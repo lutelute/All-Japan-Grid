@@ -247,6 +247,7 @@ def _compact_feature(feat: dict, layer: str) -> dict:
         compact_props["fuel_type"] = p.get("fuel_type", "unknown")
         compact_props["capacity_mw"] = p.get("capacity_mw")
         compact_props["_fuel_color"] = p.get("_fuel_color", "#999999")
+        compact_props["_category"] = p.get("_category", "ipp")
     else:
         compact_props["_voltage_kv"] = p.get("_voltage_kv")
 

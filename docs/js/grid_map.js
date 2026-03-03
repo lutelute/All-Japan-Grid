@@ -76,7 +76,7 @@ let lineLayer = null;
 let plantLayer = null;
 let currentRegion = null;
 let regionsData = [];  // cached regions.json response
-let plantsVisible = true;
+let plantFilter = "utility";  // "utility" | "ipp" | "all" | "none"
 
 function initMap() {
     map = L.map("map", {
@@ -257,11 +257,38 @@ function loadRegion(region) {
 
 async function loadPlants() {
     if (plantLayer) { map.removeLayer(plantLayer); plantLayer = null; }
-    if (!plantsVisible) return;
+    if (plantFilter === "none") return;
+
+    // Select file based on filter
+    var plantFile;
+    if (plantFilter === "utility") {
+        plantFile = "./data/plants_utility.geojson";
+    } else if (plantFilter === "ipp") {
+        // Load both utility + ipp
+        plantFile = null;  // handled below
+    } else {
+        plantFile = "./data/plants_all.geojson";
+    }
+
     try {
-        var res = await fetch("./data/plants_all.geojson");
-        if (!res.ok) return;
-        var plantData = await res.json();
+        var plantData;
+        if (plantFilter === "ipp") {
+            var responses = await Promise.all([
+                fetch("./data/plants_utility.geojson"),
+                fetch("./data/plants_ipp.geojson"),
+            ]);
+            if (!responses[0].ok || !responses[1].ok) return;
+            var d1 = await responses[0].json();
+            var d2 = await responses[1].json();
+            plantData = {
+                type: "FeatureCollection",
+                features: d1.features.concat(d2.features),
+            };
+        } else {
+            var res = await fetch(plantFile);
+            if (!res.ok) return;
+            plantData = await res.json();
+        }
         plantLayer = L.geoJSON(plantData, {
             pointToLayer: function (feature, latlng) {
                 var p = feature.properties;
@@ -373,17 +400,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Bind plants toggle
-    var showPlantsCheckbox = document.getElementById("show-plants");
-    if (showPlantsCheckbox) {
-        showPlantsCheckbox.addEventListener("change", function () {
-            plantsVisible = this.checked;
-            if (plantsVisible) {
-                loadPlants();
-            } else if (plantLayer) {
-                map.removeLayer(plantLayer);
-                plantLayer = null;
-            }
+    // Bind plant filter dropdown
+    var plantFilterSelect = document.getElementById("plant-filter");
+    if (plantFilterSelect) {
+        plantFilterSelect.addEventListener("change", function () {
+            plantFilter = this.value;
+            loadPlants();
         });
     }
 

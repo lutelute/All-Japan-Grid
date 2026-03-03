@@ -77,12 +77,35 @@ def main():
             kv_label = f">= {min_kv} kV" if min_kv > 0 else "all"
             print(f"  {filename:<25s} ({fmt_size(size):>8s}, {count:>5d} features, {kv_label})")
 
-    # Generate plants GeoJSON (all plants, no voltage filtering)
+    # Generate plants GeoJSON split by category
     plants_data = get_all_geojson_light("plants", min_voltage_kv=0)
-    count = len(plants_data.get("features", []))
+    all_plants = plants_data.get("features", [])
+
+    # Utility plants (一般送配電事業者 + J-POWER + JERA + 原電)
+    utility = [f for f in all_plants if f["properties"].get("_category") == "utility"]
+    fc_util = {"type": "FeatureCollection", "features": utility}
+    path = os.path.join(DOCS_DATA_DIR, "plants_utility.geojson")
+    size = write_json(path, fc_util)
+    print(f"  {'plants_utility.geojson':<25s} ({fmt_size(size):>8s}, {len(utility):>5d} features)")
+
+    # IPP plants: exclude solar without capacity or < 10 MW
+    ipp_major = [
+        f for f in all_plants
+        if f["properties"].get("_category") == "ipp"
+        and not (
+            f["properties"].get("fuel_type") == "solar"
+            and (f["properties"].get("capacity_mw") is None or f["properties"].get("capacity_mw", 0) < 10)
+        )
+    ]
+    fc_ipp = {"type": "FeatureCollection", "features": ipp_major}
+    path = os.path.join(DOCS_DATA_DIR, "plants_ipp.geojson")
+    size = write_json(path, fc_ipp)
+    print(f"  {'plants_ipp.geojson':<25s} ({fmt_size(size):>8s}, {len(ipp_major):>5d} features)")
+
+    # All plants (kept for reference but not loaded by default)
     path = os.path.join(DOCS_DATA_DIR, "plants_all.geojson")
     size = write_json(path, plants_data)
-    print(f"  {'plants_all.geojson':<25s} ({fmt_size(size):>8s}, {count:>5d} features)")
+    print(f"  {'plants_all.geojson':<25s} ({fmt_size(size):>8s}, {len(all_plants):>5d} features)")
 
     print("Done.")
 
