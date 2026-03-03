@@ -1,9 +1,11 @@
 # All-Japan-Power-Network
 
-Open Japanese power grid dataset built from OpenStreetMap.
+Open Japanese power grid **geographic topology** dataset built from OpenStreetMap.
 10 regions, 40,000+ transmission lines, 7,000+ substations.
 
 **Live Map:** https://lutelute.github.io/All-Japan-Power-Network/
+
+> **Important:** This dataset provides the **geographic layout** of Japan's transmission infrastructure — where substations and lines are physically located and how they connect spatially. It is **not** a ready-to-use electrical model. See [Limitations](#limitations--what-this-data-is-not) below.
 
 ## Dataset
 
@@ -54,9 +56,44 @@ python -m http.server -d docs 8080
 open http://localhost:8080
 ```
 
-## Power Flow Analysis
+## Limitations — What This Data Is NOT
 
-DC/AC power flow via pandapower. Requires the local FastAPI server:
+OSM provides the **geographic** skeleton of the transmission grid. To build a functioning electrical model (power flow, OPF, UC), the following are required but **missing** from this dataset:
+
+| Missing | Why it matters | Potential source |
+|---------|---------------|-----------------|
+| **Line impedance (R, X, B)** | Required for any power flow calculation | Typical values by voltage class (synthetic), or OCCTO published parameters |
+| **From/to bus connectivity** | OSM lines are geographic traces, not bus-bus connections; endpoint matching is heuristic and error-prone | Manual verification, OCCTO topology data |
+| **Generators** | No generation capacity, fuel type, cost curves | OCCTO supply plan, 国土数値情報 P03, JEPX data |
+| **Load / demand** | No demand allocation at buses | OCCTO area demand, prefecture-level statistics, synthetic allocation |
+| **Transformer data** | No tap ratios, impedance, winding configuration | Synthetic estimation or utility disclosure |
+| **Switching topology** | Bus-section / breaker-level detail unavailable | Not publicly available in Japan |
+
+### Lessons Learned
+
+1. **"地図があるからデータがある" は誤り** — A map showing transmission lines does not imply that the underlying electrical parameters exist. Geographic data and electrical data are fundamentally different.
+2. **容量データ ≠ 系統モデル** — Knowing a line is "275 kV" tells you the voltage class but nothing about impedance, thermal rating, or actual connectivity.
+3. **Endpoint matching is fragile** — Heuristic from/to bus estimation from geographic proximity produces many mismatches. A 50 km threshold catches most connections but also creates false links.
+4. **Japanese name normalization** — `変電所`, `発電所`, `開閉所` have multiple orthographies (kanji/kana/abbreviation). Fuzzy matching is essential.
+5. **Null diversity** — OSM features may have `voltage=null`, `voltage=""`, `voltage="yes"`, or no voltage tag at all. Robust parsing must handle all cases.
+6. **Regional scope & name resolution** — The same substation name can appear in multiple regions. Name-based matching must be scoped to the correct region.
+7. **AC power flow on OSM topology produces physically meaningless results** — Without proper impedance data, generator dispatch, and demand allocation, power flow output is numerical noise, not engineering insight.
+
+## What This Data IS Good For
+
+- **Visualization**: Interactive maps of Japan's transmission infrastructure by voltage class and region
+- **Topology research**: Graph-theoretic analysis of network connectivity, redundancy, vulnerability
+- **Geographic reference**: Substation locations and transmission corridors for spatial analysis
+- **Starting point for synthetic models**: Geographic skeleton to be enriched with electrical parameters from other sources
+- **Education**: Understanding the structure of Japan's 10 regional grids and the 50/60 Hz boundary
+
+## Analysis Tools (Experimental)
+
+The `src/` directory contains power flow and UC solver code. These tools work correctly on **complete** electrical models (e.g. MATPOWER test cases) but produce unreliable results on raw OSM topology due to the missing data described above.
+
+They are included as reference implementations for future use when combined with complementary data sources.
+
+### Local Server
 
 ```bash
 pip install -r requirements.txt
@@ -64,32 +101,30 @@ uvicorn src.server.app:app --reload
 open http://localhost:8000
 ```
 
-Features:
-- Region selection + voltage filtering
-- DC / AC power flow computation
-- Line loading visualization (color-coded)
-- MATPOWER `.mat` export
+### Included Tools
 
-### Example: Run power flow on all regions
+| Module | Purpose | Status |
+|--------|---------|--------|
+| `src/server/` | FastAPI web server, interactive map | Works (visualization) |
+| `src/powerflow/` | DC/AC power flow via pandapower | Requires electrical parameters |
+| `src/ac_powerflow/` | Advanced AC methods | Requires electrical parameters |
+| `src/uc/` | Unit Commitment (MILP, PuLP + HiGHS) | Requires generators + demand |
+| `src/converter/` | pandapower / MATPOWER export | Works (structural export) |
 
-```bash
-python examples/run_powerflow_all.py
-```
+## Future Work — Complementary Data Sources
 
-## Unit Commitment (UC)
+To build a usable electrical model, this geographic topology needs to be combined with:
 
-MILP-based day-ahead unit commitment solver using PuLP + HiGHS:
+| Data source | What it provides | Access |
+|-------------|-----------------|--------|
+| **OCCTO** (電力広域的運営推進機関) | Interconnection capacity, area demand, supply-demand plans | [occto.or.jp](https://www.occto.or.jp/) (public reports) |
+| **国土数値情報 P03** | Power plant locations, capacity, fuel type | [nlftp.mlit.go.jp](https://nlftp.mlit.go.jp/ksj/) (open data) |
+| **JEPX** (日本卸電力取引所) | Spot market prices, area price signals | [jepx.jp](http://www.jepx.jp/) (public) |
+| **PyPSA-Earth / atlite** | Renewable resource data, synthetic grid enrichment | [pypsa-earth.readthedocs.io](https://pypsa-earth.readthedocs.io/) |
+| **MATPOWER test cases** | Validated IEEE/PGLIB models for benchmarking | [matpower.org](https://matpower.org/) |
+| **Synthetic line parameters** | R/X/B estimation by voltage class and conductor type | Literature values (e.g. Glover, Sarma & Overbye) |
 
-- Demand balance, min up/down time, ramp rate constraints
-- Pumped hydro & battery storage with SOC tracking
-- Regional decomposition for national-scale problems
-- XML/CSV result export
-
-### Example: UC demo
-
-```bash
-python examples/uc_demo_visualize.py
-```
+Contributions and collaborations welcome. If you have access to additional data sources or are working on Japanese grid modeling, please open an issue.
 
 ## Project Structure
 
@@ -99,9 +134,9 @@ config/regions.yaml    Region metadata (frequency, voltage levels, bounding boxe
 src/
   model/               Data models (Substation, TransmissionLine, Generator)
   converter/           pandapower / MATPOWER conversion
-  powerflow/           DC/AC power flow runner
-  ac_powerflow/        Advanced AC power flow methods
-  uc/                  Unit Commitment solver
+  powerflow/           DC/AC power flow runner (experimental)
+  ac_powerflow/        Advanced AC power flow (experimental)
+  uc/                  Unit Commitment solver (experimental)
   server/              FastAPI web server + GeoJSON loader
   utils/               Geographic utilities
 examples/              Demo scripts (power flow, UC, visualization)
