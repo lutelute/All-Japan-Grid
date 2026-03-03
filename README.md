@@ -1,9 +1,9 @@
-# All-Japan-Power-Network
+# All-Japan-Grid
 
 Open Japanese power grid **geographic topology** dataset built from OpenStreetMap.
 10 regions, 40,000+ transmission lines, 7,000+ substations.
 
-**Live Map:** https://lutelute.github.io/All-Japan-Power-Network/
+**Live Map:** https://lutelute.github.io/All-Japan-Grid/
 
 > **Important:** This dataset provides the **geographic layout** of Japan's transmission infrastructure — where substations and lines are physically located and how they connect spatially. It is **not** a ready-to-use electrical model. See [Limitations](#limitations--what-this-data-is-not) below.
 

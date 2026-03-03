@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             '<pre style="margin:8px 0;padding:8px;background:#16213e;border-radius:4px;font-size:0.75rem;color:#7f8c8d;">' +
             "uvicorn src.server.app:app --reload" +
             "</pre>" +
-            "See <a href='https://github.com/lutelute/All-Japan-Power-Network#limitations--what-this-data-is-not' style='color:#e94560;'>README</a> for details." +
+            "See <a href='https://github.com/lutelute/All-Japan-Grid#limitations--what-this-data-is-not' style='color:#e94560;'>README</a> for details." +
             "</div>";
     }
 });
