@@ -73,9 +73,12 @@ def _enrich_feature(feature: dict, region: str, layer: str) -> dict:
     voltage_kv = _normalize_voltage(raw_voltage)
     props["_voltage_kv"] = voltage_kv
 
-    # Enrich name
+    # Enrich name (preserve geocoded/enriched display names)
     name = props.get("name") or props.get("name:ja") or ""
-    props["_display_name"] = name
+    if name:
+        props["_display_name"] = name
+    elif not props.get("_display_name"):
+        props["_display_name"] = props.get("name:en") or ""
 
     feature["properties"] = props
     return feature
