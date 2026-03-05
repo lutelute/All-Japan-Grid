@@ -181,95 +181,111 @@ function renderLayers() {
 
     // Lines
     if (layerVisible.lines) {
-        lineLayer = L.geoJSON(lineData, {
-            style: function (feature) {
-                var kv = feature.properties._voltage_kv || 0;
-                return {
-                    color: voltageColor(kv),
-                    weight: voltageLineWeight(kv),
-                    opacity: 0.7,
-                };
-            },
-            onEachFeature: function (feature, layer) {
-                var p = feature.properties;
-                var kv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
-                layer.bindPopup(
-                    "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
-                    "Voltage: " + kv + "<br>" +
-                    "Region: " + (p._region_ja || "")
-                );
-            },
-        }).addTo(map);
-    }
-
-    // Substations
-    if (layerVisible.subs) {
-        substationLayer = L.geoJSON(subData, {
-            pointToLayer: function (feature, latlng) {
-                var kv = feature.properties._voltage_kv || 0;
-                var bracket = voltageKvToBracket(kv);
-                var radius = bracket >= 500 ? 5 : bracket >= 275 ? 4 : 3;
-                return L.circleMarker(latlng, {
-                    radius: radius,
-                    fillColor: voltageColor(kv),
-                    color: "#fff",
-                    weight: 0.5,
-                    fillOpacity: 0.8,
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                var p = feature.properties;
-                var coords = feature.geometry.coordinates;
-                var enriched = (coords && coords.length >= 2) ? lookupEnrichedSub(coords[0], coords[1]) : null;
-                if (enriched) {
-                    layer.bindPopup(buildSubPopup(enriched), { maxWidth: 350 });
-                } else {
+        try {
+            lineLayer = L.geoJSON(lineData, {
+                style: function (feature) {
+                    var kv = feature.properties._voltage_kv || 0;
+                    return {
+                        color: voltageColor(kv),
+                        weight: voltageLineWeight(kv),
+                        opacity: 0.7,
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    var p = feature.properties;
                     var kv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
                     layer.bindPopup(
                         "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
                         "Voltage: " + kv + "<br>" +
                         "Region: " + (p._region_ja || "")
                     );
-                }
-            },
-        }).addTo(map);
+                },
+            }).addTo(map);
+        } catch (e) { console.error("Lines render error:", e); }
+    }
+
+    // Substations (filter to Point only — some OSM ways are MultiPolygon)
+    if (layerVisible.subs) {
+        try {
+            var subPoints = {
+                type: "FeatureCollection",
+                features: subData.features.filter(function (f) {
+                    return f.geometry && f.geometry.type === "Point";
+                }),
+            };
+            substationLayer = L.geoJSON(subPoints, {
+                pointToLayer: function (feature, latlng) {
+                    var kv = feature.properties._voltage_kv || 0;
+                    var bracket = voltageKvToBracket(kv);
+                    var radius = bracket >= 500 ? 5 : bracket >= 275 ? 4 : 3;
+                    return L.circleMarker(latlng, {
+                        radius: radius,
+                        fillColor: voltageColor(kv),
+                        color: "#fff",
+                        weight: 0.5,
+                        fillOpacity: 0.8,
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    try {
+                        var p = feature.properties;
+                        var coords = feature.geometry ? feature.geometry.coordinates : null;
+                        var enriched = (coords && coords.length >= 2) ? lookupEnrichedSub(coords[0], coords[1]) : null;
+                        if (enriched) {
+                            layer.bindPopup(buildSubPopup(enriched), { maxWidth: 350 });
+                        } else {
+                            var kv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
+                            layer.bindPopup(
+                                "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
+                                "Voltage: " + kv + "<br>" +
+                                "Region: " + (p._region_ja || "")
+                            );
+                        }
+                    } catch (e) { console.warn("Sub popup error:", e); }
+                },
+            }).addTo(map);
+        } catch (e) { console.error("Substations render error:", e); }
     }
 
     // Plants
     if (layerVisible.plants && rawPlantData) {
-        var plantData = filterByRegion(rawPlantData, selectedRegion);
-        plantLayer = L.geoJSON(plantData, {
-            pointToLayer: function (feature, latlng) {
-                var p = feature.properties;
-                var fuel = p.fuel_type || "unknown";
-                var color = FUEL_COLORS[fuel] || FUEL_COLORS.unknown;
-                var mw = p.capacity_mw || 0;
-                var radius = mw >= 1000 ? 7 : mw >= 100 ? 5 : mw > 0 ? 4 : 3;
-                return L.circleMarker(latlng, {
-                    radius: radius,
-                    fillColor: color,
-                    color: "#000",
-                    weight: 1,
-                    fillOpacity: 0.85,
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                var p = feature.properties;
-                var coords = feature.geometry.coordinates;
-                var enriched = (coords && coords.length >= 2) ? lookupEnrichedGen(coords[0], coords[1]) : null;
-                if (enriched) {
-                    layer.bindPopup(buildGenPopup(enriched), { maxWidth: 350 });
-                } else {
-                    var cap = p.capacity_mw ? p.capacity_mw + " MW" : "N/A";
-                    layer.bindPopup(
-                        "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
-                        "Fuel: " + (p.fuel_type || "unknown") + "<br>" +
-                        "Capacity: " + cap + "<br>" +
-                        "Region: " + (p._region_ja || "")
-                    );
-                }
-            },
-        }).addTo(map);
+        try {
+            var plantData = filterByRegion(rawPlantData, selectedRegion);
+            plantLayer = L.geoJSON(plantData, {
+                pointToLayer: function (feature, latlng) {
+                    var p = feature.properties;
+                    var fuel = p.fuel_type || "unknown";
+                    var color = FUEL_COLORS[fuel] || FUEL_COLORS.unknown;
+                    var mw = p.capacity_mw || 0;
+                    var radius = mw >= 1000 ? 7 : mw >= 100 ? 5 : mw > 0 ? 4 : 3;
+                    return L.circleMarker(latlng, {
+                        radius: radius,
+                        fillColor: color,
+                        color: "#000",
+                        weight: 1,
+                        fillOpacity: 0.85,
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    try {
+                        var p = feature.properties;
+                        var coords = feature.geometry ? feature.geometry.coordinates : null;
+                        var enriched = (coords && coords.length >= 2) ? lookupEnrichedGen(coords[0], coords[1]) : null;
+                        if (enriched) {
+                            layer.bindPopup(buildGenPopup(enriched), { maxWidth: 350 });
+                        } else {
+                            var cap = p.capacity_mw ? p.capacity_mw + " MW" : "N/A";
+                            layer.bindPopup(
+                                "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
+                                "Fuel: " + (p.fuel_type || "unknown") + "<br>" +
+                                "Capacity: " + cap + "<br>" +
+                                "Region: " + (p._region_ja || "")
+                            );
+                        }
+                    } catch (e) { console.warn("Plant popup error:", e); }
+                },
+            }).addTo(map);
+        } catch (e) { console.error("Plants render error:", e); }
     }
 
     updateStatus();
@@ -529,8 +545,9 @@ function buildSpatialIndex(geojson) {
     var idx = {};
     for (var i = 0; i < geojson.features.length; i++) {
         var f = geojson.features[i];
+        if (!f.geometry || !f.geometry.coordinates) continue;
         var c = f.geometry.coordinates;
-        // Key: rounded lon,lat for fast lookup
+        if (c.length < 2 || c[0] == null || c[1] == null) continue;
         var key = c[0].toFixed(4) + "," + c[1].toFixed(4);
         idx[key] = f.properties;
     }
