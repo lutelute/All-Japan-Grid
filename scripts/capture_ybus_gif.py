@@ -21,7 +21,14 @@ import warnings
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import numpy as np
+
+# Japanese font
+for _fname in ["Hiragino Sans", "Hiragino Kaku Gothic Pro", "Noto Sans CJK JP", "BIZ UDGothic"]:
+    if any(f.name == _fname for f in fm.fontManager.ttflist):
+        plt.rcParams["font.family"] = _fname
+        break
 
 # Add project root to path
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -112,7 +119,9 @@ def plot_ybus_frame(Ybus, region_label, region_ja, n_bus, n_line, color, frame_p
     if Ybus is not None:
         # Get sparse structure
         coo = Ybus.tocoo()
-        ax.scatter(coo.col, coo.row, s=0.3, c=color, alpha=0.7, marker="s", linewidths=0)
+        n = Ybus.shape[0]
+        dot_size = max(0.5, min(8, 800 / n))
+        ax.scatter(coo.col, coo.row, s=dot_size, c=color, alpha=0.8, marker="s", linewidths=0)
         ax.set_xlim(-0.5, Ybus.shape[0] - 0.5)
         ax.set_ylim(Ybus.shape[0] - 0.5, -0.5)
         nnz = Ybus.nnz
