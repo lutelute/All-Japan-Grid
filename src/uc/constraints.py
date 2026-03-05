@@ -18,6 +18,7 @@ Usage::
         add_maintenance_constraints,
         add_reserve_margin_constraints,
         add_storage_soc_constraints,
+        add_transmission_capacity_constraints,
     )
 
     model = pulp.LpProblem("UC", pulp.LpMinimize)
@@ -32,6 +33,7 @@ from typing import Dict, List, Tuple
 import pulp
 
 from src.model.generator import Generator
+from src.uc.models import Interconnection
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -641,5 +643,55 @@ def add_storage_soc_constraints(
         count,
         n_storage,
         n_skipped,
+    )
+    return count
+
+
+def add_transmission_capacity_constraints(
+    model: pulp.LpProblem,
+    f: Dict[Tuple[str, int], pulp.LpVariable],
+    interconnections: List[Interconnection],
+    timesteps: List[int],
+) -> int:
+    """Add transmission capacity constraints for interconnections.
+
+    Limits the power flow on each interconnection to its rated capacity
+    in both directions:
+
+        ``f[ic,t] <= capacity_mw[ic]``   (upper bound)
+        ``f[ic,t] >= -capacity_mw[ic]``  (lower bound)
+
+    Positive flow represents power transfer from ``from_region`` to
+    ``to_region``; negative flow represents the reverse direction.
+
+    Args:
+        model: PuLP model to add constraints to.
+        f: Flow variables indexed by ``(interconnection_id, timestep)``.
+        interconnections: List of interconnections to constrain.
+        timesteps: List of time period indices.
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    for ic in interconnections:
+        for t in timesteps:
+            # Upper bound: f <= capacity
+            model += (
+                f[(ic.id, t)] <= ic.capacity_mw,
+                f"tx_cap_ub_{ic.id}_t{t}",
+            )
+            count += 1
+            # Lower bound: f >= -capacity
+            model += (
+                f[(ic.id, t)] >= -ic.capacity_mw,
+                f"tx_cap_lb_{ic.id}_t{t}",
+            )
+            count += 1
+    logger.info(
+        "Added %d transmission capacity constraints (%d interconnections × %d timesteps × 2)",
+        count,
+        len(interconnections),
+        len(timesteps),
     )
     return count
