@@ -75,9 +75,11 @@ def _enrich_feature(feature: dict, region: str, layer: str) -> dict:
 
     # Enrich name (preserve geocoded/enriched display names)
     name = props.get("name") or props.get("name:ja") or ""
+    existing_display = props.get("_display_name", "")
     if name:
         props["_display_name"] = name
-    elif not props.get("_display_name"):
+    elif not existing_display or existing_display.startswith(("sub_", "line_")):
+        # Clear synthetic prefixes; fall back to name:en or empty
         props["_display_name"] = props.get("name:en") or ""
 
     feature["properties"] = props
@@ -89,8 +91,13 @@ def _enrich_plant_feature(feature: dict, region: str) -> dict:
     props = feature.get("properties", {})
     props["_region"] = region
     props["_region_ja"] = REGION_JA.get(region, region)
-    if not props.get("_display_name"):
-        props["_display_name"] = props.get("name") or props.get("name:ja") or ""
+    # Use name field directly; do not generate synthetic plant_ prefixes
+    name = props.get("name") or props.get("name:ja") or ""
+    existing_display = props.get("_display_name", "")
+    if name:
+        props["_display_name"] = name
+    elif not existing_display or existing_display.startswith("plant_"):
+        props["_display_name"] = ""
     fuel = props.get("fuel_type", "unknown")
     if not fuel or fuel.startswith("http") or len(fuel) > 20:
         fuel = "unknown"
