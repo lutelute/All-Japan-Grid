@@ -9,6 +9,8 @@ Tests cover:
 - Transmission capacity constraint builder (flow bounded by capacity)
 - Nodal balance constraint builder (per-region generation + net flow >= demand)
 - Flow sign convention (positive = from_region -> to_region)
+- Two-region integration test via solve_uc with interconnection flow verification
+- Regression test: solve_uc without interconnections produces unchanged behavior
 """
 
 from pathlib import Path
@@ -23,7 +25,14 @@ from src.uc.constraints import (
     add_transmission_capacity_constraints,
 )
 from src.uc.interconnection_loader import InterconnectionLoader
-from src.uc.models import Interconnection, InterconnectionFlow
+from src.uc.models import (
+    DemandProfile,
+    Interconnection,
+    InterconnectionFlow,
+    TimeHorizon,
+    UCParameters,
+)
+from src.uc.solver import solve_uc
 from tests.conftest import make_generator, make_interconnection
 
 
@@ -780,3 +789,215 @@ class TestPackageExports:
 
         flow = ICFlow(interconnection_id="test", flow_mw=[1.0, 2.0])
         assert flow.interconnection_id == "test"
+
+
+# ======================================================================
+# Helpers — integration tests
+# ======================================================================
+
+
+def _flat_demand(mw: float, periods: int) -> DemandProfile:
+    """Create a constant demand profile."""
+    return DemandProfile(demands=[mw] * periods)
+
+
+# ======================================================================
+# TestTwoRegionIntegration — solve_uc with interconnection
+# ======================================================================
+
+
+class TestTwoRegionIntegration:
+    """Integration tests for solve_uc with interconnections."""
+
+    def test_two_region_with_interconnection(self) -> None:
+        """Two-region solve with interconnection: flow from cheap to expensive region."""
+        # 2 cheap generators in tokyo (300 MW each, total 600 MW)
+        g1 = make_generator(
+            id="g_tokyo_1",
+            name="Tokyo Gen 1",
+            capacity_mw=300.0,
+            region="tokyo",
+            fuel_cost_per_mwh=10.0,
+        )
+        g2 = make_generator(
+            id="g_tokyo_2",
+            name="Tokyo Gen 2",
+            capacity_mw=300.0,
+            region="tokyo",
+            fuel_cost_per_mwh=10.0,
+        )
+        # 1 expensive generator in chubu (200 MW)
+        g3 = make_generator(
+            id="g_chubu_1",
+            name="Chubu Gen 1",
+            capacity_mw=200.0,
+            region="chubu",
+            fuel_cost_per_mwh=100.0,
+        )
+
+        # Interconnection: tokyo -> chubu, 100 MW capacity
+        ic = make_interconnection(
+            id="ic_tokyo_chubu",
+            from_region="tokyo",
+            to_region="chubu",
+            capacity_mw=100.0,
+        )
+
+        th = TimeHorizon(num_periods=4, period_duration_h=1.0)
+        # Total demand 750 MW; proportional split by capacity (600:200):
+        #   tokyo = 750 * 0.75 = 562.5 MW, chubu = 750 * 0.25 = 187.5 MW
+        # Tokyo surplus (600 - 562.5 = 37.5 MW) at 10 $/MWh is cheaper
+        # than chubu at 100 $/MWh, so optimizer exports from tokyo to chubu.
+        dp = _flat_demand(750.0, 4)
+        params = UCParameters(
+            generators=[g1, g2, g3],
+            demand=dp,
+            time_horizon=th,
+            interconnections=[ic],
+        )
+
+        result = solve_uc(params)
+
+        # (1) Optimal status
+        assert result.status == "Optimal"
+        assert result.total_cost > 0
+
+        # (2) Positive flow from tokyo to chubu
+        assert len(result.interconnection_flows) == 1
+        ic_flow = result.interconnection_flows[0]
+        assert ic_flow.interconnection_id == "ic_tokyo_chubu"
+        assert len(ic_flow.flow_mw) == 4
+        for t, flow_val in enumerate(ic_flow.flow_mw):
+            assert flow_val > 0, (
+                f"Expected positive flow at t={t}, got {flow_val}"
+            )
+
+        # (3) Flow <= 100 MW capacity bound
+        for t, flow_val in enumerate(ic_flow.flow_mw):
+            assert flow_val <= 100.0 + 1e-3, (
+                f"Flow at t={t} exceeds capacity: {flow_val}"
+            )
+
+        # (4) Both regional demands met
+        # Proportional split: tokyo = 75%, chubu = 25%
+        tokyo_demand = 750.0 * (600.0 / 800.0)  # 562.5
+        chubu_demand = 750.0 * (200.0 / 800.0)  # 187.5
+        for t in range(4):
+            tokyo_gen = sum(
+                s.power_output_mw[t]
+                for s in result.schedules
+                if s.generator_id.startswith("g_tokyo")
+            )
+            chubu_gen = sum(
+                s.power_output_mw[t]
+                for s in result.schedules
+                if s.generator_id.startswith("g_chubu")
+            )
+            flow = ic_flow.flow_mw[t]
+            # tokyo: generation - export >= demand
+            assert tokyo_gen - flow >= tokyo_demand - 1e-3, (
+                f"Tokyo demand not met at t={t}: gen={tokyo_gen}, "
+                f"export={flow}, demand={tokyo_demand}"
+            )
+            # chubu: generation + import >= demand
+            assert chubu_gen + flow >= chubu_demand - 1e-3, (
+                f"Chubu demand not met at t={t}: gen={chubu_gen}, "
+                f"import={flow}, demand={chubu_demand}"
+            )
+
+
+# ======================================================================
+# TestSolveWithoutInterconnections — regression
+# ======================================================================
+
+
+class TestSolveWithoutInterconnections:
+    """Regression tests: solve_uc without interconnections is unchanged."""
+
+    def test_solve_without_interconnections_unchanged(self) -> None:
+        """solve_uc with no interconnections produces standard optimal result."""
+        # 3-generator setup following test_uc_solver.py pattern
+        g1 = make_generator(
+            id="g1",
+            name="Base Coal",
+            capacity_mw=200.0,
+            fuel_type="coal",
+            p_min_mw=50.0,
+            startup_cost=5000.0,
+            shutdown_cost=2000.0,
+            min_up_time_h=4,
+            min_down_time_h=4,
+            ramp_up_mw_per_h=50.0,
+            ramp_down_mw_per_h=50.0,
+            fuel_cost_per_mwh=30.0,
+            labor_cost_per_h=10.0,
+            no_load_cost=100.0,
+        )
+        g2 = make_generator(
+            id="g2",
+            name="Mid LNG",
+            capacity_mw=150.0,
+            fuel_type="lng",
+            p_min_mw=30.0,
+            startup_cost=2000.0,
+            shutdown_cost=1000.0,
+            min_up_time_h=2,
+            min_down_time_h=2,
+            ramp_up_mw_per_h=75.0,
+            ramp_down_mw_per_h=75.0,
+            fuel_cost_per_mwh=50.0,
+            labor_cost_per_h=8.0,
+            no_load_cost=50.0,
+        )
+        g3 = make_generator(
+            id="g3",
+            name="Peak Oil",
+            capacity_mw=100.0,
+            fuel_type="oil",
+            p_min_mw=10.0,
+            startup_cost=1000.0,
+            shutdown_cost=500.0,
+            min_up_time_h=1,
+            min_down_time_h=1,
+            ramp_up_mw_per_h=100.0,
+            ramp_down_mw_per_h=100.0,
+            fuel_cost_per_mwh=80.0,
+            labor_cost_per_h=5.0,
+            no_load_cost=20.0,
+        )
+
+        th = TimeHorizon(num_periods=24, period_duration_h=1.0)
+        dp = _flat_demand(200.0, 24)
+        params = UCParameters(
+            generators=[g1, g2, g3],
+            demand=dp,
+            time_horizon=th,
+            interconnections=[],  # No interconnections
+        )
+
+        result = solve_uc(params)
+
+        # Status and basic structure
+        assert result.status == "Optimal"
+        assert result.total_cost > 0
+        assert result.solve_time_s >= 0
+        assert len(result.schedules) == 3
+
+        # No interconnection flows in result
+        assert len(result.interconnection_flows) == 0
+
+        # All generators have schedules
+        gen_ids = {s.generator_id for s in result.schedules}
+        assert gen_ids == {"g1", "g2", "g3"}
+
+        # Demand balance holds at every timestep
+        for t in range(24):
+            total_gen = sum(s.power_output_mw[t] for s in result.schedules)
+            assert total_gen >= 200.0 - 1e-3, (
+                f"Demand balance violated at t={t}: "
+                f"generation={total_gen:.4f} < demand=200.0"
+            )
+
+        # Total cost equals sum of generator costs
+        sum_gen_costs = sum(s.total_cost for s in result.schedules)
+        assert abs(result.total_cost - sum_gen_costs) < 1.0
