@@ -85,20 +85,23 @@ REGION_COLORS = {
 }
 
 
-# ── Ybus builder ──
+# ── Ybus builder (direct from line impedance, no power flow needed) ──
 
-def build_ybus_for_region(region_id):
-    if region_id is None:
-        return None, 0, 0
+ALL_REGION_IDS = [
+    "hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
+    "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
+]
+
+
+def _build_net(region_id):
+    """Build pandapower net for a single region."""
     from src.server.geojson_parser import build_grid_network
     from src.converter.pandapower_builder import PandapowerBuilder
-    import pandapower as pp
-    from scipy import sparse as sp
 
     sub_path = os.path.join(DATA_DIR, f"{region_id}_substations.geojson")
     line_path = os.path.join(DATA_DIR, f"{region_id}_lines.geojson")
     if not os.path.exists(sub_path) or not os.path.exists(line_path):
-        return None, 0, 0
+        return None
 
     with open(sub_path, "r", encoding="utf-8") as f:
         sub_fc = json.load(f)
@@ -107,23 +110,67 @@ def build_ybus_for_region(region_id):
 
     network = build_grid_network(sub_fc, line_fc, region_id)
     result = PandapowerBuilder().build(network)
-    net = result.net
-    if len(net.bus) == 0:
-        return None, len(net.bus), len(net.line)
+    return result.net
 
-    try:
-        pp.runpp(net, numba=False)
-    except Exception:
-        pass
 
-    if not hasattr(net, "_ppc") or net._ppc is None:
-        return None, len(net.bus), len(net.line)
-    Ybus = net._ppc.get("internal", {}).get("Ybus")
-    if Ybus is None:
-        return None, len(net.bus), len(net.line)
-    if not sp.issparse(Ybus):
-        Ybus = sp.csc_matrix(Ybus)
-    return Ybus, len(net.bus), len(net.line)
+def _ybus_from_net(net):
+    """Build Ybus directly from pandapower line table (no power flow)."""
+    from scipy import sparse as sp
+
+    n = len(net.bus)
+    if n == 0 or len(net.line) == 0:
+        return None, n, len(net.line)
+
+    Y = sp.lil_matrix((n, n), dtype=complex)
+    for _, line in net.line.iterrows():
+        if not line.in_service:
+            continue
+        i, j = int(line.from_bus), int(line.to_bus)
+        if i >= n or j >= n:
+            continue
+        r = line.r_ohm_per_km * line.length_km
+        x = line.x_ohm_per_km * line.length_km
+        z = complex(r, x)
+        if abs(z) < 1e-12:
+            continue
+        y = 1.0 / z
+        Y[i, i] += y
+        Y[j, j] += y
+        Y[i, j] -= y
+        Y[j, i] -= y
+
+    Ybus = Y.tocsc()
+    return Ybus, n, len(net.line)
+
+
+def build_ybus_for_region(region_id):
+    """Build Ybus for a single region, or all regions merged for All-Japan."""
+    from scipy import sparse as sp
+    import pandapower as pp
+
+    if region_id is None:
+        # All-Japan: merge all regions into one big Ybus
+        all_buses = 0
+        all_lines = 0
+        blocks = []
+        for rid in ALL_REGION_IDS:
+            net = _build_net(rid)
+            if net is None or len(net.bus) == 0:
+                continue
+            Ybus, nb, nl = _ybus_from_net(net)
+            if Ybus is not None and Ybus.nnz > 0:
+                blocks.append(Ybus)
+            all_buses += nb
+            all_lines += nl
+        if not blocks:
+            return None, all_buses, all_lines
+        Ybus = sp.block_diag(blocks, format="csc")
+        return Ybus, all_buses, all_lines
+
+    net = _build_net(region_id)
+    if net is None:
+        return None, 0, 0
+    return _ybus_from_net(net)
 
 
 def render_ybus_png(Ybus, label, region_id, n_bus, n_line, out_path):
@@ -145,9 +192,8 @@ def render_ybus_png(Ybus, label, region_id, n_bus, n_line, out_path):
         density = Ybus.nnz / (n * n) * 100 if n > 0 else 0
         subtitle = f"{n} buses | {Ybus.nnz:,} non-zeros | {density:.2f}%"
     elif region_id is None:
-        # All-Japan placeholder
-        ax.text(0.5, 0.5, "ALL JAPAN", transform=ax.transAxes, ha="center", va="center",
-                fontsize=28, color="#ff7f0e", fontweight="bold", alpha=0.4)
+        ax.text(0.5, 0.5, "N/A", transform=ax.transAxes, ha="center", va="center",
+                fontsize=40, color="#555", fontweight="bold")
         subtitle = "10 regions combined"
     else:
         ax.text(0.5, 0.5, "N/A", transform=ax.transAxes, ha="center", va="center",
@@ -253,6 +299,7 @@ async def main():
         await asyncio.sleep(1)
 
         frame_num = 0
+        prev_key = "all"
 
         for region in REGIONS:
             rid = region["id"]
@@ -265,13 +312,13 @@ async def main():
             else:
                 await page.evaluate('selectRegion(null); map.setView([35.5, 136.0], 5)')
 
-            # Transition frames (map animating, ybus already shown)
+            # Transition frames: map animating, keep previous Ybus
             for i in range(TRANSITION):
                 await asyncio.sleep(1000 / GIF_FPS / 1000)
                 map_png = os.path.join(map_dir, f"frame_{frame_num:05d}.png")
                 await page.screenshot(path=map_png)
                 combined = os.path.join(FRAME_DIR, f"frame_{frame_num:05d}.png")
-                combine_side_by_side(map_png, ybus_cache[key], combined)
+                combine_side_by_side(map_png, ybus_cache[prev_key], combined)
                 frame_num += 1
 
             # Wait for tiles
@@ -285,6 +332,8 @@ async def main():
                 combine_side_by_side(map_png, ybus_cache[key], combined)
                 frame_num += 1
                 await asyncio.sleep(1000 / GIF_FPS / 1000)
+
+            prev_key = key
 
         await browser.close()
 
