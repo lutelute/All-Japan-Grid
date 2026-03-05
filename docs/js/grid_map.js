@@ -201,7 +201,14 @@ function initTabs() {
             if (newMode !== colorMode) {
                 colorMode = newMode;
                 updateLegend();
-                renderLayers();
+                if (newMode === "region") {
+                    // Load all voltages for region view
+                    loadData(0);
+                } else {
+                    // Restore voltage filter from dropdown
+                    var sel = document.getElementById("min-kv");
+                    loadData(sel ? parseFloat(sel.value) : 275);
+                }
             }
         });
     });
