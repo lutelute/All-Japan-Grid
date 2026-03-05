@@ -35,8 +35,8 @@ REGIONS = [
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 OVERPASS_TIMEOUT = 300  # seconds for Overpass query
-BATCH_SIZE = 500
-PAUSE_BETWEEN_BATCHES = 5  # seconds between successful requests
+BATCH_SIZE = 100
+PAUSE_BETWEEN_BATCHES = 10  # seconds between successful requests
 
 # Exponential backoff for HTTP 429
 BACKOFF_INITIAL = 30  # seconds
