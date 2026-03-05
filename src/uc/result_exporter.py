@@ -26,7 +26,7 @@ from typing import Optional
 
 from lxml import etree
 
-from src.uc.models import GeneratorSchedule, UCResult
+from src.uc.models import GeneratorSchedule, InterconnectionFlow, UCResult
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -208,6 +208,62 @@ def _build_diagnostics_element(result: UCResult) -> Optional[etree._Element]:
     return elem
 
 
+def _build_interconnection_flow_element(
+    flow: InterconnectionFlow,
+) -> etree._Element:
+    """Build an InterconnectionFlow XML element for a single interconnection.
+
+    Includes FlowPeriod sub-elements for each timestep with the flow value
+    in MW.
+
+    Args:
+        flow: InterconnectionFlow dataclass instance with per-period flows.
+
+    Returns:
+        lxml Element representing the InterconnectionFlow.
+    """
+    attrs = {
+        "interconnection_id": flow.interconnection_id,
+    }
+    elem = etree.Element(f"{{{NAMESPACE}}}InterconnectionFlow", **attrs)
+
+    for t, flow_mw in enumerate(flow.flow_mw):
+        period_attrs = {
+            "t": str(t),
+            "flow_mw": _format_decimal(flow_mw),
+        }
+        period_elem = etree.Element(
+            f"{{{NAMESPACE}}}FlowPeriod", **period_attrs
+        )
+        elem.append(period_elem)
+
+    return elem
+
+
+def _build_interconnection_flows_element(
+    result: UCResult,
+) -> Optional[etree._Element]:
+    """Build an InterconnectionFlows container XML element.
+
+    Returns ``None`` if there are no interconnection flows to report.
+
+    Args:
+        result: UCResult with optional interconnection flow data.
+
+    Returns:
+        lxml Element representing InterconnectionFlows, or None if empty.
+    """
+    if not result.interconnection_flows:
+        return None
+
+    elem = etree.Element(f"{{{NAMESPACE}}}InterconnectionFlows")
+    for flow in result.interconnection_flows:
+        flow_elem = _build_interconnection_flow_element(flow)
+        elem.append(flow_elem)
+
+    return elem
+
+
 def export_uc_result_xml(result: UCResult, output_path: str) -> str:
     """Export a UCResult to XML conforming to uc_result.xsd.
 
@@ -269,6 +325,11 @@ def export_uc_result_xml(result: UCResult, output_path: str) -> str:
         cost_elem = _build_cost_breakdown_element(result)
         root.append(cost_elem)
 
+    # InterconnectionFlows (only when flow data is present)
+    flows_elem = _build_interconnection_flows_element(result)
+    if flows_elem is not None:
+        root.append(flows_elem)
+
     # Diagnostics (warnings)
     diag_elem = _build_diagnostics_element(result)
     if diag_elem is not None:
@@ -297,6 +358,63 @@ def export_uc_result_xml(result: UCResult, output_path: str) -> str:
 # ------------------------------------------------------------------
 
 
+def _export_interconnection_flows_csv(
+    result: UCResult, output_path: str
+) -> str:
+    """Export interconnection flow data to a separate CSV file.
+
+    The CSV has the following columns:
+
+    - ``interconnection_id``: Interconnection identifier.
+    - ``period``: Time period index.
+    - ``flow_mw``: Power flow in MW (positive = from_region to to_region).
+
+    Only called when ``result.interconnection_flows`` is non-empty.
+
+    Args:
+        result: UCResult instance with interconnection flow data.
+        output_path: File path for the output CSV.
+
+    Returns:
+        The absolute path to the generated CSV file.
+    """
+    _ensure_output_dir(output_path)
+
+    fieldnames = [
+        "interconnection_id",
+        "period",
+        "flow_mw",
+    ]
+
+    with open(output_path, "w", newline="", encoding="utf-8") as f:
+        # Header comment with summary info
+        f.write(
+            f"# Interconnection Flows: status={result.status},"
+            f" num_interconnections={len(result.interconnection_flows)}\n"
+        )
+
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for flow in result.interconnection_flows:
+            for t, flow_mw in enumerate(flow.flow_mw):
+                writer.writerow(
+                    {
+                        "interconnection_id": flow.interconnection_id,
+                        "period": t,
+                        "flow_mw": _format_decimal(flow_mw),
+                    }
+                )
+
+    logger.info(
+        "Interconnection flows CSV exported: %d interconnections to %s",
+        len(result.interconnection_flows),
+        output_path,
+    )
+
+    return os.path.abspath(output_path)
+
+
 def export_uc_result_csv(result: UCResult, output_path: str) -> str:
     """Export a UCResult to CSV with one row per (generator, period).
 
@@ -313,6 +431,10 @@ def export_uc_result_csv(result: UCResult, output_path: str) -> str:
     - ``total_cost``: Generator total cost.
 
     A header comment line is included with the solve status and total cost.
+
+    When ``result.interconnection_flows`` is non-empty, a companion CSV file
+    ``interconnection_flows.csv`` is written to the same directory with
+    columns: ``interconnection_id``, ``period``, ``flow_mw``.
 
     Args:
         result: UCResult instance from the solver.
@@ -373,6 +495,14 @@ def export_uc_result_csv(result: UCResult, output_path: str) -> str:
                         "total_cost": _format_decimal(schedule.total_cost),
                     }
                 )
+
+    # Export interconnection flows to a separate CSV when present
+    if result.interconnection_flows:
+        flows_dir = os.path.dirname(output_path)
+        flows_path = os.path.join(
+            flows_dir, "interconnection_flows.csv"
+        ) if flows_dir else "interconnection_flows.csv"
+        _export_interconnection_flows_csv(result, flows_path)
 
     logger.info(
         "UC result CSV exported: %d schedules, total_cost=%.2f",

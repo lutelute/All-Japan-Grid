@@ -1,0 +1,135 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Add Inter-Regional Transmission Capacity Constraints to UC Solver
+Spec: 003-add-transmission-capacity-constraints-between-grid
+Workspace: managed by orchestrator
+Started: 2026-03-05
+
+Workflow Type: feature
+Rationale: Extends existing UC solver with new flow variables, nodal balance constraints, and transmission capacity bounds. All current constraints remain intact. Natural dependency chain: data layer -> constraints -> solver -> decomposition/config -> export/regression.
+
+Session 1 (Planner):
+- Completed deep codebase investigation of src/uc/ module
+- Analyzed 9 existing constraint builders in constraints.py
+- Analyzed solver.py variable creation and solution extraction patterns
+- Analyzed decomposition.py RegionalDecomposer partition logic
+- Verified interconnections.yaml has all 9 OCCTO records
+- Verified regional_demand.yaml has all 10 region peak demands
+- Created implementation_plan.json (5 phases, 14 subtasks)
+- Created context.json with patterns and key decisions
+- Created init.sh environment setup script
+- Created build-progress.txt
+
+Phase Summary:
+- Phase 1 (Data Models & Interconnection Loader): 3 subtasks, depends on []
+  - Interconnection/InterconnectionFlow dataclasses
+  - InterconnectionLoader YAML loader
+  - Test factories + data layer tests
+- Phase 2 (Constraint Builder Functions): 3 subtasks, depends on [phase-1]
+  - add_transmission_capacity_constraints()
+  - add_nodal_balance_constraints()
+  - Constraint builder unit tests
+- Phase 3 (Solver Integration): 3 subtasks, depends on [phase-2]
+  - Flow variable creation + constraint wiring
+  - Flow result extraction
+  - Two-region integration test
+- Phase 4 (Decomposition Fallback & Configuration): 3 subtasks, depends on [phase-3]
+  - RegionalDecomposer fallback logic
+  - uc_config.yaml interconnection section
+  - Decomposition + config tests
+- Phase 5 (Result Export & Regression): 2 subtasks, depends on [phase-4]
+  - result_exporter.py flow data export
+  - Full regression test suite
+
+Services Involved:
+- main: Python UC solver module (src/uc/), the only service affected
+
+Files to Create:
+- src/uc/interconnection_loader.py
+- tests/test_uc_interconnection.py
+
+Files to Modify:
+- src/uc/models.py (Interconnection dataclass, UCParameters extension, UCResult extension)
+- src/uc/constraints.py (2 new constraint builders)
+- src/uc/solver.py (flow variables, constraint wiring, result extraction)
+- src/uc/decomposition.py (RegionalDecomposer fallback)
+- src/uc/__init__.py (exports)
+- src/uc/result_exporter.py (flow data export)
+- config/uc_config.yaml (interconnection toggle)
+- tests/conftest.py (make_interconnection factory)
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Sequential execution required (single service, tight dependency chain)
+- Each phase builds directly on the previous phase's output
+
+Key Architectural Decisions:
+1. Flow convention: f[ic,t] > 0 = flow from from_region to to_region
+2. Bidirectional bounds: -cap <= f <= cap
+3. Nodal balance REPLACES demand balance when interconnections active (conditional)
+4. Existing add_demand_balance_constraints() preserved unchanged
+5. RegionalDecomposer returns [params] when interconnections present
+6. Feature opt-in via uc_config.yaml interconnection.enabled (default: false)
+7. No flow cost in objective (flow is free; only generator costs matter)
+
+Risk Mitigations:
+- Existing 9 constraint builders remain untouched
+- Conditional branching in _add_all_constraints() based on interconnection presence
+- Full regression test suite run in phase 5
+- Two-region integration test validates end-to-end correctness
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1
+
+Or run init.sh first to verify environment:
+
+  bash .auto-claude/specs/003-add-transmission-capacity-constraints-between-grid/init.sh
+
+=== END SESSION 1 ===
+
+=== SESSION: Subtask 5-2 Regression Verification ===
+
+Subtask 5-2: Regression Verification
+- Ran complete existing test suite to confirm no regressions
+- Results summary:
+  - test_uc_models.py: 79 passed (0 failures)
+  - test_uc_xml_loader.py: 52 passed, 2 skipped (0 failures)
+  - test_uc_solver.py: 47 passed (0 failures)
+  - test_uc_decomposition.py: 53 passed (0 failures)
+  - test_uc_interconnection.py: 48 passed (0 failures, all new tests)
+  - Full suite: 401 passed, 2 skipped, 1 warning (unrelated RuntimeWarning in ac_powerflow)
+
+Specific Verification:
+1. 9 existing constraint builders produce identical results:
+   - demand_balance: 2 tests pass
+   - capacity_bounds: 1 test passes
+   - min_uptime: 2 tests pass
+   - min_downtime: 2 tests pass
+   - ramp_rates: 3 tests pass
+   - maintenance: 3 tests pass
+   - reserve_margin: 3 tests pass
+   - storage SOC (pumped hydro): 7 tests pass
+   - storage SOC (battery): 3 tests pass
+   - storage integration: 3 tests pass
+
+2. Storage SOC constraints unaffected:
+   - All 13 storage/SOC tests pass unchanged
+   - Pumped hydro SOC bounds, charge/discharge mutual exclusion, balance equation verified
+   - Battery SOC tracking, fast cycle, terminal SOC constraint verified
+
+3. Decomposition strategies work as before when no interconnections present:
+   - Regional decomposition: 7 partition tests + 4 solve tests pass
+   - Fuel type decomposition: 4 partition tests + 2 solve tests pass
+   - Time window decomposition: 8 partition tests + 4 solve tests pass
+   - Result merging: 7 tests pass
+   - Factory: 6 tests pass
+   - Consistency/integrity: 4 tests pass
+
+Status: COMPLETED - All subtasks in implementation plan are now completed.
+
+=== END SUBTASK 5-2 ===

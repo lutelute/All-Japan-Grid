@@ -18,6 +18,8 @@ Usage::
         add_maintenance_constraints,
         add_reserve_margin_constraints,
         add_storage_soc_constraints,
+        add_transmission_capacity_constraints,
+        add_nodal_balance_constraints,
     )
 
     model = pulp.LpProblem("UC", pulp.LpMinimize)
@@ -32,6 +34,7 @@ from typing import Dict, List, Tuple
 import pulp
 
 from src.model.generator import Generator
+from src.uc.models import Interconnection
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -641,5 +644,126 @@ def add_storage_soc_constraints(
         count,
         n_storage,
         n_skipped,
+    )
+    return count
+
+
+def add_transmission_capacity_constraints(
+    model: pulp.LpProblem,
+    f: Dict[Tuple[str, int], pulp.LpVariable],
+    interconnections: List[Interconnection],
+    timesteps: List[int],
+) -> int:
+    """Add transmission capacity constraints for interconnections.
+
+    Limits the power flow on each interconnection to its rated capacity
+    in both directions:
+
+        ``f[ic,t] <= capacity_mw[ic]``   (upper bound)
+        ``f[ic,t] >= -capacity_mw[ic]``  (lower bound)
+
+    Positive flow represents power transfer from ``from_region`` to
+    ``to_region``; negative flow represents the reverse direction.
+
+    Args:
+        model: PuLP model to add constraints to.
+        f: Flow variables indexed by ``(interconnection_id, timestep)``.
+        interconnections: List of interconnections to constrain.
+        timesteps: List of time period indices.
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    for ic in interconnections:
+        for t in timesteps:
+            # Upper bound: f <= capacity
+            model += (
+                f[(ic.id, t)] <= ic.capacity_mw,
+                f"tx_cap_ub_{ic.id}_t{t}",
+            )
+            count += 1
+            # Lower bound: f >= -capacity
+            model += (
+                f[(ic.id, t)] >= -ic.capacity_mw,
+                f"tx_cap_lb_{ic.id}_t{t}",
+            )
+            count += 1
+    logger.info(
+        "Added %d transmission capacity constraints (%d interconnections × %d timesteps × 2)",
+        count,
+        len(interconnections),
+        len(timesteps),
+    )
+    return count
+
+
+def add_nodal_balance_constraints(
+    model: pulp.LpProblem,
+    p: Dict[Tuple[str, int], pulp.LpVariable],
+    f: Dict[Tuple[str, int], pulp.LpVariable],
+    generators: List[Generator],
+    interconnections: List[Interconnection],
+    timesteps: List[int],
+    regional_demand: Dict[str, List[float]],
+) -> int:
+    """Add nodal (per-region) power balance constraints.
+
+    Ensures that generation plus net imports meets or exceeds demand in
+    each region at every time step:
+
+        ``Σ_{g∈r} p[g,t] + Σ_{ic: to=r} f[ic,t]
+        - Σ_{ic: from=r} f[ic,t] >= demand[r][idx]``  for all *r*, *t*
+
+    Positive flow on an interconnection represents power transfer from
+    ``from_region`` to ``to_region``.
+
+    Args:
+        model: PuLP model to add constraints to.
+        p: Power output variables indexed by ``(generator_id, timestep)``.
+        f: Flow variables indexed by ``(interconnection_id, timestep)``.
+        generators: List of generators available for commitment.
+        interconnections: List of inter-regional interconnections.
+        timesteps: List of time period indices.
+        regional_demand: Mapping of region identifier to demand series
+            (MW) aligned with *timesteps*.
+
+    Returns:
+        Number of constraints added.
+    """
+    # Group generator IDs by region
+    region_gen_ids: Dict[str, List[str]] = {}
+    for g in generators:
+        region_gen_ids.setdefault(g.region, []).append(g.id)
+
+    # Group interconnections by to_region and from_region
+    ic_to_region: Dict[str, List[Interconnection]] = {}
+    ic_from_region: Dict[str, List[Interconnection]] = {}
+    for ic in interconnections:
+        ic_to_region.setdefault(ic.to_region, []).append(ic)
+        ic_from_region.setdefault(ic.from_region, []).append(ic)
+
+    count = 0
+    for region, demands in regional_demand.items():
+        gen_ids = region_gen_ids.get(region, [])
+        inflows = ic_to_region.get(region, [])
+        outflows = ic_from_region.get(region, [])
+
+        for idx, t in enumerate(timesteps):
+            generation = pulp.lpSum(p[(g_id, t)] for g_id in gen_ids)
+            imports = pulp.lpSum(f[(ic.id, t)] for ic in inflows)
+            exports = pulp.lpSum(f[(ic.id, t)] for ic in outflows)
+
+            model += (
+                generation + imports - exports >= demands[idx],
+                f"nodal_bal_{region}_t{t}",
+            )
+            count += 1
+
+    logger.info(
+        "Added %d nodal balance constraints (%d regions × %d timesteps)",
+        count,
+        len(regional_demand),
+        len(timesteps),
     )
     return count

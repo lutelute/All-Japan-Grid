@@ -32,12 +32,20 @@ from src.uc.constraints import (
     add_maintenance_constraints,
     add_min_downtime_constraints,
     add_min_uptime_constraints,
+    add_nodal_balance_constraints,
     add_ramp_constraints,
     add_reserve_margin_constraints,
     add_startup_shutdown_logic,
     add_storage_soc_constraints,
+    add_transmission_capacity_constraints,
 )
-from src.uc.models import GeneratorSchedule, UCParameters, UCResult
+from src.uc.models import (
+    GeneratorSchedule,
+    Interconnection,
+    InterconnectionFlow,
+    UCParameters,
+    UCResult,
+)
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -158,6 +166,23 @@ def solve_uc(params: UCParameters) -> UCResult:
         z_ch = {}
         soc = {}
 
+    # Interconnection flow variables
+    interconnections = params.interconnections
+    f: Dict[Tuple[str, int], pulp.LpVariable] = {}
+    if interconnections:
+        ic_indices = [
+            (ic.id, t) for ic in interconnections for t in timesteps
+        ]
+        f = pulp.LpVariable.dicts(
+            "f", ic_indices, lowBound=None, cat="Continuous"
+        )
+        logger.info(
+            "Created %d flow variables (%d interconnections × %d timesteps)",
+            len(ic_indices),
+            len(interconnections),
+            len(timesteps),
+        )
+
     logger.info(
         "Created %d decision variables (%d generators × %d timesteps × 4)",
         len(indices) * 4,
@@ -173,6 +198,7 @@ def solve_uc(params: UCParameters) -> UCResult:
         model, u, p, v, w, generators, timesteps, demand, params.reserve_margin,
         p_ch=p_ch, p_dis=p_dis, z_ch=z_ch, soc=soc,
         period_duration_h=params.time_horizon.period_duration_h,
+        interconnections=interconnections, f=f,
     )
 
     # --- Select and run solver ---------------------------------------------
@@ -197,6 +223,7 @@ def solve_uc(params: UCParameters) -> UCResult:
         _extract_solution(
             result, model, u, p, v, w, generators, timesteps,
             p_ch=p_ch, p_dis=p_dis, soc=soc, storage_ids=storage_ids,
+            interconnections=interconnections, f=f,
         )
     elif result.status == "Infeasible":
         _diagnose_infeasibility(result, generators, timesteps, demand)
@@ -281,9 +308,27 @@ def _add_all_constraints(
     z_ch: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     soc: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     period_duration_h: float = 1.0,
+    interconnections: Optional[List[Interconnection]] = None,
+    f: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> None:
-    """Add all constraint classes to the model."""
-    add_demand_balance_constraints(model, p, generators, timesteps, demand)
+    """Add all constraint classes to the model.
+
+    When interconnections are present, uses per-region nodal balance
+    constraints instead of system-wide demand balance, and adds
+    transmission capacity constraints on flow variables.
+    """
+    if interconnections and f:
+        # Nodal balance replaces system-wide demand balance
+        regional_demand = _split_demand_by_region(generators, demand)
+        add_nodal_balance_constraints(
+            model, p, f, generators, interconnections, timesteps,
+            regional_demand,
+        )
+        add_transmission_capacity_constraints(
+            model, f, interconnections, timesteps,
+        )
+    else:
+        add_demand_balance_constraints(model, p, generators, timesteps, demand)
     add_capacity_bounds_constraints(model, u, p, generators, timesteps)
     add_startup_shutdown_logic(model, u, v, w, generators, timesteps)
     add_min_uptime_constraints(model, u, v, generators, timesteps)
@@ -297,6 +342,45 @@ def _add_all_constraints(
         model, p, p_ch or {}, p_dis or {}, z_ch or {}, soc or {},
         u, generators, timesteps, period_duration_h,
     )
+
+
+def _split_demand_by_region(
+    generators: List[Generator],
+    demand: List[float],
+) -> Dict[str, List[float]]:
+    """Split total demand proportionally by region capacity.
+
+    Each region receives a fraction of total demand proportional to its
+    share of total generation capacity.  Follows the same pattern as
+    ``_split_demand_by_capacity`` in ``decomposition.py``.
+
+    Args:
+        generators: List of generators with ``region`` and
+            ``capacity_mw`` attributes.
+        demand: System-wide demand values (MW) per period.
+
+    Returns:
+        Mapping of region identifier to demand series for that region.
+    """
+    # Group generators by region
+    groups: Dict[str, List[Generator]] = {}
+    for g in generators:
+        key = g.region if g.region else "_unassigned"
+        groups.setdefault(key, []).append(g)
+
+    total_cap = sum(g.capacity_mw for g in generators)
+    if total_cap <= 0:
+        # Equal split if no capacity info
+        n = len(groups) or 1
+        return {key: [d / n for d in demand] for key in groups}
+
+    result: Dict[str, List[float]] = {}
+    for key, gens in groups.items():
+        group_cap = sum(g.capacity_mw for g in gens)
+        fraction = group_cap / total_cap
+        result[key] = [d * fraction for d in demand]
+
+    return result
 
 
 def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
@@ -357,12 +441,16 @@ def _extract_solution(
     p_dis: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     soc: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     storage_ids: Optional[set] = None,
+    interconnections: Optional[List[Interconnection]] = None,
+    f: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> None:
     """Extract solution values into GeneratorSchedule objects.
 
     Populates the UCResult with per-generator schedules, cost
     breakdowns, and the total system cost.  For storage generators,
-    also extracts SOC, charge, and discharge profiles.
+    also extracts SOC, charge, and discharge profiles.  For
+    interconnections, extracts per-interconnection flow values and
+    logs saturation summary.
     """
     result.total_cost = pulp.value(model.objective)
 
@@ -436,6 +524,40 @@ def _extract_solution(
             len(timesteps),
             schedule.total_cost,
         )
+
+    # --- Extract interconnection flow results ------------------------------
+    if interconnections and f:
+        saturated_ids = []
+        for ic in interconnections:
+            flow_values = []
+            for t in timesteps:
+                flow_val = float(pulp.value(f[(ic.id, t)]))
+                flow_values.append(round(flow_val, 6))
+
+            ic_flow = InterconnectionFlow(
+                interconnection_id=ic.id,
+                flow_mw=flow_values,
+            )
+            result.interconnection_flows.append(ic_flow)
+
+            max_abs_flow = max(abs(fv) for fv in flow_values) if flow_values else 0.0
+            is_saturated = max_abs_flow >= ic.capacity_mw * 0.999
+            if is_saturated:
+                saturated_ids.append(ic.id)
+
+            logger.info(
+                "Interconnection %s: max_flow=%.1f MW / %.1f MW capacity%s",
+                ic.id,
+                max_abs_flow,
+                ic.capacity_mw,
+                " (SATURATED)" if is_saturated else "",
+            )
+
+        if saturated_ids:
+            logger.info(
+                "Saturated interconnections: %s",
+                ", ".join(saturated_ids),
+            )
 
 
 def _diagnose_infeasibility(

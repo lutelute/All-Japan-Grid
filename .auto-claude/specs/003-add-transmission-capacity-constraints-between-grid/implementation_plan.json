@@ -1,0 +1,452 @@
+{
+  "feature": "Add inter-regional transmission capacity constraints to UC solver",
+  "workflow_type": "feature",
+  "workflow_rationale": "This adds new solver capability (flow variables, nodal balance, transmission limits) to the existing UC module. It extends rather than replaces existing code, and all current constraints remain intact. Follows a natural service dependency order: data layer -> constraints -> solver integration -> decomposition/config -> export/regression.",
+  "phases": [
+    {
+      "id": "phase-1-data-layer",
+      "name": "Data Models & Interconnection Loader",
+      "type": "implementation",
+      "description": "Create the Interconnection/InterconnectionFlow dataclasses, extend UCParameters and UCResult, build the YAML loader, and add test factory fixtures. This is the foundation that all subsequent phases depend on.",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add Interconnection and InterconnectionFlow dataclasses to src/uc/models.py. Add 'interconnections' field to UCParameters (List[Interconnection], default empty). Add 'interconnection_flows' field to UCResult (List[InterconnectionFlow], default empty). Interconnection has: id, name_en, from_region, to_region, capacity_mw, type with __post_init__ validation. InterconnectionFlow has: interconnection_id, flow_mw (List[float]) for per-timestep flow values.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/models.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/models.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.models import UCParameters, UCResult; p = UCParameters(); print('interconnections:', p.interconnections); r = UCResult(); print('flows:', r.interconnection_flows); print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Added Interconnection and InterconnectionFlow dataclasses to src/uc/models.py. Added 'interconnections' field to UCParameters and 'interconnection_flows' field to UCResult. All 79 existing model tests pass unchanged. Committed as ed50495.",
+          "updated_at": "2026-03-05T12:29:36.411590+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create src/uc/interconnection_loader.py with InterconnectionLoader class. The load() method reads data/reference/interconnections.yaml using yaml.safe_load(), validates records, and returns List[Interconnection]. Follow the pattern from xml_loader.py (open with encoding='utf-8', log loaded count). Handle FileNotFoundError for missing YAML. Validate that all required fields (id, from_region, to_region, capacity_mw) are present in each record.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [
+            "src/uc/interconnection_loader.py"
+          ],
+          "patterns_from": [
+            "src/uc/xml_loader.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.interconnection_loader import InterconnectionLoader; loader = InterconnectionLoader(); ics = loader.load('data/reference/interconnections.yaml'); print(f'Loaded {len(ics)} interconnections'); assert len(ics) == 9; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Created src/uc/interconnection_loader.py with InterconnectionLoader class. The load() method reads YAML using yaml.safe_load(), validates required fields (id, from_region, to_region, capacity_mw), handles FileNotFoundError, and returns List[Interconnection]. All 9 interconnections load correctly from data/reference/interconnections.yaml. Follows xml_loader.py patterns (encoding='utf-8', get_logger, class structure). Committed as 7730f35.",
+          "updated_at": "2026-03-05T12:31:26.704879+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Add make_interconnection() factory function to tests/conftest.py following the make_generator() pattern. Add basic unit tests in tests/test_uc_interconnection.py: test Interconnection dataclass validation (empty id, negative capacity, same from/to region), test InterconnectionLoader loads all 9 records from YAML, test loader raises FileNotFoundError for missing file. Update src/uc/__init__.py to export Interconnection and InterconnectionFlow.",
+          "service": "main",
+          "files_to_modify": [
+            "tests/conftest.py",
+            "src/uc/__init__.py"
+          ],
+          "files_to_create": [
+            "tests/test_uc_interconnection.py"
+          ],
+          "patterns_from": [
+            "tests/conftest.py",
+            "tests/test_uc_solver.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -m pytest tests/test_uc_interconnection.py -v --tb=short 2>&1 | tail -20",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Added make_interconnection() factory function to tests/conftest.py following the make_generator() pattern. Created tests/test_uc_interconnection.py with 20 unit tests covering: Interconnection dataclass validation (empty id, negative capacity, zero capacity, same from/to region), InterconnectionFlow construction, InterconnectionLoader loads all 9 records from YAML with field verification, loader raises FileNotFoundError for missing file, and package exports (Interconnection and InterconnectionFlow importable from src.uc). Updated src/uc/__init__.py to export Interconnection and InterconnectionFlow. All 373 tests pass with no regressions. Committed as 07d681a.",
+          "updated_at": "2026-03-05T12:33:57.919105+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-constraints",
+      "name": "Constraint Builder Functions",
+      "type": "implementation",
+      "description": "Add the two new constraint builder functions to constraints.py: add_transmission_capacity_constraints() and add_nodal_balance_constraints(). These follow the exact same modular pattern as the existing 9 constraint builders. The existing add_demand_balance_constraints() is preserved unchanged.",
+      "depends_on": [
+        "phase-1-data-layer"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Add add_transmission_capacity_constraints(model, f, interconnections, timesteps) -> int to src/uc/constraints.py. For each interconnection ic and timestep t, add upper bound f[(ic.id, t)] <= ic.capacity_mw and lower bound f[(ic.id, t)] >= -ic.capacity_mw. Constraint names: tx_cap_ub_{ic.id}_t{t} and tx_cap_lb_{ic.id}_t{t}. Log count at INFO. Import Interconnection from models.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/constraints.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/constraints.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.constraints import add_transmission_capacity_constraints; print('Import OK')\"",
+            "expected": "Import OK"
+          },
+          "status": "completed",
+          "notes": "Added add_transmission_capacity_constraints() to src/uc/constraints.py. Imports Interconnection from src.uc.models. For each interconnection and timestep, adds upper bound (f <= capacity_mw) and lower bound (f >= -capacity_mw) constraints with naming pattern tx_cap_ub_{ic.id}_t{t} / tx_cap_lb_{ic.id}_t{t}. Logs constraint count at INFO level. Updated module docstring usage example. Verified import and functional test with 2 interconnections × 3 timesteps = 12 constraints. Committed as 4ad9243.",
+          "updated_at": "2026-03-05T12:36:03.989609+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Add add_nodal_balance_constraints(model, p, f, generators, interconnections, timesteps, regional_demand) -> int to src/uc/constraints.py. Groups generators by generator.region. For each region r and timestep t: sum(p[g,t] for g in region_r) + sum(f[ic,t] for ic where to_region==r) - sum(f[ic,t] for ic where from_region==r) >= demand[r][idx]. regional_demand is Dict[str, List[float]] mapping region to demand series. Constraint names: nodal_bal_{region}_t{t}. Log count at INFO.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/constraints.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/constraints.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.constraints import add_nodal_balance_constraints; print('Import OK')\"",
+            "expected": "Import OK"
+          },
+          "status": "completed",
+          "notes": "Added add_nodal_balance_constraints() to src/uc/constraints.py. Groups generators by region, computes per-region generation + net imports (inflows minus outflows) >= regional demand for each region and timestep. Constraint names follow pattern nodal_bal_{region}_t{t}. Logs count at INFO level. Updated module docstring imports. Verified with import test and functional test (2 regions × 2 timesteps = 4 constraints). Committed as caab8de.",
+          "updated_at": "2026-03-05T12:38:23.929140+00:00"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Add constraint builder unit tests to tests/test_uc_interconnection.py: (1) test_transmission_capacity_constraints: create a small PuLP model with 1 interconnection and 3 timesteps, verify 6 constraints added (2 per timestep), solve and verify flow within bounds. (2) test_nodal_balance_constraints: create 2 regions with 1 generator each + 1 interconnection, verify per-region balance constraints added, solve and verify region demands met. (3) test_flow_sign_convention: verify positive flow goes from from_region to to_region.",
+          "service": "main",
+          "files_to_modify": [
+            "tests/test_uc_interconnection.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "tests/test_uc_solver.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -m pytest tests/test_uc_interconnection.py -v -k 'capacity or nodal or flow_sign' --tb=short 2>&1 | tail -20",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Added 16 constraint builder unit tests to tests/test_uc_interconnection.py: TestTransmissionCapacityConstraints (6 tests - constraint count, naming, upper/lower bound enforcement), TestNodalBalanceConstraints (5 tests - count, naming, demand met, infeasibility, multi-gen per region), TestFlowSignConvention (3 tests - positive/negative flow direction, magnitude matching). All 34 tests in the file pass. No regressions in existing UC tests (126 pass). Committed as 57d6335.",
+          "updated_at": "2026-03-05T12:42:43.503336+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-solver",
+      "name": "Solver Integration",
+      "type": "implementation",
+      "description": "Wire flow variables into the solver: create f[ic,t] continuous variables, integrate new constraints via _add_all_constraints(), extract flow results in _extract_solution(), and add a two-region integration test verifying the full solve pipeline with interconnections.",
+      "depends_on": [
+        "phase-2-constraints"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Modify src/uc/solver.py to create flow variables and wire constraints. In solve_uc(): (1) If params.interconnections is non-empty, create f = pulp.LpVariable.dicts('f', ic_indices, lowBound=None, cat='Continuous') where ic_indices = [(ic.id, t) for ic in interconnections for t in timesteps]. (2) Modify _add_all_constraints() to accept interconnections and f; when interconnections present, call add_nodal_balance_constraints() INSTEAD of add_demand_balance_constraints(), plus add_transmission_capacity_constraints(). When no interconnections, call add_demand_balance_constraints() as before. (3) Pass regional_demand dict to nodal balance - compute from params.demand by splitting proportionally by region capacity (reuse _split_demand_by_capacity pattern from decomposition.py, or accept regional_demand as UCParameters field).",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/solver.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/solver.py",
+            "src/uc/decomposition.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.solver import solve_uc; from src.uc.models import UCParameters; print('solver import OK')\"",
+            "expected": "solver import OK"
+          },
+          "status": "completed",
+          "notes": "Modified src/uc/solver.py to create flow variables and wire interconnection constraints. In solve_uc(): (1) When params.interconnections is non-empty, creates f = pulp.LpVariable.dicts('f', ic_indices, lowBound=None, cat='Continuous') for all interconnection-timestep pairs. (2) Modified _add_all_constraints() to accept interconnections and f as optional kwargs; when interconnections present, calls add_nodal_balance_constraints() INSTEAD of add_demand_balance_constraints(), plus add_transmission_capacity_constraints(). When no interconnections, calls add_demand_balance_constraints() as before (backward compatible). (3) Added _split_demand_by_region() helper to compute regional_demand by splitting proportionally by region capacity, reusing the pattern from decomposition.py's _split_demand_by_capacity. All 47 existing solver tests, 34 interconnection tests, and 53 decomposition tests pass unchanged. Committed as 3293352.",
+          "updated_at": "2026-03-05T12:46:16.583651+00:00"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Add flow result extraction to solver.py _extract_solution(). When interconnections present: iterate f[ic,t] variables, extract float values, create InterconnectionFlow objects for each interconnection, and add to result.interconnection_flows. Log summary of flow results (max flow, which interconnections are saturated). Also update src/uc/__init__.py exports if not already done.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/solver.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/solver.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.solver import solve_uc; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Added flow result extraction to solver.py _extract_solution(). Imported InterconnectionFlow from models. Added interconnections and f as optional keyword parameters to _extract_solution(). When interconnections present: iterates f[ic,t] variables, extracts float values with round(,6), creates InterconnectionFlow objects for each interconnection, and adds to result.interconnection_flows. Logs per-interconnection summary (max flow, capacity, SATURATED flag for >99.9% utilization). Updated solve_uc() call site to pass interconnections=interconnections, f=f. src/uc/__init__.py already exports InterconnectionFlow (no changes needed). All 387 tests pass with no regressions. Committed as 39a2111.",
+          "updated_at": "2026-03-05T12:49:27.648306+00:00"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Add two-region integration test to tests/test_uc_interconnection.py: test_two_region_with_interconnection. Create 2 generators in 'tokyo' (300 MW each) and 1 generator in 'chubu' (200 MW). Set tokyo demand=500 MW, chubu demand=250 MW (chubu has shortfall). Add 1 interconnection tokyo->chubu with capacity 100 MW. Solve and verify: (1) Optimal status, (2) flow from tokyo to chubu (positive f value), (3) flow <= 100 MW capacity bound, (4) both regional demands met. Also add test_solve_without_interconnections_unchanged: verify solve_uc with no interconnections produces identical results to current behavior (regression).",
+          "service": "main",
+          "files_to_modify": [
+            "tests/test_uc_interconnection.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "tests/test_uc_solver.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -m pytest tests/test_uc_interconnection.py -v -k 'two_region or without_interconnection' --tb=short 2>&1 | tail -20",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Added two integration tests to tests/test_uc_interconnection.py: (1) test_two_region_with_interconnection: creates 2 cheap generators in tokyo (300 MW each, 10 $/MWh) and 1 expensive generator in chubu (200 MW, 100 $/MWh) with a 100 MW interconnection. The proportional demand split (750 MW total → tokyo=562.5, chubu=187.5) creates an economic incentive for the optimizer to export from cheap tokyo to expensive chubu. Verifies: Optimal status, positive flow from tokyo to chubu, flow ≤ 100 MW capacity bound, both regional demands met. (2) test_solve_without_interconnections_unchanged: regression test with 3-generator setup (matching test_uc_solver.py patterns), verifies solve_uc with empty interconnections produces Optimal status, no interconnection flows, demand balance at all timesteps, and cost consistency. All 36 interconnection tests and 126 existing UC tests pass. Committed as 80167b4.",
+          "updated_at": "2026-03-05T12:57:33.462947+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-decomposition-config",
+      "name": "Decomposition Fallback & Configuration",
+      "type": "implementation",
+      "description": "Add interconnection-aware fallback logic to RegionalDecomposer and the interconnection toggle to uc_config.yaml. When interconnections are present in UCParameters, RegionalDecomposer must return the full national problem as a single partition instead of decomposing by region.",
+      "depends_on": [
+        "phase-3-solver"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Modify RegionalDecomposer.partition() in src/uc/decomposition.py. At the top of partition(), add a check: if params.interconnections is non-empty, log an INFO message explaining the fallback ('Interconnections present: bypassing regional decomposition for national MILP') and return [params]. This preserves all existing decomposition behavior when no interconnections are present. Do NOT modify the Decomposer base class or any other decomposer.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/decomposition.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/decomposition.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.decomposition import RegionalDecomposer; print('Import OK')\"",
+            "expected": "Import OK"
+          },
+          "status": "completed",
+          "notes": "Modified RegionalDecomposer.partition() in src/uc/decomposition.py. Added interconnection check at the top of partition(): when params.interconnections is non-empty, logs INFO message (\"Interconnections present: bypassing regional decomposition for national MILP\") and returns [params]. Preserves all existing decomposition behavior when no interconnections are present. Did NOT modify the Decomposer base class or any other decomposer. All 53 existing decomposition tests pass unchanged. Functional tests verify fallback returns single partition containing the original params. Committed as d5c2c09.",
+          "updated_at": "2026-03-05T12:59:15.270822+00:00"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Add interconnection configuration section to config/uc_config.yaml. Add at the end of the file: 'interconnection:' section with 'enabled: false' (default off to preserve existing behavior), 'data_path: data/reference/interconnections.yaml', and 'regional_demand_path: config/regional_demand.yaml'. Document each field with YAML comments explaining usage.",
+          "service": "main",
+          "files_to_modify": [
+            "config/uc_config.yaml"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "config/uc_config.yaml"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"import yaml; cfg = yaml.safe_load(open('config/uc_config.yaml')); ic = cfg.get('interconnection', {}); print('enabled:', ic.get('enabled')); print('data_path:', ic.get('data_path')); print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Added interconnection configuration section to config/uc_config.yaml. Added at the end of the file: 'interconnection:' section with 'enabled: false' (default off to preserve existing behavior), 'data_path: data/reference/interconnections.yaml', and 'regional_demand_path: config/regional_demand.yaml'. Each field documented with YAML comments explaining usage. Verified via yaml.safe_load() parsing. Committed as df4e784.",
+          "updated_at": "2026-03-05T13:00:50.136420+00:00"
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Add decomposition and config tests to tests/test_uc_interconnection.py: (1) test_decomposition_fallback_with_interconnections: create UCParameters with 2-region generators + interconnections, verify RegionalDecomposer.partition() returns [params] (single partition). (2) test_decomposition_without_interconnections_unchanged: verify RegionalDecomposer.partition() still decomposes normally when interconnections list is empty. (3) test_config_toggle_disabled: verify that with interconnection.enabled=false, interconnections are not loaded/used. (4) test_regional_decomposer_solve_with_interconnections: verify solve_decomposed() falls back to national MILP and produces Optimal result.",
+          "service": "main",
+          "files_to_modify": [
+            "tests/test_uc_interconnection.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "tests/test_uc_decomposition.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -m pytest tests/test_uc_interconnection.py -v -k 'decomposition or config' --tb=short 2>&1 | tail -20",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Added 12 new tests across 3 test classes to tests/test_uc_interconnection.py: (1) TestDecompositionFallback (5 tests): verify RegionalDecomposer.partition() returns [params] when interconnections present, preserves all generators and interconnections, and still decomposes normally when no interconnections present or when interconnections field defaults to empty. (2) TestConfigToggle (3 tests): verify uc_config.yaml has interconnection.enabled=false by default, data_path points to valid YAML file, and when enabled=true interconnections can be loaded from data_path. (3) TestRegionalDecomposerSolveWithInterconnections (4 tests): verify solve_decomposed() falls back to national MILP producing Optimal result with all generators present, correct schedule lengths, and single partition produces flow results via solve_uc. All 48 tests in test_uc_interconnection.py pass. All 179 existing UC tests pass unchanged (no regressions). Committed as e14c0df.",
+          "updated_at": "2026-03-05T13:04:55.024623+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-5-export-regression",
+      "name": "Result Export & Regression Verification",
+      "type": "implementation",
+      "description": "Update the result exporter to include interconnection flow data in XML and CSV output. Run the complete existing test suite to verify no regressions in the 9-constraint UC formulation.",
+      "depends_on": [
+        "phase-4-decomposition-config"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Update src/uc/result_exporter.py to include flow data in XML and CSV exports. For XML: add an InterconnectionFlows container element under UCResult with InterconnectionFlow child elements (attributes: interconnection_id, flow values per period). For CSV: add flow rows to a separate section or separate CSV file (interconnection_flows.csv with columns: interconnection_id, period, flow_mw). Only export flow data when interconnection_flows is non-empty.",
+          "service": "main",
+          "files_to_modify": [
+            "src/uc/result_exporter.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "src/uc/result_exporter.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -c \"from src.uc.result_exporter import export_uc_result_xml, export_uc_result_csv; print('Export imports OK')\"",
+            "expected": "Export imports OK"
+          },
+          "status": "completed",
+          "notes": "Updated src/uc/result_exporter.py to include interconnection flow data in XML and CSV exports. For XML: added InterconnectionFlows container element under UCResult with InterconnectionFlow child elements (attributes: interconnection_id) containing FlowPeriod sub-elements (attributes: t, flow_mw). Placed between CostBreakdown and Diagnostics. For CSV: added _export_interconnection_flows_csv() that writes a separate interconnection_flows.csv file (columns: interconnection_id, period, flow_mw) to the same directory as the main CSV. Both exports are conditional on interconnection_flows being non-empty — no output when empty. Imported InterconnectionFlow from models. All 401 tests pass with no regressions. Committed as cd3a60d.",
+          "updated_at": "2026-03-05T13:08:10.663293+00:00"
+        },
+        {
+          "id": "subtask-5-2",
+          "description": "Regression verification: run the complete existing test suite to confirm no regressions. All tests in test_uc_solver.py, test_uc_decomposition.py, test_uc_models.py, and test_uc_xml_loader.py must pass unchanged. Run the full interconnection test suite. Verify: (1) 9 existing constraint builders produce identical results, (2) storage SOC constraints unaffected, (3) decomposition strategies work as before when no interconnections present.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && python -m pytest tests/ -v --tb=short 2>&1 | tail -30",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Full regression verification passed. All 401 tests pass (2 skipped, 1 warning unrelated to changes). Breakdown: test_uc_models.py: 79 passed, test_uc_xml_loader.py: 52 passed + 2 skipped, test_uc_solver.py: 47 passed (including 13 storage SOC tests), test_uc_decomposition.py: 53 passed, test_uc_interconnection.py: 48 passed (all new). Verified: (1) 9 existing constraint builders produce identical results (demand balance, capacity bounds, startup/shutdown, min-uptime, min-downtime, ramp rates, maintenance, reserve margin, storage SOC), (2) storage SOC constraints unaffected (pumped hydro and battery tests all pass), (3) decomposition strategies work as before when no interconnections present (regional, fuel-type, time-window all pass).",
+          "updated_at": "2026-03-05T13:15:00.000000+00:00"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 5,
+    "total_subtasks": 14,
+    "services_involved": [
+      "main"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution (single service, tight dependency chain between phases)"
+    },
+    "startup_command": "cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid && pip install -r requirements.txt && python -m pytest tests/ -v"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "per_phase",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All existing UC tests pass without modification (test_uc_solver.py, test_uc_decomposition.py, test_uc_models.py, test_uc_xml_loader.py)",
+      "InterconnectionLoader loads all 9 OCCTO interconnections from YAML",
+      "Flow variables bounded by +-capacity_mw in all solutions",
+      "Nodal balance satisfied at every region and timestep",
+      "RegionalDecomposer falls back to national MILP when interconnections present",
+      "Config toggle interconnection.enabled=false produces identical results to pre-change behavior",
+      "Two-region integration test solves optimally with correct flow"
+    ],
+    "verification_steps": [
+      {
+        "name": "Existing UC Tests (Regression)",
+        "command": "python -m pytest tests/test_uc_solver.py tests/test_uc_decomposition.py tests/test_uc_models.py tests/test_uc_xml_loader.py -v --tb=short",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "New Interconnection Tests",
+        "command": "python -m pytest tests/test_uc_interconnection.py -v --tb=short",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Full Test Suite",
+        "command": "python -m pytest tests/ -v --tb=short",
+        "expected_outcome": "All tests pass, no regressions",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Medium risk due to modification of core solver constraint logic. The biggest risk is in the demand balance constraint switch (system-wide vs nodal) and ensuring existing behavior is preserved when interconnections are disabled. Unit tests for each new constraint builder plus integration tests for the full solve pipeline provide adequate coverage."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_uc_interconnection.py -v"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_uc_interconnection.py -v -k 'two_region or decomposition'"
+      ],
+      "services_to_test": [
+        "main"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    }
+  },
+  "qa_signoff": null,
+  "status": "human_review",
+  "planStatus": "review",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
+  "updated_at": "2026-03-05T13:10:47.812Z",
+  "lastEvent": {
+    "eventId": "cbcb4119-c51f-439d-8d8e-fbc4ce82f636",
+    "sequence": 0,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-05T12:26:52.254462+00:00"
+  },
+  "last_updated": "2026-03-05T13:08:10.663298+00:00",
+  "reviewReason": "completed"
+}
