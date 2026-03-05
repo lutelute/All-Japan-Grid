@@ -100,6 +100,10 @@ function initMap() {
         maxZoom: 19,
     }).addTo(map);
 
+    // Custom panes for z-ordering: substations & plants above lines
+    map.createPane("substationPane").style.zIndex = 450;
+    map.createPane("plantPane").style.zIndex = 460;
+
     addVoltageLegend();
 }
 
@@ -214,16 +218,18 @@ function renderLayers() {
                 }),
             };
             substationLayer = L.geoJSON(subPoints, {
+                pane: "substationPane",
                 pointToLayer: function (feature, latlng) {
                     var kv = feature.properties._voltage_kv || 0;
                     var bracket = voltageKvToBracket(kv);
-                    var radius = bracket >= 500 ? 5 : bracket >= 275 ? 4 : 3;
+                    var radius = bracket >= 500 ? 7 : bracket >= 275 ? 6 : 5;
                     return L.circleMarker(latlng, {
+                        pane: "substationPane",
                         radius: radius,
                         fillColor: voltageColor(kv),
                         color: "#fff",
-                        weight: 0.5,
-                        fillOpacity: 0.8,
+                        weight: 1,
+                        fillOpacity: 0.9,
                     });
                 },
                 onEachFeature: function (feature, layer) {
@@ -244,6 +250,7 @@ function renderLayers() {
                     } catch (e) { console.warn("Sub popup error:", e); }
                 },
             }).addTo(map);
+            console.log("Substations rendered:", substationLayer.getLayers().length, "markers from", subPoints.features.length, "features");
         } catch (e) { console.error("Substations render error:", e); }
     }
 
@@ -252,6 +259,7 @@ function renderLayers() {
         try {
             var plantData = filterByRegion(rawPlantData, selectedRegion);
             plantLayer = L.geoJSON(plantData, {
+                pane: "plantPane",
                 pointToLayer: function (feature, latlng) {
                     var p = feature.properties;
                     var fuel = p.fuel_type || "unknown";
@@ -259,6 +267,7 @@ function renderLayers() {
                     var mw = p.capacity_mw || 0;
                     var radius = mw >= 1000 ? 7 : mw >= 100 ? 5 : mw > 0 ? 4 : 3;
                     return L.circleMarker(latlng, {
+                        pane: "plantPane",
                         radius: radius,
                         fillColor: color,
                         color: "#000",
