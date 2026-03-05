@@ -239,7 +239,7 @@
           },
           "status": "completed",
           "notes": "Created ReconstructionPipeline class orchestrating Isolator -> Simplifier/Reconnector -> DataSynthesizer chain. PipelineResult dataclass with summary property aggregates isolation, simplification/reconnection, and synthesis results. Pipeline is idempotent and reproducible (same seed = same output). Supports deep-copy mode for safety, optional GridDatabase integration. Verification and comprehensive e2e test pass (simplify mode, reconnect mode, reproducibility, summary validation).",
-          "updated_at": "2026-03-05T13:00:00.000000+00:00"
+          "updated_at": "2026-03-05T12:56:11.849737+00:00"
         },
         {
           "id": "subtask-4-2",
@@ -257,8 +257,9 @@
             "command": "PYTHONPATH=. python -c \"from src.converter.pandapower_builder import PandapowerBuilder; builder = PandapowerBuilder(); print('OK: pandapower_builder still imports correctly after modification')\"",
             "expected": "OK: pandapower_builder still imports correctly after modification"
           },
-          "status": "pending",
-          "notes": "Add optional reconstruction_config parameter to build() method. When provided, run reconstruction pipeline after initial build. Backward compatible - existing callers without the parameter work unchanged."
+          "status": "completed",
+          "notes": "Updated pandapower_builder.py with backward-compatible reconstruction support. Changes: (1) Added Optional[Any] reconstruction_config parameter to build() method. (2) Added reconstruction_result: Optional[Any] field to BuildResult dataclass. (3) Updated BuildResult.summary to include reconstruction summary when present. (4) Added _run_reconstruction() private method with lazy import of ReconstructionPipeline to avoid circular deps. (5) Pipeline runs in-place (copy_network=False) since builder owns the network. (6) Updated module and class docstrings with reconstruction usage examples. All backward compatible — existing callers without reconstruction_config work unchanged. Verification passes.",
+          "updated_at": "2026-03-05T12:59:40.892810+00:00"
         },
         {
           "id": "subtask-4-3",
@@ -559,12 +560,12 @@
   "planStatus": "in_progress",
   "xstateState": "coding",
   "executionPhase": "coding",
-  "updated_at": "2026-03-05T12:52:55.669Z",
+  "updated_at": "2026-03-05T12:56:48.645Z",
   "lastEvent": {
     "eventId": "96a6909e-5bc3-4319-834a-d749d0d8f49e",
     "sequence": 0,
     "type": "PLANNING_COMPLETE",
     "timestamp": "2026-03-05T12:15:05.064039+00:00"
   },
-  "last_updated": "2026-03-05T12:52:16.084571+00:00"
+  "last_updated": "2026-03-05T12:59:40.892814+00:00"
 }
