@@ -308,51 +308,44 @@ async def main():
         }""")
         await asyncio.sleep(1)
 
-        # Hide sidebar
+        # Hide sidebar and any markers (pointer in center of Japan)
         await page.evaluate("""() => {
             document.getElementById("sidebar").style.display = "none";
+            document.querySelectorAll(".leaflet-marker-icon, .leaflet-marker-shadow").forEach(el => el.style.display = "none");
             if (typeof map !== "undefined") map.invalidateSize();
         }""")
         await asyncio.sleep(1)
 
         frame_num = 0
-        prev_key = "all"
 
         for region in REGIONS:
             rid = region["id"]
             key = rid or "all"
             print(f"  {region['label']}...")
 
-            # Navigate
+            # Navigate and wait for tiles to fully load
             if rid:
                 await page.evaluate(f'selectRegion("{rid}")')
             else:
                 await page.evaluate('selectRegion(null); map.setView([35.5, 136.0], 5)')
 
-            # Transition frames: switch Ybus at midpoint to sync with map zoom
-            mid = TRANSITION // 2 - 1  # switch Ybus 1 frame earlier to match map
-            for i in range(TRANSITION):
-                await asyncio.sleep(1000 / GIF_FPS / 1000)
-                map_png = os.path.join(map_dir, f"frame_{frame_num:05d}.png")
-                await page.screenshot(path=map_png)
-                combined = os.path.join(FRAME_DIR, f"frame_{frame_num:05d}.png")
-                ybus_key = prev_key if i < mid else key
-                combine_side_by_side(map_png, ybus_cache[ybus_key], combined)
-                frame_num += 1
+            # Hide markers again (selectRegion may add them)
+            await page.evaluate("""() => {
+                document.querySelectorAll(".leaflet-marker-icon, .leaflet-marker-shadow").forEach(el => el.style.display = "none");
+            }""")
 
-            # Wait for tiles
-            await asyncio.sleep(1.5)
+            # Wait for zoom animation + tile loading
+            await asyncio.sleep(3)
 
-            # Hold frames
+            # Take one stable screenshot, reuse for all hold frames
+            map_png = os.path.join(map_dir, f"region_{key}.png")
+            await page.screenshot(path=map_png)
+
+            # Generate hold frames (map + Ybus perfectly synced)
             for i in range(region["hold"]):
-                map_png = os.path.join(map_dir, f"frame_{frame_num:05d}.png")
-                await page.screenshot(path=map_png)
                 combined = os.path.join(FRAME_DIR, f"frame_{frame_num:05d}.png")
                 combine_side_by_side(map_png, ybus_cache[key], combined)
                 frame_num += 1
-                await asyncio.sleep(1000 / GIF_FPS / 1000)
-
-            prev_key = key
 
         await browser.close()
 
