@@ -109,7 +109,11 @@ var rawPlantData = null;
 var enrichedSubData = null;
 var enrichedGenData = null;
 
-// Current state
+// Per-tab state
+var tabState = {
+    voltage: { minKv: 275, region: "all" },
+    region:  { minKv: 0,   region: "all" },
+};
 var selectedRegion = "all";
 var plantFilter = "utility";
 var colorMode = "voltage"; // "voltage" or "region"
@@ -196,19 +200,19 @@ function initTabs() {
             var panel = document.getElementById(tabId);
             if (panel) panel.classList.add("active");
 
+            // Save current tab state before switching
+            tabState[colorMode].region = selectedRegion;
+
             // Switch color mode based on tab
             var newMode = (tabId === "tab-area") ? "region" : "voltage";
             if (newMode !== colorMode) {
                 colorMode = newMode;
+                // Restore saved state for the new tab
+                selectedRegion = tabState[newMode].region;
+                setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#region-list");
+                setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#area-region-list");
                 updateLegend();
-                if (newMode === "region") {
-                    // Load all voltages for region view
-                    loadData(0);
-                } else {
-                    // Restore voltage filter from dropdown
-                    var sel = document.getElementById("min-kv");
-                    loadData(sel ? parseFloat(sel.value) : 275);
-                }
+                loadData(tabState[newMode].minKv);
             }
         });
     });
@@ -506,6 +510,7 @@ function zoomToRegion(region) {
 
 function selectRegion(region) {
     selectedRegion = region || "all";
+    tabState[colorMode].region = selectedRegion;
     // Update active button in both region lists
     setActiveRegionBtn(region, "#region-list");
     setActiveRegionBtn(region, "#area-region-list");
@@ -871,11 +876,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Voltage filter
+    // Voltage filter (系統図 tab)
     var minKvSelect = document.getElementById("min-kv");
     if (minKvSelect) {
         minKvSelect.addEventListener("change", function () {
-            loadData(parseFloat(this.value));
+            var v = parseFloat(this.value);
+            tabState.voltage.minKv = v;
+            loadData(v);
+        });
+    }
+
+    // Voltage filter (エリア tab)
+    var areaMinKvSelect = document.getElementById("area-min-kv");
+    if (areaMinKvSelect) {
+        areaMinKvSelect.addEventListener("change", function () {
+            var v = parseFloat(this.value);
+            tabState.region.minKv = v;
+            loadData(v);
         });
     }
 
