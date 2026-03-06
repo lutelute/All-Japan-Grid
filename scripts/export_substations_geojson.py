@@ -21,7 +21,7 @@ from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-DATA_DIR = "data/osm"
+DATA_DIR = "data"
 OUTPUT_PATH = "docs/data/substations.geojson"
 
 REGIONS = [
