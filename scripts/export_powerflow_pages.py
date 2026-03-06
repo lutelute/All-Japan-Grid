@@ -4,6 +4,9 @@
 Runs DC and AC power flow on all 10 regions and exports per-region results
 containing bus voltage, line loading, and generation data as GeoJSON files.
 
+Preserves original OSM line geometry (multi-point polylines) and also exports
+transformer connections as lines.
+
 Usage::
 
     PYTHONPATH=. python scripts/export_powerflow_pages.py
@@ -26,12 +29,68 @@ from examples.run_powerflow_all import (
     fix_zero_voltages, insert_transformers, fix_topology,
     select_slack_bus, balance_power, scale_line_ratings,
     prune_dc_infeasible, run_powerflow,
+    _get_line_coords, _get_centroid, _find_nearest_sub, _parse_voltage_kv,
 )
 from src.converter.pandapower_builder import PandapowerBuilder
 from src.powerflow.load_estimator import estimate_loads, load_demand_config
 
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "data", "powerflow")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+
+def _load_osm_line_geometries(region):
+    """Load original OSM line geometries and build lookup by (from_sub, to_sub).
+
+    Returns dict mapping (from_sub_id, to_sub_id) -> list of [lon, lat] coords.
+    Also returns the reverse mapping for lines matched in opposite direction.
+    """
+    lines_path = os.path.join(DATA_DIR, f"{region}_lines.geojson")
+    subs_path = os.path.join(DATA_DIR, f"{region}_substations.geojson")
+    if not os.path.exists(lines_path) or not os.path.exists(subs_path):
+        return {}
+
+    # Rebuild sub_coords exactly as build_network_from_geojson does
+    with open(subs_path, encoding="utf-8") as f:
+        subs_data = json.load(f)
+
+    sub_coords = []
+    for i, feat in enumerate(subs_data["features"]):
+        lat, lon = _get_centroid(feat)
+        if lat is None:
+            continue
+        sub_id = f"{region}_sub_{i}"
+        sub_coords.append((lat, lon, sub_id))
+
+    # Load lines and match endpoints
+    with open(lines_path, encoding="utf-8") as f:
+        lines_data = json.load(f)
+
+    geom_lookup = {}  # (from_sub_id, to_sub_id) -> [[lon, lat], ...]
+    for i, feat in enumerate(lines_data["features"]):
+        coords = _get_line_coords(feat)
+        if len(coords) < 2:
+            continue
+
+        start_lat, start_lon = coords[0]
+        end_lat, end_lon = coords[-1]
+
+        from_sub_id = _find_nearest_sub(start_lat, start_lon, sub_coords, 50.0)
+        to_sub_id = _find_nearest_sub(end_lat, end_lon, sub_coords, 50.0)
+
+        if not from_sub_id or not to_sub_id or from_sub_id == to_sub_id:
+            continue
+
+        # Convert (lat, lon) -> [lon, lat] for GeoJSON
+        geojson_coords = [[lon, lat] for lat, lon in coords]
+
+        key = (from_sub_id, to_sub_id)
+        rev_key = (to_sub_id, from_sub_id)
+        # Store first match; don't overwrite (some parallel lines)
+        if key not in geom_lookup and rev_key not in geom_lookup:
+            geom_lookup[key] = geojson_coords
+
+    return geom_lookup
 
 
 def build_and_solve(region, demand_cfg):
@@ -116,6 +175,51 @@ def _parse_bus_coords(net, idx):
     return None, None
 
 
+def _build_bus_name_to_sub_id(net, region):
+    """Build mapping from pandapower bus name -> sub_id for geometry lookup.
+
+    Bus names are set from substation names during build_network_from_geojson,
+    and sub_ids follow the pattern '{region}_sub_{i}'.
+    The bus name in pandapower == substation name. We need the sub_id.
+    Since we can't recover the exact sub index from the name alone,
+    we use the bus name stored in net.bus and match it to the original
+    substation data by coordinate proximity.
+    """
+    # Build bus_idx -> sub_id mapping using bus coordinates
+    subs_path = os.path.join(DATA_DIR, f"{region}_substations.geojson")
+    if not os.path.exists(subs_path):
+        return {}
+
+    with open(subs_path, encoding="utf-8") as f:
+        subs_data = json.load(f)
+
+    # Build sub coordinate list: (lat, lon, sub_id)
+    sub_locs = []
+    for i, feat in enumerate(subs_data["features"]):
+        lat, lon = _get_centroid(feat)
+        if lat is None:
+            continue
+        sub_locs.append((lat, lon, f"{region}_sub_{i}"))
+
+    # For each bus, find nearest sub by coordinate
+    bus_to_sub = {}
+    for bus_idx in net.bus.index:
+        lon, lat = _parse_bus_coords(net, bus_idx)
+        if lon is None:
+            continue
+        best_dist = float("inf")
+        best_sub = None
+        for slat, slon, sid in sub_locs:
+            d = (lat - slat) ** 2 + (lon - slon) ** 2
+            if d < best_dist:
+                best_dist = d
+                best_sub = sid
+        if best_sub and best_dist < 0.001:  # ~100m threshold
+            bus_to_sub[bus_idx] = best_sub
+
+    return bus_to_sub
+
+
 def export_bus_geojson(net, mode_label):
     """Export bus results as GeoJSON FeatureCollection."""
     features = []
@@ -144,9 +248,12 @@ def export_bus_geojson(net, mode_label):
     return {"type": "FeatureCollection", "features": features}
 
 
-def export_line_geojson(net):
-    """Export line results as GeoJSON FeatureCollection."""
+def export_line_geojson(net, region, geom_lookup, bus_to_sub):
+    """Export line results as GeoJSON FeatureCollection with original OSM geometry."""
     features = []
+    geom_hits = 0
+    geom_misses = 0
+
     for idx in net.line.index:
         if not net.line.at[idx, "in_service"]:
             continue
@@ -166,11 +273,29 @@ def export_line_geojson(net):
             loading = float(net.res_line.at[idx, "loading_percent"]) if "loading_percent" in net.res_line.columns else 0.0
             p_mw = float(net.res_line.at[idx, "p_from_mw"]) if "p_from_mw" in net.res_line.columns else 0.0
 
+        # Try to find original OSM geometry
+        coords = None
+        from_sub = bus_to_sub.get(from_bus)
+        to_sub = bus_to_sub.get(to_bus)
+        if from_sub and to_sub:
+            coords = geom_lookup.get((from_sub, to_sub))
+            if coords is None:
+                # Try reverse direction
+                rev = geom_lookup.get((to_sub, from_sub))
+                if rev is not None:
+                    coords = list(reversed(rev))
+
+        if coords:
+            geom_hits += 1
+        else:
+            geom_misses += 1
+            coords = [[from_lon, from_lat], [to_lon, to_lat]]
+
         features.append({
             "type": "Feature",
             "geometry": {
                 "type": "LineString",
-                "coordinates": [[from_lon, from_lat], [to_lon, to_lat]]
+                "coordinates": coords
             },
             "properties": {
                 "name": str(net.line.at[idx, "name"]),
@@ -179,7 +304,56 @@ def export_line_geojson(net):
             }
         })
 
-    return {"type": "FeatureCollection", "features": features}
+    # Also export transformers as line features
+    if hasattr(net, "trafo") and len(net.trafo) > 0:
+        for idx in net.trafo.index:
+            if not net.trafo.at[idx, "in_service"]:
+                continue
+
+            hv_bus = net.trafo.at[idx, "hv_bus"]
+            lv_bus = net.trafo.at[idx, "lv_bus"]
+
+            hv_lon, hv_lat = _parse_bus_coords(net, hv_bus)
+            lv_lon, lv_lat = _parse_bus_coords(net, lv_bus)
+
+            if hv_lon is None or lv_lon is None:
+                continue
+
+            loading = 0.0
+            p_mw = 0.0
+            if hasattr(net, "res_trafo") and idx in net.res_trafo.index:
+                loading = float(net.res_trafo.at[idx, "loading_percent"]) if "loading_percent" in net.res_trafo.columns else 0.0
+                p_mw = float(net.res_trafo.at[idx, "p_hv_mw"]) if "p_hv_mw" in net.res_trafo.columns else 0.0
+
+            # Try original geometry for transformer (was originally a line)
+            coords = None
+            from_sub = bus_to_sub.get(hv_bus)
+            to_sub = bus_to_sub.get(lv_bus)
+            if from_sub and to_sub:
+                coords = geom_lookup.get((from_sub, to_sub))
+                if coords is None:
+                    rev = geom_lookup.get((to_sub, from_sub))
+                    if rev is not None:
+                        coords = list(reversed(rev))
+
+            if coords is None:
+                coords = [[hv_lon, hv_lat], [lv_lon, lv_lat]]
+
+            features.append({
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": coords
+                },
+                "properties": {
+                    "name": str(net.trafo.at[idx, "name"]),
+                    "loading_pct": round(min(loading, 200), 1),
+                    "p_mw": round(p_mw, 1),
+                    "is_trafo": True,
+                }
+            })
+
+    return {"type": "FeatureCollection", "features": features}, geom_hits, geom_misses
 
 
 def main():
@@ -195,10 +369,14 @@ def main():
 
         net_dc, dc_result, net_ac, ac_result, build_info = result
 
+        # Load original OSM line geometries for this region
+        geom_lookup = _load_osm_line_geometries(region)
+
         # Export DC results
         if dc_result["converged"]:
+            bus_to_sub_dc = _build_bus_name_to_sub_id(net_dc, region)
             dc_buses = export_bus_geojson(net_dc, "dc")
-            dc_lines = export_line_geojson(net_dc)
+            dc_lines, dc_hits, dc_misses = export_line_geojson(net_dc, region, geom_lookup, bus_to_sub_dc)
             with open(os.path.join(OUTPUT_DIR, f"{region}_dc_buses.geojson"), "w") as f:
                 json.dump(dc_buses, f, separators=(",", ":"))
             with open(os.path.join(OUTPUT_DIR, f"{region}_dc_lines.geojson"), "w") as f:
@@ -206,8 +384,9 @@ def main():
 
         # Export AC results
         if ac_result["converged"]:
+            bus_to_sub_ac = _build_bus_name_to_sub_id(net_ac, region)
             ac_buses = export_bus_geojson(net_ac, "ac")
-            ac_lines = export_line_geojson(net_ac)
+            ac_lines, ac_hits, ac_misses = export_line_geojson(net_ac, region, geom_lookup, bus_to_sub_ac)
             with open(os.path.join(OUTPUT_DIR, f"{region}_ac_buses.geojson"), "w") as f:
                 json.dump(ac_buses, f, separators=(",", ":"))
             with open(os.path.join(OUTPUT_DIR, f"{region}_ac_lines.geojson"), "w") as f:
@@ -216,6 +395,24 @@ def main():
         dc_status = "OK" if dc_result["converged"] else "FAIL"
         ac_status = "OK" if ac_result["converged"] else "FAIL"
         ac_solver = ac_result.get("solver", "-")
+
+        # Report geometry match rate
+        if ac_result["converged"]:
+            total = ac_hits + ac_misses
+            rate = (ac_hits / total * 100) if total > 0 else 0
+            geom_info = f"geom={ac_hits}/{total}({rate:.0f}%)"
+        elif dc_result["converged"]:
+            total = dc_hits + dc_misses
+            rate = (dc_hits / total * 100) if total > 0 else 0
+            geom_info = f"geom={dc_hits}/{total}({rate:.0f}%)"
+        else:
+            geom_info = ""
+
+        n_trafo_feats = 0
+        if ac_result["converged"] and hasattr(net_ac, "trafo"):
+            n_trafo_feats = len(net_ac.trafo[net_ac.trafo["in_service"]])
+        elif dc_result["converged"] and hasattr(net_dc, "trafo"):
+            n_trafo_feats = len(net_dc.trafo[net_dc.trafo["in_service"]])
 
         summary[region] = {
             "name_ja": REGION_JA[region],
@@ -233,7 +430,7 @@ def main():
             **build_info,
         }
 
-        print(f"DC={dc_status} AC={ac_status}")
+        print(f"DC={dc_status} AC={ac_status} trafos={n_trafo_feats} {geom_info}")
 
     # Write summary JSON
     with open(os.path.join(OUTPUT_DIR, "summary.json"), "w") as f:
