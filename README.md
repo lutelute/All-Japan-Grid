@@ -145,6 +145,16 @@ python scripts/enrich_all.py --dry-run
 See [WHITEPAPER.md](WHITEPAPER.md) Section 4 for detailed methodology.
 詳細な方法論は [WHITEPAPER.md](WHITEPAPER.md) セクション4を参照。
 
+> **Note / 注意:** Pages上のポップアップ表示には2系統のデータが使われます:
+> 1. **地図レイヤー用** (`subs_*.geojson`, `lines_*.geojson`, `plants_*.geojson`) — `build_static_site.py` が `data/` から生成。`_display_name` で表示。
+> 2. **詳細ポップアップ用** (`substations.geojson`, `generators.geojson`) — 各 export スクリプトが生成。座標マッチングで紐付け。
+>
+> enrichment後は**両方を再生成**しないと「Unnamed」が残ります:
+> ```bash
+> python scripts/export_substations_geojson.py   # 詳細ポップアップ用
+> python scripts/build_static_site.py            # 地図レイヤー用
+> ```
+
 ## Interactive Map (GitHub Pages) / インタラクティブマップ
 
 The static site at `docs/` renders all regions on a Leaflet.js dark map with voltage-based coloring.
