@@ -427,8 +427,9 @@ async function loadData(minKv) {
     clearLayers();
 
     var tier = voltageTier(minKv);
-    var linesFile = "./data/lines_" + tier.suffix + ".geojson";
-    var subsFile  = "./data/subs_"  + tier.suffix + ".geojson";
+    var cacheBust = "?v=" + Date.now();
+    var linesFile = "./data/lines_" + tier.suffix + ".geojson" + cacheBust;
+    var subsFile  = "./data/subs_"  + tier.suffix + ".geojson" + cacheBust;
 
     try {
         var responses = await Promise.all([
@@ -469,16 +470,17 @@ async function loadData(minKv) {
 
 async function loadPlantData() {
     rawPlantData = null;
+    var cb = "?v=" + Date.now();
 
     try {
         var plantData;
         if (plantFilter === "utility") {
-            var res = await fetch("./data/plants_utility.geojson");
+            var res = await fetch("./data/plants_utility.geojson" + cb);
             if (res.ok) plantData = await res.json();
         } else if (plantFilter === "ipp") {
             var responses = await Promise.all([
-                fetch("./data/plants_utility.geojson"),
-                fetch("./data/plants_ipp.geojson"),
+                fetch("./data/plants_utility.geojson" + cb),
+                fetch("./data/plants_ipp.geojson" + cb),
             ]);
             if (responses[0].ok && responses[1].ok) {
                 var d1 = await responses[0].json();
@@ -489,7 +491,7 @@ async function loadPlantData() {
                 };
             }
         } else {
-            var res2 = await fetch("./data/plants_all.geojson");
+            var res2 = await fetch("./data/plants_all.geojson" + cb);
             if (res2.ok) plantData = await res2.json();
         }
         rawPlantData = plantData || null;
@@ -532,12 +534,13 @@ function clearLayers() {
 // ── Enriched data loaders ──
 
 async function loadEnrichedData() {
+    var cb = "?v=" + Date.now();
     try {
-        var res = await fetch("./data/substations.geojson");
+        var res = await fetch("./data/substations.geojson" + cb);
         if (res.ok) enrichedSubData = await res.json();
     } catch (e) { console.warn("No enriched substations:", e); }
     try {
-        var res2 = await fetch("./data/generators.geojson");
+        var res2 = await fetch("./data/generators.geojson" + cb);
         if (res2.ok) enrichedGenData = await res2.json();
     } catch (e) { console.warn("No enriched generators:", e); }
 }
@@ -712,7 +715,7 @@ function buildRegionList(containerId) {
 
 async function initRegionList() {
     try {
-        var res = await fetch("./data/regions.json");
+        var res = await fetch("./data/regions.json?v=" + Date.now());
         if (!res.ok) return;
         regionsData = await res.json();
         buildRegionList("region-list");
