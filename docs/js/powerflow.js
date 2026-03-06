@@ -125,19 +125,25 @@
 
     // ── Build region selector ──
 
+    var ALL_REGIONS = [
+        "hokkaido","tohoku","tokyo","chubu","hokuriku",
+        "kansai","chugoku","shikoku","kyushu","okinawa",
+    ];
+
     function buildRegionSelect(summary) {
         var sel = document.getElementById("pf-region");
         if (!sel) return;
         sel.innerHTML = "";
         sel.disabled = false;
 
-        var regions = [
-            "hokkaido","tohoku","tokyo","chubu","hokuriku",
-            "kansai","chugoku","shikoku","kyushu","okinawa",
-        ];
+        // All Japan option
+        var allOpt = document.createElement("option");
+        allOpt.value = "all";
+        allOpt.textContent = "全国 All Japan";
+        sel.appendChild(allOpt);
 
-        for (var i = 0; i < regions.length; i++) {
-            var r = regions[i];
+        for (var i = 0; i < ALL_REGIONS.length; i++) {
+            var r = ALL_REGIONS[i];
             var info = summary[r];
             if (!info) continue;
             var opt = document.createElement("option");
@@ -175,7 +181,11 @@
                 if (pfState.lineData) {
                     clearPFLayers();
                     renderPFLayers(pfState.busData, pfState.lineData, pfState.mode);
-                    showResults(pfState.region, pfState.mode, pfState.summary[pfState.region], true);
+                    if (pfState.region === "all") {
+                        showAllRegionsResults(pfState.mode, Object.keys(pfState.summary).length);
+                    } else {
+                        showResults(pfState.region, pfState.mode, pfState.summary[pfState.region], true);
+                    }
                 }
             });
         }
@@ -195,14 +205,19 @@
         var mode = pfState.mode;
         if (!region || !pfState.summary) return;
 
+        clearPFLayers();
+        pfState.busData = null;
+        pfState.lineData = null;
+
+        if (region === "all") {
+            await runPFAllRegions(mode);
+            return;
+        }
+
         var info = pfState.summary[region];
         if (!info) return;
 
         var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
-
-        clearPFLayers();
-        pfState.busData = null;
-        pfState.lineData = null;
 
         if (!converged) {
             showResults(region, mode, info, false);
@@ -238,6 +253,51 @@
         }
     }
 
+    async function runPFAllRegions(mode) {
+        var cb = "?v=" + Date.now();
+        var allBusFeatures = [];
+        var allLineFeatures = [];
+        var loadedCount = 0;
+
+        var fetches = ALL_REGIONS.map(async function (r) {
+            var info = pfState.summary[r];
+            if (!info) return;
+            var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
+            if (!converged) return;
+
+            try {
+                var busRes = await fetch("./data/powerflow/" + r + "_" + mode + "_buses.geojson" + cb);
+                var lineRes = await fetch("./data/powerflow/" + r + "_" + mode + "_lines.geojson" + cb);
+                if (!busRes.ok || !lineRes.ok) return;
+
+                var busData = await busRes.json();
+                var lineData = await lineRes.json();
+
+                if (busData.features) allBusFeatures = allBusFeatures.concat(busData.features);
+                if (lineData.features) allLineFeatures = allLineFeatures.concat(lineData.features);
+                loadedCount++;
+            } catch (e) {
+                console.error("PF load error for " + r + ":", e);
+            }
+        });
+
+        await Promise.all(fetches);
+
+        var mergedBus = { type: "FeatureCollection", features: allBusFeatures };
+        var mergedLine = { type: "FeatureCollection", features: allLineFeatures };
+
+        pfState.busData = mergedBus;
+        pfState.lineData = mergedLine;
+
+        renderPFLayers(mergedBus, mergedLine, mode);
+        showAllRegionsResults(mode, loadedCount);
+
+        // Zoom to Japan extent
+        if (window.map) {
+            window.map.fitBounds([[24, 123], [46, 146]]);
+        }
+    }
+
     // ── Render layers based on viz mode ──
 
     function renderPFLayers(busData, lineData, mode) {
@@ -246,23 +306,52 @@
 
         var viz = pfState.viz;
 
-        if (viz === "loading") {
-            renderLoadingHeatmap(lineData);
-        } else if (viz === "flow") {
-            renderFlowDirection(lineData);
-        } else if (viz === "thermal") {
-            renderThermalHeatmap(lineData);
+        if (viz === "voltage") {
+            // Voltage-only mode: show bus voltage heatmap, lines as thin grey
+            renderVoltageMode(busData, lineData, mode);
+        } else {
+            // Flow-based modes: loading, flow direction, thermal
+            if (viz === "loading") {
+                renderLoadingHeatmap(lineData);
+            } else if (viz === "flow") {
+                renderFlowDirection(lineData);
+            } else if (viz === "thermal") {
+                renderThermalHeatmap(lineData);
+            }
+        }
+    }
+
+    // ── Voltage mode (bus voltage heatmap, lines as context) ──
+
+    function renderVoltageMode(busData, lineData, mode) {
+        // Lines as thin grey context
+        if (lineData && lineData.features && lineData.features.length > 0) {
+            pfState.lineLayer = L.geoJSON(lineData, {
+                style: function () {
+                    return { color: "#555", weight: 1.5, opacity: 0.4 };
+                },
+                onEachFeature: function (feature, layer) {
+                    var p = feature.properties;
+                    layer.bindPopup(
+                        "<b>" + (p.name || "Line") + "</b><br>" +
+                        "Loading: " + p.loading_pct + "%<br>" +
+                        "P: " + p.p_mw + " MW"
+                    );
+                },
+            }).addTo(window.map);
         }
 
-        // Bus voltage layer (AC only, all viz modes)
-        if (mode === "ac" && busData && busData.features && busData.features.length > 0) {
+        // Bus voltage heatmap (AC shows real voltage, DC shows angle-based coloring)
+        if (busData && busData.features && busData.features.length > 0) {
             pfState.busLayer = L.geoJSON(busData, {
                 pointToLayer: function (feature, latlng) {
                     var vm = feature.properties.vm_pu || 1.0;
+                    var r = mode === "ac" ? vmRadius(vm) : 4;
+                    var color = mode === "ac" ? vmColor(vm) : angleColor(feature.properties.va_deg || 0);
                     return L.circleMarker(latlng, {
                         pane: "substationPane",
-                        radius: vmRadius(vm),
-                        fillColor: vmColor(vm),
+                        radius: r,
+                        fillColor: color,
                         color: "#fff",
                         weight: 0.6,
                         fillOpacity: 0.9,
@@ -279,6 +368,14 @@
                 },
             }).addTo(window.map);
         }
+    }
+
+    function angleColor(va_deg) {
+        var abs = Math.abs(va_deg);
+        if (abs < 5)   return "#2ecc71";
+        if (abs < 15)  return "#f1c40f";
+        if (abs < 30)  return "#e67e22";
+        return "#e74c3c";
     }
 
     // ── Loading heatmap (original) ──
@@ -490,19 +587,34 @@
             html += '</div>';
         }
 
-        if (mode === "ac") {
-            html += '<div style="font-size:0.72rem;color:#7f8c8d;margin:6px 0 4px">Bus Voltage</div>';
-            html += '<div style="display:flex;gap:4px;flex-wrap:wrap">';
-            var vLegend = [
-                ["> 0.99", "#2ecc71"], ["0.95-0.99", "#f1c40f"],
-                ["0.90-0.95", "#e67e22"], ["< 0.90", "#e74c3c"],
-            ];
-            for (var k = 0; k < vLegend.length; k++) {
-                html += '<span style="font-size:0.68rem;display:flex;align-items:center;gap:3px">' +
-                    '<span style="width:8px;height:8px;background:' + vLegend[k][1] + ';display:inline-block;border-radius:50%"></span>' +
-                    vLegend[k][0] + ' pu</span>';
+        if (viz === "voltage") {
+            if (mode === "ac") {
+                html += '<div style="font-size:0.72rem;color:#7f8c8d;margin-bottom:4px">Bus Voltage (AC)</div>';
+                html += '<div style="display:flex;gap:4px;flex-wrap:wrap">';
+                var vLegend = [
+                    ["> 0.99 pu", "#2ecc71"], ["0.95-0.99", "#f1c40f"],
+                    ["0.90-0.95", "#e67e22"], ["< 0.90", "#e74c3c"], ["< 0.80", "#8e44ad"],
+                ];
+                for (var k = 0; k < vLegend.length; k++) {
+                    html += '<span style="font-size:0.68rem;display:flex;align-items:center;gap:3px">' +
+                        '<span style="width:8px;height:8px;background:' + vLegend[k][1] + ';display:inline-block;border-radius:50%"></span>' +
+                        vLegend[k][0] + '</span>';
+                }
+                html += '</div>';
+            } else {
+                html += '<div style="font-size:0.72rem;color:#7f8c8d;margin-bottom:4px">Bus Angle (DC)</div>';
+                html += '<div style="display:flex;gap:4px;flex-wrap:wrap">';
+                var aLegend = [
+                    ["< 5&deg;", "#2ecc71"], ["5-15&deg;", "#f1c40f"],
+                    ["15-30&deg;", "#e67e22"], ["> 30&deg;", "#e74c3c"],
+                ];
+                for (var m = 0; m < aLegend.length; m++) {
+                    html += '<span style="font-size:0.68rem;display:flex;align-items:center;gap:3px">' +
+                        '<span style="width:8px;height:8px;background:' + aLegend[m][1] + ';display:inline-block;border-radius:50%"></span>' +
+                        aLegend[m][0] + '</span>';
+                }
+                html += '</div>';
             }
-            html += '</div>';
         }
 
         html += '</div>';
@@ -512,6 +624,44 @@
     function resultItem(label, value, cls) {
         var valClass = cls ? ' class="value ' + cls + '"' : ' class="value"';
         return '<div class="result-item"><div class="label">' + label + '</div><div' + valClass + '>' + value + '</div></div>';
+    }
+
+    // ── All-region PF results ──
+
+    function showAllRegionsResults(mode, loadedCount) {
+        var section = document.getElementById("pf-results-section");
+        var content = document.getElementById("pf-results-content");
+        if (!section || !content) return;
+
+        section.style.display = "block";
+
+        var summary = pfState.summary;
+        var totalBuses = 0, totalLines = 0, totalGens = 0, totalLoad = 0, totalGenMW = 0, totalLoss = 0;
+        for (var i = 0; i < ALL_REGIONS.length; i++) {
+            var info = summary[ALL_REGIONS[i]];
+            if (!info) continue;
+            totalBuses += info.n_active_buses || 0;
+            totalLines += info.n_lines || 0;
+            totalGens += info.n_gens || 0;
+            totalLoad += info.total_load_mw || 0;
+            totalGenMW += info.total_gen_mw || 0;
+            totalLoss += (mode === "ac" ? info.ac_loss_mw : info.dc_loss_mw) || 0;
+        }
+
+        var html = '<div class="result-grid">';
+        html += resultItem("Mode", mode.toUpperCase() + " (All Japan)");
+        html += resultItem("Regions", loadedCount + "/10");
+        html += resultItem("Active Buses", totalBuses);
+        html += resultItem("Lines", totalLines);
+        html += resultItem("Generators", totalGens);
+        html += resultItem("Load", Math.round(totalLoad) + " MW");
+        html += resultItem("Generation", Math.round(totalGenMW) + " MW");
+        html += resultItem("Total Loss", Math.round(totalLoss) + " MW");
+        html += "</div>";
+
+        html += buildLegend(mode);
+
+        content.innerHTML = html;
     }
 
     // ── All-region summary table ──
