@@ -361,11 +361,30 @@ function renderLayers() {
         } catch (e) { console.error("Substations render error:", e); }
     }
 
-    // Plants (double-circle markers)
+    // Plants (clustered markers for performance)
     if (layerVisible.plants && rawPlantData) {
         try {
             var plantData = filterByRegion(rawPlantData, selectedRegion);
-            plantLayer = L.geoJSON(plantData, {
+            var cluster = L.markerClusterGroup({
+                chunkedLoading: true,
+                chunkInterval: 100,
+                chunkDelay: 10,
+                maxClusterRadius: 50,
+                disableClusteringAtZoom: 12,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                iconCreateFunction: function (c) {
+                    var count = c.getChildCount();
+                    var size = count < 50 ? "small" : count < 200 ? "medium" : "large";
+                    var px = size === "small" ? 30 : size === "medium" ? 40 : 50;
+                    return L.divIcon({
+                        html: "<div><span>" + count + "</span></div>",
+                        className: "marker-cluster marker-cluster-" + size,
+                        iconSize: L.point(px, px),
+                    });
+                },
+            });
+            var geoLayer = L.geoJSON(plantData, {
                 pointToLayer: function (feature, latlng) {
                     var p = feature.properties;
                     var fuel = p.fuel_type || "unknown";
@@ -390,7 +409,10 @@ function renderLayers() {
                         }
                     } catch (e) { console.warn("Plant popup error:", e); }
                 },
-            }).addTo(map);
+            });
+            cluster.addLayer(geoLayer);
+            map.addLayer(cluster);
+            plantLayer = cluster;
         } catch (e) { console.error("Plants render error:", e); }
     }
 
