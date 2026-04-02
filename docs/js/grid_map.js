@@ -124,6 +124,7 @@ function initMap() {
         center: [36.5, 137.0],
         zoom: 6,
         zoomControl: true,
+        preferCanvas: true,
     });
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
@@ -253,30 +254,19 @@ function subColor(feature) {
     return voltageColor(feature.properties._voltage_kv || 0);
 }
 
-// ── Plant marker (double-circle SVG via divIcon) ──
+// ── Plant marker (canvas circleMarker for performance) ──
 
 function plantMarker(latlng, fuel, mw) {
     var color = FUEL_COLORS[fuel] || FUEL_COLORS.unknown;
-    var size = mw >= 1000 ? 18 : mw >= 100 ? 14 : mw > 0 ? 11 : 9;
-    var half = size / 2;
-    var r1 = half - 1;
-    var r2 = r1 * 0.5;
-    var svg =
-        '<svg width="' + size + '" height="' + size + '" xmlns="http://www.w3.org/2000/svg">' +
-        '<circle cx="' + half + '" cy="' + half + '" r="' + r1 +
-            '" fill="' + color + '" stroke="#000" stroke-width="1.2" opacity="0.9"/>' +
-        '<circle cx="' + half + '" cy="' + half + '" r="' + r2 +
-            '" fill="none" stroke="#000" stroke-width="1" opacity="0.7"/>' +
-        '</svg>';
-    return L.marker(latlng, {
+    var radius = mw >= 1000 ? 7 : mw >= 100 ? 5 : mw > 0 ? 3.5 : 2.5;
+    return L.circleMarker(latlng, {
         pane: "plantPane",
-        interactive: true,
-        icon: L.divIcon({
-            html: svg,
-            className: "",
-            iconSize: [size, size],
-            iconAnchor: [half, half],
-        }),
+        radius: radius,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        opacity: 0.9,
+        fillOpacity: 0.85,
     });
 }
 
@@ -361,30 +351,11 @@ function renderLayers() {
         } catch (e) { console.error("Substations render error:", e); }
     }
 
-    // Plants (clustered markers for performance)
+    // Plants (canvas circleMarkers — all visible, no clustering)
     if (layerVisible.plants && rawPlantData) {
         try {
             var plantData = filterByRegion(rawPlantData, selectedRegion);
-            var cluster = L.markerClusterGroup({
-                chunkedLoading: true,
-                chunkInterval: 100,
-                chunkDelay: 10,
-                maxClusterRadius: 50,
-                disableClusteringAtZoom: 12,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false,
-                iconCreateFunction: function (c) {
-                    var count = c.getChildCount();
-                    var size = count < 50 ? "small" : count < 200 ? "medium" : "large";
-                    var px = size === "small" ? 30 : size === "medium" ? 40 : 50;
-                    return L.divIcon({
-                        html: "<div><span>" + count + "</span></div>",
-                        className: "marker-cluster marker-cluster-" + size,
-                        iconSize: L.point(px, px),
-                    });
-                },
-            });
-            var geoLayer = L.geoJSON(plantData, {
+            plantLayer = L.geoJSON(plantData, {
                 pointToLayer: function (feature, latlng) {
                     var p = feature.properties;
                     var fuel = p.fuel_type || "unknown";
@@ -409,10 +380,7 @@ function renderLayers() {
                         }
                     } catch (e) { console.warn("Plant popup error:", e); }
                 },
-            });
-            cluster.addLayer(geoLayer);
-            map.addLayer(cluster);
-            plantLayer = cluster;
+            }).addTo(map);
         } catch (e) { console.error("Plants render error:", e); }
     }
 
