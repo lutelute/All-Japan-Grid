@@ -392,3 +392,34 @@ body {
 .list-entry small { color: #888; font-size: 9px; }
 .list-trunc { color: #e94560; font-size: 9px; padding: 4px 5px; text-align: center; }
 .list-empty { color: #888; font-size: 10px; padding: 6px 5px; }
+
+/* ── UI toggle buttons (always on map) ── */
+#ui-toggles {
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    pointer-events: all;
+}
+.ui-toggle-btn {
+    width: 30px;
+    height: 30px;
+    background: rgba(26,26,46,0.92);
+    border: 1px solid #0f3460;
+    color: #e0e0e0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 5px rgba(0,0,0,.5);
+    transition: background 0.12s, color 0.12s;
+    line-height: 1;
+    padding: 0;
+}
+.ui-toggle-btn:hover { background: #16213e; border-color: #e94560; }
+.ui-toggle-btn.inactive { color: #444; border-color: #333; background: rgba(20,20,30,0.85); }

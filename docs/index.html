@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=11"/>
+    <link rel="stylesheet" href="./css/style.css?v=12"/>
 </head>
 <body>
 
@@ -178,7 +178,13 @@
     <div id="status-bar"><span id="status-text">Ready</span></div>
 </div>
 
-<div id="map"></div>
+<div id="map">
+    <div id="ui-toggles">
+        <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="サイドバー">&#9776;</button>
+        <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例">&#9670;</button>
+        <button class="ui-toggle-btn active" id="btn-toggle-list" onclick="toggleListPanel(!listPanelVisible)" title="リスト">&#9783;</button>
+    </div>
+</div>
 
 <!-- ── リストパネル（フローティング・デフォルト表示） ── -->
 <div id="sublist" class="visible">
@@ -203,7 +209,7 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=11"></script>
-<script src="./js/powerflow.js?v=11"></script>
+<script src="./js/grid_map.js?v=12"></script>
+<script src="./js/powerflow.js?v=12"></script>
 </body>
 </html>

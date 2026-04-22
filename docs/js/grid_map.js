@@ -98,6 +98,8 @@ var substationLayer = null;
 var lineLayer = null;
 var plantLayer = null;
 var legendControl = null;
+var legendVisible = true;
+var sidebarVisible = true;
 var regionsData = [];
 
 // Raw cached GeoJSON (before region filter)
@@ -1056,6 +1058,32 @@ function toggleListPanel(show) {
     if (panel) panel.classList.toggle("visible", show);
     if (toggleBtn) toggleBtn.style.display = show ? "none" : "";
     if (show && rawSubData) buildLists();
+    _syncUiToggles();
+}
+
+function toggleSidebar() {
+    sidebarVisible = !sidebarVisible;
+    var sidebar = document.getElementById("sidebar");
+    if (sidebar) sidebar.style.display = sidebarVisible ? "" : "none";
+    _syncUiToggles();
+}
+
+function toggleLegend() {
+    legendVisible = !legendVisible;
+    if (legendControl) {
+        if (legendVisible) legendControl.addTo(map);
+        else map.removeControl(legendControl);
+    }
+    _syncUiToggles();
+}
+
+function _syncUiToggles() {
+    var b = document.getElementById("btn-toggle-sidebar");
+    var l = document.getElementById("btn-toggle-legend");
+    var p = document.getElementById("btn-toggle-list");
+    if (b) b.classList.toggle("inactive", !sidebarVisible);
+    if (l) l.classList.toggle("inactive", !legendVisible);
+    if (p) p.classList.toggle("inactive", !listPanelVisible);
 }
 
 // ── Init ──
