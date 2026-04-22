@@ -119,6 +119,13 @@ var plantFilter = "utility";
 var colorMode = "voltage"; // "voltage" or "region"
 var layerVisible = { lines: true, subs: true, plants: true };
 
+// List panel state
+var listSubsData = [];
+var listGenData = [];
+var listCurrentTab = "subs";
+var listCurrentSort = "name";
+var listPanelVisible = false;
+
 function initMap() {
     map = L.map("map", {
         center: [36.5, 137.0],
@@ -127,10 +134,34 @@ function initMap() {
         preferCanvas: true,
     });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    var cartoLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
         maxZoom: 19,
-    }).addTo(map);
+    });
+    var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+        maxZoom: 19,
+    });
+    var satelliteLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+        attribution: "Google",
+        maxZoom: 20,
+    });
+    var gsiLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+        maxZoom: 18,
+    });
+    var gsiPhotoLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg", {
+        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+        maxZoom: 18,
+    });
+    cartoLayer.addTo(map);
+    L.control.layers({
+        "Dark (CartoDB)": cartoLayer,
+        "OSM": osmLayer,
+        "衛星 (Google)": satelliteLayer,
+        "地図 (国土地理院)": gsiLayer,
+        "航空写真 (国土地理院)": gsiPhotoLayer,
+    }, null, { position: "topright", collapsed: true }).addTo(map);
 
     // Custom panes for z-ordering: substations & plants above lines
     map.createPane("substationPane").style.zIndex = 450;
@@ -385,6 +416,7 @@ function renderLayers() {
     }
 
     updateStatus();
+    if (listPanelVisible) buildLists();
 }
 
 function updateStatus() {
@@ -847,6 +879,134 @@ async function downloadLinesCSV() {
     if (!data) { alert("Line data not available"); return; }
     var csv = geojsonToCSV(data, LINE_CSV_COLUMNS);
     downloadCSV(csv, "transmission_lines.csv");
+}
+
+// ── List panel ──
+
+function buildLists() {
+    listSubsData = [];
+    listGenData = [];
+
+    if (enrichedSubData && enrichedSubData.features) {
+        for (var i = 0; i < enrichedSubData.features.length; i++) {
+            var f = enrichedSubData.features[i];
+            if (!f.geometry || !f.geometry.coordinates) continue;
+            if (f.geometry.type !== "Point") continue;
+            var p = f.properties;
+            if (selectedRegion !== "all" && p.region !== selectedRegion) continue;
+            listSubsData.push({
+                name: p.name || p._display_name || "(unnamed)",
+                kv: p.voltage_kv || 0,
+                region: p.region || "",
+                region_ja: p.region_ja || "",
+                lat: f.geometry.coordinates[1],
+                lon: f.geometry.coordinates[0],
+            });
+        }
+    }
+
+    if (enrichedGenData && enrichedGenData.features) {
+        for (var j = 0; j < enrichedGenData.features.length; j++) {
+            var fg = enrichedGenData.features[j];
+            if (!fg.geometry || !fg.geometry.coordinates) continue;
+            var pg = fg.properties;
+            if (selectedRegion !== "all" && pg.region !== selectedRegion) continue;
+            listGenData.push({
+                name: pg.name || "(unnamed)",
+                fuel: pg.fuel_type || "unknown",
+                mw: pg.capacity_mw || 0,
+                region: pg.region || "",
+                lat: fg.geometry.coordinates[1],
+                lon: fg.geometry.coordinates[0],
+            });
+        }
+    }
+
+    renderListPanel();
+}
+
+function renderListPanel() {
+    var subsEl = document.getElementById("list-tab-subs");
+    var genEl = document.getElementById("list-tab-plants");
+    if (!subsEl || !genEl) return;
+
+    var sortedSubs = sortListData(listSubsData.slice(), listCurrentSort, "sub");
+    var sortedGen = sortListData(listGenData.slice(), listCurrentSort, "gen");
+
+    subsEl.innerHTML = sortedSubs.map(function (s) {
+        var color = voltageColor(s.kv);
+        var kvLabel = s.kv > 0 ? s.kv + "kV" : "";
+        var regionLabel = s.region_ja || s.region || "";
+        return '<div class="list-entry" style="border-left-color:' + color + '"' +
+            ' onclick="map.setView([' + s.lat + ',' + s.lon + '],14)">' +
+            '<b>' + escHtml(s.name) + '</b>' +
+            '<small>' + kvLabel + (regionLabel ? " " + regionLabel : "") + "</small>" +
+            "</div>";
+    }).join("") || '<div style="color:#888;padding:4px">データなし</div>';
+
+    genEl.innerHTML = sortedGen.map(function (g) {
+        var color = FUEL_COLORS[g.fuel] || FUEL_COLORS.unknown;
+        var mwLabel = g.mw > 0 ? g.mw + "MW" : "";
+        return '<div class="list-entry" style="border-left-color:' + color + '"' +
+            ' onclick="map.setView([' + g.lat + ',' + g.lon + '],14)">' +
+            '<b>' + escHtml(g.name) + '</b>' +
+            '<small>' + g.fuel + (mwLabel ? " " + mwLabel : "") + "</small>" +
+            "</div>";
+    }).join("") || '<div style="color:#888;padding:4px">データなし</div>';
+
+    var subBtn = document.querySelector("#sublist .list-tab-btn:first-child");
+    var genBtn = document.querySelector("#sublist .list-tab-btn:nth-child(2)");
+    if (subBtn) subBtn.textContent = "変電所 (" + sortedSubs.length + ")";
+    if (genBtn) genBtn.textContent = "発電所 (" + sortedGen.length + ")";
+}
+
+function sortListData(arr, mode, type) {
+    if (mode === "name") return arr.sort(function (a, b) { return a.name.localeCompare(b.name, "ja"); });
+    if (mode === "voltage") return arr.sort(function (a, b) { return (b.kv || b.mw || 0) - (a.kv || a.mw || 0); });
+    if (mode === "area") return arr.sort(function (a, b) {
+        var d = (a.region || "").localeCompare(b.region || "");
+        return d !== 0 ? d : a.name.localeCompare(b.name, "ja");
+    });
+    return arr;
+}
+
+function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function showListTab(tab, btn) {
+    listCurrentTab = tab;
+    document.getElementById("list-tab-subs").style.display = tab === "subs" ? "" : "none";
+    document.getElementById("list-tab-plants").style.display = tab === "plants" ? "" : "none";
+    document.querySelectorAll("#sublist .list-tab-btn").forEach(function (b) { b.classList.remove("active"); });
+    if (btn) btn.classList.add("active");
+}
+
+function filterListPanel(q) {
+    var el = document.getElementById("list-tab-" + listCurrentTab);
+    if (!el) return;
+    var ql = q.toLowerCase();
+    el.querySelectorAll(".list-entry").forEach(function (e) {
+        e.style.display = e.textContent.toLowerCase().indexOf(ql) >= 0 ? "" : "none";
+    });
+}
+
+function sortListPanel(mode) {
+    listCurrentSort = mode;
+    document.querySelectorAll("#sublist .list-sort-btn").forEach(function (b) { b.classList.remove("active"); });
+    var id = "listSort" + mode.charAt(0).toUpperCase() + mode.slice(1) + "Btn";
+    var btn = document.getElementById(id);
+    if (btn) btn.classList.add("active");
+    renderListPanel();
+}
+
+function toggleListPanel(show) {
+    listPanelVisible = show;
+    var panel = document.getElementById("sublist");
+    var toggleBtn = document.getElementById("list-toggle-btn");
+    if (panel) panel.classList.toggle("visible", show);
+    if (toggleBtn) toggleBtn.style.display = show ? "none" : "";
+    if (show) buildLists();
 }
 
 // ── Init ──

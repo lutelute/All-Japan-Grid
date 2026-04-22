@@ -273,3 +273,116 @@ body {
 .flow-arrow svg {
     display: block;
 }
+
+/* ── List panel (floating) ── */
+#list-toggle-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    z-index: 1100;
+    background: rgba(26,26,46,0.95);
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+#list-toggle-btn:hover { background: #16213e; border-color: #e94560; }
+
+#sublist {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    z-index: 1100;
+    background: rgba(22,33,62,0.97);
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.5);
+    font-size: 11px;
+    width: 250px;
+    max-height: 52vh;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    overflow: hidden;
+}
+#sublist.visible { display: flex; }
+
+#sublist-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.list-tabs { display: flex; flex: 1; gap: 2px; }
+.list-tab-btn {
+    flex: 1;
+    font-size: 10px;
+    padding: 3px 4px;
+    border: 1px solid #0f3460;
+    background: #1a1a2e;
+    color: #bbb;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.list-tab-btn.active { background: #e94560; color: #fff; border-color: #e94560; }
+.list-close-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 2px;
+}
+.list-close-btn:hover { color: #e94560; }
+
+.list-search {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 10px;
+    padding: 4px 6px;
+    background: #1a1a2e;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    color: #e0e0e0;
+    outline: none;
+}
+.list-search:focus { border-color: #e94560; }
+
+.list-sort-bar {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+.list-sort-btn {
+    font-size: 9px;
+    padding: 2px 5px;
+    border: 1px solid #0f3460;
+    background: #1a1a2e;
+    color: #aaa;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.list-sort-btn.active { background: #0f3460; color: #fff; }
+.list-sort-btn:hover { background: #0f3460; }
+
+.list-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.list-entry {
+    padding: 3px 5px;
+    border-left: 3px solid #999;
+    cursor: pointer;
+    border-radius: 2px;
+    line-height: 1.4;
+}
+.list-entry:hover { background: rgba(233,69,96,0.15); }
+.list-entry b { display: block; font-size: 10px; }
+.list-entry small { color: #888; font-size: 9px; }
