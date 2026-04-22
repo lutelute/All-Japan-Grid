@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=10"/>
+    <link rel="stylesheet" href="./css/style.css?v=11"/>
 </head>
 <body>
 
@@ -180,11 +180,12 @@
 
 <div id="map"></div>
 
-<!-- ── リストパネル（フローティング） ── -->
-<div id="sublist">
+<!-- ── リストパネル（フローティング・デフォルト表示） ── -->
+<div id="sublist" class="visible">
     <div id="sublist-header">
         <div class="list-tabs">
             <button class="list-tab-btn active" onclick="showListTab('subs',this)">変電所</button>
+            <button class="list-tab-btn" onclick="showListTab('lines',this)">送電線</button>
             <button class="list-tab-btn" onclick="showListTab('plants',this)">発電所</button>
         </div>
         <button class="list-close-btn" onclick="toggleListPanel(false)">✕</button>
@@ -196,12 +197,13 @@
         <button class="list-sort-btn" id="listSortVoltageBtn" onclick="sortListPanel('voltage')">電圧順</button>
     </div>
     <div id="list-tab-subs" class="list-content"></div>
+    <div id="list-tab-lines" class="list-content" style="display:none"></div>
     <div id="list-tab-plants" class="list-content" style="display:none"></div>
 </div>
 
-<button id="list-toggle-btn" onclick="toggleListPanel(true)">&#9776; リスト</button>
+<button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=10"></script>
-<script src="./js/powerflow.js?v=10"></script>
+<script src="./js/grid_map.js?v=11"></script>
+<script src="./js/powerflow.js?v=11"></script>
 </body>
 </html>

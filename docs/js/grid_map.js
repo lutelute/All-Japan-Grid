@@ -121,10 +121,11 @@ var layerVisible = { lines: true, subs: true, plants: true };
 
 // List panel state
 var listSubsData = [];
+var listLineData = [];
 var listGenData = [];
 var listCurrentTab = "subs";
 var listCurrentSort = "name";
-var listPanelVisible = false;
+var listPanelVisible = true;
 
 function initMap() {
     map = L.map("map", {
@@ -416,7 +417,7 @@ function renderLayers() {
     }
 
     updateStatus();
-    if (listPanelVisible) buildLists();
+    buildLists();
 }
 
 function updateStatus() {
@@ -883,41 +884,70 @@ async function downloadLinesCSV() {
 
 // ── List panel ──
 
+var LIST_MAX = 1500; // 全国表示時の上限
+
 function buildLists() {
     listSubsData = [];
-    listGenData = [];
+    listLineData = [];
+    listGenData  = [];
 
-    if (enrichedSubData && enrichedSubData.features) {
-        for (var i = 0; i < enrichedSubData.features.length; i++) {
-            var f = enrichedSubData.features[i];
-            if (!f.geometry || !f.geometry.coordinates) continue;
-            if (f.geometry.type !== "Point") continue;
+    // 変電所: 電圧フィルター反映済みの rawSubData から収集
+    if (rawSubData && rawSubData.features) {
+        for (var i = 0; i < rawSubData.features.length; i++) {
+            var f = rawSubData.features[i];
+            if (!f.geometry || f.geometry.type !== "Point") continue;
             var p = f.properties;
-            if (selectedRegion !== "all" && p.region !== selectedRegion) continue;
+            var name = (p._display_name || p.name || "").trim();
+            if (!name) continue;
             listSubsData.push({
-                name: p.name || p._display_name || "(unnamed)",
-                kv: p.voltage_kv || 0,
-                region: p.region || "",
-                region_ja: p.region_ja || "",
+                name: name,
+                kv:   p._voltage_kv || 0,
+                region:    p._region || "",
+                region_ja: p._region_ja || REGION_NAMES_JA[p._region] || "",
                 lat: f.geometry.coordinates[1],
                 lon: f.geometry.coordinates[0],
             });
         }
     }
 
-    if (enrichedGenData && enrichedGenData.features) {
-        for (var j = 0; j < enrichedGenData.features.length; j++) {
-            var fg = enrichedGenData.features[j];
-            if (!fg.geometry || !fg.geometry.coordinates) continue;
-            var pg = fg.properties;
-            if (selectedRegion !== "all" && pg.region !== selectedRegion) continue;
+    // 送電線: rawLineData から名前付きラインのみ収集
+    if (rawLineData && rawLineData.features) {
+        for (var j = 0; j < rawLineData.features.length; j++) {
+            var lf = rawLineData.features[j];
+            if (!lf.geometry) continue;
+            var lp = lf.properties;
+            var lname = (lp._display_name || lp.name || "").trim();
+            if (!lname) continue;
+            var coords = lf.geometry.coordinates;
+            if (!coords || !coords.length) continue;
+            var mid = coords[Math.floor(coords.length / 2)];
+            listLineData.push({
+                name: lname,
+                kv:   lp._voltage_kv || 0,
+                region:    lp._region || "",
+                region_ja: lp._region_ja || REGION_NAMES_JA[lp._region] || "",
+                lat: mid[1],
+                lon: mid[0],
+            });
+        }
+    }
+
+    // 発電所: rawPlantData から収集（表示フィルター反映済み）
+    if (rawPlantData && rawPlantData.features) {
+        for (var k = 0; k < rawPlantData.features.length; k++) {
+            var gf = rawPlantData.features[k];
+            if (!gf.geometry || !gf.geometry.coordinates) continue;
+            var gp = gf.properties;
+            var gname = (gp._display_name || gp.name || "").trim();
+            if (!gname) continue;
             listGenData.push({
-                name: pg.name || "(unnamed)",
-                fuel: pg.fuel_type || "unknown",
-                mw: pg.capacity_mw || 0,
-                region: pg.region || "",
-                lat: fg.geometry.coordinates[1],
-                lon: fg.geometry.coordinates[0],
+                name: gname,
+                fuel: gp.fuel_type || "unknown",
+                mw:   gp.capacity_mw || 0,
+                region:    gp._region || "",
+                region_ja: REGION_NAMES_JA[gp._region] || "",
+                lat: gf.geometry.coordinates[1],
+                lon: gf.geometry.coordinates[0],
             });
         }
     }
@@ -926,44 +956,61 @@ function buildLists() {
 }
 
 function renderListPanel() {
-    var subsEl = document.getElementById("list-tab-subs");
-    var genEl = document.getElementById("list-tab-plants");
-    if (!subsEl || !genEl) return;
+    var subsEl  = document.getElementById("list-tab-subs");
+    var lineEl  = document.getElementById("list-tab-lines");
+    var genEl   = document.getElementById("list-tab-plants");
+    if (!subsEl || !lineEl || !genEl) return;
 
-    var sortedSubs = sortListData(listSubsData.slice(), listCurrentSort, "sub");
-    var sortedGen = sortListData(listGenData.slice(), listCurrentSort, "gen");
+    var sortedSubs  = sortListData(listSubsData.slice(), listCurrentSort, "sub");
+    var sortedLines = sortListData(listLineData.slice(),  listCurrentSort, "line");
+    var sortedGen   = sortListData(listGenData.slice(),   listCurrentSort, "gen");
 
-    subsEl.innerHTML = sortedSubs.map(function (s) {
-        var color = voltageColor(s.kv);
-        var kvLabel = s.kv > 0 ? s.kv + "kV" : "";
-        var regionLabel = s.region_ja || s.region || "";
-        return '<div class="list-entry" style="border-left-color:' + color + '"' +
+    var truncSubs  = sortedSubs.length  > LIST_MAX;
+    var truncLines = sortedLines.length > LIST_MAX;
+    var truncGen   = sortedGen.length   > LIST_MAX;
+    if (truncSubs)  sortedSubs  = sortedSubs.slice(0, LIST_MAX);
+    if (truncLines) sortedLines = sortedLines.slice(0, LIST_MAX);
+    if (truncGen)   sortedGen   = sortedGen.slice(0, LIST_MAX);
+
+    function renderSubEntry(s) {
+        return '<div class="list-entry" style="border-left-color:' + voltageColor(s.kv) + '"' +
             ' onclick="map.setView([' + s.lat + ',' + s.lon + '],14)">' +
             '<b>' + escHtml(s.name) + '</b>' +
-            '<small>' + kvLabel + (regionLabel ? " " + regionLabel : "") + "</small>" +
+            '<small>' + (s.kv > 0 ? s.kv + "kV" : "") + (s.region_ja ? " " + s.region_ja : "") + "</small>" +
             "</div>";
-    }).join("") || '<div style="color:#888;padding:4px">データなし</div>';
-
-    genEl.innerHTML = sortedGen.map(function (g) {
-        var color = FUEL_COLORS[g.fuel] || FUEL_COLORS.unknown;
-        var mwLabel = g.mw > 0 ? g.mw + "MW" : "";
-        return '<div class="list-entry" style="border-left-color:' + color + '"' +
+    }
+    function renderLineEntry(l) {
+        return '<div class="list-entry" style="border-left-color:' + voltageColor(l.kv) + '"' +
+            ' onclick="map.setView([' + l.lat + ',' + l.lon + '],12)">' +
+            '<b>' + escHtml(l.name) + '</b>' +
+            '<small>' + (l.kv > 0 ? l.kv + "kV" : "") + (l.region_ja ? " " + l.region_ja : "") + "</small>" +
+            "</div>";
+    }
+    function renderGenEntry(g) {
+        return '<div class="list-entry" style="border-left-color:' + (FUEL_COLORS[g.fuel] || FUEL_COLORS.unknown) + '"' +
             ' onclick="map.setView([' + g.lat + ',' + g.lon + '],14)">' +
             '<b>' + escHtml(g.name) + '</b>' +
-            '<small>' + g.fuel + (mwLabel ? " " + mwLabel : "") + "</small>" +
+            '<small>' + g.fuel + (g.mw > 0 ? " " + g.mw + "MW" : "") + "</small>" +
             "</div>";
-    }).join("") || '<div style="color:#888;padding:4px">データなし</div>';
+    }
 
-    var subBtn = document.querySelector("#sublist .list-tab-btn:first-child");
-    var genBtn = document.querySelector("#sublist .list-tab-btn:nth-child(2)");
-    if (subBtn) subBtn.textContent = "変電所 (" + sortedSubs.length + ")";
-    if (genBtn) genBtn.textContent = "発電所 (" + sortedGen.length + ")";
+    var truncMsg = '<div class="list-trunc">上位' + LIST_MAX + '件表示。リージョンを絞り込んでください。</div>';
+    subsEl.innerHTML  = sortedSubs.map(renderSubEntry).join("")   + (truncSubs  ? truncMsg : "") || '<div class="list-empty">データなし</div>';
+    lineEl.innerHTML  = sortedLines.map(renderLineEntry).join("") + (truncLines ? truncMsg : "") || '<div class="list-empty">データなし</div>';
+    genEl.innerHTML   = sortedGen.map(renderGenEntry).join("")    + (truncGen   ? truncMsg : "") || '<div class="list-empty">データなし</div>';
+
+    var tabs = document.querySelectorAll("#sublist .list-tab-btn");
+    var counts = [sortedSubs.length, sortedLines.length, sortedGen.length];
+    var labels = ["変電所", "送電線", "発電所"];
+    tabs.forEach(function (btn, i) {
+        btn.textContent = labels[i] + " (" + counts[i] + (i === 0 && truncSubs || i === 1 && truncLines || i === 2 && truncGen ? "+" : "") + ")";
+    });
 }
 
-function sortListData(arr, mode, type) {
-    if (mode === "name") return arr.sort(function (a, b) { return a.name.localeCompare(b.name, "ja"); });
+function sortListData(arr, mode) {
+    if (mode === "name")    return arr.sort(function (a, b) { return a.name.localeCompare(b.name, "ja"); });
     if (mode === "voltage") return arr.sort(function (a, b) { return (b.kv || b.mw || 0) - (a.kv || a.mw || 0); });
-    if (mode === "area") return arr.sort(function (a, b) {
+    if (mode === "area")    return arr.sort(function (a, b) {
         var d = (a.region || "").localeCompare(b.region || "");
         return d !== 0 ? d : a.name.localeCompare(b.name, "ja");
     });
@@ -976,8 +1023,10 @@ function escHtml(s) {
 
 function showListTab(tab, btn) {
     listCurrentTab = tab;
-    document.getElementById("list-tab-subs").style.display = tab === "subs" ? "" : "none";
-    document.getElementById("list-tab-plants").style.display = tab === "plants" ? "" : "none";
+    ["subs", "lines", "plants"].forEach(function (t) {
+        var el = document.getElementById("list-tab-" + t);
+        if (el) el.style.display = t === tab ? "" : "none";
+    });
     document.querySelectorAll("#sublist .list-tab-btn").forEach(function (b) { b.classList.remove("active"); });
     if (btn) btn.classList.add("active");
 }
@@ -1006,7 +1055,7 @@ function toggleListPanel(show) {
     var toggleBtn = document.getElementById("list-toggle-btn");
     if (panel) panel.classList.toggle("visible", show);
     if (toggleBtn) toggleBtn.style.display = show ? "none" : "";
-    if (show) buildLists();
+    if (show && rawSubData) buildLists();
 }
 
 // ── Init ──
