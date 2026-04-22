@@ -912,8 +912,9 @@ function buildLists() {
         }
     }
 
-    // 送電線: rawLineData から名前付きラインのみ収集
+    // 送電線: rawLineData から名前付きラインを名前+リージョン単位で集約
     if (rawLineData && rawLineData.features) {
+        var lineMap = {};
         for (var j = 0; j < rawLineData.features.length; j++) {
             var lf = rawLineData.features[j];
             if (!lf.geometry) continue;
@@ -923,15 +924,22 @@ function buildLists() {
             var coords = lf.geometry.coordinates;
             if (!coords || !coords.length) continue;
             var mid = coords[Math.floor(coords.length / 2)];
-            listLineData.push({
-                name: lname,
-                kv:   lp._voltage_kv || 0,
-                region:    lp._region || "",
-                region_ja: lp._region_ja || REGION_NAMES_JA[lp._region] || "",
-                lat: mid[1],
-                lon: mid[0],
-            });
+            var key = lname + "\x00" + (lp._region || "");
+            if (lineMap[key]) {
+                lineMap[key].count++;
+            } else {
+                lineMap[key] = {
+                    name: lname,
+                    kv:   lp._voltage_kv || 0,
+                    region:    lp._region || "",
+                    region_ja: lp._region_ja || REGION_NAMES_JA[lp._region] || "",
+                    lat: mid[1],
+                    lon: mid[0],
+                    count: 1,
+                };
+            }
         }
+        listLineData = Object.values(lineMap);
     }
 
     // 発電所: rawPlantData から収集（表示フィルター反映済み）
@@ -982,9 +990,10 @@ function renderListPanel() {
             "</div>";
     }
     function renderLineEntry(l) {
+        var countStr = l.count > 1 ? ' <span style="color:#e94560">×' + l.count + '</span>' : "";
         return '<div class="list-entry" style="border-left-color:' + voltageColor(l.kv) + '"' +
             ' onclick="map.setView([' + l.lat + ',' + l.lon + '],12)">' +
-            '<b>' + escHtml(l.name) + '</b>' +
+            '<b>' + escHtml(l.name) + countStr + '</b>' +
             '<small>' + (l.kv > 0 ? l.kv + "kV" : "") + (l.region_ja ? " " + l.region_ja : "") + "</small>" +
             "</div>";
     }
