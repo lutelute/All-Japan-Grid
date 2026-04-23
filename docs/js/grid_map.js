@@ -102,6 +102,12 @@ var legendVisible = true;
 var sidebarVisible = true;
 var regionsData = [];
 
+// RE適地スコアオーバーレイ
+var scoreTileLayer = null;
+var scoreOpacity = 0.5;
+var scoreVisible = false;
+var SCORE_TILE_BASE = "https://lutelute.github.io/japan-re-potential/tiles";
+
 // Raw cached GeoJSON (before region filter)
 var rawSubData = null;
 var rawLineData = null;
@@ -166,7 +172,10 @@ function initMap() {
         "航空写真 (国土地理院)": gsiPhotoLayer,
     }, null, { position: "topright", collapsed: true }).addTo(map);
 
-    // Custom panes for z-ordering: substations & plants above lines
+    // Custom panes for z-ordering
+    var scorePane = map.createPane("scorePane");
+    scorePane.style.zIndex = 300;
+    scorePane.style.pointerEvents = "none";
     map.createPane("substationPane").style.zIndex = 450;
     map.createPane("plantPane").style.zIndex = 460;
 
@@ -1058,6 +1067,31 @@ function sortListPanel(mode) {
     var btn = document.getElementById(id);
     if (btn) btn.classList.add("active");
     renderListPanel();
+}
+
+// ── RE適地スコアオーバーレイ ─────────────────────────────────
+function toggleScore(on) {
+    scoreVisible = (on !== undefined) ? on : !scoreVisible;
+    var chk = document.getElementById("chk-score");
+    if (chk) chk.checked = scoreVisible;
+    if (scoreVisible) {
+        if (!scoreTileLayer) {
+            scoreTileLayer = L.tileLayer(SCORE_TILE_BASE + "/{z}/{x}/{y}.png", {
+                pane: "scorePane",
+                opacity: scoreOpacity,
+                maxNativeZoom: 9,
+                maxZoom: 18,
+            });
+        }
+        scoreTileLayer.addTo(map);
+    } else {
+        if (scoreTileLayer) map.removeLayer(scoreTileLayer);
+    }
+}
+
+function setScoreOpacity(val) {
+    scoreOpacity = val / 100;
+    if (scoreTileLayer) scoreTileLayer.setOpacity(scoreOpacity);
 }
 
 function toggleListPanel(show) {
