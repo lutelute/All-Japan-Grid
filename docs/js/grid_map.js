@@ -91,6 +91,28 @@ const FUEL_COLORS = {
     battery: "#aa00ff", unknown: "#999999",
 };
 
+// Fuel type display names [key, ja, en]
+const FUEL_ENTRIES = [
+    ["nuclear",     "原子力",   "Nuclear"],
+    ["coal",        "石炭",     "Coal"],
+    ["gas",         "ガス",     "Gas"],
+    ["oil",         "石油",     "Oil"],
+    ["hydro",       "水力",     "Hydro"],
+    ["pumped_hydro","揚水",     "Pumped"],
+    ["wind",        "風力",     "Wind"],
+    ["solar",       "太陽光",   "Solar"],
+    ["geothermal",  "地熱",     "Geothermal"],
+    ["biomass",     "バイオマス","Biomass"],
+    ["waste",       "廃棄物",   "Waste"],
+    ["battery",     "蓄電池",   "Battery"],
+    ["unknown",     "その他",   "Other"],
+];
+
+const FUEL_TYPES_ALL = FUEL_ENTRIES.map(function(e) { return e[0]; });
+
+// 燃料種別フィルター（デフォルト全選択）
+var fuelTypeFilter = new Set(FUEL_TYPES_ALL);
+
 // ── Map state ──
 
 var map;
@@ -107,6 +129,24 @@ var scoreTileLayer = null;
 var scoreOpacity = 0.5;
 var scoreVisible = false;
 var SCORE_TILE_BASE = "https://lutelute.github.io/japan-re-potential/tiles";
+
+// 地形オーバーレイ
+var terrainLayers = {};
+var terrainOpacity = 0.65;
+var TERRAIN_DEFS = {
+    hillshade: {
+        url: "https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png",
+        maxNativeZoom: 16, label: "陰影起伏図",
+    },
+    relief: {
+        url: "https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png",
+        maxNativeZoom: 15, label: "色別標高図",
+    },
+    slope: {
+        url: "https://cyberjapandata.gsi.go.jp/xyz/slopemap/{z}/{x}/{y}.png",
+        maxNativeZoom: 15, label: "傾斜量図",
+    },
+};
 
 // Raw cached GeoJSON (before region filter)
 var rawSubData = null;
@@ -163,16 +203,24 @@ function initMap() {
         attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
         maxZoom: 18,
     });
+    var topoLayer = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/">OSM</a> contributors, SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
+        maxZoom: 17,
+    });
     cartoLayer.addTo(map);
     L.control.layers({
         "Dark (CartoDB)": cartoLayer,
         "OSM": osmLayer,
+        "地形図 (OpenTopoMap)": topoLayer,
         "衛星 (Google)": satelliteLayer,
         "地図 (国土地理院)": gsiLayer,
         "航空写真 (国土地理院)": gsiPhotoLayer,
     }, null, { position: "topright", collapsed: true }).addTo(map);
 
     // Custom panes for z-ordering
+    var terrainPane = map.createPane("terrainPane");
+    terrainPane.style.zIndex = 280;
+    terrainPane.style.pointerEvents = "none";
     var scorePane = map.createPane("scorePane");
     scorePane.style.zIndex = 300;
     scorePane.style.pointerEvents = "none";
@@ -398,6 +446,16 @@ function renderLayers() {
     if (layerVisible.plants && rawPlantData) {
         try {
             var plantData = filterByRegion(rawPlantData, selectedRegion);
+            if (fuelTypeFilter.size < FUEL_TYPES_ALL.length) {
+                plantData = {
+                    type: "FeatureCollection",
+                    features: plantData.features.filter(function(f) {
+                        var fuel = f.properties.fuel_type || "unknown";
+                        var key = FUEL_TYPES_ALL.indexOf(fuel) >= 0 ? fuel : "unknown";
+                        return fuelTypeFilter.has(key);
+                    })
+                };
+            }
             plantLayer = L.geoJSON(plantData, {
                 pointToLayer: function (feature, latlng) {
                     var p = feature.properties;
@@ -1069,6 +1127,87 @@ function sortListPanel(mode) {
     renderListPanel();
 }
 
+// ── 発電所種別フィルター ──────────────────────────────────────
+
+function buildFuelCheckboxes() {
+    var container = document.getElementById("fuel-checkboxes-container");
+    if (!container) return;
+    container.innerHTML = "";
+    FUEL_ENTRIES.forEach(function(entry) {
+        var key = entry[0], nameJa = entry[1];
+        var color = FUEL_COLORS[key] || FUEL_COLORS.unknown;
+
+        var label = document.createElement("label");
+        label.className = "fuel-cb-label";
+        label.title = entry[2];
+
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = fuelTypeFilter.has(key);
+        cb.dataset.fuel = key;
+        cb.addEventListener("change", function() {
+            if (this.checked) fuelTypeFilter.add(key);
+            else fuelTypeFilter.delete(key);
+            renderLayers();
+        });
+
+        var dot = document.createElement("span");
+        dot.className = "fuel-dot";
+        dot.style.background = color;
+
+        var name = document.createElement("span");
+        name.className = "fuel-name";
+        name.textContent = nameJa;
+
+        label.appendChild(cb);
+        label.appendChild(dot);
+        label.appendChild(name);
+        container.appendChild(label);
+    });
+}
+
+function setAllFuelTypes(on) {
+    if (on) {
+        FUEL_TYPES_ALL.forEach(function(k) { fuelTypeFilter.add(k); });
+    } else {
+        fuelTypeFilter.clear();
+    }
+    var container = document.getElementById("fuel-checkboxes-container");
+    if (container) {
+        container.querySelectorAll("input[type=checkbox]").forEach(function(cb) {
+            cb.checked = on;
+        });
+    }
+    renderLayers();
+}
+
+// ── 地形オーバーレイ ──────────────────────────────────────────
+function toggleTerrain(key, on) {
+    var def = TERRAIN_DEFS[key];
+    if (!def) return;
+    if (on) {
+        if (!terrainLayers[key]) {
+            terrainLayers[key] = L.tileLayer(def.url, {
+                pane: "terrainPane",
+                opacity: terrainOpacity,
+                maxNativeZoom: def.maxNativeZoom,
+                maxZoom: 18,
+                attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+            });
+        }
+        terrainLayers[key].addTo(map);
+    } else {
+        if (terrainLayers[key]) map.removeLayer(terrainLayers[key]);
+    }
+}
+
+function setTerrainOpacity(val) {
+    terrainOpacity = val / 100;
+    Object.keys(terrainLayers).forEach(function(key) {
+        if (terrainLayers[key]) terrainLayers[key].setOpacity(terrainOpacity);
+    });
+}
+
 // ── RE適地スコアオーバーレイ ─────────────────────────────────
 function toggleScore(on) {
     scoreVisible = (on !== undefined) ? on : !scoreVisible;
@@ -1135,6 +1274,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initMap();
     initTabs();
     initRegionList();
+    buildFuelCheckboxes();
 
     // Layer visibility checkboxes (synced across tabs)
     document.querySelectorAll(".layer-cb").forEach(function (cb) {

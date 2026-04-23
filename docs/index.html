@@ -44,6 +44,41 @@
                 </label>
             </div>
         </div>
+        <!-- 地形オーバーレイ -->
+        <div class="section">
+            <h2>地形オーバーレイ</h2>
+            <div class="layer-toggles">
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/>
+                    <span class="toggle-label">陰影起伏図</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/>
+                    <span class="toggle-label">色別標高図</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/>
+                    <span class="toggle-label">傾斜量図</span>
+                </label>
+            </div>
+            <div class="filter-row" style="margin-top:4px">
+                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
+                <input type="range" id="terrain-opacity" min="0" max="100" value="65"
+                    oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
+            </div>
+        </div>
+
+        <!-- 発電所種別フィルター -->
+        <div class="section" id="fuel-filter-section">
+            <h2>発電所種別
+                <span class="fuel-filter-actions">
+                    <button class="btn-fuel-all" onclick="setAllFuelTypes(true)">全選択</button>
+                    <button class="btn-fuel-all" onclick="setAllFuelTypes(false)">全解除</button>
+                </span>
+            </h2>
+            <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
+        </div>
+
         <div class="section">
             <h2>RE適地スコア <span style="font-size:10px;font-weight:normal;color:#aaa">(試験)</span></h2>
             <div class="layer-toggles">

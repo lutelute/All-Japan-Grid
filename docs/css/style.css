@@ -393,6 +393,63 @@ body {
 .list-trunc { color: #e94560; font-size: 9px; padding: 4px 5px; text-align: center; }
 .list-empty { color: #888; font-size: 10px; padding: 6px 5px; }
 
+/* ── Fuel type filter ── */
+#fuel-filter-section h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fuel-filter-actions {
+    display: flex;
+    gap: 4px;
+}
+.btn-fuel-all {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    background: #0f3460;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 1.5;
+}
+.btn-fuel-all:hover { background: #e94560; border-color: #e94560; }
+
+.fuel-checkboxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 6px;
+    padding-top: 2px;
+}
+.fuel-cb-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.76rem;
+    cursor: pointer;
+    padding: 2px 0;
+    user-select: none;
+}
+.fuel-cb-label input[type="checkbox"] {
+    accent-color: #e94560;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.fuel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.fuel-cb-label span.fuel-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ── UI toggle buttons (always on map) ── */
 #ui-toggles {
     position: absolute;
