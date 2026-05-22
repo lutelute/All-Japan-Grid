@@ -36,6 +36,7 @@ from src.uc.constraints import (
     add_ramp_constraints,
     add_reserve_margin_constraints,
     add_startup_shutdown_logic,
+    add_startup_type_constraints,
     add_storage_soc_constraints,
     add_transmission_capacity_constraints,
 )
@@ -122,6 +123,18 @@ def solve_uc(params: UCParameters) -> UCResult:
     v = pulp.LpVariable.dicts("v", indices, cat="Binary")
     w = pulp.LpVariable.dicts("w", indices, cat="Binary")
 
+    # 3-state startup type variables (only for thermal generators)
+    thermal_ids = {g.id for g in generators if g.has_thermal_startup}
+    thermal_indices = [(g_id, t) for g_id in thermal_ids for t in timesteps]
+    y_hot  = pulp.LpVariable.dicts("y_hot",  thermal_indices, cat="Binary") if thermal_indices else {}
+    y_warm = pulp.LpVariable.dicts("y_warm", thermal_indices, cat="Binary") if thermal_indices else {}
+    y_cold = pulp.LpVariable.dicts("y_cold", thermal_indices, cat="Binary") if thermal_indices else {}
+    if thermal_indices:
+        logger.info(
+            "Created %d×3 thermal startup variables (%d thermal generators)",
+            len(thermal_indices), len(thermal_ids),
+        )
+
     # Split p variable creation: non-storage (lowBound=0), storage (lowBound=None)
     non_storage_p_indices = [
         (g_id, t) for g_id in gen_ids if g_id not in storage_ids for t in timesteps
@@ -191,7 +204,8 @@ def solve_uc(params: UCParameters) -> UCResult:
     )
 
     # --- Objective function ------------------------------------------------
-    _build_objective(model, u, p, v, w, generators, timesteps)
+    _build_objective(model, u, p, v, w, generators, timesteps,
+                     y_hot=y_hot, y_warm=y_warm, y_cold=y_cold)
 
     # --- Constraints -------------------------------------------------------
     _add_all_constraints(
@@ -199,6 +213,7 @@ def solve_uc(params: UCParameters) -> UCResult:
         p_ch=p_ch, p_dis=p_dis, z_ch=z_ch, soc=soc,
         period_duration_h=params.time_horizon.period_duration_h,
         interconnections=interconnections, f=f,
+        y_hot=y_hot, y_warm=y_warm, y_cold=y_cold,
     )
 
     # --- Select and run solver ---------------------------------------------
@@ -272,24 +287,42 @@ def _build_objective(
     w: Dict[Tuple[str, int], pulp.LpVariable],
     generators: List[Generator],
     timesteps: List[int],
+    *,
+    y_hot: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_warm: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_cold: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> None:
     """Build the cost-minimisation objective function.
 
-    Total cost = Σ_g Σ_t [ fuel_cost[g] * p[g,t]
-                          + (no_load_cost[g] + labor_cost[g]) * u[g,t]
-                          + startup_cost[g] * v[g,t]
-                          + shutdown_cost[g] * w[g,t] ]
+    For generators with ``has_thermal_startup=True``, the startup cost
+    term is replaced by the 3-state formulation:
+        hot_start_cost * y_hot + warm_start_cost * y_warm + cold_start_cost * y_cold
+
+    For all others, the legacy ``startup_cost * v[g,t]`` term is used.
     """
-    objective = pulp.lpSum(
-        g.fuel_cost_per_mwh * p[(g.id, t)]
-        + (g.no_load_cost + g.labor_cost_per_h) * u[(g.id, t)]
-        + g.startup_cost * v[(g.id, t)]
-        + g.shutdown_cost * w[(g.id, t)]
-        for g in generators
-        for t in timesteps
+    y_hot  = y_hot  or {}
+    y_warm = y_warm or {}
+    y_cold = y_cold or {}
+
+    terms = []
+    for g in generators:
+        for t in timesteps:
+            terms.append(g.fuel_cost_per_mwh * p[(g.id, t)])
+            terms.append((g.no_load_cost + g.labor_cost_per_h) * u[(g.id, t)])
+            terms.append(g.shutdown_cost * w[(g.id, t)])
+            if g.has_thermal_startup and (g.id, t) in y_hot:
+                terms.append(g.hot_start_cost  * y_hot [(g.id, t)])
+                terms.append(g.warm_start_cost * y_warm[(g.id, t)])
+                terms.append(g.cold_start_cost * y_cold[(g.id, t)])
+            else:
+                terms.append(g.startup_cost * v[(g.id, t)])
+
+    model += pulp.lpSum(terms)
+    n_thermal = sum(1 for g in generators if g.has_thermal_startup)
+    logger.info(
+        "Objective built: %d generators (%d thermal 3-state, %d single-cost)",
+        len(generators), n_thermal, len(generators) - n_thermal,
     )
-    model += objective
-    logger.info("Objective function built: minimise total operating cost")
 
 
 def _add_all_constraints(
@@ -310,6 +343,9 @@ def _add_all_constraints(
     period_duration_h: float = 1.0,
     interconnections: Optional[List[Interconnection]] = None,
     f: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_hot: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_warm: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_cold: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> None:
     """Add all constraint classes to the model.
 
@@ -342,6 +378,10 @@ def _add_all_constraints(
         model, p, p_ch or {}, p_dis or {}, z_ch or {}, soc or {},
         u, generators, timesteps, period_duration_h,
     )
+    if y_hot is not None and y_warm is not None and y_cold is not None:
+        add_startup_type_constraints(
+            model, u, v, y_hot, y_warm, y_cold, generators, timesteps,
+        )
 
 
 def _split_demand_by_region(

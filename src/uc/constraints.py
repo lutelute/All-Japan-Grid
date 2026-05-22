@@ -698,6 +698,100 @@ def add_transmission_capacity_constraints(
     return count
 
 
+def add_startup_type_constraints(
+    model: pulp.LpProblem,
+    u: Dict[Tuple[str, int], pulp.LpVariable],
+    v: Dict[Tuple[str, int], pulp.LpVariable],
+    y_hot: Dict[Tuple[str, int], pulp.LpVariable],
+    y_warm: Dict[Tuple[str, int], pulp.LpVariable],
+    y_cold: Dict[Tuple[str, int], pulp.LpVariable],
+    generators: List[Generator],
+    timesteps: List[int],
+) -> int:
+    """Add cold/warm/hot startup-type partitioning constraints.
+
+    For generators with ``has_thermal_startup=True``, each startup event
+    ``v[g,t]=1`` is classified as hot, warm, or cold depending on how long
+    the unit has been offline:
+
+    - **Hot**  : offline for fewer than ``warm_start_h`` consecutive periods.
+    - **Warm** : offline >= ``warm_start_h`` but < ``cold_start_h`` periods.
+    - **Cold** : offline >= ``cold_start_h`` consecutive periods.
+
+    Constraints added per generator per timestep:
+
+    1. **Partition**      : ``y_hot + y_warm + y_cold = v``
+    2. **Upper bounds**   : ``y_hot, y_warm, y_cold <= v``
+    3. **Cold detection** : ``y_cold >= v - Σ_{τ∈Tc} u[g,τ]``
+    4. **Warm detection** : ``y_warm + y_cold >= v - Σ_{τ∈Tw} u[g,τ]``
+
+    Generators with ``has_thermal_startup=False`` are skipped (they use
+    the single ``startup_cost`` via ``v[g,t]`` in the objective).
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    n_thermal = 0
+    n_skipped = 0
+    for g in generators:
+        if not g.has_thermal_startup:
+            n_skipped += 1
+            continue
+        n_thermal += 1
+        Tw = g.warm_start_h
+        Tc = g.cold_start_h
+
+        for i, t in enumerate(timesteps):
+            # 1. Partition: y_hot + y_warm + y_cold == v
+            model += (
+                y_hot[(g.id, t)] + y_warm[(g.id, t)] + y_cold[(g.id, t)]
+                == v[(g.id, t)],
+                f"su_partition_{g.id}_t{t}",
+            )
+            count += 1
+
+            # 2. Upper bounds <= v
+            for y_var, tag in ((y_hot, "hot"), (y_warm, "warm"), (y_cold, "cold")):
+                model += (
+                    y_var[(g.id, t)] <= v[(g.id, t)],
+                    f"su_ub_{tag}_{g.id}_t{t}",
+                )
+                count += 1
+
+            # Look-back windows (clipped to available history)
+            warm_window = [timesteps[j] for j in range(max(0, i - Tw), i)]
+            cold_window = [timesteps[j] for j in range(max(0, i - Tc), i)]
+
+            # 3. Cold detection: y_cold >= v - Σ_{τ∈Tc} u[g,τ]
+            if cold_window:
+                model += (
+                    y_cold[(g.id, t)]
+                    >= v[(g.id, t)]
+                    - pulp.lpSum(u[(g.id, tau)] for tau in cold_window),
+                    f"su_cold_{g.id}_t{t}",
+                )
+                count += 1
+
+            # 4. Warm detection: y_warm + y_cold >= v - Σ_{τ∈Tw} u[g,τ]
+            if warm_window:
+                model += (
+                    y_warm[(g.id, t)] + y_cold[(g.id, t)]
+                    >= v[(g.id, t)]
+                    - pulp.lpSum(u[(g.id, tau)] for tau in warm_window),
+                    f"su_warm_{g.id}_t{t}",
+                )
+                count += 1
+
+    logger.info(
+        "Added %d startup-type constraints (%d thermal generators, %d skipped)",
+        count,
+        n_thermal,
+        n_skipped,
+    )
+    return count
+
+
 def add_nodal_balance_constraints(
     model: pulp.LpProblem,
     p: Dict[Tuple[str, int], pulp.LpVariable],
