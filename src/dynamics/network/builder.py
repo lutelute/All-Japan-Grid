@@ -403,6 +403,46 @@ class GridNetwork:
     # Connected-component extraction
     # ------------------------------------------------------------------
 
+    def top_k_components(self, k: int = 2, min_buses: int = 10) -> "List[GridNetwork]":
+        """Return the k largest connected components as separate GridNetworks."""
+        if self.nb == 0:
+            return []
+        n = self.nb
+        id2idx = {b.id: i for i, b in enumerate(self._buses)}
+        rows, cols, vals = [], [], []
+        for ln in self._lines:
+            fi = id2idx[ln.from_bus]; ti = id2idx[ln.to_bus]
+            rows.extend([fi, ti]); cols.extend([ti, fi]); vals.extend([1, 1])
+        adj = sp.coo_matrix((vals, (rows, cols)), shape=(n, n), dtype=int).tocsr()
+        n_comp, labels = connected_components(adj, directed=False)
+        sizes = np.bincount(labels)
+        top_labels = [i for i in np.argsort(sizes)[::-1]
+                      if sizes[i] >= min_buses][:k]
+        result = []
+        for lbl in top_labels:
+            keep = np.where(labels == lbl)[0].tolist()
+            old2new = {self._buses[i].id: ni for ni, i in enumerate(keep)}
+            new_buses = []
+            for new_idx, old_idx in enumerate(keep):
+                b = self._buses[old_idx]
+                new_buses.append(BusData(
+                    id=new_idx, name=b.name, base_kv=b.base_kv,
+                    region=b.region, lat=b.lat, lon=b.lon,
+                    bus_type=b.bus_type, V_mag=b.V_mag, V_ang=b.V_ang,
+                    P_gen=b.P_gen, Q_gen=b.Q_gen, P_load=b.P_load, Q_load=b.Q_load,
+                ))
+            new_lines = []
+            for ln in self._lines:
+                fi = old2new.get(ln.from_bus); ti = old2new.get(ln.to_bus)
+                if fi is not None and ti is not None:
+                    new_lines.append(LineData(
+                        from_bus=fi, to_bus=ti, R_pu=ln.R_pu, X_pu=ln.X_pu,
+                        B_pu=ln.B_pu, base_kv=ln.base_kv,
+                        length_km=ln.length_km, rating_mva=ln.rating_mva,
+                    ))
+            result.append(GridNetwork(new_buses, new_lines, self.sbase_mva))
+        return result
+
     def largest_connected_component(self) -> "GridNetwork":
         """
         Return a new GridNetwork containing only the largest connected
@@ -862,6 +902,76 @@ class GridNetwork:
                         ))
         except ImportError:
             pass   # scipy not available; skip proximity step
+
+        # ── Step 5: Bridge isolated components ────────────────────────────
+        # Find all connected components; for each pair, add the shortest
+        # inter-component edge (one per pair, per voltage class) so that
+        # small isolated fragments join the main network.
+        try:
+            from scipy.spatial import cKDTree
+            from scipy.sparse.csgraph import connected_components as _cc
+
+            n_b = len(buses)
+            id2idx2: Dict[int, int] = {b.id: i for i, b in enumerate(buses)}
+            r2, c2, v2 = [], [], []
+            for ln in lines:
+                fi = id2idx2[ln.from_bus]; ti = id2idx2[ln.to_bus]
+                r2 += [fi, ti]; c2 += [ti, fi]; v2 += [1, 1]
+            if r2:
+                adj2 = sp.coo_matrix((v2,(r2,c2)), shape=(n_b,n_b),dtype=int).tocsr()
+            else:
+                adj2 = sp.csr_matrix((n_b, n_b), dtype=int)
+            _, comp_labels = _cc(adj2, directed=False)
+            comp_sizes2 = np.bincount(comp_labels)
+
+            # Only bridge components with ≥ 5 buses
+            big_comps = [c for c in range(len(comp_sizes2)) if comp_sizes2[c] >= 5]
+            BRIDGE_KM: Dict[int, float] = {500: 500.0, 275: 250.0, 154: 120.0}
+
+            bridge_seen: set = set()
+            for kv in [500, 275, 154]:
+                kv_idxs_by_comp: Dict[int, List[int]] = {}
+                for i, b in enumerate(buses):
+                    if int(b.base_kv) == kv and comp_labels[i] in big_comps:
+                        kv_idxs_by_comp.setdefault(comp_labels[i], []).append(i)
+                comps_with_kv = [c for c in big_comps if c in kv_idxs_by_comp]
+                if len(comps_with_kv) < 2:
+                    continue
+                max_km = BRIDGE_KM.get(kv, 150.0)
+                ang_thresh = max_km / 6371.0
+                # For each comp, find nearest bus in any other comp
+                for ca in comps_with_kv:
+                    ia = kv_idxs_by_comp[ca]
+                    coords_a = np.array([[math.radians(buses[i].lat),
+                                         math.radians(buses[i].lon)] for i in ia])
+                    for cb in comps_with_kv:
+                        if cb <= ca: continue
+                        ib = kv_idxs_by_comp[cb]
+                        coords_b = np.array([[math.radians(buses[i].lat),
+                                              math.radians(buses[i].lon)] for i in ib])
+                        tree_b = cKDTree(coords_b)
+                        dists_ab, nbrs_ab = tree_b.query(coords_a, k=1)
+                        best_row = int(np.argmin(dists_ab))
+                        best_d = dists_ab[best_row]
+                        if best_d > ang_thresh:
+                            continue
+                        src = ia[best_row]
+                        tgt = ib[nbrs_ab[best_row]]
+                        edge_key = (min(src,tgt), max(src,tgt))
+                        if edge_key in bridge_seen:
+                            continue
+                        bridge_seen.add(edge_key)
+                        length_km = best_d * 6371.0
+                        R_pu, X_pu, B_pu = _pu_params(kv, length_km, sbase_mva)
+                        if X_pu > 0.50:
+                            continue  # too weak to be useful
+                        lines.append(LineData(
+                            from_bus=src, to_bus=tgt,
+                            R_pu=R_pu, X_pu=X_pu, B_pu=B_pu,
+                            base_kv=float(kv), length_km=length_km,
+                        ))
+        except ImportError:
+            pass
 
         result = cls(buses, lines, sbase_mva)
 
