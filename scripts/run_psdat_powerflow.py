@@ -55,7 +55,7 @@ def run_powerflow(case: dict) -> dict:
 
     print("\n[1] AC 潮流計算 (psdat-python Newton-Raphson)")
     t0 = time.monotonic()
-    pf = pf_solve(BUS, BRANCH, GEN, baseMVA=baseMVA)
+    pf = pf_solve(BUS, BRANCH, GEN, baseMVA=baseMVA, max_iter=100, tol=1e-6)
     dt = time.monotonic() - t0
 
     if pf.get("converged"):
@@ -65,7 +65,9 @@ def run_powerflow(case: dict) -> dict:
         print(f"  電圧範囲: {Vm.min():.4f} – {Vm.max():.4f} pu")
         print(f"  角度範囲: {Va.min():.2f}° – {Va.max():.2f}°")
     else:
-        print("  ⚠ 収束せず (初期値を維持)")
+        print(f"  ⚠ 収束せず ({pf.get('iterations','?')}反復, 初期値を維持)")
+        if "mismatch" in pf:
+            print(f"  最終ミスマッチ: {pf['mismatch']:.4e}")
 
     return pf
 
@@ -313,15 +315,21 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["powerflow","modal","fault","all"],
                         default="all")
+    parser.add_argument("--kv", default="500,275,154,77,66",
+                        help="カンマ区切りの電圧レベル [kV] 例: 500,275,154,77,66")
     args = parser.parse_args()
+
+    voltage_levels = [int(v) for v in args.kv.split(",")]
 
     print("=" * 60)
     print("全国電力系統 × psdat-python 統合解析")
     print("=" * 60)
+    print(f"電圧レベル: {voltage_levels} kV")
 
-    # load_factor=0.15: 500+275 kV backbone 単体での安定収束に適した負荷率
-    # (実際の負荷は154kV以下の配電系統に接続されるためEHVは低負荷率が現実的)
-    case = build_matpower_case(voltage_levels=[500, 275], load_factor=0.15)
+    # 電圧レベルに応じた負荷率 (高電圧のみ=低負荷率、広域モデル=高負荷率)
+    max_kv = max(voltage_levels)
+    load_factor = 0.25 if max_kv <= 275 else (0.20 if min(voltage_levels) >= 154 else 0.15)
+    case = build_matpower_case(voltage_levels=voltage_levels, load_factor=load_factor)
     print(f"\n系統規模: {case['n_bus']} バス, {case['n_gen']} 発電機")
     print(f"総発電容量: {sum(case['GEN'][:,8]):.0f} MW")
     print(f"総負荷:     {sum(case['BUS'][:,2]):.0f} MW")

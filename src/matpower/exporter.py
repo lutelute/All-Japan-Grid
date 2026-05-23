@@ -23,6 +23,7 @@ Usage::
 from __future__ import annotations
 
 import math
+import os
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -134,8 +135,11 @@ def build_matpower_case(
     if voltage_levels is None:
         voltage_levels = [500, 275]
 
-    # ── 1. Build network ─────────────────────────────────────────────────
-    net = GridNetwork.from_geojson(data_dir, voltage_levels=voltage_levels)
+    # ── 1. Build network (with disk cache for slow multi-kV builds) ───────
+    cache_dir = os.path.join(data_dir, "..", "data", "cache") if os.path.isdir(data_dir) else None
+    net = GridNetwork.from_geojson(
+        data_dir, voltage_levels=voltage_levels, cache_dir=cache_dir
+    )
     lcc = net.largest_connected_component()
     n_bus = lcc.nb
 
@@ -155,10 +159,16 @@ def build_matpower_case(
 
     # Total generation → total load (power balance at load_factor)
     total_gen_mw = sum(bus_gen[b][1] * load_factor for b in gen_bus_list)
-    pq_bus_count = n_bus - n_gen   # non-generator buses carry loads
-    if pq_bus_count < 1:
-        pq_bus_count = 1
-    load_per_pq_bus_mw = total_gen_mw / pq_bus_count   # MW per PQ bus
+
+    # Voltage-weighted load distribution: load ∝ V_kv² (proxy for substation capacity)
+    # This prevents low-voltage PQ buses from being overloaded relative to EHV buses
+    pq_bus_indices = [i for i in range(n_bus) if i not in bus_gen]
+    if not pq_bus_indices:
+        pq_bus_indices = list(range(n_bus))
+    pq_weights = {i: lcc.buses[i].base_kv ** 2 for i in pq_bus_indices}
+    total_weight = sum(pq_weights.values()) or 1.0
+    # scale so total load = total_gen_mw
+    load_scale = total_gen_mw / total_weight
 
     # ── 3. BUS array (n_bus × 13) ────────────────────────────────────────
     BUS = np.zeros((n_bus, 13))
@@ -172,8 +182,8 @@ def build_matpower_case(
         else:
             btype = PQ_BUS
 
-        # Distribute load evenly across PQ buses for power balance
-        pd_mw = 0.0 if is_gen_bus else load_per_pq_bus_mw
+        # Distribute load proportional to V_kv² for power balance
+        pd_mw = 0.0 if is_gen_bus else pq_weights[i] * load_scale
         qd_mvar = pd_mw * qg_ratio
 
         BUS[i, BUS_I]    = bus_1idx

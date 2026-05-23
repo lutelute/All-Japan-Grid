@@ -48,15 +48,16 @@ REGIONS: List[str] = [
 # Standard voltage classes [kV] used for snapping
 STANDARD_KV: List[int] = [500, 275, 154, 110, 77, 66]
 
-# Line parameters per voltage class (Ω/km, physical units)
+# Line parameters per voltage class (Ω/km and μS/km, physical units)
 # Used to compute Z_pu = Z_phys * S_base / V_base^2
+# B_pu_km = b_us_km × 1e-6 × V_kv² / S_mva  (shunt charging susceptance per km)
 LINE_PARAMS_OHM_KM: Dict[int, Dict[str, float]] = {
-    500: {"r_ohm_km": 0.02,  "x_ohm_km": 0.30},
-    275: {"r_ohm_km": 0.06,  "x_ohm_km": 0.35},
-    154: {"r_ohm_km": 0.10,  "x_ohm_km": 0.40},
-    110: {"r_ohm_km": 0.12,  "x_ohm_km": 0.42},
-    77:  {"r_ohm_km": 0.18,  "x_ohm_km": 0.45},
-    66:  {"r_ohm_km": 0.20,  "x_ohm_km": 0.45},
+    500: {"r_ohm_km": 0.02,  "x_ohm_km": 0.30, "b_us_km": 2.7},
+    275: {"r_ohm_km": 0.06,  "x_ohm_km": 0.35, "b_us_km": 2.3},
+    154: {"r_ohm_km": 0.10,  "x_ohm_km": 0.40, "b_us_km": 1.8},
+    110: {"r_ohm_km": 0.12,  "x_ohm_km": 0.42, "b_us_km": 1.5},
+    77:  {"r_ohm_km": 0.18,  "x_ohm_km": 0.45, "b_us_km": 1.2},
+    66:  {"r_ohm_km": 0.20,  "x_ohm_km": 0.45, "b_us_km": 1.0},
 }
 
 # Geographic matching thresholds [km] per voltage class
@@ -75,8 +76,28 @@ MATCH_THRESHOLD_DEFAULT_KM: float = 3.0
 # Generator-to-bus matching threshold [km]
 GEN_MATCH_KM: float = 8.0
 
-# Minimum line length to avoid degenerate entries [km]
-MIN_LINE_LENGTH_KM: float = 0.5
+# Minimum line length per voltage class (transmission-level filter)
+# 66/77 kV include many short distribution feeders → use longer threshold
+MIN_LINE_LENGTH_BY_KV: Dict[int, float] = {
+    500: 0.5,
+    275: 0.5,
+    154: 1.0,
+    110: 2.0,
+    77:  5.0,   # transmission lines only (feeders excluded)
+    66:  5.0,   # transmission lines only (feeders excluded)
+}
+MIN_LINE_LENGTH_KM: float = 0.5  # default fallback
+
+# Maximum per-unit admittance cap (avoids ill-conditioning from very short lines)
+MAX_ADMITTANCE_PU: float = 200.0
+
+# Standard transformer voltage pairs (hi_kv, lo_kv) — only create transformers for these
+# Pairs like (500, 66) or (275, 66) are NOT standard and should not be created directly
+STANDARD_TRANSFORMER_PAIRS: set = {
+    (500, 275), (275, 220), (275, 154), (220, 154),
+    (154, 110), (154, 77), (154, 66),
+    (110, 66), (77, 66), (110, 77),
+}
 
 
 # ---------------------------------------------------------------------------
@@ -166,14 +187,32 @@ def _geom_centroid(geom: dict) -> Optional[Tuple[float, float]]:
 def _snap_voltage_kv(v_str: object) -> int:
     """
     Parse a voltage field (may be "500000", "275000;154000", etc.) and snap
-    to the nearest standard voltage class [kV].
+    to the nearest standard voltage class [kV]. Returns the PRIMARY (first) level.
     """
     try:
-        raw = str(v_str).split(";")[0].strip()
+        raw = str(v_str).split(";")[0].strip().replace(",", "")
         kv = int(float(raw)) // 1000
         return min(STANDARD_KV, key=lambda c: abs(c - kv))
     except (TypeError, ValueError):
         return STANDARD_KV[-1]    # default to lowest class
+
+
+def _all_voltages_kv(v_str: object, target_kv: set) -> List[int]:
+    """
+    Parse ALL voltage levels from a compound field ("154000;66000" etc.)
+    and return those that are in target_kv, sorted high→low.
+    """
+    result = []
+    for part in str(v_str).replace(",", ";").split(";"):
+        part = part.strip()
+        try:
+            kv = int(float(part)) // 1000
+            snapped = min(STANDARD_KV, key=lambda c: abs(c - kv))
+            if snapped in target_kv and snapped not in result:
+                result.append(snapped)
+        except (TypeError, ValueError):
+            pass
+    return sorted(result, reverse=True)   # highest first
 
 
 def _line_length_km(coords: List[List[float]]) -> float:
@@ -197,11 +236,14 @@ def _nearest_bus(
     buses: List[BusData],
     preferred_kv: int,
     threshold_km: float,
+    strict: bool = False,
 ) -> Optional[int]:
     """
     Find the index of the nearest bus within *threshold_km*.
 
-    Preference ordering:
+    When strict=True (used for line endpoint matching):
+      Return only if a same-voltage bus is within threshold.
+    When strict=False:
       1. Same voltage class and within threshold → return its id.
       2. Any voltage class within threshold → return its id.
       3. No bus within threshold → return None.
@@ -222,7 +264,7 @@ def _nearest_bus(
 
     if best_same_id is not None and best_same_d <= threshold_km:
         return best_same_id
-    if best_any_id is not None and best_any_d <= threshold_km:
+    if not strict and best_any_id is not None and best_any_d <= threshold_km:
         return best_any_id
     return None
 
@@ -246,8 +288,8 @@ def _pu_params(
     z_base = (volt_kv ** 2) / sbase_mva          # Ω
     R_pu = params["r_ohm_km"] * length_km / z_base
     X_pu = params["x_ohm_km"] * length_km / z_base
-    # Shunt charging: approximate as B = 0 (conservative; can be added later)
-    B_pu = 0.0
+    # Shunt charging: B_pu = b_us_km × L × 1e-6 / Y_base = b_us_km × L × 1e-6 × z_base
+    B_pu = params["b_us_km"] * length_km * 1e-6 * z_base
     return R_pu, X_pu, B_pu
 
 
@@ -443,6 +485,7 @@ class GridNetwork:
         voltage_levels: List[int] = (500, 275),
         sbase_mva: float = 100.0,
         regions: Optional[List[str]] = None,
+        cache_dir: Optional[str] = None,
     ) -> "GridNetwork":
         """
         Build a GridNetwork by loading all regional GeoJSON files.
@@ -458,16 +501,36 @@ class GridNetwork:
             MVA system base.  Default: 100 MVA.
         regions : list of str, optional
             Subset of regions to load.  Default: all 10 REGIONS.
+        cache_dir : str, optional
+            If provided, cache the built network as a pickle in this directory
+            and reuse on subsequent calls with the same parameters.
 
         Returns
         -------
         GridNetwork
         """
+        import pickle, hashlib
         target_regions = regions if regions is not None else REGIONS
+
+        # ── Cache lookup ────────────────────────────────────────────────
+        if cache_dir is not None:
+            os.makedirs(cache_dir, exist_ok=True)
+            cache_key = hashlib.md5(
+                f"{sorted(voltage_levels)}-{sorted(target_regions)}-{sbase_mva}".encode()
+            ).hexdigest()[:12]
+            cache_path = os.path.join(cache_dir, f"gridnet_{cache_key}.pkl")
+            if os.path.exists(cache_path):
+                try:
+                    with open(cache_path, "rb") as fh:
+                        return pickle.load(fh)
+                except Exception:
+                    pass   # fall through to rebuild
         target_kv = set(int(v) for v in voltage_levels)
 
-        # ── Step 1: Load buses ────────────────────────────────────────
+        # ── Step 1: Load buses (multi-voltage substations → multiple buses) ──
         buses: List[BusData] = []
+        # transformer_pairs: (higher_bus_id, lower_bus_id) for co-located buses
+        transformer_pairs: List[Tuple[int, int, int, int]] = []  # (hi_id, lo_id, hi_kv, lo_kv)
         bus_id = 0
         for region in target_regions:
             sub_path = os.path.join(data_dir, f"{region}_substations.geojson")
@@ -481,8 +544,9 @@ class GridNetwork:
                 raw_v = props.get("voltage")
                 if raw_v is None:
                     continue
-                v_kv = _snap_voltage_kv(raw_v)
-                if v_kv not in target_kv:
+                # Get ALL voltage levels present at this substation
+                all_kv = _all_voltages_kv(raw_v, target_kv)
+                if not all_kv:
                     continue
                 geom = feat.get("geometry")
                 if geom is None:
@@ -498,15 +562,27 @@ class GridNetwork:
                     or f"{region}_{bus_id}"
                 )
 
-                buses.append(BusData(
-                    id=bus_id,
-                    name=str(name),
-                    base_kv=float(v_kv),
-                    region=region,
-                    lat=lat,
-                    lon=lon,
-                ))
-                bus_id += 1
+                # Create a bus for each voltage level at this substation
+                new_bus_ids: List[Tuple[int, int]] = []   # (bus_id, kv)
+                for v_kv in all_kv:
+                    buses.append(BusData(
+                        id=bus_id,
+                        name=f"{name}_{v_kv}kV" if len(all_kv) > 1 else str(name),
+                        base_kv=float(v_kv),
+                        region=region,
+                        lat=lat,
+                        lon=lon,
+                    ))
+                    new_bus_ids.append((bus_id, v_kv))
+                    bus_id += 1
+
+                # Add transformer pairs only for standard adjacent voltage pairs
+                for i in range(len(new_bus_ids) - 1):
+                    hi_id, hi_kv = new_bus_ids[i]
+                    lo_id, lo_kv = new_bus_ids[i + 1]
+                    if (hi_kv, lo_kv) in STANDARD_TRANSFORMER_PAIRS:
+                        transformer_pairs.append((hi_id, lo_id, hi_kv, lo_kv))
+
 
         if not buses:
             return cls([], [], sbase_mva)
@@ -548,19 +624,21 @@ class GridNetwork:
 
                 threshold = MATCH_THRESHOLD_KM.get(v_kv, MATCH_THRESHOLD_DEFAULT_KM)
 
+                min_len = MIN_LINE_LENGTH_BY_KV.get(v_kv, MIN_LINE_LENGTH_KM)
+
                 for seg in segments:
                     if len(seg) < 2:
                         continue
                     length_km = _line_length_km(seg)
-                    if length_km < MIN_LINE_LENGTH_KM:
+                    if length_km < min_len:
                         continue
 
-                    # Match endpoints to nearest buses
+                    # Match endpoints to nearest buses — strict: same voltage class only
                     s_lon, s_lat = seg[0][0],  seg[0][1]
                     e_lon, e_lat = seg[-1][0], seg[-1][1]
 
-                    bi = _nearest_bus(s_lon, s_lat, buses, v_kv, threshold)
-                    bj = _nearest_bus(e_lon, e_lat, buses, v_kv, threshold)
+                    bi = _nearest_bus(s_lon, s_lat, buses, v_kv, threshold, strict=True)
+                    bj = _nearest_bus(e_lon, e_lat, buses, v_kv, threshold, strict=True)
 
                     if bi is None or bj is None or bi == bj:
                         continue
@@ -576,6 +654,11 @@ class GridNetwork:
                     if (R_pu ** 2 + X_pu ** 2) < 1e-18:
                         continue
 
+                    # Skip lines with admittance > cap (very short, degenerate)
+                    y_mag = 1.0 / max((R_pu**2 + X_pu**2)**0.5, 1e-12)
+                    if y_mag > MAX_ADMITTANCE_PU:
+                        continue
+
                     lines.append(LineData(
                         from_bus=bi,
                         to_bus=bj,
@@ -586,7 +669,48 @@ class GridNetwork:
                         length_km=length_km,
                     ))
 
-        return cls(buses, lines, sbase_mva)
+        # ── Step 3: Add transformer branches for co-located multi-voltage buses ──
+        # Transformer model: R=0.001 pu, X=0.10 pu (typical EHV/HV transformer)
+        seen_tr: set = set()
+        for hi_id, lo_id, hi_kv, lo_kv in transformer_pairs:
+            # Make sure both bus IDs are valid
+            if hi_id >= len(buses) or lo_id >= len(buses):
+                continue
+            edge_key = (min(hi_id, lo_id), max(hi_id, lo_id))
+            if edge_key in seen_tr:
+                continue
+            seen_tr.add(edge_key)
+
+            # Transformer reactance scaled by voltage ratio (pu on sbase)
+            # Higher ratio → lower coupling → higher X in pu
+            X_tr = 0.10 * (hi_kv / lo_kv) ** 0.5 / (sbase_mva / 100.0)
+            X_tr = max(min(X_tr, 0.30), 0.05)   # clamp 0.05–0.30 pu
+
+            # Rating estimate: lower-voltage side limits the capacity
+            rating_mva = lo_kv * lo_kv / (sbase_mva * X_tr) * 0.3
+
+            lines.append(LineData(
+                from_bus=hi_id,
+                to_bus=lo_id,
+                R_pu=0.001,
+                X_pu=X_tr,
+                B_pu=0.0,
+                base_kv=float(hi_kv),     # HV side nominal
+                length_km=0.0,            # transformer (no physical length)
+                rating_mva=rating_mva,
+            ))
+
+        result = cls(buses, lines, sbase_mva)
+
+        # ── Cache store ─────────────────────────────────────────────────
+        if cache_dir is not None:
+            try:
+                with open(cache_path, "wb") as fh:
+                    pickle.dump(result, fh)
+            except Exception:
+                pass
+
+        return result
 
     # ------------------------------------------------------------------
     # Representation
