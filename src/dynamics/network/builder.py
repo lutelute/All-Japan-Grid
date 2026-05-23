@@ -475,6 +475,89 @@ class GridNetwork:
         return GridNetwork(new_buses, new_lines, self.sbase_mva)
 
     # ------------------------------------------------------------------
+    # Hop-distance filter (removes LV buses far from HV backbone)
+    # ------------------------------------------------------------------
+
+    def filter_by_hv_distance(
+        self,
+        hv_threshold_kv: float = 110.0,
+        max_hops: int = 2,
+    ) -> "GridNetwork":
+        """Remove buses that are more than *max_hops* graph hops from
+        any bus with base_kv ≥ hv_threshold_kv.
+
+        This prunes long radial 66 kV chains that are far from the
+        HV backbone, which cause ill-conditioned Jacobians in NR.
+
+        Parameters
+        ----------
+        hv_threshold_kv : float
+            Buses at this voltage level or above are the "anchor" roots.
+        max_hops : int
+            Maximum number of hops from any root bus to include.
+        """
+        n = self.nb
+        if n == 0:
+            return GridNetwork([], [], self.sbase_mva)
+
+        # Build adjacency list
+        adj: Dict[int, List[int]] = {i: [] for i in range(n)}
+        id_to_idx = {b.id: i for i, b in enumerate(self._buses)}
+        for ln in self._lines:
+            fi = id_to_idx[ln.from_bus]
+            ti = id_to_idx[ln.to_bus]
+            adj[fi].append(ti)
+            adj[ti].append(fi)
+
+        # BFS from all HV root buses simultaneously
+        dist = [-1] * n
+        queue = []
+        for i, b in enumerate(self._buses):
+            if b.base_kv >= hv_threshold_kv:
+                dist[i] = 0
+                queue.append(i)
+
+        head = 0
+        while head < len(queue):
+            cur = queue[head]; head += 1
+            if dist[cur] >= max_hops:
+                continue
+            for nb in adj[cur]:
+                if dist[nb] == -1:
+                    dist[nb] = dist[cur] + 1
+                    queue.append(nb)
+
+        keep_mask = [d != -1 for d in dist]
+        keep_indices = [i for i, k in enumerate(keep_mask) if k]
+
+        old_id_to_new: Dict[int, int] = {}
+        new_buses: List[BusData] = []
+        for new_idx, old_idx in enumerate(keep_indices):
+            b = self._buses[old_idx]
+            old_id_to_new[b.id] = new_idx
+            new_buses.append(BusData(
+                id=new_idx, name=b.name, base_kv=b.base_kv,
+                region=b.region, lat=b.lat, lon=b.lon,
+                bus_type=b.bus_type, V_mag=b.V_mag, V_ang=b.V_ang,
+                P_gen=b.P_gen, Q_gen=b.Q_gen,
+                P_load=b.P_load, Q_load=b.Q_load,
+            ))
+
+        new_lines: List[LineData] = []
+        for ln in self._lines:
+            fi = old_id_to_new.get(ln.from_bus)
+            ti = old_id_to_new.get(ln.to_bus)
+            if fi is not None and ti is not None:
+                new_lines.append(LineData(
+                    from_bus=fi, to_bus=ti,
+                    R_pu=ln.R_pu, X_pu=ln.X_pu, B_pu=ln.B_pu,
+                    base_kv=ln.base_kv, length_km=ln.length_km,
+                    rating_mva=ln.rating_mva,
+                ))
+
+        return GridNetwork(new_buses, new_lines, self.sbase_mva)
+
+    # ------------------------------------------------------------------
     # Class-method constructor
     # ------------------------------------------------------------------
 
@@ -722,7 +805,7 @@ class GridNetwork:
                 154:  80.0,
                 110:  50.0,
                 77:   20.0,
-                # 66 kV: not included (distribution; GeoJSON lines only)
+                66:    5.0,   # short urban connections only (X_pu ≤ 0.07)
             }
             # Maximum X_pu per proximity branch (skip long weak connections)
             MAX_PROX_X_PU = 0.20

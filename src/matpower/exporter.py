@@ -27,6 +27,7 @@ import os
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
+import scipy.sparse as sp
 
 from src.dynamics.network.builder import GridNetwork, BusData, LineData, assign_generators
 
@@ -97,12 +98,152 @@ def _fuel_key(fuel: str) -> str:
     return "thermal"
 
 
+def _build_ybus_for_compensation(
+    BUS: np.ndarray,
+    BRANCH: np.ndarray,
+    baseMVA: float,
+) -> sp.csc_matrix:
+    """Sparse Y-bus from MATPOWER BUS/BRANCH arrays (for reactive compensation).
+
+    Includes existing bus shunts and branch line charging (B/2 per end).
+    """
+    n = BUS.shape[0]
+    bus_nums = BUS[:, BUS_I].astype(int)
+    bus_map = {int(b): i for i, b in enumerate(bus_nums)}
+
+    rows, cols, vals = [], [], []
+
+    # Bus shunts (GS + jBS)
+    for i in range(n):
+        gs = BUS[i, GS] / baseMVA
+        bs = BUS[i, BS] / baseMVA
+        rows.append(i); cols.append(i); vals.append(complex(gs, bs))
+
+    # Branch π-model contributions
+    for k in range(BRANCH.shape[0]):
+        fi = bus_map[int(BRANCH[k, F_BUS])]
+        ti = bus_map[int(BRANCH[k, T_BUS])]
+        R  = BRANCH[k, BR_R]
+        X  = BRANCH[k, BR_X]
+        B  = BRANCH[k, BR_B]
+        tap = BRANCH[k, TAP] if BRANCH[k, TAP] != 0.0 else 1.0
+
+        z = complex(R, X)
+        if abs(z) < 1e-15:
+            continue
+        y_s = 1.0 / z
+        y_c = 0.5j * B
+
+        rows += [fi, ti, fi, ti]
+        cols += [fi, ti, ti, fi]
+        vals += [(y_s + y_c) / (tap * tap), y_s + y_c,
+                 -y_s / tap, -y_s / tap]
+
+    Y = sp.coo_matrix((vals, (rows, cols)), shape=(n, n), dtype=complex)
+    return Y.tocsc()
+
+
+def _add_shunt_compensation(
+    BUS: np.ndarray,
+    BRANCH: np.ndarray,
+    baseMVA: float,
+    method: str = "local",
+    alpha: float = 0.9,
+    v_threshold: float = 0.05,
+) -> "tuple[np.ndarray, dict]":
+    """Add shunt reactive compensation to PQ buses.
+
+    Fixes Newton-Raphson divergence caused by reactive surplus/deficit at
+    flat start (V = 1 pu, θ = 0).  The flat-start reactive injection is:
+
+        Q_flat[i] = imag(sum_j Ybus[i,j])   [pu]
+
+    Positive Q_flat → capacitive surplus (long EHV lines) → add REACTOR (BS < 0).
+    Negative Q_flat → inductive deficit (transformer-heavy buses) → add CAPACITOR (BS > 0).
+
+    Parameters
+    ----------
+    method : 'local' | 'sensitivity'
+        'local'       — compensate every PQ bus for its own Q_flat.
+        'sensitivity' — compensate only high-voltage-sensitivity buses
+                        (buses where estimated |ΔV| = |Q_flat/L_diag| > v_threshold).
+    alpha : float [0, 1]
+        Fraction of surplus to compensate.  0.9 leaves a 10% residual to
+        avoid exact Jacobian singularity at flat start.
+    v_threshold : float
+        Minimum estimated voltage deviation [pu] to trigger compensation
+        in the 'sensitivity' method.
+
+    Returns
+    -------
+    BUS_out : ndarray — modified copy of BUS with updated BS column
+    info : dict
+        Q_flat_pu     : net reactive at flat start per bus [pu]
+        BS_added_MVAr : added shunt susceptance per bus [MVAr]
+        n_compensated : number of buses compensated
+        total_MVAr    : algebraic sum of added MVAr (negative = net reactor)
+        method        : string label
+    """
+    BUS = BUS.copy()
+    n   = BUS.shape[0]
+
+    # ── Build Y-bus and flat-start Q injection ───────────────────────────
+    Ybus     = _build_ybus_for_compensation(BUS, BRANCH, baseMVA)
+    rowsum   = np.asarray(Ybus.sum(axis=1)).ravel()  # complex, shape (n,)
+    Q_flat   = rowsum.imag                            # [pu]; >0 = capacitive surplus
+
+    bus_type = BUS[:, BUS_TYPE].astype(int)
+    pq_mask  = bus_type == PQ_BUS
+
+    BS_added = np.zeros(n)  # [MVAr]
+
+    if method == "local":
+        # ── Method 1: local line-charging compensation ───────────────────
+        # Each PQ bus gets a shunt to cancel its own Q_flat exactly.
+        # BS_comp = -alpha * Q_flat * baseMVA  (negative = reactor for Q_flat>0)
+        for i in np.where(pq_mask)[0]:
+            bs = -alpha * Q_flat[i] * baseMVA
+            BUS[i, BS] += bs
+            BS_added[i] = bs
+
+    elif method == "sensitivity":
+        # ── Method 2: voltage-sensitivity ranked placement ───────────────
+        # Estimate flat-start Jacobian L-block diagonal:
+        #   L[i,i] = Q_flat[i] - imag(Ybus[i,i])   (at V=1, angle=0)
+        # Voltage deviation estimate: |ΔV[i]| ≈ |Q_flat[i]| / |L[i,i]|
+        # → compensate buses with |ΔV| > v_threshold (most urgent first)
+        B_diag  = np.asarray(Ybus.diagonal()).imag   # [pu]
+        L_diag  = Q_flat - B_diag                    # [pu]
+        L_safe  = np.where(np.abs(L_diag) > 1e-8, L_diag, 1e-8)
+        dV_est  = np.abs(Q_flat / L_safe)            # urgency [pu]
+
+        for i in np.where(pq_mask & (dV_est > v_threshold))[0]:
+            bs = -alpha * Q_flat[i] * baseMVA
+            BUS[i, BS] += bs
+            BS_added[i] = bs
+    else:
+        raise ValueError(f"Unknown shunt_compensation method '{method}'")
+
+    n_comp = int(np.count_nonzero(BS_added))
+    info = {
+        "Q_flat_pu":     Q_flat,
+        "BS_added_MVAr": BS_added,
+        "n_compensated": n_comp,
+        "total_MVAr":    float(BS_added.sum()),
+        "method":        method,
+    }
+    return BUS, info
+
+
 def build_matpower_case(
     voltage_levels: List[int] = None,
     data_dir: str = "data",
     baseMVA: float = 100.0,
     load_factor: float = 0.60,
     qg_ratio: float = 0.30,
+    shunt_compensation: Optional[str] = None,
+    compensation_alpha: float = 0.9,
+    compensation_v_threshold: float = 0.05,
 ) -> Dict:
     """Build a MATPOWER-format case from the All-Japan-Grid GeoJSON data.
 
@@ -141,6 +282,10 @@ def build_matpower_case(
         data_dir, voltage_levels=voltage_levels, cache_dir=cache_dir
     )
     lcc = net.largest_connected_component()
+    # If 66 kV buses are included, filter out radial chains far from HV backbone.
+    # Buses beyond 2 hops from 110+ kV create ill-conditioned Jacobians.
+    if any(v <= 66 for v in (voltage_levels or [500, 275])):
+        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=110.0, max_hops=2)
     n_bus = lcc.nb
 
     # ── 2. Generator assignment ──────────────────────────────────────────
@@ -183,9 +328,13 @@ def build_matpower_case(
     for i, b in enumerate(lcc.buses):
         bus_1idx = i + 1
         is_gen_bus = i in bus_gen
+        bus_kv = b.base_kv
         if i == slack_bus_idx:
             btype = REF_BUS
-        elif is_gen_bus:
+        elif is_gen_bus and bus_kv >= 77.0:
+            # Only make buses PV if at sub-transmission level or above.
+            # 66 kV generator buses remain PQ to avoid ill-conditioning;
+            # their generation is included in the load balance.
             btype = PV_BUS
         else:
             btype = PQ_BUS
@@ -222,6 +371,16 @@ def build_matpower_case(
         BRANCH[k, RATE_B] = ln.rating_mva
         BRANCH[k, RATE_C] = ln.rating_mva
         BRANCH[k, TAP]    = 0.0   # 0 = line (no transformer tap)
+
+    # ── 4b. Optional shunt reactive compensation ──────────────────────────
+    comp_info = None
+    if shunt_compensation is not None:
+        BUS, comp_info = _add_shunt_compensation(
+            BUS, BRANCH, baseMVA,
+            method=shunt_compensation,
+            alpha=compensation_alpha,
+            v_threshold=compensation_v_threshold,
+        )
 
     # ── 5. GEN array (n_gen × 10) ────────────────────────────────────────
     GEN = np.zeros((n_gen, 10))
@@ -274,4 +433,5 @@ def build_matpower_case(
         "n_bus":     n_bus,
         "slack_bus": slack_bus_idx + 1,  # 1-indexed
         "gen_buses_1idx": [b + 1 for b in gen_bus_list],
+        "compensation": comp_info,
     }
