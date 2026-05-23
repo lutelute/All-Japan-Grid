@@ -1,0 +1,705 @@
+"""
+All-Japan-Grid Network Builder
+================================
+Loads regional GeoJSON data and constructs a sparse Y-bus admittance matrix
+suitable for power flow and dynamics simulations.
+
+Design follows the approach in scripts/gen_nx_proper.py:
+  - Voltage snapping to nearest standard level
+  - Geographic proximity matching for line endpoints → bus assignment
+  - Haversine distance for all geographic calculations
+  - Kron-reducible Y-bus using scipy.sparse for scalability
+
+Per-unit base: 100 MVA (S_BASE), voltage bases per voltage class.
+
+Usage example::
+
+    from src.dynamics.network.builder import GridNetwork, assign_generators
+
+    grid = GridNetwork.from_geojson("data/", voltage_levels=[500, 275])
+    grid = grid.largest_connected_component()
+    Ybus = grid.build_ybus()
+    gens = assign_generators(grid, "data/")
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import os
+from dataclasses import dataclass, field
+from itertools import combinations
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import scipy.sparse as sp
+from scipy.sparse.csgraph import connected_components
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+REGIONS: List[str] = [
+    "hokkaido", "tohoku", "tokyo", "chubu",
+    "hokuriku", "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
+]
+
+# Standard voltage classes [kV] used for snapping
+STANDARD_KV: List[int] = [500, 275, 154, 110, 77, 66]
+
+# Line parameters per voltage class (Ω/km, physical units)
+# Used to compute Z_pu = Z_phys * S_base / V_base^2
+LINE_PARAMS_OHM_KM: Dict[int, Dict[str, float]] = {
+    500: {"r_ohm_km": 0.02,  "x_ohm_km": 0.30},
+    275: {"r_ohm_km": 0.06,  "x_ohm_km": 0.35},
+    154: {"r_ohm_km": 0.10,  "x_ohm_km": 0.40},
+    110: {"r_ohm_km": 0.12,  "x_ohm_km": 0.42},
+    77:  {"r_ohm_km": 0.18,  "x_ohm_km": 0.45},
+    66:  {"r_ohm_km": 0.20,  "x_ohm_km": 0.45},
+}
+
+# Geographic matching thresholds [km] per voltage class
+MATCH_THRESHOLD_KM: Dict[int, float] = {
+    500: 8.0,
+    275: 5.0,
+    154: 3.0,
+    110: 3.0,
+    77:  2.0,
+    66:  2.0,
+}
+
+# Default threshold for unknown voltage classes
+MATCH_THRESHOLD_DEFAULT_KM: float = 3.0
+
+# Generator-to-bus matching threshold [km]
+GEN_MATCH_KM: float = 8.0
+
+# Minimum line length to avoid degenerate entries [km]
+MIN_LINE_LENGTH_KM: float = 0.5
+
+
+# ---------------------------------------------------------------------------
+# Data classes
+# ---------------------------------------------------------------------------
+
+@dataclass
+class BusData:
+    """Represents a single bus (substation) in the network."""
+
+    id: int                        # Integer bus index (0-based, contiguous)
+    name: str                      # Human-readable name
+    base_kv: float                 # Nominal voltage [kV]
+    region: str                    # Regional system name (e.g., "tokyo")
+    lat: float                     # Geographic latitude [°]
+    lon: float                     # Geographic longitude [°]
+    bus_type: str = "PQ"           # "PQ", "PV", or "slack"
+    V_mag: float = 1.0             # Voltage magnitude [pu] (initial / result)
+    V_ang: float = 0.0             # Voltage angle [rad]  (initial / result)
+    P_gen: float = 0.0             # Active generation [pu, 100 MVA base]
+    Q_gen: float = 0.0             # Reactive generation [pu]
+    P_load: float = 0.0            # Active load [pu]
+    Q_load: float = 0.0            # Reactive load [pu]
+
+
+@dataclass
+class LineData:
+    """Represents a single transmission line / branch."""
+
+    from_bus: int                  # Bus index (0-based)
+    to_bus: int                    # Bus index (0-based)
+    R_pu: float                    # Series resistance [pu, 100 MVA base]
+    X_pu: float                    # Series reactance  [pu]
+    B_pu: float                    # Shunt susceptance [pu] (total line charging)
+    base_kv: float                 # Line voltage class [kV]
+    length_km: float               # Physical length [km]
+    rating_mva: float = 0.0        # Thermal rating [MVA] (0 = unknown)
+
+
+# ---------------------------------------------------------------------------
+# Geographic utilities
+# ---------------------------------------------------------------------------
+
+def _haversine_km(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
+    """Great-circle distance between two geographic points [km]."""
+    R = 6371.0
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlam = math.radians(lon2 - lon1)
+    a = (math.sin(dphi / 2) ** 2
+         + math.cos(phi1) * math.cos(phi2) * math.sin(dlam / 2) ** 2)
+    return 2.0 * R * math.asin(math.sqrt(max(0.0, min(1.0, a))))
+
+
+def _geom_centroid(geom: dict) -> Optional[Tuple[float, float]]:
+    """
+    Return (lon, lat) centroid of a GeoJSON geometry.
+
+    Supports Point, Polygon, MultiPolygon.
+    """
+    gtype = geom.get("type", "")
+    coords = geom.get("coordinates")
+    if coords is None:
+        return None
+
+    if gtype == "Point":
+        return float(coords[0]), float(coords[1])
+
+    elif gtype == "Polygon":
+        ring = coords[0]
+        lon = float(np.mean([c[0] for c in ring]))
+        lat = float(np.mean([c[1] for c in ring]))
+        return lon, lat
+
+    elif gtype == "MultiPolygon":
+        all_c: List[list] = []
+        for poly in coords:
+            all_c.extend(poly[0])
+        lon = float(np.mean([c[0] for c in all_c]))
+        lat = float(np.mean([c[1] for c in all_c]))
+        return lon, lat
+
+    return None
+
+
+def _snap_voltage_kv(v_str: object) -> int:
+    """
+    Parse a voltage field (may be "500000", "275000;154000", etc.) and snap
+    to the nearest standard voltage class [kV].
+    """
+    try:
+        raw = str(v_str).split(";")[0].strip()
+        kv = int(float(raw)) // 1000
+        return min(STANDARD_KV, key=lambda c: abs(c - kv))
+    except (TypeError, ValueError):
+        return STANDARD_KV[-1]    # default to lowest class
+
+
+def _line_length_km(coords: List[List[float]]) -> float:
+    """Sum of haversine distances along a polyline [km]."""
+    total = 0.0
+    for k in range(len(coords) - 1):
+        total += _haversine_km(
+            coords[k][0], coords[k][1],
+            coords[k + 1][0], coords[k + 1][1],
+        )
+    return total
+
+
+# ---------------------------------------------------------------------------
+# Bus nearest-neighbour lookup
+# ---------------------------------------------------------------------------
+
+def _nearest_bus(
+    lon: float,
+    lat: float,
+    buses: List[BusData],
+    preferred_kv: int,
+    threshold_km: float,
+) -> Optional[int]:
+    """
+    Find the index of the nearest bus within *threshold_km*.
+
+    Preference ordering:
+      1. Same voltage class and within threshold → return its id.
+      2. Any voltage class within threshold → return its id.
+      3. No bus within threshold → return None.
+    """
+    best_same_id: Optional[int] = None
+    best_same_d: float = math.inf
+    best_any_id: Optional[int] = None
+    best_any_d: float = math.inf
+
+    for b in buses:
+        d = _haversine_km(lon, lat, b.lon, b.lat)
+        if d < best_any_d:
+            best_any_d = d
+            best_any_id = b.id
+        if b.base_kv == preferred_kv and d < best_same_d:
+            best_same_d = d
+            best_same_id = b.id
+
+    if best_same_id is not None and best_same_d <= threshold_km:
+        return best_same_id
+    if best_any_id is not None and best_any_d <= threshold_km:
+        return best_any_id
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Impedance conversion
+# ---------------------------------------------------------------------------
+
+def _pu_params(
+    volt_kv: int,
+    length_km: float,
+    sbase_mva: float,
+) -> Tuple[float, float, float]:
+    """
+    Compute (R_pu, X_pu, B_pu) for a line.
+
+    Z_base [Ω] = V_base² [kV²] / S_base [MVA]
+    Z_pu = Z_phys / Z_base = Z_phys * S_base / V_base²
+    """
+    params = LINE_PARAMS_OHM_KM.get(volt_kv, LINE_PARAMS_OHM_KM[66])
+    z_base = (volt_kv ** 2) / sbase_mva          # Ω
+    R_pu = params["r_ohm_km"] * length_km / z_base
+    X_pu = params["x_ohm_km"] * length_km / z_base
+    # Shunt charging: approximate as B = 0 (conservative; can be added later)
+    B_pu = 0.0
+    return R_pu, X_pu, B_pu
+
+
+# ---------------------------------------------------------------------------
+# Main network class
+# ---------------------------------------------------------------------------
+
+class GridNetwork:
+    """
+    Transmission network built from All-Japan-Grid GeoJSON data.
+
+    Attributes
+    ----------
+    buses : List[BusData]
+        All buses (nodes) in the network.
+    lines : List[LineData]
+        All transmission lines (branches).
+    sbase_mva : float
+        MVA system base (default 100 MVA).
+    """
+
+    def __init__(
+        self,
+        buses: List[BusData],
+        lines: List[LineData],
+        sbase_mva: float = 100.0,
+    ) -> None:
+        self._buses: List[BusData] = buses
+        self._lines: List[LineData] = lines
+        self.sbase_mva: float = sbase_mva
+        # Build fast lookup: bus_id → list index
+        self._id_to_idx: Dict[int, int] = {b.id: i for i, b in enumerate(buses)}
+
+    # ------------------------------------------------------------------
+    # Properties
+    # ------------------------------------------------------------------
+
+    @property
+    def buses(self) -> List[BusData]:
+        return self._buses
+
+    @property
+    def lines(self) -> List[LineData]:
+        return self._lines
+
+    @property
+    def nb(self) -> int:
+        """Number of buses."""
+        return len(self._buses)
+
+    # ------------------------------------------------------------------
+    # Index helpers
+    # ------------------------------------------------------------------
+
+    def get_bus_index(self, bus_id: int) -> int:
+        """
+        Return the list index for a given bus id.
+
+        Raises KeyError if not found.
+        """
+        try:
+            return self._id_to_idx[bus_id]
+        except KeyError:
+            raise KeyError(f"Bus id {bus_id} not found in network.")
+
+    # ------------------------------------------------------------------
+    # Y-bus construction
+    # ------------------------------------------------------------------
+
+    def build_ybus(self) -> sp.csc_matrix:
+        """
+        Build the sparse nodal admittance matrix (Y-bus) [pu].
+
+        Returns
+        -------
+        scipy.sparse.csc_matrix, shape (nb, nb), dtype complex128
+            Y[i, i] += y_ij  (diagonal)
+            Y[i, j] -= y_ij  (off-diagonal)
+        """
+        n = self.nb
+        row: List[int] = []
+        col: List[int] = []
+        dat: List[complex] = []
+
+        def _add(r: int, c: int, val: complex) -> None:
+            row.append(r)
+            col.append(c)
+            dat.append(val)
+
+        for line in self._lines:
+            i = self.get_bus_index(line.from_bus)
+            j = self.get_bus_index(line.to_bus)
+
+            Z = complex(line.R_pu, line.X_pu)
+            if abs(Z) < 1e-12:
+                continue
+            y_series = 1.0 / Z
+            y_shunt_half = 0.5j * line.B_pu
+
+            # Diagonal: y_series + y_shunt (π model)
+            _add(i, i,  y_series + y_shunt_half)
+            _add(j, j,  y_series + y_shunt_half)
+            # Off-diagonal
+            _add(i, j, -y_series)
+            _add(j, i, -y_series)
+
+        Y = sp.coo_matrix((dat, (row, col)), shape=(n, n), dtype=complex)
+        return Y.tocsc()
+
+    # ------------------------------------------------------------------
+    # Connected-component extraction
+    # ------------------------------------------------------------------
+
+    def largest_connected_component(self) -> "GridNetwork":
+        """
+        Return a new GridNetwork containing only the largest connected
+        component of the current network.
+
+        Bus and line indices are re-numbered contiguously from 0.
+        """
+        if self.nb == 0:
+            return GridNetwork([], [], self.sbase_mva)
+
+        # Build adjacency using Y-bus connectivity (symmetric)
+        n = self.nb
+        rows, cols, vals = [], [], []
+        for line in self._lines:
+            i = self.get_bus_index(line.from_bus)
+            j = self.get_bus_index(line.to_bus)
+            rows.extend([i, j])
+            cols.extend([j, i])
+            vals.extend([1, 1])
+        if vals:
+            adj = sp.coo_matrix((vals, (rows, cols)), shape=(n, n), dtype=int).tocsr()
+        else:
+            adj = sp.csr_matrix((n, n), dtype=int)
+
+        n_comp, labels = connected_components(adj, directed=False)
+
+        comp_sizes = np.bincount(labels)
+        main_label = int(np.argmax(comp_sizes))
+        mask = labels == main_label
+        keep_indices = np.where(mask)[0].tolist()
+
+        old_id_to_new_idx: Dict[int, int] = {}
+        new_buses: List[BusData] = []
+        for new_idx, old_idx in enumerate(keep_indices):
+            b = self._buses[old_idx]
+            old_id_to_new_idx[b.id] = new_idx
+            new_buses.append(BusData(
+                id=new_idx,
+                name=b.name,
+                base_kv=b.base_kv,
+                region=b.region,
+                lat=b.lat,
+                lon=b.lon,
+                bus_type=b.bus_type,
+                V_mag=b.V_mag,
+                V_ang=b.V_ang,
+                P_gen=b.P_gen,
+                Q_gen=b.Q_gen,
+                P_load=b.P_load,
+                Q_load=b.Q_load,
+            ))
+
+        # Remap lines
+        new_lines: List[LineData] = []
+        for line in self._lines:
+            fi = old_id_to_new_idx.get(line.from_bus)
+            ti = old_id_to_new_idx.get(line.to_bus)
+            if fi is not None and ti is not None:
+                new_lines.append(LineData(
+                    from_bus=fi,
+                    to_bus=ti,
+                    R_pu=line.R_pu,
+                    X_pu=line.X_pu,
+                    B_pu=line.B_pu,
+                    base_kv=line.base_kv,
+                    length_km=line.length_km,
+                    rating_mva=line.rating_mva,
+                ))
+
+        return GridNetwork(new_buses, new_lines, self.sbase_mva)
+
+    # ------------------------------------------------------------------
+    # Class-method constructor
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def from_geojson(
+        cls,
+        data_dir: str,
+        voltage_levels: List[int] = (500, 275),
+        sbase_mva: float = 100.0,
+        regions: Optional[List[str]] = None,
+    ) -> "GridNetwork":
+        """
+        Build a GridNetwork by loading all regional GeoJSON files.
+
+        Parameters
+        ----------
+        data_dir : str
+            Path to the directory containing ``{region}_substations.geojson``
+            and ``{region}_lines.geojson`` files.
+        voltage_levels : list of int
+            Voltage classes to include [kV].  Default: [500, 275].
+        sbase_mva : float
+            MVA system base.  Default: 100 MVA.
+        regions : list of str, optional
+            Subset of regions to load.  Default: all 10 REGIONS.
+
+        Returns
+        -------
+        GridNetwork
+        """
+        target_regions = regions if regions is not None else REGIONS
+        target_kv = set(int(v) for v in voltage_levels)
+
+        # ── Step 1: Load buses ────────────────────────────────────────
+        buses: List[BusData] = []
+        bus_id = 0
+        for region in target_regions:
+            sub_path = os.path.join(data_dir, f"{region}_substations.geojson")
+            if not os.path.exists(sub_path):
+                continue
+            with open(sub_path, encoding="utf-8") as fh:
+                gj = json.load(fh)
+
+            for feat in gj.get("features", []):
+                props = feat.get("properties", {})
+                raw_v = props.get("voltage")
+                if raw_v is None:
+                    continue
+                v_kv = _snap_voltage_kv(raw_v)
+                if v_kv not in target_kv:
+                    continue
+                geom = feat.get("geometry")
+                if geom is None:
+                    continue
+                pos = _geom_centroid(geom)
+                if pos is None:
+                    continue
+                lon, lat = pos
+
+                name = (
+                    props.get("name")
+                    or props.get("_display_name")
+                    or f"{region}_{bus_id}"
+                )
+
+                buses.append(BusData(
+                    id=bus_id,
+                    name=str(name),
+                    base_kv=float(v_kv),
+                    region=region,
+                    lat=lat,
+                    lon=lon,
+                ))
+                bus_id += 1
+
+        if not buses:
+            return cls([], [], sbase_mva)
+
+        # ── Step 2: Load lines and build edges ────────────────────────
+        lines: List[LineData] = []
+        seen_edges: set = set()     # (min_id, max_id, volt_kv) → deduplicate
+
+        for region in target_regions:
+            line_path = os.path.join(data_dir, f"{region}_lines.geojson")
+            if not os.path.exists(line_path):
+                # Fall back to proximity-based connectivity if no lines file
+                continue
+            with open(line_path, encoding="utf-8") as fh:
+                gj = json.load(fh)
+
+            for feat in gj.get("features", []):
+                props = feat.get("properties", {})
+                raw_v = props.get("voltage")
+                if raw_v is None:
+                    continue
+                v_kv = _snap_voltage_kv(raw_v)
+                if v_kv not in target_kv:
+                    continue
+
+                geom = feat.get("geometry")
+                if geom is None:
+                    continue
+
+                # Normalise to list-of-segments
+                gtype = geom["type"]
+                coords_list = geom.get("coordinates", [])
+                if gtype == "LineString":
+                    segments: List[List[List[float]]] = [coords_list]
+                elif gtype == "MultiLineString":
+                    segments = coords_list
+                else:
+                    continue
+
+                threshold = MATCH_THRESHOLD_KM.get(v_kv, MATCH_THRESHOLD_DEFAULT_KM)
+
+                for seg in segments:
+                    if len(seg) < 2:
+                        continue
+                    length_km = _line_length_km(seg)
+                    if length_km < MIN_LINE_LENGTH_KM:
+                        continue
+
+                    # Match endpoints to nearest buses
+                    s_lon, s_lat = seg[0][0],  seg[0][1]
+                    e_lon, e_lat = seg[-1][0], seg[-1][1]
+
+                    bi = _nearest_bus(s_lon, s_lat, buses, v_kv, threshold)
+                    bj = _nearest_bus(e_lon, e_lat, buses, v_kv, threshold)
+
+                    if bi is None or bj is None or bi == bj:
+                        continue
+
+                    # Deduplicate (undirected)
+                    edge_key = (min(bi, bj), max(bi, bj), v_kv)
+                    if edge_key in seen_edges:
+                        continue
+                    seen_edges.add(edge_key)
+
+                    R_pu, X_pu, B_pu = _pu_params(v_kv, length_km, sbase_mva)
+
+                    if (R_pu ** 2 + X_pu ** 2) < 1e-18:
+                        continue
+
+                    lines.append(LineData(
+                        from_bus=bi,
+                        to_bus=bj,
+                        R_pu=R_pu,
+                        X_pu=X_pu,
+                        B_pu=B_pu,
+                        base_kv=float(v_kv),
+                        length_km=length_km,
+                    ))
+
+        return cls(buses, lines, sbase_mva)
+
+    # ------------------------------------------------------------------
+    # Representation
+    # ------------------------------------------------------------------
+
+    def __repr__(self) -> str:
+        return (
+            f"GridNetwork(nb={self.nb}, lines={len(self._lines)}, "
+            f"sbase={self.sbase_mva} MVA)"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Generator assignment
+# ---------------------------------------------------------------------------
+
+def assign_generators(
+    grid: GridNetwork,
+    plants_data_dir: str,
+    base_mva: float = 100.0,
+    match_threshold_km: float = GEN_MATCH_KM,
+) -> List[Tuple[int, str, float, str]]:
+    """
+    Match generating plants to network buses by geographic proximity.
+
+    Parameters
+    ----------
+    grid : GridNetwork
+        The network to assign generators to.
+    plants_data_dir : str
+        Directory containing ``{region}_plants.geojson`` files.
+    base_mva : float
+        System MVA base for capacity scaling.  Default 100 MVA.
+    match_threshold_km : float
+        Maximum distance [km] for a plant-to-bus match.  Default 8 km.
+
+    Returns
+    -------
+    list of (bus_id, fuel_type, capacity_mw, plant_name)
+        Each tuple represents one matched generator.
+        ``bus_id`` is the integer bus index in *grid*.
+        ``capacity_mw`` is the nameplate capacity in MW (physical, not pu).
+
+    Notes
+    -----
+    Plants whose fuel type is in EXCLUDE_FUELS (solar, wind, battery, unknown)
+    are skipped.  Plants with capacity < 10 MW are also skipped.
+    """
+    EXCLUDE_FUELS: set = {"solar", "battery", "wind", "unknown", "other"}
+
+    CAP_DEFAULT: Dict[str, float] = {
+        "nuclear": 1100.0,
+        "coal":     700.0,
+        "lng":      500.0,
+        "gas":      500.0,
+        "oil":      400.0,
+        "hydro":    200.0,
+        "geothermal": 50.0,
+        "biomass":  100.0,
+        "waste":     30.0,
+    }
+
+    result: List[Tuple[int, str, float, str]] = []
+
+    for region in REGIONS:
+        plant_path = os.path.join(plants_data_dir, f"{region}_plants.geojson")
+        if not os.path.exists(plant_path):
+            continue
+        with open(plant_path, encoding="utf-8") as fh:
+            gj = json.load(fh)
+
+        for feat in gj.get("features", []):
+            props = feat.get("properties", {})
+            fuel = str(props.get("fuel_type") or "unknown").lower().strip()
+            if fuel in EXCLUDE_FUELS:
+                continue
+
+            # Capacity
+            cap_raw = props.get("capacity_mw")
+            try:
+                cap_mw = float(cap_raw)
+                if cap_mw != cap_mw or cap_mw < 0:   # NaN or negative
+                    cap_mw = CAP_DEFAULT.get(fuel, 100.0)
+            except (TypeError, ValueError):
+                cap_mw = CAP_DEFAULT.get(fuel, 100.0)
+
+            if cap_mw < 10.0:
+                continue
+
+            # Geometry
+            geom = feat.get("geometry")
+            if geom is None:
+                continue
+            pos = _geom_centroid(geom)
+            if pos is None:
+                continue
+            g_lon, g_lat = pos
+
+            # Find nearest bus in the grid
+            best_bus_idx: Optional[int] = None
+            best_dist: float = math.inf
+            for bus in grid.buses:
+                d = _haversine_km(g_lon, g_lat, bus.lon, bus.lat)
+                if d < best_dist:
+                    best_dist = d
+                    best_bus_idx = bus.id
+
+            if best_bus_idx is None or best_dist > match_threshold_km:
+                continue
+
+            plant_name = str(
+                props.get("name") or props.get("_display_name") or f"{region}_{fuel}"
+            )
+            result.append((best_bus_idx, fuel, cap_mw, plant_name))
+
+    return result

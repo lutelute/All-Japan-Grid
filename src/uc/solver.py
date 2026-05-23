@@ -214,6 +214,7 @@ def solve_uc(params: UCParameters) -> UCResult:
         period_duration_h=params.time_horizon.period_duration_h,
         interconnections=interconnections, f=f,
         y_hot=y_hot, y_warm=y_warm, y_cold=y_cold,
+        regional_demands=params.regional_demands,
     )
 
     # --- Select and run solver ---------------------------------------------
@@ -346,6 +347,7 @@ def _add_all_constraints(
     y_hot: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     y_warm: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     y_cold: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    regional_demands: Optional[Dict[str, List[float]]] = None,
 ) -> None:
     """Add all constraint classes to the model.
 
@@ -354,8 +356,14 @@ def _add_all_constraints(
     transmission capacity constraints on flow variables.
     """
     if interconnections and f:
-        # Nodal balance replaces system-wide demand balance
-        regional_demand = _split_demand_by_region(generators, demand)
+        # Nodal balance replaces system-wide demand balance.
+        # Use caller-supplied regional demands when available (physically
+        # correct); fall back to capacity-fraction split otherwise.
+        regional_demand = (
+            regional_demands
+            if regional_demands
+            else _split_demand_by_region(generators, demand)
+        )
         add_nodal_balance_constraints(
             model, p, f, generators, interconnections, timesteps,
             regional_demand,

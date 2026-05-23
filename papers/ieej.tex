@@ -83,9 +83,14 @@ attributes by 87\%, yielding 6,962 substations, 40,077 lines, and
 The pipeline builds sparse bus admittance matrices ($\mathbf{Y}_{\mathrm{bus}}$)
 and achieves AC power flow convergence in all 10 regions (previously 0/10).
 A MILP unit commitment solver incorporating three-state startup costs
-(hot/warm/cold), battery SOC dynamics, and nine inter-regional
-interconnection constraints dispatches 783 generators over 24 hours,
-revealing a 1.40\% congestion cost premium when all interconnections saturate.
+(hot/warm/cold), battery storage SOC dynamics, and nine inter-regional
+interconnection constraints dispatches 646 generators (636 thermal +
+10 regional batteries totalling 3.5~GW/13.8~GWh) over 24 hours,
+using OCCTO-calibrated renewable capacities (59~GW solar, 11~GW wind);
+Kyushu noon solar reaches 83\% of its regional peak demand,
+revealing curtailment-driven battery dispatch as a key system need.
+Transient N-1--N-10 cascade analysis (30,911 cases) confirms full stability
+($\leq$2.66$^\circ$ maximum rotor angle separation), demonstrating strong network connectivity.
 \end{abstract}
 
 \begin{jkeyword}
@@ -150,7 +155,7 @@ OSM由来データが潮流計算・UC・動揺解析の各手法に
   \item 全国10地域・6,962バス・40,077送電線のオープンデータセット
   \item 7段階属性補完による欠損87\%削減
   \item 疎$\mathbf{Y}_{\mathrm{bus}}$自動構築と全地域AC潮流収束の達成
-  \item 783機・3状態起動コスト・蓄電池SOCを含むMILP UCの求解
+  \item 646機・OCCTO参照再エネ（太陽光59~GW・風力11~GW）・蓄電池3.5~GWを含むMILP UCの求解
   \item イベリア停電型の過渡安定・N-$x$解析の実施
 \end{enumerate}
 
@@ -340,16 +345,12 @@ Fig.~\ref{fig:satellite}に衛星画像との位置照合結果を示す．
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.325\textwidth]{figs/fig_layer_network.png}%
-  \hfill
-  \includegraphics[width=0.325\textwidth]{figs/fig_layer_substations.png}%
-  \hfill
-  \includegraphics[width=0.325\textwidth]{figs/fig_layer_plants.png}
+  \includegraphics[width=\textwidth]{figs/fig_layer_combined.png}
   \caption{GeoJSONレイヤ別展開：
   (a)~送電線ネットワーク（40,077本，電圧クラス別色分け），
-  (b)~変電所分布（6,962箇所），
-  (c)~発電所分類（赤△：大型集中電源[原子力・火力・大型水力等, 659箇所]，
-  黄●：分散型再エネ[太陽光・風力等, 18,479箇所]）}
+  (b)~変電所分布（6,962箇所，電圧クラス別），
+  (c)~発電所（赤△：大型集中電源[原子力・火力・大型水力等, 1,128箇所]，
+  黄点：分散型再エネ[太陽光・風力等, 18,010箇所]）}
   \label{fig:layers}
 \end{figure*}
 
@@ -488,11 +489,11 @@ PuLP\cite{pulp}＋HiGHS\cite{highs}によるMILPで
   \label{eq:balance}
 \end{equation}
 
-\subsection{783機MILP求解の技術的背景}
+\subsection{646機MILP求解の技術的背景}
 
-783機・24時間のMILPは二値変数$u_{g,t}$が
-$783 \times 24 = 18{,}792$個，連続変数（$p,v,w,f$）を含め
-総変数約75{,}000個に達し，一般的な商用ソルバで
+646機（熱電源636機・地域別蓄電池10機）・24時間のMILPは二値変数$u_{g,t}$が
+$636 \times 24 = 15{,}264$個，連続変数（$p,v,w,f$および蓄電池SOC変数）を含め
+総変数約65{,}000個に達し，一般的な商用ソルバで
 100機以下が実用限界とされる規模\cite{padhy2004,carrion2006,knueven2020}を大幅に超える．
 10秒以内の求解を実現できた主な要因は，
 （i）経済合理的な起動パターンによりLP緩和ギャップが$<0.5$\%に収まりB\&B探索木が浅い，
@@ -518,10 +519,10 @@ $783 \times 24 = 18{,}792$個，連続変数（$p,v,w,f$）を含め
 属性補完後の名称補完率は変電所・発電所とも100\%，
 送電線99.99\%である．
 3種のGeoJSONレイヤをFig.~\ref{fig:layers}に示す通り独立可視化でき，
-発電所分類（大型集中電源659箇所 vs 分散型再エネ18,479箇所）は
+発電所分類（大型集中電源1,128箇所 vs 分散型再エネ18,010箇所）は
 自由化後の再エネ大量導入を明確に反映する．
-現行の分散型再エネの94.8\%（17,527箇所）が太陽光発電であり，
-関東・東海・九州北部に集中して面的展開していることが確認できる．
+分散型再エネのうち約94\%（17,000箇所超）が太陽光発電であり，
+関東・東海・九州北部の日射良好地帯に面的展開していることが確認できる．
 
 \begin{table}[t]
   \caption{地域別データセット規模}
@@ -559,27 +560,35 @@ $y_{g,t}^{\mathrm{hot}},y_{g,t}^{\mathrm{warm}},y_{g,t}^{\mathrm{cold}}\in\{0,1\
 熱間/温間/冷間の3状態（原子力：$T_w{=}8$h，$T_c{=}48$h；
 石炭：$T_w{=}4$h，$T_c{=}12$h；LNG：$T_w{=}2$h，$T_c{=}8$h）で異なる値を設定した．
 
-783機・9連系線・蓄電池SOCダイナミクスを含む全制約で最適解を得た
-（Table~\ref{tab:uc_res}，Fig.~\ref{fig:uc3state}）．
+646機（熱電源636機＋地域別蓄電池10機）・9連系線・蓄電池SOCダイナミクスを含む
+全制約で最適解を得た（Table~\ref{tab:uc_res}，Fig.~\ref{fig:uc3state}）．
+N-$x$過渡安定解析については，全国500+275~kV系統の実GeoJSONトポロジから
+Kron縮約により発電機バス100点の等価ネットワークを構築し，
+DC潮流による事前平衡点を初期値として古典機モデルを適用する
+（Table~\ref{tab:nx}，Fig.~\ref{fig:dynamics}）．
+太陽光はOCCTO 2023年度統計ベースの地域別設備容量（全国計59~GW）に
+地域日射倍率（北海道$\times0.83$〜沖縄$\times1.13$）を乗じたCFプロファイルを適用した．
+その結果，九州では正午の太陽光発電量がピーク需要の83\%に達し，
+蓄電池が正午充電・夕刻放電サイクルを自動選択した．
 UCモデルの連系線フローはDC線形近似\cite{stott2009dc}を採用し，
-連系線制約ありでは全9連系線がピーク時に100\%利用率に到達し
-混雑コスト+1.40\%（¥107~M/日）を確認した．
+旧OSMモデル（OSM由来容量のみ）では混雑コスト+1.40\%（¥107~M/日）を確認していたが，
+OCCTO参照モデルでは再エネ大量導入により净需要が減少し総費用が削減された．
 原子力・石炭が基底，LNGがミドル，石油がピーク時稼働という
-merit order構造が自動的に再現された．
-24時間内での冷間起動は2件と少なく，原子力・石炭はほぼ常時運転の経済合理性を反映する．
+merit order構造が各地域で自動再現された．
 
 \begin{table}[t]
-  \caption{全国UC最適化結果（783機・24時間）}
+  \caption{全国UC最適化結果（24時間，9連系線制約，蓄電池SOC付き）}
   \label{tab:uc_res}
   \centering\small
   \begin{tabular}{lrrr}
     \toprule
-    モデル & コスト（億/日） & 時間 (s) & 二値変数 \\
+    モデル & コスト（億/日） & 時間 (s) & 機数 \\
     \midrule
-    単一起動コスト & 76.51 & 9 & 56,376 \\
-    3状態起動コスト & 84.00 & 39 & 73,512 \\
+    旧OSMモデル・単一起動コスト & 76.51 & 9 & 783 \\
+    旧OSMモデル・3状態起動コスト & 84.00 & 39 & 783 \\
+    \textbf{OCCTO参照・3状態起動コスト} & \textbf{68.00} & \textbf{38} & \textbf{646} \\
     \midrule
-    混雑コスト & \multicolumn{3}{l}{$+$1.40\%（¥107M/日）} \\
+    連系線混雑コスト（旧モデル） & \multicolumn{3}{l}{$+$1.40\%（¥107M/日）} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -587,9 +596,9 @@ merit order構造が自動的に再現された．
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{figs/fig_uc_regional.png}
-  \caption{10地域別UC 24時間日間プロファイル（3状態起動コスト・蓄電池SOC・9連系線制約）——
-  太陽光・風力は時刻別固定プロファイル（日中ベルカーブ，夜間ゼロ）として純需要を算出；
-  merit order（原子力→石炭→LNG→石油）が各地域で自動再現，東西の規模差が明確}
+  \caption{10地域別UC 24時間日間プロファイル（OCCTO参照容量：太陽光59~GW・風力11~GW・蓄電池3.5~GW）——
+  地域別日射倍率を適用した太陽光CF（九州$\times1.10$等）と地域需要（OCCTOピーク実績）を使用；
+  九州正午に太陽光がピーク需要の83\%に到達し蓄電池がcurtailment緩和に自動投入される}
   \label{fig:uc3state}
 \end{figure*}
 
@@ -625,63 +634,37 @@ $\mathbf{Y}_{\mathrm{bus}}^{\mathrm{red}}$は
 
 \subsection{N-$x$連鎖脱落解析}
 
-N-1（最大容量発電機脱落）およびN-$x$（複数機同時脱落）について
-全組み合わせの過渡安定解析を実施した．
-安定判定基準は最大ロータ角度差$\max_{ij}|\delta_i-\delta_j|<\pi$とした．
-実GeoJSON発電機データに燃料種別慣性定数を付与した多地域N-$x$解析結果を
-Table~\ref{tab:nx}に示す（Fig.~\ref{fig:dynamics}は多地域比較図）．
+N-1（全100バス）およびN-2〜N-10（上位15機の$\binom{15}{k}$全組合せ）について
+過渡安定解析を実施した（安定判定：$\max_{ij}|\delta_i-\delta_j|<\pi$）．結果をTable~\ref{tab:nx}に示す．
 
 \begin{table}[t]
-  \caption{N-$x$過渡安定解析結果（北海道系統，慣性定数$H=5$~s）}
+  \caption{N-$x$過渡安定解析結果（500+275~kV, Kron縮約，上位15機カスケード）}
   \label{tab:nx}
   \centering\small
-  \begin{tabular}{lrrr}
+  \begin{tabular}{lrrc}
     \toprule
-    擾乱 & 不安定/全件 & 最大角度差 & 計算時間 \\
+    擾乱 & 件数 & 不安定 & 最大角度差 \\
     \midrule
-    N-1 (発電機脱落) & 0/113 & $2.2^\circ$ & 1.3~s \\
-    N-1 (3相短絡) & 0/113 & $8.7^\circ$ & 1.3~s \\
-    N-2 (全組合せ) & 0/6,328 & $5.1^\circ$ & 143~s \\
+    N-1（全100バス） & 100 & 0 & $2.64^\circ$ \\
+    N-2〜N-10（$\sum\binom{15}{k}$） & 30{,}811 & 0 & $\leq2.66^\circ$ \\
+    \midrule
+    \textbf{合計} & \textbf{30{,}911} & \textbf{0} & $\leq2.66^\circ$ \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}\\[2pt]
+  {\scriptsize N-$x$次数増大でも最大角度差は2.64$^\circ$→2.66$^\circ$と微増に留まり，高い冗長性を示す}
 \end{table}
 
-\subsection{モード解析（固有値解析）}
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figs/fig_nx_proper.png}
+  \caption{全国500+275~kV系統 N-$x$過渡安定解析（実GeoJSONトポロジ，Kron縮約，DC潮流初期値）——
+  (a)~N-1最大角度偏差の地理分布（発電機バス100点）；
+  (b)~最悪N-1後のロータ角時空間ヒートマップ（$\Delta\delta_i(t)$）；
+  (c)~最大変動5機のスイング曲線（全99機で収束振動，最大2.64$^\circ$）}
+  \label{fig:dynamics}
+\end{figure*}
 
-動揺方程式を初期動作点で線形化した状態行列$\mathbf{A}$の固有値解析により
-振動モードを同定する：
-\begin{equation}
-  \dot{\mathbf{x}} = \mathbf{A}\mathbf{x},\quad
-  \mathbf{A} = \begin{bmatrix}\mathbf{0} & \mathbf{I} \\
-    -\mathbf{M}^{-1}\mathbf{K} & -\mathbf{M}^{-1}\mathbf{D}\end{bmatrix}
-  \label{eq:modal}
-\end{equation}
-ここで$M_i = 2H_i/\omega_s$，$K_{ij} = \partial P_{e,i}/\partial\delta_j$（同期化力行列）．
-固有値$\lambda_k = \sigma_k \pm j\omega_{d,k}$から振動周波数$f_k = \omega_{d,k}/(2\pi)$
-および減衰比$\zeta_k = -\sigma_k/|\lambda_k|$を算出する．
-
-Table~\ref{tab:modal}にベンチマークモデルの代表的振動モードを示す．
-全固有値が複素左半平面（$\sigma_k<0$）に存在し小信号安定を確認する．
-系間モード（0.1--0.8~Hz，5--15\%）は東西連系断面が生む広域振動と
-定性的に一致する周波数帯であり，局所モード（0.8--2.0~Hz，15--40\%）は
-少数機群の局部振動を示す．
-\textbf{All-Japan-Grid}の10地域GeoJSONデータは，
-任意地域のN-$x$解析・モード解析への展開基盤として機能する．
-
-\begin{table}[t]
-  \caption{代表的振動モード（ベンチマーク4機2エリアモデル）}
-  \label{tab:modal}
-  \centering\small
-  \begin{tabular}{llrr}
-    \toprule
-    モード種別 & 典型周波数 (Hz) & 減衰比 $\zeta$ & 判定 \\
-    \midrule
-    非振動モード & --- & --- & 安定 \\
-    系間モード & 0.1--0.8 & 5--15\% & 要監視 \\
-    局所モード & 0.8--2.0 & 15--40\% & 安定 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+% N-10 cascade figure (Fig.~\ref{fig:nxcascade}) is available in the supplementary material.
 
 \subsection{計算環境と性能}
 
@@ -697,9 +680,10 @@ Table~\ref{tab:modal}にベンチマークモデルの代表的振動モード�
     \midrule
     OSM取得・属性補完 & 全国10地域 & $\sim$2~h \\
     AC潮流（全地域） & 6,962バス & $<$60~s \\
-    UC（基本MILP） & 783機×24h & $<$10~s \\
-    UC（3状態起動コスト） & 783機×24h & 39~s \\
-    N-2全組合せ & 6,328ケース & 143~s \\
+    UC（旧OSMモデル） & 783機×24h & 39~s \\
+    UC（OCCTO参照モデル） & 646機×24h & 38~s \\
+    N-1（全100バス） & 100ケース & 250~s \\
+    N-1〜N-10（連鎖脱落） & 30{,}911ケース & $\sim$30~min \\
     モード解析 & $226\times226$ & $<$1~s \\
     \bottomrule
   \end{tabular}
@@ -713,12 +697,12 @@ Table~\ref{tab:modal}にベンチマークモデルの代表的振動モード�
 
 既存のMILP UCに関する文献\cite{padhy2004}では
 100機以下を対象とした研究が大半を占める．
-本研究で達成した783機・9連系線・24時間のUCは，
+本研究で達成した646機（OCCTO参照再エネ・蓄電池込み）・9連系線・24時間のUCは，
 著者らの知る限り日本の送電系統を対象とした公開研究中で最大規模であり，
-HiGHSソルバによる10秒以内の求解は実用的な日次計画への応用可能性を示す．
-また，全9連系線が飽和し混雑コスト+1.40\%（¥107~M/日）が発生するという
-定量的結果は，東西周波数変換断面が全国最適化の
-支配的ボトルネックであることを初めて定量化したものである．
+HiGHSソルバによる38秒での求解は実用的な日次計画への応用可能性を示す．
+また，旧OSMモデルで確認した全9連系線飽和・混雑コスト+1.40\%（¥107~M/日）は
+東西周波数変換断面が全国最適化のボトルネックであることを示す定量的根拠であり，
+OCCTO参照モデル（太陽光59~GW・地域別ノード需給バランス制約）では再エネ純需要削減により総費用が約19\%低減（¥84億→¥68億/日）した．
 
 \subsection{本フレームワークで実現できる解析}
 
@@ -738,12 +722,17 @@ HiGHSソルバによる10秒以内の求解は実用的な日次計画への応�
 完全な系統動的解析には発電機動特性（2軸モデル・AVR・PSS），
 送電線電磁過渡，変電所タップ制御，負荷モデル（ZIP・誘導電動機）の整備が必要であり，
 いずれもOCCTO・各電力会社の非公開パラメータを要するため今後の課題である．
+なお4次同期機（Park方程式），AVR（IEEE ST1A），GFLインバータ，
+短絡容量・小信号・継続潮流の解析フレームワーク（\texttt{src/dynamics/}）を実装済みであり，
+精度の高い動的パラメータが得られた段階での本格的な動的解析への接続基盤が整っている．
 
 \subsection{今後の課題}
 
 パイプラインは再実行で最新OSMデータを自動反映できるため，
 FIT認定データとの容量統合・OCCTOオープンデータとの照合精度向上・
 動的パラメータDB整備を順次進める予定である．
+なお発電機は立地座標で地域帰属しており（電力会社所有帰属とは意図的に異なる），
+地理的電源分布（どこから電力が送られているか）の把握が目的である．
 現状の主な限界は，インピーダンス合成推定（実測値非），
 誤接続率2--3\%，遮断器情報なし（電気的N-1不可），
 発電機動特性・負荷モデル未実装であり，
@@ -758,8 +747,9 @@ OSMから日本全国10地域の送電網モデルを自動構築する
 OSM由来のオープンデータが各種系統解析手法と接続可能であるかを
 検証する予備的試算として位置付けられる．
 7段階属性補完（87\%欠損削減），疎$\mathbf{Y}_{\mathrm{bus}}$自動構築，
-全10地域AC潮流収束，783機MILP UCの10秒以内求解，
-および連系線混雑コスト1.40\%の定量化を実現した．
+全10地域AC潮流収束，OCCTO参照モデル646機MILP UC（¥68億/日，38秒求解），
+九州正午太陽光83\%のcurtailment-driven蓄電池投入，
+N-1〜N-10（上位15機，$\binom{15}{k}$全組合せ）30{,}911ケース全安定（最大$2.66^\circ$）を確認した．
 完全な系統動的解析には発電機動特性・負荷・変電所モデルの整備が必要であり，
 データセットの継続的更新とともに今後の課題とする．
 
@@ -771,10 +761,6 @@ OSM由来のオープンデータが各種系統解析手法と接続可能で�
 
 本研究は，「CN社会実現のためのエネルギーモデル創出に関する共同研究会」による支援をもとに実施したものである．
 ここに記して謝意を表する．
-
-\noindent
-\textit{This work was supported by the Joint Research Group on
-Creating Energy Models for Realizing a Carbon Neutrality Society.}
 
 %% ============================================================
 {\small
