@@ -161,11 +161,19 @@ def build_matpower_case(
     total_gen_mw = sum(bus_gen[b][1] * load_factor for b in gen_bus_list)
 
     # Voltage-weighted load distribution: load ∝ V_kv² (proxy for substation capacity)
-    # This prevents low-voltage PQ buses from being overloaded relative to EHV buses
+    # Only buses at ≥ 77 kV carry loads (sub-transmission and above).
+    # 66 kV buses are often distribution step-down nodes — keep them as transit.
+    LOAD_MIN_KV = 77  # minimum bus voltage [kV] to receive load
     pq_bus_indices = [i for i in range(n_bus) if i not in bus_gen]
     if not pq_bus_indices:
         pq_bus_indices = list(range(n_bus))
-    pq_weights = {i: lcc.buses[i].base_kv ** 2 for i in pq_bus_indices}
+    pq_weights = {
+        i: lcc.buses[i].base_kv ** 2
+        for i in pq_bus_indices
+        if lcc.buses[i].base_kv >= LOAD_MIN_KV
+    }
+    if not pq_weights:  # fallback: use all PQ buses
+        pq_weights = {i: lcc.buses[i].base_kv ** 2 for i in pq_bus_indices}
     total_weight = sum(pq_weights.values()) or 1.0
     # scale so total load = total_gen_mw
     load_scale = total_gen_mw / total_weight
@@ -183,7 +191,8 @@ def build_matpower_case(
             btype = PQ_BUS
 
         # Distribute load proportional to V_kv² for power balance
-        pd_mw = 0.0 if is_gen_bus else pq_weights[i] * load_scale
+        # Only buses with weight entry receive load (buses below LOAD_MIN_KV excluded)
+        pd_mw = 0.0 if is_gen_bus else pq_weights.get(i, 0.0) * load_scale
         qd_mvar = pd_mw * qg_ratio
 
         BUS[i, BUS_I]    = bus_1idx

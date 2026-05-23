@@ -700,6 +700,86 @@ class GridNetwork:
                 rating_mva=rating_mva,
             ))
 
+        # ── Step 4: Proximity-based connectivity ──────────────────────────
+        # Connect isolated/weakly-connected buses to their k nearest same-voltage
+        # neighbors within a generous distance threshold. This stitches the many
+        # isolated substations (not covered by GeoJSON line data) into the network.
+        # Uses scipy KDTree for O(n log n) NN search.
+        try:
+            from scipy.spatial import cKDTree
+            # Build adjacency set from existing lines
+            adj_set: set = set()
+            for ln in lines:
+                adj_set.add((min(ln.from_bus, ln.to_bus), max(ln.from_bus, ln.to_bus)))
+
+            # Max proximity distance [km] per voltage class
+            # 66 kV is excluded: proximity connections create too-long radial chains
+            # causing reactive power imbalance → convergence failure.
+            # Only GeoJSON-sourced 66 kV lines are used (real circuit data).
+            PROX_KM: Dict[int, float] = {
+                500: 400.0,
+                275: 200.0,
+                154:  80.0,
+                110:  50.0,
+                77:   20.0,
+                # 66 kV: not included (distribution; GeoJSON lines only)
+            }
+            # Maximum X_pu per proximity branch (skip long weak connections)
+            MAX_PROX_X_PU = 0.20
+            # k nearest neighbors to connect per bus
+            K_NN = 2
+
+            by_kv: Dict[int, List[int]] = {}   # kv → list of bus indices
+            for i, b in enumerate(buses):
+                kv = int(b.base_kv)
+                by_kv.setdefault(kv, []).append(i)
+
+            prox_seen: set = set()
+            for kv, idxs in by_kv.items():
+                if len(idxs) < 2:
+                    continue
+                max_km = PROX_KM.get(kv, 80.0)
+                # Convert lat/lon to radians for approximate distance
+                coords = np.array([[math.radians(buses[i].lat),
+                                    math.radians(buses[i].lon)] for i in idxs])
+                tree = cKDTree(coords)
+                # Query k+1 (includes self) nearest within angular threshold
+                ang_thresh = max_km / 6371.0   # arc-length approx
+                k_q = min(K_NN + 1, len(idxs))
+                dists, nbrs = tree.query(coords, k=k_q, distance_upper_bound=ang_thresh)
+                for row_i, (dist_row, nbr_row) in enumerate(zip(dists, nbrs)):
+                    src = idxs[row_i]
+                    for dist_rad, col_j in zip(dist_row, nbr_row):
+                        if col_j >= len(idxs):  # sentinel (beyond threshold)
+                            continue
+                        tgt = idxs[col_j]
+                        if src == tgt:
+                            continue
+                        edge_key = (min(src, tgt), max(src, tgt))
+                        if edge_key in adj_set or edge_key in prox_seen:
+                            continue
+                        prox_seen.add(edge_key)
+                        length_km = dist_rad * 6371.0
+                        if length_km < 0.1:
+                            continue
+                        R_pu, X_pu, B_pu = _pu_params(kv, length_km, sbase_mva)
+                        if X_pu > MAX_PROX_X_PU:
+                            continue   # skip high-impedance proximity links
+                        y_mag = 1.0 / max((R_pu**2 + X_pu**2)**0.5, 1e-12)
+                        if y_mag > MAX_ADMITTANCE_PU:
+                            continue
+                        lines.append(LineData(
+                            from_bus=src,
+                            to_bus=tgt,
+                            R_pu=R_pu,
+                            X_pu=X_pu,
+                            B_pu=B_pu,
+                            base_kv=float(kv),
+                            length_km=length_km,
+                        ))
+        except ImportError:
+            pass   # scipy not available; skip proximity step
+
         result = cls(buses, lines, sbase_mva)
 
         # ── Cache store ─────────────────────────────────────────────────
