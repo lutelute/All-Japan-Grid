@@ -1005,98 +1005,161 @@ def assign_generators(
     plants_data_dir: str,
     base_mva: float = 100.0,
     match_threshold_km: float = GEN_MATCH_KM,
+    wri_csv: Optional[str] = None,
 ) -> List[Tuple[int, str, float, str]]:
+    """Match generating plants to network buses by geographic proximity.
+
+    Uses two sources (merged, de-duplicated by proximity):
+    1. ``{region}_plants.geojson`` – OSM-based regional data
+    2. WRI Global Power Plant Database CSV (if *wri_csv* is given or
+       ``{plants_data_dir}/wri_global_power_plants.csv`` exists)
+
+    WRI data takes precedence for large plants (capacity_mw ≥ 100) because
+    its capacity values are more authoritative than OSM defaults.
     """
-    Match generating plants to network buses by geographic proximity.
-
-    Parameters
-    ----------
-    grid : GridNetwork
-        The network to assign generators to.
-    plants_data_dir : str
-        Directory containing ``{region}_plants.geojson`` files.
-    base_mva : float
-        System MVA base for capacity scaling.  Default 100 MVA.
-    match_threshold_km : float
-        Maximum distance [km] for a plant-to-bus match.  Default 8 km.
-
-    Returns
-    -------
-    list of (bus_id, fuel_type, capacity_mw, plant_name)
-        Each tuple represents one matched generator.
-        ``bus_id`` is the integer bus index in *grid*.
-        ``capacity_mw`` is the nameplate capacity in MW (physical, not pu).
-
-    Notes
-    -----
-    Plants whose fuel type is in EXCLUDE_FUELS (solar, wind, battery, unknown)
-    are skipped.  Plants with capacity < 10 MW are also skipped.
-    """
-    EXCLUDE_FUELS: set = {"solar", "battery", "wind", "unknown", "other"}
-
-    CAP_DEFAULT: Dict[str, float] = {
-        "nuclear": 1100.0,
-        "coal":     700.0,
-        "lng":      500.0,
-        "gas":      500.0,
-        "oil":      400.0,
-        "hydro":    200.0,
-        "geothermal": 50.0,
-        "biomass":  100.0,
-        "waste":     30.0,
+    # Valid fuel names (normalised to lowercase)
+    FUEL_MAP: Dict[str, str] = {
+        "gas": "gas", "lng": "gas", "ng": "gas",
+        "coal": "coal", "thermal": "thermal",
+        "oil": "oil", "petroleum": "oil",
+        "nuclear": "nuclear",
+        "hydro": "hydro", "water": "hydro",
+        "pumped storage": "pumped", "pumped": "pumped",
+        "geothermal": "geothermal",
+        "biomass": "biomass", "biogas": "biomass",
+        "waste": "waste", "refuse": "waste",
+        "wind": "wind",
+        "solar": "solar", "photovoltaic": "solar",
+        "storage": "storage", "battery": "storage",
+    }
+    # Fuels to skip for transmission-level model
+    # (small distributed solar/wind connect at distribution, not 154+ kV)
+    SKIP_FUELS_SMALL: set = {"solar", "storage", "unknown", "other"}
+    MIN_CAP_BY_FUEL: Dict[str, float] = {
+        "nuclear": 100.0, "coal": 50.0, "gas": 50.0, "oil": 50.0,
+        "thermal": 50.0, "hydro": 30.0, "pumped": 30.0,
+        "geothermal": 10.0, "biomass": 10.0, "waste": 10.0,
+        "wind": 50.0, "solar": 100.0,
     }
 
-    result: List[Tuple[int, str, float, str]] = []
+    CAP_DEFAULT: Dict[str, float] = {
+        "nuclear": 1100.0, "coal": 700.0, "gas": 500.0,
+        "thermal": 500.0, "oil": 400.0, "hydro": 200.0,
+        "pumped": 400.0, "geothermal": 50.0,
+        "biomass": 100.0, "waste": 30.0, "wind": 80.0, "solar": 50.0,
+    }
 
+    def _norm_fuel(raw: str) -> str:
+        s = str(raw).lower().strip()
+        for key, val in FUEL_MAP.items():
+            if key in s:
+                return val
+        return "unknown"
+
+    # ── collect raw plant list ─────────────────────────────────────────────
+    raw_plants: List[Tuple[float, float, str, float, str]] = []  # (lon, lat, fuel, cap, name)
+
+    # 1. OSM GeoJSON
     for region in REGIONS:
         plant_path = os.path.join(plants_data_dir, f"{region}_plants.geojson")
         if not os.path.exists(plant_path):
             continue
         with open(plant_path, encoding="utf-8") as fh:
             gj = json.load(fh)
-
         for feat in gj.get("features", []):
             props = feat.get("properties", {})
-            fuel = str(props.get("fuel_type") or "unknown").lower().strip()
-            if fuel in EXCLUDE_FUELS:
+            fuel = _norm_fuel(props.get("fuel_type") or "unknown")
+            if fuel in ("unknown", "other"):
                 continue
-
-            # Capacity
             cap_raw = props.get("capacity_mw")
             try:
-                cap_mw = float(cap_raw)
-                if cap_mw != cap_mw or cap_mw < 0:   # NaN or negative
-                    cap_mw = CAP_DEFAULT.get(fuel, 100.0)
+                cap = float(cap_raw)
+                if cap != cap or cap <= 0:
+                    cap = CAP_DEFAULT.get(fuel, 100.0)
             except (TypeError, ValueError):
-                cap_mw = CAP_DEFAULT.get(fuel, 100.0)
-
-            if cap_mw < 10.0:
-                continue
-
-            # Geometry
+                cap = CAP_DEFAULT.get(fuel, 100.0)
             geom = feat.get("geometry")
             if geom is None:
                 continue
             pos = _geom_centroid(geom)
             if pos is None:
                 continue
-            g_lon, g_lat = pos
+            name = str(props.get("name") or props.get("_display_name") or f"{region}_{fuel}")
+            raw_plants.append((pos[0], pos[1], fuel, cap, name))
 
-            # Find nearest bus in the grid
-            best_bus_idx: Optional[int] = None
-            best_dist: float = math.inf
-            for bus in grid.buses:
-                d = _haversine_km(g_lon, g_lat, bus.lon, bus.lat)
-                if d < best_dist:
-                    best_dist = d
-                    best_bus_idx = bus.id
+    # 2. WRI CSV (higher-quality capacity data for large plants)
+    _wri_path = wri_csv or os.path.join(plants_data_dir, "wri_global_power_plants.csv")
+    if os.path.exists(_wri_path):
+        try:
+            import csv
+            with open(_wri_path, encoding="utf-8") as fh:
+                reader = csv.DictReader(fh)
+                for row in reader:
+                    if row.get("country", "").upper() != "JPN":
+                        continue
+                    fuel = _norm_fuel(row.get("primary_fuel", "unknown"))
+                    try:
+                        cap = float(row.get("capacity_mw", 0) or 0)
+                    except ValueError:
+                        continue
+                    if cap <= 0:
+                        continue
+                    try:
+                        lat = float(row.get("latitude", 0) or 0)
+                        lon = float(row.get("longitude", 0) or 0)
+                    except ValueError:
+                        continue
+                    if lat == 0 and lon == 0:
+                        continue
+                    name = str(row.get("name") or f"WRI_{fuel}")
+                    raw_plants.append((lon, lat, fuel, cap, name))
+        except Exception:
+            pass
 
-            if best_bus_idx is None or best_dist > match_threshold_km:
+    # ── match plants to buses (de-duplicate by bus: keep max-cap per bus) ──
+    # First filter by min capacity
+    filtered: List[Tuple[float, float, str, float, str]] = []
+    for lon, lat, fuel, cap, name in raw_plants:
+        min_cap = MIN_CAP_BY_FUEL.get(fuel, 30.0)
+        if cap < min_cap:
+            continue
+        if fuel in SKIP_FUELS_SMALL and cap < 100.0:
+            continue
+        filtered.append((lon, lat, fuel, cap, name))
+
+    # Build KDTree over buses for fast lookup
+    bus_lons = [b.lon for b in grid.buses]
+    bus_lats = [b.lat for b in grid.buses]
+    try:
+        from scipy.spatial import cKDTree
+        bus_coords = np.array([[math.radians(la), math.radians(lo)]
+                               for la, lo in zip(bus_lats, bus_lons)])
+        bus_tree = cKDTree(bus_coords)
+        ang_thresh = match_threshold_km / 6371.0
+        use_tree = True
+    except ImportError:
+        use_tree = False
+
+    # bus_idx → (fuel, cap, name): best match per bus
+    bus_best: Dict[int, Tuple[str, float, str]] = {}
+    for lon, lat, fuel, cap, name in filtered:
+        if use_tree:
+            d, idx = bus_tree.query([math.radians(lat), math.radians(lon)], k=1)
+            if d > ang_thresh:
                 continue
+            bus_id = grid.buses[idx].id
+        else:
+            best_id: Optional[int] = None
+            best_d: float = math.inf
+            for b in grid.buses:
+                d = _haversine_km(lon, lat, b.lon, b.lat)
+                if d < best_d:
+                    best_d = d; best_id = b.id
+            if best_id is None or best_d > match_threshold_km:
+                continue
+            bus_id = best_id
 
-            plant_name = str(
-                props.get("name") or props.get("_display_name") or f"{region}_{fuel}"
-            )
-            result.append((best_bus_idx, fuel, cap_mw, plant_name))
+        if bus_id not in bus_best or cap > bus_best[bus_id][1]:
+            bus_best[bus_id] = (fuel, cap, name)
 
-    return result
+    return [(bid, fuel, cap, name) for bid, (fuel, cap, name) in bus_best.items()]
