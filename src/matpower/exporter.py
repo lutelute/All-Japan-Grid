@@ -373,12 +373,16 @@ def build_matpower_case(
         data_dir, voltage_levels=voltage_levels, cache_dir=cache_dir
     )
     lcc = net.largest_connected_component()
-    # If 66 kV buses are included, filter out radial chains far from HV backbone.
-    # Buses beyond 2 hops from 110+ kV create ill-conditioned Jacobians.
+    # Filter out radial chains far from the HV backbone.
+    # 77 kV buses > 2 hops from 154 kV, or 66 kV buses > 2 hops from 110 kV,
+    # create ill-conditioned Jacobians due to very high X/R ratios.
     if any(v <= 66 for v in (voltage_levels or [500, 275])):
         lcc = lcc.filter_by_hv_distance(hv_threshold_kv=110.0, max_hops=2)
+        lcc = lcc.largest_connected_component()
+    elif any(v <= 77 for v in (voltage_levels or [500, 275])):
+        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=154.0, max_hops=2)
         # Re-extract LCC: hop filter may disconnect sub-clusters that were
-        # bridged through removed 66 kV buses, leaving isolated islands.
+        # bridged through removed 77 kV buses, leaving isolated islands.
         lcc = lcc.largest_connected_component()
     n_bus = lcc.nb
 
