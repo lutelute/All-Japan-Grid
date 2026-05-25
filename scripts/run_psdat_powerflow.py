@@ -327,8 +327,8 @@ def main():
     print(f"電圧レベル: {voltage_levels} kV")
 
     # 電圧レベルに応じた負荷率 (高電圧のみ=低負荷率、広域モデル=高負荷率)
-    max_kv = max(voltage_levels)
-    load_factor = 0.25 if max_kv <= 275 else (0.20 if min(voltage_levels) >= 154 else 0.15)
+    min_kv = min(voltage_levels)
+    load_factor = 0.25 if min_kv >= 77 else 0.20  # 66kV included → cap at 0.20
     case = build_matpower_case(voltage_levels=voltage_levels, load_factor=load_factor)
     print(f"\n系統規模: {case['n_bus']} バス, {case['n_gen']} 発電機")
     print(f"総発電容量: {sum(case['GEN'][:,8]):.0f} MW")

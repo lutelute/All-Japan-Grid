@@ -16,7 +16,7 @@ Usage::
 
     from src.matpower.exporter import build_matpower_case
 
-    case = build_matpower_case(voltage_levels=[500, 275])
+    case = build_matpower_case(voltage_levels=[500, 275, 154, 77, 66])
     BUS, BRANCH, GEN = case['BUS'], case['BRANCH'], case['GEN']
     baseMVA = case['baseMVA']
 """
@@ -341,7 +341,7 @@ def build_matpower_case(
     Parameters
     ----------
     voltage_levels : list of int, optional
-        Voltage levels [kV] to include. Default: [500, 275].
+        Voltage levels [kV] to include. Default: [500, 275, 154, 77, 66].
     data_dir : str
         Path to the data directory containing GeoJSON files.
     baseMVA : float
@@ -365,7 +365,7 @@ def build_matpower_case(
         'bus_names' — list of str
     """
     if voltage_levels is None:
-        voltage_levels = [500, 275]
+        voltage_levels = [500, 275, 154, 77, 66]
 
     # ── 1. Build network (with disk cache for slow multi-kV builds) ───────
     cache_dir = os.path.join(data_dir, "..", "data", "cache") if os.path.isdir(data_dir) else None
