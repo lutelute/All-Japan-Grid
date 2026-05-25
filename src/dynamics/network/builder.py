@@ -94,7 +94,8 @@ MAX_ADMITTANCE_PU: float = 200.0
 # Standard transformer voltage pairs (hi_kv, lo_kv) — only create transformers for these
 # Pairs like (500, 66) or (275, 66) are NOT standard and should not be created directly
 STANDARD_TRANSFORMER_PAIRS: set = {
-    (500, 275), (275, 220), (275, 154), (220, 154),
+    (500, 275), (500, 154),   # (500,154) for substations without 275 kV intermediate
+    (275, 220), (275, 154), (220, 154),
     (154, 110), (154, 77), (154, 66),
     (110, 66), (77, 66), (110, 77),
 }
@@ -804,13 +805,31 @@ class GridNetwork:
                 continue
             seen_tr.add(edge_key)
 
-            # Transformer reactance scaled by voltage ratio (pu on sbase)
-            # Higher ratio → lower coupling → higher X in pu
-            X_tr = 0.10 * (hi_kv / lo_kv) ** 0.5 / (sbase_mva / 100.0)
-            X_tr = max(min(X_tr, 0.30), 0.05)   # clamp 0.05–0.30 pu
+            # Transformer reactance: X_sys = X_nom × (sbase / tr_mva)
+            # where tr_mva is the total bank capacity at the substation.
+            # Typical Japan EHV substation transformer ratings:
+            #   500/275 kV: ~2000 MVA total → X_sys ≈ 0.006 pu (δ ≈ 3.6° at 1 GW)
+            #   275/154 kV: ~500 MVA total  → X_sys ≈ 0.024 pu
+            TRANSFORMER_MVA: Dict[tuple, float] = {
+                (500, 275): 2000.0,
+                (500, 154):  400.0,   # virtual: represents 500→187→154 chain in Shikoku
+                (275, 220):  500.0,
+                (275, 154):  500.0,
+                (220, 154):  400.0,
+                (154, 110):  200.0,
+                (154, 77):   150.0,
+                (154, 66):   150.0,
+                (110, 66):   100.0,
+                (77, 66):     75.0,
+                (110, 77):   100.0,
+            }
+            TR_X_NOMINAL = 0.12   # leakage reactance on transformer's own base
+            tr_mva = TRANSFORMER_MVA.get((hi_kv, lo_kv), 100.0)
+            X_tr = TR_X_NOMINAL * (sbase_mva / tr_mva)
+            X_tr = max(min(X_tr, 0.30), 0.003)   # clamp 0.003–0.30 pu
 
-            # Rating estimate: lower-voltage side limits the capacity
-            rating_mva = lo_kv * lo_kv / (sbase_mva * X_tr) * 0.3
+            # Rating: limited by transformer capacity
+            rating_mva = tr_mva
 
             lines.append(LineData(
                 from_bus=hi_id,
@@ -1049,12 +1068,30 @@ def assign_generators(
         "biomass": 100.0, "waste": 30.0, "wind": 80.0, "solar": 50.0,
     }
 
+    # Physical maximum capacity [MW] per fuel type used in Japan's grid.
+    # Values above this threshold likely indicate kW stored as MW → divide by 1000.
+    CAP_MAX_MW: Dict[str, float] = {
+        # Kashiwazaki-Kariwa nuclear is 8,212 MW (world's largest, 7 reactors) — must be >8212
+        "hydro": 3000.0, "pumped": 3000.0,
+        "nuclear": 10000.0, "coal": 7000.0, "gas": 8000.0,
+        "oil": 6000.0, "thermal": 8000.0,
+        "wind": 500.0, "solar": 2000.0,
+        "geothermal": 600.0, "biomass": 300.0, "waste": 100.0,
+    }
+
     def _norm_fuel(raw: str) -> str:
         s = str(raw).lower().strip()
         for key, val in FUEL_MAP.items():
             if key in s:
                 return val
         return "unknown"
+
+    def _sanitize_cap(cap: float, fuel: str) -> float:
+        """Divide by 1000 if value exceeds physical maximum — likely kW stored as MW."""
+        limit = CAP_MAX_MW.get(fuel, 20000.0)
+        if cap > limit:
+            cap /= 1000.0
+        return cap
 
     # ── collect raw plant list ─────────────────────────────────────────────
     raw_plants: List[Tuple[float, float, str, float, str]] = []  # (lon, lat, fuel, cap, name)
@@ -1076,6 +1113,8 @@ def assign_generators(
                 cap = float(cap_raw)
                 if cap != cap or cap <= 0:
                     cap = CAP_DEFAULT.get(fuel, 100.0)
+                else:
+                    cap = _sanitize_cap(cap, fuel)
             except (TypeError, ValueError):
                 cap = CAP_DEFAULT.get(fuel, 100.0)
             geom = feat.get("geometry")
@@ -1104,6 +1143,7 @@ def assign_generators(
                         continue
                     if cap <= 0:
                         continue
+                    cap = _sanitize_cap(cap, fuel)
                     try:
                         lat = float(row.get("latitude", 0) or 0)
                         lon = float(row.get("longitude", 0) or 0)
@@ -1127,23 +1167,83 @@ def assign_generators(
             continue
         filtered.append((lon, lat, fuel, cap, name))
 
-    # Build KDTree over buses for fast lookup
+    # Capacity-based matching threshold: large plants connect via dedicated HV lines
+    # (e.g. 柏崎刈羽 → 中越275kV 50 km; 大飯 → 嶺南275kV 35 km).
+    def _cap_thresh_km(cap_mw: float) -> float:
+        if cap_mw >= 1000: return 80.0
+        if cap_mw >= 500:  return 50.0
+        if cap_mw >= 300:  return 30.0
+        if cap_mw >= 100:  return 20.0
+        return match_threshold_km
+
+    # Build KDTree over buses for fast lookup; also keep per-kV sub-trees
+    # so we can prefer higher-voltage buses for large plants.
     bus_lons = [b.lon for b in grid.buses]
     bus_lats = [b.lat for b in grid.buses]
+    bus_kvs  = [b.base_kv for b in grid.buses]
     try:
         from scipy.spatial import cKDTree
         bus_coords = np.array([[math.radians(la), math.radians(lo)]
                                for la, lo in zip(bus_lats, bus_lons)])
         bus_tree = cKDTree(bus_coords)
-        ang_thresh = match_threshold_km / 6371.0
+
+        # Sub-trees for voltage preference:
+        #   ehv_tree: 500 kV buses — preferred for nuclear/large-hydro ≥ 1000 MW
+        #             Japan's large plants (e.g. Kashiwazaki 8212 MW) connect at 500 kV.
+        #             We extend search radius to 2× threshold to find the 500 kV switchyard
+        #             even if it is 100+ km away (OSM often lacks plant switchyards).
+        #   hv_tree:  275+ kV buses — preferred for medium plants ≥ 500 MW
+        ehv_mask   = np.array([kv >= 500 for kv in bus_kvs])
+        ehv_indices = np.where(ehv_mask)[0]
+        ehv_coords  = bus_coords[ehv_mask]
+        ehv_tree    = cKDTree(ehv_coords) if len(ehv_indices) else None
+
+        hv_mask    = np.array([kv >= 275 for kv in bus_kvs])
+        hv_indices = np.where(hv_mask)[0]
+        hv_coords  = bus_coords[hv_mask]
+        hv_tree    = cKDTree(hv_coords) if len(hv_indices) else None
+
         use_tree = True
     except ImportError:
         use_tree = False
+        ehv_tree = None; ehv_indices = []
+        hv_tree  = None; hv_indices  = []
 
     # bus_idx → (fuel, cap, name): best match per bus
     bus_best: Dict[int, Tuple[str, float, str]] = {}
     for lon, lat, fuel, cap, name in filtered:
+        thresh_km = _cap_thresh_km(cap)
         if use_tree:
+            ang_thresh = thresh_km / 6371.0
+
+            # Priority 1: large nuclear/hydro (≥ 1000 MW) → prefer 500 kV within 2× radius.
+            # These plants always step up to 500 kV; OSM switchyard data is sparse so we
+            # extend the search radius to capture the nearest 500 kV bus.
+            matched = False
+            if cap >= 1000 and ehv_tree is not None and fuel in ("nuclear", "hydro", "pumped", "coal"):
+                ang_ehv = (thresh_km * 2.0) / 6371.0
+                dh, ih = ehv_tree.query([math.radians(lat), math.radians(lon)], k=1)
+                if dh <= ang_ehv:
+                    idx = int(ehv_indices[ih])
+                    bus_id = grid.buses[idx].id
+                    if bus_id not in bus_best or cap > bus_best[bus_id][1]:
+                        bus_best[bus_id] = (fuel, cap, name)
+                    matched = True
+
+            # Priority 2: medium-large plants (≥ 500 MW) → prefer 275+ kV within 1.5× radius
+            if not matched and cap >= 500 and hv_tree is not None:
+                ang_hv = (thresh_km * 1.5) / 6371.0
+                dh, ih = hv_tree.query([math.radians(lat), math.radians(lon)], k=1)
+                if dh <= ang_hv:
+                    idx = int(hv_indices[ih])
+                    bus_id = grid.buses[idx].id
+                    if bus_id not in bus_best or cap > bus_best[bus_id][1]:
+                        bus_best[bus_id] = (fuel, cap, name)
+                    matched = True
+
+            if matched:
+                continue  # matched to preferred voltage bus
+
             d, idx = bus_tree.query([math.radians(lat), math.radians(lon)], k=1)
             if d > ang_thresh:
                 continue
@@ -1155,7 +1255,7 @@ def assign_generators(
                 d = _haversine_km(lon, lat, b.lon, b.lat)
                 if d < best_d:
                     best_d = d; best_id = b.id
-            if best_id is None or best_d > match_threshold_km:
+            if best_id is None or best_d > thresh_km:
                 continue
             bus_id = best_id
 

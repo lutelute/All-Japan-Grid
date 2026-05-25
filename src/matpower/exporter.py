@@ -98,6 +98,97 @@ def _fuel_key(fuel: str) -> str:
     return "thermal"
 
 
+def diagnose_powerflow_risks(
+    BUS: np.ndarray,
+    BRANCH: np.ndarray,
+    baseMVA: float = 100.0,
+    x_high_threshold: float = 0.40,
+    q_high_threshold: float = 0.10,
+) -> dict:
+    """Detect and quantify the three main NR convergence risk factors.
+
+    Returns a dict with keys:
+        'radial'        : radial bus count per voltage class
+        'q_imbalance'   : reactive surplus Q_flat per voltage class [pu]
+        'high_x'        : branch count with X_pu > x_high_threshold
+        'isolated'      : buses with degree 0 (disconnected)
+        'summary'       : human-readable warning lines
+    """
+    from collections import defaultdict
+    n = BUS.shape[0]
+    bus_kv = {int(BUS[i, BUS_I]): BUS[i, BASE_KV] for i in range(n)}
+    bus_map = {int(BUS[i, BUS_I]): i for i in range(n)}
+
+    # ── Degree (connectivity) ───────────────────────────────────────────────
+    degree = defaultdict(int)
+    for k in range(BRANCH.shape[0]):
+        fb = int(BRANCH[k, F_BUS]); tb = int(BRANCH[k, T_BUS])
+        degree[fb] += 1; degree[tb] += 1
+
+    radial = defaultdict(int)   # kv → count of degree-1 buses
+    isolated = []
+    for bus_num, kv in bus_kv.items():
+        d = degree[bus_num]
+        if d == 0:
+            isolated.append(bus_num)
+        elif d == 1:
+            radial[int(kv)] += 1
+
+    # ── Q imbalance at flat start ───────────────────────────────────────────
+    Ybus = _build_ybus_for_compensation(BUS, BRANCH, baseMVA)
+    rowsum = np.asarray(Ybus.sum(axis=1)).ravel()
+    Q_flat = rowsum.imag   # pu; >0 = capacitive surplus
+
+    q_stats: dict = {}
+    for kv in sorted(set(int(v) for v in bus_kv.values()), reverse=True):
+        mask = np.array([BUS[i, BASE_KV] == kv for i in range(n)])
+        qf = Q_flat[mask]
+        if len(qf):
+            q_stats[kv] = {
+                "n": int(len(qf)),
+                "max": float(np.max(np.abs(qf))),
+                "mean": float(np.mean(qf)),
+                "sum": float(np.sum(qf)),
+            }
+
+    # ── High-impedance branches ──────────────────────────────────────────────
+    high_x = int(np.sum(BRANCH[:, BR_X] > x_high_threshold))
+    max_x  = float(BRANCH[:, BR_X].max()) if len(BRANCH) else 0.0
+
+    # ── Build summary warnings ───────────────────────────────────────────────
+    warnings = []
+    for kv, cnt in sorted(radial.items(), reverse=True):
+        if cnt:
+            warnings.append(
+                f"[RADIAL] {kv} kV: {cnt} leaf buses (deg=1) "
+                "→ possible Jacobian near-singularity"
+            )
+    if isolated:
+        warnings.append(f"[ISOLATED] {len(isolated)} buses with degree=0 "
+                        "→ power balance impossible, will diverge")
+    for kv, s in q_stats.items():
+        if s["max"] > q_high_threshold:
+            warnings.append(
+                f"[Q-IMBALANCE] {kv} kV: max Q_flat={s['max']:.3f} pu "
+                f"({s['max']*baseMVA:.0f} MVAr) "
+                "→ add shunt reactor to compensate line charging"
+            )
+    if high_x:
+        warnings.append(f"[HIGH-X] {high_x} branches with X_pu > {x_high_threshold} "
+                        f"(max {max_x:.3f}) → long/weak connections, skip or aggregate")
+    if not warnings:
+        warnings.append("[OK] No major convergence risks detected.")
+
+    return {
+        "radial": dict(radial),
+        "q_imbalance": q_stats,
+        "high_x": high_x,
+        "max_x": max_x,
+        "isolated": isolated,
+        "summary": warnings,
+    }
+
+
 def _build_ybus_for_compensation(
     BUS: np.ndarray,
     BRANCH: np.ndarray,
@@ -286,6 +377,9 @@ def build_matpower_case(
     # Buses beyond 2 hops from 110+ kV create ill-conditioned Jacobians.
     if any(v <= 66 for v in (voltage_levels or [500, 275])):
         lcc = lcc.filter_by_hv_distance(hv_threshold_kv=110.0, max_hops=2)
+        # Re-extract LCC: hop filter may disconnect sub-clusters that were
+        # bridged through removed 66 kV buses, leaving isolated islands.
+        lcc = lcc.largest_connected_component()
     n_bus = lcc.nb
 
     # ── 2. Generator assignment ──────────────────────────────────────────
@@ -299,28 +393,51 @@ def build_matpower_case(
     gen_bus_list = sorted(bus_gen.keys())
     n_gen = len(gen_bus_list)
 
-    # Slack bus: generator bus with largest capacity
-    slack_bus_idx = max(bus_gen.keys(), key=lambda b: bus_gen[b][1])
+    # Slack bus: well-connected generator bus with large capacity.
+    # Radial buses (degree=1) make poor slack buses because they can't
+    # distribute system mismatches. Prefer buses with degree ≥ 3.
+    from collections import Counter as _Counter
+    _bus_degree: Dict[int, int] = _Counter()
+    for _ln in lcc.lines:
+        _bus_degree[_ln.from_bus] += 1
+        _bus_degree[_ln.to_bus]   += 1
 
-    # Total generation → total load (power balance at load_factor)
-    total_gen_mw = sum(bus_gen[b][1] * load_factor for b in gen_bus_list)
+    def _slack_score(b: int) -> tuple:
+        deg = _bus_degree.get(b, 0)
+        cap = bus_gen[b][1]
+        # (connectivity tier, capacity): prefer well-connected (≥3) over radial
+        tier = 2 if deg >= 3 else (1 if deg == 2 else 0)
+        return (tier, cap)
 
-    # Voltage-weighted load distribution: load ∝ V_kv² (proxy for substation capacity)
-    # Only buses at ≥ 77 kV carry loads (sub-transmission and above).
-    # 66 kV buses are often distribution step-down nodes — keep them as transit.
-    LOAD_MIN_KV = 77  # minimum bus voltage [kV] to receive load
-    pq_bus_indices = [i for i in range(n_bus) if i not in bus_gen]
-    if not pq_bus_indices:
-        pq_bus_indices = list(range(n_bus))
-    pq_weights = {
-        i: lcc.buses[i].base_kv ** 2
-        for i in pq_bus_indices
-        if lcc.buses[i].base_kv >= LOAD_MIN_KV
-    }
-    if not pq_weights:  # fallback: use all PQ buses
-        pq_weights = {i: lcc.buses[i].base_kv ** 2 for i in pq_bus_indices}
-    total_weight = sum(pq_weights.values()) or 1.0
-    # scale so total load = total_gen_mw
+    slack_bus_idx = max(bus_gen.keys(), key=_slack_score)
+
+    # Total generation → total load.
+    # Cap total to Japan's realistic peak demand so adding more matched generators
+    # does not artificially inflate the network power flow.
+    # Japan 2022 summer peak ≈ 170 GW; installed capacity ≫ this value.
+    JAPAN_PEAK_MW = 170_000.0
+    total_cap_mw = sum(bus_gen[b][1] for b in gen_bus_list)
+    total_gen_mw = min(total_cap_mw, JAPAN_PEAK_MW) * load_factor
+    pg_scale     = total_gen_mw / max(total_cap_mw * load_factor, 1.0)
+
+    # Load distribution: V_kv² weighting across all non-generator PQ buses.
+    # Including 500 kV PQ buses in the weighting distributes load more evenly and
+    # avoids overloading weak radial 154 kV buses at the network periphery.
+    # The large V_kv² weight on 500 kV buses acts as a virtual load at strongly
+    # coupled (X=0.006 pu) transformer nodes — physically they represent the
+    # equivalent downstream load seen from the 500 kV backbone.
+    LOAD_MIN_KV = 66 if any(v <= 66 for v in voltage_levels) else 77
+    all_weights: Dict[int, float] = {}
+    for i in range(n_bus):
+        if i in bus_gen:
+            continue   # gen buses have PD=0; PG handles their injection
+        kv = lcc.buses[i].base_kv
+        if kv < LOAD_MIN_KV:
+            continue
+        all_weights[i] = kv ** 2
+    if not all_weights:
+        all_weights = {i: 1.0 for i in range(n_bus)}
+    total_weight = sum(all_weights.values()) or 1.0
     load_scale = total_gen_mw / total_weight
 
     # ── 3. BUS array (n_bus × 13) ────────────────────────────────────────
@@ -339,9 +456,8 @@ def build_matpower_case(
         else:
             btype = PQ_BUS
 
-        # Distribute load proportional to V_kv² for power balance
-        # Only buses with weight entry receive load (buses below LOAD_MIN_KV excluded)
-        pd_mw = 0.0 if is_gen_bus else pq_weights.get(i, 0.0) * load_scale
+        # Distribute load from all_weights (gen buses also get reduced load)
+        pd_mw = all_weights.get(i, 0.0) * load_scale
         qd_mvar = pd_mw * qg_ratio
 
         BUS[i, BUS_I]    = bus_1idx
@@ -372,7 +488,12 @@ def build_matpower_case(
         BRANCH[k, RATE_C] = ln.rating_mva
         BRANCH[k, TAP]    = 0.0   # 0 = line (no transformer tap)
 
-    # ── 4b. Optional shunt reactive compensation ──────────────────────────
+    # ── 4b. Convergence diagnostics (always run, log risk factors) ──────────
+    diag = diagnose_powerflow_risks(BUS, BRANCH, baseMVA)
+    for warn in diag["summary"]:
+        print(f"  {warn}")
+
+    # ── 4c. Optional shunt reactive compensation ──────────────────────────
     comp_info = None
     if shunt_compensation is not None:
         BUS, comp_info = _add_shunt_compensation(
@@ -387,7 +508,7 @@ def build_matpower_case(
     gen_fuel: List[str] = []
     for g, bus_idx in enumerate(gen_bus_list):
         fuel, cap_mw, _ = bus_gen[bus_idx]
-        pg = cap_mw * load_factor   # MW
+        pg = cap_mw * load_factor * pg_scale   # MW (pg_scale=1 normally)
         qg = pg * qg_ratio           # MVAr initial dispatch
         GEN[g, GEN_BUS]    = bus_idx + 1   # 1-indexed
         GEN[g, PG]         = pg
@@ -434,4 +555,5 @@ def build_matpower_case(
         "slack_bus": slack_bus_idx + 1,  # 1-indexed
         "gen_buses_1idx": [b + 1 for b in gen_bus_list],
         "compensation": comp_info,
+        "diagnostics": diag,
     }
