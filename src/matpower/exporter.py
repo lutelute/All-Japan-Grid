@@ -16,7 +16,7 @@ Usage::
 
     from src.matpower.exporter import build_matpower_case
 
-    case = build_matpower_case(voltage_levels=[500, 275, 154, 77, 66])
+    case = build_matpower_case()   # default: [500,275,154,110,77,66] 2189-bus, lf=0.20
     BUS, BRANCH, GEN = case['BUS'], case['BRANCH'], case['GEN']
     baseMVA = case['baseMVA']
 """
@@ -330,18 +330,19 @@ def build_matpower_case(
     voltage_levels: List[int] = None,
     data_dir: str = "data",
     baseMVA: float = 100.0,
-    load_factor: float = 0.60,
+    load_factor: float = 0.20,
     qg_ratio: float = 0.30,
     shunt_compensation: Optional[str] = None,
     compensation_alpha: float = 0.9,
     compensation_v_threshold: float = 0.05,
+    hv_hops: int = 4,
 ) -> Dict:
     """Build a MATPOWER-format case from the All-Japan-Grid GeoJSON data.
 
     Parameters
     ----------
     voltage_levels : list of int, optional
-        Voltage levels [kV] to include. Default: [500, 275, 154, 77, 66].
+        Voltage levels [kV] to include. Default: [500, 275, 154, 110, 77, 66].
     data_dir : str
         Path to the data directory containing GeoJSON files.
     baseMVA : float
@@ -365,7 +366,7 @@ def build_matpower_case(
         'bus_names' — list of str
     """
     if voltage_levels is None:
-        voltage_levels = [500, 275, 154, 77, 66]
+        voltage_levels = [500, 275, 154, 110, 77, 66]
 
     # ── 1. Build network (with disk cache for slow multi-kV builds) ───────
     cache_dir = os.path.join(data_dir, "..", "data", "cache") if os.path.isdir(data_dir) else None
@@ -377,12 +378,12 @@ def build_matpower_case(
     # 77 kV buses > 2 hops from 154 kV, or 66 kV buses > 2 hops from 110 kV,
     # create ill-conditioned Jacobians due to very high X/R ratios.
     if any(v <= 66 for v in (voltage_levels or [500, 275])):
-        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=110.0, max_hops=2)
+        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=110.0, max_hops=hv_hops)
         lcc = lcc.largest_connected_component()
     elif any(v <= 77 for v in (voltage_levels or [500, 275])):
-        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=154.0, max_hops=2)
+        lcc = lcc.filter_by_hv_distance(hv_threshold_kv=154.0, max_hops=hv_hops)
         # Re-extract LCC: hop filter may disconnect sub-clusters that were
-        # bridged through removed 77 kV buses, leaving isolated islands.
+        # bridged through removed lower-kV buses, leaving isolated islands.
         lcc = lcc.largest_connected_component()
     n_bus = lcc.nb
 

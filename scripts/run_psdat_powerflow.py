@@ -315,8 +315,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["powerflow","modal","fault","all"],
                         default="all")
-    parser.add_argument("--kv", default="500,275,154,77,66",
-                        help="カンマ区切りの電圧レベル [kV] 例: 500,275,154,77,66")
+    parser.add_argument("--kv", default="500,275,154,110,77,66",
+                        help="カンマ区切りの電圧レベル [kV] 例: 500,275,154,110,77,66")
     args = parser.parse_args()
 
     voltage_levels = [int(v) for v in args.kv.split(",")]
@@ -329,7 +329,7 @@ def main():
     # 電圧レベルに応じた負荷率 (高電圧のみ=低負荷率、広域モデル=高負荷率)
     min_kv = min(voltage_levels)
     load_factor = 0.25 if min_kv >= 77 else 0.20  # 66kV included → cap at 0.20
-    case = build_matpower_case(voltage_levels=voltage_levels, load_factor=load_factor)
+    case = build_matpower_case(voltage_levels=voltage_levels, load_factor=load_factor, hv_hops=4)
     print(f"\n系統規模: {case['n_bus']} バス, {case['n_gen']} 発電機")
     print(f"総発電容量: {sum(case['GEN'][:,8]):.0f} MW")
     print(f"総負荷:     {sum(case['BUS'][:,2]):.0f} MW")
