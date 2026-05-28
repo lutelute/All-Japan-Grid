@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=12"/>
+    <link rel="stylesheet" href="./css/style.css?v=14"/>
 </head>
 <body>
 
@@ -18,6 +18,7 @@
         <button class="tab-btn active" data-tab="tab-map">系統図</button>
         <button class="tab-btn" data-tab="tab-area">エリア</button>
         <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
+        <button class="tab-btn" data-tab="tab-sld">単線図</button>
     </div>
 
     <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
@@ -156,6 +157,38 @@
         </div>
     </div>
 
+    <!-- ━━ Tab 4: 単線結線図 (IEEE SLD) ━━ -->
+    <div class="tab-panel" id="tab-sld">
+        <div class="section">
+            <h2>単線結線図 <span style="font-size:10px;font-weight:normal;color:#aaa">IEEE-style SLD</span></h2>
+            <p class="area-desc">電圧階層別にバス・発電機・負荷・変圧器を表示。<br>ホイールでズーム、ドラッグでパン。</p>
+        </div>
+        <div class="section">
+            <h2>電圧階層</h2>
+            <div class="layer-toggles" id="sld-kv-list">
+                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(500,this.checked)"/><span class="toggle-label" style="color:#b20000">■ 500 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(275,this.checked)"/><span class="toggle-label" style="color:#0044bb">■ 275 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(154,this.checked)"/><span class="toggle-label" style="color:#006622">■ 154 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(110,this.checked)"/><span class="toggle-label" style="color:#885500">■ 110 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(77,this.checked)"/><span class="toggle-label" style="color:#660077">■ 77 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(66,this.checked)"/><span class="toggle-label" style="color:#334455">■ 66 kV</span></label>
+            </div>
+        </div>
+        <div class="section">
+            <h2>凡例</h2>
+            <div style="font-size:11px;line-height:1.8;color:#ccc">
+                <div>━━ 送電線 (潮流率: 緑&lt;30% / 橙&lt;60% / 赤&lt;90% / 暗赤≥90%)</div>
+                <div>╌╌ 変圧器</div>
+                <div>⊙ G &nbsp; 発電機バス</div>
+                <div>▽ &nbsp;&nbsp; 負荷バス</div>
+                <div>— &nbsp; バスバー (kV色)</div>
+            </div>
+        </div>
+        <div class="section">
+            <button class="btn-primary" onclick="sldFitAll()" style="width:100%;margin-top:4px">全体表示 (Fit All)</button>
+        </div>
+    </div>
+
     <!-- ━━ Tab 3: 潮流解析 ━━ -->
     <div class="tab-panel" id="tab-pf">
         <div class="section">
@@ -228,6 +261,11 @@
 </div>
 
 <div id="map">
+    <!-- IEEE SLD canvas (overlaid on map, shown only in tab-sld) -->
+    <canvas id="sld-canvas"></canvas>
+    <!-- Tooltip for SLD hover -->
+    <div id="sld-tooltip"></div>
+
     <div id="ui-toggles">
         <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="サイドバー">&#9776;</button>
         <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例">&#9670;</button>
@@ -258,7 +296,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=12"></script>
-<script src="./js/powerflow.js?v=12"></script>
+<script src="./js/grid_map.js?v=14"></script>
+<script src="./js/powerflow.js?v=14"></script>
+<script src="./js/sld.js?v=14"></script>
 </body>
 </html>

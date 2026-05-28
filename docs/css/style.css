@@ -480,3 +480,32 @@ body {
 }
 .ui-toggle-btn:hover { background: #16213e; border-color: #e94560; }
 .ui-toggle-btn.inactive { color: #444; border-color: #333; background: rgba(20,20,30,0.85); }
+
+/* ── IEEE SLD canvas ── */
+#sld-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 500;
+    display: none;
+    background: #fff;
+    cursor: grab;
+}
+#sld-canvas:active { cursor: grabbing; }
+
+/* ── SLD hover tooltip ── */
+#sld-tooltip {
+    position: fixed;
+    background: rgba(10, 12, 20, 0.92);
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    padding: 7px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.6;
+    pointer-events: none;
+    display: none;
+    z-index: 1500;
+    max-width: 260px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
