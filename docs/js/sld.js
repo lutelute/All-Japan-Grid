@@ -52,8 +52,10 @@ const TIER_Y = { 500: 0.15, 275: 0.32, 154: 0.52, 110: 0.65, 77: 0.76, 66: 0.87 
 
 /* ── Public API ──────────────────────────────────────────────────────────*/
 async function sldShow() {
+    // Make canvas visible BEFORE _initCanvas() so offsetWidth/Height are non-zero
+    const el = document.getElementById('sld-canvas');
+    if (el) el.style.display = 'block';
     if (!_canvas) _initCanvas();
-    _canvas.style.display = 'block';
     if (!_data) await _load();
     _rebuildSim();
     _startSim();
