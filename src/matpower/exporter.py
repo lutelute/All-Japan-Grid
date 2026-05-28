@@ -495,9 +495,17 @@ def build_matpower_case(
         BRANCH[k, BR_R]   = max(ln.R_pu, 1e-6)
         BRANCH[k, BR_X]   = max(ln.X_pu, 1e-6)
         BRANCH[k, BR_B]   = ln.B_pu
-        BRANCH[k, RATE_A] = ln.rating_mva
-        BRANCH[k, RATE_B] = ln.rating_mva
-        BRANCH[k, RATE_C] = ln.rating_mva
+        # デフォルト熱容量: 電圧クラス別の標準的な 1 回線定格 [MVA]
+        # (RATE_A=0 は loading_pct が計算不能になるため、電圧別の典型値を使用)
+        _DEFAULT_RATE: Dict[int, float] = {
+            500: 1500.0, 275: 800.0, 154: 400.0,
+            110: 250.0,   77: 200.0,  66: 150.0,
+        }
+        kv_round = int(round(ln.base_kv))
+        rate = ln.rating_mva if ln.rating_mva > 0 else _DEFAULT_RATE.get(kv_round, 100.0)
+        BRANCH[k, RATE_A] = rate
+        BRANCH[k, RATE_B] = rate
+        BRANCH[k, RATE_C] = rate
         BRANCH[k, TAP]    = 0.0   # 0 = line (no transformer tap)
 
     # ── 4b. Convergence diagnostics (always run, log risk factors) ──────────
