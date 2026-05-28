@@ -526,12 +526,16 @@
                     pfState.ringLayer = L.geoJSON(ringData, {
                         style: function(feature) {
                             var p = feature.properties;
+                            var kv = p.kv || 500;
                             var ld = p.loading || 0;
                             var col = ld > 1 ? loadingColor(ld) : p.col;
+                            // 500kV backbone: prominent / 275kV regional mesh: subtle
+                            var wt  = kv >= 500 ? (p.wt || 4.0) : (p.wt || 2.5) * 0.7;
+                            var op  = kv >= 500 ? 0.95 : 0.45;
                             return {
                                 color:       col,
-                                weight:      p.wt || 4.0,
-                                opacity:     0.95,
+                                weight:      wt,
+                                opacity:     op,
                                 lineCap:     "round",
                                 lineJoin:    "round",
                                 pane:        "ringPane",
