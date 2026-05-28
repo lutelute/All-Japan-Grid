@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=14"/>
+    <link rel="stylesheet" href="./css/style.css?v=15"/>
 </head>
 <body>
 
@@ -215,6 +215,36 @@
             </div>
         </div>
         <div class="section">
+            <h2>実ルート電圧レイヤー</h2>
+            <div class="layer-toggles">
+                <label class="layer-toggle">
+                    <input type="checkbox" checked disabled/>
+                    <span class="toggle-label" style="color:#cc0000">━ 500 kV (常時)</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" checked disabled/>
+                    <span class="toggle-label" style="color:#0044cc">━ 275 kV (常時)</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-154" onchange="pfToggleTier(154,this.checked)"/>
+                    <span class="toggle-label" style="color:#007733">━ 154 kV <span style="color:#888;font-size:9px">2.1MB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-110" onchange="pfToggleTier(110,this.checked)"/>
+                    <span class="toggle-label" style="color:#885500">━ 110 kV <span style="color:#888;font-size:9px">664KB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-77" onchange="pfToggleTier(77,this.checked)"/>
+                    <span class="toggle-label" style="color:#660077">━ 77 kV <span style="color:#888;font-size:9px">1.1MB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-66" onchange="pfToggleTier(66,this.checked)"/>
+                    <span class="toggle-label" style="color:#334455">━ 66 kV <span style="color:#e67e22;font-size:9px">5.9MB ⚠</span></span>
+                </label>
+            </div>
+            <div style="font-size:9px;color:#666;margin-top:3px">Visualize実行後に切替可</div>
+        </div>
+        <div class="section">
             <h2>Power Flow</h2>
             <div class="pf-controls">
                 <div>
@@ -296,8 +326,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=14"></script>
-<script src="./js/powerflow.js?v=14"></script>
-<script src="./js/sld.js?v=14"></script>
+<script src="./js/grid_map.js?v=15"></script>
+<script src="./js/powerflow.js?v=15"></script>
+<script src="./js/sld.js?v=15"></script>
 </body>
 </html>

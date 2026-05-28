@@ -509,3 +509,16 @@ body {
     max-width: 260px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
+
+/* ── 500kV backbone glow animation ── */
+.leaflet-routePane500-pane path {
+    animation: backbone-glow 2.8s ease-in-out infinite alternate;
+}
+@keyframes backbone-glow {
+    from { filter: drop-shadow(0 0 1px rgba(204, 0, 0, 0.4)); }
+    to   { filter: drop-shadow(0 0 4px rgba(255, 60, 60, 0.85)); }
+}
+
+/* ── 実ルート電圧レイヤー section ── */
+#tab-pf .section h2 { font-size: 0.8rem; }
+

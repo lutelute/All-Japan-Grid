@@ -21,7 +21,8 @@
         lineLayer: null,
         arrowLayer: null,
         gridLayer: null,  // base grid background
-        routeLayers: [],  // per-kV real-route layers
+        routeLayers: [],  // per-kV real-route layers (eager 500+275 kV)
+        tierLayers: {},   // kv -> L.GeoJSON (on-demand lower tiers)
         active: false,
         busData: null,
         lineData: null,
@@ -64,6 +65,16 @@
             if (rl && window.map && window.map.hasLayer(rl)) window.map.removeLayer(rl);
         });
         pfState.routeLayers = [];
+        Object.keys(pfState.tierLayers).forEach(function(kv) {
+            var layer = pfState.tierLayers[kv];
+            if (layer && window.map) window.map.removeLayer(layer);
+        });
+        pfState.tierLayers = {};
+        // Reset lower-tier checkboxes
+        [154, 110, 77, 66].forEach(function(kv) {
+            var cb = document.getElementById("pf-tier-" + kv);
+            if (cb) cb.checked = false;
+        });
     }
 
     // ── Color scales ──
@@ -516,6 +527,70 @@
             console.error("National PF (routed) error:", e);
         }
     }
+
+    // ── On-demand lower-voltage tier loading ──────────────────────────────────
+
+    async function pfLoadTier(kv) {
+        if (pfState.tierLayers[kv]) return;  // already loaded
+        var tier = null;
+        for (var i = 0; i < ROUTE_TIERS.length; i++) {
+            if (ROUTE_TIERS[i].kv === kv) { tier = ROUTE_TIERS[i]; break; }
+        }
+        if (!tier || !window.map) return;
+
+        initRoutePanes();
+        var cb = "?v=" + Date.now();
+        try {
+            var res = await fetch("./data/powerflow/" + tier.file + cb);
+            if (!res.ok) return;
+            var data = await res.json();
+            var layer = L.geoJSON(data, {
+                style: function(feature) {
+                    var ld = feature.properties.loading || 0;
+                    if (ld > 1) {
+                        return {
+                            color:   loadingColor(ld),
+                            weight:  routeWeight(ld, kv),
+                            opacity: 0.82,
+                            pane:    "routePane" + kv,
+                        };
+                    }
+                    return {
+                        color:   tier.col,
+                        weight:  tier.wt * 0.6,
+                        opacity: 0.28,
+                        pane:    "routePane" + kv,
+                    };
+                },
+                onEachFeature: function(feature, lyr) {
+                    var p  = feature.properties;
+                    var ld = (p.loading || 0).toFixed(1);
+                    lyr.bindPopup(
+                        "<b>" + (p.name || "—") + "</b><br>" +
+                        kv + " kV | " + (p.region || "—") + "<br>" +
+                        "潮流率: " + ld + "%" +
+                        (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
+                    );
+                },
+                pane: "routePane" + kv,
+            }).addTo(window.map);
+            pfState.tierLayers[kv] = layer;
+        } catch(e) {
+            console.warn("pfLoadTier error kv=" + kv, e);
+        }
+    }
+
+    function pfUnloadTier(kv) {
+        var layer = pfState.tierLayers[kv];
+        if (layer && window.map) window.map.removeLayer(layer);
+        delete pfState.tierLayers[kv];
+    }
+
+    // Called from HTML checkboxes: pfToggleTier(154, true/false)
+    window.pfToggleTier = function(kv, checked) {
+        if (checked) pfLoadTier(kv);
+        else pfUnloadTier(kv);
+    };
 
     async function runPFAllRegions(mode) {
         var cb = "?v=" + Date.now();
