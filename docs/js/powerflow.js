@@ -442,6 +442,7 @@
     async function runPFNational() {
         var cb = "?v=" + Date.now();
         try {
+            if (window.setStatus) window.setStatus("実ルート読み込み中... (500+275 kV)");
             removeRouteLayers();
             removePFOverlays();
             initRoutePanes();
@@ -515,6 +516,7 @@
                 }
             });
             await Promise.all(fetches);
+            if (window.setStatus) window.setStatus("リング構造ハイライト読み込み中...");
 
             // ── Backbone ring highlight layer ────────────────────────────────
             try {
@@ -553,6 +555,7 @@
                 console.warn("Ring overlay load error:", e);
             }
 
+            if (window.setStatus) window.setStatus("全国実ルート表示完了 (500/275kV + リング構造)");
             // ── Results panel ────────────────────────────────────────────────
             var info = (pfState.summary && pfState.summary["all"]) || {};
             var el   = document.getElementById("pf-results-content");
@@ -586,6 +589,7 @@
         if (!tier || !window.map) return;
 
         initRoutePanes();
+        if (window.setStatus) window.setStatus(kv + " kV ルート読み込み中...");
         var cb = "?v=" + Date.now();
         try {
             var res = await fetch("./data/powerflow/" + tier.file + cb);
@@ -622,6 +626,7 @@
                 pane: "routePane" + kv,
             }).addTo(window.map);
             pfState.tierLayers[kv] = layer;
+            if (window.setStatus) window.setStatus(kv + " kV ルート表示完了");
         } catch(e) {
             console.warn("pfLoadTier error kv=" + kv, e);
         }
