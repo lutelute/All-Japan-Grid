@@ -154,17 +154,27 @@ function _getLayout() {
         if (!_visKv.has(kv)) continue;
 
         const group = _data.buses.filter(b => Math.round(b.kv) === kv);
-        group.sort((a, b) => a.lon - b.lon);
 
-        const xs = group.map(b => geoX(b.lon));
+        // Use sld_rank (crossing-minimized) if present, otherwise fall back to longitude
+        const hasRank = group.length > 0 && group[0].sld_rank !== undefined;
+        if (hasRank) {
+            group.sort((a, b) => a.sld_rank - b.sld_rank);
+        } else {
+            group.sort((a, b) => a.lon - b.lon);
+        }
+
+        // x positions: use sorted geographic lons (geography preserved) but assign
+        // them in rank order (crossing minimization order)
+        const sortedLons = group.map(b => geoX(b.lon)).sort((a, b) => a - b);
+
         // push-apart: guarantee minimum horizontal gap
-        for (let i = 1; i < xs.length; i++) {
-            if (xs[i] < xs[i-1] + tier.gapMin)
-                xs[i] = xs[i-1] + tier.gapMin;
+        for (let i = 1; i < sortedLons.length; i++) {
+            if (sortedLons[i] < sortedLons[i-1] + tier.gapMin)
+                sortedLons[i] = sortedLons[i-1] + tier.gapMin;
         }
 
         for (let i = 0; i < group.length; i++)
-            pos.set(group[i].id, { x: xs[i], y: tier.y });
+            pos.set(group[i].id, { x: sortedLons[i], y: tier.y });
     }
 
     _layout    = pos;
