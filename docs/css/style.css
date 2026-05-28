@@ -481,6 +481,25 @@ body {
 .ui-toggle-btn:hover { background: #16213e; border-color: #e94560; }
 .ui-toggle-btn.inactive { color: #444; border-color: #333; background: rgba(20,20,30,0.85); }
 
+/* ── Sim param sliders ── */
+.sim-params { margin-top: 4px; }
+.sim-row {
+    display: grid;
+    grid-template-columns: 54px 1fr 36px;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 5px;
+}
+.sim-label { font-size: 11px; color: #aaa; white-space: nowrap; }
+.sim-slider { width: 100%; accent-color: #e94560; cursor: pointer; }
+.sim-val { font-size: 11px; color: #eee; text-align: right; font-variant-numeric: tabular-nums; }
+.sim-reset-btn {
+    font-size: 12px; padding: 1px 5px; margin-left: 6px;
+    background: rgba(233,69,96,0.15); border: 1px solid #e94560;
+    color: #e94560; border-radius: 3px; cursor: pointer; vertical-align: middle;
+}
+.sim-reset-btn:hover { background: rgba(233,69,96,0.35); }
+
 /* ── Force-graph canvas ── */
 #sld-canvas {
     position: absolute;

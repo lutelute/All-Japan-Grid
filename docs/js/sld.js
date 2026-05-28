@@ -75,6 +75,33 @@ function sldToggleKv(kv, checked) {
 
 function sldFitAll() { _fitAll(); }
 
+function sldSetParam(key, value, sliderEl) {
+    SIM[key] = value;
+    const display = document.getElementById('sld-p-' + key);
+    if (display) display.textContent = Number(value).toFixed(value < 1 && value !== Math.round(value) ? 2 : 0);
+    SIM.alpha = Math.max(SIM.alpha, 0.5);
+    if (!_simRunning && _simNodes.length) _startSim();
+}
+
+function sldReheat() {
+    SIM.alpha = 1.0;
+    if (_simNodes.length) _startSim();
+}
+
+const _SIM_DEFAULTS = { repulsion: 300, linkLen: 60, linkStr: 0.18, gravity: 0.03, tierForce: 0.12, damping: 0.75 };
+
+function sldResetParams() {
+    Object.entries(_SIM_DEFAULTS).forEach(([k, v]) => {
+        SIM[k] = v;
+        const disp = document.getElementById('sld-p-' + k);
+        if (disp) disp.textContent = Number(v).toFixed(v < 1 && v !== Math.round(v) ? 2 : 0);
+        const slider = disp && disp.previousElementSibling;
+        if (slider) slider.value = v;
+    });
+    SIM.alpha = 1.0;
+    if (_simNodes.length) _startSim();
+}
+
 /* ── Init canvas ─────────────────────────────────────────────────────────*/
 function _initCanvas() {
     _canvas  = document.getElementById('sld-canvas');

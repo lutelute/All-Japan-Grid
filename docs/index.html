@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=18"/>
+    <link rel="stylesheet" href="./css/style.css?v=19"/>
 </head>
 <body>
 
@@ -184,7 +184,47 @@
             </div>
         </div>
         <div class="section">
-            <button class="btn-primary" onclick="sldFitAll()" style="width:100%;margin-top:4px">全体表示 (Fit All)</button>
+            <h2>シミュレーション <button class="sim-reset-btn" onclick="sldResetParams()" title="デフォルトに戻す">↺</button></h2>
+            <div class="sim-params">
+                <div class="sim-row">
+                    <span class="sim-label">反発力</span>
+                    <input type="range" class="sim-slider" min="0" max="1200" step="10" value="300"
+                           oninput="sldSetParam('repulsion',+this.value,this)">
+                    <span class="sim-val" id="sld-p-repulsion">300</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">リンク長</span>
+                    <input type="range" class="sim-slider" min="5" max="300" step="5" value="60"
+                           oninput="sldSetParam('linkLen',+this.value,this)">
+                    <span class="sim-val" id="sld-p-linkLen">60</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">バネ強度</span>
+                    <input type="range" class="sim-slider" min="0" max="1" step="0.01" value="0.18"
+                           oninput="sldSetParam('linkStr',+this.value,this)">
+                    <span class="sim-val" id="sld-p-linkStr">0.18</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">重力</span>
+                    <input type="range" class="sim-slider" min="0" max="0.2" step="0.005" value="0.03"
+                           oninput="sldSetParam('gravity',+this.value,this)">
+                    <span class="sim-val" id="sld-p-gravity">0.03</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">層引力</span>
+                    <input type="range" class="sim-slider" min="0" max="0.5" step="0.01" value="0.12"
+                           oninput="sldSetParam('tierForce',+this.value,this)">
+                    <span class="sim-val" id="sld-p-tierForce">0.12</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">減衰</span>
+                    <input type="range" class="sim-slider" min="0.1" max="0.99" step="0.01" value="0.75"
+                           oninput="sldSetParam('damping',+this.value,this)">
+                    <span class="sim-val" id="sld-p-damping">0.75</span>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="sldReheat()" style="width:48%;margin-top:6px">再加熱</button>
+            <button class="btn-primary" onclick="sldFitAll()" style="width:48%;margin-top:6px;margin-left:4%">全体表示</button>
         </div>
     </div>
 
@@ -329,8 +369,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=18"></script>
-<script src="./js/powerflow.js?v=18"></script>
-<script src="./js/sld.js?v=18"></script>
+<script src="./js/grid_map.js?v=19"></script>
+<script src="./js/powerflow.js?v=19"></script>
+<script src="./js/sld.js?v=19"></script>
 </body>
 </html>
