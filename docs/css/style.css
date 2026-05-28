@@ -519,6 +519,15 @@ body {
     to   { filter: drop-shadow(0 0 4px rgba(255, 60, 60, 0.85)); }
 }
 
+/* ── Ring backbone highlight pulsing (white halo works on both red/blue) ── */
+.leaflet-ringPane-pane path {
+    animation: ring-pulse 1.8s ease-in-out infinite alternate;
+}
+@keyframes ring-pulse {
+    from { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)); }
+    to   { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)); }
+}
+
 /* ── 実ルート電圧レイヤー section ── */
 #tab-pf .section h2 { font-size: 0.8rem; }
 

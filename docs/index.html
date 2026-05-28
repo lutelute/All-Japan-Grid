@@ -218,6 +218,10 @@
             <h2>実ルート電圧レイヤー</h2>
             <div class="layer-toggles">
                 <label class="layer-toggle">
+                    <input type="checkbox" id="pf-ring-toggle" checked onchange="pfToggleRing(this.checked)"/>
+                    <span class="toggle-label" style="color:#ff4444">⬡ リング枝ハイライト</span>
+                </label>
+                <label class="layer-toggle">
                     <input type="checkbox" checked disabled/>
                     <span class="toggle-label" style="color:#cc0000">━ 500 kV (常時)</span>
                 </label>

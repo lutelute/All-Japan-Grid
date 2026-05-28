@@ -20,9 +20,10 @@
         busLayer: null,
         lineLayer: null,
         arrowLayer: null,
-        gridLayer: null,  // base grid background
-        routeLayers: [],  // per-kV real-route layers (eager 500+275 kV)
-        tierLayers: {},   // kv -> L.GeoJSON (on-demand lower tiers)
+        gridLayer: null,   // base grid background
+        routeLayers: [],   // per-kV real-route layers (eager 500+275 kV)
+        tierLayers: {},    // kv -> L.GeoJSON (on-demand lower tiers)
+        ringLayer: null,   // backbone ring highlight layer
         active: false,
         busData: null,
         lineData: null,
@@ -58,6 +59,11 @@
                 p.style.zIndex = t.zIdx;
             }
         });
+        // Ring highlight pane sits above all route panes (zIndex 448, below substations)
+        if (!window.map.getPane("ringPane")) {
+            var rp = window.map.createPane("ringPane");
+            rp.style.zIndex = 448;
+        }
     }
 
     function removeRouteLayers() {
@@ -70,6 +76,10 @@
             if (layer && window.map) window.map.removeLayer(layer);
         });
         pfState.tierLayers = {};
+        if (pfState.ringLayer && window.map) {
+            window.map.removeLayer(pfState.ringLayer);
+            pfState.ringLayer = null;
+        }
         // Reset lower-tier checkboxes
         [154, 110, 77, 66].forEach(function(kv) {
             var cb = document.getElementById("pf-tier-" + kv);
@@ -506,6 +516,43 @@
             });
             await Promise.all(fetches);
 
+            // ── Backbone ring highlight layer ────────────────────────────────
+            try {
+                var ringRes = await fetch("./data/powerflow/backbone_ring.geojson" + cb);
+                if (ringRes.ok) {
+                    var ringData = await ringRes.json();
+                    pfState.ringLayer = L.geoJSON(ringData, {
+                        style: function(feature) {
+                            var p = feature.properties;
+                            var ld = p.loading || 0;
+                            var col = ld > 1 ? loadingColor(ld) : p.col;
+                            return {
+                                color:       col,
+                                weight:      p.wt || 4.0,
+                                opacity:     0.95,
+                                lineCap:     "round",
+                                lineJoin:    "round",
+                                pane:        "ringPane",
+                            };
+                        },
+                        onEachFeature: function(feature, lyr) {
+                            var p = feature.properties;
+                            var ld = (p.loading || 0).toFixed(1);
+                            lyr.bindPopup(
+                                "<b>【リング枝】" + (p.name || "—") + "</b><br>" +
+                                p.kv + " kV | " + (p.region || "—") + "<br>" +
+                                "潮流率: " + ld + "%" +
+                                (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
+                            );
+                        },
+                        pane: "ringPane",
+                        className: "ring-layer-" + "backbone",
+                    }).addTo(window.map);
+                }
+            } catch(e) {
+                console.warn("Ring overlay load error:", e);
+            }
+
             // ── Results panel ────────────────────────────────────────────────
             var info = (pfState.summary && pfState.summary["all"]) || {};
             var el   = document.getElementById("pf-results-content");
@@ -590,6 +637,13 @@
     window.pfToggleTier = function(kv, checked) {
         if (checked) pfLoadTier(kv);
         else pfUnloadTier(kv);
+    };
+
+    // Toggle backbone ring highlight layer
+    window.pfToggleRing = function(checked) {
+        if (!pfState.ringLayer || !window.map) return;
+        if (checked) pfState.ringLayer.addTo(window.map);
+        else window.map.removeLayer(pfState.ringLayer);
     };
 
     async function runPFAllRegions(mode) {
