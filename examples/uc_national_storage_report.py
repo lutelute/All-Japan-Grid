@@ -36,6 +36,15 @@ from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from matplotlib.colors import ListedColormap
+
+# Japanese font support
+plt.rcParams["font.family"] = ["Hiragino Sans", "DejaVu Sans"]
+plt.rcParams["axes.unicode_minus"] = False
 
 from src.model.generator import Generator
 from src.uc.adaptive_solver import solve_adaptive
@@ -372,6 +381,332 @@ def print_dispatch_by_fuel(adaptive_result, generators, demands):
         print(f" {total_gen:>10,.0f} {bal:>+7.0f}")
 
 
+# ── Visualization ─────────────────────────────────────────────────────────────
+
+FUEL_COLORS = {
+    "nuclear": "#7B2D8E", "coal": "#4A4A4A", "lng": "#E8832A", "oil": "#C44E52",
+    "hydro": "#2196F3", "pumped_hydro": "#1565C0", "geothermal": "#FF5722",
+    "biomass": "#8BC34A", "wind": "#4CAF50", "solar": "#FFD700",
+    "mixed": "#9E9E9E", "unknown": "#BDBDBD",
+}
+
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "uc_national")
+
+
+def plot_national_dispatch_stack(adaptive_result, generators, demands, output_path):
+    """Fig 1: National dispatch stack by fuel type (757 generators)."""
+    r = adaptive_result.result
+    gen_map = {g.id: g for g in generators}
+    hours = np.arange(NUM_PERIODS)
+
+    stacks = {ft: np.zeros(NUM_PERIODS) for ft in FUEL_ORDER}
+    for sched in r.schedules:
+        g = gen_map.get(sched.generator_id)
+        if not g:
+            continue
+        ft = g.fuel_type
+        if ft not in stacks:
+            stacks[ft] = np.zeros(NUM_PERIODS)
+        power = np.array(sched.power_output_mw[:NUM_PERIODS])
+        # For storage, separate charge (negative) and discharge (positive)
+        if g.is_storage and sched.charge_mw:
+            charge = np.array(sched.charge_mw[:NUM_PERIODS])
+            power = power - charge  # net output (can be negative)
+        stacks[ft] += power
+
+    fig, ax = plt.subplots(figsize=(16, 8))
+
+    # Split into positive (generation) and negative (charging) stacks
+    pos_fuels = [ft for ft in FUEL_ORDER if ft in stacks and np.any(stacks[ft] > 0)]
+    neg_fuels = [ft for ft in FUEL_ORDER if ft in stacks and np.any(stacks[ft] < 0)]
+
+    bottoms_pos = np.zeros(NUM_PERIODS)
+    for ft in pos_fuels:
+        vals = np.maximum(stacks[ft], 0)
+        if vals.sum() > 0:
+            ax.fill_between(hours, bottoms_pos, bottoms_pos + vals,
+                            label=ft, color=FUEL_COLORS.get(ft, "#999"),
+                            alpha=0.85, linewidth=0.5, edgecolor="white")
+            bottoms_pos += vals
+
+    # Negative (charging) below zero
+    bottoms_neg = np.zeros(NUM_PERIODS)
+    for ft in neg_fuels:
+        vals = np.minimum(stacks[ft], 0)
+        if vals.sum() < 0:
+            ax.fill_between(hours, bottoms_neg + vals, bottoms_neg,
+                            label=f"{ft} (charge)" if ft == "pumped_hydro" else ft,
+                            color=FUEL_COLORS.get(ft, "#999"), alpha=0.4,
+                            linewidth=0.5, edgecolor="white", hatch="//")
+            bottoms_neg += vals
+
+    ax.plot(hours, demands, "k-", linewidth=2.5, label="Demand", zorder=5)
+    ax.plot(hours, demands, "ko", markersize=3, zorder=5)
+
+    ax.set_xlim(0, 23)
+    ax.set_xlabel("Hour of Day / 時刻", fontsize=13)
+    ax.set_ylabel("Power Output (MW) / 出力", fontsize=13)
+    ax.set_title(f"All-Japan 24h Dispatch — {len(generators)} Generators, "
+                 f"Peak {max(demands):,.0f} MW\n"
+                 f"全日本 起動停止計画 — 燃料種別スタック図",
+                 fontsize=14, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=9, ncol=3, framealpha=0.9)
+    ax.set_xticks(hours)
+    ax.grid(axis="y", alpha=0.3)
+    ax.axhline(0, color="black", linewidth=0.5)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  Saved: {output_path}")
+
+
+def plot_fleet_capacity_pie(generators, output_path):
+    """Fig 2: Fleet capacity breakdown by fuel type."""
+    fuel_caps = {}
+    for g in generators:
+        fuel_caps[g.fuel_type] = fuel_caps.get(g.fuel_type, 0) + g.capacity_mw
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
+
+    # Pie chart by capacity
+    labels, sizes, colors = [], [], []
+    for ft in FUEL_ORDER:
+        if ft in fuel_caps and fuel_caps[ft] > 0:
+            labels.append(f"{ft}\n{fuel_caps[ft]:,.0f} MW")
+            sizes.append(fuel_caps[ft])
+            colors.append(FUEL_COLORS.get(ft, "#999"))
+
+    wedges, texts, autotexts = ax1.pie(
+        sizes, labels=labels, colors=colors, autopct="%1.1f%%",
+        startangle=90, textprops={"fontsize": 8}, pctdistance=0.8)
+    ax1.set_title(f"Installed Capacity by Fuel Type\n設備容量 燃料種別構成 "
+                  f"({sum(fuel_caps.values()):,.0f} MW total)",
+                  fontsize=13, fontweight="bold")
+
+    # Bar chart by region
+    region_caps = {}
+    region_fuel = {}
+    for g in generators:
+        region_caps[g.region] = region_caps.get(g.region, 0) + g.capacity_mw
+        key = (g.region, g.fuel_type)
+        region_fuel[key] = region_fuel.get(key, 0) + g.capacity_mw
+
+    regions_sorted = [r for r in REGIONS if r in region_caps]
+    x = np.arange(len(regions_sorted))
+    bottoms = np.zeros(len(regions_sorted))
+
+    for ft in FUEL_ORDER:
+        vals = [region_fuel.get((r, ft), 0) for r in regions_sorted]
+        if sum(vals) > 0:
+            ax2.bar(x, vals, bottom=bottoms, label=ft,
+                    color=FUEL_COLORS.get(ft, "#999"), alpha=0.85, edgecolor="white", linewidth=0.5)
+            bottoms += np.array(vals)
+
+    REGION_JA = {
+        "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
+        "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
+        "chugoku": "中国", "shikoku": "四国", "kyushu": "九州", "okinawa": "沖縄",
+    }
+    ax2.set_xticks(x)
+    ax2.set_xticklabels([f"{REGION_JA.get(r, r)}\n{r}" for r in regions_sorted], fontsize=8)
+    ax2.set_ylabel("Capacity (MW)")
+    ax2.set_title("Capacity by Region & Fuel Type\n地域別・燃料別 設備容量",
+                   fontsize=13, fontweight="bold")
+    ax2.legend(fontsize=7, ncol=2, loc="upper right")
+    ax2.grid(axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  Saved: {output_path}")
+
+
+def plot_storage_soc_chart(adaptive_result, generators, output_path):
+    """Fig 3: Storage SOC profiles for top units."""
+    r = adaptive_result.result
+    storage = [g for g in generators if g.is_storage]
+    top_units = sorted(storage, key=lambda g: g.storage_capacity_mwh, reverse=True)[:8]
+
+    fig, axes = plt.subplots(2, 1, figsize=(16, 10))
+    hours = np.arange(NUM_PERIODS)
+
+    # Panel 1: SOC %
+    ax = axes[0]
+    for g in top_units:
+        sched = next((s for s in r.schedules if s.generator_id == g.id), None)
+        if not sched or not sched.soc_mwh:
+            continue
+        soc_pct = [s / g.storage_capacity_mwh * 100 for s in sched.soc_mwh[:NUM_PERIODS]]
+        ax.plot(hours, soc_pct, "o-", markersize=3, linewidth=1.5,
+                label=f"{g.name} ({g.capacity_mw:.0f}MW/{g.storage_capacity_mwh:.0f}MWh)")
+
+    ax.set_xlim(0, 23)
+    ax.set_ylim(0, 105)
+    ax.set_xlabel("Hour of Day / 時刻")
+    ax.set_ylabel("SOC (%)")
+    ax.set_title("Storage SOC Profiles — Top 8 Units\n蓄電・揚水 充電状態推移（上位8ユニット）",
+                  fontsize=13, fontweight="bold")
+    ax.legend(fontsize=7, ncol=2, loc="lower left")
+    ax.set_xticks(hours)
+    ax.grid(alpha=0.3)
+    ax.axhline(50, color="gray", linestyle="--", alpha=0.4, linewidth=0.8)
+
+    # Panel 2: Charge/Discharge power
+    ax = axes[1]
+    for g in top_units:
+        sched = next((s for s in r.schedules if s.generator_id == g.id), None)
+        if not sched:
+            continue
+        discharge = np.array(sched.discharge_mw[:NUM_PERIODS]) if sched.discharge_mw else np.zeros(NUM_PERIODS)
+        charge = np.array(sched.charge_mw[:NUM_PERIODS]) if sched.charge_mw else np.zeros(NUM_PERIODS)
+        net = discharge - charge
+        ax.plot(hours, net, "o-", markersize=3, linewidth=1.5,
+                label=f"{g.name}")
+
+    ax.set_xlim(0, 23)
+    ax.set_xlabel("Hour of Day / 時刻")
+    ax.set_ylabel("Net Power (MW) — positive=discharge, negative=charge")
+    ax.set_title("Storage Charge/Discharge Power\n充放電出力（正=放電, 負=充電）",
+                  fontsize=13, fontweight="bold")
+    ax.legend(fontsize=7, ncol=2, loc="upper right")
+    ax.set_xticks(hours)
+    ax.grid(alpha=0.3)
+    ax.axhline(0, color="black", linewidth=0.8)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  Saved: {output_path}")
+
+
+def plot_national_summary(adaptive_result, generators, demands, output_path):
+    """Fig 4: National UC summary dashboard."""
+    r = adaptive_result.result
+    gen_map = {g.id: g for g in generators}
+    hours = np.arange(NUM_PERIODS)
+
+    fig, axes = plt.subplots(2, 2, figsize=(18, 13))
+
+    # (a) Supply vs Demand
+    ax = axes[0, 0]
+    total_supply = np.zeros(NUM_PERIODS)
+    committed_cap = np.zeros(NUM_PERIODS)
+    for sched in r.schedules:
+        g = gen_map.get(sched.generator_id)
+        if not g:
+            continue
+        total_supply += np.array(sched.power_output_mw[:NUM_PERIODS])
+        committed_cap += np.array(sched.commitment[:NUM_PERIODS]) * g.capacity_mw
+
+    ax.fill_between(hours, committed_cap, alpha=0.15, color="#2196F3", label="Committed Capacity")
+    ax.plot(hours, total_supply, "b-", linewidth=2, label="Total Supply")
+    ax.plot(hours, demands, "r--", linewidth=2, label="Demand")
+    reserve = np.array(demands) * (1 + RESERVE_MARGIN)
+    ax.plot(hours, reserve, "g:", linewidth=1.5, label=f"Demand + {RESERVE_MARGIN*100:.0f}% Reserve")
+    ax.set_xlabel("Hour"); ax.set_ylabel("MW")
+    ax.set_title("(a) Demand vs Supply & Reserve / 需給バランス", fontweight="bold")
+    ax.legend(fontsize=8); ax.grid(alpha=0.3); ax.set_xticks(hours)
+
+    # (b) Cost breakdown pie
+    ax = axes[0, 1]
+    total_fuel = sum(s.fuel_cost for s in r.schedules)
+    total_noload = sum(s.no_load_cost for s in r.schedules)
+    total_startup = sum(s.startup_cost for s in r.schedules)
+    total_shutdown = sum(s.shutdown_cost for s in r.schedules)
+
+    pie_data = [(lbl, val, col) for lbl, val, col in [
+        ("Fuel / 燃料費", total_fuel, "#E8832A"),
+        ("No-Load / 無負荷費", total_noload, "#2196F3"),
+        ("Startup / 起動費", total_startup, "#C44E52"),
+        ("Shutdown / 停止費", total_shutdown, "#9C27B0"),
+    ] if val > 0]
+
+    if pie_data:
+        labels_p, sizes_p, colors_p = zip(*pie_data)
+        ax.pie(sizes_p, labels=labels_p, colors=colors_p, autopct="%1.1f%%",
+               startangle=90, textprops={"fontsize": 9})
+    ax.set_title(f"(b) Total Cost: ¥{r.total_cost:,.0f}\n総コスト内訳", fontweight="bold")
+
+    # (c) Generation mix over time (stacked bars)
+    ax = axes[1, 0]
+    hourly = {ft: np.zeros(NUM_PERIODS) for ft in FUEL_ORDER}
+    for sched in r.schedules:
+        g = gen_map.get(sched.generator_id)
+        if not g:
+            continue
+        power = np.array(sched.power_output_mw[:NUM_PERIODS])
+        ft = g.fuel_type
+        if ft not in hourly:
+            hourly[ft] = np.zeros(NUM_PERIODS)
+        hourly[ft] += np.maximum(power, 0)
+
+    bottoms = np.zeros(NUM_PERIODS)
+    for ft in FUEL_ORDER:
+        if ft in hourly and hourly[ft].sum() > 0:
+            ax.bar(hours, hourly[ft], bottom=bottoms, width=0.8,
+                   label=ft, color=FUEL_COLORS.get(ft, "#999"), alpha=0.85,
+                   edgecolor="white", linewidth=0.3)
+            bottoms += hourly[ft]
+
+    ax.plot(hours, demands, "k-", linewidth=2, label="Demand", zorder=5)
+    ax.set_xlabel("Hour"); ax.set_ylabel("MW")
+    ax.set_title("(c) Hourly Generation Mix / 時間別電源構成", fontweight="bold")
+    ax.legend(fontsize=6, ncol=3, loc="upper right"); ax.grid(axis="y", alpha=0.3)
+    ax.set_xticks(hours)
+
+    # (d) Statistics table
+    ax = axes[1, 1]
+    ax.axis("off")
+
+    total_energy = sum(s.total_energy_mwh for s in r.schedules)
+    total_demand_mwh = sum(demands)
+    avg_cost = r.total_cost / total_energy if total_energy > 0 else 0
+    total_cap = sum(g.capacity_mw for g in generators)
+    n_storage = sum(1 for g in generators if g.is_storage)
+
+    stats = [
+        ["Metric / 指標", "Value / 値"],
+        ["Solver Status", r.status],
+        ["Solve Time", f"{adaptive_result.total_time_s:.1f} s"],
+        ["Solver Tier", adaptive_result.tier_used.value.upper()],
+        ["Total Cost / 総コスト", f"¥{r.total_cost:,.0f}"],
+        ["Total Energy / 総発電量", f"{total_energy:,.0f} MWh"],
+        ["Total Demand / 総需要", f"{total_demand_mwh:,.0f} MWh"],
+        ["Avg. Cost/MWh / 平均単価", f"¥{avg_cost:,.0f}/MWh"],
+        ["Peak Demand / ピーク需要", f"{max(demands):,.0f} MW"],
+        ["Installed Cap. / 設備容量", f"{total_cap:,.0f} MW"],
+        ["Fleet Size / 発電機数", f"{len(generators)}"],
+        ["Storage Units / 蓄電ユニット", f"{n_storage}"],
+        ["Reserve Margin / 予備率", f"{RESERVE_MARGIN*100:.0f}%"],
+    ]
+
+    table = ax.table(cellText=stats[1:], colLabels=stats[0],
+                     cellLoc="left", loc="center", colWidths=[0.50, 0.40])
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1, 1.4)
+    for j in range(2):
+        table[0, j].set_facecolor("#333")
+        table[0, j].set_text_props(color="white", fontweight="bold")
+    for i in range(1, len(stats)):
+        for j in range(2):
+            if i % 2 == 0:
+                table[i, j].set_facecolor("#f0f0f0")
+
+    ax.set_title("(d) UC Result Summary / 結果サマリ", fontweight="bold", y=0.98)
+
+    fig.suptitle(f"All-Japan Unit Commitment — {len(generators)} Generators + "
+                 f"{n_storage} Storage\n全日本 起動停止計画 結果ダッシュボード",
+                 fontsize=15, fontweight="bold", y=1.01)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  Saved: {output_path}")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -414,10 +749,23 @@ def main():
         for w in result.result.warnings[:5]:
             print(f"    {w}")
 
-    # ── Step 4: Print report ──────────────────────────────────────────────
+    # ── Step 4: Print text report ─────────────────────────────────────────
     print_solver_report(result, demands)
     print_storage_soc(result, generators)
     print_dispatch_by_fuel(result, generators, demands)
+
+    # ── Step 5: Generate visualizations ───────────────────────────────────
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    print("\n  Generating visualizations...")
+
+    plot_national_dispatch_stack(result, generators, demands,
+                                 os.path.join(OUTPUT_DIR, "national_dispatch_stack.png"))
+    plot_fleet_capacity_pie(generators,
+                            os.path.join(OUTPUT_DIR, "national_fleet_capacity.png"))
+    plot_storage_soc_chart(result, generators,
+                           os.path.join(OUTPUT_DIR, "national_storage_soc.png"))
+    plot_national_summary(result, generators, demands,
+                          os.path.join(OUTPUT_DIR, "national_summary_dashboard.png"))
 
     # ── Summary ───────────────────────────────────────────────────────────
     wall_elapsed = _time.monotonic() - wall_start
@@ -425,6 +773,7 @@ def main():
     print(f"  REPORT COMPLETE")
     print(f"  {len(generators)} generators | {len(storage)} storage | "
           f"¥{result.result.total_cost:,.0f} | {wall_elapsed:.1f}s total")
+    print(f"  Figures saved to: {os.path.abspath(OUTPUT_DIR)}")
     print("=" * 80)
 
 

@@ -1,11 +1,10 @@
 """
 Layer figures with WHITE background for IEEJ paper.
-Generates: fig_layer_network.png, fig_layer_substations.png, fig_layer_plants.png
+Generates: fig_layer_combined.png  (3-panel subplots, equal axes size)
 """
 
 import json
 import os
-import sys
 import platform
 import numpy as np
 import matplotlib
@@ -34,13 +33,12 @@ REGIONS = [
 JAPAN_LON = (122.5, 148.5)
 JAPAN_LAT  = (24.0,  45.5)
 
-# Distinct colors visible on WHITE background
 VOLT_COLORS = {
-    500: "#cc0000",   # deep red
-    275: "#e06c00",   # dark orange
-    154: "#a0a000",   # olive/dark yellow
-    110: "#007700",   # dark green
-    66:  "#0055bb",   # dark blue
+    500: "#cc0000",
+    275: "#e06c00",
+    154: "#a0a000",
+    110: "#007700",
+    66:  "#0055bb",
 }
 VOLT_ORDER = [500, 275, 154, 110, 66]
 
@@ -67,26 +65,28 @@ def draw_coastline(ax):
             for ring in poly:
                 xs = [c[0] for c in ring]
                 ys = [c[1] for c in ring]
-                ax.plot(xs, ys, color="#999999", lw=0.5, zorder=1)
+                ax.plot(xs, ys, color="#999999", lw=2.0, zorder=1)
 
 
-def setup_ax(ax, title):
+def setup_ax(ax, title, show_ylabels=True):
+    """共通軸設定。フォント・線幅は 0.325\textwidth (~55mm) 表示を想定して4倍スケール。"""
     ax.set_xlim(*JAPAN_LON)
     ax.set_ylim(*JAPAN_LAT)
     ax.set_facecolor("white")
     ax.set_aspect(1 / 0.80, adjustable="box")
-    # 緯度経度ラベル（主要目盛のみ）
     ax.set_xticks([125, 130, 135, 140, 145])
-    ax.set_xticklabels(["125°E","130°E","135°E","140°E","145°E"], fontsize=6.5, color="#555")
+    ax.set_xticklabels(["125°E","130°E","135°E","140°E","145°E"], fontsize=24, color="#555")
     ax.set_yticks([25, 30, 35, 40, 45])
-    ax.set_yticklabels(["25°N","30°N","35°N","40°N","45°N"], fontsize=6.5, color="#555")
-    ax.tick_params(length=3, width=0.5, color="#aaa")
-    # 薄い枠線
+    if show_ylabels:
+        ax.set_yticklabels(["25°N","30°N","35°N","40°N","45°N"], fontsize=24, color="#555")
+    else:
+        ax.set_yticklabels([])
+    ax.tick_params(length=10, width=2.0, color="#aaa")
     for sp in ax.spines.values():
         sp.set_visible(True)
-        sp.set_color("#bbbbbb")
-        sp.set_linewidth(0.6)
-    ax.set_title(title, fontsize=11, pad=5, color="#222")
+        sp.set_color("#888888")
+        sp.set_linewidth(2.5)
+    ax.set_title(title, fontsize=38, pad=8, color="#222")
     draw_coastline(ax)
 
 
@@ -174,81 +174,6 @@ def load_plants():
     return large, re_small
 
 
-# ── Fig A: Network lines only ──────────────────────────────────────
-def fig_network(segs):
-    fig, ax = plt.subplots(figsize=(10, 9), facecolor="white")
-    setup_ax(ax, "送電線ネットワーク（全国 40,077 本）")
-    for v in VOLT_ORDER:
-        col = VOLT_COLORS[v]
-        lw = {500: 0.9, 275: 0.65, 154: 0.45, 110: 0.35, 66: 0.25}[v]
-        alpha = {500: 1.0, 275: 0.95, 154: 0.85, 110: 0.75, 66: 0.65}[v]
-        for xs, ys in segs[v]:
-            ax.plot(xs, ys, color=col, lw=lw, alpha=alpha, zorder=2)
-    legend_handles = [
-        Line2D([0], [0], color=VOLT_COLORS[v], lw=2, label=f"{v} kV")
-        for v in VOLT_ORDER
-    ]
-    ax.legend(handles=legend_handles, loc="lower right",
-              facecolor="white", edgecolor="#bbb", fontsize=8,
-              title="電圧クラス", title_fontsize=8)
-    plt.tight_layout(pad=0.5)
-    out = f"{OUT_DIR}/fig_layer_network.png"
-    plt.savefig(out, dpi=180, bbox_inches="tight", facecolor="white")
-    plt.close()
-    print(f"Saved: {out}")
-
-
-# ── Fig B: Substations only ────────────────────────────────────────
-def fig_substations(pts):
-    fig, ax = plt.subplots(figsize=(10, 9), facecolor="white")
-    setup_ax(ax, "変電所分布（全国 6,962 箇所）")
-    pts_sorted = sorted(pts, key=lambda x: x[2])
-    for lon, lat, v in pts_sorted:
-        col = VOLT_COLORS.get(v, "#888")
-        sz = {500: 18, 275: 10, 154: 5, 110: 4, 66: 2}[v]
-        ax.scatter(lon, lat, c=col, s=sz, marker="o", zorder=3,
-                   alpha=0.85, linewidths=0)
-    legend_handles = [
-        mpatches.Patch(color=VOLT_COLORS[v], label=f"{v} kV")
-        for v in VOLT_ORDER
-    ]
-    ax.legend(handles=legend_handles, loc="lower right",
-              facecolor="white", edgecolor="#bbb", fontsize=8,
-              title="電圧クラス", title_fontsize=8)
-    plt.tight_layout(pad=0.5)
-    out = f"{OUT_DIR}/fig_layer_substations.png"
-    plt.savefig(out, dpi=180, bbox_inches="tight", facecolor="white")
-    plt.close()
-    print(f"Saved: {out}")
-
-
-# ── Fig C: Plants – 2 categories ──────────────────────────────────
-def fig_plants(large, re_small):
-    fig, ax = plt.subplots(figsize=(10, 9), facecolor="white")
-    setup_ax(ax, "発電所分布（大型集中電源 vs 分散型再エネ）")
-    re_lons = [p[0] for p in re_small]
-    re_lats = [p[1] for p in re_small]
-    ax.scatter(re_lons, re_lats, c="#f0a000", s=1.5, marker=".",
-               alpha=0.5, zorder=2, label=f"分散型再エネ（太陽光・風力等, {len(re_small):,}箇所）")
-    for lon, lat, cap in large:
-        sz = max(12, min(120, cap * 0.05))
-        ax.scatter(lon, lat, c="#cc2200", s=sz, marker="^",
-                   alpha=0.85, zorder=4, linewidths=0.3,
-                   edgecolors="#880000")
-    large_patch = mpatches.Patch(color="#cc2200",
-                                  label=f"大型集中電源（原子力・火力等, {len(large):,}箇所）")
-    re_patch = mpatches.Patch(color="#f0a000",
-                               label=f"分散型再エネ（太陽光・風力等, {len(re_small):,}箇所）")
-    ax.legend(handles=[large_patch, re_patch], loc="lower right",
-              facecolor="white", edgecolor="#bbb", fontsize=8,
-              title="発電所種別", title_fontsize=8)
-    plt.tight_layout(pad=0.5)
-    out = f"{OUT_DIR}/fig_layer_plants.png"
-    plt.savefig(out, dpi=180, bbox_inches="tight", facecolor="white")
-    plt.close()
-    print(f"Saved: {out}")
-
-
 if __name__ == "__main__":
     print("Loading data...")
     segs = load_lines()
@@ -257,7 +182,56 @@ if __name__ == "__main__":
     print(f"  Lines: {sum(len(v) for v in segs.values()):,}, Subs: {len(subs):,}")
     print(f"  Large: {len(large):,}, RE: {len(re_small):,}")
 
-    fig_network(segs)
-    fig_substations(subs)
-    fig_plants(large, re_small)
-    print("Done.")
+    # ── 3パネル統合図（サイズ完全一致） ──────────────────
+    fig, axes = plt.subplots(1, 3, figsize=(30, 10), facecolor="white",
+                              gridspec_kw={"wspace": 0.12})
+    ax_a, ax_b, ax_c = axes
+
+    setup_ax(ax_a, "(a) 送電線ネットワーク", show_ylabels=True)
+    setup_ax(ax_b, "(b) 変電所分布",         show_ylabels=False)
+    setup_ax(ax_c, "(c) 発電所分布",         show_ylabels=False)
+
+    # (a) 送電線
+    for v in VOLT_ORDER:
+        col = VOLT_COLORS[v]
+        lw  = {500: 3.5, 275: 2.5, 154: 1.7, 110: 1.3, 66: 0.9}[v]
+        alpha = {500: 1.0, 275: 0.95, 154: 0.85, 110: 0.75, 66: 0.65}[v]
+        for xs, ys in segs[v]:
+            ax_a.plot(xs, ys, color=col, lw=lw, alpha=alpha, zorder=2)
+    leg_net = [Line2D([0], [0], color=VOLT_COLORS[v], lw=7, label=f"{v} kV")
+               for v in VOLT_ORDER]
+    ax_a.legend(handles=leg_net, loc="lower right",
+                facecolor="white", edgecolor="#888", fontsize=24,
+                title="電圧クラス", title_fontsize=22)
+
+    # (b) 変電所
+    for lon, lat, v in sorted(subs, key=lambda x: x[2]):
+        col = VOLT_COLORS.get(v, "#888")
+        sz  = {500: 80, 275: 45, 154: 20, 110: 14, 66: 6}[v]
+        ax_b.scatter(lon, lat, c=col, s=sz, marker="o", zorder=3,
+                     alpha=0.85, linewidths=0)
+    leg_sub = [mpatches.Patch(color=VOLT_COLORS[v], label=f"{v} kV")
+               for v in VOLT_ORDER]
+    ax_b.legend(handles=leg_sub, loc="lower right",
+                facecolor="white", edgecolor="#888", fontsize=24,
+                title="電圧クラス", title_fontsize=22)
+
+    # (c) 発電所
+    ax_c.scatter([p[0] for p in re_small], [p[1] for p in re_small],
+                 c="#f0a000", s=6, marker=".", alpha=0.5, zorder=2)
+    for lon, lat, cap in large:
+        sz = max(50, min(500, cap * 0.20))
+        ax_c.scatter(lon, lat, c="#cc2200", s=sz, marker="^",
+                     alpha=0.85, zorder=4, linewidths=1.2, edgecolors="#880000")
+    leg_plt = [
+        mpatches.Patch(color="#cc2200", label=f"大型集中電源（{len(large):,}箇所）"),
+        mpatches.Patch(color="#f0a000", label=f"分散型再エネ（{len(re_small):,}箇所）"),
+    ]
+    ax_c.legend(handles=leg_plt, loc="lower right",
+                facecolor="white", edgecolor="#888", fontsize=24,
+                title="発電所種別", title_fontsize=22)
+
+    out = f"{OUT_DIR}/fig_layer_combined.png"
+    plt.savefig(out, dpi=150, bbox_inches="tight", facecolor="white")
+    plt.close()
+    print(f"Saved: {out}")

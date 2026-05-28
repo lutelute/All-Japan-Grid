@@ -109,6 +109,35 @@ Step 6 (lines)        ← Step 2の後（変電所名が必要）
 - **Nominatim**: 1.1秒/リクエスト（Usage Policy準拠）。全発電所 ~16,000件で約5時間
 - **Overpass**: 100 IDs/バッチ、10秒間隔、HTTP 429/504で指数バックオフ
 
+## Data Quality Audits / データ品質監査
+
+### audit_substation_plant_overlap.py
+
+変電所（`power=substation`）と発電所（`power=plant`）の分類混在を検出する監査スクリプト。
+
+4カテゴリの問題を検出:
+- **A**: 変電所なのに名前に「発電所」を含む（~45件）— 発電所併設変電設備 or 誤分類
+- **B**: `substation=generation`（~41件）— 発電所の昇圧変電所（OSM正当タグ）
+- **C**: `substation` フィールドに施設名が混入（~17件）— **明確なタグ入力ミス**
+- **D**: 発電所なのに名前に「変電所」を含む（~5件）— 蓄電池変電所など
+
+加えて、200m以内に共存する変電所・発電所ペアの名称不一致も検出（~262件、大半は水力発電所の昇圧変電所）。
+
+```bash
+# 監査のみ
+python scripts/audit_substation_plant_overlap.py
+
+# Category C タグ誤りを修正
+python scripts/audit_substation_plant_overlap.py --fix
+
+# 特定地域のみ
+python scripts/audit_substation_plant_overlap.py --region tokyo
+```
+
+**出力:**
+- `data/audit/substation_plant_overlap.json` — 全検出結果の構造化JSON
+- stdout — 人間可読なサマリ
+
 ## Other Scripts
 
 | Script | Description |
