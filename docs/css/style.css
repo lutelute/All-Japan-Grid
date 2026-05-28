@@ -481,14 +481,14 @@ body {
 .ui-toggle-btn:hover { background: #16213e; border-color: #e94560; }
 .ui-toggle-btn.inactive { color: #444; border-color: #333; background: rgba(20,20,30,0.85); }
 
-/* ── IEEE SLD canvas ── */
+/* ── Force-graph canvas ── */
 #sld-canvas {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: 500;
     display: none;
-    background: #fff;
+    background: #0d0d1a;
     cursor: grab;
 }
 #sld-canvas:active { cursor: grabbing; }
