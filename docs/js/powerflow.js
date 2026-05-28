@@ -328,6 +328,11 @@
         pfState.busData = null;
         pfState.lineData = null;
 
+        // "all" with AC mode uses the pre-computed national model (psdat-python, 2189 buses)
+        if (region === "all" && mode === "ac") {
+            await runPFNational();
+            return;
+        }
         if (region === "all") {
             await runPFAllRegions(mode);
             return;
@@ -372,6 +377,48 @@
         } catch (e) {
             console.error("PF load error:", e);
             showResults(region, mode, info, false);
+        }
+    }
+
+    // Load pre-computed national AC model (psdat-python NR, 2189 buses)
+    async function runPFNational() {
+        var cb = "?v=" + Date.now();
+        try {
+            var busRes  = await fetch("./data/powerflow/all_ac_buses.geojson" + cb);
+            var lineRes = await fetch("./data/powerflow/all_ac_lines.geojson" + cb);
+            if (!busRes.ok || !lineRes.ok) {
+                showAllRegionsResults("ac", 0);
+                return;
+            }
+            var busData  = await busRes.json();
+            var lineData = await lineRes.json();
+
+            pfState.busData  = busData;
+            pfState.lineData = lineData;
+
+            showBaseGrid("all");
+            renderPFLayers(busData, lineData, "ac");
+
+            var info = pfState.summary["all"] || {};
+            var el = document.getElementById("pf-results-content");
+            if (el) {
+                el.innerHTML =
+                    "<b>全国統合モデル (psdat-python NR)</b><br>" +
+                    "バス数: " + (info.n_buses || busData.features.length) + "<br>" +
+                    "線路数: " + (info.n_lines || lineData.features.length) + "<br>" +
+                    "電圧レベル: " + (info.voltage_levels || "500/275/154/110/77/66 kV") + "<br>" +
+                    "負荷率 lf: " + (info.lf ? (info.lf * 100).toFixed(0) + "%" : "20%") + " ("  + (info.total_load_mw || "—") + " MW)<br>" +
+                    "V range: [" + (info.ac_vm_min || "—") + ", " + (info.ac_vm_max || "—") + "] pu<br>" +
+                    "最大潮流率: " + (info.ac_max_loading || "—") + "%";
+            }
+            var sec = document.getElementById("pf-results-section");
+            if (sec) sec.style.display = "";
+
+            if (window.map) {
+                window.map.fitBounds([[24, 123], [46, 146]]);
+            }
+        } catch (e) {
+            console.error("National PF load error:", e);
         }
     }
 

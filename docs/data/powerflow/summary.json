@@ -218,5 +218,30 @@
     "n_components": 13,
     "total_load_mw": 1070.1243339253997,
     "total_gen_mw": 1123.6305506216693
+  },
+  "all": {
+    "name_ja": "全国",
+    "dc_converged": false,
+    "ac_converged": true,
+    "ac_solver": "nr (psdat-python)",
+    "dc_loss_mw": 0.0,
+    "ac_loss_mw": 0.0,
+    "ac_vm_min": 0.7829,
+    "ac_vm_max": 1.1844,
+    "dc_va_min": 0,
+    "dc_va_max": 0,
+    "dc_max_loading": 0,
+    "ac_max_loading": 148.2,
+    "n_buses": 2189,
+    "n_lines": 2920,
+    "n_gens": 296,
+    "n_trafos": 0,
+    "n_active_buses": 2189,
+    "n_components": 1,
+    "total_load_mw": 34000.0,
+    "total_gen_mw": 34000.0,
+    "lf": 0.2,
+    "voltage_levels": "500/275/154/110/77/66 kV",
+    "hv_hops": 4
   }
 }
