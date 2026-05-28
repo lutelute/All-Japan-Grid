@@ -27,6 +27,11 @@ OpenStreetMap から機械的に抽出した、日本全国の送電網 **地理
 > **日本語:**
 > 本データセットは、公開されている [OpenStreetMap](https://www.openstreetmap.org/) のデータを **機械的に自動処理** して生成したものです。各電力会社・送電事業者・政府機関等の公式情報を正確に反映したものでは **ありません**。クラウドソーシングによる地図データおよび自動抽出処理に起因する誤り・欠落・不正確さが含まれる可能性があります。**本データの利用は自己責任** でお願いいたします。本データの利用により生じたいかなる損害・損失・結果についても、作成者は一切の責任を負いません。本データセットは明示・黙示を問わず、いかなる種類の保証もなく「現状のまま」提供されます。
 
+> **⚠ Operator / Ownership Attribution / 事業者・所有者情報について:**
+> This dataset is **not** derived from official data published by General Electricity Transmission and Distribution Operators (一般送配電事業者). In OpenStreetMap, the `operator` tag on transmission/distribution lines does not always reflect the actual asset owner. Since all features are extracted automatically from open data **without authoritative ownership information**, the operator attribution of individual lines and substations is **not guaranteed** to be correct. Lines that cross utility service area boundaries, shared facilities, and assets transferred between operators may be particularly inaccurate.
+>
+> 本データセットは一般送配電事業者が公開する公式データから作成したものでは **ありません**。OpenStreetMap 上の送配電線の `operator` タグは、実際の設備所有者と異なる場合があります。所有者情報を持たないオープンデータから自動的に抽出した処理であるため、個々の送電線・変電所の事業者帰属は **保証されません**。特に、事業者の供給区域をまたぐ線路、共用設備、事業者間で移管された設備などは不正確な可能性が高くなります。
+
 ---
 
 ### Network Preview / ネットワーク プレビュー
@@ -192,6 +197,53 @@ OSM が提供するのは送電網の **地理的** 骨格です。実用的な�
 5. **Null diversity / Null値の多様性** — OSM features may have `voltage=null`, `voltage=""`, `voltage="yes"`, or no voltage tag at all. Robust parsing must handle all cases.
 6. **Regional scope & name resolution / 地域スコープと名称解決** — The same substation name can appear in multiple regions. Name-based matching must be scoped to the correct region.
 7. **AC power flow on OSM topology produces physically meaningless results / OSMトポロジでの交流潮流計算は物理的に無意味** — Without proper impedance data, generator dispatch, and demand allocation, power flow output is numerical noise, not engineering insight.
+
+### Known Data Quality Issues — Substation / Plant Classification / データ品質の既知の問題 — 変電所・発電所の分類混在
+
+OSM data contains systematic misclassifications between substations (`power=substation`) and power plants (`power=plant`). An automated audit (`scripts/audit_substation_plant_overlap.py`) identified 4 categories of issues:
+
+OSM データには変電所（`power=substation`）と発電所（`power=plant`）の間で体系的な分類の混在があります。自動監査スクリプト（`scripts/audit_substation_plant_overlap.py`）で 4 カテゴリの問題を特定しました。
+
+| Category / カテゴリ | Count / 件数 | Severity / 深刻度 | Description / 概要 |
+|---|---|---|---|
+| **A. Substations named as plants** / 発電所名の変電所 | ~45 | Medium / 中 | `power=substation` with name containing `発電所`. Mix of legitimate switchyards (e.g. `葛野川発電所屋外開閉設備`) and likely misclassified plants (e.g. `川内発電所` 500kV). |
+| **B. `substation=generation`** / 発電用変電所 | ~41 | Low / 低 | Intentional OSM tag for step-up substations at generation sites. Not an error per se, but these features may overlap with nearby plant entries. |
+| **C. Tag value errors** / タグ値の誤り | ~17 | **High / 高** | `substation` field contains another facility name instead of a valid type (e.g. `substation=東京電力パワーグリッド（株）堰原変電所`). Clearly an OSM input error. |
+| **D. Plants named as substations** / 変電所名の発電所 | ~5 | Low / 低 | `power=plant` with name containing `変電所`. Mostly battery storage at substations (e.g. `豊前蓄電池変電所`). |
+
+**Examples of Category A — Misclassified major facilities / カテゴリA 事例:**
+
+```
+[hokkaido] 石狩湾新港発電所   substation=generation  voltage=275000   ← LNG火力がsubstationとして登録
+[chugoku]  川内発電所         substation=transmission voltage=500000;187000  ← 原子力発電所
+[kansai]   阿南発電所         substation=transmission voltage=187000;66000   ← 火力発電所
+[tohoku]   田子倉発電所       substation=transmission voltage=275000   ← 水力発電所(只見川)
+[chubu]    大井水力発電所     substation=transmission voltage=154000   ← 水力発電所
+```
+
+**Examples of Category C — Tag value errors / カテゴリC 事例:**
+
+```
+[tokyo]    桜堤一丁目変電所    substation=東京電力パワーグリッド（株）堰原変電所  ← 別の変電所名が混入
+[chubu]    市場変電所          substation=SGET富山メガソーラー発電所             ← 発電所名が混入
+[kansai]   諏訪町変電所        substation=関西電力株式会社八鹿変電所             ← 別の変電所名が混入
+```
+
+**Colocated but differently named / 近接するが名称が異なる変電所・発電所ペア:**
+
+200m以内に変電所と発電所が共存するが名前が一致しないペアが約260件。多くは水力発電所の昇圧変電所（例: `岩清水変電所` ↔ `下新冠発電所` 10m）。これは発電所に併設される変電設備が独立した名前を持つ実態を反映しており、必ずしもデータ誤りではない。
+
+```bash
+# Run the full audit / 監査スクリプトを実行
+python scripts/audit_substation_plant_overlap.py
+
+# Apply reproducible fixes (Category C tag errors) / 再現可能な修正を適用
+python scripts/audit_substation_plant_overlap.py --fix
+```
+
+> **Note / 注意:** Category A and B are **upstream OSM data issues**. Fixing them in our dataset would diverge from the source. Category C tag errors are corrected by `--fix` because they are unambiguous input mistakes. The audit results are saved to `data/audit/substation_plant_overlap.json` for downstream consumers.
+>
+> カテゴリ A・B は **OSM 上流のデータ問題** です。本データセットで修正するとソースとの乖離が生じます。カテゴリ C のタグ誤りは明確な入力ミスであるため `--fix` で修正します。監査結果は `data/audit/substation_plant_overlap.json` に保存され、下流で参照可能です。
 
 ## What This Data IS Good For / 本データの活用法
 

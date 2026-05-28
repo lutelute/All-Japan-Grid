@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=12"/>
+    <link rel="stylesheet" href="./css/style.css?v=19"/>
 </head>
 <body>
 
@@ -18,6 +18,7 @@
         <button class="tab-btn active" data-tab="tab-map">系統図</button>
         <button class="tab-btn" data-tab="tab-area">エリア</button>
         <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
+        <button class="tab-btn" data-tab="tab-sld">単線図</button>
     </div>
 
     <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
@@ -44,6 +45,41 @@
                 </label>
             </div>
         </div>
+        <!-- 地形オーバーレイ -->
+        <div class="section">
+            <h2>地形オーバーレイ</h2>
+            <div class="layer-toggles">
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/>
+                    <span class="toggle-label">陰影起伏図</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/>
+                    <span class="toggle-label">色別標高図</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/>
+                    <span class="toggle-label">傾斜量図</span>
+                </label>
+            </div>
+            <div class="filter-row" style="margin-top:4px">
+                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
+                <input type="range" id="terrain-opacity" min="0" max="100" value="65"
+                    oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
+            </div>
+        </div>
+
+        <!-- 発電所種別フィルター -->
+        <div class="section" id="fuel-filter-section">
+            <h2>発電所種別
+                <span class="fuel-filter-actions">
+                    <button class="btn-fuel-all" onclick="setAllFuelTypes(true)">全選択</button>
+                    <button class="btn-fuel-all" onclick="setAllFuelTypes(false)">全解除</button>
+                </span>
+            </h2>
+            <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
+        </div>
+
         <div class="section">
             <h2>RE適地スコア <span style="font-size:10px;font-weight:normal;color:#aaa">(試験)</span></h2>
             <div class="layer-toggles">
@@ -121,6 +157,77 @@
         </div>
     </div>
 
+    <!-- ━━ Tab 4: 単線結線図 (IEEE SLD) ━━ -->
+    <div class="tab-panel" id="tab-sld">
+        <div class="section">
+            <h2>系統トポロジー <span style="font-size:10px;font-weight:normal;color:#aaa">Force Graph</span></h2>
+            <p class="area-desc">ノード=バス、枝=送電線・変圧器。<br>ノードをドラッグ可。ホイールでズーム。</p>
+        </div>
+        <div class="section">
+            <h2>電圧レイヤー</h2>
+            <div class="layer-toggles" id="sld-kv-list">
+                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(500,this.checked)"/><span class="toggle-label" style="color:#ff4444">● 500 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(275,this.checked)"/><span class="toggle-label" style="color:#4488ff">● 275 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(154,this.checked)"/><span class="toggle-label" style="color:#22cc55">● 154 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(110,this.checked)"/><span class="toggle-label" style="color:#ff9900">● 110 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(77,this.checked)"/><span class="toggle-label" style="color:#cc44cc">● 77 kV</span></label>
+                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(66,this.checked)"/><span class="toggle-label" style="color:#66aacc">● 66 kV</span></label>
+            </div>
+        </div>
+        <div class="section">
+            <h2>凡例</h2>
+            <div style="font-size:11px;line-height:1.9;color:#ccc">
+                <div>━━ 送電線 (色=潮流率)</div>
+                <div>╌╌ 変圧器 (灰)</div>
+                <div>G &nbsp; 発電機バス (黄ラベル)</div>
+                <div style="margin-top:4px;color:#888">電圧別にソフトバンドで整列。<br>重い枝ほど太く表示。</div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>シミュレーション <button class="sim-reset-btn" onclick="sldResetParams()" title="デフォルトに戻す">↺</button></h2>
+            <div class="sim-params">
+                <div class="sim-row">
+                    <span class="sim-label">反発力</span>
+                    <input type="range" class="sim-slider" min="0" max="1200" step="10" value="300"
+                           oninput="sldSetParam('repulsion',+this.value,this)">
+                    <span class="sim-val" id="sld-p-repulsion">300</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">リンク長</span>
+                    <input type="range" class="sim-slider" min="5" max="300" step="5" value="60"
+                           oninput="sldSetParam('linkLen',+this.value,this)">
+                    <span class="sim-val" id="sld-p-linkLen">60</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">バネ強度</span>
+                    <input type="range" class="sim-slider" min="0" max="1" step="0.01" value="0.18"
+                           oninput="sldSetParam('linkStr',+this.value,this)">
+                    <span class="sim-val" id="sld-p-linkStr">0.18</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">重力</span>
+                    <input type="range" class="sim-slider" min="0" max="0.2" step="0.005" value="0.03"
+                           oninput="sldSetParam('gravity',+this.value,this)">
+                    <span class="sim-val" id="sld-p-gravity">0.03</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">層引力</span>
+                    <input type="range" class="sim-slider" min="0" max="0.5" step="0.01" value="0.12"
+                           oninput="sldSetParam('tierForce',+this.value,this)">
+                    <span class="sim-val" id="sld-p-tierForce">0.12</span>
+                </div>
+                <div class="sim-row">
+                    <span class="sim-label">減衰</span>
+                    <input type="range" class="sim-slider" min="0.1" max="0.99" step="0.01" value="0.75"
+                           oninput="sldSetParam('damping',+this.value,this)">
+                    <span class="sim-val" id="sld-p-damping">0.75</span>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="sldReheat()" style="width:48%;margin-top:6px">再加熱</button>
+            <button class="btn-primary" onclick="sldFitAll()" style="width:48%;margin-top:6px;margin-left:4%">全体表示</button>
+        </div>
+    </div>
+
     <!-- ━━ Tab 3: 潮流解析 ━━ -->
     <div class="tab-panel" id="tab-pf">
         <div class="section">
@@ -145,6 +252,40 @@
                     <span class="toggle-label">変電所 Substations</span>
                 </label>
             </div>
+        </div>
+        <div class="section">
+            <h2>実ルート電圧レイヤー</h2>
+            <div class="layer-toggles">
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-ring-toggle" checked onchange="pfToggleRing(this.checked)"/>
+                    <span class="toggle-label" style="color:#ff4444">⬡ リング枝ハイライト</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" checked disabled/>
+                    <span class="toggle-label" style="color:#cc0000">━ 500 kV (常時)</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" checked disabled/>
+                    <span class="toggle-label" style="color:#0044cc">━ 275 kV (常時)</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-154" onchange="pfToggleTier(154,this.checked)"/>
+                    <span class="toggle-label" style="color:#007733">━ 154 kV <span style="color:#888;font-size:9px">2.1MB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-110" onchange="pfToggleTier(110,this.checked)"/>
+                    <span class="toggle-label" style="color:#885500">━ 110 kV <span style="color:#888;font-size:9px">664KB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-77" onchange="pfToggleTier(77,this.checked)"/>
+                    <span class="toggle-label" style="color:#660077">━ 77 kV <span style="color:#888;font-size:9px">1.1MB</span></span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="pf-tier-66" onchange="pfToggleTier(66,this.checked)"/>
+                    <span class="toggle-label" style="color:#334455">━ 66 kV <span style="color:#e67e22;font-size:9px">5.9MB ⚠</span></span>
+                </label>
+            </div>
+            <div style="font-size:9px;color:#666;margin-top:3px">Visualize実行後に切替可</div>
         </div>
         <div class="section">
             <h2>Power Flow</h2>
@@ -193,6 +334,11 @@
 </div>
 
 <div id="map">
+    <!-- IEEE SLD canvas (overlaid on map, shown only in tab-sld) -->
+    <canvas id="sld-canvas"></canvas>
+    <!-- Tooltip for SLD hover -->
+    <div id="sld-tooltip"></div>
+
     <div id="ui-toggles">
         <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="サイドバー">&#9776;</button>
         <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例">&#9670;</button>
@@ -223,7 +369,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=12"></script>
-<script src="./js/powerflow.js?v=12"></script>
+<script src="./js/grid_map.js?v=19"></script>
+<script src="./js/powerflow.js?v=19"></script>
+<script src="./js/sld.js?v=19"></script>
 </body>
 </html>

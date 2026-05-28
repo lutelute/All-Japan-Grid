@@ -107,6 +107,14 @@ class Generator:
     rebuild_planned_date: Optional[str] = None
     disaster_risk_score: float = 0.0
 
+    # Multi-state startup costs (cold/warm/hot thermal model)
+    # When cold_start_h == 0, falls back to single-cost startup_cost.
+    hot_start_cost: float = 0.0    # ¥: offline < warm_start_h periods
+    warm_start_cost: float = 0.0   # ¥: warm_start_h <= offline < cold_start_h
+    cold_start_cost: float = 0.0   # ¥: offline >= cold_start_h periods
+    warm_start_h: int = 0          # hours-offline threshold: hot → warm
+    cold_start_h: int = 0          # hours-offline threshold: warm → cold
+
     # Storage fields
     storage_capacity_mwh: float = 0.0
     charge_rate_mw: Optional[float] = None
@@ -254,6 +262,11 @@ class Generator:
     def is_connected(self) -> bool:
         """Check if this generator is connected to a substation bus."""
         return bool(self.connected_bus_id)
+
+    @property
+    def has_thermal_startup(self) -> bool:
+        """True when the 3-state (hot/warm/cold) startup model is active."""
+        return self.cold_start_h > 0
 
     @property
     def is_storage(self) -> bool:

@@ -167,6 +167,10 @@ class UCParameters:
         interconnections: List of inter-regional interconnections for
             transmission capacity constraints. Empty list disables
             interconnection modelling.
+        regional_demands: Optional per-region demand series (MW) keyed by
+            region identifier.  When provided alongside interconnections,
+            used directly for nodal balance constraints instead of the
+            capacity-fraction split of the total demand.
     """
 
     generators: List[Generator] = field(default_factory=list)
@@ -178,6 +182,7 @@ class UCParameters:
     mip_gap: Optional[float] = None
     solver_options: Dict[str, Any] = field(default_factory=dict)
     interconnections: List[Interconnection] = field(default_factory=list)
+    regional_demands: Optional[Dict[str, List[float]]] = None
 
     def __post_init__(self) -> None:
         """Validate UC parameters."""

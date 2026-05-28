@@ -393,6 +393,63 @@ body {
 .list-trunc { color: #e94560; font-size: 9px; padding: 4px 5px; text-align: center; }
 .list-empty { color: #888; font-size: 10px; padding: 6px 5px; }
 
+/* ── Fuel type filter ── */
+#fuel-filter-section h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fuel-filter-actions {
+    display: flex;
+    gap: 4px;
+}
+.btn-fuel-all {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    background: #0f3460;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 1.5;
+}
+.btn-fuel-all:hover { background: #e94560; border-color: #e94560; }
+
+.fuel-checkboxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 6px;
+    padding-top: 2px;
+}
+.fuel-cb-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.76rem;
+    cursor: pointer;
+    padding: 2px 0;
+    user-select: none;
+}
+.fuel-cb-label input[type="checkbox"] {
+    accent-color: #e94560;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.fuel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.fuel-cb-label span.fuel-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ── UI toggle buttons (always on map) ── */
 #ui-toggles {
     position: absolute;
@@ -423,3 +480,73 @@ body {
 }
 .ui-toggle-btn:hover { background: #16213e; border-color: #e94560; }
 .ui-toggle-btn.inactive { color: #444; border-color: #333; background: rgba(20,20,30,0.85); }
+
+/* ── Sim param sliders ── */
+.sim-params { margin-top: 4px; }
+.sim-row {
+    display: grid;
+    grid-template-columns: 54px 1fr 36px;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 5px;
+}
+.sim-label { font-size: 11px; color: #aaa; white-space: nowrap; }
+.sim-slider { width: 100%; accent-color: #e94560; cursor: pointer; }
+.sim-val { font-size: 11px; color: #eee; text-align: right; font-variant-numeric: tabular-nums; }
+.sim-reset-btn {
+    font-size: 12px; padding: 1px 5px; margin-left: 6px;
+    background: rgba(233,69,96,0.15); border: 1px solid #e94560;
+    color: #e94560; border-radius: 3px; cursor: pointer; vertical-align: middle;
+}
+.sim-reset-btn:hover { background: rgba(233,69,96,0.35); }
+
+/* ── Force-graph canvas ── */
+#sld-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 500;
+    display: none;
+    background: #0d0d1a;
+    cursor: grab;
+}
+#sld-canvas:active { cursor: grabbing; }
+
+/* ── SLD hover tooltip ── */
+#sld-tooltip {
+    position: fixed;
+    background: rgba(10, 12, 20, 0.92);
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    padding: 7px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.6;
+    pointer-events: none;
+    display: none;
+    z-index: 1500;
+    max-width: 260px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* ── 500kV backbone glow animation ── */
+.leaflet-routePane500-pane path {
+    animation: backbone-glow 2.8s ease-in-out infinite alternate;
+}
+@keyframes backbone-glow {
+    from { filter: drop-shadow(0 0 1px rgba(204, 0, 0, 0.4)); }
+    to   { filter: drop-shadow(0 0 4px rgba(255, 60, 60, 0.85)); }
+}
+
+/* ── Ring backbone highlight pulsing (white halo works on both red/blue) ── */
+.leaflet-ringPane-pane path {
+    animation: ring-pulse 1.8s ease-in-out infinite alternate;
+}
+@keyframes ring-pulse {
+    from { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)); }
+    to   { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)); }
+}
+
+/* ── 実ルート電圧レイヤー section ── */
+#tab-pf .section h2 { font-size: 0.8rem; }
+

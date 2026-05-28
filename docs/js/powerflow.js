@@ -20,7 +20,10 @@
         busLayer: null,
         lineLayer: null,
         arrowLayer: null,
-        gridLayer: null,  // base grid background
+        gridLayer: null,   // base grid background
+        routeLayers: [],   // per-kV real-route layers (eager 500+275 kV)
+        tierLayers: {},    // kv -> L.GeoJSON (on-demand lower tiers)
+        ringLayer: null,   // backbone ring highlight layer
         active: false,
         busData: null,
         lineData: null,
@@ -28,6 +31,61 @@
         showLines: true,
         showBuses: true,
     };
+
+    // ── Real-route tier config (500/275 kV loaded eagerly; lower kV on demand) ──
+    var ROUTE_TIERS = [
+        { kv: 500, file: "routes_500kv.geojson", zIdx: 444, col: "#cc0000", wt: 3.5, eager: true  },
+        { kv: 275, file: "routes_275kv.geojson", zIdx: 443, col: "#0044cc", wt: 2.5, eager: true  },
+        { kv: 154, file: "routes_154kv.geojson", zIdx: 442, col: "#007733", wt: 1.6, eager: false },
+        { kv: 110, file: "routes_110kv.geojson", zIdx: 441, col: "#885500", wt: 1.2, eager: false },
+        { kv: 77,  file: "routes_77kv.geojson",  zIdx: 440, col: "#660077", wt: 1.0, eager: false },
+        { kv: 66,  file: "routes_66kv.geojson",  zIdx: 439, col: "#334455", wt: 0.8, eager: false },
+    ];
+
+    function routeWeight(loading, kv) {
+        var base = kv >= 500 ? 3.5 : kv >= 275 ? 2.5 : kv >= 154 ? 1.6 : 1.0;
+        if (loading >= 100) return base * 1.8;
+        if (loading >= 70)  return base * 1.4;
+        if (loading >= 50)  return base * 1.2;
+        return base;
+    }
+
+    function initRoutePanes() {
+        if (!window.map) return;
+        ROUTE_TIERS.forEach(function(t) {
+            var pId = "routePane" + t.kv;
+            if (!window.map.getPane(pId)) {
+                var p = window.map.createPane(pId);
+                p.style.zIndex = t.zIdx;
+            }
+        });
+        // Ring highlight pane sits above all route panes (zIndex 448, below substations)
+        if (!window.map.getPane("ringPane")) {
+            var rp = window.map.createPane("ringPane");
+            rp.style.zIndex = 448;
+        }
+    }
+
+    function removeRouteLayers() {
+        pfState.routeLayers.forEach(function(rl) {
+            if (rl && window.map && window.map.hasLayer(rl)) window.map.removeLayer(rl);
+        });
+        pfState.routeLayers = [];
+        Object.keys(pfState.tierLayers).forEach(function(kv) {
+            var layer = pfState.tierLayers[kv];
+            if (layer && window.map) window.map.removeLayer(layer);
+        });
+        pfState.tierLayers = {};
+        if (pfState.ringLayer && window.map) {
+            window.map.removeLayer(pfState.ringLayer);
+            pfState.ringLayer = null;
+        }
+        // Reset lower-tier checkboxes
+        [154, 110, 77, 66].forEach(function(kv) {
+            var cb = document.getElementById("pf-tier-" + kv);
+            if (cb) cb.checked = false;
+        });
+    }
 
     // ── Color scales ──
 
@@ -328,6 +386,11 @@
         pfState.busData = null;
         pfState.lineData = null;
 
+        // "all" with AC mode uses the pre-computed national model (psdat-python, 2189 buses)
+        if (region === "all" && mode === "ac") {
+            await runPFNational();
+            return;
+        }
         if (region === "all") {
             await runPFAllRegions(mode);
             return;
@@ -374,6 +437,223 @@
             showResults(region, mode, info, false);
         }
     }
+
+    // Load pre-computed national AC model (psdat-python NR, 2189 buses)
+    async function runPFNational() {
+        var cb = "?v=" + Date.now();
+        try {
+            if (window.setStatus) window.setStatus("実ルート読み込み中... (500+275 kV)");
+            removeRouteLayers();
+            removePFOverlays();
+            initRoutePanes();
+            showBaseGrid("all");
+
+            // ── Bus voltage layer (all 2189 buses) ──────────────────────────
+            var busRes = await fetch("./data/powerflow/all_ac_buses.geojson" + cb);
+            if (busRes.ok) {
+                var busData = await busRes.json();
+                pfState.busData = busData;
+                pfState.busLayer = L.geoJSON(busData, {
+                    pointToLayer: function(feature, latlng) {
+                        var vm  = feature.properties.vm_pu || 1.0;
+                        var kv  = feature.properties.vn_kv || 66;
+                        var r   = kv >= 500 ? 5 : kv >= 275 ? 4 : kv >= 154 ? 3 : 2;
+                        return L.circleMarker(latlng, {
+                            pane:        "substationPane",
+                            radius:      r,
+                            fillColor:   vmColor(vm),
+                            color:       "#fff",
+                            weight:      0.6,
+                            fillOpacity: 0.9,
+                        });
+                    },
+                    onEachFeature: busPopup,
+                }).addTo(window.map);
+            }
+
+            // ── Real-route line layers (voltage-tiered) ──────────────────────
+            // Eager: 500+275 kV (backbone). Others: skip by default.
+            var eagerTiers = ROUTE_TIERS.filter(function(t) { return t.eager; });
+            var fetches = eagerTiers.map(async function(tier) {
+                try {
+                    var r = await fetch("./data/powerflow/" + tier.file + cb);
+                    if (!r.ok) return;
+                    var data = await r.json();
+                    var layer = L.geoJSON(data, {
+                        style: function(feature) {
+                            var ld = feature.properties.loading || 0;
+                            if (ld > 1) {
+                                return {
+                                    color:   loadingColor(ld),
+                                    weight:  routeWeight(ld, tier.kv),
+                                    opacity: 0.88,
+                                    pane:    "routePane" + tier.kv,
+                                };
+                            }
+                            // unmatched: tier color, semi-transparent
+                            return {
+                                color:   tier.col,
+                                weight:  tier.wt * 0.55,
+                                opacity: 0.30,
+                                pane:    "routePane" + tier.kv,
+                            };
+                        },
+                        onEachFeature: function(feature, lyr) {
+                            var p  = feature.properties;
+                            var ld = (p.loading || 0).toFixed(1);
+                            lyr.bindPopup(
+                                "<b>" + (p.name || "—") + "</b><br>" +
+                                tier.kv + " kV | " + p.region + "<br>" +
+                                "潮流率: " + ld + "%" +
+                                (ld > 0 ? " (" + loadingColor(p.loading) + ")" : " (unmatched)")
+                            );
+                        },
+                        pane: "routePane" + tier.kv,
+                    }).addTo(window.map);
+                    pfState.routeLayers.push(layer);
+                } catch(e) {
+                    console.warn("Route load error:", tier.file, e);
+                }
+            });
+            await Promise.all(fetches);
+            if (window.setStatus) window.setStatus("リング構造ハイライト読み込み中...");
+
+            // ── Backbone ring highlight layer ────────────────────────────────
+            try {
+                var ringRes = await fetch("./data/powerflow/backbone_ring.geojson" + cb);
+                if (ringRes.ok) {
+                    var ringData = await ringRes.json();
+                    pfState.ringLayer = L.geoJSON(ringData, {
+                        style: function(feature) {
+                            var p = feature.properties;
+                            var kv = p.kv || 500;
+                            var ld = p.loading || 0;
+                            var col = ld > 1 ? loadingColor(ld) : p.col;
+                            // 500kV backbone: prominent / 275kV regional mesh: subtle
+                            var wt  = kv >= 500 ? (p.wt || 4.0) : (p.wt || 2.5) * 0.7;
+                            var op  = kv >= 500 ? 0.95 : 0.45;
+                            return {
+                                color:       col,
+                                weight:      wt,
+                                opacity:     op,
+                                lineCap:     "round",
+                                lineJoin:    "round",
+                                pane:        "ringPane",
+                            };
+                        },
+                        onEachFeature: function(feature, lyr) {
+                            var p = feature.properties;
+                            var ld = (p.loading || 0).toFixed(1);
+                            lyr.bindPopup(
+                                "<b>【リング枝】" + (p.name || "—") + "</b><br>" +
+                                p.kv + " kV | " + (p.region || "—") + "<br>" +
+                                "潮流率: " + ld + "%" +
+                                (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
+                            );
+                        },
+                        pane: "ringPane",
+                        className: "ring-layer-" + "backbone",
+                    }).addTo(window.map);
+                }
+            } catch(e) {
+                console.warn("Ring overlay load error:", e);
+            }
+
+            if (window.setStatus) window.setStatus("全国実ルート表示完了 (500/275kV + リング構造)");
+            // ── Results panel ────────────────────────────────────────────────
+            var info = (pfState.summary && pfState.summary["all"]) || {};
+            var el   = document.getElementById("pf-results-content");
+            if (el) {
+                el.innerHTML =
+                    "<b>全国統合モデル — 実ルート表示</b><br>" +
+                    "バス数: "      + (info.n_buses    || "2189") + "<br>" +
+                    "電圧レベル: "  + "500/275 kV backbone (実ルート)<br>" +
+                    "負荷率 lf: "   + (info.lf ? (info.lf*100).toFixed(0)+"%" : "20%") + "<br>" +
+                    "V range: ["    + (info.ac_vm_min||"0.78") + ", " + (info.ac_vm_max||"1.18") + "] pu<br>" +
+                    "最大潮流率: "  + (info.ac_max_loading||"148") + "%<br>" +
+                    '<div style="margin-top:6px;font-size:10px;color:#aaa">' +
+                    "色: 実ルート座標 (OSM)、潮流率マッチ済</div>";
+            }
+            var sec = document.getElementById("pf-results-section");
+            if (sec) sec.style.display = "";
+            if (window.map) window.map.fitBounds([[24, 123], [46, 146]]);
+        } catch(e) {
+            console.error("National PF (routed) error:", e);
+        }
+    }
+
+    // ── On-demand lower-voltage tier loading ──────────────────────────────────
+
+    async function pfLoadTier(kv) {
+        if (pfState.tierLayers[kv]) return;  // already loaded
+        var tier = null;
+        for (var i = 0; i < ROUTE_TIERS.length; i++) {
+            if (ROUTE_TIERS[i].kv === kv) { tier = ROUTE_TIERS[i]; break; }
+        }
+        if (!tier || !window.map) return;
+
+        initRoutePanes();
+        if (window.setStatus) window.setStatus(kv + " kV ルート読み込み中...");
+        var cb = "?v=" + Date.now();
+        try {
+            var res = await fetch("./data/powerflow/" + tier.file + cb);
+            if (!res.ok) return;
+            var data = await res.json();
+            var layer = L.geoJSON(data, {
+                style: function(feature) {
+                    var ld = feature.properties.loading || 0;
+                    if (ld > 1) {
+                        return {
+                            color:   loadingColor(ld),
+                            weight:  routeWeight(ld, kv),
+                            opacity: 0.82,
+                            pane:    "routePane" + kv,
+                        };
+                    }
+                    return {
+                        color:   tier.col,
+                        weight:  tier.wt * 0.6,
+                        opacity: 0.28,
+                        pane:    "routePane" + kv,
+                    };
+                },
+                onEachFeature: function(feature, lyr) {
+                    var p  = feature.properties;
+                    var ld = (p.loading || 0).toFixed(1);
+                    lyr.bindPopup(
+                        "<b>" + (p.name || "—") + "</b><br>" +
+                        kv + " kV | " + (p.region || "—") + "<br>" +
+                        "潮流率: " + ld + "%" +
+                        (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
+                    );
+                },
+                pane: "routePane" + kv,
+            }).addTo(window.map);
+            pfState.tierLayers[kv] = layer;
+            if (window.setStatus) window.setStatus(kv + " kV ルート表示完了");
+        } catch(e) {
+            console.warn("pfLoadTier error kv=" + kv, e);
+        }
+    }
+
+    function pfUnloadTier(kv) {
+        var layer = pfState.tierLayers[kv];
+        if (layer && window.map) window.map.removeLayer(layer);
+        delete pfState.tierLayers[kv];
+    }
+
+    // Called from HTML checkboxes: pfToggleTier(154, true/false)
+    window.pfToggleTier = function(kv, checked) {
+        if (checked) pfLoadTier(kv);
+        else pfUnloadTier(kv);
+    };
+
+    // Toggle backbone ring highlight layer
+    window.pfToggleRing = function(checked) {
+        if (!pfState.ringLayer || !window.map) return;
+        if (checked) pfState.ringLayer.addTo(window.map);
+        else window.map.removeLayer(pfState.ringLayer);
+    };
 
     async function runPFAllRegions(mode) {
         var cb = "?v=" + Date.now();
@@ -661,6 +941,7 @@
             window.map.removeLayer(pfState.arrowLayer);
             pfState.arrowLayer = null;
         }
+        removeRouteLayers();
     }
 
     function clearAllPFLayers() {
@@ -927,6 +1208,7 @@
         buildRegionSelect(summary);
         enableControls();
         setupTabHook();
+        // Panes created lazily in runPFNational (map may not be ready yet)
 
         showAllRegionsSummary(summary);
     });
