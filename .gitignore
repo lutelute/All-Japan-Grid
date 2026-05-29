@@ -18,6 +18,10 @@ logs/security/
 # macOS
 .DS_Store
 
+# Powerflow regen staging / backups (scripts/regen_powerflow_snapped.sh)
+docs/data/powerflow_snapped/
+docs/data/powerflow.legacy_*/
+
 # Pickled GridNetwork cache
 *.pkl
 data/cache/
