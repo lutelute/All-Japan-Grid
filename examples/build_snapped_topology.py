@@ -146,7 +146,7 @@ class _SubIndex:
 
 # ── core builder ─────────────────────────────────────────────────────────────
 
-def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
+def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
