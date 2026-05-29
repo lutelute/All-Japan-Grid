@@ -155,7 +155,11 @@
     }
 
     function angleColor(va_deg) {
-        var abs = Math.abs(va_deg);
+        // Voltage angle is modular (period 360°). Wrap to (-180, 180] before
+        // coloring so disconnected-island angles (e.g. -5944°) are judged on
+        // their true physical magnitude instead of always saturating red.
+        var wrapped = ((va_deg % 360) + 540) % 360 - 180;
+        var abs = Math.abs(wrapped);
         if (abs < 5)   return "#2ecc71";
         if (abs < 15)  return "#f1c40f";
         if (abs < 30)  return "#e67e22";
@@ -660,6 +664,7 @@
         var allBusFeatures = [];
         var allLineFeatures = [];
         var loadedCount = 0;
+        var missingRegions = [];
 
         var fetches = ALL_REGIONS.map(async function (r) {
             var info = pfState.summary[r];
@@ -670,7 +675,14 @@
             try {
                 var busRes = await fetch("./data/powerflow/" + r + "_" + mode + "_buses.geojson" + cb);
                 var lineRes = await fetch("./data/powerflow/" + r + "_" + mode + "_lines.geojson" + cb);
-                if (!busRes.ok || !lineRes.ok) return;
+                if (!busRes.ok || !lineRes.ok) {
+                    var miss = [];
+                    if (!busRes.ok) miss.push("buses");
+                    if (!lineRes.ok) miss.push("lines");
+                    missingRegions.push(r + " (" + miss.join("+") + ")");
+                    console.warn("PF data missing for " + r + ": " + miss.join("+"));
+                    return;
+                }
 
                 var busData = await busRes.json();
                 var lineData = await lineRes.json();
@@ -679,11 +691,13 @@
                 if (lineData.features) allLineFeatures = allLineFeatures.concat(lineData.features);
                 loadedCount++;
             } catch (e) {
+                missingRegions.push(r + " (error)");
                 console.error("PF load error for " + r + ":", e);
             }
         });
 
         await Promise.all(fetches);
+        pfState.missingRegions = missingRegions;
 
         var mergedBus = { type: "FeatureCollection", features: allBusFeatures };
         var mergedLine = { type: "FeatureCollection", features: allLineFeatures };
@@ -954,6 +968,46 @@
 
     // ── Results display ──
 
+    // Surface model-validity issues so a "converged" flag on a fragmented or
+    // non-physical solution is not silently presented as a healthy grid.
+    function pfValidityWarnings(mode, info) {
+        var warns = [];
+        var nc = info.n_components;
+        if (nc && nc > 1) {
+            var iso = (info.n_buses != null && info.n_active_buses != null)
+                ? (info.n_buses - info.n_active_buses) : null;
+            warns.push("ネットワークが <b>" + nc + " 個</b>に断片化しています。潮流は最大連結成分のみで求解され、" +
+                (iso != null ? ("孤立 <b>" + iso + " バス</b>は無効化（地図非表示）") : "孤立部は無効化") +
+                "。再接続(reconstruction)は未適用です。");
+        }
+        if (mode === "ac" && info.ac_converged) {
+            if (info.ac_vm_min != null && info.ac_vm_min < 0.80) {
+                warns.push("最低電圧 <b>" + info.ac_vm_min + " pu</b> は非物理的（電圧崩壊水準）。収束フラグは立っていますが解が無効の可能性。");
+            }
+            if (info.ac_max_loading != null && info.ac_max_loading > 100) {
+                warns.push("最大潮流率 <b>" + info.ac_max_loading + "%</b>（熱容量超過）。");
+            }
+        }
+        if (mode === "dc" && info.dc_converged) {
+            var amax = Math.max(Math.abs(info.dc_va_min || 0), Math.abs(info.dc_va_max || 0));
+            if (amax > 180) {
+                warns.push("位相角 <b>" + info.dc_va_min + "° ~ " + info.dc_va_max + "°</b> が ±180° を超過。切断された部分系統で求解した兆候。");
+            }
+            if (info.dc_max_loading != null && info.dc_max_loading > 100) {
+                warns.push("最大潮流率 <b>" + info.dc_max_loading + "%</b>（熱容量超過）。");
+            }
+        }
+        if (!warns.length) return "";
+        var html = '<div style="margin:0 0 10px;padding:8px 10px;border-radius:4px;' +
+            'background:rgba(231,76,60,0.12);border:1px solid #e74c3c">';
+        html += '<div style="font-size:0.74rem;font-weight:600;color:#e74c3c;margin-bottom:4px">' +
+            '&#9888; モデル妥当性の警告</div>';
+        html += '<ul style="margin:0;padding-left:16px;font-size:0.7rem;color:#c0392b;line-height:1.5">';
+        for (var i = 0; i < warns.length; i++) html += '<li>' + warns[i] + '</li>';
+        html += '</ul></div>';
+        return html;
+    }
+
     function showResults(region, mode, info, hasData) {
         var section = document.getElementById("pf-results-section");
         var content = document.getElementById("pf-results-content");
@@ -964,7 +1018,8 @@
         var modeLabel = mode.toUpperCase();
         var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
 
-        var html = '<div class="result-grid">';
+        var html = pfValidityWarnings(mode, info);
+        html += '<div class="result-grid">';
         html += resultItem("Convergence", converged ? "OK" : "FAIL", converged ? "success" : "fail");
         html += resultItem("Mode", modeLabel);
         html += resultItem("Buses", info.n_buses);
@@ -1106,7 +1161,18 @@
             totalLoss += (mode === "ac" ? info.ac_loss_mw : info.dc_loss_mw) || 0;
         }
 
-        var html = '<div class="result-grid">';
+        var html = "";
+        var missing = pfState.missingRegions || [];
+        if (missing.length) {
+            html += '<div style="margin:0 0 10px;padding:8px 10px;border-radius:4px;' +
+                'background:rgba(243,156,18,0.14);border:1px solid #f39c12">';
+            html += '<div style="font-size:0.74rem;font-weight:600;color:#f39c12;margin-bottom:4px">' +
+                '&#9888; 一部地域のデータが欠落</div>';
+            html += '<div style="font-size:0.7rem;color:#d68910;line-height:1.5">次の地域は ' +
+                mode.toUpperCase() + ' データが見つからず地図に表示されていません: <b>' +
+                missing.join("、 ") + '</b></div></div>';
+        }
+        html += '<div class="result-grid">';
         html += resultItem("Mode", mode.toUpperCase() + " (All Japan)");
         html += resultItem("Regions", loadedCount + "/10");
         html += resultItem("Active Buses", totalBuses);
