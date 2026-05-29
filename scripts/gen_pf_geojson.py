@@ -354,6 +354,87 @@ def main():
                   f, ensure_ascii=False, separators=(",", ":"))
     print(f"書き出し: {pf_branches_path} ({len(branch_features)} 分岐)")
 
+    # ── all_ac_*.geojson の更新 (フロントエンドが実際に表示するファイル) ──
+    if converged:
+        # bus: name, vn_kv, vm_pu, va_deg (frontend が期待するフィールド名)
+        all_ac_buses = []
+        for feat in bus_features:
+            p = feat["properties"]
+            all_ac_buses.append({
+                "type": "Feature",
+                "geometry": feat["geometry"],
+                "properties": {
+                    "name":   p["name"],
+                    "vn_kv":  p["kv"],
+                    "vm_pu":  p["v_pu"],
+                    "va_deg": p["v_ang"],
+                    "subsystem": "main",
+                },
+            })
+
+        # 北海道バスをフラットスタート値で追加 (地図表示用)
+        # 北本連系は AC モデルでは解けないため、北海道独立サブシステムとして
+        # 別途解くべきだが、現状は AC NR が収束しないので flat (vm=1, va=0)
+        # を使う。OSM 座標は GeoJSON から再取得する。
+        try:
+            from src.dynamics.network.builder import GridNetwork as _GN
+            grid_full = _GN.from_geojson("data",
+                voltage_levels=[500, 275, 154, 110, 77, 66])
+            hokkaido_buses = [b for b in grid_full.buses if b.region == "hokkaido"]
+            n_added = 0
+            for b in hokkaido_buses:
+                coord = bus_coord.get(b.name)
+                if coord is None:
+                    coord = [b.lon, b.lat] if b.lon and b.lat else None
+                if coord is None:
+                    continue
+                all_ac_buses.append({
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": coord},
+                    "properties": {
+                        "name":   b.name,
+                        "vn_kv":  float(b.base_kv),
+                        "vm_pu":  1.0,
+                        "va_deg": 0.0,
+                        "subsystem": "hokkaido",
+                    },
+                })
+                n_added += 1
+            print(f"  + 北海道 {n_added} バスをフラットスタート値で追加")
+        except Exception as e:
+            print(f"  ⚠ 北海道バス追加スキップ: {e}")
+
+        with open(f"{OUT_DIR}/all_ac_buses.geojson", "w") as f:
+            json.dump({"type": "FeatureCollection", "features": all_ac_buses},
+                      f, ensure_ascii=False, separators=(",", ":"))
+        print(f"書き出し: {OUT_DIR}/all_ac_buses.geojson ({len(all_ac_buses)} バス, AC NR + Hokkaido flat)")
+
+        # line: name, loading_pct, p_mw
+        all_ac_lines = []
+        for feat in branch_features:
+            p = feat["properties"]
+            fb_id = p["from_bus"]; tb_id = p["to_bus"]
+            # idx → name 変換
+            fn = bus_names[fb_id] if 0 <= fb_id < len(bus_names) else ""
+            tn = bus_names[tb_id] if 0 <= tb_id < len(bus_names) else ""
+            all_ac_lines.append({
+                "type": "Feature",
+                "geometry": feat["geometry"],
+                "properties": {
+                    "name":        f"{fn} → {tn}",
+                    "loading_pct": p["loading_pct"],
+                    "p_mw":        p["p_mw"],
+                    "from_name":   fn,
+                    "to_name":     tn,
+                },
+            })
+        with open(f"{OUT_DIR}/all_ac_lines.geojson", "w") as f:
+            json.dump({"type": "FeatureCollection", "features": all_ac_lines},
+                      f, ensure_ascii=False, separators=(",", ":"))
+        print(f"書き出し: {OUT_DIR}/all_ac_lines.geojson ({len(all_ac_lines)} 分岐, AC NR)")
+    else:
+        print(f"⚠ AC NR 不収束 → all_ac_*.geojson は既存ファイルを保持")
+
     # ── sld_data.json の Pd/Vm を更新 ─────────────────────────────────────
     if os.path.exists(SLD_JSON):
         with open(SLD_JSON) as f:

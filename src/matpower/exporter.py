@@ -337,6 +337,7 @@ def build_matpower_case(
     compensation_v_threshold: float = 0.05,
     hv_hops: int = 4,
     isolate_regions: Optional[List[str]] = ("hokkaido",),
+    target_regions: Optional[List[str]] = None,
     drop_cross_region_links: Optional[List[Tuple[str, str]]] = None,
     # Note on the default: empirically, dropping kansai↔shikoku breaks NR
     # convergence (OSM conflates the 1400 MW Kii Channel HVDC with real AC
@@ -344,7 +345,9 @@ def build_matpower_case(
     # tokyo↔chubu has the same issue — OSM mixes the 50/60 Hz FCs with real
     # 60 Hz AC connections. Until the specific HVDC line IDs are identified,
     # only the hokkaido isolation (which is geographically unambiguous) is
-    # applied by default.
+    # applied by default. ``target_regions`` lets callers build a single-
+    # subsystem case (e.g. Hokkaido only) which is the proper way to model
+    # the AC side of an HVDC inter-tie.
 ) -> Dict:
     """Build a MATPOWER-format case from the All-Japan-Grid GeoJSON data.
 
@@ -390,6 +393,12 @@ def build_matpower_case(
     # Drop those regions' buses from the main case so the AC NR converges on
     # the synchronous backbone. Equivalent HVDC P-injections are handled
     # separately (out of scope for this build).
+    if target_regions:
+        # When the caller asks for a specific subsystem, isolate everything
+        # else. This is the proper way to model an HVDC-connected island
+        # (e.g. Hokkaido) as a standalone AC NR case.
+        drop = set(b.region for b in net.buses) - set(target_regions)
+        isolate_regions = list(drop) if drop else None
     if isolate_regions:
         drop = set(isolate_regions)
         old_buses = list(net.buses)
