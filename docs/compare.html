@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before / After 比較 — All-Japan-Grid</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:-apple-system,'Hiragino Sans',sans-serif;background:#0f1419;color:#e6e6e6}
+  #top{padding:10px 16px;background:#161b22;border-bottom:1px solid #2c3e50}
+  #top h1{margin:0 0 4px;font-size:17px}
+  #top p{margin:0;font-size:12px;color:#9fb3c8;line-height:1.5}
+  #ctl{padding:8px 16px;background:#11161c;display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #2c3e50}
+  #ctl select{background:#1b2631;color:#fff;border:1px solid #34495e;border-radius:4px;padding:5px 8px;font-size:14px}
+  #ctl label{font-size:13px;color:#9fb3c8}
+  #legend{display:flex;gap:16px;align-items:center;font-size:12px;color:#cfd8e3;flex-wrap:wrap}
+  #legend .k{display:flex;align-items:center;gap:5px}
+  .swatch{width:26px;height:0;border-top:3px solid}
+  .dash{width:26px;height:0;border-top:3px dashed #ff5ec7}
+  .dot{width:9px;height:9px;border-radius:50%;background:#fff;display:inline-block}
+  #wrap{display:flex;height:calc(100vh - 150px)}
+  .pane{flex:1;position:relative;border-right:2px solid #000}
+  .pane:last-child{border-right:none}
+  .pane h2{position:absolute;z-index:500;top:8px;left:8px;margin:0;padding:5px 12px;border-radius:5px;font-size:14px;
+    background:rgba(0,0,0,.7)}
+  .before h2{color:#ff8a80;border:1px solid #c0392b}
+  .after h2{color:#69f0ae;border:1px solid #27ae60}
+  .stat{position:absolute;z-index:500;bottom:8px;left:8px;right:8px;padding:7px 10px;border-radius:5px;
+    background:rgba(0,0,0,.74);font-size:12px;line-height:1.6}
+  .stat b{color:#fff}
+  .hl{color:#69f0ae;font-weight:700}
+  .bad{color:#ff8a80;font-weight:700}
+  .mapdiv{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div id="top">
+  <h1>⚡ Before / After 比較 — 送電網トポロジ改修</h1>
+  <p><b style="color:#ff8a80">左 = BEFORE</b>（旧：線端点を最近傍変電所にマッチ → 大半の線を破棄 → 系統が数百島に断片化、直線結線）
+     <b style="color:#69f0ae">右 = AFTER</b>（新：OSMの実ルートで頂点をつなぎ、データ欠落だけを推定線で補完 → 全域を1つに連結）。
+     地域を切り替えて見比べてください。</p>
+</div>
+<div id="ctl">
+  <label>地域 <select id="region"></select></label>
+  <label>表示 <select id="mode"><option value="ac">AC潮流</option><option value="dc">DC潮流</option></select></label>
+  <div id="legend">
+    <span class="k"><span class="swatch" style="border-color:#2ecc71"></span>実在の送電線（OSM・色=負荷率 低）</span>
+    <span class="k"><span class="swatch" style="border-color:#e74c3c"></span>負荷率 高</span>
+    <span class="k"><span class="dash"></span><b style="color:#ff5ec7">点線 = 推定の再接続線</b>（OSMにデータが無く、本来つながるはずの箇所を補完。実在しない可能性あり）</span>
+    <span class="k"><span class="dot"></span>変電所バス</span>
+  </div>
+</div>
+<div id="wrap">
+  <div class="pane before"><h2>BEFORE（旧）</h2><div id="mapA" class="mapdiv"></div><div class="stat" id="statA">―</div></div>
+  <div class="pane after"><h2>AFTER（新）</h2><div id="mapB" class="mapdiv"></div><div class="stat" id="statB">―</div></div>
+</div>
+
+<script>
+const BEFORE_DIR = "./data/powerflow_before";   // frozen pre-reconstruction snapshot (fragmented, straight)
+const AFTER_DIR  = "./data/powerflow";          // live: snapped + reconnect + real routes
+const REGIONS = ["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
+const JA = {hokkaido:"北海道",tohoku:"東北",tokyo:"東京",chubu:"中部",hokuriku:"北陸",kansai:"関西",chugoku:"中国",shikoku:"四国",kyushu:"九州",okinawa:"沖縄"};
+
+const tile = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const tileOpt = {subdomains:"abcd", maxZoom:19, attribution:"© OSM © CARTO"};
+const mapA = L.map("mapA",{preferCanvas:true}).setView([36,138],5);
+const mapB = L.map("mapB",{preferCanvas:true}).setView([36,138],5);
+L.tileLayer(tile,tileOpt).addTo(mapA);
+L.tileLayer(tile,tileOpt).addTo(mapB);
+
+// sync pan/zoom
+let syncing=false;
+function sync(src,dst){src.on("move",()=>{if(syncing)return;syncing=true;dst.setView(src.getCenter(),src.getZoom(),{animate:false});syncing=false;});}
+sync(mapA,mapB); sync(mapB,mapA);
+
+let layersA=[], layersB=[];
+function clear(map,arr){arr.forEach(l=>map.removeLayer(l));arr.length=0;}
+
+function lc(p){p=p||0; if(p>=100)return"#8e44ad"; if(p>=90)return"#e74c3c"; if(p>=70)return"#e67e22"; if(p>=50)return"#f1c40f"; if(p>=30)return"#27ae60"; return"#2ecc71";}
+
+async function getJSON(url){try{const r=await fetch(url+"?v="+Date.now());if(r.ok)return await r.json();}catch(e){}return null;}
+
+async function loadSide(map, arr, dir, region, mode, statEl, summary, isAfter){
+  clear(map, arr);
+  let lines = await getJSON(`${dir}/${region}_${mode}_lines.geojson`);
+  let buses = await getJSON(`${dir}/${region}_${mode}_buses.geojson`);
+  let note = "";
+  if(!lines){ // fall back to other mode so the side is not blank
+    const alt = mode==="ac" ? "dc" : "ac";
+    const l2 = await getJSON(`${dir}/${region}_${alt}_lines.geojson`);
+    if(l2){ lines=l2; buses=await getJSON(`${dir}/${region}_${alt}_buses.geojson`); note=`（${mode.toUpperCase()}データ無し→${alt.toUpperCase()}表示）`; }
+  }
+  let nLines=0, nSyn=0, nBus=0;
+  let bounds=[];
+  if(lines && lines.features){
+    const layer = L.geoJSON(lines,{
+      style:f=>{
+        const syn = f.properties && f.properties.synthetic;
+        if(syn) nSyn++;
+        return syn
+          ? {color:"#ff5ec7", weight:2, opacity:.9, dashArray:"6,6"}
+          : {color:lc(f.properties.loading_pct), weight:1.6, opacity:.85};
+      },
+      onEachFeature:(f,l)=>{
+        const p=f.properties||{};
+        l.bindPopup((p.synthetic?"<b style='color:#ff5ec7'>推定の再接続線</b><br>":"<b>送電線</b><br>")+
+          (p.name||"")+"<br>負荷率: "+(p.loading_pct!=null?p.loading_pct+"%":"-"));
+      }
+    }).addTo(map);
+    arr.push(layer);
+    nLines = lines.features.length;
+    lines.features.forEach(f=>{(f.geometry.coordinates||[]).forEach(c=>{ if(Array.isArray(c[0])){c.forEach(cc=>bounds.push([cc[1],cc[0]]));} else {bounds.push([c[1],c[0]]);} });});
+  }
+  if(buses && buses.features){
+    const bl = L.geoJSON(buses,{pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:2.2,color:"#fff",weight:.5,fillColor:"#fff",fillOpacity:.7})}).addTo(map);
+    arr.push(bl); nBus=buses.features.length;
+  }
+  // stats from summary
+  const s = summary && summary[region] || {};
+  const nc = s.n_components, vm = s.ac_vm_min, act=s.n_active_buses, tot=s.n_buses, acc=s.ac_converged;
+  const ncTxt = (nc===1)?`<span class="hl">${nc}</span>`:(nc>1?`<span class="bad">${nc}</span>`:nc);
+  statEl.innerHTML = `<b>${JA[region]||region}</b> ${note} &nbsp;|&nbsp; 連結成分: ${ncTxt} `+
+    `&nbsp; 有効バス: ${act!=null?act:"?"}/${tot!=null?tot:"?"} `+
+    `&nbsp; 描画線: ${nLines}（うち<span style="color:#ff5ec7">推定 ${nSyn}</span>） `+
+    `&nbsp; AC: ${acc===true?'<span class="hl">収束</span>':(acc===false?'<span class="bad">非収束</span>':'-')} `+
+    `&nbsp; 最低電圧: ${vm!=null?vm+" pu":"-"}`;
+  return bounds;
+}
+
+let sumA=null, sumB=null;
+async function refresh(){
+  const region = document.getElementById("region").value;
+  const mode = document.getElementById("mode").value;
+  const bA = await loadSide(mapA, layersA, BEFORE_DIR, region, mode, document.getElementById("statA"), sumA, false);
+  const bB = await loadSide(mapB, layersB, AFTER_DIR, region, mode, document.getElementById("statB"), sumB, true);
+  const all = (bB && bB.length ? bB : bA) || [];
+  if(all.length){ syncing=true; mapB.fitBounds(all,{padding:[20,20]}); mapA.setView(mapB.getCenter(),mapB.getZoom(),{animate:false}); syncing=false; }
+}
+
+(async function init(){
+  const sel=document.getElementById("region");
+  REGIONS.forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=JA[r]+" "+r;sel.appendChild(o);});
+  sel.value="tokyo";
+  sumA = await getJSON(`${BEFORE_DIR}/summary.json`);
+  sumB = await getJSON(`${AFTER_DIR}/summary.json`);
+  sel.addEventListener("change",refresh);
+  document.getElementById("mode").addEventListener("change",refresh);
+  await refresh();
+})();
+</script>
+</body>
+</html>
