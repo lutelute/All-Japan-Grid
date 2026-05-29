@@ -110,8 +110,9 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
             module before solving, so the solved network is fully connected
             instead of silently disabling islands.
     """
+    snap_geom = None
     if topology == "snapped":
-        network = build_network_snapped(region)
+        network, snap_geom = build_network_snapped(region, return_geom=True)
     else:
         network = build_network_from_geojson(region)
     if not network or not network.has_elements:
@@ -181,7 +182,7 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }
 
-    return net_dc, dc_result, net_ac, ac_result, build_info
+    return net_dc, dc_result, net_ac, ac_result, build_info, snap_geom
 
 
 def _parse_bus_coords(net, idx):
@@ -277,8 +278,14 @@ def export_bus_geojson(net, mode_label):
     return {"type": "FeatureCollection", "features": features}
 
 
-def export_line_geojson(net, region, geom_lookup, bus_to_sub):
-    """Export line results as GeoJSON FeatureCollection with original OSM geometry."""
+def export_line_geojson(net, region, geom_lookup, bus_to_sub, coord_geom=None):
+    """Export line results as GeoJSON FeatureCollection with original OSM geometry.
+
+    coord_geom: optional dict keyed by ((lat,lon),(lat,lon)) endpoint pairs ->
+    [[lon,lat],...] route, supplied by the snapped topology builder so its
+    branches (incl. those touching junction buses) render along real routes
+    instead of straight bus-to-bus segments.
+    """
     features = []
     geom_hits = 0
     geom_misses = 0
@@ -313,6 +320,13 @@ def export_line_geojson(net, region, geom_lookup, bus_to_sub):
                 rev = geom_lookup.get((to_sub, from_sub))
                 if rev is not None:
                     coords = list(reversed(rev))
+
+        # Snapped-topology geometry keyed by endpoint coordinates (handles
+        # junction buses that have no legacy sub_id).
+        if coords is None and coord_geom:
+            fk = (round(from_lat, 5), round(from_lon, 5))
+            tk = (round(to_lat, 5), round(to_lon, 5))
+            coords = coord_geom.get((fk, tk))
 
         if coords:
             geom_hits += 1
@@ -432,7 +446,7 @@ def main():
             print("SKIP")
             continue
 
-        net_dc, dc_result, net_ac, ac_result, build_info = result
+        net_dc, dc_result, net_ac, ac_result, build_info, snap_geom = result
 
         # Load original OSM line geometries for this region
         geom_lookup = _load_osm_line_geometries(region)
@@ -441,7 +455,7 @@ def main():
         if dc_result["converged"]:
             bus_to_sub_dc = _build_bus_name_to_sub_id(net_dc, region)
             dc_buses = export_bus_geojson(net_dc, "dc")
-            dc_lines, dc_hits, dc_misses = export_line_geojson(net_dc, region, geom_lookup, bus_to_sub_dc)
+            dc_lines, dc_hits, dc_misses = export_line_geojson(net_dc, region, geom_lookup, bus_to_sub_dc, coord_geom=snap_geom)
             with open(os.path.join(OUTPUT_DIR, f"{region}_dc_buses.geojson"), "w") as f:
                 json.dump(dc_buses, f, separators=(",", ":"))
             with open(os.path.join(OUTPUT_DIR, f"{region}_dc_lines.geojson"), "w") as f:
@@ -451,7 +465,7 @@ def main():
         if ac_result["converged"]:
             bus_to_sub_ac = _build_bus_name_to_sub_id(net_ac, region)
             ac_buses = export_bus_geojson(net_ac, "ac")
-            ac_lines, ac_hits, ac_misses = export_line_geojson(net_ac, region, geom_lookup, bus_to_sub_ac)
+            ac_lines, ac_hits, ac_misses = export_line_geojson(net_ac, region, geom_lookup, bus_to_sub_ac, coord_geom=snap_geom)
             with open(os.path.join(OUTPUT_DIR, f"{region}_ac_buses.geojson"), "w") as f:
                 json.dump(ac_buses, f, separators=(",", ":"))
             with open(os.path.join(OUTPUT_DIR, f"{region}_ac_lines.geojson"), "w") as f:

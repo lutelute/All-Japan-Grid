@@ -147,7 +147,7 @@ class _SubIndex:
 # ── core builder ─────────────────────────────────────────────────────────────
 
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
-                          min_voltage_kv=22.0):
+                          min_voltage_kv=22.0, return_geom=False):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -200,11 +200,28 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
         sub_coords.append((lat, lon, sid))
 
     index = _SubIndex(sub_coords)
+    node_coord = {sid: (lat, lon) for (lat, lon, sid) in sub_coords}  # id -> (lat,lon)
 
-    # Build the vertex graph as a multigraph of node -> {neighbor: (length, kv)}
-    # node id is a substation id (str) or a junction key "J:lat:lon".
-    adj = defaultdict(dict)            # node -> neighbor -> [length_km, kv]
+    # Build the vertex graph. Each edge carries length, voltage, and the real
+    # OSM coordinate path (oriented a->b) so the true route survives chain
+    # collapse and can be rendered instead of a straight bus-to-bus segment.
+    adj = defaultdict(dict)            # node -> neighbor -> {len, kv, path:[(lat,lon)...]}
     jct_coord = {}                     # junction key -> (lat, lon)
+
+    def add_edge(a, b, seg, kv, path):
+        """Insert/merge an undirected edge; store path oriented per direction."""
+        cur = adj[a].get(b)
+        if cur is None:
+            adj[a][b] = {"len": seg, "kv": kv, "path": list(path)}
+            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path))}
+        elif seg < cur["len"] or cur["len"] <= 0:
+            # keep the shorter parallel connection's geometry, highest voltage
+            kv2 = max(cur["kv"], kv)
+            adj[a][b] = {"len": seg, "kv": kv2, "path": list(path)}
+            adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path))}
+        else:
+            cur["kv"] = max(cur["kv"], kv)
+            adj[b][a]["kv"] = cur["kv"]
 
     lines_path = os.path.join(DATA_DIR, f"{region}_lines.geojson")
     if os.path.exists(lines_path):
@@ -232,22 +249,15 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
                     jct_coord[jk] = (lat, lon)
                     node_ids.append(jk)
 
-            # Add edges between consecutive distinct nodes, with segment length.
+            # Add edges between consecutive distinct nodes, with segment length
+            # and the real coordinate pair as the (sub-)path.
             for j in range(1, len(coords)):
                 a, b = node_ids[j - 1], node_ids[j]
                 if a == b:
                     continue
                 seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
                                     coords[j][0], coords[j][1])
-                cur = adj[a].get(b)
-                if cur is None:
-                    adj[a][b] = [seg, kv]
-                    adj[b][a] = [seg, kv]
-                else:
-                    # keep shortest parallel connection, highest voltage
-                    cur[0] = min(cur[0], seg) if cur[0] > 0 else seg
-                    cur[1] = max(cur[1], kv)
-                    adj[b][a] = cur
+                add_edge(a, b, seg, kv, [coords[j - 1], coords[j]])
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
@@ -265,22 +275,16 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
                 if a == b:
                     del adj[n]
                     continue
-                la = adj[n][a][0]
-                lb = adj[n][b][0]
-                kv = max(adj[n][a][1], adj[n][b][1])
+                ea, eb = adj[n][a], adj[n][b]  # paths n->a, n->b
+                la, lb = ea["len"], eb["len"]
+                kv = max(ea["kv"], eb["kv"])
+                # merged a->b path = (a->n) + (n->b), dropping the duplicate n
+                path_ab = list(reversed(ea["path"]))[:-1] + eb["path"]
                 # remove junction n, connect a-b with summed length
                 del adj[a][n]
                 del adj[b][n]
                 del adj[n]
-                if b not in adj[a]:
-                    adj[a][b] = [la + lb, kv]
-                    adj[b][a] = [la + lb, kv]
-                else:
-                    if adj[a][b][0] > la + lb:
-                        adj[a][b][0] = la + lb
-                        adj[b][a][0] = la + lb
-                    adj[a][b][1] = max(adj[a][b][1], kv)
-                    adj[b][a][1] = adj[a][b][1]
+                add_edge(a, b, la + lb, kv, path_ab)
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
@@ -299,7 +303,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
     for n in adj:
         if is_jct(n):
             lat, lon = jct_coord[n]
-            inc_kv = max((adj[n][m][1] for m in adj[n]), default=0.0)
+            inc_kv = max((adj[n][m]["kv"] for m in adj[n]), default=0.0)
+            node_coord[n] = (lat, lon)
             net.add_substation(Substation(
                 id=n.replace("J:", f"{region}_jct_"),
                 name=f"{region} junction {n[2:]}",
@@ -312,6 +317,13 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
     def node_to_id(n):
         return n.replace("J:", f"{region}_jct_") if is_jct(n) else n
 
+    def ckey(lat, lon):
+        return (round(lat, 5), round(lon, 5))
+
+    # geom lookup keyed by endpoint bus-coordinate pairs (both directions);
+    # value is the real OSM route as [[lon,lat],...] for the live map.
+    geom = {}
+
     # Emit branches (each undirected edge once).
     seen = set()
     k = 0
@@ -321,9 +333,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
             if key in seen:
                 continue
             seen.add(key)
-            length, kv = adj[a][b]
+            edge = adj[a][b]
+            length, kv = edge["len"], edge["kv"]
             if length <= 0:
                 length = 0.1
+            path_latlon = edge.get("path") or []
             try:
                 net.add_transmission_line(TransmissionLine(
                     id=f"{region}_line_{k}",
@@ -333,10 +347,17 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
                     voltage_kv=max(kv, 0),
                     length_km=length,
                     region=region,
+                    coordinates=list(path_latlon),
                 ))
                 k += 1
             except ValueError:
                 pass
+            # register geometry keyed by the two endpoint bus coordinates
+            if return_geom and path_latlon and a in node_coord and b in node_coord:
+                ll = [[lon, lat] for (lat, lon) in path_latlon]  # GeoJSON order
+                ac_, bc_ = node_coord[a], node_coord[b]
+                geom[(ckey(*ac_), ckey(*bc_))] = ll
+                geom[(ckey(*bc_), ckey(*ac_))] = list(reversed(ll))
 
     # Generators -> nearest real substation (unchanged heuristic).
     plants_path = os.path.join(DATA_DIR, f"{region}_plants.geojson")
@@ -377,6 +398,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
             except (ValueError, TypeError):
                 pass
 
+    if return_geom:
+        return net, geom
     return net
 
 
