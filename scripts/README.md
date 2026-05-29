@@ -63,13 +63,14 @@ GeoJSON の欠落属性（名称・事業者・燃料種別）を外部データ
 
 | # | Script | Description | API | Cache |
 |---|--------|-------------|-----|-------|
-| 1 | `audit_data_quality.py` | プレースホルダ監査（Before/After比較用） | - | - |
-| 2 | `enrich_substations_geocode.py` | 変電所名称: Nominatim逆ジオコーディング → `{area}変電所` | Nominatim | - |
-| 3 | `enrich_plants_p03.py` | 発電所属性: P03国土数値情報とのマッチング + 事業者名正規化 | - | - |
-| 4 | `enrich_overpass_tags.py` | 発電所属性: OSM IDでOverpass APIバッチ取得 | Overpass | `data/cache/overpass_tags.json` |
-| 5 | `enrich_plants_geocode.py` | 発電所名称: Nominatim逆ジオコーディング → `{area}発電所` | Nominatim | `data/cache/plants_geocode.json` |
-| 6 | `enrich_lines_endpoints.py` | 送電線名称: 端点変電所マッチング → `{from}~{to}線` | - | - |
-| 7 | `enrich_all.py` | 上記を正しい順序で一括実行するオーケストレーター | - | - |
+| 1 | `enrich_substations_geocode.py` | 変電所名称: Nominatim逆ジオコーディング → `{area}変電所` | Nominatim | - |
+| 2 | `enrich_plants_p03.py` | 発電所属性: P03国土数値情報とのマッチング + 事業者名正規化 | - | - |
+| 3 | `enrich_overpass_tags.py` | 発電所属性: OSM IDでOverpass APIバッチ取得 | Overpass | `data/cache/overpass_tags.json` |
+| 4 | `enrich_plants_geocode.py` | 発電所名称: Nominatim逆ジオコーディング → `{area}発電所` | Nominatim | `data/cache/plants_geocode.json` |
+| 5 | `enrich_lines_endpoints.py` | 送電線名称: 端点変電所マッチング → `{from}~{to}線` | - | - |
+| 6 | `enrich_all.py` | 上記を正しい順序で一括実行するオーケストレーター | - | - |
+
+データ品質監査は `audit_substation_plant_overlap.py` を使用 (Data Quality Audits セクション参照)。
 
 ### Usage / 使い方
 
@@ -89,19 +90,18 @@ python scripts/enrich_overpass_tags.py --region tokyo
 python scripts/enrich_plants_geocode.py --region kyushu
 python scripts/enrich_lines_endpoints.py --region chubu
 
-# 品質監査
-python scripts/audit_data_quality.py                  # 全地域
-python scripts/audit_data_quality.py --region okinawa  # 特定地域
+# 品質監査 (Data Quality Audits セクション参照)
+python scripts/audit_substation_plant_overlap.py
 ```
 
 ### Dependencies / 依存関係
 
 ```
-Step 2 (substations)  ← 独立
-Step 3 (P03)          ← 独立（P03 GMLが必要）
-Step 4 (Overpass)     ← 独立
-Step 5 (plants geo)   ← Step 3, 4の後（未解決分のみ対象）
-Step 6 (lines)        ← Step 2の後（変電所名が必要）
+Step 1 (substations)  ← 独立
+Step 2 (P03)          ← 独立（P03 GMLが必要）
+Step 3 (Overpass)     ← 独立
+Step 4 (plants geo)   ← Step 2, 3の後（未解決分のみ対象）
+Step 5 (lines)        ← Step 1の後（変電所名が必要）
 ```
 
 ### Rate Limits / API制限

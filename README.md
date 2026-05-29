@@ -37,7 +37,7 @@ OpenStreetMap から機械的に抽出した、日本全国の送電網 **地理
 ### Network Preview / ネットワーク プレビュー
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/network_ybus_tour_small.gif?v=2" alt="Network + Ybus Tour" width="100%">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/network_ybus_tour.gif" alt="Network + Ybus Tour" width="100%">
 </p>
 
 > **Important / 重要:** This dataset provides the **geographic layout** of Japan's transmission infrastructure — where substations and lines are physically located and how they connect spatially. It is **not** a ready-to-use electrical model. See [Limitations](#limitations--what-this-data-is-not--本データの限界) below.
@@ -48,16 +48,17 @@ OpenStreetMap から機械的に抽出した、日本全国の送電網 **地理
 
 | Region / 地域 | Substations / 変電所 | Lines / 送電線 | Plants / 発電所 | Frequency / 周波数 |
 |--------|------------|-------|--------|-----------|
-| Hokkaido / 北海道 | 303 | 1,879 | 436 | 50 Hz |
-| Tohoku / 東北 | 738 | 5,112 | 1,311 | 50 Hz |
-| Tokyo / 東京 | 1,367 | 8,052 | 7,207 | 50 Hz |
-| Chubu / 中部 | 898 | 5,284 | 3,792 | 60 Hz |
-| Hokuriku / 北陸 | 273 | 1,604 | 432 | 60 Hz |
-| Kansai / 関西 | 1,016 | 5,960 | 1,518 | 60 Hz |
-| Chugoku / 中国 | 548 | 3,214 | 1,173 | 60 Hz |
+| Hokkaido / 北海道 | 471 | 4,136 | 436 | 50 Hz |
+| Tohoku / 東北 | 901 | 6,628 | 1,311 | 50 Hz |
+| Tokyo / 東京 | 1,726 | 8,295 | 7,207 | 50 Hz |
+| Chubu / 中部 | 1,163 | 6,589 | 3,792 | 60 Hz |
+| Hokuriku / 北陸 | 267 | 2,296 | 432 | 60 Hz |
+| Kansai / 関西 | 902 | 3,994 | 1,518 | 60 Hz |
+| Chugoku / 中国 | 531 | 3,176 | 1,173 | 60 Hz |
 | Shikoku / 四国 | 258 | 1,532 | 688 | 60 Hz |
-| Kyushu / 九州 | 1,145 | 6,553 | 2,549 | 60 Hz |
-| Okinawa / 沖縄 | 416 | 887 | 32 | 60 Hz |
+| Kyushu / 九州 | 684 | 3,314 | 2,549 | 60 Hz |
+| Okinawa / 沖縄 | 59 | 117 | 32 | 60 Hz |
+| **Total / 合計** | **7,962** | **40,077** | **19,138** | — |
 
 ### File Format / ファイル形式
 
