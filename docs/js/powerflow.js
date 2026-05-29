@@ -166,6 +166,12 @@
         return "#e74c3c";
     }
 
+    // Synthetic (inferred) reconnection lines are drawn dashed + dimmer so
+    // they read as inferred bridges, not observed OSM geometry.
+    function isSynthetic(feature) {
+        return !!(feature && feature.properties && feature.properties.synthetic);
+    }
+
     var VOLTAGE_COLORS = {
         500: "#e74c3c", 275: "#e67e22", 220: "#d4a017",
         187: "#f1c40f", 154: "#2ecc71", 132: "#27ae60",
@@ -823,7 +829,8 @@
                 return {
                     color: loadingColor(loading),
                     weight: loadingWeight(loading),
-                    opacity: 0.85,
+                    opacity: isSynthetic(feature) ? 0.5 : 0.85,
+                    dashArray: isSynthetic(feature) ? "5,5" : null,
                 };
             },
             onEachFeature: linePopup,
@@ -841,7 +848,8 @@
                 return {
                     color: flowColor(p_mw),
                     weight: flowWeight(p_mw),
-                    opacity: 0.7,
+                    opacity: isSynthetic(feature) ? 0.45 : 0.7,
+                    dashArray: isSynthetic(feature) ? "5,5" : null,
                 };
             },
             onEachFeature: function (feature, layer) {
@@ -899,9 +907,10 @@
                 return {
                     color: loadingColor(loading),
                     weight: thermalWeight(loading),
-                    opacity: 0.9,
+                    opacity: isSynthetic(feature) ? 0.5 : 0.9,
                     lineCap: "round",
                     lineJoin: "round",
+                    dashArray: isSynthetic(feature) ? "5,5" : null,
                 };
             },
             onEachFeature: function (feature, layer) {
@@ -1128,6 +1137,13 @@
                     gLegend[n][0] + '</span>';
             }
             html += '</div>';
+        }
+
+        // Synthetic (inferred) reconnection line note — applies to line-based viz.
+        if (viz === "loading" || viz === "thermal" || viz === "flow") {
+            html += '<div style="font-size:0.68rem;color:#7f8c8d;margin-top:6px;display:flex;align-items:center;gap:4px">' +
+                '<span style="width:18px;height:0;border-top:2px dashed #aaa;display:inline-block"></span>' +
+                '破線 = 推定（再接続）線 / inferred bridge</div>';
         }
 
         html += '</div>';
