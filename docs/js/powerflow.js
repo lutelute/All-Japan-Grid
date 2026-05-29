@@ -266,8 +266,16 @@
 
         var allOpt = document.createElement("option");
         allOpt.value = "all";
-        allOpt.textContent = "全国 All Japan";
+        allOpt.textContent = "全国（地域詳細・統合）";
         sel.appendChild(allOpt);
+
+        // Separate-granularity feature: the national 500/275 kV backbone model
+        // (matpower, ~2189 buses) — intentionally a coarser, different model
+        // than the per-region detailed (snapped) networks.
+        var bbOpt = document.createElement("option");
+        bbOpt.value = "national_backbone";
+        bbOpt.textContent = "全国基幹（500/275kV 概観・別モデル）";
+        sel.appendChild(bbOpt);
 
         for (var i = 0; i < ALL_REGIONS.length; i++) {
             var r = ALL_REGIONS[i];
@@ -396,8 +404,10 @@
         pfState.busData = null;
         pfState.lineData = null;
 
-        // "all" with AC mode uses the pre-computed national model (psdat-python, 2189 buses)
-        if (region === "all" && mode === "ac") {
+        // Separate-granularity features kept side by side:
+        //  - "national_backbone": coarse 500/275 kV matpower overview (~2189 buses)
+        //  - "all": detailed per-region (snapped) networks merged
+        if (region === "national_backbone") {
             await runPFNational();
             return;
         }
