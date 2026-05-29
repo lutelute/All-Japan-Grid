@@ -336,6 +336,15 @@ def build_matpower_case(
     compensation_alpha: float = 0.9,
     compensation_v_threshold: float = 0.05,
     hv_hops: int = 4,
+    isolate_regions: Optional[List[str]] = ("hokkaido",),
+    drop_cross_region_links: Optional[List[Tuple[str, str]]] = None,
+    # Note on the default: empirically, dropping kansai↔shikoku breaks NR
+    # convergence (OSM conflates the 1400 MW Kii Channel HVDC with real AC
+    # connections through Shikoku that supply Awaji/Tokushima). Dropping
+    # tokyo↔chubu has the same issue — OSM mixes the 50/60 Hz FCs with real
+    # 60 Hz AC connections. Until the specific HVDC line IDs are identified,
+    # only the hokkaido isolation (which is geographically unambiguous) is
+    # applied by default.
 ) -> Dict:
     """Build a MATPOWER-format case from the All-Japan-Grid GeoJSON data.
 
@@ -373,6 +382,63 @@ def build_matpower_case(
     net = GridNetwork.from_geojson(
         data_dir, voltage_levels=voltage_levels, cache_dir=cache_dir
     )
+
+    # ── 1b. HVDC-connected region isolation ──────────────────────────────
+    # Japanese grid has DC inter-ties (北本連系: hokkaido↔tohoku, 紀伊水道直流連系:
+    # kansai↔shikoku) and back-to-back FCs (50/60 Hz boundary: tokyo↔chubu).
+    # OSM models these as AC lines, which causes huge angle accumulation in NR.
+    # Drop those regions' buses from the main case so the AC NR converges on
+    # the synchronous backbone. Equivalent HVDC P-injections are handled
+    # separately (out of scope for this build).
+    if isolate_regions:
+        drop = set(isolate_regions)
+        old_buses = list(net.buses)
+        keep_old_ids = [b.id for b in old_buses if b.region not in drop]
+        if len(keep_old_ids) < len(old_buses):
+            from src.dynamics.network.builder import BusData, LineData, GridNetwork as _GN
+            kept = [b for b in old_buses if b.region not in drop]
+            old2new = {b.id: i for i, b in enumerate(kept)}
+            new_buses = [BusData(
+                id=i, name=b.name, base_kv=b.base_kv,
+                region=b.region, lat=b.lat, lon=b.lon,
+                bus_type=b.bus_type, V_mag=b.V_mag, V_ang=b.V_ang,
+                P_gen=b.P_gen, Q_gen=b.Q_gen,
+                P_load=b.P_load, Q_load=b.Q_load,
+            ) for i, b in enumerate(kept)]
+            new_lines = []
+            for ln in net.lines:
+                fi = old2new.get(ln.from_bus); ti = old2new.get(ln.to_bus)
+                if fi is not None and ti is not None:
+                    new_lines.append(LineData(
+                        from_bus=fi, to_bus=ti, R_pu=ln.R_pu, X_pu=ln.X_pu,
+                        B_pu=ln.B_pu, base_kv=ln.base_kv,
+                        length_km=ln.length_km, rating_mva=ln.rating_mva,
+                    ))
+            print(f"  [HVDC-ISOLATE] dropped {len(isolate_regions)} regions "
+                  f"({', '.join(sorted(drop))}): {len(old_buses)} → "
+                  f"{len(new_buses)} buses, {len(net.lines)} → "
+                  f"{len(new_lines)} lines")
+            net = _GN(new_buses, new_lines, net.sbase_mva)
+
+    # ── 1c. Drop AC-modeled DC inter-ties between specified region pairs ──
+    if drop_cross_region_links:
+        from src.dynamics.network.builder import LineData, GridNetwork as _GN
+        drop_pairs = {frozenset(p) for p in drop_cross_region_links}
+        new_lines = []
+        n_dropped = 0
+        bus_region = {b.id: b.region for b in net.buses}
+        for ln in net.lines:
+            pair = frozenset({bus_region.get(ln.from_bus, ""),
+                              bus_region.get(ln.to_bus, "")})
+            if pair in drop_pairs and len(pair) == 2:
+                n_dropped += 1
+                continue
+            new_lines.append(ln)
+        if n_dropped:
+            print(f"  [HVDC-CROSS] dropped {n_dropped} cross-region AC lines "
+                  f"({', '.join('↔'.join(sorted(p)) for p in drop_pairs)})")
+            net = _GN(list(net.buses), new_lines, net.sbase_mva)
+
     lcc = net.largest_connected_component()
     # Filter out radial chains far from the HV backbone.
     # 77 kV buses > 2 hops from 154 kV, or 66 kV buses > 2 hops from 110 kV,
@@ -425,28 +491,17 @@ def build_matpower_case(
     total_gen_mw = min(total_cap_mw, JAPAN_PEAK_MW) * load_factor
     pg_scale     = total_gen_mw / max(total_cap_mw * load_factor, 1.0)
 
-    # Load distribution: Japanese grid realistic pattern.
-    # 66/77 kV (distribution) carries ~85% of demand; sub-transmission ~12%;
-    # HV backbone ~3% (virtual downstream equivalent for NR convergence stability).
-    # Per-bus weights — the many 66 kV buses collectively dominate.
-    _LOAD_UNIT_BY_KV: Dict[int, float] = {
-        500: 0.5,    # small virtual load for reactive balance (NR convergence)
-        275: 0.5,
-        220: 0.5,
-        187: 0.5,
-        154: 1.0,    # sub-transmission, industrial load
-        110: 1.5,
-        77:  5.0,    # distribution feeder
-        66:  8.0,    # distribution feeder (main demand)
-    }
+    # Load distribution: weight ∝ kV² (placing demand at HV ↔ MV buses so the
+    # NR Jacobian stays well-conditioned). The earlier kV-class-unit weighting
+    # (66 kV dominated) caused 66 kV radial buses to make the matrix singular.
+    # The Issue-#12-style improvement (66 kV-heavy distribution) belongs in a
+    # separate pass after AC NR convergence is verified on this weighting.
     all_weights: Dict[int, float] = {}
     for i in range(n_bus):
         if i in bus_gen:
             continue
         kv = lcc.buses[i].base_kv
-        kv_round = int(round(kv))
-        w = _LOAD_UNIT_BY_KV.get(kv_round, 1.0)
-        all_weights[i] = w
+        all_weights[i] = kv ** 2
     if not all_weights:
         all_weights = {i: 1.0 for i in range(n_bus)}
     total_weight = sum(all_weights.values()) or 1.0
