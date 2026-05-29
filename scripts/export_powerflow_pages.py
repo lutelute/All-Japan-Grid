@@ -12,6 +12,7 @@ Usage::
     PYTHONPATH=. python scripts/export_powerflow_pages.py
 """
 
+import argparse
 import copy
 import json
 import os
@@ -31,8 +32,12 @@ from examples.run_powerflow_all import (
     prune_dc_infeasible, run_powerflow,
     _get_line_coords, _get_centroid, _find_nearest_sub, _parse_voltage_kv,
 )
+from examples.build_snapped_topology import build_network_snapped
 from src.converter.pandapower_builder import PandapowerBuilder
 from src.powerflow.load_estimator import estimate_loads, load_demand_config
+from src.reconstruction.config import ReconstructionConfig
+from src.reconstruction.isolator import Isolator
+from src.reconstruction.reconnector import Reconnector
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "data", "powerflow")
@@ -93,9 +98,22 @@ def _load_osm_line_geometries(region):
     return geom_lookup
 
 
-def build_and_solve(region, demand_cfg):
-    """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info)."""
-    network = build_network_from_geojson(region)
+def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
+    """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info).
+
+    Args:
+        topology: "legacy" (nearest-substation endpoint match, current behaviour)
+            or "snapped" (vertex-graph + tolerance snap, recovers real
+            connectivity; see examples/build_snapped_topology.py).
+        reconnect: when True, bridge the residual isolated components with
+            labelled synthetic lines (recon_line_*) via the reconstruction
+            module before solving, so the solved network is fully connected
+            instead of silently disabling islands.
+    """
+    if topology == "snapped":
+        network = build_network_snapped(region)
+    else:
+        network = build_network_from_geojson(region)
     if not network or not network.has_elements:
         return None
 
@@ -105,6 +123,15 @@ def build_and_solve(region, demand_cfg):
 
     fix_zero_voltages(net)
     n_trafos = insert_transformers(net)
+
+    # Residual reconnection: bridge genuine gaps with labelled synthetic lines
+    # (named recon_line_*) instead of letting fix_topology disable the islands.
+    n_synthetic = 0
+    if reconnect:
+        iso = Isolator().detect(net)
+        rec = Reconnector().reconnect(net, iso, ReconstructionConfig(mode="reconnect"))
+        n_synthetic = rec.lines_created
+
     diag = fix_topology(net)
     select_slack_bus(net)
 
@@ -148,6 +175,8 @@ def build_and_solve(region, demand_cfg):
         "n_trafos": n_trafos,
         "n_active_buses": diag["n_active_buses"],
         "n_components": diag["n_components"],
+        "n_synthetic_lines": n_synthetic,
+        "topology": topology,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }
@@ -295,6 +324,7 @@ def export_line_geojson(net, region, geom_lookup, bus_to_sub):
             geom_misses += 1
             coords = [[from_lon, from_lat], [to_lon, to_lat]]
 
+        line_name = str(net.line.at[idx, "name"])
         features.append({
             "type": "Feature",
             "geometry": {
@@ -302,9 +332,11 @@ def export_line_geojson(net, region, geom_lookup, bus_to_sub):
                 "coordinates": coords
             },
             "properties": {
-                "name": str(net.line.at[idx, "name"]),
+                "name": line_name,
                 "loading_pct": round(min(loading, 200), 1),
                 "p_mw": round(p_mw, 1),
+                # Inferred (not observed) bridges added by the reconnection step.
+                "synthetic": line_name.startswith("recon_line"),
             }
         })
 
@@ -366,12 +398,36 @@ def export_line_geojson(net, region, geom_lookup, bus_to_sub):
 
 
 def main():
+    ap = argparse.ArgumentParser(description="Export powerflow GeoJSON for the live map.")
+    ap.add_argument("--topology", choices=["legacy", "snapped"], default="legacy",
+                    help="Topology builder: 'legacy' (current nearest-substation) "
+                         "or 'snapped' (vertex-graph + tolerance snap; recovers real connectivity).")
+    ap.add_argument("--reconnect", action="store_true",
+                    help="Bridge residual isolated components with labelled synthetic "
+                         "lines (recon_line_*) before solving (recommended with --topology snapped).")
+    ap.add_argument("--regions", nargs="*", default=None,
+                    help="Subset of regions to process (default: all).")
+    ap.add_argument("--output-dir", default=None,
+                    help="Override output directory (default: docs/data/powerflow). "
+                         "Use a staging dir to A/B compare before replacing deployed data.")
+    args = ap.parse_args()
+
+    global OUTPUT_DIR
+    if args.output_dir:
+        OUTPUT_DIR = args.output_dir
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    regions = args.regions or REGIONS
+    print(f"Topology={args.topology} reconnect={args.reconnect} "
+          f"regions={len(regions)} output={OUTPUT_DIR}")
+
     demand_cfg = load_demand_config()
     summary = {}
 
-    for region in REGIONS:
+    for region in regions:
         print(f"  Processing {region}...", end=" ", flush=True)
-        result = build_and_solve(region, demand_cfg)
+        result = build_and_solve(region, demand_cfg,
+                                 topology=args.topology, reconnect=args.reconnect)
         if result is None:
             print("SKIP")
             continue
