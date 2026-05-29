@@ -27,6 +27,7 @@ Usage::
     print(result.summary)
 """
 
+import json
 import math
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -449,9 +450,9 @@ class Reconnector:
         """
         geodata: Dict[int, Tuple[float, float]] = {}
 
-        if not hasattr(net, "bus_geodata") or net.bus_geodata.empty:
-            return geodata
-
+        # NB: do NOT early-return on empty bus_geodata — modern pandapower
+        # stores coordinates in the net.bus["geo"] column instead, which
+        # _get_single_bus_geodata also reads.
         for bus_idx in bus_indices:
             geo = self._get_single_bus_geodata(net, bus_idx)
             if geo is not None:
@@ -473,22 +474,35 @@ class Reconnector:
         Returns:
             Tuple of (longitude, latitude) or None if unavailable.
         """
-        if not hasattr(net, "bus_geodata") or net.bus_geodata.empty:
-            return None
+        def _valid(x, y):
+            return (np.isfinite(x) and np.isfinite(y)
+                    and not (x == 0.0 and y == 0.0))
 
-        if bus_idx not in net.bus_geodata.index:
-            return None
+        # 1) Legacy bus_geodata table (older pandapower)
+        if (hasattr(net, "bus_geodata") and not net.bus_geodata.empty
+                and bus_idx in net.bus_geodata.index):
+            x = net.bus_geodata.at[bus_idx, "x"]
+            y = net.bus_geodata.at[bus_idx, "y"]
+            if _valid(x, y):
+                return (float(x), float(y))
 
-        x = net.bus_geodata.at[bus_idx, "x"]
-        y = net.bus_geodata.at[bus_idx, "y"]
+        # 2) Modern net.bus["geo"] column (GeoJSON-style {"coordinates":[lon,lat]})
+        if "geo" in net.bus.columns and bus_idx in net.bus.index:
+            raw = net.bus.at[bus_idx, "geo"]
+            coords = None
+            if isinstance(raw, str):
+                try:
+                    coords = json.loads(raw).get("coordinates")
+                except (json.JSONDecodeError, TypeError, AttributeError):
+                    coords = None
+            elif hasattr(raw, "__len__"):
+                coords = raw
+            if coords is not None and len(coords) >= 2:
+                x, y = float(coords[0]), float(coords[1])
+                if _valid(x, y):
+                    return (x, y)
 
-        # Validate coordinates
-        if not (np.isfinite(x) and np.isfinite(y)):
-            return None
-        if x == 0.0 and y == 0.0:
-            return None
-
-        return (float(x), float(y))
+        return None
 
     # ------------------------------------------------------------------
     # Internal: voltage and frequency resolution
