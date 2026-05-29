@@ -146,7 +146,8 @@ class _SubIndex:
 
 # ── core builder ─────────────────────────────────────────────────────────────
 
-def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False):
+def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False,
+                          min_voltage_kv=22.0):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -156,6 +157,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False):
             (4 ~= 11 m). Lines sharing a coordinate within this precision
             are treated as electrically connected.
         keep_stubs: keep degree-1 dangling junction buses if True.
+        min_voltage_kv: skip line features with a KNOWN voltage below this
+            (non-transmission distribution/industrial mistags, e.g. a 2 kV
+            OSM line). Lines with unknown voltage (0) are kept so legitimate
+            unlabelled transmission is not lost.
 
     Returns:
         GridNetwork with real substations + synthetic junction buses + branches
@@ -177,13 +182,20 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False):
             continue
         props = feat["properties"]
         sid = f"{region}_sub_{i}"
+        vkv = _parse_voltage_kv(props.get("voltage"))
+        # A spurious sub-transmission tag (e.g. 2 kV) on a substation that
+        # actually sits on a 66+ kV line creates a huge per-unit mismatch.
+        # Treat known-low voltages as unknown (0) so fix_zero_voltages infers
+        # the real level from the connected transmission lines.
+        if 0 < vkv < min_voltage_kv:
+            vkv = 0.0
         net.add_substation(Substation(
             id=sid,
             name=props.get("name") or f"{region}_sub_{i}",
             region=region,
             latitude=lat,
             longitude=lon,
-            voltage_kv=max(_parse_voltage_kv(props.get("voltage")), 0),
+            voltage_kv=max(vkv, 0),
         ))
         sub_coords.append((lat, lon, sid))
 
@@ -204,6 +216,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=False):
             if len(coords) < 2:
                 continue
             kv = max(_parse_voltage_kv(feat["properties"].get("voltage")), 0)
+            # Skip non-transmission mistags (known voltage below threshold);
+            # keep unknown (0) so unlabelled transmission survives.
+            if 0 < kv < min_voltage_kv:
+                continue
 
             # Map each vertex to a node id (sub if snappable, else junction).
             node_ids = []
