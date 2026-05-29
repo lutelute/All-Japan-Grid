@@ -392,6 +392,10 @@ function renderLayers() {
                         "Voltage: " + kv + "<br>" +
                         "Region: " + (p._region_ja || "")
                     );
+                    layer.bindTooltip(
+                        "送電線 " + (p._display_name || "Unnamed") + " | " + kv +
+                        (p._region_ja ? " | " + p._region_ja : ""),
+                        { sticky: true });
                 },
             }).addTo(map);
         } catch (e) { console.error("Lines render error:", e); }
@@ -436,6 +440,11 @@ function renderLayers() {
                                 "Region: " + (p._region_ja || "")
                             );
                         }
+                        var skv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
+                        layer.bindTooltip(
+                            "変電所 " + (p._display_name || "Unnamed") + " | " + skv +
+                            (p._region_ja ? " | " + p._region_ja : ""),
+                            { sticky: true });
                     } catch (e) { console.warn("Sub popup error:", e); }
                 },
             }).addTo(map);
@@ -479,6 +488,11 @@ function renderLayers() {
                                 "Region: " + (p._region_ja || "")
                             );
                         }
+                        layer.bindTooltip(
+                            "発電所 " + (p._display_name || "Unnamed") + " | " +
+                            (p.fuel_type || "unknown") +
+                            (p.capacity_mw ? " | " + p.capacity_mw + "MW" : ""),
+                            { sticky: true });
                     } catch (e) { console.warn("Plant popup error:", e); }
                 },
             }).addTo(map);
