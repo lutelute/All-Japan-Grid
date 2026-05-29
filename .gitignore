@@ -14,3 +14,34 @@ package-lock.json
 .worktrees/
 .security-key
 logs/security/
+
+# macOS
+.DS_Store
+
+# Pickled GridNetwork cache
+*.pkl
+data/cache/
+
+# Marginalia annotation tool working dir
+.marginalia/
+
+# Stray LaTeX logs at repo root
+/ieej.log
+/texput.log
+
+# LaTeX build artifacts (papers/)
+papers/*.aux
+papers/*.bbl
+papers/*.blg
+papers/*.dvi
+papers/*.fdb_latexmk
+papers/*.fls
+papers/*.lof
+papers/*.lot
+papers/*.out
+papers/*.toc
+papers/*.synctex.gz
+papers/*.log
+papers/*.pdf
+papers/*.zip
+papers/.DS_Store
