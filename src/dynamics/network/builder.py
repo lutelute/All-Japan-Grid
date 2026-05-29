@@ -1172,7 +1172,7 @@ def assign_generators(
     def _cap_thresh_km(cap_mw: float) -> float:
         if cap_mw >= 1000: return 80.0
         if cap_mw >= 500:  return 50.0
-        if cap_mw >= 300:  return 30.0
+        if cap_mw >= 300:  return 40.0   # widened: 30→40 km to capture plants with sparse OSM data
         if cap_mw >= 100:  return 20.0
         return match_threshold_km
 
@@ -1216,11 +1216,11 @@ def assign_generators(
         if use_tree:
             ang_thresh = thresh_km / 6371.0
 
-            # Priority 1: large nuclear/hydro (≥ 1000 MW) → prefer 500 kV within 2× radius.
-            # These plants always step up to 500 kV; OSM switchyard data is sparse so we
-            # extend the search radius to capture the nearest 500 kV bus.
+            # Priority 1: large plants (≥ 1000 MW) → prefer 500 kV within 2× radius.
+            # Japan's large thermal/nuclear/hydro plants step up to 500 kV.
+            # Extend radius to 2× to find the 500 kV switchyard even if OSM lacks it.
             matched = False
-            if cap >= 1000 and ehv_tree is not None and fuel in ("nuclear", "hydro", "pumped", "coal"):
+            if cap >= 1000 and ehv_tree is not None:
                 ang_ehv = (thresh_km * 2.0) / 6371.0
                 dh, ih = ehv_tree.query([math.radians(lat), math.radians(lon)], k=1)
                 if dh <= ang_ehv:
@@ -1230,8 +1230,8 @@ def assign_generators(
                         bus_best[bus_id] = (fuel, cap, name)
                     matched = True
 
-            # Priority 2: medium-large plants (≥ 500 MW) → prefer 275+ kV within 1.5× radius
-            if not matched and cap >= 500 and hv_tree is not None:
+            # Priority 2: medium plants (≥ 300 MW) → prefer 275+ kV within 1.5× radius
+            if not matched and cap >= 300 and hv_tree is not None:
                 ang_hv = (thresh_km * 1.5) / 6371.0
                 dh, ih = hv_tree.query([math.radians(lat), math.radians(lon)], k=1)
                 if dh <= ang_hv:

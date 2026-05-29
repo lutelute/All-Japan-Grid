@@ -425,21 +425,28 @@ def build_matpower_case(
     total_gen_mw = min(total_cap_mw, JAPAN_PEAK_MW) * load_factor
     pg_scale     = total_gen_mw / max(total_cap_mw * load_factor, 1.0)
 
-    # Load distribution: V_kv² weighting across all non-generator PQ buses.
-    # Including 500 kV PQ buses in the weighting distributes load more evenly and
-    # avoids overloading weak radial 154 kV buses at the network periphery.
-    # The large V_kv² weight on 500 kV buses acts as a virtual load at strongly
-    # coupled (X=0.006 pu) transformer nodes — physically they represent the
-    # equivalent downstream load seen from the 500 kV backbone.
-    LOAD_MIN_KV = 66 if any(v <= 66 for v in voltage_levels) else 77
+    # Load distribution: Japanese grid realistic pattern.
+    # 66/77 kV (distribution) carries ~85% of demand; sub-transmission ~12%;
+    # HV backbone ~3% (virtual downstream equivalent for NR convergence stability).
+    # Per-bus weights — the many 66 kV buses collectively dominate.
+    _LOAD_UNIT_BY_KV: Dict[int, float] = {
+        500: 0.5,    # small virtual load for reactive balance (NR convergence)
+        275: 0.5,
+        220: 0.5,
+        187: 0.5,
+        154: 1.0,    # sub-transmission, industrial load
+        110: 1.5,
+        77:  5.0,    # distribution feeder
+        66:  8.0,    # distribution feeder (main demand)
+    }
     all_weights: Dict[int, float] = {}
     for i in range(n_bus):
         if i in bus_gen:
-            continue   # gen buses have PD=0; PG handles their injection
-        kv = lcc.buses[i].base_kv
-        if kv < LOAD_MIN_KV:
             continue
-        all_weights[i] = kv ** 2
+        kv = lcc.buses[i].base_kv
+        kv_round = int(round(kv))
+        w = _LOAD_UNIT_BY_KV.get(kv_round, 1.0)
+        all_weights[i] = w
     if not all_weights:
         all_weights = {i: 1.0 for i in range(n_bus)}
     total_weight = sum(all_weights.values()) or 1.0
@@ -488,9 +495,17 @@ def build_matpower_case(
         BRANCH[k, BR_R]   = max(ln.R_pu, 1e-6)
         BRANCH[k, BR_X]   = max(ln.X_pu, 1e-6)
         BRANCH[k, BR_B]   = ln.B_pu
-        BRANCH[k, RATE_A] = ln.rating_mva
-        BRANCH[k, RATE_B] = ln.rating_mva
-        BRANCH[k, RATE_C] = ln.rating_mva
+        # デフォルト熱容量: 電圧クラス別の標準的な 1 回線定格 [MVA]
+        # (RATE_A=0 は loading_pct が計算不能になるため、電圧別の典型値を使用)
+        _DEFAULT_RATE: Dict[int, float] = {
+            500: 1500.0, 275: 800.0, 154: 400.0,
+            110: 250.0,   77: 200.0,  66: 150.0,
+        }
+        kv_round = int(round(ln.base_kv))
+        rate = ln.rating_mva if ln.rating_mva > 0 else _DEFAULT_RATE.get(kv_round, 100.0)
+        BRANCH[k, RATE_A] = rate
+        BRANCH[k, RATE_B] = rate
+        BRANCH[k, RATE_C] = rate
         BRANCH[k, TAP]    = 0.0   # 0 = line (no transformer tap)
 
     # ── 4b. Convergence diagnostics (always run, log risk factors) ──────────
