@@ -5,20 +5,39 @@ into MATPOWER-compatible numpy arrays that can be consumed by psdat-python or
 any MATPOWER-compatible power flow solver.
 
 Output arrays (MATPOWER column conventions):
-    BUS    (n_bus × 13)   — bus data
-    BRANCH (n_branch × 9) — branch data
-    GEN    (n_gen × 10)   — generator data
-    MD     (14 × n_gen)   — dynamic machine parameters
-    ED     (8 × n_gen)    — dynamic exciter parameters
-    TD     (3 × n_gen)    — dynamic turbine/governor parameters
+    BUS     (n_bus × 13)   — bus data
+    BRANCH  (n_branch × 9) — branch data
+    GEN     (n_gen × 10)   — generator data
+    GENCOST (n_gen × 7)    — generator cost data (MATPOWER polynomial model 2)
+    MD      (14 × n_gen)   — dynamic machine parameters
+    ED      (8 × n_gen)    — dynamic exciter parameters
+    TD      (3 × n_gen)    — dynamic turbine/governor parameters
 
-Usage::
+A valid ``gencost`` table is required for MATPOWER OPF (``runopf``). Without
+it the case can only be used for plain power flow (``runpf``). It is produced
+here from the fuel-type cost defaults in
+``data/reference/generator_defaults.yaml``.
 
-    from src.matpower.exporter import build_matpower_case
+The case can be built two ways:
 
-    case = build_matpower_case()   # default: [500,275,154,110,77,66] 2189-bus, lf=0.20
-    BUS, BRANCH, GEN = case['BUS'], case['BRANCH'], case['GEN']
-    baseMVA = case['baseMVA']
+1. From the legacy GeoJSON-derived dynamics network (default, ~2189 buses):
+
+       case = build_matpower_case()   # [500,275,154,110,77,66], lf=0.20
+       BUS, BRANCH, GEN = case['BUS'], case['BRANCH'], case['GEN']
+       baseMVA = case['baseMVA']
+
+2. From a prebuilt :class:`src.model.grid_network.GridNetwork` (e.g. the
+   improved "snapped" topology from ``examples/build_snapped_topology.py``):
+
+       from examples.build_snapped_topology import build_network_snapped
+       net = build_network_snapped("okinawa")
+       case = build_matpower_case(network=net)
+
+Saving to a MATPOWER ``.mat`` file (consumable by MATPOWER / pandapower)::
+
+    from src.matpower.exporter import build_matpower_case, save_case_to_matfile
+    case = build_matpower_case(network=net)
+    save_case_to_matfile(case, "output/matpower/okinawa.mat")
 """
 from __future__ import annotations
 
@@ -54,10 +73,51 @@ QMAX     = 3; QMIN = 4; VG = 5
 MBASE    = 6; GEN_STATUS = 7
 PMAX     = 8; PMIN = 9
 
+# GENCOST (MATPOWER polynomial model)
+#   col 0  MODEL   : 1 = piecewise linear, 2 = polynomial
+#   col 1  STARTUP : startup cost ($)
+#   col 2  SHUTDOWN: shutdown cost ($)
+#   col 3  NCOST   : number of coefficients (poly) / data points (pwl)
+#   col 4+ COST    : c_(n-1) ... c_0 for f(P) = c2*P^2 + c1*P + c0
+GC_MODEL    = 0; GC_STARTUP = 1; GC_SHUTDOWN = 2; GC_NCOST = 3
+GC_COST0    = 4
+PW_LINEAR   = 1
+POLYNOMIAL  = 2
+
 # BUS types
 PQ_BUS   = 1
 PV_BUS   = 2
 REF_BUS  = 3
+
+# ---------------------------------------------------------------------------
+# Marginal cost per MWh by fuel type [$/MWh], used to build the GENCOST table.
+#
+# Sourced from data/reference/generator_defaults.yaml (fuel_cost_per_mwh, in
+# JPY/MWh) divided by a nominal FX rate so OPF objective values are in $/h.
+# The relative merit order (nuclear < coal < LNG < oil; renewables ~0) is what
+# matters for dispatch; absolute magnitudes are a planning approximation.
+# Used only when generator_defaults.yaml cannot be read or a fuel is missing.
+# ---------------------------------------------------------------------------
+_JPY_PER_USD = 150.0
+
+_FALLBACK_COST_USD_PER_MWH: Dict[str, float] = {
+    "nuclear":      10.0,
+    "hydro":         5.0,
+    "pumped_hydro": 13.0,
+    "pumped":       13.0,
+    "geothermal":    5.0,
+    "coal":         30.0,
+    "biomass":      20.0,
+    "lng":          47.0,
+    "gas":          47.0,
+    "mixed":        33.0,
+    "oil":          60.0,
+    "solar":         0.0,
+    "wind":          0.0,
+    "storage":      13.0,
+    "thermal":      40.0,
+    "unknown":      33.0,
+}
 
 # ---------------------------------------------------------------------------
 # Default dynamic parameters by fuel type
@@ -96,6 +156,130 @@ def _fuel_key(fuel: str) -> str:
         if key in f:
             return key
     return "thermal"
+
+
+# ---------------------------------------------------------------------------
+# Fuel-cost / startup-cost table (cached after first load)
+# ---------------------------------------------------------------------------
+_FUEL_COST_CACHE: Optional[Dict[str, Dict[str, float]]] = None
+
+
+def _load_fuel_cost_table(data_dir: str = "data") -> Dict[str, Dict[str, float]]:
+    """Load per-fuel marginal/startup/shutdown costs.
+
+    Reads ``data/reference/generator_defaults.yaml`` (JPY units) and converts
+    to USD so OPF objective values are in $/h. Falls back to
+    ``_FALLBACK_COST_USD_PER_MWH`` if the file is missing or unreadable.
+
+    Returns a dict ``fuel -> {marginal, startup, shutdown}`` in USD where
+    ``startup``/``shutdown`` are *per-MW-of-capacity* costs (matching the YAML
+    ``startup_cost_per_mw`` convention); callers multiply by capacity.
+    """
+    global _FUEL_COST_CACHE
+    if _FUEL_COST_CACHE is not None:
+        return _FUEL_COST_CACHE
+
+    table: Dict[str, Dict[str, float]] = {}
+    yaml_path = os.path.join(data_dir, "reference", "generator_defaults.yaml")
+    try:
+        import yaml  # local import: optional dependency for this path
+        with open(yaml_path, encoding="utf-8") as fh:
+            raw = yaml.safe_load(fh) or {}
+        for fuel, params in (raw.get("fuel_types") or {}).items():
+            if not isinstance(params, dict):
+                continue
+            table[fuel.lower()] = {
+                "marginal": float(params.get("fuel_cost_per_mwh", 0.0)) / _JPY_PER_USD,
+                "startup":  float(params.get("startup_cost_per_mw", 0.0)) / _JPY_PER_USD,
+                "shutdown": float(params.get("shutdown_cost_per_mw", 0.0)) / _JPY_PER_USD,
+            }
+    except (FileNotFoundError, ImportError, ValueError, TypeError):
+        table = {}
+
+    # Ensure every fallback fuel has an entry (startup/shutdown 0 if unknown).
+    for fuel, cost in _FALLBACK_COST_USD_PER_MWH.items():
+        table.setdefault(fuel, {"marginal": cost, "startup": 0.0, "shutdown": 0.0})
+
+    _FUEL_COST_CACHE = table
+    return table
+
+
+def _gencost_fuel_key(fuel: str) -> str:
+    """Map a raw fuel string to a cost-table key (more granular than _fuel_key).
+
+    Distinguishes coal / lng / oil / nuclear / hydro / solar / wind / biomass
+    so the OPF merit order is meaningful, rather than collapsing everything to
+    'thermal' as the dynamics-parameter mapping does.
+    """
+    f = (fuel or "").lower()
+    # Direct / substring matches against known cost keys (most specific first).
+    ordered = [
+        "nuclear", "pumped_hydro", "pumped", "geothermal", "biomass",
+        "hydro", "coal", "lng", "oil", "solar", "wind", "storage", "mixed",
+    ]
+    for key in ordered:
+        if key in f:
+            return key
+    if "gas" in f or "gtcc" in f:
+        return "lng"
+    if "thermal" in f:
+        return "coal"
+    return "unknown"
+
+
+def build_gencost(
+    GEN: np.ndarray,
+    gen_fuel: List[str],
+    gen_caps_mw: Optional[List[float]] = None,
+    data_dir: str = "data",
+) -> np.ndarray:
+    """Build a MATPOWER GENCOST table (one row per generator).
+
+    Uses the polynomial cost model (MODEL=2, NCOST=3 → quadratic
+    ``c2*P^2 + c1*P + c0``). The dominant term is the linear marginal fuel
+    cost ``c1`` [$/MWh] derived per fuel type; a small convex quadratic term
+    ``c2`` is added so the OPF objective is strictly convex (avoids degenerate
+    multiple optima), and ``c0`` is left at 0.
+
+    Parameters
+    ----------
+    GEN : ndarray (n_gen × ≥10)
+        The MATPOWER generator table (used only for the row count / ordering).
+    gen_fuel : list of str
+        Fuel type per generator, same order as ``GEN`` rows.
+    gen_caps_mw : list of float, optional
+        Rated capacity [MW] per generator, same order. Used to scale the
+        per-MW startup/shutdown costs. If omitted, uses GEN[:, PMAX].
+    data_dir : str
+        Directory containing ``reference/generator_defaults.yaml``.
+
+    Returns
+    -------
+    ndarray (n_gen × 7)
+        Columns: [MODEL, STARTUP, SHUTDOWN, NCOST, c2, c1, c0].
+    """
+    n_gen = GEN.shape[0]
+    costs = _load_fuel_cost_table(data_dir)
+    if gen_caps_mw is None:
+        gen_caps_mw = [float(GEN[g, PMAX]) for g in range(n_gen)]
+
+    # Small quadratic curvature so OPF is strictly convex. Chosen so the
+    # quadratic adds <~10% to marginal cost at full output of a typical unit.
+    C2 = 0.001  # $/MWh^2
+
+    GENCOST = np.zeros((n_gen, 7))
+    for g in range(n_gen):
+        key = _gencost_fuel_key(gen_fuel[g] if g < len(gen_fuel) else "unknown")
+        entry = costs.get(key, costs.get("unknown", {"marginal": 33.0, "startup": 0.0, "shutdown": 0.0}))
+        cap = max(float(gen_caps_mw[g]) if g < len(gen_caps_mw) else 0.0, 0.0)
+        GENCOST[g, GC_MODEL]    = POLYNOMIAL
+        GENCOST[g, GC_STARTUP]  = entry["startup"] * cap
+        GENCOST[g, GC_SHUTDOWN] = entry["shutdown"] * cap
+        GENCOST[g, GC_NCOST]    = 3
+        GENCOST[g, GC_COST0 + 0] = C2                 # c2
+        GENCOST[g, GC_COST0 + 1] = entry["marginal"]  # c1 [$/MWh]
+        GENCOST[g, GC_COST0 + 2] = 0.0                # c0
+    return GENCOST
 
 
 def diagnose_powerflow_risks(
@@ -339,6 +523,7 @@ def build_matpower_case(
     isolate_regions: Optional[List[str]] = ("hokkaido",),
     target_regions: Optional[List[str]] = None,
     drop_cross_region_links: Optional[List[Tuple[str, str]]] = None,
+    network: Optional["object"] = None,
     # Note on the default: empirically, dropping kansai↔shikoku breaks NR
     # convergence (OSM conflates the 1400 MW Kii Channel HVDC with real AC
     # connections through Shikoku that supply Awaji/Tokushima). Dropping
@@ -363,20 +548,40 @@ def build_matpower_case(
         Generator output as fraction of capacity (used for PG initial guess).
     qg_ratio : float
         QG / PG ratio for initial reactive power dispatch.
+    network : src.model.grid_network.GridNetwork, optional
+        A prebuilt model GridNetwork (substations / transmission_lines /
+        generators), e.g. the output of
+        ``examples.build_snapped_topology.build_network_snapped(region)``.
+        When provided, the case is built directly from this topology and the
+        GeoJSON-loading / region-isolation parameters above are ignored.
 
     Returns
     -------
     dict with keys:
-        'BUS'    — ndarray (n_bus, 13)
-        'BRANCH' — ndarray (n_branch, 9)
-        'GEN'    — ndarray (n_gen, 10)
-        'MD'     — ndarray (14, n_gen)  machine dynamic data
-        'ED'     — ndarray (8, n_gen)   exciter dynamic data
-        'TD'     — ndarray (3, n_gen)   turbine dynamic data
+        'BUS'     — ndarray (n_bus, 13)
+        'BRANCH'  — ndarray (n_branch, 9)
+        'GEN'     — ndarray (n_gen, 10)
+        'GENCOST' — ndarray (n_gen, 7)   MATPOWER cost table (OPF-ready)
+        'gencost' — alias of 'GENCOST' (lowercase MATPOWER field name)
+        'MD'      — ndarray (14, n_gen)  machine dynamic data
+        'ED'      — ndarray (8, n_gen)   exciter dynamic data
+        'TD'      — ndarray (3, n_gen)   turbine dynamic data
         'baseMVA' — float
         'gen_fuel' — list of str, fuel type per generator
         'bus_names' — list of str
     """
+    if network is not None:
+        return _build_case_from_model_network(
+            network,
+            baseMVA=baseMVA,
+            load_factor=load_factor,
+            qg_ratio=qg_ratio,
+            shunt_compensation=shunt_compensation,
+            compensation_alpha=compensation_alpha,
+            compensation_v_threshold=compensation_v_threshold,
+            data_dir=data_dir,
+        )
+
     if voltage_levels is None:
         voltage_levels = [500, 275, 154, 110, 77, 66]
 
@@ -624,10 +829,16 @@ def build_matpower_case(
 
     bus_names = [b.name for b in lcc.buses]
 
+    # ── 9. GENCOST (n_gen × 7) — required for OPF ─────────────────────────
+    gen_caps = [bus_gen[gen_bus_list[g]][1] for g in range(n_gen)]
+    GENCOST = build_gencost(GEN, gen_fuel, gen_caps_mw=gen_caps, data_dir=data_dir)
+
     return {
         "BUS":       BUS,
         "BRANCH":    BRANCH,
         "GEN":       GEN,
+        "GENCOST":   GENCOST,
+        "gencost":   GENCOST,
         "MD":        MD,
         "ED":        ED,
         "TD":        TD,
@@ -641,3 +852,386 @@ def build_matpower_case(
         "compensation": comp_info,
         "diagnostics": diag,
     }
+
+
+# ---------------------------------------------------------------------------
+# Model-GridNetwork → MATPOWER case (snapped topology path)
+# ---------------------------------------------------------------------------
+# Series-impedance reference (Ω/km, μS/km) per voltage class, used to convert
+# a model GridNetwork (which carries geometry/length but not pu params) into
+# MATPOWER pu values. Mirrors src/dynamics/network/builder.LINE_PARAMS_OHM_KM
+# so the two paths agree electrically.
+_LINE_OHM_KM: Dict[int, Dict[str, float]] = {
+    500: {"r": 0.02, "x": 0.30, "b_us": 2.7},
+    275: {"r": 0.06, "x": 0.35, "b_us": 2.3},
+    220: {"r": 0.07, "x": 0.37, "b_us": 2.1},
+    187: {"r": 0.08, "x": 0.38, "b_us": 2.0},
+    154: {"r": 0.10, "x": 0.40, "b_us": 1.8},
+    132: {"r": 0.11, "x": 0.41, "b_us": 1.6},
+    110: {"r": 0.12, "x": 0.42, "b_us": 1.5},
+    77:  {"r": 0.18, "x": 0.45, "b_us": 1.2},
+    66:  {"r": 0.20, "x": 0.45, "b_us": 1.0},
+}
+
+_DEFAULT_RATE_MVA: Dict[int, float] = {
+    500: 1500.0, 275: 800.0, 220: 600.0, 187: 500.0, 154: 400.0,
+    132: 300.0, 110: 250.0, 77: 200.0, 66: 150.0,
+}
+
+
+def _nearest_kv_class(kv: float) -> int:
+    """Snap an arbitrary kV to the nearest known voltage class key."""
+    if kv <= 0:
+        return 154  # neutral mid-range default for unknown-voltage lines
+    return min(_LINE_OHM_KM.keys(), key=lambda k: abs(k - kv))
+
+
+def _model_line_pu(volt_kv: float, length_km: float, baseMVA: float):
+    """Compute (R_pu, X_pu, B_pu, rating_mva) for a model line.
+
+    Uses the same z_base = V^2 / S_base convention as the dynamics builder.
+    """
+    cls = _nearest_kv_class(volt_kv)
+    p = _LINE_OHM_KM[cls]
+    v_used = volt_kv if volt_kv > 0 else float(cls)
+    length_km = max(length_km, 0.1)
+    z_base = (v_used ** 2) / baseMVA
+    R_pu = p["r"] * length_km / z_base
+    X_pu = p["x"] * length_km / z_base
+    # B_pu = b[S/km] * L / Y_base = b_us*1e-6 * L * z_base
+    B_pu = p["b_us"] * 1e-6 * length_km * z_base
+    rating = _DEFAULT_RATE_MVA[cls]
+    return R_pu, X_pu, B_pu, rating
+
+
+def _build_case_from_model_network(
+    network: "object",
+    baseMVA: float = 100.0,
+    load_factor: float = 0.20,
+    qg_ratio: float = 0.30,
+    shunt_compensation: Optional[str] = None,
+    compensation_alpha: float = 0.9,
+    compensation_v_threshold: float = 0.05,
+    data_dir: str = "data",
+) -> Dict:
+    """Build a MATPOWER case from a model GridNetwork (snapped topology).
+
+    The model GridNetwork (``src.model.grid_network.GridNetwork``) provides
+    substations (buses), transmission_lines (branches with geometry/length but
+    no pu params), and generators. This restricts to the largest connected
+    component, derives pu line parameters from voltage class + length, places
+    load weighted by kV^2, assigns one PV/REF generator per bus, and produces
+    a full BUS/BRANCH/GEN/GENCOST case (OPF-ready).
+    """
+    from collections import Counter as _Counter
+
+    subs = list(network.substations)
+    lines = list(network.transmission_lines)
+
+    # ── Restrict to the largest connected component (well-posed AC NR) ────
+    sid_to_idx = {s.id: i for i, s in enumerate(subs)}
+    adj: Dict[int, set] = {i: set() for i in range(len(subs))}
+    edge_idx: List[Tuple[int, int, "object"]] = []
+    for ln in lines:
+        fi = sid_to_idx.get(ln.from_substation_id)
+        ti = sid_to_idx.get(ln.to_substation_id)
+        if fi is None or ti is None or fi == ti:
+            continue
+        adj[fi].add(ti)
+        adj[ti].add(fi)
+        edge_idx.append((fi, ti, ln))
+
+    # BFS components
+    seen = [False] * len(subs)
+    best_comp: List[int] = []
+    for start in range(len(subs)):
+        if seen[start]:
+            continue
+        stack = [start]
+        seen[start] = True
+        comp = []
+        while stack:
+            u = stack.pop()
+            comp.append(u)
+            for v in adj[u]:
+                if not seen[v]:
+                    seen[v] = True
+                    stack.append(v)
+        if len(comp) > len(best_comp):
+            best_comp = comp
+
+    keep = set(best_comp)
+    old2new = {old: new for new, old in enumerate(sorted(keep))}
+    kept_subs = [subs[old] for old in sorted(keep)]
+    n_bus = len(kept_subs)
+    if n_bus == 0:
+        raise ValueError(
+            f"Model network '{getattr(network, 'region', '?')}' has no "
+            "connected buses to export"
+        )
+
+    # ── Branches within the kept component ────────────────────────────────
+    kept_edges = [
+        (old2new[fi], old2new[ti], ln)
+        for (fi, ti, ln) in edge_idx
+        if fi in keep and ti in keep
+    ]
+
+    # ── Generators → bus (aggregate largest capacity per bus) ─────────────
+    bus_gen: Dict[int, Tuple[str, float, str]] = {}
+    for gen in network.generators:
+        bi = sid_to_idx.get(gen.connected_bus_id)
+        if bi is None or bi not in keep:
+            continue
+        ni = old2new[bi]
+        cap = float(gen.capacity_mw)
+        fuel = str(gen.fuel_type)
+        if ni not in bus_gen or cap > bus_gen[ni][1]:
+            bus_gen[ni] = (fuel, cap, gen.name)
+
+    gen_bus_list = sorted(bus_gen.keys())
+    n_gen = len(gen_bus_list)
+
+    # Bus degree (for slack selection + diagnostics)
+    deg: Dict[int, int] = _Counter()
+    for fi, ti, _ in kept_edges:
+        deg[fi] += 1
+        deg[ti] += 1
+
+    # ── Slack: best-connected, highest-capacity generator bus ─────────────
+    if n_gen > 0:
+        def _slack_score(b: int) -> tuple:
+            d = deg.get(b, 0)
+            tier = 2 if d >= 3 else (1 if d == 2 else 0)
+            return (tier, bus_gen[b][1])
+        slack_bus_idx = max(bus_gen.keys(), key=_slack_score)
+    else:
+        # No generators: pick the most-connected bus as a synthetic slack.
+        slack_bus_idx = max(range(n_bus), key=lambda b: deg.get(b, 0))
+
+    # ── Total generation target → matched load ────────────────────────────
+    JAPAN_PEAK_MW = 170_000.0
+    total_cap_mw = sum(bus_gen[b][1] for b in gen_bus_list) if n_gen else 0.0
+    if total_cap_mw > 0:
+        total_gen_mw = min(total_cap_mw, JAPAN_PEAK_MW) * load_factor
+    else:
+        # No generators: size a nominal load off bus count so the NR is posed.
+        total_gen_mw = max(n_bus * 5.0, 50.0)
+
+    # ── Load distribution weighted by kV^2 (HV-heavy keeps Jacobian sane) ──
+    all_weights: Dict[int, float] = {}
+    for i in range(n_bus):
+        if i in bus_gen:
+            continue
+        kv = max(kept_subs[i].voltage_kv, 1.0)
+        all_weights[i] = kv ** 2
+    if not all_weights:
+        all_weights = {i: 1.0 for i in range(n_bus)}
+    total_weight = sum(all_weights.values()) or 1.0
+    load_scale = total_gen_mw / total_weight
+
+    # ── BUS array ─────────────────────────────────────────────────────────
+    BUS = np.zeros((n_bus, 13))
+    for i, sub in enumerate(kept_subs):
+        bus_kv = sub.voltage_kv if sub.voltage_kv > 0 else 154.0
+        if i == slack_bus_idx:
+            btype = REF_BUS
+        elif i in bus_gen and bus_kv >= 77.0:
+            btype = PV_BUS
+        else:
+            btype = PQ_BUS
+        pd_mw = all_weights.get(i, 0.0) * load_scale
+        BUS[i, BUS_I]    = i + 1
+        BUS[i, BUS_TYPE] = btype
+        BUS[i, PD]       = pd_mw
+        BUS[i, QD]       = pd_mw * qg_ratio
+        BUS[i, GS]       = 0.0
+        BUS[i, BS]       = 0.0
+        BUS[i, BUS_AREA] = 1
+        BUS[i, VM]       = 1.0
+        BUS[i, VA]       = 0.0
+        BUS[i, BASE_KV]  = bus_kv
+        BUS[i, ZONE]     = 1
+        BUS[i, VMAX]     = 1.05
+        BUS[i, VMIN]     = 0.95
+
+    # ── BRANCH array ──────────────────────────────────────────────────────
+    n_br = len(kept_edges)
+    BRANCH = np.zeros((n_br, 9))
+    for k, (fi, ti, ln) in enumerate(kept_edges):
+        kv = ln.voltage_kv if ln.voltage_kv > 0 else max(
+            kept_subs[fi].voltage_kv, kept_subs[ti].voltage_kv, 0.0)
+        R_pu, X_pu, B_pu, rating = _model_line_pu(kv, ln.length_km, baseMVA)
+        BRANCH[k, F_BUS]  = fi + 1
+        BRANCH[k, T_BUS]  = ti + 1
+        BRANCH[k, BR_R]   = max(R_pu, 1e-6)
+        BRANCH[k, BR_X]   = max(X_pu, 1e-6)
+        BRANCH[k, BR_B]   = B_pu
+        BRANCH[k, RATE_A] = rating
+        BRANCH[k, RATE_B] = rating
+        BRANCH[k, RATE_C] = rating
+        BRANCH[k, TAP]    = 0.0
+
+    # ── Diagnostics + optional shunt compensation ─────────────────────────
+    diag = diagnose_powerflow_risks(BUS, BRANCH, baseMVA)
+    for warn in diag["summary"]:
+        print(f"  {warn}")
+
+    comp_info = None
+    if shunt_compensation is not None:
+        BUS, comp_info = _add_shunt_compensation(
+            BUS, BRANCH, baseMVA,
+            method=shunt_compensation,
+            alpha=compensation_alpha,
+            v_threshold=compensation_v_threshold,
+        )
+
+    # ── GEN array ─────────────────────────────────────────────────────────
+    GEN = np.zeros((n_gen, 10))
+    gen_fuel: List[str] = []
+    gen_caps: List[float] = []
+    for g, bi in enumerate(gen_bus_list):
+        fuel, cap_mw, _ = bus_gen[bi]
+        pg = cap_mw * load_factor
+        GEN[g, GEN_BUS]    = bi + 1
+        GEN[g, PG]         = pg
+        GEN[g, QG]         = pg * qg_ratio
+        GEN[g, QMAX]       = cap_mw * 0.50
+        GEN[g, QMIN]       = -cap_mw * 0.25
+        GEN[g, VG]         = 1.0
+        GEN[g, MBASE]      = baseMVA
+        GEN[g, GEN_STATUS] = 1
+        GEN[g, PMAX]       = cap_mw
+        GEN[g, PMIN]       = 0.0
+        gen_fuel.append(fuel)
+        gen_caps.append(cap_mw)
+
+    # ── Dynamic data (kept for downstream compatibility) ──────────────────
+    MD = np.zeros((14, n_gen))
+    for g, fuel in enumerate(gen_fuel):
+        params = list(_MD_DEFAULTS.get(_fuel_key(fuel), _MD_THERMAL))
+        params[0] = params[0] * max(gen_caps[g], baseMVA) / baseMVA
+        MD[:, g] = params
+    ED = np.tile(np.array(_ED_DEFAULT, dtype=float), (n_gen, 1)).T
+    TD = np.tile(np.array(_TD_DEFAULT, dtype=float), (n_gen, 1)).T
+
+    # ── GENCOST (OPF-ready) ───────────────────────────────────────────────
+    GENCOST = build_gencost(GEN, gen_fuel, gen_caps_mw=gen_caps, data_dir=data_dir)
+
+    bus_names = [s.name for s in kept_subs]
+
+    return {
+        "BUS":       BUS,
+        "BRANCH":    BRANCH,
+        "GEN":       GEN,
+        "GENCOST":   GENCOST,
+        "gencost":   GENCOST,
+        "MD":        MD,
+        "ED":        ED,
+        "TD":        TD,
+        "baseMVA":   baseMVA,
+        "gen_fuel":  gen_fuel,
+        "bus_names": bus_names,
+        "n_gen":     n_gen,
+        "n_bus":     n_bus,
+        "slack_bus": slack_bus_idx + 1,  # 1-indexed
+        "gen_buses_1idx": [b + 1 for b in gen_bus_list],
+        "compensation": comp_info,
+        "diagnostics": diag,
+        "region":    getattr(network, "region", ""),
+    }
+
+
+# ---------------------------------------------------------------------------
+# MATPOWER .mat writer
+# ---------------------------------------------------------------------------
+
+def _pad_branch_matpower(BRANCH: np.ndarray) -> np.ndarray:
+    """Pad a compact 9-column branch array to the full 13-column MATPOWER format.
+
+    Full columns: [F_BUS, T_BUS, R, X, B, RATE_A, RATE_B, RATE_C, TAP, SHIFT,
+    BR_STATUS, ANGMIN, ANGMAX]. The compact build arrays stop at TAP (col 9);
+    MATPOWER / pandapower read SHIFT (9), BR_STATUS (10), ANGMIN/ANGMAX (11/12).
+    """
+    n, ncol = BRANCH.shape
+    if ncol >= 13:
+        return BRANCH
+    out = np.zeros((n, 13))
+    out[:, :ncol] = BRANCH
+    # SHIFT=0 (already), BR_STATUS=1 (in service), ANGMIN/ANGMAX = ±360 deg.
+    out[:, 10] = 1.0
+    out[:, 11] = -360.0
+    out[:, 12] = 360.0
+    return out
+
+
+def _pad_gen_matpower(GEN: np.ndarray) -> np.ndarray:
+    """Pad a compact 10-column gen array to the full 21-column MATPOWER format.
+
+    Full columns: [GEN_BUS, PG, QG, QMAX, QMIN, VG, MBASE, GEN_STATUS, PMAX,
+    PMIN, PC1, PC2, QC1MIN, QC1MAX, QC2MIN, QC2MAX, RAMP_AGC, RAMP_10,
+    RAMP_30, RAMP_Q, APF]. Columns past PMIN (10..20) are capability-curve /
+    ramp fields left at 0, which MATPOWER treats as unconstrained.
+    """
+    n, ncol = GEN.shape
+    if ncol >= 21:
+        return GEN
+    out = np.zeros((n, 21))
+    out[:, :ncol] = GEN
+    return out
+
+
+def save_case_to_matfile(case: Dict, path: str, version: str = "2") -> str:
+    """Save a case dict (from :func:`build_matpower_case`) as a MATPOWER .mat.
+
+    Wraps the arrays into an ``mpc`` struct with the standard MATPOWER fields
+    (``version``, ``baseMVA``, ``bus``, ``branch``, ``gen``, ``gencost``) so
+    the file can be loaded by MATPOWER (``loadcase``) or by pandapower's
+    ``from_mpc()``. Indices are already 1-based in the case arrays.
+
+    Parameters
+    ----------
+    case : dict
+        The case dict with keys 'BUS', 'BRANCH', 'GEN', 'GENCOST', 'baseMVA'.
+    path : str
+        Output .mat path (parent directories are created if needed).
+    version : str
+        MATPOWER case-format version string (default '2').
+
+    Returns
+    -------
+    str
+        The path written.
+    """
+    from scipy.io import savemat
+
+    BUS = np.asarray(case["BUS"], dtype=float)
+    BRANCH = np.asarray(case["BRANCH"], dtype=float)
+    GEN = np.asarray(case["GEN"], dtype=float)
+    GENCOST = case.get("GENCOST", case.get("gencost"))
+    if GENCOST is None:
+        GENCOST = build_gencost(GEN, case.get("gen_fuel", []))
+    GENCOST = np.asarray(GENCOST, dtype=float)
+
+    # Pad to the full MATPOWER column widths so the .mat is standards-
+    # compliant and loadable by MATPOWER (loadcase) / pandapower (from_mpc),
+    # both of which index columns the compact build arrays omit.
+    BRANCH = _pad_branch_matpower(BRANCH)
+    GEN = _pad_gen_matpower(GEN)
+
+    mpc = {
+        "version": version,
+        "baseMVA": float(case.get("baseMVA", 100.0)),
+        "bus": BUS,
+        "branch": BRANCH,
+        "gen": GEN,
+        "gencost": GENCOST,
+    }
+
+    parent = os.path.dirname(os.path.abspath(path))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    # Wrap in an 'mpc' struct (MATPOWER convention). do_compression keeps
+    # large national cases small.
+    savemat(path, {"mpc": mpc}, do_compression=True)
+    return path
