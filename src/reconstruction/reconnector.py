@@ -337,16 +337,18 @@ class Reconnector:
             if best_bus is not None and best_dist <= max_distance_km:
                 return best_bus, best_dist
 
-            # If beyond max distance, try voltage-matched bus within limit
-            if best_bus is not None and best_dist > max_distance_km:
+            # Geodata is available but nothing sits within max_distance_km.
+            # Try a voltage-matched bus still within the limit; otherwise this
+            # is a genuinely separate grid (e.g. a remote island such as
+            # Miyako/Ishigaki) — do NOT fabricate a long synthetic bridge.
+            if best_bus is not None:
                 voltage_matched = self._find_voltage_matched_bus(
                     net, main_geodata, iso_geo, voltage_kv,
                     max_distance_km,
                 )
-                if voltage_matched is not None:
-                    return voltage_matched
+                return voltage_matched if voltage_matched is not None else (None, float("inf"))
 
-        # Strategy 2: Fallback — voltage-matched or first available
+        # Strategy 2: Fallback only when no geodata is available at all
         return self._find_fallback_main_bus(
             net, main_buses, voltage_kv,
         )

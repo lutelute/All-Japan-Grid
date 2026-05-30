@@ -478,8 +478,15 @@ def select_slack_bus(net):
     return best_bus
 
 
-def fix_topology(net):
-    """Fix isolated components and return diagnostics."""
+def fix_topology(net, multi_slack=False):
+    """Fix isolated components and return diagnostics.
+
+    multi_slack=True: instead of disabling every non-largest component, give
+    each viable component (>=2 buses) its own slack so it is solved in place.
+    This keeps genuinely separate grids (islands, real gaps) visible and
+    solved WITHOUT fabricating cross-water synthetic lines, and without
+    dropping their real OSM lines. Single-bus stragglers are still disabled.
+    """
     mg = top.create_nxgraph(net, respect_switches=False)
     components = list(nx.connected_components(mg))
     diag = {
@@ -487,6 +494,39 @@ def fix_topology(net):
         "n_isolated_buses": 0,
         "n_active_buses": int(net.bus["in_service"].sum()),
     }
+
+    if multi_slack and len(components) > 1:
+        def _has_inservice_slack(comp):
+            if net.ext_grid.empty:
+                return False
+            for i in net.ext_grid.index:
+                if net.ext_grid.at[i, "in_service"] and net.ext_grid.at[i, "bus"] in comp:
+                    return True
+            return False
+
+        n_iso = 0
+        for comp in components:
+            if len(comp) < 2:
+                # lone bus with no line: disable (nothing to solve)
+                for b in comp:
+                    if b in net.bus.index:
+                        net.bus.at[b, "in_service"] = False
+                        n_iso += 1
+                continue
+            if _has_inservice_slack(comp):
+                continue
+            # prefer a bus carrying the largest generator, else any bus
+            slack_bus = None
+            if not net.gen.empty:
+                gens = net.gen[net.gen["bus"].isin(comp)]
+                if not gens.empty:
+                    slack_bus = int(gens.sort_values("max_p_mw", ascending=False).iloc[0]["bus"])
+            if slack_bus is None:
+                slack_bus = int(next(iter(comp)))
+            pp.create_ext_grid(net, bus=slack_bus, vm_pu=1.0, name="comp_slack")
+        diag["n_isolated_buses"] = n_iso
+        diag["n_active_buses"] = int(net.bus["in_service"].sum())
+        return diag
 
     if len(components) > 1:
         largest = max(components, key=len)

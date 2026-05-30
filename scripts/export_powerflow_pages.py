@@ -98,7 +98,26 @@ def _load_osm_line_geometries(region):
     return geom_lookup
 
 
-def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
+def add_reactive_compensation(net, factor=0.6):
+    """Add capacitive shunts at load buses to counter undervoltage.
+
+    factor = fraction of each load bus's reactive demand supplied locally by a
+    shunt capacitor (q_mvar < 0 injects Q). Models the reactive compensation
+    (capacitor banks / SVC) that real grids deploy but OSM omits, so solved
+    voltages are not artificially depressed.
+    """
+    if factor <= 0 or len(net.load) == 0:
+        return 0
+    by_bus = net.load[net.load["in_service"]].groupby("bus")["q_mvar"].sum()
+    n = 0
+    for bus, q in by_bus.items():
+        if q > 0:
+            pp.create_shunt(net, bus=int(bus), q_mvar=-factor * float(q), p_mw=0.0)
+            n += 1
+    return n
+
+
+def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info).
 
     Args:
@@ -130,10 +149,14 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
     n_synthetic = 0
     if reconnect:
         iso = Isolator().detect(net)
-        rec = Reconnector().reconnect(net, iso, ReconstructionConfig(mode="reconnect"))
+        # Only bridge tiny same-landmass gaps (OSM digitisation breaks). Larger
+        # separations (sea straits, real gaps) are NOT fabricated; they stay as
+        # separate components solved in place via multi_slack below.
+        rec = Reconnector().reconnect(net, iso, ReconstructionConfig(
+            mode="reconnect", max_reconnection_distance_km=5.0))
         n_synthetic = rec.lines_created
 
-    diag = fix_topology(net)
+    diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
 
     total_load = estimate_loads(net, region=region, demand_config=demand_cfg)
@@ -145,6 +168,7 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
 
     balance_power(net, demand_cfg)
     scale_line_ratings(net)
+    n_shunt = add_reactive_compensation(net, factor=reactive)
     net.bus["vm_pu"] = 1.0
     if len(net.gen) > 0:
         net.gen["vm_pu"] = 1.0
@@ -162,7 +186,7 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
         net_ac = copy.deepcopy(net)
         n_pruned = prune_dc_infeasible(net_ac, angle_threshold=threshold)
         if n_pruned > 0:
-            fix_topology(net_ac)
+            fix_topology(net_ac, multi_slack=True)
             select_slack_bus(net_ac)
             scale_line_ratings(net_ac)
         ac_result = run_powerflow(net_ac, "ac")
@@ -177,6 +201,7 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False):
         "n_active_buses": diag["n_active_buses"],
         "n_components": diag["n_components"],
         "n_synthetic_lines": n_synthetic,
+        "n_shunt_comp": n_shunt,
         "topology": topology,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
@@ -416,6 +441,8 @@ def main():
     ap.add_argument("--topology", choices=["legacy", "snapped"], default="legacy",
                     help="Topology builder: 'legacy' (current nearest-substation) "
                          "or 'snapped' (vertex-graph + tolerance snap; recovers real connectivity).")
+    ap.add_argument("--reactive", type=float, default=0.6,
+                    help="Reactive (capacitive shunt) compensation factor, 0=off.")
     ap.add_argument("--reconnect", action="store_true",
                     help="Bridge residual isolated components with labelled synthetic "
                          "lines (recon_line_*) before solving (recommended with --topology snapped).")
@@ -441,7 +468,8 @@ def main():
     for region in regions:
         print(f"  Processing {region}...", end=" ", flush=True)
         result = build_and_solve(region, demand_cfg,
-                                 topology=args.topology, reconnect=args.reconnect)
+                                 topology=args.topology, reconnect=args.reconnect,
+                                 reactive=args.reactive)
         if result is None:
             print("SKIP")
             continue
