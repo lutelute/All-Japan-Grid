@@ -62,8 +62,12 @@ def solve_island(island_id, isl, demand_cfg, reactive):
     fix_zero_voltages(net)
     insert_transformers(net)
     iso = Isolator().detect(net)
-    rec = Reconnector().reconnect(net, iso, ReconstructionConfig(mode="reconnect"))
-    diag = fix_topology(net)
+    # Only bridge tiny same-landmass gaps; tie-lines already connect regions.
+    rec = Reconnector().reconnect(net, iso, ReconstructionConfig(
+        mode="reconnect", max_reconnection_distance_km=5.0))
+    # multi_slack: keep every component (incl. far parts of a region) solved in
+    # place — avoids the previous bug where distant Tohoku buses were disabled.
+    diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
     # per-region demand allocation via bus 'zone'
     estimate_loads(net, region="national", demand_config=demand_cfg)
@@ -86,7 +90,7 @@ def solve_island(island_id, isl, demand_cfg, reactive):
     for thr in (45.0, 30.0, 20.0):
         net_ac = copy.deepcopy(net)
         if prune_dc_infeasible(net_ac, angle_threshold=thr) > 0:
-            fix_topology(net_ac); select_slack_bus(net_ac); scale_line_ratings(net_ac)
+            fix_topology(net_ac, multi_slack=True); select_slack_bus(net_ac); scale_line_ratings(net_ac)
         ac = run_powerflow(net_ac, "ac")
         if ac["converged"]:
             break
