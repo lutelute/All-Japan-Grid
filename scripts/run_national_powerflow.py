@@ -166,7 +166,17 @@ def main():
     cfg = load_demand_config()
     islands, async_links = build_island_networks()
     targets = args.islands or list(islands.keys())
+    # Merge into any existing summary so running islands in separate invocations
+    # (e.g. the heavy west island on its own) accumulates rather than clobbering
+    # the regions written by earlier runs.
     summary = {}
+    summary_path = f"{args.output_dir}/summary.json"
+    if os.path.exists(summary_path):
+        try:
+            with open(summary_path, encoding="utf-8") as f:
+                summary = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            summary = {}
     print(f"islands={targets} reactive={args.reactive} out={args.output_dir}")
     for iid in targets:
         if iid not in islands:
@@ -197,8 +207,9 @@ def main():
         print(f"  island {iid:9s}: AC={'OK' if ac.get('converged') else 'FAIL'} "
               f"DC={'OK' if dc.get('converged') else 'FAIL'} synth={n_syn} shunts={n_shunt} "
               f"vm=[{ac.get('vm_pu_min')},{ac.get('vm_pu_max')}] maxload={ac.get('max_loading_pct')}")
-    json.dump(summary, open(f"{args.output_dir}/summary.json", "w"), indent=2, ensure_ascii=False)
-    print(f"done -> {args.output_dir}")
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+    print(f"done -> {args.output_dir}  (summary regions: {sorted(summary.keys())})")
 
 
 if __name__ == "__main__":

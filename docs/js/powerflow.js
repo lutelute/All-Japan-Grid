@@ -277,6 +277,15 @@
         bbOpt.textContent = "全国基幹（500/275kV 概観・別モデル）";
         sel.appendChild(bbOpt);
 
+        // National zonal: each synchronous island (hokkaido / east 50Hz /
+        // west 60Hz / okinawa) solved as ONE network with inter-regional AC
+        // tie-lines, then sliced per region. Detailed (snapped) buses, but the
+        // flow is the cross-regional island solution, not 10 isolated solves.
+        var nzOpt = document.createElement("option");
+        nzOpt.value = "national_zonal";
+        nzOpt.textContent = "全国ゾーン（同期島統合・連系線あり）";
+        sel.appendChild(nzOpt);
+
         for (var i = 0; i < ALL_REGIONS.length; i++) {
             var r = ALL_REGIONS[i];
             var info = summary[r];
@@ -409,6 +418,10 @@
         //  - "all": detailed per-region (snapped) networks merged
         if (region === "national_backbone") {
             await runPFNational();
+            return;
+        }
+        if (region === "national_zonal") {
+            await runPFNationalZonal(mode);
             return;
         }
         if (region === "all") {
@@ -728,6 +741,122 @@
         if (window.map) {
             window.map.fitBounds([[24, 123], [46, 146]]);
         }
+    }
+
+    // National zonal: per-region slices of the synchronous-island solutions,
+    // merged across all regions. Same per-region file naming as the per-region
+    // results, but served from data/powerflow_national/ (each island solved as
+    // ONE network with inter-regional AC tie-lines + reactive compensation).
+    async function runPFNationalZonal(mode) {
+        var cb = "?v=" + Date.now();
+        var natDir = "./data/powerflow_national/";
+
+        // Convergence is per-island; the summary keys are per region but carry
+        // the island id + ac/dc_converged flags written by run_national_powerflow.
+        var natSummary = pfState.nationalSummary;
+        if (!natSummary) {
+            try {
+                var sres = await fetch(natDir + "summary.json" + cb);
+                natSummary = sres.ok ? await sres.json() : {};
+            } catch (e) {
+                natSummary = {};
+            }
+            pfState.nationalSummary = natSummary;
+        }
+
+        var allBusFeatures = [];
+        var allLineFeatures = [];
+        var loadedCount = 0;
+        var missingRegions = [];
+
+        var fetches = ALL_REGIONS.map(async function (r) {
+            var info = natSummary[r];
+            // If summary absent, still attempt the file (the data may exist).
+            if (info) {
+                var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
+                if (!converged) return;
+            }
+            try {
+                var busRes = await fetch(natDir + r + "_" + mode + "_buses.geojson" + cb);
+                var lineRes = await fetch(natDir + r + "_" + mode + "_lines.geojson" + cb);
+                if (!busRes.ok || !lineRes.ok) {
+                    missingRegions.push(r);
+                    return;
+                }
+                var busData = await busRes.json();
+                var lineData = await lineRes.json();
+                if (busData.features) allBusFeatures = allBusFeatures.concat(busData.features);
+                if (lineData.features) allLineFeatures = allLineFeatures.concat(lineData.features);
+                loadedCount++;
+            } catch (e) {
+                missingRegions.push(r + " (error)");
+                console.error("National-zonal PF load error for " + r + ":", e);
+            }
+        });
+
+        await Promise.all(fetches);
+        pfState.missingRegions = missingRegions;
+
+        var mergedBus = { type: "FeatureCollection", features: allBusFeatures };
+        var mergedLine = { type: "FeatureCollection", features: allLineFeatures };
+
+        pfState.busData = mergedBus;
+        pfState.lineData = mergedLine;
+
+        showBaseGrid("all");
+        renderPFLayers(mergedBus, mergedLine, mode);
+        showNationalZonalResults(mode, loadedCount, natSummary);
+
+        if (window.map) {
+            window.map.fitBounds([[24, 123], [46, 146]]);
+        }
+    }
+
+    function showNationalZonalResults(mode, loadedCount, natSummary) {
+        var section = document.getElementById("pf-results-section");
+        var content = document.getElementById("pf-results-content");
+        if (!section || !content) return;
+        section.style.display = "block";
+
+        var totalBuses = 0;
+        var islands = {};
+        for (var i = 0; i < ALL_REGIONS.length; i++) {
+            var info = natSummary[ALL_REGIONS[i]];
+            if (!info) continue;
+            totalBuses += info.n_buses || 0;
+            var isl = info.island || "?";
+            if (!islands[isl]) islands[isl] = { ac: false, regions: 0 };
+            islands[isl].ac = islands[isl].ac || !!info.ac_converged;
+            islands[isl].regions++;
+        }
+
+        var html = "";
+        var missing = pfState.missingRegions || [];
+        if (missing.length) {
+            html += '<div style="margin:0 0 10px;padding:8px 10px;border-radius:4px;' +
+                'background:rgba(243,156,18,0.14);border:1px solid #f39c12">';
+            html += '<div style="font-size:0.74rem;font-weight:600;color:#f39c12;margin-bottom:4px">' +
+                '&#9888; 一部地域のデータが欠落</div>';
+            html += '<div style="font-size:0.7rem;color:#d68910;line-height:1.5">次の地域は ' +
+                mode.toUpperCase() + ' データなし: <b>' + missing.join("、 ") + '</b></div></div>';
+        }
+
+        html += '<div class="result-grid">';
+        html += resultItem("Mode", mode.toUpperCase() + " (National zonal)");
+        html += resultItem("Regions", loadedCount + "/10");
+        html += resultItem("Island buses", totalBuses);
+        var islNames = Object.keys(islands);
+        for (var k = 0; k < islNames.length; k++) {
+            var d = islands[islNames[k]];
+            html += resultItem(islNames[k] + " island",
+                (d.ac ? "AC OK" : "AC FAIL") + " (" + d.regions + " reg.)");
+        }
+        html += "</div>";
+        html += '<div class="pf-info" style="font-size:0.7rem;margin-top:8px">' +
+            '各同期島（北海道 / 東 50Hz / 西 60Hz / 沖縄）を連系線付きの単一系統として解き、' +
+            '地域別に切り出した結果です。</div>';
+        html += buildLegend(mode);
+        content.innerHTML = html;
     }
 
     // ── Base grid background ──
