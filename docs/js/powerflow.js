@@ -299,6 +299,13 @@
 
         sel.addEventListener("change", function () {
             pfState.region = this.value;
+            // 全国ゾーンは west(西日本6地域)が DC のみ収束のため、選択時に自動で
+            // DC モードへ切替え、全10地域が操作不要で表示されるようにする。
+            if (this.value === "national_zonal") {
+                pfState.mode = "dc";
+                var ms = document.getElementById("pf-mode");
+                if (ms) ms.value = "dc";
+            }
             runPF();
         });
     }
