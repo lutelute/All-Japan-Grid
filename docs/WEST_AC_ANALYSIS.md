@@ -82,3 +82,21 @@ PYTHONPATH=. python scripts/test_west_byregion.py       # 地域別 AC（負荷/
 PYTHONPATH=. python scripts/test_west_rebalance.py      # 地域別 re-balance
 DIAG_ZONE=kansai PYTHONPATH=. python scripts/test_kansai_diag.py   # 変圧器が真因
 ```
+
+## 7. 付記：非標準電圧クリーニング（データ品質改善）
+
+究明で `vn_kv` に **22 / 25 / 30 / 33 / 100 kV の非標準電圧**が残ると判明した。
+WHITEPAPER 6.2 記載の `_clean_voltage`（標準クラスへのスナップ）が
+`examples/build_snapped_topology.py` の snapped 経路に**未実装**だったのが原因
+（`_parse_voltage_kv` は数値化のみ）。`_clean_voltage` を実装し、変電所(198行付近)と
+送電線(235行付近)の電圧を `VALID_VOLTAGES=[66,77,110,132,154,187,220,275,500]` に
+スナップするよう修正した。
+
+修正後（kansai 再build, pws-160core 実測）:
+- `vn_kv` = **[66,77,110,154,187,275,500]**（非標準値が解消、22/25/30/33→66、100→110）
+- 変圧器 **539 → 488**（同電圧化で一部が線路化、極端な 20:1 電圧比が解消）
+- **データ品質は明確に向上**（可視化・MATPOWER 変換・モデル正確性に寄与）
+
+ただし baseline AC は依然 FAIL（no-trafo / hv≥154 は OK のまま）。**AC 非収束は電圧の
+標準化では解消せず、下位網(66–132 kV)の規模・構造に起因する**ことが改めて裏付けられた。
+電圧クリーニングはデータ品質改善であって AC 収束の処方ではない。

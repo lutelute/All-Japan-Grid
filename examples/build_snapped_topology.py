@@ -120,6 +120,25 @@ def _parse_voltage_kv(voltage_raw):
     return best
 
 
+VALID_VOLTAGES = [66, 77, 110, 132, 154, 187, 220, 275, 500]
+
+
+def _clean_voltage(v_kv):
+    """Snap a KNOWN voltage to the nearest standard JP transmission class.
+
+    OSM voltage tags carry non-standard / distribution values (22/25/30/33/
+    100 kV). Leaving them produces non-standard buses and extreme transformer
+    voltage ratios (up to 20:1) that make Ybus ill-conditioned. Snapping to the
+    standard classes keeps ratios sane. Unknown (<=0) is preserved so
+    ``fix_zero_voltages`` can infer it from connected lines.
+    """
+    if v_kv <= 0:
+        return 0.0
+    if v_kv > 600:
+        v_kv = (v_kv % 1000) if v_kv > 1000 else 500.0
+    return float(min(VALID_VOLTAGES, key=lambda x: abs(x - v_kv)))
+
+
 # ── spatial index for substation snapping ───────────────────────────────────
 
 class _SubIndex:
@@ -195,7 +214,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             region=region,
             latitude=lat,
             longitude=lon,
-            voltage_kv=max(vkv, 0),
+            voltage_kv=_clean_voltage(vkv),
         ))
         sub_coords.append((lat, lon, sid))
 
@@ -237,6 +256,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             # keep unknown (0) so unlabelled transmission survives.
             if 0 < kv < min_voltage_kv:
                 continue
+            kv = _clean_voltage(kv)  # snap known line voltage to a standard class
 
             # Map each vertex to a node id (sub if snappable, else junction).
             node_ids = []
