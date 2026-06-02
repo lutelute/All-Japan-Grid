@@ -19,7 +19,8 @@
   .swatch{width:26px;height:0;border-top:3px solid}
   .dash{width:26px;height:0;border-top:3px dashed #ff5ec7}
   .dot{width:9px;height:9px;border-radius:50%;background:#fff;display:inline-block}
-  #wrap{display:flex;height:calc(100vh - 150px)}
+  /* iframeで埋め込まれた時に内部高さを使うため、ビューポートでなく親(html,body)基準 */
+  #wrap{display:flex;height:calc(100% - 150px);min-height:380px}
   .pane{flex:1;position:relative;border-right:2px solid #000}
   .pane:last-child{border-right:none}
   .pane h2{position:absolute;z-index:500;top:8px;left:8px;margin:0;padding:5px 12px;border-radius:5px;font-size:14px;

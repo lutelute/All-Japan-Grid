@@ -893,6 +893,33 @@ Bus 2 (load 60MW+j20Mvar, PQ) ----+
 これらは「OSM 由来データに各解析ツールをどこまで接続できるか」を確認する予備的試算であり、
 動的パラメータは合成値である（限界は §13 参照）。
 
+### 12.6 N-1 コンティンジェンシー解析
+
+`scripts/run_n1_contingency.py` で per-region snapped+reconnect ネットの各地域に対し、
+220 kV 以上の幹線を1本ずつ N-1 outage させ AC 再潮流を解いて最悪事故をランキングした
+（kansai は基底 AC 非収束のためスキップ、§13.6）。
+
+| 地域 | 候補線 | base max_load | worst Δmax_load | worst |
+|---|---|---|---|---|
+| hokkaido | 16 | 109% | +91% | hokkaido_line_60 |
+| tohoku | 76 | 135% | +1198% | tohoku_line_112 |
+| **tokyo** | 162 | 605% | **AC FAIL** | tokyo_line_1643 |
+| chubu | 279 | 119% | +758% | chubu_line_186 |
+| hokuriku | 68 | 102% | +237% | hokuriku_line_545 |
+| chugoku | 105 | 99% | +519% | chugoku_line_371 |
+| shikoku | 22 | 98% | +189% | shikoku_line_198 |
+| **kyushu** | 186 | 134% | **AC FAIL** | kyushu_line_173 |
+
+東京・九州で**「これを失うと潮流が解けない」枢要線**を特定。
+結果は `docs/data/n1/` と比較タブ下部で公開。
+
+### 12.7 バスアドミタンス行列 $\mathbf{Y}_{\mathrm{bus}}$ の可視化
+
+大元（全国）と地域別の $\mathbf{Y}_{\mathrm{bus}}$ スパースパターン、および
+スパイプロットを `docs/assets/analysis/ybus_*.png` で公開（papers/figs にも配置済み）。
+旧最近傍drop法では系統が数百島に断片化し $\mathbf{Y}_{\mathrm{bus}}$ が事実上特異であったが、
+vertex-snap + reconnect 改修により10地域すべてで非特異な $\mathbf{Y}_{\mathrm{bus}}$ を達成している。
+
 ---
 
 ## 13. 限界と既知の問題 / Limitations and Known Issues

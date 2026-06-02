@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=21"/>
+    <link rel="stylesheet" href="./css/style.css?v=22"/>
 </head>
 <body>
 
@@ -23,11 +23,70 @@
         <button class="tab-btn" data-tab="tab-compare">比較</button>
     </div>
 
-    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ, iframe遅延ロード) ━━ -->
+    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ + Ybus 可視化) ━━ -->
     <div class="tab-panel" id="tab-compare">
         <iframe id="compare-frame" data-src="./compare.html"
-                style="width:100%;height:calc(100vh - 56px);border:0;display:block"
+                style="width:100%;height:75vh;min-height:540px;border:0;display:block"
                 title="トポロジ比較（旧法 vs 新法）"></iframe>
+        <div id="ybus-panel" style="padding:14px 18px;background:#0f1419;color:#e6e6e6">
+            <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) スパースパターン</h3>
+            <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
+                各地域系統で構築した疎な $\mathbf{Y}_{\mathrm{bus}}$ のスパースパターン。
+                <b>大元</b>＝全国接続模型（連系線あり）、<b>地域別</b>＝10地域それぞれの $\mathbf{Y}_{\mathrm{bus}}$。
+                改修前の旧トポロジでは最近傍drop法により大半の線が捨てられ、
+                Ybusは数百のブロック対角に分裂（成分数〜500）。改修後は実OSMルートを
+                スナップで連結し、各地域が単一の連結 Ybus を構成する。
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:12px">
+                <figure style="margin:0">
+                    <img src="./assets/analysis/ybus_national.png"
+                         alt="大元 Ybus (全国)" loading="lazy"
+                         style="width:100%;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
+                    <figcaption style="margin-top:6px;font-size:12px;color:#9fb3c8">
+                        <b>大元 Ybus</b> — 全国系統（10地域 + 連系線統合）
+                    </figcaption>
+                </figure>
+                <figure style="margin:0">
+                    <img src="./assets/analysis/ybus_per_region.png"
+                         alt="地域別 Ybus" loading="lazy"
+                         style="width:100%;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
+                    <figcaption style="margin-top:6px;font-size:12px;color:#9fb3c8">
+                        <b>地域別 Ybus</b> — 10地域それぞれ
+                    </figcaption>
+                </figure>
+                <figure style="margin:0">
+                    <img src="./assets/analysis/ybus_spy.png"
+                         alt="Ybus spy plot" loading="lazy"
+                         style="width:100%;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
+                    <figcaption style="margin-top:6px;font-size:12px;color:#9fb3c8">
+                        <b>スパースパターン</b> — 帯対角構造（隣接バスのみ非零）
+                    </figcaption>
+                </figure>
+            </div>
+            <p style="margin:14px 0 0;font-size:11px;color:#7d8aa0">
+                ※ Before/After の Ybus 比較は、旧最近傍drop法では系統が数百島に断片化し
+                Ybus 自体が事実上構築不能（特異）であったため数値表示できない。
+                After（現行）の Ybus は10地域すべてで非特異・連結を達成している
+                （<code>docs/WEST_AC_ANALYSIS.md</code> 参照）。
+            </p>
+
+            <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（地域別）</h3>
+            <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
+                各地域 220 kV 以上の幹線を1本ずつ脱落（N-1）させ AC 再潮流を行い、
+                最悪事故を抽出した。<b>worst Top-1 Δmax_loading</b>＝事故前後の最大線路負荷率の悪化、
+                <b>AC FAIL</b>＝脱落で AC が収束しなくなる枢要線（東京 / 九州で確認）。
+                関西は基底 AC 非収束のためスキップ（<code>docs/WEST_AC_ANALYSIS.md</code>）。
+            </p>
+            <figure style="margin:0 0 12px">
+                <img src="./assets/analysis/n1_worst_top.png" alt="N-1 worst top per region"
+                     loading="lazy"
+                     style="width:100%;max-width:880px;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
+            </figure>
+            <p style="margin:0;font-size:11px;color:#7d8aa0">
+                詳細CSVは <code>docs/data/n1/</code>（地域別 30 件 + summary）。
+                生成元: <code>scripts/run_n1_contingency.py</code>。
+            </p>
+        </div>
     </div>
 
     <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
@@ -378,8 +437,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=21"></script>
-<script src="./js/powerflow.js?v=21"></script>
-<script src="./js/sld.js?v=21"></script>
+<script src="./js/grid_map.js?v=22"></script>
+<script src="./js/powerflow.js?v=22"></script>
+<script src="./js/sld.js?v=22"></script>
 </body>
 </html>
