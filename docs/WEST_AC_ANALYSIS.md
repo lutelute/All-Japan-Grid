@@ -10,7 +10,7 @@ National zonal powerflow で、east(tohoku+tokyo) / hokkaido / okinawa は AC �
   を numba 有効・前処理ベクトル化（`prune_dc_infeasible` / `scale_line_ratings` の
   per-round `deepcopy` 除去）に高速化した版で実行。
 - 反復診断は west 島を一度構築して `/tmp/west_base.pkl` にキャッシュし、
-  `scripts/test_west_*.py` で高速に試行（build 約 9 分 → 以降ロード数秒）。
+  `scripts/diagnostics/test_west_*.py` で高速に試行（build 約 9 分 → 以降ロード数秒）。
 
 ## 2. 切り分け結果（いずれも実測）
 
@@ -77,10 +77,10 @@ PYTHONPATH=. python scripts/run_national_powerflow.py --islands west \
   --output-dir docs/data/powerflow_national
 
 # 真因の段階診断（/tmp/west_base.pkl を最初に生成）
-PYTHONPATH=. python scripts/test_west_connectivity.py   # 成分構造・極短線
-PYTHONPATH=. python scripts/test_west_byregion.py       # 地域別 AC（負荷/発電相関）
-PYTHONPATH=. python scripts/test_west_rebalance.py      # 地域別 re-balance
-DIAG_ZONE=kansai PYTHONPATH=. python scripts/test_kansai_diag.py   # 変圧器が真因
+PYTHONPATH=. python scripts/diagnostics/test_west_connectivity.py   # 成分構造・極短線
+PYTHONPATH=. python scripts/diagnostics/test_west_byregion.py       # 地域別 AC（負荷/発電相関）
+PYTHONPATH=. python scripts/diagnostics/test_west_rebalance.py      # 地域別 re-balance
+DIAG_ZONE=kansai PYTHONPATH=. python scripts/diagnostics/test_kansai_diag.py   # 変圧器が真因
 ```
 
 ## 7. 付記：非標準電圧クリーニング（データ品質改善）
