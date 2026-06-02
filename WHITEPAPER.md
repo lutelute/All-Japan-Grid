@@ -876,6 +876,23 @@ Bus 2 (load 60MW+j20Mvar, PQ) ----+
 - **IEEE テストケース**: pandapower/MATPOWER 標準テストケースでは全20ソルバが正しく動作
 - **OSM ベースの地域モデル**: 母線数が多く（数百〜数千）、不完全なトポロジにより収束困難または物理的に無意味な解が得られる
 
+### 12.5 動特性・Unit Commitment のビジュアル成果
+
+潮流計算に加え、動揺方程式ソルバ・短絡計算・連続潮流・MILP UC の予備的試算結果を図示する
+（生成元 `scripts/run_dynamics_alljapan.py` 等、図は `papers/figs/` と `docs/assets/analysis/`）。
+
+| 図 | 内容 |
+|---|---|
+| ![dynamics summary](docs/assets/analysis/fig_dynamics_summary.png) | 動特性サマリ（固有値・参加係数・PV曲線・短絡・過渡安定） |
+| ![transient](docs/assets/analysis/fig_transient_stability.png) | 北海道系統の過渡安定（事故後ロータ角応答） |
+| ![eigenvalues](docs/assets/analysis/fig_eigenvalues.png) | 小信号安定：固有値分布 |
+| ![N-1](docs/assets/analysis/hokkaido_n1_trip.png) | N-1 設備脱落時の応答 |
+| ![UC](docs/assets/analysis/uc_summary_dashboard.png) | 地域 UC ダッシュボード（コミットメント・ディスパッチ・コスト） |
+| ![national UC](docs/assets/analysis/national_summary_dashboard.png) | 全国 UC（646 機・9 連系線・24 h） |
+
+これらは「OSM 由来データに各解析ツールをどこまで接続できるか」を確認する予備的試算であり、
+動的パラメータは合成値である（限界は §13 参照）。
+
 ---
 
 ## 13. 限界と既知の問題 / Limitations and Known Issues
