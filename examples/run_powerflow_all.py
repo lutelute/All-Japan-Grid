@@ -576,43 +576,33 @@ def prune_dc_infeasible(net, angle_threshold=45.0):
     """
     total_removed = 0
     for _iteration in range(5):  # max 5 rounds
-        net_tmp = copy.deepcopy(net)
         try:
-            pp.rundcpp(net_tmp)
+            pp.rundcpp(net)  # in-place: rundcpp writes only res_*; inputs intact
         except Exception:
             break
 
         removed_this_round = 0
+        va = net.res_bus["va_degree"]
 
-        # Check lines
-        for idx in net.line.index:
-            if not net.line.at[idx, "in_service"]:
-                continue
-            from_bus = net.line.at[idx, "from_bus"]
-            to_bus = net.line.at[idx, "to_bus"]
-            if from_bus in net_tmp.res_bus.index and to_bus in net_tmp.res_bus.index:
-                angle_diff = abs(
-                    net_tmp.res_bus.at[from_bus, "va_degree"]
-                    - net_tmp.res_bus.at[to_bus, "va_degree"]
-                )
-                if angle_diff > angle_threshold:
-                    net.line.at[idx, "in_service"] = False
-                    removed_this_round += 1
+        # Check lines (vectorized: replaces per-line .at loop + per-round deepcopy)
+        li = net.line[net.line["in_service"]]
+        if len(li) > 0:
+            d = np.abs(va.reindex(li["from_bus"].to_numpy()).to_numpy()
+                       - va.reindex(li["to_bus"].to_numpy()).to_numpy())
+            bad = li.index[np.nan_to_num(d, nan=0.0) > angle_threshold]
+            if len(bad) > 0:
+                net.line.loc[bad, "in_service"] = False
+                removed_this_round += int(len(bad))
 
-        # Check trafos
-        for idx in net.trafo.index:
-            if not net.trafo.at[idx, "in_service"]:
-                continue
-            hv_bus = net.trafo.at[idx, "hv_bus"]
-            lv_bus = net.trafo.at[idx, "lv_bus"]
-            if hv_bus in net_tmp.res_bus.index and lv_bus in net_tmp.res_bus.index:
-                angle_diff = abs(
-                    net_tmp.res_bus.at[hv_bus, "va_degree"]
-                    - net_tmp.res_bus.at[lv_bus, "va_degree"]
-                )
-                if angle_diff > angle_threshold:
-                    net.trafo.at[idx, "in_service"] = False
-                    removed_this_round += 1
+        # Check trafos (vectorized)
+        tr = net.trafo[net.trafo["in_service"]]
+        if len(tr) > 0:
+            d = np.abs(va.reindex(tr["hv_bus"].to_numpy()).to_numpy()
+                       - va.reindex(tr["lv_bus"].to_numpy()).to_numpy())
+            bad = tr.index[np.nan_to_num(d, nan=0.0) > angle_threshold]
+            if len(bad) > 0:
+                net.trafo.loc[bad, "in_service"] = False
+                removed_this_round += int(len(bad))
 
         total_removed += removed_this_round
         if removed_this_round == 0:
@@ -628,32 +618,27 @@ def scale_line_ratings(net):
     disproportionate power.  Scale max_i_ka and trafo sn_mva so that
     the network is physically feasible.
     """
-    # Run a quick DC to estimate flows
-    import copy as _copy
-    net_tmp = _copy.deepcopy(net)
+    # Quick in-place DC to estimate flows (rundcpp writes only res_*; inputs intact)
     try:
-        pp.rundcpp(net_tmp)
+        pp.rundcpp(net)
     except Exception:
         return
 
-    # Scale lines
-    if len(net_tmp.res_line) > 0 and "loading_percent" in net_tmp.res_line.columns:
-        for idx in net.line.index:
-            if idx in net_tmp.res_line.index:
-                loading = net_tmp.res_line.at[idx, "loading_percent"]
-                if loading > 100:
-                    # Scale up capacity to bring loading to ~80%
-                    factor = loading / 80.0
-                    net.line.at[idx, "max_i_ka"] = net.line.at[idx, "max_i_ka"] * factor
+    # Scale lines (vectorized)
+    if len(net.res_line) > 0 and "loading_percent" in net.res_line.columns:
+        load = net.res_line["loading_percent"].reindex(net.line.index)
+        bad = net.line.index[(load > 100).fillna(False).to_numpy()]
+        if len(bad) > 0:
+            f = load.loc[bad].to_numpy() / 80.0
+            net.line.loc[bad, "max_i_ka"] = net.line.loc[bad, "max_i_ka"].to_numpy() * f
 
-    # Scale transformers
-    if len(net_tmp.res_trafo) > 0 and "loading_percent" in net_tmp.res_trafo.columns:
-        for idx in net.trafo.index:
-            if idx in net_tmp.res_trafo.index:
-                loading = net_tmp.res_trafo.at[idx, "loading_percent"]
-                if loading > 100:
-                    factor = loading / 80.0
-                    net.trafo.at[idx, "sn_mva"] = net.trafo.at[idx, "sn_mva"] * factor
+    # Scale transformers (vectorized)
+    if len(net.res_trafo) > 0 and "loading_percent" in net.res_trafo.columns:
+        load = net.res_trafo["loading_percent"].reindex(net.trafo.index)
+        bad = net.trafo.index[(load > 100).fillna(False).to_numpy()]
+        if len(bad) > 0:
+            f = load.loc[bad].to_numpy() / 80.0
+            net.trafo.loc[bad, "sn_mva"] = net.trafo.loc[bad, "sn_mva"].to_numpy() * f
 
 
 def balance_power(net, demand_config):
@@ -707,7 +692,7 @@ def run_powerflow(net, mode="dc"):
             last_err = ""
             for solver_opts in solvers:
                 try:
-                    pp.runpp(net, numba=False, **solver_opts)
+                    pp.runpp(net, numba=True, **solver_opts)
                     if net.converged:
                         result["converged"] = True
                         result["solver"] = solver_opts["algorithm"]
