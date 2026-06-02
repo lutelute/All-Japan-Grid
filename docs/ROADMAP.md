@@ -46,8 +46,10 @@
 
 ### P7. ドキュメント + 比較タブ (Docs + Compare Tab)
 - `docs/WHAT_TO_CHECK.md` / `docs/TECHNICAL_FAQ.md` / `docs/MATPOWER_EXPORT_GUIDE.md`
-  と Before/After 比較ページ (`docs/compare.html`) を整備。
-- **状態: 進行中**。
+  と Before/After 比較ページ (`docs/compare.html`) を整備。比較は tab-bar の
+  「比較」タブに統合済み (iframe 遅延ロード)。west 島 AC 非収束の真因究明は
+  `docs/WEST_AC_ANALYSIS.md`(Q無関係→負荷/発電偏在→下位網変圧器の悪条件)。
+- **状態: 完了**。
 
 ---
 
