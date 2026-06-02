@@ -11,7 +11,10 @@
   west / okinawa)単位に整理、エリア間 AC 連系線(OCCTO)を付加
   (`examples/build_national_snapped.py`)。
 - 地域別 AC/DC 潮流を計算し、`docs/` の Leaflet マップ(系統図・エリア・潮流解析・
-  単線図の 4 タブ)としてライブ公開。
+  単線図・比較の 5 タブ)としてライブ公開。全国ゾーン選択時は自動で DC 表示。
+- 電圧標準化(`_clean_voltage`)で全島を新電圧再生成(`ef2aacd`): hokkaido 電圧最小
+  0.30→0.81 に改善、east/北海道/沖縄は AC 収束を維持、west 6地域は DC（AC 非収束は
+  下位網限界、`docs/WEST_AC_ANALYSIS.md`）。
 - **状態: 運用中 (live)**。
 
 ### P2. MATPOWER OPF / 経済性 (GENCOST) — **[DONE]**
@@ -42,7 +45,10 @@
 ### P6. 弱小地域の OSM 補強 (Weak-Region OSM Enrichment)
 - OSM が疎な四国・北陸・中国を中心に、OCCTO 実系統と突き合わせて欠落線・誤接続を
   補正し、断片化 (`n_components`) と低電圧を低減。
-- **状態: 計画**。
+- 非標準電圧(22/25/30/33/100 kV)の標準クラスへのスナップ(`_clean_voltage`)を実装し、
+  変圧器比の悪条件を緩和・電圧プロファイルを改善。kansai/kyushu の AC 非収束は下位網の
+  規模・構造に由来し電圧標準化では未解消(`docs/WEST_AC_ANALYSIS.md`)。
+- **状態: 一部実装（電圧クリーニング済・OCCTO 照合は計画）**。
 
 ### P7. ドキュメント + 比較タブ (Docs + Compare Tab)
 - `docs/WHAT_TO_CHECK.md` / `docs/TECHNICAL_FAQ.md` / `docs/MATPOWER_EXPORT_GUIDE.md`
