@@ -292,6 +292,14 @@ function initTabs() {
             var panel = document.getElementById(tabId);
             if (panel) panel.classList.add("active");
 
+            // 比較タブは独立ページ(compare.html)を iframe で遅延ロードし、
+            // メインマップの色モード処理はスキップする。
+            if (tabId === "tab-compare") {
+                var cf = document.getElementById("compare-frame");
+                if (cf && !cf.src) cf.src = cf.dataset.src;
+                return;
+            }
+
             // Save current tab state before switching
             tabState[colorMode].region = selectedRegion;
 

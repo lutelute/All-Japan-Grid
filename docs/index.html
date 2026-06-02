@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=19"/>
+    <link rel="stylesheet" href="./css/style.css?v=21"/>
 </head>
 <body>
 
@@ -20,6 +20,14 @@
         <button class="tab-btn" data-tab="tab-area">エリア</button>
         <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
         <button class="tab-btn" data-tab="tab-sld">単線図</button>
+        <button class="tab-btn" data-tab="tab-compare">比較</button>
+    </div>
+
+    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ, iframe遅延ロード) ━━ -->
+    <div class="tab-panel" id="tab-compare">
+        <iframe id="compare-frame" data-src="./compare.html"
+                style="width:100%;height:calc(100vh - 56px);border:0;display:block"
+                title="トポロジ比較（旧法 vs 新法）"></iframe>
     </div>
 
     <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
@@ -370,8 +378,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=19"></script>
-<script src="./js/powerflow.js?v=20"></script>
-<script src="./js/sld.js?v=19"></script>
+<script src="./js/grid_map.js?v=21"></script>
+<script src="./js/powerflow.js?v=21"></script>
+<script src="./js/sld.js?v=21"></script>
 </body>
 </html>
