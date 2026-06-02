@@ -685,9 +685,9 @@ def run_powerflow(net, mode="dc"):
                 {"algorithm": "nr", "init": "dc", "max_iteration": 200, "tolerance_mva": 1e-1},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 1.0},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 10.0},
-                {"algorithm": "fdbx", "init": "dc", "max_iteration": 200, "tolerance_mva": 1.0},
-                {"algorithm": "fdxb", "init": "dc", "max_iteration": 200, "tolerance_mva": 1.0},
-                {"algorithm": "gs", "init": "dc", "max_iteration": 5000, "tolerance_mva": 10.0},
+                # fdbx/fdxb/gs は除外: west島(AC非収束が確定)で gs 5000反復が
+                # ~105分の膠着を招くため。nr系のみで east/hokkaido/okinawa は収束し、
+                # west は速やかに非収束判定 -> DC にフォールバックする。
             ]
             last_err = ""
             for solver_opts in solvers:
