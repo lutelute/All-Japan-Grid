@@ -63,12 +63,30 @@ const AFTER_DIR  = "./data/powerflow";          // live: snapped + reconnect + r
 const REGIONS = ["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
 const JA = {hokkaido:"北海道",tohoku:"東北",tokyo:"東京",chubu:"中部",hokuriku:"北陸",kansai:"関西",chugoku:"中国",shikoku:"四国",kyushu:"九州",okinawa:"沖縄"};
 
-const tile = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-const tileOpt = {subdomains:"abcd", maxZoom:19, attribution:"© OSM © CARTO"};
+// 3つのベースマップを定義（dark/standard OSM/衛星）— 各マップでLayer Controlから切替可
+function makeBases(){
+  return {
+    "Dark (CARTO)": L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      {subdomains:"abcd", maxZoom:19, attribution:"© OSM © CARTO"}),
+    "OSM (標準)": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {subdomains:"abc", maxZoom:19, attribution:"© OpenStreetMap contributors"}),
+    "衛星 (Esri)": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {maxZoom:19, attribution:"Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, USGS, USDA, IGN, and the GIS User Community"}),
+    "衛星+ラベル (Esri Hybrid)": L.layerGroup([
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {maxZoom:19}),
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        {maxZoom:19, attribution:"Boundaries © Esri"})
+    ]),
+  };
+}
 const mapA = L.map("mapA",{preferCanvas:true}).setView([36,138],5);
 const mapB = L.map("mapB",{preferCanvas:true}).setView([36,138],5);
-L.tileLayer(tile,tileOpt).addTo(mapA);
-L.tileLayer(tile,tileOpt).addTo(mapB);
+const basesA = makeBases(); const basesB = makeBases();
+basesA["Dark (CARTO)"].addTo(mapA);  // 既定: ダーク
+basesB["Dark (CARTO)"].addTo(mapB);
+L.control.layers(basesA, null, {position:"topright", collapsed:false}).addTo(mapA);
+L.control.layers(basesB, null, {position:"topright", collapsed:false}).addTo(mapB);
 
 // sync pan/zoom
 let syncing=false;
