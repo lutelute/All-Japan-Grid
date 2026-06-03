@@ -848,10 +848,29 @@
                 mode.toUpperCase() + ' データなし: <b>' + missing.join("、 ") + '</b></div></div>';
         }
 
+        // 電圧範囲・合成線・シャント数を集計（per-region のキー名は run_national_powerflow.py 由来）
+        var vmMin = Infinity, vmMax = -Infinity, sumSyn = 0, sumShunt = 0, hasVm = 0;
+        var failRegions = [];
+        for (var r = 0; r < ALL_REGIONS.length; r++) {
+            var info2 = natSummary[ALL_REGIONS[r]];
+            if (!info2) continue;
+            if (mode === "ac" && !info2.ac_converged) failRegions.push(ALL_REGIONS[r]);
+            if (typeof info2.ac_vm_min === "number") { vmMin = Math.min(vmMin, info2.ac_vm_min); hasVm++; }
+            if (typeof info2.ac_vm_max === "number") { vmMax = Math.max(vmMax, info2.ac_vm_max); }
+            if (typeof info2.n_synthetic_lines === "number") sumSyn += info2.n_synthetic_lines;
+            if (typeof info2.n_shunt_comp === "number") sumShunt += info2.n_shunt_comp;
+        }
+
         html += '<div class="result-grid">';
         html += resultItem("Mode", mode.toUpperCase() + " (National zonal)");
         html += resultItem("Regions", loadedCount + "/10");
         html += resultItem("Island buses", totalBuses);
+        if (mode === "ac" && hasVm > 0 && isFinite(vmMin) && isFinite(vmMax)) {
+            html += resultItem("Voltage range",
+                vmMin.toFixed(3) + " – " + vmMax.toFixed(3) + " pu");
+        }
+        if (sumSyn > 0) html += resultItem("Synthetic lines", sumSyn);
+        if (sumShunt > 0) html += resultItem("Q shunts", sumShunt);
         var islNames = Object.keys(islands);
         for (var k = 0; k < islNames.length; k++) {
             var d = islands[islNames[k]];
@@ -859,9 +878,18 @@
                 (d.ac ? "AC OK" : "AC FAIL") + " (" + d.regions + " reg.)");
         }
         html += "</div>";
+        if (mode === "ac" && failRegions.length) {
+            html += '<div style="margin-top:8px;padding:6px 10px;border-radius:4px;' +
+                'background:rgba(231,76,60,0.12);border:1px solid #c0392b;font-size:0.7rem;line-height:1.5">' +
+                '<b style="color:#ff8a80">AC 未収束</b>: ' + failRegions.join("、") +
+                '（下位網の品質限界。<a href="./WEST_AC_ANALYSIS.md" target="_blank" ' +
+                'style="color:#f39c12">詳細</a>）</div>';
+        }
         html += '<div class="pf-info" style="font-size:0.7rem;margin-top:8px">' +
             '各同期島（北海道 / 東 50Hz / 西 60Hz / 沖縄）を連系線付きの単一系統として解き、' +
-            '地域別に切り出した結果です。</div>';
+            '地域別に切り出した結果です。';
+        if (mode === "dc") html += ' DC モードは全 10 地域で表示可能。';
+        html += '</div>';
         html += buildLegend(mode);
         content.innerHTML = html;
     }
