@@ -125,11 +125,16 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   voltage, regional container and geographic location. Line `ConnectivityNode`s
   are **independent per line** — a valid *equipment catalogue*, but lines are
   not yet electrically joined at shared buses.
-- **Level 2 (planned):** built from the snapped topology (`GridNetwork`, which
-  already carries `from_substation_id`/`to_substation_id`/`connected_bus_id`),
-  giving **shared `ConnectivityNode`s**, `PowerTransformer` + `PowerTransformerEnd`,
-  `EnergyConsumer` loads, and the TP/SSH/SV profiles needed for a CGMES
-  power-flow case.
+- **Level 2 (`src/cim/level2.py`, `scripts/export_cim_level2.py`):** built from
+  the *solved* snapped pandapower network, emitting **EQ + TP + SSH + SV + GL**
+  with **shared `ConnectivityNode`s** + `TopologicalNode`s,
+  `PowerTransformer` + `PowerTransformerEnd` (with magnetizing g/b),
+  `EnergyConsumer` loads, PV `SynchronousMachine`s (each with a voltage
+  `RegulatingControl`) and a slack `ExternalNetworkInjection`
+  (`referencePriority` + `controlEnabled`). **Validated end-to-end:** the
+  exported okinawa case round-trips through pandapower `cim2pp` and `runpp`
+  **converges** (81 buses, 16 PV gens, 1 slack, vmin 0.941) — a genuinely
+  solvable CGMES power-flow model, not just a catalogue.
 
 ---
 

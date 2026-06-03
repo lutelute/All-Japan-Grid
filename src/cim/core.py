@@ -137,7 +137,10 @@ class RdfWriter:
         for k, target in (refs or {}).items():
             if target is None:
                 continue
-            add(f'    <cim:{k} rdf:resource="#_{target}"/>')
+            targets = target if isinstance(target, (list, tuple)) else [target]
+            for t in targets:
+                if t is not None:
+                    add(f'    <cim:{k} rdf:resource="#_{t}"/>')
         for k, suffix in (enums or {}).items():
             if suffix is None:
                 continue

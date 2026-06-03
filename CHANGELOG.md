@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   6,962 / 40,077 / 19,138 objects across all 10 regions, 0 dangling references,
   validated against pandapower `cim2pp` (independent CGMES parser).
   See `docs/CIM_MAPPING.md`.
+- **CIM Level 2 — solvable CGMES power-flow case** (`src/cim/level2.py`,
+  `scripts/export_cim_level2.py`): exports the solved pandapower network as
+  EQ + TP + SSH + SV + GL with shared ConnectivityNodes, TopologicalNodes,
+  PowerTransformer (+magnetizing g/b), EnergyConsumer loads, PV
+  SynchronousMachines (voltage RegulatingControl) and a slack
+  ExternalNetworkInjection (referencePriority). Round-trips through pandapower
+  `cim2pp` and **`runpp` converges** (okinawa: 81 buses, 16 gens, vmin 0.941).
 - **Dataset distribution foundation**: unified property schema
   (`config/data_schema.yaml` + `docs/DATA_SCHEMA.json`), `DATA_DICTIONARY.md`,
   `DATA_CATALOG.md`, `CITATION.cff`, this changelog and `VERSION`.

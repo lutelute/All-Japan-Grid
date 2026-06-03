@@ -62,3 +62,12 @@ dist/cim/*_GL.xml
 !dist/cim/okinawa_EQ.xml
 !dist/cim/okinawa_GL.xml
 dist/cim/*.zip
+
+# Level-2 CGMES (EQ/TP/SSH/SV/GL per region; regenerate via export_cim_level2.py)
+dist/cim_level2/*.xml
+!dist/cim_level2/okinawa_L2_EQ.xml
+!dist/cim_level2/okinawa_L2_TP.xml
+!dist/cim_level2/okinawa_L2_SSH.xml
+!dist/cim_level2/okinawa_L2_SV.xml
+!dist/cim_level2/okinawa_L2_GL.xml
+dist/cim_level2/*.zip
