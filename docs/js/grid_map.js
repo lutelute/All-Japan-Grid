@@ -300,14 +300,16 @@ function initTabs() {
             var panel = document.getElementById(tabId);
             if (panel) panel.classList.add("active");
 
-            // 比較タブは独立ページ(compare.html)を iframe で遅延ロードし、
-            // メインマップの色モード処理はスキップする。
+            // 比較タブ / Ybus タブはサイドバー幅制約を抜けて全画面表示する。
+            // body.fullscreen-tab でタブバーを上端固定にしてタブ操作を維持。
+            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus");
+            document.body.classList.toggle("fullscreen-tab", isFullscreen);
+
             if (tabId === "tab-compare") {
                 var cf = document.getElementById("compare-frame");
                 if (cf && !cf.src) cf.src = cf.dataset.src;
                 return;
             }
-            // Ybus/N-1 タブは静的コンテンツ。メインマップは触らない。
             if (tabId === "tab-ybus") {
                 return;
             }
