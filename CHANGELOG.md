@@ -5,6 +5,26 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **CIM / CGMES export** (`src/cim/`, `scripts/export_cim.py`): the dataset is
+  now published as IEC 61970 CIM (CGMES 2.4.15) RDF/XML — EQ (Equipment) + GL
+  (Geographical Location) profiles. Substations, lines and plants map to
+  standards-conformant CIM objects (`Substation`, `ACLineSegment`, fuel-specific
+  `{Thermal,Hydro,Wind,Solar,Nuclear}GeneratingUnit`, `SynchronousMachine`, …)
+  with deterministic UUIDv5 mRIDs and WGS84 `PositionPoint` geometry.
+  6,962 / 40,077 / 19,138 objects across all 10 regions, 0 dangling references,
+  validated against pandapower `cim2pp` (independent CGMES parser).
+  See `docs/CIM_MAPPING.md`.
+- **Dataset distribution foundation**: unified property schema
+  (`config/data_schema.yaml` + `docs/DATA_SCHEMA.json`), `DATA_DICTIONARY.md`,
+  `DATA_CATALOG.md`, `CITATION.cff`, this changelog and `VERSION`.
+
+### Fixed
+- Number consistency across docs: substation total corrected to the measured
+  6,962 (the README summary table previously read 7,962).
+
 ## [1.1.0] - 2026-06
 
 Tagged in git as `v1.1.0`.

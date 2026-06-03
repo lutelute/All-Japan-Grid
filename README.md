@@ -105,6 +105,27 @@ Key properties (plants) / 主なプロパティ（発電所）:
 - `plant:source` — Raw OSM source tag / OSM 原データのソースタグ
 - `name` / `name:ja` — Plant name / 発電所名
 
+### CIM / CGMES Export / CIM・CGMES エクスポート
+
+In addition to GeoJSON, the dataset is published as **IEC 61970 CIM
+(CGMES 2.4.15) RDF/XML** — the international standard for power-system model
+exchange. Every substation, line and plant becomes a standards-conformant CIM
+object with a deterministic mRID and a WGS84 geographic location.
+
+GeoJSON に加え、本データセットを電力系統モデル交換の国際標準 **IEC 61970 CIM
+(CGMES 2.4.15) RDF/XML** としても提供します。全変電所・送電線・発電所が、決定的な
+mRID と WGS84 座標を持つ規格準拠の CIM オブジェクトになります。
+
+```bash
+python scripts/export_cim.py          # -> dist/cim/<region>_{EQ,GL}.xml
+```
+
+- **Profiles:** EQ (Equipment) + GL (Geographical Location)
+- **Mapping:** substation → `cim:Substation`+`VoltageLevel`+`BaseVoltage`, line → `cim:ACLineSegment`+`Terminal`+`ConnectivityNode`, plant → fuel-specific `cim:{Thermal,Hydro,Wind,Solar,Nuclear}GeneratingUnit` (+`SynchronousMachine`), coordinates → `cim:Location`+`PositionPoint`
+- **6,962** Substations · **40,077** ACLineSegments · **19,138** GeneratingUnits (all 10 regions, 0 dangling references)
+- **Validated** against pandapower `cim2pp` (an independent CGMES parser)
+- Full specification: **[docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)**
+
 ### Data Source / データソース
 
 All data is extracted from [OpenStreetMap](https://www.openstreetmap.org/) using the Overpass API.

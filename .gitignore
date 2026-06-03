@@ -53,3 +53,12 @@ papers/.DS_Store
 # Generated analysis outputs (regenerable; key figures kept in docs/assets & papers/figs)
 output/
 data/audit/
+
+# CIM/CGMES export — generated RDF/XML (regenerate via scripts/export_cim.py).
+# Full national set is ~294 MB; only the okinawa sample + manifest are tracked,
+# and the zipped release is published as a GitHub Release asset.
+dist/cim/*_EQ.xml
+dist/cim/*_GL.xml
+!dist/cim/okinawa_EQ.xml
+!dist/cim/okinawa_GL.xml
+dist/cim/*.zip

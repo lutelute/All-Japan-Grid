@@ -1,0 +1,273 @@
+{
+  "dataset": "All-Japan-Grid",
+  "cim_namespace": "http://iec.ch/TC57/2013/CIM-schema-cim16#",
+  "profiles": {
+    "EQ": "http://entsoe.eu/CIM/EquipmentCore/3/1",
+    "GL": "http://entsoe.eu/CIM/GeographicalLocation/2/1"
+  },
+  "totals": {
+    "substations": 6962,
+    "lines": 40077,
+    "plants": 19138
+  },
+  "regions": [
+    {
+      "region": "hokkaido",
+      "counts": {
+        "substations": 471,
+        "lines": 4136,
+        "plants": 436
+      },
+      "eq_objects": 22154,
+      "gl_objects": 52623,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        250.0,
+        187.0,
+        154.0,
+        110.0,
+        100.0,
+        66.0,
+        33.0,
+        25.0,
+        22.0,
+        20.0
+      ],
+      "eq_file": "hokkaido_EQ.xml",
+      "gl_file": "hokkaido_GL.xml"
+    },
+    {
+      "region": "tohoku",
+      "counts": {
+        "substations": 901,
+        "lines": 6628,
+        "plants": 1311
+      },
+      "eq_objects": 36439,
+      "gl_objects": 76512,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        250.0,
+        187.0,
+        154.0,
+        132.0,
+        66.0,
+        33.0,
+        25.0,
+        22.0,
+        20.0,
+        6.6,
+        3.3,
+        1.5,
+        0.05
+      ],
+      "eq_file": "tohoku_EQ.xml",
+      "gl_file": "tohoku_GL.xml"
+    },
+    {
+      "region": "tokyo",
+      "counts": {
+        "substations": 1726,
+        "lines": 8295,
+        "plants": 7207
+      },
+      "eq_objects": 52348,
+      "gl_objects": 92887,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        154.0,
+        77.0,
+        66.0,
+        33.0,
+        25.0,
+        22.0,
+        15.4,
+        11.0,
+        6.6,
+        6.0,
+        1.5,
+        0.75,
+        0.154
+      ],
+      "eq_file": "tokyo_EQ.xml",
+      "gl_file": "tokyo_GL.xml"
+    },
+    {
+      "region": "chubu",
+      "counts": {
+        "substations": 1163,
+        "lines": 6589,
+        "plants": 3792
+      },
+      "eq_objects": 39342,
+      "gl_objects": 117666,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        200.0,
+        154.0,
+        100.0,
+        77.0,
+        66.0,
+        44.0,
+        33.0,
+        30.0,
+        25.0,
+        22.0,
+        11.0,
+        6.6,
+        1.5,
+        0.154
+      ],
+      "eq_file": "chubu_EQ.xml",
+      "gl_file": "chubu_GL.xml"
+    },
+    {
+      "region": "hokuriku",
+      "counts": {
+        "substations": 267,
+        "lines": 2296,
+        "plants": 432
+      },
+      "eq_objects": 12527,
+      "gl_objects": 35081,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        200.0,
+        154.0,
+        77.0,
+        66.0,
+        1.5
+      ],
+      "eq_file": "hokuriku_EQ.xml",
+      "gl_file": "hokuriku_GL.xml"
+    },
+    {
+      "region": "kansai",
+      "counts": {
+        "substations": 902,
+        "lines": 3994,
+        "plants": 1518
+      },
+      "eq_objects": 23392,
+      "gl_objects": 53026,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        77.0,
+        66.0,
+        33.0,
+        30.0,
+        25.0,
+        22.0,
+        6.6,
+        1.5,
+        0.1,
+        0.077
+      ],
+      "eq_file": "kansai_EQ.xml",
+      "gl_file": "kansai_GL.xml"
+    },
+    {
+      "region": "chugoku",
+      "counts": {
+        "substations": 531,
+        "lines": 3176,
+        "plants": 1173
+      },
+      "eq_objects": 18244,
+      "gl_objects": 58523,
+      "base_voltages_kv": [
+        500.0,
+        275.0,
+        220.0,
+        187.0,
+        115.0,
+        110.0,
+        77.0,
+        66.0,
+        33.0,
+        25.0,
+        22.0,
+        20.0,
+        6.6,
+        1.5,
+        0.65
+      ],
+      "eq_file": "chugoku_EQ.xml",
+      "gl_file": "chugoku_GL.xml"
+    },
+    {
+      "region": "shikoku",
+      "counts": {
+        "substations": 258,
+        "lines": 1532,
+        "plants": 688
+      },
+      "eq_objects": 8944,
+      "gl_objects": 25189,
+      "base_voltages_kv": [
+        500.0,
+        220.0,
+        187.0,
+        110.0,
+        77.0,
+        66.0,
+        22.0,
+        0.65
+      ],
+      "eq_file": "shikoku_EQ.xml",
+      "gl_file": "shikoku_GL.xml"
+    },
+    {
+      "region": "kyushu",
+      "counts": {
+        "substations": 684,
+        "lines": 3314,
+        "plants": 2549
+      },
+      "eq_objects": 20651,
+      "gl_objects": 63560,
+      "base_voltages_kv": [
+        660.0,
+        500.0,
+        220.0,
+        110.0,
+        66.0,
+        60.0,
+        25.0,
+        22.0,
+        20.0,
+        6.6,
+        6.0,
+        1.5
+      ],
+      "eq_file": "kyushu_EQ.xml",
+      "gl_file": "kyushu_GL.xml"
+    },
+    {
+      "region": "okinawa",
+      "counts": {
+        "substations": 59,
+        "lines": 117,
+        "plants": 32
+      },
+      "eq_objects": 747,
+      "gl_objects": 1724,
+      "base_voltages_kv": [
+        132.0,
+        66.0,
+        13.8,
+        6.6
+      ],
+      "eq_file": "okinawa_EQ.xml",
+      "gl_file": "okinawa_GL.xml"
+    }
+  ]
+}
