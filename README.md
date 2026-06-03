@@ -40,6 +40,30 @@ OpenStreetMap から機械的に抽出した、日本全国の送電網 **地理
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/network_ybus_tour.gif" alt="Network + Ybus Tour" width="100%">
 </p>
 
+### Satellite Validation / 衛星画像との突合せ検証
+
+OSM由来のトポロジが実在の送電インフラと一致することを衛星画像で検証しています（鹿島・阿南FC・嶺南など主要変電所）。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_satellite_validation.png" alt="Satellite Validation" width="100%">
+</p>
+
+### Pipeline / パイプライン全体図
+
+7段階の自動エンリッチパイプライン: OSM取得 → 属性補完 → トポロジ再構築 → 電気パラメータ付与 → Ybus構築 → 潮流解析 → 可視化。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline Flow" width="100%">
+</p>
+
+### v1.1.0 Highlights
+
+- 🆕 [N-1 contingency analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/scripts/run_n1_contingency.py) — 914 backbone lines tripped one-by-one across 9 regions, identifying pivotal lines whose loss breaks AC convergence in Tokyo / Kyushu.
+- 🔧 Voltage standardization (`_clean_voltage`) — non-standard 22/25/30/33/100 kV snap to JP standard classes. **Hokkaido `vm_min` 0.30 → 0.81 pu**.
+- ⚡ National-zonal power flow — east/Hokkaido/Okinawa AC + west DC, with **auto-DC mode** on the live map.
+- 🗺 New compare tab with Ybus visualization (national / per-region / spy plot).
+- 📄 [Release notes](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0) / [Root-cause analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/docs/WEST_AC_ANALYSIS.md)
+
 > **Important / 重要:** This dataset provides the **geographic layout** of Japan's transmission infrastructure — where substations and lines are physically located and how they connect spatially. It is **not** a ready-to-use electrical model. See [Limitations](#limitations--what-this-data-is-not--本データの限界) below.
 >
 > 本データセットは日本の送電インフラの **地理的配置** — 変電所や送電線の物理的な位置と空間的な接続関係 — を提供するものです。そのまま使える電力系統モデルでは **ありません**。詳しくは下記 [Limitations（本データの限界）](#limitations--what-this-data-is-not--本データの限界) を参照してください。
