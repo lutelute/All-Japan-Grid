@@ -134,7 +134,11 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   (`referencePriority` + `controlEnabled`). **Validated end-to-end:** the
   exported okinawa case round-trips through pandapower `cim2pp` and `runpp`
   **converges** (81 buses, 16 PV gens, 1 slack, vmin 0.941) — a genuinely
-  solvable CGMES power-flow model, not just a catalogue.
+  solvable CGMES power-flow model, not just a catalogue. Across the full
+  country `runpp` converges for **9 of 10 regions** (kansai excepted, matching
+  the west AC sub-network transformer ill-conditioning in `WEST_AC_ANALYSIS.md`).
+  Per-region object counts and convergence verdicts are recorded in
+  `dist/cim_level2/cim_level2_index.json`.
 
 ---
 

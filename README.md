@@ -126,6 +126,21 @@ python scripts/export_cim.py          # -> dist/cim/<region>_{EQ,GL}.xml
 - **Validated** against pandapower `cim2pp` (an independent CGMES parser)
 - Full specification: **[docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)**
 
+**Level 2 — solvable power-flow case (EQ/TP/SSH/SV/GL):** `scripts/export_cim_level2.py`
+exports the *connected, solved* network with shared `ConnectivityNode`s,
+`TopologicalNode`s, `PowerTransformer`s, `EnergyConsumer` loads, PV
+`SynchronousMachine`s and a slack `ExternalNetworkInjection`. It round-trips
+through pandapower `cim2pp` and **`runpp` converges in 9/10 regions** (kansai
+excepted — the same sub-network transformer ill-conditioning as the west AC analysis).
+
+**Level 2 — 求解可能な潮流ケース:** `scripts/export_cim_level2.py` が接続済み・
+求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。pandapower `cim2pp` で読み戻すと
+**9/10 地域で潮流が収束**します（kansai を除く＝west AC 解析と同じ下位網変圧器問題）。
+
+Both levels ship as zipped GitHub Release assets
+(`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
+regenerable via the two scripts above.
+
 ### Data Source / データソース
 
 All data is extracted from [OpenStreetMap](https://www.openstreetmap.org/) using the Overpass API.

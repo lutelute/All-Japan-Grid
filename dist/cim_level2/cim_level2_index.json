@@ -1,0 +1,321 @@
+{
+  "profiles": [
+    "EQ",
+    "TP",
+    "SSH",
+    "SV",
+    "GL"
+  ],
+  "regions": [
+    {
+      "region": "hokkaido",
+      "files": {
+        "EQ": [
+          "hokkaido_L2_EQ.xml",
+          6806
+        ],
+        "TP": [
+          "hokkaido_L2_TP.xml",
+          1412
+        ],
+        "SSH": [
+          "hokkaido_L2_SSH.xml",
+          3916
+        ],
+        "SV": [
+          "hokkaido_L2_SV.xml",
+          705
+        ],
+        "GL": [
+          "hokkaido_L2_GL.xml",
+          1413
+        ]
+      },
+      "buses": 706,
+      "lines": 634,
+      "trafos": 183,
+      "loads": 706,
+      "gens": 285,
+      "verify": "OK gen=285 ext=5 vmin=0.703"
+    },
+    {
+      "region": "tohoku",
+      "files": {
+        "EQ": [
+          "tohoku_L2_EQ.xml",
+          16663
+        ],
+        "TP": [
+          "tohoku_L2_TP.xml",
+          3216
+        ],
+        "SSH": [
+          "tohoku_L2_SSH.xml",
+          9592
+        ],
+        "SV": [
+          "tohoku_L2_SV.xml",
+          1600
+        ],
+        "GL": [
+          "tohoku_L2_GL.xml",
+          3217
+        ]
+      },
+      "buses": 1608,
+      "lines": 1405,
+      "trafos": 541,
+      "loads": 1608,
+      "gens": 818,
+      "verify": "OK gen=818 ext=10 vmin=0.836"
+    },
+    {
+      "region": "tokyo",
+      "files": {
+        "EQ": [
+          "tokyo_L2_EQ.xml",
+          45133
+        ],
+        "TP": [
+          "tokyo_L2_TP.xml",
+          5908
+        ],
+        "SSH": [
+          "tokyo_L2_SSH.xml",
+          28598
+        ],
+        "SV": [
+          "tokyo_L2_SV.xml",
+          2953
+        ],
+        "GL": [
+          "tokyo_L2_GL.xml",
+          5909
+        ]
+      },
+      "buses": 2954,
+      "lines": 2674,
+      "trafos": 931,
+      "loads": 2954,
+      "gens": 5151,
+      "verify": "OK gen=5151 ext=9 vmin=0.704"
+    },
+    {
+      "region": "chubu",
+      "files": {
+        "EQ": [
+          "chubu_L2_EQ.xml",
+          34706
+        ],
+        "TP": [
+          "chubu_L2_TP.xml",
+          5554
+        ],
+        "SSH": [
+          "chubu_L2_SSH.xml",
+          20936
+        ],
+        "SV": [
+          "chubu_L2_SV.xml",
+          2775
+        ],
+        "GL": [
+          "chubu_L2_GL.xml",
+          5555
+        ]
+      },
+      "buses": 2777,
+      "lines": 2475,
+      "trafos": 974,
+      "loads": 2777,
+      "gens": 2809,
+      "verify": "OK gen=2809 ext=19 vmin=0.827"
+    },
+    {
+      "region": "hokuriku",
+      "files": {
+        "EQ": [
+          "hokuriku_L2_EQ.xml",
+          6678
+        ],
+        "TP": [
+          "hokuriku_L2_TP.xml",
+          1318
+        ],
+        "SSH": [
+          "hokuriku_L2_SSH.xml",
+          3834
+        ],
+        "SV": [
+          "hokuriku_L2_SV.xml",
+          659
+        ],
+        "GL": [
+          "hokuriku_L2_GL.xml",
+          1319
+        ]
+      },
+      "buses": 659,
+      "lines": 576,
+      "trafos": 214,
+      "loads": 659,
+      "gens": 299,
+      "verify": "OK gen=299 ext=13 vmin=0.977"
+    },
+    {
+      "region": "kansai",
+      "files": {
+        "EQ": [
+          "kansai_L2_EQ.xml",
+          17666
+        ],
+        "TP": [
+          "kansai_L2_TP.xml",
+          3346
+        ],
+        "SSH": [
+          "kansai_L2_SSH.xml",
+          10316
+        ],
+        "SV": [
+          "kansai_L2_SV.xml",
+          1
+        ],
+        "GL": [
+          "kansai_L2_GL.xml",
+          3347
+        ]
+      },
+      "buses": 1673,
+      "lines": 1573,
+      "trafos": 493,
+      "loads": 1673,
+      "gens": 941,
+      "verify": "runpp-FAIL:LoadflowNotConverged"
+    },
+    {
+      "region": "chugoku",
+      "files": {
+        "EQ": [
+          "chugoku_L2_EQ.xml",
+          12915
+        ],
+        "TP": [
+          "chugoku_L2_TP.xml",
+          2550
+        ],
+        "SSH": [
+          "chugoku_L2_SSH.xml",
+          7437
+        ],
+        "SV": [
+          "chugoku_L2_SV.xml",
+          1275
+        ],
+        "GL": [
+          "chugoku_L2_GL.xml",
+          2551
+        ]
+      },
+      "buses": 1275,
+      "lines": 1135,
+      "trafos": 395,
+      "loads": 1275,
+      "gens": 597,
+      "verify": "OK gen=597 ext=12 vmin=0.861"
+    },
+    {
+      "region": "shikoku",
+      "files": {
+        "EQ": [
+          "shikoku_L2_EQ.xml",
+          6299
+        ],
+        "TP": [
+          "shikoku_L2_TP.xml",
+          1212
+        ],
+        "SSH": [
+          "shikoku_L2_SSH.xml",
+          3689
+        ],
+        "SV": [
+          "shikoku_L2_SV.xml",
+          603
+        ],
+        "GL": [
+          "shikoku_L2_GL.xml",
+          1213
+        ]
+      },
+      "buses": 606,
+      "lines": 471,
+      "trafos": 187,
+      "loads": 606,
+      "gens": 356,
+      "verify": "OK gen=356 ext=31 vmin=0.771"
+    },
+    {
+      "region": "kyushu",
+      "files": {
+        "EQ": [
+          "kyushu_L2_EQ.xml",
+          16954
+        ],
+        "TP": [
+          "kyushu_L2_TP.xml",
+          2784
+        ],
+        "SSH": [
+          "kyushu_L2_SSH.xml",
+          10259
+        ],
+        "SV": [
+          "kyushu_L2_SV.xml",
+          1388
+        ],
+        "GL": [
+          "kyushu_L2_GL.xml",
+          2785
+        ]
+      },
+      "buses": 1392,
+      "lines": 1230,
+      "trafos": 433,
+      "loads": 1392,
+      "gens": 1374,
+      "verify": "OK gen=1374 ext=9 vmin=0.828"
+    },
+    {
+      "region": "okinawa",
+      "files": {
+        "EQ": [
+          "okinawa_L2_EQ.xml",
+          693
+        ],
+        "TP": [
+          "okinawa_L2_TP.xml",
+          162
+        ],
+        "SSH": [
+          "okinawa_L2_SSH.xml",
+          377
+        ],
+        "SV": [
+          "okinawa_L2_SV.xml",
+          79
+        ],
+        "GL": [
+          "okinawa_L2_GL.xml",
+          163
+        ]
+      },
+      "buses": 81,
+      "lines": 57,
+      "trafos": 25,
+      "loads": 81,
+      "gens": 16,
+      "verify": "OK gen=16 ext=1 vmin=0.941"
+    }
+  ]
+}
