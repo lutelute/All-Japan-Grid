@@ -56,6 +56,12 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline Flow" width="100%">
 </p>
 
+### v1.2.0 Highlights
+
+- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in 9/10 regions**.
+- 📦 [Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
+- 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
+
 ### v1.1.0 Highlights
 
 - 🆕 [N-1 contingency analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/scripts/run_n1_contingency.py) — 914 backbone lines tripped one-by-one across 9 regions, identifying pivotal lines whose loss breaks AC convergence in Tokyo / Kyushu.
@@ -137,7 +143,7 @@ excepted — the same sub-network transformer ill-conditioning as the west AC an
 求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。pandapower `cim2pp` で読み戻すと
 **9/10 地域で潮流が収束**します（kansai を除く＝west AC 解析と同じ下位網変圧器問題）。
 
-Both levels ship as zipped GitHub Release assets
+Both levels ship as zipped [GitHub Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
 regenerable via the two scripts above.
 
