@@ -207,15 +207,23 @@ function initMap() {
         attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/">OSM</a> contributors, SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
         maxZoom: 17,
     });
-    cartoLayer.addTo(map);
-    L.control.layers({
+    var BASE_LAYERS = {
         "Dark (CartoDB)": cartoLayer,
         "OSM": osmLayer,
         "地形図 (OpenTopoMap)": topoLayer,
         "衛星 (Google)": satelliteLayer,
         "地図 (国土地理院)": gsiLayer,
         "航空写真 (国土地理院)": gsiPhotoLayer,
-    }, null, { position: "topright", collapsed: true }).addTo(map);
+    };
+    var BASE_KEY = "agj_basemap";
+    var DEFAULT_BASE = "Dark (CartoDB)";
+    var savedBase = null;
+    try { savedBase = localStorage.getItem(BASE_KEY); } catch (e) {}
+    (BASE_LAYERS[savedBase] || BASE_LAYERS[DEFAULT_BASE]).addTo(map);
+    L.control.layers(BASE_LAYERS, null, { position: "topright", collapsed: true }).addTo(map);
+    map.on("baselayerchange", function(e){
+        try { localStorage.setItem(BASE_KEY, e.name); } catch (err) {}
+    });
 
     // Custom panes for z-ordering
     var terrainPane = map.createPane("terrainPane");
@@ -297,6 +305,10 @@ function initTabs() {
             if (tabId === "tab-compare") {
                 var cf = document.getElementById("compare-frame");
                 if (cf && !cf.src) cf.src = cf.dataset.src;
+                return;
+            }
+            // Ybus/N-1 タブは静的コンテンツ。メインマップは触らない。
+            if (tabId === "tab-ybus") {
                 return;
             }
 

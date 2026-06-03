@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=25"/>
+    <link rel="stylesheet" href="./css/style.css?v=26"/>
 </head>
 <body>
 
@@ -21,13 +21,18 @@
         <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
         <button class="tab-btn" data-tab="tab-sld">単線図</button>
         <button class="tab-btn" data-tab="tab-compare">比較</button>
+        <button class="tab-btn" data-tab="tab-ybus">Ybus / N-1</button>
     </div>
 
-    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ + Ybus 可視化) ━━ -->
+    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ、iframe遅延ロード) ━━ -->
     <div class="tab-panel" id="tab-compare">
         <iframe id="compare-frame" data-src="./compare.html"
-                style="width:100%;height:75vh;min-height:540px;border:0;display:block"
+                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
                 title="トポロジ比較（旧法 vs 新法）"></iframe>
+    </div>
+
+    <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
+    <div class="tab-panel" id="tab-ybus">
         <div id="ybus-panel" style="padding:14px 18px;background:#0f1419;color:#e6e6e6">
             <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) スパースパターン</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
@@ -492,8 +497,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=25"></script>
-<script src="./js/powerflow.js?v=25"></script>
-<script src="./js/sld.js?v=25"></script>
+<script src="./js/grid_map.js?v=26"></script>
+<script src="./js/powerflow.js?v=26"></script>
+<script src="./js/sld.js?v=26"></script>
 </body>
 </html>

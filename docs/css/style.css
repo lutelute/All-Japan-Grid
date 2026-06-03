@@ -64,9 +64,11 @@ body {
     overflow-y: auto;
 }
 .tab-panel.active { display: flex; flex-direction: column; }
-/* 比較タブ: iframe + Ybus/N-1 のスクロール可能領域 */
-#tab-compare.active { display: block; overflow-y: auto; height: calc(100vh - 56px); }
+/* 比較タブ: iframe をビューポートいっぱいに */
+#tab-compare.active { display: block; overflow: hidden; height: calc(100vh - 56px); }
 #tab-compare > iframe { display: block; }
+/* Ybus / N-1 タブ: スクロール可能領域 */
+#tab-ybus.active { display: block; overflow-y: auto; height: calc(100vh - 56px); }
 
 /* ── Region list ── */
 .section { padding: 12px 16px; border-bottom: 1px solid #0f3460; }
