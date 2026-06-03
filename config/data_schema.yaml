@@ -1,0 +1,651 @@
+# =============================================================================
+# All-Japan-Grid — Unified Distribution Data Schema
+# 配布データセット用 統一プロパティスキーマ (人間可読版)
+# =============================================================================
+#
+# This file is the AUTHORITATIVE, human-readable contract for the *distribution*
+# layer of the All-Japan-Grid GeoJSON dataset (substations / lines / plants).
+#
+# It is DESIGN-ONLY: it does NOT modify any file under data/. The files under
+# data/ are the RAW layer (OSM-derived, heterogeneous). This schema defines the
+# clean, regular DISTRIBUTION layer that downstream tooling and external users
+# should consume, plus the deterministic raw -> distribution transform rules.
+#
+# Machine-validatable counterpart (JSON Schema draft 2020-12):
+#   docs/DATA_SCHEMA.json
+#
+# Conventions (apply to every kind unless stated otherwise):
+#   - File granularity:  <region>_<kind>.geojson, one FeatureCollection each.
+#       region ∈ {hokkaido, tohoku, tokyo, chubu, hokuriku, kansai,
+#                 chugoku, shikoku, kyushu, okinawa}
+#       kind   ∈ {substations, lines, plants}
+#   - CRS:               WGS84 longitude/latitude, decimal degrees.
+#                        Declared as urn:ogc:def:crs:OGC:1.3:CRS84 (== EPSG:4326,
+#                        lon/lat axis order). Coordinates are [lon, lat].
+#   - Missing values:    null  (never -1.0, never "", never the string "None").
+#   - Internal metadata: keys prefixed with "_" (region, provenance, display).
+#   - Enrichment fields: OPTIONAL metadata produced by the enrichment pipeline
+#                        (geocoding / endpoint-matching / P03 snapping). Coverage
+#                        is partial and varies by region; consumers MUST treat
+#                        every "_*" field as optional and possibly null.
+#   - Voltage:           voltage_kv is NUMERIC in kV (float). Multi-voltage
+#                        elements use voltage_kv_all : array<float>, and
+#                        voltage_kv is the maximum of that array.
+#
+# Versioning:
+schema_version: "1.0.0"
+schema_date: "2026-06-03"
+crs: "urn:ogc:def:crs:OGC:1.3:CRS84"     # WGS84 lon/lat (EPSG:4326), [lon, lat]
+length_unit: "kilometre"                  # for any *_km field
+power_unit: "megawatt"                    # for capacity_mw
+voltage_unit: "kilovolt"                  # for voltage_kv / voltage_kv_all
+
+# -----------------------------------------------------------------------------
+# Two-layer model
+# -----------------------------------------------------------------------------
+layers:
+  raw:
+    path: "data/<region>_<kind>.geojson"
+    description: >
+      As-collected OSM export (plus light geocoding). Property sets differ per
+      region and per kind (e.g. tokyo_substations ~68 keys vs hokkaido ~40).
+      Voltage is a volt-valued string; missing values appear as -1.0 or "".
+      This layer is preserved as-is and is NOT covered by the field tables below
+      except as the documented "source" of each distribution field.
+    description_ja: >
+      収集したままの OSM エクスポート（軽微な geocoding を含む）。プロパティ
+      集合は地域・種別ごとに異なる。voltage は V 値の文字列、欠損は -1.0 や ""。
+      この層は変更せず保持する。
+  distribution:
+    path: "dist/<region>_<kind>.geojson   (proposed; not yet materialised)"
+    description: >
+      Clean, regular layer that conforms to the field tables and to
+      docs/DATA_SCHEMA.json. One FeatureCollection per region per kind.
+      Produced from the raw layer by applying `transform_rules` below.
+    description_ja: >
+      下記フィールド表および docs/DATA_SCHEMA.json に準拠する、整形済みで規則
+      的な配布層。raw 層に transform_rules を適用して生成する。
+
+# -----------------------------------------------------------------------------
+# Shared value vocabularies (closed-ish enumerations observed in the data)
+# -----------------------------------------------------------------------------
+vocabularies:
+  fuel_type:
+    description: "Normalised primary generation fuel. Anything unrecognised -> unknown."
+    values: [solar, wind, hydro, geothermal, biomass, waste, gas, oil, coal,
+             nuclear, battery, unknown]
+  plant_category:        # distribution field: _category
+    values: [utility, ipp, unknown]
+    notes: "utility=major incumbent utility plant; ipp=independent/embedded; unknown=unclassified."
+  substation_function:   # distribution field: function (from raw `substation`)
+    values: [transmission, distribution, minor_distribution, generation,
+             industrial, traction, transition, converter, compensation,
+             switching, rail, generic, unknown]
+    notes: >
+      Raw OSM `substation` tag, lightly normalised. Raw "yes"/"substation"
+      and missing -> "generic"/"unknown" per transform_rules.
+  enrichment_method:     # distribution field: _enriched_by
+    values: [geocode_promotion, endpoint_matching, nominatim, p03, jrp_lite, overpass]
+    notes: >
+      Provenance of name/attribute enrichment. substations use geocode_promotion;
+      lines use endpoint_matching; plants use nominatim/p03/jrp_lite/overpass.
+  name_source:           # distribution field: _name_source
+    values: [geocoded, "name:en", operator_voltage, endpoints, regional_fallback, fallback]
+    notes: >
+      How the display name / attributes were obtained. Grounded in the observed
+      raw value universe: substations use {geocoded, name:en}; lines use
+      {operator_voltage, endpoints, regional_fallback}; plants use
+      {geocoded, fallback}. null when not enriched.
+
+# =============================================================================
+# KIND: substations  (変電所)
+# =============================================================================
+substations:
+  geometry:
+    types: [Point, Polygon, MultiPolygon]
+    notes: >
+      Most substations are building/site footprints (Polygon); some are nodes
+      (Point). Distribution layer keeps original geometry; an optional Point
+      centroid MAY be added as _centroid (lon/lat) for convenience.
+  feature_id:
+    field: "id"
+    type: "string"
+    required: false
+    note: >
+      Raw subs have no stable OSM id. Distribution id, when present, is the
+      synthetic "<region>_sub_<index>" assigned at build time. Optional.
+  properties:
+
+    - name: name
+      type: string
+      required: true
+      source: "raw: name (fallback _display_name)"
+      description: "Primary display name (Japanese)."
+      description_ja: "主表示名（日本語）。"
+
+    - name: name_en
+      type: ["string", "null"]
+      required: false
+      source: "raw: name:en"
+      description: "English name if known."
+
+    - name: name_ja
+      type: ["string", "null"]
+      required: false
+      source: "raw: name:ja"
+      description: "Explicit Japanese name tag (often duplicates `name`)."
+
+    - name: operator
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator (fallback operator:ja)"
+      description: "Operating entity (utility / railway / industrial owner)."
+
+    - name: operator_en
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator:en"
+      description: "Operator name in English."
+
+    - name: operator_wikidata
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator:wikidata"
+      description: "Wikidata Q-id of the operator, if tagged."
+
+    - name: function
+      type: ["string", "null"]
+      required: false
+      source: "raw: substation"
+      vocabulary: substation_function
+      description: "Substation function/role. Raw OSM `substation` tag, normalised."
+      description_ja: "変電所の機能・役割。OSM substation タグを正規化。"
+
+    - name: voltage_kv
+      type: ["number", "null"]
+      unit: kV
+      required: false
+      source: "raw: voltage (V-string)"
+      description: >
+        Nominal voltage in kV (the maximum if the raw value listed several).
+        null when raw voltage was empty/-1.
+      description_ja: "公称電圧[kV]。複数記載があれば最大値。raw が空/-1 のとき null。"
+
+    - name: voltage_kv_all
+      type: ["array", "null"]
+      items: "number"
+      unit: kV
+      required: false
+      source: "raw: voltage (split on ';' or ',')"
+      description: >
+        All voltage levels in kV, descending. Single-level elements -> one-item
+        array. null when unknown. `voltage_kv` == max(voltage_kv_all).
+      description_ja: "全電圧階級[kV]を降順で配列化。不明なら null。"
+
+    - name: frequency_hz
+      type: ["number", "null"]
+      unit: Hz
+      required: false
+      source: "raw: frequency"
+      description: "Operating frequency (50 or 60). Usually null in raw."
+
+    - name: ref
+      type: ["string", "null"]
+      required: false
+      source: "raw: ref"
+      description: "Operator/reference designation."
+
+    - name: source
+      type: ["string", "null"]
+      required: false
+      source: "raw: source"
+      description: "Provenance note from OSM mapping (free text)."
+
+    # -- internal / enrichment metadata (all OPTIONAL) --------------------------
+    - name: _region
+      type: string
+      required: true
+      source: "build: filename region"
+      description: "Region key (one of the 10 EPCO areas)."
+      meta: true
+
+    - name: _display_name
+      type: ["string", "null"]
+      required: false
+      source: "raw: _display_name"
+      description: "Resolved display name after enrichment."
+      meta: true
+
+    - name: _name_source
+      type: ["string", "null"]
+      required: false
+      source: "raw: _name_source"
+      vocabulary: name_source
+      description: "How `_display_name` was obtained."
+      meta: true
+      enrichment: true
+
+    - name: _enriched_by
+      type: ["string", "null"]
+      required: false
+      source: "raw: _enriched_by"
+      vocabulary: enrichment_method
+      description: >
+        Enrichment provenance (substations: geocode_promotion). Present as a key
+        in every region but only ~25-78% of features carry a non-null value.
+      description_ja: "強化処理の出所。キーは全地域に存在するが非null率は地域で異なる。"
+      meta: true
+      enrichment: true
+
+# =============================================================================
+# KIND: lines  (送電線)
+# =============================================================================
+lines:
+  geometry:
+    types: [LineString]
+    notes: "Every transmission-line feature is a single LineString in [lon,lat]."
+  feature_id:
+    field: "id"
+    type: "string"
+    required: false
+    note: "Raw lines have no stable OSM id; synthetic '<region>_line_<index>' optional."
+  properties:
+
+    - name: name
+      type: string
+      required: true
+      source: "raw: name (fallback _display_name)"
+      description: "Line name (Japanese). May contain multiple names joined by ';'."
+      description_ja: "送電線名（日本語）。';' 区切りで複数名を含む場合あり。"
+
+    - name: name_en
+      type: ["string", "null"]
+      required: false
+      source: "raw: name:en"
+      description: "English line name."
+
+    - name: operator
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator (fallback operator:ja)"
+      description: "Transmission operator (TSO / utility network company)."
+
+    - name: operator_en
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator:en"
+      description: "Operator name in English."
+
+    - name: operator_wikidata
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator:wikidata"
+      description: "Wikidata Q-id of the operator, if tagged."
+
+    - name: voltage_kv
+      type: ["number", "null"]
+      unit: kV
+      required: false
+      source: "raw: voltage (V-string; fallback voltage:design)"
+      description: "Nominal voltage in kV (max if multi-circuit lists several)."
+      description_ja: "公称電圧[kV]（複数階級記載なら最大値）。"
+
+    - name: voltage_kv_all
+      type: ["array", "null"]
+      items: "number"
+      unit: kV
+      required: false
+      source: "raw: voltage (split on ';' or ',')"
+      description: >
+        All voltage levels carried, descending kV. e.g. raw "154000;66000"
+        -> [154.0, 66.0]. null when unknown.
+      description_ja: 'raw "154000;66000" → [154.0, 66.0]。不明なら null。'
+
+    - name: current_type
+      type: ["string", "null"]
+      required: false
+      source: "raw: voltage (e.g. 'dc1500')"
+      enum: [ac, dc, null]
+      description: >
+        AC or DC. Default ac. Set to dc when the raw voltage token was a DC
+        marker such as 'dc1500' (HVDC / traction DC).
+      description_ja: "交直区分。raw voltage が 'dc1500' 等のとき dc。既定は ac。"
+
+    - name: frequency_hz
+      type: ["number", "null"]
+      unit: Hz
+      required: false
+      source: "raw: frequency"
+      description: "Operating frequency (50/60). Usually null in raw."
+
+    - name: circuits
+      type: ["integer", "null"]
+      required: false
+      source: "raw: circuits"
+      description: "Number of electrical circuits on the line."
+
+    - name: cables
+      type: ["integer", "null"]
+      required: false
+      source: "raw: cables"
+      description: "Number of cables/conductors (OSM `cables`)."
+
+    - name: wires
+      type: ["string", "null"]
+      required: false
+      source: "raw: wires"
+      description: "Bundle description (e.g. single, double, quad)."
+
+    - name: ref
+      type: ["string", "null"]
+      required: false
+      source: "raw: ref"
+      description: "Operator/reference designation."
+
+    - name: source
+      type: ["string", "null"]
+      required: false
+      source: "raw: source"
+      description: "Provenance note from OSM mapping (free text)."
+
+    # -- internal / enrichment metadata (all OPTIONAL) --------------------------
+    - name: _region
+      type: string
+      required: true
+      source: "build: filename region"
+      description: "Region key."
+      meta: true
+
+    - name: _name_source
+      type: ["string", "null"]
+      required: false
+      source: "raw: _name_source"
+      vocabulary: name_source
+      description: "How the name was obtained/derived."
+      meta: true
+      enrichment: true
+
+    - name: _enriched_by
+      type: ["string", "null"]
+      required: false
+      source: "raw: _enriched_by"
+      vocabulary: enrichment_method
+      description: >
+        Enrichment provenance (lines: endpoint_matching). Key present in every
+        region; non-null coverage ~51-93% by region.
+      meta: true
+      enrichment: true
+
+# =============================================================================
+# KIND: plants  (発電所)
+# =============================================================================
+plants:
+  geometry:
+    types: [Point]
+    notes: "Each plant is a single representative Point in [lon, lat]."
+  feature_id:
+    field: "id"
+    type: ["string", "null"]
+    required: false
+    note: >
+      Use osm_type+osm_id when available (e.g. 'node/5744947416'); plants from
+      jrp_lite (kyushu/okinawa) have null osm_id and use a synthetic id.
+  properties:
+
+    - name: name
+      type: string
+      required: true
+      source: "raw: name (fallback _display_name)"
+      description: "Plant name (Japanese)."
+      description_ja: "発電所名（日本語）。"
+
+    - name: name_en
+      type: ["string", "null"]
+      required: false
+      source: "raw: name:en"
+      description: "English plant name (\"\" in raw -> null)."
+
+    - name: name_ja
+      type: ["string", "null"]
+      required: false
+      source: "raw: name:ja"
+      description: "Explicit Japanese name tag (\"\" in raw -> null)."
+
+    - name: operator
+      type: ["string", "null"]
+      required: false
+      source: "raw: operator"
+      description: "Owning/operating entity (\"\" in raw -> null)."
+
+    - name: fuel_type
+      type: string
+      required: true
+      source: "raw: fuel_type (sanitised via plant:source)"
+      vocabulary: fuel_type
+      description: >
+        Normalised primary fuel. Raw values that are URLs / 'bing' / 'image' /
+        free text are mapped to 'unknown'.
+      description_ja: "正規化した主燃料。URL や 'bing'/'image' 等は 'unknown' へ。"
+
+    - name: capacity_mw
+      type: ["number", "null"]
+      unit: MW
+      required: false
+      source: "raw: capacity_mw"
+      description: >
+        Installed capacity in MW. Raw sentinel -1.0 and missing -> null.
+        No zero/negative values survive into the distribution layer.
+      description_ja: "設備容量[MW]。raw のセンチネル -1.0 と欠損は null。"
+
+    - name: voltage_kv
+      type: ["number", "null"]
+      unit: kV
+      required: false
+      source: "raw: voltage (V-string, usually empty)"
+      description: "Interconnection voltage in kV if tagged; usually null."
+
+    - name: voltage_kv_all
+      type: ["array", "null"]
+      items: "number"
+      unit: kV
+      required: false
+      source: "raw: voltage (split on ';')"
+      description: "All interconnection voltage levels in kV, descending. Usually null."
+
+    # -- internal / enrichment metadata (mostly OPTIONAL) -----------------------
+    - name: _region
+      type: string
+      required: true
+      source: "raw: _region (fallback filename)"
+      description: "Region key."
+      meta: true
+
+    - name: _region_ja
+      type: ["string", "null"]
+      required: false
+      source: "raw: _region_ja (kyushu/okinawa only)"
+      description: "Region name in Japanese. Present only for jrp_lite regions."
+      meta: true
+
+    - name: _category
+      type: ["string", "null"]
+      required: false
+      source: "raw: _category"
+      vocabulary: plant_category
+      description: "Coarse classification (utility / ipp / unknown)."
+      meta: true
+
+    - name: _fuel_color
+      type: ["string", "null"]
+      required: false
+      source: "raw: _fuel_color"
+      description: "Hex colour (#rrggbb) used for map rendering of this fuel."
+      meta: true
+
+    - name: _display_name
+      type: ["string", "null"]
+      required: false
+      source: "raw: _display_name"
+      description: "Resolved display name after enrichment."
+      meta: true
+
+    - name: _name_source
+      type: ["string", "null"]
+      required: false
+      source: "raw: _name_source"
+      vocabulary: name_source
+      description: >
+        How the name was obtained. Absent in kyushu/okinawa plants (jrp_lite)
+        -> null there.
+      meta: true
+      enrichment: true
+
+    - name: _enriched_by
+      type: ["string", "null"]
+      required: false
+      source: "raw: _enriched_by"
+      vocabulary: enrichment_method
+      description: >
+        Enrichment provenance. plants: nominatim / p03 / overpass, or jrp_lite
+        (kyushu/okinawa). Non-null coverage ~77-100% by region.
+      meta: true
+      enrichment: true
+
+    - name: _p03_distance_km
+      type: ["number", "null"]
+      unit: km
+      required: false
+      source: "raw: _p03_distance_km"
+      description: >
+        Distance (km) to the matched MLIT P03 power-plant point used for
+        enrichment. null when not matched via P03.
+      description_ja: "強化に用いた国土数値情報 P03 発電所点までの距離[km]。"
+      meta: true
+      enrichment: true
+
+    - name: osm_id
+      type: ["integer", "null"]
+      required: false
+      source: "raw: osm_id"
+      description: "OSM element id. null for jrp_lite-sourced plants."
+      meta: true
+
+    - name: osm_type
+      type: ["string", "null"]
+      required: false
+      source: "raw: osm_type"
+      enum: [node, way, relation, null]
+      description: "OSM element type. null for jrp_lite-sourced plants."
+      meta: true
+
+# =============================================================================
+# RAW -> DISTRIBUTION TRANSFORM RULES
+# raw 層 -> 配布層 変換規則（決定的・冪等）
+# =============================================================================
+transform_rules:
+
+  global:
+    - id: geometry-guard
+      rule: >
+        Drop features whose geometry does not match the kind's allowed
+        geometry types: lines must be LineString; plants must be Point;
+        substations must be Point/Polygon/MultiPolygon. Known raw defect:
+        kansai_lines contains 2 Point features tagged power=line (no name) —
+        these are dropped by this rule. The distribution schema REJECTS such
+        mismatches so the build surfaces them.
+    - id: missing-to-null
+      rule: >
+        Any raw value equal to "" (empty string), the number -1.0, or the
+        literal string "None"/"null" becomes JSON null in the distribution layer.
+      applies_to: "all fields"
+    - id: drop-allnull-osm-tags
+      rule: >
+        Raw OSM passthrough tags that are null/"" for a feature are OMITTED from
+        that feature in the distribution layer (no carpet of null keys). Only the
+        fields in the tables above are emitted; everything else is dropped.
+    - id: crs-normalise
+      rule: >
+        Emit a top-level `crs` member = urn:ogc:def:crs:OGC:1.3:CRS84 on every
+        FeatureCollection (plants raw lacks it). Coordinates are left untouched
+        ([lon, lat], decimal degrees) — they are already WGS84.
+    - id: region-stamp
+      rule: "Set _region from the filename region token; for plants prefer raw _region."
+
+  voltage:
+    summary: "Volt-valued strings -> kV numbers; multi-level -> array; dirty tokens cleaned."
+    steps:
+      - "Read raw `voltage` (substations/lines/plants); for lines fall back to `voltage:design` when `voltage` is empty."
+      - "If empty/-1/null -> voltage_kv=null, voltage_kv_all=null, current_type=null."
+      - "Split on ';' OR ',' into tokens (raw mixes both, e.g. '154000;66000' and '154000,66000')."
+      - "Per token: detect DC marker — a leading 'dc' (e.g. 'dc1500') sets current_type='dc'; otherwise current_type='ac'."
+      - "Per token: strip a trailing unit suffix 'kv'/'KV'/'kV'/'v'/'V'. If the token already ended in 'kv', the numeric part is ALREADY in kV; otherwise the numeric part is in volts and is divided by 1000."
+      - "Numeric volt token N -> N/1000.0 kV (float). e.g. 154000 -> 154.0; '154kv' -> 154.0; 'dc1500' -> 1.5."
+      - "Drop any token that resolves to <= 0 kV (raw carries bogus 'voltage=0', e.g. '0', '500000;0'). A zero is treated as missing, not as a real level."
+      - "voltage_kv_all = sorted(unique POSITIVE kV values, descending). If none remain -> voltage_kv=null, voltage_kv_all=null, current_type=null. Otherwise voltage_kv = voltage_kv_all[0] (the maximum)."
+    examples:
+      - { raw: "154000",            voltage_kv: 154.0, voltage_kv_all: [154.0],         current_type: ac }
+      - { raw: "154000;66000",      voltage_kv: 154.0, voltage_kv_all: [154.0, 66.0],   current_type: ac }
+      - { raw: "154000,66000",      voltage_kv: 154.0, voltage_kv_all: [154.0, 66.0],   current_type: ac }
+      - { raw: "77000,22000,6600",  voltage_kv: 77.0,  voltage_kv_all: [77.0, 22.0, 6.6], current_type: ac }
+      - { raw: "154kv",             voltage_kv: 154.0, voltage_kv_all: [154.0],         current_type: ac }
+      - { raw: "dc1500",            voltage_kv: 1.5,   voltage_kv_all: [1.5],           current_type: dc }
+      - { raw: "500000;0",          voltage_kv: 500.0, voltage_kv_all: [500.0],         current_type: ac }
+      - { raw: "0",                 voltage_kv: null,  voltage_kv_all: null,            current_type: null }
+      - { raw: "",                  voltage_kv: null,  voltage_kv_all: null,            current_type: null }
+
+  capacity:
+    summary: "MW capacity sentinel cleanup."
+    steps:
+      - "Read raw `capacity_mw` (plants)."
+      - "If value is null, -1.0, or < 0 -> capacity_mw = null."
+      - "Else keep the float as-is (MW)."
+
+  fuel_type:
+    summary: "Constrain to the fuel_type vocabulary; sink junk to 'unknown'."
+    steps:
+      - "Start from raw `fuel_type`; if empty, fall back to a cleaned raw `plant:source`."
+      - "Lowercase and trim."
+      - "If the value is not in the fuel_type vocabulary (e.g. a URL, 'bing', 'image', 'gsimaps/ort', free text) -> 'unknown'."
+      - "Map known synonyms: 'biofuel' -> 'biomass'."
+
+  substation_function:
+    summary: "Normalise raw `substation` tag to substation_function vocabulary."
+    steps:
+      - "Read raw `substation`."
+      - "null/'' -> 'unknown'."
+      - "'yes' or 'substation' -> 'generic'."
+      - "Otherwise pass through if in vocabulary, else 'unknown'."
+
+  names:
+    summary: "Pick a guaranteed non-empty display name; nullify empty localized tags."
+    steps:
+      - "name = first non-empty of [raw name, raw _display_name]. If both empty, name='(unnamed)'."
+      - "name_en/name_ja = raw name:en / name:ja, with '' -> null."
+      - "operator = first non-empty of [raw operator, raw operator:ja]; '' -> null."
+
+  enrichment:
+    summary: "Carry enrichment metadata through verbatim, as OPTIONAL fields."
+    steps:
+      - "Copy _enriched_by, _name_source, _p03_distance_km, _display_name, _category, _fuel_color, _region_ja when present."
+      - "Do NOT fabricate them where absent (e.g. plants in kyushu/okinawa have no _name_source) — emit null / omit."
+      - "These fields are advisory provenance only and MUST NOT be required by consumers."
+
+# =============================================================================
+# Observed raw heterogeneity (for reference; informs the rules above)
+# =============================================================================
+raw_notes:
+  property_key_counts:
+    tokyo_substations: 69
+    hokkaido_substations: 43
+    okinawa_substations: 29
+    tokyo_lines: 61
+    hokkaido_lines: 36
+    okinawa_lines: 19
+    plants_all_regions: "17 (plants are already semi-normalised at the raw layer)"
+  voltage_dirty_tokens_seen: ["154000,66000", "77000,6600", "77000,22000,6600", "154kv", "dc1500"]
+  capacity_sentinels_seen: [-1.0, null]
+  enrichment_coverage_note: >
+    The "_enriched_by"/"_name_source" KEYS exist in all 10 regions for all kinds,
+    but NON-NULL coverage is partial (substations 25-78%, lines 51-93%,
+    plants 77-100%). kyushu/okinawa plants use jrp_lite and omit _name_source
+    while adding _region_ja. Hence all enrichment fields are modelled OPTIONAL.

@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: >-
+  If you use All-Japan-Grid, please cite it using the metadata in this file.
+  Licensing is dual: the network data under data/ (derived from OpenStreetMap)
+  is licensed under ODbL-1.0, while the source code is licensed under MIT.
+title: All-Japan-Grid
+abstract: >-
+  An open-source pipeline that automatically constructs a nationwide Japanese
+  transmission grid model from OpenStreetMap (OSM) crowdsourced data. It provides
+  bus-level GeoJSON layers (substations, lines, plants) across all 10 regions of
+  Japan's dual-frequency system, builds sparse bus admittance matrices (Ybus),
+  and supports AC power flow, MILP unit commitment, and transient/N-x stability
+  analysis.
+type: software
+version: 1.1.0
+date-released: 2026-06
+repository-code: 'https://github.com/lutelute/All-Japan-Grid'
+url: 'https://github.com/lutelute/All-Japan-Grid'
+license: MIT
+license-url: 'https://opensource.org/licenses/MIT'
+keywords:
+  - power grid
+  - OpenStreetMap
+  - Japan
+  - transmission
+  - GeoJSON
+  - power flow
+authors:
+  - family-names: Shigenobu
+    given-names: Ryuto
+    email: lute@u-fukui.ac.jp
+    affiliation: >-
+      Electrical and Electronics Engineering, Faculty of Engineering,
+      University of Fukui
+  - family-names: Takahashi
+    given-names: Akiko
+    affiliation: >-
+      Headquarters for Carbon Neutral Initiatives, Faculty of Basic and Generic
+      Researches, University of Fukui
+  - family-names: Ito
+    given-names: Masakazu
+    affiliation: >-
+      Electrical and Electronics Engineering, Faculty of Engineering,
+      University of Fukui
+notes: >-
+  Dual licensing. Network data under data/ is derived from OpenStreetMap and is
+  licensed under the Open Data Commons Open Database License (ODbL) v1.0
+  (https://opendatacommons.org/licenses/odbl/). The source code is licensed
+  under the MIT License. The top-level `license` field above (MIT) refers to the
+  code; data reuse is governed by ODbL-1.0.

@@ -763,9 +763,9 @@ $$-C_\ell \leq f_{\ell,t} \leq C_\ell \quad \forall \ell, t$$
 
 ここで $C_\ell$ は連系線 $\ell$ の運用容量（MW）である。需要 $D_{r,t}$ は各エリアの発電容量比率に基づいてシステム全体需要を按分する。
 
-**実証結果**: GeoJSON から読み込んだ757台の実発電所 × 24時間 × 9連系線の全国統合UCを単一MILPとして約9秒で最適解を得た。連系線なし（copper plate）との比較で、送電混雑コストは+1.40%（約1.07億円/日）であり、全9連系線が飽和した。
+**実証結果**: OCCTO 参照モデルの646機の発電機 × 24時間 × 9連系線の全国統合UCを単一MILPとして約38秒で最適解を得た。連系線なし（copper plate）との比較で、送電混雑コストは+1.40%（約1.07億円/日）であり、全9連系線が飽和した。
 
-Verified with 757 real generators from GeoJSON across 10 regions: the national MILP with 9 interconnections solves to optimality in ~9 seconds. Congestion cost vs. copper plate is +1.40%, with all 9 interconnections saturated.
+Verified with 646 generators (OCCTO-reference model) across 10 regions: the national MILP with 9 interconnections solves to optimality in ~38 seconds. Congestion cost vs. copper plate is +1.40%, with all 9 interconnections saturated.
 
 ### 10.5 ソルババックエンド
 

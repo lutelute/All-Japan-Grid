@@ -82,7 +82,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 | Shikoku / 四国 | 258 | 1,532 | 688 | 60 Hz |
 | Kyushu / 九州 | 684 | 3,314 | 2,549 | 60 Hz |
 | Okinawa / 沖縄 | 59 | 117 | 32 | 60 Hz |
-| **Total / 合計** | **7,962** | **40,077** | **19,138** | — |
+| **Total / 合計** | **6,962** | **40,077** | **19,138** | — |
 
 ### File Format / ファイル形式
 
@@ -302,7 +302,7 @@ open http://localhost:8000
 | `src/server/` | FastAPI web server, interactive map / FastAPI ウェブサーバー、インタラクティブマップ | Works / 動作可 |
 | `src/powerflow/` | DC/AC power flow via pandapower / pandapower による DC/AC 潮流計算 | Requires electrical parameters / 電気パラメータが必要 |
 | `src/ac_powerflow/` | Advanced AC methods / 高度な AC 手法 | Requires electrical parameters / 電気パラメータが必要 |
-| `src/uc/` | Unit Commitment (MILP, PuLP + HiGHS) with inter-regional transmission constraints / 地域間連系線制約付き UC ソルバ | Verified: 757 generators × 24h × 9 interconnections → Optimal in ~9s / 実証済み |
+| `src/uc/` | Unit Commitment (MILP, PuLP + HiGHS) with inter-regional transmission constraints / 地域間連系線制約付き UC ソルバ | Verified: 646 generators × 24h × 9 interconnections → Optimal in ~38s / 実証済み |
 | `src/converter/` | pandapower / MATPOWER export / エクスポート | Works / 動作可 |
 
 ## Future Work — Complementary Data Sources / 今後の展望 — 補完データソース

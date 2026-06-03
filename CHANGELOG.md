@@ -1,0 +1,44 @@
+# Changelog
+
+All notable changes to All-Japan-Grid are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.0] - 2026-06
+
+Tagged in git as `v1.1.0`.
+
+### Added
+- N-1 contingency analysis across the nationwide 500/275 kV system (Kron-reduced
+  generator-bus equivalent), extended through N-x cascade screening.
+- Comparison tab in the live map UI with a satellite imagery layer for visual
+  positional verification of substations and lines.
+- Interactive Ybus and N-1 views surfaced inside the comparison tab.
+- Automatic DC power flow for the national zonal solve.
+
+### Changed
+- Voltage standardization: `_clean_voltage` now snaps non-standard voltages
+  (e.g. 22 / 25 / 30 / 33 / 100 kV) onto the standard Japanese voltage classes
+  (66 / 110 / 154 / 275 / 500 kV).
+- Regenerated all island/region datasets with the new standardized voltages.
+
+### Fixed
+- Hokkaido voltage-magnitude lower bound (`vm_min`) raised from 0.30 to 0.81,
+  improving power-flow conditioning for the region.
+
+## [1.0.0] - 2026-03
+
+Tagged in git as `v1.0.0`. Initial release.
+
+### Added
+- Open Japanese power grid model automatically constructed from OpenStreetMap.
+- 10 regions covering Japan's dual-frequency (50/60 Hz) system: 40,000+ lines
+  and 7,000+ substations.
+- GeoJSON data layers (substations, lines, plants) with voltage and operator
+  metadata.
+- Seven-stage attribute completion pipeline, sparse Ybus construction, AC power
+  flow, and MILP unit commitment with inter-regional interconnection constraints.
+
+[1.1.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0
+[1.0.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.0.0
