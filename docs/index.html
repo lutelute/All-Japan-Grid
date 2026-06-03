@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=28"/>
+    <link rel="stylesheet" href="./css/style.css?v=29"/>
 </head>
 <body>
 
@@ -237,38 +237,86 @@
             })();
             </script>
 
-            <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（地域別）</h3>
+            <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（インタラクティブ）</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
-                各地域 220 kV 以上の幹線を1本ずつ脱落（N-1）させ AC 再潮流を行い、
-                最悪事故を抽出した。<b>worst Top-1 Δmax_loading</b>＝事故前後の最大線路負荷率の悪化、
-                <b>AC FAIL</b>＝脱落で AC が収束しなくなる枢要線（東京 / 九州で確認）。
+                各地域 220 kV 以上の幹線を1本ずつ脱落（N-1）させ AC 再潮流を行い、最悪事故を抽出した。
+                <b>地域を選ぶと、その地域の Worst Top-30 ランキングが表示</b>されます。
                 関西は基底 AC 非収束のためスキップ（<code>docs/WEST_AC_ANALYSIS.md</code>）。
             </p>
-            <figure style="margin:0 0 12px">
-                <img src="./assets/analysis/n1_worst_top.png" alt="N-1 worst top per region"
-                     loading="lazy"
-                     style="width:100%;max-width:880px;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
-            </figure>
-            <div id="n1-summary-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
+
+            <!-- 地域セレクタ + 表示切替 -->
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 12px">
+                <label style="font-size:12px;color:#9fb3c8">地域:</label>
+                <select id="n1-region" style="background:#1b2631;color:#fff;border:1px solid #34495e;border-radius:4px;padding:5px 8px;font-size:13px">
+                    <option value="__overview__" selected>▸ 全地域サマリ (棒グラフ + 表)</option>
+                    <option value="hokkaido">北海道 (16幹線)</option>
+                    <option value="tohoku">東北 (30幹線)</option>
+                    <option value="tokyo">東京 (30幹線, AC FAIL あり)</option>
+                    <option value="chubu">中部 (30幹線)</option>
+                    <option value="hokuriku">北陸 (30幹線)</option>
+                    <option value="chugoku">中国 (30幹線)</option>
+                    <option value="shikoku">四国 (22幹線)</option>
+                    <option value="kyushu">九州 (30幹線, AC FAIL あり)</option>
+                </select>
+                <span id="n1-region-summary" style="font-size:12px;color:#5dade2"></span>
+            </div>
+
+            <!-- 全地域オーバービュー (棒グラフ + summary表) -->
+            <div id="n1-overview">
+                <figure style="margin:0 0 12px">
+                    <img src="./assets/analysis/n1_worst_top.png" alt="N-1 worst top per region"
+                         loading="lazy"
+                         style="width:100%;max-width:880px;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
+                </figure>
+                <div id="n1-summary-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
+            </div>
+
+            <!-- 個別地域 Worst Top-30 (動的にロード) -->
+            <div id="n1-detail" style="display:none">
+                <div id="n1-detail-meta" style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 12px;padding:10px 14px;background:#0c1014;border:1px solid #2c3e50;border-radius:4px;font-size:12px"></div>
+                <div id="n1-detail-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
+                <p style="margin:0;font-size:11px;color:#7d8aa0">
+                    各行 = ある幹線を outage させた時の最悪結果。AC FAIL は脱落で AC が解けなくなる枢要線（系統の急所）。
+                </p>
+            </div>
+
             <script>
-            (async function(){
-                try {
-                    const r = await fetch("./data/n1/n1_summary.csv?cb=" + Date.now());
-                    if (!r.ok) return;
-                    const t = (await r.text()).trim();
-                    const rows = t.split(/\r?\n/).map(l => l.split(","));
+            (function(){
+                const RJA = {hokkaido:"北海道", tohoku:"東北", tokyo:"東京",
+                             chubu:"中部", hokuriku:"北陸", chugoku:"中国",
+                             shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
+
+                let summary = null;
+
+                function parseCsv(text){
+                    const rows = text.trim().split(/\r?\n/).map(l => l.split(","));
                     const head = rows.shift();
-                    const JA = {region:"地域", base_max_load:"基底 max load (%)",
-                                worst_max_load:"最悪 max load (%)", worst_delta:"Δ (%)",
-                                worst_ac_fail:"AC FAIL", worst_line:"枢要線"};
-                    const RJA = {hokkaido:"北海道", tohoku:"東北", tokyo:"東京",
-                                 chubu:"中部", hokuriku:"北陸", chugoku:"中国",
-                                 shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
+                    return {head, rows};
+                }
+
+                async function loadSummary(){
+                    if (summary) return summary;
+                    try {
+                        const r = await fetch("./data/n1/n1_summary.csv?cb=" + Date.now());
+                        if (r.ok) summary = parseCsv(await r.text());
+                    } catch(e){}
+                    return summary;
+                }
+
+                async function renderOverview(){
+                    document.getElementById("n1-overview").style.display = "";
+                    document.getElementById("n1-detail").style.display = "none";
+                    document.getElementById("n1-region-summary").textContent = "全 9 地域 / 914 候補幹線をスイープ";
+                    const s = await loadSummary();
+                    if (!s) return;
+                    const HJA = {region:"地域", base_max_load:"基底 max load (%)",
+                                 worst_max_load:"最悪 max load (%)", worst_delta:"Δ (%)",
+                                 worst_ac_fail:"AC FAIL", worst_line:"枢要線"};
                     let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
                     html += '<thead><tr>';
-                    for (const h of head) html += `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${JA[h]||h}</th>`;
+                    for (const h of s.head) html += `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${HJA[h]||h}</th>`;
                     html += '</tr></thead><tbody>';
-                    for (const cols of rows) {
+                    for (const cols of s.rows) {
                         if (!cols[0]) continue;
                         const fail = cols[4] === "yes";
                         const trBg = fail ? 'background:rgba(231,76,60,.08)' : '';
@@ -285,13 +333,83 @@
                     }
                     html += '</tbody></table>';
                     document.getElementById("n1-summary-table").innerHTML = html;
-                } catch (e) { console.warn("n1 summary load failed", e); }
+                }
+
+                async function renderRegion(region){
+                    document.getElementById("n1-overview").style.display = "none";
+                    document.getElementById("n1-detail").style.display = "";
+                    let r;
+                    try {
+                        const resp = await fetch(`./data/n1/${region}_n1.csv?cb=${Date.now()}`);
+                        if (!resp.ok) return;
+                        r = parseCsv(await resp.text());
+                    } catch(e) { return; }
+
+                    // メタ情報 (summaryから)
+                    const s = await loadSummary();
+                    let metaHtml = `<div><b style="color:#69f0ae">${RJA[region]}</b></div>`;
+                    if (s) {
+                        const row = s.rows.find(rr => rr[0] === region);
+                        if (row) {
+                            const fail = row[4] === "yes";
+                            metaHtml += `<div>候補幹線: <b>${r.rows.filter(rr=>rr[0]).length}</b></div>`;
+                            metaHtml += `<div>基底 max load: <b>${row[1]}%</b></div>`;
+                            metaHtml += `<div>最悪 max load: <b style="${fail?'color:#ff8a80':''}">${row[2]}${fail?'':'%'}</b></div>`;
+                            if (!fail) metaHtml += `<div>Δ最大悪化: <b>+${row[3]}%</b></div>`;
+                            metaHtml += `<div>枢要線: <code style="color:#5dade2">${row[5]}</code></div>`;
+                            if (fail) metaHtml += `<div style="color:#ff8a80;font-weight:700">★ AC FAIL する事故あり</div>`;
+                        }
+                    }
+                    document.getElementById("n1-detail-meta").innerHTML = metaHtml;
+                    document.getElementById("n1-region-summary").textContent =
+                        `${RJA[region]} の Worst Top-${r.rows.filter(rr=>rr[0]).length} ランキング`;
+
+                    // 詳細表
+                    const HJA = {line_idx:"#", name:"幹線名", voltage_kv:"電圧 (kV)",
+                                 ac_converged:"AC", vmin:"vmin", vmax:"vmax",
+                                 max_loading_pct:"max load (%)", n_overload:"過負荷数",
+                                 delta_max_load:"Δ max load"};
+                    let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
+                    html += '<thead><tr>' +
+                        r.head.map(h => `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${HJA[h]||h}</th>`).join("") +
+                        '</tr></thead><tbody>';
+                    for (const cols of r.rows) {
+                        if (!cols[0]) continue;
+                        const ac = cols[3];
+                        const fail = (ac === "False" || ac === "false");
+                        const trBg = fail ? 'background:rgba(231,76,60,.12)' : '';
+                        html += `<tr style="${trBg}">`;
+                        cols.forEach((c, i) => {
+                            let val = c;
+                            if (r.head[i] === "name") val = `<code style="color:#5dade2">${c}</code>`;
+                            else if (r.head[i] === "ac_converged") val = fail
+                                ? '<span style="color:#ff8a80;font-weight:700">FAIL</span>'
+                                : '<span style="color:#69f0ae">OK</span>';
+                            else if (c === "") val = '<span style="color:#7d8aa0">―</span>';
+                            else if (r.head[i] === "delta_max_load" && c !== "") {
+                                const num = parseFloat(c);
+                                if (!isNaN(num) && num > 100) val = `<span style="color:#ff8a80;font-weight:600">+${c}</span>`;
+                                else val = `+${c}`;
+                            }
+                            html += `<td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${val}</td>`;
+                        });
+                        html += '</tr>';
+                    }
+                    html += '</tbody></table>';
+                    document.getElementById("n1-detail-table").innerHTML = html;
+                }
+
+                document.getElementById("n1-region").addEventListener("change", (e) => {
+                    if (e.target.value === "__overview__") renderOverview();
+                    else renderRegion(e.target.value);
+                });
+
+                // 初期: overview
+                renderOverview();
             })();
             </script>
-            <p style="margin:0;font-size:11px;color:#7d8aa0">
-                詳細CSVは <code>docs/data/n1/</code>（地域別 30 件 + summary）。
-                生成元: <code>scripts/run_n1_contingency.py</code>。
-                関西は基底 AC 非収束のためスキップ。
+            <p style="margin:14px 0 0;font-size:11px;color:#7d8aa0">
+                詳細CSVは <code>docs/data/n1/</code>。生成元: <code>scripts/run_n1_contingency.py</code>。
             </p>
         </div>
     </div>
@@ -659,8 +777,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=28"></script>
-<script src="./js/powerflow.js?v=28"></script>
-<script src="./js/sld.js?v=28"></script>
+<script src="./js/grid_map.js?v=29"></script>
+<script src="./js/powerflow.js?v=29"></script>
+<script src="./js/sld.js?v=29"></script>
 </body>
 </html>
