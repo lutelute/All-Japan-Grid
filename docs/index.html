@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=24"/>
+    <link rel="stylesheet" href="./css/style.css?v=25"/>
 </head>
 <body>
 
@@ -82,9 +82,49 @@
                      loading="lazy"
                      style="width:100%;max-width:880px;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
             </figure>
+            <div id="n1-summary-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
+            <script>
+            (async function(){
+                try {
+                    const r = await fetch("./data/n1/n1_summary.csv?cb=" + Date.now());
+                    if (!r.ok) return;
+                    const t = (await r.text()).trim();
+                    const rows = t.split(/\r?\n/).map(l => l.split(","));
+                    const head = rows.shift();
+                    const JA = {region:"地域", base_max_load:"基底 max load (%)",
+                                worst_max_load:"最悪 max load (%)", worst_delta:"Δ (%)",
+                                worst_ac_fail:"AC FAIL", worst_line:"枢要線"};
+                    const RJA = {hokkaido:"北海道", tohoku:"東北", tokyo:"東京",
+                                 chubu:"中部", hokuriku:"北陸", chugoku:"中国",
+                                 shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
+                    let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
+                    html += '<thead><tr>';
+                    for (const h of head) html += `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${JA[h]||h}</th>`;
+                    html += '</tr></thead><tbody>';
+                    for (const cols of rows) {
+                        if (!cols[0]) continue;
+                        const fail = cols[4] === "yes";
+                        const trBg = fail ? 'background:rgba(231,76,60,.08)' : '';
+                        html += `<tr style="${trBg}">`;
+                        cols.forEach((c, i) => {
+                            let val = c;
+                            if (i === 0) val = `<b style="color:#69f0ae">${RJA[c]||c}</b>`;
+                            else if (i === 4) val = fail ? '<span style="color:#ff8a80;font-weight:700">YES</span>' : '<span style="color:#7d8aa0">no</span>';
+                            else if (c === "AC_FAIL") val = '<span style="color:#ff8a80;font-weight:700">AC_FAIL</span>';
+                            else if (i === 5) val = `<code style="color:#5dade2">${c}</code>`;
+                            html += `<td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${val}</td>`;
+                        });
+                        html += '</tr>';
+                    }
+                    html += '</tbody></table>';
+                    document.getElementById("n1-summary-table").innerHTML = html;
+                } catch (e) { console.warn("n1 summary load failed", e); }
+            })();
+            </script>
             <p style="margin:0;font-size:11px;color:#7d8aa0">
                 詳細CSVは <code>docs/data/n1/</code>（地域別 30 件 + summary）。
                 生成元: <code>scripts/run_n1_contingency.py</code>。
+                関西は基底 AC 非収束のためスキップ。
             </p>
         </div>
     </div>
@@ -452,8 +492,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=24"></script>
-<script src="./js/powerflow.js?v=24"></script>
-<script src="./js/sld.js?v=24"></script>
+<script src="./js/grid_map.js?v=25"></script>
+<script src="./js/powerflow.js?v=25"></script>
+<script src="./js/sld.js?v=25"></script>
 </body>
 </html>
