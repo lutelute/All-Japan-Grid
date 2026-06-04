@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import pandapower as pp  # noqa: E402
 
 from scripts.export_powerflow_pages import build_and_solve  # noqa: E402
+from src.cim.boundary import generate_boundary  # noqa: E402
 from src.cim.level2 import net_to_cgmes  # noqa: E402
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
 
@@ -46,6 +47,8 @@ def _verify(region: str, out_dir: str) -> str:
 
     files = [os.path.join(out_dir, f"{region}_L2_{p}.xml")
              for p in ["EQ", "TP", "SSH", "SV", "GL"]]
+    files += [os.path.join(out_dir, "AllJapan_EQ_BD.xml"),
+              os.path.join(out_dir, "AllJapan_TP_BD.xml")]
     try:
         net2 = from_cim(file_list=files)
     except Exception as e:  # noqa: BLE001
@@ -90,17 +93,28 @@ def main() -> int:
             continue
         summary = net_to_cgmes(net, region, args.out_dir,
                                f_hz=REGION_FREQUENCY_HZ.get(region, 50))
-        verdict = _verify(region, args.out_dir) if args.verify else "-"
-        summary["verify"] = verdict
         rows.append(summary)
         print(f"{region:10s} {summary['buses']:5d} {summary['lines']:5d} "
-              f"{summary['trafos']:5d} {summary['loads']:5d} {summary['gens']:5d}  {verdict}")
+              f"{summary['trafos']:5d} {summary['loads']:5d} {summary['gens']:5d}  (exported)")
+
+    # shared boundary set (EQ_BD/TP_BD) covering the union of referenced voltages
+    all_kv = sorted({v for r in rows for v in r.get("base_voltages", [])}, reverse=True)
+    bsum = generate_boundary(args.out_dir, all_kv)
+    print(f"\nBoundary: {bsum['eq_bd_objects']} BaseVoltages "
+          "-> AllJapan_EQ_BD.xml / AllJapan_TP_BD.xml")
+
+    if args.verify:
+        print("\nverify (boundary-aware cim2pp + runpp):")
+        for r in rows:
+            r["verify"] = _verify(r["region"], args.out_dir)
+            print(f"  {r['region']:10s} {r['verify']}")
 
     os.makedirs(args.out_dir, exist_ok=True)
     with open(os.path.join(args.out_dir, "cim_level2_index.json"), "w", encoding="utf-8") as fh:
-        json.dump({"profiles": ["EQ", "TP", "SSH", "SV", "GL"], "regions": rows},
+        json.dump({"profiles": ["EQ", "TP", "SSH", "SV", "GL", "EQ_BD", "TP_BD"],
+                   "boundary_voltages_kv": all_kv, "regions": rows},
                   fh, ensure_ascii=False, indent=2)
-    print(f"\nWrote {len(rows)} region(s) to {args.out_dir}/")
+    print(f"\nWrote {len(rows)} region(s) + boundary to {args.out_dir}/")
     return 0
 
 

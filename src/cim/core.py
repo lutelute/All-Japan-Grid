@@ -54,6 +54,15 @@ def mrid(*parts: object) -> str:
     return str(uuid.uuid5(_MRID_ROOT, key))
 
 
+def base_voltage_mrid(kv: float) -> str:
+    """Deterministic mRID for the BaseVoltage of nominal voltage ``kv`` (kV).
+
+    Shared by the Level-1 EQ, the Level-2 EQ and the boundary set so that all
+    three reference the *same* BaseVoltage objects (CGMES boundary convention).
+    """
+    return mrid("basevoltage", round(float(kv), 3))
+
+
 class RdfWriter:
     """Minimal, append-only CGMES RDF/XML writer (standard library only).
 

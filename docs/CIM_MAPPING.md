@@ -138,7 +138,11 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   country `runpp` converges for **9 of 10 regions** (kansai excepted, matching
   the west AC sub-network transformer ill-conditioning in `WEST_AC_ANALYSIS.md`).
   Per-region object counts and convergence verdicts are recorded in
-  `dist/cim_level2/cim_level2_index.json`.
+  `dist/cim_level2/cim_level2_index.json`. `BaseVoltage` objects are factored
+  into a shared **CGMES boundary set** (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`,
+  `src/cim/boundary.py`) that the EQ/TP profiles reference by mRID — the standard
+  convention for interoperability with PowerFactory / CIMverter. Load the
+  boundary files alongside the per-region EQ/TP/SSH/SV/GL when importing.
 
 ---
 

@@ -27,7 +27,7 @@ import math
 import os
 from typing import Dict, Optional
 
-from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, mrid
+from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, base_voltage_mrid, mrid
 
 PROFILE_TP = "http://entsoe.eu/CIM/Topology/4/1"
 PROFILE_SSH = "http://entsoe.eu/CIM/SteadyStateHypothesis/1/1"
@@ -63,7 +63,7 @@ class Level2Exporter:
         self.ssh = RdfWriter(PROFILE_SSH, mrid("l2model", "ssh", region)).header()
         self.sv = RdfWriter(PROFILE_SV, mrid("l2model", "sv", region)).header()
         self.gl = RdfWriter(PROFILE_GL, mrid("l2model", "gl", region)).header()
-        self._bv: Dict[float, str] = {}
+        self._used_voltages: set = set()
         self._cs_m: Optional[str] = None
         self._bus_cn: Dict[int, str] = {}
         self._bus_tn: Dict[int, str] = {}
@@ -89,17 +89,15 @@ class Level2Exporter:
 
     # -- shared objects -----------------------------------------------------
     def _base_voltage(self, kv: float) -> str:
+        """Return the BaseVoltage mRID for ``kv`` (defined in the EQ_BD boundary).
+
+        The BaseVoltage objects live in the shared boundary file (see
+        :mod:`src.cim.boundary`); here we record the voltage and return its
+        deterministic mRID so EQ references resolve against the boundary.
+        """
         key = round(float(kv), 3)
-        m = self._bv.get(key)
-        if m:
-            return m
-        m = mrid("l2bv", key)
-        self._bv[key] = m
-        self.eq.obj("BaseVoltage", m,
-                    attrs={"IdentifiedObject.name": f"{key:g} kV",
-                           "IdentifiedObject.mRID": m,
-                           "BaseVoltage.nominalVoltage": key})
-        return m
+        self._used_voltages.add(key)
+        return base_voltage_mrid(key)
 
     def _coordinate_system(self) -> str:
         if self._cs_m:
@@ -418,7 +416,8 @@ class Level2Exporter:
                 "buses": len(self.net.bus), "lines": len(self.net.line),
                 "trafos": len(getattr(self.net, "trafo", [])),
                 "loads": len(getattr(self.net, "load", [])),
-                "gens": len(getattr(self.net, "gen", [])) + len(getattr(self.net, "sgen", []))}
+                "gens": len(getattr(self.net, "gen", [])) + len(getattr(self.net, "sgen", [])),
+                "base_voltages": sorted(self._used_voltages, reverse=True)}
 
 
 def net_to_cgmes(net, region: str, out_dir: str, f_hz: Optional[float] = None) -> dict:

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:cim="http://iec.ch/TC57/2013/CIM-schema-cim16#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#">
+  <md:FullModel rdf:about="urn:uuid:2c0c862a-fbd6-5061-b58d-446ac008c5cf">
+    <md:Model.profile>http://entsoe.eu/CIM/EquipmentBoundary/3/1</md:Model.profile>
+    <md:Model.modelingAuthoritySet>https://github.com/lutelute/All-Japan-Grid</md:Model.modelingAuthoritySet>
+  </md:FullModel>
+  <cim:BaseVoltage rdf:ID="_64572272-8bf5-5c3e-8483-973ecaddd060">
+    <cim:IdentifiedObject.name>500 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>64572272-8bf5-5c3e-8483-973ecaddd060</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>500.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_c63a1b0c-b963-5af5-ac59-fd5fbea1b82a">
+    <cim:IdentifiedObject.name>275 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c63a1b0c-b963-5af5-ac59-fd5fbea1b82a</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>275.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_9e72eeb9-bc59-5707-a1dc-a503f95d50b0">
+    <cim:IdentifiedObject.name>220 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9e72eeb9-bc59-5707-a1dc-a503f95d50b0</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>220.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_aca3f3f6-0df2-515a-b212-d1d1092d869e">
+    <cim:IdentifiedObject.name>187 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>aca3f3f6-0df2-515a-b212-d1d1092d869e</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>187.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_05ccb01d-fb2c-5f88-8d4e-15ad6da1b5f2">
+    <cim:IdentifiedObject.name>154 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>05ccb01d-fb2c-5f88-8d4e-15ad6da1b5f2</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>154.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_eafa7594-9866-5769-9a3d-614bfcd5ca4f">
+    <cim:IdentifiedObject.name>132 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>eafa7594-9866-5769-9a3d-614bfcd5ca4f</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>132.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_1ab53c60-b143-5e16-8b2f-e803a43a025f">
+    <cim:IdentifiedObject.name>110 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1ab53c60-b143-5e16-8b2f-e803a43a025f</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>110.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_8bbd3588-6788-59b5-bcf1-9a99385ef233">
+    <cim:IdentifiedObject.name>77 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>8bbd3588-6788-59b5-bcf1-9a99385ef233</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>77.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+  <cim:BaseVoltage rdf:ID="_de973b5b-b560-5ee4-b6b9-89f66272eb97">
+    <cim:IdentifiedObject.name>66 kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>de973b5b-b560-5ee4-b6b9-89f66272eb97</cim:IdentifiedObject.mRID>
+    <cim:BaseVoltage.nominalVoltage>66.0</cim:BaseVoltage.nominalVoltage>
+  </cim:BaseVoltage>
+</rdf:RDF>

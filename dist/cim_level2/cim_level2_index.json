@@ -4,7 +4,20 @@
     "TP",
     "SSH",
     "SV",
-    "GL"
+    "GL",
+    "EQ_BD",
+    "TP_BD"
+  ],
+  "boundary_voltages_kv": [
+    500.0,
+    275.0,
+    220.0,
+    187.0,
+    154.0,
+    132.0,
+    110.0,
+    77.0,
+    66.0
   ],
   "regions": [
     {
@@ -12,7 +25,7 @@
       "files": {
         "EQ": [
           "hokkaido_L2_EQ.xml",
-          6806
+          6800
         ],
         "TP": [
           "hokkaido_L2_TP.xml",
@@ -36,6 +49,14 @@
       "trafos": 183,
       "loads": 706,
       "gens": 285,
+      "base_voltages": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        110.0,
+        66.0
+      ],
       "verify": "OK gen=285 ext=5 vmin=0.703"
     },
     {
@@ -43,7 +64,7 @@
       "files": {
         "EQ": [
           "tohoku_L2_EQ.xml",
-          16663
+          16658
         ],
         "TP": [
           "tohoku_L2_TP.xml",
@@ -67,6 +88,13 @@
       "trafos": 541,
       "loads": 1608,
       "gens": 818,
+      "base_voltages": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        66.0
+      ],
       "verify": "OK gen=818 ext=10 vmin=0.836"
     },
     {
@@ -74,7 +102,7 @@
       "files": {
         "EQ": [
           "tokyo_L2_EQ.xml",
-          45133
+          45128
         ],
         "TP": [
           "tokyo_L2_TP.xml",
@@ -98,6 +126,13 @@
       "trafos": 931,
       "loads": 2954,
       "gens": 5151,
+      "base_voltages": [
+        500.0,
+        275.0,
+        154.0,
+        77.0,
+        66.0
+      ],
       "verify": "OK gen=5151 ext=9 vmin=0.704"
     },
     {
@@ -105,7 +140,7 @@
       "files": {
         "EQ": [
           "chubu_L2_EQ.xml",
-          34706
+          34700
         ],
         "TP": [
           "chubu_L2_TP.xml",
@@ -129,6 +164,14 @@
       "trafos": 974,
       "loads": 2777,
       "gens": 2809,
+      "base_voltages": [
+        500.0,
+        275.0,
+        154.0,
+        110.0,
+        77.0,
+        66.0
+      ],
       "verify": "OK gen=2809 ext=19 vmin=0.827"
     },
     {
@@ -136,7 +179,7 @@
       "files": {
         "EQ": [
           "hokuriku_L2_EQ.xml",
-          6678
+          6673
         ],
         "TP": [
           "hokuriku_L2_TP.xml",
@@ -160,6 +203,13 @@
       "trafos": 214,
       "loads": 659,
       "gens": 299,
+      "base_voltages": [
+        500.0,
+        275.0,
+        154.0,
+        77.0,
+        66.0
+      ],
       "verify": "OK gen=299 ext=13 vmin=0.977"
     },
     {
@@ -167,7 +217,7 @@
       "files": {
         "EQ": [
           "kansai_L2_EQ.xml",
-          17666
+          17659
         ],
         "TP": [
           "kansai_L2_TP.xml",
@@ -191,6 +241,15 @@
       "trafos": 493,
       "loads": 1673,
       "gens": 941,
+      "base_voltages": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        110.0,
+        77.0,
+        66.0
+      ],
       "verify": "runpp-FAIL:LoadflowNotConverged"
     },
     {
@@ -198,7 +257,7 @@
       "files": {
         "EQ": [
           "chugoku_L2_EQ.xml",
-          12915
+          12908
         ],
         "TP": [
           "chugoku_L2_TP.xml",
@@ -222,6 +281,15 @@
       "trafos": 395,
       "loads": 1275,
       "gens": 597,
+      "base_voltages": [
+        500.0,
+        275.0,
+        220.0,
+        187.0,
+        110.0,
+        77.0,
+        66.0
+      ],
       "verify": "OK gen=597 ext=12 vmin=0.861"
     },
     {
@@ -229,7 +297,7 @@
       "files": {
         "EQ": [
           "shikoku_L2_EQ.xml",
-          6299
+          6293
         ],
         "TP": [
           "shikoku_L2_TP.xml",
@@ -253,6 +321,14 @@
       "trafos": 187,
       "loads": 606,
       "gens": 356,
+      "base_voltages": [
+        500.0,
+        220.0,
+        187.0,
+        110.0,
+        77.0,
+        66.0
+      ],
       "verify": "OK gen=356 ext=31 vmin=0.771"
     },
     {
@@ -260,7 +336,7 @@
       "files": {
         "EQ": [
           "kyushu_L2_EQ.xml",
-          16954
+          16950
         ],
         "TP": [
           "kyushu_L2_TP.xml",
@@ -284,6 +360,12 @@
       "trafos": 433,
       "loads": 1392,
       "gens": 1374,
+      "base_voltages": [
+        500.0,
+        220.0,
+        110.0,
+        66.0
+      ],
       "verify": "OK gen=1374 ext=9 vmin=0.828"
     },
     {
@@ -291,7 +373,7 @@
       "files": {
         "EQ": [
           "okinawa_L2_EQ.xml",
-          693
+          691
         ],
         "TP": [
           "okinawa_L2_TP.xml",
@@ -315,6 +397,10 @@
       "trafos": 25,
       "loads": 81,
       "gens": 16,
+      "base_voltages": [
+        132.0,
+        66.0
+      ],
       "verify": "OK gen=16 ext=1 vmin=0.941"
     }
   ]
