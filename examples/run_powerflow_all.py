@@ -411,6 +411,9 @@ def insert_transformers(net):
         if params is None:
             continue
 
+        # Carry the line's parallel count onto the transformer: parallel
+        # circuits between two voltages imply parallel transformer banks.
+        n_par = int(net.line.at[idx, "parallel"]) if "parallel" in net.line.columns else 1
         pp.create_transformer_from_parameters(
             net,
             hv_bus=hv_bus,
@@ -423,6 +426,7 @@ def insert_transformers(net):
             pfe_kw=params["pfe_kw"],
             i0_percent=params["i0_percent"],
             name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV",
+            parallel=max(n_par, 1),
         )
         lines_to_remove.append(idx)
         trafos_created += 1

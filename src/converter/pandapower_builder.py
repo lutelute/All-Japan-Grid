@@ -346,6 +346,7 @@ class PandapowerBuilder:
                 c_nf_per_km=c_nf,
                 max_i_ka=max_i,
                 name=line.name,
+                parallel=max(getattr(line, "num_parallel", 1), 1),
             )
 
             result.line_map[line.id] = line_idx

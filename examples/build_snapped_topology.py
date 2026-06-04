@@ -228,19 +228,28 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     jct_coord = {}                     # junction key -> (lat, lon)
 
     def add_edge(a, b, seg, kv, path):
-        """Insert/merge an undirected edge; store path oriented per direction."""
+        """Insert/merge an undirected edge; count merged parallels.
+
+        Real grids run 2-4 parallel circuits between the same two nodes. The
+        vertex-snap collapses them into a single edge, so we count how many
+        were merged and carry it as ``parallel`` — restoring the transmission
+        capacity that the simplification would otherwise lose.
+        """
         cur = adj[a].get(b)
         if cur is None:
-            adj[a][b] = {"len": seg, "kv": kv, "path": list(path)}
-            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path))}
+            adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": 1}
+            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)), "parallel": 1}
         elif seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
             kv2 = max(cur["kv"], kv)
-            adj[a][b] = {"len": seg, "kv": kv2, "path": list(path)}
-            adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path))}
+            par = cur.get("parallel", 1) + 1
+            adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par}
+            adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)), "parallel": par}
         else:
             cur["kv"] = max(cur["kv"], kv)
+            cur["parallel"] = cur.get("parallel", 1) + 1
             adj[b][a]["kv"] = cur["kv"]
+            adj[b][a]["parallel"] = cur["parallel"]
 
     lines_path = os.path.join(DATA_DIR, f"{region}_lines.geojson")
     if os.path.exists(lines_path):
@@ -368,6 +377,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     length_km=length,
                     region=region,
                     coordinates=list(path_latlon),
+                    num_parallel=edge.get("parallel", 1),
                 ))
                 k += 1
             except ValueError:

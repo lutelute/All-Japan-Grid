@@ -64,6 +64,7 @@ class TransmissionLine:
     coordinates: List[Tuple[float, float]] = field(default_factory=list)
     source_map: str = ""
     description: str = ""
+    num_parallel: int = 1  # parallel circuits merged by vertex-snap (>=1)
 
     def __post_init__(self) -> None:
         """Validate fields after initialization."""
