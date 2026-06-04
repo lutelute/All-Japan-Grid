@@ -143,6 +143,14 @@ excepted — the same sub-network transformer ill-conditioning as the west AC an
 求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。pandapower `cim2pp` で読み戻すと
 **9/10 地域で潮流が収束**します（kansai を除く＝west AC 解析と同じ下位網変圧器問題）。
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">
+</p>
+
+> 13,731 buses across 10 regions, exported as CGMES and re-solved through
+> pandapower `cim2pp` → `runpp` (9/10 regions; kansai in grey). /
+> 全国 13,731 バスを CGMES として出力し `cim2pp`→`runpp` で再求解（9/10 地域、kansai は灰色）。
+
 Both levels ship as zipped [GitHub Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
 regenerable via the two scripts above.
