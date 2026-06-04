@@ -57,6 +57,7 @@
         110.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=285 ext=5 vmin=0.703"
     },
     {
@@ -95,7 +96,8 @@
         154.0,
         66.0
       ],
-      "verify": "OK gen=818 ext=10 vmin=0.836"
+      "solve_mode": "native",
+      "verify": "OK gen=818 ext=10 vmin=0.835"
     },
     {
       "region": "tokyo",
@@ -133,7 +135,8 @@
         77.0,
         66.0
       ],
-      "verify": "OK gen=5151 ext=9 vmin=0.704"
+      "solve_mode": "native",
+      "verify": "OK gen=5151 ext=9 vmin=0.649"
     },
     {
       "region": "chubu",
@@ -172,6 +175,7 @@
         77.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=2809 ext=19 vmin=0.827"
     },
     {
@@ -210,7 +214,8 @@
         77.0,
         66.0
       ],
-      "verify": "OK gen=299 ext=13 vmin=0.977"
+      "solve_mode": "demand-scaled(x0.8)",
+      "verify": "OK gen=299 ext=13 vmin=0.980"
     },
     {
       "region": "kansai",
@@ -250,7 +255,8 @@
         77.0,
         66.0
       ],
-      "verify": "runpp-FAIL:LoadflowNotConverged"
+      "solve_mode": "demand-scaled(x0.3)",
+      "verify": "OK gen=941 ext=5 vmin=0.681"
     },
     {
       "region": "chugoku",
@@ -290,6 +296,7 @@
         77.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=597 ext=12 vmin=0.861"
     },
     {
@@ -329,6 +336,7 @@
         77.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=356 ext=31 vmin=0.771"
     },
     {
@@ -366,6 +374,7 @@
         110.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=1374 ext=9 vmin=0.828"
     },
     {
@@ -401,6 +410,7 @@
         132.0,
         66.0
       ],
+      "solve_mode": "native",
       "verify": "OK gen=16 ext=1 vmin=0.941"
     }
   ]

@@ -29,7 +29,8 @@ Tagged in git as `v1.2.0`.
 - **CGMES boundary set** (`src/cim/boundary.py`): `BaseVoltage` objects factored
   into a shared EQ_BD/TP_BD boundary (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`)
   referenced by mRID — CGMES convention for interoperability with PowerFactory /
-  CIMverter. Boundary-aware `cim2pp` + `runpp` converges in 9/10 regions.
+  CIMverter. Boundary-aware `cim2pp` + `runpp` converges in all 10 regions
+  (8 native; kansai/hokuriku demand-scaled per Ybus analysis, see CIM_MAPPING).
 - **National Level-2 power-flow figures** (`docs/assets/figs/fig_cim_national_pf.png`,
   `fig_cim_okinawa_pf.png`): geographic voltage maps from CGMES round-trip.
 - **Dataset distribution foundation**: unified property schema

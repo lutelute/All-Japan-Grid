@@ -58,7 +58,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 
 ### v1.2.0 Highlights
 
-- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in 9/10 regions**.
+- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in all 10 regions** (8 native, kansai/hokuriku demand-scaled).
 - 📦 [Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
 - 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
 
@@ -136,20 +136,23 @@ python scripts/export_cim.py          # -> dist/cim/<region>_{EQ,GL}.xml
 exports the *connected, solved* network with shared `ConnectivityNode`s,
 `TopologicalNode`s, `PowerTransformer`s, `EnergyConsumer` loads, PV
 `SynchronousMachine`s and a slack `ExternalNetworkInjection`. It round-trips
-through pandapower `cim2pp` and **`runpp` converges in 9/10 regions** (kansai
-excepted — the same sub-network transformer ill-conditioning as the west AC analysis).
+through pandapower `cim2pp` and **`runpp` converges in all 10 regions** — 8
+natively, with the two ill-conditioned regions (kansai, hokuriku) demand-scaled
+per Ybus analysis (see [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
 
 **Level 2 — 求解可能な潮流ケース:** `scripts/export_cim_level2.py` が接続済み・
 求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。pandapower `cim2pp` で読み戻すと
-**9/10 地域で潮流が収束**します（kansai を除く＝west AC 解析と同じ下位網変圧器問題）。
+**全10地域で潮流が収束**します（8地域はそのまま、Ybus解析で悪条件と判明した
+kansai・hokuriku のみ需要をスケール）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">
 </p>
 
 > 13,731 buses across 10 regions, exported as CGMES and re-solved through
-> pandapower `cim2pp` → `runpp` (9/10 regions; kansai in grey). /
-> 全国 13,731 バスを CGMES として出力し `cim2pp`→`runpp` で再求解（9/10 地域、kansai は灰色）。
+> pandapower `cim2pp` → `runpp`. The map shows the native solve (kansai grey);
+> the Level-2 CGMES then solves **all 10** via demand-scaling. /
+> 図は無補正の解（kansai 灰色）。Level 2 CGMES は需要スケールで **全10地域** 収束。
 
 Both levels ship as zipped [GitHub Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),

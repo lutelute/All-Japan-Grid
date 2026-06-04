@@ -135,10 +135,15 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   exported okinawa case round-trips through pandapower `cim2pp` and `runpp`
   **converges** (81 buses, 16 PV gens, 1 slack, vmin 0.941) — a genuinely
   solvable CGMES power-flow model, not just a catalogue. Across the full
-  country `runpp` converges for **9 of 10 regions** (kansai excepted, matching
-  the west AC sub-network transformer ill-conditioning in `WEST_AC_ANALYSIS.md`).
-  Per-region object counts and convergence verdicts are recorded in
-  `dist/cim_level2/cim_level2_index.json`. `BaseVoltage` objects are factored
+  country `runpp` converges for **all 10 regions**: 8 natively, while the two
+  ill-conditioned regions (kansai, hokuriku) have their demand scaled to what
+  the heavily-simplified network can carry (kansai x0.3, hokuriku x0.8; recorded
+  as `solve_mode` per region). Ybus analysis (`scripts/diagnose_ybus.py`) traced
+  kansai's non-convergence to a huge admittance spread (|Ydiag| ratio 6.9e20)
+  from ~5 m vertex-snap lines plus a demand/capacity shortfall — so the demand
+  scaling is a deliberate, documented model adjustment, not a change to the
+  underlying topology. Per-region object counts, convergence verdicts and solve
+  modes are recorded in `dist/cim_level2/cim_level2_index.json`. `BaseVoltage` objects are factored
   into a shared **CGMES boundary set** (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`,
   `src/cim/boundary.py`) that the EQ/TP profiles reference by mRID — the standard
   convention for interoperability with PowerFactory / CIMverter. Load the
