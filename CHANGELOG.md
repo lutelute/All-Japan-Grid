@@ -5,7 +5,9 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.0] - 2026-06
+
+Tagged in git as `v1.2.0`.
 
 ### Added
 - **CIM / CGMES export** (`src/cim/`, `scripts/export_cim.py`): the dataset is
@@ -24,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SynchronousMachines (voltage RegulatingControl) and a slack
   ExternalNetworkInjection (referencePriority). Round-trips through pandapower
   `cim2pp` and **`runpp` converges** (okinawa: 81 buses, 16 gens, vmin 0.941).
+- **CGMES boundary set** (`src/cim/boundary.py`): `BaseVoltage` objects factored
+  into a shared EQ_BD/TP_BD boundary (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`)
+  referenced by mRID — CGMES convention for interoperability with PowerFactory /
+  CIMverter. Boundary-aware `cim2pp` + `runpp` converges in 9/10 regions.
+- **National Level-2 power-flow figures** (`docs/assets/figs/fig_cim_national_pf.png`,
+  `fig_cim_okinawa_pf.png`): geographic voltage maps from CGMES round-trip.
 - **Dataset distribution foundation**: unified property schema
   (`config/data_schema.yaml` + `docs/DATA_SCHEMA.json`), `DATA_DICTIONARY.md`,
   `DATA_CATALOG.md`, `CITATION.cff`, this changelog and `VERSION`.
@@ -67,5 +75,6 @@ Tagged in git as `v1.0.0`. Initial release.
 - Seven-stage attribute completion pipeline, sparse Ybus construction, AC power
   flow, and MILP unit commitment with inter-regional interconnection constraints.
 
+[1.2.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0
 [1.1.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0
 [1.0.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.0.0
