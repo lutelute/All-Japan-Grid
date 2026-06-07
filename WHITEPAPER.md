@@ -321,7 +321,7 @@ P03 でカバーされない発電所（特に小規模施設や再生可能エ�
 
 ## 5. データモデルと内部表現 / Data Model and Internal Representation
 
-### 4.1 クラス階層
+### 5.1 クラス階層
 
 ```
 GridNetwork
@@ -330,7 +330,7 @@ GridNetwork
 └── List[Generator]          # 発電機
 ```
 
-### 4.2 Substation（変電所）
+### 5.2 Substation（変電所）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -343,7 +343,7 @@ GridNetwork
 
 Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 
-### 4.3 TransmissionLine（送電線）
+### 5.3 TransmissionLine（送電線）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -354,7 +354,7 @@ Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 | `length_km` | `float` | Haversine 距離に基づくポリライン長 |
 | `coordinates` | `List[Tuple]` | 経路座標列 |
 
-### 4.4 Generator（発電機）
+### 5.4 Generator（発電機）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -364,7 +364,7 @@ Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 | `connected_bus_id` | `str` | 最近傍変電所（50 km以内） |
 | `vm_pu` | `float` | 電圧設定値（p.u.） |
 
-### 4.5 GridNetwork
+### 5.5 GridNetwork
 
 `GridNetwork` は地域単位でインスタンス化され、`merge_regions()` で全国モデルに統合できる。周波数が異なるネットワークの統合時は `frequency_hz = 0`（混合）に設定される。
 

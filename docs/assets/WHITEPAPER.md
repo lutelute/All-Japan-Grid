@@ -321,7 +321,7 @@ P03 でカバーされない発電所（特に小規模施設や再生可能エ�
 
 ## 5. データモデルと内部表現 / Data Model and Internal Representation
 
-### 4.1 クラス階層
+### 5.1 クラス階層
 
 ```
 GridNetwork
@@ -330,7 +330,7 @@ GridNetwork
 └── List[Generator]          # 発電機
 ```
 
-### 4.2 Substation（変電所）
+### 5.2 Substation（変電所）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -343,7 +343,7 @@ GridNetwork
 
 Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 
-### 4.3 TransmissionLine（送電線）
+### 5.3 TransmissionLine（送電線）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -354,7 +354,7 @@ Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 | `length_km` | `float` | Haversine 距離に基づくポリライン長 |
 | `coordinates` | `List[Tuple]` | 経路座標列 |
 
-### 4.4 Generator（発電機）
+### 5.4 Generator（発電機）
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
@@ -364,7 +364,7 @@ Polygon / MultiPolygon ジオメトリはセントロイドに変換する。
 | `connected_bus_id` | `str` | 最近傍変電所（50 km以内） |
 | `vm_pu` | `float` | 電圧設定値（p.u.） |
 
-### 4.5 GridNetwork
+### 5.5 GridNetwork
 
 `GridNetwork` は地域単位でインスタンス化され、`merge_regions()` で全国モデルに統合できる。周波数が異なるネットワークの統合時は `frequency_hz = 0`（混合）に設定される。
 
@@ -744,7 +744,30 @@ $$p_{\text{dis},g,t} \leq R_{\text{dis}}^g \cdot (1 - z_{\text{ch},g,t})$$
 
 終端 SOC 制約: $\text{SOC}_{g,T} \geq \text{SOC}_{\min} \cdot E_{\max}^g$
 
-### 10.4 ソルババックエンド
+### 10.4 地域間連系線制約 / Inter-Regional Transmission Constraints
+
+UCソルバは、地域間連系線による送電容量制約を統合的に扱うことができる。`interconnections` パラメータが指定された場合、システム全体の単一需給バランス制約はエリア別のノーダルバランス制約に置き換えられる。
+
+When interconnections are provided, the solver replaces the single system-wide demand balance with per-region nodal balance constraints coupled by flow variables.
+
+**追加決定変数**:
+- $f_{\ell,t}$ — 連系線 $\ell$ の時刻 $t$ における潮流（MW、正方向: from→to）
+
+**ノーダルバランス制約** (エリア別需給バランス):
+
+$$\sum_{g \in r} p_{g,t} + \sum_{\ell: \text{to}=r} f_{\ell,t} - \sum_{\ell: \text{from}=r} f_{\ell,t} \geq D_{r,t} \quad \forall r, t$$
+
+**送電容量制約** (双方向):
+
+$$-C_\ell \leq f_{\ell,t} \leq C_\ell \quad \forall \ell, t$$
+
+ここで $C_\ell$ は連系線 $\ell$ の運用容量（MW）である。需要 $D_{r,t}$ は各エリアの発電容量比率に基づいてシステム全体需要を按分する。
+
+**実証結果**: OCCTO 参照モデルの646機の発電機 × 24時間 × 9連系線の全国統合UCを単一MILPとして約38秒で最適解を得た。連系線なし（copper plate）との比較で、送電混雑コストは+1.40%（約1.07億円/日）であり、全9連系線が飽和した。
+
+Verified with 646 generators (OCCTO-reference model) across 10 regions: the national MILP with 9 interconnections solves to optimality in ~38 seconds. Congestion cost vs. copper plate is +1.40%, with all 9 interconnections saturated.
+
+### 10.5 ソルババックエンド
 
 HiGHS (HiGHS_CMD) を優先使用し、利用不可の場合は CBC (PuLP バンドル) にフォールバックする。
 
@@ -853,6 +876,50 @@ Bus 2 (load 60MW+j20Mvar, PQ) ----+
 - **IEEE テストケース**: pandapower/MATPOWER 標準テストケースでは全20ソルバが正しく動作
 - **OSM ベースの地域モデル**: 母線数が多く（数百〜数千）、不完全なトポロジにより収束困難または物理的に無意味な解が得られる
 
+### 12.5 動特性・Unit Commitment のビジュアル成果
+
+潮流計算に加え、動揺方程式ソルバ・短絡計算・連続潮流・MILP UC の予備的試算結果を図示する
+（生成元 `scripts/run_dynamics_alljapan.py` 等、図は `papers/figs/` と `docs/assets/analysis/`）。
+
+| 図 | 内容 |
+|---|---|
+| ![dynamics summary](docs/assets/analysis/fig_dynamics_summary.png) | 動特性サマリ（固有値・参加係数・PV曲線・短絡・過渡安定） |
+| ![transient](docs/assets/analysis/fig_transient_stability.png) | 北海道系統の過渡安定（事故後ロータ角応答） |
+| ![eigenvalues](docs/assets/analysis/fig_eigenvalues.png) | 小信号安定：固有値分布 |
+| ![N-1](docs/assets/analysis/hokkaido_n1_trip.png) | N-1 設備脱落時の応答 |
+| ![UC](docs/assets/analysis/uc_summary_dashboard.png) | 地域 UC ダッシュボード（コミットメント・ディスパッチ・コスト） |
+| ![national UC](docs/assets/analysis/national_summary_dashboard.png) | 全国 UC（646 機・9 連系線・24 h） |
+
+これらは「OSM 由来データに各解析ツールをどこまで接続できるか」を確認する予備的試算であり、
+動的パラメータは合成値である（限界は §13 参照）。
+
+### 12.6 N-1 コンティンジェンシー解析
+
+`scripts/run_n1_contingency.py` で per-region snapped+reconnect ネットの各地域に対し、
+220 kV 以上の幹線を1本ずつ N-1 outage させ AC 再潮流を解いて最悪事故をランキングした
+（kansai は基底 AC 非収束のためスキップ、§13.6）。
+
+| 地域 | 候補線 | base max_load | worst Δmax_load | worst |
+|---|---|---|---|---|
+| hokkaido | 16 | 109% | +91% | hokkaido_line_60 |
+| tohoku | 76 | 135% | +1198% | tohoku_line_112 |
+| **tokyo** | 162 | 605% | **AC FAIL** | tokyo_line_1643 |
+| chubu | 279 | 119% | +758% | chubu_line_186 |
+| hokuriku | 68 | 102% | +237% | hokuriku_line_545 |
+| chugoku | 105 | 99% | +519% | chugoku_line_371 |
+| shikoku | 22 | 98% | +189% | shikoku_line_198 |
+| **kyushu** | 186 | 134% | **AC FAIL** | kyushu_line_173 |
+
+東京・九州で**「これを失うと潮流が解けない」枢要線**を特定。
+結果は `docs/data/n1/` と比較タブ下部で公開。
+
+### 12.7 バスアドミタンス行列 $\mathbf{Y}_{\mathrm{bus}}$ の可視化
+
+大元（全国）と地域別の $\mathbf{Y}_{\mathrm{bus}}$ スパースパターン、および
+スパイプロットを `docs/assets/analysis/ybus_*.png` で公開（papers/figs にも配置済み）。
+旧最近傍drop法では系統が数百島に断片化し $\mathbf{Y}_{\mathrm{bus}}$ が事実上特異であったが、
+vertex-snap + reconnect 改修により10地域すべてで非特異な $\mathbf{Y}_{\mathrm{bus}}$ を達成している。
+
 ---
 
 ## 13. 限界と既知の問題 / Limitations and Known Issues
@@ -888,6 +955,17 @@ Bus 2 (load 60MW+j20Mvar, PQ) ----+
 ### 13.5 まとめ: "地図があるからデータがある" は誤り
 
 地図上に送電線が描かれていることは、電力系統モデルを構築するのに十分なデータが存在することを意味しない。地理データと電気データは根本的に異なるものであり、前者から後者を完全に導出することはできない。
+
+### 13.6 広域ゾーナル統合のAC潮流限界 / Limits of Wide-Area Zonal AC Power Flow
+
+地域別 AC 潮流が全10地域で収束する一方、同期島（east 50 Hz / west 60 Hz）を連系線で統合した**広域ゾーナル AC 潮流は west 島（中部・北陸・関西・中国・四国・九州、約 8,400 バス）で収束しない**。pws-160core 上での段階的な切り分け（詳細は `docs/WEST_AC_ANALYSIS.md`）により、原因を以下のとおり特定した。
+
+- **無効電力補償(Q)は無関係**: reactive 0.0〜0.8 の全水準で非収束（reactive=0 でも FAIL）。
+- **極短線・断片化は副次的**: 最短 4 m の near-zero-Z 枝の融合や、52 連結成分（最大成分は 98% を被覆）の整理では解消しない。
+- **主因1: 局所的な発電不足**: `balance_power` の島全体一律スケールにより、需要集中かつ OSM 発電が過小な関西・九州で「実発電 < 負荷」となる（地域別 re-balance で発電 > 負荷にしても、なお非収束）。
+- **主因2: 下位網の悪条件変圧器**: 154 kV 未満の下位網（66–132 kV、kansai で 539 変圧器、電圧比最大 20:1、OSM の非標準電圧 22/25/30/33/100 kV）が悪条件 $\mathbf{Y}_{\mathrm{bus}}$ を生む。変圧器を除外、または 154 kV 以上のみとすると収束し、Gauss–Seidel(3000 反復)でも非収束＝ソルバでなく系統構造の問題である。
+
+非標準電圧の標準クラスへのスナップ（`_clean_voltage`、§7）でデータ品質（変圧器比・電圧プロファイル）は明確に改善し、再生成で北海道の電圧最小値は 0.30→0.81 p.u. に向上、east 島は AC 収束を維持した。しかし west 島の下位網に由来する非収束は電圧標準化では解消せず、**広域統合 AC 解析には地域分割、または OCCTO 等による下位網パラメータの補完が前提**となる。これは「地理データ ≠ 電気モデル」という本データセットの限界の具体例である。
 
 ---
 

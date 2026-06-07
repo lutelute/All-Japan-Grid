@@ -379,21 +379,28 @@ Contributions and collaborations welcome. If you have access to additional data 
 ## Project Structure / プロジェクト構成
 
 ```
-data/                  GeoJSON network data (10 regions) / 地域別 GeoJSON
-config/regions.yaml    Region metadata / 地域メタデータ（周波数、電圧、バウンディングボックス）
+data/                  GeoJSON network data (10 regions) / 地域別 GeoJSON（一次ソース）
+config/                Region metadata, schemas, UC config / 地域メタデータ・スキーマ・UC設定
 src/
   model/               Data models / データモデル（Substation, TransmissionLine, Generator）
-  converter/           pandapower / MATPOWER conversion / 変換
+  converter/           pandapower conversion / pandapower 変換
+  matpower/            MATPOWER .mat export with GENCOST / MATPOWER エクスポート
+  cim/                 IEC 61970 CIM / CGMES export (L1 + L2) / CIM・CGMES エクスポート
+  reconstruction/      Isolated-element reconnection & synthesis / 孤立要素の再接続・合成
   powerflow/           DC/AC power flow runner (experimental) / 潮流計算（実験的）
-  ac_powerflow/        Advanced AC power flow (experimental) / 高度 AC 潮流（実験的）
+  ac_powerflow/        Advanced AC power flow, ~20 methods (experimental) / 高度 AC 潮流（実験的）
+  dynamics/            Swing equation, CPF, short-circuit, modal / 動態・電圧安定性・短絡
   uc/                  Unit Commitment solver (experimental) / UC ソルバ（実験的）
+  db/                  SQLite attribute overlay (DB unification base) / 属性DB（DB統一の土台）
   server/              FastAPI web server + GeoJSON loader / ウェブサーバー
   utils/               Geographic utilities / 地理ユーティリティ
 examples/              Demo scripts (incl. national UC with 757 generators) / デモスクリプト（757台全国UC含む）
 docs/                  GitHub Pages static site / 静的サイト
-scripts/               Build tools / ビルドツール（静的サイト生成、OSM 取得）
+scripts/               Pipeline, analysis, export & figure scripts — see scripts/README.md / 用途別5系統
 schemas/               XML schema definitions / XML スキーマ定義
 tests/                 pytest test suite / テストスイート
+papers/                IEEJ (和文) & IEEE Access manuscripts / 論文原稿
+dist/                  CIM/CGMES distribution (samples tracked, full sets via Releases) / CIM 配布物
 ```
 
 ## Requirements / 必要環境
