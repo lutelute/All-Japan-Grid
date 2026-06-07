@@ -58,7 +58,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 
 ### v1.2.0 Highlights
 
-- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in all 10 regions** (8 native, kansai/hokuriku demand-scaled).
+- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in all 10 regions** (6 native; chubu/hokuriku/kyushu x0.8 and kansai x0.3 as balanced demand-scaled cases). The export is regression-tested to be **electrically identical** to the solved network across the round-trip (parallel circuits, switching states, km lengths preserved).
 - 📦 [Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
 - 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
 
@@ -135,15 +135,19 @@ python scripts/export_cim.py          # -> dist/cim/<region>_{EQ,GL}.xml
 **Level 2 — solvable power-flow case (EQ/TP/SSH/SV/GL):** `scripts/export_cim_level2.py`
 exports the *connected, solved* network with shared `ConnectivityNode`s,
 `TopologicalNode`s, `PowerTransformer`s, `EnergyConsumer` loads, PV
-`SynchronousMachine`s and a slack `ExternalNetworkInjection`. It round-trips
-through pandapower `cim2pp` and **`runpp` converges in all 10 regions** — 8
-natively, with the two ill-conditioned regions (kansai, hokuriku) demand-scaled
-per Ybus analysis (see [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
+`SynchronousMachine`s and a slack `ExternalNetworkInjection`. The round-trip
+through pandapower `cim2pp` is **electrically identical** to the solved
+network (parallel circuits, switching states and km lengths preserved;
+regression-tested) and **`runpp` converges in all 10 regions** — 6 natively,
+with the borderline/ill-conditioned regions shipped as balanced demand-scaled
+cases (chubu/hokuriku/kyushu x0.8, kansai x0.3 — generation redispatched to
+match; see [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
 
 **Level 2 — 求解可能な潮流ケース:** `scripts/export_cim_level2.py` が接続済み・
-求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。pandapower `cim2pp` で読み戻すと
-**全10地域で潮流が収束**します（8地域はそのまま、Ybus解析で悪条件と判明した
-kansai・hokuriku のみ需要をスケール）。
+求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。エクスポートは並列回線・開閉状態・
+km長を保持し、pandapower `cim2pp` での往復後も**元のネットワークと電気的に同一**
+（回帰テスト済み）。**全10地域で潮流が収束**します（6地域はそのまま、境界・悪条件の
+chubu/hokuriku/kyushu は x0.8、kansai は x0.3 の需給整合済み需要スケールケースとして提供）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">

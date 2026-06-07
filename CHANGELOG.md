@@ -5,6 +5,47 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **CIM/CGMES Level 2 export — electrical fidelity** (full-project review
+  2026-06-08, commits `557fbe1` / `658fd2c`). The cim2pp round-trip is now
+  electrically identical to the solved network (regression-tested, vm diff
+  < 1e-4 pu): parallel circuits/transformer banks export their effective
+  bundle values (previously up to 4x impedance), `in_service` switching
+  states propagate via `ACDCTerminal.connected` (previously pruned lines and
+  disabled loads re-energized on import), `Conductor.length` is km
+  (previously metres, round-tripping 1000x), demand-scaled cases redispatch
+  generation to `load x 1.05` (kansai previously shipped 3.5x generation
+  with the slack absorbing 72%), and the SV profile is re-solved on the
+  exported network (kansai previously shipped zero `SvVoltage`).
+- Solve modes are now honest: 6 regions native; chubu/hokuriku/kyushu x0.8
+  and kansai x0.3 as balanced demand-scaled cases (chubu/kyushu previously
+  reported "native" because the buggy round-trip happened to converge).
+- A `--regions` subset export no longer regenerates the boundary/index from
+  only that run (which dangled every other region's `BaseVoltage`
+  references); the boundary voltage set is unioned and the index merged.
+- Level-1 EQ no longer defines `BaseVoltage` inline (duplicate rdf:IDs vs
+  the shared boundary set); `export_cim.py` now ships the boundary files.
+- MATPOWER export folds `num_parallel` into BR_R/BR_X/BR_B and RATE_A,
+  matching the pandapower validation path.
+- Restored `scripts/audit_data_quality.py` (deleted in `1f78a2868` while
+  still imported by the test suite and invoked by `enrich_all.py`).
+- `fetch_subdivided.py` preserves OSM element ids (`osm_type`/`osm_id`)
+  through the tile merge — previously dropped by `ignore_index`, leaving
+  substations/lines GeoJSON with no stable identity.
+
+### Added
+- **Unified grid database (R/C/D layers)** per `docs/DB_ARCHITECTURE.md`:
+  `scripts/db/ingest.py` decomposes the per-region GeoJSON into immutable
+  raw features and provenance-tracked enrichments (SQLite, schema v2);
+  `scripts/db/export.py --verify` round-trips the database back to GeoJSON
+  with semantic equality across all 30 region/layer files. The curation
+  layer (232,139 rows) is backed up as the tracked, diff-readable
+  `data/db/enrichments.jsonl`.
+- CGMES round-trip regression tests (`tests/test_cim_level2.py`) and
+  DB round-trip tests (`tests/test_db_geojson_sync.py`).
+
 ## [1.2.0] - 2026-06
 
 Tagged in git as `v1.2.0`.

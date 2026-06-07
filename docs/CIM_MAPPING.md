@@ -132,18 +132,23 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   `EnergyConsumer` loads, PV `SynchronousMachine`s (each with a voltage
   `RegulatingControl`) and a slack `ExternalNetworkInjection`
   (`referencePriority` + `controlEnabled`). **Validated end-to-end:** the
-  exported okinawa case round-trips through pandapower `cim2pp` and `runpp`
-  **converges** (81 buses, 16 PV gens, 1 slack, vmin 0.941) — a genuinely
-  solvable CGMES power-flow model, not just a catalogue. Across the full
-  country `runpp` converges for **all 10 regions**: 8 natively, while the two
-  ill-conditioned regions (kansai, hokuriku) have their demand scaled to what
-  the heavily-simplified network can carry (kansai x0.3, hokuriku x0.8; recorded
-  as `solve_mode` per region). Ybus analysis (`scripts/diagnose_ybus.py`) traced
-  kansai's non-convergence to a huge admittance spread (|Ydiag| ratio 6.9e20)
-  from ~5 m vertex-snap lines plus a demand/capacity shortfall — so the demand
-  scaling is a deliberate, documented model adjustment, not a change to the
-  underlying topology. Per-region object counts, convergence verdicts and solve
-  modes are recorded in `dist/cim_level2/cim_level2_index.json`. The full method
+  export preserves parallel circuits / transformer banks (effective bundle
+  impedance), `in_service` switching states (`ACDCTerminal.connected`) and km
+  line lengths, so the cim2pp round-trip is **electrically identical** to the
+  solved element network (regression-tested to vm differences < 1e-4 pu in
+  `tests/test_cim_level2.py`). Across the full country `runpp` converges for
+  **all 10 regions**: 6 natively (hokkaido, tohoku, tokyo, chugoku, shikoku,
+  okinawa), while the borderline/ill-conditioned regions ship as **balanced
+  demand-scaled cases** — chubu / hokuriku / kyushu at x0.8 and kansai at x0.3,
+  with generation redispatched to `load x 1.05` so the SSH stays physically
+  consistent (recorded as `solve_mode` per region, and the SV profile is the
+  solved state of the SSH it ships with). Ybus analysis
+  (`scripts/diagnose_ybus.py`) traced kansai's non-convergence to a huge
+  admittance spread (|Ydiag| ratio 6.9e20) from ~5 m vertex-snap lines plus a
+  demand/capacity shortfall — so the demand scaling is a deliberate, documented
+  model adjustment, not a change to the underlying topology. Per-region object
+  counts, convergence verdicts and solve modes are recorded in
+  `dist/cim_level2/cim_level2_index.json`. The full method
 for judging solvability from Ybus is documented in `docs/YBUS_SOLVABILITY.md`. `BaseVoltage` objects are factored
   into a shared **CGMES boundary set** (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`,
   `src/cim/boundary.py`) that the EQ/TP profiles reference by mRID — the standard
