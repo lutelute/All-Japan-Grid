@@ -224,6 +224,144 @@ class LoadAttributes(Base):
         )
 
 
+class Snapshot(Base):
+    """A fetch/ingest event for one (region, layer) — R-layer provenance.
+
+    Every refresh of raw data registers a snapshot row so the database
+    records *when* and *from what source* each raw feature set came.
+    See ``docs/DB_ARCHITECTURE.md`` (R layer).
+
+    Attributes:
+        snapshot_id: Unique id, e.g. ``'2026-06-08T12:00Z_okinawa_plants'``.
+        region: Region name (``hokkaido`` … ``okinawa``).
+        layer: ``substations`` | ``lines`` | ``plants``.
+        fetched_at: ISO timestamp of the fetch/ingest.
+        source: ``'overpass'`` for real fetches, ``'ingest-legacy'`` for
+            the one-time decomposition of the pre-DB enriched GeoJSON.
+        feature_count: Number of features in this snapshot.
+    """
+
+    __tablename__ = "snapshots"
+
+    snapshot_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    region: Mapped[str] = mapped_column(String(32), nullable=False)
+    layer: Mapped[str] = mapped_column(String(32), nullable=False)
+    fetched_at: Mapped[str] = mapped_column(String(40), nullable=False)
+    source: Mapped[str] = mapped_column(String(32), nullable=False)
+    feature_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    collection_meta: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True,
+        doc=(
+            "JSON of the FeatureCollection's top-level keys other than "
+            "'features' (e.g. name, crs) so exports reproduce the file "
+            "envelope faithfully."
+        ),
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"Snapshot(id={self.snapshot_id!r}, source={self.source!r}, "
+            f"features={self.feature_count})"
+        )
+
+
+class RawFeature(Base):
+    """One raw OSM feature — R layer (written only by fetch/ingest).
+
+    ``tags`` holds the feature's properties verbatim (minus the fields
+    extracted into :class:`Enrichment` rows at legacy ingest); curated
+    values must never be written here.  ``feature_key`` is the stable
+    identity: ``n/w/r{osm_id}`` when the OSM id is known, otherwise a
+    provisional ``g:{sha1[:12]}`` of the normalized geometry (see
+    ``src/db/geojson_sync.py:feature_key_for``).
+
+    The primary key includes ``region`` because the per-region source
+    files may legitimately contain the same physical element on both
+    sides of a region boundary; faithful per-region round-trip wins
+    until the osm-key migration enables cross-region dedup analysis.
+
+    Attributes:
+        layer: ``substations`` | ``lines`` | ``plants``.
+        region: Region name.
+        feature_key: Stable feature identity (see above).
+        osm_type: ``node`` | ``way`` | ``relation`` when known.
+        osm_id: OSM element id when known.
+        tags: JSON text of raw properties.
+        geometry: JSON text of the GeoJSON geometry (verbatim).
+        seq: Original position in the source file (stable export order).
+        first_seen / last_seen: ISO timestamps across snapshots.
+        active: 1 while present in the latest snapshot, 0 once vanished.
+        snapshot_id: Snapshot that last touched this row.
+    """
+
+    __tablename__ = "raw_features"
+
+    layer: Mapped[str] = mapped_column(String(32), primary_key=True)
+    region: Mapped[str] = mapped_column(String(32), primary_key=True)
+    feature_key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    osm_type: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
+    osm_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    tags: Mapped[str] = mapped_column(Text, nullable=False)
+    geometry: Mapped[str] = mapped_column(Text, nullable=False)
+    seq: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    first_seen: Mapped[str] = mapped_column(String(40), nullable=False)
+    last_seen: Mapped[str] = mapped_column(String(40), nullable=False)
+    active: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    snapshot_id: Mapped[Optional[str]] = mapped_column(
+        String(128), nullable=True
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"RawFeature({self.layer}/{self.region}/{self.feature_key}, "
+            f"osm={self.osm_type}/{self.osm_id})"
+        )
+
+
+class Enrichment(Base):
+    """One curated field value — C layer (enrich/audit/manual writes).
+
+    Raw features are never mutated; every completion, correction or
+    external match lands here keyed by the feature's stable identity,
+    so re-fetching OSM re-applies curation automatically.
+
+    ``source`` values are taken verbatim from the legacy markers
+    (``endpoint_matching`` / ``nominatim`` / ``geocode_promotion`` /
+    ``p03`` / ``overpass`` / ``jrp_lite`` / ``legacy_marker``) plus the
+    new ``manual`` and ``audit_fix``.  Resolution priority lives in
+    ``src/db/geojson_sync.py:SOURCE_PRIORITY``.
+
+    Attributes:
+        layer / region / feature_key: Identity of the enriched feature.
+        field: Property name (``name``, ``operator``, ``fuel_type``, …;
+            ``_``-prefixed legacy meta fields are stored verbatim).
+        value: JSON-encoded value.
+        source: Provenance label (see above).
+        confidence: Optional 0–1 confidence score.
+        run_id: Optional id of the enrichment run that wrote this.
+        updated_at: ISO timestamp of last update.
+    """
+
+    __tablename__ = "enrichments"
+
+    layer: Mapped[str] = mapped_column(String(32), primary_key=True)
+    region: Mapped[str] = mapped_column(String(32), primary_key=True)
+    feature_key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    field: Mapped[str] = mapped_column(String(64), primary_key=True)
+    source: Mapped[str] = mapped_column(String(32), primary_key=True)
+    value: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    run_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"Enrichment({self.layer}/{self.region}/{self.feature_key}."
+            f"{self.field} <- {self.source})"
+        )
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 

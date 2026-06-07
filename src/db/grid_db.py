@@ -99,6 +99,15 @@ class GridDatabase:
         )
 
     # ------------------------------------------------------------------
+    # Session access (for bulk/relational modules, e.g. geojson_sync)
+    # ------------------------------------------------------------------
+
+    @property
+    def session_factory(self) -> sessionmaker:
+        """Return the SQLAlchemy session factory bound to this database."""
+        return self._session_factory
+
+    # ------------------------------------------------------------------
     # Schema version
     # ------------------------------------------------------------------
 

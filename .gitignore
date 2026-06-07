@@ -26,6 +26,13 @@ docs/data/powerflow.legacy_*/
 *.pkl
 data/cache/
 
+# Unified grid DB — rebuildable via scripts/db/ingest.py (docs/DB_ARCHITECTURE.md).
+# The tracked curation backup is data/db/enrichments.jsonl.
+data/grid.db
+data/grid.db-wal
+data/grid.db-shm
+data/db/export_preview/
+
 # Marginalia annotation tool working dir
 .marginalia/
 

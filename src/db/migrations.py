@@ -69,6 +69,16 @@ MIGRATIONS: Sequence[Migration] = (
         description="Initial schema — tables created by SQLAlchemy metadata",
         statements=[],
     ),
+    Migration(
+        version=2,
+        description=(
+            "DB unification R/C layers: snapshots, raw_features, "
+            "enrichments (docs/DB_ARCHITECTURE.md)"
+        ),
+        # Tables are created by Base.metadata.create_all() in
+        # ensure_schema(); this migration records the version bump.
+        statements=[],
+    ),
 )
 
 

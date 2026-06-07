@@ -549,10 +549,10 @@ class TestSampleGridDB:
 class TestSchemaVersioning:
     """Tests for schema version tracking."""
 
-    def test_initial_version_is_one(self) -> None:
-        """Fresh in-memory database starts at schema version 1."""
+    def test_initial_version_is_latest_migration(self) -> None:
+        """Fresh database lands on the highest registered migration."""
         db = GridDatabase(":memory:")
-        assert db.get_schema_version() == 1
+        assert db.get_schema_version() == max(m.version for m in MIGRATIONS)
 
     def test_version_persists_across_sessions(self, tmp_path) -> None:
         """Schema version persists when database is reopened."""
