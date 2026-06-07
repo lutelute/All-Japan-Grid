@@ -102,12 +102,34 @@ def subdivide_bbox(bbox: dict, rows: int, cols: int) -> list:
     return tiles
 
 
+def _materialize_osm_ids(gdf):
+    """Lift the OSM identity out of the index into osm_type / osm_id columns.
+
+    osmnx returns features indexed by (element_type, osmid) — and the tile
+    merge below uses ``pd.concat(ignore_index=True)``, which silently drops
+    that index. This is exactly why the legacy substations/lines GeoJSON
+    carries no OSM ids at all (docs/DB_ARCHITECTURE.md §1.2): without them
+    every re-fetch shifts the loaders' index-derived ids and the curated DB
+    layer cannot key features permanently. Materialising the ids here makes
+    them ordinary properties that survive merge, dedup and GeoJSON export.
+    """
+    if gdf is None or len(gdf) == 0:
+        return gdf
+    gdf = gdf.reset_index()
+    rename = {}
+    for src, dst in (("element_type", "osm_type"), ("element", "osm_type"),
+                     ("osmid", "osm_id"), ("id", "osm_id")):
+        if src in gdf.columns and dst not in gdf.columns:
+            rename[src] = dst
+    return gdf.rename(columns=rename)
+
+
 def fetch_with_retry(bbox_tuple, tags, label, max_retries=MAX_RETRIES):
     """Fetch OSM features with retry + exponential backoff."""
     for attempt in range(1, max_retries + 1):
         try:
             gdf = ox.features_from_bbox(bbox=bbox_tuple, tags=tags)
-            return gdf
+            return _materialize_osm_ids(gdf)
         except Exception as e:
             error_msg = str(e)
             # "EmptyOverpassResponse" means no features in this tile — that's OK
@@ -192,8 +214,13 @@ def fetch_region_subdivided(region: str, rows: int, cols: int):
 
     if all_subs:
         merged_subs = pd.concat(all_subs, ignore_index=True)
-        # Deduplicate by osmid (same substation may appear in overlapping tiles)
-        if "osmid" in merged_subs.columns:
+        # Deduplicate by OSM identity (same substation may appear in
+        # overlapping tiles); fall back to legacy columns / geometry.
+        if {"osm_type", "osm_id"}.issubset(merged_subs.columns):
+            before = len(merged_subs)
+            merged_subs = merged_subs.drop_duplicates(subset=["osm_type", "osm_id"])
+            _log(f"    Substations: {before} → {len(merged_subs)} (deduped by osm id)")
+        elif "osmid" in merged_subs.columns:
             before = len(merged_subs)
             merged_subs = merged_subs.drop_duplicates(subset=["osmid"])
             _log(f"    Substations: {before} → {len(merged_subs)} (deduped)")
@@ -209,7 +236,11 @@ def fetch_region_subdivided(region: str, rows: int, cols: int):
 
     if all_lines:
         merged_lines = pd.concat(all_lines, ignore_index=True)
-        if "osmid" in merged_lines.columns:
+        if {"osm_type", "osm_id"}.issubset(merged_lines.columns):
+            before = len(merged_lines)
+            merged_lines = merged_lines.drop_duplicates(subset=["osm_type", "osm_id"])
+            _log(f"    Lines: {before} → {len(merged_lines)} (deduped by osm id)")
+        elif "osmid" in merged_lines.columns:
             before = len(merged_lines)
             merged_lines = merged_lines.drop_duplicates(subset=["osmid"])
             _log(f"    Lines: {before} → {len(merged_lines)} (deduped)")
