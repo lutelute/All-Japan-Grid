@@ -886,21 +886,28 @@ def _nearest_kv_class(kv: float) -> int:
     return min(_LINE_OHM_KM.keys(), key=lambda k: abs(k - kv))
 
 
-def _model_line_pu(volt_kv: float, length_km: float, baseMVA: float):
+def _model_line_pu(volt_kv: float, length_km: float, baseMVA: float,
+                   num_parallel: int = 1):
     """Compute (R_pu, X_pu, B_pu, rating_mva) for a model line.
 
     Uses the same z_base = V^2 / S_base convention as the dynamics builder.
+    ``num_parallel`` bakes the parallel-circuit bundle into the single
+    branch (series Z / n, shunt B * n, rating * n) — the same convention
+    PandapowerBuilder applies via the ``parallel`` column, so the .mat
+    case and the pandapower validation network stay electrically
+    identical (REVIEW_FINDINGS P0 #7).
     """
     cls = _nearest_kv_class(volt_kv)
     p = _LINE_OHM_KM[cls]
     v_used = volt_kv if volt_kv > 0 else float(cls)
     length_km = max(length_km, 0.1)
+    par = max(int(num_parallel or 1), 1)
     z_base = (v_used ** 2) / baseMVA
-    R_pu = p["r"] * length_km / z_base
-    X_pu = p["x"] * length_km / z_base
+    R_pu = p["r"] * length_km / z_base / par
+    X_pu = p["x"] * length_km / z_base / par
     # B_pu = b[S/km] * L / Y_base = b_us*1e-6 * L * z_base
-    B_pu = p["b_us"] * 1e-6 * length_km * z_base
-    rating = _DEFAULT_RATE_MVA[cls]
+    B_pu = p["b_us"] * 1e-6 * length_km * z_base * par
+    rating = _DEFAULT_RATE_MVA[cls] * par
     return R_pu, X_pu, B_pu, rating
 
 
@@ -1061,7 +1068,8 @@ def _build_case_from_model_network(
     for k, (fi, ti, ln) in enumerate(kept_edges):
         kv = ln.voltage_kv if ln.voltage_kv > 0 else max(
             kept_subs[fi].voltage_kv, kept_subs[ti].voltage_kv, 0.0)
-        R_pu, X_pu, B_pu, rating = _model_line_pu(kv, ln.length_km, baseMVA)
+        R_pu, X_pu, B_pu, rating = _model_line_pu(
+            kv, ln.length_km, baseMVA, getattr(ln, "num_parallel", 1))
         BRANCH[k, F_BUS]  = fi + 1
         BRANCH[k, T_BUS]  = ti + 1
         BRANCH[k, BR_R]   = max(R_pu, 1e-6)

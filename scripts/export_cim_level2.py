@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import pandapower as pp  # noqa: E402
 
 from scripts.export_powerflow_pages import build_and_solve  # noqa: E402
-from src.cim.boundary import generate_boundary  # noqa: E402
+from src.cim.boundary import BOUNDARY_VOLTAGES, generate_boundary  # noqa: E402
 from src.cim.level2 import net_to_cgmes  # noqa: E402
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
 
@@ -74,21 +74,40 @@ def _cim_solves(net, region, tmp_dir):
     return _try_runpp(net2)
 
 
-def _ensure_solvable(net, region):
-    """Return a network that AC-converges, boosting capacity only if needed.
+def _rebalance_generation(net, reserve: float = 1.05) -> None:
+    """Scale gen/sgen dispatch to the current demand (in place).
 
-    Ybus analysis showed kansai (heavy demand, ill-conditioned) collapses by
-    voltage unless transmission capacity is raised. Regions that already solve
-    are returned untouched ("native"); only the few that don't get the minimal
-    capacity boost (more parallel circuits + larger transformer banks) that
-    makes AC converge — a deliberate, documented model adjustment.
+    After demand scaling the original full-demand dispatch would leave
+    the SSH physically meaningless (e.g. generation 3.5x load with the
+    slack absorbing the surplus — REVIEW_FINDINGS P0 #3), so generation
+    is rescaled proportionally to ``total_load * reserve``, mirroring
+    build_and_solve's balance_power target.
     """
-    # Judge by the ACTUAL CGMES round-trip (cim2pp + runpp), not the element
-    # net — they differ (kansai only solves after parallel reset + demand
-    # scaling; chubu/hokuriku are borderline). Regions that pass as-is are
-    # "native"; the rest get parallels reset (Ybus analysis: parallel
-    # restoration worsens kansai's conditioning) and demand scaled down until
-    # the round-trip converges. A deliberate, documented adjustment.
+    active = net.load[net.load.get("in_service", True) == True]  # noqa: E712
+    load = float(active["p_mw"].clip(lower=0).sum())
+    gen_p = float(net.gen["p_mw"].sum()) if len(net.gen) else 0.0
+    sgen_p = float(net.sgen["p_mw"].sum()) if len(net.sgen) else 0.0
+    total = gen_p + sgen_p
+    if total <= 0 or load <= 0:
+        return
+    factor = load * reserve / total
+    if len(net.gen):
+        net.gen["p_mw"] = net.gen["p_mw"] * factor
+    if len(net.sgen):
+        net.sgen["p_mw"] = net.sgen["p_mw"] * factor
+
+
+def _ensure_solvable(net, region):
+    """Return a network whose CGMES round-trip AC-converges.
+
+    Judged by the ACTUAL round-trip (net_to_cgmes -> cim2pp -> runpp),
+    not the element net. Since the export now preserves parallel
+    circuits, in_service flags and km lengths, the round-trip should be
+    electrically identical to the element net and regions are expected
+    to pass "native". The legacy fallback ladder (reset parallels, then
+    scale demand — now with generation rebalanced to match) remains as
+    a documented last resort for ill-conditioned regions.
+    """
     tmp = os.path.join("/tmp", f"_chk_{region}")
     if _cim_solves(net, region, tmp):
         return net, "native"
@@ -101,6 +120,7 @@ def _ensure_solvable(net, region):
         n = copy.deepcopy(base)
         n.load["p_mw"] = n.load["p_mw"] * lf
         n.load["q_mvar"] = n.load["q_mvar"] * lf
+        _rebalance_generation(n)
         if _cim_solves(n, region, tmp):
             return n, f"demand-scaled(x{lf})"
     return net, "unsolvable"
@@ -151,14 +171,22 @@ def main() -> int:
     for region in args.regions:
         try:
             result = build_and_solve(region, cfg, topology=args.topology, reconnect=reconnect)
+            # inside the try: build_and_solve returns bare None for a
+            # missing/empty region, and iterating that must not abort
+            # the whole multi-region export (REVIEW_FINDINGS Phase A 次点)
+            net = _extract_net(result) if result is not None else None
         except Exception as e:  # noqa: BLE001
             print(f"{region:10s} build-and-solve FAILED: {str(e)[:50]}")
             continue
-        net = _extract_net(result)
         if net is None:
             print(f"{region:10s} (no pandapower network returned)")
             continue
         net, solve_mode = _ensure_solvable(net, region)
+        # Refresh res_bus on the network actually being exported so the SV
+        # profile is the solved state of the SSH it ships with
+        # (REVIEW_FINDINGS P0 #4: kansai shipped with zero SvVoltage).
+        if not _try_runpp(net):
+            solve_mode += "+sv-stale"
         summary = net_to_cgmes(net, region, args.out_dir,
                                f_hz=REGION_FREQUENCY_HZ.get(region, 50))
         summary["solve_mode"] = solve_mode
@@ -166,8 +194,23 @@ def main() -> int:
         print(f"{region:10s} {summary['buses']:5d} {summary['lines']:5d} "
               f"{summary['trafos']:5d} {summary['loads']:5d} {summary['gens']:5d}  {solve_mode}")
 
-    # shared boundary set (EQ_BD/TP_BD) covering the union of referenced voltages
-    all_kv = sorted({v for r in rows for v in r.get("base_voltages", [])}, reverse=True)
+    # Shared boundary set (EQ_BD/TP_BD). The voltage set is the union of the
+    # national defaults, this run AND the existing index, so a --regions
+    # subset run can never orphan the BaseVoltage references of regions that
+    # were not re-exported (REVIEW_FINDINGS P0 #5).
+    index_path = os.path.join(args.out_dir, "cim_level2_index.json")
+    existing: dict = {}
+    if os.path.exists(index_path):
+        try:
+            with open(index_path, encoding="utf-8") as fh:
+                existing = json.load(fh)
+        except (ValueError, OSError):
+            existing = {}
+    all_kv = sorted(
+        {round(float(v), 3) for v in BOUNDARY_VOLTAGES}
+        | {round(float(v), 3) for v in existing.get("boundary_voltages_kv", [])}
+        | {round(float(v), 3) for r in rows for v in r.get("base_voltages", [])},
+        reverse=True)
     bsum = generate_boundary(args.out_dir, all_kv)
     print(f"\nBoundary: {bsum['eq_bd_objects']} BaseVoltages "
           "-> AllJapan_EQ_BD.xml / AllJapan_TP_BD.xml")
@@ -178,12 +221,23 @@ def main() -> int:
             r["verify"] = _verify(r["region"], args.out_dir)
             print(f"  {r['region']:10s} {r['verify']}")
 
+    # Merge into the existing index instead of overwriting it, so a
+    # --regions subset run keeps the other regions' entries.
+    merged = {r["region"]: r for r in existing.get("regions", [])}
+    for r in rows:
+        merged[r["region"]] = r
+    order = list(REGION_FREQUENCY_HZ)
+    merged_rows = sorted(
+        merged.values(),
+        key=lambda r: order.index(r["region"]) if r["region"] in order else 99)
+
     os.makedirs(args.out_dir, exist_ok=True)
-    with open(os.path.join(args.out_dir, "cim_level2_index.json"), "w", encoding="utf-8") as fh:
+    with open(index_path, "w", encoding="utf-8") as fh:
         json.dump({"profiles": ["EQ", "TP", "SSH", "SV", "GL", "EQ_BD", "TP_BD"],
-                   "boundary_voltages_kv": all_kv, "regions": rows},
+                   "boundary_voltages_kv": all_kv, "regions": merged_rows},
                   fh, ensure_ascii=False, indent=2)
-    print(f"\nWrote {len(rows)} region(s) + boundary to {args.out_dir}/")
+    print(f"\nWrote {len(rows)} region(s) + boundary to {args.out_dir}/ "
+          f"(index now holds {len(merged_rows)} regions)")
     return 0
 
 

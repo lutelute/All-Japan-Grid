@@ -50,6 +50,26 @@ def _num(value, default=0.0) -> float:
         return default
 
 
+def _parallel(row) -> int:
+    """Number of parallel circuits/banks for a line/trafo row (>= 1).
+
+    pandapower divides branch impedance (and multiplies shunt admittance
+    and rating) by this column; the CGMES export must bake the same
+    factor into the single exported equipment, otherwise the round-trip
+    network carries n-times the impedance (REVIEW_FINDINGS P0 #1).
+    """
+    return max(int(_num(row.get("parallel"), 1) or 1), 1)
+
+
+def _in_service(row) -> bool:
+    """Element in_service flag with NaN/None treated as True."""
+    val = row.get("in_service", True)
+    try:
+        return bool(val) and not (isinstance(val, float) and math.isnan(val))
+    except TypeError:
+        return True
+
+
 class Level2Exporter:
     """Builds CGMES EQ/TP/SSH/SV/GL from a solved pandapower network."""
 
@@ -67,6 +87,7 @@ class Level2Exporter:
         self._cs_m: Optional[str] = None
         self._bus_cn: Dict[int, str] = {}
         self._bus_tn: Dict[int, str] = {}
+        self._bus_on: Dict[int, bool] = {}
         # shared containers
         self._sub_geo = mrid("l2subgeo", region)
         geo = mrid("l2geo", "japan")
@@ -161,6 +182,7 @@ class Level2Exporter:
                         refs={"ConnectivityNode.TopologicalNode": tn})
             self._bus_cn[idx] = cn
             self._bus_tn[idx] = tn
+            self._bus_on[idx] = _in_service(row)
             # geo on the VoltageLevel
             geo = row.get("geo", None)
             if isinstance(geo, str) and geo:
@@ -179,13 +201,19 @@ class Level2Exporter:
                                        "SvVoltage.angle": round(_num(res.at[idx, "va_degree"]), 4)},
                                 refs={"SvVoltage.TopologicalNode": tn})
 
-    def _terminal(self, eqm: str, kind: str, idx: int, seq: int, bus: int) -> str:
+    def _terminal(self, eqm: str, kind: str, idx: int, seq: int, bus: int,
+                  connected: bool = True) -> str:
         t = mrid("l2term", self.region, kind, idx, seq)
         self.eq.obj("Terminal", t,
                     attrs={"IdentifiedObject.mRID": t, "ACDCTerminal.sequenceNumber": seq},
                     refs={"Terminal.ConductingEquipment": eqm,
                           "Terminal.ConnectivityNode": self._bus_cn[bus]})
-        self.ssh.obj("Terminal", t, attrs={"ACDCTerminal.connected": "true"})
+        # Element AND bus in_service must both hold; otherwise the round-trip
+        # re-energizes equipment the solved element net had switched off
+        # (pruned lines, disabled-island loads — REVIEW_FINDINGS P0 #2).
+        on = bool(connected) and self._bus_on.get(bus, True)
+        self.ssh.obj("Terminal", t,
+                     attrs={"ACDCTerminal.connected": "true" if on else "false"})
         return t
 
     def _reg_control(self, rc: str, term_m: str, target_kv: float, tag: str) -> None:
@@ -209,25 +237,33 @@ class Level2Exporter:
         for idx in net.line.index:
             row = net.line.loc[idx]
             length = _num(row.length_km, 0.0)
-            r = _num(row.r_ohm_per_km) * length
-            x = _num(row.x_ohm_per_km) * length
-            bch = 2 * math.pi * self.f_hz * _num(row.c_nf_per_km) * 1e-9 * length
-            gch = _num(row.get("g_us_per_km", 0.0)) * 1e-6 * length
+            par = _parallel(row)
+            # Effective branch values of the parallel bundle, matching what
+            # pandapower solves: series Z / n, shunt Y * n.
+            r = _num(row.r_ohm_per_km) * length / par
+            x = _num(row.x_ohm_per_km) * length / par
+            bch = 2 * math.pi * self.f_hz * _num(row.c_nf_per_km) * 1e-9 * length * par
+            gch = _num(row.get("g_us_per_km", 0.0)) * 1e-6 * length * par
             from_bus, to_bus = int(row.from_bus), int(row.to_bus)
+            in_svc = _in_service(row)
             bv = self._base_voltage(_num(net.bus.at[from_bus, "vn_kv"], 1.0))
             m = mrid("l2line", self.region, idx)
             self.eq.obj("ACLineSegment", m,
                         attrs={"IdentifiedObject.name": str(row.get("name", f"line{idx}")),
                                "IdentifiedObject.mRID": m,
-                               "Conductor.length": round(length * 1000.0, 1),
+                               # km: the CGMES EQ profile encodes Conductor.length
+                               # with unitMultiplier=k, and cim2pp reads km —
+                               # the old m value round-tripped 1000x too long
+                               # (REVIEW_FINDINGS P0 #8).
+                               "Conductor.length": round(length, 3),
                                "ACLineSegment.r": round(r, 6),
                                "ACLineSegment.x": round(x, 6),
                                "ACLineSegment.bch": round(bch, 10),
                                "ACLineSegment.gch": round(gch, 10)},
                         refs={"Equipment.EquipmentContainer": self._line_container,
                               "ConductingEquipment.BaseVoltage": bv})
-            self._terminal(m, "line", idx, 1, from_bus)
-            self._terminal(m, "line", idx, 2, to_bus)
+            self._terminal(m, "line", idx, 1, from_bus, connected=in_svc)
+            self._terminal(m, "line", idx, 2, to_bus, connected=in_svc)
 
     def _transformers(self) -> None:
         net = self.net
@@ -235,7 +271,13 @@ class Level2Exporter:
             return
         for idx in net.trafo.index:
             row = net.trafo.loc[idx]
-            sn = _num(row.sn_mva, 1.0) or 1.0
+            par = _parallel(row)
+            # Export the bank as ONE transformer with the combined rating;
+            # vk/vkr% are per-unit on the unit's own base, so computing the
+            # ohmic impedance on the combined base sn_total = sn * n yields
+            # exactly z_single / n — what pandapower solves for parallel=n
+            # (REVIEW_FINDINGS P0 #1).
+            sn = (_num(row.sn_mva, 1.0) or 1.0) * par
             vhv, vlv = _num(row.vn_hv_kv, 1.0), _num(row.vn_lv_kv, 1.0)
             zbase = (vlv * vlv) / sn if sn else 0.0
             zk = _num(row.vk_percent) / 100.0 * zbase
@@ -243,13 +285,16 @@ class Level2Exporter:
             xk = math.sqrt(max(zk * zk - rk * rk, 0.0))
             # Magnetizing admittance referred to the HV end (siemens), kept
             # strictly non-zero so cim2pp's 1/(g+jb) star conversion stays finite.
-            pfe = _num(row.get("pfe_kw"))
+            # pfe_kw is per unit -> n units; i0% holds on the combined base
+            # because sn here is already the bank total.
+            pfe = _num(row.get("pfe_kw")) * par
             i0 = _num(row.get("i0_percent"))
             g_mag = (pfe / 1000.0) / (vhv * vhv) if vhv else 0.0
             y_mag = (i0 / 100.0) * (sn / (vhv * vhv)) if vhv else 0.0
             b_mag = -math.sqrt(max(y_mag * y_mag - g_mag * g_mag, 0.0))
             if g_mag == 0.0 and b_mag == 0.0:
                 b_mag = -1e-7
+            in_svc = _in_service(row)
             m = mrid("l2trafo", self.region, idx)
             self.eq.obj("PowerTransformer", m,
                         attrs={"IdentifiedObject.name": str(row.get("name", f"trafo{idx}")),
@@ -278,7 +323,9 @@ class Level2Exporter:
                                    "ACDCTerminal.sequenceNumber": end},
                             refs={"Terminal.ConductingEquipment": m,
                                   "Terminal.ConnectivityNode": self._bus_cn[bus]})
-                self.ssh.obj("Terminal", t, attrs={"ACDCTerminal.connected": "true"})
+                on = in_svc and self._bus_on.get(bus, True)
+                self.ssh.obj("Terminal", t,
+                             attrs={"ACDCTerminal.connected": "true" if on else "false"})
 
     def _loads(self) -> None:
         net = self.net
@@ -292,7 +339,7 @@ class Level2Exporter:
                         attrs={"IdentifiedObject.name": str(row.get("name", f"load{idx}")),
                                "IdentifiedObject.mRID": m},
                         refs={"Equipment.EquipmentContainer": mrid("l2vl", self.region, bus)})
-            self._terminal(m, "load", idx, 1, bus)
+            self._terminal(m, "load", idx, 1, bus, connected=_in_service(row))
             self.ssh.obj("EnergyConsumer", m,
                          attrs={"EnergyConsumer.p": round(_num(row.p_mw), 4),
                                 "EnergyConsumer.q": round(_num(row.q_mvar), 4)})
@@ -300,7 +347,8 @@ class Level2Exporter:
     def _machine(self, kind: str, idx: int, bus: int, name: str,
                  p_mw: float, q_mvar: float, rateds: float,
                  minp: float, maxp: float,
-                 voltage_control: bool = False, vm_pu: float = 1.0) -> None:
+                 voltage_control: bool = False, vm_pu: float = 1.0,
+                 connected: bool = True) -> None:
         """Emit a GeneratingUnit + SynchronousMachine pair with SSH injection.
 
         When ``voltage_control`` is set, a voltage RegulatingControl is attached
@@ -327,7 +375,7 @@ class Level2Exporter:
                            "IdentifiedObject.mRID": sm,
                            "RotatingMachine.ratedS": round(rateds, 4)},
                     refs=sm_refs)
-        term = self._terminal(sm, kind, idx, 1, bus)
+        term = self._terminal(sm, kind, idx, 1, bus, connected=connected)
         # CGMES load convention: generation is negative injected power.
         ssh_attrs = {"RotatingMachine.p": round(-p_mw, 4),
                      "RotatingMachine.q": round(-q_mvar, 4)}
@@ -347,7 +395,8 @@ class Level2Exporter:
             self._machine("gen", idx, int(row.bus), str(row.get("name", f"gen{idx}")),
                           p, 0.0, _num(row.get("sn_mva"), p) or p,
                           _num(row.get("min_p_mw")), _num(row.get("max_p_mw"), p),
-                          voltage_control=True, vm_pu=_num(row.get("vm_pu"), 1.0))
+                          voltage_control=True, vm_pu=_num(row.get("vm_pu"), 1.0),
+                          connected=_in_service(row))
 
     def _sgens(self) -> None:
         net = self.net
@@ -358,7 +407,7 @@ class Level2Exporter:
             p = _num(row.p_mw)
             self._machine("sgen", idx, int(row.bus), str(row.get("name", f"sgen{idx}")),
                           p, _num(row.get("q_mvar")), _num(row.get("sn_mva"), p) or p,
-                          0.0, p)
+                          0.0, p, connected=_in_service(row))
 
     def _ext_grids(self) -> None:
         net = self.net
@@ -377,7 +426,7 @@ class Level2Exporter:
                         refs={"ConductingEquipment.BaseVoltage": bv,
                               "Equipment.EquipmentContainer": mrid("l2vl", self.region, bus),
                               "RegulatingCondEq.RegulatingControl": rc})
-            term = self._terminal(m, "ext", idx, 1, bus)
+            term = self._terminal(m, "ext", idx, 1, bus, connected=_in_service(row))
             # referencePriority>0 + controllable -> cim2pp selects this as the slack
             self.ssh.obj("ExternalNetworkInjection", m,
                          attrs={"ExternalNetworkInjection.p": 0.0,

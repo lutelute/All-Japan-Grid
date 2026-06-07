@@ -21,6 +21,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
+from src.cim.boundary import BOUNDARY_VOLTAGES, generate_boundary  # noqa: E402
 from src.cim.core import NS_CIM, PROFILE_EQ, PROFILE_GL  # noqa: E402
 from src.cim.exporter import REGION_NAME, export_region  # noqa: E402
 
@@ -67,12 +68,25 @@ def main() -> int:
         f"{sum(s['gl_objects'] for s in summaries):8d}"
     )
 
+    # Shared boundary set: the Level-1 EQ no longer defines BaseVoltage
+    # inline (duplicate rdf:IDs vs the boundary — REVIEW_FINDINGS P0 #9),
+    # so every export must ship a boundary covering all referenced voltages.
+    all_kv = sorted(
+        {round(float(v), 3) for v in BOUNDARY_VOLTAGES}
+        | {round(float(v), 3) for s in summaries for v in s["base_voltages"]},
+        reverse=True)
+    bsum = generate_boundary(args.out_dir, all_kv)
+    print(f"\nBoundary: {bsum['eq_bd_objects']} BaseVoltages "
+          "-> AllJapan_EQ_BD.xml / AllJapan_TP_BD.xml")
+
     # Relativise paths in the manifest so it is location-independent.
     out_dir = args.out_dir
     manifest = {
         "dataset": "All-Japan-Grid",
         "cim_namespace": NS_CIM,
-        "profiles": {"EQ": PROFILE_EQ, "GL": PROFILE_GL},
+        "profiles": {"EQ": PROFILE_EQ, "GL": PROFILE_GL,
+                     "EQ_BD": "boundary", "TP_BD": "boundary"},
+        "boundary_voltages_kv": all_kv,
         "totals": totals,
         "regions": [
             {

@@ -21,7 +21,7 @@ import math
 import os
 from typing import Dict, List, Optional, Tuple
 
-from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, mrid
+from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, base_voltage_mrid, mrid
 
 # English region names for IdentifiedObject.name of SubGeographicalRegion.
 REGION_NAME: Dict[str, str] = {
@@ -188,24 +188,25 @@ class CimExporter:
 
     # -- shared/reference objects (lazily created) --------------------------
     def _base_voltage(self, kv: Optional[float]) -> Optional[str]:
-        """Return (creating if needed) the BaseVoltage mRID for ``kv``."""
+        """Return the BaseVoltage mRID for ``kv`` (defined in the boundary).
+
+        The Level-1 EQ used to define BaseVoltage objects inline, which
+        duplicated the rdf:IDs owned by the shared boundary set
+        (``AllJapan_EQ_BD.xml``) — strict CGMES importers reject datasets
+        with duplicate definitions (REVIEW_FINDINGS P0 #9). Like Level-2,
+        the EQ now only *references* the deterministic boundary mRID
+        (:func:`src.cim.core.base_voltage_mrid` yields the identical id
+        the inline path produced) and records the voltage so the caller
+        can generate a covering boundary set.
+        """
         if kv is None:
             return None
         key = round(float(kv), 3)
         existing = self._base_voltages.get(key)
         if existing:
             return existing
-        m = mrid("basevoltage", key)
+        m = base_voltage_mrid(key)
         self._base_voltages[key] = m
-        self.eq.obj(
-            "BaseVoltage",
-            m,
-            attrs={
-                "IdentifiedObject.name": f"{key:g} kV",
-                "IdentifiedObject.mRID": m,
-                "BaseVoltage.nominalVoltage": key,
-            },
-        )
         return m
 
     def _ensure_region(self) -> None:
