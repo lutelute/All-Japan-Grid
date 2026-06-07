@@ -33,6 +33,10 @@ data/cache/
 /ieej.log
 /texput.log
 
+# IEEJ official class distribution (extracted archive; the ieej.cls actually
+# used is tracked at papers/ieej.cls — md5-identical to ieej5.0/UTF/ieej.cls)
+papers/ieej5.0/
+
 # LaTeX build artifacts (papers/)
 papers/*.aux
 papers/*.bbl
