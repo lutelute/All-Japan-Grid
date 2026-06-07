@@ -43,10 +43,22 @@ def _extract_net(result):
 
 
 def _try_runpp(net):
-    """Try AC power flow with several init strategies; True if any converges."""
-    for init in ("auto", "dc", "flat"):
+    """Try AC power flow with several init strategies; True if any converges.
+
+    max_iteration=100: borderline regions (chubu/kyushu/hokuriku) need more
+    than 50 NR iterations — build_and_solve's own fallback chain allows up
+    to 300, and judging solvability with a tighter budget than the element
+    net was solved with would misclassify real solutions as failures.
+    """
+    attempts = (
+        ("auto", "nr"), ("dc", "nr"), ("flat", "nr"),
+        # Iwamoto damped Newton: slower but robust on the ill-conditioned
+        # borderline regions (hokuriku's element net converges only here).
+        ("dc", "iwamoto_nr"), ("flat", "iwamoto_nr"),
+    )
+    for init, algorithm in attempts:
         try:
-            pp.runpp(net, init=init, max_iteration=50)
+            pp.runpp(net, init=init, algorithm=algorithm, max_iteration=100)
             return True
         except Exception:  # noqa: BLE001
             continue
