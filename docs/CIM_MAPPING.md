@@ -143,7 +143,8 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   from ~5 m vertex-snap lines plus a demand/capacity shortfall — so the demand
   scaling is a deliberate, documented model adjustment, not a change to the
   underlying topology. Per-region object counts, convergence verdicts and solve
-  modes are recorded in `dist/cim_level2/cim_level2_index.json`. `BaseVoltage` objects are factored
+  modes are recorded in `dist/cim_level2/cim_level2_index.json`. The full method
+for judging solvability from Ybus is documented in `docs/YBUS_SOLVABILITY.md`. `BaseVoltage` objects are factored
   into a shared **CGMES boundary set** (`AllJapan_EQ_BD.xml` + `AllJapan_TP_BD.xml`,
   `src/cim/boundary.py`) that the EQ/TP profiles reference by mRID — the standard
   convention for interoperability with PowerFactory / CIMverter. Load the
