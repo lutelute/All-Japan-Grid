@@ -15,10 +15,13 @@ import pytest
 
 from src.db.geojson_sync import (
     LAYERS,
+    apply_enrichments,
     compose_properties,
     decompose_properties,
     dump_enrichments_jsonl,
+    export_geojson,
     feature_key_for,
+    find_feature_keys,
     ingest_geojson,
     verify_roundtrip,
 )
@@ -188,3 +191,104 @@ class TestRoundTrip:
             record
         )
         assert "updated_at" not in record
+
+
+# ======================================================================
+# Curation write path (Step 3) — the mechanical-update loop
+# ======================================================================
+
+
+class TestCuration:
+    # hokuriku plants carry 100% OSM ids (Overpass-sourced); okinawa
+    # plants carry none (JRP-lite restore) — exercise both key regimes.
+    OSM_REGION = "hokuriku"
+
+    def _osm_id_feature(self, db):
+        """Ingest hokuriku plants and return a present, unique osm_id."""
+        path = DATA_DIR / f"{self.OSM_REGION}_plants.geojson"
+        ingest_geojson(db, self.OSM_REGION, "plants", str(path))
+        coll = export_geojson(db, self.OSM_REGION, "plants")
+        from collections import Counter
+        counts = Counter(f["properties"].get("osm_id")
+                         for f in coll["features"])
+        for f in coll["features"]:
+            oid = f["properties"].get("osm_id")
+            if oid not in (None, "") and counts[oid] == 1:
+                return int(oid)
+        pytest.skip("no unique osm_id-bearing plant in fixture")
+
+    def test_find_requires_a_selector(self, memory_db):
+        ingest_geojson(memory_db, "okinawa", "plants",
+                       str(DATA_DIR / "okinawa_plants.geojson"))
+        assert find_feature_keys(memory_db, "plants", "okinawa") == []
+
+    def test_manual_edit_appears_in_export(self, memory_db):
+        osm_id = self._osm_id_feature(memory_db)
+        keys = find_feature_keys(
+            memory_db, "plants", self.OSM_REGION, osm_id=osm_id)
+        assert len(keys) == 1
+        apply_enrichments(memory_db, [{
+            "layer": "plants", "region": self.OSM_REGION,
+            "feature_key": keys[0], "field": "operator",
+            "value": "北陸電力(キュレーション)", "source": "manual",
+        }])
+        coll = export_geojson(memory_db, self.OSM_REGION, "plants")
+        edited = [f for f in coll["features"]
+                  if f["properties"].get("osm_id") == osm_id][0]
+        assert edited["properties"]["operator"] == "北陸電力(キュレーション)"
+
+    def test_manual_overrides_legacy_by_priority(self, memory_db):
+        """A manual name must win over the legacy nominatim/marker name."""
+        osm_id = self._osm_id_feature(memory_db)
+        key = find_feature_keys(
+            memory_db, "plants", self.OSM_REGION, osm_id=osm_id)[0]
+        apply_enrichments(memory_db, [{
+            "layer": "plants", "region": self.OSM_REGION,
+            "feature_key": key, "field": "name",
+            "value": "手動命名", "source": "manual",
+        }])
+        coll2 = export_geojson(memory_db, self.OSM_REGION, "plants")
+        edited = [f for f in coll2["features"]
+                  if f["properties"].get("osm_id") == osm_id][0]
+        assert edited["properties"]["name"] == "手動命名"
+
+    def test_locate_by_name_on_geometry_keyed_region(self, memory_db):
+        """okinawa plants have no osm_id — curation must still work via name."""
+        ingest_geojson(memory_db, "okinawa", "plants",
+                       str(DATA_DIR / "okinawa_plants.geojson"))
+        coll = export_geojson(memory_db, "okinawa", "plants")
+        target = coll["features"][0]["properties"]["name"]
+        keys = find_feature_keys(memory_db, "plants", "okinawa", name=target)
+        assert keys  # geometry-keyed, located purely by effective name
+        apply_enrichments(memory_db, [{
+            "layer": "plants", "region": "okinawa", "feature_key": keys[0],
+            "field": "fuel_type", "value": "biomass", "source": "manual",
+        }])
+        coll2 = export_geojson(memory_db, "okinawa", "plants")
+        hit = [f for f in coll2["features"]
+               if f["properties"].get("name") == target][0]
+        assert hit["properties"]["fuel_type"] == "biomass"
+
+    def test_curation_survives_reingest(self, memory_db):
+        """A manual curation persists across a full legacy re-ingest.
+
+        Mechanical-update guarantee: the edit lives in the C layer keyed
+        by feature identity under a non-legacy source, so ingest (which
+        only refreshes LEGACY_SOURCES) leaves it untouched and the export
+        still reflects it.
+        """
+        osm_id = self._osm_id_feature(memory_db)
+        key = find_feature_keys(
+            memory_db, "plants", self.OSM_REGION, osm_id=osm_id)[0]
+        apply_enrichments(memory_db, [{
+            "layer": "plants", "region": self.OSM_REGION,
+            "feature_key": key, "field": "operator",
+            "value": "保持テスト", "source": "manual",
+        }])
+        # Re-ingest the same source file (stand-in for an OSM re-fetch).
+        ingest_geojson(memory_db, self.OSM_REGION, "plants",
+                       str(DATA_DIR / f"{self.OSM_REGION}_plants.geojson"))
+        coll = export_geojson(memory_db, self.OSM_REGION, "plants")
+        hit = [f for f in coll["features"]
+               if f["properties"].get("osm_id") == osm_id][0]
+        assert hit["properties"]["operator"] == "保持テスト"

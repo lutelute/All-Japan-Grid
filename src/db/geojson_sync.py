@@ -10,6 +10,9 @@ the legacy per-region GeoJSON files:
 - :func:`export_geojson` — raw ⟕ enrichments → a FeatureCollection
   semantically identical to the source file, golden-tested by
   :func:`verify_roundtrip` and ``tests/test_db_geojson_sync.py``.
+- :func:`apply_enrichments` / :func:`find_feature_keys` — the C-layer
+  write path (Step 3): mechanical curation that survives OSM re-fetch
+  because it is keyed by feature identity, not stored in the raw file.
 - :func:`dump_enrichments_jsonl` — diff-readable, timestamp-free text
   dump of the C layer: the *tracked* backup of all curation work.
 
@@ -55,6 +58,14 @@ SOURCE_PRIORITY: Tuple[str, ...] = (
 
 _OSM_PREFIX = {"node": "n", "way": "w", "relation": "r"}
 _INSERT_CHUNK = 2000
+
+#: Enrichment sources that the legacy ingest owns and refreshes. Manual /
+#: audit / external curation uses other source labels and is never touched
+#: by ingest, so it survives an OSM re-fetch (docs/DB_ARCHITECTURE.md).
+LEGACY_SOURCES: Tuple[str, ...] = (
+    "legacy_marker", "nominatim", "endpoint_matching",
+    "geocode_promotion", "p03", "overpass", "jrp_lite",
+)
 
 
 def _now_iso() -> str:
@@ -190,10 +201,12 @@ def ingest_geojson(
 ) -> Dict[str, int]:
     """Ingest one legacy GeoJSON file into the R/C layers.
 
-    Legacy ingest replaces the whole ``(layer, region)`` slice of both
-    ``raw_features`` and ``enrichments`` so re-runs are idempotent.
-    Real Overpass fetches must use a different code path that replaces
-    only raw features and *never* deletes enrichments.
+    Re-runs are idempotent. Ingest replaces all ``raw_features`` for the
+    ``(layer, region)`` slice but deletes only the **legacy-derived**
+    enrichments it owns (:data:`LEGACY_SOURCES`); ``manual`` / external
+    curation is preserved, so it survives both a re-ingest and a future
+    OSM re-fetch. (A real Overpass fetch path will likewise replace only
+    raw features.)
 
     Returns:
         ``{'features': n, 'curated_rows': m}``
@@ -257,9 +270,13 @@ def ingest_geojson(
                 RawFeature.layer == layer, RawFeature.region == region
             )
         )
+        # Only clear the legacy-derived enrichments this ingest re-writes;
+        # manual / external curation (other sources) is preserved.
         session.execute(
             delete(Enrichment).where(
-                Enrichment.layer == layer, Enrichment.region == region
+                Enrichment.layer == layer,
+                Enrichment.region == region,
+                Enrichment.source.in_(LEGACY_SOURCES),
             )
         )
         for i in range(0, len(raw_rows), _INSERT_CHUNK):
@@ -383,6 +400,114 @@ def verify_roundtrip(
                 problems.append("… (further diffs suppressed)")
                 break
     return problems
+
+
+def find_feature_keys(
+    db: GridDatabase,
+    layer: str,
+    region: str,
+    *,
+    name: Optional[str] = None,
+    osm_id: Optional[int] = None,
+) -> List[str]:
+    """Locate feature_keys by human-friendly attributes (curation helper).
+
+    ``name`` matches the *effective* name (raw tag or any enrichment),
+    so a feature already renamed by a previous curation step is still
+    found.  Returns every match (names are not unique).  Passing neither
+    selector returns ``[]`` rather than the whole layer, so a curation
+    edit can never accidentally fan out to every feature.
+    """
+    if name is None and osm_id is None:
+        return []
+    with db.session_factory() as session:
+        raw = (
+            session.execute(
+                select(RawFeature).where(
+                    RawFeature.layer == layer, RawFeature.region == region
+                )
+            )
+            .scalars()
+            .all()
+        )
+        enr = (
+            session.execute(
+                select(Enrichment).where(
+                    Enrichment.layer == layer, Enrichment.region == region
+                )
+            )
+            .scalars()
+            .all()
+        )
+    by_key: Dict[str, List[Enrichment]] = {}
+    for row in enr:
+        by_key.setdefault(row.feature_key, []).append(row)
+
+    hits: List[str] = []
+    for r in raw:
+        if osm_id is not None and r.osm_id != osm_id:
+            continue
+        if name is not None:
+            props = compose_properties(json.loads(r.tags), by_key.get(r.feature_key, ()))
+            if props.get("name") != name:
+                continue
+        hits.append(r.feature_key)
+    return hits
+
+
+def apply_enrichments(
+    db: GridDatabase,
+    rows: Sequence[Dict[str, Any]],
+    run_id: Optional[str] = None,
+) -> int:
+    """Upsert curated field values into the C layer (Step 3 write path).
+
+    Each row is ``{layer, region, feature_key, field, value}`` with an
+    optional ``source`` (default ``'manual'``) and ``confidence``.  The
+    primary key is ``(layer, region, feature_key, field, source)`` so a
+    manual override coexists with — and, per :data:`SOURCE_PRIORITY`,
+    wins over — the legacy markers; it is never written into the raw
+    feature, so a later OSM re-fetch re-applies it automatically.
+
+    Returns:
+        Number of rows upserted.
+    """
+    now = _now_iso()
+    with db.session_factory() as session:
+        for row in rows:
+            source = row.get("source", "manual")
+            existing = session.get(
+                Enrichment,
+                {
+                    "layer": row["layer"],
+                    "region": row["region"],
+                    "feature_key": row["feature_key"],
+                    "field": row["field"],
+                    "source": source,
+                },
+            )
+            value = _dumps(row["value"]) if "value" in row else None
+            if existing is None:
+                session.add(
+                    Enrichment(
+                        layer=row["layer"],
+                        region=row["region"],
+                        feature_key=row["feature_key"],
+                        field=row["field"],
+                        source=source,
+                        value=value,
+                        confidence=row.get("confidence"),
+                        run_id=run_id,
+                        updated_at=now,
+                    )
+                )
+            else:
+                existing.value = value
+                existing.confidence = row.get("confidence", existing.confidence)
+                existing.run_id = run_id
+                existing.updated_at = now
+        session.commit()
+    return len(rows)
 
 
 def dump_enrichments_jsonl(db: GridDatabase, path: str) -> int:
