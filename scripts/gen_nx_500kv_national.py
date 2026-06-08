@@ -108,12 +108,9 @@ def snap_v(v_str) -> int:
 
 # ── Haversine距離 [km] ────────────────────────────────────────────────
 def haversine_km(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
-    R = 6371.0
-    phi1, phi2 = math.radians(lat1), math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlam = math.radians(lon2 - lon1)
-    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlam / 2) ** 2
-    return 2 * R * math.asin(math.sqrt(a))
+    # Canonical impl in src.utils.geo_utils; (lon, lat) order preserved.
+    from src.utils.geo_utils import haversine_distance
+    return haversine_distance(lat1, lon1, lat2, lon2)
 
 
 # ── Step 1: 500kVバス読み込み ─────────────────────────────────────────

@@ -56,11 +56,9 @@ REGION_JP = {"hokkaido":"北海道","tohoku":"東北","kyushu":"九州"}
 # ── ユーティリティ ────────────────────────────────────────────────────
 
 def haversine_km(lo1, la1, lo2, la2):
-    R = 6371.0
-    p1,p2 = math.radians(la1), math.radians(la2)
-    dp = math.radians(la2-la1); dl = math.radians(lo2-lo1)
-    a = math.sin(dp/2)**2 + math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
-    return 2*R*math.asin(math.sqrt(a))
+    # Canonical impl in src.utils.geo_utils; (lon, lat) order preserved.
+    from src.utils.geo_utils import haversine_distance
+    return haversine_distance(la1, lo1, la2, lo2)
 
 
 def load_gens(region, max_gens=MAX_GENS):

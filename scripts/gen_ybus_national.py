@@ -38,11 +38,9 @@ REGION_COLORS = [
 
 
 def haversine_km(lat1, lon1, lat2, lon2):
-    R = 6371.0
-    a = (math.sin(math.radians(lat2-lat1)/2)**2 +
-         math.cos(math.radians(lat1))*math.cos(math.radians(lat2)) *
-         math.sin(math.radians(lon2-lon1)/2)**2)
-    return R * 2 * math.asin(math.sqrt(max(0, min(1, a))))
+    # Canonical impl in src.utils.geo_utils (same (lat, lon) order).
+    from src.utils.geo_utils import haversine_distance
+    return haversine_distance(lat1, lon1, lat2, lon2)
 
 
 def get_centroid(geom):

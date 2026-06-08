@@ -93,13 +93,12 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # ── Haversine distance ────────────────────────────────────────────────
 def haversine_km(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
-    """Great-circle distance in km between two (lon, lat) points."""
-    R = 6371.0
-    phi1, phi2 = math.radians(lat1), math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlam = math.radians(lon2 - lon1)
-    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlam / 2) ** 2
-    return 2 * R * math.asin(math.sqrt(a))
+    """Great-circle distance in km between two (lon, lat) points.
+
+    Delegates to the canonical src.utils.geo_utils implementation.
+    """
+    from src.utils.geo_utils import haversine_distance
+    return haversine_distance(lat1, lon1, lat2, lon2)
 
 
 # ── Load and filter generators from GeoJSON ──────────────────────────

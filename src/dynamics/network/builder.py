@@ -143,15 +143,13 @@ class LineData:
 # ---------------------------------------------------------------------------
 
 def _haversine_km(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
-    """Great-circle distance between two geographic points [km]."""
-    R = 6371.0
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlam = math.radians(lon2 - lon1)
-    a = (math.sin(dphi / 2) ** 2
-         + math.cos(phi1) * math.cos(phi2) * math.sin(dlam / 2) ** 2)
-    return 2.0 * R * math.asin(math.sqrt(max(0.0, min(1.0, a))))
+    """Great-circle distance between two (lon, lat) points [km].
+
+    Delegates to the canonical src.utils.geo_utils implementation; the
+    (lon, lat) argument order is preserved for this module's callers.
+    """
+    from src.utils.geo_utils import haversine_distance
+    return haversine_distance(lat1, lon1, lat2, lon2)
 
 
 def _geom_centroid(geom: dict) -> Optional[Tuple[float, float]]:
