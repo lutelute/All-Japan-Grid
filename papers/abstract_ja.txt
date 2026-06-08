@@ -1,0 +1,7 @@
+【日本語抄録 約300字】
+
+日本の電力系統にはバスレベルの公開系統モデルが存在せず，再現性のある系統研究の障壁となっている．本研究では，クラウドソーシング地理情報データベースOpenStreetMap（OSM）から日本全国10地域の送電網モデルを自動構築するオープンソースパイプライン「All-Japan-Grid」を開発した．7段階属性エンリッチメントにより107,383件の欠損属性を87%削減し，変電所6,962箇所・送電線40,077本・発電所19,138箇所（推定274 GW）を収録するオープンデータセットを実現した．疎母線アドミタンス行列を自動構築し，以前は0/10であったAC潮流計算を全10地域で収束させ，系統損失合計1,601 MWを定量化した．646機・24時間のMILP Unit Commitmentを38秒で求解し，全9連系線飽和時に混雑コスト+1.40%（¥107 M/日）が発生することを明らかにした．さらに北海道系統のN-x過渡安定解析およびモード解析により，系統動特性の定性的妥当性を確認した．
+
+【English Abstract (approx. 100 words)】
+
+Japan's power system lacks publicly available bus-level network models, hindering reproducible research. We present All-Japan-Grid, an open-source pipeline that automatically constructs a nationwide Japanese transmission grid model from OpenStreetMap crowdsourced data. A seven-stage attribute enrichment process reduces 107,383 missing attributes by 87%, yielding an open dataset of 6,962 substations, 40,077 lines, and 19,138 plants (274 GW) across all 10 regions. The pipeline automatically constructs sparse bus admittance matrices and achieves AC power flow convergence in all 10 regions (previously 0/10), with total losses of 1,601 MW. A 646-generator, 24-hour MILP unit commitment solves in 38 seconds, revealing a 1.40% congestion cost premium (¥107M/day) when all nine interconnections are saturated. N-x transient stability and modal analysis confirm qualitative validity of the dynamic model.
