@@ -25,9 +25,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 REGIONS = ["hokkaido","tohoku","tokyo","chubu","hokuriku",
            "kansai","chugoku","shikoku","kyushu","okinawa"]
-REGION_JP = {"hokkaido":"北海道","tohoku":"東北","tokyo":"東京",
-             "chubu":"中部","hokuriku":"北陸","kansai":"関西",
-             "chugoku":"中国","shikoku":"四国","kyushu":"九州","okinawa":"沖縄"}
+from src.regions import REGION_JA as REGION_JP  # config/regions.yaml
 
 # 各地域のバウンディングボックス（lon_min, lon_max, lat_min, lat_max）
 REGION_BBOX = {

@@ -37,12 +37,7 @@ REGIONS = [
     "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
 ]
 
-REGION_JA = {
-    "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
-    "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
-    "chugoku": "中国", "shikoku": "四国", "kyushu": "九州",
-    "okinawa": "沖縄",
-}
+from src.regions import REGION_JA  # config/regions.yaml
 
 # Operator name normalization (variants -> canonical)
 OPERATOR_NORMALIZE = {

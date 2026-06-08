@@ -31,9 +31,7 @@ os.makedirs(OUT, exist_ok=True)
 
 REGIONS = ["hokkaido","tohoku","tokyo","chubu","hokuriku",
            "kansai","chugoku","shikoku","kyushu","okinawa"]
-REGION_JP = {"hokkaido":"北海道","tohoku":"東北","tokyo":"東京",
-             "chubu":"中部","hokuriku":"北陸","kansai":"関西",
-             "chugoku":"中国","shikoku":"四国","kyushu":"九州","okinawa":"沖縄"}
+from src.regions import REGION_JA as REGION_JP  # config/regions.yaml
 
 # ── OCCTO 2023年度統計ベース地域別参照容量 ─────────────────────
 # 出典: 広域機関 電力需給検証報告書・再エネ導入実績 (概算値)
