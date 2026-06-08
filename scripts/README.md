@@ -116,6 +116,25 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 > ⚠ 図版スクリプト群にはヘルパー（haversine・色表・フォント設定）の重複が多い。
 > 共有モジュール化は Phase C（`REVIEW_FINDINGS.md`）で対応予定。
 
+## db/ — 統一グリッドDB（DB統一 R/C/D 層）
+
+`docs/DB_ARCHITECTURE.md` の実装。raw OSM・キュレーション・派生を分離し、機械的更新を可能にする。
+
+| Script | 役割 |
+|---|---|
+| `db/ingest.py` | 現 GeoJSON を raw_features（R層）+ enrichments（C層、provenance復元）に分解取込 → `data/grid.db` |
+| `db/curate.py` | C層へのキュレーション書き込み（手動上書き `--set f=v --where-name/...`、bulk `--import`）。raw を書き換えず再fetchでも保全される |
+| `db/export.py` | DB → GeoJSON 再生成（`--verify` で元ファイルとの golden 比較、`--dump-enrichments` で追跡用 JSONL 出力） |
+
+```bash
+python scripts/db/ingest.py                          # 全10地域 → data/grid.db
+python scripts/db/curate.py --layer plants --region hokuriku \
+    --where-osm-id 62271105 --set 'operator=北陸電力'
+python scripts/db/export.py --verify                 # golden 検証
+```
+
+> DB本体 `data/grid.db` は gitignore（再構築可能）。追跡する正本は `data/db/enrichments.jsonl`（C層ダンプ）。
+
 ## diagnostics/ — west非収束の診断群
 
 `diagnostics/test_west_*.py` / `test_kansai_*.py` は west 島 AC 非収束の根本究明
