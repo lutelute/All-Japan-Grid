@@ -3,8 +3,46 @@
   "cim_namespace": "http://iec.ch/TC57/2013/CIM-schema-cim16#",
   "profiles": {
     "EQ": "http://entsoe.eu/CIM/EquipmentCore/3/1",
-    "GL": "http://entsoe.eu/CIM/GeographicalLocation/2/1"
+    "GL": "http://entsoe.eu/CIM/GeographicalLocation/2/1",
+    "EQ_BD": "boundary",
+    "TP_BD": "boundary"
   },
+  "boundary_voltages_kv": [
+    660.0,
+    500.0,
+    275.0,
+    250.0,
+    220.0,
+    200.0,
+    187.0,
+    154.0,
+    132.0,
+    115.0,
+    110.0,
+    100.0,
+    77.0,
+    66.0,
+    60.0,
+    44.0,
+    33.0,
+    30.0,
+    25.0,
+    22.0,
+    20.0,
+    15.4,
+    13.8,
+    11.0,
+    6.6,
+    6.0,
+    3.3,
+    1.5,
+    0.75,
+    0.65,
+    0.154,
+    0.1,
+    0.077,
+    0.05
+  ],
   "totals": {
     "substations": 6962,
     "lines": 40077,
@@ -18,7 +56,7 @@
         "lines": 4136,
         "plants": 436
       },
-      "eq_objects": 22154,
+      "eq_objects": 22142,
       "gl_objects": 52623,
       "base_voltages_kv": [
         500.0,
@@ -44,7 +82,7 @@
         "lines": 6628,
         "plants": 1311
       },
-      "eq_objects": 36439,
+      "eq_objects": 36424,
       "gl_objects": 76512,
       "base_voltages_kv": [
         500.0,
@@ -73,7 +111,7 @@
         "lines": 8295,
         "plants": 7207
       },
-      "eq_objects": 52348,
+      "eq_objects": 52333,
       "gl_objects": 92887,
       "base_voltages_kv": [
         500.0,
@@ -102,7 +140,7 @@
         "lines": 6589,
         "plants": 3792
       },
-      "eq_objects": 39342,
+      "eq_objects": 39326,
       "gl_objects": 117666,
       "base_voltages_kv": [
         500.0,
@@ -132,7 +170,7 @@
         "lines": 2296,
         "plants": 432
       },
-      "eq_objects": 12527,
+      "eq_objects": 12520,
       "gl_objects": 35081,
       "base_voltages_kv": [
         500.0,
@@ -153,7 +191,7 @@
         "lines": 3994,
         "plants": 1518
       },
-      "eq_objects": 23392,
+      "eq_objects": 23378,
       "gl_objects": 53026,
       "base_voltages_kv": [
         500.0,
@@ -181,7 +219,7 @@
         "lines": 3176,
         "plants": 1173
       },
-      "eq_objects": 18244,
+      "eq_objects": 18229,
       "gl_objects": 58523,
       "base_voltages_kv": [
         500.0,
@@ -210,7 +248,7 @@
         "lines": 1532,
         "plants": 688
       },
-      "eq_objects": 8944,
+      "eq_objects": 8936,
       "gl_objects": 25189,
       "base_voltages_kv": [
         500.0,
@@ -232,7 +270,7 @@
         "lines": 3314,
         "plants": 2549
       },
-      "eq_objects": 20651,
+      "eq_objects": 20639,
       "gl_objects": 63560,
       "base_voltages_kv": [
         660.0,
@@ -258,7 +296,7 @@
         "lines": 117,
         "plants": 32
       },
-      "eq_objects": 747,
+      "eq_objects": 743,
       "gl_objects": 1724,
       "base_voltages_kv": [
         132.0,

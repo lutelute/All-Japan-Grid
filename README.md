@@ -59,7 +59,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 ### v1.2.0 Highlights
 
 - 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in all 10 regions** (6 native; chubu/hokuriku/kyushu x0.8 and kansai x0.3 as balanced demand-scaled cases). The export is regression-tested to be **electrically identical** to the solved network across the round-trip (parallel circuits, switching states, km lengths preserved).
-- 📦 [Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
+- 📦 [Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.1): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
 - 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
 
 ### v1.1.0 Highlights
@@ -158,7 +158,7 @@ chubu/hokuriku/kyushu は x0.8、kansai は x0.3 の需給整合済み需要ス�
 > the Level-2 CGMES then solves **all 10** via demand-scaling. /
 > 図は無補正の解（kansai 灰色）。Level 2 CGMES は需要スケールで **全10地域** 収束。
 
-Both levels ship as zipped [GitHub Release v1.2.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0) assets
+Both levels ship as zipped [GitHub Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.1) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
 regenerable via the two scripts above.
 
