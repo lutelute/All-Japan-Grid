@@ -11,20 +11,14 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
+from src.regions import REGIONS, REGION_JA  # noqa: F401
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "config", "regions.yaml")
 
-REGIONS = [
-    "hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
-    "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
-]
-
-REGION_JA = {
-    "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
-    "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
-    "chugoku": "中国", "shikoku": "四国", "kyushu": "九州",
-    "okinawa": "沖縄",
-}
+# REGIONS / REGION_JA are the canonical constants from src.regions
+# (config/regions.yaml), re-exported here so existing
+# `from src.server.geojson_loader import REGIONS` call sites keep working.
 
 # Cache: region -> {"substations": FC, "lines": FC, "plants": FC}
 _cache: Dict[str, Dict[str, Any]] = {}

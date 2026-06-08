@@ -46,14 +46,9 @@ from src.model.generator import Generator
 from src.model.grid_network import GridNetwork
 from src.model.substation import Substation
 from src.model.transmission_line import TransmissionLine
+from src.regions import REGION_FREQUENCY_HZ as REGION_FREQ
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
-
-REGION_FREQ = {
-    "hokkaido": 50, "tohoku": 50, "tokyo": 50,
-    "chubu": 60, "hokuriku": 60, "kansai": 60, "chugoku": 60,
-    "shikoku": 60, "kyushu": 60, "okinawa": 60,
-}
 
 _DEFAULT_CAPACITY_MW = {
     "nuclear": 1000.0, "coal": 600.0, "gas": 400.0, "oil": 300.0,

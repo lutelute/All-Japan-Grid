@@ -21,21 +21,12 @@ import math
 import os
 from typing import Dict, List, Optional, Tuple
 
+from ..regions import REGION_EN as REGION_NAME  # noqa: F401
 from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, base_voltage_mrid, mrid
 
-# English region names for IdentifiedObject.name of SubGeographicalRegion.
-REGION_NAME: Dict[str, str] = {
-    "hokkaido": "Hokkaido",
-    "tohoku": "Tohoku",
-    "tokyo": "Tokyo",
-    "chubu": "Chubu",
-    "hokuriku": "Hokuriku",
-    "kansai": "Kansai",
-    "chugoku": "Chugoku",
-    "shikoku": "Shikoku",
-    "kyushu": "Kyushu",
-    "okinawa": "Okinawa",
-}
+# REGION_NAME (English region names for IdentifiedObject.name of
+# SubGeographicalRegion) is the canonical map from src.regions, re-exported
+# here so `from src.cim.exporter import REGION_NAME` keeps working.
 
 # fuel_type -> CIM GeneratingUnit subclass (CGMES 2.4.15 / CIM16).
 # CGMES 2.4 has no Geothermal/Battery generating-unit subclasses, so those

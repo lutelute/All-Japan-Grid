@@ -27,13 +27,7 @@ from scripts.export_powerflow_pages import build_and_solve  # noqa: E402
 from src.cim.boundary import BOUNDARY_VOLTAGES, generate_boundary  # noqa: E402
 from src.cim.level2 import net_to_cgmes  # noqa: E402
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
-
-# Regional synchronous-system frequency (Hz).
-REGION_FREQUENCY_HZ = {
-    "hokkaido": 50, "tohoku": 50, "tokyo": 50,
-    "chubu": 60, "hokuriku": 60, "kansai": 60,
-    "chugoku": 60, "shikoku": 60, "kyushu": 60, "okinawa": 60,
-}
+from src.regions import REGION_FREQUENCY_HZ  # noqa: E402
 
 
 def _extract_net(result):

@@ -43,23 +43,12 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "output", "powerflow_regional")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-REGIONS = [
-    "hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
-    "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
-]
-
-REGION_JA = {
-    "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
-    "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
-    "chugoku": "中国", "shikoku": "四国", "kyushu": "九州",
-    "okinawa": "沖縄",
-}
-
-REGION_FREQ = {
-    "hokkaido": 50, "tohoku": 50, "tokyo": 50,
-    "chubu": 60, "hokuriku": 60, "kansai": 60,
-    "chugoku": 60, "shikoku": 60, "kyushu": 60, "okinawa": 60,
-}
+# Canonical region constants (config/regions.yaml via src.regions).
+from src.regions import (  # noqa: E402
+    REGIONS,
+    REGION_JA,
+    REGION_FREQUENCY_HZ as REGION_FREQ,
+)
 
 # Default capacity estimates (MW) by fuel type when capacity_mw is missing
 _DEFAULT_CAPACITY_MW = {

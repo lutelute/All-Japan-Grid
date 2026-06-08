@@ -27,18 +27,12 @@ import math
 import os
 from typing import Dict, Optional
 
+from ..regions import REGION_EN as REGION_NAME
 from .core import PROFILE_EQ, PROFILE_GL, RdfWriter, base_voltage_mrid, mrid
 
 PROFILE_TP = "http://entsoe.eu/CIM/Topology/4/1"
 PROFILE_SSH = "http://entsoe.eu/CIM/SteadyStateHypothesis/1/1"
 PROFILE_SV = "http://entsoe.eu/CIM/StateVariables/4/1"
-
-REGION_NAME = {
-    "hokkaido": "Hokkaido", "tohoku": "Tohoku", "tokyo": "Tokyo",
-    "chubu": "Chubu", "hokuriku": "Hokuriku", "kansai": "Kansai",
-    "chugoku": "Chugoku", "shikoku": "Shikoku", "kyushu": "Kyushu",
-    "okinawa": "Okinawa",
-}
 
 
 def _num(value, default=0.0) -> float:
