@@ -43,8 +43,10 @@ All-Japan-Grid は「OSM から作った地図」を、日本の電力業界が�
 | **事業者・所有者帰属** | OSM `operator` タグ（無保証） | 各社供給区域、設備形成計画 | A / B |
 | **第三者検証** | 衛星画像での部分突合せのみ | OCCTO/事業者公開値との突合せ | B / 連携 |
 
-★最優先は **Tier 0 = 公開データの取り込み**（許可不要）。P03 発電所・OCCTO 公開図表・JEPX
-エリアプライス・系統情報サービスの公開分。詳細は [docs/ENGAGEMENT.md](docs/ENGAGEMENT.md) §2 Tier 0。
+★最優先は **Tier 0 = 公開データの取り込み**（許可不要）。**国土数値情報 P03（発電所）は取り込み済み
+＝発電所の 16.2% を権威データで裏付け**（`source=p03_db`、`ajgrid coverage` で確認）。残る公開データ
+（OCCTO 公開図表・JEPX エリアプライス・系統情報サービスの公開分）が次。詳細は
+[docs/ENGAGEMENT.md](docs/ENGAGEMENT.md) §2 Tier 0。
 
 ---
 

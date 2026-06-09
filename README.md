@@ -182,6 +182,15 @@ All data is extracted from [OpenStreetMap](https://www.openstreetmap.org/) using
 
 License / ライセンス: [ODbL](https://opendatacommons.org/licenses/odbl/) (OpenStreetMap)
 
+**Authoritative overlay / 権威データの重ね合わせ:** power-plant identity, capacity and
+operator are corroborated against **国土数値情報 発電所データ（P03）**（出典: 国土交通省
+[国土数値情報](https://nlftp.mlit.go.jp/ksj/)）where an OSM plant matches a P03 record
+within 2 km. Matched attributes are tagged `source=p03_db` with a `_p03_distance_km`
+provenance and kept distinct from synthetic values. As of v1.3.x this corroborates
+**16.2 % of plants** (run `ajgrid coverage` for the live figure). The raw P03 GML is
+**not redistributed** here — fetch it from the source above; only the derived,
+attributed overlay lives in the DB.
+
 ### Data Enrichment Pipeline / データエンリッチメント パイプライン
 
 Raw OSM data contains many features with missing attributes (name, operator, fuel type). A 6-stage enrichment pipeline fills these gaps programmatically.
@@ -443,4 +452,7 @@ Key dependencies / 主な依存パッケージ: pandapower, fastapi, pulp, highs
 ## License / ライセンス
 
 - Network data / ネットワークデータ: [ODbL](https://opendatacommons.org/licenses/odbl/) (OpenStreetMap)
+- Authoritative plant overlay / 発電所の権威データ: 「国土数値情報（発電所データ P03）」
+  （国土交通省, https://nlftp.mlit.go.jp/ksj/ ）— derived attributes only, attributed per
+  the 国土数値情報 terms; raw GML not redistributed.
 - Code / コード: MIT

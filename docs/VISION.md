@@ -87,7 +87,7 @@ CIM/CGMES を入口に、MATPOWER/.mat、pandapower、PSS/E、PyPSA への橋渡
 |---|---|---|
 | **M0（現在）** | 研究・教育グレードの公開トポロジ + CIM L1/L2 + DB 土台 | 達成済み（v1.3.0） |
 | **M1** | **Living tool**: 機械更新が全エンリッチャで完結、統一 CLI、来歴完備 | サーバー実行（API/GML）。§5 |
-| **M2** | **Validated patches**: P03/OCCTO 等で一部区間を検証済みタグ化、不確かさ付き電気値 | 外部データ取得・連携 |
+| **M2** | **Validated patches**: P03/OCCTO 等で一部区間を検証済みタグ化、不確かさ付き電気値 — **P03 着手済**（発電所16.2%を権威裏付け、`source=p03_db`、`ajgrid coverage`） | 外部データ取得・連携 |
 | **M3** | **Interop reference**: PyPSA/PSS-E 連携、CGMES 厳格検証通過、引用される標準データセット | M1+M2 |
 | **M4** | **Industry-grade collaboration**: 事業者/OCCTO との突合せで運用近接モデル | 業界連携・データ提供 |
 
