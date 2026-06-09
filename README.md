@@ -187,7 +187,8 @@ operator are corroborated against **国土数値情報 発電所データ（P03�
 [国土数値情報](https://nlftp.mlit.go.jp/ksj/)）where an OSM plant matches a P03 record
 within 2 km. Matched attributes are tagged `source=p03_db` with a `_p03_distance_km`
 provenance and kept distinct from synthetic values. As of v1.3.x this corroborates
-**16.2 % of plants** (run `ajgrid coverage` for the live figure). The raw P03 GML is
+**16.2 % of plants** — see **[docs/COVERAGE.md](docs/COVERAGE.md)** for the full
+validated-vs-synthetic snapshot, or run `ajgrid coverage` for the live figure. The raw P03 GML is
 **not redistributed** here — fetch it from the source above; only the derived,
 attributed overlay lives in the DB.
 
