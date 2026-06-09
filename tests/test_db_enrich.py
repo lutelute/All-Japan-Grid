@@ -10,7 +10,7 @@ import json
 
 import pytest
 
-from src.db.enrich import enrich_lines_endpoints
+from src.db.enrich import apply_audit_fixes, enrich_lines_endpoints
 from src.db.geojson_sync import export_geojson, ingest_geojson
 from src.db.grid_db import GridDatabase
 
@@ -108,3 +108,56 @@ class TestDbLineEnricher:
         ab = [f for f in _lines(seeded_db)
               if f["geometry"]["coordinates"][0] == [135.90, 35.55]][0]
         assert ab["properties"]["name"] == "既存線"
+
+
+# ======================================================================
+# Audit Category-C tag-error fix (audit --fix -> DB)
+# ======================================================================
+
+
+class TestDbAuditFix:
+    def test_category_c_tag_error_cleared_to_db(self, tmp_path, monkeypatch):
+        import scripts.audit_substation_plant_overlap as audit
+        monkeypatch.setattr(audit, "DATA_DIR", str(tmp_path))
+
+        # A Category-C substation: the `substation` tag holds a facility
+        # name instead of a valid type -> should be cleared to null.
+        bad = {"type": "Feature",
+               "properties": {"name": "諏訪町変電所",
+                              "substation": "関西電力株式会社八鹿変電所"},
+               "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        ok = {"type": "Feature",
+              "properties": {"name": "正常変電所", "substation": "transmission"},
+              "geometry": {"type": "Point", "coordinates": [135.6, 34.8]}}
+        fc = lambda fe: json.dumps({"type": "FeatureCollection", "features": fe})
+        (tmp_path / "kansai_substations.geojson").write_text(fc([bad, ok]), encoding="utf-8")
+        (tmp_path / "kansai_plants.geojson").write_text(fc([]), encoding="utf-8")
+        (tmp_path / "kansai_lines.geojson").write_text(fc([]), encoding="utf-8")
+
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "substations",
+                       str(tmp_path / "kansai_substations.geojson"))
+
+        stats = apply_audit_fixes(db, ["kansai"])
+        assert stats["fixed"] == 1
+
+        subs = export_geojson(db, "kansai", "substations")["features"]
+        bad_after = [f for f in subs if f["properties"]["name"] == "諏訪町変電所"][0]
+        ok_after = [f for f in subs if f["properties"]["name"] == "正常変電所"][0]
+        assert bad_after["properties"]["substation"] is None  # cleared
+        assert ok_after["properties"]["substation"] == "transmission"  # untouched
+
+    def test_no_false_positives_on_clean_data(self, tmp_path, monkeypatch):
+        import scripts.audit_substation_plant_overlap as audit
+        monkeypatch.setattr(audit, "DATA_DIR", str(tmp_path))
+        ok = {"type": "Feature",
+              "properties": {"name": "正常", "substation": "transmission"},
+              "geometry": {"type": "Point", "coordinates": [135.6, 34.8]}}
+        fc = lambda fe: json.dumps({"type": "FeatureCollection", "features": fe})
+        for layer in ("substations", "plants", "lines"):
+            (tmp_path / f"kansai_{layer}.geojson").write_text(
+                fc([ok] if layer == "substations" else []), encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "substations",
+                       str(tmp_path / "kansai_substations.geojson"))
+        assert apply_audit_fixes(db, ["kansai"])["fixed"] == 0

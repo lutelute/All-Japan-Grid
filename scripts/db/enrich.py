@@ -20,7 +20,7 @@ sys.path.insert(
     ),
 )
 
-from src.db.enrich import enrich_lines_endpoints  # noqa: E402
+from src.db.enrich import apply_audit_fixes, enrich_lines_endpoints  # noqa: E402
 from src.db.grid_db import GridDatabase  # noqa: E402
 from src.server.geojson_loader import REGIONS  # noqa: E402
 
@@ -35,23 +35,30 @@ def main() -> None:
     parser.add_argument(
         "--lines", action="store_true",
         help="run endpoint line naming (the offline enricher)")
+    parser.add_argument(
+        "--audit", action="store_true",
+        help="clear Category-C substation tag errors (audit --fix -> DB)")
     args = parser.parse_args()
 
-    if not args.lines:
-        sys.exit("nothing to do: pass --lines")
+    if not (args.lines or args.audit):
+        sys.exit("nothing to do: pass --lines and/or --audit")
     regions = REGIONS if args.regions == ["all"] else args.regions
     unknown = [r for r in regions if r not in REGIONS]
     if unknown:
         sys.exit(f"unknown region(s): {', '.join(unknown)}")
 
     db = GridDatabase(args.db)
-    total = 0
-    for region in regions:
-        stats = enrich_lines_endpoints(db, region)
-        total += stats["enriched"]
-        print(f"[lines] {region}: {stats['enriched']}/{stats['total']} named")
-    print(f"TOTAL {total} lines named -> {args.db}")
-    print("Run scripts/db/export.py to regenerate the GeoJSON.")
+    if args.lines:
+        total = 0
+        for region in regions:
+            stats = enrich_lines_endpoints(db, region)
+            total += stats["enriched"]
+            print(f"[lines] {region}: {stats['enriched']}/{stats['total']} named")
+        print(f"TOTAL {total} lines named")
+    if args.audit:
+        stats = apply_audit_fixes(db, regions)
+        print(f"[audit] {stats['fixed']} Category-C tag errors cleared")
+    print(f"-> {args.db}. Run scripts/db/export.py to regenerate the GeoJSON.")
 
 
 if __name__ == "__main__":

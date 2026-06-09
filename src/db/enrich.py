@@ -33,6 +33,48 @@ from src.regions import REGION_JA, region_config
 ENDPOINT_SOURCE = "enrich_lines_endpoints"
 ENDPOINT_MARKER = "endpoint_matching"
 
+#: Source for the Category-C tag-error fix (audit --fix → DB). Curation
+#: that survives re-ingest, so it uses 'audit_fix' (already high in
+#: SOURCE_PRIORITY, above the legacy markers).
+AUDIT_SOURCE = "audit_fix"
+
+
+def apply_audit_fixes(db: GridDatabase, regions=None) -> Dict[str, int]:
+    """Clear Category-C substation tag errors into the C layer (audit --fix).
+
+    Mirrors ``scripts/audit_substation_plant_overlap.fix_category_c`` but
+    writes ``substation = null`` ``audit_fix`` enrichments instead of
+    editing the GeoJSON: a substation whose ``substation`` tag holds a
+    facility name (not a valid type) gets the bogus value cleared, and the
+    fix survives an OSM re-fetch. ``audit_region`` detects the errors from
+    the source files; the matching feature is located in the DB by its raw
+    ``substation`` value.
+
+    Returns ``{'fixed': n}``.
+    """
+    from scripts.audit_substation_plant_overlap import audit_region
+    from src.server.geojson_loader import REGIONS as _ALL
+
+    regions = regions or _ALL
+    rows = []
+    fixed = 0
+    for region in regions:
+        _a, _b, cat_c, _d, _coloc = audit_region(region)
+        if not cat_c:
+            continue
+        bad_vals = {item["bad_substation_value"] for item in cat_c}
+        for fkey, props, _geom in iter_composed(db, region, "substations"):
+            if props.get("substation") in bad_vals:
+                rows.append({
+                    "layer": "substations", "region": region,
+                    "feature_key": fkey, "field": "substation",
+                    "value": None, "source": AUDIT_SOURCE,
+                })
+                fixed += 1
+    if rows:
+        apply_enrichments(db, rows, run_id="audit_fix")
+    return {"fixed": fixed}
+
 
 def _substation_candidates(db: GridDatabase, region: str):
     """(candidates, name_to_operator) from the composed substations."""
