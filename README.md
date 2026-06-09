@@ -56,10 +56,15 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline Flow" width="100%">
 </p>
 
+### v1.3.0 Highlights
+
+- ✅ **CIM / CGMES Level 2 — electrically faithful & more native solves.** Corrected parallel-circuit counting and unified voltage parsing make the cim2pp round-trip electrically identical to the solved network, and lift **chubu & kyushu to native convergence**: **8 of 10 regions now solve natively** (hokuriku x0.8, kansai x0.3 as balanced demand-scaled cases). All 10 verify OK.
+- 🔧 **Power-flow pipeline promoted into `src/powerflow/`** — the reconstruction → solve pipeline (`build_and_solve`, topology builders, net transforms, solver) moved out of `examples/`/`scripts/` so the dependency flows the right way and the model is testable in CI.
+- 📦 [Release v1.3.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
+
 ### v1.2.0 Highlights
 
-- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp` — **`runpp` converges in all 10 regions** (6 native; chubu/hokuriku/kyushu x0.8 and kansai x0.3 as balanced demand-scaled cases). The export is regression-tested to be **electrically identical** to the solved network across the round-trip (parallel circuits, switching states, km lengths preserved).
-- 📦 [Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.1): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
+- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp`.
 - 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
 
 ### v1.1.0 Highlights
@@ -138,16 +143,16 @@ exports the *connected, solved* network with shared `ConnectivityNode`s,
 `SynchronousMachine`s and a slack `ExternalNetworkInjection`. The round-trip
 through pandapower `cim2pp` is **electrically identical** to the solved
 network (parallel circuits, switching states and km lengths preserved;
-regression-tested) and **`runpp` converges in all 10 regions** — 6 natively,
-with the borderline/ill-conditioned regions shipped as balanced demand-scaled
-cases (chubu/hokuriku/kyushu x0.8, kansai x0.3 — generation redispatched to
-match; see [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
+regression-tested) and **`runpp` converges in all 10 regions** — 8 natively,
+with the two ill-conditioned regions shipped as balanced demand-scaled cases
+(hokuriku x0.8, kansai x0.3 — generation redispatched to match; see
+[docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
 
 **Level 2 — 求解可能な潮流ケース:** `scripts/export_cim_level2.py` が接続済み・
 求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。エクスポートは並列回線・開閉状態・
 km長を保持し、pandapower `cim2pp` での往復後も**元のネットワークと電気的に同一**
-（回帰テスト済み）。**全10地域で潮流が収束**します（6地域はそのまま、境界・悪条件の
-chubu/hokuriku/kyushu は x0.8、kansai は x0.3 の需給整合済み需要スケールケースとして提供）。
+（回帰テスト済み）。**全10地域で潮流が収束**します（8地域はそのまま、悪条件の
+hokuriku は x0.8、kansai は x0.3 の需給整合済み需要スケールケースとして提供）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">
@@ -158,7 +163,7 @@ chubu/hokuriku/kyushu は x0.8、kansai は x0.3 の需給整合済み需要ス�
 > the Level-2 CGMES then solves **all 10** via demand-scaling. /
 > 図は無補正の解（kansai 灰色）。Level 2 CGMES は需要スケールで **全10地域** 収束。
 
-Both levels ship as zipped [GitHub Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.1) assets
+Both levels ship as zipped [GitHub Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
 regenerable via the two scripts above.
 

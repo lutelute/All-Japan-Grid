@@ -5,6 +5,49 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-09
+
+Tagged in git as `v1.3.0`.
+
+### Changed
+- **CIM/CGMES Level 2 regenerated — 8 of 10 regions now solve natively.**
+  With the corrected parallel-circuit counting and unified voltage parsing
+  (below), **chubu and kyushu** now converge natively instead of shipping as
+  demand-scaled cases; only hokuriku (x0.8) and kansai (x0.3) remain balanced
+  demand-scaled. All 10 verify OK on the boundary-aware cim2pp + runpp
+  round-trip.
+
+### Fixed
+- **Vertex-snap parallel-circuit counting** (`examples`→`src/powerflow/
+  snapped_topology`): a single OSM way that zig-zags across a node pair no
+  longer inflates the parallel count, and the degree-2 chain contraction now
+  carries the circuit multiplicity through instead of resetting it to 1 — so
+  same-tower double circuits keep their restored capacity. Guarded by
+  `tests/test_snapped_parallel.py`.
+- **OSM voltage parsing unified** onto `src.utils.voltage`: a multi-voltage
+  tag resolves to its highest level (`"66000;154000"` → 154 kV, not 66), and
+  `","` is a value separator (no more `"77000,6600"` → 770006.6 kV concat).
+  Six copies with two incompatible semantics collapsed to one.
+- `_verify` now uses the same solver budget (`_try_runpp`: 100 iters +
+  iwamoto fallback) as the solvability judgment, so a region judged native is
+  not spuriously reported as `runpp-FAIL` (kyushu).
+
+### Added
+- **Power-flow pipeline promoted into `src/powerflow/`** (Phase C): the
+  reconstruction → solve pipeline — `build_and_solve` (`pipeline`), the
+  topology builders (`legacy_build`, `snapped_topology`), the net transforms
+  (`transforms`) and the batch solver (`batch_solve`) — moved out of
+  `examples/`/`scripts/` so no module under `src/` imports from `examples/`
+  any more. The example/script entry points are thin re-export shims, so all
+  import sites are unchanged. End-to-end pinned by `tests/test_pipeline_smoke.py`.
+- **Single canonical region registry** `src/regions.py` (from
+  `config/regions.yaml`) replacing ~25 hard-coded copies; `src/utils/voltage.py`;
+  Haversine consolidated onto `src/utils/geo_utils`.
+- **DB unification** (`docs/DB_ARCHITECTURE.md`): SQLite R/C/D layers with
+  `scripts/db/{ingest,export,curate,enrich}.py`; the endpoint line-naming and
+  audit Category-C enrichers now write to the DB so curation survives an OSM
+  re-fetch. Curation backed up as the tracked `data/db/enrichments.jsonl`.
+
 ## [1.2.1] - 2026-06-08
 
 Tagged in git as `v1.2.1`.
@@ -119,6 +162,7 @@ Tagged in git as `v1.0.0`. Initial release.
 - Seven-stage attribute completion pipeline, sparse Ybus construction, AC power
   flow, and MILP unit commitment with inter-regional interconnection constraints.
 
+[1.3.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0
 [1.2.1]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.1
 [1.2.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.2.0
 [1.1.0]: https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0

@@ -137,9 +137,9 @@ separate analysis concern (`_clean_voltage` in `build_snapped_topology.py`).
   line lengths, so the cim2pp round-trip is **electrically identical** to the
   solved element network (regression-tested to vm differences < 1e-4 pu in
   `tests/test_cim_level2.py`). Across the full country `runpp` converges for
-  **all 10 regions**: 6 natively (hokkaido, tohoku, tokyo, chugoku, shikoku,
-  okinawa), while the borderline/ill-conditioned regions ship as **balanced
-  demand-scaled cases** — chubu / hokuriku / kyushu at x0.8 and kansai at x0.3,
+  **all 10 regions**: 8 natively (hokkaido, tohoku, tokyo, chubu, chugoku,
+  shikoku, kyushu, okinawa), while the two ill-conditioned regions ship as
+  **balanced demand-scaled cases** — hokuriku at x0.8 and kansai at x0.3,
   with generation redispatched to `load x 1.05` so the SSH stays physically
   consistent (recorded as `solve_mode` per region, and the SV profile is the
   solved state of the SSH it ships with). Ybus analysis
