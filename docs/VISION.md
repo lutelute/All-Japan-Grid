@@ -67,9 +67,10 @@ CIM/CGMES を入口に、MATPOWER/.mat、pandapower、PSS/E、PyPSA への橋渡
 
 ### Pillar 4 — Tooling & access（ツールとアクセス）
 「データセット」から「ツール」へ:
-- 統一 CLI（`ajgrid fetch|ingest|enrich|export|solve|cim`）でデータ取得〜潮流〜CIM出力を一気通貫。
+- 統一 CLI（`ajgrid regions|solve|cim|db|map`）でデータ取得〜潮流〜CIM出力を一気通貫（✅ 実装済み）。
 - 安定した Python API（`src/` を正本化済み＝Phase C で達成）。
-- 取り込み 1 行のサンプル（pandapower / PyPSA / MATPOWER）。
+- 取り込み 1 行のサンプル（pandapower CIM/MATPOWER は✅検証済み、PyPSA/MATLAB/PSS-E は文書化）
+  ＝ [INTEROP.md](INTEROP.md) + [`examples/import_quickstart.py`](../examples/import_quickstart.py)。
 - ライブ地図（GitHub Pages）＝意思決定者向けの入口。
 
 ### Pillar 5 — Governance, provenance, trust（統治・来歴・信頼）

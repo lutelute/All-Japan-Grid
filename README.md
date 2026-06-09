@@ -163,9 +163,13 @@ hokuriku は x0.8、kansai は x0.3 の需給整合済み需要スケールケ�
 > the Level-2 CGMES then solves **all 10** via demand-scaling. /
 > 図は無補正の解（kansai 灰色）。Level 2 CGMES は需要スケールで **全10地域** 収束。
 
-Both levels ship as zipped [GitHub Release v1.2.1](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0) assets
+Both levels ship as zipped [GitHub Release v1.3.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
 regenerable via the two scripts above.
+
+**Import it in ~1 line / 1行で取り込み:** load any region into pandapower (CGMES or
+MATPOWER), with PyPSA / MATLAB / PSS-E recipes, in **[docs/INTEROP.md](docs/INTEROP.md)** —
+runnable demo [`examples/import_quickstart.py`](examples/import_quickstart.py).
 
 ### Data Source / データソース
 
