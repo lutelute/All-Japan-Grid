@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Unified All-Japan-Grid CLI — thin wrapper for `python -m src.cli`.
+cd "$(dirname "$0")" && exec python -m src.cli "$@"

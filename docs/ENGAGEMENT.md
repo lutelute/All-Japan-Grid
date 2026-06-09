@@ -26,6 +26,10 @@
 
 ---
 
+<p align="center">
+  <img src="assets/figs/fig_engagement.png" alt="Engagement ladder" width="100%">
+</p>
+
 ## 2. 連携ラダー（活性化エネルギーの低い順）
 
 ### Tier 0 — 公開データの取り込み【許可不要・即実行】★最優先
