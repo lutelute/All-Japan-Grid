@@ -276,3 +276,52 @@ class TestDbOverpass:
                                 fetcher=lambda ids: called.append(ids) or {})
         assert stats == {"pending": 0, "enriched": 0}
         assert called == []  # fetcher not called when nothing has osm_id
+
+
+# ======================================================================
+# P03 generator enricher (DB, P03 list injected) — GML parse mocked
+# ======================================================================
+
+
+class TestDbP03:
+    def test_p03_match_fills_fields(self, tmp_path):
+        from src.db.enrich import enrich_p03
+        # OSM plant near a P03 record, missing name/capacity/operator.
+        plant = {"type": "Feature",
+                 "properties": {"fuel_type": "unknown"},
+                 "geometry": {"type": "Point", "coordinates": [135.500, 34.700]}}
+        (tmp_path / "kansai_plants.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [plant]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "plants",
+                       str(tmp_path / "kansai_plants.geojson"))
+
+        p03 = [{"name": "黒部川第四発電所", "lat": 34.7005, "lon": 135.5003,
+                "capacity_mw": 335.0, "operator": "関西電力",
+                "fuel_type": "hydro"}]
+        stats = enrich_p03(db, "kansai", p03, max_dist_km=2.0)
+        assert stats["matched"] == 1 and stats["enriched"] == 1
+
+        f = export_geojson(db, "kansai", "plants")["features"][0]
+        assert f["properties"]["name"] == "黒部川第四発電所"
+        assert f["properties"]["capacity_mw"] == 335.0
+        assert f["properties"]["fuel_type"] == "hydro"
+        assert f["properties"]["_enriched_by"] == "p03"
+        assert "_p03_distance_km" in f["properties"]
+
+    def test_p03_too_far_no_match(self, tmp_path):
+        from src.db.enrich import enrich_p03
+        plant = {"type": "Feature",
+                 "properties": {"fuel_type": "unknown"},
+                 "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_plants.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [plant]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "plants",
+                       str(tmp_path / "kansai_plants.geojson"))
+        # P03 record 100+ km away
+        p03 = [{"name": "遠い発電所", "lat": 36.0, "lon": 137.0,
+                "capacity_mw": 100.0, "operator": "X", "fuel_type": "coal"}]
+        assert enrich_p03(db, "kansai", p03, max_dist_km=2.0)["enriched"] == 0

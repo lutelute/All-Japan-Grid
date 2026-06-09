@@ -50,7 +50,8 @@ SOURCE_PRIORITY: Tuple[str, ...] = (
     "p03",
     "overpass",
     "jrp_lite",
-    "enrich_lines_endpoints",  # DB-native enrichers (src.db.enrich)
+    "p03_db",                  # DB-native enrichers (src.db.enrich)
+    "enrich_lines_endpoints",
     "overpass_db",
     "geocode_db",
     "endpoint_matching",       # legacy marker (ingest-extracted)

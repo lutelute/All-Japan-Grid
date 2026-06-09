@@ -167,6 +167,69 @@ def enrich_overpass(db: GridDatabase, region: str, layer: str,
     return {"pending": len(pending), "enriched": enriched}
 
 
+#: Source for DB-native P03 (国土数値情報) generator enrichment.
+P03_SOURCE = "p03_db"
+
+
+def enrich_p03(db: GridDatabase, region: str, p03_plants, max_dist_km=2.0
+               ) -> Dict[str, int]:
+    """Match OSM plants to the P03 national dataset, into the C layer.
+
+    The DB-native form of ``enrich_plants_p03``: each OSM plant is matched
+    to its nearest P03 record within ``max_dist_km`` and missing
+    name/capacity/operator/fuel filled as ``p03_db`` enrichments
+    (+ ``_enriched_by=p03``, ``_p03_distance_km``).
+
+    ``p03_plants`` is the parsed P03 list (each ``{name, lat, lon,
+    capacity_mw, operator, fuel_type}``) — produced on the server by
+    ``scripts.enrich_plants_p03.parse_p03(gml_path)`` (the 国土数値情報 P03
+    GML is not in the repo), and provided synthetically in tests. P03 is
+    *authoritative* generator data — this enricher is the entry point to
+    Pillar 3 (docs/VISION.md).
+    """
+    from scripts.enrich_plants_p03 import haversine, normalize_operator
+
+    rows = []
+    matched = enriched = 0
+    for fkey, props, geom in iter_composed(db, region, "plants"):
+        if not isinstance(geom, dict) or not geom.get("coordinates"):
+            continue
+        lon, lat = geom["coordinates"][0], geom["coordinates"][1]
+        best_d, best = float("inf"), None
+        for p in p03_plants:
+            d = haversine(lat, lon, p["lat"], p["lon"])
+            if d < best_d:
+                best_d, best = d, p
+        if best is None or best_d > max_dist_km:
+            continue
+        matched += 1
+
+        fields = {}
+        if not (props.get("name") or "").strip() and best.get("name"):
+            fields["name"] = best["name"]
+            fields["_display_name"] = best["name"]
+        if props.get("capacity_mw") is None and best.get("capacity_mw") is not None:
+            fields["capacity_mw"] = best["capacity_mw"]
+        if not (props.get("operator") or "").strip() and best.get("operator"):
+            fields["operator"] = normalize_operator(best["operator"])
+        fuel = props.get("fuel_type", "unknown")
+        if (fuel == "unknown" or not fuel) and best.get("fuel_type"):
+            fields["fuel_type"] = best["fuel_type"]
+
+        if fields:
+            fields["_enriched_by"] = "p03"
+            fields["_p03_distance_km"] = round(best_d, 3)
+            for k, v in fields.items():
+                rows.append({"layer": "plants", "region": region,
+                             "feature_key": fkey, "field": k, "value": v,
+                             "source": P03_SOURCE})
+            enriched += 1
+
+    if rows:
+        apply_enrichments(db, rows, run_id="enrich_p03")
+    return {"matched": matched, "enriched": enriched}
+
+
 def apply_audit_fixes(db: GridDatabase, regions=None) -> Dict[str, int]:
     """Clear Category-C substation tag errors into the C layer (audit --fix).
 

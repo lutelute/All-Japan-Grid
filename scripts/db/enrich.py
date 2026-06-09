@@ -25,6 +25,7 @@ from src.db.enrich import (  # noqa: E402
     enrich_geocode,
     enrich_lines_endpoints,
     enrich_overpass,
+    enrich_p03,
 )
 from src.db.grid_db import GridDatabase  # noqa: E402
 from src.server.geojson_loader import REGIONS  # noqa: E402
@@ -51,10 +52,15 @@ def main() -> None:
         "--overpass", action="store_true",
         help="fill name/operator/fuel from OSM tags (live Overpass -> DB; "
              "run on the server)")
+    parser.add_argument(
+        "--p03", metavar="GML",
+        help="match plants to the P03 国土数値情報 GML at this path -> DB "
+             "(authoritative generator data)")
     args = parser.parse_args()
 
-    if not (args.lines or args.audit or args.geocode or args.overpass):
-        sys.exit("nothing to do: pass --lines / --audit / --geocode / --overpass")
+    if not (args.lines or args.audit or args.geocode or args.overpass or args.p03):
+        sys.exit("nothing to do: pass --lines / --audit / --geocode / "
+                 "--overpass / --p03 GML")
     regions = REGIONS if args.regions == ["all"] else args.regions
     unknown = [r for r in regions if r not in REGIONS]
     if unknown:
@@ -81,6 +87,13 @@ def main() -> None:
         for region in regions:
             p = enrich_overpass(db, region, "plants")
             print(f"[overpass] {region}: plants {p['enriched']}/{p['pending']}")
+    if args.p03:
+        from scripts.enrich_plants_p03 import parse_p03
+        p03_plants = parse_p03(args.p03)
+        print(f"[p03] parsed {len(p03_plants)} P03 plants from {args.p03}")
+        for region in regions:
+            s = enrich_p03(db, region, p03_plants)
+            print(f"[p03] {region}: matched {s['matched']}, enriched {s['enriched']}")
     print(f"-> {args.db}. Run scripts/db/export.py to regenerate the GeoJSON.")
 
 
