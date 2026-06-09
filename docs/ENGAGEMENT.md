@@ -92,7 +92,7 @@
 |---|---|---|---|
 | 1 | P03 GML 取得 → `scripts/db/enrich.py --p03` でサーバー実行、検証済みタグ付与 | **不要** | サーバー作業 |
 | 2 | OCCTO/系統情報サービスの公開データを ingest し `confidence` タグ化 | **不要** | サーバー作業 |
-| 3 | `CONTRIBUTING.md` に「データギャップ・貢献経路」を明文化 | 不要 | ドキュメント |
+| 3 | ✅ `CONTRIBUTING.md` に「データギャップ・貢献経路」を明文化（[../CONTRIBUTING.md](../CONTRIBUTING.md)、firewall 明記） | 不要 | 完了 |
 | 4 | IEEJ/IEEE 論文を投稿・発表（第三者信用） | 不要 | 執筆 |
 | 5 | 指導教員と共同研究先（北陸送配電/CRIEPI/OCCTO公募）を相談、NDA設計（§2 Tier2） | **要** | 大学チャネル |
 | 6 | 電気学会標準化委員会 / IEC TC57 国内委員会へ参照実装として提示 | 要 | Tier3 |

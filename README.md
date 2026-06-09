@@ -425,6 +425,17 @@ pip install -r requirements.txt
 
 Key dependencies / 主な依存パッケージ: pandapower, fastapi, pulp, highspy, pyyaml, geopandas
 
+## Contributing / 貢献
+
+データギャップ（権威ある R/X/B・実需要・発電機諸元・第三者検証）と、再取得後も失われない
+貢献経路（OSM 上流 / DB キュレーション / コード）は **[CONTRIBUTING.md](CONTRIBUTING.md)** に
+まとめています。事業者・OCCTO・研究機関との連携設計は [docs/ENGAGEMENT.md](docs/ENGAGEMENT.md)、
+全体構想は [docs/VISION.md](docs/VISION.md) を参照。
+
+> Data gaps and contribution paths that survive an OSM re-fetch are documented in
+> **[CONTRIBUTING.md](CONTRIBUTING.md)**. **Please never submit confidential / NDA data to this
+> public repository** — only publicly-derived values or validated `confidence` tags.
+
 ## License / ライセンス
 
 - Network data / ネットワークデータ: [ODbL](https://opendatacommons.org/licenses/odbl/) (OpenStreetMap)
