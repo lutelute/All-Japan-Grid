@@ -183,11 +183,11 @@ scripts/db/export.py   : D層生成 — data/*.geojson（互換形）/ docs/data
 | 1 | `scripts/db/ingest.py` — 現 GeoJSON を raw / enrichments に分解取込 | ✅ `9943f7f`（66,177 features・232,139 curated rows、件数一致） |
 | 2 | `scripts/db/export.py` — DB → GeoJSON golden | ✅ `9943f7f`（全30 region/layer roundtrip equivalent） |
 | 3 | C層書き込み経路（`apply_enrichments` + `scripts/db/curate.py`）+ ingest が manual を保全 | ✅ `c3f889b`（curate→export 反映を実データ実証、再ingest耐性テスト済み） |
-| 3b | enrich 6段の書き込み先を GeoJSON→DB に切替（1本ずつ） | 🔶 **1/6 完了** `494a70d`: `enrich_lines_endpoints`(オフライン)を `src/db/enrich.py` + `scripts/db/enrich.py` でDB化。命名ロジックは `assign_line_name` に抽出し両版で共有。残5段(geocode×2/overpass/p03/audit)は Nominatim/Overpass/P03依存で**要サーバー実行** |
+| 3b | enrich 6段の書き込み先を GeoJSON→DB に切替 | ✅ **6/6 完了** `9055eaa`: `src/db/enrich.py` に全6本のDB版(endpoint命名/audit Category-C/substation+plant geocode/overpass/p03)。各**専用sourceラベル**(`LEGACY_SOURCES`外)で再fetch耐性、各**ネット/データ依存を注入可能**(geocoder/fetcher/p03_plants)にしてローカルで単体テスト・実行は live API/GML でサーバー。`scripts/db/enrich.py --lines/--audit/--geocode/--overpass/--p03 GML`。`tests/test_db_enrich.py` 13件 |
 | 4 | P03 ingest 新設（generators.geojson も D層出力へ = `export_generators_geojson.py` 修理） | ⏳ **ブロック中**: `data/generators/P03/*.xml`（P03 GML）がリポジトリに未取得。要 DL → パーサ移植（`src/parser` 喪失分の再実装） |
 | 5（任意） | ローダの DB 直読み・audit の SQL 化・差分レポート CI | ⏳ 未着手 |
 
-**Step 3/3b で「機械的に更新できる仕組み」が実エンリッチャでも成立**: `ingest → enrich(DB) → export` が回り、DB-nativeエンリッチャ出力は再ingest・将来の再fetchで保全される。
+**Step 3b完了で「機械的に更新できる仕組み」が全エンリッチャで閉ループ化**: `fetch → ingest(raw) → enrich(DB, 全6本) → export` が機械的に回り、DB-nativeエンリッチャ出力は再ingest・将来の再fetchで保全される。各エンリッチャはネット/データ依存(Nominatim/Overpass/P03 GML)を**注入可能**にしたので、ロジックはローカルで単体テスト済み・実行のみ live データでサーバー(pws-160core)。
 **設計上の要点(Step 3bで確定)**: DB-nativeエンリッチャは ingest が所有する legacy source(`endpoint_matching`等、`LEGACY_SOURCES`)とは**別のsourceラベル**(`enrich_lines_endpoints`)で書く。さもないと再ingestが「自分の所有物」として消す。`_enriched_by`の**値**だけ legacy と同じ(`endpoint_matching`)にしてGeoJSON互換を保つ。残り5エンリッチャ(geocode×2/overpass/p03/audit)も同パターンで、それぞれ専用sourceラベルを使う。
 Step 3b残り・Step 4 はサーバー実行・外部データ取得が前提のため、ローカルセッションでは未着手（着手時は pws-160core 等で）。
 
