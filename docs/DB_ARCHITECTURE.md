@@ -183,12 +183,13 @@ scripts/db/export.py   : D層生成 — data/*.geojson（互換形）/ docs/data
 | 1 | `scripts/db/ingest.py` — 現 GeoJSON を raw / enrichments に分解取込 | ✅ `9943f7f`（66,177 features・232,139 curated rows、件数一致） |
 | 2 | `scripts/db/export.py` — DB → GeoJSON golden | ✅ `9943f7f`（全30 region/layer roundtrip equivalent） |
 | 3 | C層書き込み経路（`apply_enrichments` + `scripts/db/curate.py`）+ ingest が manual を保全 | ✅ `c3f889b`（curate→export 反映を実データ実証、再ingest耐性テスト済み） |
-| 3b | enrich 6段の書き込み先を GeoJSON→DB に切替（1本ずつ） | ⏳ 未着手（要サーバー実行: 5/6段が Nominatim/Overpass 依存でローカル検証不可。`enrich_lines_endpoints` のみオフライン可） |
+| 3b | enrich 6段の書き込み先を GeoJSON→DB に切替（1本ずつ） | 🔶 **1/6 完了** `494a70d`: `enrich_lines_endpoints`(オフライン)を `src/db/enrich.py` + `scripts/db/enrich.py` でDB化。命名ロジックは `assign_line_name` に抽出し両版で共有。残5段(geocode×2/overpass/p03/audit)は Nominatim/Overpass/P03依存で**要サーバー実行** |
 | 4 | P03 ingest 新設（generators.geojson も D層出力へ = `export_generators_geojson.py` 修理） | ⏳ **ブロック中**: `data/generators/P03/*.xml`（P03 GML）がリポジトリに未取得。要 DL → パーサ移植（`src/parser` 喪失分の再実装） |
 | 5（任意） | ローダの DB 直読み・audit の SQL 化・差分レポート CI | ⏳ 未着手 |
 
-**Step 3 で「機械的に更新できる仕組み」は最小成立**: `ingest → curate → export` が回り、manual curation は再ingest・将来の再fetchで保全される。
-Step 3b/4 はサーバー実行・外部データ取得が前提のため、ローカルセッションでは未着手（着手時は pws-160core 等で）。
+**Step 3/3b で「機械的に更新できる仕組み」が実エンリッチャでも成立**: `ingest → enrich(DB) → export` が回り、DB-nativeエンリッチャ出力は再ingest・将来の再fetchで保全される。
+**設計上の要点(Step 3bで確定)**: DB-nativeエンリッチャは ingest が所有する legacy source(`endpoint_matching`等、`LEGACY_SOURCES`)とは**別のsourceラベル**(`enrich_lines_endpoints`)で書く。さもないと再ingestが「自分の所有物」として消す。`_enriched_by`の**値**だけ legacy と同じ(`endpoint_matching`)にしてGeoJSON互換を保つ。残り5エンリッチャ(geocode×2/overpass/p03/audit)も同パターンで、それぞれ専用sourceラベルを使う。
+Step 3b残り・Step 4 はサーバー実行・外部データ取得が前提のため、ローカルセッションでは未着手（着手時は pws-160core 等で）。
 
 Step 0–2 だけでも「キュレーション成果の救出」と「機械的更新の土台」が成立する。
 Step 3 以降は通常作業の合間に1本ずつ。
