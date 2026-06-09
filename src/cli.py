@@ -77,6 +77,16 @@ def cmd_db(_args, rest):
     return _run(f"scripts/db/{rest[0]}.py", rest[1:])
 
 
+def cmd_coverage(args, _rest):
+    """Print the provenance & validation coverage report (honest limits)."""
+    from scripts.coverage_report import gather, render
+    if not os.path.exists(args.db):
+        print(f"no DB at {args.db} — build one with `ajgrid db ingest`")
+        return 2
+    print(render(gather(args.db)))
+    return 0
+
+
 def cmd_map(args, _rest):
     print(f"Serving docs/ at http://localhost:{args.port}  (Ctrl-C to stop)")
     return subprocess.call(
@@ -108,6 +118,11 @@ def build_parser():
     sub.add_parser(
         "db", help="grid DB: ingest|export|curate|enrich (pass-through)",
         add_help=False).set_defaults(func=cmd_db)
+
+    cov = sub.add_parser(
+        "coverage", help="provenance & validation coverage report (honest limits)")
+    cov.add_argument("--db", default="data/grid.db")
+    cov.set_defaults(func=cmd_coverage)
 
     m = sub.add_parser("map", help="serve the live map from docs/")
     m.add_argument("--port", type=int, default=8080)
