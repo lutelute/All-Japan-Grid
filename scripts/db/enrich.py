@@ -24,6 +24,7 @@ from src.db.enrich import (  # noqa: E402
     apply_audit_fixes,
     enrich_geocode,
     enrich_lines_endpoints,
+    enrich_overpass,
 )
 from src.db.grid_db import GridDatabase  # noqa: E402
 from src.server.geojson_loader import REGIONS  # noqa: E402
@@ -46,10 +47,14 @@ def main() -> None:
         "--geocode", action="store_true",
         help="reverse-geocode unnamed subs/plants (live Nominatim -> DB; "
              "rate-limited, run on the server)")
+    parser.add_argument(
+        "--overpass", action="store_true",
+        help="fill name/operator/fuel from OSM tags (live Overpass -> DB; "
+             "run on the server)")
     args = parser.parse_args()
 
-    if not (args.lines or args.audit or args.geocode):
-        sys.exit("nothing to do: pass --lines / --audit / --geocode")
+    if not (args.lines or args.audit or args.geocode or args.overpass):
+        sys.exit("nothing to do: pass --lines / --audit / --geocode / --overpass")
     regions = REGIONS if args.regions == ["all"] else args.regions
     unknown = [r for r in regions if r not in REGIONS]
     if unknown:
@@ -72,6 +77,10 @@ def main() -> None:
             p = enrich_geocode(db, region, "plants", "発電所")
             print(f"[geocode] {region}: subs {s['enriched']}/{s['total']}, "
                   f"plants {p['enriched']}/{p['total']}")
+    if args.overpass:
+        for region in regions:
+            p = enrich_overpass(db, region, "plants")
+            print(f"[overpass] {region}: plants {p['enriched']}/{p['pending']}")
     print(f"-> {args.db}. Run scripts/db/export.py to regenerate the GeoJSON.")
 
 

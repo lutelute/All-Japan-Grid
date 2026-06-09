@@ -226,3 +226,53 @@ class TestDbGeocode:
         stats = enrich_geocode(db, "kansai", "substations", "変電所",
                                geocoder=lambda *a: {"suburb": "X"})
         assert stats["enriched"] == 0
+
+
+# ======================================================================
+# Overpass tag enricher (DB, fetcher injected) — Overpass is mocked
+# ======================================================================
+
+
+class TestDbOverpass:
+    def test_tags_filled_from_overpass(self, tmp_path):
+        from src.db.enrich import enrich_overpass
+        # A plant with osm_id, missing name/operator, fuel unknown.
+        plant = {"type": "Feature",
+                 "properties": {"osm_id": 555, "osm_type": "way",
+                                "fuel_type": "unknown"},
+                 "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_plants.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [plant]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "plants",
+                       str(tmp_path / "kansai_plants.geojson"))
+
+        # Stub Overpass: id 555 -> tags
+        stub = lambda ids: {555: {"name": "関西発電所", "operator": "関西電力",
+                                  "plant:source": "hydro"}}
+        stats = enrich_overpass(db, "kansai", "plants", fetcher=stub)
+        assert stats["enriched"] == 1
+
+        f = export_geojson(db, "kansai", "plants")["features"][0]
+        assert f["properties"]["name"] == "関西発電所"
+        assert f["properties"]["operator"] == "関西電力"
+        assert f["properties"]["fuel_type"] == "hydro"
+        assert f["properties"]["_enriched_by"] == "overpass"
+
+    def test_no_osm_id_means_nothing_to_do(self, tmp_path):
+        from src.db.enrich import enrich_overpass
+        plant = {"type": "Feature",
+                 "properties": {"fuel_type": "unknown"},  # no osm_id
+                 "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_plants.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [plant]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "plants",
+                       str(tmp_path / "kansai_plants.geojson"))
+        called = []
+        stats = enrich_overpass(db, "kansai", "plants",
+                                fetcher=lambda ids: called.append(ids) or {})
+        assert stats == {"pending": 0, "enriched": 0}
+        assert called == []  # fetcher not called when nothing has osm_id

@@ -110,6 +110,63 @@ def _centroid(geom):
     return get_centroid({"geometry": geom, "properties": {}})
 
 
+#: Source for DB-native Overpass tag enrichment (name/operator/fuel from OSM).
+OVERPASS_SOURCE = "overpass_db"
+
+
+def enrich_overpass(db: GridDatabase, region: str, layer: str,
+                    fetcher=None) -> Dict[str, int]:
+    """Fill missing name/operator/fuel from OSM tags into the C layer.
+
+    The DB-native form of ``enrich_overpass_tags``: for each feature that
+    has an ``osm_id`` but is missing name/operator/fuel_type, fetch the
+    live OSM tags and write the resolved fields as ``overpass_db``
+    enrichments (reusing ``apply_tags_to_feature`` to compute exactly the
+    same fields the GeoJSON enricher would set).
+
+    ``fetcher`` is an ``(osm_ids) -> {osm_id: tags_dict}`` callable —
+    defaults to the live Overpass batch query (network / rate-limited, so
+    real runs belong on the server) and is stubbed in tests.
+    """
+    from scripts.enrich_overpass_tags import (
+        apply_tags_to_feature,
+        fetch_overpass_batch,
+        needs_enrichment,
+    )
+
+    def _default_fetcher(osm_ids):
+        elements = fetch_overpass_batch(osm_ids) or []
+        return {e["id"]: e.get("tags", {}) for e in elements if "id" in e}
+
+    fetcher = fetcher or _default_fetcher
+
+    pending = [(fkey, props) for fkey, props, _g in iter_composed(db, region, layer)
+               if needs_enrichment(props)]
+    osm_ids = [int(p["osm_id"]) for _k, p in pending if p.get("osm_id")]
+    if not osm_ids:
+        return {"pending": 0, "enriched": 0}
+    tags_by_id = fetcher(osm_ids) or {}
+
+    rows = []
+    enriched = 0
+    for fkey, props in pending:
+        oid = int(props["osm_id"]) if props.get("osm_id") else None
+        tags = tags_by_id.get(oid)
+        if not tags:
+            continue
+        work = dict(props)
+        if apply_tags_to_feature(work, tags, {}):
+            for k, v in work.items():
+                if props.get(k) != v:
+                    rows.append({
+                        "layer": layer, "region": region, "feature_key": fkey,
+                        "field": k, "value": v, "source": OVERPASS_SOURCE})
+            enriched += 1
+    if rows:
+        apply_enrichments(db, rows, run_id=f"enrich_overpass_{layer}")
+    return {"pending": len(pending), "enriched": enriched}
+
+
 def apply_audit_fixes(db: GridDatabase, regions=None) -> Dict[str, int]:
     """Clear Category-C substation tag errors into the C layer (audit --fix).
 
