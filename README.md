@@ -158,10 +158,13 @@ hokuriku は x0.8、kansai は x0.3 の需給整合済み需要スケールケ�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">
 </p>
 
-> 13,731 buses across 10 regions, exported as CGMES and re-solved through
-> pandapower `cim2pp` → `runpp`. The map shows the native solve (kansai grey);
-> the Level-2 CGMES then solves **all 10** via demand-scaling. /
-> 図は無補正の解（kansai 灰色）。Level 2 CGMES は需要スケールで **全10地域** 収束。
+> ~13,700 buses across **all 10 regions**, each bus coloured by its AC-solved
+> voltage (pu). 9 regions solve natively; kansai is demand-scaled (×0.4) to
+> converge over its synthetic sub-154 kV network and is **labelled as such** on
+> the figure — a solvability expedient, not an operational result. Regenerate
+> with `python scripts/gen_cim_national_pf.py`. /
+> 全10地域の母線を AC 電圧(pu)で色分け。9地域は無補正、kansai のみ需要 ×0.4 で収束
+> （図に明記）。合成パラメータ上の便宜であり運用値ではない。
 
 Both levels ship as zipped [GitHub Release v1.3.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
