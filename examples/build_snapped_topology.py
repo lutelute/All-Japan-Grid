@@ -222,29 +222,39 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     adj = defaultdict(dict)            # node -> neighbor -> {len, kv, path:[(lat,lon)...]}
     jct_coord = {}                     # junction key -> (lat, lon)
 
-    def add_edge(a, b, seg, kv, path):
-        """Insert/merge an undirected edge; count merged parallels.
+    def add_edge(a, b, seg, kv, path, parallel=1):
+        """Insert/merge an undirected edge, accumulating parallel circuits.
 
         Real grids run 2-4 parallel circuits between the same two nodes. The
-        vertex-snap collapses them into a single edge, so we count how many
-        were merged and carry it as ``parallel`` — restoring the transmission
-        capacity that the simplification would otherwise lose.
+        vertex-snap collapses them into a single edge, so ``parallel`` carries
+        the circuit multiplicity — restoring the transmission capacity the
+        simplification would otherwise lose.
+
+        ``parallel`` is the number of circuits *this call* contributes: 1 for a
+        direct OSM-way segment, the chain's circuit count for a contracted
+        edge. Merging the same node pair **sums** the contributions, because
+        distinct ways / geometric routes between two nodes are physically
+        parallel circuits. Callers must not count the same circuit twice — the
+        segment loop dedups node pairs per way (``seen_pairs``) so a single way
+        that zig-zags across the same pair counts once, not N times.
         """
         cur = adj[a].get(b)
         if cur is None:
-            adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": 1}
-            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)), "parallel": 1}
-        elif seg < cur["len"] or cur["len"] <= 0:
+            p = max(int(parallel), 1)  # an edge is at least one circuit
+            adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p}
+            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)), "parallel": p}
+            return
+        kv2 = max(cur["kv"], kv)
+        par = cur["parallel"] + max(int(parallel), 0)
+        if seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
-            kv2 = max(cur["kv"], kv)
-            par = cur.get("parallel", 1) + 1
             adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par}
             adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)), "parallel": par}
         else:
-            cur["kv"] = max(cur["kv"], kv)
-            cur["parallel"] = cur.get("parallel", 1) + 1
-            adj[b][a]["kv"] = cur["kv"]
-            adj[b][a]["parallel"] = cur["parallel"]
+            cur["kv"] = kv2
+            cur["parallel"] = par
+            adj[b][a]["kv"] = kv2
+            adj[b][a]["parallel"] = par
 
     lines_path = os.path.join(DATA_DIR, f"{region}_lines.geojson")
     if os.path.exists(lines_path):
@@ -274,14 +284,22 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     node_ids.append(jk)
 
             # Add edges between consecutive distinct nodes, with segment length
-            # and the real coordinate pair as the (sub-)path.
+            # and the real coordinate pair as the (sub-)path. A single way is
+            # ONE circuit even if its vertices revisit a node pair (snapping
+            # zig-zag), so each pair contributes to ``parallel`` at most once
+            # per way; genuine parallels come from separate ways summing.
+            seen_pairs = set()
             for j in range(1, len(coords)):
                 a, b = node_ids[j - 1], node_ids[j]
                 if a == b:
                     continue
                 seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
                                     coords[j][0], coords[j][1])
-                add_edge(a, b, seg, kv, [coords[j - 1], coords[j]])
+                pair = (a, b) if a <= b else (b, a)
+                contrib = 0 if pair in seen_pairs else 1
+                seen_pairs.add(pair)
+                add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
+                         parallel=contrib)
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
@@ -302,13 +320,19 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 ea, eb = adj[n][a], adj[n][b]  # paths n->a, n->b
                 la, lb = ea["len"], eb["len"]
                 kv = max(ea["kv"], eb["kv"])
+                # The circuits running a->n->b are the same circuits, so the
+                # contracted edge carries the chain's multiplicity (max of the
+                # two segments — equal for a clean corridor) rather than
+                # resetting to 1. add_edge then sums this with any pre-existing
+                # a-b route (a genuinely distinct parallel path).
+                par = max(ea.get("parallel", 1), eb.get("parallel", 1))
                 # merged a->b path = (a->n) + (n->b), dropping the duplicate n
                 path_ab = list(reversed(ea["path"]))[:-1] + eb["path"]
                 # remove junction n, connect a-b with summed length
                 del adj[a][n]
                 del adj[b][n]
                 del adj[n]
-                add_edge(a, b, la + lb, kv, path_ab)
+                add_edge(a, b, la + lb, kv, path_ab, parallel=par)
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
