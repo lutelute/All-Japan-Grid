@@ -54,6 +54,8 @@ CIM/CGMES を入口に、MATPOWER/.mat、pandapower、PSS/E、PyPSA への橋渡
 決定的 mRID は既に整備済み。次は CGMES の厳格検証（CIMverter 等）と PyPSA-Earth 連携。
 
 ### Pillar 3 — From topology to a validated electrical model（地図→検証済み電気モデル）★最難関・最高価値
+
+> **連携が律速。具体的な事業者・OCCTO 連携の実行設計は [ENGAGEMENT.md](ENGAGEMENT.md) を参照。**
 資産の本丸。合成パラメータを**権威データで置換・検証**する:
 - 国土数値情報 P03（発電所）、OCCTO 供給計画・連系線容量・エリア需要、JEPX エリアプライス。
 - 文献値（Glover/Sarma 等）から voltage-class 別 R/X/B の**不確かさ付き**推定へ。
