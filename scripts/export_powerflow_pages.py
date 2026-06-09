@@ -98,118 +98,14 @@ def _load_osm_line_geometries(region):
     return geom_lookup
 
 
-def add_reactive_compensation(net, factor=0.6):
-    """Add capacitive shunts at load buses to counter undervoltage.
-
-    factor = fraction of each load bus's reactive demand supplied locally by a
-    shunt capacitor (q_mvar < 0 injects Q). Models the reactive compensation
-    (capacitor banks / SVC) that real grids deploy but OSM omits, so solved
-    voltages are not artificially depressed.
-    """
-    if factor <= 0 or len(net.load) == 0:
-        return 0
-    by_bus = net.load[net.load["in_service"]].groupby("bus")["q_mvar"].sum()
-    n = 0
-    for bus, q in by_bus.items():
-        if q > 0:
-            pp.create_shunt(net, bus=int(bus), q_mvar=-factor * float(q), p_mw=0.0)
-            n += 1
-    return n
-
-
-def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6,
-                    snap_km=1.5, vertex_prec=4):
-    """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info).
-
-    Args:
-        topology: "legacy" (nearest-substation endpoint match, current behaviour)
-            or "snapped" (vertex-graph + tolerance snap, recovers real
-            connectivity; see examples/build_snapped_topology.py).
-        reconnect: when True, bridge the residual isolated components with
-            labelled synthetic lines (recon_line_*) via the reconstruction
-            module before solving, so the solved network is fully connected
-            instead of silently disabling islands.
-    """
-    snap_geom = None
-    if topology == "snapped":
-        network, snap_geom = build_network_snapped(
-            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True)
-    else:
-        network = build_network_from_geojson(region)
-    if not network or not network.has_elements:
-        return None
-
-    builder = PandapowerBuilder()
-    build_result = builder.build(network)
-    net = build_result.net
-
-    fix_zero_voltages(net)
-    n_trafos = insert_transformers(net)
-
-    # Residual reconnection: bridge genuine gaps with labelled synthetic lines
-    # (named recon_line_*) instead of letting fix_topology disable the islands.
-    n_synthetic = 0
-    if reconnect:
-        iso = Isolator().detect(net)
-        # Only bridge tiny same-landmass gaps (OSM digitisation breaks). Larger
-        # separations (sea straits, real gaps) are NOT fabricated; they stay as
-        # separate components solved in place via multi_slack below.
-        rec = Reconnector().reconnect(net, iso, ReconstructionConfig(
-            mode="reconnect", max_reconnection_distance_km=5.0))
-        n_synthetic = rec.lines_created
-
-    diag = fix_topology(net, multi_slack=True)
-    select_slack_bus(net)
-
-    total_load = estimate_loads(net, region=region, demand_config=demand_cfg)
-    inactive_buses = set(net.bus.index[~net.bus["in_service"]])
-    if len(net.load) > 0:
-        mask = net.load["bus"].isin(inactive_buses)
-        net.load.loc[mask, "in_service"] = False
-        total_load = net.load[net.load["in_service"]]["p_mw"].sum()
-
-    balance_power(net, demand_cfg)
-    scale_line_ratings(net)
-    n_shunt = add_reactive_compensation(net, factor=reactive)
-    net.bus["vm_pu"] = 1.0
-    if len(net.gen) > 0:
-        net.gen["vm_pu"] = 1.0
-    if len(net.ext_grid) > 0:
-        net.ext_grid["vm_pu"] = 1.0
-
-    # DC
-    net_dc = copy.deepcopy(net)
-    dc_result = run_powerflow(net_dc, "dc")
-
-    # AC with pruning
-    ac_result = {"mode": "ac", "converged": False}
-    net_ac = None
-    for threshold in [45.0, 30.0, 20.0]:
-        net_ac = copy.deepcopy(net)
-        n_pruned = prune_dc_infeasible(net_ac, angle_threshold=threshold)
-        if n_pruned > 0:
-            fix_topology(net_ac, multi_slack=True)
-            select_slack_bus(net_ac)
-            scale_line_ratings(net_ac)
-        ac_result = run_powerflow(net_ac, "ac")
-        if ac_result["converged"]:
-            break
-
-    build_info = {
-        "n_buses": len(net.bus),
-        "n_lines": len(net.line),
-        "n_gens": len(net.gen),
-        "n_trafos": n_trafos,
-        "n_active_buses": diag["n_active_buses"],
-        "n_components": diag["n_components"],
-        "n_synthetic_lines": n_synthetic,
-        "n_shunt_comp": n_shunt,
-        "topology": topology,
-        "total_load_mw": float(total_load),
-        "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
-    }
-
-    return net_dc, dc_result, net_ac, ac_result, build_info, snap_geom
+# add_reactive_compensation + build_and_solve (the end-to-end pipeline)
+# now live in src.powerflow.pipeline; re-exported so existing
+# `from scripts.export_powerflow_pages import build_and_solve` call sites
+# (export_cim_level2, diagnose_ybus, run_n1_contingency,
+# export_and_solve_matpower) keep working.
+from src.powerflow.pipeline import (  # noqa: E402,F401
+    add_reactive_compensation, build_and_solve,
+)
 
 
 def _parse_bus_coords(net, idx):

@@ -1,0 +1,155 @@
+"""End-to-end reconstruction power-flow pipeline.
+
+``build_and_solve(region, demand_cfg, ...)`` is the orchestrator that ties
+the promoted pieces together: build the topology (legacy nearest-substation
+or snapped vertex-graph), convert to pandapower, apply the net transforms
+(voltage repair, transformers, slack, topology fix, demand/generation
+balance, rating scaling, reactive compensation), then solve DC and AC
+(pruning extreme-angle branches until AC converges). Returns
+``(net_dc, dc_result, net_ac, ac_result, build_info, snap_geom)``.
+
+Promoted from ``scripts/export_powerflow_pages`` (Phase C pipeline
+promotion): this was the last reverse dependency where a script imported
+the pipeline from ``examples/``. With it in src, the dependency flows
+src <- scripts/examples and the CIM / CPF / N-1 / MATPOWER entry points
+import ``build_and_solve`` from here (the script re-exports it for
+back-compat).
+"""
+
+from __future__ import annotations
+
+import copy
+
+import pandapower as pp
+
+from src.converter.pandapower_builder import PandapowerBuilder
+from src.powerflow.batch_solve import run_powerflow
+from src.powerflow.legacy_build import build_network_from_geojson
+from src.powerflow.load_estimator import estimate_loads
+from src.powerflow.snapped_topology import build_network_snapped
+from src.powerflow.transforms import (
+    balance_power,
+    fix_topology,
+    fix_zero_voltages,
+    insert_transformers,
+    prune_dc_infeasible,
+    scale_line_ratings,
+    select_slack_bus,
+)
+from src.reconstruction.config import ReconstructionConfig
+from src.reconstruction.isolator import Isolator
+from src.reconstruction.reconnector import Reconnector
+
+
+def add_reactive_compensation(net, factor=0.6):
+    """Add capacitive shunts at load buses to counter undervoltage.
+
+    factor = fraction of each load bus's reactive demand supplied locally by a
+    shunt capacitor (q_mvar < 0 injects Q). Models the reactive compensation
+    (capacitor banks / SVC) that real grids deploy but OSM omits, so solved
+    voltages are not artificially depressed.
+    """
+    if factor <= 0 or len(net.load) == 0:
+        return 0
+    by_bus = net.load[net.load["in_service"]].groupby("bus")["q_mvar"].sum()
+    n = 0
+    for bus, q in by_bus.items():
+        if q > 0:
+            pp.create_shunt(net, bus=int(bus), q_mvar=-factor * float(q), p_mw=0.0)
+            n += 1
+    return n
+
+
+def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6,
+                    snap_km=1.5, vertex_prec=4):
+    """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
+
+    Args:
+        topology: "legacy" (nearest-substation endpoint match, current behaviour)
+            or "snapped" (vertex-graph + tolerance snap, recovers real
+            connectivity; see src.powerflow.snapped_topology).
+        reconnect: when True, bridge the residual isolated components with
+            labelled synthetic lines (recon_line_*) via the reconstruction
+            module before solving, so the solved network is fully connected
+            instead of silently disabling islands.
+    """
+    snap_geom = None
+    if topology == "snapped":
+        network, snap_geom = build_network_snapped(
+            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True)
+    else:
+        network = build_network_from_geojson(region)
+    if not network or not network.has_elements:
+        return None
+
+    builder = PandapowerBuilder()
+    build_result = builder.build(network)
+    net = build_result.net
+
+    fix_zero_voltages(net)
+    n_trafos = insert_transformers(net)
+
+    # Residual reconnection: bridge genuine gaps with labelled synthetic lines
+    # (named recon_line_*) instead of letting fix_topology disable the islands.
+    n_synthetic = 0
+    if reconnect:
+        iso = Isolator().detect(net)
+        # Only bridge tiny same-landmass gaps (OSM digitisation breaks). Larger
+        # separations (sea straits, real gaps) are NOT fabricated; they stay as
+        # separate components solved in place via multi_slack below.
+        rec = Reconnector().reconnect(net, iso, ReconstructionConfig(
+            mode="reconnect", max_reconnection_distance_km=5.0))
+        n_synthetic = rec.lines_created
+
+    diag = fix_topology(net, multi_slack=True)
+    select_slack_bus(net)
+
+    total_load = estimate_loads(net, region=region, demand_config=demand_cfg)
+    inactive_buses = set(net.bus.index[~net.bus["in_service"]])
+    if len(net.load) > 0:
+        mask = net.load["bus"].isin(inactive_buses)
+        net.load.loc[mask, "in_service"] = False
+        total_load = net.load[net.load["in_service"]]["p_mw"].sum()
+
+    balance_power(net, demand_cfg)
+    scale_line_ratings(net)
+    n_shunt = add_reactive_compensation(net, factor=reactive)
+    net.bus["vm_pu"] = 1.0
+    if len(net.gen) > 0:
+        net.gen["vm_pu"] = 1.0
+    if len(net.ext_grid) > 0:
+        net.ext_grid["vm_pu"] = 1.0
+
+    # DC
+    net_dc = copy.deepcopy(net)
+    dc_result = run_powerflow(net_dc, "dc")
+
+    # AC with pruning
+    ac_result = {"mode": "ac", "converged": False}
+    net_ac = None
+    for threshold in [45.0, 30.0, 20.0]:
+        net_ac = copy.deepcopy(net)
+        n_pruned = prune_dc_infeasible(net_ac, angle_threshold=threshold)
+        if n_pruned > 0:
+            fix_topology(net_ac, multi_slack=True)
+            select_slack_bus(net_ac)
+            scale_line_ratings(net_ac)
+        ac_result = run_powerflow(net_ac, "ac")
+        if ac_result["converged"]:
+            break
+
+    build_info = {
+        "n_buses": len(net.bus),
+        "n_lines": len(net.line),
+        "n_gens": len(net.gen),
+        "n_trafos": n_trafos,
+        "n_active_buses": diag["n_active_buses"],
+        "n_components": diag["n_components"],
+        "n_synthetic_lines": n_synthetic,
+        "n_shunt_comp": n_shunt,
+        "topology": topology,
+        "total_load_mw": float(total_load),
+        "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
+    }
+
+    return net_dc, dc_result, net_ac, ac_result, build_info, snap_geom

@@ -26,10 +26,12 @@ real OSM line. Genuine gaps that remain are left to the reconnection step
 
 Usage::
 
-    python examples/build_snapped_topology.py shikoku --snap-km 1.5 --diagnose
+    python -m src.powerflow.snapped_topology shikoku --snap-km 1.5 --diagnose
     # or, programmatically:
-    from examples.build_snapped_topology import build_network_snapped
+    from src.powerflow.snapped_topology import build_network_snapped
     net = build_network_snapped("shikoku", snap_km=1.5)
+
+(``examples/build_snapped_topology`` remains as a back-compat re-export shim.)
 """
 from __future__ import annotations
 
