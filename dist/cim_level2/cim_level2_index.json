@@ -61,7 +61,7 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=285 ext=5 vmin=0.709"
+      "verify": "OK gen=285 ext=5 vmin=0.714"
     },
     {
       "region": "tohoku",
@@ -100,7 +100,7 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=818 ext=10 vmin=0.841"
+      "verify": "OK gen=818 ext=10 vmin=0.843"
     },
     {
       "region": "tokyo",
@@ -178,8 +178,8 @@
         77.0,
         66.0
       ],
-      "solve_mode": "demand-scaled(x0.8)",
-      "verify": "OK gen=2809 ext=19 vmin=0.872"
+      "solve_mode": "native",
+      "verify": "OK gen=2809 ext=19 vmin=0.887"
     },
     {
       "region": "hokuriku",
@@ -300,7 +300,7 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=597 ext=12 vmin=0.861"
+      "verify": "OK gen=597 ext=12 vmin=0.893"
     },
     {
       "region": "shikoku",
@@ -340,7 +340,7 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=356 ext=31 vmin=0.772"
+      "verify": "OK gen=356 ext=31 vmin=0.879"
     },
     {
       "region": "kyushu",
@@ -377,8 +377,8 @@
         110.0,
         66.0
       ],
-      "solve_mode": "demand-scaled(x0.8)",
-      "verify": "OK gen=1374 ext=9 vmin=0.873"
+      "solve_mode": "native",
+      "verify": "OK gen=1374 ext=9 vmin=0.850"
     },
     {
       "region": "okinawa",
@@ -414,7 +414,7 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=16 ext=1 vmin=0.944"
+      "verify": "OK gen=16 ext=1 vmin=0.941"
     }
   ]
 }

@@ -146,13 +146,12 @@ def _verify(region: str, out_dir: str) -> str:
         return f"import-FAIL:{type(e).__name__}"
     if len(net2.ext_grid) == 0:
         return "no-slack"
-    for init in ("auto", "dc", "flat"):
-        try:
-            pp.runpp(net2, init=init, max_iteration=50)
-            return (f"OK gen={len(net2.gen)} ext={len(net2.ext_grid)} "
-                    f"vmin={float(net2.res_bus.vm_pu.min()):.3f}")
-        except Exception:  # noqa: BLE001
-            continue
+    # Use the SAME solver budget (_try_runpp: 100 iters + iwamoto fallback)
+    # that _ensure_solvable used to judge solvability — otherwise a region
+    # judged 'native' can spuriously report runpp-FAIL here (kyushu).
+    if _try_runpp(net2):
+        return (f"OK gen={len(net2.gen)} ext={len(net2.ext_grid)} "
+                f"vmin={float(net2.res_bus.vm_pu.min()):.3f}")
     return "runpp-FAIL"
 
 
