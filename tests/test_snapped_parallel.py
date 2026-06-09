@@ -40,9 +40,10 @@ def _build(tmp_path, monkeypatch, region, subs, lines, **kw):
     (tmp_path / f"{region}_substations.geojson").write_text(fc(subs), encoding="utf-8")
     (tmp_path / f"{region}_lines.geojson").write_text(fc(lines), encoding="utf-8")
     (tmp_path / f"{region}_plants.geojson").write_text(fc([]), encoding="utf-8")
-    monkeypatch.setattr(build_snapped, "DATA_DIR", str(tmp_path))
+    # build_network_snapped now takes an injectable data_dir (it moved to
+    # src.powerflow.snapped_topology in the Phase C pipeline promotion).
     net = build_snapped.build_network_snapped(
-        region, snap_km=2.0, keep_stubs=True, **kw)
+        region, snap_km=2.0, keep_stubs=True, data_dir=str(tmp_path), **kw)
     return sorted(ln.num_parallel for ln in net.transmission_lines)
 
 
