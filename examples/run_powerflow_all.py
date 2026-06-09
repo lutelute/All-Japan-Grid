@@ -109,29 +109,12 @@ def _get_centroid(feature):
 
 
 def _parse_voltage_kv(voltage_raw):
-    """Parse OSM voltage string (in volts) to kV.
+    """Parse OSM voltage string (in volts) to kV; 0.0 if none.
 
-    Handles semicolon-separated (154000;66000) and comma-separated
-    (77000,6600) multi-voltage strings by taking the highest value.
+    Canonical max-voltage parser in src.utils.voltage.
     """
-    if not voltage_raw:
-        return 0.0
-    s = str(voltage_raw).strip()
-    # Split on both ; and , (OSM uses both as voltage separators)
-    parts = s.replace(",", ";").split(";")
-    best_kv = 0.0
-    for part in parts:
-        part = part.strip()
-        if not part:
-            continue
-        try:
-            v = float(part)
-        except (ValueError, TypeError):
-            continue
-        kv = v / 1000 if v > 1000 else v
-        if kv > best_kv:
-            best_kv = kv
-    return best_kv
+    from src.utils.voltage import parse_voltage_kv
+    return parse_voltage_kv(voltage_raw) or 0.0
 
 
 def _get_line_coords(feature):

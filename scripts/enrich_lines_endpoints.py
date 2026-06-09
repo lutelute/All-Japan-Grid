@@ -107,18 +107,13 @@ def get_centroid(feature):
 
 
 def parse_voltage_kv(voltage_raw):
-    """Parse OSM voltage string to kV float. Returns 0.0 if invalid."""
-    if not voltage_raw:
-        return 0.0
-    s = str(voltage_raw).strip().replace(",", "")
-    # Handle multiple voltages separated by ;
-    if ";" in s:
-        s = s.split(";")[0].strip()
-    try:
-        v = float(s)
-        return round(v / 1000, 1) if v > 1000 else round(v, 1) if v > 0 else 0.0
-    except (ValueError, TypeError):
-        return 0.0
+    """Parse OSM voltage string to kV float (0.0 if invalid).
+
+    Canonical max-voltage parser in src.utils.voltage.
+    """
+    from src.utils.voltage import parse_voltage_kv as _pv
+    v = _pv(voltage_raw)
+    return round(v, 1) if v is not None else 0.0
 
 
 def load_substation_candidates(region):

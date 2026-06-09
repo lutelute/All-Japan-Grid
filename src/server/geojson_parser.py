@@ -45,17 +45,9 @@ def _parse_voltage_kv(feature: dict) -> float:
     if v is not None and v > 0:
         return float(v)
 
-    raw = props.get("voltage")
-    if raw is None:
-        return 0.0
-    s = str(raw).strip().replace(",", "")
-    if ";" in s:
-        s = s.split(";")[0].strip()
-    try:
-        v = float(s)
-        return round(v / 1000, 1) if v > 1000 else round(v, 1) if v > 0 else 0.0
-    except (ValueError, TypeError):
-        return 0.0
+    # Fall back to the canonical max-voltage parser (src.utils.voltage).
+    from src.utils.voltage import parse_voltage_kv
+    return round(parse_voltage_kv(props.get("voltage")) or 0.0, 1)
 
 
 def _centroid(coords: list) -> Tuple[float, float]:

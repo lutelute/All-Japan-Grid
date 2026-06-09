@@ -35,25 +35,15 @@ FUEL_COLORS = {
 
 
 def _normalize_voltage(voltage_raw: Any) -> Optional[float]:
-    """Convert OSM voltage string to kV float.
+    """Convert OSM voltage string to kV float (None if unparseable).
 
-    OSM stores voltage in volts (e.g. "275000" for 275 kV).
-    Returns None if unparseable.
+    Uses the canonical max-voltage parser: a multi-voltage tag resolves to
+    its highest level, so "154000;66000" and "66000;154000" both give 154 kV
+    (the old first-token logic mislabeled the latter as 66 kV — #10).
     """
-    if voltage_raw is None:
-        return None
-    s = str(voltage_raw).strip().replace(",", "")
-    # Handle multiple voltages separated by ;
-    if ";" in s:
-        s = s.split(";")[0].strip()
-    try:
-        v = float(s)
-    except (ValueError, TypeError):
-        return None
-    # If > 1000, assume it's in volts and convert to kV
-    if v > 1000:
-        return round(v / 1000, 1)
-    return round(v, 1) if v > 0 else None
+    from src.utils.voltage import parse_voltage_kv
+    v = parse_voltage_kv(voltage_raw)
+    return round(v, 1) if v is not None else None
 
 
 def _enrich_feature(feature: dict, region: str, layer: str) -> dict:

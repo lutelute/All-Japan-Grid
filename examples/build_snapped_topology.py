@@ -98,21 +98,9 @@ def _get_line_coords(feature):
 
 
 def _parse_voltage_kv(voltage_raw):
-    if not voltage_raw:
-        return 0.0
-    parts = str(voltage_raw).strip().replace(",", ";").split(";")
-    best = 0.0
-    for p in parts:
-        p = p.strip()
-        if not p:
-            continue
-        try:
-            v = float(p)
-        except (ValueError, TypeError):
-            continue
-        kv = v / 1000 if v > 1000 else v
-        best = max(best, kv)
-    return best
+    # Canonical max-voltage parser in src.utils.voltage; 0.0 if none.
+    from src.utils.voltage import parse_voltage_kv
+    return parse_voltage_kv(voltage_raw) or 0.0
 
 
 VALID_VOLTAGES = [66, 77, 110, 132, 154, 187, 220, 275, 500]
