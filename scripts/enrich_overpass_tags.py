@@ -34,6 +34,12 @@ REGIONS = [
 ]
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+#: overpass-api.de rejects requests without a descriptive User-Agent with
+#: HTTP 406 (Not Acceptable). The default requests UA is not accepted; a
+#: project UA with contact/URL is the Overpass usage-policy expectation.
+OVERPASS_HEADERS = {
+    "User-Agent": "All-Japan-Grid/1.3 (+https://github.com/lutelute/All-Japan-Grid)"
+}
 OVERPASS_TIMEOUT = 300  # seconds for Overpass query
 BATCH_SIZE = 100
 PAUSE_BETWEEN_BATCHES = 10  # seconds between successful requests
@@ -128,6 +134,7 @@ out tags;
             resp = requests.post(
                 OVERPASS_URL,
                 data={"data": query},
+                headers=OVERPASS_HEADERS,
                 timeout=OVERPASS_TIMEOUT + 30,
             )
 

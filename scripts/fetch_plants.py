@@ -26,6 +26,10 @@ CONFIG_PATH = os.path.join(ROOT, "config", "regions.yaml")
 OUTPUT_DIR = os.path.join(ROOT, "data")
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+#: overpass-api.de returns HTTP 406 without a descriptive User-Agent.
+OVERPASS_HEADERS = {
+    "User-Agent": "All-Japan-Grid/1.3 (+https://github.com/lutelute/All-Japan-Grid)"
+}
 TIMEOUT = 120
 PAUSE = 5  # seconds between regions
 
@@ -109,7 +113,8 @@ def fetch_plants_for_bbox(bbox):
 
     for attempt in range(3):
         try:
-            resp = requests.post(OVERPASS_URL, data={"data": query}, timeout=TIMEOUT + 30)
+            resp = requests.post(OVERPASS_URL, data={"data": query},
+                                 headers=OVERPASS_HEADERS, timeout=TIMEOUT + 30)
             resp.raise_for_status()
             return resp.json().get("elements", [])
         except Exception as e:
