@@ -86,10 +86,16 @@ CIM/CGMES を入口に、MATPOWER/.mat、pandapower、PSS/E、PyPSA への橋渡
 | 段階 | 到達点 | 主な前提 |
 |---|---|---|
 | **M0（現在）** | 研究・教育グレードの公開トポロジ + CIM L1/L2 + DB 土台 | 達成済み（v1.3.0） |
-| **M1** | **Living tool**: 機械更新が全エンリッチャで完結、統一 CLI、来歴完備 | サーバー実行（API/GML）。§5 |
+| **M1** | **Living tool**: 機械更新が全エンリッチャで完結、統一 CLI、来歴完備 | **達成（2026-06）**: pws-160core で ingest(66k feat)→geocode/overpass/P03 enrich→CGMES 厳格検証→`ajgrid coverage` を実走。実バグ修正(Overpass UA)。P03 curation は `data/db/enrichments.jsonl` に来歴付きで commit。残=公開物への再反映(下記注) |
 | **M2** | **Validated patches**: P03/OCCTO 等で一部区間を検証済みタグ化、不確かさ付き電気値 — **P03 着手済**（発電所16.2%を権威裏付け、`source=p03_db`、`ajgrid coverage`） | 外部データ取得・連携 |
 | **M3** | **Interop reference**: PyPSA/PSS-E 連携、CGMES 厳格検証通過、引用される標準データセット | M1+M2 |
 | **M4** | **Industry-grade collaboration**: 事業者/OCCTO との突合せで運用近接モデル | 業界連携・データ提供 |
+
+> **注（M1後の再反映 milestone）.** 機械更新ループは閉じ、curation は DB/`enrichments.jsonl`
+> に捕捉済み。一方 `data/*.geojson` を **DB 派生物に正式降格**して P03 等を公開物へ流すには、
+> GeoJSON→CIM→MATPOWER→ライブ地図の**連鎖再生成**を一括で行う必要がある（DB compose は
+> 正準順序を使うため既存ファイルとは byte 非一致＝一度きりの正準化を伴う大きな差分）。
+> これは独立した milestone として、影響範囲を提示のうえ実施判断する。
 
 M2 以降は技術だけでなく**データの権威性とパートナーシップ**が律速。だからこそ M0–M1 で
 「権威データが入る器」を規格準拠・機械更新・来歴完備で完成させておくことが、本プロジェクトの
