@@ -20,7 +20,11 @@ sys.path.insert(
     ),
 )
 
-from src.db.enrich import apply_audit_fixes, enrich_lines_endpoints  # noqa: E402
+from src.db.enrich import (  # noqa: E402
+    apply_audit_fixes,
+    enrich_geocode,
+    enrich_lines_endpoints,
+)
 from src.db.grid_db import GridDatabase  # noqa: E402
 from src.server.geojson_loader import REGIONS  # noqa: E402
 
@@ -38,10 +42,14 @@ def main() -> None:
     parser.add_argument(
         "--audit", action="store_true",
         help="clear Category-C substation tag errors (audit --fix -> DB)")
+    parser.add_argument(
+        "--geocode", action="store_true",
+        help="reverse-geocode unnamed subs/plants (live Nominatim -> DB; "
+             "rate-limited, run on the server)")
     args = parser.parse_args()
 
-    if not (args.lines or args.audit):
-        sys.exit("nothing to do: pass --lines and/or --audit")
+    if not (args.lines or args.audit or args.geocode):
+        sys.exit("nothing to do: pass --lines / --audit / --geocode")
     regions = REGIONS if args.regions == ["all"] else args.regions
     unknown = [r for r in regions if r not in REGIONS]
     if unknown:
@@ -58,6 +66,12 @@ def main() -> None:
     if args.audit:
         stats = apply_audit_fixes(db, regions)
         print(f"[audit] {stats['fixed']} Category-C tag errors cleared")
+    if args.geocode:
+        for region in regions:
+            s = enrich_geocode(db, region, "substations", "変電所")
+            p = enrich_geocode(db, region, "plants", "発電所")
+            print(f"[geocode] {region}: subs {s['enriched']}/{s['total']}, "
+                  f"plants {p['enriched']}/{p['total']}")
     print(f"-> {args.db}. Run scripts/db/export.py to regenerate the GeoJSON.")
 
 

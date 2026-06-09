@@ -161,3 +161,68 @@ class TestDbAuditFix:
         ingest_geojson(db, "kansai", "substations",
                        str(tmp_path / "kansai_substations.geojson"))
         assert apply_audit_fixes(db, ["kansai"])["fixed"] == 0
+
+
+# ======================================================================
+# Reverse-geocode enricher (DB, geocoder injected) — Nominatim is mocked
+# ======================================================================
+
+
+class TestDbGeocode:
+    def test_geocoded_display_name_written(self, tmp_path):
+        from src.db.enrich import enrich_geocode
+        # Unnamed substation; a stub geocoder returns an address.
+        sub = {"type": "Feature",
+               "properties": {},  # no name / name:ja / name:en / _display_name
+               "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_substations.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [sub]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "substations",
+                       str(tmp_path / "kansai_substations.geojson"))
+
+        stub = lambda lat, lon: {"suburb": "八幡", "city": "京都市"}
+        stats = enrich_geocode(db, "kansai", "substations", "変電所",
+                               geocoder=stub)
+        assert stats == {"total": 1, "enriched": 1}
+
+        f = export_geojson(db, "kansai", "substations")["features"][0]
+        assert f["properties"]["_display_name"] == "八幡変電所"
+        assert f["properties"]["_name_source"] == "geocoded"
+
+    def test_name_en_fallback_skips_geocoder(self, tmp_path):
+        from src.db.enrich import enrich_geocode
+        sub = {"type": "Feature",
+               "properties": {"name:en": "Yawata SS"},
+               "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_substations.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [sub]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "substations",
+                       str(tmp_path / "kansai_substations.geojson"))
+
+        def boom(lat, lon):
+            raise AssertionError("geocoder must not be called when name:en exists")
+        stats = enrich_geocode(db, "kansai", "substations", "変電所",
+                               geocoder=boom)
+        f = export_geojson(db, "kansai", "substations")["features"][0]
+        assert stats["enriched"] == 1
+        assert f["properties"]["_display_name"] == "Yawata SS"
+        assert f["properties"]["_name_source"] == "name:en"
+
+    def test_named_feature_skipped(self, tmp_path):
+        from src.db.enrich import enrich_geocode
+        sub = {"type": "Feature",
+               "properties": {"name": "既存変電所"},
+               "geometry": {"type": "Point", "coordinates": [135.5, 34.7]}}
+        (tmp_path / "kansai_substations.geojson").write_text(
+            json.dumps({"type": "FeatureCollection", "features": [sub]}),
+            encoding="utf-8")
+        db = GridDatabase(":memory:")
+        ingest_geojson(db, "kansai", "substations",
+                       str(tmp_path / "kansai_substations.geojson"))
+        stats = enrich_geocode(db, "kansai", "substations", "変電所",
+                               geocoder=lambda *a: {"suburb": "X"})
+        assert stats["enriched"] == 0

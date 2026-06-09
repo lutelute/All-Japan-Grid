@@ -38,6 +38,77 @@ ENDPOINT_MARKER = "endpoint_matching"
 #: SOURCE_PRIORITY, above the legacy markers).
 AUDIT_SOURCE = "audit_fix"
 
+#: Source for DB-native reverse-geocoded display names (Nominatim). Distinct
+#: from the legacy 'nominatim'/'geocode_promotion' markers so re-ingest of
+#: raw OSM keeps it. The exported _name_source value stays 'geocoded'/'name:en'.
+GEOCODE_SOURCE = "geocode_db"
+
+
+def enrich_geocode(db: GridDatabase, region: str, layer: str,
+                   suffix: str, geocoder=None) -> Dict[str, int]:
+    """Reverse-geocode unnamed substations/plants into the C layer.
+
+    The DB-native form of ``enrich_substations_geocode`` /
+    ``enrich_plants_geocode``: for each feature with no effective name and
+    no ``_display_name``, fall back to ``name:en`` or a reverse-geocoded
+    ``{area}{suffix}`` (e.g. ``{area}変電所``), writing ``_display_name`` /
+    ``_name_source`` ``geocode_db`` enrichments instead of editing the
+    GeoJSON.
+
+    ``geocoder`` is a ``(lat, lon) -> address_dict`` callable — defaults to
+    the live Nominatim reverse-geocoder (network, 1.1 s/req rate limit, so
+    real runs belong on the server) and is injected as a stub in tests.
+    """
+    from scripts.enrich_substations_geocode import (
+        construct_name as _construct,
+        reverse_geocode as _default_geocoder,
+    )
+
+    geocoder = geocoder or _default_geocoder
+    # construct_name hard-codes 変電所; honour the requested suffix.
+    def name_from(addr):
+        n = _construct(addr)
+        return n[:-3] + suffix if n.endswith("変電所") else n
+
+    rows = []
+    total = enriched = 0
+    for fkey, props, geom in iter_composed(db, region, layer):
+        total += 1
+        if (props.get("name") or props.get("name:ja") or "").strip():
+            continue
+        if (props.get("_display_name") or "").strip():
+            continue
+
+        name_en = (props.get("name:en") or "").strip()
+        if name_en:
+            disp, src = name_en, "name:en"
+        else:
+            lat, lon = _centroid(geom)
+            if lat is None:
+                continue
+            disp = name_from(geocoder(lat, lon))
+            if not disp:
+                continue
+            src = "geocoded"
+
+        rows.append({"layer": layer, "region": region, "feature_key": fkey,
+                     "field": "_display_name", "value": disp,
+                     "source": GEOCODE_SOURCE})
+        rows.append({"layer": layer, "region": region, "feature_key": fkey,
+                     "field": "_name_source", "value": src,
+                     "source": GEOCODE_SOURCE})
+        enriched += 1
+
+    if rows:
+        apply_enrichments(db, rows, run_id=f"enrich_geocode_{layer}")
+    return {"total": total, "enriched": enriched}
+
+
+def _centroid(geom):
+    """(lat, lon) of a Point/Polygon/MultiPolygon geometry, or (None, None)."""
+    from scripts.enrich_substations_geocode import get_centroid
+    return get_centroid({"geometry": geom, "properties": {}})
+
 
 def apply_audit_fixes(db: GridDatabase, regions=None) -> Dict[str, int]:
     """Clear Category-C substation tag errors into the C layer (audit --fix).
