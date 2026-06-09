@@ -369,6 +369,9 @@ open http://localhost:8000
 
 ## Future Work — Complementary Data Sources / 今後の展望 — 補完データソース
 
+> **📐 戦略計画 / Strategic plan:** All-Japan-Grid を日本の電力業界の
+> 継続的資産へ育てる5本柱の計画は **[docs/VISION.md](docs/VISION.md)** を参照。
+
 To build a usable electrical model, this geographic topology needs to be combined with:
 実用的な電力系統モデルを構築するには、本地理トポロジを以下のデータと組み合わせる必要があります:
 
