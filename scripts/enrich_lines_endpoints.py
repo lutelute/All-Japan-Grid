@@ -58,6 +58,57 @@ OPERATOR_NORMALIZE = {
 _MAX_ENDPOINT_DISTANCE_KM = 50.0
 
 
+def assign_line_name(props, coords, candidates, name_to_operator,
+                     regional_utility, region_ja, fallback_seq):
+    """Compute the endpoint-based name for one unnamed line.
+
+    Pure naming algorithm shared by the GeoJSON enricher
+    (:func:`enrich_region`) and the DB-native enricher
+    (:func:`src.db.enrich.enrich_lines_endpoints`), so both produce
+    identical names. Returns
+    ``(name, operator_or_None, name_source, new_fallback_seq)`` where
+    ``operator_or_None`` is the inferred operator to set (or ``None`` to
+    leave the line's operator unchanged).
+    """
+    # GeoJSON coordinates are [lon, lat]
+    start_lon, start_lat = float(coords[0][0]), float(coords[0][1])
+    end_lon, end_lat = float(coords[-1][0]), float(coords[-1][1])
+
+    from_name = to_name = ""
+    from_operator = to_operator = ""
+    if candidates:
+        from_id, _ = find_nearest_point(
+            start_lat, start_lon, candidates, _MAX_ENDPOINT_DISTANCE_KM)
+        to_id, _ = find_nearest_point(
+            end_lat, end_lon, candidates, _MAX_ENDPOINT_DISTANCE_KM)
+        if from_id:
+            from_name = from_id
+            from_operator = name_to_operator.get(from_id, "")
+        if to_id:
+            to_name = to_id
+            to_operator = name_to_operator.get(to_id, "")
+
+    # Infer operator if the line has none.
+    set_operator = None
+    line_operator = (props.get("operator") or "").strip()
+    if line_operator:
+        line_operator = normalize_operator(line_operator)
+    else:
+        line_operator = from_operator or to_operator or regional_utility
+        if line_operator:
+            set_operator = line_operator
+
+    if from_name and to_name and from_name != to_name:
+        return f"{from_name}~{to_name}線", set_operator, "endpoints", fallback_seq
+    voltage_kv = parse_voltage_kv(props.get("voltage"))
+    if line_operator and voltage_kv > 0:
+        return (f"{line_operator} {voltage_kv}kV線", set_operator,
+                "operator_voltage", fallback_seq)
+    fallback_seq += 1
+    return (f"{region_ja}送電線_{fallback_seq}", set_operator,
+            "regional_fallback", fallback_seq)
+
+
 def _load_regional_utility(region):
     """Load the regional utility name from config/regions.yaml."""
     try:
@@ -190,66 +241,11 @@ def enrich_region(region):
         if len(coords) < 2:
             continue
 
-        # GeoJSON coordinates are [lon, lat]
-        start_lon, start_lat = float(coords[0][0]), float(coords[0][1])
-        end_lon, end_lat = float(coords[-1][0]), float(coords[-1][1])
-
-        # Match endpoints to nearest substations
-        from_name = ""
-        to_name = ""
-        from_operator = ""
-        to_operator = ""
-
-        if candidates:
-            from_id, from_dist = find_nearest_point(
-                start_lat, start_lon, candidates, _MAX_ENDPOINT_DISTANCE_KM
-            )
-            to_id, to_dist = find_nearest_point(
-                end_lat, end_lon, candidates, _MAX_ENDPOINT_DISTANCE_KM
-            )
-
-            if from_id:
-                from_name = from_id
-                from_operator = name_to_operator.get(from_id, "")
-            if to_id:
-                to_name = to_id
-                to_operator = name_to_operator.get(to_id, "")
-
-        # Infer operator if line has none
-        line_operator = (props.get("operator") or "").strip()
-        if line_operator:
-            line_operator = normalize_operator(line_operator)
-        else:
-            # Infer from nearest substation operator
-            if from_operator:
-                line_operator = from_operator
-            elif to_operator:
-                line_operator = to_operator
-            else:
-                line_operator = regional_utility
-
-            if line_operator:
-                props["operator"] = line_operator
-
-        # Construct line name
-        constructed_name = ""
-        name_source = ""
-
-        if from_name and to_name and from_name != to_name:
-            # Primary: endpoint-based naming
-            constructed_name = f"{from_name}~{to_name}線"
-            name_source = "endpoints"
-        else:
-            # Fallback: operator + voltage or regional sequence
-            voltage_kv = parse_voltage_kv(props.get("voltage"))
-            if line_operator and voltage_kv > 0:
-                constructed_name = f"{line_operator} {voltage_kv}kV線"
-                name_source = "operator_voltage"
-            else:
-                fallback_seq += 1
-                constructed_name = f"{region_ja}送電線_{fallback_seq}"
-                name_source = "regional_fallback"
-
+        constructed_name, set_operator, name_source, fallback_seq = \
+            assign_line_name(props, coords, candidates, name_to_operator,
+                             regional_utility, region_ja, fallback_seq)
+        if set_operator:
+            props["operator"] = set_operator
         props["name"] = constructed_name
         props["_enriched_by"] = "endpoint_matching"
         props["_name_source"] = name_source

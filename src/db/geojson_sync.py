@@ -50,7 +50,8 @@ SOURCE_PRIORITY: Tuple[str, ...] = (
     "p03",
     "overpass",
     "jrp_lite",
-    "endpoint_matching",
+    "enrich_lines_endpoints",  # DB-native enricher (src.db.enrich)
+    "endpoint_matching",       # legacy marker (ingest-extracted)
     "geocode_promotion",
     "nominatim",
     "legacy_marker",
@@ -299,13 +300,15 @@ def ingest_geojson(
     return {"features": len(raw_rows), "curated_rows": len(enr_rows)}
 
 
-def export_geojson(
+def iter_composed(
     db: GridDatabase, region: str, layer: str
-) -> Dict[str, Any]:
-    """Compose the D-layer FeatureCollection for one (region, layer).
+) -> List[Tuple[str, Dict[str, Any], Any]]:
+    """Composed features for one (region, layer), in original file order.
 
-    Features come back in original file order (``seq``); the collection
-    envelope (``name``, ``crs``) is restored from the latest snapshot.
+    Returns a list of ``(feature_key, properties, geometry)`` tuples — the
+    raw ⟕ enrichments effective view, keyed by feature identity so a
+    DB-native enricher (:mod:`src.db.enrich`) can write its results back to
+    the right feature. Used internally by :func:`export_geojson`.
     """
     with db.session_factory() as session:
         raw = (
@@ -328,6 +331,28 @@ def export_geojson(
             .scalars()
             .all()
         )
+    by_key: Dict[str, List[Enrichment]] = {}
+    for row in enr:
+        by_key.setdefault(row.feature_key, []).append(row)
+    return [
+        (
+            r.feature_key,
+            compose_properties(json.loads(r.tags), by_key.get(r.feature_key, ())),
+            json.loads(r.geometry),
+        )
+        for r in raw
+    ]
+
+
+def export_geojson(
+    db: GridDatabase, region: str, layer: str
+) -> Dict[str, Any]:
+    """Compose the D-layer FeatureCollection for one (region, layer).
+
+    Features come back in original file order (``seq``); the collection
+    envelope (``name``, ``crs``) is restored from the latest snapshot.
+    """
+    with db.session_factory() as session:
         snap = (
             session.execute(
                 select(Snapshot)
@@ -340,19 +365,9 @@ def export_geojson(
             .first()
         )
 
-    by_key: Dict[str, List[Enrichment]] = {}
-    for row in enr:
-        by_key.setdefault(row.feature_key, []).append(row)
-
     features = [
-        {
-            "type": "Feature",
-            "properties": compose_properties(
-                json.loads(r.tags), by_key.get(r.feature_key, ())
-            ),
-            "geometry": json.loads(r.geometry),
-        }
-        for r in raw
+        {"type": "Feature", "properties": props, "geometry": geom}
+        for _key, props, geom in iter_composed(db, region, layer)
     ]
 
     if snap is not None and snap.collection_meta:
