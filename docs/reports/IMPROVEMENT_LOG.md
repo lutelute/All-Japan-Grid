@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-10 — **Fable 5** — frequency-first化と公式系統図PDFでの検証（⑭）
+
+- **ユーザー指摘が両方向の誤りを発見**: 地図監査(`output/diagnostics/freq_filter_audit_chubu.png`)で
+  (a)東電運用×`frequency=60`タグ7本(長野混在地帯)の**誤除外**、(b)非TSO×`frequency=50`の
+  **除外漏れ75本**(J-POWER佐久間東幹線・佐久間FC連絡線・JR饋線=60Hz網への偽融合)、
+  (c)`frequency=0`(飛騨信濃DC等)のAC線扱い、を特定
+- **修正**(`a401886`): `_freq_excluded` — **OSM frequencyタグを第一証拠**に
+  (地域一致→保持、`50;60`=FC連絡は両側帰属、`0`=DC→AC網から除外、不一致→除外)、
+  operator推定はタグ無しのみ。chubu vm **0.912→0.970**
+- **公式系統図PDFで裏付け**(ユーザー指示「PDFでできるのであれば」): 東電・実績系統図
+  (2024-07-29 15時断面、転載禁止につきPDF/切抜はdata/external=非追跡)を400dpiレンダ+
+  日本語OCR(tesseract)で照合。**佐久間東幹線(↓340MW)・佐久間西幹線(↓350MW)が東電50Hz基幹として
+  実在、佐久間FCは新豊根佐久間線経由(当該断面1MW)** — chubuからの除外+tokyoモデル帰属+
+  FC=注入点というAGJの構造が公式図と一致
+- 残課題: 長野混在地帯7本の最終確定は中部PG系統図側との突合(東電図は275kV+のため対象外電圧)
+
 ## 2026-06-10 — **Fable 5** — 周波数不一致TSO設備の除外: chubu vm 0.76→0.91（⑬）
 
 - **診断**: ⑪後にchubuの公開vm_minを支配していた0.76の電圧降下は、**伊豆半島の東電(50Hz)設備が
