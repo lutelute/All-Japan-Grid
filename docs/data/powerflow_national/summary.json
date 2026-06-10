@@ -1,15 +1,16 @@
 {
   "hokkaido": {
     "island": "hokkaido",
-    "ac_converged": true,
-    "dc_converged": true,
+    "ac_converged": false,
+    "dc_converged": false,
     "ac_vm_min": NaN,
     "ac_vm_max": NaN,
     "n_buses": 799,
     "n_components": 16,
     "n_synthetic_lines": 26,
     "n_shunt_comp": 580,
-    "topology": "national_zonal"
+    "topology": "national_zonal",
+    "note": "zonal slice withheld: supply-reachability bug leaves 758/799 buses unsolved (NaN); regional view is correct. See IMPROVEMENT_LOG 2026-06-11 (25)."
   },
   "tohoku": {
     "island": "east",
@@ -111,7 +112,7 @@
     "island": "okinawa",
     "ac_converged": true,
     "dc_converged": true,
-    "ac_vm_min": 0.9233,
+    "ac_vm_min": 0.9255,
     "ac_vm_max": 1.01,
     "n_buses": 88,
     "n_components": 4,
