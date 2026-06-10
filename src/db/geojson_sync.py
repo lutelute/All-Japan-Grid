@@ -304,8 +304,21 @@ def ingest_geojson(
         )
         for i in range(0, len(raw_rows), _INSERT_CHUNK):
             session.execute(insert(RawFeature), raw_rows[i : i + _INSERT_CHUNK])
+        # Marker-derived rows (_src: transport) can duplicate non-legacy
+        # rows this ingest deliberately PRESERVED above (e.g. p03_db) —
+        # upsert instead of blind insert so re-ingesting a marker-bearing
+        # derived file is idempotent.
+        from sqlalchemy.dialects.sqlite import insert as sqlite_insert
         for i in range(0, len(enr_rows), _INSERT_CHUNK):
-            session.execute(insert(Enrichment), enr_rows[i : i + _INSERT_CHUNK])
+            stmt = sqlite_insert(Enrichment).values(
+                enr_rows[i : i + _INSERT_CHUNK])
+            session.execute(stmt.on_conflict_do_update(
+                index_elements=["layer", "region", "feature_key",
+                                "field", "source"],
+                set_={"value": stmt.excluded.value,
+                      "confidence": stmt.excluded.confidence,
+                      "run_id": stmt.excluded.run_id,
+                      "updated_at": stmt.excluded.updated_at}))
         session.add(
             Snapshot(
                 snapshot_id=snapshot_id,
@@ -432,8 +445,17 @@ def verify_roundtrip(
         problems.append(
             f"feature count {len(orig_feats)} != {len(exp_feats)}"
         )
+    def _effective(feat):
+        # _src: fields are provenance TRANSPORT (DB_ARCHITECTURE §6), not
+        # content — equivalence is judged on the effective view, so a
+        # marker-bearing derived file round-trips clean against a
+        # marker-less export and vice versa.
+        props = {k: v for k, v in (feat.get("properties") or {}).items()
+                 if not k.startswith("_src:")}
+        return {**feat, "properties": props}
+
     for i, (a, b) in enumerate(zip(orig_feats, exp_feats)):
-        if a != b:
+        if _effective(a) != _effective(b):
             problems.append(f"feature[{i}] differs")
             if len(problems) >= max_report:
                 problems.append("… (further diffs suppressed)")

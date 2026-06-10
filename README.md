@@ -60,7 +60,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 
 - 📏 **Externally validated against utility ground truth — a first.** The model is now scored
   against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:
-  corridor-usage rank correlation **Spearman ρ = 0.707** (55 trunk lines, p=1.6e-09),
+  corridor-usage rank correlation **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09),
   substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
   [docs/reports/](docs/reports/) and the full source survey in
   [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
@@ -70,7 +70,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   (region-aware cut: ≥154 kV mainland, 66 kV floor for hokkaido whose grid IS its 66 kV
   layer) gives the cleaner planning view with generator Q-limits enforced
   (`ajgrid solve <region> [--backbone]`). The interior flow correlation (boundary
-  corridors measured-conditioned and excluded) is **ρ = 0.659**.
+  corridors measured-conditioned and excluded) is **ρ = 0.721**.
 - 🏗 **Multi-voltage substations + evidence-based connectivity.** One bus per voltage class with
   intra-substation transformers (cross-voltage LINES are no longer swallowed — kansai recovers
   +759 real lines); OSM `circuits`/`cables` tags drive parallel counts; corridor voltage
@@ -79,6 +79,11 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 - 🔌 **Merit-order dispatch & boundary imports.** Fuel-specific capacity factors replace uniform
   scaling, and OCCTO interconnection flows are injected at regional boundaries (a regional slice
   is not an island) — both adopted because they measurably improved the TEPCO flow correlation.
+- 🗄 **`data/*.geojson` are now DB-derived artifacts.** The unified database
+  (`ajgrid db ingest` → `data/grid.db`) is the source of truth; the published GeoJSON is
+  regenerated from it with per-field provenance markers (`"_src:capacity_mw": "p03_db"`),
+  so authoritative values (国土数値情報 P03) ride in the public files WITHOUT breaking the
+  mechanical-update loop — re-ingest preserves their sources (regression-pinned).
 - 🧭 **OSM case studies** ([docs/reports/](docs/reports/2026-06-10_fable5_osm_case_studies.md)):
   kansai (map density ≠ electrical usability), hokuriku (attribute gaps break connectivity),
   tokyo (attachment correctness is the residual) — measured teaching examples for OSM-based
