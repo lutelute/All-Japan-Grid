@@ -542,6 +542,13 @@ def balance_power(net, demand_config):
     reserve_margin = demand_config.get("reserve_margin", 0.05)
     target_gen = active_load * (1 + reserve_margin)
 
+    # Boundary imports (sgen injections) supply part of the demand, so
+    # local dispatch only covers the remainder. Boundary exports are
+    # loads and therefore already inside active_load.
+    if len(net.sgen) > 0:
+        sgen_mw = float(net.sgen.loc[net.sgen["in_service"], "p_mw"].sum())
+        target_gen = max(target_gen - sgen_mw, 0.0)
+
     if len(net.gen) > 0:
         # Disable generators on out-of-service buses
         inactive_buses = set(net.bus.index[~net.bus["in_service"]])

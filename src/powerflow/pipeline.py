@@ -64,7 +64,7 @@ def add_reactive_compensation(net, factor=0.6):
 
 def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
-                    load_spatial="none"):
+                    load_spatial="none", boundary_imports=True):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -80,6 +80,10 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
             layer onto the >= backbone_kv backbone before load allocation
             (see transforms.reduce_to_backbone) — the AC-solvable backbone
             model that sidesteps the proven ill-conditioned OSM sub-grid.
+        boundary_imports: inject the OCCTO interconnections' typical flows
+            at the region's boundary substations (a regional slice is not
+            an electrical island; see src.powerflow.boundary). Local
+            dispatch then covers load minus imports.
     """
     snap_geom = None
     if topology == "snapped":
@@ -124,6 +128,11 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         net.load.loc[mask, "in_service"] = False
         total_load = net.load[net.load["in_service"]]["p_mw"].sum()
 
+    boundary_info = None
+    if boundary_imports:
+        from src.powerflow.boundary import apply_boundary_imports
+        boundary_info = apply_boundary_imports(net, region)
+
     balance_power(net, demand_cfg)
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, factor=reactive)
@@ -162,6 +171,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         "n_shunt_comp": n_shunt,
         "topology": topology,
         "backbone": backbone_info,
+        "boundary": boundary_info,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }
