@@ -64,11 +64,13 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
   [docs/reports/](docs/reports/) and the full source survey in
   [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
-- ⚡ **AC-solvable backbone model — all 10 regions converge natively at full demand.**
-  `reduce_to_backbone` aggregates the (proven ill-conditioned) OSM sub-grid onto the ≥154 kV
-  backbone with BFS generator aggregation; kansai solves at its full 22,833 MW (previously
-  ×0.3-0.4 demand-scaled only), vm ≥ 0.92 everywhere, generator Q-limits enforced
-  (`ajgrid solve <region> --backbone`).
+- ⚡ **AC convergence without demand scaling — all 10 regions, both models.** The FULL
+  regional model (sub-grid included) now solves natively everywhere — kansai at its full
+  22,833 MW (previously ×0.3-0.4 demand-scaled only) — and the `--backbone` reduction
+  (region-aware cut: ≥154 kV mainland, 66 kV floor for hokkaido whose grid IS its 66 kV
+  layer) gives the cleaner planning view with generator Q-limits enforced
+  (`ajgrid solve <region> [--backbone]`). The interior flow correlation (boundary
+  corridors measured-conditioned and excluded) is **ρ = 0.659**.
 - 🏗 **Multi-voltage substations + evidence-based connectivity.** One bus per voltage class with
   intra-substation transformers (cross-voltage LINES are no longer swallowed — kansai recovers
   +759 real lines); OSM `circuits`/`cables` tags drive parallel counts; corridor voltage
@@ -170,28 +172,31 @@ exports the *connected, solved* network with shared `ConnectivityNode`s,
 `SynchronousMachine`s and a slack `ExternalNetworkInjection`. The round-trip
 through pandapower `cim2pp` is **electrically identical** to the solved
 network (parallel circuits, switching states and km lengths preserved;
-regression-tested) and **`runpp` converges in all 10 regions** — 8 natively,
-with the two ill-conditioned regions shipped as balanced demand-scaled cases
-(hokuriku x0.8, kansai x0.3 — generation redispatched to match; see
-[docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)).
+regression-tested) and **`runpp` converges in all 10 regions** (v1.4.0
+assets: 6 natively, 4 as x0.8 balanced demand-scaled cases — see
+[docs/CIM_MAPPING.md](docs/CIM_MAPPING.md); the in-repo model itself now
+solves all 10 regions natively, see the figure below).
 
 **Level 2 — 求解可能な潮流ケース:** `scripts/export_cim_level2.py` が接続済み・
 求解済みネットワークを EQ/TP/SSH/SV/GL で出力します。エクスポートは並列回線・開閉状態・
 km長を保持し、pandapower `cim2pp` での往復後も**元のネットワークと電気的に同一**
-（回帰テスト済み）。**全10地域で潮流が収束**します（8地域はそのまま、悪条件の
-hokuriku は x0.8、kansai は x0.3 の需給整合済み需要スケールケースとして提供）。
+（回帰テスト済み）。**全10地域で潮流が収束**します（v1.4.0資産: 6地域はそのまま、
+4地域は x0.8 の需給整合済みケース。リポジトリ内モデル自体は下図のとおり全10地域が無補正収束）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_cim_national_pf.png" alt="CIM/CGMES Level 2 national power-flow" width="62%">
 </p>
 
-> ~13,700 buses across **all 10 regions**, each bus coloured by its AC-solved
-> voltage (pu). 9 regions solve natively; kansai is demand-scaled (×0.4) to
-> converge over its synthetic sub-154 kV network and is **labelled as such** on
-> the figure — a solvability expedient, not an operational result. Regenerate
-> with `python scripts/gen_cim_national_pf.py`. /
-> 全10地域の母線を AC 電圧(pu)で色分け。9地域は無補正、kansai のみ需要 ×0.4 で収束
-> （図に明記）。合成パラメータ上の便宜であり運用値ではない。
+> **14,647 buses across all 10 regions, every region solved natively in AC —
+> no demand scaling** (since 2026-06: multi-voltage substations, generator
+> Q-limits, voltage propagation, frequency-aware slice membership and boundary
+> imports retired the former kansai ×0.4 expedient). Bus colour = AC-solved
+> voltage (pu). Parameters remain synthetic per-class typicals, so this is a
+> topological/electrical consistency result, not an operational study.
+> Regenerate with `python scripts/gen_cim_national_pf.py`. /
+> 全10地域 14,647 母線を AC 電圧(pu)で色分け。**全地域が需要スケール無しで収束**
+> （2026-06 の累積改善で旧 kansai ×0.4 便宜を撤廃）。パラメータは合成典型値のため、
+> 運用値ではなく整合性の結果。
 
 Both levels ship as zipped [GitHub Release v1.3.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0) assets
 (`all_japan_grid_cim_L1.zip` ≈31 MB, `all_japan_grid_cim_L2.zip` ≈13 MB),
@@ -327,7 +332,7 @@ OSM が提供するのは送電網の **地理的** 骨格です。実用的な�
 4. **Japanese name normalization / 日本語名称の正規化** — `変電所`, `発電所`, `開閉所` have multiple orthographies (kanji/kana/abbreviation). Fuzzy matching is essential.
 5. **Null diversity / Null値の多様性** — OSM features may have `voltage=null`, `voltage=""`, `voltage="yes"`, or no voltage tag at all. Robust parsing must handle all cases.
 6. **Regional scope & name resolution / 地域スコープと名称解決** — The same substation name can appear in multiple regions. Name-based matching must be scoped to the correct region.
-7. **AC power flow on OSM topology produces physically meaningless results / OSMトポロジでの交流潮流計算は物理的に無意味** — Without proper impedance data, generator dispatch, and demand allocation, power flow output is numerical noise, not engineering insight.
+7. **AC power flow on OSM topology is a consistency tool, not an operational study / OSMトポロジの交流潮流は整合性検証の道具であり運用解析ではない** — With synthetic per-class impedances, CF-based dispatch and allocated demand, the solved flows now rank-correlate with utility measurements (interior Spearman ρ≈0.66 vs TEPCO, 2026-06) — useful for topology/consistency work and teaching, but absolute MW/voltage values are NOT operational results until authoritative parameters (Pillar 3) replace the typicals.
 
 ### Known Data Quality Issues — Substation / Plant Classification / データ品質の既知の問題 — 変電所・発電所の分類混在
 
