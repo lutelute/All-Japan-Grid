@@ -434,7 +434,8 @@ def _split_demand_by_region(
 def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     """Select and configure the MIP solver backend.
 
-    Prefers HiGHS_CMD when available, falling back to PULP_CBC_CMD.
+    Prefers HiGHS via the highspy Python API, then the HiGHS CLI binary
+    (HiGHS_CMD), falling back to PULP_CBC_CMD.
     Applies time limit and MIP gap settings from UCParameters.
 
     Args:
@@ -454,12 +455,19 @@ def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     if params.solver_options:
         solver_kwargs.update(params.solver_options)
 
-    # Try HiGHS first if requested
+    # Try HiGHS first if requested: highspy API, then CLI binary
     if params.solver_name.upper() in ("HIGHS", "HIGHS_CMD"):
+        try:
+            solver = pulp.HiGHS(**solver_kwargs)
+            if solver.available():
+                logger.info("Using HiGHS solver (highspy API)")
+                return solver
+        except Exception:
+            pass
         try:
             solver = pulp.HiGHS_CMD(**solver_kwargs)
             if solver.available():
-                logger.info("Using HiGHS solver")
+                logger.info("Using HiGHS solver (CLI)")
                 return solver
         except Exception:
             logger.info("HiGHS solver not available, trying CBC fallback")

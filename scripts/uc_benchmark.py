@@ -35,8 +35,13 @@ def _detect_effective_solver() -> str:
     import pulp
 
     try:
+        if hasattr(pulp, "HiGHS") and pulp.HiGHS(msg=False).available():
+            return "highs(api)"
+    except Exception:
+        pass
+    try:
         if hasattr(pulp, "HiGHS_CMD") and pulp.HiGHS_CMD().available():
-            return "highs"
+            return "highs(cli)"
     except Exception:
         pass
     return "cbc"
