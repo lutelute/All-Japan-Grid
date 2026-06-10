@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — 設計+高度化+高性能化+資産化の一括前進（㉓）
+
+- **資産化①: `_src:`per-fieldマーカー=#10核心機構**(`48e5196`, 設計=DB_ARCHITECTURE§6):
+  `export --markers`で全enrichment勝者フィールドに来歴を併記→**焼込→再ingestでsource=p03_db保全**
+  を回帰pin(test_provenance_roundtrip)。公開GeoJSONが自己記述化し、**#8(P03公開反映)のブロッカー解除**。
+  物理分離(a案)は不採用と設計確定(b案=DB正本+マーカー派生)
+- **資産化②**: CITATION.cff(引用可能データセット化)
+- **高度化**: `demand_config_from_occto(quantile)` — 地域需要をOCCTO実測(median/p95/max)へ
+  差し替え可能に(load_factor=1.0、由来をconfigに記録)
+- **高性能化**: `--jobs N`並列sweep — 全地域solved backbone **~170s→24.5s(7倍)**、AC 10/10不変
+- 953 passed
+
 ## 2026-06-11 — **Fable 5** — DB直読み=VISION step5達成+再現性レシピ（㉒）
 
 - **ユーザー方針**「再現できるように。DBとなっているといい」→ **潮流パイプラインが
