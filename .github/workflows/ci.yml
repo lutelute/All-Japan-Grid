@@ -1,0 +1,37 @@
+# CI: the 940+ test suite on every push/PR — the regression pins
+# (topology KPIs, power-flow physics, validators) now gate merges
+# instead of relying on a local pytest habit.
+#
+# The slow 10-region solved sweep stays opt-in (AJGRID_SLOW_TESTS=1,
+# several minutes) and is exercised by the weekly scheduled run.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 21 * * 0"   # weekly (Mon 06:00 JST): includes the slow sweep
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Fast suite (regression pins)
+        if: github.event_name != 'schedule'
+        run: python -m pytest -q
+      - name: Full suite incl. 10-region solved sweep (weekly)
+        if: github.event_name == 'schedule'
+        env:
+          AJGRID_SLOW_TESTS: "1"
+        run: python -m pytest -q

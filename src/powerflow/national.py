@@ -27,6 +27,7 @@ from __future__ import annotations
 import math
 import os
 import sys
+from collections import defaultdict
 
 import yaml
 
@@ -101,6 +102,55 @@ def _find_tie_bus(net, region, sub_name, target_centroid, voltage_kv):
     return best.id
 
 
+def stitch_slice_boundaries(net, cell=0.001):
+    """Fuse cross-region duplicates at slice boundaries (in place).
+
+    The regional OSM slices overlap, so a corridor crossing a boundary
+    exists in BOTH member networks — but each region builds its own
+    buses (``tokyo_jct_37.38:140.80:500`` vs ``tohoku_jct_...``), so the
+    merged island stayed electrically cut at every boundary except the
+    explicitly named OCCTO ties. This fuses, across DIFFERENT regions
+    only, buses of the same voltage class within ``cell`` degrees
+    (~110 m): the canonical survivor is a real substation when present
+    (else the first junction); line endpoints and generator connections
+    are rewired and duplicate buses dropped.
+
+    Returns the number of buses fused away.
+    """
+    groups = defaultdict(list)
+    for s in net.substations:
+        if s.latitude is None or s.longitude is None:
+            continue
+        key = (round(s.latitude / cell), round(s.longitude / cell),
+               float(s.voltage_kv or 0))
+        groups[key].append(s)
+
+    remap = {}
+    for members in groups.values():
+        if len(members) < 2 or len({m.region for m in members}) < 2:
+            continue   # duplicates within one region are intentional (#N)
+        canonical = next((m for m in members if "_jct_" not in m.id),
+                         members[0])
+        for m in members:
+            if m.id != canonical.id:
+                remap[m.id] = canonical.id
+    if not remap:
+        return 0
+
+    for ln in net.transmission_lines:
+        ln.from_substation_id = remap.get(ln.from_substation_id,
+                                          ln.from_substation_id)
+        ln.to_substation_id = remap.get(ln.to_substation_id,
+                                        ln.to_substation_id)
+    for g in net.generators:
+        g.connected_bus_id = remap.get(g.connected_bus_id, g.connected_bus_id)
+
+    net.substations[:] = [s for s in net.substations if s.id not in remap]
+    for dead in remap:
+        net._substation_index.pop(dead, None)
+    return len(remap)
+
+
 def build_island_networks(snap_km=1.5):
     """Build per-region snapped nets, merge into synchronous islands, add AC ties.
 
@@ -127,6 +177,9 @@ def build_island_networks(snap_km=1.5):
         for r in members:
             net.merge(reg_net[r])
             geom.update(reg_geom.get(r, {}))
+        # fuse the slice-boundary duplicates so cross-boundary corridors
+        # are electrically continuous, not parallel disconnected copies
+        n_stitched = stitch_slice_boundaries(net) if len(members) > 1 else 0
         # region centroids within this island
         cents = {r: _region_centroid(net, r) for r in members}
 
@@ -164,6 +217,7 @@ def build_island_networks(snap_km=1.5):
         islands[island_id] = {
             "net": net, "geom": geom, "regions": members,
             "frequency": freq, "tie_lines": added,
+            "n_stitched": n_stitched,
         }
     return islands, async_links
 
