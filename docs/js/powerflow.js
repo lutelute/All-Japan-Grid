@@ -30,6 +30,8 @@
         showGrid: true,
         showLines: true,
         showBuses: true,
+        otherFreqLayer: null,   // other-frequency reference overlay (not solved)
+        showOtherFreq: false,
     };
 
     // ── Real-route tier config (500/275 kV loaded eagerly; lower kV on demand) ──
@@ -370,6 +372,45 @@
                 updatePFLayerVisibility();
             });
         }
+        var ofCb = document.getElementById("pf-layer-otherfreq");
+        if (ofCb) {
+            ofCb.addEventListener("change", function () {
+                pfState.showOtherFreq = this.checked;
+                if (pfState.showOtherFreq && !pfState.otherFreqLayer && pfState.region) {
+                    loadOtherFreqLayer(pfState.region);
+                }
+                updatePFLayerVisibility();
+            });
+        }
+    }
+
+    // Other-frequency equipment physically present in the region slice but
+    // belonging to the other synchronous system (e.g. TEPCO 50 Hz lines on
+    // the Izu peninsula inside the 60 Hz chubu slice). Shown as a dashed
+    // reference overlay — deliberately NOT part of the AC solve.
+    async function loadOtherFreqLayer(region) {
+        if (!window.map) return;
+        try {
+            var r = await fetch("./data/powerflow/" + region +
+                                "_other_freq_lines.geojson?v=" + Date.now());
+            if (!r.ok) return;
+            var data = await r.json();
+            if (!data.features || !data.features.length) return;
+            pfState.otherFreqLayer = L.geoJSON(data, {
+                style: { color: "#888888", weight: 1.3, opacity: 0.8,
+                         dashArray: "6 5" },
+                onEachFeature: function (f, layer) {
+                    var pr = f.properties || {};
+                    layer.bindPopup(
+                        "<b>" + (pr.name || "(unnamed)") + "</b><br>" +
+                        "operator: " + (pr.operator || "?") + "<br>" +
+                        "voltage: " + (pr.voltage || "?") +
+                        "  frequency: " + (pr.frequency || "(untagged)") + "<br>" +
+                        "<i>" + (pr.note || "") + "</i>");
+                },
+            });
+            if (pfState.showOtherFreq) window.map.addLayer(pfState.otherFreqLayer);
+        } catch (e) { /* reference layer is best-effort */ }
     }
 
     function updatePFLayerVisibility() {
@@ -397,6 +438,14 @@
                 window.map.addLayer(pfState.arrowLayer);
             } else if (!pfState.showLines && window.map.hasLayer(pfState.arrowLayer)) {
                 window.map.removeLayer(pfState.arrowLayer);
+            }
+        }
+        // Other-frequency reference overlay
+        if (pfState.otherFreqLayer) {
+            if (pfState.showOtherFreq && !window.map.hasLayer(pfState.otherFreqLayer)) {
+                window.map.addLayer(pfState.otherFreqLayer);
+            } else if (!pfState.showOtherFreq && window.map.hasLayer(pfState.otherFreqLayer)) {
+                window.map.removeLayer(pfState.otherFreqLayer);
             }
         }
         // Bus layer
@@ -464,6 +513,7 @@
 
             // Show base grid background for this region
             showBaseGrid(region);
+            if (pfState.showOtherFreq) loadOtherFreqLayer(region);
 
             renderPFLayers(busData, lineData, mode);
             showResults(region, mode, info, true);
@@ -1137,6 +1187,10 @@
         if (pfState.arrowLayer && window.map) {
             window.map.removeLayer(pfState.arrowLayer);
             pfState.arrowLayer = null;
+        }
+        if (pfState.otherFreqLayer && window.map) {
+            window.map.removeLayer(pfState.otherFreqLayer);
+            pfState.otherFreqLayer = null;
         }
         removeRouteLayers();
     }
