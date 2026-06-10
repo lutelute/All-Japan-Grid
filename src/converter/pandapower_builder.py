@@ -243,6 +243,12 @@ class PandapowerBuilder:
                 vn_kv=sub.voltage_kv,
                 name=sub.name,
                 geodata=sub.geodata,
+                # pandapower bus semantics: 'b' = busbar (a real substation,
+                # a delivery point), 'n' = node (an auxiliary connection
+                # point). Synthetic junction buses from the vertex-snap
+                # builder are tap points on a line, not substations — typing
+                # them 'n' lets load allocation skip them.
+                type="n" if "_jct_" in sub.id else "b",
             )
 
             # Set zone after creation (not a create_bus parameter)

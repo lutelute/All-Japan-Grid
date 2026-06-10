@@ -137,3 +137,32 @@ def test_balance_power_uniform_without_fuel_types():
     balance_power(net, {"reserve_margin": 0.05})
     assert float(net.gen.at[0, "p_mw"]) == pytest.approx(float(net.gen.at[1, "p_mw"]))
     assert float(net.gen["p_mw"].sum()) == pytest.approx(1050.0, rel=1e-6)
+
+
+def test_junction_buses_receive_no_load():
+    """Vertex-snap junctions are tap points, not delivery substations:
+    the builder types them 'n' and load allocation skips them (measured:
+    okinawa full-model vm 0.647 -> 0.923 once mid-span demand was gone)."""
+    from src.converter.pandapower_builder import PandapowerBuilder
+    from src.model.grid_network import GridNetwork
+    from src.model.substation import Substation
+    from src.model.transmission_line import TransmissionLine
+    from tests.conftest import make_substation, make_transmission_line
+
+    nw = GridNetwork(region="shikoku", frequency_hz=60)
+    nw.add_substation(make_substation(id="s1"))
+    nw.add_substation(make_substation(
+        id="shikoku_jct_33.9:133.5", name="shikoku junction", voltage_kv=275.0))
+    nw.add_transmission_line(make_transmission_line(
+        id="l1", from_substation_id="s1",
+        to_substation_id="shikoku_jct_33.9:133.5"))
+    net = PandapowerBuilder().build(nw).net
+    assert net.bus.at[0, "type"] == "b"
+    assert net.bus.at[1, "type"] == "n"
+
+    cfg = {"regional_peak_demand_mw": {"shikoku": 100.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {275: 1.0}}
+    total = estimate_loads(net, "shikoku", demand_config=cfg)
+    assert total == pytest.approx(100.0)
+    loaded_types = net.load["bus"].map(net.bus["type"])
+    assert (loaded_types == "b").all()      # all demand on real substations

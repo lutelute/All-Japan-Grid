@@ -174,13 +174,14 @@ def _estimate_loads_national(
     buses_with_loads = _get_buses_with_loads(net) if skip_existing else set()
 
     # Group buses by zone
+    delivery = set(_delivery_buses(net))
     for zone, group in net.bus.groupby("zone"):
         peak_mw = peak_demands.get(zone, 0)
         if peak_mw <= 0:
             continue
 
         target_mw = peak_mw * load_factor
-        bus_indices = group.index.tolist()
+        bus_indices = [b for b in group.index if b in delivery]
 
         # Filter out buses with existing loads and adjust target
         if skip_existing and buses_with_loads:
@@ -208,6 +209,22 @@ def _estimate_loads_national(
     return total_allocated
 
 
+def _delivery_buses(net: Any) -> list:
+    """Bus indices eligible for synthetic load: real substations only.
+
+    Junction buses (vertex-snap tap points) are typed 'n' by the builder
+    — they are points ON a line, not delivery substations, so allocating
+    regional demand to them put load in mid-span and dragged corridor
+    voltages down artificially. Nets without the type convention (all
+    'b' / legacy builders) are unaffected.
+    """
+    if "type" in net.bus.columns:
+        mask = net.bus["type"] != "n"
+        if mask.any():                  # never empty the candidate set
+            return net.bus.index[mask].tolist()
+    return net.bus.index.tolist()
+
+
 def _allocate_bus_loads(
     net: Any,
     target_mw: float,
@@ -216,12 +233,12 @@ def _allocate_bus_loads(
     skip_existing: bool = False,
     spatial_factors: Dict[int, float] | None = None,
 ) -> float:
-    """Allocate *target_mw* across **all** (or eligible) buses in *net*.
+    """Allocate *target_mw* across the delivery (substation) buses.
 
     When *skip_existing* is ``True``, buses that already have loads
     attached are excluded from the allocation.
     """
-    bus_indices = net.bus.index.tolist()
+    bus_indices = _delivery_buses(net)
 
     if skip_existing:
         buses_with_loads = _get_buses_with_loads(net)
