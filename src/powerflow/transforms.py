@@ -216,19 +216,18 @@ def select_slack_bus(net):
                 gen_at_bus[bus] = gen_at_bus.get(bus, 0) + active_gens.at[gen_idx, "p_mw"]
 
     # Score: heavily weight voltage level and connectivity, plus generation
-    # Candidates are restricted to the component currently holding
-    # ext_grid[0]: the vn-dominated score (500 kV >> 66 kV) used to move
-    # the MAIN slack onto a high-voltage bus in some tiny fragment,
-    # stranding the largest component entirely — hokkaido's 66 kV main
-    # mesh (758 buses) was left slack-less and solved as NaN while the
-    # NaN-skipping vm stats reported "converged, vm 1.000" over the 41
-    # supplied buses (ledger 2026-06-11 entry 25/26).
+    # The MAIN slack belongs in the LARGEST component (the vn-dominated
+    # score used to move it onto a high-voltage bus in a tiny fragment,
+    # stranding hokkaido's 758-bus main mesh as NaN — ledger 25/26; and
+    # restricting to the *current* component instead pinned tokyo's
+    # slack inside a fragment and collapsed its flow pattern, rho
+    # 0.72 -> 0.34 — ledger 27). So: pick the best bus WITHIN the
+    # largest component, then repair every other component so the move
+    # can never strand one.
     allowed = None
-    if len(net.ext_grid) > 0:
-        cur = int(net.ext_grid.at[net.ext_grid.index[0], "bus"])
-        mg = top.create_nxgraph(net, respect_switches=False)
-        if cur in mg:
-            allowed = nx.node_connected_component(mg, cur)
+    mg = top.create_nxgraph(net, respect_switches=False)
+    if mg.number_of_nodes():
+        allowed = max(nx.connected_components(mg), key=len)
 
     best_bus = None
     best_score = -1
@@ -246,6 +245,21 @@ def select_slack_bus(net):
 
     if best_bus is not None and len(net.ext_grid) > 0:
         net.ext_grid.at[net.ext_grid.index[0], "bus"] = best_bus
+        # repair: the move may have taken a fragment's ONLY slack — give
+        # every viable slack-less component its own (same rule as
+        # fix_topology's multi_slack pass)
+        eg_buses = set(net.ext_grid.loc[net.ext_grid["in_service"], "bus"].astype(int))
+        for comp in nx.connected_components(mg):
+            if len(comp) < 2 or comp & eg_buses:
+                continue
+            slack_bus = None
+            if not net.gen.empty:
+                gens = net.gen[net.gen["bus"].isin(comp) & net.gen["in_service"]]
+                if not gens.empty:
+                    slack_bus = int(gens.sort_values("max_p_mw", ascending=False).iloc[0]["bus"])
+            if slack_bus is None:
+                slack_bus = int(next(iter(comp)))
+            pp.create_ext_grid(net, bus=slack_bus, vm_pu=1.0, name="comp_slack")
 
     return best_bus
 
