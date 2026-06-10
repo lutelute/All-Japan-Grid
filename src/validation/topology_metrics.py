@@ -118,6 +118,7 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
     circuit_km = 0.0
     conn_kinds = Counter()
     circuit_evidence = Counter()
+    kv_provenance = Counter()
     for ln in net.transmission_lines:
         kv = float(ln.voltage_kv or 0)
         if kv <= 0:
@@ -136,6 +137,8 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
                 conn_kinds["-".join(sorted(part[5:].split("-")))] += 1
             elif part.startswith("circuits="):
                 circuit_evidence[part[9:]] += 1
+            elif part.startswith("kv="):
+                kv_provenance[part[3:]] += 1
 
     n_branches = len(net.transmission_lines)
     return {
@@ -156,6 +159,7 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
         "circuit_km": round(circuit_km, 1),
         "conn_kinds": dict(conn_kinds),
         "circuit_evidence": dict(circuit_evidence),
+        "kv_provenance": dict(kv_provenance),
         "evidenced_circuit_share": round(
             (circuit_evidence["tag"] + circuit_evidence["cables"])
             / max(sum(circuit_evidence.values()), 1), 4),

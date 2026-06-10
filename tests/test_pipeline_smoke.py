@@ -35,18 +35,19 @@ def test_build_info_shape(okinawa_solved):
     # parallel counts, 2.5 km terminal snap radius, fixed 20 km plant
     # lookup (gens 16 -> 22).
     assert info["topology"] == "snapped"
-    assert info["n_buses"] == 94
-    assert info["n_lines"] == 83
+    assert info["n_buses"] == 91
+    assert info["n_lines"] == 81
     assert info["n_gens"] == 22
-    assert info["n_trafos"] == 16
+    assert info["n_trafos"] == 15
 
 
 def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 94
+    assert len(net_ac.bus) == 91
     vmin = float(net_ac.res_bus.vm_pu.min())
-    # 0.814 measured: the better-connected full model exposes honest sags
-    # on remote spurs (the backbone product model sits at 0.999)
-    assert 0.80 < vmin <= 1.05
+    # 0.647 measured: voltage propagation typed the northern 66 kV spur
+    # that previously hid at an inferred higher class — honest sag on an
+    # uncompensated radial (the backbone product model sits at 1.006)
+    assert 0.60 < vmin <= 1.05

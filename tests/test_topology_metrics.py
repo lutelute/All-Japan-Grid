@@ -45,11 +45,14 @@ def test_okinawa_builder_pins(okinawa_topo):
     # snap radius reattaches yard-fence gaps (junctions 22 -> 16,
     # components 14 -> 11); the widened _SubIndex search ring fixed the
     # silent ~3 km cap on the 20 km big-plant lookup (gens 16 -> 22).
+    # phase-10c: corridor voltage propagation types untagged segments from
+    # their unique neighbouring class (unknown 3.3% -> 1.1%), which also
+    # merges former @u buses into their classes (75 real subs, 87 branches).
     m = okinawa_topo
     assert m["builder"] == "snapped"
-    assert m["n_real_subs"] == 78
+    assert m["n_real_subs"] == 75
     assert m["n_junctions"] == 16
-    assert m["n_branches"] == 90
+    assert m["n_branches"] == 87
     assert m["n_gens"] == 22
     assert m["n_components"] == 11
     assert m["multi_circuit_branches"] == 32
@@ -59,9 +62,12 @@ def test_okinawa_builder_pins(okinawa_topo):
 def test_okinawa_quality_floors(okinawa_topo):
     m = okinawa_topo
     assert m["largest_comp_share"] >= 0.80
-    assert m["unknown_kv_share"] <= 0.05
+    assert m["unknown_kv_share"] <= 0.03
     # circuits/cables tags must keep driving the parallel counts
     assert m["evidenced_circuit_share"] >= 0.40
+    # voltage provenance: propagation active, tags still dominate
+    assert m["kv_provenance"].get("prop", 0) >= 1
+    assert m["kv_provenance"]["tag"] > m["kv_provenance"].get("prop", 0)
 
 
 def test_okinawa_tag_coverage():
@@ -81,11 +87,18 @@ def test_okinawa_solved_quality():
     # pipeline deliberately does NOT fabricate >5 km sea-strait bridges —
     # real islands are solved in place via multi_slack.
     assert s["n_components"] == 4
-    assert s["synthetic_rate"] <= 0.12       # 2026-06 phase-4: 9/83 = 10.8%
-    # full-model okinawa sags to 0.814 with the better-connected topology
-    # (newly attached remote spurs pull honest voltage drops); the backbone
-    # model — the AC product — sits at 0.999
-    assert 0.80 < s["ac_vm_min"] <= 1.05
+    assert s["synthetic_rate"] <= 0.13       # phase-10c: 9/81 = 11.1%
+    # full-model okinawa sags to 0.647: voltage propagation typed the
+    # northern 66 kV spur (喜瀬/松田) that previously hid at an inferred
+    # higher class — honest physics on a long uncompensated radial. The
+    # AC product is the backbone model, asserted at >= 0.95 below.
+    assert 0.60 < s["ac_vm_min"] <= 1.05
+
+
+def test_okinawa_backbone_product_quality():
+    s = solved_metrics("okinawa", backbone_kv=154.0)
+    assert s["dc_converged"] is True and s["ac_converged"] is True
+    assert s["ac_vm_min"] >= 0.95            # measured 1.006 (2026-06-10)
 
 
 # ── quality floors on a second (mid-size) region ─────────────────────────────
