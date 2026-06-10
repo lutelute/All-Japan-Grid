@@ -33,6 +33,7 @@ from src.powerflow.transforms import (
     fix_zero_voltages,
     insert_transformers,
     prune_dc_infeasible,
+    reduce_to_backbone,
     scale_line_ratings,
     select_slack_bus,
 )
@@ -61,7 +62,7 @@ def add_reactive_compensation(net, factor=0.6):
 
 
 def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6,
-                    snap_km=1.5, vertex_prec=4):
+                    snap_km=1.5, vertex_prec=4, backbone_kv=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -72,6 +73,10 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reac
             labelled synthetic lines (recon_line_*) via the reconstruction
             module before solving, so the solved network is fully connected
             instead of silently disabling islands.
+        backbone_kv: when set (e.g. 154.0), aggregate the sub-transmission
+            layer onto the >= backbone_kv backbone before load allocation
+            (see transforms.reduce_to_backbone) — the AC-solvable backbone
+            model that sidesteps the proven ill-conditioned OSM sub-grid.
     """
     snap_geom = None
     if topology == "snapped":
@@ -88,6 +93,10 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reac
 
     fix_zero_voltages(net)
     n_trafos = insert_transformers(net)
+
+    backbone_info = None
+    if backbone_kv:
+        backbone_info = reduce_to_backbone(net, min_kv=backbone_kv)
 
     # Residual reconnection: bridge genuine gaps with labelled synthetic lines
     # (named recon_line_*) instead of letting fix_topology disable the islands.
@@ -148,6 +157,7 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reac
         "n_synthetic_lines": n_synthetic,
         "n_shunt_comp": n_shunt,
         "topology": topology,
+        "backbone": backbone_info,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }

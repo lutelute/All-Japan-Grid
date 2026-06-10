@@ -53,12 +53,16 @@ def cmd_solve(args, _rest):
 
     result = build_and_solve(
         args.region, load_demand_config(),
-        topology=args.topology, reconnect=args.reconnect)
+        topology=args.topology, reconnect=args.reconnect,
+        backbone_kv=args.backbone)
     if result is None:
         print(f"{args.region}: no network (missing data?)")
         return 1
     _dc, dc_res, net_ac, ac_res, info, _geom = result
-    print(f"{args.region} [{info['topology']}]: "
+    bb = info.get("backbone")
+    tag = (f"{info['topology']}, backbone>={bb['effective_min_kv']:.0f}kV"
+           if bb and bb.get("reduced") else info["topology"])
+    print(f"{args.region} [{tag}]: "
           f"{info['n_buses']} buses, {info['n_lines']} lines, "
           f"{info['n_gens']} gens, {info['n_trafos']} trafos, "
           f"{info['n_components']} components")
@@ -127,6 +131,10 @@ def build_parser():
     s.add_argument("region")
     s.add_argument("--topology", choices=["legacy", "snapped"], default="snapped")
     s.add_argument("--reconnect", action="store_true")
+    s.add_argument("--backbone", nargs="?", const=154.0, type=float, default=None,
+                   metavar="KV",
+                   help="aggregate sub-transmission onto the >=KV backbone "
+                        "(default 154; the AC-solvable backbone model)")
     s.set_defaults(func=cmd_solve)
 
     sub.add_parser(

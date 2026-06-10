@@ -294,6 +294,104 @@ def fix_topology(net, multi_slack=False):
     return diag
 
 
+def reduce_to_backbone(net, min_kv=154.0, min_keep_buses=20):
+    """Aggregate the sub-transmission layer onto the >= ``min_kv`` backbone.
+
+    The OSM sub-transmission layer (66-132 kV) is the *proven* root cause
+    of AC non-convergence (docs/WEST_AC_ANALYSIS.md: kansai converges with
+    no-trafo or hv>=154 — 539 ill-conditioned transformers with voltage
+    ratios up to 20 make the Jacobian singular). Rather than fighting that
+    layer with numerical workarounds, this transform produces the honest
+    backbone model:
+
+    - buses with vn_kv >= min_kv are kept;
+    - generators on dropped buses are re-attached to the kept bus their
+      sub-network actually hangs from (multi-source BFS from the boundary
+      buses through the dropped subgraph), so generation capacity is
+      aggregated, not lost;
+    - dropped buses / lines / trafos are removed BEFORE load allocation,
+      so the regional demand is distributed across the backbone buses —
+      the sub-network's demand arrives aggregated at the backbone instead
+      of vanishing.
+
+    If the cut would leave fewer than ``min_keep_buses`` (okinawa's highest
+    class is 132 kV), the threshold steps down one voltage class at a time;
+    the effective threshold is reported so callers can disclose it.
+
+    Returns a summary dict (effective_min_kv, kept/dropped counts, gens
+    moved / unreachable).
+    """
+    classes = sorted({float(v) for v in net.bus["vn_kv"] if v > 0}, reverse=True)
+    if not classes:
+        return {"effective_min_kv": 0.0, "n_dropped_buses": 0,
+                "n_gens_moved": 0, "n_gens_lost": 0, "reduced": False}
+
+    eff_kv = float(min_kv)
+    while True:
+        kept = set(net.bus.index[net.bus["vn_kv"] >= eff_kv])
+        if len(kept) >= min_keep_buses or eff_kv <= classes[-1]:
+            break
+        lower = [c for c in classes if c < eff_kv]
+        eff_kv = lower[0] if lower else classes[-1]
+
+    dropped = set(net.bus.index) - kept
+    if not dropped:
+        return {"effective_min_kv": eff_kv, "n_dropped_buses": 0,
+                "n_gens_moved": 0, "n_gens_lost": 0, "reduced": False}
+
+    # Adjacency over lines + trafos (the boundary trafos are exactly how the
+    # sub-network hangs from the backbone — BFS through them finds the
+    # electrically correct aggregation bus).
+    adj = {}
+    def _link(a, b):
+        adj.setdefault(a, set()).add(b)
+        adj.setdefault(b, set()).add(a)
+    for _, row in net.line.iterrows():
+        _link(int(row["from_bus"]), int(row["to_bus"]))
+    for _, row in net.trafo.iterrows():
+        _link(int(row["hv_bus"]), int(row["lv_bus"]))
+
+    # Multi-source BFS: every dropped bus gets the nearest kept boundary bus.
+    anchor = {}
+    frontier = []
+    for k in kept:
+        for nb in adj.get(int(k), ()):
+            if nb in dropped and nb not in anchor:
+                anchor[nb] = int(k)
+                frontier.append(nb)
+    while frontier:
+        nxt = []
+        for b in frontier:
+            for nb in adj.get(b, ()):
+                if nb in dropped and nb not in anchor:
+                    anchor[nb] = anchor[b]
+                    nxt.append(nb)
+        frontier = nxt
+
+    n_moved = n_lost = 0
+    if len(net.gen) > 0:
+        for gi in net.gen.index:
+            b = int(net.gen.at[gi, "bus"])
+            if b in dropped:
+                if b in anchor:
+                    net.gen.at[gi, "bus"] = anchor[b]
+                    n_moved += 1
+                else:
+                    # sub-network component with no path to the backbone —
+                    # dropping is the honest outcome (counted, not hidden)
+                    net.gen.at[gi, "in_service"] = False
+                    n_lost += 1
+
+    pp.drop_buses(net, list(dropped))
+
+    return {"effective_min_kv": eff_kv,
+            "n_dropped_buses": len(dropped),
+            "n_kept_buses": len(kept),
+            "n_gens_moved": n_moved,
+            "n_gens_lost": n_lost,
+            "reduced": True}
+
+
 def prune_dc_infeasible(net, angle_threshold=45.0):
     """After DC power flow, remove lines/trafos with extreme angle differences.
 

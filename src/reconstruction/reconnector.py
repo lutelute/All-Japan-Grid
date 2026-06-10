@@ -810,7 +810,11 @@ class Reconnector:
             return
 
         Ybus = internal["Ybus"]
-        if not isinstance(Ybus, sparse.csc_matrix):
+        if not sparse.issparse(Ybus):
+            # pandapower hands back a dense ndarray for very small nets
+            # (surfaced by backbone-reduced regions); normalise to sparse.
+            Ybus = sparse.csc_matrix(Ybus)
+        elif not isinstance(Ybus, sparse.csc_matrix):
             Ybus = Ybus.tocsc()
 
         result.ybus_shape = Ybus.shape

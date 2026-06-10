@@ -150,20 +150,24 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
 
 
 def solved_metrics(region: str, topology: str = "snapped",
-                   reconnect: bool = True) -> dict | None:
+                   reconnect: bool = True, backbone_kv: float | None = None) -> dict | None:
     """Delivered-model KPIs: run the full build_and_solve pipeline.
 
     ``synthetic_rate`` = reconnector-fabricated branches / total solved
     branches — the price paid for n_components=1. Honest topology
     improvements reduce it; anything that *raises* it is hiding new
     fragmentation behind fabrication.
+
+    ``backbone_kv`` measures the backbone model instead (sub-transmission
+    aggregated away; see transforms.reduce_to_backbone).
     """
     from src.powerflow.load_estimator import load_demand_config
     from src.powerflow.pipeline import build_and_solve
 
     t0 = time.time()
     result = build_and_solve(region, load_demand_config(),
-                             topology=topology, reconnect=reconnect)
+                             topology=topology, reconnect=reconnect,
+                             backbone_kv=backbone_kv)
     if result is None:
         return None
     _net_dc, dc_res, net_ac, ac_res, info, _geom = result
@@ -184,6 +188,8 @@ def solved_metrics(region: str, topology: str = "snapped",
         "ac_converged": bool(ac_res.get("converged")),
         "solve_s": round(time.time() - t0, 2),
     }
+    if info.get("backbone"):
+        out["backbone"] = info["backbone"]
     if ac_res.get("converged"):
         out.update({
             "ac_vm_min": round(ac_res.get("vm_pu_min", 0.0), 4),
@@ -199,18 +205,21 @@ def solved_metrics(region: str, topology: str = "snapped",
 
 def gather(regions, solve: bool = False, builder: str = "snapped",
            snap_km: float = 1.5, data_dir: str | None = None,
-           progress=None) -> list[dict]:
+           backbone_kv: float | None = None, progress=None) -> list[dict]:
     """Compute all KPI levels for each region; returns one row per region."""
     rows = []
     for region in regions:
         if progress:
             progress(region)
         row = {"region": region, "snap_km": snap_km}
+        if backbone_kv:
+            row["backbone_kv"] = backbone_kv
         row["tags"] = tag_coverage(region, data_dir=data_dir)
         row["topology"] = topology_metrics(region, builder=builder,
                                            snap_km=snap_km, data_dir=data_dir)
         if solve:
-            row["solved"] = solved_metrics(region, topology=builder)
+            row["solved"] = solved_metrics(region, topology=builder,
+                                           backbone_kv=backbone_kv)
         rows.append(row)
     return rows
 
@@ -290,13 +299,15 @@ def main(argv=None):
                     help="also run build_and_solve (synthetic rate, AC/DC)")
     ap.add_argument("--builder", choices=["snapped", "legacy"], default="snapped")
     ap.add_argument("--snap-km", type=float, default=1.5)
+    ap.add_argument("--backbone", nargs="?", const=154.0, type=float, default=None,
+                    metavar="KV", help="measure the >=KV backbone model instead")
     ap.add_argument("--json", help="write the full report to this path")
     ap.add_argument("--baseline", help="compare against a previous --json report")
     args = ap.parse_args(argv)
 
     regions = list(REGIONS) if (args.all or not args.regions) else args.regions
     rows = gather(regions, solve=args.solve, builder=args.builder,
-                  snap_km=args.snap_km,
+                  snap_km=args.snap_km, backbone_kv=args.backbone,
                   progress=lambda r: print(f"  ... {r}", file=sys.stderr))
 
     print(render(rows))
