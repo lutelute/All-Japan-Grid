@@ -51,6 +51,33 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline Flow" width="100%">
 </p>
 
+### v1.4.0 Highlights (unreleased, 2026-06)
+
+- 📏 **Externally validated against utility ground truth — a first.** The model is now scored
+  against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:
+  corridor-usage rank correlation **Spearman ρ = 0.707** (55 trunk lines, p=1.6e-09),
+  substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
+  [docs/reports/](docs/reports/) and the full source survey in
+  [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
+- ⚡ **AC-solvable backbone model — all 10 regions converge natively at full demand.**
+  `reduce_to_backbone` aggregates the (proven ill-conditioned) OSM sub-grid onto the ≥154 kV
+  backbone with BFS generator aggregation; kansai solves at its full 22,833 MW (previously
+  ×0.3-0.4 demand-scaled only), vm ≥ 0.92 everywhere, generator Q-limits enforced
+  (`ajgrid solve <region> --backbone`).
+- 🏗 **Multi-voltage substations + evidence-based connectivity.** One bus per voltage class with
+  intra-substation transformers (cross-voltage LINES are no longer swallowed — kansai recovers
+  +759 real lines); OSM `circuits`/`cables` tags drive parallel counts; corridor voltage
+  propagation types untagged segments (unknown-voltage branches: kansai 25→8%); every branch
+  carries connection provenance (`conn=`, `circuits=`, `kv=`).
+- 🔌 **Merit-order dispatch & boundary imports.** Fuel-specific capacity factors replace uniform
+  scaling, and OCCTO interconnection flows are injected at regional boundaries (a regional slice
+  is not an island) — both adopted because they measurably improved the TEPCO flow correlation.
+- 🧭 **OSM case studies** ([docs/reports/](docs/reports/2026-06-10_fable5_osm_case_studies.md)):
+  kansai (map density ≠ electrical usability), hokuriku (attribute gaps break connectivity),
+  tokyo (attachment correctness is the residual) — measured teaching examples for OSM-based
+  grid modelling, with per-model improvement ledger in
+  [docs/reports/IMPROVEMENT_LOG.md](docs/reports/IMPROVEMENT_LOG.md).
+
 ### v1.3.0 Highlights
 
 - ✅ **CIM / CGMES Level 2 — electrically faithful & more native solves.** Corrected parallel-circuit counting and unified voltage parsing make the cim2pp round-trip electrically identical to the solved network, and lift **chubu & kyushu to native convergence**: **8 of 10 regions now solve natively** (hokuriku x0.8, kansai x0.3 as balanced demand-scaled cases). All 10 verify OK.

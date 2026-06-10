@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-10 — **Fable 5** — 公開反映: ライブマップに②〜⑩を一括デプロイ（⑩A）
+
+- `regen_powerflow_snapped.sh` で全10地域を再生成→A/B確認→promote。READMEにv1.4.0節
+- **公開ページ上の改善**（A/B実測、deployed→staged）:
+  - **関西AC: 非収束(vm=0)→0.901で収束** — 公開マップ最大の修正
+  - 東京DC角度 [-158°,63°]→[-58°,15°]（物理化）/ vm改善: 東北0.88→0.96・四国0.83→0.92・
+    北海道0.81→0.91・中国0.91→0.93 / アクティブバス全地域増（多電圧+端点回復の反映）
+  - 正直化の開示: 沖縄vm 0.96→0.65（66kVスパーの正しい型付けで隠れていた降下が表示される）
+- 注: ライブマップはfullモデル（地域詳細）。AC製品=backboneモデルはCLI/レポート側
+  （`ajgrid solve <region> --backbone`）
+
 ## 2026-06-10 — **Fable 5** — 回廊電圧伝播: 電圧不明枝を全国で半減〜1/3（⑩C）
 
 - **変更**: `build_network_snapped(propagate_voltage=True)` — 無タグ線は、その頂点群が出会う

@@ -5,24 +5,39 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 60.2,
-    "ac_vm_min": 0.8069,
-    "ac_vm_max": 1.0041,
-    "dc_va_min": -27.1,
-    "dc_va_max": 18.2,
-    "dc_max_loading": 95.7,
-    "ac_max_loading": 109.0,
-    "n_buses": 706,
-    "n_lines": 634,
-    "n_gens": 285,
-    "n_trafos": 183,
-    "n_active_buses": 704,
-    "n_components": 7,
-    "n_synthetic_lines": 34,
-    "n_shunt_comp": 704,
+    "ac_loss_mw": 59.4,
+    "ac_vm_min": 0.9056,
+    "ac_vm_max": 1.0322,
+    "dc_va_min": -1.8,
+    "dc_va_max": 27.0,
+    "dc_max_loading": 94.0,
+    "ac_max_loading": 83.7,
+    "n_buses": 818,
+    "n_lines": 835,
+    "n_gens": 350,
+    "n_trafos": 115,
+    "n_active_buses": 815,
+    "n_components": 11,
+    "n_synthetic_lines": 27,
+    "n_shunt_comp": 815,
     "topology": "snapped",
-    "total_load_mw": 3050.3788712466594,
-    "total_gen_mw": 3202.8978148089923
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_001": {
+          "mw": -450.0,
+          "bus_names": [
+            "JR北海道 新函館変電所 187kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 0.0,
+      "export_mw": 450.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 3047.2570794003323,
+    "total_gen_mw": 3672.119933370349
   },
   "tohoku": {
     "name_ja": "東北",
@@ -30,24 +45,46 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 234.2,
-    "ac_vm_min": 0.8837,
-    "ac_vm_max": 1.0319,
-    "dc_va_min": -32.4,
-    "dc_va_max": 58.4,
-    "dc_max_loading": 134.7,
-    "ac_max_loading": 134.9,
-    "n_buses": 1608,
-    "n_lines": 1405,
-    "n_gens": 818,
-    "n_trafos": 541,
-    "n_active_buses": 1599,
-    "n_components": 19,
-    "n_synthetic_lines": 117,
-    "n_shunt_comp": 1599,
+    "ac_loss_mw": 168.8,
+    "ac_vm_min": 0.959,
+    "ac_vm_max": 1.0601,
+    "dc_va_min": -20.4,
+    "dc_va_max": 38.6,
+    "dc_max_loading": 99.3,
+    "ac_max_loading": 120.8,
+    "n_buses": 1889,
+    "n_lines": 1952,
+    "n_gens": 1063,
+    "n_trafos": 351,
+    "n_active_buses": 1879,
+    "n_components": 23,
+    "n_synthetic_lines": 131,
+    "n_shunt_comp": 1879,
     "topology": "snapped",
-    "total_load_mw": 10984.856879039702,
-    "total_gen_mw": 11534.09972299169
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_001": {
+          "mw": 450.0,
+          "bus_names": [
+            "上北変電所 500kV"
+          ],
+          "method": "name"
+        },
+        "ic_002": {
+          "mw": -3330.0,
+          "bus_names": [
+            "南相馬変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 450.0,
+      "export_mw": 3330.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 10985.791940018746,
+    "total_gen_mw": 14581.581537019687
   },
   "tokyo": {
     "name_ja": "東京",
@@ -55,24 +92,52 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 2332.4,
-    "ac_vm_min": 0.7786,
-    "ac_vm_max": 1.0088,
-    "dc_va_min": -158.1,
-    "dc_va_max": 62.8,
-    "dc_max_loading": 270.9,
-    "ac_max_loading": 604.9,
-    "n_buses": 2954,
-    "n_lines": 2674,
-    "n_gens": 5151,
-    "n_trafos": 931,
-    "n_active_buses": 2952,
-    "n_components": 10,
-    "n_synthetic_lines": 210,
-    "n_shunt_comp": 2952,
+    "ac_loss_mw": 987.6,
+    "ac_vm_min": 0.7962,
+    "ac_vm_max": 1.033,
+    "dc_va_min": -58.3,
+    "dc_va_max": 15.1,
+    "dc_max_loading": 136.6,
+    "ac_max_loading": 212.2,
+    "n_buses": 3409,
+    "n_lines": 3568,
+    "n_gens": 6484,
+    "n_trafos": 785,
+    "n_active_buses": 3407,
+    "n_components": 11,
+    "n_synthetic_lines": 238,
+    "n_shunt_comp": 3407,
     "topology": "snapped",
-    "total_load_mw": 44177.65158881413,
-    "total_gen_mw": 46386.534168254846
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_002": {
+          "mw": 3330.0,
+          "bus_names": [
+            "tokyo junction 37.3806:140.8018:500",
+            "tokyo junction 37.1431:140.719:500",
+            "tokyo junction 36.9935:139.8643:500",
+            "tokyo junction 37.4253:138.5981:500",
+            "安沢変電所 500kV",
+            "tokyo junction 36.8328:139.6699:500"
+          ],
+          "method": "position(6 corridors)"
+        },
+        "ic_003": {
+          "mw": 630.0,
+          "bus_names": [
+            "tokyo junction 36.1354:137.884:500",
+            "東清水変電所 275kV"
+          ],
+          "method": "fc-site(2 converters)"
+        }
+      },
+      "import_mw": 3960.0,
+      "export_mw": 0.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 44179.24732736203,
+    "total_gen_mw": 42428.20969373013
   },
   "chubu": {
     "name_ja": "中部",
@@ -80,24 +145,55 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 325.4,
-    "ac_vm_min": 0.8707,
-    "ac_vm_max": 1.0098,
-    "dc_va_min": -42.6,
-    "dc_va_max": 33.9,
-    "dc_max_loading": 100.0,
-    "ac_max_loading": 118.5,
-    "n_buses": 2777,
-    "n_lines": 2475,
-    "n_gens": 2809,
-    "n_trafos": 974,
-    "n_active_buses": 2774,
+    "ac_loss_mw": 397.9,
+    "ac_vm_min": 0.8565,
+    "ac_vm_max": 1.0737,
+    "dc_va_min": -40.7,
+    "dc_va_max": 38.7,
+    "dc_max_loading": 96.9,
+    "ac_max_loading": 141.7,
+    "n_buses": 3298,
+    "n_lines": 3421,
+    "n_gens": 3294,
+    "n_trafos": 676,
+    "n_active_buses": 3295,
     "n_components": 22,
-    "n_synthetic_lines": 225,
-    "n_shunt_comp": 2774,
+    "n_synthetic_lines": 190,
+    "n_shunt_comp": 3295,
     "topology": "snapped",
-    "total_load_mw": 20374.632708515637,
-    "total_gen_mw": 21393.36434394142
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_003": {
+          "mw": -630.0,
+          "bus_names": [
+            "松本市変電所_5 275kV",
+            "天竜区変電所 275kV",
+            "東清水変電所 275kV"
+          ],
+          "method": "fc-site(3 converters)"
+        },
+        "ic_004": {
+          "mw": -1265.0,
+          "bus_names": [
+            "東近江開閉所 500kV"
+          ],
+          "method": "name"
+        },
+        "ic_005": {
+          "mw": 760.0,
+          "bus_names": [
+            "加賀変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 760.0,
+      "export_mw": 1895.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 20379.44843218738,
+    "total_gen_mw": 22628.170853796746
   },
   "hokuriku": {
     "name_ja": "北陸",
@@ -105,49 +201,105 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 31.0,
-    "ac_vm_min": 0.9846,
-    "ac_vm_max": 1.0204,
-    "dc_va_min": -16.2,
-    "dc_va_max": 9.5,
-    "dc_max_loading": 98.2,
-    "ac_max_loading": 101.6,
-    "n_buses": 659,
-    "n_lines": 576,
-    "n_gens": 299,
-    "n_trafos": 214,
-    "n_active_buses": 658,
-    "n_components": 14,
-    "n_synthetic_lines": 63,
-    "n_shunt_comp": 658,
+    "ac_loss_mw": 37.9,
+    "ac_vm_min": 0.978,
+    "ac_vm_max": 1.1315,
+    "dc_va_min": -7.8,
+    "dc_va_max": 10.9,
+    "dc_max_loading": 93.1,
+    "ac_max_loading": 96.6,
+    "n_buses": 808,
+    "n_lines": 825,
+    "n_gens": 379,
+    "n_trafos": 154,
+    "n_active_buses": 807,
+    "n_components": 11,
+    "n_synthetic_lines": 51,
+    "n_shunt_comp": 807,
     "topology": "snapped",
-    "total_load_mw": 4413.882352941177,
-    "total_gen_mw": 4634.576470588236
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_005": {
+          "mw": -760.0,
+          "bus_names": [
+            "越前変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 0.0,
+      "export_mw": 760.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 4415.226781857451,
+    "total_gen_mw": 5433.988120950324
   },
   "kansai": {
     "name_ja": "関西",
     "dc_converged": true,
-    "ac_converged": false,
-    "ac_solver": "-",
+    "ac_converged": true,
+    "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 0,
-    "ac_vm_min": 0,
-    "ac_vm_max": 0,
-    "dc_va_min": -66.9,
-    "dc_va_max": 31.5,
-    "dc_max_loading": 123.3,
-    "ac_max_loading": 0,
-    "n_buses": 1673,
-    "n_lines": 1573,
-    "n_gens": 941,
-    "n_trafos": 493,
-    "n_active_buses": 1664,
-    "n_components": 14,
-    "n_synthetic_lines": 226,
-    "n_shunt_comp": 1664,
+    "ac_loss_mw": 518.2,
+    "ac_vm_min": 0.9012,
+    "ac_vm_max": 1.0347,
+    "dc_va_min": -34.7,
+    "dc_va_max": 26.0,
+    "dc_max_loading": 99.5,
+    "ac_max_loading": 519.3,
+    "n_buses": 2062,
+    "n_lines": 2170,
+    "n_gens": 1163,
+    "n_trafos": 364,
+    "n_active_buses": 2054,
+    "n_components": 15,
+    "n_synthetic_lines": 196,
+    "n_shunt_comp": 2054,
     "topology": "snapped",
-    "total_load_mw": 22806.849684275374,
-    "total_gen_mw": 23947.19216848914
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_004": {
+          "mw": 1265.0,
+          "bus_names": [
+            "関ケ原町変電所 500kV"
+          ],
+          "method": "name"
+        },
+        "ic_006": {
+          "mw": 1636.0,
+          "bus_names": [
+            "kansai junction 34.9501:134.3733:500",
+            "kansai junction 35.2081:134.1883:500",
+            "kansai junction 34.0:134.4078:500",
+            "kansai junction 34.8644:134.4251:500",
+            "kansai junction 34.9732:134.5657:500",
+            "山崎開閉所 500kV",
+            "阿南発電所 (Anan Power Station) 500kV",
+            "開閉所",
+            "kansai junction 35.2366:134.8555:500",
+            "由良開閉所 500kV",
+            "kansai junction 34.9605:135.0939:500",
+            "御坊市変電所 500kV",
+            "梅谷変電所 500kV"
+          ],
+          "method": "position(13 corridors)"
+        },
+        "ic_007": {
+          "mw": 700.0,
+          "bus_names": [
+            "紀北変換所"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 3601.0,
+      "export_mw": 0.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 22841.68851599371,
+    "total_gen_mw": 20382.772941793395
   },
   "chugoku": {
     "name_ja": "中国",
@@ -155,24 +307,66 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 116.6,
-    "ac_vm_min": 0.906,
-    "ac_vm_max": 1.0049,
-    "dc_va_min": -35.9,
-    "dc_va_max": 14.5,
-    "dc_max_loading": 99.9,
-    "ac_max_loading": 99.4,
-    "n_buses": 1275,
-    "n_lines": 1135,
-    "n_gens": 597,
-    "n_trafos": 395,
-    "n_active_buses": 1274,
-    "n_components": 13,
-    "n_synthetic_lines": 137,
-    "n_shunt_comp": 1274,
+    "ac_loss_mw": 115.3,
+    "ac_vm_min": 0.9339,
+    "ac_vm_max": 1.0807,
+    "dc_va_min": -16.9,
+    "dc_va_max": 21.0,
+    "dc_max_loading": 99.8,
+    "ac_max_loading": 119.3,
+    "n_buses": 1479,
+    "n_lines": 1496,
+    "n_gens": 821,
+    "n_trafos": 267,
+    "n_active_buses": 1478,
+    "n_components": 14,
+    "n_synthetic_lines": 113,
+    "n_shunt_comp": 1478,
     "topology": "snapped",
-    "total_load_mw": 8917.803870187465,
-    "total_gen_mw": 9363.69406369684
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_006": {
+          "mw": -1636.0,
+          "bus_names": [
+            "chugoku junction 35.0608:134.6025:500",
+            "chugoku junction 34.9732:134.5657:500",
+            "chugoku junction 34.8855:134.4324:500",
+            "長尾変電所_2 500kV",
+            "chugoku junction 34.6567:134.1472:500",
+            "開閉所 500kV",
+            "chugoku junction 33.8274:134.6343:500",
+            "阿波変電所 500kV",
+            "東岡山変電所 500kV",
+            "美馬市変電所 500kV",
+            "迫間変電所 500kV",
+            "讃岐変電所 500kV",
+            "昭和町二丁目変電所_2 500kV",
+            "菰池二丁目変電所 500kV"
+          ],
+          "method": "position(14 corridors)"
+        },
+        "ic_008": {
+          "mw": 240.0,
+          "bus_names": [
+            "水島変電所 110kV"
+          ],
+          "method": "name"
+        },
+        "ic_009": {
+          "mw": 1390.0,
+          "bus_names": [
+            "新山口変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 1630.0,
+      "export_mw": 1636.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 8918.710359408034,
+    "total_gen_mw": 9452.445877378434
   },
   "shikoku": {
     "name_ja": "四国",
@@ -180,24 +374,46 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 52.0,
-    "ac_vm_min": 0.8323,
-    "ac_vm_max": 1.0031,
-    "dc_va_min": -22.9,
-    "dc_va_max": 18.0,
-    "dc_max_loading": 97.3,
-    "ac_max_loading": 97.6,
-    "n_buses": 606,
-    "n_lines": 471,
-    "n_gens": 356,
-    "n_trafos": 187,
-    "n_active_buses": 602,
-    "n_components": 35,
-    "n_synthetic_lines": 35,
-    "n_shunt_comp": 602,
+    "ac_loss_mw": 26.9,
+    "ac_vm_min": 0.9212,
+    "ac_vm_max": 1.0325,
+    "dc_va_min": -13.3,
+    "dc_va_max": 0.0,
+    "dc_max_loading": 98.6,
+    "ac_max_loading": 140.4,
+    "n_buses": 667,
+    "n_lines": 629,
+    "n_gens": 496,
+    "n_trafos": 107,
+    "n_active_buses": 664,
+    "n_components": 28,
+    "n_synthetic_lines": 26,
+    "n_shunt_comp": 664,
     "topology": "snapped",
-    "total_load_mw": 4647.61432350718,
-    "total_gen_mw": 4879.99503968254
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_007": {
+          "mw": -700.0,
+          "bus_names": [
+            "阿南周波数変換所"
+          ],
+          "method": "name"
+        },
+        "ic_008": {
+          "mw": -240.0,
+          "bus_names": [
+            "讃岐変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 0.0,
+      "export_mw": 940.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 4657.496880014263,
+    "total_gen_mw": 5877.371724014977
   },
   "kyushu": {
     "name_ja": "九州",
@@ -205,24 +421,39 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 301.3,
-    "ac_vm_min": 0.8822,
-    "ac_vm_max": 1.0154,
-    "dc_va_min": -26.4,
-    "dc_va_max": 51.5,
-    "dc_max_loading": 125.5,
-    "ac_max_loading": 133.9,
-    "n_buses": 1392,
-    "n_lines": 1230,
-    "n_gens": 1374,
-    "n_trafos": 433,
-    "n_active_buses": 1387,
+    "ac_loss_mw": 401.0,
+    "ac_vm_min": 0.8744,
+    "ac_vm_max": 1.0755,
+    "dc_va_min": -23.2,
+    "dc_va_max": 55.6,
+    "dc_max_loading": 98.6,
+    "ac_max_loading": 111.1,
+    "n_buses": 1621,
+    "n_lines": 1644,
+    "n_gens": 1903,
+    "n_trafos": 299,
+    "n_active_buses": 1616,
     "n_components": 14,
-    "n_synthetic_lines": 157,
-    "n_shunt_comp": 1387,
+    "n_synthetic_lines": 147,
+    "n_shunt_comp": 1616,
     "topology": "snapped",
-    "total_load_mw": 13120.607299149535,
-    "total_gen_mw": 13776.637664107011
+    "backbone": null,
+    "boundary": {
+      "ics": {
+        "ic_009": {
+          "mw": -1390.0,
+          "bus_names": [
+            "北九州変電所 500kV"
+          ],
+          "method": "name"
+        }
+      },
+      "import_mw": 0.0,
+      "export_mw": 1390.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 13125.942061364312,
+    "total_gen_mw": 15241.73916443253
   },
   "okinawa": {
     "name_ja": "沖縄",
@@ -230,23 +461,30 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 32.0,
-    "ac_vm_min": 0.9636,
-    "ac_vm_max": 1.0,
-    "dc_va_min": -20.9,
-    "dc_va_max": 2.6,
-    "dc_max_loading": 96.3,
-    "ac_max_loading": 121.4,
-    "n_buses": 81,
-    "n_lines": 57,
-    "n_gens": 16,
-    "n_trafos": 25,
-    "n_active_buses": 78,
+    "ac_loss_mw": 65.2,
+    "ac_vm_min": 0.6468,
+    "ac_vm_max": 1.01,
+    "dc_va_min": -44.7,
+    "dc_va_max": 1.3,
+    "dc_max_loading": 90.2,
+    "ac_max_loading": 125.2,
+    "n_buses": 91,
+    "n_lines": 81,
+    "n_gens": 22,
+    "n_trafos": 15,
+    "n_active_buses": 88,
     "n_components": 4,
-    "n_synthetic_lines": 7,
-    "n_shunt_comp": 78,
+    "n_synthetic_lines": 9,
+    "n_shunt_comp": 88,
     "topology": "snapped",
-    "total_load_mw": 1306.0317460317458,
-    "total_gen_mw": 1371.3333333333335
+    "backbone": null,
+    "boundary": {
+      "ics": {},
+      "import_mw": 0.0,
+      "export_mw": 0.0,
+      "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
+    },
+    "total_load_mw": 1311.3126491646776,
+    "total_gen_mw": 1376.8782816229113
   }
 }
