@@ -64,7 +64,8 @@ def add_reactive_compensation(net, factor=0.6):
 
 def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
-                    load_spatial="none", boundary_imports=True):
+                    load_spatial="none", boundary_imports=True,
+                    boundary_util=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -131,7 +132,8 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     boundary_info = None
     if boundary_imports:
         from src.powerflow.boundary import apply_boundary_imports
-        boundary_info = apply_boundary_imports(net, region)
+        boundary_info = apply_boundary_imports(net, region,
+                                               utilisation=boundary_util)
 
     balance_power(net, demand_cfg)
     scale_line_ratings(net)

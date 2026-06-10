@@ -303,14 +303,61 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
 
     measured = tepco_flow_stats(csv_path, q=q)
 
-    result = build_and_solve(region, load_demand_config(), topology="snapped",
-                             reconnect=True, backbone_kv=backbone_kv,
-                             load_spatial=load_spatial)
-    if result is None:
-        raise FileNotFoundError(f"no network for region {region}")
-    net_dc, dc_res, _net_ac, _ac_res, _info, _geom = result
-    if not dc_res.get("converged"):
-        raise RuntimeError("DC did not converge")
+    def _solve(boundary_util=None):
+        result = build_and_solve(region, load_demand_config(),
+                                 topology="snapped", reconnect=True,
+                                 backbone_kv=backbone_kv,
+                                 load_spatial=load_spatial,
+                                 boundary_util=boundary_util)
+        if result is None:
+            raise FileNotFoundError(f"no network for region {region}")
+        net_dc, dc_res, *_ = result
+        if not dc_res.get("converged"):
+            raise RuntimeError("DC did not converge")
+        return net_dc
+
+    def _boundary_corridors(net_dc):
+        """Names of trunk lines that touch a boundary-injection bus."""
+        if len(net_dc.sgen) == 0:
+            return set()
+        bdry = set(net_dc.sgen.loc[
+            net_dc.sgen["name"].astype(str).str.startswith("boundary_"),
+            "bus"].astype(int))
+        out = set()
+        for idx in net_dc.line.index:
+            raw = str(net_dc.line.at[idx, "name"] or "")
+            if not raw or raw.startswith(f"{region}_line_"):
+                continue
+            if int(net_dc.line.at[idx, "from_bus"]) in bdry or \
+               int(net_dc.line.at[idx, "to_bus"]) in bdry:
+                for part in raw.split(";"):
+                    key = _norm(part)
+                    if key:
+                        out.add(key)
+        return out
+
+    # Pass 1 (planning utilisation): identify which measured lines are the
+    # boundary corridors themselves. Their MEASURED median flow then sets
+    # the interconnection's injected total — measured boundary conditions,
+    # standard practice. Since those corridors are thereby pinned to data,
+    # they are EXCLUDED from the correlation (interior-only validation).
+    net_dc = _solve()
+    corridors = _boundary_corridors(net_dc)
+    calib_util = None
+    matched_corridors = sorted(c for c in corridors if c in measured)
+    if matched_corridors:
+        typical = tepco_flow_stats(csv_path, q=0.5)
+        total = sum(typical.get(c, 0.0) for c in matched_corridors)
+        from src.powerflow.boundary import (
+            TYPICAL_UTILISATION, load_interconnections)
+        for ic in load_interconnections():
+            if region == ic.get("to_region") and ic.get("type") == "AC":
+                cap = float(ic.get("capacity_mw", 0) or 0)
+                if cap > 0 and total > 0:
+                    sign = 1.0 if TYPICAL_UTILISATION.get(ic["id"], 0) >= 0 else -1.0
+                    calib_util = {ic["id"]: sign * min(total / cap, 1.0)}
+        if calib_util:
+            net_dc = _solve(boundary_util=calib_util)
 
     operators = _load_operators(region, data_dir=data_dir)
     model: dict[str, float] = {}
@@ -333,7 +380,9 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
                 model[key] = max(model.get(key, 0.0), p)
 
     common = sorted(set(measured) & set(model))
-    pairs = [(measured[k], model[k]) for k in common]
+    # interior = matched lines that did NOT receive measured boundary
+    # conditions; only they constitute an honest test of the model
+    interior = [k for k in common if k not in corridors]
     out = {
         "region": region,
         "backbone_kv": backbone_kv,
@@ -342,21 +391,29 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
         "n_measured_lines": len(measured),
         "n_model_named_lines": len(model),
         "n_matched": len(common),
+        "boundary_corridors_excluded": matched_corridors,
+        "boundary_calibration": calib_util,
     }
-    if len(common) >= 5:
-        meas_v = [p[0] for p in pairs]
-        model_v = [p[1] for p in pairs]
+
+    def _score(keys, prefix):
+        if len(keys) < 5:
+            return
+        meas_v = [measured[k] for k in keys]
+        model_v = [model[k] for k in keys]
         rho, pval = spearmanr(meas_v, model_v)
         ratios = sorted(m / x for x, m in zip(meas_v, model_v) if x > 1.0)
-        out.update({
-            "spearman_rho": round(float(rho), 3),
-            "spearman_p": float(f"{pval:.2e}"),
-            "median_model_over_measured": round(ratios[len(ratios) // 2], 2) if ratios else None,
-        })
-        diffs = sorted(common, key=lambda k: abs(model[k] - measured[k]), reverse=True)
-        out["top_mismatches"] = [
-            {"line": k, "measured_p95_mw": round(measured[k], 0),
-             "model_dc_mw": round(model[k], 0)} for k in diffs[:10]]
+        out[f"{prefix}spearman_rho"] = round(float(rho), 3)
+        out[f"{prefix}spearman_p"] = float(f"{pval:.2e}")
+        out[f"{prefix}median_model_over_measured"] = (
+            round(ratios[len(ratios) // 2], 2) if ratios else None)
+
+    _score(common, "")            # all matched (back-compat)
+    _score(interior, "interior_")  # the honest metric
+    diffs = sorted(interior, key=lambda k: abs(model[k] - measured[k]),
+                   reverse=True)
+    out["top_mismatches"] = [
+        {"line": k, "measured_p95_mw": round(measured[k], 0),
+         "model_dc_mw": round(model[k], 0)} for k in diffs[:10]]
     return out
 
 
@@ -367,12 +424,21 @@ def render_flows(m: dict) -> str:
         f"matched {m['n_matched']} lines "
         f"(measured {m['n_measured_lines']}, model-named {m['n_model_named_lines']})",
     ]
+    if m.get("boundary_calibration"):
+        lines.append(
+            f"  boundary calibration : {m['boundary_calibration']} from measured "
+            f"medians of {m['boundary_corridors_excluded']}")
+    if "interior_spearman_rho" in m:
+        lines.append(
+            f"  INTERIOR Spearman   : {m['interior_spearman_rho']} "
+            f"(p={m['interior_spearman_p']:g}; boundary-conditioned corridors excluded)")
+        lines.append(
+            f"  interior median model/measured : {m['interior_median_model_over_measured']}")
     if "spearman_rho" in m:
         lines.append(
-            f"  Spearman rank corr : {m['spearman_rho']} (p={m['spearman_p']:g})")
-        lines.append(
-            f"  median model/measured magnitude : {m['median_model_over_measured']}")
-        lines.append("  largest mismatches (measured p95 vs model DC, MW):")
+            f"  all-matched Spearman: {m['spearman_rho']} (p={m['spearman_p']:g})")
+    if m.get("top_mismatches"):
+        lines.append("  largest interior mismatches (measured p95 vs model DC, MW):")
         for t in m["top_mismatches"][:5]:
             lines.append(f"    {t['line']:12s} {t['measured_p95_mw']:>8.0f} vs "
                          f"{t['model_dc_mw']:>8.0f}")
