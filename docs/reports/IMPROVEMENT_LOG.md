@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — DB直読み=VISION step5達成+再現性レシピ（㉒）
+
+- **ユーザー方針**「再現できるように。DBとなっているといい」→ **潮流パイプラインが
+  grid.db単独から再現可能に**: `build_network_snapped(db=)`がraw⟕enrichmentsの有効ビューを
+  メモリ内合成（`ajgrid solve <region> --source db`）。**ファイル構築との完全同一性を
+  回帰pin**（tests/test_db_source_build.py: 変電所/枝(parallel込)/発電機の署名一致）
+- **docs/REPRODUCIBILITY.md**: fresh cloneから全ヘッドライン数値（AC10/10・内部ρ0.72・
+  合成線率・CIM検証）を再現する完全レシピ。外部データの取得コマンド・決定論の注意・
+  「committed スコアカード=当時値の正本」の規約まで明文化
+- これで「fetch→ingest→(DB直読み)solve→validate」が**ファイル非経由で閉曲線**。
+  残るDB化対象は#10のraw/derived物理分離（要ユーザー裁定: data/raw分離 vs 現状のDB追記型）
+
 ## 2026-06-11 — **Fable 5** — スタック充填ディスパッチ: 内部ρ 0.659→0.721（㉑）
 
 - **実装**(`0a5b7df`,`68bde14`): `balance_power(mode="stack")` を新デフォルトに —
