@@ -1,0 +1,674 @@
+[
+ {
+  "region": "hokkaido",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 4136,
+   "voltage_fill": 0.9749,
+   "circuits_fill": 0.4021,
+   "cables_fill": 0.9086,
+   "wires_fill": 0.1838,
+   "ref_fill": 0.0614,
+   "operator_fill": 0.9831
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 636,
+   "n_junctions": 220,
+   "n_branches": 963,
+   "n_gens": 350,
+   "n_components": 37,
+   "largest_comp_share": 0.9393,
+   "isolated_real_subs": 26,
+   "stub_junctions": 127,
+   "unknown_kv_branches": 32,
+   "unknown_kv_share": 0.0332,
+   "kv_histogram": {
+    "66": 609,
+    "110": 48,
+    "154": 11,
+    "187": 190,
+    "275": 67,
+    "500": 6
+   },
+   "multi_circuit_branches": 465,
+   "max_parallel": 9,
+   "circuit_km": 11492.1,
+   "conn_kinds": {
+    "J-S": 212,
+    "J-J": 101,
+    "S-S": 485
+   },
+   "circuit_evidence": {
+    "tag": 688,
+    "geom": 60,
+    "cables": 50
+   },
+   "evidenced_circuit_share": 0.9248,
+   "build_s": 0.29
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 856,
+   "n_lines": 871,
+   "n_trafos": 119,
+   "n_components": 11,
+   "n_disabled_buses": 3,
+   "n_synthetic_lines": 27,
+   "synthetic_rate": 0.031,
+   "total_load_mw": 3047.8,
+   "total_gen_mw": 3200.2,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 4.8,
+   "ac_vm_min": 0.907,
+   "ac_vm_max": 1.0105,
+   "ac_va_spread_deg": 31.1,
+   "ac_max_loading_pct": 96.5
+  }
+ },
+ {
+  "region": "tohoku",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 6628,
+   "voltage_fill": 0.9544,
+   "circuits_fill": 0.6236,
+   "cables_fill": 0.6338,
+   "wires_fill": 0.0142,
+   "ref_fill": 0.1144,
+   "operator_fill": 0.9965
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 1339,
+   "n_junctions": 615,
+   "n_branches": 2240,
+   "n_gens": 1063,
+   "n_components": 101,
+   "largest_comp_share": 0.8992,
+   "isolated_real_subs": 46,
+   "stub_junctions": 413,
+   "unknown_kv_branches": 141,
+   "unknown_kv_share": 0.0629,
+   "kv_histogram": {
+    "66": 1177,
+    "132": 6,
+    "154": 578,
+    "187": 7,
+    "275": 248,
+    "500": 83
+   },
+   "multi_circuit_branches": 1225,
+   "max_parallel": 8,
+   "circuit_km": 19959.9,
+   "conn_kinds": {
+    "S-S": 999,
+    "J-S": 576,
+    "J-J": 227
+   },
+   "circuit_evidence": {
+    "geom": 241,
+    "tag": 1542,
+    "cables": 19
+   },
+   "evidenced_circuit_share": 0.8663,
+   "build_s": 0.43
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 1954,
+   "n_lines": 1999,
+   "n_trafos": 374,
+   "n_components": 23,
+   "n_disabled_buses": 10,
+   "n_synthetic_lines": 133,
+   "synthetic_rate": 0.0665,
+   "total_load_mw": 10988.2,
+   "total_gen_mw": 11537.6,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 9.62,
+   "ac_vm_min": 0.9607,
+   "ac_vm_max": 1.0281,
+   "ac_va_spread_deg": 55.0,
+   "ac_max_loading_pct": 97.9
+  }
+ },
+ {
+  "region": "tokyo",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 8295,
+   "voltage_fill": 0.9279,
+   "circuits_fill": 0.6037,
+   "cables_fill": 0.6895,
+   "wires_fill": 0.2723,
+   "ref_fill": 0.2646,
+   "operator_fill": 0.9654
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 2731,
+   "n_junctions": 848,
+   "n_branches": 4300,
+   "n_gens": 6484,
+   "n_components": 183,
+   "largest_comp_share": 0.9251,
+   "isolated_real_subs": 129,
+   "stub_junctions": 632,
+   "unknown_kv_branches": 190,
+   "unknown_kv_share": 0.0442,
+   "kv_histogram": {
+    "66": 2032,
+    "77": 72,
+    "154": 1143,
+    "275": 540,
+    "500": 323
+   },
+   "multi_circuit_branches": 2821,
+   "max_parallel": 14,
+   "circuit_km": 17371.1,
+   "conn_kinds": {
+    "S-S": 2321,
+    "J-S": 648,
+    "J-J": 326
+   },
+   "circuit_evidence": {
+    "cables": 116,
+    "tag": 2739,
+    "geom": 440
+   },
+   "evidenced_circuit_share": 0.8665,
+   "build_s": 0.66
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 3579,
+   "n_lines": 3697,
+   "n_trafos": 842,
+   "n_components": 11,
+   "n_disabled_buses": 2,
+   "n_synthetic_lines": 239,
+   "synthetic_rate": 0.0646,
+   "total_load_mw": 44180.3,
+   "total_gen_mw": 46389.3,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 26.86,
+   "ac_vm_min": 0.8128,
+   "ac_vm_max": 1.0189,
+   "ac_va_spread_deg": 137.9,
+   "ac_max_loading_pct": 250.7
+  }
+ },
+ {
+  "region": "chubu",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 6589,
+   "voltage_fill": 0.7361,
+   "circuits_fill": 0.5474,
+   "cables_fill": 0.6074,
+   "wires_fill": 0.0815,
+   "ref_fill": 0.0973,
+   "operator_fill": 0.9405
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 2091,
+   "n_junctions": 1367,
+   "n_branches": 4108,
+   "n_gens": 3294,
+   "n_components": 137,
+   "largest_comp_share": 0.9271,
+   "isolated_real_subs": 50,
+   "stub_junctions": 943,
+   "unknown_kv_branches": 1061,
+   "unknown_kv_share": 0.2583,
+   "kv_histogram": {
+    "66": 556,
+    "77": 703,
+    "110": 18,
+    "154": 1105,
+    "187": 2,
+    "275": 476,
+    "500": 187
+   },
+   "multi_circuit_branches": 1950,
+   "max_parallel": 20,
+   "circuit_km": 39756.6,
+   "conn_kinds": {
+    "S-S": 1581,
+    "J-S": 943,
+    "J-J": 656
+   },
+   "circuit_evidence": {
+    "tag": 1506,
+    "geom": 1491,
+    "cables": 183
+   },
+   "evidenced_circuit_share": 0.5311,
+   "build_s": 0.65
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 3458,
+   "n_lines": 3457,
+   "n_trafos": 841,
+   "n_components": 22,
+   "n_disabled_buses": 3,
+   "n_synthetic_lines": 190,
+   "synthetic_rate": 0.055,
+   "total_load_mw": 20379.0,
+   "total_gen_mw": 21398.0,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 20.88,
+   "ac_vm_min": 0.9401,
+   "ac_vm_max": 1.0336,
+   "ac_va_spread_deg": 64.8,
+   "ac_max_loading_pct": 106.3
+  }
+ },
+ {
+  "region": "hokuriku",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 2296,
+   "voltage_fill": 0.8772,
+   "circuits_fill": 0.8502,
+   "cables_fill": 0.8537,
+   "wires_fill": 0.0096,
+   "ref_fill": 0.0409,
+   "operator_fill": 0.9943
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 465,
+   "n_junctions": 362,
+   "n_branches": 948,
+   "n_gens": 379,
+   "n_components": 42,
+   "largest_comp_share": 0.8537,
+   "isolated_real_subs": 9,
+   "stub_junctions": 264,
+   "unknown_kv_branches": 220,
+   "unknown_kv_share": 0.2321,
+   "kv_histogram": {
+    "66": 168,
+    "77": 90,
+    "154": 314,
+    "187": 2,
+    "275": 115,
+    "500": 39
+   },
+   "multi_circuit_branches": 483,
+   "max_parallel": 10,
+   "circuit_km": 12426.6,
+   "conn_kinds": {
+    "J-S": 216,
+    "S-S": 358,
+    "J-J": 176
+   },
+   "circuit_evidence": {
+    "cables": 4,
+    "geom": 245,
+    "tag": 501
+   },
+   "evidenced_circuit_share": 0.6733,
+   "build_s": 0.2
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 827,
+   "n_lines": 818,
+   "n_trafos": 181,
+   "n_components": 11,
+   "n_disabled_buses": 1,
+   "n_synthetic_lines": 51,
+   "synthetic_rate": 0.0623,
+   "total_load_mw": 4415.2,
+   "total_gen_mw": 4635.9,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 3.88,
+   "ac_vm_min": 0.987,
+   "ac_vm_max": 1.0607,
+   "ac_va_spread_deg": 18.7,
+   "ac_max_loading_pct": 98.2
+  }
+ },
+ {
+  "region": "kansai",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 3994,
+   "voltage_fill": 0.6908,
+   "circuits_fill": 0.5133,
+   "cables_fill": 0.5398,
+   "wires_fill": 0.0531,
+   "ref_fill": 0.0836,
+   "operator_fill": 0.9011
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 1498,
+   "n_junctions": 663,
+   "n_branches": 2466,
+   "n_gens": 1163,
+   "n_components": 166,
+   "largest_comp_share": 0.8649,
+   "isolated_real_subs": 127,
+   "stub_junctions": 448,
+   "unknown_kv_branches": 617,
+   "unknown_kv_share": 0.2502,
+   "kv_histogram": {
+    "66": 92,
+    "77": 787,
+    "110": 2,
+    "154": 451,
+    "187": 17,
+    "275": 343,
+    "500": 157
+   },
+   "multi_circuit_branches": 1149,
+   "max_parallel": 15,
+   "circuit_km": 14875.0,
+   "conn_kinds": {
+    "J-S": 531,
+    "S-S": 1046,
+    "J-J": 293
+   },
+   "circuit_evidence": {
+    "tag": 1067,
+    "cables": 38,
+    "geom": 765
+   },
+   "evidenced_circuit_share": 0.5909,
+   "build_s": 0.34
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 2161,
+   "n_lines": 2204,
+   "n_trafos": 458,
+   "n_components": 15,
+   "n_disabled_buses": 8,
+   "n_synthetic_lines": 196,
+   "synthetic_rate": 0.0889,
+   "total_load_mw": 22848.8,
+   "total_gen_mw": 23991.3,
+   "dc_converged": true,
+   "ac_converged": false,
+   "solve_s": 22.6,
+   "ac_error": "nr: Power Flow nr did not converge after 300 iterations!"
+  }
+ },
+ {
+  "region": "chugoku",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 3176,
+   "voltage_fill": 0.7856,
+   "circuits_fill": 0.5809,
+   "cables_fill": 0.5875,
+   "wires_fill": 0.0926,
+   "ref_fill": 0.0507,
+   "operator_fill": 0.977
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 886,
+   "n_junctions": 639,
+   "n_branches": 1707,
+   "n_gens": 821,
+   "n_components": 77,
+   "largest_comp_share": 0.8898,
+   "isolated_real_subs": 21,
+   "stub_junctions": 451,
+   "unknown_kv_branches": 451,
+   "unknown_kv_share": 0.2642,
+   "kv_histogram": {
+    "66": 353,
+    "77": 2,
+    "110": 506,
+    "187": 98,
+    "220": 169,
+    "275": 11,
+    "500": 117
+   },
+   "multi_circuit_branches": 794,
+   "max_parallel": 10,
+   "circuit_km": 21773.2,
+   "conn_kinds": {
+    "J-S": 496,
+    "S-S": 589,
+    "J-J": 267
+   },
+   "circuit_evidence": {
+    "geom": 683,
+    "tag": 643,
+    "cables": 26
+   },
+   "evidenced_circuit_share": 0.4948,
+   "build_s": 0.29
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 1525,
+   "n_lines": 1504,
+   "n_trafos": 316,
+   "n_components": 14,
+   "n_disabled_buses": 1,
+   "n_synthetic_lines": 113,
+   "synthetic_rate": 0.0751,
+   "total_load_mw": 8918.9,
+   "total_gen_mw": 9364.9,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 7.64,
+   "ac_vm_min": 0.9729,
+   "ac_vm_max": 1.0336,
+   "ac_va_spread_deg": 32.4,
+   "ac_max_loading_pct": 108.2
+  }
+ },
+ {
+  "region": "shikoku",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 1532,
+   "voltage_fill": 0.8172,
+   "circuits_fill": 0.733,
+   "cables_fill": 0.705,
+   "wires_fill": 0.0176,
+   "ref_fill": 0.0581,
+   "operator_fill": 0.9791
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 390,
+   "n_junctions": 291,
+   "n_branches": 727,
+   "n_gens": 496,
+   "n_components": 45,
+   "largest_comp_share": 0.5932,
+   "isolated_real_subs": 10,
+   "stub_junctions": 211,
+   "unknown_kv_branches": 201,
+   "unknown_kv_share": 0.2765,
+   "kv_histogram": {
+    "66": 233,
+    "77": 2,
+    "110": 93,
+    "187": 132,
+    "220": 29,
+    "500": 37
+   },
+   "multi_circuit_branches": 363,
+   "max_parallel": 12,
+   "circuit_km": 9606.5,
+   "conn_kinds": {
+    "S-S": 261,
+    "J-S": 211,
+    "J-J": 123
+   },
+   "circuit_evidence": {
+    "tag": 355,
+    "geom": 240
+   },
+   "evidenced_circuit_share": 0.5966,
+   "build_s": 0.14
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 681,
+   "n_lines": 611,
+   "n_trafos": 142,
+   "n_components": 28,
+   "n_disabled_buses": 3,
+   "n_synthetic_lines": 26,
+   "synthetic_rate": 0.0426,
+   "total_load_mw": 4658.0,
+   "total_gen_mw": 4890.9,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 3.5,
+   "ac_vm_min": 0.9244,
+   "ac_vm_max": 1.0081,
+   "ac_va_spread_deg": 16.7,
+   "ac_max_loading_pct": 101.7
+  }
+ },
+ {
+  "region": "kyushu",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 3314,
+   "voltage_fill": 0.7716,
+   "circuits_fill": 0.6337,
+   "cables_fill": 0.6705,
+   "wires_fill": 0.2492,
+   "ref_fill": 0.0534,
+   "operator_fill": 0.9309
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 1088,
+   "n_junctions": 607,
+   "n_branches": 1882,
+   "n_gens": 1903,
+   "n_components": 99,
+   "largest_comp_share": 0.8814,
+   "isolated_real_subs": 42,
+   "stub_junctions": 393,
+   "unknown_kv_branches": 375,
+   "unknown_kv_share": 0.1993,
+   "kv_histogram": {
+    "66": 772,
+    "110": 251,
+    "220": 382,
+    "500": 102
+   },
+   "multi_circuit_branches": 1019,
+   "max_parallel": 12,
+   "circuit_km": 20189.3,
+   "conn_kinds": {
+    "S-S": 719,
+    "J-S": 471,
+    "J-J": 288
+   },
+   "circuit_evidence": {
+    "geom": 505,
+    "cables": 72,
+    "tag": 901
+   },
+   "evidenced_circuit_share": 0.6583,
+   "build_s": 0.39
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 1695,
+   "n_lines": 1683,
+   "n_trafos": 347,
+   "n_components": 14,
+   "n_disabled_buses": 5,
+   "n_synthetic_lines": 148,
+   "synthetic_rate": 0.0879,
+   "total_load_mw": 13129.3,
+   "total_gen_mw": 13785.8,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 9.44,
+   "ac_vm_min": 0.9123,
+   "ac_vm_max": 1.0208,
+   "ac_va_spread_deg": 49.9,
+   "ac_max_loading_pct": 118.5
+  }
+ },
+ {
+  "region": "okinawa",
+  "snap_km": 1.5,
+  "tags": {
+   "n_line_features": 117,
+   "voltage_fill": 0.9487,
+   "circuits_fill": 0.4615,
+   "cables_fill": 0.5299,
+   "wires_fill": 0.1197,
+   "ref_fill": 0.0,
+   "operator_fill": 0.9573
+  },
+  "topology": {
+   "builder": "snapped",
+   "n_real_subs": 78,
+   "n_junctions": 16,
+   "n_branches": 90,
+   "n_gens": 22,
+   "n_components": 11,
+   "largest_comp_share": 0.8723,
+   "isolated_real_subs": 8,
+   "stub_junctions": 11,
+   "unknown_kv_branches": 3,
+   "unknown_kv_share": 0.0333,
+   "kv_histogram": {
+    "66": 47,
+    "132": 40
+   },
+   "multi_circuit_branches": 32,
+   "max_parallel": 4,
+   "circuit_km": 249.8,
+   "conn_kinds": {
+    "S-S": 49,
+    "J-S": 18,
+    "J-J": 4
+   },
+   "circuit_evidence": {
+    "cables": 2,
+    "tag": 27,
+    "geom": 42
+   },
+   "evidenced_circuit_share": 0.4085,
+   "build_s": 0.01
+  },
+  "solved": {
+   "topology": "snapped",
+   "n_buses": 94,
+   "n_lines": 83,
+   "n_trafos": 16,
+   "n_components": 4,
+   "n_disabled_buses": 3,
+   "n_synthetic_lines": 9,
+   "synthetic_rate": 0.1084,
+   "total_load_mw": 1313.0,
+   "total_gen_mw": 1378.6,
+   "dc_converged": true,
+   "ac_converged": true,
+   "solve_s": 0.53,
+   "ac_vm_min": 0.8138,
+   "ac_vm_max": 1.0,
+   "ac_va_spread_deg": 74.8,
+   "ac_max_loading_pct": 145.6
+  }
+ }
+]

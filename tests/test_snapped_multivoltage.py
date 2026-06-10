@@ -127,3 +127,14 @@ def test_multi_voltage_false_preserves_legacy_single_bus(data_dir):
     assert "testreg_sub_0" in ids
     assert not any("@" in i for i in ids)
     assert not any("_xfmr_" in ln.id for ln in net.transmission_lines)
+
+
+def test_parse_circuits_evidence():
+    from src.powerflow.snapped_topology import _parse_circuits
+    assert _parse_circuits({"circuits": "2"}) == (2, "tag")
+    assert _parse_circuits({"circuits": "2;2"}) == (2, "tag")     # first token
+    assert _parse_circuits({"cables": "6"}) == (2, "cables")      # 3-phase
+    assert _parse_circuits({"cables": "2"}) == (1, None)          # < 1 circuit
+    assert _parse_circuits({"circuits": "junk"}) == (1, None)
+    assert _parse_circuits({}) == (1, None)
+    assert _parse_circuits({"circuits": "99"}) == (8, "tag")      # clamped

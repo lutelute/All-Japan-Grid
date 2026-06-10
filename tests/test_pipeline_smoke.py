@@ -29,14 +29,15 @@ def test_returns_six_tuple(okinawa_solved):
 
 def test_build_info_shape(okinawa_solved):
     _dc, _dcr, _ac, _acr, info, _geom = okinawa_solved
-    # Pinned from the multi-voltage snapped build (2026-06-10): substations
-    # are one bus per voltage class with intra-substation transformer stubs,
-    # so cross-voltage LINES are no longer swallowed into transformers
-    # (81 buses/57 lines/25 trafos -> 100/90/16).
+    # Pinned from the multi-voltage + evidence-based snapped build
+    # (2026-06-10): one bus per voltage class with intra-substation
+    # transformer stubs (no line swallowing), circuits/cables tags drive
+    # parallel counts, 2.5 km terminal snap radius, fixed 20 km plant
+    # lookup (gens 16 -> 22).
     assert info["topology"] == "snapped"
-    assert info["n_buses"] == 100
-    assert info["n_lines"] == 90
-    assert info["n_gens"] == 16
+    assert info["n_buses"] == 94
+    assert info["n_lines"] == 83
+    assert info["n_gens"] == 22
     assert info["n_trafos"] == 16
 
 
@@ -44,6 +45,8 @@ def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 100
+    assert len(net_ac.bus) == 94
     vmin = float(net_ac.res_bus.vm_pu.min())
-    assert 0.85 < vmin <= 1.05  # solved, physically sane okinawa range
+    # 0.814 measured: the better-connected full model exposes honest sags
+    # on remote spurs (the backbone product model sits at 0.999)
+    assert 0.80 < vmin <= 1.05

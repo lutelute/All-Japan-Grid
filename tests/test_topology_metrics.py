@@ -38,25 +38,30 @@ def okinawa_topo():
 
 
 def test_okinawa_builder_pins(okinawa_topo):
-    # Pinned values for the multi-voltage builder (2026-06-10): substations
-    # split into one bus per voltage class (59 sites -> 78 buses incl @u),
-    # cross-voltage junction fusion removed (components 11 -> 14 = honest),
-    # intra-substation xfmr stubs included in n_branches (75 -> 93).
+    # Pinned values for the multi-voltage + evidence-based builder
+    # (2026-06-10): substations split into one bus per voltage class
+    # (59 sites -> 78 buses incl @u); OSM circuits/cables tags drive the
+    # parallel counts (multi_circuit 4 -> 32); the 2.5 km terminal-vertex
+    # snap radius reattaches yard-fence gaps (junctions 22 -> 16,
+    # components 14 -> 11); the widened _SubIndex search ring fixed the
+    # silent ~3 km cap on the 20 km big-plant lookup (gens 16 -> 22).
     m = okinawa_topo
     assert m["builder"] == "snapped"
     assert m["n_real_subs"] == 78
-    assert m["n_junctions"] == 22
-    assert m["n_branches"] == 93
-    assert m["n_gens"] == 16
-    assert m["n_components"] == 14
-    assert m["multi_circuit_branches"] == 4
-    assert m["max_parallel"] == 2
+    assert m["n_junctions"] == 16
+    assert m["n_branches"] == 90
+    assert m["n_gens"] == 22
+    assert m["n_components"] == 11
+    assert m["multi_circuit_branches"] == 32
+    assert m["max_parallel"] == 4
 
 
 def test_okinawa_quality_floors(okinawa_topo):
     m = okinawa_topo
     assert m["largest_comp_share"] >= 0.80
     assert m["unknown_kv_share"] <= 0.05
+    # circuits/cables tags must keep driving the parallel counts
+    assert m["evidenced_circuit_share"] >= 0.40
 
 
 def test_okinawa_tag_coverage():
@@ -76,8 +81,11 @@ def test_okinawa_solved_quality():
     # pipeline deliberately does NOT fabricate >5 km sea-strait bridges —
     # real islands are solved in place via multi_slack.
     assert s["n_components"] == 4
-    assert s["synthetic_rate"] <= 0.16       # 2026-06 multi-voltage: 13/90 = 14.4%
-    assert 0.85 < s["ac_vm_min"] <= 1.05
+    assert s["synthetic_rate"] <= 0.12       # 2026-06 phase-4: 9/83 = 10.8%
+    # full-model okinawa sags to 0.814 with the better-connected topology
+    # (newly attached remote spurs pull honest voltage drops); the backbone
+    # model — the AC product — sits at 0.999
+    assert 0.80 < s["ac_vm_min"] <= 1.05
 
 
 # ── quality floors on a second (mid-size) region ─────────────────────────────

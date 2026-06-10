@@ -141,9 +141,13 @@ class _SubIndex:
 
     def nearest(self, lat, lon, max_km):
         ci, cj = round(lat / self.CELL), round(lon / self.CELL)
+        # ring size follows the requested radius (one 0.02-deg cell is
+        # ~2.2 km of latitude) so radii beyond the historical 3x3
+        # neighbourhood actually search far enough
+        r = max(1, int(max_km / (self.CELL * 111.0)) + 1)
         best, bd = None, float("inf")
-        for di in (-1, 0, 1):
-            for dj in (-1, 0, 1):
+        for di in range(-r, r + 1):
+            for dj in range(-r, r + 1):
                 for slat, slon, sid in self.buckets.get((ci + di, cj + dj), ()):  # noqa: E501
                     d = _haversine_km(lat, lon, slat, slon)
                     if d < bd:
@@ -153,9 +157,34 @@ class _SubIndex:
 
 # ── core builder ─────────────────────────────────────────────────────────────
 
+def _parse_circuits(props):
+    """Parallel-circuit count from OSM evidence: circuits tag, else cables/3.
+
+    Returns (count, source) where source is "tag" / "cables" / None (no
+    evidence — caller falls back to geometric inference, counting 1 per
+    way). Clamped to [1, 8] against junk values.
+    """
+    raw = props.get("circuits")
+    if raw not in (None, ""):
+        try:
+            n = int(str(raw).replace(";", "/").split("/")[0])
+            return max(1, min(n, 8)), "tag"
+        except ValueError:
+            pass
+    raw = props.get("cables")
+    if raw not in (None, ""):
+        try:
+            n = int(str(raw).replace(";", "/").split("/")[0]) // 3
+            if n >= 1:
+                return min(n, 8), "cables"
+        except ValueError:
+            pass
+    return 1, None
+
+
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
-                          multi_voltage=True):
+                          multi_voltage=True, endpoint_snap_km=2.5):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -171,6 +200,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             (non-transmission distribution/industrial mistags, e.g. a 2 kV
             OSM line). Lines with unknown voltage (0) are kept so legitimate
             unlabelled transmission is not lost.
+        endpoint_snap_km: snap radius for a line's TERMINAL vertices.
+            Measured on real data (2026-06-10): 6-8% of line endpoints sit
+            1.5-2.5 km from their substation (digitisation stops at the
+            yard fence) — kansai +506, tokyo +1,340 endpoints recovered at
+            2.5 km. Interior vertices keep the tighter ``snap_km`` so
+            corridors passing near a substation are not falsely fused.
         multi_voltage: model substations as one bus PER voltage class with
             explicit intra-substation transformer stubs (the real busbar
             structure), instead of one bus at the substation's tagged
@@ -226,7 +261,9 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     adj = defaultdict(dict)            # node -> neighbor -> {len, kv, path:[(lat,lon)...]}
     jct_coord = {}                     # junction key -> (lat, lon)
 
-    def add_edge(a, b, seg, kv, path, parallel=1):
+    _EV_RANK = {None: 0, "cables": 1, "tag": 2}
+
+    def add_edge(a, b, seg, kv, path, parallel=1, evidence=None):
         """Insert/merge an undirected edge, accumulating parallel circuits.
 
         Real grids run 2-4 parallel circuits between the same two nodes. The
@@ -234,31 +271,43 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         the circuit multiplicity — restoring the transmission capacity the
         simplification would otherwise lose.
 
-        ``parallel`` is the number of circuits *this call* contributes: 1 for a
-        direct OSM-way segment, the chain's circuit count for a contracted
-        edge. Merging the same node pair **sums** the contributions, because
-        distinct ways / geometric routes between two nodes are physically
-        parallel circuits. Callers must not count the same circuit twice — the
-        segment loop dedups node pairs per way (``seen_pairs``) so a single way
-        that zig-zags across the same pair counts once, not N times.
+        ``parallel`` is the number of circuits *this call* contributes: the
+        way's own circuits/cables tag value (or 1 without evidence), the
+        chain's circuit count for a contracted edge. Merging the same node
+        pair **sums** the contributions, because distinct ways / geometric
+        routes between two nodes are physically parallel circuits. Callers
+        must not count the same circuit twice — the segment loop dedups node
+        pairs per way (``seen_pairs``) so a single way that zig-zags across
+        the same pair counts once, not N times.
+
+        ``evidence`` records the strongest circuit-count source seen
+        ("tag" > "cables" > None=geometric) for provenance reporting.
         """
         cur = adj[a].get(b)
         if cur is None:
             p = max(int(parallel), 1)  # an edge is at least one circuit
-            adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p}
-            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)), "parallel": p}
+            adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p,
+                         "ev": evidence}
+            adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)),
+                         "parallel": p, "ev": evidence}
             return
         kv2 = max(cur["kv"], kv)
         par = cur["parallel"] + max(int(parallel), 0)
+        ev = evidence if _EV_RANK.get(evidence, 0) >= _EV_RANK.get(cur.get("ev"), 0) \
+            else cur.get("ev")
         if seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
-            adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par}
-            adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)), "parallel": par}
+            adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par,
+                         "ev": ev}
+            adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)),
+                         "parallel": par, "ev": ev}
         else:
             cur["kv"] = kv2
             cur["parallel"] = par
+            cur["ev"] = ev
             adj[b][a]["kv"] = kv2
             adj[b][a]["parallel"] = par
+            adj[b][a]["ev"] = ev
 
     lines_path = os.path.join(data_dir, f"{region}_lines.geojson")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
@@ -275,22 +324,27 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             coords = _get_line_coords(feat)
             if len(coords) < 2:
                 continue
-            kv = max(_parse_voltage_kv(feat["properties"].get("voltage")), 0)
+            props = feat["properties"]
+            kv = max(_parse_voltage_kv(props.get("voltage")), 0)
             # Skip non-transmission mistags (known voltage below threshold);
             # keep unknown (0) so unlabelled transmission survives.
             if 0 < kv < min_voltage_kv:
                 continue
             kv = _clean_voltage(kv)  # snap known line voltage to a standard class
-            feat_cache.append((coords, kv))
+            circ, circ_src = _parse_circuits(props)
+            feat_cache.append((coords, kv, circ, circ_src))
             if multi_voltage and kv > 0:
                 for (lat, lon) in coords:
                     coord_cls[(round(lat, vertex_prec), round(lon, vertex_prec))].add(kv)
 
         # Pass B: map vertices to class-aware nodes and build edges.
-        for coords, kv in feat_cache:
+        for coords, kv, circ, circ_src in feat_cache:
             node_ids = []
-            for (lat, lon) in coords:
-                sid, _ = index.nearest(lat, lon, snap_km)
+            last = len(coords) - 1
+            for vi, (lat, lon) in enumerate(coords):
+                # terminal vertices get the wider radius (yard-fence gaps)
+                radius = endpoint_snap_km if vi in (0, last) else snap_km
+                sid, _ = index.nearest(lat, lon, max(radius, snap_km))
                 rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
                 if sid is not None:
                     if multi_voltage:
@@ -308,10 +362,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     node_ids.append(jk)
 
             # Add edges between consecutive distinct nodes, with segment length
-            # and the real coordinate pair as the (sub-)path. A single way is
-            # ONE circuit even if its vertices revisit a node pair (snapping
-            # zig-zag), so each pair contributes to ``parallel`` at most once
-            # per way; genuine parallels come from separate ways summing.
+            # and the real coordinate pair as the (sub-)path. A single way
+            # contributes its OWN circuit count (the OSM circuits/cables tag
+            # where present — direct evidence — else 1) and only once per
+            # node pair even if its vertices revisit it (snapping zig-zag);
+            # genuine parallels come from separate ways summing.
             seen_pairs = set()
             for j in range(1, len(coords)):
                 a, b = node_ids[j - 1], node_ids[j]
@@ -320,10 +375,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
                                     coords[j][0], coords[j][1])
                 pair = (a, b) if a <= b else (b, a)
-                contrib = 0 if pair in seen_pairs else 1
+                contrib = 0 if pair in seen_pairs else circ
                 seen_pairs.add(pair)
                 add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
-                         parallel=contrib)
+                         parallel=contrib, evidence=circ_src)
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
@@ -350,13 +405,15 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 # resetting to 1. add_edge then sums this with any pre-existing
                 # a-b route (a genuinely distinct parallel path).
                 par = max(ea.get("parallel", 1), eb.get("parallel", 1))
+                ev = ea.get("ev") if _EV_RANK.get(ea.get("ev"), 0) >= \
+                    _EV_RANK.get(eb.get("ev"), 0) else eb.get("ev")
                 # merged a->b path = (a->n) + (n->b), dropping the duplicate n
                 path_ab = list(reversed(ea["path"]))[:-1] + eb["path"]
                 # remove junction n, connect a-b with summed length
                 del adj[a][n]
                 del adj[b][n]
                 del adj[n]
-                add_edge(a, b, la + lb, kv, path_ab, parallel=par)
+                add_edge(a, b, la + lb, kv, path_ab, parallel=par, evidence=ev)
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
@@ -469,6 +526,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if length <= 0:
                 length = 0.1
             path_latlon = edge.get("path") or []
+            # connection provenance: endpoint kinds (S=substation, J=junction)
+            # and the circuit-count evidence source — honest disclosure of
+            # how each branch came to exist
+            kind_a = "J" if is_jct(a) else "S"
+            kind_b = "J" if is_jct(b) else "S"
+            prov = f"conn={kind_a}-{kind_b};circuits={edge.get('ev') or 'geom'}"
             try:
                 net.add_transmission_line(TransmissionLine(
                     id=f"{region}_line_{k}",
@@ -480,6 +543,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     region=region,
                     coordinates=list(path_latlon),
                     num_parallel=edge.get("parallel", 1),
+                    description=prov,
                 ))
                 k += 1
             except ValueError:

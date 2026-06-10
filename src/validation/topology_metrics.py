@@ -116,6 +116,8 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
     multi_circuit = 0
     max_parallel = 1
     circuit_km = 0.0
+    conn_kinds = Counter()
+    circuit_evidence = Counter()
     for ln in net.transmission_lines:
         kv = float(ln.voltage_kv or 0)
         if kv <= 0:
@@ -127,6 +129,13 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
             multi_circuit += 1
         max_parallel = max(max_parallel, par)
         circuit_km += float(ln.length_km or 0) * par
+        # connection provenance written by the builder (conn=S-J;circuits=tag)
+        desc = getattr(ln, "description", "") or ""
+        for part in desc.split(";"):
+            if part.startswith("conn="):
+                conn_kinds["-".join(sorted(part[5:].split("-")))] += 1
+            elif part.startswith("circuits="):
+                circuit_evidence[part[9:]] += 1
 
     n_branches = len(net.transmission_lines)
     return {
@@ -145,6 +154,11 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
         "multi_circuit_branches": multi_circuit,
         "max_parallel": max_parallel,
         "circuit_km": round(circuit_km, 1),
+        "conn_kinds": dict(conn_kinds),
+        "circuit_evidence": dict(circuit_evidence),
+        "evidenced_circuit_share": round(
+            (circuit_evidence["tag"] + circuit_evidence["cables"])
+            / max(sum(circuit_evidence.values()), 1), 4),
         "build_s": round(time.time() - t0, 2),
     }
 
