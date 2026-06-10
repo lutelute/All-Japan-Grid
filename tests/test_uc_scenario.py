@@ -100,8 +100,22 @@ class TestLoadNationalThermalGenerators:
         stats = LoadStats()
         gens = load_national_thermal_generators(str(tmp_path), stats)
         assert len(gens) == 1
-        assert gens[0].capacity_mw == pytest.approx(600)  # THERMAL_DEFAULT["coal"]
+        # 欠損火力は自家発スケール100MW（THERMAL_DEFAULT["coal"]、2026-06-11較正）
+        assert gens[0].capacity_mw == pytest.approx(100)
         assert stats.n_capacity_defaulted == 1
+
+    def test_missing_capacity_patched_for_known_large_plants(self, tmp_path):
+        # 苓北火力は容量欠損だが実態1,400MW → capacity_patches.yaml で個別補正
+        _write_geojson(
+            tmp_path / "kyushu_plants.geojson",
+            [_feat("苓北火力発電所", "coal", None, 9)],
+        )
+        stats = LoadStats()
+        gens = load_national_thermal_generators(str(tmp_path), stats)
+        assert len(gens) == 1
+        assert gens[0].capacity_mw == pytest.approx(1400)
+        assert stats.n_capacity_patched == 1
+        assert stats.n_capacity_defaulted == 0
 
     def test_small_units_skipped(self, tmp_path):
         _write_geojson(tmp_path / "chubu_plants.geojson", [_feat("small", "hydro", 3.0, 7)])

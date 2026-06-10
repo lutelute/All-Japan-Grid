@@ -90,8 +90,13 @@ SU = {"nuclear": dict(hot=10000, warm=30000, cold=100000, wh=8, ch=48, mut=8, md
       "coal":    dict(hot=5000,  warm=15000, cold=40000,  wh=4, ch=12, mut=4, mdt=4),
       "lng":     dict(hot=2000,  warm=5000,  cold=15000,  wh=2, ch=8,  mut=2, mdt=2),
       "oil":     dict(hot=1500,  warm=3000,  cold=8000,   wh=2, ch=6,  mut=1, mdt=1)}
-THERMAL_DEFAULT = {"nuclear": 900, "coal": 600, "lng": 400, "gas": 400,
-                   "oil": 200, "geothermal": 30, "waste": 15, "biomass": 20}
+# 容量欠損時の既定値。計測(2026-06-11)で欠損coal/gas/oilの実態は小規模自家発・
+# 産業用IPPが大半と判明したため、火力は自家発スケール(100MW)とする。
+# 大規模なのに欠損している例外は data/reference/capacity_patches.yaml で個別補正。
+# （旧値 coal600/lng400 は欠損32機で19.2GWの幻容量を生んでいた）
+# nuclear は nuclear_status.yaml が容量を上書きするため実質未使用。
+THERMAL_DEFAULT = {"nuclear": 900, "coal": 100, "lng": 100, "gas": 100,
+                   "oil": 100, "geothermal": 30, "waste": 15, "biomass": 20}
 
 # 容量下限: これ未満の電源はUC対象外（小水力・自家発スケール）
 MIN_UNIT_MW = 5.0
@@ -156,6 +161,7 @@ class LoadStats:
     n_duplicates: int = 0              # osm_id が既出のコピー数（dedup時は除去数）
     duplicate_capacity_mw: float = 0.0
     n_capacity_defaulted: int = 0      # 容量欠損を THERMAL_DEFAULT で補完した台数
+    n_capacity_patched: int = 0        # capacity_patches.yaml で個別補正した台数
     n_skipped_small: int = 0           # MIN_UNIT_MW 未満で除外
     n_storage_units: int = 0           # is_storage な発電機（揚水等）
     storage_capacity_mwh: float = 0.0
@@ -187,6 +193,7 @@ def load_national_thermal_generators(
     data_dir: str = "data",
     stats: Optional[LoadStats] = None,
     dedup: bool = True,
+    capacity_patches_path: str = "data/reference/capacity_patches.yaml",
 ) -> list[Generator]:
     """GeoJSONから熱電源（太陽光・風力・蓄電池以外）をロードする。
 
@@ -205,6 +212,13 @@ def load_national_thermal_generators(
         stats = LoadStats()
     stats.dedup_enabled = dedup
     all_gens: list[Generator] = []
+
+    capacity_patches: list[dict] = []
+    if capacity_patches_path and os.path.exists(capacity_patches_path):
+        import yaml
+
+        with open(capacity_patches_path) as f:
+            capacity_patches = (yaml.safe_load(f) or {}).get("patches", [])
 
     # パス1: 全スライスを読み、osm_id の出現地域から帰属地域を決める
     region_data: dict[str, dict] = {}
@@ -246,11 +260,20 @@ def load_national_thermal_generators(
             # 太陽光・風力はOCCTO参照値を使用するためOSMエントリは除外
             if fuel in ("solar", "wind", "battery"):
                 continue
-            # 欠損・負値をデフォルト容量で補完（それでも不明なら除外）
+            # 欠損・負値の補完: 個別パッチ（大規模の例外）→ 燃料別既定値
             if cap <= 0:
-                cap = THERMAL_DEFAULT.get(rf, 0.0)
-                if cap > 0:
-                    stats.n_capacity_defaulted += 1
+                name_for_patch = props.get("name") or ""
+                patch = next(
+                    (pt for pt in capacity_patches if pt["match"] in name_for_patch),
+                    None,
+                )
+                if patch is not None:
+                    cap = float(patch["capacity_mw"])
+                    stats.n_capacity_patched += 1
+                else:
+                    cap = THERMAL_DEFAULT.get(rf, 0.0)
+                    if cap > 0:
+                        stats.n_capacity_defaulted += 1
             if cap < MIN_UNIT_MW:
                 stats.n_skipped_small += 1
                 continue
