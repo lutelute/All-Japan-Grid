@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "091b87c",
+    "scenario": "national_24h_nodal (gen_uc_regional互換)",
+    "reserve_margin": 0.05,
+    "mip_gap": 0.01,
+    "effective_solver": "cbc"
+  },
+  "data_quality": {
+    "dedup_enabled": true,
+    "n_features_scanned": 19138,
+    "n_thermal_loaded": 510,
+    "thermal_capacity_mw": 228596.45000000004,
+    "n_duplicates": 126,
+    "duplicate_capacity_mw": 39764.6,
+    "n_capacity_defaulted": 119,
+    "n_skipped_small": 922,
+    "n_storage_units": 0,
+    "storage_capacity_mwh": 0.0,
+    "fuel_counts": {
+      "nuclear": 21,
+      "biomass": 71,
+      "hydro": 202,
+      "lng": 75,
+      "coal": 83,
+      "oil": 31,
+      "geothermal": 26,
+      "unknown": 1
+    },
+    "fuel_capacity_mw": {
+      "nuclear": 31753.0,
+      "biomass": 2763.2999999999997,
+      "hydro": 18578.300000000003,
+      "lng": 85843.29999999999,
+      "coal": 59116.0,
+      "oil": 29537.0,
+      "geothermal": 999.3,
+      "unknown": 6.25
+    },
+    "n_unique_units": 510,
+    "unique_capacity_mw": 228596.45000000004
+  },
+  "solve": {
+    "status": "Optimal",
+    "solve_time_s": 30.5,
+    "total_cost_jpy": 8506855039,
+    "total_cost_oku_per_day": 85.07,
+    "gap": 0.0,
+    "num_warnings": 0,
+    "n_generators": 520,
+    "n_thermal": 510,
+    "n_battery": 10,
+    "battery_mw": 3450,
+    "battery_mwh": 13800
+  },
+  "dispatch": {
+    "total_energy_gwh_per_day": 3171.2,
+    "fuel_share_pct": {
+      "coal": 30.01,
+      "nuclear": 23.22,
+      "hydro": 14.06,
+      "lng": 13.3,
+      "solar": 13.27,
+      "wind": 3.38,
+      "biomass": 1.7,
+      "geothermal": 0.76,
+      "battery": 0.31
+    },
+    "battery_discharge_mwh": 9869,
+    "battery_charge_mwh": 9927,
+    "battery_equivalent_cycles": 0.715,
+    "interconnection_peak_utilisation": {
+      "ic_001": 1.0,
+      "ic_002": 1.0,
+      "ic_003": 1.0,
+      "ic_004": 1.0,
+      "ic_005": 0.693,
+      "ic_006": 1.0,
+      "ic_007": 1.0,
+      "ic_008": 1.0,
+      "ic_009": 1.0
+    }
+  }
+}

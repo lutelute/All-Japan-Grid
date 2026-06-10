@@ -1,0 +1,91 @@
+# 日本の揚水発電所 参照リスト（44件・現況出力合計 約27.6GW）
+#
+# 出典: エレクトリカル・ジャパン「日本全国の揚水発電所一覧」
+#   https://agora.ex.nii.ac.jp/earthquake/201103-eastjapan/energy/electrical-japan/type/5.html.ja
+#   （国立情報学研究所 北本朝展研究室、2026-06-11取得。現況出力ベース:
+#     葛野川1200=4号機まで・神流川940=2号機まで運開を反映）
+#
+# 用途（src/uc/scenario.py apply_pumped_storage_reference）:
+#   1) OSM hydro発電機への名前マッチで fuel_type=pumped_hydro に再分類+容量補正
+#   2) OSMに存在しない揚水を参照値で追加
+#
+# region: 電気的帰属管内。10電力運営分は自明。J-POWER（電源開発）分は
+#   系統連系先ベースで判断（note に所在地と根拠を開示）。
+#
+# storage_h: 満水からの全力発電可能時間。個別の上池容量(MWh)の一次公表は
+#   乏しいため、純揚水の典型運転時間 6h を既定値とする（defaults.storage_h）。
+#   個別に確かな値が得られたエントリのみ storage_h を上書きすること。
+
+defaults:
+  storage_h: 6
+  charge_efficiency: 0.84    # 総合効率~70%を充放電に等分 (0.84^2 ≈ 0.70)
+  discharge_efficiency: 0.84
+
+plants:
+  # ── 関西電力 ──
+  - {name: 奥多々良木, operator: 関西電力, region: kansai, capacity_mw: 1932}
+  - {name: 大河内,     operator: 関西電力, region: kansai, capacity_mw: 1280}
+  - {name: 奥吉野,     operator: 関西電力, region: kansai, capacity_mw: 1206}
+  - {name: 喜撰山,     operator: 関西電力, region: kansai, capacity_mw: 466}
+  - {name: 三尾,       operator: 関西電力, region: kansai, capacity_mw: 37}
+  # ── 中部電力 ──
+  - {name: 奥美濃,     operator: 中部電力, region: chubu, capacity_mw: 1500}
+  - {name: 奥矢作第二, operator: 中部電力, region: chubu, capacity_mw: 780}
+  - {name: 高根第一,   operator: 中部電力, region: chubu, capacity_mw: 340}
+  - {name: 奥矢作第一, operator: 中部電力, region: chubu, capacity_mw: 323}
+  - {name: 馬瀬川第一, operator: 中部電力, region: chubu, capacity_mw: 288}
+  - {name: 畑薙第一,   operator: 中部電力, region: chubu, capacity_mw: 86}
+  # ── 東京電力リニューアブルパワー ──
+  - {name: 新高瀬川,   operator: 東京電力, region: tokyo, capacity_mw: 1280}
+  - {name: 玉原,       operator: 東京電力, region: tokyo, capacity_mw: 1200}
+  - {name: 葛野川,     operator: 東京電力, region: tokyo, capacity_mw: 1200}
+  - {name: 今市,       operator: 東京電力, region: tokyo, capacity_mw: 1050}
+  - {name: 神流川,     operator: 東京電力, region: tokyo, capacity_mw: 940}
+  - {name: 塩原,       operator: 東京電力, region: tokyo, capacity_mw: 900}
+  - {name: 安曇,       operator: 東京電力, region: tokyo, capacity_mw: 623,
+     note: 混合揚水。OSMはchubuスライスに出現するが東電RP=東京エリア帰属}
+  - {name: 水殿,       operator: 東京電力, region: tokyo, capacity_mw: 245,
+     note: 混合揚水（安曇と同じ梓川系）}
+  - {name: 矢木沢,     operator: 東京電力, region: tokyo, capacity_mw: 240}
+  # ── 公営 ──
+  - {name: 城山,       operator: 神奈川県企業庁, region: tokyo, capacity_mw: 250}
+  # ── 電源開発（J-POWER、東日本50Hz系=東京エリア向け供給で帰属） ──
+  - {name: 奥清津,     operator: 電源開発, region: tokyo, capacity_mw: 1000,
+     note: 所在は新潟県湯沢町。50Hz・東京エリア向け。OSMの奥清津発電所1600MWは第二との合算}
+  - {name: 奥清津第二, operator: 電源開発, region: tokyo, capacity_mw: 600,
+     note: 所在は新潟県湯沢町。奥清津と上下池を共有}
+  - {name: 下郷,       operator: 電源開発, region: tokyo, capacity_mw: 1000,
+     note: 所在は福島県下郷町。50Hz・東京エリア向け供給とされる（確信度中）}
+  - {name: 沼原,       operator: 電源開発, region: tokyo, capacity_mw: 675,
+     note: 所在は栃木県那須塩原市=東京エリア}
+  # ── 電源開発（その他地域） ──
+  - {name: 新豊根,     operator: 電源開発, region: chubu, capacity_mw: 1125,
+     note: 所在は愛知県=中部エリア(60Hz)}
+  - {name: 池原,       operator: 電源開発, region: kansai, capacity_mw: 350,
+     note: 所在は奈良県=関西エリア。混合揚水}
+  - {name: 長野,       operator: 電源開発, region: hokuriku, capacity_mw: 220,
+     note: 所在は福井県大野市・九頭竜川=北陸エリア。混合揚水}
+  # ── 中国電力 ──
+  - {name: 俣野川,     operator: 中国電力, region: chugoku, capacity_mw: 1200}
+  - {name: 南原,       operator: 中国電力, region: chugoku, capacity_mw: 620}
+  - {name: 新成羽川,   operator: 中国電力, region: chugoku, capacity_mw: 303,
+     note: 混合揚水}
+  # ── 九州電力 ──
+  - {name: 小丸川,     operator: 九州電力, region: kyushu, capacity_mw: 1200}
+  - {name: 天山,       operator: 九州電力, region: kyushu, capacity_mw: 600}
+  - {name: 大平,       operator: 九州電力, region: kyushu, capacity_mw: 500}
+  - {name: 諸塚,       operator: 九州電力, region: kyushu, capacity_mw: 50}
+  # ── 北海道電力 ──
+  - {name: 京極,       operator: 北海道電力, region: hokkaido, capacity_mw: 400}
+  - {name: 新冠,       operator: 北海道電力, region: hokkaido, capacity_mw: 200}
+  - {name: 高見,       operator: 北海道電力, region: hokkaido, capacity_mw: 200}
+  # ── 東北電力 ──
+  - {name: 第二沼沢,   operator: 東北電力, region: tohoku, capacity_mw: 460}
+  - {name: 池尻川,     operator: 東北電力, region: tohoku, capacity_mw: 2.34,
+     note: 5MW未満のためUCローダーでは対象外（リスト完全性のため収載）}
+  # ── 四国電力 ──
+  - {name: 本川,       operator: 四国電力, region: shikoku, capacity_mw: 615}
+  - {name: 蔭平,       operator: 四国電力, region: shikoku, capacity_mw: 46.5,
+     note: 混合揚水}
+  - {name: 穴内川,     operator: 四国電力, region: shikoku, capacity_mw: 12.5}
+  - {name: 大森川,     operator: 四国電力, region: shikoku, capacity_mw: 12.2}

@@ -1,0 +1,28 @@
+# 原子力発電所の稼働状態 参照リスト
+#
+# 断面: 2023年度（シナリオの需要・RE参照 = OCCTO 2023年度統計と整合させる）
+# 2023年度末時点で新規制基準下の再稼働・営業運転実績のある12基のみを
+# 稼働可能(operational)とする。合計 11,608 MW（公表値「約1,160万kW」と整合）。
+#
+# 背景（ベースライン計測 2026-06-11）: OSM抽出の原子力21エントリ31.8GWには
+# 廃炉済み（福島第二4,400MW・もんじゅ・ふげん・敦賀1号等）や長期停止中
+# （柏崎刈羽・浜岡・泊・志賀等）が含まれ、全数が起動可能扱いだったため
+# nuclearシェアが23%超（実態~9%）に歪んでいた。
+#
+# 適用 (src/uc/scenario.py apply_nuclear_status_reference):
+#   - operational に名前マッチした OSM 原発 → 容量を稼働可能容量に補正
+#   - マッチしない OSM 原発 → 除外（停止・廃炉・建設中）
+#   - OSM に無い operational エントリ → 追加
+#
+# 再稼働の進展で断面を更新する場合はこのファイルを改訂する
+# （例: 女川2号 2024-10 / 島根2号 2024-12 営業運転再開 → fiscal_year 2024 断面）。
+
+fiscal_year: 2023
+
+operational:
+  - {name: 川内, region: kyushu,  capacity_mw: 1780, units: "1,2号機 (890MW×2)"}
+  - {name: 玄海, region: kyushu,  capacity_mw: 2360, units: "3,4号機 (1180MW×2)"}
+  - {name: 伊方, region: shikoku, capacity_mw: 890,  units: "3号機"}
+  - {name: 高浜, region: kansai,  capacity_mw: 3392, units: "1-4号機 (826×2+870×2)"}
+  - {name: 大飯, region: kansai,  capacity_mw: 2360, units: "3,4号機 (1180MW×2)"}
+  - {name: 美浜, region: kansai,  capacity_mw: 826,  units: "3号機"}
