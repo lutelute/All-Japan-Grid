@@ -79,6 +79,16 @@ MIGRATIONS: Sequence[Migration] = (
         # ensure_schema(); this migration records the version bump.
         statements=[],
     ),
+    Migration(
+        version=3,
+        description=(
+            "UC scenarios: uc_scenarios, uc_scenario_generators "
+            "(scenario-dependent generator selection, owner 2026-06-11)"
+        ),
+        # Tables are created by Base.metadata.create_all() in
+        # ensure_schema(); this migration records the version bump.
+        statements=[],
+    ),
 )
 
 

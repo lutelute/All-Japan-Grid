@@ -57,9 +57,10 @@ def _git_head() -> str:
         return "unknown"
 
 
-def run_benchmark(reserve_margin: float, mip_gap: float) -> dict:
-    print("シナリオ構築中...")
-    scn = build_national_scenario()
+def run_benchmark(reserve_margin: float, mip_gap: float,
+                  scenario: str = "fy2023") -> dict:
+    print(f"シナリオ構築中... ({scenario})")
+    scn = build_national_scenario(scenario=scenario)
     stats = scn.load_stats
 
     n_thermal = sum(1 for g in scn.generators
@@ -118,7 +119,7 @@ def run_benchmark(reserve_margin: float, mip_gap: float) -> dict:
         "meta": {
             "date": _dt.date.today().isoformat(),
             "git_head": _git_head(),
-            "scenario": "national_24h_nodal (gen_uc_regional互換)",
+            "scenario": f"national_24h_nodal / uc_scenario={scn.config.name}",
             "reserve_margin": reserve_margin,
             "mip_gap": mip_gap,
             "effective_solver": _detect_effective_solver(),
@@ -153,6 +154,8 @@ def run_benchmark(reserve_margin: float, mip_gap: float) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--label", default="snapshot", help="レポートのラベル")
+    ap.add_argument("--scenario", default="fy2023",
+                    help="UCシナリオ名 (config/uc_scenarios/) またはYAMLパス")
     ap.add_argument("--reserve-margin", type=float, default=0.05)
     ap.add_argument("--mip-gap", type=float, default=0.01)
     ap.add_argument("--out", default=None, help="出力JSONパス（省略時は docs/reports/ に自動命名）")
@@ -160,7 +163,8 @@ def main() -> int:
                     help="比較対象の過去スナップショットJSON（差分を表示）")
     args = ap.parse_args()
 
-    report = run_benchmark(args.reserve_margin, args.mip_gap)
+    report = run_benchmark(args.reserve_margin, args.mip_gap,
+                           scenario=args.scenario)
 
     out = args.out or (
         f"docs/reports/uc_benchmark_{args.label}_{report['meta']['date']}.json"

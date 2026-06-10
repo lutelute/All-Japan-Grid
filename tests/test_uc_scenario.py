@@ -11,13 +11,13 @@ import numpy as np
 import pytest
 
 from src.uc.scenario import (
-    DEMAND_SHAPE,
-    OCCTO_RE,
     REGIONS,
     LoadStats,
+    UCScenarioConfig,
     build_battery,
     build_national_scenario,
     load_national_thermal_generators,
+    load_scenario_config,
 )
 
 
@@ -301,15 +301,44 @@ operational:
 
 
 class TestBuildBattery:
-    def test_battery_fields_from_occto_reference(self):
-        b = build_battery("kyushu")
+    def test_battery_fields_from_scenario_reference(self):
+        cfg = load_scenario_config("fy2023")
+        b = build_battery("kyushu", cfg)
         assert b.fuel_type == "battery"
         assert b.region == "kyushu"
-        assert b.capacity_mw == OCCTO_RE["kyushu"]["batt_mw"]
-        assert b.storage_capacity_mwh == OCCTO_RE["kyushu"]["batt_mwh"]
+        assert b.capacity_mw == cfg.battery["kyushu"]["mw"]
+        assert b.storage_capacity_mwh == cfg.battery["kyushu"]["mwh"]
         assert b.is_storage
         assert b.initial_soc_fraction == pytest.approx(0.5)
         assert b.min_terminal_soc_fraction == pytest.approx(0.4)
+
+
+class TestLoadScenarioConfig:
+    def test_fy2023_loads_with_expected_values(self):
+        cfg = load_scenario_config("fy2023")
+        assert cfg.name == "fy2023"
+        assert cfg.fiscal_year == 2023
+        assert cfg.demand_shape.shape == (24,)
+        assert cfg.demand_shape.max() == pytest.approx(1.0)
+        assert set(cfg.regional_peak_mw) == set(REGIONS)
+        # 旧ハードコード定数からの移行値の回帰ピン
+        assert cfg.regional_peak_mw["tokyo"] == pytest.approx(60000)
+        assert cfg.fuel_costs["coal"] == pytest.approx(4500)
+        assert cfg.capacity_defaults["coal"] == pytest.approx(100)
+        # startup_profiles はYAMLキーから内部短縮キーへ変換される
+        assert cfg.startup_profiles["nuclear"]["mut"] == 8
+        assert cfg.startup_profiles["lng"]["wh"] == 2
+        # references がシナリオの一部
+        assert "nuclear_status" in cfg.reference_paths
+
+    def test_passthrough_and_default(self):
+        cfg = load_scenario_config("fy2023")
+        assert load_scenario_config(cfg) is cfg          # パススルー
+        assert load_scenario_config(None).name == "fy2023"  # 既定
+
+    def test_unknown_scenario_raises(self):
+        with pytest.raises(FileNotFoundError, match="fy2023"):
+            load_scenario_config("no_such_scenario")
 
 
 class TestNationalScenario:
@@ -331,7 +360,9 @@ class TestNationalScenario:
         assert set(scn.gross_demand_r) == set(REGIONS)
         for r in REGIONS:
             assert scn.gross_demand_r[r].shape == (24,)
-            assert scn.gross_demand_r[r].max() == pytest.approx(OCCTO_RE[r]["peak_mw"])
+            assert scn.gross_demand_r[r].max() == pytest.approx(
+                scn.config.regional_peak_mw[r]
+            )
         # 純需要は非負
         for r, d in scn.net_demand_r.items():
             assert (d >= 0).all()

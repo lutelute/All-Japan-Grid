@@ -1,15 +1,19 @@
-"""全国UCシナリオビルダー — GeoJSON発電所データからUC入力を構築する。
+"""全国UCシナリオビルダー — シナリオ定義に基づきGeoJSONからUC入力を構築する。
 
-scripts/gen_uc_regional.py のデータロード部を共通化したモジュール。
-スクリプト群（ベンチマーク・図生成）が同一のロードロジックを共有することで、
-データ品質改善が全スクリプトに一括反映され、KPI計測の物差しが揃う。
+設計原則（2026-06-11 オーナー指示「発電機の選定はシナリオ依存」）:
+- **シナリオ = 第一級概念**。需要・RE容量・燃料コスト・起動費・容量既定値・
+  発電機可用性（原子力断面・揚水・容量パッチ）の年度断面パッケージ。
+- 正本は git 追跡の ``config/uc_scenarios/{name}.yaml``。
+  ``load_scenario_config("fy2023")`` で読み、全ビルド関数が config 駆動で動く。
+- 新断面（fy2024・将来計画）は YAML を複製して調整するだけで切り替わる。
+- DB（grid.db の uc_scenarios / uc_scenario_generators）へは
+  ``scripts/db/ingest_uc_scenarios.py`` で機械的に同期する（実行時ビュー）。
 
-設計メモ:
-- 太陽光・風力・蓄電池は OSM データを使わず OCCTO 統計ベースの参照容量
-  （OCCTO_RE）で表現する（OSM は -1MW 欠損フラグ多数のため）。
-- ロード時に重複（osm_id が複数地域スライスに出現）等のデータ品質統計を
-  LoadStats として収集する。挙動はオプションで切り替え、デフォルトは
-  従来スクリプトと同一（重複を除外しない）。
+データ品質処理（計測ベース、docs/reports/uc_benchmark_*_2026-06-11.json）:
+- osm_id 重複の帰属解決（地域スライス重なりの二重計上 126機39.8GW を除去）
+- 揚水の storage 化（OSM は plant:method を保持せず全揚水が フリー水力だった）
+- 原子力の年度断面適用（廃炉・停止中を除外）
+- 容量欠損の較正（既定値=自家発スケール + 大規模例外の個別パッチ）
 """
 
 from __future__ import annotations
@@ -17,86 +21,25 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field, replace
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 
 import numpy as np
 
 from src.model.generator import Generator
+from src.regions import REGIONS
 from src.uc.interconnection_loader import InterconnectionLoader
 from src.uc.models import DemandProfile, Interconnection, TimeHorizon, UCParameters
 
-REGIONS = [
-    "hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
-    "kansai", "chugoku", "shikoku", "kyushu", "okinawa",
-]
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+SCENARIO_DIR = _REPO_ROOT / "config" / "uc_scenarios"
+DEFAULT_SCENARIO = "fy2023"
 
-# ── OCCTO 2023年度統計ベース地域別参照容量 ─────────────────────
-# 出典: 広域機関 電力需給検証報告書・再エネ導入実績 (概算値)
-OCCTO_RE = {
-    "hokkaido": {"solar_mw": 4000,  "wind_mw": 4500,  "batt_mw": 300,  "batt_mwh": 1200, "peak_mw": 6000},
-    "tohoku":   {"solar_mw": 7500,  "wind_mw": 4000,  "batt_mw": 400,  "batt_mwh": 1600, "peak_mw": 14000},
-    "tokyo":    {"solar_mw": 12000, "wind_mw": 300,   "batt_mw": 500,  "batt_mwh": 2000, "peak_mw": 60000},
-    "chubu":    {"solar_mw": 6000,  "wind_mw": 200,   "batt_mw": 200,  "batt_mwh": 800,  "peak_mw": 22000},
-    "hokuriku": {"solar_mw": 1800,  "wind_mw": 100,   "batt_mw": 100,  "batt_mwh": 400,  "peak_mw": 5000},
-    "kansai":   {"solar_mw": 5500,  "wind_mw": 100,   "batt_mw": 300,  "batt_mwh": 1200, "peak_mw": 28000},
-    "chugoku":  {"solar_mw": 5000,  "wind_mw": 300,   "batt_mw": 200,  "batt_mwh": 800,  "peak_mw": 10000},
-    "shikoku":  {"solar_mw": 2000,  "wind_mw": 100,   "batt_mw": 150,  "batt_mwh": 600,  "peak_mw": 5000},
-    "kyushu":   {"solar_mw": 15000, "wind_mw": 1200,  "batt_mw": 1200, "batt_mwh": 4800, "peak_mw": 18000},
-    "okinawa":  {"solar_mw": 500,   "wind_mw": 100,   "batt_mw": 100,  "batt_mwh": 400,  "peak_mw": 2000},
-}
-
-# ── 24時間需要形状（ピーク=1.0, 平日夏季典型） ─────────────────
-DEMAND_SHAPE = np.array([
-    0.60, 0.57, 0.55, 0.53, 0.55, 0.60, 0.68, 0.78,
-    0.87, 0.93, 0.97, 1.00, 0.99, 0.98, 0.96, 0.93,
-    0.90, 0.86, 0.82, 0.78, 0.74, 0.70, 0.66, 0.63,
-])
-
-# ── 太陽光CF: ベース曲線 × 地域別日照倍率 ────────────────────
-SOLAR_CF_BASE = np.array([
-    0, 0, 0, 0, 0, 0.02, 0.10, 0.25, 0.45, 0.65, 0.80, 0.90,
-    0.92, 0.88, 0.78, 0.62, 0.40, 0.18, 0.04, 0, 0, 0, 0, 0,
-])
-# 年間水平面日射量 (GHI) 比による地域係数
-SOLAR_MULT = {
-    "hokkaido": 0.83, "tohoku": 0.92, "tokyo": 1.00, "chubu": 1.03,
-    "hokuriku": 0.90, "kansai": 1.04, "chugoku": 1.06, "shikoku": 1.06,
-    "kyushu": 1.10, "okinawa": 1.13,
-}
-SOLAR_CF_R = {r: np.minimum(SOLAR_CF_BASE * SOLAR_MULT[r], 1.0) for r in REGIONS}
-
-# ── 風力CF: ベース曲線 × 地域別風況倍率 ──────────────────────
-WIND_CF_BASE = np.array([
-    0.38, 0.40, 0.41, 0.42, 0.40, 0.38, 0.34, 0.30,
-    0.28, 0.27, 0.28, 0.29, 0.30, 0.31, 0.32, 0.33,
-    0.35, 0.37, 0.38, 0.39, 0.40, 0.40, 0.39, 0.38,
-])
-WIND_MULT = {
-    "hokkaido": 1.25, "tohoku": 1.20, "tokyo": 0.70, "chubu": 0.85,
-    "hokuriku": 0.95, "kansai": 0.80, "chugoku": 0.90, "shikoku": 0.90,
-    "kyushu": 1.00, "okinawa": 1.10,
-}
-WIND_CF_R = {r: WIND_CF_BASE * WIND_MULT[r] for r in REGIONS}
-
-# ── 燃料コスト・分類 ──────────────────────────────────────────
-FUEL_COST = {"coal": 4500, "lng": 7000, "oil": 9000, "nuclear": 1500,
-             "hydro": 0, "pumped_hydro": 0, "battery": 0,
-             "biomass": 3000, "geothermal": 0, "waste": 5000, "unknown": 5000}
+# ── シナリオ非依存の定数 ──────────────────────────────────────
+# OSM燃料タグの正規化（タグ体系の事実であり断面に依らない）
 FUEL_MAP = {"coal": "coal", "gas": "lng", "lng": "lng", "oil": "oil", "nuclear": "nuclear",
             "hydro": "hydro", "wind": "wind", "solar": "solar", "biomass": "biomass",
             "geothermal": "geothermal", "waste": "biomass", "battery": "battery"}
-
-SU = {"nuclear": dict(hot=10000, warm=30000, cold=100000, wh=8, ch=48, mut=8, mdt=8),
-      "coal":    dict(hot=5000,  warm=15000, cold=40000,  wh=4, ch=12, mut=4, mdt=4),
-      "lng":     dict(hot=2000,  warm=5000,  cold=15000,  wh=2, ch=8,  mut=2, mdt=2),
-      "oil":     dict(hot=1500,  warm=3000,  cold=8000,   wh=2, ch=6,  mut=1, mdt=1)}
-# 容量欠損時の既定値。計測(2026-06-11)で欠損coal/gas/oilの実態は小規模自家発・
-# 産業用IPPが大半と判明したため、火力は自家発スケール(100MW)とする。
-# 大規模なのに欠損している例外は data/reference/capacity_patches.yaml で個別補正。
-# （旧値 coal600/lng400 は欠損32機で19.2GWの幻容量を生んでいた）
-# nuclear は nuclear_status.yaml が容量を上書きするため実質未使用。
-THERMAL_DEFAULT = {"nuclear": 900, "coal": 100, "lng": 100, "gas": 100,
-                   "oil": 100, "geothermal": 30, "waste": 15, "biomass": 20}
 
 # 容量下限: これ未満の電源はUC対象外（小水力・自家発スケール）
 MIN_UNIT_MW = 5.0
@@ -108,6 +51,109 @@ OPERATOR_REGION = {
     "中国電力": "chugoku", "四国電力": "shikoku", "九州電力": "kyushu",
     "沖縄電力": "okinawa",
 }
+
+
+# ── シナリオ設定 ──────────────────────────────────────────────
+@dataclass
+class UCScenarioConfig:
+    """UCシナリオ定義（config/uc_scenarios/*.yaml の型付きビュー）。"""
+
+    name: str
+    fiscal_year: Optional[int]
+    description: str
+    demand_shape: np.ndarray                 # (24,) ピーク=1.0
+    regional_peak_mw: dict[str, float]
+    solar_capacity_mw: dict[str, float]
+    solar_cf_base: np.ndarray
+    solar_multiplier: dict[str, float]
+    wind_capacity_mw: dict[str, float]
+    wind_cf_base: np.ndarray
+    wind_multiplier: dict[str, float]
+    battery: dict[str, dict]                 # region -> {mw, mwh}
+    fuel_costs: dict[str, float]
+    startup_profiles: dict[str, dict]        # 内部形式 hot/warm/cold/wh/ch/mut/mdt
+    capacity_defaults: dict[str, float]
+    reference_paths: dict[str, str]
+    raw: dict = field(repr=False, default_factory=dict)  # 元YAML（DB ingest用）
+
+    @property
+    def solar_cf_r(self) -> dict[str, np.ndarray]:
+        return {
+            r: np.minimum(self.solar_cf_base * self.solar_multiplier[r], 1.0)
+            for r in self.solar_multiplier
+        }
+
+    @property
+    def wind_cf_r(self) -> dict[str, np.ndarray]:
+        return {r: self.wind_cf_base * self.wind_multiplier[r]
+                for r in self.wind_multiplier}
+
+    def reference_path(self, key: str) -> Optional[str]:
+        p = self.reference_paths.get(key)
+        return str(p) if p else None
+
+
+def load_scenario_config(
+    scenario: Union[str, Path, UCScenarioConfig, None] = None,
+) -> UCScenarioConfig:
+    """シナリオ定義をロードする。
+
+    Args:
+        scenario: シナリオ名（``config/uc_scenarios/{name}.yaml`` を解決）、
+            YAMLへのパス、ロード済み ``UCScenarioConfig``（パススルー）、
+            または None（既定 ``fy2023``）。
+    """
+    if isinstance(scenario, UCScenarioConfig):
+        return scenario
+    name = scenario or DEFAULT_SCENARIO
+
+    path = Path(name)
+    if not path.suffix:  # 名前 → 標準ディレクトリ
+        path = SCENARIO_DIR / f"{name}.yaml"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"UC scenario not found: {path}"
+            f" (known: {sorted(p.stem for p in SCENARIO_DIR.glob('*.yaml'))})"
+        )
+
+    import yaml
+
+    with open(path) as f:
+        raw = yaml.safe_load(f)
+
+    meta = raw.get("meta", {})
+    demand = raw["demand"]
+    solar = raw["renewables"]["solar"]
+    wind = raw["renewables"]["wind"]
+
+    # 起動費プロファイル: YAMLの読みやすいキー → 内部短縮キー
+    su: dict[str, dict] = {}
+    for fuel, p in (raw.get("startup_profiles") or {}).items():
+        su[fuel] = dict(
+            hot=p["hot"], warm=p["warm"], cold=p["cold"],
+            wh=p["warm_start_h"], ch=p["cold_start_h"],
+            mut=p["min_up_h"], mdt=p["min_down_h"],
+        )
+
+    return UCScenarioConfig(
+        name=meta.get("name", path.stem),
+        fiscal_year=meta.get("fiscal_year"),
+        description=meta.get("description", ""),
+        demand_shape=np.asarray(demand["shape_24h"], dtype=float),
+        regional_peak_mw={k: float(v) for k, v in demand["regional_peak_mw"].items()},
+        solar_capacity_mw={k: float(v) for k, v in solar["capacity_mw"].items()},
+        solar_cf_base=np.asarray(solar["cf_base_24h"], dtype=float),
+        solar_multiplier={k: float(v) for k, v in solar["regional_multiplier"].items()},
+        wind_capacity_mw={k: float(v) for k, v in wind["capacity_mw"].items()},
+        wind_cf_base=np.asarray(wind["cf_base_24h"], dtype=float),
+        wind_multiplier={k: float(v) for k, v in wind["regional_multiplier"].items()},
+        battery=dict(raw.get("battery") or {}),
+        fuel_costs={k: float(v) for k, v in (raw.get("fuel_costs_per_mwh") or {}).items()},
+        startup_profiles=su,
+        capacity_defaults={k: float(v) for k, v in (raw.get("capacity_defaults_mw") or {}).items()},
+        reference_paths=dict(raw.get("references") or {}),
+        raw=raw,
+    )
 
 
 def _bbox_inner_margin(lon: float, lat: float, bbox: dict) -> float:
@@ -160,7 +206,7 @@ class LoadStats:
     thermal_capacity_mw: float = 0.0
     n_duplicates: int = 0              # osm_id が既出のコピー数（dedup時は除去数）
     duplicate_capacity_mw: float = 0.0
-    n_capacity_defaulted: int = 0      # 容量欠損を THERMAL_DEFAULT で補完した台数
+    n_capacity_defaulted: int = 0      # 容量欠損を capacity_defaults で補完した台数
     n_capacity_patched: int = 0        # capacity_patches.yaml で個別補正した台数
     n_skipped_small: int = 0           # MIN_UNIT_MW 未満で除外
     n_storage_units: int = 0           # is_storage な発電機（揚水等）
@@ -193,31 +239,37 @@ def load_national_thermal_generators(
     data_dir: str = "data",
     stats: Optional[LoadStats] = None,
     dedup: bool = True,
-    capacity_patches_path: str = "data/reference/capacity_patches.yaml",
+    capacity_patches_path: Optional[str] = None,
+    config: Optional[UCScenarioConfig] = None,
 ) -> list[Generator]:
     """GeoJSONから熱電源（太陽光・風力・蓄電池以外）をロードする。
 
     挙動:
-    - 太陽光・風力・蓄電池は除外（OCCTO参照値で別途表現）
-    - 容量欠損・0以下は THERMAL_DEFAULT で補完、それでも MIN_UNIT_MW 未満は除外
+    - 太陽光・風力・蓄電池は除外（シナリオの参照容量で別途表現）
+    - 容量欠損・0以下は個別パッチ → capacity_defaults で補完、
+      それでも MIN_UNIT_MW 未満は除外
     - 沖縄は OSM 容量記録がないため OCCTO 実績ベースの合成火力を追加
-    - 揚水は fuel_type='pumped_hydro' のときのみ storage 扱い
-      （注: 現状の OSM 抽出に pumped_hydro は存在しない = 既知の精度課題）
     - dedup=True（デフォルト）: 地域スライスの重なりで複数地域に出現する
       osm_id を1回だけ採用する。帰属は operator→管内 / bbox内側マージンで決定
       （ベースライン計測 2026-06-11: 重複126機39.8GW=熱容量の14.8%が二重計上）。
       dedup=False で従来の二重計上挙動を再現できる。
     """
+    config = load_scenario_config(config)
+    fuel_cost = config.fuel_costs
+    su_profiles = config.startup_profiles
+    capacity_defaults = config.capacity_defaults
+
     if stats is None:
         stats = LoadStats()
     stats.dedup_enabled = dedup
     all_gens: list[Generator] = []
 
+    patches_path = capacity_patches_path or config.reference_path("capacity_patches")
     capacity_patches: list[dict] = []
-    if capacity_patches_path and os.path.exists(capacity_patches_path):
+    if patches_path and os.path.exists(patches_path):
         import yaml
 
-        with open(capacity_patches_path) as f:
+        with open(patches_path) as f:
             capacity_patches = (yaml.safe_load(f) or {}).get("patches", [])
 
     # パス1: 全スライスを読み、osm_id の出現地域から帰属地域を決める
@@ -257,7 +309,7 @@ def load_national_thermal_generators(
             if rf.startswith("http"):
                 rf = "unknown"
             fuel = FUEL_MAP.get(rf, "unknown")
-            # 太陽光・風力はOCCTO参照値を使用するためOSMエントリは除外
+            # 太陽光・風力はシナリオ参照値を使用するためOSMエントリは除外
             if fuel in ("solar", "wind", "battery"):
                 continue
             # 欠損・負値の補完: 個別パッチ（大規模の例外）→ 燃料別既定値
@@ -271,7 +323,7 @@ def load_national_thermal_generators(
                     cap = float(patch["capacity_mw"])
                     stats.n_capacity_patched += 1
                 else:
-                    cap = THERMAL_DEFAULT.get(rf, 0.0)
+                    cap = capacity_defaults.get(rf, 0.0)
                     if cap > 0:
                         stats.n_capacity_defaulted += 1
             if cap < MIN_UNIT_MW:
@@ -287,13 +339,13 @@ def load_national_thermal_generators(
                 regs.append(r)
                 if dedup and oid in home_region and r != home_region[oid]:
                     continue  # 帰属地域のコピーのみ採用
-            sp = SU.get(fuel, {})
+            sp = su_profiles.get(fuel, {})
             is_storage = fuel in ("pumped_hydro",)
             g = Generator(
                 id=f"{r}_g{i}",
                 name=(props.get("name") or f"{r}_{fuel}_{i}")[:40],
                 capacity_mw=cap, fuel_type=fuel, region=r,
-                fuel_cost_per_mwh=FUEL_COST.get(fuel, 5000),
+                fuel_cost_per_mwh=fuel_cost.get(fuel, 5000),
                 no_load_cost=500 if not is_storage and fuel != "geothermal" else 0,
                 startup_cost=sp.get("hot", 3000) if not is_storage else 0,
                 shutdown_cost=2000 if not is_storage else 0,
@@ -328,11 +380,11 @@ def load_national_thermal_generators(
                 ("沖縄石炭", "coal", 200),
             ]
             for name, fuel, cap_ow in okinawa_thermals:
-                sp = SU.get(fuel, {})
+                sp = su_profiles.get(fuel, {})
                 g = Generator(
                     id=f"okinawa_synth_{name}", name=name,
                     capacity_mw=cap_ow, fuel_type=fuel, region="okinawa",
-                    fuel_cost_per_mwh=FUEL_COST.get(fuel, 9000),
+                    fuel_cost_per_mwh=fuel_cost.get(fuel, 9000),
                     no_load_cost=500, startup_cost=sp.get("hot", 1500),
                     shutdown_cost=2000,
                     min_up_time_h=sp.get("mut", 1), min_down_time_h=sp.get("mdt", 1),
@@ -356,7 +408,8 @@ def load_national_thermal_generators(
 def apply_pumped_storage_reference(
     gens: list[Generator],
     stats: Optional[LoadStats] = None,
-    ref_path: str = "data/reference/pumped_storage.yaml",
+    ref_path: Optional[str] = None,
+    config: Optional[UCScenarioConfig] = None,
 ) -> list[Generator]:
     """揚水参照リストを適用し、揚水をstorage付き電源として正しく表現する。
 
@@ -376,6 +429,9 @@ def apply_pumped_storage_reference(
     """
     import yaml
 
+    if ref_path is None:
+        config = load_scenario_config(config)
+        ref_path = config.reference_path("pumped_storage")
     with open(ref_path) as f:
         ref = yaml.safe_load(f)
     defaults = ref.get("defaults", {})
@@ -473,11 +529,12 @@ def apply_pumped_storage_reference(
 def apply_nuclear_status_reference(
     gens: list[Generator],
     stats: Optional[LoadStats] = None,
-    ref_path: str = "data/reference/nuclear_status.yaml",
+    ref_path: Optional[str] = None,
+    config: Optional[UCScenarioConfig] = None,
 ) -> list[Generator]:
-    """原子力稼働状態リスト(data/reference/nuclear_status.yaml)を適用する。
+    """原子力稼働状態リストを適用する（シナリオの年度断面）。
 
-    背景（ベースライン計測 2026-06-11）: OSM原子力21エントリ31.8GWには廃炉済み
+    背景（ベースライン計測 2026-06-11）: OSM原子力21エントリ31.8GVには廃炉済み
     （福島第二・もんじゅ等）や長期停止中（柏崎刈羽・浜岡等）が含まれ全数起動
     可能扱い → nuclearシェア23%超（実態~9%）の歪み。
 
@@ -488,6 +545,9 @@ def apply_nuclear_status_reference(
     """
     import yaml
 
+    config = load_scenario_config(config)
+    if ref_path is None:
+        ref_path = config.reference_path("nuclear_status")
     with open(ref_path) as f:
         ref = yaml.safe_load(f)
     entries = list(ref.get("operational", []))
@@ -536,7 +596,7 @@ def apply_nuclear_status_reference(
         mw_avail += cap
 
     # OSMに存在しない稼働炉を追加
-    sp = SU["nuclear"]
+    sp = config.startup_profiles.get("nuclear", {})
     for e in entries:
         if id(e) in matched_entries:
             continue
@@ -545,15 +605,15 @@ def apply_nuclear_status_reference(
             id=f"nuc_{e['name']}",
             name=f"{e['name']}原子力発電所",
             capacity_mw=cap, fuel_type="nuclear", region=e["region"],
-            fuel_cost_per_mwh=FUEL_COST["nuclear"],
+            fuel_cost_per_mwh=config.fuel_costs.get("nuclear", 1500),
             no_load_cost=500,
-            startup_cost=sp["hot"], shutdown_cost=2000,
-            min_up_time_h=sp["mut"], min_down_time_h=sp["mdt"],
+            startup_cost=sp.get("hot", 10000), shutdown_cost=2000,
+            min_up_time_h=sp.get("mut", 8), min_down_time_h=sp.get("mdt", 8),
             p_min_mw=cap * 0.4,
             ramp_up_mw_per_h=cap * 0.1, ramp_down_mw_per_h=cap * 0.1,
-            hot_start_cost=sp["hot"], warm_start_cost=sp["warm"],
-            cold_start_cost=sp["cold"],
-            warm_start_h=sp["wh"], cold_start_h=sp["ch"],
+            hot_start_cost=sp.get("hot", 10000), warm_start_cost=sp.get("warm", 30000),
+            cold_start_cost=sp.get("cold", 100000),
+            warm_start_h=sp.get("wh", 8), cold_start_h=sp.get("ch", 48),
             storage_capacity_mwh=0.0,
             charge_efficiency=0.88, discharge_efficiency=0.88,
         ))
@@ -575,12 +635,17 @@ def apply_nuclear_status_reference(
     return out
 
 
-def build_battery(region: str) -> Generator:
-    """地域集約蓄電池（OCCTO参照容量）を1台のGeneratorとして構築する。"""
+def build_battery(
+    region: str,
+    config: Optional[UCScenarioConfig] = None,
+) -> Generator:
+    """地域集約蓄電池（シナリオ参照容量）を1台のGeneratorとして構築する。"""
     from src.regions import REGION_JA
 
-    batt_mw = OCCTO_RE[region]["batt_mw"]
-    batt_mwh = OCCTO_RE[region]["batt_mwh"]
+    config = load_scenario_config(config)
+    spec = config.battery[region]
+    batt_mw = float(spec["mw"])
+    batt_mwh = float(spec["mwh"])
     return Generator(
         id=f"{region}_battery",
         name=f"{REGION_JA[region]}蓄電池",
@@ -608,6 +673,7 @@ class NationalScenario:
     solar_gen_r: dict[str, np.ndarray]
     wind_gen_r: dict[str, np.ndarray]
     load_stats: LoadStats
+    config: Optional[UCScenarioConfig] = None
     num_periods: int = 24
 
     @property
@@ -647,28 +713,49 @@ class NationalScenario:
 
 
 def build_national_scenario(
+    scenario: Union[str, Path, UCScenarioConfig, None] = None,
     data_dir: str = "data",
     interconnections_path: str = "data/reference/interconnections.yaml",
     dedup: bool = True,
     pumped_storage: bool = True,
-    pumped_storage_path: str = "data/reference/pumped_storage.yaml",
+    pumped_storage_path: Optional[str] = None,
     nuclear_status: bool = True,
-    nuclear_status_path: str = "data/reference/nuclear_status.yaml",
+    nuclear_status_path: Optional[str] = None,
 ) -> NationalScenario:
-    """全国24hシナリオを構築する（需要・RE条件は gen_uc_regional.py 互換）。"""
+    """シナリオ定義に基づき全国24h UCシナリオを構築する。
+
+    Args:
+        scenario: シナリオ名（既定 fy2023）/ YAMLパス / ロード済みconfig。
+        pumped_storage / nuclear_status: 参照リスト適用のon/off
+            （off は比較計測・ベースライン再現用）。
+        *_path: 参照リストの明示パス（既定はシナリオの references）。
+    """
+    config = load_scenario_config(scenario)
     stats = LoadStats()
-    gens = load_national_thermal_generators(data_dir, stats, dedup=dedup)
-    if pumped_storage and os.path.exists(pumped_storage_path):
-        gens = apply_pumped_storage_reference(gens, stats, pumped_storage_path)
-    if nuclear_status and os.path.exists(nuclear_status_path):
-        gens = apply_nuclear_status_reference(gens, stats, nuclear_status_path)
+    gens = load_national_thermal_generators(
+        data_dir, stats, dedup=dedup, config=config,
+    )
+    ps_path = pumped_storage_path or config.reference_path("pumped_storage")
+    if pumped_storage and ps_path and os.path.exists(ps_path):
+        gens = apply_pumped_storage_reference(gens, stats, ps_path, config=config)
+    ns_path = nuclear_status_path or config.reference_path("nuclear_status")
+    if nuclear_status and ns_path and os.path.exists(ns_path):
+        gens = apply_nuclear_status_reference(gens, stats, ns_path, config=config)
     for r in REGIONS:
-        gens.append(build_battery(r))
+        gens.append(build_battery(r, config=config))
 
     ics = InterconnectionLoader().load(interconnections_path)
-    gross_demand_r = {r: DEMAND_SHAPE * OCCTO_RE[r]["peak_mw"] for r in REGIONS}
-    solar_gen_r = {r: SOLAR_CF_R[r] * OCCTO_RE[r]["solar_mw"] for r in REGIONS}
-    wind_gen_r = {r: WIND_CF_R[r] * OCCTO_RE[r]["wind_mw"] for r in REGIONS}
+    gross_demand_r = {
+        r: config.demand_shape * config.regional_peak_mw[r] for r in REGIONS
+    }
+    solar_cf_r = config.solar_cf_r
+    wind_cf_r = config.wind_cf_r
+    solar_gen_r = {
+        r: solar_cf_r[r] * config.solar_capacity_mw[r] for r in REGIONS
+    }
+    wind_gen_r = {
+        r: wind_cf_r[r] * config.wind_capacity_mw[r] for r in REGIONS
+    }
 
     return NationalScenario(
         generators=gens,
@@ -677,4 +764,5 @@ def build_national_scenario(
         solar_gen_r=solar_gen_r,
         wind_gen_r=wind_gen_r,
         load_stats=stats,
+        config=config,
     )

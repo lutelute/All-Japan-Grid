@@ -23,10 +23,7 @@ os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 
 from src.model.generator import Generator
 from src.uc.models import DemandProfile, TimeHorizon, UCParameters
-from src.uc.scenario import (
-    DEMAND_SHAPE, OCCTO_RE, REGIONS, SOLAR_CF_R, WIND_CF_R,
-    build_national_scenario,
-)
+from src.uc.scenario import REGIONS, build_national_scenario
 from src.uc.solver import solve_uc
 
 OUT = "papers/figs"
@@ -49,16 +46,17 @@ FUEL_JP = {"nuclear":"原子力","coal":"石炭","lng":"LNG","oil":"石油",
 
 # ── 発電機ロード+シナリオ構築（src/uc/scenario.py に共通化） ──
 print("発電機データ読み込み中...")
-scn = build_national_scenario()
+scn = build_national_scenario()  # 既定シナリオ fy2023 (config/uc_scenarios/)
+cfg = scn.config
 all_gens = scn.generators
 
 total_cap = sum(g.capacity_mw for g in all_gens if g.fuel_type != "battery")
 print(f"  熱電源: {sum(1 for g in all_gens if g.fuel_type not in ('battery','pumped_hydro'))}機 "
       f"{total_cap:,.0f} MW")
-print(f"  蓄電池: {sum(OCCTO_RE[r]['batt_mw'] for r in REGIONS):,.0f} MW / "
-      f"{sum(OCCTO_RE[r]['batt_mwh'] for r in REGIONS):,.0f} MWh")
-print(f"  太陽光(OCCTO): {sum(OCCTO_RE[r]['solar_mw'] for r in REGIONS):,.0f} MW")
-print(f"  風力(OCCTO):   {sum(OCCTO_RE[r]['wind_mw'] for r in REGIONS):,.0f} MW")
+print(f"  蓄電池: {sum(b['mw'] for b in cfg.battery.values()):,.0f} MW / "
+      f"{sum(b['mwh'] for b in cfg.battery.values()):,.0f} MWh")
+print(f"  太陽光(OCCTO): {sum(cfg.solar_capacity_mw.values()):,.0f} MW")
+print(f"  風力(OCCTO):   {sum(cfg.wind_capacity_mw.values()):,.0f} MW")
 
 # ── 地域別需要・太陽光・風力（シナリオから取得） ─────────────────
 gross_demand_r = scn.gross_demand_r
@@ -183,10 +181,10 @@ ok_gens = [
               initial_soc_fraction=0.5, min_terminal_soc_fraction=0.4),
 ]
 
-ok_solar   = SOLAR_CF_R["okinawa"] * OCCTO_RE["okinawa"]["solar_mw"]
-ok_wind    = WIND_CF_R["okinawa"]  * OCCTO_RE["okinawa"]["wind_mw"]
+ok_solar   = cfg.solar_cf_r["okinawa"] * cfg.solar_capacity_mw["okinawa"]
+ok_wind    = cfg.wind_cf_r["okinawa"]  * cfg.wind_capacity_mw["okinawa"]
 ok_peak_mw = 1800  # 沖縄電力 2022年夏季実績ピーク (設備容量2GWに対し実需要1,750-1,800MW)
-ok_gross   = DEMAND_SHAPE * ok_peak_mw
+ok_gross   = cfg.demand_shape * ok_peak_mw
 ok_net     = np.maximum(ok_gross - ok_solar - ok_wind, 0.0)
 
 print("沖縄スタンドアロンUC求解中 (7機+蓄電池)...")
@@ -263,7 +261,7 @@ for idx, r in enumerate(REGIONS_PLOT):
     ax.plot(hours, fp["_net_demand"] / 1000, "k--", lw=0.9, zorder=5, label="純需要")
 
     solar_noon = solar_gen_r[r][11] / 1000
-    solar_pct  = solar_noon / (OCCTO_RE[r]["peak_mw"] / 1000) * 100
+    solar_pct  = solar_noon / (cfg.regional_peak_mw[r] / 1000) * 100
     ax.set_title(f"{REGION_JP[r]}\n太陽光@正午:{solar_pct:.0f}%",
                  fontsize=9, fontweight="bold", pad=2)
     ax.set_xlim(-0.5, 23.5)
@@ -291,9 +289,9 @@ fig.legend(handles=handles, loc="lower center", ncol=8,
            fontsize=8, facecolor="white", edgecolor="#bbb",
            bbox_to_anchor=(0.5, -0.05), framealpha=0.95)
 
-total_solar_gw = sum(OCCTO_RE[r]["solar_mw"] for r in REGIONS) / 1000
-total_wind_gw  = sum(OCCTO_RE[r]["wind_mw"] for r in REGIONS) / 1000
-total_batt_gw  = sum(OCCTO_RE[r]["batt_mw"] for r in REGIONS) / 1000
+total_solar_gw = sum(cfg.solar_capacity_mw.values()) / 1000
+total_wind_gw  = sum(cfg.wind_capacity_mw.values()) / 1000
+total_batt_gw  = sum(b["mw"] for b in cfg.battery.values()) / 1000
 fig.suptitle(
     f"10地域別UC 24時間プロファイル（OCCTO参照: 太陽光{total_solar_gw:.0f}GW・"
     f"風力{total_wind_gw:.0f}GW・蓄電池{total_batt_gw:.1f}GW, 9連系線制約）\n"

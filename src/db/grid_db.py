@@ -41,6 +41,8 @@ from src.db.schema import (
     LoadAttributes,
     SchemaVersion,
     SubstationAttributes,
+    UCScenario,
+    UCScenarioGenerator,
 )
 from src.utils.logging_config import get_logger
 
@@ -300,6 +302,112 @@ class GridDatabase:
             "substations": self.list_substation_attributes(),
             "loads": self.list_load_attributes(),
         }
+
+    # ------------------------------------------------------------------
+    # UC scenarios (scenario-dependent generator selection)
+    # ------------------------------------------------------------------
+
+    def upsert_uc_scenario(
+        self,
+        scenario_id: str,
+        *,
+        config_json: str,
+        fiscal_year: Optional[int] = None,
+        description: Optional[str] = None,
+    ) -> UCScenario:
+        """Create or update a UC scenario definition (mirror of the YAML)."""
+        now = datetime.now(timezone.utc).isoformat()
+        with self._session_factory() as session:
+            record = session.get(UCScenario, scenario_id)
+            if record is None:
+                record = UCScenario(
+                    scenario_id=scenario_id,
+                    fiscal_year=fiscal_year,
+                    description=description,
+                    config_json=config_json,
+                    updated_at=now,
+                )
+                session.add(record)
+            else:
+                record.fiscal_year = fiscal_year
+                record.description = description
+                record.config_json = config_json
+                record.updated_at = now
+            session.commit()
+            session.expunge(record)
+            return record
+
+    def get_uc_scenario(self, scenario_id: str) -> Optional[UCScenario]:
+        """Retrieve a UC scenario by id."""
+        return self._get(UCScenario, scenario_id)
+
+    def list_uc_scenarios(self) -> List[UCScenario]:
+        """List all UC scenarios."""
+        return self._list_all(UCScenario)
+
+    def upsert_uc_scenario_generator(
+        self,
+        scenario_id: str,
+        kind: str,
+        gen_key: str,
+        payload_json: str,
+    ) -> UCScenarioGenerator:
+        """Create or update one per-generator scenario entry."""
+        now = datetime.now(timezone.utc).isoformat()
+        with self._session_factory() as session:
+            record = session.get(
+                UCScenarioGenerator, (scenario_id, kind, gen_key)
+            )
+            if record is None:
+                record = UCScenarioGenerator(
+                    scenario_id=scenario_id,
+                    kind=kind,
+                    gen_key=gen_key,
+                    payload_json=payload_json,
+                    updated_at=now,
+                )
+                session.add(record)
+            else:
+                record.payload_json = payload_json
+                record.updated_at = now
+            session.commit()
+            session.expunge(record)
+            return record
+
+    def list_uc_scenario_generators(
+        self,
+        scenario_id: str,
+        kind: Optional[str] = None,
+    ) -> List[UCScenarioGenerator]:
+        """List per-generator entries for a scenario, optionally by kind."""
+        with self._session_factory() as session:
+            query = session.query(UCScenarioGenerator).filter(
+                UCScenarioGenerator.scenario_id == scenario_id
+            )
+            if kind is not None:
+                query = query.filter(UCScenarioGenerator.kind == kind)
+            records = list(query.all())
+            for record in records:
+                session.expunge(record)
+            return records
+
+    def delete_uc_scenario(self, scenario_id: str) -> bool:
+        """Delete a scenario and its per-generator entries.
+
+        Returns:
+            ``True`` if the scenario existed and was deleted.
+        """
+        with self._session_factory() as session:
+            record = session.get(UCScenario, scenario_id)
+            session.query(UCScenarioGenerator).filter(
+                UCScenarioGenerator.scenario_id == scenario_id
+            ).delete()
+            if record is None:
+                session.commit()
+                return False
+            session.delete(record)
+            session.commit()
+            return True
 
     # ------------------------------------------------------------------
     # Internal generic CRUD helpers

@@ -362,6 +362,76 @@ class Enrichment(Base):
         )
 
 
+class UCScenario(Base):
+    """UC scenario definition — machine-queryable mirror of the YAML.
+
+    The git-tracked ``config/uc_scenarios/{scenario_id}.yaml`` remains the
+    source of truth (owner decision 2026-06-11: generator selection is
+    scenario-dependent, so scenarios are first-class and DB-backed).
+    This table is written by ``scripts/db/ingest_uc_scenarios.py`` so that
+    downstream tooling can resolve scenarios without touching the repo
+    config tree.
+
+    Attributes:
+        scenario_id: Scenario name (e.g. ``'fy2023'``).
+        fiscal_year: Fiscal year of the snapshot, when applicable.
+        description: Human-readable description.
+        config_json: Full scenario definition as JSON (verbatim mirror of
+            the YAML content).
+        updated_at: ISO timestamp of last ingest.
+    """
+
+    __tablename__ = "uc_scenarios"
+
+    scenario_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    fiscal_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    config_json: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCScenario(scenario_id={self.scenario_id!r}, "
+            f"fiscal_year={self.fiscal_year})"
+        )
+
+
+class UCScenarioGenerator(Base):
+    """Per-generator scenario entry (availability / storage / capacity).
+
+    Row-level mirror of the scenario reference lists so generator selection
+    can be queried per scenario:
+
+    - ``kind='nuclear_status'``: operational reactor sites for the snapshot
+      (entries from ``data/reference/nuclear_status.yaml``)
+    - ``kind='pumped_storage'``: pumped-storage plants with storage hours
+      (``data/reference/pumped_storage.yaml``)
+    - ``kind='capacity_patch'``: individual capacity corrections for
+      capacity-missing plants (``data/reference/capacity_patches.yaml``)
+
+    Attributes:
+        scenario_id: Owning scenario.
+        kind: Entry kind (see above).
+        gen_key: Stable key within the kind (plant name / match string).
+        payload_json: Full entry as JSON (capacity_mw, region, note, …).
+        updated_at: ISO timestamp of last ingest.
+    """
+
+    __tablename__ = "uc_scenario_generators"
+
+    scenario_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), primary_key=True)
+    gen_key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCScenarioGenerator({self.scenario_id}/{self.kind}/"
+            f"{self.gen_key})"
+        )
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 
