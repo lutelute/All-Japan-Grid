@@ -27,10 +27,16 @@ def run_powerflow(net, mode: str = "dc") -> dict:
             pp.rundcpp(net)
             result["converged"] = True
         else:
-            # Solver fallback chain
+            # Solver fallback chain. The first attempts enforce generator
+            # Q-limits (PV->PQ switching at the capability curve) — the
+            # physical solution; later fallbacks relax them for
+            # convergence, which run_powerflow reports via "solver".
             solvers = [
+                {"algorithm": "nr", "init": "dc", "max_iteration": 100, "tolerance_mva": 1e-2,
+                 "enforce_q_lims": True},
+                {"algorithm": "nr", "init": "flat", "max_iteration": 100, "tolerance_mva": 1e-2,
+                 "enforce_q_lims": True},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 100, "tolerance_mva": 1e-2},
-                {"algorithm": "nr", "init": "flat", "max_iteration": 100, "tolerance_mva": 1e-2},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 200, "tolerance_mva": 1e-1},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 1.0},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 10.0},
@@ -45,6 +51,8 @@ def run_powerflow(net, mode: str = "dc") -> dict:
                     if net.converged:
                         result["converged"] = True
                         result["solver"] = solver_opts["algorithm"]
+                        result["q_lims_enforced"] = bool(
+                            solver_opts.get("enforce_q_lims", False))
                         break
                 except Exception as e:  # noqa: BLE001
                     last_err = f"{solver_opts['algorithm']}: {str(e)[:60]}"

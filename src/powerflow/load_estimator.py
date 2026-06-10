@@ -46,6 +46,7 @@ def estimate_loads(
     demand_config: Optional[Dict[str, Any]] = None,
     config_path: str = DEFAULT_DEMAND_CONFIG_PATH,
     skip_existing: bool = False,
+    spatial: str = "none",
 ) -> float:
     """Distribute synthetic loads across all buses in the network.
 
@@ -72,6 +73,10 @@ def estimate_loads(
         skip_existing: If ``True``, do not create loads on buses that
             already have at least one load element.  Existing loads are
             preserved and the allocation target is reduced accordingly.
+        spatial: "none" (pure voltage-class weights, default) or
+            "degree" (tilt by branch degree — see :func:`degree_factors`).
+            Kept opt-in until validated against external per-substation
+            flow data (TEPCO disclosure; docs/VALIDATION_SOURCES.md).
 
     Returns:
         Total active power (MW) allocated across all buses.
@@ -113,6 +118,7 @@ def estimate_loads(
     total_allocated = _allocate_bus_loads(
         net, target_mw, tan_phi, voltage_weights,
         skip_existing=skip_existing,
+        spatial_factors=degree_factors(net) if spatial == "degree" else None,
     )
 
     logger.info(
@@ -208,6 +214,7 @@ def _allocate_bus_loads(
     tan_phi: float,
     voltage_weights: Dict,
     skip_existing: bool = False,
+    spatial_factors: Dict[int, float] | None = None,
 ) -> float:
     """Allocate *target_mw* across **all** (or eligible) buses in *net*.
 
@@ -222,7 +229,32 @@ def _allocate_bus_loads(
 
     return _allocate_bus_loads_subset(
         net, bus_indices, target_mw, tan_phi, voltage_weights,
+        spatial_factors=spatial_factors,
     )
+
+
+def degree_factors(net) -> Dict[int, float]:
+    """Per-bus connectivity factor for spatial load weighting.
+
+    Utilities site substations where the load is, and busy substations
+    terminate more feeders — so branch degree is the best in-repo spatial
+    proxy for demand density until external ground truth (per-substation
+    flow data) validates something better. Bounded to 0.5 + 0.5*deg/mean
+    so it tilts the voltage-class allocation rather than replacing it.
+    """
+    from collections import Counter
+
+    deg = Counter()
+    if len(net.line) > 0:
+        deg.update(net.line["from_bus"].tolist())
+        deg.update(net.line["to_bus"].tolist())
+    if len(net.trafo) > 0:
+        deg.update(net.trafo["hv_bus"].tolist())
+        deg.update(net.trafo["lv_bus"].tolist())
+    if not deg:
+        return {}
+    mean_deg = sum(deg.values()) / len(deg)
+    return {b: 0.5 + 0.5 * d / mean_deg for b, d in deg.items()}
 
 
 def _allocate_bus_loads_subset(
@@ -231,10 +263,12 @@ def _allocate_bus_loads_subset(
     target_mw: float,
     tan_phi: float,
     voltage_weights: Dict,
+    spatial_factors: Dict[int, float] | None = None,
 ) -> float:
     """Allocate *target_mw* across a subset of buses.
 
-    The allocation is proportional to each bus's voltage-class weight.
+    The allocation is proportional to each bus's voltage-class weight,
+    optionally tilted by *spatial_factors* (see :func:`degree_factors`).
     """
     if not bus_indices:
         return 0.0
@@ -245,6 +279,8 @@ def _allocate_bus_loads_subset(
         vn_kv = net.bus.at[idx, "vn_kv"]
         # Find the closest matching voltage weight
         w = _voltage_weight(vn_kv, voltage_weights)
+        if spatial_factors:
+            w *= spatial_factors.get(idx, 0.5)
         weights.append(w)
 
     total_weight = sum(weights)

@@ -474,6 +474,12 @@ class PandapowerBuilder:
                 name=gen.name,
                 min_p_mw=gen.p_min_mw,
                 max_p_mw=gen.capacity_mw,
+                # Typical synchronous-machine reactive capability at rated P
+                # (over-excited ~0.5 pu, under-excited ~0.3 pu of Pmax).
+                # Solved with enforce_q_lims so a machine at its limit flips
+                # PV->PQ instead of acting as an infinite VAr source.
+                max_q_mvar=0.5 * gen.capacity_mw,
+                min_q_mvar=-0.3 * gen.capacity_mw,
             )
 
             gens_created += 1

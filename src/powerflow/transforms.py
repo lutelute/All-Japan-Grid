@@ -161,6 +161,35 @@ def insert_transformers(net):
     return trafos_created
 
 
+def apply_voltage_setpoints(net):
+    """Schedule generator / slack voltage setpoints by bus voltage class.
+
+    Real JP operation holds EHV buses slightly above nominal (AVR
+    schedules); a flat 1.00 pu everywhere leaves long radials sagging
+    further than reality. Conservative class schedule:
+    >=400 kV: 1.03, >=200: 1.02, >=100: 1.01, below: 1.00.
+    """
+    def _sched(vn):
+        if vn >= 400:
+            return 1.03
+        if vn >= 200:
+            return 1.02
+        if vn >= 100:
+            return 1.01
+        return 1.00
+
+    n = 0
+    if len(net.gen) > 0:
+        vn = net.bus.loc[net.gen["bus"], "vn_kv"].to_numpy()
+        net.gen["vm_pu"] = [_sched(v) for v in vn]
+        n += len(net.gen)
+    if len(net.ext_grid) > 0:
+        vn = net.bus.loc[net.ext_grid["bus"], "vn_kv"].to_numpy()
+        net.ext_grid["vm_pu"] = [_sched(v) for v in vn]
+        n += len(net.ext_grid)
+    return n
+
+
 def select_slack_bus(net):
     """Select optimal slack bus: well-connected high-voltage bus with generation."""
     active_buses = net.bus[net.bus["in_service"]]

@@ -28,6 +28,7 @@ from src.powerflow.legacy_build import build_network_from_geojson
 from src.powerflow.load_estimator import estimate_loads
 from src.powerflow.snapped_topology import build_network_snapped
 from src.powerflow.transforms import (
+    apply_voltage_setpoints,
     balance_power,
     fix_topology,
     fix_zero_voltages,
@@ -62,7 +63,8 @@ def add_reactive_compensation(net, factor=0.6):
 
 
 def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6,
-                    snap_km=1.5, vertex_prec=4, backbone_kv=None):
+                    snap_km=1.5, vertex_prec=4, backbone_kv=None,
+                    load_spatial="none"):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -113,7 +115,8 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reac
     diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
 
-    total_load = estimate_loads(net, region=region, demand_config=demand_cfg)
+    total_load = estimate_loads(net, region=region, demand_config=demand_cfg,
+                                spatial=load_spatial)
     inactive_buses = set(net.bus.index[~net.bus["in_service"]])
     if len(net.load) > 0:
         mask = net.load["bus"].isin(inactive_buses)
@@ -124,10 +127,10 @@ def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reac
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, factor=reactive)
     net.bus["vm_pu"] = 1.0
-    if len(net.gen) > 0:
-        net.gen["vm_pu"] = 1.0
-    if len(net.ext_grid) > 0:
-        net.ext_grid["vm_pu"] = 1.0
+    # AVR-style class schedule (EHV slightly above nominal) instead of a
+    # flat 1.00 — together with the builder's Q-limits this replaces the
+    # "infinite flat VAr source" generator model.
+    apply_voltage_setpoints(net)
 
     # DC
     net_dc = copy.deepcopy(net)
