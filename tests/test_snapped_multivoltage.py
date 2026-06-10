@@ -166,3 +166,21 @@ def test_opposite_frequency_tso_features_excluded(tmp_path):
     assert any("kepco" in n for n in names)                   # 60 Hz foreign kept
     assert any("jpower" in n for n in names)                  # non-TSO kept
     assert not any("湊" in s.name for s in net.substations)
+
+
+def test_frequency_tag_outranks_operator():
+    from src.powerflow.snapped_topology import _freq_excluded
+    # explicit tag decides — even against the operator's home frequency
+    assert _freq_excluded({"frequency": "50", "operator": "電源開発送変電ネットワーク"}, 60) is True
+    assert _freq_excluded({"frequency": "60", "operator": "東京電力パワーグリッド"}, 60) is False
+    # FC connectors tagged with both frequencies belong to both sides
+    assert _freq_excluded({"frequency": "50;60"}, 60) is False
+    assert _freq_excluded({"frequency": "50;60"}, 50) is False
+    # DC poles are not AC branches on either side
+    assert _freq_excluded({"frequency": "0"}, 60) is True
+    assert _freq_excluded({"frequency": "0"}, 50) is True
+    # untagged: operator inference (and non-TSO untagged stays)
+    assert _freq_excluded({"operator": "東京電力"}, 60) is True
+    assert _freq_excluded({"operator": "東京電力"}, 50) is False
+    assert _freq_excluded({"operator": "東日本旅客鉄道"}, 60) is False
+    assert _freq_excluded({}, 60) is False

@@ -134,6 +134,40 @@ def _operator_freq(operator) -> int | None:
     return None
 
 
+def _freq_excluded(props, region_hz) -> bool:
+    """True if the feature does not belong to this region's AC network.
+
+    The OSM ``frequency`` tag is the PRIMARY evidence (map audit
+    2026-06-10): an explicit 50/60 decides membership directly —
+    multi-valued tags like ``50;60`` (FC station connectors) belong to
+    BOTH sides; ``0`` marks DC equipment (HVDC poles such as
+    飛騨信濃直流幹線), which is not an AC branch and is represented as an
+    async injection instead. Operator→home-frequency inference handles
+    only untagged features, so non-TSO 50 Hz assets (J-POWER's
+    佐久間東幹線, JR feeders — 75 lines in the chubu slice) are excluded
+    by their own tag, while TEPCO-operated ``frequency=60`` lines in the
+    Nagano mixed zone are KEPT (the tag outranks the operator guess).
+    """
+    tokens = []
+    for t in str(props.get("frequency") or "").replace("/", ";").split(";"):
+        t = t.strip()
+        if not t:
+            continue
+        try:
+            tokens.append(float(t))
+        except ValueError:
+            pass
+    if tokens:
+        if any(abs(t - region_hz) < 1e-9 for t in tokens):
+            return False                       # explicitly ours (incl. 50;60)
+        if any(t == 0 for t in tokens):
+            return True                        # DC pole
+        if any(t in (50.0, 60.0) for t in tokens):
+            return True                        # explicitly the other grid
+    op_hz = _operator_freq(props.get("operator"))
+    return op_hz is not None and op_hz != region_hz
+
+
 def _clean_voltage(v_kv):
     """Snap a KNOWN voltage to the nearest standard JP transmission class.
 
@@ -274,9 +308,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if lat is None:
             continue
         props = feat["properties"]
-        op_hz = _operator_freq(props.get("operator"))
-        if op_hz is not None and op_hz != freq:
-            continue   # opposite-frequency TSO: not in this synchronous net
+        if _freq_excluded(props, freq):
+            continue   # not part of this synchronous network
         sid = f"{region}_sub_{i}"
         vkv = _parse_voltage_kv(props.get("voltage"))
         # A spurious sub-transmission tag (e.g. 2 kV) on a substation that
@@ -368,9 +401,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if len(coords) < 2:
                 continue
             props = feat["properties"]
-            op_hz = _operator_freq(props.get("operator"))
-            if op_hz is not None and op_hz != freq:
-                continue   # opposite-frequency TSO equipment
+            if _freq_excluded(props, freq):
+                continue   # not part of this synchronous network (50/60/DC)
             kv = max(_parse_voltage_kv(props.get("voltage")), 0)
             # Skip non-transmission mistags (known voltage below threshold);
             # keep unknown (0) so unlabelled transmission survives.
