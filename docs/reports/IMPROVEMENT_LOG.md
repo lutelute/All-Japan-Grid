@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — #8実行: P03公開反映=D層世代交代（㉔）
+
+- **#8完了**(`0835455`): 全`data/*.geojson`をDBからマーカー付き再生成 —
+  **P03権威値が来歴つきで公開ファイルに**(`"_src:capacity_mw": "p03_db"`、自己記述・機械監査可能)。
+  再ingestでsource保全(pin済)=機械更新ループ無傷。READMEに「data/*.geojson=DB派生物」宣言
+- **C層是正(開示)**: P03エンリッチャが**capacity_mw=-1番兵2,752行**を値として保存していた
+  → SQL検証で「正のOSM値マスク=0件」を確認の上削除(欠測は値ではない)。真正147件のみ公開。
+  enrichments.jsonl再dump(243,112行)
+- **堅牢化**: ingestをupsert化(マーカー由来行と保全済み非legacy行の衝突解消=マーカー付派生の
+  再ingestが冪等) / verify_roundtripを実効ビュー比較化(_src:はtransport)
+- README同期: 内部ρ0.721。954 passed
+
 ## 2026-06-11 — **Fable 5** — 設計+高度化+高性能化+資産化の一括前進（㉓）
 
 - **資産化①: `_src:`per-fieldマーカー=#10核心機構**(`48e5196`, 設計=DB_ARCHITECTURE§6):
