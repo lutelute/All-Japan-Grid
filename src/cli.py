@@ -61,7 +61,8 @@ def cmd_solve(args, rest):
     result = build_and_solve(
         args.region, load_demand_config(),
         topology=args.topology, reconnect=args.reconnect,
-        backbone_kv=args.backbone)
+        backbone_kv=args.backbone,
+        db=(args.db if args.source == "db" else None))
     if result is None:
         print(f"{args.region}: no network (missing data?)")
         return 1
@@ -144,6 +145,11 @@ def build_parser():
                    metavar="KV",
                    help="aggregate sub-transmission onto the >=KV backbone "
                         "(default 154; the AC-solvable backbone model)")
+    s.add_argument("--source", choices=["files", "db"], default="files",
+                   help="read the three layers from data/*.geojson or compose "
+                        "them from the unified DB (reproduces from "
+                        "`ajgrid db ingest` alone)")
+    s.add_argument("--db", default="data/grid.db")
     s.set_defaults(func=cmd_solve)
 
     sub.add_parser(

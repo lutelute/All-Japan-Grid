@@ -239,10 +239,18 @@ def _parse_circuits(props):
     return 1, None
 
 
+def _resolve_db(db):
+    """Accept a GridDatabase instance or a path string; None passes through."""
+    if db is None or not isinstance(db, str):
+        return db
+    from src.db.grid_db import GridDatabase
+    return GridDatabase(db)
+
+
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
-                          propagate_voltage=True):
+                          propagate_voltage=True, db=None):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -287,19 +295,40 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             vertices); unknown-voltage lines join the highest known class
             present at the coordinate (their usual continuation).
 
+        db: a ``GridDatabase`` instance or path (e.g. ``data/grid.db``).
+            When given, the three layers are composed IN MEMORY from the
+            unified database (raw ⟕ enrichments effective view) instead of
+            reading ``data/*.geojson`` — the whole power-flow pipeline then
+            reproduces from ``ajgrid db ingest`` alone (VISION step 5).
+            Round-trip equivalence with the file path is regression-tested.
+
     Returns:
         GridNetwork with real substations + synthetic junction buses + branches
         tracing real OSM line geometry. Returns None if data missing.
     """
     data_dir = data_dir or DATA_DIR
+    db = _resolve_db(db)
+
+    def _layer(layer):
+        if db is not None:
+            from src.db.geojson_sync import export_geojson
+            try:
+                fc = export_geojson(db, region, layer)
+            except Exception:
+                return None
+            return fc if fc.get("features") else fc
+        path = os.path.join(data_dir, f"{region}_{layer}.geojson")
+        if not os.path.exists(path):
+            return None
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+
     freq = REGION_FREQ.get(region, 50)
     net = GridNetwork(region=region, frequency_hz=freq)
 
-    sub_path = os.path.join(data_dir, f"{region}_substations.geojson")
-    if not os.path.exists(sub_path):
+    subs_data = _layer("substations")
+    if not subs_data:
         return None
-    with open(sub_path, encoding="utf-8") as f:
-        subs_data = json.load(f)
 
     sub_coords = []   # (lat, lon, sub_id)
     sub_info = {}     # sub_id -> dict(name, lat, lon, own_cls)
@@ -385,13 +414,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 side["name"] = nm
                 side["kv_src"] = ks
 
-    lines_path = os.path.join(data_dir, f"{region}_lines.geojson")
+    lines_data = _layer("lines")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
     feat_cache = []                  # (coords, cls) parsed once
     coord_cls = defaultdict(set)     # rounded coord -> known classes present
-    if os.path.exists(lines_path):
-        with open(lines_path, encoding="utf-8") as f:
-            lines_data = json.load(f)
+    if lines_data:
 
         # Pass A: parse + collect the known classes at each vertex, so an
         # unknown-voltage segment can join the class it most likely
@@ -698,10 +725,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             pass
 
     # Generators -> nearest real substation (unchanged heuristic).
-    plants_path = os.path.join(data_dir, f"{region}_plants.geojson")
-    if os.path.exists(plants_path):
-        with open(plants_path, encoding="utf-8") as f:
-            plants_data = json.load(f)
+    plants_data = _layer("plants")
+    if plants_data:
         for i, feat in enumerate(plants_data["features"]):
             lat, lon = _get_centroid(feat)
             if lat is None:

@@ -74,7 +74,7 @@ def add_reactive_compensation(net, factor=0.6):
 def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none", boundary_imports=True,
-                    boundary_util=None):
+                    boundary_util=None, db=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -98,7 +98,8 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     snap_geom = None
     if topology == "snapped":
         network, snap_geom = build_network_snapped(
-            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True)
+            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True,
+            db=db)
     else:
         network = build_network_from_geojson(region)
     if not network or not network.has_elements:
