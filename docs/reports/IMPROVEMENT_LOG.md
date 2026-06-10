@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — OCCTO公表APIの発見と実測連系線フロー導入（⑲自己ループ）
+
+- **発見**: OCCTO web-kohyo CSV APIが登録不要で到達可能(30分値・保持窓~14ヶ月)。
+  jhSybt=02=エリア需要実測 / 04=連系線計画潮流。FY2025+Q1FY2026を取得し集計を
+  `docs/reports/occto_calibration_2026-06-11.json` にcommit(生データは非追跡)
+- **boundary.py**: 手置きTYPICAL_UTILISATION → **MEASURED_UTILISATION**(実測中央値/容量)。
+  独立クロスチェック: FC −0.33 vs 旧−0.3 / 関門 −0.49 vs −0.5 / 相馬双葉 +0.74 vs +0.6。
+  ic_006は実測中央値~5.0GW>容量4,090でクランプ(-1.0)・開示
+- **全国ゾーナル配信**(`8e5b37d`): east/hokkaido/okinawa AC を公開ページへ(westはDC継続)
+- 年度ずれ注記(検証=FY2024 vs 較正=FY2025+)。backbone AC 10/10維持・内部ρ0.659不変・947 passed
+
 ## 2026-06-11 — **Fable 5** — 全国ゾーナルwest島AC再試行: 依然FAIL（⑱・正直記録）
 
 - **実行**: 縫合(2,171バス融合)+累積改善後の初再試行。結果: hokkaido/east/okinawa **AC=OK**
