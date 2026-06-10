@@ -65,6 +65,27 @@ TYPICAL_UTILISATION = {
     "ic_009": -0.5,
 }
 
+# MEASURED utilisations — FY2025+Q1FY2026 medians of OCCTO's published
+# 30-min planned interconnector flows (web-kohyo jhSybt=04; derived
+# aggregates in docs/reports/occto_calibration_2026-06-11.json), divided
+# by the yaml capacities and signed along the yaml from->to convention.
+# Cross-checks where the planning guesses were independent: FC -0.325
+# vs -0.3, 関門 -0.49 vs -0.5, 相馬双葉 +0.74 vs +0.6 — same structure,
+# better magnitudes. ic_006 clamps at -1.0: the measured westbound
+# Kansai import (関西-中国 東+西, median ~5.0 GW) exceeds the single
+# yaml capacity figure (4,090 MW), disclosed here rather than hidden.
+MEASURED_UTILISATION = {
+    "ic_001": +0.15,   # 北海道・本州間 median +133 MW / 900
+    "ic_002": +0.74,   # 相馬双葉幹線 median +4,098 MW / 5,550
+    "ic_003": -0.33,   # 周波数変換設備 median 683 MW Chubu->Tokyo / 2,100
+    "ic_004": +0.79,   # 三重東近江線 median 2,000 MW Chubu->Kansai / 2,530
+    "ic_005": -0.15,   # 北陸フェンス median 284 MW Hokuriku->out / 1,900
+    "ic_006": -1.0,    # 関西-中国(東+西) median ~5.0 GW Chugoku->Kansai (clamped)
+    "ic_007": -0.05,   # 阿南紀北直流幹線 median 70 MW Shikoku->Kansai / 1,400
+    "ic_008": -0.94,   # 本四連系線 median 1,130 MW Shikoku->Chugoku / 1,200
+    "ic_009": -0.49,   # 関門連系線 median 1,373 MW Kyushu->Chugoku / 2,780
+}
+
 _CLASS_SUFFIX = re.compile(r"\s*(\d+(\.\d+)?kV|\(untyped\))$")
 
 
@@ -215,7 +236,7 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
     Returns a summary dict {ic_id: {mw, bus_names, method}} plus totals;
     ``mw`` > 0 is an import into the region.
     """
-    util = dict(TYPICAL_UTILISATION)
+    util = dict(MEASURED_UTILISATION)   # data-driven default (OCCTO medians)
     if utilisation:
         util.update(utilisation)
 
