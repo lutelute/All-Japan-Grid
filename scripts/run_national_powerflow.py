@@ -27,6 +27,7 @@ from src.powerflow.national import ISLANDS, build_island_networks
 from src.powerflow.transforms import (
     apply_voltage_setpoints,
     balance_power,
+    balance_power_by_zone,
     fix_topology,
     fix_zero_voltages,
     insert_transformers,
@@ -80,7 +81,7 @@ def solve_island(island_id, isl, demand_cfg, reactive):
     inactive = set(net.bus.index[~net.bus["in_service"]])
     if len(net.load) > 0:
         net.load.loc[net.load["bus"].isin(inactive), "in_service"] = False
-    balance_power(net, demand_cfg)
+    balance_power_by_zone(net, demand_cfg)
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, reactive)
     net.bus["vm_pu"] = 1.0

@@ -166,3 +166,28 @@ def test_junction_buses_receive_no_load():
     assert total == pytest.approx(100.0)
     loaded_types = net.load["bus"].map(net.bus["type"])
     assert (loaded_types == "b").all()      # all demand on real substations
+
+
+def test_balance_power_by_zone_scales_each_zone_to_its_own_load():
+    """Island-wide scaling starves demand-heavy zones (the historical west
+    failure mode); the per-zone variant dispatches each zone's fleet to its
+    own load + reserve, clipping at nameplate."""
+    from src.powerflow.transforms import balance_power_by_zone
+
+    net = pp.create_empty_network(f_hz=60)
+    a = pp.create_bus(net, vn_kv=275.0)
+    b = pp.create_bus(net, vn_kv=275.0)
+    net.bus.loc[a, "zone"] = "kansai"
+    net.bus.loc[b, "zone"] = "chugoku"
+    pp.create_ext_grid(net, bus=a, vm_pu=1.0)
+    pp.create_line_from_parameters(net, a, b, 50.0, 0.028, 0.325, 12.0, 2.0)
+    pp.create_load(net, bus=a, p_mw=1000.0, q_mvar=100.0)   # kansai heavy
+    pp.create_load(net, bus=b, p_mw=100.0, q_mvar=10.0)
+    pp.create_gen(net, bus=a, p_mw=0.0, vm_pu=1.0, max_p_mw=800.0, type="gas")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
+    balance_power_by_zone(net, {"reserve_margin": 0.05})
+    # kansai target 1050 exceeds its nameplate -> clipped at 800 (honest
+    # deficit, served over the tie), NOT padded from chugoku's fleet
+    assert float(net.gen.at[0, "p_mw"]) == pytest.approx(800.0)
+    # chugoku covers exactly its own load + reserve
+    assert float(net.gen.at[1, "p_mw"]) == pytest.approx(105.0)

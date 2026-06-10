@@ -421,6 +421,46 @@ def reduce_to_backbone(net, min_kv=154.0, min_keep_buses=20):
             "reduced": True}
 
 
+def balance_power_by_zone(net, demand_config):
+    """Merit-order balance_power applied PER ZONE (multi-region islands).
+
+    Island-wide scaling reproduces the historical west-island failure
+    mode (WEST_AC_ANALYSIS §3): demand-heavy zones (kansai/kyushu) end
+    up locally under-generated and import over electrically thin
+    stitched corridors, collapsing the AC solve. Scaling each zone's
+    fleet to its own load (plus reserve) keeps inter-zonal transfer at
+    the tie-line scale the data can support. Falls back to the global
+    balance when no zone column exists.
+    """
+    if "zone" not in net.bus.columns or len(net.load) == 0:
+        return balance_power(net, demand_config)
+    reserve = demand_config.get("reserve_margin", 0.05)
+    zone_of_bus = net.bus["zone"]
+    inactive = set(net.bus.index[~net.bus["in_service"]])
+    if len(net.gen) > 0:
+        net.gen.loc[net.gen["bus"].isin(inactive), "in_service"] = False
+
+    loads = net.load[net.load["in_service"]]
+    load_by_zone = loads.groupby(loads["bus"].map(zone_of_bus))["p_mw"].sum()
+    for zone, zload in load_by_zone.items():
+        if zload <= 0 or len(net.gen) == 0:
+            continue
+        gmask = net.gen["in_service"] & (net.gen["bus"].map(zone_of_bus) == zone)
+        if not gmask.any():
+            continue
+        cap = (net.gen.loc[gmask, "max_p_mw"]
+               if "max_p_mw" in net.gen.columns else net.gen.loc[gmask, "p_mw"])
+        if "type" in net.gen.columns and net.gen.loc[gmask, "type"].notna().any():
+            avail = cap * net.gen.loc[gmask, "type"].map(_dispatch_cf)
+        else:
+            avail = cap.astype(float)
+        total_avail = float(avail.sum())
+        if total_avail <= 0:
+            continue
+        p = avail * (zload * (1 + reserve) / total_avail)
+        net.gen.loc[gmask, "p_mw"] = p.clip(upper=cap)
+
+
 def prune_dc_infeasible(net, angle_threshold=45.0):
     """After DC power flow, remove lines/trafos with extreme angle differences.
 
