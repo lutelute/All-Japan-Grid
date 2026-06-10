@@ -191,6 +191,12 @@ def solved_metrics(region: str, topology: str = "snapped",
     _net_dc, dc_res, net_ac, ac_res, info, _geom = result
 
     n_lines = info["n_lines"]
+    # non-finite results = supplied-from-nowhere buses; pandas stats skip
+    # NaN silently, so this is pinned explicitly (hokkaido 41/799 lesson)
+    import numpy as np
+    ins = net_ac.bus["in_service"] if net_ac is not None else None
+    n_unsolved = (int((~np.isfinite(net_ac.res_bus["vm_pu"]) & ins).sum())
+                  if net_ac is not None and len(net_ac.res_bus) else None)
     out = {
         "topology": info["topology"],
         "n_buses": info["n_buses"],
@@ -204,6 +210,7 @@ def solved_metrics(region: str, topology: str = "snapped",
         "total_gen_mw": round(info["total_gen_mw"], 1),
         "dc_converged": bool(dc_res.get("converged")),
         "ac_converged": bool(ac_res.get("converged")),
+        "n_unsolved_buses": n_unsolved,
         "solve_s": round(time.time() - t0, 2),
     }
     if info.get("backbone"):

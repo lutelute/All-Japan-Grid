@@ -216,9 +216,25 @@ def select_slack_bus(net):
                 gen_at_bus[bus] = gen_at_bus.get(bus, 0) + active_gens.at[gen_idx, "p_mw"]
 
     # Score: heavily weight voltage level and connectivity, plus generation
+    # Candidates are restricted to the component currently holding
+    # ext_grid[0]: the vn-dominated score (500 kV >> 66 kV) used to move
+    # the MAIN slack onto a high-voltage bus in some tiny fragment,
+    # stranding the largest component entirely — hokkaido's 66 kV main
+    # mesh (758 buses) was left slack-less and solved as NaN while the
+    # NaN-skipping vm stats reported "converged, vm 1.000" over the 41
+    # supplied buses (ledger 2026-06-11 entry 25/26).
+    allowed = None
+    if len(net.ext_grid) > 0:
+        cur = int(net.ext_grid.at[net.ext_grid.index[0], "bus"])
+        mg = top.create_nxgraph(net, respect_switches=False)
+        if cur in mg:
+            allowed = nx.node_connected_component(mg, cur)
+
     best_bus = None
     best_score = -1
     for bus_idx in active_buses.index:
+        if allowed is not None and bus_idx not in allowed:
+            continue
         vn_kv = active_buses.at[bus_idx, "vn_kv"]
         conn = connectivity.get(bus_idx, 0)
         gen_mw = gen_at_bus.get(bus_idx, 0)

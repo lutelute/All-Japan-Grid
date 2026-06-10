@@ -165,3 +165,14 @@ def test_all_regions_solved_sweep():
         # but fragmentation must stay bounded and bridging a small minority.
         assert s["n_components"] <= 25, row["region"]
         assert s["synthetic_rate"] <= 0.20, row["region"]
+
+
+def test_no_silent_unsolved_buses_okinawa_and_hokkaido():
+    """Every in-service bus must carry a finite AC result. Pandas stats
+    skip NaN, which hid hokkaido's 758 slack-stranded buses behind a
+    'converged, vm 1.000' headline (ledger 25/26) — n_unsolved_buses
+    pins the honest count at zero."""
+    for region in ("okinawa", "hokkaido"):
+        s = solved_metrics(region)
+        assert s["ac_converged"] is True, region
+        assert s["n_unsolved_buses"] == 0, region
