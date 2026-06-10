@@ -1,19 +1,24 @@
 """Unified command-line interface for All-Japan-Grid (``ajgrid``).
 
-A single front door over the pipeline that the Phase C promotion moved
-into ``src/``: build & solve a region's network, export CIM/CGMES, drive
-the unified grid database, and serve the live map. Each sub-command is a
-thin dispatcher to the existing entry points — the tool, not a rewrite.
+A single front door over the whole pipeline: build & solve a region's
+network, export & strictly validate CIM/CGMES, drive the unified grid
+database, report provenance coverage, and serve the live map. Each
+sub-command is a thin dispatcher to the existing entry points — the tool,
+not a rewrite.
 
-    python -m src.cli solve okinawa --topology snapped --reconnect
-    python -m src.cli cim --regions okinawa --verify
-    python -m src.cli db ingest
-    python -m src.cli db enrich --lines --audit
-    python -m src.cli db export --verify
-    python -m src.cli map            # serve docs/ at http://localhost:8080
-    python -m src.cli regions
+After ``pip install -e .`` this is the ``ajgrid`` console command:
 
-(``./ajgrid <args>`` is a convenience wrapper for ``python -m src.cli``.)
+    ajgrid regions                                   # list the 10 regions
+    ajgrid solve okinawa --topology snapped --reconnect
+    ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2
+    ajgrid validate --all --dir dist/cim_level2      # strict CGMES check
+    ajgrid db ingest                                 # raw + restore curation
+    ajgrid db enrich --p03 <GML>                     # authoritative P03
+    ajgrid db export --verify
+    ajgrid coverage                                  # validated-vs-synthetic
+    ajgrid map                                       # serve docs/ at :8080
+
+(``./ajgrid <args>`` and ``python -m src.cli <args>`` work without install.)
 """
 
 from __future__ import annotations
@@ -69,6 +74,11 @@ def cmd_cim(_args, rest):
     return _run("scripts/export_cim_level2.py", rest)
 
 
+def cmd_validate(_args, rest):
+    """Strict CGMES validation, independent of cim2pp (pass-through)."""
+    return _run("scripts/validate_cgmes.py", rest)
+
+
 def cmd_db(_args, rest):
     """Drive the unified grid DB: db {ingest|export|curate|enrich} ..."""
     if not rest or rest[0] not in ("ingest", "export", "curate", "enrich"):
@@ -114,6 +124,10 @@ def build_parser():
     sub.add_parser(
         "cim", help="export CIM/CGMES Level 2 (passes args to the script)",
         add_help=False).set_defaults(func=cmd_cim)
+
+    sub.add_parser(
+        "validate", help="strict CGMES validation, --all/--region (pass-through)",
+        add_help=False).set_defaults(func=cmd_validate)
 
     sub.add_parser(
         "db", help="grid DB: ingest|export|curate|enrich (pass-through)",

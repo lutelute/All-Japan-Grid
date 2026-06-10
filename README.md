@@ -432,15 +432,30 @@ papers/                IEEJ (和文) & IEEE Access manuscripts / 論文原稿
 dist/                  CIM/CGMES distribution (samples tracked, full sets via Releases) / CIM 配布物
 ```
 
-## Requirements / 必要環境
+## Install & CLI / インストールと CLI
 
-Python 3.10+
+Python 3.10+. Install as a tool to get the **`ajgrid`** command:
 
 ```bash
-pip install -r requirements.txt
+pip install -e .          # or: pip install -r requirements.txt (library use)
 ```
 
-Key dependencies / 主な依存パッケージ: pandapower, fastapi, pulp, highspy, pyyaml, geopandas
+```bash
+ajgrid regions                                   # the 10 regions
+ajgrid solve okinawa --topology snapped --reconnect   # build + AC/DC power flow
+ajgrid cim --regions okinawa --verify            # export CIM/CGMES Level 2
+ajgrid validate --all --dir dist/cim_level2      # strict CGMES check (0 dangling)
+ajgrid db ingest                                 # rebuild DB: raw OSM + restore curation
+ajgrid db enrich --p03 <P03.gml>                 # authoritative 国土数値情報 P03
+ajgrid db export --verify                         # regenerate GeoJSON from the DB
+ajgrid coverage                                  # validated-vs-synthetic report
+ajgrid map                                       # serve the live map at :8080
+```
+
+`ajgrid db ingest` reconstructs the **full curated state** (raw OSM + P03 +
+manual fixes from `data/db/enrichments.jsonl`), so committed curation survives
+an OSM re-fetch. See [docs/COVERAGE.md](docs/COVERAGE.md) for what is validated
+vs synthetic. Key deps / 主な依存: pandapower, sqlalchemy, geopandas, pulp, highspy, fastapi.
 
 ## Contributing / 貢献
 

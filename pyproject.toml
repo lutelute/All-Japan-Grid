@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "all-japan-grid"
+dynamic = ["version"]
+description = "Open, standards-based reference model of Japan's power transmission grid (OSM → CGMES/MATPOWER, power flow, unified DB)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Ryuto Shigenobu" },
+  { name = "Akiko Takahashi" },
+  { name = "Masakazu Ito" },
+]
+keywords = ["power-systems", "grid", "openstreetmap", "cgmes", "cim", "pandapower", "japan"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering",
+  "Intended Audience :: Science/Research",
+]
+dependencies = [
+  "fastkml[lxml]>=1.4.0",
+  "lxml>=5.0",
+  "geopandas>=0.14",
+  "pandapower>=3.4.0",
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "requests>=2.31",
+  "pyyaml>=6.0",
+  "openpyxl>=3.1",
+  "pulp>=3.3.0",
+  "highspy>=1.7.0",
+  "psutil>=6.0.0",
+  "tqdm>=4.65",
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "jinja2>=3.1",
+  "sqlalchemy>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "pytest-cov>=4.1"]
+
+[project.urls]
+Homepage = "https://github.com/lutelute/All-Japan-Grid"
+Repository = "https://github.com/lutelute/All-Japan-Grid"
+"Live map" = "https://lutelute.github.io/All-Japan-Grid/"
+
+# `ajgrid` becomes a real console command after `pip install -e .`
+[project.scripts]
+ajgrid = "src.cli:main"
+
+[tool.setuptools.dynamic]
+version = { file = "VERSION" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+# (pytest config lives in pytest.ini)
