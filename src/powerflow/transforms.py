@@ -563,13 +563,62 @@ def _dispatch_cf(fuel) -> float:
     return _DISPATCH_CF.get(tokens[0], _DEFAULT_CF) if tokens else _DEFAULT_CF
 
 
-def balance_power(net, demand_config):
-    """Match generation to load with merit-order (capacity-factor) dispatch.
+# Stack-fill merit order: energy-limited sources are must-run at their
+# capacity factor; everything else fills to NAMEPLATE in cost order until
+# the demand target is met (the marginal unit runs partial). Mirrors how
+# a high-load operating point is actually dispatched — the proportional
+# rule capped Tokyo-bay LNG at a uniform ~59% while the measured p95
+# corridors imply near-full output (新京葉線 model 2,233 vs measured
+# 4,910 MW; ledger 2026-06-11 entry 20).
+_MUST_RUN = {"solar", "wind", "hydro"}
+_MERIT_RANK = {"nuclear": 0, "geothermal": 1, "biomass": 2, "waste": 2,
+               "coal": 3, "gas": 4, "lng": 4, "oil": 6}
+_DEFAULT_RANK = 5
 
-    Each generator's available output is max_p_mw x its fuel's typical
-    capacity factor; the fleet is scaled to the demand target on that
-    basis (clipped at nameplate). Falls back to uniform scaling when the
-    builder did not provide fuel types (``type`` column).
+
+def _merit_rank(fuel) -> int:
+    tokens = [t.strip().lower() for t in str(fuel or "").split(";") if t.strip()]
+    return _MERIT_RANK.get(tokens[0], _DEFAULT_RANK) if tokens else _DEFAULT_RANK
+
+
+def _stack_dispatch(net, active, cap, target_gen) -> None:
+    fuels = (net.gen.loc[active, "type"] if "type" in net.gen.columns
+             else None)
+    if fuels is None or not fuels.notna().any():
+        # no fuel info: degenerate to proportional-at-nameplate
+        total = float(cap.sum())
+        if total > 0:
+            net.gen.loc[active, "p_mw"] = cap * min(target_gen / total, 1.0)
+        return
+    is_must = fuels.map(lambda f: str(f or "").split(";")[0].strip().lower()
+                        in _MUST_RUN)
+    must_p = cap[is_must] * fuels[is_must].map(_dispatch_cf)
+    must_total = float(must_p.sum())
+    if must_total >= target_gen > 0:
+        # renewables alone exceed the target: curtail proportionally
+        net.gen.loc[active, "p_mw"] = 0.0
+        net.gen.loc[must_p.index, "p_mw"] = must_p * (target_gen / must_total)
+        return
+    net.gen.loc[must_p.index, "p_mw"] = must_p
+    remaining = target_gen - must_total
+    therm = cap[~is_must]
+    order = sorted(therm.index,
+                   key=lambda i: (_merit_rank(fuels.loc[i]), -float(therm.loc[i])))
+    for i in order:
+        p = min(float(therm.loc[i]), max(remaining, 0.0))
+        net.gen.at[i, "p_mw"] = p
+        remaining -= p
+    # remaining > 0 (fleet short of target) is honest: the slack absorbs it
+
+
+def balance_power(net, demand_config, mode: str = "stack"):
+    """Match generation to load with merit-order dispatch.
+
+    mode="stack" (default): must-run renewables at capacity factor, then
+    thermal units fill to NAMEPLATE in cost order until the target is
+    met — the high-load operating point the validation compares against.
+    mode="proportional": the previous rule (CF-weighted proportional
+    scaling, clipped at nameplate), kept for A/B comparison.
     """
     if len(net.load) == 0:
         return
@@ -598,6 +647,9 @@ def balance_power(net, demand_config):
         active = net.gen["in_service"]
         cap = (net.gen.loc[active, "max_p_mw"]
                if "max_p_mw" in net.gen.columns else net.gen.loc[active, "p_mw"])
+        if mode == "stack":
+            _stack_dispatch(net, active, cap.astype(float), target_gen)
+            return
         if "type" in net.gen.columns and net.gen.loc[active, "type"].notna().any():
             avail = cap * net.gen.loc[active, "type"].map(_dispatch_cf)
         else:

@@ -111,7 +111,7 @@ def test_merit_order_dispatch_by_fuel():
     pp.create_load(net, bus=b, p_mw=1000.0, q_mvar=100.0)
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="solar")
-    balance_power(net, {"reserve_margin": 0.05})
+    balance_power(net, {"reserve_margin": 0.05}, mode="proportional")
     p_gas = float(net.gen.at[0, "p_mw"])
     p_solar = float(net.gen.at[1, "p_mw"])
     assert p_gas + p_solar == pytest.approx(1050.0, rel=1e-6)
@@ -134,7 +134,7 @@ def test_balance_power_uniform_without_fuel_types():
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1500.0)
     net.gen["type"] = None
     from src.powerflow.transforms import balance_power
-    balance_power(net, {"reserve_margin": 0.05})
+    balance_power(net, {"reserve_margin": 0.05}, mode="proportional")
     assert float(net.gen.at[0, "p_mw"]) == pytest.approx(float(net.gen.at[1, "p_mw"]))
     assert float(net.gen["p_mw"].sum()) == pytest.approx(1050.0, rel=1e-6)
 
@@ -191,3 +191,27 @@ def test_balance_power_by_zone_scales_each_zone_to_its_own_load():
     assert float(net.gen.at[0, "p_mw"]) == pytest.approx(800.0)
     # chugoku covers exactly its own load + reserve
     assert float(net.gen.at[1, "p_mw"]) == pytest.approx(105.0)
+
+
+def test_stack_dispatch_fills_merit_order_to_nameplate():
+    """The default stack mode: must-run renewables at CF, then thermal
+    units fill to NAMEPLATE cheapest-first; the marginal unit is partial.
+    (This is the fix for the uniform-59%-LNG distortion — measured
+    interior rho 0.659 -> 0.721, magnitude ratio 0.65 -> 0.79.)"""
+    from src.powerflow.transforms import balance_power
+
+    net = pp.create_empty_network(f_hz=50)
+    b = pp.create_bus(net, vn_kv=275.0)
+    pp.create_ext_grid(net, bus=b, vm_pu=1.0)
+    pp.create_load(net, bus=b, p_mw=2000.0, q_mvar=200.0)
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="solar")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="coal")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="oil")
+    balance_power(net, {"reserve_margin": 0.05})        # stack is default
+    # target 2100: solar must-run 150 (CF .15), coal fills 1000,
+    # gas (next merit) covers 950 partial, oil stays cold
+    assert float(net.gen.at[0, "p_mw"]) == pytest.approx(150.0)
+    assert float(net.gen.at[1, "p_mw"]) == pytest.approx(1000.0)
+    assert float(net.gen.at[2, "p_mw"]) == pytest.approx(950.0)
+    assert float(net.gen.at[3, "p_mw"]) == pytest.approx(0.0)
