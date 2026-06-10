@@ -75,7 +75,15 @@ def cmd_cim(_args, rest):
 
 
 def cmd_validate(_args, rest):
-    """Strict CGMES validation, independent of cim2pp (pass-through)."""
+    """Validation front door: CGMES strictness or topology/PF quality KPIs.
+
+    ``--topology`` routes to the KPI report (fragmentation, synthetic-line
+    rate, convergence vs a pinned baseline); anything else passes through
+    to the strict CGMES validator, unchanged.
+    """
+    if "--topology" in rest:
+        from src.validation.topology_metrics import main as topo_main
+        return topo_main([a for a in rest if a != "--topology"])
     return _run("scripts/validate_cgmes.py", rest)
 
 
@@ -126,7 +134,8 @@ def build_parser():
         add_help=False).set_defaults(func=cmd_cim)
 
     sub.add_parser(
-        "validate", help="strict CGMES validation, --all/--region (pass-through)",
+        "validate",
+        help="CGMES strict check (pass-through) or --topology quality KPIs",
         add_help=False).set_defaults(func=cmd_validate)
 
     sub.add_parser(
