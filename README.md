@@ -51,7 +51,12 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline Flow" width="100%">
 </p>
 
-### v1.4.0 Highlights (unreleased, 2026-06)
+### v1.4.0 Highlights
+
+- 📦 [Release v1.4.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.4.0):
+  `all_japan_grid_cim_L2.zip` regenerated with this model — **kansai's CIM case improves
+  from ×0.3 to ×0.8 demand**, 6 regions native + 4 at ×0.8, all 10 verified by `cim2pp`
+  round-trip and strict CGMES validation (0 dangling references).
 
 - 📏 **Externally validated against utility ground truth — a first.** The model is now scored
   against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:

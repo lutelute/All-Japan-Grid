@@ -28,30 +28,30 @@
       "files": {
         "EQ": [
           "hokkaido_L2_EQ.xml",
-          6800
+          7342
         ],
         "TP": [
           "hokkaido_L2_TP.xml",
-          1412
+          1636
         ],
         "SSH": [
           "hokkaido_L2_SSH.xml",
-          3916
+          4172
         ],
         "SV": [
           "hokkaido_L2_SV.xml",
-          705
+          816
         ],
         "GL": [
           "hokkaido_L2_GL.xml",
-          1413
+          1637
         ]
       },
-      "buses": 706,
-      "lines": 634,
-      "trafos": 183,
-      "loads": 706,
-      "gens": 285,
+      "buses": 818,
+      "lines": 835,
+      "trafos": 115,
+      "loads": 599,
+      "gens": 350,
       "base_voltages": [
         500.0,
         275.0,
@@ -61,155 +61,77 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=285 ext=5 vmin=0.714"
+      "verify": "OK gen=350 ext=8 vmin=0.919"
     },
     {
       "region": "tohoku",
       "files": {
         "EQ": [
           "tohoku_L2_EQ.xml",
-          16658
+          18241
         ],
         "TP": [
           "tohoku_L2_TP.xml",
-          3216
+          3778
         ],
         "SSH": [
           "tohoku_L2_SSH.xml",
-          9592
+          10390
         ],
         "SV": [
           "tohoku_L2_SV.xml",
-          1600
+          1880
         ],
         "GL": [
           "tohoku_L2_GL.xml",
-          3217
+          3779
         ]
       },
-      "buses": 1608,
-      "lines": 1405,
-      "trafos": 541,
-      "loads": 1608,
-      "gens": 818,
+      "buses": 1889,
+      "lines": 1952,
+      "trafos": 351,
+      "loads": 1277,
+      "gens": 1064,
       "base_voltages": [
         500.0,
         275.0,
         187.0,
         154.0,
+        132.0,
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=818 ext=10 vmin=0.843"
+      "verify": "OK gen=1063 ext=13 vmin=0.943"
     },
     {
       "region": "tokyo",
       "files": {
         "EQ": [
           "tokyo_L2_EQ.xml",
-          45128
+          52560
         ],
         "TP": [
           "tokyo_L2_TP.xml",
-          5908
+          6818
         ],
         "SSH": [
           "tokyo_L2_SSH.xml",
-          28598
+          33323
         ],
         "SV": [
           "tokyo_L2_SV.xml",
-          2953
+          3408
         ],
         "GL": [
           "tokyo_L2_GL.xml",
-          5909
+          6819
         ]
       },
-      "buses": 2954,
-      "lines": 2674,
-      "trafos": 931,
-      "loads": 2954,
-      "gens": 5151,
-      "base_voltages": [
-        500.0,
-        275.0,
-        154.0,
-        77.0,
-        66.0
-      ],
-      "solve_mode": "native",
-      "verify": "OK gen=5151 ext=9 vmin=0.704"
-    },
-    {
-      "region": "chubu",
-      "files": {
-        "EQ": [
-          "chubu_L2_EQ.xml",
-          34700
-        ],
-        "TP": [
-          "chubu_L2_TP.xml",
-          5554
-        ],
-        "SSH": [
-          "chubu_L2_SSH.xml",
-          20936
-        ],
-        "SV": [
-          "chubu_L2_SV.xml",
-          2775
-        ],
-        "GL": [
-          "chubu_L2_GL.xml",
-          5555
-        ]
-      },
-      "buses": 2777,
-      "lines": 2475,
-      "trafos": 974,
-      "loads": 2777,
-      "gens": 2809,
-      "base_voltages": [
-        500.0,
-        275.0,
-        154.0,
-        110.0,
-        77.0,
-        66.0
-      ],
-      "solve_mode": "native",
-      "verify": "OK gen=2809 ext=19 vmin=0.887"
-    },
-    {
-      "region": "hokuriku",
-      "files": {
-        "EQ": [
-          "hokuriku_L2_EQ.xml",
-          6673
-        ],
-        "TP": [
-          "hokuriku_L2_TP.xml",
-          1318
-        ],
-        "SSH": [
-          "hokuriku_L2_SSH.xml",
-          3834
-        ],
-        "SV": [
-          "hokuriku_L2_SV.xml",
-          659
-        ],
-        "GL": [
-          "hokuriku_L2_GL.xml",
-          1319
-        ]
-      },
-      "buses": 659,
-      "lines": 576,
-      "trafos": 214,
-      "loads": 659,
-      "gens": 299,
+      "buses": 3409,
+      "lines": 3568,
+      "trafos": 785,
+      "loads": 2561,
+      "gens": 6492,
       "base_voltages": [
         500.0,
         275.0,
@@ -218,37 +140,37 @@
         66.0
       ],
       "solve_mode": "demand-scaled(x0.8)",
-      "verify": "OK gen=299 ext=13 vmin=0.982"
+      "verify": "OK gen=6484 ext=9 vmin=0.941"
     },
     {
-      "region": "kansai",
+      "region": "chubu",
       "files": {
         "EQ": [
-          "kansai_L2_EQ.xml",
-          17659
+          "chubu_L2_EQ.xml",
+          37351
         ],
         "TP": [
-          "kansai_L2_TP.xml",
-          3346
+          "chubu_L2_TP.xml",
+          6596
         ],
         "SSH": [
-          "kansai_L2_SSH.xml",
-          10316
+          "chubu_L2_SSH.xml",
+          22007
         ],
         "SV": [
-          "kansai_L2_SV.xml",
-          1665
+          "chubu_L2_SV.xml",
+          3296
         ],
         "GL": [
-          "kansai_L2_GL.xml",
-          3347
+          "chubu_L2_GL.xml",
+          6597
         ]
       },
-      "buses": 1673,
-      "lines": 1573,
-      "trafos": 493,
-      "loads": 1673,
-      "gens": 941,
+      "buses": 3298,
+      "lines": 3421,
+      "trafos": 676,
+      "loads": 1936,
+      "gens": 3295,
       "base_voltages": [
         500.0,
         275.0,
@@ -258,38 +180,119 @@
         77.0,
         66.0
       ],
-      "solve_mode": "demand-scaled(x0.3)",
-      "verify": "OK gen=941 ext=5 vmin=0.682"
+      "solve_mode": "demand-scaled(x0.8)",
+      "verify": "OK gen=3294 ext=19 vmin=0.969"
+    },
+    {
+      "region": "hokuriku",
+      "files": {
+        "EQ": [
+          "hokuriku_L2_EQ.xml",
+          7305
+        ],
+        "TP": [
+          "hokuriku_L2_TP.xml",
+          1616
+        ],
+        "SSH": [
+          "hokuriku_L2_SSH.xml",
+          4019
+        ],
+        "SV": [
+          "hokuriku_L2_SV.xml",
+          808
+        ],
+        "GL": [
+          "hokuriku_L2_GL.xml",
+          1617
+        ]
+      },
+      "buses": 808,
+      "lines": 825,
+      "trafos": 154,
+      "loads": 447,
+      "gens": 379,
+      "base_voltages": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        77.0,
+        66.0
+      ],
+      "solve_mode": "demand-scaled(x0.8)",
+      "verify": "OK gen=379 ext=10 vmin=0.983"
+    },
+    {
+      "region": "kansai",
+      "files": {
+        "EQ": [
+          "kansai_L2_EQ.xml",
+          19974
+        ],
+        "TP": [
+          "kansai_L2_TP.xml",
+          4124
+        ],
+        "SSH": [
+          "kansai_L2_SSH.xml",
+          11406
+        ],
+        "SV": [
+          "kansai_L2_SV.xml",
+          2055
+        ],
+        "GL": [
+          "kansai_L2_GL.xml",
+          4125
+        ]
+      },
+      "buses": 2062,
+      "lines": 2170,
+      "trafos": 364,
+      "loads": 1399,
+      "gens": 1178,
+      "base_voltages": [
+        500.0,
+        275.0,
+        187.0,
+        154.0,
+        110.0,
+        77.0,
+        66.0
+      ],
+      "solve_mode": "demand-scaled(x0.8)",
+      "verify": "OK gen=1163 ext=7 vmin=0.856"
     },
     {
       "region": "chugoku",
       "files": {
         "EQ": [
           "chugoku_L2_EQ.xml",
-          12908
+          13824
         ],
         "TP": [
           "chugoku_L2_TP.xml",
-          2550
+          2958
         ],
         "SSH": [
           "chugoku_L2_SSH.xml",
-          7437
+          7742
         ],
         "SV": [
           "chugoku_L2_SV.xml",
-          1275
+          1479
         ],
         "GL": [
           "chugoku_L2_GL.xml",
-          2551
+          2959
         ]
       },
-      "buses": 1275,
-      "lines": 1135,
-      "trafos": 395,
-      "loads": 1275,
-      "gens": 597,
+      "buses": 1479,
+      "lines": 1496,
+      "trafos": 267,
+      "loads": 855,
+      "gens": 823,
       "base_voltages": [
         500.0,
         275.0,
@@ -300,37 +303,37 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=597 ext=12 vmin=0.893"
+      "verify": "OK gen=821 ext=13 vmin=0.954"
     },
     {
       "region": "shikoku",
       "files": {
         "EQ": [
           "shikoku_L2_EQ.xml",
-          6293
+          6575
         ],
         "TP": [
           "shikoku_L2_TP.xml",
-          1212
+          1334
         ],
         "SSH": [
           "shikoku_L2_SSH.xml",
-          3689
+          3791
         ],
         "SV": [
           "shikoku_L2_SV.xml",
-          603
+          665
         ],
         "GL": [
           "shikoku_L2_GL.xml",
-          1213
+          1335
         ]
       },
-      "buses": 606,
-      "lines": 471,
-      "trafos": 187,
-      "loads": 606,
-      "gens": 356,
+      "buses": 667,
+      "lines": 629,
+      "trafos": 107,
+      "loads": 378,
+      "gens": 496,
       "base_voltages": [
         500.0,
         220.0,
@@ -340,37 +343,37 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=356 ext=31 vmin=0.879"
+      "verify": "OK gen=496 ext=25 vmin=0.901"
     },
     {
       "region": "kyushu",
       "files": {
         "EQ": [
           "kyushu_L2_EQ.xml",
-          16950
+          19350
         ],
         "TP": [
           "kyushu_L2_TP.xml",
-          2784
+          3242
         ],
         "SSH": [
           "kyushu_L2_SSH.xml",
-          10259
+          11660
         ],
         "SV": [
           "kyushu_L2_SV.xml",
-          1388
+          1617
         ],
         "GL": [
           "kyushu_L2_GL.xml",
-          2785
+          3243
         ]
       },
-      "buses": 1392,
-      "lines": 1230,
-      "trafos": 433,
-      "loads": 1392,
-      "gens": 1374,
+      "buses": 1621,
+      "lines": 1644,
+      "trafos": 299,
+      "loads": 1019,
+      "gens": 1903,
       "base_voltages": [
         500.0,
         220.0,
@@ -378,43 +381,43 @@
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=1374 ext=9 vmin=0.850"
+      "verify": "OK gen=1903 ext=9 vmin=0.966"
     },
     {
       "region": "okinawa",
       "files": {
         "EQ": [
           "okinawa_L2_EQ.xml",
-          691
+          745
         ],
         "TP": [
           "okinawa_L2_TP.xml",
-          162
+          182
         ],
         "SSH": [
           "okinawa_L2_SSH.xml",
-          377
+          411
         ],
         "SV": [
           "okinawa_L2_SV.xml",
-          79
+          89
         ],
         "GL": [
           "okinawa_L2_GL.xml",
-          163
+          183
         ]
       },
-      "buses": 81,
-      "lines": 57,
-      "trafos": 25,
-      "loads": 81,
-      "gens": 16,
+      "buses": 91,
+      "lines": 81,
+      "trafos": 15,
+      "loads": 75,
+      "gens": 22,
       "base_voltages": [
         132.0,
         66.0
       ],
       "solve_mode": "native",
-      "verify": "OK gen=16 ext=1 vmin=0.941"
+      "verify": "OK gen=22 ext=1 vmin=0.916"
     }
   ]
 }

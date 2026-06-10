@@ -5,13 +5,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 59.4,
-    "ac_vm_min": 0.9056,
+    "ac_loss_mw": 54.5,
+    "ac_vm_min": 0.9462,
     "ac_vm_max": 1.0322,
-    "dc_va_min": -1.8,
-    "dc_va_max": 27.0,
-    "dc_max_loading": 94.0,
-    "ac_max_loading": 83.7,
+    "dc_va_min": -0.5,
+    "dc_va_max": 25.3,
+    "dc_max_loading": 84.0,
+    "ac_max_loading": 84.0,
     "n_buses": 818,
     "n_lines": 835,
     "n_gens": 350,
@@ -19,7 +19,7 @@
     "n_active_buses": 815,
     "n_components": 11,
     "n_synthetic_lines": 27,
-    "n_shunt_comp": 815,
+    "n_shunt_comp": 595,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -36,8 +36,8 @@
       "export_mw": 450.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 3047.2570794003323,
-    "total_gen_mw": 3672.119933370349
+    "total_load_mw": 3042.3631123919304,
+    "total_gen_mw": 3666.9812680115274
   },
   "tohoku": {
     "name_ja": "東北",
@@ -45,13 +45,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 168.8,
-    "ac_vm_min": 0.959,
-    "ac_vm_max": 1.0601,
-    "dc_va_min": -20.4,
-    "dc_va_max": 38.6,
-    "dc_max_loading": 99.3,
-    "ac_max_loading": 120.8,
+    "ac_loss_mw": 173.6,
+    "ac_vm_min": 0.9616,
+    "ac_vm_max": 1.06,
+    "dc_va_min": -19.7,
+    "dc_va_max": 43.2,
+    "dc_max_loading": 94.8,
+    "ac_max_loading": 124.9,
     "n_buses": 1889,
     "n_lines": 1952,
     "n_gens": 1063,
@@ -59,7 +59,7 @@
     "n_active_buses": 1879,
     "n_components": 23,
     "n_synthetic_lines": 131,
-    "n_shunt_comp": 1879,
+    "n_shunt_comp": 1266,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -83,8 +83,8 @@
       "export_mw": 3330.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 10985.791940018746,
-    "total_gen_mw": 14581.581537019687
+    "total_load_mw": 10952.785923753665,
+    "total_gen_mw": 14546.92521994135
   },
   "tokyo": {
     "name_ja": "東京",
@@ -92,13 +92,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 987.6,
-    "ac_vm_min": 0.7962,
-    "ac_vm_max": 1.033,
-    "dc_va_min": -58.3,
-    "dc_va_max": 15.1,
-    "dc_max_loading": 136.6,
-    "ac_max_loading": 212.2,
+    "ac_loss_mw": 737.9,
+    "ac_vm_min": 0.9008,
+    "ac_vm_max": 1.03,
+    "dc_va_min": -35.9,
+    "dc_va_max": 20.7,
+    "dc_max_loading": 140.8,
+    "ac_max_loading": 143.7,
     "n_buses": 3409,
     "n_lines": 3568,
     "n_gens": 6484,
@@ -106,7 +106,7 @@
     "n_active_buses": 3407,
     "n_components": 11,
     "n_synthetic_lines": 238,
-    "n_shunt_comp": 3407,
+    "n_shunt_comp": 2559,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -136,8 +136,8 @@
       "export_mw": 0.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 44179.24732736203,
-    "total_gen_mw": 42428.20969373013
+    "total_load_mw": 44171.52908532355,
+    "total_gen_mw": 42420.10553958973
   },
   "chubu": {
     "name_ja": "中部",
@@ -145,13 +145,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 397.9,
-    "ac_vm_min": 0.8565,
+    "ac_loss_mw": 369.4,
+    "ac_vm_min": 0.7626,
     "ac_vm_max": 1.0737,
-    "dc_va_min": -40.7,
-    "dc_va_max": 38.7,
-    "dc_max_loading": 96.9,
-    "ac_max_loading": 141.7,
+    "dc_va_min": -41.4,
+    "dc_va_max": 38.2,
+    "dc_max_loading": 99.0,
+    "ac_max_loading": 183.5,
     "n_buses": 3298,
     "n_lines": 3421,
     "n_gens": 3294,
@@ -159,7 +159,7 @@
     "n_active_buses": 3295,
     "n_components": 22,
     "n_synthetic_lines": 190,
-    "n_shunt_comp": 3295,
+    "n_shunt_comp": 1929,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -192,8 +192,8 @@
       "export_mw": 1895.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 20379.44843218738,
-    "total_gen_mw": 22628.170853796746
+    "total_load_mw": 20364.5371577575,
+    "total_gen_mw": 22612.514015645374
   },
   "hokuriku": {
     "name_ja": "北陸",
@@ -201,13 +201,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 37.9,
-    "ac_vm_min": 0.978,
-    "ac_vm_max": 1.1315,
-    "dc_va_min": -7.8,
-    "dc_va_max": 10.9,
-    "dc_max_loading": 93.1,
-    "ac_max_loading": 96.6,
+    "ac_loss_mw": 41.4,
+    "ac_vm_min": 0.9922,
+    "ac_vm_max": 1.1337,
+    "dc_va_min": -8.5,
+    "dc_va_max": 12.0,
+    "dc_max_loading": 97.3,
+    "ac_max_loading": 94.3,
     "n_buses": 808,
     "n_lines": 825,
     "n_gens": 379,
@@ -215,7 +215,7 @@
     "n_active_buses": 807,
     "n_components": 11,
     "n_synthetic_lines": 51,
-    "n_shunt_comp": 807,
+    "n_shunt_comp": 445,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -232,8 +232,8 @@
       "export_mw": 760.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 4415.226781857451,
-    "total_gen_mw": 5433.988120950324
+    "total_load_mw": 4411.794554455446,
+    "total_gen_mw": 5430.384282178218
   },
   "kansai": {
     "name_ja": "関西",
@@ -241,13 +241,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 518.2,
-    "ac_vm_min": 0.9012,
-    "ac_vm_max": 1.0347,
-    "dc_va_min": -34.7,
-    "dc_va_max": 26.0,
-    "dc_max_loading": 99.5,
-    "ac_max_loading": 519.3,
+    "ac_loss_mw": 426.4,
+    "ac_vm_min": 0.9323,
+    "ac_vm_max": 1.0353,
+    "dc_va_min": -32.1,
+    "dc_va_max": 26.9,
+    "dc_max_loading": 98.5,
+    "ac_max_loading": 534.7,
     "n_buses": 2062,
     "n_lines": 2170,
     "n_gens": 1163,
@@ -255,7 +255,7 @@
     "n_active_buses": 2054,
     "n_components": 15,
     "n_synthetic_lines": 196,
-    "n_shunt_comp": 2054,
+    "n_shunt_comp": 1391,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -298,8 +298,8 @@
       "export_mw": 0.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 22841.68851599371,
-    "total_gen_mw": 20382.772941793395
+    "total_load_mw": 22787.841020608437,
+    "total_gen_mw": 20326.233071638853
   },
   "chugoku": {
     "name_ja": "中国",
@@ -307,13 +307,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 115.3,
-    "ac_vm_min": 0.9339,
-    "ac_vm_max": 1.0807,
-    "dc_va_min": -16.9,
-    "dc_va_max": 21.0,
-    "dc_max_loading": 99.8,
-    "ac_max_loading": 119.3,
+    "ac_loss_mw": 97.5,
+    "ac_vm_min": 0.9805,
+    "ac_vm_max": 1.0824,
+    "dc_va_min": -7.9,
+    "dc_va_max": 20.1,
+    "dc_max_loading": 98.4,
+    "ac_max_loading": 126.4,
     "n_buses": 1479,
     "n_lines": 1496,
     "n_gens": 821,
@@ -321,7 +321,7 @@
     "n_active_buses": 1478,
     "n_components": 14,
     "n_synthetic_lines": 113,
-    "n_shunt_comp": 1478,
+    "n_shunt_comp": 840,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -365,8 +365,8 @@
       "export_mw": 1636.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 8918.710359408034,
-    "total_gen_mw": 9452.445877378434
+    "total_load_mw": 8913.83502736513,
+    "total_gen_mw": 9447.326778733384
   },
   "shikoku": {
     "name_ja": "四国",
@@ -374,13 +374,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 26.9,
-    "ac_vm_min": 0.9212,
-    "ac_vm_max": 1.0325,
-    "dc_va_min": -13.3,
+    "ac_loss_mw": 23.0,
+    "ac_vm_min": 0.9404,
+    "ac_vm_max": 1.0326,
+    "dc_va_min": -11.7,
     "dc_va_max": 0.0,
-    "dc_max_loading": 98.6,
-    "ac_max_loading": 140.4,
+    "dc_max_loading": 89.7,
+    "ac_max_loading": 117.1,
     "n_buses": 667,
     "n_lines": 629,
     "n_gens": 496,
@@ -388,7 +388,7 @@
     "n_active_buses": 664,
     "n_components": 28,
     "n_synthetic_lines": 26,
-    "n_shunt_comp": 664,
+    "n_shunt_comp": 373,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -412,8 +412,8 @@
       "export_mw": 940.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 4657.496880014263,
-    "total_gen_mw": 5877.371724014977
+    "total_load_mw": 4642.694965449161,
+    "total_gen_mw": 5861.829713721621
   },
   "kyushu": {
     "name_ja": "九州",
@@ -421,13 +421,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 401.0,
-    "ac_vm_min": 0.8744,
-    "ac_vm_max": 1.0755,
-    "dc_va_min": -23.2,
-    "dc_va_max": 55.6,
-    "dc_max_loading": 98.6,
-    "ac_max_loading": 111.1,
+    "ac_loss_mw": 367.8,
+    "ac_vm_min": 0.891,
+    "ac_vm_max": 1.0729,
+    "dc_va_min": -10.6,
+    "dc_va_max": 57.2,
+    "dc_max_loading": 102.1,
+    "ac_max_loading": 137.6,
     "n_buses": 1621,
     "n_lines": 1644,
     "n_gens": 1903,
@@ -435,7 +435,7 @@
     "n_active_buses": 1616,
     "n_components": 14,
     "n_synthetic_lines": 147,
-    "n_shunt_comp": 1616,
+    "n_shunt_comp": 1013,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -452,8 +452,8 @@
       "export_mw": 1390.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 13125.942061364312,
-    "total_gen_mw": 15241.73916443253
+    "total_load_mw": 13095.257838034137,
+    "total_gen_mw": 15209.520729935844
   },
   "okinawa": {
     "name_ja": "沖縄",
@@ -461,13 +461,13 @@
     "ac_converged": true,
     "ac_solver": "nr",
     "dc_loss_mw": 0.0,
-    "ac_loss_mw": 65.2,
-    "ac_vm_min": 0.6468,
+    "ac_loss_mw": 60.3,
+    "ac_vm_min": 0.9233,
     "ac_vm_max": 1.01,
-    "dc_va_min": -44.7,
+    "dc_va_min": -34.8,
     "dc_va_max": 1.3,
-    "dc_max_loading": 90.2,
-    "ac_max_loading": 125.2,
+    "dc_max_loading": 95.4,
+    "ac_max_loading": 108.2,
     "n_buses": 91,
     "n_lines": 81,
     "n_gens": 22,
@@ -475,7 +475,7 @@
     "n_active_buses": 88,
     "n_components": 4,
     "n_synthetic_lines": 9,
-    "n_shunt_comp": 88,
+    "n_shunt_comp": 72,
     "topology": "snapped",
     "backbone": null,
     "boundary": {
@@ -484,7 +484,7 @@
       "export_mw": 0.0,
       "provenance": "typical planning utilisation of OCCTO 運用容量 (pending measured 連系線潮流実績)"
     },
-    "total_load_mw": 1311.3126491646776,
-    "total_gen_mw": 1376.8782816229113
+    "total_load_mw": 1300.6113537117903,
+    "total_gen_mw": 1365.6419213973797
   }
 }
