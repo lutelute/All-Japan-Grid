@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — UC改善③: HiGHS有効化+シナリオ第一級化+DBミラー
+
+- **HiGHS有効化**(`30a8402`): highspy導入済みなのに_select_solverがCLI版のみ探索しCBCに
+  フォールバックしていた。highspy API優先に修正、全国24h **27.8s→12.5s**（コストはgap内同等）。
+  pws-160core側もhighspy確認済み（160C/231GB free）→ 8760h級はサーバー実行方針（ユーザー許可: 160core+GPU）
+- **シナリオ第一級化**(`c1dd2c0`, ユーザー指示「発電機の選定はシナリオ依存」):
+  `config/uc_scenarios/fy2023.yaml` を正本に、需要形状/地域ピーク/RE容量・CF/蓄電池/燃料費/
+  起動費/容量既定値/参照リスト群を集約（旧ハードコード定数を全廃、二重管理解消）。
+  `build_national_scenario(scenario="fy2023")` で断面切替可能。**KPI差分ゼロを確認**
+  (uc_benchmark_scenario_yaml = uc_benchmark_highs)
+- **DBミラー**(同): grid.db migration v3 = `uc_scenarios`+`uc_scenario_generators`。
+  `scripts/db/ingest_uc_scenarios.py` でYAML→DB機械同期(nuclear 6/揚水44/パッチ2)。
+  YAML=正本・DB=実行時ビュー（DB_ARCHITECTURE整合）。978 passed
+
 ## 2026-06-11 — **Fable 5** — UC改善②: 精度4連打（dedup・揚水・原子力・容量較正）
 
 - 全て `scripts/uc_benchmark.py` のKPIスナップショットで段階計測（docs/reports/uc_benchmark_*_2026-06-11.json）
