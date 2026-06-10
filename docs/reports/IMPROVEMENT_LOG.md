@@ -7,6 +7,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-10 — **Fable 5** — backboneモデルでAC 10/10（②）+ 外部照合の初計測（①完結）
+
+- **② AC-solvable backbone** (`decbad0`): `reduce_to_backbone`（≥154kV保持、下位網発電を
+  境界バスへBFS集約、需要は縮約後に配分、閾値は地域別auto-degrade）
+  - **AC 10/10 native収束**（従来9/10）。**関西が全量需要22,833MWで収束**（従来x0.3〜0.4スケール必須）
+  - vm_min 全地域≥0.91（フルモデル: 東京0.78/北海道0.81）、東京過負荷583%→127%
+  - 需要スケールladderの撤去がこのモデルでは可能に。`ajgrid solve <region> --backbone`
+  - 副産物: reconnector の dense-Ybus クラッシュ修正（小網で顕在化した潜在バグ）
+- **① 外部照合** : Web実調査で正解ソース確定（`docs/VALIDATION_SOURCES.md`）。
+  **旧メモのC02=電力施設は誤り（C02=港湾、KSJに送電線データは存在しない）**
+  - 関西送配電CSV（線路名・回線数・容量、毎日更新）との照合実装 `src/validation/external_match.py`
+  - **初計測（関西）**: 公式235線の名前一致40%（厳密17.9%）・**500kV 34線中20線が名前で発見不可**・
+    circuits タグ一致56% — 入力(OSM)自体の欠落が初めて定量化された
+  - 発見: 東電PGが**変電所×線路名つき1時間値潮流CSV**(2024通年)を公開 = 東京エリアの接続+潮流の正解
+
 ## 2026-06-10 — **Fable 5** — プロジェクト評価と検証フレームワーク（①）
 
 - **判断レポート**: [2026-06-10_fable5_evaluation.md](2026-06-10_fable5_evaluation.md)
