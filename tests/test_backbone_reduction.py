@@ -102,3 +102,23 @@ def test_kansai_backbone_ac_converges_full_demand():
     # sag sits on the long 154 kV Kii-peninsula radial (Owase/Kumano), an
     # honest physical weak spot awaiting reactive/tap modelling (phase 5).
     assert 0.80 < vmin <= 1.05
+
+
+def test_hokkaido_backbone_floor_is_66kv():
+    """The mainland >=154 kV cut does not transfer to hokkaido (11 branches
+    at 154 kV; the 66 kV layer with 591 branches IS the regional grid), so
+    the default backbone request resolves to a 66 kV floor there — keeping
+    the full 800-bus network — while an explicit value is honoured."""
+    from src.powerflow.load_estimator import load_demand_config
+    from src.powerflow.pipeline import DEFAULT_BACKBONE_KV, build_and_solve
+
+    r = build_and_solve("hokkaido", load_demand_config(), topology="snapped",
+                        reconnect=True, backbone_kv=DEFAULT_BACKBONE_KV)
+    _dc, dc_res, _ac, ac_res, info, _ = r
+    assert info["backbone"]["effective_min_kv"] == 66.0
+    assert info["n_buses"] > 700
+    assert dc_res["converged"] and ac_res["converged"]
+
+    r2 = build_and_solve("hokkaido", load_demand_config(), topology="snapped",
+                         reconnect=True, backbone_kv=187.0)   # explicit wins
+    assert r2[4]["backbone"]["effective_min_kv"] == 187.0

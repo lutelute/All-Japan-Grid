@@ -42,6 +42,15 @@ from src.reconstruction.config import ReconstructionConfig
 from src.reconstruction.isolator import Isolator
 from src.reconstruction.reconnector import Reconnector
 
+# The mainland backbone cut (>=154 kV) does not transfer to every region:
+# hokkaido's grid has only 11 branches at 154 kV — its regional
+# connectivity layer IS the 66 kV network (591 branches; classes 275/187
+# above it), so a 154 kV cut leaves a skeleton (154 buses, ~18% loading).
+# Per-region floors apply when the caller asks for the DEFAULT cut; an
+# explicit non-default --backbone value is honoured as given.
+DEFAULT_BACKBONE_KV = 154.0
+REGION_BACKBONE_FLOOR = {"hokkaido": 66.0}
+
 
 def add_reactive_compensation(net, factor=0.6):
     """Add capacitive shunts at load buses to counter undervoltage.
@@ -104,7 +113,9 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
 
     backbone_info = None
     if backbone_kv:
-        backbone_info = reduce_to_backbone(net, min_kv=backbone_kv)
+        eff_kv = (REGION_BACKBONE_FLOOR.get(region, backbone_kv)
+                  if backbone_kv == DEFAULT_BACKBONE_KV else backbone_kv)
+        backbone_info = reduce_to_backbone(net, min_kv=eff_kv)
 
     # Residual reconnection: bridge genuine gaps with labelled synthetic lines
     # (named recon_line_*) instead of letting fix_topology disable the islands.

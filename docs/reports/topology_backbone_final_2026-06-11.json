@@ -51,34 +51,33 @@
     "unk": 16
    },
    "evidenced_circuit_share": 0.9282,
-   "build_s": 0.29
+   "build_s": 0.3
   },
   "solved": {
    "topology": "snapped",
-   "n_buses": 154,
-   "n_lines": 156,
+   "n_buses": 804,
+   "n_lines": 819,
    "n_trafos": 105,
-   "n_components": 4,
-   "n_disabled_buses": 0,
-   "n_synthetic_lines": 1,
-   "synthetic_rate": 0.0064,
-   "total_load_mw": 3060.0,
-   "total_gen_mw": 3685.5,
+   "n_components": 16,
+   "n_disabled_buses": 5,
+   "n_synthetic_lines": 26,
+   "synthetic_rate": 0.0317,
+   "total_load_mw": 3030.3,
+   "total_gen_mw": 3654.3,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 3.57,
+   "solve_s": 4.55,
    "backbone": {
-    "effective_min_kv": 154.0,
-    "n_dropped_buses": 650,
-    "n_kept_buses": 154,
-    "n_gens_moved": 311,
-    "n_gens_lost": 9,
-    "reduced": true
+    "effective_min_kv": 66.0,
+    "n_dropped_buses": 0,
+    "n_gens_moved": 0,
+    "n_gens_lost": 0,
+    "reduced": false
    },
-   "ac_vm_min": 1.0088,
+   "ac_vm_min": 1.0,
    "ac_vm_max": 1.0322,
-   "ac_va_spread_deg": 0.4,
-   "ac_max_loading_pct": 17.9
+   "ac_va_spread_deg": 0.5,
+   "ac_max_loading_pct": 16.9
   }
  },
  {
@@ -133,7 +132,7 @@
     "unk": 65
    },
    "evidenced_circuit_share": 0.8676,
-   "build_s": 0.49
+   "build_s": 0.46
   },
   "solved": {
    "topology": "snapped",
@@ -148,7 +147,7 @@
    "total_gen_mw": 14630.7,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 6.55,
+   "solve_s": 6.48,
    "backbone": {
     "effective_min_kv": 154.0,
     "n_dropped_buses": 1338,
@@ -214,7 +213,7 @@
     "unk": 96
    },
    "evidenced_circuit_share": 0.8733,
-   "build_s": 0.7
+   "build_s": 0.71
   },
   "solved": {
    "topology": "snapped",
@@ -229,7 +228,7 @@
    "total_gen_mw": 42416.9,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 21.35,
+   "solve_s": 21.03,
    "backbone": {
     "effective_min_kv": 154.0,
     "n_dropped_buses": 2246,
@@ -296,7 +295,7 @@
     "unk": 325
    },
    "evidenced_circuit_share": 0.4763,
-   "build_s": 0.65
+   "build_s": 0.64
   },
   "solved": {
    "topology": "snapped",
@@ -311,7 +310,7 @@
    "total_gen_mw": 20770.4,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 13.89,
+   "solve_s": 13.74,
    "backbone": {
     "effective_min_kv": 154.0,
     "n_dropped_buses": 1152,
@@ -460,7 +459,7 @@
     "unk": 191
    },
    "evidenced_circuit_share": 0.5957,
-   "build_s": 0.39
+   "build_s": 0.38
   },
   "solved": {
    "topology": "snapped",
@@ -475,7 +474,7 @@
    "total_gen_mw": 20496.5,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 7.01,
+   "solve_s": 7.05,
    "backbone": {
     "effective_min_kv": 154.0,
     "n_dropped_buses": 1319,
@@ -543,7 +542,7 @@
     "prop": 248
    },
    "evidenced_circuit_share": 0.4985,
-   "build_s": 0.36
+   "build_s": 0.35
   },
   "solved": {
    "topology": "snapped",
@@ -558,7 +557,7 @@
    "total_gen_mw": 9402.8,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 4.65,
+   "solve_s": 4.68,
    "backbone": {
     "effective_min_kv": 154.0,
     "n_dropped_buses": 1175,
@@ -704,7 +703,7 @@
     "unk": 185
    },
    "evidenced_circuit_share": 0.6551,
-   "build_s": 0.38
+   "build_s": 0.4
   },
   "solved": {
    "topology": "snapped",
@@ -797,7 +796,7 @@
    "total_gen_mw": 1428.0,
    "dc_converged": true,
    "ac_converged": true,
-   "solve_s": 0.31,
+   "solve_s": 0.32,
    "backbone": {
     "effective_min_kv": 132.0,
     "n_dropped_buses": 67,
