@@ -23,12 +23,18 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pandapower as pp
 
-from examples.build_national_snapped import build_island_networks, ISLANDS
-from examples.run_powerflow_all import (
-    fix_zero_voltages, insert_transformers, fix_topology,
-    select_slack_bus, balance_power, scale_line_ratings,
-    prune_dc_infeasible, run_powerflow,
+from src.powerflow.national import ISLANDS, build_island_networks
+from src.powerflow.transforms import (
+    apply_voltage_setpoints,
+    balance_power,
+    fix_topology,
+    fix_zero_voltages,
+    insert_transformers,
+    prune_dc_infeasible,
+    scale_line_ratings,
+    select_slack_bus,
 )
+from src.powerflow.batch_solve import run_powerflow
 from scripts.export_powerflow_pages import _parse_bus_coords
 from src.converter.pandapower_builder import PandapowerBuilder
 from src.powerflow.load_estimator import estimate_loads, load_demand_config
@@ -78,10 +84,8 @@ def solve_island(island_id, isl, demand_cfg, reactive):
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, reactive)
     net.bus["vm_pu"] = 1.0
-    if len(net.gen) > 0:
-        net.gen["vm_pu"] = 1.0
-    if len(net.ext_grid) > 0:
-        net.ext_grid["vm_pu"] = 1.0
+    # AVR-style class schedule (matches src.powerflow.pipeline phase 5)
+    apply_voltage_setpoints(net)
 
     net_dc = copy.deepcopy(net)
     dc = run_powerflow(net_dc, "dc")

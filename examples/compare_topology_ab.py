@@ -27,12 +27,17 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)  # config/*.yaml paths are repo-relative
 
-from examples.run_powerflow_all import (
-    build_network_from_geojson,
-    fix_zero_voltages, insert_transformers, fix_topology,
-    select_slack_bus, balance_power, scale_line_ratings,
-    prune_dc_infeasible, run_powerflow,
+from src.powerflow.legacy_build import build_network_from_geojson
+from src.powerflow.transforms import (
+    balance_power,
+    fix_topology,
+    fix_zero_voltages,
+    insert_transformers,
+    prune_dc_infeasible,
+    scale_line_ratings,
+    select_slack_bus,
 )
+from src.powerflow.batch_solve import run_powerflow
 from examples.build_snapped_topology import build_network_snapped
 from src.converter.pandapower_builder import PandapowerBuilder
 from src.powerflow.load_estimator import estimate_loads, load_demand_config

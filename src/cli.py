@@ -46,8 +46,15 @@ def cmd_regions(_args, _rest):
     return 0
 
 
-def cmd_solve(args, _rest):
-    """Build a region's snapped/legacy network and solve DC+AC."""
+def cmd_solve(args, rest):
+    """Build a region's snapped/legacy network and solve DC+AC.
+
+    ``ajgrid solve national`` dispatches the national zonal solver
+    (synchronous islands + inter-regional ties; heavy — west is ~12k
+    buses), passing any extra args through to the script.
+    """
+    if args.region == "national":
+        return _run("scripts/run_national_powerflow.py", rest)
     from src.powerflow.load_estimator import load_demand_config
     from src.powerflow.pipeline import build_and_solve
 
@@ -127,7 +134,9 @@ def build_parser():
     sub.add_parser("regions", help="list the 10 regions").set_defaults(
         func=cmd_regions)
 
-    s = sub.add_parser("solve", help="build & solve a region's power flow")
+    s = sub.add_parser(
+        "solve", help="build & solve a region's power flow "
+                      "(or `solve national` for the zonal island solver)")
     s.add_argument("region")
     s.add_argument("--topology", choices=["legacy", "snapped"], default="snapped")
     s.add_argument("--reconnect", action="store_true")

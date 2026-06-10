@@ -62,15 +62,16 @@ def add_reactive_compensation(net, factor=0.6):
     return n
 
 
-def build_and_solve(region, demand_cfg, topology="legacy", reconnect=False, reactive=0.6,
+def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none"):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
-        topology: "legacy" (nearest-substation endpoint match, current behaviour)
-            or "snapped" (vertex-graph + tolerance snap, recovers real
-            connectivity; see src.powerflow.snapped_topology).
+        topology: "snapped" (vertex-graph + tolerance snap; the default and
+            recommended builder) or "legacy" (nearest-substation endpoint
+            match — kept for A/B comparison only; it drops the majority of
+            lines and swallows cross-voltage lines into transformers).
         reconnect: when True, bridge the residual isolated components with
             labelled synthetic lines (recon_line_*) via the reconstruction
             module before solving, so the solved network is fully connected

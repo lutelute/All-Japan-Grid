@@ -21,9 +21,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pandapower as pp
 
 from examples.build_national_snapped import build_island_networks
-from examples.run_powerflow_all import (
-    fix_zero_voltages, insert_transformers, fix_topology,
-    select_slack_bus, balance_power, scale_line_ratings, prune_dc_infeasible,
+from src.powerflow.transforms import (
+    balance_power,
+    fix_topology,
+    fix_zero_voltages,
+    insert_transformers,
+    prune_dc_infeasible,
+    scale_line_ratings,
+    select_slack_bus,
 )
 from src.powerflow.load_estimator import load_demand_config, estimate_loads
 from src.reconstruction.config import ReconstructionConfig

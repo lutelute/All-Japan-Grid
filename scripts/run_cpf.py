@@ -45,10 +45,14 @@ import numpy as np
 import pandapower as pp
 
 from examples.build_snapped_topology import build_network_snapped
-from examples.run_powerflow_all import (
-    fix_zero_voltages, insert_transformers, fix_topology,
-    select_slack_bus, balance_power, scale_line_ratings,
+from src.powerflow.transforms import (
+    balance_power,
+    fix_topology,
+    fix_zero_voltages,
+    insert_transformers,
     prune_dc_infeasible,
+    scale_line_ratings,
+    select_slack_bus,
 )
 from scripts.export_powerflow_pages import add_reactive_compensation
 from src.converter.pandapower_builder import PandapowerBuilder

@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-10 — **Fable 5** — 構造統一: national昇格・import直結・legacy隔離（⑥）
+
+- **変更**:
+  - 全国ゾーナルビルダー `examples/build_national_snapped.py` → **`src/powerflow/national.py`** 昇格
+    （旧パスは再エクスポートshim）。**`ajgrid solve national [--islands ...]`** をCLIに追加
+  - `examples.run_powerflow_all` shim経由だった5ファイル（export_powerflow_pages /
+    run_national_powerflow / run_cpf / compare_topology_ab / 診断1本）のimportを **src直結化**
+  - `export_cim_level2` の build_and_solve も `src.powerflow.pipeline` 直結
+    （監査時の「CIM-L2にインライン再実装」は現存せず=Phase Cで解消済みを確認）
+  - `build_and_solve` のデフォルトを `topology="snapped"` に変更（**legacyは比較専用に隔離**、docstring明記）
+  - nationalソルバーにも⑤のAVR設定値を配線（okinawa島 vm 0.814→0.843）
+- **意図的に未実施**: トポロジビルダーのDB直読み化 — 残タスク#10（raw/derived split）の
+  設計判断（ユーザー裁定要: data/raw分離 vs snapshotsテーブル直読）とセットで行うべきで、
+  単独先行はprovenance破壊リスク（#8の実証済み教訓）
+- テスト925 passed
+
 ## 2026-06-10 — **Fable 5** — 潮流物理の底上げ: Q制限・AVR設定値・空間負荷（⑤）
 
 - **変更**:

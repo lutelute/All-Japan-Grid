@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import pandapower as pp  # noqa: E402
 
-from scripts.export_powerflow_pages import build_and_solve  # noqa: E402
+from src.powerflow.pipeline import build_and_solve  # noqa: E402
 from src.cim.boundary import BOUNDARY_VOLTAGES, generate_boundary  # noqa: E402
 from src.cim.level2 import net_to_cgmes  # noqa: E402
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
