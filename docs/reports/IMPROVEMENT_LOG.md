@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — 41/799根本修正: スラック移設の成分迷子（㉖）
+
+- **真因**: `select_slack_bus` のスコア(vn×10支配)が**主スラックを小成分の高電圧バスへ移設**
+  →北海道の66kV主メッシュ(758バス・発電138機)が**ext_grid 0本**で全NaN。
+  「converged, vm 1.000」は41バス統計だった(㉕)
+- **修正**(`このcommit`): スラック選択を**現在のext_grid[0]が属する成分内に限定** — 最適化が
+  成分を迷子にできない構造に。北海道 **799/799有効・vm[0.947,1.032]・loading 97%**
+  （昨日の vm 1.000/17% は撤回・再表明）
+- **再発防止**: `solved_metrics` に **n_unsolved_buses**(非有限res数)を計装し、
+  okinawa+hokkaidoで**ゼロを回帰pin** — NaNスキップ系のバグは二度と隠れられない
+- 配信: hokkaido zonal再生成(799バス・NaN 0)・FAIL明示を解除。955 passed
+
 ## 2026-06-11 — **Fable 5** — マップ検証が暴いたsilent-NaNバグ: 北海道41/799問題（㉕・要追跡）
 
 - **発見経路**: nationalタブのPlaywrightスモーク→hokkaidoスライスが不正JSON(vm_pu:NaN)→
