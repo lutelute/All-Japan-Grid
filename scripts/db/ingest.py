@@ -22,7 +22,11 @@ sys.path.insert(
     ),
 )
 
-from src.db.geojson_sync import LAYERS, ingest_geojson  # noqa: E402
+from src.db.geojson_sync import (  # noqa: E402
+    LAYERS,
+    ingest_geojson,
+    load_enrichments_jsonl,
+)
 from src.db.grid_db import GridDatabase  # noqa: E402
 from src.server.geojson_loader import REGIONS  # noqa: E402
 
@@ -39,6 +43,16 @@ def main() -> None:
         nargs="+",
         default=["all"],
         help="Region names or 'all' (default)",
+    )
+    parser.add_argument(
+        "--enrichments",
+        default="data/db/enrichments.jsonl",
+        help="curation backup to restore after ingest (the committed C layer)",
+    )
+    parser.add_argument(
+        "--no-enrichments",
+        action="store_true",
+        help="ingest raw only; do not restore the curation backup",
     )
     args = parser.parse_args()
 
@@ -66,6 +80,15 @@ def main() -> None:
         f"TOTAL: {total_features} features, {total_curated} curated rows "
         f"-> {args.db}"
     )
+
+    # Restore the committed curation backup (P03, manual fixes, …) so a fresh
+    # rebuild reconstructs the full curated state — not just what the legacy
+    # GeoJSON markers carry. Idempotent (upsert keyed by feature identity).
+    if not args.no_enrichments and os.path.exists(args.enrichments):
+        n = load_enrichments_jsonl(db, args.enrichments, regions=regions)
+        print(f"[restore] applied {n} curation rows from {args.enrichments}")
+    elif not args.no_enrichments:
+        print(f"[restore] no curation backup at {args.enrichments} (skipped)")
 
 
 if __name__ == "__main__":

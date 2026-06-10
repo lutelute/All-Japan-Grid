@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -570,4 +571,37 @@ def dump_enrichments_jsonl(db: GridDatabase, path: str) -> int:
                 )
                 + "\n"
             )
+    return len(rows)
+
+
+def load_enrichments_jsonl(db: GridDatabase, path: str, regions=None) -> int:
+    """Load a curation backup written by :func:`dump_enrichments_jsonl` back
+    into the C layer — the *restore* half of the tracked backup.
+
+    Each JSONL record (``{layer, region, feature_key, field, source, value,
+    [confidence]}``) is upserted via :func:`apply_enrichments`, so the load is
+    idempotent and the restored curation is keyed by feature identity (it
+    survives a later OSM re-fetch). This is what makes committed curation —
+    P03 authoritative data, manual fixes — actually take effect on a fresh
+    ``ingest`` rebuild instead of being a write-only backup.
+
+    ``regions`` optionally restricts the load to a set/list of region names
+    (so a single-region ingest doesn't apply orphan rows for other regions).
+
+    Returns the number of enrichment rows applied (0 if the file is absent).
+    """
+    if not os.path.exists(path):
+        return 0
+    keep = set(regions) if regions is not None else None
+    rows = []
+    with open(path, "r", encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            rec = json.loads(line)
+            if keep is None or rec.get("region") in keep:
+                rows.append(rec)
+    if rows:
+        apply_enrichments(db, rows, run_id="load_enrichments_jsonl")
     return len(rows)
