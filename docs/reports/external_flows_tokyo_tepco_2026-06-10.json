@@ -1,0 +1,63 @@
+{
+ "region": "tokyo",
+ "backbone_kv": 154.0,
+ "quantile": 0.95,
+ "n_measured_lines": 179,
+ "n_model_named_lines": 532,
+ "n_matched": 97,
+ "spearman_rho": 0.508,
+ "spearman_p": 1.11e-07,
+ "median_model_over_measured": 0.77,
+ "top_mismatches": [
+  {
+   "line": "京北線",
+   "measured_p95_mw": 78.0,
+   "model_dc_mw": 3496.0
+  },
+  {
+   "line": "新袖ヶ浦線",
+   "measured_p95_mw": 4690.0,
+   "model_dc_mw": 1929.0
+  },
+  {
+   "line": "南葛線",
+   "measured_p95_mw": 293.0,
+   "model_dc_mw": 3032.0
+  },
+  {
+   "line": "小松川線",
+   "measured_p95_mw": 410.0,
+   "model_dc_mw": 3148.0
+  },
+  {
+   "line": "白石線",
+   "measured_p95_mw": 258.0,
+   "model_dc_mw": 2868.0
+  },
+  {
+   "line": "新栃木線",
+   "measured_p95_mw": 4090.0,
+   "model_dc_mw": 1656.0
+  },
+  {
+   "line": "香取線",
+   "measured_p95_mw": 1321.0,
+   "model_dc_mw": 3732.0
+  },
+  {
+   "line": "亀戸線",
+   "measured_p95_mw": 420.0,
+   "model_dc_mw": 2741.0
+  },
+  {
+   "line": "港北線",
+   "measured_p95_mw": 2420.0,
+   "model_dc_mw": 152.0
+  },
+  {
+   "line": "新京葉線",
+   "measured_p95_mw": 4910.0,
+   "model_dc_mw": 2654.0
+  }
+ ]
+}

@@ -165,6 +165,130 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None) -> dict
     }
 
 
+def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
+    """Per-line measured-flow statistic from the full hourly time series.
+
+    Columns for the same (substation, line) are circuit groups (1･2L,
+    3･4L) and are SUMMED per timestamp (total line flow at that end);
+    the two ends of a line are separate (sub, line) groups and the
+    larger-statistic end is taken (ends differ only by losses).
+
+    Returns {normalised line name: q-quantile of |total flow| in MW}.
+    The quantile (default 0.95) is robust against metering glitches while
+    still representing "how heavily this corridor is actually used".
+    """
+    import pandas as pd
+
+    df = pd.read_csv(csv_path, encoding="cp932", na_values=["-", ""])
+    groups = defaultdict(list)   # (sub, line) -> [column, ...]
+    for col in df.columns[1:]:
+        m = _COL_PAT.match(col.strip())
+        if not m:
+            continue
+        eq = m.group(3).strip()
+        if eq.endswith("L") and "線" in eq:
+            line = _CIRCUIT_SUFFIX.sub("", eq).strip()
+            if line:
+                groups[(m.group(1).strip(), line)].append(col)
+
+    stats: dict[str, float] = {}
+    for (sub, line), cols in groups.items():
+        total = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
+        val = float(total.abs().quantile(q))
+        key = _norm(line)
+        stats[key] = max(stats.get(key, 0.0), val)
+    return stats
+
+
+def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
+                q: float = 0.95, data_dir: str | None = None,
+                load_spatial: str = "none") -> dict:
+    """Flow-level validation: model DC flows vs TEPCO measured flows.
+
+    Caveat by construction: the model solves ONE synthetic snapshot
+    (OCCTO peak x load factor, synthetic allocation), the measurement is
+    a year of actuals — so the defensible comparison is *ordinal*: does
+    the model route power on the right corridors? Reported as Spearman
+    rank correlation over name-matched lines, plus the magnitude ratio
+    distribution and the largest mismatches (named, actionable).
+    """
+    from scipy.stats import spearmanr
+
+    from src.powerflow.load_estimator import load_demand_config
+    from src.powerflow.pipeline import build_and_solve
+
+    measured = tepco_flow_stats(csv_path, q=q)
+
+    result = build_and_solve(region, load_demand_config(), topology="snapped",
+                             reconnect=True, backbone_kv=backbone_kv,
+                             load_spatial=load_spatial)
+    if result is None:
+        raise FileNotFoundError(f"no network for region {region}")
+    net_dc, dc_res, _net_ac, _ac_res, _info, _geom = result
+    if not dc_res.get("converged"):
+        raise RuntimeError("DC did not converge")
+
+    model: dict[str, float] = {}
+    flows = net_dc.res_line["p_from_mw"].abs()
+    for idx in net_dc.line.index:
+        raw = str(net_dc.line.at[idx, "name"] or "")
+        if not raw or raw.startswith(f"{region}_line_"):
+            continue
+        p = float(flows.get(idx, 0.0))
+        for part in raw.split(";"):           # OSM compound names
+            key = _norm(part)
+            if key:
+                # series segments carry the same flow -> max is the
+                # corridor's loaded section
+                model[key] = max(model.get(key, 0.0), p)
+
+    common = sorted(set(measured) & set(model))
+    pairs = [(measured[k], model[k]) for k in common]
+    out = {
+        "region": region,
+        "backbone_kv": backbone_kv,
+        "load_spatial": load_spatial,
+        "quantile": q,
+        "n_measured_lines": len(measured),
+        "n_model_named_lines": len(model),
+        "n_matched": len(common),
+    }
+    if len(common) >= 5:
+        meas_v = [p[0] for p in pairs]
+        model_v = [p[1] for p in pairs]
+        rho, pval = spearmanr(meas_v, model_v)
+        ratios = sorted(m / x for x, m in zip(meas_v, model_v) if x > 1.0)
+        out.update({
+            "spearman_rho": round(float(rho), 3),
+            "spearman_p": float(f"{pval:.2e}"),
+            "median_model_over_measured": round(ratios[len(ratios) // 2], 2) if ratios else None,
+        })
+        diffs = sorted(common, key=lambda k: abs(model[k] - measured[k]), reverse=True)
+        out["top_mismatches"] = [
+            {"line": k, "measured_p95_mw": round(measured[k], 0),
+             "model_dc_mw": round(model[k], 0)} for k in diffs[:10]]
+    return out
+
+
+def render_flows(m: dict) -> str:
+    lines = [
+        f"{m['region']} flow-level vs TEPCO (q={m['quantile']}, "
+        f"backbone>={m['backbone_kv']}kV): "
+        f"matched {m['n_matched']} lines "
+        f"(measured {m['n_measured_lines']}, model-named {m['n_model_named_lines']})",
+    ]
+    if "spearman_rho" in m:
+        lines.append(
+            f"  Spearman rank corr : {m['spearman_rho']} (p={m['spearman_p']:g})")
+        lines.append(
+            f"  median model/measured magnitude : {m['median_model_over_measured']}")
+        lines.append("  largest mismatches (measured p95 vs model DC, MW):")
+        for t in m["top_mismatches"][:5]:
+            lines.append(f"    {t['line']:12s} {t['measured_p95_mw']:>8.0f} vs "
+                         f"{t['model_dc_mw']:>8.0f}")
+    return "\n".join(lines)
+
+
 def render_tepco(m: dict) -> str:
     t = m["truth"]
     return "\n".join([
@@ -187,11 +311,22 @@ def main(argv=None):
     ap.add_argument("--region", default="tokyo")
     ap.add_argument("--json", help="write the full scorecard")
     ap.add_argument("--missing", action="store_true", help="list missing items")
+    ap.add_argument("--flows", action="store_true",
+                    help="flow-level validation (model DC vs measured MW)")
+    ap.add_argument("--backbone", type=float, default=154.0)
     args = ap.parse_args(argv)
 
     if not os.path.exists(args.csv):
         print(f"no CSV at {args.csv} — fetch it first (see module docstring)")
         return 2
+    if args.flows:
+        m = match_flows(args.region, args.csv, backbone_kv=args.backbone)
+        print(render_flows(m))
+        if args.json:
+            with open(args.json, "w", encoding="utf-8") as f:
+                json.dump(m, f, indent=1, ensure_ascii=False)
+            print(f"\nscorecard -> {args.json}")
+        return 0
     m = match_tepco(args.region, args.csv)
     print(render_tepco(m))
     if args.missing:

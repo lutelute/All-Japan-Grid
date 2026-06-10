@@ -82,3 +82,20 @@ def test_match_scores_attachments_and_missing(tepco_csv, data_dir):
     assert m["pair_line_present_not_attached"] == 1
     assert m["missing_lines"] == ["不在線"]
     assert any("葛南 - 東京南線" in s for s in m["missing_pairs"])
+
+
+def test_flow_stats_sums_circuit_groups_takes_max_end(tmp_path):
+    """Circuit-group columns at the same end are summed per timestamp;
+    the two ends of a line are separate groups and the larger wins."""
+    rows = [
+        "日時,京浜(変) - A線1･2L,京浜(変) - A線3･4L,葛南(変) - A線1･2L",
+        "2024年04月01日 00時,100,50,120",
+        "2024年04月01日 01時,200,100,250",
+    ]
+    p = tmp_path / "flows.csv"
+    p.write_bytes(("\n".join(rows) + "\n").encode("cp932"))
+
+    from src.validation.external_tepco import tepco_flow_stats
+    stats = tepco_flow_stats(str(p), q=1.0)   # q=1 -> max
+    # 京浜 end: 100+50=150, 200+100=300 -> 300 ; 葛南 end: 250 -> keep 300
+    assert stats == {"A線": 300.0}
