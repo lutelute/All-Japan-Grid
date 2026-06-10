@@ -138,3 +138,31 @@ def test_parse_circuits_evidence():
     assert _parse_circuits({"circuits": "junk"}) == (1, None)
     assert _parse_circuits({}) == (1, None)
     assert _parse_circuits({"circuits": "99"}) == (8, "tag")      # clamped
+
+
+def test_opposite_frequency_tso_features_excluded(tmp_path):
+    """A 50 Hz TSO's equipment inside a 60 Hz region slice (the Izu
+    intrusion: 1,000+ TEPCO features in the chubu slice) is excluded;
+    same-frequency foreign TSOs and non-TSO operators are kept."""
+    subs = _geojson([
+        _sub(138.9, 34.7, voltage="66000", name="湊変電所"),
+    ])
+    subs["features"][0]["properties"]["operator"] = "東京電力パワーグリッド"
+    lines = _geojson([
+        _line([[138.9, 34.7], [138.95, 34.75]], voltage="66000", name="izu"),
+        _line([[136.0, 35.0], [136.05, 35.05]], voltage="275000", name="kepco"),
+        _line([[137.0, 35.5], [137.05, 35.55]], voltage="154000", name="jpower"),
+    ])
+    lines["features"][0]["properties"]["operator"] = "東京電力"          # 50 Hz
+    lines["features"][1]["properties"]["operator"] = "関西電力送配電"     # 60 Hz
+    lines["features"][2]["properties"]["operator"] = "電源開発送変電ネットワーク"
+    d = tmp_path / "freq"
+    d.mkdir()
+    (d / "shikoku_substations.geojson").write_text(json.dumps(subs))
+    (d / "shikoku_lines.geojson").write_text(json.dumps(lines))
+    net = build_network_snapped("shikoku", data_dir=str(d))   # 60 Hz region
+    names = {ln.name for ln in net.transmission_lines}
+    assert not any("izu" in n for n in names)                 # 50 Hz dropped
+    assert any("kepco" in n for n in names)                   # 60 Hz foreign kept
+    assert any("jpower" in n for n in names)                  # non-TSO kept
+    assert not any("湊" in s.name for s in net.substations)

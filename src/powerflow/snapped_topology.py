@@ -110,6 +110,29 @@ def _parse_voltage_kv(voltage_raw):
 
 VALID_VOLTAGES = [66, 77, 110, 132, 154, 187, 220, 275, 500]
 
+# TSO operator name fragments -> home grid frequency. The regional OSM
+# slices overlap, so e.g. the chubu (60 Hz) slice contains 1,000+ TEPCO
+# (50 Hz) features down the Izu peninsula. Equipment of an opposite-
+# frequency TSO cannot be part of this synchronous network, so such
+# features are excluded at build time. Same-frequency foreign TSOs are
+# KEPT (boundary corridors near ties are often neighbour-operated);
+# non-TSO operators (railways, J-POWER, IPPs) are kept everywhere.
+_TSO_FREQ = {
+    "北海道電力": 50, "東北電力": 50, "東京電力": 50,
+    "中部電力": 60, "北陸電力": 60, "関西電力": 60,
+    "中国電力": 60, "四国電力": 60, "九州電力": 60, "沖縄電力": 60,
+}
+
+
+def _operator_freq(operator) -> int | None:
+    """Home frequency of the operating TSO, or None if not a known TSO."""
+    if not operator:
+        return None
+    for frag, hz in _TSO_FREQ.items():
+        if frag in str(operator):
+            return hz
+    return None
+
 
 def _clean_voltage(v_kv):
     """Snap a KNOWN voltage to the nearest standard JP transmission class.
@@ -251,6 +274,9 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if lat is None:
             continue
         props = feat["properties"]
+        op_hz = _operator_freq(props.get("operator"))
+        if op_hz is not None and op_hz != freq:
+            continue   # opposite-frequency TSO: not in this synchronous net
         sid = f"{region}_sub_{i}"
         vkv = _parse_voltage_kv(props.get("voltage"))
         # A spurious sub-transmission tag (e.g. 2 kV) on a substation that
@@ -342,6 +368,9 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if len(coords) < 2:
                 continue
             props = feat["properties"]
+            op_hz = _operator_freq(props.get("operator"))
+            if op_hz is not None and op_hz != freq:
+                continue   # opposite-frequency TSO equipment
             kv = max(_parse_voltage_kv(props.get("voltage")), 0)
             # Skip non-transmission mistags (known voltage below threshold);
             # keep unknown (0) so unlabelled transmission survives.
