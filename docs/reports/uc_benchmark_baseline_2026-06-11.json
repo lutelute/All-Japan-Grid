@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "cc3a5d7",
+    "scenario": "national_24h_nodal (gen_uc_regional互換)",
+    "reserve_margin": 0.05,
+    "mip_gap": 0.01,
+    "effective_solver": "cbc"
+  },
+  "data_quality": {
+    "n_features_scanned": 19138,
+    "n_thermal_loaded": 636,
+    "thermal_capacity_mw": 268361.05000000005,
+    "n_duplicates": 126,
+    "duplicate_capacity_mw": 39764.6,
+    "n_capacity_defaulted": 119,
+    "n_skipped_small": 922,
+    "n_storage_units": 0,
+    "storage_capacity_mwh": 0.0,
+    "fuel_counts": {
+      "nuclear": 27,
+      "biomass": 79,
+      "hydro": 288,
+      "lng": 81,
+      "coal": 98,
+      "oil": 36,
+      "geothermal": 26,
+      "unknown": 1
+    },
+    "fuel_capacity_mw": {
+      "nuclear": 35944.4,
+      "biomass": 2920.2999999999993,
+      "hydro": 31064.500000000007,
+      "lng": 94689.29999999999,
+      "coal": 70375.0,
+      "oil": 32362.0,
+      "geothermal": 999.3,
+      "unknown": 6.25
+    },
+    "n_unique_units": 510,
+    "unique_capacity_mw": 228596.45000000004
+  },
+  "solve": {
+    "status": "Optimal",
+    "solve_time_s": 31.9,
+    "total_cost_jpy": 6799845563,
+    "total_cost_oku_per_day": 68.0,
+    "gap": 0.0,
+    "num_warnings": 0,
+    "n_generators": 646,
+    "n_thermal": 636,
+    "n_battery": 10,
+    "battery_mw": 3450,
+    "battery_mwh": 13800
+  },
+  "dispatch": {
+    "total_energy_gwh_per_day": 3162.1,
+    "fuel_share_pct": {
+      "nuclear": 24.27,
+      "hydro": 23.58,
+      "coal": 22.93,
+      "solar": 13.31,
+      "lng": 10.05,
+      "wind": 3.39,
+      "biomass": 1.63,
+      "geothermal": 0.76,
+      "battery": 0.1,
+      "unknown": 0.0
+    },
+    "battery_discharge_mwh": 3037,
+    "battery_charge_mwh": 2027,
+    "battery_equivalent_cycles": 0.22,
+    "interconnection_peak_utilisation": {
+      "ic_001": 1.0,
+      "ic_002": 1.0,
+      "ic_003": 1.0,
+      "ic_004": 1.0,
+      "ic_005": 1.0,
+      "ic_006": 1.0,
+      "ic_007": 1.0,
+      "ic_008": 1.0,
+      "ic_009": 1.0
+    }
+  }
+}

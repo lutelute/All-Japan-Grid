@@ -7,6 +7,19 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — UC改善①: ベースライン計測基盤（worktree分離セッション）
+
+- **worktree `worktree-uc-improvements`** でUC機能改善シリーズを開始（main側の潮流改修と並行のため分離）
+- **計測基盤**: `src/uc/scenario.py`（gen_uc_regional.pyのロード部を共通化、挙動不変を出力一致で確認:
+  636機/268,361MW/沖縄¥206.9百万 一致）+ `scripts/uc_benchmark.py`（データ品質/求解/ディスパッチKPIの
+  スナップショット、`--baseline` diff付き）+ 回帰ピン11テスト。**958 passed**
+- **ベースライン確定** (`uc_benchmark_baseline_2026-06-11.json`): 全国24hノーダルUC =
+  Optimal 31.9s(CBC)・¥68.0億/日。計測で確定した問題: **重複126機39.8GW(熱容量の14.8%)が二重計上** /
+  **揚水storage 0機**（OSM抽出が`plant:method`を落とし全揚水が一般水力=コスト0のフリー電源扱い、
+  葛野川・奥清津・玉原など名前同定は可能）/ 原子力27機35.9GWが全数稼働可能扱い /
+  シェア乖離 hydro 23.6%・nuclear 24.3%・lng 10.1%（実態目安 ~8%・~9%・~33%）/ HiGHS未導入
+- 評価・改善ロードマップ: `UC_BASELINE_ASSESSMENT_2026-06-11.md`（タスク②精度→③ソルバー→④8760h→⑤CLI→⑥PF連携）
+
 ## 2026-06-11 — **Fable 5** — OCCTO公表APIの発見と実測連系線フロー導入（⑲自己ループ）
 
 - **発見**: OCCTO web-kohyo CSV APIが登録不要で到達可能(30分値・保持窓~14ヶ月)。
