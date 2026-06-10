@@ -472,6 +472,9 @@ class PandapowerBuilder:
                 p_mw=gen.capacity_mw,
                 vm_pu=gen.vm_pu,
                 name=gen.name,
+                # fuel type rides along so dispatch can be merit-order
+                # (capacity-factor) aware instead of uniform scaling
+                type=gen.fuel_type,
                 min_p_mw=gen.p_min_mw,
                 max_p_mw=gen.capacity_mw,
                 # Typical synchronous-machine reactive capability at rated P

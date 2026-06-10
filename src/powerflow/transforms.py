@@ -495,8 +495,42 @@ def scale_line_ratings(net):
             net.trafo.loc[bad, "sn_mva"] = net.trafo.loc[bad, "sn_mva"].to_numpy() * f
 
 
+# Typical JP annual capacity factors by fuel — the merit-order weighting
+# for synthetic dispatch. Uniform scaling ran every plant at the same
+# fraction, which compressed near-baseload LNG/coal trunk plants to ~35%
+# while phantom default-capacity rooftop solar ran at the same rate —
+# flattening the corridor flow pattern (measured against TEPCO actuals:
+# 新袖ヶ浦線 model 1,929 MW vs measured p95 4,690 MW).
+_DISPATCH_CF = {
+    "nuclear": 0.8, "coal": 0.7, "gas": 0.55, "lng": 0.55, "oil": 0.1,
+    "hydro": 0.45, "solar": 0.15, "wind": 0.25, "biomass": 0.6,
+    "geothermal": 0.6, "waste": 0.6,
+}
+_DEFAULT_CF = 0.3
+
+
+def _dispatch_cf(fuel) -> float:
+    """Capacity factor for a fuel tag; multi-fuel uses the FIRST token.
+
+    "oil;gas" plants are typically legacy oil stations with partial gas
+    repowering (鹿島: nameplate 5.7 GW, largely retired) — taking the
+    best fuel's factor over-dispatched them and flooded their corridors
+    (香取線 model 5,727 MW vs measured p95 1,321 MW), so the first tag
+    wins and stale-nameplate damping is left to authoritative capacity
+    data (Pillar 3).
+    """
+    tokens = [t.strip().lower() for t in str(fuel or "").split(";") if t.strip()]
+    return _DISPATCH_CF.get(tokens[0], _DEFAULT_CF) if tokens else _DEFAULT_CF
+
+
 def balance_power(net, demand_config):
-    """Ensure generation roughly matches load for convergence."""
+    """Match generation to load with merit-order (capacity-factor) dispatch.
+
+    Each generator's available output is max_p_mw x its fuel's typical
+    capacity factor; the fleet is scaled to the demand target on that
+    basis (clipped at nameplate). Falls back to uniform scaling when the
+    builder did not provide fuel types (``type`` column).
+    """
     if len(net.load) == 0:
         return
 
@@ -514,9 +548,14 @@ def balance_power(net, demand_config):
         gen_inactive_mask = net.gen["bus"].isin(inactive_buses)
         net.gen.loc[gen_inactive_mask, "in_service"] = False
 
-        active_gens = net.gen[net.gen["in_service"]]
-        total_capacity = active_gens["max_p_mw"].sum() if "max_p_mw" in active_gens.columns else active_gens["p_mw"].sum()
-
-        if total_capacity > 0:
-            scale = min(target_gen / total_capacity, 1.0)
-            net.gen.loc[net.gen["in_service"], "p_mw"] = net.gen.loc[net.gen["in_service"], "max_p_mw"] * scale
+        active = net.gen["in_service"]
+        cap = (net.gen.loc[active, "max_p_mw"]
+               if "max_p_mw" in net.gen.columns else net.gen.loc[active, "p_mw"])
+        if "type" in net.gen.columns and net.gen.loc[active, "type"].notna().any():
+            avail = cap * net.gen.loc[active, "type"].map(_dispatch_cf)
+        else:
+            avail = cap.astype(float)
+        total_avail = float(avail.sum())
+        if total_avail > 0:
+            p = avail * (target_gen / total_avail)
+            net.gen.loc[active, "p_mw"] = p.clip(upper=cap)

@@ -97,3 +97,43 @@ def test_degree_factors_tilt_allocation():
     # equal voltage weights: flat is uniform, degree tilts to the hub
     assert flat[b154] == pytest.approx(flat[b500])
     assert deg[b154] > deg[b500]
+
+
+def test_merit_order_dispatch_by_fuel():
+    """LNG runs near its CF share; rooftop solar no longer crowds out
+    baseload (the uniform-scaling distortion measured against TEPCO)."""
+    import pandas as pd
+    from src.powerflow.transforms import _dispatch_cf, balance_power
+
+    net = pp.create_empty_network(f_hz=50)
+    b = pp.create_bus(net, vn_kv=275.0)
+    pp.create_ext_grid(net, bus=b, vm_pu=1.0)
+    pp.create_load(net, bus=b, p_mw=1000.0, q_mvar=100.0)
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="solar")
+    balance_power(net, {"reserve_margin": 0.05})
+    p_gas = float(net.gen.at[0, "p_mw"])
+    p_solar = float(net.gen.at[1, "p_mw"])
+    assert p_gas + p_solar == pytest.approx(1050.0, rel=1e-6)
+    # 0.55 vs 0.15 capacity factors -> gas carries ~78.6% of the dispatch
+    assert p_gas / (p_gas + p_solar) == pytest.approx(0.55 / 0.70, rel=1e-6)
+    # first-token rule: legacy oil plants with partial gas repowering
+    # follow the oil factor (鹿島 over-dispatch fix, measured rho 0.657->0.691)
+    assert _dispatch_cf("oil;gas") == 0.1
+    assert _dispatch_cf("gas;coal") == 0.55
+    assert _dispatch_cf(None) == 0.3
+
+
+def test_balance_power_uniform_without_fuel_types():
+    """Nets built without the type column keep the legacy uniform scaling."""
+    net = pp.create_empty_network(f_hz=50)
+    b = pp.create_bus(net, vn_kv=275.0)
+    pp.create_ext_grid(net, bus=b, vm_pu=1.0)
+    pp.create_load(net, bus=b, p_mw=1000.0, q_mvar=100.0)
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1500.0)
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1500.0)
+    net.gen["type"] = None
+    from src.powerflow.transforms import balance_power
+    balance_power(net, {"reserve_margin": 0.05})
+    assert float(net.gen.at[0, "p_mw"]) == pytest.approx(float(net.gen.at[1, "p_mw"]))
+    assert float(net.gen["p_mw"].sum()) == pytest.approx(1050.0, rel=1e-6)
