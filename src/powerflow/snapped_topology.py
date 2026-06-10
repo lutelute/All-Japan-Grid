@@ -263,7 +263,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
     _EV_RANK = {None: 0, "cables": 1, "tag": 2}
 
-    def add_edge(a, b, seg, kv, path, parallel=1, evidence=None):
+    def add_edge(a, b, seg, kv, path, parallel=1, evidence=None, name=None):
         """Insert/merge an undirected edge, accumulating parallel circuits.
 
         Real grids run 2-4 parallel circuits between the same two nodes. The
@@ -287,27 +287,30 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if cur is None:
             p = max(int(parallel), 1)  # an edge is at least one circuit
             adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p,
-                         "ev": evidence}
+                         "ev": evidence, "name": name}
             adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)),
-                         "parallel": p, "ev": evidence}
+                         "parallel": p, "ev": evidence, "name": name}
             return
         kv2 = max(cur["kv"], kv)
         par = cur["parallel"] + max(int(parallel), 0)
         ev = evidence if _EV_RANK.get(evidence, 0) >= _EV_RANK.get(cur.get("ev"), 0) \
             else cur.get("ev")
+        nm = cur.get("name") or name  # first real OSM name wins
         if seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
             adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par,
-                         "ev": ev}
+                         "ev": ev, "name": nm}
             adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)),
-                         "parallel": par, "ev": ev}
+                         "parallel": par, "ev": ev, "name": nm}
         else:
             cur["kv"] = kv2
             cur["parallel"] = par
             cur["ev"] = ev
+            cur["name"] = nm
             adj[b][a]["kv"] = kv2
             adj[b][a]["parallel"] = par
             adj[b][a]["ev"] = ev
+            adj[b][a]["name"] = nm
 
     lines_path = os.path.join(data_dir, f"{region}_lines.geojson")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
@@ -332,13 +335,14 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 continue
             kv = _clean_voltage(kv)  # snap known line voltage to a standard class
             circ, circ_src = _parse_circuits(props)
-            feat_cache.append((coords, kv, circ, circ_src))
+            osm_name = props.get("name") or None
+            feat_cache.append((coords, kv, circ, circ_src, osm_name))
             if multi_voltage and kv > 0:
                 for (lat, lon) in coords:
                     coord_cls[(round(lat, vertex_prec), round(lon, vertex_prec))].add(kv)
 
         # Pass B: map vertices to class-aware nodes and build edges.
-        for coords, kv, circ, circ_src in feat_cache:
+        for coords, kv, circ, circ_src, osm_name in feat_cache:
             node_ids = []
             last = len(coords) - 1
             for vi, (lat, lon) in enumerate(coords):
@@ -378,7 +382,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 contrib = 0 if pair in seen_pairs else circ
                 seen_pairs.add(pair)
                 add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
-                         parallel=contrib, evidence=circ_src)
+                         parallel=contrib, evidence=circ_src, name=osm_name)
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
@@ -407,13 +411,17 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 par = max(ea.get("parallel", 1), eb.get("parallel", 1))
                 ev = ea.get("ev") if _EV_RANK.get(ea.get("ev"), 0) >= \
                     _EV_RANK.get(eb.get("ev"), 0) else eb.get("ev")
+                # name: prefer the longer segment's OSM name (the corridor)
+                nm = (ea.get("name") if (ea.get("name") and la >= lb)
+                      else eb.get("name") or ea.get("name"))
                 # merged a->b path = (a->n) + (n->b), dropping the duplicate n
                 path_ab = list(reversed(ea["path"]))[:-1] + eb["path"]
                 # remove junction n, connect a-b with summed length
                 del adj[a][n]
                 del adj[b][n]
                 del adj[n]
-                add_edge(a, b, la + lb, kv, path_ab, parallel=par, evidence=ev)
+                add_edge(a, b, la + lb, kv, path_ab, parallel=par, evidence=ev,
+                         name=nm)
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
@@ -535,7 +543,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             try:
                 net.add_transmission_line(TransmissionLine(
                     id=f"{region}_line_{k}",
-                    name=f"{region}_line_{k}",
+                    # real OSM line name where known — enables matching the
+                    # model against per-line ground truth (TEPCO/OCCTO flow
+                    # disclosures, TSO availability CSVs)
+                    name=edge.get("name") or f"{region}_line_{k}",
                     from_substation_id=node_to_id(a),
                     to_substation_id=node_to_id(b),
                     voltage_kv=max(kv, 0),
