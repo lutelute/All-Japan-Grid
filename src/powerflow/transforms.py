@@ -450,15 +450,10 @@ def balance_power_by_zone(net, demand_config):
             continue
         cap = (net.gen.loc[gmask, "max_p_mw"]
                if "max_p_mw" in net.gen.columns else net.gen.loc[gmask, "p_mw"])
-        if "type" in net.gen.columns and net.gen.loc[gmask, "type"].notna().any():
-            avail = cap * net.gen.loc[gmask, "type"].map(_dispatch_cf)
-        else:
-            avail = cap.astype(float)
-        total_avail = float(avail.sum())
-        if total_avail <= 0:
-            continue
-        p = avail * (zload * (1 + reserve) / total_avail)
-        net.gen.loc[gmask, "p_mw"] = p.clip(upper=cap)
+        # stack-fill within the zone (same rule as balance_power's default):
+        # the proportional rule left demand-heavy zones under-generated even
+        # when nameplate sufficed — the west-island co-factor.
+        _stack_dispatch(net, gmask, cap.astype(float), zload * (1 + reserve))
 
 
 def prune_dc_infeasible(net, angle_threshold=45.0):
