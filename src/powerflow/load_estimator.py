@@ -394,3 +394,40 @@ def scale_generation(net: Any, target_mw: float) -> float:
         total_capacity,
     )
     return actual_total
+
+
+_OCCTO_AREA_TO_REGION = {
+    "北海道": "hokkaido", "東北": "tohoku", "東京": "tokyo", "中部": "chubu",
+    "北陸": "hokuriku", "関西": "kansai", "中国": "chugoku",
+    "四国": "shikoku", "九州": "kyushu", "沖縄": "okinawa",
+}
+
+
+def demand_config_from_occto(stats_path: str, quantile: str = "median",
+                             base_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Demand config whose regional targets are MEASURED area demand.
+
+    ``stats_path`` is the committed aggregate of OCCTO's published 30-min
+    area demand (docs/reports/occto_calibration_*.json); ``quantile`` is
+    one of its stats keys (``median`` / ``p95`` / ``max``). The values are
+    actual MW, so ``load_factor`` is forced to 1.0 — this replaces the
+    static "2023 peak x 0.85" guess with a measured operating point
+    (median = typical, p95 = the high-load point the TEPCO flow
+    comparison effectively probes).
+    """
+    import json as _json
+
+    base = dict(base_config or load_demand_config())
+    with open(stats_path, encoding="utf-8") as f:
+        stats = _json.load(f)["area_demand_mw"]
+    peaks = {}
+    for area, region in _OCCTO_AREA_TO_REGION.items():
+        if area in stats and quantile in stats[area]:
+            peaks[region] = float(stats[area][quantile])
+    missing = [r for r in _OCCTO_AREA_TO_REGION.values() if r not in peaks]
+    if missing:
+        raise ValueError(f"OCCTO stats missing regions: {missing}")
+    base["regional_peak_demand_mw"] = peaks
+    base["load_factor"] = 1.0
+    base["_demand_source"] = f"occto:{quantile} ({stats_path})"
+    return base

@@ -152,12 +152,25 @@ def decompose_properties(
         ``(raw_tags, curated)`` where ``curated`` is a list of
         ``(field, value, source)`` tuples (fields unique per feature).
     """
+    # Per-field provenance markers (``_src:<field>`` = source string) are
+    # the faithful-roundtrip transport written by ``export_geojson(...,
+    # markers=True)``: a marked field re-ingests as a curated row with its
+    # ORIGINAL source instead of degrading to a raw tag — the exact
+    # failure that blocked publishing P03 into the public GeoJSON
+    # (task #8, 2026-06-10). The markers themselves are transport only
+    # and are not stored.
+    src_markers = {k[5:]: v for k, v in props.items()
+                   if k.startswith("_src:") and isinstance(v, str) and v}
     name_enriched = "_name_source" in props
     enriched_by = props.get("_enriched_by")
     raw_tags: Dict[str, Any] = {}
     curated: List[Tuple[str, Any, str]] = []
     for key, value in props.items():
-        if key.startswith("_"):
+        if key.startswith("_src:"):
+            continue
+        if key in src_markers:
+            curated.append((key, value, src_markers[key]))
+        elif key.startswith("_"):
             curated.append((key, value, "legacy_marker"))
         elif key == "name" and name_enriched:
             source = (
@@ -172,7 +185,8 @@ def decompose_properties(
 
 
 def compose_properties(
-    raw_tags: Dict[str, Any], enrichment_rows: Sequence[Any]
+    raw_tags: Dict[str, Any], enrichment_rows: Sequence[Any],
+    with_markers: bool = False,
 ) -> Dict[str, Any]:
     """raw ⟕ curated → effective properties (D layer).
 
@@ -193,6 +207,10 @@ def compose_properties(
     props = dict(raw_tags)
     for field, row in best.items():
         props[field] = json.loads(row.value) if row.value is not None else None
+    if with_markers:
+        for field, row in best.items():
+            if not field.startswith("_"):
+                props[f"_src:{field}"] = row.source
     return props
 
 
@@ -305,7 +323,7 @@ def ingest_geojson(
 
 
 def iter_composed(
-    db: GridDatabase, region: str, layer: str
+    db: GridDatabase, region: str, layer: str, with_markers: bool = False,
 ) -> List[Tuple[str, Dict[str, Any], Any]]:
     """Composed features for one (region, layer), in original file order.
 
@@ -341,7 +359,8 @@ def iter_composed(
     return [
         (
             r.feature_key,
-            compose_properties(json.loads(r.tags), by_key.get(r.feature_key, ())),
+            compose_properties(json.loads(r.tags), by_key.get(r.feature_key, ()),
+                               with_markers=with_markers),
             json.loads(r.geometry),
         )
         for r in raw
@@ -349,7 +368,7 @@ def iter_composed(
 
 
 def export_geojson(
-    db: GridDatabase, region: str, layer: str
+    db: GridDatabase, region: str, layer: str, markers: bool = False,
 ) -> Dict[str, Any]:
     """Compose the D-layer FeatureCollection for one (region, layer).
 
@@ -371,7 +390,8 @@ def export_geojson(
 
     features = [
         {"type": "Feature", "properties": props, "geometry": geom}
-        for _key, props, geom in iter_composed(db, region, layer)
+        for _key, props, geom in iter_composed(db, region, layer,
+                                               with_markers=markers)
     ]
 
     if snap is not None and snap.collection_meta:

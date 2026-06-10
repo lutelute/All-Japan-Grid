@@ -221,25 +221,44 @@ def solved_metrics(region: str, topology: str = "snapped",
     return out
 
 
+def _gather_one(args):
+    """Top-level worker (picklable) for one region's KPI row."""
+    region, solve, builder, snap_km, data_dir, backbone_kv = args
+    row = {"region": region, "snap_km": snap_km}
+    if backbone_kv:
+        row["backbone_kv"] = backbone_kv
+    row["tags"] = tag_coverage(region, data_dir=data_dir)
+    row["topology"] = topology_metrics(region, builder=builder,
+                                       snap_km=snap_km, data_dir=data_dir)
+    if solve:
+        row["solved"] = solved_metrics(region, topology=builder,
+                                       backbone_kv=backbone_kv)
+    return row
+
+
 def gather(regions, solve: bool = False, builder: str = "snapped",
            snap_km: float = 1.5, data_dir: str | None = None,
-           backbone_kv: float | None = None, progress=None) -> list[dict]:
-    """Compute all KPI levels for each region; returns one row per region."""
-    rows = []
-    for region in regions:
-        if progress:
-            progress(region)
-        row = {"region": region, "snap_km": snap_km}
-        if backbone_kv:
-            row["backbone_kv"] = backbone_kv
-        row["tags"] = tag_coverage(region, data_dir=data_dir)
-        row["topology"] = topology_metrics(region, builder=builder,
-                                           snap_km=snap_km, data_dir=data_dir)
-        if solve:
-            row["solved"] = solved_metrics(region, topology=builder,
-                                           backbone_kv=backbone_kv)
-        rows.append(row)
-    return rows
+           backbone_kv: float | None = None, progress=None,
+           jobs: int = 1) -> list[dict]:
+    """Compute all KPI levels for each region; returns one row per region.
+
+    ``jobs > 1`` fans the regions out over processes (each region's build
+    + solve is independent); row order is preserved.
+    """
+    work = [(r, solve, builder, snap_km, data_dir, backbone_kv)
+            for r in regions]
+    if jobs <= 1 or len(regions) <= 1:
+        rows = []
+        for args in work:
+            if progress:
+                progress(args[0])
+            rows.append(_gather_one(args))
+        return rows
+    from concurrent.futures import ProcessPoolExecutor
+    if progress:
+        progress(f"{len(regions)} regions x {jobs} procs")
+    with ProcessPoolExecutor(max_workers=jobs) as ex:
+        return list(ex.map(_gather_one, work))
 
 
 # ── reporting ────────────────────────────────────────────────────────────────
@@ -321,11 +340,14 @@ def main(argv=None):
                     metavar="KV", help="measure the >=KV backbone model instead")
     ap.add_argument("--json", help="write the full report to this path")
     ap.add_argument("--baseline", help="compare against a previous --json report")
+    ap.add_argument("--jobs", type=int, default=1,
+                    help="parallel region workers (sweep wall-clock divider)")
     args = ap.parse_args(argv)
 
     regions = list(REGIONS) if (args.all or not args.regions) else args.regions
     rows = gather(regions, solve=args.solve, builder=args.builder,
                   snap_km=args.snap_km, backbone_kv=args.backbone,
+                  jobs=args.jobs,
                   progress=lambda r: print(f"  ... {r}", file=sys.stderr))
 
     print(render(rows))

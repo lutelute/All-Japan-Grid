@@ -215,3 +215,22 @@ def test_stack_dispatch_fills_merit_order_to_nameplate():
     assert float(net.gen.at[1, "p_mw"]) == pytest.approx(1000.0)
     assert float(net.gen.at[2, "p_mw"]) == pytest.approx(950.0)
     assert float(net.gen.at[3, "p_mw"]) == pytest.approx(0.0)
+
+
+def test_demand_config_from_occto(tmp_path):
+    """Measured-demand option: regional targets become OCCTO area stats
+    (actual MW, load_factor forced to 1.0), provenance recorded."""
+    import json
+    from src.powerflow.load_estimator import demand_config_from_occto
+
+    stats = {"area_demand_mw": {
+        a: {"median": 1000.0 + i, "p95": 2000.0 + i}
+        for i, a in enumerate(["北海道", "東北", "東京", "中部", "北陸",
+                               "関西", "中国", "四国", "九州", "沖縄"])}}
+    p = tmp_path / "occto.json"
+    p.write_text(json.dumps(stats), encoding="utf-8")
+    cfg = demand_config_from_occto(str(p), quantile="p95")
+    assert cfg["load_factor"] == 1.0
+    assert cfg["regional_peak_demand_mw"]["tokyo"] == 2002.0
+    assert cfg["regional_peak_demand_mw"]["okinawa"] == 2009.0
+    assert "occto:p95" in cfg["_demand_source"]
