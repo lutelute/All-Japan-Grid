@@ -154,7 +154,8 @@ class _SubIndex:
 # ── core builder ─────────────────────────────────────────────────────────────
 
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
-                          min_voltage_kv=22.0, return_geom=False, data_dir=None):
+                          min_voltage_kv=22.0, return_geom=False, data_dir=None,
+                          multi_voltage=True):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -170,6 +171,18 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             (non-transmission distribution/industrial mistags, e.g. a 2 kV
             OSM line). Lines with unknown voltage (0) are kept so legitimate
             unlabelled transmission is not lost.
+        multi_voltage: model substations as one bus PER voltage class with
+            explicit intra-substation transformer stubs (the real busbar
+            structure), instead of one bus at the substation's tagged
+            voltage. The single-bus form made ``insert_transformers``
+            swallow every cross-voltage *line* into a transformer —
+            discarding the line's impedance and creating the pathological
+            voltage ratios behind the west-island AC failures. Junctions
+            are also keyed by voltage class, so two lines of different
+            known classes crossing at a shared tower coordinate are no
+            longer fused into a false electrical connection (~1% of
+            vertices); unknown-voltage lines join the highest known class
+            present at the coordinate (their usual continuation).
 
     Returns:
         GridNetwork with real substations + synthetic junction buses + branches
@@ -185,7 +198,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     with open(sub_path, encoding="utf-8") as f:
         subs_data = json.load(f)
 
-    sub_coords = []  # (lat, lon, sub_id)
+    sub_coords = []   # (lat, lon, sub_id)
+    sub_info = {}     # sub_id -> dict(name, lat, lon, own_cls)
     for i, feat in enumerate(subs_data["features"]):
         lat, lon = _get_centroid(feat)
         if lat is None:
@@ -199,18 +213,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         # the real level from the connected transmission lines.
         if 0 < vkv < min_voltage_kv:
             vkv = 0.0
-        net.add_substation(Substation(
-            id=sid,
-            name=props.get("name") or f"{region}_sub_{i}",
-            region=region,
-            latitude=lat,
-            longitude=lon,
-            voltage_kv=_clean_voltage(vkv),
-        ))
+        sub_info[sid] = {"name": props.get("name") or sid, "lat": lat,
+                         "lon": lon, "own_cls": _clean_voltage(vkv)}
         sub_coords.append((lat, lon, sid))
 
     index = _SubIndex(sub_coords)
-    node_coord = {sid: (lat, lon) for (lat, lon, sid) in sub_coords}  # id -> (lat,lon)
+    node_coord = {}   # final bus id -> (lat, lon)
 
     # Build the vertex graph. Each edge carries length, voltage, and the real
     # OSM coordinate path (oriented a->b) so the true route survives chain
@@ -253,10 +261,16 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             adj[b][a]["parallel"] = par
 
     lines_path = os.path.join(data_dir, f"{region}_lines.geojson")
+    sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
+    feat_cache = []                  # (coords, cls) parsed once
+    coord_cls = defaultdict(set)     # rounded coord -> known classes present
     if os.path.exists(lines_path):
         with open(lines_path, encoding="utf-8") as f:
             lines_data = json.load(f)
 
+        # Pass A: parse + collect the known classes at each vertex, so an
+        # unknown-voltage segment can join the class it most likely
+        # continues (deterministic, order-independent).
         for feat in lines_data["features"]:
             coords = _get_line_coords(feat)
             if len(coords) < 2:
@@ -267,15 +281,29 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if 0 < kv < min_voltage_kv:
                 continue
             kv = _clean_voltage(kv)  # snap known line voltage to a standard class
+            feat_cache.append((coords, kv))
+            if multi_voltage and kv > 0:
+                for (lat, lon) in coords:
+                    coord_cls[(round(lat, vertex_prec), round(lon, vertex_prec))].add(kv)
 
-            # Map each vertex to a node id (sub if snappable, else junction).
+        # Pass B: map vertices to class-aware nodes and build edges.
+        for coords, kv in feat_cache:
             node_ids = []
             for (lat, lon) in coords:
                 sid, _ = index.nearest(lat, lon, snap_km)
+                rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
                 if sid is not None:
-                    node_ids.append(sid)
+                    if multi_voltage:
+                        sub_classes[sid].add(kv)
+                        node_ids.append(f"S|{sid}|{kv:g}")
+                    else:
+                        node_ids.append(sid)
                 else:
-                    jk = f"J:{round(lat, vertex_prec)}:{round(lon, vertex_prec)}"
+                    if multi_voltage:
+                        jcls = kv if kv > 0 else max(coord_cls.get((rlat, rlon), (0,)))
+                        jk = f"J:{rlat}:{rlon}:{jcls:g}"
+                    else:
+                        jk = f"J:{rlat}:{rlon}"
                     jct_coord[jk] = (lat, lon)
                     node_ids.append(jk)
 
@@ -358,8 +386,67 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 voltage_kv=inc_kv,
             ))
 
+    # Substation buses. multi_voltage: one bus per incident voltage class,
+    # named {sid}@{kv} ({sid}@u for the unknown class, which keeps the
+    # substation's own tagged voltage as its evidence). Single-class
+    # substations keep the plain {sid} id so the common case is unchanged.
+    sub_resolved = {}   # (sid, cls) -> final bus id
+    xfmr_stubs = []     # (sid, hv_id, lv_id, hv_kv) intra-substation pairs
+
+    def _add_sub_bus(sid, bus_id, name, vn_kv):
+        info = sub_info[sid]
+        net.add_substation(Substation(
+            id=bus_id, name=name, region=region,
+            latitude=info["lat"], longitude=info["lon"], voltage_kv=vn_kv))
+
+    for sid, info in sub_info.items():
+        classes = sub_classes.get(sid, set()) if multi_voltage else set()
+        known = sorted((c for c in classes if c > 0), reverse=True)
+        has_unknown = 0 in classes
+        if not multi_voltage or len(classes) <= 1:
+            # plain single bus; voltage = the line class if known, else the
+            # substation's own tag (original behaviour for isolated subs)
+            vn = known[0] if known else info["own_cls"]
+            _add_sub_bus(sid, sid, info["name"], vn)
+            node_coord[sid] = (info["lat"], info["lon"])
+            for c in (classes or {None}):
+                sub_resolved[(sid, c)] = sid
+            continue
+        ladder = []
+        for c in known:
+            bid = f"{sid}@{c:g}"
+            _add_sub_bus(sid, bid, f"{info['name']} {c:g}kV", c)
+            node_coord[bid] = (info["lat"], info["lon"])
+            sub_resolved[(sid, c)] = bid
+            ladder.append((c, bid))
+        if has_unknown:
+            bid = f"{sid}@u"
+            _add_sub_bus(sid, bid, f"{info['name']} (untyped)", info["own_cls"])
+            node_coord[bid] = (info["lat"], info["lon"])
+            sub_resolved[(sid, 0)] = bid
+            if ladder:
+                # untyped busbar hangs off the highest class; once
+                # fix_zero_voltages types it, insert_transformers either
+                # converts the stub (different class) or leaves it as a
+                # negligible-impedance coupler (same class)
+                xfmr_stubs.append((sid, ladder[0][1], bid, ladder[0][0]))
+        # the real intra-substation transformer ladder: adjacent class pairs
+        for (hv_c, hv_id), (_lv_c, lv_id) in zip(ladder, ladder[1:]):
+            xfmr_stubs.append((sid, hv_id, lv_id, hv_c))
+
     def node_to_id(n):
-        return n.replace("J:", f"{region}_jct_") if is_jct(n) else n
+        if is_jct(n):
+            return n.replace("J:", f"{region}_jct_")
+        if n.startswith("S|"):
+            _, sid, cls = n.split("|")
+            return sub_resolved[(sid, float(cls))]
+        return n
+
+    # raw S|sid|cls node coordinates for the geometry lookup below
+    for n in adj:
+        if isinstance(n, str) and n.startswith("S|"):
+            sid = n.split("|")[1]
+            node_coord[n] = (sub_info[sid]["lat"], sub_info[sid]["lon"])
 
     def ckey(lat, lon):
         return (round(lat, 5), round(lon, 5))
@@ -404,6 +491,28 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 geom[(ckey(*ac_), ckey(*bc_))] = ll
                 geom[(ckey(*bc_), ckey(*ac_))] = list(reversed(ll))
 
+    # Intra-substation transformer stubs: 50 m lines between the per-class
+    # buses. insert_transformers converts each into a standard-ladder
+    # transformer (500/275, 275/154, ...) — and since the swallowed line is
+    # a stub by construction, no real line impedance is lost any more
+    # (previously whole cross-voltage LINES were eaten into transformers).
+    for sid, hv_id, lv_id, hv_kv in xfmr_stubs:
+        info = sub_info[sid]
+        try:
+            net.add_transmission_line(TransmissionLine(
+                id=f"{sid}_xfmr_{hv_id.split('@')[-1]}_{lv_id.split('@')[-1]}",
+                name=f"{info['name']} intra-substation {hv_kv:g}kV stub",
+                from_substation_id=hv_id,
+                to_substation_id=lv_id,
+                voltage_kv=hv_kv,
+                length_km=0.05,
+                region=region,
+                coordinates=[(info["lat"], info["lon"]), (info["lat"], info["lon"])],
+                num_parallel=1,
+            ))
+        except ValueError:
+            pass
+
     # Generators -> nearest real substation (unchanged heuristic).
     plants_path = os.path.join(data_dir, f"{region}_plants.geojson")
     if os.path.exists(plants_path):
@@ -429,13 +538,24 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 sid, _ = index.nearest(lat, lon, 20.0)
             if sid is None:
                 continue
+            # Pick the connection bus among the substation's voltage classes:
+            # big plants feed the grid at transmission level, small ones at
+            # the lowest class present (matches JP interconnection practice).
+            bus_id = sid
+            if multi_voltage:
+                known = sorted((c for c in sub_classes.get(sid, ()) if c > 0))
+                if known:
+                    cls = known[-1] if cap >= 200 else known[0]
+                    bus_id = sub_resolved.get((sid, cls), sid)
+                elif (sid, 0) in sub_resolved:
+                    bus_id = sub_resolved[(sid, 0)]
             try:
                 net.add_generator(Generator(
                     id=f"{region}_gen_{i}",
                     name=props.get("name") or f"{region}_plant_{i}",
                     capacity_mw=cap,
                     fuel_type=fuel,
-                    connected_bus_id=sid,
+                    connected_bus_id=bus_id,
                     region=region,
                     latitude=lat,
                     longitude=lon,

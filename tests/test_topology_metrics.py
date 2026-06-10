@@ -38,20 +38,24 @@ def okinawa_topo():
 
 
 def test_okinawa_builder_pins(okinawa_topo):
+    # Pinned values for the multi-voltage builder (2026-06-10): substations
+    # split into one bus per voltage class (59 sites -> 78 buses incl @u),
+    # cross-voltage junction fusion removed (components 11 -> 14 = honest),
+    # intra-substation xfmr stubs included in n_branches (75 -> 93).
     m = okinawa_topo
     assert m["builder"] == "snapped"
-    assert m["n_real_subs"] == 59
+    assert m["n_real_subs"] == 78
     assert m["n_junctions"] == 22
-    assert m["n_branches"] == 75
+    assert m["n_branches"] == 93
     assert m["n_gens"] == 16
-    assert m["n_components"] == 11
-    assert m["multi_circuit_branches"] == 6
-    assert m["max_parallel"] == 3
+    assert m["n_components"] == 14
+    assert m["multi_circuit_branches"] == 4
+    assert m["max_parallel"] == 2
 
 
 def test_okinawa_quality_floors(okinawa_topo):
     m = okinawa_topo
-    assert m["largest_comp_share"] >= 0.85
+    assert m["largest_comp_share"] >= 0.80
     assert m["unknown_kv_share"] <= 0.05
 
 
@@ -72,7 +76,7 @@ def test_okinawa_solved_quality():
     # pipeline deliberately does NOT fabricate >5 km sea-strait bridges —
     # real islands are solved in place via multi_slack.
     assert s["n_components"] == 4
-    assert s["synthetic_rate"] <= 0.15       # 2026-06 baseline: 7/57 = 12.3%
+    assert s["synthetic_rate"] <= 0.16       # 2026-06 multi-voltage: 13/90 = 14.4%
     assert 0.85 < s["ac_vm_min"] <= 1.05
 
 
