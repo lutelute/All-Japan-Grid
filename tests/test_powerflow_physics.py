@@ -204,6 +204,44 @@ def test_measured_loads_pin_buses_and_residual_fills_rest():
     assert 1 not in set(synth["bus"]) and 2 not in set(synth["bus"])
 
 
+def test_radialize_band_opens_highest_impedance_loop_edge():
+    """M5 experiment transform: a 66 kV triangle keeps its 2 lowest-
+    impedance corridors (MST) and opens the heaviest one — parallel
+    circuits on the opened corridor go out together; out-of-band loops
+    are untouched; no bus is disconnected."""
+    from src.powerflow.transforms import radialize_band
+
+    net = pp.create_empty_network(f_hz=50)
+    b = [pp.create_bus(net, vn_kv=66.0) for _ in range(3)]
+    hv = [pp.create_bus(net, vn_kv=275.0) for _ in range(3)]
+    pp.create_ext_grid(net, bus=b[0], vm_pu=1.0)
+
+    def line(f, t, x, n=1, **kw):
+        return pp.create_line_from_parameters(
+            net, f, t, length_km=1.0, r_ohm_per_km=0.1, x_ohm_per_km=x,
+            c_nf_per_km=0.0, max_i_ka=1.0, parallel=n, **kw)
+
+    line(b[0], b[1], x=0.1)
+    line(b[1], b[2], x=0.2)
+    heavy1 = line(b[2], b[0], x=0.9)
+    heavy2 = line(b[2], b[0], x=0.9)          # parallel circuit, same corridor
+    hv_loop = [line(hv[0], hv[1], x=0.1), line(hv[1], hv[2], x=0.1),
+               line(hv[2], hv[0], x=0.1)]      # 275 kV ring stays closed
+
+    info = radialize_band(net, lo_kv=60.0, hi_kv=140.0)
+    assert info["n_band_corridors"] == 3
+    assert info["n_opened"] == 1 and info["n_lines_opened"] == 2
+    assert not net.line.at[heavy1, "in_service"]
+    assert not net.line.at[heavy2, "in_service"]
+    assert all(net.line.at[i, "in_service"] for i in hv_loop)
+    # connectivity preserved on the 66 kV layer
+    import networkx as nx
+    G = nx.Graph((int(net.line.at[i, "from_bus"]), int(net.line.at[i, "to_bus"]))
+                 for i in net.line.index if net.line.at[i, "in_service"]
+                 and net.bus.at[int(net.line.at[i, "from_bus"]), "vn_kv"] < 140)
+    assert nx.is_connected(G.subgraph(b))
+
+
 def test_measured_loads_capped_at_regional_target():
     net = _measured_net()
     cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,

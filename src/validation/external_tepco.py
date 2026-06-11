@@ -565,7 +565,7 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
                 load_spatial: str = "none", csv154=None, csv66=None,
                 stats_db: str | None = None,
-                measured_loads="auto") -> dict:
+                measured_loads="auto", radialize_band_kv=None) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -615,7 +615,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                                  load_spatial=load_spatial,
                                  boundary_util=boundary_util,
                                  boundary_stats=typical,
-                                 measured_loads=measured_loads)
+                                 measured_loads=measured_loads,
+                                 radialize_band_kv=radialize_band_kv)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
@@ -820,6 +821,10 @@ def main(argv=None):
     ap.add_argument("--no-measured-loads", action="store_true",
                     help="A/B switch: disable the DB measured-demand "
                          "placement (synthetic allocation only)")
+    ap.add_argument("--radialize-66", action="store_true",
+                    help="EXPERIMENT (M5): open in-band 66 kV loops "
+                         "(impedance-MST proxy for normally-open points) "
+                         "before solving")
     args = ap.parse_args(argv)
 
     if not (args.flows and args.from_db) and not os.path.exists(args.csv):
@@ -832,7 +837,9 @@ def main(argv=None):
         m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
                         csv154=csv154, csv66=csv66, stats_db=args.from_db,
                         measured_loads=(None if args.no_measured_loads
-                                        else "auto"))
+                                        else "auto"),
+                        radialize_band_kv=(60.0 if args.radialize_66
+                                           else None))
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:

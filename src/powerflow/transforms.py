@@ -353,6 +353,58 @@ def fix_topology(net, multi_slack=False):
     return diag
 
 
+def radialize_band(net, lo_kv: float = 60.0, hi_kv: float = 140.0) -> dict:
+    """EXPERIMENT (PLAN_66KV M5): open in-band loops to mimic the
+    normally-open radial operation of the sub-transmission network.
+
+    The physical 66 kV network is meshed but operated radially via
+    normally-open points whose positions are not public. Proxy rule:
+    per connected component of the in-band corridor graph, keep the
+    minimum-spanning tree on electrical distance (x·length/parallel —
+    the low-impedance backbone a planner would keep closed) and switch
+    every non-tree corridor out of service. Parallel circuits between
+    the same bus pair are ONE corridor (opened/kept together); opening
+    only tree complements can never disconnect a bus.
+
+    Opt-in only (``build_and_solve(radialize_band_kv=...)``): adopted or
+    rejected purely on the measured flow correlation.
+
+    Returns {"n_band_corridors", "n_opened", "n_lines_opened"}.
+    """
+    import networkx as nx
+
+    vn = net.bus["vn_kv"]
+    pair_lines: dict[tuple, list] = {}
+    pair_w: dict[tuple, float] = {}
+    for idx in net.line.index:
+        if not bool(net.line.at[idx, "in_service"]):
+            continue
+        fb = int(net.line.at[idx, "from_bus"])
+        tb = int(net.line.at[idx, "to_bus"])
+        if not (lo_kv <= float(vn.get(fb, 0)) < hi_kv):
+            continue
+        par = max(int(net.line.at[idx, "parallel"] or 1), 1)
+        w = (float(net.line.at[idx, "x_ohm_per_km"])
+             * float(net.line.at[idx, "length_km"]) / par)
+        key = (min(fb, tb), max(fb, tb))
+        pair_lines.setdefault(key, []).append(idx)
+        pair_w[key] = min(w, pair_w.get(key, float("inf")))
+
+    G = nx.Graph()
+    for (a, b), w in pair_w.items():
+        G.add_edge(a, b, weight=w)
+    keep = {tuple(sorted(e))
+            for e in nx.minimum_spanning_edges(G, weight="weight", data=False)}
+    opened_pairs = [k for k in pair_lines if k not in keep]
+    n_lines = 0
+    for k in opened_pairs:
+        for idx in pair_lines[k]:
+            net.line.at[idx, "in_service"] = False
+            n_lines += 1
+    return {"n_band_corridors": len(pair_lines),
+            "n_opened": len(opened_pairs), "n_lines_opened": n_lines}
+
+
 def reduce_to_backbone(net, min_kv=154.0, min_keep_buses=20):
     """Aggregate the sub-transmission layer onto the >= ``min_kv`` backbone.
 

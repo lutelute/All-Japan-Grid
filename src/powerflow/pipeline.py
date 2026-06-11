@@ -75,7 +75,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none", boundary_imports=True,
                     boundary_util=None, db=None, boundary_stats=None,
-                    measured_loads="auto"):
+                    measured_loads="auto", radialize_band_kv=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -130,6 +130,11 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         rec = Reconnector().reconnect(net, iso, ReconstructionConfig(
             mode="reconnect", max_reconnection_distance_km=5.0))
         n_synthetic = rec.lines_created
+
+    radial_info = None
+    if radialize_band_kv:
+        from src.powerflow.transforms import radialize_band
+        radial_info = radialize_band(net, lo_kv=float(radialize_band_kv))
 
     diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
@@ -204,6 +209,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         "topology": topology,
         "backbone": backbone_info,
         "boundary": boundary_info,
+        "radialized": radial_info,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }
