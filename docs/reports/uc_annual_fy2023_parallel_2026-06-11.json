@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "merged_from": [
+      "uc_annual_chunk00_2026-06-11.json",
+      "uc_annual_chunk01_2026-06-11.json",
+      "uc_annual_chunk02_2026-06-11.json",
+      "uc_annual_chunk03_2026-06-11.json",
+      "uc_annual_chunk04_2026-06-11.json",
+      "uc_annual_chunk05_2026-06-11.json",
+      "uc_annual_chunk06_2026-06-11.json",
+      "uc_annual_chunk07_2026-06-11.json",
+      "uc_annual_chunk08_2026-06-11.json",
+      "uc_annual_chunk09_2026-06-11.json",
+      "uc_annual_chunk10_2026-06-11.json",
+      "uc_annual_chunk11_2026-06-11.json",
+      "uc_annual_chunk12_2026-06-11.json"
+    ],
+    "day_span": [
+      0,
+      365
+    ],
+    "coverage_gaps": [],
+    "scenario": "fy2023",
+    "window_h": 48,
+    "step_h": 24
+  },
+  "result": {
+    "status": "Optimal",
+    "n_chunks": 13,
+    "n_windows": 389,
+    "n_retried": 0,
+    "wall_time_s_max_chunk": 3538.0,
+    "cpu_time_s_sum": 35701.9,
+    "total_cost_oku": 37084.9,
+    "total_energy_twh": 1005.57
+  },
+  "fuel_share_pct": {
+    "coal": 36.37,
+    "lng": 25.39,
+    "solar": 14.25,
+    "nuclear": 10.11,
+    "hydro": 5.59,
+    "wind": 3.83,
+    "biomass": 2.4,
+    "geothermal": 0.87,
+    "oil": 0.54,
+    "pumped_hydro": 0.36,
+    "battery": 0.29,
+    "unknown": 0.0
+  },
+  "fuel_energy_mwh": {
+    "biomass": 24129434.6,
+    "pumped_hydro": 3596973.5,
+    "lng": 255351950.1,
+    "hydro": 56215579.9,
+    "coal": 365757080.7,
+    "oil": 5388726.9,
+    "geothermal": 8753868.0,
+    "unknown": 14208.4,
+    "nuclear": 101682507.2,
+    "battery": 2874069.6,
+    "solar": 143246521.2,
+    "wind": 38561665.5
+  }
+}

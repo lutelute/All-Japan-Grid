@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — UC改善⑤: 8760h年間UC完走（ROADMAP P5達成）+ ajgrid uc CLI
+
+- **rolling horizon実装**(`bdd41ca`): 窓間状態引き継ぎ3点セット = initial_commitment（幻の起動費防止）/
+  initial_history_h（min up/down残置強制）/ SOC引き継ぎ。窓48h・step24h・lookahead24h。
+  warm-start連鎖・gap緩和リトライ・確定部分の再計算コスト（lookahead重複排除）
+- **160core実行**(ユーザー許可): 直列実測82s/窓=8.3hを**30日×13チャンク並列(warmup2日)**で~70分に。
+  実戦バグ1件即修正(`851cd88`): 揚水「大森川12.2MW×6h=73.1999…MWh」のSOC境界丸めでPuLP
+  setInitialValueが拒否→クランプ+その境界値の回帰テスト
+- **結果** (`uc_annual_fy2023_parallel_2026-06-11.json`): **全365日・497窓 全Optimal**。
+  年間1,005.6TWh（実績~985TWhと整合=合成需要の妥当性確認）・燃料費等¥3.71兆/年。
+  年間シェア: coal 36.4%(実態~28、+8pt=一般水力欠損と2013年体系燃料価格が残差) /
+  lng 25.4%(~33) / solar 14.3%(~10) / nuclear 10.1%(~9✓) / hydro 5.6%(~8) / wind 3.8%(~1)。
+  揚水0.36%・蓄電池0.29%が年間で稼働（SOC連鎖の成立）
+- **`ajgrid uc` CLI**(`f2b2a60`): benchmark/annual/merge/ingest-scenarios の薄いディスパッチ
+- 997 passed。残: OCCTO実測時系列(Phase 2) / 燃料価格2023年度較正 / 一般水力容量 / UC→PF連携
+
 ## 2026-06-11 — **Fable 5** — UC改善④: 地域限界価格(LMP)+warm-start（負の結果込み）
 
 - **双対値抽出**(`bfc864b`): `UCParameters.extract_duals` — コミットメント固定LP再解
