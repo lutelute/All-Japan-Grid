@@ -825,6 +825,10 @@ def main(argv=None):
                     help="EXPERIMENT (M5): open in-band 66 kV loops "
                          "(impedance-MST proxy for normally-open points) "
                          "before solving")
+    ap.add_argument("--spatial", default="none",
+                    choices=["none", "degree", "population"],
+                    help="residual-demand spatial weighting (population = "
+                         "census 1km mesh, scripts/fetch_estat_mesh.py)")
     args = ap.parse_args(argv)
 
     if not (args.flows and args.from_db) and not os.path.exists(args.csv):
@@ -836,6 +840,7 @@ def main(argv=None):
         csv66 = args.csv66 if args.csv66 and _g.glob(args.csv66) else None
         m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
                         csv154=csv154, csv66=csv66, stats_db=args.from_db,
+                        load_spatial=args.spatial,
                         measured_loads=(None if args.no_measured_loads
                                         else "auto"),
                         radialize_band_kv=(60.0 if args.radialize_66

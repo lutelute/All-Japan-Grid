@@ -13,6 +13,7 @@ Usage::
 """
 
 import math
+import os
 from typing import Any, Dict, Optional, Set
 
 import pandapower as pp
@@ -137,7 +138,9 @@ def estimate_loads(
     total_allocated = _allocate_bus_loads(
         net, target_mw, tan_phi, voltage_weights,
         skip_existing=skip_existing,
-        spatial_factors=degree_factors(net) if spatial == "degree" else None,
+        spatial_factors=(degree_factors(net) if spatial == "degree"
+                         else population_factors(net) or None
+                         if spatial == "population" else None),
     )
 
     logger.info(
@@ -324,6 +327,108 @@ def _allocate_bus_loads(
         net, bus_indices, target_mw, tan_phi, voltage_weights,
         spatial_factors=spatial_factors,
     )
+
+
+MESH_POP_DIR = "data/external/estat"
+
+
+def _load_mesh_population(mesh_dir: str = MESH_POP_DIR):
+    """[(lat, lon, population)] from e-Stat 1 km census mesh files.
+
+    Files are ``tblT001140S<code>.txt`` (scripts/fetch_estat_mesh.py).
+    KEY_CODE is the 8-digit 1 km mesh code; T001140001 the population.
+    Returns None when the directory has no parsable files (fail-soft).
+    """
+    import csv
+    import glob
+
+    rows = []
+    for path in sorted(glob.glob(os.path.join(mesh_dir, "tblT001140S*.txt"))):
+        try:
+            with open(path, encoding="cp932", newline="") as f:
+                reader = csv.reader(f)
+                header = next(reader)
+                k = header.index("KEY_CODE")
+                p = header.index("T001140001")
+                for row in reader:
+                    code = row[k].strip()
+                    if len(code) != 8 or not code.isdigit():
+                        continue   # label row / sub-mesh aggregates
+                    try:
+                        pop = float(row[p])
+                    except ValueError:
+                        continue
+                    if pop <= 0:
+                        continue
+                    # 1 km mesh decode -> cell centre
+                    lat = (int(code[0:2]) / 1.5 + int(code[4]) * 5 / 60
+                           + int(code[6]) * 30 / 3600 + 15 / 3600)
+                    lon = (100 + int(code[2:4]) + int(code[5]) * 7.5 / 60
+                           + int(code[7]) * 45 / 3600 + 22.5 / 3600)
+                    rows.append((lat, lon, pop))
+        except (OSError, ValueError, IndexError):
+            continue
+    return rows or None
+
+
+def population_factors(net, mesh_dir: str = MESH_POP_DIR) -> Dict[int, float]:
+    """Per-bus census-population weight (PLAN_66KV M5-2).
+
+    Every 1 km mesh cell's population is assigned to its NEAREST
+    delivery bus (a Voronoi partition — no double counting), so a bus's
+    factor is "how many people live closest to this substation". The
+    caller multiplies this with the voltage-class weight, which keeps
+    demand at distribution-class buses. Returns {} when mesh data is
+    absent (the allocator then falls back to the class-only rule).
+
+    Known v1 limits (recorded in the ledger): residential population is
+    a proxy — industrial/commercial demand (bay-area plants, downtown
+    offices) deviates from it.
+    """
+    cells = _load_mesh_population(mesh_dir)
+    if not cells:
+        logger.warning("population spatial mode: no mesh data under %s "
+                       "— falling back to class-only weights", mesh_dir)
+        return {}
+    import json as _json
+
+    import numpy as np
+
+    buses, coords = [], []
+    geo = net.bus.get("geo")
+    for b in _delivery_buses(net):
+        try:
+            g = _json.loads(geo.at[b]) if geo is not None else None
+        except (TypeError, ValueError):
+            g = None
+        if not g or "coordinates" not in g:
+            continue
+        lon, lat = g["coordinates"][0], g["coordinates"][1]
+        buses.append(b)
+        coords.append((lat, lon))
+    if not buses:
+        return {}
+    try:
+        from scipy.spatial import cKDTree
+    except ImportError:
+        logger.warning("population spatial mode needs scipy — skipped")
+        return {}
+    tree = cKDTree(np.asarray(coords))
+    pop = np.zeros(len(buses))
+    cell_arr = np.asarray([(la, lo) for la, lo, _p in cells])
+    _d, idx = tree.query(cell_arr)
+    for i, (_la, _lo, p) in zip(idx, cells):
+        pop[i] += p
+    total = float(pop.sum())
+    if total <= 0:
+        return {}
+    # Bounded tilt, same convention as degree_factors (0.5 + 0.5*x/mean):
+    # the raw Voronoi share REPLACED the class structure and measurably
+    # overconcentrated demand (trunk rho 0.617->0.567, magnitude ratio
+    # 1.09->1.31 on tokyo, ledger 43) — damping keeps the population
+    # signal as a tilt on the voltage-class allocation instead.
+    mean = total / len(buses)
+    return {b: 0.5 + 0.5 * float(v) / mean for b, v in zip(buses, pop)}
 
 
 def degree_factors(net) -> Dict[int, float]:

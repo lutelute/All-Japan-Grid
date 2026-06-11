@@ -204,6 +204,50 @@ def test_measured_loads_pin_buses_and_residual_fills_rest():
     assert 1 not in set(synth["bus"]) and 2 not in set(synth["bus"])
 
 
+def test_population_factors_voronoi_assignment(tmp_path):
+    """Census mesh cells weight the residual allocation: each cell's
+    population goes to its nearest delivery bus (M5-2). Mesh code
+    53394525 decodes to ~(35.69, 139.69) — Shinjuku."""
+    from src.powerflow.load_estimator import (
+        _load_mesh_population,
+        population_factors,
+    )
+
+    rows = [
+        "KEY_CODE,HTKSYORI,HTKSAKI,GASSAN,T001140001",
+        ",,,,人口（総数）",
+        "53394525,0,,,30000",       # ~(35.69, 139.69)
+        "54401234,0,,,10000",       # far north-east (~36.4, 140.2)
+        "5339,0,,,999999",          # aggregate row -> ignored
+    ]
+    (tmp_path / "tblT001140S5339.txt").write_bytes(
+        ("\n".join(rows) + "\n").encode("cp932"))
+
+    cells = _load_mesh_population(str(tmp_path))
+    assert len(cells) == 2
+    la, lo, p = cells[0]
+    assert p == 30000.0
+    assert la == pytest.approx(35.6938, abs=0.01)
+    assert lo == pytest.approx(139.6938, abs=0.01)
+
+    net = pp.create_empty_network(f_hz=50)
+    import json as _json
+    b_tokyo = pp.create_bus(net, vn_kv=66.0, name="新宿変電所", type="b")
+    net.bus.at[b_tokyo, "geo"] = _json.dumps(
+        {"type": "Point", "coordinates": [139.70, 35.69]})
+    b_north = pp.create_bus(net, vn_kv=66.0, name="北変電所", type="b")
+    net.bus.at[b_north, "geo"] = _json.dumps(
+        {"type": "Point", "coordinates": [140.2, 36.4]})
+
+    f = population_factors(net, mesh_dir=str(tmp_path))
+    # bounded tilt 0.5 + 0.5*pop/mean (mean = 20000): 30000 -> 1.25,
+    # 10000 -> 0.75 — population tilts, never replaces, the class rule
+    assert f[b_tokyo] == pytest.approx(1.25)
+    assert f[b_north] == pytest.approx(0.75)
+    # fail-soft: empty dir -> {} (allocator falls back)
+    assert population_factors(net, mesh_dir=str(tmp_path / "none")) == {}
+
+
 def test_radialize_band_opens_highest_impedance_loop_edge():
     """M5 experiment transform: a 66 kV triangle keeps its 2 lowest-
     impedance corridors (MST) and opens the heaviest one — parallel

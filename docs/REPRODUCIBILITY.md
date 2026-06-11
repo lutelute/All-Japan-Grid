@@ -57,7 +57,9 @@ PYTHONPATH=. python scripts/db/enrich.py --p03 data/external/P03-13/P03-13-g.xml
 # OCCTO 公表API（30分値・保持~14ヶ月）
 python scripts/fetch_occto_kohyo.py --from 2025-04-01 --to 2026-06-09
 # 開示集計のDB化（境界回廊の実測重み付け & --from-db 検証が有効になる）
-PYTHONPATH=. python scripts/db/calibrate.py   # → measured_line_stats(回廊別q50/p95)
+PYTHONPATH=. python scripts/db/calibrate.py   # → measured_line_stats + measured_bus_loads
+# 国勢調査2020 1kmメッシュ人口（e-Stat、出典明記で利用可。残余需要のspatial=population用）
+python scripts/fetch_estat_mesh.py            # → data/external/estat/ (関東12メッシュ)
 ```
 
 ## 5. 外部検証（誠実指標）
