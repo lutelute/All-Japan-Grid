@@ -626,3 +626,41 @@ class TestInterconnectionOverrides:
         caps = {ic.id: ic.capacity_mw for ic in scn.interconnections}
         assert caps["ic_005"] == pytest.approx(1900)
         assert "ic_010" not in caps
+
+
+class TestDemandProfileRef:
+    def test_measured_profile_resolves_and_chains_sha(self, tmp_path, monkeypatch):
+        # profile_ref指定時: データスペースの実測48点が1h平均24点の
+        # グロス需要になり、取得指紋がシナリオに連鎖する
+        import src.uc.scenario as S
+
+        class FakeDS:
+            def fetch(self, provider, query):
+                assert provider == "occto_kohyo"
+                assert query["date_from"] == "2025-08-06"
+                # 全地域に 48点（各地域 値=100*(idx+1) のフラット系列）
+                return {r: [float(100)] * 48 for r in S.REGIONS}
+
+        import src.dataspace as DSP
+        monkeypatch.setattr(DSP, "DataSpace", lambda: FakeDS())
+        _write_geojson(tmp_path / "tokyo_plants.geojson",
+                       [_feat("A", "coal", 600, 1)])
+        scn = build_national_scenario(
+            data_dir=str(tmp_path), scenario="fy2025r1",
+            pumped_storage=False, nuclear_status=False,
+        )
+        assert scn.demand_profile_sha is not None
+        for r in S.REGIONS:
+            assert scn.gross_demand_r[r].shape == (24,)
+            assert scn.gross_demand_r[r][0] == pytest.approx(100.0)
+
+    def test_fy2025r1_pins(self):
+        cfg = load_scenario_config("fy2025r1")
+        assert cfg.demand_profile_ref["representative_day"] == "2025-08-06"
+        assert "fy2025" in cfg.reference_path("nuclear_status")
+        # FY2025断面: 女川2・島根2込み 14基 13,253MW
+        import yaml
+        with open(cfg.reference_path("nuclear_status")) as f:
+            ops = yaml.safe_load(f)["operational"]
+        assert len(ops) == 8  # 8サイト
+        assert sum(e["capacity_mw"] for e in ops) == pytest.approx(13253)

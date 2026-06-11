@@ -148,6 +148,8 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
             "git_head": _git_head(),
             "scenario": f"national_24h_nodal / uc_scenario={scn.config.name}",
             "scenario_sha256": _scenario_sha256(scn.config),
+            # 実測needs使用時: 取得データの指紋（再現性の連鎖, DATA_SPACE §5）
+            "demand_profile_sha": scn.demand_profile_sha,
             "reserve_margin": reserve_margin,
             "mip_gap": mip_gap,
             "effective_solver": _detect_effective_solver(),

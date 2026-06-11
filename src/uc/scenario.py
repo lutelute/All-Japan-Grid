@@ -79,6 +79,9 @@ class UCScenarioConfig:
     hydro_ror_capacity_mw: dict[str, float] = field(default_factory=dict)
     hydro_ror_cf_base: Optional[np.ndarray] = None
     hydro_ror_multiplier: dict[str, float] = field(default_factory=dict)
+    # 実測需要参照（DATA_SPACE §5 profile_ref。指定時は demand_shape×peak の
+    # 合成でなく、データスペース経由の実測系列を gross_demand_r に用いる）
+    demand_profile_ref: dict = field(default_factory=dict)
     # 連系線のシナリオ別補正（共有yamlを直接編集せずに上書き/追加）
     interconnection_overrides: dict = field(default_factory=dict)
     interconnection_additions: list = field(default_factory=list)
@@ -182,6 +185,7 @@ def load_scenario_config(
             k: float(v)
             for k, v in (hydro_ror.get("regional_multiplier") or {}).items()
         },
+        demand_profile_ref=dict(demand.get("profile_ref") or {}),
         interconnection_overrides=dict(
             (raw.get("interconnections") or {}).get("overrides") or {}
         ),
@@ -805,6 +809,7 @@ class NationalScenario:
     wind_gen_r: dict[str, np.ndarray]
     load_stats: LoadStats
     config: Optional[UCScenarioConfig] = None
+    demand_profile_sha: Optional[str] = None  # 実測needs使用時の取得データ指紋
     hydro_ror_gen_r: dict[str, np.ndarray] = field(default_factory=dict)
     num_periods: int = 24
 
@@ -955,6 +960,44 @@ def build_annual_profiles(
     )
 
 
+
+def _resolve_demand_profile(
+    config: UCScenarioConfig,
+) -> tuple[dict[str, np.ndarray], str]:
+    """profile_ref（実測needs）をデータスペース経由で解決する。
+
+    representative_day の30分値（48点）を1時間平均（24点）へ落とし、
+    地域別グロス需要として返す。取得データのsha256（指紋）も返し、
+    シナリオ指紋と連鎖させる（DATA_SPACE §5: 再現性の連鎖）。
+    """
+    import hashlib
+    import json as _json
+
+    from src.dataspace import DataSpace
+
+    ref = config.demand_profile_ref
+    day = ref["representative_day"]
+    ds = DataSpace()
+    data = ds.fetch(ref.get("provider", "occto_kohyo"), {
+        "kind": ref.get("kind", "area_demand"),
+        "date_from": day, "date_to": day,
+    })
+    out: dict[str, np.ndarray] = {}
+    for r in REGIONS:
+        v = np.asarray(data.get(r, []), dtype=float)
+        if len(v) == 48:
+            v = v.reshape(24, 2).mean(axis=1)
+        elif len(v) != 24:
+            raise ValueError(
+                f"profile_ref: region '{r}' series length {len(v)} "
+                f"(expected 24 or 48) for {day}")
+        out[r] = v
+    sha = hashlib.sha256(_json.dumps(
+        {r: [float(x) for x in v] for r, v in out.items()},
+        sort_keys=True).encode()).hexdigest()[:16]
+    return out, sha
+
+
 def build_national_scenario(
     scenario: Union[str, Path, UCScenarioConfig, None] = None,
     data_dir: str = "data",
@@ -1002,9 +1045,14 @@ def build_national_scenario(
         ]
     for add in config.interconnection_additions:
         ics.append(Interconnection(**add))
-    gross_demand_r = {
-        r: config.demand_shape * config.regional_peak_mw[r] for r in REGIONS
-    }
+    profile_sha = None
+    if config.demand_profile_ref:
+        gross_demand_r, profile_sha = _resolve_demand_profile(config)
+    else:
+        gross_demand_r = {
+            r: config.demand_shape * config.regional_peak_mw[r]
+            for r in REGIONS
+        }
     solar_cf_r = config.solar_cf_r
     wind_cf_r = config.wind_cf_r
     solar_gen_r = {
@@ -1029,4 +1077,5 @@ def build_national_scenario(
         hydro_ror_gen_r=hydro_ror_gen_r,
         load_stats=stats,
         config=config,
+        demand_profile_sha=profile_sha,
     )

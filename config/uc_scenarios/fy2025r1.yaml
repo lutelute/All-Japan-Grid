@@ -1,0 +1,240 @@
+# UCシナリオ定義 — 2023年度断面 改訂2 (fy2023r2)
+#
+# fy2023 からの較正版（2026-06-11、計測 docs/reports/uc_annual_fy2023_parallel
+# のシェア乖離 coal+8pt / wind+2.7pt / solar+4.4pt / hydro-2pt を実勢で是正）。
+# fy2023 は過去ベンチの再現性のため凍結し、本ファイルを較正断面とする。
+# DB (grid.db uc_scenarios) には両版を ingest する。
+#
+# ── 較正の出典（再現性担保のため必読） ──────────────────────────
+# [S1] 資源エネルギー庁 電力調査統計・総合エネルギー統計 2023年度:
+#      総発電ベースの電源構成 = LNG32.9 / 石炭28.3 / 石油等7.4 / 原子力8.5 /
+#      水力7.6(揚水込み) / 太陽光9.8 / 風力1.1 / バイオ4.1 / 地熱0.3 %
+#      → reference_shares として固定（ベンチの乖離KPIの正本）
+# [S2] ISEP「国内の2023年度の自然エネルギー電力の割合と導入状況(速報)」:
+#      太陽光発電量 921億kWh(92.1TWh)、エリア別シェア 東京29/中部17/九州15/東北12%
+# [S3] 資源エネルギー庁 再エネ導入状況(2024-06): 太陽光運転開始 8,740万kW(DC)、
+#      風力(20kW以上)運転開始 約600万kW
+# [S4] エネ庁 発電コスト検証WG(2024-2025) 2023年断面の燃料費相当（概算）:
+#      石炭~7円/kWh、LNG~11円/kWh、石油~18円/kWh
+# [S5] 一般水力: 設備約22GW・年間発電量と[S1]水力シェアから、OSMモデル内
+#      ディスパッチャブル水力(6.4GW)との差分エネルギー22TWh/年を
+#      中小水力RoR控除(実効2.5GW)として表現
+#
+# 較正の考え方:
+# - solar: 容量70GW(AC実効) × CF年平均~14.9%(晴天カーブ×天候稼働率0.54) で
+#   年間91.4TWh ≈ [S2]92.1TWh。地域配分は[S2]発電量シェアから日射倍率で逆算
+# - wind: 容量6.0GW[S3] × CF年平均~22.5%(ベース×0.64) で年間11.8TWh ≈ [S1]1.1%
+# - hydro_ror: フラット2.5GW×出水月別係数 → 22.3TWh（[S5]）
+# - 燃料費: [S4]。coal/LNG比はほぼ不変のためmerit order不変、絶対コストが実勢化
+
+meta:
+  name: fy2025r1
+  fiscal_year: 2025
+  description: FY2025断面 改訂1 — OCCTO実測需要(profile_ref)+FY2025原子力。容量・コストはfy2023r2踏襲
+
+demand:
+  # 実測需要（データスペース経由、DATA_SPACE §5）。FY2025夏ピーク日
+  # 2025-08-06（全国30分値max 163.1GW、本セッションで実測特定）の
+  # エリア需要30分値→1h平均をグロス需要として使用。shape/peakは
+  # profile_ref不使用時のフォールバック。
+  profile_ref:
+    provider: occto_kohyo
+    kind: area_demand
+    representative_day: "2025-08-06"
+  shape_24h: [0.60, 0.57, 0.55, 0.53, 0.55, 0.60, 0.68, 0.78,
+              0.87, 0.93, 0.97, 1.00, 0.99, 0.98, 0.96, 0.93,
+              0.90, 0.86, 0.82, 0.78, 0.74, 0.70, 0.66, 0.63]
+  regional_peak_mw:
+    hokkaido: 6000
+    tohoku: 14000
+    tokyo: 60000
+    chubu: 22000
+    hokuriku: 5000
+    kansai: 28000
+    chugoku: 10000
+    shikoku: 5000
+    kyushu: 18000
+    okinawa: 2000
+
+renewables:
+  solar:
+    # [S2][S3] 容量70GW(AC実効)。地域配分=発電量シェア(東京29/中部17/九州15/
+    # 東北12%)を日射倍率で容量に逆算、残りは旧比率でスケール
+    capacity_mw:
+      hokkaido: 4490
+      tohoku: 9300
+      tokyo: 20700
+      chubu: 10400
+      hokuriku: 2020
+      kansai: 6170
+      chugoku: 5610
+      shikoku: 2240
+      kyushu: 8500
+      okinawa: 560
+    # 晴天カーブ × 天候稼働率0.54 = 年CF~14.9%（[S2]の92.1TWhに較正）
+    cf_base_24h: [0, 0, 0, 0, 0, 0.011, 0.054, 0.135, 0.243, 0.351, 0.432, 0.486,
+                  0.497, 0.475, 0.421, 0.335, 0.216, 0.097, 0.022, 0, 0, 0, 0, 0]
+    regional_multiplier:
+      hokkaido: 0.83
+      tohoku: 0.92
+      tokyo: 1.00
+      chubu: 1.03
+      hokuriku: 0.90
+      kansai: 1.04
+      chugoku: 1.06
+      shikoku: 1.06
+      kyushu: 1.10
+      okinawa: 1.13
+  wind:
+    # [S3] 運転開始6.0GW。配分は東北・北海道・九州中心（実態の導入分布）
+    capacity_mw:
+      hokkaido: 1000
+      tohoku: 2400
+      tokyo: 100
+      chubu: 300
+      hokuriku: 200
+      kansai: 150
+      chugoku: 500
+      shikoku: 350
+      kyushu: 950
+      okinawa: 50
+    # ベース×0.64 = 年CF~22.5%（[S1]シェア1.1%=~11TWhに較正）
+    cf_base_24h: [0.243, 0.256, 0.262, 0.269, 0.256, 0.243, 0.218, 0.192,
+                  0.179, 0.173, 0.179, 0.186, 0.192, 0.198, 0.205, 0.211,
+                  0.224, 0.237, 0.243, 0.250, 0.256, 0.256, 0.250, 0.243]
+    regional_multiplier:
+      hokkaido: 1.25
+      tohoku: 1.20
+      tokyo: 0.70
+      chubu: 0.85
+      hokuriku: 0.95
+      kansai: 0.80
+      chugoku: 0.90
+      shikoku: 0.90
+      kyushu: 1.00
+      okinawa: 1.10
+  hydro_ror:
+    # [S5] OSMモデル外の中小一般水力をRoR控除で表現（実効MW、CF込み）。
+    # 年間 2.5GW×月別平均1.017×8760h ≈ 22.3TWh
+    capacity_mw:
+      hokkaido: 100
+      tohoku: 500
+      tokyo: 250
+      chubu: 600
+      hokuriku: 400
+      kansai: 350
+      chugoku: 100
+      shikoku: 50
+      kyushu: 150
+    cf_base_24h: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    regional_multiplier:
+      hokkaido: 1.0
+      tohoku: 1.0
+      tokyo: 1.0
+      chubu: 1.0
+      hokuriku: 1.0
+      kansai: 1.0
+      chugoku: 1.0
+      shikoku: 1.0
+      kyushu: 1.0
+
+battery:
+  hokkaido: {mw: 300,  mwh: 1200}
+  tohoku:   {mw: 400,  mwh: 1600}
+  tokyo:    {mw: 500,  mwh: 2000}
+  chubu:    {mw: 200,  mwh: 800}
+  hokuriku: {mw: 100,  mwh: 400}
+  kansai:   {mw: 300,  mwh: 1200}
+  chugoku:  {mw: 200,  mwh: 800}
+  shikoku:  {mw: 150,  mwh: 600}
+  kyushu:   {mw: 1200, mwh: 4800}
+  okinawa:  {mw: 100,  mwh: 400}
+
+# [S4] 2023年度実勢（円/MWh）。biomass はFIT電源のmust-run性格を
+# fuel_cost低位で近似（実燃料費はより高いが市場順位はFITで優先）
+fuel_costs_per_mwh:
+  coal: 7000
+  lng: 11000
+  oil: 18000
+  nuclear: 1500
+  hydro: 0
+  pumped_hydro: 0
+  battery: 0
+  biomass: 3000
+  geothermal: 0
+  waste: 5000
+  unknown: 8000
+
+startup_profiles:
+  nuclear: {hot: 10000, warm: 30000, cold: 100000, warm_start_h: 8, cold_start_h: 48, min_up_h: 8, min_down_h: 8}
+  coal:    {hot: 5000,  warm: 15000, cold: 40000,  warm_start_h: 4, cold_start_h: 12, min_up_h: 4, min_down_h: 4}
+  lng:     {hot: 2000,  warm: 5000,  cold: 15000,  warm_start_h: 2, cold_start_h: 8,  min_up_h: 2, min_down_h: 2}
+  oil:     {hot: 1500,  warm: 3000,  cold: 8000,   warm_start_h: 2, cold_start_h: 6,  min_up_h: 1, min_down_h: 1}
+
+capacity_defaults_mw:
+  nuclear: 900
+  coal: 100
+  lng: 100
+  gas: 100
+  oil: 100
+  geothermal: 30
+  waste: 15
+  biomass: 20
+
+annual:
+  demand_month_mult: [0.95, 0.93, 0.85, 0.78, 0.75, 0.80, 0.95, 1.00, 0.88, 0.78, 0.80, 0.90]
+  solar_month_mult:  [0.75, 0.85, 1.05, 1.15, 1.15, 1.00, 1.00, 1.00, 0.95, 0.90, 0.75, 0.70]
+  wind_month_mult:   [1.30, 1.25, 1.15, 1.00, 0.85, 0.70, 0.65, 0.70, 0.85, 1.00, 1.15, 1.25]
+  # 出水期（融雪4-5月・梅雨6-7月）に高い
+  hydro_ror_month_mult: [0.90, 0.90, 1.00, 1.10, 1.20, 1.20, 1.15, 1.00, 1.00, 0.95, 0.90, 0.90]
+
+# 定期検査・計画停止の合成（年間運用でのみ効く。24h断面はメンテ窓外）
+# 背景: fy2023r2のRE較正で coal CF~100%（実態62%）のメンテ無し問題が露呈
+# （年間ベンチ 2026-06-11: coal 42.0% vs 実績28.3%）。
+# 配置は決定論的（md5(gen_id) % 候補週 — 乱数不使用で再現性担保）に
+# 春・秋の低需要期（週12-20 / 週38-46）へ分散する。
+# duration出典: 定検実態の概数（原子力=13ヶ月毎3ヶ月→年率換算13週、
+# 火力=2-6週/年の定検・補修）。経済停止は含まない（残差として開示）。
+maintenance:
+  # 配置は (地域×燃料) グループ内で容量降順の輪番（決定論・乱数なし）。
+  # md5独立配置は秋の集中期に同一地域の大容量機が偶然同時停止し
+  # infeasible を起こした（2026-06-11 r4 chunk10 で実測）ため輪番化。
+  placement_weeks: [12, 13, 14, 15, 16, 17, 18, 19, 20, 38, 39, 40, 41, 42, 43, 44, 45, 46]
+  # 原子力は13週停止が長いため、スロット間隔をduration(13週)以上に取り
+  # 同一地域サイトの停止が構造的に重ならないようにする
+  # （[2,8,14,...]は関西3サイトが春に重畳し r5 chunk02-04 infeasible、実測）。
+  # 輪番: 関西=高浜(週2-15)→大飯(16-29)→美浜(30-43)、九州=玄海(2-15)→川内(16-29)
+  placement_weeks_nuclear: [2, 16, 30]
+  duration_weeks_by_fuel:
+    nuclear: 13
+    coal: 5
+    lng: 4
+    oil: 4
+
+# 連系線のシナリオ別補正（オーナー指摘 2026-06-11: 「北陸に2,000MWもtielineは
+# 無い」）。data/reference/interconnections.yaml は潮流側(main)と共有のため
+# 直接編集せず、UCシナリオ側で上書き・追加する。本体改訂はmainマージ時に
+# boundary.py の MEASURED_UTILISATION（容量比）と整合させて行う（台帳記録）。
+interconnections:
+  overrides:
+    # 北陸フェンス（中部-北陸間）: 系統安定度制約による運用容量オーダー。
+    # 旧1,900MWは北陸関西間の容量との混同とみられる
+    ic_005: {capacity_mw: 300}
+  additions:
+    # 北陸関西間連系線（yaml本体に不在だった主要ルート）
+    - id: ic_010
+      name_en: "Hokuriku-Kansai Interconnection"
+      from_region: hokuriku
+      to_region: kansai
+      capacity_mw: 1900
+
+# FY2025の実績シェアは年度未了のため乖離KPIの正本は置かない
+# （需要は実測、発電側シェアの検証はFY2025統計の確定後）。
+# solar/wind容量はfy2023r2値を踏襲 — FY2025の導入増（solar~+5GW等）は
+# 未反映で、RE控除が過小=純需要が過大方向のバイアス（要較正、開示）。
+
+references:
+  nuclear_status: data/reference/nuclear_status_fy2025.yaml
+  pumped_storage: data/reference/pumped_storage.yaml
+  capacity_patches: data/reference/capacity_patches.yaml
