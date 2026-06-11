@@ -1,0 +1,65 @@
+# データスペース カタログ — 外部データ源の契約（Data Contract）正本
+# 設計: docs/DATA_SPACE.md（zero-copy原則: データは源泉に留め、必要断面のみ取得）
+#
+# 各providerの必須キー: title / custodian / location / license /
+#   redistribute_raw / redistribute_derived / connector
+# location の書式:
+#   env:VAR    — 環境変数VARで所在を指す（未設定なら明示エラー、暗黙取得しない）
+#   https://…  — 公開エンドポイント
+#   text       — 人間向けの所在記述（コネクタ無しの参照専用契約）
+
+providers:
+  msm:
+    title: 気象庁メソ数値予報モデル(MSM) GPV
+    custodian: 研究室NAS（京大RISH配布アーカイブのローカルミラー）
+    location: "env:AJGRID_MSM_ROOT"
+    license: 気象庁GPV。配布元(RISH)の利用条件に従う。学術利用・出典明記
+    redistribute_raw: false        # GRIB2をリポジトリへ複製しない
+    redistribute_derived: true     # 地域集約CF系列は出典明記でコミット可
+    connector: msm
+    variables:
+      - {name: dswrf, desc: 下向き短波放射(日射) → 太陽光CF変換}
+      - {name: u10v10, desc: 地上10m風速成分 → 風力CF変換(パワーカーブ)}
+    granularity: 約5kmメッシュ / 1時間（地上面）
+    notes: >-
+      集約（地域マスク平均→CF変換）はNASをマウントしたサーバー側で実行し、
+      AGJへは地域×時間の系列のみ渡す。生メッシュは転送・保存しない。
+
+  occto_kohyo:
+    title: OCCTO 系統情報公表（web-kohyo）公開CSV
+    custodian: 電力広域的運営推進機関（OCCTO）
+    location: "https://web-kohyo.occto.or.jp"
+    license: 公開情報。生CSVは再配布せず、集計値を出典明記で利用
+    redistribute_raw: false
+    redistribute_derived: true
+    connector: occto
+    variables:
+      - {name: area_demand, desc: エリア需要実測 30分値 (jhSybt=02)}
+      - {name: interconnector_flow, desc: 連系線潮流計画 30分値 (jhSybt=04)}
+    granularity: 30分値・保持窓 約14ヶ月
+    notes: >-
+      実績: docs/reports/occto_calibration_2026-06-11.json（FY2025+Q1FY2026集計、
+      main側セッションで取得実証済み）。エンドポイント詳細はコネクタの
+      endpoint 設定で上書き可能。
+
+  p03:
+    title: 国土数値情報 発電施設（P03）
+    custodian: 国土交通省
+    location: "https://nlftp.mlit.go.jp/ksj/gml/data/P03/P03-13/P03-13.zip"
+    license: 国土数値情報利用約款。生GMLの再配布不可
+    redistribute_raw: false
+    redistribute_derived: true     # enrichments.jsonl のderived属性のみ
+    connector: null                # 既存の scripts/db/enrich.py --p03 経路を使用
+    granularity: 発電所単位（2013年版、名板陳腐化に注意）
+    notes: 既存DB機械更新ループ（fetch→ingest→enrich→export）が取得経路の正本
+
+  energy_stats:
+    title: 資源エネルギー庁 電力調査統計・総合エネルギー統計
+    custodian: 経済産業省 資源エネルギー庁
+    location: "https://www.enecho.meti.go.jp/statistics/electric_power/ep002/"
+    license: 政府統計。数値引用可（出典明記）
+    redistribute_raw: false
+    redistribute_derived: true
+    connector: null                # 較正定数として uc_scenarios の reference_shares_pct に手動転記
+    granularity: 年度・月次
+    notes: fy2023r2.yaml の [S1] 出典。シェア較正の正本
