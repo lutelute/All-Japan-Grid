@@ -81,6 +81,38 @@ def parse_tepco_header(csv_path: str) -> dict:
     return {"subs": subs, "lines": lines, "pairs": pairs}
 
 
+def parse_tepco_headers_banded(csv_path, csv154=None, csv66=None) -> dict:
+    """Merged attachment truth with a kv-class floor per line/pair.
+
+    Bands: trunk file -> 200, 154 kV files -> 140, prefecture 66 kV
+    files -> 60. Same-named lines in different bands stay separate
+    truths (matched only against model lines of their own band).
+    """
+    import glob as _glob
+
+    def _paths(x):
+        if not x:
+            return []
+        xs = [x] if isinstance(x, str) else list(x)
+        out = []
+        for p_ in xs:
+            out.extend(sorted(_glob.glob(p_)) or [p_])
+        return out
+
+    truth = {"subs": set(), "lines": {}, "pairs": {}}
+    for floor, paths in ((200.0, _paths(csv_path)),
+                         (140.0, _paths(csv154)),
+                         (60.0, _paths(csv66))):
+        for p_ in paths:
+            t = parse_tepco_header(p_)
+            truth["subs"] |= t["subs"]
+            for ln in t["lines"]:
+                truth["lines"].setdefault(ln, floor)
+            for pair in t["pairs"]:
+                truth["pairs"].setdefault(pair, floor)
+    return truth
+
+
 _RAILWAY_PAT = re.compile(r"旅客鉄道|JR|新幹線|鉄道|Railway", re.IGNORECASE)
 
 
@@ -149,7 +181,8 @@ def _model_inventory(region: str, data_dir: str | None = None):
 
 
 def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
-                min_kv: float = 200.0, pos_km: float = 1.5) -> dict:
+                min_kv: float = 200.0, pos_km: float = 1.5,
+                csv154=None, csv66=None) -> dict:
     """Score the built model against TEPCO's substation-line attachments.
 
     Matching guards (added after the failure-mode taxonomy, 2026-06-10):
@@ -166,7 +199,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     """
     from src.powerflow.snapped_topology import _haversine_km
 
-    truth = parse_tepco_header(csv_path)
+    truth = parse_tepco_headers_banded(csv_path, csv154=csv154, csv66=csv66)
     _net, sub_names, sub_pos, line_info = _model_inventory(region, data_dir=data_dir)
     operators = _load_operators(region, data_dir=data_dir)
 
@@ -175,15 +208,20 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     n_railway_excluded = len(line_info) - len(eligible)
     line_keys = list(eligible.keys())
 
-    def find_line(official: str):
+    def _band(floor):
+        ceil = 1e9 if floor >= 200.0 else 200.0 if floor >= 140.0 else 140.0
+        return floor, ceil
+
+    def find_line(official: str, floor: float):
+        lo, hi = _band(floor)
         key = _norm(official)
         cands = ([key] if key in eligible else
                  [k for k in line_keys if key in k or k in key])
         if not cands:
             return None, None, False
-        trunk = [k for k in cands if eligible[k]["kv"] >= min_kv]
-        if trunk:
-            return trunk[0], ("exact" if trunk[0] == key else "loose"), True
+        in_band = [k for k in cands if lo <= eligible[k]["kv"] < hi]
+        if in_band:
+            return in_band[0], ("exact" if in_band[0] == key else "loose"), True
         return cands[0], ("exact" if cands[0] == key else "loose"), False
 
     sub_hit = sum(1 for s in truth["subs"] if _norm(s) in sub_names)
@@ -191,7 +229,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     line_exact = line_loose = 0
     missing_lines = []
     for ln in sorted(truth["lines"]):
-        _key, tier, _trunk = find_line(ln)
+        _key, tier, _trunk = find_line(ln, truth["lines"][ln])
         if tier == "exact":
             line_exact += 1
         elif tier == "loose":
@@ -200,15 +238,21 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
             missing_lines.append(ln)
 
     pair_name = pair_pos = pair_class = pair_un = 0
+    band_tot = defaultdict(int)
+    band_ok = defaultdict(int)
     missing_pairs = []
     for sub, ln in sorted(truth["pairs"]):
-        key, _tier, trunk_class = find_line(ln)
+        floor = truth["pairs"][(sub, ln)]
+        key, _tier, trunk_class = find_line(ln, floor)
         if key is None:
             missing_pairs.append(f"{sub} - {ln} (line missing)")
             continue
         info = eligible[key]
+        bname = "trunk" if floor >= 200 else ("154" if floor >= 140 else "66")
+        band_tot[bname] += 1
         if _norm(sub) in info["ends"]:
             pair_name += 1
+            band_ok[bname] += 1
             continue
         spots = sub_pos.get(_norm(sub), [])
         d = min((_haversine_km(la, lo, ela, elo)
@@ -216,6 +260,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
                 default=float("inf"))
         if d <= pos_km:
             pair_pos += 1
+            band_ok[bname] += 1
         elif not trunk_class:
             # only a sub-trunk-class line carries this name -> collision
             pair_class += 1
@@ -228,8 +273,17 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
 
     n_subs, n_lines, n_pairs = (len(truth["subs"]), len(truth["lines"]),
                                 len(truth["pairs"]))
+    # truth["pairs"]に入らなかった(line missing)分もband_totへ計上
+    for (sub, ln), floor in truth["pairs"].items():
+        bname = "trunk" if floor >= 200 else ("154" if floor >= 140 else "66")
+        if find_line(ln, floor)[0] is None:
+            band_tot[bname] += 1
     attached = pair_name + pair_pos
+    band_recall = {b: round(band_ok[b] / band_tot[b], 4)
+                   for b in band_tot if band_tot[b]}
     return {
+        "pair_recall_by_band": band_recall,
+        "pair_total_by_band": dict(band_tot),
         "region": region,
         "min_kv": min_kv,
         "pos_km": pos_km,
@@ -508,6 +562,9 @@ def render_tepco(m: dict) -> str:
         f"(name {m['pair_attached_name']} + position {m['pair_attached_position']} "
         f"of {t['pairs']}; class-collision {m['pair_class_collision']}, "
         f"unattached {m['pair_unattached']})",
+        f"  by band           : " + "  ".join(
+            f"{b}={100*r:.1f}%({m['pair_total_by_band'][b]})"
+            for b, r in sorted(m.get("pair_recall_by_band", {}).items())),
     ])
 
 
@@ -545,7 +602,11 @@ def main(argv=None):
                 json.dump(m, f, indent=1, ensure_ascii=False)
             print(f"\nscorecard -> {args.json}")
         return 0
-    m = match_tepco(args.region, args.csv)
+    import glob as _g2
+    m = match_tepco(
+        args.region, args.csv,
+        csv154=(args.csv154 if args.csv154 and _g2.glob(args.csv154) else None),
+        csv66=(args.csv66 if args.csv66 and _g2.glob(args.csv66) else None))
     print(render_tepco(m))
     if args.missing:
         print("\nofficial trunk lines absent from the model (work list):")
