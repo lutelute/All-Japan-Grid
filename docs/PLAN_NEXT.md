@@ -23,7 +23,7 @@
 
 ## F: TSO需給実績フェッチャ（reconcileの燃料別拡張）
 
-- [ ] F1 所在調査: 10エリアの需給実績CSV(燃料別・再エネ実績)のURL/形式/更新頻度/利用条件を確定(東電エリアから着手)→docs/VALIDATION_SOURCES.md追記
+- [x] F1 所在調査(60): **東電検証済み**(`eria_jukyu_YYYYMM_03.csv`・燃料別フル列・UTF-8-sig)・様式はOCCTO共通と確定。関西等9社の正確なURLはF3の発見課題に純化。VALIDATION_SOURCES.md台帳化
 - [ ] F2 プロトタイプ: 1社(東京)のfetch+パーサ→metric=gen_by_fuel:<fuel>でmeasured_area_statsへ(メタ管理は57方式)
 - [ ] F3 全社展開(形式差異は正直に記録、取れない社はスキップ理由を台帳へ)
 - [ ] F4 reconcile拡張: モデルの燃料別dispatch vs 実績帯(帯判定)→LINE配信
