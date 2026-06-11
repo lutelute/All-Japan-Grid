@@ -889,6 +889,56 @@ class AnnualProfiles:
         return np.maximum(gross - ded, 0.0)
 
 
+
+def _resolve_annual_demand(
+    config: UCScenarioConfig,
+    days: int,
+) -> dict[str, np.ndarray]:
+    """profile_ref.annual_window の実測needsを年間系列として解決する。
+
+    月別チャンクでデータスペースから取得（キャッシュ単位=月、初回のみ
+    実フェッチ）し、30分値→1h平均で連結する。地域間で長さが揃わない
+    場合は最短に切り揃えて警告する（欠測の正直な扱い）。
+    """
+    import datetime as _d
+
+    from src.dataspace import DataSpace
+
+    ref = config.demand_profile_ref
+    win = ref["annual_window"]
+    d0 = _d.date.fromisoformat(win["date_from"])
+    d1 = _d.date.fromisoformat(win["date_to"])
+    # 必要日数分だけ取得（短縮実行・チャンク実行で全期間を引かない）
+    d1 = min(d1, d0 + _d.timedelta(days=days - 1))
+    ds = DataSpace()
+    series: dict[str, list] = {r: [] for r in REGIONS}
+    cur = d0
+    while cur <= d1:
+        nxt = (cur.replace(day=28) + _d.timedelta(days=4)).replace(day=1)
+        end = min(d1, nxt - _d.timedelta(days=1))
+        data = ds.fetch(ref.get("provider", "occto_kohyo"), {
+            "kind": ref.get("kind", "area_demand"),
+            "date_from": cur.isoformat(), "date_to": end.isoformat(),
+        })
+        for r in REGIONS:
+            series[r].extend(data.get(r, []))
+        cur = nxt
+
+    lengths = {r: len(v) for r, v in series.items()}
+    n_min = min(lengths.values())
+    if len(set(lengths.values())) > 1:
+        logger = __import__("src.utils.logging_config", fromlist=["get_logger"]).get_logger(__name__)
+        logger.warning("annual demand: uneven series lengths %s -> trimmed to %d",
+                       lengths, n_min)
+    out: dict[str, np.ndarray] = {}
+    n_half = (n_min // 48) * 48
+    for r in REGIONS:
+        v = np.asarray(series[r][:n_half], dtype=float)
+        hourly = v.reshape(-1, 2).mean(axis=1)
+        out[r] = hourly[: days * 24]
+    return out
+
+
 def build_annual_profiles(
     config: Optional[UCScenarioConfig] = None,
     days: int = 365,
@@ -909,6 +959,11 @@ def build_annual_profiles(
             f"scenario '{config.name}' has no 'annual' section "
             "(monthly multipliers required for 8760h synthesis)"
         )
+    measured_demand = None
+    if config.demand_profile_ref.get("annual_window"):
+        # 実測needs（DATA_SPACE §5）。RE側は従来の合成（実測RE出力は
+        # nas03/MSMコネクタの所在確定後 — Phase 2続き）
+        measured_demand = _resolve_annual_demand(config, days)
     dm = [float(x) for x in ann["demand_month_mult"]]
     sm = [float(x) for x in ann["solar_month_mult"]]
     wm = [float(x) for x in ann["wind_month_mult"]]
@@ -932,9 +987,25 @@ def build_annual_profiles(
     wind_cf_r = config.wind_cf_r
     ror_cf_r = config.hydro_ror_cf_r
 
-    gross_demand_r = {
-        r: shape * demand_mult * config.regional_peak_mw[r] for r in REGIONS
-    }
+    if measured_demand is not None:
+        n_meas = min(len(v) for v in measured_demand.values())
+        n_days_eff = min(n_days, n_meas // 24)
+        if n_days_eff < n_days:
+            n_days = n_days_eff
+            n_hours = n_days * 24
+            month_of_day = month_of_day[:n_days]
+            solar_mult = solar_mult[:n_hours]
+            wind_mult = wind_mult[:n_hours]
+            ror_mult = ror_mult[:n_hours]
+            shape = shape[:n_hours]
+        gross_demand_r = {
+            r: measured_demand[r][:n_hours] for r in REGIONS
+        }
+    else:
+        gross_demand_r = {
+            r: shape * demand_mult * config.regional_peak_mw[r]
+            for r in REGIONS
+        }
     solar_gen_r = {
         r: np.minimum(np.tile(solar_cf_r[r], n_days) * solar_mult, 1.0)
         * config.solar_capacity_mw[r]
