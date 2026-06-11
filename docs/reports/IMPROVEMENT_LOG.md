@@ -273,6 +273,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── main（潮流・トポロジ改修シリーズ） ── -->
 
 
+## 2026-06-12 — **Fable 5** — X1: UC合流資産の採否判定 — 置換なし・役割分担を確定（67）
+
+- **OCCTOコネクタ**: dataspace版は当方の実証エンドポイント(台帳⑲)を参照する**UC実行時
+  データ層**(契約/キャッシュ) — 当方fetch_occto_kohyo=**アーカイブ+メタ+DB較正**。同源で
+  役割分担、統合不要と判定
+- **需要データ**: UCのprofile_ref=**エリア×年間時系列**(いつ) vs 当方measured_bus_loads=
+  **変電所×断面p95**(どこ) — 直交軸で相互補完。置換なし。将来reconcileの時間分解に
+  UCプロファイルを使う選択肢のみ記録
+- X2(capacity_bridgeのPF側A/B)・X3(燃料別帯判定へのUC dispatch接続)は継続項目。
+  1078 passed(合流後)
+
 ## 2026-06-12 — **Fable 5** — D1/D2: 詳細化開始 — wires束を定格へ反映（66）
 
 - **D1棚卸し**: 未活用証拠の充足率 — **wires 13%(5,045本)**・circuits59%・cables67%(活用済)・

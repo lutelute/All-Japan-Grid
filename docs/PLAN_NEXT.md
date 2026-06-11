@@ -43,7 +43,7 @@
 ## X: UC合流の活用判断（ユーザー指示 04時「こっちの方がいいデータ・進んでいるところあれば都度判断」）
 
 PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC側較正のPF注入・8760h年間UC・HiGHS・zonal LMP)・`src/dataspace/`(契約/キャッシュ/来歴つきデータ層・**OCCTOライブコネクタ**)・uc_runs(migration v4)・FY2025実測需要プロファイル。
-- [ ] X1 重複と優位の判定: dataspaceのOCCTOコネクタ vs 我がfetch_occto_kohyo(57方式メタ)・UCのFY2025実測需要プロファイル vs measured_bus_loads(p95断面) — **時系列プロファイルは断面より上位互換の可能性大** → 採用判断
+- [x] X1(67): **置換なし・役割分担** — コネクタ=UC実行時層/当方=アーカイブ較正(同源)、需要=時間軸(UC)×空間軸(当方)で直交補完
 - [ ] X2 capacity_bridgeのPF側評価: UC側較正のPF注入が我々のρ/ACにどう効くかA/B
 - [ ] X3 燃料別検証の合流: F4(燃料別reconcile)はUCのdispatch結果と同じ帯判定に通す(UC_HANDOFF入口の実演)
 
