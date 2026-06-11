@@ -484,20 +484,53 @@ class TestSyntheticMaintenance:
             else:
                 assert g1.maintenance_windows == []  # hydro等は対象外
 
+    @staticmethod
+    def _anchor(region, mw=30000):
+        # メンテ対象外の大容量アンカー（系統規模の文脈を作り、地域別の
+        # 同時停止上限 = 域内容量×fraction を現実的な値にする）
+        from src.model.generator import Generator
+        return Generator(id=f"anchor_{region}", name="anchor", capacity_mw=mw,
+                         fuel_type="hydro", region=region, fuel_cost_per_mwh=0)
+
     def test_round_robin_avoids_same_group_overlap(self):
-        # 同一(地域×燃料)グループは容量降順の輪番で別週に配置される
+        # 同一(地域×燃料)グループは輪番で別週に配置される
         # （md5独立配置の偶然同時停止 = r4 chunk10 infeasible の再発防止）
         from src.uc.scenario import load_scenario_config, synthesize_maintenance
         from src.model.generator import Generator
         cfg = load_scenario_config("fy2023r2")
-        gens = [
+        gens = [self._anchor("kyushu")] + [
             Generator(id=f"c{i}", name=f"c{i}", capacity_mw=1000 - i,
                       fuel_type="coal", region="kyushu", fuel_cost_per_mwh=5000)
             for i in range(4)
         ]
         out = synthesize_maintenance(gens, cfg)
-        starts = [g.maintenance_windows[0][0] for g in out]
+        starts = [g.maintenance_windows[0][0] for g in out
+                  if g.maintenance_windows]
+        assert len(starts) == 4
         assert len(set(starts)) == 4  # 4機が全て異なる週に分散
+
+    def test_outage_cap_skips_oversized_units(self):
+        # 域内容量×fraction を超える配置は行われない（小地域の枯渇防止）。
+        # 沖縄相当: 合計1.88GWの孤立系統では 420MW機は上限25%(0.47GW)内に
+        # 1機ずつしか停止できず、収まらない機はメンテなしになる
+        from src.uc.scenario import load_scenario_config, synthesize_maintenance
+        from src.model.generator import Generator
+        cfg = load_scenario_config("fy2023r2")
+        gens = [
+            Generator(id=f"o{i}", name=f"o{i}", capacity_mw=420,
+                      fuel_type="oil", region="okinawa", fuel_cost_per_mwh=9000)
+            for i in range(4)
+        ] + [Generator(id="oc", name="oc", capacity_mw=200, fuel_type="coal",
+                       region="okinawa", fuel_cost_per_mwh=4500)]
+        out = synthesize_maintenance(gens, cfg)
+        # 各週の同時停止が上限 (1880*0.25=470MW) を超えない
+        from collections import defaultdict
+        week_out = defaultdict(float)
+        for g in out:
+            for s, e in g.maintenance_windows:
+                for wk in range(s // 168, (e + 167) // 168):
+                    week_out[wk] += g.capacity_mw
+        assert all(v <= 1880 * 0.25 + 1e-6 for v in week_out.values())
 
     def test_24h_snapshot_unaffected(self):
         # メンテは春秋配置（最早 週12=2016h〜）なので 24h断面 (t<24) に窓が無い
@@ -506,5 +539,28 @@ class TestSyntheticMaintenance:
         cfg = load_scenario_config("fy2023r2")
         g = Generator(id="c1", name="c1", capacity_mw=500, fuel_type="coal",
                       region="tokyo", fuel_cost_per_mwh=5000)
-        (s, e), = synthesize_maintenance([g], cfg)[0].maintenance_windows
+        out = synthesize_maintenance([self._anchor("tokyo"), g], cfg)
+        (s, e), = next(x for x in out if x.id == "c1").maintenance_windows
         assert s >= 24  # add_maintenance_constraints は t<24 に制約を張らない
+
+    def test_nuclear_slots_never_overlap_within_region(self):
+        # 原子力スロット間隔 >= duration(13週) → 同一地域サイトの停止が
+        # 重ならない（r5 chunk02-04 春infeasibleの再発防止ピン）
+        from src.uc.scenario import load_scenario_config, synthesize_maintenance
+        from src.model.generator import Generator
+        cfg = load_scenario_config("fy2023r2")
+        spec = cfg.raw["maintenance"]
+        slots = spec["placement_weeks_nuclear"]
+        dur = spec["duration_weeks_by_fuel"]["nuclear"]
+        assert all(b - a >= dur for a, b in zip(slots, slots[1:]))
+        # 関西3サイト相当の輪番で窓が交差しないこと
+        gens = [self._anchor("kansai")] + [
+            Generator(id=n, name=n, capacity_mw=c, fuel_type="nuclear",
+                      region="kansai", fuel_cost_per_mwh=1500)
+            for n, c in [("takahama", 3392), ("ohi", 2360), ("mihama", 826)]]
+        out = synthesize_maintenance(gens, cfg)
+        wins = sorted(g.maintenance_windows[0] for g in out
+                      if g.maintenance_windows)
+        assert len(wins) == 3
+        for (s1, e1), (s2, e2) in zip(wins, wins[1:]):
+            assert e1 <= s2  # 交差なし

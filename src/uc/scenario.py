@@ -695,17 +695,51 @@ def synthesize_maintenance(
     if not weeks or not durations:
         return gens
 
-    groups: dict = defaultdict(list)
+    # ── 地域別の同時停止容量上限つきグリーディ配置 ──
+    # 輪番だけではスロット間隔(1週) < duration(4-5週) のため隣接配置機が
+    # 重なり、小地域（北陸: 域内2.9GW / 沖縄: 連系ゼロ）の供給力を割って
+    # infeasible になる（2026-06-11 r6スモーク診断で実測）。週ごとの地域
+    # 停止容量を追跡し、上限（域内容量×fraction）を超える配置はスロットを
+    # ずらす。どのスロットにも収まらない機はメンテなし（skip、開示）。
+    frac = float(spec.get("max_concurrent_outage_fraction", 0.25))
+    cap_total: dict = defaultdict(float)
     for g in gens:
-        if g.fuel_type in durations:
-            groups[(g.region, g.fuel_type)].append(g)
+        cap_total[g.region] += g.capacity_mw
+    limit = {r: c * frac for r, c in cap_total.items()}
+    outage: dict = defaultdict(lambda: defaultdict(float))
 
+    def _fits(g: Generator, week: int, dur: int) -> bool:
+        return all(
+            outage[g.region][wk] + g.capacity_mw <= limit[g.region]
+            for wk in range(week, week + dur)
+        )
+
+    # 原子力（最長duration・最大単機容量）を先に、次いで火力を容量降順で
+    targets = sorted(
+        (g for g in gens if g.fuel_type in durations),
+        key=lambda g: (0 if g.fuel_type == "nuclear" else 1,
+                       -g.capacity_mw, g.id),
+    )
+    rr_index: dict = defaultdict(int)  # (region, fuel) -> 次に試すスロット
     start_week_of: dict = {}
-    for key in sorted(groups):
-        members = sorted(groups[key], key=lambda g: (-g.capacity_mw, g.id))
-        wlist = weeks_nuclear if key[1] == "nuclear" else weeks
-        for i, g in enumerate(members):
-            start_week_of[g.id] = wlist[i % len(wlist)]
+    n_skipped = 0
+    for g in targets:
+        wlist = weeks_nuclear if g.fuel_type == "nuclear" else weeks
+        dur = durations[g.fuel_type]
+        key = (g.region, g.fuel_type)
+        placed = None
+        for k in range(len(wlist)):
+            w = wlist[(rr_index[key] + k) % len(wlist)]
+            if _fits(g, w, dur):
+                placed = w
+                rr_index[key] = (rr_index[key] + k + 1) % len(wlist)
+                break
+        if placed is None:
+            n_skipped += 1  # 上限内に収まらない: メンテなしで稼働継続（開示）
+            continue
+        start_week_of[g.id] = placed
+        for wk in range(placed, placed + dur):
+            outage[g.region][wk] += g.capacity_mw
 
     out = []
     for g in gens:
