@@ -249,7 +249,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     }
 
 
-def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
+def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
     """Per-line measured-flow statistic from the full hourly time series.
 
     Columns for the same (substation, line) are circuit groups (1･2L,
@@ -261,9 +261,18 @@ def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
     The quantile (default 0.95) is robust against metering glitches while
     still representing "how heavily this corridor is actually used".
     """
+    import glob as _glob
+
     import pandas as pd
 
-    df = pd.read_csv(csv_path, encoding="cp932", na_values=["-", ""])
+    paths = ([csv_path] if isinstance(csv_path, str) else list(csv_path))
+    expanded = []
+    for p_ in paths:
+        expanded.extend(sorted(_glob.glob(p_)) or [p_])
+    frames = [pd.read_csv(p_, encoding="cp932", na_values=["-", ""])
+              for p_ in expanded]
+    df = frames[0] if len(frames) == 1 else pd.concat(
+        [f.set_index(f.columns[0]) for f in frames], axis=1).reset_index()
     groups = defaultdict(list)   # (sub, line) -> [column, ...]
     for col in df.columns[1:]:
         m = _COL_PAT.match(col.strip())
@@ -284,9 +293,9 @@ def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
     return stats
 
 
-def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
+def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
-                load_spatial: str = "none") -> dict:
+                load_spatial: str = "none", csv154=None) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -301,7 +310,15 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
     from src.powerflow.load_estimator import load_demand_config
     from src.powerflow.pipeline import build_and_solve
 
-    measured = tepco_flow_stats(csv_path, q=q)
+    # measured sets are class-tagged: the trunk disclosure covers 275 kV+,
+    # the 154 kV files cover the 140-200 kV layer — matching is restricted
+    # within each class band so same-named lines at other voltages stay
+    # name collisions instead of becoming false pairs.
+    measured_cls = {k: (v, 200.0) for k, v in tepco_flow_stats(csv_path, q=q).items()}
+    if csv154:
+        for k, v in tepco_flow_stats(csv154, q=q).items():
+            measured_cls.setdefault(k, (v, 140.0))
+    measured = {k: v for k, (v, _c) in measured_cls.items()}
 
     typical = tepco_flow_stats(csv_path, q=0.5)
 
@@ -369,17 +386,26 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
         raw = str(net_dc.line.at[idx, "name"] or "")
         if not raw or raw.startswith(f"{region}_line_"):
             continue
-        # trunk-class only (the disclosure covers 275 kV+) — a same-named
-        # 154 kV line is a different physical line
-        if float(vn.get(net_dc.line.at[idx, "from_bus"], 0)) < 200.0:
-            continue
+        line_kv = float(vn.get(net_dc.line.at[idx, "from_bus"], 0))
         p = float(flows.get(idx, 0.0))
         for part in raw.replace(" / ", ";").split(";"):  # OSM compound names
             key = _norm(part)
-            if key and not _is_railway_only(key, operators):
-                # series segments carry the same flow -> max is the
-                # corridor's loaded section
-                model[key] = max(model.get(key, 0.0), p)
+            if not key or _is_railway_only(key, operators):
+                continue
+            # class-banded matching: a measured trunk (275 kV+) name only
+            # accepts >=200 kV model lines; a 154-file name accepts the
+            # 140-200 kV band — other-class homonyms stay collisions
+            mc = measured_cls.get(key)
+            if mc is not None:
+                floor = mc[1]
+                ceil = 200.0 if floor < 200.0 else 1e9
+                if not (floor <= line_kv < ceil):
+                    continue
+            elif line_kv < 140.0:
+                continue
+            # series segments carry the same flow -> max is the
+            # corridor's loaded section
+            model[key] = max(model.get(key, 0.0), p)
 
     common = sorted(set(measured) & set(model))
     # interior = matched lines that did NOT receive measured boundary
@@ -411,6 +437,14 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
 
     _score(common, "")            # all matched (back-compat)
     _score(interior, "interior_")  # the honest metric
+    # per-class breakdown: the 275 kV+ trunk is the established headline;
+    # the 154 kV layer is a NEW, separately-reported measurement
+    trunk_keys = [k for k in interior if measured_cls[k][1] >= 200.0]
+    sub_keys = [k for k in interior if measured_cls[k][1] < 200.0]
+    _score(trunk_keys, "trunk_")
+    _score(sub_keys, "kv154_")
+    out["n_interior_trunk"] = len(trunk_keys)
+    out["n_interior_154"] = len(sub_keys)
     diffs = sorted(interior, key=lambda k: abs(model[k] - measured[k]),
                    reverse=True)
     out["top_mismatches"] = [
@@ -434,6 +468,11 @@ def render_flows(m: dict) -> str:
         lines.append(
             f"  INTERIOR Spearman   : {m['interior_spearman_rho']} "
             f"(p={m['interior_spearman_p']:g}; boundary-conditioned corridors excluded)")
+        if "trunk_spearman_rho" in m:
+            lines.append(
+                f"    trunk 275kV+ ({m['n_interior_trunk']}): rho={m['trunk_spearman_rho']}"
+                + (f" | 154kV layer ({m['n_interior_154']}): rho={m['kv154_spearman_rho']}"
+                   if "kv154_spearman_rho" in m else ""))
         lines.append(
             f"  interior median model/measured : {m['interior_median_model_over_measured']}")
     if "spearman_rho" in m:
@@ -473,6 +512,9 @@ def main(argv=None):
     ap.add_argument("--missing", action="store_true", help="list missing items")
     ap.add_argument("--flows", action="store_true",
                     help="flow-level validation (model DC vs measured MW)")
+    ap.add_argument("--csv154", default="data/external/tepco/jisseki_154kV0*.csv",
+                    help="glob of the 154 kV flow CSVs (extends the measured "
+                         "set; pass '' to disable)")
     ap.add_argument("--backbone", type=float, default=154.0)
     args = ap.parse_args(argv)
 
@@ -480,7 +522,10 @@ def main(argv=None):
         print(f"no CSV at {args.csv} — fetch it first (see module docstring)")
         return 2
     if args.flows:
-        m = match_flows(args.region, args.csv, backbone_kv=args.backbone)
+        import glob as _g
+        csv154 = args.csv154 if args.csv154 and _g.glob(args.csv154) else None
+        m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
+                        csv154=csv154)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:
