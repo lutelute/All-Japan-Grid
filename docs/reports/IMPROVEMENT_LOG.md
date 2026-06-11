@@ -9,6 +9,29 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑫: 全国ゾーナルUC→PF（east AC/west DC 完走）— 容量二重管理の定量化
+
+- **zone別注入**(`inject_dispatch_by_zone`): 多地域同期島ネット（bus.zone）へ
+  地域ごとに load=UC純需要スケール+gen=燃料別容量比例注入。primitivesに
+  gen_mask/load_mask追加（1063 passed）。ドライバ `uc_to_pf_national.py` は
+  run_national_powerflow の島構築チェーンの balance_power_by_zone を
+  UC断面に置換し、tie線潮流（zone跨ぎline）とUC連系線フローを地域対で比較
+- **east（tohoku+tokyo, 5,024バス）t=17**: gate PASS → **AC収束**
+  vm tohoku[0.96,1.037]/tokyo[0.817,1.03]（フルモデルは縮約版に無い弱バスを露出）
+- **west（6地域, 7,082バス）t=17**: gate PASS → **DC収束 loading p95 79%**
+  （AC不可は既知の確定事項=下位網変圧器。ローカルMacで完走、サーバー不要）
+- **最重要の新事実 — UC↔PF間の容量二重管理を初めて定量化**:
+  UC側の容量較正（capacity_patches 27件・参照リスト）はシナリオ層にのみ存在し、
+  PF側のOSM由来GridNetworkへ届いていない。地域別ギャップ（t=17断面）:
+  - **hokuriku gap 2,444MW (-77%)**: coal 1,949クリップ（敦賀火力等のregion/容量パッチ未反映）
+  - **kyushu gap 4,452MW (-31%)**: nuclear 2,140 + lng 1,895（新大分2,295級）+ coal/geo
+  - **shikoku gap 1,498MW (-52%)**: **coal 1,356がunmatched = 橘湾石炭がPF側に不在**
+  - tokyo（east側）: coal 2,340クリップ → tie潮流乖離（PF 11.6GW vs UC 5.6GW）の主因
+  - クリップ分はslack供給に化け、tie潮流をUC計画から大きく歪める（west連系線で顕著）
+- **帰結（方針裏付け）**: 発電容量の正は R/C/D 層のDBで一元化し、UCシナリオ
+  ローダーとPF側enrichが同一の正を引くべき — 「潮流側とのDB統合」の根拠データ
+- 次: UC実行履歴のDB記録（uc_runs）/ 容量パッチのDB昇格 → PF側enrich接続
+
 ## 2026-06-12 — **Fable 5** — UC改善⑪: UC→PF 24断面スイープ（「流せない時間帯」の不在と電圧の質を計測）
 
 - **--all-hours実装**(`scripts/uc_to_pf.py`): UC1回+PF網1回構築→24時刻を断面ごとに

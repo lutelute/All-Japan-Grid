@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "date": "2026-06-12",
+    "git_head": "5fd2fea",
+    "scenario": "fy2023r2",
+    "reactive": 0.6
+  },
+  "islands": {
+    "west": {
+      "regions": [
+        "chubu",
+        "hokuriku",
+        "kansai",
+        "chugoku",
+        "shikoku",
+        "kyushu"
+      ],
+      "hour": 17,
+      "net_demand_mw": 69937.7,
+      "n_buses": 7082,
+      "injection": {
+        "chubu": {
+          "load_scale": 0.8956,
+          "injection": {
+            "requested_mw": 21793.4,
+            "injected_mw": 21793.4,
+            "clipped": {},
+            "unmatched": {},
+            "zeroed_gens": 3585
+          }
+        },
+        "hokuriku": {
+          "load_scale": 0.8323,
+          "injection": {
+            "requested_mw": 3180.9,
+            "injected_mw": 736.4,
+            "clipped": {
+              "hydro": 495.5,
+              "coal": 1949.0
+            },
+            "unmatched": {},
+            "zeroed_gens": 27
+          }
+        },
+        "kansai": {
+          "load_scale": 1.0113,
+          "injection": {
+            "requested_mw": 21151.3,
+            "injected_mw": 20826.3,
+            "clipped": {
+              "biomass": 25.0
+            },
+            "unmatched": {
+              "battery": 300.0
+            },
+            "zeroed_gens": 857
+          }
+        },
+        "chugoku": {
+          "load_scale": 0.8771,
+          "injection": {
+            "requested_mw": 8745.9,
+            "injected_mw": 8451.1,
+            "clipped": {
+              "biomass": 247.4
+            },
+            "unmatched": {
+              "battery": 47.4
+            },
+            "zeroed_gens": 1194
+          }
+        },
+        "shikoku": {
+          "load_scale": 0.8597,
+          "injection": {
+            "requested_mw": 2874.2,
+            "injected_mw": 1376.6,
+            "clipped": {
+              "biomass": 40.0,
+              "hydro": 45.8
+            },
+            "unmatched": {
+              "coal": 1356.0,
+              "battery": 55.8
+            },
+            "zeroed_gens": 52
+          }
+        },
+        "kyushu": {
+          "load_scale": 1.0847,
+          "injection": {
+            "requested_mw": 14292.0,
+            "injected_mw": 9840.0,
+            "clipped": {
+              "nuclear": 2140.0,
+              "coal": 247.0,
+              "geothermal": 150.0,
+              "lng": 1895.0,
+              "biomass": 20.0
+            },
+            "unmatched": {},
+            "zeroed_gens": 1769
+          }
+        }
+      },
+      "gate": {
+        "pass": true,
+        "cond_max": 493739728.2338985
+      },
+      "mode": "dc",
+      "converged": true,
+      "line_loading_p95": 79.0,
+      "tie_flow_mw": {
+        "pf": {
+          "chubu->hokuriku": 2942.2,
+          "chubu->kansai": 843.2,
+          "chugoku->kansai": -7015.1,
+          "hokuriku->kansai": -0.0,
+          "chugoku->kyushu": 3760.6,
+          "chugoku->shikoku": 3311.1,
+          "kansai->shikoku": -979.7
+        },
+        "uc": {
+          "chubu->kansai": 2530.0,
+          "chubu->hokuriku": -57.1,
+          "chugoku->kansai": -176.5,
+          "kansai->shikoku": -129.2,
+          "chugoku->shikoku": 1200.0,
+          "chugoku->kyushu": -94.1
+        }
+      }
+    }
+  }
+}
