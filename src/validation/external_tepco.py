@@ -201,7 +201,8 @@ def _is_railway_only(name_key: str, operators: dict) -> bool:
 def _model_inventory(region: str, data_dir: str | None = None):
     """Built-model inventories: substation names/positions and, per line
     name: endpoint sub names, endpoint positions (subs AND junctions —
-    for the positional attachment tier), and max voltage class."""
+    for the positional attachment tier), endpoint node ids + the node
+    adjacency map (for the graph-adjacency tier), and max voltage class."""
     from src.powerflow.snapped_topology import build_network_snapped
 
     net = build_network_snapped(region, data_dir=data_dir)
@@ -210,29 +211,37 @@ def _model_inventory(region: str, data_dir: str | None = None):
     sub_name = {}       # real substation id -> normalised name
     pos = {}            # any bus id (sub or junction) -> (lat, lon)
     sub_pos = defaultdict(list)   # normalised name -> [(lat, lon)]
+    sub_ids = defaultdict(set)    # normalised name -> {node ids}
     for s in net.substations:
         pos[s.id] = (s.latitude, s.longitude)
         if "_jct_" not in s.id:
             sub_name[s.id] = _norm(s.name)
             sub_pos[_norm(s.name)].append((s.latitude, s.longitude))
+            sub_ids[_norm(s.name)].add(s.id)
     sub_names = set(sub_name.values())
 
-    line_info = {}   # name key -> {"ends": set, "pos": list, "kv": float}
+    neighbors = defaultdict(set)  # node id -> adjacent node ids
+    line_info = {}   # name key -> {"ends", "end_ids", "pos", "kv"}
     for ln in net.transmission_lines:
+        neighbors[ln.from_substation_id].add(ln.to_substation_id)
+        neighbors[ln.to_substation_id].add(ln.from_substation_id)
         if "_xfmr_" in ln.id or not ln.name or ln.name.startswith(f"{region}_line_"):
             continue
         for part in str(ln.name).split(";"):
             key = _norm(part)
             if not key:
                 continue
-            info = line_info.setdefault(key, {"ends": set(), "pos": [], "kv": 0.0})
+            info = line_info.setdefault(
+                key, {"ends": set(), "end_ids": set(), "pos": [], "kv": 0.0})
             info["kv"] = max(info["kv"], float(ln.voltage_kv or 0))
             for end in (ln.from_substation_id, ln.to_substation_id):
+                info["end_ids"].add(end)
                 if end in sub_name:
                     info["ends"].add(sub_name[end])
                 if end in pos:
                     info["pos"].append(pos[end])
-    return net, sub_names, dict(sub_pos), line_info
+    return (net, sub_names, dict(sub_pos), line_info,
+            dict(sub_ids), dict(neighbors))
 
 
 def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
@@ -250,12 +259,20 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     - **positional attachment tier**: TEPCO facility names and OSM names
       disagree for adjacent/identical yards (西北線 ends at OSM 稲城 =
       TEPCO 北多摩, 1.1 km apart), so an endpoint within ``pos_km`` of
-      the official substation counts as attached-by-position.
+      the official substation counts as attached-by-position;
+    - **graph-adjacency tier** (2026-06-11, ledger 38): OSM segments
+      corridors under changing names — the final approach into a yard
+      often carries a different or no name, so the named group's
+      endpoint set misses the official sub even though the model wiring
+      is electrically continuous (measured: 108 of 184 distance-cases
+      are exactly 1 hop away, 82% within 3). An official sub directly
+      adjacent (one segment) to a named endpoint counts as attached.
     """
     from src.powerflow.snapped_topology import _haversine_km
 
     truth = parse_tepco_headers_banded(csv_path, csv154=csv154, csv66=csv66)
-    _net, sub_names, sub_pos, line_info = _model_inventory(region, data_dir=data_dir)
+    (_net, sub_names, sub_pos, line_info,
+     sub_ids, neighbors) = _model_inventory(region, data_dir=data_dir)
     operators = _load_operators(region, data_dir=data_dir)
 
     eligible = {k: v for k, v in line_info.items()
@@ -292,7 +309,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         else:
             missing_lines.append(ln)
 
-    pair_name = pair_pos = pair_class = pair_un = 0
+    pair_name = pair_pos = pair_adj = pair_class = pair_un = 0
     band_tot = defaultdict(int)
     band_ok = defaultdict(int)
     missing_pairs = []
@@ -313,8 +330,14 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         d = min((_haversine_km(la, lo, ela, elo)
                  for (la, lo) in spots for (ela, elo) in info["pos"]),
                 default=float("inf"))
+        ids = sub_ids.get(_norm(sub), set())
+        adjacent = any(t == e or t in neighbors.get(e, ())
+                       for e in info["end_ids"] for t in ids)
         if d <= pos_km:
             pair_pos += 1
+            band_ok[bname] += 1
+        elif adjacent:
+            pair_adj += 1
             band_ok[bname] += 1
         elif not trunk_class:
             # only a sub-trunk-class line carries this name -> collision
@@ -333,7 +356,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         bname = "trunk" if floor >= 200 else ("154" if floor >= 140 else "66")
         if find_line(ln, floor)[0] is None:
             band_tot[bname] += 1
-    attached = pair_name + pair_pos
+    attached = pair_name + pair_pos + pair_adj
     band_recall = {b: round(band_ok[b] / band_tot[b], 4)
                    for b in band_tot if band_tot[b]}
     return {
@@ -349,6 +372,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         "line_recall_loose": round((line_exact + line_loose) / n_lines, 4) if n_lines else 0.0,
         "pair_attached_name": pair_name,
         "pair_attached_position": pair_pos,
+        "pair_attached_adjacent": pair_adj,
         "pair_class_collision": pair_class,
         "pair_unattached": pair_un,
         "pair_recall_name": round(pair_name / n_pairs, 4) if n_pairs else 0.0,
@@ -752,6 +776,7 @@ def render_tepco(m: dict) -> str:
         f"{100 * m['line_recall_loose']:.1f}% incl. loose",
         f"  attachment recall : {100 * m['pair_recall']:.1f}% "
         f"(name {m['pair_attached_name']} + position {m['pair_attached_position']} "
+        f"+ adjacent {m.get('pair_attached_adjacent', 0)} "
         f"of {t['pairs']}; class-collision {m['pair_class_collision']}, "
         f"unattached {m['pair_unattached']})",
         f"  by band           : " + "  ".join(

@@ -117,6 +117,51 @@ def test_position_tier_attaches_renamed_facility(tepco_csv, tmp_path):
     assert m["pair_unattached"] <= 1   # only 葛南 may remain
 
 
+def test_adjacency_tier_attaches_via_unnamed_final_segment(tmp_path):
+    """OSM segments corridors under changing names: 東京南線 ends at 中継,
+    and an UNNAMED segment continues 中継 -> 葛南 (the official metering
+    yard, ~10 km from the named endpoints, far beyond pos_km). The model
+    wiring is electrically continuous, so the graph-adjacency tier
+    counts the (葛南, 東京南線) pair as attached (ledger 38: 108/184
+    distance-cases were exactly 1 hop)."""
+    header = ",".join([
+        "日時", "葛南(変) - 東京南線1･2L",
+    ])
+    csvp = tmp_path / "jisseki.csv"
+    csvp.write_bytes((header + "\n").encode("cp932"))
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "京浜変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.60, 35.50]}},
+        {"type": "Feature",
+         "properties": {"name": "中継変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.90, 35.80]}},
+        {"type": "Feature",
+         "properties": {"name": "葛南変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.00, 35.90]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "東京南線", "voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.60, 35.50], [139.90, 35.80]]}},
+        {"type": "Feature",     # unnamed final approach into 葛南
+         "properties": {"voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.90, 35.80], [140.00, 35.90]]}},
+    ]}
+    d = tmp_path / "data3"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(json.dumps(lines))
+
+    m = match_tepco("testreg", str(csvp), data_dir=str(d))
+    assert m["pair_attached_adjacent"] == 1
+    assert m["pair_unattached"] == 0
+    assert m["pair_recall"] == pytest.approx(1.0)
+
+
 def test_railway_only_names_are_excluded(tmp_path):
     subs = {"type": "FeatureCollection", "features": [
         {"type": "Feature", "properties": {"name": "京浜変電所", "voltage": "275000"},
