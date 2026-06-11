@@ -295,7 +295,7 @@ def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
 
 def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
-                load_spatial: str = "none", csv154=None) -> dict:
+                load_spatial: str = "none", csv154=None, csv66=None) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -318,6 +318,9 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
     if csv154:
         for k, v in tepco_flow_stats(csv154, q=q).items():
             measured_cls.setdefault(k, (v, 140.0))
+    if csv66:
+        for k, v in tepco_flow_stats(csv66, q=q).items():
+            measured_cls.setdefault(k, (v, 60.0))
     measured = {k: v for k, (v, _c) in measured_cls.items()}
 
     typical = tepco_flow_stats(csv_path, q=0.5)
@@ -398,10 +401,11 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
             mc = measured_cls.get(key)
             if mc is not None:
                 floor = mc[1]
-                ceil = 200.0 if floor < 200.0 else 1e9
+                ceil = (1e9 if floor >= 200.0 else
+                        200.0 if floor >= 140.0 else 140.0)
                 if not (floor <= line_kv < ceil):
                     continue
-            elif line_kv < 140.0:
+            elif line_kv < 60.0:
                 continue
             # series segments carry the same flow -> max is the
             # corridor's loaded section
@@ -440,11 +444,14 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
     # per-class breakdown: the 275 kV+ trunk is the established headline;
     # the 154 kV layer is a NEW, separately-reported measurement
     trunk_keys = [k for k in interior if measured_cls[k][1] >= 200.0]
-    sub_keys = [k for k in interior if measured_cls[k][1] < 200.0]
+    sub_keys = [k for k in interior if 140.0 <= measured_cls[k][1] < 200.0]
+    kv66_keys = [k for k in interior if measured_cls[k][1] < 140.0]
     _score(trunk_keys, "trunk_")
     _score(sub_keys, "kv154_")
+    _score(kv66_keys, "kv66_")
     out["n_interior_trunk"] = len(trunk_keys)
     out["n_interior_154"] = len(sub_keys)
+    out["n_interior_66"] = len(kv66_keys)
     diffs = sorted(interior, key=lambda k: abs(model[k] - measured[k]),
                    reverse=True)
     out["top_mismatches"] = [
@@ -471,8 +478,10 @@ def render_flows(m: dict) -> str:
         if "trunk_spearman_rho" in m:
             lines.append(
                 f"    trunk 275kV+ ({m['n_interior_trunk']}): rho={m['trunk_spearman_rho']}"
-                + (f" | 154kV layer ({m['n_interior_154']}): rho={m['kv154_spearman_rho']}"
-                   if "kv154_spearman_rho" in m else ""))
+                + (f" | 154kV ({m['n_interior_154']}): rho={m['kv154_spearman_rho']}"
+                   if "kv154_spearman_rho" in m else "")
+                + (f" | 66kV ({m['n_interior_66']}): rho={m['kv66_spearman_rho']}"
+                   if "kv66_spearman_rho" in m else ""))
         lines.append(
             f"  interior median model/measured : {m['interior_median_model_over_measured']}")
     if "spearman_rho" in m:
@@ -512,6 +521,9 @@ def main(argv=None):
     ap.add_argument("--missing", action="store_true", help="list missing items")
     ap.add_argument("--flows", action="store_true",
                     help="flow-level validation (model DC vs measured MW)")
+    ap.add_argument("--csv66",
+                    default="data/external/tepco/jisseki_[cfgikmnsty]*.csv",
+                    help="glob of the per-prefecture 66 kV flow CSVs ('' to disable)")
     ap.add_argument("--csv154", default="data/external/tepco/jisseki_154kV0*.csv",
                     help="glob of the 154 kV flow CSVs (extends the measured "
                          "set; pass '' to disable)")
@@ -524,8 +536,9 @@ def main(argv=None):
     if args.flows:
         import glob as _g
         csv154 = args.csv154 if args.csv154 and _g.glob(args.csv154) else None
+        csv66 = args.csv66 if args.csv66 and _g.glob(args.csv66) else None
         m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
-                        csv154=csv154)
+                        csv154=csv154, csv66=csv66)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:
