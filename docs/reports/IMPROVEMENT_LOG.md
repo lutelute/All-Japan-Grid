@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — N4完了: 全国一枚系統図+国家MATPOWERエクスポート（64）
+
+- **全国一枚系統図**: `render_grid_figure.py --region national` — 10地域・枝14,138・
+  変電所10,077を実OSM経路で1枚に(全4島AC収束の注記つき)。LINE+ユーザー納品済み
+- **国家MATPOWER**: `scripts/export_national_matpower.py` → dist/matpower_national/ —
+  4島別 bus/branch/gen CSV(p.u. on 100MVA・出典メタつき):
+  hokkaido 778/878/358・east 5,024/6,124/7,506・west 7,082/10,388/7,448・okinawa 89/85/25。
+  生成物は非コミット(スクリプトが再現レシピ)・別開発UCがそのまま読める形式
+- 982 passed(レンダラ+エクスポータ)。N4完了 — N残=N5国家reconcile・N6 west品質磨き
+
 ## 2026-06-12 — **Fable 5** — 🎉N1/N3: WEST統合島AC初収束 — 「日本としての系統」全島AC成立（63）
 
 - **N1計測**: 同期4島の現状=hokkaido(778subs)/east(5,024)/west(7,082)/okinawa(89)。
