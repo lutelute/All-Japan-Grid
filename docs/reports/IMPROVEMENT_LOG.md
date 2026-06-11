@@ -9,6 +9,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑭: FY2025実測需要の年間UC完走（r7）— 合成需要の過大+12%を定量化
+
+- **r7**(`950ce68`): fy2025r1（実測需要 via DataSpace profile_ref・annual_window +
+  nuclear_status_fy2025 14基13,253MW）の8760h UC。pws-160core 13チャンク並列、
+  389窓**全365日Optimal**・リトライ0・カバレッジギャップ0
+- **実測needs化の効果（r6=fy2023r2maint比）**:
+  - 総需要 **999.3 → 879.7 TWh（-12%）** — 合成需要（OCCTOピーク×形状の年間化）の
+    過大が初めて定量化された。コスト ¥6.47兆 → **¥4.99兆/年（-23%）**
+  - **LNG 30.7 → 21.7%（-9.0pp）**: 需要減を限界電源が吸収（メリットオーダー通り）
+  - nuclear 7.6 → 9.9%（+2.3pp、女川2+島根2の14基断面）、揚水 0.10 → 0.56%
+    （実測の夕方ピーク形状が揚水を稼働させる）
+- **開示**: FY2025実績シェアは年度未了で正本なし（構造比較のみ）。RE容量は
+  fy2023r2踏襲（FY2025導入増未較正=solar/windやや過小バイアス）。coal 41.5%は
+  経済停止モデル外の既知過大と同根
+- uc_runs索引: backfillで75件（r7チャンク13+マージ1を含む）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑬: UC実行履歴のDB索引（uc_runs, migration v4）
 
 - **UCRunテーブル**(`b4b32f1`): docs/reports/ のレポートJSONを正本としたまま、
