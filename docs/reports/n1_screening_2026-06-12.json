@@ -1,0 +1,832 @@
+{
+ "generated_at": "2026-06-11T19:50:17+00:00",
+ "note": "screening on synthetic ratings + one demand snapshot — ordering and structural verdicts are meaningful, exact margins are not",
+ "islands": [
+  {
+   "island": "east",
+   "n_screened": 50,
+   "base_overloads": 5,
+   "n_splits": 3,
+   "n_cascading": 39,
+   "n_ok": 8,
+   "worst": [
+    {
+     "line": "姉崎線1・2L",
+     "base_loading_pct": 92.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 42,
+     "post_max_loading_pct": 277.5
+    },
+    {
+     "line": "姉崎線1・2L",
+     "base_loading_pct": 94.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 29,
+     "post_max_loading_pct": 233.6
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 94.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 24,
+     "post_max_loading_pct": 236.7
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 22,
+     "post_max_loading_pct": 225.8
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 22,
+     "post_max_loading_pct": 150.6
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 20,
+     "post_max_loading_pct": 153.1
+    },
+    {
+     "line": "南川崎南太田線",
+     "base_loading_pct": 121.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 18,
+     "post_max_loading_pct": 309.2
+    },
+    {
+     "line": "上野線",
+     "base_loading_pct": 59.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 13,
+     "post_max_loading_pct": 321.4
+    }
+   ],
+   "results": [
+    {
+     "line": "南川崎南太田線",
+     "base_loading_pct": 121.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 18,
+     "post_max_loading_pct": 309.2
+    },
+    {
+     "line": "杉並線",
+     "base_loading_pct": 113.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 7,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "杉並線",
+     "base_loading_pct": 43.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 9,
+     "post_max_loading_pct": 163.4
+    },
+    {
+     "line": "上野線",
+     "base_loading_pct": 59.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 13,
+     "post_max_loading_pct": 321.4
+    },
+    {
+     "line": "上野線",
+     "base_loading_pct": 1.2,
+     "verdict": "cascading_overloads",
+     "new_overloads": 13,
+     "post_max_loading_pct": 317.3
+    },
+    {
+     "line": "花川線",
+     "base_loading_pct": 97.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 5,
+     "post_max_loading_pct": 220.4
+    },
+    {
+     "line": "常磐線 / 常北線",
+     "base_loading_pct": 99.1,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "橋本線",
+     "base_loading_pct": 99.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 4,
+     "post_max_loading_pct": 143.3
+    },
+    {
+     "line": "野方線",
+     "base_loading_pct": 98.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 9,
+     "post_max_loading_pct": 216.1
+    },
+    {
+     "line": "青井線",
+     "base_loading_pct": 96.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 233.4
+    },
+    {
+     "line": "福岡線",
+     "base_loading_pct": 98.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 245.3
+    },
+    {
+     "line": "松尾線",
+     "base_loading_pct": 97.8,
+     "verdict": "splits",
+     "stranded_buses": 6
+    },
+    {
+     "line": "上野水道橋線",
+     "base_loading_pct": 97.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 13,
+     "post_max_loading_pct": 303.6
+    },
+    {
+     "line": "吉橋線",
+     "base_loading_pct": 97.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "小松川線",
+     "base_loading_pct": 96.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "岬町線",
+     "base_loading_pct": 96.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 123.8
+    },
+    {
+     "line": "岬町線",
+     "base_loading_pct": 0.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 123.8
+    },
+    {
+     "line": "新鶴見線",
+     "base_loading_pct": 96.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 4,
+     "post_max_loading_pct": 121.2
+    },
+    {
+     "line": "京北線",
+     "base_loading_pct": 97.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "大字夏茂変電所~大字根岸変電所線",
+     "base_loading_pct": 96.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 192.3
+    },
+    {
+     "line": "飯坂変電所~北福島変電所線",
+     "base_loading_pct": 97.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 4,
+     "post_max_loading_pct": 148.0
+    },
+    {
+     "line": "神立変電所~土樽変電所線",
+     "base_loading_pct": 96.2,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "西多賀変電所~太白区変電所線",
+     "base_loading_pct": 95.5,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "南横浜火力線 / 磯子火力線",
+     "base_loading_pct": 95.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 440.3
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 94.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 24,
+     "post_max_loading_pct": 236.7
+    },
+    {
+     "line": "下葛線",
+     "base_loading_pct": 82.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 5,
+     "post_max_loading_pct": 125.8
+    },
+    {
+     "line": "相武線",
+     "base_loading_pct": 94.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 121.5
+    },
+    {
+     "line": "姉崎線1・2L",
+     "base_loading_pct": 94.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 29,
+     "post_max_loading_pct": 233.6
+    },
+    {
+     "line": "上野水道橋線",
+     "base_loading_pct": 93.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 13,
+     "post_max_loading_pct": 294.1
+    },
+    {
+     "line": "水海道線",
+     "base_loading_pct": 94.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "安食線",
+     "base_loading_pct": 94.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 148.4
+    },
+    {
+     "line": "南川崎南太田線",
+     "base_loading_pct": 94.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 150.4
+    },
+    {
+     "line": "北浦線",
+     "base_loading_pct": 93.9,
+     "verdict": "splits",
+     "stranded_buses": 3
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 22,
+     "post_max_loading_pct": 225.8
+    },
+    {
+     "line": "稲敷線",
+     "base_loading_pct": 98.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "大宮線",
+     "base_loading_pct": 93.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "下館線",
+     "base_loading_pct": 93.6,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 20,
+     "post_max_loading_pct": 153.1
+    },
+    {
+     "line": "JR足利線",
+     "base_loading_pct": 93.4,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "東京北線",
+     "base_loading_pct": 93.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 22,
+     "post_max_loading_pct": 150.6
+    },
+    {
+     "line": "上山変電所~宮内変電所線",
+     "base_loading_pct": 92.8,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "高井戸線;杉並線",
+     "base_loading_pct": 92.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 126.3
+    },
+    {
+     "line": "亀戸線 / 東八潮線",
+     "base_loading_pct": 93.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 4,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "東北送電線_242",
+     "base_loading_pct": 92.4,
+     "verdict": "splits",
+     "stranded_buses": 6
+    },
+    {
+     "line": "橋本線",
+     "base_loading_pct": 92.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 5,
+     "post_max_loading_pct": 135.6
+    },
+    {
+     "line": "昭和線",
+     "base_loading_pct": 92.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 140.3
+    },
+    {
+     "line": "姉崎線1・2L",
+     "base_loading_pct": 92.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 42,
+     "post_max_loading_pct": 277.5
+    },
+    {
+     "line": "保土ヶ谷線 / 妙蓮寺線",
+     "base_loading_pct": 91.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 188.4
+    },
+    {
+     "line": "八幡原変電所~米沢市変電所線",
+     "base_loading_pct": 91.6,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    },
+    {
+     "line": "天間林線",
+     "base_loading_pct": 91.6,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 121.3
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "n_screened": 50,
+   "base_overloads": 7,
+   "n_splits": 4,
+   "n_cascading": 36,
+   "n_ok": 10,
+   "worst": [
+    {
+     "line": "高雄一丁目変電所~関西電力 高津尾変電所線",
+     "base_loading_pct": 87.9,
+     "verdict": "splits",
+     "stranded_buses": 16
+    },
+    {
+     "line": "阿波変電所~阿南周波数変換所線",
+     "base_loading_pct": 88.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 15,
+     "post_max_loading_pct": 195.5
+    },
+    {
+     "line": "中能登変電所~上野変電所_2線",
+     "base_loading_pct": 99.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 11,
+     "post_max_loading_pct": 281.1
+    },
+    {
+     "line": "山代変電所~九州電力　日宇変電所線",
+     "base_loading_pct": 94.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 10,
+     "post_max_loading_pct": 144.5
+    },
+    {
+     "line": "南港東七丁目変電所~本田変電所 (Honden Substation)線",
+     "base_loading_pct": 93.2,
+     "verdict": "splits",
+     "stranded_buses": 9
+    },
+    {
+     "line": "宇和島線",
+     "base_loading_pct": 123.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 8,
+     "post_max_loading_pct": 200.3
+    },
+    {
+     "line": "古賀福間線",
+     "base_loading_pct": 97.7,
+     "verdict": "splits",
+     "stranded_buses": 7
+    },
+    {
+     "line": "北陸電力穴水変電所~上野変電所_2線",
+     "base_loading_pct": 131.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 158.4
+    }
+   ],
+   "results": [
+    {
+     "line": "北陸電力穴水変電所~上野変電所_2線",
+     "base_loading_pct": 131.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 158.4
+    },
+    {
+     "line": "宇和島線",
+     "base_loading_pct": 123.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 8,
+     "post_max_loading_pct": 200.3
+    },
+    {
+     "line": "大脇変電所~北刈谷変電所 (Kita Kariya Hendensho)線",
+     "base_loading_pct": 116.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "立田変電所~土佐山田町新改変電所線",
+     "base_loading_pct": 105.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "川口町五丁目変電所~新居町五丁目変電所線",
+     "base_loading_pct": 102.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "御荘線",
+     "base_loading_pct": 102.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 209.3
+    },
+    {
+     "line": "川口町五丁目変電所~新居町五丁目変電所線",
+     "base_loading_pct": 101.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "中能登変電所~上野変電所_2線",
+     "base_loading_pct": 99.9,
+     "verdict": "cascading_overloads",
+     "new_overloads": 11,
+     "post_max_loading_pct": 281.1
+    },
+    {
+     "line": "阪急塚口線",
+     "base_loading_pct": 99.4,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "鹿児島新鹿児島線",
+     "base_loading_pct": 99.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "古賀福間線",
+     "base_loading_pct": 97.7,
+     "verdict": "splits",
+     "stranded_buses": 7
+    },
+    {
+     "line": "長尾大濠線",
+     "base_loading_pct": 97.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "駿遠西掛川線",
+     "base_loading_pct": 97.1,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "松尾変電所~鼎変電所線",
+     "base_loading_pct": 97.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "出石変電所~松原変電所線",
+     "base_loading_pct": 96.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "上津役折尾線",
+     "base_loading_pct": 96.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "鹿児島帖佐線",
+     "base_loading_pct": 95.6,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "高知変電所~伊勢崎町変電所線",
+     "base_loading_pct": 95.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 131.3
+    },
+    {
+     "line": "道下変電所~下山変電所線",
+     "base_loading_pct": 95.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 190.3
+    },
+    {
+     "line": "道下変電所~下山変電所線",
+     "base_loading_pct": 190.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 190.3
+    },
+    {
+     "line": "大浜北町二丁変電所~石津西町変電所線",
+     "base_loading_pct": 94.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 217.3
+    },
+    {
+     "line": "山代変電所~九州電力　日宇変電所線",
+     "base_loading_pct": 94.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 10,
+     "post_max_loading_pct": 144.5
+    },
+    {
+     "line": "武雄変電所~伊万里変電所線",
+     "base_loading_pct": 99.2,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "高知変電所~孕変電所線",
+     "base_loading_pct": 93.2,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 135.9
+    },
+    {
+     "line": "南港東七丁目変電所~本田変電所 (Honden Substation)線",
+     "base_loading_pct": 93.2,
+     "verdict": "splits",
+     "stranded_buses": 9
+    },
+    {
+     "line": "比津が丘五丁目変電所~西津田二丁目変電所線",
+     "base_loading_pct": 93.0,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "豊崎線",
+     "base_loading_pct": 92.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "九州電力 佐賀変電所~牛島上変電所線",
+     "base_loading_pct": 92.1,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "牛津変電所~九州電力 南佐賀変電所線",
+     "base_loading_pct": 70.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "出石変電所~上野変電所線",
+     "base_loading_pct": 91.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 133.6
+    },
+    {
+     "line": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
+     "base_loading_pct": 91.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "長野市変電所~中部電力パワーグリッド 川中島変電所線",
+     "base_loading_pct": 91.7,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "下山変電所~五郎八変電所線",
+     "base_loading_pct": 91.7,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 183.4
+    },
+    {
+     "line": "下山変電所~五郎八変電所線",
+     "base_loading_pct": 183.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 183.4
+    },
+    {
+     "line": "山家JR九州二日市線",
+     "base_loading_pct": 91.0,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "紫原変電所~鴨池変電所線",
+     "base_loading_pct": 90.9,
+     "verdict": "splits",
+     "stranded_buses": 4
+    },
+    {
+     "line": "道下変電所~朝日町変電所線",
+     "base_loading_pct": 90.8,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 181.6
+    },
+    {
+     "line": "道下変電所~朝日町変電所線",
+     "base_loading_pct": 181.6,
+     "verdict": "cascading_overloads",
+     "new_overloads": 1,
+     "post_max_loading_pct": 181.6
+    },
+    {
+     "line": "上福原三丁目変電所~余子変電所線",
+     "base_loading_pct": 90.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 140.0
+    },
+    {
+     "line": "鹿児島帖佐線",
+     "base_loading_pct": 90.4,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "都城変電所~志和池変電所線",
+     "base_loading_pct": 90.4,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "平城木津線",
+     "base_loading_pct": 90.2,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "川口町五丁目変電所~新居町五丁目変電所線",
+     "base_loading_pct": 89.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 2,
+     "post_max_loading_pct": 139.0
+    },
+    {
+     "line": "温泉線",
+     "base_loading_pct": 89.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "豊崎線",
+     "base_loading_pct": 88.5,
+     "verdict": "cascading_overloads",
+     "new_overloads": 6,
+     "post_max_loading_pct": 135.5
+    },
+    {
+     "line": "四国送電線_42",
+     "base_loading_pct": 88.4,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 171.8
+    },
+    {
+     "line": "高知変電所~伊勢崎町変電所線",
+     "base_loading_pct": 93.3,
+     "verdict": "cascading_overloads",
+     "new_overloads": 3,
+     "post_max_loading_pct": 214.5
+    },
+    {
+     "line": "牛島上変電所~九州電力 南佐賀変電所線",
+     "base_loading_pct": 88.3,
+     "verdict": "ok",
+     "new_overloads": 0,
+     "post_max_loading_pct": 131.1
+    },
+    {
+     "line": "阿波変電所~阿南周波数変換所線",
+     "base_loading_pct": 88.1,
+     "verdict": "cascading_overloads",
+     "new_overloads": 15,
+     "post_max_loading_pct": 195.5
+    },
+    {
+     "line": "高雄一丁目変電所~関西電力 高津尾変電所線",
+     "base_loading_pct": 87.9,
+     "verdict": "splits",
+     "stranded_buses": 16
+    }
+   ]
+  }
+ ]
+}
