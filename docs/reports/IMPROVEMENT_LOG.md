@@ -9,6 +9,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑩: 実測需要のシナリオ統合（profile_ref稼働=データスペース実用第一号）
+
+- **profile_ref実装**(`3bc6c04`, DATA_SPACE §5): シナリオの demand.profile_ref が
+  DataSpace.fetch(occto_kohyo)で解決され、代表日の実測30分値（→1h平均）がグロス需要になる。
+  取得データのsha256が NationalScenario.demand_profile_sha → ベンチmeta に連鎖
+  （シナリオ指紋→取得データ指紋の再現性チェーン）
+- **fy2025r1シナリオ**: 代表日=**2025-08-06（FY2025夏ピーク、実測7月中旬〜8月の走査で
+  全国30分値max 163.1GWと特定）** + nuclear_status_fy2025（12基+女川2・島根2=**14基13,253MW**、
+  柏崎刈羽は未反映と開示）。solar/wind容量はfy2023r2踏襲（FY2025導入増は未較正=純需要過大
+  方向のバイアスをファイル内開示）。FY2025実績シェアは年度未了のため乖離KPI正本なし
+- **結果**: 実測需要での全国24h UC = **Optimal 11.5s・¥202億/日・nuclear 10.2%（14基断面）**。
+  合成需要という最大の近似が代表日断面で解消。1061 passed
+- 次: 年間8760hの実測化（月別取得+キャッシュ、FY2025の365日）/ FY2025 RE容量較正 / nas03・MSM所在待ち
+
 ## 2026-06-11 — **Fable 5** — UC改善⑨: UC→潮流結合（タスク#6完了 = 全タスク完了）
 
 - **mainマージ**(`7d989c4`): origin/main（M7-M9: PTDF需要推定・Ybus出荷ゲート・中間タップ
