@@ -173,8 +173,14 @@ def upsert_measured_area_stats(db, rows) -> int:
 
 def load_measured_area_stats(db_path: str = DEFAULT_DB,
                              metric: str | None = None) -> dict | None:
-    """{area: {"q50","p95","signed_q50"}} (optionally one metric),
-    fail-soft None."""
+    """Measured area aggregates, fail-soft None.
+
+    With ``metric`` set: ``{area: {...}}`` (area unique per metric).
+    Without: ``{(area, metric): {...}}`` — areas legitimately carry
+    many metrics (demand + 13 per-fuel rows), so the unfiltered view
+    must not collapse them (caught when the F2 fuels overwrote each
+    other, ledger 68).
+    """
     if not db_path or not os.path.exists(db_path):
         return None
     try:
@@ -186,10 +192,15 @@ def load_measured_area_stats(db_path: str = DEFAULT_DB,
             qy = session.query(MeasuredAreaStat)
             if metric:
                 qy = qy.filter_by(metric=metric)
-            out = {r.area: {"q50": r.q50_mw, "p95": r.p95_mw,
-                            "signed_q50": r.signed_q50_mw,
-                            "metric": r.metric}
-                   for r in qy.all()}
+            rows = qy.all()
+            if metric:
+                out = {r.area: {"q50": r.q50_mw, "p95": r.p95_mw,
+                                "signed_q50": r.signed_q50_mw,
+                                "metric": r.metric} for r in rows}
+            else:
+                out = {(r.area, r.metric): {"q50": r.q50_mw, "p95": r.p95_mw,
+                                            "signed_q50": r.signed_q50_mw,
+                                            "metric": r.metric} for r in rows}
         return out or None
     except Exception:
         return None

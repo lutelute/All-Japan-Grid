@@ -56,7 +56,7 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 ## F: TSO需給実績フェッチャ（reconcileの燃料別拡張）
 
 - [x] F1 所在調査(60): **東電検証済み**(`eria_jukyu_YYYYMM_03.csv`・燃料別フル列・UTF-8-sig)・様式はOCCTO共通と確定。関西等9社の正確なURLはF3の発見課題に純化。VALIDATION_SOURCES.md台帳化
-- [ ] F2 プロトタイプ: 1社(東京)のfetch+パーサ→metric=gen_by_fuel:<fuel>でmeasured_area_statsへ(メタ管理は57方式)
+- [x] F2(68): 東電12ヶ月×13燃料系列をDB搭載(curl必須・多metricローダバグ修正込み)。gas14,652/coal5,646 MW等・nuclear0=実態一致
 - [ ] F3 全社展開(形式差異は正直に記録、取れない社はスキップ理由を台帳へ)
 - [ ] F4 reconcile拡張: モデルの燃料別dispatch vs 実績帯(帯判定)→LINE配信
 - [ ] F5 UC検証導線: UC時系列(燃料別)を同じ帯判定に通すサンプルを UC_HANDOFF.md に追記

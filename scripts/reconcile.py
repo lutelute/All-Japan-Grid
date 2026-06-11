@@ -99,8 +99,8 @@ def reconcile(db_path: str = "data/grid.db", uc_csv: str | None = None) -> dict:
                     val = float(r.get("value_mw", ""))
                 except ValueError:
                     continue
-                s = all_stats.get(area)
-                if not s or s.get("metric") != metric:
+                s = all_stats.get((area, metric))
+                if not s:
                     checks.append({"area": area, "metric": metric,
                                    "value_mw": val, "verdict": "no_reference"})
                     continue

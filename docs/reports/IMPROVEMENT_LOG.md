@@ -273,6 +273,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── main（潮流・トポロジ改修シリーズ） ── -->
 
 
+## 2026-06-12 — **Fable 5** — F2: 東電燃料別実績をDB搭載 — 通年12ヶ月・13系列（68）
+
+- **取得**: eria_jukyu 2025-05〜2026-04の12ヶ月をcurl取得(urllibはTLS指紋系403 →
+  curl -A必須と記録)。data/external/tso_jukyu/tokyo/+meta.json
+- **パーサ**: `tso_jukyu_rows()` — OCCTO共通様式の燃料13列(原子力/LNG/石炭/石油/他火力/
+  水力/地熱/バイオ/太陽光/風力/揚水/蓄電池/連系線)→ metric=gen_by_fuel:<fuel> で
+  measured_area_statsへ。calibrate `--tso-jukyu` 1コマンド統合
+- **実測値(東京・q50)**: gas 14,652 / coal 5,646 / hydro 1,115 / oil 453 /
+  interconnect 4,459 MW・**nuclear 0(柏崎刈羽未稼働の実態どおり)** — 燃料別dispatch
+  検証(F4)の真値が揃った
+- **バグ修正(正直記録)**: 多metric地域でローダがarea単独キーのため**燃料13系列が
+  相互上書き**→無filter時は(area,metric)キーに変更(reconcile UC入口も追随)。
+  1078 passed
+
 ## 2026-06-12 — **Fable 5** — X1: UC合流資産の採否判定 — 置換なし・役割分担を確定（67）
 
 - **OCCTOコネクタ**: dataspace版は当方の実証エンドポイント(台帳⑲)を参照する**UC実行時

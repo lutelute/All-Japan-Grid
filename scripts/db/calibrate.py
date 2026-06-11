@@ -118,6 +118,47 @@ def occto_area_rows(occto_dir: str) -> list[dict]:
     return rows
 
 
+_JUKYU_FUELS = {"原子力": "nuclear", "火力(LNG)": "gas", "火力(石炭)": "coal",
+                "火力(石油)": "oil", "火力(その他)": "thermal_other",
+                "水力": "hydro", "地熱": "geothermal", "バイオマス": "biomass",
+                "太陽光発電実績": "solar", "風力発電実績": "wind",
+                "揚水": "pumped", "蓄電池": "battery", "連系線": "interconnect"}
+
+
+def tso_jukyu_rows(jukyu_dir: str, area: str = "東京") -> list[dict]:
+    """TSO エリア需給実績 (OCCTO共通様式) -> per-fuel measured_area_stats
+    rows (metric=gen_by_fuel:<fuel>, q50/p95 of MW; UTF-8-sig, 2-row
+    header)."""
+    import glob as _g
+
+    import pandas as pd
+
+    frames = []
+    for p_ in sorted(_g.glob(os.path.join(jukyu_dir, "eria_jukyu_*.csv"))):
+        try:
+            df = pd.read_csv(p_, skiprows=1, encoding="utf-8-sig")
+            frames.append(df)
+        except Exception:
+            continue
+    if not frames:
+        return []
+    d = pd.concat(frames)
+    win = f'{d["DATE"].iloc[0]}..{d["DATE"].iloc[-1]}'
+    rows = []
+    for col, fuel in _JUKYU_FUELS.items():
+        if col not in d.columns:
+            continue
+        v = pd.to_numeric(d[col], errors="coerce").dropna()
+        if len(v) < 100:
+            continue
+        rows.append({"area": area, "metric": f"gen_by_fuel:{fuel}",
+                     "q50_mw": float(v.abs().median()),
+                     "p95_mw": float(v.abs().quantile(0.95)),
+                     "signed_q50_mw": float(v.median()),
+                     "window": win, "source": "tso_jukyu"})
+    return rows
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -129,6 +170,8 @@ def main(argv=None) -> int:
                     default="data/external/tepco/jisseki_[cfgikmnsty]*.csv")
     ap.add_argument("--occto", default="data/external/occto",
                     help="dir of kohyo_02/_04 CSVs ('' to skip)")
+    ap.add_argument("--tso-jukyu", default="data/external/tso_jukyu/tokyo",
+                    help="dir of eria_jukyu_*.csv ('' to skip)")
     args = ap.parse_args(argv)
 
     if not os.path.exists(args.csv):
@@ -174,6 +217,15 @@ def main(argv=None) -> int:
             ics = sum(1 for r in rows2 if r["metric"] == "ic_flow_mw")
             print(f"occto: {na} area stats -> {args.db} "
                   f"({na - ics} demand areas + {ics} interconnectors)")
+
+    # per-fuel supply actuals from the TSO common-format CSVs (F2)
+    if args.tso_jukyu and os.path.isdir(args.tso_jukyu):
+        rows3 = tso_jukyu_rows(args.tso_jukyu)
+        if rows3:
+            from src.db.calibration import upsert_measured_area_stats
+            nf = upsert_measured_area_stats(db, rows3)
+            print(f"tso_jukyu: {nf} per-fuel stats -> {args.db} "
+                  f"(window {rows3[0]['window']})")
     return 0
 
 
