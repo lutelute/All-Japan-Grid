@@ -157,3 +157,35 @@ def test_flow_stats_sums_circuit_groups_takes_max_end(tmp_path):
     stats = tepco_flow_stats(str(p), q=1.0)   # q=1 -> max
     # 京浜 end: 100+50=150, 200+100=300 -> 300 ; 葛南 end: 250 -> keep 300
     assert stats == {"A線": 300.0}
+
+
+def test_model_name_keys_expands_osm_variants():
+    """OSM naming diverges by composition (ledger 33): compound names,
+    circuit suffixes, from~to segments and parenthetical aliases must
+    all land on the disclosure key. Measured on the 154 kV files:
+    14 of 65 pure-154 corridors were recoverable only via variants."""
+    from src.validation.external_tepco import _model_name_keys
+
+    assert "中沢線" in _model_name_keys("中沢線3・4L")
+    assert "京浜線" in _model_name_keys("京浜線3,4号線")
+    assert _model_name_keys("北葛飾線/野田線") == ["北葛飾線", "野田線"]
+    assert "北駿線" in _model_name_keys("小山町~北駿線")
+    keys = _model_name_keys("坂戸川越線(只見幹線)")
+    assert "坂戸川越線" in keys and "只見幹線" in keys
+    assert {"大倉山線", "北島線"} <= set(_model_name_keys("大倉山線1・2L、北島線"))
+    # NFKC + NT alias unify the two spellings of the same corridor
+    assert _model_name_keys("千葉NT線") == ["千葉ニュータウン線"]
+
+
+def test_flow_stats_collapses_metering_sections(tmp_path):
+    """佐久間東幹線(中)/(山) are metering sections of one corridor —
+    they collapse to the corridor key, max keeps the loaded section."""
+    rows = [
+        "日時,佐久(変) - 東幹線(中)1･2L,佐久(変) - 東幹線(山)1･2L",
+        "2024年04月01日 00時,340,120",
+    ]
+    p = tmp_path / "flows.csv"
+    p.write_bytes(("\n".join(rows) + "\n").encode("cp932"))
+
+    from src.validation.external_tepco import tepco_flow_stats
+    assert tepco_flow_stats(str(p), q=1.0) == {"東幹線": 340.0}

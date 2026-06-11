@@ -56,9 +56,64 @@ _CLASS_SUFFIX = re.compile(r"\s*(\d+(\.\d+)?kV|\(untyped\))$")
 def _norm(s: str) -> str:
     s = unicodedata.normalize("NFKC", str(s))
     s = _CLASS_SUFFIX.sub("", s)   # multi-voltage builder bus-name suffixes
+    s = s.replace("NT", "ニュータウン")   # 千葉NT線 = 千葉ニュータウン線
     for suf in ("変電所", "開閉所", "発電所"):
         s = s.replace(suf, "")
     return "".join(s.split())
+
+
+# trailing metering-section qualifier on disclosure line names:
+# 佐久間東幹線(中)/(山)/(里) are sections of ONE corridor
+_PAREN_QUAL = re.compile(r"[（(][^（()）]{1,4}[)）]$")
+
+# model-side circuit suffixes: 3・4L (as on the CSV side) plus the
+# spelled-out 3,4号線 / 3・4号 forms OSM mappers use
+_MODEL_CIRCUIT = re.compile(r"[0-9０-９･・,，]+(L|号線?)$")
+
+
+def _model_name_keys(raw: str) -> list[str]:
+    """Match keys for one OSM line name, most-specific first.
+
+    OSM names diverge from the disclosure's by composition, not just
+    spelling: compounds (北葛飾線/野田線, 大倉山線1・2L、北島線),
+    circuit suffixes (中沢線3・4L, 京浜線3,4号線), from~to segment
+    naming (小山町~北駿線 = TEPCO's 北駿線) and parenthetical aliases
+    (坂戸川越線(只見幹線)). Yield the normalised variants so the flow
+    matcher can land on the disclosure key; the class-band restriction
+    still guards against homonyms at other voltages.
+    """
+    parts = []
+    for chunk in str(raw).replace(" / ", ";").replace("/", ";").split(";"):
+        parts.extend(chunk.split("、"))
+    keys: list[str] = []
+
+    def _add(c: str):
+        k = _norm(c)
+        if k and k not in keys:
+            keys.append(k)
+
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        cands = [part]
+        m = re.search(r"[（(]([^（()）]+)[)）]", part)
+        if m:                                   # alias in parentheses
+            cands.append(re.sub(r"[（(][^（()）]*[)）]", "", part))
+            cands.append(m.group(1))
+        for c in list(cands):
+            stripped = _MODEL_CIRCUIT.sub("", c).strip()
+            if stripped and stripped != c:
+                cands.append(stripped)
+        for c in list(cands):
+            for sep in ("~", "〜", "～"):
+                if sep in c:
+                    tail = c.split(sep)[-1].strip()
+                    if tail:
+                        cands.append(tail)
+        for c in cands:
+            _add(c)
+    return keys
 
 
 def parse_tepco_header(csv_path: str) -> dict:
@@ -342,7 +397,9 @@ def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
     for (sub, line), cols in groups.items():
         total = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
         val = float(total.abs().quantile(q))
-        key = _norm(line)
+        # metering sections 佐久間東幹線(中)/(山)/(里) collapse to the
+        # corridor; max keeps the loaded section, as across (sub, line)
+        key = _norm(_PAREN_QUAL.sub("", line.strip()))
         stats[key] = max(stats.get(key, 0.0), val)
     return stats
 
@@ -407,10 +464,7 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 continue
             if int(net_dc.line.at[idx, "from_bus"]) in bdry or \
                int(net_dc.line.at[idx, "to_bus"]) in bdry:
-                for part in raw.split(";"):
-                    key = _norm(part)
-                    if key:
-                        out.add(key)
+                out.update(_model_name_keys(raw))
         return out
 
     # Pass 1 (planning utilisation): identify which measured lines are the
@@ -445,9 +499,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
             continue
         line_kv = float(vn.get(net_dc.line.at[idx, "from_bus"], 0))
         p = float(flows.get(idx, 0.0))
-        for part in raw.replace(" / ", ";").split(";"):  # OSM compound names
-            key = _norm(part)
-            if not key or _is_railway_only(key, operators):
+        for key in _model_name_keys(raw):   # compound/suffix/segment variants
+            if _is_railway_only(key, operators):
                 continue
             # class-banded matching: a measured trunk (275 kV+) name only
             # accepts >=200 kV model lines; a 154-file name accepts the
