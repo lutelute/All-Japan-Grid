@@ -9,6 +9,24 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-11 — **Fable 5** — UC改善⑨: UC→潮流結合（タスク#6完了 = 全タスク完了）
+
+- **mainマージ**(`7d989c4`): origin/main（M7-M9: PTDF需要推定・Ybus出荷ゲート・中間タップ
+  スナップ等、+9,252行）を取り込み。衝突解消=IMPROVEMENT_LOG（両系列を区分保持）・
+  schema.py（UC 2テーブル+main計測2テーブル共存、migrationはUC v3が単独で無衝突）。
+  マージ後 **1053 passed**
+- **結合実装**(`9224fd6`, `ajgrid uc to-pf`): main側のUC_HANDOFF契約を完全消費 —
+  ①UC求解→②地域PF構築→③**ybus_gate（FAILなら注入しない契約を遵守）**→
+  ④ピーク時刻断面を燃料別集計し容量比例で注入（UC'lng'⇔PF'gas'の語彙正規化、
+  UC断面に無い燃料は0化=コミットメント反映、slack除外、loadはUC純需要へスケール）→
+  ⑤AC再ソルブ。**mainのpipelineは無改変**（解き済みnetへの事後注入=並行開発安全）
+- **実測結果**: tokyo backbone = gate PASS(5.6e7)・39.6GW注入・**AC収束 vm[0.960,1.036]**・
+  slack 6.6GW（UC側の連系線輸入と整合）/ kansai = 19.5GW注入（2023年度断面の原子力6.6GW込み）・
+  **AC収束**・unmatched 214MW=揚水のPF側欠如（開示）。
+  **較正シナリオ上のUC運用断面が、OSM由来の実系統で流れることを初実証**
+- 注入はv1=地域×燃料集計（UC機とPF機は別実体のため）。機別マッチ・多時刻連続検証・
+  全国ゾーナル断面は次段階
+
 ## 2026-06-11 — **Fable 5** — UC改善⑧: 北陸実態化（オーナー指摘）+ OCCTO実疎通 + 機別図
 
 - **北陸の精査**(`ce9f7ac`, 指摘「発電量が小さすぎ・2000MWもtielineない」→両方正しかった):
