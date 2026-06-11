@@ -273,6 +273,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── main（潮流・トポロジ改修シリーズ） ── -->
 
 
+## 2026-06-12 — **Fable 5** — D1/D2: 詳細化開始 — wires束を定格へ反映（66）
+
+- **D1棚卸し**: 未活用証拠の充足率 — **wires 13%(5,045本)**・circuits59%・cables67%(活用済)・
+  voltage85%。変電所ratingタグは10/6,962で棄却。power=transformerノード/minor_lineは
+  要再fetch(D3/D4へ)
+- **D2実装**: wiresタグ(single/double/quad/sixfold/eightfold+数値・複合は最大)→
+  `n_bundle`としてedge→TransmissionLineへ伝搬(マージ=max・縮約=max)。builderは
+  **クラス典型束(500kV:4/275-187:2/以下:1)との比で定格max_i_kaのみ補正**[0.5,2.5]clamp —
+  インピーダンスはクラス既定維持(典型値に束効果が織込済みのため二重計上回避を明記)
+- 東京: 束証拠つき1,357枝(quad+ 224枝)。流れρ不変(定格はDC/AC流量に無影響) —
+  効果はS1のN-1スクリーニング・loading KPIの精密化に現れる設計。981 passed
+
 ## 2026-06-12 — **Fable 5** — N6: west品質診断 — 「過負荷1631%」は架空定格の錯視、実態は健全（65）
 
 - **診断**(west島AC解): 電圧沈下vm<0.85は**6,998バス中17バスのみ(0.24%)** —

@@ -405,6 +405,20 @@ class PandapowerBuilder:
             line.voltage_kv, f_hz,
             kind="cable" if getattr(line, "is_cable", False) else "overhead")
 
+        # OSM wires evidence refines the RATING only (ampacity scales
+        # with conductors per phase, relative to the class-typical
+        # bundle the reference table already assumes). Impedance stays
+        # at the class value to avoid double-counting bundle effects
+        # already baked into the typicals (ledger 66).
+        bundle = int(getattr(line, "n_bundle", 0) or 0)
+        if ref_params is not None and bundle > 0:
+            typical = (4 if line.voltage_kv >= 400 else
+                       2 if line.voltage_kv >= 180 else 1)
+            factor = max(0.5, min(2.5, bundle / typical))
+            if abs(factor - 1.0) > 1e-9:
+                ref_params = {**ref_params,
+                              "max_i_ka": ref_params["max_i_ka"] * factor}
+
         if ref_params is not None:
             logger.debug(
                 "Line '%s': using reference parameters for %.0f kV @ %d Hz",
