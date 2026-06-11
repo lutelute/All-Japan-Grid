@@ -303,12 +303,15 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
 
     measured = tepco_flow_stats(csv_path, q=q)
 
+    typical = tepco_flow_stats(csv_path, q=0.5)
+
     def _solve(boundary_util=None):
         result = build_and_solve(region, load_demand_config(),
                                  topology="snapped", reconnect=True,
                                  backbone_kv=backbone_kv,
                                  load_spatial=load_spatial,
-                                 boundary_util=boundary_util)
+                                 boundary_util=boundary_util,
+                                 boundary_stats=typical)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
@@ -346,7 +349,6 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
     calib_util = None
     matched_corridors = sorted(c for c in corridors if c in measured)
     if matched_corridors:
-        typical = tepco_flow_stats(csv_path, q=0.5)
         total = sum(typical.get(c, 0.0) for c in matched_corridors)
         from src.powerflow.boundary import (
             TYPICAL_UTILISATION, load_interconnections)
@@ -372,7 +374,7 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
         if float(vn.get(net_dc.line.at[idx, "from_bus"], 0)) < 200.0:
             continue
         p = float(flows.get(idx, 0.0))
-        for part in raw.split(";"):           # OSM compound names
+        for part in raw.replace(" / ", ";").split(";"):  # OSM compound names
             key = _norm(part)
             if key and not _is_railway_only(key, operators):
                 # series segments carry the same flow -> max is the

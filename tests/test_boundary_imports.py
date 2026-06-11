@@ -96,7 +96,7 @@ def test_positional_fallback_clusters_corridors(tmp_path, monkeypatch):
                         lambda *a, **k: (38.3, 140.6))
     s = apply_boundary_imports(net, "tokyo", yaml_path=y,
                                utilisation={"ic_t1": 0.6})
-    assert "position(2 corridors)" in s["ics"]["ic_t1"]["method"]
+    assert "position(2 corridors" in s["ics"]["ic_t1"]["method"]  # equal/measured-weighted variants
     assert len(net.sgen) == 2
     assert sorted(net.sgen["p_mw"]) == pytest.approx([300.0, 300.0])
 

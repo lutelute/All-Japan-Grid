@@ -4,8 +4,8 @@
  "load_spatial": "none",
  "quantile": 0.95,
  "n_measured_lines": 179,
- "n_model_named_lines": 192,
- "n_matched": 55,
+ "n_model_named_lines": 195,
+ "n_matched": 59,
  "boundary_corridors_excluded": [
   "南いわき幹線",
   "新いわき線"
@@ -13,12 +13,12 @@
  "boundary_calibration": {
   "ic_002": 0.572972972972973
  },
- "spearman_rho": 0.718,
- "spearman_p": 6.74e-10,
- "median_model_over_measured": 0.78,
- "interior_spearman_rho": 0.718,
- "interior_spearman_p": 1.45e-09,
- "interior_median_model_over_measured": 0.78,
+ "spearman_rho": 0.705,
+ "spearman_p": 4.49e-10,
+ "median_model_over_measured": 0.8,
+ "interior_spearman_rho": 0.696,
+ "interior_spearman_p": 1.84e-09,
+ "interior_median_model_over_measured": 0.8,
  "top_mismatches": [
   {
    "line": "北千葉線",
@@ -28,32 +28,27 @@
   {
    "line": "東京東線",
    "measured_p95_mw": 550.0,
-   "model_dc_mw": 2565.0
+   "model_dc_mw": 2575.0
   },
   {
    "line": "東京北線",
    "measured_p95_mw": 600.0,
-   "model_dc_mw": 2599.0
-  },
-  {
-   "line": "新栃木線",
-   "measured_p95_mw": 4090.0,
-   "model_dc_mw": 2106.0
+   "model_dc_mw": 2611.0
   },
   {
    "line": "港北線",
    "measured_p95_mw": 2420.0,
-   "model_dc_mw": 536.0
+   "model_dc_mw": 532.0
   },
   {
    "line": "新京葉線",
    "measured_p95_mw": 4910.0,
-   "model_dc_mw": 3096.0
+   "model_dc_mw": 3088.0
   },
   {
-   "line": "南狭山線",
-   "measured_p95_mw": 2180.0,
-   "model_dc_mw": 544.0
+   "line": "新栃木線",
+   "measured_p95_mw": 4090.0,
+   "model_dc_mw": 2272.0
   },
   {
    "line": "阿武隈線",
@@ -61,14 +56,19 @@
    "model_dc_mw": 2342.0
   },
   {
-   "line": "新新田線",
-   "measured_p95_mw": 2890.0,
-   "model_dc_mw": 1280.0
-  },
-  {
    "line": "那珂線",
    "measured_p95_mw": 2640.0,
-   "model_dc_mw": 4240.0
+   "model_dc_mw": 4236.0
+  },
+  {
+   "line": "新新田線",
+   "measured_p95_mw": 2890.0,
+   "model_dc_mw": 1363.0
+  },
+  {
+   "line": "東京西線",
+   "measured_p95_mw": 2460.0,
+   "model_dc_mw": 984.0
   }
  ]
 }
