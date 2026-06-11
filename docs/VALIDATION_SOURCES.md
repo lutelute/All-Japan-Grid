@@ -86,8 +86,10 @@ OCCTO共通様式「エリア需給実績」を各TSOが自社サイトで公開
 | TSO | 状態 | URL/パターン |
 |---|---|---|
 | 東京電力PG | **検証済み** | `https://www.tepco.co.jp/forecast/html/images/eria_jukyu_YYYYMM_03.csv` (UTF-8-sig) |
-| 関西送配電 | 要発見 | eria_jukyu系の正確なパス未特定（juyo1_kansai.csvは需要のみ） |
-| 他8社 | 要発見 | 同様式の公開が確認されている（でんき予報配下が通例）— F3で各社特定 |
+| 関西送配電 | F3探索済・未達 | jisseki-latest.json→juyo_06_*.csv=需要のみ。燃料別はJS/別導線(手動ナビ要) |
+| 中部PG | F3探索済・未達 | keito_jisseki_cepco003.csv=需要/総発電/再エネ計のみ(燃料別でない) |
+| 九州送配電 | F3探索済・未達 | area_jyukyu_jisseki_YYYY_QQ.csv形式確認も最新期が非公開パス(頁掲載は~2023) |
+| 他5社 | 未探索 | F3続行時に手動ナビ(でんき予報→公表資料)で特定 |
 
 用途: `ajgrid reconcile`の燃料別dispatch検証（metric=gen_by_fuel:<fuel>としてmeasured_area_statsへ）。
 取得はメタ管理(57方式)に従う。再配布不可・data/external/tso_jukyu/へ。

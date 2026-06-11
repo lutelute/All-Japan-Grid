@@ -273,6 +273,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── main（潮流・トポロジ改修シリーズ） ── -->
 
 
+## 2026-06-12 — **Fable 5** — F3: 西3社の燃料別実績URL探索 — 予測可能パスでは未達（76）
+
+- **探索結果(正直)**: 中部PG=keito_jisseki(需要/総発電/再エネ計のみ・燃料別なし)・
+  関西=jisseki-latest.json→juyo需要ファイルのみ(燃料別はJS導線の先)・
+  九州=四半期形式は確認(area_jyukyu_jisseki_YYYY_QQ)も新しい期が非公開パス
+- **帰結**: 西の燃料別検証計器は未整備のまま → **X2(capacity_bridge採用)の保留継続**。
+  次アプローチ=手動ページナビ or OCCTO系統情報サービス。VALIDATION_SOURCES.md更新
+- 探索はcurl実プローブのみ(推測を事実と書かない)。1078 passed
+
 ## 2026-06-12 — **Fable 5** — W5: OSM編集ターゲット集を公開文書化（75）
 
 - `docs/reports/osm_edit_targets_2026-06-12.md` — 検証計器が**開示データ照合で**特定した
