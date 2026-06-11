@@ -58,7 +58,8 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 - [x] F1 所在調査(60): **東電検証済み**(`eria_jukyu_YYYYMM_03.csv`・燃料別フル列・UTF-8-sig)・様式はOCCTO共通と確定。関西等9社の正確なURLはF3の発見課題に純化。VALIDATION_SOURCES.md台帳化
 - [x] F2(68): 東電12ヶ月×13燃料系列をDB搭載(curl必須・多metricローダバグ修正込み)。gas14,652/coal5,646 MW等・nuclear0=実態一致
 - [ ] F3 全社展開(形式差異は正直に記録、取れない社はスキップ理由を台帳へ)
-- [ ] F4 reconcile拡張: モデルの燃料別dispatch vs 実績帯(帯判定)→LINE配信
+- [x] F4(69): `--solve-region`実装・東京初検証 — **coal/hydro過大・oil/wind過小**をデータで特定(gas/solar/IC/nuclearは帯内)
+- [ ] F6 dispatch較正: F4ターゲット4件のCF/メリット調整をA/B(ρ退行ガード付き)で適用
 - [ ] F5 UC検証導線: UC時系列(燃料別)を同じ帯判定に通すサンプルを UC_HANDOFF.md に追記
 
 ## 夜間強行軍モード（ユーザー指示 2026-06-12 02時「一晩自己ループをかけまくって誰も到達できないところまで。ただし再現性を崩すな」）

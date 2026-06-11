@@ -44,7 +44,37 @@ def _band(value, q50, p95):
     return ">p95"
 
 
-def reconcile(db_path: str = "data/grid.db", uc_csv: str | None = None) -> dict:
+_MODEL_FUEL = {"gas": "gas", "lng": "gas", "coal": "coal", "oil": "oil",
+               "hydro": "hydro", "nuclear": "nuclear", "solar": "solar",
+               "wind": "wind", "geothermal": "geothermal",
+               "biomass": "biomass", "pumped": "pumped"}
+
+
+def dispatch_by_fuel(region: str) -> dict:
+    """Solve the region's full model and aggregate dispatch by fuel."""
+    from src.powerflow.load_estimator import load_demand_config
+    from src.powerflow.pipeline import build_and_solve
+
+    res = build_and_solve(region, load_demand_config(), topology="snapped",
+                          reconnect=True, backbone_kv=0.0)
+    net = res[0]
+    out: dict = {}
+    g = net.gen[net.gen["in_service"]]
+    for t, grp in g.groupby(g["type"].fillna("unknown").str.split(";").str[0]):
+        fuel = _MODEL_FUEL.get(str(t).lower())
+        if fuel:
+            out[fuel] = out.get(fuel, 0.0) + float(grp["p_mw"].sum())
+    # boundary injections approximate the interconnector draw
+    sg = net.sgen[net.sgen["in_service"]] if len(net.sgen) else None
+    if sg is not None:
+        b = sg[sg["name"].astype(str).str.startswith("boundary_")]
+        if len(b):
+            out["interconnect"] = float(b["p_mw"].sum())
+    return out
+
+
+def reconcile(db_path: str = "data/grid.db", uc_csv: str | None = None,
+              solve_region: str | None = None) -> dict:
     from src.db.calibration import load_measured_area_stats
     from src.powerflow.boundary import (
         MEASURED_UTILISATION,
@@ -85,6 +115,27 @@ def reconcile(db_path: str = "data/grid.db", uc_csv: str | None = None) -> dict:
         "source": "db" if db_util else "hardcoded_fallback",
         "values": db_util or dict(MEASURED_UTILISATION),
     }
+
+    if solve_region:
+        area = AREA_OF_REGION.get(solve_region, solve_region)
+        fuels = load_measured_area_stats(db_path) or {}
+        disp = dispatch_by_fuel(solve_region)
+        checks = []
+        for fuel, mw in sorted(disp.items(), key=lambda kv: -kv[1]):
+            s = fuels.get((area, f"gen_by_fuel:{fuel}"))
+            if not s:
+                checks.append({"fuel": fuel, "model_mw": round(mw, 0),
+                               "verdict": "no_reference"})
+                continue
+            checks.append({"fuel": fuel, "model_mw": round(mw, 0),
+                           "meas_q50_mw": round(s["q50"], 0),
+                           "meas_p95_mw": round(s["p95"], 0),
+                           "verdict": _band(mw, s["q50"], s["p95"])})
+        out["dispatch_checks"] = {"region": solve_region, "rows": checks,
+                                  "note": ("model = one synthetic snapshot at "
+                                           "peak x LF vs measured annual "
+                                           "q50..p95 band — judge ordering "
+                                           "and band, not exact MW")}
 
     if uc_csv:
         import csv as _csv
@@ -131,6 +182,14 @@ def render(m: dict) -> str:
     bu = m["boundary_utilisation"]
     vals = "  ".join(f"{k}={v:+.2f}" for k, v in sorted(bu["values"].items()))
     lines.append(f"  boundary util [{bu['source']}]: {vals}")
+    dc = m.get("dispatch_checks")
+    if dc:
+        lines.append(f"  fuel dispatch ({dc['region']} model vs measured band):")
+        for r in dc["rows"]:
+            ref = (f" (q50 {r['meas_q50_mw']:,.0f} / p95 {r['meas_p95_mw']:,.0f})"
+                   if "meas_q50_mw" in r else "")
+            lines.append(f"    {r['fuel']:12} {r['model_mw']:>8,.0f} MW "
+                         f"-> {r['verdict']}{ref}")
     for c in m.get("uc_checks", []):
         lines.append(f"  UC {c['area']}/{c['metric']}: {c['value_mw']:,.0f} MW "
                      f"-> {c['verdict']}"
@@ -144,9 +203,13 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--db", default="data/grid.db")
     ap.add_argument("--uc-csv", help="external UC results: area,metric,value_mw")
+    ap.add_argument("--solve-region",
+                    help="solve this region and band-check its per-fuel "
+                         "dispatch against gen_by_fuel:* actuals (F4)")
     ap.add_argument("--json")
     args = ap.parse_args(argv)
-    m = reconcile(args.db, uc_csv=args.uc_csv)
+    m = reconcile(args.db, uc_csv=args.uc_csv,
+                  solve_region=args.solve_region)
     print(render(m))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as f:

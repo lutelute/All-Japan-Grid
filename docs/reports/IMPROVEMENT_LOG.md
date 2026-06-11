@@ -273,6 +273,19 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── main（潮流・トポロジ改修シリーズ） ── -->
 
 
+## 2026-06-12 — **Fable 5** — F4: 燃料別dispatch検証が稼働 — 石炭/水力過大・石油/風力過小を特定（69）
+
+- **実装**: `ajgrid reconcile --solve-region tokyo` — フル解のgen typeを燃料へ正規化集計し
+  DB実測帯(gen_by_fuel:*)で帯判定。境界注入=interconnectとして比較。
+  注記明記: モデル=ピーク×LFの単一断面 vs 実測=通年帯 → 帯と順序で判断
+- **初検証(東京)**: 帯内=gas 15,788(帯14.7-25.0GW)・solar 9,532・interconnect 4,780・
+  nuclear 1,100(帯0-1,317=窓内の実稼働と整合)。**>p95: coal 10,014(p95 7,716)・
+  hydro 4,387(p95 1,984)** / **<q50: oil 0(q50 453)・wind 3・biomass 352** —
+  メリットオーダーのCF仮定(石炭・水力高すぎ/石油ゼロ扱い)の**実測較正ターゲット4件**が
+  初めて数字で確定
+- dispatch較正(CF調整)はρへのA/B必須のため次項目化(F6)。1078 passed・
+  スコアカード: reconcile_fuel_tokyo_2026-06-12.json
+
 ## 2026-06-12 — **Fable 5** — F2: 東電燃料別実績をDB搭載 — 通年12ヶ月・13系列（68）
 
 - **取得**: eria_jukyu 2025-05〜2026-04の12ヶ月をcurl取得(urllibはTLS指紋系403 →
