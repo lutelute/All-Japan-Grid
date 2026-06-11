@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — 較正のDB化: measured_line_stats・--from-dbが計器を完全再現（㉟）
+
+- **スキーマ**: `measured_line_stats`(region,line_key,kv_floor,source PK / q50,p95,window) —
+  開示CSVは再配布不可のまま、**保持してよい導出集計だけ**をDBの資産に(出典・窓つき)
+- **書き込み**: `scripts/db/calibrate.py` — 帯割当はmatcherと同一のtrunk-first。
+  実行: 東京**705回廊**(trunk171/154帯59/66帯475)・窓=2024-04-01..2025-03-31通年
+- **読み出し2系統**: (a) pipelineが境界回廊重み(q50)をDBから自動読み
+  (calibrate済DBがあるときだけ。無ければ等分=従来どおり、地域非対応も従来どおり)
+  (b) validator `--flows --from-db` — **CSV直読みと全8ヘッドライン指標が完全一致**
+  (ρ4種+n4種SAME)を実測確認。フェイルソフト(DB/行欠如→None→CSVfallback)をテストでpin
+- 意義: 「DBで機械的に更新できる仕組み」(ユーザー目標)の較正版 — 開示更新は
+  fetch→calibrate→同じ物差し、の3手で完結。965 passed
+- 運転票整理: M2の地域別品質KPI台帳化はM4(忠実度報告)へ移動 — **次はM3末端オフテイク(本丸)**
+
 ## 2026-06-11 — **Fable 5** — sweepに3層ρ統合: ρ退行が標準レポートで見える化（㉞・M1完了）
 
 - **統合**: `topology_metrics`に`external_flow_metrics()`+`--flows`フラグ — 開示CSVがローカルに

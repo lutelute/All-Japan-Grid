@@ -19,17 +19,17 @@
 - [x] sweepレポートに3層ρを統合(㉞): `ajgrid validate --topology tokyo --solve --flows` → external_flowsレベル(render行+`--baseline`差分でρ退行検出)。CSV不在時は黙ってスキップ(CI安全)。0.473を再現確認
 
 ## M2 DB整備（較正の一級市民化）
-- [ ] `scripts/db/calibrate.py`: measured_line_stats テーブル(line_key,kv_class,q50,p95,window,source) — tepco/occto集計をDBへ。validator/boundaryをDB読み対応(ファイル直読みはfallback)
-- [ ] 66kV層の品質KPI(電圧タグ率・接続)を地域別にdocs/reports台帳化
+- [x] `scripts/db/calibrate.py`(㉟): measured_line_stats(region,line_key,kv_floor,source PK + q50/p95/window) — 東京705回廊(trunk171/154帯59/66帯475, FY2024通年)をDB化。pipelineは境界重みをDB自動読み(無ければ従来)、validatorは`--flows --from-db`でCSV無しに**全8指標を完全再現**確認済
 
 ## M3 需要の地理配置（本丸 — 154kVが集約層: 66kV実測オフテイクは154/66変換点に集まりρ154に直結）
-- [ ] **末端オフテイク抽出**: 県別66kV CSVで「行き止まり変電所」(線列が1グループのみ)の流入中央値=実測オフテイク → {変電所:MW}辞書
+- [ ] **末端オフテイク抽出**: 県別66kV CSVで「行き止まり変電所」(線列が1グループのみ)の流入中央値=実測オフテイク → {変電所:MW}辞書(DBの calibrate に同居も検討)
 - [ ] `estimate_loads(measured_bus_loads=)`: 名前一致バスへ実測需要を配置、残差を従来則で配分
 - [ ] 計測: 154/66 ρ変化を記録(これが最初の大物)
 
 ## M4 下位網トポロジ忠実度
 - [ ] 66kV attachment recall改善(位置タイア・施設名ズレ対策の66kV版)
 - [ ] 放射構造の検証: モデルの66kV放射端集合 vs 実測末端集合の一致率
+- [ ] 66kV層の品質KPI(電圧タグ率・接続)を地域別にdocs/reports台帳化(M2から移動: 忠実度報告の一部として)
 
 ## M5 電気・運用
 - [ ] 66kVのR/X: ケーブル/架空の地域ヒューリスティック(都区部=ケーブル優位)検討

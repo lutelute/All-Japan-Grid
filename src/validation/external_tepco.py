@@ -406,7 +406,8 @@ def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
 
 def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
-                load_spatial: str = "none", csv154=None, csv66=None) -> dict:
+                load_spatial: str = "none", csv154=None, csv66=None,
+                stats_db: str | None = None) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -425,16 +426,29 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
     # the 154 kV files cover the 140-200 kV layer — matching is restricted
     # within each class band so same-named lines at other voltages stay
     # name collisions instead of becoming false pairs.
-    measured_cls = {k: (v, 200.0) for k, v in tepco_flow_stats(csv_path, q=q).items()}
-    if csv154:
-        for k, v in tepco_flow_stats(csv154, q=q).items():
-            measured_cls.setdefault(k, (v, 140.0))
-    if csv66:
-        for k, v in tepco_flow_stats(csv66, q=q).items():
-            measured_cls.setdefault(k, (v, 60.0))
-    measured = {k: v for k, (v, _c) in measured_cls.items()}
+    if stats_db:
+        # calibrated aggregates from measured_line_stats (q is pinned to
+        # the stored quantiles: p95 measured set, q50 boundary medians)
+        from src.db.calibration import load_measured_line_stats
 
-    typical = tepco_flow_stats(csv_path, q=0.5)
+        rows = load_measured_line_stats(stats_db, region)
+        if not rows:
+            raise FileNotFoundError(
+                f"no measured_line_stats for {region} in {stats_db} — "
+                f"run scripts/db/calibrate.py first")
+        measured_cls = {k: (v["p95"], v["kv_floor"]) for k, v in rows.items()}
+        typical = {k: v["q50"] for k, v in rows.items()}
+    else:
+        measured_cls = {k: (v, 200.0)
+                        for k, v in tepco_flow_stats(csv_path, q=q).items()}
+        if csv154:
+            for k, v in tepco_flow_stats(csv154, q=q).items():
+                measured_cls.setdefault(k, (v, 140.0))
+        if csv66:
+            for k, v in tepco_flow_stats(csv66, q=q).items():
+                measured_cls.setdefault(k, (v, 60.0))
+        typical = tepco_flow_stats(csv_path, q=0.5)
+    measured = {k: v for k, (v, _c) in measured_cls.items()}
 
     def _solve(boundary_util=None):
         result = build_and_solve(region, load_demand_config(),
@@ -637,10 +651,15 @@ def main(argv=None):
     ap.add_argument("--csv154", default="data/external/tepco/jisseki_154kV0*.csv",
                     help="glob of the 154 kV flow CSVs (extends the measured "
                          "set; pass '' to disable)")
+    ap.add_argument("--from-db", nargs="?", const="data/grid.db", default=None,
+                    metavar="DB", dest="from_db",
+                    help="--flows reads calibrated aggregates from the DB's "
+                         "measured_line_stats (scripts/db/calibrate.py) "
+                         "instead of parsing the CSVs")
     ap.add_argument("--backbone", type=float, default=154.0)
     args = ap.parse_args(argv)
 
-    if not os.path.exists(args.csv):
+    if not (args.flows and args.from_db) and not os.path.exists(args.csv):
         print(f"no CSV at {args.csv} — fetch it first (see module docstring)")
         return 2
     if args.flows:
@@ -648,7 +667,7 @@ def main(argv=None):
         csv154 = args.csv154 if args.csv154 and _g.glob(args.csv154) else None
         csv66 = args.csv66 if args.csv66 and _g.glob(args.csv66) else None
         m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
-                        csv154=csv154, csv66=csv66)
+                        csv154=csv154, csv66=csv66, stats_db=args.from_db)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:

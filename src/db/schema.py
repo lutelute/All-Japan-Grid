@@ -362,6 +362,48 @@ class Enrichment(Base):
         )
 
 
+class MeasuredLineStat(Base):
+    """One measured-flow aggregate per disclosure corridor — the
+    calibration layer (written only by ``scripts/db/calibrate.py``).
+
+    The raw disclosure CSVs (TEPCO jisseki etc.) are NOT redistributable
+    and live outside git in ``data/external/``; the DB keeps only the
+    derived per-corridor aggregates with source citation. Consumers
+    (boundary injection, the flow validator's ``--from-db`` mode) read
+    these rows first and fall back to parsing the CSVs.
+
+    Attributes:
+        region: Model region the disclosure covers (``tokyo``).
+        line_key: Normalised line name (``external_tepco._norm`` of the
+            disclosure column) — the same key the flow matcher uses.
+        kv_floor: Class-band floor in kV (200 trunk / 140 / 60); the
+            band assignment mirrors the matcher's trunk-first rule.
+        source: Disclosure family (``tepco_jisseki``).
+        q50_mw / p95_mw: Median and 0.95 quantile of |flow| over the
+            window (circuit groups summed per timestamp, larger line
+            end taken — see ``external_tepco.tepco_flow_stats``).
+        window: Data window as ``<first>..<last>`` timestamps.
+        updated_at: ISO timestamp of the calibrate run.
+    """
+
+    __tablename__ = "measured_line_stats"
+
+    region: Mapped[str] = mapped_column(String(32), primary_key=True)
+    line_key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    kv_floor: Mapped[float] = mapped_column(Float, primary_key=True)
+    source: Mapped[str] = mapped_column(String(32), primary_key=True)
+    q50_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    p95_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    window: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"MeasuredLineStat({self.region}/{self.line_key}"
+            f"@{self.kv_floor:g}kV q50={self.q50_mw:.0f})"
+        )
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 

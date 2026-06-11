@@ -144,6 +144,12 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     boundary_info = None
     if boundary_imports:
         from src.powerflow.boundary import apply_boundary_imports
+        if boundary_stats is None:
+            # DB-first: corridor medians from measured_line_stats when a
+            # calibrated DB is present (scripts/db/calibrate.py); regions
+            # without calibration get None -> equal-split, as before.
+            from src.db.calibration import boundary_stats_from_db
+            boundary_stats = boundary_stats_from_db(region=region)
         boundary_info = apply_boundary_imports(net, region,
                                                utilisation=boundary_util,
                                                corridor_stats=boundary_stats)

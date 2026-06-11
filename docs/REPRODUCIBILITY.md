@@ -56,6 +56,8 @@ curl -A "Mozilla/5.0" -o /tmp/P03-13.zip https://nlftp.mlit.go.jp/ksj/gml/data/P
 PYTHONPATH=. python scripts/db/enrich.py --p03 data/external/P03-13/P03-13-g.xml
 # OCCTO 公表API（30分値・保持~14ヶ月）
 python scripts/fetch_occto_kohyo.py --from 2025-04-01 --to 2026-06-09
+# 開示集計のDB化（境界回廊の実測重み付け & --from-db 検証が有効になる）
+PYTHONPATH=. python scripts/db/calibrate.py   # → measured_line_stats(回廊別q50/p95)
 ```
 
 ## 5. 外部検証（誠実指標）
@@ -63,8 +65,10 @@ python scripts/fetch_occto_kohyo.py --from 2025-04-01 --to 2026-06-09
 ```bash
 python -m src.validation.external_match kansai \
     --csv data/external/kansai_td/154kv_more_line.csv      # 名前recall等
-python -m src.validation.external_tepco                    # 接続ペアrecall ~55%
-python -m src.validation.external_tepco --flows            # 内部Spearman ρ ≈ 0.72
+python -m src.validation.external_tepco                    # 帯別接続recall(trunk/154/66)
+python -m src.validation.external_tepco --flows --backbone 0   # 3層内部ρ(フルモデル)
+python -m src.validation.external_tepco --flows --backbone 0 --from-db
+                                # ↑calibrate済DBから同じ物差しを再現(CSV直読み不要)
 ```
 
 注意: 外部CSVは更新され続けるため、recall/ρは取得日でわずかに変動する。
