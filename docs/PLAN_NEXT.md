@@ -40,6 +40,13 @@
 - [ ] D4 配電層パイロット: minor_line(6.6-22kV)の1地域取得→規模・品質評価→全国展開判断
 - [ ] D5 22-33kV既存データの取り込み判定: min_voltage_kv引き下げの効果と副作用をA/B
 
+## X: UC合流の活用判断（ユーザー指示 04時「こっちの方がいいデータ・進んでいるところあれば都度判断」）
+
+PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC側較正のPF注入・8760h年間UC・HiGHS・zonal LMP)・`src/dataspace/`(契約/キャッシュ/来歴つきデータ層・**OCCTOライブコネクタ**)・uc_runs(migration v4)・FY2025実測需要プロファイル。
+- [ ] X1 重複と優位の判定: dataspaceのOCCTOコネクタ vs 我がfetch_occto_kohyo(57方式メタ)・UCのFY2025実測需要プロファイル vs measured_bus_loads(p95断面) — **時系列プロファイルは断面より上位互換の可能性大** → 採用判断
+- [ ] X2 capacity_bridgeのPF側評価: UC側較正のPF注入が我々のρ/ACにどう効くかA/B
+- [ ] X3 燃料別検証の合流: F4(燃料別reconcile)はUCのdispatch結果と同じ帯判定に通す(UC_HANDOFF入口の実演)
+
 ## S: シミュレーション重点（同指示「シミュレーション・検証を重点的に」）
 
 - [ ] S1 国家N-1スクリーニング: east/west島で上位回廊のN-1(1回線停止)→過負荷波及・島分裂の有無を全数計測→docs/reports台帳+LINE
