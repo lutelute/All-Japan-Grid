@@ -76,3 +76,18 @@
    **負の結果**: ⑤のdegree空間配分はρ改善なし → デフォルトflat維持が検証で確定。
    OCCTO 30分値での他エリア展開は今後
 5. OCCTO 連系線実績 vs 全国ゾーナルモデル（`ajgrid solve national` で実行可能に）
+
+
+## TSO別エリア需給実績（燃料別・F1調査 2026-06-12）
+
+OCCTO共通様式「エリア需給実績」を各TSOが自社サイトで公開（30分値・月次CSV・燃料別:
+原子力/火力LNG・石炭・石油・他/水力/地熱/バイオ/太陽光実績+抑制/風力実績+抑制/揚水/蓄電池/連系線）。
+
+| TSO | 状態 | URL/パターン |
+|---|---|---|
+| 東京電力PG | **検証済み** | `https://www.tepco.co.jp/forecast/html/images/eria_jukyu_YYYYMM_03.csv` (UTF-8-sig) |
+| 関西送配電 | 要発見 | eria_jukyu系の正確なパス未特定（juyo1_kansai.csvは需要のみ） |
+| 他8社 | 要発見 | 同様式の公開が確認されている（でんき予報配下が通例）— F3で各社特定 |
+
+用途: `ajgrid reconcile`の燃料別dispatch検証（metric=gen_by_fuel:<fuel>としてmeasured_area_statsへ）。
+取得はメタ管理(57方式)に従う。再配布不可・data/external/tso_jukyu/へ。

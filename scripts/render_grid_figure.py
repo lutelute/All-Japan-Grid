@@ -44,6 +44,9 @@ def render(region: str, out: str, kpi_json: str | None = None) -> str:
 
     from src.powerflow.snapped_topology import build_network_snapped
 
+    if region == "national":
+        return render_national(out)
+
     net = build_network_snapped(region)
     if net is None:
         raise SystemExit(f"no data for region {region}")
@@ -103,6 +106,66 @@ def render(region: str, out: str, kpi_json: str | None = None) -> str:
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
     ax.legend(handles=handles, loc="lower right", fontsize=8, frameon=True)
 
+    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+    fig.savefig(out, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    print(f"figure -> {out}")
+    return out
+
+
+def render_national(out: str) -> str:
+    """One-Japan figure: all 10 regions on real routes (the network that
+    now solves AC on all four synchronous islands — ledger 63)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+
+    from src.powerflow.snapped_topology import build_network_snapped
+    from src.regions import REGIONS
+
+    fig, ax = plt.subplots(figsize=(13, 15), dpi=150)
+    n_branch = n_sub = 0
+    for region in REGIONS:
+        net = build_network_snapped(region)
+        if net is None:
+            continue
+        for ln in net.transmission_lines:
+            if "_xfmr_" in ln.id or not ln.coordinates or len(ln.coordinates) < 2:
+                continue
+            kv = float(ln.voltage_kv or 0)
+            c, w, z = _style(kv)
+            xs = [lon for (_la, lon) in ln.coordinates]
+            ys = [la for (la, _lo) in ln.coordinates]
+            dash = (0, (2.5, 1.5)) if getattr(ln, "is_cable", False) else "solid"
+            ax.plot(xs, ys, color=c, linewidth=w * 0.8, zorder=z, alpha=0.8,
+                    linestyle=dash, solid_capstyle="round")
+            n_branch += 1
+        for s in net.substations:
+            if "_jct_" in s.id:
+                continue
+            kv = float(s.voltage_kv or 0)
+            c, _w, z = _style(kv)
+            ax.plot(s.longitude, s.latitude, "o",
+                    ms=1.6 if kv >= 154 else 0.8, color=c,
+                    mec="white", mew=0.15, zorder=z + 3)
+            n_sub += 1
+    ax.set_aspect(1.0 / 0.82)
+    ax.set_xlim(127.0, 146.2)
+    ax.set_ylim(26.0, 45.8)
+    ax.set_axis_off()
+    ax.set_title(
+        "All-Japan-Grid — 日本一体の潮流計算可能系統 (全国10地域)\n"
+        f"branches {n_branch:,} / substations {n_sub:,} | "
+        "同期4島 (北海道・東50Hz・西60Hz・沖縄) すべて AC収束 (2026-06-12 台帳63)\n"
+        "vm: 北海道[0.86,1.03] 東[0.89,1.06] 西[0.66,1.05] 沖縄[0.96,1.01]",
+        fontsize=12, family="Hiragino Sans", loc="left")
+    handles = [Line2D([], [], color=c, lw=max(w * 2, 1.2),
+                      label=f"{mn}kV+" if mn else "unknown")
+               for mn, c, w, _z in CLASS_STYLE]
+    handles.append(Line2D([], [], color="#334455", lw=1.2,
+                          linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
+    ax.legend(handles=handles, loc="lower right", fontsize=9, frameon=True)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     fig.savefig(out, bbox_inches="tight", facecolor="white")
     plt.close(fig)

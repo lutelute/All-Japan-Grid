@@ -76,6 +76,48 @@ def calibrate_rows(csv, csv154=None, csv66=None) -> list[dict]:
     return list(rows.values())
 
 
+def occto_area_rows(occto_dir: str) -> list[dict]:
+    """OCCTO kohyo_02 (area demand) + kohyo_04 (IC planned flow) ->
+    measured_area_stats rows. Signs keep OCCTO's forward convention."""
+    import glob as _g
+
+    import pandas as pd
+
+    rows: list[dict] = []
+    dem = []
+    for p_ in sorted(_g.glob(os.path.join(occto_dir, "kohyo_02_*.csv"))):
+        df = pd.read_csv(p_, skiprows=1, encoding="utf-8-sig")
+        dem.append(df[["対象年月日", "エリア名", "エリア需要(MW)"]])
+    if dem:
+        d = pd.concat(dem)
+        d["v"] = pd.to_numeric(d["エリア需要(MW)"], errors="coerce")
+        win = f'{d["対象年月日"].min()}..{d["対象年月日"].max()}'
+        for area, g in d.groupby("エリア名"):
+            v = g["v"].dropna()
+            if len(v) < 100:
+                continue
+            rows.append({"area": str(area), "metric": "demand_mw",
+                         "q50_mw": float(v.median()),
+                         "p95_mw": float(v.quantile(0.95)), "window": win})
+    ics = []
+    for p_ in sorted(_g.glob(os.path.join(occto_dir, "kohyo_04_*.csv"))):
+        df = pd.read_csv(p_, skiprows=1, encoding="utf-8-sig")
+        ics.append(df[["対象年月日", "連系線名", "順方向計画潮流(MW)"]])
+    if ics:
+        d = pd.concat(ics)
+        d["v"] = pd.to_numeric(d["順方向計画潮流(MW)"], errors="coerce")
+        win = f'{d["対象年月日"].min()}..{d["対象年月日"].max()}'
+        for name, g in d.groupby("連系線名"):
+            v = g["v"].dropna()
+            if len(v) < 100:
+                continue
+            rows.append({"area": str(name), "metric": "ic_flow_mw",
+                         "q50_mw": float(v.abs().median()),
+                         "p95_mw": float(v.abs().quantile(0.95)),
+                         "signed_q50_mw": float(v.median()), "window": win})
+    return rows
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -85,6 +127,8 @@ def main(argv=None) -> int:
     ap.add_argument("--csv154", default="data/external/tepco/jisseki_154kV0*.csv")
     ap.add_argument("--csv66",
                     default="data/external/tepco/jisseki_[cfgikmnsty]*.csv")
+    ap.add_argument("--occto", default="data/external/occto",
+                    help="dir of kohyo_02/_04 CSVs ('' to skip)")
     args = ap.parse_args(argv)
 
     if not os.path.exists(args.csv):
@@ -120,6 +164,16 @@ def main(argv=None) -> int:
         print(f"{args.region}: {nl} measured bus loads -> {args.db} "
               f"(busbar {len(busbar_keys)} + terminal "
               f"{nl - len(busbar_keys)}; q50 total {tot:,.0f} MW)")
+
+    # OCCTO area demand + interconnector flows (M10 reconciliation layer)
+    if args.occto and os.path.isdir(args.occto):
+        rows2 = occto_area_rows(args.occto)
+        if rows2:
+            from src.db.calibration import upsert_measured_area_stats
+            na = upsert_measured_area_stats(db, rows2)
+            ics = sum(1 for r in rows2 if r["metric"] == "ic_flow_mw")
+            print(f"occto: {na} area stats -> {args.db} "
+                  f"({na - ics} demand areas + {ics} interconnectors)")
     return 0
 
 

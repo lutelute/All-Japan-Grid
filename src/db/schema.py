@@ -569,6 +569,31 @@ class UCRun(Base):
         )
 
 
+class MeasuredAreaStat(Base):
+    """One OCCTO-published area/interconnector aggregate — written only
+    by ``scripts/db/calibrate.py --occto`` (M10 reconciliation layer).
+
+    ``metric``: ``demand_mw`` (area demand) or ``ic_flow_mw`` (planned
+    interconnector flow; ``signed_q50_mw`` keeps the OCCTO forward-
+    direction sign). Raw CSVs stay in data/external/occto (gitignored,
+    ~14-month API retention); the DB keeps citable aggregates.
+    """
+
+    __tablename__ = "measured_area_stats"
+
+    area: Mapped[str] = mapped_column(String(64), primary_key=True)
+    metric: Mapped[str] = mapped_column(String(32), primary_key=True)
+    source: Mapped[str] = mapped_column(String(32), primary_key=True)
+    q50_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    p95_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    signed_q50_mw: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    window: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return f"MeasuredAreaStat({self.area}/{self.metric} q50={self.q50_mw:.0f})"
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 
