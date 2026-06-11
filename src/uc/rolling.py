@@ -120,6 +120,24 @@ def _update_history(
     return new_hist
 
 
+def _slice_maintenance(
+    windows: List[tuple],
+    w0: int,
+    w1: int,
+) -> List[tuple]:
+    """年間絶対時間のメンテ窓を rolling 窓ローカル index に変換する。
+
+    ``add_maintenance_constraints`` は窓ローカルの timestep と比較するため、
+    各窓の構築時に (start_h, end_h) を [w0, w1) と交差・平行移動する。
+    """
+    out = []
+    for s, e in windows:
+        ls, le = max(int(s) - w0, 0), min(int(e) - w0, w1 - w0)
+        if ls < le:
+            out.append((ls, le))
+    return out
+
+
 def _shift_schedules(
     schedules: List[GeneratorSchedule],
     shift: int,
@@ -218,11 +236,16 @@ def solve_rolling_uc(
         w1 = min(w0 + cfg.window_h, T)
         n_commit = min(cfg.step_h, T - w0)
 
-        gens_w = [
-            replace(g, initial_soc_fraction=soc_state[g.id])
-            if g.id in soc_state else g
-            for g in generators
-        ]
+        gens_w = []
+        for g in generators:
+            kw = {}
+            if g.id in soc_state:
+                kw["initial_soc_fraction"] = soc_state[g.id]
+            if g.maintenance_windows:
+                kw["maintenance_windows"] = _slice_maintenance(
+                    g.maintenance_windows, w0, w1,
+                )
+            gens_w.append(replace(g, **kw) if kw else g)
         params = UCParameters(
             generators=gens_w,
             demand=DemandProfile(demands=[float(x) for x in demand[w0:w1]]),

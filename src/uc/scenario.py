@@ -663,6 +663,48 @@ def apply_nuclear_status_reference(
     return out
 
 
+def synthesize_maintenance(
+    gens: list[Generator],
+    config: Optional[UCScenarioConfig] = None,
+) -> list[Generator]:
+    """定期検査・計画停止を決定論的に合成する（年間運用用）。
+
+    シナリオの ``maintenance`` セクション（fuel別duration週・配置候補週）に
+    基づき、対象燃料の各機に年1回の連続停止窓 ``(start_h, end_h)`` を付与する。
+    配置は ``md5(generator_id)`` で候補週から選ぶ — **乱数を使わない**ため
+    同じシナリオ+同じ発電機集合なら常に同じ計画になる（再現性担保）。
+
+    24h断面（ベンチマーク）はメンテ窓（春・秋配置）の外なので影響しない。
+    経済停止はモデル外（正直な残差として開示）。
+    """
+    import hashlib
+
+    config = load_scenario_config(config)
+    spec = (config.raw or {}).get("maintenance")
+    if not spec:
+        return gens
+    weeks = list(spec.get("placement_weeks", []))
+    durations = {k: int(v) for k, v in
+                 (spec.get("duration_weeks_by_fuel") or {}).items()}
+    if not weeks or not durations:
+        return gens
+
+    out = []
+    for g in gens:
+        dur = durations.get(g.fuel_type)
+        if not dur:
+            out.append(g)
+            continue
+        digest = int(hashlib.md5(g.id.encode()).hexdigest(), 16)
+        start_week = weeks[digest % len(weeks)]
+        start_h = start_week * 7 * 24
+        end_h = start_h + dur * 7 * 24
+        out.append(replace(
+            g, maintenance_windows=[(start_h, min(end_h, 8760))],
+        ))
+    return out
+
+
 def build_battery(
     region: str,
     config: Optional[UCScenarioConfig] = None,
@@ -881,6 +923,9 @@ def build_national_scenario(
     ns_path = nuclear_status_path or config.reference_path("nuclear_status")
     if nuclear_status and ns_path and os.path.exists(ns_path):
         gens = apply_nuclear_status_reference(gens, stats, ns_path, config=config)
+    # 定検・計画停止の決定論的合成（maintenanceセクションがある場合のみ。
+    # 24h断面は春秋のメンテ窓外なので影響しない）
+    gens = synthesize_maintenance(gens, config)
     for r in REGIONS:
         gens.append(build_battery(r, config=config))
 

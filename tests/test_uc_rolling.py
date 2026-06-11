@@ -184,3 +184,15 @@ class TestSolveRollingUC:
         res = solve_rolling_uc([g], demand, None, [], cfg, progress=False)
         assert res.is_optimal
         assert len(res.schedules["base"].commitment) == 30
+
+
+class TestSliceMaintenance:
+    def test_absolute_to_window_local(self):
+        from src.uc.rolling import _slice_maintenance
+        # 年間絶対 (2016, 2856) のメンテを各窓ローカルへ
+        win = [(2016, 2856)]
+        assert _slice_maintenance(win, 0, 48) == []            # 窓が手前
+        assert _slice_maintenance(win, 2016, 2064) == [(0, 48)]  # 窓全体がメンテ
+        assert _slice_maintenance(win, 1992, 2040) == [(24, 48)]  # 後半から開始
+        assert _slice_maintenance(win, 2832, 2880) == [(0, 24)]   # 前半で終了
+        assert _slice_maintenance(win, 2880, 2928) == []       # 窓が後ろ

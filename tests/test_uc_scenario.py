@@ -455,3 +455,39 @@ class TestFY2023R2Calibration:
         assert not any("豊前" in n for n in names)      # 廃止 → 除外
         shin_oita = next(g for g in gens if "新大分" in g.name)
         assert shin_oita.capacity_mw == pytest.approx(2295)  # 公称値パッチ
+
+
+class TestSyntheticMaintenance:
+    def test_deterministic_and_in_low_season(self):
+        from src.uc.scenario import load_scenario_config, synthesize_maintenance
+        from src.model.generator import Generator
+        cfg = load_scenario_config("fy2023r2")
+        gens = [
+            Generator(id=f"g{i}", name=f"g{i}", capacity_mw=500,
+                      fuel_type=ft, region="tokyo", fuel_cost_per_mwh=5000)
+            for i, ft in enumerate(["coal", "lng", "nuclear", "oil", "hydro"])
+        ]
+        out1 = synthesize_maintenance(gens, cfg)
+        out2 = synthesize_maintenance(gens, cfg)
+        spec = cfg.raw["maintenance"]
+        weeks = spec["placement_weeks"]
+        durs = spec["duration_weeks_by_fuel"]
+        for g1, g2 in zip(out1, out2):
+            # 決定論: 同一入力 → 同一計画（乱数不使用の再現性担保）
+            assert g1.maintenance_windows == g2.maintenance_windows
+            if g1.fuel_type in durs:
+                (s, e), = g1.maintenance_windows
+                assert (e - s) == durs[g1.fuel_type] * 7 * 24
+                assert (s // (7 * 24)) in weeks  # 春秋の低需要期に配置
+            else:
+                assert g1.maintenance_windows == []  # hydro等は対象外
+
+    def test_24h_snapshot_unaffected(self):
+        # メンテは春秋配置（最早 週12=2016h〜）なので 24h断面 (t<24) に窓が無い
+        from src.uc.scenario import load_scenario_config, synthesize_maintenance
+        from src.model.generator import Generator
+        cfg = load_scenario_config("fy2023r2")
+        g = Generator(id="c1", name="c1", capacity_mw=500, fuel_type="coal",
+                      region="tokyo", fuel_cost_per_mwh=5000)
+        (s, e), = synthesize_maintenance([g], cfg)[0].maintenance_windows
+        assert s >= 24  # add_maintenance_constraints は t<24 に制約を張らない
