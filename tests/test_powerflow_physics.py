@@ -328,6 +328,34 @@ def test_radialize_band_opens_highest_impedance_loop_edge():
     assert nx.is_connected(G.subgraph(b))
 
 
+def test_measured_loads_eponym_corridor_tier():
+    """A measured yard absent from the model by name is placed at the
+    endpoint of its eponymous corridor (塚田線 -> 塚田; ledger 47). An
+    endpoint belonging to ANOTHER measured yard does not qualify."""
+    import json as _json
+
+    net = pp.create_empty_network(f_hz=50)
+    b_src = pp.create_bus(net, vn_kv=66.0, name="下総変電所 66kV", type="b")
+    b_dst = pp.create_bus(net, vn_kv=66.0, name="無名変電所 66kV", type="b")
+    for b, lon in ((b_src, 140.0), (b_dst, 140.05)):
+        net.bus.at[b, "geo"] = _json.dumps(
+            {"type": "Point", "coordinates": [lon, 35.7]})
+    pp.create_line_from_parameters(net, b_src, b_dst, length_km=4.0,
+                                   r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+                                   c_nf_per_km=0.0, max_i_ka=1.0,
+                                   name="塚田線")
+    cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {66: 0.5}}
+    measured = {"下総": {"p95": 40.0}, "塚田": {"p95": 25.0}}
+    estimate_loads(net, "tokyo", demand_config=cfg,
+                   measured_bus_loads=measured)
+    by_name = {net.load.at[i, "name"]: int(net.load.at[i, "bus"])
+               for i in net.load.index
+               if str(net.load.at[i, "name"]).startswith("measured_")}
+    assert by_name["measured_下総"] == b_src          # name tier
+    assert by_name["measured_塚田"] == b_dst          # eponym-corridor tier
+
+
 def test_measured_loads_capped_at_regional_target():
     net = _measured_net()
     cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,

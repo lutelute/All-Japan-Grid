@@ -183,16 +183,57 @@ def _place_measured_loads(net: Any, measured: Dict[str, Any],
         if cur is None or vn < cur[1]:
             candidates[key] = (b, vn)
 
+    # Eponym-corridor tier (user challenge, ledger 47): Japanese line
+    # names carry their destination yard (塚田線 feeds 塚田変電所), so a
+    # measured sub absent from the model BY NAME can still be placed at
+    # the model endpoint of its eponymous in-band corridor — the yard
+    # exists, just named differently/unnamed in OSM. Only endpoints that
+    # don't belong to another measured yard qualify (no stealing).
+    from src.validation.external_tepco import _model_name_keys
+
+    eponym_lines: Dict[str, list] = {}
+    vn_col = net.bus["vn_kv"]
+    for idx in net.line.index:
+        raw = str(net.line.at[idx, "name"] or "")
+        if not raw or raw.startswith("recon_line"):
+            continue
+        fb = int(net.line.at[idx, "from_bus"])
+        if not (50.0 <= float(vn_col.get(fb, 0)) < 140.0):
+            continue
+        for k in _model_name_keys(raw):
+            eponym_lines.setdefault(k, []).append(idx)
+
+    measured_keys = set(measured)
+
+    def _eponym_bus(key: str):
+        cands = []
+        for idx in eponym_lines.get(key + "線", ()):
+            for b in (int(net.line.at[idx, "from_bus"]),
+                      int(net.line.at[idx, "to_bus"])):
+                vn = float(vn_col.get(b, 0))
+                if not (50.0 <= vn < 140.0):
+                    continue
+                bname = _norm(str(net.bus.at[b, "name"] or ""))
+                if bname and bname in measured_keys and bname != key:
+                    continue          # endpoint is another measured yard
+                cands.append((vn, b))
+        return min(cands)[1] if cands else None
+
     rows = []
     for key, v in measured.items():
         if isinstance(v, dict):
             mw = float(v.get(stat) or v.get("q50") or 0.0)
         else:
             mw = float(v)
-        hit = candidates.get(key)
-        if mw <= 0.0 or hit is None:
+        if mw <= 0.0:
             continue
-        rows.append((hit[0], key, mw))
+        hit = candidates.get(key)
+        if hit is not None:
+            rows.append((hit[0], key, mw))
+            continue
+        b = _eponym_bus(key)
+        if b is not None:
+            rows.append((b, key, mw))
     if not rows:
         return 0.0
 

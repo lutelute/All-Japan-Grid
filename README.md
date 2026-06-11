@@ -403,7 +403,7 @@ A measured campaign (ledger ㉛–㊺, `docs/PLAN_66KV.md`) pushed the model to 
 **Why the gates were not reached — a data-bound ceiling, each point evidenced in `docs/reports/IMPROVEMENT_LOG.md` / 未達の理由は手法でなくデータの天井**:
 
 1. **OSM lacks the urban underground network** — 20 of 65 pure-154 kV corridors (central-Tokyo cables) are unmapped, capping the 154 kV instrument at n≈36–45 (ledger ㉝). / 都心地中ケーブル網がOSM未収載
-2. **The disclosure meters lines and busbars at largely disjoint yards** — median measured-endpoint coverage of scored 66 kV corridors is 0%, so even a perfect demand map cannot order half the corridors (ledger ㊲). / 開示の線路計測と母線計測はほぼ別ヤード
+2. **A corridor's flow aggregates several downstream yards** — the line/busbar metering points are linkable (44% of 66 kV corridors connect to a measured destination yard by the eponym rule, 塚田線→塚田; ledger ㊼ correcting ㊲'s overstated 'disjoint yards'), but the corridor typically carries ~2.6× its destination's own demand, so single-yard demand knowledge orders flows only weakly (truth-side ρ≈0.25). / 回廊流量は複数下流ヤードの合算（行先1件の需要では順序づけ困難）
 3. **Normally-open switch states are not public** — the 66 kV mesh is operated radially; an impedance-MST proxy measurably did not help (ledger ㊷). / 常開点非公開（プロキシ実験は無効果と実証）
 
 Sub-transmission flows where demand WAS measured reach ρ≈0.19 (vs 0.11 without) — demand knowledge helps, but the structural ceiling sits below the gates until the data above exists (ledger ㊵).
