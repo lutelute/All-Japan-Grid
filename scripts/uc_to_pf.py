@@ -57,6 +57,8 @@ def main() -> int:
                     help="24時刻全断面を検証（UCは解けるがPFで流せない時間帯の特定）")
     ap.add_argument("--full", action="store_true",
                     help="backbone縮約なしのフルモデルで検証")
+    ap.add_argument("--no-bridge", action="store_true",
+                    help="容量橋渡し（UC較正のPF側適用）を無効化（比較用）")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     region = args.region
@@ -106,6 +108,18 @@ def main() -> int:
     if not gate["pass"]:
         print(f"  FAIL島: {gate.get('failing')} — 契約により注入せず終了")
         return 1
+
+    # ── 容量橋渡し: UC側較正(DB)をPF側genへ適用（単一地域は容量補正のみ） ──
+    bridge_rep = None
+    if not args.no_bridge:
+        from src.uc.capacity_bridge import apply_to_net, load_pf_calibration
+        bridge_rep = apply_to_net(net, load_pf_calibration(
+            scenario_id=args.scenario))
+        print(f"  bridge: dedup {bridge_rep['dedup_disabled']}, "
+              f"patched {bridge_rep['patched']}, "
+              f"nuclear {bridge_rep['nuclear_set']}set/"
+              f"{bridge_rep['nuclear_stopped']}stop, "
+              f"Δ{bridge_rep['mw_delta']:+,.0f} MW")
 
     # ── 4./5. 注入 + AC再ソルブ（--all-hours は24断面スイープ） ──
     import copy as _copy
@@ -166,6 +180,7 @@ def main() -> int:
             "scenario": args.scenario,
             "hour": t,
             "all_hours": bool(args.all_hours),
+            "capacity_bridge": not args.no_bridge,
             "model": "full" if args.full else "backbone154",
         },
         "uc": {
@@ -175,6 +190,9 @@ def main() -> int:
             "fuel_mw": {k: round(v, 1) for k, v in snapshot.items()},
         },
         "gate": {"pass": gate["pass"], "cond_max": gate["cond_max"]},
+        "capacity_bridge": (
+            {k: v for k, v in bridge_rep.items() if k != "zone_override"}
+            if bridge_rep else None),
         "pf": {
             "baseline_ac_converged": bool(ac0["converged"]),
             "all_converged": n_fail == 0,

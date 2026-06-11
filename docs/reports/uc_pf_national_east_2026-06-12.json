@@ -1,9 +1,10 @@
 {
   "meta": {
     "date": "2026-06-12",
-    "git_head": "07d039c",
+    "git_head": "a459d13",
     "scenario": "fy2023r2",
-    "reactive": 0.6
+    "reactive": 0.6,
+    "capacity_bridge": true
   },
   "islands": {
     "east": {
@@ -14,6 +15,43 @@
       "hour": 17,
       "net_demand_mw": 59353.0,
       "n_buses": 5024,
+      "capacity_bridge": {
+        "dedup_disabled": 6,
+        "patched": 3,
+        "retired": 0,
+        "fuel_fixed": 0,
+        "nuclear_set": 0,
+        "nuclear_stopped": 6,
+        "mw_delta": -13833.0,
+        "unmatched_patches": [
+          "Gushikawa Power",
+          "Ishikawa J-Power",
+          "Orix Hibikinada",
+          "シグマパワー有明三池",
+          "七尾大田",
+          "下松火力",
+          "九州電力 松浦火力",
+          "吉の浦火力",
+          "富山新港",
+          "川内発電所",
+          "敦賀火力",
+          "新大分火力",
+          "新小倉火力",
+          "松島火力",
+          "橘湾火力",
+          "池島町長崎市発電所",
+          "牧港火力",
+          "相浦火力",
+          "石川火力",
+          "糸魚川発電所",
+          "苅田火力発電所",
+          "苓北",
+          "豊前火力",
+          "金武火力",
+          "電源開発 松浦火力"
+        ],
+        "zone_override_n": 0
+      },
       "injection": {
         "tohoku": {
           "load_scale": 0.9153,
@@ -25,7 +63,7 @@
               "battery": 360.0
             },
             "unmatched": {},
-            "zeroed_gens": 1149
+            "zeroed_gens": 1144
           }
         },
         "tokyo": {
@@ -37,30 +75,30 @@
               "coal": 2340.0
             },
             "unmatched": {},
-            "zeroed_gens": 6013
+            "zeroed_gens": 6012
           }
         }
       },
       "gate": {
         "pass": true,
-        "cond_max": 847487239.406881
+        "cond_max": 848783755.5368698
       },
       "prune_threshold": 45.0,
       "mode": "ac",
       "converged": true,
       "vm_by_zone": {
         "tohoku": [
-          0.96,
+          0.953,
           1.037
         ],
         "tokyo": [
-          0.817,
+          0.816,
           1.03
         ]
       },
       "tie_flow_mw": {
         "pf": {
-          "tohoku->tokyo": 11640.8
+          "tohoku->tokyo": 11637.4
         },
         "uc": {
           "tohoku->tokyo": 5550.0

@@ -143,12 +143,18 @@ def inject_dispatch_by_zone(
     net,
     fuel_mw_by_zone: Dict[str, Dict[str, float]],
     zone_demand_mw: Dict[str, float],
+    gen_zone_override: Optional[Dict[int, str]] = None,
 ) -> Dict[str, Dict]:
     """多地域同期島ネット（bus 'zone'=地域名）へ地域別にUC断面を注入する。
 
     地域ごとに load をUC純需要へスケールし、gen へ容量比例注入する。
     指定地域に属さないバスの load/gen は触らない。zone列が無い島ネットは
     対象外（build_island_networks 由来であることが前提）。
+
+    Args:
+        gen_zone_override: {gen_idx: region} — busのzoneと実際の帰属が
+            異なるgen（bbox重複帰属の橘湾火力・敦賀火力等、
+            capacity_bridge が生成）の注入先を上書きする。
 
     Returns: {region: {"load_scale": 倍率, "injection": inject_dispatchのreport}}
     """
@@ -159,6 +165,9 @@ def inject_dispatch_by_zone(
             "多地域島ネットにのみ適用できる")
     zone_of_bus = net.bus["zone"]
     gen_zone = net.gen["bus"].map(zone_of_bus)
+    for gi, region in (gen_zone_override or {}).items():
+        if gi in gen_zone.index:
+            gen_zone.loc[gi] = region
     load_zone = net.load["bus"].map(zone_of_bus)
     out: Dict[str, Dict] = {}
     for region, fuel_mw in fuel_mw_by_zone.items():

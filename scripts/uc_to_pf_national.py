@@ -80,7 +80,8 @@ def _git_head() -> str:
         return "unknown"
 
 
-def build_injected_island(isl, regions, scn, uc, t, demand_cfg, reactive):
+def build_injected_island(isl, regions, scn, uc, t, demand_cfg, reactive,
+                          calib=None):
     """島ネット構築+UC断面zone別注入（solve_islandのUC版、ソルブ前まで）。"""
     net = PandapowerBuilder().build(isl["net"]).net
     fix_zero_voltages(net)
@@ -95,17 +96,26 @@ def build_injected_island(isl, regions, scn, uc, t, demand_cfg, reactive):
     if len(net.load) > 0:
         net.load.loc[net.load["bus"].isin(inactive), "in_service"] = False
 
+    # ── 容量橋渡し: UC側較正(DB)をPF側genへ適用（容量二重管理の解消） ──
+    bridge_rep = None
+    zone_override = None
+    if calib is not None:
+        from src.uc.capacity_bridge import apply_to_net
+        bridge_rep = apply_to_net(net, calib)
+        zone_override = bridge_rep["zone_override"] or None
+
     # ── UC断面のzone別注入（merit-order balance_power_by_zone の代替） ──
     fuel_by_zone = {r: uc_snapshot(uc, scn.generators, t, region=r)
                     for r in regions}
     demand_by_zone = {r: float(scn.net_demand_r[r][t]) for r in regions}
-    inj = inject_dispatch_by_zone(net, fuel_by_zone, demand_by_zone)
+    inj = inject_dispatch_by_zone(net, fuel_by_zone, demand_by_zone,
+                                  gen_zone_override=zone_override)
 
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, reactive)
     net.bus["vm_pu"] = 1.0
     apply_voltage_setpoints(net)
-    return net, inj, n_shunt
+    return net, inj, n_shunt, bridge_rep
 
 
 def tie_flows_by_pair(net) -> dict:
@@ -159,6 +169,8 @@ def main() -> int:
     ap.add_argument("--reactive", type=float, default=0.6)
     ap.add_argument("--try-ac", action="store_true",
                     help="westでもACを試す（既定はDC=確定事項）")
+    ap.add_argument("--no-bridge", action="store_true",
+                    help="容量橋渡し（UC較正のPF側適用）を無効化（比較用）")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -178,12 +190,18 @@ def main() -> int:
     print(f"  built in {time.monotonic() - t0:.0f}s")
     demand_cfg = load_demand_config()
 
+    calib = None
+    if not args.no_bridge:
+        from src.uc.capacity_bridge import load_pf_calibration
+        calib = load_pf_calibration(scenario_id=args.scenario)
+
     report = {
         "meta": {
             "date": _dt.date.today().isoformat(),
             "git_head": _git_head(),
             "scenario": args.scenario,
             "reactive": args.reactive,
+            "capacity_bridge": not args.no_bridge,
         },
         "islands": {},
     }
@@ -200,8 +218,15 @@ def main() -> int:
         print(f"\n== {iid} ({'+'.join(regions)}) t={t} "
               f"純需要 {float(net_dem[t]):,.0f} MW ==")
 
-        net, inj, n_shunt = build_injected_island(
-            isl, regions, scn, uc, t, demand_cfg, args.reactive)
+        net, inj, n_shunt, bridge_rep = build_injected_island(
+            isl, regions, scn, uc, t, demand_cfg, args.reactive, calib=calib)
+        if bridge_rep:
+            print(f"  bridge: dedup {bridge_rep['dedup_disabled']}, "
+                  f"patched {bridge_rep['patched']}, "
+                  f"nuclear {bridge_rep['nuclear_set']}set/"
+                  f"{bridge_rep['nuclear_stopped']}stop, "
+                  f"Δ{bridge_rep['mw_delta']:+,.0f} MW, "
+                  f"zone_override {len(bridge_rep['zone_override'])}")
         tot_inj = sum(x["injection"]["injected_mw"] for x in inj.values())
         print(f"  {len(net.bus)} buses, 注入 {tot_inj:,.0f} MW, "
               f"shunt {n_shunt}")
@@ -218,6 +243,10 @@ def main() -> int:
             "regions": regions, "hour": t,
             "net_demand_mw": round(float(net_dem[t]), 1),
             "n_buses": int(len(net.bus)),
+            "capacity_bridge": (
+                {k: v for k, v in bridge_rep.items() if k != "zone_override"}
+                | {"zone_override_n": len(bridge_rep["zone_override"])}
+                if bridge_rep else None),
             "injection": inj,
             "gate": {"pass": gate["pass"], "cond_max": gate["cond_max"]},
         }

@@ -55,6 +55,17 @@ patches:
     fuel: lng
     override: true
     note: 現役はLNG1号424.7MWのみ（石炭250×2は2018廃止）。OSMの1500は旧名板
+  # ── 2026-06-12追補: 全国ゾーナルUC→PF検証で発覚した帰属誤り ──
+  - match: 橘湾火力
+    capacity_mw: 2100
+    region: shikoku
+    override: true
+    note: J-POWER橘湾 1050×2（徳島県阿南市=四国）。kansai bbox重複の初出dedupで
+      kansai帰属になっていた（敦賀火力と同構造）。「橘湾発電所」(四電700MW)は別site
+  - match: 橘湾発電所
+    region: shikoku
+    note: 四国電力橘湾 700MW（阿南市、容量はOSM正値を維持）。帰属のみ四国へ固定。
+      文字列「橘湾発電所」は「橘湾火力発電所」に部分一致しない（J-POWER側と独立）
 
   # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
   # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
