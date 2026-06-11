@@ -16,7 +16,7 @@
 ## P: 論文化（IEEJ系・方法論論文。papers/に既存ビルド環境あり）
 
 - [x] P1 アウトライン確定(59): **二段構え** — ①ieej.tex増強(外部検証の新節=査読弱点の充填) ②方法論第2論文(訂正事例集が独自性)。docs/PAPER_OUTLINE.md・図版5点TODO・P2-P5割当
-- [ ] P2 主要図版: (a)3層ρの推移と計器改訂 (b)天井3因の証拠図 (c)fetch→calibrate→reconcile→config修正の閉ループ図 (d)西日本カバー(W進捗を反映)
+- [x] P2 図版5点(62): val_rho_progression/recall_tiers/reconcile_bands/west_pockets/closed_loop — committed JSONのみから再現可能(`gen_paper_figs.py`)
 - [ ] P3 方法論章ドラフト(計器の設計と運用規律)
 - [ ] P4 結果・考察章ドラフト(ゲート未達の honest reporting を含む)
 - [ ] P5 全体組版→ユーザーレビュー依頼(LINE)

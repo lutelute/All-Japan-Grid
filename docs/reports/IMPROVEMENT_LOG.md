@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — P2: 検証図版5点を生成 — 全てcommitted scorecardから再現可能（62）
+
+- `scripts/gen_paper_figs.py` → papers/figs/val_*.{pdf,png}: (A)3層ρ推移(計器改訂と
+  モデル変更を区別注釈) (B)帯別recall+マッチ階層内訳 (C)reconcile帯(修正前検出の図化)
+  (D)西日本ポケット構造(連結率+33件分類) (E)計器駆動閉ループ図
+- 入力は全てdocs/reports/のcommitted JSON=**リポジトリだけからビット安定に再生成可能**
+  (夜間規約の再現性条件に適合)。Hiragino+Type42でIEEJ組版互換
+- 981 passed(図スクリプトのみ)。P3(ieej.tex新節ドラフト)の素材完備
+
 ## 2026-06-12 — **Fable 5** — W2: 孤立33ポケットの分類台帳 — 過半はノイズ/越境/離島（61）
 
 - **機械分類**(docs/reports/west_isolated_pockets_2026-06-12.json):
