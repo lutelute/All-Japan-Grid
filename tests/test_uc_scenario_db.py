@@ -81,11 +81,10 @@ class TestIngestRealScenario:
         from scripts.db.ingest_uc_scenarios import ingest_scenario
 
         counts = ingest_scenario(db, "fy2023")
-        # nuclear 6サイト / 揚水44箇所 / 容量パッチ24件
-        # (2026-06-11断面: jrp_lite欠損大物12+廃止4+沖縄二重解消6+初版2)
+        # nuclear/揚水は安定した参照断面、容量パッチは調査の進展で増える
         assert counts["nuclear_status"] == 6
         assert counts["pumped_storage"] == 44
-        assert counts["capacity_patches"] == 24
+        assert counts["capacity_patches"] >= 24
 
         rec = db.get_uc_scenario("fy2023")
         assert rec.fiscal_year == 2023
