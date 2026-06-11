@@ -23,9 +23,17 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__)))))
 
-from src.db.calibration import SOURCE_TEPCO, upsert_measured_stats  # noqa: E402
+from src.db.calibration import (  # noqa: E402
+    SOURCE_TEPCO,
+    upsert_measured_bus_loads,
+    upsert_measured_stats,
+)
 from src.db.grid_db import GridDatabase  # noqa: E402
-from src.validation.external_tepco import tepco_flow_stats  # noqa: E402
+from src.validation.external_tepco import (  # noqa: E402
+    tepco_busbar_demands,
+    tepco_flow_stats,
+    tepco_terminal_offtakes,
+)
 
 
 def _window(paths) -> str | None:
@@ -95,6 +103,23 @@ def main(argv=None) -> int:
                                                            reverse=True))
     print(f"{args.region}: {n} corridors -> {args.db} "
           f"(measured_line_stats; {bands}; window {rows[0]['window']})")
+
+    # per-substation measured demand (M3): busbar map + radial ends
+    win = rows[0]["window"]
+    loads = [dict(sub_key=k, method="busbar", window=win, **v)
+             for k, v in tepco_busbar_demands(args.csv66).items()]
+    busbar_keys = {r["sub_key"] for r in loads}
+    term = tepco_terminal_offtakes(args.csv, args.csv154, args.csv66)
+    loads += [dict(sub_key=k, method="terminal_line", window=win,
+                   q50_mw=v["q50_mw"], p95_mw=v["p95_mw"],
+                   n_cols=v["n_cols"])
+              for k, v in term.items() if k not in busbar_keys]
+    if loads:
+        nl = upsert_measured_bus_loads(db, args.region, loads)
+        tot = sum(r["q50_mw"] for r in loads)
+        print(f"{args.region}: {nl} measured bus loads -> {args.db} "
+              f"(busbar {len(busbar_keys)} + terminal "
+              f"{nl - len(busbar_keys)}; q50 total {tot:,.0f} MW)")
     return 0
 
 

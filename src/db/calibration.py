@@ -91,3 +91,58 @@ def boundary_stats_from_db(db_path: str = DEFAULT_DB,
     if not stats:
         return None
     return {k: v["q50"] for k, v in stats.items()}
+
+
+def upsert_measured_bus_loads(db, region: str, rows) -> int:
+    """Upsert per-substation measured demands; returns rows written.
+
+    ``rows``: iterables of dicts with sub_key / method / q50_mw /
+    p95_mw and optional n_cols, window, source.
+    """
+    from src.db.schema import MeasuredBusLoad
+
+    n = 0
+    now = _now_iso()
+    with db.session_factory() as session:
+        for r in rows:
+            session.merge(MeasuredBusLoad(
+                region=region,
+                sub_key=r["sub_key"],
+                source=r.get("source", SOURCE_TEPCO),
+                method=r["method"],
+                q50_mw=float(r["q50_mw"]),
+                p95_mw=float(r["p95_mw"]),
+                n_cols=r.get("n_cols"),
+                window=r.get("window"),
+                updated_at=now,
+            ))
+            n += 1
+        session.commit()
+    return n
+
+
+def load_measured_bus_loads(db_path: str = DEFAULT_DB,
+                            region: str = "tokyo",
+                            method: str | None = None) -> dict | None:
+    """{sub_key: {"q50", "p95", "method"}} or None when absent.
+
+    Fail-soft like :func:`load_measured_line_stats`. With ``method``
+    set, only rows of that instrument are returned.
+    """
+    if not db_path or not os.path.exists(db_path):
+        return None
+    try:
+        from src.db.grid_db import GridDatabase
+        from src.db.schema import MeasuredBusLoad
+
+        db = GridDatabase(db_path)
+        with db.session_factory() as session:
+            qy = session.query(MeasuredBusLoad).filter_by(region=region)
+            if method:
+                qy = qy.filter_by(method=method)
+            out = {r.sub_key: {"q50": r.q50_mw, "p95": r.p95_mw,
+                               "method": r.method}
+                   for r in qy.all()}
+        return out or None
+    except Exception:
+        return None

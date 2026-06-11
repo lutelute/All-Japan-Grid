@@ -22,7 +22,7 @@
 - [x] `scripts/db/calibrate.py`(㉟): measured_line_stats(region,line_key,kv_floor,source PK + q50/p95/window) — 東京705回廊(trunk171/154帯59/66帯475, FY2024通年)をDB化。pipelineは境界重みをDB自動読み(無ければ従来)、validatorは`--flows --from-db`でCSV無しに**全8指標を完全再現**確認済
 
 ## M3 需要の地理配置（本丸 — 154kVが集約層: 66kV実測オフテイクは154/66変換点に集まりρ154に直結）
-- [ ] **末端オフテイク抽出**: 県別66kV CSVで「行き止まり変電所」(線列が1グループのみ)の流入中央値=実測オフテイク → {変電所:MW}辞書(DBの calibrate に同居も検討)
+- [x] **実測需要地図の抽出**(㊱): 当初案の末端オフテイクは26件/2.1GWで偽陽性あり(新信濃FC・新木更津=片端計測の罠) → **県別CSVの母線(B)列が本命**と発見: 配電用変電所の母線通過=その需要。**busbar 1,201変電所+terminal 21=1,222件・q50計19.1GW**をDB(measured_bus_loads)へ。モデル名一致54%/9.5GW(配置可能性確認済)
 - [ ] `estimate_loads(measured_bus_loads=)`: 名前一致バスへ実測需要を配置、残差を従来則で配分
 - [ ] 計測: 154/66 ρ変化を記録(これが最初の大物)
 

@@ -404,6 +404,129 @@ def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
     return stats
 
 
+def tepco_terminal_offtakes(csv_path, csv154=None, csv66=None) -> dict:
+    """Measured offtake at radial-end substations (M3's demand truth).
+
+    A substation that appears with exactly ONE distinct line name across
+    the union of disclosure headers (trunk + 154 kV + per-prefecture
+    66 kV) is a radial end: no transit passes through it, so its line
+    flow IS its draw from the network. Returns
+    ``{normalised sub name: {"q50_mw", "p95_mw", "line", "n_cols"}}``
+    over |circuit-group sum| per timestamp.
+
+    Guards: switching stations ((開)/(開閉所)) are pass-through by
+    construction and excluded; a sub that also appears in another file
+    with a different line (e.g. the 154 kV supply of a 154/66 yard) is
+    a transformation point, not an end — the cross-file union excludes
+    it. Two ends of the same line are distinct subs and metered
+    separately, so duplicates take the larger statistic.
+    """
+    import glob as _glob
+
+    import pandas as pd
+
+    def _paths(x):
+        if not x:
+            return []
+        xs = [x] if isinstance(x, str) else list(x)
+        out = []
+        for p_ in xs:
+            out.extend(sorted(_glob.glob(p_)) or [p_])
+        return [p_ for p_ in out if os.path.exists(p_)]
+
+    def _line_cols(df):
+        for col in df.columns[1:]:
+            m = _COL_PAT.match(str(col).strip())
+            if not m:
+                continue
+            eq = m.group(3).strip()
+            if eq.endswith("L") and "線" in eq:
+                line = _CIRCUIT_SUFFIX.sub("", eq).strip()
+                if line:
+                    yield (col, m.group(1).strip(), m.group(2),
+                           _norm(_PAREN_QUAL.sub("", line)))
+
+    # pass 1: line-name sets per substation across ALL files
+    sub_lines: dict[str, set] = defaultdict(set)
+    is_substation: dict[str, bool] = {}
+    frames = []
+    for p_ in (_paths(csv_path) + _paths(csv154) + _paths(csv66)):
+        df = pd.read_csv(p_, encoding="cp932", na_values=["-", ""],
+                         low_memory=False)
+        frames.append(df)
+        for _col, sub, kind, line_key in _line_cols(df):
+            sub_lines[sub].add(line_key)
+            is_substation[sub] = (is_substation.get(sub, True)
+                                  and kind == "変")
+
+    # pass 2: quantiles of the single corridor's |total| at terminal subs
+    out: dict[str, dict] = {}
+    for df in frames:
+        groups = defaultdict(list)
+        for col, sub, _kind, _line in _line_cols(df):
+            if len(sub_lines[sub]) == 1 and is_substation.get(sub, False):
+                groups[sub].append(col)
+        for sub, cols in groups.items():
+            total = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
+            q50 = float(total.abs().quantile(0.5))
+            p95 = float(total.abs().quantile(0.95))
+            key = _norm(sub)
+            if key not in out or q50 > out[key]["q50_mw"]:
+                out[key] = {"q50_mw": round(q50, 2), "p95_mw": round(p95, 2),
+                            "line": next(iter(sub_lines[sub])),
+                            "n_cols": len(cols)}
+    return out
+
+
+def tepco_busbar_demands(csv66) -> dict:
+    """Per-substation measured demand from the 66 kV files' busbar columns.
+
+    The per-prefecture disclosure is dominated by 母線 (busbar) columns —
+    3,372 of them across ~1,200 distribution substations vs only 782
+    line columns. At a 66 kV distribution substation there is no network
+    below to transit into, so the busbar through-power IS the yard's
+    offtake; per-sub |sum of B columns| gives a measured demand map
+    (tokyo: 1,201 subs totalling ~17 GW at q50 — typical distribution
+    magnitudes, 庚申塚 46 MW / 角筈 38 MW).
+
+    Known honest limits: intermediate 66 kV subs feeding others
+    downstream double-count their transit (the 17 GW total vs ~35 GW
+    area median suggests this is minor); the trunk file's busbars ARE
+    transit, so any path containing ``kikan`` is excluded; switching
+    stations are excluded by kind.
+
+    Returns ``{normalised sub name: {"q50_mw", "p95_mw", "n_cols"}}``.
+    """
+    import glob as _glob
+
+    import pandas as pd
+
+    paths = ([csv66] if isinstance(csv66, str) else list(csv66 or []))
+    expanded = []
+    for p_ in paths:
+        expanded.extend(sorted(_glob.glob(p_)) or [p_])
+    out: dict[str, dict] = {}
+    for p_ in expanded:
+        if not os.path.exists(p_) or "kikan" in os.path.basename(p_):
+            continue
+        df = pd.read_csv(p_, encoding="cp932", na_values=["-", ""],
+                         low_memory=False)
+        groups = defaultdict(list)
+        for col in df.columns[1:]:
+            m = _COL_PAT.match(str(col).strip())
+            if m and m.group(2) == "変" and m.group(3).strip().endswith("B"):
+                groups[m.group(1).strip()].append(col)
+        for sub, cols in groups.items():
+            tot = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
+            q50 = float(tot.abs().quantile(0.5))
+            p95 = float(tot.abs().quantile(0.95))
+            key = _norm(sub)
+            if key not in out or q50 > out[key]["q50_mw"]:
+                out[key] = {"q50_mw": round(q50, 2), "p95_mw": round(p95, 2),
+                            "n_cols": len(cols)}
+    return out
+
+
 def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
                 load_spatial: str = "none", csv154=None, csv66=None,

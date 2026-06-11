@@ -404,6 +404,48 @@ class MeasuredLineStat(Base):
         )
 
 
+class MeasuredBusLoad(Base):
+    """One measured per-substation demand — M3's placement truth
+    (written only by ``scripts/db/calibrate.py``).
+
+    Source instrument (``method``):
+
+    - ``busbar``: |sum of the sub's 母線 columns| in the per-prefecture
+      66 kV disclosure — at a distribution substation the busbar
+      through-power is the yard's offtake (primary, ~1,200 subs);
+    - ``terminal_line``: single-attachment radial ends' line inflow
+      (secondary; small population and prone to metering-side false
+      positives at FC/EHV yards).
+
+    Attributes:
+        region / sub_key: Normalised substation name key.
+        source: Disclosure family (``tepco_jisseki``).
+        method: Instrument as above.
+        q50_mw / p95_mw: Median and 0.95 quantile of |MW|.
+        n_cols: Number of disclosure columns aggregated.
+        window: Data window as ``<first>..<last>`` timestamps.
+        updated_at: ISO timestamp of the calibrate run.
+    """
+
+    __tablename__ = "measured_bus_loads"
+
+    region: Mapped[str] = mapped_column(String(32), primary_key=True)
+    sub_key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    source: Mapped[str] = mapped_column(String(32), primary_key=True)
+    method: Mapped[str] = mapped_column(String(32), nullable=False)
+    q50_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    p95_mw: Mapped[float] = mapped_column(Float, nullable=False)
+    n_cols: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    window: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"MeasuredBusLoad({self.region}/{self.sub_key} "
+            f"q50={self.q50_mw:.1f} via {self.method})"
+        )
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 

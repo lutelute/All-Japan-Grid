@@ -102,3 +102,72 @@ def test_calibrate_main_writes_db(tmp_path):
     assert rc == 0
     out = load_measured_line_stats(db_path, "tokyo")
     assert out["A幹線"]["kv_floor"] == 200.0
+
+
+# ── per-substation measured demand (M3 truth) ────────────────────────────────
+
+def test_busbar_demands_sum_columns_and_guards(tmp_path):
+    """1B+2B sum per timestamp; 開閉所 and kikan-file busbars excluded."""
+    pref = tmp_path / "jisseki_chiba01.csv"
+    pref.write_bytes((
+        "日時,町田(変) - 1B,町田(変) - 2B,葛南(開) - 1B\n"
+        "2024年04月01日 00時,10,5,99\n"
+        "2024年04月01日 01時,30,15,99\n").encode("cp932"))
+    trunk = tmp_path / "jisseki_kikan.csv"
+    trunk.write_bytes((
+        "日時,基幹(変) - 1B\n"
+        "2024年04月01日 00時,500\n").encode("cp932"))
+
+    from src.validation.external_tepco import tepco_busbar_demands
+    out = tepco_busbar_demands([str(pref), str(trunk)])
+    # quantiles of [15, 45]: q50=30, p95=43.5; switching station absent
+    assert set(out) == {"町田"}
+    assert out["町田"]["q50_mw"] == pytest.approx(30.0)
+    assert out["町田"]["p95_mw"] == pytest.approx(43.5)
+    assert out["町田"]["n_cols"] == 2
+
+
+def test_terminal_offtakes_cross_file_union_guard(tmp_path):
+    """A sub with one 66 kV line but another line in the 154 kV file is
+    a transformation point, not a radial end (新木更津 lesson)."""
+    f66 = tmp_path / "jisseki_chiba01.csv"
+    f66.write_bytes((
+        "日時,湯船(変) - 末端線1･2L,中台(変) - 下流線1･2L,口戸(開) - 孤線1･2L\n"
+        "2024年04月01日 00時,20,40,70\n"
+        "2024年04月01日 01時,40,60,90\n").encode("cp932"))
+    f154 = tmp_path / "jisseki_154kV01.csv"
+    f154.write_bytes((
+        "日時,中台(変) - 上流線1･2L\n"
+        "2024年04月01日 00時,100\n").encode("cp932"))
+
+    from src.validation.external_tepco import tepco_terminal_offtakes
+    out = tepco_terminal_offtakes(str(f66), str(f154))
+    # 湯船: true radial end (q50 of [20,40] = 30); 中台 excluded by the
+    # cross-file union (新木更津 lesson); 口戸 excluded as a switching
+    # station
+    assert set(out) == {"湯船"}
+    assert out["湯船"]["q50_mw"] == pytest.approx(30.0)
+    assert out["湯船"]["line"] == "末端線"
+
+
+def test_bus_loads_roundtrip_and_method_filter(tmp_path):
+    from src.db.calibration import (
+        load_measured_bus_loads,
+        upsert_measured_bus_loads,
+    )
+
+    db_path = str(tmp_path / "x.db")
+    db = GridDatabase(db_path)
+    n = upsert_measured_bus_loads(db, "tokyo", [
+        {"sub_key": "庚申塚", "method": "busbar", "q50_mw": 46.0,
+         "p95_mw": 80.0, "n_cols": 2},
+        {"sub_key": "湯船", "method": "terminal_line", "q50_mw": 62.0,
+         "p95_mw": 86.0},
+    ])
+    assert n == 2
+    out = load_measured_bus_loads(db_path, "tokyo")
+    assert out["庚申塚"]["q50"] == 46.0 and out["庚申塚"]["method"] == "busbar"
+    only_b = load_measured_bus_loads(db_path, "tokyo", method="busbar")
+    assert set(only_b) == {"庚申塚"}
+    assert load_measured_bus_loads(db_path, "kansai") is None
+    assert load_measured_bus_loads("/nonexistent.db") is None

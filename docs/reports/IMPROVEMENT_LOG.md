@@ -7,6 +7,23 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — 実測需要地図: 母線列1,201変電所/19GWをDB化（㊱・M3-1）
+
+- **当初案の正直な棄却**: 「ヘッダ1線のみ=末端」案は26件/2.1GWで、上位に**偽陽性**
+  (新信濃=周波数変換所、新木更津=500kV変換点 — 開示は線の**片端のみ掲載**があり
+  「ヘッダに1線」≠「物理的に1線」)。クロスファイル和集合ガード+変電所種別ガードを実装の上、
+  補助計器(terminal_line)に降格
+- **本命の発見**: 県別66kV開示の列分類を実測 — **母線(B)列3,372本 ≫ 線路列782本**。
+  配電用変電所に下位網は無く母線通過=その変電所の需要 → `tepco_busbar_demands`
+- **抽出**(東京): **busbar 1,201変電所 + terminal 21 = 1,222件・q50計19.1GW**
+  (庚申塚46MW・角筈38MW等、配電用の典型量。面需要中央値~35GWの過半をカバー)
+- **DB**: `measured_bus_loads`(region,sub_key,source PK / method,q50,p95,n_cols,window)
+  + フェイルソフトloader。calibrate.py 1コマンドで line_stats と同時更新
+- **配置可能性**(M3-2の事前計測): モデル変電所への名前一致 **647/1,201=54%・9.5GW分**
+  — 残りは位置タイア・名寄せで回収余地。モデル本体は不変(ρ=0.473のまま、計測スキップ)
+- 既知の限界を記録: 中間66kV変電所は下流transitを二重計上しうる(計19GW<35GWより軽微)。
+  968 passed
+
 ## 2026-06-11 — **Fable 5** — 較正のDB化: measured_line_stats・--from-dbが計器を完全再現（㉟）
 
 - **スキーマ**: `measured_line_stats`(region,line_key,kv_floor,source PK / q50,p95,window) —
