@@ -98,3 +98,38 @@ class TestWarmStart:
         partial = [s for s in r1.schedules if s.generator_id == "cheap"]
         r2 = solve_uc(self._params(gens, demands, schedules=partial))
         assert r2.is_optimal
+
+
+class TestFloatBoundaryClamp:
+    def test_soc_at_capacity_float_rounding(self):
+        # 12.2MW×6h=73.19999999999999 の upBound に対し前窓SOC 73.2 を注入
+        # しても落ちない（クランプされる）— chunk05 で実際に起きた境界バグ
+        cap_mw = 12.2
+        batt = Generator(
+            id="b", name="b", capacity_mw=cap_mw, fuel_type="battery",
+            region="tokyo", fuel_cost_per_mwh=0, no_load_cost=0,
+            startup_cost=0, shutdown_cost=0,
+            min_up_time_h=1, min_down_time_h=1, p_min_mw=0.0,
+            storage_capacity_mwh=cap_mw * 6,
+            charge_rate_mw=cap_mw, discharge_rate_mw=cap_mw,
+            charge_efficiency=0.9, discharge_efficiency=0.9,
+            initial_soc_fraction=1.0, min_terminal_soc_fraction=0.0,
+        )
+        g = _gen("g", cap=100, cost=10, startup_cost=0)
+        from src.uc.models import GeneratorSchedule
+        prev = [GeneratorSchedule(
+            generator_id="b",
+            commitment=[1, 1],
+            power_output_mw=[0.0, 0.0],
+            soc_mwh=[73.2, 73.2],  # upBound 73.19999999999999 を僅かに超える
+            charge_mw=[0.0, 0.0],
+            discharge_mw=[0.0, 0.0],
+        )]
+        params = UCParameters(
+            generators=[g, batt],
+            demand=DemandProfile(demands=[50.0, 50.0]),
+            time_horizon=TimeHorizon(num_periods=2),
+            warm_start_schedules=prev,
+        )
+        result = solve_uc(params)  # ValueErrorで落ちないこと
+        assert result.is_optimal

@@ -487,6 +487,21 @@ class _HiGHSWarmStart(pulp.HiGHS):
         lp.solverModel.run()
 
 
+def _set_initial_clamped(var: pulp.LpVariable, val: float) -> None:
+    """setInitialValue with clamping to the variable's bounds.
+
+    Solution values can exceed bounds by float rounding (e.g. a previous
+    window's SOC of 73.2 vs upBound 12.2*6 = 73.19999999999999), which
+    PuLP's validity check rejects.  Clamping is always safe for a start
+    hint.
+    """
+    if var.upBound is not None and val > var.upBound:
+        val = var.upBound
+    if var.lowBound is not None and val < var.lowBound:
+        val = var.lowBound
+    var.setInitialValue(val)
+
+
 def _apply_warm_start(
     schedules,
     u: Dict[Tuple[str, int], pulp.LpVariable],
@@ -499,7 +514,8 @@ def _apply_warm_start(
     """Inject a previous solution as variable initial values.
 
     Matches by generator_id and period index.  Periods beyond the provided
-    schedule stay unset (free for the solver to repair/extend).
+    schedule stay unset (free for the solver to repair/extend).  Values
+    are clamped to variable bounds (float-rounding tolerance).
 
     Returns:
         Number of variable initial values set.
@@ -512,19 +528,22 @@ def _apply_warm_start(
                 break
             key = (gid, t)
             if key in u and idx < len(sched.commitment):
-                u[key].setInitialValue(round(sched.commitment[idx]))
+                _set_initial_clamped(u[key], round(sched.commitment[idx]))
                 n += 1
             if key in p:
-                p[key].setInitialValue(float(sched.power_output_mw[idx]))
+                _set_initial_clamped(p[key], float(sched.power_output_mw[idx]))
                 n += 1
             if key in p_ch and idx < len(sched.charge_mw):
-                p_ch[key].setInitialValue(max(0.0, float(sched.charge_mw[idx])))
+                _set_initial_clamped(
+                    p_ch[key], max(0.0, float(sched.charge_mw[idx])))
                 n += 1
             if key in p_dis and idx < len(sched.discharge_mw):
-                p_dis[key].setInitialValue(max(0.0, float(sched.discharge_mw[idx])))
+                _set_initial_clamped(
+                    p_dis[key], max(0.0, float(sched.discharge_mw[idx])))
                 n += 1
             if key in soc and idx < len(sched.soc_mwh):
-                soc[key].setInitialValue(max(0.0, float(sched.soc_mwh[idx])))
+                _set_initial_clamped(
+                    soc[key], max(0.0, float(sched.soc_mwh[idx])))
                 n += 1
     return n
 
