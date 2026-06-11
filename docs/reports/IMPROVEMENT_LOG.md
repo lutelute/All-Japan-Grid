@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — 地中ケーブルのXLPEパラメータ: 物理的忠実性で採用（㊹・M5-3）
+
+- **発見**: OSMは`power=cable`/`location=underground`で地中線を明示 — 東京486 features
+  (66kV 313本)。**従来は全線が架空ACSR値**(X=0.29-0.40Ω/km)で解かれていた
+- **実装**: line_types.yamlに各クラスの`cable:`変種(66kV XLPE: X=0.11Ω/km≈架空の1/3・
+  R=0.05・B=1.1e-4)。`get_line_parameters(kind="cable")`→builderがline.is_cableで選択。
+  トポロジ側は cable長を区間→連鎖縮約まで加算し**過半長ルール**でis_cable判定
+  (provに`med=cable`)。東京で**151枝/57km**がケーブル化
+- **A/B計測**: 全層誤差帯内 — 全体0.463→0.455 / trunk −0.015 / 154 +0.009 / 66 −0.008・
+  倍率1.09→**1.07**。OSM収載ケーブルが57kmのみ(都心網の大半は未収載=㉝)のため
+  計器では解像不能と正直記録
+- **採用判断**: XLPEのX≈架空1/3は教科書的事実=物理的忠実性で**採用**(㉙㊲と同基準)。
+  OSMに都心ケーブル網が描かれた時に自動で効く土台。新計器基準=fスコアカード。975 passed
+
 ## 2026-06-11 — **Fable 5** — 国勢調査メッシュ需要配分: 154は+0.05動くがtrunkとトレード（㊸・M5-2）
 
 - **データ**: e-Stat 2020国勢調査1kmメッシュ人口 — `scripts/fetch_estat_mesh.py`で関東12メッシュ

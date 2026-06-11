@@ -399,8 +399,11 @@ class PandapowerBuilder:
                 line.max_i_ka,
             )
 
-        # Fall back to reference table
-        ref_params = get_line_parameters_safe(line.voltage_kv, f_hz)
+        # Fall back to reference table (underground cables get the XLPE
+        # variant — ~1/3 the overhead reactance, set by OSM power=cable)
+        ref_params = get_line_parameters_safe(
+            line.voltage_kv, f_hz,
+            kind="cable" if getattr(line, "is_cable", False) else "overhead")
 
         if ref_params is not None:
             logger.debug(

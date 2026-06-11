@@ -364,7 +364,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     _KV_RANK = {"unk": 0, "prop": 1, "tag": 2}
 
     def add_edge(a, b, seg, kv, path, parallel=1, evidence=None, name=None,
-                 kv_src="unk"):
+                 kv_src="unk", cable_km=0.0):
         """Insert/merge an undirected edge, accumulating parallel circuits.
 
         Real grids run 2-4 parallel circuits between the same two nodes. The
@@ -388,10 +388,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if cur is None:
             p = max(int(parallel), 1)  # an edge is at least one circuit
             adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p,
-                         "ev": evidence, "name": name, "kv_src": kv_src}
+                         "ev": evidence, "name": name, "kv_src": kv_src,
+                         "cab": cable_km}
             adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)),
                          "parallel": p, "ev": evidence, "name": name,
-                         "kv_src": kv_src}
+                         "kv_src": kv_src, "cab": cable_km}
             return
         kv2 = max(cur["kv"], kv)
         par = cur["parallel"] + max(int(parallel), 0)
@@ -400,12 +401,14 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         ks = kv_src if _KV_RANK.get(kv_src, 0) >= _KV_RANK.get(cur.get("kv_src"), 0) \
             else cur.get("kv_src", "unk")
         nm = cur.get("name") or name  # first real OSM name wins
+        cab = max(cur.get("cab", 0.0), cable_km)  # any cable parallel marks it
         if seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
             adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par,
-                         "ev": ev, "name": nm, "kv_src": ks}
+                         "ev": ev, "name": nm, "kv_src": ks, "cab": cab}
             adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)),
-                         "parallel": par, "ev": ev, "name": nm, "kv_src": ks}
+                         "parallel": par, "ev": ev, "name": nm, "kv_src": ks,
+                         "cab": cab}
         else:
             for side in (cur, adj[b][a]):
                 side["kv"] = kv2
@@ -413,6 +416,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 side["ev"] = ev
                 side["name"] = nm
                 side["kv_src"] = ks
+                side["cab"] = cab
 
     lines_data = _layer("lines")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
@@ -438,8 +442,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             kv = _clean_voltage(kv)  # snap known line voltage to a standard class
             circ, circ_src = _parse_circuits(props)
             osm_name = props.get("name") or None
+            is_cab = (props.get("power") == "cable"
+                      or props.get("location") == "underground")
             feat_cache.append([coords, kv, circ, circ_src, osm_name,
-                               "tag" if kv > 0 else "unk"])
+                               "tag" if kv > 0 else "unk", is_cab])
             if multi_voltage and kv > 0:
                 for (lat, lon) in coords:
                     coord_cls[(round(lat, vertex_prec), round(lon, vertex_prec))].add(kv)
@@ -473,7 +479,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     break
 
         # Pass B: map vertices to class-aware nodes and build edges.
-        for coords, kv, circ, circ_src, osm_name, kv_src in feat_cache:
+        for coords, kv, circ, circ_src, osm_name, kv_src, is_cab in feat_cache:
             node_ids = []
             last = len(coords) - 1
             for vi, (lat, lon) in enumerate(coords):
@@ -514,7 +520,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 seen_pairs.add(pair)
                 add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
                          parallel=contrib, evidence=circ_src, name=osm_name,
-                         kv_src=kv_src)
+                         kv_src=kv_src, cable_km=seg if is_cab else 0.0)
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
@@ -556,7 +562,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 del adj[b][n]
                 del adj[n]
                 add_edge(a, b, la + lb, kv, path_ab, parallel=par, evidence=ev,
-                         name=nm, kv_src=ks)
+                         name=nm, kv_src=ks,
+                         cable_km=ea.get("cab", 0.0) + eb.get("cab", 0.0))
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
@@ -674,8 +681,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             # how each branch came to exist
             kind_a = "J" if is_jct(a) else "S"
             kind_b = "J" if is_jct(b) else "S"
+            med_cable = edge.get("cab", 0.0) > 0.5 * length
             prov = (f"conn={kind_a}-{kind_b};circuits={edge.get('ev') or 'geom'};"
-                    f"kv={edge.get('kv_src', 'unk')}")
+                    f"kv={edge.get('kv_src', 'unk')}"
+                    + (";med=cable" if med_cable else ""))
             try:
                 net.add_transmission_line(TransmissionLine(
                     id=f"{region}_line_{k}",
@@ -691,6 +700,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     coordinates=list(path_latlon),
                     num_parallel=edge.get("parallel", 1),
                     description=prov,
+                    is_cable=med_cable,
                 ))
                 k += 1
             except ValueError:

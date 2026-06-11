@@ -204,6 +204,48 @@ def test_measured_loads_pin_buses_and_residual_fills_rest():
     assert 1 not in set(synth["bus"]) and 2 not in set(synth["bus"])
 
 
+def test_cable_lines_get_xlpe_parameters(tmp_path):
+    """OSM power=cable -> is_cable -> XLPE reference parameters (~1/3 the
+    overhead X). The builder resolves kind per line (M5-3)."""
+    import json as _json
+
+    from src.converter.line_parameters import get_line_parameters
+    from src.powerflow.snapped_topology import build_network_snapped
+
+    oh = get_line_parameters(66, 50)
+    cb = get_line_parameters(66, 50, kind="cable")
+    assert cb["x_ohm_per_km"] == pytest.approx(0.11)
+    assert cb["x_ohm_per_km"] < oh["x_ohm_per_km"] / 3
+    # class without a cable entry falls back to overhead values
+    fb = get_line_parameters(187, 50, kind="cable")
+    assert fb["x_ohm_per_km"] == get_line_parameters(187, 50)["x_ohm_per_km"]
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"name": "甲変電所", "voltage": "66000"},
+         "geometry": {"type": "Point", "coordinates": [139.60, 35.50]}},
+        {"type": "Feature", "properties": {"name": "乙変電所", "voltage": "66000"},
+         "geometry": {"type": "Point", "coordinates": [139.70, 35.55]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "地中線", "voltage": "66000", "power": "cable"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.60, 35.50], [139.70, 35.55]]}},
+    ]}
+    d = tmp_path / "cdata"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(_json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(_json.dumps(lines))
+    net = build_network_snapped("testreg", data_dir=str(d))
+    cab = [ln for ln in net.transmission_lines if "_xfmr_" not in ln.id]
+    assert len(cab) == 1 and cab[0].is_cable is True
+
+    from src.converter.pandapower_builder import PandapowerBuilder
+    pp_net = PandapowerBuilder().build(net).net
+    row = pp_net.line.iloc[0]
+    assert float(row["x_ohm_per_km"]) == pytest.approx(0.11)
+
+
 def test_population_factors_voronoi_assignment(tmp_path):
     """Census mesh cells weight the residual allocation: each cell's
     population goes to its nearest delivery bus (M5-2). Mesh code
