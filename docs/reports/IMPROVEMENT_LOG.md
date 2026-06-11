@@ -9,6 +9,34 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑮: capacity_bridge — 容量の正の一元化（⑫の二重管理解消）
+
+- **橋渡し層**(`19ea474`, `src/uc/capacity_bridge.py`): DB（uc_scenario_generators、
+  YAMLフォールバック）の capacity_patches + nuclear_status を **PF側 net.gen へ適用**。
+  UC側ローダーと同一意味論の4ステップ: ①bbox重複コピーのdedup（**≥100MW限定** —
+  無差別dedupはeast島で同名ソーラー群4,492行/-59GWを誤停止しgate FAILを招いた）
+  ②容量パッチ常時適用（PF側は-1.0欠損が燃料別デフォルトに置換済みで欠損が観測
+  不能 → 出典付き公称値を正とする。regionのみのパッチはOSM容量維持）
+  ③nuclear_status: 稼働サイト=site容量/リスト外=停止（east島で6炉停止
+  =FY2023断面の東日本原発ゼロを正しく反映）④zone帰属表（注入側でgen単位上書き）
+- **新パッチ2件 — 橘湾の誤帰属**: J-POWER橘湾2,100MW（徳島県阿南市）が
+  kansai bbox重複の初出dedupでkansai帰属だった（敦賀火力と同構造、**UC側も同罪**）
+  → region: shikoku。四電橘湾700MWはregionのみパッチ
+- **west島の実測効果**: 注入ギャップ hokuriku **-77%→-16%** / kyushu **-31%→-7%** /
+  shikoku -52%→-16%（四電パッチ後）。総注入 63.0→69.2GW（純需要の99.0%）。
+  旧版の chugoku→kansai -7GW のtie潮流歪みも解消
+- **負の結果（重要）**: kansai 24断面の昼間低電圧 vm 0.798 は bridge適用後も不変 —
+  容量較正と独立の課題（原子力の北部偏在 vs 都市部昼ピークの地理乖離、
+  注入の地理重み付けが次のテーマ）と確定
+- **main還流事項**: ①ybus_gate の cond推定が閾値1e9際で実行ごとに揺れる —
+  同一入力で 4.84e8 / 1.13e9 / 1.21e9(PYTHONHASHSEED=0) を実測。west島
+  （bridge後）は「gate際の網」であり、判定の決定論化（推定の反復中央値 or
+  シード固定）と閾値の余裕度設計が必要。**gate PASS時のDCは収束する**
+  （p95 78.7%実測、19ea474）ので保守側には倒れている
+  ②PF側GridNetworkローダーの「-1.0→燃料別デフォルト置換」は玄海/川内を
+  1000MW扱いにする（実2360/1780）— DB容量の優先参照をビルダーへ昇格すべき
+- 残: tokyo coal欠損2.3GW（PF側のみ、パッチ出典調査が必要）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑭: FY2025実測需要の年間UC完走（r7）— 合成需要の過大+12%を定量化
 
 - **r7**(`950ce68`): fy2025r1（実測需要 via DataSpace profile_ref・annual_window +
