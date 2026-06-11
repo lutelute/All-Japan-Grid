@@ -328,6 +328,74 @@ def test_radialize_band_opens_highest_impedance_loop_edge():
     assert nx.is_connected(G.subgraph(b))
 
 
+def test_corridor_subtree_calibration_conserves_measured_flow():
+    """Demand state estimation from flows (ledger 48): a measured
+    corridor pins its load-subtree total via conservation. Inner
+    corridors calibrate first and stay fixed; measured_* pins are never
+    rescaled; subtrees needing absurd scales are skipped."""
+    from src.powerflow.flow_calibration import corridor_subtree_calibration
+
+    net = pp.create_empty_network(f_hz=50)
+    hv = pp.create_bus(net, vn_kv=275.0, name="基幹")
+    b = [pp.create_bus(net, vn_kv=66.0, name=f"b{i}") for i in range(4)]
+    pp.create_ext_grid(net, bus=hv, vm_pu=1.0)
+    pp.create_transformer_from_parameters(
+        net, hv_bus=hv, lv_bus=b[0], sn_mva=300, vn_hv_kv=275, vn_lv_kv=66,
+        vkr_percent=0.4, vk_percent=10, pfe_kw=0, i0_percent=0.0)
+
+    def line(f, t, name):
+        return pp.create_line_from_parameters(
+            net, f, t, length_km=2.0, r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+            c_nf_per_km=0.0, max_i_ka=1.0, name=name)
+
+    line(b[0], b[1], "外幹線")       # outer corridor: feeds b1+b2+b3
+    line(b[1], b[2], "中支線")       # inner corridor: feeds b2+b3
+    line(b[2], b[3], "末端線")       # innermost: feeds b3
+    l1 = pp.create_load(net, bus=b[1], p_mw=10.0, q_mvar=1.0)
+    l2 = pp.create_load(net, bus=b[2], p_mw=10.0, q_mvar=1.0)
+    pp.create_load(net, bus=b[3], p_mw=5.0, q_mvar=0.5,
+                   name="measured_末端")   # pinned, never rescaled
+
+    info = corridor_subtree_calibration(
+        net, {"末端線": 5.0, "中支線": 25.0, "外幹線": 60.0})
+    # 末端線's subtree holds only the pin (nothing free to scale) -> the
+    # other two corridors calibrate; conservation still holds throughout
+    assert info["n_calibrated"] == 2
+    # 末端線 subtree {b3}: pinned 5 == measured 5, nothing to scale
+    assert float(net.load.at[net.load.index[-1], "p_mw"]) == pytest.approx(5.0)
+    # 中支線 subtree {b2,b3}: target 25 - fixed 5 -> l2 scales 10 -> 20
+    assert float(net.load.at[l2, "p_mw"]) == pytest.approx(20.0)
+    # 外幹線 subtree {b1,b2,b3}: target 60 - fixed 25 -> l1 10 -> 35
+    assert float(net.load.at[l1, "p_mw"]) == pytest.approx(35.0)
+    # Q scales with P (power factor preserved)
+    assert float(net.load.at[l1, "q_mvar"]) == pytest.approx(3.5)
+
+
+def test_corridor_calibration_skips_meshed_and_overscale():
+    from src.powerflow.flow_calibration import corridor_subtree_calibration
+
+    net = pp.create_empty_network(f_hz=50)
+    hv = pp.create_bus(net, vn_kv=275.0)
+    b = [pp.create_bus(net, vn_kv=66.0) for _ in range(3)]
+    pp.create_ext_grid(net, bus=hv, vm_pu=1.0)
+    pp.create_transformer_from_parameters(
+        net, hv_bus=hv, lv_bus=b[0], sn_mva=300, vn_hv_kv=275, vn_lv_kv=66,
+        vkr_percent=0.4, vk_percent=10, pfe_kw=0, i0_percent=0.0)
+
+    def line(f, t, name):
+        pp.create_line_from_parameters(
+            net, f, t, length_km=1.0, r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+            c_nf_per_km=0.0, max_i_ka=1.0, name=name)
+
+    line(b[0], b[1], "環線")
+    line(b[1], b[2], "環線二")
+    line(b[2], b[0], "環線三")          # ring: cutting one edge never splits
+    l = pp.create_load(net, bus=b[1], p_mw=1.0, q_mvar=0.1)
+    info = corridor_subtree_calibration(net, {"環線": 50.0})
+    assert info["meshed_or_isolated"] == 1 and info["n_calibrated"] == 0
+    assert float(net.load.at[l, "p_mw"]) == pytest.approx(1.0)  # untouched
+
+
 def test_measured_loads_eponym_corridor_tier():
     """A measured yard absent from the model by name is placed at the
     endpoint of its eponymous corridor (塚田線 -> 塚田; ledger 47). An

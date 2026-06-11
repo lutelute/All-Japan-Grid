@@ -75,7 +75,8 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none", boundary_imports=True,
                     boundary_util=None, db=None, boundary_stats=None,
-                    measured_loads="auto", radialize_band_kv=None):
+                    measured_loads="auto", radialize_band_kv=None,
+                    corridor_calib=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -170,6 +171,16 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                                                utilisation=boundary_util,
                                                corridor_stats=boundary_stats)
 
+    # Corridor-flow demand calibration (ledger 48): measured corridor
+    # flows pin their load-subtree totals — demand reaches nameless
+    # yards via conservation, not name matching. Opt-in: pass a
+    # {corridor key: MW} dict (the validator passes its train split).
+    calib_info = None
+    if corridor_calib:
+        from src.powerflow.flow_calibration import corridor_subtree_calibration
+        calib_info = corridor_subtree_calibration(net, dict(corridor_calib))
+        total_load = float(net.load[net.load["in_service"]]["p_mw"].sum())
+
     balance_power(net, demand_cfg)
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, factor=reactive)
@@ -210,6 +221,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         "backbone": backbone_info,
         "boundary": boundary_info,
         "radialized": radial_info,
+        "corridor_calib": calib_info,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }

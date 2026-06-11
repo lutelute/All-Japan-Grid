@@ -565,7 +565,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
                 load_spatial: str = "none", csv154=None, csv66=None,
                 stats_db: str | None = None,
-                measured_loads="auto", radialize_band_kv=None) -> dict:
+                measured_loads="auto", radialize_band_kv=None,
+                corridor_calib: bool = False) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -608,6 +609,19 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
         typical = tepco_flow_stats(csv_path, q=0.5)
     measured = {k: v for k, (v, _c) in measured_cls.items()}
 
+    # Corridor-flow demand calibration (ledger 48): the TRAIN half of the
+    # measured 66-band corridors becomes a conservation constraint set
+    # (subtree demands rescaled so each corridor carries its measured
+    # flow); rho is then reported on the held-out TEST half. The split is
+    # deterministic (sorted keys, alternating) so runs reproduce.
+    calib_train: dict = {}
+    calib_test: set = set()
+    if corridor_calib:
+        band66 = sorted(k for k, (_v, fl) in measured_cls.items() if fl < 140.0)
+        calib_train = {k: measured_cls[k][0]
+                       for i, k in enumerate(band66) if i % 2 == 0}
+        calib_test = {k for i, k in enumerate(band66) if i % 2 == 1}
+
     def _solve(boundary_util=None):
         result = build_and_solve(region, load_demand_config(),
                                  topology="snapped", reconnect=True,
@@ -616,7 +630,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                                  boundary_util=boundary_util,
                                  boundary_stats=typical,
                                  measured_loads=measured_loads,
-                                 radialize_band_kv=radialize_band_kv)
+                                 radialize_band_kv=radialize_band_kv,
+                                 corridor_calib=calib_train or None)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
@@ -733,6 +748,15 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
     out["n_interior_trunk"] = len(trunk_keys)
     out["n_interior_154"] = len(sub_keys)
     out["n_interior_66"] = len(kv66_keys)
+    if corridor_calib:
+        # honest split scores: train corridors are FITTED (high by
+        # construction); the held-out test rho is the real result
+        test_keys = [k for k in kv66_keys if k in calib_test]
+        train_keys = [k for k in kv66_keys if k in calib_train]
+        _score(test_keys, "kv66_test_")
+        _score(train_keys, "kv66_train_")
+        out["n_66_test"] = len(test_keys)
+        out["n_66_train"] = len(train_keys)
     diffs = sorted(interior, key=lambda k: abs(model[k] - measured[k]),
                    reverse=True)
     out["top_mismatches"] = [
@@ -763,6 +787,13 @@ def render_flows(m: dict) -> str:
                    if "kv154_spearman_rho" in m else "")
                 + (f" | 66kV ({m['n_interior_66']}): rho={m['kv66_spearman_rho']}"
                    if "kv66_spearman_rho" in m else ""))
+        if "kv66_test_spearman_rho" in m:
+            lines.append(
+                f"    corridor-calib HOLDOUT 66kV: test rho="
+                f"{m['kv66_test_spearman_rho']} ({m['n_66_test']})"
+                + (f" | train(fitted) rho={m['kv66_train_spearman_rho']} "
+                   f"({m['n_66_train']})"
+                   if "kv66_train_spearman_rho" in m else ""))
         lines.append(
             f"  interior median model/measured : {m['interior_median_model_over_measured']}")
     if "spearman_rho" in m:
@@ -829,6 +860,10 @@ def main(argv=None):
                     choices=["none", "degree", "population"],
                     help="residual-demand spatial weighting (population = "
                          "census 1km mesh, scripts/fetch_estat_mesh.py)")
+    ap.add_argument("--corridor-calib", action="store_true",
+                    help="demand state estimation from measured corridor "
+                         "flows: calibrate on the train half (alternating "
+                         "split), report held-out kv66_test rho")
     args = ap.parse_args(argv)
 
     if not (args.flows and args.from_db) and not os.path.exists(args.csv):
@@ -844,7 +879,8 @@ def main(argv=None):
                         measured_loads=(None if args.no_measured_loads
                                         else "auto"),
                         radialize_band_kv=(60.0 if args.radialize_66
-                                           else None))
+                                           else None),
+                        corridor_calib=args.corridor_calib)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:
