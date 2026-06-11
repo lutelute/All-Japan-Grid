@@ -685,8 +685,9 @@ class TestLoadSynthesisCreatesMissing:
         synth = DataSynthesizer(seed=42)
         result = synth.synthesize_loads(net, region="shikoku")
 
-        # Shikoku peak demand is 5500 MW, load factor 0.85 -> 4675 MW
-        expected_target = 5500 * 0.85
+        # Shikoku peak demand is 4700 MW (OCCTO-corrected, ledger 56),
+        # load factor 0.85 -> 3995 MW
+        expected_target = 4700 * 0.85
         # Allow some tolerance due to jitter
         assert abs(result.total_load_mw - expected_target) / expected_target < 0.05
 

@@ -4,14 +4,14 @@
 
 # Regional peak demand (MW) — OCCTO 2023 summer/winter peak values
 regional_peak_demand_mw:
-  hokkaido: 3600
+  hokkaido: 5200   # 2026-06-11 (ledger 56): OCCTO実測p95 4,441MW/LF0.85≈5,225 — 旧3,600は夏値で冬ピーク(>5GW)を欠落、reconcileが<q50を検出
   tohoku: 13000
   tokyo: 52000
   chubu: 24000
   hokuriku: 5200
   kansai: 27000
   chugoku: 10500
-  shikoku: 5500
+  shikoku: 4700    # 2026-06-11 (ledger 56): OCCTO実測p95 4,013MW/LF0.85≈4,721 — 旧5,500は過大(snapshot=1.16×p95)、reconcileが検出
   kyushu: 15500
   okinawa: 1600
 

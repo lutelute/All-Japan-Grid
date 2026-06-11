@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — reconcile所見の実装: 北海道・四国ピークをOCCTO根拠で修正（56）
+
+- **修正**(計器→モデルの初の閉ループ): `regional_demand.yaml` —
+  **hokkaido 3,600→5,200MW**(旧値は夏値で冬ピーク欠落。OCCTO p95 4,441/LF=5,225、
+  既知の冬ピーク~520万kWとも整合) / **shikoku 5,500→4,700MW**(旧値過大1.16×p95。
+  OCCTO p95 4,013/LF=4,721)。出典・台帳番号をyamlコメントに記録
+- **検証**: reconcile帯=両地域とも**1.0×p95でq50..p95帯内**に正常化。
+  solve健全性: hokkaido AC収束・n_unsolved 0・vm_min 0.858(需要+44%で電圧は沈むが許容)、
+  shikoku vm 0.958。テスト1件の旧値ハードコード(5500)を更新して981 passed
+- tokyo計器への影響なし(地域独立・境界util不変=ρ再計測不要)。zonal/national成果物は
+  次回regen時に新需要で更新される
+- 意義: M10計器が**初めて具体的なモデル修正を駆動** — fetch→calibrate→reconcile→config修正
+  →帯内確認、の機械的サイクルが一周した
+
 ## 2026-06-11 — **Fable 5** — `ajgrid reconcile`: 需要スケーリングの地域別初検証＋UC入口（55・M10-3）
 
 - **実装**: `scripts/reconcile.py` + `ajgrid reconcile` — measured_area_stats(OCCTO)に対し
