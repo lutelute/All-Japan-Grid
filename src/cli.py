@@ -118,15 +118,18 @@ def cmd_uc(_args, rest):
                        ``--start-day``/``--warmup-days`` for chunked runs)
     ``merge``          merge chunk JSONs into one annual report
     ``ingest-scenarios``  sync config/uc_scenarios + references to grid.db
+    ``to-pf``          inject a UC dispatch snapshot into the power flow
+                       (ybus_gate -> capacity-proportional injection -> AC)
     """
     mapping = {
         "benchmark": "scripts/uc_benchmark.py",
         "annual": "scripts/uc_annual.py",
         "merge": "scripts/uc_annual_merge.py",
         "ingest-scenarios": "scripts/db/ingest_uc_scenarios.py",
+        "to-pf": "scripts/uc_to_pf.py",
     }
     if not rest or rest[0] not in mapping:
-        print("usage: ajgrid uc {benchmark|annual|merge|ingest-scenarios} [args...]")
+        print("usage: ajgrid uc {benchmark|annual|merge|ingest-scenarios|to-pf} [args...]")
         return 2
     return _run(mapping[rest[0]], rest[1:])
 
