@@ -74,6 +74,7 @@ class UCScenarioConfig:
     startup_profiles: dict[str, dict]        # 内部形式 hot/warm/cold/wh/ch/mut/mdt
     capacity_defaults: dict[str, float]
     reference_paths: dict[str, str]
+    annual: dict = field(default_factory=dict)  # 月別係数（8760h合成用）
     raw: dict = field(repr=False, default_factory=dict)  # 元YAML（DB ingest用）
 
     @property
@@ -152,6 +153,7 @@ def load_scenario_config(
         startup_profiles=su,
         capacity_defaults={k: float(v) for k, v in (raw.get("capacity_defaults_mw") or {}).items()},
         reference_paths=dict(raw.get("references") or {}),
+        annual=dict(raw.get("annual") or {}),
         raw=raw,
     )
 
@@ -712,6 +714,97 @@ class NationalScenario:
             regional_demands={r: d.tolist() for r, d in self.net_demand_r.items()},
             extract_duals=extract_duals,
         )
+
+
+_DAYS_PER_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+
+@dataclass
+class AnnualProfiles:
+    """年間時系列（地域別 需要・太陽光・風力、各 (hours,) 配列）。"""
+
+    gross_demand_r: dict[str, np.ndarray]
+    solar_gen_r: dict[str, np.ndarray]
+    wind_gen_r: dict[str, np.ndarray]
+    hours: int = 8760
+
+    @property
+    def net_demand_r(self) -> dict[str, np.ndarray]:
+        return {
+            r: np.maximum(
+                self.gross_demand_r[r] - self.solar_gen_r[r] - self.wind_gen_r[r],
+                0.0,
+            )
+            for r in self.gross_demand_r
+        }
+
+    @property
+    def net_demand_national(self) -> np.ndarray:
+        solar = sum(self.solar_gen_r.values())
+        wind = sum(self.wind_gen_r.values())
+        gross = sum(self.gross_demand_r.values())
+        return np.maximum(gross - solar - wind, 0.0)
+
+
+def build_annual_profiles(
+    config: Optional[UCScenarioConfig] = None,
+    days: int = 365,
+) -> AnnualProfiles:
+    """合成年間時系列を構築する（月別係数 × 24h形状）。
+
+    シナリオの ``annual`` セクション（月別係数）と既存の24h形状・地域容量
+    から 365日×24h=8760h（``days`` 指定で短縮可、ローカル検証用）の
+    需要・太陽光・風力プロファイルを合成する。
+
+    近似であることを明示した Phase 1 実装（機構検証用）。
+    OCCTOエリア需給実績（30分値）による実測置換は Phase 2。
+    """
+    config = load_scenario_config(config)
+    ann = config.annual
+    if not ann:
+        raise ValueError(
+            f"scenario '{config.name}' has no 'annual' section "
+            "(monthly multipliers required for 8760h synthesis)"
+        )
+    dm = [float(x) for x in ann["demand_month_mult"]]
+    sm = [float(x) for x in ann["solar_month_mult"]]
+    wm = [float(x) for x in ann["wind_month_mult"]]
+
+    # 各日の月indexを並べる（365日、閏日なし）
+    month_of_day: list[int] = []
+    for m, ndays in enumerate(_DAYS_PER_MONTH):
+        month_of_day.extend([m] * ndays)
+    month_of_day = month_of_day[:days]
+    n_hours = len(month_of_day) * 24
+
+    demand_mult = np.repeat([dm[m] for m in month_of_day], 24)
+    solar_mult = np.repeat([sm[m] for m in month_of_day], 24)
+    wind_mult = np.repeat([wm[m] for m in month_of_day], 24)
+
+    n_days = len(month_of_day)
+    shape = np.tile(config.demand_shape, n_days)
+    solar_cf_r = config.solar_cf_r
+    wind_cf_r = config.wind_cf_r
+
+    gross_demand_r = {
+        r: shape * demand_mult * config.regional_peak_mw[r] for r in REGIONS
+    }
+    solar_gen_r = {
+        r: np.minimum(np.tile(solar_cf_r[r], n_days) * solar_mult, 1.0)
+        * config.solar_capacity_mw[r]
+        for r in REGIONS
+    }
+    wind_gen_r = {
+        r: np.minimum(np.tile(wind_cf_r[r], n_days) * wind_mult, 1.0)
+        * config.wind_capacity_mw[r]
+        for r in REGIONS
+    }
+    return AnnualProfiles(
+        gross_demand_r=gross_demand_r,
+        solar_gen_r=solar_gen_r,
+        wind_gen_r=wind_gen_r,
+        hours=n_hours,
+    )
 
 
 def build_national_scenario(

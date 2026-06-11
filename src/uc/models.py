@@ -185,6 +185,16 @@ class UCParameters:
             Supported by the HiGHS (highspy API) backend; other backends
             ignore the hint.  An imperfect start is repaired by the
             solver, so time-shifted solutions are acceptable.
+        initial_commitment: Commitment state (``generator_id -> 0/1``)
+            immediately before the first period.  Used by the
+            startup/shutdown logic at t=0 so that units already running
+            do not incur a phantom startup cost.  Missing units default
+            to 0 (offline) — the legacy single-shot assumption.
+        initial_history_h: Signed pre-horizon streak per generator
+            (``+h`` = continuously ON for h hours, ``-h`` = OFF).
+            Enforces remaining minimum up/down time at the window head.
+            Both fields are the state-carrying interface for
+            rolling-horizon solves (src/uc/rolling.py).
     """
 
     generators: List[Generator] = field(default_factory=list)
@@ -199,6 +209,8 @@ class UCParameters:
     regional_demands: Optional[Dict[str, List[float]]] = None
     extract_duals: bool = False
     warm_start_schedules: Optional[List["GeneratorSchedule"]] = None
+    initial_commitment: Optional[Dict[str, int]] = None
+    initial_history_h: Optional[Dict[str, int]] = None
 
     def __post_init__(self) -> None:
         """Validate UC parameters."""

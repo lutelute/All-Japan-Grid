@@ -29,6 +29,7 @@ from src.model.generator import Generator
 from src.uc.constraints import (
     add_capacity_bounds_constraints,
     add_demand_balance_constraints,
+    add_initial_history_constraints,
     add_maintenance_constraints,
     add_min_downtime_constraints,
     add_min_uptime_constraints,
@@ -215,6 +216,8 @@ def solve_uc(params: UCParameters) -> UCResult:
         interconnections=interconnections, f=f,
         y_hot=y_hot, y_warm=y_warm, y_cold=y_cold,
         regional_demands=params.regional_demands,
+        initial_commitment=params.initial_commitment,
+        initial_history_h=params.initial_history_h,
     )
 
     # --- Select and run solver ---------------------------------------------
@@ -359,12 +362,16 @@ def _add_all_constraints(
     y_warm: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     y_cold: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     regional_demands: Optional[Dict[str, List[float]]] = None,
+    initial_commitment: Optional[Dict[str, int]] = None,
+    initial_history_h: Optional[Dict[str, int]] = None,
 ) -> None:
     """Add all constraint classes to the model.
 
     When interconnections are present, uses per-region nodal balance
     constraints instead of system-wide demand balance, and adds
     transmission capacity constraints on flow variables.
+    ``initial_commitment`` / ``initial_history_h`` carry pre-horizon state
+    for rolling-horizon solves.
     """
     if interconnections and f:
         # Nodal balance replaces system-wide demand balance.
@@ -385,7 +392,14 @@ def _add_all_constraints(
     else:
         add_demand_balance_constraints(model, p, generators, timesteps, demand)
     add_capacity_bounds_constraints(model, u, p, generators, timesteps)
-    add_startup_shutdown_logic(model, u, v, w, generators, timesteps)
+    add_startup_shutdown_logic(
+        model, u, v, w, generators, timesteps,
+        initial_commitment=initial_commitment,
+    )
+    if initial_history_h:
+        add_initial_history_constraints(
+            model, u, generators, timesteps, initial_history_h,
+        )
     add_min_uptime_constraints(model, u, v, generators, timesteps)
     add_min_downtime_constraints(model, u, w, generators, timesteps)
     add_ramp_constraints(model, p, u, generators, timesteps)
