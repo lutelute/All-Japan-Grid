@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "e1e42ee",
+    "scenario": "fy2023r2",
+    "scenario_sha256": "55204b4c16bcafec",
+    "start_day": 60,
+    "end_day": 90,
+    "days": 30,
+    "warmup_days": 2,
+    "window_h": 48,
+    "step_h": 24,
+    "warm_start": true
+  },
+  "result": {
+    "status": "Optimal",
+    "hours": 768,
+    "n_windows": 32,
+    "n_retried": 0,
+    "failed_window": null,
+    "solve_time_s": 2434.8,
+    "mean_window_time_s": 76.07,
+    "max_window_time_s": 97.41,
+    "total_cost_oku": 5214.4,
+    "total_energy_twh": 80.77
+  },
+  "fuel_share_pct": {
+    "coal": 42.47,
+    "lng": 28.72,
+    "solar": 10.34,
+    "hydro": 7.95,
+    "nuclear": 4.43,
+    "biomass": 2.46,
+    "wind": 1.51,
+    "oil": 1.0,
+    "geothermal": 0.89,
+    "pumped_hydro": 0.13,
+    "battery": 0.09,
+    "unknown": 0.0
+  },
+  "fuel_energy_mwh": {
+    "biomass": 1989576.0,
+    "pumped_hydro": 103268.8,
+    "lng": 23198905.3,
+    "hydro": 6420816.0,
+    "coal": 34309101.9,
+    "oil": 811704.8,
+    "geothermal": 719496.0,
+    "unknown": 1960.6,
+    "nuclear": 3575520.0,
+    "battery": 70753.1,
+    "solar": 8351617.3,
+    "wind": 1222205.1
+  }
+}
