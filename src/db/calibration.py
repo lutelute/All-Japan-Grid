@@ -146,3 +146,50 @@ def load_measured_bus_loads(db_path: str = DEFAULT_DB,
         return out or None
     except Exception:
         return None
+
+
+SOURCE_OCCTO = "occto_kohyo"
+
+
+def upsert_measured_area_stats(db, rows) -> int:
+    """Upsert OCCTO area/IC aggregates; rows carry area/metric/q50_mw/
+    p95_mw and optional signed_q50_mw, window, source."""
+    from src.db.schema import MeasuredAreaStat
+
+    n = 0
+    now = _now_iso()
+    with db.session_factory() as session:
+        for r in rows:
+            session.merge(MeasuredAreaStat(
+                area=r["area"], metric=r["metric"],
+                source=r.get("source", SOURCE_OCCTO),
+                q50_mw=float(r["q50_mw"]), p95_mw=float(r["p95_mw"]),
+                signed_q50_mw=r.get("signed_q50_mw"),
+                window=r.get("window"), updated_at=now))
+            n += 1
+        session.commit()
+    return n
+
+
+def load_measured_area_stats(db_path: str = DEFAULT_DB,
+                             metric: str | None = None) -> dict | None:
+    """{area: {"q50","p95","signed_q50"}} (optionally one metric),
+    fail-soft None."""
+    if not db_path or not os.path.exists(db_path):
+        return None
+    try:
+        from src.db.grid_db import GridDatabase
+        from src.db.schema import MeasuredAreaStat
+
+        db = GridDatabase(db_path)
+        with db.session_factory() as session:
+            qy = session.query(MeasuredAreaStat)
+            if metric:
+                qy = qy.filter_by(metric=metric)
+            out = {r.area: {"q50": r.q50_mw, "p95": r.p95_mw,
+                            "signed_q50": r.signed_q50_mw,
+                            "metric": r.metric}
+                   for r in qy.all()}
+        return out or None
+    except Exception:
+        return None

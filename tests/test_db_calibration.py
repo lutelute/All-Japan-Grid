@@ -171,3 +171,31 @@ def test_bus_loads_roundtrip_and_method_filter(tmp_path):
     assert set(only_b) == {"庚申塚"}
     assert load_measured_bus_loads(db_path, "kansai") is None
     assert load_measured_bus_loads("/nonexistent.db") is None
+
+
+def test_measured_utilisation_from_db_signs_and_clamp(tmp_path):
+    """occto IC medians -> utilisation: ic_004 flips sign (OCCTO forward
+    is Kansai->Chubu), multi-name ICs sum, and |u|>1 clamps. Verified on
+    real data: all 9 DB-derived values match the frozen hardcode
+    (ledger 54)."""
+    from src.db.calibration import upsert_measured_area_stats
+    from src.powerflow.boundary import measured_utilisation_from_db
+
+    db_path = str(tmp_path / "x.db")
+    db = GridDatabase(db_path)
+    upsert_measured_area_stats(db, [
+        {"area": "北海道・本州間電力連系設備", "metric": "ic_flow_mw",
+         "q50_mw": 133, "p95_mw": 630, "signed_q50_mw": 133.0},
+        {"area": "三重東近江線", "metric": "ic_flow_mw",
+         "q50_mw": 2000, "p95_mw": 2500, "signed_q50_mw": -2000.0},
+        {"area": "関西-中国（東）", "metric": "ic_flow_mw",
+         "q50_mw": 2756, "p95_mw": 4625, "signed_q50_mw": -2756.0},
+        {"area": "関西-中国（西）", "metric": "ic_flow_mw",
+         "q50_mw": 2266, "p95_mw": 3743, "signed_q50_mw": -2266.0},
+    ])
+    u = measured_utilisation_from_db(db_path)
+    assert u["ic_001"] == pytest.approx(133 / 900, abs=0.01)
+    assert u["ic_004"] == pytest.approx(+2000 / 2530, abs=0.01)  # flipped
+    assert u["ic_006"] == -1.0                                   # clamped sum
+    assert "ic_009" not in u                                     # no rows
+    assert measured_utilisation_from_db("/nonexistent.db") is None

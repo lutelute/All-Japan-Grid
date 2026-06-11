@@ -7,6 +7,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — OCCTO実測のDB化: 連系線ハードコードを機械更新に移行（54・M10-2）
+
+- **DB化**: `measured_area_stats`(area,metric,source PK / q50,p95,signed_q50,window) —
+  calibrate.py `--occto` がkohyo_02(エリア需要10地域)+kohyo_04(連系線14本)を集計・upsert。
+  1コマンドで line_stats/bus_loads と同時更新
+- **boundary.py移行**: `measured_utilisation_from_db()` — OCCTO符号付き中央値÷yaml容量
+  (clamp±1)。ic_id↔OCCTO開示名の対応表`_OCCTO_IC`(**ic_004のみ符号反転**=OCCTO順方向が
+  関西→中部)。ハードコードMEASURED_UTILISATIONは凍結スナップショットfallbackに降格
+- **検証**: **全9連系線でDB導出値がハードコードと完全一致**(0.15/0.74/−0.33/0.79/−0.15/
+  −1.00/−0.05/−0.94/−0.49) — 出自データから機械再現できることを実証。モデル不変
+  (値一致のためρ再計測不要と明記)
+- 意義: 連系線実測の更新が fetch_occto_kohyo→calibrate の2手に。単体テストで
+  符号反転・複数名合算・クランプ・フェイルソフトをpin。980 passed
+- M10残: (1)fetch拡張(再エネ実績等) (3)`ajgrid reconcile`レポート+UC時系列入口+LINE
+
 ## 2026-06-11 — **Fable 5** — 道路経路スコア再接続: 計器完成・自動接続は見送り判定（53・M9-2）
 
 - **計器**: `scripts/score_road_reconnection.py` — 66kV帯の分断成分ペア(直線≤crow_max)に

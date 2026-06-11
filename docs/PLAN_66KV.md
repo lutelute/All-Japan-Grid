@@ -60,7 +60,7 @@
 
 ## M10 OCCTO実績突合プラットフォーム（ユーザー許可06-11「作ってもいいかも」）
 - [ ] **fetch拡張**: fetch_occto_kohyo.pyを需要(02)/連系線(04)に加え再エネ実績等の公表系列へ一般化。窓・出典・取得日をメタ管理
-- [ ] **DB化**: `measured_area_stats`(area, metric, q50/p95, window, source) — calibrate.pyと同パターンで1コマンド更新。boundary.pyのMEASURED_UTILISATIONハードコードをDB読みへ移行(fallback維持)
+- [x] **DB化**(54): `measured_area_stats` + calibrate `--occto`(需要10地域+連系線14本)。boundary.pyはDB読み移行済み — **全9連系線でDB導出=ハードコード完全一致**を実証(ic_004のみ符号反転)。ハードコードは凍結fallbackに降格
 - [ ] **突合レポート**: モデル断面(地域需要・燃料別ディスパッチ・境界流)vs OCCTO実績の標準レポートカード(`ajgrid reconcile`案)→docs/reports+LINE送信。**別開発UCの時系列結果を投げ込める入口**(CSV in→突合レポートout)も用意
 
 ---

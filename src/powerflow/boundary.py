@@ -86,6 +86,55 @@ MEASURED_UTILISATION = {
     "ic_009": -0.49,   # 関門連系線 median 1,373 MW Kyushu->Chugoku / 2,780
 }
 
+
+# OCCTO kohyo_04 disclosure name(s) and the sign of OCCTO's forward
+# direction relative to the yaml's from->to, per interconnection. Only
+# ic_004 flips (OCCTO forward = Kansai->Chubu; yaml = Chubu->Kansai) —
+# verified by reproducing every hardcoded MEASURED_UTILISATION value
+# from the raw medians (ledger 54).
+_OCCTO_IC = {
+    "ic_001": (["北海道・本州間電力連系設備"], +1),
+    "ic_002": (["相馬双葉幹線"], +1),
+    "ic_003": (["周波数変換設備"], +1),
+    "ic_004": (["三重東近江線"], -1),
+    "ic_005": (["北陸フェンス"], +1),
+    "ic_006": (["関西-中国（東）", "関西-中国（西）"], +1),
+    "ic_007": (["阿南紀北直流幹線"], +1),
+    "ic_008": (["本四連系線"], +1),
+    "ic_009": (["関門連系線"], +1),
+}
+
+
+def measured_utilisation_from_db(db_path: str = "data/grid.db") -> dict | None:
+    """MEASURED_UTILISATION recomputed from the calibrated DB.
+
+    occto kohyo_04 signed medians (measured_area_stats, metric
+    ic_flow_mw) divided by the yaml capacity, clamped to [-1, 1].
+    Fail-soft None keeps the hardcoded medians as the fallback — the
+    hardcode becomes the frozen 2025-snapshot default, the DB the
+    machine-updatable source (refresh = fetch_occto_kohyo + calibrate).
+    """
+    try:
+        from src.db.calibration import load_measured_area_stats
+    except ImportError:
+        return None
+    stats = load_measured_area_stats(db_path, metric="ic_flow_mw")
+    if not stats:
+        return None
+    out = {}
+    for ic in load_interconnections():
+        spec = _OCCTO_IC.get(ic.get("id"))
+        cap = float(ic.get("capacity_mw", 0) or 0)
+        if not spec or cap <= 0:
+            continue
+        names, sign = spec
+        vals = [stats[n].get("signed_q50") for n in names if n in stats]
+        if len(vals) != len(names) or any(v is None for v in vals):
+            continue
+        out[ic["id"]] = max(-1.0, min(1.0, sign * sum(vals) / cap))
+    return out or None
+
+
 _CLASS_SUFFIX = re.compile(r"\s*(\d+(\.\d+)?kV|\(untyped\))$")
 
 
@@ -263,7 +312,10 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
     Returns a summary dict {ic_id: {mw, bus_names, method}} plus totals;
     ``mw`` > 0 is an import into the region.
     """
-    util = dict(MEASURED_UTILISATION)   # data-driven default (OCCTO medians)
+    util = dict(MEASURED_UTILISATION)   # frozen 2025-snapshot default
+    db_util = measured_utilisation_from_db()
+    if db_util:                          # DB-first (calibrate --occto)
+        util.update(db_util)
     if utilisation:
         util.update(utilisation)
 
