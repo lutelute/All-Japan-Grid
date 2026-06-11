@@ -168,6 +168,55 @@ def test_junction_buses_receive_no_load():
     assert (loaded_types == "b").all()      # all demand on real substations
 
 
+def _measured_net():
+    """3 named substations; 庚申塚 split across two voltage classes."""
+    net = pp.create_empty_network(f_hz=50)
+    pp.create_bus(net, vn_kv=154.0, name="庚申塚変電所 154kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="庚申塚変電所 66kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="角筈変電所 66kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="不在変電所 66kV", type="b")
+    return net
+
+
+def test_measured_loads_pin_buses_and_residual_fills_rest():
+    """M3 placement: name-matched subs get the measured statistic as an
+    absolute load on their LOWEST >=50 kV bus; the synthetic rule fills
+    only the residual on the remaining buses; the regional total holds."""
+    net = _measured_net()
+    cfg = {"regional_peak_demand_mw": {"tokyo": 200.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {154: 0.3, 66: 0.5}}
+    measured = {"庚申塚": {"q50": 46.0, "p95": 80.0},
+                "角筈": {"q50": 38.0, "p95": 60.0},
+                "別地域": {"q50": 999.0, "p95": 999.0}}   # no such bus
+    total = estimate_loads(net, "tokyo", demand_config=cfg,
+                           measured_bus_loads=measured)
+    assert total == pytest.approx(200.0)
+
+    by_name = {net.load.at[i, "name"]: net.load.loc[i]
+               for i in net.load.index}
+    pinned = by_name["measured_庚申塚"]
+    assert float(pinned["p_mw"]) == pytest.approx(80.0)     # p95 default
+    assert int(pinned["bus"]) == 1                          # 66 kV bus wins
+    assert float(by_name["measured_角筈"]["p_mw"]) == pytest.approx(60.0)
+    # residual 200-140=60 lands on the unmatched buses only
+    synth = net.load[~net.load["name"].astype(str).str.startswith("measured_")]
+    assert float(synth["p_mw"].sum()) == pytest.approx(60.0)
+    assert 1 not in set(synth["bus"]) and 2 not in set(synth["bus"])
+
+
+def test_measured_loads_capped_at_regional_target():
+    net = _measured_net()
+    cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {154: 0.3, 66: 0.5}}
+    measured = {"庚申塚": 90.0, "角筈": 110.0}    # bare-MW form, sum 200
+    total = estimate_loads(net, "tokyo", demand_config=cfg,
+                           measured_bus_loads=measured)
+    assert total == pytest.approx(100.0)
+    meas = net.load[net.load["name"].astype(str).str.startswith("measured_")]
+    assert float(meas["p_mw"].sum()) == pytest.approx(100.0)  # scaled 0.5
+    assert sorted(meas["p_mw"]) == pytest.approx([45.0, 55.0])
+
+
 def test_balance_power_by_zone_scales_each_zone_to_its_own_load():
     """Island-wide scaling starves demand-heavy zones (the historical west
     failure mode); the per-zone variant dispatches each zone's fleet to its

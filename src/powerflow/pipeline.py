@@ -74,7 +74,8 @@ def add_reactive_compensation(net, factor=0.6):
 def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none", boundary_imports=True,
-                    boundary_util=None, db=None, boundary_stats=None):
+                    boundary_util=None, db=None, boundary_stats=None,
+                    measured_loads="auto"):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -133,8 +134,18 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
 
+    # Measured demand placement (M3): DB-first — name-matched substations
+    # are pinned to their disclosed busbar statistic when a calibrated DB
+    # is present (scripts/db/calibrate.py); regions without rows get the
+    # synthetic rule unchanged. Pass measured_loads=None to disable.
+    mbl = None
+    if measured_loads == "auto":
+        from src.db.calibration import load_measured_bus_loads
+        mbl = load_measured_bus_loads(region=region)
+    elif isinstance(measured_loads, dict):
+        mbl = measured_loads
     total_load = estimate_loads(net, region=region, demand_config=demand_cfg,
-                                spatial=load_spatial)
+                                spatial=load_spatial, measured_bus_loads=mbl)
     inactive_buses = set(net.bus.index[~net.bus["in_service"]])
     if len(net.load) > 0:
         mask = net.load["bus"].isin(inactive_buses)

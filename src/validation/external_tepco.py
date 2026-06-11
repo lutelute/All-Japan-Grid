@@ -530,7 +530,8 @@ def tepco_busbar_demands(csv66) -> dict:
 def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
                 load_spatial: str = "none", csv154=None, csv66=None,
-                stats_db: str | None = None) -> dict:
+                stats_db: str | None = None,
+                measured_loads="auto") -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -579,7 +580,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                                  backbone_kv=backbone_kv,
                                  load_spatial=load_spatial,
                                  boundary_util=boundary_util,
-                                 boundary_stats=typical)
+                                 boundary_stats=typical,
+                                 measured_loads=measured_loads)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
@@ -780,6 +782,9 @@ def main(argv=None):
                          "measured_line_stats (scripts/db/calibrate.py) "
                          "instead of parsing the CSVs")
     ap.add_argument("--backbone", type=float, default=154.0)
+    ap.add_argument("--no-measured-loads", action="store_true",
+                    help="A/B switch: disable the DB measured-demand "
+                         "placement (synthetic allocation only)")
     args = ap.parse_args(argv)
 
     if not (args.flows and args.from_db) and not os.path.exists(args.csv):
@@ -790,7 +795,9 @@ def main(argv=None):
         csv154 = args.csv154 if args.csv154 and _g.glob(args.csv154) else None
         csv66 = args.csv66 if args.csv66 and _g.glob(args.csv66) else None
         m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
-                        csv154=csv154, csv66=csv66, stats_db=args.from_db)
+                        csv154=csv154, csv66=csv66, stats_db=args.from_db,
+                        measured_loads=(None if args.no_measured_loads
+                                        else "auto"))
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:

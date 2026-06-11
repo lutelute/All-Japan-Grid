@@ -47,6 +47,8 @@ def estimate_loads(
     config_path: str = DEFAULT_DEMAND_CONFIG_PATH,
     skip_existing: bool = False,
     spatial: str = "none",
+    measured_bus_loads: Optional[Dict[str, Any]] = None,
+    measured_stat: str = "p95",
 ) -> float:
     """Distribute synthetic loads across all buses in the network.
 
@@ -77,6 +79,14 @@ def estimate_loads(
             "degree" (tilt by branch degree — see :func:`degree_factors`).
             Kept opt-in until validated against external per-substation
             flow data (TEPCO disclosure; docs/VALIDATION_SOURCES.md).
+        measured_bus_loads: measured per-substation demands
+            ``{normalised sub name: {"q50":.., "p95":..} | MW}`` (e.g.
+            from ``src.db.calibration.load_measured_bus_loads``). Name-
+            matched substation buses are pinned to the measured value
+            (absolute MW); only the residual goes through the synthetic
+            voltage-class rule, on the remaining buses.
+        measured_stat: which measured statistic to pin ("p95" default —
+            closest to the solved peak-ish snapshot; "q50" for medians).
 
     Returns:
         Total active power (MW) allocated across all buses.
@@ -109,6 +119,15 @@ def estimate_loads(
 
     target_mw = peak_mw * load_factor
 
+    # Measured demand placement (M3): pin name-matched substations to
+    # their disclosed busbar/terminal statistic, then let the synthetic
+    # rule fill only the residual on the remaining buses.
+    if measured_bus_loads:
+        placed = _place_measured_loads(net, measured_bus_loads, tan_phi,
+                                       target_mw, stat=measured_stat)
+        if placed > 0.0:
+            skip_existing = True
+
     # Reduce target by existing loads when skipping
     existing_mw = 0.0
     if skip_existing and not net.load.empty:
@@ -130,6 +149,63 @@ def estimate_loads(
         region,
     )
     return total_allocated + existing_mw
+
+
+def _place_measured_loads(net: Any, measured: Dict[str, Any],
+                          tan_phi: float, target_mw: float,
+                          stat: str = "p95") -> float:
+    """Pin measured per-substation demands to name-matched buses.
+
+    A multi-voltage yard places its offtake at its LOWEST >=50 kV bus
+    (the distribution draw hangs off the lowest transmission class, so
+    the 66 kV network carries it — that is what the disclosure
+    measured). Loads are named ``measured_<sub>`` for traceability.
+    The aggregate is capped at *target_mw* (proportional scale-down,
+    logged) so the regional total stays honest.
+
+    Returns the MW placed.
+    """
+    from src.validation.external_tepco import _norm
+
+    candidates: Dict[str, tuple] = {}
+    for b in _delivery_buses(net):
+        name = net.bus.at[b, "name"]
+        if not name:
+            continue
+        vn = float(net.bus.at[b, "vn_kv"])
+        if vn < 50.0:
+            continue
+        key = _norm(str(name))
+        cur = candidates.get(key)
+        if cur is None or vn < cur[1]:
+            candidates[key] = (b, vn)
+
+    rows = []
+    for key, v in measured.items():
+        if isinstance(v, dict):
+            mw = float(v.get(stat) or v.get("q50") or 0.0)
+        else:
+            mw = float(v)
+        hit = candidates.get(key)
+        if mw <= 0.0 or hit is None:
+            continue
+        rows.append((hit[0], key, mw))
+    if not rows:
+        return 0.0
+
+    total = sum(mw for _b, _k, mw in rows)
+    scale = min(1.0, target_mw / total) if total > 0 else 1.0
+    if scale < 1.0:
+        logger.warning(
+            "Measured loads (%.0f MW) exceed the regional target "
+            "(%.0f MW); scaling by %.2f", total, target_mw, scale)
+    for b, key, mw in rows:
+        p = mw * scale
+        pp.create_load(net, bus=b, p_mw=p, q_mvar=p * tan_phi,
+                       name=f"measured_{key}")
+    logger.info("Pinned %d measured substation loads (%.0f MW, stat=%s)",
+                len(rows), total * scale, stat)
+    return total * scale
 
 
 def _estimate_loads_national(

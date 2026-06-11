@@ -1,0 +1,86 @@
+{
+ "region": "tokyo",
+ "backbone_kv": 0.0,
+ "load_spatial": "none",
+ "quantile": 0.95,
+ "n_measured_lines": 705,
+ "n_model_named_lines": 1697,
+ "n_matched": 419,
+ "boundary_corridors_excluded": [
+  "南いわき幹線",
+  "新いわき線"
+ ],
+ "boundary_calibration": {
+  "ic_002": 0.572972972972973
+ },
+ "spearman_rho": 0.47,
+ "spearman_p": 1.97e-24,
+ "median_model_over_measured": 1.08,
+ "interior_spearman_rho": 0.463,
+ "interior_spearman_p": 1.52e-23,
+ "interior_median_model_over_measured": 1.09,
+ "trunk_spearman_rho": 0.617,
+ "trunk_spearman_p": 4.91e-09,
+ "trunk_median_model_over_measured": 0.68,
+ "kv154_spearman_rho": 0.097,
+ "kv154_spearman_p": 0.575,
+ "kv154_median_model_over_measured": 0.61,
+ "kv66_spearman_rho": 0.144,
+ "kv66_spearman_p": 0.0115,
+ "kv66_median_model_over_measured": 1.25,
+ "n_interior_trunk": 74,
+ "n_interior_154": 36,
+ "n_interior_66": 307,
+ "top_mismatches": [
+  {
+   "line": "西町線",
+   "measured_p95_mw": 8.0,
+   "model_dc_mw": 3177.0
+  },
+  {
+   "line": "北千代田線",
+   "measured_p95_mw": 138.0,
+   "model_dc_mw": 2937.0
+  },
+  {
+   "line": "田端線",
+   "measured_p95_mw": 138.0,
+   "model_dc_mw": 2937.0
+  },
+  {
+   "line": "笹目線",
+   "measured_p95_mw": 270.0,
+   "model_dc_mw": 2912.0
+  },
+  {
+   "line": "新京葉線",
+   "measured_p95_mw": 4910.0,
+   "model_dc_mw": 2531.0
+  },
+  {
+   "line": "港北線",
+   "measured_p95_mw": 2420.0,
+   "model_dc_mw": 336.0
+  },
+  {
+   "line": "新栃木線",
+   "measured_p95_mw": 4090.0,
+   "model_dc_mw": 2150.0
+  },
+  {
+   "line": "桜ヶ丘線",
+   "measured_p95_mw": 2124.0,
+   "model_dc_mw": 189.0
+  },
+  {
+   "line": "野田線",
+   "measured_p95_mw": 474.0,
+   "model_dc_mw": 2331.0
+  },
+  {
+   "line": "新新田線",
+   "measured_p95_mw": 2890.0,
+   "model_dc_mw": 1075.0
+  }
+ ]
+}
