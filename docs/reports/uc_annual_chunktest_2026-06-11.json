@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "bdd41ca",
+    "scenario": "fy2023",
+    "start_day": 2,
+    "end_day": 3,
+    "days": 1,
+    "warmup_days": 2,
+    "window_h": 48,
+    "step_h": 24,
+    "warm_start": true
+  },
+  "result": {
+    "status": "Optimal",
+    "hours": 72,
+    "n_windows": 3,
+    "n_retried": 0,
+    "failed_window": null,
+    "solve_time_s": 58.7,
+    "mean_window_time_s": 19.54,
+    "max_window_time_s": 25.36,
+    "total_cost_oku": 122.9,
+    "total_energy_twh": 3.02
+  },
+  "fuel_share_pct": {
+    "coal": 34.11,
+    "lng": 32.57,
+    "solar": 10.46,
+    "nuclear": 9.24,
+    "hydro": 5.11,
+    "wind": 4.62,
+    "biomass": 2.19,
+    "geothermal": 0.8,
+    "oil": 0.61,
+    "battery": 0.19,
+    "pumped_hydro": 0.11,
+    "unknown": 0.0
+  },
+  "fuel_energy_mwh": {
+    "biomass": 65991.6,
+    "pumped_hydro": 3357.2,
+    "lng": 982301.0,
+    "hydro": 154027.2,
+    "coal": 1028565.6,
+    "oil": 18273.0,
+    "geothermal": 23983.2,
+    "unknown": 93.1,
+    "nuclear": 278592.0,
+    "battery": 5719.0,
+    "solar": 315573.3,
+    "wind": 139289.1
+  }
+}

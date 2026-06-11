@@ -141,12 +141,18 @@ def _shift_schedules(
 def _recompute_cost(
     acc: Dict[str, GeneratorSchedule],
     generators: List[Generator],
+    skip_h: int = 0,
 ) -> float:
-    """確定スケジュールから年間コストを再計算する。
+    """確定スケジュールからコストを再計算する。
 
     窓のobjective合計はlookahead重複を含むため使えない。fuel + no_load/labor
     + 起動費（0→1遷移×hot_start相当）で再構成する。3-state起動の厳密な
-    warm/cold判定は行わない（hotで近似、概算であることをdocstringに明記）。
+    warm/cold判定は行わない（hotで近似の概算）。
+
+    Args:
+        skip_h: 先頭から除外する期間数（チャンク並列のwarmup）。起動判定の
+            直前状態には ``commitment[skip_h-1]`` を使い、warmup境界での
+            幻の起動費を発生させない。
     """
     gen_map = {g.id: g for g in generators}
     total = 0.0
@@ -154,15 +160,19 @@ def _recompute_cost(
         g = gen_map.get(gid)
         if g is None:
             continue
-        power = np.asarray(sched.power_output_mw)
-        commit = np.asarray(sched.commitment, dtype=int)
+        power = np.asarray(sched.power_output_mw[skip_h:])
+        commit = np.asarray(sched.commitment[skip_h:], dtype=int)
         total += float(power.clip(min=0).sum()) * g.fuel_cost_per_mwh
         total += float(commit.sum()) * (g.no_load_cost + g.labor_cost_per_h)
         if len(commit):
-            starts = int(np.maximum(np.diff(commit, prepend=0), 0).sum())
+            prev = (
+                int(sched.commitment[skip_h - 1]) if skip_h > 0
+                and len(sched.commitment) >= skip_h else 0
+            )
+            starts = int(np.maximum(np.diff(commit, prepend=prev), 0).sum())
             startup_cost = g.hot_start_cost or g.startup_cost
             total += starts * startup_cost
-            stops = int(np.maximum(-np.diff(commit, prepend=0), 0).sum())
+            stops = int(np.maximum(-np.diff(commit, prepend=prev), 0).sum())
             total += stops * g.shutdown_cost
     return total
 

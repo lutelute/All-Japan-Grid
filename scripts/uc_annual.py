@@ -2,8 +2,14 @@
 
 使い方:
     python scripts/uc_annual.py --days 7 --label smoke      # ローカル検証
-    python scripts/uc_annual.py --label fy2023_full         # 365日（サーバー推奨）
-    python scripts/uc_annual.py --days 365 --window 48 --step 24
+    python scripts/uc_annual.py --label fy2023_full         # 365日（直列）
+    # チャンク並列（160コアサーバー向け）: 30日チャンク+2日warmup
+    python scripts/uc_annual.py --start-day 30 --days 30 --warmup-days 2 --label chunk1
+    # → 全チャンク完了後 scripts/uc_annual_merge.py でマージ
+
+チャンク方式: warmup期間（既定2日）を頭に付けて解き、集計から捨てる。
+状態（SOC日次サイクル・min up/down≤48h）はwarmup内で実用上収束するため、
+チャンク境界の状態断絶の影響は無視できる（開示済みの近似）。
 
 出力: docs/reports/uc_annual_<label>_<date>.json
 （年間燃料シェア・コスト・窓統計。24hベンチ (uc_benchmark) と同じシェア定義）
@@ -21,7 +27,11 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 
-from src.uc.rolling import RollingUCConfig, solve_rolling_uc  # noqa: E402
+from src.uc.rolling import (  # noqa: E402
+    RollingUCConfig,
+    _recompute_cost,
+    solve_rolling_uc,
+)
 from src.uc.scenario import (  # noqa: E402
     build_annual_profiles,
     build_national_scenario,
@@ -42,6 +52,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--scenario", default="fy2023")
     ap.add_argument("--days", type=int, default=365)
+    ap.add_argument("--start-day", type=int, default=0,
+                    help="開始日（チャンク並列用、年間プロファイル内の日index）")
+    ap.add_argument("--warmup-days", type=int, default=0,
+                    help="状態収束用に頭に付けて解き、集計から捨てる日数")
     ap.add_argument("--window", type=int, default=48, help="窓長 (h)")
     ap.add_argument("--step", type=int, default=24, help="前進幅 (h)")
     ap.add_argument("--mip-gap", type=float, default=0.01)
@@ -51,13 +65,21 @@ def main() -> int:
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
-    print(f"シナリオ構築中... ({args.scenario}, {args.days}日)")
+    warmup_days = min(args.warmup_days, args.start_day)  # 年頭はwarmup不可
+    warmup_h = warmup_days * 24
+    s_h = (args.start_day - warmup_days) * 24
+    e_day = min(args.start_day + args.days, 365)
+    e_h = e_day * 24
+
+    print(f"シナリオ構築中... ({args.scenario}, day {args.start_day}-{e_day - 1}"
+          f"{f' +warmup{warmup_days}d' if warmup_days else ''})")
     scn = build_national_scenario(scenario=args.scenario)
-    profiles = build_annual_profiles(scn.config, days=args.days)
-    hours = profiles.hours
-    net_r = profiles.net_demand_r
-    net_nat = profiles.net_demand_national
+    profiles = build_annual_profiles(scn.config, days=365)
+    net_r = {r: d[s_h:e_h] for r, d in profiles.net_demand_r.items()}
+    net_nat = profiles.net_demand_national[s_h:e_h]
+    hours = len(net_nat)
     print(f"  発電機 {len(scn.generators)}機 / {hours}h "
+          f"(うちwarmup {warmup_h}h は集計除外) "
           f"/ ピーク純需要 {net_nat.max() / 1000:.1f} GW "
           f"/ 最小 {net_nat.min() / 1000:.1f} GW")
 
@@ -72,28 +94,35 @@ def main() -> int:
     res = solve_rolling_uc(
         scn.generators, net_nat, net_r, scn.interconnections, cfg,
     )
+    # warmup除外のコスト（チャンク集計・マージに使う正味値）
+    net_cost = _recompute_cost(res.schedules, scn.generators, skip_h=warmup_h)
     print(f"  {res.status}, {res.n_windows}窓, {res.solve_time_s}s, "
-          f"再計算コスト ¥{res.total_cost / 1e8:.1f}億")
+          f"正味コスト ¥{net_cost / 1e8:.1f}億")
 
     # ── 年間燃料シェア（uc_benchmark と同じエネルギーベース定義） ──
+    # warmup期間は集計から除外（チャンク並列の状態収束緩衝）
     gen_map = {g.id: g for g in scn.generators}
     fuel_energy: dict = {}
     for gid, sched in res.schedules.items():
         g = gen_map.get(gid)
         if g is None:
             continue
-        e = float(np.asarray(sched.power_output_mw).clip(min=0).sum())
+        e = float(
+            np.asarray(sched.power_output_mw[warmup_h:]).clip(min=0).sum()
+        )
         fuel_energy[g.fuel_type] = fuel_energy.get(g.fuel_type, 0.0) + e
     n_solved_h = (
         len(next(iter(res.schedules.values())).power_output_mw)
         if res.schedules else 0
     )
-    fuel_energy["solar"] = float(
-        sum(s[:n_solved_h].sum() for s in profiles.solar_gen_r.values())
-    )
-    fuel_energy["wind"] = float(
-        sum(w[:n_solved_h].sum() for w in profiles.wind_gen_r.values())
-    )
+    fuel_energy["solar"] = float(sum(
+        s[s_h + warmup_h:s_h + n_solved_h].sum()
+        for s in profiles.solar_gen_r.values()
+    ))
+    fuel_energy["wind"] = float(sum(
+        w[s_h + warmup_h:s_h + n_solved_h].sum()
+        for w in profiles.wind_gen_r.values()
+    ))
     total = sum(fuel_energy.values())
     share = {
         k: round(v / total * 100, 2)
@@ -106,7 +135,10 @@ def main() -> int:
             "date": _dt.date.today().isoformat(),
             "git_head": _git_head(),
             "scenario": args.scenario,
-            "days": args.days,
+            "start_day": args.start_day,
+            "end_day": e_day,
+            "days": e_day - args.start_day,
+            "warmup_days": warmup_days,
             "window_h": cfg.window_h,
             "step_h": cfg.step_h,
             "warm_start": cfg.warm_start,
@@ -125,10 +157,12 @@ def main() -> int:
             "max_window_time_s": (
                 max(res.window_times_s) if res.window_times_s else None
             ),
-            "total_cost_oku": round(res.total_cost / 1e8, 1),
+            "total_cost_oku": round(net_cost / 1e8, 1),
             "total_energy_twh": round(total / 1e6, 2),
         },
         "fuel_share_pct": share,
+        # マージ用の絶対量（MWh、warmup除外済み）
+        "fuel_energy_mwh": {k: round(v, 1) for k, v in fuel_energy.items()},
     }
     out = args.out or (
         f"docs/reports/uc_annual_{args.label}_{report['meta']['date']}.json"
