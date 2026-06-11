@@ -30,7 +30,12 @@ AREA_TO_REGION = {
     "沖縄": "okinawa",
 }
 
-DEFAULT_ENDPOINT = "https://web-kohyo.occto.or.jp/kks-web-public/dl/csv"
+# 実証済みエンドポイント（main側 fetch_occto_kohyo.py / IMPROVEMENT_LOG ⑲）。
+# 日付は YYYY/MM/DD 形式、User-Agent 必須（無いと拒否されるOverpass同様の慣行）
+DEFAULT_ENDPOINT = (
+    "https://web-kohyo.occto.or.jp/kks-web-public/download/downloadCsv"
+)
+_UA = {"User-Agent": "All-Japan-Grid dataspace (research; contact in repo)"}
 
 
 class OcctoConnector:
@@ -51,11 +56,13 @@ class OcctoConnector:
         endpoint = query.get("endpoint", DEFAULT_ENDPOINT)
         params = dict(query.get("params") or {})
         params.setdefault("jhSybt", jh)
-        params.setdefault("dateFrom", query.get("date_from"))
-        params.setdefault("dateTo", query.get("date_to"))
+        params.setdefault(
+            "tgtYmdFrom", str(query.get("date_from", "")).replace("-", "/"))
+        params.setdefault(
+            "tgtYmdTo", str(query.get("date_to", "")).replace("-", "/"))
 
         logger.info("occto fetch %s %s", endpoint, params)
-        resp = requests.get(endpoint, params=params, timeout=60)
+        resp = requests.get(endpoint, params=params, headers=_UA, timeout=120)
         if resp.status_code != 200:
             raise RuntimeError(
                 f"occto connector: HTTP {resp.status_code} from {endpoint} — "
@@ -67,40 +74,52 @@ class OcctoConnector:
 
     @staticmethod
     def parse_area_csv(text: str, stat: str = "series") -> Dict[str, Any]:
-        """OCCTOエリア需給CSV（ヘッダにエリア名列を含む形式）をパースする。
+        """OCCTOエリア需給CSV（jhSybt=02、実構造=行指向）をパースする。
 
-        返却: {region: [MW...]}（series）または {region: {median,p95,max,n}}。
-        列構成のゆらぎに対し「エリア名を含む列を需要値として拾う」寛容パース。
+        実フォーマット（2026-06実測）: 1行目=UPDATEスタンプ、2行目=ヘッダ
+        （「エリア名」「エリア需要(MW)」列を含む）、以降 1行=時刻×エリア。
+        ヘッダ名でindexを特定するため列の追加・並び替えに頑健。
+
+        返却: {region: [MW...]}（時刻順series）または
+        {region: {n, median, p95, max}}（summary）。
         """
         reader = csv.reader(io.StringIO(text))
         rows = [r for r in reader if r]
-        if not rows:
+        # ヘッダ行（「エリア名」を含む行）を探す（先頭はUPDATEスタンプ等）
+        h_idx = next(
+            (i for i, r in enumerate(rows) if any("エリア名" in c for c in r)),
+            None,
+        )
+        if h_idx is None:
             return {}
-        header = rows[0]
-        col_of: Dict[str, int] = {}
-        for i, h in enumerate(header):
-            for area, region in AREA_TO_REGION.items():
-                if area in h and region not in col_of:
-                    col_of[region] = i
-        series: Dict[str, list] = {r: [] for r in col_of}
-        for row in rows[1:]:
-            for region, i in col_of.items():
-                if i < len(row):
-                    try:
-                        series[region].append(float(row[i].replace(",", "")))
-                    except ValueError:
-                        continue
+        header = rows[h_idx]
+        try:
+            i_area = next(i for i, c in enumerate(header) if "エリア名" in c)
+            i_dem = next(i for i, c in enumerate(header)
+                         if "エリア需要" in c)
+        except StopIteration:
+            return {}
+        series: Dict[str, list] = {}
+        for row in rows[h_idx + 1:]:
+            if len(row) <= max(i_area, i_dem):
+                continue
+            region = AREA_TO_REGION.get(row[i_area].strip())
+            if region is None:
+                continue
+            try:
+                val = float(row[i_dem].replace(",", ""))
+            except ValueError:
+                continue
+            series.setdefault(region, []).append(val)
         if stat == "series":
             return series
         out = {}
         for region, vals in series.items():
-            if not vals:
-                continue
             sv = sorted(vals)
             out[region] = {
                 "n": len(sv),
                 "median": sv[len(sv) // 2],
-                "p95": sv[int(len(sv) * 0.95)],
+                "p95": sv[min(int(len(sv) * 0.95), len(sv) - 1)],
                 "max": sv[-1],
             }
         return out

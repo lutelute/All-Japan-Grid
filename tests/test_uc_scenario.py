@@ -564,3 +564,65 @@ class TestSyntheticMaintenance:
         assert len(wins) == 3
         for (s1, e1), (s2, e2) in zip(wins, wins[1:]):
             assert e1 <= s2  # 交差なし
+
+
+class TestPatchExtensions:
+    def test_fuel_and_override_patch(self, tmp_path):
+        # 七尾大田: biomass誤タグ+欠損 → coal 1200 に補正（fuel+override）
+        _write_geojson(
+            tmp_path / "hokuriku_plants.geojson",
+            [_feat("七尾大田火力発電所", "biomass", -1.0, 11)],
+        )
+        gens = load_national_thermal_generators(str(tmp_path))
+        g = next(g for g in gens if "七尾大田" in g.name)
+        assert g.fuel_type == "coal"
+        assert g.capacity_mw == pytest.approx(1200)
+
+    def test_positive_nameplate_override(self, tmp_path):
+        # 富山新港: 正値1500（旧名板）でも override で現役425/lngに補正
+        _write_geojson(
+            tmp_path / "hokuriku_plants.geojson",
+            [_feat("富山新港火力発電所", "coal", 1500.0, 12)],
+        )
+        gens = load_national_thermal_generators(str(tmp_path))
+        g = next(g for g in gens if "富山新港" in g.name)
+        assert g.capacity_mw == pytest.approx(425)
+        assert g.fuel_type == "lng"
+
+    def test_region_patch_overrides_bbox_assignment(self, tmp_path):
+        # 敦賀火力: kansaiスライス出現でも region パッチで hokuriku 帰属
+        _write_geojson(
+            tmp_path / "kansai_plants.geojson",
+            [_feat("敦賀火力発電所", "coal", 1200.0, 13)],
+        )
+        gens = load_national_thermal_generators(str(tmp_path))
+        g = next(g for g in gens if "敦賀火力" in g.name)
+        assert g.region == "hokuriku"
+
+
+class TestInterconnectionOverrides:
+    def test_fy2023r2_hokuriku_ties(self, tmp_path):
+        # オーナー指摘の回帰ピン: 北陸フェンス300MW + 北陸関西1,900MW
+        _write_geojson(tmp_path / "tokyo_plants.geojson",
+                       [_feat("A", "coal", 600, 1)])
+        scn = build_national_scenario(
+            data_dir=str(tmp_path), scenario="fy2023r2",
+            pumped_storage=False, nuclear_status=False,
+        )
+        caps = {ic.id: ic.capacity_mw for ic in scn.interconnections}
+        assert caps["ic_005"] == pytest.approx(300)
+        assert caps["ic_010"] == pytest.approx(1900)
+        ic10 = next(ic for ic in scn.interconnections if ic.id == "ic_010")
+        assert (ic10.from_region, ic10.to_region) == ("hokuriku", "kansai")
+
+    def test_fy2023_unchanged(self, tmp_path):
+        # 凍結シナリオ fy2023 は従来の連系線のまま（再現性保持）
+        _write_geojson(tmp_path / "tokyo_plants.geojson",
+                       [_feat("A", "coal", 600, 1)])
+        scn = build_national_scenario(
+            data_dir=str(tmp_path), scenario="fy2023",
+            pumped_storage=False, nuclear_status=False,
+        )
+        caps = {ic.id: ic.capacity_mw for ic in scn.interconnections}
+        assert caps["ic_005"] == pytest.approx(1900)
+        assert "ic_010" not in caps

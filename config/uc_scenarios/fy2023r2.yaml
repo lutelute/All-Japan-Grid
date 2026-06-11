@@ -204,6 +204,23 @@ maintenance:
     lng: 4
     oil: 4
 
+# 連系線のシナリオ別補正（オーナー指摘 2026-06-11: 「北陸に2,000MWもtielineは
+# 無い」）。data/reference/interconnections.yaml は潮流側(main)と共有のため
+# 直接編集せず、UCシナリオ側で上書き・追加する。本体改訂はmainマージ時に
+# boundary.py の MEASURED_UTILISATION（容量比）と整合させて行う（台帳記録）。
+interconnections:
+  overrides:
+    # 北陸フェンス（中部-北陸間）: 系統安定度制約による運用容量オーダー。
+    # 旧1,900MWは北陸関西間の容量との混同とみられる
+    ic_005: {capacity_mw: 300}
+  additions:
+    # 北陸関西間連系線（yaml本体に不在だった主要ルート）
+    - id: ic_010
+      name_en: "Hokuriku-Kansai Interconnection"
+      from_region: hokuriku
+      to_region: kansai
+      capacity_mw: 1900
+
 # [S1] ベンチマークの乖離KPIの正本（総発電ベース、%）。
 # モデル側は hydro = hydro+pumped_hydro+hydro_ror 合算で比較する
 # （統計の「水力」は揚水発電分を含むため）。oil は統計上「石油等」

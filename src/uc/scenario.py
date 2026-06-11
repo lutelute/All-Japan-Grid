@@ -79,6 +79,9 @@ class UCScenarioConfig:
     hydro_ror_capacity_mw: dict[str, float] = field(default_factory=dict)
     hydro_ror_cf_base: Optional[np.ndarray] = None
     hydro_ror_multiplier: dict[str, float] = field(default_factory=dict)
+    # 連系線のシナリオ別補正（共有yamlを直接編集せずに上書き/追加）
+    interconnection_overrides: dict = field(default_factory=dict)
+    interconnection_additions: list = field(default_factory=list)
     annual: dict = field(default_factory=dict)  # 月別係数（8760h合成用）
     raw: dict = field(repr=False, default_factory=dict)  # 元YAML（DB ingest用）
 
@@ -179,6 +182,12 @@ def load_scenario_config(
             k: float(v)
             for k, v in (hydro_ror.get("regional_multiplier") or {}).items()
         },
+        interconnection_overrides=dict(
+            (raw.get("interconnections") or {}).get("overrides") or {}
+        ),
+        interconnection_additions=list(
+            (raw.get("interconnections") or {}).get("additions") or []
+        ),
         annual=dict(raw.get("annual") or {}),
         raw=raw,
     )
@@ -337,26 +346,29 @@ def load_national_thermal_generators(
             if rf.startswith("http"):
                 rf = "unknown"
             fuel = FUEL_MAP.get(rf, "unknown")
+            # 個別パッチ: 容量欠損の補完に加え、override指定で正値の名板補正・
+            # 燃料誤タグ補正(fuel)・帰属補正(region)も行う（出典はYAMLのnote）
+            name_for_patch = props.get("name") or ""
+            patch = next(
+                (pt for pt in capacity_patches if pt["match"] in name_for_patch),
+                None,
+            )
+            if patch and patch.get("fuel"):
+                fuel = patch["fuel"]
             # 太陽光・風力はシナリオ参照値を使用するためOSMエントリは除外
             if fuel in ("solar", "wind", "battery"):
                 continue
-            # 欠損・負値の補完: 個別パッチ（大規模の例外）→ 燃料別既定値
-            if cap <= 0:
-                name_for_patch = props.get("name") or ""
-                patch = next(
-                    (pt for pt in capacity_patches if pt["match"] in name_for_patch),
-                    None,
-                )
-                if patch is not None:
-                    cap = float(patch["capacity_mw"])
-                    stats.n_capacity_patched += 1
-                else:
-                    cap = capacity_defaults.get(rf, 0.0)
-                    if cap > 0:
-                        stats.n_capacity_defaulted += 1
+            if patch and (cap <= 0 or patch.get("override")):
+                cap = float(patch.get("capacity_mw", cap))
+                stats.n_capacity_patched += 1
+            elif cap <= 0:
+                cap = capacity_defaults.get(rf, 0.0)
+                if cap > 0:
+                    stats.n_capacity_defaulted += 1
             if cap < MIN_UNIT_MW:
                 stats.n_skipped_small += 1
                 continue
+            assigned_region = (patch.get("region") if patch else None) or r
             # 重複帰属の解決（UC入力相当=フィルタ通過コピーのみ統計に計上）
             oid = props.get("osm_id")
             if oid is not None:
@@ -372,7 +384,7 @@ def load_national_thermal_generators(
             g = Generator(
                 id=f"{r}_g{i}",
                 name=(props.get("name") or f"{r}_{fuel}_{i}")[:40],
-                capacity_mw=cap, fuel_type=fuel, region=r,
+                capacity_mw=cap, fuel_type=fuel, region=assigned_region,
                 fuel_cost_per_mwh=fuel_cost.get(fuel, 5000),
                 no_load_cost=500 if not is_storage and fuel != "geothermal" else 0,
                 startup_cost=sp.get("hot", 3000) if not is_storage else 0,
@@ -979,6 +991,17 @@ def build_national_scenario(
         gens.append(build_battery(r, config=config))
 
     ics = InterconnectionLoader().load(interconnections_path)
+    # シナリオ別の連系線補正（共有yamlは不変のまま上書き/追加）
+    if config.interconnection_overrides:
+        ics = [
+            replace(ic, **{
+                k: v for k, v in
+                config.interconnection_overrides.get(ic.id, {}).items()
+            }) if ic.id in config.interconnection_overrides else ic
+            for ic in ics
+        ]
+    for add in config.interconnection_additions:
+        ics.append(Interconnection(**add))
     gross_demand_r = {
         r: config.demand_shape * config.regional_peak_mw[r] for r in REGIONS
     }

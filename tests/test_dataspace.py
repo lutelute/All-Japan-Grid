@@ -120,22 +120,30 @@ class TestNoConnectorContract:
 
 
 class TestOcctoParse:
+    # 実フォーマット（2026-06実測）: UPDATEスタンプ行 + ヘッダ + 行指向
     CSV = (
-        "日時,北海道エリア需要,東京エリア需要,九州エリア需要\n"
-        "2025/04/01 00:00,2900,28000,8000\n"
-        "2025/04/01 00:30,2800,27500,7900\n"
-        "2025/04/01 01:00,2750,27000,7800\n"
+        '"2026/06/09 23:00 UPDATE"\n'
+        '"対象年月日","時刻","ブロックNo","エリア名","広域ブロック需要(MW)","エリア需要(MW)","エリア供給力(MW)"\n'
+        '"2026/06/09","00:30","1","北海道","46044","2491","2721"\n'
+        '"2026/06/09","00:30","1","東京","46044","24058","26330"\n'
+        '"2026/06/09","01:00","1","北海道","45800","2450","2700"\n'
+        '"2026/06/09","01:00","1","東京","45800","23500","26000"\n'
+        '"2026/06/09","01:00","9","九州","12000","7900","9000"\n'
     )
 
-    def test_series(self):
+    def test_series_row_oriented(self):
         from src.dataspace.connectors.occto import OcctoConnector
         s = OcctoConnector.parse_area_csv(self.CSV, stat="series")
-        assert s["hokkaido"] == [2900.0, 2800.0, 2750.0]
-        assert s["tokyo"][0] == 28000.0
-        assert "kansai" not in s  # 列に無い地域は含めない
+        # エリア名列でグループ化、エリア需要(MW)列を時系列化
+        assert s["hokkaido"] == [2491.0, 2450.0]
+        assert s["tokyo"] == [24058.0, 23500.0]
+        assert s["kyushu"] == [7900.0]
+        assert "kansai" not in s  # 行に無い地域は含めない
+        # 広域ブロック需要(46044)を誤って拾っていない
+        assert 46044.0 not in s["hokkaido"]
 
     def test_summary(self):
         from src.dataspace.connectors.occto import OcctoConnector
         s = OcctoConnector.parse_area_csv(self.CSV, stat="summary")
-        assert s["kyushu"]["n"] == 3
-        assert s["kyushu"]["max"] == 8000.0
+        assert s["tokyo"]["n"] == 2
+        assert s["tokyo"]["max"] == 24058.0

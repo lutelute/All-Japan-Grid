@@ -53,6 +53,24 @@ providers:
     granularity: 発電所単位（2013年版、名板陳腐化に注意）
     notes: 既存DB機械更新ループ（fetch→ingest→enrich→export）が取得経路の正本
 
+  nas03_generation_records:
+    title: 発電実績・でんき予報アーカイブ（研究室NAS03）
+    custodian: 研究室 pws-nas03 (UGREEN DXP4800 Plus)
+    location: "env:AJGRID_NAS03_ROOT"
+    license: 元データの各電力会社・OCCTO公表条件に従う（生データ再配布不可）
+    redistribute_raw: false
+    redistribute_derived: true
+    connector: null                # 所在・形式の確認後にコネクタ実装（Phase 2）
+    variables:
+      - {name: area_generation_actual, desc: エリア別・電源種別の発電実績}
+      - {name: denki_yoho, desc: でんき予報（需要予測・太陽光出力予測等）}
+    granularity: 要確認（各社CSV形式・期間）
+    notes: >-
+      オーナー示唆(2026-06-11): UC検証には発電実績があるのでnas03から参照する、
+      でんき予報も参照可。NAS上のパス・ファイル形式の確認後、MSMと同じ
+      所在ガード方式でコネクタ化する。UCの燃料別シェア検証を「年間統計1点」
+      から「月次・地域別の実績系列」比較へ強化できる。
+
   energy_stats:
     title: 資源エネルギー庁 電力調査統計・総合エネルギー統計
     custodian: 経済産業省 資源エネルギー庁

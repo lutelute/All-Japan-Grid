@@ -38,6 +38,24 @@ patches:
   - {match: 川内発電所, capacity_mw: 0, note: 九電川内火力1,2号 廃止（川内原子力とは別。部分一致は原子力名に非該当）}
   - {match: 下松火力, capacity_mw: 0, note: 中国電力下松 廃止}
   - {match: 池島町長崎市発電所, capacity_mw: 0, note: 池島炭鉱跡 廃止}
+  # ── 2026-06-11追補2: 北陸の域内供給力過小（オーナー指摘）の是正 ──
+  # 拡張キー: fuel=燃料誤タグ補正 / region=帰属補正 / override=正値も上書き
+  - match: 七尾大田
+    capacity_mw: 1200
+    fuel: coal
+    override: true
+    note: 北陸電力 七尾大田1,2号(500+700)。OSMはbiomass誤タグ+容量-1.0欠損だった
+  - match: 敦賀火力
+    capacity_mw: 1200
+    region: hokuriku
+    override: true
+    note: 北陸電力 敦賀1,2号(500+700)。所在(敦賀市)がbbox帰属でkansaiに流れるため北陸へ固定
+  - match: 富山新港
+    capacity_mw: 425
+    fuel: lng
+    override: true
+    note: 現役はLNG1号424.7MWのみ（石炭250×2は2018廃止）。OSMの1500は旧名板
+
   # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
   # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
   - {match: 吉の浦火力, capacity_mw: 0, note: 沖縄は合成火力に一本化（二重計上防止）}
