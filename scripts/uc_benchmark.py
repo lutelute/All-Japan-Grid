@@ -15,6 +15,7 @@ KPI構成:
 
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import os
 import subprocess
@@ -55,6 +56,12 @@ def _git_head() -> str:
         ).stdout.strip()
     except Exception:
         return "unknown"
+
+
+def _scenario_sha256(config) -> str:
+    """シナリオ定義の指紋（再現性担保: どの断面で計測したか機械検証可能）。"""
+    blob = json.dumps(config.raw, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(blob.encode()).hexdigest()[:16]
 
 
 def run_benchmark(reserve_margin: float, mip_gap: float,
@@ -101,12 +108,30 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
 
     fuel_energy["solar"] = float(sum(s.sum() for s in scn.solar_gen_r.values()))
     fuel_energy["wind"] = float(sum(w.sum() for w in scn.wind_gen_r.values()))
+    if scn.hydro_ror_gen_r:
+        # 中小水力RoR控除分は hydro として計上（実態統計との比較整合）
+        fuel_energy["hydro"] = fuel_energy.get("hydro", 0.0) + float(
+            sum(h.sum() for h in scn.hydro_ror_gen_r.values())
+        )
     total_mwh = sum(fuel_energy.values())
     fuel_share_pct = {
         k: round(v / total_mwh * 100, 2)
         for k, v in sorted(fuel_energy.items(), key=lambda kv: -kv[1])
         if v > 0
     }
+
+    # ── 実績シェアとの乖離KPI（シナリオに reference_shares_pct がある場合） ──
+    share_deviation = None
+    ref = (scn.config.raw or {}).get("reference_shares_pct")
+    if ref:
+        # 統計の「水力」は揚水込み → モデル側は hydro+pumped_hydro 合算
+        model = dict(fuel_share_pct)
+        model["hydro"] = model.get("hydro", 0.0) + model.pop("pumped_hydro", 0.0)
+        common = {k: abs(model.get(k, 0.0) - float(v)) for k, v in ref.items()}
+        share_deviation = {
+            "per_fuel_abs_pp": {k: round(v, 2) for k, v in common.items()},
+            "l1_total_pp": round(sum(common.values()), 2),
+        }
 
     # 連系線利用率（期間最大 |flow| / 容量）
     ic_caps = {ic.id: ic.capacity_mw for ic in scn.interconnections}
@@ -122,6 +147,7 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
             "date": _dt.date.today().isoformat(),
             "git_head": _git_head(),
             "scenario": f"national_24h_nodal / uc_scenario={scn.config.name}",
+            "scenario_sha256": _scenario_sha256(scn.config),
             "reserve_margin": reserve_margin,
             "mip_gap": mip_gap,
             "effective_solver": _detect_effective_solver(),
@@ -163,6 +189,7 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
                 }
                 if result.regional_lmp else None
             ),
+            "share_deviation_vs_reference": share_deviation,
         },
     }
 
@@ -195,6 +222,12 @@ def main() -> int:
     print("\n── 燃料別シェア (エネルギーベース) ──")
     for fuel, pct in report["dispatch"]["fuel_share_pct"].items():
         print(f"  {fuel:12s} {pct:6.2f}%")
+    dev = report["dispatch"].get("share_deviation_vs_reference")
+    if dev:
+        print(f"\n── 実績シェア乖離 (L1合計 {dev['l1_total_pp']}pp) ──")
+        for fuel, pp in sorted(dev["per_fuel_abs_pp"].items(),
+                               key=lambda kv: -kv[1]):
+            print(f"  {fuel:12s} ±{pp:5.2f}pp")
 
     if args.baseline:
         with open(args.baseline) as f:

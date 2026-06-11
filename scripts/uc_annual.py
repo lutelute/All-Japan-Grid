@@ -17,6 +17,7 @@
 
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import os
 import subprocess
@@ -123,6 +124,12 @@ def main() -> int:
         w[s_h + warmup_h:s_h + n_solved_h].sum()
         for w in profiles.wind_gen_r.values()
     ))
+    if profiles.hydro_ror_gen_r:
+        # 中小水力RoR控除分は hydro として計上（実態統計との比較整合）
+        fuel_energy["hydro"] = fuel_energy.get("hydro", 0.0) + float(sum(
+            h[s_h + warmup_h:s_h + n_solved_h].sum()
+            for h in profiles.hydro_ror_gen_r.values()
+        ))
     total = sum(fuel_energy.values())
     share = {
         k: round(v / total * 100, 2)
@@ -135,6 +142,10 @@ def main() -> int:
             "date": _dt.date.today().isoformat(),
             "git_head": _git_head(),
             "scenario": args.scenario,
+            "scenario_sha256": hashlib.sha256(
+                json.dumps(scn.config.raw, sort_keys=True,
+                           ensure_ascii=False).encode()
+            ).hexdigest()[:16],
             "start_day": args.start_day,
             "end_day": e_day,
             "days": e_day - args.start_day,

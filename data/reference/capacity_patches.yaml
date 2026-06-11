@@ -16,3 +16,33 @@ patches:
   - match: 福島ガス発電所
     capacity_mw: 1180
     note: 福島天然ガス発電 590MW×2（LNG）
+
+  # ── 2026-06-11追補: jrp_lite欠損(capacity_mw=-1.0, osm_id=null)の大規模火力 ──
+  # fy2023r2較正で九州の供給力不足(infeasible)が露呈し全数調査。
+  # 2023年度断面の稼働状態で設定（廃止済みは 0 = ローダーで除外）。
+  # 出典: 各社公表の設備諸元・廃止公表（値は公称万kW）。
+  - {match: 新大分火力, capacity_mw: 2295, note: 九州電力 新大分LNG 229.5万kW}
+  - {match: 九州電力 松浦火力, capacity_mw: 1700, note: 九電松浦 1号700+2号1000}
+  - {match: 電源開発 松浦火力, capacity_mw: 2000, note: J-POWER松浦 1000×2}
+  - {match: 新小倉火力, capacity_mw: 1200, note: 九電新小倉 4,5号600×2（3号長期計画停止）}
+  - {match: 松島火力, capacity_mw: 1000, note: J-POWER松島 500×2}
+  - {match: 苅田火力発電所, capacity_mw: 360, note: 九電苅田 新1号}
+  - {match: 相浦火力, capacity_mw: 500, note: 九電相浦 2号のみ（1号は2022廃止）}
+  - {match: シグマパワー有明三池, capacity_mw: 175, note: 三池発電所}
+  - {match: Orix Hibikinada, capacity_mw: 112, note: 響灘火力}
+  - {match: Orix Soma, capacity_mw: 112, note: 相馬エネルギーパーク}
+  - {match: 糸魚川発電所, capacity_mw: 149, note: サミット明星パワー（石炭・バイオ混焼）}
+  - {match: 石巻雲雀野, capacity_mw: 149, note: 日本製紙石巻エネルギーセンター}
+  # 廃止済み（2023年度断面で発電不可 → 0 = 除外）
+  - {match: 豊前火力, capacity_mw: 0, note: 九電豊前1,2号 廃止(2019-2021)}
+  - {match: 川内発電所, capacity_mw: 0, note: 九電川内火力1,2号 廃止（川内原子力とは別。部分一致は原子力名に非該当）}
+  - {match: 下松火力, capacity_mw: 0, note: 中国電力下松 廃止}
+  - {match: 池島町長崎市発電所, capacity_mw: 0, note: 池島炭鉱跡 廃止}
+  # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
+  # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
+  - {match: 吉の浦火力, capacity_mw: 0, note: 沖縄は合成火力に一本化（二重計上防止）}
+  - {match: 金武火力, capacity_mw: 0, note: 同上}
+  - {match: 牧港火力, capacity_mw: 0, note: 同上}
+  - {match: 石川火力, capacity_mw: 0, note: 同上}
+  - {match: Ishikawa J-Power, capacity_mw: 0, note: 同上}
+  - {match: Gushikawa Power, capacity_mw: 0, note: 同上}

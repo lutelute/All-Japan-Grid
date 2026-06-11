@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "8b0690a",
+    "scenario": "national_24h_nodal / uc_scenario=fy2023r2",
+    "scenario_sha256": "f98387164d60a384",
+    "reserve_margin": 0.05,
+    "mip_gap": 0.01,
+    "effective_solver": "highs(api)"
+  },
+  "data_quality": {
+    "dedup_enabled": true,
+    "n_features_scanned": 19138,
+    "n_thermal_loaded": 506,
+    "thermal_capacity_mw": 213278.15000000005,
+    "n_duplicates": 126,
+    "duplicate_capacity_mw": 38964.6,
+    "n_capacity_defaulted": 91,
+    "n_capacity_patched": 29,
+    "n_skipped_small": 936,
+    "n_storage_units": 43,
+    "storage_capacity_mwh": 165331.2,
+    "n_pumped_reclassified": 18,
+    "n_pumped_added": 25,
+    "pumped_capacity_mw": 27555.2,
+    "pumped_storage_mwh": 165331.2,
+    "n_nuclear_available": 6,
+    "n_nuclear_excluded": 15,
+    "nuclear_available_mw": 11608.0,
+    "nuclear_excluded_mw": 19785.0,
+    "fuel_counts": {
+      "nuclear": 6,
+      "biomass": 71,
+      "hydro": 184,
+      "lng": 74,
+      "coal": 75,
+      "oil": 26,
+      "geothermal": 26,
+      "unknown": 1,
+      "pumped_hydro": 43
+    },
+    "fuel_capacity_mw": {
+      "nuclear": 11608.0,
+      "biomass": 2763.2999999999997,
+      "hydro": 6417.800000000003,
+      "lng": 86218.29999999999,
+      "coal": 48973.0,
+      "oil": 28737.0,
+      "geothermal": 999.3,
+      "unknown": 6.25,
+      "pumped_hydro": 27555.2
+    },
+    "n_unique_units": 506,
+    "unique_capacity_mw": 213278.15000000005
+  },
+  "solve": {
+    "status": "Optimal",
+    "solve_time_s": 10.0,
+    "total_cost_jpy": 21172153871,
+    "total_cost_oku_per_day": 211.72,
+    "gap": 0.0,
+    "num_warnings": 0,
+    "n_generators": 516,
+    "n_thermal": 463,
+    "n_battery": 10,
+    "battery_mw": 3450.0,
+    "battery_mwh": 13800.0
+  },
+  "dispatch": {
+    "total_energy_gwh_per_day": 3163.2,
+    "fuel_share_pct": {
+      "coal": 37.1,
+      "lng": 33.8,
+      "nuclear": 8.81,
+      "solar": 8.38,
+      "hydro": 6.77,
+      "biomass": 2.1,
+      "wind": 1.12,
+      "oil": 1.0,
+      "geothermal": 0.76,
+      "battery": 0.12,
+      "pumped_hydro": 0.04,
+      "unknown": 0.0
+    },
+    "battery_discharge_mwh": 3823,
+    "battery_charge_mwh": 2936,
+    "battery_equivalent_cycles": 0.277,
+    "interconnection_peak_utilisation": {
+      "ic_001": 0.962,
+      "ic_002": 1.0,
+      "ic_003": 1.0,
+      "ic_004": 1.0,
+      "ic_005": 0.81,
+      "ic_006": 1.0,
+      "ic_007": 1.0,
+      "ic_008": 1.0,
+      "ic_009": 1.0
+    },
+    "regional_lmp_mean": {
+      "chubu": 11625.0,
+      "chugoku": 11000.0,
+      "hokkaido": 11147.4,
+      "hokuriku": 11625.0,
+      "kansai": 11000.0,
+      "kyushu": 11000.0,
+      "okinawa": 18000.0,
+      "shikoku": 11000.0,
+      "tohoku": 11147.4,
+      "tokyo": 11896.3
+    },
+    "regional_lmp_peak": {
+      "chubu": 19000.0,
+      "chugoku": 19000.0,
+      "hokkaido": 25510.2,
+      "hokuriku": 19000.0,
+      "kansai": 19000.0,
+      "kyushu": 19000.0,
+      "okinawa": 18000.0,
+      "shikoku": 19000.0,
+      "tohoku": 25510.2,
+      "tokyo": 25510.2
+    },
+    "share_deviation_vs_reference": {
+      "per_fuel_abs_pp": {
+        "lng": 0.9,
+        "coal": 8.8,
+        "oil": 6.4,
+        "nuclear": 0.31,
+        "hydro": 0.79,
+        "solar": 1.42,
+        "wind": 0.02,
+        "biomass": 2.0,
+        "geothermal": 0.46
+      },
+      "l1_total_pp": 21.1
+    }
+  }
+}

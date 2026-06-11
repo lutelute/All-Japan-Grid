@@ -74,6 +74,11 @@ class UCScenarioConfig:
     startup_profiles: dict[str, dict]        # 内部形式 hot/warm/cold/wh/ch/mut/mdt
     capacity_defaults: dict[str, float]
     reference_paths: dict[str, str]
+    # 中小水力 run-of-river（OSMモデル外の一般水力をsolar/windと同じ
+    # 控除方式で表現。容量空なら無効 — fy2023r2以降の較正シナリオで使用）
+    hydro_ror_capacity_mw: dict[str, float] = field(default_factory=dict)
+    hydro_ror_cf_base: Optional[np.ndarray] = None
+    hydro_ror_multiplier: dict[str, float] = field(default_factory=dict)
     annual: dict = field(default_factory=dict)  # 月別係数（8760h合成用）
     raw: dict = field(repr=False, default_factory=dict)  # 元YAML（DB ingest用）
 
@@ -88,6 +93,15 @@ class UCScenarioConfig:
     def wind_cf_r(self) -> dict[str, np.ndarray]:
         return {r: self.wind_cf_base * self.wind_multiplier[r]
                 for r in self.wind_multiplier}
+
+    @property
+    def hydro_ror_cf_r(self) -> dict[str, np.ndarray]:
+        if self.hydro_ror_cf_base is None:
+            return {}
+        return {
+            r: self.hydro_ror_cf_base * self.hydro_ror_multiplier.get(r, 1.0)
+            for r in self.hydro_ror_capacity_mw
+        }
 
     def reference_path(self, key: str) -> Optional[str]:
         p = self.reference_paths.get(key)
@@ -126,6 +140,7 @@ def load_scenario_config(
     demand = raw["demand"]
     solar = raw["renewables"]["solar"]
     wind = raw["renewables"]["wind"]
+    hydro_ror = raw["renewables"].get("hydro_ror") or {}
 
     # 起動費プロファイル: YAMLの読みやすいキー → 内部短縮キー
     su: dict[str, dict] = {}
@@ -153,6 +168,17 @@ def load_scenario_config(
         startup_profiles=su,
         capacity_defaults={k: float(v) for k, v in (raw.get("capacity_defaults_mw") or {}).items()},
         reference_paths=dict(raw.get("references") or {}),
+        hydro_ror_capacity_mw={
+            k: float(v) for k, v in (hydro_ror.get("capacity_mw") or {}).items()
+        },
+        hydro_ror_cf_base=(
+            np.asarray(hydro_ror["cf_base_24h"], dtype=float)
+            if hydro_ror.get("cf_base_24h") else None
+        ),
+        hydro_ror_multiplier={
+            k: float(v)
+            for k, v in (hydro_ror.get("regional_multiplier") or {}).items()
+        },
         annual=dict(raw.get("annual") or {}),
         raw=raw,
     )
@@ -676,12 +702,19 @@ class NationalScenario:
     wind_gen_r: dict[str, np.ndarray]
     load_stats: LoadStats
     config: Optional[UCScenarioConfig] = None
+    hydro_ror_gen_r: dict[str, np.ndarray] = field(default_factory=dict)
     num_periods: int = 24
+
+    def _deduction(self, r: str) -> np.ndarray:
+        d = self.solar_gen_r[r] + self.wind_gen_r[r]
+        if r in self.hydro_ror_gen_r:
+            d = d + self.hydro_ror_gen_r[r]
+        return d
 
     @property
     def net_demand_r(self) -> dict[str, np.ndarray]:
         return {
-            r: np.maximum(self.gross_demand_r[r] - self.solar_gen_r[r] - self.wind_gen_r[r], 0.0)
+            r: np.maximum(self.gross_demand_r[r] - self._deduction(r), 0.0)
             for r in self.gross_demand_r
         }
 
@@ -691,9 +724,8 @@ class NationalScenario:
 
     @property
     def net_demand_national(self) -> np.ndarray:
-        solar = sum(self.solar_gen_r.values())
-        wind = sum(self.wind_gen_r.values())
-        return np.maximum(self.gross_demand_national - solar - wind, 0.0)
+        ded = sum(self._deduction(r) for r in self.gross_demand_r)
+        return np.maximum(self.gross_demand_national - ded, 0.0)
 
     def to_uc_parameters(
         self,
@@ -721,29 +753,32 @@ _DAYS_PER_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 @dataclass
 class AnnualProfiles:
-    """年間時系列（地域別 需要・太陽光・風力、各 (hours,) 配列）。"""
+    """年間時系列（地域別 需要・太陽光・風力・中小水力、各 (hours,) 配列）。"""
 
     gross_demand_r: dict[str, np.ndarray]
     solar_gen_r: dict[str, np.ndarray]
     wind_gen_r: dict[str, np.ndarray]
+    hydro_ror_gen_r: dict[str, np.ndarray] = field(default_factory=dict)
     hours: int = 8760
+
+    def _deduction(self, r: str) -> np.ndarray:
+        d = self.solar_gen_r[r] + self.wind_gen_r[r]
+        if r in self.hydro_ror_gen_r:
+            d = d + self.hydro_ror_gen_r[r]
+        return d
 
     @property
     def net_demand_r(self) -> dict[str, np.ndarray]:
         return {
-            r: np.maximum(
-                self.gross_demand_r[r] - self.solar_gen_r[r] - self.wind_gen_r[r],
-                0.0,
-            )
+            r: np.maximum(self.gross_demand_r[r] - self._deduction(r), 0.0)
             for r in self.gross_demand_r
         }
 
     @property
     def net_demand_national(self) -> np.ndarray:
-        solar = sum(self.solar_gen_r.values())
-        wind = sum(self.wind_gen_r.values())
         gross = sum(self.gross_demand_r.values())
-        return np.maximum(gross - solar - wind, 0.0)
+        ded = sum(self._deduction(r) for r in self.gross_demand_r)
+        return np.maximum(gross - ded, 0.0)
 
 
 def build_annual_profiles(
@@ -769,6 +804,7 @@ def build_annual_profiles(
     dm = [float(x) for x in ann["demand_month_mult"]]
     sm = [float(x) for x in ann["solar_month_mult"]]
     wm = [float(x) for x in ann["wind_month_mult"]]
+    rm = [float(x) for x in ann.get("hydro_ror_month_mult", [1.0] * 12)]
 
     # 各日の月indexを並べる（365日、閏日なし）
     month_of_day: list[int] = []
@@ -780,11 +816,13 @@ def build_annual_profiles(
     demand_mult = np.repeat([dm[m] for m in month_of_day], 24)
     solar_mult = np.repeat([sm[m] for m in month_of_day], 24)
     wind_mult = np.repeat([wm[m] for m in month_of_day], 24)
+    ror_mult = np.repeat([rm[m] for m in month_of_day], 24)
 
     n_days = len(month_of_day)
     shape = np.tile(config.demand_shape, n_days)
     solar_cf_r = config.solar_cf_r
     wind_cf_r = config.wind_cf_r
+    ror_cf_r = config.hydro_ror_cf_r
 
     gross_demand_r = {
         r: shape * demand_mult * config.regional_peak_mw[r] for r in REGIONS
@@ -799,10 +837,17 @@ def build_annual_profiles(
         * config.wind_capacity_mw[r]
         for r in REGIONS
     }
+    hydro_ror_gen_r = {
+        r: np.tile(ror_cf_r[r], n_days) * ror_mult
+        * config.hydro_ror_capacity_mw[r]
+        for r in config.hydro_ror_capacity_mw
+        if r in ror_cf_r
+    }
     return AnnualProfiles(
         gross_demand_r=gross_demand_r,
         solar_gen_r=solar_gen_r,
         wind_gen_r=wind_gen_r,
+        hydro_ror_gen_r=hydro_ror_gen_r,
         hours=n_hours,
     )
 
@@ -851,6 +896,12 @@ def build_national_scenario(
     wind_gen_r = {
         r: wind_cf_r[r] * config.wind_capacity_mw[r] for r in REGIONS
     }
+    ror_cf_r = config.hydro_ror_cf_r
+    hydro_ror_gen_r = {
+        r: ror_cf_r[r] * config.hydro_ror_capacity_mw[r]
+        for r in config.hydro_ror_capacity_mw
+        if r in ror_cf_r
+    }
 
     return NationalScenario(
         generators=gens,
@@ -858,6 +909,7 @@ def build_national_scenario(
         gross_demand_r=gross_demand_r,
         solar_gen_r=solar_gen_r,
         wind_gen_r=wind_gen_r,
+        hydro_ror_gen_r=hydro_ror_gen_r,
         load_stats=stats,
         config=config,
     )

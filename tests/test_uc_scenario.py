@@ -406,3 +406,52 @@ class TestNationalScenario:
             g.capacity_mw for g in scn.generators if g.fuel_type != "battery"
         )
         assert 200_000 <= cap <= 350_000
+
+
+class TestFY2023R2Calibration:
+    def test_r2_loads_with_calibrated_values(self):
+        cfg = load_scenario_config("fy2023r2")
+        # 較正の回帰ピン（出典は fy2023r2.yaml 冒頭 [S1]-[S5]）
+        assert sum(cfg.wind_capacity_mw.values()) == pytest.approx(6000)   # [S3]
+        assert sum(cfg.solar_capacity_mw.values()) == pytest.approx(69990)  # [S2][S3]
+        assert sum(cfg.hydro_ror_capacity_mw.values()) == pytest.approx(2500)  # [S5]
+        assert cfg.fuel_costs["coal"] == pytest.approx(7000)   # [S4]
+        assert cfg.fuel_costs["lng"] == pytest.approx(11000)
+        assert cfg.raw["reference_shares_pct"]["lng"] == pytest.approx(32.9)  # [S1]
+        # solar年間エネルギーが実績92.1TWhに較正されていること（±5%）
+        import numpy as np
+        annual_twh = sum(
+            float(np.minimum(cfg.solar_cf_base * cfg.solar_multiplier[r], 1.0).mean())
+            * cfg.solar_capacity_mw[r] * 8760 / 1e6
+            for r in cfg.solar_capacity_mw
+        ) * 0.95  # 月別平均
+        assert 85 <= annual_twh <= 100
+
+    def test_hydro_ror_deducts_demand(self, tmp_path):
+        _write_geojson(tmp_path / "tokyo_plants.geojson",
+                       [_feat("A", "coal", 600, 1)])
+        base = build_national_scenario(
+            data_dir=str(tmp_path), scenario="fy2023",
+            pumped_storage=False, nuclear_status=False,
+        )
+        r2 = build_national_scenario(
+            data_dir=str(tmp_path), scenario="fy2023r2",
+            pumped_storage=False, nuclear_status=False,
+        )
+        assert r2.hydro_ror_gen_r  # RoRが構築される
+        # RoR控除で純需要が下がる（chubu: 600MW分）
+        assert (r2.net_demand_r["chubu"] < base.net_demand_r["chubu"]).all()
+
+    def test_retired_plants_excluded_via_zero_patch(self, tmp_path):
+        # 廃止プラント（豊前等）は capacity_patches の 0 指定で除外される
+        _write_geojson(
+            tmp_path / "kyushu_plants.geojson",
+            [_feat("豊前火力発電所", "oil", -1.0, None),
+             _feat("新大分火力発電所", "gas", -1.0, None)],
+        )
+        stats = LoadStats()
+        gens = load_national_thermal_generators(str(tmp_path), stats)
+        names = [g.name for g in gens]
+        assert not any("豊前" in n for n in names)      # 廃止 → 除外
+        shin_oita = next(g for g in gens if "新大分" in g.name)
+        assert shin_oita.capacity_mw == pytest.approx(2295)  # 公称値パッチ
