@@ -204,3 +204,24 @@ def load_measured_area_stats(db_path: str = DEFAULT_DB,
         return out or None
     except Exception:
         return None
+
+
+AREA_OF_REGION = {
+    "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
+    "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
+    "chugoku": "中国", "shikoku": "四国", "kyushu": "九州", "okinawa": "沖縄",
+}
+
+
+def fuel_bands_from_db(db_path: str = DEFAULT_DB,
+                       region: str = "tokyo") -> dict | None:
+    """{fuel: (q50_mw, p95_mw)} from gen_by_fuel:* rows, fail-soft None."""
+    stats = load_measured_area_stats(db_path)
+    if not stats:
+        return None
+    area = AREA_OF_REGION.get(region, region)
+    out = {}
+    for (a, metric), v in stats.items():
+        if a == area and metric.startswith("gen_by_fuel:"):
+            out[metric.split(":", 1)[1]] = (v["q50"], v["p95"])
+    return out or None

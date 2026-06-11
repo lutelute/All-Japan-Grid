@@ -171,7 +171,12 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                                                utilisation=boundary_util,
                                                corridor_stats=boundary_stats)
 
-    balance_power(net, demand_cfg)
+    # measured per-fuel dispatch bands (F6): clamp the synthetic merit
+    # order into the annual measured band where calibrated data exists
+    # (gas swings as Japan's marginal fuel); fail-soft None elsewhere
+    from src.db.calibration import fuel_bands_from_db
+    fuel_bands = fuel_bands_from_db(region=region)
+    balance_power(net, demand_cfg, fuel_bands=fuel_bands)
 
     # Corridor-flow demand state estimation (ledger 48/49): measured
     # corridor flows reshape the demand vector — names locate corridors,

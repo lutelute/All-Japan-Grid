@@ -700,7 +700,64 @@ def _stack_dispatch(net, active, cap, target_gen) -> None:
     # remaining > 0 (fleet short of target) is honest: the slack absorbs it
 
 
-def balance_power(net, demand_config, mode: str = "stack"):
+_BAND_FUELS = {"coal", "oil", "hydro", "nuclear", "geothermal", "biomass",
+               "wind"}   # gas is the swing fuel; solar stays must-run
+
+
+def _apply_fuel_bands(net, bands: dict) -> dict:
+    """Clamp per-fuel dispatch into the measured annual band (ledger 73).
+
+    Evidence-based correction of the synthetic merit order: fuels whose
+    stack dispatch lands ABOVE the measured p95 scale down to p95;
+    fuels below the measured q50 scale up toward q50 (bounded by
+    nameplate). The net difference swings on gas — Japan's marginal
+    fuel — bounded by gas nameplate; any residual is honestly left to
+    the slack and reported. Applies only where a measured band exists
+    (DB gen_by_fuel rows; tokyo for now).
+    """
+    if len(net.gen) == 0:
+        return {}
+    g = net.gen
+    active = g["in_service"].fillna(True).astype(bool)
+    fuel = g["type"].fillna("unknown").astype(str).str.split(";").str[0].str.lower()
+    moved = 0.0
+    report = {}
+    for f, (q50, p95) in bands.items():
+        if f not in _BAND_FUELS:
+            continue
+        sel = active & (fuel == f)
+        cur = float(g.loc[sel, "p_mw"].sum())
+        cap = float(g.loc[sel, "max_p_mw"].sum()) if "max_p_mw" in g else cur
+        target = cur
+        if cur > p95:
+            target = p95
+        elif cur < q50:
+            target = min(q50, cap)
+        if abs(target - cur) < 1.0 or cur <= 0 and target <= 0:
+            continue
+        if cur > 0:
+            scale = target / cur
+            net.gen.loc[sel, "p_mw"] = g.loc[sel, "p_mw"] * scale
+        else:
+            # spread the q50 floor across the fuel's units by nameplate
+            caps = g.loc[sel, "max_p_mw"]
+            tot = float(caps.sum())
+            if tot > 0:
+                net.gen.loc[sel, "p_mw"] = caps / tot * target
+        report[f] = {"from": round(cur, 0), "to": round(target, 0)}
+        moved += target - cur
+    # swing on gas
+    sel_gas = active & (fuel == "gas")
+    gas_cur = float(net.gen.loc[sel_gas, "p_mw"].sum())
+    gas_cap = float(net.gen.loc[sel_gas, "max_p_mw"].sum()) if "max_p_mw" in net.gen else gas_cur
+    gas_new = max(0.0, min(gas_cap, gas_cur - moved))
+    if gas_cur > 0 and abs(gas_new - gas_cur) >= 1.0:
+        net.gen.loc[sel_gas, "p_mw"] = net.gen.loc[sel_gas, "p_mw"] * (gas_new / gas_cur)
+        report["gas_swing"] = {"from": round(gas_cur, 0), "to": round(gas_new, 0)}
+    return report
+
+
+def balance_power(net, demand_config, mode: str = "stack", fuel_bands=None):
     """Match generation to load with merit-order dispatch.
 
     mode="stack" (default): must-run renewables at capacity factor, then
@@ -738,6 +795,8 @@ def balance_power(net, demand_config, mode: str = "stack"):
                if "max_p_mw" in net.gen.columns else net.gen.loc[active, "p_mw"])
         if mode == "stack":
             _stack_dispatch(net, active, cap.astype(float), target_gen)
+            if fuel_bands:
+                _apply_fuel_bands(net, fuel_bands)
             return
         if "type" in net.gen.columns and net.gen.loc[active, "type"].notna().any():
             avail = cap * net.gen.loc[active, "type"].map(_dispatch_cf)
