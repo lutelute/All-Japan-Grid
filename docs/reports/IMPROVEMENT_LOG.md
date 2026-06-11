@@ -7,6 +7,23 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — UC改善⑦: データスペース層（zero-copy連携）+ 沖縄実態化
+
+- **データスペース**(`d6aed8f`, オーナー指示「全て持ってくるはナンセンス、データスペース的連携を」):
+  `docs/DATA_SPACE.md`（原則=データは源泉に留め、UCが要る地域×時間の集約断面のみ取得。
+  集約は源泉近く=NASマウントのある160core側で実行）+ `config/dataspace.yaml`（契約カタログ:
+  msm/occto_kohyo/p03/energy_stats、custodian・license・再配布可否を明文化）+
+  `src/dataspace`（registry/sha256キャッシュ/provenance.jsonl=全取得の出所機械記録）。
+  コネクタ: OCCTO（main側で疎通実証済みAPI、エンドポイント上書き可・寛容パース）/
+  MSM（所在ガード: AJGRID_MSM_ROOT未設定は案内付き明示失敗=暗黙取得しない、Phase 2境界まで）。
+  シナリオ接続（profile_ref→取得shaをシナリオsha256に連鎖）は仕様定義済み・Phase 2実装。
+  10テスト、計1016 passed
+- **沖縄実態化**(`e4991a8`): 図生成のfy2023r2適用で旧ハードコード（吉の浦350×2等）の
+  不正確さが露呈しinfeasible → 2023年度実態（吉の浦LNG CC 251×2・金武220×2・具志川156×2・
+  石川J-POWER 312・内燃合成400開示）に置換、Optimal回復。新旧全地域図をLINE配信
+- **残**: MSMアーカイブのNAS所在確認→Phase 2（GRIB2→地域CF集約）/ OCCTO実測needsへの置換 /
+  UC→PF連携（タスク#6）
+
 ## 2026-06-11 — **Fable 5** — UC改善⑥: 実勢較正fy2023r2+定検合成 — 年間L1乖離 33.6→23.5pp
 
 - **fy2023r2シナリオ**(`e35d723`): 出典[S1-S5]構造化の較正版（fy2023は凍結=過去ベンチ再現性保持、
