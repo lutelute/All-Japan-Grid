@@ -16,7 +16,7 @@
 - [x] 3層クラス帯ρ(trunk/154/66)・フルモデル計測 (`2bc782f`+)
 - [x] match_tepco(接続recall)の154/66拡張 → 帯別recall: trunk 54.9%/154 56.9%/66 **46.9%**(n=634) — 構造は~半分再現、ρ低迷は需要配置が主因と確証（㉜）
 - [x] **154kV流れ標本の回収**(06-11㉝): 184回廊中**119本は幹線の重複掲載**→純154母集団=65本。OSM名の変種展開(`_model_name_keys`)でマッチ384→419・全体ρ0.418→**0.473**。154は31→36(p=0.61のまま)・**残り20本=都心154kV地中ケーブルのOSM未収載が計器上限** → ρ154の本命はM3。66kVは0.145(p=0.011)で初の有意
-- [ ] sweepレポートに3層ρを統合(外部CSV存在時のみ、--flows-with連携)
+- [x] sweepレポートに3層ρを統合(㉞): `ajgrid validate --topology tokyo --solve --flows` → external_flowsレベル(render行+`--baseline`差分でρ退行検出)。CSV不在時は黙ってスキップ(CI安全)。0.473を再現確認
 
 ## M2 DB整備（較正の一級市民化）
 - [ ] `scripts/db/calibrate.py`: measured_line_stats テーブル(line_key,kv_class,q50,p95,window,source) — tepco/occto集計をDBへ。validator/boundaryをDB読み対応(ファイル直読みはfallback)

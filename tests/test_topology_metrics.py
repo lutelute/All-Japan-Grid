@@ -148,6 +148,33 @@ def test_compare_handles_missing_baseline_region():
     assert "no baseline" in out
 
 
+# ── external-flows sweep level (disclosure CSVs are local-only) ──────────────
+
+def test_external_flow_metrics_skips_unconfigured_region():
+    from src.validation.topology_metrics import external_flow_metrics
+    assert external_flow_metrics("okinawa") is None
+
+
+def test_render_and_compare_carry_external_flows():
+    row = _row("tokyo", 100, 0.06, True)
+    row["external_flows"] = {
+        "interior_spearman_rho": 0.473, "trunk_spearman_rho": 0.615,
+        "n_interior_trunk": 74, "kv154_spearman_rho": 0.089,
+        "n_interior_154": 36, "kv66_spearman_rho": 0.145,
+        "n_interior_66": 307,
+    }
+    out = render([row])
+    assert "flows vs disclosure" in out and "0.473" in out
+
+    base = [dict(row, external_flows=dict(row["external_flows"],
+                                          kv66_spearman_rho=0.112))]
+    diff = compare([row], base)
+    assert "kv66_spearman_rho: 0.112 -> 0.145" in diff
+    # rows without the level stay silent (CI has no disclosure CSVs)
+    plain = _row("tokyo", 100, 0.06, True)
+    assert "flows" not in render([plain])
+
+
 # ── full sweep (slow, opt-in) ────────────────────────────────────────────────
 
 @pytest.mark.skipif(not os.environ.get("AJGRID_SLOW_TESTS"),

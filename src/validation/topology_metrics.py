@@ -228,9 +228,47 @@ def solved_metrics(region: str, topology: str = "snapped",
     return out
 
 
+# regions with a locally fetched disclosure to correlate flows against.
+# The raw CSVs are NOT redistributable (data/external is gitignored) —
+# the sweep simply skips this level when they are absent.
+_DISCLOSURE_CSVS = {
+    "tokyo": {
+        "csv": "data/external/tepco/jisseki_kikan.csv",
+        "csv154": "data/external/tepco/jisseki_154kV0*.csv",
+        "csv66": "data/external/tepco/jisseki_[cfgikmnsty]*.csv",
+    },
+}
+
+
+def external_flow_metrics(region: str, data_dir: str | None = None) -> dict | None:
+    """3-layer measured-flow correlation (trunk/154/66) for the sweep.
+
+    Runs the FULL model (backbone 0 — the 66 kV layer only exists
+    there) against the disclosure CSVs when present; returns the
+    headline subset of the external_tepco scorecard, or None when the
+    region has no disclosure configured or the files are not fetched.
+    """
+    import glob
+
+    cfg = _DISCLOSURE_CSVS.get(region)
+    if not cfg or not os.path.exists(cfg["csv"]):
+        return None
+    from src.validation.external_tepco import match_flows
+
+    m = match_flows(region, cfg["csv"], backbone_kv=0.0, data_dir=data_dir,
+                    csv154=(cfg["csv154"] if glob.glob(cfg["csv154"]) else None),
+                    csv66=(cfg["csv66"] if glob.glob(cfg["csv66"]) else None))
+    keep = ("interior_spearman_rho", "interior_spearman_p",
+            "trunk_spearman_rho", "n_interior_trunk",
+            "kv154_spearman_rho", "n_interior_154",
+            "kv66_spearman_rho", "n_interior_66",
+            "n_matched", "interior_median_model_over_measured")
+    return {k: m.get(k) for k in keep}
+
+
 def _gather_one(args):
     """Top-level worker (picklable) for one region's KPI row."""
-    region, solve, builder, snap_km, data_dir, backbone_kv = args
+    region, solve, builder, snap_km, data_dir, backbone_kv, flows = args
     row = {"region": region, "snap_km": snap_km}
     if backbone_kv:
         row["backbone_kv"] = backbone_kv
@@ -240,19 +278,23 @@ def _gather_one(args):
     if solve:
         row["solved"] = solved_metrics(region, topology=builder,
                                        backbone_kv=backbone_kv)
+    if flows:
+        ext = external_flow_metrics(region, data_dir=data_dir)
+        if ext is not None:
+            row["external_flows"] = ext
     return row
 
 
 def gather(regions, solve: bool = False, builder: str = "snapped",
            snap_km: float = 1.5, data_dir: str | None = None,
            backbone_kv: float | None = None, progress=None,
-           jobs: int = 1) -> list[dict]:
+           jobs: int = 1, flows: bool = False) -> list[dict]:
     """Compute all KPI levels for each region; returns one row per region.
 
     ``jobs > 1`` fans the regions out over processes (each region's build
     + solve is independent); row order is preserved.
     """
-    work = [(r, solve, builder, snap_km, data_dir, backbone_kv)
+    work = [(r, solve, builder, snap_km, data_dir, backbone_kv, flows)
             for r in regions]
     if jobs <= 1 or len(regions) <= 1:
         rows = []
@@ -297,6 +339,15 @@ def render(rows) -> str:
             f"{dc:>3s} {ac:>3s} "
             f"{s.get('ac_vm_min', float('nan')):>6.3f} "
             f"{s.get('ac_max_loading_pct', float('nan')):>6.1f}")
+    for row in rows:
+        ext = row.get("external_flows")
+        if ext:
+            lines.append(
+                f"{row['region']} flows vs disclosure: interior rho="
+                f"{ext.get('interior_spearman_rho')} | trunk "
+                f"{ext.get('trunk_spearman_rho')}({ext.get('n_interior_trunk')}) "
+                f"154 {ext.get('kv154_spearman_rho')}({ext.get('n_interior_154')}) "
+                f"66 {ext.get('kv66_spearman_rho')}({ext.get('n_interior_66')})")
     return "\n".join(lines)
 
 
@@ -308,6 +359,9 @@ _DIFF_KEYS = (
     ("solved", "dc_converged"),
     ("solved", "ac_converged"),
     ("solved", "ac_vm_min"),
+    ("external_flows", "interior_spearman_rho"),
+    ("external_flows", "kv154_spearman_rho"),
+    ("external_flows", "kv66_spearman_rho"),
 )
 
 
@@ -349,12 +403,16 @@ def main(argv=None):
     ap.add_argument("--baseline", help="compare against a previous --json report")
     ap.add_argument("--jobs", type=int, default=1,
                     help="parallel region workers (sweep wall-clock divider)")
+    ap.add_argument("--flows", action="store_true",
+                    help="also correlate full-model DC flows against locally "
+                         "fetched disclosure CSVs (3-layer rho; skipped when "
+                         "the region has none)")
     args = ap.parse_args(argv)
 
     regions = list(REGIONS) if (args.all or not args.regions) else args.regions
     rows = gather(regions, solve=args.solve, builder=args.builder,
                   snap_km=args.snap_km, backbone_kv=args.backbone,
-                  jobs=args.jobs,
+                  jobs=args.jobs, flows=args.flows,
                   progress=lambda r: print(f"  ... {r}", file=sys.stderr))
 
     print(render(rows))

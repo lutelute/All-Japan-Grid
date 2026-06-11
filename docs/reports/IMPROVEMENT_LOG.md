@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — sweepに3層ρ統合: ρ退行が標準レポートで見える化（㉞・M1完了）
+
+- **統合**: `topology_metrics`に`external_flow_metrics()`+`--flows`フラグ — 開示CSVがローカルに
+  在る地域(現状tokyo)だけフルモデル(backbone 0)の3層ρをsweep行に追加。レポート末尾に
+  `tokyo flows vs disclosure: interior rho=0.473 | trunk 0.615(74) 154 0.089(36) 66 0.145(307)`
+- **退行ゲート化**: `--baseline`比較の_DIFF_KEYSにρ3種を追加 — 以後のループでρ悪化が
+  `ajgrid validate --topology --flows --baseline`で自動検出される(運転規則2の機械化)
+- CSV不在時(CI・fresh clone)は黙ってスキップ=既存sweepと完全互換。960 passed
+- **M1(計器)完了**: 3層ρ・帯別接続recall・sweep統合の3点が揃い、以後の改善は全て同じ物差しで測れる
+- レポート: `topology_tokyo_flows_2026-06-11.json`(committed 0.473を再現)
+
 ## 2026-06-11 — **Fable 5** — 154標本の解剖と変種マッチ: 全体ρ0.473・66kVが初の統計的有意（㉝）
 
 - **ユーザー指示**「154がかなり大量なので肝」→ 154計器の解剖を最優先で実施
