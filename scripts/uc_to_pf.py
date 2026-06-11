@@ -53,6 +53,8 @@ def main() -> int:
     ap.add_argument("--scenario", default="fy2023r2")
     ap.add_argument("--hour", type=int, default=None,
                     help="注入する時刻 (0-23)。省略時=地域純需要ピーク時刻")
+    ap.add_argument("--all-hours", action="store_true",
+                    help="24時刻全断面を検証（UCは解けるがPFで流せない時間帯の特定）")
     ap.add_argument("--full", action="store_true",
                     help="backbone縮約なしのフルモデルで検証")
     ap.add_argument("--out", default=None)
@@ -105,31 +107,56 @@ def main() -> int:
         print(f"  FAIL島: {gate.get('failing')} — 契約により注入せず終了")
         return 1
 
-    # ── 4. 注入 ──
-    ratio = scale_loads_to(net, float(net_dem[t]))
-    inj = inject_dispatch(net, snapshot)
-    print(f"  load×{ratio:.3f}, 注入 {inj['injected_mw']:,.0f} MW "
-          f"(clip {sum(inj['clipped'].values()):,.0f} / "
-          f"unmatched {sum(inj['unmatched'].values()):,.0f})")
+    # ── 4./5. 注入 + AC再ソルブ（--all-hours は24断面スイープ） ──
+    import copy as _copy
 
-    # ── 5. AC再ソルブ ──
     from src.powerflow.batch_solve import run_powerflow
-    ac = run_powerflow(net, "ac")
-    slack_mw = None
-    if ac["converged"]:
-        parts = []
-        if len(net.ext_grid):
-            parts.append(float(net.res_ext_grid["p_mw"].sum()))
-        if "slack" in net.gen.columns:
-            sm = net.gen["slack"].fillna(False).astype(bool)
-            if sm.any():
-                parts.append(float(net.res_gen.loc[sm, "p_mw"].sum()))
-        slack_mw = round(sum(parts), 1) if parts else None
-        vm = net.res_bus["vm_pu"]
-        print(f"  AC(UC注入): converged, vm [{vm.min():.3f}, {vm.max():.3f}], "
-              f"slack {slack_mw if slack_mw is not None else float('nan'):,.0f} MW")
-    else:
-        print(f"  AC(UC注入): FAILED ({str(ac.get('error', ''))[:80]})")
+
+    hours_list = list(range(24)) if args.all_hours else [t]
+    rows = []
+    for hh in hours_list:
+        snap_h = uc_snapshot(uc, scn.generators, hh, region=region)
+        # 元のnetは触らず時刻ごとに複製へ注入（単一断面なら複製不要）
+        net_h = _copy.deepcopy(net) if len(hours_list) > 1 else net
+        ratio = scale_loads_to(net_h, float(net_dem[hh]))
+        inj = inject_dispatch(net_h, snap_h)
+        ac = run_powerflow(net_h, "ac")
+        row = {
+            "hour": hh,
+            "uc_dispatch_mw": round(sum(snap_h.values()), 1),
+            "net_demand_mw": round(float(net_dem[hh]), 1),
+            "load_scale": round(ratio, 3),
+            "injected_mw": round(inj["injected_mw"], 1),
+            "clipped_mw": round(sum(inj["clipped"].values()), 1),
+            "unmatched_mw": round(sum(inj["unmatched"].values()), 1),
+            "converged": bool(ac["converged"]),
+        }
+        if ac["converged"]:
+            parts = []
+            if len(net_h.ext_grid):
+                parts.append(float(net_h.res_ext_grid["p_mw"].sum()))
+            if "slack" in net_h.gen.columns:
+                sm = net_h.gen["slack"].fillna(False).astype(bool)
+                if sm.any():
+                    parts.append(float(net_h.res_gen.loc[sm, "p_mw"].sum()))
+            slack_mw = round(sum(parts), 1) if parts else None
+            vm = net_h.res_bus["vm_pu"]
+            row.update({
+                "vm_min": round(float(vm.min()), 3),
+                "vm_max": round(float(vm.max()), 3),
+                "slack_mw": slack_mw,
+            })
+            print(f"  h={hh:02d}: converged vm[{row['vm_min']:.3f}, "
+                  f"{row['vm_max']:.3f}] slack {slack_mw} MW "
+                  f"(注入 {row['injected_mw']:,.0f} MW)")
+        else:
+            row["error"] = str(ac.get("error", ""))[:120]
+            print(f"  h={hh:02d}: FAILED ({row['error'][:60]})")
+        rows.append(row)
+
+    n_fail = sum(1 for r in rows if not r["converged"])
+    if args.all_hours:
+        print(f"  全{len(rows)}断面: 収束 {len(rows) - n_fail} / 失敗 {n_fail}")
 
     report = {
         "meta": {
@@ -138,6 +165,7 @@ def main() -> int:
             "region": region,
             "scenario": args.scenario,
             "hour": t,
+            "all_hours": bool(args.all_hours),
             "model": "full" if args.full else "backbone154",
         },
         "uc": {
@@ -147,25 +175,20 @@ def main() -> int:
             "fuel_mw": {k: round(v, 1) for k, v in snapshot.items()},
         },
         "gate": {"pass": gate["pass"], "cond_max": gate["cond_max"]},
-        "injection": inj,
         "pf": {
             "baseline_ac_converged": bool(ac0["converged"]),
-            "uc_ac_converged": bool(ac["converged"]),
-            "vm_min": (round(float(net.res_bus['vm_pu'].min()), 4)
-                       if ac["converged"] else None),
-            "vm_max": (round(float(net.res_bus['vm_pu'].max()), 4)
-                       if ac["converged"] else None),
-            "slack_mw": (round(slack_mw, 1)
-                         if slack_mw is not None else None),
-            "load_scale_ratio": round(ratio, 4),
+            "all_converged": n_fail == 0,
+            "n_failed_hours": n_fail,
+            "hours": rows,
         },
     }
+    suffix = "_allhours" if args.all_hours else ""
     out = args.out or (
-        f"docs/reports/uc_pf_link_{region}_{report['meta']['date']}.json")
+        f"docs/reports/uc_pf_link_{region}{suffix}_{report['meta']['date']}.json")
     with open(out, "w") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"Saved: {out}")
-    return 0 if ac["converged"] else 1
+    return 0 if n_fail == 0 else 1
 
 
 if __name__ == "__main__":

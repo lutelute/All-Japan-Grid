@@ -9,6 +9,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑪: UC→PF 24断面スイープ（「流せない時間帯」の不在と電圧の質を計測）
+
+- **--all-hours実装**(`scripts/uc_to_pf.py`): UC1回+PF網1回構築→24時刻を断面ごとに
+  deepcopy注入+AC再ソルブ。時刻別 vm/slack/注入量をJSONに記録
+  (`docs/reports/uc_pf_link_{region}_allhours_2026-06-12.json`)
+- **結果（fy2023r2, backbone154）**: tokyo(1110バス)/kansai(714)/kyushu(358)とも
+  **24/24断面AC収束 = 「UCは解けるがPFで流せない時間帯」は3地域に存在しない**
+- **収束を超えた質の計測（本スイープの新事実)**:
+  - **kansai 昼間帯(8-19時)に vm_min 0.799〜0.897 の低電圧**。slackは負(吸収側)なのに
+    需要中心で電圧降下 → UC断面の地理配分（原子力6.6GW=若狭湾岸北部偏在）と
+    昼ピーク需要分布の乖離を容量比例注入が埋められない（=次の深化対象。
+    main側の既知性質「関西=PVノーズ」とも整合）
+  - kyushu は時間帯によらず vm [1.017, 1.070] の高め電圧（軽負荷+充電容量の網特性、
+    注入起因ではない）/ tokyo は全時間帯健全 vm[0.960,1.040]・slack平均+14.6%
+- 次: 注入の地理重み付け（需要近接/ゾーン別）・全国ゾーナル断面（east AC / west DC、サーバー）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑩: 実測需要のシナリオ統合（profile_ref稼働=データスペース実用第一号）
 
 - **profile_ref実装**(`3bc6c04`, DATA_SPACE §5): シナリオの demand.profile_ref が
