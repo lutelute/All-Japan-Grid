@@ -1,0 +1,189 @@
+{
+ "db": "data/grid.db",
+ "demand": [
+  {
+   "region": "hokkaido",
+   "area": "北海道",
+   "config_peak_mw": 5200,
+   "config_snapshot_mw": 4420.0,
+   "occto_q50_mw": 3322.0,
+   "occto_p95_mw": 4460.0,
+   "snapshot_over_p95": 0.99,
+   "band": "q50..p95"
+  },
+  {
+   "region": "tohoku",
+   "area": "東北",
+   "config_peak_mw": 13000,
+   "config_snapshot_mw": 11050.0,
+   "occto_q50_mw": 8786.0,
+   "occto_p95_mw": 12307.0,
+   "snapshot_over_p95": 0.9,
+   "band": "q50..p95"
+  },
+  {
+   "region": "tokyo",
+   "area": "東京",
+   "config_peak_mw": 52000,
+   "config_snapshot_mw": 44200.0,
+   "occto_q50_mw": 30360.0,
+   "occto_p95_mw": 45772.0,
+   "snapshot_over_p95": 0.97,
+   "band": "q50..p95"
+  },
+  {
+   "region": "chubu",
+   "area": "中部",
+   "config_peak_mw": 24000,
+   "config_snapshot_mw": 20400.0,
+   "occto_q50_mw": 14316.0,
+   "occto_p95_mw": 20964.0,
+   "snapshot_over_p95": 0.97,
+   "band": "q50..p95"
+  },
+  {
+   "region": "hokuriku",
+   "area": "北陸",
+   "config_peak_mw": 5200,
+   "config_snapshot_mw": 4420.0,
+   "occto_q50_mw": 3016.0,
+   "occto_p95_mw": 4398.0,
+   "snapshot_over_p95": 1.01,
+   "band": ">p95"
+  },
+  {
+   "region": "kansai",
+   "area": "関西",
+   "config_peak_mw": 27000,
+   "config_snapshot_mw": 22950.0,
+   "occto_q50_mw": 15272.0,
+   "occto_p95_mw": 23031.0,
+   "snapshot_over_p95": 1.0,
+   "band": "q50..p95"
+  },
+  {
+   "region": "chugoku",
+   "area": "中国",
+   "config_peak_mw": 10500,
+   "config_snapshot_mw": 8925.0,
+   "occto_q50_mw": 6245.0,
+   "occto_p95_mw": 8875.0,
+   "snapshot_over_p95": 1.01,
+   "band": ">p95"
+  },
+  {
+   "region": "shikoku",
+   "area": "四国",
+   "config_peak_mw": 4700,
+   "config_snapshot_mw": 3995.0,
+   "occto_q50_mw": 2780.0,
+   "occto_p95_mw": 4051.0,
+   "snapshot_over_p95": 0.99,
+   "band": "q50..p95"
+  },
+  {
+   "region": "kyushu",
+   "area": "九州",
+   "config_peak_mw": 15500,
+   "config_snapshot_mw": 13175.0,
+   "occto_q50_mw": 9415.0,
+   "occto_p95_mw": 13583.0,
+   "snapshot_over_p95": 0.97,
+   "band": "q50..p95"
+  },
+  {
+   "region": "okinawa",
+   "area": "沖縄",
+   "config_peak_mw": 1600,
+   "config_snapshot_mw": 1360.0,
+   "occto_q50_mw": 897.0,
+   "occto_p95_mw": 1462.0,
+   "snapshot_over_p95": 0.93,
+   "band": "q50..p95"
+  }
+ ],
+ "demand_note": "config snapshot = peak x load_factor; OCCTO window is API-retention (~14 months), so a snapshot above p95 means the config peak is a design peak, not last year's",
+ "boundary_utilisation": {
+  "source": "db",
+  "values": {
+   "ic_001": 0.14761111111111114,
+   "ic_002": 0.7383153153153152,
+   "ic_003": -0.3250714285714286,
+   "ic_004": 0.7905094861660079,
+   "ic_005": -0.14957894736842103,
+   "ic_006": -1.0,
+   "ic_007": -0.05,
+   "ic_008": -0.9415416666666666,
+   "ic_009": -0.49399280575539567
+  }
+ },
+ "dispatch_checks": {
+  "region": "tokyo",
+  "rows": [
+   {
+    "fuel": "gas",
+    "model_mw": 15788.0,
+    "meas_q50_mw": 14652.0,
+    "meas_p95_mw": 25022.0,
+    "verdict": "q50..p95"
+   },
+   {
+    "fuel": "coal",
+    "model_mw": 10014.0,
+    "meas_q50_mw": 5646.0,
+    "meas_p95_mw": 7716.0,
+    "verdict": ">p95"
+   },
+   {
+    "fuel": "solar",
+    "model_mw": 9532.0,
+    "meas_q50_mw": 7.0,
+    "meas_p95_mw": 12812.0,
+    "verdict": "q50..p95"
+   },
+   {
+    "fuel": "interconnect",
+    "model_mw": 4780.0,
+    "meas_q50_mw": 4459.0,
+    "meas_p95_mw": 6156.0,
+    "verdict": "q50..p95"
+   },
+   {
+    "fuel": "hydro",
+    "model_mw": 4387.0,
+    "meas_q50_mw": 1115.0,
+    "meas_p95_mw": 1984.0,
+    "verdict": ">p95"
+   },
+   {
+    "fuel": "nuclear",
+    "model_mw": 1100.0,
+    "meas_q50_mw": 0.0,
+    "meas_p95_mw": 1317.0,
+    "verdict": "q50..p95"
+   },
+   {
+    "fuel": "biomass",
+    "model_mw": 352.0,
+    "meas_q50_mw": 419.0,
+    "meas_p95_mw": 515.0,
+    "verdict": "<q50"
+   },
+   {
+    "fuel": "wind",
+    "model_mw": 3.0,
+    "meas_q50_mw": 120.0,
+    "meas_p95_mw": 323.0,
+    "verdict": "<q50"
+   },
+   {
+    "fuel": "oil",
+    "model_mw": 0.0,
+    "meas_q50_mw": 453.0,
+    "meas_p95_mw": 715.0,
+    "verdict": "<q50"
+   }
+  ],
+  "note": "model = one synthetic snapshot at peak x LF vs measured annual q50..p95 band — judge ordering and band, not exact MW"
+ }
+}
