@@ -516,6 +516,59 @@ class UCScenarioGenerator(Base):
         )
 
 
+class UCRun(Base):
+    """UC execution history — machine-queryable index of run results.
+
+    The report JSON under ``docs/reports/`` remains the source of truth
+    (same owner decision as scenarios: DB mirrors, files are canonical).
+    One row per produced report; re-running upserts by ``report_path`` so
+    the index never duplicates. Written best-effort by
+    :mod:`src.uc.run_recorder` — absence of the DB never fails a run.
+
+    Attributes:
+        report_path: Repo-relative path of the canonical report JSON
+            (primary key — one report, one row).
+        kind: Run kind (``'benchmark' | 'annual' | 'pf_link' |
+            'pf_national'``).
+        run_date: ISO date of the run.
+        git_head: Short commit hash the run was produced at.
+        scenario_id: UC scenario name (e.g. ``'fy2023r2'``).
+        scenario_sha256: Scenario definition fingerprint (reproducibility
+            chain, when recorded).
+        demand_profile_sha: Fetched measured-demand fingerprint (when the
+            scenario resolves a profile_ref).
+        status: Solver status (``'Optimal'`` …) or PF outcome.
+        total_cost_jpy: Objective value for solve runs.
+        solve_time_s: Wall-clock solve time.
+        l1_total_pp: L1 deviation vs reference fuel shares (pp), when
+            evaluated.
+        summary_json: Compact KPI summary (JSON), shape depends on kind.
+        created_at: ISO timestamp of (last) recording.
+    """
+
+    __tablename__ = "uc_runs"
+
+    report_path: Mapped[str] = mapped_column(String(256), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    run_date: Mapped[str] = mapped_column(String(10), nullable=False)
+    git_head: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
+    scenario_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    scenario_sha256: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    demand_profile_sha: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    status: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    total_cost_jpy: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    solve_time_s: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    l1_total_pp: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    summary_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCRun({self.kind}/{self.scenario_id} {self.run_date} "
+            f"{self.status} -> {self.report_path})"
+        )
+
+
 class SchemaVersion(Base):
     """Schema version tracking for lightweight migrations.
 

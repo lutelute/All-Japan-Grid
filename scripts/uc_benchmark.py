@@ -221,6 +221,23 @@ def main() -> int:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"Saved: {out}")
 
+    # uc_runs 索引へベストエフォート記録（正本は上のJSON）
+    from src.uc.run_recorder import record_run
+    dev = report["dispatch"].get("share_deviation_vs_reference") or {}
+    record_run(
+        out, kind="benchmark", run_date=report["meta"]["date"],
+        git_head=report["meta"]["git_head"],
+        scenario_id=args.scenario,
+        scenario_sha256=report["meta"]["scenario_sha256"],
+        demand_profile_sha=report["meta"].get("demand_profile_sha"),
+        status=report["solve"]["status"],
+        total_cost_jpy=report["solve"]["total_cost_jpy"],
+        solve_time_s=report["solve"]["solve_time_s"],
+        l1_total_pp=dev.get("l1_total_pp"),
+        summary_json=json.dumps(
+            report["dispatch"]["fuel_share_pct"], ensure_ascii=False),
+    )
+
     print("\n── 燃料別シェア (エネルギーベース) ──")
     for fuel, pct in report["dispatch"]["fuel_share_pct"].items():
         print(f"  {fuel:12s} {pct:6.2f}%")

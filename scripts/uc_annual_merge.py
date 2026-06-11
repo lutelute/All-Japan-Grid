@@ -102,6 +102,17 @@ def main() -> int:
           f"{report['result']['total_energy_twh']} TWh")
     for fuel, pct in share.items():
         print(f"  {fuel:12s} {pct:6.2f}%")
+
+    # uc_runs 索引へベストエフォート記録（正本は上のJSON）
+    from src.uc.run_recorder import record_run
+    record_run(
+        out, kind="annual", run_date=report["meta"]["date"],
+        scenario_id=report["meta"]["scenario"],
+        status=report["result"]["status"],
+        total_cost_jpy=report["result"]["total_cost_oku"] * 1e8,
+        solve_time_s=report["result"]["cpu_time_s_sum"],
+        summary_json=json.dumps(share, ensure_ascii=False),
+    )
     return 0 if report["result"]["status"] == "Optimal" else 1
 
 

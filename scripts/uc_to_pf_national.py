@@ -291,6 +291,20 @@ def main() -> int:
     with open(out, "w") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"\nSaved: {out}")
+
+    # uc_runs 索引へベストエフォート記録（正本は上のJSON）
+    from src.uc.run_recorder import record_run
+    record_run(
+        out, kind="pf_national", run_date=report["meta"]["date"],
+        git_head=report["meta"]["git_head"], scenario_id=args.scenario,
+        status="converged" if overall_ok else "failed",
+        summary_json=json.dumps(
+            {iid: {"mode": isl.get("mode"),
+                   "converged": isl.get("converged"),
+                   "n_buses": isl.get("n_buses")}
+             for iid, isl in report["islands"].items()},
+            ensure_ascii=False),
+    )
     return 0 if overall_ok else 1
 
 

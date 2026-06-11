@@ -188,6 +188,21 @@ def main() -> int:
     with open(out, "w") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"Saved: {out}")
+
+    # uc_runs 索引へベストエフォート記録（正本は上のJSON）
+    from src.uc.run_recorder import record_run
+    record_run(
+        out, kind="pf_link", run_date=report["meta"]["date"],
+        git_head=report["meta"]["git_head"], scenario_id=args.scenario,
+        status="converged" if n_fail == 0 else f"{n_fail}/{len(rows)} failed",
+        summary_json=json.dumps(
+            {"region": region, "hours": len(rows), "n_failed": n_fail,
+             "vm_min": min((r["vm_min"] for r in rows if "vm_min" in r),
+                           default=None),
+             "vm_max": max((r["vm_max"] for r in rows if "vm_max" in r),
+                           default=None)},
+            ensure_ascii=False),
+    )
     return 0 if n_fail == 0 else 1
 
 

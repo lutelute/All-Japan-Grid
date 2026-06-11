@@ -89,6 +89,16 @@ MIGRATIONS: Sequence[Migration] = (
         # ensure_schema(); this migration records the version bump.
         statements=[],
     ),
+    Migration(
+        version=4,
+        description=(
+            "UC run history: uc_runs (machine-queryable index of run "
+            "reports; files under docs/reports/ stay canonical)"
+        ),
+        # Tables are created by Base.metadata.create_all() in
+        # ensure_schema(); this migration records the version bump.
+        statements=[],
+    ),
 )
 
 

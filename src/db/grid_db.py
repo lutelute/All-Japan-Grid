@@ -41,6 +41,7 @@ from src.db.schema import (
     LoadAttributes,
     SchemaVersion,
     SubstationAttributes,
+    UCRun,
     UCScenario,
     UCScenarioGenerator,
 )
@@ -408,6 +409,54 @@ class GridDatabase:
             session.delete(record)
             session.commit()
             return True
+
+    # ------------------------------------------------------------------
+    # UC run history (machine-queryable index; report JSONs canonical)
+    # ------------------------------------------------------------------
+
+    def record_uc_run(self, report_path: str, *, kind: str, run_date: str,
+                      **fields: object) -> UCRun:
+        """Upsert one UC run record keyed by its canonical report path.
+
+        Args:
+            report_path: Repo-relative path of the report JSON.
+            kind: ``'benchmark' | 'annual' | 'pf_link' | 'pf_national'``.
+            run_date: ISO date of the run.
+            **fields: Optional UCRun columns (git_head, scenario_id,
+                scenario_sha256, demand_profile_sha, status,
+                total_cost_jpy, solve_time_s, l1_total_pp, summary_json).
+        """
+        now = datetime.now(timezone.utc).isoformat()
+        with self._session_factory() as session:
+            record = session.get(UCRun, report_path)
+            if record is None:
+                record = UCRun(report_path=report_path, kind=kind,
+                               run_date=run_date, created_at=now, **fields)
+                session.add(record)
+            else:
+                record.kind = kind
+                record.run_date = run_date
+                for key, value in fields.items():
+                    setattr(record, key, value)
+                record.created_at = now
+            session.commit()
+            session.expunge(record)
+            return record
+
+    def list_uc_runs(self, kind: Optional[str] = None,
+                     scenario_id: Optional[str] = None) -> List[UCRun]:
+        """List run records, newest first, optionally filtered."""
+        with self._session_factory() as session:
+            query = session.query(UCRun)
+            if kind is not None:
+                query = query.filter(UCRun.kind == kind)
+            if scenario_id is not None:
+                query = query.filter(UCRun.scenario_id == scenario_id)
+            records = list(query.order_by(UCRun.run_date.desc(),
+                                          UCRun.created_at.desc()).all())
+            for record in records:
+                session.expunge(record)
+            return records
 
     # ------------------------------------------------------------------
     # Internal generic CRUD helpers
