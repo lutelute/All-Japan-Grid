@@ -124,11 +124,20 @@ def parse_p03(gml_path):
             cap_str = el.findtext("ksj:generatingPower", namespaces=NS) or ""
             burning = el.findtext("ksj:burningType", namespaces=NS) or ""
 
-            # Parse capacity (MW)
+            # Parse capacity. ksj:generatingPower is 最大出力 in **kW**
+            # per the KSJ P03 spec — taking it as MW shipped a 36.2 MW
+            # mega-solar as 36,200 "MW" (181 GW of phantom fleet across
+            # its duplicates; ledger 2026-06-11 entry 27). Convert kW->MW,
+            # treat <=0 as the dataset's "unknown" sentinel (absence, not
+            # a value), and bound to a plausible plant range.
             capacity = None
             if cap_str:
                 try:
-                    capacity = float(cap_str)
+                    kw = float(cap_str)
+                    if kw > 0:
+                        mw = kw / 1000.0
+                        if 0.01 <= mw <= 9000.0:   # 10 kW .. > Kashiwazaki-Kariwa
+                            capacity = mw
                 except (ValueError, TypeError):
                     pass
 

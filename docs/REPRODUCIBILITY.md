@@ -50,6 +50,10 @@ curl -L -o data/external/kansai_td/154kv_more_line.csv \
 # 東電 潮流実績（FY2024通年・基幹）: zipはCP932名 → scripts参照 or 手動展開
 curl -A "Mozilla/5.0" -o data/external/tepco/tyouryu_kikan.zip \
   https://www.tepco.co.jp/pg/consignment/system/pdf/tyouryu_kikan.zip
+# 国土数値情報 P03（発電施設GML; zip内部名はCP932→python zipfileで展開)
+curl -A "Mozilla/5.0" -o /tmp/P03-13.zip https://nlftp.mlit.go.jp/ksj/gml/data/P03/P03-13/P03-13.zip
+# → data/external/P03-13/P03-13-g.xml に展開後:
+PYTHONPATH=. python scripts/db/enrich.py --p03 data/external/P03-13/P03-13-g.xml
 # OCCTO 公表API（30分値・保持~14ヶ月）
 python scripts/fetch_occto_kohyo.py --from 2025-04-01 --to 2026-06-09
 ```
