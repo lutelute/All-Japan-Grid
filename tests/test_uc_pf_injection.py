@@ -9,6 +9,7 @@ import pytest
 
 from src.uc.pf_injection import (
     inject_dispatch,
+    inject_dispatch_by_zone,
     normalize_fuel,
     scale_loads_to,
     uc_snapshot,
@@ -100,3 +101,50 @@ class TestScaleLoads:
         assert ratio == pytest.approx(2.0)
         assert net.load.at[0, "p_mw"] == pytest.approx(600.0)
         assert net.load.at[0, "q_mvar"] == pytest.approx(60.0)
+
+
+def _two_zone_net():
+    """bus 'zone' 付きの2地域島ネット（build_island_networks の縮小模型）。"""
+    net = pp.create_empty_network()
+    b1 = pp.create_bus(net, vn_kv=154.0, zone="tohoku")
+    b2 = pp.create_bus(net, vn_kv=154.0, zone="tokyo")
+    pp.create_line_from_parameters(net, b1, b2, length_km=10,
+                                   r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+                                   c_nf_per_km=10, max_i_ka=1.0)
+    pp.create_load(net, b1, p_mw=100.0, q_mvar=10.0)   # tohoku
+    pp.create_load(net, b2, p_mw=400.0, q_mvar=40.0)   # tokyo
+    pp.create_gen(net, b1, p_mw=0.0, vm_pu=1.0, slack=True, name="slack",
+                  type="lng", max_p_mw=1000.0, min_p_mw=0.0)
+    pp.create_gen(net, b1, p_mw=50.0, vm_pu=1.0, name="tohoku_coal",
+                  type="coal", max_p_mw=200.0, min_p_mw=0.0)
+    pp.create_gen(net, b2, p_mw=50.0, vm_pu=1.0, name="tokyo_coal",
+                  type="coal", max_p_mw=300.0, min_p_mw=0.0)
+    pp.create_gen(net, b2, p_mw=80.0, vm_pu=1.0, name="tokyo_gas",
+                  type="gas", max_p_mw=500.0, min_p_mw=0.0)
+    return net
+
+
+class TestInjectByZone:
+    def test_zone_isolation(self):
+        net = _two_zone_net()
+        reports = inject_dispatch_by_zone(
+            net,
+            {"tohoku": {"coal": 100.0}, "tokyo": {"lng": 250.0}},
+            {"tohoku": 150.0, "tokyo": 600.0},
+        )
+        # tohoku: coal 100 はtohoku機のみへ（tokyo_coalは対象外のまま0化対象でもない）
+        assert net.gen.at[1, "p_mw"] == pytest.approx(100.0)
+        # tokyo: lng 250 が tokyo_gas へ、tokyo断面にcoalが無い→tokyo_coalは0化
+        assert net.gen.at[3, "p_mw"] == pytest.approx(250.0)
+        assert net.gen.at[2, "p_mw"] == pytest.approx(0.0)
+        assert reports["tokyo"]["injection"]["zeroed_gens"] == 1
+        # load はゾーン別スケール: tohoku 100→150 (×1.5), tokyo 400→600 (×1.5)
+        assert net.load.at[0, "p_mw"] == pytest.approx(150.0)
+        assert net.load.at[1, "p_mw"] == pytest.approx(600.0)
+        # slack は不変
+        assert net.gen.at[0, "p_mw"] == pytest.approx(0.0)
+
+    def test_requires_zone_column(self):
+        net = _mini_net()  # zone列なし
+        with pytest.raises(ValueError, match="zone"):
+            inject_dispatch_by_zone(net, {"tokyo": {}}, {"tokyo": 0.0})

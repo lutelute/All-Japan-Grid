@@ -63,8 +63,12 @@ def uc_snapshot(
     return out
 
 
-def inject_dispatch(net, fuel_mw: Dict[str, float]) -> Dict:
+def inject_dispatch(net, fuel_mw: Dict[str, float], gen_mask=None) -> Dict:
     """燃料別MWをPF側genへ容量比例で注入する（slack機は対象外）。
+
+    Args:
+        gen_mask: net.gen に対するbooleanマスク（多地域島でzone別に注入する
+            場合に対象genを絞る）。Noneなら全gen。
 
     Returns:
         report dict:
@@ -80,6 +84,8 @@ def inject_dispatch(net, fuel_mw: Dict[str, float]) -> Dict:
                 if "slack" in gen.columns else
                 np.zeros(len(gen), dtype=bool))
     active = gen["in_service"].astype(bool) & ~is_slack
+    if gen_mask is not None:
+        active &= gen_mask.reindex(gen.index, fill_value=False).astype(bool)
     fuels_pf = gen["type"].map(normalize_fuel)
 
     report = {"requested_mw": round(sum(fuel_mw.values()), 1),
@@ -112,12 +118,18 @@ def inject_dispatch(net, fuel_mw: Dict[str, float]) -> Dict:
     return report
 
 
-def scale_loads_to(net, target_mw: float) -> float:
+def scale_loads_to(net, target_mw: float, load_mask=None) -> float:
     """PF側の有効負荷合計をUC断面の地域純需要へスケールする。
+
+    Args:
+        load_mask: net.load に対するbooleanマスク（多地域島でzone別に
+            スケールする場合）。Noneなら全load。
 
     Returns: 適用した倍率。
     """
     active = net.load["in_service"].astype(bool)
+    if load_mask is not None:
+        active &= load_mask.reindex(net.load.index, fill_value=False).astype(bool)
     cur = float(net.load.loc[active, "p_mw"].sum())
     if cur <= 0 or target_mw <= 0:
         return 1.0
@@ -125,3 +137,34 @@ def scale_loads_to(net, target_mw: float) -> float:
     net.load.loc[active, "p_mw"] *= ratio
     net.load.loc[active, "q_mvar"] *= ratio
     return ratio
+
+
+def inject_dispatch_by_zone(
+    net,
+    fuel_mw_by_zone: Dict[str, Dict[str, float]],
+    zone_demand_mw: Dict[str, float],
+) -> Dict[str, Dict]:
+    """多地域同期島ネット（bus 'zone'=地域名）へ地域別にUC断面を注入する。
+
+    地域ごとに load をUC純需要へスケールし、gen へ容量比例注入する。
+    指定地域に属さないバスの load/gen は触らない。zone列が無い島ネットは
+    対象外（build_island_networks 由来であることが前提）。
+
+    Returns: {region: {"load_scale": 倍率, "injection": inject_dispatchのreport}}
+    """
+    # pandapowerはbusに既定でzone列を持つ（None埋め）— 値の実在で判定する
+    if "zone" not in net.bus.columns or net.bus["zone"].isna().all():
+        raise ValueError(
+            "net.bus の zone が未設定 — build_island_networks 由来の"
+            "多地域島ネットにのみ適用できる")
+    zone_of_bus = net.bus["zone"]
+    gen_zone = net.gen["bus"].map(zone_of_bus)
+    load_zone = net.load["bus"].map(zone_of_bus)
+    out: Dict[str, Dict] = {}
+    for region, fuel_mw in fuel_mw_by_zone.items():
+        ratio = scale_loads_to(
+            net, float(zone_demand_mw.get(region, 0.0)),
+            load_mask=(load_zone == region))
+        rep = inject_dispatch(net, fuel_mw, gen_mask=(gen_zone == region))
+        out[region] = {"load_scale": round(ratio, 4), "injection": rep}
+    return out

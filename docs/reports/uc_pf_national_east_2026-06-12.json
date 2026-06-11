@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "date": "2026-06-12",
+    "git_head": "07d039c",
+    "scenario": "fy2023r2",
+    "reactive": 0.6
+  },
+  "islands": {
+    "east": {
+      "regions": [
+        "tohoku",
+        "tokyo"
+      ],
+      "hour": 17,
+      "net_demand_mw": 59353.0,
+      "n_buses": 5024,
+      "injection": {
+        "tohoku": {
+          "load_scale": 0.9153,
+          "injection": {
+            "requested_mw": 15917.8,
+            "injected_mw": 15402.4,
+            "clipped": {
+              "geothermal": 155.4,
+              "battery": 360.0
+            },
+            "unmatched": {},
+            "zeroed_gens": 1149
+          }
+        },
+        "tokyo": {
+          "load_scale": 1.1185,
+          "injection": {
+            "requested_mw": 41675.5,
+            "injected_mw": 39335.5,
+            "clipped": {
+              "coal": 2340.0
+            },
+            "unmatched": {},
+            "zeroed_gens": 6013
+          }
+        }
+      },
+      "gate": {
+        "pass": true,
+        "cond_max": 847487239.406881
+      },
+      "prune_threshold": 45.0,
+      "mode": "ac",
+      "converged": true,
+      "vm_by_zone": {
+        "tohoku": [
+          0.96,
+          1.037
+        ],
+        "tokyo": [
+          0.817,
+          1.03
+        ]
+      },
+      "tie_flow_mw": {
+        "pf": {
+          "tohoku->tokyo": 11640.8
+        },
+        "uc": {
+          "tohoku->tokyo": 5550.0
+        }
+      }
+    }
+  }
+}
