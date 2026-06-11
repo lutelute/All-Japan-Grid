@@ -219,6 +219,15 @@ def solve_uc(params: UCParameters) -> UCResult:
 
     # --- Select and run solver ---------------------------------------------
     solver = _select_solver(params)
+
+    # Inject previous solution as a MIP start (rolling horizon, re-solves)
+    if params.warm_start_schedules:
+        n_ws = _apply_warm_start(
+            params.warm_start_schedules, u, p,
+            p_ch or {}, p_dis or {}, soc or {}, timesteps,
+        )
+        logger.info("Warm start: %d initial values injected", n_ws)
+
     start_time = time.monotonic()
 
     logger.info("Solving UC problem...")
@@ -241,6 +250,8 @@ def solve_uc(params: UCParameters) -> UCResult:
             p_ch=p_ch, p_dis=p_dis, soc=soc, storage_ids=storage_ids,
             interconnections=interconnections, f=f,
         )
+        if params.extract_duals:
+            _extract_duals(result, model, solver, timesteps)
     elif result.status == "Infeasible":
         _diagnose_infeasibility(result, generators, timesteps, demand)
 
@@ -431,6 +442,79 @@ def _split_demand_by_region(
     return result
 
 
+class _HiGHSWarmStart(pulp.HiGHS):
+    """HiGHS (highspy API) with user MIP start injection.
+
+    ``pulp.HiGHS`` ignores ``LpVariable.setInitialValue()``.  This subclass
+    collects initial values right before ``run()`` — ``var.index`` is
+    assigned by ``buildSolverModel`` — and hands them to HiGHS via
+    ``setSolution`` as a user MIP start.  Unset variables default to 0.0;
+    HiGHS repairs imperfect starts, so partial or time-shifted solutions
+    (rolling horizon) are acceptable.  With no initial values set, the
+    behaviour is identical to ``pulp.HiGHS``.
+    """
+
+    def callSolver(self, lp):  # noqa: N802 (PuLP API name)
+        import highspy
+
+        n_set = 0
+        values = [0.0] * lp.solverModel.getNumCol()
+        for var in lp.variables():
+            if var.varValue is not None and hasattr(var, "index"):
+                values[var.index] = float(var.varValue)
+                n_set += 1
+        if n_set:
+            sol = highspy.HighsSolution()
+            sol.col_value = values
+            sol.value_valid = True
+            lp.solverModel.setSolution(sol)
+            logger.info("HiGHS MIP start injected (%d of %d columns set)",
+                        n_set, len(values))
+        lp.solverModel.run()
+
+
+def _apply_warm_start(
+    schedules,
+    u: Dict[Tuple[str, int], pulp.LpVariable],
+    p: Dict[Tuple[str, int], pulp.LpVariable],
+    p_ch: Dict[Tuple[str, int], pulp.LpVariable],
+    p_dis: Dict[Tuple[str, int], pulp.LpVariable],
+    soc: Dict[Tuple[str, int], pulp.LpVariable],
+    timesteps: List[int],
+) -> int:
+    """Inject a previous solution as variable initial values.
+
+    Matches by generator_id and period index.  Periods beyond the provided
+    schedule stay unset (free for the solver to repair/extend).
+
+    Returns:
+        Number of variable initial values set.
+    """
+    n = 0
+    for sched in schedules:
+        gid = sched.generator_id
+        for idx, t in enumerate(timesteps):
+            if idx >= len(sched.power_output_mw):
+                break
+            key = (gid, t)
+            if key in u and idx < len(sched.commitment):
+                u[key].setInitialValue(round(sched.commitment[idx]))
+                n += 1
+            if key in p:
+                p[key].setInitialValue(float(sched.power_output_mw[idx]))
+                n += 1
+            if key in p_ch and idx < len(sched.charge_mw):
+                p_ch[key].setInitialValue(max(0.0, float(sched.charge_mw[idx])))
+                n += 1
+            if key in p_dis and idx < len(sched.discharge_mw):
+                p_dis[key].setInitialValue(max(0.0, float(sched.discharge_mw[idx])))
+                n += 1
+            if key in soc and idx < len(sched.soc_mwh):
+                soc[key].setInitialValue(max(0.0, float(sched.soc_mwh[idx])))
+                n += 1
+    return n
+
+
 def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     """Select and configure the MIP solver backend.
 
@@ -455,10 +539,11 @@ def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     if params.solver_options:
         solver_kwargs.update(params.solver_options)
 
-    # Try HiGHS first if requested: highspy API, then CLI binary
+    # Try HiGHS first if requested: highspy API (with MIP-start support),
+    # then CLI binary
     if params.solver_name.upper() in ("HIGHS", "HIGHS_CMD"):
         try:
-            solver = pulp.HiGHS(**solver_kwargs)
+            solver = _HiGHSWarmStart(**solver_kwargs)
             if solver.available():
                 logger.info("Using HiGHS solver (highspy API)")
                 return solver
@@ -484,6 +569,81 @@ def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     # Last resort: default solver
     logger.warning("No preferred solver available; using PuLP default")
     return pulp.PULP_CBC_CMD(msg=0)
+
+
+def _extract_duals(
+    result: UCResult,
+    model: pulp.LpProblem,
+    solver: pulp.apis.LpSolver,
+    timesteps: List[int],
+) -> None:
+    """Extract marginal prices via a commitment-fixed LP re-solve.
+
+    MILPs have no duals.  The standard market practice is to fix all
+    integer variables (commitment, startup/shutdown, charge-mode, startup
+    type) at their optimal MILP values, re-solve the remaining problem as
+    an LP, and read the duals of the balance constraints:
+
+    - ``demand_balance_t{t}``  -> ``result.system_lambda`` (system price)
+    - ``nodal_bal_{region}_t{t}`` -> ``result.regional_lmp`` (zonal price;
+      inter-regional differences reflect interconnector congestion)
+
+    The objective value is unchanged by the fixing, so prices are
+    consistent with the reported schedule.  On any re-solve failure a
+    warning is appended and price fields stay at their defaults.
+    """
+    logger.info("Extracting duals via commitment-fixed LP re-solve...")
+    t0 = time.monotonic()
+
+    for var in model.variables():
+        if var.cat == pulp.LpInteger:
+            val = round(var.value() or 0.0)
+            var.lowBound = val
+            var.upBound = val
+            var.cat = pulp.LpContinuous
+
+    status_code = model.solve(solver)
+    status = _STATUS_MAP.get(status_code, "Unknown")
+    if status != "Optimal":
+        result.warnings.append(
+            f"dual extraction skipped: commitment-fixed LP status={status}"
+        )
+        return
+
+    # System-wide demand balance duals (model without interconnections)
+    lambdas: Optional[List[float]] = []
+    for t in timesteps:
+        c = model.constraints.get(f"demand_balance_t{t}")
+        if c is None:
+            lambdas = None
+            break
+        lambdas.append(float(c.pi) if c.pi is not None else 0.0)
+    if lambdas is not None:
+        result.system_lambda = lambdas
+
+    # Nodal balance duals (model with interconnections)
+    regional: Dict[str, List[float]] = {}
+    prefix = "nodal_bal_"
+    for name, c in model.constraints.items():
+        if not name.startswith(prefix):
+            continue
+        region, sep, t_str = name[len(prefix):].rpartition("_t")
+        if not sep:
+            continue
+        try:
+            idx = timesteps.index(int(t_str))
+        except ValueError:
+            continue
+        series = regional.setdefault(region, [0.0] * len(timesteps))
+        series[idx] = float(c.pi) if c.pi is not None else 0.0
+    if regional:
+        result.regional_lmp = regional
+
+    logger.info(
+        "Dual extraction LP re-solved in %.2fs (%d nodal regions)",
+        time.monotonic() - t0,
+        len(regional),
+    )
 
 
 def _extract_solution(

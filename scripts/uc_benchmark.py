@@ -58,7 +58,7 @@ def _git_head() -> str:
 
 
 def run_benchmark(reserve_margin: float, mip_gap: float,
-                  scenario: str = "fy2023") -> dict:
+                  scenario: str = "fy2023", duals: bool = False) -> dict:
     print(f"シナリオ構築中... ({scenario})")
     scn = build_national_scenario(scenario=scenario)
     stats = scn.load_stats
@@ -74,7 +74,9 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
     print(f"  重複(osm_id): {stats.n_duplicates}機 "
           f"{stats.duplicate_capacity_mw:,.0f} MW")
 
-    params = scn.to_uc_parameters(reserve_margin=reserve_margin, mip_gap=mip_gap)
+    params = scn.to_uc_parameters(
+        reserve_margin=reserve_margin, mip_gap=mip_gap, extract_duals=duals,
+    )
 
     print("UC求解中...")
     t0 = time.monotonic()
@@ -147,6 +149,20 @@ def run_benchmark(reserve_margin: float, mip_gap: float,
                 round(batt_discharge_mwh / batt_mwh, 3) if batt_mwh > 0 else None
             ),
             "interconnection_peak_utilisation": ic_util,
+            "regional_lmp_mean": (
+                {
+                    r: round(float(np.mean(v)), 1)
+                    for r, v in sorted(result.regional_lmp.items())
+                }
+                if result.regional_lmp else None
+            ),
+            "regional_lmp_peak": (
+                {
+                    r: round(float(np.max(v)), 1)
+                    for r, v in sorted(result.regional_lmp.items())
+                }
+                if result.regional_lmp else None
+            ),
         },
     }
 
@@ -156,6 +172,8 @@ def main() -> int:
     ap.add_argument("--label", default="snapshot", help="レポートのラベル")
     ap.add_argument("--scenario", default="fy2023",
                     help="UCシナリオ名 (config/uc_scenarios/) またはYAMLパス")
+    ap.add_argument("--duals", action="store_true",
+                    help="コミットメント固定LP再解で地域限界価格を抽出")
     ap.add_argument("--reserve-margin", type=float, default=0.05)
     ap.add_argument("--mip-gap", type=float, default=0.01)
     ap.add_argument("--out", default=None, help="出力JSONパス（省略時は docs/reports/ に自動命名）")
@@ -164,7 +182,7 @@ def main() -> int:
     args = ap.parse_args()
 
     report = run_benchmark(args.reserve_margin, args.mip_gap,
-                           scenario=args.scenario)
+                           scenario=args.scenario, duals=args.duals)
 
     out = args.out or (
         f"docs/reports/uc_benchmark_{args.label}_{report['meta']['date']}.json"

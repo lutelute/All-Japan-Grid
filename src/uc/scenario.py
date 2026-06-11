@@ -534,7 +534,7 @@ def apply_nuclear_status_reference(
 ) -> list[Generator]:
     """原子力稼働状態リストを適用する（シナリオの年度断面）。
 
-    背景（ベースライン計測 2026-06-11）: OSM原子力21エントリ31.8GVには廃炉済み
+    背景（ベースライン計測 2026-06-11）: OSM原子力21エントリ31.8GWには廃炉済み
     （福島第二・もんじゅ等）や長期停止中（柏崎刈羽・浜岡等）が含まれ全数起動
     可能扱い → nuclearシェア23%超（実態~9%）の歪み。
 
@@ -698,6 +698,7 @@ class NationalScenario:
         reserve_margin: float = 0.05,
         mip_gap: float = 0.01,
         solver_name: str = "highs",
+        extract_duals: bool = False,
     ) -> UCParameters:
         return UCParameters(
             generators=self.generators,
@@ -709,6 +710,7 @@ class NationalScenario:
             interconnections=self.interconnections,
             # 地域別純需要をノード別バランス制約に直接使用（容量比按分の代替）
             regional_demands={r: d.tolist() for r, d in self.net_demand_r.items()},
+            extract_duals=extract_duals,
         )
 
 
