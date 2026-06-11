@@ -1,0 +1,37 @@
+{
+ "threshold": 1000000000.0,
+ "n_islands": 204,
+ "cond_max": 442280208.2810575,
+ "pass": true,
+ "failing": [],
+ "region": "WEST-merged",
+ "islands_top3": [
+  {
+   "n_buses": 6190,
+   "ref_bus": 3318,
+   "ref_name": "阿南発電所 (Anan Power Station) 500kV",
+   "has_ext_grid": true,
+   "cond_1norm_est": 442280208.2810575,
+   "singular": false,
+   "pass": true
+  },
+  {
+   "n_buses": 17,
+   "ref_bus": 1763,
+   "ref_name": "須雲川変電所",
+   "has_ext_grid": true,
+   "cond_1norm_est": 8081.560310133575,
+   "singular": false,
+   "pass": true
+  },
+  {
+   "n_buses": 15,
+   "ref_bus": 2458,
+   "ref_name": "生坂村変電所",
+   "has_ext_grid": true,
+   "cond_1norm_est": 7069.9843429712055,
+   "singular": false,
+   "pass": true
+  }
+ ]
+}

@@ -7,6 +7,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — 🎉N1/N3: WEST統合島AC初収束 — 「日本としての系統」全島AC成立（63）
+
+- **N1計測**: 同期4島の現状=hokkaido(778subs)/east(5,024)/west(7,082)/okinawa(89)。
+  **west統合島のYbus条件数=4.42e8 — PASS(良品圏)**: 「既知不良アンカー」の前提が覆った。
+  WEST_AC_ANALYSIS当時の悪条件(比率20の変圧器539台)は、その後の多電圧ビルダー
+  (クラス別バス+標準ラダー変圧器)で構造的に解消されていたと判明
+- **N3実行**: west島 **AC=OK**(3キャンペーン失敗の末の初収束)。続けて全島実行 —
+  **hokkaido/east/west/okinawa 全てAC=OK** = 日本一体の系統が史上初めて全島ACで成立。
+  ユーザーの「とにかく日本としての系統を完成させたい」の核が通った
+- **正直な品質注記**: west vm_min 0.656(深い放射端の電圧沈下)・maxload 1631%
+  (定格/合成線の見直し対象)・synth 511本 — 収束の壁は崩れたが磨き込みが次工程
+- **N2(外科手術)は不要だった**と記録(ゲートが先に「壁は消えている」と教えた —
+  計測駆動の価値の好例)。国家ライブマップ成果物(docs/data/powerflow_national)更新
+- west島ybusスコアカード: `ybus_west_island_2026-06-12.json`。981 passed
+
 ## 2026-06-12 — **Fable 5** — P2: 検証図版5点を生成 — 全てcommitted scorecardから再現可能（62）
 
 - `scripts/gen_paper_figs.py` → papers/figs/val_*.{pdf,png}: (A)3層ρ推移(計器改訂と
