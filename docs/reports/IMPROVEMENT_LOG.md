@@ -9,6 +9,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑬: UC実行履歴のDB索引（uc_runs, migration v4）
+
+- **UCRunテーブル**(`b4b32f1`): docs/reports/ のレポートJSONを正本としたまま、
+  report_pathキーのupsertで機械検索可能な索引をgrid.dbに持つ（重複しない再実行）。
+  `record_uc_run`/`list_uc_runs` + `src/uc/run_recorder.record_run`
+  （**ベストエフォート**: DB欠如・ロックでも実行を失敗させない=サーバーチャンク並列安全）
+- 4ドライバ（benchmark/annual merge/pf_link/pf_national）が保存後に自動記録、
+  `scripts/db/backfill_uc_runs.py` で既存61レポートを一括索引化
+  （benchmark 11 / annual 43 / pf_link 5 / pf_national 2、旧単一断面形式も対応）
+- **DB統合方針との関係**: シナリオ(v3)+実行履歴(v4)でUC側のDB資産が完備。
+  次は容量パッチ（uc_scenario_generators の kind='capacity_patch'、ingest済み）を
+  PF側enrich（GeneratorAttributes）へ接続し容量の正を一元化 — ⑫の二重管理解消、
+  mainマージ時の統合タスク
+- tests/test_uc_runs_db.py 7件追加（1070 passed見込み）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑫: 全国ゾーナルUC→PF（east AC/west DC 完走）— 容量二重管理の定量化
 
 - **zone別注入**(`inject_dispatch_by_zone`): 多地域同期島ネット（bus.zone）へ
