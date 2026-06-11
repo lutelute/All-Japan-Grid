@@ -44,6 +44,32 @@ FUEL_JP = {"nuclear":"原子力","coal":"石炭","lng":"LNG","oil":"石油",
            "pumped_hydro":"揚水","battery":"蓄電池","hydro":"水力","biomass":"バイオ",
            "geothermal":"地熱","solar":"太陽光","wind":"風力","unknown":"その他"}
 
+# ── 機別グラデーション（台数の可視化。色味は燃料基色を保つ控えめレンジ） ──
+from matplotlib.colors import LinearSegmentedColormap, to_rgb
+
+
+def _fuel_cmap(base):
+    """燃料基色のアイデンティティを保ったまま機ごとの濃淡を出す。"""
+    b = np.array(to_rgb(base))
+    light = b + (1.0 - b) * 0.38
+    dark = b * 0.62
+    return LinearSegmentedColormap.from_list("u", [light, b, dark])
+
+
+def _stack_units(ax, units, base, bottom, hours):
+    """機別系列を容量降順（大きい機が下）に積む。極細白線が機の境界。"""
+    units = sorted(units, key=lambda t: -t[0])
+    cmap = _fuel_cmap(base)
+    n = max(len(units) - 1, 1)
+    for i, (_cap, series) in enumerate(units):
+        if series.sum() < 0.01:
+            continue
+        ax.bar(hours, series / 1000, bottom=bottom / 1000,
+               color=cmap(i / n), width=0.88, zorder=2,
+               linewidth=0.15, edgecolor="white")
+        bottom = bottom + series
+    return bottom
+
 # ── 発電機ロード+シナリオ構築（src/uc/scenario.py に共通化） ──
 print("発電機データ読み込み中...")
 _SCENARIO = sys.argv[1] if len(sys.argv) > 1 else None  # 例: fy2023r2
@@ -90,12 +116,15 @@ if not result.is_optimal:
 # ── 地域別集計 ────────────────────────────────────────────────
 gen_map = {g.id: g for g in all_gens}
 region_fuel_power = {r: {ft: np.zeros(24) for ft in FUEL_ORDER} for r in REGIONS}
+# 機別系列（燃料内グラデーション用; solar/windは集約値のため対象外）
+region_fuel_units = {r: {ft: [] for ft in FUEL_ORDER} for r in REGIONS}
 
 for sched in result.schedules:
     g  = gen_map[sched.generator_id]
     ft = g.fuel_type if g.fuel_type in FUEL_ORDER else "unknown"
-    pwr = np.array(sched.power_output_mw)
-    region_fuel_power[g.region][ft] += np.maximum(pwr, 0.0)  # 充電期間は0表示
+    pwr = np.maximum(np.array(sched.power_output_mw), 0.0)  # 充電期間は0表示
+    region_fuel_power[g.region][ft] += pwr
+    region_fuel_units[g.region][ft].append((g.capacity_mw, pwr))
 
 # 太陽光・風力をOCCTO容量ベースで地域帰属
 # 需要を超える分は出力抑制として表現（ピークで地域需要超過しないよう cap）
@@ -193,11 +222,14 @@ ok_result = solve_uc(ok_params)
 print(f"  {ok_result.status}, ¥{ok_result.total_cost/1e6:.1f}百万/日")
 
 ok_fuel_power = {ft: np.zeros(24) for ft in FUEL_ORDER}
+ok_fuel_units = {ft: [] for ft in FUEL_ORDER}
 ok_gen_map = {g.id: g for g in ok_gens}
 for sched in ok_result.schedules:
     g  = ok_gen_map[sched.generator_id]
     ft = g.fuel_type if g.fuel_type in FUEL_ORDER else "unknown"
-    ok_fuel_power[ft] += np.maximum(np.array(sched.power_output_mw), 0.0)
+    pwr = np.maximum(np.array(sched.power_output_mw), 0.0)
+    ok_fuel_power[ft] += pwr
+    ok_fuel_units[ft].append((g.capacity_mw, pwr))
 ok_fuel_power["solar"] = ok_solar
 ok_fuel_power["wind"]  = ok_wind
 ok_fuel_power["_demand"]     = ok_gross
@@ -217,12 +249,18 @@ ax_ok = axes_flat[9]
 ax_ok.set_facecolor("white")
 ok_bottom = np.zeros(24)
 for ft in FUEL_ORDER:
-    vals = ok_fuel_power[ft]
-    if vals.sum() < 0.01:
-        continue
-    ax_ok.bar(hours, vals / 1000, bottom=ok_bottom / 1000,
-              color=FUEL_COLORS.get(ft, "#ccc"), width=0.88, zorder=2, linewidth=0)
-    ok_bottom += vals
+    if ft in ("solar", "wind"):
+        vals = ok_fuel_power[ft]
+        if vals.sum() < 0.01:
+            continue
+        ax_ok.bar(hours, vals / 1000, bottom=ok_bottom / 1000,
+                  color=FUEL_COLORS.get(ft, "#ccc"), width=0.88, zorder=2,
+                  linewidth=0)
+        ok_bottom = ok_bottom + vals
+    else:
+        ok_bottom = _stack_units(
+            ax_ok, ok_fuel_units.get(ft, []), FUEL_COLORS.get(ft, "#ccc"),
+            ok_bottom, hours)
 ax_ok.plot(hours, ok_fuel_power["_demand"] / 1000,     "k-",  lw=1.4, zorder=5)
 ax_ok.plot(hours, ok_fuel_power["_net_demand"] / 1000, "k--", lw=0.9, zorder=5)
 ax_ok.set_title(f"沖縄（孤立系統）\n太陽光@正午:{ok_solar_noon_pct_val:.0f}%",
@@ -244,13 +282,18 @@ for idx, r in enumerate(REGIONS_PLOT):
 
     bottom = np.zeros(24)
     for ft in FUEL_ORDER:
-        vals = fp[ft]
-        if vals.sum() < 0.01:
-            continue
-        ax.bar(hours, vals / 1000, bottom=bottom / 1000,
-               color=FUEL_COLORS.get(ft, "#ccc"),
-               width=0.88, zorder=2, linewidth=0)
-        bottom += vals
+        if ft in ("solar", "wind"):
+            vals = fp[ft]
+            if vals.sum() < 0.01:
+                continue
+            ax.bar(hours, vals / 1000, bottom=bottom / 1000,
+                   color=FUEL_COLORS.get(ft, "#ccc"),
+                   width=0.88, zorder=2, linewidth=0)
+            bottom = bottom + vals
+        else:
+            bottom = _stack_units(
+                ax, region_fuel_units[r].get(ft, []),
+                FUEL_COLORS.get(ft, "#ccc"), bottom, hours)
 
     ax.plot(hours, fp["_demand"] / 1000,     "k-",  lw=1.4, zorder=5, label="総需要")
     ax.plot(hours, fp["_net_demand"] / 1000, "k--", lw=0.9, zorder=5, label="純需要")
