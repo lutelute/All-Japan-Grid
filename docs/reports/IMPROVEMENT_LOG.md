@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — `ajgrid reconcile`: 需要スケーリングの地域別初検証＋UC入口（55・M10-3）
+
+- **実装**: `scripts/reconcile.py` + `ajgrid reconcile` — measured_area_stats(OCCTO)に対し
+  (a)各地域の設定断面(ピーク×LF) vs 実測帯q50..p95 (b)境界util(DB導出)
+  (c)**外部UC時系列CSV入口**(area,metric,value_mw→同じ帯判定、UC_HANDOFF契約)。
+  判定は合否でなく**帯**(<q50 / q50..p95 / >p95)=断面が年間分布のどこかに居るのは正当
+- **初検証(所見)**: 10地域中6地域が帯内(東京0.97/中部0.98/九州0.98×p95等=設定の妥当性を
+  初めて地域別に確認)。**北海道<q50=設定ピーク過小の疑い**(OCCTO窓に冬を含む・要確認)・
+  **四国1.16×p95=過大の疑い** — 需要設定の具体的な修正候補2件が初めて特定された
+- レポートをLINE配信(運用開始)。`reconcile_occto_2026-06-11.json`。981 passed
+- M10残: fetch拡張(再エネ実績等・軽)。北海道/四国ピークの修正は計測根拠つきで次回判断
+
 ## 2026-06-11 — **Fable 5** — OCCTO実測のDB化: 連系線ハードコードを機械更新に移行（54・M10-2）
 
 - **DB化**: `measured_area_stats`(area,metric,source PK / q50,p95,signed_q50,window) —

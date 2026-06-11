@@ -199,3 +199,30 @@ def test_measured_utilisation_from_db_signs_and_clamp(tmp_path):
     assert u["ic_006"] == -1.0                                   # clamped sum
     assert "ic_009" not in u                                     # no rows
     assert measured_utilisation_from_db("/nonexistent.db") is None
+
+
+def test_reconcile_bands_and_uc_intake(tmp_path):
+    """ajgrid reconcile (M10-3): config snapshot judged against the
+    OCCTO band; external UC rows judged by area/metric with
+    no_reference for unknown areas (UC_HANDOFF intake contract)."""
+    import importlib
+
+    from src.db.calibration import upsert_measured_area_stats
+
+    db_path = str(tmp_path / "x.db")
+    db = GridDatabase(db_path)
+    upsert_measured_area_stats(db, [
+        {"area": "東京", "metric": "demand_mw", "q50_mw": 30000.0,
+         "p95_mw": 45000.0},
+    ])
+    uc = tmp_path / "uc.csv"
+    uc.write_text("area,metric,value_mw\n東京,demand_mw,46000\n"
+                  "未知,demand_mw,1\n", encoding="utf-8")
+
+    rec = importlib.import_module("scripts.reconcile")
+    m = rec.reconcile(db_path, uc_csv=str(uc))
+    tokyo = next(r for r in m["demand"] if r["region"] == "tokyo")
+    assert tokyo["band"] == "q50..p95"      # 52000*0.85=44200 in band
+    v = {c["area"]: c["verdict"] for c in m["uc_checks"]}
+    assert v["東京"] == ">p95" and v["未知"] == "no_reference"
+    assert "東京" in rec.render(m)

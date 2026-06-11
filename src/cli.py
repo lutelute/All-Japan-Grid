@@ -99,6 +99,11 @@ def cmd_validate(_args, rest):
     return _run("scripts/validate_cgmes.py", rest)
 
 
+def cmd_reconcile(_args, rest):
+    """OCCTO-actuals reconciliation report (scripts/reconcile.py)."""
+    return _run("scripts/reconcile.py", rest)
+
+
 def cmd_db(_args, rest):
     """Drive the unified grid DB: db {ingest|export|curate|enrich} ..."""
     if not rest or rest[0] not in ("ingest", "export", "curate", "enrich"):
@@ -155,6 +160,11 @@ def build_parser():
     sub.add_parser(
         "cim", help="export CIM/CGMES Level 2 (passes args to the script)",
         add_help=False).set_defaults(func=cmd_cim)
+
+    sub.add_parser(
+        "reconcile",
+        help="model config / external UC results vs OCCTO actuals (M10)",
+        add_help=False).set_defaults(func=cmd_reconcile)
 
     sub.add_parser(
         "validate",

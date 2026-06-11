@@ -1,0 +1,120 @@
+{
+ "db": "data/grid.db",
+ "demand": [
+  {
+   "region": "hokkaido",
+   "area": "北海道",
+   "config_peak_mw": 3600,
+   "config_snapshot_mw": 3060.0,
+   "occto_q50_mw": 3271.0,
+   "occto_p95_mw": 4441.0,
+   "snapshot_over_p95": 0.69,
+   "band": "<q50"
+  },
+  {
+   "region": "tohoku",
+   "area": "東北",
+   "config_peak_mw": 13000,
+   "config_snapshot_mw": 11050.0,
+   "occto_q50_mw": 8700.0,
+   "occto_p95_mw": 12238.0,
+   "snapshot_over_p95": 0.9,
+   "band": "q50..p95"
+  },
+  {
+   "region": "tokyo",
+   "area": "東京",
+   "config_peak_mw": 52000,
+   "config_snapshot_mw": 44200.0,
+   "occto_q50_mw": 30099.0,
+   "occto_p95_mw": 45434.0,
+   "snapshot_over_p95": 0.97,
+   "band": "q50..p95"
+  },
+  {
+   "region": "chubu",
+   "area": "中部",
+   "config_peak_mw": 24000,
+   "config_snapshot_mw": 20400.0,
+   "occto_q50_mw": 14161.0,
+   "occto_p95_mw": 20806.0,
+   "snapshot_over_p95": 0.98,
+   "band": "q50..p95"
+  },
+  {
+   "region": "hokuriku",
+   "area": "北陸",
+   "config_peak_mw": 5200,
+   "config_snapshot_mw": 4420.0,
+   "occto_q50_mw": 2980.0,
+   "occto_p95_mw": 4368.0,
+   "snapshot_over_p95": 1.01,
+   "band": ">p95"
+  },
+  {
+   "region": "kansai",
+   "area": "関西",
+   "config_peak_mw": 27000,
+   "config_snapshot_mw": 22950.0,
+   "occto_q50_mw": 15108.0,
+   "occto_p95_mw": 22790.0,
+   "snapshot_over_p95": 1.01,
+   "band": ">p95"
+  },
+  {
+   "region": "chugoku",
+   "area": "中国",
+   "config_peak_mw": 10500,
+   "config_snapshot_mw": 8925.0,
+   "occto_q50_mw": 6186.0,
+   "occto_p95_mw": 8818.0,
+   "snapshot_over_p95": 1.01,
+   "band": ">p95"
+  },
+  {
+   "region": "shikoku",
+   "area": "四国",
+   "config_peak_mw": 5500,
+   "config_snapshot_mw": 4675.0,
+   "occto_q50_mw": 2756.0,
+   "occto_p95_mw": 4013.0,
+   "snapshot_over_p95": 1.16,
+   "band": ">p95"
+  },
+  {
+   "region": "kyushu",
+   "area": "九州",
+   "config_peak_mw": 15500,
+   "config_snapshot_mw": 13175.0,
+   "occto_q50_mw": 9345.0,
+   "occto_p95_mw": 13457.0,
+   "snapshot_over_p95": 0.98,
+   "band": "q50..p95"
+  },
+  {
+   "region": "okinawa",
+   "area": "沖縄",
+   "config_peak_mw": 1600,
+   "config_snapshot_mw": 1360.0,
+   "occto_q50_mw": 898.0,
+   "occto_p95_mw": 1457.0,
+   "snapshot_over_p95": 0.93,
+   "band": "q50..p95"
+  }
+ ],
+ "demand_note": "config snapshot = peak x load_factor; OCCTO window is API-retention (~14 months), so a snapshot above p95 means the config peak is a design peak, not last year's",
+ "boundary_utilisation": {
+  "source": "db",
+  "values": {
+   "ic_001": 0.14761111111111114,
+   "ic_002": 0.7383153153153152,
+   "ic_003": -0.3250714285714286,
+   "ic_004": 0.7905094861660079,
+   "ic_005": -0.14957894736842103,
+   "ic_006": -1.0,
+   "ic_007": -0.05,
+   "ic_008": -0.9415416666666666,
+   "ic_009": -0.49399280575539567
+  }
+ }
+}
