@@ -328,6 +328,38 @@ def test_radialize_band_opens_highest_impedance_loop_edge():
     assert nx.is_connected(G.subgraph(b))
 
 
+def test_ybus_gate_passes_sane_net_and_fails_pathological():
+    """The shipping gate (M8): a healthy 2-bus net passes; a chain of
+    absurd-ratio low-impedance transformers (the west failure mode)
+    drives the condition estimate up by orders of magnitude."""
+    from src.powerflow.ybus_gate import ybus_gate
+
+    net = pp.create_empty_network(f_hz=50, sn_mva=100)
+    b1 = pp.create_bus(net, vn_kv=154.0, name="甲")
+    b2 = pp.create_bus(net, vn_kv=154.0, name="乙")
+    pp.create_ext_grid(net, bus=b1, vm_pu=1.0)
+    pp.create_line_from_parameters(net, b1, b2, length_km=10.0,
+                                   r_ohm_per_km=0.05, x_ohm_per_km=0.38,
+                                   c_nf_per_km=9.0, max_i_ka=1.0)
+    g = ybus_gate(net)
+    assert g["pass"] is True and g["n_islands"] == 1
+    assert g["islands"][0]["has_ext_grid"] is True
+    base_cond = g["cond_max"]
+
+    # graft a pathological chain: tiny-impedance trafos in series
+    prev = b2
+    for _ in range(3):
+        nxt = pp.create_bus(net, vn_kv=66.0)
+        pp.create_transformer_from_parameters(
+            net, hv_bus=prev, lv_bus=nxt, sn_mva=10000.0,
+            vn_hv_kv=154, vn_lv_kv=66, vkr_percent=0.0001,
+            vk_percent=0.01, pfe_kw=0, i0_percent=0.0)
+        prev = nxt
+    g2 = ybus_gate(net)
+    assert g2["cond_max"] > base_cond * 1e3   # conditioning collapses
+    assert ybus_gate(net, threshold=g2["cond_max"] / 10)["pass"] is False
+
+
 def test_corridor_subtree_calibration_conserves_measured_flow():
     """Demand state estimation from flows (ledger 48): a measured
     corridor pins its load-subtree total via conservation. Inner
