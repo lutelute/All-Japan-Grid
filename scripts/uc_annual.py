@@ -31,6 +31,7 @@ os.chdir(os.path.join(os.path.dirname(__file__), ".."))
 from src.uc.rolling import (  # noqa: E402
     RollingUCConfig,
     _recompute_cost,
+    _slice_maintenance,
     solve_rolling_uc,
 )
 from src.uc.scenario import (  # noqa: E402
@@ -83,6 +84,23 @@ def main() -> int:
           f"(うちwarmup {warmup_h}h は集計除外) "
           f"/ ピーク純需要 {net_nat.max() / 1000:.1f} GW "
           f"/ 最小 {net_nat.min() / 1000:.1f} GW")
+
+    # チャンク実行時の時間軸補正: メンテ窓は年間絶対hourで合成されるが、
+    # rolling には [s_h, e_h) スライス済みの系列を渡すため、メンテ窓も
+    # チャンクローカルへ変換する（変換漏れだと全チャンクで窓範囲外になり
+    # メンテが一切適用されない — 2026-06-11 r3初回実行で実測したバグ）。
+    if s_h:
+        from dataclasses import replace as _replace
+
+        scn.generators = [
+            _replace(g, maintenance_windows=_slice_maintenance(
+                g.maintenance_windows, s_h, e_h))
+            if g.maintenance_windows else g
+            for g in scn.generators
+        ]
+    n_maint = sum(1 for g in scn.generators if g.maintenance_windows)
+    if n_maint:
+        print(f"  計画停止: このチャンク内に {n_maint}機")
 
     cfg = RollingUCConfig(
         window_h=args.window,
