@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-11 — **Fable 5** — UC改善④: 地域限界価格(LMP)+warm-start（負の結果込み）
+
+- **双対値抽出**(`bfc864b`): `UCParameters.extract_duals` — コミットメント固定LP再解
+  （MILPに双対なし、市場標準手法）でnodal balance制約のπ=地域限界価格を `UCResult.regional_lmp` に。
+  手計算一致の単体テスト（限界機価格・混雑分離・非混雑収束）+全国検証:
+  **60Hz西日本5地域が7,083円/MWhに完全収束（一物一価）**・北安値（北海道4,521/東北5,891=北本混雑）・
+  沖縄9,000固定（孤立・石油限界機）= 物理的に妥当な価格構造。**オーバーヘッド+0.6s**。
+  `uc_benchmark.py --duals` でLMP平均/ピークをKPI化
+- **warm-start**(同): `_HiGHSWarmStart`（pulp.HiGHSはsetInitialValue無視→highspy setSolutionで
+  MIP start注入）+ schedules→変数マッピング。**計測による負の結果**: 全国24hでは0.99x=効果なし。
+  HiGHSログで根拠確定（**Nodes=1・LP 20,543反復9.8s/12.4s = root LP支配で分枝スキップ余地なし**）。
+  タイトな窓（冬ピーク・rolling再解）の保険として保持
+- タスク3の残り（LP丸め・時間窓境界）は8760h rolling実装（タスク4）に統合する判断。987 passed
+
 ## 2026-06-11 — **Fable 5** — UC改善③: HiGHS有効化+シナリオ第一級化+DBミラー
 
 - **HiGHS有効化**(`30a8402`): highspy導入済みなのに_select_solverがCLI版のみ探索しCBCに
