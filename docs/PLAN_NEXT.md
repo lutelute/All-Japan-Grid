@@ -44,7 +44,7 @@
 
 PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC側較正のPF注入・8760h年間UC・HiGHS・zonal LMP)・`src/dataspace/`(契約/キャッシュ/来歴つきデータ層・**OCCTOライブコネクタ**)・uc_runs(migration v4)・FY2025実測需要プロファイル。
 - [x] X1(67): **置換なし・役割分担** — コネクタ=UC実行時層/当方=アーカイブ較正(同源)、需要=時間軸(UC)×空間軸(当方)で直交補完
-- [ ] X2 capacity_bridgeのPF側評価: UC側較正のPF注入が我々のρ/ACにどう効くかA/B
+- [x] X2(74): 互換✓・west補正−35.3GW(dedup43機)。東京=実測帯と衝突で不採用・west=**F3の実測検証まで採用保留**。dedupのcurate昇格をキュー
 - [ ] X3 燃料別検証の合流: F4(燃料別reconcile)はUCのdispatch結果と同じ帯判定に通す(UC_HANDOFF入口の実演)
 
 ## S: シミュレーション重点（同指示「シミュレーション・検証を重点的に」）
