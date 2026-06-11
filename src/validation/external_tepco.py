@@ -246,7 +246,7 @@ def _model_inventory(region: str, data_dir: str | None = None):
 
 def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
                 min_kv: float = 200.0, pos_km: float = 1.5,
-                csv154=None, csv66=None) -> dict:
+                csv154=None, csv66=None, homonym_km: float = 20.0) -> dict:
     """Score the built model against TEPCO's substation-line attachments.
 
     Matching guards (added after the failure-mode taxonomy, 2026-06-10):
@@ -310,6 +310,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
             missing_lines.append(ln)
 
     pair_name = pair_pos = pair_adj = pair_class = pair_un = 0
+    pair_homonym = 0
     band_tot = defaultdict(int)
     band_ok = defaultdict(int)
     missing_pairs = []
@@ -339,6 +340,14 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         elif adjacent:
             pair_adj += 1
             band_ok[bname] += 1
+        elif _tier == "loose" and d > homonym_km:
+            # containment-matched a line whose nearest end is tens of km
+            # away: a different line sharing name parts (南武's 中原線 vs
+            # a homonym 88 km out), not this yard's corridor — report as
+            # missing-at-this-yard so the OSM work list stays truthful
+            pair_homonym += 1
+            missing_pairs.append(f"{sub} - {ln} (loose match {d:.0f}km away "
+                                 f"— homonym guard, treated as missing)")
         elif not trunk_class:
             # only a sub-trunk-class line carries this name -> collision
             pair_class += 1
@@ -373,6 +382,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         "pair_attached_name": pair_name,
         "pair_attached_position": pair_pos,
         "pair_attached_adjacent": pair_adj,
+        "pair_homonym_guarded": pair_homonym,
         "pair_class_collision": pair_class,
         "pair_unattached": pair_un,
         "pair_recall_name": round(pair_name / n_pairs, 4) if n_pairs else 0.0,

@@ -162,6 +162,43 @@ def test_adjacency_tier_attaches_via_unnamed_final_segment(tmp_path):
     assert m["pair_recall"] == pytest.approx(1.0)
 
 
+def test_homonym_guard_reclassifies_distant_loose_match(tmp_path):
+    """A containment-matched line whose nearest end is tens of km from
+    the official sub is a homonym (南武's 中原線 vs one 88 km away), not
+    this yard's corridor — it must NOT pollute the 'present, not
+    attached' work list (ledger 39)."""
+    header = ",".join(["日時", "南武(変) - 中原線1･2L"])
+    csvp = tmp_path / "jisseki.csv"
+    csvp.write_bytes((header + "\n").encode("cp932"))
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "南武変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.65, 35.58]}},
+        {"type": "Feature",
+         "properties": {"name": "遠隔変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.55, 36.45]}},
+        {"type": "Feature",
+         "properties": {"name": "遠隔南変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.55, 36.35]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",     # homonym ~120 km from 南武
+         "properties": {"name": "北中原線", "voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[140.55, 36.45], [140.55, 36.35]]}},
+    ]}
+    d = tmp_path / "data4"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(json.dumps(lines))
+
+    m = match_tepco("testreg", str(csvp), data_dir=str(d))
+    assert m["pair_homonym_guarded"] == 1
+    assert m["pair_unattached"] == 0
+    assert any("homonym guard" in s for s in m["missing_pairs"])
+
+
 def test_railway_only_names_are_excluded(tmp_path):
     subs = {"type": "FeatureCollection", "features": [
         {"type": "Feature", "properties": {"name": "京浜変電所", "voltage": "275000"},
