@@ -671,34 +671,49 @@ def synthesize_maintenance(
 
     シナリオの ``maintenance`` セクション（fuel別duration週・配置候補週）に
     基づき、対象燃料の各機に年1回の連続停止窓 ``(start_h, end_h)`` を付与する。
-    配置は ``md5(generator_id)`` で候補週から選ぶ — **乱数を使わない**ため
-    同じシナリオ+同じ発電機集合なら常に同じ計画になる（再現性担保）。
 
-    24h断面（ベンチマーク）はメンテ窓（春・秋配置）の外なので影響しない。
+    配置は **(地域×燃料) グループ内で容量降順の輪番** — 実務の定検計画の
+    平準化に相当し、同一地域の大容量機が同時に停止する事態を構造的に避ける
+    （md5独立配置は秋の集中期に偶然の同時停止で infeasible を起こした、
+    2026-06-11 r4 計測）。ソート+剰余のみで**乱数を使わない**ため、同じ
+    シナリオ+同じ発電機集合なら常に同じ計画になる（再現性担保）。
+
+    原子力は ``placement_weeks_nuclear``（あれば）の専用スロットを使う。
+    24h断面（ベンチマーク）はメンテ窓の外なので影響しない。
     経済停止はモデル外（正直な残差として開示）。
     """
-    import hashlib
+    from collections import defaultdict
 
     config = load_scenario_config(config)
     spec = (config.raw or {}).get("maintenance")
     if not spec:
         return gens
     weeks = list(spec.get("placement_weeks", []))
+    weeks_nuclear = list(spec.get("placement_weeks_nuclear", weeks))
     durations = {k: int(v) for k, v in
                  (spec.get("duration_weeks_by_fuel") or {}).items()}
     if not weeks or not durations:
         return gens
 
+    groups: dict = defaultdict(list)
+    for g in gens:
+        if g.fuel_type in durations:
+            groups[(g.region, g.fuel_type)].append(g)
+
+    start_week_of: dict = {}
+    for key in sorted(groups):
+        members = sorted(groups[key], key=lambda g: (-g.capacity_mw, g.id))
+        wlist = weeks_nuclear if key[1] == "nuclear" else weeks
+        for i, g in enumerate(members):
+            start_week_of[g.id] = wlist[i % len(wlist)]
+
     out = []
     for g in gens:
-        dur = durations.get(g.fuel_type)
-        if not dur:
+        if g.id not in start_week_of:
             out.append(g)
             continue
-        digest = int(hashlib.md5(g.id.encode()).hexdigest(), 16)
-        start_week = weeks[digest % len(weeks)]
-        start_h = start_week * 7 * 24
-        end_h = start_h + dur * 7 * 24
+        start_h = start_week_of[g.id] * 7 * 24
+        end_h = start_h + durations[g.fuel_type] * 7 * 24
         out.append(replace(
             g, maintenance_windows=[(start_h, min(end_h, 8760))],
         ))

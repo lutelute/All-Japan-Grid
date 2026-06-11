@@ -471,16 +471,33 @@ class TestSyntheticMaintenance:
         out2 = synthesize_maintenance(gens, cfg)
         spec = cfg.raw["maintenance"]
         weeks = spec["placement_weeks"]
+        weeks_nuc = spec.get("placement_weeks_nuclear", weeks)
         durs = spec["duration_weeks_by_fuel"]
         for g1, g2 in zip(out1, out2):
             # 決定論: 同一入力 → 同一計画（乱数不使用の再現性担保）
             assert g1.maintenance_windows == g2.maintenance_windows
             if g1.fuel_type in durs:
                 (s, e), = g1.maintenance_windows
-                assert (e - s) == durs[g1.fuel_type] * 7 * 24
-                assert (s // (7 * 24)) in weeks  # 春秋の低需要期に配置
+                assert (e - s) == min(durs[g1.fuel_type] * 7 * 24, 8760 - s)
+                allowed = weeks_nuc if g1.fuel_type == "nuclear" else weeks
+                assert (s // (7 * 24)) in allowed
             else:
                 assert g1.maintenance_windows == []  # hydro等は対象外
+
+    def test_round_robin_avoids_same_group_overlap(self):
+        # 同一(地域×燃料)グループは容量降順の輪番で別週に配置される
+        # （md5独立配置の偶然同時停止 = r4 chunk10 infeasible の再発防止）
+        from src.uc.scenario import load_scenario_config, synthesize_maintenance
+        from src.model.generator import Generator
+        cfg = load_scenario_config("fy2023r2")
+        gens = [
+            Generator(id=f"c{i}", name=f"c{i}", capacity_mw=1000 - i,
+                      fuel_type="coal", region="kyushu", fuel_cost_per_mwh=5000)
+            for i in range(4)
+        ]
+        out = synthesize_maintenance(gens, cfg)
+        starts = [g.maintenance_windows[0][0] for g in out]
+        assert len(set(starts)) == 4  # 4機が全て異なる週に分散
 
     def test_24h_snapshot_unaffected(self):
         # メンテは春秋配置（最早 週12=2016h〜）なので 24h断面 (t<24) に窓が無い
