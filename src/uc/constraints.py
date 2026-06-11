@@ -29,7 +29,7 @@ Usage::
     # ... etc ...
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import pulp
 
@@ -143,6 +143,7 @@ def add_startup_shutdown_logic(
     w: Dict[Tuple[str, int], pulp.LpVariable],
     generators: List[Generator],
     timesteps: List[int],
+    initial_commitment: Optional[Dict[str, int]] = None,
 ) -> int:
     """Add startup/shutdown indicator linking constraints.
 
@@ -151,8 +152,12 @@ def add_startup_shutdown_logic(
 
         ``v[g,t] - w[g,t] = u[g,t] - u[g,t-1]``  for all *g*, *t*
 
-    For the first time step, ``u[g,t-1]`` is assumed to be 0 (all
-    generators start offline).
+    For the first time step, ``u[g,t-1]`` comes from
+    ``initial_commitment`` (1 = was on just before the horizon, 0 = was
+    off).  Generators missing from the mapping default to 0 (offline) —
+    the historical behaviour.  Rolling-horizon callers must pass the
+    final committed state of the previous window here, otherwise every
+    window re-pays startup costs for units that were already running.
 
     Args:
         model: PuLP model to add constraints to.
@@ -163,17 +168,20 @@ def add_startup_shutdown_logic(
             ``(generator_id, timestep)``.
         generators: List of generators available for commitment.
         timesteps: List of time period indices (must be sorted).
+        initial_commitment: Optional mapping ``generator_id -> 0/1`` of
+            the commitment state immediately before the first period.
 
     Returns:
         Number of constraints added.
     """
+    initial_commitment = initial_commitment or {}
     count = 0
     for g in generators:
+        u_init = int(initial_commitment.get(g.id, 0))
         for i, t in enumerate(timesteps):
             if i == 0:
-                # First period: assume generator was off (u[g, t-1] = 0)
                 model += (
-                    v[(g.id, t)] - w[(g.id, t)] == u[(g.id, t)],
+                    v[(g.id, t)] - w[(g.id, t)] == u[(g.id, t)] - u_init,
                     f"startup_shutdown_{g.id}_t{t}",
                 )
             else:
@@ -190,6 +198,57 @@ def add_startup_shutdown_logic(
         len(generators),
         len(timesteps),
     )
+    return count
+
+
+def add_initial_history_constraints(
+    model: pulp.LpProblem,
+    u: Dict[Tuple[str, int], pulp.LpVariable],
+    generators: List[Generator],
+    timesteps: List[int],
+    initial_history_h: Dict[str, int],
+) -> int:
+    """Enforce minimum up/down time remaining from pre-horizon history.
+
+    For rolling-horizon solves the commitment history does not reset at
+    the window boundary.  Given ``initial_history_h[g] = +h`` (unit has
+    been continuously ON for *h* hours) or ``-h`` (continuously OFF), the
+    unit must remain ON for ``max(0, min_up_time_h - h)`` further periods
+    (resp. OFF for ``max(0, min_down_time_h - h)``).
+
+    Args:
+        model: PuLP model to add constraints to.
+        u: Binary commitment variables indexed by ``(generator_id, timestep)``.
+        generators: List of generators available for commitment.
+        timesteps: List of time period indices (must be sorted).
+        initial_history_h: Mapping ``generator_id -> signed hours``
+            (positive = ON streak, negative = OFF streak, 0/absent = no
+            binding history).
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    for g in generators:
+        hist = int(initial_history_h.get(g.id, 0))
+        if hist > 0:
+            must_on = max(0, int(g.min_up_time_h) - hist)
+            for t in timesteps[:must_on]:
+                model += (
+                    u[(g.id, t)] == 1,
+                    f"init_must_on_{g.id}_t{t}",
+                )
+                count += 1
+        elif hist < 0:
+            must_off = max(0, int(g.min_down_time_h) + hist)  # hist is negative
+            for t in timesteps[:must_off]:
+                model += (
+                    u[(g.id, t)] == 0,
+                    f"init_must_off_{g.id}_t{t}",
+                )
+                count += 1
+    if count:
+        logger.info("Added %d initial-history must-run/stay-off constraints", count)
     return count
 
 

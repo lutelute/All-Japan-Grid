@@ -1,0 +1,77 @@
+# OSM容量欠損の大規模火力に対する個別容量パッチ
+#
+# 背景（2026-06-11計測）: 容量欠損の coal/gas はユニーク18機で、ほぼ全てが
+# 小規模自家発・産業用IPP（住友共同電力・製紙ミル・市クリーンセンター等）。
+# 一律 THERMAL_DEFAULT（coal 600MW）の補完は約10倍の過大評価で、coal容量を
+# 19.2GW 水増ししシェアを 39%（実態~28%）に歪めていた。
+# 一方で実際に大規模なのに欠損している例外が以下の2件。
+#
+# 適用: 名前部分一致（src/uc/scenario.py ローダー、容量欠損時のみ）。
+# 出典: 各社公表の設備諸元。
+
+patches:
+  - match: 苓北
+    capacity_mw: 1400
+    note: 九州電力 苓北火力 700MW×2（石炭）
+  - match: 福島ガス発電所
+    capacity_mw: 1180
+    note: 福島天然ガス発電 590MW×2（LNG）
+
+  # ── 2026-06-11追補: jrp_lite欠損(capacity_mw=-1.0, osm_id=null)の大規模火力 ──
+  # fy2023r2較正で九州の供給力不足(infeasible)が露呈し全数調査。
+  # 2023年度断面の稼働状態で設定（廃止済みは 0 = ローダーで除外）。
+  # 出典: 各社公表の設備諸元・廃止公表（値は公称万kW）。
+  - {match: 新大分火力, capacity_mw: 2295, note: 九州電力 新大分LNG 229.5万kW}
+  - {match: 九州電力 松浦火力, capacity_mw: 1700, note: 九電松浦 1号700+2号1000}
+  - {match: 電源開発 松浦火力, capacity_mw: 2000, note: J-POWER松浦 1000×2}
+  - {match: 新小倉火力, capacity_mw: 1200, note: 九電新小倉 4,5号600×2（3号長期計画停止）}
+  - {match: 松島火力, capacity_mw: 1000, note: J-POWER松島 500×2}
+  - {match: 苅田火力発電所, capacity_mw: 360, note: 九電苅田 新1号}
+  - {match: 相浦火力, capacity_mw: 500, note: 九電相浦 2号のみ（1号は2022廃止）}
+  - {match: シグマパワー有明三池, capacity_mw: 175, note: 三池発電所}
+  - {match: Orix Hibikinada, capacity_mw: 112, note: 響灘火力}
+  - {match: Orix Soma, capacity_mw: 112, note: 相馬エネルギーパーク}
+  - {match: 糸魚川発電所, capacity_mw: 149, note: サミット明星パワー（石炭・バイオ混焼）}
+  - {match: 石巻雲雀野, capacity_mw: 149, note: 日本製紙石巻エネルギーセンター}
+  # 廃止済み（2023年度断面で発電不可 → 0 = 除外）
+  - {match: 豊前火力, capacity_mw: 0, note: 九電豊前1,2号 廃止(2019-2021)}
+  - {match: 川内発電所, capacity_mw: 0, note: 九電川内火力1,2号 廃止（川内原子力とは別。部分一致は原子力名に非該当）}
+  - {match: 下松火力, capacity_mw: 0, note: 中国電力下松 廃止}
+  - {match: 池島町長崎市発電所, capacity_mw: 0, note: 池島炭鉱跡 廃止}
+  # ── 2026-06-11追補2: 北陸の域内供給力過小（オーナー指摘）の是正 ──
+  # 拡張キー: fuel=燃料誤タグ補正 / region=帰属補正 / override=正値も上書き
+  - match: 七尾大田
+    capacity_mw: 1200
+    fuel: coal
+    override: true
+    note: 北陸電力 七尾大田1,2号(500+700)。OSMはbiomass誤タグ+容量-1.0欠損だった
+  - match: 敦賀火力
+    capacity_mw: 1200
+    region: hokuriku
+    override: true
+    note: 北陸電力 敦賀1,2号(500+700)。所在(敦賀市)がbbox帰属でkansaiに流れるため北陸へ固定
+  - match: 富山新港
+    capacity_mw: 425
+    fuel: lng
+    override: true
+    note: 現役はLNG1号424.7MWのみ（石炭250×2は2018廃止）。OSMの1500は旧名板
+  # ── 2026-06-12追補: 全国ゾーナルUC→PF検証で発覚した帰属誤り ──
+  - match: 橘湾火力
+    capacity_mw: 2100
+    region: shikoku
+    override: true
+    note: J-POWER橘湾 1050×2（徳島県阿南市=四国）。kansai bbox重複の初出dedupで
+      kansai帰属になっていた（敦賀火力と同構造）。「橘湾発電所」(四電700MW)は別site
+  - match: 橘湾発電所
+    region: shikoku
+    note: 四国電力橘湾 700MW（阿南市、容量はOSM正値を維持）。帰属のみ四国へ固定。
+      文字列「橘湾発電所」は「橘湾火力発電所」に部分一致しない（J-POWER側と独立）
+
+  # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
+  # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
+  - {match: 吉の浦火力, capacity_mw: 0, note: 沖縄は合成火力に一本化（二重計上防止）}
+  - {match: 金武火力, capacity_mw: 0, note: 同上}
+  - {match: 牧港火力, capacity_mw: 0, note: 同上}
+  - {match: 石川火力, capacity_mw: 0, note: 同上}
+  - {match: Ishikawa J-Power, capacity_mw: 0, note: 同上}
+  - {match: Gushikawa Power, capacity_mw: 0, note: 同上}

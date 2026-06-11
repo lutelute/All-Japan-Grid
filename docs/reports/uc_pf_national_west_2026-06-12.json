@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "date": "2026-06-12",
+    "git_head": "19ea474",
+    "scenario": "fy2023r2",
+    "reactive": 0.6,
+    "capacity_bridge": true
+  },
+  "islands": {
+    "west": {
+      "regions": [
+        "chubu",
+        "hokuriku",
+        "kansai",
+        "chugoku",
+        "shikoku",
+        "kyushu"
+      ],
+      "hour": 17,
+      "net_demand_mw": 69937.7,
+      "n_buses": 7082,
+      "capacity_bridge": {
+        "dedup_disabled": 45,
+        "patched": 19,
+        "retired": 5,
+        "fuel_fixed": 2,
+        "nuclear_set": 6,
+        "nuclear_stopped": 11,
+        "mw_delta": -35916.2,
+        "unmatched_patches": [
+          "Gushikawa Power",
+          "Ishikawa J-Power",
+          "Orix Soma",
+          "吉の浦火力",
+          "牧港火力",
+          "石川火力",
+          "石巻雲雀野",
+          "福島ガス発電所",
+          "金武火力"
+        ],
+        "zone_override_n": 3
+      },
+      "injection": {
+        "chubu": {
+          "load_scale": 0.8956,
+          "injection": {
+            "requested_mw": 21787.4,
+            "injected_mw": 21787.4,
+            "clipped": {},
+            "unmatched": {},
+            "zeroed_gens": 3569
+          }
+        },
+        "hokuriku": {
+          "load_scale": 0.8323,
+          "injection": {
+            "requested_mw": 3180.9,
+            "injected_mw": 2685.4,
+            "clipped": {
+              "hydro": 495.5
+            },
+            "unmatched": {},
+            "zeroed_gens": 25
+          }
+        },
+        "kansai": {
+          "load_scale": 1.0113,
+          "injection": {
+            "requested_mw": 18380.9,
+            "injected_mw": 18355.9,
+            "clipped": {
+              "biomass": 25.0
+            },
+            "unmatched": {},
+            "zeroed_gens": 856
+          }
+        },
+        "chugoku": {
+          "load_scale": 0.8771,
+          "injection": {
+            "requested_mw": 8975.9,
+            "injected_mw": 8528.5,
+            "clipped": {
+              "biomass": 247.4
+            },
+            "unmatched": {
+              "battery": 200.0
+            },
+            "zeroed_gens": 1188
+          }
+        },
+        "shikoku": {
+          "load_scale": 0.8597,
+          "injection": {
+            "requested_mw": 4974.2,
+            "injected_mw": 4176.6,
+            "clipped": {
+              "coal": 656.0,
+              "biomass": 40.0,
+              "hydro": 45.8
+            },
+            "unmatched": {
+              "battery": 55.8
+            },
+            "zeroed_gens": 52
+          }
+        },
+        "kyushu": {
+          "load_scale": 1.0847,
+          "injection": {
+            "requested_mw": 14738.4,
+            "injected_mw": 13692.0,
+            "clipped": {
+              "coal": 460.0,
+              "geothermal": 150.0,
+              "biomass": 20.0,
+              "battery": 416.4
+            },
+            "unmatched": {},
+            "zeroed_gens": 1766
+          }
+        }
+      },
+      "gate": {
+        "pass": false,
+        "cond_max": 1214806398.4866385
+      },
+      "skipped": "ybus_gate FAIL — 契約により注入断面を解かない"
+    }
+  }
+}

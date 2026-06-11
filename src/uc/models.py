@@ -171,6 +171,30 @@ class UCParameters:
             region identifier.  When provided alongside interconnections,
             used directly for nodal balance constraints instead of the
             capacity-fraction split of the total demand.
+        extract_duals: When ``True``, after an optimal MILP solve the
+            integer variables are fixed at their solution and the model is
+            re-solved as an LP to extract dual prices (marginal prices).
+            Results land in ``UCResult.system_lambda`` (system-wide demand
+            balance) or ``UCResult.regional_lmp`` (nodal balance), in
+            currency units per MWh.  Adds one LP solve of overhead.
+        warm_start_schedules: Optional previous solution (e.g. the
+            schedules of a prior, similar solve such as the preceding
+            rolling-horizon window) injected as a user MIP start.
+            Schedules are matched by ``generator_id`` and period index;
+            extra periods are ignored, missing values are left free.
+            Supported by the HiGHS (highspy API) backend; other backends
+            ignore the hint.  An imperfect start is repaired by the
+            solver, so time-shifted solutions are acceptable.
+        initial_commitment: Commitment state (``generator_id -> 0/1``)
+            immediately before the first period.  Used by the
+            startup/shutdown logic at t=0 so that units already running
+            do not incur a phantom startup cost.  Missing units default
+            to 0 (offline) — the legacy single-shot assumption.
+        initial_history_h: Signed pre-horizon streak per generator
+            (``+h`` = continuously ON for h hours, ``-h`` = OFF).
+            Enforces remaining minimum up/down time at the window head.
+            Both fields are the state-carrying interface for
+            rolling-horizon solves (src/uc/rolling.py).
     """
 
     generators: List[Generator] = field(default_factory=list)
@@ -183,6 +207,10 @@ class UCParameters:
     solver_options: Dict[str, Any] = field(default_factory=dict)
     interconnections: List[Interconnection] = field(default_factory=list)
     regional_demands: Optional[Dict[str, List[float]]] = None
+    extract_duals: bool = False
+    warm_start_schedules: Optional[List["GeneratorSchedule"]] = None
+    initial_commitment: Optional[Dict[str, int]] = None
+    initial_history_h: Optional[Dict[str, int]] = None
 
     def __post_init__(self) -> None:
         """Validate UC parameters."""
@@ -290,6 +318,16 @@ class UCResult:
         warnings: Non-fatal issues encountered during setup or solve.
         interconnection_flows: Per-interconnection flow results across the
             planning horizon. Empty when interconnections are not modelled.
+        system_lambda: Marginal system price per period (currency/MWh),
+            extracted as the dual of the system-wide demand balance in the
+            commitment-fixed LP re-solve.  ``None`` unless
+            ``UCParameters.extract_duals`` was set and the model used the
+            system-wide balance (no interconnections).
+        regional_lmp: Marginal price per region per period (currency/MWh),
+            duals of the nodal balance constraints in the commitment-fixed
+            LP re-solve.  Empty unless ``extract_duals`` was set and nodal
+            balance was active (interconnections present).  Differences
+            between regions reflect interconnector congestion.
     """
 
     status: str = "Not Solved"
@@ -299,6 +337,8 @@ class UCResult:
     gap: Optional[float] = None
     warnings: List[str] = field(default_factory=list)
     interconnection_flows: List[InterconnectionFlow] = field(default_factory=list)
+    system_lambda: Optional[List[float]] = None
+    regional_lmp: Dict[str, List[float]] = field(default_factory=dict)
 
     @property
     def is_optimal(self) -> bool:

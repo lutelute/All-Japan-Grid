@@ -446,6 +446,129 @@ class MeasuredBusLoad(Base):
         )
 
 
+class UCScenario(Base):
+    """UC scenario definition — machine-queryable mirror of the YAML.
+
+    The git-tracked ``config/uc_scenarios/{scenario_id}.yaml`` remains the
+    source of truth (owner decision 2026-06-11: generator selection is
+    scenario-dependent, so scenarios are first-class and DB-backed).
+    This table is written by ``scripts/db/ingest_uc_scenarios.py`` so that
+    downstream tooling can resolve scenarios without touching the repo
+    config tree.
+
+    Attributes:
+        scenario_id: Scenario name (e.g. ``'fy2023'``).
+        fiscal_year: Fiscal year of the snapshot, when applicable.
+        description: Human-readable description.
+        config_json: Full scenario definition as JSON (verbatim mirror of
+            the YAML content).
+        updated_at: ISO timestamp of last ingest.
+    """
+
+    __tablename__ = "uc_scenarios"
+
+    scenario_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    fiscal_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    config_json: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCScenario(scenario_id={self.scenario_id!r}, "
+            f"fiscal_year={self.fiscal_year})"
+        )
+
+
+class UCScenarioGenerator(Base):
+    """Per-generator scenario entry (availability / storage / capacity).
+
+    Row-level mirror of the scenario reference lists so generator selection
+    can be queried per scenario:
+
+    - ``kind='nuclear_status'``: operational reactor sites for the snapshot
+      (entries from ``data/reference/nuclear_status.yaml``)
+    - ``kind='pumped_storage'``: pumped-storage plants with storage hours
+      (``data/reference/pumped_storage.yaml``)
+    - ``kind='capacity_patch'``: individual capacity corrections for
+      capacity-missing plants (``data/reference/capacity_patches.yaml``)
+
+    Attributes:
+        scenario_id: Owning scenario.
+        kind: Entry kind (see above).
+        gen_key: Stable key within the kind (plant name / match string).
+        payload_json: Full entry as JSON (capacity_mw, region, note, …).
+        updated_at: ISO timestamp of last ingest.
+    """
+
+    __tablename__ = "uc_scenario_generators"
+
+    scenario_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), primary_key=True)
+    gen_key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCScenarioGenerator({self.scenario_id}/{self.kind}/"
+            f"{self.gen_key})"
+        )
+
+
+class UCRun(Base):
+    """UC execution history — machine-queryable index of run results.
+
+    The report JSON under ``docs/reports/`` remains the source of truth
+    (same owner decision as scenarios: DB mirrors, files are canonical).
+    One row per produced report; re-running upserts by ``report_path`` so
+    the index never duplicates. Written best-effort by
+    :mod:`src.uc.run_recorder` — absence of the DB never fails a run.
+
+    Attributes:
+        report_path: Repo-relative path of the canonical report JSON
+            (primary key — one report, one row).
+        kind: Run kind (``'benchmark' | 'annual' | 'pf_link' |
+            'pf_national'``).
+        run_date: ISO date of the run.
+        git_head: Short commit hash the run was produced at.
+        scenario_id: UC scenario name (e.g. ``'fy2023r2'``).
+        scenario_sha256: Scenario definition fingerprint (reproducibility
+            chain, when recorded).
+        demand_profile_sha: Fetched measured-demand fingerprint (when the
+            scenario resolves a profile_ref).
+        status: Solver status (``'Optimal'`` …) or PF outcome.
+        total_cost_jpy: Objective value for solve runs.
+        solve_time_s: Wall-clock solve time.
+        l1_total_pp: L1 deviation vs reference fuel shares (pp), when
+            evaluated.
+        summary_json: Compact KPI summary (JSON), shape depends on kind.
+        created_at: ISO timestamp of (last) recording.
+    """
+
+    __tablename__ = "uc_runs"
+
+    report_path: Mapped[str] = mapped_column(String(256), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    run_date: Mapped[str] = mapped_column(String(10), nullable=False)
+    git_head: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
+    scenario_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    scenario_sha256: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    demand_profile_sha: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    status: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    total_cost_jpy: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    solve_time_s: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    l1_total_pp: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    summary_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"UCRun({self.kind}/{self.scenario_id} {self.run_date} "
+            f"{self.status} -> {self.report_path})"
+        )
+
+
 class MeasuredAreaStat(Base):
     """One OCCTO-published area/interconnector aggregate — written only
     by ``scripts/db/calibrate.py --occto`` (M10 reconciliation layer).

@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "7d989c4",
+    "region": "kansai",
+    "scenario": "fy2023r2",
+    "hour": 11,
+    "model": "backbone154"
+  },
+  "uc": {
+    "status": "Optimal",
+    "region_dispatch_mw": 21065.3,
+    "region_net_demand_mw": 24509.1,
+    "fuel_mw": {
+      "biomass": 112.5,
+      "hydro": 441.8,
+      "lng": 7919.0,
+      "nuclear": 6578.0,
+      "coal": 5800.0,
+      "pumped_hydro": 214.0
+    }
+  },
+  "gate": {
+    "pass": true,
+    "cond_max": 35623141.361164734
+  },
+  "injection": {
+    "requested_mw": 21065.3,
+    "injected_mw": 19487.9,
+    "clipped": {
+      "biomass": 63.5,
+      "coal": 1299.9
+    },
+    "unmatched": {
+      "pumped_hydro": 214.0
+    },
+    "zeroed_gens": 1002
+  },
+  "pf": {
+    "baseline_ac_converged": true,
+    "uc_ac_converged": true,
+    "vm_min": 0.7988,
+    "vm_max": 1.0365,
+    "slack_mw": -849.3,
+    "load_scale_ratio": 1.0679
+  }
+}

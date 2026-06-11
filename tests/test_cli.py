@@ -37,3 +37,13 @@ def test_regions_command_runs(capsys):
 
 def test_db_rejects_unknown_subcommand():
     assert cli.cmd_db(None, ["bogus"]) == 2
+
+
+def test_uc_passthrough_and_validation():
+    p = cli.build_parser()
+    args, rest = p.parse_known_args(["uc", "benchmark", "--duals"])
+    assert args.command == "uc"
+    assert rest == ["benchmark", "--duals"]
+    # 未知サブコマンドは usage (rc=2)
+    assert cli.cmd_uc(None, ["bogus"]) == 2
+    assert cli.cmd_uc(None, []) == 2

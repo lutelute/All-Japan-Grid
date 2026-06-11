@@ -6,6 +6,272 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 2026-06-10以降のエントリはモデル名の記録を必須とする。
 
 ---
+<!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
+
+
+## 2026-06-12 — **Fable 5** — UC改善⑮: capacity_bridge — 容量の正の一元化（⑫の二重管理解消）
+
+- **橋渡し層**(`19ea474`, `src/uc/capacity_bridge.py`): DB（uc_scenario_generators、
+  YAMLフォールバック）の capacity_patches + nuclear_status を **PF側 net.gen へ適用**。
+  UC側ローダーと同一意味論の4ステップ: ①bbox重複コピーのdedup（**≥100MW限定** —
+  無差別dedupはeast島で同名ソーラー群4,492行/-59GWを誤停止しgate FAILを招いた）
+  ②容量パッチ常時適用（PF側は-1.0欠損が燃料別デフォルトに置換済みで欠損が観測
+  不能 → 出典付き公称値を正とする。regionのみのパッチはOSM容量維持）
+  ③nuclear_status: 稼働サイト=site容量/リスト外=停止（east島で6炉停止
+  =FY2023断面の東日本原発ゼロを正しく反映）④zone帰属表（注入側でgen単位上書き）
+- **新パッチ2件 — 橘湾の誤帰属**: J-POWER橘湾2,100MW（徳島県阿南市）が
+  kansai bbox重複の初出dedupでkansai帰属だった（敦賀火力と同構造、**UC側も同罪**）
+  → region: shikoku。四電橘湾700MWはregionのみパッチ
+- **west島の実測効果**: 注入ギャップ hokuriku **-77%→-16%** / kyushu **-31%→-7%** /
+  shikoku -52%→-16%（四電パッチ後）。総注入 63.0→69.2GW（純需要の99.0%）。
+  旧版の chugoku→kansai -7GW のtie潮流歪みも解消
+- **負の結果（重要）**: kansai 24断面の昼間低電圧 vm 0.798 は bridge適用後も不変 —
+  容量較正と独立の課題（原子力の北部偏在 vs 都市部昼ピークの地理乖離、
+  注入の地理重み付けが次のテーマ）と確定
+- **main還流事項**: ①ybus_gate の cond推定が閾値1e9際で実行ごとに揺れる —
+  同一入力で 4.84e8 / 1.13e9 / 1.21e9(PYTHONHASHSEED=0) を実測。west島
+  （bridge後）は「gate際の網」であり、判定の決定論化（推定の反復中央値 or
+  シード固定）と閾値の余裕度設計が必要。**gate PASS時のDCは収束する**
+  （p95 78.7%実測、19ea474）ので保守側には倒れている
+  ②PF側GridNetworkローダーの「-1.0→燃料別デフォルト置換」は玄海/川内を
+  1000MW扱いにする（実2360/1780）— DB容量の優先参照をビルダーへ昇格すべき
+- **tokyo coal欠損2.3GWの真因確定（追記）**: 容量タグではなく **KSC Chiba IPP
+  (1,440MW)と鹿島共同発電所(1,000MW)の2台がGridNetwork構築で未接続→不参加**
+  （GeoJSONは11台11,454MW正値、GridNetworkは9台9,014MW）。容量パッチでは
+  直らない=ビルダーの接続探索の問題（main還流事項③）
+
+## 2026-06-12 — **Fable 5** — UC改善⑭: FY2025実測需要の年間UC完走（r7）— 合成需要の過大+12%を定量化
+
+- **r7**(`950ce68`): fy2025r1（実測需要 via DataSpace profile_ref・annual_window +
+  nuclear_status_fy2025 14基13,253MW）の8760h UC。pws-160core 13チャンク並列、
+  389窓**全365日Optimal**・リトライ0・カバレッジギャップ0
+- **実測needs化の効果（r6=fy2023r2maint比）**:
+  - 総需要 **999.3 → 879.7 TWh（-12%）** — 合成需要（OCCTOピーク×形状の年間化）の
+    過大が初めて定量化された。コスト ¥6.47兆 → **¥4.99兆/年（-23%）**
+  - **LNG 30.7 → 21.7%（-9.0pp）**: 需要減を限界電源が吸収（メリットオーダー通り）
+  - nuclear 7.6 → 9.9%（+2.3pp、女川2+島根2の14基断面）、揚水 0.10 → 0.56%
+    （実測の夕方ピーク形状が揚水を稼働させる）
+- **開示**: FY2025実績シェアは年度未了で正本なし（構造比較のみ）。RE容量は
+  fy2023r2踏襲（FY2025導入増未較正=solar/windやや過小バイアス）。coal 41.5%は
+  経済停止モデル外の既知過大と同根
+- uc_runs索引: backfillで75件（r7チャンク13+マージ1を含む）
+
+## 2026-06-12 — **Fable 5** — UC改善⑬: UC実行履歴のDB索引（uc_runs, migration v4）
+
+- **UCRunテーブル**(`b4b32f1`): docs/reports/ のレポートJSONを正本としたまま、
+  report_pathキーのupsertで機械検索可能な索引をgrid.dbに持つ（重複しない再実行）。
+  `record_uc_run`/`list_uc_runs` + `src/uc/run_recorder.record_run`
+  （**ベストエフォート**: DB欠如・ロックでも実行を失敗させない=サーバーチャンク並列安全）
+- 4ドライバ（benchmark/annual merge/pf_link/pf_national）が保存後に自動記録、
+  `scripts/db/backfill_uc_runs.py` で既存61レポートを一括索引化
+  （benchmark 11 / annual 43 / pf_link 5 / pf_national 2、旧単一断面形式も対応）
+- **DB統合方針との関係**: シナリオ(v3)+実行履歴(v4)でUC側のDB資産が完備。
+  次は容量パッチ（uc_scenario_generators の kind='capacity_patch'、ingest済み）を
+  PF側enrich（GeneratorAttributes）へ接続し容量の正を一元化 — ⑫の二重管理解消、
+  mainマージ時の統合タスク
+- tests/test_uc_runs_db.py 7件追加（1070 passed見込み）
+
+## 2026-06-12 — **Fable 5** — UC改善⑫: 全国ゾーナルUC→PF（east AC/west DC 完走）— 容量二重管理の定量化
+
+- **zone別注入**(`inject_dispatch_by_zone`): 多地域同期島ネット（bus.zone）へ
+  地域ごとに load=UC純需要スケール+gen=燃料別容量比例注入。primitivesに
+  gen_mask/load_mask追加（1063 passed）。ドライバ `uc_to_pf_national.py` は
+  run_national_powerflow の島構築チェーンの balance_power_by_zone を
+  UC断面に置換し、tie線潮流（zone跨ぎline）とUC連系線フローを地域対で比較
+- **east（tohoku+tokyo, 5,024バス）t=17**: gate PASS → **AC収束**
+  vm tohoku[0.96,1.037]/tokyo[0.817,1.03]（フルモデルは縮約版に無い弱バスを露出）
+- **west（6地域, 7,082バス）t=17**: gate PASS → **DC収束 loading p95 79%**
+  （AC不可は既知の確定事項=下位網変圧器。ローカルMacで完走、サーバー不要）
+- **最重要の新事実 — UC↔PF間の容量二重管理を初めて定量化**:
+  UC側の容量較正（capacity_patches 27件・参照リスト）はシナリオ層にのみ存在し、
+  PF側のOSM由来GridNetworkへ届いていない。地域別ギャップ（t=17断面）:
+  - **hokuriku gap 2,444MW (-77%)**: coal 1,949クリップ（敦賀火力等のregion/容量パッチ未反映）
+  - **kyushu gap 4,452MW (-31%)**: nuclear 2,140 + lng 1,895（新大分2,295級）+ coal/geo
+  - **shikoku gap 1,498MW (-52%)**: **coal 1,356がunmatched = 橘湾石炭がPF側に不在**
+  - tokyo（east側）: coal 2,340クリップ → tie潮流乖離（PF 11.6GW vs UC 5.6GW）の主因
+  - クリップ分はslack供給に化け、tie潮流をUC計画から大きく歪める（west連系線で顕著）
+- **帰結（方針裏付け）**: 発電容量の正は R/C/D 層のDBで一元化し、UCシナリオ
+  ローダーとPF側enrichが同一の正を引くべき — 「潮流側とのDB統合」の根拠データ
+- 次: UC実行履歴のDB記録（uc_runs）/ 容量パッチのDB昇格 → PF側enrich接続
+
+## 2026-06-12 — **Fable 5** — UC改善⑪: UC→PF 24断面スイープ（「流せない時間帯」の不在と電圧の質を計測）
+
+- **--all-hours実装**(`scripts/uc_to_pf.py`): UC1回+PF網1回構築→24時刻を断面ごとに
+  deepcopy注入+AC再ソルブ。時刻別 vm/slack/注入量をJSONに記録
+  (`docs/reports/uc_pf_link_{region}_allhours_2026-06-12.json`)
+- **結果（fy2023r2, backbone154）**: tokyo(1110バス)/kansai(714)/kyushu(358)とも
+  **24/24断面AC収束 = 「UCは解けるがPFで流せない時間帯」は3地域に存在しない**
+- **収束を超えた質の計測（本スイープの新事実)**:
+  - **kansai 昼間帯(8-19時)に vm_min 0.799〜0.897 の低電圧**。slackは負(吸収側)なのに
+    需要中心で電圧降下 → UC断面の地理配分（原子力6.6GW=若狭湾岸北部偏在）と
+    昼ピーク需要分布の乖離を容量比例注入が埋められない（=次の深化対象。
+    main側の既知性質「関西=PVノーズ」とも整合）
+  - kyushu は時間帯によらず vm [1.017, 1.070] の高め電圧（軽負荷+充電容量の網特性、
+    注入起因ではない）/ tokyo は全時間帯健全 vm[0.960,1.040]・slack平均+14.6%
+- 次: 注入の地理重み付け（需要近接/ゾーン別）・全国ゾーナル断面（east AC / west DC、サーバー）
+
+## 2026-06-12 — **Fable 5** — UC改善⑩: 実測需要のシナリオ統合（profile_ref稼働=データスペース実用第一号）
+
+- **profile_ref実装**(`3bc6c04`, DATA_SPACE §5): シナリオの demand.profile_ref が
+  DataSpace.fetch(occto_kohyo)で解決され、代表日の実測30分値（→1h平均）がグロス需要になる。
+  取得データのsha256が NationalScenario.demand_profile_sha → ベンチmeta に連鎖
+  （シナリオ指紋→取得データ指紋の再現性チェーン）
+- **fy2025r1シナリオ**: 代表日=**2025-08-06（FY2025夏ピーク、実測7月中旬〜8月の走査で
+  全国30分値max 163.1GWと特定）** + nuclear_status_fy2025（12基+女川2・島根2=**14基13,253MW**、
+  柏崎刈羽は未反映と開示）。solar/wind容量はfy2023r2踏襲（FY2025導入増は未較正=純需要過大
+  方向のバイアスをファイル内開示）。FY2025実績シェアは年度未了のため乖離KPI正本なし
+- **結果**: 実測需要での全国24h UC = **Optimal 11.5s・¥202億/日・nuclear 10.2%（14基断面）**。
+  合成需要という最大の近似が代表日断面で解消。1061 passed
+- 次: 年間8760hの実測化（月別取得+キャッシュ、FY2025の365日）/ FY2025 RE容量較正 / nas03・MSM所在待ち
+
+## 2026-06-11 — **Fable 5** — UC改善⑨: UC→潮流結合（タスク#6完了 = 全タスク完了）
+
+- **mainマージ**(`7d989c4`): origin/main（M7-M9: PTDF需要推定・Ybus出荷ゲート・中間タップ
+  スナップ等、+9,252行）を取り込み。衝突解消=IMPROVEMENT_LOG（両系列を区分保持）・
+  schema.py（UC 2テーブル+main計測2テーブル共存、migrationはUC v3が単独で無衝突）。
+  マージ後 **1053 passed**
+- **結合実装**(`9224fd6`, `ajgrid uc to-pf`): main側のUC_HANDOFF契約を完全消費 —
+  ①UC求解→②地域PF構築→③**ybus_gate（FAILなら注入しない契約を遵守）**→
+  ④ピーク時刻断面を燃料別集計し容量比例で注入（UC'lng'⇔PF'gas'の語彙正規化、
+  UC断面に無い燃料は0化=コミットメント反映、slack除外、loadはUC純需要へスケール）→
+  ⑤AC再ソルブ。**mainのpipelineは無改変**（解き済みnetへの事後注入=並行開発安全）
+- **実測結果**: tokyo backbone = gate PASS(5.6e7)・39.6GW注入・**AC収束 vm[0.960,1.036]**・
+  slack 6.6GW（UC側の連系線輸入と整合）/ kansai = 19.5GW注入（2023年度断面の原子力6.6GW込み）・
+  **AC収束**・unmatched 214MW=揚水のPF側欠如（開示）。
+  **較正シナリオ上のUC運用断面が、OSM由来の実系統で流れることを初実証**
+- 注入はv1=地域×燃料集計（UC機とPF機は別実体のため）。機別マッチ・多時刻連続検証・
+  全国ゾーナル断面は次段階
+
+## 2026-06-11 — **Fable 5** — UC改善⑧: 北陸実態化（オーナー指摘）+ OCCTO実疎通 + 機別図
+
+- **北陸の精査**(`ce9f7ac`, 指摘「発電量が小さすぎ・2000MWもtielineない」→両方正しかった):
+  域内2,960→**4,265MW** — 七尾大田1,200MW coal（OSMはbiomass誤タグ+容量-1.0で20MW扱い）/
+  敦賀火力1,200MW（敦賀市がhokuriku bboxぎりぎり圏外でkansaiに帰属流出→regionパッチで固定）/
+  富山新港 旧名板1,500→現役425MW LNG（石炭250×2は2018廃止）。
+  capacity_patchesに fuel/region/override キーを拡張（正値名板の補正も可能に）
+- **連系線**: ic_005北陸フェンス 1,900→300MW（安定度制約の運用容量オーダー）+ ic_010
+  北陸関西間1,900MWを新設。**シナリオ側overrides/additions方式**で共有yamlは不変
+  （本体改訂はmainマージ時にboundary.pyの容量比utilisationと整合させる、を台帳化）
+- **OCCTOコネクタ実疎通**: main側の実証URL(download/downloadCsv, UA必須)を取り込み、
+  実CSV（行指向・エリア名列）にパーサーを書き直し → **全10地域×48半時間点の実需要を
+  取得・provenance記録**までend-to-end確認。「でんき予報」拡張の土台
+- **nas03契約**（オーナー示唆「発電実績・でんき予報をnas03から参照」）: dataspaceカタログに
+  所在ガード式で契約化（パス・形式の確認後にコネクタ実装）
+- **機別グラデーション図**: 火力の単色塊→機単位の積層（基色±38%濃淡+白細線=台数可視化、
+  「色味を失わない程度に」準拠）。LINE配信済み。24h fy2023r2 = Optimal・L1 21.3pp。1021 passed
+
+## 2026-06-11 — **Fable 5** — UC改善⑦: データスペース層（zero-copy連携）+ 沖縄実態化
+
+- **データスペース**(`d6aed8f`, オーナー指示「全て持ってくるはナンセンス、データスペース的連携を」):
+  `docs/DATA_SPACE.md`（原則=データは源泉に留め、UCが要る地域×時間の集約断面のみ取得。
+  集約は源泉近く=NASマウントのある160core側で実行）+ `config/dataspace.yaml`（契約カタログ:
+  msm/occto_kohyo/p03/energy_stats、custodian・license・再配布可否を明文化）+
+  `src/dataspace`（registry/sha256キャッシュ/provenance.jsonl=全取得の出所機械記録）。
+  コネクタ: OCCTO（main側で疎通実証済みAPI、エンドポイント上書き可・寛容パース）/
+  MSM（所在ガード: AJGRID_MSM_ROOT未設定は案内付き明示失敗=暗黙取得しない、Phase 2境界まで）。
+  シナリオ接続（profile_ref→取得shaをシナリオsha256に連鎖）は仕様定義済み・Phase 2実装。
+  10テスト、計1016 passed
+- **沖縄実態化**(`e4991a8`): 図生成のfy2023r2適用で旧ハードコード（吉の浦350×2等）の
+  不正確さが露呈しinfeasible → 2023年度実態（吉の浦LNG CC 251×2・金武220×2・具志川156×2・
+  石川J-POWER 312・内燃合成400開示）に置換、Optimal回復。新旧全地域図をLINE配信
+- **残**: MSMアーカイブのNAS所在確認→Phase 2（GRIB2→地域CF集約）/ OCCTO実測needsへの置換 /
+  UC→PF連携（タスク#6）
+
+## 2026-06-11 — **Fable 5** — UC改善⑥: 実勢較正fy2023r2+定検合成 — 年間L1乖離 33.6→23.5pp
+
+- **fy2023r2シナリオ**(`e35d723`): 出典[S1-S5]構造化の較正版（fy2023は凍結=過去ベンチ再現性保持、
+  scenario_sha256でベンチの断面を機械検証可能化、DB両版ingest）。wind 10.9→6.0GW・solar→70GW
+  天候derate（年91.4TWh≒実績92.1）・中小水力RoR控除2.5GW(+22TWh)・燃料費2023年度実勢。
+  実績シェア(エネ庁)をreference_shares_pctとして固定しベンチがL1乖離KPIを自動算出
+- **較正が掘った追加バグ**: 九州30MW不足infeasible→jrp_lite欠損(-1.0)の主力火力（新大分2295/
+  松浦2サイト3700/新小倉1200等）が100MW扱い。パッチ22件追補（廃止4件除外・沖縄OSM6件の
+  合成火力二重計上解消）
+- **定検合成**(`f791d14`→`8da4e0b`→`e1e42ee`): 3度の実測infeasibleを経て確定した設計 =
+  **決定論的（乱数なし）・原子力スロット間隔≥duration・地域別同時停止上限25%のグリーディ配置**。
+  失敗事例も台帳化: md5独立配置(秋重畳)→輪番(春の原発重畳)→上限付き(全地域21-25%で安定)。
+  チャンク時間軸の変換漏れ（メンテが無作用でr2と同一結果=決定論の傍証）も修正
+- **年間結果**(uc_annual_fy2023r2maint): **全365日Optimal・999.3TWh・¥6.47兆/年**。
+  シェアvs実績: lng 30.7%(32.9)・nuclear 7.6%(8.5)・hydro計7.96%(7.6)・solar 9.1%(9.8)・
+  wind 1.3%(1.1)・coal 38.9%(28.3)。**L1合計 23.5pp（メンテなし33.6から10.1pp改善）**
+- **残差の開示**: coal +10.6pp（経済停止・市場運用はモデル外=人工CF上限は結果合わせになるため
+  導入せず）/ oil -6.4pp（統計「石油等」がその他ガス込みの区分差）/ biomass -1.7pp（容量過小）
+
+## 2026-06-11 — **Fable 5** — UC改善⑤: 8760h年間UC完走（ROADMAP P5達成）+ ajgrid uc CLI
+
+- **rolling horizon実装**(`bdd41ca`): 窓間状態引き継ぎ3点セット = initial_commitment（幻の起動費防止）/
+  initial_history_h（min up/down残置強制）/ SOC引き継ぎ。窓48h・step24h・lookahead24h。
+  warm-start連鎖・gap緩和リトライ・確定部分の再計算コスト（lookahead重複排除）
+- **160core実行**(ユーザー許可): 直列実測82s/窓=8.3hを**30日×13チャンク並列(warmup2日)**で~70分に。
+  実戦バグ1件即修正(`851cd88`): 揚水「大森川12.2MW×6h=73.1999…MWh」のSOC境界丸めでPuLP
+  setInitialValueが拒否→クランプ+その境界値の回帰テスト
+- **結果** (`uc_annual_fy2023_parallel_2026-06-11.json`): **全365日・497窓 全Optimal**。
+  年間1,005.6TWh（実績~985TWhと整合=合成需要の妥当性確認）・燃料費等¥3.71兆/年。
+  年間シェア: coal 36.4%(実態~28、+8pt=一般水力欠損と2013年体系燃料価格が残差) /
+  lng 25.4%(~33) / solar 14.3%(~10) / nuclear 10.1%(~9✓) / hydro 5.6%(~8) / wind 3.8%(~1)。
+  揚水0.36%・蓄電池0.29%が年間で稼働（SOC連鎖の成立）
+- **`ajgrid uc` CLI**(`f2b2a60`): benchmark/annual/merge/ingest-scenarios の薄いディスパッチ
+- 997 passed。残: OCCTO実測時系列(Phase 2) / 燃料価格2023年度較正 / 一般水力容量 / UC→PF連携
+
+## 2026-06-11 — **Fable 5** — UC改善④: 地域限界価格(LMP)+warm-start（負の結果込み）
+
+- **双対値抽出**(`bfc864b`): `UCParameters.extract_duals` — コミットメント固定LP再解
+  （MILPに双対なし、市場標準手法）でnodal balance制約のπ=地域限界価格を `UCResult.regional_lmp` に。
+  手計算一致の単体テスト（限界機価格・混雑分離・非混雑収束）+全国検証:
+  **60Hz西日本5地域が7,083円/MWhに完全収束（一物一価）**・北安値（北海道4,521/東北5,891=北本混雑）・
+  沖縄9,000固定（孤立・石油限界機）= 物理的に妥当な価格構造。**オーバーヘッド+0.6s**。
+  `uc_benchmark.py --duals` でLMP平均/ピークをKPI化
+- **warm-start**(同): `_HiGHSWarmStart`（pulp.HiGHSはsetInitialValue無視→highspy setSolutionで
+  MIP start注入）+ schedules→変数マッピング。**計測による負の結果**: 全国24hでは0.99x=効果なし。
+  HiGHSログで根拠確定（**Nodes=1・LP 20,543反復9.8s/12.4s = root LP支配で分枝スキップ余地なし**）。
+  タイトな窓（冬ピーク・rolling再解）の保険として保持
+- タスク3の残り（LP丸め・時間窓境界）は8760h rolling実装（タスク4）に統合する判断。987 passed
+
+## 2026-06-11 — **Fable 5** — UC改善③: HiGHS有効化+シナリオ第一級化+DBミラー
+
+- **HiGHS有効化**(`30a8402`): highspy導入済みなのに_select_solverがCLI版のみ探索しCBCに
+  フォールバックしていた。highspy API優先に修正、全国24h **27.8s→12.5s**（コストはgap内同等）。
+  pws-160core側もhighspy確認済み（160C/231GB free）→ 8760h級はサーバー実行方針（ユーザー許可: 160core+GPU）
+- **シナリオ第一級化**(`c1dd2c0`, ユーザー指示「発電機の選定はシナリオ依存」):
+  `config/uc_scenarios/fy2023.yaml` を正本に、需要形状/地域ピーク/RE容量・CF/蓄電池/燃料費/
+  起動費/容量既定値/参照リスト群を集約（旧ハードコード定数を全廃、二重管理解消）。
+  `build_national_scenario(scenario="fy2023")` で断面切替可能。**KPI差分ゼロを確認**
+  (uc_benchmark_scenario_yaml = uc_benchmark_highs)
+- **DBミラー**(同): grid.db migration v3 = `uc_scenarios`+`uc_scenario_generators`。
+  `scripts/db/ingest_uc_scenarios.py` でYAML→DB機械同期(nuclear 6/揚水44/パッチ2)。
+  YAML=正本・DB=実行時ビュー（DB_ARCHITECTURE整合）。978 passed
+
+## 2026-06-11 — **Fable 5** — UC改善②: 精度4連打（dedup・揚水・原子力・容量較正）
+
+- 全て `scripts/uc_benchmark.py` のKPIスナップショットで段階計測（docs/reports/uc_benchmark_*_2026-06-11.json）
+- **(1) osm_id重複除去**(`bc2668d`): スライス重なりの二重計上126機39.8GW(熱容量14.8%)を解消。
+  帰属=operator→管内マップ+bbox内側マージン。636→510機
+- **(2) 揚水storage化**(同): `data/reference/pumped_storage.yaml`(44箇所27.6GW、エレクトリカル・
+  ジャパン由来の現況出力)。名前マッチで18機再分類(葛野川1600→1200の現況補正含む)+25機追加
+  (奥多々良木1932等)。**165GWhがSOC制約付きstorageに**(従来=コスト0フリー電源)
+- **(3) 原子力2023年度断面**(同): `nuclear_status.yaml`(再稼働12基11.6GW)。廃炉(福島第二・もんじゅ)
+  と長期停止(柏崎刈羽・浜岡等)の31.8GW全数稼働扱いを是正。川内900→1780等の過小も補正
+- **(4) 火力容量較正**(`b377455`): 容量欠損coal32機への一律600MW補完=19.2GW幻容量が真因と特定。
+  実態は自家発(製紙・化学)が大半→既定100MW+大物2件は個別パッチ(苓北1400/福島ガス1180)
+- **燃料シェアの実態(2023年度概数)への収束**: nuclear 24.3→**8.8%**(実態~9✓) / lng 10.1→**32.9%**
+  (~33✓) / coal 22.9→33.0%(~28、+5pt残) / hydro 23.6→4.9%(~8、一般水力欠損で過小) /
+  総コスト¥68→128億/日(フリー電源の幻が消えた結果)。全段Optimal 27-32s(CBC)。968 passed
+- 残課題: 一般水力の容量欠損 / wind参照値10.9GW過大(実態~5.2GW) / oil過小 / 設定二重管理
+
+## 2026-06-11 — **Fable 5** — UC改善①: ベースライン計測基盤（worktree分離セッション）
+
+- **worktree `worktree-uc-improvements`** でUC機能改善シリーズを開始（main側の潮流改修と並行のため分離）
+- **計測基盤**: `src/uc/scenario.py`（gen_uc_regional.pyのロード部を共通化、挙動不変を出力一致で確認:
+  636機/268,361MW/沖縄¥206.9百万 一致）+ `scripts/uc_benchmark.py`（データ品質/求解/ディスパッチKPIの
+  スナップショット、`--baseline` diff付き）+ 回帰ピン11テスト。**958 passed**
+- **ベースライン確定** (`uc_benchmark_baseline_2026-06-11.json`): 全国24hノーダルUC =
+  Optimal 31.9s(CBC)・¥68.0億/日。計測で確定した問題: **重複126機39.8GW(熱容量の14.8%)が二重計上** /
+  **揚水storage 0機**（OSM抽出が`plant:method`を落とし全揚水が一般水力=コスト0のフリー電源扱い、
+  葛野川・奥清津・玉原など名前同定は可能）/ 原子力27機35.9GWが全数稼働可能扱い /
+  シェア乖離 hydro 23.6%・nuclear 24.3%・lng 10.1%（実態目安 ~8%・~9%・~33%）/ HiGHS未導入
+- 評価・改善ロードマップ: `UC_BASELINE_ASSESSMENT_2026-06-11.md`（タスク②精度→③ソルバー→④8760h→⑤CLI→⑥PF連携）
+
+<!-- ── main（潮流・トポロジ改修シリーズ） ── -->
+
 
 ## 2026-06-12 — **Fable 5** — N6: west品質診断 — 「過負荷1631%」は架空定格の錯視、実態は健全（65）
 

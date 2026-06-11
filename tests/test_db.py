@@ -634,9 +634,12 @@ class TestMigrationManager:
         manager = MigrationManager(engine)
         manager.ensure_schema()
 
-        # Manually apply a v2 migration that adds a column
+        # Manually apply a next-version migration that adds a column
+        # (relative to the registered MIGRATIONS, so this test stays
+        # valid as new schema versions are appended)
+        next_version = manager.get_current_version() + 1
         migration = Migration(
-            version=2,
+            version=next_version,
             description="Add test_column to generator_attributes",
             statements=[
                 "ALTER TABLE generator_attributes ADD COLUMN test_column TEXT"
@@ -649,7 +652,7 @@ class TestMigrationManager:
         assert "test_column" in columns
 
         # Verify version was recorded
-        assert manager.get_current_version() == 2
+        assert manager.get_current_version() == next_version
 
     def test_migration_preserves_existing_data(self) -> None:
         """Schema migration adds columns without losing existing data."""

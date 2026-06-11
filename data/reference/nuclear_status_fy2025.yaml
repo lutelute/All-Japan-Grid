@@ -1,0 +1,21 @@
+# 原子力発電所の稼働状態 参照リスト — FY2025断面
+#
+# fy2023断面（12基11.6GW）からの差分:
+# - 女川2号 825MW（東北電力、2024-10 営業運転再開）を追加
+# - 島根2号 820MW（中国電力、2024-12 営業運転再開）を追加
+# 合計 14基 13,253MW。
+#
+# 注記（開示）: 柏崎刈羽の再稼働動向は本断面に未反映（要確認のうえ
+# 反映する）。高浜・美浜の高経年炉の運転継続は継続と仮定。
+
+fiscal_year: 2025
+
+operational:
+  - {name: 川内, region: kyushu,  capacity_mw: 1780, units: "1,2号機 (890MW×2)"}
+  - {name: 玄海, region: kyushu,  capacity_mw: 2360, units: "3,4号機 (1180MW×2)"}
+  - {name: 伊方, region: shikoku, capacity_mw: 890,  units: "3号機"}
+  - {name: 高浜, region: kansai,  capacity_mw: 3392, units: "1-4号機 (826×2+870×2)"}
+  - {name: 大飯, region: kansai,  capacity_mw: 2360, units: "3,4号機 (1180MW×2)"}
+  - {name: 美浜, region: kansai,  capacity_mw: 826,  units: "3号機"}
+  - {name: 女川, region: tohoku,  capacity_mw: 825,  units: "2号機 (2024-10再稼働)"}
+  - {name: 島根, region: chugoku, capacity_mw: 820,  units: "2号機 (2024-12再稼働)"}

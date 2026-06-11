@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "7faa9a1",
+    "scenario": "national_24h_nodal (gen_uc_regional互換)",
+    "reserve_margin": 0.05,
+    "mip_gap": 0.01,
+    "effective_solver": "highs(api)"
+  },
+  "data_quality": {
+    "dedup_enabled": true,
+    "n_features_scanned": 19138,
+    "n_thermal_loaded": 520,
+    "thermal_capacity_mw": 206126.15000000005,
+    "n_duplicates": 126,
+    "duplicate_capacity_mw": 38964.6,
+    "n_capacity_defaulted": 117,
+    "n_capacity_patched": 2,
+    "n_skipped_small": 922,
+    "n_storage_units": 43,
+    "storage_capacity_mwh": 165331.2,
+    "n_pumped_reclassified": 18,
+    "n_pumped_added": 25,
+    "pumped_capacity_mw": 27555.2,
+    "pumped_storage_mwh": 165331.2,
+    "n_nuclear_available": 6,
+    "n_nuclear_excluded": 15,
+    "nuclear_available_mw": 11608.0,
+    "nuclear_excluded_mw": 19785.0,
+    "fuel_counts": {
+      "nuclear": 6,
+      "biomass": 71,
+      "hydro": 184,
+      "lng": 75,
+      "coal": 83,
+      "oil": 31,
+      "geothermal": 26,
+      "unknown": 1,
+      "pumped_hydro": 43
+    },
+    "fuel_capacity_mw": {
+      "nuclear": 11608.0,
+      "biomass": 2763.2999999999997,
+      "hydro": 6417.800000000003,
+      "lng": 83023.29999999999,
+      "coal": 44916.0,
+      "oil": 28837.0,
+      "geothermal": 999.3,
+      "unknown": 6.25,
+      "pumped_hydro": 27555.2
+    },
+    "n_unique_units": 520,
+    "unique_capacity_mw": 206126.15000000005
+  },
+  "solve": {
+    "status": "Optimal",
+    "solve_time_s": 12.5,
+    "total_cost_jpy": 12821417245,
+    "total_cost_oku_per_day": 128.21,
+    "gap": 0.0,
+    "num_warnings": 0,
+    "n_generators": 530,
+    "n_thermal": 477,
+    "n_battery": 10,
+    "battery_mw": 3450,
+    "battery_mwh": 13800
+  },
+  "dispatch": {
+    "total_energy_gwh_per_day": 3173.7,
+    "fuel_share_pct": {
+      "coal": 32.98,
+      "lng": 32.84,
+      "solar": 13.26,
+      "nuclear": 8.78,
+      "hydro": 4.85,
+      "wind": 3.38,
+      "biomass": 2.08,
+      "geothermal": 0.76,
+      "oil": 0.67,
+      "pumped_hydro": 0.22,
+      "battery": 0.18,
+      "unknown": 0.0
+    },
+    "battery_discharge_mwh": 5643,
+    "battery_charge_mwh": 5041,
+    "battery_equivalent_cycles": 0.409,
+    "interconnection_peak_utilisation": {
+      "ic_001": 1.0,
+      "ic_002": 1.0,
+      "ic_003": 1.0,
+      "ic_004": 1.0,
+      "ic_005": 0.991,
+      "ic_006": 1.0,
+      "ic_007": 1.0,
+      "ic_008": 1.0,
+      "ic_009": 1.0
+    }
+  }
+}

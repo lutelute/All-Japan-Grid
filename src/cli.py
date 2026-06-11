@@ -15,6 +15,9 @@ After ``pip install -e .`` this is the ``ajgrid`` console command:
     ajgrid db ingest                                 # raw + restore curation
     ajgrid db enrich --p03 <GML>                     # authoritative P03
     ajgrid db export --verify
+    ajgrid uc benchmark --duals                      # 24h national UC + LMP
+    ajgrid uc annual --days 7                        # rolling-horizon UC
+    ajgrid uc ingest-scenarios                       # UC scenarios -> grid.db
     ajgrid coverage                                  # validated-vs-synthetic
     ajgrid map                                       # serve docs/ at :8080
 
@@ -112,6 +115,30 @@ def cmd_db(_args, rest):
     return _run(f"scripts/db/{rest[0]}.py", rest[1:])
 
 
+def cmd_uc(_args, rest):
+    """Unit commitment front door (thin dispatch to scripts/uc_*).
+
+    ``benchmark``      24h national UC KPI snapshot (``--duals`` for LMP)
+    ``annual``         rolling-horizon time-series UC (``--days``,
+                       ``--start-day``/``--warmup-days`` for chunked runs)
+    ``merge``          merge chunk JSONs into one annual report
+    ``ingest-scenarios``  sync config/uc_scenarios + references to grid.db
+    ``to-pf``          inject a UC dispatch snapshot into the power flow
+                       (ybus_gate -> capacity-proportional injection -> AC)
+    """
+    mapping = {
+        "benchmark": "scripts/uc_benchmark.py",
+        "annual": "scripts/uc_annual.py",
+        "merge": "scripts/uc_annual_merge.py",
+        "ingest-scenarios": "scripts/db/ingest_uc_scenarios.py",
+        "to-pf": "scripts/uc_to_pf.py",
+    }
+    if not rest or rest[0] not in mapping:
+        print("usage: ajgrid uc {benchmark|annual|merge|ingest-scenarios|to-pf} [args...]")
+        return 2
+    return _run(mapping[rest[0]], rest[1:])
+
+
 def cmd_coverage(args, _rest):
     """Print the provenance & validation coverage report (honest limits)."""
     from scripts.coverage_report import gather, render
@@ -174,6 +201,12 @@ def build_parser():
     sub.add_parser(
         "db", help="grid DB: ingest|export|curate|enrich (pass-through)",
         add_help=False).set_defaults(func=cmd_db)
+
+    sub.add_parser(
+        "uc",
+        help="unit commitment: benchmark|annual|merge|ingest-scenarios "
+             "(pass-through)",
+        add_help=False).set_defaults(func=cmd_uc)
 
     cov = sub.add_parser(
         "coverage", help="provenance & validation coverage report (honest limits)")

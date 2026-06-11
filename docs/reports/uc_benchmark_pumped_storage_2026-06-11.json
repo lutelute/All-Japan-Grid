@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "date": "2026-06-11",
+    "git_head": "091b87c",
+    "scenario": "national_24h_nodal (gen_uc_regional互換)",
+    "reserve_margin": 0.05,
+    "mip_gap": 0.01,
+    "effective_solver": "cbc"
+  },
+  "data_quality": {
+    "dedup_enabled": true,
+    "n_features_scanned": 19138,
+    "n_thermal_loaded": 535,
+    "thermal_capacity_mw": 243991.15000000005,
+    "n_duplicates": 126,
+    "duplicate_capacity_mw": 39764.6,
+    "n_capacity_defaulted": 119,
+    "n_skipped_small": 922,
+    "n_storage_units": 43,
+    "storage_capacity_mwh": 165331.2,
+    "n_pumped_reclassified": 18,
+    "n_pumped_added": 25,
+    "pumped_capacity_mw": 27555.2,
+    "pumped_storage_mwh": 165331.2,
+    "fuel_counts": {
+      "nuclear": 21,
+      "biomass": 71,
+      "hydro": 184,
+      "lng": 75,
+      "coal": 83,
+      "oil": 31,
+      "geothermal": 26,
+      "unknown": 1,
+      "pumped_hydro": 43
+    },
+    "fuel_capacity_mw": {
+      "nuclear": 31753.0,
+      "biomass": 2763.2999999999997,
+      "hydro": 6417.800000000003,
+      "lng": 85843.29999999999,
+      "coal": 59116.0,
+      "oil": 29537.0,
+      "geothermal": 999.3,
+      "unknown": 6.25,
+      "pumped_hydro": 27555.2
+    },
+    "n_unique_units": 535,
+    "unique_capacity_mw": 243991.15000000005
+  },
+  "solve": {
+    "status": "Optimal",
+    "solve_time_s": 27.3,
+    "total_cost_jpy": 10278385406,
+    "total_cost_oku_per_day": 102.78,
+    "gap": 0.0,
+    "num_warnings": 0,
+    "n_generators": 545,
+    "n_thermal": 492,
+    "n_battery": 10,
+    "battery_mw": 3450,
+    "battery_mwh": 13800
+  },
+  "dispatch": {
+    "total_energy_gwh_per_day": 3213.2,
+    "fuel_share_pct": {
+      "coal": 32.64,
+      "nuclear": 23.47,
+      "lng": 18.93,
+      "solar": 13.09,
+      "hydro": 4.79,
+      "wind": 3.33,
+      "biomass": 1.71,
+      "pumped_hydro": 0.99,
+      "geothermal": 0.75,
+      "battery": 0.3
+    },
+    "battery_discharge_mwh": 9697,
+    "battery_charge_mwh": 9728,
+    "battery_equivalent_cycles": 0.703,
+    "interconnection_peak_utilisation": {
+      "ic_001": 1.0,
+      "ic_002": 1.0,
+      "ic_003": 1.0,
+      "ic_004": 1.0,
+      "ic_005": 0.935,
+      "ic_006": 1.0,
+      "ic_007": 1.0,
+      "ic_008": 1.0,
+      "ic_009": 1.0
+    }
+  }
+}
