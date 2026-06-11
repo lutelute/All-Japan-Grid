@@ -171,17 +171,21 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                                                utilisation=boundary_util,
                                                corridor_stats=boundary_stats)
 
-    # Corridor-flow demand calibration (ledger 48): measured corridor
-    # flows pin their load-subtree totals — demand reaches nameless
-    # yards via conservation, not name matching. Opt-in: pass a
-    # {corridor key: MW} dict (the validator passes its train split).
+    balance_power(net, demand_cfg)
+
+    # Corridor-flow demand state estimation (ledger 48/49): measured
+    # corridor flows reshape the demand vector — names locate corridors,
+    # the yards below them need none. v2 fits ALL corridors at once via
+    # PTDF least squares (loops included); runs on the balanced net and
+    # the dispatch is rebalanced to the calibrated demand afterwards.
+    # Opt-in: pass {corridor key: MW} (the validator passes its train split).
     calib_info = None
     if corridor_calib:
-        from src.powerflow.flow_calibration import corridor_subtree_calibration
-        calib_info = corridor_subtree_calibration(net, dict(corridor_calib))
+        from src.powerflow.flow_calibration import ptdf_demand_estimation
+        calib_info = ptdf_demand_estimation(net, dict(corridor_calib))
         total_load = float(net.load[net.load["in_service"]]["p_mw"].sum())
+        balance_power(net, demand_cfg)
 
-    balance_power(net, demand_cfg)
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, factor=reactive)
     net.bus["vm_pu"] = 1.0

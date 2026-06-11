@@ -566,7 +566,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 load_spatial: str = "none", csv154=None, csv66=None,
                 stats_db: str | None = None,
                 measured_loads="auto", radialize_band_kv=None,
-                corridor_calib: bool = False) -> dict:
+                corridor_calib: bool = False,
+                calib_swap: bool = False) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -618,9 +619,10 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
     calib_test: set = set()
     if corridor_calib:
         band66 = sorted(k for k, (_v, fl) in measured_cls.items() if fl < 140.0)
+        tr_par = 1 if calib_swap else 0      # swap halves for cross-fit
         calib_train = {k: measured_cls[k][0]
-                       for i, k in enumerate(band66) if i % 2 == 0}
-        calib_test = {k for i, k in enumerate(band66) if i % 2 == 1}
+                       for i, k in enumerate(band66) if i % 2 == tr_par}
+        calib_test = {k for i, k in enumerate(band66) if i % 2 != tr_par}
 
     def _solve(boundary_util=None):
         result = build_and_solve(region, load_demand_config(),
@@ -864,6 +866,8 @@ def main(argv=None):
                     help="demand state estimation from measured corridor "
                          "flows: calibrate on the train half (alternating "
                          "split), report held-out kv66_test rho")
+    ap.add_argument("--calib-swap", action="store_true",
+                    help="swap the train/test halves (cross-fit evidence)")
     args = ap.parse_args(argv)
 
     if not (args.flows and args.from_db) and not os.path.exists(args.csv):
@@ -880,7 +884,8 @@ def main(argv=None):
                                         else "auto"),
                         radialize_band_kv=(60.0 if args.radialize_66
                                            else None),
-                        corridor_calib=args.corridor_calib)
+                        corridor_calib=args.corridor_calib,
+                        calib_swap=args.calib_swap)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:
