@@ -13,6 +13,7 @@ Usage::
 """
 
 import math
+import os
 from typing import Any, Dict, Optional, Set
 
 import pandapower as pp
@@ -47,6 +48,8 @@ def estimate_loads(
     config_path: str = DEFAULT_DEMAND_CONFIG_PATH,
     skip_existing: bool = False,
     spatial: str = "none",
+    measured_bus_loads: Optional[Dict[str, Any]] = None,
+    measured_stat: str = "p95",
 ) -> float:
     """Distribute synthetic loads across all buses in the network.
 
@@ -77,6 +80,14 @@ def estimate_loads(
             "degree" (tilt by branch degree — see :func:`degree_factors`).
             Kept opt-in until validated against external per-substation
             flow data (TEPCO disclosure; docs/VALIDATION_SOURCES.md).
+        measured_bus_loads: measured per-substation demands
+            ``{normalised sub name: {"q50":.., "p95":..} | MW}`` (e.g.
+            from ``src.db.calibration.load_measured_bus_loads``). Name-
+            matched substation buses are pinned to the measured value
+            (absolute MW); only the residual goes through the synthetic
+            voltage-class rule, on the remaining buses.
+        measured_stat: which measured statistic to pin ("p95" default —
+            closest to the solved peak-ish snapshot; "q50" for medians).
 
     Returns:
         Total active power (MW) allocated across all buses.
@@ -109,6 +120,15 @@ def estimate_loads(
 
     target_mw = peak_mw * load_factor
 
+    # Measured demand placement (M3): pin name-matched substations to
+    # their disclosed busbar/terminal statistic, then let the synthetic
+    # rule fill only the residual on the remaining buses.
+    if measured_bus_loads:
+        placed = _place_measured_loads(net, measured_bus_loads, tan_phi,
+                                       target_mw, stat=measured_stat)
+        if placed > 0.0:
+            skip_existing = True
+
     # Reduce target by existing loads when skipping
     existing_mw = 0.0
     if skip_existing and not net.load.empty:
@@ -118,7 +138,9 @@ def estimate_loads(
     total_allocated = _allocate_bus_loads(
         net, target_mw, tan_phi, voltage_weights,
         skip_existing=skip_existing,
-        spatial_factors=degree_factors(net) if spatial == "degree" else None,
+        spatial_factors=(degree_factors(net) if spatial == "degree"
+                         else population_factors(net) or None
+                         if spatial == "population" else None),
     )
 
     logger.info(
@@ -130,6 +152,104 @@ def estimate_loads(
         region,
     )
     return total_allocated + existing_mw
+
+
+def _place_measured_loads(net: Any, measured: Dict[str, Any],
+                          tan_phi: float, target_mw: float,
+                          stat: str = "p95") -> float:
+    """Pin measured per-substation demands to name-matched buses.
+
+    A multi-voltage yard places its offtake at its LOWEST >=50 kV bus
+    (the distribution draw hangs off the lowest transmission class, so
+    the 66 kV network carries it — that is what the disclosure
+    measured). Loads are named ``measured_<sub>`` for traceability.
+    The aggregate is capped at *target_mw* (proportional scale-down,
+    logged) so the regional total stays honest.
+
+    Returns the MW placed.
+    """
+    from src.validation.external_tepco import _norm
+
+    candidates: Dict[str, tuple] = {}
+    for b in _delivery_buses(net):
+        name = net.bus.at[b, "name"]
+        if not name:
+            continue
+        vn = float(net.bus.at[b, "vn_kv"])
+        if vn < 50.0:
+            continue
+        key = _norm(str(name))
+        cur = candidates.get(key)
+        if cur is None or vn < cur[1]:
+            candidates[key] = (b, vn)
+
+    # Eponym-corridor tier (user challenge, ledger 47): Japanese line
+    # names carry their destination yard (塚田線 feeds 塚田変電所), so a
+    # measured sub absent from the model BY NAME can still be placed at
+    # the model endpoint of its eponymous in-band corridor — the yard
+    # exists, just named differently/unnamed in OSM. Only endpoints that
+    # don't belong to another measured yard qualify (no stealing).
+    from src.validation.external_tepco import _model_name_keys
+
+    eponym_lines: Dict[str, list] = {}
+    vn_col = net.bus["vn_kv"]
+    for idx in net.line.index:
+        raw = str(net.line.at[idx, "name"] or "")
+        if not raw or raw.startswith("recon_line"):
+            continue
+        fb = int(net.line.at[idx, "from_bus"])
+        if not (50.0 <= float(vn_col.get(fb, 0)) < 140.0):
+            continue
+        for k in _model_name_keys(raw):
+            eponym_lines.setdefault(k, []).append(idx)
+
+    measured_keys = set(measured)
+
+    def _eponym_bus(key: str):
+        cands = []
+        for idx in eponym_lines.get(key + "線", ()):
+            for b in (int(net.line.at[idx, "from_bus"]),
+                      int(net.line.at[idx, "to_bus"])):
+                vn = float(vn_col.get(b, 0))
+                if not (50.0 <= vn < 140.0):
+                    continue
+                bname = _norm(str(net.bus.at[b, "name"] or ""))
+                if bname and bname in measured_keys and bname != key:
+                    continue          # endpoint is another measured yard
+                cands.append((vn, b))
+        return min(cands)[1] if cands else None
+
+    rows = []
+    for key, v in measured.items():
+        if isinstance(v, dict):
+            mw = float(v.get(stat) or v.get("q50") or 0.0)
+        else:
+            mw = float(v)
+        if mw <= 0.0:
+            continue
+        hit = candidates.get(key)
+        if hit is not None:
+            rows.append((hit[0], key, mw))
+            continue
+        b = _eponym_bus(key)
+        if b is not None:
+            rows.append((b, key, mw))
+    if not rows:
+        return 0.0
+
+    total = sum(mw for _b, _k, mw in rows)
+    scale = min(1.0, target_mw / total) if total > 0 else 1.0
+    if scale < 1.0:
+        logger.warning(
+            "Measured loads (%.0f MW) exceed the regional target "
+            "(%.0f MW); scaling by %.2f", total, target_mw, scale)
+    for b, key, mw in rows:
+        p = mw * scale
+        pp.create_load(net, bus=b, p_mw=p, q_mvar=p * tan_phi,
+                       name=f"measured_{key}")
+    logger.info("Pinned %d measured substation loads (%.0f MW, stat=%s)",
+                len(rows), total * scale, stat)
+    return total * scale
 
 
 def _estimate_loads_national(
@@ -248,6 +368,108 @@ def _allocate_bus_loads(
         net, bus_indices, target_mw, tan_phi, voltage_weights,
         spatial_factors=spatial_factors,
     )
+
+
+MESH_POP_DIR = "data/external/estat"
+
+
+def _load_mesh_population(mesh_dir: str = MESH_POP_DIR):
+    """[(lat, lon, population)] from e-Stat 1 km census mesh files.
+
+    Files are ``tblT001140S<code>.txt`` (scripts/fetch_estat_mesh.py).
+    KEY_CODE is the 8-digit 1 km mesh code; T001140001 the population.
+    Returns None when the directory has no parsable files (fail-soft).
+    """
+    import csv
+    import glob
+
+    rows = []
+    for path in sorted(glob.glob(os.path.join(mesh_dir, "tblT001140S*.txt"))):
+        try:
+            with open(path, encoding="cp932", newline="") as f:
+                reader = csv.reader(f)
+                header = next(reader)
+                k = header.index("KEY_CODE")
+                p = header.index("T001140001")
+                for row in reader:
+                    code = row[k].strip()
+                    if len(code) != 8 or not code.isdigit():
+                        continue   # label row / sub-mesh aggregates
+                    try:
+                        pop = float(row[p])
+                    except ValueError:
+                        continue
+                    if pop <= 0:
+                        continue
+                    # 1 km mesh decode -> cell centre
+                    lat = (int(code[0:2]) / 1.5 + int(code[4]) * 5 / 60
+                           + int(code[6]) * 30 / 3600 + 15 / 3600)
+                    lon = (100 + int(code[2:4]) + int(code[5]) * 7.5 / 60
+                           + int(code[7]) * 45 / 3600 + 22.5 / 3600)
+                    rows.append((lat, lon, pop))
+        except (OSError, ValueError, IndexError):
+            continue
+    return rows or None
+
+
+def population_factors(net, mesh_dir: str = MESH_POP_DIR) -> Dict[int, float]:
+    """Per-bus census-population weight (PLAN_66KV M5-2).
+
+    Every 1 km mesh cell's population is assigned to its NEAREST
+    delivery bus (a Voronoi partition — no double counting), so a bus's
+    factor is "how many people live closest to this substation". The
+    caller multiplies this with the voltage-class weight, which keeps
+    demand at distribution-class buses. Returns {} when mesh data is
+    absent (the allocator then falls back to the class-only rule).
+
+    Known v1 limits (recorded in the ledger): residential population is
+    a proxy — industrial/commercial demand (bay-area plants, downtown
+    offices) deviates from it.
+    """
+    cells = _load_mesh_population(mesh_dir)
+    if not cells:
+        logger.warning("population spatial mode: no mesh data under %s "
+                       "— falling back to class-only weights", mesh_dir)
+        return {}
+    import json as _json
+
+    import numpy as np
+
+    buses, coords = [], []
+    geo = net.bus.get("geo")
+    for b in _delivery_buses(net):
+        try:
+            g = _json.loads(geo.at[b]) if geo is not None else None
+        except (TypeError, ValueError):
+            g = None
+        if not g or "coordinates" not in g:
+            continue
+        lon, lat = g["coordinates"][0], g["coordinates"][1]
+        buses.append(b)
+        coords.append((lat, lon))
+    if not buses:
+        return {}
+    try:
+        from scipy.spatial import cKDTree
+    except ImportError:
+        logger.warning("population spatial mode needs scipy — skipped")
+        return {}
+    tree = cKDTree(np.asarray(coords))
+    pop = np.zeros(len(buses))
+    cell_arr = np.asarray([(la, lo) for la, lo, _p in cells])
+    _d, idx = tree.query(cell_arr)
+    for i, (_la, _lo, p) in zip(idx, cells):
+        pop[i] += p
+    total = float(pop.sum())
+    if total <= 0:
+        return {}
+    # Bounded tilt, same convention as degree_factors (0.5 + 0.5*x/mean):
+    # the raw Voronoi share REPLACED the class structure and measurably
+    # overconcentrated demand (trunk rho 0.617->0.567, magnitude ratio
+    # 1.09->1.31 on tokyo, ledger 43) — damping keeps the population
+    # signal as a tilt on the voltage-class allocation instead.
+    mean = total / len(buses)
+    return {b: 0.5 + 0.5 * float(v) / mean for b, v in zip(buses, pop)}
 
 
 def degree_factors(net) -> Dict[int, float]:
@@ -394,3 +616,40 @@ def scale_generation(net: Any, target_mw: float) -> float:
         total_capacity,
     )
     return actual_total
+
+
+_OCCTO_AREA_TO_REGION = {
+    "北海道": "hokkaido", "東北": "tohoku", "東京": "tokyo", "中部": "chubu",
+    "北陸": "hokuriku", "関西": "kansai", "中国": "chugoku",
+    "四国": "shikoku", "九州": "kyushu", "沖縄": "okinawa",
+}
+
+
+def demand_config_from_occto(stats_path: str, quantile: str = "median",
+                             base_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Demand config whose regional targets are MEASURED area demand.
+
+    ``stats_path`` is the committed aggregate of OCCTO's published 30-min
+    area demand (docs/reports/occto_calibration_*.json); ``quantile`` is
+    one of its stats keys (``median`` / ``p95`` / ``max``). The values are
+    actual MW, so ``load_factor`` is forced to 1.0 — this replaces the
+    static "2023 peak x 0.85" guess with a measured operating point
+    (median = typical, p95 = the high-load point the TEPCO flow
+    comparison effectively probes).
+    """
+    import json as _json
+
+    base = dict(base_config or load_demand_config())
+    with open(stats_path, encoding="utf-8") as f:
+        stats = _json.load(f)["area_demand_mw"]
+    peaks = {}
+    for area, region in _OCCTO_AREA_TO_REGION.items():
+        if area in stats and quantile in stats[area]:
+            peaks[region] = float(stats[area][quantile])
+    missing = [r for r in _OCCTO_AREA_TO_REGION.values() if r not in peaks]
+    if missing:
+        raise ValueError(f"OCCTO stats missing regions: {missing}")
+    base["regional_peak_demand_mw"] = peaks
+    base["load_factor"] = 1.0
+    base["_demand_source"] = f"occto:{quantile} ({stats_path})"
+    return base

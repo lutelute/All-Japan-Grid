@@ -56,9 +56,64 @@ _CLASS_SUFFIX = re.compile(r"\s*(\d+(\.\d+)?kV|\(untyped\))$")
 def _norm(s: str) -> str:
     s = unicodedata.normalize("NFKC", str(s))
     s = _CLASS_SUFFIX.sub("", s)   # multi-voltage builder bus-name suffixes
+    s = s.replace("NT", "ニュータウン")   # 千葉NT線 = 千葉ニュータウン線
     for suf in ("変電所", "開閉所", "発電所"):
         s = s.replace(suf, "")
     return "".join(s.split())
+
+
+# trailing metering-section qualifier on disclosure line names:
+# 佐久間東幹線(中)/(山)/(里) are sections of ONE corridor
+_PAREN_QUAL = re.compile(r"[（(][^（()）]{1,4}[)）]$")
+
+# model-side circuit suffixes: 3・4L (as on the CSV side) plus the
+# spelled-out 3,4号線 / 3・4号 forms OSM mappers use
+_MODEL_CIRCUIT = re.compile(r"[0-9０-９･・,，]+(L|号線?)$")
+
+
+def _model_name_keys(raw: str) -> list[str]:
+    """Match keys for one OSM line name, most-specific first.
+
+    OSM names diverge from the disclosure's by composition, not just
+    spelling: compounds (北葛飾線/野田線, 大倉山線1・2L、北島線),
+    circuit suffixes (中沢線3・4L, 京浜線3,4号線), from~to segment
+    naming (小山町~北駿線 = TEPCO's 北駿線) and parenthetical aliases
+    (坂戸川越線(只見幹線)). Yield the normalised variants so the flow
+    matcher can land on the disclosure key; the class-band restriction
+    still guards against homonyms at other voltages.
+    """
+    parts = []
+    for chunk in str(raw).replace(" / ", ";").replace("/", ";").split(";"):
+        parts.extend(chunk.split("、"))
+    keys: list[str] = []
+
+    def _add(c: str):
+        k = _norm(c)
+        if k and k not in keys:
+            keys.append(k)
+
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        cands = [part]
+        m = re.search(r"[（(]([^（()）]+)[)）]", part)
+        if m:                                   # alias in parentheses
+            cands.append(re.sub(r"[（(][^（()）]*[)）]", "", part))
+            cands.append(m.group(1))
+        for c in list(cands):
+            stripped = _MODEL_CIRCUIT.sub("", c).strip()
+            if stripped and stripped != c:
+                cands.append(stripped)
+        for c in list(cands):
+            for sep in ("~", "〜", "～"):
+                if sep in c:
+                    tail = c.split(sep)[-1].strip()
+                    if tail:
+                        cands.append(tail)
+        for c in cands:
+            _add(c)
+    return keys
 
 
 def parse_tepco_header(csv_path: str) -> dict:
@@ -79,6 +134,38 @@ def parse_tepco_header(csv_path: str) -> dict:
                 lines.add(line)
                 pairs.add((sub, line))
     return {"subs": subs, "lines": lines, "pairs": pairs}
+
+
+def parse_tepco_headers_banded(csv_path, csv154=None, csv66=None) -> dict:
+    """Merged attachment truth with a kv-class floor per line/pair.
+
+    Bands: trunk file -> 200, 154 kV files -> 140, prefecture 66 kV
+    files -> 60. Same-named lines in different bands stay separate
+    truths (matched only against model lines of their own band).
+    """
+    import glob as _glob
+
+    def _paths(x):
+        if not x:
+            return []
+        xs = [x] if isinstance(x, str) else list(x)
+        out = []
+        for p_ in xs:
+            out.extend(sorted(_glob.glob(p_)) or [p_])
+        return out
+
+    truth = {"subs": set(), "lines": {}, "pairs": {}}
+    for floor, paths in ((200.0, _paths(csv_path)),
+                         (140.0, _paths(csv154)),
+                         (60.0, _paths(csv66))):
+        for p_ in paths:
+            t = parse_tepco_header(p_)
+            truth["subs"] |= t["subs"]
+            for ln in t["lines"]:
+                truth["lines"].setdefault(ln, floor)
+            for pair in t["pairs"]:
+                truth["pairs"].setdefault(pair, floor)
+    return truth
 
 
 _RAILWAY_PAT = re.compile(r"旅客鉄道|JR|新幹線|鉄道|Railway", re.IGNORECASE)
@@ -114,7 +201,8 @@ def _is_railway_only(name_key: str, operators: dict) -> bool:
 def _model_inventory(region: str, data_dir: str | None = None):
     """Built-model inventories: substation names/positions and, per line
     name: endpoint sub names, endpoint positions (subs AND junctions —
-    for the positional attachment tier), and max voltage class."""
+    for the positional attachment tier), endpoint node ids + the node
+    adjacency map (for the graph-adjacency tier), and max voltage class."""
     from src.powerflow.snapped_topology import build_network_snapped
 
     net = build_network_snapped(region, data_dir=data_dir)
@@ -123,33 +211,42 @@ def _model_inventory(region: str, data_dir: str | None = None):
     sub_name = {}       # real substation id -> normalised name
     pos = {}            # any bus id (sub or junction) -> (lat, lon)
     sub_pos = defaultdict(list)   # normalised name -> [(lat, lon)]
+    sub_ids = defaultdict(set)    # normalised name -> {node ids}
     for s in net.substations:
         pos[s.id] = (s.latitude, s.longitude)
         if "_jct_" not in s.id:
             sub_name[s.id] = _norm(s.name)
             sub_pos[_norm(s.name)].append((s.latitude, s.longitude))
+            sub_ids[_norm(s.name)].add(s.id)
     sub_names = set(sub_name.values())
 
-    line_info = {}   # name key -> {"ends": set, "pos": list, "kv": float}
+    neighbors = defaultdict(set)  # node id -> adjacent node ids
+    line_info = {}   # name key -> {"ends", "end_ids", "pos", "kv"}
     for ln in net.transmission_lines:
+        neighbors[ln.from_substation_id].add(ln.to_substation_id)
+        neighbors[ln.to_substation_id].add(ln.from_substation_id)
         if "_xfmr_" in ln.id or not ln.name or ln.name.startswith(f"{region}_line_"):
             continue
         for part in str(ln.name).split(";"):
             key = _norm(part)
             if not key:
                 continue
-            info = line_info.setdefault(key, {"ends": set(), "pos": [], "kv": 0.0})
+            info = line_info.setdefault(
+                key, {"ends": set(), "end_ids": set(), "pos": [], "kv": 0.0})
             info["kv"] = max(info["kv"], float(ln.voltage_kv or 0))
             for end in (ln.from_substation_id, ln.to_substation_id):
+                info["end_ids"].add(end)
                 if end in sub_name:
                     info["ends"].add(sub_name[end])
                 if end in pos:
                     info["pos"].append(pos[end])
-    return net, sub_names, dict(sub_pos), line_info
+    return (net, sub_names, dict(sub_pos), line_info,
+            dict(sub_ids), dict(neighbors))
 
 
 def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
-                min_kv: float = 200.0, pos_km: float = 1.5) -> dict:
+                min_kv: float = 200.0, pos_km: float = 1.5,
+                csv154=None, csv66=None, homonym_km: float = 20.0) -> dict:
     """Score the built model against TEPCO's substation-line attachments.
 
     Matching guards (added after the failure-mode taxonomy, 2026-06-10):
@@ -162,12 +259,20 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     - **positional attachment tier**: TEPCO facility names and OSM names
       disagree for adjacent/identical yards (西北線 ends at OSM 稲城 =
       TEPCO 北多摩, 1.1 km apart), so an endpoint within ``pos_km`` of
-      the official substation counts as attached-by-position.
+      the official substation counts as attached-by-position;
+    - **graph-adjacency tier** (2026-06-11, ledger 38): OSM segments
+      corridors under changing names — the final approach into a yard
+      often carries a different or no name, so the named group's
+      endpoint set misses the official sub even though the model wiring
+      is electrically continuous (measured: 108 of 184 distance-cases
+      are exactly 1 hop away, 82% within 3). An official sub directly
+      adjacent (one segment) to a named endpoint counts as attached.
     """
     from src.powerflow.snapped_topology import _haversine_km
 
-    truth = parse_tepco_header(csv_path)
-    _net, sub_names, sub_pos, line_info = _model_inventory(region, data_dir=data_dir)
+    truth = parse_tepco_headers_banded(csv_path, csv154=csv154, csv66=csv66)
+    (_net, sub_names, sub_pos, line_info,
+     sub_ids, neighbors) = _model_inventory(region, data_dir=data_dir)
     operators = _load_operators(region, data_dir=data_dir)
 
     eligible = {k: v for k, v in line_info.items()
@@ -175,15 +280,20 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     n_railway_excluded = len(line_info) - len(eligible)
     line_keys = list(eligible.keys())
 
-    def find_line(official: str):
+    def _band(floor):
+        ceil = 1e9 if floor >= 200.0 else 200.0 if floor >= 140.0 else 140.0
+        return floor, ceil
+
+    def find_line(official: str, floor: float):
+        lo, hi = _band(floor)
         key = _norm(official)
         cands = ([key] if key in eligible else
                  [k for k in line_keys if key in k or k in key])
         if not cands:
             return None, None, False
-        trunk = [k for k in cands if eligible[k]["kv"] >= min_kv]
-        if trunk:
-            return trunk[0], ("exact" if trunk[0] == key else "loose"), True
+        in_band = [k for k in cands if lo <= eligible[k]["kv"] < hi]
+        if in_band:
+            return in_band[0], ("exact" if in_band[0] == key else "loose"), True
         return cands[0], ("exact" if cands[0] == key else "loose"), False
 
     sub_hit = sum(1 for s in truth["subs"] if _norm(s) in sub_names)
@@ -191,7 +301,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     line_exact = line_loose = 0
     missing_lines = []
     for ln in sorted(truth["lines"]):
-        _key, tier, _trunk = find_line(ln)
+        _key, tier, _trunk = find_line(ln, truth["lines"][ln])
         if tier == "exact":
             line_exact += 1
         elif tier == "loose":
@@ -199,23 +309,45 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         else:
             missing_lines.append(ln)
 
-    pair_name = pair_pos = pair_class = pair_un = 0
+    pair_name = pair_pos = pair_adj = pair_class = pair_un = 0
+    pair_homonym = 0
+    band_tot = defaultdict(int)
+    band_ok = defaultdict(int)
     missing_pairs = []
     for sub, ln in sorted(truth["pairs"]):
-        key, _tier, trunk_class = find_line(ln)
+        floor = truth["pairs"][(sub, ln)]
+        key, _tier, trunk_class = find_line(ln, floor)
         if key is None:
             missing_pairs.append(f"{sub} - {ln} (line missing)")
             continue
         info = eligible[key]
+        bname = "trunk" if floor >= 200 else ("154" if floor >= 140 else "66")
+        band_tot[bname] += 1
         if _norm(sub) in info["ends"]:
             pair_name += 1
+            band_ok[bname] += 1
             continue
         spots = sub_pos.get(_norm(sub), [])
         d = min((_haversine_km(la, lo, ela, elo)
                  for (la, lo) in spots for (ela, elo) in info["pos"]),
                 default=float("inf"))
+        ids = sub_ids.get(_norm(sub), set())
+        adjacent = any(t == e or t in neighbors.get(e, ())
+                       for e in info["end_ids"] for t in ids)
         if d <= pos_km:
             pair_pos += 1
+            band_ok[bname] += 1
+        elif adjacent:
+            pair_adj += 1
+            band_ok[bname] += 1
+        elif _tier == "loose" and d > homonym_km:
+            # containment-matched a line whose nearest end is tens of km
+            # away: a different line sharing name parts (南武's 中原線 vs
+            # a homonym 88 km out), not this yard's corridor — report as
+            # missing-at-this-yard so the OSM work list stays truthful
+            pair_homonym += 1
+            missing_pairs.append(f"{sub} - {ln} (loose match {d:.0f}km away "
+                                 f"— homonym guard, treated as missing)")
         elif not trunk_class:
             # only a sub-trunk-class line carries this name -> collision
             pair_class += 1
@@ -228,8 +360,17 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
 
     n_subs, n_lines, n_pairs = (len(truth["subs"]), len(truth["lines"]),
                                 len(truth["pairs"]))
-    attached = pair_name + pair_pos
+    # truth["pairs"]に入らなかった(line missing)分もband_totへ計上
+    for (sub, ln), floor in truth["pairs"].items():
+        bname = "trunk" if floor >= 200 else ("154" if floor >= 140 else "66")
+        if find_line(ln, floor)[0] is None:
+            band_tot[bname] += 1
+    attached = pair_name + pair_pos + pair_adj
+    band_recall = {b: round(band_ok[b] / band_tot[b], 4)
+                   for b in band_tot if band_tot[b]}
     return {
+        "pair_recall_by_band": band_recall,
+        "pair_total_by_band": dict(band_tot),
         "region": region,
         "min_kv": min_kv,
         "pos_km": pos_km,
@@ -240,6 +381,8 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
         "line_recall_loose": round((line_exact + line_loose) / n_lines, 4) if n_lines else 0.0,
         "pair_attached_name": pair_name,
         "pair_attached_position": pair_pos,
+        "pair_attached_adjacent": pair_adj,
+        "pair_homonym_guarded": pair_homonym,
         "pair_class_collision": pair_class,
         "pair_unattached": pair_un,
         "pair_recall_name": round(pair_name / n_pairs, 4) if n_pairs else 0.0,
@@ -249,7 +392,7 @@ def match_tepco(region: str, csv_path: str, data_dir: str | None = None,
     }
 
 
-def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
+def tepco_flow_stats(csv_path, q: float = 0.95) -> dict:
     """Per-line measured-flow statistic from the full hourly time series.
 
     Columns for the same (substation, line) are circuit groups (1･2L,
@@ -261,9 +404,18 @@ def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
     The quantile (default 0.95) is robust against metering glitches while
     still representing "how heavily this corridor is actually used".
     """
+    import glob as _glob
+
     import pandas as pd
 
-    df = pd.read_csv(csv_path, encoding="cp932", na_values=["-", ""])
+    paths = ([csv_path] if isinstance(csv_path, str) else list(csv_path))
+    expanded = []
+    for p_ in paths:
+        expanded.extend(sorted(_glob.glob(p_)) or [p_])
+    frames = [pd.read_csv(p_, encoding="cp932", na_values=["-", ""])
+              for p_ in expanded]
+    df = frames[0] if len(frames) == 1 else pd.concat(
+        [f.set_index(f.columns[0]) for f in frames], axis=1).reset_index()
     groups = defaultdict(list)   # (sub, line) -> [column, ...]
     for col in df.columns[1:]:
         m = _COL_PAT.match(col.strip())
@@ -279,14 +431,143 @@ def tepco_flow_stats(csv_path: str, q: float = 0.95) -> dict:
     for (sub, line), cols in groups.items():
         total = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
         val = float(total.abs().quantile(q))
-        key = _norm(line)
+        # metering sections 佐久間東幹線(中)/(山)/(里) collapse to the
+        # corridor; max keeps the loaded section, as across (sub, line)
+        key = _norm(_PAREN_QUAL.sub("", line.strip()))
         stats[key] = max(stats.get(key, 0.0), val)
     return stats
 
 
-def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
+def tepco_terminal_offtakes(csv_path, csv154=None, csv66=None) -> dict:
+    """Measured offtake at radial-end substations (M3's demand truth).
+
+    A substation that appears with exactly ONE distinct line name across
+    the union of disclosure headers (trunk + 154 kV + per-prefecture
+    66 kV) is a radial end: no transit passes through it, so its line
+    flow IS its draw from the network. Returns
+    ``{normalised sub name: {"q50_mw", "p95_mw", "line", "n_cols"}}``
+    over |circuit-group sum| per timestamp.
+
+    Guards: switching stations ((開)/(開閉所)) are pass-through by
+    construction and excluded; a sub that also appears in another file
+    with a different line (e.g. the 154 kV supply of a 154/66 yard) is
+    a transformation point, not an end — the cross-file union excludes
+    it. Two ends of the same line are distinct subs and metered
+    separately, so duplicates take the larger statistic.
+    """
+    import glob as _glob
+
+    import pandas as pd
+
+    def _paths(x):
+        if not x:
+            return []
+        xs = [x] if isinstance(x, str) else list(x)
+        out = []
+        for p_ in xs:
+            out.extend(sorted(_glob.glob(p_)) or [p_])
+        return [p_ for p_ in out if os.path.exists(p_)]
+
+    def _line_cols(df):
+        for col in df.columns[1:]:
+            m = _COL_PAT.match(str(col).strip())
+            if not m:
+                continue
+            eq = m.group(3).strip()
+            if eq.endswith("L") and "線" in eq:
+                line = _CIRCUIT_SUFFIX.sub("", eq).strip()
+                if line:
+                    yield (col, m.group(1).strip(), m.group(2),
+                           _norm(_PAREN_QUAL.sub("", line)))
+
+    # pass 1: line-name sets per substation across ALL files
+    sub_lines: dict[str, set] = defaultdict(set)
+    is_substation: dict[str, bool] = {}
+    frames = []
+    for p_ in (_paths(csv_path) + _paths(csv154) + _paths(csv66)):
+        df = pd.read_csv(p_, encoding="cp932", na_values=["-", ""],
+                         low_memory=False)
+        frames.append(df)
+        for _col, sub, kind, line_key in _line_cols(df):
+            sub_lines[sub].add(line_key)
+            is_substation[sub] = (is_substation.get(sub, True)
+                                  and kind == "変")
+
+    # pass 2: quantiles of the single corridor's |total| at terminal subs
+    out: dict[str, dict] = {}
+    for df in frames:
+        groups = defaultdict(list)
+        for col, sub, _kind, _line in _line_cols(df):
+            if len(sub_lines[sub]) == 1 and is_substation.get(sub, False):
+                groups[sub].append(col)
+        for sub, cols in groups.items():
+            total = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
+            q50 = float(total.abs().quantile(0.5))
+            p95 = float(total.abs().quantile(0.95))
+            key = _norm(sub)
+            if key not in out or q50 > out[key]["q50_mw"]:
+                out[key] = {"q50_mw": round(q50, 2), "p95_mw": round(p95, 2),
+                            "line": next(iter(sub_lines[sub])),
+                            "n_cols": len(cols)}
+    return out
+
+
+def tepco_busbar_demands(csv66) -> dict:
+    """Per-substation measured demand from the 66 kV files' busbar columns.
+
+    The per-prefecture disclosure is dominated by 母線 (busbar) columns —
+    3,372 of them across ~1,200 distribution substations vs only 782
+    line columns. At a 66 kV distribution substation there is no network
+    below to transit into, so the busbar through-power IS the yard's
+    offtake; per-sub |sum of B columns| gives a measured demand map
+    (tokyo: 1,201 subs totalling ~17 GW at q50 — typical distribution
+    magnitudes, 庚申塚 46 MW / 角筈 38 MW).
+
+    Known honest limits: intermediate 66 kV subs feeding others
+    downstream double-count their transit (the 17 GW total vs ~35 GW
+    area median suggests this is minor); the trunk file's busbars ARE
+    transit, so any path containing ``kikan`` is excluded; switching
+    stations are excluded by kind.
+
+    Returns ``{normalised sub name: {"q50_mw", "p95_mw", "n_cols"}}``.
+    """
+    import glob as _glob
+
+    import pandas as pd
+
+    paths = ([csv66] if isinstance(csv66, str) else list(csv66 or []))
+    expanded = []
+    for p_ in paths:
+        expanded.extend(sorted(_glob.glob(p_)) or [p_])
+    out: dict[str, dict] = {}
+    for p_ in expanded:
+        if not os.path.exists(p_) or "kikan" in os.path.basename(p_):
+            continue
+        df = pd.read_csv(p_, encoding="cp932", na_values=["-", ""],
+                         low_memory=False)
+        groups = defaultdict(list)
+        for col in df.columns[1:]:
+            m = _COL_PAT.match(str(col).strip())
+            if m and m.group(2) == "変" and m.group(3).strip().endswith("B"):
+                groups[m.group(1).strip()].append(col)
+        for sub, cols in groups.items():
+            tot = df[cols].apply(pd.to_numeric, errors="coerce").sum(axis=1)
+            q50 = float(tot.abs().quantile(0.5))
+            p95 = float(tot.abs().quantile(0.95))
+            key = _norm(sub)
+            if key not in out or q50 > out[key]["q50_mw"]:
+                out[key] = {"q50_mw": round(q50, 2), "p95_mw": round(p95, 2),
+                            "n_cols": len(cols)}
+    return out
+
+
+def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 q: float = 0.95, data_dir: str | None = None,
-                load_spatial: str = "none") -> dict:
+                load_spatial: str = "none", csv154=None, csv66=None,
+                stats_db: str | None = None,
+                measured_loads="auto", radialize_band_kv=None,
+                corridor_calib: bool = False,
+                calib_swap: bool = False) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -301,14 +582,58 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
     from src.powerflow.load_estimator import load_demand_config
     from src.powerflow.pipeline import build_and_solve
 
-    measured = tepco_flow_stats(csv_path, q=q)
+    # measured sets are class-tagged: the trunk disclosure covers 275 kV+,
+    # the 154 kV files cover the 140-200 kV layer — matching is restricted
+    # within each class band so same-named lines at other voltages stay
+    # name collisions instead of becoming false pairs.
+    if stats_db:
+        # calibrated aggregates from measured_line_stats (q is pinned to
+        # the stored quantiles: p95 measured set, q50 boundary medians)
+        from src.db.calibration import load_measured_line_stats
+
+        rows = load_measured_line_stats(stats_db, region)
+        if not rows:
+            raise FileNotFoundError(
+                f"no measured_line_stats for {region} in {stats_db} — "
+                f"run scripts/db/calibrate.py first")
+        measured_cls = {k: (v["p95"], v["kv_floor"]) for k, v in rows.items()}
+        typical = {k: v["q50"] for k, v in rows.items()}
+    else:
+        measured_cls = {k: (v, 200.0)
+                        for k, v in tepco_flow_stats(csv_path, q=q).items()}
+        if csv154:
+            for k, v in tepco_flow_stats(csv154, q=q).items():
+                measured_cls.setdefault(k, (v, 140.0))
+        if csv66:
+            for k, v in tepco_flow_stats(csv66, q=q).items():
+                measured_cls.setdefault(k, (v, 60.0))
+        typical = tepco_flow_stats(csv_path, q=0.5)
+    measured = {k: v for k, (v, _c) in measured_cls.items()}
+
+    # Corridor-flow demand calibration (ledger 48): the TRAIN half of the
+    # measured 66-band corridors becomes a conservation constraint set
+    # (subtree demands rescaled so each corridor carries its measured
+    # flow); rho is then reported on the held-out TEST half. The split is
+    # deterministic (sorted keys, alternating) so runs reproduce.
+    calib_train: dict = {}
+    calib_test: set = set()
+    if corridor_calib:
+        band66 = sorted(k for k, (_v, fl) in measured_cls.items() if fl < 140.0)
+        tr_par = 1 if calib_swap else 0      # swap halves for cross-fit
+        calib_train = {k: measured_cls[k][0]
+                       for i, k in enumerate(band66) if i % 2 == tr_par}
+        calib_test = {k for i, k in enumerate(band66) if i % 2 != tr_par}
 
     def _solve(boundary_util=None):
         result = build_and_solve(region, load_demand_config(),
                                  topology="snapped", reconnect=True,
                                  backbone_kv=backbone_kv,
                                  load_spatial=load_spatial,
-                                 boundary_util=boundary_util)
+                                 boundary_util=boundary_util,
+                                 boundary_stats=typical,
+                                 measured_loads=measured_loads,
+                                 radialize_band_kv=radialize_band_kv,
+                                 corridor_calib=calib_train or None)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
@@ -330,10 +655,7 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
                 continue
             if int(net_dc.line.at[idx, "from_bus"]) in bdry or \
                int(net_dc.line.at[idx, "to_bus"]) in bdry:
-                for part in raw.split(";"):
-                    key = _norm(part)
-                    if key:
-                        out.add(key)
+                out.update(_model_name_keys(raw))
         return out
 
     # Pass 1 (planning utilisation): identify which measured lines are the
@@ -346,7 +668,6 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
     calib_util = None
     matched_corridors = sorted(c for c in corridors if c in measured)
     if matched_corridors:
-        typical = tepco_flow_stats(csv_path, q=0.5)
         total = sum(typical.get(c, 0.0) for c in matched_corridors)
         from src.powerflow.boundary import (
             TYPICAL_UTILISATION, load_interconnections)
@@ -367,17 +688,26 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
         raw = str(net_dc.line.at[idx, "name"] or "")
         if not raw or raw.startswith(f"{region}_line_"):
             continue
-        # trunk-class only (the disclosure covers 275 kV+) — a same-named
-        # 154 kV line is a different physical line
-        if float(vn.get(net_dc.line.at[idx, "from_bus"], 0)) < 200.0:
-            continue
+        line_kv = float(vn.get(net_dc.line.at[idx, "from_bus"], 0))
         p = float(flows.get(idx, 0.0))
-        for part in raw.split(";"):           # OSM compound names
-            key = _norm(part)
-            if key and not _is_railway_only(key, operators):
-                # series segments carry the same flow -> max is the
-                # corridor's loaded section
-                model[key] = max(model.get(key, 0.0), p)
+        for key in _model_name_keys(raw):   # compound/suffix/segment variants
+            if _is_railway_only(key, operators):
+                continue
+            # class-banded matching: a measured trunk (275 kV+) name only
+            # accepts >=200 kV model lines; a 154-file name accepts the
+            # 140-200 kV band — other-class homonyms stay collisions
+            mc = measured_cls.get(key)
+            if mc is not None:
+                floor = mc[1]
+                ceil = (1e9 if floor >= 200.0 else
+                        200.0 if floor >= 140.0 else 140.0)
+                if not (floor <= line_kv < ceil):
+                    continue
+            elif line_kv < 60.0:
+                continue
+            # series segments carry the same flow -> max is the
+            # corridor's loaded section
+            model[key] = max(model.get(key, 0.0), p)
 
     common = sorted(set(measured) & set(model))
     # interior = matched lines that did NOT receive measured boundary
@@ -409,6 +739,26 @@ def match_flows(region: str, csv_path: str, backbone_kv: float | None = 154.0,
 
     _score(common, "")            # all matched (back-compat)
     _score(interior, "interior_")  # the honest metric
+    # per-class breakdown: the 275 kV+ trunk is the established headline;
+    # the 154 kV layer is a NEW, separately-reported measurement
+    trunk_keys = [k for k in interior if measured_cls[k][1] >= 200.0]
+    sub_keys = [k for k in interior if 140.0 <= measured_cls[k][1] < 200.0]
+    kv66_keys = [k for k in interior if measured_cls[k][1] < 140.0]
+    _score(trunk_keys, "trunk_")
+    _score(sub_keys, "kv154_")
+    _score(kv66_keys, "kv66_")
+    out["n_interior_trunk"] = len(trunk_keys)
+    out["n_interior_154"] = len(sub_keys)
+    out["n_interior_66"] = len(kv66_keys)
+    if corridor_calib:
+        # honest split scores: train corridors are FITTED (high by
+        # construction); the held-out test rho is the real result
+        test_keys = [k for k in kv66_keys if k in calib_test]
+        train_keys = [k for k in kv66_keys if k in calib_train]
+        _score(test_keys, "kv66_test_")
+        _score(train_keys, "kv66_train_")
+        out["n_66_test"] = len(test_keys)
+        out["n_66_train"] = len(train_keys)
     diffs = sorted(interior, key=lambda k: abs(model[k] - measured[k]),
                    reverse=True)
     out["top_mismatches"] = [
@@ -432,6 +782,20 @@ def render_flows(m: dict) -> str:
         lines.append(
             f"  INTERIOR Spearman   : {m['interior_spearman_rho']} "
             f"(p={m['interior_spearman_p']:g}; boundary-conditioned corridors excluded)")
+        if "trunk_spearman_rho" in m:
+            lines.append(
+                f"    trunk 275kV+ ({m['n_interior_trunk']}): rho={m['trunk_spearman_rho']}"
+                + (f" | 154kV ({m['n_interior_154']}): rho={m['kv154_spearman_rho']}"
+                   if "kv154_spearman_rho" in m else "")
+                + (f" | 66kV ({m['n_interior_66']}): rho={m['kv66_spearman_rho']}"
+                   if "kv66_spearman_rho" in m else ""))
+        if "kv66_test_spearman_rho" in m:
+            lines.append(
+                f"    corridor-calib HOLDOUT 66kV: test rho="
+                f"{m['kv66_test_spearman_rho']} ({m['n_66_test']})"
+                + (f" | train(fitted) rho={m['kv66_train_spearman_rho']} "
+                   f"({m['n_66_train']})"
+                   if "kv66_train_spearman_rho" in m else ""))
         lines.append(
             f"  interior median model/measured : {m['interior_median_model_over_measured']}")
     if "spearman_rho" in m:
@@ -456,8 +820,12 @@ def render_tepco(m: dict) -> str:
         f"{100 * m['line_recall_loose']:.1f}% incl. loose",
         f"  attachment recall : {100 * m['pair_recall']:.1f}% "
         f"(name {m['pair_attached_name']} + position {m['pair_attached_position']} "
+        f"+ adjacent {m.get('pair_attached_adjacent', 0)} "
         f"of {t['pairs']}; class-collision {m['pair_class_collision']}, "
         f"unattached {m['pair_unattached']})",
+        f"  by band           : " + "  ".join(
+            f"{b}={100*r:.1f}%({m['pair_total_by_band'][b]})"
+            for b, r in sorted(m.get("pair_recall_by_band", {}).items())),
     ])
 
 
@@ -471,21 +839,64 @@ def main(argv=None):
     ap.add_argument("--missing", action="store_true", help="list missing items")
     ap.add_argument("--flows", action="store_true",
                     help="flow-level validation (model DC vs measured MW)")
+    ap.add_argument("--csv66",
+                    default="data/external/tepco/jisseki_[cfgikmnsty]*.csv",
+                    help="glob of the per-prefecture 66 kV flow CSVs ('' to disable)")
+    ap.add_argument("--csv154", default="data/external/tepco/jisseki_154kV0*.csv",
+                    help="glob of the 154 kV flow CSVs (extends the measured "
+                         "set; pass '' to disable)")
+    ap.add_argument("--from-db", nargs="?", const="data/grid.db", default=None,
+                    metavar="DB", dest="from_db",
+                    help="--flows reads calibrated aggregates from the DB's "
+                         "measured_line_stats (scripts/db/calibrate.py) "
+                         "instead of parsing the CSVs")
     ap.add_argument("--backbone", type=float, default=154.0)
+    ap.add_argument("--no-measured-loads", action="store_true",
+                    help="A/B switch: disable the DB measured-demand "
+                         "placement (synthetic allocation only)")
+    ap.add_argument("--radialize-66", action="store_true",
+                    help="EXPERIMENT (M5): open in-band 66 kV loops "
+                         "(impedance-MST proxy for normally-open points) "
+                         "before solving")
+    ap.add_argument("--spatial", default="none",
+                    choices=["none", "degree", "population"],
+                    help="residual-demand spatial weighting (population = "
+                         "census 1km mesh, scripts/fetch_estat_mesh.py)")
+    ap.add_argument("--corridor-calib", action="store_true",
+                    help="demand state estimation from measured corridor "
+                         "flows: calibrate on the train half (alternating "
+                         "split), report held-out kv66_test rho")
+    ap.add_argument("--calib-swap", action="store_true",
+                    help="swap the train/test halves (cross-fit evidence)")
     args = ap.parse_args(argv)
 
-    if not os.path.exists(args.csv):
+    if not (args.flows and args.from_db) and not os.path.exists(args.csv):
         print(f"no CSV at {args.csv} — fetch it first (see module docstring)")
         return 2
     if args.flows:
-        m = match_flows(args.region, args.csv, backbone_kv=args.backbone)
+        import glob as _g
+        csv154 = args.csv154 if args.csv154 and _g.glob(args.csv154) else None
+        csv66 = args.csv66 if args.csv66 and _g.glob(args.csv66) else None
+        m = match_flows(args.region, args.csv, backbone_kv=args.backbone,
+                        csv154=csv154, csv66=csv66, stats_db=args.from_db,
+                        load_spatial=args.spatial,
+                        measured_loads=(None if args.no_measured_loads
+                                        else "auto"),
+                        radialize_band_kv=(60.0 if args.radialize_66
+                                           else None),
+                        corridor_calib=args.corridor_calib,
+                        calib_swap=args.calib_swap)
         print(render_flows(m))
         if args.json:
             with open(args.json, "w", encoding="utf-8") as f:
                 json.dump(m, f, indent=1, ensure_ascii=False)
             print(f"\nscorecard -> {args.json}")
         return 0
-    m = match_tepco(args.region, args.csv)
+    import glob as _g2
+    m = match_tepco(
+        args.region, args.csv,
+        csv154=(args.csv154 if args.csv154 and _g2.glob(args.csv154) else None),
+        csv66=(args.csv66 if args.csv66 and _g2.glob(args.csv66) else None))
     print(render_tepco(m))
     if args.missing:
         print("\nofficial trunk lines absent from the model (work list):")

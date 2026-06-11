@@ -54,6 +54,14 @@ def main() -> None:
         help="Golden check against --data-dir originals",
     )
     parser.add_argument(
+        "--markers",
+        action="store_true",
+        help="Write per-field provenance markers (_src:<field> = source) "
+             "beside every enrichment-won value — the faithful-roundtrip "
+             "derived form (DB_ARCHITECTURE §6); re-ingest preserves the "
+             "original sources",
+    )
+    parser.add_argument(
         "--dump-enrichments",
         default=None,
         metavar="PATH",
@@ -92,7 +100,8 @@ def main() -> None:
                     out_path = os.path.join(
                         args.out_dir, f"{region}_{layer}.geojson"
                     )
-                    collection = export_geojson(db, region, layer)
+                    collection = export_geojson(db, region, layer,
+                                                markers=args.markers)
                     with open(out_path, "w", encoding="utf-8") as fh:
                         json.dump(
                             collection,

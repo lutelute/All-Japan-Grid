@@ -36,6 +36,11 @@
   kml_style: "extra_thick"
   notes: "Main inter-regional backbone lines (基幹系統). Quad-bundle conductors."
 
+  cable:                      # XLPE/OF地中(新豊洲線型; 典型値)
+    r_ohm_per_km: 0.008
+    x_ohm_per_km: 0.130
+    b_s_per_km: 6.6e-5
+    max_i_ka: 1.5
 275:
   description: "275kV high voltage trunk"
   description_ja: "275kV 高圧幹線送電線"
@@ -50,6 +55,11 @@
   kml_style: "medium_thick"
   notes: "Regional backbone and major supply lines (地内基幹). Twin-bundle conductors."
 
+  cable:                      # 275kV XLPE地中(都心環状; 典型値)
+    r_ohm_per_km: 0.012
+    x_ohm_per_km: 0.120
+    b_s_per_km: 7.5e-5
+    max_i_ka: 1.2
 154:
   description: "154kV regional supply"
   description_ja: "154kV 地域供給送電線"
@@ -64,6 +74,11 @@
   kml_style: "thin"
   notes: "Regional supply lines. Used in Tohoku, Tokyo, Chubu, Hokuriku, Kansai, Chugoku."
 
+  cable:                      # 154kV XLPE地中(典型値)
+    r_ohm_per_km: 0.025
+    x_ohm_per_km: 0.120
+    b_s_per_km: 7.0e-5
+    max_i_ka: 0.9
 66:
   description: "66kV sub-transmission"
   description_ja: "66kV 配電用変電所向け送電線"
@@ -81,6 +96,11 @@
 # Additional voltage classes used in specific regions
 # These are less common but appear in certain regional grids
 
+  cable:                      # 66kV XLPE地中(都区部配電系; 典型値)
+    r_ohm_per_km: 0.050
+    x_ohm_per_km: 0.110
+    b_s_per_km: 1.1e-4
+    max_i_ka: 0.7
 220:
   description: "220kV regional backbone (Chugoku, Kyushu)"
   description_ja: "220kV 地域基幹送電線"
@@ -137,6 +157,11 @@
   kml_style: "thin"
   notes: "Lower-level supply lines in western regions."
 
+  cable:                      # 110kV XLPE地中(典型値)
+    r_ohm_per_km: 0.030
+    x_ohm_per_km: 0.120
+    b_s_per_km: 8.0e-5
+    max_i_ka: 0.8
 77:
   description: "77kV sub-transmission (Chubu, Hokuriku, Kansai)"
   description_ja: "77kV 送電線"
@@ -150,3 +175,9 @@
   grid_class: "sub_transmission"
   kml_style: "thin"
   notes: "Used in Chubu, Hokuriku, and Kansai as lower-level sub-transmission."
+
+  cable:                      # 77kV XLPE地中(典型値)
+    r_ohm_per_km: 0.050
+    x_ohm_per_km: 0.110
+    b_s_per_km: 1.0e-4
+    max_i_ka: 0.7

@@ -14,6 +14,7 @@ Usage:
 import argparse
 import copy
 import json
+import math
 import os
 import sys
 import warnings
@@ -122,6 +123,8 @@ def export_region_slices(net, mode, region, geom):
             continue
         vm = float(net.res_bus.at[idx, "vm_pu"]) if idx in net.res_bus.index else 1.0
         va = float(net.res_bus.at[idx, "va_degree"]) if idx in net.res_bus.index else 0.0
+        if not (math.isfinite(vm) and math.isfinite(va)):
+            continue   # unsolved bus (no result row) — NaN would corrupt the JSON
         buses.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]},
                       "properties": {"name": str(net.bus.at[idx, "name"]),
                                      "vn_kv": round(float(net.bus.at[idx, "vn_kv"]), 1),
@@ -139,6 +142,10 @@ def export_region_slices(net, mode, region, geom):
             continue
         loading = float(net.res_line.at[idx, "loading_percent"]) if idx in net.res_line.index and "loading_percent" in net.res_line.columns else 0.0
         p_mw = float(net.res_line.at[idx, "p_from_mw"]) if idx in net.res_line.index and "p_from_mw" in net.res_line.columns else 0.0
+        if not math.isfinite(loading):
+            loading = 0.0
+        if not math.isfinite(p_mw):
+            p_mw = 0.0
         name = str(net.line.at[idx, "name"])
         coords = geom.get(((round(flat, 5), round(flon, 5)), (round(tlat, 5), round(tlon, 5))))
         if not coords:
@@ -187,18 +194,31 @@ def main():
         if iid not in islands:
             continue
         isl = islands[iid]
-        net_dc, dc, net_ac, ac, n_syn, n_shunt, diag = solve_island(iid, isl, cfg, args.reactive)
+        if len(isl["regions"]) == 1:
+            # Single-region island (hokkaido / okinawa): reuse the
+            # battle-tested regional pipeline instead of solve_island —
+            # the island path left hokkaido's main component unsupplied
+            # (only 41/799 buses carried results; NaN JSON on the map).
+            from src.powerflow.pipeline import build_and_solve
+            _r = build_and_solve(isl["regions"][0], cfg, topology="snapped",
+                                 reconnect=True, reactive=args.reactive)
+            net_dc, dc, net_ac, ac, _info, _g = _r
+            n_syn = _info.get("n_synthetic_lines", 0)
+            n_shunt = _info.get("n_shunt_comp", 0)
+            diag = {"n_components": _info.get("n_components")}
+        else:
+            net_dc, dc, net_ac, ac, n_syn, n_shunt, diag = solve_island(iid, isl, cfg, args.reactive)
         net_for_ac = net_ac if ac.get("converged") else None
         for region in isl["regions"]:
             # DC slices
             if dc.get("converged"):
                 b, l = export_region_slices(net_dc, "dc", region, isl["geom"])
-                json.dump(b, open(f"{args.output_dir}/{region}_dc_buses.geojson", "w"), separators=(",", ":"))
-                json.dump(l, open(f"{args.output_dir}/{region}_dc_lines.geojson", "w"), separators=(",", ":"))
+                json.dump(b, open(f"{args.output_dir}/{region}_dc_buses.geojson", "w"), separators=(",", ":"), allow_nan=False)
+                json.dump(l, open(f"{args.output_dir}/{region}_dc_lines.geojson", "w"), separators=(",", ":"), allow_nan=False)
             if net_for_ac is not None:
                 b, l = export_region_slices(net_for_ac, "ac", region, isl["geom"])
-                json.dump(b, open(f"{args.output_dir}/{region}_ac_buses.geojson", "w"), separators=(",", ":"))
-                json.dump(l, open(f"{args.output_dir}/{region}_ac_lines.geojson", "w"), separators=(",", ":"))
+                json.dump(b, open(f"{args.output_dir}/{region}_ac_buses.geojson", "w"), separators=(",", ":"), allow_nan=False)
+                json.dump(l, open(f"{args.output_dir}/{region}_ac_lines.geojson", "w"), separators=(",", ":"), allow_nan=False)
             rs = region_summary(net_for_ac if net_for_ac is not None else net_dc, region)
             summary[region] = {
                 "island": iid, "ac_converged": ac.get("converged", False),

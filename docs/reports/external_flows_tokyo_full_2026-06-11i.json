@@ -1,0 +1,94 @@
+{
+ "region": "tokyo",
+ "backbone_kv": 0.0,
+ "load_spatial": "none",
+ "quantile": 0.95,
+ "n_measured_lines": 705,
+ "n_model_named_lines": 1697,
+ "n_matched": 419,
+ "boundary_corridors_excluded": [
+  "南いわき幹線",
+  "新いわき線"
+ ],
+ "boundary_calibration": {
+  "ic_002": 0.572972972972973
+ },
+ "spearman_rho": 0.543,
+ "spearman_p": 1.56e-33,
+ "median_model_over_measured": 0.88,
+ "interior_spearman_rho": 0.537,
+ "interior_spearman_p": 1.65e-32,
+ "interior_median_model_over_measured": 0.88,
+ "trunk_spearman_rho": 0.54,
+ "trunk_spearman_p": 6.7e-07,
+ "trunk_median_model_over_measured": 0.49,
+ "kv154_spearman_rho": 0.085,
+ "kv154_spearman_p": 0.622,
+ "kv154_median_model_over_measured": 0.5,
+ "kv66_spearman_rho": 0.31,
+ "kv66_spearman_p": 3.02e-08,
+ "kv66_median_model_over_measured": 0.97,
+ "n_interior_trunk": 74,
+ "n_interior_154": 36,
+ "n_interior_66": 307,
+ "kv66_test_spearman_rho": 0.191,
+ "kv66_test_spearman_p": 0.0178,
+ "kv66_test_median_model_over_measured": 0.98,
+ "kv66_train_spearman_rho": 0.427,
+ "kv66_train_spearman_p": 3.83e-08,
+ "kv66_train_median_model_over_measured": 0.96,
+ "n_66_test": 154,
+ "n_66_train": 153,
+ "top_mismatches": [
+  {
+   "line": "新京葉線",
+   "measured_p95_mw": 4910.0,
+   "model_dc_mw": 926.0
+  },
+  {
+   "line": "新古河線",
+   "measured_p95_mw": 5190.0,
+   "model_dc_mw": 2326.0
+  },
+  {
+   "line": "新茂木線",
+   "measured_p95_mw": 2560.0,
+   "model_dc_mw": 103.0
+  },
+  {
+   "line": "新栃木線",
+   "measured_p95_mw": 4090.0,
+   "model_dc_mw": 1675.0
+  },
+  {
+   "line": "新所沢線",
+   "measured_p95_mw": 3090.0,
+   "model_dc_mw": 750.0
+  },
+  {
+   "line": "新新田線",
+   "measured_p95_mw": 2890.0,
+   "model_dc_mw": 619.0
+  },
+  {
+   "line": "港北線",
+   "measured_p95_mw": 2420.0,
+   "model_dc_mw": 302.0
+  },
+  {
+   "line": "新佐原線",
+   "measured_p95_mw": 3520.0,
+   "model_dc_mw": 1459.0
+  },
+  {
+   "line": "桜ヶ丘線",
+   "measured_p95_mw": 2124.0,
+   "model_dc_mw": 79.0
+  },
+  {
+   "line": "新多摩線",
+   "measured_p95_mw": 2610.0,
+   "model_dc_mw": 578.0
+  }
+ ]
+}

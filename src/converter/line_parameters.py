@@ -125,6 +125,7 @@ def get_line_parameters(
     voltage_kv: float,
     f_hz: float,
     config_path: Optional[Path] = None,
+    kind: str = "overhead",
 ) -> Dict[str, Any]:
     """Get electrical parameters for a Japanese transmission line type.
 
@@ -172,6 +173,13 @@ def get_line_parameters(
 
     raw_params = line_types[voltage_key]
 
+    # Underground cable variant (OSM power=cable / location=underground):
+    # XLPE cables run ~1/3 the reactance of overhead lines, which changes
+    # DC flow splits on urban parallel paths. Falls back to the overhead
+    # values when the class has no cable entry.
+    if kind == "cable" and isinstance(raw_params.get("cable"), dict):
+        raw_params = {**raw_params, **raw_params["cable"]}
+
     # Extract required electrical parameters
     r_ohm = raw_params["r_ohm_per_km"]
     x_ohm = raw_params["x_ohm_per_km"]
@@ -209,6 +217,7 @@ def get_line_parameters_safe(
     voltage_kv: float,
     f_hz: float,
     config_path: Optional[Path] = None,
+    kind: str = "overhead",
 ) -> Optional[Dict[str, Any]]:
     """Get line parameters with fallback to nearest voltage class.
 
@@ -226,7 +235,7 @@ def get_line_parameters_safe(
         if no suitable fallback exists.
     """
     try:
-        return get_line_parameters(voltage_kv, f_hz, config_path)
+        return get_line_parameters(voltage_kv, f_hz, config_path, kind=kind)
     except ValueError:
         pass
 

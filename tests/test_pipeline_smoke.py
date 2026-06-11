@@ -33,10 +33,12 @@ def test_build_info_shape(okinawa_solved):
     # (2026-06-10): one bus per voltage class with intra-substation
     # transformer stubs (no line swallowing), circuits/cables tags drive
     # parallel counts, 2.5 km terminal snap radius, fixed 20 km plant
-    # lookup (gens 16 -> 22).
+    # lookup (gens 16 -> 22). 2026-06-11 tap snap (ledger 52): two
+    # dead-end stubs join their same-class span (91 -> 89 buses,
+    # 81 -> 79 lines after chain collapse).
     assert info["topology"] == "snapped"
-    assert info["n_buses"] == 91
-    assert info["n_lines"] == 81
+    assert info["n_buses"] == 89
+    assert info["n_lines"] == 79
     assert info["n_gens"] == 22
     assert info["n_trafos"] == 15
 
@@ -45,7 +47,7 @@ def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 91
+    assert len(net_ac.bus) == 89
     vmin = float(net_ac.res_bus.vm_pu.min())
     # 0.647 measured: voltage propagation typed the northern 66 kV spur
     # that previously hid at an inferred higher class — honest sag on an

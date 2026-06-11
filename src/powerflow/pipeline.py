@@ -74,7 +74,9 @@ def add_reactive_compensation(net, factor=0.6):
 def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, reactive=0.6,
                     snap_km=1.5, vertex_prec=4, backbone_kv=None,
                     load_spatial="none", boundary_imports=True,
-                    boundary_util=None):
+                    boundary_util=None, db=None, boundary_stats=None,
+                    measured_loads="auto", radialize_band_kv=None,
+                    corridor_calib=None):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -98,7 +100,8 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     snap_geom = None
     if topology == "snapped":
         network, snap_geom = build_network_snapped(
-            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True)
+            region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True,
+            db=db)
     else:
         network = build_network_from_geojson(region)
     if not network or not network.has_elements:
@@ -129,11 +132,26 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
             mode="reconnect", max_reconnection_distance_km=5.0))
         n_synthetic = rec.lines_created
 
+    radial_info = None
+    if radialize_band_kv:
+        from src.powerflow.transforms import radialize_band
+        radial_info = radialize_band(net, lo_kv=float(radialize_band_kv))
+
     diag = fix_topology(net, multi_slack=True)
     select_slack_bus(net)
 
+    # Measured demand placement (M3): DB-first — name-matched substations
+    # are pinned to their disclosed busbar statistic when a calibrated DB
+    # is present (scripts/db/calibrate.py); regions without rows get the
+    # synthetic rule unchanged. Pass measured_loads=None to disable.
+    mbl = None
+    if measured_loads == "auto":
+        from src.db.calibration import load_measured_bus_loads
+        mbl = load_measured_bus_loads(region=region)
+    elif isinstance(measured_loads, dict):
+        mbl = measured_loads
     total_load = estimate_loads(net, region=region, demand_config=demand_cfg,
-                                spatial=load_spatial)
+                                spatial=load_spatial, measured_bus_loads=mbl)
     inactive_buses = set(net.bus.index[~net.bus["in_service"]])
     if len(net.load) > 0:
         mask = net.load["bus"].isin(inactive_buses)
@@ -143,10 +161,31 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     boundary_info = None
     if boundary_imports:
         from src.powerflow.boundary import apply_boundary_imports
+        if boundary_stats is None:
+            # DB-first: corridor medians from measured_line_stats when a
+            # calibrated DB is present (scripts/db/calibrate.py); regions
+            # without calibration get None -> equal-split, as before.
+            from src.db.calibration import boundary_stats_from_db
+            boundary_stats = boundary_stats_from_db(region=region)
         boundary_info = apply_boundary_imports(net, region,
-                                               utilisation=boundary_util)
+                                               utilisation=boundary_util,
+                                               corridor_stats=boundary_stats)
 
     balance_power(net, demand_cfg)
+
+    # Corridor-flow demand state estimation (ledger 48/49): measured
+    # corridor flows reshape the demand vector — names locate corridors,
+    # the yards below them need none. v2 fits ALL corridors at once via
+    # PTDF least squares (loops included); runs on the balanced net and
+    # the dispatch is rebalanced to the calibrated demand afterwards.
+    # Opt-in: pass {corridor key: MW} (the validator passes its train split).
+    calib_info = None
+    if corridor_calib:
+        from src.powerflow.flow_calibration import ptdf_demand_estimation
+        calib_info = ptdf_demand_estimation(net, dict(corridor_calib))
+        total_load = float(net.load[net.load["in_service"]]["p_mw"].sum())
+        balance_power(net, demand_cfg)
+
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, factor=reactive)
     net.bus["vm_pu"] = 1.0
@@ -185,6 +224,8 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
         "topology": topology,
         "backbone": backbone_info,
         "boundary": boundary_info,
+        "radialized": radial_info,
+        "corridor_calib": calib_info,
         "total_load_mw": float(total_load),
         "total_gen_mw": float(net.gen[net.gen["in_service"]]["p_mw"].sum()) if len(net.gen) > 0 else 0,
     }

@@ -65,6 +65,7 @@ class TransmissionLine:
     source_map: str = ""
     description: str = ""
     num_parallel: int = 1  # parallel circuits merged by vertex-snap (>=1)
+    is_cable: bool = False  # OSM power=cable / underground (XLPE params)
 
     def __post_init__(self) -> None:
         """Validate fields after initialization."""

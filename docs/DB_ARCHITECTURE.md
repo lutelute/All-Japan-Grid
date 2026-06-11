@@ -205,3 +205,27 @@ Step 3 以降は通常作業の合間に1本ずつ。
   要件化したら PostgreSQL + PostGIS を再検討（スキーマは ORM なので移行容易）
 - 表示用派生値（`_fuel_color`・`_category` 等）を enrichments に入れるか export 時計算にするか
   → **export 時計算に倒す**（純粋な派生はC層に保存しない）方向で実装時に確定
+
+---
+
+## §6 raw/derived 最終分離 — 設計確定 v2（2026-06-11, Fable 5）
+
+**決定**: 物理ディレクトリ分離(a案: data/raw/ 複製)は採らない。**DB=正本・ファイル=派生**を
+マーカー機構で成立させる(b案確定)。根拠: `--source db`(VISION step5達成)によりパイプラインは
+既にファイル非依存で、残る問題は「派生ファイルを再ingestしたときの来歴破壊」(#8の実証済み failure)のみ。
+
+**機構** (`_src:` per-field provenance marker, 実装済み・回帰pin付き):
+1. `export_geojson(markers=True)` — enrichmentが勝った全フィールドに `"_src:<field>": "<source>"` を併記
+   → 公開GeoJSONが**自己記述的**(どの値がどの権威由来か機械可読=資産価値)
+2. `decompose_properties` — `_src:`マーカー付きフィールドは**元のsourceのままC層へ復元**
+   (raw tags に混入しない)。マーカー自体は transport であり保存しない
+3. 後方互換: マーカー無しファイルのingestは従来どおり / `markers=False`(デフォルト)のexportは
+   既存golden(verify_roundtrip)と不変
+
+**帰結**:
+- **#8 解除**: P03権威値を `data/*.geojson` に `--markers` 焼込→commit→再ingestしても
+  `source=p03_db` が保全される(tests/test_provenance_roundtrip.py が恒久保証)
+- 機械的更新フロー最終形: `fetch → ingest → enrich(DB) → export --markers → commit(派生+来歴)`
+- 移行手順: ①scripts/db/export.py に --markers 追加 ②全10地域を--markersでexport→
+  D層ファイル世代交代(1回だけのchurn、来歴付きdiffで監査可能) ③README/DATA_CATALOGに
+  「data/*.geojson はDB派生物」と宣言

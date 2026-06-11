@@ -216,9 +216,24 @@ def select_slack_bus(net):
                 gen_at_bus[bus] = gen_at_bus.get(bus, 0) + active_gens.at[gen_idx, "p_mw"]
 
     # Score: heavily weight voltage level and connectivity, plus generation
+    # The MAIN slack belongs in the LARGEST component (the vn-dominated
+    # score used to move it onto a high-voltage bus in a tiny fragment,
+    # stranding hokkaido's 758-bus main mesh as NaN — ledger 25/26; and
+    # restricting to the *current* component instead pinned tokyo's
+    # slack inside a fragment and collapsed its flow pattern, rho
+    # 0.72 -> 0.34 — ledger 27). So: pick the best bus WITHIN the
+    # largest component, then repair every other component so the move
+    # can never strand one.
+    allowed = None
+    mg = top.create_nxgraph(net, respect_switches=False)
+    if mg.number_of_nodes():
+        allowed = max(nx.connected_components(mg), key=len)
+
     best_bus = None
     best_score = -1
     for bus_idx in active_buses.index:
+        if allowed is not None and bus_idx not in allowed:
+            continue
         vn_kv = active_buses.at[bus_idx, "vn_kv"]
         conn = connectivity.get(bus_idx, 0)
         gen_mw = gen_at_bus.get(bus_idx, 0)
@@ -230,6 +245,21 @@ def select_slack_bus(net):
 
     if best_bus is not None and len(net.ext_grid) > 0:
         net.ext_grid.at[net.ext_grid.index[0], "bus"] = best_bus
+        # repair: the move may have taken a fragment's ONLY slack — give
+        # every viable slack-less component its own (same rule as
+        # fix_topology's multi_slack pass)
+        eg_buses = set(net.ext_grid.loc[net.ext_grid["in_service"], "bus"].astype(int))
+        for comp in nx.connected_components(mg):
+            if len(comp) < 2 or comp & eg_buses:
+                continue
+            slack_bus = None
+            if not net.gen.empty:
+                gens = net.gen[net.gen["bus"].isin(comp) & net.gen["in_service"]]
+                if not gens.empty:
+                    slack_bus = int(gens.sort_values("max_p_mw", ascending=False).iloc[0]["bus"])
+            if slack_bus is None:
+                slack_bus = int(next(iter(comp)))
+            pp.create_ext_grid(net, bus=slack_bus, vm_pu=1.0, name="comp_slack")
 
     return best_bus
 
@@ -321,6 +351,58 @@ def fix_topology(net, multi_slack=False):
         diag["n_active_buses"] = int(net.bus["in_service"].sum())
 
     return diag
+
+
+def radialize_band(net, lo_kv: float = 60.0, hi_kv: float = 140.0) -> dict:
+    """EXPERIMENT (PLAN_66KV M5): open in-band loops to mimic the
+    normally-open radial operation of the sub-transmission network.
+
+    The physical 66 kV network is meshed but operated radially via
+    normally-open points whose positions are not public. Proxy rule:
+    per connected component of the in-band corridor graph, keep the
+    minimum-spanning tree on electrical distance (x·length/parallel —
+    the low-impedance backbone a planner would keep closed) and switch
+    every non-tree corridor out of service. Parallel circuits between
+    the same bus pair are ONE corridor (opened/kept together); opening
+    only tree complements can never disconnect a bus.
+
+    Opt-in only (``build_and_solve(radialize_band_kv=...)``): adopted or
+    rejected purely on the measured flow correlation.
+
+    Returns {"n_band_corridors", "n_opened", "n_lines_opened"}.
+    """
+    import networkx as nx
+
+    vn = net.bus["vn_kv"]
+    pair_lines: dict[tuple, list] = {}
+    pair_w: dict[tuple, float] = {}
+    for idx in net.line.index:
+        if not bool(net.line.at[idx, "in_service"]):
+            continue
+        fb = int(net.line.at[idx, "from_bus"])
+        tb = int(net.line.at[idx, "to_bus"])
+        if not (lo_kv <= float(vn.get(fb, 0)) < hi_kv):
+            continue
+        par = max(int(net.line.at[idx, "parallel"] or 1), 1)
+        w = (float(net.line.at[idx, "x_ohm_per_km"])
+             * float(net.line.at[idx, "length_km"]) / par)
+        key = (min(fb, tb), max(fb, tb))
+        pair_lines.setdefault(key, []).append(idx)
+        pair_w[key] = min(w, pair_w.get(key, float("inf")))
+
+    G = nx.Graph()
+    for (a, b), w in pair_w.items():
+        G.add_edge(a, b, weight=w)
+    keep = {tuple(sorted(e))
+            for e in nx.minimum_spanning_edges(G, weight="weight", data=False)}
+    opened_pairs = [k for k in pair_lines if k not in keep]
+    n_lines = 0
+    for k in opened_pairs:
+        for idx in pair_lines[k]:
+            net.line.at[idx, "in_service"] = False
+            n_lines += 1
+    return {"n_band_corridors": len(pair_lines),
+            "n_opened": len(opened_pairs), "n_lines_opened": n_lines}
 
 
 def reduce_to_backbone(net, min_kv=154.0, min_keep_buses=20):
@@ -450,15 +532,10 @@ def balance_power_by_zone(net, demand_config):
             continue
         cap = (net.gen.loc[gmask, "max_p_mw"]
                if "max_p_mw" in net.gen.columns else net.gen.loc[gmask, "p_mw"])
-        if "type" in net.gen.columns and net.gen.loc[gmask, "type"].notna().any():
-            avail = cap * net.gen.loc[gmask, "type"].map(_dispatch_cf)
-        else:
-            avail = cap.astype(float)
-        total_avail = float(avail.sum())
-        if total_avail <= 0:
-            continue
-        p = avail * (zload * (1 + reserve) / total_avail)
-        net.gen.loc[gmask, "p_mw"] = p.clip(upper=cap)
+        # stack-fill within the zone (same rule as balance_power's default):
+        # the proportional rule left demand-heavy zones under-generated even
+        # when nameplate sufficed — the west-island co-factor.
+        _stack_dispatch(net, gmask, cap.astype(float), zload * (1 + reserve))
 
 
 def prune_dc_infeasible(net, angle_threshold=45.0):
@@ -563,13 +640,62 @@ def _dispatch_cf(fuel) -> float:
     return _DISPATCH_CF.get(tokens[0], _DEFAULT_CF) if tokens else _DEFAULT_CF
 
 
-def balance_power(net, demand_config):
-    """Match generation to load with merit-order (capacity-factor) dispatch.
+# Stack-fill merit order: energy-limited sources are must-run at their
+# capacity factor; everything else fills to NAMEPLATE in cost order until
+# the demand target is met (the marginal unit runs partial). Mirrors how
+# a high-load operating point is actually dispatched — the proportional
+# rule capped Tokyo-bay LNG at a uniform ~59% while the measured p95
+# corridors imply near-full output (新京葉線 model 2,233 vs measured
+# 4,910 MW; ledger 2026-06-11 entry 20).
+_MUST_RUN = {"solar", "wind", "hydro"}
+_MERIT_RANK = {"nuclear": 0, "geothermal": 1, "biomass": 2, "waste": 2,
+               "coal": 3, "gas": 4, "lng": 4, "oil": 6}
+_DEFAULT_RANK = 5
 
-    Each generator's available output is max_p_mw x its fuel's typical
-    capacity factor; the fleet is scaled to the demand target on that
-    basis (clipped at nameplate). Falls back to uniform scaling when the
-    builder did not provide fuel types (``type`` column).
+
+def _merit_rank(fuel) -> int:
+    tokens = [t.strip().lower() for t in str(fuel or "").split(";") if t.strip()]
+    return _MERIT_RANK.get(tokens[0], _DEFAULT_RANK) if tokens else _DEFAULT_RANK
+
+
+def _stack_dispatch(net, active, cap, target_gen) -> None:
+    fuels = (net.gen.loc[active, "type"] if "type" in net.gen.columns
+             else None)
+    if fuels is None or not fuels.notna().any():
+        # no fuel info: degenerate to proportional-at-nameplate
+        total = float(cap.sum())
+        if total > 0:
+            net.gen.loc[active, "p_mw"] = cap * min(target_gen / total, 1.0)
+        return
+    is_must = fuels.map(lambda f: str(f or "").split(";")[0].strip().lower()
+                        in _MUST_RUN)
+    must_p = cap[is_must] * fuels[is_must].map(_dispatch_cf)
+    must_total = float(must_p.sum())
+    if must_total >= target_gen > 0:
+        # renewables alone exceed the target: curtail proportionally
+        net.gen.loc[active, "p_mw"] = 0.0
+        net.gen.loc[must_p.index, "p_mw"] = must_p * (target_gen / must_total)
+        return
+    net.gen.loc[must_p.index, "p_mw"] = must_p
+    remaining = target_gen - must_total
+    therm = cap[~is_must]
+    order = sorted(therm.index,
+                   key=lambda i: (_merit_rank(fuels.loc[i]), -float(therm.loc[i])))
+    for i in order:
+        p = min(float(therm.loc[i]), max(remaining, 0.0))
+        net.gen.at[i, "p_mw"] = p
+        remaining -= p
+    # remaining > 0 (fleet short of target) is honest: the slack absorbs it
+
+
+def balance_power(net, demand_config, mode: str = "stack"):
+    """Match generation to load with merit-order dispatch.
+
+    mode="stack" (default): must-run renewables at capacity factor, then
+    thermal units fill to NAMEPLATE in cost order until the target is
+    met — the high-load operating point the validation compares against.
+    mode="proportional": the previous rule (CF-weighted proportional
+    scaling, clipped at nameplate), kept for A/B comparison.
     """
     if len(net.load) == 0:
         return
@@ -598,6 +724,9 @@ def balance_power(net, demand_config):
         active = net.gen["in_service"]
         cap = (net.gen.loc[active, "max_p_mw"]
                if "max_p_mw" in net.gen.columns else net.gen.loc[active, "p_mw"])
+        if mode == "stack":
+            _stack_dispatch(net, active, cap.astype(float), target_gen)
+            return
         if "type" in net.gen.columns and net.gen.loc[active, "type"].notna().any():
             avail = cap * net.gen.loc[active, "type"].map(_dispatch_cf)
         else:

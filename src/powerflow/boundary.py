@@ -151,7 +151,8 @@ def _partner_centroid(partner_region: str, data_dir: str | None = None):
 
 def _find_boundary_buses(net, official_name: str, partner_region: str,
                          min_kv: float, spread_km: float,
-                         data_dir: str | None = None):
+                         data_dir: str | None = None,
+                         corridor_stats: dict | None = None):
     """Return ([(bus_idx, weight)], method) for one interconnection end."""
     active = net.bus[net.bus["in_service"]]
 
@@ -189,10 +190,35 @@ def _find_boundary_buses(net, official_name: str, partner_region: str,
                 break
         else:
             clusters.append([i])
-    w = 1.0 / len(clusters)
     reps = [min(cl, key=lambda i: _haversine_km(*coords[i], *cent))
             for cl in clusters]
-    return [(i, w) for i in reps], f"position({len(reps)} corridors)"
+    # Per-corridor measured weighting: an equal split over-feeds the
+    # corridors that really carry little and starves the heavy ones —
+    # the validation signature was 阿武隈線 (Iwaki side) over-routed
+    # ~3x while 新栃木線 ran at half its measured flow. When the
+    # caller provides measured per-line statistics, each cluster is
+    # weighted by the flow its own incident named corridor actually
+    # carries (fallback: equal split, disclosed via the method string).
+    weights = None
+    if corridor_stats and net is not None:
+        ws = []
+        for rep in reps:
+            stat = 0.0
+            inc = net.line[((net.line["from_bus"] == rep)
+                            | (net.line["to_bus"] == rep))
+                           & net.line["in_service"]]
+            for raw in inc["name"].astype(str):
+                for part in raw.replace(" / ", ";").split(";"):
+                    stat = max(stat, corridor_stats.get(_norm(part), 0.0))
+            ws.append(stat)
+        if sum(ws) > 0:
+            weights = [w / sum(ws) for w in ws]
+    if weights is None:
+        weights = [1.0 / len(reps)] * len(reps)
+        method = f"position({len(reps)} corridors, equal)"
+    else:
+        method = f"position({len(reps)} corridors, measured-weighted)"
+    return list(zip(reps, weights)), method
 
 
 def _fc_buses(net, converters: list[dict], min_kv: float,
@@ -230,7 +256,8 @@ def load_interconnections(yaml_path: str | None = None) -> list[dict]:
 def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
                            utilisation: dict | None = None,
                            spread_km: float = 75.0,
-                           data_dir: str | None = None) -> dict:
+                           data_dir: str | None = None,
+                           corridor_stats: dict | None = None) -> dict:
     """Inject every interconnection touching *region* at its boundary.
 
     Returns a summary dict {ic_id: {mw, bus_names, method}} plus totals;
@@ -269,7 +296,7 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
         else:
             buses, method = _find_boundary_buses(
                 net, official, partner, min_kv=min_kv, spread_km=spread_km,
-                data_dir=data_dir)
+                data_dir=data_dir, corridor_stats=corridor_stats)
         if not buses:
             summary["ics"][icid] = {"mw": 0.0, "bus_names": [],
                                     "method": "UNPLACED"}

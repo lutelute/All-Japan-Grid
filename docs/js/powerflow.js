@@ -34,11 +34,15 @@
         showOtherFreq: false,
     };
 
-    // ── Real-route tier config (500/275 kV loaded eagerly; lower kV on demand) ──
+    // ── Real-route tier config ──
+    // 500/275/154 kV load eagerly (154 is the sub-transmission backbone the
+    // 66 kV programme targets — PLAN_66KV); 110/77/66 stay on-demand for
+    // payload, but user toggles now PERSIST across mode switches instead of
+    // being force-unchecked (the "66 kV disappeared" report, 2026-06-11).
     var ROUTE_TIERS = [
         { kv: 500, file: "routes_500kv.geojson", zIdx: 444, col: "#cc0000", wt: 3.5, eager: true  },
         { kv: 275, file: "routes_275kv.geojson", zIdx: 443, col: "#0044cc", wt: 2.5, eager: true  },
-        { kv: 154, file: "routes_154kv.geojson", zIdx: 442, col: "#007733", wt: 1.6, eager: false },
+        { kv: 154, file: "routes_154kv.geojson", zIdx: 442, col: "#007733", wt: 1.6, eager: true  },
         { kv: 110, file: "routes_110kv.geojson", zIdx: 441, col: "#885500", wt: 1.2, eager: false },
         { kv: 77,  file: "routes_77kv.geojson",  zIdx: 440, col: "#660077", wt: 1.0, eager: false },
         { kv: 66,  file: "routes_66kv.geojson",  zIdx: 439, col: "#334455", wt: 0.8, eager: false },
@@ -82,10 +86,12 @@
             window.map.removeLayer(pfState.ringLayer);
             pfState.ringLayer = null;
         }
-        // Reset lower-tier checkboxes
-        [154, 110, 77, 66].forEach(function(kv) {
+        // NOTE: tier checkboxes are deliberately NOT reset — checked lower
+        // tiers (110/77/66) reload below so the layers survive mode/region
+        // switches (they used to vanish silently: 2026-06-11 user report).
+        [110, 77, 66].forEach(function(kv) {
             var cb = document.getElementById("pf-tier-" + kv);
-            if (cb) cb.checked = false;
+            if (cb && cb.checked) setTimeout(function() { pfLoadTier(kv); }, 0);
         });
     }
 

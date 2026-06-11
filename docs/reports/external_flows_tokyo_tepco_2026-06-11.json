@@ -3,9 +3,9 @@
  "backbone_kv": 154.0,
  "load_spatial": "none",
  "quantile": 0.95,
- "n_measured_lines": 179,
- "n_model_named_lines": 192,
- "n_matched": 55,
+ "n_measured_lines": 719,
+ "n_model_named_lines": 346,
+ "n_matched": 90,
  "boundary_corridors_excluded": [
   "南いわき幹線",
   "新いわき線"
@@ -13,62 +13,71 @@
  "boundary_calibration": {
   "ic_002": 0.572972972972973
  },
- "spearman_rho": 0.669,
- "spearman_p": 2.41e-08,
- "median_model_over_measured": 0.65,
- "interior_spearman_rho": 0.659,
- "interior_spearman_p": 8.32e-08,
- "interior_median_model_over_measured": 0.65,
+ "spearman_rho": 0.506,
+ "spearman_p": 3.66e-07,
+ "median_model_over_measured": 0.86,
+ "interior_spearman_rho": 0.492,
+ "interior_spearman_p": 1.11e-06,
+ "interior_median_model_over_measured": 0.86,
+ "trunk_spearman_rho": 0.696,
+ "trunk_spearman_p": 1.84e-09,
+ "trunk_median_model_over_measured": 0.8,
+ "kv154_spearman_rho": -0.001,
+ "kv154_spearman_p": 0.997,
+ "kv154_median_model_over_measured": 1.51,
+ "n_interior_trunk": 57,
+ "n_interior_154": 31,
+ "n_interior_66": 0,
  "top_mismatches": [
   {
-   "line": "新京葉線",
-   "measured_p95_mw": 4910.0,
-   "model_dc_mw": 2233.0
+   "line": "西町線",
+   "measured_p95_mw": 8.0,
+   "model_dc_mw": 3601.0
   },
   {
-   "line": "新栃木線",
-   "measured_p95_mw": 4090.0,
-   "model_dc_mw": 1858.0
+   "line": "北千代田線",
+   "measured_p95_mw": 138.0,
+   "model_dc_mw": 3290.0
   },
   {
-   "line": "港北線",
-   "measured_p95_mw": 2420.0,
-   "model_dc_mw": 192.0
+   "line": "田端線",
+   "measured_p95_mw": 138.0,
+   "model_dc_mw": 3290.0
   },
   {
-   "line": "新袖ヶ浦線",
-   "measured_p95_mw": 4690.0,
-   "model_dc_mw": 2857.0
+   "line": "笹目線",
+   "measured_p95_mw": 270.0,
+   "model_dc_mw": 3023.0
   },
   {
-   "line": "新新田線",
-   "measured_p95_mw": 2890.0,
-   "model_dc_mw": 1103.0
+   "line": "北千葉線",
+   "measured_p95_mw": 2670.0,
+   "model_dc_mw": 4860.0
   },
   {
-   "line": "新所沢線",
-   "measured_p95_mw": 3090.0,
-   "model_dc_mw": 1344.0
+   "line": "東京東線",
+   "measured_p95_mw": 550.0,
+   "model_dc_mw": 2575.0
   },
   {
-   "line": "南狭山線",
-   "measured_p95_mw": 2180.0,
-   "model_dc_mw": 456.0
-  },
-  {
-   "line": "東京西線",
-   "measured_p95_mw": 2460.0,
-   "model_dc_mw": 781.0
-  },
-  {
-   "line": "新多摩線",
-   "measured_p95_mw": 2610.0,
-   "model_dc_mw": 1028.0
+   "line": "桜ヶ丘線",
+   "measured_p95_mw": 2124.0,
+   "model_dc_mw": 101.0
   },
   {
    "line": "東京北線",
    "measured_p95_mw": 600.0,
-   "model_dc_mw": 2094.0
+   "model_dc_mw": 2611.0
+  },
+  {
+   "line": "港北線",
+   "measured_p95_mw": 2420.0,
+   "model_dc_mw": 532.0
+  },
+  {
+   "line": "新京葉線",
+   "measured_p95_mw": 4910.0,
+   "model_dc_mw": 3088.0
   }
  ]
 }

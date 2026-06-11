@@ -111,7 +111,7 @@ def test_merit_order_dispatch_by_fuel():
     pp.create_load(net, bus=b, p_mw=1000.0, q_mvar=100.0)
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="solar")
-    balance_power(net, {"reserve_margin": 0.05})
+    balance_power(net, {"reserve_margin": 0.05}, mode="proportional")
     p_gas = float(net.gen.at[0, "p_mw"])
     p_solar = float(net.gen.at[1, "p_mw"])
     assert p_gas + p_solar == pytest.approx(1050.0, rel=1e-6)
@@ -134,7 +134,7 @@ def test_balance_power_uniform_without_fuel_types():
     pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1500.0)
     net.gen["type"] = None
     from src.powerflow.transforms import balance_power
-    balance_power(net, {"reserve_margin": 0.05})
+    balance_power(net, {"reserve_margin": 0.05}, mode="proportional")
     assert float(net.gen.at[0, "p_mw"]) == pytest.approx(float(net.gen.at[1, "p_mw"]))
     assert float(net.gen["p_mw"].sum()) == pytest.approx(1050.0, rel=1e-6)
 
@@ -168,6 +168,307 @@ def test_junction_buses_receive_no_load():
     assert (loaded_types == "b").all()      # all demand on real substations
 
 
+def _measured_net():
+    """3 named substations; 庚申塚 split across two voltage classes."""
+    net = pp.create_empty_network(f_hz=50)
+    pp.create_bus(net, vn_kv=154.0, name="庚申塚変電所 154kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="庚申塚変電所 66kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="角筈変電所 66kV", type="b")
+    pp.create_bus(net, vn_kv=66.0, name="不在変電所 66kV", type="b")
+    return net
+
+
+def test_measured_loads_pin_buses_and_residual_fills_rest():
+    """M3 placement: name-matched subs get the measured statistic as an
+    absolute load on their LOWEST >=50 kV bus; the synthetic rule fills
+    only the residual on the remaining buses; the regional total holds."""
+    net = _measured_net()
+    cfg = {"regional_peak_demand_mw": {"tokyo": 200.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {154: 0.3, 66: 0.5}}
+    measured = {"庚申塚": {"q50": 46.0, "p95": 80.0},
+                "角筈": {"q50": 38.0, "p95": 60.0},
+                "別地域": {"q50": 999.0, "p95": 999.0}}   # no such bus
+    total = estimate_loads(net, "tokyo", demand_config=cfg,
+                           measured_bus_loads=measured)
+    assert total == pytest.approx(200.0)
+
+    by_name = {net.load.at[i, "name"]: net.load.loc[i]
+               for i in net.load.index}
+    pinned = by_name["measured_庚申塚"]
+    assert float(pinned["p_mw"]) == pytest.approx(80.0)     # p95 default
+    assert int(pinned["bus"]) == 1                          # 66 kV bus wins
+    assert float(by_name["measured_角筈"]["p_mw"]) == pytest.approx(60.0)
+    # residual 200-140=60 lands on the unmatched buses only
+    synth = net.load[~net.load["name"].astype(str).str.startswith("measured_")]
+    assert float(synth["p_mw"].sum()) == pytest.approx(60.0)
+    assert 1 not in set(synth["bus"]) and 2 not in set(synth["bus"])
+
+
+def test_cable_lines_get_xlpe_parameters(tmp_path):
+    """OSM power=cable -> is_cable -> XLPE reference parameters (~1/3 the
+    overhead X). The builder resolves kind per line (M5-3)."""
+    import json as _json
+
+    from src.converter.line_parameters import get_line_parameters
+    from src.powerflow.snapped_topology import build_network_snapped
+
+    oh = get_line_parameters(66, 50)
+    cb = get_line_parameters(66, 50, kind="cable")
+    assert cb["x_ohm_per_km"] == pytest.approx(0.11)
+    assert cb["x_ohm_per_km"] < oh["x_ohm_per_km"] / 3
+    # class without a cable entry falls back to overhead values
+    fb = get_line_parameters(187, 50, kind="cable")
+    assert fb["x_ohm_per_km"] == get_line_parameters(187, 50)["x_ohm_per_km"]
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"name": "甲変電所", "voltage": "66000"},
+         "geometry": {"type": "Point", "coordinates": [139.60, 35.50]}},
+        {"type": "Feature", "properties": {"name": "乙変電所", "voltage": "66000"},
+         "geometry": {"type": "Point", "coordinates": [139.70, 35.55]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "地中線", "voltage": "66000", "power": "cable"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.60, 35.50], [139.70, 35.55]]}},
+    ]}
+    d = tmp_path / "cdata"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(_json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(_json.dumps(lines))
+    net = build_network_snapped("testreg", data_dir=str(d))
+    cab = [ln for ln in net.transmission_lines if "_xfmr_" not in ln.id]
+    assert len(cab) == 1 and cab[0].is_cable is True
+
+    from src.converter.pandapower_builder import PandapowerBuilder
+    pp_net = PandapowerBuilder().build(net).net
+    row = pp_net.line.iloc[0]
+    assert float(row["x_ohm_per_km"]) == pytest.approx(0.11)
+
+
+def test_population_factors_voronoi_assignment(tmp_path):
+    """Census mesh cells weight the residual allocation: each cell's
+    population goes to its nearest delivery bus (M5-2). Mesh code
+    53394525 decodes to ~(35.69, 139.69) — Shinjuku."""
+    from src.powerflow.load_estimator import (
+        _load_mesh_population,
+        population_factors,
+    )
+
+    rows = [
+        "KEY_CODE,HTKSYORI,HTKSAKI,GASSAN,T001140001",
+        ",,,,人口（総数）",
+        "53394525,0,,,30000",       # ~(35.69, 139.69)
+        "54401234,0,,,10000",       # far north-east (~36.4, 140.2)
+        "5339,0,,,999999",          # aggregate row -> ignored
+    ]
+    (tmp_path / "tblT001140S5339.txt").write_bytes(
+        ("\n".join(rows) + "\n").encode("cp932"))
+
+    cells = _load_mesh_population(str(tmp_path))
+    assert len(cells) == 2
+    la, lo, p = cells[0]
+    assert p == 30000.0
+    assert la == pytest.approx(35.6938, abs=0.01)
+    assert lo == pytest.approx(139.6938, abs=0.01)
+
+    net = pp.create_empty_network(f_hz=50)
+    import json as _json
+    b_tokyo = pp.create_bus(net, vn_kv=66.0, name="新宿変電所", type="b")
+    net.bus.at[b_tokyo, "geo"] = _json.dumps(
+        {"type": "Point", "coordinates": [139.70, 35.69]})
+    b_north = pp.create_bus(net, vn_kv=66.0, name="北変電所", type="b")
+    net.bus.at[b_north, "geo"] = _json.dumps(
+        {"type": "Point", "coordinates": [140.2, 36.4]})
+
+    f = population_factors(net, mesh_dir=str(tmp_path))
+    # bounded tilt 0.5 + 0.5*pop/mean (mean = 20000): 30000 -> 1.25,
+    # 10000 -> 0.75 — population tilts, never replaces, the class rule
+    assert f[b_tokyo] == pytest.approx(1.25)
+    assert f[b_north] == pytest.approx(0.75)
+    # fail-soft: empty dir -> {} (allocator falls back)
+    assert population_factors(net, mesh_dir=str(tmp_path / "none")) == {}
+
+
+def test_radialize_band_opens_highest_impedance_loop_edge():
+    """M5 experiment transform: a 66 kV triangle keeps its 2 lowest-
+    impedance corridors (MST) and opens the heaviest one — parallel
+    circuits on the opened corridor go out together; out-of-band loops
+    are untouched; no bus is disconnected."""
+    from src.powerflow.transforms import radialize_band
+
+    net = pp.create_empty_network(f_hz=50)
+    b = [pp.create_bus(net, vn_kv=66.0) for _ in range(3)]
+    hv = [pp.create_bus(net, vn_kv=275.0) for _ in range(3)]
+    pp.create_ext_grid(net, bus=b[0], vm_pu=1.0)
+
+    def line(f, t, x, n=1, **kw):
+        return pp.create_line_from_parameters(
+            net, f, t, length_km=1.0, r_ohm_per_km=0.1, x_ohm_per_km=x,
+            c_nf_per_km=0.0, max_i_ka=1.0, parallel=n, **kw)
+
+    line(b[0], b[1], x=0.1)
+    line(b[1], b[2], x=0.2)
+    heavy1 = line(b[2], b[0], x=0.9)
+    heavy2 = line(b[2], b[0], x=0.9)          # parallel circuit, same corridor
+    hv_loop = [line(hv[0], hv[1], x=0.1), line(hv[1], hv[2], x=0.1),
+               line(hv[2], hv[0], x=0.1)]      # 275 kV ring stays closed
+
+    info = radialize_band(net, lo_kv=60.0, hi_kv=140.0)
+    assert info["n_band_corridors"] == 3
+    assert info["n_opened"] == 1 and info["n_lines_opened"] == 2
+    assert not net.line.at[heavy1, "in_service"]
+    assert not net.line.at[heavy2, "in_service"]
+    assert all(net.line.at[i, "in_service"] for i in hv_loop)
+    # connectivity preserved on the 66 kV layer
+    import networkx as nx
+    G = nx.Graph((int(net.line.at[i, "from_bus"]), int(net.line.at[i, "to_bus"]))
+                 for i in net.line.index if net.line.at[i, "in_service"]
+                 and net.bus.at[int(net.line.at[i, "from_bus"]), "vn_kv"] < 140)
+    assert nx.is_connected(G.subgraph(b))
+
+
+def test_ybus_gate_passes_sane_net_and_fails_pathological():
+    """The shipping gate (M8): a healthy 2-bus net passes; a chain of
+    absurd-ratio low-impedance transformers (the west failure mode)
+    drives the condition estimate up by orders of magnitude."""
+    from src.powerflow.ybus_gate import ybus_gate
+
+    net = pp.create_empty_network(f_hz=50, sn_mva=100)
+    b1 = pp.create_bus(net, vn_kv=154.0, name="甲")
+    b2 = pp.create_bus(net, vn_kv=154.0, name="乙")
+    pp.create_ext_grid(net, bus=b1, vm_pu=1.0)
+    pp.create_line_from_parameters(net, b1, b2, length_km=10.0,
+                                   r_ohm_per_km=0.05, x_ohm_per_km=0.38,
+                                   c_nf_per_km=9.0, max_i_ka=1.0)
+    g = ybus_gate(net)
+    assert g["pass"] is True and g["n_islands"] == 1
+    assert g["islands"][0]["has_ext_grid"] is True
+    base_cond = g["cond_max"]
+
+    # graft a pathological chain: tiny-impedance trafos in series
+    prev = b2
+    for _ in range(3):
+        nxt = pp.create_bus(net, vn_kv=66.0)
+        pp.create_transformer_from_parameters(
+            net, hv_bus=prev, lv_bus=nxt, sn_mva=10000.0,
+            vn_hv_kv=154, vn_lv_kv=66, vkr_percent=0.0001,
+            vk_percent=0.01, pfe_kw=0, i0_percent=0.0)
+        prev = nxt
+    g2 = ybus_gate(net)
+    assert g2["cond_max"] > base_cond * 1e3   # conditioning collapses
+    assert ybus_gate(net, threshold=g2["cond_max"] / 10)["pass"] is False
+
+
+def test_corridor_subtree_calibration_conserves_measured_flow():
+    """Demand state estimation from flows (ledger 48): a measured
+    corridor pins its load-subtree total via conservation. Inner
+    corridors calibrate first and stay fixed; measured_* pins are never
+    rescaled; subtrees needing absurd scales are skipped."""
+    from src.powerflow.flow_calibration import corridor_subtree_calibration
+
+    net = pp.create_empty_network(f_hz=50)
+    hv = pp.create_bus(net, vn_kv=275.0, name="基幹")
+    b = [pp.create_bus(net, vn_kv=66.0, name=f"b{i}") for i in range(4)]
+    pp.create_ext_grid(net, bus=hv, vm_pu=1.0)
+    pp.create_transformer_from_parameters(
+        net, hv_bus=hv, lv_bus=b[0], sn_mva=300, vn_hv_kv=275, vn_lv_kv=66,
+        vkr_percent=0.4, vk_percent=10, pfe_kw=0, i0_percent=0.0)
+
+    def line(f, t, name):
+        return pp.create_line_from_parameters(
+            net, f, t, length_km=2.0, r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+            c_nf_per_km=0.0, max_i_ka=1.0, name=name)
+
+    line(b[0], b[1], "外幹線")       # outer corridor: feeds b1+b2+b3
+    line(b[1], b[2], "中支線")       # inner corridor: feeds b2+b3
+    line(b[2], b[3], "末端線")       # innermost: feeds b3
+    l1 = pp.create_load(net, bus=b[1], p_mw=10.0, q_mvar=1.0)
+    l2 = pp.create_load(net, bus=b[2], p_mw=10.0, q_mvar=1.0)
+    pp.create_load(net, bus=b[3], p_mw=5.0, q_mvar=0.5,
+                   name="measured_末端")   # pinned, never rescaled
+
+    info = corridor_subtree_calibration(
+        net, {"末端線": 5.0, "中支線": 25.0, "外幹線": 60.0})
+    # 末端線's subtree holds only the pin (nothing free to scale) -> the
+    # other two corridors calibrate; conservation still holds throughout
+    assert info["n_calibrated"] == 2
+    # 末端線 subtree {b3}: pinned 5 == measured 5, nothing to scale
+    assert float(net.load.at[net.load.index[-1], "p_mw"]) == pytest.approx(5.0)
+    # 中支線 subtree {b2,b3}: target 25 - fixed 5 -> l2 scales 10 -> 20
+    assert float(net.load.at[l2, "p_mw"]) == pytest.approx(20.0)
+    # 外幹線 subtree {b1,b2,b3}: target 60 - fixed 25 -> l1 10 -> 35
+    assert float(net.load.at[l1, "p_mw"]) == pytest.approx(35.0)
+    # Q scales with P (power factor preserved)
+    assert float(net.load.at[l1, "q_mvar"]) == pytest.approx(3.5)
+
+
+def test_corridor_calibration_skips_meshed_and_overscale():
+    from src.powerflow.flow_calibration import corridor_subtree_calibration
+
+    net = pp.create_empty_network(f_hz=50)
+    hv = pp.create_bus(net, vn_kv=275.0)
+    b = [pp.create_bus(net, vn_kv=66.0) for _ in range(3)]
+    pp.create_ext_grid(net, bus=hv, vm_pu=1.0)
+    pp.create_transformer_from_parameters(
+        net, hv_bus=hv, lv_bus=b[0], sn_mva=300, vn_hv_kv=275, vn_lv_kv=66,
+        vkr_percent=0.4, vk_percent=10, pfe_kw=0, i0_percent=0.0)
+
+    def line(f, t, name):
+        pp.create_line_from_parameters(
+            net, f, t, length_km=1.0, r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+            c_nf_per_km=0.0, max_i_ka=1.0, name=name)
+
+    line(b[0], b[1], "環線")
+    line(b[1], b[2], "環線二")
+    line(b[2], b[0], "環線三")          # ring: cutting one edge never splits
+    l = pp.create_load(net, bus=b[1], p_mw=1.0, q_mvar=0.1)
+    info = corridor_subtree_calibration(net, {"環線": 50.0})
+    assert info["meshed_or_isolated"] == 1 and info["n_calibrated"] == 0
+    assert float(net.load.at[l, "p_mw"]) == pytest.approx(1.0)  # untouched
+
+
+def test_measured_loads_eponym_corridor_tier():
+    """A measured yard absent from the model by name is placed at the
+    endpoint of its eponymous corridor (塚田線 -> 塚田; ledger 47). An
+    endpoint belonging to ANOTHER measured yard does not qualify."""
+    import json as _json
+
+    net = pp.create_empty_network(f_hz=50)
+    b_src = pp.create_bus(net, vn_kv=66.0, name="下総変電所 66kV", type="b")
+    b_dst = pp.create_bus(net, vn_kv=66.0, name="無名変電所 66kV", type="b")
+    for b, lon in ((b_src, 140.0), (b_dst, 140.05)):
+        net.bus.at[b, "geo"] = _json.dumps(
+            {"type": "Point", "coordinates": [lon, 35.7]})
+    pp.create_line_from_parameters(net, b_src, b_dst, length_km=4.0,
+                                   r_ohm_per_km=0.1, x_ohm_per_km=0.4,
+                                   c_nf_per_km=0.0, max_i_ka=1.0,
+                                   name="塚田線")
+    cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {66: 0.5}}
+    measured = {"下総": {"p95": 40.0}, "塚田": {"p95": 25.0}}
+    estimate_loads(net, "tokyo", demand_config=cfg,
+                   measured_bus_loads=measured)
+    by_name = {net.load.at[i, "name"]: int(net.load.at[i, "bus"])
+               for i in net.load.index
+               if str(net.load.at[i, "name"]).startswith("measured_")}
+    assert by_name["measured_下総"] == b_src          # name tier
+    assert by_name["measured_塚田"] == b_dst          # eponym-corridor tier
+
+
+def test_measured_loads_capped_at_regional_target():
+    net = _measured_net()
+    cfg = {"regional_peak_demand_mw": {"tokyo": 100.0}, "load_factor": 1.0,
+           "power_factor": 0.95, "voltage_weights": {154: 0.3, 66: 0.5}}
+    measured = {"庚申塚": 90.0, "角筈": 110.0}    # bare-MW form, sum 200
+    total = estimate_loads(net, "tokyo", demand_config=cfg,
+                           measured_bus_loads=measured)
+    assert total == pytest.approx(100.0)
+    meas = net.load[net.load["name"].astype(str).str.startswith("measured_")]
+    assert float(meas["p_mw"].sum()) == pytest.approx(100.0)  # scaled 0.5
+    assert sorted(meas["p_mw"]) == pytest.approx([45.0, 55.0])
+
+
 def test_balance_power_by_zone_scales_each_zone_to_its_own_load():
     """Island-wide scaling starves demand-heavy zones (the historical west
     failure mode); the per-zone variant dispatches each zone's fleet to its
@@ -191,3 +492,46 @@ def test_balance_power_by_zone_scales_each_zone_to_its_own_load():
     assert float(net.gen.at[0, "p_mw"]) == pytest.approx(800.0)
     # chugoku covers exactly its own load + reserve
     assert float(net.gen.at[1, "p_mw"]) == pytest.approx(105.0)
+
+
+def test_stack_dispatch_fills_merit_order_to_nameplate():
+    """The default stack mode: must-run renewables at CF, then thermal
+    units fill to NAMEPLATE cheapest-first; the marginal unit is partial.
+    (This is the fix for the uniform-59%-LNG distortion — measured
+    interior rho 0.659 -> 0.721, magnitude ratio 0.65 -> 0.79.)"""
+    from src.powerflow.transforms import balance_power
+
+    net = pp.create_empty_network(f_hz=50)
+    b = pp.create_bus(net, vn_kv=275.0)
+    pp.create_ext_grid(net, bus=b, vm_pu=1.0)
+    pp.create_load(net, bus=b, p_mw=2000.0, q_mvar=200.0)
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="solar")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="coal")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=2000.0, type="gas")
+    pp.create_gen(net, bus=b, p_mw=0.0, vm_pu=1.0, max_p_mw=1000.0, type="oil")
+    balance_power(net, {"reserve_margin": 0.05})        # stack is default
+    # target 2100: solar must-run 150 (CF .15), coal fills 1000,
+    # gas (next merit) covers 950 partial, oil stays cold
+    assert float(net.gen.at[0, "p_mw"]) == pytest.approx(150.0)
+    assert float(net.gen.at[1, "p_mw"]) == pytest.approx(1000.0)
+    assert float(net.gen.at[2, "p_mw"]) == pytest.approx(950.0)
+    assert float(net.gen.at[3, "p_mw"]) == pytest.approx(0.0)
+
+
+def test_demand_config_from_occto(tmp_path):
+    """Measured-demand option: regional targets become OCCTO area stats
+    (actual MW, load_factor forced to 1.0), provenance recorded."""
+    import json
+    from src.powerflow.load_estimator import demand_config_from_occto
+
+    stats = {"area_demand_mw": {
+        a: {"median": 1000.0 + i, "p95": 2000.0 + i}
+        for i, a in enumerate(["北海道", "東北", "東京", "中部", "北陸",
+                               "関西", "中国", "四国", "九州", "沖縄"])}}
+    p = tmp_path / "occto.json"
+    p.write_text(json.dumps(stats), encoding="utf-8")
+    cfg = demand_config_from_occto(str(p), quantile="p95")
+    assert cfg["load_factor"] == 1.0
+    assert cfg["regional_peak_demand_mw"]["tokyo"] == 2002.0
+    assert cfg["regional_peak_demand_mw"]["okinawa"] == 2009.0
+    assert "occto:p95" in cfg["_demand_source"]

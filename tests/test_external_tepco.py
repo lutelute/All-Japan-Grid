@@ -117,6 +117,88 @@ def test_position_tier_attaches_renamed_facility(tepco_csv, tmp_path):
     assert m["pair_unattached"] <= 1   # only 葛南 may remain
 
 
+def test_adjacency_tier_attaches_via_unnamed_final_segment(tmp_path):
+    """OSM segments corridors under changing names: 東京南線 ends at 中継,
+    and an UNNAMED segment continues 中継 -> 葛南 (the official metering
+    yard, ~10 km from the named endpoints, far beyond pos_km). The model
+    wiring is electrically continuous, so the graph-adjacency tier
+    counts the (葛南, 東京南線) pair as attached (ledger 38: 108/184
+    distance-cases were exactly 1 hop)."""
+    header = ",".join([
+        "日時", "葛南(変) - 東京南線1･2L",
+    ])
+    csvp = tmp_path / "jisseki.csv"
+    csvp.write_bytes((header + "\n").encode("cp932"))
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "京浜変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.60, 35.50]}},
+        {"type": "Feature",
+         "properties": {"name": "中継変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.90, 35.80]}},
+        {"type": "Feature",
+         "properties": {"name": "葛南変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.00, 35.90]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "東京南線", "voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.60, 35.50], [139.90, 35.80]]}},
+        {"type": "Feature",     # unnamed final approach into 葛南
+         "properties": {"voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[139.90, 35.80], [140.00, 35.90]]}},
+    ]}
+    d = tmp_path / "data3"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(json.dumps(lines))
+
+    m = match_tepco("testreg", str(csvp), data_dir=str(d))
+    assert m["pair_attached_adjacent"] == 1
+    assert m["pair_unattached"] == 0
+    assert m["pair_recall"] == pytest.approx(1.0)
+
+
+def test_homonym_guard_reclassifies_distant_loose_match(tmp_path):
+    """A containment-matched line whose nearest end is tens of km from
+    the official sub is a homonym (南武's 中原線 vs one 88 km away), not
+    this yard's corridor — it must NOT pollute the 'present, not
+    attached' work list (ledger 39)."""
+    header = ",".join(["日時", "南武(変) - 中原線1･2L"])
+    csvp = tmp_path / "jisseki.csv"
+    csvp.write_bytes((header + "\n").encode("cp932"))
+
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "南武変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [139.65, 35.58]}},
+        {"type": "Feature",
+         "properties": {"name": "遠隔変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.55, 36.45]}},
+        {"type": "Feature",
+         "properties": {"name": "遠隔南変電所", "voltage": "275000"},
+         "geometry": {"type": "Point", "coordinates": [140.55, 36.35]}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",     # homonym ~120 km from 南武
+         "properties": {"name": "北中原線", "voltage": "275000"},
+         "geometry": {"type": "LineString",
+                      "coordinates": [[140.55, 36.45], [140.55, 36.35]]}},
+    ]}
+    d = tmp_path / "data4"
+    d.mkdir()
+    (d / "testreg_substations.geojson").write_text(json.dumps(subs))
+    (d / "testreg_lines.geojson").write_text(json.dumps(lines))
+
+    m = match_tepco("testreg", str(csvp), data_dir=str(d))
+    assert m["pair_homonym_guarded"] == 1
+    assert m["pair_unattached"] == 0
+    assert any("homonym guard" in s for s in m["missing_pairs"])
+
+
 def test_railway_only_names_are_excluded(tmp_path):
     subs = {"type": "FeatureCollection", "features": [
         {"type": "Feature", "properties": {"name": "京浜変電所", "voltage": "275000"},
@@ -157,3 +239,35 @@ def test_flow_stats_sums_circuit_groups_takes_max_end(tmp_path):
     stats = tepco_flow_stats(str(p), q=1.0)   # q=1 -> max
     # 京浜 end: 100+50=150, 200+100=300 -> 300 ; 葛南 end: 250 -> keep 300
     assert stats == {"A線": 300.0}
+
+
+def test_model_name_keys_expands_osm_variants():
+    """OSM naming diverges by composition (ledger 33): compound names,
+    circuit suffixes, from~to segments and parenthetical aliases must
+    all land on the disclosure key. Measured on the 154 kV files:
+    14 of 65 pure-154 corridors were recoverable only via variants."""
+    from src.validation.external_tepco import _model_name_keys
+
+    assert "中沢線" in _model_name_keys("中沢線3・4L")
+    assert "京浜線" in _model_name_keys("京浜線3,4号線")
+    assert _model_name_keys("北葛飾線/野田線") == ["北葛飾線", "野田線"]
+    assert "北駿線" in _model_name_keys("小山町~北駿線")
+    keys = _model_name_keys("坂戸川越線(只見幹線)")
+    assert "坂戸川越線" in keys and "只見幹線" in keys
+    assert {"大倉山線", "北島線"} <= set(_model_name_keys("大倉山線1・2L、北島線"))
+    # NFKC + NT alias unify the two spellings of the same corridor
+    assert _model_name_keys("千葉NT線") == ["千葉ニュータウン線"]
+
+
+def test_flow_stats_collapses_metering_sections(tmp_path):
+    """佐久間東幹線(中)/(山) are metering sections of one corridor —
+    they collapse to the corridor key, max keeps the loaded section."""
+    rows = [
+        "日時,佐久(変) - 東幹線(中)1･2L,佐久(変) - 東幹線(山)1･2L",
+        "2024年04月01日 00時,340,120",
+    ]
+    p = tmp_path / "flows.csv"
+    p.write_bytes(("\n".join(rows) + "\n").encode("cp932"))
+
+    from src.validation.external_tepco import tepco_flow_stats
+    assert tepco_flow_stats(str(p), q=1.0) == {"東幹線": 340.0}

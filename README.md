@@ -60,7 +60,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 
 - 📏 **Externally validated against utility ground truth — a first.** The model is now scored
   against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:
-  corridor-usage rank correlation **Spearman ρ = 0.707** (55 trunk lines, p=1.6e-09),
+  corridor-usage rank correlation **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09),
   substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
   [docs/reports/](docs/reports/) and the full source survey in
   [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
@@ -70,7 +70,7 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
   (region-aware cut: ≥154 kV mainland, 66 kV floor for hokkaido whose grid IS its 66 kV
   layer) gives the cleaner planning view with generator Q-limits enforced
   (`ajgrid solve <region> [--backbone]`). The interior flow correlation (boundary
-  corridors measured-conditioned and excluded) is **ρ = 0.659**.
+  corridors measured-conditioned and excluded) is **ρ = 0.721**.
 - 🏗 **Multi-voltage substations + evidence-based connectivity.** One bus per voltage class with
   intra-substation transformers (cross-voltage LINES are no longer swallowed — kansai recovers
   +759 real lines); OSM `circuits`/`cables` tags drive parallel counts; corridor voltage
@@ -79,6 +79,11 @@ OSM由来のトポロジが実在の送電インフラと一致することを�
 - 🔌 **Merit-order dispatch & boundary imports.** Fuel-specific capacity factors replace uniform
   scaling, and OCCTO interconnection flows are injected at regional boundaries (a regional slice
   is not an island) — both adopted because they measurably improved the TEPCO flow correlation.
+- 🗄 **`data/*.geojson` are now DB-derived artifacts.** The unified database
+  (`ajgrid db ingest` → `data/grid.db`) is the source of truth; the published GeoJSON is
+  regenerated from it with per-field provenance markers (`"_src:capacity_mw": "p03_db"`),
+  so authoritative values (国土数値情報 P03) ride in the public files WITHOUT breaking the
+  mechanical-update loop — re-ingest preserves their sources (regression-pinned).
 - 🧭 **OSM case studies** ([docs/reports/](docs/reports/2026-06-10_fable5_osm_case_studies.md)):
   kansai (map density ≠ electrical usability), hokuriku (attribute gaps break connectivity),
   tokyo (attachment correctness is the residual) — measured teaching examples for OSM-based
@@ -332,7 +337,7 @@ OSM が提供するのは送電網の **地理的** 骨格です。実用的な�
 4. **Japanese name normalization / 日本語名称の正規化** — `変電所`, `発電所`, `開閉所` have multiple orthographies (kanji/kana/abbreviation). Fuzzy matching is essential.
 5. **Null diversity / Null値の多様性** — OSM features may have `voltage=null`, `voltage=""`, `voltage="yes"`, or no voltage tag at all. Robust parsing must handle all cases.
 6. **Regional scope & name resolution / 地域スコープと名称解決** — The same substation name can appear in multiple regions. Name-based matching must be scoped to the correct region.
-7. **AC power flow on OSM topology is a consistency tool, not an operational study / OSMトポロジの交流潮流は整合性検証の道具であり運用解析ではない** — With synthetic per-class impedances, CF-based dispatch and allocated demand, the solved flows now rank-correlate with utility measurements (interior Spearman ρ≈0.66 vs TEPCO, 2026-06) — useful for topology/consistency work and teaching, but absolute MW/voltage values are NOT operational results until authoritative parameters (Pillar 3) replace the typicals.
+7. **AC power flow on OSM topology is a consistency tool, not an operational study / OSMトポロジの交流潮流は整合性検証の道具であり運用解析ではない** — With synthetic per-class impedances, CF-based dispatch and allocated demand, the solved flows now rank-correlate with utility measurements (interior Spearman ρ≈0.46 vs TEPCO across 419 corridors incl. the 66 kV layer, 2026-06-11; trunk-only ρ≈0.60) — useful for topology/consistency work and teaching, but absolute MW/voltage values are NOT operational results until authoritative parameters (Pillar 3) replace the typicals.
 
 ### Known Data Quality Issues — Substation / Plant Classification / データ品質の既知の問題 — 変電所・発電所の分類混在
 
@@ -380,6 +385,30 @@ python scripts/audit_substation_plant_overlap.py --fix
 > **Note / 注意:** Category A and B are **upstream OSM data issues**. Fixing them in our dataset would diverge from the source. Category C tag errors are corrected by `--fix` because they are unambiguous input mistakes. The audit results are saved to `data/audit/substation_plant_overlap.json` for downstream consumers.
 >
 > カテゴリ A・B は **OSM 上流のデータ問題** です。本データセットで修正するとソースとの乖離が生じます。カテゴリ C のタグ誤りは明確な入力ミスであるため `--fix` で修正します。監査結果は `data/audit/substation_plant_overlap.json` に保存され、下流で参照可能です。
+
+
+### 66 kV Programme — Verdict & Ceiling / 66kV級プログラムの到達点と天井（2026-06-11）
+
+A measured campaign (ledger ㉛–㊺, `docs/PLAN_66KV.md`) pushed the model to solve **meaningfully down to 66 kV** and instrumented it against TEPCO's per-line disclosure. Where it landed, honestly:
+
+| Layer / 層 | Attachment recall / 接続再現 | Flow rank-corr ρ / 流れ順位相関 | Gate / 目標 |
+|---|---|---|---|
+| Trunk (275 kV+) | 60.8% (n=286) | **0.60** (n=74) | — |
+| 154 kV | 61.3% (n=137) | 0.11 (n=36, n.s.) | 0.40 — **not reached / 未達** |
+| 66 kV | 53.1% (n=634) | **0.14** (n=307, p=0.017) | 0.30 — **not reached / 未達** |
+| All interior / 全体 | 56.3% (n=1,057) | **0.46** (p≈1e-23) | 0.50 — not reached / 未達 |
+
+**What works / 達成**: full-model AC converges in all 10 regions with the 66 kV layer in; a measured demand map (1,222 substations / 19 GW from disclosure busbar columns) and per-corridor flow statistics live in the DB (`measured_bus_loads` / `measured_line_stats`, `scripts/db/calibrate.py`) and recalibrate with one command; the validation instruments (3-layer ρ, banded attachment recall with graph-adjacency tier) ship in the standard sweep.
+
+**Why the gates were not reached — a data-bound ceiling, each point evidenced in `docs/reports/IMPROVEMENT_LOG.md` / 未達の理由は手法でなくデータの天井**:
+
+1. **OSM lacks the urban underground network** — 20 of 65 pure-154 kV corridors (central-Tokyo cables) are unmapped, capping the 154 kV instrument at n≈36–45 (ledger ㉝). / 都心地中ケーブル網がOSM未収載
+2. **A corridor's flow aggregates several downstream yards** — the line/busbar metering points are linkable (44% of 66 kV corridors connect to a measured destination yard by the eponym rule, 塚田線→塚田; ledger ㊼ correcting ㊲'s overstated 'disjoint yards'), but the corridor typically carries ~2.6× its destination's own demand, so single-yard demand knowledge orders flows only weakly (truth-side ρ≈0.25). / 回廊流量は複数下流ヤードの合算（行先1件の需要では順序づけ困難）
+3. **Normally-open switch states are not public** — the 66 kV mesh is operated radially; an impedance-MST proxy measurably did not help (ledger ㊷). / 常開点非公開（プロキシ実験は無効果と実証）
+
+Sub-transmission flows where demand WAS measured reach ρ≈0.19 (vs 0.11 without) — demand knowledge helps, but the structural ceiling sits below the gates until the data above exists (ledger ㊵).
+
+**Regional expansion / 他地域への展開**: the per-line flow validation is Tokyo-only (TEPCO is the only utility publishing per-line hourly series found so far). East-Japan regions (Hokkaido/Tohoku) carry 95–98% voltage-tagged 66 kV layers and are structurally ready; Chubu/Kansai/Kyushu's 66 kV layers are heavily fragmented (largest-component cover 12–17%, ledger ㊶) and need connectivity curation before sub-transmission flows can mean anything there. Attachment-recall validation generalises wherever a utility publishes line names; flow-ρ validation needs per-line series.
 
 ## What This Data IS Good For / 本データの活用法
 

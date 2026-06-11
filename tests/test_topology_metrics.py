@@ -48,14 +48,17 @@ def test_okinawa_builder_pins(okinawa_topo):
     # phase-10c: corridor voltage propagation types untagged segments from
     # their unique neighbouring class (unknown 3.3% -> 1.1%), which also
     # merges former @u buses into their classes (75 real subs, 87 branches).
+    # 2026-06-11 tap snap (ledger 52): two dead-end stubs join their
+    # neighbouring span mid-air (junctions 16 -> 14, branches 87 -> 85,
+    # one merged parallel 32 -> 33) — the "bare polyline tee" fix.
     m = okinawa_topo
     assert m["builder"] == "snapped"
     assert m["n_real_subs"] == 75
-    assert m["n_junctions"] == 16
-    assert m["n_branches"] == 87
+    assert m["n_junctions"] == 14
+    assert m["n_branches"] == 85
     assert m["n_gens"] == 22
     assert m["n_components"] == 11
-    assert m["multi_circuit_branches"] == 32
+    assert m["multi_circuit_branches"] == 33
     assert m["max_parallel"] == 4
 
 
@@ -148,6 +151,33 @@ def test_compare_handles_missing_baseline_region():
     assert "no baseline" in out
 
 
+# ── external-flows sweep level (disclosure CSVs are local-only) ──────────────
+
+def test_external_flow_metrics_skips_unconfigured_region():
+    from src.validation.topology_metrics import external_flow_metrics
+    assert external_flow_metrics("okinawa") is None
+
+
+def test_render_and_compare_carry_external_flows():
+    row = _row("tokyo", 100, 0.06, True)
+    row["external_flows"] = {
+        "interior_spearman_rho": 0.473, "trunk_spearman_rho": 0.615,
+        "n_interior_trunk": 74, "kv154_spearman_rho": 0.089,
+        "n_interior_154": 36, "kv66_spearman_rho": 0.145,
+        "n_interior_66": 307,
+    }
+    out = render([row])
+    assert "flows vs disclosure" in out and "0.473" in out
+
+    base = [dict(row, external_flows=dict(row["external_flows"],
+                                          kv66_spearman_rho=0.112))]
+    diff = compare([row], base)
+    assert "kv66_spearman_rho: 0.112 -> 0.145" in diff
+    # rows without the level stay silent (CI has no disclosure CSVs)
+    plain = _row("tokyo", 100, 0.06, True)
+    assert "flows" not in render([plain])
+
+
 # ── full sweep (slow, opt-in) ────────────────────────────────────────────────
 
 @pytest.mark.skipif(not os.environ.get("AJGRID_SLOW_TESTS"),
@@ -165,3 +195,14 @@ def test_all_regions_solved_sweep():
         # but fragmentation must stay bounded and bridging a small minority.
         assert s["n_components"] <= 25, row["region"]
         assert s["synthetic_rate"] <= 0.20, row["region"]
+
+
+def test_no_silent_unsolved_buses_okinawa_and_hokkaido():
+    """Every in-service bus must carry a finite AC result. Pandas stats
+    skip NaN, which hid hokkaido's 758 slack-stranded buses behind a
+    'converged, vm 1.000' headline (ledger 25/26) — n_unsolved_buses
+    pins the honest count at zero."""
+    for region in ("okinawa", "hokkaido"):
+        s = solved_metrics(region)
+        assert s["ac_converged"] is True, region
+        assert s["n_unsolved_buses"] == 0, region
