@@ -48,14 +48,17 @@ def test_okinawa_builder_pins(okinawa_topo):
     # phase-10c: corridor voltage propagation types untagged segments from
     # their unique neighbouring class (unknown 3.3% -> 1.1%), which also
     # merges former @u buses into their classes (75 real subs, 87 branches).
+    # 2026-06-11 tap snap (ledger 52): two dead-end stubs join their
+    # neighbouring span mid-air (junctions 16 -> 14, branches 87 -> 85,
+    # one merged parallel 32 -> 33) — the "bare polyline tee" fix.
     m = okinawa_topo
     assert m["builder"] == "snapped"
     assert m["n_real_subs"] == 75
-    assert m["n_junctions"] == 16
-    assert m["n_branches"] == 87
+    assert m["n_junctions"] == 14
+    assert m["n_branches"] == 85
     assert m["n_gens"] == 22
     assert m["n_components"] == 11
-    assert m["multi_circuit_branches"] == 32
+    assert m["multi_circuit_branches"] == 33
     assert m["max_parallel"] == 4
 
 

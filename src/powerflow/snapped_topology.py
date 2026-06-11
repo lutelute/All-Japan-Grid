@@ -250,7 +250,7 @@ def _resolve_db(db):
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
-                          propagate_voltage=True, db=None):
+                          propagate_voltage=True, db=None, tap_snap_km=0.12):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -364,7 +364,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     _KV_RANK = {"unk": 0, "prop": 1, "tag": 2}
 
     def add_edge(a, b, seg, kv, path, parallel=1, evidence=None, name=None,
-                 kv_src="unk", cable_km=0.0):
+                 kv_src="unk", cable_km=0.0, tap=False):
         """Insert/merge an undirected edge, accumulating parallel circuits.
 
         Real grids run 2-4 parallel circuits between the same two nodes. The
@@ -389,10 +389,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             p = max(int(parallel), 1)  # an edge is at least one circuit
             adj[a][b] = {"len": seg, "kv": kv, "path": list(path), "parallel": p,
                          "ev": evidence, "name": name, "kv_src": kv_src,
-                         "cab": cable_km}
+                         "cab": cable_km, "tap": tap}
             adj[b][a] = {"len": seg, "kv": kv, "path": list(reversed(path)),
                          "parallel": p, "ev": evidence, "name": name,
-                         "kv_src": kv_src, "cab": cable_km}
+                         "kv_src": kv_src, "cab": cable_km, "tap": tap}
             return
         kv2 = max(cur["kv"], kv)
         par = cur["parallel"] + max(int(parallel), 0)
@@ -402,13 +402,15 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             else cur.get("kv_src", "unk")
         nm = cur.get("name") or name  # first real OSM name wins
         cab = max(cur.get("cab", 0.0), cable_km)  # any cable parallel marks it
+        tp = bool(cur.get("tap")) or tap
         if seg < cur["len"] or cur["len"] <= 0:
             # keep the shorter parallel connection's geometry, highest voltage
             adj[a][b] = {"len": seg, "kv": kv2, "path": list(path), "parallel": par,
-                         "ev": ev, "name": nm, "kv_src": ks, "cab": cab}
+                         "ev": ev, "name": nm, "kv_src": ks, "cab": cab,
+                         "tap": tp}
             adj[b][a] = {"len": seg, "kv": kv2, "path": list(reversed(path)),
                          "parallel": par, "ev": ev, "name": nm, "kv_src": ks,
-                         "cab": cab}
+                         "cab": cab, "tap": tp}
         else:
             for side in (cur, adj[b][a]):
                 side["kv"] = kv2
@@ -417,6 +419,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 side["name"] = nm
                 side["kv_src"] = ks
                 side["cab"] = cab
+                side["tap"] = tp
 
     lines_data = _layer("lines")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
@@ -479,6 +482,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     break
 
         # Pass B: map vertices to class-aware nodes and build edges.
+        tap_segs = []   # (node_a, node_b, latlon_a, latlon_b, kv) for tap snapping
         for coords, kv, circ, circ_src, osm_name, kv_src, is_cab in feat_cache:
             node_ids = []
             last = len(coords) - 1
@@ -521,9 +525,79 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
                          parallel=contrib, evidence=circ_src, name=osm_name,
                          kv_src=kv_src, cable_km=seg if is_cab else 0.0)
+                tap_segs.append((a, b, coords[j - 1], coords[j], kv))
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")
+
+    # Mid-span tap snap (user observation 2026-06-11: OSM ways are bare
+    # polylines — a tee whose terminal lands mid-span of the through
+    # line shares no node and LOOKS disconnected while being physically
+    # continuous; counted 201/196/89 such dead-ends in tokyo/chubu/
+    # kansai). A degree-1 junction within tap_snap_km of another
+    # same-class (or unknown-class) segment is joined to that segment's
+    # nearer endpoint; the edge is marked tap=True (prov "tap=snap") so
+    # the fabrication stays visible.
+    if tap_snap_km and tap_segs:
+        import math as _math
+
+        _KM = 111.32
+        cell = max(tap_snap_km * 2, 0.2)
+
+        def _xy(lat, lon):
+            return (lon * _KM * _math.cos(_math.radians(lat)), lat * _KM)
+
+        seg_grid = defaultdict(list)
+        for si, (a, b, p1, p2, kv) in enumerate(tap_segs):
+            # register the segment in EVERY cell its bbox touches — long
+            # spans between OSM vertices otherwise vanish from the search
+            x1, y1 = _xy(*p1)
+            x2, y2 = _xy(*p2)
+            for gx in range(int(min(x1, x2) // cell), int(max(x1, x2) // cell) + 1):
+                for gy in range(int(min(y1, y2) // cell),
+                                int(max(y1, y2) // cell) + 1):
+                    seg_grid[(gx, gy)].append(si)
+
+        n_taps = 0
+        for nid in [n for n in list(adj) if is_jct(n) and len(adj[n]) == 1]:
+            if nid not in jct_coord:
+                continue
+            nb = next(iter(adj[nid]))
+            own_kv = adj[nid][nb].get("kv", 0)
+            la, lo = jct_coord[nid]
+            px, py = _xy(la, lo)
+            cx, cy = int(px // cell), int(py // cell)
+            best = (None, tap_snap_km)
+            for gx in (cx - 1, cx, cx + 1):
+                for gy in (cy - 1, cy, cy + 1):
+                    for si in seg_grid.get((gx, gy), ()):
+                        a, b, p1, p2, kv = tap_segs[si]
+                        if nid in (a, b) or a in adj.get(nid, {})                                 or b in adj.get(nid, {}):
+                            continue
+                        # BOTH classes must be known and equal: tapping
+                        # via an unknown-class segment fused a 154/66
+                        # crossing in the multivoltage regression — the
+                        # exact hazard the class stacks exist to prevent
+                        if not (own_kv > 0 and abs(own_kv - kv) <= 1):
+                            continue
+                        ax, ay = _xy(*p1)
+                        bx, by = _xy(*p2)
+                        dx, dy = bx - ax, by - ay
+                        l2 = dx * dx + dy * dy
+                        t = 0.0 if l2 == 0 else max(
+                            0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / l2))
+                        qx, qy = ax + t * dx, ay + t * dy
+                        d = _math.hypot(px - qx, py - qy)
+                        if d < best[1]:
+                            tgt = a if t < 0.5 else b
+                            best = ((tgt, p1 if t < 0.5 else p2), d)
+            if best[0] is None:
+                continue
+            tgt, tgt_ll = best[0]
+            add_edge(nid, tgt, max(best[1], 0.01), own_kv or 0,
+                     [(la, lo), tuple(tgt_ll)], parallel=1, evidence=None,
+                     name=None, kv_src="unk", cable_km=0.0, tap=True)
+            n_taps += 1
 
     # Collapse degree-2 junction chains into single branches.
     changed = True
@@ -563,7 +637,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 del adj[n]
                 add_edge(a, b, la + lb, kv, path_ab, parallel=par, evidence=ev,
                          name=nm, kv_src=ks,
-                         cable_km=ea.get("cab", 0.0) + eb.get("cab", 0.0))
+                         cable_km=ea.get("cab", 0.0) + eb.get("cab", 0.0),
+                         tap=bool(ea.get("tap")) or bool(eb.get("tap")))
                 changed = True
 
     # Optionally drop degree-1 junction stubs (dead-ends).
@@ -684,7 +759,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             med_cable = edge.get("cab", 0.0) > 0.5 * length
             prov = (f"conn={kind_a}-{kind_b};circuits={edge.get('ev') or 'geom'};"
                     f"kv={edge.get('kv_src', 'unk')}"
-                    + (";med=cable" if med_cable else ""))
+                    + (";med=cable" if med_cable else "")
+                    + (";tap=snap" if edge.get("tap") else ""))
             try:
                 net.add_transmission_line(TransmissionLine(
                     id=f"{region}_line_{k}",
