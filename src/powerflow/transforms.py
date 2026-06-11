@@ -589,6 +589,18 @@ def scale_line_ratings(net):
     disproportionate power.  Scale max_i_ka and trafo sn_mva so that
     the network is physically feasible.
     """
+    # Non-physical elements first (ledger 65): intra-substation stubs,
+    # reconnection bridges and tap-snap joints are yard/model connections,
+    # not conductors — a thermal rating on them is fiction, and under AC
+    # redistribution they showed up as the west island's 1632% "overload".
+    # They get a non-binding rating so the loading KPI reflects REAL lines.
+    if len(net.line) > 0:
+        names = net.line["name"].astype(str)
+        nonphys = (names.str.contains("intra-substation")
+                   | names.str.startswith("recon_line")
+                   | (net.line["length_km"] <= 0.06))
+        net.line.loc[nonphys, "max_i_ka"] = 100.0
+
     # Quick in-place DC to estimate flows (rundcpp writes only res_*; inputs intact)
     try:
         pp.rundcpp(net)
