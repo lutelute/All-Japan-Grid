@@ -96,7 +96,9 @@ function legendHTML() {
     <span class="sw" style="background:#27ae60"></span>&lt;50
     <span class="sw" style="background:#f1c40f"></span>50–80
     <span class="sw" style="background:#e67e22"></span>80–100
-    <span class="sw" style="background:#c0392b"></span>&gt;100`;
+    <span class="sw" style="background:#c0392b"></span>&gt;100<br>
+    <span class="sw" style="background:#8e44ad"></span>変圧器（異電圧接続）
+    <span class="sw" style="background:#999;opacity:.5"></span>合成線（破線）`;
 }
 
 async function render() {
@@ -116,6 +118,10 @@ async function render() {
         style: f => {
           const p = f.properties;
           const v = mode === "diff" ? p.dloading : p.loading_pct;
+          if (p.trafo) return {        // 変圧器 = 異電圧接続（OSM線の置換）
+            color: mode === "diff" ? divColor(v, 50) : "#8e44ad",
+            weight: 2.2, opacity: .8, dashArray: "2 5",
+          };
           return {
             color: mode === "diff" ? divColor(v, 50) : ldColor(v),
             weight: p.tie ? 4 : (mode === "diff" && v != null && Math.abs(v) > 10 ? 3 : 1.4),
@@ -128,6 +134,7 @@ async function render() {
           l.bindTooltip(
             `${p.name}<br>loading ${p.loading_pct}% / p ${p.p_mw} MW` +
             (p.dloading != null ? `<br>Δloading ${p.dloading > 0 ? "+" : ""}${p.dloading}pp` : "") +
+            (p.trafo ? "<br><b>変圧器</b>（異電圧接続 — OSM線の潮流モデル上の置換）" : "") +
             (p.tie ? "<br><b>地域間tie線</b>" : ""), { sticky: true });
         },
       }).addTo(map);
