@@ -121,8 +121,19 @@ def main() -> int:
     month = args.date.replace("-", "")[:6]
 
     # ── 1. UC ──
-    print(f"UC求解中... ({args.scenario})")
-    scn = build_national_scenario(scenario=args.scenario)
+    # --date がシナリオの代表日と異なる場合は差し替えて構築する
+    # （閑散日検証: 例 2025-08-10日曜 — 経済停止=ティルトの効果は
+    # ピーク日では見えにくく、軽負荷日に現れる）
+    from src.uc.scenario import load_scenario_config
+    cfg = load_scenario_config(args.scenario)
+    rep = cfg.demand_profile_ref.get("representative_day")
+    if rep and rep != args.date:
+        cfg.demand_profile_ref["representative_day"] = args.date
+        (cfg.raw.setdefault("demand", {})
+            .setdefault("profile_ref", {}))["representative_day"] = args.date
+        print(f"代表日を差し替え: {rep} → {args.date}")
+    print(f"UC求解中... ({args.scenario} @ {args.date})")
+    scn = build_national_scenario(scenario=cfg)
     uc = solve_uc(scn.to_uc_parameters())
     print(f"  {uc.status}")
     if not uc.is_optimal:

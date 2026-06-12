@@ -1,7 +1,7 @@
 {
   "meta": {
     "date": "2026-06-12",
-    "git_head": "58ab3fb",
+    "git_head": "ce4592e",
     "scenario": "fy2025r1",
     "validation_date": "2025-08-06",
     "companies": [
@@ -29,10 +29,10 @@
           "shape_corr": null
         },
         "coal": {
-          "uc_mwh": 57605.5,
+          "uc_mwh": 55169.5,
           "measured_mwh": 31150.5,
-          "diff_mwh": 26455.0,
-          "shape_corr": 0.575
+          "diff_mwh": 24019.0,
+          "shape_corr": 0.176
         },
         "oil": {
           "uc_mwh": 0.0,
@@ -71,19 +71,19 @@
           "shape_corr": -0.561
         },
         "pumped_hydro": {
-          "uc_mwh": 1507.6,
+          "uc_mwh": 0.0,
           "measured_mwh": 512.5,
-          "diff_mwh": 995.1,
-          "shape_corr": 0.414
+          "diff_mwh": -512.5,
+          "shape_corr": null
         },
         "battery": {
-          "uc_mwh": 768.6,
+          "uc_mwh": 509.1,
           "measured_mwh": -50.0,
-          "diff_mwh": 818.6,
-          "shape_corr": 0.269
+          "diff_mwh": 559.1,
+          "shape_corr": 0.184
         }
       },
-      "share_l1_pp": 47.86,
+      "share_l1_pp": 48.74,
       "curtailment_mwh": {
         "solar": 0.0,
         "wind": 0.0
@@ -100,16 +100,16 @@
           "shape_corr": null
         },
         "lng": {
-          "uc_mwh": 20622.9,
+          "uc_mwh": 25469.6,
           "measured_mwh": 111424.0,
-          "diff_mwh": -90801.1,
-          "shape_corr": 0.562
+          "diff_mwh": -85954.4,
+          "shape_corr": 0.654
         },
         "coal": {
-          "uc_mwh": 212064.0,
+          "uc_mwh": 212005.1,
           "measured_mwh": 148589.5,
-          "diff_mwh": 63474.5,
-          "shape_corr": null
+          "diff_mwh": 63415.6,
+          "shape_corr": 0.269
         },
         "oil": {
           "uc_mwh": 0.0,
@@ -151,10 +151,10 @@
           "uc_mwh": 148.8,
           "measured_mwh": -53.0,
           "diff_mwh": 201.8,
-          "shape_corr": 0.025
+          "shape_corr": -0.116
         }
       },
-      "share_l1_pp": 61.4,
+      "share_l1_pp": 58.84,
       "curtailment_mwh": {
         "solar": 0.0,
         "wind": 0.0
@@ -165,10 +165,10 @@
       "demand_measured_mwh": 1076789.0,
       "per_fuel": {
         "lng": {
-          "uc_mwh": 547112.0,
+          "uc_mwh": 539524.2,
           "measured_mwh": 574299.5,
-          "diff_mwh": -27187.5,
-          "shape_corr": 0.95
+          "diff_mwh": -34775.3,
+          "shape_corr": 0.96
         },
         "coal": {
           "uc_mwh": 238128.0,
@@ -177,10 +177,10 @@
           "shape_corr": null
         },
         "oil": {
-          "uc_mwh": 1830.8,
+          "uc_mwh": 2593.7,
           "measured_mwh": 52562.0,
-          "diff_mwh": -50731.2,
-          "shape_corr": -0.054
+          "diff_mwh": -49968.3,
+          "shape_corr": -0.237
         },
         "hydro": {
           "uc_mwh": 36331.2,
@@ -210,10 +210,10 @@
           "uc_mwh": 186.0,
           "measured_mwh": 105.0,
           "diff_mwh": 81.0,
-          "shape_corr": -0.041
+          "shape_corr": -0.135
         }
       },
-      "share_l1_pp": 13.61,
+      "share_l1_pp": 14.08,
       "curtailment_mwh": {
         "solar": 0.0,
         "wind": 0.0
@@ -337,13 +337,13 @@
           "shape_corr": 0.462
         },
         "battery": {
-          "uc_mwh": 257.2,
+          "uc_mwh": 185.5,
           "measured_mwh": -18.0,
-          "diff_mwh": 275.2,
-          "shape_corr": 0.155
+          "diff_mwh": 203.5,
+          "shape_corr": 0.054
         }
       },
-      "share_l1_pp": 41.09,
+      "share_l1_pp": 41.07,
       "curtailment_mwh": {
         "solar": 0.0,
         "wind": 0.0
@@ -352,12 +352,12 @@
   },
   "summary": {
     "l1_pp_by_region": {
-      "hokkaido": 47.86,
-      "tohoku": 61.4,
-      "tokyo": 13.61,
+      "hokkaido": 48.74,
+      "tohoku": 58.84,
+      "tokyo": 14.08,
       "hokuriku": 33.27,
-      "shikoku": 41.09
+      "shikoku": 41.07
     },
-    "l1_pp_mean": 39.45
+    "l1_pp_mean": 39.2
   }
 }
