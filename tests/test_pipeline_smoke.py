@@ -37,11 +37,11 @@ def test_build_info_shape(okinawa_solved):
     # binding keeps out-of-radius mid-vertices as junction buses instead
     # of fusing them into substations (89 -> 102 buses, 79 -> 92 lines).
     # 2026-06-12 name-evidence tip binding (ledger 91): named tips join
-    # their substations, absorbing stub junctions (102 -> 97 buses,
-    # 92 -> 85 lines; unknown-kv tips stay out per the own>0 guard) and adding two class nodes' trafos (14 -> 16).
+    # their substations, absorbing stub junctions (102 -> 96 buses,
+    # 92 -> 84 lines; ledger 98: name-claimed class adoption joins one more tip) and adding two class nodes' trafos (14 -> 16).
     assert info["topology"] == "snapped"
-    assert info["n_buses"] == 97
-    assert info["n_lines"] == 85
+    assert info["n_buses"] == 96
+    assert info["n_lines"] == 84
     assert info["n_gens"] == 22
     assert info["n_trafos"] == 16
 
@@ -50,7 +50,7 @@ def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 97
+    assert len(net_ac.bus) == 96
     vmin = float(net_ac.res_bus.vm_pu.min())
     # 0.647 measured: voltage propagation typed the northern 66 kV spur
     # that previously hid at an inferred higher class — honest sag on an

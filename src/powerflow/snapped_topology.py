@@ -888,9 +888,15 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 continue
             own = edge.get("kv", 0) or 0
             if own <= 0:
-                continue   # class unknown — binding into a 0-class node
-                # reproduces the west transformer pathology (same guard
-                # as the lead-in block)
+                # class unknown — adopt the CLAIMED substation's class as
+                # name-derived grade evidence (緑区~川尻線 46-node fragment:
+                # the name asserts both endpoints AND their 66 kV context;
+                # ledger 98). unknown->unknown stays forbidden — binding
+                # into a 0-class node reproduces the west transformer
+                # pathology (the lead-in guard).
+                own = sub_info[best_c].get("own_cls") or 0
+                if own <= 0:
+                    continue
             si_ = sub_info[best_c]
             if multi_voltage:
                 sub_classes[best_c].add(own)

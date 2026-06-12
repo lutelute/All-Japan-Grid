@@ -86,8 +86,12 @@ def _run_bulk(args, grid, cell):
     n = args.bulk
     spath = f"data/{args.region}_lines_supplement.geojson"
     sub_path = f"data/{args.region}_substations_supplement.geojson"
+    plant_path = f"data/{args.region}_plants_supplement.geojson"
     existing = {"type": "FeatureCollection", "features": []}
     sub_existing = {"type": "FeatureCollection", "features": []}
+    plant_existing = {"type": "FeatureCollection", "features": []}
+    if os.path.exists(plant_path):
+        plant_existing = json.load(open(plant_path, encoding="utf-8"))
     have_ids = set()
     sub_have = set()
     if os.path.exists(spath):
@@ -126,7 +130,8 @@ def _run_bulk(args, grid, cell):
             q = (f'[out:json][timeout:180];(way({bb})'
                  f'["power"~"^(line|cable)$"];'
                  f'way({bb})["power"="substation"];'
-                 f'node({bb})["power"="substation"];);out tags geom;')
+                 f'node({bb})["power"="substation"];'
+                 f'way({bb})["power"="plant"];);out tags geom;')
             ok = False
             for attempt in (1, 2):
                 r = subprocess.run(
@@ -150,7 +155,8 @@ def _run_bulk(args, grid, cell):
             for e in els:
                 wid = e.get("id")
                 tags_ = e.get("tags") or {}
-                if tags_.get("power") == "substation":
+                if tags_.get("power") in ("substation", "plant"):
+                    is_plant = tags_.get("power") == "plant"
                     if wid in sub_have or wid in seen_ids:
                         continue
                     seen_ids.add(wid)
@@ -175,7 +181,8 @@ def _run_bulk(args, grid, cell):
                                    "supplement_fetched": today,
                                    "supplement_source":
                                        "overpass bulk bbox (I3)"})
-                    sub_existing["features"].append(
+                    target = plant_existing if is_plant else sub_existing
+                    target["features"].append(
                         {"type": "Feature", "properties": props_,
                          "geometry": geom_s})
                     sub_have.add(wid)
@@ -215,6 +222,8 @@ def _run_bulk(args, grid, cell):
         json.dump(existing, f, ensure_ascii=False)
     with open(sub_path, "w", encoding="utf-8") as f:
         json.dump(sub_existing, f, ensure_ascii=False)
+    with open(plant_path, "w", encoding="utf-8") as f:
+        json.dump(plant_existing, f, ensure_ascii=False)
     print(f"{spath}: bulk +{added} (total {len(existing['features'])})")
     print(f"{sub_path}: +{sub_added} substations "
           f"(total {len(sub_existing['features'])})")

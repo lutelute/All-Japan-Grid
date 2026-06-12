@@ -59,16 +59,18 @@ def test_okinawa_builder_pins(okinawa_topo):
     # 2026-06-12 name-evidence tip binding (ledger 91): 「X変電所~Y変電所線」
     # names bind dead-end tips to the named yards — okinawa gains two
     # name-claimed substations back (74 -> 76 real subs), their joins
-    # absorb junction stubs (28 -> 21) and close fragments
-    # (10 -> 7 components; the own>0 guard keeps unknown-kv tips out); one more evidenced parallel merge lands a
+    # absorb junction stubs (28 -> 20) and close fragments
+    # (10 -> 6 components). Ledger 98: an unknown-kv tip may adopt the
+    # NAME-CLAIMED substation's class (unknown->unknown stays forbidden) —
+    # one more okinawa tip joins its named yard (21 -> 20 junctions); one more evidenced parallel merge lands a
     # 5-circuit corridor (35 -> 37 multi, max_parallel 4 -> 5).
     m = okinawa_topo
     assert m["builder"] == "snapped"
     assert m["n_real_subs"] == 76
-    assert m["n_junctions"] == 21
+    assert m["n_junctions"] == 20
     assert m["n_branches"] == 98
     assert m["n_gens"] == 22
-    assert m["n_components"] == 7
+    assert m["n_components"] == 6
     assert m["multi_circuit_branches"] == 37
     assert m["max_parallel"] == 5
 
