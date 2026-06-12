@@ -53,21 +53,24 @@ def test_okinawa_builder_pins(okinawa_topo):
     # one merged parallel 32 -> 33) — the "bare polyline tee" fix.
     # 2026-06-12 OSM-faithful binding ON by default (ledger 85): polygon-
     # first vertex binding + tip joint + explicit lead-ins replace the
-    # blind centroid radii. One falsely fused class node drops (75 -> 74
-    # real subs); out-of-radius mid-vertices stay junctions (14 -> 28)
-    # with their chains drawn (85 -> 98 branches); a tip joint closes one
-    # fragment pair (components 11 -> 10); two evidenced parallel merges
-    # (33 -> 35). Tokyo A/B: implicit wrong-binds 3,365 -> 0, trunk rho
-    # .615 -> .647, 154 kV rho .095 -> .215.
+    # blind centroid radii (74 real subs / 28 junctions / 98 branches /
+    # 10 components at that step; tokyo A/B: implicit wrong-binds
+    # 3,365 -> 0, trunk rho .615 -> .647, 154 kV rho .095 -> .215).
+    # 2026-06-12 name-evidence tip binding (ledger 91): 「X変電所~Y変電所線」
+    # names bind dead-end tips to the named yards — okinawa gains two
+    # name-claimed substations back (74 -> 76 real subs), their joins
+    # absorb junction stubs (28 -> 21) and close fragments
+    # (10 -> 7 components; the own>0 guard keeps unknown-kv tips out); one more evidenced parallel merge lands a
+    # 5-circuit corridor (35 -> 37 multi, max_parallel 4 -> 5).
     m = okinawa_topo
     assert m["builder"] == "snapped"
-    assert m["n_real_subs"] == 74
-    assert m["n_junctions"] == 28
+    assert m["n_real_subs"] == 76
+    assert m["n_junctions"] == 21
     assert m["n_branches"] == 98
     assert m["n_gens"] == 22
-    assert m["n_components"] == 10
-    assert m["multi_circuit_branches"] == 35
-    assert m["max_parallel"] == 4
+    assert m["n_components"] == 7
+    assert m["multi_circuit_branches"] == 37
+    assert m["max_parallel"] == 5
 
 
 def test_okinawa_quality_floors(okinawa_topo):
@@ -79,8 +82,11 @@ def test_okinawa_quality_floors(okinawa_topo):
     # lead-ins are evidence-less single-circuit edges by design, diluting
     # the share (measured 0.3855) without weakening the tag-driven counts.
     assert m["evidenced_circuit_share"] >= 0.38
-    # voltage provenance: propagation active, tags still dominate
-    assert m["kv_provenance"].get("prop", 0) >= 1
+    # voltage provenance: tags must dominate any inference. The okinawa
+    # prop count went 1 -> 0 at ledger 91 (the last untagged segment now
+    # joins via its name-claimed tip and merges into the tagged corridor,
+    # leaving nothing to propagate) — propagation itself stays covered by
+    # the multi-region builds; here we only pin tag dominance.
     assert m["kv_provenance"]["tag"] > m["kv_provenance"].get("prop", 0)
 
 

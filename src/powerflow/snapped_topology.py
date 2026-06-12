@@ -270,7 +270,7 @@ def _resolve_db(db):
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           polygon_bind=True, poly_edge_km=0.15,
                           fallback_snap_km=0.4, fallback_endpoint_km=0.6,
-                          tip_joint_km=0.12, leadin_km=1.5,
+                          tip_joint_km=0.12, leadin_km=1.5, name_bind_km=5.0,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12):
@@ -425,6 +425,55 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
     _DEG_KM = 102.0   # rough deg->km at Japanese latitudes (edge distances)
     _bind_cache = {}
+
+    # Name-evidence binding (ledger 91): OSM line names of the form
+    # 「X変電所~Y変電所線」 ASSERT the connection. In sparse-mapped terrain
+    # (Izu measured: ways stop 1.1-2.3 km short of the named yards) the
+    # geometry alone misses what the mapper stated — the old blind radius
+    # caught these by accident, the polygon binding lost them and the
+    # west-Izu chain sagged 0.89 -> 0.67. An UNBOUND terminal binds to a
+    # name-claimed substation when it is within ``name_bind_km``
+    # (exact normalized name match only — no substring guessing).
+    name_index: dict = {}
+    if polygon_bind and name_bind_km:
+        import unicodedata as _ud
+
+        def _nname(s):
+            s = _ud.normalize("NFKC", str(s or ""))
+            s = s.replace("ヶ", "ケ")
+            for suf in ("変電所", "変換所", "開閉所", "発電所"):
+                s = s.replace(suf, "")
+            return "".join(s.split())
+
+        for sid_, si_ in sub_info.items():
+            nm_ = _nname(si_["name"])
+            if nm_:
+                name_index.setdefault(nm_, []).append(sid_)
+
+        _claim_cache: dict = {}
+
+        def _name_claims(osm_name):
+            """Feature name -> substation ids it textually asserts."""
+            if not osm_name:
+                return ()
+            if osm_name in _claim_cache:
+                return _claim_cache[osm_name]
+            sids: list = []
+            for part in str(osm_name).replace(";", "/").split("/"):
+                stem = part.strip()
+                if stem.endswith("線"):
+                    stem = stem[:-1]
+                for tok in (stem.replace("〜", "~").replace("～", "~")
+                            .split("~")):
+                    nm_ = _nname(tok)
+                    if len(nm_) >= 2:
+                        sids.extend(name_index.get(nm_, ()))
+            out = tuple(dict.fromkeys(sids))
+            _claim_cache[osm_name] = out
+            return out
+    else:
+        def _name_claims(osm_name):   # noqa: ARG001
+            return ()
 
     def _bind_vertex(lat, lon, terminal):
         """Vertex -> substation binding: polygon first, small radius after."""
@@ -786,6 +835,53 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                      [(la, lo), ncoords[best_n]], parallel=1, evidence=None,
                      name=None, kv_src="unk", cable_km=0.0, tap=True)
             n_joints += 1
+
+    # Name-evidence lead-in (ledger 91, STRONGEST tip evidence): a degree-1
+    # tip whose incident edge is NAMED 「X変電所~Y変電所線」 binds to the
+    # nearest claimed substation within name_bind_km. Dead-end tips only —
+    # a first attempt bound ALL unbound feature terminals and mid-corridor
+    # segments named after their corridor short-circuited the trunk
+    # (tokyo trunk rho .666 -> .623); mid-span ends are degree>=2, so the
+    # tip restriction removes exactly that failure mode while keeping the
+    # sparse-mapped mountain chains (west Izu sagged 0.89 -> 0.67 without
+    # these connections; the mapper's name is the connection claim).
+    n_namebinds = 0
+    if name_bind_km and name_index:
+        for nid in [n for n in list(adj) if is_jct(n) and len(adj[n]) == 1]:
+            if nid not in jct_coord:
+                continue
+            nb = next(iter(adj[nid]))
+            edge = adj[nid][nb]
+            claimed = _name_claims(edge.get("name"))
+            if not claimed:
+                continue
+            la, lo = jct_coord[nid]
+            best_c, bd_c = None, name_bind_km
+            for csid in claimed:
+                si_ = sub_info[csid]
+                d = _haversine_km(la, lo, si_["lat"], si_["lon"])
+                if d < bd_c:
+                    best_c, bd_c = csid, d
+            if best_c is None:
+                continue
+            own = edge.get("kv", 0) or 0
+            if own <= 0:
+                continue   # class unknown — binding into a 0-class node
+                # reproduces the west transformer pathology (same guard
+                # as the lead-in block)
+            si_ = sub_info[best_c]
+            if multi_voltage:
+                sub_classes[best_c].add(own)
+                tgt = f"S|{best_c}|{own:g}"
+            else:
+                tgt = best_c
+            if tgt == nid or tgt in adj.get(nid, {}):
+                continue
+            add_edge(nid, tgt, max(bd_c, 0.02), own,
+                     [(la, lo), (si_["lat"], si_["lon"])], parallel=1,
+                     evidence=None, name="namebind", kv_src="unk",
+                     cable_km=0.0, tap=False)
+            n_namebinds += 1
 
     # Explicit lead-in (the honest replacement for the old blind radius):
     # OSM frequently ends a feeder at the last pole, 0.6-1.5 km short of
