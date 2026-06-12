@@ -6,6 +6,34 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 2026-06-10以降のエントリはモデル名の記録を必須とする。
 
 ---
+
+## 2026-06-12 — **Fable 5** — N7: MATPOWER仕様変換の確認 — 4島.matケース化+往復再ソルブ検証（78）
+
+- **ユーザー指示**「matpower仕様に変換もしくは自動変換できるかも確認」への回答=**可能・自動変換を実装**。
+  経路: 正準 `solve_island`(AC) → `to_mpc` → `canonical_mpc` → `.mat`(case v2)
+- **`canonical_mpc`** (`src/converter/matpower_exporter.py`): pandapower 3.x の `to_mpc` は
+  FACTS/DC表(bus_dc/svc/vsc…)と `internal` 簿記を同梱し loadcase の期待形と異なる →
+  正準5フィールド(baseMVA/version/bus/branch/gen)・loadcase入力幅(13/13/21列)へ剥離。
+  1始まり連番は to_mpc が保証済みを確認。MBASE の NaN は **MATPOWER仕様自身の
+  デフォルト「baseMVA」** を適用(沖縄実ケースで22件、捏造ではなく仕様準拠)
+- **基底の正直性修正**: 旧 meta.json は `base_mva: 100.0` と記載しつつ実 ppc は
+  sn_mva=1.0 基底だった(虚偽記載)。sn_mva=100 への再基底は結果不変(ΔVA~1e-6°実証)
+  を確認した上で再ソルブ→表と埋込VM/VAが一致する100 MVA基底で出力
+- **4島すべて往復検証 ok**(`.mat`→`from_mpc`→再ソルブ→元解と比較):
+  ΔVM max = hokkaido 9.0e-5 / east 1.4e-4 / west 6.6e-4 / okinawa 1.5e-6 pu、
+  ΔVA max = 0.09 / 0.50 / 0.60 / 0.002°。機械精度ではなく再インポート時の
+  モデル写像(shunt/trafo再構成)の量子化で、運用差≪1% — ケースファイルとして完全・可解
+- 規模: east 5,010バス/6,472枝/7,482gen、west 6,998/10,899/7,485(REF 72=成分毎
+  1スラック、MATPOWER合法)。gencost は**非出力**(費用を捏造しない —
+  runpf-ready/runopf非対応と meta に明記)。MATLAB実機での loadcase は未検証
+  (本機にMATLAB/Octaveなし)— 構造は loadcase 仕様に一致、from_mpc/loadmat で確認
+- 既存資産の役割分担を確認: `src/matpower/exporter.py`(gencost付きOPF用・psdat向け)
+  と `MATPOWERExporter`(汎用to_mpcラッパー)は健在のまま、国家出力は本経路に一本化
+- テスト9件新設(`tests/test_matpower_canonical.py`: 正準形・1始まり・解状態埋込・往復一致)。
+  **1086 passed / 3 skipped**
+- 副記録: D3変圧器ノードは関東コアbboxで245件取得成功(devices=並列バンク数タグは34件
+  と薄い)。フル東京bboxは Overpass 2連続失敗 — 次反復でタイル分割
+
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
