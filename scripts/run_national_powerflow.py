@@ -150,11 +150,44 @@ def export_region_slices(net, mode, region, geom):
         coords = geom.get(((round(flat, 5), round(flon, 5)), (round(tlat, 5), round(tlon, 5))))
         if not coords:
             coords = [[flon, flat], [tlon, tlat]]
+        else:
+            # 端点をバス代表座標へ吸着 — バス点はスナップクラスタの代表
+            # 座標でOSM実形状の端点から数kmズレうる(uc_map側PR #16と同じ
+            # 修正、台帳81で独立検証済み)。中間形状はOSMのまま
+            coords = [[flon, flat]] + list(coords)[1:-1] + [[tlon, tlat]]
         lines.append({"type": "Feature", "geometry": {"type": "LineString", "coordinates": coords},
                       "properties": {"name": name, "loading_pct": round(min(loading, 200), 1),
                                      "p_mw": round(p_mw, 1),
                                      "synthetic": name.startswith("recon_line"),
                                      "tie": name.startswith("tie_") or rf != rt}})
+    # 変圧器も線として描く — insert_transformers が異電圧バス間のOSM線を
+    # trafoに置換するため、描かないと下位網バスが「浮いて」見える
+    # (uc_map側PR #16の還流④。同一座標の構内trafoは描いても見えないので省く)
+    for idx in net.trafo.index:
+        if not net.trafo.at[idx, "in_service"]:
+            continue
+        hb = net.trafo.at[idx, "hv_bus"]; lb = net.trafo.at[idx, "lv_bus"]
+        rf = bus_region.get(hb, _region_of_bus(net, hb))
+        rt = bus_region.get(lb, _region_of_bus(net, lb))
+        if region not in (rf, rt):
+            continue
+        hlon, hlat = _parse_bus_coords(net, hb); llon, llat = _parse_bus_coords(net, lb)
+        if hlon is None or llon is None:
+            continue
+        if abs(hlon - llon) < 1e-6 and abs(hlat - llat) < 1e-6:
+            continue
+        ld = 0.0
+        if idx in net.res_trafo.index and "loading_percent" in net.res_trafo.columns:
+            v = float(net.res_trafo.at[idx, "loading_percent"])
+            ld = v if math.isfinite(v) else 0.0
+        lines.append({"type": "Feature",
+                      "geometry": {"type": "LineString",
+                                   "coordinates": [[hlon, hlat], [llon, llat]]},
+                      "properties": {"name": (f"trafo {net.bus.at[hb, 'vn_kv']:.0f}/"
+                                              f"{net.bus.at[lb, 'vn_kv']:.0f}kV"),
+                                     "loading_pct": round(min(ld, 200), 1),
+                                     "p_mw": 0.0, "synthetic": False,
+                                     "tie": False, "trafo": True}})
     return ({"type": "FeatureCollection", "features": buses},
             {"type": "FeatureCollection", "features": lines})
 

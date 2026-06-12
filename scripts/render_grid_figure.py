@@ -36,7 +36,33 @@ def _style(kv):
     return CLASS_STYLE[-1][1:]
 
 
-def render(region: str, out: str, kpi_json: str | None = None) -> str:
+def _dangling_ends(net):
+    """Dead-end junction tips: line ends at a degree-1 junction vertex.
+
+    The before/after instrument for the attachment work (ledger 79):
+    these are the ends the extension-snap curation is meant to recover,
+    so marking them makes a fix visually comparable across two renders.
+    """
+    from collections import defaultdict
+    deg = defaultdict(int)
+    for ln in net.transmission_lines:
+        if "_xfmr_" in ln.id:
+            continue
+        deg[ln.from_substation_id] += 1
+        deg[ln.to_substation_id] += 1
+    pts = []
+    for ln in net.transmission_lines:
+        if "_xfmr_" in ln.id or not ln.coordinates:
+            continue
+        for eid, c in ((ln.from_substation_id, ln.coordinates[0]),
+                       (ln.to_substation_id, ln.coordinates[-1])):
+            if "_jct_" in eid and deg[eid] <= 1:
+                pts.append(c)
+    return pts
+
+
+def render(region: str, out: str, kpi_json: str | None = None,
+           mark_dangles: bool = False, label: str = "") -> str:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -80,12 +106,23 @@ def render(region: str, out: str, kpi_json: str | None = None) -> str:
                 color=c, mec="white", mew=0.2, zorder=z + 3)
         n_sub += 1
 
+    n_dangle = 0
+    if mark_dangles:
+        pts = _dangling_ends(net)
+        n_dangle = len(pts)
+        if pts:
+            ax.plot([lo for (_la, lo) in pts], [la for (la, _lo) in pts],
+                    "x", ms=4.5, mew=1.1, color="#ff0066", zorder=12,
+                    linestyle="none")
+
     ax.set_aspect(1.0 / 0.82)        # ~Kanto latitude aspect
     ax.set_axis_off()
 
-    kpi_lines = [f"All-Japan-Grid 系統図 — {region}",
+    head = f"All-Japan-Grid 系統図 — {region}" + (f" [{label}]" if label else "")
+    kpi_lines = [head,
                  f"branches {n_branch:,} / substations {n_sub:,} / "
-                 f"cable {cable_km:,.0f} km"]
+                 f"cable {cable_km:,.0f} km"
+                 + (f" / 浮き端(行き止まり) {n_dangle:,}" if mark_dangles else "")]
     if kpi_json:
         paths = sorted(glob.glob(kpi_json))
         if paths:
@@ -104,7 +141,11 @@ def render(region: str, out: str, kpi_json: str | None = None) -> str:
                for mn, c, w, _z in CLASS_STYLE]
     handles.append(Line2D([], [], color="#334455", lw=1.2,
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
-    ax.legend(handles=handles, loc="lower right", fontsize=8, frameon=True)
+    if mark_dangles:
+        handles.append(Line2D([], [], color="#ff0066", marker="x",
+                              linestyle="none", label="浮き端"))
+    ax.legend(handles=handles, loc="lower right", frameon=True,
+              prop={"family": "Hiragino Sans", "size": 8})
 
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     fig.savefig(out, bbox_inches="tight", facecolor="white")
@@ -165,7 +206,8 @@ def render_national(out: str) -> str:
                for mn, c, w, _z in CLASS_STYLE]
     handles.append(Line2D([], [], color="#334455", lw=1.2,
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
-    ax.legend(handles=handles, loc="lower right", fontsize=9, frameon=True)
+    ax.legend(handles=handles, loc="lower right", frameon=True,
+              prop={"family": "Hiragino Sans", "size": 9})
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     fig.savefig(out, bbox_inches="tight", facecolor="white")
     plt.close(fig)
@@ -180,8 +222,13 @@ def main(argv=None) -> int:
     ap.add_argument("--kpi",
                     default="docs/reports/external_flows_tokyo_full_*.json",
                     help="glob; the newest scorecard annotates the figure")
+    ap.add_argument("--mark-dangles", action="store_true",
+                    help="mark dead-end junction tips (before/after instrument)")
+    ap.add_argument("--label", default="",
+                    help="title tag, e.g. 'before' / 'after'")
     args = ap.parse_args(argv)
-    render(args.region, args.out, args.kpi)
+    render(args.region, args.out, args.kpi,
+           mark_dangles=args.mark_dangles, label=args.label)
     return 0
 
 

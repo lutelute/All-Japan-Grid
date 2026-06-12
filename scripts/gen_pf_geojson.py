@@ -316,12 +316,17 @@ def main():
 
         # line geometry: look up from all_ac_lines or use point-to-point
         coords = line_geom_by_ends.get((fn, tn)) or line_geom_by_ends.get((tn, fn))
+        cf = bus_coord.get(fn); ct = bus_coord.get(tn)
         if coords is None:
-            cf = bus_coord.get(fn); ct = bus_coord.get(tn)
             if cf and ct:
                 coords = [cf, ct]
             else:
                 continue
+        elif cf and ct:
+            # 端点をバス代表座標へ吸着 — 線はOSM実形状端点・点はクラスタ
+            # 代表座標で数百m〜数kmズレ、国家レイヤの「浮き点」の原因だった
+            # (台帳82。uc_map PR #16 / export_powerflow_pages と同じ規約)
+            coords = [list(cf)] + list(coords)[1:-1] + [list(ct)]
 
         # Flow: compute from V (already done in loading_arr)
         R = BRANCH[k, BR_R]; X = BRANCH[k, BR_X]
