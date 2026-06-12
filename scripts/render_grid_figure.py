@@ -237,11 +237,32 @@ def render_national(out: str) -> str:
     ax.set_xlim(127.0, 146.2)
     ax.set_ylim(26.0, 45.8)
     ax.set_axis_off()
+    # vm annotation reads the live national summary (run_national_powerflow
+    # output) instead of a hardcoded snapshot — the old hardcode went stale
+    # the same day it was written (ledger 95 honesty fix)
+    vm_note = ""
+    try:
+        with open("docs/data/powerflow_national/summary.json",
+                  encoding="utf-8") as f:
+            summ = json.load(f)
+        agg: dict = {}
+        for rec in summ.values():
+            isl = rec.get("island")
+            lo, hi = rec.get("ac_vm_min"), rec.get("ac_vm_max")
+            if not isl or lo is None or hi is None:
+                continue
+            cur = agg.setdefault(isl, [lo, hi])
+            cur[0], cur[1] = min(cur[0], lo), max(cur[1], hi)
+        parts = [f"{i}[{agg[i][0]:.2f},{agg[i][1]:.2f}]"
+                 for i in ("hokkaido", "east", "west", "okinawa") if i in agg]
+        if parts:
+            vm_note = "\nvm: " + " ".join(parts)
+    except Exception:   # noqa: BLE001 — annotation is best-effort
+        pass
     ax.set_title(
         "All-Japan-Grid — 日本一体の潮流計算可能系統 (全国10地域)\n"
         f"branches {n_branch:,} / substations {n_sub:,} | "
-        "同期4島 (北海道・東50Hz・西60Hz・沖縄) すべて AC収束 (2026-06-12 台帳63)\n"
-        "vm: 北海道[0.86,1.03] 東[0.89,1.06] 西[0.66,1.05] 沖縄[0.96,1.01]",
+        "同期4島 (北海道・東50Hz・西60Hz・沖縄) すべて AC収束" + vm_note,
         fontsize=12, family="Hiragino Sans", loc="left")
     handles = [Line2D([], [], color=c, lw=max(w * 2, 1.2),
                       label=f"{mn}kV+" if mn else "66kV扱い(タグ無し)")

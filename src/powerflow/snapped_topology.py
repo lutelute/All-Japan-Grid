@@ -271,6 +271,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           polygon_bind=True, poly_edge_km=0.15,
                           fallback_snap_km=0.4, fallback_endpoint_km=0.6,
                           tip_joint_km=0.12, leadin_km=1.5, name_bind_km=5.0,
+                          line_centric_coords=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12):
@@ -583,6 +584,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
     lines_data = _layer("lines")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
+    bind_pts: dict = {}              # sid -> bound vertex coords (D10)
     feat_cache = []                  # (coords, cls) parsed once
     coord_cls = defaultdict(set)     # rounded coord -> known classes present
     if lines_data:
@@ -669,6 +671,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             for vi, (lat, lon) in enumerate(coords):
                 # polygon-first binding; terminals keep a wider fallback
                 sid = _bind_vertex(lat, lon, vi in (0, last))
+                if sid is not None:
+                    bind_pts.setdefault(sid, []).append((lat, lon))
                 rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
                 if sid is not None:
                     if multi_voltage:
@@ -1081,6 +1085,18 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         net.add_substation(Substation(
             id=bus_id, name=name, region=region,
             latitude=info["lat"], longitude=info["lon"], voltage_kv=vn_kv))
+
+    # Line-primacy coordinates (D10, owner directive 2026-06-12 「線を基準に
+    # している方がかなりいい」): a substation that BOUND line vertices is
+    # placed at the mean of those bound points — where the lines actually
+    # converge — instead of the polygon centroid. Drawing and electricity
+    # then share one coordinate; substations with no bound vertices
+    # (leadin/namebind-fed or isolated) keep the centroid.
+    if line_centric_coords:
+        for sid_, pts_ in bind_pts.items():
+            if sid_ in sub_info and pts_:
+                sub_info[sid_]["lat"] = sum(p[0] for p in pts_) / len(pts_)
+                sub_info[sid_]["lon"] = sum(p[1] for p in pts_) / len(pts_)
 
     for sid, info in sub_info.items():
         classes = sub_classes.get(sid, set()) if multi_voltage else set()
