@@ -131,6 +131,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑳: 天気正規化検証（--re-actuals）— tokyo日曜悪化の真因は天気
+
+- **tokyo日曜52.6ppの分解**: 主因は休日運用ではなく**天気** — 8/10のsolar実績
+  16.0GWh vs UC想定78.1GWh（雨曇の日曜、形状相関0.968=形は完璧で量1/5）。
+  太陽光不足分が実績側で lng+109/oil+42GWh の追い焚きとなりUCと乖離
+- **--re-actuals**（uc_validate）: 検証地域のsolar/windを**当日実績系列で置換**
+  してUCを解く=天気を所与にして**運用だけを比較**する検証モード
+  （NationalScenario.net_demand_rはpropertyなので置換だけで純需要も追従）
+- **結果（8/10）**: tokyo 52.6→**28.9pp** / hokuriku 21.0 / shikoku 21.8 /
+  平均36.6→**32.6pp**。残るtokyo 28.9はcoal+64GWh（休日のcoal抑制を
+  UCが知らない=経済停止の残り）等の純粋な運用差
+- 教訓: **単日検証は天気正規化が必須**（手法の進化）。hokkaidoは31.7→39.7と
+  悪化=実績RE置換で別の前提差（wind実績の少なさ→coal流れ込み）が露出
+- 残差更新: ①coal休日抑制（tokyo+64GWh、全国coal設備過大と同根の可能性）
+  ②hokkaidoの前提差 ③地熱個別機 ④kansai旧形式（Phase B）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑲: 効率ティルト — 経済停止の決定論表現（人工CF上限なし）
 
 - **apply_fuel_cost_tilt**(`src/uc/scenario.py`): 同一燃料グループへ実在の
