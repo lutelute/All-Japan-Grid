@@ -7,6 +7,30 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — F7: nas03西側燃料別較正 — 関西/中国/北陸の実測帯がDBに入り、関西の「輸入過多・火力過少」を初の実測根拠で特定（86）
+
+- **在庫の実地確定**(ssh調査): chugoku=月次2016〜(独自列名)・kansai=月次〜2023-12
+  (隣PR#23のlegacyパーサ対応済)・hokuriku=**202404以降**(FY2023指定では空振り→FY2024で取得)・
+  **chubu=需要のみ**(`dt,MW`、燃料別なし=正直に不可)・**kyushu=H29(2017)四半期のみ**
+  (8年前の帯は運用較正に不適=不可)。西側の燃料別カバレッジ上限は関西/中国/北陸と確定
+- **chugoku方言を最小差分で追加**(`nas03.py` _FUEL_COLUMNS拡張のみ): 需要/火力(合算)/
+  太陽光(実績)/連系線潮流 — 長キー優先照合で既存6社の挙動不変(テスト8 passed)。
+  「火力出力制御量」キーを先置きしhokkaido変種の誤マップも予防
+- **intake実装**(`calibrate.py --nas03 <companies> --nas03-months`): dataspaceコネクタ経由
+  (キャッシュ+来歴)で月次を取得し、**30分/1時間生値のプール分布からq50/p95**(tso_jukyu
+  と同一統計量=帯の互換性)。DB搭載: **関西9+中国9+北陸14=32帯**(gen_by_fuel:*、
+  source=nas03_demand_raw)。北陸はwest島初のper-fuelフル帯
+- **reconcileに火力合算チェック**: gas/coal/oil個別が無くthermal_combinedがある社は
+  モデルのgas+coal+oil合計を帯に通す(関西・中国向け)
+- **F4関西の初実測判定**(reconcile_kansai_nas03_2026-06-12.json): 帯内4(nuclear=p95丁度
+  =F6クランプ作動・hydro=q50丁度・solar・biomass) / **構造的な対の歪みを特定**:
+  interconnect 6,160MW(帯[980,2,714]**超過**) × thermal合算4,377MW(帯[7,276,11,741]
+  **未満**) = モデルは輸入に頼りすぎ火力を焚かなすぎ。wind微小(10vs26)
+- **X2 west採用の判定材料**: 関西の歪みは容量配置(capacity_bridgeの守備範囲)と
+  境界利用率の両方に跨る — bridgeのwest補正(-35.3GW)単独では輸入過多を説明できず、
+  **境界キャリブレーションとの同時A/Bが採用条件**(次反復候補)
+- **1101 passed**(nas03テスト+2)。生データ非コミット(キャッシュはdata/cache、gitignore)
+
 ## 2026-06-12 — **Fable 5** — D6-2: west AC回復→**OSM忠実束縛をデフォルト昇格** — 4島AC維持×154kV ρ 2.3倍を両立（85）
 
 - **真因=プルーン梯子の不足(仮説bが正解)**: 84のwest AC非収束は (45,30,20)°の梯子が

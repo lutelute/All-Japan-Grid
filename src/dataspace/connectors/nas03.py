@@ -47,7 +47,10 @@ _FUEL_COLUMNS = {
     "蓄電池": "battery",
     "連系線": "interconnector",
     "その他": "other",
-    # chugoku別名（「需給実績」形式: DATE,TIME + 需要/火力合算/括弧表記）
+    # chugoku別名（「需給実績」形式: DATE,TIME + 需要/火力合算/括弧表記）。
+    # 長いキー優先の照合で標準列（エリア需要・火力(LNG)等）が先に当たる
+    # ため既存社の挙動は不変（両セッションが同日に同実装、F7/台帳86で統合）
+    "火力出力制御量": "thermal_curtailed",  # 「火力」より先に当てて保護
     "需要": "demand",
     "火力": "thermal_combined",
     "太陽光(実績)": "solar",

@@ -131,6 +131,16 @@ def reconcile(db_path: str = "data/grid.db", uc_csv: str | None = None,
                            "meas_q50_mw": round(s["q50"], 0),
                            "meas_p95_mw": round(s["p95"], 0),
                            "verdict": _band(mw, s["q50"], s["p95"])})
+        # 合算火力しか公表しない社（関西・中国の nas03 在庫等）: モデルの
+        # gas+coal+oil 合計を thermal_combined 帯に通す
+        s = fuels.get((area, "gen_by_fuel:thermal_combined"))
+        if s and not fuels.get((area, "gen_by_fuel:gas")):
+            mw = sum(disp.get(f, 0.0) for f in ("gas", "coal", "oil"))
+            checks.append({"fuel": "thermal(gas+coal+oil)",
+                           "model_mw": round(mw, 0),
+                           "meas_q50_mw": round(s["q50"], 0),
+                           "meas_p95_mw": round(s["p95"], 0),
+                           "verdict": _band(mw, s["q50"], s["p95"])})
         out["dispatch_checks"] = {"region": solve_region, "rows": checks,
                                   "note": ("model = one synthetic snapshot at "
                                            "peak x LF vs measured annual "

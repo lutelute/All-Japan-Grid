@@ -159,6 +159,92 @@ def tso_jukyu_rows(jukyu_dir: str, area: str = "東京") -> list[dict]:
     return rows
 
 
+# nas03 正規燃料キー -> DB上の燃料名（tso_jukyu と同じ語彙に揃える）
+_NAS03_TO_DB_FUEL = {"lng": "gas", "pumped_hydro": "pumped",
+                     "interconnector": "interconnect"}
+_REGION_AREA_JA = {
+    "hokkaido": "北海道", "tohoku": "東北", "tokyo": "東京",
+    "chubu": "中部", "hokuriku": "北陸", "kansai": "関西",
+    "chugoku": "中国", "shikoku": "四国", "kyushu": "九州",
+    "okinawa": "沖縄",
+}
+
+
+def _months_range(spec: str) -> list[str]:
+    lo, hi = spec.split("-")
+    y, m = int(lo[:4]), int(lo[4:6])
+    out = []
+    while True:
+        cur = f"{y}{m:02d}"
+        if cur > hi:
+            break
+        out.append(cur)
+        m += 1
+        if m > 12:
+            y, m = y + 1, 1
+    return out
+
+
+def nas03_rows(companies: list[str], months_spec: str) -> list[dict]:
+    """nas03 demand_raw (F7) -> per-fuel measured_area_stats rows.
+
+    Fetches each available month through the dataspace connector
+    (ssh zero-copy + cache + provenance; per-company dialects absorbed
+    there), pools the RAW 30-min/hourly MW values and takes q50/p95 of
+    the pooled distribution — the same statistic as ``tso_jukyu_rows``
+    so the bands are comparable across sources. Months missing from the
+    NAS stock are skipped fail-soft (kansai ends 2023-12; chugoku is
+    monthly since 2016). Curtailment columns and demand are not written
+    (demand stays OCCTO's; curtailment is a UC-side concern).
+    """
+    from src.dataspace.connectors.nas03 import COMPANY_TO_REGION
+    from src.dataspace.registry import DataSpace
+
+    ds = DataSpace()
+    rows: list[dict] = []
+    for comp in companies:
+        region = COMPANY_TO_REGION.get(comp)
+        if region is None:
+            print(f"nas03: unknown company '{comp}' — skipped")
+            continue
+        pooled: dict[str, list[float]] = {}
+        used: list[str] = []
+        for mon in _months_range(months_spec):
+            try:
+                d = ds.fetch("nas03_generation_records",
+                             {"company": comp, "month": mon})
+            except Exception:   # noqa: BLE001 — 在庫外の月はスキップ
+                continue
+            if not d.get("rows"):
+                continue
+            for rec in d["rows"]:
+                for k, v in rec.items():
+                    if k == "dt":
+                        continue
+                    pooled.setdefault(k, []).append(float(v))
+            used.append(mon)
+        if not used:
+            print(f"nas03: {comp} — no months in stock for {months_spec}")
+            continue
+        win = f"{used[0]}..{used[-1]} ({len(used)}mo)"
+        area = _REGION_AREA_JA[region]
+        for fuel, vals in sorted(pooled.items()):
+            if fuel == "demand" or fuel.endswith("_curtailed"):
+                continue
+            if len(vals) < 100:
+                continue
+            dbf = _NAS03_TO_DB_FUEL.get(fuel, fuel)
+            a = sorted(abs(x) for x in vals)
+            q50 = a[len(a) // 2]
+            p95 = a[min(len(a) - 1, round(0.95 * (len(a) - 1)))]
+            s = sorted(vals)
+            rows.append({"area": area, "metric": f"gen_by_fuel:{dbf}",
+                         "q50_mw": float(q50), "p95_mw": float(p95),
+                         "signed_q50_mw": float(s[len(s) // 2]),
+                         "window": win, "source": "nas03_demand_raw"})
+    return rows
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -172,7 +258,29 @@ def main(argv=None) -> int:
                     help="dir of kohyo_02/_04 CSVs ('' to skip)")
     ap.add_argument("--tso-jukyu", default="data/external/tso_jukyu/tokyo",
                     help="dir of eria_jukyu_*.csv ('' to skip)")
+    ap.add_argument("--nas03", nargs="*", default=None,
+                    help="nas03 demand_raw companies (e.g. hokuriku kansai "
+                         "chugoku) -> per-fuel measured_area_stats (F7). "
+                         "Requires AJGRID_NAS03_ROOT.")
+    ap.add_argument("--nas03-months", default="202304-202403",
+                    help="inclusive YYYYMM-YYYYMM range (default FY2023)")
     args = ap.parse_args(argv)
+
+    # nas03 per-fuel intake (F7) — standalone-friendly: usable without the
+    # TEPCO disclosure CSVs below.
+    if args.nas03:
+        rows4 = nas03_rows(args.nas03, args.nas03_months)
+        if rows4:
+            from src.db.calibration import upsert_measured_area_stats
+            db4 = GridDatabase(args.db)
+            nf = upsert_measured_area_stats(db4, rows4)
+            areas = sorted({r["area"] for r in rows4})
+            print(f"nas03: {nf} per-fuel stats -> {args.db} "
+                  f"({'/'.join(areas)}; {rows4[0]['window']})")
+        else:
+            print("nas03: no rows produced")
+        if not os.path.exists(args.csv):
+            return 0
 
     if not os.path.exists(args.csv):
         print(f"no CSV at {args.csv} — fetch it first (REPRODUCIBILITY §4)")

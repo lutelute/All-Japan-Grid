@@ -65,7 +65,7 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 - [x] F4(69): `--solve-region`実装・東京初検証 — **coal/hydro過大・oil/wind過小**をデータで特定(gas/solar/IC/nuclearは帯内)
 - [x] F6(73): 実測帯クランプ+ガススイングを採用 — 燃料帯4/9→**7/9**・trunk ρ+0.017。残るwind/biomassは設備容量データの限界と確定
 - [ ] F5 UC検証導線: UC時系列(燃料別)を同じ帯判定に通すサンプルを UC_HANDOFF.md に追記
-- [ ] F7 nas03経由の西側燃料別較正(PR #17所在確定→PR #18でコネクタ実装済み): **`src/dataspace/connectors/nas03.py`を再利用**(ssh zero-copy・社別方言吸収済み。隣のA-1は東5地域のみ=西3社は未踏)→月次取得→q50/p95集約→calibrate.py intakeでmeasured_area_stats gen_by_fuel:西エリア→F6帯west展開+F4検証(関西/中部/九州)→**X2 west採用の判定材料**。生データコミット禁止
+- [x] F7(86): **西側実測帯がDB搭載** — 関西9+中国9+北陸14=32帯(chugoku方言追加・thermal_combined判定・`--nas03` intake)。F4関西初判定=**輸入過多(6,160 vs p95 2,714)×火力過少(4,377 vs q50 7,276)の対の歪み**を特定。chubu=需要のみ/kyushu=2017のみ=正直に不可。X2採用条件=境界キャリブレーションとの同時A/B(次反復候補)
 
 ## 夜間強行軍モード（ユーザー指示 2026-06-12 02時「一晩自己ループをかけまくって誰も到達できないところまで。ただし再現性を崩すな」）
 
