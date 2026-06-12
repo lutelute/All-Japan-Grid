@@ -306,7 +306,8 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
                            utilisation: dict | None = None,
                            spread_km: float = 75.0,
                            data_dir: str | None = None,
-                           corridor_stats: dict | None = None) -> dict:
+                           corridor_stats: dict | None = None,
+                           net_rescale: bool = True) -> dict:
     """Inject every interconnection touching *region* at its boundary.
 
     Returns a summary dict {ic_id: {mw, bus_names, method}} plus totals;
@@ -322,6 +323,7 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
     summary = {"ics": {}, "import_mw": 0.0, "export_mw": 0.0,
                "provenance": "typical planning utilisation of OCCTO 運用容量 "
                              "(pending measured 連系線潮流実績)"}
+    placements = []   # (icid, inj, buses, method) — created after net rescale
     for ic in load_interconnections(yaml_path):
         icid = ic.get("id")
         frm, to = ic.get("from_region"), ic.get("to_region")
@@ -353,6 +355,66 @@ def apply_boundary_imports(net, region: str, yaml_path: str | None = None,
             summary["ics"][icid] = {"mw": 0.0, "bus_names": [],
                                     "method": "UNPLACED"}
             continue
+        placements.append((icid, inj, buses, method))
+
+    # Net rescale against the AREA's measured net interconnect (X2-2,
+    # ledger 87): corridor-median utilisations double-count loop flow —
+    # kansai measured a NET median of +865 MW while the corridor-derived
+    # injections summed to +6,160 MW (7x). Where the calibrated DB holds
+    # the TSO supply-demand actual (gen_by_fuel:interconnect, signed
+    # median), scale every boundary injection by one factor so the net
+    # matches the measured operating point while the corridor RATIOS
+    # (placement evidence) survive. Fail-soft: no stat, no rescale.
+    scale = 1.0
+    if placements and net_rescale:
+        model_net = sum(p[1] for p in placements)
+        try:
+            from src.db.calibration import (
+                AREA_OF_REGION,
+                load_measured_area_stats,
+            )
+            stats = load_measured_area_stats() or {}
+            s = stats.get((AREA_OF_REGION.get(region, region),
+                           "gen_by_fuel:interconnect"))
+        except Exception:   # noqa: BLE001 — calibration layer is optional
+            s = None
+        # demand-conditional target: the pipeline solves a peak x LF
+        # snapshot that sits at the area's ~p95 demand, and interconnect
+        # draw rises with demand — so the consistent operating point is
+        # the p95 magnitude with the measured net DIRECTION, not the
+        # annual median (kansai A/B: a median target pushed the freed
+        # 5.3 GW into thermal at 14.2 GW, overshooting its band).
+        target = None
+        if s:
+            sq = s.get("signed_q50")
+            p95 = s.get("p95")
+            if sq is not None:
+                target = (p95 if (p95 and sq > 0)
+                          else (-p95 if (p95 and sq < 0) else sq))
+        if target is not None and abs(model_net) > 1.0:
+            f = target / model_net
+            # same-direction shrink/boost only, with a sanity ceiling —
+            # a sign flip would fabricate a regime the corridors don't
+            # support; record instead of forcing.
+            if f >= 0:
+                scale = min(f, 2.0)
+                summary["net_rescale"] = {
+                    "model_net_mw": round(model_net, 1),
+                    "measured_net_mw": round(float(target), 1),
+                    "factor": round(scale, 3),
+                    "source": "measured_area_stats gen_by_fuel:interconnect",
+                }
+            else:
+                summary["net_rescale"] = {
+                    "model_net_mw": round(model_net, 1),
+                    "measured_net_mw": round(float(target), 1),
+                    "factor": 1.0,
+                    "note": "sign mismatch — corridors imply the opposite "
+                            "net direction; left unscaled for honesty",
+                }
+
+    for icid, inj, buses, method in placements:
+        inj *= scale
         names = []
         for bus, w in buses:
             mw = inj * w

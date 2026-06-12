@@ -62,7 +62,8 @@ def test_name_match_import_picks_highest_class(tmp_path):
     ])
     y = _yaml(tmp_path, capacity=2000.0)
     s = apply_boundary_imports(net, "tokyo", yaml_path=y,
-                               utilisation={"ic_t1": 0.5})
+                               utilisation={"ic_t1": 0.5},
+                               net_rescale=False)  # 生値ピン(台帳87)
     assert s["ics"]["ic_t1"]["method"] == "name"
     assert s["import_mw"] == pytest.approx(1000.0)
     assert len(net.sgen) == 1
@@ -74,7 +75,8 @@ def test_export_side_becomes_load(tmp_path):
     net = _net_with([("相馬変電所 500kV", 500.0, (140.9, 37.8))])
     y = _yaml(tmp_path, capacity=2000.0)
     s = apply_boundary_imports(net, "tohoku", yaml_path=y,
-                               utilisation={"ic_t1": 0.5})
+                               utilisation={"ic_t1": 0.5},
+                               net_rescale=False)  # 生値ピン(台帳87)
     assert s["export_mw"] == pytest.approx(1000.0)
     assert len(net.sgen) == 0
     assert len(net.load) == 1
@@ -95,10 +97,30 @@ def test_positional_fallback_clusters_corridors(tmp_path, monkeypatch):
     monkeypatch.setattr(bd, "_partner_centroid",
                         lambda *a, **k: (38.3, 140.6))
     s = apply_boundary_imports(net, "tokyo", yaml_path=y,
-                               utilisation={"ic_t1": 0.6})
+                               utilisation={"ic_t1": 0.6},
+                               net_rescale=False)  # 生値ピン(台帳87)
     assert "position(2 corridors" in s["ics"]["ic_t1"]["method"]  # equal/measured-weighted variants
     assert len(net.sgen) == 2
     assert sorted(net.sgen["p_mw"]) == pytest.approx([300.0, 300.0])
+
+
+def test_net_rescale_caps_to_measured(tmp_path, monkeypatch):
+    """X2-2 (台帳87): 回廊由来の正味が実測(需要条件付きp95)へ再スケール。
+    関西実測: 回廊和+6,160 MW vs 実測p95 2,714 MW(ループフローの誤読で
+    7倍)。比率は保存・係数はsummaryに記録される。"""
+    net = _net_with([("関ケ原町変電所 500kV", 500.0, (136.46, 35.36))])
+    y = _yaml(tmp_path, capacity=2000.0)
+    import src.db.calibration as cal
+    monkeypatch.setattr(
+        cal, "load_measured_area_stats",
+        lambda *a, **k: {("東京", "gen_by_fuel:interconnect"):
+                         {"q50": 200.0, "p95": 500.0, "signed_q50": 200.0}})
+    s = apply_boundary_imports(net, "tokyo", yaml_path=y,
+                               utilisation={"ic_t1": 0.5})
+    # 1,000 MW -> 実測p95 500 MW(輸入方向なので+p95が目標)
+    assert s["net_rescale"]["factor"] == pytest.approx(0.5)
+    assert s["import_mw"] == pytest.approx(500.0)
+    assert net.sgen.at[0, "p_mw"] == pytest.approx(500.0)
 
 
 def test_balance_power_covers_load_minus_imports():
