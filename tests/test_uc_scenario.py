@@ -664,3 +664,33 @@ class TestDemandProfileRef:
             ops = yaml.safe_load(f)["operational"]
         assert len(ops) == 8  # 8サイト
         assert sum(e["capacity_mw"] for e in ops) == pytest.approx(13253)
+
+
+class TestFuelCostTilt:
+    def test_tilt_preserves_weighted_average_and_orders(self):
+        from src.model.generator import Generator
+        from src.uc.scenario import apply_fuel_cost_tilt
+        gens = [
+            Generator(id=f"g{i}", name=f"g{i}", capacity_mw=cap,
+                      fuel_type="coal", region="tohoku",
+                      fuel_cost_per_mwh=7000)
+            for i, cap in enumerate([2000, 1000, 600, 150])
+        ]
+        n = apply_fuel_cost_tilt(gens, {"coal": [6500, 8500]})
+        assert n == 4
+        # 大容量=安い / 小容量=高い の単調順序
+        costs = {g.capacity_mw: g.fuel_cost_per_mwh for g in gens}
+        assert costs[2000] < costs[1000] < costs[600] < costs[150]
+        # 容量加重平均はベース7000を維持（正規化）
+        w = sum(g.capacity_mw * g.fuel_cost_per_mwh for g in gens) / \
+            sum(g.capacity_mw for g in gens)
+        assert abs(w - 7000) < 1.0
+
+    def test_single_unit_group_untouched(self):
+        from src.model.generator import Generator
+        from src.uc.scenario import apply_fuel_cost_tilt
+        gens = [Generator(id="x", name="x", capacity_mw=500,
+                          fuel_type="lng", region="tokyo",
+                          fuel_cost_per_mwh=11000)]
+        assert apply_fuel_cost_tilt(gens, {"lng": [10000, 13000]}) == 0
+        assert gens[0].fuel_cost_per_mwh == 11000

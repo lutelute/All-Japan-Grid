@@ -27,9 +27,12 @@ from typing import Optional, Union
 import numpy as np
 
 from src.model.generator import Generator
+from src.utils.logging_config import get_logger
 from src.regions import REGIONS
 from src.uc.interconnection_loader import InterconnectionLoader
 from src.uc.models import DemandProfile, Interconnection, TimeHorizon, UCParameters
+
+logger = get_logger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = _REPO_ROOT / "config" / "uc_scenarios"
@@ -1069,6 +1072,47 @@ def _resolve_demand_profile(
     return out, sha
 
 
+def apply_fuel_cost_tilt(gens: list, tilt_cfg: dict) -> int:
+    """coal/lng等の燃料費へ効率ティルトを適用する（経済停止の決定論表現）。
+
+    同一燃料を一律単価にすると「需要が下がっても燃料グループ内の止まる
+    順序が無い」ため、夜間市場価格が下位クラスタ（JEPX 2025-08で7-8円）
+    に落ちる実態を再現できない（台帳⑱）。実在する効率差 — coalのUSC
+    （大容量・新鋭）~6.5円/kWh と 亜臨界（小容量・老朽）~8.5円、lngの
+    GTCC ~10円 と 汽力 ~13円 — を **容量ランクで決定論的に** 割り当てる。
+    人工的なCF上限は使わない（オーナー方針）。
+
+    tilt_cfg: {fuel: [lo, hi]}（円/MWh）。グループの**容量加重平均が
+    シナリオのfuel_cost基準値を維持**するよう正規化する（年間コスト
+    水準を変えずに順序だけ与える）。
+
+    Returns: ティルトを適用した機数。
+    """
+    n = 0
+    for fuel, (lo, hi) in tilt_cfg.items():
+        group = [g for g in gens if g.fuel_type == fuel]
+        if len(group) < 2:
+            continue
+        base_w = sum(g.capacity_mw * g.fuel_cost_per_mwh for g in group)
+        cap_sum = sum(g.capacity_mw for g in group)
+        if cap_sum <= 0 or base_w <= 0:
+            continue
+        base_avg = base_w / cap_sum
+        caps = sorted({g.capacity_mw for g in group})
+        span = max(len(caps) - 1, 1)
+        rank = {c: i / span for i, c in enumerate(caps)}
+        for g in group:
+            # 大容量=新鋭=低コスト、小容量=老朽=高コスト（決定論）
+            g.fuel_cost_per_mwh = float(hi) - (float(hi) - float(lo)) * rank[g.capacity_mw]
+        tilt_avg = sum(g.capacity_mw * g.fuel_cost_per_mwh
+                       for g in group) / cap_sum
+        k = base_avg / tilt_avg
+        for g in group:
+            g.fuel_cost_per_mwh = round(g.fuel_cost_per_mwh * k, 1)
+            n += 1
+    return n
+
+
 def build_national_scenario(
     scenario: Union[str, Path, UCScenarioConfig, None] = None,
     data_dir: str = "data",
@@ -1101,6 +1145,12 @@ def build_national_scenario(
     # 定検・計画停止の決定論的合成（maintenanceセクションがある場合のみ。
     # 24h断面は春秋のメンテ窓外なので影響しない）
     gens = synthesize_maintenance(gens, config)
+    tilt_cfg = (config.raw or {}).get("fuel_cost_tilt") or {}
+    if tilt_cfg:
+        n_tilted = apply_fuel_cost_tilt(gens, tilt_cfg)
+        stats.n_capacity_patched += 0  # 統計は不変（コスト順序のみ付与）
+        logger.info("fuel cost tilt applied to %d units: %s",
+                    n_tilted, tilt_cfg)
     for r in REGIONS:
         gens.append(build_battery(r, config=config))
 
