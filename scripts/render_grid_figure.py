@@ -25,8 +25,12 @@ CLASS_STYLE = [  # (min_kv, color, width, zorder)
     (110, "#885500", 0.55, 4),
     (77,  "#660077", 0.45, 4),
     (66,  "#334455", 0.4, 3),
-    (0,   "#999999", 0.3, 2),
+    # kv-untagged lines SOLVE as 66 kV (parameter fallback) — drawing
+    # them grey hid that they are live grid lines (D8, ledger 89).
+    # Same 66 colour, dotted = "66 kV treatment, tag pending".
+    (0,   "#334455", 0.4, 2),
 ]
+UNTAGGED_DASH = (0, (1.0, 1.6))   # dotted — distinguishes prov from tagged 66
 
 
 def _style(kv):
@@ -112,7 +116,8 @@ def render(region: str, out: str, kpi_json: str | None = None,
         ys = [la for (la, _lo) in ln.coordinates]
         if len(xs) < 2:
             continue
-        dash = (0, (2.5, 1.5)) if getattr(ln, "is_cable", False) else "solid"
+        dash = ((0, (2.5, 1.5)) if getattr(ln, "is_cable", False)
+                else UNTAGGED_DASH if kv <= 0 else "solid")
         if getattr(ln, "is_cable", False):
             cable_km += float(ln.length_km or 0)
         # parallel circuits are collapsed into one edge — width carries the
@@ -171,7 +176,7 @@ def render(region: str, out: str, kpi_json: str | None = None,
                  loc="left")
 
     handles = [Line2D([], [], color=c, lw=max(w * 2, 1.2),
-                      label=f"{mn}kV+" if mn else "unknown")
+                      label=f"{mn}kV+" if mn else "66kV扱い(タグ無し)")
                for mn, c, w, _z in CLASS_STYLE]
     handles.append(Line2D([], [], color="#334455", lw=1.2,
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
@@ -214,7 +219,8 @@ def render_national(out: str) -> str:
             c, w, z = _style(kv)
             xs = [lon for (_la, lon) in ln.coordinates]
             ys = [la for (la, _lo) in ln.coordinates]
-            dash = (0, (2.5, 1.5)) if getattr(ln, "is_cable", False) else "solid"
+            dash = ((0, (2.5, 1.5)) if getattr(ln, "is_cable", False)
+                else UNTAGGED_DASH if kv <= 0 else "solid")
             ax.plot(xs, ys, color=c, linewidth=w * 0.8, zorder=z, alpha=0.8,
                     linestyle=dash, solid_capstyle="round")
             n_branch += 1
@@ -238,7 +244,7 @@ def render_national(out: str) -> str:
         "vm: 北海道[0.86,1.03] 東[0.89,1.06] 西[0.66,1.05] 沖縄[0.96,1.01]",
         fontsize=12, family="Hiragino Sans", loc="left")
     handles = [Line2D([], [], color=c, lw=max(w * 2, 1.2),
-                      label=f"{mn}kV+" if mn else "unknown")
+                      label=f"{mn}kV+" if mn else "66kV扱い(タグ無し)")
                for mn, c, w, _z in CLASS_STYLE]
     handles.append(Line2D([], [], color="#334455", lw=1.2,
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))

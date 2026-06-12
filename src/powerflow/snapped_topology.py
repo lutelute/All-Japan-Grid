@@ -469,7 +469,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     jct_coord = {}                     # junction key -> (lat, lon)
 
     _EV_RANK = {None: 0, "cables": 1, "tag": 2}
-    _KV_RANK = {"unk": 0, "prop": 1, "tag": 2}
+    _KV_RANK = {"unk": 0, "prop2": 1, "prop": 1, "tag": 2}
 
     def add_edge(a, b, seg, kv, path, parallel=1, evidence=None, name=None,
                  kv_src="unk", cable_km=0.0, tap=False, bundle=0):
@@ -582,10 +582,29 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                         seen |= coord_cls.get(
                             (round(lat, vertex_prec), round(lon, vertex_prec)),
                             set())
+                    new_kv = None
                     if len(seen) == 1:
                         new_kv = next(iter(seen))
+                        src = "prop"
+                    elif len(seen) > 1:
+                        # v2(a) (D8, ledger 89): the vertex UNION is multi-
+                        # class when the corridor merely CROSSES another
+                        # class mid-span. The corridor reading is the
+                        # TERMINALS': when both ends see exactly the same
+                        # single class, adopt it (160 features nationally;
+                        # ambiguous ends still stay unknown — no guessing).
+                        t1 = coord_cls.get((round(coords[0][0], vertex_prec),
+                                            round(coords[0][1], vertex_prec)),
+                                           set())
+                        t2 = coord_cls.get((round(coords[-1][0], vertex_prec),
+                                            round(coords[-1][1], vertex_prec)),
+                                           set())
+                        if len(t1) == 1 and t1 == t2:
+                            new_kv = next(iter(t1))
+                            src = "prop2"
+                    if new_kv:
                         feat[1] = new_kv
-                        feat[5] = "prop"
+                        feat[5] = src
                         for (lat, lon) in coords:
                             coord_cls[(round(lat, vertex_prec),
                                        round(lon, vertex_prec))].add(new_kv)
