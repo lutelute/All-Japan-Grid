@@ -37,28 +37,51 @@ def _style(kv):
 
 
 def _dangling_ends(net):
-    """Dead-end junction tips: line ends at a degree-1 junction vertex.
+    """Dead-end junction tips, split into spurs and orphans (ledger 83).
 
-    The before/after instrument for the attachment work (ledger 79):
-    these are the ends the extension-snap curation is meant to recover,
-    so marking them makes a fix visually comparable across two renders.
+    A degree-1 junction tip is a *spur* when its connected chain reaches
+    a real substation (a harmless zero-flow leftover of vertex snapping
+    — 76-87 % of tips), and an *orphan* when the whole fragment touches
+    no substation (a genuine OSM gap). Only orphans represent missing
+    connectivity; conflating the two overstated the problem 8x in the
+    first before-figure.
+
+    Returns (spur_points, orphan_points).
     """
-    from collections import defaultdict
+    from collections import defaultdict, deque
+    subs = {s.id for s in net.substations if "_jct_" not in s.id}
+    adj = defaultdict(set)
     deg = defaultdict(int)
     for ln in net.transmission_lines:
         if "_xfmr_" in ln.id:
             continue
-        deg[ln.from_substation_id] += 1
-        deg[ln.to_substation_id] += 1
-    pts = []
+        a, b = ln.from_substation_id, ln.to_substation_id
+        adj[a].add(b)
+        adj[b].add(a)
+        deg[a] += 1
+        deg[b] += 1
+    spurs, orphans = [], []
     for ln in net.transmission_lines:
         if "_xfmr_" in ln.id or not ln.coordinates:
             continue
         for eid, c in ((ln.from_substation_id, ln.coordinates[0]),
                        (ln.to_substation_id, ln.coordinates[-1])):
-            if "_jct_" in eid and deg[eid] <= 1:
-                pts.append(c)
-    return pts
+            if "_jct_" not in eid or deg[eid] > 1:
+                continue
+            seen = {eid}
+            q = deque([eid])
+            reach = False
+            while q and len(seen) < 5000:
+                n = q.popleft()
+                if n in subs:
+                    reach = True
+                    break
+                for m in adj[n]:
+                    if m not in seen:
+                        seen.add(m)
+                        q.append(m)
+            (spurs if reach else orphans).append(c)
+    return spurs, orphans
 
 
 def render(region: str, out: str, kpi_json: str | None = None,
@@ -106,13 +129,18 @@ def render(region: str, out: str, kpi_json: str | None = None,
                 color=c, mec="white", mew=0.2, zorder=z + 3)
         n_sub += 1
 
-    n_dangle = 0
+    n_spur = n_orphan = 0
     if mark_dangles:
-        pts = _dangling_ends(net)
-        n_dangle = len(pts)
-        if pts:
-            ax.plot([lo for (_la, lo) in pts], [la for (la, _lo) in pts],
-                    "x", ms=4.5, mew=1.1, color="#ff0066", zorder=12,
+        spurs, orphans = _dangling_ends(net)
+        n_spur, n_orphan = len(spurs), len(orphans)
+        if spurs:
+            ax.plot([lo for (_la, lo) in spurs], [la for (la, _lo) in spurs],
+                    "x", ms=3.0, mew=0.7, color="#bbbbbb", zorder=11,
+                    linestyle="none")
+        if orphans:
+            ax.plot([lo for (_la, lo) in orphans],
+                    [la for (la, _lo) in orphans],
+                    "x", ms=5.0, mew=1.3, color="#ff0066", zorder=12,
                     linestyle="none")
 
     ax.set_aspect(1.0 / 0.82)        # ~Kanto latitude aspect
@@ -122,7 +150,8 @@ def render(region: str, out: str, kpi_json: str | None = None,
     kpi_lines = [head,
                  f"branches {n_branch:,} / substations {n_sub:,} / "
                  f"cable {cable_km:,.0f} km"
-                 + (f" / 浮き端(行き止まり) {n_dangle:,}" if mark_dangles else "")]
+                 + (f" / 真の孤児端 {n_orphan:,} / 接続済みスパー {n_spur:,}"
+                    if mark_dangles else "")]
     if kpi_json:
         paths = sorted(glob.glob(kpi_json))
         if paths:
@@ -143,7 +172,9 @@ def render(region: str, out: str, kpi_json: str | None = None,
                           linestyle=(0, (2.5, 1.5)), label="cable(地中)"))
     if mark_dangles:
         handles.append(Line2D([], [], color="#ff0066", marker="x",
-                              linestyle="none", label="浮き端"))
+                              linestyle="none", label="真の孤児端(未接続)"))
+        handles.append(Line2D([], [], color="#bbbbbb", marker="x",
+                              linestyle="none", label="スパー(接続済み残骸)"))
     ax.legend(handles=handles, loc="lower right", frameon=True,
               prop={"family": "Hiragino Sans", "size": 8})
 
