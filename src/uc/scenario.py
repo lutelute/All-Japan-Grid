@@ -1139,6 +1139,32 @@ def build_national_scenario(
         if r in ror_cf_r
     }
 
+    # 代表日（実測needs）の月が分かる場合はRE/RoRへ季節係数を適用する。
+    # 24h断面が年平均CFのままだと、弱風期（8月 wind_month_mult=0.70）に
+    # 風力が実績の~3倍になることを検証ループで実測（uc_validate 2025-08-06、
+    # tohoku UC 650MW平均 vs 実績213MW）。年間経路 build_annual_profiles と
+    # 同じ月係数を使い、断面と年間の季節性を整合させる。
+    rep_day = str((config.demand_profile_ref or {}).get(
+        "representative_day", ""))
+    try:
+        rep_month = int(rep_day.split("-")[1]) if rep_day else None
+    except (IndexError, ValueError):
+        rep_month = None
+    if rep_month is not None:
+        ann = (config.raw or {}).get("annual") or {}
+        sm = ann.get("solar_month_mult")
+        wm = ann.get("wind_month_mult")
+        rm = ann.get("hydro_ror_month_mult")
+        if sm:
+            solar_gen_r = {r: v * float(sm[rep_month - 1])
+                           for r, v in solar_gen_r.items()}
+        if wm:
+            wind_gen_r = {r: v * float(wm[rep_month - 1])
+                          for r, v in wind_gen_r.items()}
+        if rm:
+            hydro_ror_gen_r = {r: v * float(rm[rep_month - 1])
+                               for r, v in hydro_ror_gen_r.items()}
+
     return NationalScenario(
         generators=gens,
         interconnections=ics,
