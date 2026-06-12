@@ -1,14 +1,16 @@
 {
   "meta": {
     "date": "2026-06-12",
-    "git_head": "c693f2f",
+    "git_head": "2a8630d",
     "scenario": "fy2025r1",
     "validation_date": "2023-12-13",
     "re_actuals": true,
     "demand_from_measured": true,
     "disclosure": "検証地域=実績需要・他地域=合成needs・原子力断面=シナリオ断面のまま",
     "companies": [
-      "kansai"
+      "kansai",
+      "chugoku",
+      "kyushu"
     ],
     "vocabulary_notes": [
       "UC oil = 実績 火力(石油)+火力(その他)（区分差の開示）",
@@ -51,30 +53,156 @@
           "diff_mwh": 0.0,
           "shape_corr": 1.0
         },
+        "pumped_hydro": {
+          "uc_mwh": 247.0,
+          "measured_mwh": -2291.0,
+          "diff_mwh": 2538.0,
+          "shape_corr": 0.148
+        },
         "battery": {
-          "uc_mwh": 630.5,
+          "uc_mwh": 890.0,
           "measured_mwh": 0.0,
-          "diff_mwh": 630.5,
+          "diff_mwh": 890.0,
           "shape_corr": null
         },
         "thermal(combined)": {
-          "uc_mwh": 158859.6,
+          "uc_mwh": 127173.0,
           "measured_mwh": 190155.0,
-          "diff_mwh": -31295.4,
-          "shape_corr": 0.57
+          "diff_mwh": -62982.0,
+          "shape_corr": 0.947
         }
       },
-      "share_l1_pp": 23.65,
+      "share_l1_pp": 34.31,
       "curtailment_mwh": {
         "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "chugoku": {
+      "company": "chugoku",
+      "demand_measured_mwh": 157907.0,
+      "per_fuel": {
+        "nuclear": {
+          "uc_mwh": 19680.0,
+          "measured_mwh": 0.0,
+          "diff_mwh": 19680.0,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 4365.6,
+          "measured_mwh": 3833.0,
+          "diff_mwh": 532.6,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 23702.4,
+          "measured_mwh": 5794.0,
+          "diff_mwh": 17908.4,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 22035.0,
+          "measured_mwh": 22035.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "wind": {
+          "uc_mwh": 845.0,
+          "measured_mwh": 845.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "pumped_hydro": {
+          "uc_mwh": 213.8,
+          "measured_mwh": -1335.0,
+          "diff_mwh": 1548.8,
+          "shape_corr": 0.235
+        },
+        "battery": {
+          "uc_mwh": 1053.9,
+          "measured_mwh": 0.0,
+          "diff_mwh": 1053.9,
+          "shape_corr": null
+        },
+        "thermal(combined)": {
+          "uc_mwh": 101819.3,
+          "measured_mwh": 133005.0,
+          "diff_mwh": -31185.7,
+          "shape_corr": 0.791
+        }
+      },
+      "share_l1_pp": 46.33,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "kyushu": {
+      "company": "kyushu",
+      "demand_measured_mwh": 224290.0,
+      "per_fuel": {
+        "nuclear": {
+          "uc_mwh": 99360.0,
+          "measured_mwh": 71710.0,
+          "diff_mwh": 27650.0,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 3600.0,
+          "measured_mwh": 5331.0,
+          "diff_mwh": -1731.0,
+          "shape_corr": null
+        },
+        "geothermal": {
+          "uc_mwh": 5760.0,
+          "measured_mwh": 3789.0,
+          "diff_mwh": 1971.0,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 3360.0,
+          "measured_mwh": 13695.0,
+          "diff_mwh": -10335.0,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 41271.0,
+          "measured_mwh": 41271.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "wind": {
+          "uc_mwh": 2301.0,
+          "measured_mwh": 2301.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "battery": {
+          "uc_mwh": 4597.9,
+          "measured_mwh": 0.0,
+          "diff_mwh": 4597.9,
+          "shape_corr": null
+        },
+        "thermal(combined)": {
+          "uc_mwh": 133403.5,
+          "measured_mwh": 130447.0,
+          "diff_mwh": 2956.5,
+          "shape_corr": 0.939
+        }
+      },
+      "share_l1_pp": 18.5,
+      "curtailment_mwh": {
+        "solar": 207.0,
         "wind": 0.0
       }
     }
   },
   "summary": {
     "l1_pp_by_region": {
-      "kansai": 23.65
+      "kansai": 34.31,
+      "chugoku": 46.33,
+      "kyushu": 18.5
     },
-    "l1_pp_mean": 23.65
+    "l1_pp_mean": 33.05
   }
 }
