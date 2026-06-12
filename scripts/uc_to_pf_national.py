@@ -237,6 +237,12 @@ def export_before_after(net_before, net_after, regions, geom, island_id,
                                (round(tlat, 5), round(tlon, 5))))
             if not coords:
                 coords = [[flon, flat], [tlon, tlat]]
+            else:
+                # 端点をバス代表座標へ吸着 — バス点はスナップクラスタの
+                # 代表座標でOSM実形状の端点から数kmズレうる（大田原で
+                # 実測3km、浮きバス問題の真因。オーナー指摘 2026-06-12）。
+                # 中間形状はOSMのまま、端点だけ繋いで接続を可視化する
+                coords = [[flon, flat]] + list(coords)[1:-1] + [[tlon, tlat]]
             zf, zt = zone.get(fb), zone.get(tb)
             props = {
                 "name": name[:60],
@@ -254,6 +260,47 @@ def export_before_after(net_before, net_after, regions, geom, island_id,
             feats.append({"type": "Feature",
                           "geometry": {"type": "LineString",
                                        "coordinates": coords},
+                          "properties": props})
+        # 変圧器も線として描く — insert_transformers は異電圧バス間の
+        # OSM線をtrafoに置換（線は削除）するため、描かないと下位網バスが
+        # 「浮いて」見える（east 375/west 438バス、8割が66-110kV帯。
+        # オーナー指摘 2026-06-12）。電気的接続の可視化として必須
+        ldt_b = (net_before.res_trafo["loading_percent"]
+                 if hasattr(net_before, "res_trafo")
+                 and "loading_percent" in getattr(net_before, "res_trafo", {})
+                 else None)
+        for idx in net.trafo.index:
+            if not net.trafo.at[idx, "in_service"]:
+                continue
+            hb = net.trafo.at[idx, "hv_bus"]
+            lb = net.trafo.at[idx, "lv_bus"]
+            hlon, hlat = _parse_bus_coords(net, hb)
+            llon, llat = _parse_bus_coords(net, lb)
+            if hlon is None or llon is None:
+                continue
+            if abs(hlon - llon) < 1e-6 and abs(hlat - llat) < 1e-6:
+                continue  # 同一座標（構内trafo）は描いても見えない
+            ld = 0.0
+            if (hasattr(net, "res_trafo") and idx in net.res_trafo.index
+                    and "loading_percent" in net.res_trafo.columns):
+                v = float(net.res_trafo.at[idx, "loading_percent"])
+                ld = v if math.isfinite(v) else 0.0
+            props = {
+                "name": (f"trafo {net.bus.at[hb, 'vn_kv']:.0f}/"
+                         f"{net.bus.at[lb, 'vn_kv']:.0f}kV"),
+                "loading_pct": round(min(ld, 300), 1),
+                "p_mw": 0.0,
+                "tie": False, "synthetic": False, "trafo": True,
+            }
+            if with_diff:
+                props["dloading"] = (
+                    round(ld - float(ldt_b.at[idx]), 1)
+                    if ldt_b is not None and idx in ldt_b.index
+                    and math.isfinite(float(ldt_b.at[idx])) else None)
+            feats.append({"type": "Feature",
+                          "geometry": {"type": "LineString",
+                                       "coordinates": [[hlon, hlat],
+                                                       [llon, llat]]},
                           "properties": props})
         return {"type": "FeatureCollection", "features": feats}
 
@@ -325,6 +372,10 @@ def main() -> int:
                     help="before(merit-order)/after(UC注入)の地域別GeoJSON+"
                          "差分(dvm/dloading)を docs/data/uc_powerflow/ へ出力")
     ap.add_argument("--export-dir", default="docs/data/uc_powerflow")
+    ap.add_argument("--gate-retries", type=int, default=0,
+                    help="ybus_gate FAIL時に島網を作り直して再試行する回数。"
+                         "west島は同一入力でも構築のハッシュ順により cond が"
+                         "4.84e8(PASS)/1.13e9(FAIL)の二値で振れる（台帳⑮⑯）")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -373,11 +424,22 @@ def main() -> int:
               f"純需要 {float(net_dem[t]):,.0f} MW ==")
 
         # base網は1回だけ構築し、before/afterはdeepcopyで分岐（網構成の
-        # ハッシュ順ゆらぎを差分に混ぜないため）
-        net_base = build_island_base(isl, demand_cfg)
-        net = copy.deepcopy(net_base) if args.export else net_base
-        inj, bridge_rep = dispatch_uc(net, regions, scn, uc, t, calib)
-        n_shunt = finalize_island(net, args.reactive)
+        # ハッシュ順ゆらぎを差分に混ぜないため）。gate FAIL時は島網ごと
+        # 作り直してリトライ（cond は構築のハッシュ順で二値に振れる）
+        attempt = 0
+        while True:
+            net_base = build_island_base(isl, demand_cfg)
+            net = copy.deepcopy(net_base) if args.export else net_base
+            inj, bridge_rep = dispatch_uc(net, regions, scn, uc, t, calib)
+            n_shunt = finalize_island(net, args.reactive)
+            gate = ybus_gate(net)            # 契約: 流す前に必ず
+            if gate["pass"] or attempt >= args.gate_retries:
+                break
+            attempt += 1
+            print(f"  ybus_gate FAIL (cond={gate['cond_max']:.2e}) — "
+                  f"島網を再構築してリトライ {attempt}/{args.gate_retries}")
+            islands, _async = build_island_networks()
+            isl = islands[iid]
         if bridge_rep:
             print(f"  bridge: dedup {bridge_rep['dedup_disabled']}, "
                   f"patched {bridge_rep['patched']}, "
@@ -392,11 +454,9 @@ def main() -> int:
             rep = x["injection"]
             print(f"    {r:9s} inj {rep['injected_mw']:8,.0f} MW "
                   f"(req {rep['requested_mw']:,.0f}, load×{x['load_scale']})")
-
-        # ── 3. gate（契約: 流す前に必ず） ──
-        gate = ybus_gate(net)
         print(f"  ybus_gate: {'PASS' if gate['pass'] else 'FAIL'} "
-              f"(cond_max={gate['cond_max']:.2e})")
+              f"(cond_max={gate['cond_max']:.2e}"
+              + (f", retries {attempt}" if attempt else "") + ")")
         isl_rep = {
             "regions": regions, "hour": t,
             "net_demand_mw": round(float(net_dem[t]), 1),

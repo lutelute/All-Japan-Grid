@@ -1,7 +1,7 @@
 {
   "meta": {
     "date": "2026-06-12",
-    "git_head": "5df0228",
+    "git_head": "2a05003",
     "scenario": "fy2023r2",
     "reactive": 0.6,
     "capacity_bridge": true
@@ -122,64 +122,10 @@
         }
       },
       "gate": {
-        "pass": true,
-        "cond_max": 483870927.25228834
+        "pass": false,
+        "cond_max": 1129649258.6911588
       },
-      "prune_threshold": 45.0,
-      "mode": "ac",
-      "converged": true,
-      "vm_by_zone": {
-        "chubu": [
-          0.981,
-          1.038
-        ],
-        "hokuriku": [
-          0.92,
-          1.038
-        ],
-        "kansai": [
-          0.824,
-          1.034
-        ],
-        "chugoku": [
-          0.68,
-          1.053
-        ],
-        "shikoku": [
-          0.663,
-          1.048
-        ],
-        "kyushu": [
-          0.969,
-          1.047
-        ]
-      },
-      "tie_flow_mw": {
-        "pf": {
-          "chubu->hokuriku": 2401.9,
-          "chubu->kansai": 9246.5,
-          "chugoku->kansai": -5530.2,
-          "hokuriku->kansai": 0.0,
-          "chugoku->kyushu": 4249.6,
-          "chugoku->shikoku": 1826.5,
-          "kansai->shikoku": 745.5
-        },
-        "uc": {
-          "chubu->kansai": 2166.9,
-          "chubu->hokuriku": 300.0,
-          "chugoku->kansai": 1329.0,
-          "kansai->shikoku": -1400.0,
-          "chugoku->shikoku": 370.8,
-          "chugoku->kyushu": -540.5
-        }
-      },
-      "before_converged": true,
-      "export": [
-        "west_before_buses.geojson",
-        "west_before_lines.geojson",
-        "west_after_buses.geojson",
-        "west_after_lines.geojson"
-      ]
+      "skipped": "ybus_gate FAIL — 契約により注入断面を解かない"
     }
   }
 }

@@ -59,8 +59,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   潮流パターンを作る（tohoku→tokyo輸入経路の混雑増が地図上で可視）
 - 開示: 線×バス点の視覚ズレ（線=OSM実形状端点、点=変電所代表座標、snapped
   1.5km吸着分）は描画上の課題で電気的接続とは別（オーナー質問への確認 2026-06-12）
+- **浮きバス問題の真因と解消（オーナー指摘起点、同日追記)**: 「OSMでは接続
+  されているのに緑（バス）だけ浮く」（east 375/west 438バス、8割が66-110kV帯）。
+  調査の確定事実: ①全浮きバスが活線を持ち電気的孤立は皆無（大田原=活線12本）
+  ②「大田原変電所~稲沢変電所線」の描画端点がバス点から3.08km — **線=OSM実形状
+  （正しい位置）、バス点=スナップクラスタ代表座標（実変電所から数kmズレうる）の
+  座標二重系統**が真因。途中仮説の「trafo未描画」は部分要因（同一座標構内trafoが
+  大半で可視化効果は30本のみ）。**解消=線端点をfrom/toバス座標へ吸着**（中間は
+  OSM形状のまま）→ east浮きバス **373→0**。trafoも紫点線で描画
+  （`変圧器（異電圧接続 — OSM線の潮流モデル上の置換）`とツールチップ明示）
+- **mainライブマップへの共通知見**: index.html系も同じ座標二重系統+trafo未描画の
+  はず — 同種の「浮き」が出ている場合は端点吸着+trafo描画で解消可能（還流④）
+- **gate二値ゆらぎの機械的対処**: cond は構築プロセスのハッシュ順で
+  4.84e8(PASS)/1.13e9(FAIL) の二値に振れる（5回再現で確認、onenormest内ゆらぎ
+  ではない）→ `--gate-retries N` で島網を作り直してPASSを引くまで再試行
 - 再現: `python3 scripts/uc_to_pf_national.py --islands east --export` /
-  `--islands west --try-ac --export` → docs/uc_map.html（テスト23 passed）
+  `--islands west --try-ac --export --gate-retries 4` → docs/uc_map.html
 
 ## 2026-06-12 — **Fable 5** — UC改善⑮: capacity_bridge — 容量の正の一元化（⑫の二重管理解消）
 
