@@ -98,3 +98,44 @@ pumped_hydro→揚水 / battery→蓄電池。連系線列はUCのic flowと照�
 - 「その他」「火力(その他)」の扱い（UC側unknownとの対応）
 - nas03のSSH認証は鍵登録済み（このMacから接続確認済み）。サーバー
   （pws-160core）からの経路は未確認 — 重い集計はpws-gpu3060が近道
+
+## 4. 達成水準と残差の構造（2026-06-12 総括 — 自己改善8巡の結果）
+
+### 4.1 達成水準（精度担保の現状）
+
+| 指標 | 値 |
+|---|---|
+| 検証カバレッジ | **8/10社**（hokkaido/tohoku/tepco/hokuriku/shikoku=新形式、kansai/chugoku/kyushu=旧形式。残: chubu=年度別形式・okinawa） |
+| 地域別L1（ピーク日2025-08-06） | 平均 **37.2pp**（ベースライン47.0から8巡で-9.8） |
+| 同・天気正規化（--re-actuals） | 平均 **32.6pp** |
+| 最良地域 | **kyushu 18.5pp** / kansai 23.7 / hokuriku 21.0（閑散日） |
+| 外部妥当性 | 全国地熱**549MW=公表~550MW一致** / fuel_cost=JEPX 2025-08クラスタと整合 / 北陸coal 61.2 vs 62.0 GWh/日 / tohoku送出 UC-107 vs 実績-121 GWh/日（方向・規模一致） |
+| 時間形状 | solar相関0.89-0.97（形状は較正済み、乖離は量側） |
+
+### 4.2 8巡で潰した要因（台帳⑰〜㉔）
+
+季節係数未適用→帰属誤り（IGCC・橘湾・敦賀）→効率ティルト→天気正規化→
+地熱坑井重複→検証カバレッジ3社拡大→ティルト幅JEPX較正→連系線突合。
+「燃料費が誤り」「全国coal設備が過大」の両仮説は**計測により棄却**。
+
+### 4.3 残差の構造（現アーキテクチャの限界として開示）
+
+1. **coal部分負荷運用**: UCはコスト最小化でcoalをフル稼働させるが、実績は
+   57-63%稼働。効率ティルトで一部表現したが、残りは**自社需要+市場取引**
+   （JEPX約定に応じた出力調整）の領分 — 市場結合モデルは本UCのスコープ外
+2. **連系線の時間パターン**: 日量・方向は整合（4.1）するが形状相関は低い
+   （0.26〜-0.58）— 市場スケジュールと連動する時間配分は同上の限界
+3. **検証データ側**: kansai 2024.csvがHTML破損（NAS取得スクリプトの修繕要）、
+   OCCTO需要の保持窓~14ヶ月（古い日付は--demand-from-measuredで代替）
+4. 単日検証は天気・曜日・定検の影響を受ける — 恒久運用はPhase C
+   （月次自動検証）で平滑化するのが正
+
+### 4.4 再現
+
+```bash
+AJGRID_NAS03_ROOT="ssh://pwslab@100.102.148.23/volume1/PWS_DB" \
+  python3 scripts/uc_validate.py --scenario fy2025r1 --date 2025-08-06            # ピーク日
+  python3 scripts/uc_validate.py --scenario fy2025r1 --date 2025-08-10 --re-actuals  # 天気正規化
+  python3 scripts/uc_validate.py --scenario fy2025r1 --date 2023-12-13 \
+    --companies kansai,chugoku,kyushu --demand-from-measured --re-actuals       # 旧形式3社
+```
