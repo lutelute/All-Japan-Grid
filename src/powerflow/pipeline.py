@@ -203,10 +203,13 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     net_dc = copy.deepcopy(net)
     dc_result = run_powerflow(net_dc, "dc")
 
-    # AC with pruning
+    # AC with pruning. The 12-degree rung exists for the OSM-faithful
+    # binding (ledger 85): the de-fused west island carries longer honest
+    # radials whose DC angles exceed 20 degrees; legacy builds converge at
+    # >=20 so the extra rung is dormant for them.
     ac_result = {"mode": "ac", "converged": False}
     net_ac = None
-    for threshold in [45.0, 30.0, 20.0]:
+    for threshold in [45.0, 30.0, 20.0, 12.0]:
         net_ac = copy.deepcopy(net)
         n_pruned = prune_dc_infeasible(net_ac, angle_threshold=threshold)
         if n_pruned > 0:

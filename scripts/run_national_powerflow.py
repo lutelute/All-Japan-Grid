@@ -93,7 +93,8 @@ def solve_island(island_id, isl, demand_cfg, reactive):
     dc = run_powerflow(net_dc, "dc")
     ac = {"mode": "ac", "converged": False}
     net_ac = None
-    for thr in (45.0, 30.0, 20.0):
+    # 12-degree rung: required by the OSM-faithful west island (ledger 85)
+    for thr in (45.0, 30.0, 20.0, 12.0):
         net_ac = copy.deepcopy(net)
         if prune_dc_infeasible(net_ac, angle_threshold=thr) > 0:
             fix_topology(net_ac, multi_slack=True); select_slack_bus(net_ac); scale_line_ratings(net_ac)

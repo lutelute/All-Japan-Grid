@@ -51,14 +51,22 @@ def test_okinawa_builder_pins(okinawa_topo):
     # 2026-06-11 tap snap (ledger 52): two dead-end stubs join their
     # neighbouring span mid-air (junctions 16 -> 14, branches 87 -> 85,
     # one merged parallel 32 -> 33) — the "bare polyline tee" fix.
+    # 2026-06-12 OSM-faithful binding ON by default (ledger 85): polygon-
+    # first vertex binding + tip joint + explicit lead-ins replace the
+    # blind centroid radii. One falsely fused class node drops (75 -> 74
+    # real subs); out-of-radius mid-vertices stay junctions (14 -> 28)
+    # with their chains drawn (85 -> 98 branches); a tip joint closes one
+    # fragment pair (components 11 -> 10); two evidenced parallel merges
+    # (33 -> 35). Tokyo A/B: implicit wrong-binds 3,365 -> 0, trunk rho
+    # .615 -> .647, 154 kV rho .095 -> .215.
     m = okinawa_topo
     assert m["builder"] == "snapped"
-    assert m["n_real_subs"] == 75
-    assert m["n_junctions"] == 14
-    assert m["n_branches"] == 85
+    assert m["n_real_subs"] == 74
+    assert m["n_junctions"] == 28
+    assert m["n_branches"] == 98
     assert m["n_gens"] == 22
-    assert m["n_components"] == 11
-    assert m["multi_circuit_branches"] == 33
+    assert m["n_components"] == 10
+    assert m["multi_circuit_branches"] == 35
     assert m["max_parallel"] == 4
 
 
@@ -66,8 +74,11 @@ def test_okinawa_quality_floors(okinawa_topo):
     m = okinawa_topo
     assert m["largest_comp_share"] >= 0.80
     assert m["unknown_kv_share"] <= 0.03
-    # circuits/cables tags must keep driving the parallel counts
-    assert m["evidenced_circuit_share"] >= 0.40
+    # circuits/cables tags must keep driving the parallel counts.
+    # Floor recalibrated 0.40 -> 0.38 (ledger 85): tip joints and explicit
+    # lead-ins are evidence-less single-circuit edges by design, diluting
+    # the share (measured 0.3855) without weakening the tag-driven counts.
+    assert m["evidenced_circuit_share"] >= 0.38
     # voltage provenance: propagation active, tags still dominate
     assert m["kv_provenance"].get("prop", 0) >= 1
     assert m["kv_provenance"]["tag"] > m["kv_provenance"].get("prop", 0)

@@ -268,9 +268,9 @@ def _resolve_db(db):
 
 
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
-                          polygon_bind=False, poly_edge_km=0.15,
+                          polygon_bind=True, poly_edge_km=0.15,
                           fallback_snap_km=0.4, fallback_endpoint_km=0.6,
-                          tip_joint_km=0.0, leadin_km=1.5,
+                          tip_joint_km=0.12, leadin_km=1.5,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12):
@@ -310,9 +310,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             substations and polygon gaps.
             Measured A/B with tip_joint_km=0.12 + leadin_km=1.5 (tokyo,
             ledger 84): implicit wrong-binds 3,365 -> 0, trunk rho
-            .615 -> .647, 154 kV rho .095 -> .215, 66 kV in-band; BUT the
-            west merged island loses AC convergence — default stays OFF
-            until that is cured (D6-2). Opt in per build.
+            .615 -> .647, 154 kV rho .095 -> .215, 66 kV in-band.
+            DEFAULT ON since ledger 85: the west-island AC loss that
+            first blocked adoption was the prune ladder stopping at 20
+            degrees (the de-fused island carries longer honest radials),
+            cured by the 12-degree rung — not the short joint edges
+            (floor A/B: bit-identical vmin with and without).
         tip_joint_km: join a degree-1 junction TIP to the nearest node of
             the SAME class within this distance (node-to-node complement
             of ``tap_snap_km``'s node-to-segment join). Owner directive:

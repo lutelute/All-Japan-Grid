@@ -151,8 +151,12 @@ def stitch_slice_boundaries(net, cell=0.001):
     return len(remap)
 
 
-def build_island_networks(snap_km=1.5):
+def build_island_networks(snap_km=1.5, **build_kwargs):
     """Build per-region snapped nets, merge into synchronous islands, add AC ties.
+
+    ``build_kwargs`` pass through to :func:`build_network_snapped`
+    (e.g. ``polygon_bind=True, tip_joint_km=0.12`` — the OSM-faithful
+    binding A/B of ledger 84).
 
     Returns (islands, async_links) where islands[name] = {
         net, geom, regions, frequency, tie_lines (list of added tie ids)
@@ -163,7 +167,8 @@ def build_island_networks(snap_km=1.5):
     # per-region snapped networks + geometry
     reg_net, reg_geom = {}, {}
     for r in ALL_REGIONS:
-        res = build_network_snapped(r, snap_km=snap_km, return_geom=True)
+        res = build_network_snapped(r, snap_km=snap_km, return_geom=True,
+                                    **build_kwargs)
         if res:
             reg_net[r], reg_geom[r] = res
 
