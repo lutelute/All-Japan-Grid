@@ -119,3 +119,38 @@ def test_kansai_legacy_format(tmp_path):
     assert r0["thermal_combined"] == pytest.approx(6364.0)
     assert r0["pumped_hydro"] == pytest.approx(33.0)
     assert r0["interconnector"] == pytest.approx(-823.0)
+
+
+CSV_CHUGOKU = """供給区域の需給実績,,,,,,,,,,,,,
+,,需要実績(MWh),供給実績(MWh),,,,,,,,,,
+DATE,TIME,需要,原子力,火力,水力,地熱,バイオマス,太陽光(実績),太陽光(抑制量),風力(実績),風力(抑制量),揚水,連系線潮流
+2023/12/13,0:00,5000,0,4523,249,0,186,0,－,2,－,129,-88
+2023/12/13,1:00,4900,0,4400,250,0,186,0,－,2,－,100,-80
+"""
+
+
+def test_chugoku_aliases(tmp_path):
+    d = tmp_path / "demand_raw" / "chugoku"
+    d.mkdir(parents=True)
+    (d / "202312.csv").write_bytes(CSV_CHUGOKU.encode("cp932"))
+    out = Nas03Connector().fetch(
+        {"company": "chugoku", "month": "202312", "date": "2023-12-13"},
+        _FakeContract(str(tmp_path)))
+    r0 = out["rows"][0]
+    assert r0["demand"] == pytest.approx(5000.0)
+    assert r0["thermal_combined"] == pytest.approx(4523.0)
+    assert r0["solar"] == pytest.approx(0.0)
+    assert r0["interconnector"] == pytest.approx(-88.0)
+    assert "solar_curtailed" not in r0    # 「－」欠測はスキップ
+
+
+def test_kyushu_quarter_file_resolution(tmp_path):
+    d = tmp_path / "demand_raw" / "kyushu"
+    d.mkdir(parents=True)
+    # 202312.csv は無く、FY四半期ファイル 2023_3Q.csv のみ存在
+    (d / "2023_3Q.csv").write_bytes(CSV_KANSAI_LEGACY.encode("cp932"))
+    out = Nas03Connector().fetch(
+        {"company": "kyushu", "month": "202312", "date": "2023-12-13"},
+        _FakeContract(str(tmp_path)))
+    assert out["format"] == "legacy_datetime"
+    assert out["n_rows"] == 2

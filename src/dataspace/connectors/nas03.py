@@ -47,6 +47,14 @@ _FUEL_COLUMNS = {
     "蓄電池": "battery",
     "連系線": "interconnector",
     "その他": "other",
+    # chugoku別名（「需給実績」形式: DATE,TIME + 需要/火力合算/括弧表記）
+    "需要": "demand",
+    "火力": "thermal_combined",
+    "太陽光(実績)": "solar",
+    "太陽光(抑制量)": "solar_curtailed",
+    "風力(実績)": "wind",
+    "風力(抑制量)": "wind_curtailed",
+    "連系線潮流": "interconnector",
 }
 # 「バイオマス出力制御量」等が「バイオマス」に部分一致しないよう長い順に照合
 _FUEL_KEYS_ORDERED = sorted(_FUEL_COLUMNS, key=len, reverse=True)
@@ -104,7 +112,28 @@ class Nas03Connector:
                 "ください（例: ssh://pwslab@100.102.148.23/volume1/PWS_DB、"
                 "マウント済み環境では /mnt/nas03）。暗黙のフォールバックは"
                 "しない方針（DATA_SPACE.md §4）")
-        raw = _read_remote(root, f"demand_raw/{company}/{month}.csv")
+        candidates = [f"demand_raw/{company}/{month}.csv"]
+        # kyushu等の四半期ファイル命名（2023_3Q.csv / 2023_Q4.csv 混在）:
+        # FY四半期(4-6=1Q…1-3=4Q)と暦四半期の両解釈を候補に足す
+        y, m = int(month[:4]), int(month[4:6])
+        fq = (m - 4) // 3 % 4 + 1 if m >= 4 else 4
+        cq = (m - 1) // 3 + 1
+        fy = y if m >= 4 else y - 1
+        for name in (f"{fy}_{fq}Q", f"{fy}_Q{fq}", f"{y}_Q{cq}",
+                     f"{y}_{cq}Q"):
+            candidates.append(f"demand_raw/{company}/{name}.csv")
+        raw = None
+        last_err = None
+        for rel in candidates:
+            try:
+                raw = _read_remote(root, rel)
+                break
+            except (RuntimeError, FileNotFoundError) as exc:
+                last_err = exc
+        if raw is None:
+            raise RuntimeError(
+                f"nas03: {company} {month} のファイルが見つからない "
+                f"(tried {len(candidates)}): {last_err}")
         # tepco月次はUTF-8-SIG、他社はCP932 — 「エリア需要」が読める方を採用
         # （CP932固定だとtepcoの列名が化けてdemand列が消え全行棄却になる）
         text = None
