@@ -1,0 +1,369 @@
+{
+  "meta": {
+    "date": "2026-06-12",
+    "git_head": "2cc433c",
+    "scenario": "fy2025r1",
+    "validation_date": "2025-08-06",
+    "companies": [
+      "hokkaido",
+      "tohoku",
+      "tepco",
+      "hokuriku",
+      "shikoku"
+    ],
+    "vocabulary_notes": [
+      "UC oil = 実績 火力(石油)+火力(その他)（区分差の開示）",
+      "UC solar/wind はシナリオ参照値（fy2025r1はFY2023容量踏襲=FY2025導入増未較正のバイアスをここで実測する）",
+      "実績は30分MW平均→1h平均、UCは1h値"
+    ]
+  },
+  "regions": {
+    "hokkaido": {
+      "company": "hokkaido",
+      "demand_measured_mwh": 85998.0,
+      "per_fuel": {
+        "lng": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 1977.5,
+          "diff_mwh": -1977.5,
+          "shape_corr": null
+        },
+        "coal": {
+          "uc_mwh": 54630.4,
+          "measured_mwh": 31150.5,
+          "diff_mwh": 23479.9,
+          "shape_corr": 0.405
+        },
+        "oil": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 14470.5,
+          "diff_mwh": -14470.5,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 20040.0,
+          "measured_mwh": 13537.5,
+          "diff_mwh": 6502.5,
+          "shape_corr": null
+        },
+        "geothermal": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 24.0,
+          "diff_mwh": -24.0,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 11400.0,
+          "measured_mwh": 6481.5,
+          "diff_mwh": 4918.5,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 14068.3,
+          "measured_mwh": 8432.0,
+          "diff_mwh": 5636.3,
+          "shape_corr": 0.85
+        },
+        "wind": {
+          "uc_mwh": 6776.2,
+          "measured_mwh": 7162.5,
+          "diff_mwh": -386.2,
+          "shape_corr": -0.561
+        },
+        "pumped_hydro": {
+          "uc_mwh": 705.6,
+          "measured_mwh": 512.5,
+          "diff_mwh": 193.1,
+          "shape_corr": 0.365
+        },
+        "battery": {
+          "uc_mwh": 847.4,
+          "measured_mwh": -50.0,
+          "diff_mwh": 897.4,
+          "shape_corr": 0.242
+        }
+      },
+      "share_l1_pp": 43.98,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "tohoku": {
+      "company": "tohoku",
+      "demand_measured_mwh": 240802.5,
+      "per_fuel": {
+        "nuclear": {
+          "uc_mwh": 19800.0,
+          "measured_mwh": 18841.0,
+          "diff_mwh": 959.0,
+          "shape_corr": null
+        },
+        "lng": {
+          "uc_mwh": 6914.8,
+          "measured_mwh": 111424.0,
+          "diff_mwh": -104509.2,
+          "shape_corr": 0.481
+        },
+        "coal": {
+          "uc_mwh": 233645.8,
+          "measured_mwh": 148589.5,
+          "diff_mwh": 85056.3,
+          "shape_corr": 0.466
+        },
+        "oil": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 9975.5,
+          "diff_mwh": -9975.5,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 27710.4,
+          "measured_mwh": 26129.0,
+          "diff_mwh": 1581.4,
+          "shape_corr": null
+        },
+        "geothermal": {
+          "uc_mwh": 17503.2,
+          "measured_mwh": 2688.0,
+          "diff_mwh": 14815.2,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 5337.6,
+          "measured_mwh": 16740.5,
+          "diff_mwh": -11402.9,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 32298.9,
+          "measured_mwh": 22245.5,
+          "diff_mwh": 10053.4,
+          "shape_corr": 0.959
+        },
+        "wind": {
+          "uc_mwh": 15612.5,
+          "measured_mwh": 5111.0,
+          "diff_mwh": 10501.5,
+          "shape_corr": 0.735
+        },
+        "pumped_hydro": {
+          "uc_mwh": 1212.1,
+          "measured_mwh": -491.0,
+          "diff_mwh": 1703.1,
+          "shape_corr": 0.545
+        },
+        "battery": {
+          "uc_mwh": 1584.5,
+          "measured_mwh": -53.0,
+          "diff_mwh": 1637.5,
+          "shape_corr": 0.305
+        }
+      },
+      "share_l1_pp": 69.71,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "tokyo": {
+      "company": "tepco",
+      "demand_measured_mwh": 1076789.0,
+      "per_fuel": {
+        "lng": {
+          "uc_mwh": 562830.3,
+          "measured_mwh": 574299.5,
+          "diff_mwh": -11469.2,
+          "shape_corr": 0.967
+        },
+        "coal": {
+          "uc_mwh": 212496.0,
+          "measured_mwh": 189534.5,
+          "diff_mwh": 22961.5,
+          "shape_corr": null
+        },
+        "oil": {
+          "uc_mwh": 245.3,
+          "measured_mwh": 52562.0,
+          "diff_mwh": -52316.7,
+          "shape_corr": 0.237
+        },
+        "hydro": {
+          "uc_mwh": 36331.2,
+          "measured_mwh": 34242.5,
+          "diff_mwh": 2088.7,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 12763.2,
+          "measured_mwh": 10388.5,
+          "diff_mwh": 2374.7,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 78142.5,
+          "measured_mwh": 88300.0,
+          "diff_mwh": -10157.5,
+          "shape_corr": 0.968
+        },
+        "wind": {
+          "uc_mwh": 379.5,
+          "measured_mwh": 2380.5,
+          "diff_mwh": -2001.0,
+          "shape_corr": 0.717
+        },
+        "battery": {
+          "uc_mwh": 186.0,
+          "measured_mwh": 105.0,
+          "diff_mwh": 81.0,
+          "shape_corr": 0.01
+        }
+      },
+      "share_l1_pp": 12.66,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "hokuriku": {
+      "company": "hokuriku",
+      "demand_measured_mwh": 89050.5,
+      "per_fuel": {
+        "lng": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 6490.5,
+          "diff_mwh": -6490.5,
+          "shape_corr": null
+        },
+        "coal": {
+          "uc_mwh": 61176.0,
+          "measured_mwh": 62039.5,
+          "diff_mwh": -863.5,
+          "shape_corr": null
+        },
+        "oil": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 8995.5,
+          "diff_mwh": -8995.5,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 24765.6,
+          "measured_mwh": 20431.0,
+          "diff_mwh": 4334.6,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 1491.5,
+          "diff_mwh": -1491.5,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 6863.0,
+          "measured_mwh": 4081.0,
+          "diff_mwh": 2782.0,
+          "shape_corr": 0.886
+        },
+        "wind": {
+          "uc_mwh": 1030.0,
+          "measured_mwh": 918.0,
+          "diff_mwh": 112.0,
+          "shape_corr": 0.315
+        },
+        "pumped_hydro": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 347.0,
+          "diff_mwh": -347.0,
+          "shape_corr": null
+        },
+        "battery": {
+          "uc_mwh": 37.2,
+          "measured_mwh": 0.0,
+          "diff_mwh": 37.2,
+          "shape_corr": null
+        }
+      },
+      "share_l1_pp": 33.06,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    },
+    "shikoku": {
+      "company": "shikoku",
+      "demand_measured_mwh": 94018.0,
+      "per_fuel": {
+        "nuclear": {
+          "uc_mwh": 21360.0,
+          "measured_mwh": 20857.0,
+          "diff_mwh": 503.0,
+          "shape_corr": null
+        },
+        "lng": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 7972.0,
+          "diff_mwh": -7972.0,
+          "shape_corr": null
+        },
+        "coal": {
+          "uc_mwh": 82944.0,
+          "measured_mwh": 56566.5,
+          "diff_mwh": 26377.5,
+          "shape_corr": null
+        },
+        "oil": {
+          "uc_mwh": 0.0,
+          "measured_mwh": 6054.5,
+          "diff_mwh": -6054.5,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 10377.6,
+          "measured_mwh": 8315.0,
+          "diff_mwh": 2062.6,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 4560.0,
+          "measured_mwh": 6964.0,
+          "diff_mwh": -2404.0,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 8963.4,
+          "measured_mwh": 16931.0,
+          "diff_mwh": -7967.6,
+          "shape_corr": 0.988
+        },
+        "wind": {
+          "uc_mwh": 1707.6,
+          "measured_mwh": 228.0,
+          "diff_mwh": 1479.6,
+          "shape_corr": 0.462
+        },
+        "battery": {
+          "uc_mwh": 315.3,
+          "measured_mwh": -18.0,
+          "diff_mwh": 333.3,
+          "shape_corr": 0.159
+        }
+      },
+      "share_l1_pp": 41.33,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    }
+  },
+  "summary": {
+    "l1_pp_by_region": {
+      "hokkaido": 43.98,
+      "tohoku": 69.71,
+      "tokyo": 12.66,
+      "hokuriku": 33.06,
+      "shikoku": 41.33
+    },
+    "l1_pp_mean": 40.15
+  }
+}

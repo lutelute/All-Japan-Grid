@@ -60,7 +60,7 @@ providers:
     license: 元データの各電力会社公表条件に従う（生データ再配布不可）
     redistribute_raw: false
     redistribute_derived: true
-    connector: null            # Phase A実装予定（docs/UC_VALIDATION_PLAN.md）
+    connector: nas03           # Phase A-1実装済み（新形式=2024-04以降の月次）
     variables:
       - {name: area_generation_actual,
          desc: "demand_raw/{company}/ 10社・30分値・電源種別 (原子力/LNG/石炭/石油/水力/地熱/バイオ/太陽光+制御/風力+制御/揚水/蓄電池/連系線)"}
