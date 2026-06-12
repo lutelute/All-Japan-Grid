@@ -1,0 +1,98 @@
+{
+ "region": "shikoku",
+ "watch_buses": [
+  "四国電力 甲浦変電所",
+  "多良変電所",
+  "牟岐変電所",
+  "江田島変電所",
+  "能美変電所"
+ ],
+ "curve": [
+  {
+   "lambda": 1.0,
+   "converged": true,
+   "vm_min_watch": 0.958,
+   "vm_watch": [
+    0.958,
+    0.959,
+    0.97,
+    0.971,
+    0.974
+   ]
+  },
+  {
+   "lambda": 1.1,
+   "converged": true,
+   "vm_min_watch": 0.945,
+   "vm_watch": [
+    0.945,
+    0.947,
+    0.96,
+    0.964,
+    0.966
+   ]
+  },
+  {
+   "lambda": 1.2,
+   "converged": true,
+   "vm_min_watch": 0.932,
+   "vm_watch": [
+    0.932,
+    0.934,
+    0.949,
+    0.956,
+    0.959
+   ]
+  },
+  {
+   "lambda": 1.3,
+   "converged": true,
+   "vm_min_watch": 0.919,
+   "vm_watch": [
+    0.919,
+    0.921,
+    0.938,
+    0.947,
+    0.951
+   ]
+  },
+  {
+   "lambda": 1.4,
+   "converged": true,
+   "vm_min_watch": 0.905,
+   "vm_watch": [
+    0.905,
+    0.907,
+    0.926,
+    0.941,
+    0.944
+   ]
+  },
+  {
+   "lambda": 1.5,
+   "converged": true,
+   "vm_min_watch": 0.89,
+   "vm_watch": [
+    0.89,
+    0.893,
+    0.914,
+    0.932,
+    0.936
+   ]
+  },
+  {
+   "lambda": 1.6,
+   "converged": true,
+   "vm_min_watch": 0.874,
+   "vm_watch": [
+    0.874,
+    0.878,
+    0.901,
+    0.923,
+    0.927
+   ]
+  }
+ ],
+ "critical_lambda": null,
+ "note": "PV proxy: uniform load+gen scaling; AC NR divergence = collapse proxy. Synthetic params -> margin is indicative ordering, not operational."
+}
