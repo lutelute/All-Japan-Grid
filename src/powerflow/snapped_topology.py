@@ -368,12 +368,30 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 fc = export_geojson(db, region, layer)
             except Exception:
                 return None
-            return fc if fc.get("features") else fc
-        path = os.path.join(data_dir, f"{region}_{layer}.geojson")
-        if not os.path.exists(path):
-            return None
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
+            fc = fc if fc.get("features") else fc
+        else:
+            path = os.path.join(data_dir, f"{region}_{layer}.geojson")
+            if not os.path.exists(path):
+                return None
+            with open(path, encoding="utf-8") as f:
+                fc = json.load(f)
+        # Additive supplement (I3, ledger 96): ways the original extracts
+        # missed — fetched from Overpass around isolated-fragment tips
+        # (real trunk lines like 佐久間東幹線/東千葉房総線 were absent).
+        # Tracked curated files with provenance; never mutates the base
+        # extract (the data covenant forbids destructive regeneration).
+        spath = os.path.join(data_dir, f"{region}_{layer}_supplement.geojson")
+        if fc is not None and os.path.exists(spath):
+            try:
+                with open(spath, encoding="utf-8") as f:
+                    sup = json.load(f)
+                feats = sup.get("features") or []
+                if feats:
+                    fc = {"type": "FeatureCollection",
+                          "features": list(fc.get("features", [])) + feats}
+            except Exception:   # noqa: BLE001 — supplement is best-effort
+                pass
+        return fc
 
     freq = REGION_FREQ.get(region, 50)
     net = GridNetwork(region=region, frequency_hz=freq)
