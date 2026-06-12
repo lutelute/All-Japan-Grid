@@ -54,22 +54,25 @@ providers:
     notes: 既存DB機械更新ループ（fetch→ingest→enrich→export）が取得経路の正本
 
   nas03_generation_records:
-    title: 発電実績・でんき予報アーカイブ（研究室NAS03）
-    custodian: 研究室 pws-nas03 (UGREEN DXP4800 Plus)
-    location: "env:AJGRID_NAS03_ROOT"
-    license: 元データの各電力会社・OCCTO公表条件に従う（生データ再配布不可）
+    title: 電力需給実績（エリア別・電源種別、研究室NAS03 PWS_DB）
+    custodian: 研究室 pws-nas03 (UGREEN DXP4800 Plus) /volume1/PWS_DB
+    location: "env:AJGRID_NAS03_ROOT"   # 例 ssh://pwslab@100.102.148.23/volume1/PWS_DB
+    license: 元データの各電力会社公表条件に従う（生データ再配布不可）
     redistribute_raw: false
     redistribute_derived: true
-    connector: null                # 所在・形式の確認後にコネクタ実装（Phase 2）
+    connector: null            # Phase A実装予定（docs/UC_VALIDATION_PLAN.md）
     variables:
-      - {name: area_generation_actual, desc: エリア別・電源種別の発電実績}
-      - {name: denki_yoho, desc: でんき予報（需要予測・太陽光出力予測等）}
-    granularity: 要確認（各社CSV形式・期間）
+      - {name: area_generation_actual,
+         desc: "demand_raw/{company}/ 10社・30分値・電源種別 (原子力/LNG/石炭/石油/水力/地熱/バイオ/太陽光+制御/風力+制御/揚水/蓄電池/連系線)"}
+      - {name: demand_normalized, desc: "需要のみ正規化済み demand_{year}.csv"}
+    granularity: 30分値（社別に命名・形式の方言あり、CP932等）
     notes: >-
-      オーナー示唆(2026-06-11): UC検証には発電実績があるのでnas03から参照する、
-      でんき予報も参照可。NAS上のパス・ファイル形式の確認後、MSMと同じ
-      所在ガード方式でコネクタ化する。UCの燃料別シェア検証を「年間統計1点」
-      から「月次・地域別の実績系列」比較へ強化できる。
+      所在確定(2026-06-12調査): NAS README.mdが正本。期間は社別
+      (kansai/chugoku 2016〜、多くがFY2023-2025、demand_dailyは
+      pws-gpu3060 cronで毎日自動更新)。同NASに msm_raw 2024-2025
+      (GRIB2 ~1.2TB → msm契約の所在もこれで確定) と price_raw/jepx
+      (2009〜 → JEPXプロバイダ候補) も所在。検証ループ設計は
+      docs/UC_VALIDATION_PLAN.md。
 
   energy_stats:
     title: 資源エネルギー庁 電力調査統計・総合エネルギー統計
