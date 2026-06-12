@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "date": "2026-06-12",
+    "git_head": "c693f2f",
+    "scenario": "fy2025r1",
+    "validation_date": "2023-12-13",
+    "re_actuals": true,
+    "demand_from_measured": true,
+    "disclosure": "検証地域=実績需要・他地域=合成needs・原子力断面=シナリオ断面のまま",
+    "companies": [
+      "kansai"
+    ],
+    "vocabulary_notes": [
+      "UC oil = 実績 火力(石油)+火力(その他)（区分差の開示）",
+      "UC solar/wind はシナリオ参照値（fy2025r1はFY2023容量踏襲=FY2025導入増未較正のバイアスをここで実測する）",
+      "実績は30分MW平均→1h平均、UCは1h値"
+    ]
+  },
+  "regions": {
+    "kansai": {
+      "company": "kansai",
+      "demand_measured_mwh": 384947.0,
+      "per_fuel": {
+        "nuclear": {
+          "uc_mwh": 157872.0,
+          "measured_mwh": 117140.0,
+          "diff_mwh": 40732.0,
+          "shape_corr": null
+        },
+        "hydro": {
+          "uc_mwh": 19003.2,
+          "measured_mwh": 31302.0,
+          "diff_mwh": -12298.8,
+          "shape_corr": null
+        },
+        "biomass": {
+          "uc_mwh": 2700.0,
+          "measured_mwh": 1536.0,
+          "diff_mwh": 1164.0,
+          "shape_corr": null
+        },
+        "solar": {
+          "uc_mwh": 22376.0,
+          "measured_mwh": 22376.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "wind": {
+          "uc_mwh": 1697.0,
+          "measured_mwh": 1697.0,
+          "diff_mwh": 0.0,
+          "shape_corr": 1.0
+        },
+        "battery": {
+          "uc_mwh": 630.5,
+          "measured_mwh": 0.0,
+          "diff_mwh": 630.5,
+          "shape_corr": null
+        },
+        "thermal(combined)": {
+          "uc_mwh": 158859.6,
+          "measured_mwh": 190155.0,
+          "diff_mwh": -31295.4,
+          "shape_corr": 0.57
+        }
+      },
+      "share_l1_pp": 23.65,
+      "curtailment_mwh": {
+        "solar": 0.0,
+        "wind": 0.0
+      }
+    }
+  },
+  "summary": {
+    "l1_pp_by_region": {
+      "kansai": 23.65
+    },
+    "l1_pp_mean": 23.65
+  }
+}

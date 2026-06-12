@@ -124,9 +124,60 @@ class Nas03Connector:
         h_idx = next((i for i, r in enumerate(rows_in)
                       if r and r[0].strip() == "DATE"), None)
         if h_idx is None:
-            raise RuntimeError(
-                f"nas03: {company}/{month}.csv に新形式ヘッダ(DATE,TIME,…)が"
-                f"見つからない — 旧形式（火力合算）はPhase B対応")
+            # kansai旧形式（Phase B）: DATE_TIME 1列・1時間値MWh・火力合算。
+            # 列位置固定（2行ヘッダで7-10列目の実績/抑制は1行目の
+            # 太陽光/風力と組合せ — 位置で確定する方が頑健）
+            kx = next((i for i, r in enumerate(rows_in)
+                       if r and r[0].strip() == "DATE_TIME"), None)
+            if kx is None:
+                raise RuntimeError(
+                    f"nas03: {company}/{month}.csv のヘッダが未知形式 — "
+                    f"DATE/TIME でも DATE_TIME でもない")
+            KANSAI_COLS = ["demand", "nuclear", "thermal_combined", "hydro",
+                           "geothermal", "biomass", "solar",
+                           "solar_curtailed", "wind", "wind_curtailed",
+                           "pumped_hydro", "interconnector"]
+            want_date = str(query.get("date", "")).replace("-", "/")
+            want_alt = None
+            if want_date:
+                y, m, d = want_date.split("/")
+                want_alt = f"{y}/{int(m)}/{int(d)}"
+            out_rows = []
+            for r in rows_in[kx + 1:]:
+                if len(r) < 3 or not r[0].strip():
+                    continue
+                dt_s = r[0].strip()           # "2023/12/13 0:00"
+                date_part = dt_s.split()[0]
+                if want_date and date_part not in (want_date, want_alt):
+                    continue
+                rec: Dict[str, Any] = {"dt": dt_s}
+                ok = False
+                for i, fuel in enumerate(KANSAI_COLS, start=1):
+                    if i >= len(r):
+                        continue
+                    v = r[i].strip().replace(",", "")
+                    if v in ("", "－", "-"):
+                        continue
+                    try:
+                        rec[fuel] = float(v)   # 1時間値MWh = MW平均と同値
+                        ok = True
+                    except ValueError:
+                        continue
+                if ok and "demand" in rec:
+                    out_rows.append(rec)
+            fuels = sorted({k for rec in out_rows for k in rec if k != "dt"})
+            logger.info("nas03 fetch %s/%s (legacy DATE_TIME): %d rows",
+                        company, month, len(out_rows))
+            return {
+                "region": COMPANY_TO_REGION[company],
+                "company": company,
+                "month": month,
+                "date": str(query.get("date", "")) or None,
+                "format": "legacy_datetime",
+                "n_rows": len(out_rows),
+                "fuels": fuels,
+                "rows": out_rows,
+            }
         header = rows_in[h_idx]
         col_map: Dict[int, str] = {}
         for i, col in enumerate(header):
