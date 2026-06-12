@@ -1,0 +1,115 @@
+{
+ "generated_at": "2026-06-12T13:07:40+00:00",
+ "method": "DC sweep: measured interconnect stat (p95/signed_q50) scaled x0.8/1.0/1.2 via loader patch — production code untouched; overloads/loading on REAL lines only (non-physical excluded)",
+ "canonical": "external_flows_tokyo_full_2026-06-12e.json",
+ "cases": [
+  {
+   "region": "kansai",
+   "factor": 0.8,
+   "dc": true,
+   "ac": false,
+   "boundary_import_mw": 2171.2,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 6160.0,
+    "measured_net_mw": 2171.2,
+    "factor": 0.352,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 2,
+   "max_loading_real_pct": 118.4,
+   "p95_loading_real_pct": 80.0,
+   "overload_sum_pct_excess": 23.0
+  },
+  {
+   "region": "kansai",
+   "factor": 1.0,
+   "dc": true,
+   "ac": false,
+   "boundary_import_mw": 2714.0,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 6160.0,
+    "measured_net_mw": 2714.0,
+    "factor": 0.441,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 3,
+   "max_loading_real_pct": 119.2,
+   "p95_loading_real_pct": 80.0,
+   "overload_sum_pct_excess": 40.0
+  },
+  {
+   "region": "kansai",
+   "factor": 1.2,
+   "dc": true,
+   "ac": false,
+   "boundary_import_mw": 3256.8,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 6160.0,
+    "measured_net_mw": 3256.8,
+    "factor": 0.529,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 2,
+   "max_loading_real_pct": 119.6,
+   "p95_loading_real_pct": 80.0,
+   "overload_sum_pct_excess": 31.0
+  },
+  {
+   "region": "tokyo",
+   "factor": 0.8,
+   "dc": true,
+   "ac": true,
+   "boundary_import_mw": 4924.8,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 4780.3,
+    "measured_net_mw": 4924.8,
+    "factor": 1.03,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 18,
+   "max_loading_real_pct": 159.6,
+   "p95_loading_real_pct": 80.0,
+   "overload_sum_pct_excess": 165.0
+  },
+  {
+   "region": "tokyo",
+   "factor": 1.0,
+   "dc": true,
+   "ac": true,
+   "boundary_import_mw": 6156.0,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 4780.3,
+    "measured_net_mw": 6156.0,
+    "factor": 1.288,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 13,
+   "max_loading_real_pct": 149.7,
+   "p95_loading_real_pct": 80.0,
+   "overload_sum_pct_excess": 140.0
+  },
+  {
+   "region": "tokyo",
+   "factor": 1.2,
+   "dc": true,
+   "ac": true,
+   "boundary_import_mw": 7387.2,
+   "boundary_export_mw": 0.0,
+   "net_rescale": {
+    "model_net_mw": 4780.3,
+    "measured_net_mw": 7387.2,
+    "factor": 1.545,
+    "source": "measured_area_stats gen_by_fuel:interconnect"
+   },
+   "n_overloads_real": 9,
+   "max_loading_real_pct": 139.6,
+   "p95_loading_real_pct": 79.8,
+   "overload_sum_pct_excess": 80.0
+  }
+ ]
+}
