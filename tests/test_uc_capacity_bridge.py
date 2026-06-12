@@ -70,8 +70,11 @@ class TestApplyToNet:
         assert rep["dedup_disabled"] == 1
         active_tachibana = net.gen[
             net.gen["name"].astype(str).str.contains("橘湾火力")
-            & net.gen["in_service"]]
-        assert len(active_tachibana) == 1  # 二重計上が解消
+            & (net.gen["max_p_mw"] > 0)]
+        assert len(active_tachibana) == 1  # 二重計上が解消（容量0化方式）
+        # 網構造は不変: in_service は全行 True のまま（ybus_gate を壊さない）
+        dup = net.gen[net.gen["name"].astype(str).str.contains("橘湾火力")]
+        assert dup["in_service"].all()
 
     def test_patch_capacity_fuel_retire(self):
         net = _bridge_net()
@@ -81,9 +84,10 @@ class TestApplyToNet:
         assert nanao.iloc[0]["type"] == "coal"
         assert nanao.iloc[0]["max_p_mw"] == pytest.approx(1200.0)
         assert rep["fuel_fixed"] == 1
-        # 豊前: 廃止
+        # 豊前: 廃止 = 容量0化（in_serviceは触らない）
         buzen = net.gen[net.gen["name"].astype(str).str.contains("豊前")]
-        assert not bool(buzen.iloc[0]["in_service"])
+        assert buzen.iloc[0]["max_p_mw"] == pytest.approx(0.0)
+        assert bool(buzen.iloc[0]["in_service"])
         assert rep["retired"] == 1
         # matchしないパッチは開示
         assert "存在しない発電所" in rep["unmatched_patches"]
@@ -104,7 +108,8 @@ class TestApplyToNet:
         genkai = net.gen[net.gen["name"].astype(str).str.contains("玄海")]
         assert genkai.iloc[0]["max_p_mw"] == pytest.approx(2360.0)  # site容量
         hamaoka = net.gen[net.gen["name"].astype(str).str.contains("浜岡")]
-        assert not bool(hamaoka.iloc[0]["in_service"])  # リスト外=停止
+        assert hamaoka.iloc[0]["max_p_mw"] == pytest.approx(0.0)  # リスト外=容量0化
+        assert bool(hamaoka.iloc[0]["in_service"])
         assert rep["nuclear_set"] == 1
         assert rep["nuclear_stopped"] == 1
 
@@ -122,7 +127,7 @@ class TestApplyToNet:
         # 容量比例: 橘湾火力2100 / 七尾大田(coal化)1200 / 橘湾(四電)700 = 4000
         tachibana_active = net.gen[
             net.gen["name"].astype(str).str.contains("橘湾火力")
-            & net.gen["in_service"]]
+            & (net.gen["max_p_mw"] > 0)]
         assert float(tachibana_active.iloc[0]["p_mw"]) == pytest.approx(
             1500.0 * 2100 / 4000)
         nanao = net.gen[net.gen["name"].astype(str).str.contains("七尾大田")]

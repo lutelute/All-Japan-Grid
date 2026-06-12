@@ -81,14 +81,32 @@ def load_pf_calibration(scenario_id: str = "fy2023r2",
     return {"patches": patches, "nuclear": nuclear}
 
 
+def _zero_out(net, idx) -> None:
+    """genを「容量0化」で止める — in_serviceは触らない。
+
+    in_service=False はPVノードをybusから消し、閾値際の島では条件数を
+    悪化させて ybus_gate を割る（west島で実測: 素の網4.42e8 → 停止方式
+    1.13e9 FAIL）。容量0化なら網構造が不変で、容量比例注入は0容量機に
+    配分しない。停止炉がPVノードとして電圧維持に残る近似は開示事項
+    （実機の調相運転に相当する場合もある）。
+    """
+    net.gen.at[idx, "max_p_mw"] = 0.0
+    net.gen.at[idx, "p_mw"] = 0.0
+    net.gen.at[idx, "max_q_mvar"] = 0.0
+    net.gen.at[idx, "min_q_mvar"] = 0.0
+
+
 def apply_to_net(net, calib: Dict[str, List[dict]]) -> Dict:
     """net.gen へ較正を適用し、適用レポートを返す（in-place）。
 
+    停止系の操作（dedup・廃止・リスト外原子炉）はすべて容量0化
+    （:func:`_zero_out`）で表現し、in_service と網構造は変えない。
+
     Returns:
         report:
-        - dedup_disabled: 停止した重複行数
+        - dedup_disabled: 容量0化した重複行数
         - patched / retired / fuel_fixed: パッチ適用件数
-        - nuclear_set / nuclear_stopped: 稼働炉の容量設定・リスト外停止数
+        - nuclear_set / nuclear_stopped: 稼働炉の容量設定・リスト外0化数
         - zone_override: {gen_idx: region} 注入側で使う帰属表
         - mw_delta: max_p_mw の正味増減（稼働genのみ）
         - unmatched_patches: PF側に見つからなかったmatch文字列（開示）
@@ -110,13 +128,15 @@ def apply_to_net(net, calib: Dict[str, List[dict]]) -> Dict:
     active = gen["in_service"].astype(bool)
     names = gen["name"].astype(str)
     seen: set = set()
+    zeroed: set = set()   # 0化済み行 — 後続のパッチ/nuclearで復活させない
     for idx in gen.index[active]:
         cap0 = float(gen.at[idx, "max_p_mw"])
         if cap0 < DEDUP_MIN_MW:
             continue
         key = (names.at[idx], int(gen.at[idx, "bus"]), round(cap0, 1))
         if key in seen and key[0] not in ("", "None", "nan"):
-            net.gen.at[idx, "in_service"] = False
+            _zero_out(net, idx)
+            zeroed.add(idx)
             report["dedup_disabled"] += 1
         else:
             seen.add(key)
@@ -134,14 +154,16 @@ def apply_to_net(net, calib: Dict[str, List[dict]]) -> Dict:
             continue
         cap_raw = patch.get("capacity_mw")  # 無し=帰属/燃料のみのパッチ
         for idx in net.gen.index[mask]:
+            if idx in zeroed:   # dedup0化済みコピーには適用しない
+                continue
             if patch.get("fuel"):
                 if net.gen.at[idx, "type"] != patch["fuel"]:
                     net.gen.at[idx, "type"] = patch["fuel"]
                     report["fuel_fixed"] += 1
             if cap_raw is not None:
                 cap = float(cap_raw)
-                if cap <= 0:  # 廃止・除外
-                    net.gen.at[idx, "in_service"] = False
+                if cap <= 0:  # 廃止・除外（容量0化、網構造は不変）
+                    _zero_out(net, idx)
                     report["retired"] += 1
                     continue
                 net.gen.at[idx, "max_p_mw"] = cap
@@ -158,17 +180,19 @@ def apply_to_net(net, calib: Dict[str, List[dict]]) -> Dict:
     sites = calib.get("nuclear", [])
     claimed: set = set()
     for idx in net.gen.index[nuc_mask]:
+        if idx in zeroed:   # dedup0化済みコピーには適用しない
+            continue
         name = names.at[idx]
         site = next((s for s in sites
                      if str(s.get("name", "")) and str(s["name"]) in name),
                     None)
         if site is None:
-            net.gen.at[idx, "in_service"] = False
+            _zero_out(net, idx)
             report["nuclear_stopped"] += 1
             continue
         skey = str(site["name"])
-        if skey in claimed:  # 同サイト2行目（dedup漏れ）は停止
-            net.gen.at[idx, "in_service"] = False
+        if skey in claimed:  # 同サイト2行目（dedup漏れ）は容量0化
+            _zero_out(net, idx)
             report["nuclear_stopped"] += 1
             continue
         claimed.add(skey)

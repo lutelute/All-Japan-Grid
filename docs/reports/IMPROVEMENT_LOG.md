@@ -37,6 +37,31 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑯: west島UC断面の初AC収束 + before/afterマップ（merit-order vs UCコミットメント）
+
+- **west島がUC注入断面でAC収束（本プロジェクト初）**: mainのmulti-voltage builder
+  進化（ledger 63「stale assumption」）のマージに加え、**bridgeの停止操作を
+  in_service=False→容量0化（_zero_out: max_p_mw/p_mw/q上限=0、PVノード温存）に
+  変更**したことで gate が閾値際（1.13e9 FAIL）から **4.84e8 PASS** に復帰。
+  vm zone別: chubu[0.981,1.038] hokuriku[0.92,1.038] kansai[0.824,1.034]
+  chugoku[0.68,1.053] shikoku[0.663,1.048] kyushu[0.969,1.047]
+  （chugoku/shikokuの深い放射状はmain ledger 63/77の既知性質と一致）。
+  0化済み行に後続パッチが再容量化するバグはzeroed集合ガードで修正
+- **before/afterエクスポート機械化**(`--export`): base網を**1回だけ構築し
+  deepcopyで2分岐**（before=merit-order/after=UC注入、需要は両方UC断面=
+  「同一網・同一需要・配分のみ差」）→ 地域別GeoJSON+差分（dvm/dloading）を
+  docs/data/uc_powerflow/ へ出力（east+west 8ファイル+summary、20MB）。
+  別buildにしない理由=網構成のハッシュ順ゆらぎを差分に混ぜない（gateゆらぎの教訓）
+- **uc_map.html**（単独ページ、mainのマップ無改変）: before/after/差分の3モード
+  ×島切替×バス(vm)/線(loading)レイヤ。Playwrightで描画検証済み
+- **east差分の計測**: dvm/dloading 100%有効。dvm median -0.0015/min -0.077、
+  **|Δloading|>10ppが1,322本** — UCコミットメントはmerit-orderと大きく異なる
+  潮流パターンを作る（tohoku→tokyo輸入経路の混雑増が地図上で可視）
+- 開示: 線×バス点の視覚ズレ（線=OSM実形状端点、点=変電所代表座標、snapped
+  1.5km吸着分）は描画上の課題で電気的接続とは別（オーナー質問への確認 2026-06-12）
+- 再現: `python3 scripts/uc_to_pf_national.py --islands east --export` /
+  `--islands west --try-ac --export` → docs/uc_map.html（テスト23 passed）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑮: capacity_bridge — 容量の正の一元化（⑫の二重管理解消）
 
 - **橋渡し層**(`19ea474`, `src/uc/capacity_bridge.py`): DB（uc_scenario_generators、

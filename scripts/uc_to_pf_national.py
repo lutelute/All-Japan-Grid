@@ -28,6 +28,7 @@ import argparse
 import copy
 import datetime as _dt
 import json
+import math
 import os
 import subprocess
 import sys
@@ -80,9 +81,13 @@ def _git_head() -> str:
         return "unknown"
 
 
-def build_injected_island(isl, regions, scn, uc, t, demand_cfg, reactive,
-                          calib=None):
-    """島ネット構築+UC断面zone別注入（solve_islandのUC版、ソルブ前まで）。"""
+def build_island_base(isl, demand_cfg):
+    """島ネットの共通base（builder→トポロジ→需要配置、配分前まで）。
+
+    before/after比較は **このbaseのdeepcopy** から分岐する — 別々にbuildすると
+    set走査順（ハッシュシード）で網構成が揺れ、差分が配分以外を拾ってしまう
+    （ybus_gateゆらぎの教訓）。
+    """
     net = PandapowerBuilder().build(isl["net"]).net
     fix_zero_voltages(net)
     insert_transformers(net)
@@ -95,27 +100,172 @@ def build_injected_island(isl, regions, scn, uc, t, demand_cfg, reactive,
     inactive = set(net.bus.index[~net.bus["in_service"]])
     if len(net.load) > 0:
         net.load.loc[net.load["bus"].isin(inactive), "in_service"] = False
+    return net
 
-    # ── 容量橋渡し: UC側較正(DB)をPF側genへ適用（容量二重管理の解消） ──
+
+def dispatch_uc(net, regions, scn, uc, t, calib):
+    """after断面: 容量橋渡し+UC断面のzone別注入。"""
     bridge_rep = None
     zone_override = None
     if calib is not None:
         from src.uc.capacity_bridge import apply_to_net
         bridge_rep = apply_to_net(net, calib)
         zone_override = bridge_rep["zone_override"] or None
-
-    # ── UC断面のzone別注入（merit-order balance_power_by_zone の代替） ──
     fuel_by_zone = {r: uc_snapshot(uc, scn.generators, t, region=r)
                     for r in regions}
     demand_by_zone = {r: float(scn.net_demand_r[r][t]) for r in regions}
     inj = inject_dispatch_by_zone(net, fuel_by_zone, demand_by_zone,
                                   gen_zone_override=zone_override)
+    return inj, bridge_rep
 
+
+def dispatch_merit(net, regions, scn, t, demand_cfg):
+    """before断面: 同一需要（UC断面の地域純需要）でmerit-order配分。
+
+    loadをUC断面へスケールしてから balance_power_by_zone を呼ぶことで、
+    before/afterは「同一網・同一需要・配分のみ差」になる。
+    """
+    from src.powerflow.transforms import balance_power_by_zone
+    from src.uc.pf_injection import scale_loads_to
+
+    zone_of_bus = net.bus["zone"]
+    load_zone = net.load["bus"].map(zone_of_bus)
+    for r in regions:
+        scale_loads_to(net, float(scn.net_demand_r[r][t]),
+                       load_mask=(load_zone == r))
+    balance_power_by_zone(net, demand_cfg)
+
+
+def finalize_island(net, reactive):
+    """配分後の共通仕上げ（ratings→無効電力補償→電圧初期値）。"""
     scale_line_ratings(net)
     n_shunt = add_reactive_compensation(net, reactive)
     net.bus["vm_pu"] = 1.0
     apply_voltage_setpoints(net)
-    return net, inj, n_shunt, bridge_rep
+    return n_shunt
+
+
+def solve_island_mode(net, mode):
+    """島をAC（pruneリトライ45/30/20）またはDCで解く。
+
+    Returns: (net_solved, result, prune_threshold or None)
+    """
+    if mode == "ac":
+        res = {"converged": False}
+        net_s = None
+        for thr in (45.0, 30.0, 20.0):
+            net_s = copy.deepcopy(net)
+            if prune_dc_infeasible(net_s, angle_threshold=thr) > 0:
+                fix_topology(net_s, multi_slack=True)
+                select_slack_bus(net_s)
+                scale_line_ratings(net_s)
+            res = run_powerflow(net_s, "ac")
+            if res["converged"]:
+                return net_s, res, thr
+        return net_s, res, None
+    net_s = copy.deepcopy(net)
+    return net_s, run_powerflow(net_s, "dc"), None
+
+
+def export_before_after(net_before, net_after, regions, geom, island_id,
+                        mode, outdir):
+    """before(merit-order)/after(UC注入)の地域別GeoJSON+差分を出力する。
+
+    両netは同一baseのdeepcopy由来 — bus/line indexの対応が保証されるので、
+    after側featureに dvm（vm_after-vm_before）/ dloading を焼き込む。
+    ACのprune段数差でin_service集合が僅かに違いうるため、差分は両断面に
+    結果がある要素のみ（無い側はnull=マップで灰色）。
+    """
+    from scripts.export_powerflow_pages import _parse_bus_coords
+
+    os.makedirs(outdir, exist_ok=True)
+    written = []
+    vm_b = (net_before.res_bus["vm_pu"]
+            if "vm_pu" in getattr(net_before, "res_bus", {}) else None)
+    ld_b = (net_before.res_line["loading_percent"]
+            if "loading_percent" in getattr(net_before, "res_line", {})
+            else None)
+
+    def _bus_fc(net, with_diff):
+        feats = []
+        for idx in net.bus.index:
+            if not net.bus.at[idx, "in_service"] or idx not in net.res_bus.index:
+                continue
+            lon, lat = _parse_bus_coords(net, idx)
+            if lon is None or (lon == 0 and lat == 0):
+                continue
+            vm = float(net.res_bus.at[idx, "vm_pu"])
+            if not math.isfinite(vm):
+                continue
+            props = {
+                "name": str(net.bus.at[idx, "name"])[:40],
+                "zone": str(net.bus.at[idx, "zone"]),
+                "vn_kv": round(float(net.bus.at[idx, "vn_kv"]), 1),
+                "vm_pu": round(vm, 4),
+            }
+            if with_diff:
+                props["dvm"] = (
+                    round(vm - float(vm_b.at[idx]), 4)
+                    if vm_b is not None and idx in vm_b.index
+                    and math.isfinite(float(vm_b.at[idx])) else None)
+            feats.append({"type": "Feature",
+                          "geometry": {"type": "Point",
+                                       "coordinates": [lon, lat]},
+                          "properties": props})
+        return {"type": "FeatureCollection", "features": feats}
+
+    def _line_fc(net, with_diff):
+        zone = net.bus["zone"]
+        feats = []
+        for idx in net.line.index:
+            if not net.line.at[idx, "in_service"] or idx not in net.res_line.index:
+                continue
+            fb = net.line.at[idx, "from_bus"]
+            tb = net.line.at[idx, "to_bus"]
+            flon, flat = _parse_bus_coords(net, fb)
+            tlon, tlat = _parse_bus_coords(net, tb)
+            if flon is None or tlon is None:
+                continue
+            ld = float(net.res_line.at[idx, "loading_percent"])
+            p = float(net.res_line.at[idx, "p_from_mw"])
+            if not math.isfinite(ld):
+                ld = 0.0
+            if not math.isfinite(p):
+                p = 0.0
+            name = str(net.line.at[idx, "name"])
+            coords = geom.get(((round(flat, 5), round(flon, 5)),
+                               (round(tlat, 5), round(tlon, 5))))
+            if not coords:
+                coords = [[flon, flat], [tlon, tlat]]
+            zf, zt = zone.get(fb), zone.get(tb)
+            props = {
+                "name": name[:60],
+                "loading_pct": round(min(ld, 300), 1),
+                "p_mw": round(p, 1),
+                "tie": bool(isinstance(zf, str) and isinstance(zt, str)
+                            and zf != zt),
+                "synthetic": name.startswith("recon_line"),
+            }
+            if with_diff:
+                props["dloading"] = (
+                    round(ld - float(ld_b.at[idx]), 1)
+                    if ld_b is not None and idx in ld_b.index
+                    and math.isfinite(float(ld_b.at[idx])) else None)
+            feats.append({"type": "Feature",
+                          "geometry": {"type": "LineString",
+                                       "coordinates": coords},
+                          "properties": props})
+        return {"type": "FeatureCollection", "features": feats}
+
+    for tag, net in (("before", net_before), ("after", net_after)):
+        with_diff = tag == "after"
+        for kind, fc in (("buses", _bus_fc(net, with_diff)),
+                         ("lines", _line_fc(net, with_diff))):
+            path = os.path.join(outdir, f"{island_id}_{tag}_{kind}.geojson")
+            with open(path, "w") as f:
+                json.dump(fc, f, ensure_ascii=False)
+            written.append(os.path.basename(path))
+    return written
 
 
 def tie_flows_by_pair(net) -> dict:
@@ -171,6 +321,10 @@ def main() -> int:
                     help="westでもACを試す（既定はDC=確定事項）")
     ap.add_argument("--no-bridge", action="store_true",
                     help="容量橋渡し（UC較正のPF側適用）を無効化（比較用）")
+    ap.add_argument("--export", action="store_true",
+                    help="before(merit-order)/after(UC注入)の地域別GeoJSON+"
+                         "差分(dvm/dloading)を docs/data/uc_powerflow/ へ出力")
+    ap.add_argument("--export-dir", default="docs/data/uc_powerflow")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -218,8 +372,12 @@ def main() -> int:
         print(f"\n== {iid} ({'+'.join(regions)}) t={t} "
               f"純需要 {float(net_dem[t]):,.0f} MW ==")
 
-        net, inj, n_shunt, bridge_rep = build_injected_island(
-            isl, regions, scn, uc, t, demand_cfg, args.reactive, calib=calib)
+        # base網は1回だけ構築し、before/afterはdeepcopyで分岐（網構成の
+        # ハッシュ順ゆらぎを差分に混ぜないため）
+        net_base = build_island_base(isl, demand_cfg)
+        net = copy.deepcopy(net_base) if args.export else net_base
+        inj, bridge_rep = dispatch_uc(net, regions, scn, uc, t, calib)
+        n_shunt = finalize_island(net, args.reactive)
         if bridge_rep:
             print(f"  bridge: dedup {bridge_rep['dedup_disabled']}, "
                   f"patched {bridge_rep['patched']}, "
@@ -258,23 +416,9 @@ def main() -> int:
 
         # ── 4. ソルブ（east=AC / west=DC既定） ──
         mode = "ac" if (iid != "west" or args.try_ac) else "dc"
-        if mode == "ac":
-            ac = {"converged": False}
-            net_s = None
-            for thr in (45.0, 30.0, 20.0):
-                net_s = copy.deepcopy(net)
-                if prune_dc_infeasible(net_s, angle_threshold=thr) > 0:
-                    fix_topology(net_s, multi_slack=True)
-                    select_slack_bus(net_s)
-                    scale_line_ratings(net_s)
-                ac = run_powerflow(net_s, "ac")
-                if ac["converged"]:
-                    isl_rep["prune_threshold"] = thr
-                    break
-            res = ac
-        else:
-            net_s = copy.deepcopy(net)
-            res = run_powerflow(net_s, "dc")
+        net_s, res, prune_thr = solve_island_mode(net, mode)
+        if prune_thr is not None:
+            isl_rep["prune_threshold"] = prune_thr
         isl_rep["mode"] = mode
         isl_rep["converged"] = bool(res["converged"])
 
@@ -308,6 +452,24 @@ def main() -> int:
             for k in sorted(set(pf_ties) | set(uc_ties)):
                 print(f"    {k:22s} {pf_ties.get(k, float('nan')):9,.1f} / "
                       f"{uc_ties.get(k, float('nan')):9,.1f} MW")
+
+            # ── 6. before/after エクスポート（--export時） ──
+            if args.export:
+                print("  before断面 (merit-order, 同一需要) を求解中...")
+                dispatch_merit(net_base, regions, scn, t, demand_cfg)
+                finalize_island(net_base, args.reactive)
+                net_bs, res_b, _thr_b = solve_island_mode(net_base, mode)
+                isl_rep["before_converged"] = bool(res_b["converged"])
+                if res_b["converged"]:
+                    files = export_before_after(
+                        net_bs, net_s, regions, isl["geom"], iid, mode,
+                        args.export_dir)
+                    isl_rep["export"] = files
+                    print(f"  exported: {len(files)} files -> "
+                          f"{args.export_dir}/")
+                else:
+                    print("  before断面が非収束 — exportスキップ（after断面"
+                          "のレポートは有効）")
         else:
             isl_rep["error"] = str(res.get("error", ""))[:120]
             print(f"  {mode.upper()}: FAILED ({isl_rep['error'][:60]})")
@@ -320,6 +482,36 @@ def main() -> int:
     with open(out, "w") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"\nSaved: {out}")
+
+    # ── マップ用 summary（uc_map.html が読むインデックス） ──
+    if args.export:
+        spath = os.path.join(args.export_dir, "summary.json")
+        prev = {}
+        if os.path.exists(spath):  # 島別実行の積み上げに対応
+            try:
+                with open(spath) as f:
+                    prev = json.load(f).get("islands", {})
+            except (json.JSONDecodeError, OSError):
+                prev = {}
+        summary = {
+            "meta": report["meta"],
+            "islands": prev | {
+                iid: {
+                    "regions": isl_rep["regions"],
+                    "hour": isl_rep["hour"],
+                    "mode": isl_rep.get("mode"),
+                    "converged": isl_rep.get("converged"),
+                    "before_converged": isl_rep.get("before_converged"),
+                    "files": isl_rep.get("export", []),
+                    "vm_by_zone": isl_rep.get("vm_by_zone"),
+                }
+                for iid, isl_rep in report["islands"].items()
+                if isl_rep.get("export")
+            },
+        }
+        with open(spath, "w") as f:
+            json.dump(summary, f, ensure_ascii=False, indent=2)
+        print(f"Saved: {spath}")
 
     # uc_runs 索引へベストエフォート記録（正本は上のJSON）
     from src.uc.run_recorder import record_run
