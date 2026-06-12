@@ -268,6 +268,9 @@ def _resolve_db(db):
 
 
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
+                          polygon_bind=False, poly_edge_km=0.15,
+                          fallback_snap_km=0.4, fallback_endpoint_km=0.6,
+                          tip_joint_km=0.0, leadin_km=1.5,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12):
@@ -292,6 +295,31 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             yard fence) — kansai +506, tokyo +1,340 endpoints recovered at
             2.5 km. Interior vertices keep the tighter ``snap_km`` so
             corridors passing near a substation are not falsely fused.
+            Both radii apply only when ``polygon_bind`` is off (or as the
+            legacy path when shapely is unavailable).
+        polygon_bind: OSM-faithful binding (owner directive 2026-06-12
+            「まずはOSMにちゃんと忠実に系統作ってほしい」): a vertex binds to a
+            substation when it lies INSIDE the substation's OSM polygon or
+            within ``poly_edge_km`` of its boundary — the criterion the map
+            itself draws. The blind centroid radius was the measured source
+            of BOTH false binds (3,365 tokyo lines attached to substations
+            their path never approaches within 1 km) and big-yard misses
+            (北総 275 kV left with deg=1): it survives only as a small
+            fallback (``fallback_snap_km`` interior /
+            ``fallback_endpoint_km`` terminal) for point-mapped
+            substations and polygon gaps.
+            Measured A/B with tip_joint_km=0.12 + leadin_km=1.5 (tokyo,
+            ledger 84): implicit wrong-binds 3,365 -> 0, trunk rho
+            .615 -> .647, 154 kV rho .095 -> .215, 66 kV in-band; BUT the
+            west merged island loses AC convergence — default stays OFF
+            until that is cured (D6-2). Opt in per build.
+        tip_joint_km: join a degree-1 junction TIP to the nearest node of
+            the SAME class within this distance (node-to-node complement
+            of ``tap_snap_km``'s node-to-segment join). Owner directive:
+            「物理的に明らかにそこには線が存在するのを繋げばいいだけ」 — a tip
+            metres from another node is the same pole; parallel corridors
+            are untouched because only dead-end tips qualify and the class
+            guard blocks cross-voltage fusion.
         propagate_voltage: infer the class of voltage-untagged features
             from the corridor they continue: when ALL the known classes
             seen at a feature's vertices agree on exactly one class, the
@@ -352,6 +380,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
     sub_coords = []   # (lat, lon, sub_id)
     sub_info = {}     # sub_id -> dict(name, lat, lon, own_cls)
+    sub_polys = []    # (geometry dict, sub_id) for polygon-first binding
     for i, feat in enumerate(subs_data["features"]):
         lat, lon = _get_centroid(feat)
         if lat is None:
@@ -370,8 +399,64 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         sub_info[sid] = {"name": props.get("name") or sid, "lat": lat,
                          "lon": lon, "own_cls": _clean_voltage(vkv)}
         sub_coords.append((lat, lon, sid))
+        if polygon_bind and feat.get("geometry", {}).get("type") in (
+                "Polygon", "MultiPolygon"):
+            sub_polys.append((feat["geometry"], sid))
 
     index = _SubIndex(sub_coords)
+
+    # OSM-faithful polygon binding (see docstring). shapely is an optional
+    # path: without it the legacy centroid radii apply unchanged.
+    poly_tree = poly_geoms = poly_sids = None
+    if polygon_bind and sub_polys:
+        try:
+            from shapely.geometry import box as _box
+            from shapely.geometry import Point as _Pt
+            from shapely.geometry import shape as _shape
+            from shapely.strtree import STRtree as _STR
+            poly_geoms = [_shape(g) for g, _ in sub_polys]
+            poly_sids = [sid for _, sid in sub_polys]
+            poly_tree = _STR(poly_geoms)
+        except Exception:   # noqa: BLE001 — fail soft to the legacy radii
+            poly_tree = None
+
+    _DEG_KM = 102.0   # rough deg->km at Japanese latitudes (edge distances)
+    _bind_cache = {}
+
+    def _bind_vertex(lat, lon, terminal):
+        """Vertex -> substation binding: polygon first, small radius after."""
+        if poly_tree is None:
+            radius = endpoint_snap_km if terminal else snap_km
+            sid, _ = index.nearest(lat, lon, max(radius, snap_km))
+            return sid
+        key = (round(lat, 6), round(lon, 6), bool(terminal))
+        if key in _bind_cache:
+            return _bind_cache[key]
+        # interior vertices: strict edge band (passing corridors must not
+        # fuse). TERMINAL vertices: the line STOPS here — a tip within
+        # fallback_endpoint_km of the yard fence is the lead-in OSM left
+        # undrawn (poles end at the gantry), so the wider band applies to
+        # the POLYGON distance, not the centroid (big yards: fence 0.3 km
+        # away can be >0.8 km from the centroid — the gap that re-broke
+        # the 438 substations in the first polygon-only A/B).
+        reach = fallback_endpoint_km if terminal else poly_edge_km
+        eps = reach / _DEG_KM
+        pt = _Pt(lon, lat)
+        best_sid, best_d = None, reach
+        for pi in poly_tree.query(_box(lon - eps, lat - eps,
+                                       lon + eps, lat + eps)):
+            g = poly_geoms[int(pi)]
+            if g.covers(pt):
+                best_sid, best_d = poly_sids[int(pi)], 0.0
+                break
+            d = g.distance(pt) * _DEG_KM
+            if d < best_d:
+                best_sid, best_d = poly_sids[int(pi)], d
+        if best_sid is None:
+            radius = fallback_endpoint_km if terminal else fallback_snap_km
+            best_sid, _ = index.nearest(lat, lon, radius)
+        _bind_cache[key] = best_sid
+        return best_sid
     node_coord = {}   # final bus id -> (lat, lon)
 
     # Build the vertex graph. Each edge carries length, voltage, and the real
@@ -511,9 +596,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             node_ids = []
             last = len(coords) - 1
             for vi, (lat, lon) in enumerate(coords):
-                # terminal vertices get the wider radius (yard-fence gaps)
-                radius = endpoint_snap_km if vi in (0, last) else snap_km
-                sid, _ = index.nearest(lat, lon, max(radius, snap_km))
+                # polygon-first binding; terminals keep a wider fallback
+                sid = _bind_vertex(lat, lon, vi in (0, last))
                 rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
                 if sid is not None:
                     if multi_voltage:
@@ -623,6 +707,179 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                      [(la, lo), tuple(tgt_ll)], parallel=1, evidence=None,
                      name=None, kv_src="unk", cable_km=0.0, tap=True)
             n_taps += 1
+
+    # Tip joint — node-to-node complement of the tap snap (owner directive
+    # 2026-06-12 「物理的に明らかにそこには線が存在するのを繋げばいいだけ」).
+    # A degree-1 tip metres from another node of the SAME class is the same
+    # physical pole/yard corner (vertex_prec rounding splits measured at
+    # 4-6 m); only dead-end tips qualify, so parallel corridors running on
+    # shared towers are never fused, and the class guard blocks
+    # cross-voltage joins exactly like the tap snap.
+    n_joints = 0
+    if tip_joint_km:
+        ncoords = {}
+        for n in adj:
+            if is_jct(n):
+                if n in jct_coord:
+                    ncoords[n] = jct_coord[n]
+            elif isinstance(n, str) and n.startswith("S|"):
+                si = sub_info.get(n.split("|")[1])
+                if si:
+                    ncoords[n] = (si["lat"], si["lon"])
+        cellj = 0.005
+        ngrid = defaultdict(list)
+        for n, (la, lo) in ncoords.items():
+            ngrid[(round(la / cellj), round(lo / cellj))].append(n)
+
+        def _cls_of(n):
+            try:
+                return float(n.rsplit(":" if is_jct(n) else "|", 1)[1])
+            except (ValueError, IndexError):
+                return 0.0
+
+        for nid in [n for n in list(adj) if is_jct(n) and len(adj[n]) == 1]:
+            if nid not in ncoords:
+                continue
+            own = _cls_of(nid) or max(
+                (adj[nid][m]["kv"] for m in adj[nid]), default=0.0)
+            if own <= 0:
+                continue   # no class evidence — a join could fuse classes
+            la, lo = ncoords[nid]
+            ci, cj = round(la / cellj), round(lo / cellj)
+            best_n, bd = None, tip_joint_km
+            for di in (-1, 0, 1):
+                for dj in (-1, 0, 1):
+                    for m in ngrid.get((ci + di, cj + dj), ()):
+                        if m == nid or m in adj.get(nid, {}) or m not in adj:
+                            continue
+                        mcls = _cls_of(m)
+                        if not (mcls > 0 and abs(mcls - own) <= 1):
+                            continue
+                        d = _haversine_km(la, lo, *ncoords[m])
+                        if d < bd:
+                            best_n, bd = m, d
+            if best_n is None:
+                continue
+            add_edge(nid, best_n, max(bd, 0.005), own,
+                     [(la, lo), ncoords[best_n]], parallel=1, evidence=None,
+                     name=None, kv_src="unk", cable_km=0.0, tap=True)
+            n_joints += 1
+
+    # Explicit lead-in (the honest replacement for the old blind radius):
+    # OSM frequently ends a feeder at the last pole, 0.6-1.5 km short of
+    # the substation it visibly serves. After polygon binding and the tip
+    # joint, a REMAINING degree-1 tip with a known class binds to the
+    # nearest substation by POLYGON distance within ``leadin_km`` as a
+    # labelled "leadin" edge — same physical claim the 2.5 km centroid
+    # radius used to make implicitly, now tip-only (passing corridors can
+    # no longer fuse: their interior vertices stay free) and visible in
+    # the line name for audit/exclusion.
+    n_leadins = 0
+    if leadin_km and poly_tree is not None:
+        eps_l = leadin_km / _DEG_KM
+        for nid in [n for n in list(adj) if is_jct(n) and len(adj[n]) == 1]:
+            if nid not in jct_coord:
+                continue
+            own = max((adj[nid][m]["kv"] for m in adj[nid]), default=0.0)
+            if own <= 0:
+                continue   # class unknown — no evidence for a feed claim
+            la, lo = jct_coord[nid]
+            pt = _Pt(lo, la)
+            best_sid, bd = None, leadin_km
+            for pi in poly_tree.query(_box(lo - eps_l, la - eps_l,
+                                           lo + eps_l, la + eps_l)):
+                g = poly_geoms[int(pi)]
+                d = 0.0 if g.covers(pt) else g.distance(pt) * _DEG_KM
+                if d < bd:
+                    best_sid, bd = poly_sids[int(pi)], d
+            if best_sid is None:
+                best_sid, bd = index.nearest(la, lo, leadin_km)
+            if best_sid is None:
+                continue
+            si = sub_info[best_sid]
+            if multi_voltage:
+                sub_classes[best_sid].add(own)
+                tgt = f"S|{best_sid}|{own:g}"
+            else:
+                tgt = best_sid
+            if tgt in adj.get(nid, {}):
+                continue
+            add_edge(nid, tgt, max(bd, 0.02), own,
+                     [(la, lo), (si["lat"], si["lon"])], parallel=1,
+                     evidence=None, name="leadin", kv_src="unk",
+                     cable_km=0.0, tap=False)
+            n_leadins += 1
+
+    # T-tap lead-in: a substation that bound NO vertex at all (the old
+    # interior radius used to fuse a passing corridor's mid-vertex into
+    # it — crude but it modelled the real T分岐 feeding distribution
+    # substations). The honest replacement joins the substation to the
+    # nearer endpoint of the nearest passing SEGMENT within ``leadin_km``
+    # as a labelled "leadin" edge: the corridor keeps its through-path
+    # (flow no longer detours into the yard) and the feed claim is
+    # visible in the line name.
+    if leadin_km and tap_segs and multi_voltage and poly_tree is not None:
+        import math as _math2
+        _KM2 = 111.32
+
+        def _xy2(lat, lon):
+            return (lon * _KM2 * _math2.cos(_math2.radians(lat)), lat * _KM2)
+
+        cell2 = max(leadin_km, 0.5)
+        seg_grid2 = defaultdict(list)
+        for si2, (a, b, p1, p2, kv) in enumerate(tap_segs):
+            x1, y1 = _xy2(*p1)
+            x2, y2 = _xy2(*p2)
+            for gx in range(int(min(x1, x2) // cell2),
+                            int(max(x1, x2) // cell2) + 1):
+                for gy in range(int(min(y1, y2) // cell2),
+                                int(max(y1, y2) // cell2) + 1):
+                    seg_grid2[(gx, gy)].append(si2)
+
+        for sid, si in sub_info.items():
+            if sub_classes.get(sid):
+                continue   # already fed by bound vertices
+            own_cls = si.get("own_cls") or 0.0
+            px, py = _xy2(si["lat"], si["lon"])
+            cx, cy = int(px // cell2), int(py // cell2)
+            best = (None, leadin_km)
+            for gx in (cx - 1, cx, cx + 1):
+                for gy in (cy - 1, cy, cy + 1):
+                    for si2 in seg_grid2.get((gx, gy), ()):
+                        a, b, p1, p2, kv = tap_segs[si2]
+                        if kv <= 0:
+                            continue   # class-unknown corridor: no claim
+                        # the substation's own tagged class, when known,
+                        # must match the corridor (a 66 kV sub does not
+                        # tap a 275 kV trunk)
+                        if own_cls > 0 and abs(own_cls - kv) > 1:
+                            continue
+                        ax, ay = _xy2(*p1)
+                        bx, by = _xy2(*p2)
+                        dx, dy = bx - ax, by - ay
+                        l2 = dx * dx + dy * dy
+                        t = 0.0 if l2 == 0 else max(
+                            0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / l2))
+                        qx, qy = ax + t * dx, ay + t * dy
+                        d = _math2.hypot(px - qx, py - qy)
+                        if d < best[1]:
+                            tgt = a if t < 0.5 else b
+                            best = ((tgt, p1 if t < 0.5 else p2, kv), d)
+            if best[0] is None:
+                continue
+            tgt, tgt_ll, kv = best[0]
+            if multi_voltage:
+                sub_classes[sid].add(kv)
+                snode = f"S|{sid}|{kv:g}"
+            else:
+                snode = sid
+            if tgt == snode or tgt in adj.get(snode, {}):
+                continue
+            add_edge(snode, tgt, max(best[1], 0.02), kv,
+                     [(si["lat"], si["lon"]), tuple(tgt_ll)], parallel=1,
+                     evidence=None, name="leadin", kv_src="unk",
+                     cable_km=0.0, tap=False)
+            n_leadins += 1
 
     # Collapse degree-2 junction chains into single branches.
     changed = True

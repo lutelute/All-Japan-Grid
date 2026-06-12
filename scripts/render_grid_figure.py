@@ -115,7 +115,12 @@ def render(region: str, out: str, kpi_json: str | None = None,
         dash = (0, (2.5, 1.5)) if getattr(ln, "is_cable", False) else "solid"
         if getattr(ln, "is_cable", False):
             cable_km += float(ln.length_km or 0)
-        ax.plot(xs, ys, color=c, linewidth=w, zorder=z, alpha=0.85,
+        # parallel circuits are collapsed into one edge — width carries the
+        # multiplicity so a 4-circuit corridor no longer reads as one thin
+        # line vs the OSM basemap (北総 case, ledger 84)
+        par = max(int(getattr(ln, "num_parallel", 1) or 1), 1)
+        w_eff = w * (1.0 + 0.30 * (min(par, 6) - 1))
+        ax.plot(xs, ys, color=c, linewidth=w_eff, zorder=z, alpha=0.85,
                 linestyle=dash, solid_capstyle="round")
         n_branch += 1
 
