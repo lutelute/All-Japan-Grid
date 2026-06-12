@@ -449,7 +449,32 @@ def load_national_thermal_generators(
                 stats.fuel_counts[fuel] = stats.fuel_counts.get(fuel, 0) + 1
                 stats.fuel_capacity_mw[fuel] = stats.fuel_capacity_mw.get(fuel, 0.0) + cap_ow
 
-    return all_gens
+    # 地熱の同名サイト集約 — OSMは坑井・設備ポイントを別ノードで持つことが
+    # あり、同名地熱が多重計上される（葛根田: 10ポイント530MW vs 実サイト
+    # 1号80+2号30=110MW、検証ループ⑱⑲で東北geoが実績の6.5倍と計測）。
+    # 地熱はサイト=発電所が通例なので、同(region, name)は最大容量の1機に
+    # 集約する（決定論）。他燃料は同名複数ユニットが正当にあり得るため不適用
+    geo_seen: dict = {}
+    aggregated: list[Generator] = []
+    n_geo_dropped = 0
+    for g in all_gens:
+        if g.fuel_type == "geothermal":
+            key = (g.region, g.name)
+            if key in geo_seen:
+                keep = geo_seen[key]
+                if g.capacity_mw > keep.capacity_mw:
+                    aggregated[aggregated.index(keep)] = g
+                    geo_seen[key] = g
+                n_geo_dropped += 1
+                stats.thermal_capacity_mw -= min(g.capacity_mw,
+                                                 keep.capacity_mw)
+                continue
+            geo_seen[key] = g
+        aggregated.append(g)
+    if n_geo_dropped:
+        logger.info("geothermal same-site aggregation: %d duplicate points "
+                    "dropped", n_geo_dropped)
+    return aggregated
 
 
 def apply_pumped_storage_reference(

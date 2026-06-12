@@ -74,6 +74,11 @@ patches:
   - match: Nakoso IGCC
     region: tokyo
     note: 同・勿来IGCC（525MW）。広野と同じ福島復興電源スキーム
+  - match: 葛根田地熱
+    capacity_mw: 110
+    override: true
+    note: 東北電力 葛根田1号80+2号30=110MW（公表値）。OSMは坑井ポイント10重複
+      （ローダーの地熱同名集約で1機化した上で本パッチがサイト計を与える、台帳㉑）
 
   # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
   # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
