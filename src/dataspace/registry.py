@@ -122,6 +122,9 @@ class DataSpace:
         if contract.connector == "msm":
             from src.dataspace.connectors.msm import MSMConnector
             return MSMConnector()
+        if contract.connector == "nas03":
+            from src.dataspace.connectors.nas03 import Nas03Connector
+            return Nas03Connector()
         raise ValueError(f"unknown connector '{contract.connector}'")
 
     def fetch(

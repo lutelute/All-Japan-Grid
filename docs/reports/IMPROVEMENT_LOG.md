@@ -108,6 +108,32 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善⑰: 検証ループ稼働（Phase A-1）— UC vs 発電実績の地域×燃料突合
+
+- **nas03/PWS_DBコネクタ**(`e06d448`): エリア需給実績（10社・30分値・電源種別）を
+  ssh zero-copyで月単位取得。列名マップでhokkaido変種（制御量+2列）を吸収、
+  制御量列の本体上書きバグ修正、**tepcoのUTF-8-SIG**対応（CP932固定だと
+  列名が化けdemand列消失→全行棄却=tokyoが空に見えた。多段デコードで解決）
+- **uc_validate.py**: 代表日2025-08-06のfy2025r1 UC解 vs 5社実績
+  （hokkaido/tohoku/tepco/hokuriku/shikoku — 202508新形式在庫のある社）。
+  地域×燃料の日エネルギー・シェアL1・時間形状相関・抑制量を出力、
+  uc_runs(kind=validation)記録
+- **ベースラインL1**: tokyo **12.7pp**（最良）/ hokuriku 33.1 / shikoku 41.3 /
+  hokkaido 44.0 / tohoku 69.7（平均40.2pp）
+- **実測で立証されたこと**: ①hokuriku coal **61.2 vs 62.0 GWh/日でほぼ一致** —
+  七尾大田・敦賀の容量パッチが実績と整合（⑮の検証）②solar形状相関0.89-0.96 —
+  実測needs+参照CFの時間形状は正確、バイアスは量側
+- **自己改善1巡目**: 24h断面にRE/RoRの**月係数が未適用**だった（年平均CFのまま
+  → 8月弱風期にtohoku windが実績の3倍）→ 代表日の月で季節係数を適用
+  （年間経路と整合化）。ただし**平均L1は40.2→40.8ppとほぼ不変** — windを
+  正すと浮いた分をcoalが受けて相殺。**L1残差の支配項はcoal/lngスワップ
+  （tohoku +85/-105 GWh/日 = 経済停止の構造、タスク#12）に集約**と確定
+- 残課題の地域分解: tohoku geothermal 6.5倍過大（UC 729MW vs 実績132MW、
+  個別機調査=Phase A-2）/ tepco実績は全日あり（欠測ではなかった）/
+  kansai・chugoku・kyushuは202508在庫なし（Phase Bで旧形式対応）
+- 再現: `AJGRID_NAS03_ROOT=ssh://… python3 scripts/uc_validate.py
+  --scenario fy2025r1 --date 2025-08-06`（コネクタテスト6+15 passed）
+
 ## 2026-06-12 — **Fable 5** — UC改善⑯: west島UC断面の初AC収束 + before/afterマップ（merit-order vs UCコミットメント）
 
 - **west島がUC注入断面でAC収束（本プロジェクト初）**: mainのmulti-voltage builder
