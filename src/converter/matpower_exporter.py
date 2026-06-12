@@ -47,6 +47,66 @@ _DEFAULT_REGIONS_DIR = "output/matpower/regions"
 _DEFAULT_REPORTS_DIR = "output/reports"
 _DEFAULT_REPORT_FILENAME = "validation_report.json"
 
+# MATPOWER case format v2 input widths (the loadcase/runpf spec).
+# pandapower's internal ppc tables are wider: result columns (PF/QF/...)
+# and 3.x FACTS/DC-grid extensions that MATLAB tooling does not expect
+# inside a case file.
+_MPC_BUS_COLS = 13     # BUS_I .. VMIN
+_MPC_BRANCH_COLS = 13  # F_BUS .. ANGMAX
+_MPC_GEN_COLS = 21     # GEN_BUS .. APF (incl. OPF columns)
+
+
+def _fit_cols(arr, n_cols: int) -> np.ndarray:
+    """Real-valued copy of ``arr`` truncated/zero-padded to ``n_cols``."""
+    a = np.atleast_2d(np.real(np.asarray(arr)).astype(float))
+    if a.shape[1] >= n_cols:
+        return a[:, :n_cols].copy()
+    out = np.zeros((a.shape[0], n_cols))
+    out[:, : a.shape[1]] = a
+    return out
+
+
+def canonical_mpc(mpc: Dict[str, Any]) -> Dict[str, Any]:
+    """Reduce a ``to_mpc()`` result to the canonical MATPOWER case v2 struct.
+
+    pandapower's ``to_mpc()`` emits its full internal ppc — result
+    columns, FACTS/DC-grid tables (``bus_dc``, ``svc``, ``vsc``, ...)
+    and an ``internal`` bookkeeping struct — none of which belong in a
+    MATPOWER case file. This keeps exactly the fields MATPOWER's
+    ``loadcase`` defines (baseMVA / version / bus / branch / gen at
+    input widths, plus ``gencost`` when present), so the saved .mat is
+    consumable by MATPOWER ``loadcase``/``runpf``, PYPOWER, psdat and
+    pandapower's ``from_mpc`` alike. Bus numbering is already 1-based
+    contiguous from ``to_mpc``.
+
+    Args:
+        mpc: dict returned by ``to_mpc`` — either the ``{"mpc": {...}}``
+            wrapper or the inner case dict.
+
+    Returns:
+        ``{"mpc": {...}}`` dict ready for ``scipy.io.savemat``.
+    """
+    inner = mpc.get("mpc", mpc)
+    base_mva = float(np.squeeze(inner["baseMVA"]))
+    gen = _fit_cols(inner["gen"], _MPC_GEN_COLS)
+    # pandapower leaves MBASE = NaN when gen.sn_mva is unset; the MATPOWER
+    # case format defines MBASE as "defaults to baseMVA" — apply the
+    # format's own default so the case file is finite throughout.
+    mbase = gen[:, 6]
+    mbase[~np.isfinite(mbase)] = base_mva
+    out: Dict[str, Any] = {
+        "baseMVA": base_mva,
+        "version": "2",
+        "bus": _fit_cols(inner["bus"], _MPC_BUS_COLS),
+        "branch": _fit_cols(inner["branch"], _MPC_BRANCH_COLS),
+        "gen": gen,
+    }
+    gencost = inner.get("gencost")
+    if gencost is not None and np.size(gencost):
+        out["gencost"] = np.atleast_2d(
+            np.real(np.asarray(gencost)).astype(float))
+    return {"mpc": out}
+
 
 @dataclass
 class ExportResult:
