@@ -115,6 +115,10 @@ def main() -> int:
                     help="新形式在庫のある会社（カンマ区切り）")
     ap.add_argument("--force-fetch", action="store_true",
                     help="DataSpaceキャッシュを無視して実績を再取得")
+    ap.add_argument("--demand-from-measured", action="store_true",
+                    help="検証地域のグロス需要を実績demand系列で与える"
+                         "（OCCTO保持窓~14ヶ月の外の日付用。他地域は合成"
+                         "フォールバック、metaに開示）")
     ap.add_argument("--re-actuals", action="store_true",
                     help="検証地域のsolar/windをその日の実績系列で置換して"
                          "UCを解く（天気を所与にして運用だけを比較する検証）")
@@ -148,9 +152,21 @@ def main() -> int:
         meas_by_region[region] = measured_region_fuel_24h(
             meas_raw["rows"], args.date)
 
+    if args.demand_from_measured:
+        # OCCTO窓外: profile_refを外して合成へ、検証地域のみ実績needsに置換
+        cfg.demand_profile_ref.clear()
+        (cfg.raw.get("demand") or {}).pop("profile_ref", None)
     print(f"UC求解中... ({args.scenario} @ {args.date}"
-          + (", RE=実績" if args.re_actuals else "") + ")")
+          + (", RE=実績" if args.re_actuals else "")
+          + (", 需要=実績(検証地域)" if args.demand_from_measured else "")
+          + ")")
     scn = build_national_scenario(scenario=cfg)
+    if args.demand_from_measured:
+        import numpy as _np2
+        for region, meas in meas_by_region.items():
+            dem = meas.get("demand")
+            if dem and len(dem) == scn.num_periods:
+                scn.gross_demand_r[region] = _np2.asarray(dem, dtype=float)
     if args.re_actuals:
         import numpy as _np
         for region, meas in meas_by_region.items():
@@ -193,6 +209,23 @@ def main() -> int:
                 "diff_mwh": round(uc_mwh - m_mwh, 1),
                 "shape_corr": corr,
             }
+        # 旧形式（火力合算）: UC lng+coal+oil を thermal(combined) として突合
+        if "thermal_combined" in meas:
+            uc_th = float(sum(np.sum(ucr.get(f, []))
+                              for f in ("lng", "coal", "oil")))
+            m_th = float(np.sum(meas["thermal_combined"]))
+            us = np.array([sum(ucr.get(f, [0.0] * 24)[h]
+                               for f in ("lng", "coal", "oil"))
+                           for h in range(24)])
+            ms = np.array(meas["thermal_combined"])
+            corr = (round(float(np.corrcoef(us, ms)[0, 1]), 3)
+                    if us.std() > 1e-6 and ms.std() > 1e-6 else None)
+            per_fuel["thermal(combined)"] = {
+                "uc_mwh": round(uc_th, 1), "measured_mwh": round(m_th, 1),
+                "diff_mwh": round(uc_th - m_th, 1), "shape_corr": corr,
+            }
+            for f in ("lng", "coal", "oil"):   # 個別行は実績側が無く誤誘導
+                per_fuel.pop(f, None)
         uc_tot = sum(v["uc_mwh"] for v in per_fuel.values())
         m_tot = sum(v["measured_mwh"] for v in per_fuel.values())
         l1_pp = (sum(abs(v["uc_mwh"] / uc_tot - v["measured_mwh"] / m_tot)
@@ -220,6 +253,10 @@ def main() -> int:
             "scenario": args.scenario,
             "validation_date": args.date,
             "re_actuals": bool(args.re_actuals),
+            "demand_from_measured": bool(args.demand_from_measured),
+            "disclosure": ("検証地域=実績需要・他地域=合成needs・原子力断面="
+                           "シナリオ断面のまま"
+                           if args.demand_from_measured else None),
             "companies": companies,
             "vocabulary_notes": [
                 "UC oil = 実績 火力(石油)+火力(その他)（区分差の開示）",

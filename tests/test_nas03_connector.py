@@ -94,3 +94,28 @@ class TestParser:
 def test_company_region_map_covers_10():
     assert len(COMPANY_TO_REGION) == 10
     assert COMPANY_TO_REGION["tepco"] == "tokyo"
+
+
+CSV_KANSAI_LEGACY = """,,,,,,,太陽光,太陽光,風力,風力,,
+DATE_TIME,エリア需要〔MWh〕,原子力〔MWh〕,火力〔MWh〕,水力〔MWh〕,地熱〔MWh〕,バイオマス〔MWh〕,実績〔MWh〕,抑制量〔MWh〕,実績〔MWh〕,抑制量〔MWh〕,揚水〔MWh〕,連系線〔MWh〕
+2023/12/13 0:00,11734,4961,6364,1114,0,80,0,0,4,0,33,-823
+2023/12/13 1:00,11512,4961,6580,1155,0,80,0,0,2,0,-453,-813
+2023/12/14 0:00,12000,4961,6500,1200,0,80,0,0,3,0,40,-800
+"""
+
+
+def test_kansai_legacy_format(tmp_path):
+    d = tmp_path / "demand_raw" / "kansai"
+    d.mkdir(parents=True)
+    (d / "202312.csv").write_bytes(CSV_KANSAI_LEGACY.encode("cp932"))
+    out = Nas03Connector().fetch(
+        {"company": "kansai", "month": "202312", "date": "2023-12-13"},
+        _FakeContract(str(tmp_path)))
+    assert out["format"] == "legacy_datetime"
+    assert out["region"] == "kansai"
+    assert out["n_rows"] == 2          # 12/14は除外
+    r0 = out["rows"][0]
+    assert r0["nuclear"] == pytest.approx(4961.0)
+    assert r0["thermal_combined"] == pytest.approx(6364.0)
+    assert r0["pumped_hydro"] == pytest.approx(33.0)
+    assert r0["interconnector"] == pytest.approx(-823.0)

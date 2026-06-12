@@ -178,6 +178,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 <!-- ── UC改善シリーズ（worktree uc-improvements） ── -->
 
 
+## 2026-06-12 — **Fable 5** — UC改善㉒: Phase B — kansai検証の開通（旧形式パーサ+実績需要モード）
+
+- **kansai旧形式パーサ**（nas03コネクタ）: DATE_TIME 1列・1時間値MWh・
+  **火力合算**の関西独自形式をフォールバック実装（列位置固定、テスト7 passed）。
+  uc_validate側は thermal(combined)=UC lng+coal+oil 合算で突合（語彙開示）
+- **--demand-from-measured**: OCCTO実測需要の**保持窓~14ヶ月**の外の日付
+  （kansai月次在庫は2023-12まで）に対応 — 検証地域のグロス需要を実績demand
+  系列で与え、他地域は合成フォールバック（metaに開示）。
+  kansai/2024.csvはHTML破損（NAS側のdemand_update取得失敗、要修繕と開示）
+- **kansai 2023-12-13(水) 検証**: **L1 23.7pp**（良好圏）。乖離主因=
+  **原子力断面差**（UC=fy2025断面6.6GWフル vs 実績4.9GW平均=当時定検中）
+  +40.7GWh/日、その分thermal -31.3 — 検証機構が断面不一致を正しく検出
+- 検証カバレッジ: 5社（2025-08新形式）+kansai（〜2023-12旧形式）=**6社開通**。
+  残り: chubu（年度別形式）/chugoku/kyushu（旧形式）/okinawa
+- ループ累計: ピーク日37.9pp / 天気正規化32.6pp / kansai初値23.7pp
+
 ## 2026-06-12 — **Fable 5** — UC改善㉑: 地熱の坑井重複集約 — 全国549MW=公表値一致
 
 - **真因**: 葛根田地熱がOSMの坑井・設備ポイントで**10重複**（530MW計上 vs
