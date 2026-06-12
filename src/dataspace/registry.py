@@ -125,6 +125,9 @@ class DataSpace:
         if contract.connector == "nas03":
             from src.dataspace.connectors.nas03 import Nas03Connector
             return Nas03Connector()
+        if contract.connector == "jepx":
+            from src.dataspace.connectors.jepx import JepxConnector
+            return JepxConnector()
         raise ValueError(f"unknown connector '{contract.connector}'")
 
     def fetch(

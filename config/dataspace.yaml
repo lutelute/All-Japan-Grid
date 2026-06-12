@@ -74,6 +74,21 @@ providers:
       (2009〜 → JEPXプロバイダ候補) も所在。検証ループ設計は
       docs/UC_VALIDATION_PLAN.md。
 
+  jepx_spot:
+    title: JEPXスポット市場価格（研究室NAS03 PWS_DB ミラー）
+    custodian: JEPX（一般社団法人 日本卸電力取引所）— NAS03に年度CSVミラー
+    location: "env:AJGRID_NAS03_ROOT"
+    license: JEPX公表データの利用条件に従う（生データ再配布不可）
+    redistribute_raw: false
+    redistribute_derived: true
+    connector: jepx
+    variables:
+      - {name: spot_area_price, desc: "エリアプライス9地域+システム (円/kWh, 30分48コマ)"}
+    granularity: 30分（spot_summary_{年度}.csv、2009年度〜）
+    notes: >-
+      タスク#12の入力: 市場価格分布からcoal/lngの実勢SRMCクラスタを推定し
+      UC fuel_cost較正の出典にする（台帳⑱）。所在はnas03と同一NAS。
+
   energy_stats:
     title: 資源エネルギー庁 電力調査統計・総合エネルギー統計
     custodian: 経済産業省 資源エネルギー庁
