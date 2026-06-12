@@ -7,6 +7,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-12 — **Fable 5** — F5/X3: UC時系列の帯判定intakeを実演しHANDOFF文書化 — UCの断面ビンテージ差を独立検出（94）
+
+- **X3実演**: 隣UCの実出力(fy2025r1・2023-12-13関西断面、PR #23の検証JSON)から
+  日量→時平均MWでintake CSVを生成し `ajgrid reconcile --uc-csv` に通した —
+  demand帯内・**nuclear 6,578MW >p95(4,883/5,636)**・hydro/thermal_combined <q50。
+  nuclear帯外はfy2025r1の原子力断面(6.6GW)と検証日実勢(4.9GW平均)の
+  **ビンテージ違いを正しく検出**(UC側ledger 22と同結論に独立到達=計器の交差検証)
+- **F5文書化**(docs/UC_HANDOFF.md): 3列契約(area,metric,value_mw)・metric語彙に
+  `thermal_combined`を正式追加(関西・中国は合算公表)・帯の出典3系統
+  (東京=TSO 12ヶ月/西3=nas03/需要=OCCTO)・「帯外=エラーでなく前提差を述べよの
+  シグナル」という読み方を明記
+- **HANDOFF鮮度修正**: 「westはAC不成立・ゾーナルDC推奨」の旧記述を
+  全島AC(63/85/91)の現状+vm品質注意へ更新
+- F/X/Sトラックの未完了[ ]はこれで**全消化**(残=D4/D5の配電層のみ+P凍結)
+
 ## 2026-06-12 — **Fable 5** — S3: 連系線±20%感度スイープ — 東京=輸入が混雑を単調緩和/関西=非感応の構造差を計測（93）
 
 - **方法**: 実測interconnect統計(p95/signed_q50)をローダパッチで×0.8/1.0/1.2して
