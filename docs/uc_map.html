@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UC before/after — merit-order vs UCコミットメントの潮流比較</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; font-family: -apple-system, "Hiragino Sans", sans-serif; }
+  #map { height: 100%; }
+  .panel {
+    position: absolute; top: 10px; right: 10px; z-index: 1000;
+    background: rgba(255,255,255,.95); border-radius: 8px; padding: 12px 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.3); font-size: 13px; max-width: 290px;
+  }
+  .panel h1 { font-size: 14px; margin: 0 0 8px; }
+  .panel .row { margin: 6px 0; }
+  .panel label { margin-right: 8px; cursor: pointer; }
+  .panel .meta { color: #666; font-size: 11px; margin-top: 8px; line-height: 1.5; }
+  .legend { position: absolute; bottom: 18px; right: 10px; z-index: 1000;
+    background: rgba(255,255,255,.95); border-radius: 8px; padding: 10px 12px;
+    font-size: 11px; box-shadow: 0 1px 6px rgba(0,0,0,.3); }
+  .legend .sw { display: inline-block; width: 14px; height: 8px; margin-right: 4px;
+    vertical-align: middle; border-radius: 2px; }
+  .err { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
+    z-index: 1100; background: #fff3f3; border: 1px solid #e99; border-radius: 8px;
+    padding: 18px 22px; font-size: 14px; max-width: 480px; display: none; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <h1>UC before/after 潮流マップ</h1>
+  <div class="row">島:
+    <span id="islandSel"></span>
+  </div>
+  <div class="row">断面:
+    <label><input type="radio" name="mode" value="before"> before<small>（merit-order）</small></label>
+    <label><input type="radio" name="mode" value="after" checked> after<small>（UC注入）</small></label>
+    <label><input type="radio" name="mode" value="diff"> 差分</label>
+  </div>
+  <div class="row">
+    <label><input type="checkbox" id="cbBuses" checked> バス（電圧）</label>
+    <label><input type="checkbox" id="cbLines" checked> 送電線</label>
+  </div>
+  <div class="meta" id="meta">summary.json を読込中…</div>
+</div>
+<div class="legend" id="legend"></div>
+<div class="err" id="err"></div>
+<script>
+const DATA = "data/uc_powerflow";
+const map = L.map("map").setView([36.5, 137.5], 6);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { attribution: "&copy; OpenStreetMap", maxZoom: 18, opacity: .55 }).addTo(map);
+
+let summary = null, island = null, mode = "after";
+let cache = {};            // {island_tag_kind: geojson}
+let busLayer = null, lineLayer = null;
+
+// ---- 色スケール ----
+const vmColor = v => v == null ? "#999"
+  : v < 0.90 ? "#c0392b" : v < 0.95 ? "#e67e22"
+  : v <= 1.05 ? "#27ae60" : v <= 1.07 ? "#e67e22" : "#c0392b";
+const ldColor = v => v == null ? "#bbb"
+  : v < 50 ? "#27ae60" : v < 80 ? "#f1c40f" : v < 100 ? "#e67e22" : "#c0392b";
+// 差分: 青(改善/減) ←→ 赤(悪化/増)
+const divColor = (v, s) => {
+  if (v == null) return "#bbb";
+  const x = Math.max(-1, Math.min(1, v / s));
+  return x > 0 ? `rgba(192,57,43,${.25 + .75 * x})`
+               : `rgba(41,128,185,${.25 - .75 * x})`;
+};
+
+async function fetchFC(name) {
+  if (cache[name]) return cache[name];
+  const r = await fetch(`${DATA}/${name}`);
+  if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
+  cache[name] = await r.json();
+  return cache[name];
+}
+
+function legendHTML() {
+  if (mode === "diff") return `
+    <b>差分（after − before）</b><br>
+    バス Δvm: <span class="sw" style="background:rgba(41,128,185,.85)"></span>上昇
+    <span class="sw" style="background:rgba(192,57,43,.85)"></span>低下（|Δ|=0.05でフル）<br>
+    線 Δloading: <span class="sw" style="background:rgba(41,128,185,.85)"></span>減
+    <span class="sw" style="background:rgba(192,57,43,.85)"></span>増（|Δ|=50ppでフル）`;
+  return `
+    <b>バス電圧 vm [pu]</b>
+    <span class="sw" style="background:#c0392b"></span>&lt;0.90
+    <span class="sw" style="background:#e67e22"></span>0.90–0.95
+    <span class="sw" style="background:#27ae60"></span>0.95–1.05<br>
+    <b>線 loading [%]</b>
+    <span class="sw" style="background:#27ae60"></span>&lt;50
+    <span class="sw" style="background:#f1c40f"></span>50–80
+    <span class="sw" style="background:#e67e22"></span>80–100
+    <span class="sw" style="background:#c0392b"></span>&gt;100`;
+}
+
+async function render() {
+  document.getElementById("legend").innerHTML = legendHTML();
+  if (busLayer) { map.removeLayer(busLayer); busLayer = null; }
+  if (lineLayer) { map.removeLayer(lineLayer); lineLayer = null; }
+  if (!island) return;
+  const isl = summary.islands[island];
+  const tag = mode === "diff" ? "after" : mode;   // 差分はafterのdvm/dloadingを使う
+  const isDC = isl.mode === "dc";
+  const wantBuses = document.getElementById("cbBuses").checked && !isDC;
+  const wantLines = document.getElementById("cbLines").checked;
+  try {
+    if (wantLines) {
+      const fc = await fetchFC(`${island}_${tag}_lines.geojson`);
+      lineLayer = L.geoJSON(fc, {
+        style: f => {
+          const p = f.properties;
+          const v = mode === "diff" ? p.dloading : p.loading_pct;
+          return {
+            color: mode === "diff" ? divColor(v, 50) : ldColor(v),
+            weight: p.tie ? 4 : (mode === "diff" && v != null && Math.abs(v) > 10 ? 3 : 1.4),
+            opacity: p.synthetic ? .35 : .85,
+            dashArray: p.synthetic ? "4 4" : null,
+          };
+        },
+        onEachFeature: (f, l) => {
+          const p = f.properties;
+          l.bindTooltip(
+            `${p.name}<br>loading ${p.loading_pct}% / p ${p.p_mw} MW` +
+            (p.dloading != null ? `<br>Δloading ${p.dloading > 0 ? "+" : ""}${p.dloading}pp` : "") +
+            (p.tie ? "<br><b>地域間tie線</b>" : ""), { sticky: true });
+        },
+      }).addTo(map);
+    }
+    if (wantBuses) {
+      const fc = await fetchFC(`${island}_${tag}_buses.geojson`);
+      busLayer = L.geoJSON(fc, {
+        pointToLayer: (f, latlng) => {
+          const p = f.properties;
+          const v = mode === "diff" ? p.dvm : p.vm_pu;
+          const big = p.vn_kv >= 275;
+          return L.circleMarker(latlng, {
+            radius: mode === "diff" && v != null
+              ? 2 + Math.min(6, Math.abs(v) * 120) : (big ? 4 : 2.2),
+            color: mode === "diff" ? divColor(v, 0.05) : vmColor(v),
+            fillColor: mode === "diff" ? divColor(v, 0.05) : vmColor(v),
+            fillOpacity: .85, weight: 0,
+          });
+        },
+        onEachFeature: (f, l) => {
+          const p = f.properties;
+          l.bindTooltip(
+            `${p.name} (${p.vn_kv}kV, ${p.zone})<br>vm ${p.vm_pu} pu` +
+            (p.dvm != null ? `<br>Δvm ${p.dvm > 0 ? "+" : ""}${p.dvm}` : ""),
+            { sticky: true });
+        },
+      }).addTo(map);
+    }
+    const m = isl.mode === "ac" ? "AC" : "DC";
+    document.getElementById("meta").innerHTML =
+      `${island}: ${isl.regions.join("+")} / t=${isl.hour}時 / ${m}` +
+      (isDC ? "<br>※DC断面のためバス電圧レイヤは無効" : "") +
+      (isl.vm_by_zone ? "<br>vm: " + Object.entries(isl.vm_by_zone)
+        .map(([r, v]) => `${r} [${v[0]}, ${v[1]}]`).join(" / ") : "") +
+      `<br>シナリオ ${summary.meta.scenario} (${summary.meta.date}, ${summary.meta.git_head})` +
+      `<br><b>before</b>=merit-order配分 / <b>after</b>=UCコミットメント注入（同一網・同一需要）`;
+  } catch (e) {
+    const err = document.getElementById("err");
+    err.style.display = "block";
+    err.textContent = `データ読込エラー: ${e.message} — scripts/uc_to_pf_national.py --islands ${island} --export を実行してください`;
+  }
+}
+
+(async () => {
+  try {
+    const r = await fetch(`${DATA}/summary.json`);
+    if (!r.ok) throw new Error("summary.json なし");
+    summary = await r.json();
+    const ids = Object.keys(summary.islands);
+    if (!ids.length) throw new Error("エクスポート済みの島がありません");
+    const sel = document.getElementById("islandSel");
+    sel.innerHTML = ids.map((i, k) =>
+      `<label><input type="radio" name="isl" value="${i}" ${k === 0 ? "checked" : ""}> ${i}</label>`
+    ).join("");
+    island = ids[0];
+    document.querySelectorAll('input[name="isl"]').forEach(el =>
+      el.addEventListener("change", e => { island = e.target.value; render(); }));
+    document.querySelectorAll('input[name="mode"]').forEach(el =>
+      el.addEventListener("change", e => { mode = e.target.value; render(); }));
+    ["cbBuses", "cbLines"].forEach(id =>
+      document.getElementById(id).addEventListener("change", render));
+    if (island === "west") map.setView([34.5, 133.5], 7);
+    if (island === "east") map.setView([37.0, 139.8], 7);
+    render();
+  } catch (e) {
+    const err = document.getElementById("err");
+    err.style.display = "block";
+    err.innerHTML = `<b>UC before/after データが未生成です。</b><br>` +
+      `${e.message}<br><br>生成コマンド:<br>` +
+      `<code>python3 scripts/uc_to_pf_national.py --islands east --export</code><br>` +
+      `<code>python3 scripts/uc_to_pf_national.py --islands west --try-ac --export</code>`;
+    document.getElementById("meta").textContent = "データなし";
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "meta": {
     "date": "2026-06-12",
-    "git_head": "a459d13",
+    "git_head": "5df0228",
     "scenario": "fy2023r2",
     "reactive": 0.6,
     "capacity_bridge": true
@@ -39,6 +39,7 @@
           "新小倉火力",
           "松島火力",
           "橘湾火力",
+          "橘湾発電所",
           "池島町長崎市発電所",
           "牧港火力",
           "相浦火力",
@@ -98,12 +99,19 @@
       },
       "tie_flow_mw": {
         "pf": {
-          "tohoku->tokyo": 11637.4
+          "tohoku->tokyo": 11637.5
         },
         "uc": {
           "tohoku->tokyo": 5550.0
         }
-      }
+      },
+      "before_converged": true,
+      "export": [
+        "east_before_buses.geojson",
+        "east_before_lines.geojson",
+        "east_after_buses.geojson",
+        "east_after_lines.geojson"
+      ]
     }
   }
 }
