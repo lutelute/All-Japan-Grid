@@ -115,6 +115,9 @@ def main() -> int:
                     help="新形式在庫のある会社（カンマ区切り）")
     ap.add_argument("--force-fetch", action="store_true",
                     help="DataSpaceキャッシュを無視して実績を再取得")
+    ap.add_argument("--re-actuals", action="store_true",
+                    help="検証地域のsolar/windをその日の実績系列で置換して"
+                         "UCを解く（天気を所与にして運用だけを比較する検証）")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     companies = [c.strip() for c in args.companies.split(",") if c.strip()]
@@ -132,17 +135,9 @@ def main() -> int:
         (cfg.raw.setdefault("demand", {})
             .setdefault("profile_ref", {}))["representative_day"] = args.date
         print(f"代表日を差し替え: {rep} → {args.date}")
-    print(f"UC求解中... ({args.scenario} @ {args.date})")
-    scn = build_national_scenario(scenario=cfg)
-    uc = solve_uc(scn.to_uc_parameters())
-    print(f"  {uc.status}")
-    if not uc.is_optimal:
-        return 1
-
-    # ── 2. 実績取得（必要月×社のみ、DataSpace経由=キャッシュ+provenance） ──
+    # ── 実績の先行取得（--re-actualsはUC構築前に必要） ──
     ds = DataSpace()
-    report_regions = {}
-    l1_rows = []
+    meas_by_region = {}
     for company in companies:
         region = COMPANY_TO_REGION[company]
         print(f"実績取得: {company} ({region}) {month} ...")
@@ -150,7 +145,30 @@ def main() -> int:
                             {"company": company, "month": month,
                              "date": args.date},
                             force=args.force_fetch)
-        meas = measured_region_fuel_24h(meas_raw["rows"], args.date)
+        meas_by_region[region] = measured_region_fuel_24h(
+            meas_raw["rows"], args.date)
+
+    print(f"UC求解中... ({args.scenario} @ {args.date}"
+          + (", RE=実績" if args.re_actuals else "") + ")")
+    scn = build_national_scenario(scenario=cfg)
+    if args.re_actuals:
+        import numpy as _np
+        for region, meas in meas_by_region.items():
+            for key, attr in (("solar", "solar_gen_r"), ("wind", "wind_gen_r")):
+                series = meas.get(key)
+                if series and len(series) == scn.num_periods:
+                    getattr(scn, attr)[region] = _np.asarray(series, dtype=float)
+    uc = solve_uc(scn.to_uc_parameters())
+    print(f"  {uc.status}")
+    if not uc.is_optimal:
+        return 1
+
+    # ── 2. 突合（実績は先行取得済み） ──
+    report_regions = {}
+    l1_rows = []
+    for company in companies:
+        region = COMPANY_TO_REGION[company]
+        meas = meas_by_region[region]
         ucr = uc_region_fuel_24h(scn, uc, region)
 
         fuels = sorted(set(UC_TO_MEASURED) & (set(ucr) | {"solar", "wind"}))
@@ -201,6 +219,7 @@ def main() -> int:
             "git_head": _git_head(),
             "scenario": args.scenario,
             "validation_date": args.date,
+            "re_actuals": bool(args.re_actuals),
             "companies": companies,
             "vocabulary_notes": [
                 "UC oil = 実績 火力(石油)+火力(その他)（区分差の開示）",
@@ -218,8 +237,9 @@ def main() -> int:
             if any(v is not None for _, v in l1_rows) else None,
         },
     }
+    suffix = "_reactuals" if args.re_actuals else ""
     out = args.out or (f"docs/reports/uc_validation_{args.scenario}_"
-                       f"{args.date}.json")
+                       f"{args.date}{suffix}.json")
     with open(out, "w") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"Saved: {out}")
