@@ -226,6 +226,31 @@ def main() -> int:
             }
             for f in ("lng", "coal", "oil"):   # 個別行は実績側が無く誤誘導
                 per_fuel.pop(f, None)
+        # 連系線チェック（シェアL1には混ぜない別枠）: UC地域純輸入 vs 実績
+        # 連系線列。符号規約: 両者とも受電=正（エリア需給実績の連系線列は
+        # 供給力側=域外からの受電が正、UC側は to_region への流入を正に集計）
+        ic_check = None
+        if "interconnector" in meas:
+            ic_meta = {ic.id: ic for ic in scn.interconnections}
+            net_imp = np.zeros(24)
+            for icf in uc.interconnection_flows:
+                ic = ic_meta.get(icf.interconnection_id)
+                if ic is None:
+                    continue
+                f = np.array(icf.flow_mw[:24], dtype=float)
+                if getattr(ic, "to_region", None) == region:
+                    net_imp += f
+                if getattr(ic, "from_region", None) == region:
+                    net_imp -= f
+            ms = np.array(meas["interconnector"])
+            corr = (round(float(np.corrcoef(net_imp, ms)[0, 1]), 3)
+                    if net_imp.std() > 1e-6 and ms.std() > 1e-6 else None)
+            ic_check = {
+                "uc_net_import_mwh": round(float(net_imp.sum()), 1),
+                "measured_mwh": round(float(ms.sum()), 1),
+                "diff_mwh": round(float(net_imp.sum() - ms.sum()), 1),
+                "shape_corr": corr,
+            }
         uc_tot = sum(v["uc_mwh"] for v in per_fuel.values())
         m_tot = sum(v["measured_mwh"] for v in per_fuel.values())
         l1_pp = (sum(abs(v["uc_mwh"] / uc_tot - v["measured_mwh"] / m_tot)
@@ -236,6 +261,7 @@ def main() -> int:
             "demand_measured_mwh": round(
                 float(np.sum(meas.get("demand", []))), 1),
             "per_fuel": per_fuel,
+            "interconnector_check": ic_check,
             "share_l1_pp": round(l1_pp, 2) if l1_pp is not None else None,
             "curtailment_mwh": {
                 "solar": round(float(np.sum(meas.get("solar_curtailed", []))), 1),
