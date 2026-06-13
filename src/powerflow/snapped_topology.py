@@ -723,8 +723,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             # 従来どおり単一クラス [kv]。展開時の回線数は各クラス1(証拠なき配分は
             # しない=D2のインピーダンス二重計上回避と同じ慎重さ)。
             build_classes = sorted(vclasses) if len(vclasses) > 1 else [kv]
-            circ_eff = circ if len(build_classes) == 1 else 1
             for bkv in build_classes:
+                # 主クラス(=max電圧=従来の単一kv)は元のcircuitsを維持し、追加で
+                # 展開する低電圧クラスのみ1回線とする。混在線のcircuitsが各クラス
+                # 1に減ると主送電容量が激減し過負荷になる(関西「国府支線;岩中国府線」
+                # 77;33 circuits=3 が77kV側3→1回線で184%過負荷した=I6-2の切り分け結果)
+                circ_eff = circ if (len(build_classes) == 1 or bkv == kv) else 1
                 node_ids = []
                 last = len(coords) - 1
                 for vi, (lat, lon) in enumerate(coords):
