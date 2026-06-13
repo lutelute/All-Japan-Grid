@@ -77,7 +77,8 @@ def tag_coverage(region: str, data_dir: str | None = None) -> dict | None:
 
 
 def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5,
-                     keep_stubs: bool = True, data_dir: str | None = None) -> dict | None:
+                     keep_stubs: bool = True, data_dir: str | None = None,
+                     expand_mixed_voltage: bool = False) -> dict | None:
     """Builder-level connectivity KPIs (no reconnection, no solving).
 
     ``n_components`` here is the honest OSM fragmentation; the solved
@@ -90,7 +91,8 @@ def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5
     if builder == "snapped":
         from src.powerflow.snapped_topology import build_network_snapped
         net = build_network_snapped(region, snap_km=snap_km,
-                                    keep_stubs=keep_stubs, data_dir=data_dir)
+                                    keep_stubs=keep_stubs, data_dir=data_dir,
+                                    expand_mixed_voltage=expand_mixed_voltage)
     elif builder == "legacy":
         from src.powerflow.legacy_build import build_network_from_geojson
         net = build_network_from_geojson(region)
@@ -240,7 +242,8 @@ _DISCLOSURE_CSVS = {
 }
 
 
-def external_flow_metrics(region: str, data_dir: str | None = None) -> dict | None:
+def external_flow_metrics(region: str, data_dir: str | None = None,
+                          expand_mixed_voltage: bool = False) -> dict | None:
     """3-layer measured-flow correlation (trunk/154/66) for the sweep.
 
     Runs the FULL model (backbone 0 — the 66 kV layer only exists
@@ -257,7 +260,8 @@ def external_flow_metrics(region: str, data_dir: str | None = None) -> dict | No
 
     m = match_flows(region, cfg["csv"], backbone_kv=0.0, data_dir=data_dir,
                     csv154=(cfg["csv154"] if glob.glob(cfg["csv154"]) else None),
-                    csv66=(cfg["csv66"] if glob.glob(cfg["csv66"]) else None))
+                    csv66=(cfg["csv66"] if glob.glob(cfg["csv66"]) else None),
+                    expand_mixed_voltage=expand_mixed_voltage)
     keep = ("interior_spearman_rho", "interior_spearman_p",
             "trunk_spearman_rho", "n_interior_trunk",
             "kv154_spearman_rho", "n_interior_154",

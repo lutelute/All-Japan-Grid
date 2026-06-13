@@ -76,7 +76,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                     load_spatial="none", boundary_imports=True,
                     boundary_util=None, db=None, boundary_stats=None,
                     measured_loads="auto", radialize_band_kv=None,
-                    corridor_calib=None):
+                    corridor_calib=None, expand_mixed_voltage=False):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:
@@ -101,7 +101,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
     if topology == "snapped":
         network, snap_geom = build_network_snapped(
             region, snap_km=snap_km, vertex_prec=vertex_prec, return_geom=True,
-            db=db)
+            db=db, expand_mixed_voltage=expand_mixed_voltage)
     else:
         network = build_network_from_geojson(region)
     if not network or not network.has_elements:

@@ -184,6 +184,32 @@ def _clean_voltage(v_kv):
     return float(min(VALID_VOLTAGES, key=lambda x: abs(x - v_kv)))
 
 
+def _parse_voltage_classes(voltage_raw):
+    """混在電圧タグの各回線クラス(clean後・標準JP送電クラス)を集合で返す。
+
+    ``154000;66000`` のような併架(under-build)は物理的に別電圧の独立回線で、
+    :func:`parse_voltage_kv` の max丸めでは低電圧側の接続が失われる
+    (62kV島の主因, ledger 103)。``expand_mixed_voltage`` がこの集合で
+    各クラスを個別に系統へ展開するために使う。非標準値(22/33kV)は
+    ``_clean_voltage`` で最寄り標準クラスに丸められるので、``66;22`` などは
+    単一クラス {66} になり展開対象外。
+    """
+    out = set()
+    for part in str(voltage_raw or "").replace(",", ";").split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            v = float(part)
+        except (ValueError, TypeError):
+            continue
+        kv = v / 1000.0 if v > 1000 else v
+        c = _clean_voltage(kv)
+        if c > 0:
+            out.add(c)
+    return out
+
+
 # ── spatial index for substation snapping ───────────────────────────────────
 
 class _SubIndex:
@@ -274,7 +300,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           line_centric_coords=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
-                          propagate_voltage=True, db=None, tap_snap_km=0.12):
+                          propagate_voltage=True, db=None, tap_snap_km=0.12,
+                          expand_mixed_voltage=False):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -623,16 +650,24 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if 0 < kv < min_voltage_kv:
                 continue
             kv = _clean_voltage(kv)  # snap known line voltage to a standard class
+            # 混在電圧(154;66 併架)の各クラス。expand時のみ計算(off時は空集合)。
+            vclasses = (_parse_voltage_classes(props.get("voltage"))
+                        if expand_mixed_voltage else set())
             circ, circ_src = _parse_circuits(props)
             osm_name = props.get("name") or None
             is_cab = (props.get("power") == "cable"
                       or props.get("location") == "underground")
             feat_cache.append([coords, kv, circ, circ_src, osm_name,
                                "tag" if kv > 0 else "unk", is_cab,
-                               _parse_wires(props)])
-            if multi_voltage and kv > 0:
-                for (lat, lon) in coords:
-                    coord_cls[(round(lat, vertex_prec), round(lon, vertex_prec))].add(kv)
+                               _parse_wires(props), vclasses])
+            if multi_voltage:
+                # 展開する併架線は各クラスを、それ以外は単一kvを座標クラスに播種
+                seed = (sorted(vclasses) if len(vclasses) > 1
+                        else ([kv] if kv > 0 else []))
+                for c in seed:
+                    for (lat, lon) in coords:
+                        coord_cls[(round(lat, vertex_prec),
+                                   round(lon, vertex_prec))].add(c)
 
         # Pass A.5: corridor voltage propagation. An untagged feature whose
         # vertices only ever meet ONE known class is that corridor's
@@ -683,51 +718,58 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
         # Pass B: map vertices to class-aware nodes and build edges.
         tap_segs = []   # (node_a, node_b, latlon_a, latlon_b, kv) for tap snapping
-        for coords, kv, circ, circ_src, osm_name, kv_src, is_cab, wires in feat_cache:
-            node_ids = []
-            last = len(coords) - 1
-            for vi, (lat, lon) in enumerate(coords):
-                # polygon-first binding; terminals keep a wider fallback
-                sid = _bind_vertex(lat, lon, vi in (0, last))
-                if sid is not None:
-                    bind_pts.setdefault(sid, []).append((lat, lon))
-                rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
-                if sid is not None:
-                    if multi_voltage:
-                        sub_classes[sid].add(kv)
-                        node_ids.append(f"S|{sid}|{kv:g}")
+        for coords, kv, circ, circ_src, osm_name, kv_src, is_cab, wires, vclasses in feat_cache:
+            # 併架線(expand時)は各電圧クラスを独立回線として展開する。それ以外は
+            # 従来どおり単一クラス [kv]。展開時の回線数は各クラス1(証拠なき配分は
+            # しない=D2のインピーダンス二重計上回避と同じ慎重さ)。
+            build_classes = sorted(vclasses) if len(vclasses) > 1 else [kv]
+            circ_eff = circ if len(build_classes) == 1 else 1
+            for bkv in build_classes:
+                node_ids = []
+                last = len(coords) - 1
+                for vi, (lat, lon) in enumerate(coords):
+                    # polygon-first binding; terminals keep a wider fallback
+                    sid = _bind_vertex(lat, lon, vi in (0, last))
+                    if sid is not None:
+                        bind_pts.setdefault(sid, []).append((lat, lon))
+                    rlat, rlon = round(lat, vertex_prec), round(lon, vertex_prec)
+                    if sid is not None:
+                        if multi_voltage:
+                            sub_classes[sid].add(bkv)
+                            node_ids.append(f"S|{sid}|{bkv:g}")
+                        else:
+                            node_ids.append(sid)
                     else:
-                        node_ids.append(sid)
-                else:
-                    if multi_voltage:
-                        jcls = kv if kv > 0 else max(coord_cls.get((rlat, rlon), (0,)))
-                        jk = f"J:{rlat}:{rlon}:{jcls:g}"
-                    else:
-                        jk = f"J:{rlat}:{rlon}"
-                    jct_coord[jk] = (lat, lon)
-                    node_ids.append(jk)
+                        if multi_voltage:
+                            jcls = bkv if bkv > 0 else max(coord_cls.get((rlat, rlon), (0,)))
+                            jk = f"J:{rlat}:{rlon}:{jcls:g}"
+                        else:
+                            jk = f"J:{rlat}:{rlon}"
+                        jct_coord[jk] = (lat, lon)
+                        node_ids.append(jk)
 
-            # Add edges between consecutive distinct nodes, with segment length
-            # and the real coordinate pair as the (sub-)path. A single way
-            # contributes its OWN circuit count (the OSM circuits/cables tag
-            # where present — direct evidence — else 1) and only once per
-            # node pair even if its vertices revisit it (snapping zig-zag);
-            # genuine parallels come from separate ways summing.
-            seen_pairs = set()
-            for j in range(1, len(coords)):
-                a, b = node_ids[j - 1], node_ids[j]
-                if a == b:
-                    continue
-                seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
-                                    coords[j][0], coords[j][1])
-                pair = (a, b) if a <= b else (b, a)
-                contrib = 0 if pair in seen_pairs else circ
-                seen_pairs.add(pair)
-                add_edge(a, b, seg, kv, [coords[j - 1], coords[j]],
-                         parallel=contrib, evidence=circ_src, name=osm_name,
-                         kv_src=kv_src, cable_km=seg if is_cab else 0.0,
-                         bundle=wires)
-                tap_segs.append((a, b, coords[j - 1], coords[j], kv))
+                # Add edges between consecutive distinct nodes, with segment
+                # length and the real coordinate pair as the (sub-)path. A
+                # single way contributes its OWN circuit count (the OSM
+                # circuits/cables tag where present — direct evidence — else
+                # 1) and only once per node pair even if its vertices revisit
+                # it (snapping zig-zag); genuine parallels come from separate
+                # ways summing.
+                seen_pairs = set()
+                for j in range(1, len(coords)):
+                    a, b = node_ids[j - 1], node_ids[j]
+                    if a == b:
+                        continue
+                    seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
+                                        coords[j][0], coords[j][1])
+                    pair = (a, b) if a <= b else (b, a)
+                    contrib = 0 if pair in seen_pairs else circ_eff
+                    seen_pairs.add(pair)
+                    add_edge(a, b, seg, bkv, [coords[j - 1], coords[j]],
+                             parallel=contrib, evidence=circ_src, name=osm_name,
+                             kv_src=kv_src, cable_km=seg if is_cab else 0.0,
+                             bundle=wires)
+                    tap_segs.append((a, b, coords[j - 1], coords[j], bkv))
 
     def is_jct(n):
         return isinstance(n, str) and n.startswith("J:")

@@ -567,7 +567,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 stats_db: str | None = None,
                 measured_loads="auto", radialize_band_kv=None,
                 corridor_calib: bool = False,
-                calib_swap: bool = False) -> dict:
+                calib_swap: bool = False,
+                expand_mixed_voltage: bool = False) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
@@ -633,7 +634,8 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                                  boundary_stats=typical,
                                  measured_loads=measured_loads,
                                  radialize_band_kv=radialize_band_kv,
-                                 corridor_calib=calib_train or None)
+                                 corridor_calib=calib_train or None,
+                                 expand_mixed_voltage=expand_mixed_voltage)
         if result is None:
             raise FileNotFoundError(f"no network for region {region}")
         net_dc, dc_res, *_ = result
