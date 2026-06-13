@@ -69,8 +69,48 @@ def _base_grid(region: str, cell: float = 0.001):
     return grid
 
 
+def _other_region_grid(region: str, cell: float = 0.001):
+    """他9地域の基底線レイヤの頂点グリッド(縄張り規律: 既在線の越境取込を防ぐ)。"""
+    from src.regions import REGIONS
+    g = set()
+    for r in REGIONS:
+        if r == region:
+            continue
+        path = f"data/{r}_lines.geojson"
+        if not os.path.exists(path):
+            continue
+        d = json.load(open(path, encoding="utf-8"))
+        for ft in d["features"]:
+            gm = ft["geometry"]
+            if gm["type"] == "LineString":
+                cs = gm["coordinates"]
+            elif gm["type"] == "MultiLineString":
+                cs = [c for part in gm["coordinates"] for c in part]
+            else:
+                continue
+            for lon, la in cs[::3]:
+                g.add((round(la / cell), round(lon / cell)))
+    return g
+
+
 def _run_bulk(args, grid, cell):
     """地域bboxタイルで power=line|cable を全取得し欠落分を一括補完。"""
+    from src.powerflow.snapped_topology import _freq_excluded
+    from src.regions import REGION_FREQUENCY_HZ
+    region_hz = REGION_FREQUENCY_HZ.get(args.region, 50)
+    other = _other_region_grid(args.region, cell)
+    own_base = _base_grid(args.region, cell)
+
+    def in_other(la, lo):
+        ci, cj = round(la / cell), round(lo / cell)
+        return any((ci + di, cj + dj) in other
+                   for di in (-1, 0, 1) for dj in (-1, 0, 1))
+
+    def near_own(la, lo, r=20):   # ~2km — 境界共有帯は自網扱い
+        ci, cj = round(la / cell), round(lo / cell)
+        return any((ci + di, cj + dj) in own_base
+                   for di in range(-r, r + 1) for dj in range(-r, r + 1))
+
     d0 = json.load(open(f"data/{args.region}_lines.geojson", encoding="utf-8"))
     las, los = [], []
     for ft in d0["features"][::5]:
@@ -199,6 +239,15 @@ def _run_bulk(args, grid, cell):
                 ci, cj = round(mid["lat"] / cell), round(mid["lon"] / cell)
                 if any((ci + di, cj + dj) in grid
                        for di in (-1, 0, 1) for dj in (-1, 0, 1)):
+                    continue
+                # 縄張り規律(台帳99): 他地域に既在 かつ 自網から遠い(>2km)
+                # 線は取り込まない(中部60Hz・東北の深部流入を防ぎつつ、
+                # 県境の共有帯は保持 — 一律除外は正当な境界設備まで削った)
+                if (in_other(mid["lat"], mid["lon"])
+                        and not near_own(mid["lat"], mid["lon"])):
+                    continue
+                # 地域の同期網テスト(_freq_excludedと同基準)
+                if _freq_excluded(e.get("tags") or {}, region_hz):
                     continue
                 props = dict(e.get("tags") or {})
                 props.update({"osm_way_id": wid,
