@@ -78,7 +78,7 @@ def tag_coverage(region: str, data_dir: str | None = None) -> dict | None:
 
 def topology_metrics(region: str, builder: str = "snapped", snap_km: float = 1.5,
                      keep_stubs: bool = True, data_dir: str | None = None,
-                     expand_mixed_voltage: bool = False) -> dict | None:
+                     expand_mixed_voltage: bool = True) -> dict | None:
     """Builder-level connectivity KPIs (no reconnection, no solving).
 
     ``n_components`` here is the honest OSM fragmentation; the solved
@@ -243,7 +243,7 @@ _DISCLOSURE_CSVS = {
 
 
 def external_flow_metrics(region: str, data_dir: str | None = None,
-                          expand_mixed_voltage: bool = False) -> dict | None:
+                          expand_mixed_voltage: bool = True) -> dict | None:
     """3-layer measured-flow correlation (trunk/154/66) for the sweep.
 
     Runs the FULL model (backbone 0 — the 66 kV layer only exists

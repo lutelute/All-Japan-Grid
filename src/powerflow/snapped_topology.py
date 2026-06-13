@@ -301,7 +301,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
-                          expand_mixed_voltage=False):
+                          expand_mixed_voltage=True):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:

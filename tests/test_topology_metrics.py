@@ -66,9 +66,14 @@ def test_okinawa_builder_pins(okinawa_topo):
     # 5-circuit corridor (35 -> 37 multi, max_parallel 4 -> 5).
     m = okinawa_topo
     assert m["builder"] == "snapped"
-    assert m["n_real_subs"] == 76
-    assert m["n_junctions"] == 20
-    assert m["n_branches"] == 98
+    # 2026-06-13 (ledger 106): mixed-voltage class expansion default-on —
+    # 154;66 etc. under-built circuits restored to each class (76->78 real,
+    # 20->21 jct, 98->114 branches). multi_circuit/max_parallel UNCHANGED:
+    # circ_eff (ledger 105) keeps the main class's original circuits, so only
+    # the added low-voltage circuit (parallel=1) appears — no de-aggregation.
+    assert m["n_real_subs"] == 78
+    assert m["n_junctions"] == 21
+    assert m["n_branches"] == 114
     assert m["n_gens"] == 22
     assert m["n_components"] == 6
     assert m["multi_circuit_branches"] == 37

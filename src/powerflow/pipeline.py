@@ -76,7 +76,7 @@ def build_and_solve(region, demand_cfg, topology="snapped", reconnect=False, rea
                     load_spatial="none", boundary_imports=True,
                     boundary_util=None, db=None, boundary_stats=None,
                     measured_loads="auto", radialize_band_kv=None,
-                    corridor_calib=None, expand_mixed_voltage=False):
+                    corridor_calib=None, expand_mixed_voltage=True):
     """Build network, solve DC+AC, return (net_dc, dc_result, net_ac, ac_result, build_info, snap_geom).
 
     Args:

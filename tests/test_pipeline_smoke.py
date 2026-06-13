@@ -40,17 +40,20 @@ def test_build_info_shape(okinawa_solved):
     # their substations, absorbing stub junctions (102 -> 96 buses,
     # 92 -> 84 lines; ledger 98: name-claimed class adoption joins one more tip) and adding two class nodes' trafos (14 -> 16).
     assert info["topology"] == "snapped"
-    assert info["n_buses"] == 96
-    assert info["n_lines"] == 84
+    # 2026-06-13 (ledger 106): mixed-voltage class expansion default-on
+    # (expand_mixed_voltage) restores 154;66 etc. under-built circuits to each
+    # class: 96 -> 99 buses, 84 -> 98 lines, 16 -> 18 trafos.
+    assert info["n_buses"] == 99
+    assert info["n_lines"] == 98
     assert info["n_gens"] == 22
-    assert info["n_trafos"] == 16
+    assert info["n_trafos"] == 18
 
 
 def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 96
+    assert len(net_ac.bus) == 99
     vmin = float(net_ac.res_bus.vm_pu.min())
     # 0.647 measured: voltage propagation typed the northern 66 kV spur
     # that previously hid at an inferred higher class — honest sag on an

@@ -568,7 +568,7 @@ def match_flows(region: str, csv_path, backbone_kv: float | None = 154.0,
                 measured_loads="auto", radialize_band_kv=None,
                 corridor_calib: bool = False,
                 calib_swap: bool = False,
-                expand_mixed_voltage: bool = False) -> dict:
+                expand_mixed_voltage: bool = True) -> dict:
     """Flow-level validation: model DC flows vs TEPCO measured flows.
 
     Caveat by construction: the model solves ONE synthetic snapshot
