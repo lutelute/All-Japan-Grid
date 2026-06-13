@@ -1,0 +1,5409 @@
+{
+ "summary": {
+  "region": "tokyo",
+  "n_components": 299,
+  "main_size": 3562,
+  "n_islands": 298,
+  "near_km": 1.5,
+  "far_km": 5.0,
+  "counts": {
+   "near": 87,
+   "mid": 107,
+   "far": 104
+  },
+  "island_nodes_total": 610,
+  "island_real_subs_total": 202,
+  "near_pair_kinds": {
+   "cross": 24,
+   "unk": 33,
+   "same": 30
+  },
+  "near_kv_pairs": {
+   "66.0->66.0": 24,
+   "0.0->66.0": 20,
+   "66.0->154.0": 9,
+   "0.0->154.0": 8,
+   "66.0->275.0": 8,
+   "0.0->275.0": 5,
+   "500.0->500.0": 3,
+   "154.0->154.0": 3,
+   "154.0->66.0": 3,
+   "500.0->66.0": 1,
+   "154.0->275.0": 1,
+   "66.0->500.0": 1,
+   "275.0->154.0": 1
+  }
+ },
+ "buckets": {
+  "near": [
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.0,
+    "island_pt": [
+     35.78201,
+     138.39161
+    ],
+    "main_pt": [
+     35.78201,
+     138.39161
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.782:138.3916:66",
+    "main_id": "tokyo_jct_35.782:138.3916:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.03,
+    "island_pt": [
+     35.55289,
+     139.75357
+    ],
+    "main_pt": [
+     35.55309,
+     139.75415
+    ],
+    "island_kv": 500.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_594",
+    "main_id": "tokyo_sub_774"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.039,
+    "island_pt": [
+     36.77734,
+     140.68084
+    ],
+    "main_pt": [
+     36.77704,
+     140.68005
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.7773:140.6808:0",
+    "main_id": "tokyo_jct_36.777:140.6801:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.052,
+    "island_pt": [
+     36.80878,
+     139.31392
+    ],
+    "main_pt": [
+     36.80882,
+     139.31342
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.8088:139.3139:0",
+    "main_id": "tokyo_jct_36.8088:139.3134:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.082,
+    "island_pt": [
+     35.48868,
+     138.32698
+    ],
+    "main_pt": [
+     35.48878,
+     138.32805
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4887:138.327:0",
+    "main_id": "tokyo_jct_35.4888:138.3281:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.097,
+    "island_pt": [
+     36.96939,
+     138.79935
+    ],
+    "main_pt": [
+     36.97017,
+     138.80026
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.9694:138.7993:0",
+    "main_id": "tokyo_jct_36.9702:138.8003:0"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.104,
+    "island_pt": [
+     35.42604,
+     138.40303
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.426:138.403:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.161,
+    "island_pt": [
+     37.14103,
+     140.72646
+    ],
+    "main_pt": [
+     37.13975,
+     140.72322
+    ],
+    "island_kv": 500.0,
+    "main_kv": 500.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.141:140.7265:500",
+    "main_id": "tokyo_jct_37.1398:140.7232:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.164,
+    "island_pt": [
+     36.52332,
+     138.61718
+    ],
+    "main_pt": [
+     36.52471,
+     138.62029
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.5233:138.6172:0",
+    "main_id": "tokyo_jct_36.5247:138.6203:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.191,
+    "island_pt": [
+     35.80387,
+     139.62408
+    ],
+    "main_pt": [
+     35.80426,
+     139.62271
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.8039:139.6241:66",
+    "main_id": "tokyo_jct_35.8043:139.6227:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.196,
+    "island_pt": [
+     35.42651,
+     138.40301
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4265:138.403:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.217,
+    "island_pt": [
+     36.77777,
+     140.67914
+    ],
+    "main_pt": [
+     36.77704,
+     140.68005
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.7778:140.6791:0",
+    "main_id": "tokyo_jct_36.777:140.6801:66"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.225,
+    "island_pt": [
+     35.3489,
+     139.0899
+    ],
+    "main_pt": [
+     35.35079,
+     139.09225
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.3489:139.0899:0",
+    "main_id": "tokyo_jct_35.3508:139.0923:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.239,
+    "island_pt": [
+     35.25396,
+     139.04313
+    ],
+    "main_pt": [
+     35.25524,
+     139.04744
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.254:139.0431:0",
+    "main_id": "tokyo_jct_35.2552:139.0474:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.248,
+    "island_pt": [
+     37.1423,
+     140.72433
+    ],
+    "main_pt": [
+     37.14023,
+     140.71941
+    ],
+    "island_kv": 500.0,
+    "main_kv": 500.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.1423:140.7243:500",
+    "main_id": "tokyo_jct_37.1402:140.7194:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.259,
+    "island_pt": [
+     37.30482,
+     140.42493
+    ],
+    "main_pt": [
+     37.30516,
+     140.42846
+    ],
+    "island_kv": 154.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.3048:140.4249:154",
+    "main_id": "tokyo_jct_37.3052:140.4285:275"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.273,
+    "island_pt": [
+     37.30363,
+     140.42318
+    ],
+    "main_pt": [
+     37.30516,
+     140.42846
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.3036:140.4232:66",
+    "main_id": "tokyo_jct_37.3052:140.4285:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.281,
+    "island_pt": [
+     35.22859,
+     138.89211
+    ],
+    "main_pt": [
+     35.22715,
+     138.89218
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.2286:138.8921:66",
+    "main_id": "tokyo_jct_35.2272:138.8922:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.288,
+    "island_pt": [
+     35.68861,
+     140.20509
+    ],
+    "main_pt": [
+     35.68644,
+     140.20303
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.6886:140.2051:0",
+    "main_id": "tokyo_jct_35.6864:140.203:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.308,
+    "island_pt": [
+     37.13718,
+     138.90743
+    ],
+    "main_pt": [
+     37.13692,
+     138.9104
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.1372:138.9074:0",
+    "main_id": "tokyo_jct_37.1369:138.9104:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.376,
+    "island_pt": [
+     35.72734,
+     139.7139
+    ],
+    "main_pt": [
+     35.72879,
+     139.72021
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_536",
+    "main_id": "tokyo_sub_818"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.377,
+    "island_pt": [
+     35.58903,
+     138.54839
+    ],
+    "main_pt": [
+     35.59174,
+     138.5556
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_308",
+    "main_id": "tokyo_jct_35.5917:138.5556:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.404,
+    "island_pt": [
+     37.14439,
+     140.72173
+    ],
+    "main_pt": [
+     37.14442,
+     140.71723
+    ],
+    "island_kv": 500.0,
+    "main_kv": 500.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.1444:140.7217:500",
+    "main_id": "tokyo_jct_37.1444:140.7172:500"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.413,
+    "island_pt": [
+     35.93636,
+     139.61077
+    ],
+    "main_pt": [
+     35.93957,
+     139.61876
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1354",
+    "main_id": "tokyo_jct_35.9396:139.6188:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.517,
+    "island_pt": [
+     37.30586,
+     140.42397
+    ],
+    "main_pt": [
+     37.30516,
+     140.42846
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.3059:140.424:66",
+    "main_id": "tokyo_jct_37.3052:140.4285:275"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.536,
+    "island_pt": [
+     35.5688,
+     139.48566
+    ],
+    "main_pt": [
+     35.5671,
+     139.47714
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.5688:139.4857:66",
+    "main_id": "tokyo_jct_35.5671:139.4771:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.547,
+    "island_pt": [
+     35.78103,
+     139.59015
+    ],
+    "main_pt": [
+     35.78545,
+     139.60059
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.781:139.5901:66",
+    "main_id": "tokyo_jct_35.7855:139.6006:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.598,
+    "island_pt": [
+     36.27517,
+     139.09617
+    ],
+    "main_pt": [
+     36.26991,
+     139.0883
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.2752:139.0962:66",
+    "main_id": "tokyo_jct_36.2699:139.0883:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.611,
+    "island_pt": [
+     36.65375,
+     140.60072
+    ],
+    "main_pt": [
+     36.64829,
+     140.58981
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.6537:140.6007:66",
+    "main_id": "tokyo_jct_36.6483:140.5898:66"
+   },
+   {
+    "n_nodes": 8,
+    "n_real_subs": 5,
+    "min_km_to_main": 0.618,
+    "island_pt": [
+     35.73689,
+     140.18738
+    ],
+    "main_pt": [
+     35.7329,
+     140.18514
+    ],
+    "island_kv": 66.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_730",
+    "main_id": "tokyo_sub_841"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.626,
+    "island_pt": [
+     36.23849,
+     139.1474
+    ],
+    "main_pt": [
+     36.2386,
+     139.1406
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.2385:139.1474:66",
+    "main_id": "tokyo_sub_1171"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.657,
+    "island_pt": [
+     36.36459,
+     139.84743
+    ],
+    "main_pt": [
+     36.36877,
+     139.86015
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1470",
+    "main_id": "tokyo_jct_36.3688:139.8602:66"
+   },
+   {
+    "n_nodes": 5,
+    "n_real_subs": 2,
+    "min_km_to_main": 0.682,
+    "island_pt": [
+     37.05706,
+     138.68209
+    ],
+    "main_pt": [
+     37.05388,
+     138.68287
+    ],
+    "island_kv": 275.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.0571:138.6821:275",
+    "main_id": "tokyo_jct_37.0539:138.6829:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.684,
+    "island_pt": [
+     35.73463,
+     139.72804
+    ],
+    "main_pt": [
+     35.72879,
+     139.72021
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_971",
+    "main_id": "tokyo_sub_818"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 4,
+    "min_km_to_main": 0.699,
+    "island_pt": [
+     35.5669,
+     139.69581
+    ],
+    "main_pt": [
+     35.56815,
+     139.6904
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_605",
+    "main_id": "tokyo_sub_632"
+   },
+   {
+    "n_nodes": 27,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.704,
+    "island_pt": [
+     35.96414,
+     139.65741
+    ],
+    "main_pt": [
+     35.9579,
+     139.645
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.9641:139.6574:0",
+    "main_id": "tokyo_sub_1345"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.722,
+    "island_pt": [
+     35.73504,
+     139.73955
+    ],
+    "main_pt": [
+     35.72903,
+     139.72594
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_538",
+    "main_id": "tokyo_sub_775"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.728,
+    "island_pt": [
+     35.85371,
+     139.34428
+    ],
+    "main_pt": [
+     35.84748,
+     139.33081
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_382",
+    "main_id": "tokyo_sub_197"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 0.744,
+    "island_pt": [
+     36.54795,
+     139.89326
+    ],
+    "main_pt": [
+     36.55438,
+     139.90261
+    ],
+    "island_kv": 154.0,
+    "main_kv": 154.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1678",
+    "main_id": "tokyo_sub_1417"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.764,
+    "island_pt": [
+     35.68022,
+     139.72154
+    ],
+    "main_pt": [
+     35.68677,
+     139.73042
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_590",
+    "main_id": "tokyo_sub_570"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.776,
+    "island_pt": [
+     35.37434,
+     139.46956
+    ],
+    "main_pt": [
+     35.38114,
+     139.48331
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_173",
+    "main_id": "tokyo_sub_174"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.779,
+    "island_pt": [
+     35.44407,
+     140.30503
+    ],
+    "main_pt": [
+     35.43783,
+     140.29022
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4441:140.305:0",
+    "main_id": "tokyo_sub_849"
+   },
+   {
+    "n_nodes": 9,
+    "n_real_subs": 2,
+    "min_km_to_main": 0.826,
+    "island_pt": [
+     36.10482,
+     140.22793
+    ],
+    "main_pt": [
+     36.10592,
+     140.22078
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1533",
+    "main_id": "tokyo_sub_1556"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.841,
+    "island_pt": [
+     36.28469,
+     139.47425
+    ],
+    "main_pt": [
+     36.29052,
+     139.49067
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1186",
+    "main_id": "tokyo_sub_1255"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.878,
+    "island_pt": [
+     35.51283,
+     139.68512
+    ],
+    "main_pt": [
+     35.52045,
+     139.69571
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_633",
+    "main_id": "tokyo_sub_553"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.907,
+    "island_pt": [
+     35.73227,
+     139.7172
+    ],
+    "main_pt": [
+     35.72879,
+     139.72021
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_535",
+    "main_id": "tokyo_sub_818"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.92,
+    "island_pt": [
+     36.1247,
+     137.92196
+    ],
+    "main_pt": [
+     36.12684,
+     137.93563
+    ],
+    "island_kv": 154.0,
+    "main_kv": 154.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.1247:137.922:154",
+    "main_id": "tokyo_jct_36.1268:137.9356:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.947,
+    "island_pt": [
+     35.79284,
+     139.3026
+    ],
+    "main_pt": [
+     35.80134,
+     139.31839
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.7928:139.3026:0",
+    "main_id": "tokyo_jct_35.8013:139.3184:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.953,
+    "island_pt": [
+     35.83136,
+     139.68797
+    ],
+    "main_pt": [
+     35.823,
+     139.67569
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_964",
+    "main_id": "tokyo_sub_961"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 3,
+    "min_km_to_main": 0.963,
+    "island_pt": [
+     37.31093,
+     138.8236
+    ],
+    "main_pt": [
+     37.30544,
+     138.82193
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.3109:138.8236:66",
+    "main_id": "tokyo_jct_37.3054:138.8219:66"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.967,
+    "island_pt": [
+     36.64809,
+     139.1087
+    ],
+    "main_pt": [
+     36.65512,
+     139.11498
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.6481:139.1087:0",
+    "main_id": "tokyo_sub_993@66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 0.978,
+    "island_pt": [
+     35.19628,
+     138.64022
+    ],
+    "main_pt": [
+     35.19771,
+     138.63203
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.1963:138.6402:0",
+    "main_id": "tokyo_jct_35.1977:138.632:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.98,
+    "island_pt": [
+     35.95219,
+     139.40436
+    ],
+    "main_pt": [
+     35.95985,
+     139.41247
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1334",
+    "main_id": "tokyo_sub_1116"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 0.994,
+    "island_pt": [
+     36.66185,
+     139.03265
+    ],
+    "main_pt": [
+     36.6638,
+     139.04706
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1090",
+    "main_id": "tokyo_jct_36.6638:139.0471:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.005,
+    "island_pt": [
+     35.15469,
+     138.74203
+    ],
+    "main_pt": [
+     35.1467,
+     138.72319
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_499",
+    "main_id": "tokyo_sub_347@66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.032,
+    "island_pt": [
+     36.96307,
+     140.0408
+    ],
+    "main_pt": [
+     36.96737,
+     140.05902
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.9631:140.0408:66",
+    "main_id": "tokyo_sub_1537@154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.08,
+    "island_pt": [
+     37.09594,
+     138.87761
+    ],
+    "main_pt": [
+     37.10475,
+     138.89892
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1788",
+    "main_id": "tokyo_sub_1744"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.081,
+    "island_pt": [
+     35.40304,
+     139.54349
+    ],
+    "main_pt": [
+     35.39978,
+     139.52659
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.403:139.5435:66",
+    "main_id": "tokyo_sub_49@66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.096,
+    "island_pt": [
+     35.40755,
+     139.38406
+    ],
+    "main_pt": [
+     35.40655,
+     139.39439
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4075:139.3841:0",
+    "main_id": "tokyo_jct_35.4065:139.3944:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.13,
+    "island_pt": [
+     35.80747,
+     139.31622
+    ],
+    "main_pt": [
+     35.80183,
+     139.31679
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8075:139.3162:0",
+    "main_id": "tokyo_jct_35.8018:139.3168:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.164,
+    "island_pt": [
+     35.55774,
+     139.69691
+    ],
+    "main_pt": [
+     35.551,
+     139.67528
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5577:139.6969:0",
+    "main_id": "tokyo_sub_596"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.189,
+    "island_pt": [
+     35.70058,
+     139.79202
+    ],
+    "main_pt": [
+     35.69577,
+     139.7718
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.7006:139.792:0",
+    "main_id": "tokyo_sub_560"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.2,
+    "island_pt": [
+     35.80606,
+     139.31193
+    ],
+    "main_pt": [
+     35.80183,
+     139.31679
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8061:139.3119:0",
+    "main_id": "tokyo_jct_35.8018:139.3168:66"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 2,
+    "min_km_to_main": 1.216,
+    "island_pt": [
+     36.91369,
+     138.80805
+    ],
+    "main_pt": [
+     36.92354,
+     138.81998
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1184",
+    "main_id": "tokyo_sub_1329"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.216,
+    "island_pt": [
+     36.38476,
+     140.58792
+    ],
+    "main_pt": [
+     36.3809,
+     140.59368
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1525",
+    "main_id": "tokyo_sub_1375"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.226,
+    "island_pt": [
+     35.57719,
+     139.64688
+    ],
+    "main_pt": [
+     35.56766,
+     139.63714
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_484",
+    "main_id": "tokyo_sub_155@154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.229,
+    "island_pt": [
+     36.32737,
+     138.33131
+    ],
+    "main_pt": [
+     36.33843,
+     138.3515
+    ],
+    "island_kv": 154.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.3274:138.3313:154",
+    "main_id": "tokyo_jct_36.3384:138.3515:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.246,
+    "island_pt": [
+     35.67035,
+     139.45196
+    ],
+    "main_pt": [
+     35.66478,
+     139.43024
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_348",
+    "main_id": "tokyo_jct_35.6648:139.4302:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.25,
+    "island_pt": [
+     36.54768,
+     138.92491
+    ],
+    "main_pt": [
+     36.54627,
+     138.90849
+    ],
+    "island_kv": 154.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.5477:138.9249:154",
+    "main_id": "tokyo_jct_36.5463:138.9085:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.255,
+    "island_pt": [
+     37.01531,
+     140.86145
+    ],
+    "main_pt": [
+     37.0087,
+     140.86068
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.0153:140.8614:66",
+    "main_id": "tokyo_jct_37.0087:140.8607:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 1.271,
+    "island_pt": [
+     35.94087,
+     139.6367
+    ],
+    "main_pt": [
+     35.94559,
+     139.65793
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1196",
+    "main_id": "tokyo_sub_1425"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.33,
+    "island_pt": [
+     36.22118,
+     139.60209
+    ],
+    "main_pt": [
+     36.22587,
+     139.62414
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.2212:139.6021:0",
+    "main_id": "tokyo_jct_36.2259:139.6241:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.342,
+    "island_pt": [
+     35.75755,
+     139.69128
+    ],
+    "main_pt": [
+     35.7459,
+     139.6748
+    ],
+    "island_kv": 154.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_955",
+    "main_id": "tokyo_sub_968"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.346,
+    "island_pt": [
+     36.20526,
+     140.23696
+    ],
+    "main_pt": [
+     36.21586,
+     140.26327
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.2053:140.237:66",
+    "main_id": "tokyo_jct_36.2159:140.2633:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.362,
+    "island_pt": [
+     36.66698,
+     140.62641
+    ],
+    "main_pt": [
+     36.67868,
+     140.6524
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.667:140.6264:66",
+    "main_id": "tokyo_jct_36.6787:140.6524:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.362,
+    "island_pt": [
+     37.16181,
+     138.9218
+    ],
+    "main_pt": [
+     37.15906,
+     138.93176
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.1618:138.9218:0",
+    "main_id": "tokyo_sub_1747"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.365,
+    "island_pt": [
+     35.83474,
+     139.70086
+    ],
+    "main_pt": [
+     35.823,
+     139.67569
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_962",
+    "main_id": "tokyo_sub_961"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.375,
+    "island_pt": [
+     36.13155,
+     137.92972
+    ],
+    "main_pt": [
+     36.12684,
+     137.93563
+    ],
+    "island_kv": 154.0,
+    "main_kv": 154.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.1316:137.9297:154",
+    "main_id": "tokyo_jct_36.1268:137.9356:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.41,
+    "island_pt": [
+     35.41292,
+     139.3167
+    ],
+    "main_pt": [
+     35.42503,
+     139.34233
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4129:139.3167:0",
+    "main_id": "tokyo_sub_500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.434,
+    "island_pt": [
+     35.80733,
+     139.31201
+    ],
+    "main_pt": [
+     35.80183,
+     139.31679
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8073:139.312:0",
+    "main_id": "tokyo_jct_35.8018:139.3168:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.437,
+    "island_pt": [
+     36.22486,
+     139.1593
+    ],
+    "main_pt": [
+     36.21679,
+     139.1575
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.2249:139.1593:66",
+    "main_id": "tokyo_sub_1122@66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.446,
+    "island_pt": [
+     35.139,
+     138.9151
+    ],
+    "main_pt": [
+     35.13827,
+     138.89794
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.139:138.9151:0",
+    "main_id": "tokyo_sub_442@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.459,
+    "island_pt": [
+     35.73152,
+     139.61961
+    ],
+    "main_pt": [
+     35.74449,
+     139.63969
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_370",
+    "main_id": "tokyo_sub_186"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.467,
+    "island_pt": [
+     35.73406,
+     139.78526
+    ],
+    "main_pt": [
+     35.73249,
+     139.79866
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_814",
+    "main_id": "tokyo_sub_634"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.47,
+    "island_pt": [
+     35.65739,
+     139.52652
+    ],
+    "main_pt": [
+     35.64662,
+     139.49822
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_238",
+    "main_id": "tokyo_sub_90@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.473,
+    "island_pt": [
+     36.92486,
+     140.01303
+    ],
+    "main_pt": [
+     36.93811,
+     140.03832
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1536",
+    "main_id": "tokyo_sub_1392@154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.489,
+    "island_pt": [
+     36.36229,
+     140.48313
+    ],
+    "main_pt": [
+     36.37236,
+     140.4903
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1640",
+    "main_id": "tokyo_sub_1501"
+   }
+  ],
+  "mid": [
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.512,
+    "island_pt": [
+     35.85319,
+     139.62322
+    ],
+    "main_pt": [
+     35.85111,
+     139.63619
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_420",
+    "main_id": "tokyo_sub_419"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.513,
+    "island_pt": [
+     35.64352,
+     139.54082
+    ],
+    "main_pt": [
+     35.65521,
+     139.56986
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.6435:139.5408:66",
+    "main_id": "tokyo_sub_65"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 1.52,
+    "island_pt": [
+     35.55679,
+     139.66041
+    ],
+    "main_pt": [
+     35.56964,
+     139.68865
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_604",
+    "main_id": "tokyo_sub_676"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.526,
+    "island_pt": [
+     35.80822,
+     139.29876
+    ],
+    "main_pt": [
+     35.79573,
+     139.26976
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8082:139.2988:0",
+    "main_id": "tokyo_sub_387"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.53,
+    "island_pt": [
+     36.41216,
+     140.44063
+    ],
+    "main_pt": [
+     36.41211,
+     140.45765
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1695",
+    "main_id": "tokyo_jct_36.4121:140.4576:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.538,
+    "island_pt": [
+     36.80755,
+     139.23283
+    ],
+    "main_pt": [
+     36.79879,
+     139.2303
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.8076:139.2328:0",
+    "main_id": "tokyo_jct_36.7988:139.2303:0"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.552,
+    "island_pt": [
+     35.82894,
+     139.64686
+    ],
+    "main_pt": [
+     35.82785,
+     139.66213
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_421",
+    "main_id": "tokyo_sub_628"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.574,
+    "island_pt": [
+     35.43315,
+     139.62104
+    ],
+    "main_pt": [
+     35.43695,
+     139.61085
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_437",
+    "main_id": "tokyo_sub_233"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.584,
+    "island_pt": [
+     35.33683,
+     139.45333
+    ],
+    "main_pt": [
+     35.35093,
+     139.48031
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_309",
+    "main_id": "tokyo_sub_444"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.585,
+    "island_pt": [
+     35.734,
+     139.75116
+    ],
+    "main_pt": [
+     35.72903,
+     139.72594
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_972",
+    "main_id": "tokyo_sub_775"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 4,
+    "min_km_to_main": 1.597,
+    "island_pt": [
+     35.12573,
+     138.85057
+    ],
+    "main_pt": [
+     35.13836,
+     138.88052
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_361",
+    "main_id": "tokyo_sub_191@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.608,
+    "island_pt": [
+     35.12622,
+     138.85016
+    ],
+    "main_pt": [
+     35.13836,
+     138.88052
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_280",
+    "main_id": "tokyo_sub_191@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.612,
+    "island_pt": [
+     35.69845,
+     139.82026
+    ],
+    "main_pt": [
+     35.70718,
+     139.84986
+    ],
+    "island_kv": 275.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_597",
+    "main_id": "tokyo_sub_571"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.622,
+    "island_pt": [
+     35.80806,
+     139.30105
+    ],
+    "main_pt": [
+     35.79573,
+     139.26976
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8081:139.3011:0",
+    "main_id": "tokyo_sub_387"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.641,
+    "island_pt": [
+     35.05876,
+     138.52223
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_325",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.653,
+    "island_pt": [
+     35.80927,
+     139.30116
+    ],
+    "main_pt": [
+     35.79573,
+     139.26976
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8093:139.3012:0",
+    "main_id": "tokyo_sub_387"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.689,
+    "island_pt": [
+     37.37136,
+     140.42271
+    ],
+    "main_pt": [
+     37.37902,
+     140.42053
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.3714:140.4227:66",
+    "main_id": "tokyo_jct_37.379:140.4205:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.702,
+    "island_pt": [
+     35.55868,
+     140.18557
+    ],
+    "main_pt": [
+     35.54661,
+     140.15284
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5587:140.1856:0",
+    "main_id": "tokyo_jct_35.5466:140.1528:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.713,
+    "island_pt": [
+     35.80608,
+     139.30567
+    ],
+    "main_pt": [
+     35.79066,
+     139.27853
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8061:139.3057:0",
+    "main_id": "tokyo_sub_139"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.767,
+    "island_pt": [
+     35.69027,
+     139.89593
+    ],
+    "main_pt": [
+     35.6744,
+     139.86961
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.6903:139.8959:66",
+    "main_id": "tokyo_jct_35.6744:139.8696:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.779,
+    "island_pt": [
+     35.84607,
+     139.64989
+    ],
+    "main_pt": [
+     35.85594,
+     139.65172
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_946",
+    "main_id": "tokyo_sub_947"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.782,
+    "island_pt": [
+     35.63181,
+     139.6502
+    ],
+    "main_pt": [
+     35.63052,
+     139.66764
+    ],
+    "island_kv": 275.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_404",
+    "main_id": "tokyo_sub_555"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.88,
+    "island_pt": [
+     35.3105,
+     139.54728
+    ],
+    "main_pt": [
+     35.32717,
+     139.57975
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_265",
+    "main_id": "tokyo_jct_35.3272:139.5797:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.891,
+    "island_pt": [
+     35.79911,
+     139.72052
+    ],
+    "main_pt": [
+     35.78217,
+     139.6885
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_958",
+    "main_id": "tokyo_sub_952"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.892,
+    "island_pt": [
+     35.93943,
+     139.98705
+    ],
+    "main_pt": [
+     35.94581,
+     140.01788
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.9394:139.9871:0",
+    "main_id": "tokyo_jct_35.9458:140.0179:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.907,
+    "island_pt": [
+     35.7688,
+     139.686
+    ],
+    "main_pt": [
+     35.77578,
+     139.67892
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_966",
+    "main_id": "tokyo_sub_967"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.908,
+    "island_pt": [
+     36.18831,
+     139.98882
+    ],
+    "main_pt": [
+     36.17708,
+     139.95263
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.1883:139.9888:66",
+    "main_id": "tokyo_jct_36.1771:139.9526:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.909,
+    "island_pt": [
+     36.33035,
+     139.36849
+    ],
+    "main_pt": [
+     36.31568,
+     139.33113
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1170",
+    "main_id": "tokyo_jct_36.3157:139.3311:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.916,
+    "island_pt": [
+     35.90511,
+     139.42717
+    ],
+    "main_pt": [
+     35.8893,
+     139.40788
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.9051:139.4272:66",
+    "main_id": "tokyo_jct_35.8893:139.4079:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.944,
+    "island_pt": [
+     35.80674,
+     139.73394
+    ],
+    "main_pt": [
+     35.82194,
+     139.74996
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_957",
+    "main_id": "tokyo_sub_565"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.945,
+    "island_pt": [
+     35.73631,
+     139.71391
+    ],
+    "main_pt": [
+     35.72879,
+     139.72021
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_979",
+    "main_id": "tokyo_sub_818"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 1.958,
+    "island_pt": [
+     35.41015,
+     138.36595
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4101:138.366:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.965,
+    "island_pt": [
+     35.68449,
+     139.69307
+    ],
+    "main_pt": [
+     35.66685,
+     139.66041
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_600",
+    "main_id": "tokyo_jct_35.6668:139.6604:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.974,
+    "island_pt": [
+     35.68457,
+     139.69312
+    ],
+    "main_pt": [
+     35.66685,
+     139.66041
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_802",
+    "main_id": "tokyo_jct_35.6668:139.6604:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.986,
+    "island_pt": [
+     35.24838,
+     138.86582
+    ],
+    "main_pt": [
+     35.26454,
+     138.90292
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.2484:138.8658:66",
+    "main_id": "tokyo_jct_35.2645:138.9029:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 1.989,
+    "island_pt": [
+     36.08059,
+     139.67948
+    ],
+    "main_pt": [
+     36.09819,
+     139.71491
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1648",
+    "main_id": "tokyo_jct_36.0982:139.7149:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.014,
+    "island_pt": [
+     37.10565,
+     138.24034
+    ],
+    "main_pt": [
+     37.12362,
+     138.27003
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1772",
+    "main_id": "tokyo_sub_1773"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.015,
+    "island_pt": [
+     35.24901,
+     138.64743
+    ],
+    "main_pt": [
+     35.23931,
+     138.61206
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.249:138.6474:0",
+    "main_id": "tokyo_jct_35.2393:138.6121:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.019,
+    "island_pt": [
+     35.69462,
+     139.68653
+    ],
+    "main_pt": [
+     35.68042,
+     139.64768
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_807",
+    "main_id": "tokyo_sub_21@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.022,
+    "island_pt": [
+     35.73858,
+     139.77145
+    ],
+    "main_pt": [
+     35.75488,
+     139.79008
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_812",
+    "main_id": "tokyo_sub_650"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.031,
+    "island_pt": [
+     35.90538,
+     140.56591
+    ],
+    "main_pt": [
+     35.89803,
+     140.53216
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.9054:140.5659:0",
+    "main_id": "tokyo_sub_603"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.105,
+    "island_pt": [
+     35.39161,
+     139.60099
+    ],
+    "main_pt": [
+     35.37274,
+     139.57056
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_411",
+    "main_id": "tokyo_sub_266@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.135,
+    "island_pt": [
+     35.62171,
+     139.75706
+    ],
+    "main_pt": [
+     35.63968,
+     139.79692
+    ],
+    "island_kv": 154.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_606",
+    "main_id": "tokyo_sub_795"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.141,
+    "island_pt": [
+     35.61614,
+     139.73158
+    ],
+    "main_pt": [
+     35.5995,
+     139.69053
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_567",
+    "main_id": "tokyo_sub_528"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.147,
+    "island_pt": [
+     35.13425,
+     138.62448
+    ],
+    "main_pt": [
+     35.15096,
+     138.66485
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.1343:138.6245:0",
+    "main_id": "tokyo_sub_337"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.149,
+    "island_pt": [
+     35.61674,
+     139.73148
+    ],
+    "main_pt": [
+     35.5995,
+     139.69053
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_772",
+    "main_id": "tokyo_sub_528"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.153,
+    "island_pt": [
+     35.67296,
+     139.72302
+    ],
+    "main_pt": [
+     35.68677,
+     139.73042
+    ],
+    "island_kv": 275.0,
+    "main_kv": 275.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_819",
+    "main_id": "tokyo_sub_570"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.165,
+    "island_pt": [
+     35.95242,
+     140.66532
+    ],
+    "main_pt": [
+     35.93309,
+     140.62767
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1668",
+    "main_id": "tokyo_sub_1383@275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.185,
+    "island_pt": [
+     35.81586,
+     138.33161
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1741",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.205,
+    "island_pt": [
+     35.76115,
+     139.68226
+    ],
+    "main_pt": [
+     35.74449,
+     139.63969
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_977",
+    "main_id": "tokyo_sub_186"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.292,
+    "island_pt": [
+     36.34303,
+     138.64481
+    ],
+    "main_pt": [
+     36.32872,
+     138.63781
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1148",
+    "main_id": "tokyo_jct_36.3287:138.6378:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.295,
+    "island_pt": [
+     37.03692,
+     138.25715
+    ],
+    "main_pt": [
+     37.05104,
+     138.26392
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.0369:138.2572:0",
+    "main_id": "tokyo_jct_37.051:138.2639:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.333,
+    "island_pt": [
+     37.00473,
+     140.72696
+    ],
+    "main_pt": [
+     37.01124,
+     140.76404
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.0047:140.727:66",
+    "main_id": "tokyo_jct_37.0112:140.764:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.38,
+    "island_pt": [
+     35.69106,
+     139.68922
+    ],
+    "main_pt": [
+     35.68042,
+     139.64768
+    ],
+    "island_kv": 275.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_815",
+    "main_id": "tokyo_sub_21@66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.387,
+    "island_pt": [
+     35.95231,
+     139.745
+    ],
+    "main_pt": [
+     35.96421,
+     139.78818
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1487",
+    "main_id": "tokyo_jct_35.9642:139.7882:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.398,
+    "island_pt": [
+     35.30635,
+     138.92138
+    ],
+    "main_pt": [
+     35.28779,
+     138.90308
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_251",
+    "main_id": "tokyo_sub_190@154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.416,
+    "island_pt": [
+     35.633,
+     139.71323
+    ],
+    "main_pt": [
+     35.61147,
+     139.67951
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_601",
+    "main_id": "tokyo_sub_554"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 2,
+    "min_km_to_main": 2.449,
+    "island_pt": [
+     36.76233,
+     139.97755
+    ],
+    "main_pt": [
+     36.74631,
+     139.96723
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.7623:139.9776:66",
+    "main_id": "tokyo_sub_1418@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.462,
+    "island_pt": [
+     36.97447,
+     139.81502
+    ],
+    "main_pt": [
+     36.99352,
+     139.86426
+    ],
+    "island_kv": 66.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1675",
+    "main_id": "tokyo_jct_36.9935:139.8643:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.495,
+    "island_pt": [
+     36.53082,
+     140.00222
+    ],
+    "main_pt": [
+     36.53853,
+     139.98991
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.5308:140.0022:66",
+    "main_id": "tokyo_jct_36.5385:139.9899:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.515,
+    "island_pt": [
+     36.41617,
+     139.86774
+    ],
+    "main_pt": [
+     36.42344,
+     139.9075
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.4162:139.8677:66",
+    "main_id": "tokyo_sub_1535"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.541,
+    "island_pt": [
+     35.75224,
+     139.74307
+    ],
+    "main_pt": [
+     35.74933,
+     139.76594
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_970",
+    "main_id": "tokyo_sub_636"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 2.55,
+    "island_pt": [
+     36.35433,
+     140.43444
+    ],
+    "main_pt": [
+     36.37703,
+     140.47985
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1548",
+    "main_id": "tokyo_sub_1502"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.555,
+    "island_pt": [
+     35.79684,
+     139.73616
+    ],
+    "main_pt": [
+     35.78217,
+     139.6885
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_956",
+    "main_id": "tokyo_sub_952"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.559,
+    "island_pt": [
+     35.33829,
+     139.48215
+    ],
+    "main_pt": [
+     35.34824,
+     139.52482
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_18",
+    "main_id": "tokyo_sub_183"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.579,
+    "island_pt": [
+     35.8799,
+     139.52618
+    ],
+    "main_pt": [
+     35.85822,
+     139.49832
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_417",
+    "main_id": "tokyo_sub_158@154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.58,
+    "island_pt": [
+     35.74336,
+     139.69882
+    ],
+    "main_pt": [
+     35.7459,
+     139.6748
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_969",
+    "main_id": "tokyo_sub_968"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 2.636,
+    "island_pt": [
+     36.86159,
+     139.94976
+    ],
+    "main_pt": [
+     36.88524,
+     139.99584
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1416",
+    "main_id": "tokyo_jct_36.8852:139.9958:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.658,
+    "island_pt": [
+     35.39806,
+     139.61716
+    ],
+    "main_pt": [
+     35.37518,
+     139.58621
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_250",
+    "main_id": "tokyo_sub_386"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.708,
+    "island_pt": [
+     35.69206,
+     139.71037
+    ],
+    "main_pt": [
+     35.68677,
+     139.73042
+    ],
+    "island_kv": 275.0,
+    "main_kv": 275.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_817",
+    "main_id": "tokyo_sub_570"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.721,
+    "island_pt": [
+     35.07651,
+     138.91984
+    ],
+    "main_pt": [
+     35.09771,
+     138.94091
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.0765:138.9198:0",
+    "main_id": "tokyo_jct_35.0977:138.9409:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.796,
+    "island_pt": [
+     36.32587,
+     138.3021
+    ],
+    "main_pt": [
+     36.33843,
+     138.3515
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.3259:138.3021:0",
+    "main_id": "tokyo_jct_36.3384:138.3515:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.806,
+    "island_pt": [
+     35.74681,
+     139.70753
+    ],
+    "main_pt": [
+     35.7459,
+     139.6748
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_978",
+    "main_id": "tokyo_sub_968"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.807,
+    "island_pt": [
+     35.6953,
+     139.69891
+    ],
+    "main_pt": [
+     35.68042,
+     139.64768
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_537",
+    "main_id": "tokyo_sub_21@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.825,
+    "island_pt": [
+     35.95478,
+     139.30612
+    ],
+    "main_pt": [
+     35.94929,
+     139.32716
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1340",
+    "main_id": "tokyo_sub_1064@154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.838,
+    "island_pt": [
+     35.61466,
+     139.7596
+    ],
+    "main_pt": [
+     35.63968,
+     139.79692
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_800",
+    "main_id": "tokyo_sub_795"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.849,
+    "island_pt": [
+     35.65663,
+     139.7516
+    ],
+    "main_pt": [
+     35.64181,
+     139.6999
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_598",
+    "main_id": "tokyo_sub_623"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.872,
+    "island_pt": [
+     35.63499,
+     139.73387
+    ],
+    "main_pt": [
+     35.61147,
+     139.67951
+    ],
+    "island_kv": 275.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_820",
+    "main_id": "tokyo_sub_554"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.878,
+    "island_pt": [
+     35.13553,
+     138.61309
+    ],
+    "main_pt": [
+     35.15096,
+     138.66485
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_322",
+    "main_id": "tokyo_sub_337"
+   },
+   {
+    "n_nodes": 5,
+    "n_real_subs": 5,
+    "min_km_to_main": 2.899,
+    "island_pt": [
+     35.12235,
+     138.61395
+    ],
+    "main_pt": [
+     35.13623,
+     138.66463
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_326@77",
+    "main_id": "tokyo_sub_439"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.904,
+    "island_pt": [
+     35.57556,
+     139.73416
+    ],
+    "main_pt": [
+     35.56815,
+     139.6904
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_759",
+    "main_id": "tokyo_sub_632"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 4,
+    "min_km_to_main": 2.907,
+    "island_pt": [
+     36.93532,
+     138.81219
+    ],
+    "main_pt": [
+     36.92354,
+     138.81998
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1324@u",
+    "main_id": "tokyo_sub_1329"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.933,
+    "island_pt": [
+     35.69265,
+     139.69857
+    ],
+    "main_pt": [
+     35.66685,
+     139.66041
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_816",
+    "main_id": "tokyo_jct_35.6668:139.6604:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.974,
+    "island_pt": [
+     37.17216,
+     138.9234
+    ],
+    "main_pt": [
+     37.16984,
+     138.95264
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1743",
+    "main_id": "tokyo_jct_37.1698:138.9526:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 2.987,
+    "island_pt": [
+     35.94552,
+     139.71834
+    ],
+    "main_pt": [
+     35.94389,
+     139.68229
+    ],
+    "island_kv": 154.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.9455:139.7183:154",
+    "main_id": "tokyo_sub_1423"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 2.994,
+    "island_pt": [
+     35.5964,
+     139.73946
+    ],
+    "main_pt": [
+     35.56964,
+     139.68865
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_534",
+    "main_id": "tokyo_sub_676"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.0,
+    "island_pt": [
+     35.68744,
+     138.69093
+    ],
+    "main_pt": [
+     35.66113,
+     138.63759
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.6874:138.6909:0",
+    "main_id": "tokyo_sub_224"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.056,
+    "island_pt": [
+     36.97734,
+     139.80664
+    ],
+    "main_pt": [
+     36.99352,
+     139.86426
+    ],
+    "island_kv": 66.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1674",
+    "main_id": "tokyo_jct_36.9935:139.8643:500"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.167,
+    "island_pt": [
+     35.61769,
+     139.78083
+    ],
+    "main_pt": [
+     35.63968,
+     139.79692
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_575",
+    "main_id": "tokyo_sub_795"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.211,
+    "island_pt": [
+     35.70058,
+     139.70853
+    ],
+    "main_pt": [
+     35.68042,
+     139.64768
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_973",
+    "main_id": "tokyo_sub_21@66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.251,
+    "island_pt": [
+     35.6702,
+     139.75844
+    ],
+    "main_pt": [
+     35.64181,
+     139.6999
+    ],
+    "island_kv": 275.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_822",
+    "main_id": "tokyo_sub_623"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 2,
+    "min_km_to_main": 3.345,
+    "island_pt": [
+     35.93192,
+     140.16416
+    ],
+    "main_pt": [
+     35.91917,
+     140.10786
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1712",
+    "main_id": "tokyo_sub_1476"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.429,
+    "island_pt": [
+     35.6579,
+     139.76049
+    ],
+    "main_pt": [
+     35.64181,
+     139.6999
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_576",
+    "main_id": "tokyo_sub_623"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.434,
+    "island_pt": [
+     35.64166,
+     139.74347
+    ],
+    "main_pt": [
+     35.64706,
+     139.7904
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_599",
+    "main_id": "tokyo_sub_542"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.483,
+    "island_pt": [
+     35.02801,
+     138.46545
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 77.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.028:138.4654:77",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.579,
+    "island_pt": [
+     35.12133,
+     140.21373
+    ],
+    "main_pt": [
+     35.14115,
+     140.27897
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.1213:140.2137:0",
+    "main_id": "tokyo_jct_35.1412:140.279:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.621,
+    "island_pt": [
+     35.67561,
+     139.78442
+    ],
+    "main_pt": [
+     35.70718,
+     139.84986
+    ],
+    "island_kv": 275.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_717",
+    "main_id": "tokyo_sub_571"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 1,
+    "min_km_to_main": 3.636,
+    "island_pt": [
+     36.39097,
+     139.85446
+    ],
+    "main_pt": [
+     36.42344,
+     139.9075
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_36.391:139.8545:66",
+    "main_id": "tokyo_sub_1535"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.753,
+    "island_pt": [
+     35.81834,
+     139.24416
+    ],
+    "main_pt": [
+     35.80009,
+     139.17707
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8183:139.2442:0",
+    "main_id": "tokyo_sub_385"
+   },
+   {
+    "n_nodes": 10,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.794,
+    "island_pt": [
+     37.11355,
+     140.16864
+    ],
+    "main_pt": [
+     37.07938,
+     140.10661
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.1135:140.1686:66",
+    "main_id": "tokyo_jct_37.0794:140.1066:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.872,
+    "island_pt": [
+     35.81345,
+     139.25365
+    ],
+    "main_pt": [
+     35.84514,
+     139.32726
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8134:139.2536:0",
+    "main_id": "tokyo_sub_381"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 3.922,
+    "island_pt": [
+     35.81675,
+     139.2447
+    ],
+    "main_pt": [
+     35.80009,
+     139.17707
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8168:139.2447:0",
+    "main_id": "tokyo_sub_385"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 4.101,
+    "island_pt": [
+     36.34702,
+     138.32214
+    ],
+    "main_pt": [
+     36.33843,
+     138.3515
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.347:138.3221:77",
+    "main_id": "tokyo_jct_36.3384:138.3515:66"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 4.126,
+    "island_pt": [
+     35.12192,
+     138.81173
+    ],
+    "main_pt": [
+     35.13836,
+     138.88052
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_35.1219:138.8117:66",
+    "main_id": "tokyo_sub_191@66"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 4.76,
+    "island_pt": [
+     35.02212,
+     138.41245
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.0221:138.4125:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 4.857,
+    "island_pt": [
+     37.08122,
+     140.84508
+    ],
+    "main_pt": [
+     37.11532,
+     140.87409
+    ],
+    "island_kv": 66.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.0812:140.8451:66",
+    "main_id": "tokyo_jct_37.1153:140.8741:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 4.961,
+    "island_pt": [
+     35.18863,
+     138.41233
+    ],
+    "main_pt": [
+     35.23186,
+     138.49992
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.1886:138.4123:0",
+    "main_id": "tokyo_jct_35.2319:138.4999:66"
+   }
+  ],
+  "far": [
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 5.066,
+    "island_pt": [
+     37.02894,
+     140.10502
+    ],
+    "main_pt": [
+     37.05831,
+     140.11547
+    ],
+    "island_kv": 275.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1749",
+    "main_id": "tokyo_jct_37.0583:140.1155:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 5.172,
+    "island_pt": [
+     35.41232,
+     138.43524
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.4123:138.4352:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 5.381,
+    "island_pt": [
+     36.57516,
+     138.72839
+    ],
+    "main_pt": [
+     36.62266,
+     138.80178
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.5752:138.7284:0",
+    "main_id": "tokyo_sub_998@u"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 5.421,
+    "island_pt": [
+     36.27959,
+     140.33609
+    ],
+    "main_pt": [
+     36.23592,
+     140.28478
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1639",
+    "main_id": "tokyo_jct_36.2359:140.2848:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 5.475,
+    "island_pt": [
+     37.33051,
+     140.34098
+    ],
+    "main_pt": [
+     37.37902,
+     140.42053
+    ],
+    "island_kv": 154.0,
+    "main_kv": 154.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.3305:140.341:154",
+    "main_id": "tokyo_jct_37.379:140.4205:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 5.514,
+    "island_pt": [
+     37.12702,
+     140.8353
+    ],
+    "main_pt": [
+     37.11532,
+     140.87409
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.127:140.8353:0",
+    "main_id": "tokyo_jct_37.1153:140.8741:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 5.823,
+    "island_pt": [
+     37.06688,
+     140.87029
+    ],
+    "main_pt": [
+     37.02946,
+     140.84693
+    ],
+    "island_kv": 66.0,
+    "main_kv": 66.0,
+    "pair": "same",
+    "sample_id": "tokyo_jct_37.0669:140.8703:66",
+    "main_id": "tokyo_jct_37.0295:140.8469:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 6.048,
+    "island_pt": [
+     37.16187,
+     140.82688
+    ],
+    "main_pt": [
+     37.13975,
+     140.72322
+    ],
+    "island_kv": 66.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.1619:140.8269:66",
+    "main_id": "tokyo_jct_37.1398:140.7232:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 6.578,
+    "island_pt": [
+     35.01663,
+     138.38038
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.0166:138.3804:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 6.814,
+    "island_pt": [
+     37.30846,
+     139.9032
+    ],
+    "main_pt": [
+     37.34475,
+     139.90851
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.3085:139.9032:0",
+    "main_id": "tokyo_jct_37.3447:139.9085:500"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 6.882,
+    "island_pt": [
+     36.33977,
+     138.58173
+    ],
+    "main_pt": [
+     36.32872,
+     138.63781
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1352",
+    "main_id": "tokyo_jct_36.3287:138.6378:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 6.89,
+    "island_pt": [
+     37.30362,
+     139.004
+    ],
+    "main_pt": [
+     37.26138,
+     138.98315
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.3036:139.004:0",
+    "main_id": "tokyo_jct_37.2614:138.9832:66"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 0,
+    "min_km_to_main": 7.06,
+    "island_pt": [
+     37.25477,
+     140.38322
+    ],
+    "main_pt": [
+     37.30516,
+     140.42846
+    ],
+    "island_kv": 66.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.2548:140.3832:66",
+    "main_id": "tokyo_jct_37.3052:140.4285:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 7.541,
+    "island_pt": [
+     36.14065,
+     138.23408
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.1406:138.2341:0",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 7.778,
+    "island_pt": [
+     37.31757,
+     139.03436
+    ],
+    "main_pt": [
+     37.26138,
+     138.98315
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.3176:139.0344:0",
+    "main_id": "tokyo_jct_37.2614:138.9832:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 7.865,
+    "island_pt": [
+     36.80882,
+     138.61891
+    ],
+    "main_pt": [
+     36.87457,
+     138.77114
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.8088:138.6189:0",
+    "main_id": "tokyo_jct_36.8746:138.7711:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 8.208,
+    "island_pt": [
+     35.64726,
+     138.29659
+    ],
+    "main_pt": [
+     35.71648,
+     138.44867
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.6473:138.2966:0",
+    "main_id": "tokyo_sub_218"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 8.452,
+    "island_pt": [
+     36.20693,
+     137.9815
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.2069:137.9815:0",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 8.75,
+    "island_pt": [
+     36.31617,
+     138.5189
+    ],
+    "main_pt": [
+     36.32872,
+     138.63781
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1149",
+    "main_id": "tokyo_jct_36.3287:138.6378:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 8.775,
+    "island_pt": [
+     37.33567,
+     140.80539
+    ],
+    "main_pt": [
+     37.3804,
+     140.80729
+    ],
+    "island_kv": 66.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_37.3357:140.8054:66",
+    "main_id": "tokyo_jct_37.3804:140.8073:500"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 8.814,
+    "island_pt": [
+     34.97813,
+     138.36297
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1801",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 8.843,
+    "island_pt": [
+     36.99333,
+     138.22768
+    ],
+    "main_pt": [
+     37.05104,
+     138.26392
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.9933:138.2277:0",
+    "main_id": "tokyo_jct_37.051:138.2639:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 8.939,
+    "island_pt": [
+     36.32847,
+     138.43299
+    ],
+    "main_pt": [
+     36.33843,
+     138.3515
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.3285:138.433:0",
+    "main_id": "tokyo_jct_36.3384:138.3515:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 9.003,
+    "island_pt": [
+     36.25656,
+     138.46372
+    ],
+    "main_pt": [
+     36.32872,
+     138.63781
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1176",
+    "main_id": "tokyo_jct_36.3287:138.6378:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 9.378,
+    "island_pt": [
+     34.98058,
+     138.4147
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.9806:138.4147:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 10.573,
+    "island_pt": [
+     34.9652,
+     138.31689
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.9652:138.3169:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 11,
+    "n_real_subs": 7,
+    "min_km_to_main": 10.692,
+    "island_pt": [
+     36.06144,
+     138.47401
+    ],
+    "main_pt": [
+     36.08137,
+     138.62571
+    ],
+    "island_kv": 77.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1295",
+    "main_id": "tokyo_jct_36.0814:138.6257:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 10.912,
+    "island_pt": [
+     35.37061,
+     138.20068
+    ],
+    "main_pt": [
+     35.43911,
+     138.40473
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.3706:138.2007:0",
+    "main_id": "tokyo_jct_35.4391:138.4047:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 10.998,
+    "island_pt": [
+     36.9997,
+     138.00634
+    ],
+    "main_pt": [
+     37.08727,
+     138.10752
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.9997:138.0063:0",
+    "main_id": "tokyo_jct_37.0873:138.1075:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 11.057,
+    "island_pt": [
+     36.40647,
+     138.26751
+    ],
+    "main_pt": [
+     36.48569,
+     138.48388
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.4065:138.2675:0",
+    "main_id": "tokyo_jct_36.4857:138.4839:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 11.062,
+    "island_pt": [
+     35.12095,
+     138.35308
+    ],
+    "main_pt": [
+     35.20005,
+     138.56187
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.121:138.3531:0",
+    "main_id": "tokyo_jct_35.2:138.5619:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 11.382,
+    "island_pt": [
+     35.00132,
+     138.51173
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_323",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 4,
+    "n_real_subs": 1,
+    "min_km_to_main": 11.71,
+    "island_pt": [
+     37.02,
+     140.39352
+    ],
+    "main_pt": [
+     36.91973,
+     140.16767
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_37.02:140.3935:0",
+    "main_id": "tokyo_jct_36.9197:140.1677:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 12.049,
+    "island_pt": [
+     35.08001,
+     138.37914
+    ],
+    "main_pt": [
+     35.18855,
+     138.56589
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1800",
+    "main_id": "tokyo_jct_35.1885:138.5659:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 12.131,
+    "island_pt": [
+     34.99439,
+     138.28625
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 275.0,
+    "main_kv": 275.0,
+    "pair": "same",
+    "sample_id": "tokyo_sub_1791",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 12.152,
+    "island_pt": [
+     35.31981,
+     138.18681
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.3198:138.1868:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 12.258,
+    "island_pt": [
+     36.39699,
+     138.24395
+    ],
+    "main_pt": [
+     36.48569,
+     138.48388
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.397:138.2439:0",
+    "main_id": "tokyo_jct_36.4857:138.4839:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 12.512,
+    "island_pt": [
+     34.95073,
+     138.36581
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1726",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 12.598,
+    "island_pt": [
+     36.23316,
+     137.98777
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.2332:137.9878:0",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 3,
+    "min_km_to_main": 12.822,
+    "island_pt": [
+     35.37281,
+     138.43868
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_463",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 13.325,
+    "island_pt": [
+     36.31235,
+     138.45062
+    ],
+    "main_pt": [
+     36.33843,
+     138.3515
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1150",
+    "main_id": "tokyo_jct_36.3384:138.3515:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 14.306,
+    "island_pt": [
+     35.97606,
+     137.98886
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 77.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1737",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 14.694,
+    "island_pt": [
+     35.65261,
+     138.13267
+    ],
+    "main_pt": [
+     35.78201,
+     138.39161
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.6526:138.1327:0",
+    "main_id": "tokyo_jct_35.782:138.3916:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 14.97,
+    "island_pt": [
+     36.00806,
+     138.09477
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 77.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1730",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 15.259,
+    "island_pt": [
+     34.93332,
+     138.36418
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1790",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 15.723,
+    "island_pt": [
+     35.3865,
+     138.03224
+    ],
+    "main_pt": [
+     35.48878,
+     138.32805
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.3865:138.0322:0",
+    "main_id": "tokyo_jct_35.4888:138.3281:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 16.49,
+    "island_pt": [
+     35.2064,
+     138.23452
+    ],
+    "main_pt": [
+     35.26165,
+     138.49759
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.2064:138.2345:0",
+    "main_id": "tokyo_sub_473"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 16.724,
+    "island_pt": [
+     36.25566,
+     137.98616
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 77.0,
+    "main_kv": 500.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1732",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 17.158,
+    "island_pt": [
+     35.7661,
+     138.084
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.7661:138.084:0",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 17.282,
+    "island_pt": [
+     34.90595,
+     138.28979
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.9059:138.2898:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 17.387,
+    "island_pt": [
+     36.42621,
+     138.1976
+    ],
+    "main_pt": [
+     36.48583,
+     138.48404
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.4262:138.1976:77",
+    "main_id": "tokyo_jct_36.4858:138.484:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 17.913,
+    "island_pt": [
+     36.24737,
+     137.9397
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1734",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 18.788,
+    "island_pt": [
+     37.12579,
+     139.71911
+    ],
+    "main_pt": [
+     37.01226,
+     139.66736
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1745",
+    "main_id": "tokyo_jct_37.0123:139.6674:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 19.728,
+    "island_pt": [
+     34.89638,
+     138.32152
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.8964:138.3215:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 19.877,
+    "island_pt": [
+     35.2652,
+     138.22646
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1727",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 20.19,
+    "island_pt": [
+     36.2575,
+     137.93446
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.2575:137.9345:0",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 1,
+    "min_km_to_main": 20.498,
+    "island_pt": [
+     35.09237,
+     138.11469
+    ],
+    "main_pt": [
+     35.23186,
+     138.49992
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1798",
+    "main_id": "tokyo_jct_35.2319:138.4999:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 20.498,
+    "island_pt": [
+     36.87771,
+     138.20154
+    ],
+    "main_pt": [
+     36.99291,
+     138.59129
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1777",
+    "main_id": "tokyo_sub_1137"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 20.779,
+    "island_pt": [
+     35.09139,
+     138.10972
+    ],
+    "main_pt": [
+     35.23186,
+     138.49992
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1797",
+    "main_id": "tokyo_jct_35.2319:138.4999:66"
+   },
+   {
+    "n_nodes": 6,
+    "n_real_subs": 1,
+    "min_km_to_main": 20.83,
+    "island_pt": [
+     34.88496,
+     138.3008
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.885:138.3008:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 20.83,
+    "island_pt": [
+     34.90069,
+     138.11133
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.9007:138.1113:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 20.844,
+    "island_pt": [
+     35.54632,
+     138.05666
+    ],
+    "main_pt": [
+     35.71648,
+     138.44867
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5463:138.0567:0",
+    "main_id": "tokyo_sub_218"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 21.008,
+    "island_pt": [
+     35.55121,
+     138.04935
+    ],
+    "main_pt": [
+     35.71648,
+     138.44867
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5512:138.0493:0",
+    "main_id": "tokyo_sub_218"
+   },
+   {
+    "n_nodes": 3,
+    "n_real_subs": 1,
+    "min_km_to_main": 21.289,
+    "island_pt": [
+     36.00413,
+     138.16546
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 77.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_36.0041:138.1655:77",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 8,
+    "n_real_subs": 2,
+    "min_km_to_main": 21.317,
+    "island_pt": [
+     36.49307,
+     138.18957
+    ],
+    "main_pt": [
+     36.61347,
+     138.59142
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.4931:138.1896:0",
+    "main_id": "tokyo_sub_1244"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 22.143,
+    "island_pt": [
+     36.92533,
+     138.23355
+    ],
+    "main_pt": [
+     36.99291,
+     138.59129
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.9253:138.2336:0",
+    "main_id": "tokyo_sub_1137"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 22.292,
+    "island_pt": [
+     34.85765,
+     138.13985
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.8577:138.1398:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 22.317,
+    "island_pt": [
+     35.54894,
+     138.02218
+    ],
+    "main_pt": [
+     35.71648,
+     138.44867
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5489:138.0222:0",
+    "main_id": "tokyo_sub_218"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 22.426,
+    "island_pt": [
+     35.05702,
+     138.07903
+    ],
+    "main_pt": [
+     35.23186,
+     138.49992
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.057:138.079:0",
+    "main_id": "tokyo_jct_35.2319:138.4999:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 23.184,
+    "island_pt": [
+     36.60432,
+     138.24959
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.6043:138.2496:0",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 23.506,
+    "island_pt": [
+     35.81409,
+     138.07882
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.8141:138.0788:0",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 24.149,
+    "island_pt": [
+     36.70568,
+     138.27174
+    ],
+    "main_pt": [
+     36.89126,
+     138.74913
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.7057:138.2717:0",
+    "main_id": "tokyo_jct_36.8913:138.7491:275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 24.493,
+    "island_pt": [
+     34.83937,
+     138.17515
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 77.0,
+    "main_kv": 275.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1795",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 24.645,
+    "island_pt": [
+     36.27531,
+     137.91924
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1735",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 24.741,
+    "island_pt": [
+     35.70658,
+     137.92654
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1738",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 24.866,
+    "island_pt": [
+     36.29858,
+     137.98402
+    ],
+    "main_pt": [
+     36.13479,
+     137.88469
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.2986:137.984:0",
+    "main_id": "tokyo_sub_1731"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 25.123,
+    "island_pt": [
+     34.83325,
+     138.1617
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.8332:138.1617:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 25.135,
+    "island_pt": [
+     35.005,
+     138.08737
+    ],
+    "main_pt": [
+     35.18887,
+     138.56085
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.005:138.0874:0",
+    "main_id": "tokyo_jct_35.1889:138.5609:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 25.139,
+    "island_pt": [
+     36.62619,
+     138.26004
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1755",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 25.668,
+    "island_pt": [
+     35.53315,
+     137.94255
+    ],
+    "main_pt": [
+     35.75085,
+     138.41497
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5332:137.9425:0",
+    "main_id": "tokyo_sub_346"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 25.979,
+    "island_pt": [
+     36.69374,
+     138.23528
+    ],
+    "main_pt": [
+     36.89126,
+     138.74913
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.6937:138.2353:0",
+    "main_id": "tokyo_jct_36.8913:138.7491:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 26.293,
+    "island_pt": [
+     35.73953,
+     137.9414
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.7395:137.9414:77",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 26.366,
+    "island_pt": [
+     36.54063,
+     138.13197
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1759",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 26.445,
+    "island_pt": [
+     36.3442,
+     137.99388
+    ],
+    "main_pt": [
+     36.48569,
+     138.48388
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.3442:137.9939:0",
+    "main_id": "tokyo_jct_36.4857:138.4839:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 26.542,
+    "island_pt": [
+     34.82524,
+     138.04084
+    ],
+    "main_pt": [
+     35.05744,
+     138.502
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.8252:138.0408:0",
+    "main_id": "tokyo_sub_169@275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 26.66,
+    "island_pt": [
+     35.89825,
+     137.95384
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1739",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 26.692,
+    "island_pt": [
+     35.55717,
+     137.89753
+    ],
+    "main_pt": [
+     35.78201,
+     138.39161
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.5572:137.8975:0",
+    "main_id": "tokyo_jct_35.782:138.3916:154"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 27.276,
+    "island_pt": [
+     36.53822,
+     138.11757
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1762",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 27.406,
+    "island_pt": [
+     36.66284,
+     138.21946
+    ],
+    "main_pt": [
+     36.89126,
+     138.74913
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1752",
+    "main_id": "tokyo_jct_36.8913:138.7491:275"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 28.198,
+    "island_pt": [
+     36.50611,
+     138.07521
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.5061:138.0752:0",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 28.273,
+    "island_pt": [
+     35.83271,
+     138.05713
+    ],
+    "main_pt": [
+     35.83368,
+     138.37299
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.8327:138.0571:77",
+    "main_id": "tokyo_jct_35.8337:138.373:66"
+   },
+   {
+    "n_nodes": 5,
+    "n_real_subs": 2,
+    "min_km_to_main": 29.506,
+    "island_pt": [
+     36.65886,
+     138.16829
+    ],
+    "main_pt": [
+     36.89126,
+     138.74913
+    ],
+    "island_kv": 0.0,
+    "main_kv": 275.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.6589:138.1683:0",
+    "main_id": "tokyo_jct_36.8913:138.7491:275"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 30.906,
+    "island_pt": [
+     36.62763,
+     138.15745
+    ],
+    "main_pt": [
+     36.8459,
+     138.76684
+    ],
+    "island_kv": 0.0,
+    "main_kv": 500.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1757",
+    "main_id": "tokyo_jct_36.8459:138.7668:500"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 31.445,
+    "island_pt": [
+     35.01025,
+     137.90819
+    ],
+    "main_pt": [
+     35.23186,
+     138.49992
+    ],
+    "island_kv": 154.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.0103:137.9082:154",
+    "main_id": "tokyo_jct_35.2319:138.4999:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 32.218,
+    "island_pt": [
+     36.72448,
+     137.96762
+    ],
+    "main_pt": [
+     36.99291,
+     138.59129
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1754",
+    "main_id": "tokyo_sub_1137"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 33.948,
+    "island_pt": [
+     35.86295,
+     137.96513
+    ],
+    "main_pt": [
+     36.08323,
+     138.08812
+    ],
+    "island_kv": 77.0,
+    "main_kv": 154.0,
+    "pair": "cross",
+    "sample_id": "tokyo_jct_35.863:137.9651:77",
+    "main_id": "tokyo_sub_1729"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 34.01,
+    "island_pt": [
+     36.33705,
+     137.88656
+    ],
+    "main_pt": [
+     36.48583,
+     138.48404
+    ],
+    "island_kv": 77.0,
+    "main_kv": 66.0,
+    "pair": "cross",
+    "sample_id": "tokyo_sub_1733",
+    "main_id": "tokyo_jct_36.4858:138.484:66"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 34.096,
+    "island_pt": [
+     36.69652,
+     137.95449
+    ],
+    "main_pt": [
+     36.99291,
+     138.59129
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1761",
+    "main_id": "tokyo_sub_1137"
+   },
+   {
+    "n_nodes": 1,
+    "n_real_subs": 1,
+    "min_km_to_main": 35.125,
+    "island_pt": [
+     36.67891,
+     138.07244
+    ],
+    "main_pt": [
+     36.99291,
+     138.59129
+    ],
+    "island_kv": 0.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_sub_1760",
+    "main_id": "tokyo_sub_1137"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 35.245,
+    "island_pt": [
+     36.4389,
+     137.92444
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.4389:137.9244:0",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 35.498,
+    "island_pt": [
+     36.37229,
+     137.8997
+    ],
+    "main_pt": [
+     36.61347,
+     138.59142
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.3723:137.8997:0",
+    "main_id": "tokyo_sub_1244"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 36.379,
+    "island_pt": [
+     36.41564,
+     137.89561
+    ],
+    "main_pt": [
+     36.66364,
+     138.60572
+    ],
+    "island_kv": 0.0,
+    "main_kv": 66.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_36.4156:137.8956:0",
+    "main_id": "tokyo_jct_36.6636:138.6057:66"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 37.822,
+    "island_pt": [
+     35.08499,
+     137.83901
+    ],
+    "main_pt": [
+     35.42548,
+     138.40299
+    ],
+    "island_kv": 0.0,
+    "main_kv": 154.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_35.085:137.839:0",
+    "main_id": "tokyo_jct_35.4255:138.403:154"
+   },
+   {
+    "n_nodes": 2,
+    "n_real_subs": 0,
+    "min_km_to_main": 54.857,
+    "island_pt": [
+     34.83973,
+     137.47041
+    ],
+    "main_pt": [
+     35.26165,
+     138.49759
+    ],
+    "island_kv": 154.0,
+    "main_kv": 0.0,
+    "pair": "unk",
+    "sample_id": "tokyo_jct_34.8397:137.4704:154",
+    "main_id": "tokyo_sub_473"
+   }
+  ]
+ }
+}
