@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-13 — **Fable 5** — MATPOWER名前マッピング完備(issue #26)+時系列DB計画起票(#27)（101）
+
+- **オーナー要望**「.csvに発電所名・ブランチ名…DBにするための機械処理」=issue #26の実装:
+  `_pd2ppc_lookups`で行整合した3サイドカー — `{island}_busname.csv`(BUS_I,name,
+  base_kv,zone,lat,lon)・`{island}_branchname.csv`(row,F_BUS,T_BUS,kind=line|trafo,
+  name,parallel)・`{island}_genname.csv`(row,GEN_BUS,kind=slack|gen,name,fuel,PG,PMAX)
+  +**mpc.bus_name**(MATPOWER公式オプションのcell array、loadcase互換)。
+  補償スラックと実発電機が名前で区別可能に(PV含む全電源が出力される)
+- 全国再エクスポート: 4島AC・roundtrip維持(east dVA 0.30°/west 0.43°)。
+  沖縄検証例: 金武火力(coal600)・那覇高安線(parallel=2)・leadin来歴も名前列で追跡可能
+- **時系列DB化を計画起票(#27)**(オーナー指摘「まだ時系列DBになっていない」):
+  DuckDB/Parquet層+既存コネクタ(nas03/jepx)のシンク+帯値の一致再現を受け入れ基準に
+- **伊豆PV論点**(オーナー「PVも入れた方が?」): 伊豆・静岡東部のモデル内電源2,670MW
+  (solar 820/hydro 550/coal表記1,300=誤帰属疑い)。#6(P03エンリッチ)へ
+  「伊豆を最優先適用地域に」コメント — 分散注入が放射先端vmを直接持ち上げる
+
 ## 2026-06-13 — **Fable 5** — 銘板218%バグの発見と修正 — 千葉の幻12.4GWを解消、66kV ρ史上最高/trunkの誤差相殺が露呈（100）
 
 - **オーナー質問**「千葉は発電所もあるからこんなに電圧落ちる?」の調査で発見:

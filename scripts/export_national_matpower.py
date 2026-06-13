@@ -94,6 +94,101 @@ def export_island(island_id, isl, out_dir, validate=True):
                                init="results" if ac_ok else "flat"))
     inner = mpc["mpc"]
 
+    # Name mappings (issue #26): the names exist in the pandapower net and
+    # were dropped at to_mpc's numeric conversion. Row-aligned via
+    # _pd2ppc_lookups so BUS_I / branch row / gen row resolve to substation,
+    # line and plant names — the machine joins a DB pipeline needs.
+    import numpy as np
+
+    from scripts.export_powerflow_pages import _parse_bus_coords
+
+    lk = net._pd2ppc_lookups
+    n_ppc_bus = inner["bus"].shape[0]
+    bus_name = [""] * n_ppc_bus
+    bus_lat = [None] * n_ppc_bus
+    bus_lon = [None] * n_ppc_bus
+    bus_zone = [""] * n_ppc_bus
+    for pp_i in net.bus.index:
+        row = int(lk["bus"][pp_i])
+        if not (0 <= row < n_ppc_bus) or bus_name[row]:
+            continue
+        bus_name[row] = str(net.bus.at[pp_i, "name"])
+        z = net.bus.at[pp_i, "zone"]
+        bus_zone[row] = z if isinstance(z, str) else ""
+        lon, lat = _parse_bus_coords(net, pp_i)
+        bus_lat[row], bus_lon[row] = lat, lon
+    pd.DataFrame({
+        "BUS_I": inner["bus"][:, 0].astype(int),
+        "name": bus_name,
+        "base_kv": inner["bus"][:, 9],
+        "zone_region": bus_zone,
+        "lat": bus_lat, "lon": bus_lon,
+    }).to_csv(os.path.join(out_dir, f"{island_id}_busname.csv"),
+              index=False)
+
+    n_br = inner["branch"].shape[0]
+    br_name = [""] * n_br
+    br_kind = [""] * n_br
+    br_par = [1] * n_br
+    lo, hi = lk["branch"].get("line", (0, 0))
+    live_lines = [i for i in net.line.index if net.line.at[i, "in_service"]]
+    for k, li in enumerate(live_lines):
+        row = lo + k
+        if row < hi and row < n_br:
+            br_name[row] = str(net.line.at[li, "name"])[:80]
+            br_kind[row] = "line"
+            if "parallel" in net.line.columns:
+                br_par[row] = int(net.line.at[li, "parallel"])
+    lo, hi = lk["branch"].get("trafo", (0, 0))
+    live_tr = [i for i in net.trafo.index if net.trafo.at[i, "in_service"]]
+    for k, ti in enumerate(live_tr):
+        row = lo + k
+        if row < hi and row < n_br:
+            br_name[row] = str(net.trafo.at[ti, "name"])[:80]
+            br_kind[row] = "trafo"
+    pd.DataFrame({
+        "row": range(1, n_br + 1),
+        "F_BUS": inner["branch"][:, 0].astype(int),
+        "T_BUS": inner["branch"][:, 1].astype(int),
+        "kind": br_kind,
+        "name": br_name,
+        "parallel": br_par,
+    }).to_csv(os.path.join(out_dir, f"{island_id}_branchname.csv"),
+              index=False)
+
+    n_g = inner["gen"].shape[0]
+    g_name = [""] * n_g
+    g_fuel = [""] * n_g
+    g_kind = [""] * n_g
+    n_eg = int(net.ext_grid["in_service"].sum())
+    for k, ei in enumerate(i for i in net.ext_grid.index
+                           if net.ext_grid.at[i, "in_service"]):
+        if k < n_g:
+            g_name[k] = str(net.ext_grid.at[ei, "name"])
+            g_kind[k] = "slack"
+    for k, gi in enumerate(i for i in net.gen.index
+                           if net.gen.at[i, "in_service"]):
+        row = n_eg + k
+        if row < n_g:
+            g_name[row] = str(net.gen.at[gi, "name"])[:80]
+            g_fuel[row] = (str(net.gen.at[gi, "type"]).split(";")[0]
+                           if "type" in net.gen.columns else "")
+            g_kind[row] = "gen"
+    pd.DataFrame({
+        "row": range(1, n_g + 1),
+        "GEN_BUS": inner["gen"][:, 0].astype(int),
+        "kind": g_kind,
+        "name": g_name,
+        "fuel": g_fuel,
+        "PG": inner["gen"][:, 1],
+        "PMAX": inner["gen"][:, 8],
+    }).to_csv(os.path.join(out_dir, f"{island_id}_genname.csv"),
+              index=False)
+
+    # mpc.bus_name — MATPOWER's official optional field (cell array)
+    mpc["mpc"]["bus_name"] = np.array(
+        [n or f"bus_{i+1}" for i, n in enumerate(bus_name)], dtype=object)
+
     mat_path = os.path.join(out_dir, f"{island_id}.mat")
     savemat(mat_path, mpc, do_compression=True)
 
@@ -146,10 +241,14 @@ def main(argv=None) -> int:
             "async_links": [str(a) for a in async_links],
             "note": ("canonical MATPOWER case v2 per island (.mat: baseMVA/"
                      "version/bus/branch/gen at loadcase widths, 1-based "
-                     "buses, 100 MVA base) + the same tables as CSV; no "
-                     "gencost (no fabricated costs) — runpf-ready, not "
-                     "runopf; multi-component islands carry one REF per "
-                     "component"),
+                     "buses, 100 MVA base, mpc.bus_name cell array) + the "
+                     "same tables as CSV + name sidecars (issue #26): "
+                     "{island}_busname.csv (BUS_I,name,base_kv,zone,lat,"
+                     "lon), {island}_branchname.csv (row,F_BUS,T_BUS,kind,"
+                     "name,parallel), {island}_genname.csv (row,GEN_BUS,"
+                     "kind=slack|gen,name,fuel,PG,PMAX); no gencost (no "
+                     "fabricated costs) — runpf-ready, not runopf; "
+                     "multi-component islands carry one REF per component"),
             "islands": []}
     for island_id, isl in islands.items():
         print(f"  ... {island_id}", file=sys.stderr)
