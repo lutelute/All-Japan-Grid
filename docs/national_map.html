@@ -67,7 +67,8 @@ const cache = {};                 // url -> geojson
 let busLayer = null, lineLayer = null;
 
 const vmColor = v => v == null ? "#999"
-  : v < 0.90 ? "#c0392b" : v < 0.95 ? "#e67e22"
+  : v < 0.80 ? "#8e0000" : v < 0.85 ? "#c0392b"
+  : v < 0.90 ? "#e67e22" : v < 0.95 ? "#f1c40f"
   : v <= 1.05 ? "#27ae60" : v <= 1.07 ? "#e67e22" : "#c0392b";
 const ldColor = v => v == null ? "#bbb"
   : v < 50 ? "#27ae60" : v < 80 ? "#f1c40f" : v < 100 ? "#e67e22" : "#c0392b";
@@ -83,8 +84,10 @@ async function fetchFC(url) {
 function legendHTML() {
   return `
     <b>バス電圧 vm [pu]</b>
-    <span class="sw" style="background:#c0392b"></span>&lt;0.90
-    <span class="sw" style="background:#e67e22"></span>0.90–0.95
+    <span class="sw" style="background:#8e0000"></span>&lt;0.80
+    <span class="sw" style="background:#c0392b"></span>0.80–0.85
+    <span class="sw" style="background:#e67e22"></span>0.85–0.90
+    <span class="sw" style="background:#f1c40f"></span>0.90–0.95
     <span class="sw" style="background:#27ae60"></span>0.95–1.05<br>
     <b>線 loading [%]</b>
     <span class="sw" style="background:#27ae60"></span>&lt;50

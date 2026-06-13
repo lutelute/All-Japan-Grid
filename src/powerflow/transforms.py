@@ -720,6 +720,33 @@ def _apply_fuel_bands(net, bands: dict) -> dict:
     g = net.gen
     active = g["in_service"].fillna(True).astype(bool)
     fuel = g["type"].fillna("unknown").astype(str).str.split(";").str[0].str.lower()
+
+    def _scale_units(sel, target):
+        """Move the selection's total to ``target`` respecting UNIT caps.
+
+        Scale-down stays multiplicative (shares preserved, floor 0).
+        Scale-UP allocates the increase by available HEADROOM — the old
+        multiplicative up-scaling pushed already-full units past their
+        nameplate (富津 at 218 % while 姉崎/千葉/袖ヶ浦 sat at zero,
+        ledger 100; the phantom 12.4 GW was also the top canonical flow
+        mismatch, 新袖ヶ浦線). Returns the total actually reached.
+        """
+        cur_ = float(g.loc[sel, "p_mw"].sum())
+        if target >= cur_:
+            caps_ = (g.loc[sel, "max_p_mw"].astype(float) if "max_p_mw" in g
+                     else g.loc[sel, "p_mw"].astype(float))
+            head = (caps_ - g.loc[sel, "p_mw"]).clip(lower=0.0)
+            ht = float(head.sum())
+            add = min(target - cur_, ht)
+            if ht > 0 and add > 0:
+                net.gen.loc[sel, "p_mw"] = (g.loc[sel, "p_mw"]
+                                            + head * (add / ht))
+                return cur_ + add
+            return cur_
+        if cur_ > 0:
+            net.gen.loc[sel, "p_mw"] = g.loc[sel, "p_mw"] * (target / cur_)
+        return target
+
     moved = 0.0
     report = {}
     for f, (q50, p95) in bands.items():
@@ -735,25 +762,18 @@ def _apply_fuel_bands(net, bands: dict) -> dict:
             target = min(q50, cap)
         if abs(target - cur) < 1.0 or cur <= 0 and target <= 0:
             continue
-        if cur > 0:
-            scale = target / cur
-            net.gen.loc[sel, "p_mw"] = g.loc[sel, "p_mw"] * scale
-        else:
-            # spread the q50 floor across the fuel's units by nameplate
-            caps = g.loc[sel, "max_p_mw"]
-            tot = float(caps.sum())
-            if tot > 0:
-                net.gen.loc[sel, "p_mw"] = caps / tot * target
-        report[f] = {"from": round(cur, 0), "to": round(target, 0)}
-        moved += target - cur
-    # swing on gas
+        reached = _scale_units(sel, target)
+        report[f] = {"from": round(cur, 0), "to": round(reached, 0)}
+        moved += reached - cur
+    # swing on gas — headroom-allocated on the way up, never past nameplate
     sel_gas = active & (fuel == "gas")
     gas_cur = float(net.gen.loc[sel_gas, "p_mw"].sum())
     gas_cap = float(net.gen.loc[sel_gas, "max_p_mw"].sum()) if "max_p_mw" in net.gen else gas_cur
     gas_new = max(0.0, min(gas_cap, gas_cur - moved))
     if gas_cur > 0 and abs(gas_new - gas_cur) >= 1.0:
-        net.gen.loc[sel_gas, "p_mw"] = net.gen.loc[sel_gas, "p_mw"] * (gas_new / gas_cur)
-        report["gas_swing"] = {"from": round(gas_cur, 0), "to": round(gas_new, 0)}
+        reached = _scale_units(sel_gas, gas_new)
+        report["gas_swing"] = {"from": round(gas_cur, 0),
+                               "to": round(reached, 0)}
     return report
 
 
