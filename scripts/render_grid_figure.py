@@ -89,7 +89,8 @@ def _dangling_ends(net):
 
 
 def render(region: str, out: str, kpi_json: str | None = None,
-           mark_dangles: bool = False, label: str = "") -> str:
+           mark_dangles: bool = False, label: str = "",
+           expand_mixed_voltage: bool = True) -> str:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -100,7 +101,7 @@ def render(region: str, out: str, kpi_json: str | None = None,
     if region == "national":
         return render_national(out)
 
-    net = build_network_snapped(region)
+    net = build_network_snapped(region, expand_mixed_voltage=expand_mixed_voltage)
     if net is None:
         raise SystemExit(f"no data for region {region}")
 
