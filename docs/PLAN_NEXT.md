@@ -102,7 +102,8 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 - [x] E5(116): **設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`(アーキ・データモデル・API・適用先・検証判定・多ユーザー段階)
 - [x] E6(116): **編集ログ基盤** `src/server/edit_log.py`(append専用 `data/db/connection_edits.jsonl`・validate/list/counts)+FastAPI `POST /api/edits`・`GET /api/edits/{region}`。round-trip/import検証済
 - [x] E7(117): **本格エディタ** `src/server/templates/editor.html`+`/editor`(FastAPI配信)。全OSM点(変電所+全線頂点)をスナップ選択・🔗接続(2点)・✂️切断(線)・➕点追加(緯度経度自動+属性)・✎属性編集→全操作`POST /api/edits`。実地検証済(POST/GET動作)。残=自由描画の高度化・大量点クラスタリング
-- [ ] E8: **検証→判定** 編集ログを適用→潮流計算(島削減・ρ 13b比・AC収束)+DB整合→pending/adopted/rejected判定。before/after図を自動送付
+- [x] E8(118): **検証→判定(島削減A/B)** `src/server/edit_apply.py`+`POST /api/verify/{region}`+エディタ検証ボタン。編集を一時適用→build→島数before/after。strong2件で島263→261(Δ-2)検証。核心ループ完成
+- [ ] E8b: disconnect→builder cut機構(`build_network_snapped(cuts=)`で該当edge非生成)・set_attr→enrichments反映・検証にρ13b比/AC収束も追加・status自動判定(adopted/rejected)・before/after図自動送付
 - [ ] E9: **多ユーザー対応**(認証/同時編集/レビュー承認フロー・OSM ODbL還元)
 
 ## 夜間強行軍モード（ユーザー指示 2026-06-12 02時「一晩自己ループをかけまくって誰も到達できないところまで。ただし再現性を崩すな」）

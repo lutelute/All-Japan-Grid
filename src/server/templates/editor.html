@@ -54,7 +54,7 @@
 
   <h3>編集ログ <span class="muted" id="counts"></span></h3>
   <div><button onclick="loadEdits()">再読込</button>
-       <button class="go" onclick="alert('検証→判定(E8)は /api/verify 実装後に有効化')">検証→判定(E8)</button></div>
+       <button class="go" onclick="verifyEdits()">検証(島削減A/B)</button></div>
   <div id="editlist" style="margin-top:6px">—</div>
 
   <div class="muted" style="margin-top:10px" id="status">読込中…</div>
@@ -193,6 +193,19 @@ async function loadEdits(){
     });
     $('editlist').textContent=rows.length?rows.join('\n'):'(編集なし)';
   }catch(e){ $('editlist').textContent='編集ログ読込失敗: '+e; }
+}
+
+async function verifyEdits(){
+  $('status').textContent='検証中(モデル再構築・少し待つ)…';
+  try{
+    const r=await fetch(`/api/verify/${REGION}`,{method:'POST'});
+    const j=await r.json();
+    if(!r.ok){ $('status').textContent='検証失敗: '+(j.detail||r.status); return; }
+    $('status').textContent=`検証: 島 ${j.islands_before}→${j.islands_after} (Δ${j.delta_islands})`;
+    alert(`検証結果 (${REGION})\n島(連結成分): ${j.islands_before} → ${j.islands_after}  Δ=${j.delta_islands}\n`
+      +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
+      +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)`);
+  }catch(e){ $('status').textContent='検証失敗: '+e; }
 }
 
 $('region').onchange=loadRegion;

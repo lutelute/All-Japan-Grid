@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E8: 検証→判定(編集適用→島削減A/B)・核心ループ完成（118）
+
+- `src/server/edit_apply.py`: pending編集を一時data_dirに適用(connect→lines_supplement / add_point→subs_supplement・
+  symlinkで他層温存)→`build_network_snapped`で島数 before/after。disconnect/set_attrは別経路(E8b)で件数報告
+- FastAPI `POST /api/verify/{region}` + エディタ「検証(島削減A/B)」ボタン配線
+- **実地検証**: strong候補2件(福島500kV)をPOST→verify→**島263→261(Δ-2)**。
+  **編集→ログ→検証→島削減A/B の核心ループが端から端まで動作**
+- これでプラットフォーム E1-E8 完成: 候補生成→エディタ(全OSM点選択・接続/切断/点追加/属性)→編集ログ→検証判定。
+  残=E8b(builder cut機構でdisconnect反映・set_attr→enrichment反映)・E9(多ユーザー)・OSM ODbL還元
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E7: 本格エディタ(全OSM点選択+接続/切断/点追加/属性)（117）
 
 - `src/server/templates/editor.html` + `/editor` ルート。FastAPI配信(`uvicorn src.server.app:app --port 8088`)・OSMタイル下地

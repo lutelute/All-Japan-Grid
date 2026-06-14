@@ -138,6 +138,18 @@ async def get_edits(region: str, status: Optional[str] = None):
     }
 
 
+@app.post("/api/verify/{region}")
+async def verify_edits(region: str):
+    """pending編集をモデルに一時適用→島数before/after(検証→判定材料・E8)。"""
+    from src.server import edit_apply
+
+    try:
+        return edit_apply.verify(region)
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(500, f"verify failed: {exc}")
+
+
 # ─── Power Flow API ──────────────────────────────────────────────────
 
 
