@@ -10,7 +10,7 @@ Usage::
 
 import os
 import traceback
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
@@ -84,6 +84,52 @@ async def get_geojson(region: str, layer: str):
     if data is None:
         raise HTTPException(404, f"No data for region '{region}', layer '{layer}'")
     return data
+
+
+# ─── Connection edit log (editor platform) ───────────────────────────
+# 設計: docs/CONNECTION_EDITOR_DESIGN.md。人間の接続編集を append専用ログに記録し、
+# E8の検証(潮流/DB)で判定する。物理接続=真・捏造禁止。
+
+
+class EditIn(BaseModel):
+    action: str                       # connect | disconnect | add_point | set_attr
+    region: str
+    a: Optional[dict] = None          # {node?, lat, lon}
+    b: Optional[dict] = None
+    pt: Optional[dict] = None         # add_point: {lat, lon}
+    line_key: Optional[str] = None    # disconnect: line id (a/b の代替)
+    feature_key: Optional[str] = None  # set_attr 対象
+    field: Optional[str] = None
+    value: Optional[Any] = None
+    kv: Optional[float] = None
+    user: Optional[str] = "anon"
+    evidence: Optional[str] = None
+    note: Optional[str] = None
+
+
+@app.post("/api/edits")
+async def post_edit(edit: EditIn):
+    """接続編集(connect/disconnect/add_point/set_attr)をappend専用ログに記録。"""
+    from src.server import edit_log
+
+    payload = {k: v for k, v in edit.model_dump().items() if v is not None}
+    try:
+        rec = edit_log.append_edit(payload)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    return {"ok": True, "id": rec["id"], "status": rec["status"]}
+
+
+@app.get("/api/edits/{region}")
+async def get_edits(region: str, status: Optional[str] = None):
+    """記録済み編集の一覧(status で絞り込み可)。地図への色分け表示用。"""
+    from src.server import edit_log
+
+    return {
+        "region": region,
+        "edits": edit_log.list_edits(region, status),
+        "counts": edit_log.counts(region),
+    }
 
 
 # ─── Power Flow API ──────────────────────────────────────────────────

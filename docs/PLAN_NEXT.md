@@ -99,8 +99,8 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 - [x] E3(115): `scripts/apply_connections.py`(承認/strong候補→supplement加算統合→島数A/B・既定書込なし)。strong5で島263→258(Δ-5)検証
 
 **プラットフォーム化(ユーザー新要件 2026-06-14「全OSM点を選択可能に+点追加(緯度経度自動+属性)+誤接続の切断+ログ→潮流/DB検証→判定+多ユーザー」「完璧な設計まで実行」)**:
-- [ ] E5: **設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`(アーキ=FastAPIバックエンド+編集ログjsonl+Leafletエディタ+検証判定。多ユーザー対応の段階設計)
-- [ ] E6: **編集ログ基盤** `data/db/connection_edits.jsonl`(append専用・action=connect/disconnect/add_point/set_attr・endpoints/coords/attrs/user/time/status)+FastAPI `POST /api/edits`・`GET /api/edits`
+- [x] E5(116): **設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`(アーキ・データモデル・API・適用先・検証判定・多ユーザー段階)
+- [x] E6(116): **編集ログ基盤** `src/server/edit_log.py`(append専用 `data/db/connection_edits.jsonl`・validate/list/counts)+FastAPI `POST /api/edits`・`GET /api/edits/{region}`。round-trip/import検証済
 - [ ] E7: **本格エディタ**(FastAPI配信・全OSM点(変電所+線頂点/鉄塔)をもれなく表示&選択・2点接続・誤接続の切断・点追加(クリックで緯度経度自動+属性フォーム)・属性編集・全操作をログPOST)
 - [ ] E8: **検証→判定** 編集ログを適用→潮流計算(島削減・ρ 13b比・AC収束)+DB整合→pending/adopted/rejected判定。before/after図を自動送付
 - [ ] E9: **多ユーザー対応**(認証/同時編集/レビュー承認フロー・OSM ODbL還元)

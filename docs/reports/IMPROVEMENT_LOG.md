@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E5-E6: 設計doc+編集ログ基盤+編集API（116）
+
+- **E5 設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`: アーキ(Leafletエディタ↔FastAPI↔編集ログjsonl↔適用層↔潮流/DB検証→判定)、
+  データモデル(action=connect/disconnect/add_point/set_attr・status pending→verified→adopted/rejected)、
+  適用先(connect→lines_supplement / disconnect→cuts / add_point→subs_supplement / set_attr→enrichments)、多ユーザー段階(E9)
+- **E6 編集ログ基盤** `src/server/edit_log.py`(append専用 `data/db/connection_edits.jsonl`・validate・list・counts)
+  + FastAPI `POST /api/edits`(記録)・`GET /api/edits/{region}`(一覧)。round-trip/validation/import 検証済
+- 物理接続=真・捏造禁止・全編集を記録し検証して判定の原則。次=E7本格エディタ(全OSM点選択+接続/切断/点追加/属性)
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集ツール③: 接続適用+島削減A/B(apply_connections.py)・プラットフォーム要件追加（115）
 
 - `scripts/apply_connections.py`: 編集ツールのエクスポート(or strong候補)を `data/{region}_lines_supplement.geojson`
