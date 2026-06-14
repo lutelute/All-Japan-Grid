@@ -153,6 +153,33 @@ async def verify_edits(region: str):
 _built_cache: dict = {}  # region -> built_view result(再構築は重い〜2秒なのでキャッシュ)
 
 
+class IssueIn(BaseModel):
+    memo: Optional[str] = None
+    verify: Optional[dict] = None   # 直近の検証結果(島A/B)をそのまま本文に載せる
+    dry_run: Optional[bool] = False
+
+
+@app.post("/api/issue/{region}")
+async def post_issue(region: str, body: IssueIn):
+    """pending接続をまとめて GitHub issue 化(レビュー・メモ・OSM還元の単位)。
+
+    粒度=まとめて1 issue(オーナー選択)。`connection`+`data-quality` ラベル。
+    送信済みは data/db/connection_submissions.jsonl に記録し二重送信を防ぐ。
+    """
+    from src.server import issue_submit
+
+    try:
+        result = issue_submit.submit_issue(
+            region, memo=body.memo, verify=body.verify, dry_run=bool(body.dry_run),
+        )
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(500, f"issue submit failed: {exc}")
+    if not result.get("ok"):
+        raise HTTPException(400, result.get("error", "issue submit failed"))
+    return result
+
+
 @app.get("/api/built/{region}")
 async def get_built(region: str, fresh: int = 0):
     """系統モデル(build後)の接続状態。OSMと並列表示し『繋がっているか』を確認する(E10)。

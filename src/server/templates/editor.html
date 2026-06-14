@@ -79,6 +79,16 @@
        <button class="go" onclick="verifyEdits()">検証(島削減A/B)</button></div>
   <div id="editlist" style="margin-top:6px">—</div>
 
+  <h3>GitHubに送信(接続提案issue)</h3>
+  <div class="muted">pending接続を<b>まとめて1 issue</b>に。メモ(根拠・気づき)を添えてレビュー・採用・OSM還元の単位にします。</div>
+  <textarea id="memo" rows="3" placeholder="メモ(例: 井の頭通り沿いの66kV配電がOSMで連続。モデルでは分断。)"
+    style="width:100%;margin-top:6px;background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:5px;padding:6px;box-sizing:border-box;font-size:12px"></textarea>
+  <div style="margin-top:4px">
+    <button onclick="previewIssue()">本文プレビュー</button>
+    <button class="go" onclick="submitIssue()">🐙 issue送信</button>
+  </div>
+  <div class="muted" id="issuestat" style="margin-top:4px"></div>
+
   <div class="muted" style="margin-top:10px" id="status">読込中…</div>
 </div>
 <script>
@@ -314,12 +324,38 @@ async function verifyEdits(){
     const r=await fetch(`/api/verify/${REGION}`,{method:'POST'});
     const j=await r.json();
     if(!r.ok){ $('status').textContent='検証失敗: '+(j.detail||r.status); return; }
+    lastVerify=j;  // issue本文に載せる
     $('status').textContent=`検証: 島 ${j.islands_before}→${j.islands_after} (Δ${j.delta_islands})`;
     alert(`検証結果 (${REGION})\n島(連結成分): ${j.islands_before} → ${j.islands_after}  Δ=${j.delta_islands}\n`
       +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
       +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)`);
-    loadRegion();  // モデル再読込で島の変化を地図に反映
   }catch(e){ $('status').textContent='検証失敗: '+e; }
+}
+
+let lastVerify=null;
+async function postIssue(dry){
+  const body={memo:$('memo').value||null, verify:lastVerify, dry_run:!!dry};
+  const r=await fetch(`/api/issue/${REGION}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  if(!r.ok){ $('issuestat').textContent='送信エラー: '+(j.detail||r.status); return null; }
+  return j;
+}
+async function previewIssue(){
+  $('issuestat').textContent='プレビュー生成中…';
+  const j=await postIssue(true);
+  if(!j) return;
+  $('issuestat').textContent=`プレビュー(${j.n}件・未送信)`;
+  alert(`【${j.title}】\n\n${j.body}`);
+}
+async function submitIssue(){
+  const j0=await postIssue(true);  // 件数を先に確認
+  if(!j0) return;
+  if(!confirm(`pending接続 ${j0.n}件 をまとめてGitHub issueとして送信します。\nリポジトリ: lutelute/All-Japan-Grid (公開)\nラベル: connection, data-quality\n\n送信してよいですか?`)) return;
+  $('issuestat').textContent='送信中(gh issue create)…';
+  const j=await postIssue(false);
+  if(!j) return;
+  $('issuestat').innerHTML=`✅ issue #${j.issue_number} 作成 (${j.n}件) — <a href="${j.issue_url}" target="_blank" style="color:#58a6ff">開く</a>`;
+  loadEdits();
 }
 
 $('region').onchange=loadRegion;

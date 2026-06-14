@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Claude Fable 5** — E12: 接続編集を GitHub issue 化(メモ・レビュー・OSM還元の土台）（120）
+
+- **オーナー方針**: 「接続はGitHub issueとして送られるようにしたい。メモも入れられるように。こういうツールにしたい」
+- `src/server/issue_submit.py` 新設 + `POST /api/issue/{region}`: pending接続を**まとめて1 issue**化(オーナー選択)。
+  本文=各接続のチェックリスト(座標・電圧・evidence・OSMリンク)+検証(島A/B)+メモ。`gh issue create --label connection,data-quality`。
+  送信済みは `data/db/connection_submissions.jsonl` で管理し二重送信防止(edit_logは append専用のまま不変)
+- エディタにメモ欄+「本文プレビュー(dry-run)」「issue送信」ボタン。送信前に件数確認ダイアログ
+- **実地: オーナーの手動接続12本(武蔵野付近)→ issue [#28](https://github.com/lutelute/All-Japan-Grid/issues/28) を実生成**(connectionラベル新設)。
+  人間が編集→ログ→検証→**GitHub issueでレビュー/採用** の協働ループが繋がった。E9(多ユーザー)の実体的な第一歩
+- pytest 1103緑・モデル/スコアカード不変
+
 ## 2026-06-14 — **Claude Fable 5** — E10追補: モデル接続線を実OSM幾何で描画+鉄塔の扱いを明文化（119b）
 
 - **オーナー指摘**: 「東京でモデル接続線が1本もOSM線上に載っていない、絶対おかしい」。原因=`built_view`が
