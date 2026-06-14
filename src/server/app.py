@@ -150,15 +150,21 @@ async def verify_edits(region: str):
         raise HTTPException(500, f"verify failed: {exc}")
 
 
+_built_cache: dict = {}  # region -> built_view result(再構築は重い〜2秒なのでキャッシュ)
+
+
 @app.get("/api/built/{region}")
-async def get_built(region: str):
+async def get_built(region: str, fresh: int = 0):
     """系統モデル(build後)の接続状態。OSMと並列表示し『繋がっているか』を確認する(E10)。
 
-    節点を島/本系統で色分け+モデルが実際に張った接続線を返す。OSMでは線が見える
-    のにモデルでは島(=未接続)、という乖離をエディタ上で可視化するためのレイヤ。
+    節点を島/本系統で色分け+モデルが実際に張った接続線(実OSM幾何)を返す。OSMでは
+    線が見えるのにモデルでは島(=未接続)、という乖離をエディタ上で可視化するためのレイヤ。
+    再構築は重いのでregion単位でメモリキャッシュ(`?fresh=1`で強制再構築・検証後の更新用)。
     """
     from src.server import built_view
 
+    if not fresh and region in _built_cache:
+        return _built_cache[region]
     try:
         result = built_view.built_view(region)
     except Exception as exc:
@@ -166,6 +172,7 @@ async def get_built(region: str):
         raise HTTPException(500, f"built_view failed: {exc}")
     if result is None:
         raise HTTPException(404, f"No built model for region '{region}'")
+    _built_cache[region] = result
     return result
 
 

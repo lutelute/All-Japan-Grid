@@ -35,12 +35,18 @@ def built_view(region, data_dir=None):
     edges = []
     for ln in net.transmission_lines:
         a, b = ln.from_substation_id, ln.to_substation_id
-        if a in pos and b in pos:
-            edges.append({
-                "a": [round(pos[a][0], 5), round(pos[a][1], 5)],
-                "b": [round(pos[b][0], 5), round(pos[b][1], 5)],
-                "main": (a in main and b in main),
-            })
+        # 実OSM幾何(鉄塔を通る折れ線)を保持 → エディタでOSM線と重ねて描ける。
+        # 鉄塔は次数2なら畳まれ bus にはならないが、線形(path)は失われない。
+        coords = getattr(ln, "coordinates", None) or []
+        path = [[round(la, 5), round(lo, 5)] for (la, lo) in coords
+                if la is not None and lo is not None]
+        if len(path) < 2:  # 幾何が無ければ bus 端点で直線フォールバック
+            if a in pos and b in pos:
+                path = [[round(pos[a][0], 5), round(pos[a][1], 5)],
+                        [round(pos[b][0], 5), round(pos[b][1], 5)]]
+            else:
+                continue
+        edges.append({"path": path, "main": (a in main and b in main)})
     return {
         "region": region, "n_nodes": len(nodes), "n_edges": len(edges),
         "n_components": len(comps), "main_size": len(main),

@@ -108,39 +108,44 @@ function setMode(m){ mode=m; clearPick();
   $('hint').textContent=h[m]||''; }
 function clearPick(){ pick=[]; pickMarkers.forEach(m=>map.removeLayer(m)); pickMarkers=[]; $('selinfo').textContent=''; }
 
+let loadToken=0;
 async function loadRegion(){
   REGION=$('region').value; clearPick();
+  const tk=++loadToken;
   [lineLayer,subLayer,mainLayer,islandLayer,edgeLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
   if(layerCtl){ map.removeControl(layerCtl); layerCtl=null; }
-  snapPts=[];
-  $('status').textContent=`${REGION}: 読込中…`;
-  $('modelstat').textContent='読込中…';
+  mainLayer=islandLayer=edgeLayer=null; snapPts=[];
+  $('status').textContent=`${REGION}: OSM読込中…`;
+  $('modelstat').textContent='—';
   try{
-    const [subs,lines,built]=await Promise.all([
+    // まずOSM(実在)だけ描いて地図を即操作可能に(モデルは重いので後乗せ)
+    const [subs,lines]=await Promise.all([
       fetch(`/api/geojson/${REGION}/substations`).then(r=>r.json()),
-      fetch(`/api/geojson/${REGION}/lines`).then(r=>r.json()),
-      fetch(`/api/built/${REGION}`).then(r=>r.ok?r.json():null).catch(()=>null)]);
-
+      fetch(`/api/geojson/${REGION}/lines`).then(r=>r.json())]);
+    if(tk!==loadToken) return;  // 地域切替が走ったら破棄
     buildOSM(subs,lines);
-    buildModel(built);
-
     editLayer=L.layerGroup();
-    // 既定ON: OSM線/OSM変電所/モデル島/編集 。 既定OFF: モデル本系統/モデル接続線(必要時にトグル)
-    [lineLayer,subLayer,islandLayer,editLayer].forEach(l=>l&&l.addTo(map));
-
-    const overlays={};
-    overlays['OSM 送電線'] = lineLayer;
-    overlays['OSM 変電所'] = subLayer;
-    if(islandLayer) overlays['モデル 島(橙・未接続)'] = islandLayer;
-    if(mainLayer)   overlays['モデル 本系統(青)'] = mainLayer;
-    if(edgeLayer)   overlays['モデル 接続線(水)'] = edgeLayer;
-    overlays['編集(pending/adopted)'] = editLayer;
-    layerCtl=L.control.layers(null, overlays, {collapsed:false, position:'topright'}).addTo(map);
-
-    $('status').textContent=`${REGION}: OSM変電所${subs.features.length}/送電線${lines.features.length}/スナップ点${snapPts.length}`;
+    [lineLayer,subLayer,editLayer].forEach(l=>l&&l.addTo(map));
+    layerCtl=L.control.layers(null,
+      {'OSM 送電線':lineLayer,'OSM 変電所':subLayer,'編集(pending/adopted)':editLayer},
+      {collapsed:false, position:'topright'}).addTo(map);
     if(lines.features.length){ try{map.fitBounds(lineLayer.getBounds().pad(0.05));}catch(e){} }
+    $('status').textContent=`${REGION}: OSM変電所${subs.features.length}/送電線${lines.features.length}/スナップ点${snapPts.length}`;
     loadEdits();
-  }catch(e){ $('status').textContent='読込失敗: '+e; }
+    loadModel(tk);  // 系統モデル(build後)を非同期で後乗せ
+  }catch(e){ $('status').textContent='OSM読込失敗: '+e; }
+}
+
+async function loadModel(tk, fresh){
+  $('modelstat').textContent='系統モデル構築中…(数秒)';
+  try{
+    const built=await fetch(`/api/built/${REGION}${fresh?'?fresh=1':''}`).then(r=>r.ok?r.json():null);
+    if(tk!==loadToken) return;
+    buildModel(built);
+    if(islandLayer){ islandLayer.addTo(map); layerCtl.addOverlay(islandLayer,'モデル 島(橙・未接続)'); }
+    if(mainLayer){ layerCtl.addOverlay(mainLayer,'モデル 本系統(青)'); }
+    if(edgeLayer){ layerCtl.addOverlay(edgeLayer,'モデル 接続線(水)'); }
+  }catch(e){ $('modelstat').textContent='モデル読込失敗: '+e; }
 }
 
 function buildOSM(subs,lines){
@@ -168,11 +173,11 @@ function buildOSM(subs,lines){
 function buildModel(built){
   mainLayer=islandLayer=edgeLayer=null;
   if(!built){ $('modelstat').innerHTML='<span class="muted">モデル未構築(build_network_snapped 失敗 or 未対応地域)</span>'; return; }
-  // モデル接続線(build後にモデルが実際に張ったedge)
+  // モデル接続線(build後にモデルが実際に張ったedge・実OSM幾何=鉄塔を通る折れ線で描画)
   edgeLayer=L.layerGroup();
   (built.edges||[]).forEach(e=>{
-    L.polyline([[e.a[0],e.a[1]],[e.b[0],e.b[1]]],
-      {color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
+    const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
+    if(pts&&pts.length>=2) L.polyline(pts,{color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
   });
   // 節点(本系統=青・島=橙で連結性を色分け)
   mainLayer=L.layerGroup(); islandLayer=L.layerGroup();
