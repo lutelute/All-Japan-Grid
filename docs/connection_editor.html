@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>AGJ 接続編集ツール</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+  #map{position:absolute;top:0;bottom:0;left:0;right:340px}
+  #panel{position:absolute;top:0;bottom:0;right:0;width:340px;background:#0d1117;color:#e6edf3;
+         overflow-y:auto;padding:14px;box-sizing:border-box;font-size:13px;line-height:1.5}
+  h2{font-size:15px;margin:2px 0 8px}
+  .row{margin:8px 0}
+  .muted{color:#8b949e;font-size:12px}
+  button{background:#238636;color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:13px}
+  button.sec{background:#30363d}
+  .leg{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:5px}
+  label{cursor:pointer}
+  code{background:#161b22;padding:1px 5px;border-radius:3px;font-size:11px}
+  #out{white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:10px;background:#161b22;
+       padding:8px;border-radius:6px;max-height:220px;overflow:auto;margin-top:8px}
+  hr{border:0;border-top:1px solid #30363d;margin:10px 0}
+</style></head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <h2>🔌 接続編集ツール</h2>
+  <div class="muted">候補の線をクリックで<b>承認/解除</b>。OSM地図(下地)で<b>実在を確認してから</b>承認すること(物理接続=真・捏造禁止)。承認分を supplement GeoJSON で書き出す。</div>
+  <hr>
+  <div class="row"><b>表示フィルタ</b><br>
+    <label><input type="checkbox" id="f_strong" checked> <span class="leg" style="background:#3fb950"></span>strong(線の続き・近接・方位一致)</label><br>
+    <label><input type="checkbox" id="f_medium" checked> <span class="leg" style="background:#d29922"></span>medium</label><br>
+    <label><input type="checkbox" id="f_weak"> <span class="leg" style="background:#6e7681"></span>weak(孤立変電所等・要現地確認)</label>
+  </div>
+  <div class="row">🔴島側端点　🔵主系統側候補</div>
+  <hr>
+  <div class="row">承認済み: <b id="napprove">0</b> 件</div>
+  <div class="row">
+    <button onclick="exportApproved()">承認済みをエクスポート</button>
+    <button class="sec" onclick="clearApproved()">全解除</button>
+  </div>
+  <div class="row muted">書き出した <code>approved_connections_*.geojson</code> を E3 の <code>scripts/apply_connections.py</code> で <code>data/{region}_lines_supplement.geojson</code> に統合→builderが取込。</div>
+  <div class="row"><span id="status">読込中…</span></div>
+  <div id="out"></div>
+</div>
+<script>
+const REGION = new URLSearchParams(location.search).get('region') || 'tokyo';
+const COLOR = {strong:'#3fb950', medium:'#d29922', weak:'#6e7681'};
+const map = L.map('map').setView([36.2,139.4], 9);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);
+let cands=[], layers=[], approved=new Set();
+
+fetch(`reports/connection_candidates_${REGION}.json`).then(r=>r.json()).then(d=>{
+  cands = d.candidates || [];
+  document.getElementById('status').textContent =
+    `${REGION}: 候補 ${cands.length}件 ` + JSON.stringify(d.summary.by_strength);
+  render();
+  if(cands.length){
+    const b = L.latLngBounds(cands.flatMap(c=>[c.island_pt, c.main_pt]));
+    map.fitBounds(b.pad(0.1));
+  }
+}).catch(e=>{document.getElementById('status').textContent='候補JSON読込失敗: '+e+' (ajgrid map で docs/ を配信して開く)';});
+
+const key = c => c.island_node+'|'+c.candidate_main;
+const visible = c => document.getElementById('f_'+c.strength).checked;
+
+function render(){
+  layers.forEach(l=>map.removeLayer(l)); layers=[];
+  cands.forEach(c=>{
+    if(!visible(c)) return;
+    const on = approved.has(key(c));
+    const line = L.polyline([c.island_pt, c.main_pt], {
+      color: on?'#2ea043':COLOR[c.strength], weight: on?5:2,
+      dashArray: on?null:'6,5', opacity:.9});
+    line.bindPopup(`<b>${c.strength}</b> · ${c.evidence}<br>kv${c.kv} · 距離${c.dist_m}m · 方位整合${c.bearing_align_deg??'-'}°<br>`
+      +`<small>${c.island_node}<br>→ ${c.candidate_main}</small><br><b>${on?'✓承認済み(クリックで解除)':'クリックで承認'}</b>`);
+    line.on('click',()=>{ approved.has(key(c))?approved.delete(key(c)):approved.add(key(c)); upd(); render(); });
+    line.addTo(map); layers.push(line);
+    layers.push(L.circleMarker(c.island_pt,{radius:4,color:'#f85149',fillOpacity:.85}).addTo(map));
+    layers.push(L.circleMarker(c.main_pt,{radius:3,color:'#58a6ff',fillOpacity:.6}).addTo(map));
+  });
+}
+function upd(){ document.getElementById('napprove').textContent=approved.size; }
+['f_strong','f_medium','f_weak'].forEach(id=>document.getElementById(id).onchange=render);
+
+function exportApproved(){
+  const today=new Date().toISOString().slice(0,10);
+  const feats = cands.filter(c=>approved.has(key(c))).map(c=>({
+    type:'Feature',
+    geometry:{type:'LineString', coordinates:[[c.island_pt[1],c.island_pt[0]],[c.main_pt[1],c.main_pt[0]]]},
+    properties:{power:'line', voltage:Math.round((c.kv||c.main_kv)*1000)||null, name:'manual_connection',
+      source:'manual', supplement_source:'connection_editor', supplement_fetched:today,
+      island_node:c.island_node, candidate_main:c.candidate_main, evidence:c.evidence, strength:c.strength}
+  }));
+  const fc={type:'FeatureCollection', features:feats};
+  const txt=JSON.stringify(fc,null,1);
+  document.getElementById('out').textContent=`${feats.length}件 書き出し:\n`+txt.slice(0,600)+(txt.length>600?'\n…':'');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));
+  a.download=`approved_connections_${REGION}_${today}.geojson`; a.click();
+}
+function clearApproved(){ approved.clear(); upd(); render(); }
+</script>
+</body></html>

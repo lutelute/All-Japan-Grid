@@ -95,7 +95,7 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 
 ゴール: 地形/方位で接続候補を自動提示→**人間がツールで承認・編集**→`data/{region}_lines_supplement.geojson`に追記(加算専用)→builderが取込→OSM還元。物理接続が真・人間が実在確認=捏造でない。
 - [x] E1(113): 接続候補ジェネレータ `scripts/connection_candidates.py`。東京262島→候補79(strong5/medium33/weak41)。統合点=supplement追記→`_layer()`取込・地図UIは`docs/national_map.html`
-- [ ] E2: 地図編集UI(national_map.html拡張=島/孤立変電所を強調+候補表示+人間がクリック/ドラッグで接続を描く→supplement保存)
+- [x] E2(114): 地図編集UI `docs/connection_editor.html`(Leaflet+**OSMタイル下地**で実在確認・候補をクリック承認→supplement GeoJSON書き出し)。`ajgrid map`で配信。残=自由描画(2点クリックで任意接続)は後続
 - [ ] E3: builderが手動supplement接続を取込→A/B検証(島削減・ρ 13b比・AC収束)→before/after図を自動送付→commit
 - [ ] E4: 地形(標高/回廊)データで延長候補を高度化・OSM編集還元(W5)
 

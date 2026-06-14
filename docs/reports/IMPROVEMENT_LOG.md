@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集ツール②: 地図編集UI(OSM下地で候補承認→supplement書き出し)（114）
+
+- `docs/connection_editor.html` 新設。**Leaflet + OSMタイル下地**で、E1の候補JSON
+  (`reports/connection_candidates_tokyo.json`)を読み、島側端点(赤)・主系統候補(青)・候補線(strength色)を表示
+- 人間が候補線を**クリックで承認/解除**→「承認済みをエクスポート」で supplement GeoJSON
+  (LineString・source=manual)をダウンロード。**OSM下地で実在確認してから承認**(物理接続=真・捏造禁止)
+- `ajgrid map`(docs/配信)で `http://localhost:8080/connection_editor.html?region=tokyo`。strong/medium/weakフィルタ付き
+- 次手: ③`scripts/apply_connections.py` でエクスポートを `data/{region}_lines_supplement.geojson` に統合→A/B(島削減・ρ13b比・AC収束)
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集ツール①: 接続候補ジェネレータ — 東京79島に候補(strong5/medium33)（113）
 
 - **オーナー新方向(接続編集ツール)に着手**。統合点を調査確定: 人間が承認した接続は
