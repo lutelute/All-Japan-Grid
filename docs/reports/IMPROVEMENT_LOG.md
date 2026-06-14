@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E7: 本格エディタ(全OSM点選択+接続/切断/点追加/属性)（117）
+
+- `src/server/templates/editor.html` + `/editor` ルート。FastAPI配信(`uvicorn src.server.app:app --port 8088`)・OSMタイル下地
+- **全OSM点を選択可能**: 変電所(赤点・クリック)+**全線頂点をスナップ点に登録**(クリックで最寄り点に~120mスナップ)。送電線はクリックで切断対象
+- モード: 🔗接続(2点)/✂️切断(線)/➕点追加(地図クリック→**緯度経度自動**+名称・電圧フォーム)/✎属性編集/閲覧。各操作→`POST /api/edits`
+- 編集ログを地図に色分け描画(pending橙点線/adopted緑実線)+一覧+status件数。検証→判定(E8)はボタン枠のみ
+- **実地検証**: /editor 200・/api/geojson 200・POST connect記録成功(id発行)・GET一覧。端から端まで動作確認
+- 次=E8検証→判定(`/api/verify`: 編集をsupplement/cut/enrichmentに適用→潮流/島削減/ρ13b比→status更新)
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E5-E6: 設計doc+編集ログ基盤+編集API（116）
 
 - **E5 設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`: アーキ(Leafletエディタ↔FastAPI↔編集ログjsonl↔適用層↔潮流/DB検証→判定)、

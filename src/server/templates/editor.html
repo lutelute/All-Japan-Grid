@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>AGJ 接続編集プラットフォーム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+  #map{position:absolute;top:0;bottom:0;left:0;right:360px;cursor:crosshair}
+  #panel{position:absolute;top:0;bottom:0;right:0;width:360px;background:#0d1117;color:#e6edf3;
+         overflow-y:auto;padding:14px;box-sizing:border-box;font-size:13px;line-height:1.5}
+  h2{font-size:15px;margin:2px 0 6px} h3{font-size:13px;margin:10px 0 4px;color:#58a6ff}
+  .muted{color:#8b949e;font-size:12px}
+  button{background:#30363d;color:#e6edf3;border:1px solid #444c56;border-radius:6px;
+         padding:7px 10px;cursor:pointer;font-size:12px;margin:2px}
+  button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
+  button.go{background:#238636;border-color:#238636;color:#fff}
+  .leg{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:4px}
+  .lg2{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+  code{background:#161b22;padding:1px 5px;border-radius:3px;font-size:11px}
+  hr{border:0;border-top:1px solid #30363d;margin:10px 0}
+  #editlist{font-family:ui-monospace,monospace;font-size:10px;max-height:200px;overflow:auto;
+            background:#161b22;padding:6px;border-radius:6px}
+  .pill{display:inline-block;padding:0 5px;border-radius:8px;font-size:10px}
+  .sel{color:#f0c674}
+</style></head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <h2>🔌 接続編集プラットフォーム</h2>
+  <div class="muted">OSM地図(下地)で<b>実在を確認</b>しながら編集する(物理接続=真・捏造禁止)。全編集はログに記録→潮流/DB検証で判定。</div>
+
+  <h3>地域</h3>
+  <select id="region" style="width:100%;padding:5px;background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:5px">
+    <option>tokyo</option><option>hokkaido</option><option>tohoku</option><option>chubu</option>
+    <option>hokuriku</option><option>kansai</option><option>chugoku</option><option>shikoku</option>
+    <option>kyushu</option><option>okinawa</option>
+  </select>
+
+  <h3>モード</h3>
+  <div>
+    <button id="m_view" class="mode on" onclick="setMode('view')">閲覧</button>
+    <button id="m_connect" class="mode" onclick="setMode('connect')">🔗接続(2点)</button>
+    <button id="m_cut" class="mode" onclick="setMode('cut')">✂️切断(線)</button>
+    <button id="m_add" class="mode" onclick="setMode('add')">➕点追加</button>
+    <button id="m_attr" class="mode" onclick="setMode('attr')">✎属性</button>
+  </div>
+  <div class="muted" id="hint" style="margin-top:6px"></div>
+  <div class="row sel" id="selinfo"></div>
+
+  <h3>凡例</h3>
+  <div><span class="leg" style="background:#f85149"></span>変電所(点)　<span class="lg2" style="background:#8b949e"></span>送電線</div>
+  <div><span class="lg2" style="background:#d29922;border-top:2px dashed"></span>編集pending　<span class="lg2" style="background:#3fb950"></span>adopted</div>
+
+  <h3>編集ログ <span class="muted" id="counts"></span></h3>
+  <div><button onclick="loadEdits()">再読込</button>
+       <button class="go" onclick="alert('検証→判定(E8)は /api/verify 実装後に有効化')">検証→判定(E8)</button></div>
+  <div id="editlist" style="margin-top:6px">—</div>
+
+  <div class="muted" style="margin-top:10px" id="status">読込中…</div>
+</div>
+<script>
+const qp = new URLSearchParams(location.search);
+let REGION = qp.get('region') || 'tokyo';
+const map = L.map('map').setView([36.2,139.4], 9);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);
+
+let subLayer=null, lineLayer=null, editLayer=null, snapPts=[], mode='view', pick=[];
+const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
+const $ = id => document.getElementById(id);
+
+function setMode(m){ mode=m; pick=[]; $('selinfo').textContent='';
+  document.querySelectorAll('.mode').forEach(b=>b.classList.remove('on'));
+  $('m_'+m).classList.add('on');
+  const h={view:'地物をクリックで情報表示',connect:'繋ぐ2点を順にクリック(最寄りOSM点にスナップ)',
+    cut:'切断する線をクリック',add:'地図をクリックで点追加(緯度経度自動)',attr:'変電所をクリックで属性編集'};
+  $('hint').textContent=h[m]||''; }
+
+async function loadRegion(){
+  REGION=$('region').value; pick=[];
+  [subLayer,lineLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
+  snapPts=[];
+  $('status').textContent=`${REGION}: 読込中…`;
+  try{
+    const [subs,lines]=await Promise.all([
+      fetch(`/api/geojson/${REGION}/substations`).then(r=>r.json()),
+      fetch(`/api/geojson/${REGION}/lines`).then(r=>r.json())]);
+    // 送電線(クリックで切断対象)
+    lineLayer=L.geoJSON(lines,{style:{color:'#8b949e',weight:1.5,opacity:.7},
+      onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }}).addTo(map);
+    // 線頂点をスナップ点に
+    lines.features.forEach((f,i)=>{
+      const gs=f.geometry.type==='MultiLineString'?f.geometry.coordinates:[f.geometry.coordinates];
+      gs.forEach(seg=>seg.forEach(c=>snapPts.push({lat:c[1],lon:c[0],kind:'vertex'})));
+    });
+    // 変電所(点・もれなく選択可)
+    subLayer=L.layerGroup();
+    subs.features.forEach(f=>{
+      const c=f.geometry.type==='Point'?f.geometry.coordinates:centroid(f.geometry);
+      if(!c)return;
+      const m=L.circleMarker([c[1],c[0]],{radius:4,color:'#f85149',weight:1,fillOpacity:.7});
+      m.on('click',e=>{L.DomEvent.stop(e); onPoint({lat:c[1],lon:c[0],kind:'sub',
+        node:(f.properties&&(f.properties.id||f.properties.name))||null,kv:KV_OF(f.properties)}, f);});
+      m.addTo(subLayer);
+      snapPts.push({lat:c[1],lon:c[0],kind:'sub',node:(f.properties&&(f.properties.id||f.properties.name))||null,kv:KV_OF(f.properties)});
+    });
+    subLayer.addTo(map);
+    $('status').textContent=`${REGION}: 変電所${subs.features.length} / 送電線${lines.features.length} / スナップ点${snapPts.length}`;
+    if(lines.features.length){ try{map.fitBounds(lineLayer.getBounds().pad(0.05));}catch(e){} }
+    loadEdits();
+  }catch(e){ $('status').textContent='読込失敗: '+e; }
+}
+function centroid(g){ try{ const pts=(g.type==='Polygon'?g.coordinates[0]:g.coordinates.flat());
+  let x=0,y=0; pts.forEach(p=>{x+=p[0];y+=p[1];}); return [x/pts.length,y/pts.length]; }catch(e){return null;} }
+
+function nearestSnap(latlng){
+  let best=null,bd=Infinity;
+  const cx=latlng.lng, cy=latlng.lat;
+  for(const p of snapPts){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} }
+  // ~120m 以内のみスナップ(度換算おおよそ)
+  return (best && bd < (0.0015)**2) ? best : null;
+}
+
+map.on('click', e=>{
+  if(mode==='add'){ addPoint(e.latlng); return; }
+  if(mode==='connect'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
+    pick.push(s); $('selinfo').textContent=`接続: ${pick.length}点選択 ${pick.map(p=>p.kind).join(',')}`;
+    L.circleMarker([s.lat,s.lon],{radius:6,color:'#f0c674',fill:false}).addTo(map);
+    if(pick.length===2){ doConnect(pick[0],pick[1]); pick=[]; } }
+});
+function onPoint(pt,f){
+  if(mode==='connect'){ pick.push(pt); $('selinfo').textContent=`接続: ${pick.length}点 ${pick.map(p=>p.kind).join(',')}`;
+    if(pick.length===2){ doConnect(pick[0],pick[1]); pick=[]; } return; }
+  if(mode==='attr'){ doAttr(pt,f); return; }
+  L.popup().setLatLng([pt.lat,pt.lon]).setContent(`変電所 ${pt.node||''}<br>kv${pt.kv||'?'}<br><small>${pt.lat.toFixed(5)},${pt.lon.toFixed(5)}</small>`).openOn(map);
+}
+function onLine(f,latlng){
+  if(mode==='cut'){ doCut(f,latlng); return; }
+  const p=f.properties||{};
+  L.popup().setLatLng(latlng).setContent(`線 ${p.name||p.id||''}<br>v${p.voltage||'?'}`).openOn(map);
+}
+
+async function postEdit(body){
+  body.region=REGION; body.user=body.user||'shigenobu';
+  const r=await fetch('/api/edits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  if(!r.ok){ alert('編集エラー: '+(j.detail||r.status)); return null; }
+  loadEdits(); return j;
+}
+function doConnect(a,b){
+  const kv=a.kv||b.kv||0;
+  if(!confirm(`接続を記録?\n${a.kind}(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ ${b.kind}(${b.lat.toFixed(4)},${b.lon.toFixed(4)})\nkv${kv||'?'}`)) return;
+  postEdit({action:'connect',a:{node:a.node,lat:a.lat,lon:a.lon},b:{node:b.node,lat:b.lat,lon:b.lon},kv:kv*1000||null,evidence:'osm_visible'});
+}
+function doCut(f,latlng){
+  const p=f.properties||{}; const key=p.osm_id||p['@id']||p.id||p.name||('idx');
+  if(!confirm(`この線の接続を切断(誤接続)として記録?\n${p.name||key}`)) return;
+  postEdit({action:'disconnect',line_key:String(key),a:{lat:latlng.lat,lon:latlng.lng},note:p.name||''});
+}
+function addPoint(latlng){
+  const name=prompt('点(変電所)の名称(任意):','');
+  if(name===null) return;
+  const kv=prompt('電圧 kV (例 66, 154, 500・任意):','');
+  postEdit({action:'add_point',pt:{lat:latlng.lat,lon:latlng.lng},
+    attrs:{power:'substation',name:name||null,voltage:kv?Math.round(parseFloat(kv)*1000):null}});
+  L.circleMarker([latlng.lat,latlng.lng],{radius:5,color:'#3fb950'}).addTo(map);
+}
+function doAttr(pt,f){
+  const field=prompt('編集する属性(voltage / name など):','voltage');
+  if(!field) return;
+  const value=prompt(`${field} の新しい値:`, field==='voltage'?'':'');
+  if(value===null) return;
+  const fk=(f.properties&&(f.properties.id||f.properties['@id']))||(`pt:${pt.lat},${pt.lon}`);
+  let v=value; if(field==='voltage') v=Math.round(parseFloat(value)*1000);
+  postEdit({action:'set_attr',feature_key:String(fk),field:field,value:v});
+}
+
+async function loadEdits(){
+  try{
+    const j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
+    $('counts').textContent=JSON.stringify(j.counts||{});
+    editLayer&&map.removeLayer(editLayer); editLayer=L.layerGroup().addTo(map);
+    const rows=(j.edits||[]).slice(-40).reverse().map(e=>{
+      // connect/disconnect を地図に描画
+      if(e.action==='connect'&&e.a&&e.b){
+        L.polyline([[e.a.lat,e.a.lon],[e.b.lat,e.b.lon]],
+          {color:e.status==='adopted'?'#3fb950':'#d29922',weight:e.status==='adopted'?4:2,
+           dashArray:e.status==='adopted'?null:'6,5'}).addTo(editLayer);
+      }
+      if(e.action==='add_point'&&e.pt){ L.circleMarker([e.pt.lat,e.pt.lon],{radius:5,color:'#3fb950'}).addTo(editLayer); }
+      return `[${e.status[0]}] ${e.action} ${e.id||''}`;
+    });
+    $('editlist').textContent=rows.length?rows.join('\n'):'(編集なし)';
+  }catch(e){ $('editlist').textContent='編集ログ読込失敗: '+e; }
+}
+
+$('region').onchange=loadRegion;
+setMode('view');
+loadRegion();
+</script>
+</body></html>

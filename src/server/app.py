@@ -50,6 +50,12 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/editor", response_class=HTMLResponse)
+async def editor(request: Request):
+    """接続編集プラットフォーム(全OSM点選択+接続/切断/点追加/属性編集→/api/edits)。"""
+    return templates.TemplateResponse("editor.html", {"request": request})
+
+
 # ─── GeoJSON API ──────────────────────────────────────────────────────
 
 @app.get("/api/regions")
