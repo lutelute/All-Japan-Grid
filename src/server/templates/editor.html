@@ -63,6 +63,8 @@
     <button id="m_add" class="mode" onclick="setMode('add')">➕点追加</button>
     <button id="m_attr" class="mode" onclick="setMode('attr')">✎属性</button>
   </div>
+  <div style="margin-top:5px"><button onclick="undoLast()">↩ 直前を取消 (⌘Z)</button>
+    <span class="muted">✂️切断モードで保留の線/点をクリック→個別取消・反映前から操作可</span></div>
   <div class="step" id="hint"></div>
   <div class="sel" id="selinfo"></div>
 
@@ -104,7 +106,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 let lineLayer=null, subLayer=null;                 // OSM
 let mainLayer=null, islandLayer=null, edgeLayer=null;  // モデル
 let editLayer=null, layerCtl=null;
-let snapPts=[], mode='view', pick=[], pickMarkers=[];
+let snapPts=[], pendingPts=[], mode='view', pick=[], pickMarkers=[];
 const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
 const $ = id => document.getElementById(id);
 
@@ -258,7 +260,8 @@ function centroid(g){ try{
 function nearestSnap(latlng){
   let best=null,bd=Infinity;
   const cx=latlng.lng, cy=latlng.lat;
-  for(const p of snapPts){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} }
+  const scan=arr=>{ for(const p of arr){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} } };
+  scan(snapPts); scan(pendingPts);   // OSM点に加え、追加した点/接続端点も反映前からスナップ対象に
   return (best && bd < (0.0015)**2) ? best : null;   // ~120m以内のみスナップ
 }
 
@@ -331,19 +334,54 @@ async function loadEdits(){
   try{
     const j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
     $('counts').textContent=JSON.stringify(j.counts||{});
+    const submitted=new Set(j.submitted||[]);
     if(!editLayer){ editLayer=L.layerGroup().addTo(map); } else { editLayer.clearLayers(); }
-    const rows=(j.edits||[]).slice(-40).reverse().map(e=>{
+    pendingPts=[];   // 追加点/接続端点を反映前からスナップ対象に(都度作り直し)
+    (j.edits||[]).forEach(e=>{
+      const isSub=submitted.has(e.id);
       if(e.action==='connect'&&e.a&&e.b){
-        L.polyline([[e.a.lat,e.a.lon],[e.b.lat,e.b.lon]],
-          {color:e.status==='adopted'?'#3fb950':'#d29922',weight:e.status==='adopted'?4:2,
-           dashArray:e.status==='adopted'?null:'6,5'}).addTo(editLayer);
+        const pl=L.polyline([[e.a.lat,e.a.lon],[e.b.lat,e.b.lon]],
+          {color:e.status==='adopted'?'#3fb950':(isSub?'#1f6feb':'#d29922'),
+           weight:e.status==='adopted'?4:3, dashArray:(e.status==='adopted'||isSub)?null:'6,5'}).addTo(editLayer);
+        pl.on('click',ev=>{ L.DomEvent.stop(ev);
+          if(mode==='cut'){ if(isSub){alert('issue送信済みは取消不可');return;}
+            if(confirm(`この保留接続を取消?\n${e.a.lat.toFixed(4)},${e.a.lon.toFixed(4)} ↔ ${e.b.lat.toFixed(4)},${e.b.lon.toFixed(4)}`)) removeEdit(e.id); }
+          else L.popup().setLatLng(ev.latlng).setContent(`保留接続 <code>${e.id}</code>${isSub?' (issue送信済)':''}<br>✂️切断モードでクリックすると取消`).openOn(map); });
+        pendingPts.push({lat:e.a.lat,lon:e.a.lon,kind:'added',node:e.a.node||null});
+        pendingPts.push({lat:e.b.lat,lon:e.b.lon,kind:'added',node:e.b.node||null});
       }
-      if(e.action==='add_point'&&e.pt){ L.circleMarker([e.pt.lat,e.pt.lon],{radius:5,color:'#3fb950'}).addTo(editLayer); }
-      return `[${e.status[0]}] ${e.action} ${e.id||''}`;
+      if(e.action==='add_point'&&e.pt){
+        const mk=L.circleMarker([e.pt.lat,e.pt.lon],{radius:5,color:isSub?'#1f6feb':'#3fb950',weight:2,fillOpacity:.5});
+        mk.on('click',ev=>{ L.DomEvent.stop(ev);
+          if(mode==='cut'){ if(isSub){alert('issue送信済みは取消不可');return;} if(confirm('この追加点を取消?')) removeEdit(e.id); }
+          else if(mode==='connect'){ addPick({lat:e.pt.lat,lon:e.pt.lon,kind:'added',node:e.id}); }
+          else if(mode==='chain'){ chainClick({lat:e.pt.lat,lon:e.pt.lon,kind:'added',node:e.id}); }
+          else L.popup().setLatLng([e.pt.lat,e.pt.lon]).setContent(`追加点 <code>${e.id}</code><br>${(e.attrs&&e.attrs.name)||''}<br>✂️切断で取消・接続/連続で結合可`).openOn(map); });
+        mk.addTo(editLayer);
+        pendingPts.push({lat:e.pt.lat,lon:e.pt.lon,kind:'added',node:e.id});
+      }
     });
+    const rows=(j.edits||[]).slice(-40).reverse().map(e=>`[${e.status[0]}]${submitted.has(e.id)?'📤':''} ${e.action} ${e.id||''}`);
     $('editlist').textContent=rows.length?rows.join('\n'):'(編集なし)';
   }catch(e){ $('editlist').textContent='編集ログ読込失敗: '+e; }
 }
+
+async function removeEdit(id){
+  const r=await fetch(`/api/edits/${REGION}/${id}`,{method:'DELETE'});
+  const j=await r.json();
+  if(!r.ok){ $('status').textContent='取消失敗: '+(j.detail||r.status); return; }
+  $('status').textContent=`取消: ${j.removed.action} ${id}`;
+  loadEdits();
+}
+async function undoLast(){
+  const j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
+  const submitted=new Set(j.submitted||[]);
+  const eds=(j.edits||[]).filter(e=>e.status==='pending'&&!submitted.has(e.id));
+  if(!eds.length){ $('status').textContent='取消できる保留編集がありません(送信済みは除く)'; return; }
+  endChain();
+  await removeEdit(eds[eds.length-1].id);
+}
+document.addEventListener('keydown', e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'){ e.preventDefault(); undoLast(); } });
 
 async function verifyEdits(){
   $('status').textContent='検証中(モデル再構築・少し待つ)…';

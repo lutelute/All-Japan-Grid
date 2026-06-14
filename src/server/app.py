@@ -128,14 +128,32 @@ async def post_edit(edit: EditIn):
 
 @app.get("/api/edits/{region}")
 async def get_edits(region: str, status: Optional[str] = None):
-    """記録済み編集の一覧(status で絞り込み可)。地図への色分け表示用。"""
-    from src.server import edit_log
+    """記録済み編集の一覧(status で絞り込み可)。地図への色分け表示用。
+
+    submitted=issue送信済みの edit id(取消不可・色分け用)も返す。
+    """
+    from src.server import edit_log, issue_submit
 
     return {
         "region": region,
         "edits": edit_log.list_edits(region, status),
         "counts": edit_log.counts(region),
+        "submitted": sorted(issue_submit.submitted_edit_ids(region)),
     }
+
+
+@app.delete("/api/edits/{region}/{edit_id}")
+async def delete_edit(region: str, edit_id: str):
+    """保留編集を1件取消(undo/反映前の切断)。issue送信済みは取消不可。"""
+    from src.server import edit_log, issue_submit
+
+    submitted = issue_submit.submitted_edit_ids(region)
+    if edit_id in submitted:
+        raise HTTPException(400, "issue送信済みの編集は取消できません(issue側で対応)")
+    removed = edit_log.remove_edit_by_id(region, edit_id, exclude_ids=submitted)
+    if removed is None:
+        raise HTTPException(404, "該当する保留編集が見つかりません")
+    return {"ok": True, "removed": removed}
 
 
 @app.post("/api/verify/{region}")

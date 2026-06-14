@@ -92,6 +92,39 @@ def list_edits(region=None, status=None, path=None):
     return out
 
 
+def remove_edit_by_id(region, edit_id, exclude_ids=None, path=None):
+    """id 指定で1件を物理削除して返す(undo/保留編集の取消)。
+
+    append専用の原則の例外: pending(未採用・未送信)の編集を人間が取り消すための操作。
+    exclude_ids(issue送信済み等)に含まれる id は削除せず None を返す。
+    """
+    p = path or EDITS_PATH
+    if not os.path.exists(p):
+        return None
+    exclude = set(exclude_ids or ())
+    if edit_id in exclude:
+        return None
+    with open(p, encoding="utf-8") as fh:
+        lines = [ln for ln in fh.read().splitlines() if ln.strip()]
+    removed = None
+    kept = []
+    for ln in lines:
+        try:
+            e = json.loads(ln)
+        except json.JSONDecodeError:
+            kept.append(ln)
+            continue
+        if removed is None and e.get("region") == region and e.get("id") == edit_id:
+            removed = e          # この1件を落とす
+            continue
+        kept.append(ln)
+    if removed is not None:
+        with open(p, "w", encoding="utf-8") as fh:
+            for ln in kept:
+                fh.write(ln + "\n")
+    return removed
+
+
 def counts(region=None, path=None):
     """status別の件数(ダッシュボード/検証用)。"""
     from collections import Counter
