@@ -58,6 +58,7 @@
   <div>
     <button id="m_view" class="mode on" onclick="setMode('view')">👆閲覧</button>
     <button id="m_connect" class="mode" onclick="setMode('connect')">🔗接続(2点)</button>
+    <button id="m_chain" class="mode" onclick="setMode('chain')">⛓連続接続</button>
     <button id="m_cut" class="mode" onclick="setMode('cut')">✂️切断(線)</button>
     <button id="m_add" class="mode" onclick="setMode('add')">➕点追加</button>
     <button id="m_attr" class="mode" onclick="setMode('attr')">✎属性</button>
@@ -107,16 +108,35 @@ let snapPts=[], mode='view', pick=[], pickMarkers=[];
 const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
 const $ = id => document.getElementById(id);
 
-function setMode(m){ mode=m; clearPick();
+function setMode(m){ endChain(); mode=m; clearPick();
   document.querySelectorAll('.mode').forEach(b=>b.classList.remove('on'));
   $('m_'+m).classList.add('on');
   const h={view:'地物をクリックで情報表示。島(橙)をクリックすると未接続の理由を確認できます。',
     connect:'繋ぐ2点を順にクリック(最寄りのOSM点/モデル節点に自動スナップ)。確認ダイアログで記録。',
+    chain:'連続接続: 点を順にクリックすると隣り合う点が次々と接続される(回廊を一気に辿る)。モード切替/Escで終了。',
     cut:'誤接続の線をクリックで切断記録(モデル再構築で反映=E8b)。',
     add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
     attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
   $('hint').textContent=h[m]||''; }
 function clearPick(){ pick=[]; pickMarkers.forEach(m=>map.removeLayer(m)); pickMarkers=[]; $('selinfo').textContent=''; }
+
+// ── 連続接続(chain): 点を順にクリックして隣接ペアを次々と記録 ──
+let chainPrev=null, chainCount=0, chainMarkers=[];
+function endChain(){
+  if(chainCount){ $('selinfo').textContent=`連続接続: ${chainCount}本を記録しました`; loadEdits(); }
+  chainPrev=null; chainCount=0;
+  chainMarkers.forEach(m=>map.removeLayer(m)); chainMarkers=[];
+}
+function chainMark(pt,col){ const m=L.circleMarker([pt.lat,pt.lon],{radius:5,color:col,weight:2,fill:false}).addTo(map); chainMarkers.push(m); }
+async function chainClick(pt){
+  if(!chainPrev){ chainPrev=pt; chainMark(pt,'#3fb950'); $('selinfo').textContent=`連続接続: 起点(${pt.kind}) — 次の点をクリック`; return; }
+  const kv=chainPrev.kv||pt.kv||0;
+  await postEdit({action:'connect',a:{node:chainPrev.node,lat:chainPrev.lat,lon:chainPrev.lon},
+    b:{node:pt.node,lat:pt.lat,lon:pt.lon},kv:kv*1000||null,evidence:'osm_visible'}, true);
+  L.polyline([[chainPrev.lat,chainPrev.lon],[pt.lat,pt.lon]],{color:'#d29922',weight:3,dashArray:'6,5'}).addTo(map);
+  chainMark(pt,'#f0c674'); chainCount++; chainPrev=pt;
+  $('selinfo').textContent=`連続接続: ${chainCount}本(続けてクリック / Escで終了)`;
+}
 
 let loadToken=0;
 async function loadRegion(){
@@ -210,8 +230,10 @@ function buildModel(built){
 }
 
 function onModelNode(n){
-  // 島(橙)クリック → 未接続の確認情報。connectモードなら接続候補に追加
-  if(mode==='connect'){ addPick({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000}); return; }
+  // 島(橙)クリック → 未接続の確認情報。connect/chainモードなら接続候補に追加
+  const np={lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000};
+  if(mode==='connect'){ addPick(np); return; }
+  if(mode==='chain'){ chainClick(np); return; }
   const tag = n.main ? '本系統(連結OK)' : `<b style="color:#f0883e">島 #${n.comp}(未接続)</b>`;
   L.popup().setLatLng([n.lat,n.lon]).setContent(
     `モデル節点 <code>${n.id}</code><br>${tag}<br>`
@@ -251,10 +273,14 @@ function addPick(s){
 map.on('click', e=>{
   if(mode==='add'){ addPoint(e.latlng); return; }
   if(mode==='connect'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
-    addPick(s); }
+    addPick(s); return; }
+  if(mode==='chain'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
+    chainClick(s); }
 });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && mode==='chain'){ endChain(); } });
 function onPoint(pt,f){
   if(mode==='connect'){ addPick(pt); return; }
+  if(mode==='chain'){ chainClick(pt); return; }
   if(mode==='attr'){ doAttr(pt,f); return; }
   L.popup().setLatLng([pt.lat,pt.lon]).setContent(
     `OSM変電所 ${pt.node||''}<br>${pt.kv||'?'}kV<br><small>${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}</small>`).openOn(map);
@@ -265,12 +291,13 @@ function onLine(f,latlng){
   L.popup().setLatLng(latlng).setContent(`OSM送電線 ${p.name||p.id||''}<br>${p.voltage||'?'}`).openOn(map);
 }
 
-async function postEdit(body){
+async function postEdit(body, skipReload){
   body.region=REGION; body.user=body.user||'shigenobu';
   const r=await fetch('/api/edits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json();
   if(!r.ok){ alert('編集エラー: '+(j.detail||r.status)); return null; }
-  loadEdits(); return j;
+  if(!skipReload) loadEdits();
+  return j;
 }
 function doConnect(a,b){
   const kv=a.kv||b.kv||0;
