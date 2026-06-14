@@ -136,7 +136,9 @@ async function chainClick(pt){
   const kv=chainPrev.kv||pt.kv||0;
   await postEdit({action:'connect',a:{node:chainPrev.node,lat:chainPrev.lat,lon:chainPrev.lon},
     b:{node:pt.node,lat:pt.lat,lon:pt.lon},kv:kv*1000||null,evidence:'osm_visible'}, true);
-  L.polyline([[chainPrev.lat,chainPrev.lon],[pt.lat,pt.lon]],{color:'#d29922',weight:3,dashArray:'6,5'}).addTo(map);
+  // 仮表示の線は chainMarkers に入れて管理(endChain/undoで消える=旧版は生mapに描き消えなかった)
+  const seg=L.polyline([[chainPrev.lat,chainPrev.lon],[pt.lat,pt.lon]],{color:'#d29922',weight:3,dashArray:'6,5'}).addTo(map);
+  chainMarkers.push(seg);
   chainMark(pt,'#f0c674'); chainCount++; chainPrev=pt;
   $('selinfo').textContent=`連続接続: ${chainCount}本(続けてクリック / Escで終了)`;
 }
@@ -182,7 +184,7 @@ async function loadModel(tk, fresh){
   }catch(e){ $('modelstat').textContent='モデル読込失敗: '+e; }
 }
 
-function isBusbar(f){ return ['busbar','bay','internal'].includes((f.properties||{}).line); }
+function isBusbar(f){ return ['busbar','bay','internal','substation'].includes((f.properties||{}).line); }
 function buildOSM(subs,lines){
   // 送電線=送電回廊(クリックで切断対象・実在の一次根拠)。母線/ベイ(変電所内部結線)は別レイヤへ。
   lineLayer=L.geoJSON(lines,{filter:f=>!isBusbar(f), style:{color:'#8b949e',weight:1.5,opacity:.7},
@@ -324,7 +326,7 @@ function addPoint(latlng){
   const kv=prompt('電圧 kV (例 66, 154, 500・任意):','');
   postEdit({action:'add_point',pt:{lat:latlng.lat,lon:latlng.lng},
     attrs:{power:'substation',name:name||null,voltage:kv?Math.round(parseFloat(kv)*1000):null}});
-  L.circleMarker([latlng.lat,latlng.lng],{radius:5,color:'#3fb950'}).addTo(map);
+  // 描画は loadEdits が editLayer に行う(生mapへの二重描画=undoで消えない を回避)
 }
 function doAttr(pt,f){
   const field=prompt('編集する属性(voltage / name など):','voltage');

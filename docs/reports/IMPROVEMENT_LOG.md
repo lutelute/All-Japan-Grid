@@ -27,6 +27,8 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 - **undo/保留編集の操作**(120c): `edit_log.remove_edit_by_id` + `DELETE /api/edits/{region}/{id}`・GET に submitted(issue送信済み=取消不可)を追加。
   エディタ: ↩直前を取消(⌘Z)・✂️切断モードで**保留の接続線/追加点をクリック→個別取消**・追加点と接続端点を `pendingPts` として**反映前からスナップ対象**に(=新規点に繋げる/誤接続を消せる)
   - 検証: テストedit追加→DELETE取消OK・**issue#28送信済み12件はDELETE 400で保護**。pytest 1103緑・モデル不変
+  - **バグ修正(121b)**: chainの仮線/addPointの点を生mapに直描き→`Ctrl+Z`で消えなかった。chainMarkers管理+loadEdits描画に統一して解消。
+    `line=substation` も母線/ベイレイヤのフィルタに追加(kansai 28・hokuriku 12)
 
 ## 2026-06-14 — **Claude Fable 5** — E12: 接続編集を GitHub issue 化(メモ・レビュー・OSM還元の土台）（120）
 
