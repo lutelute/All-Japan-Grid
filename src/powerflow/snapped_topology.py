@@ -301,7 +301,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
-                          expand_mixed_voltage=True, drop_busbar_bay=False):
+                          expand_mixed_voltage=True, drop_busbar_bay=False,
+                          group_substations=False, group_km=1.0):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -430,6 +431,23 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     sub_coords = []   # (lat, lon, sub_id)
     sub_info = {}     # sub_id -> dict(name, lat, lon, own_cls)
     sub_polys = []    # (geometry dict, sub_id) for polygon-first binding
+
+    # group_substations (P1, owner 2026-06-14「沼津型」): OSMが1変電所を電圧別/
+    # 分割ポリゴンで表す(沼津=66kV+77kVの2ポリゴン)と、線が別sidへ分散束縛され
+    # 構内が島化する。同名(変電所等の接尾辞除去)かつ group_km 内のポリゴンを1つの
+    # canonical sid に統合 → 全ての引込線が同一変電所の電圧別busへ集まり、母線(変圧器
+    # スタブ経由)で繋がる。物理: 同名近接の電圧別ヤードは同一変電所=捏造でない。
+    _gcanon: dict = {}
+    if group_substations:
+        import unicodedata as _udg
+
+        def _gname(s):
+            s = _udg.normalize("NFKC", str(s or "")).replace("ヶ", "ケ")
+            for suf in ("変電所", "変換所", "開閉所", "発電所", "き電区分所",
+                        "変電区分所", "電所"):
+                s = s.replace(suf, "")
+            return "".join(s.split())
+
     for i, feat in enumerate(subs_data["features"]):
         lat, lon = _get_centroid(feat)
         if lat is None:
@@ -438,6 +456,15 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if _freq_excluded(props, freq):
             continue   # not part of this synchronous network
         sid = f"{region}_sub_{i}"
+        if group_substations:
+            gn = _gname(props.get("name"))
+            if gn:
+                prev = _gcanon.get(gn)
+                if prev and (((prev[1] - lat) ** 2 + (prev[2] - lon) ** 2) ** 0.5
+                             * 111.0 <= group_km):
+                    sid = prev[0]            # 既存の同名近接ヤードへ統合
+                else:
+                    _gcanon[gn] = (sid, lat, lon)
         vkv = _parse_voltage_kv(props.get("voltage"))
         # A spurious sub-transmission tag (e.g. 2 kV) on a substation that
         # actually sits on a 66+ kV line creates a huge per-unit mismatch.
@@ -445,12 +472,13 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         # the real level from the connected transmission lines.
         if 0 < vkv < min_voltage_kv:
             vkv = 0.0
-        sub_info[sid] = {"name": props.get("name") or sid, "lat": lat,
-                         "lon": lon, "own_cls": _clean_voltage(vkv)}
-        sub_coords.append((lat, lon, sid))
+        if sid not in sub_info:   # 統合時は最初のヤードの coord/own_cls を温存
+            sub_info[sid] = {"name": props.get("name") or sid, "lat": lat,
+                             "lon": lon, "own_cls": _clean_voltage(vkv)}
+            sub_coords.append((lat, lon, sid))
         if polygon_bind and feat.get("geometry", {}).get("type") in (
                 "Polygon", "MultiPolygon"):
-            sub_polys.append((feat["geometry"], sid))
+            sub_polys.append((feat["geometry"], sid))   # 各ポリゴン→同一sidで束縛
 
     index = _SubIndex(sub_coords)
 

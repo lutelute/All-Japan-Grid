@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — GridStitch P1a: 分割変電所の統合(group_substations) + 島真因の再診断（122）
+
+- 全面改修=GridStitch(計画 `docs/GRIDSTITCH_PLAN.md`)。P1(母線束縛A/B)の第一歩。
+- **P1a `group_substations` opt-in**(snapped_topology・既定off): OSMが1変電所を電圧別/分割ポリゴンで表す
+  (沼津=66kV+77kVの2ポリゴン)場合に、同名(接尾辞除去)かつ `group_km`(1km)内のポリゴンを1 canonical sid へ統合。
+  A/B(tokyo): bus **4215→4194**(分割変電所21件統合)、線 4670→4642。**島は 263→263(Δ0)**。全地域smoke緑・pytest 1103緑。
+- **正直な結果**: 多ポリゴン統合は faithful(沼津は1変電所が正)だが**島削減の梃子ではない**。新鮮ビルドで再診断したところ、
+  島の真因は別: **島変電所173件中、OSM本線2本以上が届くのに degree<2 = 29件**(清水9本/沼津9本/NEC府中5本/富士市5本…)。
+  これは「線が変電所busに束縛されていない」(束縛距離 or 母線が別ノード)状態。**P1b=到達線を電圧別busbarへ束縛**が本丸。
+- 方針: group_substations はボトムアップ計画(P3 STEP1の変電所統合)の土台として保持。committed/スコアカード不変(opt-in)。
+
 ## 2026-06-14 — **Claude Fable 5** — 嶺南変電所の検証(接続は正常)+母線/ベイの分離表示（121）
 
 - オーナー指摘「嶺南変電所はOSMでは素晴らしい構成なのに系統図ではダメ、終点が宙に浮いて繋がっていないのでは」
