@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集ツール①: 接続候補ジェネレータ — 東京79島に候補(strong5/medium33)（113）
+
+- **オーナー新方向(接続編集ツール)に着手**。統合点を調査確定: 人間が承認した接続は
+  `data/{region}_lines_supplement.geojson` に追記(加算専用)→`build_network_snapped`の`_layer()`が
+  既に取込(snapped_topology.py:391-421)。地図UIは`docs/national_map.html`(Leaflet)を足場。
+  enrichments.jsonl(source=manual最優先)はフィールド補完用で、新規ジオメトリはsupplementが自然
+- 候補ジェネレータ `scripts/connection_candidates.py` 新設(**自動では繋がない・捏造禁止の材料提示**):
+  島端点(degree-1 tip)/孤立変電所→方位連続性・同電圧・距離で主系統への候補をランク+strength付与
+- 東京262島→**候補あり79(strong5/medium33/weak41)**。evidence: line_tip_continuation55/isolated_sub_nearest24。
+  strongは福島500kV基幹系(161m align3°/248m align21°)等=これまでのweld候補と整合
+- 次手: ②地図UI(national_map.html拡張=島強調+候補表示+人間が接続を描く→supplement保存) ③builder取込→A/B検証(13b比)
+
 ## 2026-06-14 — **Opus 4.8** — I6-5: 孤立変電所105の真因 — 85島はOSMに送電線なし・吸着漏れは10島（112）
 
 - 孤立変電所(degree-0)105島の最寄りOSM線頂点までの距離: <50m(吸着漏れ濃厚)**10** / 50-150m 7 / 150-500m 3 /
