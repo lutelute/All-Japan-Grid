@@ -71,6 +71,7 @@
   <h3>凡例</h3>
   <div class="legrow"><span class="leg ring"></span>OSM変電所(クリック/スナップ可)
        <span class="lg2" style="background:#8b949e"></span>OSM送電線(実在)</div>
+  <div class="legrow"><span class="lg2" style="background:#6e7681;border-top:1px dashed #6e7681"></span>OSM母線/ベイ=変電所内部(既定OFF・右上で表示)</div>
   <div class="legrow"><span class="leg" style="background:#388bfd"></span>モデル本系統(連結)
        <span class="leg" style="background:#f0883e"></span>モデル島(未接続=要確認)</div>
   <div class="legrow"><span class="lg2" style="background:#2dd4bf"></span>モデル接続線(build後)
@@ -103,7 +104,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   {maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);
 
 // OSMレイヤ(実在=編集対象)とモデルレイヤ(build後=接続確認用)を分離
-let lineLayer=null, subLayer=null;                 // OSM
+let lineLayer=null, subLayer=null, busbarLayer=null;   // OSM
 let mainLayer=null, islandLayer=null, edgeLayer=null;  // モデル
 let editLayer=null, layerCtl=null;
 let snapPts=[], pendingPts=[], mode='view', pick=[], pickMarkers=[];
@@ -158,9 +159,10 @@ async function loadRegion(){
     buildOSM(subs,lines);
     editLayer=L.layerGroup();
     [lineLayer,subLayer,editLayer].forEach(l=>l&&l.addTo(map));
-    layerCtl=L.control.layers(null,
-      {'OSM 送電線':lineLayer,'OSM 変電所':subLayer,'編集(pending/adopted)':editLayer},
-      {collapsed:false, position:'topright'}).addTo(map);
+    const baseOv={'OSM 送電線':lineLayer,'OSM 変電所':subLayer};
+    if(busbarLayer && busbarLayer.getLayers().length) baseOv['OSM 母線/ベイ(変電所内部)']=busbarLayer;
+    baseOv['編集(pending/adopted)']=editLayer;
+    layerCtl=L.control.layers(null, baseOv, {collapsed:false, position:'topright'}).addTo(map);
     if(lines.features.length){ try{map.fitBounds(lineLayer.getBounds().pad(0.05));}catch(e){} }
     $('status').textContent=`${REGION}: OSM変電所${subs.features.length}/送電線${lines.features.length}/スナップ点${snapPts.length}`;
     loadEdits();
@@ -180,11 +182,15 @@ async function loadModel(tk, fresh){
   }catch(e){ $('modelstat').textContent='モデル読込失敗: '+e; }
 }
 
+function isBusbar(f){ return ['busbar','bay','internal'].includes((f.properties||{}).line); }
 function buildOSM(subs,lines){
-  // 送電線(クリックで切断対象・実在の一次根拠)
-  lineLayer=L.geoJSON(lines,{style:{color:'#8b949e',weight:1.5,opacity:.7},
+  // 送電線=送電回廊(クリックで切断対象・実在の一次根拠)。母線/ベイ(変電所内部結線)は別レイヤへ。
+  lineLayer=L.geoJSON(lines,{filter:f=>!isBusbar(f), style:{color:'#8b949e',weight:1.5,opacity:.7},
     onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }});
-  // 線頂点をスナップ点に(OSMの□点をもれなく選択可能に)
+  // 母線/ベイ=変電所の内部配線(嶺南の154本など)。既定OFF・薄い破線で「素晴らしい構成」を必要時のみ表示。
+  busbarLayer=L.geoJSON(lines,{filter:isBusbar, style:{color:'#6e7681',weight:0.8,opacity:.5,dashArray:'2,3'},
+    onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }});
+  // 線頂点をスナップ点に(OSMの□点をもれなく選択可能に・母線/ベイ含む)
   lines.features.forEach(f=>{
     const gs=f.geometry.type==='MultiLineString'?f.geometry.coordinates:[f.geometry.coordinates];
     gs.forEach(seg=>seg.forEach(c=>snapPts.push({lat:c[1],lon:c[0],kind:'vertex'})));

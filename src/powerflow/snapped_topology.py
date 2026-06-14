@@ -301,7 +301,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           min_voltage_kv=22.0, return_geom=False, data_dir=None,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
-                          expand_mixed_voltage=True):
+                          expand_mixed_voltage=True, drop_busbar_bay=False):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -644,6 +644,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             props = feat["properties"]
             if _freq_excluded(props, freq):
                 continue   # not part of this synchronous network (50/60/DC)
+            # 母線/ベイは変電所の内部結線(送電回廊ではない)。opt-inで送電線集合から
+            # 除外すると、multi_voltageの「電圧別bus+変圧器スタブ」が残り、嶺南のような
+            # 大規模変電所が154本の内部線で毛玉化する問題が解ける(オーナー指摘)。
+            # 物理: 引込線は変電所ポリゴンに直接束縛されるので接続は母線非依存。
+            if drop_busbar_bay and props.get("line") in ("busbar", "bay", "internal"):
+                continue
             kv = max(_parse_voltage_kv(props.get("voltage")), 0)
             # Skip non-transmission mistags (known voltage below threshold);
             # keep unknown (0) so unlabelled transmission survives.
