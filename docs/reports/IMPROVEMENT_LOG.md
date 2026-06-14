@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Opus 4.8** — 接続編集ツール③: 接続適用+島削減A/B(apply_connections.py)・プラットフォーム要件追加（115）
+
+- `scripts/apply_connections.py`: 編集ツールのエクスポート(or strong候補)を `data/{region}_lines_supplement.geojson`
+  に加算統合(source=manual・dedup)→島数A/B。**既定は書き込まず検証のみ**(`--apply`で採用)
+- strong5候補でパイプライン検証: **島263→258(Δ-5)**。追加→supplement→builder取込→島削減が端から端まで通ることを確認。
+  物理接続=真・捏造禁止: 採用は人間がOSM地図で実在確認したもののみ
+- **ユーザー新要件(2026-06-14・プラットフォーム化)**: ①全OSM点をもれなく選択可能に ②点追加(地図クリックで
+  緯度経度自動+属性入力) ③誤接続の切断(点-点を切る) ④全編集をログ記録→⑤潮流計算+DB検証→判定 ⑥多ユーザー入力の
+  プラットフォーム。→ 候補承認MVPを超える本格GISエディタ+バックエンド(FastAPI `src/server/app.py`拡張)が必要
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集ツール②: 地図編集UI(OSM下地で候補承認→supplement書き出し)（114）
 
 - `docs/connection_editor.html` 新設。**Leaflet + OSMタイル下地**で、E1の候補JSON

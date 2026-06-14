@@ -96,8 +96,14 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 ゴール: 地形/方位で接続候補を自動提示→**人間がツールで承認・編集**→`data/{region}_lines_supplement.geojson`に追記(加算専用)→builderが取込→OSM還元。物理接続が真・人間が実在確認=捏造でない。
 - [x] E1(113): 接続候補ジェネレータ `scripts/connection_candidates.py`。東京262島→候補79(strong5/medium33/weak41)。統合点=supplement追記→`_layer()`取込・地図UIは`docs/national_map.html`
 - [x] E2(114): 地図編集UI `docs/connection_editor.html`(Leaflet+**OSMタイル下地**で実在確認・候補をクリック承認→supplement GeoJSON書き出し)。`ajgrid map`で配信。残=自由描画(2点クリックで任意接続)は後続
-- [ ] E3: builderが手動supplement接続を取込→A/B検証(島削減・ρ 13b比・AC収束)→before/after図を自動送付→commit
-- [ ] E4: 地形(標高/回廊)データで延長候補を高度化・OSM編集還元(W5)
+- [x] E3(115): `scripts/apply_connections.py`(承認/strong候補→supplement加算統合→島数A/B・既定書込なし)。strong5で島263→258(Δ-5)検証
+
+**プラットフォーム化(ユーザー新要件 2026-06-14「全OSM点を選択可能に+点追加(緯度経度自動+属性)+誤接続の切断+ログ→潮流/DB検証→判定+多ユーザー」「完璧な設計まで実行」)**:
+- [ ] E5: **設計doc** `docs/CONNECTION_EDITOR_DESIGN.md`(アーキ=FastAPIバックエンド+編集ログjsonl+Leafletエディタ+検証判定。多ユーザー対応の段階設計)
+- [ ] E6: **編集ログ基盤** `data/db/connection_edits.jsonl`(append専用・action=connect/disconnect/add_point/set_attr・endpoints/coords/attrs/user/time/status)+FastAPI `POST /api/edits`・`GET /api/edits`
+- [ ] E7: **本格エディタ**(FastAPI配信・全OSM点(変電所+線頂点/鉄塔)をもれなく表示&選択・2点接続・誤接続の切断・点追加(クリックで緯度経度自動+属性フォーム)・属性編集・全操作をログPOST)
+- [ ] E8: **検証→判定** 編集ログを適用→潮流計算(島削減・ρ 13b比・AC収束)+DB整合→pending/adopted/rejected判定。before/after図を自動送付
+- [ ] E9: **多ユーザー対応**(認証/同時編集/レビュー承認フロー・OSM ODbL還元)
 
 ## 夜間強行軍モード（ユーザー指示 2026-06-12 02時「一晩自己ループをかけまくって誰も到達できないところまで。ただし再現性を崩すな」）
 
