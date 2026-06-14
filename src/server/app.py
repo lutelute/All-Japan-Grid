@@ -150,6 +150,25 @@ async def verify_edits(region: str):
         raise HTTPException(500, f"verify failed: {exc}")
 
 
+@app.get("/api/built/{region}")
+async def get_built(region: str):
+    """系統モデル(build後)の接続状態。OSMと並列表示し『繋がっているか』を確認する(E10)。
+
+    節点を島/本系統で色分け+モデルが実際に張った接続線を返す。OSMでは線が見える
+    のにモデルでは島(=未接続)、という乖離をエディタ上で可視化するためのレイヤ。
+    """
+    from src.server import built_view
+
+    try:
+        result = built_view.built_view(region)
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(500, f"built_view failed: {exc}")
+    if result is None:
+        raise HTTPException(404, f"No built model for region '{region}'")
+    return result
+
+
 # ─── Power Flow API ──────────────────────────────────────────────────
 
 

@@ -6,29 +6,42 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-  #map{position:absolute;top:0;bottom:0;left:0;right:360px;cursor:crosshair}
-  #panel{position:absolute;top:0;bottom:0;right:0;width:360px;background:#0d1117;color:#e6edf3;
-         overflow-y:auto;padding:14px;box-sizing:border-box;font-size:13px;line-height:1.5}
-  h2{font-size:15px;margin:2px 0 6px} h3{font-size:13px;margin:10px 0 4px;color:#58a6ff}
+  #map{position:absolute;top:0;bottom:0;left:0;right:370px;cursor:crosshair}
+  #panel{position:absolute;top:0;bottom:0;right:0;width:370px;background:#0d1117;color:#e6edf3;
+         overflow-y:auto;padding:14px;box-sizing:border-box;font-size:13px;line-height:1.55}
+  h2{font-size:15px;margin:2px 0 6px} h3{font-size:13px;margin:12px 0 5px;color:#58a6ff;
+     border-bottom:1px solid #21262d;padding-bottom:3px}
   .muted{color:#8b949e;font-size:12px}
   button{background:#30363d;color:#e6edf3;border:1px solid #444c56;border-radius:6px;
          padding:7px 10px;cursor:pointer;font-size:12px;margin:2px}
+  button:hover{border-color:#8b949e}
   button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
   button.go{background:#238636;border-color:#238636;color:#fff}
-  .leg{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:4px}
-  .lg2{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+  .leg{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:5px}
+  .leg.ring{background:transparent;border:1.5px solid #c9d1d9}
+  .lg2{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px}
+  .legrow{margin:3px 0}
   code{background:#161b22;padding:1px 5px;border-radius:3px;font-size:11px}
   hr{border:0;border-top:1px solid #30363d;margin:10px 0}
-  #editlist{font-family:ui-monospace,monospace;font-size:10px;max-height:200px;overflow:auto;
+  #editlist{font-family:ui-monospace,monospace;font-size:10px;max-height:170px;overflow:auto;
             background:#161b22;padding:6px;border-radius:6px}
-  .pill{display:inline-block;padding:0 5px;border-radius:8px;font-size:10px}
-  .sel{color:#f0c674}
+  .sel{color:#f0c674;min-height:18px;margin-top:4px;font-size:12px}
+  .stat{background:#161b22;border-radius:6px;padding:8px 10px;margin-top:4px}
+  .stat b{font-size:15px}
+  .kbig{color:#f0883e}
+  .step{background:#161b22;border-left:3px solid #1f6feb;padding:6px 9px;margin-top:6px;font-size:12px;border-radius:0 6px 6px 0}
+  /* レイヤ操作パネル(Leaflet control)を暗色化 */
+  .leaflet-control-layers{background:#161b22;color:#e6edf3;border:1px solid #30363d;font-size:12px}
+  .leaflet-control-layers-expanded{padding:8px 10px}
+  .leaflet-control-layers label{margin:2px 0}
 </style></head>
 <body>
 <div id="map"></div>
 <div id="panel">
   <h2>🔌 接続編集プラットフォーム</h2>
-  <div class="muted">OSM地図(下地)で<b>実在を確認</b>しながら編集する(物理接続=真・捏造禁止)。全編集はログに記録→潮流/DB検証で判定。</div>
+  <div class="muted">OSM(実在=下地)と<b>系統モデル(build後)</b>を<b>並列表示</b>。
+    「OSMに線があるのにモデルでは<span style="color:#f0883e">島=未接続</span>」を一目で見つけ、
+    繋ぐ/切る編集をログ→潮流/DB検証で判定する(物理接続=真・捏造禁止)。</div>
 
   <h3>地域</h3>
   <select id="region" style="width:100%;padding:5px;background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:5px">
@@ -37,20 +50,29 @@
     <option>kyushu</option><option>okinawa</option>
   </select>
 
+  <h3>モデル状態(build後)</h3>
+  <div class="stat" id="modelstat">読込中…</div>
+  <div class="muted" style="margin-top:4px">右上のレイヤ操作で OSM / モデル の表示を切替えて比較できます。</div>
+
   <h3>モード</h3>
   <div>
-    <button id="m_view" class="mode on" onclick="setMode('view')">閲覧</button>
+    <button id="m_view" class="mode on" onclick="setMode('view')">👆閲覧</button>
     <button id="m_connect" class="mode" onclick="setMode('connect')">🔗接続(2点)</button>
     <button id="m_cut" class="mode" onclick="setMode('cut')">✂️切断(線)</button>
     <button id="m_add" class="mode" onclick="setMode('add')">➕点追加</button>
     <button id="m_attr" class="mode" onclick="setMode('attr')">✎属性</button>
   </div>
-  <div class="muted" id="hint" style="margin-top:6px"></div>
-  <div class="row sel" id="selinfo"></div>
+  <div class="step" id="hint"></div>
+  <div class="sel" id="selinfo"></div>
 
   <h3>凡例</h3>
-  <div><span class="leg" style="background:#f85149"></span>変電所(点)　<span class="lg2" style="background:#8b949e"></span>送電線</div>
-  <div><span class="lg2" style="background:#d29922;border-top:2px dashed"></span>編集pending　<span class="lg2" style="background:#3fb950"></span>adopted</div>
+  <div class="legrow"><span class="leg ring"></span>OSM変電所(クリック/スナップ可)
+       <span class="lg2" style="background:#8b949e"></span>OSM送電線(実在)</div>
+  <div class="legrow"><span class="leg" style="background:#388bfd"></span>モデル本系統(連結)
+       <span class="leg" style="background:#f0883e"></span>モデル島(未接続=要確認)</div>
+  <div class="legrow"><span class="lg2" style="background:#2dd4bf"></span>モデル接続線(build後)
+       <span class="lg2" style="background:#d29922;border-top:2px dashed #d29922"></span>編集pending
+       <span class="lg2" style="background:#3fb950"></span>adopted</div>
 
   <h3>編集ログ <span class="muted" id="counts"></span></h3>
   <div><button onclick="loadEdits()">再読込</button>
@@ -62,83 +84,170 @@
 <script>
 const qp = new URLSearchParams(location.search);
 let REGION = qp.get('region') || 'tokyo';
-const map = L.map('map').setView([36.2,139.4], 9);
+const map = L.map('map', {preferCanvas:true}).setView([36.2,139.4], 9);
+window.map = map;  // コンソール/デバッグから操作可能に
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   {maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);
 
-let subLayer=null, lineLayer=null, editLayer=null, snapPts=[], mode='view', pick=[];
+// OSMレイヤ(実在=編集対象)とモデルレイヤ(build後=接続確認用)を分離
+let lineLayer=null, subLayer=null;                 // OSM
+let mainLayer=null, islandLayer=null, edgeLayer=null;  // モデル
+let editLayer=null, layerCtl=null;
+let snapPts=[], mode='view', pick=[], pickMarkers=[];
 const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
 const $ = id => document.getElementById(id);
 
-function setMode(m){ mode=m; pick=[]; $('selinfo').textContent='';
+function setMode(m){ mode=m; clearPick();
   document.querySelectorAll('.mode').forEach(b=>b.classList.remove('on'));
   $('m_'+m).classList.add('on');
-  const h={view:'地物をクリックで情報表示',connect:'繋ぐ2点を順にクリック(最寄りOSM点にスナップ)',
-    cut:'切断する線をクリック',add:'地図をクリックで点追加(緯度経度自動)',attr:'変電所をクリックで属性編集'};
+  const h={view:'地物をクリックで情報表示。島(橙)をクリックすると未接続の理由を確認できます。',
+    connect:'繋ぐ2点を順にクリック(最寄りのOSM点/モデル節点に自動スナップ)。確認ダイアログで記録。',
+    cut:'誤接続の線をクリックで切断記録(モデル再構築で反映=E8b)。',
+    add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
+    attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
   $('hint').textContent=h[m]||''; }
+function clearPick(){ pick=[]; pickMarkers.forEach(m=>map.removeLayer(m)); pickMarkers=[]; $('selinfo').textContent=''; }
 
 async function loadRegion(){
-  REGION=$('region').value; pick=[];
-  [subLayer,lineLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
+  REGION=$('region').value; clearPick();
+  [lineLayer,subLayer,mainLayer,islandLayer,edgeLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
+  if(layerCtl){ map.removeControl(layerCtl); layerCtl=null; }
   snapPts=[];
   $('status').textContent=`${REGION}: 読込中…`;
+  $('modelstat').textContent='読込中…';
   try{
-    const [subs,lines]=await Promise.all([
+    const [subs,lines,built]=await Promise.all([
       fetch(`/api/geojson/${REGION}/substations`).then(r=>r.json()),
-      fetch(`/api/geojson/${REGION}/lines`).then(r=>r.json())]);
-    // 送電線(クリックで切断対象)
-    lineLayer=L.geoJSON(lines,{style:{color:'#8b949e',weight:1.5,opacity:.7},
-      onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }}).addTo(map);
-    // 線頂点をスナップ点に
-    lines.features.forEach((f,i)=>{
-      const gs=f.geometry.type==='MultiLineString'?f.geometry.coordinates:[f.geometry.coordinates];
-      gs.forEach(seg=>seg.forEach(c=>snapPts.push({lat:c[1],lon:c[0],kind:'vertex'})));
-    });
-    // 変電所(点・もれなく選択可)
-    subLayer=L.layerGroup();
-    subs.features.forEach(f=>{
-      const c=f.geometry.type==='Point'?f.geometry.coordinates:centroid(f.geometry);
-      if(!c)return;
-      const m=L.circleMarker([c[1],c[0]],{radius:4,color:'#f85149',weight:1,fillOpacity:.7});
-      m.on('click',e=>{L.DomEvent.stop(e); onPoint({lat:c[1],lon:c[0],kind:'sub',
-        node:(f.properties&&(f.properties.id||f.properties.name))||null,kv:KV_OF(f.properties)}, f);});
-      m.addTo(subLayer);
-      snapPts.push({lat:c[1],lon:c[0],kind:'sub',node:(f.properties&&(f.properties.id||f.properties.name))||null,kv:KV_OF(f.properties)});
-    });
-    subLayer.addTo(map);
-    $('status').textContent=`${REGION}: 変電所${subs.features.length} / 送電線${lines.features.length} / スナップ点${snapPts.length}`;
+      fetch(`/api/geojson/${REGION}/lines`).then(r=>r.json()),
+      fetch(`/api/built/${REGION}`).then(r=>r.ok?r.json():null).catch(()=>null)]);
+
+    buildOSM(subs,lines);
+    buildModel(built);
+
+    editLayer=L.layerGroup();
+    // 既定ON: OSM線/OSM変電所/モデル島/編集 。 既定OFF: モデル本系統/モデル接続線(必要時にトグル)
+    [lineLayer,subLayer,islandLayer,editLayer].forEach(l=>l&&l.addTo(map));
+
+    const overlays={};
+    overlays['OSM 送電線'] = lineLayer;
+    overlays['OSM 変電所'] = subLayer;
+    if(islandLayer) overlays['モデル 島(橙・未接続)'] = islandLayer;
+    if(mainLayer)   overlays['モデル 本系統(青)'] = mainLayer;
+    if(edgeLayer)   overlays['モデル 接続線(水)'] = edgeLayer;
+    overlays['編集(pending/adopted)'] = editLayer;
+    layerCtl=L.control.layers(null, overlays, {collapsed:false, position:'topright'}).addTo(map);
+
+    $('status').textContent=`${REGION}: OSM変電所${subs.features.length}/送電線${lines.features.length}/スナップ点${snapPts.length}`;
     if(lines.features.length){ try{map.fitBounds(lineLayer.getBounds().pad(0.05));}catch(e){} }
     loadEdits();
   }catch(e){ $('status').textContent='読込失敗: '+e; }
 }
-function centroid(g){ try{ const pts=(g.type==='Polygon'?g.coordinates[0]:g.coordinates.flat());
-  let x=0,y=0; pts.forEach(p=>{x+=p[0];y+=p[1];}); return [x/pts.length,y/pts.length]; }catch(e){return null;} }
+
+function buildOSM(subs,lines){
+  // 送電線(クリックで切断対象・実在の一次根拠)
+  lineLayer=L.geoJSON(lines,{style:{color:'#8b949e',weight:1.5,opacity:.7},
+    onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }});
+  // 線頂点をスナップ点に(OSMの□点をもれなく選択可能に)
+  lines.features.forEach(f=>{
+    const gs=f.geometry.type==='MultiLineString'?f.geometry.coordinates:[f.geometry.coordinates];
+    gs.forEach(seg=>seg.forEach(c=>snapPts.push({lat:c[1],lon:c[0],kind:'vertex'})));
+  });
+  // 変電所(OSM点・もれなく選択可・中空リングで描画)
+  subLayer=L.layerGroup();
+  subs.features.forEach(f=>{
+    const c=f.geometry.type==='Point'?f.geometry.coordinates:centroid(f.geometry);
+    if(!c || !isFinite(c[0]) || !isFinite(c[1]))return;  // 不正geometryは1件でも全体を止めない
+    const node=(f.properties&&(f.properties.id||f.properties.name))||null;
+    const m=L.circleMarker([c[1],c[0]],{radius:5,color:'#c9d1d9',weight:1.5,fillOpacity:0});
+    m.on('click',e=>{L.DomEvent.stop(e); onPoint({lat:c[1],lon:c[0],kind:'sub',node:node,kv:KV_OF(f.properties)}, f);});
+    m.addTo(subLayer);
+    snapPts.push({lat:c[1],lon:c[0],kind:'sub',node:node,kv:KV_OF(f.properties)});
+  });
+}
+
+function buildModel(built){
+  mainLayer=islandLayer=edgeLayer=null;
+  if(!built){ $('modelstat').innerHTML='<span class="muted">モデル未構築(build_network_snapped 失敗 or 未対応地域)</span>'; return; }
+  // モデル接続線(build後にモデルが実際に張ったedge)
+  edgeLayer=L.layerGroup();
+  (built.edges||[]).forEach(e=>{
+    L.polyline([[e.a[0],e.a[1]],[e.b[0],e.b[1]]],
+      {color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
+  });
+  // 節点(本系統=青・島=橙で連結性を色分け)
+  mainLayer=L.layerGroup(); islandLayer=L.layerGroup();
+  (built.nodes||[]).forEach(n=>{
+    if(!isFinite(n.lat)||!isFinite(n.lon))return;
+    if(n.main){
+      L.circleMarker([n.lat,n.lon],{radius:3,color:'#388bfd',weight:0,fillOpacity:.85})
+        .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
+    }else{
+      // 島=actionable。大きめ橙+白縁で目立たせる
+      const m=L.circleMarker([n.lat,n.lon],{radius:6,color:'#fff',weight:1.5,fillColor:'#f0883e',fillOpacity:.9});
+      m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
+      // 島節点も接続スナップ対象に(繋ぎたい当人)
+      snapPts.push({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000});
+    }
+  });
+  $('modelstat').innerHTML=
+    `<b class="kbig">島 ${built.n_island_nodes}</b> 点 ／ <b style="color:#388bfd">本系統 ${built.main_size}</b> 点`
+    +`<br><span class="muted">連結成分 ${built.n_components} ／ 節点 ${built.n_nodes} ／ モデル接続線 ${built.n_edges}</span>`;
+}
+
+function onModelNode(n){
+  // 島(橙)クリック → 未接続の確認情報。connectモードなら接続候補に追加
+  if(mode==='connect'){ addPick({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000}); return; }
+  const tag = n.main ? '本系統(連結OK)' : `<b style="color:#f0883e">島 #${n.comp}(未接続)</b>`;
+  L.popup().setLatLng([n.lat,n.lon]).setContent(
+    `モデル節点 <code>${n.id}</code><br>${tag}<br>`
+    +`電圧 ${(n.kv||0)/1000||'?'}kV ／ 次数 ${n.deg}<br>`
+    +`<small>${n.lat.toFixed(5)}, ${n.lon.toFixed(5)}</small>`
+    +(n.main?'':'<br><span class="muted">OSMに近接線があれば接続(2点)で繋げます</span>')
+  ).openOn(map);
+}
+
+function centroid(g){ try{
+  // 座標配列を再帰的に [lon,lat] ペアまで平坦化(Polygon/MultiPolygon/入れ子に対応)
+  const pts=[];
+  (function walk(a){ if(!Array.isArray(a))return;
+    if(a.length>=2 && typeof a[0]==='number' && typeof a[1]==='number'){ pts.push(a); return; }
+    a.forEach(walk); })(g.coordinates);
+  if(!pts.length) return null;
+  let x=0,y=0; pts.forEach(p=>{x+=p[0];y+=p[1];});
+  const c=[x/pts.length, y/pts.length];
+  return (isFinite(c[0])&&isFinite(c[1]))?c:null;
+}catch(e){return null;} }
 
 function nearestSnap(latlng){
   let best=null,bd=Infinity;
   const cx=latlng.lng, cy=latlng.lat;
   for(const p of snapPts){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} }
-  // ~120m 以内のみスナップ(度換算おおよそ)
-  return (best && bd < (0.0015)**2) ? best : null;
+  return (best && bd < (0.0015)**2) ? best : null;   // ~120m以内のみスナップ
+}
+
+function addPick(s){
+  pick.push(s);
+  const m=L.circleMarker([s.lat,s.lon],{radius:8,color:'#f0c674',weight:2,fill:false}).addTo(map);
+  pickMarkers.push(m);
+  $('selinfo').textContent=`接続: ${pick.length}点選択 [${pick.map(p=>p.kind).join(', ')}]`;
+  if(pick.length===2){ doConnect(pick[0],pick[1]); clearPick(); }
 }
 
 map.on('click', e=>{
   if(mode==='add'){ addPoint(e.latlng); return; }
   if(mode==='connect'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
-    pick.push(s); $('selinfo').textContent=`接続: ${pick.length}点選択 ${pick.map(p=>p.kind).join(',')}`;
-    L.circleMarker([s.lat,s.lon],{radius:6,color:'#f0c674',fill:false}).addTo(map);
-    if(pick.length===2){ doConnect(pick[0],pick[1]); pick=[]; } }
+    addPick(s); }
 });
 function onPoint(pt,f){
-  if(mode==='connect'){ pick.push(pt); $('selinfo').textContent=`接続: ${pick.length}点 ${pick.map(p=>p.kind).join(',')}`;
-    if(pick.length===2){ doConnect(pick[0],pick[1]); pick=[]; } return; }
+  if(mode==='connect'){ addPick(pt); return; }
   if(mode==='attr'){ doAttr(pt,f); return; }
-  L.popup().setLatLng([pt.lat,pt.lon]).setContent(`変電所 ${pt.node||''}<br>kv${pt.kv||'?'}<br><small>${pt.lat.toFixed(5)},${pt.lon.toFixed(5)}</small>`).openOn(map);
+  L.popup().setLatLng([pt.lat,pt.lon]).setContent(
+    `OSM変電所 ${pt.node||''}<br>${pt.kv||'?'}kV<br><small>${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}</small>`).openOn(map);
 }
 function onLine(f,latlng){
   if(mode==='cut'){ doCut(f,latlng); return; }
   const p=f.properties||{};
-  L.popup().setLatLng(latlng).setContent(`線 ${p.name||p.id||''}<br>v${p.voltage||'?'}`).openOn(map);
+  L.popup().setLatLng(latlng).setContent(`OSM送電線 ${p.name||p.id||''}<br>${p.voltage||'?'}`).openOn(map);
 }
 
 async function postEdit(body){
@@ -150,7 +259,7 @@ async function postEdit(body){
 }
 function doConnect(a,b){
   const kv=a.kv||b.kv||0;
-  if(!confirm(`接続を記録?\n${a.kind}(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ ${b.kind}(${b.lat.toFixed(4)},${b.lon.toFixed(4)})\nkv${kv||'?'}`)) return;
+  if(!confirm(`接続を記録?\n${a.kind}(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ ${b.kind}(${b.lat.toFixed(4)},${b.lon.toFixed(4)})\n${kv||'?'}kV\n\n※実在(OSM線・同電圧)の根拠を確認のこと`)) return;
   postEdit({action:'connect',a:{node:a.node,lat:a.lat,lon:a.lon},b:{node:b.node,lat:b.lat,lon:b.lon},kv:kv*1000||null,evidence:'osm_visible'});
 }
 function doCut(f,latlng){
@@ -169,7 +278,7 @@ function addPoint(latlng){
 function doAttr(pt,f){
   const field=prompt('編集する属性(voltage / name など):','voltage');
   if(!field) return;
-  const value=prompt(`${field} の新しい値:`, field==='voltage'?'':'');
+  const value=prompt(`${field} の新しい値:`, '');
   if(value===null) return;
   const fk=(f.properties&&(f.properties.id||f.properties['@id']))||(`pt:${pt.lat},${pt.lon}`);
   let v=value; if(field==='voltage') v=Math.round(parseFloat(value)*1000);
@@ -180,9 +289,8 @@ async function loadEdits(){
   try{
     const j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
     $('counts').textContent=JSON.stringify(j.counts||{});
-    editLayer&&map.removeLayer(editLayer); editLayer=L.layerGroup().addTo(map);
+    if(!editLayer){ editLayer=L.layerGroup().addTo(map); } else { editLayer.clearLayers(); }
     const rows=(j.edits||[]).slice(-40).reverse().map(e=>{
-      // connect/disconnect を地図に描画
       if(e.action==='connect'&&e.a&&e.b){
         L.polyline([[e.a.lat,e.a.lon],[e.b.lat,e.b.lon]],
           {color:e.status==='adopted'?'#3fb950':'#d29922',weight:e.status==='adopted'?4:2,
@@ -205,6 +313,7 @@ async function verifyEdits(){
     alert(`検証結果 (${REGION})\n島(連結成分): ${j.islands_before} → ${j.islands_after}  Δ=${j.delta_islands}\n`
       +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
       +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)`);
+    loadRegion();  // モデル再読込で島の変化を地図に反映
   }catch(e){ $('status').textContent='検証失敗: '+e; }
 }
 

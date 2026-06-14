@@ -103,7 +103,9 @@ PR #14マージで合流した別開発UCの資産: `src/uc/`(capacity_bridge=UC
 - [x] E6(116): **編集ログ基盤** `src/server/edit_log.py`(append専用 `data/db/connection_edits.jsonl`・validate/list/counts)+FastAPI `POST /api/edits`・`GET /api/edits/{region}`。round-trip/import検証済
 - [x] E7(117): **本格エディタ** `src/server/templates/editor.html`+`/editor`(FastAPI配信)。全OSM点(変電所+全線頂点)をスナップ選択・🔗接続(2点)・✂️切断(線)・➕点追加(緯度経度自動+属性)・✎属性編集→全操作`POST /api/edits`。実地検証済(POST/GET動作)。残=自由描画の高度化・大量点クラスタリング
 - [x] E8(118): **検証→判定(島削減A/B)** `src/server/edit_apply.py`+`POST /api/verify/{region}`+エディタ検証ボタン。編集を一時適用→build→島数before/after。strong2件で島263→261(Δ-2)検証。核心ループ完成
+- [x] E10(119): **OSM⇄系統モデルの並列表示・接続性可視化**(オーナー指示「OSMと現状系統が並列で見えないと繋がっているか確認できない」)。`src/server/built_view.py`+`GET /api/built/{region}`(build後の節点を本系統/島で色分け+モデル接続線+連結性サマリ)。`editor.html`をOSM層(灰線+中空リング変電所)とモデル層(青=本系統・橙=島・水=接続線)の独立トグル(`L.control.layers`)に全面改修。島クリックで未接続理由表示。**centroid()のMultiPolygon NaNバグ修正**(再帰平坦化+isFiniteガード=1件の不正geometryで全描画が止まる事象を解消)。tokyo島526可視化・pytest 1103緑・モデル不変
 - [ ] E8b: disconnect→builder cut機構(`build_network_snapped(cuts=)`で該当edge非生成)・set_attr→enrichments反映・検証にρ13b比/AC収束も追加・status自動判定(adopted/rejected)・before/after図自動送付
+- [ ] E11: 島クリック→近接OSM線/端点を自動ハイライト(接続候補を距離・方位つきで提示)・接続記録後そのまま再検証→島Δを地図に即反映するワンクリック導線
 - [ ] E9: **多ユーザー対応**(認証/同時編集/レビュー承認フロー・OSM ODbL還元)
 
 ## 夜間強行軍モード（ユーザー指示 2026-06-12 02時「一晩自己ループをかけまくって誰も到達できないところまで。ただし再現性を崩すな」）

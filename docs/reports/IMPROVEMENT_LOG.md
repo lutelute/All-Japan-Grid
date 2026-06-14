@@ -7,6 +7,25 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-14 — **Claude Fable 5** — 接続編集プラットフォーム E10: OSM⇄系統モデルの並列表示・接続性可視化（119）
+
+- **動機(オーナー指示)**: 「OSMのデータと今現状の系統のデータが並列で見えないと確認ができない。
+  つながっているかどうか確認できない」。従来エディタはOSM(変電所・線)だけを表示し、
+  **build後の系統モデルがどう繋がっているか(=島か本系統か)が見えなかった**
+- `src/server/built_view.py` 新設: `build_network_snapped` の結果(snapped topology)を
+  節点(本系統/島で色分け)+モデル接続線+連結性サマリとして返す。`networkx`連結成分で main(最大)/island判定
+- FastAPI `GET /api/built/{region}` 追加(app.py)。tokyo=4215節点/4670接続線/263成分/本系統3689/**島526**(正準263成分と一致)・約2秒
+- `editor.html` 全面改修(並列レイヤ):
+  - **OSM層**(実在=編集対象): 送電線(灰)・変電所(中空リング・全点スナップ可)
+  - **モデル層**(build後=接続確認): 本系統(青)・**島(橙=未接続・要確認)**・モデル接続線(水)
+  - `L.control.layers`で各層を独立トグル → 「OSMに線があるのにモデルでは島(橙)」を直接比較できる
+  - パネルに「モデル状態(島N/本系統M/成分K)」常時表示・島クリックで未接続理由をポップアップ・`preferCanvas`で大規模描画
+- **バグ修正(丁寧化)**: 旧`centroid()`は`.flat()`1段のみでMultiPolygon変電所(tokyo 1件)を`[NaN,NaN]`化→
+  `L.circleMarker`例外で**全レンダリング停止**していた。座標ペアまで再帰平坦化+`isFinite`ガードで堅牢化
+  (1件の不正geometryで全体が止まらない)。これが「微妙に使いづらい」の一因
+- full pytest 1103 passed(3 skipped)・回帰なし。**モデル/スコアカード不変**(可視化のみ・潮流計算に非接触)
+- 残: 島クリック→近接OSM線ハイライト(接続候補提示)・接続後の自動再検証UI・E8b(builder cut)・E9(多ユーザー)
+
 ## 2026-06-14 — **Opus 4.8** — 接続編集プラットフォーム E8: 検証→判定(編集適用→島削減A/B)・核心ループ完成（118）
 
 - `src/server/edit_apply.py`: pending編集を一時data_dirに適用(connect→lines_supplement / add_point→subs_supplement・
