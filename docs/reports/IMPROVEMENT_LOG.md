@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — B Phase2: node-topology+変電所束縛で島A/B(全国)（130）
+
+- `scripts/b_phase2_analyze.py`: node-topology(共有ノード=正確な線接続)+変電所束縛(point-in-polygon)で島数を測り現モデルとA/B。結果 `docs/reports/b_phase2_2026-06-15.json`
+- **全国ネット −291島(B優位)**。だが一様でない:
+  - **B圧勝**: 四国 99 vs 306(−207)・中部 352 vs 550(−198)・北陸 96 vs 178(−82)・東京 516 vs 526(−10) = **現スナップが線接続を取りこぼしていた所をnode-topologyが正確化**
+  - **B悪化**: 関西 438 vs 343(+95)・中国(+45)・沖縄(+42)・九州(+18)・東北(+5)・北海道(+1)
+- **悪化の原因(重要)**: Phase2の変電所束縛が **point-in-polygon+150mのみ**=現モデル(半径2.5km endpoint_snap+名前束縛)より**厳しすぎる**。
+  線が変電所の少し外で終わる所をB島と誤判定。**node-topology自体の欠点でなく束縛方式の差**。沖縄は離島散在で特に不利
+- **結論**: node-topologyの線接続は明確に有効(四国/中部で大幅島減)。正しいB = **node-sharing線 + 現モデルの寛容な変電所束縛**の組合せ。
+  → **Phase3** = snapped_topologyの線-線接続(座標スナップ)をnode-sharingに置換し、**変電所束縛は現行維持**→ρ13b比/AC/島でA/B。大改修につき慎重に(夜間の盲目置換はしない)
+- 本番モデル/スコアカード不変(分析のみ)。pytest対象外(standalone)
+
 ## 2026-06-15 — **Claude Fable 5** — B Phase1完了: 全国を生OSM(ノード参照)で取得・連結性測定（129）
 
 - オーナー指示「サーバー等で一晩かけてB実施」→ `scripts/b_overnight.py` で全国10地域を夜間取得(tile失敗0)。
