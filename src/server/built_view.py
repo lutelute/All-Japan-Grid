@@ -50,7 +50,12 @@ def built_view(region, data_dir=None, join_untagged_tips=False):
                         [round(pos[b][0], 5), round(pos[b][1], 5)]]
             else:
                 continue
-        edges.append({"path": path, "main": (a in main and b in main)})
+        # 端点(変電所/junction)座標を round5 で添える。エディタの✂切断は a/b を
+        # disconnect 編集に載せ、builder の cut機構(端点座標一致)が同じ精度で照合する。
+        ea = [round(pos[a][0], 5), round(pos[a][1], 5)] if a in pos else None
+        eb = [round(pos[b][0], 5), round(pos[b][1], 5)] if b in pos else None
+        edges.append({"path": path, "main": (a in main and b in main),
+                      "a": ea, "b": eb})
     return {
         "region": region, "n_nodes": len(nodes), "n_edges": len(edges),
         "n_components": len(comps), "main_size": len(main),

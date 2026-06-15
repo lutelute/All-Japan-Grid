@@ -293,6 +293,48 @@ def _resolve_db(db):
     return GridDatabase(db)
 
 
+def _normalize_cuts(cuts):
+    """編集の disconnect を切断キー集合へ正規化。
+
+    各 cut = 2端点の座標ペア。受理形:
+      [[lat,lon],[lat,lon]] / [(lat,lon),(lat,lon)] / {"a":{lat,lon},"b":{lat,lon}}。
+    端点は round(.,5)(built_view と同一精度)・順序非依存(frozenset)で照合する。
+    真は物理接続=誤接続(合成橋/誤スナップ/手動誤接続)の除去のみに使う(加算でなく抑制)。
+    """
+    out = set()
+    for c in cuts or ():
+        try:
+            if isinstance(c, dict):
+                a, b = c.get("a"), c.get("b")
+                pa = (round(float(a["lat"]), 5), round(float(a["lon"]), 5))
+                pb = (round(float(b["lat"]), 5), round(float(b["lon"]), 5))
+            else:
+                (la1, lo1), (la2, lo2) = c
+                pa = (round(float(la1), 5), round(float(lo1), 5))
+                pb = (round(float(la2), 5), round(float(lo2), 5))
+        except (KeyError, TypeError, ValueError):
+            continue
+        out.add(frozenset((pa, pb)))
+    return out
+
+
+def _load_cut_file(data_dir, region):
+    """data_dir の {region}_cuts.json(切断の永続キュレーション)を読む。
+
+    supplement と対をなす加算専用ファイル(git追跡・来歴つき)。存在しなければ空=
+    本番モデルは不変(切断を adopt して初めてファイルが生まれモデルに反映される)。
+    各要素 = {"a":{lat,lon}, "b":{lat,lon}, "edit_id":..., "note":...}。
+    """
+    p = os.path.join(data_dir, f"{region}_cuts.json")
+    if not os.path.exists(p):
+        return []
+    try:
+        d = json.load(open(p, encoding="utf-8"))
+        return d.get("cuts", d) if isinstance(d, dict) else d
+    except (OSError, ValueError):
+        return []
+
+
 def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           polygon_bind=True, poly_edge_km=0.15,
                           fallback_snap_km=0.4, fallback_endpoint_km=0.6,
@@ -303,7 +345,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
                           expand_mixed_voltage=True, drop_busbar_bay=False,
                           group_substations=False, group_km=1.0,
-                          join_untagged_tips=False):
+                          join_untagged_tips=False, cuts=None):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -1383,6 +1425,26 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 ))
             except (ValueError, TypeError):
                 pass
+
+    # E8b: 切断(disconnect)機構 — 誤接続として人間が確認した枝を生成しない。
+    # built_view と同一の端点座標(変電所/junction位置を round(.,5))で照合するので、
+    # エディタで見えている枝とモデルの枝が一対一で対応する。捏造の逆操作(抑制)・可逆
+    # (編集を取消せば次回build で枝は復活)。基底extract/supplement は一切変異しない。
+    cutset = _normalize_cuts(list(cuts or []) + _load_cut_file(data_dir, region))
+    if cutset:
+        pos = {s.id: (round(s.latitude, 5), round(s.longitude, 5))
+               for s in net.substations}
+        kept, n_cut = [], 0
+        for ln in net.transmission_lines:
+            a, b = ln.from_substation_id, ln.to_substation_id
+            if (a in pos and b in pos
+                    and frozenset((pos[a], pos[b])) in cutset):
+                n_cut += 1
+                continue
+            kept.append(ln)
+        net.transmission_lines = kept
+        net._rebuild_indices()
+        net.metadata["cut_lines"] = str(n_cut)
 
     if return_geom:
         return net, geom

@@ -130,7 +130,7 @@ function setMode(m){ endChain(); mode=m; clearPick();
   const h={view:'地物をクリックで情報表示。島(橙)をクリックすると未接続の理由を確認できます。',
     connect:'繋ぐ2点を順にクリック(最寄りのOSM点/モデル節点に自動スナップ)。確認ダイアログで記録。',
     chain:'連続接続: 点を順にクリックすると隣り合う点が次々と接続される(回廊を一気に辿る)。モード切替/Escで終了。',
-    cut:'誤接続の線をクリックで切断記録(モデル再構築で反映=E8b)。',
+    cut:'誤接続を切断記録。水色の<b>モデル枝</b>をクリック→端点で切断(builder cutが該当枝を生成しない=E8b)。灰のOSM線クリックはOSM側の記録。検証/反映で消える(可逆)。',
     add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
     attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
   $('hint').textContent=h[m]||''; }
@@ -287,7 +287,10 @@ function buildModel(built){
   edgeLayer=L.layerGroup();
   (built.edges||[]).forEach(e=>{
     const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
-    if(pts&&pts.length>=2) L.polyline(pts,{color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
+    if(!pts||pts.length<2) return;
+    const pl=L.polyline(pts,{color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
+    // ✂切断モードでモデル枝をクリック→端点(a,b)で disconnect 記録(builder cutが同精度で照合)
+    if(e.a&&e.b) pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev); cutModelEdge(e); } });
   });
   // 節点(本系統=青・島=橙で連結性を色分け)
   mainLayer=L.layerGroup(); islandLayer=L.layerGroup();
@@ -395,6 +398,15 @@ function doCut(f,latlng){
   $('status').textContent=`✂️ 切断記録: ${p.name||key}(赤✂で表示・取消は✂モードでクリック)`;
   postEdit({action:'disconnect',line_key:String(key),a:{lat:latlng.lat,lon:latlng.lng},note:p.name||''});
 }
+function cutModelEdge(e){
+  // モデル枝(系統レイヤ)の切断: 端点 a/b を載せると builder cut機構が該当枝を生成しなくなる(E8b)
+  const a={lat:e.a[0],lon:e.a[1]}, b={lat:e.b[0],lon:e.b[1]};
+  if(!confirm(`このモデル枝(誤接続)を切断記録?\n(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ (${b.lat.toFixed(4)},${b.lon.toFixed(4)})\n\n検証/反映で枝が消えます(可逆)`)) return;
+  try{ const fl=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:'#da3633',weight:4,opacity:.9}).addTo(map);
+       setTimeout(()=>map.removeLayer(fl),1400); }catch(_){}
+  $('status').textContent='✂️ モデル枝の切断を記録(検証/反映で枝が消える・取消は✂で✂マーカーをクリック)';
+  postEdit({action:'disconnect',a:a,b:b,note:'model-edge cut'});
+}
 function addPoint(latlng){
   const name=prompt('点(変電所)の名称(任意):','');
   if(name===null) return;
@@ -486,8 +498,8 @@ async function verifyEdits(){
     lastVerify=j;  // issue本文に載せる
     $('status').textContent=`検証: 島 ${j.islands_before}→${j.islands_after} (Δ${j.delta_islands})`;
     alert(`検証結果 (${REGION})\n島(連結成分): ${j.islands_before} → ${j.islands_after}  Δ=${j.delta_islands}\n`
-      +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
-      +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)\n\n`
+      +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point} / ✂切断 ${j.applied.disconnect}\n`
+      +`(set_attr ${j.applied.set_attr_skipped}件は別経路)\n\n`
       +`※これは一時計算です。モデルに残すには「⬇反映」を押してください。`);
   }catch(e){ $('status').textContent='検証失敗: '+e; }
 }
@@ -500,10 +512,10 @@ async function adoptEdits(){
     const r=await fetch(`/api/adopt/${REGION}`,{method:'POST'});
     const j=await r.json();
     if(!r.ok){ $('status').textContent='反映失敗: '+(j.detail||r.status); return; }
-    $('status').textContent=`反映完了: connect ${j.applied.connect}/add_point ${j.applied.add_point} → 連結成分 ${j.islands_now}・本系統 ${j.main_now}`;
-    alert(`反映完了 (${REGION})\nconnect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
+    $('status').textContent=`反映完了: connect ${j.applied.connect}/add_point ${j.applied.add_point}/✂切断 ${j.applied.disconnect} → 連結成分 ${j.islands_now}・本系統 ${j.main_now}`;
+    alert(`反映完了 (${REGION})\nconnect ${j.applied.connect} / add_point ${j.applied.add_point} / ✂切断 ${j.applied.disconnect}\n`
       +`現在: 連結成分 ${j.islands_now} / 本系統 ${j.main_now}\n`
-      +`supplement: 線${j.lines_supplement} / 変電所${j.subs_supplement}\n\nモデルを再読込して反映を表示します。`);
+      +`supplement: 線${j.lines_supplement} / 変電所${j.subs_supplement} / cuts ${j.cuts}\n\nモデルを再読込して反映を表示します。`);
     loadRegion();   // built再構築(キャッシュ無効化済)で反映を地図に表示
   }catch(e){ $('status').textContent='反映失敗: '+e; }
 }

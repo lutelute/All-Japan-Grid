@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — E8b: disconnect→builder cut機構(誤接続の切断をモデルに反映)（135）
+
+- オーナー指示「Eトラックのエディタ強化に進める」。接続編集の**切断(disconnect)経路**が未実装だった(connect=supplement+adoptは完成、cutは件数報告のみskip)を完成。
+- **builder cut機構**: `build_network_snapped(cuts=)` を新設。post-build で各枝の端点座標(変電所/junction位置を round5=built_viewと同一精度)で照合し、誤接続枝を生成しない。**捏造の逆操作(加算でなく抑制)**・基底extract/supplement不変・可逆(編集取消→次build で枝復活)。
+- **永続化(supplementと対称)**: `{region}_cuts.json`(加算専用・git追跡・来歴つき)を builder が自動読込。**absent-by-default=本番モデル完全不変**(切断をadoptして初めてファイルが生まれ反映)。`edit_apply` の verify(一時)/adopt(永続)が disconnect を honor。
+- **UI連結**: `built_view` が各枝に端点 `a`/`b`(round5)を添付 → editor の✂切断モードで**水色のモデル枝をクリック→`disconnect{a,b}`** を記録(builder cutが同精度で照合)。検証/反映ダイアログに✂切断件数を表示。
+- **テスト新設** `tests/test_edit_cut.py`(7件): _normalize_cuts(list/dict/順序非依存/不正skip)・指定枝のみ除去・無関係枝不変・cuts.json自動読込・**absent=no-op**(安全性)・座標必須・verify適用。
+- **pytest 1110緑**(1103+7)。okinawa exact pin不変=`cuts=None`は完全no-op(本番不変)を回帰で保証。**モデル/スコアカード不変**(cutsファイル不在)。
+- 残(E8b): set_attr→enrichments・verifyにρ13b比/AC収束・status自動判定(adopted/rejected)・before/after図自動送付。E11=島クリック→AI候補ハイライト。接続編集ループが connect/cut 両方向で対称に完成。
+
 ## 2026-06-16 — **Claude Opus 4.8** — 標準ツール(osmnx)で接続を独立検証: 我々の座標スナップが優位・取りこぼし無し（134）
 
 - オーナー質問「点と線をつなぐpythonツールは無いのか / もしくは全てAI判断」への実証回答(`scripts/osmnx_ab.py`)。
