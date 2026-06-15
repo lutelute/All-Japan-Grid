@@ -48,20 +48,22 @@ def fetch_power_ways(bbox, cache_key=None, timeout=110):
          f'way["power"="substation"]({s},{w},{n},{e});'
          f"); out body; >; out skel qt;")
     last = None
-    for ep in ENDPOINTS:
-        try:
-            r = requests.post(ep, data={"data": q}, headers={"User-Agent": UA}, timeout=timeout)
-            if r.status_code == 200:
-                data = r.json()
-                if cache_key:
-                    with open(cpath, "w", encoding="utf-8") as fh:
-                        json.dump(data, fh, ensure_ascii=False)
-                return data
-            last = f"{ep.split('/')[2]} HTTP {r.status_code}"
-        except Exception as exc:   # noqa: BLE001
-            last = f"{ep.split('/')[2]} {str(exc)[:60]}"
-        time.sleep(2)
-    raise SystemExit(f"Overpass到達不可(最後: {last})。時間をおいて再試行。")
+    for attempt in range(3):              # エンドポイント一巡を最大3回(夜間の過負荷耐性)
+        for ep in ENDPOINTS:
+            try:
+                r = requests.post(ep, data={"data": q}, headers={"User-Agent": UA}, timeout=timeout)
+                if r.status_code == 200:
+                    data = r.json()
+                    if cache_key:
+                        with open(cpath, "w", encoding="utf-8") as fh:
+                            json.dump(data, fh, ensure_ascii=False)
+                    return data
+                last = f"{ep.split('/')[2]} HTTP {r.status_code}"
+            except Exception as exc:   # noqa: BLE001
+                last = f"{ep.split('/')[2]} {str(exc)[:60]}"
+            time.sleep(3)
+        time.sleep(20 * (attempt + 1))    # 一巡失敗→バックオフして再挑戦
+    raise RuntimeError(f"Overpass到達不可(最後: {last})")
 
 
 def build_node_topology(data):
