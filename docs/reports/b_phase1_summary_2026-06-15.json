@@ -1,0 +1,232 @@
+[
+ {
+  "region": "okinawa",
+  "tiles": 4,
+  "tiles_failed": 0,
+  "osm_ways": 256,
+  "osm_nodes": 1889,
+  "connection_points": 123,
+  "line_components": 77,
+  "largest_component": 37,
+  "way_kinds": {
+   "substation": 57,
+   "minor_line": 82,
+   "line": 107,
+   "cable": 10
+  },
+  "current_model": {
+   "subs": 99,
+   "lines": 114,
+   "components": 6,
+   "largest": 94,
+   "island_nodes": 5
+  }
+ },
+ {
+  "region": "shikoku",
+  "tiles": 4,
+  "tiles_failed": 0,
+  "osm_ways": 1728,
+  "osm_nodes": 16997,
+  "connection_points": 1170,
+  "line_components": 405,
+  "largest_component": 944,
+  "way_kinds": {
+   "line": 1429,
+   "substation": 259,
+   "minor_line": 22,
+   "cable": 18
+  },
+  "current_model": {
+   "subs": 717,
+   "lines": 733,
+   "components": 55,
+   "largest": 411,
+   "island_nodes": 306
+  }
+ },
+ {
+  "region": "hokuriku",
+  "tiles": 4,
+  "tiles_failed": 0,
+  "osm_ways": 3256,
+  "osm_nodes": 26766,
+  "connection_points": 2977,
+  "line_components": 534,
+  "largest_component": 1650,
+  "way_kinds": {
+   "line": 2167,
+   "substation": 260,
+   "minor_line": 823,
+   "cable": 6
+  },
+  "current_model": {
+   "subs": 775,
+   "lines": 832,
+   "components": 59,
+   "largest": 597,
+   "island_nodes": 178
+  }
+ },
+ {
+  "region": "chugoku",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 4077,
+  "osm_nodes": 41109,
+  "connection_points": 2994,
+  "line_components": 924,
+  "largest_component": 984,
+  "way_kinds": {
+   "line": 3015,
+   "substation": 556,
+   "cable": 91,
+   "minor_line": 415
+  },
+  "current_model": {
+   "subs": 1582,
+   "lines": 1743,
+   "components": 87,
+   "largest": 1375,
+   "island_nodes": 207
+  }
+ },
+ {
+  "region": "kansai",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 5083,
+  "osm_nodes": 47713,
+  "connection_points": 3732,
+  "line_components": 1250,
+  "largest_component": 2868,
+  "way_kinds": {
+   "line": 3906,
+   "substation": 885,
+   "cable": 93,
+   "minor_line": 199
+  },
+  "current_model": {
+   "subs": 2292,
+   "lines": 2537,
+   "components": 152,
+   "largest": 1949,
+   "island_nodes": 343
+  }
+ },
+ {
+  "region": "kyushu",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 4229,
+  "osm_nodes": 42912,
+  "connection_points": 2701,
+  "line_components": 1215,
+  "largest_component": 1042,
+  "way_kinds": {
+   "substation": 796,
+   "line": 3106,
+   "cable": 285,
+   "minor_line": 42
+  },
+  "current_model": {
+   "subs": 1749,
+   "lines": 1940,
+   "components": 80,
+   "largest": 1550,
+   "island_nodes": 199
+  }
+ },
+ {
+  "region": "chubu",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 8704,
+  "osm_nodes": 83637,
+  "connection_points": 6480,
+  "line_components": 1707,
+  "largest_component": 2911,
+  "way_kinds": {
+   "line": 6123,
+   "substation": 1122,
+   "cable": 75,
+   "minor_line": 1384
+  },
+  "current_model": {
+   "subs": 3069,
+   "lines": 3298,
+   "components": 271,
+   "largest": 2519,
+   "island_nodes": 550
+  }
+ },
+ {
+  "region": "tohoku",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 7530,
+  "osm_nodes": 64539,
+  "connection_points": 6299,
+  "line_components": 1149,
+  "largest_component": 5487,
+  "way_kinds": {
+   "line": 6576,
+   "substation": 883,
+   "minor_line": 5,
+   "cable": 66
+  },
+  "current_model": {
+   "subs": 1990,
+   "lines": 2231,
+   "components": 81,
+   "largest": 1820,
+   "island_nodes": 170
+  }
+ },
+ {
+  "region": "hokkaido",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 4786,
+  "osm_nodes": 46334,
+  "connection_points": 4461,
+  "line_components": 557,
+  "largest_component": 3439,
+  "way_kinds": {
+   "line": 3873,
+   "substation": 473,
+   "cable": 373,
+   "minor_line": 67
+  },
+  "current_model": {
+   "subs": 836,
+   "lines": 919,
+   "components": 37,
+   "largest": 760,
+   "island_nodes": 76
+  }
+ },
+ {
+  "region": "tokyo",
+  "tiles": 9,
+  "tiles_failed": 0,
+  "osm_ways": 10390,
+  "osm_nodes": 72583,
+  "connection_points": 6113,
+  "line_components": 2031,
+  "largest_component": 5888,
+  "way_kinds": {
+   "line": 7814,
+   "substation": 1686,
+   "minor_line": 404,
+   "cable": 486
+  },
+  "current_model": {
+   "subs": 4215,
+   "lines": 4670,
+   "components": 263,
+   "largest": 3689,
+   "island_nodes": 526
+  }
+ }
+]
