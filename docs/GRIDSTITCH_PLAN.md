@@ -105,6 +105,7 @@ STEP 6  chain collapse/jct昇格 : 現行踏襲(degree≥3の実タップのみ�
 **提供形態**:
 - サーバ(主): `ajgrid stitch serve --port 8080`(= uvicorn src.server.app:app)で `/editor` 配信。
 - CLI(ヘッドレス): `ajgrid stitch` 配下に `log`/`apply`/`verify`/`issue`/`replay`。`src/cli.py` の subparsers に1つ追加するのみ(新パッケージ不要)。
+- **SubScope(変電所構造ビューア)**: `scripts/substation_scope.py --region R --name N` で (A)OSM実構造図 + (B)単線結線図(SLD draft) を生成(電圧色分け・カスケード変圧器・忠実層保持)。設計確認・点検・LINE報告に使う(台帳123)。
 - doc: `docs/GRIDSTITCH.md`(`CONNECTION_EDITOR_DESIGN.md` を改名/参照)正本化、READMEに独立節。
 
 **リリース単位**: GridStitch v0.1(編集→ログ→検証→issue→採用) → v0.2(cut機構E8b・属性検証・ρ/AC連動・status自動判定) → v0.3(提示UI E11・認証/同時編集/OSM changeset自動化 E9)。

@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — SubScope: 変電所構造ビューア(OSM実構造+単線結線図)を命名・再現可能化（123）
+
+- オーナー指示「この写真(嶺南の構造図)使い勝手いい・出し方記録・名前つけて」→ **SubScope**(GridStitch機能・変電所構造ビューア)として実装
+- `scripts/substation_scope.py`: 変電所名(部分一致)から2図を生成。`PYTHONPATH=. python scripts/substation_scope.py --region kansai --name 嶺南`
+  - **(A) OSM実構造図**: 母線(busbar)太線/ベイ(bay)破線/本線を電圧で色分け(500赤/275橙/154紫/77緑/無印灰)。構内結線と引込方向が一目で分かる
+  - **(B) 単線結線図(SLD draft)**: 電圧階級ごと1母線・隣接をカスケード変圧器(1次HV/2次LV・**飛び越し無し**=500/77直結作らない)。bus-branchビューに対応・忠実層(母線/ベイ/端点)は保持し展開可
+- **嶺南で検証**: SLD導出モデル=500kV{京北/八乙女/色浜/白木}・275kV{京北/湖東/白木}・77kV(カスケード500-275-77)。手動設計版を完全再現
+- 設計方針(オーナー): 潮流は単線+単位法で難しくない・回線が本質・**電圧は接続先から辿って埋める**・畳んでも展開余地を残す
+- pytest 1103緑(新規standaloneスクリプト・package非依存)。LINE送付運用に有用
+
 ## 2026-06-15 — **Claude Fable 5** — GridStitch P1a: 分割変電所の統合(group_substations) + 島真因の再診断（122）
 
 - 全面改修=GridStitch(計画 `docs/GRIDSTITCH_PLAN.md`)。P1(母線束縛A/B)の第一歩。
