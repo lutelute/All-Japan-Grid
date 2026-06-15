@@ -45,6 +45,7 @@
 
   <h3>地域</h3>
   <select id="region" style="width:100%;padding:5px;background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:5px">
+    <option value="all">🗾 全国(概観・≥66kV)</option>
     <option>tokyo</option><option>hokkaido</option><option>tohoku</option><option>chubu</option>
     <option>hokuriku</option><option>kansai</option><option>chugoku</option><option>shikoku</option>
     <option>kyushu</option><option>okinawa</option>
@@ -157,7 +158,8 @@ async function loadRegion(){
   const tk=++loadToken;
   [lineLayer,subLayer,mainLayer,islandLayer,edgeLayer,islandClassLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
   if(layerCtl){ map.removeControl(layerCtl); layerCtl=null; }
-  mainLayer=islandLayer=edgeLayer=islandClassLayer=null; snapPts=[];
+  mainLayer=islandLayer=edgeLayer=islandClassLayer=null; snapPts=[]; pendingPts=[];
+  if(REGION==='all'){ loadNational(tk); return; }   // 全国は概観表示(別経路)
   $('status').textContent=`${REGION}: OSM読込中…`;
   $('modelstat').textContent='—';
   try{
@@ -213,6 +215,38 @@ async function loadIslandClass(tk){
     const s=j.summary||{};
     $('modelstat').innerHTML += `<br><span class="muted">島分類: 黄OSM欠落${s.osm_gap||0} / 紫電圧分離${s.vsplit||0} / 灰鉄道${s.railway||0} / 線なし${s.isolated||0}</span>`;
   }catch(e){}
+}
+
+// 全国概観表示: 全地域マージ(/api/geojson/all)を電圧色で。編集/モデルは地域選択時のみ。
+function vcolNat(kv){ kv=+kv||0;
+  if(kv>=500)return '#d62728'; if(kv>=275)return '#ff7f0e'; if(kv>=154)return '#9467bd';
+  if(kv>=110)return '#1f77b4'; if(kv>=66)return '#2ca02c'; return '#888888'; }
+async function loadNational(tk){
+  const MINKV=66;
+  $('status').textContent='全国読込中…(送電線数万・少し待つ)';
+  $('modelstat').innerHTML='<span class="muted">全国は概観表示(電圧色)。モデル/島分類/編集検証は地域を選択してください。</span>';
+  try{
+    const [subs,lines]=await Promise.all([
+      fetch(`/api/geojson/all/substations?min_kv=${MINKV}`).then(r=>r.json()),
+      fetch(`/api/geojson/all/lines?min_kv=${MINKV}`).then(r=>r.json())]);
+    if(tk!==loadToken) return;
+    lineLayer=L.geoJSON(lines,{style:f=>({color:vcolNat((f.properties||{})._voltage_kv),weight:1,opacity:.6}),
+      onEachFeature:(f,l)=>{ l.on('click',e=>{L.DomEvent.stop(e); onLine(f,e.latlng);}); }});
+    subLayer=L.layerGroup();
+    (subs.features||[]).forEach(f=>{ const c=f.geometry&&f.geometry.coordinates; if(!c||!isFinite(c[0])||!isFinite(c[1]))return;
+      const p=f.properties||{};
+      L.circleMarker([c[1],c[0]],{radius:3,color:'#c9d1d9',weight:1,fillOpacity:0})
+        .on('click',e=>{L.DomEvent.stop(e); onPoint({lat:c[1],lon:c[0],kind:'sub',node:p._display_name||null,kv:p._voltage_kv||0},f);}).addTo(subLayer);
+      snapPts.push({lat:c[1],lon:c[0],kind:'sub',node:p._display_name||null,kv:p._voltage_kv||0});
+    });
+    editLayer=L.layerGroup();
+    [lineLayer,subLayer,editLayer].forEach(l=>l.addTo(map));
+    const ov={'全国送電線(電圧色)':lineLayer,'全国変電所':subLayer,'編集(pending/adopted)':editLayer};
+    Object.assign(ov, baseOverlayExtra);
+    layerCtl=L.control.layers(baseLayers, ov, {collapsed:false, position:'topright'}).addTo(map);
+    try{ map.fitBounds(lineLayer.getBounds().pad(0.03)); }catch(e){ map.setView([37.5,138],6); }
+    $('status').textContent=`全国(≥${MINKV}kV): 変電所${subs.features.length} / 送電線${lines.features.length}(色=電圧 赤500/橙275/紫154/緑66)`;
+  }catch(e){ $('status').textContent='全国読込失敗: '+e; }
 }
 
 function isBusbar(f){ return ['busbar','bay','internal','substation'].includes((f.properties||{}).line); }
