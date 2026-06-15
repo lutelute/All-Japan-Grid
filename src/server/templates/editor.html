@@ -77,7 +77,8 @@
        <span class="leg" style="background:#f0883e"></span>モデル島(未接続=要確認)</div>
   <div class="legrow"><span class="lg2" style="background:#2dd4bf"></span>モデル接続線(build後)
        <span class="lg2" style="background:#d29922;border-top:2px dashed #d29922"></span>編集pending
-       <span class="lg2" style="background:#3fb950"></span>adopted</div>
+       <span class="lg2" style="background:#3fb950"></span>adopted
+       <span style="color:#da3633;font-weight:bold">✂</span>切断記録</div>
 
   <h3>編集ログ <span class="muted" id="counts"></span></h3>
   <div><button onclick="loadEdits()">再読込</button>
@@ -383,6 +384,11 @@ function doConnect(a,b){
 function doCut(f,latlng){
   const p=f.properties||{}; const key=p.osm_id||p['@id']||p.id||p.name||('idx');
   if(!confirm(`この線の接続を切断(誤接続)として記録?\n${p.name||key}`)) return;
+  // 即時フィードバック: クリック位置に赤リングを一瞬出す(loadEditsが✂を恒久描画)
+  try{ const fl=L.circleMarker([latlng.lat,latlng.lng],{radius:13,color:'#da3633',weight:3,fill:false}).addTo(map);
+       setTimeout(()=>map.removeLayer(fl),1200); }catch(e){}
+  $('selinfo').textContent=`✂️ 切断を記録: ${p.name||key}`;
+  $('status').textContent=`✂️ 切断記録: ${p.name||key}(赤✂で表示・取消は✂モードでクリック)`;
   postEdit({action:'disconnect',line_key:String(key),a:{lat:latlng.lat,lon:latlng.lng},note:p.name||''});
 }
 function addPoint(latlng){
@@ -432,6 +438,17 @@ async function loadEdits(){
           else L.popup().setLatLng([e.pt.lat,e.pt.lon]).setContent(`追加点 <code>${e.id}</code><br>${(e.attrs&&e.attrs.name)||''}<br>✂️切断で取消・接続/連続で結合可`).openOn(map); });
         mk.addTo(editLayer);
         pendingPts.push({lat:e.pt.lat,lon:e.pt.lon,kind:'added',node:e.id});
+      }
+      if(e.action==='disconnect'&&e.a){
+        // 切断は赤い✂マーカーで明示(従来は無表示=アクション不明だった)
+        const col=isSub?'#1f6feb':'#da3633';
+        const mk=L.marker([e.a.lat,e.a.lon],{icon:L.divIcon({className:'',
+          html:`<div style="background:${col};border-radius:50%;width:20px;height:20px;color:#fff;text-align:center;line-height:20px;font-size:12px;border:2px solid #fff;box-shadow:0 0 3px #0008">✂</div>`,
+          iconSize:[20,20],iconAnchor:[10,10]})});
+        mk.on('click',ev=>{ L.DomEvent.stop(ev);
+          if(mode==='cut'){ if(isSub){alert('issue送信済みは取消不可');return;} if(confirm(`この切断記録を取消?\n${e.note||e.line_key||''}`)) removeEdit(e.id); }
+          else L.popup().setLatLng([e.a.lat,e.a.lon]).setContent(`✂️切断記録 <code>${e.id}</code><br>${e.note||e.line_key||''}${isSub?' (issue送信済)':''}<br>✂️切断モードでクリックで取消`).openOn(map); });
+        mk.addTo(editLayer);
       }
     });
     const rows=(j.edits||[]).slice(-40).reverse().map(e=>`[${e.status[0]}]${submitted.has(e.id)?'📤':''} ${e.action} ${e.id||''}`);
