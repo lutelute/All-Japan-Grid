@@ -8,6 +8,8 @@ Usage::
     PYTHONPATH=. uvicorn src.server.app:app --host 0.0.0.0 --port 8080 --reload
 """
 
+import glob
+import json
 import os
 import traceback
 from typing import Optional, Any
@@ -196,6 +198,20 @@ async def post_issue(region: str, body: IssueIn):
     if not result.get("ok"):
         raise HTTPException(400, result.get("error", "issue submit failed"))
     return result
+
+
+@app.get("/api/island_class/{region}")
+async def get_island_class(region: str):
+    """島変電所の分類(railway/osm_gap/vsplit/reachable/isolated)。
+
+    `scripts/island_classify.py` が出力した最新JSONを配信(編集ツールの島色分け用)。
+    未生成なら404+生成コマンドを返す。自動束縛は捏造になるため「どの島を人間が繋ぐか」の提示材料。
+    """
+    files = sorted(glob.glob(os.path.join("data", "db", f"island_classify_{region}_*.json")))
+    if not files:
+        raise HTTPException(404, f"island_classify未生成: PYTHONPATH=. python scripts/island_classify.py --region {region} --out data/db --stamp <date>")
+    with open(files[-1], encoding="utf-8") as fh:
+        return json.load(fh)
 
 
 @app.get("/api/built/{region}")

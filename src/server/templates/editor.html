@@ -105,7 +105,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 // OSMレイヤ(実在=編集対象)とモデルレイヤ(build後=接続確認用)を分離
 let lineLayer=null, subLayer=null, busbarLayer=null;   // OSM
-let mainLayer=null, islandLayer=null, edgeLayer=null;  // モデル
+let mainLayer=null, islandLayer=null, edgeLayer=null, islandClassLayer=null;  // モデル
 let editLayer=null, layerCtl=null;
 let snapPts=[], pendingPts=[], mode='view', pick=[], pickMarkers=[];
 const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
@@ -147,9 +147,9 @@ let loadToken=0;
 async function loadRegion(){
   REGION=$('region').value; clearPick();
   const tk=++loadToken;
-  [lineLayer,subLayer,mainLayer,islandLayer,edgeLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
+  [lineLayer,subLayer,mainLayer,islandLayer,edgeLayer,islandClassLayer,editLayer].forEach(l=>l&&map.removeLayer(l));
   if(layerCtl){ map.removeControl(layerCtl); layerCtl=null; }
-  mainLayer=islandLayer=edgeLayer=null; snapPts=[];
+  mainLayer=islandLayer=edgeLayer=islandClassLayer=null; snapPts=[];
   $('status').textContent=`${REGION}: OSM読込中…`;
   $('modelstat').textContent='—';
   try{
@@ -181,7 +181,29 @@ async function loadModel(tk, fresh){
     if(islandLayer){ islandLayer.addTo(map); layerCtl.addOverlay(islandLayer,'モデル 島(橙・未接続)'); }
     if(mainLayer){ layerCtl.addOverlay(mainLayer,'モデル 本系統(青)'); }
     if(edgeLayer){ layerCtl.addOverlay(edgeLayer,'モデル 接続線(水)'); }
+    loadIslandClass(tk);   // 島分類(なぜ繋がらないか)を後乗せ
   }catch(e){ $('modelstat').textContent='モデル読込失敗: '+e; }
+}
+
+// 島分類レイヤ(island_classify): 繋ぐべき所(OSM欠落/電圧分離)に人間を集中させる。自動束縛は捏造なので人間判断。
+const ICCOL={railway:'#888888',osm_gap:'#f0c000',vsplit:'#b15be8',reachable:'#e8410a',isolated:'#c98a3a',phantom:'#ff33ff'};
+const ICLABEL={railway:'鉄道/別事業者(繋がない)',osm_gap:'OSM連系線欠落(人間/OSMで連系)',vsplit:'電圧ヤード分離(変圧器連結を判断)',reachable:'主系統に実到達なのに島(精査)',isolated:'線なし孤立(方針A)',phantom:'幽霊(要除去)'};
+async function loadIslandClass(tk){
+  try{
+    const j=await fetch(`/api/island_class/${REGION}`).then(r=>r.ok?r.json():null);
+    if(!j || tk!==loadToken) return;
+    islandClassLayer=L.layerGroup();
+    Object.keys(j.buckets||{}).forEach(k=>{
+      (j.buckets[k]||[]).forEach(b=>{
+        L.circleMarker([b.lat,b.lon],{radius:7,color:'#fff',weight:1,fillColor:ICCOL[k]||'#888',fillOpacity:.85})
+          .bindPopup(`<b>${b.name}</b> ${b.kv}kV<br>分類: <b style="color:${ICCOL[k]}">${ICLABEL[k]||k}</b><br>次数${b.deg} / 届く本線${b.n_reaching}${b.note?'<br>'+b.note:''}`)
+          .addTo(islandClassLayer);
+      });
+    });
+    layerCtl.addOverlay(islandClassLayer,'島(分類別: 黄=要連系/紫=電圧分離/灰=鉄道)');
+    const s=j.summary||{};
+    $('modelstat').innerHTML += `<br><span class="muted">島分類: 黄OSM欠落${s.osm_gap||0} / 紫電圧分離${s.vsplit||0} / 灰鉄道${s.railway||0} / 線なし${s.isolated||0}</span>`;
+  }catch(e){}
 }
 
 function isBusbar(f){ return ['busbar','bay','internal','substation'].includes((f.properties||{}).line); }
