@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — B Phase3検証: 大改修は不要(座標丸めが既にnode-topology捕捉)（131）
+
+- 大改修(線接続を座標スナップ→node-sharing置換)の前に、四国で**同一way集合(power=line 1429)**で両方式の連結分割を照合:
+  - 座標丸めprec4: **128成分** / node-sharing: **131成分**
+  - **node共有なのに座標丸めで別成分になるペア = 0**。むしろ座標丸めの方が3組多く繋ぐ(近接~11m橋渡し)
+- **結論(重要・負の結果)**: 現builderの座標スナップは**OSMノードトポロジを既に完全捕捉**(共有ノード=同一lat/lon→prec4丸めで同一頂点→連結)。
+  **node-sharingへの置換は接続利得ゼロ**=900行の大改修は無意味。Phase2でBが多く繋いだのは**minor_line/cable包含＋Phase2束縛差**であって接続方式ではない。
+- **オーナーの「ショートカット」知覚の真因**(再確認): 嶺南モデル線は実幾何242点で追従済(builderは正確)。直線に見えるのは①手動connect(a→b直線)②合成橋③旧キャッシュ。**builderの接続方式ではない**
+- **島削減の真の梃子(確定済)**: OSM接続欠落(編集ツール+OSM還元)・鉄道(繋がない)・線種包含。**node-sharing builder書換は梃子でない**ので不採用
+- 価値: Phase1の全国node-refデータ(`data/osm_raw/`)は監査/検証用に保持。大改修を**検証で回避**(捏造的価値を作らない=方法論)。本番モデル不変
+
 ## 2026-06-15 — **Claude Fable 5** — B Phase2: node-topology+変電所束縛で島A/B(全国)（130）
 
 - `scripts/b_phase2_analyze.py`: node-topology(共有ノード=正確な線接続)+変電所束縛(point-in-polygon)で島数を測り現モデルとA/B。結果 `docs/reports/b_phase2_2026-06-15.json`
