@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — 標準ツール(osmnx)で接続を独立検証: 我々の座標スナップが優位・取りこぼし無し（134）
+
+- オーナー質問「点と線をつなぐpythonツールは無いのか / もしくは全てAI判断」への実証回答(`scripts/osmnx_ab.py`)。
+- **既存ツールの棚卸し(インストール済)**: osmnx 2.1(OSMノード/ウェイ構造を直接グラフ化=node-sharing標準API)・shapely 2.1(`ops.snap`/`unary_union`/`linemerge`)・geopandas 1.1+rtree(最近傍空間結合)・pandapower 3.4(`topology`連結性)。電力特化はPyPSA-Eur `build_osm_network`/GridKit/osmTGmod(未インストール・参考)。
+- **管理されたA/B(交絡ゼロ)**: osmnx 2.1で関西フルOSMの power line を node-sharing 取得(38,368ノード)→**同一ノード集合**に prec4 座標丸めを適用して成分数比較(=台帳131の管理再現を標準ツールで):
+  - node-sharing(osmid共有): **383成分** / 座標丸めprec4(我々): **339成分**(−44)
+  - = 我々の座標スナップは node-sharing の接続を**全て捕捉+近接~11mで44組多く橋渡し**。largest 26,390→26,603。**標準ツールが見つけて我々が取りこぼす接続はゼロ**。
+- **台帳131(四国 座標128/node131)を、標準ライブラリ×関西フルOSMで独立再確認**。「目がない/ショートカット」の原因はアルゴリズムでない(再々確認)。
+- **決定**: 連結性目的で osmnx/GridKit へ乗り換えても島は減らない(ボトルネック=OSMデータ欠落)。乗り換えの価値はコード再利用・エッジケースの堅牢性のみ。**「全てAI判断」は候補提案・ランク付け(Eトラック編集ツール)としてのみ採用=証拠でゲート**、AI判断を真にするのは捏造(3,365の教訓)で不可。
+- 注: 383/339は**線頂点(鉄塔含む)成分**=モデルの「島」とは別物(モデルview=build_network_snapped 152成分/カバー85%)。本番モデル/スコアカード不変・pytest 1103緑・`osmnx_ab.py`は分析ツールとして保持。
+
 ## 2026-06-16 — **Claude Opus 4.8** — geojson再生成(電圧伝播+鉄塔fetch)は不採用: 伝播は冗長・raw再取得は越境断片を再導入(負の結果)（133）
 
 - ブランチ `geojson-rebuild-noderef` の決着(オーナー「とにかく走り切って」)。狙い=生OSM(node参照・鉄塔fetch由来)から lines geojson を作り直し、**共有ノードで繋がる既知電圧を無タグ線へ伝播**して充填(`scripts/rebuild_geojson.py`)。
