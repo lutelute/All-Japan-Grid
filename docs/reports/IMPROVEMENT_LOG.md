@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — geojson再生成(電圧伝播+鉄塔fetch)は不採用: 伝播は冗長・raw再取得は越境断片を再導入(負の結果)（133）
+
+- ブランチ `geojson-rebuild-noderef` の決着(オーナー「とにかく走り切って」)。狙い=生OSM(node参照・鉄塔fetch由来)から lines geojson を作り直し、**共有ノードで繋がる既知電圧を無タグ線へ伝播**して充填(`scripts/rebuild_geojson.py`)。
+- **再生成自体は成功**: kansai 線4198・**無タグ1351→513(838本=62%に電圧伝播充填)**。node参照を `properties.osm_nodes` に保持。
+- **A/B(他層固定・linesのみ差替・`scripts/rebuild_ab.py`)**: 現行 vs 再生成 → 成分**152→207(+55)**・カバー**85.0%→80.5%(−4.5pp)**・最大成分1949→1988・孤立実変電所85→86。**接続は改善せず悪化。**
+- **電圧伝播の隔離(決定的)**: builder内部伝播(`propagate_voltage`)のON/OFFで —
+  - 現行geojson: ON 152成分 / OFF 162成分 = **builder内部伝播が10成分ぶん効いている**
+  - 再生成(事前充填)geojson: ON 207 / OFF 207 = **完全に同一**。事前充填済で builder伝播が「やることが無い」
+  - → **geojsonレベルの電圧伝播は builder内部伝播と冗長**(同じ機構を前段でやるだけ・端的な負の結果)。台帳131(node-sharing=接続利得ゼロ)を機構面から裏付け
+- **悪化の真因(成分サイズ分布で確定)**: Δ成分の内訳は **極小(size2-3)+43・小(4-10)+10・実体(11+)+1のみ**。主系統は無傷(最大成分むしろ+39)。
+  = raw 3×3 bbox再取得が**越境/周縁の極小断片を再導入**(現行curated extractがterritory-clipで除いていたノイズ)。接続を失ったのではなくノイズを足しただけ
+- **結論**: 本番geojsonは**現行(curated extract + builder内部伝播)が既に最適**。再取得では真のボトルネック(OSMデータgap)は埋まらない → 正攻法は **supplement機構(I3)で個別欠落線を証拠付き追記**。**本番モデル/スコアカード不変**(再生成は不採用)。
+- 残す資産: `tower_connectivity.py`/`build_topology_dataset.py`(全国トポロジ接続データ=監査用・台帳済)・`rebuild_geojson.py`/`rebuild_ab.py`(分析ツールとして保持)。pytest 1103緑・モデル変更なし(before/after図は対象外=本番不変)
+
 ## 2026-06-16 — **Claude Fable 5** — join_untagged_tips: 無タグ鉄塔tipの近接吸着(検証通過・初の有効改修)（132）
 
 - オーナー指摘「点(=鉄塔)が数mで繋がっているのに無視される」の真因=**tap_snap/tip_jointのクラスガードが untagged(own_kv=0)を弾く**(`own_kv>0`必須)。kansaiは点66%・線37%が無タグ。
