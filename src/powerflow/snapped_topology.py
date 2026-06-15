@@ -302,7 +302,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
                           expand_mixed_voltage=True, drop_busbar_bay=False,
-                          group_substations=False, group_km=1.0):
+                          group_substations=False, group_km=1.0,
+                          join_untagged_tips=False):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
 
     Args:
@@ -856,11 +857,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                         a, b, p1, p2, kv = tap_segs[si]
                         if nid in (a, b) or a in adj.get(nid, {})                                 or b in adj.get(nid, {}):
                             continue
-                        # BOTH classes must be known and equal: tapping
-                        # via an unknown-class segment fused a 154/66
-                        # crossing in the multivoltage regression — the
-                        # exact hazard the class stacks exist to prevent
-                        if not (own_kv > 0 and abs(own_kv - kv) <= 1):
+                        # 通常は両クラス既知・同一のみ(経路中のuntagged segmentでの
+                        # tapは154/66を誤融合させた回帰の原因)。join_untagged_tips時は
+                        # degree-1のleaf tip(own_kv==0)が既知segに吸着しクラスを継ぐ。
+                        # leafは片側のみ接続=クラス間ブリッジは起きない(鉄塔の数m近接の救済)。
+                        if not ((own_kv > 0 and abs(own_kv - kv) <= 1)
+                                 or (join_untagged_tips and own_kv == 0 and kv > 0)):
                             continue
                         ax, ay = _xy(*p1)
                         bx, by = _xy(*p2)
@@ -872,11 +874,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                         d = _math.hypot(px - qx, py - qy)
                         if d < best[1]:
                             tgt = a if t < 0.5 else b
-                            best = ((tgt, p1 if t < 0.5 else p2), d)
+                            best = ((tgt, p1 if t < 0.5 else p2, kv), d)
             if best[0] is None:
                 continue
-            tgt, tgt_ll = best[0]
-            add_edge(nid, tgt, max(best[1], 0.01), own_kv or 0,
+            tgt, tgt_ll, tgt_kv = best[0]
+            add_edge(nid, tgt, max(best[1], 0.01), own_kv or tgt_kv or 0,
                      [(la, lo), tuple(tgt_ll)], parallel=1, evidence=None,
                      name=None, kv_src="unk", cable_km=0.0, tap=True)
             n_taps += 1
@@ -915,25 +917,27 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 continue
             own = _cls_of(nid) or max(
                 (adj[nid][m]["kv"] for m in adj[nid]), default=0.0)
-            if own <= 0:
-                continue   # no class evidence — a join could fuse classes
+            if own <= 0 and not join_untagged_tips:
+                continue   # 既定: クラス証拠なしは除外(融合回避)。opt-in時はuntagged leafも救済
             la, lo = ncoords[nid]
             ci, cj = round(la / cellj), round(lo / cellj)
-            best_n, bd = None, tip_joint_km
+            best_n, bd, best_cls = None, tip_joint_km, 0.0
             for di in (-1, 0, 1):
                 for dj in (-1, 0, 1):
                     for m in ngrid.get((ci + di, cj + dj), ()):
                         if m == nid or m in adj.get(nid, {}) or m not in adj:
                             continue
                         mcls = _cls_of(m)
-                        if not (mcls > 0 and abs(mcls - own) <= 1):
+                        # 既知同一、または untagged leaf(own==0)が既知へ吸着しクラス継承
+                        if not ((mcls > 0 and abs(mcls - own) <= 1)
+                                 or (join_untagged_tips and own == 0 and mcls > 0)):
                             continue
                         d = _haversine_km(la, lo, *ncoords[m])
                         if d < bd:
-                            best_n, bd = m, d
+                            best_n, bd, best_cls = m, d, mcls
             if best_n is None:
                 continue
-            add_edge(nid, best_n, max(bd, 0.005), own,
+            add_edge(nid, best_n, max(bd, 0.005), own or best_cls,
                      [(la, lo), ncoords[best_n]], parallel=1, evidence=None,
                      name=None, kv_src="unk", cable_km=0.0, tap=True)
             n_joints += 1

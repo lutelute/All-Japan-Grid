@@ -243,7 +243,8 @@ _DISCLOSURE_CSVS = {
 
 
 def external_flow_metrics(region: str, data_dir: str | None = None,
-                          expand_mixed_voltage: bool = True) -> dict | None:
+                          expand_mixed_voltage: bool = True,
+                          join_untagged_tips: bool = False) -> dict | None:
     """3-layer measured-flow correlation (trunk/154/66) for the sweep.
 
     Runs the FULL model (backbone 0 — the 66 kV layer only exists
@@ -261,7 +262,8 @@ def external_flow_metrics(region: str, data_dir: str | None = None,
     m = match_flows(region, cfg["csv"], backbone_kv=0.0, data_dir=data_dir,
                     csv154=(cfg["csv154"] if glob.glob(cfg["csv154"]) else None),
                     csv66=(cfg["csv66"] if glob.glob(cfg["csv66"]) else None),
-                    expand_mixed_voltage=expand_mixed_voltage)
+                    expand_mixed_voltage=expand_mixed_voltage,
+                    join_untagged_tips=join_untagged_tips)
     keep = ("interior_spearman_rho", "interior_spearman_p",
             "trunk_spearman_rho", "n_interior_trunk",
             "kv154_spearman_rho", "n_interior_154",

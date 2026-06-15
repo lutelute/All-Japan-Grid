@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Fable 5** — join_untagged_tips: 無タグ鉄塔tipの近接吸着(検証通過・初の有効改修)（132）
+
+- オーナー指摘「点(=鉄塔)が数mで繋がっているのに無視される」の真因=**tap_snap/tip_jointのクラスガードが untagged(own_kv=0)を弾く**(`own_kv>0`必須)。kansaiは点66%・線37%が無タグ。
+- 実装 `join_untagged_tips`(opt-in・既定off): **degree-1のleaf tip(untagged)**を近接の既知ノード/segに吸着しクラス継承。
+  leafは片側のみ接続=クラス間ブリッジ無し(154/66誤融合の主因=経路中untagged segmentとは別)。tap_snap+tip_joint両方を緩和。
+- **島A/B(off→on)**: 四国306→298・中部550→492(−58)・関西343→314・**東京526→494(−32)**・北陸178→158。全テスト地域で減・線追加は僅少(+2〜21)
+- **ρ A/B(tokyo 13b・誤融合検証)**: interior 0.451→**0.454** / trunk 0.574→**0.576** / 154 0.251→**0.252** / 66 0.208(不変)・matched451不変。
+  **ρ悪化なし(微改善)=物理的に正しい接続**(誤融合なら下がる)。AC収束維持(ρ計算成功)
+- pytest 1103緑(既定off)。`build_and_solve`/`match_flows`/`external_flow_metrics`にも引数を貫通。
+- **node-sharing(台帳131)と対照的に検証を通過**。次=全地域AC確認→default-on化(本番反映・新日付スコアカード)はオーナー確認後
+
 ## 2026-06-15 — **Claude Fable 5** — B Phase3検証: 大改修は不要(座標丸めが既にnode-topology捕捉)（131）
 
 - 大改修(線接続を座標スナップ→node-sharing置換)の前に、四国で**同一way集合(power=line 1429)**で両方式の連結分割を照合:
