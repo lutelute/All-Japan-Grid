@@ -215,7 +215,8 @@ async def adopt_edits(region: str):
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(500, f"adopt failed: {exc}")
-    _built_cache.pop(region, None)   # 反映後は再構築させる
+    for k in [k for k in _built_cache if k.split("|")[0] == region]:
+        _built_cache.pop(k, None)   # 反映後は(join_untagged有無とも)再構築させる
     return result
 
 
@@ -234,25 +235,26 @@ async def get_island_class(region: str):
 
 
 @app.get("/api/built/{region}")
-async def get_built(region: str, fresh: int = 0):
+async def get_built(region: str, fresh: int = 0, join_untagged: int = 0):
     """系統モデル(build後)の接続状態。OSMと並列表示し『繋がっているか』を確認する(E10)。
 
     節点を島/本系統で色分け+モデルが実際に張った接続線(実OSM幾何)を返す。OSMでは
     線が見えるのにモデルでは島(=未接続)、という乖離をエディタ上で可視化するためのレイヤ。
-    再構築は重いのでregion単位でメモリキャッシュ(`?fresh=1`で強制再構築・検証後の更新用)。
+    再構築は重いのでキャッシュ(`?fresh=1`で強制再構築)。`?join_untagged=1`で無タグ鉄塔tip吸着(台帳132)。
     """
     from src.server import built_view
 
-    if not fresh and region in _built_cache:
-        return _built_cache[region]
+    key = f"{region}|{int(bool(join_untagged))}"
+    if not fresh and key in _built_cache:
+        return _built_cache[key]
     try:
-        result = built_view.built_view(region)
+        result = built_view.built_view(region, join_untagged_tips=bool(join_untagged))
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(500, f"built_view failed: {exc}")
     if result is None:
         raise HTTPException(404, f"No built model for region '{region}'")
-    _built_cache[region] = result
+    _built_cache[key] = result
     return result
 
 

@@ -6,10 +6,14 @@
 import networkx as nx
 
 
-def built_view(region, data_dir=None):
-    """系統モデルの節点・接続線・連結性を返す(エディタの『系統』レイヤ用)。"""
+def built_view(region, data_dir=None, join_untagged_tips=False):
+    """系統モデルの節点・接続線・連結性を返す(エディタの『系統』レイヤ用)。
+
+    join_untagged_tips: 無タグの行き止まり鉄塔tipを近接既知ノードに吸着(台帳132・検証済)。
+    """
     from src.powerflow.snapped_topology import build_network_snapped
-    net = build_network_snapped(region, data_dir=data_dir)
+    net = build_network_snapped(region, data_dir=data_dir,
+                                join_untagged_tips=join_untagged_tips)
     if net is None:
         return None
     pos = {s.id: (s.latitude, s.longitude) for s in net.substations}

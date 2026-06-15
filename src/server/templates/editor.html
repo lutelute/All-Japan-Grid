@@ -53,6 +53,7 @@
 
   <h3>モデル状態(build後)</h3>
   <div class="stat" id="modelstat">読込中…</div>
+  <label class="muted" style="display:block;margin-top:4px"><input type="checkbox" id="joinuntagged" onchange="loadRegion()"> 🔗無タグ鉄塔tipも接続(検証済・島が減る/ρ維持)</label>
   <div class="muted" style="margin-top:4px">右上のレイヤ操作で OSM / モデル の表示を切替えて比較できます。</div>
 
   <h3>モード</h3>
@@ -189,7 +190,8 @@ async function loadRegion(){
 async function loadModel(tk, fresh){
   $('modelstat').textContent='系統モデル構築中…(数秒)';
   try{
-    const built=await fetch(`/api/built/${REGION}${fresh?'?fresh=1':''}`).then(r=>r.ok?r.json():null);
+    const ju=($('joinuntagged')&&$('joinuntagged').checked)?1:0;
+    const built=await fetch(`/api/built/${REGION}?join_untagged=${ju}${fresh?'&fresh=1':''}`).then(r=>r.ok?r.json():null);
     if(tk!==loadToken) return;
     buildModel(built);
     if(islandLayer){ islandLayer.addTo(map); layerCtl.addOverlay(islandLayer,'モデル 島(橙・未接続)'); }
