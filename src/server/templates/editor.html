@@ -82,7 +82,9 @@
 
   <h3>編集ログ <span class="muted" id="counts"></span></h3>
   <div><button onclick="loadEdits()">再読込</button>
-       <button class="go" onclick="verifyEdits()">検証(島削減A/B)</button></div>
+       <button class="go" onclick="verifyEdits()">検証(島削減A/B)</button>
+       <button class="go" onclick="adoptEdits()">⬇反映(モデルに適用)</button></div>
+  <div class="muted" style="margin-top:3px">検証=一時計算/反映=supplementに永続適用しモデル再構築(可逆)。issueはレビュー記録。</div>
   <div id="editlist" style="margin-top:6px">—</div>
 
   <h3>GitHubに送信(接続提案issue)</h3>
@@ -483,8 +485,25 @@ async function verifyEdits(){
     $('status').textContent=`検証: 島 ${j.islands_before}→${j.islands_after} (Δ${j.delta_islands})`;
     alert(`検証結果 (${REGION})\n島(連結成分): ${j.islands_before} → ${j.islands_after}  Δ=${j.delta_islands}\n`
       +`適用: connect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
-      +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)`);
+      +`(disconnect ${j.applied.disconnect_skipped}件・set_attr ${j.applied.set_attr_skipped}件は別経路E8b)\n\n`
+      +`※これは一時計算です。モデルに残すには「⬇反映」を押してください。`);
   }catch(e){ $('status').textContent='検証失敗: '+e; }
+}
+
+async function adoptEdits(){
+  if(REGION==='all'){ alert('地域を選択してください(全国は概観表示で反映対象外)'); return; }
+  if(!confirm(`${REGION}: pending接続/追加点を実モデル(supplement)に反映します。\nモデルが再構築され、島・接続が更新されます。\n(可逆: 編集を取消して再反映すれば戻ります)\nよいですか?`)) return;
+  $('status').textContent='反映中(supplement適用→モデル再構築・数秒)…';
+  try{
+    const r=await fetch(`/api/adopt/${REGION}`,{method:'POST'});
+    const j=await r.json();
+    if(!r.ok){ $('status').textContent='反映失敗: '+(j.detail||r.status); return; }
+    $('status').textContent=`反映完了: connect ${j.applied.connect}/add_point ${j.applied.add_point} → 連結成分 ${j.islands_now}・本系統 ${j.main_now}`;
+    alert(`反映完了 (${REGION})\nconnect ${j.applied.connect} / add_point ${j.applied.add_point}\n`
+      +`現在: 連結成分 ${j.islands_now} / 本系統 ${j.main_now}\n`
+      +`supplement: 線${j.lines_supplement} / 変電所${j.subs_supplement}\n\nモデルを再読込して反映を表示します。`);
+    loadRegion();   // built再構築(キャッシュ無効化済)で反映を地図に表示
+  }catch(e){ $('status').textContent='反映失敗: '+e; }
 }
 
 let lastVerify=null;

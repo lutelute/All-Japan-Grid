@@ -200,6 +200,25 @@ async def post_issue(region: str, body: IssueIn):
     return result
 
 
+@app.post("/api/adopt/{region}")
+async def adopt_edits(region: str):
+    """pending/verifiedのconnect/add_pointを実supplementに**反映**(永続)→モデル再構築。
+
+    「編集→検証→issueまでやったのに反映されない」への対応。supplement統合により
+    `build_network_snapped` がその接続を取り込む。可逆(編集取消→再adoptで消える)。
+    反映後は built キャッシュを無効化し、エディタの再読込でモデル(島/接続)が更新される。
+    """
+    from src.server import edit_apply
+
+    try:
+        result = edit_apply.adopt(region)
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(500, f"adopt failed: {exc}")
+    _built_cache.pop(region, None)   # 反映後は再構築させる
+    return result
+
+
 @app.get("/api/island_class/{region}")
 async def get_island_class(region: str):
     """島変電所の分類(railway/osm_gap/vsplit/reachable/isolated)。

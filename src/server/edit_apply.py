@@ -87,6 +87,57 @@ def apply_to_dir(region, edits, base="data"):
     return tmp, applied
 
 
+def adopt(region, statuses=("pending", "verified"), base="data"):
+    """connect/add_point編集を実supplementに**永続適用**し、再構築後の島数を返す(=反映)。
+
+    edit由来(properties.edit_id)を一旦除去して現在の編集で作り直す**同期**方式:
+    冪等で、編集を取消(removeEdit)してから再度adoptすればsupplementからも消える(可逆)。
+    editor以外がキュレートしたsupplement(edit_id無し)は温存する。
+    これがE8の「adopted接続のsupplement統合」=モデルへの反映。
+    """
+    lpath = os.path.join(base, f"{region}_lines_supplement.geojson")
+    spath = os.path.join(base, f"{region}_substations_supplement.geojson")
+
+    def _load(p):
+        if os.path.exists(p):
+            return json.load(open(p, encoding="utf-8"))
+        return {"type": "FeatureCollection", "features": []}
+
+    lsupp = _load(lpath)
+    ssupp = _load(spath)
+    # editor由来(edit_id付き)を除去 → 現在の編集で作り直す(同期=可逆)
+    lsupp["features"] = [f for f in lsupp["features"]
+                         if not (f.get("properties") or {}).get("edit_id")]
+    ssupp["features"] = [f for f in ssupp["features"]
+                         if not (f.get("properties") or {}).get("edit_id")]
+    edits = [e for e in edit_log.list_edits(region=region)
+             if e.get("status") in statuses]
+    applied = {"connect": 0, "add_point": 0, "disconnect_skipped": 0, "set_attr_skipped": 0}
+    for e in edits:
+        act = e.get("action")
+        if act == "connect" and e.get("a") and e.get("b"):
+            lsupp["features"].append(_connect_feature(e))
+            applied["connect"] += 1
+        elif act == "add_point" and e.get("pt"):
+            ssupp["features"].append(_point_feature(e))
+            applied["add_point"] += 1
+        elif act == "disconnect":
+            applied["disconnect_skipped"] += 1
+        elif act == "set_attr":
+            applied["set_attr_skipped"] += 1
+    os.makedirs(base, exist_ok=True)
+    with open(lpath, "w", encoding="utf-8") as fh:
+        json.dump(lsupp, fh, ensure_ascii=False)
+    with open(spath, "w", encoding="utf-8") as fh:
+        json.dump(ssupp, fh, ensure_ascii=False)
+    nb, mb = _island_count(region)   # supplement書込後の実モデル=反映後
+    return {"region": region, "applied": applied, "n_edits": len(edits),
+            "lines_supplement": len(lsupp["features"]),
+            "subs_supplement": len(ssupp["features"]),
+            "islands_now": nb, "main_now": mb,
+            "note": "connect/add_pointを実supplementに反映(可逆・同期)。disconnect→builder cut(E8b)・set_attrは別経路"}
+
+
 def verify(region, statuses=("pending", "verified"), base="data"):
     """pending(+verified)編集を適用して島数A/Bを返す(検証→判定材料)。"""
     edits = [e for e in edit_log.list_edits(region=region) if e.get("status") in statuses]

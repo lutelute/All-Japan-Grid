@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — 編集の「反映(adopt)」: supplement永続適用→モデル再構築（127）
+
+- オーナー指摘「編集→検証→issueまでやったのにモデルに反映されない」。**adopted編集を実データに永続適用する経路が欠けていた**(verifyは一時tempdirで捨てていた)
+- `edit_apply.adopt(region)`: pending/verifiedのconnect/add_pointを **実 `data/{region}_*_supplement.geojson` に同期**(editor由来=edit_id付きを除去→現編集で再構築=**冪等・可逆**。編集取消→再反映で消える)。書込後の島数を返す
+- `POST /api/adopt/{region}`: 反映後 built キャッシュ無効化→次の `/api/built` で再構築。エディタに **「⬇反映(モデルに適用)」ボタン**+`adoptEdits()`(確認→反映→loadRegionで再表示)
+- 3経路の役割を明確化: **検証=一時計算 / 反映=supplement永続→モデル反映 / issue=レビュー記録**(UIに明記)
+- 実地: tokyo pending19接続を反映→supplement 218→237・島263→263/本系統+2(可逆確認後に復元)。本番反映はオーナーがボタンで地域別に判断(experimental編集の無差別本番化を回避)
+- pytest 1103緑。supplementは加算チャネル(builderが`_layer`で取込)=設計どおりの「adopted接続のsupplement統合」
+
 ## 2026-06-15 — **Claude Fable 5** — 島分類器: 「なぜ繋がらないか」で仕分け→編集ツール/OSM還元へ（126）
 
 - 台帳125の結論(自動束縛は捏造)を運用化。`scripts/island_classify.py`: 島変電所を6バケツに分類。
