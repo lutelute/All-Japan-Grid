@@ -1,0 +1,17 @@
+{
+  "built": "2026-06-16 (branch geojson-rebuild-noderef)",
+  "method": "OSM out body(node参照)→ 全点(鉄塔/変電所/頂点)をノード・共有OSMノードを辺",
+  "national_merged": {
+    "nodes": 313436, "edges": 316388, "towers": 245585, "components": 4143,
+    "top5_component_sizes": [82869, 60621, 33108, 11331, 8108]
+  },
+  "tower_connectivity_by_component_size": {
+    "ge10000_regional_grids": {"components": 4, "towers": 154496, "pct": 62},
+    "1000_9999_branches": {"components": 10, "towers": 22394, "pct": 9},
+    "100_999_medium_frag": {"components": 234, "towers": 44809, "pct": 18},
+    "10_99_small_frag": {"components": 938, "towers": 20651, "pct": 8},
+    "lt10_tiny": {"components": 2957, "towers": 3235, "pct": 1}
+  },
+  "caveats": "断片は (1)地域bbox境界の端切れ (2)minor_line/cable(別系統) (3)真の局所分断 の混在。真の未接続にはbbox重ね(boundary stitch)+線種分離が必要",
+  "per_region": "data/topology/ALL_summary.json / {region}_{nodes,edges}.jsonl(gitignore)"
+}
