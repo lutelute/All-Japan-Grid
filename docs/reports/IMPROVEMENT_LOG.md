@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-15 — **Claude Fable 5** — 島分類器: 「なぜ繋がらないか」で仕分け→編集ツール/OSM還元へ（126）
+
+- 台帳125の結論(自動束縛は捏造)を運用化。`scripts/island_classify.py`: 島変電所を6バケツに分類。
+  `PYTHONPATH=. python scripts/island_classify.py --region tokyo --out data/db --stamp 2026-06-15`
+- **tokyo実測(島変電所173件)**:
+  - **isolated 106**(線なし孤立・方針A) / **osm_gap 50**(連系線OSM未整備) / **railway 13**(鉄道・別網) = **169件は自動修正不可**(繋ぐと捏造)→ 人間/OSM/編集ツール
+  - **vsplit 2**(清水・宇都宮=同名別電圧ヤードが離在・変圧器未連結) / **reachable 2**(乙黒等・要精査) = 候補4件のみ。**phantom 0**(幽霊節点なし=抽出健全)
+  - 宇都宮は66kVヤードと154kVヤードが**2607m離在**=安全に自動連結不可(154/66変圧器がOSM未マップ)
+- **確定**: tokyoの島に安全な自動接続はほぼ無い(候補4件も危険)。**島削減の正道=GridStitch編集ツール(人間が実態で連系)+OSM還元**。分類器JSONが編集候補/OSM貢献対象の提示材料
+- 出力 `data/db/island_classify_tokyo_2026-06-15.json`(committedスコアカードに非接触)。pytest 1103緑・モデル不変
+
 ## 2026-06-15 — **Claude Fable 5** — P1b前提の再評価: 島の大半はOSM欠落/鉄道=ブランケット束縛は捏造（125）
 
 - P1b(母線束縛)実装の前に、tokyoの非鉄道島(本線2本+届くのにdeg<2)を**届く線が主系統の別変電所へ達するか**で分類:
