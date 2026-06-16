@@ -58,6 +58,26 @@ async def editor(request: Request):
     return templates.TemplateResponse("editor.html", {"request": request})
 
 
+@app.get("/api/regions")
+async def api_regions():
+    """各地域の bounding_box(config/regions.yaml)。
+
+    全国(all)ビューで編集した点を、座標から正しい地域へ振り分けるためにエディタが使う
+    (全国の編集を region='all' のまま記録すると build 先が無く反映されない問題の解消)。
+    """
+    import yaml
+    try:
+        cfg = yaml.safe_load(open(os.path.join("config", "regions.yaml"), encoding="utf-8"))
+    except Exception as exc:   # noqa: BLE001
+        raise HTTPException(500, f"regions.yaml読込失敗: {exc}")
+    out = {}
+    for r, d in (cfg.get("regions") or {}).items():
+        bb = d.get("bounding_box") or {}
+        if all(k in bb for k in ("lat_min", "lat_max", "lon_min", "lon_max")):
+            out[r] = {k: bb[k] for k in ("lat_min", "lat_max", "lon_min", "lon_max")}
+    return {"regions": out}
+
+
 # ─── GeoJSON API ──────────────────────────────────────────────────────
 
 @app.get("/api/regions")

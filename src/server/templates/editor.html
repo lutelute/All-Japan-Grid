@@ -323,6 +323,7 @@ function buildModel(built){
     if(n.main){
       L.circleMarker([n.lat,n.lon],{radius:3,color:'#388bfd',weight:0,fillOpacity:.85})
         .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
+      snapPts.push({lat:n.lat,lon:n.lon,kind:'bus',node:n.id,kv:(n.kv||0)/1000});  // 本系統節点もスナップ対象(島→本系統を繋ぐ)
     }else{
       // 島=actionable。大きめ橙+白縁で目立たせる
       const m=L.circleMarker([n.lat,n.lon],{radius:6,color:'#fff',weight:1.5,fillColor:'#f0883e',fillOpacity:.9});
@@ -373,6 +374,16 @@ function nearestSnap(latlng){
   return (best && bd < (0.004)**2) ? best : null;   // ~440m以内の最寄り鉄塔/変電所にスナップ
 }
 
+// 全国(all)ビューで編集した点を座標から正しい地域へ振り分ける(region='all'では反映先が無いため)
+let REGION_BBOX=null;
+fetch('/api/regions').then(r=>r.json()).then(d=>{REGION_BBOX=d.regions||null;}).catch(()=>{});
+function regionAt(lat,lon){
+  if(!REGION_BBOX) return null;
+  for(const r in REGION_BBOX){ const b=REGION_BBOX[r];
+    if(lat>=b.lat_min&&lat<=b.lat_max&&lon>=b.lon_min&&lon<=b.lon_max) return r; }
+  return null;
+}
+
 function addPick(s){
   pick.push(s);
   const col = mode==='cut' ? '#da3633' : '#f0c674';   // 切断=赤・接続=黄
@@ -409,7 +420,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(mode==='chain
 let snapHint=null;
 map.on('mousemove', e=>{
   const editing = (mode==='cut'||mode==='connect'||mode==='chain');
-  if(!editing || REGION==='all'){ if(snapHint){ map.removeLayer(snapHint); snapHint=null; } return; }
+  if(!editing){ if(snapHint){ map.removeLayer(snapHint); snapHint=null; } return; }   // 全国でもスナップ点(変電所+モデル節点)を表示
   const s=nearestSnap(e.latlng);
   if(s){ const ll=[s.lat,s.lon]; const col=(mode==='cut')?'#da3633':'#f0c674';
     if(snapHint){ snapHint.setLatLng(ll); snapHint.setStyle({color:col,fillColor:col}); }
@@ -433,7 +444,14 @@ function onLine(f,latlng){
 }
 
 async function postEdit(body, skipReload){
-  body.region=REGION; body.user=body.user||'shigenobu';
+  let reg=REGION;
+  if(REGION==='all'){   // 全国編集は座標から地域を特定して記録(でないと反映先が無い)
+    const c=body.a||body.pt||body.b;
+    reg=(c&&regionAt(c.lat,c.lon))||null;
+    if(!reg){ alert('全国編集: この点の地域を特定できません。地域ビューで編集してください'); return null; }
+    $('status').textContent=`全国編集 → ${reg} に記録(反映は地域選択時)`;
+  }
+  body.region=reg; body.user=body.user||'shigenobu';
   const r=await fetch('/api/edits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json();
   if(!r.ok){ alert('編集エラー: '+(j.detail||r.status)); return null; }
