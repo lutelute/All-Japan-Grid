@@ -171,7 +171,7 @@ function render(){
     const pts=(e.path&&e.path.length>1)?e.path:[e.a,e.b];
     const pl=L.polyline(pts,{color:e.main?'#2f81f7':'#d29922',
       weight:Math.min(1+(e.par||1),5),opacity:e.main?0.7:0.9});
-    pl.on('click',ev=>{ if(mode!=='pan')return;
+    if(!big) pl.on('click',ev=>{ if(mode!=='pan')return;   // 全国規模はクリック省略(軽量化)
       pl.bindPopup(`モデル線 ${e.kv||'?'}kV ${(e.par||1)>1?`(${e.par}回線)`:''}<br>${e.main?'本系統':'島側'}`).openPopup(ev.latlng);});
     pl.addTo(map); layers.push(pl);
   });

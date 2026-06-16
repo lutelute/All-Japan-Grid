@@ -158,9 +158,11 @@ def build_national(collected: dict) -> dict:
                    "kv": n["kv"], "main": n["main"], "deg": n["deg"],
                    "sub": n["sub"], "name": n["name"], "region": n["region"]}
                   for n in nodes],
-        # National: A-B segments only (no path) — keeps the payload loadable.
-        "edges": [{"a": e["a"], "b": e["b"], "main": e["main"],
-                   "kv": e["kv"], "par": e["par"]} for e in edges],
+        # National: OSM幾何(path)込み — :8088の built_view_all と同一表現に統一。
+        # path省略の直線(弦)描画だと長距離枝が斜めに交差して「無茶苦茶接続」に見えるため。
+        "edges": [({"a": e["a"], "b": e["b"], "main": e["main"], "kv": e["kv"],
+                    "par": e["par"]} | ({"path": e["path"]} if e.get("path") else {}))
+                  for e in edges],
     }
 
 
@@ -202,8 +204,8 @@ def main():
         island_subs = sum(1 for n in cnodes if not n["main"] and n["sub"])
         print(f"  {r:<10s} {fmt(size):>9s}  nodes={stats['n_nodes']:>6d} "
               f"edges={stats['n_edges']:>6d} island_subs={island_subs:>4d}")
-        # Keep the un-compacted view for the national merge (needs region-tagged copy).
-        collected[r] = {"nodes": cnodes, "edges": _compact_edges(v["edges"], with_path=False)}
+        # Keep for the national merge (path込み = :8088と同一表現に統一)。
+        collected[r] = {"nodes": cnodes, "edges": _compact_edges(v["edges"], with_path=True)}
         manifest_regions.append({"id": r, "stats": stats})
 
     if do_national and collected:
