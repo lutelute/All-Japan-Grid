@@ -332,9 +332,13 @@ function buildModel(built){
         .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'bus',node:n.id,kv:(n.kv||0)/1000});  // 本系統節点もスナップ対象(島→本系統を繋ぐ)
     }else if(n.sub){
-      // 実変電所の島=actionable(繋ぐべき本物の変電所)。大きめ橙+白縁+名前
-      const m=L.circleMarker([n.lat,n.lon],{radius:6,color:'#fff',weight:1.5,fillColor:'#f0883e',fillOpacity:.9});
-      if(n.name) m.bindTooltip(n.name+(n.kv?` ${n.kv}kV`:''),{sticky:true});
+      // 実変電所の本系統外。degree0=孤立(線なし=繋ぐべき本物 or 別系統)=橙。
+      // degree>=1=連結サブクラスタ(線で繋がるが本系統外=越境/鉄道/OSM欠落)=終端バス扱い=紫(島扱いしない)。
+      const connected=(n.deg||0)>=1;
+      const m=L.circleMarker([n.lat,n.lon],{radius:connected?4:6,color:'#fff',
+        weight:connected?1:1.5,fillColor:connected?'#a371f7':'#f0883e',fillOpacity:connected?.7:.9});
+      const lbl=connected?'連結(本系統外サブクラスタ/終端バス)':'孤立(線なし)';
+      if(n.name) m.bindTooltip(`${n.name}${n.kv?` ${n.kv}kV`:''} — ${lbl}`,{sticky:true});
       m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000});
     }else{
@@ -345,11 +349,13 @@ function buildModel(built){
       snapPts.push({lat:n.lat,lon:n.lon,kind:'jct',node:n.id,kv:(n.kv||0)/1000});
     }
   });
-  const islSub=(built.nodes||[]).filter(n=>!n.main&&n.sub).length;
-  const islJct=(built.n_island_nodes||0)-islSub;
+  const isl=(built.nodes||[]).filter(n=>!n.main);
+  const iso=isl.filter(n=>n.sub&&(n.deg||0)===0).length;     // 孤立(線なし)
+  const subcl=isl.filter(n=>n.sub&&(n.deg||0)>=1).length;    // 連結サブクラスタ(終端バス)
+  const islJct=isl.filter(n=>!n.sub).length;                  // 鉄塔分岐
   $('modelstat').innerHTML=
-    `<b class="kbig">島 ${built.n_island_nodes}</b> 点 (<b style="color:#f0883e">実変電所 ${islSub}</b> / 鉄塔分岐 ${islJct}) ／ <b style="color:#388bfd">本系統 ${built.main_size}</b> 点`
-    +`<br><span class="muted">橙=繋ぐべき実変電所の島 / 小灰=鉄塔分岐(変電所でない)。連結成分 ${built.n_components} ／ 接続線 ${built.n_edges}</span>`;
+    `<b class="kbig">本系統外 ${built.n_island_nodes}</b> (<b style="color:#f0883e">孤立 ${iso}</b> / <b style="color:#a371f7">連結サブクラスタ ${subcl}</b> / 鉄塔分岐 ${islJct}) ／ <b style="color:#388bfd">本系統 ${built.main_size}</b>`
+    +`<br><span class="muted">橙=孤立(線なし→繋ぐ/別系統) 紫=連結だが本系統外(越境/鉄道/OSM欠落=終端バス・島扱いしない) 小灰=鉄塔分岐。成分 ${built.n_components}／接続線 ${built.n_edges}</span>`;
   buildSnapIndex();   // snapPts確定→空間インデックス再構築(全国でも近い点を高速自動検出)
 }
 
