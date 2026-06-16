@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — 接続編集プラットフォームの資産化(オーナー実機編集で磨き「記録しておいて」)（136）
+
+branch `model-source-unification`。オーナーが嶺南変電所・京北開閉所・金武火力等を実機で手編集しながら磨いた確定資産(「編集はかなりやりやすくなった/点が押しやすい」)。要点:
+- **単一の正(設計R1)**: 全国も `built_view_all()`(全地域build合成・編集込み・`/api/built/all`)を描く → 「地域で繋いだ編集が全国に反映されない/どれが正か不明」を解消。設計doc `MODEL_SOURCE_UNIFICATION.md`。
+- **✂セグメント切断**: `build_network_snapped(cuts=)` を**隣接点間(セグメント)**に適用 → 「点と点の間の1区間だけ」消す(線が割れる・長距離枝は無傷)。オーナー指摘「長距離始点-終点がカットされる」を修正。UI=2点クリック→**連続切断**(Escで終了)・スナップ点プレビュー・線ホバー強調。`{region}_cuts.json`(absent=本番不変・可逆)。test 8件・1111緑。
+- **発電所連系点(switchyard)欠落の検出器** `scripts/plant_switchyard_gaps.py`: 発電所点はOSMにあるが連系変電所が無く発電機が遠方subへ(金武火力600MW→伊芸5km)。**線終端<0.6km=連系点の物理証拠**でsupplement補完→自分のswitchyardに接続。okinawa 6件(金武/石川/牧港/Gushikawa/Ishikawa/つきしろ/松本)。捏造回避(距離一律でなく線終端証拠)。
+- **間引きバグ**: `geojson_loader._simplify_coords` step 3→1。全国緑線が `coords[::3]` で鉄塔無視→全点保持(伊芸~松田 14→40点)。
+- **メモリ**: [[project_agj_connection_editor]] に全機能を記録。本番モデル/スコアカード不変(編集は supplement/cuts=可逆キュレーション)。
+
 ## 2026-06-16 — **Claude Opus 4.8** — E8b: disconnect→builder cut機構(誤接続の切断をモデルに反映)（135）
 
 - オーナー指示「Eトラックのエディタ強化に進める」。接続編集の**切断(disconnect)経路**が未実装だった(connect=supplement+adoptは完成、cutは件数報告のみskip)を完成。

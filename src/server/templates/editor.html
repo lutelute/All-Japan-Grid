@@ -133,7 +133,7 @@ function setMode(m){ endChain(); mode=m; clearPick();
   const h={view:'地物をクリックで情報表示。島(橙)をクリックすると未接続の理由を確認できます。',
     connect:'繋ぐ2点を順にクリック(最寄りのOSM点/モデル節点に自動スナップ)。確認ダイアログで記録。',
     chain:'連続接続: 点を順にクリックすると隣り合う点が次々と接続される(回廊を一気に辿る)。モード切替/Escで終了。',
-    cut:'<b>2点をクリック</b>→その<b>間の線(1区間)だけ</b>を切断(線がそこで割れる・長距離の枝全体は消えない)。点は鉄塔/変電所にスナップ。検証/反映で反映・可逆。',
+    cut:'<b>2点をクリック</b>→その<b>間の線(1区間)だけ</b>切断(線が割れる・長距離枝は無傷)。続けて点を打つと<b>連続切断</b>(Escで終了)。点は鉄塔/変電所にスナップ・ホバーで線が太く強調。検証/反映で反映・可逆。',
     add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
     attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
   $('hint').textContent=h[m]||''; }
@@ -303,7 +303,11 @@ function buildModel(built){
     const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
     if(!pts||pts.length<2) return;
     const pl=L.polyline(pts,{color:'#2dd4bf',weight:1.5,opacity:.55}).addTo(edgeLayer);
-    // ✂切断モードでモデル枝をクリック→最寄りの点を2点選択(間の区間を切断)
+    if(REGION!=='all'){   // 線を選択しやすく: ホバーで太く強調(全国は本数が多く重いので地域限定)
+      pl.on('mouseover',()=>pl.setStyle({weight:4,opacity:.95,color:(mode==='cut'?'#da3633':'#2dd4bf')}));
+      pl.on('mouseout',()=>pl.setStyle({weight:1.5,opacity:.55,color:'#2dd4bf'}));
+    }
+    // ✂切断モードでモデル枝をクリック→最寄りの点を2点選択(間の区間を連続切断)
     pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev);
       const s=nearestSnap(ev.latlng); if(s) addPick(s);
       else $('status').textContent='✂ 線上の点(鉄塔/変電所)をクリックしてください'; } });
@@ -368,11 +372,17 @@ function addPick(s){
   const col = mode==='cut' ? '#da3633' : '#f0c674';   // 切断=赤・接続=黄
   const m=L.circleMarker([s.lat,s.lon],{radius:8,color:col,weight:2,fill:false}).addTo(map);
   pickMarkers.push(m);
-  const verb = mode==='cut' ? '✂切断(間の線を消す)' : '接続';
+  const verb = mode==='cut' ? '✂連続切断(間の線を消す)' : '接続';
   $('selinfo').textContent=`${verb}: ${pick.length}点選択 [${pick.map(p=>p.kind).join(', ')}]`;
   if(pick.length===2){
-    if(mode==='cut') doCutSegment(pick[0],pick[1]); else doConnect(pick[0],pick[1]);
-    clearPick();
+    if(mode==='cut'){
+      doCutSegment(pick[0],pick[1]);
+      // ★連続切断: 末点を次の起点に残す → 線に沿って点を打ち続けると区間を連続削除(Escで終了)
+      const last=pick[1]; clearPick(); pick.push(last);
+      const m2=L.circleMarker([last.lat,last.lon],{radius:8,color:'#da3633',weight:2,fill:false}).addTo(map);
+      pickMarkers.push(m2);
+      $('selinfo').textContent='✂連続切断中: 次の点をクリックで次区間も切断(Escで終了)';
+    } else { doConnect(pick[0],pick[1]); clearPick(); }
   }
 }
 
@@ -386,7 +396,8 @@ map.on('click', e=>{
   if(mode==='chain'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
     chainClick(s); }
 });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape' && mode==='chain'){ endChain(); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(mode==='chain') endChain();
+  else if(pick.length){ clearPick(); $('selinfo').textContent='選択解除'; } } });
 // スナップ先プレビュー: ✂/接続/連続モードでカーソル最寄りの点(鉄塔/変電所)を黄丸で表示
 // → どこをクリックすれば良いか一目で分かる(全国は点数が多く重いので地域ビュー限定)。
 let snapHint=null;

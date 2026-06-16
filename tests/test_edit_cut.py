@@ -80,14 +80,19 @@ def test_cuts_file_autoloaded_from_data_dir(tmp_path):
 
 
 def test_absent_cuts_file_is_noop(tmp_path):
-    """cuts.json が無ければ本番モデルは完全に不変(切断機構の安全性)。"""
+    """cuts.json が無い or 空 なら不変(切断機構の安全性)。
+
+    base geojson のみの clean な data_dir で検証する(ライブ手編集の supplement に
+    汚染されないため。data/ を直接読むと働中の switchyard 等の supplement で揺れる)。
+    """
     for layer in ("lines", "substations", "plants"):
         src = f"data/okinawa_{layer}.geojson"
         if os.path.exists(src):
             shutil.copy(src, tmp_path / f"okinawa_{layer}.geojson")
-    n_no_dir = len(build_network_snapped("okinawa", db=None).transmission_lines)
-    n_tmp = len(build_network_snapped("okinawa", db=None, data_dir=str(tmp_path)).transmission_lines)
-    assert n_no_dir == n_tmp                                # cutファイル無し=不変
+    n1 = len(build_network_snapped("okinawa", db=None, data_dir=str(tmp_path)).transmission_lines)
+    (tmp_path / "okinawa_cuts.json").write_text(json.dumps({"cuts": []}), encoding="utf-8")
+    n2 = len(build_network_snapped("okinawa", db=None, data_dir=str(tmp_path)).transmission_lines)
+    assert n1 == n2                                # cuts 無し と 空cuts は同一(no-op)
 
 
 def test_cut_entries_requires_coordinates():
