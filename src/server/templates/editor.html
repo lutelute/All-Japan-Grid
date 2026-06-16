@@ -247,7 +247,14 @@ async function loadNational(tk){
         .on('click',e=>{L.DomEvent.stop(e); onPoint({lat:c[1],lon:c[0],kind:'sub',node:p._display_name||null,kv:p._voltage_kv||0},f);}).addTo(subLayer);
       snapPts.push({lat:c[1],lon:c[0],kind:'sub',node:p._display_name||null,kv:p._voltage_kv||0});
     });
+    // ★全国でも線の頂点(鉄塔)をスナップ対象に → 地域と同じ「近い点が自動検出される」操作性。
+    // 数十万点になるが nearestSnap は空間インデックスで近傍セルのみ走査=軽い。
+    (lines.features||[]).forEach(f=>{ const g=f.geometry; if(!g)return;
+      const segs = g.type==='MultiLineString' ? g.coordinates : [g.coordinates||[]];
+      segs.forEach(seg=>seg.forEach(c=>{ if(c&&isFinite(c[0])&&isFinite(c[1])) snapPts.push({lat:c[1],lon:c[0],kind:'vertex'}); }));
+    });
     editLayer=L.layerGroup();
+    buildSnapIndex();   // 全国モデルbuild(~10s)を待たずに、変電所+線頂点で先にスナップを効かせる
     [lineLayer,subLayer,editLayer].forEach(l=>l.addTo(map));
     const ov={'全国送電線(電圧色)':lineLayer,'全国変電所':subLayer,'編集(pending/adopted)':editLayer};
     Object.assign(ov, baseOverlayExtra);
@@ -343,6 +350,7 @@ function buildModel(built){
   $('modelstat').innerHTML=
     `<b class="kbig">島 ${built.n_island_nodes}</b> 点 (<b style="color:#f0883e">実変電所 ${islSub}</b> / 鉄塔分岐 ${islJct}) ／ <b style="color:#388bfd">本系統 ${built.main_size}</b> 点`
     +`<br><span class="muted">橙=繋ぐべき実変電所の島 / 小灰=鉄塔分岐(変電所でない)。連結成分 ${built.n_components} ／ 接続線 ${built.n_edges}</span>`;
+  buildSnapIndex();   // snapPts確定→空間インデックス再構築(全国でも近い点を高速自動検出)
 }
 
 function onModelNode(n){
@@ -371,11 +379,23 @@ function centroid(g){ try{
   return (isFinite(c[0])&&isFinite(c[1]))?c:null;
 }catch(e){return null;} }
 
+// 空間インデックス(グリッドバケット)=全国規模(数十万点)でもスナップ検出を高速に。
+// 地域と同じ「近い点が自動検出される」操作性を全国でも出すための土台。
+let snapIndex=null; const SNAP_CELL=0.01;   // ~1km セル
+function buildSnapIndex(){
+  snapIndex=new Map();
+  for(const p of snapPts){ const k=Math.round(p.lat/SNAP_CELL)+'_'+Math.round(p.lon/SNAP_CELL);
+    let a=snapIndex.get(k); if(!a){a=[];snapIndex.set(k,a);} a.push(p); }
+}
 function nearestSnap(latlng){
   let best=null,bd=Infinity;
   const cx=latlng.lng, cy=latlng.lat;
-  const scan=arr=>{ for(const p of arr){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} } };
-  scan(snapPts); scan(pendingPts);   // OSM点に加え、追加した点/接続端点も反映前からスナップ対象に
+  const scan=arr=>{ if(!arr)return; for(const p of arr){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} } };
+  if(snapIndex){   // 近傍セル(3x3)だけ走査=点数に依らず高速(全国でも軽い)
+    const ci=Math.round(cy/SNAP_CELL), cj=Math.round(cx/SNAP_CELL);
+    for(let i=-1;i<=1;i++)for(let j=-1;j<=1;j++) scan(snapIndex.get((ci+i)+'_'+(cj+j)));
+  } else scan(snapPts);
+  scan(pendingPts);   // OSM点に加え、追加した点/接続端点も反映前からスナップ対象に
   // スナップ半径を~440mに拡大。鉄塔(線頂点)は実測で280-460m間隔(最大689m)あり、
   // 旧~165mだと区間の中央をクリックすると鉄塔に届かず「選択できない点が多数」になっていた。
   // ホバーで最寄り点を黄/赤丸表示しているので、広めでも誤スナップは目で確認できる。
