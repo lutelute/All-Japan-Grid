@@ -136,4 +136,11 @@ def main():
         if p.exists(): slim_plants(p)
 
 if __name__ == "__main__":
+    import os, sys
+    if os.environ.get("AGJ_ALLOW_BASE_WRITE") != "1":
+        sys.exit(
+            "[封鎖:全面改修Phase1] data/*.geojson を in-place 書換する破壊的経路です。"
+            " 正はDB(grid.db)に一本化済み → enrich は DB-native `ajgrid db enrich`(src/db/enrich.py)。"
+            " files=DB-export は tests/test_db_source_unified.py が保証(drift検知)。"
+            " 直接書く場合のみ AGJ_ALLOW_BASE_WRITE=1 を設定。")
     main()

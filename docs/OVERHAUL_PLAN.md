@@ -40,9 +40,10 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
 - **kVスケール要検証**: `templates/editor.html`が`node.kv`を`/1000`(W前提)、`built_view`はkV。実害有無を確認し正規化。
 - **edit_log status遷移**: verified/adopted/rejected の書込みが未実装(全件pending)。adopt/verify時にstatus更新を実装。
 
-### Phase 1 — 破壊経路の封鎖(基底extract不変を構造保証)
-- `scripts/enrich_*.py`(in-place 6本)・`enrich_all.py`・`fix_plant_capacity.py`・`restore_missing_plants.py`・`slim_geojson.py` を**削除 or git-guard**(`data/*.geojson`書込みをassert拒否)。enrichは`src/db/enrich.py`(DB-native)へ一本化。
-- supplement書込みの一本化: `scripts/apply_connections.py`等の非editor経路を`edit_apply.adopt()`のedit_id管理・可逆方式へ統合。
+### Phase 1 — 破壊経路の封鎖(基底extract不変を構造保証)✅(2026-06-17)
+- `scripts/enrich_*.py`(in-place 6本)・`enrich_all.py`・`fix_plant_capacity.py`・`restore_missing_plants.py`・`slim_geojson.py` の **9本に fail-fast ガード**を追加(`__main__` で `data/*.geojson` 直書きを拒否し `ajgrid db enrich`=DB-native へ誘導・`AGJ_ALLOW_BASE_WRITE=1` で明示解除)。**削除でなくガード**(docs/tests が関数を参照・テストは import 経路で不破壊=91 passed)。enrich の正は `src/db/enrich.py`(DB-native)。
+- 二重の保護: 実行時ガード(fail-fast)+ `tests/test_db_source_unified.py`(files=DB-export の drift を CI で検知)。基底extract不変が**構造的に**保証された。
+- 残(別扱い): supplement書込みの一本化(`scripts/apply_connections.py` を `edit_apply.adopt()` へ統合)は本フェーズ外。
 
 ### Phase 2 — 単一の正: builderをDB直読みに(R1 / DB_ARCHITECTURE Step5)
 - `build_network_snapped`の既定を`db`(grid.db)経由へ。round-trip等価テスト(`tests/test_db_source_build.py`既存)で担保。`--source files`は退避フラグ。
