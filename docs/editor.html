@@ -45,6 +45,24 @@
   </div>
   <div class="row mut" id="stat">読込中…</div>
 
+  <div class="row">
+    <button class="go" style="width:100%" onclick="toggleReview()" id="rev-enter">🔍 A島候補を一つずつレビュー</button>
+  </div>
+  <div id="review" style="display:none;border:1px solid #2f81f7;border-radius:8px;padding:8px;margin:6px 0">
+    <h3 style="margin-top:2px">候補レビュー <span id="rev-prog" class="big"></span></h3>
+    <div class="row" id="rev-island"></div>
+    <div class="row" id="rev-target"></div>
+    <div class="row mut" id="rev-flags"></div>
+    <div class="row" style="display:flex;gap:4px;flex-wrap:wrap">
+      <button onclick="revPrev()">◀前</button>
+      <button onclick="revSkip()">⏭スキップ</button>
+      <button class="warn" onclick="revReject()">❌却下</button>
+      <button class="go" onclick="revApprove()">✅承認</button>
+    </div>
+    <div class="row mut">承認=接続を下書きに記録(下のJSONLエクスポートでローカル採用)。<b>OSM下地で実在(線/送電線敷)を確認してから</b>承認。距離大/電圧階級違いは⚠で警告。</div>
+    <div class="row"><button onclick="toggleReview()">レビュー終了(自由編集に戻る)</button></div>
+  </div>
+
   <h3>モード</h3>
   <div class="row modes">
     <button id="m-pan" class="on" onclick="setMode('pan')">🖐 パン</button>
@@ -87,6 +105,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 let DATA={nodes:[],edges:[]}, REGION='okinawa';
 let layers=[], draftLayers=[], mode='pan', pick=[], snapCells=new Map(), CELL=0.01;
 let drafts=loadDrafts();
+// 候補レビュー(A島を一つずつ承認/却下)
+let CANDS=[], revIdx=0, reviewing=false, revLayers=[];
+let revDone=loadRevDone();
 
 // ---- region manifest ----
 fetch('data/built/index.json').then(r=>r.json()).then(m=>{
@@ -236,14 +257,16 @@ function addDraft(action,a,b){
 }
 function renderDrafts(){
   draftLayers.forEach(l=>map.removeLayer(l)); draftLayers=[];
-  const here=drafts.filter(d=>d.region===REGION);
-  here.forEach(d=>{
-    const pts=[[d.a.lat,d.a.lon],[d.b.lat,d.b.lon]];
-    draftLayers.push(L.polyline(pts,{color:d.action==='connect'?'#3fb950':'#f85149',
-      weight:4,dashArray:'7,5',opacity:.95}).addTo(map));
-    pts.forEach(p=>draftLayers.push(L.circleMarker(p,
-      {radius:4,color:'#3fb950',fillOpacity:.7}).addTo(map)));
-  });
+  if(!reviewing){                          // レビュー中は地図に下書きを描かない(候補表示を優先)
+    const here=drafts.filter(d=>d.region===REGION);
+    here.forEach(d=>{
+      const pts=[[d.a.lat,d.a.lon],[d.b.lat,d.b.lon]];
+      draftLayers.push(L.polyline(pts,{color:d.action==='connect'?'#3fb950':'#f85149',
+        weight:4,dashArray:'7,5',opacity:.95}).addTo(map));
+      pts.forEach(p=>draftLayers.push(L.circleMarker(p,
+        {radius:4,color:'#3fb950',fillOpacity:.7}).addTo(map)));
+    });
+  }
   document.getElementById('ndraft').textContent=drafts.length;
   const box=document.getElementById('drafts');
   if(!drafts.length){box.innerHTML='<span class="mut">なし</span>';return;}
@@ -282,6 +305,84 @@ function proposeIssue(){
     '```jsonl\n'+jsonl()+'\n```\n';
   const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
   window.open(url,'_blank');
+}
+
+// ---- 候補レビュー(A島を一つずつ) ----
+function loadRevDone(){try{return new Set(JSON.parse(localStorage.getItem('agj_rev_done')||'[]'));}catch(e){return new Set();}}
+function saveRevDone(){localStorage.setItem('agj_rev_done',JSON.stringify([...revDone]));}
+function clearOverlays(){[layers,draftLayers,pickLayer,revLayers].forEach(a=>a.forEach(l=>map.removeLayer(l)));
+  layers=[];draftLayers=[];pickLayer=[];revLayers=[];}
+
+async function toggleReview(){
+  reviewing=!reviewing;
+  document.getElementById('review').style.display=reviewing?'block':'none';
+  document.getElementById('rev-enter').style.display=reviewing?'none':'block';
+  if(reviewing){
+    if(!CANDS.length){
+      try{const d=await fetch('data/island_candidates.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json();});
+        CANDS=d.candidates||[];}
+      catch(e){flash('候補読込失敗: '+e+' (build_island_candidates.py を実行)',true);
+        reviewing=false;document.getElementById('review').style.display='none';
+        document.getElementById('rev-enter').style.display='block';return;}
+    }
+    setMode('pan'); clearOverlays();
+    revIdx=Math.min(parseInt(localStorage.getItem('agj_rev_idx')||'0',10)||0, Math.max(0,CANDS.length-1));
+    showCand();
+  } else {
+    revLayers.forEach(l=>map.removeLayer(l)); revLayers=[];
+    loadRegion(REGION);                    // モデル表示に復帰
+  }
+}
+function showCand(){
+  revLayers.forEach(l=>map.removeLayer(l)); revLayers=[];
+  const P=document.getElementById('rev-prog'), I=document.getElementById('rev-island'),
+        T=document.getElementById('rev-target'), F=document.getElementById('rev-flags');
+  if(revIdx>=CANDS.length){
+    P.textContent='完了'; I.innerHTML='<b>全候補を確認しました 🎉</b>';
+    T.innerHTML=''; F.innerHTML='承認分はJSONLエクスポートしてローカルで採用。'; return;
+  }
+  const c=CANDS[revIdx], isl=c.island, tg=c.target;
+  localStorage.setItem('agj_rev_idx',String(revIdx));
+  const im=L.circleMarker([isl.lat,isl.lon],{radius:9,color:'#f0883e',fillColor:'#f0883e',fillOpacity:.6,weight:3}).addTo(map);
+  im.bindTooltip(`島: ${isl.name}`,{permanent:true,direction:'top'}); revLayers.push(im);
+  if(tg){
+    const tm=L.circleMarker([tg.lat,tg.lon],{radius:8,color:'#2f81f7',fillColor:'#2f81f7',fillOpacity:.6,weight:3}).addTo(map);
+    tm.bindTooltip(`接続先: ${tg.name}`,{permanent:true,direction:'bottom'}); revLayers.push(tm);
+    revLayers.push(L.polyline([[isl.lat,isl.lon],[tg.lat,tg.lon]],
+      {color:'#e3b341',weight:3,dashArray:'8,6'}).addTo(map));
+    if(tg.dist_km>40){ map.setView([isl.lat,isl.lon],11); }
+    else { map.fitBounds(L.latLngBounds([[isl.lat,isl.lon],[tg.lat,tg.lon]]).pad(0.5)); }
+  } else { map.setView([isl.lat,isl.lon],13); }
+  const nconn=drafts.filter(d=>d.action==='connect').length;
+  P.textContent=`#${c.rank}/${CANDS.length}${revDone.has(c.rank)?' ✓':''}（承認${nconn}）`;
+  const vmis=isl.voltage_mismatch&&isl.osm_kv?` <span class="mut">(OSM ${isl.osm_kv}kV)</span>`:'';
+  const rmis=isl.region_mismatch?` → <b>${isl.region_calibrated}</b><span class="mut">(operator校正)</span>`:'';
+  I.innerHTML=`<b>島</b>: ${isl.name}<br>${isl.kv}kV${vmis} · deg${isl.deg} · ${isl.region}${rmis}`
+    +(isl.operator?`<br><span class="mut">op: ${isl.operator}</span>`:'');
+  T.innerHTML=tg?`<b>接続先候補</b>: ${tg.name}<br>${tg.kv}kV · ${tg.dist_km}km`
+    :'<b>接続先候補</b>: 不明(手動で探す)';
+  const flags=[];
+  if(tg&&!tg.kv_class_ok) flags.push('⚠ 電圧階級が島と異なる(変圧器/別系統かも)');
+  if(tg&&tg.dist_km>10) flags.push(`⚠ 距離大(${tg.dist_km}km)=実在を要確認`);
+  F.innerHTML=flags.join('<br>');
+}
+function revAdvance(){revIdx++;showCand();}
+function revPrev(){if(revIdx>0)revIdx--;showCand();}
+function revSkip(){revAdvance();}
+function revReject(){const c=CANDS[revIdx];if(c){revDone.delete(c.rank);saveRevDone();}revAdvance();}
+function revApprove(){
+  const c=CANDS[revIdx]; if(!c)return;
+  if(!c.target){flash('接続先不明=承認不可(スキップ可)',true);return;}
+  const isl=c.island, tg=c.target;
+  drafts.push({action:'connect',region:isl.region_calibrated||isl.region,
+    a:{node:null,lat:isl.lat,lon:isl.lon},b:{node:null,lat:tg.lat,lon:tg.lon},
+    evidence:'osm_visible',source:'review',status:'pending',
+    note:`候補#${c.rank} ${isl.name}→${tg.name} (${tg.dist_km}km${tg.kv_class_ok?'':',階級違い'})`,
+    ts:new Date().toISOString()});
+  saveDrafts(); renderDrafts();
+  revDone.add(c.rank); saveRevDone();
+  flash(`✅ #${c.rank} ${isl.name}→${tg.name} を記録`,false);
+  revAdvance();
 }
 
 // ---- flash ----
