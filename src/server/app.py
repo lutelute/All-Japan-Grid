@@ -32,6 +32,11 @@ app = FastAPI(
 
 # Static files and templates
 app.mount("/static", StaticFiles(directory=os.path.join(_BASE_DIR, "static")), name="static")
+# 全面改修Phase5: 共有エディタコア(docs/js/editor_core.js)を :8088 でも配信し、Pages と
+# **同一の物理ファイル**を参照させる(色パレット等の正を1つに・コピー/drift防止)。
+_DOCS_JS = os.path.join(_BASE_DIR, "..", "..", "docs", "js")
+if os.path.isdir(_DOCS_JS):
+    app.mount("/js", StaticFiles(directory=_DOCS_JS), name="js")
 templates = Jinja2Templates(directory=os.path.join(_BASE_DIR, "templates"))
 
 # Preload GeoJSON data on startup

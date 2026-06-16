@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/editor_core.js"></script>
 <style>
   :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--ln:#30363d;--card:#161b22}
   html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -158,11 +159,10 @@ function fitData(){
 }
 
 // ---- rendering ----
-function nodeColor(n){
-  if(!n.sub) return '#6e7681';            // junction (鉄塔/分岐)
-  if(n.main) return '#2f81f7';            // 本系統の変電所
-  return n.deg>0 ? '#a371f7' : '#f0883e'; // 連結サブクラスタ : 孤立(deg0)
-}
+// 節点色は共有コア(js/editor_core.js)に一本化 = :8088と同一パレット(全面改修Phase5)
+function nodeColor(n){ return (typeof agjNodeColor==='function')
+  ? agjNodeColor(n)
+  : (!n.sub?'#c98a3a':n.main?'#388bfd':(n.deg>0?'#a371f7':'#f0883e')); }
 function render(){
   layers.forEach(l=>map.removeLayer(l)); layers=[];
   const big=DATA.nodes.length>6000;       // 全国規模は軽量化

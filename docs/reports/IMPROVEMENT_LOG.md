@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-17 — **Claude Opus 4.8** — 全面改修 一気通貫: Phase1(破壊封鎖)/Phase4(出力統一)/Phase5(共有エディタコア)（141）
+
+オーナー「あとは一気通貫で」(残Phase1/4/5)。`docs/OVERHAUL_PLAN.md`。
+
+- **Phase1 破壊enrich封鎖**: `scripts/enrich_*.py`(in-place 6本)+`fix_plant_capacity`/`restore_missing_plants`/`slim_geojson` の**9本**に `__main__` fail-fast ガード(`data/*.geojson` 直書きを拒否し `ajgrid db enrich`=DB-native へ誘導・`AGJ_ALLOW_BASE_WRITE=1` で解除)。削除でなくガード(docs/tests が関数 import=不破壊・91 passed)。**基底extract不変を構造保証**(実行時ガード+`test_db_source_unified` の drift 検知の二重)。
+- **Phase4 出力の単一オーケストレーション**: `scripts/regenerate_all.py`(build_editor_data→powerflow→matpower→cim→build_static_site を1コマンド・重い段は `--skip-*`/`--light`)+ `docs/data/MODEL_VERSION.json`(git HEAD刻印=skew可視化)。`deploy-pages.yml` trigger に builder/connectivity/built_view/build_editor_data/regenerate_all を追加。OSM地図4/23 vs built6/16 の7週間skewを「一括再生成+版可視化」で解消。
+- **Phase5 共有エディタコア(部分)**: `docs/js/editor_core.js`(`AGJ_COLORS`+`agjNodeColor`=島/本系統の色分けの単一の正)。app.py が `/js`→`docs/js` を mount し **:8088 も Pages も同一物理ファイル**を参照(drift不能)。両 editor.html が採用・**:8088 は値不変=見た目不変**(read-only headless 検証: AGJ_COLORS=#388bfd・error0)。本質的乖離はPhase2/3で解消済。フルDataSource1本化は設計済・deferred(:8088ライブ書込みの安全検証要)。
+- pytest 1127 passed(既知okinawa pin3除く)。不変条件維持(物理接続=真・捏造禁止・基底extract不変・スコアカード不可触)。全面改修 Phase1-5 一巡完了(Phase5フル統合のみ hands-on 残)。
+
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修: 正を1つに(Phase2 DB正化=既達の固定 / Phase3 連結性一本化)（140）
 
 オーナー「全面改修(エディタ以外も含め全体見直し)」→「DB正化を核に先に」→「Phase3」。核心=正(source of truth)を1つに。`docs/OVERHAUL_PLAN.md`(3並列調査の実コード根拠)。

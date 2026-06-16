@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/editor_core.js"></script><!-- 全面改修Phase5: 色パレットの単一の正(Pagesと同一ファイル) -->
 <style>
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
   #map{position:absolute;top:0;bottom:0;left:0;right:370px;cursor:crosshair}
@@ -328,7 +329,7 @@ function buildModel(built){
   (built.nodes||[]).forEach(n=>{
     if(!isFinite(n.lat)||!isFinite(n.lon))return;
     if(n.main){
-      L.circleMarker([n.lat,n.lon],{radius:3,color:'#388bfd',weight:0,fillOpacity:.85})
+      L.circleMarker([n.lat,n.lon],{radius:3,color:AGJ_COLORS.main,weight:0,fillOpacity:.85})
         .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'bus',node:n.id,kv:(n.kv||0)/1000});  // 本系統節点もスナップ対象(島→本系統を繋ぐ)
     }else if(n.sub){
@@ -336,14 +337,14 @@ function buildModel(built){
       // degree>=1=連結サブクラスタ(線で繋がるが本系統外=越境/鉄道/OSM欠落)=終端バス扱い=紫(島扱いしない)。
       const connected=(n.deg||0)>=1;
       const m=L.circleMarker([n.lat,n.lon],{radius:connected?4:6,color:'#fff',
-        weight:connected?1:1.5,fillColor:connected?'#a371f7':'#f0883e',fillOpacity:connected?.7:.9});
+        weight:connected?1:1.5,fillColor:connected?AGJ_COLORS.islandSub:AGJ_COLORS.islandIso,fillOpacity:connected?.7:.9});
       const lbl=connected?'連結(本系統外サブクラスタ/終端バス)':'孤立(線なし)';
       if(n.name) m.bindTooltip(`${n.name}${n.kv?` ${n.kv}kV`:''} — ${lbl}`,{sticky:true});
       m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000});
     }else{
       // junction=鉄塔の分岐点(変電所でない)。小さく灰で区別(オーナー指摘「島の点が鉄塔/空」)
-      const m=L.circleMarker([n.lat,n.lon],{radius:3,color:'#c98a3a',weight:0,fillOpacity:.5});
+      const m=L.circleMarker([n.lat,n.lon],{radius:3,color:AGJ_COLORS.junction,weight:0,fillOpacity:.5});
       m.bindTooltip('鉄塔分岐(変電所でない)',{sticky:true});
       m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'jct',node:n.id,kv:(n.kv||0)/1000});

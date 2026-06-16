@@ -82,11 +82,10 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
 - 運用: モデルに影響する変更後は `regenerate_all.py` を回してから commit(MODEL_VERSION が git HEAD を記録)。
 - 残(別扱い): OSM map/CIM の supplement/cuts 反映 or「raw extract」明示ラベルは未(現状=raw base 由来。CI deploy で毎回再生成され内容は committed data と一致)。heavy段(powerflow/matpower/cim)はpyyaml-only CIでは回せずローカル/オンデマンド。
 
-### Phase 5 — エディタ1本化(runtime-adaptive)
-- **DataSource抽象**: `LiveSource`(/api)・`StaticSource`(静的JSON+localStorage下書き)。起動時backend検出で差替。
-- `renderModel`/`SnapIndex`/`COLORS`を共有コアに抽出(2ファイルの重複/乖離を解消)。
-- **単一HTML正本**(`templates/editor.html`)→ build時`docs/editor.html`へコピー。:8088もPagesも同一コード・同一の見た目/幾何。
-- verify/adoptはliveのみ、staticは下書き+export(捏造しない)。レビュー/候補機能は両モードに露出。
+### Phase 5 — エディタ1本化(runtime-adaptive)— 部分達成 ✅(2026-06-17)
+- **共有レンダリングコア `docs/js/editor_core.js`**(`AGJ_COLORS`+`agjNodeColor`)を新設 = 島/本系統の**色分けの単一の正**。app.py が `/js`→`docs/js` を mount し、**:8088 も Pages も同一の物理ファイル**を参照(`/js/editor_core.js` ⇔ `js/editor_core.js`・コピー不要・drift不能)。両 editor.html が読込・`AGJ_COLORS` 使用。**値は :8088 の従来パレットに一致=:8088 は見た目不変**(read-only headless で AGJ_COLORS=#388bfd・描画・error0 を検証)。
+- **本質的乖離は既に解消**: データ/連結性は Phase2(同一モデル)/Phase3(同一連結性権威)で統一済 → 2 editor が示す**内容は一致**。Phase5 は残った見た目(色パレット)の単一ソース化。
+- **残(deferred)**: フルの DataSource 1本化(`LiveSource`/`StaticSource` 自動判別・単一HTML・一方を廃止・`renderModel`/`SnapIndex` 全共有)は設計済(Agent B)だが大規模 + :8088 のライブ書込み機能(verify/adopt/issue)を安全に自動検証できない(Playwright絡まりの教訓)ため、**ハンズオンで実施**するのが安全。色パレットの単一ソース化で「再び色がズレる」は構造的に防止。
 
 ## 4. 推奨実行順
 **0(可視バグ即修正)→ 1(破壊封鎖=安全)→ 5(エディタ統一=痛点解消)→ 3(連結性一致)→ 2(DB正化)→ 4(出力統一+CI)**。
