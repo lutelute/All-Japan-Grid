@@ -32,6 +32,12 @@
          font-size:13px;color:#fff;display:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
   hr{border:0;border-top:1px solid var(--ln);margin:10px 0}
   .stat{display:inline-block;min-width:54px} .big{font-size:16px;font-weight:600}
+  .leaflet-tooltip.lbl{font-size:12px;font-weight:700;text-align:center;padding:3px 7px;
+    border:2px solid #fff;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.5);opacity:1}
+  .leaflet-tooltip.lbl-isl{background:#f0883e;color:#fff}
+  .leaflet-tooltip.lbl-isl::before{border-top-color:#f0883e}
+  .leaflet-tooltip.lbl-tgt{background:#2f81f7;color:#fff}
+  .leaflet-tooltip.lbl-tgt::before{border-bottom-color:#2f81f7}
 </style></head>
 <body>
 <div id="map"></div>
@@ -50,11 +56,13 @@
   </div>
   <div id="review" style="display:none;border:1px solid #2f81f7;border-radius:8px;padding:8px;margin:6px 0">
     <h3 style="margin-top:2px">候補レビュー <span id="rev-prog" class="big"></span></h3>
+    <div class="row mut"><span class="leg" style="background:#f0883e"></span>🏝 つなぐ島　<span class="leg" style="background:#2f81f7"></span>🔌 接続先　<span class="legl" style="background:#e3b341"></span>提案する線</div>
     <div class="row" id="rev-island"></div>
     <div class="row" id="rev-target"></div>
     <div class="row mut" id="rev-flags"></div>
     <div class="row" style="display:flex;gap:4px;flex-wrap:wrap">
       <button onclick="revPrev()">◀前</button>
+      <button onclick="showCand()" title="地図をこの候補へ再フォーカス">↺ この候補へ</button>
       <button onclick="revSkip()">⏭スキップ</button>
       <button class="warn" onclick="revReject()">❌却下</button>
       <button class="go" onclick="revApprove()">✅承認</button>
@@ -142,6 +150,7 @@ async function loadRegion(r){
 
 function fitData(){
   if(!DATA.nodes.length)return;
+  map.invalidateSize();                      // iframe/タブ内で地図サイズがずれるのを補正
   const ll=DATA.nodes.map(n=>[n.lat,n.lon]);
   map.fitBounds(L.latLngBounds(ll).pad(0.05));
 }
@@ -343,16 +352,26 @@ function showCand(){
   }
   const c=CANDS[revIdx], isl=c.island, tg=c.target;
   localStorage.setItem('agj_rev_idx',String(revIdx));
-  const im=L.circleMarker([isl.lat,isl.lon],{radius:9,color:'#f0883e',fillColor:'#f0883e',fillOpacity:.6,weight:3}).addTo(map);
-  im.bindTooltip(`島: ${isl.name}`,{permanent:true,direction:'top'}); revLayers.push(im);
+  map.invalidateSize();                      // ★これが無いと地図が候補へ移動しない(iframe/タブのサイズずれ補正)
+  // 島(主役): 大ハロー(点滅風の大リング)+ 橙ドット + 明確ラベル
+  revLayers.push(L.circleMarker([isl.lat,isl.lon],
+    {radius:26,color:'#f0883e',weight:3,fill:false,dashArray:'6,6'}).addTo(map));
+  const im=L.circleMarker([isl.lat,isl.lon],
+    {radius:11,color:'#fff',weight:3,fillColor:'#f0883e',fillOpacity:1}).addTo(map);
+  im.bindTooltip(`🏝 つなぐ島<br>${isl.name}<br>${isl.kv}kV`,
+    {permanent:true,direction:'top',className:'lbl lbl-isl',offset:[0,-10]});
+  revLayers.push(im);
   if(tg){
-    const tm=L.circleMarker([tg.lat,tg.lon],{radius:8,color:'#2f81f7',fillColor:'#2f81f7',fillOpacity:.6,weight:3}).addTo(map);
-    tm.bindTooltip(`接続先: ${tg.name}`,{permanent:true,direction:'bottom'}); revLayers.push(tm);
+    const tm=L.circleMarker([tg.lat,tg.lon],
+      {radius:9,color:'#fff',weight:3,fillColor:'#2f81f7',fillOpacity:1}).addTo(map);
+    tm.bindTooltip(`🔌 接続先<br>${tg.name}<br>${tg.kv}kV`,
+      {permanent:true,direction:'bottom',className:'lbl lbl-tgt',offset:[0,10]});
+    revLayers.push(tm);
     revLayers.push(L.polyline([[isl.lat,isl.lon],[tg.lat,tg.lon]],
-      {color:'#e3b341',weight:3,dashArray:'8,6'}).addTo(map));
-    if(tg.dist_km>40){ map.setView([isl.lat,isl.lon],11); }
-    else { map.fitBounds(L.latLngBounds([[isl.lat,isl.lon],[tg.lat,tg.lon]]).pad(0.5)); }
-  } else { map.setView([isl.lat,isl.lon],13); }
+      {color:'#e3b341',weight:4,dashArray:'10,6'}).addTo(map));
+    map.fitBounds(L.latLngBounds([[isl.lat,isl.lon],[tg.lat,tg.lon]]).pad(0.6),
+      {maxZoom:15,animate:false});
+  } else { map.setView([isl.lat,isl.lon],14,{animate:false}); }
   const nconn=drafts.filter(d=>d.action==='connect').length;
   P.textContent=`#${c.rank}/${CANDS.length}${revDone.has(c.rank)?' ✓':''}（承認${nconn}）`;
   const vmis=isl.voltage_mismatch&&isl.osm_kv?` <span class="mut">(OSM ${isl.osm_kv}kV)</span>`:'';
