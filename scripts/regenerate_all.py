@@ -38,6 +38,10 @@ STEPS = [
     ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
+    # 全面改修Phase5フル統合: Pagesエディタを単一の正(templates/editor.html)から再生成。
+    # 静的shimでフル:8088エディタがPages上で動く(drift防止・最後にdocs/editor.htmlへ書く)。
+    ("build_pages_editor",
+     [sys.executable, "scripts/build_pages_editor.py", "--out", "docs/editor.html"], False),
 ]
 
 
