@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-17 — **Claude Opus 4.8** — 全面改修 Phase5 フル統合: Pagesエディタを:8088の正から派生(静的shim方式)（142）
+
+オーナー「Phase5のフル統合を一緒にやろう」。Pages編集タブが:8088から分岐したlossyコピー(見た目/データ/連結性ズレ)だった問題の**最終解決**。確定設計=`docs/OVERHAUL_PLAN.md`「静的shim方式」。
+
+- **正は1つ = `src/server/templates/editor.html`(フル機能の:8088エディタ)。:8088は無改修**(git でテンプレ unchanged を証明=作り込み完全保存)。Pages版は**ビルドで派生**する構成に一本化 → 二度と分岐しない。
+- **`docs/js/editor_static_shim.js`(新規)**: backend無し(Pages)で `window.fetch` を上書きし `/api/*` を静的等価へ振替。**肝=レスポンス正規化**: 事前生成 `data/built/{region}.json` は counts を `stats` 内包だがフロントはトップレベルで読む(L274/L358)→ shim が `stats` を展開(これが「全国undefined/無茶苦茶接続」級バグの構造的解消)。per-region生OSMは公開済 `built/{region}.json` から**軽量合成**(変電所リング+回廊線=fit復活・snap点6万・基底extract非静的化)、全国概観は既存tier(`subs/lines_all.geojson`+min_kv)。下書きCRUD=localStorage、verify/adopt=backend専用ゆえDOM非表示、issue=GitHubプレフィルURL(捏造せず人間がGitHubで作成)。`__AGJ_STATIC__=true`。
+- **`scripts/build_pages_editor.py`(新規)**: テンプレを copy + 絶対パス(`/js/`)→Pages相対 rewrite + shim を本体inline script直前に inject → `docs/editor.html`(723行=フルエディタ)生成。`docs/data/built/regions_bbox.json`(shim の `/api/regions`=regionAt用・全10地域bbox+island_classマニフェスト)も生成。アンカー不検出で fail-fast(壊れた版を出さない)。`regenerate_all.py` STEPS と `deploy-pages.yml`(再生成step+trigger)に組込=CI が常にテンプレから再生成(drift不能)。
+- **検証(隔離headless・localhost専用・read-only・ダイアログdismiss・MCP不使用)**: ①全国 ②地域(tokyo) ③統合経路(index→タブ→iframe `?v=7`) の**3経路すべてPASS・コンソールエラー0**。stats正規化で `main_size:11423/n_island_nodes:2161/成分1096` 正常表示、地域は合成subs2232/lines4670・tokyo中心fit・snap60493、下書きCRUD往復・issue下書き生成 OK。旧 hand-rolled docs/editor.html(420行・review-mode)を置換(候補機能は:8088の `toggleCandidates` が継承)。
+- **不変条件のテスト固定** `tests/test_pages_editor_build.py`(4件): shim注入+相対パス化、**docs/editor.html ≡ テンプレ派生(ドリフト禁止)**、テンプレに shim 不混入(無改修原則)、regions_bbox マニフェスト。**full pytest 1134 passed/3 skipped/0 failed**(okinawa supplement退避時)。不変条件維持(物理接続=真・捏造禁止・基底extract不変・スコアカード不可触)。**全面改修 Phase1-5 完全完了**。
+
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修 一気通貫: Phase1(破壊封鎖)/Phase4(出力統一)/Phase5(共有エディタコア)（141）
 
 オーナー「あとは一気通貫で」(残Phase1/4/5)。`docs/OVERHAUL_PLAN.md`。

@@ -82,12 +82,12 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
 - 運用: モデルに影響する変更後は `regenerate_all.py` を回してから commit(MODEL_VERSION が git HEAD を記録)。
 - 残(別扱い): OSM map/CIM の supplement/cuts 反映 or「raw extract」明示ラベルは未(現状=raw base 由来。CI deploy で毎回再生成され内容は committed data と一致)。heavy段(powerflow/matpower/cim)はpyyaml-only CIでは回せずローカル/オンデマンド。
 
-### Phase 5 — エディタ1本化(runtime-adaptive)— 部分達成 ✅(2026-06-17)
+### Phase 5 — エディタ1本化(静的shim方式)— 完了 ✅(2026-06-17)
 - **共有レンダリングコア `docs/js/editor_core.js`**(`AGJ_COLORS`+`agjNodeColor`)を新設 = 島/本系統の**色分けの単一の正**。app.py が `/js`→`docs/js` を mount し、**:8088 も Pages も同一の物理ファイル**を参照(`/js/editor_core.js` ⇔ `js/editor_core.js`・コピー不要・drift不能)。両 editor.html が読込・`AGJ_COLORS` 使用。**値は :8088 の従来パレットに一致=:8088 は見た目不変**(read-only headless で AGJ_COLORS=#388bfd・描画・error0 を検証)。
 - **本質的乖離は既に解消**: データ/連結性は Phase2(同一モデル)/Phase3(同一連結性権威)で統一済 → 2 editor が示す**内容は一致**。Phase5 は残った見た目(色パレット)の単一ソース化。
-- **残(フル統合)**: 下記「静的shim方式」で実施(オーナーと合意・2026-06-17)。
+- **フル統合 完了(2026-06-17・台帳142)**: 下記「静的shim方式」を実装。`editor_static_shim.js`+`build_pages_editor.py` で `templates/editor.html`(無改修)から `docs/editor.html`(フルエディタ723行)を派生。3経路 headless 検証 PASS(error0)・`tests/test_pages_editor_build.py` でドリフト禁止を固定・CI が常に再生成。**Pagesは二度と:8088から分岐しない**。
 
-#### Phase 5 フル統合の確定設計 — 静的shim方式(:8088を一切触らない)
+#### Phase 5 フル統合の確定設計 — 静的shim方式(:8088を一切触らない)〔実装済〕
 
 **正は1つ = `src/server/templates/editor.html`(フル機能の:8088エディタ)。:8088は無改修**(=既存挙動・あなたの作り込みが完全保存・壊れない)。Pages版は**ビルドで派生**する:
 
@@ -105,7 +105,7 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
 5. **置換**: 現 hand-rolled `docs/editor.html`(レビューモード付き)を生成版に置換。レビュー/候補(`island_candidates.json`)はモードとして移植 or :8088の client-candidates と統合。
 6. **手順厳守**: 生成版は別名(`docs/editor.new.html`)で先に headless 検証 → OKならtabを差替(壊れた版を配信しない)。
 
-**実施はコンテキストに余裕のある新セッションで**(721行エディタの /api 利用を正確に読む + 両側検証が要るため。文脈枯渇中の大改造は:8088破壊リスク)。引き継ぎ: `.claude/handover/latest.md`。
+**実施済(新セッション・2026-06-17)**: 721行エディタの /api 利用を全列挙 → shim 実装 → 3経路 headless 検証 PASS で完了。:8088 テンプレは git unchanged(無改修を証明)。詳細は台帳142。
 
 ## 4. 推奨実行順
 **0(可視バグ即修正)→ 1(破壊封鎖=安全)→ 5(エディタ統一=痛点解消)→ 3(連結性一致)→ 2(DB正化)→ 4(出力統一+CI)**。
