@@ -117,42 +117,30 @@ def build_national(collected: dict) -> dict:
             nodes.append(m)
         edges.extend(v["edges"])
 
-    g = nx.Graph()
-    for n in nodes:
-        g.add_node(k5(n["lat"], n["lon"]))
-    for e in edges:
-        if e.get("a") and e.get("b"):
-            g.add_edge(tuple(e["a"]), tuple(e["b"]))
-    # 越境stitch: ~100m cells joining nodes from different regions (same physical point)
-    n_stitch = 0
-    prec = 3
-    cellmap = defaultdict(list)
-    for n in nodes:
-        cellmap[(round(n["lat"], prec), round(n["lon"], prec))].append(n)
-    for grp in cellmap.values():
-        if len({n["region"] for n in grp}) <= 1:
-            continue
-        base = k5(grp[0]["lat"], grp[0]["lon"])
-        for n in grp[1:]:
-            if n["region"] != grp[0]["region"]:
-                kk = k5(n["lat"], n["lon"])
-                if kk != base:
-                    g.add_edge(base, kk)
-                n_stitch += 1
-    comps = sorted(nx.connected_components(g), key=len, reverse=True)
-    main = set(comps[0]) if comps else set()
+    # Phase3: 連結性は単一権威(src.powerflow.connectivity)で計算 = built_view_all / national.py と統一。
+    # 周波数島(東50/西60を別)・同電圧階級stitch(~110m)・OCCTO ACタイ。pandapower非依存。
+    from src.powerflow.connectivity import compute_connectivity
+    conn = compute_connectivity(nodes, edges)
+    main = conn["main_keys"]
     for n in nodes:
         n["main"] = 1 if k5(n["lat"], n["lon"]) in main else 0
     for e in edges:
         if e.get("a") and e.get("b"):
             e["main"] = 1 if (tuple(e["a"]) in main and tuple(e["b"]) in main) else 0
+    # ACタイを表示枝に追加(島内 region 対の物理連系)
+    for ka, kb, tname in conn["tie_edges"]:
+        edges.append({"a": list(ka), "b": list(kb), "par": 1, "kv": 0,
+                      "main": 1 if (ka in main and kb in main) else 0,
+                      "path": [list(ka), list(kb)], "tie": 1, "name": tname})
+    meta = conn["meta"]
     island = sum(1 for n in nodes if not n["main"])
     return {
         "region": "all",
         "stats": {
             "n_nodes": len(nodes), "n_edges": len(edges),
-            "main_size": len(main), "n_components": len(comps),
-            "n_island_nodes": island, "n_stitch": n_stitch,
+            "main_size": len(main), "n_components": sum(meta["components"].values()),
+            "n_island_nodes": island, "n_stitch": meta["n_stitch"],
+            "n_tie": meta["n_tie"], "islands": meta["components"],
         },
         "nodes": [{"id": n["id"], "lat": n["lat"], "lon": n["lon"],
                    "kv": n["kv"], "main": n["main"], "deg": n["deg"],
@@ -161,7 +149,8 @@ def build_national(collected: dict) -> dict:
         # National: OSM幾何(path)込み — :8088の built_view_all と同一表現に統一。
         # path省略の直線(弦)描画だと長距離枝が斜めに交差して「無茶苦茶接続」に見えるため。
         "edges": [({"a": e["a"], "b": e["b"], "main": e["main"], "kv": e["kv"],
-                    "par": e["par"]} | ({"path": e["path"]} if e.get("path") else {}))
+                    "par": e["par"]} | ({"path": e["path"]} if e.get("path") else {})
+                   | ({"tie": 1} if e.get("tie") else {}))
                   for e in edges],
     }
 

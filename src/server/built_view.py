@@ -40,42 +40,31 @@ def built_view_all(join_untagged_tips=False, regions=None, stitch_km=0.15):
     def k5(la, lo):
         return (round(la, 5), round(lo, 5))
 
-    # 全国一枚グラフ: 座標キー(round5)で節点(同座標の越境重複は自動統合)
-    g = nx.Graph()
+    # Phase3: 連結性は単一権威(src.powerflow.connectivity)で計算 = national.py(潮流)と統一。
+    # 4周波数同期島ごとに(東50Hz/西60Hzを別に)・越境は同電圧階級stitch(~110m)・OCCTO ACタイを連結。
+    # 旧「全国一枚グラフ・任意階級stitch・タイ無し」だと東西を誤連結し島判定が潮流と食い違っていた。
+    from src.powerflow.connectivity import compute_connectivity
+    conn = compute_connectivity(nodes, edges)
+    main = conn["main_keys"]
     for n in nodes:
-        g.add_node(k5(n["lat"], n["lon"]))
-    for e in edges:
-        if e.get("a") and e.get("b"):
-            g.add_edge(tuple(e["a"]), tuple(e["b"]))
-    # 越境stitch: ~100mセルで地域をまたぐ節点群を繋ぐ(同一物理点=境界の変電所/鉄塔)
-    n_stitch = 0
-    prec = 3 if stitch_km >= 0.1 else 4
-    cellmap = defaultdict(list)
-    for n in nodes:
-        cellmap[(round(n["lat"], prec), round(n["lon"], prec))].append(n)
-    for grp in cellmap.values():
-        if len({n["region"] for n in grp}) <= 1:
-            continue
-        base = k5(grp[0]["lat"], grp[0]["lon"])
-        for n in grp[1:]:
-            if n["region"] != grp[0]["region"]:
-                kk = k5(n["lat"], n["lon"])
-                if kk != base:
-                    g.add_edge(base, kk)
-                n_stitch += 1
-    comps = sorted(nx.connected_components(g), key=len, reverse=True)
-    main = set(comps[0]) if comps else set()
-    for n in nodes:
-        n["main"] = k5(n["lat"], n["lon"]) in main      # 全国グローバルで再色分け
+        n["main"] = k5(n["lat"], n["lon"]) in main      # 所属周波数島の最大成分=本系統
     for e in edges:
         if e.get("a") and e.get("b"):
             e["main"] = tuple(e["a"]) in main and tuple(e["b"]) in main
+    # ACタイを表示枝に追加(島内 region 対を繋ぐ物理連系=本系統連結の一部)
+    for ka, kb, tname in conn["tie_edges"]:
+        edges.append({"path": [list(ka), list(kb)], "a": list(ka), "b": list(kb),
+                      "main": (ka in main and kb in main), "par": 1, "kv": 0,
+                      "name": tname, "tie": True})
+    meta = conn["meta"]
     island = sum(1 for n in nodes if not n["main"])
     return {"region": "all", "n_nodes": len(nodes), "n_edges": len(edges),
             "nodes": nodes, "edges": edges, "by_region": by_region,
-            "main_size": len(main), "n_components": len(comps),
-            "n_island_nodes": island, "n_stitch": n_stitch,
-            "note": f"全国一枚build+越境stitch({n_stitch}点)。連結性を全国でグローバル計算(Phase2)"}
+            "main_size": len(main), "n_components": sum(meta["components"].values()),
+            "n_island_nodes": island, "n_stitch": meta["n_stitch"], "n_tie": meta["n_tie"],
+            "islands": meta["components"],
+            "note": "周波数島(east/west/hokkaido/okinawa)別に連結性計算+OCCTO ACタイ"
+                    "(Phase3: national.pyと単一権威で統一)"}
 
 
 def built_view(region, data_dir=None, join_untagged_tips=False):

@@ -59,9 +59,21 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
   committed の乖離リスクを生むため**保留**。代わりに「files=DB-export を破壊させない」=Phase 1(破壊封鎖)が
   真の保護。→ **次は下流の不統一(Phase 3 連結性 / Phase 4 出力オーケストレーション)が本丸**。
 
-### Phase 3 — 単一の連結性権威 + 定義の一本化
+### Phase 3 — 単一の連結性権威 + 定義の一本化 ✅(2026-06-17)
 - `national.build_island_networks`(stitch+ties)を**全国連結性の唯一の計算**に。`built_view_all`/`build_national`はそれを消費(round-5座標グラフの再計算を廃止)→ Pages島色=潮流島=census が構造的に一致。
 - 地域→周波数のハードコード4箇所(`national.py:44`/`pandapower_builder.py:51`/`built_view.py:10`/`dynamics builder`)を`src/regions.py`(config/regions.yaml)へ一本化。
+
+**実装(2026-06-17)**: `src/powerflow/connectivity.py`(共有・軽量・pandapower非依存)を新設。
+- `compute_connectivity(nodes, edges)` = **4周波数同期島ごと**に(東50/西60を別)連結性を計算・
+  **越境stitchは同電圧階級~110m**(national.stitch_slice_boundaries と同規則)・**OCCTO ACタイ7本**
+  (`national.load_interconnections`=定義の単一の正)を連結。
+- `built_view_all`(:8088) と `build_editor_data.build_national`(Pages) が**同一権威を消費**
+  (旧: 全国一枚・任意階級stitch・タイ無し=東西を誤連結していた)。`national.ISLANDS`/`load_interconnections`
+  を import = grouping/タイ定義の正を一本化。
+- **検証**: 被覆率が national.diagnose と一致(hok90/east88/west85/oki93% ≈ 90/89/86/95)。
+  ACタイ7本適用。all.json: 島{hok37/east328/west725/oki6}・main 11423(旧10922)・島2161(旧2644・タイ連結で改善)。
+  `tests/test_connectivity.py`(6件: 東西非連結・同階級stitch・別階級非stitch・タイ連結・定義単一)+ pytest 1127 passed。
+- エディタで**ACタイを紫破線で区別表示**。**残**: pandapower_builder/dynamics の region→freq ハードコードは未統一(連結性は connectivity.py に集約済)。
 
 ### Phase 4 — 全出力を単一オーケストレーションで派生 + 鮮度統一
 - `scripts/regenerate_all.py`: `build_editor_data`→`run_national_powerflow`→`export_national_matpower`→`export_cim`→`build_static_site` を順に実行し、**MODEL_VERSION**(git HEAD+timestamp)を全出力metadataに刻印。7週間skewを解消。

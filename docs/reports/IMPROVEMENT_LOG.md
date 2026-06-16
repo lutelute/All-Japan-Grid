@@ -7,6 +7,14 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-17 — **Claude Opus 4.8** — 全面改修: 正を1つに(Phase2 DB正化=既達の固定 / Phase3 連結性一本化)（140）
+
+オーナー「全面改修(エディタ以外も含め全体見直し)」→「DB正化を核に先に」→「Phase3」。核心=正(source of truth)を1つに。`docs/OVERHAUL_PLAN.md`(3並列調査の実コード根拠)。
+
+- **Phase 2(DB正化)— 着手して判明: ソースの正は既に統一済み**。永続 `data/grid.db` build ≡ files build が**全10地域で完全同値**(subs/lines/gens署名 ALL MATCH)、committed `data/*.geojson` は全10地域で DB(R⟕C)の忠実なD層export(roundtripクリーン)。→ 正はDBに一本化済み・files はその検証済 reproducible export。`tests/test_db_source_unified.py`(CI-safe全地域roundtrip+ローカルgrid.db build同値)で不変条件化。grid.dbはgitignore(CIはfiles=DB-exportでbuild)ゆえ build既定のDB切替は保留(driftリスクのみ)。**重要: 今回の不統一の真因はソースDBでなく下流(出力生成)**。
+- **Phase 3(連結性一本化)— 本丸**。`built_view_all`(表示)と `national.py`(潮流)で連結性計算が**2系統**(前者=全国一枚・任意階級stitch・タイ無し / 後者=4周波数島・同階級融合・OCCTO ACタイ)→ **Pages島色 ≠ 潮流の島**だった。`src/powerflow/connectivity.py`(共有・軽量・pandapower非依存)を新設: `compute_connectivity` = **4周波数同期島ごと**(東50/西60を別)・**越境同電圧階級stitch~110m**・**OCCTO ACタイ7本**(`national.load_interconnections`=定義の単一の正)。`built_view_all`/`build_editor_data.build_national` が同一権威を消費 → **Pages島色=潮流の島が構造的に一致**。被覆率 national.diagnose 一致(hok90/east88/west85/oki93%)。all.json: 島{hok37/east328/west725/oki6}・main 11423(旧10922)・タイ7・島2161(旧2644)。エディタでACタイを紫破線表示。`tests/test_connectivity.py` 6件。**pytest 1127 passed**(既知okinawa pin3=working-tree supplement由来)。
+- 不変条件維持: 物理接続=真・計算は検証器・捏造禁止・基底extract不変・committedスコアカード不可触。残: Phase1(破壊enrich封鎖)/Phase4(出力の単一オーケストレーション+鮮度統一)/Phase5(エディタ1本化)。
+
 ## 2026-06-16 — **Claude Opus 4.8** — A島接続の「一つずつレビュー」: 候補worklist + レビューUI（139）
 
 オーナー「一つずつ表示してほしい。100くらいなら確認できる」= A島接続を1件ずつ人手で承認する導線。
