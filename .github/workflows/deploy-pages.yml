@@ -9,6 +9,12 @@ on:
       - 'config/**'
       - 'docs/**'
       - 'scripts/build_static_site.py'
+      # 全面改修Phase4: builder/連結性/編集ビュー生成が変わったら再デプロイ(鮮度統一)
+      - 'src/powerflow/snapped_topology.py'
+      - 'src/powerflow/connectivity.py'
+      - 'src/server/built_view.py'
+      - 'scripts/build_editor_data.py'
+      - 'scripts/regenerate_all.py'
   workflow_dispatch:
 
 permissions:

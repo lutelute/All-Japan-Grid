@@ -76,10 +76,11 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
   `tests/test_connectivity.py`(6件: 東西非連結・同階級stitch・別階級非stitch・タイ連結・定義単一)+ pytest 1127 passed。
 - エディタで**ACタイを紫破線で区別表示**。**残**: pandapower_builder/dynamics の region→freq ハードコードは未統一(連結性は connectivity.py に集約済)。
 
-### Phase 4 — 全出力を単一オーケストレーションで派生 + 鮮度統一
-- `scripts/regenerate_all.py`: `build_editor_data`→`run_national_powerflow`→`export_national_matpower`→`export_cim`→`build_static_site` を順に実行し、**MODEL_VERSION**(git HEAD+timestamp)を全出力metadataに刻印。7週間skewを解消。
-- OSM mapレイヤ+CIMを**supplement/cuts反映**(真の統一) or 「raw extract(pre-model)」と明示ラベル。
-- CI(`deploy-pages.yml`)のtriggerに`snapped_topology.py`/`built_view.py`を追加し、build jobで`build_editor_data.py`を実行。
+### Phase 4 — 全出力を単一オーケストレーションで派生 + 鮮度統一 ✅(2026-06-17)
+- `scripts/regenerate_all.py`: `build_editor_data`→`run_national_powerflow`→`export_national_matpower`→`export_cim`→`build_static_site` を順に実行し、**MODEL_VERSION**(git HEAD+timestamp)を `docs/data/MODEL_VERSION.json` に刻印。重い段は `--skip-*`/`--light`(pandapower不要のeditor+staticのみ)。7週間skewを「1コマンドで一括再生成」+「版の可視化」で解消。
+- CI(`deploy-pages.yml`)のtriggerに `snapped_topology.py`/`connectivity.py`/`built_view.py`/`build_editor_data.py`/`regenerate_all.py` を追加 → **builder/連結性/編集ビューが変わったら再デプロイ**(build_static_site がOSM地図を毎回再生成・committed built/ を配信)。
+- 運用: モデルに影響する変更後は `regenerate_all.py` を回してから commit(MODEL_VERSION が git HEAD を記録)。
+- 残(別扱い): OSM map/CIM の supplement/cuts 反映 or「raw extract」明示ラベルは未(現状=raw base 由来。CI deploy で毎回再生成され内容は committed data と一致)。heavy段(powerflow/matpower/cim)はpyyaml-only CIでは回せずローカル/オンデマンド。
 
 ### Phase 5 — エディタ1本化(runtime-adaptive)
 - **DataSource抽象**: `LiveSource`(/api)・`StaticSource`(静的JSON+localStorage下書き)。起動時backend検出で差替。
