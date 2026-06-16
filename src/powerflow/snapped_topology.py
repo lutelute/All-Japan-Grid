@@ -431,6 +431,21 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     """
     data_dir = data_dir or DATA_DIR
     db = _resolve_db(db)
+    # 切断キー(端点ペア round5)を早期に計算。**セグメント単位**(線の隣接点間)で適用するので、
+    # 「点と点の間の1区間だけ」を消す(長距離の始点-終点をまるごと消さない)=オーナー要件。
+    # 同じキーは post-build でも照合し、端点が変電所/junctionの場合は枝ごと除去(両対応)。
+    cutset = _normalize_cuts(list(cuts or []) + _load_cut_file(data_dir, region))
+    n_seg_cut = [0]   # セグメント切断のカウンタ(list でクロージャから可変)
+
+    def _is_cut_segment(c0, c1):
+        if not cutset:
+            return False
+        k = frozenset(((round(c0[0], 5), round(c0[1], 5)),
+                       (round(c1[0], 5), round(c1[1], 5))))
+        if k in cutset:
+            n_seg_cut[0] += 1
+            return True
+        return False
 
     def _layer(layer):
         if db is not None:
@@ -840,6 +855,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                 for j in range(1, len(coords)):
                     a, b = node_ids[j - 1], node_ids[j]
                     if a == b:
+                        continue
+                    # セグメント切断: この区間(隣接点間)が切断指定なら辺を作らない=線がここで割れる。
+                    # 長距離の枝端点でなく「実際にクリックした2点の間」だけを消す(オーナー要件)。
+                    if _is_cut_segment(coords[j - 1], coords[j]):
                         continue
                     seg = _haversine_km(coords[j - 1][0], coords[j - 1][1],
                                         coords[j][0], coords[j][1])
@@ -1430,7 +1449,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     # built_view と同一の端点座標(変電所/junction位置を round(.,5))で照合するので、
     # エディタで見えている枝とモデルの枝が一対一で対応する。捏造の逆操作(抑制)・可逆
     # (編集を取消せば次回build で枝は復活)。基底extract/supplement は一切変異しない。
-    cutset = _normalize_cuts(list(cuts or []) + _load_cut_file(data_dir, region))
+    # cutset は早期計算済(セグメント単位で既に適用)。ここでは端点が変電所/junction の
+    # 「枝まるごと」ケースのみ後段で除去する(2点が枝端点=長距離枝を意図的に消す場合)。
     if cutset:
         pos = {s.id: (round(s.latitude, 5), round(s.longitude, 5))
                for s in net.substations}
@@ -1445,6 +1465,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         net.transmission_lines = kept
         net._rebuild_indices()
         net.metadata["cut_lines"] = str(n_cut)
+        net.metadata["cut_segments"] = str(n_seg_cut[0])
 
     if return_geom:
         return net, geom

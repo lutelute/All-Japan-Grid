@@ -61,7 +61,7 @@
     <button id="m_view" class="mode on" onclick="setMode('view')">👆閲覧</button>
     <button id="m_connect" class="mode" onclick="setMode('connect')">🔗接続(2点)</button>
     <button id="m_chain" class="mode" onclick="setMode('chain')">⛓連続接続</button>
-    <button id="m_cut" class="mode" onclick="setMode('cut')">✂️切断(線)</button>
+    <button id="m_cut" class="mode" onclick="setMode('cut')">✂️切断(2点で区間)</button>
     <button id="m_add" class="mode" onclick="setMode('add')">➕点追加</button>
     <button id="m_attr" class="mode" onclick="setMode('attr')">✎属性</button>
   </div>
@@ -133,7 +133,7 @@ function setMode(m){ endChain(); mode=m; clearPick();
   const h={view:'地物をクリックで情報表示。島(橙)をクリックすると未接続の理由を確認できます。',
     connect:'繋ぐ2点を順にクリック(最寄りのOSM点/モデル節点に自動スナップ)。確認ダイアログで記録。',
     chain:'連続接続: 点を順にクリックすると隣り合う点が次々と接続される(回廊を一気に辿る)。モード切替/Escで終了。',
-    cut:'誤接続を切断記録。水色の<b>モデル枝</b>をクリック→端点で切断(builder cutが該当枝を生成しない=E8b)。灰のOSM線クリックはOSM側の記録。検証/反映で消える(可逆)。',
+    cut:'<b>2点をクリック</b>→その<b>間の線(1区間)だけ</b>を切断(線がそこで割れる・長距離の枝全体は消えない)。点は鉄塔/変電所にスナップ。検証/反映で反映・可逆。',
     add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
     attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
   $('hint').textContent=h[m]||''; }
@@ -253,7 +253,18 @@ async function loadNational(tk){
     Object.assign(ov, baseOverlayExtra);
     layerCtl=L.control.layers(baseLayers, ov, {collapsed:false, position:'topright'}).addTo(map);
     try{ map.fitBounds(lineLayer.getBounds().pad(0.03)); }catch(e){ map.setView([37.5,138],6); }
-    $('status').textContent=`全国(≥${MINKV}kV): 変電所${subs.features.length} / 送電線${lines.features.length}(色=電圧 赤500/橙275/紫154/緑66)`;
+    $('status').textContent=`全国(≥${MINKV}kV): 変電所${subs.features.length} / 送電線${lines.features.length}(灰=生OSM)。モデル構築中…`;
+    // ★Phase1(設計R1=単一の正): 全国も built モデル(編集込み)を後乗せ → 地域と同じ"正"を描く。
+    // これで「地域で繋いだのに全国に反映されない」が解消(全国も同じbuildを読む)。
+    $('modelstat').innerHTML='<span class="muted">全国モデル構築中…(全地域build・初回は時間がかかる/以後キャッシュ)</span>';
+    fetch('/api/built/all').then(r=>r.ok?r.json():null).then(built=>{
+      if(!built||tk!==loadToken) return;
+      buildModel(built);   // nodes/edges描画・modelstat更新・window._built設定(編集込みの正)
+      if(edgeLayer){ edgeLayer.addTo(map); layerCtl.addOverlay(edgeLayer,'モデル 接続線(水=本系統/橙=島)'); }
+      if(islandLayer){ islandLayer.addTo(map); layerCtl.addOverlay(islandLayer,'モデル 島(橙・未接続)'); }
+      if(mainLayer){ layerCtl.addOverlay(mainLayer,'モデル 本系統ノード(青・多数のため既定OFF)'); }
+      $('status').textContent=`全国 = 地域と同じbuiltモデルを表示(編集込み)。接続線${built.n_edges}/島ノード${built.n_island_nodes}`;
+    }).catch(()=>{ $('modelstat').innerHTML='<span class="muted">全国モデル構築失敗(地域選択で個別確認可)</span>'; });
   }catch(e){ $('status').textContent='全国読込失敗: '+e; }
 }
 
@@ -292,12 +303,10 @@ function buildModel(built){
     const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
     if(!pts||pts.length<2) return;
     const pl=L.polyline(pts,{color:'#2dd4bf',weight:1.5,opacity:.55}).addTo(edgeLayer);
-    // ✂切断モードでモデル枝をクリック→端点(a,b)で disconnect 記録(builder cutが同精度で照合)
-    if(e.a&&e.b){
-      pl.on('mouseover',()=>{ if(mode==='cut') pl.setStyle({color:'#da3633',weight:5,opacity:.95}); });
-      pl.on('mouseout',()=>pl.setStyle({color:'#2dd4bf',weight:1.5,opacity:.55}));
-      pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev); cutModelEdge(e); } });
-    }
+    // ✂切断モードでモデル枝をクリック→最寄りの点を2点選択(間の区間を切断)
+    pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev);
+      const s=nearestSnap(ev.latlng); if(s) addPick(s);
+      else $('status').textContent='✂ 線上の点(鉄塔/変電所)をクリックしてください'; } });
   });
   window._built=built;   // 追加候補(クライアント計算)で使う
   // 節点(本系統=青・島=橙で連結性を色分け)
@@ -356,15 +365,23 @@ function nearestSnap(latlng){
 
 function addPick(s){
   pick.push(s);
-  const m=L.circleMarker([s.lat,s.lon],{radius:8,color:'#f0c674',weight:2,fill:false}).addTo(map);
+  const col = mode==='cut' ? '#da3633' : '#f0c674';   // 切断=赤・接続=黄
+  const m=L.circleMarker([s.lat,s.lon],{radius:8,color:col,weight:2,fill:false}).addTo(map);
   pickMarkers.push(m);
-  $('selinfo').textContent=`接続: ${pick.length}点選択 [${pick.map(p=>p.kind).join(', ')}]`;
-  if(pick.length===2){ doConnect(pick[0],pick[1]); clearPick(); }
+  const verb = mode==='cut' ? '✂切断(間の線を消す)' : '接続';
+  $('selinfo').textContent=`${verb}: ${pick.length}点選択 [${pick.map(p=>p.kind).join(', ')}]`;
+  if(pick.length===2){
+    if(mode==='cut') doCutSegment(pick[0],pick[1]); else doConnect(pick[0],pick[1]);
+    clearPick();
+  }
 }
 
 map.on('click', e=>{
   if(mode==='add'){ addPoint(e.latlng); return; }
   if(mode==='connect'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
+    addPick(s); return; }
+  if(mode==='cut'){ const s=nearestSnap(e.latlng);   // 切断は点を2つ=スナップ必須(座標一致で区間を消す)
+    if(!s){ $('status').textContent='✂ 切断は線上の点(鉄塔/変電所)をクリック(スナップ必須)'; return; }
     addPick(s); return; }
   if(mode==='chain'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
     chainClick(s); }
@@ -372,13 +389,16 @@ map.on('click', e=>{
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && mode==='chain'){ endChain(); } });
 function onPoint(pt,f){
   if(mode==='connect'){ addPick(pt); return; }
+  if(mode==='cut'){ addPick(pt); return; }   // 切断も2点選択(間の線=区間を消す)
   if(mode==='chain'){ chainClick(pt); return; }
   if(mode==='attr'){ doAttr(pt,f); return; }
   L.popup().setLatLng([pt.lat,pt.lon]).setContent(
     `OSM変電所 ${pt.node||''}<br>${pt.kv||'?'}kV<br><small>${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}</small>`).openOn(map);
 }
 function onLine(f,latlng){
-  if(mode==='cut'){ doCut(f,latlng); return; }
+  if(mode==='cut'){ const s=nearestSnap(latlng);   // 線をクリック→最寄りの点を選択(2点で区間切断)
+    if(s) addPick(s); else $('status').textContent='✂ 線上の点(鉄塔/変電所)をクリックしてください';
+    return; }
   const p=f.properties||{};
   L.popup().setLatLng(latlng).setContent(`OSM送電線 ${p.name||p.id||''}<br>${p.voltage||'?'}`).openOn(map);
 }
@@ -396,24 +416,14 @@ function doConnect(a,b){
   if(!confirm(`接続を記録?\n${a.kind}(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ ${b.kind}(${b.lat.toFixed(4)},${b.lon.toFixed(4)})\n${kv||'?'}kV\n\n※実在(OSM線・同電圧)の根拠を確認のこと`)) return;
   postEdit({action:'connect',a:{node:a.node,lat:a.lat,lon:a.lon},b:{node:b.node,lat:b.lat,lon:b.lon},kv:kv*1000||null,evidence:'osm_visible'});
 }
-function doCut(f,latlng){
-  const p=f.properties||{}; const key=p.osm_id||p['@id']||p.id||p.name||('idx');
-  if(!confirm(`この線の接続を切断(誤接続)として記録?\n${p.name||key}`)) return;
-  // 即時フィードバック: クリック位置に赤リングを一瞬出す(loadEditsが✂を恒久描画)
-  try{ const fl=L.circleMarker([latlng.lat,latlng.lng],{radius:13,color:'#da3633',weight:3,fill:false}).addTo(map);
-       setTimeout(()=>map.removeLayer(fl),1200); }catch(e){}
-  $('selinfo').textContent=`✂️ 切断を記録: ${p.name||key}`;
-  $('status').textContent=`✂️ 切断記録: ${p.name||key}(赤✂で表示・取消は✂モードでクリック)`;
-  postEdit({action:'disconnect',line_key:String(key),a:{lat:latlng.lat,lon:latlng.lng},note:p.name||''});
-}
-function cutModelEdge(e){
-  // モデル枝(系統レイヤ)の切断: 端点 a/b を載せると builder cut機構が該当枝を生成しなくなる(E8b)
-  const a={lat:e.a[0],lon:e.a[1]}, b={lat:e.b[0],lon:e.b[1]};
-  if(!confirm(`このモデル枝(誤接続)を切断記録?\n(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ (${b.lat.toFixed(4)},${b.lon.toFixed(4)})\n\n検証/反映で枝が消えます(可逆)`)) return;
-  try{ const fl=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:'#da3633',weight:4,opacity:.9}).addTo(map);
-       setTimeout(()=>map.removeLayer(fl),1400); }catch(_){}
-  $('status').textContent='✂️ モデル枝の切断を記録(検証/反映で枝が消える・取消は✂で✂マーカーをクリック)';
-  postEdit({action:'disconnect',a:a,b:b,note:'model-edge cut'});
+function doCutSegment(a,b){
+  // ★点と点の「間の1区間」だけを切断(オーナー要件)。builderはこの隣接区間の辺を作らない=
+  // 線がここで割れる。長距離の始点-終点(枝全体)を消さない。端点が変電所同士なら枝ごと除去にもなる。
+  if(!confirm(`点と点の「間の線(1区間)」を切断?\n(${a.lat.toFixed(5)},${a.lon.toFixed(5)}) ↔ (${b.lat.toFixed(5)},${b.lon.toFixed(5)})\n\n線はこの区間で割れます(長距離の枝全体は消えません)。検証/反映で反映・可逆`)) return;
+  try{ const fl=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:'#da3633',weight:6,opacity:.95}).addTo(map);
+       setTimeout(()=>map.removeLayer(fl),1600); }catch(_){}
+  $('status').textContent='✂ 区間切断を記録(その2点間だけ消える=線が割れる)。検証/反映で反映';
+  postEdit({action:'disconnect',a:{lat:a.lat,lon:a.lon},b:{lat:b.lat,lon:b.lon},note:'segment cut'});
 }
 // ── 追加線候補(クライアント計算): 各島ノード→最寄りの本系統ノードを破線で提示 ──
 let candLayer=null;

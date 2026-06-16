@@ -112,3 +112,25 @@ def test_verify_applies_disconnect(monkeypatch):
     res = edit_apply.verify("okinawa")
     assert res["applied"]["disconnect"] == 1
     assert res["delta_islands"] >= 0          # 枝の除去は成分を分割しうる(減らさない)
+
+
+def test_segment_cut_splits_line_not_whole_edge():
+    """セグメント切断(オーナー要件): 2点の「間の1区間」だけ消え、長距離の枝全体は消えない。"""
+    lines = json.load(open("data/okinawa_lines.geojson", encoding="utf-8"))["features"]
+    long = max(lines, key=lambda f: len(f["geometry"]["coordinates"]))
+    coords = long["geometry"]["coordinates"]            # [lon, lat]
+    mid = len(coords) // 2
+    p0 = (coords[mid - 1][1], coords[mid - 1][0])        # (lat, lon)
+    p1 = (coords[mid][1], coords[mid][0])
+    base = build_network_snapped("okinawa", db=None)
+    cut = build_network_snapped("okinawa", db=None, cuts=[[list(p0), list(p1)]])
+    # 1区間だけ切れた(枝まるごと除去=0)
+    assert cut.metadata.get("cut_segments") == "1"
+    assert cut.metadata.get("cut_lines") == "0"
+
+    def tlen(net, name):
+        return sum(ln.length_km for ln in net.transmission_lines if (ln.name or "") == name)
+    nm = long["properties"].get("name")
+    base_len, cut_len = tlen(base, nm), tlen(cut, nm)
+    assert cut_len < base_len            # その区間は消えた
+    assert cut_len > base_len * 0.8      # でも大半は残る(=長距離の枝全体は消えていない)
