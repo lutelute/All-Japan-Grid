@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — Pages接続編集タブ統合 + 島データ校正(region/voltage)（138）
+
+オーナー指示「編集ツールもpagesにタブとして実装してほしい。mainに統合していく」+「(c)が先がいい(データ校正先行)」。
+
+- **Pages接続編集タブ**(`docs/editor.html` + `scripts/build_editor_data.py`): Pagesは静的配信なのでフル版エディタの`/api`依存は持てない。`built_view`を**事前レンダ**した静的JSON(`docs/data/built/{region,all}.json`・計14MB・遅延ロード)を読む構成で **閲覧(島=橙孤立/紫連結サブクラスタ・本系統=青・回線数で線幅)** は完全動作。**編集**はlocalStorage下書き→**JSONLエクスポート/GitHub issue提案**(connect/disconnectを2点スナップ)。採用・潮流検証はローカルサーバ(:8088)に委ねる(物理接続=真・計算は検証器・捏造禁止)。タブはiframe遅延ロード(`grid_map.js` initTabs・v=30)。**公開JSON=コミット済みmain状態**(未コミットのokinawa supplementを除いて再生成: okinawa=99節点)。`183e7dc`・Pagesデプロイ成功。
+- **島データ校正(c)** (`scripts/calibrate_islands.py` → `island_calibration_2026-06-16.{json,md}`): レポートL18のupstream問題を定量化。855島をOSM変電所6962件に突合し —
+  - **region誤タグ32件**(operator根拠・高確度): tohoku→tokyo 9(群馬栃木TEPCO)・hokkaido→tohoku 4(下北半島=青森の東北電力)・shikoku→chugoku 3(広島山口の中国電力)・hokuriku→tokyo 1(新信濃275kV)等。operator無(黒瀬等)は出ない=**下限**。
+  - **電圧不一致60件**(名称/census vs OSM): 黒瀬・廿日市 名称220kV→OSM110kV 等。解決は**Web検証[verified]>OSM既定>flag**(例: 東通村は名称154kV・OSM66kVだが検証済154kVが正)。検出に徹し権威値は断定しない。
+  - **基底extract不変**(派生レポートのみ)。region remapはbuildに適用せず(全国ビュー`built_view_all`は座標キーで越境連結=接続性は地域タグ非依存)。効果=A島接続の**targeting(地域)と優先度(電圧)を正す**前処理(A/B反転は稀)。
+- 不変: モデル本体・committedスコアカード・supplement/cuts。次段=refined worklistでA島接続(high確度95件優先: 都心275kV地中網/大間500kV/中国220kV/下北154kV)。
+
 ## 2026-06-16 — **Claude Opus 4.8** — Phase2 越境stitch: AC本土8地域を全国一体に連結（137）
 
 branch `model-source-unification`。設計R2(越境stitch)。地域別buildが県境で線を切り島化させていた問題を、**全国を一枚のグラフ**にして解消(`built_view_all`)。
