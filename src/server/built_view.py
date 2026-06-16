@@ -3,18 +3,21 @@
 `build_network_snapped` の結果(snapped topology)を、節点(島/本系統で色分け)+接続線として返す。
 これにより「OSMでは線が見えるのにモデルでは島(=未接続)」がエディタ上で一目で分かる。
 """
+from collections import defaultdict
+
 import networkx as nx
 
 REGIONS_ALL = ["hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
                "kansai", "chugoku", "shikoku", "kyushu", "okinawa"]
 
 
-def built_view_all(join_untagged_tips=False, regions=None):
+def built_view_all(join_untagged_tips=False, regions=None, stitch_km=0.15):
     """全国ビュー = 全地域の built モデルを合成(設計R1: 単一の正=全国も地域も同じ build を描く)。
 
-    各地域 built_view の nodes/edges を連結する。**人間の編集(supplement/cuts)が
-    build に取り込まれるので、全国ビューにも編集が反映される**(従来の生OSM全国ビューは
-    編集を映さなかった=混乱の根本)。連結性は地域内(Phase1)。越境 stitch は Phase2。
+    Phase1: 全国も生OSMでなく build を描く(編集が全国に反映)。
+    Phase2(越境stitch): 地域別buildは県境で線を切り島化させる。**地域をまたいで同一物理点
+    (同座標~stitch_km以内の越境変電所/鉄塔)を繋ぎ**、全国でグローバルに連結性を計算する。
+    同座標重複は座標キーで自動統合・近接(~100m)は明示stitch。証拠=同一座標(捏造でない)。
     """
     regions = regions or REGIONS_ALL
     nodes, edges, by_region = [], [], {}
@@ -26,17 +29,53 @@ def built_view_all(join_untagged_tips=False, regions=None):
         if not v:
             by_region[r] = {"error": True}
             continue
+        for n in v["nodes"]:
+            n["region"] = r
         nodes.extend(v["nodes"])
         edges.extend(v["edges"])
         by_region[r] = {"n_nodes": v["n_nodes"], "n_edges": v["n_edges"],
                         "n_components": v["n_components"],
                         "main_size": v["main_size"], "island_nodes": v["n_island_nodes"]}
+
+    def k5(la, lo):
+        return (round(la, 5), round(lo, 5))
+
+    # 全国一枚グラフ: 座標キー(round5)で節点(同座標の越境重複は自動統合)
+    g = nx.Graph()
+    for n in nodes:
+        g.add_node(k5(n["lat"], n["lon"]))
+    for e in edges:
+        if e.get("a") and e.get("b"):
+            g.add_edge(tuple(e["a"]), tuple(e["b"]))
+    # 越境stitch: ~100mセルで地域をまたぐ節点群を繋ぐ(同一物理点=境界の変電所/鉄塔)
+    n_stitch = 0
+    prec = 3 if stitch_km >= 0.1 else 4
+    cellmap = defaultdict(list)
+    for n in nodes:
+        cellmap[(round(n["lat"], prec), round(n["lon"], prec))].append(n)
+    for grp in cellmap.values():
+        if len({n["region"] for n in grp}) <= 1:
+            continue
+        base = k5(grp[0]["lat"], grp[0]["lon"])
+        for n in grp[1:]:
+            if n["region"] != grp[0]["region"]:
+                kk = k5(n["lat"], n["lon"])
+                if kk != base:
+                    g.add_edge(base, kk)
+                n_stitch += 1
+    comps = sorted(nx.connected_components(g), key=len, reverse=True)
+    main = set(comps[0]) if comps else set()
+    for n in nodes:
+        n["main"] = k5(n["lat"], n["lon"]) in main      # 全国グローバルで再色分け
+    for e in edges:
+        if e.get("a") and e.get("b"):
+            e["main"] = tuple(e["a"]) in main and tuple(e["b"]) in main
+    island = sum(1 for n in nodes if not n["main"])
     return {"region": "all", "n_nodes": len(nodes), "n_edges": len(edges),
             "nodes": nodes, "edges": edges, "by_region": by_region,
-            "main_size": sum(s.get("main_size", 0) for s in by_region.values()),
-            "n_components": sum(s.get("n_components", 0) for s in by_region.values()),
-            "n_island_nodes": sum(s.get("island_nodes", 0) for s in by_region.values()),
-            "note": "全国=全地域built合成(編集込み)。連結性は地域内・越境stitchはPhase2"}
+            "main_size": len(main), "n_components": len(comps),
+            "n_island_nodes": island, "n_stitch": n_stitch,
+            "note": f"全国一枚build+越境stitch({n_stitch}点)。連結性を全国でグローバル計算(Phase2)"}
 
 
 def built_view(region, data_dir=None, join_untagged_tips=False):

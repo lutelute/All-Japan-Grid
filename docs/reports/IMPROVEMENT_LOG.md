@@ -7,6 +7,14 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-16 — **Claude Opus 4.8** — Phase2 越境stitch: AC本土8地域を全国一体に連結（137）
+
+branch `model-source-unification`。設計R2(越境stitch)。地域別buildが県境で線を切り島化させていた問題を、**全国を一枚のグラフ**にして解消(`built_view_all`)。
+- **機構**: 全地域builtを座標キー(round5)で一枚に。地域をまたいで同一物理点(~100mセル)にある節点(境界の変電所/鉄塔=重複extract)を stitch して全国でグローバルに連結性を再計算。証拠=同一座標(捏造でない)。
+- **結果**: **stitch 2543点**で AC本土8地域(tohoku/tokyo/chubu/hokuriku/kansai/chugoku/shikoku/kyushu)が**1つの全国本系統に連結**(本土AC ~89%が1連結網)。hokkaido(北本=DC連系)・okinawa(離島)は正しく分離。
+- **意義**: 「全国の生OSMは繋がって見えるのに buildモデルは島」の乖離を解消 → **全国ビューが真の全国AC連結を描く**(オーナー指摘「全国は繋がって見えたがDBの正は?」への回答=Phase1で正を一本化・Phase2で正自体を全国連結)。
+- 残: 各地域内の小島(OSM接続欠落=編集ツールの対象)・DC/海峡越え(別機構)。本番モデル/スコアカード不変(全国ビューの連結計算のみ・建設はbuild_network_snappedで地域別のまま)。
+
 ## 2026-06-16 — **Claude Opus 4.8** — 接続編集プラットフォームの資産化(オーナー実機編集で磨き「記録しておいて」)（136）
 
 branch `model-source-unification`。オーナーが嶺南変電所・京北開閉所・金武火力等を実機で手編集しながら磨いた確定資産(「編集はかなりやりやすくなった/点が押しやすい」)。要点:
