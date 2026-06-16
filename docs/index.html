@@ -22,6 +22,7 @@
         <button class="tab-btn" data-tab="tab-sld">単線図</button>
         <button class="tab-btn" data-tab="tab-compare">比較</button>
         <button class="tab-btn" data-tab="tab-ybus">Ybus / N-1</button>
+        <button class="tab-btn" data-tab="tab-editor">接続編集</button>
     </div>
 
     <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ、iframe遅延ロード) ━━ -->
@@ -29,6 +30,13 @@
         <iframe id="compare-frame" data-src="./compare.html"
                 style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
                 title="トポロジ比較（旧法 vs 新法）"></iframe>
+    </div>
+
+    <!-- ━━ Tab: 接続編集 (モデルビューア+下書き編集、iframe遅延ロード) ━━ -->
+    <div class="tab-panel" id="tab-editor">
+        <iframe id="editor-frame" data-src="./editor.html"
+                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
+                title="接続編集（モデルビューア）"></iframe>
     </div>
 
     <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
@@ -781,8 +789,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=29"></script>
-<script src="./js/powerflow.js?v=29"></script>
-<script src="./js/sld.js?v=29"></script>
+<script src="./js/grid_map.js?v=30"></script>
+<script src="./js/powerflow.js?v=30"></script>
+<script src="./js/sld.js?v=30"></script>
 </body>
 </html>

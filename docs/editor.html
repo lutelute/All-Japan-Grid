@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>AGJ 接続編集（モデルビューア）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--ln:#30363d;--card:#161b22}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  #map{position:absolute;top:0;bottom:0;left:0;right:330px;background:#aab}
+  #panel{position:absolute;top:0;bottom:0;right:0;width:330px;background:var(--bg);color:var(--fg);
+         overflow-y:auto;padding:12px 14px;box-sizing:border-box;font-size:13px;line-height:1.5}
+  h2{font-size:15px;margin:2px 0 4px} h3{font-size:13px;margin:12px 0 4px;color:var(--mut)}
+  .row{margin:7px 0}
+  .mut{color:var(--mut);font-size:11.5px}
+  select,button{font-size:13px;border-radius:6px;border:0;cursor:pointer}
+  select{background:var(--card);color:var(--fg);padding:6px 8px;border:1px solid var(--ln);width:100%}
+  button{background:#21262d;color:var(--fg);border:1px solid var(--ln);padding:7px 10px}
+  button:hover{background:#30363d}
+  button.on{background:#1f6feb;border-color:#388bfd;color:#fff}
+  button.go{background:#238636;border-color:#2ea043;color:#fff}
+  button.warn{background:#9e2b25;border-color:#da3633;color:#fff}
+  .modes button{width:32%}
+  .leg{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:5px}
+  .legl{display:inline-block;width:16px;height:3px;vertical-align:3px;margin-right:5px}
+  code{background:var(--card);padding:1px 5px;border-radius:3px;font-size:11px}
+  #drafts{max-height:180px;overflow:auto;background:var(--card);border:1px solid var(--ln);
+          border-radius:6px;padding:6px;margin-top:4px;font-size:11px;font-family:ui-monospace,monospace}
+  .d{display:flex;justify-content:space-between;gap:6px;padding:2px 0;border-bottom:1px solid #21262d}
+  .d a{color:#f85149;cursor:pointer;text-decoration:none}
+  #flash{position:absolute;top:10px;left:10px;z-index:1000;padding:8px 14px;border-radius:6px;
+         font-size:13px;color:#fff;display:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  hr{border:0;border-top:1px solid var(--ln);margin:10px 0}
+  .stat{display:inline-block;min-width:54px} .big{font-size:16px;font-weight:600}
+</style></head>
+<body>
+<div id="map"></div>
+<div id="flash"></div>
+<div id="panel">
+  <h2>🔌 接続編集 / モデルビューア</h2>
+  <div class="mut">OSMの物理接続が<b>真</b>・計算は検証器・捏造禁止。下地のOSM地図で<b>実在を確認してから</b>線を引くこと。
+  ここで作るのは<b>下書き</b>—採用/潮流検証はローカルサーバ(:8088)で行う。</div>
+  <div class="row">
+    <select id="region"></select>
+  </div>
+  <div class="row mut" id="stat">読込中…</div>
+
+  <h3>モード</h3>
+  <div class="row modes">
+    <button id="m-pan" class="on" onclick="setMode('pan')">🖐 パン</button>
+    <button id="m-con" onclick="setMode('connect')">➕ 接続</button>
+    <button id="m-cut" onclick="setMode('cut')">✂ 切断</button>
+  </div>
+  <div class="row mut" id="hint">パン: 地図移動。接続/切断は2点をクリック(近い点に自動スナップ)。</div>
+
+  <h3>下書き <span id="ndraft" class="big">0</span> 件</h3>
+  <div id="drafts"></div>
+  <div class="row">
+    <button class="go" onclick="exportJSONL()">⬇ JSONLエクスポート</button>
+    <button onclick="proposeIssue()">GitHubで提案</button>
+  </div>
+  <div class="row">
+    <button class="warn" onclick="clearDrafts()">下書き全消去</button>
+  </div>
+  <div class="row mut">エクスポートした <code>connection_edits_*.jsonl</code> をローカルサーバの
+  <code>/api/edits</code> 取込→<code>verify</code>→<code>adopt</code> で本番反映(島↓・AC維持を確認)。</div>
+
+  <h3>凡例</h3>
+  <div class="row mut">
+    <span class="leg" style="background:#2f81f7"></span>本系統(連結)<br>
+    <span class="leg" style="background:#f0883e"></span>孤立変電所(deg0)<br>
+    <span class="leg" style="background:#a371f7"></span>連結サブクラスタ/終端(deg≥1)<br>
+    <span class="leg" style="background:#6e7681"></span>鉄塔/分岐(junction)<br>
+    <span class="legl" style="background:#2f81f7"></span>モデル線(本系統)
+    <span class="legl" style="background:#d29922"></span>モデル線(島)<br>
+    <span class="legl" style="background:#3fb950;border-top:2px dashed #3fb950"></span>下書き:接続
+    <span class="legl" style="background:#f85149"></span>下書き:切断
+  </div>
+  <div class="row mut">線の太さ=回線数(parallel)。クリックで詳細。</div>
+</div>
+<script>
+const REPO="lutelute/All-Japan-Grid";
+const map=L.map('map',{preferCanvas:true}).setView([36.5,138],5);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+
+let DATA={nodes:[],edges:[]}, REGION='okinawa';
+let layers=[], draftLayers=[], mode='pan', pick=[], snapCells=new Map(), CELL=0.01;
+let drafts=loadDrafts();
+
+// ---- region manifest ----
+fetch('data/built/index.json').then(r=>r.json()).then(m=>{
+  const sel=document.getElementById('region');
+  (m.regions||[]).forEach(r=>{
+    const o=document.createElement('option');
+    const s=r.stats||{};
+    o.value=r.id;
+    o.textContent=`${r.id}  (島${s.n_island_nodes??'?'}/${s.n_nodes??'?'})`;
+    sel.appendChild(o);
+  });
+  const want=new URLSearchParams(location.search).get('region');
+  REGION=want||(m.regions&&m.regions[0]&&m.regions[0].id)||'okinawa';
+  sel.value=REGION;
+  loadRegion(REGION);
+}).catch(e=>flash('manifest読込失敗: '+e,true));
+
+document.getElementById('region').onchange=e=>{REGION=e.target.value;pick=[];loadRegion(REGION);};
+
+async function loadRegion(r){
+  setStat('読込中…');
+  try{
+    DATA=await fetch(`data/built/${r}.json`).then(x=>{if(!x.ok)throw Error(x.status);return x.json();});
+  }catch(e){flash(`${r}.json 読込失敗: `+e,true);setStat('読込失敗');return;}
+  buildSnapIndex();
+  render();
+  fitData();
+  const s=DATA.stats||{};
+  const isubs=DATA.nodes.filter(n=>!n.main&&n.sub).length;
+  setStat(`${r}: 節点${s.n_nodes} / 線${s.n_edges} / 本系統${s.main_size} / 島節点${s.n_island_nodes}(うち変電所${isubs})`);
+}
+
+function fitData(){
+  if(!DATA.nodes.length)return;
+  const ll=DATA.nodes.map(n=>[n.lat,n.lon]);
+  map.fitBounds(L.latLngBounds(ll).pad(0.05));
+}
+
+// ---- rendering ----
+function nodeColor(n){
+  if(!n.sub) return '#6e7681';            // junction (鉄塔/分岐)
+  if(n.main) return '#2f81f7';            // 本系統の変電所
+  return n.deg>0 ? '#a371f7' : '#f0883e'; // 連結サブクラスタ : 孤立(deg0)
+}
+function render(){
+  layers.forEach(l=>map.removeLayer(l)); layers=[];
+  const big=DATA.nodes.length>6000;       // 全国規模は軽量化
+  // edges — クリックは pan モードのみ popup(接続/切断モードでは map click でピック)
+  DATA.edges.forEach(e=>{
+    const pts=(e.path&&e.path.length>1)?e.path:[e.a,e.b];
+    const pl=L.polyline(pts,{color:e.main?'#2f81f7':'#d29922',
+      weight:Math.min(1+(e.par||1),5),opacity:e.main?0.7:0.9});
+    pl.on('click',ev=>{ if(mode!=='pan')return;
+      pl.bindPopup(`モデル線 ${e.kv||'?'}kV ${(e.par||1)>1?`(${e.par}回線)`:''}<br>${e.main?'本系統':'島側'}`).openPopup(ev.latlng);});
+    pl.addTo(map); layers.push(pl);
+  });
+  // nodes — 全国規模では島と変電所のみ描画(junction省略で軽量化)。
+  // ピックは map click + snap に一本化(マーカ個別clickは二重発火を招くため付けない)。
+  DATA.nodes.forEach(n=>{
+    if(big && n.main && !n.sub) return;   // 全国: 本系統junctionは省略
+    const isl=!n.main;
+    const m=L.circleMarker([n.lat,n.lon],{
+      radius:isl?(n.sub?5:3):(n.sub?3:2),
+      color:nodeColor(n), fillColor:nodeColor(n),
+      fillOpacity:isl?0.95:0.6, weight:isl&&n.sub?2:1});
+    m.bindTooltip(nodeLabel(n),{direction:'top'});
+    m.addTo(map); layers.push(m);
+  });
+  renderDrafts();
+}
+function nodeLabel(n){
+  const t=n.sub?(n.main?'変電所(本系統)':(n.deg>0?'連結サブクラスタ':'孤立変電所')):'鉄塔/分岐';
+  const nm=(n.sub&&n.name&&!/junction/i.test(n.name))?` ${n.name}`:'';
+  return `${t}${nm}<br>${n.kv||'?'}kV · deg${n.deg}`;
+}
+
+// ---- snap index ----
+function ckey(la,lo){return Math.round(la/CELL)+'_'+Math.round(lo/CELL);}
+function buildSnapIndex(){
+  snapCells=new Map();
+  const add=(la,lo,id)=>{const k=ckey(la,lo);(snapCells.get(k)||snapCells.set(k,[]).get(k)).push([la,lo,id]);};
+  DATA.nodes.forEach(n=>add(n.lat,n.lon,n.id));
+  // edge vertices (path points) も対象に — セグメント切断/中間点接続のため
+  DATA.edges.forEach(e=>{
+    const pts=(e.path&&e.path.length>1)?e.path:[e.a,e.b];
+    pts.forEach(p=>add(p[0],p[1],null));
+  });
+}
+function snap(latlng){
+  const la=latlng.lat, lo=latlng.lng;
+  const ci=Math.round(la/CELL), cj=Math.round(lo/CELL);
+  let best=null, bestpx=26;                // 26px以内に限る(zoom-aware)
+  const click=map.latLngToContainerPoint(latlng);
+  for(let i=ci-1;i<=ci+1;i++)for(let j=cj-1;j<=cj+1;j++){
+    const arr=snapCells.get(i+'_'+j); if(!arr)continue;
+    for(const [a,b,id] of arr){
+      const p=map.latLngToContainerPoint([a,b]);
+      const d=Math.hypot(p.x-click.x,p.y-click.y);
+      if(d<bestpx){bestpx=d;best=[a,b,id];}
+    }
+  }
+  return best;
+}
+
+// ---- editing (client-side drafts) ----
+function setMode(m){
+  mode=m; pick=[];
+  ['pan','con','cut'].forEach(k=>document.getElementById('m-'+k).classList.remove('on'));
+  document.getElementById('m-'+(m==='connect'?'con':m==='cut'?'cut':'pan')).classList.add('on');
+  map.getContainer().style.cursor = m==='pan'?'':'crosshair';
+  const h={pan:'パン: 地図移動。',
+    connect:'接続: 2点をクリック(自動スナップ)。OSM下地で実在確認してから。',
+    cut:'切断: 消したい区間の両端2点をクリック(端点座標で照合)。'}[m];
+  document.getElementById('hint').textContent=h;
+  drawPick();
+}
+map.on('click',ev=>{ if(mode!=='pan') onPick(ev.latlng); });
+
+function onPick(latlng){
+  if(mode==='pan')return;
+  const s=snap(latlng);
+  if(!s){flash('近くに点がありません(ズームして点に合わせる)',true);return;}
+  pick.push(s); drawPick();
+  if(pick.length===2){
+    const [a,b]=pick;
+    if(a[0]===b[0]&&a[1]===b[1]){flash('同じ点です',true);pick=[];drawPick();return;}
+    addDraft(mode==='connect'?'connect':'disconnect',a,b);
+    pick=(mode==='connect')?[b]:[];        // 接続は終点を次の始点に連鎖・切断は連鎖しない
+    drawPick();
+  }
+}
+let pickLayer=[];
+function drawPick(){
+  pickLayer.forEach(l=>map.removeLayer(l)); pickLayer=[];
+  pick.forEach(p=>{pickLayer.push(L.circleMarker([p[0],p[1]],
+    {radius:7,color:'#3fb950',fillColor:'#3fb950',fillOpacity:.5,weight:2}).addTo(map));});
+}
+
+function addDraft(action,a,b){
+  const d={action,region:REGION,
+    a:{node:a[2]||null,lat:a[0],lon:a[1]},
+    b:{node:b[2]||null,lat:b[0],lon:b[1]},
+    evidence:'osm_visible',source:'pages_editor',status:'pending',
+    ts:new Date().toISOString()};
+  drafts.push(d); saveDrafts(); renderDrafts();
+  flash((action==='connect'?'➕ 接続':'✂ 切断')+'を下書きに記録',false);
+}
+function renderDrafts(){
+  draftLayers.forEach(l=>map.removeLayer(l)); draftLayers=[];
+  const here=drafts.filter(d=>d.region===REGION);
+  here.forEach(d=>{
+    const pts=[[d.a.lat,d.a.lon],[d.b.lat,d.b.lon]];
+    draftLayers.push(L.polyline(pts,{color:d.action==='connect'?'#3fb950':'#f85149',
+      weight:4,dashArray:'7,5',opacity:.95}).addTo(map));
+    pts.forEach(p=>draftLayers.push(L.circleMarker(p,
+      {radius:4,color:'#3fb950',fillOpacity:.7}).addTo(map)));
+  });
+  document.getElementById('ndraft').textContent=drafts.length;
+  const box=document.getElementById('drafts');
+  if(!drafts.length){box.innerHTML='<span class="mut">なし</span>';return;}
+  box.innerHTML='';
+  drafts.forEach((d,i)=>{
+    const row=document.createElement('div'); row.className='d';
+    const sym=d.action==='connect'?'➕':'✂';
+    row.innerHTML=`<span>${sym} ${d.region} ${d.a.lat.toFixed(4)},${d.a.lon.toFixed(4)} → ${d.b.lat.toFixed(4)},${d.b.lon.toFixed(4)}</span>`;
+    const x=document.createElement('a'); x.textContent='✕'; x.title='削除';
+    x.onclick=()=>{drafts.splice(i,1);saveDrafts();renderDrafts();};
+    row.appendChild(x); box.appendChild(row);
+  });
+}
+
+// ---- persistence + export ----
+function loadDrafts(){try{return JSON.parse(localStorage.getItem('agj_drafts')||'[]');}catch(e){return [];}}
+function saveDrafts(){localStorage.setItem('agj_drafts',JSON.stringify(drafts));}
+function clearDrafts(){if(drafts.length&&!confirm(`下書き${drafts.length}件を全消去?`))return;
+  drafts=[];saveDrafts();renderDrafts();flash('下書きを消去',false);}
+
+function jsonl(){return drafts.map(d=>JSON.stringify(d)).join('\n');}
+function exportJSONL(){
+  if(!drafts.length){flash('下書きがありません',true);return;}
+  const date=new Date().toISOString().slice(0,10);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([jsonl()+'\n'],{type:'application/x-ndjson'}));
+  a.download=`connection_edits_${date}.jsonl`; a.click();
+  flash(`${drafts.length}件をエクスポート`,false);
+}
+function proposeIssue(){
+  if(!drafts.length){flash('下書きがありません',true);return;}
+  const regs=[...new Set(drafts.map(d=>d.region))].join(',');
+  const title=`接続編集提案: ${regs} (${drafts.length}件)`;
+  const body=`OSM物理接続にもとづく接続/切断の提案です(Pagesエディタの下書き)。\n`+
+    `採用前にローカルサーバ(:8088)で verify(島↓・AC維持)を確認してください。\n\n`+
+    '```jsonl\n'+jsonl()+'\n```\n';
+  const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+  window.open(url,'_blank');
+}
+
+// ---- flash ----
+let flashT=null;
+function flash(msg,err){
+  const f=document.getElementById('flash');
+  f.textContent=msg; f.style.background=err?'#9e2b25':'#1f6feb'; f.style.display='block';
+  clearTimeout(flashT); flashT=setTimeout(()=>f.style.display='none',err?4000:2200);
+}
+map.on('zoomend moveend',()=>{}); // snapはクリック時に都度計算(zoom-aware)
+</script>
+</body></html>

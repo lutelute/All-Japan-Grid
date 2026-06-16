@@ -302,12 +302,17 @@ function initTabs() {
 
             // 比較タブ / Ybus タブはサイドバー幅制約を抜けて全画面表示する。
             // body.fullscreen-tab でタブバーを上端固定にしてタブ操作を維持。
-            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus");
+            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus" || tabId === "tab-editor");
             document.body.classList.toggle("fullscreen-tab", isFullscreen);
 
             if (tabId === "tab-compare") {
                 var cf = document.getElementById("compare-frame");
                 if (cf && !cf.src) cf.src = cf.dataset.src;
+                return;
+            }
+            if (tabId === "tab-editor") {
+                var ef = document.getElementById("editor-frame");
+                if (ef && !ef.src) ef.src = ef.dataset.src;
                 return;
             }
             if (tabId === "tab-ybus") {
