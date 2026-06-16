@@ -67,6 +67,8 @@
   </div>
   <div style="margin-top:5px"><button onclick="undoLast()">↩ 直前を取消 (⌘Z)</button>
     <span class="muted">✂️切断モードで保留の線/点をクリック→個別取消・反映前から操作可</span></div>
+  <div style="margin-top:5px"><button id="m_cand" onclick="toggleCandidates()">➕追加候補を表示</button>
+    <span class="muted">各島→最寄り本系統の接続候補(紫破線・距離つき)を提示。クリックで接続記録(要OSM実在確認)</span></div>
   <div class="step" id="hint"></div>
   <div class="sel" id="selinfo"></div>
 
@@ -76,10 +78,11 @@
   <div class="legrow"><span class="lg2" style="background:#6e7681;border-top:1px dashed #6e7681"></span>OSM母線/ベイ=変電所内部(既定OFF・右上で表示)</div>
   <div class="legrow"><span class="leg" style="background:#388bfd"></span>モデル本系統(連結)
        <span class="leg" style="background:#f0883e"></span>モデル島(未接続=要確認)</div>
-  <div class="legrow"><span class="lg2" style="background:#2dd4bf"></span>モデル接続線(build後)
+  <div class="legrow"><span class="lg2" style="background:#2dd4bf"></span>モデル接続線(build後・✂モードでホバー→赤=切断対象)
        <span class="lg2" style="background:#d29922;border-top:2px dashed #d29922"></span>編集pending
        <span class="lg2" style="background:#3fb950"></span>adopted
        <span style="color:#da3633;font-weight:bold">✂</span>切断記録</div>
+  <div class="legrow"><span class="lg2" style="background:#a371f7;border-top:2px dashed #a371f7"></span>追加候補(島→最寄り本系統・クリックで接続)</div>
 
   <h3>編集ログ <span class="muted" id="counts"></span></h3>
   <div><button onclick="loadEdits()">再読込</button>
@@ -288,10 +291,15 @@ function buildModel(built){
   (built.edges||[]).forEach(e=>{
     const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
     if(!pts||pts.length<2) return;
-    const pl=L.polyline(pts,{color:'#2dd4bf',weight:1,opacity:.55}).addTo(edgeLayer);
+    const pl=L.polyline(pts,{color:'#2dd4bf',weight:1.5,opacity:.55}).addTo(edgeLayer);
     // ✂切断モードでモデル枝をクリック→端点(a,b)で disconnect 記録(builder cutが同精度で照合)
-    if(e.a&&e.b) pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev); cutModelEdge(e); } });
+    if(e.a&&e.b){
+      pl.on('mouseover',()=>{ if(mode==='cut') pl.setStyle({color:'#da3633',weight:5,opacity:.95}); });
+      pl.on('mouseout',()=>pl.setStyle({color:'#2dd4bf',weight:1.5,opacity:.55}));
+      pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev); cutModelEdge(e); } });
+    }
   });
+  window._built=built;   // 追加候補(クライアント計算)で使う
   // 節点(本系統=青・島=橙で連結性を色分け)
   mainLayer=L.layerGroup(); islandLayer=L.layerGroup();
   (built.nodes||[]).forEach(n=>{
@@ -406,6 +414,45 @@ function cutModelEdge(e){
        setTimeout(()=>map.removeLayer(fl),1400); }catch(_){}
   $('status').textContent='✂️ モデル枝の切断を記録(検証/反映で枝が消える・取消は✂で✂マーカーをクリック)';
   postEdit({action:'disconnect',a:a,b:b,note:'model-edge cut'});
+}
+// ── 追加線候補(クライアント計算): 各島ノード→最寄りの本系統ノードを破線で提示 ──
+let candLayer=null;
+function _haversine(la1,lo1,la2,lo2){
+  const R=6371,r=Math.PI/180,dla=(la2-la1)*r,dlo=(lo2-lo1)*r;
+  const x=Math.sin(dla/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin(dlo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function toggleCandidates(){
+  const btn=$('m_cand');
+  if(candLayer){ map.removeLayer(candLayer); candLayer=null; btn.classList.remove('on');
+    $('status').textContent='追加候補: 非表示'; return; }
+  const built=window._built;
+  if(!built||!built.nodes){ alert('地域を選択してください(全国概観は対象外)'); return; }
+  const mains=built.nodes.filter(n=>n.main), islands=built.nodes.filter(n=>!n.main);
+  if(!islands.length){ $('status').textContent='島ノードなし(全て本系統に連結)'; return; }
+  candLayer=L.layerGroup().addTo(map); btn.classList.add('on');
+  const MAXKM=5; let count=0;
+  islands.forEach(n=>{
+    let best=null,bd=1e9;
+    mains.forEach(m=>{ const d=_haversine(n.lat,n.lon,m.lat,m.lon); if(d<bd){bd=d;best=m;} });
+    if(best&&bd<=MAXKM){ count++;
+      const km=bd<1?bd.toFixed(2):bd.toFixed(1);
+      const ln=L.polyline([[n.lat,n.lon],[best.lat,best.lon]],
+        {color:'#a371f7',weight:2,dashArray:'5,6',opacity:.85}).addTo(candLayer);
+      ln.bindTooltip(`追加候補 ${km}km`,{sticky:true});
+      ln.on('mouseover',()=>ln.setStyle({weight:5,opacity:1}));
+      ln.on('mouseout',()=>ln.setStyle({weight:2,opacity:.85}));
+      ln.on('click',ev=>{ L.DomEvent.stop(ev); addCandidate(n,best,bd); });
+    }
+  });
+  $('status').textContent=`追加候補 ${count}本を表示(紫破線・${MAXKM}km内)。クリックで接続記録(要OSM実在確認)`;
+}
+function addCandidate(a,b,km){
+  const kv=a.kv||b.kv||0;
+  if(!confirm(`この追加線を接続記録?\n島(${a.lat.toFixed(4)},${a.lon.toFixed(4)}) ↔ 本系統(${b.lat.toFixed(4)},${b.lon.toFixed(4)})\n距離 ${km.toFixed(2)}km / ${kv||'?'}kV\n\n※近接提案です。OSMに実在線がある等の根拠を確認のこと`)) return;
+  postEdit({action:'connect',a:{lat:a.lat,lon:a.lon},b:{lat:b.lat,lon:b.lon},
+    kv:kv*1000||null,evidence:'candidate_nearest',note:`add候補 ${km.toFixed(2)}km`});
+  $('status').textContent='✚ 追加線を記録(検証/反映で接続)。候補を更新するにはモデル再読込';
 }
 function addPoint(latlng){
   const name=prompt('点(変電所)の名称(任意):','');
