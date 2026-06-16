@@ -87,8 +87,13 @@ def built_view(region, data_dir=None, join_untagged_tips=False):
         # disconnect 編集に載せ、builder の cut機構(端点座標一致)が同じ精度で照合する。
         ea = [round(pos[a][0], 5), round(pos[a][1], 5)] if a in pos else None
         eb = [round(pos[b][0], 5), round(pos[b][1], 5)] if b in pos else None
+        # 回線数(num_parallel): 並行2回線等は1枝にまとめ parallel=2 として容量保持される。
+        # 「片方に吸収された」のは描画が1本なだけで、電気的には2回線(容量2倍)を保持している。
+        par = int(getattr(ln, "num_parallel", 1) or 1)
         edges.append({"path": path, "main": (a in main and b in main),
-                      "a": ea, "b": eb})
+                      "a": ea, "b": eb, "par": par,
+                      "kv": float(getattr(ln, "voltage_kv", 0) or 0),
+                      "name": getattr(ln, "name", "") or ""})
     return {
         "region": region, "n_nodes": len(nodes), "n_edges": len(edges),
         "n_components": len(comps), "main_size": len(main),

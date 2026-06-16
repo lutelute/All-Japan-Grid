@@ -302,10 +302,13 @@ function buildModel(built){
   (built.edges||[]).forEach(e=>{
     const pts=e.path||(e.a&&e.b?[e.a,e.b]:null);
     if(!pts||pts.length<2) return;
-    const pl=L.polyline(pts,{color:'#2dd4bf',weight:1.5,opacity:.55}).addTo(edgeLayer);
+    const par=e.par||1;
+    const w = par>=3?3.5 : par===2?2.5 : 1.5;   // 回線数で太さ=並行回線が描画でも見える(吸収されたように見えない)
+    const pl=L.polyline(pts,{color:'#2dd4bf',weight:w,opacity:.55}).addTo(edgeLayer);
+    if(e.name||par>1) pl.bindTooltip(`${e.name||'線'}${par>1?` <b>(${par}回線)</b>`:''}${e.kv?` ${e.kv}kV`:''}`,{sticky:true});
     if(REGION!=='all'){   // 線を選択しやすく: ホバーで太く強調(全国は本数が多く重いので地域限定)
-      pl.on('mouseover',()=>pl.setStyle({weight:4,opacity:.95,color:(mode==='cut'?'#da3633':'#2dd4bf')}));
-      pl.on('mouseout',()=>pl.setStyle({weight:1.5,opacity:.55,color:'#2dd4bf'}));
+      pl.on('mouseover',()=>pl.setStyle({weight:w+2.5,opacity:.95,color:(mode==='cut'?'#da3633':'#2dd4bf')}));
+      pl.on('mouseout',()=>pl.setStyle({weight:w,opacity:.55,color:'#2dd4bf'}));
     }
     // ✂切断モードでモデル枝をクリック→最寄りの点を2点選択(間の区間を連続切断)
     pl.on('click',ev=>{ if(mode==='cut'){ L.DomEvent.stop(ev);
@@ -364,7 +367,10 @@ function nearestSnap(latlng){
   const cx=latlng.lng, cy=latlng.lat;
   const scan=arr=>{ for(const p of arr){ const d=(p.lon-cx)**2+(p.lat-cy)**2; if(d<bd){bd=d;best=p;} } };
   scan(snapPts); scan(pendingPts);   // OSM点に加え、追加した点/接続端点も反映前からスナップ対象に
-  return (best && bd < (0.0015)**2) ? best : null;   // ~120m以内のみスナップ
+  // スナップ半径を~440mに拡大。鉄塔(線頂点)は実測で280-460m間隔(最大689m)あり、
+  // 旧~165mだと区間の中央をクリックすると鉄塔に届かず「選択できない点が多数」になっていた。
+  // ホバーで最寄り点を黄/赤丸表示しているので、広めでも誤スナップは目で確認できる。
+  return (best && bd < (0.004)**2) ? best : null;   // ~440m以内の最寄り鉄塔/変電所にスナップ
 }
 
 function addPick(s){
