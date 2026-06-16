@@ -324,17 +324,25 @@ function buildModel(built){
       L.circleMarker([n.lat,n.lon],{radius:3,color:'#388bfd',weight:0,fillOpacity:.85})
         .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'bus',node:n.id,kv:(n.kv||0)/1000});  // 本系統節点もスナップ対象(島→本系統を繋ぐ)
-    }else{
-      // 島=actionable。大きめ橙+白縁で目立たせる
+    }else if(n.sub){
+      // 実変電所の島=actionable(繋ぐべき本物の変電所)。大きめ橙+白縁+名前
       const m=L.circleMarker([n.lat,n.lon],{radius:6,color:'#fff',weight:1.5,fillColor:'#f0883e',fillOpacity:.9});
+      if(n.name) m.bindTooltip(n.name+(n.kv?` ${n.kv}kV`:''),{sticky:true});
       m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
-      // 島節点も接続スナップ対象に(繋ぎたい当人)
       snapPts.push({lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000});
+    }else{
+      // junction=鉄塔の分岐点(変電所でない)。小さく灰で区別(オーナー指摘「島の点が鉄塔/空」)
+      const m=L.circleMarker([n.lat,n.lon],{radius:3,color:'#c98a3a',weight:0,fillOpacity:.5});
+      m.bindTooltip('鉄塔分岐(変電所でない)',{sticky:true});
+      m.on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(islandLayer);
+      snapPts.push({lat:n.lat,lon:n.lon,kind:'jct',node:n.id,kv:(n.kv||0)/1000});
     }
   });
+  const islSub=(built.nodes||[]).filter(n=>!n.main&&n.sub).length;
+  const islJct=(built.n_island_nodes||0)-islSub;
   $('modelstat').innerHTML=
-    `<b class="kbig">島 ${built.n_island_nodes}</b> 点 ／ <b style="color:#388bfd">本系統 ${built.main_size}</b> 点`
-    +`<br><span class="muted">連結成分 ${built.n_components} ／ 節点 ${built.n_nodes} ／ モデル接続線 ${built.n_edges}</span>`;
+    `<b class="kbig">島 ${built.n_island_nodes}</b> 点 (<b style="color:#f0883e">実変電所 ${islSub}</b> / 鉄塔分岐 ${islJct}) ／ <b style="color:#388bfd">本系統 ${built.main_size}</b> 点`
+    +`<br><span class="muted">橙=繋ぐべき実変電所の島 / 小灰=鉄塔分岐(変電所でない)。連結成分 ${built.n_components} ／ 接続線 ${built.n_edges}</span>`;
 }
 
 function onModelNode(n){

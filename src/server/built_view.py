@@ -90,6 +90,7 @@ def built_view(region, data_dir=None, join_untagged_tips=False):
         return None
     pos = {s.id: (s.latitude, s.longitude) for s in net.substations}
     kv = {s.id: float(s.voltage_kv) for s in net.substations}
+    nm = {s.id: (s.name or "") for s in net.substations}
     g = nx.Graph()
     g.add_nodes_from(s.id for s in net.substations)
     for ln in net.transmission_lines:
@@ -103,10 +104,13 @@ def built_view(region, data_dir=None, join_untagged_tips=False):
 
     nodes = []
     for n, (la, lo) in pos.items():
+        # sub=実変電所 / junction=鉄塔の分岐点(モデルが作る節点)。オーナー指摘:
+        # 島として描かれる点の多くは「変電所でなくただの鉄塔」=junction。両者を区別する。
         nodes.append({
             "id": n, "lat": round(la, 5), "lon": round(lo, 5),
             "kv": kv.get(n, 0.0), "comp": comp_of.get(n, -1),
             "main": n in main, "deg": g.degree(n),
+            "sub": "_jct_" not in n, "name": nm.get(n, ""),
         })
     edges = []
     for ln in net.transmission_lines:
