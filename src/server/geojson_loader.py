@@ -219,9 +219,11 @@ def get_all_geojson(layer: str) -> dict:
     return {"type": "FeatureCollection", "features": features}
 
 
-def _simplify_coords(coords: list, step: int = 3) -> list:
-    """Downsample coordinate list, keeping first and last."""
-    if len(coords) <= 4:
+def _simplify_coords(coords: list, step: int = 1) -> list:
+    """座標の間引き。**既定 step=1=間引かない**(オーナー指摘: step=3の間引きで全国の
+    緑線が鉄塔を無視して見えた)。線の頂点=鉄塔位置なので忠実描画には全点が要る。
+    軽量化はプロパティ除去で行い、幾何は保持する。step>1は明示指定時のみ。"""
+    if step <= 1 or len(coords) <= 4:
         return coords
     result = coords[::step]
     if result[-1] != coords[-1]:

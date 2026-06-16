@@ -387,6 +387,18 @@ map.on('click', e=>{
     chainClick(s); }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && mode==='chain'){ endChain(); } });
+// スナップ先プレビュー: ✂/接続/連続モードでカーソル最寄りの点(鉄塔/変電所)を黄丸で表示
+// → どこをクリックすれば良いか一目で分かる(全国は点数が多く重いので地域ビュー限定)。
+let snapHint=null;
+map.on('mousemove', e=>{
+  const editing = (mode==='cut'||mode==='connect'||mode==='chain');
+  if(!editing || REGION==='all'){ if(snapHint){ map.removeLayer(snapHint); snapHint=null; } return; }
+  const s=nearestSnap(e.latlng);
+  if(s){ const ll=[s.lat,s.lon]; const col=(mode==='cut')?'#da3633':'#f0c674';
+    if(snapHint){ snapHint.setLatLng(ll); snapHint.setStyle({color:col,fillColor:col}); }
+    else snapHint=L.circleMarker(ll,{radius:7,color:col,weight:2,fill:true,fillColor:col,fillOpacity:.45,interactive:false}).addTo(map);
+  } else if(snapHint){ map.removeLayer(snapHint); snapHint=null; }
+});
 function onPoint(pt,f){
   if(mode==='connect'){ addPick(pt); return; }
   if(mode==='cut'){ addPick(pt); return; }   // 切断も2点選択(間の線=区間を消す)
@@ -522,6 +534,9 @@ async function loadEdits(){
           if(mode==='cut'){ if(isSub){alert('issue送信済みは取消不可');return;} if(confirm(`この切断記録を取消?\n${e.note||e.line_key||''}`)) removeEdit(e.id); }
           else L.popup().setLatLng([e.a.lat,e.a.lon]).setContent(`✂️切断記録 <code>${e.id}</code><br>${e.note||e.line_key||''}${isSub?' (issue送信済)':''}<br>✂️切断モードでクリックで取消`).openOn(map); });
         mk.addTo(editLayer);
+        // 切る区間(a-b)を赤破線で明示 → どの1区間が消えるか一目で分かる(反映で実際に割れる)
+        if(e.b){ L.polyline([[e.a.lat,e.a.lon],[e.b.lat,e.b.lon]],
+          {color:col,weight:5,opacity:.9,dashArray:'5,5'}).addTo(editLayer); }
       }
     });
     const rows=(j.edits||[]).slice(-40).reverse().map(e=>`[${e.status[0]}]${submitted.has(e.id)?'📤':''} ${e.action} ${e.id||''}`);
