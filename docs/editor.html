@@ -135,6 +135,8 @@ fetch('data/built/index.json').then(r=>r.json()).then(m=>{
 
 document.getElementById('region').onchange=e=>{REGION=e.target.value;pick=[];loadRegion(REGION);};
 
+function setStat(t){const e=document.getElementById('stat');if(e)e.textContent=t;}
+
 async function loadRegion(r){
   setStat('読込中…');
   try{
