@@ -85,7 +85,27 @@ C層 enrichments(.jsonl正本)─┼─→ build_network_snapped(db) ─→【�
 ### Phase 5 — エディタ1本化(runtime-adaptive)— 部分達成 ✅(2026-06-17)
 - **共有レンダリングコア `docs/js/editor_core.js`**(`AGJ_COLORS`+`agjNodeColor`)を新設 = 島/本系統の**色分けの単一の正**。app.py が `/js`→`docs/js` を mount し、**:8088 も Pages も同一の物理ファイル**を参照(`/js/editor_core.js` ⇔ `js/editor_core.js`・コピー不要・drift不能)。両 editor.html が読込・`AGJ_COLORS` 使用。**値は :8088 の従来パレットに一致=:8088 は見た目不変**(read-only headless で AGJ_COLORS=#388bfd・描画・error0 を検証)。
 - **本質的乖離は既に解消**: データ/連結性は Phase2(同一モデル)/Phase3(同一連結性権威)で統一済 → 2 editor が示す**内容は一致**。Phase5 は残った見た目(色パレット)の単一ソース化。
-- **残(deferred)**: フルの DataSource 1本化(`LiveSource`/`StaticSource` 自動判別・単一HTML・一方を廃止・`renderModel`/`SnapIndex` 全共有)は設計済(Agent B)だが大規模 + :8088 のライブ書込み機能(verify/adopt/issue)を安全に自動検証できない(Playwright絡まりの教訓)ため、**ハンズオンで実施**するのが安全。色パレットの単一ソース化で「再び色がズレる」は構造的に防止。
+- **残(フル統合)**: 下記「静的shim方式」で実施(オーナーと合意・2026-06-17)。
+
+#### Phase 5 フル統合の確定設計 — 静的shim方式(:8088を一切触らない)
+
+**正は1つ = `src/server/templates/editor.html`(フル機能の:8088エディタ)。:8088は無改修**(=既存挙動・あなたの作り込みが完全保存・壊れない)。Pages版は**ビルドで派生**する:
+
+1. **`docs/js/editor_static_shim.js`(新規)**: `window.fetch` を上書きし、backend が無い(Pages)とき `/api/*` を静的等価へ振替:
+   - `GET /api/built/{region|all}` → `data/built/{region}.json`
+   - `GET /api/regions` → 静的 `data/built/regions_bbox.json`(新規生成・regionAt用。:8088の/api/regions二重定義バグもPagesでは回避)
+   - `GET /api/geojson/all/{layer}?min_kv=` → 既存 `data/{subs,lines}_{tier}.geojson` / `GET /api/geojson/{region}/{layer}` → 空FC(per-region生OSMは静的化しない=基底extract不変・OSMタイルが下地)
+   - `GET /api/island_class/{region}` → 静的(在れば)/空buckets
+   - `POST/GET/DELETE /api/edits` → **localStorage**(下書きCRUD)
+   - `POST /api/verify|/api/adopt` → 静的モード応答(「ローカルサーバで」)or UIで非表示 / `POST /api/issue` → GitHub issue URL を返す
+   - shim は `window.__AGJ_STATIC__=true` をセット。
+2. **`scripts/build_pages_editor.py`(新規)**: `templates/editor.html` を読み → (a) 絶対パス `/js/`→`js/`・`/static/`→該当へ rewrite、(b) `editor_static_shim.js` を inline JS の前に inject → `docs/editor.html` を生成。`regenerate_all` と CI に組込。
+3. **templates/editor.html 最小追記(任意・低リスク)**: verify/adopt ボタンを `if(window.__AGJ_STATIC__)` で非表示(backend有時は no-op=:8088不変)。
+4. **検証**: Pages 側=隔離 headless で「フルエディタが静的に描画・下書き・export 動作」。:8088 側=read-only で無改修を確認(本質的に templates 不変)。
+5. **置換**: 現 hand-rolled `docs/editor.html`(レビューモード付き)を生成版に置換。レビュー/候補(`island_candidates.json`)はモードとして移植 or :8088の client-candidates と統合。
+6. **手順厳守**: 生成版は別名(`docs/editor.new.html`)で先に headless 検証 → OKならtabを差替(壊れた版を配信しない)。
+
+**実施はコンテキストに余裕のある新セッションで**(721行エディタの /api 利用を正確に読む + 両側検証が要るため。文脈枯渇中の大改造は:8088破壊リスク)。引き継ぎ: `.claude/handover/latest.md`。
 
 ## 4. 推奨実行順
 **0(可視バグ即修正)→ 1(破壊封鎖=安全)→ 5(エディタ統一=痛点解消)→ 3(連結性一致)→ 2(DB正化)→ 4(出力統一+CI)**。
