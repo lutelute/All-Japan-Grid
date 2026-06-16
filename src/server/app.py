@@ -215,8 +215,8 @@ async def adopt_edits(region: str):
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(500, f"adopt failed: {exc}")
-    for k in [k for k in _built_cache if k.split("|")[0] == region]:
-        _built_cache.pop(k, None)   # 反映後は(join_untagged有無とも)再構築させる
+    for k in [k for k in _built_cache if k.split("|")[0] in (region, "all")]:
+        _built_cache.pop(k, None)   # 反映後は当該地域+全国(集約ビュー)を再構築(設計R1: 全国に反映)
     return result
 
 
@@ -248,7 +248,11 @@ async def get_built(region: str, fresh: int = 0, join_untagged: int = 0):
     if not fresh and key in _built_cache:
         return _built_cache[key]
     try:
-        result = built_view.built_view(region, join_untagged_tips=bool(join_untagged))
+        # 全国(all)も生OSMでなく built モデルを描く(設計R1=単一の正・編集が全国に反映)
+        if region == "all":
+            result = built_view.built_view_all(join_untagged_tips=bool(join_untagged))
+        else:
+            result = built_view.built_view(region, join_untagged_tips=bool(join_untagged))
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(500, f"built_view failed: {exc}")
