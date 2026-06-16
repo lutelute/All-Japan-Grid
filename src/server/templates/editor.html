@@ -471,18 +471,32 @@ function onLine(f,latlng){
   L.popup().setLatLng(latlng).setContent(`OSM送電線 ${p.name||p.id||''}<br>${p.voltage||'?'}`).openOn(map);
 }
 
+// 編集が「記録できた」ことを画面中央上に大きく明示(オーナー「編集できているか分からない」対応)
+const ACTLABEL={connect:'接続',disconnect:'✂切断',add_point:'点追加',set_attr:'属性'};
+let pendingCount=0;
+function flash(msg, ok){
+  let el=document.getElementById('flashmsg');
+  if(!el){ el=document.createElement('div'); el.id='flashmsg';
+    el.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:99999;padding:11px 20px;border-radius:9px;font-weight:bold;font-size:15px;box-shadow:0 3px 14px #0007;pointer-events:none;transition:opacity .45s';
+    document.body.appendChild(el); }
+  el.textContent=msg; el.style.background=ok?'#238636':'#da3633'; el.style.color='#fff'; el.style.opacity='1';
+  clearTimeout(el._t); el._t=setTimeout(()=>{ el.style.opacity='0'; }, 1900);
+}
 async function postEdit(body, skipReload){
   let reg=REGION;
   if(REGION==='all'){   // 全国編集は座標から地域を特定して記録(でないと反映先が無い)
     const c=body.a||body.pt||body.b;
     reg=(c&&regionAt(c.lat,c.lon))||null;
-    if(!reg){ alert('全国編集: この点の地域を特定できません。地域ビューで編集してください'); return null; }
-    $('status').textContent=`全国編集 → ${reg} に記録(反映は地域選択時)`;
+    if(!reg){ flash('地域を特定できません — その点は地域ビューで編集を', false); return null; }
   }
   body.region=reg; body.user=body.user||'shigenobu';
-  const r=await fetch('/api/edits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  const j=await r.json();
-  if(!r.ok){ alert('編集エラー: '+(j.detail||r.status)); return null; }
+  let r,j;
+  try{ r=await fetch('/api/edits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+       j=await r.json().catch(()=>({})); }
+  catch(e){ flash('通信エラー: '+e, false); return null; }
+  if(!r.ok){ flash('編集エラー: '+(j.detail||r.status), false); return null; }
+  pendingCount++;
+  flash(`✓ ${ACTLABEL[body.action]||body.action}を記録${REGION==='all'?'('+reg+')':''} — 保留 ${pendingCount}件`, true);
   if(!skipReload) loadEdits();
   return j;
 }
@@ -557,10 +571,23 @@ function doAttr(pt,f){
   postEdit({action:'set_attr',feature_key:String(fk),field:field,value:v});
 }
 
+const ALL_REGIONS=['hokkaido','tohoku','tokyo','chubu','hokuriku','kansai','chugoku','shikoku','kyushu','okinawa','all'];
 async function loadEdits(){
   try{
-    const j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
-    $('counts').textContent=JSON.stringify(j.counts||{});
+    let j;
+    if(REGION==='all'){
+      // 全国ビューの編集は各地域へ振り分け記録されるため、全地域を集約して地図に出す
+      const parts=await Promise.all(ALL_REGIONS.map(r=>fetch(`/api/edits/${r}`)
+        .then(x=>x.ok?x.json():null).catch(()=>null)));
+      const edits=[], submitted=[];
+      for(const p of parts){ if(p){ edits.push(...(p.edits||[])); submitted.push(...(p.submitted||[])); } }
+      const counts={}; for(const e of edits){ counts[e.status]=(counts[e.status]||0)+1; }
+      j={edits, submitted, counts};
+    } else {
+      j=await fetch(`/api/edits/${REGION}`).then(r=>r.json());
+    }
+    pendingCount=(j.counts&&j.counts.pending)||0;   // 保留件数を実データと同期
+    $('counts').textContent='保留'+pendingCount+'件 '+JSON.stringify(j.counts||{});
     const submitted=new Set(j.submitted||[]);
     if(!editLayer){ editLayer=L.layerGroup().addTo(map); } else { editLayer.clearLayers(); }
     pendingPts=[];   // 追加点/接続端点を反映前からスナップ対象に(都度作り直し)
