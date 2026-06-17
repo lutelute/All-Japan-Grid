@@ -51,6 +51,8 @@
   .mode .ic{font-size:17px;line-height:1}
   .mode:hover{border-color:var(--mut);transform:translateY(-1px)}
   .mode.on{background:var(--acc2);border-color:var(--acc);color:#fff;box-shadow:0 3px 11px rgba(31,111,235,.4)}
+  .notebtn{width:100%;flex-direction:row!important;gap:8px;border-style:dashed;font-weight:600;font-size:12px}
+  .notebtn.on{background:#2a2140;border-color:var(--sub);color:#d9c2ff;box-shadow:none}
   .util{display:flex;gap:7px;margin-top:8px}
   .util button{flex:1;background:var(--card);border:1px solid var(--bd2);color:var(--tx);border-radius:9px;
     padding:8px;font-size:11.5px;font-weight:550;cursor:pointer;transition:.12s}
@@ -146,6 +148,9 @@
         <button onclick="undoLast()">↩ 直前を取消</button>
         <button id="m_cand" onclick="toggleCandidates()">➕ 追加候補</button>
       </div>
+      <div class="util" style="margin-top:7px">
+        <button id="m_note" class="mode notebtn" onclick="setMode('note')">📍 地点メモを置く → GitHub issue</button>
+      </div>
       <div class="hint" id="hint"></div>
       <div class="sel" id="selinfo"></div>
     </div>
@@ -220,7 +225,8 @@ function setMode(m){
     chain:'連続接続: 点を順にクリックすると隣り合う点が次々と接続される(回廊を一気に辿る)。モード切替/Escで終了。',
     cut:'<b>2点をクリック</b>→その<b>間の線(1区間)だけ</b>切断(線が割れる・長距離枝は無傷)。続けて点を打つと<b>連続切断</b>(Escで終了)。点は鉄塔/変電所にスナップ・ホバーで線が太く強調。検証/反映で反映・可逆。',
     add:'地図をクリックで点追加(緯度経度は自動取得)。名称・電圧を入力。',
-    attr:'変電所をクリックで属性(電圧・名称等)を編集。'};
+    attr:'変電所をクリックで属性(電圧・名称等)を編集。',
+    note:'地図をクリックして📍メモを置く→ピンをクリックで GitHub issue 化(ブラウザ保存)。'};
   $('hint').textContent=h[m]||''; }
 function toggleLock(){
   editLocked=!editLocked;
@@ -531,6 +537,7 @@ function addPick(s){
 }
 
 map.on('click', e=>{
+  if(mode==='note'){ addNotePin(e.latlng); return; }
   if(mode==='add'){ addPoint(e.latlng); return; }
   if(mode==='connect'){ const s=nearestSnap(e.latlng)||{lat:e.latlng.lat,lon:e.latlng.lng,kind:'free'};
     addPick(s); return; }
@@ -652,6 +659,45 @@ function addCandidate(a,b,km){
   postEdit({action:'connect',a:{lat:a.lat,lon:a.lon},b:{lat:b.lat,lon:b.lon},
     kv:kv*1000||null,evidence:'candidate_nearest',note:`add候補 ${km.toFixed(2)}km`});
   $('status').textContent='✚ 追加線を記録(検証/反映で接続)。候補を更新するにはモデル再読込';
+}
+// ── 📍 地点メモ → GitHub issue(自由な地点にピン+メモ・localStorage保存・バックエンド不要) ──
+let notePinLayer=null;
+function _pins(){ try{ return JSON.parse(localStorage.getItem('agj_pins')||'[]'); }catch(e){ return []; } }
+function _savePins(a){ localStorage.setItem('agj_pins', JSON.stringify(a)); }
+function _pinEsc(s){ return String(s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+function addNotePin(latlng){
+  const memo=prompt('この地点のメモ(GitHub issue にします):','');
+  if(memo===null || !memo.trim()) return;
+  const a=_pins(); a.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    lat:latlng.lat, lon:latlng.lng, memo:memo.trim(), ts:Date.now()});
+  _savePins(a); renderPins();
+  if(typeof flash==='function') flash('📍 地点メモを記録(ピンをクリックで issue 化)', true);
+}
+function renderPins(){
+  if(!notePinLayer){ notePinLayer=L.layerGroup().addTo(map); } else { notePinLayer.clearLayers(); }
+  _pins().forEach(p=>{
+    const mk=L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',
+      html:'<div style="font-size:24px;line-height:1;filter:drop-shadow(0 1px 2px #000a);cursor:pointer">📍</div>',
+      iconSize:[24,24],iconAnchor:[12,22]})});
+    mk.bindPopup('<b>📍 地点メモ</b><br>'+_pinEsc(p.memo)+'<br><small>'+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+'</small><br>'
+      +'<button onclick="pinToIssue(\''+p.id+'\')" style="margin-top:6px">🐙 issue にする</button> '
+      +'<button onclick="deletePin(\''+p.id+'\')">🗑 削除</button>');
+    mk.addTo(notePinLayer);
+  });
+}
+function pinToIssue(id){
+  const p=_pins().find(x=>x.id===id); if(!p) return;
+  const title='[現地メモ] '+p.memo.split('\n')[0].slice(0,50);
+  const body=p.memo+'\n\n地点: '+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+'\n'
+    +'地図(OSM): https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=16/'+p.lat+'/'+p.lon+'\n'
+    +'Google: https://maps.google.com/?q='+p.lat+','+p.lon+'\n\n> AGJ 接続編集の「地点メモ」から作成。物理接続=真・捏造禁止のもとレビューしてください。';
+  const url='https://github.com/lutelute/All-Japan-Grid/issues/new?labels='+encodeURIComponent('note,location')
+    +'&title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
+  window.open(url,'_blank');
+}
+function deletePin(id){
+  if(!confirm('この地点メモを削除しますか?')) return;
+  _savePins(_pins().filter(x=>x.id!==id)); renderPins();
 }
 function addPoint(latlng){
   const name=prompt('点(変電所)の名称(任意):','');
@@ -810,6 +856,7 @@ async function submitIssue(){
 
 $('region').onchange=loadRegion;
 setMode('view');
+renderPins();
 loadRegion();
 </script>
 </body></html>
