@@ -130,6 +130,7 @@ async function loadSide(map, arr, dir, region, mode, statEl, summary, isAfter){
     const alt = mode==="ac" ? "dc" : "ac";
     const l2 = await getJSON(`${dir}/${region}_${alt}_lines.geojson`);
     if(l2){ lines=l2; buses=await getJSON(`${dir}/${region}_${alt}_buses.geojson`); note=`（${mode.toUpperCase()}データ無し→${alt.toUpperCase()}表示）`; }
+    else { note = `（送電線データ無し — 対比はバス/統計のみ）`; }
   }
   let nLines=0, nSyn=0, nBus=0;
   let bounds=[];
