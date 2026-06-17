@@ -73,6 +73,11 @@ def _compact_edges(edges: list, with_path: bool) -> list:
             "kv": round(float(e.get("kv") or 0), 1),
             "par": int(e.get("par") or 1),
         }
+        # OSM線名を保持(系統図の線一覧/ポップアップ・SLD等で実名表示に使う)。
+        # 空名は省略してバイト節約。built_view が ln.name を付与済(L128)。
+        nm = e.get("name")
+        if nm:
+            rec["name"] = nm
         if with_path:
             path = e.get("path") or []
             # Drop a degenerate path that is just the two endpoints (the editor
@@ -150,7 +155,8 @@ def build_national(collected: dict) -> dict:
         # path省略の直線(弦)描画だと長距離枝が斜めに交差して「無茶苦茶接続」に見えるため。
         "edges": [({"a": e["a"], "b": e["b"], "main": e["main"], "kv": e["kv"],
                     "par": e["par"]} | ({"path": e["path"]} if e.get("path") else {})
-                   | ({"tie": 1} if e.get("tie") else {}))
+                   | ({"tie": 1} if e.get("tie") else {})
+                   | ({"name": e["name"]} if e.get("name") else {}))
                   for e in edges],
     }
 
