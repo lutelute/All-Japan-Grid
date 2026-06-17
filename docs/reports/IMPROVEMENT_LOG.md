@@ -7,6 +7,19 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-17〜18 — **Claude Opus 4.8** — :8088とPagesの統合・kv表示バグ・分析タブ暗テーマ統一・Ybus視覚改善ループ（145）
+
+オーナー「元のページ(:8088の/)はどこ?統合してきていい・DBも統合できた」「あちこち1000除算バグ」「全タブ検証した?」「テーマというより機能」「テーマは統一していい・タブの方法を目で見てループでどんどん改善」「ybusが並んでいくさまを見たい・図を貼り付けてるだけでよくわからない」。144(UI大改修merge)後の仕上げ＝**正を1つに**の継続と視覚改善ループ。
+
+- **メインページ統合**: `src/server/app.py` が `docs/` を `/`(html=True)にマウント → :8088の `/` が正典Pagesアプリを配信。`/editor`(templates・実backend)+`/api/*` は温存。旧2タブ地図 `templates/index.html` は撤去(docs/index.html に一本化)。`@app.get("/")` index ルート削除。
+- **kv /1000 表示バグ**: built モデルの `node.kv`/`edge.kv` は既にkV単位(例66.0)なのに表示側が `/1000`(V扱い)→ 0.066kV と誤表示。editor.html ポップアップ+ shim issue本文を修正(`/1000`除去・`kv>=1000`時のみ換算)。snapPts内部の `/1000`↔`*1000` は往復(内部・表示非関与)ゆえ据置。
+- **分析タブのテーマ統一**(`041ec7f`): Ybus/潮流/単線図/エリアの白基調UIを系統図と同じ暗テーマ(`#0f1419`/`#5dade2`)に統一(`style.css` !important上書き・`.ybus-mode-btn`/`#ybus-stats-panel`/`.pf-controls`/`.btn-primary`/`.result-item`)。
+- **Ybus視覚改善ループ**(オーナー「目で見てループで」を実践・3周):
+  - **R1 動的既定化**(`37290c4`): 「▶全国アニメ」モード追加=暗テーマの全国ツアー`ybus_tour.gif`を**既定**に。静的貼付→動的「並んでいくさま」で理解しやすく。
+  - **R2 地域別10枚 暗化+自己説明化**(`24c0e7b`): `gen_ybus_interactive.py`を暗パレット化。**対角(橙=自己)/非対角(シアン=結合)を色分け+凡例**で「何の点か図中で分かる」に。`ybus-img`背景 `#fff`→`#0f1419`(白フラッシュ防止)。統計不変(同一トポロジ)。
+  - **R3 大元/Spy/ギャラリー 暗化**(`334a513`): 旧白PNG3枚は清潔な生成元が現行scriptsに無く、`gen_ybus_app_dark.py`を新設し**地域別と同一の `build_ybus_sparsity`+`block_diag`**で一貫生成。**指標を地域別モードと同一定義(nnz=結線数, density=結線/バス²)に統一**=沖縄1.523%等がモード間で一致(整合バグ解消)。大元キャプションを「連系線の弱対角要素が見える」→**ブロック対角の実態に正直化**(連系線は動的ツアー/実モデルで考慮)。→ 全5モード暗統一。
+- **検証**: 全変更を隔離headless(localhost専用・read-only・dialog dismiss・**MCP Playwright不使用**)で実描画確認、各モード img読込済・**コンソールerror 0**。Python変更は viz生成器+app.py のみ(モデル/テスト非依存)。不変条件維持(物理接続=真・捏造禁止・基底extract不変・スコアカード不可触・okinawa supplement非commit)。push済(`334a513`)。
+
 ## 2026-06-17 — **Claude Opus 4.8** — UI大改修 提案版(編集+表示) を別URLで公開・反復中（144）
 
 オーナー「大改修・UIを何周もかけて・煩雑にせずスタイリッシュに・提案htmlがあれば報告」。本番(editor.html/index.html/style.css/templates)は**無改変**のまま、提案版を別URLで公開して合意形成する方式(編集タブ=`editor.proposal.html`、系統図=`index.proposal.html`+`style.proposal.css`)。生成器=`/tmp/make_proposal.py`(editor.html→editor.proposal.html へ panel/CSS刷新+機能注入を再適用・JSロジック温存)。全機能 隔離headless で検証・**コンソールerror0**・本番ドリフトテスト維持。
