@@ -557,7 +557,7 @@ function onModelNode(n){
   const tag = n.main ? '本系統(連結OK)' : `<b style="color:#f0883e">島 #${n.comp}(未接続)</b>`;
   L.popup().setLatLng([n.lat,n.lon]).setContent(
     `モデル節点 <code>${n.id}</code><br>${tag}<br>`
-    +`電圧 ${(n.kv||0)/1000||'?'}kV ／ 次数 ${n.deg}<br>`
+    +`電圧 ${(n.kv||0)||'?'}kV ／ 次数 ${n.deg}<br>`
     +`<small>${n.lat.toFixed(5)}, ${n.lon.toFixed(5)}</small>`
     +(n.main?'':'<br><span class="muted">OSMに近接線があれば接続(2点)で繋げます</span>')
     +((n.sub||(n.deg||0)>0)?('<br><button onclick="showSLDAt('+n.lat+','+n.lon+')" style="margin-top:6px;cursor:pointer">📋 単線結線図</button>'):'')

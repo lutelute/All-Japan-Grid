@@ -240,7 +240,8 @@ def sld_fig(region, name, model, out):
         ax.plot([6.7, 6.7], [ym - 0.5, y2], color="#333", lw=1.5, zorder=2)
         ax.text(7.15, ym, f"T  {kvs[i]}/{kvs[i+1]}\n1次={kvs[i]}(HV)/2次={kvs[i+1]}(LV)",
                 ha="left", va="center", fontsize=9, color="#333")
-    ax.text(5, top + 0.9, f"{name}変電所 単線結線図(SubScope draft)",
+    _title = name if name.endswith(("変電所", "開閉所", "変換所")) else f"{name}変電所"
+    ax.text(5, top + 0.9, f"{_title} 単線結線図(SubScope draft)",
             ha="center", fontsize=14, fontweight="bold")
     ax.text(5, 0.4,
             "潮流層: 各電圧=1バス・単位法・カスケード変圧器(飛び越し無し)\n"
