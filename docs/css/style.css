@@ -663,3 +663,17 @@ input[type="range"]{ accent-color:var(--p-acc); }
 /* ── 凡例トグル等のフローティングUIも同トーン ── */
 .ui-toggle-btn{ background:var(--p-card)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
 .ui-toggle-btn.active{ border-color:var(--p-acc)!important; color:var(--p-acc)!important; }
+
+/* ── 右一覧パネル/凡例 も同トーンに(2026-06-17 表示UI刷新 追補) ── */
+#sublist{ background:var(--p-card)!important; border:1px solid var(--p-bd)!important; border-radius:11px!important; color:var(--p-tx)!important; }
+#sublist-header{ border-bottom:1px solid var(--p-bd)!important; }
+.list-tab-btn{ background:var(--p-card2)!important; color:var(--p-mut)!important; border:1px solid var(--p-bd2)!important; border-radius:7px!important; font-size:11.5px; }
+.list-tab-btn:hover{ color:var(--p-tx)!important; border-color:var(--p-mut)!important; }
+.list-tab-btn.active{ background:var(--p-acc2)!important; color:#fff!important; border-color:var(--p-acc)!important; }
+.list-sort-btn{ background:var(--p-card2)!important; color:var(--p-mut)!important; border:1px solid var(--p-bd2)!important; border-radius:7px!important; }
+.list-sort-btn:hover{ background:var(--p-card)!important; border-color:var(--p-mut)!important; }
+.list-sort-btn.active{ background:var(--p-acc2)!important; color:#fff!important; border-color:var(--p-acc)!important; }
+.list-entry{ border-bottom:1px solid var(--p-bd)!important; }
+.list-entry:hover{ background:rgba(56,139,253,.12)!important; }
+.legend{ background:rgba(22,27,34,.94)!important; border:1px solid var(--p-bd)!important; border-radius:10px!important; color:var(--p-tx)!important; }
+.legend h4{ color:#fff!important; }
