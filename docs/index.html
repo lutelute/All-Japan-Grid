@@ -59,7 +59,7 @@
 
             <!-- 表示モード切替 -->
             <div id="ybus-mode-bar" style="display:flex;gap:4px;margin:0 0 10px;flex-wrap:wrap">
-                <button class="ybus-mode-btn active" data-mode="anim" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 全国アニメ</button>
+                <button class="ybus-mode-btn active" data-mode="anim" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 組立アニメ</button>
                 <button class="ybus-mode-btn" data-mode="region" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
                 <button class="ybus-mode-btn" data-mode="national" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">大元 (全国統合)</button>
                 <button class="ybus-mode-btn" data-mode="all" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">全地域ギャラリー</button>
@@ -87,7 +87,7 @@
             <!-- メインビューア -->
             <div id="ybus-viewer" style="display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:14px;margin:0 0 16px">
                 <figure id="ybus-figure" style="margin:0">
-                    <img id="ybus-img" src="./assets/analysis/ybus/tokyo.png" alt="Ybus" loading="lazy"
+                    <img id="ybus-img" src="./assets/gif/ybus_build.gif" alt="Ybus" loading="lazy"
                          style="width:100%;height:auto;max-height:80vh;object-fit:contain;border:1px solid #2c3e50;border-radius:4px;background:#0f1419">
                     <figcaption id="ybus-caption" style="margin-top:6px;font-size:12px;color:#9fb3c8">読み込み中...</figcaption>
                 </figure>
@@ -221,15 +221,15 @@
 
                 function renderAnim(){
                     const img = document.getElementById("ybus-img");
-                    img.src = "./assets/gif/ybus_tour.gif";
-                    img.alt = "全国 Ybus(動的ツアー)";
+                    img.src = "./assets/gif/ybus_build.gif";
+                    img.alt = "全国 Ybus(地域ごとに組み上がる)";
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>全国 Ybus（動的ツアー）</b> — 6,949 バス × 20,319 非零要素の疎構造を巡回表示。地域ブロック（帯対角）が並び、連系線が弱い非対角要素として疎に入る様子が見える。静止画は他モードへ。';
+                        '<b>全国 Ybus（組立アニメ）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の $\\mathbf{Y}_{\\mathrm{bus}}$（橙=自己アドミタンス／各色=地域内のバス間結合）が積み上がり、全国のブロック対角構造が組み上がる。';
                     document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">全国統合 $\\mathbf{Y}_{\\mathrm{bus}}$ を暗テーマで動的表示。' +
-                        '各地域の帯対角ブロックが対角に並び、連系線が弱非対角要素として疎に入る。' +
-                        '個別の静止スパイは「地域別 Ybus」「大元」「Spy plot」モードで。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "全国 6,949 バス · 動的";
+                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">全国 $\\mathbf{Y}_{\\mathrm{bus}}$ が地域ごとに構築される過程を暗テーマで表示。' +
+                        '各地域のブロックが対角位置に順に出現し、最終的に10地域すべてが並ぶ。' +
+                        '完成形の静止スパイは「大元」「Spy plot」、地域別の詳細は「地域別 Ybus」モードへ。</div>';
+                    document.getElementById("ybus-stats-mini").innerHTML = "全国 6,962 バス · 組立";
                 }
 
                 function applyMode(){

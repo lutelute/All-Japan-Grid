@@ -228,5 +228,85 @@ def main():
     print("  -> ybus_per_region.png", flush=True)
 
 
+def build_anim():
+    """全国Ybusを地域ごとに「並べていく」組立アニメのフレーム群を生成する。
+
+    各地域のブロックが対角に1つずつ出現して全国 Ybus が組み上がる様子を見せる
+    (オーナー要望「ybusが並んでいくさま」)。tour gif は完成形のパンで「組立」が
+    見えないため、本アニメで補完する。出力フレームは ffmpeg で gif 化(シェル側)。
+
+    注意: アニメフレームは全て同一画素サイズである必要があるため bbox_inches は
+    使わず、固定 figsize + 固定マージンで描画する。
+    """
+    gif_dir = os.path.join(os.path.dirname(OUT_DIR), "gif")
+    frames_dir = os.path.join(gif_dir, "_build_frames")
+    os.makedirs(frames_dir, exist_ok=True)
+    # 既存フレーム掃除(再実行時の混入防止)
+    for f in os.listdir(frames_dir):
+        if f.startswith("frame_") and f.endswith(".png"):
+            os.remove(os.path.join(frames_dir, f))
+
+    print("Building assembly animation frames...", flush=True)
+    blocks, labels, sizes, edges = build_national()
+
+    offsets, off = [], 0
+    for nb in sizes:
+        offsets.append(off)
+        off += nb
+    nb_nat = off
+    n_reg = len(blocks)
+    total_edges = int(sum(edges))
+
+    # 地域ごとの全国座標系での非零座標(対角/非対角)を事前計算
+    region_pts = []
+    for idx, (b, o) in enumerate(zip(blocks, offsets)):
+        coo = b.tocoo()
+        xs = coo.col + o
+        ys = coo.row + o
+        dg = coo.row == coo.col
+        region_pts.append((xs, ys, dg, REGION_COLORS[idx]))
+
+    state = {"fidx": 0}
+
+    def emit(placed_upto, title, repeat=1):
+        fig, ax = plt.subplots(figsize=(7.2, 7.6), facecolor=DK_FIG)
+        fig.subplots_adjust(left=0.10, right=0.97, top=0.90, bottom=0.09)
+        _style_dark(ax)
+        for j in range(placed_upto):
+            xs, ys, dg, col = region_pts[j]
+            ax.scatter(xs[~dg], ys[~dg], c=col, s=0.7, marker=",",
+                       alpha=0.85, linewidths=0, rasterized=True)
+            ax.scatter(xs[dg], ys[dg], c=DK_DIAG, s=0.7, marker=",",
+                       alpha=0.9, linewidths=0, rasterized=True)
+            o = offsets[j]
+            ax.text(o + sizes[j] / 2, o + 2, labels[j], fontsize=7,
+                    color=region_pts[j][3], ha="center", va="top",
+                    fontweight="bold")
+        ax.set_xlim(0, nb_nat)
+        ax.set_ylim(nb_nat, 0)
+        ax.set_aspect("equal")
+        ax.set_title(title, fontsize=12.5, color=DK_TITLE, pad=10)
+        ax.set_xlabel("バス番号", color=DK_SUB)
+        ax.set_ylabel("バス番号", color=DK_SUB)
+        for _ in range(repeat):
+            fig.savefig(os.path.join(frames_dir, f"frame_{state['fidx']:03d}.png"),
+                        dpi=110, facecolor=DK_FIG)
+            state["fidx"] += 1
+        plt.close(fig)
+
+    emit(0, "全国 Ybus を10地域ごとに組み上げる →", repeat=2)
+    for k in range(1, n_reg + 1):
+        cum_b = sum(sizes[:k])
+        cum_e = sum(edges[:k])
+        emit(k, f"構築 {k}/{n_reg}  ＋{labels[k - 1]}"
+                f"   ({cum_b:,} バス, nnz={cum_e:,})", repeat=3)
+    emit(n_reg, f"全国 Ybus 完成   ({nb_nat:,} バス, nnz={total_edges:,}, 10地域)",
+         repeat=7)
+    print(f"  -> {state['fidx']} frames in {frames_dir}", flush=True)
+
+
 if __name__ == "__main__":
-    main()
+    if "--build" in sys.argv:
+        build_anim()
+    else:
+        main()
