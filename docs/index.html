@@ -59,7 +59,8 @@
 
             <!-- 表示モード切替 -->
             <div id="ybus-mode-bar" style="display:flex;gap:4px;margin:0 0 10px;flex-wrap:wrap">
-                <button class="ybus-mode-btn active" data-mode="region" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
+                <button class="ybus-mode-btn active" data-mode="anim" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 全国アニメ</button>
+                <button class="ybus-mode-btn" data-mode="region" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
                 <button class="ybus-mode-btn" data-mode="national" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">大元 (全国統合)</button>
                 <button class="ybus-mode-btn" data-mode="all" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">全地域ギャラリー</button>
                 <button class="ybus-mode-btn" data-mode="spy" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">Spy plot</button>
@@ -108,7 +109,7 @@
                              chubu:"中部", hokuriku:"北陸", kansai:"関西",
                              chugoku:"中国", shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
                 let stats = null;
-                let mode = "region";
+                let mode = "anim";
 
                 async function loadStats(){
                     if (stats) return stats;
@@ -218,10 +219,24 @@
                     document.getElementById("ybus-stats-mini").innerHTML = "全国 Ybus spy";
                 }
 
+                function renderAnim(){
+                    const img = document.getElementById("ybus-img");
+                    img.src = "./assets/gif/ybus_tour.gif";
+                    img.alt = "全国 Ybus(動的ツアー)";
+                    document.getElementById("ybus-caption").innerHTML =
+                        '<b>全国 Ybus（動的ツアー）</b> — 6,949 バス × 20,319 非零要素の疎構造を巡回表示。地域ブロック（帯対角）が並び、連系線が弱い非対角要素として疎に入る様子が見える。静止画は他モードへ。';
+                    document.getElementById("ybus-stats-rows").innerHTML =
+                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">全国統合 $\\mathbf{Y}_{\\mathrm{bus}}$ を暗テーマで動的表示。' +
+                        '各地域の帯対角ブロックが対角に並び、連系線が弱非対角要素として疎に入る。' +
+                        '個別の静止スパイは「地域別 Ybus」「大元」「Spy plot」モードで。</div>';
+                    document.getElementById("ybus-stats-mini").innerHTML = "全国 6,949 バス · 動的";
+                }
+
                 function applyMode(){
                     const sel = document.getElementById("ybus-region-selector");
                     sel.style.display = (mode === "region") ? "flex" : "none";
-                    if (mode === "region") renderRegion(document.getElementById("ybus-region").value);
+                    if (mode === "anim") renderAnim();
+                    else if (mode === "region") renderRegion(document.getElementById("ybus-region").value);
                     else if (mode === "national") renderNational();
                     else if (mode === "all") renderAll();
                     else if (mode === "spy") renderSpy();
