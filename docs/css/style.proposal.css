@@ -1,0 +1,74 @@
+/* 系統図サイドバー 表示UI刷新(提案版・本番 style.css に重ねる上書き) — 接続編集提案版と同トーン。
+   オーナー「見る=系統図 で分離改修・スタイリッシュに」。機能/ID/JSは不変、見た目のみ刷新。 */
+:root{
+  --p-bg:#0d1117; --p-card:#161b22; --p-card2:#1c2230; --p-bd:#262d38; --p-bd2:#30363d;
+  --p-tx:#e6edf3; --p-mut:#8b949e; --p-acc:#388bfd; --p-acc2:#1f6feb; --p-go:#2ea043;
+}
+#sidebar{ width:362px!important; min-width:362px!important;
+  background:linear-gradient(180deg,#0f141b,#0d1117)!important; color:var(--p-tx)!important;
+  border-right:1px solid var(--p-bd); }
+#sidebar::-webkit-scrollbar{ width:9px } #sidebar::-webkit-scrollbar-thumb{ background:#21262d; border-radius:5px }
+
+#sidebar h1{ background:rgba(13,17,23,.82)!important; backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--p-bd)!important; font-size:1rem!important; font-weight:650; letter-spacing:.2px;
+  padding:13px 16px!important; }
+
+/* ── タブ ── */
+.tab-bar{ border-bottom:1px solid var(--p-bd)!important; background:#0d1117; }
+.tab-btn{ background:transparent!important; color:var(--p-mut)!important; font-size:.8rem!important; font-weight:600; padding:11px 0!important; transition:.15s; }
+.tab-btn:hover{ color:var(--p-tx)!important; }
+.tab-btn.active{ color:#fff!important; background:transparent!important;
+  border-bottom:2px solid var(--p-acc)!important; margin-bottom:-1px; }
+
+/* ── セクション ── */
+.section{ padding:13px 16px!important; border-bottom:1px solid var(--p-bd)!important; }
+.section h2{ font-size:10.5px!important; text-transform:uppercase; letter-spacing:.7px;
+  color:var(--p-mut)!important; font-weight:650!important; margin:0 0 9px 0!important;
+  display:flex; align-items:center; gap:7px; }
+
+/* ── レイヤトグル(行=カード・アクセントチェックボックス) ── */
+.layer-toggles{ display:flex; flex-direction:column; gap:5px!important; }
+.layer-toggle{ padding:8px 10px!important; border-radius:9px; background:var(--p-card);
+  border:1px solid var(--p-bd); transition:.12s; cursor:pointer; align-items:center; }
+.layer-toggle:hover{ border-color:var(--p-bd2); background:var(--p-card2); }
+.layer-toggle input[type="checkbox"]{ accent-color:var(--p-acc); width:15px; height:15px; cursor:pointer; }
+.toggle-label{ font-size:12.5px!important; color:var(--p-tx); }
+.inline-select{ background:var(--p-card2)!important; color:var(--p-tx)!important;
+  border:1px solid var(--p-bd2)!important; border-radius:7px!important; font-size:11px!important; padding:4px 8px!important; }
+
+/* ── 発電所種別チップ ── */
+.fuel-checkboxes{ gap:5px 8px!important; }
+.fuel-cb-label{ font-size:11.5px!important; padding:4px 8px; border-radius:7px; background:var(--p-card); border:1px solid var(--p-bd); }
+.fuel-cb-label input[type="checkbox"]{ accent-color:var(--p-acc); }
+.fuel-filter-actions .btn-fuel-all{ background:var(--p-card)!important; color:var(--p-mut)!important;
+  border:1px solid var(--p-bd2)!important; border-radius:7px!important; font-size:10.5px!important; padding:3px 9px!important; cursor:pointer; }
+.fuel-filter-actions .btn-fuel-all:hover{ border-color:var(--p-mut)!important; color:var(--p-tx)!important; }
+
+/* ── スライダ ── */
+input[type="range"]{ accent-color:var(--p-acc); }
+
+/* ── ダウンロード/アクションボタン ── */
+.btn-download{ background:var(--p-card)!important; color:var(--p-tx)!important;
+  border:1px solid var(--p-bd2)!important; border-radius:9px!important; padding:10px!important;
+  font-size:12px!important; font-weight:550!important; transition:.12s; margin:3px 0!important; }
+.btn-download:hover{ border-color:var(--p-mut)!important; background:var(--p-card2)!important; }
+
+/* ── 地域ボタン ── */
+.region-list{ gap:4px!important; }
+.region-btn{ background:var(--p-card)!important; color:var(--p-tx)!important;
+  border:1px solid var(--p-bd)!important; border-radius:8px!important; font-size:12px!important;
+  padding:7px 10px!important; transition:.12s; cursor:pointer; }
+.region-btn:hover{ border-color:var(--p-mut)!important; background:var(--p-card2)!important; }
+.region-btn.active{ border-color:var(--p-acc)!important; background:var(--p-acc2)!important; color:#fff!important; }
+
+/* ── min-kv セレクト ── */
+#min-kv{ background:var(--p-card2)!important; color:var(--p-tx)!important;
+  border:1px solid var(--p-bd2)!important; border-radius:8px!important; padding:7px 10px!important; font-size:12.5px; width:100%; }
+
+/* ── whats-new バナーを控えめに ── */
+#whats-new{ background:linear-gradient(90deg,rgba(56,139,253,.08),rgba(46,160,67,.05))!important;
+  border-bottom:1px solid var(--p-bd)!important; }
+
+/* ── 凡例トグル等のフローティングUIも同トーン ── */
+.ui-toggle-btn{ background:var(--p-card)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
+.ui-toggle-btn.active{ border-color:var(--p-acc)!important; color:var(--p-acc)!important; }
