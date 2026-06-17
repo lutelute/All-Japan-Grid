@@ -125,7 +125,7 @@
                     const cap = document.getElementById("ybus-caption");
                     img.src = "./assets/analysis/ybus/" + region + ".png";
                     img.alt = RJA[region] + " Ybus";
-                    cap.innerHTML = `<b>${RJA[region]}</b> 地域 Ybus — 各点は非零要素（送電線で接続された母線ペア）。対角＝自己アドミタンス、非対角＝バス間の結合。`;
+                    cap.innerHTML = `<b>${RJA[region]}</b> 地域 Ybus（DB更新モデル）— 各点は実際に送電線で接続されたノード対。対角＝自己アドミタンス、非対角＝バス間の結合。ノード＝変電所＋接続点。`;
                     if (!stats || !stats[region]) {
                         document.getElementById("ybus-stats-rows").innerHTML = "";
                         document.getElementById("ybus-stats-mini").textContent = "";
@@ -134,11 +134,11 @@
                     const s = stats[region];
                     const rows = [
                         ["地域名 (日本語)", s.name_ja],
-                        ["バス数 N", s.n_buses.toLocaleString()],
-                        ["非零要素 nnz (上三角)", s.nnz.toLocaleString()],
-                        ["非対角要素数 (2·nnz)", s.n_offdiag.toLocaleString()],
+                        ["ノード数 N", s.n_buses.toLocaleString()],
+                        ["うち変電所", (s.n_sub != null ? s.n_sub.toLocaleString() : "—")],
+                        ["結線数 (送電線)", s.nnz.toLocaleString()],
                         ["疎度 density", s.density_pct + " %"],
-                        ["平均次数 (1バスあたり接続数)", s.degree_avg],
+                        ["平均次数 (1ノードあたり接続数)", s.degree_avg],
                         ["最大次数", s.degree_max],
                         ["行列形状", `${s.n_buses} × ${s.n_buses}`],
                     ];
@@ -148,7 +148,7 @@
                             <span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${v}</span>
                         </div>`).join("");
                     document.getElementById("ybus-stats-mini").innerHTML =
-                        `<b>${s.n_buses.toLocaleString()}</b> バス · nnz=<b>${s.nnz.toLocaleString()}</b> · density=<b>${s.density_pct}%</b>`;
+                        `<b>${s.n_buses.toLocaleString()}</b> ノード · 変電所<b>${s.n_sub != null ? s.n_sub.toLocaleString() : "—"}</b> · 結線=<b>${s.nnz.toLocaleString()}</b>`;
                 }
 
                 function renderTable(){
@@ -156,7 +156,7 @@
                     const order = ["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
                     let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
                     html += '<thead><tr>' +
-                        ['地域','バス数 N','非零 nnz','非対角','疎度 (%)','平均次数','最大次数']
+                        ['地域','ノード数 N','変電所','結線数','疎度 (%)','平均次数','最大次数']
                             .map(h=>`<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${h}</th>`).join("") +
                         '</tr></thead><tbody>';
                     for (const r of order) {
@@ -165,8 +165,8 @@
                         html += `<tr>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937"><b style="color:#69f0ae">${RJA[r]}</b></td>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.n_buses.toLocaleString()}</td>
+                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.n_sub != null ? s.n_sub.toLocaleString() : "—"}</td>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.nnz.toLocaleString()}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.n_offdiag.toLocaleString()}</td>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.density_pct}</td>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.degree_avg}</td>
                             <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.degree_max}</td>
@@ -179,19 +179,19 @@
                 function renderNational(){
                     const img = document.getElementById("ybus-img");
                     img.src = "./assets/analysis/ybus_national.png";
-                    img.alt = "大元 Ybus (全国統合・ブロック対角)";
+                    img.alt = "大元 Ybus (全国統合・DB更新モデル+連系線)";
+                    const nat = (stats && stats._national) || {};
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>大元 Ybus</b> — 全国10地域の $\\mathbf{Y}_{\\mathrm{bus}}$ をブロック対角に統合。地域ごとの色で帯対角ブロックが並び（橙=自己アドミタンス、各色=地域内のバス間結合）、右は地域別の充填率。地域間連系線は動的ツアー／実モデルで考慮。';
-                    let total_buses = 0, total_nnz = 0;
-                    if (stats) {
-                        for (const r in stats) { total_buses += stats[r].n_buses; total_nnz += stats[r].nnz; }
-                    }
+                        '<b>大元 Ybus（DB更新モデル）</b> — DB更新済みの建造モデルから直接生成。地域ごとの色で帯対角ブロックが並び（橙=自己アドミタンス、各色=地域内のバス間結合）、<b style="color:#ff3b6b">赤の非対角点＝エリア間連系線</b>。右は地域別の充填率。';
+                    const nNodes = (nat.n_nodes||0), nSub=(nat.n_sub||0), nInter=(nat.n_inter||0), nIntra=(nat.n_intra||0);
                     document.getElementById("ybus-stats-rows").innerHTML = `
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">構成</span><span style="color:#fff">10 地域（ブロック対角）</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計バス数</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${total_buses.toLocaleString()}</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計 nnz（結線数）</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${total_nnz.toLocaleString()}</span></div>
-                        <div style="font-size:11px;color:#7d8aa0;margin-top:8px;line-height:1.5">※ 各地域の Ybus 非零パターンをブロック対角に配置。本静止図は地域内結線のみ（地域間連系線は動的ツアー／実モデルで考慮）。</div>`;
-                    document.getElementById("ybus-stats-mini").innerHTML = `合計 <b>${total_buses.toLocaleString()}</b> バス · 10地域`;
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">構成</span><span style="color:#fff">10 地域 + 連系線</span></div>
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計ノード数</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nNodes.toLocaleString()}</span></div>
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">うち変電所</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nSub.toLocaleString()}</span></div>
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">地域内 結線</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nIntra.toLocaleString()}</span></div>
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">エリア間 連系線</span><span style="font-family:ui-monospace,monospace;color:#ff3b6b;font-weight:600">${nInter.toLocaleString()}</span></div>
+                        <div style="font-size:11px;color:#7d8aa0;margin-top:8px;line-height:1.5">※ DB更新済み建造モデル(docs/data/built)から生成。全エッジが実ノードに接続。赤点が10地域をまたぐ連系線。</div>`;
+                    document.getElementById("ybus-stats-mini").innerHTML = `合計 <b>${nNodes.toLocaleString()}</b> ノード · 連系線<b style="color:#ff3b6b">${nInter.toLocaleString()}</b>`;
                 }
 
                 function renderAll(){
@@ -199,11 +199,11 @@
                     img.src = "./assets/analysis/ybus_per_region.png";
                     img.alt = "全地域 Ybus ギャラリー";
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>地域別 Ybus ギャラリー</b> — 10 地域の $\\mathbf{Y}_{\\mathrm{bus}}$ を一覧。サイズ（バス数）と疎度が地域で大きく異なることが分かる。個別表示は「地域別 Ybus」モードへ。';
+                        '<b>地域別 Ybus ギャラリー（DB更新モデル）</b> — 10 地域の $\\mathbf{Y}_{\\mathrm{bus}}$ を一覧。各地域の規模（ノード数）と疎度が大きく異なることが分かる。個別表示は「地域別 Ybus」モードへ。';
                     document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">10 地域すべてを並べた一覧画像。' +
+                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの10地域を並べた一覧。' +
                         '個別の統計は「地域別 Ybus」モードで地域を選ぶと表示されます。下の表でも全地域を比較できます。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "10 地域一覧";
+                    document.getElementById("ybus-stats-mini").innerHTML = "10 地域一覧（DBモデル）";
                 }
 
                 function renderSpy(){
@@ -211,25 +211,26 @@
                     img.src = "./assets/analysis/ybus_spy.png";
                     img.alt = "Ybus spy plot";
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>Spy plot</b> — 行列の非零パターンのみを表示。帯対角構造（隣接バスのみ非零）が明瞭。電力系統 Ybus に典型的な疎構造。';
+                        '<b>Spy plot（DB更新モデル）</b> — 全国 Ybus の非零パターン。地域ごとの帯対角ブロックと、<b style="color:#ff3b6b">赤＝エリア間連系線</b>（地域をまたぐ非対角点）が見て取れる。電力系統 Ybus に典型的な疎構造。';
                     document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">スパイプロットは Ybus の非零パターンのみを抽出した可視化。' +
-                        '帯対角（=隣接バス）と疎な非対角（=長距離結線）が見て取れる。' +
-                        '改修前の旧トポロジでは数百島に分裂し Ybus が事実上特異だったが、本改修後は10地域すべてで非特異・連結。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "全国 Ybus spy";
+                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの全国 Ybus 非零パターン。' +
+                        '地域内の帯対角（=隣接ノード）と、<b style="color:#ff3b6b">赤のエリア間連系線</b>（北海道-東北、中部-東京、中国-四国 等）が分布する。' +
+                        '全エッジが実ノード(変電所/接続点)に接続している。</div>';
+                    document.getElementById("ybus-stats-mini").innerHTML = "全国 Ybus spy（DBモデル）";
                 }
 
                 function renderAnim(){
                     const img = document.getElementById("ybus-img");
                     img.src = "./assets/gif/ybus_build.gif";
-                    img.alt = "全国 Ybus(地域ごとに組み上がる)";
+                    img.alt = "全国 Ybus(地域ごとに組み上がる・DBモデル)";
+                    const na = (stats && stats._national) || {};
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>全国 Ybus（組立アニメ）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の $\\mathbf{Y}_{\\mathrm{bus}}$（橙=自己アドミタンス／各色=地域内のバス間結合）が積み上がり、全国のブロック対角構造が組み上がる。';
+                        '<b>全国 Ybus（組立アニメ・DB更新モデル）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の $\\mathbf{Y}_{\\mathrm{bus}}$（橙=自己アドミタンス／各色=地域内の結合）が積み上がり、<b style="color:#ff3b6b">赤＝エリア間連系線</b>が地域を繋いで入る。';
                     document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">全国 $\\mathbf{Y}_{\\mathrm{bus}}$ が地域ごとに構築される過程を暗テーマで表示。' +
-                        '各地域のブロックが対角位置に順に出現し、最終的に10地域すべてが並ぶ。' +
-                        '完成形の静止スパイは「大元」「Spy plot」、地域別の詳細は「地域別 Ybus」モードへ。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "全国 6,962 バス · 組立";
+                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの全国 Ybus が地域ごとに構築される過程。' +
+                        '各地域のブロックが対角に順に出現し、地域がまたぐと<b style="color:#ff3b6b">赤の連系線</b>が入る。最終的に10地域+連系線で全国が組み上がる。' +
+                        '完成形は「大元」「Spy plot」、地域別詳細は「地域別 Ybus」へ。</div>';
+                    document.getElementById("ybus-stats-mini").innerHTML = `全国 <b>${(na.n_nodes||0).toLocaleString()}</b> ノード · 連系線<b style="color:#ff3b6b">${(na.n_inter||0).toLocaleString()}</b> · 組立`;
                 }
 
                 function applyMode(){

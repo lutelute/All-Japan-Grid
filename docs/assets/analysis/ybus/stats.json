@@ -1,92 +1,99 @@
 {
   "hokkaido": {
     "name_ja": "北海道",
-    "n_buses": 471,
-    "nnz": 459,
-    "n_offdiag": 918,
-    "density_pct": 0.2069,
-    "degree_max": 9,
-    "degree_avg": 2.38
+    "n_buses": 836,
+    "n_sub": 551,
+    "nnz": 835,
+    "density_pct": 0.1195,
+    "degree_max": 7,
+    "degree_avg": 2.26
   },
   "tohoku": {
     "name_ja": "東北",
-    "n_buses": 901,
-    "nnz": 962,
-    "n_offdiag": 1924,
-    "density_pct": 0.1185,
-    "degree_max": 13,
-    "degree_avg": 2.49
+    "n_buses": 1990,
+    "n_sub": 1132,
+    "nnz": 1997,
+    "density_pct": 0.0504,
+    "degree_max": 8,
+    "degree_avg": 2.28
   },
   "tokyo": {
     "name_ja": "東京",
-    "n_buses": 1726,
-    "nnz": 1609,
-    "n_offdiag": 3218,
-    "density_pct": 0.054,
-    "degree_max": 10,
-    "degree_avg": 2.5
+    "n_buses": 4215,
+    "n_sub": 2232,
+    "nnz": 4216,
+    "density_pct": 0.0237,
+    "degree_max": 8,
+    "degree_avg": 2.27
   },
   "chubu": {
     "name_ja": "中部",
-    "n_buses": 1163,
-    "nnz": 1438,
-    "n_offdiag": 2876,
-    "density_pct": 0.1063,
-    "degree_max": 11,
-    "degree_avg": 2.88
+    "n_buses": 3069,
+    "n_sub": 1406,
+    "nnz": 2903,
+    "density_pct": 0.0308,
+    "degree_max": 8,
+    "degree_avg": 2.23
   },
   "hokuriku": {
     "name_ja": "北陸",
-    "n_buses": 267,
-    "nnz": 339,
-    "n_offdiag": 678,
-    "density_pct": 0.4755,
+    "n_buses": 784,
+    "n_sub": 353,
+    "nnz": 746,
+    "density_pct": 0.1214,
     "degree_max": 8,
-    "degree_avg": 2.92
+    "degree_avg": 2.16
   },
   "kansai": {
     "name_ja": "関西",
-    "n_buses": 902,
-    "nnz": 861,
-    "n_offdiag": 1722,
-    "density_pct": 0.1058,
-    "degree_max": 10,
-    "degree_avg": 2.66
+    "n_buses": 2292,
+    "n_sub": 1240,
+    "nnz": 2181,
+    "density_pct": 0.0415,
+    "degree_max": 7,
+    "degree_avg": 2.3
   },
   "chugoku": {
     "name_ja": "中国",
-    "n_buses": 531,
-    "nnz": 628,
-    "n_offdiag": 1256,
-    "density_pct": 0.2227,
-    "degree_max": 9,
-    "degree_avg": 2.7
+    "n_buses": 1582,
+    "n_sub": 750,
+    "nnz": 1518,
+    "density_pct": 0.0607,
+    "degree_max": 8,
+    "degree_avg": 2.22
   },
   "shikoku": {
     "name_ja": "四国",
-    "n_buses": 258,
-    "nnz": 291,
-    "n_offdiag": 582,
-    "density_pct": 0.4372,
-    "degree_max": 9,
-    "degree_avg": 2.52
+    "n_buses": 717,
+    "n_sub": 342,
+    "nnz": 645,
+    "density_pct": 0.1255,
+    "degree_max": 7,
+    "degree_avg": 2.06
   },
   "kyushu": {
     "name_ja": "九州",
-    "n_buses": 684,
-    "nnz": 728,
-    "n_offdiag": 1456,
-    "density_pct": 0.1556,
-    "degree_max": 9,
-    "degree_avg": 2.54
+    "n_buses": 1749,
+    "n_sub": 910,
+    "nnz": 1711,
+    "density_pct": 0.0559,
+    "degree_max": 8,
+    "degree_avg": 2.25
   },
   "okinawa": {
     "name_ja": "沖縄",
-    "n_buses": 59,
-    "nnz": 53,
-    "n_offdiag": 106,
-    "density_pct": 1.5226,
+    "n_buses": 99,
+    "n_sub": 78,
+    "nnz": 95,
+    "density_pct": 0.9693,
     "degree_max": 6,
-    "degree_avg": 2.21
+    "degree_avg": 2.43
+  },
+  "_national": {
+    "n_nodes": 17333,
+    "n_sub": 8994,
+    "n_intra": 16025,
+    "n_inter": 829,
+    "n_edges_model": 19031
   }
 }

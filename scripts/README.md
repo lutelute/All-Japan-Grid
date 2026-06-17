@@ -109,7 +109,8 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 | `gen_dynamics_fig_v2.py` | 動態応答図（Kundur 2エリアモデル） |
 | `gen_swing_waveforms.py` | 動揺波形図 |
 | `gen_nx_proper.py` / `gen_nx_500kv_national.py` / `gen_nx_multiregion.py` | N-x カスケード安定度解析図 |
-| `gen_ybus_national.py` / `gen_ybus_white.py` / `gen_ybus_interactive.py` | Ybus スパーシティ図（全国 / 白背景 / インタラクティブHTML） |
+| **`gen_ybus_from_db.py`** | **Ybusタブの全アセット（地域別/大元/Spy/ギャラリー/組立アニメ）を DB更新済み建造モデル `docs/data/built/` から生成（正典・エリア間連系線含む）。`--build` で組立gif** |
+| `gen_ybus_national.py` / `gen_ybus_white.py` | Ybus 図（論文/README 用・白背景の `papers/figs` `fig_ybus_*`）。※最近傍近似のため**アプリ表示には使わない**（アプリは `gen_ybus_from_db.py`） |
 | `gen_uc_dispatch_profile.py` / `gen_uc_national_overview.py` / `gen_uc_regional.py` | UC ディスパッチ・全国概況・地域別図 |
 | `capture_combined_gif.py` / `capture_ybus_gif.py` / `capture_network_gifs.mjs` | README 用アニメーション GIF（Network+Ybus ツアー等） |
 
