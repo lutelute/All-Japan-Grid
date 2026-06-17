@@ -222,6 +222,8 @@
       // POST /api/verify|/api/adopt → バックエンド専用(下書きモードでは非対応)
       if (/^\/api\/verify\//.test(path)) return J({ detail: "検証(潮流)はローカル :8088 でのみ可能(下書きモード)" }, 501);
       if (/^\/api\/adopt\//.test(path)) return J({ detail: "反映(supplement永続)はローカル :8088 でのみ可能(下書きモード)" }, 501);
+      // GET /api/sld/{region}/{name} → 詳細SLD(OSM忠実層・matplotlib)はローカル専用
+      if (/^\/api\/sld\//.test(path)) return J({ detail: "詳細SLD(OSM忠実層: 複母線/ベイ)はローカル :8088 でのみ生成可能。Pagesは簡易draftまで。" }, 501);
 
       // POST /api/issue/{region} → GitHub プレフィルURL
       var mIss = path.match(/^\/api\/issue\/([^/]+)$/);

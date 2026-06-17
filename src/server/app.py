@@ -287,6 +287,29 @@ async def get_built(region: str, fresh: int = 0, join_untagged: int = 0):
     return result
 
 
+@app.get("/api/sld/{region}/{name}")
+async def get_sld(region: str, name: str):
+    """変電所の単線結線図(SLD・OSM忠実層=substation_scope)を PNG で返す。
+
+    複母線/ベイを含む `data/{region}_lines.geojson` から電圧階級ごと母線+カスケード変圧器を描く
+    (エディタのクライアント側 draft より正確)。matplotlib 生成のためローカル(:8088)専用。
+    name は部分一致(エディタは電圧サフィックスを除いて渡す)。
+    """
+    import sys
+    scripts_dir = os.path.join(_BASE_DIR, "..", "..", "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    try:
+        from substation_scope import build_sld
+        path = build_sld(region, name, out=os.path.join("/tmp", "agj_sld"))
+    except ValueError as exc:
+        raise HTTPException(404, str(exc))
+    except Exception as exc:   # noqa: BLE001
+        traceback.print_exc()
+        raise HTTPException(500, f"SLD生成失敗: {exc}")
+    return FileResponse(path, media_type="image/png")
+
+
 # ─── Power Flow API ──────────────────────────────────────────────────
 
 

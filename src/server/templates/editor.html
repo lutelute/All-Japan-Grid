@@ -521,6 +521,7 @@ function showSLD(node){
     s+='<circle cx="'+tx+'" cy="'+(ym+9)+'" r="11" fill="none" stroke="#c9d1d9" stroke-width="2"/>';
     s+='<text x="'+(tx+20)+'" y="'+(ym+4)+'" fill="#c9d1d9" font-size="11">T '+kvs[i]+'/'+kvs[i+1]+'</text>'; }
   s+='</svg>';
+  window.__sldCtx={region:REGION, name:(node.name||'')};   // 詳細SLD(忠実層)ボタン用
   let m=document.getElementById('sld-modal');
   if(!m){ m=document.createElement('div'); m.id='sld-modal';
     m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px';
@@ -528,9 +529,25 @@ function showSLD(node){
   m.style.display='flex';
   m.innerHTML='<div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:12px;max-height:92vh;overflow:auto;box-shadow:0 12px 44px #000b">'
     +'<div style="text-align:right;margin-bottom:6px"><button id="sld-close" style="background:#30363d;color:#e6edf3;border:1px solid #444c56;border-radius:7px;padding:6px 13px;cursor:pointer;font-size:12px">✕ 閉じる</button></div>'
-    +s+'<div style="color:#8b949e;font-size:11px;margin-top:8px;max-width:700px;line-height:1.5">※ build モデルの接続(電圧・回線数・接続先)から自動導出した <b>draft</b>。複母線/区分/正確な母線構成は OSM 忠実層で要確認(物理接続=真・捏造禁止)。</div></div>';
+    +s+'<div style="color:#8b949e;font-size:11px;margin-top:8px;max-width:700px;line-height:1.5">※ build モデルの接続(電圧・回線数・接続先)から自動導出した <b>draft</b>。複母線/区分/正確な母線構成は下の「詳細SLD」(OSM忠実層)で(物理接続=真・捏造禁止)。</div>'
+    +'<div style="margin-top:10px;text-align:center"><button onclick="fetchDetailSLD()" style="background:#1f6feb;color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;font-weight:600">🔬 詳細SLD(OSM忠実層: 複母線/ベイ)</button></div>'
+    +'<div id="sld-detail" style="margin-top:10px"></div></div>';
   const cl=function(e){ if(e.target===m||e.target.id==='sld-close') m.style.display='none'; };
   m.onclick=cl;
+}
+async function fetchDetailSLD(){   // OSM忠実層の詳細SLD(substation_scope)を :8088 から取得して表示
+  const host=document.getElementById('sld-detail'); if(!host) return;
+  const ctx=window.__sldCtx||{}; const region=ctx.region||REGION;
+  const name=(ctx.name||'').replace(/\s*\d+\s*kV.*$/,'').replace(/_\d+$/,'').trim();
+  if(!name){ host.innerHTML='<div style="color:#f0c674;padding:8px;font-size:12px">変電所名が不明のため詳細SLDを生成できません</div>'; return; }
+  host.innerHTML='<div style="color:#8b949e;padding:10px;font-size:12px">詳細SLD生成中…(OSM忠実層・数秒)</div>';
+  try{
+    const r=await fetch('/api/sld/'+encodeURIComponent(region)+'/'+encodeURIComponent(name));
+    if(!r.ok){ const j=await r.json().catch(function(){return {};});
+      host.innerHTML='<div style="color:#f0c674;padding:10px;font-size:12px">詳細SLD(OSM忠実層)はローカル <code>:8088</code> でのみ生成できます'+(j.detail?'<br><span class="muted">'+j.detail+'</span>':'')+'</div>'; return; }
+    const url=URL.createObjectURL(await r.blob());
+    host.innerHTML='<img src="'+url+'" style="max-width:100%;border-radius:8px;background:#fff" alt="詳細SLD(OSM忠実層)">';
+  }catch(e){ host.innerHTML='<div style="color:#da3633;padding:10px;font-size:12px">詳細SLD取得失敗: '+e+'</div>'; }
 }
 function onModelNode(n){
   // 島(橙)クリック → 未接続の確認情報。connect/chainモードなら接続候補に追加

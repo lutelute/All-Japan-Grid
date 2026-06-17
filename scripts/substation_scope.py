@@ -266,6 +266,21 @@ def scope(region, name, out="/tmp", data_dir="data"):
     return a, b, model
 
 
+def build_sld(region, name, out="/tmp", data_dir="data"):
+    """単線結線図(SLD)PNG のみ生成してパスを返す(:8088 /api/sld 用・anatomy省略で軽量)。
+
+    OSM忠実層(`data/{region}_lines.geojson` の busbar/bay 含む)から電圧階級ごと母線+
+    カスケード変圧器の SLD を描く。クライアント側 draft(build モデル由来)より正確。
+    """
+    subs, lines = load(region, data_dir)
+    feats = find_sub(subs, name)
+    if not feats:
+        raise ValueError(f"変電所 '{name}' が {region} に見つかりません")
+    os.makedirs(out, exist_ok=True)
+    model = derive_model(name, feats, lines)
+    return sld_fig(region, name, model, out)
+
+
 def main():
     ap = argparse.ArgumentParser(description="SubScope — 変電所構造ビューア(OSM実構造+単線結線図)")
     ap.add_argument("--region", required=True)
