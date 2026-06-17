@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-17 — **Claude Opus 4.8** — edit/review分離: 候補レビューを専用タブに(統合しすぎない原則)（143）
+
+オーナー指示「アカデミックでは見たいものが違う・**あまり統合しすぎはよくない**・統合しても機能が見える/確認できるならやっていい」+「**editとreviewは明確に分けたい**/ボタンで編集をロックして見れるなら可」。Phase5フル統合で消してしまった「一つずつレビュー」を**見える形で復活**。
+
+- **原則の確定**([[feedback_view_separation]]): 「正を1つに」は**データ/モデルの源泉**に適用するが、**ビュー(見え方)は用途別に保つ**(統合してビューが消えるのは不可)。源泉統合(Pages=:8088派生・台帳142)は維持。
+- **`docs/review.html`(新規・閲覧専用)**: A島接続候補(`docs/data/island_candidates.json` 379件)を1件ずつ確認(島=橙/接続先=青/提案線=金・**OSM⇔衛星**で実在確認)。承認/却下/スキップ/◀前・進捗 localStorage 再開(`agj_rev_idx`/`agj_rev_done`)・⚠(電圧階級違い/距離大/地域校正不一致)。**編集パレットを持たない=構造的にedit-lock**(edit/review分離)。色は共有 `editor_core.js`(AGJ_COLORS)。
+- **データ統合・ビュー分離**: 承認は接続編集と**同じ下書きストア**(`localStorage agj_edits_{region}`)へ `source=review` で記録 → 接続編集タブで確認・GitHub issue 化。レビューという**活動は別タブ**に分離しつつ、承認の下流(下書き→issue)は1本に統合。
+- **タブ配線**: `docs/index.html`「候補レビュー」タブ(iframe遅延 `?v=1`)、`grid_map.js` initTabs・`style.css` フルスクリーン規則に `tab-review` 追加。**`editor.html`/templates は無改変**(ドリフトテスト維持)。隔離headless 3経路(review単体/承認→エディタ下書き統合/タブ埋め込み)PASS・error0。`e09619b`。
+
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修 Phase5 フル統合: Pagesエディタを:8088の正から派生(静的shim方式)（142）
 
 オーナー「Phase5のフル統合を一緒にやろう」。Pages編集タブが:8088から分岐したlossyコピー(見た目/データ/連結性ズレ)だった問題の**最終解決**。確定設計=`docs/OVERHAUL_PLAN.md`「静的shim方式」。
