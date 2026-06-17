@@ -43,6 +43,19 @@ REGIONS = [
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "assets",
                       "analysis", "ybus")
 
+# ── ダークパレット (Ybusタブ #ybus-panel の配色に整合) ──────────────
+#   背景 #0f1419 / プロット面 #0c1014 / アクセント #5dade2 (cyan) /
+#   見出し #e6e6e6 / 補助文字 #9fb3c8 / 枠 #2c3e50。白PNGが暗UIから
+#   浮く問題を解消し「貼り付けただけ」感を払拭する。
+DK_FIG = "#0f1419"
+DK_AX = "#0c1014"
+DK_DOT = "#5dade2"
+DK_DIAG = "#f5b041"   # 対角(自己アドミタンス)を暖色で識別しやすく
+DK_TITLE = "#e6e6e6"
+DK_SUB = "#9fb3c8"
+DK_GRID = "#1e2b38"
+DK_SPINE = "#2c3e50"
+
 
 def render_region(region: str, label: str):
     """Build Ybus spy plot for one region; return stats dict."""
@@ -52,27 +65,35 @@ def render_region(region: str, label: str):
 
     Y_dense = Y.toarray()
     nzr, nzc = np.where(Y_dense > 0)
+    # 対角(自己アドミタンス)と非対角(バス間結合)を色分けして可読性を上げる
+    diag = nzr == nzc
+    off = ~diag
 
-    fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor="white")
-    ax.set_facecolor("white")
-    ax.scatter(nzc, nzr, c="#1f77b4", s=0.7, marker=",",
-               alpha=0.7, linewidths=0, rasterized=True)
+    fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor=DK_FIG)
+    ax.set_facecolor(DK_AX)
+    ax.scatter(nzc[off], nzr[off], c=DK_DOT, s=0.8, marker=",",
+               alpha=0.85, linewidths=0, rasterized=True, label="非対角(結合)")
+    ax.scatter(nzc[diag], nzr[diag], c=DK_DIAG, s=0.8, marker=",",
+               alpha=0.9, linewidths=0, rasterized=True, label="対角(自己)")
     ax.set_xlim(0, nb)
     ax.set_ylim(nb, 0)
     ax.set_aspect("equal")
     density = nnz / (nb * nb) * 100 if nb > 0 else 0.0
     ax.set_title(f"{label}  Ybus  ({nb} buses, nnz={nnz:,}, "
                  f"density={density:.3f}%)",
-                 fontsize=11, pad=8)
-    ax.set_xlabel("bus index")
-    ax.set_ylabel("bus index")
-    ax.grid(True, color="#dddddd", lw=0.4)
+                 fontsize=11, pad=8, color=DK_TITLE)
+    ax.set_xlabel("bus index", color=DK_SUB)
+    ax.set_ylabel("bus index", color=DK_SUB)
+    ax.tick_params(colors=DK_SUB, labelsize=8)
+    ax.grid(True, color=DK_GRID, lw=0.4)
     for spine in ax.spines.values():
-        spine.set_edgecolor("#999")
+        spine.set_edgecolor(DK_SPINE)
+    leg = ax.legend(loc="upper right", fontsize=7, framealpha=0.0,
+                    labelcolor=DK_SUB, markerscale=6, handletextpad=0.3)
 
     os.makedirs(OUT_DIR, exist_ok=True)
     out_png = os.path.join(OUT_DIR, f"{region}.png")
-    fig.savefig(out_png, dpi=130, bbox_inches="tight", facecolor="white")
+    fig.savefig(out_png, dpi=130, bbox_inches="tight", facecolor=DK_FIG)
     plt.close(fig)
 
     # degree (バスごとの非ゼロ非対角要素数)
