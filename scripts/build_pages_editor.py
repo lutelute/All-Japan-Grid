@@ -38,8 +38,8 @@ SHIM_TAG = ('<script src="js/editor_static_shim.js"></script>'
             '<!-- 全面改修Phase5: Pages静的shim(/api/*→静的JSON+localStorage・:8088は無改修) -->\n')
 
 
-def build_html(out_path: str) -> None:
-    with open(SRC, encoding="utf-8") as fh:
+def build_html(out_path: str, template: str = SRC) -> None:
+    with open(template, encoding="utf-8") as fh:
         html = fh.read()
 
     # (a) 絶対アセットパス → Pages 相対(project site 配下でも正しく解決)。
@@ -85,11 +85,14 @@ def build_bbox() -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=OUT_DEFAULT, help="出力HTML(既定 docs/editor.new.html)")
+    ap.add_argument("--template", default=SRC, help="入力テンプレ(既定=本番 editor.html・提案検証時のみ別指定)")
     ap.add_argument("--skip-bbox", action="store_true", help="regions_bbox.json 生成を省略")
     args = ap.parse_args()
 
     if not os.path.isfile(os.path.join(DOCS, "js", "editor_static_shim.js")):
         sys.exit("[build_pages_editor] ERROR: docs/js/editor_static_shim.js が無い(shim未配置)")
-    build_html(args.out)
+    if not os.path.isfile(args.template):
+        sys.exit(f"[build_pages_editor] ERROR: テンプレが無い: {args.template}")
+    build_html(args.out, template=args.template)
     if not args.skip_bbox:
         build_bbox()
