@@ -302,7 +302,7 @@ function initTabs() {
 
             // 比較タブ / Ybus タブはサイドバー幅制約を抜けて全画面表示する。
             // body.fullscreen-tab でタブバーを上端固定にしてタブ操作を維持。
-            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus" || tabId === "tab-editor");
+            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus" || tabId === "tab-editor" || tabId === "tab-review");
             document.body.classList.toggle("fullscreen-tab", isFullscreen);
 
             if (tabId === "tab-compare") {
@@ -313,6 +313,11 @@ function initTabs() {
             if (tabId === "tab-editor") {
                 var ef = document.getElementById("editor-frame");
                 if (ef && !ef.src) ef.src = ef.dataset.src;
+                return;
+            }
+            if (tabId === "tab-review") {
+                var rf = document.getElementById("review-frame");
+                if (rf && !rf.src) rf.src = rf.dataset.src;
                 return;
             }
             if (tabId === "tab-ybus") {

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>AGJ 候補レビュー(A島接続・閲覧専用)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/editor_core.js"></script><!-- 色の単一の正(AGJ_COLORS)を接続編集と共有 -->
+<!--
+  候補レビュー専用ページ(edit と review を明確に分離・オーナー指示 2026-06-17)。
+  これは「閲覧+承認」だけのツール = 自由編集パレット(connect/cut/add/attr)を持たない=構造的にedit-lock。
+  各 A島接続候補(docs/data/island_candidates.json・379件)を1件ずつ確認し、
+  ✅承認すると **接続編集タブと同じ下書きストア(localStorage: agj_edits_{region})** に
+  pending connect として記録する(データは統合・ビューは分離)→ 接続編集タブで確認・GitHub issue 化。
+  捏造禁止: OSM/衛星の下地で実在(送電線/敷地)を確認してから承認する。
+-->
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+  #map{position:absolute;top:0;bottom:0;left:0;right:360px}
+  #panel{position:absolute;top:0;bottom:0;right:0;width:360px;background:#0d1117;color:#e6edf3;
+         overflow-y:auto;padding:14px;box-sizing:border-box;font-size:13px;line-height:1.55}
+  h2{font-size:15px;margin:2px 0 6px} h3{font-size:13px;margin:12px 0 5px;color:#58a6ff;
+     border-bottom:1px solid #21262d;padding-bottom:3px}
+  .muted{color:#8b949e;font-size:12px}
+  button{background:#30363d;color:#e6edf3;border:1px solid #444c56;border-radius:6px;
+         padding:8px 11px;cursor:pointer;font-size:13px;margin:2px}
+  button:hover{border-color:#8b949e}
+  button.go{background:#238636;border-color:#238636;color:#fff;font-weight:bold}
+  button.reject{background:#6e2330;border-color:#8b2635;color:#fff}
+  .stat{background:#161b22;border-radius:6px;padding:8px 10px;margin-top:4px}
+  .big{color:#f0883e;font-weight:bold;font-size:15px}
+  .leg{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:4px}
+  .lg2{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:4px}
+  .legrow{margin:4px 0}
+  .row{margin:6px 0}
+  .warn{color:#f0c674;font-size:12px}
+  code{background:#161b22;padding:1px 5px;border-radius:3px;font-size:11px}
+  .btns{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+  .leaflet-tooltip.lbl{font-weight:bold;border:0;padding:3px 7px;border-radius:6px;box-shadow:0 1px 6px #0006}
+  .leaflet-tooltip.lbl-isl{background:#f0883e;color:#1a1100}
+  .leaflet-tooltip.lbl-tgt{background:#388bfd;color:#02122b}
+  .leaflet-control-layers{background:#161b22;color:#e6edf3;border:1px solid #30363d;font-size:12px}
+</style></head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <h2>🔍 候補レビュー — A島接続(1件ずつ)</h2>
+  <div class="muted">各島を最寄り本系統に繋ぐ候補を<b>1件ずつ確認</b>。✅承認は<b>下書き</b>に記録され
+    <b>「接続編集」タブで確認・GitHub issue 化</b>できます。
+    <b style="color:#e3b341">このページは閲覧専用(自由編集はできません)。OSM/衛星で実在を確認してから承認を。</b></div>
+
+  <div class="stat"><span id="prog">読込中…</span></div>
+  <div class="row" id="island"></div>
+  <div class="row" id="target"></div>
+  <div class="row warn" id="flags"></div>
+
+  <div class="btns">
+    <button onclick="revPrev()">◀ 前</button>
+    <button onclick="showCand()" title="地図をこの候補へ再フォーカス">↺ この候補へ</button>
+    <button onclick="revSkip()">⏭ スキップ</button>
+    <button class="reject" onclick="revReject()">❌ 却下</button>
+    <button class="go" onclick="revApprove()">✅ 承認</button>
+  </div>
+  <div class="muted row">承認=接続を下書き(<code>agj_edits</code>)に記録 → 接続編集タブで確認・issue 化。
+    却下/スキップは記録のみ(下書きは作らない)。進捗はブラウザに保存され再開できます。</div>
+
+  <h3>凡例</h3>
+  <div class="legrow"><span class="leg" style="background:#f0883e"></span>🏝 つなぐ島(本系統外)
+       <span class="leg" style="background:#388bfd"></span>🔌 接続先(本系統)
+       <span class="lg2" style="background:#e3b341"></span>提案する線</div>
+  <div class="legrow muted">右上で OSM ⇔ 衛星写真を切替えて実在を確認できます。</div>
+
+  <div class="row muted" id="counts"></div>
+  <div class="row muted" id="status"></div>
+</div>
+<script>
+const map = L.map('map', {preferCanvas:true}).setView([36.2,139.4], 9);
+window.map = map;
+const osmBase = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19, attribution:'© OpenStreetMap contributors'});
+const satBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {maxZoom:19, attribution:'Tiles © Esri — World Imagery'});
+osmBase.addTo(map);
+L.control.layers({'OSM地図':osmBase, '衛星写真(Esri)':satBase}, {}, {collapsed:false, position:'topright'}).addTo(map);
+
+const $ = id => document.getElementById(id);
+const ISL_COL = (typeof AGJ_COLORS!=='undefined' && AGJ_COLORS.islandIso) || '#f0883e';
+const TGT_COL = (typeof AGJ_COLORS!=='undefined' && AGJ_COLORS.main) || '#388bfd';
+const LINE_COL = '#e3b341';
+const ALL_REGIONS = ['hokkaido','tohoku','tokyo','chubu','hokuriku','kansai','chugoku','shikoku','kyushu','okinawa'];
+
+// ── 下書きストア(接続編集タブ=静的shim と同一: localStorage agj_edits_{region}) ──
+function ek(r){ return 'agj_edits_'+r; }
+function getEdits(r){ try{ return JSON.parse(localStorage.getItem(ek(r))||'[]'); }catch(e){ return []; } }
+function setEdits(r,a){ localStorage.setItem(ek(r), JSON.stringify(a)); }
+function newId(){ return 'd'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function approvedCount(){ let n=0; ALL_REGIONS.forEach(r=>getEdits(r).forEach(e=>{ if(e.source==='review') n++; })); return n; }
+
+// ── レビュー進捗(再開用) ──
+let CANDS=[], revIdx=0, revLayers=[];
+let revDone = (function(){ try{ return new Set(JSON.parse(localStorage.getItem('agj_rev_done')||'[]')); }catch(e){ return new Set(); } })();
+function saveRevDone(){ localStorage.setItem('agj_rev_done', JSON.stringify([...revDone])); }
+
+let flashEl=null;
+function flash(msg, bad){
+  if(!flashEl){ flashEl=document.createElement('div'); flashEl.id='flashmsg';
+    flashEl.style.cssText='position:fixed;top:16px;left:calc(50% - 180px);transform:translateX(-50%);z-index:99999;padding:11px 20px;border-radius:9px;font-weight:bold;font-size:15px;box-shadow:0 3px 14px #0007;pointer-events:none;transition:opacity .45s';
+    document.body.appendChild(flashEl); }
+  flashEl.textContent=msg; flashEl.style.background=bad?'#da3633':'#238636'; flashEl.style.color='#fff'; flashEl.style.opacity='1';
+  clearTimeout(flashEl._t); flashEl._t=setTimeout(()=>{ flashEl.style.opacity='0'; }, 1800);
+}
+
+function showCand(){
+  revLayers.forEach(l=>map.removeLayer(l)); revLayers=[];
+  const P=$('prog'), I=$('island'), T=$('target'), F=$('flags');
+  if(!CANDS.length){ P.textContent='候補なし'; return; }
+  if(revIdx>=CANDS.length){
+    P.innerHTML='<b>全候補を確認しました 🎉</b>';
+    I.innerHTML=''; T.innerHTML=''; F.innerHTML='承認分は「接続編集」タブで確認・issue 化してください。'; updateCounts(); return;
+  }
+  if(revIdx<0) revIdx=0;
+  const c=CANDS[revIdx], isl=c.island, tg=c.target;
+  localStorage.setItem('agj_rev_idx', String(revIdx));
+  map.invalidateSize();   // iframe/タブのサイズずれ補正(無いと地図が候補へ移動しない)
+  // 島(主役): 大ハロー + 橙ドット + 常時ラベル
+  revLayers.push(L.circleMarker([isl.lat,isl.lon],{radius:26,color:ISL_COL,weight:3,fill:false,dashArray:'6,6'}).addTo(map));
+  const im=L.circleMarker([isl.lat,isl.lon],{radius:11,color:'#fff',weight:3,fillColor:ISL_COL,fillOpacity:1}).addTo(map);
+  im.bindTooltip(`🏝 つなぐ島<br>${isl.name}<br>${isl.kv}kV`,{permanent:true,direction:'top',className:'lbl lbl-isl',offset:[0,-10]});
+  revLayers.push(im);
+  if(tg){
+    const tm=L.circleMarker([tg.lat,tg.lon],{radius:9,color:'#fff',weight:3,fillColor:TGT_COL,fillOpacity:1}).addTo(map);
+    tm.bindTooltip(`🔌 接続先<br>${tg.name}<br>${tg.kv}kV`,{permanent:true,direction:'bottom',className:'lbl lbl-tgt',offset:[0,10]});
+    revLayers.push(tm);
+    revLayers.push(L.polyline([[isl.lat,isl.lon],[tg.lat,tg.lon]],{color:LINE_COL,weight:4,dashArray:'10,6'}).addTo(map));
+    map.fitBounds(L.latLngBounds([[isl.lat,isl.lon],[tg.lat,tg.lon]]).pad(0.6),{maxZoom:15,animate:false});
+  } else { map.setView([isl.lat,isl.lon],14,{animate:false}); }
+  P.innerHTML=`候補 <span class="big">#${c.rank}/${CANDS.length}</span>${revDone.has(c.rank)?' <span style="color:#3fb950">✓承認済</span>':''}`;
+  const vmis=isl.voltage_mismatch&&isl.osm_kv?` <span class="muted">(OSM ${isl.osm_kv}kV)</span>`:'';
+  const rmis=isl.region_mismatch?` → <b>${isl.region_calibrated}</b><span class="muted">(operator校正)</span>`:'';
+  I.innerHTML=`<b>島</b>: ${isl.name}<br>${isl.kv}kV${vmis} · deg${isl.deg} · ${isl.region}${rmis}`
+    +(isl.operator?`<br><span class="muted">op: ${isl.operator}</span>`:'');
+  T.innerHTML=tg?`<b>接続先候補</b>: ${tg.name}<br>${tg.kv}kV · ${tg.dist_km}km`
+    :'<b>接続先候補</b>: 不明(承認不可・スキップを)';
+  const flags=[];
+  if(tg&&!tg.kv_class_ok) flags.push('⚠ 電圧階級が島と異なる(変圧器/別系統かも・実在を要確認)');
+  if(tg&&tg.dist_km>10) flags.push(`⚠ 距離大(${tg.dist_km}km)=実在を強く要確認`);
+  if(isl.region_mismatch) flags.push('⚠ 地域タグとoperator校正が不一致(接続先地域に注意)');
+  F.innerHTML=flags.join('<br>');
+}
+function revAdvance(){ revIdx++; showCand(); }
+function revPrev(){ if(revIdx>0) revIdx--; showCand(); }
+function revSkip(){ revAdvance(); }
+function revReject(){ const c=CANDS[revIdx]; if(c){ revDone.delete(c.rank); saveRevDone(); } $('status').textContent='却下(下書きは作りません)'; revAdvance(); }
+function revApprove(){
+  const c=CANDS[revIdx]; if(!c) return;
+  if(!c.target){ flash('接続先不明=承認不可(スキップを)', true); return; }
+  const isl=c.island, tg=c.target, region=isl.region_calibrated||isl.region||'tokyo';
+  const arr=getEdits(region);
+  if(arr.some(e=>e.note && e.note.indexOf('候補#'+c.rank+' ')===0)){ flash('この候補は既に承認済み', true); revDone.add(c.rank); saveRevDone(); revAdvance(); return; }
+  arr.push({action:'connect', region:region,
+    a:{node:isl.name||null, lat:isl.lat, lon:isl.lon},
+    b:{node:tg.name||null, lat:tg.lat, lon:tg.lon},
+    kv: isl.kv?Math.round(isl.kv*1000):null,
+    evidence:'candidate_review', source:'review',
+    note:`候補#${c.rank} ${isl.name}→${tg.name} (${tg.dist_km}km${tg.kv_class_ok?'':',階級違い'})`,
+    id:newId(), status:'pending', ts:Date.now()});
+  setEdits(region, arr);
+  revDone.add(c.rank); saveRevDone();
+  flash(`✅ #${c.rank} ${isl.name}→${tg.name} を下書きに記録(${region})`);
+  updateCounts(); revAdvance();
+}
+function updateCounts(){
+  $('counts').innerHTML=`確認済 ${revDone.size}/${CANDS.length} ・ <b style="color:#3fb950">承認(下書き) ${approvedCount()}件</b>`
+    +`<br><span class="muted">承認は「接続編集」タブの下書きに入ります(同じブラウザ保存)。</span>`;
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key.toLowerCase()==='d') revSkip();
+  else if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a') revPrev();
+  else if(e.key.toLowerCase()==='s') revApprove();
+});
+
+fetch('data/island_candidates.json').then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(d=>{
+    CANDS = d.candidates || [];
+    revIdx = Math.min(parseInt(localStorage.getItem('agj_rev_idx')||'0',10)||0, Math.max(0, CANDS.length-1));
+    $('status').textContent=`候補 ${CANDS.length}件 読込(${d.note||''})`;
+    showCand(); updateCounts();
+  })
+  .catch(e=>{ $('prog').textContent='候補読込失敗: '+e; $('status').textContent='build_island_candidates.py を実行して docs/data/island_candidates.json を生成してください'; });
+</script>
+</body></html>

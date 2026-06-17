@@ -23,6 +23,7 @@
         <button class="tab-btn" data-tab="tab-compare">比較</button>
         <button class="tab-btn" data-tab="tab-ybus">Ybus / N-1</button>
         <button class="tab-btn" data-tab="tab-editor">接続編集</button>
+        <button class="tab-btn" data-tab="tab-review">候補レビュー</button>
     </div>
 
     <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ、iframe遅延ロード) ━━ -->
@@ -37,6 +38,13 @@
         <iframe id="editor-frame" data-src="./editor.html?v=7"
                 style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
                 title="接続編集（モデルビューア）"></iframe>
+    </div>
+
+    <!-- ━━ Tab: 候補レビュー (A島接続候補を1件ずつ承認・閲覧専用・editとreviewを分離・iframe遅延ロード) ━━ -->
+    <div class="tab-panel" id="tab-review">
+        <iframe id="review-frame" data-src="./review.html?v=1"
+                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
+                title="候補レビュー（A島接続・閲覧専用）"></iframe>
     </div>
 
     <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
