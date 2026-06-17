@@ -33,118 +33,34 @@ OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**し�
 
 ---
 
-## Figures / 論文の図
+## Preview / プレビュー
 
-This section showcases the figures from the accompanying manuscript (`papers/ieej.tex`): *Data-Driven Automated Construction of a Nationwide Japanese Transmission Grid Model from OpenStreetMap*. They walk from the national topology, through satellite and external-measurement validation, to the construction pipeline.
+**Live interactive map & in-browser connection editor.** The site renders the national grid coloured by voltage class; the `接続編集` editor lets you inspect what the model actually connected, draft connections/cuts, drop note pins, and pop up a per-substation single-line diagram.
 
-以下は付随論文（`papers/ieej.tex`、「OpenStreetMapに基づくデータ駆動型日本全国送電網モデルの自動構築と系統解析」）の主要図です。全国トポロジ → 衛星・外部実測による検証 → 構築パイプラインの順に提示します。
+ライブの対話地図とブラウザ内の接続編集ツール。サイトは全国系統を電圧クラス別に表示し、`接続編集`タブでモデルの接続状態の確認・接続/切断の下書き・地点メモ・変電所ごとの単線結線図の表示ができます。
 
-### 1. National Transmission Topology / 全国送電網トポロジ
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/network_ybus_tour.gif" alt="Network + Ybus tour" width="100%">
+</p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/editor_tour.gif" alt="Connection editor in action" width="100%">
+</p>
 
-The whole-country transmission network extracted from OSM, coloured by voltage class (red 500 kV, orange 275 kV, yellow 154 kV, green 110 kV, blue 66 kV).
+### National Topology & Validation / 全国トポロジと検証
 
-OSM から抽出した全国送電網。電圧クラス別色分け（赤 500 kV・橙 275 kV・黄 154 kV・緑 110 kV・青 66 kV）。
+The national transmission network extracted from OSM (coloured by voltage class), confirmed against satellite imagery (Kashima / Anan FC / Reinan), and scored against TEPCO's per-line flows — corridor-usage rank correlation reaches **interior Spearman ρ = 0.721** (details in [Highlights](#highlights--ハイライト)).
+
+OSM から抽出した全国送電網（電圧クラス別色分け）。衛星画像との位置照合で実在インフラ上に乗ることを確認（鹿島・阿南FC・嶺南）。東京電力の線路別潮流と突合せ検証し、回廊使用率の順位相関は **内部 Spearman ρ = 0.721** に達する（詳細は下記 Highlights）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_national_all.png" alt="National transmission topology" width="100%">
 </p>
-
-Per-region detail (all 10 regions) and the three GeoJSON layers expanded independently — (a) lines (40,077), (b) substations (6,962), (c) plants split into large central generation vs. distributed renewables (19,138 total).
-
-各地域の詳細（全10地域）と、3種の GeoJSON レイヤを独立に展開した図 — (a) 送電線（40,077 本）、(b) 変電所（6,962 箇所）、(c) 大型集中電源と分散型再エネに2分類した発電所（計 19,138 箇所）。
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_regional_networks.png" alt="Per-region networks" width="100%">
-</p>
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_layer_combined.png" alt="GeoJSON layers" width="100%">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_satellite_validation.png" alt="Satellite validation (Kashima / Anan FC / Reinan)" width="100%">
 </p>
 
-### 2. Satellite Validation / 衛星画像との位置照合
-
-OSM-derived topology overlaid on satellite imagery confirms that the extracted features sit on real infrastructure: (left) Kashima thermal plant, Ibaraki — the 500 kV lines leaving the plant are visible; (centre) Anan frequency converter, Tokushima — the east–west DC 300 MW interconnection lead-in is clear; (right) Reinan substation, Fukui — a 500 kV trunk node in the Wakasa Bay nuclear cluster where multiple EHV circuits converge.
-
-OSM 由来トポロジを衛星画像に重畳し、抽出フィーチャが実在インフラ上に位置することを確認：（左）鹿島火力発電所（茨城県）— 本体から伸びる 500 kV 送電線が視認可能；（中）阿南周波数変換所（徳島県）— 東西連系 DC 300 MW の引込み線が明確；（右）嶺南変電所（福井県）— 若狭湾原子力集積地帯に位置する 500 kV 基幹変電所で複数の超高圧回線が集約される様子を確認。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/sat_kashima.png" alt="Kashima thermal plant" width="32%">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/sat_anan_fc.png" alt="Anan frequency converter" width="32%">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/sat_reinan.png" alt="Reinan substation" width="32%">
-</p>
-
-### 3. External Validation — scored against utility ground truth / 外部実測との突合せ検証
-
-**This is the headline result.** The model is scored against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure. Corridor-usage rank correlation reaches **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09); substation recall is 86% and attachment recall 55%. Every score ships as a JSON scorecard in [docs/reports/](docs/reports/), with the full source survey in [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
-
-**本データセットのハイライト。** 東京電力の公開する線路別潮流、および関西送配電の線路開示と突合せてモデルを採点しています。回廊使用率の順位相関は **内部 Spearman ρ = 0.721**（境界条件付き回廊を除外、p≈1e-09）、変電所 recall 86%、接続 recall 55%。各スコアは [docs/reports/](docs/reports/) に JSON スコアカードとして保存され、出典の全調査は [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md) にまとめています。`ajgrid validate --topology` で KPI を取得できます。
-
-Three-layer flow correlation (interior / trunk 275 kV+ / 154 kV / 66 kV) tracked across instrument revisions and model changes on the Tokyo full model.
-
-3層（全体・幹線 275 kV+・154 kV・66 kV）の流れ相関を、計器改訂とモデル変更にわたって追跡（東京フルモデル）。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/val_rho_progression.png" alt="3-layer rho progression" width="80%">
-</p>
-
-Banded attachment recall (trunk / 154 kV / 66 kV) over the 1,057 measured corridor pairs, with the match-tier breakdown (name / position / electrical-adjacency / homonym guard / unattached).
-
-帯別の接続再現率（幹線・154 kV・66 kV）を実測 1,057 ペアで評価し、マッチ階層（名称・位置・電気的隣接・同名ガード・未接続）の内訳を示す。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/val_recall_tiers.png" alt="Banded recall tiers" width="90%">
-</p>
-
-Regional demand settings reconciled against OCCTO measured p95 — the closed-loop check that detected and corrected the Hokkaido (under-set) and Shikoku (over-set) demand snapshots.
-
-地域需要設定を OCCTO 実測 p95 と突合せ — 北海道（過小）・四国（過大）の需要断面を検出・修正した閉ループ検証。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/val_reconcile_bands.png" alt="OCCTO reconciliation bands" width="80%">
-</p>
-
-> **Caveat / 注意:** AC power flow on OSM topology is a **consistency tool, not an operational study**. With synthetic per-class impedances, CF-based dispatch and allocated demand, the solved flows rank-correlate with utility measurements — useful for topology/consistency work and teaching — but absolute MW/voltage values are **not** operational results until authoritative parameters replace the typicals. See [Limitations](#limitations--what-this-data-is-not--本データの限界).
-
-### 4. Construction Pipeline / 構築パイプライン
-
-A seven-stage automated pipeline: OSM fetch → attribute completion → topology reconstruction → electrical-parameter assignment → Ybus construction → power-flow solve → visualization. It reduces 107,383 missing attributes by 87% and achieves AC power flow convergence in all 10 regions (previously 0/10).
-
-7段階の自動パイプライン: OSM取得 → 属性補完 → トポロジ再構築 → 電気パラメータ付与 → Ybus構築 → 潮流解析 → 可視化。107,383 件の属性欠損を 87% 削減し、全10地域で AC 潮流収束を達成（従来 0/10）。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_pipeline_flow.png" alt="Pipeline flow" width="100%">
-</p>
-
-### 5. Bus Admittance Matrix & Network Tour / 母線アドミタンス行列・ネットワークツアー
-
-The national bus admittance matrix **Y**_bus (6,962 buses, 20,369 non-zero entries, fill ratio <0.01%) shows a block-diagonal structure (10 regions independent); the side plot is per-region fill ratio (Tokyo and Tohoku largest).
-
-全国統合 **Y**_bus（6,962 バス、20,369 非零要素、充填率 <0.01%）はブロック対角構造（10 地域独立）を示す。右グラフは地域別充填率（東京・東北が最大）。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_ybus_national.png" alt="National Ybus" width="100%">
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/network_ybus_tour.gif" alt="Network + Ybus Tour" width="100%">
-</p>
-
-### 6. Unit Commitment & Transient Stability / Unit Commitment・過渡安定解析
-
-A MILP unit commitment dispatches 646 generators (636 thermal + 10 regional batteries) over 24 hours with nine inter-regional interconnection constraints, using OCCTO-referenced capacities (solar 59 GW, wind 11 GW, battery 3.5 GW). Kyushu noon solar reaches 83% of its regional peak demand, and the battery auto-selects a noon-charge / evening-discharge cycle to relieve curtailment.
-
-MILP Unit Commitment が 646 機（熱電源 636 機 + 地域別蓄電池 10 機）を 24 時間・9 連系線制約のもとで起動計画。OCCTO 参照容量（太陽光 59 GW・風力 11 GW・蓄電池 3.5 GW）を使用。九州は正午の太陽光がピーク需要の 83% に達し、蓄電池が正午充電・夕刻放電サイクルを自動選択して curtailment を緩和。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_uc_regional.png" alt="Regional UC profiles" width="100%">
-</p>
-
-N-1 through N-10 cascade transient stability on the national 500+275 kV system (real GeoJSON topology, Kron reduction, DC power-flow initial values): (a) geographic distribution of N-1 maximum angle deviation (100 generator buses); (b) rotor-angle space-time heatmap after the worst N-1; (c) swing curves of the five largest movers (all 99 generators converge, max 2.64°).
-
-全国 500+275 kV 系統の N-1〜N-10 連鎖過渡安定解析（実 GeoJSON トポロジ、Kron 縮約、DC 潮流初期値）：(a) N-1 最大角度偏差の地理分布（発電機バス100点）；(b) 最悪 N-1 後のロータ角時空間ヒートマップ；(c) 最大変動5機のスイング曲線（全99機で収束、最大 2.64°）。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_nx_proper.png" alt="N-x transient stability" width="100%">
-</p>
+> Detailed methodology figures (validation ρ progression, recall tiers, regional networks, Ybus, unit commitment, transient stability) live in the manuscript under [`papers/`](papers/).
+> 詳細な方法論の図（検証ρの推移・recall・地域別ネットワーク・Ybus・UC・過渡安定）は [`papers/`](papers/) の論文に収録。
 
 ---
 
