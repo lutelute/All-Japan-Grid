@@ -690,3 +690,22 @@ input[type="range"]{ accent-color:var(--p-acc); }
 .ov-details > summary::after{ content:"▾"; margin-left:auto; color:var(--p-mut); transition:.2s; }
 .ov-details[open] > summary::after{ transform:rotate(180deg); }
 .ov-hint{ font-size:10px; font-weight:normal; color:#7f8c8d; text-transform:none; letter-spacing:0; margin-left:6px; }
+
+/* ── 分析タブ(Ybus/潮流解析/単線図/エリア)を新テーマに統一(旧パレットのインライン/クラスを上書き) ── */
+#ybus-panel{ background:#0d1117!important; color:var(--p-tx)!important; }
+#ybus-panel h3, #ybus-panel p, #ybus-panel label, #ybus-panel .area-desc{ color:var(--p-tx)!important; }
+#ybus-panel p, #ybus-panel label{ color:var(--p-mut)!important; }
+.ybus-mode-btn{ background:var(--p-card)!important; color:var(--p-mut)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
+.ybus-mode-btn:hover{ border-color:var(--p-mut)!important; color:var(--p-tx)!important; }
+.ybus-mode-btn.active{ background:var(--p-acc2)!important; color:#fff!important; border-color:var(--p-acc)!important; }
+#ybus-region, #ybus-region-selector select{ background:var(--p-card2)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:7px!important; }
+#ybus-stats-panel, #ybus-panel details{ background:var(--p-card)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd)!important; border-radius:10px!important; }
+#ybus-stats-mini, #ybus-stats-panel *{ color:inherit; }
+#ybus-figure img, #tab-sld img, #tab-pf img, #ybus-img{ border:1px solid var(--p-bd)!important; border-radius:8px!important; }
+/* 潮流解析タブ */
+.pf-controls select, .pf-controls input{ background:var(--p-card2)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
+.pf-controls label, .pf-info, .area-desc, .filter-row label{ color:var(--p-mut)!important; }
+.result-item{ background:var(--p-card2)!important; border:1px solid var(--p-bd)!important; border-radius:8px!important; }
+.btn-primary{ background:var(--p-acc2)!important; border:1px solid var(--p-acc)!important; color:#fff!important; border-radius:9px!important; }
+.btn-primary:hover{ filter:brightness(1.08); }
+.btn-secondary{ background:var(--p-card)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
