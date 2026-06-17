@@ -461,6 +461,60 @@ function buildModel(built){
   buildSnapIndex();   // snapPts確定→空間インデックス再構築(全国でも近い点を高速自動検出)
 }
 
+// ── 単線結線図(SLD draft): クリックした変電所の接続(電圧/回線数/接続先)から自動導出してSVG描画 ──
+function _esc(s){ return String(s).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];}); }
+function _kvcol(kv){ if(kv>=500)return '#d62728'; if(kv>=220)return '#ff7f0e'; if(kv>=154)return '#9467bd';
+  if(kv>=110)return '#1f77b4'; if(kv>=77)return '#8c564b'; if(kv>=66)return '#2ca02c'; return '#8b949e'; }
+function _sldNodeAt(lat,lon){ const b=window._built; if(!b||!b.nodes) return null;
+  let best=null,bd=(0.0006)*(0.0006);
+  for(const n of b.nodes){ const d=(n.lat-lat)*(n.lat-lat)+(n.lon-lon)*(n.lon-lon); if(d<bd){bd=d;best=n;} } return best; }
+function showSLDAt(lat,lon){ showSLD(_sldNodeAt(lat,lon) || {lat:lat,lon:lon,name:null,kv:0}); }
+function showSLD(node){
+  const b=window._built; if(!b||!b.edges){ alert('モデル未読込(地域を選択してください)'); return; }
+  const inc=[];
+  for(const e of b.edges){ const ends=[e.a,e.b];
+    for(let i=0;i<2;i++){ const p=ends[i];
+      if(p && Math.abs(p[0]-node.lat)<1e-5 && Math.abs(p[1]-node.lon)<1e-5){
+        const o=ends[1-i], on=_sldNodeAt(o[0],o[1]);
+        inc.push({kv:Math.round(e.kv||0)||0, par:e.par||1,
+          to:(on&&on.sub&&on.name)?on.name:((on&&!on.sub)?'鉄塔/分岐':'')}); } } }
+  const byKv={}; inc.forEach(function(x){ if(!x.kv) return; (byKv[x.kv]=byKv[x.kv]||[]).push(x); });
+  const nkv=Math.round(node.kv||0); if(nkv && !byKv[nkv]) byKv[nkv]=[];
+  const kvs=Object.keys(byKv).map(Number).sort(function(a,b){return b-a;});
+  if(!kvs.length){ alert('この点に接続線が見つかりません(鉄塔/孤立の可能性)'); return; }
+  const W=720, rowH=108, H=120+rowH*kvs.length, bx0=178, bx1=560;
+  const ys={}; kvs.forEach(function(kv,i){ ys[kv]=100+rowH*i; });
+  let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+  s+='<rect width="'+W+'" height="'+H+'" fill="#0d1117" rx="8"/>';
+  s+='<text x="'+(W/2)+'" y="32" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">'+_esc(node.name||'(無名変電所)')+' 単線結線図(draft)</text>';
+  s+='<text x="'+(W/2)+'" y="52" fill="#8b949e" font-size="11" text-anchor="middle">電圧階級ごと1母線・隣接をカスケード変圧器で接続(モデルから自動導出・要OSM確認)</text>';
+  kvs.forEach(function(kv){ const y=ys[kv], col=_kvcol(kv), fs=byKv[kv]||[];
+    s+='<line x1="'+bx0+'" y1="'+y+'" x2="'+bx1+'" y2="'+y+'" stroke="'+col+'" stroke-width="7" stroke-linecap="round"/>';
+    s+='<text x="'+(bx0-12)+'" y="'+(y+4)+'" fill="'+col+'" font-size="13" font-weight="700" text-anchor="end">'+kv+'kV 母線</text>';
+    fs.slice(0,8).forEach(function(f,j){ const x=bx0+42+j*46;
+      s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-32)+'" stroke="'+col+'" stroke-width="2"/>';
+      s+='<circle cx="'+x+'" cy="'+(y-32)+'" r="4" fill="'+col+'"/>';
+      const lbl=(f.to||'')+(f.par>1?(' ×'+f.par):'');
+      if(lbl) s+='<text x="'+x+'" y="'+(y-38)+'" fill="#c9d1d9" font-size="9" text-anchor="start" transform="rotate(-34 '+x+' '+(y-38)+')">'+_esc(lbl.slice(0,12))+'</text>'; });
+    if(fs.length>8) s+='<text x="'+(bx0+42+8*46)+'" y="'+(y-8)+'" fill="#8b949e" font-size="10">+'+(fs.length-8)+'</text>';
+    s+='<text x="'+(bx1+12)+'" y="'+(y+4)+'" fill="#8b949e" font-size="10">'+fs.length+'回線</text>'; });
+  for(let i=0;i<kvs.length-1;i++){ const y1=ys[kvs[i]], y2=ys[kvs[i+1]], ym=(y1+y2)/2, tx=bx1-46;
+    s+='<line x1="'+tx+'" y1="'+y1+'" x2="'+tx+'" y2="'+y2+'" stroke="#8b949e" stroke-width="1.5"/>';
+    s+='<circle cx="'+tx+'" cy="'+(ym-9)+'" r="11" fill="none" stroke="#c9d1d9" stroke-width="2"/>';
+    s+='<circle cx="'+tx+'" cy="'+(ym+9)+'" r="11" fill="none" stroke="#c9d1d9" stroke-width="2"/>';
+    s+='<text x="'+(tx+20)+'" y="'+(ym+4)+'" fill="#c9d1d9" font-size="11">T '+kvs[i]+'/'+kvs[i+1]+'</text>'; }
+  s+='</svg>';
+  let m=document.getElementById('sld-modal');
+  if(!m){ m=document.createElement('div'); m.id='sld-modal';
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px';
+    document.body.appendChild(m); }
+  m.style.display='flex';
+  m.innerHTML='<div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:12px;max-height:92vh;overflow:auto;box-shadow:0 12px 44px #000b">'
+    +'<div style="text-align:right;margin-bottom:6px"><button id="sld-close" style="background:#30363d;color:#e6edf3;border:1px solid #444c56;border-radius:7px;padding:6px 13px;cursor:pointer;font-size:12px">✕ 閉じる</button></div>'
+    +s+'<div style="color:#8b949e;font-size:11px;margin-top:8px;max-width:700px;line-height:1.5">※ build モデルの接続(電圧・回線数・接続先)から自動導出した <b>draft</b>。複母線/区分/正確な母線構成は OSM 忠実層で要確認(物理接続=真・捏造禁止)。</div></div>';
+  const cl=function(e){ if(e.target===m||e.target.id==='sld-close') m.style.display='none'; };
+  m.onclick=cl;
+}
 function onModelNode(n){
   // 島(橙)クリック → 未接続の確認情報。connect/chainモードなら接続候補に追加
   const np={lat:n.lat,lon:n.lon,kind:'island',node:n.id,kv:(n.kv||0)/1000};
@@ -472,6 +526,7 @@ function onModelNode(n){
     +`電圧 ${(n.kv||0)/1000||'?'}kV ／ 次数 ${n.deg}<br>`
     +`<small>${n.lat.toFixed(5)}, ${n.lon.toFixed(5)}</small>`
     +(n.main?'':'<br><span class="muted">OSMに近接線があれば接続(2点)で繋げます</span>')
+    +((n.sub||(n.deg||0)>0)?('<br><button onclick="showSLDAt('+n.lat+','+n.lon+')" style="margin-top:6px;cursor:pointer">📋 単線結線図</button>'):'')
   ).openOn(map);
 }
 
@@ -570,7 +625,7 @@ function onPoint(pt,f){
   if(mode==='chain'){ chainClick(pt); return; }
   if(mode==='attr'){ doAttr(pt,f); return; }
   L.popup().setLatLng([pt.lat,pt.lon]).setContent(
-    `OSM変電所 ${pt.node||''}<br>${pt.kv||'?'}kV<br><small>${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}</small>`).openOn(map);
+    `OSM変電所 ${pt.node||''}<br>${pt.kv||'?'}kV<br><small>${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}</small>`+`<br><button onclick="showSLDAt(${pt.lat},${pt.lon})" style="margin-top:6px;cursor:pointer">📋 単線結線図</button>`).openOn(map);
 }
 function onLine(f,latlng){
   if(mode==='cut'){ const s=nearestSnap(latlng);   // 線をクリック→最寄りの点を選択(2点で区間切断)
