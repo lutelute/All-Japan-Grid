@@ -199,11 +199,11 @@ const map = L.map('map', {preferCanvas:true}).setView([36.2,139.4], 9);
 window.map = map;  // コンソール/デバッグから操作可能に
 // ベース地図: OSM ⇔ 衛星写真(Esri World Imagery)を切替可能に
 const osmBase = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {maxZoom:19, attribution:'© OpenStreetMap contributors'});
+  {maxZoom:21, maxNativeZoom:19, attribution:'© OpenStreetMap contributors'});
 const satBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:19, attribution:'Tiles © Esri — World Imagery'});
+  {maxZoom:21, maxNativeZoom:19, attribution:'Tiles © Esri — World Imagery'});
 const satLabel = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:19, opacity:0.9});  // 衛星時の地名ラベル(任意でON)
+  {maxZoom:21, maxNativeZoom:19, opacity:0.9});  // 衛星時の地名ラベル(任意でON)
 osmBase.addTo(map);  // 既定=OSM
 const baseLayers = {'OSM地図': osmBase, '衛星写真(Esri)': satBase};
 const baseOverlayExtra = {'衛星時の地名ラベル': satLabel};
@@ -298,8 +298,8 @@ async function loadModel(tk, fresh){
     if(tk!==loadToken) return;
     buildModel(built);
     if(islandLayer){ islandLayer.addTo(map); layerCtl.addOverlay(islandLayer,'モデル 島(橙・未接続)'); }
-    if(mainLayer){ layerCtl.addOverlay(mainLayer,'モデル 本系統(青)'); }
-    if(edgeLayer){ layerCtl.addOverlay(edgeLayer,'モデル 接続線(水)'); }
+    if(edgeLayer){ edgeLayer.addTo(map); layerCtl.addOverlay(edgeLayer,'モデル 接続線(水)'); }
+    if(mainLayer){ mainLayer.addTo(map); layerCtl.addOverlay(mainLayer,'モデル 本系統(青)'); }
     loadIslandClass(tk);   // 島分類(なぜ繋がらないか)を後乗せ
   }catch(e){ $('modelstat').textContent='モデル読込失敗: '+e; }
 }
@@ -428,7 +428,9 @@ function buildModel(built){
   (built.nodes||[]).forEach(n=>{
     if(!isFinite(n.lat)||!isFinite(n.lon))return;
     if(n.main){
-      L.circleMarker([n.lat,n.lon],{radius:3,color:AGJ_COLORS.main,weight:0,fillOpacity:.85})
+      L.circleMarker([n.lat,n.lon], n.sub
+        ? {radius:5,color:'#fff',weight:1.6,fillColor:AGJ_COLORS.main,fillOpacity:1}
+        : {radius:2.5,color:AGJ_COLORS.main,weight:0,fillOpacity:.55})
         .on('click',e=>{L.DomEvent.stop(e); onModelNode(n);}).addTo(mainLayer);
       snapPts.push({lat:n.lat,lon:n.lon,kind:'bus',node:n.id,kv:(n.kv||0)/1000});  // 本系統節点もスナップ対象(島→本系統を繋ぐ)
     }else if(n.sub){
