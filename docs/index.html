@@ -6,7 +6,7 @@
     <title>All-Japan-Grid</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=32"/>
+    <link rel="stylesheet" href="./css/style.css?v=33"/>
 </head>
 <body>
 
@@ -447,53 +447,41 @@
                         style="background:transparent;color:#9fb3c8;border:1px solid #34495e;border-radius:3px;padding:2px 8px;font-size:12px;cursor:pointer">✕</button>
             </div>
         </div>
+        <!-- ① 電圧階級(最上位フィルタ・できるだけ上) -->
         <div class="section">
-            <h2>Layers</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="lines" checked/>
-                    <span class="toggle-label">送電線 Lines</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="subs" checked/>
-                    <span class="toggle-label">変電所 Substations</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="plants" checked/>
-                    <span class="toggle-label">発電所 Plants</span>
-                    <select id="plant-filter" class="inline-select">
-                        <option value="utility" selected>Utility</option>
-                        <option value="ipp">+ IPP</option>
-                        <option value="all">All</option>
-                    </select>
-                </label>
-            </div>
-        </div>
-        <!-- 地形オーバーレイ -->
-        <div class="section">
-            <h2>地形オーバーレイ</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/>
-                    <span class="toggle-label">陰影起伏図</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/>
-                    <span class="toggle-label">色別標高図</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/>
-                    <span class="toggle-label">傾斜量図</span>
-                </label>
-            </div>
-            <div class="filter-row" style="margin-top:4px">
-                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="terrain-opacity" min="0" max="100" value="65"
-                    oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
+            <h2>電圧階級 Voltage</h2>
+            <div class="filter-row">
+                <label for="min-kv">最低:</label>
+                <select id="min-kv">
+                    <option value="0">全電圧</option>
+                    <option value="66">66 kV +</option>
+                    <option value="110">110 kV +</option>
+                    <option value="154">154 kV +</option>
+                    <option value="275" selected>275 kV +</option>
+                    <option value="500">500 kV のみ</option>
+                </select>
             </div>
         </div>
 
-        <!-- 発電所種別フィルター -->
+        <!-- ② 表示レイヤ(送電線/変電所/発電所・横並びコンパクト=縦を取らない) -->
+        <div class="section">
+            <h2>表示レイヤ</h2>
+            <div class="layer-toggles compact">
+                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="lines" checked/><span class="toggle-label">送電線</span></label>
+                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="subs" checked/><span class="toggle-label">変電所</span></label>
+                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="plants" checked/><span class="toggle-label">発電所</span></label>
+            </div>
+            <div class="filter-row" style="margin-top:7px">
+                <label for="plant-filter" style="font-size:11px">発電所種:</label>
+                <select id="plant-filter" class="inline-select">
+                    <option value="utility" selected>Utility</option>
+                    <option value="ipp">+ IPP</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ③ 発電所種別フィルター(電力系) -->
         <div class="section" id="fuel-filter-section">
             <h2>発電所種別
                 <span class="fuel-filter-actions">
@@ -504,38 +492,37 @@
             <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
         </div>
 
+        <!-- ④ 地域(電力系) -->
         <div class="section">
-            <h2>RE適地スコア <span style="font-size:10px;font-weight:normal;color:#aaa">(試験)</span></h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="chk-score" onchange="toggleScore(this.checked)"/>
-                    <span class="toggle-label">スコアオーバーレイ</span>
-                </label>
-            </div>
-            <div class="filter-row" style="margin-top:4px">
-                <label for="score-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="score-opacity" min="0" max="100" value="50"
-                    oninput="setScoreOpacity(this.value)" style="flex:1;margin-left:6px">
-            </div>
-        </div>
-        <div class="section">
-            <h2>Voltage</h2>
-            <div class="filter-row">
-                <label for="min-kv">Min:</label>
-                <select id="min-kv">
-                    <option value="0">All voltages</option>
-                    <option value="66">66 kV+</option>
-                    <option value="110">110 kV+</option>
-                    <option value="154">154 kV+</option>
-                    <option value="275" selected>275 kV+</option>
-                    <option value="500">500 kV only</option>
-                </select>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Regions</h2>
+            <h2>地域 Regions</h2>
             <div class="region-list" id="region-list"></div>
         </div>
+
+        <!-- ⑤ オーバーレイ(背景・最下部・折りたたみ) -->
+        <details class="ov-details">
+            <summary>地形オーバーレイ <span class="ov-hint">(背景・任意)</span></summary>
+            <div class="layer-toggles compact" style="margin-top:8px">
+                <label class="layer-toggle"><input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/><span class="toggle-label">陰影</span></label>
+                <label class="layer-toggle"><input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/><span class="toggle-label">標高色</span></label>
+                <label class="layer-toggle"><input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/><span class="toggle-label">傾斜</span></label>
+            </div>
+            <div class="filter-row" style="margin-top:7px">
+                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
+                <input type="range" id="terrain-opacity" min="0" max="100" value="65" oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
+            </div>
+        </details>
+
+        <!-- ⑥ オーバーレイ: RE適地スコア(最下部・折りたたみ) -->
+        <details class="ov-details">
+            <summary>RE適地スコア <span class="ov-hint">(試験)</span></summary>
+            <div class="layer-toggles compact" style="margin-top:8px">
+                <label class="layer-toggle"><input type="checkbox" id="chk-score" onchange="toggleScore(this.checked)"/><span class="toggle-label">スコア表示</span></label>
+            </div>
+            <div class="filter-row" style="margin-top:7px">
+                <label for="score-opacity" style="font-size:11px">透過度:</label>
+                <input type="range" id="score-opacity" min="0" max="100" value="50" oninput="setScoreOpacity(this.value)" style="flex:1;margin-left:6px">
+            </div>
+        </details>
     </div>
 
     <!-- ━━ Tab 2: エリア (region coloring) ━━ -->

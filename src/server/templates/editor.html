@@ -499,7 +499,7 @@ function showSLD(node){
   const nkv=Math.round(node.kv||0); if(nkv && !byKv[nkv]) byKv[nkv]=[];
   const kvs=Object.keys(byKv).map(Number).sort(function(a,b){return b-a;});
   if(!kvs.length){ alert('この点に接続線が見つかりません(鉄塔/孤立の可能性)'); return; }
-  const W=720, rowH=108, H=120+rowH*kvs.length, bx0=178, bx1=560;
+  const W=720, rowH=124, H=130+rowH*kvs.length, bx0=178, bx1=560;
   const ys={}; kvs.forEach(function(kv,i){ ys[kv]=100+rowH*i; });
   let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
   s+='<rect width="'+W+'" height="'+H+'" fill="#0d1117" rx="8"/>';
@@ -508,11 +508,11 @@ function showSLD(node){
   kvs.forEach(function(kv){ const y=ys[kv], col=_kvcol(kv), fs=byKv[kv]||[];
     s+='<line x1="'+bx0+'" y1="'+y+'" x2="'+bx1+'" y2="'+y+'" stroke="'+col+'" stroke-width="7" stroke-linecap="round"/>';
     s+='<text x="'+(bx0-12)+'" y="'+(y+4)+'" fill="'+col+'" font-size="13" font-weight="700" text-anchor="end">'+kv+'kV 母線</text>';
-    fs.slice(0,8).forEach(function(f,j){ const x=bx0+42+j*46;
-      s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-32)+'" stroke="'+col+'" stroke-width="2"/>';
-      s+='<circle cx="'+x+'" cy="'+(y-32)+'" r="4" fill="'+col+'"/>';
+    fs.slice(0,8).forEach(function(f,j){ const x=bx0+42+j*46; const up=(j%2)?58:34;
+      s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-up)+'" stroke="'+col+'" stroke-width="2"/>';
+      s+='<circle cx="'+x+'" cy="'+(y-up)+'" r="4" fill="'+col+'"/>';
       const lbl=(f.to||'')+(f.n>1?(' ×'+f.n):'');
-      if(lbl) s+='<text x="'+x+'" y="'+(y-38)+'" fill="#c9d1d9" font-size="9" text-anchor="start" transform="rotate(-32 '+x+' '+(y-38)+')">'+_esc(lbl.slice(0,16))+'</text>'; });
+      if(lbl) s+='<text x="'+(x+2)+'" y="'+(y-up-5)+'" fill="#c9d1d9" font-size="8.5" text-anchor="start" transform="rotate(-26 '+(x+2)+' '+(y-up-5)+')">'+_esc(lbl.slice(0,16))+'</text>'; });
     if(fs.length>8) s+='<text x="'+(bx0+42+8*46)+'" y="'+(y-8)+'" fill="#8b949e" font-size="10">+'+(fs.length-8)+'先</text>';
     s+='<text x="'+(bx1+12)+'" y="'+(y+4)+'" fill="#8b949e" font-size="10">'+fs.reduce(function(a,f){return a+f.n;},0)+'回線</text>'; });
   for(let i=0;i<kvs.length-1;i++){ const y1=ys[kvs[i]], y2=ys[kvs[i+1]], ym=(y1+y2)/2, tx=bx1-46;

@@ -677,3 +677,16 @@ input[type="range"]{ accent-color:var(--p-acc); }
 .list-entry:hover{ background:rgba(56,139,253,.12)!important; }
 .legend{ background:rgba(22,27,34,.94)!important; border:1px solid var(--p-bd)!important; border-radius:10px!important; color:var(--p-tx)!important; }
 .legend h4{ color:#fff!important; }
+
+/* ── 表示レイヤを横並びコンパクトに(送電線/変電所/発電所が縦を取らない) ── */
+.layer-toggles.compact{ flex-direction:row!important; flex-wrap:wrap; gap:6px!important; }
+.layer-toggles.compact .layer-toggle{ flex:1 1 0; padding:7px 6px!important; justify-content:center; min-width:0; }
+.layer-toggles.compact .toggle-label{ flex:none!important; font-size:11.5px!important; }
+/* ── オーバーレイ(地形/REスコア)は折りたたみ・最下部 ── */
+.ov-details{ padding:11px 16px; border-bottom:1px solid var(--p-bd); }
+.ov-details > summary{ list-style:none; cursor:pointer; font-size:10.5px; text-transform:uppercase;
+  letter-spacing:.7px; color:var(--p-mut); font-weight:650; display:flex; align-items:center; }
+.ov-details > summary::-webkit-details-marker{ display:none; }
+.ov-details > summary::after{ content:"▾"; margin-left:auto; color:var(--p-mut); transition:.2s; }
+.ov-details[open] > summary::after{ transform:rotate(180deg); }
+.ov-hint{ font-size:10px; font-weight:normal; color:#7f8c8d; text-transform:none; letter-spacing:0; margin-left:6px; }

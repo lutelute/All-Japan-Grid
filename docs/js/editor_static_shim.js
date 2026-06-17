@@ -240,15 +240,14 @@
   // ── UI 微調整(Pagesのみ・:8088には無い): 下書きモードの明示と backend専用ボタンの整理 ──
   function tweakUI() {
     var panel = document.getElementById("panel");
-    if (panel && !document.getElementById("agj-static-banner")) {
+    var host = panel ? (panel.querySelector(".body") || panel) : null;
+    if (host && !document.getElementById("agj-static-banner")) {
       var b = document.createElement("div");
       b.id = "agj-static-banner";
-      b.style.cssText = "background:#1f2937;border:1px solid #30363d;border-left:3px solid #a371f7;"
-        + "border-radius:6px;padding:8px 10px;margin:0 0 8px;font-size:12px;color:#c9d1d9;line-height:1.5";
-      b.innerHTML = "📝 <b>下書きモード(GitHub Pages)</b> — :8088 と同じフルエディタ。"
-        + "モデル閲覧 + 接続の<b>下書き(ブラウザ保存)</b> + <b>issue下書き</b>が可能。"
-        + "<span class='muted'>検証(潮流)・反映(supplement永続)・属性永続はローカル <code>:8088</code> で。</span>";
-      panel.insertBefore(b, panel.firstChild);
+      b.style.cssText = "background:#161b22;border:1px solid #30363d;border-left:3px solid #a371f7;"
+        + "border-radius:9px;padding:7px 10px;margin:12px 0 0;font-size:11px;color:#9cc4f0;line-height:1.45";
+      b.innerHTML = "📝 <b>下書きモード</b> — 閲覧+下書き+issue(ブラウザ保存)。検証/反映/属性永続は <code>:8088</code> で。";
+      host.insertBefore(b, host.firstChild);
     }
     // backend専用ボタンを非表示(verify/adopt)
     var hide = ["verifyEdits()", "adoptEdits()"];
