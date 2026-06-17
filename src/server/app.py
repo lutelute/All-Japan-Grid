@@ -51,10 +51,9 @@ async def startup_load():
 
 # ─── Pages ────────────────────────────────────────────────────────────
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    """Serve the main map page."""
-    return templates.TemplateResponse("index.html", {"request": request})
+# 統合(2026-06-17): 主ページ `/` は末尾の docs 静的マウントが配信する(Pages と同一の正本
+# アプリ = docs/index.html・主地図+全タブ)。:8088 は /editor=実バックエンド編集 + /api/* を担う。
+# 旧 templates/index.html(2タブの古い地図)は撤去。
 
 
 @app.get("/editor", response_class=HTMLResponse)
@@ -425,3 +424,12 @@ async def get_ac_methods():
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(500, f"Failed to load AC methods: {exc}")
+
+
+# ─── 統合: Pages の正本アプリ(docs/)を :8088 でも配信 ─────────────────────
+# `:8088 /` = docs/index.html(主地図+全タブ)。css/js/data/assets/editor.html 等の相対参照も
+# このマウントが解決する(Pages と完全同一の正本アプリ)。明示ルート(/api/*, /editor)を先に
+# 登録済みなのでそれらが優先一致し、残り(/, /css, /editor.html …)をこの静的マウントが受ける。
+_DOCS_DIR = os.path.join(_BASE_DIR, "..", "..", "docs")
+if os.path.isdir(_DOCS_DIR):
+    app.mount("/", StaticFiles(directory=_DOCS_DIR, html=True), name="site")

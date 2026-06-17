@@ -128,7 +128,7 @@
     if (body && body.memo) { L.push("## メモ", body.memo, ""); }
     L.push("## 編集一覧");
     eds.slice(0, 80).forEach(function (e) {
-      if (e.action === "connect") L.push("- connect " + fmtPt(e.a) + " ↔ " + fmtPt(e.b) + (e.kv ? " (" + (e.kv / 1000) + "kV)" : ""));
+      if (e.action === "connect") L.push("- connect " + fmtPt(e.a) + " ↔ " + fmtPt(e.b) + (e.kv ? " (" + (e.kv >= 1000 ? Math.round(e.kv / 1000) : e.kv) + "kV)" : ""));
       else if (e.action === "disconnect") L.push("- ✂cut " + fmtPt(e.a) + " ↔ " + fmtPt(e.b));
       else if (e.action === "add_point") L.push("- add_point " + fmtPt(e.pt) + " " + ((e.attrs && e.attrs.name) || ""));
       else L.push("- " + e.action);
