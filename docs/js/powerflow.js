@@ -148,6 +148,7 @@
     }
 
     function vmColor(vm_pu) {
+        if (vm_pu == null || isNaN(vm_pu)) return "#7f8c8d";  // 未収束/データなし=灰(健全と誤認させない)
         if (vm_pu >= 0.99) return "#2ecc71";
         if (vm_pu >= 0.97) return "#27ae60";
         if (vm_pu >= 0.95) return "#f1c40f";
@@ -157,6 +158,7 @@
     }
 
     function vmRadius(vm_pu) {
+        if (vm_pu == null || isNaN(vm_pu)) return 3;  // 未収束/データなし=小さめ
         if (vm_pu >= 0.95) return 4;
         if (vm_pu >= 0.85) return 5;
         return 6;
@@ -551,7 +553,7 @@
                 pfState.busData = busData;
                 pfState.busLayer = L.geoJSON(busData, {
                     pointToLayer: function(feature, latlng) {
-                        var vm  = feature.properties.vm_pu || 1.0;
+                        var vm  = feature.properties.vm_pu;  // null/NaN は健全1.0に化けさせない
                         var kv  = feature.properties.vn_kv || 66;
                         var r   = kv >= 500 ? 5 : kv >= 275 ? 4 : kv >= 154 ? 3 : 2;
                         return L.circleMarker(latlng, {
@@ -1041,7 +1043,7 @@
         if (busData && busData.features && busData.features.length > 0) {
             pfState.busLayer = L.geoJSON(busData, {
                 pointToLayer: function (feature, latlng) {
-                    var vm = feature.properties.vm_pu || 1.0;
+                    var vm = feature.properties.vm_pu;  // null/NaN は健全1.0に化けさせない
                     var r = mode === "ac" ? vmRadius(vm) : 4;
                     var color = mode === "ac" ? vmColor(vm) : angleColor(feature.properties.va_deg || 0);
                     return L.circleMarker(latlng, {
@@ -1180,11 +1182,15 @@
 
     function busPopup(feature, layer) {
         var p = feature.properties;
+        var bad = function(x){ return x == null || (typeof x === "number" && isNaN(x)); };
+        var vmTxt = bad(p.vm_pu) ? '<span style="color:#e74c3c">未収束/データなし</span>'
+                                 : p.vm_pu + " pu";
+        var vaTxt = bad(p.va_deg) ? "—" : p.va_deg + "&deg;";
         layer.bindPopup(
             "<b>" + (p.name || "Bus") + "</b><br>" +
-            "V: " + p.vm_pu + " pu<br>" +
-            "Angle: " + p.va_deg + "&deg;<br>" +
-            "Vn: " + p.vn_kv + " kV"
+            "V: " + vmTxt + "<br>" +
+            "Angle: " + vaTxt + "<br>" +
+            "Vn: " + (p.vn_kv != null ? p.vn_kv + " kV" : "—")
         );
     }
 
