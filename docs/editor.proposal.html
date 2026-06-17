@@ -469,16 +469,34 @@ function _sldNodeAt(lat,lon){ const b=window._built; if(!b||!b.nodes) return nul
   let best=null,bd=(0.0006)*(0.0006);
   for(const n of b.nodes){ const d=(n.lat-lat)*(n.lat-lat)+(n.lon-lon)*(n.lon-lon); if(d<bd){bd=d;best=n;} } return best; }
 function showSLDAt(lat,lon){ showSLD(_sldNodeAt(lat,lon) || {lat:lat,lon:lon,name:null,kv:0}); }
+function _sldKey(p){ return p[0].toFixed(5)+','+p[1].toFixed(5); }
+function _sldAdj(b){ if(b.__adj) return; const adj={}, nbk={};
+  for(const n of b.nodes) nbk[_sldKey([n.lat,n.lon])]=n;
+  for(const e of b.edges){ const ka=_sldKey(e.a), kb=_sldKey(e.b);
+    (adj[ka]=adj[ka]||[]).push(kb); (adj[kb]=adj[kb]||[]).push(ka); }
+  b.__adj=adj; b.__nbk=nbk; }
+function _sldFollow(sub, firstEdge, b){   // 鉄塔網を辿り最寄りの接続先変電所名を返す(分岐対応BFS)
+  _sldAdj(b); const nbk=b.__nbk, adj=b.__adj;
+  const subK=_sldKey([sub.lat,sub.lon]);
+  const far=(Math.abs(firstEdge.a[0]-sub.lat)<1e-5 && Math.abs(firstEdge.a[1]-sub.lon)<1e-5)?firstEdge.b:firstEdge.a;
+  const seen={}; seen[subK]=1; let fr=[_sldKey(far)];
+  for(let hop=0; hop<25 && fr.length; hop++){ const nx=[];
+    for(let i=0;i<fr.length;i++){ const k=fr[i]; if(seen[k]) continue; seen[k]=1;
+      const nd=nbk[k]; if(nd && nd.sub) return nd.name||'変電所';
+      const ns=adj[k]||[]; for(let j=0;j<ns.length;j++){ if(!seen[ns[j]]) nx.push(ns[j]); } }
+    fr=nx; }
+  return null; }
 function showSLD(node){
   const b=window._built; if(!b||!b.edges){ alert('モデル未読込(地域を選択してください)'); return; }
   const inc=[];
   for(const e of b.edges){ const ends=[e.a,e.b];
     for(let i=0;i<2;i++){ const p=ends[i];
       if(p && Math.abs(p[0]-node.lat)<1e-5 && Math.abs(p[1]-node.lon)<1e-5){
-        const o=ends[1-i], on=_sldNodeAt(o[0],o[1]);
-        inc.push({kv:Math.round(e.kv||0)||0, par:e.par||1,
-          to:(on&&on.sub&&on.name)?on.name:((on&&!on.sub)?'鉄塔/分岐':'')}); } } }
-  const byKv={}; inc.forEach(function(x){ if(!x.kv) return; (byKv[x.kv]=byKv[x.kv]||[]).push(x); });
+        inc.push({kv:Math.round(e.kv||0)||0, par:e.par||1, to:_sldFollow(node,e,b)||'(経由先)'}); } } }
+  const merged={}; inc.forEach(function(x){ if(!x.kv) return; const k=x.kv+'|'+x.to;
+    if(!merged[k]) merged[k]={kv:x.kv,to:x.to,n:0}; merged[k].n+=x.par; });
+  const byKv={}; Object.keys(merged).forEach(function(k){ const m=merged[k]; (byKv[m.kv]=byKv[m.kv]||[]).push(m); });
+  Object.keys(byKv).forEach(function(kv){ byKv[kv].sort(function(a,b){return b.n-a.n;}); });
   const nkv=Math.round(node.kv||0); if(nkv && !byKv[nkv]) byKv[nkv]=[];
   const kvs=Object.keys(byKv).map(Number).sort(function(a,b){return b-a;});
   if(!kvs.length){ alert('この点に接続線が見つかりません(鉄塔/孤立の可能性)'); return; }
@@ -494,10 +512,10 @@ function showSLD(node){
     fs.slice(0,8).forEach(function(f,j){ const x=bx0+42+j*46;
       s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-32)+'" stroke="'+col+'" stroke-width="2"/>';
       s+='<circle cx="'+x+'" cy="'+(y-32)+'" r="4" fill="'+col+'"/>';
-      const lbl=(f.to||'')+(f.par>1?(' ×'+f.par):'');
-      if(lbl) s+='<text x="'+x+'" y="'+(y-38)+'" fill="#c9d1d9" font-size="9" text-anchor="start" transform="rotate(-34 '+x+' '+(y-38)+')">'+_esc(lbl.slice(0,12))+'</text>'; });
-    if(fs.length>8) s+='<text x="'+(bx0+42+8*46)+'" y="'+(y-8)+'" fill="#8b949e" font-size="10">+'+(fs.length-8)+'</text>';
-    s+='<text x="'+(bx1+12)+'" y="'+(y+4)+'" fill="#8b949e" font-size="10">'+fs.length+'回線</text>'; });
+      const lbl=(f.to||'')+(f.n>1?(' ×'+f.n):'');
+      if(lbl) s+='<text x="'+x+'" y="'+(y-38)+'" fill="#c9d1d9" font-size="9" text-anchor="start" transform="rotate(-32 '+x+' '+(y-38)+')">'+_esc(lbl.slice(0,16))+'</text>'; });
+    if(fs.length>8) s+='<text x="'+(bx0+42+8*46)+'" y="'+(y-8)+'" fill="#8b949e" font-size="10">+'+(fs.length-8)+'先</text>';
+    s+='<text x="'+(bx1+12)+'" y="'+(y+4)+'" fill="#8b949e" font-size="10">'+fs.reduce(function(a,f){return a+f.n;},0)+'回線</text>'; });
   for(let i=0;i<kvs.length-1;i++){ const y1=ys[kvs[i]], y2=ys[kvs[i+1]], ym=(y1+y2)/2, tx=bx1-46;
     s+='<line x1="'+tx+'" y1="'+y1+'" x2="'+tx+'" y2="'+y2+'" stroke="#8b949e" stroke-width="1.5"/>';
     s+='<circle cx="'+tx+'" cy="'+(ym-9)+'" r="11" fill="none" stroke="#c9d1d9" stroke-width="2"/>';
