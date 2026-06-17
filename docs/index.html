@@ -179,19 +179,19 @@
                 function renderNational(){
                     const img = document.getElementById("ybus-img");
                     img.src = "./assets/analysis/ybus_national.png";
-                    img.alt = "大元 Ybus (全国統合)";
+                    img.alt = "大元 Ybus (全国統合・ブロック対角)";
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>大元 Ybus</b> — 全国系統（10地域 + 連系線）の統合 $\\mathbf{Y}_{\\mathrm{bus}}$。地域内の帯対角ブロックと、地域間の連系線（弱対角要素）の構造が見える。';
+                        '<b>大元 Ybus</b> — 全国10地域の $\\mathbf{Y}_{\\mathrm{bus}}$ をブロック対角に統合。地域ごとの色で帯対角ブロックが並び（橙=自己アドミタンス、各色=地域内のバス間結合）、右は地域別の充填率。地域間連系線は動的ツアー／実モデルで考慮。';
                     let total_buses = 0, total_nnz = 0;
                     if (stats) {
                         for (const r in stats) { total_buses += stats[r].n_buses; total_nnz += stats[r].nnz; }
                     }
                     document.getElementById("ybus-stats-rows").innerHTML = `
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">構成</span><span style="color:#fff">10 地域 + 連系線</span></div>
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">構成</span><span style="color:#fff">10 地域（ブロック対角）</span></div>
                         <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計バス数</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${total_buses.toLocaleString()}</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計 nnz</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${total_nnz.toLocaleString()}</span></div>
-                        <div style="font-size:11px;color:#7d8aa0;margin-top:8px;line-height:1.5">※ 大元 Ybus は各地域のブロックを対角配置し、連系線（OCCTO 公開）の弱対角要素を追加して構築。</div>`;
-                    document.getElementById("ybus-stats-mini").innerHTML = `合計 <b>${total_buses.toLocaleString()}</b> バス · 連系線あり`;
+                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計 nnz（結線数）</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${total_nnz.toLocaleString()}</span></div>
+                        <div style="font-size:11px;color:#7d8aa0;margin-top:8px;line-height:1.5">※ 各地域の Ybus 非零パターンをブロック対角に配置。本静止図は地域内結線のみ（地域間連系線は動的ツアー／実モデルで考慮）。</div>`;
+                    document.getElementById("ybus-stats-mini").innerHTML = `合計 <b>${total_buses.toLocaleString()}</b> バス · 10地域`;
                 }
 
                 function renderAll(){
