@@ -545,7 +545,7 @@
     <div class="tab-panel" id="tab-area">
         <div class="section">
             <h2>Area Color Mode</h2>
-            <p class="area-desc">送電線・変電所をエリア(電力会社管轄)ごとに色分けします。</p>
+            <p class="area-desc">送電線・変電所を地理的エリア（電力会社管轄の目安）ごとに色分けします。境界は概略で、連系線付近は厳密な管轄と一致しない場合があります。</p>
         </div>
         <div class="section">
             <h2>Layers</h2>
@@ -740,8 +740,9 @@
                 <button class="btn-primary" id="btn-run-pf" disabled>Visualize</button>
             </div>
             <div class="pf-info" style="margin-top:6px">
-                Pre-computed results from pandapower (10/10 AC convergence).<br>
-                Lines colored by loading %, buses by voltage magnitude.
+                地域別=pandapower / 全国基幹=psdat(MATPOWER系) の事前計算結果。AC は 10/10 地域で収束。<br>
+                ただし一部地域は過負荷(loading&gt;100%)や断片化が残る — 各地域選択時の警告を参照。<br>
+                線色=潮流率(loading %)、バス色=電圧 (Vm)。
             </div>
         </div>
         <div class="section" id="pf-results-section" style="display:none">
@@ -800,8 +801,8 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=30"></script>
-<script src="./js/powerflow.js?v=30"></script>
-<script src="./js/sld.js?v=30"></script>
+<script src="./js/grid_map.js?v=31"></script>
+<script src="./js/powerflow.js?v=31"></script>
+<script src="./js/sld.js?v=31"></script>
 </body>
 </html>

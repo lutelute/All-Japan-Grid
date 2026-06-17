@@ -47,7 +47,22 @@ const REGION_ORDER = [
     "kansai","chugoku","shikoku","kyushu","okinawa",
 ];
 
+// 日本に実在する最高電圧は500kV。これを大きく超える値はOSMの多値タグ
+// ("77000;6600"V 等)の連結パースミスによる異常値(例 770006.6kV)。捏造防止のため
+// 不明扱いにし、既定の高電圧ビューに偽の500kV級として混入させない。
+const KV_MAX_REAL = 1100;
+function isCorruptKv(kv) { return !(kv > 0) || kv > KV_MAX_REAL; }
+
+// 電圧表示の共通フォーマッタ(異常値は正直に「不明」と出す)
+function fmtKv(kv) {
+    if (kv == null || kv === "") return "Unknown";
+    var n = +kv;
+    if (isCorruptKv(n)) return "不明 (電圧タグ異常)";
+    return n + " kV";
+}
+
 function voltageKvToBracket(kv) {
+    if (isCorruptKv(kv)) return 0;   // 異常値/欠損 → 不明扱い(高電圧ビューから除外)
     if (kv >= 500) return 500;
     if (kv >= 275) return 275;
     if (kv >= 220) return 220;
@@ -418,7 +433,7 @@ function renderLayers() {
                 },
                 onEachFeature: function (feature, layer) {
                     var p = feature.properties;
-                    var kv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
+                    var kv = fmtKv(p._voltage_kv);
                     layer.bindPopup(
                         "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
                         "Voltage: " + kv + "<br>" +
@@ -465,14 +480,14 @@ function renderLayers() {
                         if (enriched) {
                             layer.bindPopup(buildSubPopup(enriched), { maxWidth: 350 });
                         } else {
-                            var kv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
+                            var kv = fmtKv(p._voltage_kv);
                             layer.bindPopup(
                                 "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
                                 "Voltage: " + kv + "<br>" +
                                 "Region: " + (p._region_ja || "")
                             );
                         }
-                        var skv = p._voltage_kv ? p._voltage_kv + " kV" : "Unknown";
+                        var skv = fmtKv(p._voltage_kv);
                         layer.bindTooltip(
                             "変電所 " + (p._display_name || "Unnamed") + " | " + skv +
                             (p._region_ja ? " | " + p._region_ja : ""),

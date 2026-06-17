@@ -149,12 +149,12 @@ function _initCanvas() {
                 _tooltip.style.display = 'block';
                 _tooltip.style.left = (e.clientX + 14) + 'px';
                 _tooltip.style.top  = (e.clientY - 10) + 'px';
+                // Vm/Pd は flat-start の縮約モデル値(未計算プレースホルダ)のため表示しない
+                // — 捏造回避(計算結果のように見せない)。実在情報のみ。
                 _tooltip.innerHTML =
                     '<b>' + n.name + '</b><br>' +
-                    _kvLabel(n.kv) + '<br>' +
-                    'Vm: ' + (n.vm || 1).toFixed(4) + ' pu<br>' +
-                    (n.Pd ? 'Load: ' + n.Pd.toFixed(0) + ' MW' : '') +
-                    (n.gen ? ' <span style="color:#ffcc00">⚡ Gen</span>' : '');
+                    _kvLabel(n.kv) +
+                    (n.gen ? '<br><span style="color:#ffcc00">⚡ 発電機接続</span>' : '');
             } else if (_tooltip) {
                 _tooltip.style.display = 'none';
             }

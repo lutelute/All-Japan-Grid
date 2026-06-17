@@ -656,19 +656,29 @@
             }
 
             if (window.setStatus) window.setStatus("全国実ルート表示完了 (500/275kV + リング構造)");
-            // ── Results panel ────────────────────────────────────────────────
-            var info = (pfState.summary && pfState.summary["all"]) || {};
-            var el   = document.getElementById("pf-results-content");
+            // ── Results panel: 実データ(all_ac_buses)から集計。捏造定数は使わない ──
+            var feats = (pfState.busData && pfState.busData.features) || [];
+            var nBus = feats.length;
+            var vmin = Infinity, vmax = -Infinity, kvSet = {};
+            for (var bi = 0; bi < feats.length; bi++) {
+                var pr = feats[bi].properties || {};
+                var v = pr.vm_pu;
+                if (typeof v === "number" && isFinite(v)) {
+                    if (v < vmin) vmin = v;
+                    if (v > vmax) vmax = v;
+                }
+                if (pr.vn_kv != null) kvSet[pr.vn_kv] = 1;
+            }
+            var nLevels = Object.keys(kvSet).length;
+            var el = document.getElementById("pf-results-content");
             if (el) {
                 el.innerHTML =
                     "<b>全国統合モデル — 実ルート表示</b><br>" +
-                    "バス数: "      + (info.n_buses    || "2189") + "<br>" +
-                    "電圧レベル: "  + "500/275 kV backbone (実ルート)<br>" +
-                    "負荷率 lf: "   + (info.lf ? (info.lf*100).toFixed(0)+"%" : "20%") + "<br>" +
-                    "V range: ["    + (info.ac_vm_min||"0.78") + ", " + (info.ac_vm_max||"1.18") + "] pu<br>" +
-                    "最大潮流率: "  + (info.ac_max_loading||"148") + "%<br>" +
+                    "バス数: "       + (nBus ? nBus.toLocaleString() : "—") + "<br>" +
+                    "電圧レベル数: " + (nLevels || "—") + " 種（500/275 kV 幹線を実ルートで表示）<br>" +
+                    "電圧 Vm range: " + (isFinite(vmin) ? "[" + vmin.toFixed(2) + ", " + vmax.toFixed(2) + "] pu" : "—") + "<br>" +
                     '<div style="margin-top:6px;font-size:10px;color:#aaa">' +
-                    "色: 実ルート座標 (OSM)、潮流率マッチ済</div>";
+                    "幹線は実ルート座標(OSM)。枝の潮流率はクリックで表示（リング枝=AC計算値、その他ルートは幾何のみ）。</div>";
             }
             var sec = document.getElementById("pf-results-section");
             if (sec) sec.style.display = "";
