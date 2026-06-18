@@ -19,7 +19,7 @@
 **タスク[ ]**:
 - [x] DB1(a4fb805): **完了** — `scripts/run_full_powerflow_from_db.py` 新設、built/all.json から全規模(17,333バス・縮約なし)構築、pws-160coreで実行。**4周波数島すべてフルAC収束**(hokkaido836/east6205/west10193/okinawa99)。出力=`docs/data/powerflow_full/`。
 - [x] DB2(a4fb805): **完了** — モデル連結性(site-aware)で精査: 負荷は変電所(sub=1)のみ・junctionは0負荷。孤立(deg=0)343は**全て変電所**(線なし変電所=島の根因)、末端junctionの隣が変電所317/junction1508、junction-only成分336(1045ノード)=OSM接続ギャップ(編集タスク・ソルバ範囲外)。
-- [ ] **DB3(次): live潮流タブを `powerflow_full`(built正典)に切替** — powerflow.js の参照を新出力へ。全規模データ(34,995 feature)の描画・凡例調整。現状はlive(旧縮約)を温存して未切替。
+- [x] DB3(3527c61): **完了** — 潮流タブ(per-region/全国all)を `powerflow_full` に切替てPages反映。powerflow.js に PF_DIR 追加・新summaryスキーマ対応・AC固定・resultItem堅牢化。東京4,163バス/全国17,281バス描画・undefined無し・error0。national_backbone/zonalは別モデル据置。?v=33。
 - [ ] DB3補: 過負荷(west maxload1035%等)は合成定格の錯視/放射端沈下=既知の物理(捏造でない)。非物理スタブの定格非拘束化(N6方式)で磨くと現実的な値に。
 - [ ] DB4: **Ybusシミュレーションツール化** — gif/静止画をやめ、built から JS で Ybus を構成し、母線/枝の操作・再計算・潮流連動ができるインタラクティブツールに。`gen_ybus_from_db.py`の出力はデータ供給に転用。
 - [ ] DB5(課題・後送り): 電圧階級別の縮約モデルの概念設計(全規模が確立してから)。
