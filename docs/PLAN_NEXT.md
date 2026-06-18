@@ -17,9 +17,10 @@
 - built all.json: 17,333ノード/変電所8,994。末端(deg=1)4,773=変電所1,899+junction2,874。**末端junctionの2,110個が変電所でなくjunctionに接続**(764のみ変電所直結)。孤立も粗キーで多め(transformerの同地点異kvがcoord衝突で自己ループ化=過小評価)→ **モデル本来の連結性(deg/main)で精査必須**。
 
 **タスク[ ]**:
-- [ ] DB1: 潮流生成器(`run_national_powerflow.py`/`gen_all_ac_buses.py`/`gen_pf_geojson.py`)の入力を built に統一。全規模(全バス)で解く経路を確立(縮約しない)。重い→pws-160core想定。
-- [ ] DB2: 末端バス→変電所 接続性をモデル連結性で精査し、負荷busが変電所に載るモデル化。OSM接続を極力保つ(孤立/末端junctionの扱いを正直に)。
-- [ ] DB3: 潮流結果(per-region/all geojson + summary)を built由来で再生成 → 潮流タブが正典反映。捏造定数は既に除去済(147)。
+- [x] DB1(a4fb805): **完了** — `scripts/run_full_powerflow_from_db.py` 新設、built/all.json から全規模(17,333バス・縮約なし)構築、pws-160coreで実行。**4周波数島すべてフルAC収束**(hokkaido836/east6205/west10193/okinawa99)。出力=`docs/data/powerflow_full/`。
+- [x] DB2(a4fb805): **完了** — モデル連結性(site-aware)で精査: 負荷は変電所(sub=1)のみ・junctionは0負荷。孤立(deg=0)343は**全て変電所**(線なし変電所=島の根因)、末端junctionの隣が変電所317/junction1508、junction-only成分336(1045ノード)=OSM接続ギャップ(編集タスク・ソルバ範囲外)。
+- [ ] **DB3(次): live潮流タブを `powerflow_full`(built正典)に切替** — powerflow.js の参照を新出力へ。全規模データ(34,995 feature)の描画・凡例調整。現状はlive(旧縮約)を温存して未切替。
+- [ ] DB3補: 過負荷(west maxload1035%等)は合成定格の錯視/放射端沈下=既知の物理(捏造でない)。非物理スタブの定格非拘束化(N6方式)で磨くと現実的な値に。
 - [ ] DB4: **Ybusシミュレーションツール化** — gif/静止画をやめ、built から JS で Ybus を構成し、母線/枝の操作・再計算・潮流連動ができるインタラクティブツールに。`gen_ybus_from_db.py`の出力はデータ供給に転用。
 - [ ] DB5(課題・後送り): 電圧階級別の縮約モデルの概念設計(全規模が確立してから)。
 
