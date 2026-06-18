@@ -741,8 +741,9 @@
                 <button class="btn-primary" id="btn-run-pf" disabled>Visualize</button>
             </div>
             <div class="pf-info" style="margin-top:6px">
-                地域別=pandapower / 全国基幹=psdat(MATPOWER系) の事前計算結果。AC は 10/10 地域で収束。<br>
-                ただし一部地域は過負荷(loading&gt;100%)や断片化が残る — 各地域選択時の警告を参照。<br>
+                <b>地域別・全国 = DB正典(built)由来の全規模AC潮流</b>（全17,333バス・縮約なし、pandapower、4周波数島すべてAC収束）。<br>
+                全国基幹/全国ゾーンは別モデル（500/275kV概観・同期島）として併設。<br>
+                ※過負荷(loading&gt;100%)や低電圧は合成定格の錯視・放射端の電圧沈下＝正直な物理（各地域の警告参照）。<br>
                 線色=潮流率(loading %)、バス色=電圧 (Vm)。
             </div>
         </div>
@@ -803,7 +804,7 @@
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
 <script src="./js/grid_map.js?v=31"></script>
-<script src="./js/powerflow.js?v=32"></script>
+<script src="./js/powerflow.js?v=33"></script>
 <script src="./js/sld.js?v=31"></script>
 </body>
 </html>

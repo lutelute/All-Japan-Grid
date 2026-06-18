@@ -252,9 +252,23 @@
 
     async function loadSummary() {
         try {
-            var res = await fetch("./data/powerflow/summary.json?v=" + Date.now());
+            var res = await fetch(PF_DIR + "summary.json?v=" + Date.now());
             if (!res.ok) return null;
-            return await res.json();
+            var data = await res.json();
+            // 全規模summaryは regions{} にネスト。per-region に展開し、旧コードが読む
+            // フィールド名へマップ(name_ja / ac_vm_min など)。無い統計は欠損のまま
+            // (resultItem が省略表示)。
+            var regions = data.regions || data;
+            for (var rk in regions) {
+                var x = regions[rk];
+                if (!x || typeof x !== "object") continue;
+                if (x.name_ja == null) x.name_ja = PF_JA[rk] || rk;
+                if (x.ac_vm_min == null && x.vm_min != null) x.ac_vm_min = x.vm_min;
+                if (x.ac_vm_max == null && x.vm_max != null) x.ac_vm_max = x.vm_max;
+                if (x.n_active_buses == null) x.n_active_buses = x.n_buses;
+                if (x.n_lines == null) x.n_lines = x.n_lines_exported;
+            }
+            return regions;
         } catch (e) {
             console.error("Failed to load PF summary:", e);
             return null;
@@ -267,6 +281,13 @@
         "hokkaido","tohoku","tokyo","chubu","hokuriku",
         "kansai","chugoku","shikoku","kyushu","okinawa",
     ];
+
+    // DB3(2026-06-18): 潮流タブの per-region / "all" 詳細表示を全規模(built正典)へ。
+    // = docs/data/powerflow_full/(17,333バス・全バス・AC・縮約なし)。
+    // national_backbone(500/275概観)/national_zonal(同期島)は別モデルゆえ旧データ据置。
+    var PF_DIR = "./data/powerflow_full/";
+    var PF_JA = {hokkaido:"北海道",tohoku:"東北",tokyo:"東京",chubu:"中部",hokuriku:"北陸",
+                 kansai:"関西",chugoku:"中国",shikoku:"四国",kyushu:"九州",okinawa:"沖縄"};
 
     function buildRegionSelect(summary) {
         var sel = document.getElementById("pf-region");
@@ -493,10 +514,12 @@
             return;
         }
 
+        // 全規模(built正典)は AC のみエクスポート → per-region は AC 固定。
+        mode = "ac";
         var info = pfState.summary[region];
         if (!info) return;
 
-        var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
+        var converged = info.ac_converged;
 
         if (!converged) {
             showResults(region, mode, info, false);
@@ -505,8 +528,8 @@
 
         var cb = "?v=" + Date.now();
         try {
-            var busRes = await fetch("./data/powerflow/" + region + "_" + mode + "_buses.geojson" + cb);
-            var lineRes = await fetch("./data/powerflow/" + region + "_" + mode + "_lines.geojson" + cb);
+            var busRes = await fetch(PF_DIR + region + "_ac_buses.geojson" + cb);
+            var lineRes = await fetch(PF_DIR + region + "_ac_lines.geojson" + cb);
 
             if (!busRes.ok || !lineRes.ok) {
                 showResults(region, mode, info, false);
@@ -764,6 +787,7 @@
     };
 
     async function runPFAllRegions(mode) {
+        mode = "ac";   // 全規模(built正典)は AC のみ
         var cb = "?v=" + Date.now();
         var allBusFeatures = [];
         var allLineFeatures = [];
@@ -773,12 +797,12 @@
         var fetches = ALL_REGIONS.map(async function (r) {
             var info = pfState.summary[r];
             if (!info) return;
-            var converged = mode === "dc" ? info.dc_converged : info.ac_converged;
+            var converged = info.ac_converged;
             if (!converged) return;
 
             try {
-                var busRes = await fetch("./data/powerflow/" + r + "_" + mode + "_buses.geojson" + cb);
-                var lineRes = await fetch("./data/powerflow/" + r + "_" + mode + "_lines.geojson" + cb);
+                var busRes = await fetch(PF_DIR + r + "_ac_buses.geojson" + cb);
+                var lineRes = await fetch(PF_DIR + r + "_ac_lines.geojson" + cb);
                 if (!busRes.ok || !lineRes.ok) {
                     var miss = [];
                     if (!busRes.ok) miss.push("buses");
@@ -1401,6 +1425,12 @@
     }
 
     function resultItem(label, value, cls) {
+        // 欠損値(null/undefined/NaN)は行ごと省略 — 全規模summaryに無い項目を
+        // 「NaN MW」「undefined」等で出さない(捏造的な空欄を避ける)。
+        if (value == null) return "";
+        var sv = String(value);
+        if (sv.indexOf("undefined") !== -1 || sv.indexOf("NaN") !== -1 ||
+            sv === "null" || sv.indexOf("null ") === 0) return "";
         var valClass = cls ? ' class="value ' + cls + '"' : ' class="value"';
         return '<div class="result-item"><div class="label">' + label + '</div><div' + valClass + '>' + value + '</div></div>';
     }
@@ -1416,15 +1446,18 @@
 
         var summary = pfState.summary;
         var totalBuses = 0, totalLines = 0, totalGens = 0, totalLoad = 0, totalGenMW = 0, totalLoss = 0;
+        // 軽量summary(全規模)に無い統計は0として誤表示せず、利用可否を追跡し欠損は省略。
+        var haveGens = false, haveLoad = false, haveGen = false, haveLoss = false;
         for (var i = 0; i < ALL_REGIONS.length; i++) {
             var info = summary[ALL_REGIONS[i]];
             if (!info) continue;
             totalBuses += info.n_active_buses || 0;
             totalLines += info.n_lines || 0;
-            totalGens += info.n_gens || 0;
-            totalLoad += info.total_load_mw || 0;
-            totalGenMW += info.total_gen_mw || 0;
-            totalLoss += (mode === "ac" ? info.ac_loss_mw : info.dc_loss_mw) || 0;
+            if (info.n_gens != null) { totalGens += info.n_gens; haveGens = true; }
+            if (info.total_load_mw != null) { totalLoad += info.total_load_mw; haveLoad = true; }
+            if (info.total_gen_mw != null) { totalGenMW += info.total_gen_mw; haveGen = true; }
+            var lossv = (mode === "ac" ? info.ac_loss_mw : info.dc_loss_mw);
+            if (lossv != null) { totalLoss += lossv; haveLoss = true; }
         }
 
         var html = "";
@@ -1443,10 +1476,10 @@
         html += resultItem("Regions", loadedCount + "/10");
         html += resultItem("Active Buses", totalBuses);
         html += resultItem("Lines", totalLines);
-        html += resultItem("Generators", totalGens);
-        html += resultItem("Load", Math.round(totalLoad) + " MW");
-        html += resultItem("Generation", Math.round(totalGenMW) + " MW");
-        html += resultItem("Total Loss", Math.round(totalLoss) + " MW");
+        html += resultItem("Generators", haveGens ? totalGens : null);
+        html += resultItem("Load", haveLoad ? Math.round(totalLoad) + " MW" : null);
+        html += resultItem("Generation", haveGen ? Math.round(totalGenMW) + " MW" : null);
+        html += resultItem("Total Loss", haveLoss ? Math.round(totalLoss) + " MW" : null);
         html += "</div>";
 
         html += buildLegend(mode);
