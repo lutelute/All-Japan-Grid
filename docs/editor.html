@@ -212,7 +212,7 @@ const baseOverlayExtra = {'衛星時の地名ラベル': satLabel};
 let lineLayer=null, subLayer=null, busbarLayer=null;   // OSM
 let mainLayer=null, islandLayer=null, edgeLayer=null, islandClassLayer=null;  // モデル
 let editLayer=null, layerCtl=null;
-let snapPts=[], pendingPts=[], mode='view', pick=[], pickMarkers=[], editLocked=false;
+let snapPts=[], pendingPts=[], mode='view', pick=[], pickMarkers=[], editLocked=false, snapHint=null;
 const KV_OF = p => (p && (p.voltage||p.voltage_kv)) || 0;
 const $ = id => document.getElementById(id);
 
@@ -237,7 +237,7 @@ function toggleLock(){
   if(editLocked) setMode('view');
   if(typeof flash==='function') flash(editLocked?'🔒 編集ロック(閲覧専用)':'🔓 編集可', !editLocked);
 }
-function clearPick(){ pick=[]; pickMarkers.forEach(m=>map.removeLayer(m)); pickMarkers=[]; $('selinfo').textContent=''; }
+function clearPick(){ pick=[]; pickMarkers.forEach(m=>map.removeLayer(m)); pickMarkers=[]; if(snapHint){ map.removeLayer(snapHint); snapHint=null; } $('selinfo').textContent=''; }
 
 // ── 連続接続(chain): 点を順にクリックして隣接ペアを次々と記録 ──
 let chainPrev=null, chainCount=0, chainMarkers=[];
@@ -644,16 +644,19 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ if(mode==='chain
   else if(pick.length){ clearPick(); $('selinfo').textContent='選択解除'; } } });
 // スナップ先プレビュー: ✂/接続/連続モードでカーソル最寄りの点(鉄塔/変電所)を黄丸で表示
 // → どこをクリックすれば良いか一目で分かる(全国は点数が多く重いので地域ビュー限定)。
-let snapHint=null;
+// snapHint は先頭の状態宣言で定義(setMode/clearPick で確実に消すため)。
+function clearSnapHint(){ if(snapHint){ map.removeLayer(snapHint); snapHint=null; } }
 map.on('mousemove', e=>{
   const editing = (mode==='cut'||mode==='connect'||mode==='chain');
-  if(!editing){ if(snapHint){ map.removeLayer(snapHint); snapHint=null; } return; }   // 全国でもスナップ点(変電所+モデル節点)を表示
+  if(!editing){ clearSnapHint(); return; }   // 全国でもスナップ点(変電所+モデル節点)を表示
   const s=nearestSnap(e.latlng);
   if(s){ const ll=[s.lat,s.lon]; const col=(mode==='cut')?'#da3633':'#f0c674';
     if(snapHint){ snapHint.setLatLng(ll); snapHint.setStyle({color:col,fillColor:col}); }
     else snapHint=L.circleMarker(ll,{radius:7,color:col,weight:2,fill:true,fillColor:col,fillOpacity:.45,interactive:false}).addTo(map);
-  } else if(snapHint){ map.removeLayer(snapHint); snapHint=null; }
+  } else clearSnapHint();
 });
+// 地図外にカーソルが出たらホバー点を消す(端に残る「消えない点」を防ぐ)
+map.on('mouseout', clearSnapHint);
 function onPoint(pt,f){
   if(mode==='connect'){ addPick(pt); return; }
   if(mode==='cut'){ addPick(pt); return; }   // 切断も2点選択(間の線=区間を消す)
