@@ -50,20 +50,33 @@
     <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
     <div class="tab-panel" id="tab-ybus">
         <div id="ybus-panel" style="padding:14px 18px;background:#0f1419;color:#e6e6e6">
-            <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) — インタラクティブ閲覧</h3>
+            <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) — シミュレーションツール</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
-                $\mathbf{Y}_{\mathrm{bus}}$ は系統の電気的接続を表す疎行列。
-                地域を選ぶとスパースパターンと統計が切り替わります。
-                帯対角=隣接バス間の結線、対角=自己アドミタンス。
+                $\mathbf{Y}_{\mathrm{bus}}$ は系統の電気的接続を表す疎行列（バス×バス）。
+                ここでは <b>DB更新済み建造モデル</b>（<code>docs/data/built</code>）から
+                <b>ブラウザ上で実時間に Ybus 隣接を構成</b>し、操作・再計算できます。
+                地域を選ぶ→スパイ図を描画（<span style="color:#f5b041">対角=自己</span>／<span style="color:#5dade2">送電線結合</span>／<span style="color:#69f0ae">変圧器</span>）→
+                ホバーでバス情報・クリックで行と列（接続先）をハイライト・<b>枝の on/off</b> で
+                非零パターンと統計（非零数・密度・次数・<b>連結成分数</b>）が即時更新されます。
+            </p>
+
+            <!-- ▼ インタラクティブ・シミュレーション（主役・ybus_sim.js がマウント） -->
+            <div id="ybus-sim-root" style="margin:0 0 16px"></div>
+
+            <!-- ▽ 静止アセット（地域別/大元/Spy/組立アニメ）は副次的に格納 -->
+            <details style="margin:0 0 14px;background:#0c1014;border:1px solid #2c3e50;border-radius:4px;padding:8px 14px">
+            <summary style="cursor:pointer;font-size:13px;color:#9fb3c8;font-weight:600">▸ 静止プロット（地域別 PNG・大元・Spy・組立アニメ）を見る</summary>
+            <p style="margin:8px 0 10px;font-size:11px;color:#7d8aa0;line-height:1.5">
+                事前生成した静止スパイ図のギャラリー（参考用）。最新の操作・解析は上のシミュレーションツールで行います。
             </p>
 
             <!-- 表示モード切替 -->
             <div id="ybus-mode-bar" style="display:flex;gap:4px;margin:0 0 10px;flex-wrap:wrap">
-                <button class="ybus-mode-btn active" data-mode="anim" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 組立アニメ</button>
-                <button class="ybus-mode-btn" data-mode="region" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
+                <button class="ybus-mode-btn active" data-mode="region" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
                 <button class="ybus-mode-btn" data-mode="national" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">大元 (全国統合)</button>
                 <button class="ybus-mode-btn" data-mode="all" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">全地域ギャラリー</button>
                 <button class="ybus-mode-btn" data-mode="spy" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">Spy plot</button>
+                <button class="ybus-mode-btn" data-mode="anim" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 組立アニメ</button>
             </div>
 
             <!-- 地域セレクタ (region modeのみ) -->
@@ -87,7 +100,7 @@
             <!-- メインビューア -->
             <div id="ybus-viewer" style="display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:14px;margin:0 0 16px">
                 <figure id="ybus-figure" style="margin:0">
-                    <img id="ybus-img" src="./assets/gif/ybus_build.gif" alt="Ybus" loading="lazy"
+                    <img id="ybus-img" alt="Ybus" loading="lazy"
                          style="width:100%;height:auto;max-height:80vh;object-fit:contain;border:1px solid #2c3e50;border-radius:4px;background:#0f1419">
                     <figcaption id="ybus-caption" style="margin-top:6px;font-size:12px;color:#9fb3c8">読み込み中...</figcaption>
                 </figure>
@@ -109,7 +122,7 @@
                              chubu:"中部", hokuriku:"北陸", kansai:"関西",
                              chugoku:"中国", shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
                 let stats = null;
-                let mode = "anim";
+                let mode = "region";
 
                 async function loadStats(){
                     if (stats) return stats;
@@ -264,10 +277,13 @@
                     renderRegion(e.target.value);
                 });
 
-                // 初期化
+                // 初期化（静止アセットは details を開いた時のみ実質ロード。
+                // 既定 region モードは画像srcのみ差し替え、gif は明示選択時だけ）
                 loadStats().then(() => { renderTable(); applyMode(); });
             })();
             </script>
+            </details>
+            <!-- ▲ 静止アセット details ここまで -->
 
             <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（インタラクティブ）</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
@@ -806,5 +822,6 @@
 <script src="./js/grid_map.js?v=31"></script>
 <script src="./js/powerflow.js?v=33"></script>
 <script src="./js/sld.js?v=31"></script>
+<script src="./js/ybus_sim.js?v=1"></script>
 </body>
 </html>
