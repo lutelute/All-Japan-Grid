@@ -709,3 +709,23 @@ input[type="range"]{ accent-color:var(--p-acc); }
 .btn-primary{ background:var(--p-acc2)!important; border:1px solid var(--p-acc)!important; color:#fff!important; border-radius:9px!important; }
 .btn-primary:hover{ filter:brightness(1.08); }
 .btn-secondary{ background:var(--p-card)!important; color:var(--p-tx)!important; border:1px solid var(--p-bd2)!important; border-radius:8px!important; }
+
+/* ── 統一上部タブバー(2026-06-18) — 全タブで一貫させる整理 ──
+   従来は左サイドバー内のタブが、全画面系タブ(比較/Ybus/編集/レビュー)で
+   `body.fullscreen-tab` により上部へジャンプし、配置がちぐはぐだった。
+   タブバーを常時 上端固定(全幅)に統一し、サイドバー/地図/全画面パネルを
+   バー高さ分だけ下げることで「タブは常に最上部」に一本化する。 */
+:root { --tabbar-h: 44px; }
+.tab-bar {
+    position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    width: 100vw !important; max-width: 100vw !important; z-index: 2100 !important;
+    background: #0d1117 !important;
+    border-bottom: 1px solid var(--p-bd, #30363d) !important;
+}
+#sidebar { padding-top: var(--tabbar-h) !important; }
+#map { height: calc(100vh - var(--tabbar-h)) !important; margin-top: var(--tabbar-h) !important; }
+#tab-compare.active, #tab-ybus.active,
+#tab-editor.active, #tab-review.active {
+    top: var(--tabbar-h) !important;
+    height: calc(100vh - var(--tabbar-h)) !important;
+}
