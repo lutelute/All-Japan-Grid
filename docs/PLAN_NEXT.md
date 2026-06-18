@@ -21,7 +21,7 @@
 - [x] DB2(a4fb805): **完了** — モデル連結性(site-aware)で精査: 負荷は変電所(sub=1)のみ・junctionは0負荷。孤立(deg=0)343は**全て変電所**(線なし変電所=島の根因)、末端junctionの隣が変電所317/junction1508、junction-only成分336(1045ノード)=OSM接続ギャップ(編集タスク・ソルバ範囲外)。
 - [x] DB3(3527c61): **完了** — 潮流タブ(per-region/全国all)を `powerflow_full` に切替てPages反映。powerflow.js に PF_DIR 追加・新summaryスキーマ対応・AC固定・resultItem堅牢化。東京4,163バス/全国17,281バス描画・undefined無し・error0。national_backbone/zonalは別モデル据置。?v=33。
 - [ ] DB3補: 過負荷(west maxload1035%等)は合成定格の錯視/放射端沈下=既知の物理(捏造でない)。非物理スタブの定格非拘束化(N6方式)で磨くと現実的な値に。
-- [ ] DB4: **Ybusシミュレーションツール化** — gif/静止画をやめ、built から JS で Ybus を構成し、母線/枝の操作・再計算・潮流連動ができるインタラクティブツールに。`gen_ybus_from_db.py`の出力はデータ供給に転用。
+- [x] DB4(fac1bb4): **完了(v1)** — `docs/js/ybus_sim.js` 新設。built から JS で Ybus 隣接を構成(site-aware)、Canvas スパイ図(ズーム/パン・ホバー情報・クリック行列ハイライト)、**枝on/offトグル→nnz/密度/次数/連結成分が即時更新**(union-find)。gifは既定から外し静止モードは折畳`<details>`に副次化。headless検証 error0(toggleで成分6→31変化を確認)。次反復候補=潮流連動(loading色)・全国版(block-diag+連系線)・数値Ybus(G+jB)・編集topシナリオ出力・RCM並べ替え。
 - [ ] DB5(課題・後送り): 電圧階級別の縮約モデルの概念設計(全規模が確立してから)。
 
 **制約**: 全規模潮流は重い → 新セッション/サーバ(pws-160core)で実行。捏造禁止・基底extract不変・物理接続=真・okinawa supplement非commit。
