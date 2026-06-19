@@ -39,13 +39,17 @@
     // 66 kV programme targets — PLAN_66KV); 110/77/66 stay on-demand for
     // payload, but user toggles now PERSIST across mode switches instead of
     // being force-unchecked (the "66 kV disappeared" report, 2026-06-11).
+    // DB②(2026-06-19): 全国基幹のデータソースを旧縮約(powerflow/routes_*・2189バス)→
+    // 正典(powerflow_full/national_overview_*)へ。gen_national_overview_from_full.py が
+    // 全規模AC結果(17,333バス)から電圧帯別に生成(再solveなし・kv付与=端点99%+名前100%)。
+    // tier UI(下位電圧の on-demand 表示)はそのまま温存。プロパティは loading_pct。
     var ROUTE_TIERS = [
-        { kv: 500, file: "routes_500kv.geojson", zIdx: 444, col: "#cc0000", wt: 3.5, eager: true  },
-        { kv: 275, file: "routes_275kv.geojson", zIdx: 443, col: "#0044cc", wt: 2.5, eager: true  },
-        { kv: 154, file: "routes_154kv.geojson", zIdx: 442, col: "#007733", wt: 1.6, eager: true  },
-        { kv: 110, file: "routes_110kv.geojson", zIdx: 441, col: "#885500", wt: 1.2, eager: false },
-        { kv: 77,  file: "routes_77kv.geojson",  zIdx: 440, col: "#660077", wt: 1.0, eager: false },
-        { kv: 66,  file: "routes_66kv.geojson",  zIdx: 439, col: "#334455", wt: 0.8, eager: false },
+        { kv: 500, file: "national_overview_500kv.geojson", zIdx: 444, col: "#cc0000", wt: 3.5, eager: true  },
+        { kv: 275, file: "national_overview_275kv.geojson", zIdx: 443, col: "#0044cc", wt: 2.5, eager: true  },
+        { kv: 154, file: "national_overview_154kv.geojson", zIdx: 442, col: "#007733", wt: 1.6, eager: true  },
+        { kv: 110, file: "national_overview_110kv.geojson", zIdx: 441, col: "#885500", wt: 1.2, eager: false },
+        { kv: 77,  file: "national_overview_77kv.geojson",  zIdx: 440, col: "#660077", wt: 1.0, eager: false },
+        { kv: 66,  file: "national_overview_66kv.geojson",  zIdx: 439, col: "#334455", wt: 0.8, eager: false },
     ];
 
     function routeWeight(loading, kv) {
@@ -559,18 +563,19 @@
         }
     }
 
-    // Load pre-computed national AC model (psdat-python NR, 2189 buses)
+    // Load national backbone overview (500/275 kV) from CANONICAL powerflow_full (17,333-bus AC).
+    // DB②(2026-06-19): 旧 psdat 縮約 2189 バスを廃止し、全規模 AC の既存結果から抽出(再solveなし)。
     async function runPFNational() {
         var cb = "?v=" + Date.now();
         try {
-            if (window.setStatus) window.setStatus("実ルート読み込み中... (500+275 kV)");
+            if (window.setStatus) window.setStatus("全国基幹概観 読み込み中... (500/275 kV・正典)");
             removeRouteLayers();
             removePFOverlays();
             initRoutePanes();
             showBaseGrid("all");
 
             // ── Bus voltage layer (all 2189 buses) ──────────────────────────
-            var busRes = await fetch("./data/powerflow/all_ac_buses.geojson" + cb);
+            var busRes = await fetch("./data/powerflow_full/national_overview_buses.geojson" + cb);
             if (busRes.ok) {
                 var busData = await busRes.json();
                 pfState.busData = busData;
@@ -597,12 +602,12 @@
             var eagerTiers = ROUTE_TIERS.filter(function(t) { return t.eager; });
             var fetches = eagerTiers.map(async function(tier) {
                 try {
-                    var r = await fetch("./data/powerflow/" + tier.file + cb);
+                    var r = await fetch("./data/powerflow_full/" + tier.file + cb);
                     if (!r.ok) return;
                     var data = await r.json();
                     var layer = L.geoJSON(data, {
                         style: function(feature) {
-                            var ld = feature.properties.loading || 0;
+                            var ld = feature.properties.loading_pct || 0;
                             if (ld > 1) {
                                 return {
                                     color:   loadingColor(ld),
@@ -611,7 +616,7 @@
                                     pane:    "routePane" + tier.kv,
                                 };
                             }
-                            // unmatched: tier color, semi-transparent
+                            // low-load: tier color, semi-transparent
                             return {
                                 color:   tier.col,
                                 weight:  tier.wt * 0.55,
@@ -621,12 +626,13 @@
                         },
                         onEachFeature: function(feature, lyr) {
                             var p  = feature.properties;
-                            var ld = (p.loading || 0).toFixed(1);
+                            var ld = (p.loading_pct || 0).toFixed(1);
                             lyr.bindPopup(
                                 "<b>" + (p.name || "—") + "</b><br>" +
-                                tier.kv + " kV | " + p.region + "<br>" +
+                                tier.kv + " kV | " + (p.region || "—") +
+                                (p.tie ? " | <span style='color:#ff3b6b'>連系線</span>" : "") + "<br>" +
                                 "潮流率: " + ld + "%" +
-                                (ld > 0 ? " (" + loadingColor(p.loading) + ")" : " (unmatched)")
+                                (ld > 0 ? "" : " <span style='color:#888'>(低負荷/未計算)</span>")
                             );
                         },
                         pane: "routePane" + tier.kv,
@@ -637,51 +643,11 @@
                 }
             });
             await Promise.all(fetches);
-            if (window.setStatus) window.setStatus("リング構造ハイライト読み込み中...");
+            // リング構造ハイライト(backbone_ring)は旧縮約モデル特有で正典に対応物が無いため
+            // DB②で廃止。エリア間連系線は national_overview_* 各線の tie フラグで識別できる。
 
-            // ── Backbone ring highlight layer ────────────────────────────────
-            try {
-                var ringRes = await fetch("./data/powerflow/backbone_ring.geojson" + cb);
-                if (ringRes.ok) {
-                    var ringData = await ringRes.json();
-                    pfState.ringLayer = L.geoJSON(ringData, {
-                        style: function(feature) {
-                            var p = feature.properties;
-                            var kv = p.kv || 500;
-                            var ld = p.loading || 0;
-                            var col = ld > 1 ? loadingColor(ld) : p.col;
-                            // 500kV backbone: prominent / 275kV regional mesh: subtle
-                            var wt  = kv >= 500 ? (p.wt || 4.0) : (p.wt || 2.5) * 0.7;
-                            var op  = kv >= 500 ? 0.95 : 0.45;
-                            return {
-                                color:       col,
-                                weight:      wt,
-                                opacity:     op,
-                                lineCap:     "round",
-                                lineJoin:    "round",
-                                pane:        "ringPane",
-                            };
-                        },
-                        onEachFeature: function(feature, lyr) {
-                            var p = feature.properties;
-                            var ld = (p.loading || 0).toFixed(1);
-                            lyr.bindPopup(
-                                "<b>【リング枝】" + (p.name || "—") + "</b><br>" +
-                                p.kv + " kV | " + (p.region || "—") + "<br>" +
-                                "潮流率: " + ld + "%" +
-                                (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
-                            );
-                        },
-                        pane: "ringPane",
-                        className: "ring-layer-" + "backbone",
-                    }).addTo(window.map);
-                }
-            } catch(e) {
-                console.warn("Ring overlay load error:", e);
-            }
-
-            if (window.setStatus) window.setStatus("全国実ルート表示完了 (500/275kV + リング構造)");
-            // ── Results panel: 実データ(all_ac_buses)から集計。捏造定数は使わない ──
+            if (window.setStatus) window.setStatus("全国基幹概観 表示完了 (500/275kV・正典17,333バス由来)");
+            // ── Results panel: 正典 national_overview_buses から集計。捏造定数は使わない ──
             var feats = (pfState.busData && pfState.busData.features) || [];
             var nBus = feats.length;
             var vmin = Infinity, vmax = -Infinity, kvSet = {};
@@ -698,12 +664,13 @@
             var el = document.getElementById("pf-results-content");
             if (el) {
                 el.innerHTML =
-                    "<b>全国統合モデル — 実ルート表示</b><br>" +
-                    "バス数: "       + (nBus ? nBus.toLocaleString() : "—") + "<br>" +
-                    "電圧レベル数: " + (nLevels || "—") + " 種（500/275 kV 幹線を実ルートで表示）<br>" +
+                    "<b>全国基幹概観 — 500/275 kV（正典 full 由来）</b><br>" +
+                    "バス数(≥154kV): " + (nBus ? nBus.toLocaleString() : "—") + "<br>" +
+                    "電圧レベル数: " + (nLevels || "—") + " 種<br>" +
                     "電圧 Vm range: " + (isFinite(vmin) ? "[" + vmin.toFixed(2) + ", " + vmax.toFixed(2) + "] pu" : "—") + "<br>" +
                     '<div style="margin-top:6px;font-size:10px;color:#aaa">' +
-                    "幹線は実ルート座標(OSM)。枝の潮流率はクリックで表示（リング枝=AC計算値、その他ルートは幾何のみ）。</div>";
+                    "全規模AC(17,333バス・縮約なし)の結果から抽出。枝色=潮流率(loading)。" +
+                    "下位電圧(110/77/66kV)はチェックで追加表示。</div>";
             }
             var sec = document.getElementById("pf-results-section");
             if (sec) sec.style.display = "";
@@ -727,12 +694,12 @@
         if (window.setStatus) window.setStatus(kv + " kV ルート読み込み中...");
         var cb = "?v=" + Date.now();
         try {
-            var res = await fetch("./data/powerflow/" + tier.file + cb);
+            var res = await fetch("./data/powerflow_full/" + tier.file + cb);
             if (!res.ok) return;
             var data = await res.json();
             var layer = L.geoJSON(data, {
                 style: function(feature) {
-                    var ld = feature.properties.loading || 0;
+                    var ld = feature.properties.loading_pct || 0;
                     if (ld > 1) {
                         return {
                             color:   loadingColor(ld),
@@ -750,12 +717,13 @@
                 },
                 onEachFeature: function(feature, lyr) {
                     var p  = feature.properties;
-                    var ld = (p.loading || 0).toFixed(1);
+                    var ld = (p.loading_pct || 0).toFixed(1);
                     lyr.bindPopup(
                         "<b>" + (p.name || "—") + "</b><br>" +
-                        kv + " kV | " + (p.region || "—") + "<br>" +
+                        kv + " kV | " + (p.region || "—") +
+                        (p.tie ? " | <span style='color:#ff3b6b'>連系線</span>" : "") + "<br>" +
                         "潮流率: " + ld + "%" +
-                        (p.loading > 1 ? "" : " <span style='color:#888'>(未マッチ)</span>")
+                        (p.loading_pct > 1 ? "" : " <span style='color:#888'>(低負荷/未計算)</span>")
                     );
                 },
                 pane: "routePane" + kv,

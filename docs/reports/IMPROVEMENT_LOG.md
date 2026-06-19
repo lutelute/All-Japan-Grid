@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-19 — **Claude Opus 4.8** — DB② 全国基幹概観を正典(powerflow_full)由来へ・旧2189縮約を追放（150）
+
+[評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)の②(潮流タブ3世代同居)を是正。オーナー選択「正典由来へ再生成」。
+
+- **問題**: 潮流タブで per-region/"all" は正典(17,333バス)なのに "national_backbone"(全国基幹500/275概観)だけ psdat 縮約 **2,189バス**(`powerflow/all_ac_buses`+`routes_*`+`backbone_ring`)を表示。選択で正典度がサイレント後退していた。
+- **是正(再solveなし)**: `scripts/gen_national_overview_from_full.py` 新設。全規模AC(powerflow_full)の **既存結果** を集計して電圧帯別 geojson(`national_overview_{500..66}kv.geojson`+`_buses.geojson`)を生成。各 line への kv 付与=端点→bus vn_kv 99% + built edge 名 100%(nokv=0)。`powerflow.js` の `ROUTE_TIERS` 参照先を `powerflow/routes_*`→`powerflow_full/national_overview_*` に差替(tier UI=下位電圧 on-demand は温存)、`loading`→`loading_pct`、bus ソースを正典へ。リング(backbone_ring=縮約特有)は正典に対応物が無く廃止(連系線は各線 tie フラグで識別)。
+- **結果**: national_backbone が正典17,333バス由来に。buses 4,213(≥154kV)・実 Vm range[0.74,1.13]pu(縮約でない実AC)・500/275/154 eager + 110/77/66 on-demand。**旧2189縮約の3世代同居を解消**(per-region/"all"/national_backbone すべて正典)。national_zonal(同期島)は有用ゆえ残置。
+- **不変**: index.html ?v 据置(後方互換=旧JS×残存旧データ/新JS×新データ両立・DB7ドラフト保全)。旧 `powerflow/{all_ac_buses,routes_*,backbone_ring}` は当面残置(⑤掃除で後送り・sld/other_freq が `powerflow/` を併用中)。
+- **検証**: 隔離headless(:8899 read-only・MCP不使用)。national_backbone 選択→`national_overview_*` のみ fetch・旧縮約 fetch 0・console error 0・パネル「正典 full 由来」・**PASS**。
+
 ## 2026-06-19 — **Claude Opus 4.8** — DB① 変電所属性をDB正典(D層)へ一元化・詳細カバー 8%→56%（149）
 
 [評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)で同定した本丸①(属性の正がDB外)を是正。オーナー選択の着手対象①。
