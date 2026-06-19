@@ -475,8 +475,9 @@ function renderLayers() {
                 onEachFeature: function (feature, layer) {
                     try {
                         var p = feature.properties;
-                        var coords = feature.geometry ? feature.geometry.coordinates : null;
-                        var enriched = (coords && coords.length >= 2) ? lookupEnrichedSub(coords[0], coords[1]) : null;
+                        // 変電所属性は subs_*.geojson に焼き込み済み(_attr_source 付き = export_map_tiers
+                        // の名前優先+座標結合≈56%)。旧 substations.geojson の別fetch+4桁座標突合(≈8%)を廃止。
+                        var enriched = p._attr_source ? p : null;
                         if (enriched) {
                             layer.bindPopup(buildSubPopup(enriched), { maxWidth: 350 });
                         } else {
@@ -688,10 +689,8 @@ function clearLayers() {
 
 async function loadEnrichedData() {
     var cb = "?v=" + Date.now();
-    try {
-        var res = await fetch("./data/substations.geojson" + cb);
-        if (res.ok) enrichedSubData = await res.json();
-    } catch (e) { console.warn("No enriched substations:", e); }
+    // 変電所属性は subs_*.geojson に焼き込み済み(export_map_tiers_from_built.py)なので別fetch不要。
+    // 発電所属性のみ別供給元から読む(発電所のDB正典化は別課題=本セッション対象外)。
     try {
         var res2 = await fetch("./data/generators.geojson" + cb);
         if (res2.ok) enrichedGenData = await res2.json();
@@ -987,13 +986,13 @@ async function downloadGeneratorsCSV() {
 }
 
 async function downloadSubstationsCSV() {
-    var data = enrichedSubData;
-    if (!data) {
-        try {
-            var res = await fetch("./data/substations.geojson");
-            if (res.ok) data = await res.json();
-        } catch (e) {}
-    }
+    // CSV は全件フル属性のリッチな供給元(substations.geojson)を直接読む。
+    // (マップ表示の属性は subs_*.geojson に焼き込み済みだが、CSV は全属性が価値)。
+    var data = null;
+    try {
+        var res = await fetch("./data/substations.geojson");
+        if (res.ok) data = await res.json();
+    } catch (e) {}
     if (!data) { alert("Substation data not available"); return; }
     var csv = geojsonToCSV(data, SUB_CSV_COLUMNS);
     downloadCSV(csv, "substations.csv");

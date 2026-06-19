@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-19 — **Claude Opus 4.8** — DB① 変電所属性をDB正典(D層)へ一元化・詳細カバー 8%→56%（149）
+
+[評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)で同定した本丸①(属性の正がDB外)を是正。オーナー選択の着手対象①。
+
+- **問題の定量化**: 系統図の変電所クリック属性は `grid_map.js` が別fetch(`substations.geojson`)+4桁座標突合で引いていたが、built再スナップで座標がずれ **798/8994=8%しか当たっていなかった**(92%は属性popup空)。評価148の「約2,000件欠落」は過小で、実測は約8,200件。
+- **是正(D層一元化)**: `export_map_tiers_from_built.py` に**名前優先+座標(2km妥当性チェック=誤接続防止)**の属性結合を追加。built sub に旧`substations.geojson`の属性(operator/category_ja/voltage_source 等15列)を結合し `subs_*.geojson`(D層生成物)へ焼き込み。`_attr_source`∈{coord,name}で出所明示・供給元不在は焼かない(捏造なし)。**カバー 8%→56%(5,051/8,994 = coord 798 + name 4,253)**。
+- **`grid_map.js`**: クリックハンドラを feature内属性直読み(`p._attr_source?p:null`)に変更、`loadEnrichedData` の `substations.geojson` 別fetchを廃止(=二重fetch・8%座標接着の解消)。CSVは全属性の `substations.geojson` を明示直読みで残置。
+- **不変性**: lines/regions.json は不変(line側未変更・件数 old=new 一致)。`index.html` ?v 据置(後方互換=旧JS×新データ/新JS×旧データ両立ゆえ安全・DB7ドラフト保全)。残44%は供給元(旧6,962件)に不在=本来④発電所/P03権威データで埋める後送り課題。
+- **検証**: 隔離headless(:8898 read-only・MCP不使用)。console error 0・`buildSubPopup` が operator/category 描画・`substations.geojson` のマップ再fetch無し・**PASS**。
+
 ## 2026-06-19 — **Claude Opus 4.8** — Pages各タブの「DB正典忠実度」監査（148・評価のみ）
 
 オーナー「DBを統合した。それを正とした時に、今のpagesのツールへの違和感があちこちある。評価してほしい」。`docs/data/built/`(6-18・17,333ノード/変電所8,994)を唯一の正典とする規範に対し、各タブが実際に `fetch()` するソースの出自を読取専用で監査した。**是正は未着手**（評価レポートの正本化のみ）。

@@ -20,6 +20,9 @@ docs/data/built/all.json  : {nodes:[{id,lat,lon,kv,main,deg,sub,name,region}],
                              sub=1 が変電所 / sub=0 が接続点(junction)。
                              ※ built の座標は [lat, lon] 順。GeoJSON は [lon, lat] 順。
 docs/data/regions.json    : 既存の region メタ(list)。frequency_hz を保持する。
+docs/data/substations.geojson : 変電所の **キュレーション属性**(operator/category_ja/
+                             voltage_source 等)の供給元(旧基底OSM由来の C層相当)。built は
+                             幾何+表示名4フィールドのみなので、ここから属性を結合して焼き込む。
 
 出力 (上書き)
 -------------
@@ -41,6 +44,12 @@ docs/data/regions.json         (substations/lines 件数 + bbox を built から
     _display_name: 表示名 (subs=node.name / lines=建造edgeに名前が無いので "")
     _voltage_kv  : 電圧(数値 or null)。filterByVoltage / voltageColor / voltageKvToBracket。
   geometry: subs=Point(変電所のみ) / lines=LineString。座標は [lon, lat]。
+- subs の追加属性(属性結合・grid_map.js buildSubPopup が読む): name/operator/operator_en/
+  region_ja/voltage_kv/voltage_source/voltage_label/frequency_hz/rating/category_ja/
+  substation_type/gas_insulated/ref/addr_city/website。値があるキーのみ焼く。
+  `_attr_source`∈{coord,name}=属性の突合方法(出所明示)。属性が引けないノードは _attr_source 無し
+  (旧 substations.geojson に存在しない=供給元不在。捏造で埋めない)。これにより grid_map.js の
+  別fetch(substations.geojson)+4桁座標突合(当たり≈8%)を、export時の名前優先+座標(≈56%)へ一元化。
 - 異常/欠損電圧: grid_map.js は kv<=0 や kv>1100 を「不明」とし高電圧ビューから除外する。
   建造モデルの不明電圧は kv==0.0。本スクリプトは捏造防止のため _voltage_kv=null とし、
   偽の 500kV を作らない。null/不明は 'all' タイルにのみ載る(帯閾値を満たさないため)。
@@ -49,6 +58,7 @@ base extract(data/ 直下のOSM生抽出)・okinawa補完(data/okinawa_*)・
 generators.geojson は触らない。
 """
 import json
+import math
 import os
 import sys
 
@@ -63,6 +73,16 @@ COORD_PRECISION = 4
 # 日本に実在する最高電圧は 500kV。これを超える値は OSM 多値タグの連結パースミス。
 # grid_map.js KV_MAX_REAL と一致させ、捏造防止のため不明(null)化する。
 KV_MAX_REAL = 1100.0
+
+# 属性結合の供給元(C層相当=旧 substations.geojson)と、grid_map.js buildSubPopup が読むキー集合。
+SUBS_ENRICH = os.path.join(DATA_DIR, "substations.geojson")
+POPUP_FIELDS = [
+    "name", "operator", "operator_en", "region_ja", "voltage_kv", "voltage_source",
+    "voltage_label", "frequency_hz", "rating", "category_ja", "substation_type",
+    "gas_insulated", "ref", "addr_city", "website",
+]
+# 名前一致で属性を結合する際、座標がこの距離(km)を超えたら別物として捨てる(誤接続防止)。
+ATTR_NAME_MAX_KM = 2.0
 
 # region 英 → 日 (grid_map.js REGION_NAMES_JA と一致)
 REGION_JA = {
@@ -111,14 +131,80 @@ def kv_in_tier(kv, suffix):
     return kv >= floor
 
 
-def build_sub_features(nodes):
+def _haversine_km(lat1, lon1, lat2, lon2):
+    """2点間の距離(km)。名前一致属性の座標妥当性チェック用(誤接続防止)。"""
+    rlat1, rlat2 = math.radians(lat1), math.radians(lat2)
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(rlat1) * math.cos(rlat2) * math.sin(dlon / 2) ** 2
+    return 2 * 6371.0 * math.asin(min(1.0, math.sqrt(a)))
+
+
+def load_attr_sources():
+    """旧 substations.geojson から属性を読み、座標index(4桁)と名前indexを作る。
+
+    返り値 (by_coord, by_name):
+      by_coord: {(lat4,lon4): props}             厳密座標一致用
+      by_name : {name: [(props, lat, lon), ...]} 名前一致用(同名は座標で最寄りを選ぶ)
+    ファイルが無ければ (None, None)=属性結合なし(従来どおり幾何のみで安全に縮退)。
+    """
+    if not os.path.exists(SUBS_ENRICH):
+        print(f"  (no attr source {SUBS_ENRICH}; emitting geometry-only subs)")
+        return None, None
+    with open(SUBS_ENRICH, encoding="utf-8") as f:
+        feats = json.load(f).get("features", [])
+    by_coord, by_name = {}, {}
+    for ft in feats:
+        g = ft.get("geometry") or {}
+        c = g.get("coordinates")
+        if not c or len(c) < 2 or c[0] is None or c[1] is None:
+            continue
+        lon, lat = float(c[0]), float(c[1])        # GeoJSON は [lon,lat]
+        props = ft.get("properties") or {}
+        by_coord.setdefault((round(lat, COORD_PRECISION), round(lon, COORD_PRECISION)), props)
+        nm = (props.get("name") or "").strip()
+        if nm:
+            by_name.setdefault(nm, []).append((props, lat, lon))
+    print(f"  attr source: {len(feats)} features "
+          f"({len(by_coord)} coord keys, {len(by_name)} unique names)")
+    return by_coord, by_name
+
+
+def match_attr(node, by_coord, by_name):
+    """built ノードに旧属性を突合する。戻り値 (props|None, source|None)。
+
+    優先順: (1) 4桁座標厳密一致='coord'(最も確実)、(2) 名前完全一致='name'
+    (ただし座標が ATTR_NAME_MAX_KM を超える同名は別物として捨てる=誤接続防止)。
+    どちらも当たらなければ (None, None)=供給元に存在しない(捏造で埋めない)。
+    """
+    lat, lon = float(node["lat"]), float(node["lon"])
+    hit = by_coord.get((round(lat, COORD_PRECISION), round(lon, COORD_PRECISION)))
+    if hit is not None:
+        return hit, "coord"
+    nm = (node.get("name") or "").strip()
+    if nm and nm in by_name:
+        best, best_d = None, 1e9
+        for props, plat, plon in by_name[nm]:
+            d = _haversine_km(lat, lon, plat, plon)
+            if d < best_d:
+                best_d, best = d, props
+        if best is not None and best_d <= ATTR_NAME_MAX_KM:
+            return best, "name"
+    return None, None
+
+
+def build_sub_features(nodes, by_coord=None, by_name=None):
     """sub==1 のノードを Point feature 化(座標 [lon,lat]、4桁丸め)。
 
     建造モデルでは同一物理変電所が電圧別に複数ノードへ分かれる(例 "X 154kV"/"X 66kV"、
     同一 lat/lon)。これは旧 geojson が電圧別 Point を持っていたのと同じ粒度なので
     そのまま 1 ノード=1 feature とする(=捏造でない・潰さない)。
+
+    by_coord/by_name が与えられれば、旧 substations.geojson の属性を結合して焼き込む
+    (POPUP_FIELDS のうち値があるキーのみ + _attr_source)。供給元に無いノードは幾何のみ。
     """
     feats = []
+    n_coord = n_name = n_none = 0
     for n in nodes:
         if n.get("sub") != 1:
             continue
@@ -126,19 +212,39 @@ def build_sub_features(nodes):
         if lat is None or lon is None:
             continue
         region = n.get("region") or ""
+        props = {
+            "_region": region,
+            "_region_ja": REGION_JA.get(region, ""),
+            "_display_name": n.get("name") or "",
+            "_voltage_kv": clean_kv(n.get("kv")),
+        }
+        if by_coord is not None:
+            attrs, src = match_attr(n, by_coord, by_name)
+            if attrs:
+                for k in POPUP_FIELDS:
+                    v = attrs.get(k)
+                    if v is not None and v != "":
+                        props[k] = v
+                props["_attr_source"] = src
+                if src == "coord":
+                    n_coord += 1
+                else:
+                    n_name += 1
+            else:
+                n_none += 1
         feats.append({
             "type": "Feature",
-            "properties": {
-                "_region": region,
-                "_region_ja": REGION_JA.get(region, ""),
-                "_display_name": n.get("name") or "",
-                "_voltage_kv": clean_kv(n.get("kv")),
-            },
+            "properties": props,
             "geometry": {
                 "type": "Point",
                 "coordinates": [r(lon), r(lat)],
             },
         })
+    if by_coord is not None:
+        tot = n_coord + n_name + n_none
+        cov = 100 * (n_coord + n_name) // max(tot, 1)
+        print(f"  attr join: coord={n_coord} name={n_name} none={n_none} "
+              f"-> covered {cov}% of {tot} subs")
     return feats
 
 
@@ -280,7 +386,9 @@ def main():
         nodes_by_coord[(round(float(lat), COORD_PRECISION),
                         round(float(lon), COORD_PRECISION))] = n.get("region") or ""
 
-    all_subs = build_sub_features(nodes)
+    print("\n=== attribute join from substations.geojson (C層属性を D層へ焼き込み) ===")
+    by_coord, by_name = load_attr_sources()
+    all_subs = build_sub_features(nodes, by_coord, by_name)
     all_lines = build_line_features(edges, nodes_by_coord)
     print(f"derived: {len(all_subs)} substation Points, {len(all_lines)} line LineStrings")
 
