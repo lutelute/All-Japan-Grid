@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-19 — **Claude Opus 4.8** — DB7 統合検索＋地名ズームを本番化・3新JSの ?v 更新（152）
+
+①②③(149-151)の本番反映に伴い、保全されていた DB7 検索ドラフト(オーナー「DB7も一緒に本番化」)を検証して本番化。
+
+- **?v 更新**: `index.html` の grid_map(31→32)/powerflow(33→34)/sld(31→32) を更新し、①②③の新JSを GitHub Pages で即時配信(従来は ?v 据置でキャッシュ期限待ちだった)。
+- **DB7 本番化**: `docs/js/grid_search.js`(445行・統合検索: (A)変電所/送電線/発電所の `_display_name` オフライン部分一致→候補クリックで map.flyTo+一時マーカー、(B)Nominatim 地名ジオコーディング=Enter/デバウンス・規約配慮で静かにフォールバック)・`docs/css/style.css`(`.gs-*`)・`index.html`(検索UI+script)。系統図サイドバー上部に検索ボックスを挿入(既存の一覧/zoom と独立 DOM)。
+- **検証**: 隔離headless(:8901 read-only・MCP不使用)。検索ボックス存在・`searchDb('嶺南')`→「嶺南変電所 500kV」等10件・全タブ巡回(map→pf:national_backbone→sld→map)で **console error 0**・①属性(subs `_attr_source`)と検索 `_display_name` 両立・**PASS**。
+- **不変**: okinawa/" 2"複製は非commit保全。①の属性結合で検索候補のメタ(kv/region)も充実。
+
 ## 2026-06-19 — **Claude Opus 4.8** — DB③ SLD(単線結線図)を正典 built+powerflow_full 由来へ（151）
 
 [評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)の③(SLDが旧縮約取り残し)を是正。オーナー選択「全電圧(フィルタ制御)」。これで①②③着手対象すべて完了。
