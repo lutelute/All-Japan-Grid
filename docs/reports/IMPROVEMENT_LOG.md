@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-19 — **Claude Opus 4.8** — DB③ SLD(単線結線図)を正典 built+powerflow_full 由来へ（151）
+
+[評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)の③(SLDが旧縮約取り残し)を是正。オーナー選択「全電圧(フィルタ制御)」。これで①②③着手対象すべて完了。
+
+- **問題**: SLDタブ(`sld.js`=force-directed グラフ)が `powerflow/sld_data.json`(psdat縮約由来)を読み、per-region/"all"/national_backbone 正典化後も旧世代に取り残されていた。
+- **是正**: `scripts/gen_sld_from_built.py` 新設。正典トポロジ `built/all.json`(17,333ノード)から bus/branch を生成。loading は `powerflow_full` line の端点突合で付与(実潮流率・hit 14,161/18,619=76%)、変圧器枝 1,925(同一地点異電圧)、gen 72(generators 座標突合)。中間電圧(220/187/132kV)は表示帯 `tier`(500/275/154/110/77/66/不明0)へ丸めて付与(実 kv は tooltip 用に `bus.kv` 保持・grid_map 同様)。出力 `powerflow_full/sld_data.json`(4.0MB・全電圧収録)。
+- **`sld.js`**: fetch を正典へ・フィルタ/色/半径/Y を `tier` ベースに(tooltip は実 kv)・**force-sim repulsion を O(N²)→spatial-grid 近似(実効 O(N))** に置換し全電圧(下位帯ON で数千ノード)でも耐えるよう最適化。vm/Pd は built に無く非表示(既存方針)。
+- **不変**: index.html ?v 据置(後方互換・DB7保全)。旧 `powerflow/sld_data.json` は残置(⑤掃除で後送り)。national_zonal/発電所(④)は別課題。
+- **検証**: 隔離headless(:8900 read-only・MCP不使用)。SLDタブ→force-sim 3.5s 走行・console error 0・`powerflow_full/sld_data.json` のみ fetch・旧 fetch 0・bus tier 有り・canvas 描画・**PASS**。
+
 ## 2026-06-19 — **Claude Opus 4.8** — DB② 全国基幹概観を正典(powerflow_full)由来へ・旧2189縮約を追放（150）
 
 [評価148](2026-06-19_opus4.8_pages_db_canon_audit.md)の②(潮流タブ3世代同居)を是正。オーナー選択「正典由来へ再生成」。

@@ -182,7 +182,9 @@ function _initCanvas() {
 
 /* ── Load data ───────────────────────────────────────────────────────────*/
 async function _load() {
-    const r = await fetch('./data/powerflow/sld_data.json?v=' + Date.now());
+    // DB③(2026-06-19): 旧縮約 powerflow/sld_data.json → 正典 built+powerflow_full 由来へ。
+    // gen_sld_from_built.py が生成(全電圧収録・bus.tier=表示帯・loading=実潮流率)。
+    const r = await fetch('./data/powerflow_full/sld_data.json?v=' + Date.now());
     _data = await r.json();
 }
 
@@ -194,22 +196,22 @@ function _rebuildSim() {
     const prevPos = {};
     _simNodes.forEach(n => { prevPos[n.id] = { x: n.x, y: n.y }; });
 
-    // Filter buses by visible kV
-    const visBuses = _data.buses.filter(b => _visKv.has(Math.round(b.kv)));
+    // Filter buses by visible tier (表示帯)。tier 無し(旧データ)は実 kv に縮退。
+    const tierOf   = b => (b.tier != null ? b.tier : Math.round(b.kv));
+    const visBuses = _data.buses.filter(b => _visKv.has(tierOf(b)));
     const visSet   = new Set(visBuses.map(b => b.id));
 
     _simNodes = visBuses.map(b => {
-        const kv  = Math.round(b.kv);
-        const old = prevPos[b.id];
+        const tier = tierOf(b);
+        const old  = prevPos[b.id];
         // Initial position: tier Y + geographic X scatter
-        const tx  = W * 0.1 + (b.lon - 125.5) / 20 * W * 0.8;
-        const ty  = H * (TIER_Y[kv] || 0.5) + (Math.random() - 0.5) * H * 0.08;
+        const tx   = W * 0.1 + (b.lon - 125.5) / 20 * W * 0.8;
+        const ty   = H * (TIER_Y[tier] || 0.5) + (Math.random() - 0.5) * H * 0.08;
         return {
             id:   b.id,
             name: b.name,
-            kv:   kv,
-            vm:   b.vm,
-            Pd:   b.Pd,
+            kv:   Math.round(b.kv),   // 実電圧(tooltip 用)
+            tier: tier,               // 表示帯(色/半径/Y/フィルタ)
             gen:  b.gen,
             x:    old ? old.x : tx,
             y:    old ? old.y : ty,
@@ -257,17 +259,37 @@ function _tick() {
         t.ax -= fx; t.ay -= fy;
     });
 
-    // Repulsion (Barnes-Hut approximation skipped, direct O(N²) for N≤400)
+    // Repulsion — spatial-grid approximation。DB③で built 全電圧(N が数千)に対応するため、
+    // 旧 O(N²) 直接計算を格子近似に置換。各ノードを cellSize 格子に置き、同セル+隣接セルの
+    // 対のみ反発を計算する(遠方反発は 1/d² で無視可能ゆえ近似が妥当)= 実効 O(N)。
+    const cellSize = Math.max(SIM.linkLen, 40);
+    const grid = {};
     for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-            const a_ = _simNodes[i], b_ = _simNodes[j];
-            const dx = b_.x - a_.x, dy = b_.y - a_.y;
-            const d2 = dx * dx + dy * dy + 1;
-            const f  = -SIM.repulsion * a / d2;
-            const fx = (dx / Math.sqrt(d2)) * f;
-            const fy = (dy / Math.sqrt(d2)) * f;
-            a_.ax += fx; a_.ay += fy;
-            b_.ax -= fx; b_.ay -= fy;
+        const n = _simNodes[i];
+        const gx = Math.floor(n.x / cellSize), gy = Math.floor(n.y / cellSize);
+        const key = gx + ',' + gy;
+        (grid[key] || (grid[key] = [])).push(i);
+    }
+    for (let i = 0; i < N; i++) {
+        const a_ = _simNodes[i];
+        const gx = Math.floor(a_.x / cellSize), gy = Math.floor(a_.y / cellSize);
+        for (let ox = -1; ox <= 1; ox++) {
+            for (let oy = -1; oy <= 1; oy++) {
+                const cell = grid[(gx + ox) + ',' + (gy + oy)];
+                if (!cell) continue;
+                for (let c = 0; c < cell.length; c++) {
+                    const j = cell[c];
+                    if (j <= i) continue;
+                    const b_ = _simNodes[j];
+                    const dx = b_.x - a_.x, dy = b_.y - a_.y;
+                    const d2 = dx * dx + dy * dy + 1;
+                    const f  = -SIM.repulsion * a / d2;
+                    const fx = (dx / Math.sqrt(d2)) * f;
+                    const fy = (dy / Math.sqrt(d2)) * f;
+                    a_.ax += fx; a_.ay += fy;
+                    b_.ax -= fx; b_.ay -= fy;
+                }
+            }
         }
     }
 
@@ -275,7 +297,7 @@ function _tick() {
     _simNodes.forEach(n => {
         n.ax += (cx - n.x) * SIM.gravity * a;
         n.ay += (cy - n.y) * SIM.gravity * a;
-        const ty = H * (TIER_Y[n.kv] || 0.5);
+        const ty = H * (TIER_Y[n.tier] || 0.5);
         n.ay += (ty - n.y) * SIM.tierForce * a;
     });
 
@@ -343,14 +365,14 @@ function _draw() {
 
     // Draw nodes
     _simNodes.forEach(n => {
-        const r = (KV_RADIUS[n.kv] || 4) / _cam.scale * Math.max(1, _cam.scale * 0.7);
-        const col = KV_COLOR[n.kv] || '#aaa';
+        const r = (KV_RADIUS[n.tier] || 4) / _cam.scale * Math.max(1, _cam.scale * 0.7);
+        const col = KV_COLOR[n.tier] || '#888';
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, 2 * Math.PI);
         ctx.fillStyle = col;
         ctx.globalAlpha = n === _hovNode ? 1.0 : 0.85;
         ctx.fill();
-        if (n === _hovNode || n.kv >= 500) {
+        if (n === _hovNode || n.tier >= 500) {
             ctx.strokeStyle = '#fff';
             ctx.lineWidth   = 1.5 / _cam.scale;
             ctx.stroke();
@@ -361,7 +383,7 @@ function _draw() {
             ctx.fillText('G', n.x + r * 0.6, n.y - r * 0.6);
         }
         // Label for high-voltage or hovered
-        if (n === _hovNode || (n.kv >= 500 && _cam.scale > 0.3)) {
+        if (n === _hovNode || (n.tier >= 500 && _cam.scale > 0.3)) {
             ctx.fillStyle = '#fff';
             ctx.font = (9 / _cam.scale) + 'px sans-serif';
             ctx.fillText(n.name.replace(/_\d+$/, '').replace(/_\d+kV$/, ''), n.x + r + 1, n.y + 3 / _cam.scale);
