@@ -7,6 +7,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-20 — **Claude Opus 4.8** — ④出典容量をgeojsonへ反映+popup出典明示・⑥版票STEPS更新（157）
+
+[台帳153](出典必須DB枠組み)+[台帳155](22件収集)を**表示まで貫く**フェーズ(④)。併せて⑥再生成パイプラインの STEPS/版票を①②③④の正典構成へ更新。commit 3c6b7f5。
+
+- **④geojson反映**(`scripts/apply_capacity_sources.py`新設): 出典DB45件(verify ok=45/bad=0)を `docs/data` の generators/plants_all/plants_utility/plants_ipp.geojson へ `capacity_mw_sourced`/`_source_url`/`_source_type`/`_source_conf`/`_source_note` で付与。**元 capacity_mw(OSM/P03)は保持**(比較用)。付与 features: generators 113・plants_all 54・plants_utility 42・plants_ipp 12。OSM過小値の是正例: 川内原子力 890→1780・高浜 25→3392・川崎火力 807→3420・能代火力 1200→1800。
+- **冪等**: pop→set 方式(stale を一旦消してから再付与)。再実行で `cleared stale=0`・4 geojson の md5 不変を確認。
+- **名寄せの安全策**: `norm()` は空白と「発電所/株式会社」のみ除去し**火力/水力/原子力/第一/第二は温存**(広野火力≠広野水力・姫路第一≠第二・知多火力≠知多 の誤反映防止)。出典DBに無い発電所は一切触らない(捏造しない)・base extract(data/直下)は不変・D層(docs/data)のみ更新。docstring の旧誤記(「火力/原子力除去」)も実装に合わせ訂正。
+- **popup出典表示**(`grid_map.js`): 発電所popup(詳細 buildGenPopup・簡易 fallback)に「公式容量 **X MW** [type/conf] 出典(リンク)」+note を追加。元 Capacity 行は残置(OSM値と並記)。`index.html` grid_map.js ?v=32→33。
+- **⑥STEPS/版票**(`regenerate_all.py`/`MODEL_VERSION.json`): 再生成 STEPS を旧 run_national_powerflow から①export_map_tiers②gen_national_overview③gen_sld(全規模 run_full_powerflow 前提)④apply_capacity_sources の正典構成へ。MODEL_VERSION=f8ebec7/2026-06-20 刻印。
+- **検証**: 隔離headless(:8904 read-only・MCP不使用)。実データ(generators.geojson)で実関数 buildGenPopup(川内原子力) を呼び「公式容量 1780 MW・出典リンク・ソースURL含む」を確認。出典無し発電所は公式容量行が**出ない**(誤表示なし=負の対照)。簡易popup契約OK。全タブ巡回(map→pf:backbone→pf:zonal→sld→compare→map)で console error 0・/data/ 404 ゼロ・**PASS**。
+- **不変/次**: okinawa supplement/" 2".json複製は非commit保全。次=src/db GeneratorAttributes へ出典付き容量を統合(C層)・出典DB継続収集(候補18件)。
+
 ## 2026-06-20 — **Claude Opus 4.8** — ⑤遺物掃除: 死蔵潮流データ削除(公開94ファイル+ローカル211MB)（156）
 
 オーナー「ゴミ整理して良い」。②③正典化で死蔵化した旧潮流データを、実コード参照ゼロを確認してから掃除。
