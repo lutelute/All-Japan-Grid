@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-20 — **Claude Opus 4.8** — DB② 完遂: national_zonal を powerflow_full 正典化(AC全島)・孤立 national_map 削除（154）
+
+評価148の②積み残し(national_zonal=旧縮約・other_freq)のうち national_zonal を正典化し②を完遂。
+
+- **発見**: powerflow_full(全規模AC・17,333バス)は **west を含む全4同期島が AC収束**(west bus 10,193 ac_conv=True)。旧 national_zonal が DC固定だったのは旧 powerflow_national(縮約13,704バス)の west 非収束が理由 → 正典では解消済みだった。
+- **是正**(`powerflow.js`): runPFNationalZonal の natDir を `powerflow_national/`→`powerflow_full/` に、summary を `powerflow_full/summary.json` の `regions{}`(per-region に island/ac_converged/vm を持つ)から取得。national_zonal 選択時の **DC固定を解除し AC化**(全島AC収束ゆえ)。結果パネルの vm キー(ac_vm→vm)両対応・文言更新・option を「同期島統合・全規模AC」に。
+- **孤立ページ削除**: `national_map.html`(index.html から href 無し=到達不可・powerflow_national 依存で national_zonal と機能重複)を削除。
+- **結果**: 潮流タブの全経路(per-region / "all" / national_backbone / national_zonal)が powerflow_full 正典に統一。**旧 powerflow_national 依存ゼロ**(死蔵化=⑤掃除で後送り)。other_freq(参考)のみ別レイヤーで温存。index.html powerflow.js ?v=34→35。
+- **検証**: 隔離headless(:8902 read-only・MCP不使用)。national_zonal→mode=ac・powerflow_full の _ac_buses fetch・powerflow_national fetch 0・島別「hokkaido/east/west/okinawa すべて AC OK」・console error 0・**PASS**。
+
 ## 2026-06-20 — **Claude Opus 4.8** — 発電量/容量の「出典必須DB」枠組み＋少数実証（153）
 
 オーナー指示「発電量や容量が上手く入っていないのをスクリーニングして、web から情報を集めてくるとき、**嘘をつかず必ず引用となるように DB を作っておく**」。④発電所(DB外・出典なし)の品質改善の第一歩。

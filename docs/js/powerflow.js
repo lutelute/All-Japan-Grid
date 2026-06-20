@@ -312,13 +312,13 @@
         bbOpt.textContent = "全国基幹（500/275kV 概観・別モデル）";
         sel.appendChild(bbOpt);
 
-        // National zonal: each synchronous island (hokkaido / east 50Hz /
-        // west 60Hz / okinawa) solved as ONE network with inter-regional AC
-        // tie-lines, then sliced per region. Detailed (snapped) buses, but the
-        // flow is the cross-regional island solution, not 10 isolated solves.
+        // National zonal: 各同期島(hokkaido / east 50Hz / west 60Hz / okinawa)を
+        // 連系線付きの単一系統として解いた正典(powerflow_full・全規模AC)を地域別に
+        // 切り出してマージ。DB②(2026-06-20): 旧 powerflow_national(west DC固定)を廃し、
+        // powerflow_full の全島AC収束結果へ置換(west も AC OK)。
         var nzOpt = document.createElement("option");
         nzOpt.value = "national_zonal";
-        nzOpt.textContent = "全国ゾーン（同期島統合・連系線あり）";
+        nzOpt.textContent = "全国ゾーン（同期島統合・全規模AC）";
         sel.appendChild(nzOpt);
 
         for (var i = 0; i < ALL_REGIONS.length; i++) {
@@ -334,12 +334,12 @@
 
         sel.addEventListener("change", function () {
             pfState.region = this.value;
-            // 全国ゾーンは west(西日本6地域)が DC のみ収束のため、選択時に自動で
-            // DC モードへ切替え、全10地域が操作不要で表示されるようにする。
+            // DB②(2026-06-20): 正典 powerflow_full は west を含む全同期島が AC 収束する
+            // ため、旧来の DC 固定を解除し AC で全島表示する。
             if (this.value === "national_zonal") {
-                pfState.mode = "dc";
+                pfState.mode = "ac";
                 var ms = document.getElementById("pf-mode");
-                if (ms) ms.value = "dc";
+                if (ms) ms.value = "ac";
             }
             runPF();
         });
@@ -811,20 +811,21 @@
     }
 
     // National zonal: per-region slices of the synchronous-island solutions,
-    // merged across all regions. Same per-region file naming as the per-region
-    // results, but served from data/powerflow_national/ (each island solved as
-    // ONE network with inter-regional AC tie-lines + reactive compensation).
+    // merged across all regions. DB②(2026-06-20)で正典 powerflow_full(全規模AC・
+    // 全島収束)に置換。各島は連系線付きの単一系統として solve 済み(per-region に切出)。
     async function runPFNationalZonal(mode) {
         var cb = "?v=" + Date.now();
-        var natDir = "./data/powerflow_national/";
+        // DB②(2026-06-20): 旧 powerflow_national(縮約・west DC固定)→ 正典 powerflow_full
+        // (全規模AC・全島収束)。summary は per-island だが regions{} に per-region の
+        // island/ac_converged/vm を持つので、それを per-region サマリとして使う。
+        var natDir = "./data/powerflow_full/";
 
-        // Convergence is per-island; the summary keys are per region but carry
-        // the island id + ac/dc_converged flags written by run_national_powerflow.
         var natSummary = pfState.nationalSummary;
         if (!natSummary) {
             try {
                 var sres = await fetch(natDir + "summary.json" + cb);
-                natSummary = sres.ok ? await sres.json() : {};
+                var sj = sres.ok ? await sres.json() : {};
+                natSummary = sj.regions || sj;   // powerflow_full は regions 配下が per-region
             } catch (e) {
                 natSummary = {};
             }
@@ -915,8 +916,11 @@
             var info2 = natSummary[ALL_REGIONS[r]];
             if (!info2) continue;
             if (mode === "ac" && !info2.ac_converged) failRegions.push(ALL_REGIONS[r]);
-            if (typeof info2.ac_vm_min === "number") { vmMin = Math.min(vmMin, info2.ac_vm_min); hasVm++; }
-            if (typeof info2.ac_vm_max === "number") { vmMax = Math.max(vmMax, info2.ac_vm_max); }
+            // powerflow_full の regions は vm_min/vm_max、旧 national は ac_vm_min/max。両対応。
+            var rvmin = (typeof info2.ac_vm_min === "number") ? info2.ac_vm_min : info2.vm_min;
+            var rvmax = (typeof info2.ac_vm_max === "number") ? info2.ac_vm_max : info2.vm_max;
+            if (typeof rvmin === "number") { vmMin = Math.min(vmMin, rvmin); hasVm++; }
+            if (typeof rvmax === "number") { vmMax = Math.max(vmMax, rvmax); }
             if (typeof info2.n_synthetic_lines === "number") sumSyn += info2.n_synthetic_lines;
             if (typeof info2.n_shunt_comp === "number") sumShunt += info2.n_shunt_comp;
         }
@@ -946,9 +950,8 @@
                 'style="color:#f39c12">詳細</a>）</div>';
         }
         html += '<div class="pf-info" style="font-size:0.7rem;margin-top:8px">' +
-            '各同期島（北海道 / 東 50Hz / 西 60Hz / 沖縄）を連系線付きの単一系統として解き、' +
-            '地域別に切り出した結果です。';
-        if (mode === "dc") html += ' DC モードは全 10 地域で表示可能。';
+            '各同期島（北海道 / 東 50Hz / 西 60Hz / 沖縄）を連系線付きの単一系統として解いた' +
+            '正典(全規模AC・17,333バス)を地域別に切り出した結果です。west も含め全島 AC 収束。';
         html += '</div>';
         html += buildLegend(mode);
         content.innerHTML = html;
