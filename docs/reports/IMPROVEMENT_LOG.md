@@ -7,6 +7,16 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-20 — **Claude Opus 4.8** — 発電量/容量の「出典必須DB」枠組み＋少数実証（153）
+
+オーナー指示「発電量や容量が上手く入っていないのをスクリーニングして、web から情報を集めてくるとき、**嘘をつかず必ず引用となるように DB を作っておく**」。④発電所(DB外・出典なし)の品質改善の第一歩。
+
+- **現状(スクリーニング)**: `generators.geojson`(P03・688)は容量全件あるが**出典フィールド皆無**、`plants_all.geojson`(OSM・19,138)は**容量欠損73%**(solar 17,043が大半)。両者とも値の根拠が辿れず、Web収集すると捏造を検出できない状態だった。
+- **出典必須スキーマ+バリデーション**(`scripts/capacity_provenance.py`): 1値=`{plant_key,name,field,value,unit,source_type,source_url,source_title,quote,retrieved_at,confidence,collected_by}`。**source_url が実http(s)でない / quote(原文引用)が空 / value が非数値 は機械的に REJECT**=「記憶からの捏造値」を構造的に封じる。正本=`data/generator_capacity_sources.jsonl`(1値1行・git追跡・diff可)。selftest で no_url/no_quote/fake_url が全て REJECT を実証。
+- **スクリーニング**(`scripts/screen_capacity_gaps.py`): capacity の missing(値なし)/no_source(値はあるが出典なし)を抽出し、系統寄与の大きい utility(原子力>火力>水力)優先で worklist 出力。**3,813件**(no_source 1,111/missing 2,702)=`docs/reports/capacity_worklist_2026-06-20.json`。
+- **少数実証(utility大規模・原子力3件)**: WebSearch→WebFetch で**実ページ本文の原文引用**を取得し出典付き記録(高浜3,392MW/大飯2,360MW=関電公式[high]、川内1,780MW=Wikipedia[medium])。append=accepted 3/rejected 0、verify ok 3/bad 0。**OSM値との不一致を発見**(川内 OSM 1,590MW→公式 89.0万kW×2=1,780MW=OSMが過小)=出典照合の価値を実証。
+- **次**: worklist 上位の大規模収集→検証済みのみ geojson 反映(popup/CSV に出典明示)→`src/db` GeneratorAttributes 統合。捏造禁止・okinawa 非commit維持。
+
 ## 2026-06-19 — **Claude Opus 4.8** — DB7 統合検索＋地名ズームを本番化・3新JSの ?v 更新（152）
 
 ①②③(149-151)の本番反映に伴い、保全されていた DB7 検索ドラフト(オーナー「DB7も一緒に本番化」)を検証して本番化。
