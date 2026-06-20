@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-20 — **Claude Opus 4.8** — 出典必須DB: 火力/水力22件を出典付きで収集（155）
+
+[台帳153](出典必須DB枠組み)の大規模収集フェーズ。worklist上位の utility大規模(火力/揚水)を収集専任サブエージェント(background)が WebSearch→WebFetch で出典付き収集。
+
+- **22件追加**(計25件・verify 25 ok/0 bad): official 9(high)/wikipedia 16(medium)。火力(鹿島5,660/富津5,160/川越4,802/碧南4,100…)・揚水(神流川2,820/奥多々良木1,932/奥清津1,600/奥美濃1,500/大河内1,280/俣野川1,200/小丸川1,200…)。
+- **捏造防止の三重確認**: (1)バリデーション=source_url実URL+quote原文が無い値は機械的REJECT(accepted22/rejected0) (2)エージェント自己確認=official 3ページ再fetch (3)**私の独立spot check**=東新潟火力 WebFetch「総出力:416万kW」がjsonlのquote/value(4,160MW)と完全一致。
+- **重要caveat(各noteに明記)**: 火力(鹿島・広野・知多・姉崎・大飯等)のWikipedia総出力は名目/ピーク値で、近年の号機廃止後の現稼働容量はより小さい(noteに号機内訳)。揚水(神流川)は全6号機完成時の計画値。`value`=設備容量(名目)・現稼働はnote参照。系統解析で現稼働を使う場合は要区別。
+- **次**: worklist残(火力/水力の残り・大規模solar)継続→検証済みのみ geojson 反映(popup/CSVに出典明示)→`src/db` GeneratorAttributes統合。捏造禁止・okinawa非commit維持。
+
 ## 2026-06-20 — **Claude Opus 4.8** — DB② 完遂: national_zonal を powerflow_full 正典化(AC全島)・孤立 national_map 削除（154）
 
 評価148の②積み残し(national_zonal=旧縮約・other_freq)のうち national_zonal を正典化し②を完遂。
