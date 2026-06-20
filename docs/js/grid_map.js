@@ -529,6 +529,11 @@ function renderLayers() {
                             layer.bindPopup(buildGenPopup(enriched), { maxWidth: 350 });
                         } else {
                             var cap = p.capacity_mw ? p.capacity_mw + " MW" : "N/A";
+                            if (p.capacity_mw_sourced != null) {
+                                cap += " ／ 公式 <b>" + p.capacity_mw_sourced + " MW</b>";
+                                if (p.capacity_source_url)
+                                    cap += ' <a href="' + p.capacity_source_url + '" target="_blank" style="color:#3498db">[出典]</a>';
+                            }
                             layer.bindPopup(
                                 "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
                                 "Fuel: " + (p.fuel_type || "unknown") + "<br>" +
@@ -760,6 +765,16 @@ function buildGenPopup(p) {
     html += '<div class="popup-section"><div class="popup-section-title">Basic</div><table>';
     html += '<tr><td>Fuel</td><td>' + fuel + '</td></tr>';
     html += '<tr><td>Capacity</td><td>' + fmtNum(p.capacity_mw) + ' MW</td></tr>';
+    // 出典必須DB(generator_capacity_sources)の検証済み容量。値は実Webソースの原文引用に紐づく。
+    if (p.capacity_mw_sourced != null) {
+        var gsrc = p.capacity_source_url
+            ? '<a href="' + p.capacity_source_url + '" target="_blank" style="color:#3498db">出典</a>' : '';
+        html += '<tr><td>公式容量</td><td><b>' + fmtNum(p.capacity_mw_sourced) + ' MW</b> ' +
+            '<span style="color:#2ecc71;font-size:0.66rem">[' + (p.capacity_source_type || '') +
+            '/' + (p.capacity_source_conf || '') + ']</span> ' + gsrc + '</td></tr>';
+        if (p.capacity_source_note)
+            html += '<tr><td></td><td style="font-size:0.6rem;color:#999">' + p.capacity_source_note + '</td></tr>';
+    }
     html += '<tr><td>P_min</td><td>' + fmtNum(p.p_min_mw) + ' MW</td></tr>';
     html += '<tr><td>Dispatchable</td><td>' + (p.dispatchable ? "Yes" : "No") + '</td></tr>';
     html += '</table></div>';

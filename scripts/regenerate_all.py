@@ -34,7 +34,11 @@ MODEL_VERSION_PATH = os.path.join(ROOT, "docs", "data", "MODEL_VERSION.json")
 # (name, argv, heavy?) — heavy 段は pandapower 等が要る・遅い
 STEPS = [
     ("build_editor_data", [sys.executable, "scripts/build_editor_data.py"], False),
-    ("run_national_powerflow", [sys.executable, "scripts/run_national_powerflow.py"], True),
+    ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
+    ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
+    ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py"], True),          # 全規模AC(②前提・サーバ)
+    ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
+    ("apply_capacity_sources", [sys.executable, "scripts/apply_capacity_sources.py"], False),         # ④ 出典容量反映
     ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
