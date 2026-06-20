@@ -7,6 +7,15 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-06-20 — **Claude Opus 4.8** — ⑤遺物掃除: 死蔵潮流データ削除(公開94ファイル+ローカル211MB)（156）
+
+オーナー「ゴミ整理して良い」。②③正典化で死蔵化した旧潮流データを、実コード参照ゼロを確認してから掃除。
+
+- **公開物(git)削除 94ファイル**: `powerflow_national/`(41・②で national_zonal が powerflow_full 化し死蔵) + 旧`powerflow/`の縮約死蔵 53(all_ac_*/routes_*(6電圧帯)/backbone_ring/per-region {ac,dc}/pf_branches/pf_buses/sld_data=②③で powerflow_full・national_overview・sld_data へ移行済)。
+- **ローカル遺物(.gitignore済)物理削除 211MB**: powerflow_snapped(26MB)+powerflow.legacy×4(165MB)。git管理外ゆえディスク節約のみ(公開物/Pagesに影響なし)。
+- **残す**: `powerflow_full/`(正典27)・`powerflow_before/`(compare.html 使用39)・`powerflow/*_other_freq_lines`(現役10・周波数境界線の参考表示)。
+- **確認**: 削除前に各対象の実コード参照(fetch/src/href)が**ゼロ**を grep 確認。okinawa supplement/" 2"複製/正典は非混入。後方互換=旧JSキャッシュが national_zonal で powerflow_national を読んでも runPFNationalZonal の try-catch で graceful(missing 表示・クラッシュなし)。
+
 ## 2026-06-20 — **Claude Opus 4.8** — 出典必須DB: 火力/水力22件を出典付きで収集（155）
 
 [台帳153](出典必須DB枠組み)の大規模収集フェーズ。worklist上位の utility大規模(火力/揚水)を収集専任サブエージェント(background)が WebSearch→WebFetch で出典付き収集。
