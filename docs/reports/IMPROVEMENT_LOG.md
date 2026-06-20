@@ -14,7 +14,8 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 - **公開物(git)削除 94ファイル**: `powerflow_national/`(41・②で national_zonal が powerflow_full 化し死蔵) + 旧`powerflow/`の縮約死蔵 53(all_ac_*/routes_*(6電圧帯)/backbone_ring/per-region {ac,dc}/pf_branches/pf_buses/sld_data=②③で powerflow_full・national_overview・sld_data へ移行済)。
 - **ローカル遺物(.gitignore済)物理削除 211MB**: powerflow_snapped(26MB)+powerflow.legacy×4(165MB)。git管理外ゆえディスク節約のみ(公開物/Pagesに影響なし)。
 - **残す**: `powerflow_full/`(正典27)・`powerflow_before/`(compare.html 使用39)・`powerflow/*_other_freq_lines`(現役10・周波数境界線の参考表示)。
-- **確認**: 削除前に各対象の実コード参照(fetch/src/href)が**ゼロ**を grep 確認。okinawa supplement/" 2"複製/正典は非混入。後方互換=旧JSキャッシュが national_zonal で powerflow_national を読んでも runPFNationalZonal の try-catch で graceful(missing 表示・クラッシュなし)。
+- **確認**: 削除前に各対象の実コード参照(fetch/src/href)を grep 確認。okinawa supplement/" 2"複製/正典は非混入。後方互換=旧JSキャッシュが national_zonal で powerflow_national を読んでも runPFNationalZonal の try-catch で graceful(missing 表示・クラッシュなし)。
+- **修正(同日・誤削除→復元)**: `compare.html` の `AFTER_DIR="./data/powerflow"`(末尾スラッシュ無しゆえ初回 grep `"data/powerflow/"` が見落とし)が powerflow/ の per-region {ac,dc}_{buses,lines}+summary を読んでいた→誤削除で compare タブが404。**per-region 40+summary.json を復元**(363f62f から git checkout)。真の死蔵(all_ac_*/routes_*/backbone_ring/pf_branches/pf_buses/sld_data=national_backbone/SLD が powerflow_full へ移行済)のみ削除維持。隔離headless 再検証で**全タブ HTTP404ゼロ・console error 0・PASS**。**教訓=削除前 grep はパス末尾スラッシュ有無の両方+変数連結(`DIR+"/"+...`)も照合する**。
 
 ## 2026-06-20 — **Claude Opus 4.8** — 出典必須DB: 火力/水力22件を出典付きで収集（155）
 
