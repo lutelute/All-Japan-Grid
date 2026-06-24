@@ -51,7 +51,8 @@ def _is_rail(props_list):
 
 
 def classify(region, data_dir="data", reach_km=0.25):
-    from src.powerflow.snapped_topology import build_network_snapped
+    from src.powerflow.snapped_topology import build_network_snapped, _freq_excluded
+    from src.regions import REGION_FREQUENCY_HZ as REGION_FREQ
     net = build_network_snapped(region, data_dir=data_dir)
     if net is None:
         return None
@@ -66,10 +67,13 @@ def classify(region, data_dir="data", reach_km=0.25):
 
     lines = json.load(open(os.path.join(data_dir, f"{region}_lines.geojson"),
                            encoding="utf-8"))
-    # 本線(母線/ベイ等を除く)のみ
+    # 本線(母線/ベイ等を除く)のみ。builder と同じ周波数フィルタを適用し、
+    # 別同期島(例: 60Hz地域に混入した50Hz TEPCO資産)の線を「届く」と誤検知しない。
+    freq = REGION_FREQ.get(region, 50)
     main_lines = [f for f in lines["features"]
                   if (f.get("properties") or {}).get("line")
-                  not in ("busbar", "bay", "substation", "internal")]
+                  not in ("busbar", "bay", "substation", "internal")
+                  and not _freq_excluded(f.get("properties") or {}, freq)]
 
     # 同名グループ(電圧分離検出用)
     byname = collections.defaultdict(list)
