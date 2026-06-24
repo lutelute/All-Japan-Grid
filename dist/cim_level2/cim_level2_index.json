@@ -188,40 +188,39 @@
       "files": {
         "EQ": [
           "hokuriku_L2_EQ.xml",
-          7305
+          6761
         ],
         "TP": [
           "hokuriku_L2_TP.xml",
-          1616
+          1574
         ],
         "SSH": [
           "hokuriku_L2_SSH.xml",
-          4019
+          3724
         ],
         "SV": [
           "hokuriku_L2_SV.xml",
-          808
+          786
         ],
         "GL": [
           "hokuriku_L2_GL.xml",
-          1617
+          1575
         ]
       },
-      "buses": 808,
-      "lines": 825,
-      "trafos": 154,
-      "loads": 447,
+      "buses": 787,
+      "lines": 813,
+      "trafos": 89,
+      "loads": 357,
       "gens": 379,
       "base_voltages": [
         500.0,
         275.0,
-        187.0,
         154.0,
         77.0,
         66.0
       ],
-      "solve_mode": "demand-scaled(x0.8)",
-      "verify": "OK gen=379 ext=10 vmin=0.983"
+      "solve_mode": "native",
+      "verify": "OK gen=379 ext=23 vmin=0.964"
     },
     {
       "region": "kansai",
