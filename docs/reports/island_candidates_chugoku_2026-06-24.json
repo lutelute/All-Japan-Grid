@@ -1,0 +1,412 @@
+{
+ "region": "chugoku",
+ "stamp": "2026-06-24",
+ "source": "island_classify osm_gap+isolated",
+ "policy": "OSM=接続の一次根拠。端点一致(<=0.15km)かつ別成分を橋渡しする新規OSM線のみ追加。根拠なしは候補化のみ(捏造禁止)。",
+ "n_targets": 21,
+ "n_lines_added": 0,
+ "finding": "21島変電所いずれも、追加可能な新規橋渡しOSM線は無し。端点一致8件は全てbase既在線で同一クラスタ内接続済み(橋にならず複製は逆効果)。残13件は端点が0.15km外(通過線/遠方)。別途、jct間で0.15km内別成分に吸着する既在本線13本が存在するが、これらは対象21島と無関係+supplement複製は無効(snap許容差の builder 側課題)。",
+ "candidates": [
+  {
+   "id": "chugoku_sub_49",
+   "name": "中原東四丁目変電所",
+   "bucket": "osm_gap",
+   "kv": 66.0,
+   "lat": 33.9015,
+   "lon": 130.84903,
+   "component": 3,
+   "component_size": 6,
+   "n_endpoint_hits": 4,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp3,size6)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 186077670,
+     "name": "九州電力送配電 66.0kV線",
+     "d_m": 55.8,
+     "note": "base既在・同一comp内"
+    },
+    {
+     "way_id": 187970424,
+     "name": "中国電力ネットワーク 66.0kV線",
+     "d_m": 55.8,
+     "note": "base既在・同一comp内"
+    },
+    {
+     "way_id": 405811230,
+     "name": "中国電力ネットワーク 66.0kV線",
+     "d_m": 55.8,
+     "note": "base既在・同一comp内"
+    },
+    {
+     "way_id": 405811255,
+     "name": "中国電力ネットワーク 66.0kV線",
+     "d_m": 55.8,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_235",
+   "name": "中国電力和気変電所",
+   "bucket": "osm_gap",
+   "kv": 110.0,
+   "lat": 34.82237,
+   "lon": 134.17559,
+   "component": 76,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 3,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_285",
+   "name": "豊浜町姫浜変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.08319,
+   "lon": 133.64287,
+   "component": 5,
+   "component_size": 5,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 2,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_287",
+   "name": "松江四丁目変電所",
+   "bucket": "osm_gap",
+   "kv": 66.0,
+   "lat": 34.51007,
+   "lon": 133.76776,
+   "component": 78,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 1,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_311",
+   "name": "中田井町変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.1202,
+   "lon": 133.70168,
+   "component": 5,
+   "component_size": 5,
+   "n_endpoint_hits": 2,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp5,size5)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 654880155,
+     "name": "中国送電線_176",
+     "d_m": 85.0,
+     "note": "base既在・同一comp内"
+    },
+    {
+     "way_id": 654880154,
+     "name": "山本町財田西変電所~中田井町変電所線",
+     "d_m": 88.5,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_312",
+   "name": "山本町財田西変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.11929,
+   "lon": 133.72436,
+   "component": 5,
+   "component_size": 5,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 1,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_345",
+   "name": "若松区変電所",
+   "bucket": "osm_gap",
+   "kv": 66.0,
+   "lat": 33.92267,
+   "lon": 130.8024,
+   "component": 4,
+   "component_size": 5,
+   "n_endpoint_hits": 1,
+   "n_passing_lines": 1,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp4,size5)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 764464972,
+     "name": "安瀬変電所~若松区変電所線",
+     "d_m": 4.6,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_346",
+   "name": "安瀬変電所",
+   "bucket": "osm_gap",
+   "kv": 66.0,
+   "lat": 33.92205,
+   "lon": 130.80041,
+   "component": 4,
+   "component_size": 5,
+   "n_endpoint_hits": 2,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp4,size5)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 680183972,
+     "name": "若松区変電所~安瀬変電所線",
+     "d_m": 54.4,
+     "note": "base既在・同一comp内"
+    },
+    {
+     "way_id": 764464972,
+     "name": "安瀬変電所~若松区変電所線",
+     "d_m": 55.7,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_363",
+   "name": "水島川崎通一丁目変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.51275,
+   "lon": 133.71085,
+   "component": 9,
+   "component_size": 4,
+   "n_endpoint_hits": 1,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp9,size4)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 996601540,
+     "name": "中国送電線_296",
+     "d_m": 0.4,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_370",
+   "name": "南区変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.59722,
+   "lon": 133.90345,
+   "component": 42,
+   "component_size": 2,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 1,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_475",
+   "name": "三津変電所",
+   "bucket": "osm_gap",
+   "kv": 66.0,
+   "lat": 33.86872,
+   "lon": 132.7311,
+   "component": 84,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 2,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_489",
+   "name": "周南市変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 34.06944,
+   "lon": 131.70344,
+   "component": 71,
+   "component_size": 2,
+   "n_endpoint_hits": 1,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp71,size2)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 1395524990,
+     "name": "周南市変電所~南陽変電所線",
+     "d_m": 139.9,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_492",
+   "name": "阿月変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 33.88906,
+   "lon": 132.12643,
+   "component": 12,
+   "component_size": 4,
+   "n_endpoint_hits": 1,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp12,size4)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 1395747287,
+     "name": "古開作変電所~阿月変電所線",
+     "d_m": 0.5,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_493",
+   "name": "中央南変電所",
+   "bucket": "osm_gap",
+   "kv": 110.0,
+   "lat": 33.95013,
+   "lon": 132.04881,
+   "component": 85,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 2,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_530",
+   "name": "鉢変電所",
+   "bucket": "osm_gap",
+   "kv": 0.0,
+   "lat": 33.80187,
+   "lon": 134.46749,
+   "component": 6,
+   "component_size": 4,
+   "n_endpoint_hits": 1,
+   "n_passing_lines": 1,
+   "action": "candidate_only_no_line_added",
+   "reason": "端点一致する本線は全てbase extractに既在しモデル既接続。当該島変電所はそれら既存OSM線で局所クラスタ(comp6,size4)に接続済み。クラスタ↔主系統を橋渡しするOSM線がextractに無いため新規追加不可(既在線の複製は無効化・実測で島87→88と悪化)。",
+   "endpoint_evidence": [
+    {
+     "way_id": 1472609175,
+     "name": "中国送電線_451",
+     "d_m": 121.5,
+     "note": "base既在・同一comp内"
+    }
+   ]
+  },
+  {
+   "id": "chugoku_sub_27",
+   "name": "広島中央変電所",
+   "bucket": "isolated",
+   "kv": 0.0,
+   "lat": 34.38357,
+   "lon": 132.46134,
+   "component": 75,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_263",
+   "name": "相代変電所",
+   "bucket": "isolated",
+   "kv": 0.0,
+   "lat": 35.4752,
+   "lon": 132.77389,
+   "component": 77,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_333",
+   "name": "倉敷市変電所_4",
+   "bucket": "isolated",
+   "kv": 0.0,
+   "lat": 34.49857,
+   "lon": 133.67841,
+   "component": 80,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_347",
+   "name": "北湊変電所",
+   "bucket": "isolated",
+   "kv": 66.0,
+   "lat": 33.91006,
+   "lon": 130.81092,
+   "component": 81,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_427",
+   "name": "白島変電所",
+   "bucket": "isolated",
+   "kv": 0.0,
+   "lat": 34.40263,
+   "lon": 132.46548,
+   "component": 82,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  },
+  {
+   "id": "chugoku_sub_529",
+   "name": "長沢変電所",
+   "bucket": "isolated",
+   "kv": 0.0,
+   "lat": 33.72901,
+   "lon": 133.28652,
+   "component": 86,
+   "component_size": 1,
+   "n_endpoint_hits": 0,
+   "n_passing_lines": 0,
+   "action": "candidate_only_no_line_added",
+   "reason": "半径0.15km内に端点を持つ本線が無い(最寄り端点でも通過線で端点は遠方)。OSM根拠なし=線を作らない。",
+   "endpoint_evidence": []
+  }
+ ]
+}

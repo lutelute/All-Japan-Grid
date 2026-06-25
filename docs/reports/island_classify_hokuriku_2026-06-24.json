@@ -1,0 +1,421 @@
+{
+ "region": "hokuriku",
+ "n_islands_sub": 44,
+ "summary": {
+  "railway": 0,
+  "phantom": 0,
+  "vsplit": 0,
+  "osm_gap": 36,
+  "reachable": 1,
+  "isolated": 7
+ },
+ "buckets": {
+  "railway": [],
+  "phantom": [],
+  "vsplit": [],
+  "osm_gap": [
+   {
+    "id": "hokuriku_sub_10",
+    "name": "東日本旅客鉄道 海ノ口変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.56321,
+    "lon": 137.84509,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_13",
+    "name": "三ツ渕変電所",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 35.73409,
+    "lon": 137.2052,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokuriku_sub_14",
+    "name": "高根町上ケ洞変電所",
+    "kv": 275.0,
+    "deg": 2,
+    "lat": 36.03671,
+    "lon": 137.49304,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_16@154",
+    "name": "小坂町小坂町変電所 154kV",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 35.94827,
+    "lon": 137.26259,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokuriku_sub_16@u",
+    "name": "小坂町小坂町変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 35.94827,
+    "lon": 137.26259,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokuriku_sub_17",
+    "name": "木曽町変電所",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 35.86503,
+    "lon": 137.74311,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_18",
+    "name": "三岳変電所",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 35.85895,
+    "lon": 137.59857,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_30",
+    "name": "新信濃変電所",
+    "kv": 275.0,
+    "deg": 1,
+    "lat": 36.13716,
+    "lon": 137.88545,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_55",
+    "name": "穂高変電所",
+    "kv": 77.0,
+    "deg": 4,
+    "lat": 36.33554,
+    "lon": 137.88482,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_58",
+    "name": "安曇野市変電所_2",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.32262,
+    "lon": 137.85622,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_64",
+    "name": "大町市変電所_2",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 36.48962,
+    "lon": 137.85498,
+    "n_reaching": 5
+   },
+   {
+    "id": "hokuriku_sub_70",
+    "name": "松本市変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.20612,
+    "lon": 137.89839,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_71",
+    "name": "松本市変電所_2",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.21358,
+    "lon": 137.85796,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_77",
+    "name": "竜島変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.18144,
+    "lon": 137.79289,
+    "n_reaching": 5
+   },
+   {
+    "id": "hokuriku_sub_78",
+    "name": "松本市変電所_3",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.17118,
+    "lon": 137.64552,
+    "n_reaching": 6
+   },
+   {
+    "id": "hokuriku_sub_79",
+    "name": "大町市変電所_3",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.49967,
+    "lon": 137.86477,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokuriku_sub_80",
+    "name": "大町市変電所_4",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.49167,
+    "lon": 137.86166,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_81",
+    "name": "大町市変電所_5",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.48055,
+    "lon": 137.82947,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_82",
+    "name": "大町市変電所_6",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.47118,
+    "lon": 137.86063,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokuriku_sub_83",
+    "name": "大町市変電所_7",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.45923,
+    "lon": 137.84985,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_84",
+    "name": "松川村変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.43341,
+    "lon": 137.84466,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_85",
+    "name": "池田変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.4166,
+    "lon": 137.88816,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_86",
+    "name": "安曇野市変電所_3",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 36.33879,
+    "lon": 137.88159,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_125",
+    "name": "大字須沢変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 37.02475,
+    "lon": 137.84066,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokuriku_sub_135",
+    "name": "大町市変電所_8",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.52102,
+    "lon": 137.8576,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokuriku_sub_138",
+    "name": "花乃杜四丁目変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.22768,
+    "lon": 136.19942,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_148",
+    "name": "平沢変電所",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 35.97827,
+    "lon": 137.82407,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_150",
+    "name": "木曽町変電所_2",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 35.82485,
+    "lon": 137.67731,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokuriku_sub_157",
+    "name": "本巣市変電所",
+    "kv": 500.0,
+    "deg": 2,
+    "lat": 35.73471,
+    "lon": 136.66136,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokuriku_sub_208",
+    "name": "色浜変電所_2",
+    "kv": 275.0,
+    "deg": 2,
+    "lat": 35.75136,
+    "lon": 136.01987,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokuriku_sub_211",
+    "name": "木曽町変電所_3",
+    "kv": 154.0,
+    "deg": 1,
+    "lat": 35.83668,
+    "lon": 137.68738,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokuriku_sub_247",
+    "name": "花乃杜四丁目変電所_2",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.22542,
+    "lon": 136.20155,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_258",
+    "name": "宮川町野首変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.32351,
+    "lon": 137.13452,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_265",
+    "name": "旭町変電所",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 35.78247,
+    "lon": 137.6889,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_266@154",
+    "name": "大桑村変電所 154kV",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 35.70755,
+    "lon": 137.69996,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokuriku_sub_266@u",
+    "name": "大桑村変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 35.70755,
+    "lon": 137.69996,
+    "n_reaching": 1
+   }
+  ],
+  "reachable": [
+   {
+    "id": "hokuriku_sub_15",
+    "name": "白鳥町大島変電所",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 35.85741,
+    "lon": 136.85997,
+    "n_reaching": 3
+   }
+  ],
+  "isolated": [
+   {
+    "id": "hokuriku_sub_4",
+    "name": "安曇野市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.37041,
+    "lon": 137.76297,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_6",
+    "name": "白馬村変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.68775,
+    "lon": 137.85064,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_75",
+    "name": "旭ケ丘町変電所",
+    "kv": 154.0,
+    "deg": 1,
+    "lat": 36.17583,
+    "lon": 137.24432,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_141",
+    "name": "大聖寺敷地変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.31664,
+    "lon": 136.33473,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_144",
+    "name": "吉原釜屋町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.46523,
+    "lon": 136.46788,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_156",
+    "name": "松本市変電所_5",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.18988,
+    "lon": 137.82235,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokuriku_sub_218",
+    "name": "北陸電力送配電(株)美川変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.48477,
+    "lon": 136.49883,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 61,
+ "main_size": 598
+}

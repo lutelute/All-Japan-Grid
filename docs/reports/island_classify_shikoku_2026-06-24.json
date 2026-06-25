@@ -1,0 +1,1070 @@
+{
+ "region": "shikoku",
+ "n_islands_sub": 116,
+ "summary": {
+  "railway": 9,
+  "phantom": 0,
+  "vsplit": 0,
+  "osm_gap": 100,
+  "reachable": 1,
+  "isolated": 6
+ },
+ "buckets": {
+  "railway": [
+   {
+    "id": "shikoku_sub_2@110",
+    "name": "広島補助き電区分所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.39277,
+    "lon": 132.49378,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_2@u",
+    "name": "広島補助き電区分所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.39277,
+    "lon": 132.49378,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_142",
+    "name": "沼田一丁目変電所",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.39812,
+    "lon": 133.0425,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_143@110",
+    "name": "新倉一丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.39191,
+    "lon": 133.05399,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_143@u",
+    "name": "新倉一丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.39191,
+    "lon": 133.05399,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_203@110",
+    "name": "西広島変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.38256,
+    "lon": 132.40673,
+    "n_reaching": 6
+   },
+   {
+    "id": "shikoku_sub_203@u",
+    "name": "西広島変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.38256,
+    "lon": 132.40673,
+    "n_reaching": 6
+   },
+   {
+    "id": "shikoku_sub_236@110",
+    "name": "大州四丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.39109,
+    "lon": 132.49393,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_236@u",
+    "name": "大州四丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.39109,
+    "lon": 132.49393,
+    "n_reaching": 1
+   }
+  ],
+  "phantom": [],
+  "vsplit": [],
+  "osm_gap": [
+   {
+    "id": "shikoku_sub_0",
+    "name": "因島変電所",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.30204,
+    "lon": 133.18139,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_20",
+    "name": "大野変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 34.28571,
+    "lon": 132.27282,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_21@220",
+    "name": "廿日市変電所 220kV",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 34.35681,
+    "lon": 132.30041,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_21@110",
+    "name": "廿日市変電所 110kV",
+    "kv": 110.0,
+    "deg": 5,
+    "lat": 34.35681,
+    "lon": 132.30041,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_23",
+    "name": "友和変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 34.35887,
+    "lon": 132.23393,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_36",
+    "name": "南西条変電所",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.37963,
+    "lon": 132.68931,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_41@110",
+    "name": "丹那町変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.36279,
+    "lon": 132.47772,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_41@u",
+    "name": "丹那町変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.36279,
+    "lon": 132.47772,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_42",
+    "name": "八幡変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.38946,
+    "lon": 132.36365,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_58",
+    "name": "大崎上島町変電所",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 34.25745,
+    "lon": 132.87518,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_59@110",
+    "name": "上平原変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.25712,
+    "lon": 132.58249,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_59@66",
+    "name": "上平原変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.25712,
+    "lon": 132.58249,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_60@110",
+    "name": "呉変電所 110kV",
+    "kv": 110.0,
+    "deg": 5,
+    "lat": 34.24488,
+    "lon": 132.61646,
+    "n_reaching": 10
+   },
+   {
+    "id": "shikoku_sub_60@66",
+    "name": "呉変電所 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 34.24488,
+    "lon": 132.61646,
+    "n_reaching": 10
+   },
+   {
+    "id": "shikoku_sub_60@u",
+    "name": "呉変電所 (untyped)",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.24488,
+    "lon": 132.61646,
+    "n_reaching": 10
+   },
+   {
+    "id": "shikoku_sub_61@220",
+    "name": "黒瀬変電所 220kV",
+    "kv": 220.0,
+    "deg": 3,
+    "lat": 34.31983,
+    "lon": 132.62777,
+    "n_reaching": 13
+   },
+   {
+    "id": "shikoku_sub_61@110",
+    "name": "黒瀬変電所 110kV",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.31983,
+    "lon": 132.62777,
+    "n_reaching": 13
+   },
+   {
+    "id": "shikoku_sub_62@110",
+    "name": "本町四丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.35229,
+    "lon": 132.90545,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_62@u",
+    "name": "本町四丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.35229,
+    "lon": 132.90545,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_63",
+    "name": "沼隈町大字草深変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.3993,
+    "lon": 133.327,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_64",
+    "name": "因島三庄町変電所",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.2994,
+    "lon": 133.1821,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_65@110",
+    "name": "宮原変電所 110kV",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.22054,
+    "lon": 132.55364,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_65@66",
+    "name": "宮原変電所 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 34.22054,
+    "lon": 132.55364,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_65@u",
+    "name": "宮原変電所 (untyped)",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.22054,
+    "lon": 132.55364,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_66",
+    "name": "倉橋変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.15339,
+    "lon": 132.51525,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_67",
+    "name": "大柿町大君変電所",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 34.16551,
+    "lon": 132.47802,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_68@220",
+    "name": "錦見三丁目変電所 220kV",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 34.16907,
+    "lon": 132.1974,
+    "n_reaching": 8
+   },
+   {
+    "id": "shikoku_sub_68@110",
+    "name": "錦見三丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 5,
+    "lat": 34.16907,
+    "lon": 132.1974,
+    "n_reaching": 8
+   },
+   {
+    "id": "shikoku_sub_68@66",
+    "name": "錦見三丁目変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.16907,
+    "lon": 132.1974,
+    "n_reaching": 8
+   },
+   {
+    "id": "shikoku_sub_68@u",
+    "name": "錦見三丁目変電所 (untyped)",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.16907,
+    "lon": 132.1974,
+    "n_reaching": 8
+   },
+   {
+    "id": "shikoku_sub_69@66",
+    "name": "美和町西畑変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.20966,
+    "lon": 132.0606,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_69@u",
+    "name": "美和町西畑変電所 (untyped)",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.20966,
+    "lon": 132.0606,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_70",
+    "name": "多良変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.60321,
+    "lon": 134.34902,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_73",
+    "name": "佐川変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.51392,
+    "lon": 133.27333,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_79",
+    "name": "沖塩屋一丁目変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.2816,
+    "lon": 132.26576,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_94",
+    "name": "豊浜町姫浜変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.08319,
+    "lon": 133.64287,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_95",
+    "name": "高森",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.09643,
+    "lon": 132.05211,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_96@110",
+    "name": "山手町二丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.1669,
+    "lon": 132.21169,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_96@u",
+    "name": "山手町二丁目変電所 (untyped)",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.1669,
+    "lon": 132.21169,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_97@220",
+    "name": "藤生町三丁目変電所 220kV",
+    "kv": 220.0,
+    "deg": 4,
+    "lat": 34.1212,
+    "lon": 132.19042,
+    "n_reaching": 5
+   },
+   {
+    "id": "shikoku_sub_97@110",
+    "name": "藤生町三丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.1212,
+    "lon": 132.19042,
+    "n_reaching": 5
+   },
+   {
+    "id": "shikoku_sub_97@u",
+    "name": "藤生町三丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.1212,
+    "lon": 132.19042,
+    "n_reaching": 5
+   },
+   {
+    "id": "shikoku_sub_98@220",
+    "name": "藤生町一丁目変電所 220kV",
+    "kv": 220.0,
+    "deg": 3,
+    "lat": 34.11823,
+    "lon": 132.19855,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_98@110",
+    "name": "藤生町一丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.11823,
+    "lon": 132.19855,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_98@u",
+    "name": "藤生町一丁目変電所 (untyped)",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 34.11823,
+    "lon": 132.19855,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_102",
+    "name": "中田井町変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.1202,
+    "lon": 133.70168,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_103",
+    "name": "山本町財田西変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.11929,
+    "lon": 133.72436,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_109",
+    "name": "今治市変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.25536,
+    "lon": 133.04679,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_113@110",
+    "name": "装束町四丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.20332,
+    "lon": 132.22834,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_113@u",
+    "name": "装束町四丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.20332,
+    "lon": 132.22834,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_114",
+    "name": "白石一丁目変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.21498,
+    "lon": 132.21368,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_115",
+    "name": "西栄三丁目変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.2208,
+    "lon": 132.23373,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_116",
+    "name": "伯方変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.21107,
+    "lon": 133.09338,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_123",
+    "name": "四国電力 甲浦変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.54758,
+    "lon": 134.28884,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_125",
+    "name": "生名変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.27284,
+    "lon": 133.17634,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_144",
+    "name": "瀬戸田町沢変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.30922,
+    "lon": 133.09175,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_145",
+    "name": "瀬戸田町鹿田原変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.3037,
+    "lon": 133.09524,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_149",
+    "name": "岩国市変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.15436,
+    "lon": 132.14242,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_192",
+    "name": "1丁目変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.28703,
+    "lon": 132.75362,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_193",
+    "name": "4丁目変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 34.24067,
+    "lon": 132.69984,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_194",
+    "name": "4丁目変電所_2",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.23964,
+    "lon": 132.70326,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_195@220",
+    "name": "東広島市変電所 220kV",
+    "kv": 220.0,
+    "deg": 3,
+    "lat": 34.32736,
+    "lon": 132.81836,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_195@110",
+    "name": "東広島市変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.32736,
+    "lon": 132.81836,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_195@u",
+    "name": "東広島市変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 34.32736,
+    "lon": 132.81836,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_208",
+    "name": "押込町変電所",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 34.3232,
+    "lon": 132.56387,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_210",
+    "name": "牟岐変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 33.67362,
+    "lon": 134.42005,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_211",
+    "name": "美波町変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.73659,
+    "lon": 134.52553,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_219",
+    "name": "公園通変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.24638,
+    "lon": 132.5568,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_220",
+    "name": "1丁目変電所_2",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.2809,
+    "lon": 132.57306,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_221",
+    "name": "坂変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.34074,
+    "lon": 132.51296,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_222",
+    "name": "能美変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 34.20718,
+    "lon": 132.44257,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_223",
+    "name": "江田島変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 34.24788,
+    "lon": 132.48536,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_224",
+    "name": "大柿変電所",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 34.18734,
+    "lon": 132.47063,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_225",
+    "name": "吉浦変電所",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 34.26487,
+    "lon": 132.53367,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_226@220",
+    "name": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 34.33897,
+    "lon": 132.95992,
+    "n_reaching": 9
+   },
+   {
+    "id": "shikoku_sub_226@110",
+    "name": "忠海長浜一丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 5,
+    "lat": 34.33897,
+    "lon": 132.95992,
+    "n_reaching": 9
+   },
+   {
+    "id": "shikoku_sub_227@110",
+    "name": "向島変電所 110kV",
+    "kv": 110.0,
+    "deg": 4,
+    "lat": 34.39514,
+    "lon": 133.21012,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_227@66",
+    "name": "向島変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 34.39514,
+    "lon": 133.21012,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_227@u",
+    "name": "向島変電所 (untyped)",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.39514,
+    "lon": 133.21012,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_230",
+    "name": "三津変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 33.86872,
+    "lon": 132.7311,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_232",
+    "name": "大渡変電所",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 33.54406,
+    "lon": 133.12766,
+    "n_reaching": 5
+   },
+   {
+    "id": "shikoku_sub_233",
+    "name": "黒川変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.45621,
+    "lon": 133.12264,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_234",
+    "name": "駅前変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.36137,
+    "lon": 132.33626,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_237",
+    "name": "中津町三丁目変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.14886,
+    "lon": 132.21728,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_238",
+    "name": "由宇町南沖三丁目変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.03873,
+    "lon": 132.21302,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_239",
+    "name": "由宇町北一丁目変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.05373,
+    "lon": 132.20983,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_240@220",
+    "name": "田布施町変電所 220kV",
+    "kv": 220.0,
+    "deg": 3,
+    "lat": 33.96303,
+    "lon": 132.05472,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_240@110",
+    "name": "田布施町変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 33.96303,
+    "lon": 132.05472,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_241@220",
+    "name": "古開作変電所 220kV",
+    "kv": 220.0,
+    "deg": 2,
+    "lat": 33.96581,
+    "lon": 132.09128,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_241@110",
+    "name": "古開作変電所 110kV",
+    "kv": 110.0,
+    "deg": 3,
+    "lat": 33.96581,
+    "lon": 132.09128,
+    "n_reaching": 4
+   },
+   {
+    "id": "shikoku_sub_242",
+    "name": "柳井市変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 33.95941,
+    "lon": 132.16053,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_243",
+    "name": "阿月変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 33.88906,
+    "lon": 132.12643,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_244",
+    "name": "中央南変電所",
+    "kv": 110.0,
+    "deg": 0,
+    "lat": 33.95013,
+    "lon": 132.04881,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_250",
+    "name": "丹那町変電所_2",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.36207,
+    "lon": 132.47535,
+    "n_reaching": 2
+   },
+   {
+    "id": "shikoku_sub_251@110",
+    "name": "仁保四丁目変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 34.36168,
+    "lon": 132.49998,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_251@u",
+    "name": "仁保四丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 34.36168,
+    "lon": 132.49998,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_252",
+    "name": "広町変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.27834,
+    "lon": 132.63656,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_253",
+    "name": "7丁目変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 34.23657,
+    "lon": 132.60203,
+    "n_reaching": 1
+   },
+   {
+    "id": "shikoku_sub_254",
+    "name": "五日市六丁目変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.37117,
+    "lon": 132.36103,
+    "n_reaching": 3
+   },
+   {
+    "id": "shikoku_sub_257",
+    "name": "鉢変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.80187,
+    "lon": 134.46749,
+    "n_reaching": 2
+   }
+  ],
+  "reachable": [
+   {
+    "id": "shikoku_sub_57",
+    "name": "夜須町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 33.55286,
+    "lon": 133.74903,
+    "n_reaching": 3
+   }
+  ],
+  "isolated": [
+   {
+    "id": "shikoku_sub_19",
+    "name": "宮島変電所",
+    "kv": 110.0,
+    "deg": 1,
+    "lat": 34.32489,
+    "lon": 132.31818,
+    "n_reaching": 0
+   },
+   {
+    "id": "shikoku_sub_22",
+    "name": "広島中央変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.38357,
+    "lon": 132.46134,
+    "n_reaching": 0
+   },
+   {
+    "id": "shikoku_sub_44",
+    "name": "幸町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.06788,
+    "lon": 134.55471,
+    "n_reaching": 0
+   },
+   {
+    "id": "shikoku_sub_71",
+    "name": "末広四丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.06564,
+    "lon": 134.57761,
+    "n_reaching": 0
+   },
+   {
+    "id": "shikoku_sub_255",
+    "name": "長沢変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.72901,
+    "lon": 133.28652,
+    "n_reaching": 0
+   },
+   {
+    "id": "shikoku_sub_256",
+    "name": "須崎変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 33.38942,
+    "lon": 133.27175,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 55,
+ "main_size": 411
+}

@@ -1,0 +1,1586 @@
+{
+ "region": "tokyo",
+ "n_islands_sub": 173,
+ "summary": {
+  "railway": 13,
+  "phantom": 0,
+  "vsplit": 2,
+  "osm_gap": 50,
+  "reachable": 2,
+  "isolated": 106
+ },
+ "buckets": {
+  "railway": [
+   {
+    "id": "tokyo_sub_280",
+    "name": "沼津変電所",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 35.12622,
+    "lon": 138.85016,
+    "n_reaching": 5
+   },
+   {
+    "id": "tokyo_sub_322",
+    "name": "富士市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.13553,
+    "lon": 138.61309,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_462",
+    "name": "波木井変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 35.374,
+    "lon": 138.44373,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_463",
+    "name": "身延変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.37281,
+    "lon": 138.43868,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_472",
+    "name": "JR東海身延変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.36265,
+    "lon": 138.45397,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1183",
+    "name": "土樽変電所_2",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.92529,
+    "lon": 138.84121,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1184",
+    "name": "神立変電所_2",
+    "kv": 0.0,
+    "deg": 5,
+    "lat": 36.91369,
+    "lon": 138.80805,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1324@66",
+    "name": "越後湯沢変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 36.93532,
+    "lon": 138.81219,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1324@u",
+    "name": "越後湯沢変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.93532,
+    "lon": 138.81219,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1325",
+    "name": "土樽変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.87612,
+    "lon": 138.85997,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1354",
+    "name": "日進変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.93636,
+    "lon": 139.61077,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1533",
+    "name": "土浦変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.10482,
+    "lon": 140.22793,
+    "n_reaching": 4
+   },
+   {
+    "id": "tokyo_sub_1648",
+    "name": "鷲宮変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.08059,
+    "lon": 139.67948,
+    "n_reaching": 3
+   }
+  ],
+  "phantom": [],
+  "vsplit": [
+   {
+    "id": "tokyo_sub_198",
+    "name": "清水変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 35.01842,
+    "lon": 138.45553,
+    "n_reaching": 6,
+    "note": "同名バスが本系統に別在(電圧ヤード分離・変圧器未連結)"
+   },
+   {
+    "id": "tokyo_sub_1566",
+    "name": "宇都宮変電所",
+    "kv": 154.0,
+    "deg": 1,
+    "lat": 36.54657,
+    "lon": 139.89871,
+    "n_reaching": 2,
+    "note": "同名バスが本系統に別在(電圧ヤード分離・変圧器未連結)"
+   }
+  ],
+  "osm_gap": [
+   {
+    "id": "tokyo_sub_17",
+    "name": "東富岡変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.41992,
+    "lon": 139.31829,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_173",
+    "name": "亀井野変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.37434,
+    "lon": 139.46956,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_179",
+    "name": "布田変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 35.64066,
+    "lon": 139.5474,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_323",
+    "name": "清水区変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.00132,
+    "lon": 138.51173,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_324",
+    "name": "富士市変電所_2",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 35.13254,
+    "lon": 138.622,
+    "n_reaching": 8
+   },
+   {
+    "id": "tokyo_sub_325",
+    "name": "清水区変電所_2",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.05876,
+    "lon": 138.52223,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_326@154",
+    "name": "蒲原一丁目変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 35.12237,
+    "lon": 138.61395,
+    "n_reaching": 11
+   },
+   {
+    "id": "tokyo_sub_326@77",
+    "name": "蒲原一丁目変電所 77kV",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 35.12237,
+    "lon": 138.61395,
+    "n_reaching": 11
+   },
+   {
+    "id": "tokyo_sub_326@u",
+    "name": "蒲原一丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 35.12237,
+    "lon": 138.61395,
+    "n_reaching": 11
+   },
+   {
+    "id": "tokyo_sub_328@154",
+    "name": "蒲原一丁目変電所_2 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 35.12467,
+    "lon": 138.6138,
+    "n_reaching": 9
+   },
+   {
+    "id": "tokyo_sub_328@77",
+    "name": "蒲原一丁目変電所_2 77kV",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 35.12467,
+    "lon": 138.6138,
+    "n_reaching": 9
+   },
+   {
+    "id": "tokyo_sub_328@u",
+    "name": "蒲原一丁目変電所_2 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 35.12467,
+    "lon": 138.6138,
+    "n_reaching": 9
+   },
+   {
+    "id": "tokyo_sub_348",
+    "name": "NEC府中変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.67035,
+    "lon": 139.45196,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_382",
+    "name": "椿本チエイン変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.85371,
+    "lon": 139.34428,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_466",
+    "name": "天野変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.03048,
+    "lon": 138.94434,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_467@66",
+    "name": "立花二丁目変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 35.03028,
+    "lon": 138.95111,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_467@u",
+    "name": "立花二丁目変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.03028,
+    "lon": 138.95111,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_599",
+    "name": "芝浦四丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.64166,
+    "lon": 139.74347,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_604",
+    "name": "北の原変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.55679,
+    "lon": 139.66041,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_605",
+    "name": "池上変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 35.5669,
+    "lon": 139.69581,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_633",
+    "name": "栄町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.51283,
+    "lon": 139.68512,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_751",
+    "name": "六郷変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 35.54892,
+    "lon": 139.71216,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_776",
+    "name": "篠崎変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.68999,
+    "lon": 139.901,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1009",
+    "name": "小海町変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.09258,
+    "lon": 138.48466,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1076",
+    "name": "湯沢変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.94919,
+    "lon": 138.8022,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1090",
+    "name": "薄根変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.66185,
+    "lon": 139.03265,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1149",
+    "name": "大字御代田変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.31617,
+    "lon": 138.5189,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1150",
+    "name": "小諸市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.31235,
+    "lon": 138.45062,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1176",
+    "name": "横和変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.25656,
+    "lon": 138.46372,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1177",
+    "name": "勝間変電所",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 36.18581,
+    "lon": 138.48091,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1179",
+    "name": "川上村変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 35.98342,
+    "lon": 138.51143,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1180",
+    "name": "小海町変電所_2",
+    "kv": 77.0,
+    "deg": 3,
+    "lat": 36.05629,
+    "lon": 138.46627,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1186",
+    "name": "羽刈町変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.28469,
+    "lon": 139.47425,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1196",
+    "name": "見沼三丁目変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.94087,
+    "lon": 139.6367,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1197",
+    "name": "本郷町変電所_2",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.94081,
+    "lon": 139.63609,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1295",
+    "name": "小海町変電所_3",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.06144,
+    "lon": 138.47401,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1296",
+    "name": "小海町変電所_4",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.08132,
+    "lon": 138.48312,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1297",
+    "name": "佐久穂町変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.13016,
+    "lon": 138.47529,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1352",
+    "name": "軽井沢町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.33977,
+    "lon": 138.58173,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1433",
+    "name": "牛久変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.97156,
+    "lon": 140.14741,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1436",
+    "name": "出島変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 36.08817,
+    "lon": 140.3023,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1470",
+    "name": "国分寺変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.36459,
+    "lon": 139.84743,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1473",
+    "name": "北小名浜変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.99977,
+    "lon": 140.89588,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1525",
+    "name": "新光町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.38476,
+    "lon": 140.58792,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1576",
+    "name": "矢祭変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.87835,
+    "lon": 140.41994,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1587",
+    "name": "黒磯変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.96559,
+    "lon": 140.04111,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1678",
+    "name": "簗瀬町変電所",
+    "kv": 154.0,
+    "deg": 1,
+    "lat": 36.54795,
+    "lon": 139.89326,
+    "n_reaching": 1
+   },
+   {
+    "id": "tokyo_sub_1695",
+    "name": "渡里町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.41216,
+    "lon": 140.44063,
+    "n_reaching": 3
+   },
+   {
+    "id": "tokyo_sub_1712",
+    "name": "北竜台変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.93192,
+    "lon": 140.16416,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1799",
+    "name": "tokyo_sub_1799",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.2085,
+    "lon": 138.2207,
+    "n_reaching": 1
+   }
+  ],
+  "reachable": [
+   {
+    "id": "tokyo_sub_308",
+    "name": "乙黒変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.58903,
+    "lon": 138.54839,
+    "n_reaching": 2
+   },
+   {
+    "id": "tokyo_sub_1800",
+    "name": "tokyo_sub_1800",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.08001,
+    "lon": 138.37914,
+    "n_reaching": 1
+   }
+  ],
+  "isolated": [
+   {
+    "id": "tokyo_sub_18",
+    "name": "小田急電鉄藤沢変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.33829,
+    "lon": 139.48215,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_238",
+    "name": "飛田給変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.65739,
+    "lon": 139.52652,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_250",
+    "name": "磯子変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.39806,
+    "lon": 139.61716,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_265",
+    "name": "東京電力若宮変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.3105,
+    "lon": 139.54728,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_309",
+    "name": "辻堂変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.33683,
+    "lon": 139.45333,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_370",
+    "name": "南田中変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.73152,
+    "lon": 139.61961,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_404",
+    "name": "世田谷変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.63181,
+    "lon": 139.6502,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_411",
+    "name": "東京電力パワーグリッド笹下変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.39161,
+    "lon": 139.60099,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_420",
+    "name": "秋ヶ瀬変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.85319,
+    "lon": 139.62322,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_437",
+    "name": "高砂町一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.43315,
+    "lon": 139.62104,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_534",
+    "name": "南大井一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.5964,
+    "lon": 139.73946,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_535",
+    "name": "東池袋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73227,
+    "lon": 139.7172,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_536",
+    "name": "南池袋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.72734,
+    "lon": 139.7139,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_537",
+    "name": "北新宿変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.6953,
+    "lon": 139.69891,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_538",
+    "name": "巣鴨変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73504,
+    "lon": 139.73955,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_561",
+    "name": "蒲田変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.57127,
+    "lon": 139.72003,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_567",
+    "name": "広町一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.61614,
+    "lon": 139.73158,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_575",
+    "name": "東京電力(株)青海変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.61769,
+    "lon": 139.78083,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_576",
+    "name": "海岸一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.6579,
+    "lon": 139.76049,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_590",
+    "name": "南元町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.68022,
+    "lon": 139.72154,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_594",
+    "name": "羽田変電所",
+    "kv": 500.0,
+    "deg": 0,
+    "lat": 35.55289,
+    "lon": 139.75357,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_597",
+    "name": "墨東変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.69845,
+    "lon": 139.82026,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_598",
+    "name": "芝公園二丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.65663,
+    "lon": 139.7516,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_600",
+    "name": "代々木三丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.68449,
+    "lon": 139.69307,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_601",
+    "name": "下目黒一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.633,
+    "lon": 139.71323,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_606",
+    "name": "天王洲変電所",
+    "kv": 154.0,
+    "deg": 0,
+    "lat": 35.62171,
+    "lon": 139.75706,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_717",
+    "name": "永代橋変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.67561,
+    "lon": 139.78442,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_759",
+    "name": "大森西二丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.57556,
+    "lon": 139.73416,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_772",
+    "name": "JR東海 大崎変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.61674,
+    "lon": 139.73148,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_800",
+    "name": "八潮二丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.61466,
+    "lon": 139.7596,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_802",
+    "name": "京王電鉄 天神橋変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.68457,
+    "lon": 139.69312,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_807",
+    "name": "淀橋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.69462,
+    "lon": 139.68653,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_812",
+    "name": "尾久変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73858,
+    "lon": 139.77145,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_814",
+    "name": "三河島変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73406,
+    "lon": 139.78526,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_815",
+    "name": "新宿変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.69106,
+    "lon": 139.68922,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_816",
+    "name": "西新宿変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.69265,
+    "lon": 139.69857,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_817",
+    "name": "東新宿変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.69206,
+    "lon": 139.71037,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_819",
+    "name": "城南変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.67296,
+    "lon": 139.72302,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_820",
+    "name": "高輪変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.63499,
+    "lon": 139.73387,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_822",
+    "name": "東内幸町変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 35.6702,
+    "lon": 139.75844,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_955",
+    "name": "常盤台変電所",
+    "kv": 154.0,
+    "deg": 0,
+    "lat": 35.75755,
+    "lon": 139.69128,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_956",
+    "name": "東川口変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.79684,
+    "lon": 139.73616,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_957",
+    "name": "川口変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.80674,
+    "lon": 139.73394,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_958",
+    "name": "川口本町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.79911,
+    "lon": 139.72052,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_966",
+    "name": "前野変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.7688,
+    "lon": 139.686,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_969",
+    "name": "中丸変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.74336,
+    "lon": 139.69882,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_970",
+    "name": "王子変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.75224,
+    "lon": 139.74307,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_971",
+    "name": "西巣鴨変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73463,
+    "lon": 139.72804,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_972",
+    "name": "上富士変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.734,
+    "lon": 139.75116,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_973",
+    "name": "戸山変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.70058,
+    "lon": 139.70853,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_977",
+    "name": "ときわ台変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.76115,
+    "lon": 139.68226,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_978",
+    "name": "板橋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.74681,
+    "lon": 139.70753,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_979",
+    "name": "池袋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.73631,
+    "lon": 139.71391,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_980",
+    "name": "萩中一丁目変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.55157,
+    "lon": 139.72829,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_985",
+    "name": "市の坪変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 35.56879,
+    "lon": 139.66478,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1148",
+    "name": "軽井沢東変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.34303,
+    "lon": 138.64481,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1334",
+    "name": "若葉変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.95219,
+    "lon": 139.40436,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1340",
+    "name": "越生変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.95478,
+    "lon": 139.30612,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1640",
+    "name": "白梅変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.36229,
+    "lon": 140.48313,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1668",
+    "name": "平井変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.95242,
+    "lon": 140.66532,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1674",
+    "name": "塩原3号配電塔",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.97734,
+    "lon": 139.80664,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1675",
+    "name": "塩原2号配電塔",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.97447,
+    "lon": 139.81502,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1726",
+    "name": "tokyo_sub_1726",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.95073,
+    "lon": 138.36581,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1727",
+    "name": "tokyo_sub_1727",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.2652,
+    "lon": 138.22646,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1730",
+    "name": "tokyo_sub_1730",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 36.00806,
+    "lon": 138.09477,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1732",
+    "name": "tokyo_sub_1732",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 36.25566,
+    "lon": 137.98616,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1733",
+    "name": "tokyo_sub_1733",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 36.33705,
+    "lon": 137.88656,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1734",
+    "name": "tokyo_sub_1734",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.24737,
+    "lon": 137.9397,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1735",
+    "name": "tokyo_sub_1735",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.27531,
+    "lon": 137.91924,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1736",
+    "name": "tokyo_sub_1736",
+    "kv": 77.0,
+    "deg": 2,
+    "lat": 35.96888,
+    "lon": 138.17391,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1737",
+    "name": "tokyo_sub_1737",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 35.97606,
+    "lon": 137.98886,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1738",
+    "name": "tokyo_sub_1738",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.70658,
+    "lon": 137.92654,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1739",
+    "name": "tokyo_sub_1739",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.89825,
+    "lon": 137.95384,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1740",
+    "name": "tokyo_sub_1740",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.20913,
+    "lon": 137.97386,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1741",
+    "name": "白州変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 35.81586,
+    "lon": 138.33161,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1743",
+    "name": "tokyo_sub_1743",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 37.17216,
+    "lon": 138.9234,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1745",
+    "name": "tokyo_sub_1745",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 37.12579,
+    "lon": 139.71911,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1746",
+    "name": "小出",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.22661,
+    "lon": 138.96677,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1748",
+    "name": "tokyo_sub_1748",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.25662,
+    "lon": 138.90862,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1749",
+    "name": "新那須変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 37.02894,
+    "lon": 140.10502,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1752",
+    "name": "tokyo_sub_1752",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.66284,
+    "lon": 138.21946,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1753",
+    "name": "tokyo_sub_1753",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.59134,
+    "lon": 138.14656,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1754",
+    "name": "奥裾花地下発電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.72448,
+    "lon": 137.96762,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1755",
+    "name": "tokyo_sub_1755",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.62619,
+    "lon": 138.26004,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1756",
+    "name": "tokyo_sub_1756",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.63505,
+    "lon": 138.17757,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1757",
+    "name": "tokyo_sub_1757",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.62763,
+    "lon": 138.15745,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1758",
+    "name": "中部電力パワーグリッド 川中島変電所",
+    "kv": 77.0,
+    "deg": 1,
+    "lat": 36.59506,
+    "lon": 138.17704,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1759",
+    "name": "新屋代補助き電区分所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.54063,
+    "lon": 138.13197,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1760",
+    "name": "tokyo_sub_1760",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.67891,
+    "lon": 138.07244,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1761",
+    "name": "tokyo_sub_1761",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.69652,
+    "lon": 137.95449,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1762",
+    "name": "中部電力パワーグリッド(株) 屋代変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.53822,
+    "lon": 138.11757,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1763",
+    "name": "松代変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.55305,
+    "lon": 138.19453,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1766@275",
+    "name": "東上越変電所 275kV",
+    "kv": 275.0,
+    "deg": 2,
+    "lat": 37.18831,
+    "lon": 138.37398,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1766@154",
+    "name": "東上越変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 37.18831,
+    "lon": 138.37398,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1772",
+    "name": "高田変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.10565,
+    "lon": 138.24034,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1776",
+    "name": "えちごトキめき鉄道(株)二本木変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.98364,
+    "lon": 138.22599,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1777",
+    "name": "東北電力ネットワーク",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 36.87771,
+    "lon": 138.20154,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1787",
+    "name": "tokyo_sub_1787",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.26966,
+    "lon": 138.86485,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1788",
+    "name": "六日町変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 37.09594,
+    "lon": 138.87761,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1790",
+    "name": "tokyo_sub_1790",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.93332,
+    "lon": 138.36418,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1791",
+    "name": "tokyo_sub_1791",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 34.99439,
+    "lon": 138.28625,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1795",
+    "name": "島田電力所",
+    "kv": 77.0,
+    "deg": 0,
+    "lat": 34.83937,
+    "lon": 138.17515,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1797",
+    "name": "tokyo_sub_1797",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 35.09139,
+    "lon": 138.10972,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1798",
+    "name": "tokyo_sub_1798",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 35.09237,
+    "lon": 138.11469,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1801",
+    "name": "tokyo_sub_1801",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 34.97813,
+    "lon": 138.36297,
+    "n_reaching": 0
+   },
+   {
+    "id": "tokyo_sub_1802",
+    "name": "tokyo_sub_1802",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.87427,
+    "lon": 138.31098,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 263,
+ "main_size": 3689
+}

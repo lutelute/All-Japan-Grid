@@ -1,0 +1,322 @@
+{
+ "region": "kyushu",
+ "n_islands_sub": 33,
+ "summary": {
+  "railway": 0,
+  "phantom": 0,
+  "vsplit": 0,
+  "osm_gap": 14,
+  "reachable": 2,
+  "isolated": 17
+ },
+ "buckets": {
+  "railway": [],
+  "phantom": [],
+  "vsplit": [],
+  "osm_gap": [
+   {
+    "id": "kyushu_sub_46",
+    "name": "中原東四丁目変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 33.90154,
+    "lon": 130.84917,
+    "n_reaching": 6
+   },
+   {
+    "id": "kyushu_sub_144",
+    "name": "九州電力 千代変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 33.60306,
+    "lon": 130.42016,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_249@110",
+    "name": "日田市変電所 110kV",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 33.16461,
+    "lon": 130.98453,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_249@u",
+    "name": "日田市変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 33.16461,
+    "lon": 130.98453,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_305",
+    "name": "犬飼変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.05038,
+    "lon": 131.64273,
+    "n_reaching": 4
+   },
+   {
+    "id": "kyushu_sub_315",
+    "name": "郷ノ浦変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 33.75452,
+    "lon": 129.70846,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_319",
+    "name": "天瀬町赤岩変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 33.25876,
+    "lon": 131.03349,
+    "n_reaching": 2
+   },
+   {
+    "id": "kyushu_sub_424",
+    "name": "岱明町野口変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 32.92288,
+    "lon": 130.53216,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_470",
+    "name": "都農変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 32.25773,
+    "lon": 131.55311,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_485",
+    "name": "敷川内町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 32.44995,
+    "lon": 130.59448,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_663",
+    "name": "串間市変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 31.41128,
+    "lon": 131.27844,
+    "n_reaching": 3
+   },
+   {
+    "id": "kyushu_sub_664",
+    "name": "串間市変電所_2",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 31.41032,
+    "lon": 131.28014,
+    "n_reaching": 3
+   },
+   {
+    "id": "kyushu_sub_675",
+    "name": "周南市変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 34.06944,
+    "lon": 131.70344,
+    "n_reaching": 1
+   },
+   {
+    "id": "kyushu_sub_677",
+    "name": "中央南変電所",
+    "kv": 110.0,
+    "deg": 0,
+    "lat": 33.95013,
+    "lon": 132.04881,
+    "n_reaching": 1
+   }
+  ],
+  "reachable": [
+   {
+    "id": "kyushu_sub_250",
+    "name": "小国町変電所",
+    "kv": 110.0,
+    "deg": 2,
+    "lat": 33.10039,
+    "lon": 131.08991,
+    "n_reaching": 2
+   },
+   {
+    "id": "kyushu_sub_410",
+    "name": "山陽小野田市変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 34.04645,
+    "lon": 131.13256,
+    "n_reaching": 2
+   }
+  ],
+  "isolated": [
+   {
+    "id": "kyushu_sub_0",
+    "name": "日南市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.68072,
+    "lon": 131.3767,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_31",
+    "name": "田代補助き電区分所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.3852,
+    "lon": 130.52503,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_168",
+    "name": "糸島市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.5046,
+    "lon": 130.09194,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_179",
+    "name": "北熊本変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 32.82861,
+    "lon": 130.72171,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_309",
+    "name": "涌井変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 32.63154,
+    "lon": 130.89249,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_333",
+    "name": "伊集院町下谷口変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.61561,
+    "lon": 130.41286,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_345",
+    "name": "大浦町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.36629,
+    "lon": 130.22807,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_419",
+    "name": "妻ケ丘変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.72092,
+    "lon": 131.07433,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_427",
+    "name": "石谷町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.62786,
+    "lon": 130.44012,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_476",
+    "name": "青葉変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 31.91981,
+    "lon": 131.4373,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_552",
+    "name": "南九州市変電所_3",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.28507,
+    "lon": 130.39598,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_569",
+    "name": "知覧町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 31.36778,
+    "lon": 130.44875,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_572",
+    "name": "九州電力 鳴川配電塔",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 32.39547,
+    "lon": 130.35325,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_614",
+    "name": "脇田変電所",
+    "kv": 500.0,
+    "deg": 0,
+    "lat": 31.54337,
+    "lon": 130.53691,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_625",
+    "name": "東唐津二丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.45271,
+    "lon": 129.98168,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_626",
+    "name": "東唐津二丁目変電所_2",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.45264,
+    "lon": 129.9818,
+    "n_reaching": 0
+   },
+   {
+    "id": "kyushu_sub_657",
+    "name": "伊福甲変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 33.0399,
+    "lon": 130.1703,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 80,
+ "main_size": 1550
+}

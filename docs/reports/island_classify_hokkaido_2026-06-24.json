@@ -1,0 +1,466 @@
+{
+ "region": "hokkaido",
+ "n_islands_sub": 49,
+ "summary": {
+  "railway": 0,
+  "phantom": 0,
+  "vsplit": 0,
+  "osm_gap": 31,
+  "reachable": 2,
+  "isolated": 16
+ },
+ "buckets": {
+  "railway": [],
+  "phantom": [],
+  "vsplit": [],
+  "osm_gap": [
+   {
+    "id": "hokkaido_sub_0",
+    "name": "福山変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.434,
+    "lon": 140.11255,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_1@154",
+    "name": "東通村変電所 154kV",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 41.41063,
+    "lon": 141.44214,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_1@66",
+    "name": "東通村変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 41.41063,
+    "lon": 141.44214,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_30@154",
+    "name": "下北変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 41.30572,
+    "lon": 141.19351,
+    "n_reaching": 14
+   },
+   {
+    "id": "hokkaido_sub_30@66",
+    "name": "下北変電所 66kV",
+    "kv": 66.0,
+    "deg": 4,
+    "lat": 41.30572,
+    "lon": 141.19351,
+    "n_reaching": 14
+   },
+   {
+    "id": "hokkaido_sub_61",
+    "name": "佐井変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.46118,
+    "lon": 140.8871,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_62",
+    "name": "大畑変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.39963,
+    "lon": 141.15657,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_63@154",
+    "name": "東通変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 41.35383,
+    "lon": 141.34125,
+    "n_reaching": 6
+   },
+   {
+    "id": "hokkaido_sub_63@66",
+    "name": "東通変電所 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 41.35383,
+    "lon": 141.34125,
+    "n_reaching": 6
+   },
+   {
+    "id": "hokkaido_sub_67",
+    "name": "大間町変電所_2",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 41.50811,
+    "lon": 140.91146,
+    "n_reaching": 8
+   },
+   {
+    "id": "hokkaido_sub_73@154",
+    "name": "岩屋変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 41.37949,
+    "lon": 141.40299,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_73@66",
+    "name": "岩屋変電所 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 41.37949,
+    "lon": 141.40299,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_74@154",
+    "name": "岩屋変電所_2 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 41.3768,
+    "lon": 141.40013,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_74@66",
+    "name": "岩屋変電所_2 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 41.3768,
+    "lon": 141.40013,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_75@500",
+    "name": "大間町変電所_3 500kV",
+    "kv": 500.0,
+    "deg": 2,
+    "lat": 41.50864,
+    "lon": 140.91221,
+    "n_reaching": 8
+   },
+   {
+    "id": "hokkaido_sub_75@66",
+    "name": "大間町変電所_3 66kV",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 41.50864,
+    "lon": 140.91221,
+    "n_reaching": 8
+   },
+   {
+    "id": "hokkaido_sub_82",
+    "name": "大間町変電所_4",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.50814,
+    "lon": 140.91138,
+    "n_reaching": 8
+   },
+   {
+    "id": "hokkaido_sub_83",
+    "name": "大間町変電所_5",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 41.50618,
+    "lon": 140.916,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_90",
+    "name": "上ノ国町変電所",
+    "kv": 187.0,
+    "deg": 1,
+    "lat": 41.73942,
+    "lon": 140.12642,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_146",
+    "name": "あけぼの町五丁目変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 42.68129,
+    "lon": 141.64339,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_191",
+    "name": "平岸3条18変電所_2",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 43.01926,
+    "lon": 141.3677,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_193@66",
+    "name": "南区変電所 66kV",
+    "kv": 66.0,
+    "deg": 4,
+    "lat": 42.96787,
+    "lon": 141.27928,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokkaido_sub_193@u",
+    "name": "南区変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 42.96787,
+    "lon": 141.27928,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokkaido_sub_194",
+    "name": "定山渓温泉西1変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 42.97256,
+    "lon": 141.17051,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_195",
+    "name": "南区変電所_2",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 42.96768,
+    "lon": 141.19485,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_203",
+    "name": "南区変電所_3",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 42.96544,
+    "lon": 141.2574,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_223",
+    "name": "千歳市変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 42.78943,
+    "lon": 141.43845,
+    "n_reaching": 4
+   },
+   {
+    "id": "hokkaido_sub_288",
+    "name": "生田原変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 43.9222,
+    "lon": 143.52945,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_292",
+    "name": "長都駅前三丁目変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 42.85015,
+    "lon": 141.61841,
+    "n_reaching": 3
+   },
+   {
+    "id": "hokkaido_sub_301",
+    "name": "沼牛変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 43.97014,
+    "lon": 142.17916,
+    "n_reaching": 1
+   },
+   {
+    "id": "hokkaido_sub_419",
+    "name": "標茶町変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 43.37867,
+    "lon": 144.55628,
+    "n_reaching": 1
+   }
+  ],
+  "reachable": [
+   {
+    "id": "hokkaido_sub_23",
+    "name": "大間町変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.46523,
+    "lon": 140.88999,
+    "n_reaching": 2
+   },
+   {
+    "id": "hokkaido_sub_462",
+    "name": "幌加内町変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 44.30049,
+    "lon": 142.17932,
+    "n_reaching": 4
+   }
+  ],
+  "isolated": [
+   {
+    "id": "hokkaido_sub_24",
+    "name": "函館市企業局東雲町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.77044,
+    "lon": 140.72986,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_37",
+    "name": "末広町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.76238,
+    "lon": 140.71752,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_45",
+    "name": "田家町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.80121,
+    "lon": 140.74672,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_50",
+    "name": "茂辺地変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.78074,
+    "lon": 140.57706,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_66",
+    "name": "JR北海道木古内機電区分所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.69107,
+    "lon": 140.44851,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_80",
+    "name": "大平変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.6967,
+    "lon": 140.45533,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_81",
+    "name": "東雲変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 41.77055,
+    "lon": 140.72976,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_152",
+    "name": "北海道電力 大通変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 43.06037,
+    "lon": 141.34463,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_154",
+    "name": "北海道電力",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.06156,
+    "lon": 141.35802,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_155",
+    "name": "円山変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 43.05123,
+    "lon": 141.32876,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_181",
+    "name": "札幌市交通局高速電車 すすきの変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.05338,
+    "lon": 141.35759,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_188",
+    "name": "南18条西11丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.03573,
+    "lon": 141.34481,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_189",
+    "name": "中の島1条1変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.03843,
+    "lon": 141.35995,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_209",
+    "name": "桑園変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.06369,
+    "lon": 141.33075,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_228",
+    "name": "宮下通十七丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.75989,
+    "lon": 142.37334,
+    "n_reaching": 0
+   },
+   {
+    "id": "hokkaido_sub_353",
+    "name": "南町八条二丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 43.17881,
+    "lon": 141.75649,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 37,
+ "main_size": 760
+}

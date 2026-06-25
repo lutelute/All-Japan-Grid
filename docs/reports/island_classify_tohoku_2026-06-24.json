@@ -1,0 +1,640 @@
+{
+ "region": "tohoku",
+ "n_islands_sub": 68,
+ "summary": {
+  "railway": 10,
+  "phantom": 0,
+  "vsplit": 1,
+  "osm_gap": 33,
+  "reachable": 1,
+  "isolated": 23
+ },
+ "buckets": {
+  "railway": [
+   {
+    "id": "tohoku_sub_69",
+    "name": "矢板変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.81503,
+    "lon": 139.92845,
+    "n_reaching": 4
+   },
+   {
+    "id": "tohoku_sub_113@66",
+    "name": "矢板変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 36.8054,
+    "lon": 139.93238,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_113@u",
+    "name": "矢板変電所 (untyped)",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 36.8054,
+    "lon": 139.93238,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_115",
+    "name": "川治変電所",
+    "kv": 66.0,
+    "deg": 3,
+    "lat": 36.8948,
+    "lon": 139.70182,
+    "n_reaching": 7
+   },
+   {
+    "id": "tohoku_sub_116",
+    "name": "川治変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.89431,
+    "lon": 139.70215,
+    "n_reaching": 7
+   },
+   {
+    "id": "tohoku_sub_699@187",
+    "name": "JR北海道吉岡変電所 187kV",
+    "kv": 187.0,
+    "deg": 2,
+    "lat": 41.443,
+    "lon": 140.23467,
+    "n_reaching": 9
+   },
+   {
+    "id": "tohoku_sub_699@66",
+    "name": "JR北海道吉岡変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 41.443,
+    "lon": 140.23467,
+    "n_reaching": 9
+   },
+   {
+    "id": "tohoku_sub_798@275",
+    "name": "JR東日本 新七戸変電所 275kV",
+    "kv": 275.0,
+    "deg": 1,
+    "lat": 40.71058,
+    "lon": 141.17891,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_798@66",
+    "name": "JR東日本 新七戸変電所 66kV",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 40.71058,
+    "lon": 141.17891,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_860",
+    "name": "IGRいわて銀河鉄道 一戸変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.17992,
+    "lon": 141.30597,
+    "n_reaching": 1
+   }
+  ],
+  "phantom": [],
+  "vsplit": [
+   {
+    "id": "tohoku_sub_114",
+    "name": "川俣変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.87276,
+    "lon": 139.52129,
+    "n_reaching": 1,
+    "note": "同名バスが本系統に別在(電圧ヤード分離・変圧器未連結)"
+   }
+  ],
+  "osm_gap": [
+   {
+    "id": "tohoku_sub_4",
+    "name": "東北電力ネットワーク(株)大野変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 37.84531,
+    "lon": 139.0058,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_22",
+    "name": "青山一丁目変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.89149,
+    "lon": 139.00037,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_25",
+    "name": "ときめき東一丁目変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 37.87723,
+    "lon": 139.01058,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_27",
+    "name": "平五丁目変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.46264,
+    "lon": 139.00688,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_44",
+    "name": "糸沢変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 37.1242,
+    "lon": 139.71883,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_45@154",
+    "name": "立石変電所 154kV",
+    "kv": 154.0,
+    "deg": 3,
+    "lat": 36.81086,
+    "lon": 139.70879,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_45@66",
+    "name": "立石変電所 66kV",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 36.81086,
+    "lon": 139.70879,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_46",
+    "name": "下郷町変電所",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 37.27339,
+    "lon": 139.96534,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_47",
+    "name": "南会津町変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 37.20401,
+    "lon": 139.78844,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_48",
+    "name": "南会津町変電所_2",
+    "kv": 0.0,
+    "deg": 3,
+    "lat": 37.20161,
+    "lon": 139.79195,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_71",
+    "name": "渋川変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 37.34853,
+    "lon": 139.05115,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_76",
+    "name": "みなかみ町変電所_2",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 36.86566,
+    "lon": 139.06128,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_77@154",
+    "name": "鬼怒川変電所 154kV",
+    "kv": 154.0,
+    "deg": 2,
+    "lat": 36.82955,
+    "lon": 139.71197,
+    "n_reaching": 4
+   },
+   {
+    "id": "tohoku_sub_77@66",
+    "name": "鬼怒川変電所 66kV",
+    "kv": 66.0,
+    "deg": 4,
+    "lat": 36.82955,
+    "lon": 139.71197,
+    "n_reaching": 4
+   },
+   {
+    "id": "tohoku_sub_81",
+    "name": "大久保変電所_2",
+    "kv": 0.0,
+    "deg": 2,
+    "lat": 37.10061,
+    "lon": 139.59712,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_87",
+    "name": "三依変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.9784,
+    "lon": 139.69202,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_122",
+    "name": "栗山変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 36.86754,
+    "lon": 139.60546,
+    "n_reaching": 5
+   },
+   {
+    "id": "tohoku_sub_129",
+    "name": "初森変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 37.53355,
+    "lon": 140.53078,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_165",
+    "name": "飯舘変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 37.68239,
+    "lon": 140.72469,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_294",
+    "name": "矢祭変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 36.87835,
+    "lon": 140.41994,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_325",
+    "name": "黒磯変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 36.96559,
+    "lon": 140.04111,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_362",
+    "name": "原町区大谷変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 37.65283,
+    "lon": 140.89104,
+    "n_reaching": 3
+   },
+   {
+    "id": "tohoku_sub_484",
+    "name": "大字藤田変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 38.3732,
+    "lon": 140.20193,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_523",
+    "name": "由利本荘市変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 39.17295,
+    "lon": 140.15918,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_524",
+    "name": "鳥海町下直根変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 39.1687,
+    "lon": 140.15851,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_539",
+    "name": "土崎港東四丁目変電所",
+    "kv": 0.0,
+    "deg": 1,
+    "lat": 39.75559,
+    "lon": 140.08014,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_631",
+    "name": "門前寺変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 39.79929,
+    "lon": 141.16741,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_679",
+    "name": "塚浜変電所_4",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 38.40009,
+    "lon": 141.50035,
+    "n_reaching": 8
+   },
+   {
+    "id": "tohoku_sub_688",
+    "name": "福山変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.434,
+    "lon": 140.11255,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_695",
+    "name": "餅田変電所",
+    "kv": 154.0,
+    "deg": 0,
+    "lat": 40.27962,
+    "lon": 140.51667,
+    "n_reaching": 2
+   },
+   {
+    "id": "tohoku_sub_698",
+    "name": "福島変電所",
+    "kv": 66.0,
+    "deg": 2,
+    "lat": 41.49855,
+    "lon": 140.25102,
+    "n_reaching": 4
+   },
+   {
+    "id": "tohoku_sub_771",
+    "name": "岩瀬変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.27619,
+    "lon": 140.4721,
+    "n_reaching": 1
+   },
+   {
+    "id": "tohoku_sub_773",
+    "name": "松前変電所",
+    "kv": 66.0,
+    "deg": 1,
+    "lat": 41.43029,
+    "lon": 140.07513,
+    "n_reaching": 3
+   }
+  ],
+  "reachable": [
+   {
+    "id": "tohoku_sub_680",
+    "name": "塚浜変電所_5",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 38.39881,
+    "lon": 141.50306,
+    "n_reaching": 5
+   }
+  ],
+  "isolated": [
+   {
+    "id": "tohoku_sub_70",
+    "name": "寄居浜変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 37.92573,
+    "lon": 139.03077,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_75",
+    "name": "みなかみ町変電所",
+    "kv": 275.0,
+    "deg": 0,
+    "lat": 36.80037,
+    "lon": 139.0471,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_120",
+    "name": "塩原3号配電塔",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.97734,
+    "lon": 139.80664,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_121",
+    "name": "塩原2号配電塔",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 36.97447,
+    "lon": 139.81502,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_127",
+    "name": "中仙台変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 38.26552,
+    "lon": 140.87829,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_157",
+    "name": "東北電力花京院変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 38.2644,
+    "lon": 140.88053,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_180",
+    "name": "美田園一丁目変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 38.16295,
+    "lon": 140.90765,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_203",
+    "name": "土樋変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 38.24384,
+    "lon": 140.8858,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_316",
+    "name": "栄町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 37.75563,
+    "lon": 140.46251,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_394",
+    "name": "ふくしま絆",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 37.30999,
+    "lon": 141.22407,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_406",
+    "name": "温海変電所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 38.61628,
+    "lon": 139.60411,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_542",
+    "name": "川尻町変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 39.71501,
+    "lon": 140.0841,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_671",
+    "name": "JR東日本 新柏木平き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 39.82237,
+    "lon": 141.17514,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_677",
+    "name": "桃生町城内変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 38.56401,
+    "lon": 141.26304,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_682",
+    "name": "遠野市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 39.2953,
+    "lon": 141.40293,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_777",
+    "name": "青い森鉄道 浅虫き電区分所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 40.91819,
+    "lon": 140.88251,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_787",
+    "name": "十和田市変電所",
+    "kv": 0.0,
+    "deg": 0,
+    "lat": 40.42496,
+    "lon": 140.90644,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_823",
+    "name": "JR東日本 新おいらせき電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.5941,
+    "lon": 141.38625,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_856",
+    "name": "JR東日本 新市川補助き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.55424,
+    "lon": 141.44155,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_872",
+    "name": "新二戸き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.2824,
+    "lon": 141.29092,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_876",
+    "name": "JR東日本 新底田き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.74192,
+    "lon": 141.1115,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_882",
+    "name": "JR東日本 新名川補助き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.39591,
+    "lon": 141.35551,
+    "n_reaching": 0
+   },
+   {
+    "id": "tohoku_sub_883",
+    "name": "JR東日本 新六戸補助き電区分所",
+    "kv": 66.0,
+    "deg": 0,
+    "lat": 40.65535,
+    "lon": 141.29404,
+    "n_reaching": 0
+   }
+  ]
+ },
+ "n_components": 81,
+ "main_size": 1820
+}
