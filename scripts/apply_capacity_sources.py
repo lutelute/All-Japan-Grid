@@ -85,7 +85,8 @@ def main():
             p = ft["properties"]
             if "capacity_mw_sourced" in p and isinstance(p.get("capacity_mw"), (int, float)):
                 o, s = p["capacity_mw"], p["capacity_mw_sourced"]
-                if o and abs(o - s) / max(o, s) > 0.1:
+                den = max(o, s)
+                if den > 0 and abs(o - s) / den > 0.1:
                     difs.append((p.get("_display_name") or p.get("name"), o, s))
         print(f"  {tgt}: applied={applied} (cleared stale={cleared})")
         for nm, o, s in difs[:4]:
