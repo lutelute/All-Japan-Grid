@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "title": "Kansai-TD trunk-line voltage — external validation (aggregate only)",
+    "generated": "2026-06-26",
+    "ground_truth": "関西電力送配電 「154kV以上 送電線空容量一覧」",
+    "source_url": "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv",
+    "license_note": "Ground-truth is publicly disclosed but All-Rights-Reserved (no redistribution). Raw per-line values are NOT published here; only aggregate agreement metrics are reported, mirroring the TEPCO per-line-flow methodology (source-at-rest, aggregates-only).",
+    "method": "Published model line voltage class (docs/data/lines_all.geojson, _voltage_kv) joined to the Kansai-TD disclosure by EXACT line name; voltage class compared. Per-line ratings (設備容量/運用容量) were used privately as ground truth and are not reproduced."
+  },
+  "coverage": {
+    "kansai_td_trunk_lines_disclosed": 182,
+    "matched_to_model_by_name": 38,
+    "matched_line_segments": 143
+  },
+  "voltage_class_agreement": {
+    "overall": { "matched_lines": 38, "agree": 37, "rate": 0.974 },
+    "by_class": {
+      "500kV": { "n": 6, "agree": 6 },
+      "275kV": { "n": 16, "agree": 16 },
+      "154kV": { "n": 16, "agree": 15 }
+    }
+  },
+  "interpretation": [
+    "Second authoritative external validation after TEPCO per-line flows — this one on a different dimension (line voltage class), against a different utility (Kansai).",
+    "Model voltage-class assignment (OSM-derived) matches the utility's official trunk-line disclosure on 37 of 38 named >=154 kV lines (97%).",
+    "Future work: model BRANCH thermal ratings are keyed to bus indices, not line names; a name<->BRANCH join is needed to also validate synthetic line ratings against the authoritative 設備容量."
+  ]
+}

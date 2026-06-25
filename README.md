@@ -75,6 +75,9 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
   [docs/reports/](docs/reports/) and the full source survey in
   [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
+  Line **voltage class** is independently cross-checked against Kansai-TD's official ≥154 kV
+  trunk-line disclosure: **97 % agreement** (37/38 named lines; aggregate only — the utility's
+  raw per-line values are not redistributed, see [scorecard](docs/reports/external_kansai_lines_voltage_2026-06-26.json)).
 - ⚡ **AC convergence without demand scaling — all 10 regions, both models.** The FULL
   regional model (sub-grid included) now solves natively everywhere — kansai at its full
   22,833 MW (previously ×0.3-0.4 demand-scaled only) — and the `--backbone` reduction
