@@ -5,10 +5,10 @@
 # All-Japan-Grid
 
 Open Japanese power grid **geographic topology** dataset, automatically constructed from OpenStreetMap — then **scored against utility ground truth**.
-10 regions, 40,000+ transmission lines, 7,000+ substations, 19,000+ power plants. Corridor-usage rank correlation against TEPCO's published per-line flows reaches **interior Spearman ρ = 0.721**.
+10 regions, 40,000+ transmission lines, 7,000+ substations, 19,000+ power plants. Corridor-usage rank correlation against TEPCO's published per-line flows reaches **interior Spearman ρ = 0.721** — a capacity/topology proxy; the AC power flow solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**.
 
 OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**した、日本全国の送電網 **地理トポロジ** データセットです。
-10 地域、送電線 40,000 本超、変電所 7,000 箇所超、発電所 19,000 箇所超。東京電力の公開する線路別潮流との回廊使用率の順位相関は **内部 Spearman ρ = 0.721** に達します。
+10 地域、送電線 40,000 本超、変電所 7,000 箇所超、発電所 19,000 箇所超。東京電力の公開する線路別潮流との回廊使用率の順位相関（容量・トポロジの代理指標）は **内部 Spearman ρ = 0.721**。合成負荷で解いた AC 潮流の相関は **ρ ≈ 0.46（内部）/ 0.60（基幹）** です。
 
 **Live Map / ライブマップ:** https://lutelute.github.io/All-Japan-Grid/
 
@@ -48,9 +48,9 @@ OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**し�
 
 ### National Topology & Validation / 全国トポロジと検証
 
-The national transmission network extracted from OSM (coloured by voltage class), confirmed against satellite imagery (Kashima / Anan FC / Reinan), and scored against TEPCO's per-line flows — corridor-usage rank correlation reaches **interior Spearman ρ = 0.721** (details in [Highlights](#highlights--ハイライト)).
+The national transmission network extracted from OSM (coloured by voltage class), confirmed against satellite imagery (Kashima / Anan FC / Reinan), and scored against TEPCO's per-line flows — corridor-usage rank correlation (a capacity/topology proxy) reaches **interior Spearman ρ = 0.721**, while the AC flow solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)** (details in [Highlights](#highlights--ハイライト)).
 
-OSM から抽出した全国送電網（電圧クラス別色分け）。衛星画像との位置照合で実在インフラ上に乗ることを確認（鹿島・阿南FC・嶺南）。東京電力の線路別潮流と突合せ検証し、回廊使用率の順位相関は **内部 Spearman ρ = 0.721** に達する（詳細は下記 Highlights）。
+OSM から抽出した全国送電網（電圧クラス別色分け）。衛星画像との位置照合で実在インフラ上に乗ることを確認（鹿島・阿南FC・嶺南）。東京電力の線路別潮流と突合せ検証。回廊使用率の順位相関（容量・トポロジの代理指標）は **内部 Spearman ρ = 0.721**、合成負荷で解いた AC 潮流の相関は **ρ ≈ 0.46（内部）/ 0.60（基幹）**（詳細は下記 Highlights）。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_national_all.png" alt="National transmission topology" width="100%">
@@ -68,9 +68,10 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ### v1.4.0
 
-- 📏 **Externally validated against utility ground truth — a first.** The model is now scored
+- 📏 **Externally validated against utility ground truth — to our knowledge, a first for an OSM-extracted public grid.** The model is now scored
   against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:
-  corridor-usage rank correlation **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09),
+  corridor-usage rank correlation (a capacity/topology proxy) **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09),
+  while the AC power flow solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**;
   substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
   [docs/reports/](docs/reports/) and the full source survey in
   [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
@@ -79,8 +80,9 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   22,833 MW (previously ×0.3-0.4 demand-scaled only) — and the `--backbone` reduction
   (region-aware cut: ≥154 kV mainland, 66 kV floor for hokkaido whose grid IS its 66 kV
   layer) gives the cleaner planning view with generator Q-limits enforced
-  (`ajgrid solve <region> [--backbone]`). The interior flow correlation (boundary
-  corridors measured-conditioned and excluded) is **ρ = 0.721**.
+  (`ajgrid solve <region> [--backbone]`). The interior corridor-usage rank correlation
+  (a capacity/topology proxy, boundary corridors excluded) is **ρ = 0.721**; the AC flow
+  solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**.
 - 📦 [Release v1.4.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.4.0):
   `all_japan_grid_cim_L2.zip` regenerated with this model — **kansai's CIM case improves
   from ×0.3 to ×0.8 demand**, 6 regions native + 4 at ×0.8, all 10 verified by `cim2pp`

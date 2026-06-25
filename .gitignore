@@ -23,6 +23,11 @@ logs/security/
 # macOS
 .DS_Store
 
+# Coverage / pytest artifacts (regenerable)
+.coverage
+.coverage.*
+htmlcov/
+
 # Powerflow regen staging / backups (scripts/regen_powerflow_snapped.sh)
 docs/data/powerflow_snapped/
 docs/data/powerflow.legacy_*/
