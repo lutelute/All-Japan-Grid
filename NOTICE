@@ -9,6 +9,9 @@ or validated against, several third-party sources. Attributions and licenses:
    - Open Database License (ODbL) v1.0 — https://opendatacommons.org/licenses/odbl/
    - The derived network data in data/ and docs/data/ is a Derivative Database
      and is therefore distributed under ODbL (share-alike).
+   - Snapshot: the distributed extract is point-in-time; the precise Overpass
+     osm3s timestamp is not yet embedded in distributed files (known gap — see
+     docs/reports/formal_review_2026-06-26.md). Build dates are in git history.
 
 2. National Land Numerical Information / 国土数値情報 (MLIT, Japan)
    - Power-plant point locations (P03 発電施設データ)
@@ -19,6 +22,8 @@ or validated against, several third-party sources. Attributions and licenses:
    - (c) World Resources Institute (WRI)
    - Licensed under CC-BY-4.0 — https://creativecommons.org/licenses/by/4.0/
    - Source: https://datasets.wri.org/dataset/globalpowerplantdatabase
+   - Version: WRI GPPD v1.3.0 (final release, 2021); per-record vintage is in the
+     year_of_capacity_data / commissioning_year columns.
    - Used for external cross-checking of plant capacity / fuel.
 
 4. Plant capacity provenance — data/generator_capacity_sources.jsonl

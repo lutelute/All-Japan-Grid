@@ -5,6 +5,40 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-06-26
+
+### Added
+- Sourced-capacity provenance DB grown 45 → 160 plants (`data/generator_capacity_sources.jsonl`); every value carries a source URL + verbatim quote (`scripts/capacity_provenance.py verify` = 160 ok / 0 bad). OSM/P03 capacity errors corrected (e.g. Kashiwazaki-Kariwa → 8212 MW, Soga solar 1440 → 1.99 MW); decommissioned / under-construction plants recorded as `0`. Surfaced to map popups on all plant layers.
+- `NOTICE` — third-party data attributions (OpenStreetMap ODbL, 国土数値情報 P03, WRI GPPD CC-BY-4.0, Wikipedia CC-BY-SA, validation-only sources).
+- `SECURITY.md` — trust boundary for the local editor server, dual-use / out-of-scope notes, reporting.
+- Kansai-TD line-voltage external validation scorecard (97 % agreement on 38 named ≥154 kV trunk lines; aggregate metrics only, raw utility values not redistributed).
+- `uv.lock` (pinned dependencies); `docs/ROADMAP_ASSET.md`; formal multi-agent review record (`docs/reports/formal_review_2026-06-26.md`).
+
+### Changed
+- README correlation honesty: ρ = 0.721 is labelled a capacity/topology proxy, with the measured AC power-flow correlation ρ ≈ 0.46 (interior) / 0.60 (trunk) shown alongside; "a first" hedged to "to our knowledge".
+- CI / regeneration: `apply_capacity_sources` now runs **after** `build_static_site` (deploy-pages.yml + regenerate_all.py), fixing a bug where published plant layers lost their sourced-capacity overlay on deploy.
+- CITATION.cff declares both MIT (code) and ODbL-1.0 (data).
+
+### Fixed
+- `apply_capacity_sources.py` ZeroDivisionError when a sourced capacity is `0` (decommissioned plants).
+- `.gitignore` protects the redistribution-restricted `k_line.csv` and test/coverage artifacts.
+
+### Known issues (see `docs/reports/formal_review_2026-06-26.md`)
+- Sourced-capacity corrections are **display-only**; the power-flow builder still reads `capacity_mw`.
+- `papers/ieee-openaccess.tex` substation count (8,164 in prose) disagrees with its own table / the data (6,962).
+- No DOI / Zenodo archive yet; the OSM snapshot timestamp is not embedded in distributed files.
+
+## [1.4.0] - 2026-06-11
+
+Tagged in git as `v1.4.0`.
+
+### Added
+- External validation against utility ground truth (TEPCO per-line flows, Kansai-TD line disclosure): corridor-usage rank correlation and substation/attachment recall, shipped as JSON scorecards.
+- CIM / CGMES Level 2 power-flow case (EQ/TP/SSH/SV/GL) for all 10 regions, verified by pandapower `cim2pp` round-trip and strict CGMES validation (0 dangling references).
+
+### Changed
+- Full-model AC power flow solves across all 10 regions (kansai at full demand); the unified DB is the source of truth and the published GeoJSON is regenerated from it with per-field provenance markers.
+
 ## [1.3.0] - 2026-06-09
 
 Tagged in git as `v1.3.0`.
