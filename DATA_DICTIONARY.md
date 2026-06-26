@@ -174,6 +174,20 @@ This document defines every column (property) in the All-Japan-Grid distributed 
 
 > 注意: ごく一部のフィーチャで `fuel_type` に URL 等の異常値が残存（OSM 原データの `source` タグ混入）。下流利用時は上記既知値以外を `unknown` として扱うのが安全。
 
+### 3.4 出典付き容量 / Sourced-capacity provenance（`capacity_mw_sourced` / `capacity_source_*`）
+
+地図ポップアップに「公式容量＋[出典]」を表示するための、一次出典で検証した容量の出典層。正本は `data/generator_capacity_sources.jsonl`（各値に `source_url` ＋ 原文 `quote` が必須、欠落は機械 REJECT。検証は `scripts/capacity_provenance.py verify`）。`scripts/apply_capacity_sources.py` が `_display_name` 突合で配信 geojson に焼き込む。
+
+| 列名 / Column | 型 / Type | 単位 / Unit | 説明 / Description |
+|---|---|---|---|
+| `capacity_mw_sourced` | number | MW | 一次出典で検証した容量。OSM/P03 の `capacity_mw` を訂正する場合あり（例: 柏崎刈羽 8212、蘇我ソーラー 1.99）。廃止/建設中は `0` |
+| `capacity_source_url` | string | — | 出典 URL（`^https?://`、必須） |
+| `capacity_source_type` | string | — | `official` / `gov` / `ir` / `wikipedia` / `news` / `other` |
+| `capacity_source_conf` | string | — | `high` / `medium` / `low`（一次=high） |
+| `capacity_source_note` | string | — | MW 換算根拠・廃止/建設中等の状態 |
+
+> **重要 / IMPORTANT — 表示専用スコープ / display-only**: `capacity_mw_sourced` は**出典明示・地図表示のための層であり、潮流計算には使われない**。潮流ビルダ（`scripts/run_full_powerflow_from_db.py`）と dispatch は依然 `capacity_mw`（OSM/P03 値）を読む。したがって出典で訂正した値（例: 蘇我ソーラーは実 1.99 MW だが OSM の `capacity_mw` は 1440 MW のまま）や `0`（廃止/建設中）は**現時点では潮流入力・検証 ρ に反映されていない**。出典容量を計算へ伝播させる（`capacity_mw` への昇格、またはビルダで `_sourced` 優先）のは今後の作業。
+
 ---
 
 ## 4. 欠損・センチネル値の早見表 / Missing-value cheat sheet
