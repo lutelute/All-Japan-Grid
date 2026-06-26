@@ -1,0 +1,46 @@
+All-Japan-Grid — Third-Party Data Notices and Attributions
+==========================================================
+
+This repository combines original code (MIT) with data that is derived from,
+or validated against, several third-party sources. Attributions and licenses:
+
+1. OpenStreetMap — network topology & geometry
+   - (c) OpenStreetMap contributors
+   - Open Database License (ODbL) v1.0 — https://opendatacommons.org/licenses/odbl/
+   - The derived network data in data/ and docs/data/ is a Derivative Database
+     and is therefore distributed under ODbL (share-alike).
+
+2. National Land Numerical Information / 国土数値情報 (MLIT, Japan)
+   - Power-plant point locations (P03 発電施設データ)
+   - 出典: 国土交通省 国土数値情報（発電施設データ）— used under the
+     国土数値情報利用約款. https://nlftp.mlit.go.jp/ksj/
+
+3. WRI Global Power Plant Database — data/wri_global_power_plants.csv
+   - (c) World Resources Institute (WRI)
+   - Licensed under CC-BY-4.0 — https://creativecommons.org/licenses/by/4.0/
+   - Source: https://datasets.wri.org/dataset/globalpowerplantdatabase
+   - Used for external cross-checking of plant capacity / fuel.
+
+4. Plant capacity provenance — data/generator_capacity_sources.jsonl
+   - Each capacity value is individually sourced with a URL and a verbatim quote.
+   - Sources (by type): operator-official 62, Wikipedia 87, government 5,
+     news 4, investor-relations 1, other 1.
+   - Wikipedia content is (c) Wikipedia contributors, CC-BY-SA 4.0.
+   - Every record cites its own source_url; see the file for per-value provenance.
+
+5. Validation-only sources — NOT redistributed in this repository
+   - TEPCO published per-line power flows, and Kansai Transmission & Distribution
+     (関西電力送配電) line / voltage disclosures, are used PRIVATELY as ground
+     truth for validation. These are publicly disclosed but All-Rights-Reserved;
+     only AGGREGATE validation metrics (e.g. correlation, agreement rate) are
+     published under docs/reports/. Raw per-line values are NOT included here.
+   - 関西TD disclosure:
+     https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
+
+---
+
+Code in src/, scripts/, and tooling: MIT License (see LICENSE).
+Derived network data in data/ and docs/data/: ODbL v1.0 (see LICENSE).
+
+When citing or reusing this dataset, please retain the OpenStreetMap and WRI
+attributions above and comply with ODbL share-alike for the network data.
