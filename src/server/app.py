@@ -3,9 +3,14 @@
 Serves an interactive Leaflet.js map with OSM GeoJSON overlays,
 power flow computation APIs, and MATPOWER export.
 
-Usage::
+Usage (LOCAL USE ONLY — bind to localhost)::
 
-    PYTHONPATH=. uvicorn src.server.app:app --host 0.0.0.0 --port 8080 --reload
+    PYTHONPATH=. uvicorn src.server.app:app --host 127.0.0.1 --port 8080 --reload
+
+SECURITY: the editor's state-changing endpoints (POST /api/adopt, /api/edits,
+POST /api/issue, DELETE ...) have NO authentication / CORS / rate-limit, and
+/api/issue runs `gh issue create` under the host's GitHub login. Do NOT bind to
+0.0.0.0 or expose this server publicly. See SECURITY.md.
 """
 
 import glob
