@@ -38,10 +38,12 @@ STEPS = [
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py"], True),          # 全規模AC(②前提・サーバ)
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
-    ("apply_capacity_sources", [sys.executable, "scripts/apply_capacity_sources.py"], False),         # ④ 出典容量反映
     ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
+    # ④ 出典容量反映 — build_static_site が plants_utility/ipp/all を作り直すため、必ずその後に再適用。
+    # 順序を誤ると live/regen で capacity_mw_sourced・出典リンクが消える(2026-06-26 修正)。
+    ("apply_capacity_sources", [sys.executable, "scripts/apply_capacity_sources.py"], False),
     # 全面改修Phase5フル統合: Pagesエディタを単一の正(templates/editor.html)から再生成。
     # 静的shimでフル:8088エディタがPages上で動く(drift防止・最後にdocs/editor.htmlへ書く)。
     ("build_pages_editor",
