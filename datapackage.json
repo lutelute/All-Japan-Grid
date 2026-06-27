@@ -1,0 +1,91 @@
+{
+  "name": "all-japan-grid",
+  "title": "All-Japan-Grid: an OSM-derived, externally validated model of Japan's transmission network",
+  "description": "Japan's 10 regional transmission networks (50/60 Hz) extracted from OpenStreetMap with per-field provenance, exported to interchange formats (GeoJSON, CIM/CGMES Level 1+2, MATPOWER, pandapower), and scored against utility ground truth (TEPCO per-line flows; Kansai-TD voltage disclosure). Substation counts differ by layer: the source OSM substation count is 6,962 (see `substations.geojson`), while the published display/built view `subs_all.geojson` expands to 8,994 by voltage class (site-aware, one bus per voltage class). Sourced plant capacity (`capacity_mw_sourced`) is a display/provenance layer and is NOT used by the power-flow builder, which reads `capacity_mw`. See docs/reports/ for the formal review, international benchmark, and known limitations.",
+  "version": "1.4.0",
+  "created": "2026-06-27",
+  "homepage": "https://github.com/lutelute/All-Japan-Grid",
+  "licenses": [
+    { "name": "ODbL-1.0", "title": "Open Database License v1.0", "path": "https://opendatacommons.org/licenses/odbl/1-0/" }
+  ],
+  "contributors": [
+    { "title": "Ryuto Shigenobu", "role": "author" }
+  ],
+  "sources": [
+    { "title": "OpenStreetMap contributors (ODbL-1.0)", "path": "https://www.openstreetmap.org/copyright" },
+    { "title": "National Land Numerical Information P03 power plants (MLIT, Japan)", "path": "https://nlftp.mlit.go.jp/ksj/" },
+    { "title": "WRI Global Power Plant Database v1.3.0 (CC-BY-4.0)", "path": "https://datasets.wri.org/dataset/globalpowerplantdatabase" }
+  ],
+  "resources": [
+    {
+      "name": "lines_all",
+      "path": "docs/data/lines_all.geojson",
+      "format": "geojson",
+      "mediatype": "application/geo+json",
+      "title": "Transmission lines (all voltages)",
+      "description": "19,031 transmission line features derived from the canonical built model (voltage-class tiers also in lines_275kv.geojson / lines_154kv.geojson). Properties: _region, _voltage_kv, _display_name."
+    },
+    {
+      "name": "substations_source",
+      "path": "docs/data/substations.geojson",
+      "format": "geojson",
+      "mediatype": "application/geo+json",
+      "title": "Substations (source OSM layer, rich attributes)",
+      "description": "6,962 source OSM substations with rich attributes (name_en, operator, voltage_kv, frequency_hz)."
+    },
+    {
+      "name": "substations_display",
+      "path": "docs/data/subs_all.geojson",
+      "format": "geojson",
+      "mediatype": "application/geo+json",
+      "title": "Substations (built/display view, voltage-class expanded)",
+      "description": "8,994 substation features from the built model (site-aware, one bus per voltage class). Distinct from the 6,962 source count above."
+    },
+    {
+      "name": "plants_all",
+      "path": "docs/data/plants_all.geojson",
+      "format": "geojson",
+      "mediatype": "application/geo+json",
+      "title": "Power plants",
+      "description": "19,138 power-plant features. Sourced capacity (160 plants) is surfaced as capacity_mw_sourced / capacity_source_url (display-only; power flow uses capacity_mw). See DATA_DICTIONARY.md §3.4."
+    },
+    {
+      "name": "built_model",
+      "path": "docs/data/built/all.json",
+      "format": "json",
+      "mediatype": "application/json",
+      "title": "Canonical built topology",
+      "description": "17,333 nodes / 19,031 edges; 829 inter-region edges; main component 11,423; the source of truth for map, editor, Ybus and power-flow tooling."
+    },
+    {
+      "name": "capacity_provenance",
+      "path": "data/generator_capacity_sources.jsonl",
+      "format": "ndjson",
+      "mediatype": "application/x-ndjson",
+      "title": "Sourced generator capacity (provenance DB)",
+      "description": "160 capacity values, each with source_url + verbatim quote + confidence + retrieved_at (machine-verified by scripts/capacity_provenance.py verify = 160 ok / 0 bad). Sources: operator-official 62, Wikipedia 87 (CC-BY-SA), gov 5, news 4, IR 1, other 1.",
+      "licenses": [
+        { "name": "CC-BY-SA-4.0", "title": "Creative Commons Attribution-ShareAlike 4.0 (Wikipedia-derived values)", "path": "https://creativecommons.org/licenses/by-sa/4.0/" }
+      ]
+    },
+    {
+      "name": "cgmes_level2",
+      "path": "dist/cim_level2/cim_level2_index.json",
+      "format": "json",
+      "mediatype": "application/json",
+      "title": "CIM/CGMES 2.4.15 Level-2 power-flow case (index)",
+      "description": "IEC 61970 CGMES 2.4.15 Level-2 profiles (EQ/TP/SSH/SV/GL) for all 10 regions; validated 0 dangling references (scripts/validate_cgmes.py) and pandapower cim2pp round-trip. Full XML set is a GitHub Release asset (okinawa sample + boundary tracked in-repo)."
+    },
+    {
+      "name": "wri_power_plants",
+      "path": "data/wri_global_power_plants.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "title": "WRI Global Power Plant Database (Japan rows, external cross-check)",
+      "description": "WRI GPPD v1.3.0 used for external cross-checking of plant capacity / fuel. Per-record vintage in year_of_capacity_data / commissioning_year.",
+      "licenses": [
+        { "name": "CC-BY-4.0", "title": "Creative Commons Attribution 4.0", "path": "https://creativecommons.org/licenses/by/4.0/" }
+      ]
+    }
+  ]
+}
