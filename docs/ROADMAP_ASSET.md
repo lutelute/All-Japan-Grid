@@ -32,7 +32,7 @@
 - ρ見出しの正直化: `0.721`は「回廊使用率の順位相関(容量代理)」と明記し、実測潮流 `ρ≈0.46/0.60` を二段で併記
 - `git gc --prune=now`: tmp_pack 残骸 8.35GiB を回収(履歴無損失)
 - 依存 lock(uv.lock、数値コア固定)、CI の Python 版整合(宣言 vs 3.12)
-- 変電所数"三分裂"の統一: papers 散文8,164 / CHANGELOG・DATA_CATALOG 7,962 → 正典 6,962(README は是正済)
+- 変電所数"三分裂"の統一: **papers 散文8,164 のみ未統一**(CHANGELOG/DATA_CATALOG/README は 6,962 で是正済・実測で確認) → 正典 6,962。papers は別agent管轄=協調
 - west AC「収束」の正直化: per-component slack 前提を成果物・白書・論文で明示
 - テスト隔離: supplement の有無でテストが壊れない fixture/env(作業ツリーの赤を止める)
 - 掃除: `.coverage` / 一時CSV を .gitignore、未追跡の島分類レポート10本をコミット、台帳を HEAD に追従

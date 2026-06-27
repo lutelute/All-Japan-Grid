@@ -92,7 +92,7 @@ jq '.islands.west' docs/data/powerflow_full/summary.json
 | 2 | ナラティブ内部分裂: PLAN_NEXT は west収束、他は非収束 | docs/PLAN_NEXT.md:20 vs WHITEPAPER/README/ieej |
 | 3 | コードとデータ矛盾: batch_solve.py「west AC非収束が確定→DC」 vs summary ac_converged=true | src/powerflow/batch_solve.py |
 | 4 | バス数 10193(full) vs 約8400(旧ゾーナル) | summary._meta vs WHITEPAPER.md:961, WEST_AC_ANALYSIS.md:4 |
-| 5 | 断片化の三重不整合: PFモデル2531 vs 同summary内 audit 544/main8782 vs WEST_AC_ANALYSIS 52成分/98%被覆 | summary `.connectivity_audit_db2.west`; WEST_AC_ANALYSIS.md:21 |
+| 5 | 断片化の三重不整合: PFモデル2531 vs 同summary内 audit 544/main8782 vs WEST_AC_ANALYSIS 52成分/98%被覆 | summary `.connectivity_audit_db2.per_island.west`; WEST_AC_ANALYSIS.md:21 |
 | 6 | 最新成果物が文書未反映(powerflow_full/per-component/10193/2531 が4文書とも grep 0件) | README/WHITEPAPER/ieej.tex/WEST_AC_ANALYSIS |
 | 7 | 再現性ギャップ: --max-ac-buses 既定6000では west/east とも DC-only のはずだが両方収束=別実行 | run_full_powerflow_from_db.py:489; regenerate_all.py:39 |
 | 8 | summary._meta に per-component/prune/物理非妥当の caveat 無し | summary._meta |
@@ -116,7 +116,7 @@ jq '.islands.west' docs/data/powerflow_full/summary.json
 
 ```bash
 jq '.islands.west' docs/data/powerflow_full/summary.json          # 全値一致
-jq '.connectivity_audit_db2.west' summary.json                    # 544/8782/193(2531と別物)
+jq '.connectivity_audit_db2.per_island.west' summary.json                    # 544/8782/193(2531と別物)
 sed -n '312,342p' scripts/run_full_powerflow_from_db.py           # add_per_component_slacks
 sed -n '367,388p' scripts/run_full_powerflow_from_db.py           # prune梯子(None,45,30,20)
 sed -n '34,46p' src/powerflow/batch_solve.py                      # tolerance 1e-2..10.0, q_lims先頭2段
@@ -125,7 +125,7 @@ grep -rn 'powerflow_full|per-component|10193|2531' README.md WHITEPAPER.md paper
 ```
 
 ## 出典(リポジトリ内)
-- `docs/data/powerflow_full/summary.json`(`.islands.west`, `._meta`, `.connectivity_audit_db2.west`)
+- `docs/data/powerflow_full/summary.json`(`.islands.west`, `._meta`, `.connectivity_audit_db2.per_island.west`)
 - `scripts/run_full_powerflow_from_db.py`(L144-169 build skip, L312-342 add_per_component_slacks, L367-388 solve_island, L489 --max-ac-buses default=6000, L534-535 永続化)
 - `src/powerflow/batch_solve.py`(L34-46 ソルバ梯子, L53-55 q_lims記録, 「west島AC非収束が確定」コメント)
 - `src/powerflow/transforms.py`(L541-582 prune_dc_infeasible, L596-601 非物理スタブ線→1632%過負荷)
