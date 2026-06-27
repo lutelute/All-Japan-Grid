@@ -36,7 +36,7 @@ STEPS = [
     ("build_editor_data", [sys.executable, "scripts/build_editor_data.py"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
-    ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py"], True),          # 全規模AC(②前提・サーバ)
+    ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
     ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),

@@ -40,9 +40,11 @@ def run_powerflow(net, mode: str = "dc") -> dict:
                 {"algorithm": "nr", "init": "dc", "max_iteration": 200, "tolerance_mva": 1e-1},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 1.0},
                 {"algorithm": "nr", "init": "dc", "max_iteration": 300, "tolerance_mva": 10.0},
-                # fdbx/fdxb/gs は除外: west島(AC非収束が確定)で gs 5000反復が
-                # ~105分の膠着を招くため。nr系のみで east/hokkaido/okinawa は収束し、
-                # west は速やかに非収束判定 -> DC にフォールバックする。
+                # fdbx/fdxb/gs は除外: 単一同期島としての west AC は非収束で gs 5000反復が
+                # ~105分の膠着を招くため。nr系のみで east/hokkaido/okinawa は収束し、単一島 west は
+                # 速やかに非収束判定 -> DC にフォールバックする。
+                # 注: run_full_powerflow_from_db.py の per-component slack 解法では west も数値収束
+                # しうる(成分分割アーティファクト・運用解ではない、docs/reports/west_ac_convergence_2026-06-27.md)。
             ]
             last_err = ""
             for solver_opts in solvers:
