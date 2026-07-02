@@ -1,9 +1,10 @@
 {
  "generated": "2026-07-02",
- "ybus_version": "2.0.0",
+ "ybus_version": "3.0.0",
  "changelog": {
   "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・.mat/.npz/バス表",
-  "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) ②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) ③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) ④AC/DCバス順序の整合検証"
+  "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) ②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) ③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) ④AC/DCバス順序の整合検証",
+  "3.0.0": "①枝アドミタンス行列 Yf/Yt 同梱(線潮流 If=Yf·V が MATLAB で完結) ②枝表 {island}_branch.csv(kind/名前/from-to ybus_index/長さ/par/tap) ③再構成恒等式ゲート Ybus == Cf'Yf+Ct'Yt+diag(Ysh) (機械精度) ④枝順序ゲート(lookup範囲=lines→trafos の整合検証)"
  },
  "source": "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
  "note": "4 frequency islands are asynchronous; the national Ybus is the block-diagonal direct sum of these.",
@@ -11,7 +12,7 @@
   "hokkaido": {
    "island": "hokkaido",
    "f_hz": 50.0,
-   "ybus_version": "2.0.0",
+   "ybus_version": "3.0.0",
    "fingerprint": "9163ae8a3da65533",
    "n_bus": 836,
    "nnz": 2620,
@@ -23,6 +24,11 @@
     "included": true,
     "nnz": 2620,
     "aligned": true
+   },
+   "branch_matrices": {
+    "included": true,
+    "n_branch": 927,
+    "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
@@ -38,20 +44,22 @@
     "offdiag_checked": 908,
     "offdiag_rel_err_median": 0.0,
     "offdiag_rel_err_p99": 1.2283674932279337e-16,
+    "branch_order_mismatches": 0,
+    "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
     "backbone_symmetry_max_abs_err": 9.094947017729282e-13
    },
    "gate": {
     "pass": true,
-    "cond_max": 3497330.4720089696,
+    "cond_max": 4359126.60078795,
     "n_islands": 15
    },
-   "elapsed_s": 2.0
+   "elapsed_s": 8.7
   },
   "east": {
    "island": "east",
    "f_hz": 50.0,
-   "ybus_version": "2.0.0",
+   "ybus_version": "3.0.0",
    "fingerprint": "1baf9feb8419b629",
    "n_bus": 6205,
    "nnz": 19321,
@@ -63,6 +71,11 @@
     "included": true,
     "nnz": 19321,
     "aligned": true
+   },
+   "branch_matrices": {
+    "included": true,
+    "n_branch": 6945,
+    "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
@@ -78,20 +91,22 @@
     "offdiag_checked": 6726,
     "offdiag_rel_err_median": 0.0,
     "offdiag_rel_err_p99": 1.7000471781300878e-16,
+    "branch_order_mismatches": 0,
+    "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
     "backbone_symmetry_max_abs_err": 1.4551915228366852e-11
    },
    "gate": {
     "pass": true,
-    "cond_max": 104671254.8262918,
+    "cond_max": 149359334.97020167,
     "n_islands": 181
    },
-   "elapsed_s": 15.3
+   "elapsed_s": 39.4
   },
   "west": {
    "island": "west",
    "f_hz": 60.0,
-   "ybus_version": "2.0.0",
+   "ybus_version": "3.0.0",
    "fingerprint": "1f01e919fed03ed9",
    "n_bus": 10193,
    "nnz": 26784,
@@ -103,6 +118,11 @@
     "included": true,
     "nnz": 26784,
     "aligned": true
+   },
+   "branch_matrices": {
+    "included": true,
+    "n_branch": 10854,
+    "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
@@ -118,6 +138,8 @@
     "offdiag_checked": 9400,
     "offdiag_rel_err_median": 0.0,
     "offdiag_rel_err_p99": 1.6653908696644005e-16,
+    "branch_order_mismatches": 0,
+    "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
     "backbone_symmetry_max_abs_err": 1.4551915228366852e-11
    },
@@ -126,12 +148,12 @@
     "cond_max": 62523633.65730759,
     "n_islands": 322
    },
-   "elapsed_s": 30.1
+   "elapsed_s": 35.2
   },
   "okinawa": {
    "island": "okinawa",
    "f_hz": 60.0,
-   "ybus_version": "2.0.0",
+   "ybus_version": "3.0.0",
    "fingerprint": "2a5c0ef0ca6210e7",
    "n_bus": 99,
    "nnz": 321,
@@ -143,6 +165,11 @@
     "included": true,
     "nnz": 321,
     "aligned": true
+   },
+   "branch_matrices": {
+    "included": true,
+    "n_branch": 114,
+    "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 132.0,
@@ -158,6 +185,8 @@
     "offdiag_checked": 114,
     "offdiag_rel_err_median": 0.0,
     "offdiag_rel_err_p99": 1.7829505604930805e-16,
+    "branch_order_mismatches": 0,
+    "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
     "backbone_symmetry_max_abs_err": 4.296434007659337e-14
    },
@@ -166,7 +195,7 @@
     "cond_max": 41379.87214356339,
     "n_islands": 1
    },
-   "elapsed_s": 0.3
+   "elapsed_s": 0.4
   }
  }
 }

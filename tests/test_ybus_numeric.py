@@ -77,13 +77,30 @@ def test_regression_pin_okinawa(okinawa_ybus):
 def test_v2_version_and_dc(okinawa_ybus):
     """v2: バージョン刻印・フィンガープリント・DC行列の同梱と整合。"""
     out, meta = okinawa_ybus
-    assert meta["ybus_version"].startswith("2.")
+    assert meta["ybus_version"].startswith("3.")
     assert len(meta["fingerprint"]) == 16
     assert meta["dc"]["included"] and meta["dc"]["aligned"]
     d = np.load(os.path.join(out, "okinawa.npz"))
     B = sp.csr_matrix((d["bdc_data"], d["bdc_indices"], d["bdc_indptr"]),
                       shape=tuple(d["shape"]))
     assert abs(B - B.T).max() < 1e-9          # DC 行列も対称
+
+
+def test_v3_branch_matrices(okinawa_ybus):
+    """v3: 枝行列 Yf/Yt の同梱・枝順序整合・再構成恒等式(機械精度)。"""
+    out, meta = okinawa_ybus
+    c = meta["checks"]
+    assert meta["branch_matrices"]["included"]
+    assert c["branch_order_mismatches"] == 0
+    assert c["reconstruction_rel_err"] < 1e-12
+    d = np.load(os.path.join(out, "okinawa.npz"))
+    Yf = sp.csr_matrix((d["yf_data"], d["yf_indices"], d["yf_indptr"]),
+                       shape=tuple(d["branch_shape"]))
+    assert Yf.shape == (meta["branch_matrices"]["n_branch"], meta["n_bus"])
+    # 枝表と Yf の from 列が一致(各行の from 位置に非ゼロ)
+    bf = d["branch_from"]
+    for i in range(0, Yf.shape[0], 10):
+        assert Yf[i, int(bf[i])] != 0
 
 
 def test_v2_kron_equals_dense_schur(okinawa_ybus):

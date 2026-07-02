@@ -42,7 +42,7 @@ ISLANDS = [("hokkaido", 50.0), ("east", 50.0), ("west", 60.0),
 
 # Ybus は「バージョン管理された成果物」(オーナー認識 2026-07-02)。
 # モデル・出荷物・検証が変わるたびに上げ、meta.json と .mat に刻印する。
-YBUS_VERSION = "2.0.0"
+YBUS_VERSION = "3.0.0"
 CHANGELOG = {
     "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・"
              ".mat/.npz/バス表",
@@ -50,6 +50,10 @@ CHANGELOG = {
              "②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) "
              "③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) "
              "④AC/DCバス順序の整合検証",
+    "3.0.0": "①枝アドミタンス行列 Yf/Yt 同梱(線潮流 If=Yf·V が MATLAB で完結) "
+             "②枝表 {island}_branch.csv(kind/名前/from-to ybus_index/長さ/par/tap) "
+             "③再構成恒等式ゲート Ybus == Cf'Yf+Ct'Yt+diag(Ysh) (機械精度) "
+             "④枝順序ゲート(lookup範囲=lines→trafos の整合検証)",
 }
 BACKBONE_KV = 154.0     # transforms.reduce_to_backbone と同じ閾値(WEST_AC_ANALYSIS)
 
@@ -168,7 +172,8 @@ def extract_ybus(net):
     except pp.LoadflowNotConverged:
         pass    # 行列は net._ppc に既に在る(下で検証つき回収)
     ppc = net.get("_ppc") or {}
-    Y = ppc.get("internal", {}).get("Ybus")
+    internal = ppc.get("internal", {})
+    Y = internal.get("Ybus")
     if Y is None or Y.shape[0] == 0:
         raise RuntimeError("Ybus was not assembled (pd2ppc failed)")
     Y = Y.tocsr()
@@ -178,7 +183,75 @@ def extract_ybus(net):
         ppc_idx = int(lookup[pd_idx])
         if 0 <= ppc_idx < Y.shape[0] and ppc_bus_ids[ppc_idx] == -1:
             ppc_bus_ids[ppc_idx] = int(pd_idx)
-    return Y, ppc_bus_ids
+    return Y, ppc_bus_ids, internal
+
+
+def branch_bundle(net, internal, Y):
+    """枝行列 Yf/Yt と枝表(v3)を検証つきで取り出す。
+
+    枝順序 = ppci 内部順。`_pd2ppc_lookups["branch"]` が
+    {"line": (0, n_line), "trafo": (n_line, n_line+n_trafo)} を保証するので、
+    行 i<n_line は net.line.iloc[i]、以降は net.trafo に対応する。
+    その対応を internal branch 配列の F_BUS/T_BUS で行ごとに検証し、
+    再構成恒等式 Ybus == Cf'·Yf + Ct'·Yt + diag(Ysh) を機械精度で確認する。
+    """
+    from pandapower.pypower.idx_brch import F_BUS, T_BUS, TAP
+    from pandapower.pypower.idx_bus import BS, GS
+
+    Yf = internal["Yf"].tocsr()
+    Yt = internal["Yt"].tocsr()
+    br = internal["branch"]
+    bus_arr = internal["bus"]
+    base = float(internal.get("baseMVA", 100.0))
+    lk = net._pd2ppc_lookups["branch"]
+    l0, l1 = lk["line"]
+    t0, t1 = lk.get("trafo", (l1, l1))
+    if Yf.shape[0] != br.shape[0] or t1 != br.shape[0]:
+        raise RuntimeError("branch matrix/lookup shape mismatch")
+
+    # --- 枝表(from/to は ybus_index = internal 順そのもの) ---
+    rows = []
+    line_idx = list(net.line.index)
+    trafo_idx = list(net.trafo.index)
+    for i in range(br.shape[0]):
+        fb, tb = int(br[i, F_BUS].real), int(br[i, T_BUS].real)
+        tap = float(br[i, TAP].real) or 1.0
+        if l0 <= i < l1:
+            li = line_idx[i - l0]
+            rows.append((i, "line", int(li), str(net.line.at[li, "name"]),
+                         fb, tb, float(net.line.at[li, "length_km"]),
+                         int(net.line.at[li, "parallel"] or 1), tap))
+        else:
+            ti = trafo_idx[i - t0]
+            rows.append((i, "trafo", int(ti), str(net.trafo.at[ti, "name"]),
+                         fb, tb, 0.0,
+                         int(getattr(net.trafo.at[ti, "parallel"], "real",
+                                     net.trafo.at[ti, "parallel"]) or 1), tap))
+
+    # --- 検証①: 枝順序(lookup 行の F_BUS が pandapower 側の from/hv と一致) ---
+    lookup_bus = net._pd2ppc_lookups["bus"]
+    n_mis = 0
+    for i, kind, pidx, _nm, fb, _tb, _L, _p, _tap in rows:
+        want = (int(lookup_bus[int(net.line.at[pidx, "from_bus"])])
+                if kind == "line"
+                else int(lookup_bus[int(net.trafo.at[pidx, "hv_bus"])]))
+        if want != fb:
+            n_mis += 1
+    # --- 検証②: 再構成恒等式 ---
+    nb, nl = Y.shape[0], br.shape[0]
+    ii = np.arange(nl)
+    Cf = sp.csr_matrix((np.ones(nl), (ii, br[:, F_BUS].real.astype(int))),
+                       shape=(nl, nb))
+    Ct = sp.csr_matrix((np.ones(nl), (ii, br[:, T_BUS].real.astype(int))),
+                       shape=(nl, nb))
+    Ysh = (bus_arr[:, GS].real + 1j * bus_arr[:, BS].real) / base
+    Yrec = Cf.T @ Yf + Ct.T @ Yt + sp.diags(Ysh)
+    drec = abs(Y - Yrec.tocsr())
+    rec_err = float(drec.max()) if drec.nnz else 0.0
+    rec_rel = rec_err / (float(abs(Y).max()) or 1.0)
+    checks = {"branch_order_mismatches": int(n_mis),
+              "reconstruction_rel_err": rec_rel}
+    return Yf, Yt, rows, checks
 
 
 def own_offdiag(net, base_mva=100.0):
@@ -260,8 +333,12 @@ def export_island(island, freq, nodes, edges, out_dir):
     geom = {}
     net, bus_of, _stats = build_island_net(island, nodes, edges, freq, geom)
     n_refs = add_ref_per_component(net)
-    Y, bus_ids = extract_ybus(net)
+    Y, bus_ids, internal = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
+
+    # --- 枝行列 Yf/Yt + 枝表(v3) ---
+    Yf, Yt, branch_rows, br_checks = branch_bundle(net, internal, Y)
+    checks.update(br_checks)
 
     # --- DC 行列(v2): 公式 Bbus。AC と同一バス順序であることを検証 ---
     Bbus, bus_ids_dc = extract_bdc(net)
@@ -317,23 +394,43 @@ def export_island(island, freq, nodes, edges, out_dir):
                     "region"])
         w.writerows(rows)
 
-    # --- npz(scipy CSR + Bbus + バス配列を同梱) ---
+    # --- 枝表 CSV ---
+    with open(os.path.join(out_dir, f"{island}_branch.csv"), "w",
+              newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["branch_index", "kind", "pp_index", "name",
+                    "from_ybus_index", "to_ybus_index", "length_km", "par",
+                    "tap"])
+        w.writerows(branch_rows)
+
+    # --- npz(scipy CSR + Bbus + Yf/Yt + バス/枝配列を同梱) ---
     np.savez_compressed(
         os.path.join(out_dir, f"{island}.npz"),
         ybus_version=np.array([YBUS_VERSION]),
         data=Y.data, indices=Y.indices, indptr=Y.indptr,
         shape=np.array(Y.shape), base_mva=np.array([100.0]), f_hz=np.array([freq]),
         bdc_data=Bbus.data, bdc_indices=Bbus.indices, bdc_indptr=Bbus.indptr,
+        yf_data=Yf.data, yf_indices=Yf.indices, yf_indptr=Yf.indptr,
+        yt_data=Yt.data, yt_indices=Yt.indices, yt_indptr=Yt.indptr,
+        branch_shape=np.array(Yf.shape),
+        branch_from=np.array([r[4] for r in branch_rows]),
+        branch_to=np.array([r[5] for r in branch_rows]),
         bus_pp=np.array([r[1] for r in rows]),
         bus_kv=np.array([r[3] for r in rows]),
         bus_lat=np.array([r[4] for r in rows]),
         bus_lon=np.array([r[5] for r in rows]))
 
-    # --- .mat(MATLAB: sparse complex + DC行列 + バス属性) ---
+    # --- .mat(MATLAB: sparse complex + DC行列 + 枝行列 + 属性) ---
     from scipy.io import savemat
     savemat(os.path.join(out_dir, f"{island}.mat"), {
         "Ybus": Y.tocsc(),                     # MATLAB native sparse
         "Bbus": Bbus.tocsc(),                  # DC 行列(PTDF/DC潮流用)
+        "Yf": Yf.tocsc(), "Yt": Yt.tocsc(),    # 枝行列(If = Yf*V)
+        "branch_from": np.array([r[4] for r in branch_rows]),   # 0-based
+        "branch_to": np.array([r[5] for r in branch_rows]),
+        "branch_kind": np.array([r[1] for r in branch_rows], dtype=object),
+        "branch_name": np.array([r[3] for r in branch_rows], dtype=object),
+        "branch_par": np.array([r[7] for r in branch_rows]),
         "ybus_version": YBUS_VERSION,
         "base_mva": 100.0, "f_hz": freq,
         "bus_kv": np.array([r[3] for r in rows]),
@@ -382,6 +479,8 @@ def export_island(island, freq, nodes, edges, out_dir):
         "n_components_refs": int(n_refs),
         "dc": {"included": True, "nnz": int(Bbus.nnz),
                "aligned": bool(checks["dc_bus_order_aligned"])},
+        "branch_matrices": {"included": True, "n_branch": int(Yf.shape[0]),
+                            "order": "lines then trafos (lookup-verified)"},
         "backbone": {
             "keep_kv_min": backbone_kv,
             "n_bus": int(Yred.shape[0]), "nnz": int(Yred.nnz),
@@ -419,6 +518,9 @@ def main():
               f"trafo={meta['n_trafo']} | sym={c['symmetry_rel_err']:.0e} "
               f"offdiag_p99={c['offdiag_rel_err_p99']:.1e} | "
               f"dc={'OK' if meta['dc']['aligned'] else 'MISALIGNED'} | "
+              f"branch: n={meta['branch_matrices']['n_branch']} "
+              f"order_mis={c['branch_order_mismatches']} "
+              f"rec_rel={c['reconstruction_rel_err']:.1e} | "
               f"backbone {bb['n_bus']}bus fill={bb['fill_density']:.3f} "
               f"drop={bb['n_dropped_buses']} | "
               f"gate={'PASS' if meta['gate']['pass'] else 'FAIL'} "
