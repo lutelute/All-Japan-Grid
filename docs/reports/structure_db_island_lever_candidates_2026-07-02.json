@@ -1,0 +1,4418 @@
+{
+ "generated": "2026-07-02",
+ "method": "structure-DB connections vs built(all.json) coordinate components (kv-collapsed)",
+ "meaning": "structure DB claims these site pairs are connected by an OSM line bound at both ends, but built has them in different components — candidates to reduce islands (verify each before adopting)",
+ "n_candidates": 210,
+ "candidates": [
+  {
+   "region": "chubu",
+   "line_name": "北巨摩線",
+   "line_key": "g:29497f0c92d4",
+   "from_site": "chubu_site_32bd9cc15d54",
+   "from_name": "長坂変電所",
+   "from_latlon": [
+    35.83594,
+    138.369785
+   ],
+   "to_site": "chubu_site_3a4632912578",
+   "to_name": "白州変電所",
+   "to_latlon": [
+    35.81583,
+    138.331723
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "中部送電線_135",
+   "line_key": "g:396f65260ba5",
+   "from_site": "chubu_site_b2403521f5bc",
+   "from_name": "諏訪三丁目変電所",
+   "from_latlon": [
+    34.82842,
+    137.367485
+   ],
+   "to_site": "chubu_site_be3da42c5f4a",
+   "to_name": "桜木通三丁目変電所",
+   "to_latlon": [
+    34.828936,
+    137.371656
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "大同渋川線",
+   "line_key": "g:4c9f9f8313bb",
+   "from_site": "chubu_site_4c42884c003f",
+   "from_name": "南渋川変電所",
+   "from_latlon": [
+    36.491681,
+    139.011142
+   ],
+   "to_site": "chubu_site_518fd70684bb",
+   "to_name": "中村変電所_2",
+   "to_latlon": [
+    36.484447,
+    139.009774
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "竜島変電所~中信変電所線",
+   "line_key": "g:57e0fab259f3",
+   "from_site": "chubu_site_367c1f7d719d",
+   "from_name": "中信変電所",
+   "from_latlon": [
+    36.126696,
+    137.932487
+   ],
+   "to_site": "chubu_site_76999bfbf76b",
+   "to_name": "竜島変電所",
+   "to_latlon": [
+    36.180996,
+    137.792864
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "竜島変電所~中信変電所線",
+   "line_key": "g:57e0fab259f3",
+   "from_site": "chubu_site_76999bfbf76b",
+   "from_name": "竜島変電所",
+   "from_latlon": [
+    36.180996,
+    137.792864
+   ],
+   "to_site": "chubu_site_f44c12c8f663",
+   "to_name": "中信変電所",
+   "to_latlon": [
+    36.126136,
+    137.933939
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "東京電力パワーグリッド 66.0kV線",
+   "line_key": "g:5f6245382a6f",
+   "from_site": "chubu_site_4c42884c003f",
+   "from_name": "南渋川変電所",
+   "from_latlon": [
+    36.491681,
+    139.011142
+   ],
+   "to_site": "chubu_site_518fd70684bb",
+   "to_name": "中村変電所_2",
+   "to_latlon": [
+    36.484447,
+    139.009774
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "大同渋川線",
+   "line_key": "g:78cbd95ac499",
+   "from_site": "chubu_site_4c42884c003f",
+   "from_name": "南渋川変電所",
+   "from_latlon": [
+    36.491681,
+    139.011142
+   ],
+   "to_site": "chubu_site_518fd70684bb",
+   "to_name": "中村変電所_2",
+   "to_latlon": [
+    36.484447,
+    139.009774
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chubu",
+   "line_name": "松本市変電所~竜島変電所線",
+   "line_key": "g:bfe7e48f660a",
+   "from_site": "chubu_site_5726d77a3d87",
+   "from_name": "松本市変電所_3",
+   "from_latlon": [
+    36.171185,
+    137.64623
+   ],
+   "to_site": "chubu_site_76999bfbf76b",
+   "to_name": "竜島変電所",
+   "to_latlon": [
+    36.180996,
+    137.792864
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "chugoku",
+   "line_name": "山野井支線",
+   "line_key": "g:7788abc4b497",
+   "from_site": "chugoku_site_2632635b3ab2",
+   "from_name": "山陽小野田市変電所",
+   "from_latlon": [
+    34.048833,
+    131.13241
+   ],
+   "to_site": "chugoku_site_410137c6ede6",
+   "to_name": "山野井変電所",
+   "to_latlon": [
+    34.049304,
+    131.133332
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "chugoku",
+   "line_name": "中国電力ネットワーク 66.0kV線",
+   "line_key": "g:87aa868a2fce",
+   "from_site": "chugoku_site_2632635b3ab2",
+   "from_name": "山陽小野田市変電所",
+   "from_latlon": [
+    34.048833,
+    131.13241
+   ],
+   "to_site": "chugoku_site_410137c6ede6",
+   "to_name": "山野井変電所",
+   "to_latlon": [
+    34.049304,
+    131.133332
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "平岸3条18変電所~南札幌変電所線",
+   "line_key": "g:0358fa82a15e",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "平岸3条18変電所~南札幌変電所線",
+   "line_key": "g:0358fa82a15e",
+   "from_site": "hokkaido_site_911eaaefa8c0",
+   "from_name": "月寒変電所",
+   "from_latlon": [
+    43.032862,
+    141.412878
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "平岸3条18変電所~南札幌変電所線",
+   "line_key": "g:0358fa82a15e",
+   "from_site": "hokkaido_site_bc479c8401a5",
+   "from_name": "平岸3条18変電所_2",
+   "from_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "to_site": "hokkaido_site_c9e9a00f9e3e",
+   "to_name": "南札幌変電所",
+   "to_latlon": [
+    43.022371,
+    141.418573
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/vertex-shared",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "白石中央",
+   "line_key": "g:13700f47d28e",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:3132af21c700",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:492e9bc7134d",
+   "from_site": "hokkaido_site_2d60a94b63d5",
+   "from_name": "幌加内町変電所_2",
+   "from_latlon": [
+    44.300636,
+    142.180502
+   ],
+   "to_site": "hokkaido_site_e0154e5fa446",
+   "to_name": "幌加内町変電所",
+   "to_latlon": [
+    44.300674,
+    142.180434
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "白石中央",
+   "line_key": "g:6f3d92edc854",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:701ae2f7f20f",
+   "from_site": "hokkaido_site_2d60a94b63d5",
+   "from_name": "幌加内町変電所_2",
+   "from_latlon": [
+    44.300636,
+    142.180502
+   ],
+   "to_site": "hokkaido_site_e0154e5fa446",
+   "to_name": "幌加内町変電所",
+   "to_latlon": [
+    44.300674,
+    142.180434
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:7e28e7cfca79",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:a691c2d11a62",
+   "from_site": "hokkaido_site_2d60a94b63d5",
+   "from_name": "幌加内町変電所_2",
+   "from_latlon": [
+    44.300636,
+    142.180502
+   ],
+   "to_site": "hokkaido_site_e0154e5fa446",
+   "to_name": "幌加内町変電所",
+   "to_latlon": [
+    44.300674,
+    142.180434
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 33.0kV線",
+   "line_key": "g:ba34b9f5e358",
+   "from_site": "hokkaido_site_2d60a94b63d5",
+   "from_name": "幌加内町変電所_2",
+   "from_latlon": [
+    44.300636,
+    142.180502
+   ],
+   "to_site": "hokkaido_site_e0154e5fa446",
+   "to_name": "幌加内町変電所",
+   "to_latlon": [
+    44.300674,
+    142.180434
+   ],
+   "from_vl": "33",
+   "to_vl": "33",
+   "binding": "polygon/polygon",
+   "confidence": 0.9
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "HVDC Hokkaido-Honschu",
+   "line_key": "g:d3a5a19066b7",
+   "from_site": "hokkaido_site_2e1acc732979",
+   "from_name": "大間町変電所",
+   "from_latlon": [
+    41.465215,
+    140.890078
+   ],
+   "to_site": "hokkaido_site_97b433e13100",
+   "to_name": "古川ケーブルヘッド",
+   "to_latlon": [
+    41.765044,
+    140.859434
+   ],
+   "from_vl": "250",
+   "to_vl": "250",
+   "binding": "vertex-shared/polygon",
+   "confidence": 0.9
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "HVDC Hokkaido-Honschu",
+   "line_key": "g:d3a5a19066b7",
+   "from_site": "hokkaido_site_2e1acc732979",
+   "from_name": "大間町変電所",
+   "from_latlon": [
+    41.465215,
+    140.890078
+   ],
+   "to_site": "hokkaido_site_a59c51e86e7b",
+   "to_name": "古川町変電所",
+   "to_latlon": [
+    41.767276,
+    140.861798
+   ],
+   "from_vl": "250",
+   "to_vl": "250",
+   "binding": "vertex-shared/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "HVDC Hokkaido-Honschu",
+   "line_key": "g:d3a5a19066b7",
+   "from_site": "hokkaido_site_8f2f1cc1dbf0",
+   "from_name": "佐井変電所",
+   "from_latlon": [
+    41.461768,
+    140.886431
+   ],
+   "to_site": "hokkaido_site_97b433e13100",
+   "to_name": "古川ケーブルヘッド",
+   "to_latlon": [
+    41.765044,
+    140.859434
+   ],
+   "from_vl": "250",
+   "to_vl": "250",
+   "binding": "vertex-shared/polygon",
+   "confidence": 0.9
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "HVDC Hokkaido-Honschu",
+   "line_key": "g:d3a5a19066b7",
+   "from_site": "hokkaido_site_8f2f1cc1dbf0",
+   "from_name": "佐井変電所",
+   "from_latlon": [
+    41.461768,
+    140.886431
+   ],
+   "to_site": "hokkaido_site_a59c51e86e7b",
+   "to_name": "古川町変電所",
+   "to_latlon": [
+    41.767276,
+    140.861798
+   ],
+   "from_vl": "250",
+   "to_vl": "250",
+   "binding": "vertex-shared/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:e241d3c5a900",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:e9a6e740a9d2",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "白石中央",
+   "line_key": "g:ea992137c9ea",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "白石中央",
+   "line_key": "g:ea992137c9ea",
+   "from_site": "hokkaido_site_847f082c0162",
+   "from_name": "白石変電所",
+   "from_latlon": [
+    43.059205,
+    141.40582
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokkaido",
+   "line_name": "北海道電力ネットワーク 66.0kV線",
+   "line_key": "g:f621c10d86ac",
+   "from_site": "hokkaido_site_48ec8a1c2a50",
+   "from_name": "平岸3条18変電所",
+   "from_latlon": [
+    43.019311,
+    141.370105
+   ],
+   "to_site": "hokkaido_site_bc479c8401a5",
+   "to_name": "平岸3条18変電所_2",
+   "to_latlon": [
+    43.019056,
+    141.367637
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "hokuriku",
+   "line_name": "松本市変電所_3~竜島変電所線",
+   "line_key": "g:6da2daebd417",
+   "from_site": "hokuriku_site_5726d77a3d87",
+   "from_name": "松本市変電所_3",
+   "from_latlon": [
+    36.171185,
+    137.64623
+   ],
+   "to_site": "hokuriku_site_76999bfbf76b",
+   "to_name": "竜島変電所",
+   "to_latlon": [
+    36.180996,
+    137.792864
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kansai",
+   "line_name": "関西送電線_38",
+   "line_key": "g:0c87ae8d3ec7",
+   "from_site": "kansai_site_1ec9c470befd",
+   "from_name": "西区変電所_3",
+   "from_latlon": [
+    34.56757,
+    135.409943
+   ],
+   "to_site": "kansai_site_8534d50ccaa0",
+   "to_name": "西区変電所_7",
+   "to_latlon": [
+    34.571441,
+    135.409187
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kansai",
+   "line_name": "関西送電線_38",
+   "line_key": "g:0c87ae8d3ec7",
+   "from_site": "kansai_site_3c37d79263d7",
+   "from_name": "西区変電所_4",
+   "from_latlon": [
+    34.563667,
+    135.414769
+   ],
+   "to_site": "kansai_site_8534d50ccaa0",
+   "to_name": "西区変電所_7",
+   "to_latlon": [
+    34.571441,
+    135.409187
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kansai",
+   "line_name": "阿南紀北直流幹線",
+   "line_key": "g:bd04515b0c29",
+   "from_site": "kansai_site_162c20ca11b2",
+   "from_name": "由良開閉所",
+   "from_latlon": [
+    33.976948,
+    135.088993
+   ],
+   "to_site": "kansai_site_f6fdf4423274",
+   "to_name": "阿南周波数変換所",
+   "to_latlon": [
+    33.827825,
+    134.636564
+   ],
+   "from_vl": "500",
+   "to_vl": "500",
+   "binding": "polygon/polygon",
+   "confidence": 0.9
+  },
+  {
+   "region": "kansai",
+   "line_name": "阿南紀北直流幹線",
+   "line_key": "g:eeefbaa5a0bb",
+   "from_site": "kansai_site_162c20ca11b2",
+   "from_name": "由良開閉所",
+   "from_latlon": [
+    33.976948,
+    135.088993
+   ],
+   "to_site": "kansai_site_be440223ee69",
+   "to_name": "紀北変換所",
+   "to_latlon": [
+    34.213924,
+    135.502115
+   ],
+   "from_vl": "500",
+   "to_vl": "500",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:1ac44067b5a3",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:1ac44067b5a3",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "九州電力送配電 66.0kV線",
+   "line_key": "g:3a6affe34071",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "九州電力送配電 66.0kV線",
+   "line_key": "g:3a6affe34071",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:40a547eb3dd6",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:40a547eb3dd6",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "九州電力送配電 66.0kV線",
+   "line_key": "g:58cbfff6f8ea",
+   "from_site": "kyushu_site_2632635b3ab2",
+   "from_name": "山陽小野田市変電所",
+   "from_latlon": [
+    34.048833,
+    131.13241
+   ],
+   "to_site": "kyushu_site_410137c6ede6",
+   "to_name": "山野井変電所",
+   "to_latlon": [
+    34.049304,
+    131.133332
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "山野井支線",
+   "line_key": "g:7788abc4b497",
+   "from_site": "kyushu_site_2632635b3ab2",
+   "from_name": "山陽小野田市変電所",
+   "from_latlon": [
+    34.048833,
+    131.13241
+   ],
+   "to_site": "kyushu_site_410137c6ede6",
+   "to_name": "山野井変電所",
+   "to_latlon": [
+    34.049304,
+    131.133332
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:85c327082ab2",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:85c327082ab2",
+   "from_site": "kyushu_site_a353b08a784d",
+   "from_name": "新鹿児島変電所",
+   "from_latlon": [
+    31.536354,
+    130.464749
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "新鹿児島紫原線",
+   "line_key": "g:85c327082ab2",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:8b98117fa9be",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:8b98117fa9be",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:e4033aab1200",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:e4033aab1200",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:e99e2695136d",
+   "from_site": "kyushu_site_74b24e570106",
+   "from_name": "紫原変電所",
+   "from_latlon": [
+    31.54876,
+    130.536187
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "kyushu",
+   "line_name": "鹿大医学部分岐線",
+   "line_key": "g:e99e2695136d",
+   "from_site": "kyushu_site_d443b60cea47",
+   "from_name": "宇宿四丁目変電所",
+   "from_latlon": [
+    31.548583,
+    130.534983
+   ],
+   "to_site": "kyushu_site_e5f21c18dd82",
+   "to_name": "脇田変電所",
+   "to_latlon": [
+    31.543386,
+    130.536909
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_a29293202818",
+   "to_name": "石巻変電所",
+   "to_latlon": [
+    38.481114,
+    141.237765
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_a29293202818",
+   "from_name": "石巻変電所",
+   "from_latlon": [
+    38.481114,
+    141.237765
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "牡鹿幹線",
+   "line_key": "g:00fbcdd72076",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_218",
+   "line_key": "g:237516baa172",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_221",
+   "line_key": "g:3b92005f182a",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_220",
+   "line_key": "g:3f60288e83c1",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_216",
+   "line_key": "g:4545f97335d7",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "土崎支線",
+   "line_key": "g:741defbf3d28",
+   "from_site": "tohoku_site_17d9856c50a6",
+   "from_name": "土崎港東四丁目変電所",
+   "from_latlon": [
+    39.754164,
+    140.081757
+   ],
+   "to_site": "tohoku_site_957910fb6967",
+   "to_name": "土崎変電所",
+   "to_latlon": [
+    39.748936,
+    140.081373
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_219",
+   "line_key": "g:9af465a067b8",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9e6b7f5bb1ea",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:9ee50e4998f8",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "北斗今別直流幹線",
+   "line_key": "g:bf6aa7f39b8b",
+   "from_site": "tohoku_site_529cebd404d0",
+   "from_name": "JR北海道変電所",
+   "from_latlon": [
+    41.255409,
+    140.344053
+   ],
+   "to_site": "tohoku_site_8f0767c4580a",
+   "to_name": "JR北海道吉岡変電所",
+   "to_latlon": [
+    41.442895,
+    140.23499
+   ],
+   "from_vl": "250",
+   "to_vl": "250",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_224",
+   "line_key": "g:bfe9ec614468",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:c3ac68425f3a",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 275.0kV線",
+   "line_key": "g:d5ca4fd363b3",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "松島幹線",
+   "line_key": "g:d7bdaecf32d0",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "275",
+   "to_vl": "275",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_222",
+   "line_key": "g:e057eb735937",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_196",
+   "line_key": "g:e368e28e4624",
+   "from_site": "tohoku_site_17d9856c50a6",
+   "from_name": "土崎港東四丁目変電所",
+   "from_latlon": [
+    39.754164,
+    140.081757
+   ],
+   "to_site": "tohoku_site_957910fb6967",
+   "to_name": "土崎変電所",
+   "to_latlon": [
+    39.748936,
+    140.081373
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "polygon/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_217",
+   "line_key": "g:ed483f837625",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北電力ネットワーク 66.0kV線",
+   "line_key": "g:f376fb1f0886",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_4fa43d382a0d",
+   "to_name": "塚浜変電所_4",
+   "to_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_049ebefc2482",
+   "from_name": "塚浜変電所_6",
+   "from_latlon": [
+    38.39619,
+    141.499742
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_ae67f88c3dc2",
+   "to_name": "塚浜変電所",
+   "to_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_bd99201b4acc",
+   "to_name": "塚浜変電所_2",
+   "to_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_db9a3e2e0e29",
+   "to_name": "塚浜変電所_3",
+   "to_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_4fa43d382a0d",
+   "from_name": "塚浜変電所_4",
+   "from_latlon": [
+    38.400089,
+    141.500396
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_ae67f88c3dc2",
+   "from_name": "塚浜変電所",
+   "from_latlon": [
+    38.396117,
+    141.499618
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_bd99201b4acc",
+   "from_name": "塚浜変電所_2",
+   "from_latlon": [
+    38.397758,
+    141.501242
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tohoku",
+   "line_name": "東北送電線_223",
+   "line_key": "g:fbbee51fe638",
+   "from_site": "tohoku_site_db9a3e2e0e29",
+   "from_name": "塚浜変電所_3",
+   "from_latlon": [
+    38.39987,
+    141.498597
+   ],
+   "to_site": "tohoku_site_e5e6525d2b66",
+   "to_name": "塚浜変電所_5",
+   "to_latlon": [
+    38.39865,
+    141.502822
+   ],
+   "from_vl": "u",
+   "to_vl": "u",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "安方線",
+   "line_key": "g:4d1d73d439a4",
+   "from_site": "tokyo_site_2f270cba9a56",
+   "from_name": "矢口変電所",
+   "from_latlon": [
+    35.568915,
+    139.69006
+   ],
+   "to_site": "tokyo_site_918590ba9809",
+   "to_name": "池上変電所",
+   "to_latlon": [
+    35.569346,
+    139.696465
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "北千代田線 / 田端線",
+   "line_key": "g:85c87a769488",
+   "from_site": "tokyo_site_28b2ba699ea6",
+   "from_name": "田端変電所",
+   "from_latlon": [
+    35.746965,
+    139.765749
+   ],
+   "to_site": "tokyo_site_dde385b2bcd9",
+   "to_name": "尾久変電所",
+   "to_latlon": [
+    35.738585,
+    139.771621
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tokyo",
+   "line_name": "北千代田線 / 田端線",
+   "line_key": "g:85c87a769488",
+   "from_site": "tokyo_site_d4c9a5a4c798",
+   "from_name": "鳩ヶ谷変電所",
+   "from_latlon": [
+    35.822045,
+    139.736364
+   ],
+   "to_site": "tokyo_site_dde385b2bcd9",
+   "to_name": "尾久変電所",
+   "to_latlon": [
+    35.738585,
+    139.771621
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "polygon/vertex-shared",
+   "confidence": 0.9
+  },
+  {
+   "region": "tokyo",
+   "line_name": "北千代田線 / 田端線",
+   "line_key": "g:85c87a769488",
+   "from_site": "tokyo_site_da4388a4f18a",
+   "from_name": "東尾久五丁目変電所",
+   "from_latlon": [
+    35.746481,
+    139.765995
+   ],
+   "to_site": "tokyo_site_dde385b2bcd9",
+   "to_name": "尾久変電所",
+   "to_latlon": [
+    35.738585,
+    139.771621
+   ],
+   "from_vl": "154",
+   "to_vl": "154",
+   "binding": "vertex-shared/vertex-shared",
+   "confidence": 1.0
+  },
+  {
+   "region": "tokyo",
+   "line_name": "安方線",
+   "line_key": "g:ba8c4357108c",
+   "from_site": "tokyo_site_2f270cba9a56",
+   "from_name": "矢口変電所",
+   "from_latlon": [
+    35.568915,
+    139.69006
+   ],
+   "to_site": "tokyo_site_918590ba9809",
+   "to_name": "池上変電所",
+   "to_latlon": [
+    35.569346,
+    139.696465
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "安方線",
+   "line_key": "g:ba8c4357108c",
+   "from_site": "tokyo_site_2f270cba9a56",
+   "from_name": "矢口変電所",
+   "from_latlon": [
+    35.568915,
+    139.69006
+   ],
+   "to_site": "tokyo_site_cebd34299c96",
+   "to_name": "六郷変電所",
+   "to_latlon": [
+    35.547209,
+    139.712913
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/polygon",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "クリーンセンター常陸那珂線",
+   "line_key": "g:ecdac3862646",
+   "from_site": "tokyo_site_075f244ace65",
+   "from_name": "新光町変電所",
+   "from_latlon": [
+    36.386395,
+    140.587395
+   ],
+   "to_site": "tokyo_site_54a8005bac61",
+   "to_name": "阿字ケ浦町変電所",
+   "to_latlon": [
+    36.381066,
+    140.594184
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "クリーンセンター常陸那珂線",
+   "line_key": "g:ecdac3862646",
+   "from_site": "tokyo_site_075f244ace65",
+   "from_name": "新光町変電所",
+   "from_latlon": [
+    36.386395,
+    140.587395
+   ],
+   "to_site": "tokyo_site_8367c4046c27",
+   "to_name": "常陸海浜変電所",
+   "to_latlon": [
+    36.377032,
+    140.586644
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  },
+  {
+   "region": "tokyo",
+   "line_name": "出島線",
+   "line_key": "g:fcc55e352c14",
+   "from_site": "tokyo_site_1746f772ddb7",
+   "from_name": "出島変電所",
+   "from_latlon": [
+    36.088588,
+    140.304538
+   ],
+   "to_site": "tokyo_site_3473b24335ca",
+   "to_name": "北神立町変電所",
+   "to_latlon": [
+    36.11131,
+    140.229937
+   ],
+   "from_vl": "66",
+   "to_vl": "66",
+   "binding": "leadin/leadin",
+   "confidence": 0.7
+  }
+ ]
+}

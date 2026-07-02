@@ -122,3 +122,8 @@ data/osm_raw_towers/
 data/rebuild/
 data/topology/*.jsonl
 /cache/
+
+# 構造DB(node-breaker): 地域ファイルはD層生成物(4秒で決定的に再生成可能)。
+# 正典カタログ summary.json のみ追跡(生成器=scripts/build_structures_batch.py)
+data/structures/*.json
+!data/structures/summary.json
