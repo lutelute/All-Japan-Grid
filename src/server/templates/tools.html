@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>AGJ ツールダッシュボード</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0d1117;--card:#161b22;--card2:#1c2230;--bd:#262d38;--bd2:#30363d;
+    --tx:#e6edf3;--mut:#8b949e;--acc:#388bfd;--acc2:#1f6feb;--go:#2ea043;
+    --warn:#d29922;--dang:#da3633;--teal:#2dd4bf;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-size:13.5px;line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{position:sticky;top:0;z-index:5;background:rgba(13,17,23,.92);backdrop-filter:blur(10px);
+    padding:13px 22px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:14px}
+  header h1{font-size:16px;margin:0;font-weight:650}
+  header .nav{margin-left:auto;display:flex;gap:10px}
+  header .nav a{color:var(--acc);text-decoration:none;font-size:12.5px;padding:5px 10px;
+    border:1px solid var(--bd2);border-radius:8px}
+  header .nav a:hover{border-color:var(--acc)}
+  main{max-width:1280px;margin:0 auto;padding:18px 22px 90px}
+  h2{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);
+    margin:26px 0 10px;font-weight:650}
+  .grid{display:grid;grid-template-columns:390px 1fr;gap:16px;align-items:start}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+  .card h3{margin:0 0 3px;font-size:14px;font-weight:650}
+  .card p.desc{margin:0 0 10px;font-size:12px;color:var(--mut)}
+  label{display:block;font-size:11px;color:var(--mut);margin:8px 0 3px}
+  select,input[type=text]{width:100%;padding:8px 10px;background:var(--card2);color:var(--tx);
+    border:1px solid var(--bd2);border-radius:9px;font-size:13px}
+  button{padding:8px 14px;border-radius:9px;border:1px solid var(--bd2);background:var(--card2);
+    color:var(--tx);font-size:12.5px;cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--acc);color:var(--acc)}
+  button.run{background:var(--acc2);border-color:var(--acc2);color:#fff;font-weight:650;margin-top:10px}
+  button.run:hover{filter:brightness(1.15);color:#fff}
+  button.mini{padding:3px 9px;font-size:11px;border-radius:7px}
+  button:disabled{opacity:.45;cursor:wait}
+  #result .status{font-size:12px;color:var(--mut);margin-bottom:8px}
+  #result pre{background:#0a0d12;border:1px solid var(--bd);border-radius:9px;padding:11px;
+    font-size:11.5px;overflow:auto;max-height:260px;white-space:pre-wrap}
+  .artifact{margin:12px 0;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+  .artifact .bar{display:flex;gap:6px;align-items:center;padding:7px 10px;background:var(--card2);
+    font-size:12px;border-bottom:1px solid var(--bd)}
+  .artifact .bar .nm{font-weight:600;margin-right:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .artifact img{display:block;width:100%;background:#fff}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);text-align:left;
+    padding:6px 8px;border-bottom:1px solid var(--bd)}
+  td{padding:6px 8px;border-bottom:1px solid var(--bd)}
+  td.acts{white-space:nowrap;text-align:right}
+  td .nm{font-weight:550}
+  .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .tabs button.on{background:var(--acc2);border-color:var(--acc2);color:#fff}
+  .mut{color:var(--mut)}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--mut);
+    border-top-color:var(--acc);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .toast{position:fixed;bottom:18px;right:18px;background:var(--card2);border:1px solid var(--bd2);
+    border-radius:10px;padding:10px 15px;font-size:12.5px;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+</style></head>
+<body>
+<header>
+  <h1>🧰 AGJ ツールダッシュボード</h1>
+  <span class="mut" style="font-size:11.5px">ツール実行・データ/MATLAB を開く(ローカル :8088 専用)</span>
+  <div class="nav"><a href="/">🗾 地図</a><a href="/editor">✏️ 接続エディタ</a></div>
+</header>
+<main>
+  <div class="grid">
+    <div>
+      <h2>ツール実行</h2>
+      <div class="card">
+        <label>地域</label>
+        <select id="region"></select>
+        <label>変電所名(構造系ツール用・部分一致)</label>
+        <input type="text" id="subname" placeholder="例: 嶺南変電所">
+      </div>
+      <div id="toolcards"></div>
+    </div>
+    <div>
+      <h2>実行結果</h2>
+      <div class="card" id="result"><span class="mut">← ツールを実行すると結果がここに出ます</span></div>
+    </div>
+  </div>
+
+  <h2>データブラウザ</h2>
+  <div class="card">
+    <div class="tabs" id="roots"></div>
+    <div id="dirinfo" class="mut" style="font-size:11.5px;margin-bottom:6px"></div>
+    <table><thead><tr><th>ファイル</th><th style="width:90px">サイズ</th>
+      <th style="width:150px">更新</th><th style="width:280px"></th></tr></thead>
+      <tbody id="files"></tbody></table>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const $ = (s) => document.querySelector(s);
+let REG = null, curRoot = null, isMac = false;
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600); }
+function fmtSize(n){ if(n>1048576) return (n/1048576).toFixed(1)+' MB';
+  if(n>1024) return (n/1024).toFixed(0)+' KB'; return n+' B'; }
+function fmtTime(t){ return new Date(t*1000).toLocaleString('ja-JP',
+  {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+
+async function api(path, opts){
+  const r = await fetch(path, opts);
+  if(!r.ok){ let d=''; try{ d=(await r.json()).detail||''; }catch(e){}
+    throw new Error(d || (r.status+' '+r.statusText)); }
+  return r.json();
+}
+
+async function openPath(path, app){
+  try{ await api('/api/tools/open', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({path, app})});
+    toast((app==='matlab'?'MATLAB':app==='finder'?'Finder':'既定アプリ')+'で開きました');
+  }catch(e){ toast('開けません: '+e.message); }
+}
+
+function openBtns(path, name){
+  const b = [];
+  b.push(`<button class="mini" onclick="window.open('/api/tools/file?path='+encodeURIComponent('${path}'),'_blank')">表示</button>`);
+  if(isMac){
+    b.push(`<button class="mini" onclick="openPath('${path}','default')">開く</button>`);
+    b.push(`<button class="mini" onclick="openPath('${path}','finder')">Finder</button>`);
+    if(/\.(mat|csv|m|xlsx?)$/i.test(name))
+      b.push(`<button class="mini" onclick="openPath('${path}','matlab')">MATLAB</button>`);
+  }
+  return b.join(' ');
+}
+
+async function runTool(id, btn){
+  const params = {region: $('#region').value, name: $('#subname').value.trim()};
+  const res = $('#result');
+  btn.disabled = true;
+  res.innerHTML = `<div class="status"><span class="spin"></span> ${id} 実行中…(重い診断は数分かかります)</div>`;
+  try{
+    const r = await api('/api/tools/run', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({tool:id, params})});
+    let html = `<div class="status">✅ ${id} 完了 (${r.elapsed_s}s)</div>`;
+    if(r.output) html += `<pre>${r.output.replace(/</g,'&lt;')}</pre>`;
+    for(const a of (r.artifacts||[])){
+      const nm = a.path.split('/').pop();
+      html += `<div class="artifact"><div class="bar"><span class="nm">${a.label||nm}</span>${openBtns(a.path,nm)}</div>`;
+      if(a.kind==='png') html += `<img src="/api/tools/file?path=${encodeURIComponent(a.path)}&t=${Date.now()}">`;
+      html += `</div>`;
+    }
+    res.innerHTML = html;
+    if(curRoot) browse(curRoot);   // 生成物がブラウザに映るよう更新
+  }catch(e){
+    res.innerHTML = `<div class="status" style="color:var(--dang)">❌ ${id} 失敗</div><pre>${String(e.message).replace(/</g,'&lt;')}</pre>`;
+  }finally{ btn.disabled = false; }
+}
+
+async function browse(root){
+  curRoot = root;
+  document.querySelectorAll('#roots button').forEach(b=>b.classList.toggle('on', b.dataset.id===root));
+  const r = await api('/api/tools/browse?root='+root);
+  $('#dirinfo').textContent = r.dir + ` (${r.files.length} files)`;
+  $('#files').innerHTML = r.files.map(f =>
+    `<tr><td class="nm">${f.name}</td><td>${fmtSize(f.size)}</td>` +
+    `<td class="mut">${fmtTime(f.mtime)}</td><td class="acts">${openBtns(f.path, f.name)}</td></tr>`
+  ).join('') || '<tr><td colspan="4" class="mut">（ファイルなし）</td></tr>';
+}
+
+(async function init(){
+  REG = await api('/api/tools/registry');
+  isMac = REG.platform === 'darwin';
+  $('#region').innerHTML = REG.regions.map(r=>`<option value="${r.id}">${r.ja} (${r.id})</option>`).join('');
+  $('#toolcards').innerHTML = REG.tools.map(t =>
+    `<div class="card"><h3>${t.label}</h3><p class="desc">${t.desc}` +
+    (t.params.includes('name') ? ' — 変電所名を使用' : '') +
+    `</p><button class="run" onclick="runTool('${t.id}', this)">▶ 実行</button></div>`
+  ).join('');
+  $('#roots').innerHTML = REG.browse_roots.map(b=>
+    `<button data-id="${b.id}" onclick="browse('${b.id}')">${b.label}</button>`).join('');
+  browse(REG.browse_roots[0].id);
+})();
+</script>
+</body></html>

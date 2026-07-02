@@ -431,6 +431,13 @@ async def get_ac_methods():
         raise HTTPException(500, f"Failed to load AC methods: {exc}")
 
 
+# ─── ツールダッシュボード(/tools) — ツール実行・データ/MATLABを開く ──────────
+# ローカル専用(subprocess/`open` を伴うため Pages では動かない)。静的マウントより先に登録。
+from src.server.tools_dashboard import router as _tools_router  # noqa: E402
+
+app.include_router(_tools_router)
+
+
 # ─── 統合: Pages の正本アプリ(docs/)を :8088 でも配信 ─────────────────────
 # `:8088 /` = docs/index.html(主地図+全タブ)。css/js/data/assets/editor.html 等の相対参照も
 # このマウントが解決する(Pages と完全同一の正本アプリ)。明示ルート(/api/*, /editor)を先に
