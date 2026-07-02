@@ -88,6 +88,55 @@ def derive_connections(structures) -> list:
     return conns
 
 
+def apply_transformer_provenance(region, structures):
+    """出典付き変圧器データ(existing のみ)を TransformerSpec に伝播する。
+
+    正本 = data/transformer_sources.jsonl(出典URL+原文引用が無い値は
+    validate_record が機械的に拒否済み)。planned(整備計画)は将来断面の
+    資産として正本に保持するが、現況モデルには適用しない。
+    """
+    from scripts.transformer_provenance import by_site
+    curated = by_site()
+    n_applied = 0
+    for s in structures:
+        key = f"{region}:{s.site.name}"
+        fields = curated.get(key)
+        if not fields:
+            continue
+
+        def _val(fname):
+            recs = [r for r in fields.get(fname, [])
+                    if r.get("status") == "existing"]
+            return (recs[0] if recs else None)
+
+        sn, nu, hv = _val("sn_mva"), _val("n_units"), _val("hv_kv")
+        lv = _val("lv_kv")
+        if sn is None:
+            continue
+        # 階級ペア指定(hv/lv)があれば一致する TransformerSpec、無ければ最上位
+        target = None
+        for tr in s.transformers:
+            tr_hv = tr.hv_vl_id.rsplit("@", 1)[1]
+            tr_lv = tr.lv_vl_id.rsplit("@", 1)[1]
+            if hv is not None and tr_hv != str(int(hv["value"])):
+                continue
+            if lv is not None and tr_lv != str(int(lv["value"])):
+                continue
+            target = tr
+            break
+        if target is None and s.transformers:
+            target = s.transformers[0]
+        if target is None:
+            continue
+        target.sn_mva = float(sn["value"])
+        if nu is not None:
+            target.n_parallel = int(nu["value"])
+        target.source = "nameplate"
+        target.note = f"{sn['source_url']} | {sn['quote'][:80]}"
+        n_applied += 1
+    return n_applied
+
+
 def build_region(region, data_dir="data"):
     """1地域の全変電所を構造化。(structures, report) を返す。"""
     t0 = time.time()
@@ -117,6 +166,7 @@ def build_region(region, data_dir="data"):
         seen_ids[s.site.site_id] = True
         structures.append(s)
 
+    n_nameplate = apply_transformer_provenance(region, structures)
     conns = derive_connections(structures)
     bind = Counter(t.binding for s in structures for t in s.terminals)
     vl_known = sum(1 for s in structures
@@ -135,6 +185,7 @@ def build_region(region, data_dir="data"):
                                   if b.kv_inferred),
         "n_bays": sum(len(s.bays) for s in structures),
         "n_transformers": sum(len(s.transformers) for s in structures),
+        "n_trafo_nameplate": n_nameplate,
         "sites_with_known_kv": vl_known,
         "n_connections": len(conns),
         "elapsed_s": round(time.time() - t0, 1),

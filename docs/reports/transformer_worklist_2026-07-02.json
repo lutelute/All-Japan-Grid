@@ -1,0 +1,2965 @@
+{
+ "generated": "2026-07-02",
+ "purpose": "Phase B pilot: transformer nameplate/tap provenance collection, ranked by Ybus impact (500kV sites, terminal count desc)",
+ "n_targets": 206,
+ "targets": [
+  {
+   "site_key": "kansai:おおい町変電所",
+   "name": "おおい町変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 100,
+   "n_transformers_structural": 0,
+   "lat": 35.540529,
+   "lon": 135.656137
+  },
+  {
+   "site_key": "tokyo:新野田変電所",
+   "name": "新野田変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 99,
+   "n_transformers_structural": 3,
+   "lat": 35.931168,
+   "lon": 139.910502
+  },
+  {
+   "site_key": "chubu:500 kV switching station",
+   "name": "500 kV switching station",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 99,
+   "n_transformers_structural": 2,
+   "lat": 34.62355,
+   "lon": 138.146732
+  },
+  {
+   "site_key": "tokyo:三ヶ尾変電所",
+   "name": "三ヶ尾変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 93,
+   "n_transformers_structural": 3,
+   "lat": 35.928621,
+   "lon": 139.908139
+  },
+  {
+   "site_key": "chubu:上ノ原変電所_3",
+   "name": "上ノ原変電所_3",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 91,
+   "n_transformers_structural": 2,
+   "lat": 34.624932,
+   "lon": 138.143928
+  },
+  {
+   "site_key": "chubu:上ノ原変電所",
+   "name": "上ノ原変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 90,
+   "n_transformers_structural": 2,
+   "lat": 34.626799,
+   "lon": 138.14736
+  },
+  {
+   "site_key": "chubu:駿遠変電所",
+   "name": "駿遠変電所",
+   "region": "chubu",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 88,
+   "n_transformers_structural": 3,
+   "lat": 34.811022,
+   "lon": 138.06396
+  },
+  {
+   "site_key": "chubu:駿遠変電所",
+   "name": "駿遠変電所",
+   "region": "chubu",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 88,
+   "n_transformers_structural": 3,
+   "lat": 34.808364,
+   "lon": 138.063071
+  },
+  {
+   "site_key": "tokyo:新京葉変電所",
+   "name": "新京葉変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 80,
+   "n_transformers_structural": 3,
+   "lat": 35.781472,
+   "lon": 140.069487
+  },
+  {
+   "site_key": "kansai:南京都変電所",
+   "name": "南京都変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 72,
+   "n_transformers_structural": 2,
+   "lat": 34.865643,
+   "lon": 135.897533
+  },
+  {
+   "site_key": "tohoku:宮城変電所",
+   "name": "宮城変電所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 69,
+   "n_transformers_structural": 3,
+   "lat": 38.604937,
+   "lon": 140.848841
+  },
+  {
+   "site_key": "kansai:新生駒 変電所",
+   "name": "新生駒 変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 69,
+   "n_transformers_structural": 3,
+   "lat": 34.734825,
+   "lon": 135.714709
+  },
+  {
+   "site_key": "kansai:北田原変電所",
+   "name": "北田原変電所",
+   "region": "kansai",
+   "operator": "関西電力送配電",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77,
+    22,
+    6
+   ],
+   "n_terminals": 69,
+   "n_transformers_structural": 5,
+   "lat": 34.732167,
+   "lon": 135.714546
+  },
+  {
+   "site_key": "kansai:北摂変電所",
+   "name": "北摂変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 68,
+   "n_transformers_structural": 2,
+   "lat": 34.931797,
+   "lon": 135.110057
+  },
+  {
+   "site_key": "tokyo:新栃木変電所",
+   "name": "新栃木変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    25
+   ],
+   "n_terminals": 67,
+   "n_transformers_structural": 3,
+   "lat": 36.655431,
+   "lon": 139.917631
+  },
+  {
+   "site_key": "tokyo:新宇都宮変電所",
+   "name": "新宇都宮変電所",
+   "region": "tokyo",
+   "operator": "東日本旅客鉄道株式会社",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    25
+   ],
+   "n_terminals": 64,
+   "n_transformers_structural": 3,
+   "lat": 36.655158,
+   "lon": 139.913585
+  },
+  {
+   "site_key": "kyushu:1/2号 開閉所",
+   "name": "1/2号 開閉所",
+   "region": "kyushu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    66
+   ],
+   "n_terminals": 64,
+   "n_transformers_structural": 2,
+   "lat": 33.514626,
+   "lon": 129.838551
+  },
+  {
+   "site_key": "kyushu:3/4号 開閉所",
+   "name": "3/4号 開閉所",
+   "region": "kyushu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    66
+   ],
+   "n_terminals": 62,
+   "n_transformers_structural": 2,
+   "lat": 33.515727,
+   "lon": 129.834796
+  },
+  {
+   "site_key": "tokyo:房総変電所",
+   "name": "房総変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 61,
+   "n_transformers_structural": 3,
+   "lat": 35.499213,
+   "lon": 140.166439
+  },
+  {
+   "site_key": "tokyo:潤井戸変電所",
+   "name": "潤井戸変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 61,
+   "n_transformers_structural": 3,
+   "lat": 35.501681,
+   "lon": 140.166387
+  },
+  {
+   "site_key": "tokyo:うるいど南六丁目変電所",
+   "name": "うるいど南六丁目変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 61,
+   "n_transformers_structural": 3,
+   "lat": 35.50203,
+   "lon": 140.165763
+  },
+  {
+   "site_key": "kansai:嶺南変電所",
+   "name": "嶺南変電所",
+   "region": "kansai",
+   "operator": "関西電力（株）",
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 60,
+   "n_transformers_structural": 2,
+   "lat": 35.556579,
+   "lon": 135.972198
+  },
+  {
+   "site_key": "kyushu:北九州変電所",
+   "name": "北九州変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 60,
+   "n_transformers_structural": 1,
+   "lat": 33.810053,
+   "lon": 130.804332
+  },
+  {
+   "site_key": "kyushu:久見崎町変電所",
+   "name": "久見崎町変電所",
+   "region": "kyushu",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 60,
+   "n_transformers_structural": 0,
+   "lat": 31.831963,
+   "lon": 130.189289
+  },
+  {
+   "site_key": "chugoku:北九州変電所",
+   "name": "北九州変電所",
+   "region": "chugoku",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 57,
+   "n_transformers_structural": 1,
+   "lat": 33.810053,
+   "lon": 130.804332
+  },
+  {
+   "site_key": "tohoku:西仙台変電所",
+   "name": "西仙台変電所",
+   "region": "tohoku",
+   "operator": "東北電力株式会社",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 55,
+   "n_transformers_structural": 2,
+   "lat": 38.254962,
+   "lon": 140.643942
+  },
+  {
+   "site_key": "tokyo:東毛変電所",
+   "name": "東毛変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 54,
+   "n_transformers_structural": 3,
+   "lat": 36.299122,
+   "lon": 139.32871
+  },
+  {
+   "site_key": "tokyo:内房変電所",
+   "name": "内房変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 53,
+   "n_transformers_structural": 3,
+   "lat": 35.341468,
+   "lon": 140.025766
+  },
+  {
+   "site_key": "tokyo:新木更津変電所",
+   "name": "新木更津変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 53,
+   "n_transformers_structural": 3,
+   "lat": 35.343514,
+   "lon": 140.027787
+  },
+  {
+   "site_key": "kansai:新綾部変電所",
+   "name": "新綾部変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 53,
+   "n_transformers_structural": 2,
+   "lat": 35.351354,
+   "lon": 135.266238
+  },
+  {
+   "site_key": "tohoku:上北変電所",
+   "name": "上北変電所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 52,
+   "n_transformers_structural": 3,
+   "lat": 40.783125,
+   "lon": 141.173098
+  },
+  {
+   "site_key": "chubu:西群馬開閉所",
+   "name": "西群馬開閉所",
+   "region": "chubu",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 51,
+   "n_transformers_structural": 0,
+   "lat": 36.62198,
+   "lon": 138.801688
+  },
+  {
+   "site_key": "tokyo:新坂戸変電所",
+   "name": "新坂戸変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 50,
+   "n_transformers_structural": 3,
+   "lat": 35.962199,
+   "lon": 139.436352
+  },
+  {
+   "site_key": "shikoku:讃岐変電所",
+   "name": "讃岐変電所",
+   "region": "shikoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 50,
+   "n_transformers_structural": 1,
+   "lat": 34.164921,
+   "lon": 133.954011
+  },
+  {
+   "site_key": "tohoku:新福島変電所",
+   "name": "新福島変電所",
+   "region": "tohoku",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    275,
+    132,
+    66
+   ],
+   "n_terminals": 49,
+   "n_transformers_structural": 3,
+   "lat": 37.359379,
+   "lon": 140.96061
+  },
+  {
+   "site_key": "chugoku:讃岐変電所",
+   "name": "讃岐変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 49,
+   "n_transformers_structural": 1,
+   "lat": 34.164921,
+   "lon": 133.954011
+  },
+  {
+   "site_key": "chugoku:西播変電所",
+   "name": "西播変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 49,
+   "n_transformers_structural": 2,
+   "lat": 34.861623,
+   "lon": 134.425783
+  },
+  {
+   "site_key": "chubu:東部変電所",
+   "name": "東部変電所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 48,
+   "n_transformers_structural": 1,
+   "lat": 35.106124,
+   "lon": 137.262292
+  },
+  {
+   "site_key": "tohoku:卒古沢変電所",
+   "name": "卒古沢変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 46,
+   "n_transformers_structural": 3,
+   "lat": 40.780206,
+   "lon": 141.171918
+  },
+  {
+   "site_key": "tokyo:新古河変電所",
+   "name": "新古河変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 44,
+   "n_transformers_structural": 1,
+   "lat": 36.106867,
+   "lon": 139.832535
+  },
+  {
+   "site_key": "chubu:新富士変電所",
+   "name": "新富士変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66,
+    6
+   ],
+   "n_terminals": 44,
+   "n_transformers_structural": 4,
+   "lat": 35.372399,
+   "lon": 138.963078
+  },
+  {
+   "site_key": "tokyo:西群馬開閉所",
+   "name": "西群馬開閉所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 43,
+   "n_transformers_structural": 0,
+   "lat": 36.62198,
+   "lon": 138.801688
+  },
+  {
+   "site_key": "tokyo:新岡部変電所",
+   "name": "新岡部変電所",
+   "region": "tokyo",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 42,
+   "n_transformers_structural": 2,
+   "lat": 36.220067,
+   "lon": 139.212909
+  },
+  {
+   "site_key": "tohoku:南相馬変電所",
+   "name": "南相馬変電所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275,
+    66
+   ],
+   "n_terminals": 41,
+   "n_transformers_structural": 2,
+   "lat": 37.535501,
+   "lon": 140.949734
+  },
+  {
+   "site_key": "tokyo:新富士変電所",
+   "name": "新富士変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66,
+    6
+   ],
+   "n_terminals": 41,
+   "n_transformers_structural": 4,
+   "lat": 35.372399,
+   "lon": 138.963078
+  },
+  {
+   "site_key": "chugoku:北松江変電所",
+   "name": "北松江変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 41,
+   "n_transformers_structural": 2,
+   "lat": 35.470392,
+   "lon": 133.115991
+  },
+  {
+   "site_key": "chugoku:大井町変電所",
+   "name": "大井町変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 41,
+   "n_transformers_structural": 2,
+   "lat": 35.468122,
+   "lon": 133.119623
+  },
+  {
+   "site_key": "tohoku:岩手変電所",
+   "name": "岩手変電所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 40,
+   "n_transformers_structural": 2,
+   "lat": 39.905084,
+   "lon": 141.176154
+  },
+  {
+   "site_key": "tokyo:新所沢変電所",
+   "name": "新所沢変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 39,
+   "n_transformers_structural": 1,
+   "lat": 35.92889,
+   "lon": 139.370665
+  },
+  {
+   "site_key": "hokuriku:中能登変電所",
+   "name": "中能登変電所",
+   "region": "hokuriku",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 39,
+   "n_transformers_structural": 2,
+   "lat": 36.996174,
+   "lon": 136.837934
+  },
+  {
+   "site_key": "hokuriku:加賀変電所",
+   "name": "加賀変電所",
+   "region": "hokuriku",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 39,
+   "n_transformers_structural": 2,
+   "lat": 36.500549,
+   "lon": 136.716898
+  },
+  {
+   "site_key": "chubu:東山梨変電所",
+   "name": "東山梨変電所",
+   "region": "chubu",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 38,
+   "n_transformers_structural": 1,
+   "lat": 35.590567,
+   "lon": 138.799988
+  },
+  {
+   "site_key": "chubu:愛知変電所",
+   "name": "愛知変電所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 38,
+   "n_transformers_structural": 1,
+   "lat": 35.210392,
+   "lon": 137.297997
+  },
+  {
+   "site_key": "kansai:西京都変電所",
+   "name": "西京都変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 38,
+   "n_transformers_structural": 2,
+   "lat": 34.969806,
+   "lon": 135.619019
+  },
+  {
+   "site_key": "kyushu:九州電力中央変電所",
+   "name": "九州電力中央変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 38,
+   "n_transformers_structural": 1,
+   "lat": 33.491765,
+   "lon": 130.62393
+  },
+  {
+   "site_key": "chubu:中能登変電所",
+   "name": "中能登変電所",
+   "region": "chubu",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 37,
+   "n_transformers_structural": 2,
+   "lat": 36.996174,
+   "lon": 136.837934
+  },
+  {
+   "site_key": "chubu:加賀変電所",
+   "name": "加賀変電所",
+   "region": "chubu",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 37,
+   "n_transformers_structural": 2,
+   "lat": 36.500549,
+   "lon": 136.716898
+  },
+  {
+   "site_key": "shikoku:川内発電所",
+   "name": "川内発電所",
+   "region": "shikoku",
+   "operator": "四国電力送配電",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 37,
+   "n_transformers_structural": 1,
+   "lat": 33.792015,
+   "lon": 132.928213
+  },
+  {
+   "site_key": "tokyo:東山梨変電所",
+   "name": "東山梨変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 36,
+   "n_transformers_structural": 1,
+   "lat": 35.590567,
+   "lon": 138.799988
+  },
+  {
+   "site_key": "chugoku:川内発電所",
+   "name": "川内発電所",
+   "region": "chugoku",
+   "operator": "四国電力送配電",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 36,
+   "n_transformers_structural": 1,
+   "lat": 33.792015,
+   "lon": 132.928213
+  },
+  {
+   "site_key": "chugoku:日野変電所",
+   "name": "日野変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    110,
+    22,
+    11
+   ],
+   "n_terminals": 36,
+   "n_transformers_structural": 4,
+   "lat": 35.296125,
+   "lon": 133.405759
+  },
+  {
+   "site_key": "tohoku:新いわき開閉所",
+   "name": "新いわき開閉所",
+   "region": "tohoku",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 35,
+   "n_transformers_structural": 0,
+   "lat": 37.141968,
+   "lon": 140.722587
+  },
+  {
+   "site_key": "tohoku:小高区大田和変電所",
+   "name": "小高区大田和変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    66
+   ],
+   "n_terminals": 35,
+   "n_transformers_structural": 2,
+   "lat": 37.537047,
+   "lon": 140.947312
+  },
+  {
+   "site_key": "tokyo:新新田変電所",
+   "name": "新新田変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 35,
+   "n_transformers_structural": 2,
+   "lat": 36.326245,
+   "lon": 139.304743
+  },
+  {
+   "site_key": "tokyo:新筑波変電所",
+   "name": "新筑波変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 35,
+   "n_transformers_structural": 1,
+   "lat": 36.16713,
+   "lon": 139.903531
+  },
+  {
+   "site_key": "chubu:西部変電所",
+   "name": "西部変電所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 35,
+   "n_transformers_structural": 1,
+   "lat": 35.19316,
+   "lon": 136.514458
+  },
+  {
+   "site_key": "kansai:紀の川変電所",
+   "name": "紀の川変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    77
+   ],
+   "n_terminals": 34,
+   "n_transformers_structural": 2,
+   "lat": 34.211469,
+   "lon": 135.336327
+  },
+  {
+   "site_key": "hokuriku:加賀変電所",
+   "name": "加賀変電所",
+   "region": "hokuriku",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 33,
+   "n_transformers_structural": 2,
+   "lat": 36.501857,
+   "lon": 136.72521
+  },
+  {
+   "site_key": "kyushu:九州電力中央変電所",
+   "name": "九州電力中央変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 33,
+   "n_transformers_structural": 1,
+   "lat": 33.490436,
+   "lon": 130.622457
+  },
+  {
+   "site_key": "tokyo:うるいど南五丁目変電所",
+   "name": "うるいど南五丁目変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 31,
+   "n_transformers_structural": 3,
+   "lat": 35.50503,
+   "lon": 140.168372
+  },
+  {
+   "site_key": "chubu:加賀変電所",
+   "name": "加賀変電所",
+   "region": "chubu",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 31,
+   "n_transformers_structural": 2,
+   "lat": 36.501857,
+   "lon": 136.72521
+  },
+  {
+   "site_key": "kansai:西部変電所",
+   "name": "西部変電所",
+   "region": "kansai",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 30,
+   "n_transformers_structural": 1,
+   "lat": 35.19316,
+   "lon": 136.514458
+  },
+  {
+   "site_key": "kansai:信貴変電所",
+   "name": "信貴変電所",
+   "region": "kansai",
+   "operator": "関西電力株式会社",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 28,
+   "n_transformers_structural": 1,
+   "lat": 34.597312,
+   "lon": 135.647951
+  },
+  {
+   "site_key": "kansai:田ノ浦変電所",
+   "name": "田ノ浦変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 28,
+   "n_transformers_structural": 0,
+   "lat": 35.521395,
+   "lon": 135.504024
+  },
+  {
+   "site_key": "kansai:田ノ浦変電所_2",
+   "name": "田ノ浦変電所_2",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 28,
+   "n_transformers_structural": 0,
+   "lat": 35.520832,
+   "lon": 135.505072
+  },
+  {
+   "site_key": "chubu:静岡変電所",
+   "name": "静岡変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 27,
+   "n_transformers_structural": 1,
+   "lat": 34.863492,
+   "lon": 138.04897
+  },
+  {
+   "site_key": "tokyo:新多摩変電所",
+   "name": "新多摩変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 26,
+   "n_transformers_structural": 1,
+   "lat": 35.714864,
+   "lon": 139.223294
+  },
+  {
+   "site_key": "tokyo:新秦野変電所",
+   "name": "新秦野変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 26,
+   "n_transformers_structural": 2,
+   "lat": 35.400606,
+   "lon": 139.225573
+  },
+  {
+   "site_key": "chubu:新秩父開閉所",
+   "name": "新秩父開閉所",
+   "region": "chubu",
+   "operator": "東京電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 26,
+   "n_transformers_structural": 0,
+   "lat": 36.030859,
+   "lon": 138.936881
+  },
+  {
+   "site_key": "tohoku:越後開閉所",
+   "name": "越後開閉所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 25,
+   "n_transformers_structural": 1,
+   "lat": 37.889491,
+   "lon": 139.411925
+  },
+  {
+   "site_key": "chubu:Gifu Substation",
+   "name": "Gifu Substation",
+   "region": "chubu",
+   "operator": "中部電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 25,
+   "n_transformers_structural": 0,
+   "lat": 35.635684,
+   "lon": 136.962608
+  },
+  {
+   "site_key": "chugoku:新山口変電所",
+   "name": "新山口変電所",
+   "region": "chugoku",
+   "operator": "中国電力ネットワーク",
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 25,
+   "n_transformers_structural": 2,
+   "lat": 34.163228,
+   "lon": 131.093124
+  },
+  {
+   "site_key": "tokyo:南山変電所",
+   "name": "南山変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    66
+   ],
+   "n_terminals": 24,
+   "n_transformers_structural": 3,
+   "lat": 35.784798,
+   "lon": 140.063363
+  },
+  {
+   "site_key": "tokyo:新秩父開閉所",
+   "name": "新秩父開閉所",
+   "region": "tokyo",
+   "operator": "東京電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 23,
+   "n_transformers_structural": 0,
+   "lat": 36.030859,
+   "lon": 138.936881
+  },
+  {
+   "site_key": "chubu:東近江開閉所",
+   "name": "東近江開閉所",
+   "region": "chubu",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 23,
+   "n_transformers_structural": 0,
+   "lat": 35.09511,
+   "lon": 136.293366
+  },
+  {
+   "site_key": "kyushu:新山口変電所",
+   "name": "新山口変電所",
+   "region": "kyushu",
+   "operator": "中国電力ネットワーク",
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 23,
+   "n_transformers_structural": 2,
+   "lat": 34.163228,
+   "lon": 131.093124
+  },
+  {
+   "site_key": "tokyo:東群馬変電所",
+   "name": "東群馬変電所",
+   "region": "tokyo",
+   "operator": "東京電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 22,
+   "n_transformers_structural": 1,
+   "lat": 36.579264,
+   "lon": 139.223692
+  },
+  {
+   "site_key": "kyushu:南九州変電所",
+   "name": "南九州変電所",
+   "region": "kyushu",
+   "operator": "九州電力送配電",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 22,
+   "n_transformers_structural": 1,
+   "lat": 31.957715,
+   "lon": 130.655602
+  },
+  {
+   "site_key": "tokyo:市川塩浜変電所",
+   "name": "市川塩浜変電所",
+   "region": "tokyo",
+   "operator": "東日本旅客鉄道株式会社",
+   "kv_ladder": [
+    500,
+    66,
+    1
+   ],
+   "n_terminals": 21,
+   "n_transformers_structural": 2,
+   "lat": 35.670659,
+   "lon": 139.926452
+  },
+  {
+   "site_key": "kansai:金剛変電所",
+   "name": "金剛変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 21,
+   "n_transformers_structural": 1,
+   "lat": 34.402669,
+   "lon": 135.586836
+  },
+  {
+   "site_key": "tokyo:新佐原変電所",
+   "name": "新佐原変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 20,
+   "n_transformers_structural": 1,
+   "lat": 35.865421,
+   "lon": 140.458011
+  },
+  {
+   "site_key": "kansai:紀北変換所",
+   "name": "紀北変換所",
+   "region": "kansai",
+   "operator": "関西電力送配電",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 20,
+   "n_transformers_structural": 0,
+   "lat": 34.213924,
+   "lon": 135.502115
+  },
+  {
+   "site_key": "kansai:能勢変電所",
+   "name": "能勢変電所",
+   "region": "kansai",
+   "operator": "関西電力送配電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 20,
+   "n_transformers_structural": 1,
+   "lat": 34.990542,
+   "lon": 135.484594
+  },
+  {
+   "site_key": "kansai:東近江開閉所",
+   "name": "東近江開閉所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 20,
+   "n_transformers_structural": 0,
+   "lat": 35.09511,
+   "lon": 136.293366
+  },
+  {
+   "site_key": "shikoku:九町変電所",
+   "name": "九町変電所",
+   "region": "shikoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    187,
+    66
+   ],
+   "n_terminals": 20,
+   "n_transformers_structural": 2,
+   "lat": 33.48899,
+   "lon": 132.311975
+  },
+  {
+   "site_key": "chugoku:東予変電所",
+   "name": "東予変電所",
+   "region": "chugoku",
+   "operator": "四国電力株式会社",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 19,
+   "n_transformers_structural": 1,
+   "lat": 33.944279,
+   "lon": 133.395001
+  },
+  {
+   "site_key": "shikoku:東予変電所",
+   "name": "東予変電所",
+   "region": "shikoku",
+   "operator": "四国電力株式会社",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 19,
+   "n_transformers_structural": 1,
+   "lat": 33.944279,
+   "lon": 133.395001
+  },
+  {
+   "site_key": "kyushu:熊本変電所",
+   "name": "熊本変電所",
+   "region": "kyushu",
+   "operator": "九州電力送配電",
+   "kv_ladder": [
+    500,
+    220,
+    66
+   ],
+   "n_terminals": 19,
+   "n_transformers_structural": 2,
+   "lat": 32.909375,
+   "lon": 130.902588
+  },
+  {
+   "site_key": "chubu:新榛名",
+   "name": "新榛名",
+   "region": "chubu",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 18,
+   "n_transformers_structural": 1,
+   "lat": 36.547881,
+   "lon": 138.832739
+  },
+  {
+   "site_key": "chugoku:東岡山変電所",
+   "name": "東岡山変電所",
+   "region": "chugoku",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220,
+    110,
+    66
+   ],
+   "n_terminals": 18,
+   "n_transformers_structural": 3,
+   "lat": 34.888114,
+   "lon": 134.025121
+  },
+  {
+   "site_key": "kyushu:九州電力西九州変電所",
+   "name": "九州電力西九州変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 18,
+   "n_transformers_structural": 1,
+   "lat": 33.350398,
+   "lon": 129.928974
+  },
+  {
+   "site_key": "tohoku:南いわき開閉所",
+   "name": "南いわき開閉所",
+   "region": "tohoku",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 17,
+   "n_transformers_structural": 0,
+   "lat": 37.381646,
+   "lon": 140.805342
+  },
+  {
+   "site_key": "chubu:三重開閉所",
+   "name": "三重開閉所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 17,
+   "n_transformers_structural": 0,
+   "lat": 35.203342,
+   "lon": 136.451062
+  },
+  {
+   "site_key": "hokuriku:南福光連系所",
+   "name": "南福光連系所",
+   "region": "hokuriku",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 17,
+   "n_transformers_structural": 0,
+   "lat": 36.499196,
+   "lon": 136.82594
+  },
+  {
+   "site_key": "hokuriku:南福光変電所",
+   "name": "南福光変電所",
+   "region": "hokuriku",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 17,
+   "n_transformers_structural": 0,
+   "lat": 36.4995,
+   "lon": 136.824919
+  },
+  {
+   "site_key": "chugoku:西島根変電所",
+   "name": "西島根変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    110
+   ],
+   "n_terminals": 17,
+   "n_transformers_structural": 2,
+   "lat": 34.697635,
+   "lon": 131.979686
+  },
+  {
+   "site_key": "tokyo:新飯能変電所",
+   "name": "新飯能変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 1,
+   "lat": 35.851949,
+   "lon": 139.239447
+  },
+  {
+   "site_key": "tokyo:原木変電所",
+   "name": "原木変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 1,
+   "lat": 35.696389,
+   "lon": 139.951467
+  },
+  {
+   "site_key": "tokyo:新今市開閉所",
+   "name": "新今市開閉所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 0,
+   "lat": 36.712788,
+   "lon": 139.832471
+  },
+  {
+   "site_key": "chubu:南福光連系所",
+   "name": "南福光連系所",
+   "region": "chubu",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 0,
+   "lat": 36.499196,
+   "lon": 136.82594
+  },
+  {
+   "site_key": "chubu:新信濃変電所",
+   "name": "新信濃変電所",
+   "region": "chubu",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    200
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 2,
+   "lat": 36.137661,
+   "lon": 137.883872
+  },
+  {
+   "site_key": "chubu:南福光変電所",
+   "name": "南福光変電所",
+   "region": "chubu",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 0,
+   "lat": 36.4995,
+   "lon": 136.824919
+  },
+  {
+   "site_key": "kansai:梶原六丁目変電所_3",
+   "name": "梶原六丁目変電所_3",
+   "region": "kansai",
+   "operator": "東海旅客鉄道",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77,
+    25
+   ],
+   "n_terminals": 16,
+   "n_transformers_structural": 4,
+   "lat": 34.863698,
+   "lon": 135.652696
+  },
+  {
+   "site_key": "tokyo:中袖変電所",
+   "name": "中袖変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 1,
+   "lat": 35.463823,
+   "lon": 139.980066
+  },
+  {
+   "site_key": "tokyo:新榛名",
+   "name": "新榛名",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 1,
+   "lat": 36.547881,
+   "lon": 138.832739
+  },
+  {
+   "site_key": "kansai:東大和開閉所",
+   "name": "東大和開閉所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 0,
+   "lat": 34.448775,
+   "lon": 135.902434
+  },
+  {
+   "site_key": "kansai:三重開閉所",
+   "name": "三重開閉所",
+   "region": "kansai",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 0,
+   "lat": 35.203342,
+   "lon": 136.451062
+  },
+  {
+   "site_key": "chugoku:新岡山変電所",
+   "name": "新岡山変電所",
+   "region": "chugoku",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 1,
+   "lat": 34.803714,
+   "lon": 133.388353
+  },
+  {
+   "site_key": "kyushu:豊前変電所",
+   "name": "豊前変電所",
+   "region": "kyushu",
+   "operator": "九州電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 15,
+   "n_transformers_structural": 1,
+   "lat": 33.608139,
+   "lon": 131.01552
+  },
+  {
+   "site_key": "hokkaido:大間町変電所_2",
+   "name": "大間町変電所_2",
+   "region": "hokkaido",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 1,
+   "lat": 41.508114,
+   "lon": 140.91134
+  },
+  {
+   "site_key": "hokkaido:大間町変電所_3",
+   "name": "大間町変電所_3",
+   "region": "hokkaido",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 0,
+   "lat": 41.508662,
+   "lon": 140.911422
+  },
+  {
+   "site_key": "hokkaido:大間町変電所_4",
+   "name": "大間町変電所_4",
+   "region": "hokkaido",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 0,
+   "lat": 41.508114,
+   "lon": 140.91134
+  },
+  {
+   "site_key": "hokkaido:大間町変電所_5",
+   "name": "大間町変電所_5",
+   "region": "hokkaido",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 0,
+   "lat": 41.507033,
+   "lon": 140.916191
+  },
+  {
+   "site_key": "tohoku:広野町変電所",
+   "name": "広野町変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 0,
+   "lat": 37.236509,
+   "lon": 141.010128
+  },
+  {
+   "site_key": "tohoku:白糠変電所",
+   "name": "白糠変電所",
+   "region": "tohoku",
+   "operator": "東北電力株式会社",
+   "kv_ladder": [
+    500,
+    154,
+    66,
+    6
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 3,
+   "lat": 41.188932,
+   "lon": 141.381295
+  },
+  {
+   "site_key": "tohoku:東通村変電所_2",
+   "name": "東通村変電所_2",
+   "region": "tohoku",
+   "operator": "東北電力株式会社",
+   "kv_ladder": [
+    500,
+    154,
+    66
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 2,
+   "lat": 41.188426,
+   "lon": 141.386445
+  },
+  {
+   "site_key": "tohoku:東通村変電所_3",
+   "name": "東通村変電所_3",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    154,
+    66
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 2,
+   "lat": 41.187613,
+   "lon": 141.38654
+  },
+  {
+   "site_key": "hokuriku:新信濃変電所",
+   "name": "新信濃変電所",
+   "region": "hokuriku",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275,
+    200
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 2,
+   "lat": 36.137661,
+   "lon": 137.883872
+  },
+  {
+   "site_key": "kansai:淀川変電所",
+   "name": "淀川変電所",
+   "region": "kansai",
+   "operator": "関西電力送配電",
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 3,
+   "lat": 34.860519,
+   "lon": 135.657255
+  },
+  {
+   "site_key": "kyushu:東九州変電所",
+   "name": "東九州変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 1,
+   "lat": 33.134165,
+   "lon": 131.729324
+  },
+  {
+   "site_key": "kyushu:ひむか変電所",
+   "name": "ひむか変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 1,
+   "lat": 32.25094,
+   "lon": 131.385544
+  },
+  {
+   "site_key": "kyushu:花津留一丁目変電所",
+   "name": "花津留一丁目変電所",
+   "region": "kyushu",
+   "operator": "九州電力送配電",
+   "kv_ladder": [
+    660,
+    66
+   ],
+   "n_terminals": 14,
+   "n_transformers_structural": 1,
+   "lat": 33.245522,
+   "lon": 131.635406
+  },
+  {
+   "site_key": "tohoku:楢葉町変電所",
+   "name": "楢葉町変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 37.316219,
+   "lon": 141.021836
+  },
+  {
+   "site_key": "tohoku:今泉変電所_2",
+   "name": "今泉変電所_2",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 37.843783,
+   "lon": 140.94075
+  },
+  {
+   "site_key": "tohoku:新地町変電所",
+   "name": "新地町変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 37.839906,
+   "lon": 140.938463
+  },
+  {
+   "site_key": "chubu:小山町変電所",
+   "name": "小山町変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 2,
+   "lat": 35.365347,
+   "lon": 138.962921
+  },
+  {
+   "site_key": "kansai:御坊市変電所",
+   "name": "御坊市変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    77
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 33.860372,
+   "lon": 135.154409
+  },
+  {
+   "site_key": "chugoku:新西広島変電所",
+   "name": "新西広島変電所",
+   "region": "chugoku",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 2,
+   "lat": 34.412514,
+   "lon": 132.257533
+  },
+  {
+   "site_key": "chugoku:東山口変電所 (Higashi Yamaguchi Hendensho)",
+   "name": "東山口変電所 (Higashi Yamaguchi Hendensho)",
+   "region": "chugoku",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 34.200243,
+   "lon": 131.826159
+  },
+  {
+   "site_key": "chugoku:阿波変電所",
+   "name": "阿波変電所",
+   "region": "chugoku",
+   "operator": "四国電力",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 34.000763,
+   "lon": 134.408613
+  },
+  {
+   "site_key": "shikoku:阿波変電所",
+   "name": "阿波変電所",
+   "region": "shikoku",
+   "operator": "四国電力",
+   "kv_ladder": [
+    500,
+    187
+   ],
+   "n_terminals": 13,
+   "n_transformers_structural": 1,
+   "lat": 34.000763,
+   "lon": 134.408613
+  },
+  {
+   "site_key": "tokyo:小山町変電所",
+   "name": "小山町変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 2,
+   "lat": 35.365347,
+   "lon": 138.962921
+  },
+  {
+   "site_key": "tokyo:海神変電所",
+   "name": "海神変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 1,
+   "lat": 35.693442,
+   "lon": 139.974098
+  },
+  {
+   "site_key": "tokyo:八千代変電所",
+   "name": "八千代変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 1,
+   "lat": 36.175633,
+   "lon": 139.893052
+  },
+  {
+   "site_key": "chubu:新三河変電所",
+   "name": "新三河変電所",
+   "region": "chubu",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 1,
+   "lat": 34.890936,
+   "lon": 137.45229
+  },
+  {
+   "site_key": "kansai:梶原六丁目変電所",
+   "name": "梶原六丁目変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 3,
+   "lat": 34.86348,
+   "lon": 135.652615
+  },
+  {
+   "site_key": "kyushu:九州電力脊振変電所",
+   "name": "九州電力脊振変電所",
+   "region": "kyushu",
+   "operator": "九州電力",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 12,
+   "n_transformers_structural": 1,
+   "lat": 33.47023,
+   "lon": 130.364602
+  },
+  {
+   "site_key": "tohoku:宮城中央変電所",
+   "name": "宮城中央変電所",
+   "region": "tohoku",
+   "operator": "東北電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 38.352465,
+   "lon": 140.751435
+  },
+  {
+   "site_key": "chubu:色浜変電所",
+   "name": "色浜変電所",
+   "region": "chubu",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.753487,
+   "lon": 136.017325
+  },
+  {
+   "site_key": "chubu:色浜変電所_2",
+   "name": "色浜変電所_2",
+   "region": "chubu",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.75198,
+   "lon": 136.020632
+  },
+  {
+   "site_key": "hokuriku:色浜変電所",
+   "name": "色浜変電所",
+   "region": "hokuriku",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.753487,
+   "lon": 136.017325
+  },
+  {
+   "site_key": "hokuriku:色浜変電所_2",
+   "name": "色浜変電所_2",
+   "region": "hokuriku",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.75198,
+   "lon": 136.020632
+  },
+  {
+   "site_key": "kansai:阿南周波数変換所",
+   "name": "阿南周波数変換所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 0,
+   "lat": 33.827825,
+   "lon": 134.636564
+  },
+  {
+   "site_key": "kansai:色浜変電所",
+   "name": "色浜変電所",
+   "region": "kansai",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.753487,
+   "lon": 136.017325
+  },
+  {
+   "site_key": "kansai:色浜変電所_2",
+   "name": "色浜変電所_2",
+   "region": "kansai",
+   "operator": "日本原子力発電",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 35.75198,
+   "lon": 136.020632
+  },
+  {
+   "site_key": "chugoku:新広島変電所",
+   "name": "新広島変電所",
+   "region": "chugoku",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 1,
+   "lat": 34.48905,
+   "lon": 132.709282
+  },
+  {
+   "site_key": "shikoku:阿南周波数変換所",
+   "name": "阿南周波数変換所",
+   "region": "shikoku",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 11,
+   "n_transformers_structural": 0,
+   "lat": 33.827825,
+   "lon": 134.636564
+  },
+  {
+   "site_key": "tohoku:今泉変電所_3",
+   "name": "今泉変電所_3",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 37.844731,
+   "lon": 140.941133
+  },
+  {
+   "site_key": "tokyo:新富変電所",
+   "name": "新富変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 35.342851,
+   "lon": 139.837078
+  },
+  {
+   "site_key": "tokyo:新富変電所_2",
+   "name": "新富変電所_2",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 35.343899,
+   "lon": 139.836613
+  },
+  {
+   "site_key": "chubu:北部変電所",
+   "name": "北部変電所",
+   "region": "chubu",
+   "operator": "中部電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 35.527249,
+   "lon": 136.937382
+  },
+  {
+   "site_key": "chubu:山県市変電所",
+   "name": "山県市変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 0,
+   "lat": 35.584258,
+   "lon": 136.723583
+  },
+  {
+   "site_key": "chubu:飛騨変換所",
+   "name": "飛騨変換所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    200
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 36.070189,
+   "lon": 137.059715
+  },
+  {
+   "site_key": "hokuriku:飛騨変換所",
+   "name": "飛騨変換所",
+   "region": "hokuriku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    200
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 36.070189,
+   "lon": 137.059715
+  },
+  {
+   "site_key": "kansai:京北開閉所",
+   "name": "京北開閉所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 0,
+   "lat": 35.136785,
+   "lon": 135.644622
+  },
+  {
+   "site_key": "kansai:山県市変電所",
+   "name": "山県市変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 0,
+   "lat": 35.584258,
+   "lon": 136.723583
+  },
+  {
+   "site_key": "kyushu:東山口変電所 (Higashi Yamaguchi Hendensho)",
+   "name": "東山口変電所 (Higashi Yamaguchi Hendensho)",
+   "region": "kyushu",
+   "operator": "中国電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 10,
+   "n_transformers_structural": 1,
+   "lat": 34.200243,
+   "lon": 131.826159
+  },
+  {
+   "site_key": "chugoku:八雲町変電所",
+   "name": "八雲町変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220,
+    110
+   ],
+   "n_terminals": 9,
+   "n_transformers_structural": 2,
+   "lat": 35.409378,
+   "lon": 133.106323
+  },
+  {
+   "site_key": "tokyo:葛野川発電所屋外開閉設備",
+   "name": "葛野川発電所屋外開閉設備",
+   "region": "tokyo",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    66,
+    6
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 35.708733,
+   "lon": 138.908513
+  },
+  {
+   "site_key": "tokyo:深城変電所",
+   "name": "深城変電所",
+   "region": "tokyo",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    66,
+    6
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 35.70899,
+   "lon": 138.911043
+  },
+  {
+   "site_key": "tokyo:富津市変電所",
+   "name": "富津市変電所",
+   "region": "tokyo",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 1,
+   "lat": 35.329358,
+   "lon": 139.834877
+  },
+  {
+   "site_key": "tokyo:富津変電所",
+   "name": "富津変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 1,
+   "lat": 35.326287,
+   "lon": 139.836305
+  },
+  {
+   "site_key": "tokyo:東日本旅客鉄道新箕郷変電所",
+   "name": "東日本旅客鉄道新箕郷変電所",
+   "region": "tokyo",
+   "operator": "東日本旅客鉄道",
+   "kv_ladder": [
+    500,
+    275,
+    25
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 36.377219,
+   "lon": 138.965988
+  },
+  {
+   "site_key": "chubu:信濃変電所",
+   "name": "信濃変電所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 1,
+   "lat": 36.063981,
+   "lon": 137.987302
+  },
+  {
+   "site_key": "chubu:越前変電所",
+   "name": "越前変電所",
+   "region": "chubu",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 1,
+   "lat": 35.99577,
+   "lon": 136.415864
+  },
+  {
+   "site_key": "chubu:葛野川発電所屋外開閉設備",
+   "name": "葛野川発電所屋外開閉設備",
+   "region": "chubu",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    66,
+    6
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 35.708733,
+   "lon": 138.908513
+  },
+  {
+   "site_key": "chubu:東日本旅客鉄道新箕郷変電所",
+   "name": "東日本旅客鉄道新箕郷変電所",
+   "region": "chubu",
+   "operator": "東日本旅客鉄道",
+   "kv_ladder": [
+    500,
+    275,
+    25
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 36.377219,
+   "lon": 138.965988
+  },
+  {
+   "site_key": "chubu:深城変電所",
+   "name": "深城変電所",
+   "region": "chubu",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500,
+    66,
+    6
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 2,
+   "lat": 35.70899,
+   "lon": 138.911043
+  },
+  {
+   "site_key": "hokuriku:越前変電所",
+   "name": "越前変電所",
+   "region": "hokuriku",
+   "operator": "北陸電力",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 1,
+   "lat": 35.99577,
+   "lon": 136.415864
+  },
+  {
+   "site_key": "kansai:梶原六丁目変電所_2",
+   "name": "梶原六丁目変電所_2",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275,
+    154,
+    77
+   ],
+   "n_terminals": 8,
+   "n_transformers_structural": 3,
+   "lat": 34.863609,
+   "lon": 135.652402
+  },
+  {
+   "site_key": "chubu:下黒川変電所",
+   "name": "下黒川変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 7,
+   "n_transformers_structural": 0,
+   "lat": 35.162304,
+   "lon": 137.728968
+  },
+  {
+   "site_key": "chubu:中部電力(株)豊根開閉所",
+   "name": "中部電力(株)豊根開閉所",
+   "region": "chubu",
+   "operator": "中部電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 7,
+   "n_transformers_structural": 0,
+   "lat": 35.162273,
+   "lon": 137.729089
+  },
+  {
+   "site_key": "chugoku:菰池二丁目変電所",
+   "name": "菰池二丁目変電所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 7,
+   "n_transformers_structural": 0,
+   "lat": 34.457907,
+   "lon": 133.783191
+  },
+  {
+   "site_key": "chugoku:開閉所",
+   "name": "開閉所",
+   "region": "chugoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 7,
+   "n_transformers_structural": 1,
+   "lat": 35.208667,
+   "lon": 134.187849
+  },
+  {
+   "site_key": "kyushu:九州電力 中九州変電所",
+   "name": "九州電力 中九州変電所",
+   "region": "kyushu",
+   "operator": "九州電力株式会社",
+   "kv_ladder": [
+    500,
+    220
+   ],
+   "n_terminals": 7,
+   "n_transformers_structural": 1,
+   "lat": 32.614344,
+   "lon": 130.799206
+  },
+  {
+   "site_key": "tohoku:細谷変電所",
+   "name": "細谷変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    132,
+    66
+   ],
+   "n_terminals": 6,
+   "n_transformers_structural": 2,
+   "lat": 37.429583,
+   "lon": 141.030899
+  },
+  {
+   "site_key": "tokyo:小峰変電所",
+   "name": "小峰変電所",
+   "region": "tokyo",
+   "operator": "東京電力",
+   "kv_ladder": [
+    500,
+    275,
+    66
+   ],
+   "n_terminals": 6,
+   "n_transformers_structural": 2,
+   "lat": 35.718272,
+   "lon": 139.23224
+  },
+  {
+   "site_key": "chubu:門前変電所",
+   "name": "門前変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 6,
+   "n_transformers_structural": 1,
+   "lat": 35.071591,
+   "lon": 137.708441
+  },
+  {
+   "site_key": "tohoku:今泉変電所",
+   "name": "今泉変電所",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 37.851058,
+   "lon": 140.949043
+  },
+  {
+   "site_key": "chubu:南信変電所",
+   "name": "南信変電所",
+   "region": "chubu",
+   "operator": "中部電力株式会社",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 1,
+   "lat": 35.710011,
+   "lon": 137.996991
+  },
+  {
+   "site_key": "chubu:本巣市変電所",
+   "name": "本巣市変電所",
+   "region": "chubu",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 35.735051,
+   "lon": 136.660869
+  },
+  {
+   "site_key": "hokuriku:本巣市変電所",
+   "name": "本巣市変電所",
+   "region": "hokuriku",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 35.735051,
+   "lon": 136.660869
+  },
+  {
+   "site_key": "kansai:十津川村変電所",
+   "name": "十津川村変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 34.112988,
+   "lon": 135.822468
+  },
+  {
+   "site_key": "kansai:猪名川変電所",
+   "name": "猪名川変電所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500,
+    275,
+    154
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 2,
+   "lat": 34.984378,
+   "lon": 135.345996
+  },
+  {
+   "site_key": "kansai:山崎開閉所",
+   "name": "山崎開閉所",
+   "region": "kansai",
+   "operator": "関西電力",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 35.063284,
+   "lon": 134.601453
+  },
+  {
+   "site_key": "kansai:本巣市変電所",
+   "name": "本巣市変電所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 35.735051,
+   "lon": 136.660869
+  },
+  {
+   "site_key": "kyushu:宮崎変電所",
+   "name": "宮崎変電所",
+   "region": "kyushu",
+   "operator": "九州電力送配電",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 5,
+   "n_transformers_structural": 0,
+   "lat": 31.921965,
+   "lon": 131.194134
+  },
+  {
+   "site_key": "tokyo:新茂木",
+   "name": "新茂木",
+   "region": "tokyo",
+   "operator": "TEPCO",
+   "kv_ladder": [
+    500,
+    275
+   ],
+   "n_terminals": 4,
+   "n_transformers_structural": 1,
+   "lat": 36.522674,
+   "lon": 140.152774
+  },
+  {
+   "site_key": "tokyo:徳次郎変電所",
+   "name": "徳次郎変電所",
+   "region": "tokyo",
+   "operator": "東京電力パワーグリッド",
+   "kv_ladder": [
+    500,
+    154
+   ],
+   "n_terminals": 4,
+   "n_transformers_structural": 1,
+   "lat": 36.662721,
+   "lon": 139.836606
+  },
+  {
+   "site_key": "tokyo:西大家変電所",
+   "name": "西大家変電所",
+   "region": "tokyo",
+   "operator": "東武鉄道",
+   "kv_ladder": [
+    500,
+    275,
+    66,
+    1
+   ],
+   "n_terminals": 3,
+   "n_transformers_structural": 3,
+   "lat": 35.932211,
+   "lon": 139.358877
+  },
+  {
+   "site_key": "shikoku:福江町三丁目変電所",
+   "name": "福江町三丁目変電所",
+   "region": "shikoku",
+   "operator": "四国電力送配電",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 3,
+   "n_transformers_structural": 0,
+   "lat": 34.302173,
+   "lon": 133.862502
+  },
+  {
+   "site_key": "tohoku:下郷町変電所_2",
+   "name": "下郷町変電所_2",
+   "region": "tohoku",
+   "operator": null,
+   "kv_ladder": [
+    500,
+    66
+   ],
+   "n_terminals": 2,
+   "n_transformers_structural": 1,
+   "lat": 37.344903,
+   "lon": 139.908487
+  },
+  {
+   "site_key": "kansai:由良開閉所",
+   "name": "由良開閉所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 2,
+   "n_transformers_structural": 0,
+   "lat": 33.976948,
+   "lon": 135.088993
+  },
+  {
+   "site_key": "kansai:開閉所",
+   "name": "開閉所",
+   "region": "kansai",
+   "operator": null,
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 2,
+   "n_transformers_structural": 0,
+   "lat": 35.12823,
+   "lon": 134.717924
+  },
+  {
+   "site_key": "chugoku:福江町三丁目変電所",
+   "name": "福江町三丁目変電所",
+   "region": "chugoku",
+   "operator": "四国電力送配電",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 2,
+   "n_transformers_structural": 0,
+   "lat": 34.302173,
+   "lon": 133.862502
+  },
+  {
+   "site_key": "tokyo:新豊洲変電所",
+   "name": "新豊洲変電所",
+   "region": "tokyo",
+   "operator": "東京電力株式会社",
+   "kv_ladder": [
+    500
+   ],
+   "n_terminals": 1,
+   "n_transformers_structural": 0,
+   "lat": 35.647883,
+   "lon": 139.790809
+  }
+ ]
+}
