@@ -72,3 +72,42 @@ def test_regression_pin_okinawa(okinawa_ybus):
     assert meta["n_bus"] == 99
     assert meta["nnz"] == 321
     assert meta["n_trafo"] == 19
+
+
+def test_v2_version_and_dc(okinawa_ybus):
+    """v2: バージョン刻印・フィンガープリント・DC行列の同梱と整合。"""
+    out, meta = okinawa_ybus
+    assert meta["ybus_version"].startswith("2.")
+    assert len(meta["fingerprint"]) == 16
+    assert meta["dc"]["included"] and meta["dc"]["aligned"]
+    d = np.load(os.path.join(out, "okinawa.npz"))
+    B = sp.csr_matrix((d["bdc_data"], d["bdc_indices"], d["bdc_indptr"]),
+                      shape=tuple(d["shape"]))
+    assert abs(B - B.T).max() < 1e-9          # DC 行列も対称
+
+
+def test_v2_kron_equals_dense_schur(okinawa_ybus):
+    """v2: Kron 縮約 = 密 Schur 補行列(機械精度)の数学的検証。"""
+    out, meta = okinawa_ybus
+    from scripts.gen_ybus_numeric import kron_reduce
+    d = np.load(os.path.join(out, "okinawa.npz"))
+    Y = sp.csr_matrix((d["data"], d["indices"], d["indptr"]),
+                      shape=tuple(d["shape"]))
+    kv = d["bus_kv"]
+    keep = kv >= meta["backbone"]["keep_kv_min"]
+    Yred, kept_idx, _drop, _fill = kron_reduce(Y, keep)
+
+    # 密 Schur: 同じ scope(残置成分)で全消去を一括逆行列
+    import scipy.sparse.csgraph as csg
+    _n, labels = csg.connected_components((abs(Y) > 0).astype(np.int8),
+                                          directed=False)
+    in_scope = np.isin(labels, np.unique(labels[keep]))
+    kd = np.where(keep & in_scope)[0]
+    ed = np.where(~keep & in_scope)[0]
+    Yd = Y.toarray()
+    schur = Yd[np.ix_(kd, kd)] - Yd[np.ix_(kd, ed)] @ np.linalg.solve(
+        Yd[np.ix_(ed, ed)], Yd[np.ix_(ed, kd)])
+    assert np.array_equal(kept_idx, kd)
+    err = np.max(np.abs(Yred.toarray() - schur))
+    scale = np.max(np.abs(schur))
+    assert err / scale < 1e-10

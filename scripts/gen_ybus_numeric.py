@@ -40,6 +40,93 @@ OUT_DIR = "dist/ybus"
 ISLANDS = [("hokkaido", 50.0), ("east", 50.0), ("west", 60.0),
            ("okinawa", 60.0)]
 
+# Ybus は「バージョン管理された成果物」(オーナー認識 2026-07-02)。
+# モデル・出荷物・検証が変わるたびに上げ、meta.json と .mat に刻印する。
+YBUS_VERSION = "2.0.0"
+CHANGELOG = {
+    "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・"
+             ".mat/.npz/バス表",
+    "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) "
+             "②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) "
+             "③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) "
+             "④AC/DCバス順序の整合検証",
+}
+BACKBONE_KV = 154.0     # transforms.reduce_to_backbone と同じ閾値(WEST_AC_ANALYSIS)
+
+
+def fingerprint(Y) -> str:
+    """行列の再現性フィンガープリント(CSR正規形の sha256 先頭16桁)。"""
+    import hashlib
+    h = hashlib.sha256()
+    h.update(np.ascontiguousarray(Y.data).tobytes())
+    h.update(np.ascontiguousarray(Y.indices).tobytes())
+    h.update(np.ascontiguousarray(Y.indptr).tobytes())
+    h.update(np.array(Y.shape).tobytes())
+    return h.hexdigest()[:16]
+
+
+def kron_reduce(Y, keep_mask):
+    """Kron 縮約(回路論的に厳密な等価回路): Y_red = Ybb − Ybi · Yii⁻¹ · Yib.
+
+    消去バスの影響(低圧網・シャント込み)を残置バス間の等価アドミタンスに
+    畳み込む。捏造ではなく厳密な回路変換であり、provenance は "kron" と明示。
+
+    残置バスを含まない連結成分は縮約の定義域外(Yii が特異)なので丸ごと
+    落とし、件数を返す(正直に記録)。
+
+    Returns:
+        (Y_red csr, kept_idx, n_dropped_buses, fill_density)
+    """
+    import scipy.sparse.csgraph as csg
+    from scipy.sparse.linalg import splu
+
+    keep_mask = np.asarray(keep_mask, dtype=bool)
+    pattern = (abs(Y) > 0).astype(np.int8)
+    _n, labels = csg.connected_components(pattern, directed=False)
+    comp_keep = np.unique(labels[keep_mask])
+    in_scope = np.isin(labels, comp_keep)
+    kept_idx = np.where(keep_mask & in_scope)[0]
+    elim_idx = np.where(~keep_mask & in_scope)[0]
+    n_dropped = int(np.sum(~in_scope))
+
+    Ycsc = Y.tocsc()
+    Ybb = Ycsc[kept_idx][:, kept_idx].toarray()
+    if elim_idx.size:
+        Ybi = Ycsc[kept_idx][:, elim_idx].tocsc()
+        Yib = Ycsc[elim_idx][:, kept_idx].tocsc()
+        Yii = Ycsc[elim_idx][:, elim_idx].tocsc()
+        lu = splu(Yii)
+        # メモリを抑えるため右辺を列チャンクで解く(west: 8k消去×1k残置)
+        chunk = 256
+        for s in range(0, kept_idx.size, chunk):
+            e = min(s + chunk, kept_idx.size)
+            X = lu.solve(Yib[:, s:e].toarray())
+            Ybb[:, s:e] -= Ybi @ X
+    Yred = sp.csr_matrix(Ybb)
+    Yred.eliminate_zeros()
+    fill = float(Yred.nnz) / max(Yred.shape[0] ** 2, 1)
+    return Yred, kept_idx, n_dropped, fill
+
+
+def extract_bdc(net):
+    """DC 行列 Bbus(pandapower 公式 makeBdc 出力)を回収する。
+
+    rundcpp はコピーに対して実行(AC 側の _ppc を汚さない)。バス順序が AC の
+    Ybus と同一であることを呼び出し側で検証すること。
+    """
+    import copy as _copy
+    net_dc = _copy.deepcopy(net)
+    pp.rundcpp(net_dc)
+    internal = net_dc._ppc["internal"]
+    Bbus = sp.csr_matrix(internal["Bbus"])
+    lookup = net_dc._pd2ppc_lookups["bus"]
+    bus_ids = np.full(Bbus.shape[0], -1, dtype=int)
+    for pd_idx in net_dc.bus.index:
+        ppc_idx = int(lookup[pd_idx])
+        if 0 <= ppc_idx < Bbus.shape[0] and bus_ids[ppc_idx] == -1:
+            bus_ids[ppc_idx] = int(pd_idx)
+    return Bbus, bus_ids
+
 
 def add_ref_per_component(net):
     """全連結成分に ext_grid を置く(Ybus 抽出用の参照。負荷ゼロなので潮流は恒等)。
@@ -176,8 +263,35 @@ def export_island(island, freq, nodes, edges, out_dir):
     Y, bus_ids = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
 
+    # --- DC 行列(v2): 公式 Bbus。AC と同一バス順序であることを検証 ---
+    Bbus, bus_ids_dc = extract_bdc(net)
+    if Bbus.shape[0] == Y.shape[0] and np.array_equal(bus_ids, bus_ids_dc):
+        dc_aligned = True
+    else:                                   # 順序不一致は並べ替えて整合
+        dc_aligned = False
+        pos = {int(b): i for i, b in enumerate(bus_ids_dc)}
+        perm = np.array([pos.get(int(b), -1) for b in bus_ids])
+        if (perm >= 0).all():
+            Bbus = Bbus[perm][:, perm]
+            dc_aligned = True
+    checks["dc_bus_order_aligned"] = bool(dc_aligned)
+
     from src.powerflow.ybus_gate import ybus_gate
     gate = ybus_gate(net)
+
+    # --- Kron 縮約バックボーン(v2): ≥BACKBONE_KV を残置し厳密縮約 ---
+    # 島の最高電圧が閾値未満(okinawa=132kV系)なら、その島の基幹=最高電圧
+    # クラスへフォールバックする(空のバックボーンを出荷しない)。
+    kv_arr = np.array([float(net.bus.at[int(b), "vn_kv"]) if b >= 0 else 0.0
+                       for b in bus_ids])
+    backbone_kv = BACKBONE_KV
+    if not (kv_arr >= backbone_kv).any():
+        backbone_kv = float(kv_arr.max())
+    keep_mask = kv_arr >= backbone_kv
+    Yred, kept_idx, n_dropped, fill = kron_reduce(Y, keep_mask)
+    dsym_r = abs(Yred - Yred.T)
+    checks["backbone_symmetry_max_abs_err"] = (float(dsym_r.max())
+                                               if dsym_r.nnz else 0.0)
 
     # バス→ソースノード(lat/lon/region は built から直接引く。pandapower の
     # geodata API はバージョン差があるため使わない)
@@ -203,20 +317,24 @@ def export_island(island, freq, nodes, edges, out_dir):
                     "region"])
         w.writerows(rows)
 
-    # --- npz(scipy CSR + バス配列を同梱) ---
+    # --- npz(scipy CSR + Bbus + バス配列を同梱) ---
     np.savez_compressed(
         os.path.join(out_dir, f"{island}.npz"),
+        ybus_version=np.array([YBUS_VERSION]),
         data=Y.data, indices=Y.indices, indptr=Y.indptr,
         shape=np.array(Y.shape), base_mva=np.array([100.0]), f_hz=np.array([freq]),
+        bdc_data=Bbus.data, bdc_indices=Bbus.indices, bdc_indptr=Bbus.indptr,
         bus_pp=np.array([r[1] for r in rows]),
         bus_kv=np.array([r[3] for r in rows]),
         bus_lat=np.array([r[4] for r in rows]),
         bus_lon=np.array([r[5] for r in rows]))
 
-    # --- .mat(MATLAB: sparse complex + バス属性) ---
+    # --- .mat(MATLAB: sparse complex + DC行列 + バス属性) ---
     from scipy.io import savemat
     savemat(os.path.join(out_dir, f"{island}.mat"), {
         "Ybus": Y.tocsc(),                     # MATLAB native sparse
+        "Bbus": Bbus.tocsc(),                  # DC 行列(PTDF/DC潮流用)
+        "ybus_version": YBUS_VERSION,
         "base_mva": 100.0, "f_hz": freq,
         "bus_kv": np.array([r[3] for r in rows]),
         "bus_lat": np.array([r[4] for r in rows]),
@@ -225,12 +343,52 @@ def export_island(island, freq, nodes, edges, out_dir):
         "bus_region": np.array([r[6] for r in rows], dtype=object),
     }, do_compression=True)
 
+    # --- バックボーン縮約(≥BACKBONE_KV)の出荷 ---
+    bb_rows = [rows[i] for i in kept_idx]
+    with open(os.path.join(out_dir, f"{island}_backbone_bus.csv"), "w",
+              newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["ybus_index", "pp_bus", "name", "vn_kv", "lat", "lon",
+                    "region", "full_index"])
+        for j, r in enumerate(bb_rows):
+            w.writerow([j, r[1], r[2], r[3], r[4], r[5], r[6],
+                        int(kept_idx[j])])
+    savemat(os.path.join(out_dir, f"{island}_backbone.mat"), {
+        "Ybus": Yred.tocsc(), "ybus_version": YBUS_VERSION,
+        "reduction": f"kron(keep >= {backbone_kv:.0f} kV)",
+        "base_mva": 100.0, "f_hz": freq,
+        "bus_kv": np.array([r[3] for r in bb_rows]),
+        "bus_lat": np.array([r[4] for r in bb_rows]),
+        "bus_lon": np.array([r[5] for r in bb_rows]),
+        "bus_name": np.array([r[2] for r in bb_rows], dtype=object),
+        "full_index": kept_idx,
+    }, do_compression=True)
+    np.savez_compressed(
+        os.path.join(out_dir, f"{island}_backbone.npz"),
+        ybus_version=np.array([YBUS_VERSION]),
+        data=Yred.data, indices=Yred.indices, indptr=Yred.indptr,
+        shape=np.array(Yred.shape), full_index=kept_idx,
+        bus_kv=np.array([r[3] for r in bb_rows]),
+        bus_lat=np.array([r[4] for r in bb_rows]),
+        bus_lon=np.array([r[5] for r in bb_rows]))
+
     meta = {
         "island": island, "f_hz": freq,
+        "ybus_version": YBUS_VERSION,
+        "fingerprint": fingerprint(Y),
         "n_bus": int(Y.shape[0]), "nnz": int(Y.nnz),
         "density": float(Y.nnz) / (Y.shape[0] ** 2),
         "n_line": int(len(net.line)), "n_trafo": int(len(net.trafo)),
         "n_components_refs": int(n_refs),
+        "dc": {"included": True, "nnz": int(Bbus.nnz),
+               "aligned": bool(checks["dc_bus_order_aligned"])},
+        "backbone": {
+            "keep_kv_min": backbone_kv,
+            "n_bus": int(Yred.shape[0]), "nnz": int(Yred.nnz),
+            "fill_density": round(fill, 4),
+            "n_dropped_buses": int(n_dropped),
+            "fingerprint": fingerprint(Yred),
+        },
         "checks": checks,
         "gate": {"pass": gate["pass"], "cond_max": gate["cond_max"],
                  "n_islands": gate["n_islands"]},
@@ -256,18 +414,21 @@ def main():
         meta = export_island(island, freq_of[island], nodes, edges, args.out)
         metas[island] = meta
         c = meta["checks"]
+        bb = meta["backbone"]
         print(f"[{island}] bus={meta['n_bus']} nnz={meta['nnz']} "
-              f"line={meta['n_line']} trafo={meta['n_trafo']} | "
-              f"sym_rel={c['symmetry_rel_err']:.1e} "
-              f"offdiag_med={c['offdiag_rel_err_median']:.1e} "
-              f"p99={c['offdiag_rel_err_p99']:.1e} "
-              f"(checked {c['offdiag_checked']}) | "
+              f"trafo={meta['n_trafo']} | sym={c['symmetry_rel_err']:.0e} "
+              f"offdiag_p99={c['offdiag_rel_err_p99']:.1e} | "
+              f"dc={'OK' if meta['dc']['aligned'] else 'MISALIGNED'} | "
+              f"backbone {bb['n_bus']}bus fill={bb['fill_density']:.3f} "
+              f"drop={bb['n_dropped_buses']} | "
               f"gate={'PASS' if meta['gate']['pass'] else 'FAIL'} "
-              f"cond={meta['gate']['cond_max']:.2e} ({meta['elapsed_s']}s)")
+              f"({meta['elapsed_s']}s)")
 
     from datetime import date
     with open(os.path.join(args.out, "meta.json"), "w") as f:
         json.dump({"generated": date.today().isoformat(),
+                   "ybus_version": YBUS_VERSION,
+                   "changelog": CHANGELOG,
                    "source": BUILT,
                    "note": "4 frequency islands are asynchronous; the national "
                            "Ybus is the block-diagonal direct sum of these.",
