@@ -127,3 +127,8 @@ data/topology/*.jsonl
 # 正典カタログ summary.json のみ追跡(生成器=scripts/build_structures_batch.py)
 data/structures/*.json
 !data/structures/summary.json
+
+# 数値Ybus(D層生成物・全4島47秒で決定的に再生成)。品質記録 meta.json のみ追跡
+dist/ybus/*.mat
+dist/ybus/*.npz
+dist/ybus/*_bus.csv

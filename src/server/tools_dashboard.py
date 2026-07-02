@@ -51,6 +51,8 @@ _BROWSE_ROOTS = {
     "matpower": ("dist/matpower_national", (".mat", ".csv"),
                  "MATPOWER(国全体・島別)"),
     "reports": ("docs/reports", (".md", ".json", ".png"), "レポート/診断"),
+    "ybus": ("dist/ybus", (".mat", ".npz", ".csv", ".json"),
+             "数値Ybus(島別・MATLAB対応)"),
 }
 
 
@@ -193,7 +195,44 @@ TOOLS = {
         "params": [],
         "runner": _run_structures_all,
     },
+    "ybus_numeric": {
+        "label": "数値Ybus 全4島生成",
+        "desc": "built正典→検証済みアドミタンス行列(.mat/.npz/バス表。約50秒)",
+        "params": [],
+        "runner": None,   # set below (forward reference)
+    },
 }
+
+
+def _run_ybus_numeric(params: dict) -> dict:
+    import json as _json
+    from scripts.gen_ybus_numeric import ISLANDS, export_island
+    from scripts.run_full_powerflow_from_db import BUILT
+    out_dir = os.path.join(_PROJECT_ROOT, "dist", "ybus")
+    os.makedirs(out_dir, exist_ok=True)
+    built = _json.load(open(BUILT))
+    lines = []
+    metas = {}
+    for island, freq in ISLANDS:
+        meta = export_island(island, freq, built["nodes"], built["edges"],
+                             out_dir)
+        metas[island] = meta
+        c = meta["checks"]
+        lines.append(
+            f"[{island}] bus={meta['n_bus']} nnz={meta['nnz']} "
+            f"trafo={meta['n_trafo']} sym={c['symmetry_max_abs_err']:.0e} "
+            f"offdiag_p99={c['offdiag_rel_err_p99']:.1e} "
+            f"gate={'PASS' if meta['gate']['pass'] else 'FAIL'}")
+    from datetime import date
+    with open(os.path.join(out_dir, "meta.json"), "w") as f:
+        _json.dump({"generated": date.today().isoformat(), "source": BUILT,
+                    "islands": metas}, f, ensure_ascii=False, indent=1)
+    return {"output": "\n".join(lines),
+            "artifacts": [{"path": os.path.join(out_dir, "meta.json"),
+                           "kind": "json", "label": "Ybus品質メタ(meta.json)"}]}
+
+
+TOOLS["ybus_numeric"]["runner"] = _run_ybus_numeric
 
 
 # ─── API ──────────────────────────────────────────────────────────────

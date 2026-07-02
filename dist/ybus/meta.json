@@ -1,0 +1,99 @@
+{
+ "generated": "2026-07-02",
+ "source": "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
+ "note": "4 frequency islands are asynchronous; the national Ybus is the block-diagonal direct sum of these.",
+ "islands": {
+  "hokkaido": {
+   "island": "hokkaido",
+   "f_hz": 50.0,
+   "n_bus": 836,
+   "nnz": 2620,
+   "density": 0.0037487694878780248,
+   "n_line": 853,
+   "n_trafo": 74,
+   "n_components_refs": 47,
+   "checks": {
+    "symmetry_max_abs_err": 0.0,
+    "symmetry_rel_err": 0.0,
+    "offdiag_checked": 908,
+    "offdiag_rel_err_median": 0.0,
+    "offdiag_rel_err_p99": 1.2283674932279337e-16
+   },
+   "gate": {
+    "pass": true,
+    "cond_max": 4359126.60078795,
+    "n_islands": 15
+   },
+   "elapsed_s": 1.8
+  },
+  "east": {
+   "island": "east",
+   "f_hz": 50.0,
+   "n_bus": 6205,
+   "nnz": 19321,
+   "density": 0.000501817761533322,
+   "n_line": 6315,
+   "n_trafo": 630,
+   "n_components_refs": 517,
+   "checks": {
+    "symmetry_max_abs_err": 0.0,
+    "symmetry_rel_err": 0.0,
+    "offdiag_checked": 6726,
+    "offdiag_rel_err_median": 0.0,
+    "offdiag_rel_err_p99": 1.7000471781300878e-16
+   },
+   "gate": {
+    "pass": true,
+    "cond_max": 149359334.97020167,
+    "n_islands": 181
+   },
+   "elapsed_s": 14.9
+  },
+  "west": {
+   "island": "west",
+   "f_hz": 60.0,
+   "n_bus": 10193,
+   "nnz": 26784,
+   "density": 0.0002577931587004772,
+   "n_line": 9793,
+   "n_trafo": 1061,
+   "n_components_refs": 2531,
+   "checks": {
+    "symmetry_max_abs_err": 0.0,
+    "symmetry_rel_err": 0.0,
+    "offdiag_checked": 9400,
+    "offdiag_rel_err_median": 0.0,
+    "offdiag_rel_err_p99": 1.6653908696644005e-16
+   },
+   "gate": {
+    "pass": true,
+    "cond_max": 61535680.1934577,
+    "n_islands": 322
+   },
+   "elapsed_s": 30.2
+  },
+  "okinawa": {
+   "island": "okinawa",
+   "f_hz": 60.0,
+   "n_bus": 99,
+   "nnz": 321,
+   "density": 0.0327517600244873,
+   "n_line": 95,
+   "n_trafo": 19,
+   "n_components_refs": 7,
+   "checks": {
+    "symmetry_max_abs_err": 0.0,
+    "symmetry_rel_err": 0.0,
+    "offdiag_checked": 114,
+    "offdiag_rel_err_median": 0.0,
+    "offdiag_rel_err_p99": 1.7829505604930805e-16
+   },
+   "gate": {
+    "pass": true,
+    "cond_max": 41379.87214356339,
+    "n_islands": 1
+   },
+   "elapsed_s": 0.3
+  }
+ }
+}
