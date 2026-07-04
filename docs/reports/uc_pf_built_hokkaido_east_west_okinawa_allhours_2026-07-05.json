@@ -1,0 +1,1765 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "git_head": "d80c0f1",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "hokkaido": {
+   "mode": "ac",
+   "regions": [
+    "hokkaido"
+   ],
+   "n_bus": 836,
+   "n_trafo_nameplate": 1,
+   "gate": {
+    "pass": true,
+    "cond_max": 1677457.3078313184
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3196.2,
+     "load_scale": {
+      "hokkaido": 0.7231
+     },
+     "slack_abs_mw": -486.9,
+     "solve_s": 1.0,
+     "vm_min": 0.8573,
+     "vm_max": 1.0044,
+     "loss_mw": 78.9,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3000.0,
+     "load_scale": {
+      "hokkaido": 0.6787
+     },
+     "slack_abs_mw": -685.4,
+     "solve_s": 0.0,
+     "vm_min": 0.873,
+     "vm_max": 1.0049,
+     "loss_mw": 76.6,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2872.5,
+     "load_scale": {
+      "hokkaido": 0.6499
+     },
+     "slack_abs_mw": -813.6,
+     "solve_s": 0.0,
+     "vm_min": 0.8821,
+     "vm_max": 1.0052,
+     "loss_mw": 75.9,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2743.8,
+     "load_scale": {
+      "hokkaido": 0.6208
+     },
+     "slack_abs_mw": -829.4,
+     "solve_s": 0.0,
+     "vm_min": 0.8917,
+     "vm_max": 1.0057,
+     "loss_mw": 70.6,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2880.0,
+     "load_scale": {
+      "hokkaido": 0.6516
+     },
+     "slack_abs_mw": -806.1,
+     "solve_s": 0.0,
+     "vm_min": 0.8816,
+     "vm_max": 1.0052,
+     "loss_mw": 75.9,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3155.3,
+     "load_scale": {
+      "hokkaido": 0.7139
+     },
+     "slack_abs_mw": -528.5,
+     "solve_s": 0.0,
+     "vm_min": 0.8614,
+     "vm_max": 1.0045,
+     "loss_mw": 78.3,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3506.3,
+     "load_scale": {
+      "hokkaido": 0.7933
+     },
+     "slack_abs_mw": -170.2,
+     "solve_s": 0.0,
+     "vm_min": 0.8167,
+     "vm_max": 1.0036,
+     "loss_mw": 85.5,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3836.9,
+     "load_scale": {
+      "hokkaido": 0.8681
+     },
+     "slack_abs_mw": 172.2,
+     "solve_s": 0.0,
+     "vm_min": 0.7633,
+     "vm_max": 1.0033,
+     "loss_mw": 97.3,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3990.7,
+     "load_scale": {
+      "hokkaido": 0.9029
+     },
+     "slack_abs_mw": 333.7,
+     "solve_s": 0.0,
+     "vm_min": 0.7263,
+     "vm_max": 1.0029,
+     "loss_mw": 105.1,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3955.7,
+     "load_scale": {
+      "hokkaido": 0.8949
+     },
+     "slack_abs_mw": 296.9,
+     "solve_s": 0.0,
+     "vm_min": 0.7354,
+     "vm_max": 1.003,
+     "loss_mw": 103.2,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3886.3,
+     "load_scale": {
+      "hokkaido": 0.8793
+     },
+     "slack_abs_mw": 224.0,
+     "solve_s": 0.1,
+     "vm_min": 0.7522,
+     "vm_max": 1.0032,
+     "loss_mw": 99.7,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3856.3,
+     "load_scale": {
+      "hokkaido": 0.8725
+     },
+     "slack_abs_mw": 192.6,
+     "solve_s": 0.0,
+     "vm_min": 0.759,
+     "vm_max": 1.0032,
+     "loss_mw": 98.2,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3747.8,
+     "load_scale": {
+      "hokkaido": 0.8479
+     },
+     "slack_abs_mw": 79.5,
+     "solve_s": 0.0,
+     "vm_min": 0.7792,
+     "vm_max": 1.0033,
+     "loss_mw": 93.6,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3762.3,
+     "load_scale": {
+      "hokkaido": 0.8512
+     },
+     "slack_abs_mw": 94.5,
+     "solve_s": 0.0,
+     "vm_min": 0.7768,
+     "vm_max": 1.0033,
+     "loss_mw": 94.2,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3834.8,
+     "load_scale": {
+      "hokkaido": 0.8676
+     },
+     "slack_abs_mw": 170.1,
+     "solve_s": 0.1,
+     "vm_min": 0.7638,
+     "vm_max": 1.0033,
+     "loss_mw": 97.2,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3967.8,
+     "load_scale": {
+      "hokkaido": 0.8977
+     },
+     "slack_abs_mw": 309.6,
+     "solve_s": 0.1,
+     "vm_min": 0.7323,
+     "vm_max": 1.003,
+     "loss_mw": 103.8,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4215.0,
+     "load_scale": {
+      "hokkaido": 0.9536
+     },
+     "slack_abs_mw": 572.9,
+     "solve_s": 0.0,
+     "vm_min": 0.6511,
+     "vm_max": 1.0031,
+     "loss_mw": 119.9,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4402.3,
+     "load_scale": {
+      "hokkaido": 0.996
+     },
+     "slack_abs_mw": 759.6,
+     "solve_s": 1.0,
+     "vm_min": 0.8163,
+     "vm_max": 1.003,
+     "loss_mw": 119.4,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4434.3,
+     "load_scale": {
+      "hokkaido": 1.0032
+     },
+     "slack_abs_mw": 793.4,
+     "solve_s": 1.0,
+     "vm_min": 0.8144,
+     "vm_max": 1.003,
+     "loss_mw": 121.2,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4267.5,
+     "load_scale": {
+      "hokkaido": 0.9655
+     },
+     "slack_abs_mw": 629.9,
+     "solve_s": 0.0,
+     "vm_min": 0.6253,
+     "vm_max": 1.0028,
+     "loss_mw": 124.4,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4020.0,
+     "load_scale": {
+      "hokkaido": 0.9095
+     },
+     "slack_abs_mw": 364.7,
+     "solve_s": 0.0,
+     "vm_min": 0.7182,
+     "vm_max": 1.0029,
+     "loss_mw": 106.7,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3780.0,
+     "load_scale": {
+      "hokkaido": 0.8552
+     },
+     "slack_abs_mw": 112.9,
+     "solve_s": 0.0,
+     "vm_min": 0.7737,
+     "vm_max": 1.0033,
+     "loss_mw": 94.9,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3547.5,
+     "load_scale": {
+      "hokkaido": 0.8026
+     },
+     "slack_abs_mw": -127.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8107,
+     "vm_max": 1.0034,
+     "loss_mw": 86.7,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3376.2,
+     "load_scale": {
+      "hokkaido": 0.7639
+     },
+     "slack_abs_mw": -303.5,
+     "solve_s": 0.0,
+     "vm_min": 0.8346,
+     "vm_max": 1.0039,
+     "loss_mw": 82.3,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "n_bus": 6205,
+   "n_trafo_nameplate": 6,
+   "gate": {
+    "pass": true,
+    "cond_max": 406303340.64369476
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42933.1,
+     "load_scale": {
+      "tohoku": 0.6516,
+      "tokyo": 0.8084
+     },
+     "slack_abs_mw": 10320.8,
+     "solve_s": 31.8,
+     "vm_min": 0.8796,
+     "vm_max": 1.0229,
+     "loss_mw": 2681.4,
+     "tie_mw": {
+      "tohoku->tokyo": 4871.4
+     }
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 40674.8,
+     "load_scale": {
+      "tohoku": 0.6102,
+      "tokyo": 0.7677
+     },
+     "slack_abs_mw": 9749.5,
+     "solve_s": 30.4,
+     "vm_min": 0.8885,
+     "vm_max": 1.0229,
+     "loss_mw": 2378.0,
+     "tie_mw": {
+      "tohoku->tokyo": 4658.3
+     }
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39177.1,
+     "load_scale": {
+      "tohoku": 0.5833,
+      "tokyo": 0.7405
+     },
+     "slack_abs_mw": 9236.2,
+     "solve_s": 36.6,
+     "vm_min": 0.8941,
+     "vm_max": 1.0229,
+     "loss_mw": 2046.5,
+     "tie_mw": {
+      "tohoku->tokyo": 4517.2
+     }
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 37676.4,
+     "load_scale": {
+      "tohoku": 0.5561,
+      "tokyo": 0.7134
+     },
+     "slack_abs_mw": 9234.0,
+     "solve_s": 31.3,
+     "vm_min": 0.677,
+     "vm_max": 1.0403,
+     "loss_mw": 2314.8,
+     "tie_mw": {
+      "tohoku->tokyo": 3715.0
+     }
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39194.8,
+     "load_scale": {
+      "tohoku": 0.5849,
+      "tokyo": 0.7405
+     },
+     "slack_abs_mw": 9338.2,
+     "solve_s": 39.3,
+     "vm_min": 0.8941,
+     "vm_max": 1.0229,
+     "loss_mw": 2071.1,
+     "tie_mw": {
+      "tohoku->tokyo": 4214.2
+     }
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42611.3,
+     "load_scale": {
+      "tohoku": 0.6431,
+      "tokyo": 0.8033
+     },
+     "slack_abs_mw": 9921.3,
+     "solve_s": 39.1,
+     "vm_min": 0.8807,
+     "vm_max": 1.0229,
+     "loss_mw": 2651.7,
+     "tie_mw": {
+      "tohoku->tokyo": 4827.3
+     }
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47347.1,
+     "load_scale": {
+      "tohoku": 0.7177,
+      "tokyo": 0.8918
+     },
+     "slack_abs_mw": 10833.9,
+     "solve_s": 19.1,
+     "vm_min": 0.8598,
+     "vm_max": 1.0229,
+     "loss_mw": 3430.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5197.8
+     }
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 52454.0,
+     "load_scale": {
+      "tohoku": 0.7884,
+      "tokyo": 0.9896
+     },
+     "slack_abs_mw": 11686.3,
+     "solve_s": 15.2,
+     "vm_min": 0.8332,
+     "vm_max": 1.0229,
+     "loss_mw": 4541.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5342.5
+     }
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55992.7,
+     "load_scale": {
+      "tohoku": 0.8222,
+      "tokyo": 1.0613
+     },
+     "slack_abs_mw": 15269.7,
+     "solve_s": 14.9,
+     "vm_min": 0.8103,
+     "vm_max": 1.0229,
+     "loss_mw": 5349.1,
+     "tie_mw": {
+      "tohoku->tokyo": 4988.6
+     }
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57290.8,
+     "load_scale": {
+      "tohoku": 0.8162,
+      "tokyo": 1.0921
+     },
+     "slack_abs_mw": 16140.8,
+     "solve_s": 11.5,
+     "vm_min": 0.7993,
+     "vm_max": 1.0229,
+     "loss_mw": 5725.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5049.3
+     }
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57863.4,
+     "load_scale": {
+      "tohoku": 0.8026,
+      "tokyo": 1.1085
+     },
+     "slack_abs_mw": 16316.2,
+     "solve_s": 15.5,
+     "vm_min": 0.7931,
+     "vm_max": 1.0229,
+     "loss_mw": 5844.6,
+     "tie_mw": {
+      "tohoku->tokyo": 5228.2
+     }
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58482.9,
+     "load_scale": {
+      "tohoku": 0.7969,
+      "tokyo": 1.1239
+     },
+     "slack_abs_mw": 16770.9,
+     "solve_s": 17.8,
+     "vm_min": 0.787,
+     "vm_max": 1.0229,
+     "loss_mw": 6113.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5246.0
+     }
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57403.4,
+     "load_scale": {
+      "tohoku": 0.7742,
+      "tokyo": 1.1052
+     },
+     "slack_abs_mw": 15642.4,
+     "solve_s": 21.3,
+     "vm_min": 0.7944,
+     "vm_max": 1.0229,
+     "loss_mw": 5850.1,
+     "tie_mw": {
+      "tohoku->tokyo": 5435.8
+     }
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57289.3,
+     "load_scale": {
+      "tohoku": 0.777,
+      "tokyo": 1.1019
+     },
+     "slack_abs_mw": 16758.1,
+     "solve_s": 16.9,
+     "vm_min": 0.7956,
+     "vm_max": 1.0229,
+     "loss_mw": 6010.0,
+     "tie_mw": {
+      "tohoku->tokyo": 4263.8
+     }
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57368.5,
+     "load_scale": {
+      "tohoku": 0.7916,
+      "tokyo": 1.1
+     },
+     "slack_abs_mw": 16154.0,
+     "solve_s": 20.9,
+     "vm_min": 0.7963,
+     "vm_max": 1.0229,
+     "loss_mw": 5769.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5302.1
+     }
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57646.8,
+     "load_scale": {
+      "tohoku": 0.8186,
+      "tokyo": 1.0996
+     },
+     "slack_abs_mw": 16206.2,
+     "solve_s": 18.2,
+     "vm_min": 0.7965,
+     "vm_max": 1.0229,
+     "loss_mw": 5843.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5023.1
+     }
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58869.9,
+     "load_scale": {
+      "tohoku": 0.8694,
+      "tokyo": 1.1146
+     },
+     "slack_abs_mw": 15461.8,
+     "solve_s": 17.8,
+     "vm_min": 0.7908,
+     "vm_max": 1.0229,
+     "loss_mw": 5979.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5894.7
+     }
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.9075,
+      "tokyo": 1.116
+     },
+     "slack_abs_mw": 16133.5,
+     "solve_s": 17.5,
+     "vm_min": 0.7902,
+     "vm_max": 1.0229,
+     "loss_mw": 6013.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5716.4
+     }
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58569.5,
+     "load_scale": {
+      "tohoku": 0.9133,
+      "tokyo": 1.0968
+     },
+     "slack_abs_mw": 15309.0,
+     "solve_s": 18.0,
+     "vm_min": 0.7976,
+     "vm_max": 1.0229,
+     "loss_mw": 5802.4,
+     "tie_mw": {
+      "tohoku->tokyo": 5657.5
+     }
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 56232.5,
+     "load_scale": {
+      "tohoku": 0.8778,
+      "tokyo": 1.0528
+     },
+     "slack_abs_mw": 14486.5,
+     "solve_s": 17.4,
+     "vm_min": 0.8132,
+     "vm_max": 1.0229,
+     "loss_mw": 5135.1,
+     "tie_mw": {
+      "tohoku->tokyo": 5948.4
+     }
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 53254.8,
+     "load_scale": {
+      "tohoku": 0.8256,
+      "tokyo": 0.9985
+     },
+     "slack_abs_mw": 13469.7,
+     "solve_s": 17.3,
+     "vm_min": 0.8305,
+     "vm_max": 1.0229,
+     "loss_mw": 4489.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5712.3
+     }
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 50294.8,
+     "load_scale": {
+      "tohoku": 0.7749,
+      "tokyo": 0.9442
+     },
+     "slack_abs_mw": 12506.1,
+     "solve_s": 18.9,
+     "vm_min": 0.8461,
+     "vm_max": 1.0229,
+     "loss_mw": 3904.4,
+     "tie_mw": {
+      "tohoku->tokyo": 5476.0
+     }
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47352.5,
+     "load_scale": {
+      "tohoku": 0.7258,
+      "tokyo": 0.8899
+     },
+     "slack_abs_mw": 11964.9,
+     "solve_s": 21.9,
+     "vm_min": 0.8603,
+     "vm_max": 1.0229,
+     "loss_mw": 3499.7,
+     "tie_mw": {
+      "tohoku->tokyo": 4300.4
+     }
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 45153.1,
+     "load_scale": {
+      "tohoku": 0.6896,
+      "tokyo": 0.8492
+     },
+     "slack_abs_mw": 10937.3,
+     "solve_s": 39.4,
+     "vm_min": 0.8702,
+     "vm_max": 1.0229,
+     "loss_mw": 3014.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5062.5
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "west": {
+   "mode": "dc",
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "n_bus": 10193,
+   "n_trafo_nameplate": 5,
+   "gate": {
+    "pass": true,
+    "cond_max": 54877909.04002936
+   },
+   "hours": {
+    "0": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 50596.0,
+     "load_scale": {
+      "chubu": 0.6146,
+      "chugoku": 0.6488,
+      "hokuriku": 0.5778,
+      "kansai": 0.7155,
+      "kyushu": 0.7908,
+      "shikoku": 0.7193
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 171.2,
+      "chubu->kansai": 2287.9,
+      "chugoku->kansai": 4635.0,
+      "chugoku->kyushu": -1027.0,
+      "chugoku->shikoku": -2898.1,
+      "hokuriku->kansai": 2.8,
+      "kansai->shikoku": -282.5,
+      "kyushu->shikoku": 125.2
+     }
+    },
+    "1": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 47926.3,
+     "load_scale": {
+      "chubu": 0.5821,
+      "chugoku": 0.6145,
+      "hokuriku": 0.5433,
+      "kansai": 0.6788,
+      "kyushu": 0.7489,
+      "shikoku": 0.6807
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 101.8,
+      "chubu->kansai": 1491.3,
+      "chugoku->kansai": 5323.0,
+      "chugoku->kyushu": -1475.8,
+      "chugoku->shikoku": -2863.6,
+      "hokuriku->kansai": 2.9,
+      "kansai->shikoku": -367.6,
+      "kyushu->shikoku": 129.5
+     }
+    },
+    "2": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 46152.6,
+     "load_scale": {
+      "chubu": 0.5605,
+      "chugoku": 0.5918,
+      "hokuriku": 0.5204,
+      "kansai": 0.6544,
+      "kyushu": 0.7211,
+      "shikoku": 0.6552
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 50.8,
+      "chubu->kansai": 170.4,
+      "chugoku->kansai": 5772.8,
+      "chugoku->kyushu": -1773.0,
+      "chugoku->shikoku": -2834.9,
+      "hokuriku->kansai": 1.9,
+      "kansai->shikoku": -429.7,
+      "kyushu->shikoku": 132.4
+     }
+    },
+    "3": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 44376.7,
+     "load_scale": {
+      "chubu": 0.5388,
+      "chugoku": 0.5691,
+      "hokuriku": 0.4975,
+      "kansai": 0.63,
+      "kyushu": 0.6933,
+      "shikoku": 0.6296
+     },
+     "slack_abs_mw": 3040.5,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 5.8,
+      "chubu->kansai": -826.9,
+      "chugoku->kansai": 5802.9,
+      "chugoku->kyushu": -1612.0,
+      "chugoku->shikoku": -2844.3,
+      "hokuriku->kansai": 1.0,
+      "kansai->shikoku": -458.8,
+      "kyushu->shikoku": 139.9
+     }
+    },
+    "4": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 46166.3,
+     "load_scale": {
+      "chubu": 0.5605,
+      "chugoku": 0.5921,
+      "hokuriku": 0.5207,
+      "kansai": 0.6544,
+      "kyushu": 0.7216,
+      "shikoku": 0.6557
+     },
+     "slack_abs_mw": 2775.7,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 55.9,
+      "chubu->kansai": -347.8,
+      "chugoku->kansai": 5268.3,
+      "chugoku->kyushu": -1678.6,
+      "chugoku->shikoku": -2877.7,
+      "hokuriku->kansai": 0.9,
+      "kansai->shikoku": -368.4,
+      "kyushu->shikoku": 114.1
+     }
+    },
+    "5": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 50193.2,
+     "load_scale": {
+      "chubu": 0.6088,
+      "chugoku": 0.6415,
+      "hokuriku": 0.5733,
+      "kansai": 0.7124,
+      "kyushu": 0.783,
+      "shikoku": 0.7127
+     },
+     "slack_abs_mw": 3387.3,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 152.3,
+      "chubu->kansai": 343.7,
+      "chugoku->kansai": 4759.2,
+      "chugoku->kyushu": -1110.4,
+      "chugoku->shikoku": -2880.3,
+      "hokuriku->kansai": 0.3,
+      "kansai->shikoku": -309.1,
+      "kyushu->shikoku": 126.2
+     }
+    },
+    "6": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 55715.6,
+     "load_scale": {
+      "chubu": 0.6728,
+      "chugoku": 0.7037,
+      "hokuriku": 0.6472,
+      "kansai": 0.7981,
+      "kyushu": 0.8636,
+      "shikoku": 0.7893
+     },
+     "slack_abs_mw": 4104.2,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 312.5,
+      "chubu->kansai": 3418.7,
+      "chugoku->kansai": 3475.3,
+      "chugoku->kyushu": -246.8,
+      "chugoku->shikoku": -2956.4,
+      "hokuriku->kansai": 2.1,
+      "kansai->shikoku": -133.8,
+      "kyushu->shikoku": 118.6
+     }
+    },
+    "7": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 61608.8,
+     "load_scale": {
+      "chubu": 0.7385,
+      "chugoku": 0.7631,
+      "hokuriku": 0.7281,
+      "kansai": 0.8976,
+      "kyushu": 0.9446,
+      "shikoku": 0.8683
+     },
+     "slack_abs_mw": 5605.2,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 464.3,
+      "chubu->kansai": 1976.5,
+      "chugoku->kansai": 2335.0,
+      "chugoku->kyushu": 459.0,
+      "chugoku->shikoku": -2995.5,
+      "hokuriku->kansai": -2.7,
+      "kansai->shikoku": 8.6,
+      "kyushu->shikoku": 110.0
+     }
+    },
+    "8": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 65603.8,
+     "load_scale": {
+      "chubu": 0.779,
+      "chugoku": 0.7927,
+      "hokuriku": 0.786,
+      "kansai": 0.9773,
+      "kyushu": 0.9919,
+      "shikoku": 0.9178
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 562.7,
+      "chubu->kansai": 4050.7,
+      "chugoku->kansai": 3246.8,
+      "chugoku->kyushu": 1222.7,
+      "chugoku->shikoku": -3105.8,
+      "hokuriku->kansai": 0.3,
+      "kansai->shikoku": -150.8,
+      "kyushu->shikoku": 441.6
+     }
+    },
+    "9": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66942.7,
+     "load_scale": {
+      "chubu": 0.7871,
+      "chugoku": 0.7882,
+      "hokuriku": 0.8097,
+      "kansai": 1.0203,
+      "kyushu": 0.9976,
+      "shikoku": 0.9292
+     },
+     "slack_abs_mw": 3300.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 614.7,
+      "chubu->kansai": 4803.6,
+      "chugoku->kansai": 3105.0,
+      "chugoku->kyushu": 1234.9,
+      "chugoku->shikoku": -3092.2,
+      "hokuriku->kansai": 0.9,
+      "kansai->shikoku": -124.1,
+      "kyushu->shikoku": 414.2
+     }
+    },
+    "10": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 67483.0,
+     "load_scale": {
+      "chubu": 0.7876,
+      "chugoku": 0.7788,
+      "hokuriku": 0.8214,
+      "kansai": 1.0465,
+      "kyushu": 0.9944,
+      "shikoku": 0.9306
+     },
+     "slack_abs_mw": 3310.8,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 636.6,
+      "chubu->kansai": 4774.7,
+      "chugoku->kansai": 3138.6,
+      "chugoku->kyushu": 1188.1,
+      "chugoku->shikoku": -3073.4,
+      "hokuriku->kansai": 0.9,
+      "kansai->shikoku": -130.1,
+      "kyushu->shikoku": 402.7
+     }
+    },
+    "11": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 68129.7,
+     "load_scale": {
+      "chubu": 0.7915,
+      "chugoku": 0.7761,
+      "hokuriku": 0.8328,
+      "kansai": 1.0679,
+      "kyushu": 0.9965,
+      "shikoku": 0.9355
+     },
+     "slack_abs_mw": 3576.5,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 655.7,
+      "chubu->kansai": 4690.3,
+      "chugoku->kansai": 3342.9,
+      "chugoku->kyushu": 1253.8,
+      "chugoku->shikoku": -3098.3,
+      "hokuriku->kansai": 0.9,
+      "kansai->shikoku": -141.7,
+      "kyushu->shikoku": 444.9
+     }
+    },
+    "12": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66833.2,
+     "load_scale": {
+      "chubu": 0.7749,
+      "chugoku": 0.7572,
+      "hokuriku": 0.8167,
+      "kansai": 1.0526,
+      "kyushu": 0.9746,
+      "shikoku": 0.916
+     },
+     "slack_abs_mw": 3830.2,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 628.8,
+      "chubu->kansai": 4239.2,
+      "chugoku->kansai": 3222.0,
+      "chugoku->kyushu": 918.8,
+      "chugoku->shikoku": -3031.9,
+      "hokuriku->kansai": 0.4,
+      "kansai->shikoku": -134.0,
+      "kyushu->shikoku": 346.7
+     }
+    },
+    "13": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66745.1,
+     "load_scale": {
+      "chubu": 0.7756,
+      "chugoku": 0.7604,
+      "hokuriku": 0.8142,
+      "kansai": 1.0465,
+      "kyushu": 0.9761,
+      "shikoku": 0.9161
+     },
+     "slack_abs_mw": 3065.3,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 622.3,
+      "chubu->kansai": 4981.1,
+      "chugoku->kansai": 3551.4,
+      "chugoku->kyushu": 1022.2,
+      "chugoku->shikoku": -3060.6,
+      "hokuriku->kansai": 1.8,
+      "kansai->shikoku": -184.0,
+      "kyushu->shikoku": 426.3
+     }
+    },
+    "14": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66946.5,
+     "load_scale": {
+      "chubu": 0.7823,
+      "chugoku": 0.7736,
+      "hokuriku": 0.8135,
+      "kansai": 1.0372,
+      "kyushu": 0.9866,
+      "shikoku": 0.9226
+     },
+     "slack_abs_mw": 3202.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 625.1,
+      "chubu->kansai": 4876.2,
+      "chugoku->kansai": 2887.6,
+      "chugoku->kyushu": 1025.4,
+      "chugoku->shikoku": -3046.0,
+      "hokuriku->kansai": 1.1,
+      "kansai->shikoku": -88.6,
+      "kyushu->shikoku": 323.5
+     }
+    },
+    "15": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 67442.0,
+     "load_scale": {
+      "chubu": 0.795,
+      "chugoku": 0.797,
+      "hokuriku": 0.8147,
+      "kansai": 1.0246,
+      "kyushu": 1.0062,
+      "shikoku": 0.9357
+     },
+     "slack_abs_mw": 3461.7,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 625.5,
+      "chubu->kansai": 4667.8,
+      "chugoku->kansai": 2724.0,
+      "chugoku->kyushu": 1277.8,
+      "chugoku->shikoku": -3086.5,
+      "hokuriku->kansai": 0.3,
+      "kansai->shikoku": -72.2,
+      "kyushu->shikoku": 364.0
+     }
+    },
+    "16": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69129.8,
+     "load_scale": {
+      "chubu": 0.825,
+      "chugoku": 0.842,
+      "hokuriku": 0.8291,
+      "kansai": 1.0212,
+      "kyushu": 1.0488,
+      "shikoku": 0.9679
+     },
+     "slack_abs_mw": 4207.7,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 645.1,
+      "chubu->kansai": 4155.0,
+      "chugoku->kansai": 2857.1,
+      "chugoku->kyushu": 1923.3,
+      "chugoku->shikoku": -3193.9,
+      "hokuriku->kansai": -1.2,
+      "kansai->shikoku": -109.9,
+      "kyushu->shikoku": 550.0
+     }
+    },
+    "17": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69937.7,
+     "load_scale": {
+      "chubu": 0.8441,
+      "chugoku": 0.8758,
+      "hokuriku": 0.8323,
+      "kansai": 1.0056,
+      "kyushu": 1.0776,
+      "shikoku": 0.9875
+     },
+     "slack_abs_mw": 4433.2,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 646.5,
+      "chubu->kansai": 3837.5,
+      "chugoku->kansai": 2747.1,
+      "chugoku->kyushu": 2286.1,
+      "chugoku->shikoku": -3255.2,
+      "hokuriku->kansai": -2.3,
+      "kansai->shikoku": -104.7,
+      "kyushu->shikoku": 631.0
+     }
+    },
+    "18": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69150.4,
+     "load_scale": {
+      "chubu": 0.8403,
+      "chugoku": 0.8807,
+      "hokuriku": 0.8176,
+      "kansai": 0.9778,
+      "kyushu": 1.0758,
+      "shikoku": 0.9815
+     },
+     "slack_abs_mw": 4386.4,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 616.6,
+      "chubu->kansai": 3923.8,
+      "chugoku->kansai": 3114.1,
+      "chugoku->kyushu": 2381.5,
+      "chugoku->shikoku": -3294.3,
+      "hokuriku->kansai": -1.9,
+      "kansai->shikoku": -157.2,
+      "kyushu->shikoku": 716.5
+     }
+    },
+    "19": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66420.0,
+     "load_scale": {
+      "chubu": 0.8086,
+      "chugoku": 0.8501,
+      "hokuriku": 0.7811,
+      "kansai": 0.9351,
+      "kyushu": 1.0362,
+      "shikoku": 0.944
+     },
+     "slack_abs_mw": 3740.2,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 559.0,
+      "chubu->kansai": 4504.3,
+      "chugoku->kansai": 2344.3,
+      "chugoku->kyushu": 1743.8,
+      "chugoku->shikoku": -3185.5,
+      "hokuriku->kansai": -0.5,
+      "kansai->shikoku": -30.5,
+      "kyushu->shikoku": 433.5
+     }
+    },
+    "20": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 62886.3,
+     "load_scale": {
+      "chubu": 0.7654,
+      "chugoku": 0.805,
+      "hokuriku": 0.7356,
+      "kansai": 0.8862,
+      "kyushu": 0.9812,
+      "shikoku": 0.8935
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 466.0,
+      "chubu->kansai": 3942.3,
+      "chugoku->kansai": 3202.2,
+      "chugoku->kyushu": 1199.4,
+      "chugoku->shikoku": -3138.6,
+      "hokuriku->kansai": 0.5,
+      "kansai->shikoku": -144.1,
+      "kyushu->shikoku": 439.6
+     }
+    },
+    "21": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 59366.3,
+     "load_scale": {
+      "chubu": 0.7223,
+      "chugoku": 0.7602,
+      "hokuriku": 0.6904,
+      "kansai": 0.8374,
+      "kyushu": 0.9265,
+      "shikoku": 0.8434
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 391.8,
+      "chubu->kansai": 3599.2,
+      "chugoku->kansai": 2504.3,
+      "chugoku->kyushu": 314.9,
+      "chugoku->shikoku": -2998.4,
+      "hokuriku->kansai": 0.7,
+      "kansai->shikoku": -17.9,
+      "kyushu->shikoku": 110.0
+     }
+    },
+    "22": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 55860.0,
+     "load_scale": {
+      "chubu": 0.6792,
+      "chugoku": 0.7157,
+      "hokuriku": 0.6454,
+      "kansai": 0.7887,
+      "kyushu": 0.8723,
+      "shikoku": 0.7938
+     },
+     "slack_abs_mw": 2921.1,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 296.1,
+      "chubu->kansai": 1413.2,
+      "chugoku->kansai": 3464.5,
+      "chugoku->kyushu": -345.2,
+      "chugoku->shikoku": -2943.1,
+      "hokuriku->kansai": -0.9,
+      "kansai->shikoku": -137.4,
+      "kyushu->shikoku": 114.9
+     }
+    },
+    "23": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 53236.0,
+     "load_scale": {
+      "chubu": 0.647,
+      "chugoku": 0.6824,
+      "hokuriku": 0.6117,
+      "kansai": 0.7521,
+      "kyushu": 0.8318,
+      "shikoku": 0.7568
+     },
+     "slack_abs_mw": 2905.0,
+     "solve_s": 0.1,
+     "tie_mw": {
+      "chubu->hokuriku": 226.0,
+      "chubu->kansai": 547.6,
+      "chugoku->kansai": 4051.3,
+      "chugoku->kyushu": -698.9,
+      "chugoku->shikoku": -2910.8,
+      "hokuriku->kansai": -0.8,
+      "kansai->shikoku": -219.2,
+      "kyushu->shikoku": 119.9
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "okinawa": {
+   "mode": "ac",
+   "regions": [
+    "okinawa"
+   ],
+   "n_bus": 99,
+   "n_trafo_nameplate": 0,
+   "gate": {
+    "pass": true,
+    "cond_max": 38487.435727053446
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1186.6,
+     "load_scale": {
+      "okinawa": 0.8725
+     },
+     "slack_abs_mw": 410.2,
+     "solve_s": 0.0,
+     "vm_min": 0.9021,
+     "vm_max": 1.0,
+     "loss_mw": 23.6,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1125.9,
+     "load_scale": {
+      "okinawa": 0.8279
+     },
+     "slack_abs_mw": 346.5,
+     "solve_s": 0.0,
+     "vm_min": 0.9151,
+     "vm_max": 1.0,
+     "loss_mw": 20.6,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1085.6,
+     "load_scale": {
+      "okinawa": 0.7982
+     },
+     "slack_abs_mw": 304.3,
+     "solve_s": 0.0,
+     "vm_min": 0.9234,
+     "vm_max": 1.0,
+     "loss_mw": 18.7,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1045.2,
+     "load_scale": {
+      "okinawa": 0.7685
+     },
+     "slack_abs_mw": 262.2,
+     "solve_s": 0.0,
+     "vm_min": 0.9313,
+     "vm_max": 1.0,
+     "loss_mw": 17.0,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1085.9,
+     "load_scale": {
+      "okinawa": 0.7985
+     },
+     "slack_abs_mw": 304.7,
+     "solve_s": 0.0,
+     "vm_min": 0.9233,
+     "vm_max": 1.0,
+     "loss_mw": 18.7,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1179.7,
+     "load_scale": {
+      "okinawa": 0.8674
+     },
+     "slack_abs_mw": 402.9,
+     "solve_s": 0.0,
+     "vm_min": 0.9036,
+     "vm_max": 1.0,
+     "loss_mw": 23.2,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1313.8,
+     "load_scale": {
+      "okinawa": 0.9661
+     },
+     "slack_abs_mw": 544.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8717,
+     "vm_max": 1.0,
+     "loss_mw": 31.0,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1464.0,
+     "load_scale": {
+      "okinawa": 1.0765
+     },
+     "slack_abs_mw": 706.0,
+     "solve_s": 0.0,
+     "vm_min": 0.8271,
+     "vm_max": 1.0,
+     "loss_mw": 42.0,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1576.4,
+     "load_scale": {
+      "okinawa": 1.1591
+     },
+     "slack_abs_mw": 828.8,
+     "solve_s": 0.0,
+     "vm_min": 0.7854,
+     "vm_max": 1.0,
+     "loss_mw": 52.4,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1628.4,
+     "load_scale": {
+      "okinawa": 1.1973
+     },
+     "slack_abs_mw": 886.6,
+     "solve_s": 0.1,
+     "vm_min": 0.762,
+     "vm_max": 1.0,
+     "loss_mw": 58.2,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1656.8,
+     "load_scale": {
+      "okinawa": 1.2182
+     },
+     "slack_abs_mw": 918.5,
+     "solve_s": 0.0,
+     "vm_min": 0.7476,
+     "vm_max": 1.0,
+     "loss_mw": 61.7,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1682.2,
+     "load_scale": {
+      "okinawa": 1.2369
+     },
+     "slack_abs_mw": 947.4,
+     "solve_s": 0.0,
+     "vm_min": 0.7332,
+     "vm_max": 1.0,
+     "loss_mw": 65.2,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1654.9,
+     "load_scale": {
+      "okinawa": 1.2169
+     },
+     "slack_abs_mw": 916.4,
+     "solve_s": 0.0,
+     "vm_min": 0.7486,
+     "vm_max": 1.0,
+     "loss_mw": 61.5,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1648.5,
+     "load_scale": {
+      "okinawa": 1.2122
+     },
+     "slack_abs_mw": 909.2,
+     "solve_s": 0.0,
+     "vm_min": 0.7519,
+     "vm_max": 1.0,
+     "loss_mw": 60.7,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1642.3,
+     "load_scale": {
+      "okinawa": 1.2076
+     },
+     "slack_abs_mw": 902.2,
+     "solve_s": 0.0,
+     "vm_min": 0.7551,
+     "vm_max": 1.0,
+     "loss_mw": 59.9,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1636.4,
+     "load_scale": {
+      "okinawa": 1.2032
+     },
+     "slack_abs_mw": 895.6,
+     "solve_s": 0.0,
+     "vm_min": 0.7581,
+     "vm_max": 1.0,
+     "loss_mw": 59.2,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1651.0,
+     "load_scale": {
+      "okinawa": 1.214
+     },
+     "slack_abs_mw": 912.0,
+     "solve_s": 0.0,
+     "vm_min": 0.7506,
+     "vm_max": 1.0,
+     "loss_mw": 61.0,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1645.6,
+     "load_scale": {
+      "okinawa": 1.21
+     },
+     "slack_abs_mw": 905.9,
+     "solve_s": 0.0,
+     "vm_min": 0.7534,
+     "vm_max": 1.0,
+     "loss_mw": 60.3,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1612.7,
+     "load_scale": {
+      "okinawa": 1.1858
+     },
+     "slack_abs_mw": 869.1,
+     "solve_s": 0.0,
+     "vm_min": 0.7694,
+     "vm_max": 1.0,
+     "loss_mw": 56.4,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1546.2,
+     "load_scale": {
+      "okinawa": 1.1369
+     },
+     "slack_abs_mw": 795.6,
+     "solve_s": 0.0,
+     "vm_min": 0.7975,
+     "vm_max": 1.0,
+     "loss_mw": 49.4,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1465.9,
+     "load_scale": {
+      "okinawa": 1.0779
+     },
+     "slack_abs_mw": 708.0,
+     "solve_s": 0.0,
+     "vm_min": 0.8264,
+     "vm_max": 1.0,
+     "loss_mw": 42.1,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1385.9,
+     "load_scale": {
+      "okinawa": 1.0191
+     },
+     "slack_abs_mw": 621.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8514,
+     "vm_max": 1.0,
+     "loss_mw": 35.9,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1306.2,
+     "load_scale": {
+      "okinawa": 0.9605
+     },
+     "slack_abs_mw": 536.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8737,
+     "vm_max": 1.0,
+     "loss_mw": 30.5,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1246.6,
+     "load_scale": {
+      "okinawa": 0.9166
+     },
+     "slack_abs_mw": 473.5,
+     "solve_s": 0.0,
+     "vm_min": 0.8884,
+     "vm_max": 1.0,
+     "loss_mw": 26.9,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}
