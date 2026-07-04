@@ -313,12 +313,14 @@
         sel.appendChild(bbOpt);
 
         // National zonal: 各同期島(hokkaido / east 50Hz / west 60Hz / okinawa)を
-        // 連系線付きの単一系統として解いた正典(powerflow_full・全規模AC)を地域別に
-        // 切り出してマージ。DB②(2026-06-20): 旧 powerflow_national(west DC固定)を廃し、
-        // powerflow_full の全島AC収束結果へ置換(west も AC OK)。
+        // 連系線付きの単一系統として解いた正典(powerflow_full)を地域別に切り出して
+        // マージ。解法は summary の solved_mode に従う(2026-07-05):
+        //   east(6,205バス)=全規模AC(v4銘板・実収束) / west=DC —
+        //   west の旧「AC収束」は fragmentation による見せかけと確定したため
+        //   (docs/WEST_AC_ANALYSIS.md)、誠実に DC 解を正典とする。
         var nzOpt = document.createElement("option");
         nzOpt.value = "national_zonal";
-        nzOpt.textContent = "全国ゾーン（同期島統合・全規模AC）";
+        nzOpt.textContent = "全国ゾーン（同期島統合・east AC / west DC）";
         sel.appendChild(nzOpt);
 
         for (var i = 0; i < ALL_REGIONS.length; i++) {
@@ -327,7 +329,9 @@
             if (!info) continue;
             var opt = document.createElement("option");
             opt.value = r;
-            var ac = info.ac_converged ? "AC OK" : "AC FAIL";
+            var solvedMode = info.solved_mode || (info.ac_converged ? "ac" : "dc");
+            var ac = solvedMode === "ac" ? "AC OK"
+                : (info.dc_converged ? "DC解" : "FAIL");
             opt.textContent = info.name_ja + " (" + r + ") — " + ac;
             sel.appendChild(opt);
         }
@@ -518,12 +522,14 @@
             return;
         }
 
-        // 全規模(built正典)は AC のみエクスポート → per-region は AC 固定。
-        mode = "ac";
+        // 全規模(built正典)の解法は summary の solved_mode に従う。
+        // east島=AC(2026-07-04昇格)・west島=DC(AC「収束」はfragmentationの
+        // 見せかけと確定済みのため誠実にDC解を表示する)。
         var info = pfState.summary[region];
         if (!info) return;
+        mode = info.solved_mode || "ac";
 
-        var converged = info.ac_converged;
+        var converged = info.ac_converged || info.dc_converged;
 
         if (!converged) {
             showResults(region, mode, info, false);
@@ -532,8 +538,8 @@
 
         var cb = "?v=" + Date.now();
         try {
-            var busRes = await fetch(PF_DIR + region + "_ac_buses.geojson" + cb);
-            var lineRes = await fetch(PF_DIR + region + "_ac_lines.geojson" + cb);
+            var busRes = await fetch(PF_DIR + region + "_" + mode + "_buses.geojson" + cb);
+            var lineRes = await fetch(PF_DIR + region + "_" + mode + "_lines.geojson" + cb);
 
             if (!busRes.ok || !lineRes.ok) {
                 showResults(region, mode, info, false);
@@ -765,12 +771,15 @@
         var fetches = ALL_REGIONS.map(async function (r) {
             var info = pfState.summary[r];
             if (!info) return;
-            var converged = info.ac_converged;
+            // solved_mode(ac|dc) のファイルを読む。dc も表示する(west島は
+            // 誠実にDC解 — AC「収束」はfragmentationの見せかけと確定済み)。
+            var rMode = info.solved_mode || "ac";
+            var converged = info.ac_converged || info.dc_converged;
             if (!converged) return;
 
             try {
-                var busRes = await fetch(PF_DIR + r + "_ac_buses.geojson" + cb);
-                var lineRes = await fetch(PF_DIR + r + "_ac_lines.geojson" + cb);
+                var busRes = await fetch(PF_DIR + r + "_" + rMode + "_buses.geojson" + cb);
+                var lineRes = await fetch(PF_DIR + r + "_" + rMode + "_lines.geojson" + cb);
                 if (!busRes.ok || !lineRes.ok) {
                     var miss = [];
                     if (!busRes.ok) miss.push("buses");
@@ -893,8 +902,9 @@
             if (!info) continue;
             totalBuses += info.n_buses || 0;
             var isl = info.island || "?";
-            if (!islands[isl]) islands[isl] = { ac: false, regions: 0 };
+            if (!islands[isl]) islands[isl] = { ac: false, mode: null, regions: 0 };
             islands[isl].ac = islands[isl].ac || !!info.ac_converged;
+            islands[isl].mode = islands[isl].mode || info.solved_mode;
             islands[isl].regions++;
         }
 
@@ -939,7 +949,8 @@
         for (var k = 0; k < islNames.length; k++) {
             var d = islands[islNames[k]];
             html += resultItem(islNames[k] + " island",
-                (d.ac ? "AC OK" : "AC FAIL") + " (" + d.regions + " reg.)");
+                (d.ac ? "AC OK" : (d.mode === "dc" ? "DC解" : "AC FAIL")) +
+                " (" + d.regions + " reg.)");
         }
         html += "</div>";
         if (mode === "ac" && failRegions.length) {

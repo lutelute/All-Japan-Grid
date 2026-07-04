@@ -582,8 +582,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--islands", nargs="*", default=None)
     ap.add_argument("--output-dir", default=OUT_DEFAULT)
-    ap.add_argument("--max-ac-buses", type=int, default=6000,
-                    help="skip AC attempt for islands larger than this (DC only)")
+    ap.add_argument("--max-ac-buses", type=int, default=7000,
+                    help="skip AC attempt for islands larger than this (DC only). "
+                         "既定7000: east(6205バス)は全規模ACが収束する実績"
+                         "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
+                         "AC『収束』が fragmentation による見せかけと確定済みのため"
+                         "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
