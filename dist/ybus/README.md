@@ -24,6 +24,21 @@ PYTHONPATH=. .venv/bin/python scripts/gen_ybus_numeric.py --islands west
 | `{island}_branch.csv` | 枝表(枝 index 順: kind=line/trafo・名前・from/to ybus_index・長さ・par・tap) |
 | `{island}_backbone.mat` / `.npz` / `_backbone_bus.csv` | Kron 縮約バックボーン(≥154kV。沖縄は132kV) |
 | `meta.json` | バージョン・sha256指紋・検証結果・条件数 |
+| `figs/*.png` | 可視化一式(下記。`scripts/plot_ybus.py` で出荷物から決定的に再生成) |
+
+## 図(dist/ybus/figs/)
+
+```bash
+PYTHONPATH=. .venv/bin/python scripts/plot_ybus.py   # 出荷物から再生成
+open dist/ybus/figs                                   # Finder で開く
+```
+
+| 図 | 内容 |
+|---|---|
+| `ybus_spy_all.png` | 4島フル Ybus スパーシティ(銘板変圧器 @nameplate を赤丸で重畳) |
+| `ybus_spy_backbone.png` | 4島バックボーン(Kron縮約 154kV以上)スパーシティ |
+| `ybus_diag_hist.png` | 自己アドミタンス対角 \|Y_ii\| の島別分布 |
+| `ybus_v4_nameplate.png` | v4 銘板適用の before/after(位置図+容量比較) |
 
 ## MATLAB での使い方
 
