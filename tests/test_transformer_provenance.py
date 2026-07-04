@@ -64,13 +64,33 @@ def test_apply_to_structure_db_shigi():
 
 
 def test_planned_not_applied():
-    """planned(整備計画)は現況モデルに適用されない(東北の計画6サイト)。"""
+    """planned(整備計画)は現況モデルに適用されない(東北の計画サイト)。
+
+    西山形は 2026-07-04 に既設(existing=増強前値 275/154 300MVA×2)を得たため
+    このリストから卒業。existing/planned の峻別は下の
+    test_before_value_applied_nishi_yamagata が検証する。
+    """
     from scripts.build_structures_batch import build_region
     structures, _conns, _rep = build_region("tohoku")
     for s in structures:
-        if s.site.name in ("東花巻変電所", "岩手変電所", "西山形変電所"):
+        if s.site.name in ("東花巻変電所", "岩手変電所"):
             for tr in s.transformers:
                 assert tr.source != "nameplate", s.site.name
+
+
+def test_before_value_applied_nishi_yamagata():
+    """増強前値(existing)は適用され、同サイトのplanned(将来値)は適用されない。
+
+    西山形: 既設 275/154 300MVA×2(existing) / 昇圧後 500/154 450MVA×2(planned,
+    2031年度以降)。TransformerSpec には 300 が入り 450 が入らないこと=峻別の核心。
+    """
+    from scripts.build_structures_batch import build_region
+    structures, _conns, _rep = build_region("tohoku")
+    ny = next(s for s in structures if s.site.name == "西山形変電所")
+    plated = [t for t in ny.transformers if t.source == "nameplate"]
+    assert plated, "西山形に existing 銘板が適用されていない"
+    assert plated[0].sn_mva == 300.0          # 既設値(planned の 450 ではない)
+    assert plated[0].n_parallel == 2
 
 
 def test_normalize_site_key_matching():
