@@ -41,9 +41,20 @@ import json
 import os
 import re
 import sys
+import unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCES_PATH = os.path.join(ROOT, "data", "transformer_sources.jsonl")
+
+
+def normalize_site_key(key):
+    """site_key 照合用の正規化 (NFKC + 空白除去)。
+
+    OSM由来のサイト名には「新生駒 変電所」のような空白入りが実在し、
+    レコード側の「新生駒変電所」と照合できない。表記ゆれ(全角英数・空白)を
+    吸収して同一実体に当てるための正規化。正本の site_key 自体は書き換えない。
+    """
+    return re.sub(r"\s+", "", unicodedata.normalize("NFKC", str(key)))
 
 REQUIRED_FIELDS = [
     "site_key", "name", "field", "value", "unit",
@@ -129,11 +140,16 @@ def verify_file(path=SOURCES_PATH):
     return len(recs), bad
 
 
-def by_site(path=SOURCES_PATH):
-    """site_key -> {field: [records]} (適用側の入口)。"""
+def by_site(path=SOURCES_PATH, normalize=False):
+    """site_key -> {field: [records]} (適用側の入口)。
+
+    normalize=True で正規化キー(normalize_site_key)に統合する。
+    構造DB照合(apply_transformer_provenance)はこちらを使う。
+    """
     out = {}
     for rec in load_records(path):
-        out.setdefault(rec["site_key"], {}).setdefault(
+        key = normalize_site_key(rec["site_key"]) if normalize else rec["site_key"]
+        out.setdefault(key, {}).setdefault(
             rec["field"], []).append(rec)
     return out
 

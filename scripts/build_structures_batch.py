@@ -95,11 +95,11 @@ def apply_transformer_provenance(region, structures):
     validate_record が機械的に拒否済み)。planned(整備計画)は将来断面の
     資産として正本に保持するが、現況モデルには適用しない。
     """
-    from scripts.transformer_provenance import by_site
-    curated = by_site()
+    from scripts.transformer_provenance import by_site, normalize_site_key
+    curated = by_site(normalize=True)
     n_applied = 0
     for s in structures:
-        key = f"{region}:{s.site.name}"
+        key = normalize_site_key(f"{region}:{s.site.name}")
         fields = curated.get(key)
         if not fields:
             continue

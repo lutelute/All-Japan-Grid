@@ -71,3 +71,36 @@ def test_planned_not_applied():
         if s.site.name in ("東花巻変電所", "岩手変電所", "西山形変電所"):
             for tr in s.transformers:
                 assert tr.source != "nameplate", s.site.name
+
+
+def test_normalize_site_key_matching():
+    """OSM表記ゆれ(「新生駒 変電所」等の空白・全角)を照合時に吸収する。
+
+    構造DBには「新生駒 変電所」(スペース入り)が実在し、素朴な文字列一致では
+    レコード(「新生駒変電所」)が永久に当たらない。正本は書き換えず照合側で吸収。
+    """
+    import json
+    from scripts.transformer_provenance import by_site, normalize_site_key
+
+    assert (normalize_site_key("kansai:新生駒 変電所")
+            == normalize_site_key("kansai:新生駒変電所"))
+    assert normalize_site_key("tokyo:新野田　変電所") == "tokyo:新野田変電所"
+    assert normalize_site_key("kyushu:１/２号 開閉所") == "kyushu:1/2号開閉所"
+
+
+def test_by_site_normalized(tmp_path):
+    """by_site(normalize=True) は表記ゆれキーを同一実体に統合する。"""
+    import json
+    from scripts.transformer_provenance import by_site
+
+    r1 = _good()
+    r1["site_key"] = "kansai:新生駒変電所"
+    r2 = _good()
+    r2["site_key"] = "kansai:新生駒 変電所"
+    r2["field"], r2["value"], r2["unit"] = "n_units", 3, "units"
+    p = tmp_path / "s.jsonl"
+    p.write_text("\n".join(json.dumps(r, ensure_ascii=False)
+                           for r in (r1, r2)) + "\n")
+    merged = by_site(path=str(p), normalize=True)
+    assert set(merged) == {"kansai:新生駒変電所"}
+    assert set(merged["kansai:新生駒変電所"]) == {"sn_mva", "n_units"}
