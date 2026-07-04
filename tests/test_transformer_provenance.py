@@ -66,14 +66,14 @@ def test_apply_to_structure_db_shigi():
 def test_planned_not_applied():
     """planned(整備計画)は現況モデルに適用されない(東北の計画サイト)。
 
-    西山形は 2026-07-04 に既設(existing=増強前値 275/154 300MVA×2)を得たため
-    このリストから卒業。existing/planned の峻別は下の
-    test_before_value_applied_nishi_yamagata が検証する。
+    西山形(増強前値 300MVA×2)と岩手(東芝技報2010の銘板 1,000MVA×1)は
+    2026-07-04 に既設(existing)を得たためこのリストから卒業。
+    existing/planned の峻別は下の test_before_value_applied_nishi_yamagata が検証する。
     """
     from scripts.build_structures_batch import build_region
     structures, _conns, _rep = build_region("tohoku")
     for s in structures:
-        if s.site.name in ("東花巻変電所", "岩手変電所"):
+        if s.site.name in ("東花巻変電所",):
             for tr in s.transformers:
                 assert tr.source != "nameplate", s.site.name
 
