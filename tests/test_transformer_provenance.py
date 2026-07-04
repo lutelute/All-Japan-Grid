@@ -90,7 +90,8 @@ def test_before_value_applied_nishi_yamagata():
     plated = [t for t in ny.transformers if t.source == "nameplate"]
     assert plated, "西山形に existing 銘板が適用されていない"
     assert plated[0].sn_mva == 300.0          # 既設値(planned の 450 ではない)
-    assert plated[0].n_parallel == 2
+    # n_parallel は検証しない: 整備計画の台数欄は「工事対象バンク数」であり
+    # 変電所全体の同階級台数の確証にならないため n_units は保守的に不記録(2026-07-04)
 
 
 def test_normalize_site_key_matching():
