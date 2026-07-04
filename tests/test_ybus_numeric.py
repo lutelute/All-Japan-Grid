@@ -76,8 +76,9 @@ def test_regression_pin_okinawa(okinawa_ybus):
 
 def test_v2_version_and_dc(okinawa_ybus):
     """v2: バージョン刻印・フィンガープリント・DC行列の同梱と整合。"""
+    from scripts.gen_ybus_numeric import YBUS_VERSION
     out, meta = okinawa_ybus
-    assert meta["ybus_version"].startswith("3.")
+    assert meta["ybus_version"] == YBUS_VERSION   # 刻印は現行版と一致
     assert len(meta["fingerprint"]) == 16
     assert meta["dc"]["included"] and meta["dc"]["aligned"]
     d = np.load(os.path.join(out, "okinawa.npz"))
@@ -128,3 +129,41 @@ def test_v2_kron_equals_dense_schur(okinawa_ybus):
     err = np.max(np.abs(Yred.toarray() - schur))
     scale = np.max(np.abs(schur))
     assert err / scale < 1e-10
+
+
+def test_v4_version_and_changelog():
+    """v4: バージョン刻印と CHANGELOG の整合。"""
+    from scripts.gen_ybus_numeric import YBUS_VERSION, CHANGELOG
+    assert YBUS_VERSION == "4.0.0"
+    assert "4.0.0" in CHANGELOG and "実容量化" in CHANGELOG["4.0.0"]
+
+
+def test_v4_nameplate_loading():
+    """v4: 構造DBの銘板ロード(出典必須DB existing 由来のみ)。信貴 750MVA×3 を pin。"""
+    from scripts.run_full_powerflow_from_db import load_nameplates
+    plates = load_nameplates()
+    assert len(plates) >= 10          # 2026-07-04 時点で12サイト(厳格apply後)
+    shigi = plates.get(("kansai", "信貴変電所"))
+    assert shigi, "信貴の銘板が構造DBから引けない"
+    assert any(s["sn_mva"] == 750.0 and s["n_parallel"] == 3
+               and s["hv_kv"] == 500.0 and s["lv_kv"] == 154.0 for s in shigi)
+
+
+def test_v4_nameplate_applied_in_build(okinawa_ybus):
+    """v4: build_island_net が銘板を trafo に適用する(hokkaido=南早来 600MVA×2)。
+    okinawa は銘板ゼロの負の対照(meta.trafo_nameplate.n_applied == 0)。"""
+    import json as _json
+    from scripts.run_full_powerflow_from_db import BUILT, build_island_net
+
+    _out, meta = okinawa_ybus
+    assert meta["trafo_nameplate"]["n_applied"] == 0   # 沖縄に existing 銘板は無い
+
+    built = _json.load(open(BUILT))
+    net, _bus_of, stats = build_island_net(
+        "hokkaido", built["nodes"], built["edges"], 50.0, {})
+    assert stats["n_trafo_nameplate"] >= 1
+    plated = net.trafo[net.trafo.name.str.contains("@nameplate")]
+    minamihayakita = plated[(plated.vn_hv_kv == 275.0) & (plated.vn_lv_kv == 187.0)]
+    assert len(minamihayakita) == 1
+    r = minamihayakita.iloc[0]
+    assert r.sn_mva == 600.0 and r.parallel == 2       # 南早来(増設前の既設2台)

@@ -115,9 +115,78 @@ def _nearest_kv(kv):
 # ──────────────────────────────────────────────────────────────────────────
 #  Build one frequency island as a pandapower net straight from built nodes/edges
 # ──────────────────────────────────────────────────────────────────────────
-def build_island_net(island, nodes, edges, freq, geom_out):
+STRUCTURES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              "data", "structures")
+_NAMEPLATES_CACHE = None
+
+
+def _norm_site_name(s):
+    """OSM表記ゆれ吸収(NFKC+空白除去)。transformer_provenance.normalize_site_key と同旨。"""
+    import re as _re
+    import unicodedata as _ud
+    return _re.sub(r"\s+", "", _ud.normalize("NFKC", str(s)))
+
+
+def _site_name_of_node(name):
+    """built ノード名 '信貴変電所 500kV' から電圧サフィックスを外して正規化。"""
+    import re as _re
+    return _norm_site_name(_re.sub(r"\s*\d+(?:\.\d+)?\s*kV$", "", str(name)))
+
+
+def load_nameplates(structures_dir=STRUCTURES_DIR):
+    """構造DB(出典必須DB data/transformer_sources.jsonl から existing のみ伝播済み)の
+    銘板 TransformerSpec を (region, 正規化サイト名) -> [spec...] で返す (Ybus v4)。
+
+    正典の流れ: 出典DB --apply(existingのみ)--> 構造DB --本関数--> build_island_net。
+    構造DBが無い環境では空 dict (従来のヒューリスティック容量にフォールバック)。
+    """
+    import glob as _glob
+    out = {}
+    for path in sorted(_glob.glob(os.path.join(structures_dir, "*.json"))):
+        if os.path.basename(path) == "summary.json":
+            continue
+        try:
+            with open(path) as f:
+                d = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            continue
+        region = d.get("region")
+        for s in d.get("structures", []):
+            plates = [t for t in s.get("transformers", [])
+                      if t.get("source") == "nameplate" and t.get("sn_mva")]
+            if not plates:
+                continue
+
+            def _kv(vl_id):
+                try:
+                    return float(str(vl_id).rsplit("@", 1)[1])
+                except (IndexError, ValueError):
+                    return None
+
+            key = (region, _norm_site_name(s["site"]["name"]))
+            out.setdefault(key, []).extend(
+                {"hv_kv": _kv(t.get("hv_vl_id")), "lv_kv": _kv(t.get("lv_vl_id")),
+                 "sn_mva": float(t["sn_mva"]),
+                 "n_parallel": max(int(t.get("n_parallel") or 1), 1)}
+                for t in plates)
+    return out
+
+
+def _get_nameplates():
+    global _NAMEPLATES_CACHE
+    if _NAMEPLATES_CACHE is None:
+        _NAMEPLATES_CACHE = load_nameplates()
+    return _NAMEPLATES_CACHE
+
+
+def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto"):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
-    transformers between co-located voltage levels. No reduction."""
+    transformers between co-located voltage levels. No reduction.
+
+    nameplates: "auto"(既定)=構造DBの銘板(existing出典のみ)を該当サイトの trafo
+    sn_mva/parallel に適用(v4)。None=従来ヒューリスティック容量のみ(回帰比較用)。"""
+    if nameplates == "auto":
+        nameplates = _get_nameplates()
     net = pp.create_empty_network(name=f"full_{island}", f_hz=freq)
 
     # candidate buses = nodes whose region maps to this island
@@ -190,6 +259,7 @@ def build_island_net(island, nodes, edges, freq, geom_out):
     #      that steps voltage). For each site, chain adjacent distinct-kv buses
     #      (high->low) with a 2-winding transformer sized to the lower side. ----
     n_trafo = 0
+    n_trafo_nameplate = 0
     for coord, idxs in coord_nodes.items():
         if len(idxs) < 2:
             continue
@@ -199,27 +269,53 @@ def build_island_net(island, nodes, edges, freq, geom_out):
             vn = float(net.bus.at[bus_of[j], "vn_kv"])
             by_kv.setdefault(round(vn, 1), bus_of[j])
         kvs = sorted(by_kv.keys(), reverse=True)
+        # site nameplates (structure DB, existing provenance only): built nodes and
+        # the structure DB share the same OSM name source, so a normalized
+        # (region, site-name) lookup addresses the same physical substation (v4)
+        plates = []
+        if nameplates:
+            seen_site = set()
+            for j in idxs:
+                nm = nodes[j].get("name")
+                if not nm:
+                    continue
+                key = (nodes[j].get("region"), _site_name_of_node(nm))
+                if key not in seen_site:
+                    seen_site.add(key)
+                    plates.extend(nameplates.get(key, ()))
         for hv_kv, lv_kv in zip(kvs, kvs[1:]):
             hb, lb = by_kv[hv_kv], by_kv[lv_kv]
             if hv_kv <= lv_kv:
                 continue
-            # rating: cover the lower side's typical line capacity, >=100 MVA
+            # rating: nameplate (provenance-backed, exact voltage-pair match) wins;
+            # else cover the lower side's typical line capacity, >=100 MVA
             sn = max(100.0, math.sqrt(3) * lv_kv
                      * (get_line_parameters_safe(_nearest_kv(lv_kv) or lv_kv, freq) or
                         {"max_i_ka": 1.0})["max_i_ka"])
+            par, tag = 1, ""
+            for p in plates:
+                if p["hv_kv"] is None or abs(p["hv_kv"] - hv_kv) > 0.5:
+                    continue
+                if p["lv_kv"] is None or abs(p["lv_kv"] - lv_kv) > 0.5:
+                    continue
+                sn, par, tag = p["sn_mva"], p["n_parallel"], "@nameplate"
+                break
             try:
                 pp.create_transformer_from_parameters(
                     net, hv_bus=hb, lv_bus=lb, sn_mva=sn,
                     vn_hv_kv=hv_kv, vn_lv_kv=lv_kv,
                     vkr_percent=0.5, vk_percent=12.0,   # typical large power trafo
-                    pfe_kw=0.0, i0_percent=0.0,
-                    name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV")
+                    pfe_kw=0.0, i0_percent=0.0, parallel=par,
+                    name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV{tag}")
                 n_trafo += 1
+                if tag:
+                    n_trafo_nameplate += 1
             except (ValueError, TypeError):
                 pass
 
     return net, bus_of, {"n_bus": len(bus_of), "n_line": n_line,
-                         "n_trafo": n_trafo, "n_edge_skipped": n_edge_skipped}
+                         "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
+                         "n_edge_skipped": n_edge_skipped}
 
 
 # ──────────────────────────────────────────────────────────────────────────

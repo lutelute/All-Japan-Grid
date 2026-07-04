@@ -125,3 +125,20 @@ def test_by_site_normalized(tmp_path):
     merged = by_site(path=str(p), normalize=True)
     assert set(merged) == {"kansai:新生駒変電所"}
     assert set(merged["kansai:新生駒変電所"]) == {"sn_mva", "n_units"}
+
+
+def test_apply_no_fallback_to_wrong_pair():
+    """階級フォールバック廃止: 出典の電圧ペアが構造DBの実ペアに無いサイトは
+    **適用しない**(v4)。東毛(existing 275/66)は構造DB側の階級ラダーに275/66が
+    無いため銘板が付かないこと(誤ペア適用の退行防止)。"""
+    from scripts.build_structures_batch import build_region
+    structures, _conns, _rep = build_region("tokyo")
+    tomo = next((s for s in structures if s.site.name == "東毛変電所"), None)
+    if tomo is None:
+        import pytest as _pytest
+        _pytest.skip("東毛変電所が構造DBに無い(OSM変動)")
+    for tr in tomo.transformers:
+        hv = tr.hv_vl_id.rsplit("@", 1)[1]
+        lv = tr.lv_vl_id.rsplit("@", 1)[1]
+        if (hv, lv) != ("275", "66"):
+            assert tr.source != "nameplate", f"誤ペア({hv}/{lv})に銘板が付いている"

@@ -113,7 +113,10 @@ def apply_transformer_provenance(region, structures):
         lv = _val("lv_kv")
         if sn is None:
             continue
-        # 階級ペア指定(hv/lv)があれば一致する TransformerSpec、無ければ最上位
+        # 階級ペア指定(hv/lv)があれば一致する TransformerSpec のみ。一致が無い場合は
+        # **適用しない**(誤ペアへの銘板付与を防ぐ。例: 東毛の275/66銘板を構造DBの
+        # 500/275スペックへ付けると Ybus v4 で誤った実容量になる)。
+        # hv/lv レコードが無い古いレコードのみ最上位へフォールバック。
         target = None
         for tr in s.transformers:
             tr_hv = tr.hv_vl_id.rsplit("@", 1)[1]
@@ -124,8 +127,11 @@ def apply_transformer_provenance(region, structures):
                 continue
             target = tr
             break
-        if target is None and s.transformers:
-            target = s.transformers[0]
+        if target is None:
+            if hv is not None or lv is not None:
+                continue
+            if s.transformers:
+                target = s.transformers[0]
         if target is None:
             continue
         target.sn_mva = float(sn["value"])

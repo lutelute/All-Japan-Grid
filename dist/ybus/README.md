@@ -49,10 +49,26 @@ R = load('west_backbone.mat'); % 2779バス。full_index が元行列の行番�
 - Kron 縮約 == 密 Schur 補行列(機械精度)
 - AC/DC バス順序整合・枝順序(lookup)整合・条件数ゲート(<1e9)
 
+## v4: 変圧器の実容量化(出典必須DB → 銘板)
+
+出典必須DB(`data/transformer_sources.jsonl`, **existing 銘板のみ**・URL+原文引用が
+無い値は機械拒否)→構造DB(`data/structures/*.json` の TransformerSpec
+source=nameplate)→ `build_island_net` の trafo `sn_mva`/`parallel` へ接続。
+
+- 適用は**電圧ペア厳密一致のみ**(構造DBの実ペアに無い銘板は適用しない=誤ペア防止)
+- 適用された枝は `{island}_branch.csv` の名前に **`@nameplate`** が付く
+- 適用数は `meta.json` の `islands.{island}.trafo_nameplate.n_applied`
+  (2026-07-04 初出荷: hokkaido 1 / east 6 / west 5 / okinawa 0 = 計12サイト。
+  沖縄は銘板ゼロで**指紋が v3 と完全一致** = 変更の局所性の実証)
+- planned(整備計画)は将来断面資産として正本に保持されるが**適用されない**
+
 ## 正直な注意(現行モデルの限界)
 
-- 変圧器は電圧階級ペアの**合成典型値**(タップ=1固定)。実銘板・タップは
-  構造DB Phase B(出典付き充填)で置換予定(v4候補)
+- 変圧器は銘板適用12サイト以外は電圧階級ペアの**合成典型値**。タップは全器=1固定
+  (タップ出典は未収集)。vk%/vkr% は銘板器も典型値(12%/0.5%)のまま=銘板が変えるのは
+  MVAベースと並列数のみ
+- `sn_total_mva`(有報の変電所全体総出力97件)は**適用しない**(バンク按分は導出値の
+  混入になるため検算・上限用途に限定)
 - 線路 R/X/B は `config/line_types.yaml` の階級代表値 × 実延長 × 並列回線数。
   導体種別・地中ケーブルの個別性は未反映
 - 電圧不明バスは 66kV(最低送電クラス)として扱う(builder 既定)

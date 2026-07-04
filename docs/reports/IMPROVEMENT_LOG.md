@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-04(夕) — **Claude Fable 5** — Ybus v4.0.0: 変圧器の実容量化 — 出典→銘板→行列の全通
+
+Phase Bの出典必須DBが数値Ybusまで届いた(出典URL+原文引用→構造DB→trafo sn_mva/parallel)。
+
+- **接続の実装**: `load_nameplates()`(構造DB→(region,正規化サイト名)辞書)+`build_island_net(nameplates="auto")`。built名の電圧サフィックス(「信貴変電所 500kV」)を吸収する照合で**銘板12サイトが12/12全一致**(電圧ペアまで)
+- **v4.0.0出荷**: 適用 hokkaido 1(南早来600×2)/east 6(岩手・新福島・西山形・南多摩・房総・霞ヶ浦)/west 5(信貴750×3・嶺南・新綾部・東大阪・香川)。**okinawa 0=指紋がv3と完全一致(変更の局所性の実証)**。west条件数 6.2e7→3.1e7に改善。枝名@nameplate刻印・meta.trafo_nameplate記録
+- **applyの階級フォールバック廃止**(品質是正): 出典の電圧ペアが構造DBの実ペアに無いサイト(東毛275/66・鹿島275/66・西島根500/220)は適用しない=誤ペアへの銘板付与を防止(15→12サイトは正しい減少。OSM側の階級データ欠落が原因、OSM課題)
+- **sn_total_mva 97件は適用しない**(バンク按分=導出値の混入。検算・上限用途に限定、README明記)
+- 潮流(run_full_powerflow_from_db)も同一build関数のため自動的に同一モデル(v1設計思想の維持)
+- ゲート25 passed(v4テスト3+フォールバック退行防止1を追加)
+
 ## 2026-07-04(午後) — **Claude Fable 5** — Phase B: 既設(existing)充填 — 4経路で 3→257レコード・銘板伝播13サイト
 
 worklist(既設500kV 206サイト)の充填を開始。詳細 = `docs/reports/transformer_existing_2026-07-04.md`。

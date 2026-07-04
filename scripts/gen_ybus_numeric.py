@@ -42,7 +42,7 @@ ISLANDS = [("hokkaido", 50.0), ("east", 50.0), ("west", 60.0),
 
 # Ybus は「バージョン管理された成果物」(オーナー認識 2026-07-02)。
 # モデル・出荷物・検証が変わるたびに上げ、meta.json と .mat に刻印する。
-YBUS_VERSION = "3.0.0"
+YBUS_VERSION = "4.0.0"
 CHANGELOG = {
     "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・"
              ".mat/.npz/バス表",
@@ -54,6 +54,13 @@ CHANGELOG = {
              "②枝表 {island}_branch.csv(kind/名前/from-to ybus_index/長さ/par/tap) "
              "③再構成恒等式ゲート Ybus == Cf'Yf+Ct'Yt+diag(Ysh) (機械精度) "
              "④枝順序ゲート(lookup範囲=lines→trafos の整合検証)",
+    "4.0.0": "①変圧器の実容量化: 出典必須DB(data/transformer_sources.jsonl, "
+             "existing銘板のみ)→構造DB(TransformerSpec source=nameplate)→"
+             "build_island_net の trafo sn_mva/parallel へ接続(電圧ペア厳密一致のみ・"
+             "枝名に@nameplate刻印) "
+             "②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) "
+             "③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 "
+             "④meta.trafo_nameplate に適用数と伝播経路を記録",
 }
 BACKBONE_KV = 154.0     # transforms.reduce_to_backbone と同じ閾値(WEST_AC_ANALYSIS)
 
@@ -331,7 +338,7 @@ def verify(Y, bus_ids, net):
 def export_island(island, freq, nodes, edges, out_dir):
     t0 = time.time()
     geom = {}
-    net, bus_of, _stats = build_island_net(island, nodes, edges, freq, geom)
+    net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom)
     n_refs = add_ref_per_component(net)
     Y, bus_ids, internal = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
@@ -476,6 +483,11 @@ def export_island(island, freq, nodes, edges, out_dir):
         "n_bus": int(Y.shape[0]), "nnz": int(Y.nnz),
         "density": float(Y.nnz) / (Y.shape[0] ** 2),
         "n_line": int(len(net.line)), "n_trafo": int(len(net.trafo)),
+        "trafo_nameplate": {
+            "n_applied": int(bstats.get("n_trafo_nameplate", 0)),
+            "source": "transformer_sources.jsonl(existing) → structures/*.json"
+                      "(source=nameplate) → sn_mva/parallel (v4)",
+        },
         "n_components_refs": int(n_refs),
         "dc": {"included": True, "nnz": int(Bbus.nnz),
                "aligned": bool(checks["dc_bus_order_aligned"])},
