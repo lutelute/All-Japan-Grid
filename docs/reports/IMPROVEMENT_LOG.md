@@ -7,6 +7,25 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-05 — **Claude Fable 5** — east全規模AC正典昇格 + UC 24h×全規模96断面全収束
+
+v4銘板モデルの潮流実証を2段: ①単断面の正典昇格 ②UC時系列24hの全規模化。
+コミット: `d80c0f1`(①)・`c1043aa`(②)。
+
+- **①east全規模AC昇格**: max-ac-buses 6000→7000。east(6,205バス・銘板6)の全規模AC収束
+  (vm 0.83-1.02pu)を正典 docs/data/powerflow_full に反映。**westの「AC収束」ファイル
+  (6-18生成)はfragmentationの見せかけと確定済みだったのに正典に残存していた→削除し
+  誠実なDC解(_dc_*)へ置換**(遺物12本排除)。pages は solved_mode 参照に改修
+  (「関西 — DC解」表示・Playwright実表示検証・console error 0)
+- **②UC 24h全規模**(scripts/uc_to_pf_built.py 新設): UC(fy2023r2)→zone別注入→
+  正典と同一のsolve_island(prune ladder)。**24h×4島=96断面 全収束**(east AC 24/24含む)。
+  学び: UC断面注入の素のNRは発散、prune ladder必須(=solve実装の共用が正解)
+- **正直な品質指標**(次の改善対象の定量化): slack吸収 east 25.5%/okinawa 49.9%(median)
+  =UCディスパッチと実網の需給整合の粗さ(発電所位置・容量出典・連系線モデル)。
+  east損失median 4,838MW(需要の~9%)・低電圧バス(vm 0.63-0.68)残存
+- モデル役割分担を確立: uc_to_pf(地域backbone・6月実績)/national(snapped比較)/
+  built(全規模v4=本命)。ゲート25 passed
+
 ## 2026-07-04(夕) — **Claude Fable 5** — Ybus v4.0.0: 変圧器の実容量化 — 出典→銘板→行列の全通
 
 Phase Bの出典必須DBが数値Ybusまで届いた(出典URL+原文引用→構造DB→trafo sn_mva/parallel)。
