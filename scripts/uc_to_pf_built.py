@@ -57,6 +57,117 @@ from src.uc.solver import solve_uc  # noqa: E402
 
 ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
 ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "dc", "okinawa": "ac"}
+BACKBONE_KV = 154.0
+
+
+def build_backbone_net(base, threshold_kv=BACKBONE_KV):
+    """built全規模net → backbone計算モデルへの明示的変換(縮約の帳簿つき)。
+
+    オーナー方針(2026-07-05)「計算は縮約も辿るが、リアリティを失わない」の実装:
+      - データ資産(built)は触らない。これは計算モデルへの**変換**である
+      - backboneバス = vn_kv >= threshold(島の最高階級が閾値未満なら最高階級=okinawa 132)
+      - 非backboneバスの load/gen は「同一成分内の最寄り(hop)backboneバス」へ集約
+      - backboneを持たない成分(断片)の load/gen は「地理的最寄りbackboneバス」へ集約し
+        from_fragment として帳簿に記録 — 断片上の実在電源(磯子・奥清津等)は現実には
+        繋がっているため、これは現実の回復であって捏造ではない(帳簿で透明化)
+      - 残す枝 = 両端backboneの line/trafo(v4銘板 500/275・275/154 等は温存)
+      - 注意: ネット側backboneはトポロジ切断(154kV未満経由の経路は落ちる)。
+        回路論的に厳密な縮約は dist/ybus の Kron backbone(別物)
+
+    Returns (net_bb, ledger)
+    """
+    from collections import deque
+
+    import networkx as nx
+    import pandapower.topology as ptop
+
+    from scripts.run_full_powerflow_from_db import _bus_lonlat, _haversine_km
+
+    net = copy.deepcopy(base)
+    kvs = net.bus.vn_kv
+    thr = threshold_kv
+    if not (kvs >= thr).any():
+        thr = float(kvs.max())
+    bb = set(net.bus.index[(kvs >= thr) & net.bus.in_service])
+
+    g = ptop.create_nxgraph(net, respect_switches=False,
+                            include_out_of_service=False)
+    # 多源BFS: 各バスに「最も近い(hop) backboneバス」を割り当てる
+    owner = {b: b for b in bb if b in g}
+    dq = deque(owner)
+    while dq:
+        u = dq.popleft()
+        for v in g[u]:
+            if v not in owner:
+                owner[v] = owner[u]
+                dq.append(v)
+
+    # 断片(backbone無し成分)用: 地理的最寄りbackboneバス
+    bb_pos = [(b, *(_bus_lonlat(net, b))) for b in bb]
+    bb_pos = [(b, lon, lat) for b, lon, lat in bb_pos
+              if lon is not None and lat is not None]
+
+    def geo_nearest(bus):
+        lon, lat = _bus_lonlat(net, bus)
+        if lon is None or not bb_pos:
+            return next(iter(bb)), float("nan")
+        best = min(bb_pos, key=lambda p: _haversine_km(lat, lon, p[2], p[1]))
+        return best[0], _haversine_km(lat, lon, best[2], best[1])
+
+    ledger = {"threshold_kv": thr, "n_bus_full": int(len(net.bus)),
+              "n_backbone_bus": len(bb),
+              "loads": {"moved": 0, "moved_mw": 0.0,
+                        "from_fragment": 0, "from_fragment_mw": 0.0},
+              "gens": {"moved": 0, "moved_mw": 0.0,
+                       "from_fragment": 0, "from_fragment_mw": 0.0},
+              "cross_zone_moves": 0,
+              "fragment_geo_km_max": 0.0}
+
+    zone = net.bus["zone"]
+    for elm, key, pcol in (("load", "loads", "p_mw"),
+                           ("gen", "gens", "max_p_mw")):
+        df = getattr(net, elm)
+        for i in df.index:
+            b = int(df.at[i, "bus"])
+            if b in bb:
+                continue
+            tgt = owner.get(b)
+            frag = tgt is None
+            dist_km = 0.0
+            if frag:
+                tgt, dist_km = geo_nearest(b)
+                ledger["fragment_geo_km_max"] = max(
+                    ledger["fragment_geo_km_max"],
+                    0.0 if dist_km != dist_km else dist_km)
+            df.at[i, "bus"] = tgt
+            mw = float(df.at[i, pcol] or 0.0)
+            ledger[key]["moved"] += 1
+            ledger[key]["moved_mw"] += mw
+            if frag:
+                ledger[key]["from_fragment"] += 1
+                ledger[key]["from_fragment_mw"] += mw
+            if str(zone.get(b)) != str(zone.get(tgt)):
+                ledger["cross_zone_moves"] += 1
+
+    for k in ("loads", "gens"):
+        ledger[k]["moved_mw"] = round(ledger[k]["moved_mw"], 1)
+        ledger[k]["from_fragment_mw"] = round(ledger[k]["from_fragment_mw"], 1)
+    ledger["fragment_geo_km_max"] = round(ledger["fragment_geo_km_max"], 1)
+
+    drop = [int(b) for b in net.bus.index if int(b) not in bb]
+    pp.drop_buses(net, drop)          # 参照要素(線/変圧器/旧slack)ごと落ちる
+    if len(net.ext_grid):
+        net.ext_grid.drop(net.ext_grid.index, inplace=True)
+
+    g2 = ptop.create_nxgraph(net, respect_switches=False,
+                             include_out_of_service=False)
+    ledger["n_bus_backbone_net"] = int(len(net.bus))
+    ledger["n_components_backbone"] = int(
+        nx.number_connected_components(g2)) if len(net.bus) else 0
+    ledger["n_trafo_kept"] = int(len(net.trafo))
+    ledger["n_trafo_nameplate_kept"] = int(
+        net.trafo.name.str.contains("@nameplate").sum()) if len(net.trafo) else 0
+    return net, ledger
 
 
 def _git_head():
@@ -89,19 +200,52 @@ def tie_flows_by_pair(net):
     return {k: round(v, 1) for k, v in sorted(out.items())}
 
 
+# 有界ACチェーン: run_powerflow の緩トレランス長反復フォールバック
+# (max_iteration 200-300 / tolerance 0.1-10) は、発散状態で反復を続けると
+# macOS Accelerate の cblas_dgemv abort でプロセスごと落ちる
+# (west backbone t=13 で決定的に再現・プローブで特定 2026-07-05)。
+# 物理的にも緩トレランス解は意味が薄いため、厳トレランス・100反復までに有界化する。
+_BOUNDED_AC = [
+    {"algorithm": "nr", "init": "dc", "max_iteration": 100,
+     "tolerance_mva": 1e-2, "enforce_q_lims": True},
+    {"algorithm": "nr", "init": "flat", "max_iteration": 100,
+     "tolerance_mva": 1e-2, "enforce_q_lims": True},
+    {"algorithm": "nr", "init": "dc", "max_iteration": 100,
+     "tolerance_mva": 1e-2},
+]
+
+
+def _bounded_ac(net):
+    for so in _BOUNDED_AC:
+        try:
+            pp.runpp(net, numba=True, **so)
+        except Exception:
+            continue
+        if net.converged:
+            return True
+    return False
+
+
 def solve_hour(base, mode):
-    """1時刻断面を解く — 正典実行(run_full_powerflow_from_db)と同一の
-    solve_island(prune ladder付きAC / DC)を共用する。AC不成立は正直に
-    dc_fallback と記録する。"""
-    from scripts.run_full_powerflow_from_db import solve_island
-    net = copy.deepcopy(base)
+    """1時刻断面を解く — prune ladder(正典と同じ閾値列)+有界ACチェーン。
+    AC不成立は正直に dc_fallback と記録する。"""
     if mode == "ac":
-        net_dc, dc, net_ac, ac = solve_island(net, max_ac_buses=10**9)
-        if ac.get("converged"):
-            return net_ac, "ac"
-        return net_dc, "dc_fallback"
-    net_dc, _dc, _na, _ac = solve_island(net, max_ac_buses=0)
-    return net_dc, "dc"
+        from src.powerflow.transforms import prune_dc_infeasible
+        for thr in (None, 45.0, 30.0, 20.0):
+            net = copy.deepcopy(base)
+            if thr is not None:
+                try:
+                    prune_dc_infeasible(net, angle_threshold=thr)
+                except Exception:
+                    pass
+            if _bounded_ac(net):
+                return net, "ac"
+        net = copy.deepcopy(base)
+        pp.rundcpp(net)
+        return net, "dc_fallback"
+    net = copy.deepcopy(base)
+    pp.rundcpp(net)
+    return net, "dc"
 
 
 def main():
@@ -111,6 +255,9 @@ def main():
     ap.add_argument("--all-hours", action="store_true")
     ap.add_argument("--hours", nargs="*", type=int, default=None,
                     help="解く時刻(0-23)。省略時=島純需要ピーク時刻のみ")
+    ap.add_argument("--model", choices=["full", "backbone"], default="full",
+                    help="full=全規模(既定) / backbone=縮約計算モデル"
+                         "(≥154kV・load/gen集約の帳簿つき・v4銘板温存・全島AC再挑戦)")
     ap.add_argument("--inject-main-comp-only", action="store_true",
                     help="主成分(最大連結成分)外の発電機を in_service=False にして"
                          "から注入する。断片上の発電は物理的に主成分へ送電できない"
@@ -139,7 +286,7 @@ def main():
     rc = 0
     for island in args.islands:
         regions = sorted(r for r, (isl, _f) in ISLAND_OF.items() if isl == island)
-        mode = ISLAND_MODE[island]
+        mode = "ac" if args.model == "backbone" else ISLAND_MODE[island]
         net_dem = sum(np.asarray(scn.net_demand_r[r]) for r in regions)
         if args.all_hours:
             hours = list(range(24))
@@ -156,8 +303,18 @@ def main():
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom)
         attach_generators(base, bus_of, built["nodes"], island)
         allocate_loads(base, cfg)
+        ledger = None
+        if args.model == "backbone":
+            base, ledger = build_backbone_net(base)
+            print(f"  backbone変換: {ledger['n_bus_full']}→"
+                  f"{ledger['n_bus_backbone_net']}バス(≥{ledger['threshold_kv']:.0f}kV) "
+                  f"load集約{ledger['loads']['moved']}件"
+                  f"(断片から{ledger['loads']['from_fragment_mw']:,.0f}MW) "
+                  f"gen集約{ledger['gens']['moved']}件"
+                  f"(断片から{ledger['gens']['from_fragment_mw']:,.0f}MW) "
+                  f"銘板残{ledger['n_trafo_nameplate_kept']}")
         add_per_component_slacks(base)
-        print(f"  built: {bstats['n_bus']}バス trafo={bstats['n_trafo']} "
+        print(f"  built: {len(base.bus)}バス trafo={len(base.trafo)} "
               f"(銘板{bstats['n_trafo_nameplate']}) {time.monotonic()-t0:.0f}s")
 
         n_gen_off = 0
@@ -180,8 +337,10 @@ def main():
 
         gate = ybus_gate(base)
         isl_rep = {"mode": mode, "regions": regions,
-                   "n_bus": bstats["n_bus"],
+                   "model": args.model,
+                   "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
+                   "backbone_ledger": ledger,
                    "inject_main_comp_only": bool(args.inject_main_comp_only),
                    "n_fragment_gen_off": n_gen_off,
                    "fragment_unserved_load_mw": round(fragment_load_mw, 1),

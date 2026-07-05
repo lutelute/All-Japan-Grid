@@ -1,0 +1,150 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "git_head": "89025da",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "west": {
+   "mode": "ac",
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "model": "backbone",
+   "n_bus": 2779,
+   "n_trafo_nameplate": 5,
+   "backbone_ledger": {
+    "threshold_kv": 154.0,
+    "n_bus_full": 10193,
+    "n_backbone_bus": 2779,
+    "loads": {
+     "moved": 3556,
+     "moved_mw": 61681.6,
+     "from_fragment": 962,
+     "from_fragment_mw": 16722.3
+    },
+    "gens": {
+     "moved": 7473,
+     "moved_mw": 126267.8,
+     "from_fragment": 1349,
+     "from_fragment_mw": 32168.1
+    },
+    "cross_zone_moves": 967,
+    "fragment_geo_km_max": 57.7,
+    "n_bus_backbone_net": 2779,
+    "n_components_backbone": 609,
+    "n_trafo_kept": 182,
+    "n_trafo_nameplate_kept": 3
+   },
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 7998514.295917263
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 69937.7,
+     "load_scale": {
+      "chubu": 0.7049,
+      "chugoku": 0.8311,
+      "hokuriku": 1.5691,
+      "kansai": 1.1022,
+      "kyushu": 1.0841,
+      "shikoku": 1.0806
+     },
+     "slack_abs_mw": 5514.6,
+     "solve_s": 14.9,
+     "vm_min": 0.8484,
+     "vm_max": 1.0708,
+     "loss_mw": 1366.4,
+     "tie_mw": {
+      "chubu->hokuriku": 2169.4,
+      "chubu->kansai": 484.1,
+      "chugoku->kansai": -3393.7,
+      "chugoku->kyushu": 3946.3,
+      "chugoku->shikoku": -462.0,
+      "hokuriku->kansai": -31.9,
+      "kansai->shikoku": 317.2,
+      "kyushu->shikoku": 932.2
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  },
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "backbone",
+   "n_bus": 1310,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": {
+    "threshold_kv": 154.0,
+    "n_bus_full": 6205,
+    "n_backbone_bus": 1310,
+    "loads": {
+     "moved": 2458,
+     "moved_mw": 47161.0,
+     "from_fragment": 275,
+     "from_fragment_mw": 5552.9
+    },
+    "gens": {
+     "moved": 7186,
+     "moved_mw": 102135.3,
+     "from_fragment": 432,
+     "from_fragment_mw": 14088.7
+    },
+    "cross_zone_moves": 204,
+    "fragment_geo_km_max": 48.5,
+    "n_bus_backbone_net": 1310,
+    "n_components_backbone": 74,
+    "n_trafo_kept": 141,
+    "n_trafo_nameplate_kept": 4
+   },
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 76666405.12120497
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.8168,
+      "tokyo": 1.1478
+     },
+     "slack_abs_mw": 4912.6,
+     "solve_s": 2.8,
+     "vm_min": 0.9643,
+     "vm_max": 1.0221,
+     "loss_mw": 2373.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5115.1
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}

@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-05(夜) — **Claude Fable 5** — backbone計算モデル: west AC 23/24 初達成・east slack 25.5→9.2%
+
+オーナー方針「計算は縮約も辿るが、リアリティを失わない」の実装(`--model backbone`)。
+詳細 = `docs/reports/backbone_model_2026-07-05.md`。
+
+- **設計**: built(データ資産・不変)と計算モデル(縮約=変換)の分離。≥154kVを残し、下位網
+  load/genを最寄りbackboneバスへ集約。**断片上の実在電源(west 32.2GW!)は地理最寄りへ復帰**
+  =現実の回復(帳簿full記録: 越境967件・地理max57.7km・silent truncation禁止)
+- **west島 AC 23/24** — built系譜初のACタイムシリーズ(6月確定の「下位網変圧器が真因」の実証。
+  t=21のみ正直にdc_fallback)。east slack 25.5→9.2%・損失4,838→1,982MW。
+  **okinawaはほぼ不変(49.9→47.9%)=slack解剖の診断(燃料容量不一致)の裏付け**
+- **ハマり⑨(重要)**: run_powerflowの粘りソルバー(200-300反復・tol 0.1-10)は発散状態で
+  **macOS Accelerate cblas_dgemv abort**(プロセス死・捕捉不能・west bb t=13決定的再現)
+  → uc_to_pf_built側に有界ACチェーン(_BOUNDED_AC=厳tol 1e-2×100反復×3構成)。正典solve_islandは不変更
+- v4銘板は縮約後も温存(east 4/west 3器)。BLAS対策でプロセス分割実行→JSONマージ
+
 ## 2026-07-05(午後) — **Claude Fable 5** — slack解剖・tie突合・検証資産棚卸し(C/D)
 
 オーナー方針確定: **梃子候補210件の自動採用は禁止**(機械=スクリーニング・根拠整形まで、
