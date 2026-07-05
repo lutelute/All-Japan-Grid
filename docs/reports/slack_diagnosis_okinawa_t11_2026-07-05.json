@@ -1,0 +1,94 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "island": "okinawa",
+  "hour": 11,
+  "scenario": "fy2023r2",
+  "solved": "ac",
+  "n_components": 7,
+  "total_load_mw": 1682.4
+ },
+ "decomposition": {
+  "slack_supply_total_mw": 947.6,
+  "slack_supply_frac_of_load": 0.5632,
+  "slack_absorb_total_mw": 0,
+  "fragments_supply_mw": 140.4,
+  "fragments_supply_frac_of_slack": 0.1482,
+  "fragments_zero_gen_supply_mw": 117.0,
+  "main_component": {
+   "comp": 0,
+   "n_bus": 93,
+   "load_mw": 1542.0,
+   "gen_inj_mw": 800.0,
+   "n_gen": 26,
+   "slack_mw": 807.2,
+   "zone_top": "okinawa"
+  }
+ },
+ "components_top50": [
+  {
+   "comp": 0,
+   "n_bus": 93,
+   "load_mw": 1542.0,
+   "gen_inj_mw": 800.0,
+   "n_gen": 26,
+   "slack_mw": 807.2,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 1,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 2,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 3,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 4,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 5,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 2,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  },
+  {
+   "comp": 6,
+   "n_bus": 1,
+   "load_mw": 23.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 23.4,
+   "zone_top": "okinawa"
+  }
+ ],
+ "note": "判断は人間が行う(2026-07-05オーナー方針)。本レポートは材料の整形。(a)断片slack=負荷按分が孤立変電所にも載る構造の症状(接続修復か按分ポリシーの選択は要オーナー判断)。(b)主成分slack=発電位置/容量/UC容量比例注入の粗さ。"
+}

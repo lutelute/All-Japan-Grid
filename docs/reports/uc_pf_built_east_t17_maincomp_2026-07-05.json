@@ -1,0 +1,49 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "git_head": "b5580d2",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "n_bus": 6205,
+   "n_trafo_nameplate": 6,
+   "inject_main_comp_only": true,
+   "n_fragment_gen_off": 451,
+   "fragment_unserved_load_mw": 6076.8,
+   "gate": {
+    "pass": true,
+    "cond_max": 406303340.64369476
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.9075,
+      "tokyo": 1.116
+     },
+     "slack_abs_mw": 20115.0,
+     "solve_s": 18.9,
+     "vm_min": 0.7904,
+     "vm_max": 1.0229,
+     "loss_mw": 5996.9,
+     "tie_mw": {
+      "tohoku->tokyo": 6012.8
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}

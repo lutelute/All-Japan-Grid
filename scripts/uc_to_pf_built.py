@@ -111,6 +111,12 @@ def main():
     ap.add_argument("--all-hours", action="store_true")
     ap.add_argument("--hours", nargs="*", type=int, default=None,
                     help="解く時刻(0-23)。省略時=島純需要ピーク時刻のみ")
+    ap.add_argument("--inject-main-comp-only", action="store_true",
+                    help="主成分(最大連結成分)外の発電機を in_service=False にして"
+                         "から注入する。断片上の発電は物理的に主成分へ送電できない"
+                         "ため、容量比例注入が断片に落ちる分(east実測~17GW/59GW)を"
+                         "排除する。断片の負荷は synthetic slack 供給のまま"
+                         "(=fragment_unserved としてレポート)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -154,10 +160,31 @@ def main():
         print(f"  built: {bstats['n_bus']}バス trafo={bstats['n_trafo']} "
               f"(銘板{bstats['n_trafo_nameplate']}) {time.monotonic()-t0:.0f}s")
 
+        n_gen_off = 0
+        fragment_load_mw = 0.0
+        if args.inject_main_comp_only:
+            import networkx as nx
+            import pandapower.topology as ptop
+            g = ptop.create_nxgraph(base, respect_switches=False,
+                                    include_out_of_service=False)
+            main = max(nx.connected_components(g), key=len)
+            gen_out = ~base.gen.bus.isin(main)
+            n_gen_off = int(gen_out.sum())
+            base.gen.loc[gen_out, "in_service"] = False
+            frag_loads = base.load[~base.load.bus.isin(main)
+                                   & base.load.in_service]
+            fragment_load_mw = float(frag_loads.p_mw.sum())
+            print(f"  主成分限定注入: 断片gen {n_gen_off}台を停止・"
+                  f"断片負荷 {fragment_load_mw:,.0f}MW は slack供給のまま"
+                  f"(fragment_unserved)")
+
         gate = ybus_gate(base)
         isl_rep = {"mode": mode, "regions": regions,
                    "n_bus": bstats["n_bus"],
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
+                   "inject_main_comp_only": bool(args.inject_main_comp_only),
+                   "n_fragment_gen_off": n_gen_off,
+                   "fragment_unserved_load_mw": round(fragment_load_mw, 1),
                    "gate": {"pass": bool(gate["pass"]),
                             "cond_max": gate["cond_max"]},
                    "hours": {}}

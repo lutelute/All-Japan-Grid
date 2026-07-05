@@ -1,0 +1,481 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "island": "east",
+  "hour": 17,
+  "scenario": "fy2023r2",
+  "solved": "ac",
+  "n_components": 519,
+  "total_load_mw": 59350.7
+ },
+ "decomposition": {
+  "slack_supply_total_mw": 22120.6,
+  "slack_supply_frac_of_load": 0.3727,
+  "slack_absorb_total_mw": -5989.5,
+  "fragments_supply_mw": 6300.0,
+  "fragments_supply_frac_of_slack": 0.2848,
+  "fragments_zero_gen_supply_mw": 5299.2,
+  "main_component": {
+   "comp": 2,
+   "n_bus": 5342,
+   "load_mw": 52150.6,
+   "gen_inj_mw": 42339.6,
+   "n_gen": 8055,
+   "slack_mw": 15820.6,
+   "zone_top": "tokyo"
+  }
+ },
+ "components_top50": [
+  {
+   "comp": 2,
+   "n_bus": 5342,
+   "load_mw": 52150.6,
+   "gen_inj_mw": 42339.6,
+   "n_gen": 8055,
+   "slack_mw": 15820.6,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 208,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 2165.2,
+   "n_gen": 2,
+   "slack_mw": -2139.2,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 496,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 2152.0,
+   "n_gen": 64,
+   "slack_mw": -2126.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 246,
+   "n_bus": 1,
+   "load_mw": 15.6,
+   "gen_inj_mw": 956.8,
+   "n_gen": 1,
+   "slack_mw": -941.2,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 226,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 287.0,
+   "n_gen": 1,
+   "slack_mw": -261.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 86,
+   "n_bus": 6,
+   "load_mw": 52.0,
+   "gen_inj_mw": 310.8,
+   "n_gen": 2,
+   "slack_mw": -258.8,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 271,
+   "n_bus": 1,
+   "load_mw": 3.1,
+   "gen_inj_mw": 159.4,
+   "n_gen": 4,
+   "slack_mw": -156.3,
+   "zone_top": "tohoku"
+  },
+  {
+   "comp": 83,
+   "n_bus": 11,
+   "load_mw": 163.8,
+   "gen_inj_mw": 28.3,
+   "n_gen": 4,
+   "slack_mw": 136.2,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 53,
+   "n_bus": 6,
+   "load_mw": 130.0,
+   "gen_inj_mw": 9.3,
+   "n_gen": 1,
+   "slack_mw": 121.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 279,
+   "n_bus": 1,
+   "load_mw": 10.2,
+   "gen_inj_mw": 117.3,
+   "n_gen": 2,
+   "slack_mw": -107.0,
+   "zone_top": "tohoku"
+  },
+  {
+   "comp": 70,
+   "n_bus": 6,
+   "load_mw": 104.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 104.2,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 79,
+   "n_bus": 3,
+   "load_mw": 78.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 78.1,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 163,
+   "n_bus": 6,
+   "load_mw": 78.0,
+   "gen_inj_mw": 9.4,
+   "n_gen": 1,
+   "slack_mw": 69.4,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 93,
+   "n_bus": 9,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 194,
+   "slack_mw": 52.1,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 110,
+   "n_bus": 5,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 52.1,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 65,
+   "n_bus": 2,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 2,
+   "slack_mw": 52.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 71,
+   "n_bus": 2,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 52.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 88,
+   "n_bus": 2,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 52.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 92,
+   "n_bus": 2,
+   "load_mw": 52.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 29,
+   "slack_mw": 52.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 64,
+   "n_bus": 3,
+   "load_mw": 78.0,
+   "gen_inj_mw": 28.5,
+   "n_gen": 3,
+   "slack_mw": 49.5,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 111,
+   "n_bus": 8,
+   "load_mw": 49.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 49.5,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 9,
+   "n_bus": 10,
+   "load_mw": 51.2,
+   "gen_inj_mw": 3.6,
+   "n_gen": 13,
+   "slack_mw": 48.6,
+   "zone_top": "tohoku"
+  },
+  {
+   "comp": 0,
+   "n_bus": 7,
+   "load_mw": 35.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 35.9,
+   "zone_top": "tohoku"
+  },
+  {
+   "comp": 98,
+   "n_bus": 2,
+   "load_mw": 31.2,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 31.2,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 4,
+   "n_bus": 4,
+   "load_mw": 30.7,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 30.8,
+   "zone_top": "tohoku"
+  },
+  {
+   "comp": 45,
+   "n_bus": 3,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 52,
+   "n_bus": 4,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 66,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 3,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 77,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 80,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 87,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 2,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 95,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 1,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 105,
+   "n_bus": 6,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 117,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 153,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 162,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 164,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 165,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 166,
+   "n_bus": 3,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 168,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 2,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 180,
+   "n_bus": 2,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 184,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 185,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 1,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 186,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 187,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 188,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 189,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 190,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 191,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  },
+  {
+   "comp": 192,
+   "n_bus": 1,
+   "load_mw": 26.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 26.0,
+   "zone_top": "tokyo"
+  }
+ ],
+ "note": "判断は人間が行う(2026-07-05オーナー方針)。本レポートは材料の整形。(a)断片slack=負荷按分が孤立変電所にも載る構造の症状(接続修復か按分ポリシーの選択は要オーナー判断)。(b)主成分slack=発電位置/容量/UC容量比例注入の粗さ。"
+}

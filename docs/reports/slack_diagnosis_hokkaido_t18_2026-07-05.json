@@ -1,0 +1,454 @@
+{
+ "meta": {
+  "date": "2026-07-05",
+  "island": "hokkaido",
+  "hour": 18,
+  "scenario": "fy2023r2",
+  "solved": "ac",
+  "n_components": 47,
+  "total_load_mw": 4433.2
+ },
+ "decomposition": {
+  "slack_supply_total_mw": 803.0,
+  "slack_supply_frac_of_load": 0.1811,
+  "slack_absorb_total_mw": -10.7,
+  "fragments_supply_mw": 439.8,
+  "fragments_supply_frac_of_slack": 0.5477,
+  "fragments_zero_gen_supply_mw": 278.6,
+  "main_component": {
+   "comp": 0,
+   "n_bus": 751,
+   "load_mw": 3948.3,
+   "gen_inj_mw": 3706.0,
+   "n_gen": 400,
+   "slack_mw": 363.2,
+   "zone_top": "hokkaido"
+  }
+ },
+ "components_top50": [
+  {
+   "comp": 0,
+   "n_bus": 751,
+   "load_mw": 3948.3,
+   "gen_inj_mw": 3706.0,
+   "n_gen": 400,
+   "slack_mw": 363.2,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 2,
+   "n_bus": 15,
+   "load_mw": 80.4,
+   "gen_inj_mw": 0.0,
+   "n_gen": 3,
+   "slack_mw": 80.4,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 3,
+   "n_bus": 11,
+   "load_mw": 54.5,
+   "gen_inj_mw": 0.0,
+   "n_gen": 12,
+   "slack_mw": 54.7,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 8,
+   "n_bus": 5,
+   "load_mw": 44.7,
+   "gen_inj_mw": 55.4,
+   "n_gen": 4,
+   "slack_mw": -10.7,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 1,
+   "n_bus": 2,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 14,
+   "n_bus": 2,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 10,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 15,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 16,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 17,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 18,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 19,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 20,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 21,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 22,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 23,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 25,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 26,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 27,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 29,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 30,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 31,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 32,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 33,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 34,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 35,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 36,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 37,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 38,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 2,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 39,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 40,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 41,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 42,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 43,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 44,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 45,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 46,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 8.9,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 24,
+   "n_bus": 1,
+   "load_mw": 8.9,
+   "gen_inj_mw": 0.6,
+   "n_gen": 1,
+   "slack_mw": 8.3,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 28,
+   "n_bus": 1,
+   "load_mw": 7.1,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 7.1,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 7,
+   "n_bus": 2,
+   "load_mw": 4.5,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 4.5,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 4,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 5,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 6,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 9,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 10,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 11,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 12,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  },
+  {
+   "comp": 13,
+   "n_bus": 2,
+   "load_mw": 0.0,
+   "gen_inj_mw": 0.0,
+   "n_gen": 0,
+   "slack_mw": 0.0,
+   "zone_top": "hokkaido"
+  }
+ ],
+ "note": "判断は人間が行う(2026-07-05オーナー方針)。本レポートは材料の整形。(a)断片slack=負荷按分が孤立変電所にも載る構造の症状(接続修復か按分ポリシーの選択は要オーナー判断)。(b)主成分slack=発電位置/容量/UC容量比例注入の粗さ。"
+}

@@ -7,6 +7,25 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-05(午後) — **Claude Fable 5** — slack解剖・tie突合・検証資産棚卸し(C/D)
+
+オーナー方針確定: **梃子候補210件の自動採用は禁止**(機械=スクリーニング・根拠整形まで、
+判断=人間)。その前提でC(品質課題の解体)とD(資産化)を実施。
+
+- **slack解剖器**(`scripts/diagnose_slack.py`新設): 島ごとに主犯が違うと判明 —
+  east=**断片上の実在電源17.9GW**(奥清津1600/玉原1200/磯子1200等451台の接続点孤立)+
+  prune起因の発電未達~8.8GW、hokkaido=断片負荷(slack+の54.8%)、okinawa=燃料別容量不一致
+  (UC石油1,482 vs PF石油系600MW)。検証実験(--inject-main-comp-only)で「断片gen除外は
+  解でない」(16.1→20.1GWに悪化=電源は実在しzone別coalがclip)を実証
+- **tie突合**: east tohoku→tokyo 24h MAE 384MW(~7%)=**OSM網の自然潮流配分がOCCTO
+  連系線容量と整合**(正の検証)。west側で**実在しない「kyushu↔shikoku 445MW」幻tie検出**
+  (zone境界誤り疑い・人間レビュー案件)
+- **検証資産棚卸し**(`docs/reports/verification_assets_2026-07-05.md`): 論文V&V章の材料を
+  「主張・数字・再現コマンド」三点セットで一覧化。限界5項目も明示
+- **CGMESギャップ発見**: v4銘板はbuilt系譜、CGMES出力はsnapped系譜(build_and_solve)
+  →現行CGMESのratedSに銘板が届いていない(移植 or built系譜移行の二択を文書化)
+- レポート: `docs/reports/slack_tie_diagnosis_2026-07-05.md`(次の一手A-Eの判断材料)
+
 ## 2026-07-05 — **Claude Fable 5** — east全規模AC正典昇格 + UC 24h×全規模96断面全収束
 
 v4銘板モデルの潮流実証を2段: ①単断面の正典昇格 ②UC時系列24hの全規模化。
