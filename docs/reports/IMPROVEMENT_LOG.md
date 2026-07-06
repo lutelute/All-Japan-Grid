@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07(深夜) — **Claude Fable 5** — 島境界注入: slack≒損失のみに到達（east残差+0.02%）
+
+slack分解で特定した最大の構造項「島間融通ギャップ」の解消。
+詳細 = `docs/reports/boundary_injection_2026-07-07.md`。
+
+- **実装**: `uc_to_pf_built --boundary-injection` — UCの島間連系フロー(東西FC・北本)を
+  **builtに実在する境界設備バス**(新信濃/東清水/佐久間/飛騨変換所/上北/今別/北斗 —
+  OSM実体を名前解決・座標捏造なし)へsgen注入。未解決点は同ペア内で重み再配分し開示
+- **結果(backbone+bridge併用・24h)**: east **slack 3.06% vs 損失3.03%(残差+0.02%)**・
+  west 1.46%(AC22hで残差−0.12%)・hokkaido 1.43%(残差+0.23%)。全島24/24収束
+- **east slackの弧が完結**: 25.5%(full)→9.2%(backbone)→7.4%(bridge)→**3.06%≒損失のみ**。
+  UC運用断面とOSM由来PF網の需給整合は損失を除き0.02%まで閉じた
+- 副次: この構成ではハマり⑨(BLAS abort)不発生(t=17/19もAC収束・構成依存を再確認)
+- 残る本質課題: 損失の扱い(UCは損失を配らない=開示)・枝容量制約なしの潮流配分(tie突合)・
+  B案(重複枝dedup)・--bridge/--boundary-injectionの既定ON化(正典96断面更新とセット・オーナー判断)
+
 ## 2026-07-07(夜) — **Claude Fable 5** — zone再属性(A案)実装: 幻tie消滅・本四復活・west slack較正後2.1%
 
 オーナー承認(「進めて」)を受けたA案の実装。

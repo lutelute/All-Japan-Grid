@@ -59,6 +59,80 @@ ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
 ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "dc", "okinawa": "ac"}
 BACKBONE_KV = 154.0
 
+# ── 島境界の連系設備(東西FC・北本) ──────────────────────────────
+# PF島モデルは島間連系を持たず、UCの島間融通がslackに落ちる
+# (east +4.0% / west -3.3% — docs/reports/east_slack_decomposition_2026-07-07.md)。
+# --boundary-injection は UCの連系フローを境界設備バスへ sgen 注入して
+# この構造項を解消する。座標はbuiltノード(OSM実体)を名前で解決(捏造回避)。
+# weight = 変換所定格MW(interconnections.yaml converters ほか公知:
+#   新信濃600+飛騨信濃900(東端=新信濃)・佐久間300・東清水300 = FC計2,100 /
+#   北本900 = 旧北本600(上北—函館)+新北本300(今別—北斗)。
+#   west側は飛騨信濃の西端=飛騨変換所に900を配分。
+#   hokkaido側は函館変換所ノードが無いため北斗へ集約(開示))
+BOUNDARY_POINTS = {
+    "east": [
+        {"pair": ("chubu", "tokyo"), "name": "新信濃変電所", "weight": 1500},
+        {"pair": ("chubu", "tokyo"), "name": "佐久間周波数変換所", "weight": 300},
+        {"pair": ("chubu", "tokyo"), "name": "東清水変電所", "weight": 300},
+        {"pair": ("hokkaido", "tohoku"), "name": "上北変電所", "weight": 600},
+        {"pair": ("hokkaido", "tohoku"), "name": "今別変換所", "weight": 300},
+    ],
+    "west": [
+        {"pair": ("chubu", "tokyo"), "name": "新信濃変電所", "weight": 600},
+        {"pair": ("chubu", "tokyo"), "name": "飛騨変換所", "weight": 900},
+        {"pair": ("chubu", "tokyo"), "name": "佐久間周波数変換所", "weight": 300},
+        {"pair": ("chubu", "tokyo"), "name": "東清水変電所", "weight": 300},
+    ],
+    "hokkaido": [
+        {"pair": ("hokkaido", "tohoku"), "name": "北斗変換所", "weight": 900},
+    ],
+    "okinawa": [],
+}
+
+
+def island_boundary_flows(uc, scn, island_regions):
+    """島境界を跨ぐUC連系フローを {pairキー: [24h 正味輸入MW]} で返す。"""
+    out = {}
+    for fr in getattr(uc, "interconnection_flows", []) or []:
+        ic = next((i for i in scn.interconnections
+                   if i.id == fr.interconnection_id), None)
+        if ic is None:
+            continue
+        inbound = ic.to_region in island_regions
+        outbound = ic.from_region in island_regions
+        if inbound == outbound:
+            continue          # 島境界を跨がない
+        key = tuple(sorted((ic.from_region, ic.to_region)))
+        sign = 1.0 if inbound else -1.0
+        out[key] = [sign * float(v) for v in fr.flow_mw]
+    return out
+
+
+def setup_boundary_sgens(net, island):
+    """境界設備バスを名前で解決し sgen(p=0) を用意する。
+
+    Returns: [{name, pair, share, sgen, bus_name}] (解決不能な点は同pair内で
+    重みを再配分し、ledger用に dropped を返す)
+    """
+    points = BOUNDARY_POINTS.get(island, [])
+    resolved, dropped = [], []
+    for pt in points:
+        mask = net.bus.name.astype(str).str.contains(pt["name"], regex=False)
+        mask &= net.bus.in_service
+        if not mask.any():
+            dropped.append(pt["name"])
+            continue
+        b = net.bus.loc[mask, "vn_kv"].idxmax()
+        resolved.append({**pt, "bus": int(b),
+                         "bus_name": str(net.bus.at[b, "name"])})
+    for pt in resolved:
+        pair_w = sum(p["weight"] for p in resolved if p["pair"] == pt["pair"])
+        pt["share"] = pt["weight"] / pair_w if pair_w else 0.0
+        pt["sgen"] = int(pp.create_sgen(
+            net, bus=pt["bus"], p_mw=0.0, q_mvar=0.0,
+            name=f"boundary_{pt['name']}"))
+    return resolved, dropped
+
 
 def build_backbone_net(base, threshold_kv=BACKBONE_KV):
     """built全規模net → backbone計算モデルへの明示的変換(縮約の帳簿つき)。
@@ -264,6 +338,10 @@ def main():
                          "ため、容量比例注入が断片に落ちる分(east実測~17GW/59GW)を"
                          "排除する。断片の負荷は synthetic slack 供給のまま"
                          "(=fragment_unserved としてレポート)")
+    ap.add_argument("--boundary-injection", action="store_true",
+                    help="UCの島間連系フロー(東西FC・北本)を境界設備バスへ"
+                         "sgen注入する。PF島が表現できない島間融通の構造項"
+                         "(east +4.0%% / west -3.3%%)を解消(2026-07-07)")
     ap.add_argument("--bridge", action="store_true",
                     help="capacity_bridge(容量較正: dedup・出典付き容量パッチ・"
                          "稼働炉リスト)をPF側netへ適用する。UC側は常に同じ"
@@ -288,6 +366,7 @@ def main():
                        "git_head": _git_head(), "scenario": args.scenario,
                        "model": "built_full_v4_nameplate",
                        "bridge": bool(args.bridge),
+                       "boundary_injection": bool(args.boundary_injection),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -335,6 +414,16 @@ def main():
                   f"(断片から{ledger['gens']['from_fragment_mw']:,.0f}MW) "
                   f"銘板残{ledger['n_trafo_nameplate_kept']}")
         add_per_component_slacks(base)
+        boundary_pts, boundary_flows = [], {}
+        if args.boundary_injection:
+            boundary_pts, bdropped = setup_boundary_sgens(base, island)
+            boundary_flows = island_boundary_flows(
+                uc, scn, set(regions))
+            for pt in boundary_pts:
+                print(f"  boundary: {pt['name']} -> {pt['bus_name']} "
+                      f"(share {pt['share']:.2f})")
+            if bdropped:
+                print(f"  boundary: 未解決(重み再配分) {bdropped}")
         print(f"  built: {len(base.bus)}バス trafo={len(base.trafo)} "
               f"(銘板{bstats['n_trafo_nameplate']}) {time.monotonic()-t0:.0f}s")
 
@@ -365,6 +454,11 @@ def main():
                    "bridge": ({k: v for k, v in bridge_rep.items()
                                if k != "zone_override"}
                               if bridge_rep else None),
+                   "boundary_injection": ([
+                       {"name": p["name"], "bus": p["bus_name"],
+                        "pair": list(p["pair"]),
+                        "share": round(p["share"], 3)}
+                       for p in boundary_pts] if boundary_pts else None),
                    "inject_main_comp_only": bool(args.inject_main_comp_only),
                    "n_fragment_gen_off": n_gen_off,
                    "fragment_unserved_load_mw": round(fragment_load_mw, 1),
@@ -387,6 +481,14 @@ def main():
             demand = {r: float(scn.net_demand_r[r][t]) for r in regions}
             inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand,
                                           gen_zone_override=gen_zone_override)
+            bnd_mw = {}
+            for pt in boundary_pts:
+                series = boundary_flows.get(tuple(sorted(pt["pair"])))
+                if series is None or t >= len(series):
+                    continue
+                p_pt = float(series[t]) * pt["share"]
+                net_t.sgen.at[pt["sgen"], "p_mw"] = p_pt
+                bnd_mw[pt["name"]] = round(p_pt, 1)
             net_s, used = solve_hour(net_t, mode)
             conv = bool(net_s.converged)
             n_ok += int(conv)
@@ -397,6 +499,8 @@ def main():
                     "load_scale": {r: inj[r]["load_scale"] for r in regions},
                     "slack_abs_mw": round(slack, 1) if slack is not None else None,
                     "solve_s": round(time.monotonic() - th, 1)}
+            if bnd_mw:
+                hrep["boundary_mw"] = bnd_mw
             inj_issues = {r: {k: v for k, v in
                               (("clipped", inj[r]["injection"]["clipped"]),
                                ("unmatched", inj[r]["injection"]["unmatched"]))

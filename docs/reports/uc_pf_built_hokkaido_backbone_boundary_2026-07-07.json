@@ -1,0 +1,526 @@
+{
+ "meta": {
+  "date": "2026-07-07",
+  "git_head": "bafca13",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": true,
+  "boundary_injection": true,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "hokkaido": {
+   "mode": "ac",
+   "regions": [
+    "hokkaido"
+   ],
+   "model": "backbone",
+   "n_bus": 118,
+   "n_trafo_nameplate": 1,
+   "backbone_ledger": {
+    "threshold_kv": 154.0,
+    "n_bus_full": 819,
+    "n_backbone_bus": 118,
+    "loads": {
+     "moved": 448,
+     "moved_mw": 4037.9,
+     "from_fragment": 43,
+     "from_fragment_mw": 389.4
+    },
+    "gens": {
+     "moved": 326,
+     "moved_mw": 5718.3,
+     "from_fragment": 17,
+     "from_fragment_mw": 315.4
+    },
+    "cross_zone_moves": 0,
+    "fragment_geo_km_max": 40.9,
+    "n_bus_backbone_net": 118,
+    "n_components_backbone": 3,
+    "n_trafo_kept": 8,
+    "n_trafo_nameplate_kept": 1
+   },
+   "bridge": {
+    "dedup_disabled": 0,
+    "patched": 0,
+    "retired": 0,
+    "fuel_fixed": 0,
+    "nuclear_set": 0,
+    "nuclear_stopped": 1,
+    "mw_delta": -2070.0,
+    "unmatched_patches": [
+     "苓北",
+     "福島ガス発電所",
+     "新大分火力",
+     "九州電力 松浦火力",
+     "電源開発 松浦火力",
+     "新小倉火力",
+     "松島火力",
+     "苅田火力発電所",
+     "相浦火力",
+     "シグマパワー有明三池",
+     "Orix Hibikinada",
+     "Orix Soma",
+     "糸魚川発電所",
+     "石巻雲雀野",
+     "豊前火力",
+     "川内発電所",
+     "下松火力",
+     "池島町長崎市発電所",
+     "七尾大田",
+     "敦賀火力",
+     "富山新港",
+     "橘湾火力",
+     "橘湾発電所",
+     "Hirono IGCC",
+     "Nakoso IGCC",
+     "葛根田地熱",
+     "吉の浦火力",
+     "金武火力",
+     "Gushikawa Power",
+     "Ishikawa J-Power",
+     "牧港火力",
+     "石川火力"
+    ]
+   },
+   "boundary_injection": [
+    {
+     "name": "北斗変換所",
+     "bus": "北斗変換所 275kV",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 1.0
+    }
+   ],
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 115366.16036895299
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3196.2,
+     "load_scale": {
+      "hokkaido": 0.7231
+     },
+     "slack_abs_mw": 49.2,
+     "solve_s": 1.0,
+     "boundary_mw": {
+      "北斗変換所": -565.8
+     },
+     "vm_min": 0.9571,
+     "vm_max": 1.0024,
+     "loss_mw": 49.2,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3000.0,
+     "load_scale": {
+      "hokkaido": 0.6787
+     },
+     "slack_abs_mw": 58.8,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -762.0
+     },
+     "vm_min": 0.9645,
+     "vm_max": 1.0022,
+     "loss_mw": 58.8,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2872.5,
+     "load_scale": {
+      "hokkaido": 0.6499
+     },
+     "slack_abs_mw": 66.9,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -889.5
+     },
+     "vm_min": 0.9594,
+     "vm_max": 1.0025,
+     "loss_mw": 66.9,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2743.8,
+     "load_scale": {
+      "hokkaido": 0.6208
+     },
+     "slack_abs_mw": -54.1,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9603,
+     "vm_max": 1.0027,
+     "loss_mw": 64.1,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2880.0,
+     "load_scale": {
+      "hokkaido": 0.6516
+     },
+     "slack_abs_mw": 66.4,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -882.0
+     },
+     "vm_min": 0.9602,
+     "vm_max": 1.0024,
+     "loss_mw": 66.4,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3155.3,
+     "load_scale": {
+      "hokkaido": 0.7139
+     },
+     "slack_abs_mw": 50.9,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -606.7
+     },
+     "vm_min": 0.9587,
+     "vm_max": 1.0019,
+     "loss_mw": 50.9,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3506.3,
+     "load_scale": {
+      "hokkaido": 0.7933
+     },
+     "slack_abs_mw": 39.8,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -255.7
+     },
+     "vm_min": 0.9449,
+     "vm_max": 1.0051,
+     "loss_mw": 39.8,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3836.9,
+     "load_scale": {
+      "hokkaido": 0.8681
+     },
+     "slack_abs_mw": 36.4,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 74.9
+     },
+     "vm_min": 0.931,
+     "vm_max": 1.0067,
+     "loss_mw": 36.4,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3990.7,
+     "load_scale": {
+      "hokkaido": 0.9029
+     },
+     "slack_abs_mw": 37.1,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 228.7
+     },
+     "vm_min": 0.9242,
+     "vm_max": 1.0071,
+     "loss_mw": 37.1,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3955.7,
+     "load_scale": {
+      "hokkaido": 0.8949
+     },
+     "slack_abs_mw": 36.8,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 193.7
+     },
+     "vm_min": 0.9258,
+     "vm_max": 1.007,
+     "loss_mw": 36.8,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3886.3,
+     "load_scale": {
+      "hokkaido": 0.8793
+     },
+     "slack_abs_mw": 36.5,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 124.3
+     },
+     "vm_min": 0.9288,
+     "vm_max": 1.0069,
+     "loss_mw": 36.5,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3856.3,
+     "load_scale": {
+      "hokkaido": 0.8725
+     },
+     "slack_abs_mw": 36.4,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 94.3
+     },
+     "vm_min": 0.9302,
+     "vm_max": 1.0068,
+     "loss_mw": 36.4,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3747.8,
+     "load_scale": {
+      "hokkaido": 0.8479
+     },
+     "slack_abs_mw": 36.7,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -14.2
+     },
+     "vm_min": 0.9348,
+     "vm_max": 1.0064,
+     "loss_mw": 36.7,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3762.3,
+     "load_scale": {
+      "hokkaido": 0.8512
+     },
+     "slack_abs_mw": 36.6,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 0.3
+     },
+     "vm_min": 0.9342,
+     "vm_max": 1.0064,
+     "loss_mw": 36.6,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3834.8,
+     "load_scale": {
+      "hokkaido": 0.8676
+     },
+     "slack_abs_mw": 36.4,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 72.8
+     },
+     "vm_min": 0.9311,
+     "vm_max": 1.0067,
+     "loss_mw": 36.4,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3967.8,
+     "load_scale": {
+      "hokkaido": 0.8977
+     },
+     "slack_abs_mw": 36.9,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 205.8
+     },
+     "vm_min": 0.9252,
+     "vm_max": 1.007,
+     "loss_mw": 36.9,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4215.0,
+     "load_scale": {
+      "hokkaido": 0.9536
+     },
+     "slack_abs_mw": 40.5,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 453.0
+     },
+     "vm_min": 0.9139,
+     "vm_max": 1.0073,
+     "loss_mw": 40.5,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4402.3,
+     "load_scale": {
+      "hokkaido": 0.996
+     },
+     "slack_abs_mw": 261.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": 426.4
+     },
+     "injection_issues": {
+      "hokkaido": {
+       "unmatched": {
+        "battery": 213.9
+       }
+      }
+     },
+     "vm_min": 0.905,
+     "vm_max": 1.0067,
+     "loss_mw": 47.8,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4434.3,
+     "load_scale": {
+      "hokkaido": 1.0032
+     },
+     "slack_abs_mw": 46.5,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 672.3
+     },
+     "vm_min": 0.9034,
+     "vm_max": 1.0075,
+     "loss_mw": 46.5,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4267.5,
+     "load_scale": {
+      "hokkaido": 0.9655
+     },
+     "slack_abs_mw": 41.7,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 505.5
+     },
+     "vm_min": 0.9115,
+     "vm_max": 1.0075,
+     "loss_mw": 41.7,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4020.0,
+     "load_scale": {
+      "hokkaido": 0.9095
+     },
+     "slack_abs_mw": 37.4,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 258.0
+     },
+     "vm_min": 0.9229,
+     "vm_max": 1.0072,
+     "loss_mw": 37.4,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3780.0,
+     "load_scale": {
+      "hokkaido": 0.8552
+     },
+     "slack_abs_mw": 36.5,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": 18.0
+     },
+     "vm_min": 0.9335,
+     "vm_max": 1.0065,
+     "loss_mw": 36.5,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3547.5,
+     "load_scale": {
+      "hokkaido": 0.8026
+     },
+     "slack_abs_mw": 39.0,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -214.5
+     },
+     "vm_min": 0.9432,
+     "vm_max": 1.0055,
+     "loss_mw": 39.0,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 3376.2,
+     "load_scale": {
+      "hokkaido": 0.7639
+     },
+     "slack_abs_mw": 42.9,
+     "solve_s": 0.0,
+     "boundary_mw": {
+      "北斗変換所": -385.8
+     },
+     "vm_min": 0.9501,
+     "vm_max": 1.0041,
+     "loss_mw": 42.9,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}

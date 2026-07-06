@@ -1,0 +1,699 @@
+{
+ "meta": {
+  "date": "2026-07-07",
+  "git_head": "bafca13",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": true,
+  "boundary_injection": true,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "backbone",
+   "n_bus": 1316,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": {
+    "threshold_kv": 154.0,
+    "n_bus_full": 6222,
+    "n_backbone_bus": 1316,
+    "loads": {
+     "moved": 2466,
+     "moved_mw": 47119.2,
+     "from_fragment": 282,
+     "from_fragment_mw": 5347.3
+    },
+    "gens": {
+     "moved": 6992,
+     "moved_mw": 99879.5,
+     "from_fragment": 412,
+     "from_fragment_mw": 12998.7
+    },
+    "cross_zone_moves": 31,
+    "fragment_geo_km_max": 48.5,
+    "n_bus_backbone_net": 1316,
+    "n_components_backbone": 80,
+    "n_trafo_kept": 141,
+    "n_trafo_nameplate_kept": 4
+   },
+   "bridge": {
+    "dedup_disabled": 0,
+    "patched": 13,
+    "retired": 0,
+    "fuel_fixed": 0,
+    "nuclear_set": 0,
+    "nuclear_stopped": 6,
+    "mw_delta": -8056.0,
+    "unmatched_patches": [
+     "苓北",
+     "新大分火力",
+     "九州電力 松浦火力",
+     "電源開発 松浦火力",
+     "新小倉火力",
+     "松島火力",
+     "苅田火力発電所",
+     "相浦火力",
+     "シグマパワー有明三池",
+     "Orix Hibikinada",
+     "糸魚川発電所",
+     "豊前火力",
+     "川内発電所",
+     "下松火力",
+     "池島町長崎市発電所",
+     "七尾大田",
+     "敦賀火力",
+     "富山新港",
+     "橘湾火力",
+     "橘湾発電所",
+     "吉の浦火力",
+     "金武火力",
+     "Gushikawa Power",
+     "Ishikawa J-Power",
+     "牧港火力",
+     "石川火力"
+    ]
+   },
+   "boundary_injection": [
+    {
+     "name": "新信濃変電所",
+     "bus": "新信濃変電所",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.833
+    },
+    {
+     "name": "東清水変電所",
+     "bus": "東清水変電所 275kV",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.167
+    },
+    {
+     "name": "上北変電所",
+     "bus": "上北変電所 500kV",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 0.667
+    },
+    {
+     "name": "今別変換所",
+     "bus": "今別変換所",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 0.333
+    }
+   ],
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 76666405.12120026
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42933.1,
+     "load_scale": {
+      "tohoku": 0.6505,
+      "tokyo": 0.8088
+     },
+     "slack_abs_mw": 1066.7,
+     "solve_s": 1.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 377.2,
+      "今別変換所": 188.6
+     },
+     "vm_min": 0.8638,
+     "vm_max": 1.0671,
+     "loss_mw": 1066.7,
+     "tie_mw": {
+      "tohoku->tokyo": 6437.9
+     }
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 40674.8,
+     "load_scale": {
+      "tohoku": 0.6092,
+      "tokyo": 0.768
+     },
+     "slack_abs_mw": 957.0,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 508.0,
+      "今別変換所": 254.0
+     },
+     "vm_min": 0.8863,
+     "vm_max": 1.0678,
+     "loss_mw": 957.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5914.6
+     }
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39177.1,
+     "load_scale": {
+      "tohoku": 0.5823,
+      "tokyo": 0.7408
+     },
+     "slack_abs_mw": 949.2,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 761.9,
+      "東清水変電所": 152.4,
+      "上北変電所": 593.0,
+      "今別変換所": 296.5
+     },
+     "vm_min": 0.8984,
+     "vm_max": 1.0676,
+     "loss_mw": 949.2,
+     "tie_mw": {
+      "tohoku->tokyo": 6461.8
+     }
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 37676.4,
+     "load_scale": {
+      "tohoku": 0.5552,
+      "tokyo": 0.7137
+     },
+     "slack_abs_mw": 869.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "vm_min": 0.9115,
+     "vm_max": 1.0677,
+     "loss_mw": 869.9,
+     "tie_mw": {
+      "tohoku->tokyo": 6464.0
+     }
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39194.8,
+     "load_scale": {
+      "tohoku": 0.5839,
+      "tokyo": 0.7408
+     },
+     "slack_abs_mw": 918.6,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 588.0,
+      "今別変換所": 294.0
+     },
+     "vm_min": 0.8997,
+     "vm_max": 1.0676,
+     "loss_mw": 918.6,
+     "tie_mw": {
+      "tohoku->tokyo": 6460.7
+     }
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42611.3,
+     "load_scale": {
+      "tohoku": 0.642,
+      "tokyo": 0.8036
+     },
+     "slack_abs_mw": 1262.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1193.1,
+      "東清水変電所": 238.6,
+      "上北変電所": 404.5,
+      "今別変換所": 202.2
+     },
+     "injection_issues": {
+      "tokyo": {
+       "unmatched": {
+        "battery": 186.0
+       }
+      }
+     },
+     "vm_min": 0.8658,
+     "vm_max": 1.0673,
+     "loss_mw": 1076.7,
+     "tie_mw": {
+      "tohoku->tokyo": 6441.6
+     }
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47347.1,
+     "load_scale": {
+      "tohoku": 0.7165,
+      "tokyo": 0.8922
+     },
+     "slack_abs_mw": 1314.1,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 170.5,
+      "今別変換所": 85.2
+     },
+     "vm_min": 0.7993,
+     "vm_max": 1.0655,
+     "loss_mw": 1314.1,
+     "tie_mw": {
+      "tohoku->tokyo": 6403.4
+     }
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 52454.0,
+     "load_scale": {
+      "tohoku": 0.7871,
+      "tokyo": 0.99
+     },
+     "slack_abs_mw": 1555.7,
+     "solve_s": 2.3,
+     "boundary_mw": {
+      "新信濃変電所": 1197.1,
+      "東清水変電所": 239.4,
+      "上北変電所": -49.9,
+      "今別変換所": -25.0
+     },
+     "vm_min": 0.9833,
+     "vm_max": 1.0219,
+     "loss_mw": 1555.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5042.1
+     }
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55992.7,
+     "load_scale": {
+      "tohoku": 0.8209,
+      "tokyo": 1.0617
+     },
+     "slack_abs_mw": 1774.0,
+     "solve_s": 2.4,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -152.4,
+      "今別変換所": -76.2
+     },
+     "vm_min": 0.9817,
+     "vm_max": 1.0219,
+     "loss_mw": 1774.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5667.1
+     }
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57290.8,
+     "load_scale": {
+      "tohoku": 0.8148,
+      "tokyo": 1.0926
+     },
+     "slack_abs_mw": 1883.7,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -129.1,
+      "今別変換所": -64.6
+     },
+     "vm_min": 0.9808,
+     "vm_max": 1.0218,
+     "loss_mw": 1883.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5763.0
+     }
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57863.4,
+     "load_scale": {
+      "tohoku": 0.8013,
+      "tokyo": 1.1089
+     },
+     "slack_abs_mw": 1930.7,
+     "solve_s": 2.3,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -82.9,
+      "今別変換所": -41.4
+     },
+     "vm_min": 0.9806,
+     "vm_max": 1.0218,
+     "loss_mw": 1930.7,
+     "tie_mw": {
+      "tohoku->tokyo": 6365.9
+     }
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58482.9,
+     "load_scale": {
+      "tohoku": 0.7956,
+      "tokyo": 1.1244
+     },
+     "slack_abs_mw": 1994.7,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -62.9,
+      "今別変換所": -31.4
+     },
+     "vm_min": 0.9801,
+     "vm_max": 1.0218,
+     "loss_mw": 1994.7,
+     "tie_mw": {
+      "tohoku->tokyo": 6257.0
+     }
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57403.4,
+     "load_scale": {
+      "tohoku": 0.7729,
+      "tokyo": 1.1056
+     },
+     "slack_abs_mw": 1911.9,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 9.4,
+      "今別変換所": 4.7
+     },
+     "vm_min": 0.9808,
+     "vm_max": 1.0218,
+     "loss_mw": 1911.9,
+     "tie_mw": {
+      "tohoku->tokyo": 6362.0
+     }
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57289.3,
+     "load_scale": {
+      "tohoku": 0.7757,
+      "tokyo": 1.1023
+     },
+     "slack_abs_mw": 1909.2,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -0.2,
+      "今別変換所": -0.1
+     },
+     "vm_min": 0.9801,
+     "vm_max": 1.0218,
+     "loss_mw": 1909.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5228.5
+     }
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57368.5,
+     "load_scale": {
+      "tohoku": 0.7903,
+      "tokyo": 1.1005
+     },
+     "slack_abs_mw": 1900.3,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -48.5,
+      "今別変換所": -24.3
+     },
+     "vm_min": 0.9808,
+     "vm_max": 1.0218,
+     "loss_mw": 1900.3,
+     "tie_mw": {
+      "tohoku->tokyo": 6138.7
+     }
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57646.8,
+     "load_scale": {
+      "tohoku": 0.8173,
+      "tokyo": 1.1
+     },
+     "slack_abs_mw": 1915.0,
+     "solve_s": 2.5,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -137.2,
+      "今別変換所": -68.6
+     },
+     "vm_min": 0.9809,
+     "vm_max": 1.0218,
+     "loss_mw": 1915.0,
+     "tie_mw": {
+      "tohoku->tokyo": 6330.3
+     }
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58869.9,
+     "load_scale": {
+      "tohoku": 0.868,
+      "tokyo": 1.115
+     },
+     "slack_abs_mw": 2005.8,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -302.0,
+      "今別変換所": -151.0
+     },
+     "vm_min": 0.9804,
+     "vm_max": 1.0218,
+     "loss_mw": 2005.8,
+     "tie_mw": {
+      "tohoku->tokyo": 6286.5
+     }
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.906,
+      "tokyo": 1.1164
+     },
+     "slack_abs_mw": 2135.0,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -284.3,
+      "今別変換所": -142.1
+     },
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      }
+     },
+     "vm_min": 0.9801,
+     "vm_max": 1.0218,
+     "loss_mw": 2026.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5767.2
+     }
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58569.5,
+     "load_scale": {
+      "tohoku": 0.9118,
+      "tokyo": 1.0972
+     },
+     "slack_abs_mw": 1968.3,
+     "solve_s": 2.6,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -448.2,
+      "今別変換所": -224.1
+     },
+     "vm_min": 0.9807,
+     "vm_max": 1.0218,
+     "loss_mw": 1968.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5736.3
+     }
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 56232.5,
+     "load_scale": {
+      "tohoku": 0.8764,
+      "tokyo": 1.0532
+     },
+     "slack_abs_mw": 1786.2,
+     "solve_s": 2.2,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -337.0,
+      "今別変換所": -168.5
+     },
+     "vm_min": 0.9824,
+     "vm_max": 1.0219,
+     "loss_mw": 1786.2,
+     "tie_mw": {
+      "tohoku->tokyo": 6203.7
+     }
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 53254.8,
+     "load_scale": {
+      "tohoku": 0.8242,
+      "tokyo": 0.9989
+     },
+     "slack_abs_mw": 1602.9,
+     "solve_s": 2.4,
+     "boundary_mw": {
+      "新信濃変電所": 1300.0,
+      "東清水変電所": 260.0,
+      "上北変電所": -172.0,
+      "今別変換所": -86.0
+     },
+     "vm_min": 0.9839,
+     "vm_max": 1.0219,
+     "loss_mw": 1602.9,
+     "tie_mw": {
+      "tohoku->tokyo": 6331.6
+     }
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 50294.8,
+     "load_scale": {
+      "tohoku": 0.7736,
+      "tokyo": 0.9446
+     },
+     "slack_abs_mw": 1530.0,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": -12.0,
+      "今別変換所": -6.0
+     },
+     "vm_min": 0.7288,
+     "vm_max": 1.0622,
+     "loss_mw": 1530.0,
+     "tie_mw": {
+      "tohoku->tokyo": 6365.4
+     }
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47352.5,
+     "load_scale": {
+      "tohoku": 0.7246,
+      "tokyo": 0.8902
+     },
+     "slack_abs_mw": 1310.6,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 143.0,
+      "今別変換所": 71.5
+     },
+     "vm_min": 0.8013,
+     "vm_max": 1.0651,
+     "loss_mw": 1310.6,
+     "tie_mw": {
+      "tohoku->tokyo": 6399.2
+     }
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 45153.1,
+     "load_scale": {
+      "tohoku": 0.6885,
+      "tokyo": 0.8495
+     },
+     "slack_abs_mw": 1178.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 257.2,
+      "今別変換所": 128.6
+     },
+     "vm_min": 0.8357,
+     "vm_max": 1.0659,
+     "loss_mw": 1178.9,
+     "tie_mw": {
+      "tohoku->tokyo": 6419.9
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}
