@@ -1,0 +1,1865 @@
+{
+ "_meta": {
+  "island": "west",
+  "date": "2026-07-07",
+  "source": "docs/data/built/all.json",
+  "territory_reattribution": true,
+  "region_reattribution": {
+   "n_nodes": 17333,
+   "n_changed": 2855,
+   "changes": {
+    "chubu->hokuriku": 578,
+    "kansai->chubu": 503,
+    "chugoku->shikoku": 322,
+    "tokyo->tohoku": 233,
+    "shikoku->chugoku": 230,
+    "chubu->kansai": 200,
+    "kyushu->chugoku": 184,
+    "hokuriku->chubu": 171,
+    "chugoku->kyushu": 123,
+    "tohoku->tokyo": 117,
+    "kansai->hokuriku": 51,
+    "chugoku->kansai": 48,
+    "kansai->shikoku": 44,
+    "hokkaido->tohoku": 26,
+    "shikoku->kansai": 11,
+    "tohoku->hokkaido": 9,
+    "hokuriku->kansai": 2,
+    "kyushu->shikoku": 2,
+    "kansai->chugoku": 1
+   },
+   "skipped_freq": {
+    "chubu->tokyo": 249,
+    "tokyo->chubu": 210,
+    "chubu->tohoku": 41,
+    "hokuriku->tohoku": 22
+   }
+  },
+  "script": "scripts/diagnose_zone_contamination.py"
+ },
+ "crossing_pairs_summary": {
+  "chubu<->hokuriku": {
+   "n": 33,
+   "kv": {
+    "500": 2,
+    "275": 12,
+    "154": 10,
+    "66": 9
+   },
+   "real_tie": "南福光連系所(BTB — AC貫通線は存在しないのが正)"
+  },
+  "chubu<->kansai": {
+   "n": 18,
+   "kv": {
+    "500": 3,
+    "154": 6,
+    "275": 9
+   },
+   "real_tie": "三重東近江ほか"
+  },
+  "chugoku<->kansai": {
+   "n": 5,
+   "kv": {
+    "500": 4,
+    "110": 1
+   },
+   "real_tie": "西播東岡山・山崎智頭ほか"
+  },
+  "chugoku<->kyushu": {
+   "n": 5,
+   "kv": {
+    "500": 3,
+    "110": 2
+   },
+   "real_tie": "関門連系線(500kV)"
+  },
+  "chugoku<->shikoku": {
+   "n": 11,
+   "kv": {
+    "110": 7,
+    "500": 2,
+    "66": 2
+   },
+   "real_tie": "本四連系線(500kV・瀬戸大橋)"
+  },
+  "hokuriku<->kansai": {
+   "n": 15,
+   "kv": {
+    "500": 8,
+    "275": 3,
+    "154": 3,
+    "66": 1
+   },
+   "real_tie": "越前嶺南ルート"
+  },
+  "kansai<->shikoku": {
+   "n": 3,
+   "kv": {
+    "187": 2,
+    "500": 1
+   },
+   "real_tie": "阿南紀北直流幹線(DC — AC線は存在しないのが正)"
+  }
+ },
+ "crossing_lines": {
+  "chubu<->hokuriku": [
+   {
+    "line": 410,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 56.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "南福光連系所",
+     "lat": 36.4991,
+     "lon": 136.82489
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛騨変換所",
+     "lat": 36.06843,
+     "lon": 137.05877
+    }
+   },
+   {
+    "line": 1453,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 15.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "城端開閉所",
+     "lat": 36.49576,
+     "lon": 136.91653
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    }
+   },
+   {
+    "line": 1777,
+    "kv": 154.0,
+    "parallel": 3,
+    "length_km": 18.8,
+    "from": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.5577:137.2298:154",
+     "lat": 36.55765,
+     "lon": 137.22978
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛驒市変電所",
+     "lat": 36.40268,
+     "lon": 137.29106
+    }
+   },
+   {
+    "line": 2182,
+    "kv": 154.0,
+    "parallel": 4,
+    "length_km": 7.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.4606:137.2411:154",
+     "lat": 36.46062,
+     "lon": 137.24106
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛驒市変電所",
+     "lat": 36.40268,
+     "lon": 137.29106
+    }
+   },
+   {
+    "line": 2220,
+    "kv": 66.0,
+    "parallel": 4,
+    "length_km": 14.8,
+    "from": {
+     "zone": "hokuriku",
+     "name": "朝日町変電所_2",
+     "lat": 36.97645,
+     "lon": 137.63523
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 37.0099:137.7918:66",
+     "lat": 37.00993,
+     "lon": 137.7918
+    }
+   },
+   {
+    "line": 2456,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 16.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3659:137.4588:0",
+     "lat": 36.36589,
+     "lon": 137.45877
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.4904:137.459:0",
+     "lat": 36.4904,
+     "lon": 137.45898
+    }
+   },
+   {
+    "line": 2520,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 9.1,
+    "from": {
+     "zone": "chubu",
+     "name": "飯島変電所",
+     "lat": 36.27988,
+     "lon": 136.90118
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 2626,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 12.3,
+    "from": {
+     "zone": "hokuriku",
+     "name": "牛ケ増変電所 66kV",
+     "lat": 36.55512,
+     "lon": 137.22173
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.4536:137.2542:66",
+     "lat": 36.45357,
+     "lon": 137.25422
+    }
+   },
+   {
+    "line": 2642,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 3.9,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3224:136.8919:275",
+     "lat": 36.32244,
+     "lon": 136.89186
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 2643,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 3.8,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3232:136.8906:275",
+     "lat": 36.32323,
+     "lon": 136.89056
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 2644,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 0.4,
+    "from": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    }
+   },
+   {
+    "line": 2652,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 7.7,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.403:136.9109:275",
+     "lat": 36.40303,
+     "lon": 136.91094
+    }
+   },
+   {
+    "line": 2677,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 50.5,
+    "from": {
+     "zone": "hokuriku",
+     "name": "大野市変電所 154kV",
+     "lat": 35.89215,
+     "lon": 136.68566
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "関開閉所 275kV",
+     "lat": 35.50552,
+     "lon": 136.87013
+    }
+   },
+   {
+    "line": 2931,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 6.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.381:137.1859:154",
+     "lat": 36.38102,
+     "lon": 137.18588
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.431:137.2129:154",
+     "lat": 36.431,
+     "lon": 137.21294
+    }
+   },
+   {
+    "line": 2932,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 4.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.4497:137.1755:154",
+     "lat": 36.44966,
+     "lon": 137.1755
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.431:137.2129:154",
+     "lat": 36.431,
+     "lon": 137.21294
+    }
+   },
+   {
+    "line": 2994,
+    "kv": 500.0,
+    "parallel": 5,
+    "length_km": 56.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "南福光連系所",
+     "lat": 36.49907,
+     "lon": 136.82489
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛騨変換所",
+     "lat": 36.06843,
+     "lon": 137.05877
+    }
+   },
+   {
+    "line": 3052,
+    "kv": 275.0,
+    "parallel": 5,
+    "length_km": 15.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "城端開閉所",
+     "lat": 36.49559,
+     "lon": 136.91648
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    }
+   },
+   {
+    "line": 3302,
+    "kv": 154.0,
+    "parallel": 4,
+    "length_km": 18.8,
+    "from": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.5577:137.2298:154",
+     "lat": 36.55765,
+     "lon": 137.22978
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛驒市変電所",
+     "lat": 36.40268,
+     "lon": 137.29106
+    }
+   },
+   {
+    "line": 3408,
+    "kv": 154.0,
+    "parallel": 4,
+    "length_km": 7.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.4606:137.2411:154",
+     "lat": 36.46062,
+     "lon": 137.24106
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "飛驒市変電所",
+     "lat": 36.40268,
+     "lon": 137.29106
+    }
+   },
+   {
+    "line": 3463,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 5.6,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.9899:137.8655:0",
+     "lat": 36.9899,
+     "lon": 137.86549
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "hokuriku junction 36.99:137.9268:0",
+     "lat": 36.98996,
+     "lon": 137.9268
+    }
+   },
+   {
+    "line": 3464,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 7.1,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.9899:137.8655:0",
+     "lat": 36.9899,
+     "lon": 137.86549
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "大字青海変電所 66kV",
+     "lat": 37.00991,
+     "lon": 137.79248
+    }
+   },
+   {
+    "line": 3505,
+    "kv": 66.0,
+    "parallel": 3,
+    "length_km": 16.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3659:137.4588:0",
+     "lat": 36.36589,
+     "lon": 137.45877
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.4904:137.459:0",
+     "lat": 36.4904,
+     "lon": 137.45898
+    }
+   },
+   {
+    "line": 3553,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 9.1,
+    "from": {
+     "zone": "chubu",
+     "name": "飯島変電所",
+     "lat": 36.27988,
+     "lon": 136.90118
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 3556,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 24.7,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.8394:137.7955:0",
+     "lat": 36.83939,
+     "lon": 137.7955
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "大字青海変電所 66kV",
+     "lat": 37.00991,
+     "lon": 137.79248
+    }
+   },
+   {
+    "line": 3558,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 1.5,
+    "from": {
+     "zone": "hokuriku",
+     "name": "大字青海変電所 66kV",
+     "lat": 37.00991,
+     "lon": 137.79248
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.9964:137.8029:0",
+     "lat": 36.99635,
+     "lon": 137.8029
+    }
+   },
+   {
+    "line": 3596,
+    "kv": 66.0,
+    "parallel": 4,
+    "length_km": 12.3,
+    "from": {
+     "zone": "hokuriku",
+     "name": "牛ケ増変電所 66kV",
+     "lat": 36.55534,
+     "lon": 137.22209
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.4536:137.2542:66",
+     "lat": 36.45357,
+     "lon": 137.25422
+    }
+   },
+   {
+    "line": 3612,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 3.9,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3224:136.8919:275",
+     "lat": 36.32244,
+     "lon": 136.89186
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 3613,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 3.8,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3232:136.8906:275",
+     "lat": 36.32323,
+     "lon": 136.89056
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    }
+   },
+   {
+    "line": 3614,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 0.4,
+    "from": {
+     "zone": "hokuriku",
+     "name": "成出変電所",
+     "lat": 36.35495,
+     "lon": 136.87458
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    }
+   },
+   {
+    "line": 3622,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 7.7,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.3596:136.8709:275",
+     "lat": 36.35961,
+     "lon": 136.87086
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.403:136.9109:275",
+     "lat": 36.40303,
+     "lon": 136.91094
+    }
+   },
+   {
+    "line": 3629,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 50.6,
+    "from": {
+     "zone": "hokuriku",
+     "name": "大野市変電所 154kV",
+     "lat": 35.89218,
+     "lon": 136.68602
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "hokuriku junction 35.5045:136.8693:0",
+     "lat": 35.50448,
+     "lon": 136.86925
+    }
+   },
+   {
+    "line": 3715,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 6.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.381:137.1859:154",
+     "lat": 36.38102,
+     "lon": 137.18588
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.431:137.2129:154",
+     "lat": 36.431,
+     "lon": 137.21294
+    }
+   },
+   {
+    "line": 3716,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 4.4,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 36.4497:137.1755:154",
+     "lat": 36.44966,
+     "lon": 137.1755
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 36.431:137.2129:154",
+     "lat": 36.431,
+     "lon": 137.21294
+    }
+   }
+  ],
+  "chubu<->kansai": [
+   {
+    "line": 335,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 19.5,
+    "from": {
+     "zone": "kansai",
+     "name": "東近江開閉所",
+     "lat": 35.0948,
+     "lon": 136.29341
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "三重開閉所",
+     "lat": 35.20352,
+     "lon": 136.4509
+    }
+   },
+   {
+    "line": 355,
+    "kv": 154.0,
+    "parallel": 6,
+    "length_km": 22.0,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 35.3794:136.5697:154",
+     "lat": 35.3794,
+     "lon": 136.56967
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chubu junction 35.3231:136.3424:154",
+     "lat": 35.32306,
+     "lon": 136.34241
+    }
+   },
+   {
+    "line": 378,
+    "kv": 275.0,
+    "parallel": 9,
+    "length_km": 71.8,
+    "from": {
+     "zone": "chubu",
+     "name": "三橋一丁目変電所 275kV",
+     "lat": 35.45511,
+     "lon": 136.66941
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "甲賀変電所 275kV",
+     "lat": 35.00701,
+     "lon": 136.14192
+    }
+   },
+   {
+    "line": 517,
+    "kv": 275.0,
+    "parallel": 12,
+    "length_km": 155.7,
+    "from": {
+     "zone": "kansai",
+     "name": "chubu junction 35.0505:136.0946:275",
+     "lat": 35.05046,
+     "lon": 136.09465
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "白川村変電所 275kV",
+     "lat": 36.14033,
+     "lon": 136.909
+    }
+   },
+   {
+    "line": 1099,
+    "kv": 154.0,
+    "parallel": 6,
+    "length_km": 84.9,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 35.0273:136.5921:154",
+     "lat": 35.0273,
+     "lon": 136.59212
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chubu junction 34.6312:135.8453:154",
+     "lat": 34.63118,
+     "lon": 135.84532
+    }
+   },
+   {
+    "line": 1178,
+    "kv": 154.0,
+    "parallel": 6,
+    "length_km": 42.5,
+    "from": {
+     "zone": "chubu",
+     "name": "関町沓掛変電所 154kV",
+     "lat": 34.86718,
+     "lon": 136.35626
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chubu junction 34.7768:135.9197:154",
+     "lat": 34.77679,
+     "lon": 135.91967
+    }
+   },
+   {
+    "line": 3006,
+    "kv": 275.0,
+    "parallel": 10,
+    "length_km": 164.1,
+    "from": {
+     "zone": "kansai",
+     "name": "hokuriku junction 35.0049:136.0213:275",
+     "lat": 35.00485,
+     "lon": 136.0213
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "白川村変電所 275kV",
+     "lat": 36.14008,
+     "lon": 136.90891
+    }
+   },
+   {
+    "line": 4146,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 81.2,
+    "from": {
+     "zone": "chubu",
+     "name": "伊勢開閉所 275kV",
+     "lat": 34.44569,
+     "lon": 136.36997
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "下北山村変電所",
+     "lat": 34.03991,
+     "lon": 135.97631
+    }
+   },
+   {
+    "line": 4288,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 20.8,
+    "from": {
+     "zone": "chubu",
+     "name": "kansai junction 33.8817:135.9448:275",
+     "lat": 33.88167,
+     "lon": 135.94477
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "kansai junction 33.7136:135.9814:275",
+     "lat": 33.71361,
+     "lon": 135.98135
+    }
+   },
+   {
+    "line": 4293,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 6.0,
+    "from": {
+     "zone": "kansai",
+     "name": "新宮変電所",
+     "lat": 33.7158,
+     "lon": 135.99122
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "kansai junction 33.7454:135.9914:275",
+     "lat": 33.74543,
+     "lon": 135.99138
+    }
+   },
+   {
+    "line": 4299,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 9.4,
+    "from": {
+     "zone": "kansai",
+     "name": "下池原変電所",
+     "lat": 34.03866,
+     "lon": 135.9741
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "kansai junction 33.96:136.0017:275",
+     "lat": 33.96002,
+     "lon": 136.00169
+    }
+   },
+   {
+    "line": 5132,
+    "kv": 154.0,
+    "parallel": 6,
+    "length_km": 85.8,
+    "from": {
+     "zone": "kansai",
+     "name": "櫟本変電所 154kV",
+     "lat": 34.62901,
+     "lon": 135.83326
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "chubu junction 35.0273:136.5921:154",
+     "lat": 35.0273,
+     "lon": 136.59212
+    }
+   },
+   {
+    "line": 5152,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 19.5,
+    "from": {
+     "zone": "kansai",
+     "name": "東近江開閉所",
+     "lat": 35.09484,
+     "lon": 136.29343
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "三重開閉所",
+     "lat": 35.20351,
+     "lon": 136.45096
+    }
+   },
+   {
+    "line": 5188,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 22.0,
+    "from": {
+     "zone": "chubu",
+     "name": "chubu junction 35.3794:136.5697:154",
+     "lat": 35.3794,
+     "lon": 136.56967
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chubu junction 35.3231:136.3424:154",
+     "lat": 35.32306,
+     "lon": 136.34241
+    }
+   },
+   {
+    "line": 5206,
+    "kv": 275.0,
+    "parallel": 3,
+    "length_km": 71.8,
+    "from": {
+     "zone": "chubu",
+     "name": "三橋一丁目変電所 275kV",
+     "lat": 35.45489,
+     "lon": 136.66986
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "甲賀変電所 275kV",
+     "lat": 35.007,
+     "lon": 136.14176
+    }
+   },
+   {
+    "line": 5238,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 120.2,
+    "from": {
+     "zone": "kansai",
+     "name": "chubu junction 35.0505:136.0946:275",
+     "lat": 35.05046,
+     "lon": 136.09465
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "kansai junction 35.8499:136.8733:275",
+     "lat": 35.84992,
+     "lon": 136.87332
+    }
+   },
+   {
+    "line": 5528,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 42.5,
+    "from": {
+     "zone": "chubu",
+     "name": "関町沓掛変電所 154kV",
+     "lat": 34.86726,
+     "lon": 136.35627
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chubu junction 34.7768:135.9197:154",
+     "lat": 34.77679,
+     "lon": 135.91967
+    }
+   },
+   {
+    "line": 9787,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 85.4,
+    "from": {
+     "zone": "kansai",
+     "name": "東近江開閉所",
+     "lat": 35.0948,
+     "lon": 136.29341
+    },
+    "to": {
+     "zone": "chubu",
+     "name": "kansai junction 35.6359:136.9617:500",
+     "lat": 35.63595,
+     "lon": 136.96166
+    }
+   }
+  ],
+  "chugoku<->kansai": [
+   {
+    "line": 4573,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 42.4,
+    "from": {
+     "zone": "kansai",
+     "name": "山崎開閉所 500kV",
+     "lat": 35.06254,
+     "lon": 134.60249
+    },
+    "to": {
+     "zone": "chugoku",
+     "name": "kansai junction 35.2081:134.1883:500",
+     "lat": 35.20813,
+     "lon": 134.18828
+    }
+   },
+   {
+    "line": 6285,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 42.1,
+    "from": {
+     "zone": "chugoku",
+     "name": "東岡山変電所 500kV",
+     "lat": 34.88798,
+     "lon": 134.02492
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "西播変電所 500kV",
+     "lat": 34.86144,
+     "lon": 134.42532
+    }
+   },
+   {
+    "line": 6324,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 42.2,
+    "from": {
+     "zone": "chugoku",
+     "name": "開閉所 500kV",
+     "lat": 35.20831,
+     "lon": 134.18772
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chugoku junction 35.0639:134.5978:500",
+     "lat": 35.06389,
+     "lon": 134.59778
+    }
+   },
+   {
+    "line": 6985,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 22.1,
+    "from": {
+     "zone": "chugoku",
+     "name": "chugoku junction 34.7937:134.1664:0",
+     "lat": 34.79372,
+     "lon": 134.16637
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "釜島変電所",
+     "lat": 34.83782,
+     "lon": 134.38527
+    }
+   },
+   {
+    "line": 9789,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 41.1,
+    "from": {
+     "zone": "chugoku",
+     "name": "kansai junction 35.2081:134.1883:500",
+     "lat": 35.20813,
+     "lon": 134.18828
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "chugoku junction 35.0608:134.6025:500",
+     "lat": 35.06077,
+     "lon": 134.60248
+    }
+   }
+  ],
+  "chugoku<->kyushu": [
+   {
+    "line": 6210,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 31.2,
+    "from": {
+     "zone": "kyushu",
+     "name": "大久保二丁目変電所 500kV",
+     "lat": 33.95511,
+     "lon": 130.98053
+    },
+    "to": {
+     "zone": "chugoku",
+     "name": "新山口変電所 500kV",
+     "lat": 34.16385,
+     "lon": 131.09282
+    }
+   },
+   {
+    "line": 6251,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 6.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "下関変電所 110kV",
+     "lat": 33.99934,
+     "lon": 130.96376
+    },
+    "to": {
+     "zone": "kyushu",
+     "name": "大久保二丁目変電所 110kV",
+     "lat": 33.95511,
+     "lon": 130.98053
+    }
+   },
+   {
+    "line": 8319,
+    "kv": 500.0,
+    "parallel": 6,
+    "length_km": 31.2,
+    "from": {
+     "zone": "kyushu",
+     "name": "大久保二丁目変電所 500kV",
+     "lat": 33.9551,
+     "lon": 130.98028
+    },
+    "to": {
+     "zone": "chugoku",
+     "name": "新山口変電所 500kV",
+     "lat": 34.16389,
+     "lon": 131.09278
+    }
+   },
+   {
+    "line": 8389,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 6.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "下関変電所 110kV",
+     "lat": 33.99928,
+     "lon": 130.96379
+    },
+    "to": {
+     "zone": "kyushu",
+     "name": "大久保二丁目変電所 110kV",
+     "lat": 33.9551,
+     "lon": 130.98028
+    }
+   },
+   {
+    "line": 9792,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 47.5,
+    "from": {
+     "zone": "chugoku",
+     "name": "新山口変電所 500kV",
+     "lat": 34.16385,
+     "lon": 131.09282
+    },
+    "to": {
+     "zone": "kyushu",
+     "name": "北九州変電所 500kV",
+     "lat": 33.81044,
+     "lon": 130.80435
+    }
+   }
+  ],
+  "chugoku<->shikoku": [
+   {
+    "line": 5938,
+    "kv": 110.0,
+    "parallel": 4,
+    "length_km": 17.0,
+    "from": {
+     "zone": "chugoku",
+     "name": "chugoku junction 34.3492:132.9619:110",
+     "lat": 34.34918,
+     "lon": 132.96189
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "chugoku junction 34.2251:133.0452:110",
+     "lat": 34.22507,
+     "lon": 133.04518
+    }
+   },
+   {
+    "line": 6316,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 18.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "菰池二丁目変電所 500kV",
+     "lat": 34.4593,
+     "lon": 133.78299
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "昭和町二丁目変電所_2 500kV",
+     "lat": 34.32691,
+     "lon": 133.86222
+    }
+   },
+   {
+    "line": 6553,
+    "kv": 110.0,
+    "parallel": 2,
+    "length_km": 2.5,
+    "from": {
+     "zone": "chugoku",
+     "name": "因島三庄町変電所",
+     "lat": 34.2994,
+     "lon": 133.1821
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "生名変電所",
+     "lat": 34.27284,
+     "lon": 133.17634
+    }
+   },
+   {
+    "line": 6555,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 3.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "因島三庄町変電所",
+     "lat": 34.2994,
+     "lon": 133.1821
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "chugoku junction 34.282:133.2116:0",
+     "lat": 34.282,
+     "lon": 133.21161
+    }
+   },
+   {
+    "line": 6645,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 22.6,
+    "from": {
+     "zone": "chugoku",
+     "name": "chugoku junction 34.5342:133.9862:66",
+     "lat": 34.53424,
+     "lon": 133.98615
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "土庄変電所",
+     "lat": 34.48451,
+     "lon": 134.18007
+    }
+   },
+   {
+    "line": 7305,
+    "kv": 66.0,
+    "parallel": 3,
+    "length_km": 6.1,
+    "from": {
+     "zone": "chugoku",
+     "name": "chugoku junction 34.4682:133.9299:0",
+     "lat": 34.46823,
+     "lon": 133.92987
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "chugoku junction 34.4719:133.9774:0",
+     "lat": 34.47194,
+     "lon": 133.97739
+    }
+   },
+   {
+    "line": 7433,
+    "kv": 110.0,
+    "parallel": 4,
+    "length_km": 17.0,
+    "from": {
+     "zone": "chugoku",
+     "name": "chugoku junction 34.3492:132.9619:110",
+     "lat": 34.34918,
+     "lon": 132.96189
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "chugoku junction 34.2251:133.0452:110",
+     "lat": 34.22507,
+     "lon": 133.04518
+    }
+   },
+   {
+    "line": 7696,
+    "kv": 110.0,
+    "parallel": 2,
+    "length_km": 2.5,
+    "from": {
+     "zone": "chugoku",
+     "name": "因島三庄町変電所",
+     "lat": 34.2994,
+     "lon": 133.1821
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "生名変電所",
+     "lat": 34.27284,
+     "lon": 133.17634
+    }
+   },
+   {
+    "line": 7698,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 3.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "因島三庄町変電所",
+     "lat": 34.2994,
+     "lon": 133.1821
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "chugoku junction 34.282:133.2116:0",
+     "lat": 34.282,
+     "lon": 133.21161
+    }
+   },
+   {
+    "line": 7796,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 18.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "shikoku junction 34.4574:133.7831:500",
+     "lat": 34.45735,
+     "lon": 133.78309
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "昭和町二丁目変電所_2 500kV",
+     "lat": 34.32701,
+     "lon": 133.86253
+    }
+   },
+   {
+    "line": 9791,
+    "kv": 110.0,
+    "parallel": 1,
+    "length_km": 45.4,
+    "from": {
+     "zone": "chugoku",
+     "name": "水島変電所 110kV",
+     "lat": 34.52781,
+     "lon": 133.72525
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "讃岐変電所 500kV",
+     "lat": 34.16501,
+     "lon": 133.95328
+    }
+   }
+  ],
+  "hokuriku<->kansai": [
+   {
+    "line": 336,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 86.2,
+    "from": {
+     "zone": "kansai",
+     "name": "東近江開閉所",
+     "lat": 35.0948,
+     "lon": 136.29341
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 35.5337:135.9887:500",
+     "lat": 35.53375,
+     "lon": 135.98872
+    }
+   },
+   {
+    "line": 780,
+    "kv": 275.0,
+    "parallel": 4,
+    "length_km": 52.9,
+    "from": {
+     "zone": "hokuriku",
+     "name": "chubu junction 35.5538:135.9779:275",
+     "lat": 35.55385,
+     "lon": 135.97788
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "湖東変電所 275kV",
+     "lat": 35.31299,
+     "lon": 136.30567
+    }
+   },
+   {
+    "line": 1695,
+    "kv": 154.0,
+    "parallel": 4,
+    "length_km": 14.6,
+    "from": {
+     "zone": "hokuriku",
+     "name": "疋田変電所",
+     "lat": 35.59658,
+     "lon": 136.10227
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "高島市変電所 154kV",
+     "lat": 35.46845,
+     "lon": 136.0713
+    }
+   },
+   {
+    "line": 3219,
+    "kv": 154.0,
+    "parallel": 4,
+    "length_km": 38.9,
+    "from": {
+     "zone": "kansai",
+     "name": "hokuriku junction 35.5171:136.0902:154",
+     "lat": 35.51715,
+     "lon": 136.09016
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "chubu junction 35.84:136.1876:154",
+     "lat": 35.83996,
+     "lon": 136.18756
+    }
+   },
+   {
+    "line": 4425,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 72.6,
+    "from": {
+     "zone": "kansai",
+     "name": "西京都変電所 500kV",
+     "lat": 34.96982,
+     "lon": 135.61912
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "おおい町変電所 500kV",
+     "lat": 35.54049,
+     "lon": 135.65611
+    }
+   },
+   {
+    "line": 4433,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 48.4,
+    "from": {
+     "zone": "hokuriku",
+     "name": "おおい町変電所 500kV",
+     "lat": 35.54049,
+     "lon": 135.65611
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "京北開閉所",
+     "lat": 35.1373,
+     "lon": 135.64479
+    }
+   },
+   {
+    "line": 4440,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 94.2,
+    "from": {
+     "zone": "kansai",
+     "name": "北大阪変電所 275kV",
+     "lat": 34.8809,
+     "lon": 135.57551
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "嶺南変電所 275kV",
+     "lat": 35.55663,
+     "lon": 135.97247
+    }
+   },
+   {
+    "line": 4443,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 57.9,
+    "from": {
+     "zone": "kansai",
+     "name": "京北開閉所",
+     "lat": 35.1373,
+     "lon": 135.64479
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "嶺南変電所 500kV",
+     "lat": 35.55663,
+     "lon": 135.97247
+    }
+   },
+   {
+    "line": 4640,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 30.3,
+    "from": {
+     "zone": "kansai",
+     "name": "新綾部変電所 500kV",
+     "lat": 35.35138,
+     "lon": 135.26561
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "田ノ浦変電所_2 500kV",
+     "lat": 35.52083,
+     "lon": 135.50521
+    }
+   },
+   {
+    "line": 4641,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 24.8,
+    "from": {
+     "zone": "kansai",
+     "name": "新綾部変電所 500kV",
+     "lat": 35.35138,
+     "lon": 135.26561
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "kansai junction 35.4813:135.4697:500",
+     "lat": 35.48132,
+     "lon": 135.46966
+    }
+   },
+   {
+    "line": 4646,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 15.7,
+    "from": {
+     "zone": "hokuriku",
+     "name": "kansai junction 35.4813:135.4697:500",
+     "lat": 35.48132,
+     "lon": 135.46966
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "kansai junction 35.5242:135.3449:500",
+     "lat": 35.52424,
+     "lon": 135.34489
+    }
+   },
+   {
+    "line": 4848,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 53.2,
+    "from": {
+     "zone": "hokuriku",
+     "name": "嶺南変電所 275kV",
+     "lat": 35.55663,
+     "lon": 135.97247
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "湖東変電所 275kV",
+     "lat": 35.31299,
+     "lon": 136.30566
+    }
+   },
+   {
+    "line": 4857,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 17.8,
+    "from": {
+     "zone": "hokuriku",
+     "name": "kansai junction 35.4655:135.6019:0",
+     "lat": 35.46545,
+     "lon": 135.60191
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "kansai junction 35.4621:135.414:0",
+     "lat": 35.46212,
+     "lon": 135.414
+    }
+   },
+   {
+    "line": 5153,
+    "kv": 500.0,
+    "parallel": 3,
+    "length_km": 89.1,
+    "from": {
+     "zone": "kansai",
+     "name": "東近江開閉所",
+     "lat": 35.09484,
+     "lon": 136.29343
+    },
+    "to": {
+     "zone": "hokuriku",
+     "name": "嶺南変電所 500kV",
+     "lat": 35.55663,
+     "lon": 135.97247
+    }
+   },
+   {
+    "line": 5613,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 14.6,
+    "from": {
+     "zone": "hokuriku",
+     "name": "疋田変電所",
+     "lat": 35.59658,
+     "lon": 136.10227
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "高島市変電所 154kV",
+     "lat": 35.4685,
+     "lon": 136.07147
+    }
+   }
+  ],
+  "kansai<->shikoku": [
+   {
+    "line": 4023,
+    "kv": 187.0,
+    "parallel": 4,
+    "length_km": 19.4,
+    "from": {
+     "zone": "shikoku",
+     "name": "kansai junction 34.1754:134.5559:187",
+     "lat": 34.17542,
+     "lon": 134.55592
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "kansai junction 34.2791:134.6992:187",
+     "lat": 34.27908,
+     "lon": 134.69921
+    }
+   },
+   {
+    "line": 7884,
+    "kv": 187.0,
+    "parallel": 4,
+    "length_km": 19.4,
+    "from": {
+     "zone": "shikoku",
+     "name": "kansai junction 34.1754:134.5559:187",
+     "lat": 34.17542,
+     "lon": 134.55592
+    },
+    "to": {
+     "zone": "kansai",
+     "name": "kansai junction 34.2791:134.6992:187",
+     "lat": 34.27908,
+     "lon": 134.69921
+    }
+   },
+   {
+    "line": 9790,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 90.8,
+    "from": {
+     "zone": "kansai",
+     "name": "紀北変換所",
+     "lat": 34.21324,
+     "lon": 135.50355
+    },
+    "to": {
+     "zone": "shikoku",
+     "name": "阿南周波数変換所",
+     "lat": 33.82823,
+     "lon": 134.63471
+    }
+   }
+  ]
+ },
+ "multi_zone_coords": {
+  "total": 10,
+  "by_pair": {
+   "chubu|hokuriku": 10
+  }
+ },
+ "plant_name_overlaps": {
+  "chubu|hokuriku": {
+   "count": 236,
+   "sample": [
+    "CSDソーラー　福井太陽光発電所",
+    "ENEOS 坂井メガソーラー発電所",
+    "Fukui Mikuni Thermal Power Plant",
+    "SGET富山メガソーラー発電所",
+    "あわら北潟風力発電所",
+    "ふげん",
+    "七ヶ用水発電所",
+    "三ツ瀬町白山市発電所",
+    "三国町宿坂井市発電所",
+    "三国町川崎坂井市発電所"
+   ]
+  },
+  "chubu|kansai": {
+   "count": 162,
+   "sample": [
+    "Energy Green 住宅用　PV 2009-03",
+    "Nakayabu 1-chome彦根市発電所",
+    "Yokkaichi Biomass Power Plant",
+    "いぶきグリーンエナジー株式会社",
+    "びわ町長浜市発電所",
+    "ふげん",
+    "コスモ石油 四日市霞発電所",
+    "ソーラー発電",
+    "マキノ町牧野高島市発電所",
+    "メガソーラー野村"
+   ]
+  },
+  "chubu|kyushu": {
+   "count": 1,
+   "sample": [
+    "Energy Green 住宅用　PV 2009-03"
+   ]
+  },
+  "chubu|shikoku": {
+   "count": 1,
+   "sample": [
+    "平山発電所"
+   ]
+  },
+  "chugoku|kansai": {
+   "count": 1,
+   "sample": [
+    "鳴門市発電所"
+   ]
+  },
+  "chugoku|kyushu": {
+   "count": 61,
+   "sample": [
+    "Hibikinada wind farm",
+    "Hofu Biomass Chogoku Air Water Yamaguchi Power Plant",
+    "Hofu Energy Service (Daini) Power Plant",
+    "Mitsubishi Materials Kyushu Plant power station",
+    "Nihonkaisui TTS Kanda power station",
+    "Tokuyama Central Power Plant",
+    "Tokuyama Central power station",
+    "Tokuyama Shunan Power East Power Plant",
+    "Tosoh Nanyo Power Plant",
+    "あすとぴあ三丁目宇部市発電所"
+   ]
+  },
+  "chugoku|shikoku": {
+   "count": 261,
+   "sample": [
+    "8丁目呉市発電所",
+    "CSDソーラー大三島太陽光発電所",
+    "Daio Paper Mishima Mills Power Station",
+    "Hiroshima Elpida (Micron) Power Station",
+    "IGメガソーラー パーク新居浜発電所",
+    "Kaita power station",
+    "Marifu Refinery Power Station",
+    "Marusumi Paper Ohe Mill",
+    "Mitsubishi Chemical Hiroshima Factory Power Plant",
+    "Niihama Kita power station"
+   ]
+  },
+  "hokuriku|kansai": {
+   "count": 5,
+   "sample": [
+    "ふげん",
+    "太陽光発電",
+    "奥美濃所内水力発電所",
+    "手敦賀市発電所",
+    "敦賀原子力発電所"
+   ]
+  },
+  "kansai|kyushu": {
+   "count": 2,
+   "sample": [
+    "Energy Green 住宅用　PV 2009-03",
+    "白川発電所"
+   ]
+  },
+  "kansai|shikoku": {
+   "count": 25,
+   "sample": [
+    "ホテルニューアワジプラザ淡路島風力発電所",
+    "南淡風力発電施設",
+    "大塚テクノ株式会社",
+    "大毛鳴門市発電所",
+    "大津町大代鳴門市発電所",
+    "大谷鳴門市発電所",
+    "大麻町姫田鳴門市発電所",
+    "大麻町松村鳴門市発電所",
+    "大麻町板東鳴門市発電所",
+    "大麻町萩原鳴門市発電所"
+   ]
+  },
+  "kyushu|shikoku": {
+   "count": 2,
+   "sample": [
+    "伊方町発電所",
+    "生見川ダム"
+   ]
+  }
+ }
+}

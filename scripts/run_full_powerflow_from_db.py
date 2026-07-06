@@ -179,14 +179,22 @@ def _get_nameplates():
     return _NAMEPLATES_CACHE
 
 
-def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto"):
+def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
+                     territory=True):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
     nameplates: "auto"(既定)=構造DBの銘板(existing出典のみ)を該当サイトの trafo
-    sn_mva/parallel に適用(v4)。None=従来ヒューリスティック容量のみ(回帰比較用)。"""
+    sn_mva/parallel に適用(v4)。None=従来ヒューリスティック容量のみ(回帰比較用)。
+    territory: True(既定)=ノードregionを領土(座標→県→エリア)で再属性してから
+    バス化する(A案 2026-07-07採用)。bbox重なり由来のzone誤属性(幻tie・実tie不可視化・
+    需要/UC注入の誤帰属)を修正する。物理接続は不変。False=旧挙動(回帰比較用)。"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
+    rstats = None
+    if territory:
+        from src.powerflow.region_attribution import reattribute_node_regions
+        rstats = reattribute_node_regions(nodes)   # in-place・冪等
     net = pp.create_empty_network(name=f"full_{island}", f_hz=freq)
 
     # candidate buses = nodes whose region maps to this island
@@ -315,14 +323,20 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto"):
 
     return net, bus_of, {"n_bus": len(bus_of), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
-                         "n_edge_skipped": n_edge_skipped}
+                         "n_edge_skipped": n_edge_skipped,
+                         "region_reattribution": rstats}
 
 
 # ──────────────────────────────────────────────────────────────────────────
 #  Generators from OSM plants (nearest substation bus)
 # ──────────────────────────────────────────────────────────────────────────
-def attach_generators(net, bus_of, nodes, island):
-    """Attach OSM plants to the nearest in-island substation bus (<=20 km)."""
+def attach_generators(net, bus_of, nodes, island, territory=True):
+    """Attach OSM plants to the nearest in-island substation bus (<=20 km).
+
+    territory: True(既定)=同一 osm_id が複数地域ファイルに存在する場合
+    (bbox重なりのスピルオーバー)、1回だけ採用し、領土地域(座標→県→エリア)の
+    コピーを優先する。旧挙動は同一発電所を二重付与していた(zone汚染レポート⑤:
+    下関火力がkyushu既定容量+chugoku 575MWの二重など、west同名重複750件超)。"""
     import glob
     # substation bus coords for nearest search
     sub_bus = [(i, bus_of[i], nodes[i]["lat"], nodes[i]["lon"])
@@ -330,40 +344,66 @@ def attach_generators(net, bus_of, nodes, island):
     if not sub_bus:
         return 0
     regions = [r for r, (isl, _f) in ISLAND_OF.items() if isl == island]
-    n_gen = 0
+    feats = []          # (region, feat) 収集
     for region in regions:
         path = os.path.join(ROOT, "data", f"{region}_plants.geojson")
         if not os.path.exists(path):
             continue
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
-        for k, feat in enumerate(data.get("features", [])):
+        for feat in data.get("features", []):
+            feats.append((region, feat))
+    if territory:
+        from src.powerflow.region_attribution import area_of_coord
+        chosen, extra = {}, []
+        for region, feat in feats:
             g = feat.get("geometry") or {}
-            if g.get("type") != "Point":
+            oid = (feat.get("properties") or {}).get("osm_id")
+            if oid is None or g.get("type") != "Point":
+                extra.append((region, feat))
                 continue
-            lon, lat = g["coordinates"][0], g["coordinates"][1]
-            props = feat.get("properties", {})
-            try:
-                cap = float(props.get("capacity_mw"))
-            except (TypeError, ValueError):
-                cap = None
-            fuel = props.get("fuel_type") or props.get("plant:source") or "unknown"
-            if not isinstance(fuel, str) or fuel.startswith("http"):
-                fuel = "unknown"
-            if cap is None or cap <= 0:
-                cap = _DEFAULT_CAP.get(fuel, _CAP_FALLBACK)
-            # nearest substation bus
-            best = min(sub_bus, key=lambda s: _haversine_km(lat, lon, s[2], s[3]))
-            if _haversine_km(lat, lon, best[2], best[3]) > 20.0:
-                continue
-            try:
-                pp.create_gen(net, bus=best[1], p_mw=cap, vm_pu=1.0,
-                              name=str(props.get("name") or f"{region}_gen_{k}"),
-                              type=fuel, max_p_mw=cap, min_p_mw=0.0,
-                              max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
-                n_gen += 1
-            except (ValueError, TypeError):
-                pass
+            cur = chosen.get(oid)
+            if cur is None:
+                chosen[oid] = (region, feat)
+            else:  # 重複コピー: 領土地域のファイル由来を優先(自エリアの整備が最良)
+                lon, lat = g["coordinates"][0], g["coordinates"][1]
+                home = area_of_coord(lat, lon)
+                if region == home and cur[0] != home:
+                    chosen[oid] = (region, feat)
+        n_dup = len(feats) - len(chosen) - len(extra)
+        if n_dup:
+            print(f"  plants dedup: 重複コピー{n_dup}件を1回採用に統合"
+                  f"(領土地域優先)")
+        feats = list(chosen.values()) + extra
+
+    n_gen = 0
+    for k, (region, feat) in enumerate(feats):
+        g = feat.get("geometry") or {}
+        if g.get("type") != "Point":
+            continue
+        lon, lat = g["coordinates"][0], g["coordinates"][1]
+        props = feat.get("properties", {})
+        try:
+            cap = float(props.get("capacity_mw"))
+        except (TypeError, ValueError):
+            cap = None
+        fuel = props.get("fuel_type") or props.get("plant:source") or "unknown"
+        if not isinstance(fuel, str) or fuel.startswith("http"):
+            fuel = "unknown"
+        if cap is None or cap <= 0:
+            cap = _DEFAULT_CAP.get(fuel, _CAP_FALLBACK)
+        # nearest substation bus
+        best = min(sub_bus, key=lambda s: _haversine_km(lat, lon, s[2], s[3]))
+        if _haversine_km(lat, lon, best[2], best[3]) > 20.0:
+            continue
+        try:
+            pp.create_gen(net, bus=best[1], p_mw=cap, vm_pu=1.0,
+                          name=str(props.get("name") or f"{region}_gen_{k}"),
+                          type=fuel, max_p_mw=cap, min_p_mw=0.0,
+                          max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
+            n_gen += 1
+        except (ValueError, TypeError):
+            pass
     return n_gen
 
 

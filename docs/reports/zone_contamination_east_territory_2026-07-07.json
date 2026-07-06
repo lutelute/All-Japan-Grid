@@ -1,0 +1,617 @@
+{
+ "_meta": {
+  "island": "east",
+  "date": "2026-07-07",
+  "source": "docs/data/built/all.json",
+  "territory_reattribution": true,
+  "region_reattribution": {
+   "n_nodes": 17333,
+   "n_changed": 2855,
+   "changes": {
+    "chubu->hokuriku": 578,
+    "kansai->chubu": 503,
+    "chugoku->shikoku": 322,
+    "tokyo->tohoku": 233,
+    "shikoku->chugoku": 230,
+    "chubu->kansai": 200,
+    "kyushu->chugoku": 184,
+    "hokuriku->chubu": 171,
+    "chugoku->kyushu": 123,
+    "tohoku->tokyo": 117,
+    "kansai->hokuriku": 51,
+    "chugoku->kansai": 48,
+    "kansai->shikoku": 44,
+    "hokkaido->tohoku": 26,
+    "shikoku->kansai": 11,
+    "tohoku->hokkaido": 9,
+    "hokuriku->kansai": 2,
+    "kyushu->shikoku": 2,
+    "kansai->chugoku": 1
+   },
+   "skipped_freq": {
+    "chubu->tokyo": 249,
+    "tokyo->chubu": 210,
+    "chubu->tohoku": 41,
+    "hokuriku->tohoku": 22
+   }
+  },
+  "script": "scripts/diagnose_zone_contamination.py"
+ },
+ "crossing_pairs_summary": {
+  "tohoku<->tokyo": {
+   "n": 30,
+   "kv": {
+    "500": 11,
+    "154": 7,
+    "275": 5,
+    "66": 7
+   },
+   "real_tie": "相馬双葉幹線ほか"
+  }
+ },
+ "crossing_lines": {
+  "tohoku<->tokyo": [
+   {
+    "line": 43,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 194.1,
+    "from": {
+     "zone": "tohoku",
+     "name": "南いわき開閉所",
+     "lat": 37.38109,
+     "lon": 140.80564
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.5817:139.2258:500",
+     "lat": 36.58171,
+     "lon": 139.22583
+    }
+   },
+   {
+    "line": 48,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 61.7,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.9325:140.0466:154",
+     "lat": 36.93246,
+     "lon": 140.04661
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "赤津変電所",
+     "lat": 37.41192,
+     "lon": 140.0773
+    }
+   },
+   {
+    "line": 66,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 10.5,
+    "from": {
+     "zone": "tohoku",
+     "name": "tohoku junction 37.1305:140.1822:154",
+     "lat": 37.13048,
+     "lon": 140.18221
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 37.0583:140.1155:154",
+     "lat": 37.05831,
+     "lon": 140.11547
+    }
+   },
+   {
+    "line": 147,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 109.2,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.7125:139.8339:500",
+     "lat": 36.71247,
+     "lon": 139.83385
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "新いわき開閉所",
+     "lat": 37.14221,
+     "lon": 140.72229
+    }
+   },
+   {
+    "line": 231,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 47.1,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 37.0123:139.6674:500",
+     "lat": 37.01226,
+     "lon": 139.66736
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "下郷町変電所_2 500kV",
+     "lat": 37.34492,
+     "lon": 139.90859
+    }
+   },
+   {
+    "line": 235,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 60.5,
+    "from": {
+     "zone": "tohoku",
+     "name": "tohoku junction 37.0677:139.261:275",
+     "lat": 37.06772,
+     "lon": 139.26098
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.5783:139.2251:275",
+     "lat": 36.57833,
+     "lon": 139.22511
+    }
+   },
+   {
+    "line": 552,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 137.7,
+    "from": {
+     "zone": "tohoku",
+     "name": "新いわき開閉所",
+     "lat": 37.14221,
+     "lon": 140.72229
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.1696:139.9035:500",
+     "lat": 36.16962,
+     "lon": 139.90352
+    }
+   },
+   {
+    "line": 554,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 89.0,
+    "from": {
+     "zone": "tohoku",
+     "name": "新いわき開閉所",
+     "lat": 37.14221,
+     "lon": 140.72229
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.5244:140.1537:500",
+     "lat": 36.52438,
+     "lon": 140.15367
+    }
+   },
+   {
+    "line": 567,
+    "kv": 275.0,
+    "parallel": 4,
+    "length_km": 49.2,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.6787:140.6524:275",
+     "lat": 36.67868,
+     "lon": 140.6524
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.9859:140.74:275",
+     "lat": 36.98592,
+     "lon": 140.74005
+    }
+   },
+   {
+    "line": 884,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 7.5,
+    "from": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.9103:140.8118:66",
+     "lat": 36.91029,
+     "lon": 140.81177
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.863:140.7709:66",
+     "lat": 36.86303,
+     "lon": 140.77095
+    }
+   },
+   {
+    "line": 885,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 3.7,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.863:140.7709:66",
+     "lat": 36.86303,
+     "lon": 140.77095
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.8949:140.7776:66",
+     "lat": 36.89489,
+     "lon": 140.77763
+    }
+   },
+   {
+    "line": 2755,
+    "kv": 500.0,
+    "parallel": 4,
+    "length_km": 27.8,
+    "from": {
+     "zone": "tokyo",
+     "name": "西群馬開閉所 500kV",
+     "lat": 36.62266,
+     "lon": 138.80178
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.8459:138.7668:500",
+     "lat": 36.8459,
+     "lon": 138.76684
+    }
+   },
+   {
+    "line": 4295,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 129.1,
+    "from": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.3806:140.8018:500",
+     "lat": 37.38064,
+     "lon": 140.80179
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "新今市開閉所",
+     "lat": 36.71272,
+     "lon": 139.83219
+    }
+   },
+   {
+    "line": 4297,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 108.7,
+    "from": {
+     "zone": "tokyo",
+     "name": "新今市開閉所",
+     "lat": 36.71272,
+     "lon": 139.83219
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.1444:140.7172:500",
+     "lat": 37.14442,
+     "lon": 140.71723
+    }
+   },
+   {
+    "line": 4373,
+    "kv": 275.0,
+    "parallel": 1,
+    "length_km": 21.9,
+    "from": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.8913:138.7491:275",
+     "lat": 36.89126,
+     "lon": 138.74913
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.7198:138.8388:275",
+     "lat": 36.71975,
+     "lon": 138.8388
+    }
+   },
+   {
+    "line": 4530,
+    "kv": 500.0,
+    "parallel": 1,
+    "length_km": 47.5,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 37.0123:139.6674:500",
+     "lat": 37.01226,
+     "lon": 139.66736
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.3447:139.9085:500",
+     "lat": 37.34475,
+     "lon": 139.90851
+    }
+   },
+   {
+    "line": 4532,
+    "kv": 275.0,
+    "parallel": 2,
+    "length_km": 72.5,
+    "from": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.1606:139.2432:275",
+     "lat": 37.16057,
+     "lon": 139.24316
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "東群馬変電所 275kV",
+     "lat": 36.57928,
+     "lon": 139.22324
+    }
+   },
+   {
+    "line": 4549,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 16.8,
+    "from": {
+     "zone": "tokyo",
+     "name": "須川変電所 154kV",
+     "lat": 36.69228,
+     "lon": 138.90548
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.7829:138.7808:154",
+     "lat": 36.78291,
+     "lon": 138.78077
+    }
+   },
+   {
+    "line": 4578,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 24.8,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.7697:138.9635:154",
+     "lat": 36.76968,
+     "lon": 138.96351
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.9563:138.9222:154",
+     "lat": 36.95627,
+     "lon": 138.92215
+    }
+   },
+   {
+    "line": 4580,
+    "kv": 154.0,
+    "parallel": 1,
+    "length_km": 24.1,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.767:138.962:154",
+     "lat": 36.76704,
+     "lon": 138.962
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.9563:138.9222:154",
+     "lat": 36.95627,
+     "lon": 138.92215
+    }
+   },
+   {
+    "line": 4860,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 8.5,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.8088:138.6189:0",
+     "lat": 36.80882,
+     "lon": 138.61891
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.8822:138.6378:0",
+     "lat": 36.88219,
+     "lon": 138.63784
+    }
+   },
+   {
+    "line": 5054,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 88.9,
+    "from": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.1402:140.7194:500",
+     "lat": 37.14023,
+     "lon": 140.71941
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "新茂木 500kV",
+     "lat": 36.52302,
+     "lon": 140.15291
+    }
+   },
+   {
+    "line": 5057,
+    "kv": 500.0,
+    "parallel": 2,
+    "length_km": 88.2,
+    "from": {
+     "zone": "tokyo",
+     "name": "新茂木 500kV",
+     "lat": 36.52302,
+     "lon": 140.15291
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.1437:140.7153:500",
+     "lat": 37.14369,
+     "lon": 140.71533
+    }
+   },
+   {
+    "line": 5070,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 46.5,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.9325:140.0466:154",
+     "lat": 36.93246,
+     "lon": 140.04661
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.2938:140.1602:154",
+     "lat": 37.29379,
+     "lon": 140.16016
+    }
+   },
+   {
+    "line": 5101,
+    "kv": 154.0,
+    "parallel": 2,
+    "length_km": 31.2,
+    "from": {
+     "zone": "tohoku",
+     "name": "tokyo junction 37.2938:140.1602:154",
+     "lat": 37.29379,
+     "lon": 140.16016
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 37.0583:140.1155:154",
+     "lat": 37.05831,
+     "lon": 140.11547
+    }
+   },
+   {
+    "line": 5109,
+    "kv": 275.0,
+    "parallel": 4,
+    "length_km": 48.7,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.6818:140.656:275",
+     "lat": 36.68178,
+     "lon": 140.65598
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.9859:140.74:275",
+     "lat": 36.98592,
+     "lon": 140.74005
+    }
+   },
+   {
+    "line": 5667,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 7.5,
+    "from": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.9103:140.8118:66",
+     "lat": 36.91029,
+     "lon": 140.81177
+    },
+    "to": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.863:140.7709:66",
+     "lat": 36.86303,
+     "lon": 140.77095
+    }
+   },
+   {
+    "line": 5668,
+    "kv": 66.0,
+    "parallel": 2,
+    "length_km": 3.7,
+    "from": {
+     "zone": "tokyo",
+     "name": "tohoku junction 36.863:140.7709:66",
+     "lat": 36.86303,
+     "lon": 140.77095
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tohoku junction 36.8949:140.7776:66",
+     "lat": 36.89489,
+     "lon": 140.77763
+    }
+   },
+   {
+    "line": 6160,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 24.2,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.9099:137.9094:0",
+     "lat": 36.90986,
+     "lon": 137.90943
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.9997:138.0063:0",
+     "lat": 36.9997,
+     "lon": 138.00634
+    }
+   },
+   {
+    "line": 6277,
+    "kv": 66.0,
+    "parallel": 1,
+    "length_km": 8.5,
+    "from": {
+     "zone": "tokyo",
+     "name": "tokyo junction 36.8088:138.6189:0",
+     "lat": 36.80882,
+     "lon": 138.61891
+    },
+    "to": {
+     "zone": "tohoku",
+     "name": "tokyo junction 36.8822:138.6378:0",
+     "lat": 36.88219,
+     "lon": 138.63784
+    }
+   }
+  ]
+ },
+ "multi_zone_coords": {
+  "total": 0,
+  "by_pair": {}
+ },
+ "plant_name_overlaps": {
+  "tohoku|tokyo": {
+   "count": 122,
+   "sample": [
+    "Nakoso IGCC Power Plant",
+    "SGET大田原メガソーラー",
+    "あたご町那須塩原市発電所",
+    "いわきゴルフクラブ",
+    "いわき市発電所",
+    "サン・ファクトリー関谷 那須塩原",
+    "ソフトバンク那須塩原ソーラーパーク",
+    "一之瀬発電所",
+    "三本木那須塩原市発電所",
+    "三沢町いわき市発電所"
+   ]
+  }
+ }
+}

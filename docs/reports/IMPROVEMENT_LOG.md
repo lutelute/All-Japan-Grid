@@ -7,6 +7,26 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07(夜) — **Claude Fable 5** — zone再属性(A案)実装: 幻tie消滅・本四復活・west slack較正後2.1%
+
+オーナー承認(「進めて」)を受けたA案の実装。
+詳細 = `docs/reports/zone_reattribution_2026-07-07.md`。
+
+- **領土再属性**: 座標→県(ポリゴン47・国土地理院由来・出典明記)→エリア。2,855/17,333
+  ノード変更・物理接続不変・**周波数を跨ぐ移動は禁止**(新信濃変換所・佐久軽井沢の50Hz
+  設備を壊さない — skipped_freqで開示)。build_island_net既定ON(`territory=False`で旧挙動)
+- **効果**: 幻tie kyushu↔shikoku消滅・本四連系線復活・複数zone並存1,623→10・
+  跨ぎ線613→90本(west)。発電所重複付与はosm_id dedup(領土優先)で1,312件統合
+- **嶺南原発の発見**: 高浜/大飯/美浜(立地=福井)はUCがkansaiにディスパッチ→毎時6.6GWが
+  unmatched化。nuclear_statusのregionからbridgeが**gen単位zone_override**を出して解消
+- **west backbone slackの弧**: 7.44%(07-05=重複の見せかけ受け皿)→13.92%(正直化で露出)→
+  **2.14%**(bridge+override較正後・signed−2.13%≒FC輸出2,100MW/hの構造項)
+- **tie突合が意味を持つ比較に**: 阿南紀北MAE 198MW(正の検証)・chubu→kansaiは容量制約
+  なしの構造差・hokuriku→kansai 6.8GW=嶺南自社幹線(連系線と区別不能=開示)・関門は
+  方向逆転残存(境界注入・B案後に再評価)
+- ハマり⑨再発: bridge構成でt=17/19にBLAS abort(構成依存)→チャンク隔離+マージ+
+  blas_abort明示レコードで22/24収束。県近似の残渣(飛騨神岡等)・B案(重複dedup)は残課題
+
 ## 2026-07-07 — **Claude Fable 5** — east slack 9.2%の分解: 恒等式が機械精度で閉じた（損失3.6+融通4.0+clip1.9%）
 
 詳細 = `docs/reports/east_slack_decomposition_2026-07-07.md`。

@@ -121,13 +121,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--island", default="west",
                     choices=["west", "east", "hokkaido", "okinawa"])
+    ap.add_argument("--no-territory", action="store_true",
+                    help="A案(領土再属性)を無効化して旧挙動を計測(回帰比較用)")
     args = ap.parse_args()
     freq = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
 
     with open(BUILT, encoding="utf-8") as f:
         db = json.load(f)
-    net, _, _ = build_island_net(args.island, db["nodes"], db["edges"],
-                                 freq[args.island], {})
+    net, _, bstats = build_island_net(args.island, db["nodes"], db["edges"],
+                                      freq[args.island], {},
+                                      territory=not args.no_territory)
+    if bstats.get("region_reattribution"):
+        rs = bstats["region_reattribution"]
+        print(f"領土再属性: {rs['n_changed']}/{rs['n_nodes']}ノード変更 "
+              f"{dict(list(rs['changes'].items())[:6])}")
     print(f"{args.island}: {len(net.bus)} buses / {len(net.line)} lines")
 
     pairs = crossing_lines(net)
@@ -154,6 +161,8 @@ def main():
     out = {
         "_meta": {"island": args.island, "date": date,
                   "source": "docs/data/built/all.json",
+                  "territory_reattribution": not args.no_territory,
+                  "region_reattribution": bstats.get("region_reattribution"),
                   "script": "scripts/diagnose_zone_contamination.py"},
         "crossing_pairs_summary": summary,
         "crossing_lines": {f"{k[0]}<->{k[1]}": v for k, v in sorted(pairs.items())},
@@ -161,8 +170,9 @@ def main():
                               "by_pair": {"|".join(p): c for p, c in mz.items()}},
         "plant_name_overlaps": dup,
     }
+    tag = "" if args.no_territory else "_territory"
     path = os.path.join(ROOT, "docs", "reports",
-                        f"zone_contamination_{args.island}_{date}.json")
+                        f"zone_contamination_{args.island}{tag}_{date}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print(f"\nsaved: {path}")

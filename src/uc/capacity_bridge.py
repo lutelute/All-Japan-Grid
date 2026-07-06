@@ -201,6 +201,13 @@ def apply_to_net(net, calib: Dict[str, List[dict]]) -> Dict:
         net.gen.at[idx, "max_q_mvar"] = 0.5 * cap
         net.gen.at[idx, "min_q_mvar"] = -0.3 * cap
         report["nuclear_set"] += 1
+        # 電源計上エリア(nuclear_statusのregion)を注入帰属に反映 —
+        # 嶺南原発群(高浜/大飯/美浜)は立地=福井県(hokuriku領土)だが
+        # 関西電力の電源としてkansaiにディスパッチされる。A案(領土zone)
+        # 導入後はbus zone=hokuriku になるため、gen単位で上書きする
+        # (橘湾・敦賀火力と同じ zone override 機構)
+        if site.get("region"):
+            report["zone_override"][int(idx)] = str(site["region"])
 
     after_mw = float(
         net.gen.loc[net.gen["in_service"].astype(bool), "max_p_mw"]
