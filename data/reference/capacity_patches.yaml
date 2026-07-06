@@ -80,11 +80,31 @@ patches:
     note: 東北電力 葛根田1号80+2号30=110MW（公表値）。OSMは坑井ポイント10重複
       （ローダーの地熱同名集約で1機化した上で本パッチがサイト計を与える、台帳㉑）
 
-  # 沖縄: 全国UCは OCCTO実績ベースの合成火力(1,880MW)で表現しており、
-  # OSM側の-1.0機体が100MW補完されると二重計上になるため除外に固定
-  - {match: 吉の浦火力, capacity_mw: 0, note: 沖縄は合成火力に一本化（二重計上防止）}
-  - {match: 金武火力, capacity_mw: 0, note: 同上}
-  - {match: 牧港火力, capacity_mw: 0, note: 同上}
-  - {match: 石川火力, capacity_mw: 0, note: 同上}
-  - {match: Ishikawa J-Power, capacity_mw: 0, note: 同上}
-  - {match: Gushikawa Power, capacity_mw: 0, note: 同上}
+  # 沖縄: 実フリート化(2026-07-07) — 旧・合成火力(石油1,680+石炭200MW)への
+  # 一本化を廃止し、出典付き実フリートへ統一。UC(scenario)とPF(capacity_bridge)
+  # の双方が本パッチを読むため燃料構成が両側で一致し、注入clipが解消する。
+  # 出典 = data/generator_capacity_sources.jsonl (2026-06-26収集・URL+原文quote)
+  - match: 吉の浦火力
+    capacity_mw: 502
+    override: true
+    note: 沖縄電力LNG(中城村) 25.1万kW×2=502MW。出典DB p03:吉の浦火力発電所(high)
+  - match: 金武火力
+    capacity_mw: 440
+    override: true
+    note: 沖縄電力 石炭(金武町) 22万kW×2=440MW。出典DB p03:金武火力発電所(high)
+  - match: Gushikawa Power
+    capacity_mw: 312
+    override: true
+    note: 具志川火力(沖縄電力 石炭+バイオマス混焼) 15.6万kW×2=312MW。出典DB p03:具志川火力発電所(high)
+  - match: Ishikawa J-Power
+    capacity_mw: 312
+    override: true
+    note: 石川石炭火力(電源開発J-POWER) 15.6万kW×2=312MW。出典DB p03:石川石炭火力発電所(high・official)
+  - match: 牧港火力
+    capacity_mw: 333
+    override: true
+    note: 沖縄電力(浦添) 現況33.3万kW=重油汽力125+GT163+ガスエンジン45(2024-03時点)。混成だがoil主体でoilのまま。出典DB p03:牧港火力発電所(medium)
+  - match: 石川火力
+    capacity_mw: 353
+    override: true
+    note: 沖縄電力 石油/GT(うるま) 35.3万kW=12.5万×2+GT10.3万。石川石炭火力(J-POWER)とは別設備(部分一致しない)。出典DB p03:石川火力発電所(medium)

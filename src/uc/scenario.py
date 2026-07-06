@@ -292,7 +292,8 @@ def load_national_thermal_generators(
     - 太陽光・風力・蓄電池は除外（シナリオの参照容量で別途表現）
     - 容量欠損・0以下は個別パッチ → capacity_defaults で補完、
       それでも MIN_UNIT_MW 未満は除外
-    - 沖縄は OSM 容量記録がないため OCCTO 実績ベースの合成火力を追加
+    - 沖縄も他地域と同経路（capacity_patches の出典付き実フリートで補正。
+      2026-07-07 に合成火力を廃止）
     - dedup=True（デフォルト）: 地域スライスの重なりで複数地域に出現する
       osm_id を1回だけ採用する。帰属は operator→管内 / bbox内側マージンで決定
       （ベースライン計測 2026-06-11: 重複126機39.8GW=熱容量の14.8%が二重計上）。
@@ -418,36 +419,12 @@ def load_national_thermal_generators(
                 stats.n_storage_units += 1
                 stats.storage_capacity_mwh += g.storage_capacity_mwh
 
-        # ── 沖縄: OSMの容量記録なし → OCCTO参照の実態火力を合成追加 ──
-        # 沖縄電力の実態: 石油火力1,680MW + 石炭200MW (OCCTO実績ベース)
-        if r == "okinawa":
-            okinawa_thermals = [
-                ("沖縄石油A", "oil", 420), ("沖縄石油B", "oil", 420),
-                ("沖縄石油C", "oil", 420), ("沖縄石油D", "oil", 420),
-                ("沖縄石炭", "coal", 200),
-            ]
-            for name, fuel, cap_ow in okinawa_thermals:
-                sp = su_profiles.get(fuel, {})
-                g = Generator(
-                    id=f"okinawa_synth_{name}", name=name,
-                    capacity_mw=cap_ow, fuel_type=fuel, region="okinawa",
-                    fuel_cost_per_mwh=fuel_cost.get(fuel, 9000),
-                    no_load_cost=500, startup_cost=sp.get("hot", 1500),
-                    shutdown_cost=2000,
-                    min_up_time_h=sp.get("mut", 1), min_down_time_h=sp.get("mdt", 1),
-                    p_min_mw=cap_ow * 0.4 if fuel == "coal" else 0.0,
-                    ramp_up_mw_per_h=cap_ow * 0.3, ramp_down_mw_per_h=cap_ow * 0.3,
-                    hot_start_cost=sp.get("hot", 0), warm_start_cost=sp.get("warm", 0),
-                    cold_start_cost=sp.get("cold", 0),
-                    warm_start_h=sp.get("wh", 0), cold_start_h=sp.get("ch", 0),
-                    storage_capacity_mwh=0.0,
-                    charge_efficiency=0.88, discharge_efficiency=0.88,
-                )
-                all_gens.append(g)
-                stats.n_thermal_loaded += 1
-                stats.thermal_capacity_mw += cap_ow
-                stats.fuel_counts[fuel] = stats.fuel_counts.get(fuel, 0) + 1
-                stats.fuel_capacity_mw[fuel] = stats.fuel_capacity_mw.get(fuel, 0.0) + cap_ow
+        # 沖縄の合成火力(石油A-D+石炭、OCCTO実績ベース)は2026-07-07に廃止。
+        # 実フリートは capacity_patches の出典付き実値(吉の浦502/金武440/
+        # 具志川312/石川石炭312/牧港333/石川353)で他地域と同経路にロードされる
+        # (出典 = data/generator_capacity_sources.jsonl)。旧合成は石油1,680MW
+        # と実態(石炭1,064+LNG502中心)から乖離し、UC→PF注入のclip
+        # (slack 47.9%)の主犯だった。
 
     # 地熱の同名サイト集約 — OSMは坑井・設備ポイントを別ノードで持つことが
     # あり、同名地熱が多重計上される（葛根田: 10ポイント530MW vs 実サイト

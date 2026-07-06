@@ -137,14 +137,33 @@ class TestLoadNationalThermalGenerators:
         gens = load_national_thermal_generators(str(tmp_path))
         assert [g.fuel_type for g in gens] == ["coal"]
 
-    def test_okinawa_synthetic_thermals_added(self, tmp_path):
-        _write_geojson(tmp_path / "okinawa_plants.geojson", [])
+    def test_okinawa_real_fleet_via_patches(self, tmp_path):
+        # 2026-07-07: 合成火力(石油A-D 1,680+石炭200MW)を廃止し、
+        # capacity_patches の出典付き実フリートへ一本化した回帰ピン
+        # (出典 = data/generator_capacity_sources.jsonl)。
+        # OSMの容量欠損(-1)がパッチで実値に補正されることを確認する。
+        _write_geojson(tmp_path / "okinawa_plants.geojson", [
+            _feat("吉の浦火力発電所", "gas", -1, 1),
+            _feat("金武火力発電所", "coal", -1, 2),
+            _feat("Gushikawa Power Plant", "coal", -1, 3),
+            _feat("Ishikawa J-Power Coal Power Plant", "coal", -1, 4),
+            _feat("牧港火力発電所", "oil", -1, 5),
+            _feat("石川火力発電所", "oil", -1, 6),
+        ])
         stats = LoadStats()
         gens = load_national_thermal_generators(str(tmp_path), stats)
-        # 合成 石油×4 (420MW) + 石炭×1 (200MW)
-        assert len(gens) == 5
-        assert sum(g.capacity_mw for g in gens) == pytest.approx(1880)
-        assert stats.n_thermal_loaded == 5
+        assert len(gens) == 6
+        assert sum(g.capacity_mw for g in gens) == pytest.approx(2252)
+        by_fuel: dict = {}
+        for g in gens:
+            by_fuel[g.fuel_type] = by_fuel.get(g.fuel_type, 0) + g.capacity_mw
+        assert by_fuel == {"coal": 1064, "lng": 502, "oil": 686}
+
+    def test_okinawa_no_synthetic_thermals(self, tmp_path):
+        # 合成火力が復活していないことのピン: 空のGeoJSONなら沖縄は0機
+        _write_geojson(tmp_path / "okinawa_plants.geojson", [])
+        gens = load_national_thermal_generators(str(tmp_path))
+        assert [g for g in gens if g.region == "okinawa"] == []
 
     def test_hydro_not_treated_as_storage(self, tmp_path):
         # 既知課題の回帰ピン: OSM抽出に pumped_hydro が存在しないため

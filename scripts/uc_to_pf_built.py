@@ -264,6 +264,12 @@ def main():
                          "ため、容量比例注入が断片に落ちる分(east実測~17GW/59GW)を"
                          "排除する。断片の負荷は synthetic slack 供給のまま"
                          "(=fragment_unserved としてレポート)")
+    ap.add_argument("--bridge", action="store_true",
+                    help="capacity_bridge(容量較正: dedup・出典付き容量パッチ・"
+                         "稼働炉リスト)をPF側netへ適用する。UC側は常に同じ"
+                         "capacity_patchesを読むため、双方の燃料別容量が一致し"
+                         "注入clipが減る(okinawa燃料フリート較正 2026-07-07)。"
+                         "既定OFF=07-05正典結果との比較可能性を保つ")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -281,6 +287,7 @@ def main():
     report = {"meta": {"date": _dt.date.today().isoformat(),
                        "git_head": _git_head(), "scenario": args.scenario,
                        "model": "built_full_v4_nameplate",
+                       "bridge": bool(args.bridge),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -302,6 +309,20 @@ def main():
         base, bus_of, bstats = build_island_net(
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom)
         attach_generators(base, bus_of, built["nodes"], island)
+        bridge_rep = None
+        gen_zone_override = None
+        if args.bridge:
+            from src.uc.capacity_bridge import apply_to_net, load_pf_calibration
+            calib = load_pf_calibration(scenario_id=args.scenario)
+            bridge_rep = apply_to_net(base, calib)
+            gen_zone_override = {int(k): v for k, v
+                                 in bridge_rep["zone_override"].items()}
+            print(f"  bridge: patched={bridge_rep['patched']} "
+                  f"dedup={bridge_rep['dedup_disabled']} "
+                  f"retired={bridge_rep['retired']} "
+                  f"nuclear={bridge_rep['nuclear_set']}set/"
+                  f"{bridge_rep['nuclear_stopped']}stop "
+                  f"Δ{bridge_rep['mw_delta']:+,.0f}MW")
         allocate_loads(base, cfg)
         ledger = None
         if args.model == "backbone":
@@ -341,6 +362,9 @@ def main():
                    "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,
+                   "bridge": ({k: v for k, v in bridge_rep.items()
+                               if k != "zone_override"}
+                              if bridge_rep else None),
                    "inject_main_comp_only": bool(args.inject_main_comp_only),
                    "n_fragment_gen_off": n_gen_off,
                    "fragment_unserved_load_mw": round(fragment_load_mw, 1),
@@ -361,7 +385,8 @@ def main():
             fuel_by_zone = {r: uc_snapshot(uc, scn.generators, t, region=r)
                             for r in regions}
             demand = {r: float(scn.net_demand_r[r][t]) for r in regions}
-            inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand)
+            inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand,
+                                          gen_zone_override=gen_zone_override)
             net_s, used = solve_hour(net_t, mode)
             conv = bool(net_s.converged)
             n_ok += int(conv)
@@ -372,6 +397,14 @@ def main():
                     "load_scale": {r: inj[r]["load_scale"] for r in regions},
                     "slack_abs_mw": round(slack, 1) if slack is not None else None,
                     "solve_s": round(time.monotonic() - th, 1)}
+            inj_issues = {r: {k: v for k, v in
+                              (("clipped", inj[r]["injection"]["clipped"]),
+                               ("unmatched", inj[r]["injection"]["unmatched"]))
+                              if v}
+                          for r in regions}
+            inj_issues = {r: d for r, d in inj_issues.items() if d}
+            if inj_issues:
+                hrep["injection_issues"] = inj_issues
             if conv and used == "ac":
                 vm = net_s.res_bus.vm_pu
                 hrep["vm_min"] = round(float(vm.min()), 4)

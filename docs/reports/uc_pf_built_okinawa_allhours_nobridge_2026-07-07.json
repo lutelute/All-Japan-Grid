@@ -1,0 +1,485 @@
+{
+ "meta": {
+  "date": "2026-07-07",
+  "git_head": "1429cff",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "okinawa": {
+   "mode": "ac",
+   "regions": [
+    "okinawa"
+   ],
+   "model": "full",
+   "n_bus": 99,
+   "n_trafo_nameplate": 0,
+   "backbone_ledger": null,
+   "bridge": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 38487.435727053446
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1186.6,
+     "load_scale": {
+      "okinawa": 0.8725
+     },
+     "slack_abs_mw": 24.0,
+     "solve_s": 1.0,
+     "vm_min": 0.9026,
+     "vm_max": 1.0,
+     "loss_mw": 24.0,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1125.9,
+     "load_scale": {
+      "okinawa": 0.8279
+     },
+     "slack_abs_mw": -79.4,
+     "solve_s": 0.0,
+     "vm_min": 0.9156,
+     "vm_max": 1.0,
+     "loss_mw": 20.6,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1085.6,
+     "load_scale": {
+      "okinawa": 0.7982
+     },
+     "slack_abs_mw": 21.4,
+     "solve_s": 0.0,
+     "vm_min": 0.9238,
+     "vm_max": 1.0,
+     "loss_mw": 21.4,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1045.2,
+     "load_scale": {
+      "okinawa": 0.7685
+     },
+     "slack_abs_mw": 1.0,
+     "solve_s": 0.0,
+     "vm_min": 0.9318,
+     "vm_max": 1.0,
+     "loss_mw": 19.8,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1085.9,
+     "load_scale": {
+      "okinawa": 0.7985
+     },
+     "slack_abs_mw": 21.4,
+     "solve_s": 0.0,
+     "vm_min": 0.9238,
+     "vm_max": 1.0,
+     "loss_mw": 21.4,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1179.7,
+     "load_scale": {
+      "okinawa": 0.8674
+     },
+     "slack_abs_mw": 63.0,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "unmatched": {
+        "battery": 37.7
+       }
+      }
+     },
+     "vm_min": 0.9041,
+     "vm_max": 1.0,
+     "loss_mw": 25.3,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1313.8,
+     "load_scale": {
+      "okinawa": 0.9661
+     },
+     "slack_abs_mw": 28.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8722,
+     "vm_max": 1.0,
+     "loss_mw": 28.8,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1464.0,
+     "load_scale": {
+      "okinawa": 1.0765
+     },
+     "slack_abs_mw": 36.5,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 0.0
+       }
+      }
+     },
+     "vm_min": 0.8277,
+     "vm_max": 1.0,
+     "loss_mw": 36.5,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1576.4,
+     "load_scale": {
+      "okinawa": 1.1591
+     },
+     "slack_abs_mw": 147.3,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7863,
+     "vm_max": 1.0,
+     "loss_mw": 45.3,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1628.4,
+     "load_scale": {
+      "okinawa": 1.1973
+     },
+     "slack_abs_mw": 151.9,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7631,
+     "vm_max": 1.0,
+     "loss_mw": 49.9,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1656.8,
+     "load_scale": {
+      "okinawa": 1.2182
+     },
+     "slack_abs_mw": 154.7,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7487,
+     "vm_max": 1.0,
+     "loss_mw": 52.7,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1682.2,
+     "load_scale": {
+      "okinawa": 1.2369
+     },
+     "slack_abs_mw": 157.4,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7345,
+     "vm_max": 1.0,
+     "loss_mw": 55.4,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1654.9,
+     "load_scale": {
+      "okinawa": 1.2169
+     },
+     "slack_abs_mw": 244.5,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       },
+       "unmatched": {
+        "battery": 88.9
+       }
+      }
+     },
+     "vm_min": 0.7497,
+     "vm_max": 1.0,
+     "loss_mw": 53.5,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1648.5,
+     "load_scale": {
+      "okinawa": 1.2122
+     },
+     "slack_abs_mw": 237.3,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       },
+       "unmatched": {
+        "battery": 82.5
+       }
+      }
+     },
+     "vm_min": 0.753,
+     "vm_max": 1.0,
+     "loss_mw": 52.8,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1642.3,
+     "load_scale": {
+      "okinawa": 1.2076
+     },
+     "slack_abs_mw": 153.2,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7562,
+     "vm_max": 1.0,
+     "loss_mw": 51.2,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1636.4,
+     "load_scale": {
+      "okinawa": 1.2032
+     },
+     "slack_abs_mw": 152.6,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7592,
+     "vm_max": 1.0,
+     "loss_mw": 50.6,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1651.0,
+     "load_scale": {
+      "okinawa": 1.214
+     },
+     "slack_abs_mw": 154.1,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7518,
+     "vm_max": 1.0,
+     "loss_mw": 52.1,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1645.6,
+     "load_scale": {
+      "okinawa": 1.21
+     },
+     "slack_abs_mw": 234.0,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       },
+       "unmatched": {
+        "battery": 79.6
+       }
+      }
+     },
+     "vm_min": 0.7545,
+     "vm_max": 1.0,
+     "loss_mw": 52.4,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1612.7,
+     "load_scale": {
+      "okinawa": 1.1858
+     },
+     "slack_abs_mw": 150.4,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 102.0
+       }
+      }
+     },
+     "vm_min": 0.7704,
+     "vm_max": 1.0,
+     "loss_mw": 48.4,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1546.2,
+     "load_scale": {
+      "okinawa": 1.1369
+     },
+     "slack_abs_mw": 125.1,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 82.2
+       }
+      }
+     },
+     "vm_min": 0.7984,
+     "vm_max": 1.0,
+     "loss_mw": 42.8,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1465.9,
+     "load_scale": {
+      "okinawa": 1.0779
+     },
+     "slack_abs_mw": 38.5,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "clipped": {
+        "lng": 101.9
+       }
+      }
+     },
+     "vm_min": 0.8271,
+     "vm_max": 1.0,
+     "loss_mw": 36.6,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1385.9,
+     "load_scale": {
+      "okinawa": 1.0191
+     },
+     "slack_abs_mw": -40.6,
+     "solve_s": 0.0,
+     "vm_min": 0.852,
+     "vm_max": 1.0,
+     "loss_mw": 31.4,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1306.2,
+     "load_scale": {
+      "okinawa": 0.9605
+     },
+     "slack_abs_mw": 28.5,
+     "solve_s": 0.0,
+     "vm_min": 0.8743,
+     "vm_max": 1.0,
+     "loss_mw": 28.5,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1246.6,
+     "load_scale": {
+      "okinawa": 0.9166
+     },
+     "slack_abs_mw": 26.1,
+     "solve_s": 0.0,
+     "vm_min": 0.8889,
+     "vm_max": 1.0,
+     "loss_mw": 26.1,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}

@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07 — **Claude Fable 5** — okinawa燃料フリート較正: slack 47.3%→3.7%（出典付き実フリートへ両側収束）
+
+slack解剖(07-05)で確定した主犯「燃料別容量不一致」の解消。
+詳細 = `docs/reports/okinawa_fleet_calibration_2026-07-07.md`。
+
+- **旧構成の問題**: UC=合成フリート(沖縄石油A-D 1,680MW・石油偏重・実在しない機名)/
+  PF=OSM容量欠損→燃料別デフォルト(coal600×3等)。実態(石炭1,064+LNG502中心)と両側乖離
+- **修正**: ①UC合成廃止(scenario.py) ②capacity_patches 6件を容量0→出典付き実値へ
+  (出典=generator_capacity_sources.jsonl 2026-06-26収集済・吉の浦502/金武440/具志川312/
+  石川石炭312/石川353/牧港333) ③capacity_bridgeをbuilt系へ配線(`--bridge`・既定OFF)
+- **Ablation(24h・AC 24/24)**: 47.3%(旧)→7.2%(UC実フリートのみ)→**3.7%**(+bridge)。
+  残差=蓄電池のPF受け皿なし(4時間max89MW・設置場所出典なしのため恣意バス化せず=開示)
+- ゲート: 正典25+UCシナリオ42+bridge/注入/solver 68 全passed。テストは合成ピン→実フリートピンへ更新
+
 ## 2026-07-07 — **Claude Fable 5** — 幻tie解剖: bbox重なりによるzone汚染は系統的と確定（特定=機械・修正判断=人間）
 
 07-05に発見した幻tie「kyushu↔shikoku 445MW」の正体を特定。
