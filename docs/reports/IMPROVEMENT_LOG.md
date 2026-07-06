@@ -7,6 +7,25 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07 — **Claude Fable 5** — 幻tie解剖: bbox重なりによるzone汚染は系統的と確定（特定=機械・修正判断=人間）
+
+07-05に発見した幻tie「kyushu↔shikoku 445MW」の正体を特定。
+詳細 = `docs/reports/phantom_tie_zone_contamination_2026-07-07.md`。
+
+- **幻tieの実体**: 山口県内の中国電力実在系統2本（500kV幹線の一部 line8146 + 220kV
+  田布施—古開作 line8777）。地域抽出bboxの重なりで山口県ノードが kyushu/shikoku と
+  誤属性され「連系線」に見えていた
+- **氷山の一角**: zone汚染はwest全域に系統的 — ①tie集計汚染（chubu↔hokuriku 225本等・
+  全ペア）②実tie「本四連系線」の不可視化（chugoku/shikoku二重コピーが各々域内線化・
+  par1+2=実質3回線並走）③物理枝の二重生成（関門ルート par4+par6並存等）
+  ④需要の地理誤配置（複数zone並存1,623箇所）⑤発電所の二重計上（同名重複 west 750件超・
+  下関火力2回付与等）
+- **誠実な訂正**: west UC vs PF tie突合（07-05）は連系線比較としては**無効**。
+  east（tohoku↔tokyo 50本=実tie回廊と整合）の正の検証は概ね維持
+- 診断器 `scripts/diagnose_zone_contamination.py` 新設（west/east計測JSON出荷）。
+  修正オプションA（zone再属性・推奨）/B（重複dedup）/C（抽出クリップ）を提示 —
+  **採否はオーナー判断待ち**
+
 ## 2026-07-05(夜) — **Claude Fable 5** — backbone計算モデル: west AC 23/24 初達成・east slack 25.5→9.2%
 
 オーナー方針「計算は縮約も辿るが、リアリティを失わない」の実装(`--model backbone`)。
