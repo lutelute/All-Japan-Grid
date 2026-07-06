@@ -7,6 +7,21 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07 — **Claude Fable 5** — east slack 9.2%の分解: 恒等式が機械精度で閉じた（損失3.6+融通4.0+clip1.9%）
+
+詳細 = `docs/reports/east_slack_decomposition_2026-07-07.md`。
+
+- **slack = 損失 + 島間融通ギャップ + 注入clip** が24h全断面で残差0.00%
+  (t=17残差2.3e-13MW)。「整合の粗さ」は消滅し全て既知構造に帰着
+- **島間融通4.02%** = eastは毎時1,300〜3,000MW輸入超過(東西FC chubu→tokyo
+  ~2,100MW張り付き+北本±900MW)をPF島モデルが持たない構造項。
+  新診断器 `scripts/uc_island_gap.py` で時刻別ダンプ
+- **clip 1.90% = tokyo石炭 平均968MW/h** → `--bridge`(容量較正)で解消し
+  **9.51→7.41%**(patched=13・重複dedup=6・idle原子炉6基を正直化Δ-13.8GW)
+- 次のレバー: ①島境界注入の実装(-4.02%見込み) ②--bridge既定ON化(96断面更新とセット・
+  オーナー判断) ③損失の扱い明示。uc_to_pf_builtは注入clip/unmatchedを時刻別JSON記録
+  (silent truncation禁止の徹底)
+
 ## 2026-07-07 — **Claude Fable 5** — okinawa燃料フリート較正: slack 47.3%→3.7%（出典付き実フリートへ両側収束）
 
 slack解剖(07-05)で確定した主犯「燃料別容量不一致」の解消。

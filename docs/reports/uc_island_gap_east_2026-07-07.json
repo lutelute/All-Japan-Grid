@@ -1,0 +1,274 @@
+{
+ "_meta": {
+  "island": "east",
+  "scenario": "fy2023r2",
+  "date": "2026-07-07",
+  "script": "scripts/uc_island_gap.py"
+ },
+ "hours": [
+  {
+   "t": 0,
+   "requested_mw": 40267.4,
+   "demand_mw": 42933.1,
+   "uc_gap_mw": -2665.8,
+   "net_import_mw": 2665.8,
+   "boundary_flows": {
+    "hokkaido->tohoku": 565.8,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 1,
+   "requested_mw": 37812.8,
+   "demand_mw": 40674.8,
+   "uc_gap_mw": -2862.0,
+   "net_import_mw": 2862.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": 762.0,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 2,
+   "requested_mw": 37373.3,
+   "demand_mw": 39177.1,
+   "uc_gap_mw": -1803.8,
+   "net_import_mw": 1803.8,
+   "boundary_flows": {
+    "hokkaido->tohoku": 889.5,
+    "tokyo->chubu": -914.3
+   }
+  },
+  {
+   "t": 3,
+   "requested_mw": 34676.4,
+   "demand_mw": 37676.4,
+   "uc_gap_mw": -3000.0,
+   "net_import_mw": 3000.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": 900.0,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 4,
+   "requested_mw": 36212.8,
+   "demand_mw": 39194.8,
+   "uc_gap_mw": -2982.0,
+   "net_import_mw": 2982.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": 882.0,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 5,
+   "requested_mw": 40572.9,
+   "demand_mw": 42611.3,
+   "uc_gap_mw": -2038.4,
+   "net_import_mw": 2038.4,
+   "boundary_flows": {
+    "hokkaido->tohoku": 606.7,
+    "tokyo->chubu": -1431.7
+   }
+  },
+  {
+   "t": 6,
+   "requested_mw": 44991.3,
+   "demand_mw": 47347.1,
+   "uc_gap_mw": -2355.7,
+   "net_import_mw": 2355.7,
+   "boundary_flows": {
+    "hokkaido->tohoku": 255.7,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 7,
+   "requested_mw": 51092.4,
+   "demand_mw": 52454.0,
+   "uc_gap_mw": -1361.6,
+   "net_import_mw": 1361.6,
+   "boundary_flows": {
+    "hokkaido->tohoku": -74.9,
+    "tokyo->chubu": -1436.5
+   }
+  },
+  {
+   "t": 8,
+   "requested_mw": 54121.4,
+   "demand_mw": 55992.7,
+   "uc_gap_mw": -1871.3,
+   "net_import_mw": 1871.3,
+   "boundary_flows": {
+    "hokkaido->tohoku": -228.7,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 9,
+   "requested_mw": 55384.5,
+   "demand_mw": 57290.8,
+   "uc_gap_mw": -1906.3,
+   "net_import_mw": 1906.3,
+   "boundary_flows": {
+    "hokkaido->tohoku": -193.7,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 10,
+   "requested_mw": 55887.7,
+   "demand_mw": 57863.4,
+   "uc_gap_mw": -1975.7,
+   "net_import_mw": 1975.7,
+   "boundary_flows": {
+    "hokkaido->tohoku": -124.3,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 11,
+   "requested_mw": 56477.2,
+   "demand_mw": 58482.9,
+   "uc_gap_mw": -2005.7,
+   "net_import_mw": 2005.7,
+   "boundary_flows": {
+    "hokkaido->tohoku": -94.3,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 12,
+   "requested_mw": 55289.2,
+   "demand_mw": 57403.4,
+   "uc_gap_mw": -2114.2,
+   "net_import_mw": 2114.2,
+   "boundary_flows": {
+    "hokkaido->tohoku": 14.2,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 13,
+   "requested_mw": 55189.6,
+   "demand_mw": 57289.3,
+   "uc_gap_mw": -2099.7,
+   "net_import_mw": 2099.7,
+   "boundary_flows": {
+    "hokkaido->tohoku": -0.3,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 14,
+   "requested_mw": 55341.3,
+   "demand_mw": 57368.5,
+   "uc_gap_mw": -2027.2,
+   "net_import_mw": 2027.2,
+   "boundary_flows": {
+    "hokkaido->tohoku": -72.8,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 15,
+   "requested_mw": 55752.6,
+   "demand_mw": 57646.8,
+   "uc_gap_mw": -1894.2,
+   "net_import_mw": 1894.2,
+   "boundary_flows": {
+    "hokkaido->tohoku": -205.8,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 16,
+   "requested_mw": 57222.9,
+   "demand_mw": 58869.9,
+   "uc_gap_mw": -1647.0,
+   "net_import_mw": 1647.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": -453.0,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 17,
+   "requested_mw": 57679.4,
+   "demand_mw": 59353.0,
+   "uc_gap_mw": -1673.6,
+   "net_import_mw": 1673.6,
+   "boundary_flows": {
+    "hokkaido->tohoku": -426.4,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 18,
+   "requested_mw": 57141.8,
+   "demand_mw": 58569.5,
+   "uc_gap_mw": -1427.7,
+   "net_import_mw": 1427.7,
+   "boundary_flows": {
+    "hokkaido->tohoku": -672.3,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 19,
+   "requested_mw": 54638.0,
+   "demand_mw": 56232.5,
+   "uc_gap_mw": -1594.5,
+   "net_import_mw": 1594.5,
+   "boundary_flows": {
+    "hokkaido->tohoku": -505.5,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 20,
+   "requested_mw": 51952.8,
+   "demand_mw": 53254.8,
+   "uc_gap_mw": -1302.0,
+   "net_import_mw": 1302.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": -258.0,
+    "tokyo->chubu": -1560.0
+   }
+  },
+  {
+   "t": 21,
+   "requested_mw": 48212.8,
+   "demand_mw": 50294.8,
+   "uc_gap_mw": -2082.0,
+   "net_import_mw": 2082.0,
+   "boundary_flows": {
+    "hokkaido->tohoku": -18.0,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 22,
+   "requested_mw": 45038.0,
+   "demand_mw": 47352.5,
+   "uc_gap_mw": -2314.5,
+   "net_import_mw": 2314.5,
+   "boundary_flows": {
+    "hokkaido->tohoku": 214.5,
+    "tokyo->chubu": -2100.0
+   }
+  },
+  {
+   "t": 23,
+   "requested_mw": 42667.4,
+   "demand_mw": 45153.1,
+   "uc_gap_mw": -2485.7,
+   "net_import_mw": 2485.8,
+   "boundary_flows": {
+    "hokkaido->tohoku": 385.8,
+    "tokyo->chubu": -2100.0
+   }
+  }
+ ]
+}

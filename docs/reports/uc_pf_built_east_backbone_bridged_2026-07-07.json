@@ -1,0 +1,516 @@
+{
+ "meta": {
+  "date": "2026-07-07",
+  "git_head": "30c094b",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": true,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "backbone",
+   "n_bus": 1310,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": {
+    "threshold_kv": 154.0,
+    "n_bus_full": 6205,
+    "n_backbone_bus": 1310,
+    "loads": {
+     "moved": 2458,
+     "moved_mw": 47161.0,
+     "from_fragment": 275,
+     "from_fragment_mw": 5552.9
+    },
+    "gens": {
+     "moved": 7186,
+     "moved_mw": 101805.3,
+     "from_fragment": 432,
+     "from_fragment_mw": 13188.7
+    },
+    "cross_zone_moves": 204,
+    "fragment_geo_km_max": 48.5,
+    "n_bus_backbone_net": 1310,
+    "n_components_backbone": 74,
+    "n_trafo_kept": 141,
+    "n_trafo_nameplate_kept": 4
+   },
+   "bridge": {
+    "dedup_disabled": 6,
+    "patched": 13,
+    "retired": 0,
+    "fuel_fixed": 0,
+    "nuclear_set": 0,
+    "nuclear_stopped": 6,
+    "mw_delta": -13833.0,
+    "unmatched_patches": [
+     "苓北",
+     "新大分火力",
+     "九州電力 松浦火力",
+     "電源開発 松浦火力",
+     "新小倉火力",
+     "松島火力",
+     "苅田火力発電所",
+     "相浦火力",
+     "シグマパワー有明三池",
+     "Orix Hibikinada",
+     "糸魚川発電所",
+     "豊前火力",
+     "川内発電所",
+     "下松火力",
+     "池島町長崎市発電所",
+     "七尾大田",
+     "敦賀火力",
+     "富山新港",
+     "橘湾火力",
+     "橘湾発電所",
+     "吉の浦火力",
+     "金武火力",
+     "Gushikawa Power",
+     "Ishikawa J-Power",
+     "牧港火力",
+     "石川火力"
+    ]
+   },
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 76666405.12120497
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42933.1,
+     "load_scale": {
+      "tohoku": 0.5865,
+      "tokyo": 0.8315
+     },
+     "slack_abs_mw": 3895.7,
+     "solve_s": 1.0,
+     "vm_min": 0.7486,
+     "vm_max": 1.0674,
+     "loss_mw": 1229.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5678.6
+     }
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 40674.8,
+     "load_scale": {
+      "tohoku": 0.5492,
+      "tokyo": 0.7896
+     },
+     "slack_abs_mw": 3961.5,
+     "solve_s": 0.1,
+     "vm_min": 0.783,
+     "vm_max": 1.068,
+     "loss_mw": 1099.5,
+     "tie_mw": {
+      "tohoku->tokyo": 4970.3
+     }
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39177.1,
+     "load_scale": {
+      "tohoku": 0.525,
+      "tokyo": 0.7617
+     },
+     "slack_abs_mw": 2815.9,
+     "solve_s": 0.1,
+     "vm_min": 0.8027,
+     "vm_max": 1.0676,
+     "loss_mw": 1012.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5403.8
+     }
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 37676.4,
+     "load_scale": {
+      "tohoku": 0.5006,
+      "tokyo": 0.7337
+     },
+     "slack_abs_mw": 3968.7,
+     "solve_s": 0.1,
+     "vm_min": 0.8198,
+     "vm_max": 1.0679,
+     "loss_mw": 968.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5401.8
+     }
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39194.8,
+     "load_scale": {
+      "tohoku": 0.5264,
+      "tokyo": 0.7617
+     },
+     "slack_abs_mw": 4016.5,
+     "solve_s": 0.1,
+     "vm_min": 0.8027,
+     "vm_max": 1.0676,
+     "loss_mw": 1034.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5409.5
+     }
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42611.3,
+     "load_scale": {
+      "tohoku": 0.5788,
+      "tokyo": 0.8262
+     },
+     "slack_abs_mw": 3426.8,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "tokyo": {
+       "unmatched": {
+        "battery": 186.0
+       }
+      }
+     },
+     "vm_min": 0.7535,
+     "vm_max": 1.0675,
+     "loss_mw": 1202.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5644.4
+     }
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47347.1,
+     "load_scale": {
+      "tohoku": 0.646,
+      "tokyo": 0.9172
+     },
+     "slack_abs_mw": 3742.7,
+     "solve_s": 2.9,
+     "vm_min": 0.9723,
+     "vm_max": 1.0223,
+     "loss_mw": 1387.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5938.4
+     }
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 52454.0,
+     "load_scale": {
+      "tohoku": 0.7097,
+      "tokyo": 1.0179
+     },
+     "slack_abs_mw": 3055.6,
+     "solve_s": 2.7,
+     "vm_min": 0.9689,
+     "vm_max": 1.0222,
+     "loss_mw": 1694.0,
+     "tie_mw": {
+      "tohoku->tokyo": 4884.7
+     }
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55992.7,
+     "load_scale": {
+      "tohoku": 0.7401,
+      "tokyo": 1.0915
+     },
+     "slack_abs_mw": 3852.2,
+     "solve_s": 2.0,
+     "vm_min": 0.9663,
+     "vm_max": 1.0222,
+     "loss_mw": 1980.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5656.3
+     }
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57290.8,
+     "load_scale": {
+      "tohoku": 0.7346,
+      "tokyo": 1.1233
+     },
+     "slack_abs_mw": 4009.4,
+     "solve_s": 2.3,
+     "vm_min": 0.9651,
+     "vm_max": 1.0222,
+     "loss_mw": 2103.1,
+     "tie_mw": {
+      "tohoku->tokyo": 5719.5
+     }
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57863.4,
+     "load_scale": {
+      "tohoku": 0.7224,
+      "tokyo": 1.1401
+     },
+     "slack_abs_mw": 4136.0,
+     "solve_s": 2.4,
+     "vm_min": 0.9645,
+     "vm_max": 1.0222,
+     "loss_mw": 2160.3,
+     "tie_mw": {
+      "tohoku->tokyo": 6256.8
+     }
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58482.9,
+     "load_scale": {
+      "tohoku": 0.7173,
+      "tokyo": 1.156
+     },
+     "slack_abs_mw": 4237.1,
+     "solve_s": 2.4,
+     "vm_min": 0.964,
+     "vm_max": 1.0222,
+     "loss_mw": 2231.4,
+     "tie_mw": {
+      "tohoku->tokyo": 6119.6
+     }
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57403.4,
+     "load_scale": {
+      "tohoku": 0.6968,
+      "tokyo": 1.1367
+     },
+     "slack_abs_mw": 4260.6,
+     "solve_s": 2.5,
+     "vm_min": 0.9647,
+     "vm_max": 1.0222,
+     "loss_mw": 2146.4,
+     "tie_mw": {
+      "tohoku->tokyo": 6122.1
+     }
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57289.3,
+     "load_scale": {
+      "tohoku": 0.6994,
+      "tokyo": 1.1333
+     },
+     "slack_abs_mw": 4242.0,
+     "solve_s": 2.5,
+     "vm_min": 0.9648,
+     "vm_max": 1.0222,
+     "loss_mw": 2142.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5002.6
+     }
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57368.5,
+     "load_scale": {
+      "tohoku": 0.7126,
+      "tokyo": 1.1314
+     },
+     "slack_abs_mw": 4156.4,
+     "solve_s": 2.6,
+     "vm_min": 0.9649,
+     "vm_max": 1.0222,
+     "loss_mw": 2129.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5980.6
+     }
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57646.8,
+     "load_scale": {
+      "tohoku": 0.7369,
+      "tokyo": 1.1309
+     },
+     "slack_abs_mw": 4032.6,
+     "solve_s": 2.5,
+     "vm_min": 0.9649,
+     "vm_max": 1.0222,
+     "loss_mw": 2138.4,
+     "tie_mw": {
+      "tohoku->tokyo": 6297.2
+     }
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58869.9,
+     "load_scale": {
+      "tohoku": 0.7825,
+      "tokyo": 1.1464
+     },
+     "slack_abs_mw": 3869.3,
+     "solve_s": 2.5,
+     "vm_min": 0.9643,
+     "vm_max": 1.0221,
+     "loss_mw": 2222.4,
+     "tie_mw": {
+      "tohoku->tokyo": 6488.1
+     }
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.8168,
+      "tokyo": 1.1478
+     },
+     "slack_abs_mw": 4024.3,
+     "solve_s": 2.5,
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      }
+     },
+     "vm_min": 0.9643,
+     "vm_max": 1.0221,
+     "loss_mw": 2241.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5937.8
+     }
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58569.5,
+     "load_scale": {
+      "tohoku": 0.8221,
+      "tokyo": 1.1281
+     },
+     "slack_abs_mw": 3589.4,
+     "solve_s": 2.5,
+     "vm_min": 0.965,
+     "vm_max": 1.0221,
+     "loss_mw": 2161.6,
+     "tie_mw": {
+      "tohoku->tokyo": 6150.5
+     }
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 56232.5,
+     "load_scale": {
+      "tohoku": 0.7901,
+      "tokyo": 1.0828
+     },
+     "slack_abs_mw": 3576.0,
+     "solve_s": 2.4,
+     "vm_min": 0.9666,
+     "vm_max": 1.0221,
+     "loss_mw": 1981.5,
+     "tie_mw": {
+      "tohoku->tokyo": 6454.3
+     }
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 53254.8,
+     "load_scale": {
+      "tohoku": 0.7431,
+      "tokyo": 1.027
+     },
+     "slack_abs_mw": 3054.6,
+     "solve_s": 2.9,
+     "vm_min": 0.9685,
+     "vm_max": 1.0222,
+     "loss_mw": 1752.6,
+     "tie_mw": {
+      "tohoku->tokyo": 6345.4
+     }
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 50294.8,
+     "load_scale": {
+      "tohoku": 0.6975,
+      "tokyo": 0.9711
+     },
+     "slack_abs_mw": 3645.3,
+     "solve_s": 3.0,
+     "vm_min": 0.9705,
+     "vm_max": 1.0222,
+     "loss_mw": 1563.3,
+     "tie_mw": {
+      "tohoku->tokyo": 6158.1
+     }
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47352.5,
+     "load_scale": {
+      "tohoku": 0.6533,
+      "tokyo": 0.9153
+     },
+     "slack_abs_mw": 3698.5,
+     "solve_s": 2.4,
+     "vm_min": 0.9724,
+     "vm_max": 1.0223,
+     "loss_mw": 1384.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5972.5
+     }
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 45153.1,
+     "load_scale": {
+      "tohoku": 0.6207,
+      "tokyo": 0.8734
+     },
+     "slack_abs_mw": 3860.4,
+     "solve_s": 0.1,
+     "vm_min": 0.7024,
+     "vm_max": 1.0666,
+     "loss_mw": 1374.6,
+     "tie_mw": {
+      "tohoku->tokyo": 5827.7
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}
