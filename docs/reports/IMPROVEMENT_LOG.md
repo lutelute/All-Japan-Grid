@@ -7,6 +7,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-07(GIF作業中) — **Claude Fable 5** — ハマり⑩: 見せかけAC解の発見と給電率ガード
+
+潮流GIF制作が思わぬ検証になった。full全規模+bridge+境界注入の合成でeastのACが
+発散し、prune ladderが**網の9割を切断した残片の収束を「AC成功」と報告**
+(served 6.2/57.4GW・損失149MW=物理的に不可能な低さが発見の糸口)。
+
+- **ガード**: `uc_to_pf_built.solve_hour` に給電率ガード(served≥95%必須・未満の
+  「収束」は却下して次段へ)。served_load_mw/served_frac をJSON帳簿に追加
+- **合成リスクの実例**: backbone+bridge+境界注入は健全(slack 3.06%)、
+  **同じ介入をfullへ合成すると破綻** — 単体で正当な介入も構成次第で壊れる
+  (MODEL_INTERVENTIONS.md に警告節を追加)
+- 教訓: 新構成の初回実行では served_frac と損失の物理妥当性(需要の1-10%)を必ず見る。
+  「収束した」は「正しく解けた」を意味しない — 幻tie(もっともらしさの罠)と同根
+
 ## 2026-07-07(深夜) — **Claude Fable 5** — 島境界注入: slack≒損失のみに到達（east残差+0.02%）
 
 slack分解で特定した最大の構造項「島間融通ギャップ」の解消。

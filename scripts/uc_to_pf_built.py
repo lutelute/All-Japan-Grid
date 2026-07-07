@@ -302,7 +302,12 @@ def _bounded_ac(net):
 
 def solve_hour(base, mode):
     """1時刻断面を解く — prune ladder(正典と同じ閾値列)+有界ACチェーン。
-    AC不成立は正直に dc_fallback と記録する。"""
+    AC不成立は正直に dc_fallback と記録する。
+
+    給電率ガード(ハマり⑩ 2026-07-07): pruneが網の大半を切断しても残片だけで
+    「収束」と報告される見せかけAC解(east fullで served 6.2/57.4GW を実測)を
+    却下する。served < 95% のAC解は採用せず次の段へ(=silent truncation禁止)。"""
+    pre_load = float(base.load.loc[base.load.in_service, "p_mw"].sum())
     if mode == "ac":
         from src.powerflow.transforms import prune_dc_infeasible
         for thr in (None, 45.0, 30.0, 20.0):
@@ -313,7 +318,10 @@ def solve_hour(base, mode):
                 except Exception:
                     pass
             if _bounded_ac(net):
-                return net, "ac"
+                served = float(net.res_load.p_mw.sum())
+                if pre_load <= 0 or served >= 0.95 * pre_load:
+                    return net, "ac"
+                continue  # 見せかけAC(大半が切断) — 却下して次の段へ
         net = copy.deepcopy(base)
         pp.rundcpp(net)
         return net, "dc_fallback"
@@ -494,9 +502,15 @@ def main():
             n_ok += int(conv)
             slack = (float(net_s.res_ext_grid.p_mw.sum())
                      if conv and len(net_s.res_ext_grid) else None)
+            served = (float(net_s.res_load.p_mw.sum())
+                      if conv and len(net_s.res_load) else None)
+            pre = float(net_t.load.loc[net_t.load.in_service, "p_mw"].sum())
             hrep = {"solver": used, "converged": conv,
                     "net_demand_mw": round(float(net_dem[t]), 1),
                     "load_scale": {r: inj[r]["load_scale"] for r in regions},
+                    "served_load_mw": round(served, 1) if served is not None else None,
+                    "served_frac": (round(served / pre, 4)
+                                    if served is not None and pre > 0 else None),
                     "slack_abs_mw": round(slack, 1) if slack is not None else None,
                     "solve_s": round(time.monotonic() - th, 1)}
             if bnd_mw:

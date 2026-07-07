@@ -36,11 +36,16 @@
 | 10 | **UC注入の容量比例配分**（燃料別合計MWを同燃料機へ容量比例で） | 配分 | ★★ | `src/uc/pf_injection.inject_dispatch` | 機別1:1対応が存在しない | clipped/unmatched（時刻別JSON・07-07から） | — |
 | 11 | **成分別合成slack**（全連結成分にslack付与=断片も静かに給電される） | 配分 | ★★★ | `add_per_component_slacks` | 解けない成分を解くための数値的必須 | slack合計はKPIとして常時報告。**成分別内訳はdiagnose_slackで** | — |
 | 12 | **容量欠損のデフォルト値**（fuel別: nuclear1000/coal600/gas400/…/fallback30MW） | 値 | ★★★ | `_DEFAULT_CAP`/`_CAP_FALLBACK` | 燃料別の典型値。**銘板の証拠なし**。okinawa事例で実害実証（47.3%の主因の片翼） | なし（**要改善**: 適用件数の帳簿化候補） | capacity_bridge適用で上書き |
-| 13 | **capacity_bridge**（出典付き容量パッチ・大型機dedup・稼働炉リスト・zone_override） | 値 | ★ | `src/uc/capacity_bridge.py` | data/reference YAML（出典note付き）・nuclear_status | 適用レポート（patched/dedup/retired/unmatched_patches） | `--bridge`省略（既定OFF） |
+| 13 | **capacity_bridge**（出典付き容量パッチ・大型機dedup・稼働炉リスト・zone_override） | 値 | ★★ | `src/uc/capacity_bridge.py` | data/reference YAML（出典note付き）・nuclear_status | 適用レポート（patched/dedup/retired/unmatched_patches） | `--bridge`省略（既定OFF） |
+
+⚠ **介入の合成リスクの実例（2026-07-07）**: #13(bridge)+#8(境界注入)を**full全規模**へ合成すると
+east のACが発散し、#17 の prune が網の9割を切断した見せかけ解に到達した（backbone では
+同じ合成が健全: slack 3.06%）。単体で正当な介入も**合成先の構成で破綻し得る** —
+新しい構成の初回実行では必ず給電率(served_frac)と損失の物理妥当性を確認すること。
 | 14 | **線路の階級典型パラメータ**（R/X/C/max_i を電圧階級で一律） | 値 | ★★ | `get_line_parameters_safe`/line_types.yaml | 教科書典型値。導体・地中の個体差は無視 | なし（yamlが定義） | — |
 | 15 | **変圧器の階級典型値+v4銘板**（既定=典型sn_mva、出典ありサイトのみ実銘板） | 値 | ★★ | `_TRAFO_PARAMS`+`load_nameplates` | 銘板=出典必須DB（existing 266）。**残り~1,500器は典型値** | `@nameplate`刻印・`n_trafo_nameplate` | `nameplates=None` |
 | 16 | **不明電圧の66kVフォールバック**（kv≤0のノード） | 値 | ★★ | `build_island_net` | 送電網最下級として可解性維持 | なし | — |
-| 17 | **AC prune ladder**（DC不可行枝を刈ってからAC・段階的閾値） | 構造 | ★★ | `solve_island` | 発散する全規模ACを解くための数値手段。**刈られた枝の潮流は存在しない扱い** | prune段数・solved_mode表示（west「DC解」明示） | maxバス数設定 |
+| 17 | **AC prune ladder**（DC不可行枝を刈ってからAC・段階的閾値） | 構造 | ★★★ | `solve_island`/`uc_to_pf_built.solve_hour` | 発散する全規模ACを解くための数値手段。**刈られた枝の潮流は存在しない扱い**。⚠実害実証(2026-07-07): pruneが網の9割を切断した残片の収束を「AC成功」と報告する**見せかけAC解**(east full+bridge構成で served 6.2/57.4GW)→solve_hourに**給電率ガード**(served≥95%必須・未満は却下し次段へ)を追加 | prune段数・solved_mode・**served_load_mw/served_frac**(07-07から) | maxバス数設定 |
 | 18 | **有界ACチェーン**（backbone系: 厳tol×100反復×3構成のみ・粘らない） | 値 | ★ | `uc_to_pf_built._BOUNDED_AC` | BLAS abort回避+緩tol解の物理的無意味さ | solver名がJSONに | — |
 
 （snapped系譜の旧介入 — 最近傍drop法・合成橋 — は built 系譜への移行で退役。
