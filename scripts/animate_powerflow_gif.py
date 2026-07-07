@@ -109,8 +109,9 @@ def solve_island_24h(island, scn, uc, model, bridge=False, boundary=False):
     built = json.load(open(BUILT, encoding="utf-8"))
     cfg = load_demand_config()
     t0 = time.monotonic()
+    geom = {}
     base, bus_of, _ = build_island_net(island, built["nodes"], built["edges"],
-                                       ISLAND_FREQ[island], {})
+                                       ISLAND_FREQ[island], geom)
     attach_generators(base, bus_of, built["nodes"], island)
     gzo = None
     if bridge:
@@ -133,8 +134,14 @@ def solve_island_24h(island, scn, uc, model, bridge=False, boundary=False):
     for li in base.line.index:
         fb, tb = int(base.line.at[li, "from_bus"]), int(base.line.at[li, "to_bus"])
         pa, pb = coords[fb], coords[tb]
-        if pa[0] is not None and pb[0] is not None:
-            line_seg[int(li)] = (pa, pb)
+        if pa[0] is None or pb[0] is None:
+            continue
+        # 実OSM経路(ポリライン)で描く — 直線描画は実在しない交差に見える
+        a5 = (round(pa[1], 5), round(pa[0], 5))
+        b5 = (round(pb[1], 5), round(pb[0], 5))
+        path = geom.get((a5, b5))
+        line_seg[int(li)] = (path if path and len(path) >= 2
+                             else [list(pa), list(pb)])
 
     frames = []
     for t in range(24):
@@ -237,7 +244,7 @@ def _draw_net(ax, fr, line_seg, coords, pmax, gmax, key_filter=None):
     lis = [li for li in fr["flows"]
            if key_filter is None or key_filter(li)]
     if lis:
-        segs = [[line_seg[li][0], line_seg[li][1]] for li in lis]
+        segs = [np.asarray(line_seg[li], dtype=float) for li in lis]
         mags = np.array([abs(fr["flows"][li]) for li in lis])
         rel = np.sqrt(np.clip(mags / pmax, 0, 1))
         colors = LINE_LO[None, :] + rel[:, None] * (LINE_HI - LINE_LO)[None, :]

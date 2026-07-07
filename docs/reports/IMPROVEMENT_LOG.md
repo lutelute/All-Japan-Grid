@@ -20,6 +20,12 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   (MODEL_INTERVENTIONS.md に警告節を追加)
 - 教訓: 新構成の初回実行では served_frac と損失の物理妥当性(需要の1-10%)を必ず見る。
   「収束した」は「正しく解けた」を意味しない — 幻tie(もっともらしさの罠)と同根
+- **検証プローブの判定(同日)**: ①**07-05の「east全規模AC」正典主張は有効**
+  (territory=False再現: thr=45で**99.0%給電**・損失5,797MW=公表値と一致)。
+  ②**A案(領土再属性)がeast全規模ACの収束を壊した**(territory=True: thr=20で
+  10.8%給電の見せかけ解のみ→ガード後は誠実なdc_fallback)。原因候補=plants dedup
+  による発電分布変化 or 青函再属性の島構成変化 — **未解明(次セッションの調査対象)**。
+  正典 solve_island にも同ガード+served_frac帳簿を追加(見せかけ解はrejected記録)
 
 ## 2026-07-07(深夜) — **Claude Fable 5** — 島境界注入: slack≒損失のみに到達（east残差+0.02%）
 

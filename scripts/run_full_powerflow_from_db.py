@@ -501,8 +501,13 @@ def balance_by_zone(net, cfg):
 
 
 def solve_island(net, max_ac_buses):
-    """DC always; AC with a prune ladder unless the island exceeds max_ac_buses."""
+    """DC always; AC with a prune ladder unless the island exceeds max_ac_buses.
+
+    給電率ガード(ハマり⑩ 2026-07-07): pruneが網の大半を切断した残片の収束を
+    「AC成功」と報告する見せかけAC解(east+territoryで served 10.8% を実測)を
+    却下する。served < 95% のAC解は採用せず次の段へ。served_frac を ac に記録。"""
     net.bus["vm_pu"] = 1.0
+    pre_load = float(net.load.loc[net.load.in_service, "p_mw"].sum())
     net_dc = copy.deepcopy(net)
     dc = run_powerflow(net_dc, "dc")
     ac = {"mode": "ac", "converged": False}
@@ -518,7 +523,15 @@ def solve_island(net, max_ac_buses):
                     pass
             ac = run_powerflow(net_ac, "ac")
             if ac["converged"]:
-                break
+                served = (float(net_ac.res_load.p_mw.sum())
+                          if len(net_ac.res_load) else 0.0)
+                frac = served / pre_load if pre_load > 0 else 1.0
+                ac["served_load_mw"] = round(served, 1)
+                ac["served_frac"] = round(frac, 4)
+                if frac >= 0.95:
+                    break
+                ac = {"mode": "ac", "converged": False,
+                      "rejected": f"fake_ac served_frac={frac:.3f} thr={thr}"}
     else:
         ac["error"] = f"island too large for AC ({len(net.bus)} > {max_ac_buses}); DC only"
     return net_dc, dc, net_ac, ac

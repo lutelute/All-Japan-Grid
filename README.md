@@ -66,6 +66,40 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ## Highlights / ハイライト
 
+### Unreleased — 2026-07 (in progress)
+
+- 🧾 **Model-intervention registry / モデル介入台帳** ([docs/MODEL_INTERVENTIONS.md](docs/MODEL_INTERVENTIONS.md)).
+  Every mechanism that makes the model *look* connected, solvable, or complete — nearest-neighbour
+  generator attachment, synthetic load allocation, default capacities, per-component slacks,
+  prune ladders (18 in total) — is now catalogued with its **basis, ledger (where it is disclosed),
+  and off-switch**. Includes "how to read" rules: per-line flow values are composite estimates and
+  must not be cited individually. Motivated by the phantom-tie incident (next bullet):
+  *an internally consistent model can silently assert equipment that does not exist.*
+  「専門知識がないと、つながったと信じ込んでしまう」— 盲信リスクへの恒久対応として、
+  接続・値・配分を作る介入18件を根拠・帳簿・無効化の3点セットで台帳化。
+- 🕵️ **Failure case study: the phantom tie / 失敗事例「幻の連系線」**
+  ([docs/reports/case_study_phantom_tie_2026-07-07.md](docs/reports/case_study_phantom_tie_2026-07-07.md)).
+  For ~a month the model asserted a non-existent Kyushu–Shikoku interconnector (445 MW) — actually
+  two real Chugoku-EPCO lines in Yamaguchi mislabelled by overlapping extraction bboxes. Found only
+  by reconciliation against external ground truth (OCCTO's real tie list). Fixed by
+  **territory-based zone re-attribution** (coordinate → prefecture polygon → service area;
+  physical connectivity untouched, frequency-boundary moves forbidden): multi-zone duplicate
+  coordinates 1,623→10, the invisible Honshi tie restored, duplicate plant attachments removed.
+- ⚖️ **Slack decomposed to physics / slackの完全分解.** With sourced okinawa fleet calibration
+  (slack 47.3→3.7%), capacity bridging, and UC interconnection flows injected at the *actual*
+  converter substations (Shin-Shinano FC, Kita-Hon), the east-island 24 h slack identity now closes
+  at machine precision: **slack ≈ losses (residual +0.02 %)**
+  ([docs/reports/east_slack_decomposition_2026-07-07.md](docs/reports/east_slack_decomposition_2026-07-07.md),
+  [boundary_injection_2026-07-07.md](docs/reports/boundary_injection_2026-07-07.md)).
+- 🛡 **Served-load guard against fake AC solutions / 見せかけAC解ガード.** A "converged" AC solve
+  that silently disconnected 90 % of the network (6.2 of 57.4 GW served, 149 MW losses — physically
+  impossible) is now rejected: AC solutions must serve ≥95 % of pre-solve load, and
+  `served_frac` ships in every result JSON. *Convergence is not correctness.*
+- 🎬 **24 h power-flow animation / 潮流アニメーション**
+  (`scripts/animate_powerflow_gif.py`): the UC dispatch flowing through the national grid,
+  hour by hour — line width/shade = |P|, generation bubbles, FC/Kita-Hon transfers, honest
+  DC labelling for west, and the intervention-registry caveat rendered on every frame.
+
 ### v1.4.0
 
 - 📏 **Externally validated against utility ground truth — to our knowledge, a first for an OSM-extracted public grid.** The model is now scored
