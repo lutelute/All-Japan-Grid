@@ -38,6 +38,12 @@ function solve_pf(island, mode)
     fprintf('=== %s ===\n', island);
     fprintf('case: %s\n', matfile);
     mpc = loadcase(matfile);
+    % 配布ケースは表示用の bus_name を同梱するが、MATPOWER の ext2int が
+    % 並べ替え時に一部環境で失敗する。潮流計算には不要なので除去する
+    % (バス名は dist/matpower_national/<island>_busname.csv で参照可)。
+    if isfield(mpc, 'bus_name')
+        mpc = rmfield(mpc, 'bus_name');
+    end
     fprintf('loaded: %d bus, %d branch, %d gen\n', ...
         size(mpc.bus, 1), size(mpc.branch, 1), size(mpc.gen, 1));
 
