@@ -5,6 +5,19 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Reactive compensation** (opt-in `--reactive-comp`, intervention registry #20): shunt
+  capacitor banks at load buses, modelling what real distribution substations carry but OSM
+  omits. Diagnosis (`docs/reports/east_network_reactive_2026-07-09.md`) showed the east
+  full-scale AC non-convergence under honest demand geography is a **reactive/voltage-collapse**
+  problem, not an angle bottleneck: DC angles are healthy (prune removes ~0 lines) yet ~19 GVar
+  of load reactive demand had to flow through high-X radial 66 kV lines with no local support.
+  Compensation restores an honest full-scale AC solution (98.2 % served, 98.4 % of buses in
+  0.9–1.1 pu). Config `reactive_compensation_factor` (default 0.6); wired into both
+  `uc_to_pf_built.py` and `run_full_powerflow_from_db.py`; ledger in the result JSON. Default OFF.
+
 ## [1.5.0] - 2026-07-09
 
 Tagged in git as `v1.5.0`. Theme: **ready-to-run dataset distribution** (download page,

@@ -66,6 +66,21 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ## Highlights / ハイライト
 
+### Unreleased — 2026-07 (in progress)
+
+- 🔌 **east full-scale AC solved — root cause was reactive power, not topology / east全規模ACの網側解明.**
+  ([docs/reports/east_network_reactive_2026-07-09.md](docs/reports/east_network_reactive_2026-07-09.md)).
+  Under honest demand geography the 6,222-bus east AC failed — but the DC angles are healthy
+  (the angle-based prune ladder removes ~0 lines) so the breaker is **reactive power / voltage
+  collapse**, not an angle bottleneck: ~19 GVar of load reactive demand had to flow through
+  high-X radial 66 kV lines with **no local support**. Modelling the shunt capacitor banks that
+  real distribution substations carry (opt-in `--reactive-comp`, intervention #20) restores an
+  honest full-scale AC solution — **98.2 % served, 98.4 % of buses in the 0.9–1.1 pu band**
+  (vs the earlier fake 10.8 %). The remaining ~41 outlier buses (0.66 %) are the localized 66 kV
+  detail left to refine. Default OFF keeps canonical comparability.
+- 🧾 **Model-intervention registry now at 20 entries** — #19 per-prefecture demand, #20 reactive
+  compensation, each with basis / ledger / off-switch.
+
 ### v1.5.0 — 2026-07-09
 
 - 📦 **Ready-to-run dataset distribution / DLしてそのまま回るデータセット配布.**

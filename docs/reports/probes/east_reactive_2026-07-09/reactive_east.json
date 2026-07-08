@@ -1,0 +1,53 @@
+{
+ "probe": "reactive-compensation",
+ "island": "east",
+ "t": 12,
+ "config": "A案+pref-demand(誠実な需要地理)、シャント補償率を振る",
+ "pre_load_mw": 57403.4,
+ "q_load_mvar": 18867.6,
+ "variants": [
+  {
+   "solver": "dc_fallback",
+   "factor": 0.0,
+   "n_shunt": 0,
+   "q_comp_mvar": 0.0,
+   "solve_s": 30.1
+  },
+  {
+   "solver": "ac",
+   "thr": 30.0,
+   "served_frac": 0.9824,
+   "loss_mw": 6538.6,
+   "vm_min": 0.521,
+   "vm_max": 1.6888,
+   "n_shunt": 3377,
+   "factor": 0.3,
+   "q_comp_mvar": 5660.3,
+   "solve_s": 22.5
+  },
+  {
+   "solver": "ac",
+   "thr": 30.0,
+   "served_frac": 0.9824,
+   "loss_mw": 6397.2,
+   "vm_min": 0.6535,
+   "vm_max": 1.7022,
+   "n_shunt": 3377,
+   "factor": 0.6,
+   "q_comp_mvar": 11320.5,
+   "solve_s": 20.6
+  },
+  {
+   "solver": "ac",
+   "thr": 30.0,
+   "served_frac": 0.9824,
+   "loss_mw": 6328.3,
+   "vm_min": 0.73,
+   "vm_max": 1.7157,
+   "n_shunt": 3377,
+   "factor": 0.9,
+   "q_comp_mvar": 16980.8,
+   "solve_s": 23.0
+  }
+ ]
+}

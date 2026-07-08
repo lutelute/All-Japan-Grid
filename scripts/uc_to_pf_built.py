@@ -362,6 +362,14 @@ def main():
                          "既定OFF=従来のzone一様(正典比較性維持)。A案の需要地理"
                          "回帰への中期対応(a) "
                          "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
+    ap.add_argument("--reactive-comp", nargs="?", type=float, const=-1.0,
+                    default=None, metavar="FACTOR",
+                    help="負荷バスに容量性シャント(コンデンサバンク)を付与して"
+                         "無効電力を局所供給する。実配電用変電所のコンデンサを"
+                         "モデル化(OSM欠落)。FACTOR=各負荷の無効需要の局所供給率"
+                         "(省略時=config reactive_compensation_factor)。既定OFF。"
+                         "east full ACの非収束(電圧崩壊)を解消 "
+                         "(docs/reports/east_network_reactive_2026-07-09.md)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -389,6 +397,7 @@ def main():
                        "bridge": bool(args.bridge),
                        "boundary_injection": bool(args.boundary_injection),
                        "pref_demand": bool(args.pref_demand),
+                       "reactive_comp": (args.reactive_comp is not None),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -426,6 +435,17 @@ def main():
                   f"Δ{bridge_rep['mw_delta']:+,.0f}MW")
         allocate_loads(base, cfg, pref_gwh=pref_gwh)
         pref_ledger = getattr(base, "_pref_demand_ledger", None) if pref_gwh else None
+        reactive_rep = None
+        if args.reactive_comp is not None:
+            from src.powerflow.pipeline import add_reactive_compensation
+            rfac = (cfg.get("reactive_compensation_factor", 0.6)
+                    if args.reactive_comp == -1.0 else args.reactive_comp)
+            n_shunt = add_reactive_compensation(base, factor=rfac)
+            q_comp = float(-base.shunt.q_mvar.sum()) if len(base.shunt) else 0.0
+            reactive_rep = {"factor": rfac, "n_shunt": n_shunt,
+                            "q_comp_mvar": round(q_comp, 1)}
+            print(f"  reactive-comp: factor={rfac} shunt={n_shunt} "
+                  f"q_comp={q_comp:,.0f}MVar")
         ledger = None
         if args.model == "backbone":
             base, ledger = build_backbone_net(base)
@@ -475,6 +495,7 @@ def main():
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,
                    "pref_demand_ledger": pref_ledger,
+                   "reactive_comp": reactive_rep,
                    "bridge": ({k: v for k, v in bridge_rep.items()
                                if k != "zone_override"}
                               if bridge_rep else None),

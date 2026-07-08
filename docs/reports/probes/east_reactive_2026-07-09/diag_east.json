@@ -1,0 +1,103 @@
+{
+ "probe": "east-network-bottleneck",
+ "t": 12,
+ "config": "A案(territory=True)+pref-demand(誠実な需要地理)",
+ "line_kv_hist": {
+  "66": 4905,
+  "77": 23,
+  "132": 1,
+  "154": 934,
+  "275": 304,
+  "500": 146
+ },
+ "n_bus": 6222,
+ "n_line": 6313,
+ "n_trafo": 630,
+ "build_s": 42.2,
+ "pre_load_mw": 57403.4,
+ "dc_angle_by_kv": {
+  "66": {
+   "n": 4905,
+   "p50": 0.1,
+   "p95": 1.2,
+   "max": 30.4,
+   "n_over_45": 0,
+   "n_over_90": 0
+  },
+  "77": {
+   "n": 23,
+   "p50": 0.0,
+   "p95": 0.3,
+   "max": 0.4,
+   "n_over_45": 0,
+   "n_over_90": 0
+  },
+  "132": {
+   "n": 1,
+   "p50": 0.1,
+   "p95": 0.1,
+   "max": 0.1,
+   "n_over_45": 0,
+   "n_over_90": 0
+  },
+  "154": {
+   "n": 934,
+   "p50": 0.1,
+   "p95": 2.1,
+   "max": 12.4,
+   "n_over_45": 0,
+   "n_over_90": 0
+  },
+  "275": {
+   "n": 304,
+   "p50": 0.1,
+   "p95": 3.1,
+   "max": 7.5,
+   "n_over_45": 0,
+   "n_over_90": 0
+  },
+  "500": {
+   "n": 146,
+   "p50": 0.1,
+   "p95": 3.1,
+   "max": 19.4,
+   "n_over_45": 0,
+   "n_over_90": 0
+  }
+ },
+ "prune_ladder": [
+  {
+   "thr": 45.0,
+   "n_pruned": 0,
+   "pruned_kv": {},
+   "n_comp": 533,
+   "main_comp": 5373,
+   "ac_converged": false,
+   "served_frac": null
+  },
+  {
+   "thr": 30.0,
+   "n_pruned": 2,
+   "pruned_kv": {
+    "66": 2
+   },
+   "n_comp": 535,
+   "main_comp": 5340,
+   "ac_converged": false,
+   "served_frac": null
+  },
+  {
+   "thr": 20.0,
+   "n_pruned": 7,
+   "pruned_kv": {
+    "66": 4,
+    "275": 2,
+    "500": 1
+   },
+   "n_comp": 540,
+   "main_comp": 5262,
+   "ac_converged": true,
+   "served_frac": 0.1086
+  }
+ ]
+}

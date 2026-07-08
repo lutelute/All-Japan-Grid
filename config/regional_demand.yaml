@@ -23,6 +23,18 @@ load_factor: 0.85
 # cos(phi) = 0.95 → Q = P * tan(acos(0.95))
 power_factor: 0.95
 
+# Reactive compensation factor (opt-in via --reactive-comp / reactive_comp=…).
+# Fraction of each load bus's reactive demand supplied locally by a shunt
+# capacitor (models the capacitor banks that real distribution substations
+# carry but OSM omits). 0 = off (default, keeps canonical comparability).
+# Diagnosis (docs/reports/east_network_reactive_2026-07-09.md): east full AC
+# non-convergence under honest demand geography is a reactive/voltage-collapse
+# problem — DC angles are healthy, prune removes ~0 lines, yet AC diverges
+# because ~19 GVar of load reactive demand must flow through high-X radial
+# 66 kV lines with no local support. Compensation restores honest AC (98 %
+# served, vs the fake 10.8 %). 0.6 is a reasonable central value.
+reactive_compensation_factor: 0.6
+
 # Voltage-class weights for distributing demand across buses
 # Lower voltage levels carry proportionally more distribution load
 # Weights are normalized within each region

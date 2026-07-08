@@ -710,6 +710,13 @@ def main():
                          "既定OFF=従来のzone一様(正典比較性維持)。"
                          "A案(territory=True)とセットで需要地理が閉じる "
                          "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
+    ap.add_argument("--reactive-comp", nargs="?", type=float, const=-1.0,
+                    default=None, metavar="FACTOR",
+                    help="負荷バスに容量性シャント(コンデンサバンク)を付与し無効"
+                         "電力を局所供給(実配電用変電所のコンデンサをモデル化)。"
+                         "FACTOR=局所供給率(省略時=config)。既定OFF。east full ACの"
+                         "非収束(電圧崩壊)を解消 "
+                         "(docs/reports/east_network_reactive_2026-07-09.md)")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
@@ -738,6 +745,12 @@ def main():
         net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom)
         n_gen = attach_generators(net, bus_of, nodes, island)
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
+        if args.reactive_comp is not None:
+            from src.powerflow.pipeline import add_reactive_compensation
+            rfac = (cfg.get("reactive_compensation_factor", 0.6)
+                    if args.reactive_comp == -1.0 else args.reactive_comp)
+            n_shunt = add_reactive_compensation(net, factor=rfac)
+            print(f"  reactive-comp: factor={rfac} shunt={n_shunt}")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
         balance_by_zone(net, cfg)
         net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)
