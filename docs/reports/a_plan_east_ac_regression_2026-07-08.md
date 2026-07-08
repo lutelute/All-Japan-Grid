@@ -110,7 +110,56 @@ zone が変わると**1バスあたり需要が跳ぶ**:
 .venv/bin/python docs/reports/probes/a_regression_2026-07-08/probe_a_regression.py T0 /tmp/T0.json
 # 第2弾（zone機構分解・3変種）
 .venv/bin/python docs/reports/probes/a_regression_2026-07-08/probe_a_regression2.py /tmp/probe2.json
+# 第3弾（§7 中期対応(a)の検証）
+.venv/bin/python docs/reports/probes/a_regression_2026-07-08/probe_pref_demand.py east /tmp/pref_east.json
 ```
 
 生JSON（本レポートの全数値の出所）: 同ディレクトリの
-`T0.json / T1.json / T1_nodedup.json / T1_noseikan.json / probe2.json`。
+`T0.json / T1.json / T1_nodedup.json / T1_noseikan.json / probe2.json /
+pref_east_v1_enclave_bug.json / pref_east_v2_honest.json / pref_hokkaido.json`。
+
+---
+
+## 7. 中期対応(a)の実装と検証（2026-07-09・オーナー委任によるFable判断）
+
+### 実装（介入#19・opt-in）
+
+- 出典付き県別需要: `data/reference/pref_demand_fy2024.json`
+  （電力調査統計 3-(2) 都道府県別電力需要実績 FY2024年度計・資源エネルギー庁・
+  URL/原文引用/checksum同梱。全国計822.8TWh、県積上げとの差+14.9GWh=0.002%は原典内丸め）
+- `src/powerflow/pref_demand.py` — {(zone,pref): GWh} 重み。zoneは**A案再属性後の
+  実ラベル**で数え、県がzoneを跨ぐ場合はsubノード数で按分（静岡の富士川split、
+  周波数ガード飛び地=新信濃FC周辺の東電50Hz設備(長野県内zone=tokyo, 15.4%)等を帳簿化）
+- `allocate_loads(pref_gwh=…)` — zone内を県別実需要シェア→県内電圧重みの2段配分。
+  zone合計アンカー(regional_peak_demand_mw)は不変。`--pref-demand`（uc_to_pf_built /
+  run_full_powerflow_from_db、既定OFF）。帳簿は `pref_demand_ledger` としてJSON出力
+- 不変量検証: 単一県zone（okinawa・hokkaido）では従来配分と**厳密一致**（最大バス差0.000000MW）。
+  ゲート44件PASS
+
+### 検証結果 — 誠実な負の結果を含む
+
+| 構成 | 判定 |
+|---|---|
+| A案＋県別需要 **v1**（飛び地バグあり） | ✅ AC thr=30 served 0.983 loss 6,051MW — **ただしアーティファクト** |
+| A案＋県別需要 **v2**（誠実な飛び地按分） | ❌ dc_fallback（thr=45/30非収束・thr=20見せかけ0.1086） |
+
+**v1の「AC回復」は出荷前に棄却した。** v1では (tokyo,長野県) ペアの欠落フォールバックが
+長野県需要のほぼ全量シェア（約2.3GW相当）を新信濃FC回廊の36バスに集中させており、
+その分都心メッシュの負荷が軽くなって偶然解けていた — 本レポート§4で暴いたのと同型の
+「誤った需要地理が偶然バランスして解ける」現象の再演であり、これを「回復」として
+出荷することは本プロジェクトの規約（盲信リスク・介入台帳の精神）に反する。
+before/after図の目視（長野に不自然な濃赤クラスタ）で発覚し、飛び地按分の修正（v2）で
+需要地理を誠実化した結果、fullのACは不成立に戻った。
+
+### 採用した結論
+
+1. **介入#19（v2）を採用** — 目的は需要地理の真実化であり、AC復活ではない。
+   都心66kVバス約50MW/バス vs 地方約10MW/バスという現実的な密度差が入った
+   （before/after図: `figs/pref_demand_before_after_2026-07-09.png`、
+   正味移動 Σ|Δ|/2≈9.0GW）
+2. **east fullのAC不成立は「正しい需要地理では現行モデルが解けない」という事実**として
+   受け入れ、誠実に dc_fallback 表示（短期(c)の継続）。AC実証は backbone が担う
+3. §5の対症案(b)（prune深化・ソルバ調整でfullのACを無理に立てる）は**採用しない** —
+   v1の教訓どおり、「解けた」を作る操作は誤地理の温存と区別がつかなくなる
+4. 残る真の改善方向: 都心メッシュの66kV網の物理表現（並列回線・変圧器容量・無効電力）
+   の精緻化。これは需要側でなく**網側**の課題として別トラックで扱う

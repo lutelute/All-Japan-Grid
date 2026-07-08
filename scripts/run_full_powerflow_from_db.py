@@ -410,7 +410,17 @@ def attach_generators(net, bus_of, nodes, island, territory=True):
 # ──────────────────────────────────────────────────────────────────────────
 #  Load allocation: substation buses only, per region, voltage-class weighted
 # ──────────────────────────────────────────────────────────────────────────
-def allocate_loads(net, cfg):
+def allocate_loads(net, cfg, pref_gwh=None):
+    """zone別ピーク需要をバスへ空間配分する。
+
+    pref_gwh: None(既定)=従来のzone一様×電圧階級重み(正典比較性維持)。
+      {(zone, pref): 年間需要GWh}(src.powerflow.pref_demand.pref_zone_gwh)を
+      渡すと、zone内をまず県別実需要シェアで配り、県内を電圧重みで配る
+      (需要空間配分の細分化 2026-07-09 —
+       docs/reports/a_plan_east_ac_regression_2026-07-08.md の中期対応(a))。
+      zone合計は従来どおり regional_peak_demand_mw がアンカー。
+      帳簿は net._pref_demand_ledger に残す。
+    """
     peak = cfg["regional_peak_demand_mw"]
     lf = cfg.get("load_factor", 0.85)
     pf = cfg.get("power_factor", 0.95)
@@ -418,6 +428,44 @@ def allocate_loads(net, cfg):
     tan_phi = math.tan(math.acos(pf))
     total = 0.0
     is_sub = net.bus["type"] != "n"
+
+    def _vweight(b):
+        vn = float(net.bus.at[b, "vn_kv"])
+        key = int(round(vn))
+        return vw.get(key) or vw.get(min(
+            [k for k in vw if isinstance(k, (int, float)) and k > 0] or [0],
+            key=lambda k: abs(k - vn)), 0.5)
+
+    def _spread(idxs, target):
+        nonlocal total
+        weights = [_vweight(b) for b in idxs]
+        tw = sum(weights) or len(idxs)
+        for b, w in zip(idxs, weights):
+            p = target * (w / tw)
+            pp.create_load(net, bus=b, p_mw=p, q_mvar=p * tan_phi,
+                           name=f"load_{b}")
+            total += p
+
+    pref_of_bus = None
+    ledger = None
+    if pref_gwh is not None:
+        from src.powerflow.pref_demand import load_pref_demand
+        from src.powerflow.region_attribution import prefecture_of
+        _pref_cache = {}
+
+        def pref_of_bus(b):
+            lon, lat = _bus_lonlat(net, b)
+            if lon is None:
+                return None
+            key = (round(lat, 4), round(lon, 4))
+            if key not in _pref_cache:
+                _pref_cache[key] = prefecture_of(lat, lon)
+            return _pref_cache[key]
+
+        _national = {p: rec["total_gwh"]
+                     for p, rec in load_pref_demand()["prefectures"].items()}
+        ledger = {"mode": "pref_demand_fy2024", "zones": {}}
+
     for zone, grp in net.bus.groupby("zone"):
         target = peak.get(zone, 0) * lf
         if target <= 0:
@@ -425,20 +473,35 @@ def allocate_loads(net, cfg):
         idxs = [b for b in grp.index if is_sub.get(b, False)]
         if not idxs:
             idxs = list(grp.index)
-        weights = []
+        if pref_gwh is None:
+            _spread(idxs, target)
+            continue
+        # --- 県別実需要シェアで zone 内を配る ---
+        by_pref = {}
         for b in idxs:
-            vn = float(net.bus.at[b, "vn_kv"])
-            key = int(round(vn))
-            w = vw.get(key) or vw.get(min(
-                [k for k in vw if isinstance(k, (int, float)) and k > 0] or [0],
-                key=lambda k: abs(k - vn)), 0.5)
-            weights.append(w)
-        tw = sum(weights) or len(idxs)
-        for b, w in zip(idxs, weights):
-            p = target * (w / tw)
-            pp.create_load(net, bus=b, p_mw=p, q_mvar=p * tan_phi,
-                           name=f"load_{b}")
-            total += p
+            by_pref.setdefault(pref_of_bus(b), []).append(b)
+        gwh_of = {}
+        for pref in by_pref:
+            if pref is None:
+                gwh_of[pref] = 0.0  # 座標欠損(想定外) — 後段でzone平均を充当
+            else:
+                # (zone,pref) 実需要。表に無いペア(旧zoneラベル等)は県全体値で代用(開示)
+                gwh_of[pref] = pref_gwh.get((zone, pref),
+                                            _national.get(pref, 0.0))
+        pos = [v for v in gwh_of.values() if v > 0]
+        fill = (sum(pos) / len(pos)) if pos else 1.0
+        gwh_of = {p: (v if v > 0 else fill) for p, v in gwh_of.items()}
+        tg = sum(gwh_of.values())
+        zl = {}
+        for pref, buses in by_pref.items():
+            t_pref = target * (gwh_of[pref] / tg)
+            _spread(buses, t_pref)
+            zl[str(pref)] = {"n_bus": len(buses),
+                             "gwh": round(gwh_of[pref], 1),
+                             "target_mw": round(t_pref, 1)}
+        ledger["zones"][zone] = zl
+    if ledger is not None:
+        net._pref_demand_ledger = ledger
     return total
 
 
@@ -641,6 +704,12 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
+    ap.add_argument("--pref-demand", action="store_true",
+                    help="需要空間配分の細分化: zone内を県別実需要シェア"
+                         "(電力調査統計FY2024・出典付き)で配ってから電圧重み。"
+                         "既定OFF=従来のzone一様(正典比較性維持)。"
+                         "A案(territory=True)とセットで需要地理が閉じる "
+                         "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
@@ -648,6 +717,12 @@ def main():
         db = json.load(f)
     nodes, edges = db["nodes"], db["edges"]
     cfg = load_demand_config()
+    pref_gwh = None
+    if args.pref_demand:
+        from src.powerflow.pref_demand import pref_zone_gwh
+        pref_gwh, pw_ledger = pref_zone_gwh(nodes)
+        print(f"県別需要重み: {pw_ledger['title']} "
+              f"({pw_ledger['n_pref_weighted']}県, split={list(pw_ledger['split_prefs'])})")
 
     targets = args.islands or ["hokkaido", "east", "west", "okinawa"]
     summary = {"_meta": {"source": "docs/data/built/all.json",
@@ -662,7 +737,7 @@ def main():
         geom = {}
         net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom)
         n_gen = attach_generators(net, bus_of, nodes, island)
-        total_load = allocate_loads(net, cfg)
+        total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
         balance_by_zone(net, cfg)
         net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)

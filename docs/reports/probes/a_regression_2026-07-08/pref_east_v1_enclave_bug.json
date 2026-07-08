@@ -1,0 +1,139 @@
+{
+ "probe": "pref-demand-recovery",
+ "island": "east",
+ "t": 12,
+ "config": "territory=True(既定)+dedup ON(既定)+pref_demand",
+ "pref_weights": {
+  "n_pref": 47,
+  "split_prefs": {
+   "静岡県": {
+    "tokyo": {
+     "n_sub": 99,
+     "share": 0.339,
+     "gwh": 9514.3
+    },
+    "chubu": {
+     "n_sub": 193,
+     "share": 0.661,
+     "gwh": 18548.1
+    }
+   }
+  },
+  "source": "https://www.enecho.meti.go.jp/statistics/electric_power/ep002/xls/2024/3-2-2024.xlsx"
+ },
+ "build": {
+  "n_bus": 6222,
+  "n_gen": 8235,
+  "load_mw": 55250.0,
+  "build_s": 42.1,
+  "ledger_zones": {
+   "tohoku": {
+    "新潟県": {
+     "n_bus": 142,
+     "gwh": 15794.1,
+     "target_mw": 2310.0
+    },
+    "福島県": {
+     "n_bus": 232,
+     "gwh": 14686.6,
+     "target_mw": 2148.0
+    },
+    "宮城県": {
+     "n_bus": 203,
+     "gwh": 13846.9,
+     "target_mw": 2025.2
+    },
+    "岩手県": {
+     "n_bus": 141,
+     "gwh": 9133.1,
+     "target_mw": 1335.8
+    },
+    "山形県": {
+     "n_bus": 118,
+     "gwh": 7703.1,
+     "target_mw": 1126.6
+    },
+    "青森県": {
+     "n_bus": 217,
+     "gwh": 7555.1,
+     "target_mw": 1105.0
+    }
+   },
+   "tokyo": {
+    "東京都": {
+     "n_bus": 315,
+     "gwh": 76976.2,
+     "target_mw": 12184.8
+    },
+    "神奈川県": {
+     "n_bus": 339,
+     "gwh": 46841.9,
+     "target_mw": 7414.8
+    },
+    "埼玉県": {
+     "n_bus": 369,
+     "gwh": 36671.9,
+     "target_mw": 5804.9
+    },
+    "千葉県": {
+     "n_bus": 312,
+     "gwh": 35246.5,
+     "target_mw": 5579.3
+    },
+    "茨城県": {
+     "n_bus": 224,
+     "gwh": 23149.3,
+     "target_mw": 3664.4
+    },
+    "栃木県": {
+     "n_bus": 263,
+     "gwh": 15319.3,
+     "target_mw": 2425.0
+    }
+   }
+  }
+ },
+ "uc_status": "Optimal",
+ "injection": {
+  "tohoku": {
+   "load_scale": 0.7742,
+   "clipped": {},
+   "unmatched": {}
+  },
+  "tokyo": {
+   "load_scale": 1.1052,
+   "clipped": {
+    "coal": 968.0
+   },
+   "unmatched": {}
+  }
+ },
+ "pre_load_mw": 57403.4,
+ "rungs": [
+  {
+   "thr": null,
+   "converged": false,
+   "solve_s": 7.9
+  },
+  {
+   "thr": 45.0,
+   "converged": false,
+   "solve_s": 9.6
+  },
+  {
+   "thr": 30.0,
+   "converged": true,
+   "solve_s": 3.6,
+   "served_frac": 0.983,
+   "loss_mw": 6051.0,
+   "vm_min": 0.5972,
+   "vm_max": 1.6767
+  }
+ ],
+ "verdict": {
+  "solver": "ac",
+  "thr": 30.0,
+  "served_frac": 0.983,
+  "loss_mw": 6051.0
+ }
+}

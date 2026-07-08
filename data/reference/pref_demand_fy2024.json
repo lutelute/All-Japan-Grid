@@ -1,0 +1,304 @@
+{
+ "_meta": {
+  "title": "電力調査統計 ３－（２）都道府県別電力需要実績 2024年度（年度計）",
+  "publisher": "経済産業省 資源エネルギー庁",
+  "source_url": "https://www.enecho.meti.go.jp/statistics/electric_power/ep002/xls/2024/3-2-2024.xlsx",
+  "source_page": "https://www.enecho.meti.go.jp/statistics/electric_power/ep002/results.html",
+  "retrieved": "2026-07-09",
+  "unit": "GWh (原典は1,000kWh、÷1000で換算)",
+  "quote_header": "３－（２）．都道府県別電力需要実績 / 都道府県名 / 特別高圧 / 高圧 / 低圧 / 合計 / 電力需要量（1,000kWh）",
+  "quote_example": "北海道 合計 27620514.78 (1,000kWh) / 全国合計 822769312 (1,000kWh)",
+  "checksum": {
+   "prefs_total_gwh": 822784.2,
+   "sheet_grand_total_gwh": 822769.312
+  },
+  "note": "電気事業者からの報告に基づく都道府県別電力需要量(FY2024年度計)。AGJでは需要空間配分の県内シェア重みに使用(zone合計のアンカーは従来どおりregional_peak_demand_mw。年間電力量シェア→ピークシェアの近似は開示済みの割り切り)。",
+  "license": "出典明記のうえ利用可（経済産業省ウェブサイト利用規約=公共データ利用規約(第1.0版)準拠）"
+ },
+ "fy": 2024,
+ "grand_total_gwh": 822769.312,
+ "prefectures": {
+  "北海道": {
+   "tokubetsu_koatsu_gwh": 3010.881,
+   "koatsu_gwh": 12506.969,
+   "teiatsu_gwh": 12102.665,
+   "total_gwh": 27620.515
+  },
+  "青森県": {
+   "tokubetsu_koatsu_gwh": 1548.357,
+   "koatsu_gwh": 3032.15,
+   "teiatsu_gwh": 2974.62,
+   "total_gwh": 7555.126
+  },
+  "岩手県": {
+   "tokubetsu_koatsu_gwh": 2513.666,
+   "koatsu_gwh": 3552.372,
+   "teiatsu_gwh": 3067.064,
+   "total_gwh": 9133.102
+  },
+  "宮城県": {
+   "tokubetsu_koatsu_gwh": 2844.149,
+   "koatsu_gwh": 5524.83,
+   "teiatsu_gwh": 5477.941,
+   "total_gwh": 13846.92
+  },
+  "秋田県": {
+   "tokubetsu_koatsu_gwh": 2070.182,
+   "koatsu_gwh": 2378.822,
+   "teiatsu_gwh": 2383.128,
+   "total_gwh": 6832.132
+  },
+  "山形県": {
+   "tokubetsu_koatsu_gwh": 1743.767,
+   "koatsu_gwh": 3200.502,
+   "teiatsu_gwh": 2758.845,
+   "total_gwh": 7703.113
+  },
+  "福島県": {
+   "tokubetsu_koatsu_gwh": 4895.763,
+   "koatsu_gwh": 5236.44,
+   "teiatsu_gwh": 4554.403,
+   "total_gwh": 14686.605
+  },
+  "茨城県": {
+   "tokubetsu_koatsu_gwh": 7952.458,
+   "koatsu_gwh": 8045.379,
+   "teiatsu_gwh": 7151.459,
+   "total_gwh": 23149.296
+  },
+  "栃木県": {
+   "tokubetsu_koatsu_gwh": 4571.09,
+   "koatsu_gwh": 5818.786,
+   "teiatsu_gwh": 4929.462,
+   "total_gwh": 15319.339
+  },
+  "群馬県": {
+   "tokubetsu_koatsu_gwh": 4029.951,
+   "koatsu_gwh": 6115.229,
+   "teiatsu_gwh": 4922.385,
+   "total_gwh": 15067.565
+  },
+  "埼玉県": {
+   "tokubetsu_koatsu_gwh": 5936.736,
+   "koatsu_gwh": 14722.305,
+   "teiatsu_gwh": 16012.855,
+   "total_gwh": 36671.896
+  },
+  "千葉県": {
+   "tokubetsu_koatsu_gwh": 9445.84,
+   "koatsu_gwh": 12153.152,
+   "teiatsu_gwh": 13647.52,
+   "total_gwh": 35246.512
+  },
+  "東京都": {
+   "tokubetsu_koatsu_gwh": 19300.346,
+   "koatsu_gwh": 25080.009,
+   "teiatsu_gwh": 32595.86,
+   "total_gwh": 76976.216
+  },
+  "神奈川県": {
+   "tokubetsu_koatsu_gwh": 12896.61,
+   "koatsu_gwh": 14720.347,
+   "teiatsu_gwh": 19224.943,
+   "total_gwh": 46841.9
+  },
+  "新潟県": {
+   "tokubetsu_koatsu_gwh": 3872.025,
+   "koatsu_gwh": 6255.939,
+   "teiatsu_gwh": 5666.181,
+   "total_gwh": 15794.144
+  },
+  "富山県": {
+   "tokubetsu_koatsu_gwh": 3271.443,
+   "koatsu_gwh": 3745.943,
+   "teiatsu_gwh": 3271.348,
+   "total_gwh": 10288.734
+  },
+  "石川県": {
+   "tokubetsu_koatsu_gwh": 1500.84,
+   "koatsu_gwh": 3861.101,
+   "teiatsu_gwh": 3529.408,
+   "total_gwh": 8891.35
+  },
+  "福井県": {
+   "tokubetsu_koatsu_gwh": 1777.115,
+   "koatsu_gwh": 2954.723,
+   "teiatsu_gwh": 2504.165,
+   "total_gwh": 7236.002
+  },
+  "山梨県": {
+   "tokubetsu_koatsu_gwh": 1102.519,
+   "koatsu_gwh": 2487.546,
+   "teiatsu_gwh": 2213.772,
+   "total_gwh": 5803.837
+  },
+  "長野県": {
+   "tokubetsu_koatsu_gwh": 2262.306,
+   "koatsu_gwh": 6763.326,
+   "teiatsu_gwh": 5611.462,
+   "total_gwh": 14637.093
+  },
+  "岐阜県": {
+   "tokubetsu_koatsu_gwh": 3061.543,
+   "koatsu_gwh": 6443.33,
+   "teiatsu_gwh": 5259.141,
+   "total_gwh": 14764.013
+  },
+  "静岡県": {
+   "tokubetsu_koatsu_gwh": 7720.154,
+   "koatsu_gwh": 11260.006,
+   "teiatsu_gwh": 9082.271,
+   "total_gwh": 28062.431
+  },
+  "愛知県": {
+   "tokubetsu_koatsu_gwh": 19874.923,
+   "koatsu_gwh": 18832.985,
+   "teiatsu_gwh": 18225.829,
+   "total_gwh": 56933.737
+  },
+  "三重県": {
+   "tokubetsu_koatsu_gwh": 9321.812,
+   "koatsu_gwh": 5599.818,
+   "teiatsu_gwh": 4730.305,
+   "total_gwh": 19651.935
+  },
+  "滋賀県": {
+   "tokubetsu_koatsu_gwh": 5253.083,
+   "koatsu_gwh": 3685.441,
+   "teiatsu_gwh": 3745.182,
+   "total_gwh": 12683.706
+  },
+  "京都府": {
+   "tokubetsu_koatsu_gwh": 3730.105,
+   "koatsu_gwh": 5377.676,
+   "teiatsu_gwh": 6628.516,
+   "total_gwh": 15736.298
+  },
+  "大阪府": {
+   "tokubetsu_koatsu_gwh": 15605.6,
+   "koatsu_gwh": 17742.498,
+   "teiatsu_gwh": 20919.78,
+   "total_gwh": 54267.878
+  },
+  "兵庫県": {
+   "tokubetsu_koatsu_gwh": 12557.343,
+   "koatsu_gwh": 11744.175,
+   "teiatsu_gwh": 13206.594,
+   "total_gwh": 37508.112
+  },
+  "奈良県": {
+   "tokubetsu_koatsu_gwh": 879.061,
+   "koatsu_gwh": 2584.916,
+   "teiatsu_gwh": 3280.586,
+   "total_gwh": 6744.563
+  },
+  "和歌山県": {
+   "tokubetsu_koatsu_gwh": 1159.417,
+   "koatsu_gwh": 2049.713,
+   "teiatsu_gwh": 2715.95,
+   "total_gwh": 5925.08
+  },
+  "鳥取県": {
+   "tokubetsu_koatsu_gwh": 520.99,
+   "koatsu_gwh": 1413.868,
+   "teiatsu_gwh": 1533.557,
+   "total_gwh": 3468.415
+  },
+  "島根県": {
+   "tokubetsu_koatsu_gwh": 1364.418,
+   "koatsu_gwh": 1637.157,
+   "teiatsu_gwh": 1941.935,
+   "total_gwh": 4943.51
+  },
+  "岡山県": {
+   "tokubetsu_koatsu_gwh": 5519.801,
+   "koatsu_gwh": 4913.354,
+   "teiatsu_gwh": 5129.436,
+   "total_gwh": 15562.59
+  },
+  "広島県": {
+   "tokubetsu_koatsu_gwh": 5553.065,
+   "koatsu_gwh": 6541.28,
+   "teiatsu_gwh": 7315.574,
+   "total_gwh": 19409.918
+  },
+  "山口県": {
+   "tokubetsu_koatsu_gwh": 4129.137,
+   "koatsu_gwh": 3024.985,
+   "teiatsu_gwh": 3559.824,
+   "total_gwh": 10713.945
+  },
+  "徳島県": {
+   "tokubetsu_koatsu_gwh": 1923.46,
+   "koatsu_gwh": 2023.347,
+   "teiatsu_gwh": 2126.578,
+   "total_gwh": 6073.385
+  },
+  "香川県": {
+   "tokubetsu_koatsu_gwh": 1555.512,
+   "koatsu_gwh": 2887.39,
+   "teiatsu_gwh": 2726.487,
+   "total_gwh": 7169.39
+  },
+  "愛媛県": {
+   "tokubetsu_koatsu_gwh": 1220.989,
+   "koatsu_gwh": 3334.599,
+   "teiatsu_gwh": 3627.467,
+   "total_gwh": 8183.055
+  },
+  "高知県": {
+   "tokubetsu_koatsu_gwh": 253.183,
+   "koatsu_gwh": 1608.698,
+   "teiatsu_gwh": 1969.446,
+   "total_gwh": 3831.327
+  },
+  "福岡県": {
+   "tokubetsu_koatsu_gwh": 7260.186,
+   "koatsu_gwh": 10902.376,
+   "teiatsu_gwh": 13024.672,
+   "total_gwh": 31187.234
+  },
+  "佐賀県": {
+   "tokubetsu_koatsu_gwh": 2181.319,
+   "koatsu_gwh": 2253.888,
+   "teiatsu_gwh": 2237.293,
+   "total_gwh": 6672.5
+  },
+  "長崎県": {
+   "tokubetsu_koatsu_gwh": 2060.312,
+   "koatsu_gwh": 2630.343,
+   "teiatsu_gwh": 3580.462,
+   "total_gwh": 8271.117
+  },
+  "熊本県": {
+   "tokubetsu_koatsu_gwh": 3309.107,
+   "koatsu_gwh": 3941.728,
+   "teiatsu_gwh": 4785.314,
+   "total_gwh": 12036.149
+  },
+  "大分県": {
+   "tokubetsu_koatsu_gwh": 2742.189,
+   "koatsu_gwh": 2678.631,
+   "teiatsu_gwh": 3182.38,
+   "total_gwh": 8603.2
+  },
+  "宮崎県": {
+   "tokubetsu_koatsu_gwh": 1116.503,
+   "koatsu_gwh": 2762.596,
+   "teiatsu_gwh": 2962.859,
+   "total_gwh": 6841.958
+  },
+  "鹿児島県": {
+   "tokubetsu_koatsu_gwh": 1621.584,
+   "koatsu_gwh": 3977.766,
+   "teiatsu_gwh": 4457.129,
+   "total_gwh": 10056.479
+  },
+  "沖縄県": {
+   "tokubetsu_koatsu_gwh": 1358.755,
+   "koatsu_gwh": 2107.681,
+   "teiatsu_gwh": 4714.409,
+   "total_gwh": 8180.845
+  }
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "probe": "pref-demand-recovery",
+ "island": "hokkaido",
+ "t": 12,
+ "config": "territory=True(既定)+dedup ON(既定)+pref_demand",
+ "pref_weights": {
+  "n_pref": 47,
+  "split_prefs": {
+   "静岡県": {
+    "tokyo": {
+     "n_sub": 99,
+     "share": 0.339,
+     "gwh": 9514.3
+    },
+    "chubu": {
+     "n_sub": 193,
+     "share": 0.661,
+     "gwh": 18548.1
+    }
+   }
+  },
+  "source": "https://www.enecho.meti.go.jp/statistics/electric_power/ep002/xls/2024/3-2-2024.xlsx"
+ },
+ "build": {
+  "n_bus": 819,
+  "n_gen": 417,
+  "load_mw": 4420.0,
+  "build_s": 4.1,
+  "ledger_zones": {
+   "hokkaido": {
+    "北海道": {
+     "n_bus": 538,
+     "gwh": 27620.5,
+     "target_mw": 4420.0
+    }
+   }
+  }
+ },
+ "uc_status": "Optimal",
+ "injection": {
+  "hokkaido": {
+   "load_scale": 0.8479,
+   "clipped": {},
+   "unmatched": {}
+  }
+ },
+ "pre_load_mw": 3747.8,
+ "rungs": [
+  {
+   "thr": null,
+   "converged": true,
+   "solve_s": 0.9,
+   "served_frac": 1.0,
+   "loss_mw": 96.8,
+   "vm_min": 0.7648,
+   "vm_max": 1.0033
+  }
+ ],
+ "verdict": {
+  "solver": "ac",
+  "thr": null,
+  "served_frac": 1.0,
+  "loss_mw": 96.8
+ }
+}

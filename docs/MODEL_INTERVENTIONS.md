@@ -47,6 +47,7 @@ east のACが発散し、#17 の prune が網の9割を切断した見せかけ�
 | 16 | **不明電圧の66kVフォールバック**（kv≤0のノード） | 値 | ★★ | `build_island_net` | 送電網最下級として可解性維持 | なし | — |
 | 17 | **AC prune ladder**（DC不可行枝を刈ってからAC・段階的閾値） | 構造 | ★★★ | `solve_island`/`uc_to_pf_built.solve_hour` | 発散する全規模ACを解くための数値手段。**刈られた枝の潮流は存在しない扱い**。⚠実害実証(2026-07-07): pruneが網の9割を切断した残片の収束を「AC成功」と報告する**見せかけAC解**(east full+bridge構成で served 6.2/57.4GW)→solve_hourに**給電率ガード**(served≥95%必須・未満は却下し次段へ)を追加 | prune段数・solved_mode・**served_load_mw/served_frac**(07-07から) | maxバス数設定 |
 | 18 | **有界ACチェーン**（backbone系: 厳tol×100反復×3構成のみ・粘らない） | 値 | ★ | `uc_to_pf_built._BOUNDED_AC` | BLAS abort回避+緩tol解の物理的無意味さ | solver名がJSONに | — |
+| 19 | **県別実需要シェア配分**（#9のzone内一様を、県別実需要シェア→県内電圧重みの2段に細分化） | 配分 | ★★ | `allocate_loads(pref_gwh=…)`+`src/powerflow/pref_demand.py` | 出典=電力調査統計3-(2)都道府県別電力需要実績FY2024年度計（資源エネ庁・URL/引用/checksum付きJSON=`data/reference/pref_demand_fy2024.json`）。**年間電力量シェア→ピークシェアの近似（県別負荷率差は無視）**・県がzoneを跨ぐ分（静岡富士川split・周波数ガード飛び地=長野の東電50Hz帯15.4%等）はsubノード数按分(share帳簿化)。動機=A案回帰の真因が#9の粗さと確定（`reports/a_plan_east_ac_regression_2026-07-08.md`）。⚠適用しても**east fullのACは回復しない**（誠実にdc_fallback。回復に見えた初版は飛び地バグのバラスト効果と判明し出荷前に棄却=同レポート§7） | `net._pref_demand_ledger`→uc_to_pf JSONの`pref_demand_ledger`（zone×県のn_bus/gwh/target_mw全件）・split_prefs | `--pref-demand`省略（既定OFF） |
 
 （snapped系譜の旧介入 — 最近傍drop法・合成橋 — は built 系譜への移行で退役。
 経緯は `reports/2026-06-10_fable5_osm_case_studies.md` と topology レポート群）

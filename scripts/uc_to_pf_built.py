@@ -356,6 +356,12 @@ def main():
                          "capacity_patchesを読むため、双方の燃料別容量が一致し"
                          "注入clipが減る(okinawa燃料フリート較正 2026-07-07)。"
                          "既定OFF=07-05正典結果との比較可能性を保つ")
+    ap.add_argument("--pref-demand", action="store_true",
+                    help="需要空間配分の細分化: zone内を県別実需要シェア"
+                         "(電力調査統計FY2024・出典付き)で配ってから電圧重み。"
+                         "既定OFF=従来のzone一様(正典比較性維持)。A案の需要地理"
+                         "回帰への中期対応(a) "
+                         "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -369,12 +375,20 @@ def main():
 
     built = json.load(open(BUILT))
     cfg = load_demand_config()
+    pref_gwh = None
+    if args.pref_demand:
+        from src.powerflow.pref_demand import pref_zone_gwh
+        pref_gwh, pw_ledger = pref_zone_gwh(built["nodes"])
+        print(f"県別需要重み: {pw_ledger['title']} "
+              f"({pw_ledger['n_pref_weighted']}県, "
+              f"split={list(pw_ledger['split_prefs'])})")
 
     report = {"meta": {"date": _dt.date.today().isoformat(),
                        "git_head": _git_head(), "scenario": args.scenario,
                        "model": "built_full_v4_nameplate",
                        "bridge": bool(args.bridge),
                        "boundary_injection": bool(args.boundary_injection),
+                       "pref_demand": bool(args.pref_demand),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -410,7 +424,8 @@ def main():
                   f"nuclear={bridge_rep['nuclear_set']}set/"
                   f"{bridge_rep['nuclear_stopped']}stop "
                   f"Δ{bridge_rep['mw_delta']:+,.0f}MW")
-        allocate_loads(base, cfg)
+        allocate_loads(base, cfg, pref_gwh=pref_gwh)
+        pref_ledger = getattr(base, "_pref_demand_ledger", None) if pref_gwh else None
         ledger = None
         if args.model == "backbone":
             base, ledger = build_backbone_net(base)
@@ -459,6 +474,7 @@ def main():
                    "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,
+                   "pref_demand_ledger": pref_ledger,
                    "bridge": ({k: v for k, v in bridge_rep.items()
                                if k != "zone_override"}
                               if bridge_rep else None),

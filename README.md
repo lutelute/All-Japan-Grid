@@ -95,6 +95,24 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   that silently disconnected 90 % of the network (6.2 of 57.4 GW served, 149 MW losses — physically
   impossible) is now rejected: AC solutions must serve ≥95 % of pre-solve load, and
   `served_frac` ships in every result JSON. *Convergence is not correctness.*
+- 🔬 **Root cause of the east full-scale AC regression / A案回帰の原因確定**
+  ([docs/reports/a_plan_east_ac_regression_2026-07-08.md](docs/reports/a_plan_east_ac_regression_2026-07-08.md)).
+  A 7-variant probe (scripts + raw JSON archived alongside) shows the territory re-attribution
+  itself is *correct* — the breaker is the coarse **demand allocation** (zone-uniform × voltage
+  weights): relabelling ~350 nodes in the Niigata/Fukushima–North-Kanto belt to their true
+  service areas shifts ~1 GW of demand (a 66 kV bus jumps 11.3⇄23.6 MW) and tips the marginal
+  6,205-bus AC solve into non-convergence. Seikan island composition and plant dedup were
+  cleared (identical topology still fails). **Consequently the earlier "east full-scale AC
+  (99.0 % served)" claim stood on the old bbox-mislabelled demand geography** — treat it as a
+  limit solution, not a validated operating point. Full-scale runs now honestly report
+  `dc_fallback` (guard above); AC demonstrations live on the backbone model.
+  **Follow-up (registry #19, opt-in `--pref-demand`)**: demand allocation refined to sourced
+  per-prefecture shares (電力調査統計 FY2024) — metro Tokyo now carries a realistic
+  ~50 MW/bus vs ~10 MW/bus rural. An early probe seemed to restore full-scale AC, but was
+  traced to an enclave-weighting bug that dumped ~2.3 GW of Nagano demand at the Shin-Shinano
+  FC corridor — the same accidental-ballast pattern this report exposes — and was rejected
+  before shipping. With honest weights the full-scale AC stays infeasible: *the model, not
+  the demand geography, is what needs fixing next* (metro 66 kV mesh representation).
 - 🎬 **24 h power-flow animation / 潮流アニメーション**
   (`scripts/animate_powerflow_gif.py`): the UC dispatch flowing through the national grid,
   hour by hour — line width/shade = |P|, generation bubbles, FC/Kita-Hon transfers, honest
