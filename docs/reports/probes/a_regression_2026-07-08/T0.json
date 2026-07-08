@@ -1,0 +1,63 @@
+{
+ "variant": "T0",
+ "build_territory": false,
+ "attach_territory(dedup)": false,
+ "island": "east",
+ "t": 12,
+ "scenario": "fy2023r2",
+ "build_s": 41.1,
+ "build": {
+  "n_bus": 6205,
+  "n_line": 6315,
+  "n_trafo": 630,
+  "n_gen": 8514,
+  "gen_cap_mw": 195138.1,
+  "load_mw": 55250.0,
+  "n_slack": 517,
+  "reattr_changes": null,
+  "reattr_skipped_island": null,
+  "n_components": 517,
+  "main_comp_bus": 5384,
+  "gen_cap_in_main_mw": 177282.7
+ },
+ "uc_status": "Optimal",
+ "injection": {
+  "tohoku": {
+   "load_scale": 0.7742,
+   "clipped": {},
+   "unmatched": {}
+  },
+  "tokyo": {
+   "load_scale": 1.1052,
+   "clipped": {
+    "coal": 968.0
+   },
+   "unmatched": {}
+  }
+ },
+ "pre_load_mw": 57403.4,
+ "rungs": [
+  {
+   "thr": null,
+   "n_line_off": 0,
+   "converged": false,
+   "solve_s": 10.1
+  },
+  {
+   "thr": 45.0,
+   "n_line_off": 1,
+   "converged": true,
+   "solve_s": 1.7,
+   "served_mw": 56811.2,
+   "served_frac": 0.9897,
+   "loss_mw": 5797.2,
+   "slack_abs_mw": 16265.1
+  }
+ ],
+ "verdict": {
+  "solver": "ac",
+  "thr": 45.0,
+  "served_frac": 0.9897,
+  "loss_mw": 5797.2
+ }
+}

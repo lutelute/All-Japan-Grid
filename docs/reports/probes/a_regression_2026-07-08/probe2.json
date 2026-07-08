@@ -1,0 +1,177 @@
+{
+ "probe": "zone-mechanism-decomposition",
+ "island": "east",
+ "t": 12,
+ "variants": {
+  "Z_sanity": {
+   "z_loads": "old",
+   "z_inject": "old",
+   "injection": {
+    "tohoku": {
+     "load_scale": 0.7742,
+     "clipped": {},
+     "unmatched": {}
+    },
+    "tokyo": {
+     "load_scale": 1.1052,
+     "clipped": {
+      "coal": 968.0
+     },
+     "unmatched": {}
+    }
+   },
+   "pre_load_mw": 57403.4,
+   "rungs": [
+    {
+     "thr": null,
+     "converged": false,
+     "solve_s": 10.1
+    },
+    {
+     "thr": 45.0,
+     "converged": true,
+     "solve_s": 1.7,
+     "served_frac": 0.9897,
+     "loss_mw": 5797.2
+    }
+   ],
+   "verdict": {
+    "solver": "ac",
+    "thr": 45.0,
+    "served_frac": 0.9897,
+    "loss_mw": 5797.2
+   }
+  },
+  "Z_loads_new": {
+   "z_loads": "new",
+   "z_inject": "old",
+   "injection": {
+    "tohoku": {
+     "load_scale": 0.7608,
+     "clipped": {},
+     "unmatched": {}
+    },
+    "tokyo": {
+     "load_scale": 1.1101,
+     "clipped": {
+      "coal": 968.0
+     },
+     "unmatched": {}
+    }
+   },
+   "pre_load_mw": 57403.4,
+   "rungs": [
+    {
+     "thr": null,
+     "converged": false,
+     "solve_s": 6.7
+    },
+    {
+     "thr": 45.0,
+     "converged": false,
+     "solve_s": 11.5
+    },
+    {
+     "thr": 30.0,
+     "converged": false,
+     "solve_s": 8.4
+    },
+    {
+     "thr": 20.0,
+     "converged": true,
+     "solve_s": 0.1,
+     "served_frac": 0.1084,
+     "loss_mw": 2.9
+    }
+   ],
+   "verdict": {
+    "solver": "dc_fallback"
+   }
+  },
+  "Z_inject_new": {
+   "z_loads": "old",
+   "z_inject": "new",
+   "injection": {
+    "tohoku": {
+     "load_scale": 0.7097,
+     "clipped": {},
+     "unmatched": {}
+    },
+    "tokyo": {
+     "load_scale": 1.1309,
+     "clipped": {
+      "coal": 968.0
+     },
+     "unmatched": {}
+    }
+   },
+   "pre_load_mw": 57403.4,
+   "rungs": [
+    {
+     "thr": null,
+     "converged": false,
+     "solve_s": 9.1
+    },
+    {
+     "thr": 45.0,
+     "converged": false,
+     "solve_s": 8.2
+    },
+    {
+     "thr": 30.0,
+     "converged": true,
+     "solve_s": 2.7,
+     "served_frac": 0.9912,
+     "loss_mw": 6480.4
+    }
+   ],
+   "verdict": {
+    "solver": "ac",
+    "thr": 30.0,
+    "served_frac": 0.9912,
+    "loss_mw": 6480.4
+   }
+  }
+ },
+ "build": {
+  "n_bus": 6205,
+  "n_gen": 8514,
+  "gen_cap_mw": 195138.1,
+  "n_relabel_bus": 350,
+  "reattr": {
+   "n_nodes": 17333,
+   "n_changed": 2820,
+   "changes": {
+    "chubu->hokuriku": 578,
+    "kansai->chubu": 503,
+    "chugoku->shikoku": 322,
+    "tokyo->tohoku": 233,
+    "shikoku->chugoku": 230,
+    "chubu->kansai": 200,
+    "kyushu->chugoku": 184,
+    "hokuriku->chubu": 171,
+    "chugoku->kyushu": 123,
+    "tohoku->tokyo": 117,
+    "kansai->hokuriku": 51,
+    "chugoku->kansai": 48,
+    "kansai->shikoku": 44,
+    "shikoku->kansai": 11,
+    "hokuriku->kansai": 2,
+    "kyushu->shikoku": 2,
+    "kansai->chugoku": 1
+   },
+   "skipped_freq": {
+    "tokyo->chubu": 210,
+    "chubu->tokyo": 249,
+    "chubu->tohoku": 41,
+    "hokuriku->tohoku": 22
+   },
+   "skipped_island": {
+    "hokkaido->tohoku": 26,
+    "tohoku->hokkaido": 9
+   }
+  },
+  "build_s": 39.8
+ },
+ "uc_status": "Optimal"
+}

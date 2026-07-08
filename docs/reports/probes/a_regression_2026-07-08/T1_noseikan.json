@@ -1,0 +1,93 @@
+{
+ "variant": "T1_noseikan",
+ "build_territory": true,
+ "attach_territory(dedup)": true,
+ "island": "east",
+ "t": 12,
+ "scenario": "fy2023r2",
+ "build_s": 40.7,
+ "build": {
+  "n_bus": 6205,
+  "n_line": 6315,
+  "n_trafo": 630,
+  "n_gen": 8235,
+  "gen_cap_mw": 186597.4,
+  "load_mw": 55250.0,
+  "n_slack": 517,
+  "reattr_changes": {
+   "chubu->hokuriku": 578,
+   "kansai->chubu": 503,
+   "chugoku->shikoku": 322,
+   "tokyo->tohoku": 233,
+   "shikoku->chugoku": 230,
+   "chubu->kansai": 200,
+   "kyushu->chugoku": 184,
+   "hokuriku->chubu": 171,
+   "chugoku->kyushu": 123,
+   "tohoku->tokyo": 117,
+   "kansai->hokuriku": 51,
+   "chugoku->kansai": 48,
+   "kansai->shikoku": 44,
+   "shikoku->kansai": 11,
+   "hokuriku->kansai": 2,
+   "kyushu->shikoku": 2,
+   "kansai->chugoku": 1
+  },
+  "reattr_skipped_island": {
+   "hokkaido->tohoku": 26,
+   "tohoku->hokkaido": 9
+  },
+  "n_components": 517,
+  "main_comp_bus": 5384,
+  "gen_cap_in_main_mw": 171054.9
+ },
+ "uc_status": "Optimal",
+ "injection": {
+  "tohoku": {
+   "load_scale": 0.7742,
+   "clipped": {},
+   "unmatched": {}
+  },
+  "tokyo": {
+   "load_scale": 1.1052,
+   "clipped": {
+    "coal": 968.0
+   },
+   "unmatched": {}
+  }
+ },
+ "pre_load_mw": 57403.4,
+ "rungs": [
+  {
+   "thr": null,
+   "n_line_off": 0,
+   "converged": false,
+   "solve_s": 11.4
+  },
+  {
+   "thr": 45.0,
+   "n_line_off": 0,
+   "converged": false,
+   "solve_s": 9.2
+  },
+  {
+   "thr": 30.0,
+   "n_line_off": 1,
+   "converged": false,
+   "solve_s": 9.1
+  },
+  {
+   "thr": 20.0,
+   "n_line_off": 6,
+   "converged": true,
+   "solve_s": 0.1,
+   "served_mw": 6140.7,
+   "served_frac": 0.107,
+   "loss_mw": 2.7,
+   "slack_abs_mw": -5411.4
+  }
+ ],
+ "verdict": {
+  "solver": "dc_fallback"
+ }
+}
