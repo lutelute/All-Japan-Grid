@@ -2,19 +2,35 @@
   "name": "all-japan-grid",
   "title": "All-Japan-Grid: an OSM-derived, externally validated model of Japan's transmission network",
   "description": "Japan's 10 regional transmission networks (50/60 Hz) extracted from OpenStreetMap with per-field provenance, exported to interchange formats (GeoJSON, CIM/CGMES Level 1+2, MATPOWER, pandapower), and scored against utility ground truth (TEPCO per-line flows; Kansai-TD voltage disclosure). Substation counts differ by layer: the source OSM substation count is 6,962 (see `substations.geojson`), while the published display/built view `subs_all.geojson` expands to 8,994 by voltage class (site-aware, one bus per voltage class). Sourced plant capacity (`capacity_mw_sourced`) is a display/provenance layer and is NOT used by the power-flow builder, which reads `capacity_mw`. See docs/reports/ for the formal review, international benchmark, and known limitations.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "created": "2026-06-27",
   "homepage": "https://github.com/lutelute/All-Japan-Grid",
   "licenses": [
-    { "name": "ODbL-1.0", "title": "Open Database License v1.0", "path": "https://opendatacommons.org/licenses/odbl/1-0/" }
+    {
+      "name": "ODbL-1.0",
+      "title": "Open Database License v1.0",
+      "path": "https://opendatacommons.org/licenses/odbl/1-0/"
+    }
   ],
   "contributors": [
-    { "title": "Ryuto Shigenobu", "role": "author" }
+    {
+      "title": "Ryuto Shigenobu",
+      "role": "author"
+    }
   ],
   "sources": [
-    { "title": "OpenStreetMap contributors (ODbL-1.0)", "path": "https://www.openstreetmap.org/copyright" },
-    { "title": "National Land Numerical Information P03 power plants (MLIT, Japan)", "path": "https://nlftp.mlit.go.jp/ksj/" },
-    { "title": "WRI Global Power Plant Database v1.3.0 (CC-BY-4.0)", "path": "https://datasets.wri.org/dataset/globalpowerplantdatabase" }
+    {
+      "title": "OpenStreetMap contributors (ODbL-1.0)",
+      "path": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "title": "National Land Numerical Information P03 power plants (MLIT, Japan)",
+      "path": "https://nlftp.mlit.go.jp/ksj/"
+    },
+    {
+      "title": "WRI Global Power Plant Database v1.3.0 (CC-BY-4.0)",
+      "path": "https://datasets.wri.org/dataset/globalpowerplantdatabase"
+    }
   ],
   "resources": [
     {
@@ -65,7 +81,11 @@
       "title": "Sourced generator capacity (provenance DB)",
       "description": "160 capacity values, each with source_url + verbatim quote + confidence + retrieved_at (machine-verified by scripts/capacity_provenance.py verify = 160 ok / 0 bad). Sources: operator-official 62, Wikipedia 87 (CC-BY-SA), gov 5, news 4, IR 1, other 1.",
       "licenses": [
-        { "name": "CC-BY-SA-4.0", "title": "Creative Commons Attribution-ShareAlike 4.0 (Wikipedia-derived values)", "path": "https://creativecommons.org/licenses/by-sa/4.0/" }
+        {
+          "name": "CC-BY-SA-4.0",
+          "title": "Creative Commons Attribution-ShareAlike 4.0 (Wikipedia-derived values)",
+          "path": "https://creativecommons.org/licenses/by-sa/4.0/"
+        }
       ]
     },
     {
@@ -84,8 +104,20 @@
       "title": "WRI Global Power Plant Database (Japan rows, external cross-check)",
       "description": "WRI GPPD v1.3.0 used for external cross-checking of plant capacity / fuel. Per-record vintage in year_of_capacity_data / commissioning_year.",
       "licenses": [
-        { "name": "CC-BY-4.0", "title": "Creative Commons Attribution 4.0", "path": "https://creativecommons.org/licenses/by/4.0/" }
+        {
+          "name": "CC-BY-4.0",
+          "title": "Creative Commons Attribution 4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/"
+        }
       ]
+    },
+    {
+      "name": "pref_demand_fy2024",
+      "path": "data/reference/pref_demand_fy2024.json",
+      "format": "json",
+      "mediatype": "application/json",
+      "title": "Prefecture-level electricity demand FY2024 (sourced)",
+      "description": "47-prefecture annual electricity demand (特別高圧/高圧/低圧/合計, GWh), extracted from METI/ANRE 電力調査統計 3-(2) 都道府県別電力需要実績 FY2024 with source URL, verbatim quotes and checksum in _meta. Used by the opt-in --pref-demand spatial demand allocation (intervention registry #19)."
     }
   ]
 }

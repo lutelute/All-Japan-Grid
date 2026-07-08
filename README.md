@@ -66,8 +66,16 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ## Highlights / ハイライト
 
-### Unreleased — 2026-07 (in progress)
+### v1.5.0 — 2026-07-09
 
+- 📦 **Ready-to-run dataset distribution / DLしてそのまま回るデータセット配布.**
+  Self-contained bundles (core ≈13 MB / full ≈25 MB, SHA256 MANIFEST) on the GitHub Release,
+  a [download page](https://lutelute.github.io/All-Japan-Grid/download.html), and `dataset/`
+  tutorials: MATPOWER power flow (pandapower `solve_pf.py` / MATLAB `solve_pf.m`) and
+  **Excel → 24 h unit commitment** (`make_template.py` → edit xlsx → `run_uc.py`).
+  E2E-verified: real download → SHA256 match → fresh venv → both tutorials complete
+  (MATLAB R2025a + MATPOWER 8.1 verified; `requirements.txt` matplotlib gap found by the
+  fresh-venv test and fixed before shipping).
 - 🧾 **Model-intervention registry / モデル介入台帳** ([docs/MODEL_INTERVENTIONS.md](docs/MODEL_INTERVENTIONS.md)).
   Every mechanism that makes the model *look* connected, solvable, or complete — nearest-neighbour
   generator attachment, synthetic load allocation, default capacities, per-component slacks,

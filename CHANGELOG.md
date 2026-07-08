@@ -5,28 +5,102 @@ All notable changes to All-Japan-Grid are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-06-26
+## [1.5.0] - 2026-07-09
+
+Tagged in git as `v1.5.0`. Theme: **ready-to-run dataset distribution** (download page,
+self-contained bundles, MATPOWER / Excel-UC tutorials) and **honesty infrastructure**
+(model-intervention registry, fake-AC guard, failure case studies), on top of a
+numerically verified Ybus export line and sourced transformer nameplates.
 
 ### Added
-- Sourced-capacity provenance DB grown 45 → 160 plants (`data/generator_capacity_sources.jsonl`); every value carries a source URL + verbatim quote (`scripts/capacity_provenance.py verify` = 160 ok / 0 bad). OSM/P03 capacity errors corrected (e.g. Kashiwazaki-Kariwa → 8212 MW, Soga solar 1440 → 1.99 MW); decommissioned / under-construction plants recorded as `0`. Surfaced to map popups on all plant layers.
-- `NOTICE` — third-party data attributions (OpenStreetMap ODbL, 国土数値情報 P03, WRI GPPD CC-BY-4.0, Wikipedia CC-BY-SA, validation-only sources).
-- `SECURITY.md` — trust boundary for the local editor server, dual-use / out-of-scope notes, reporting.
-- Kansai-TD line-voltage external validation scorecard (97 % agreement on 38 named ≥154 kV trunk lines; aggregate metrics only, raw utility values not redistributed).
-- `uv.lock` (pinned dependencies); `docs/ROADMAP_ASSET.md`; formal multi-agent review record (`docs/reports/formal_review_2026-06-26.md`).
+- **Dataset distribution** — `dataset/` tutorials (`01_matpower_powerflow` `solve_pf.py`
+  pandapower / `solve_pf.m` MATPOWER `runpf`; `02_uc_from_excel` Excel → 24 h unit
+  commitment with xlsx/png output), self-contained bundle generator
+  (`scripts/make_dataset_bundle.py`: core ≈13 MB / full ≈25 MB, `src`+`config`+data
+  included, SHA256 MANIFEST), GitHub Release assets and a download page
+  (`docs/download.html`). **E2E-verified**: real download → SHA256 match → fresh venv →
+  both tutorials complete; `solve_pf.m` verified on MATLAB R2025a + MATPOWER 8.1
+  (`bus_name`/`ext2int` crash worked around in the shipped case reader).
+- **Numeric Ybus export line v1→v4** (`scripts/gen_ybus_numeric.py` → `dist/ybus/`):
+  pandapower-canonical Ybus for the 4 asynchronous islands (17,333 buses,
+  machine-precision symmetry / textbook cross-check p99 = 1.8e-16), branch matrices
+  Yf/Yt + branch table (exact reconstruction identity), DC Bbus, Kron-reduced ≥154 kV
+  backbone verified against a dense Schur complement, version stamps + sha256
+  fingerprints in `.mat`/`.npz`/CSV; v4 wires sourced transformer nameplates into the
+  matrices.
+- **Transformer provenance DB** (`data/transformer_sources.jsonl`, 602 records / verify
+  0 bad): existing nameplates (utility annual reports 有報「主要変電設備」 as the
+  systematic source + society journals) and planned units from the grid-development
+  plans of all 9 TSOs; nameplate propagation into build (`@nameplate`-tagged trafos).
+- **Model-intervention registry** (`docs/MODEL_INTERVENTIONS.md`) — all 19 mechanisms
+  that make the model *look* connected/solvable/complete (nearest-neighbour generator
+  attachment, synthetic load allocation, default capacities, per-component slacks,
+  prune ladders, …), each with basis / ledger / off-switch, plus rules for quoting
+  results.
+- **Territory-based zone re-attribution (A案)** (`src/powerflow/region_attribution.py`,
+  default ON): coordinate → prefecture polygon → service area; kills the phantom
+  Kyushu–Shikoku tie, restores the invisible Honshi tie, removes duplicate plant
+  attachments; frequency-boundary moves forbidden. Failure case study:
+  `docs/reports/case_study_phantom_tie_2026-07-07.md`.
+- **Boundary injection + slack decomposition**: UC interconnection flows injected at the
+  actual converter substations (Shin-Shinano FC, Kita-Hon); the east-island 24 h slack
+  identity closes at machine precision (**slack ≈ losses, residual +0.02 %**); okinawa
+  fleet calibrated with sourced capacities (slack 47.3 → 3.7 %).
+- **Served-load guard against fake AC solutions**: AC solutions must serve ≥95 % of
+  pre-solve load; `served_frac` ships in every result JSON. *Convergence is not
+  correctness.*
+- **Per-prefecture demand allocation** (registry #19, opt-in `--pref-demand`): zone
+  totals split by sourced prefecture demand shares (METI/ANRE 電力調査統計 3-(2)
+  FY2024, shipped as datapackage resource `data/reference/pref_demand_fy2024.json`
+  with URL/quotes/checksum); cross-zone prefectures (Shizuoka Fujikawa split,
+  frequency-guard enclaves) prorated by substation-node counts with a full ledger.
+- **24 h power-flow animation** (`scripts/animate_powerflow_gif.py`): UC dispatch over
+  the real OSM line paths, honest DC labelling, intervention-registry caveat on every
+  frame.
+- Sourced-capacity provenance DB grown 45 → 160 plants
+  (`data/generator_capacity_sources.jsonl`), every value with source URL + verbatim
+  quote; OSM/P03 capacity errors corrected (Kashiwazaki-Kariwa → 8212 MW, Soga solar
+  1440 → 1.99 MW); decommissioned plants recorded as `0`; surfaced in map popups.
+- `NOTICE` (third-party data attributions), `SECURITY.md` (trust boundary), Kansai-TD
+  line-voltage external validation scorecard (97 % agreement on 38 named ≥154 kV trunk
+  lines; aggregates only), `uv.lock`, `docs/ROADMAP_ASSET.md`, formal multi-agent
+  review record (`docs/reports/formal_review_2026-06-26.md`).
 
 ### Changed
-- README correlation honesty: ρ = 0.721 is labelled a capacity/topology proxy, with the measured AC power-flow correlation ρ ≈ 0.46 (interior) / 0.60 (trunk) shown alongside; "a first" hedged to "to our knowledge".
-- CI / regeneration: `apply_capacity_sources` now runs **after** `build_static_site` (deploy-pages.yml + regenerate_all.py), fixing a bug where published plant layers lost their sourced-capacity overlay on deploy.
+- **"east full-scale AC (99.0 % served)" re-interpreted**: a 7-variant probe
+  (`docs/reports/a_plan_east_ac_regression_2026-07-08.md`, scripts + raw JSON archived)
+  proved the claim stood on bbox-mislabelled demand geography — the sole breaker is the
+  coarse spatial demand allocation, not Seikan island composition or plant dedup. With
+  honest geography the full-scale AC is infeasible and is reported honestly as
+  `dc_fallback`; AC demonstrations live on the backbone model. An early "recovery"
+  under `--pref-demand` was traced to an enclave-weighting bug (accidental ~2.3 GW
+  ballast at the Shin-Shinano corridor) and rejected before shipping.
+- Legacy west "AC" artifacts (fake convergence) deleted; pages show the honest DC label.
+- README correlation honesty: ρ = 0.721 labelled a capacity/topology proxy with the
+  measured AC correlations alongside; "a first" hedged to "to our knowledge".
+- CI / regeneration: `apply_capacity_sources` runs **after** `build_static_site`,
+  fixing sourced-capacity overlay loss on deploy.
 - CITATION.cff declares both MIT (code) and ODbL-1.0 (data).
 
 ### Fixed
-- `apply_capacity_sources.py` ZeroDivisionError when a sourced capacity is `0` (decommissioned plants).
-- `.gitignore` protects the redistribution-restricted `k_line.csv` and test/coverage artifacts.
+- `requirements.txt` was missing `matplotlib` while the UC tutorial imports it
+  unguarded — found by fresh-venv E2E, bundle re-shipped, plot now degrades gracefully.
+- pandapower `from_mpc` mishandles multi-slack (multi-component) islands (negative
+  losses); documented as a converter limitation — the distributed `.mat` is healthy and
+  MATLAB/MATPOWER solves those islands correctly (hokkaido AC, loss +3.5 %).
+- `apply_capacity_sources.py` ZeroDivisionError on sourced capacity `0`;
+  `.gitignore` protects the redistribution-restricted `k_line.csv`.
 
-### Known issues (see `docs/reports/formal_review_2026-06-26.md`)
-- Sourced-capacity corrections are **display-only**; the power-flow builder still reads `capacity_mw`.
-- `papers/ieee-openaccess.tex` substation count (8,164 in prose) disagrees with its own table / the data (6,962).
-- No DOI / Zenodo archive yet; the OSM snapshot timestamp is not embedded in distributed files.
+### Known issues
+- **east full-scale AC is infeasible under honest demand geography** (next lever: metro
+  66 kV mesh representation — parallel circuits, transformer capacities, reactive
+  support). Backbone model is the supported AC demonstration path.
+- Sourced-capacity corrections are display-only for the map; the power-flow builder
+  still reads `capacity_mw` (capacity bridge `--bridge` covers the UC/PF path).
+- `papers/ieee-openaccess.tex` substation count (8,164 in prose) disagrees with its own
+  table / the data (6,962).
+- No DOI / Zenodo archive yet; the OSM snapshot timestamp is not embedded in
+  distributed files.
 
 ## [1.4.0] - 2026-06-11
 
