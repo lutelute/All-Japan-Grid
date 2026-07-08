@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All-Japan-Grid — データセット ダウンロード</title>
+<meta name="description" content="OpenStreetMap 由来・外部検証済みの日本送電網モデル。MATPOWER 潮流計算と Excel→UC がそのまま回る自己完結バンドルを配布。">
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#0f1419; --panel2:#12181f; --border:#243040;
+    --text:#e6ecf3; --muted:#9fb3c8; --dim:#7d8aa0;
+    --blue:#5dade2; --amber:#f5b041; --green:#69f0ae; --purple:#af7ac5; --red:#e57373;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,pre{font-family:"SF Mono",Menlo,Consolas,"Roboto Mono",monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* hero */
+  header.hero{padding:64px 0 40px;background:
+    radial-gradient(1200px 400px at 20% -10%,rgba(93,173,226,.18),transparent 60%),
+    radial-gradient(900px 360px at 90% 0%,rgba(105,240,174,.10),transparent 55%);
+    border-bottom:1px solid var(--border)}
+  .hero h1{margin:0 0 12px;font-size:34px;line-height:1.2;letter-spacing:.2px}
+  .hero .zap{color:var(--amber)}
+  .hero p.lead{margin:0 0 22px;font-size:16px;color:var(--muted);max-width:720px}
+  .hero .links{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1px solid var(--border);
+    border-radius:999px;font-size:13px;color:var(--muted);background:var(--panel)}
+  .chip:hover{border-color:var(--blue);color:var(--text);text-decoration:none}
+
+  section{padding:40px 0}
+  h2{font-size:22px;margin:0 0 6px}
+  h2 .num{color:var(--blue);font-variant-numeric:tabular-nums;margin-right:8px}
+  .sub{color:var(--dim);font-size:14px;margin:0 0 22px}
+
+  /* download cards */
+  .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--border);
+    border-radius:var(--radius);padding:22px;display:flex;flex-direction:column}
+  .card.featured{border-color:rgba(93,173,226,.55);box-shadow:0 0 0 1px rgba(93,173,226,.15)}
+  .card h3{margin:0 0 4px;font-size:19px}
+  .card .size{color:var(--amber);font-size:13px;font-weight:600;margin:0 0 12px}
+  .card ul{margin:0 0 18px;padding-left:18px;color:var(--muted);font-size:14px}
+  .card ul li{margin:3px 0}
+  .card .spacer{flex:1}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    padding:12px 16px;border-radius:8px;font-size:15px;font-weight:600;
+    background:linear-gradient(180deg,#3a95d4,#2b7fc0);color:#fff;border:1px solid #2b7fc0}
+  .btn:hover{filter:brightness(1.08);text-decoration:none}
+  .btn.ghost{background:transparent;color:var(--blue);border:1px solid var(--border)}
+  .btn.ghost:hover{border-color:var(--blue)}
+  .hash{margin-top:10px;font-size:11px;color:var(--dim);word-break:break-all}
+  .hash b{color:var(--muted);font-weight:600}
+
+  /* quickstart */
+  .qs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .qs{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+  .qs .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:3px 9px;border-radius:5px;margin:0 0 12px}
+  .qs.pf .tag{background:rgba(93,173,226,.15);color:var(--blue)}
+  .qs.pfm .tag{background:rgba(175,122,197,.16);color:var(--purple)}
+  .qs.uc .tag{background:rgba(105,240,174,.14);color:var(--green)}
+  .qs h3{margin:0 0 8px;font-size:16px}
+  .qs p{margin:0 0 12px;font-size:13px;color:var(--muted)}
+  pre{background:#080b0f;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:0;
+    overflow-x:auto;font-size:12.5px;color:#d6e2ee;line-height:1.6}
+  pre .c{color:var(--dim)}
+  pre .k{color:var(--green)}
+
+  figure{margin:26px 0 0;text-align:center}
+  figure img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:var(--radius);background:#fff}
+  figcaption{margin-top:10px;font-size:12.5px;color:var(--dim)}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  td code{color:var(--amber)}
+
+  .note{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--amber);
+    border-radius:8px;padding:16px 18px;margin-top:16px;font-size:14px;color:var(--muted)}
+  .note b{color:var(--text)}
+  .note.blue{border-left-color:var(--blue)}
+
+  footer{border-top:1px solid var(--border);padding:30px 0 60px;color:var(--dim);font-size:13px}
+  .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+  @media (max-width:560px){.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1><span class="zap">&#9889;</span> All-Japan-Grid — データセット ダウンロード</h1>
+    <p class="lead">OpenStreetMap 由来・外部データで検証した日本全国の送電網モデル（50/60&nbsp;Hz）。
+      MATPOWER の潮流計算と、Excel で発電機を設定して解くユニットコミットメント(UC)が
+      <b>そのまま回る自己完結バンドル</b>を配布しています（リポジトリを clone しなくても動きます）。</p>
+    <div class="links">
+      <a class="chip" href="#download">&#11015; ダウンロードへ</a>
+      <a class="chip" href="https://github.com/lutelute/All-Japan-Grid" target="_blank" rel="noopener">&#128187; GitHub リポジトリ</a>
+      <a class="chip" href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.4.0" target="_blank" rel="noopener">&#127991; Release v1.4.0</a>
+      <a class="chip" href="./index.html">&#128506; インタラクティブ系統図</a>
+    </div>
+  </div>
+</header>
+
+<section id="download">
+  <div class="wrap">
+    <h2><span class="num">1</span>ダウンロード</h2>
+    <p class="sub">2 つのプロファイル。まずは <b>core</b> で十分です。zip 内に SHA256 の MANIFEST を同梱しています。</p>
+    <div class="dl-grid">
+
+      <div class="card featured">
+        <h3>core バンドル</h3>
+        <div class="size">約 13 MB / zip</div>
+        <ul>
+          <li>MATPOWER 潮流ケース（非同期4島 <code>.mat</code>＋CSV）</li>
+          <li>正典 built モデル・GeoJSON・出典DB</li>
+          <li>チュートリアル（潮流・UC）＋ <code>src</code>/<code>config</code> 同梱</li>
+          <li>これだけで潮流計算と UC が回ります</li>
+        </ul>
+        <div class="spacer"></div>
+        <a class="btn" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.4.0/all-japan-grid-dataset-v1.4.0-core.zip">&#11015; core.zip をダウンロード</a>
+        <div class="hash"><b>SHA256:</b> f5c7acd765e789f0ec9261b281c432dbc7ef791ecd3a9a8a404ec4e4d8033b15
+          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.4.0/all-japan-grid-dataset-v1.4.0-core.MANIFEST.sha256">MANIFEST</a></div>
+      </div>
+
+      <div class="card">
+        <h3>full バンドル</h3>
+        <div class="size">約 25 MB / zip</div>
+        <ul>
+          <li>core の内容すべて</li>
+          <li>＋ 数値 Ybus 一式（<code>.mat</code>/<code>.npz</code>/CSV）</li>
+          <li>＋ 主要 GeoJSON（送電線・変電所・発電所）</li>
+          <li>解析・可視化まで一通り揃えたい人向け</li>
+        </ul>
+        <div class="spacer"></div>
+        <a class="btn ghost" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.4.0/all-japan-grid-dataset-v1.4.0-full.zip">&#11015; full.zip をダウンロード</a>
+        <div class="hash"><b>SHA256:</b> cdb45ba57eccd9fd7d52ea492558b24539deb132c25de18ec2afe9fbb62c156b
+          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.4.0/all-japan-grid-dataset-v1.4.0-full.MANIFEST.sha256">MANIFEST</a></div>
+      </div>
+
+    </div>
+    <div class="note blue">
+      <b>展開して依存を入れるだけ。</b>
+      <pre style="margin-top:10px"><span class="c"># zip を展開してディレクトリに入る</span>
+unzip all-japan-grid-dataset-v1.4.0-core.zip &amp;&amp; cd all-japan-grid-dataset-v1.4.0-core
+pip install -r requirements.txt   <span class="c"># pandapower, pulp, openpyxl, scipy, matplotlib ほか</span></pre>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--panel)">
+  <div class="wrap">
+    <h2><span class="num">2</span>回し方（そのまま動く例題）</h2>
+    <p class="sub">展開したバンドルの中で以下を実行するだけ。</p>
+    <div class="qs-grid">
+
+      <div class="qs pf">
+        <span class="tag">潮流 · Python</span>
+        <h3>MATPOWER 潮流（pandapower）</h3>
+        <p>配布ケースを読み、AC 潮流（Newton–Raphson）を解きます。MATLAB 不要。</p>
+        <pre><span class="k">python</span> dataset/01_matpower_powerflow/solve_pf.py okinawa
+<span class="c"># → AC 収束・損失 1.4%・Vm 0.985–1.010</span></pre>
+      </div>
+
+      <div class="qs pfm">
+        <span class="tag">潮流 · MATLAB</span>
+        <h3>MATPOWER 潮流（本体 runpf）</h3>
+        <p>MATLAB＋MATPOWER で同じケースを解きます。多成分島も正しく求解。</p>
+        <pre><span class="c">% 先に addpath で MATPOWER を通す</span>
+addpath(genpath(<span class="k">'/path/to/matpower8.1'</span>));
+solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / 'east' / 'west'</span></pre>
+      </div>
+
+      <div class="qs uc">
+        <span class="tag">UC · Excel</span>
+        <h3>Excel で発電機設定 → UC</h3>
+        <p>発電機と需要を Excel で編集し、24h の最小コスト起動停止計画を解きます。</p>
+        <pre><span class="k">python</span> dataset/02_uc_from_excel/make_template.py  <span class="c"># Excel 生成</span>
+<span class="c"># → generators_template.xlsx を編集</span>
+<span class="k">python</span> dataset/02_uc_from_excel/run_uc.py       <span class="c"># 解いて xlsx/png 出力</span></pre>
+      </div>
+
+    </div>
+
+    <figure>
+      <img src="./assets/dataset/uc_dispatch.png" alt="ユニットコミットメントの発電ディスパッチ結果（沖縄フリート・24時間）" loading="lazy">
+      <figcaption>Excel→UC の出力例：沖縄フリート22機の24時間ディスパッチ（Optimal・総コスト1.52億円）。
+        merit order 通り石炭が主力・ピーク時に石油、再エネは下部帯。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="num">3</span>ライセンスと出典</h2>
+    <p class="sub">引用・再配布の際は必ず確認してください。</p>
+    <table>
+      <thead><tr><th>対象</th><th>ライセンス</th></tr></thead>
+      <tbody>
+        <tr><td>送電網トポロジ（OSM 由来）</td><td><code>ODbL-1.0</code> © OpenStreetMap contributors</td></tr>
+        <tr><td>発電容量の出典DB（Wikipedia 由来値を含む）</td><td><code>CC-BY-SA-4.0</code></td></tr>
+        <tr><td>WRI 全球発電所DB（クロスチェック）</td><td><code>CC-BY-4.0</code></td></tr>
+        <tr><td>コード</td><td>リポジトリ <code>LICENSE</code> を参照</td></tr>
+      </tbody>
+    </table>
+    <p class="sub" style="margin-top:14px">引用は <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/CITATION.cff">CITATION.cff</a> ／
+      <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/datapackage.json">datapackage.json</a>、
+      データ辞書は <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/DATA_DICTIONARY.md">DATA_DICTIONARY.md</a>。</p>
+  </div>
+</section>
+
+<section style="background:var(--panel)">
+  <div class="wrap">
+    <h2><span class="num">4</span>データの限界（誠実な注意）</h2>
+    <p class="sub">これは<b>モデル</b>であり実系統そのものではありません。使う前に押さえてください。</p>
+    <div class="note">
+      <b>「潮流が収束した」＝「正しく解けた」ではありません。</b> 配布ケースは建造断面のスナップショットで、
+      発電機出力は時間断面として厳密に需給調整されたものではありません。
+    </div>
+    <div class="note">
+      <b>多成分島は MATLAB版と Python版で挙動が異なります。</b> 沖縄以外は複数の弱連結成分に分かれ各成分に slack を持ちます。
+      <b>MATLAB（MATPOWER）は正しく解けます</b>（実機確認：北海道 AC 収束・損失 +3.5%）が、
+      <b>Python（pandapower <code>from_mpc</code>）は複数 slack を正しく変換できず</b>損失が負になる等の不整合が出ます
+      （配布 <code>.mat</code> 自体は健全）。Python で大規模島を扱うなら MATLAB 版か UC→潮流連成を使ってください。
+    </div>
+    <div class="note">
+      <b>UC のコスト・起動費・最小出力は例題用の一般既定値</b>で、特定発電所の実測値ではありません。
+      発電所名・燃料・定格は OSM 由来の実在フリートです。実データがあれば Excel 上で上書きしてください。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    All-Japan-Grid · データセット配布ページ ·
+    <a href="https://github.com/lutelute/All-Japan-Grid">GitHub</a> ·
+    <a href="https://github.com/lutelute/All-Japan-Grid/tree/main/dataset">dataset/ チュートリアル</a> ·
+    <a href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.4.0">Release v1.4.0</a>
+    <div style="margin-top:8px">© OpenStreetMap contributors（ODbL-1.0）ほか。詳細は各ライセンス表記に従ってください。</div>
+  </div>
+</footer>
+
+</body>
+</html>

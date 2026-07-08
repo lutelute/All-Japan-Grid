@@ -165,6 +165,7 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 ## Download & Quickstart / ダウンロードと使い方
 
 データセットを DL してすぐ回せる入口とチュートリアルを [`dataset/`](dataset/) に用意しています。
+オンラインの **[ダウンロードページ](https://lutelute.github.io/All-Japan-Grid/docs/download.html)**（DL＋回し方を1枚に）も公開しています。
 
 - **配布バンドル (zip)** — [GitHub Releases](https://github.com/lutelute/All-Japan-Grid/releases) から
   `all-japan-grid-dataset-v<VERSION>-core.zip`（約 13 MB）をダウンロード、または
