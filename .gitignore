@@ -133,3 +133,12 @@ dist/ybus/*.mat
 dist/ybus/*.npz
 dist/ybus/*_bus.csv
 dist/ybus/*_branch.csv
+
+# データセット配布バンドル(生成物・Release経由で配布)。生成器=scripts/make_dataset_bundle.py
+dist/bundle/
+
+# チュートリアル実行成果物(利用者が生成)。テンプレ generators_template.xlsx は追跡する
+dataset/02_uc_from_excel/uc_result.xlsx
+dataset/02_uc_from_excel/uc_result.png
+dataset/**/out/
+dataset/**/*_res_bus.csv

@@ -162,6 +162,23 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 - 🗺 New compare tab with Ybus visualization (national / per-region / spy plot).
 - 📄 [Release notes](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0) / [Root-cause analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/docs/WEST_AC_ANALYSIS.md)
 
+## Download & Quickstart / ダウンロードと使い方
+
+データセットを DL してすぐ回せる入口とチュートリアルを [`dataset/`](dataset/) に用意しています。
+
+- **配布バンドル (zip)** — [GitHub Releases](https://github.com/lutelute/All-Japan-Grid/releases) から
+  `all-japan-grid-dataset-v<VERSION>-core.zip`（約 13 MB）をダウンロード、または
+  `python scripts/make_dataset_bundle.py` で生成（→ `dist/bundle/`）。`src`・`config`・データを
+  同梱した**自己完結**バンドルで、リポジトリを clone しなくても下記が回ります。
+- **潮流計算 (MATPOWER)** — `python dataset/01_matpower_powerflow/solve_pf.py okinawa`
+  （MATLAB 版 `solve_pf.m` も同梱）。配布ケース `dist/matpower_national/<island>.mat` を `runpf`。
+- **発電機設定 → UC (Excel)** — `python dataset/02_uc_from_excel/make_template.py` で編集用 Excel を
+  生成 → 発電機・需要を編集 → `python dataset/02_uc_from_excel/run_uc.py` で 24h の起動停止計画を求解。
+
+> 配布物 `dist/matpower_national/` と `dist/ybus/` は生成物のため Git 追跡外です。バンドル（Release）に
+> 同梱されるほか、`scripts/export_national_matpower.py` / `scripts/gen_ybus_numeric.py` で再生成できます。
+> 詳細は [`dataset/README.md`](dataset/README.md)（入口）と [`dataset/BUNDLE.md`](dataset/BUNDLE.md)（作成・公開手順）。
+
 ## Dataset / データセット
 
 | Region / 地域 | Substations / 変電所 | Lines / 送電線 | Plants / 発電所 | Frequency / 周波数 |
