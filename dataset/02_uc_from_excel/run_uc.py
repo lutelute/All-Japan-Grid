@@ -195,10 +195,13 @@ def main() -> int:
 
     out = Path(args.out)
     write_result_xlsx(gens, result, demand, out)
-    png = out.with_suffix(".png")
-    write_plot(gens, result, demand, png)
     print(f"wrote {out}")
-    print(f"wrote {png}")
+    png = out.with_suffix(".png")
+    try:
+        write_plot(gens, result, demand, png)
+        print(f"wrote {png}")
+    except ImportError:
+        print("  (matplotlib が無いため png はスキップ — `pip install matplotlib` で出力できます)")
     return 0 if result.is_optimal else 1
 
 

@@ -8,6 +8,7 @@ scipy>=1.10
 requests>=2.31
 pyyaml>=6.0
 openpyxl>=3.1
+matplotlib>=3.7  # dataset/02_uc_from_excel の png 出力ほか可視化全般
 pulp>=3.3.0
 highspy>=1.7.0  # HiGHS solver backend for better MIP performance
 psutil>=6.0.0
