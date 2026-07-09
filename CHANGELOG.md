@@ -8,16 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Duplicate-node dedup** (opt-in `--dedup-nodes`, intervention registry #21): merges nodes at
-  identical coordinate + voltage — the same OSM object double-extracted by overlapping regional
-  bboxes (verified: 飛騨変換所 has the same osm_id in both chubu and hokuriku extracts; 98.6% of
-  west's cross-region duplicate groups share the base name). This is *removal*, not a forced
-  connection — coordinates come from OSM geometry, so identical coordinates mean the same physical
-  point. Cuts west fragmentation 2,531 → 544 components (main 69 → 86 %) and east 532 → 312 (87 →
-  90 %) without adding any line. Root-cause report: `docs/reports/west_fragmentation_rootcause_2026-07-09.md`.
-  Default OFF (dedup-off is byte-identical to canonical); default-ON would need a full Ybus/powerflow
-  regeneration (owner decision). Note: dedup fixes fragmentation but is not a cure for west full-scale
-  AC, which remains harder than east.
+- **bbox double-extraction dedup** (opt-in `--dedup-nodes`, intervention registry #21): removes the
+  duplicates that overlapping regional bboxes create — **(a) nodes** at identical coordinate+voltage
+  and **(b) edges** with identical bus-pair+path (keeping max `par`). Verified as *removal*, not a
+  forced connection: 飛騨変換所 has the same osm_id in both chubu & hokuriku extracts; 98.6 % of
+  cross-region node-duplicate groups share the base name; 99.6 % of the 1,837 duplicate-edge groups
+  have byte-identical paths (same OSM way). Genuine parallel circuits (represented as `par>1` on a
+  single edge, 8,898 of them) are untouched, and **no self-loops** are created. Cuts west
+  fragmentation 2,531 → 544 components (main 69 → 86 %; east 532 → 312) and removes the line
+  double-counting (west 9,793 → 8,353 lines; east AC loss 6,415 → 6,781 MW, i.e. +5.7 % toward a
+  realistic value as the artificial impedance-halving is undone). Report:
+  `docs/reports/west_fragmentation_rootcause_2026-07-09.md`. Default OFF (byte-identical to canonical);
+  default-ON needs a full Ybus/powerflow regeneration (owner decision). dedup fixes fragmentation but
+  is not a cure for west full-scale AC.
 - **All-island 24 h validation** of `--pref-demand --reactive-comp`
   (`docs/reports/allisland_24h_reactive_2026-07-09.md`): all 4 islands solve for all 24 hours
   (hokkaido & okinawa 24/24 AC with healthy voltages, east 22/24 AC + 2 honest dc_fallback,

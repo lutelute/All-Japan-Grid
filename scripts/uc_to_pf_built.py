@@ -371,10 +371,11 @@ def main():
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
     ap.add_argument("--dedup-nodes", action="store_true",
-                    help="同一座標+同一電圧の重複ノードを1バスに畳む(bbox重なりで"
-                         "同一OSMオブジェクトが別regionに二重抽出された分=B案)。"
-                         "座標一致は同一物理点ゆえ除去であって接続追加でない。"
-                         "既定OFF。westの断片化2531→544成分を解消 "
+                    help="bbox重なりの二重抽出を除去(B案): ①同一座標+同一電圧の"
+                         "重複ノードを1バスに畳む ②同一バス対+同一経路の重複エッジを"
+                         "1本に(回線数parはmax保存・本物の複線=par>1単一エッジは不変)。"
+                         "座標/経路一致は同一物理点ゆえ除去であって接続追加でない。"
+                         "既定OFF。west断片化2531→544成分・線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()

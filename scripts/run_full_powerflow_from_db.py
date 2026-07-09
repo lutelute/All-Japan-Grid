@@ -235,6 +235,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     #      SAME coordinate — that is a transformer, handled below) ----
     n_line = 0
     n_edge_skipped = 0
+    n_edge_dup = 0
+    seen_edges = {}         # (min bus, max bus, kv, path署名) -> line idx(B案 エッジ側)
     for e in edges:
         ka, kb = _k5(*e["a"]), _k5(*e["b"])
         ca, cb = coord_nodes.get(ka), coord_nodes.get(kb)
@@ -255,6 +257,23 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         fa, ta = bus_of[ja], bus_of[jb]
         kv = ekv or max(float(nodes[ja].get("kv") or 0),
                         float(nodes[jb].get("kv") or 0)) or 66.0
+        if dedup_nodes:
+            # エッジ側の二重抽出除去(B案): 同一バス対+同一電圧階級+同一経路の線は
+            # 同一OSM wayがbbox重なりで二重抽出されたもの(実測99.6%が経路完全一致)。
+            # 本物の並列回線は built では par>1 の単一エッジなのでここに掛からない。
+            # 経路が異なる別ルートは別署名になり残す(下北線・鉄道等の稀少例)。
+            ppath = e.get("path") or [e["a"], e["b"]]
+            psig = tuple((round(p[0], 5), round(p[1], 5)) for p in ppath)
+            esig = (min(fa, ta), max(fa, ta), _nearest_kv(kv) or round(kv, 0),
+                    min(psig, tuple(reversed(psig))))
+            if esig in seen_edges:
+                # 二重抽出: 既存線を残し、回線数(par)は大きい方を採用(過少計上防止)
+                kept = seen_edges[esig]
+                net.line.at[kept, "parallel"] = max(
+                    int(net.line.at[kept, "parallel"]),
+                    max(int(e.get("par") or 1), 1))
+                n_edge_dup += 1
+                continue
         params = get_line_parameters_safe(_nearest_kv(kv) or kv, freq)
         if params is None:
             n_edge_skipped += 1
@@ -269,6 +288,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
             c_nf_per_km=params["c_nf_per_km"], max_i_ka=params["max_i_ka"],
             name=str(e.get("name") or f"line_{n_line}"),
             parallel=max(int(e.get("par") or 1), 1))
+        if dedup_nodes:
+            seen_edges[esig] = li
         n_line += 1
         # geometry for export (key by endpoint bus coords, both directions)
         a5 = (_k5(nodes[ja]["lat"], nodes[ja]["lon"]))
@@ -340,6 +361,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "n_edge_skipped": n_edge_skipped,
                          "n_dedup_merged": n_dedup_merged,
+                         "n_edge_dup_removed": n_edge_dup,
                          "region_reattribution": rstats}
 
 
@@ -734,9 +756,10 @@ def main():
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
     ap.add_argument("--dedup-nodes", action="store_true",
-                    help="同一座標+同一電圧の重複ノードを1バスに畳む(bbox重なりの"
-                         "二重抽出=B案・除去であって接続追加でない)。既定OFF。"
-                         "westの断片化2531→544成分を解消 "
+                    help="bbox重なりの二重抽出を除去(B案): 重複ノード(同一座標+kv)を"
+                         "1バスへ+重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存)。"
+                         "除去であって接続追加でない。既定OFF。west断片化2531→544成分・"
+                         "線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
