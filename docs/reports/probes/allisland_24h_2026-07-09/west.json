@@ -1,0 +1,1311 @@
+{
+ "meta": {
+  "date": "2026-07-09",
+  "git_head": "513c998",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "west": {
+   "mode": "dc",
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "model": "full",
+   "n_bus": 10193,
+   "n_trafo_nameplate": 5,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "chubu": {
+      "静岡県": {
+       "n_bus": 200,
+       "gwh": 19220.8,
+       "target_mw": 2986.2
+      },
+      "愛知県": {
+       "n_bus": 391,
+       "gwh": 56933.7,
+       "target_mw": 8845.5
+      },
+      "長野県": {
+       "n_bus": 198,
+       "gwh": 12385.2,
+       "target_mw": 1924.2
+      },
+      "群馬県": {
+       "n_bus": 34,
+       "gwh": 2125.7,
+       "target_mw": 330.3
+      },
+      "岐阜県": {
+       "n_bus": 209,
+       "gwh": 14764.0,
+       "target_mw": 2293.8
+      },
+      "山梨県": {
+       "n_bus": 26,
+       "gwh": 1959.7,
+       "target_mw": 304.5
+      },
+      "埼玉県": {
+       "n_bus": 10,
+       "gwh": 967.6,
+       "target_mw": 150.3
+      },
+      "三重県": {
+       "n_bus": 169,
+       "gwh": 19651.9,
+       "target_mw": 3053.2
+      },
+      "神奈川県": {
+       "n_bus": 17,
+       "gwh": 2236.8,
+       "target_mw": 347.5
+      },
+      "東京都": {
+       "n_bus": 1,
+       "gwh": 243.6,
+       "target_mw": 37.8
+      },
+      "新潟県": {
+       "n_bus": 8,
+       "gwh": 815.2,
+       "target_mw": 126.7
+      }
+     },
+     "chugoku": {
+      "広島県": {
+       "n_bus": 190,
+       "gwh": 19409.9,
+       "target_mw": 3202.2
+      },
+      "山口県": {
+       "n_bus": 249,
+       "gwh": 10713.9,
+       "target_mw": 1767.6
+      },
+      "岡山県": {
+       "n_bus": 153,
+       "gwh": 15562.6,
+       "target_mw": 2567.5
+      },
+      "島根県": {
+       "n_bus": 63,
+       "gwh": 4943.5,
+       "target_mw": 815.6
+      },
+      "鳥取県": {
+       "n_bus": 49,
+       "gwh": 3468.4,
+       "target_mw": 572.2
+      }
+     },
+     "hokuriku": {
+      "福井県": {
+       "n_bus": 147,
+       "gwh": 7236.0,
+       "target_mw": 1187.8
+      },
+      "富山県": {
+       "n_bus": 301,
+       "gwh": 10288.7,
+       "target_mw": 1689.0
+      },
+      "石川県": {
+       "n_bus": 166,
+       "gwh": 8891.4,
+       "target_mw": 1459.6
+      },
+      "新潟県": {
+       "n_bus": 5,
+       "gwh": 509.5,
+       "target_mw": 83.6
+      }
+     },
+     "kansai": {
+      "滋賀県": {
+       "n_bus": 196,
+       "gwh": 12683.7,
+       "target_mw": 2190.9
+      },
+      "大阪府": {
+       "n_bus": 354,
+       "gwh": 54267.9,
+       "target_mw": 9373.7
+      },
+      "兵庫県": {
+       "n_bus": 281,
+       "gwh": 37508.1,
+       "target_mw": 6478.8
+      },
+      "和歌山県": {
+       "n_bus": 59,
+       "gwh": 5925.1,
+       "target_mw": 1023.4
+      },
+      "奈良県": {
+       "n_bus": 95,
+       "gwh": 6744.6,
+       "target_mw": 1165.0
+      },
+      "京都府": {
+       "n_bus": 132,
+       "gwh": 15736.3,
+       "target_mw": 2718.1
+      }
+     },
+     "kyushu": {
+      "福岡県": {
+       "n_bus": 366,
+       "gwh": 31187.2,
+       "target_mw": 4910.9
+      },
+      "宮崎県": {
+       "n_bus": 74,
+       "gwh": 6842.0,
+       "target_mw": 1077.4
+      },
+      "佐賀県": {
+       "n_bus": 75,
+       "gwh": 6672.5,
+       "target_mw": 1050.7
+      },
+      "大分県": {
+       "n_bus": 75,
+       "gwh": 8603.2,
+       "target_mw": 1354.7
+      },
+      "熊本県": {
+       "n_bus": 105,
+       "gwh": 12036.1,
+       "target_mw": 1895.3
+      },
+      "鹿児島県": {
+       "n_bus": 125,
+       "gwh": 10056.5,
+       "target_mw": 1583.6
+      },
+      "長崎県": {
+       "n_bus": 48,
+       "gwh": 8271.1,
+       "target_mw": 1302.4
+      }
+     },
+     "shikoku": {
+      "徳島県": {
+       "n_bus": 100,
+       "gwh": 6073.4,
+       "target_mw": 960.6
+      },
+      "香川県": {
+       "n_bus": 126,
+       "gwh": 7169.4,
+       "target_mw": 1134.0
+      },
+      "愛媛県": {
+       "n_bus": 161,
+       "gwh": 8183.1,
+       "target_mw": 1294.3
+      },
+      "高知県": {
+       "n_bus": 43,
+       "gwh": 3831.3,
+       "target_mw": 606.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.6,
+    "n_shunt": 5001,
+    "q_comp_mvar": 14567.0
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 65337660.34373622
+   },
+   "hours": {
+    "0": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 50596.0,
+     "load_scale": {
+      "chubu": 0.6146,
+      "chugoku": 0.6488,
+      "hokuriku": 0.5778,
+      "kansai": 0.7155,
+      "kyushu": 0.7908,
+      "shikoku": 0.7193
+     },
+     "served_load_mw": 50596.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.4,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -203.3,
+      "chubu->kansai": 2439.5,
+      "chugoku->kansai": 2980.1,
+      "chugoku->kyushu": -891.1,
+      "chugoku->shikoku": -902.0,
+      "hokuriku->kansai": 736.0,
+      "kansai->shikoku": -2148.4
+     }
+    },
+    "1": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 47926.3,
+     "load_scale": {
+      "chubu": 0.5821,
+      "chugoku": 0.6145,
+      "hokuriku": 0.5433,
+      "kansai": 0.6788,
+      "kyushu": 0.7489,
+      "shikoku": 0.6807
+     },
+     "served_load_mw": 47926.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -280.2,
+      "chubu->kansai": 2305.4,
+      "chugoku->kansai": 3471.9,
+      "chugoku->kyushu": -1136.8,
+      "chugoku->shikoku": -921.3,
+      "hokuriku->kansai": 763.7,
+      "kansai->shikoku": -2223.1
+     }
+    },
+    "2": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 46152.6,
+     "load_scale": {
+      "chubu": 0.5605,
+      "chugoku": 0.5918,
+      "hokuriku": 0.5204,
+      "kansai": 0.6544,
+      "kyushu": 0.7211,
+      "shikoku": 0.6552
+     },
+     "served_load_mw": 46152.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 8218.7,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -496.0,
+      "chubu->kansai": 1609.1,
+      "chugoku->kansai": 3910.4,
+      "chugoku->kyushu": -1454.9,
+      "chugoku->shikoku": -891.3,
+      "hokuriku->kansai": 617.4,
+      "kansai->shikoku": -2315.2
+     }
+    },
+    "3": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 44376.7,
+     "load_scale": {
+      "chubu": 0.5388,
+      "chugoku": 0.5691,
+      "hokuriku": 0.4975,
+      "kansai": 0.63,
+      "kyushu": 0.6933,
+      "shikoku": 0.6296
+     },
+     "served_load_mw": 44376.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 6683.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -582.0,
+      "chubu->kansai": 1371.7,
+      "chugoku->kansai": 4215.8,
+      "chugoku->kyushu": -1665.9,
+      "chugoku->shikoku": -835.1,
+      "hokuriku->kansai": 600.9,
+      "kansai->shikoku": -2312.1
+     }
+    },
+    "4": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 46166.3,
+     "load_scale": {
+      "chubu": 0.5605,
+      "chugoku": 0.5921,
+      "hokuriku": 0.5207,
+      "kansai": 0.6544,
+      "kyushu": 0.7216,
+      "shikoku": 0.6557
+     },
+     "served_load_mw": 46166.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -310.0,
+      "chubu->kansai": 1737.4,
+      "chugoku->kansai": 3667.7,
+      "chugoku->kyushu": -1361.2,
+      "chugoku->shikoku": -856.0,
+      "hokuriku->kansai": 508.0,
+      "kansai->shikoku": -2227.7
+     }
+    },
+    "5": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 50193.2,
+     "load_scale": {
+      "chubu": 0.6088,
+      "chugoku": 0.6415,
+      "hokuriku": 0.5733,
+      "kansai": 0.7124,
+      "kyushu": 0.783,
+      "shikoku": 0.7127
+     },
+     "served_load_mw": 50193.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7701.3,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -175.6,
+      "chubu->kansai": 2560.7,
+      "chugoku->kansai": 2908.9,
+      "chugoku->kyushu": -745.8,
+      "chugoku->shikoku": -927.6,
+      "hokuriku->kansai": 777.4,
+      "kansai->shikoku": -2138.7
+     }
+    },
+    "6": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 55715.6,
+     "load_scale": {
+      "chubu": 0.6728,
+      "chugoku": 0.7037,
+      "hokuriku": 0.6472,
+      "kansai": 0.7981,
+      "kyushu": 0.8636,
+      "shikoku": 0.7893
+     },
+     "served_load_mw": 55715.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 78.7,
+      "chubu->kansai": 3233.5,
+      "chugoku->kansai": 2256.8,
+      "chugoku->kyushu": -569.5,
+      "chugoku->shikoku": -863.9,
+      "hokuriku->kansai": 807.6,
+      "kansai->shikoku": -2015.8
+     }
+    },
+    "7": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 61608.8,
+     "load_scale": {
+      "chubu": 0.7385,
+      "chugoku": 0.7631,
+      "hokuriku": 0.7281,
+      "kansai": 0.8976,
+      "kyushu": 0.9446,
+      "shikoku": 0.8683
+     },
+     "served_load_mw": 61608.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7696.5,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 487.8,
+      "chubu->kansai": 4429.8,
+      "chugoku->kansai": 989.0,
+      "chugoku->kyushu": 323.6,
+      "chugoku->shikoku": -882.2,
+      "hokuriku->kansai": 971.1,
+      "kansai->shikoku": -1804.7
+     }
+    },
+    "8": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 65603.8,
+     "load_scale": {
+      "chubu": 0.779,
+      "chugoku": 0.7927,
+      "hokuriku": 0.786,
+      "kansai": 0.9773,
+      "kyushu": 0.9919,
+      "shikoku": 0.9178
+     },
+     "served_load_mw": 65603.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 696.0,
+      "chubu->kansai": 5103.4,
+      "chugoku->kansai": 1826.1,
+      "chugoku->kyushu": 865.2,
+      "chugoku->shikoku": -656.3,
+      "hokuriku->kansai": 1003.5,
+      "kansai->shikoku": -1909.9
+     }
+    },
+    "9": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66942.7,
+     "load_scale": {
+      "chubu": 0.7871,
+      "chugoku": 0.7882,
+      "hokuriku": 0.8097,
+      "kansai": 1.0203,
+      "kyushu": 0.9976,
+      "shikoku": 0.9292
+     },
+     "served_load_mw": 66942.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 955.3,
+      "chubu->kansai": 6032.6,
+      "chugoku->kansai": 1792.7,
+      "chugoku->kyushu": 931.2,
+      "chugoku->shikoku": -659.6,
+      "hokuriku->kansai": 1190.8,
+      "kansai->shikoku": -1878.8
+     }
+    },
+    "10": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 67483.0,
+     "load_scale": {
+      "chubu": 0.7876,
+      "chugoku": 0.7788,
+      "hokuriku": 0.8214,
+      "kansai": 1.0465,
+      "kyushu": 0.9944,
+      "shikoku": 0.9306
+     },
+     "served_load_mw": 67483.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 973.4,
+      "chubu->kansai": 6081.3,
+      "chugoku->kansai": 1866.6,
+      "chugoku->kyushu": 893.8,
+      "chugoku->shikoku": -633.5,
+      "hokuriku->kansai": 1173.6,
+      "kansai->shikoku": -1901.4
+     }
+    },
+    "11": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 68129.7,
+     "load_scale": {
+      "chubu": 0.7915,
+      "chugoku": 0.7761,
+      "hokuriku": 0.8328,
+      "kansai": 1.0679,
+      "kyushu": 0.9965,
+      "shikoku": 0.9355
+     },
+     "served_load_mw": 68129.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7257.4,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chubu": {
+       "unmatched": {
+        "battery": 74.4
+       }
+      },
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      },
+      "shikoku": {
+       "unmatched": {
+        "battery": 150.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 781.3,
+      "chubu->kansai": 5423.1,
+      "chugoku->kansai": 3168.3,
+      "chugoku->kyushu": 918.5,
+      "chugoku->shikoku": -399.9,
+      "hokuriku->kansai": 946.8,
+      "kansai->shikoku": -2123.0
+     }
+    },
+    "12": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66833.2,
+     "load_scale": {
+      "chubu": 0.7749,
+      "chugoku": 0.7572,
+      "hokuriku": 0.8167,
+      "kansai": 1.0526,
+      "kyushu": 0.9746,
+      "shikoku": 0.916
+     },
+     "served_load_mw": 66833.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 734.2,
+      "chubu->kansai": 5331.2,
+      "chugoku->kansai": 3536.8,
+      "chugoku->kyushu": 667.5,
+      "chugoku->shikoku": -392.8,
+      "hokuriku->kansai": 948.6,
+      "kansai->shikoku": -2177.8
+     }
+    },
+    "13": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66745.1,
+     "load_scale": {
+      "chubu": 0.7756,
+      "chugoku": 0.7604,
+      "hokuriku": 0.8142,
+      "kansai": 1.0465,
+      "kyushu": 0.9761,
+      "shikoku": 0.9161
+     },
+     "served_load_mw": 66745.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 849.2,
+      "chubu->kansai": 5739.4,
+      "chugoku->kansai": 3049.2,
+      "chugoku->kyushu": 684.9,
+      "chugoku->shikoku": -483.4,
+      "hokuriku->kansai": 1071.2,
+      "kansai->shikoku": -2087.0
+     }
+    },
+    "14": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66946.5,
+     "load_scale": {
+      "chubu": 0.7823,
+      "chugoku": 0.7736,
+      "hokuriku": 0.8135,
+      "kansai": 1.0372,
+      "kyushu": 0.9866,
+      "shikoku": 0.9226
+     },
+     "served_load_mw": 66946.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 798.6,
+      "chubu->kansai": 5562.1,
+      "chugoku->kansai": 3327.0,
+      "chugoku->kyushu": 805.2,
+      "chugoku->shikoku": -429.0,
+      "hokuriku->kansai": 1022.8,
+      "kansai->shikoku": -2125.5
+     }
+    },
+    "15": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 67442.0,
+     "load_scale": {
+      "chubu": 0.795,
+      "chugoku": 0.797,
+      "hokuriku": 0.8147,
+      "kansai": 1.0246,
+      "kyushu": 1.0062,
+      "shikoku": 0.9357
+     },
+     "served_load_mw": 67442.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7082.6,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       },
+       "unmatched": {
+        "battery": 49.6
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 841.8,
+      "chubu->kansai": 5681.5,
+      "chugoku->kansai": 2982.0,
+      "chugoku->kyushu": 1030.0,
+      "chugoku->shikoku": -463.6,
+      "hokuriku->kansai": 1062.4,
+      "kansai->shikoku": -2059.0
+     }
+    },
+    "16": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69129.8,
+     "load_scale": {
+      "chubu": 0.825,
+      "chugoku": 0.842,
+      "hokuriku": 0.8291,
+      "kansai": 1.0212,
+      "kyushu": 1.0488,
+      "shikoku": 0.9679
+     },
+     "served_load_mw": 69129.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7268.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       },
+       "unmatched": {
+        "battery": 197.8
+       }
+      },
+      "hokuriku": {
+       "unmatched": {
+        "battery": 37.2
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 924.3,
+      "chubu->kansai": 5867.9,
+      "chugoku->kansai": 2244.8,
+      "chugoku->kyushu": 1517.4,
+      "chugoku->shikoku": -511.7,
+      "hokuriku->kansai": 1101.0,
+      "kansai->shikoku": -1932.4
+     }
+    },
+    "17": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69937.7,
+     "load_scale": {
+      "chubu": 0.8441,
+      "chugoku": 0.8758,
+      "hokuriku": 0.8323,
+      "kansai": 1.0056,
+      "kyushu": 1.0776,
+      "shikoku": 0.9875
+     },
+     "served_load_mw": 69937.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7596.5,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0,
+        "battery": 111.6
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0,
+        "battery": 416.4
+       }
+      },
+      "shikoku": {
+       "unmatched": {
+        "battery": 35.5
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 1032.8,
+      "chubu->kansai": 6185.4,
+      "chugoku->kansai": 1364.5,
+      "chugoku->kyushu": 1818.2,
+      "chugoku->shikoku": -618.8,
+      "hokuriku->kansai": 1200.1,
+      "kansai->shikoku": -1777.5
+     }
+    },
+    "18": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69150.4,
+     "load_scale": {
+      "chubu": 0.8403,
+      "chugoku": 0.8807,
+      "hokuriku": 0.8176,
+      "kansai": 0.9778,
+      "kyushu": 1.0758,
+      "shikoku": 0.9815
+     },
+     "served_load_mw": 69150.4,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 822.5,
+      "chubu->kansai": 5438.7,
+      "chugoku->kansai": 1726.8,
+      "chugoku->kyushu": 1826.9,
+      "chugoku->shikoku": -559.3,
+      "hokuriku->kansai": 1034.2,
+      "kansai->shikoku": -1851.5
+     }
+    },
+    "19": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 66420.0,
+     "load_scale": {
+      "chubu": 0.8086,
+      "chugoku": 0.8501,
+      "hokuriku": 0.7811,
+      "kansai": 0.9351,
+      "kyushu": 1.0362,
+      "shikoku": 0.944
+     },
+     "served_load_mw": 66420.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 981.6,
+      "chubu->kansai": 6084.5,
+      "chugoku->kansai": 588.1,
+      "chugoku->kyushu": 1373.8,
+      "chugoku->shikoku": -847.4,
+      "hokuriku->kansai": 1304.0,
+      "kansai->shikoku": -1655.0
+     }
+    },
+    "20": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 62886.3,
+     "load_scale": {
+      "chubu": 0.7654,
+      "chugoku": 0.805,
+      "hokuriku": 0.7356,
+      "kansai": 0.8862,
+      "kyushu": 0.9812,
+      "shikoku": 0.8935
+     },
+     "served_load_mw": 62886.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7573.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 780.0,
+      "chubu->kansai": 5516.2,
+      "chugoku->kansai": 1019.7,
+      "chugoku->kyushu": 742.4,
+      "chugoku->shikoku": -889.1,
+      "hokuriku->kansai": 1240.5,
+      "kansai->shikoku": -1736.5
+     }
+    },
+    "21": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 59366.3,
+     "load_scale": {
+      "chubu": 0.7223,
+      "chugoku": 0.7602,
+      "hokuriku": 0.6904,
+      "kansai": 0.8374,
+      "kyushu": 0.9265,
+      "shikoku": 0.8434
+     },
+     "served_load_mw": 59366.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 705.5,
+      "chubu->kansai": 5424.1,
+      "chugoku->kansai": 1465.6,
+      "chugoku->kyushu": 116.1,
+      "chugoku->shikoku": -952.0,
+      "hokuriku->kansai": 1303.3,
+      "kansai->shikoku": -1795.7
+     }
+    },
+    "22": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 55860.0,
+     "load_scale": {
+      "chubu": 0.6792,
+      "chugoku": 0.7157,
+      "hokuriku": 0.6454,
+      "kansai": 0.7887,
+      "kyushu": 0.8723,
+      "shikoku": 0.7938
+     },
+     "served_load_mw": 55860.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 346.7,
+      "chubu->kansai": 4303.6,
+      "chugoku->kansai": 2650.8,
+      "chugoku->kyushu": -505.3,
+      "chugoku->shikoku": -861.1,
+      "hokuriku->kansai": 1081.0,
+      "kansai->shikoku": -2007.5
+     }
+    },
+    "23": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 53236.0,
+     "load_scale": {
+      "chubu": 0.647,
+      "chugoku": 0.6824,
+      "hokuriku": 0.6117,
+      "kansai": 0.7521,
+      "kyushu": 0.8318,
+      "shikoku": 0.7568
+     },
+     "served_load_mw": 53236.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7033.0,
+     "solve_s": 0.1,
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 415.0
+       }
+      },
+      "kansai": {
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "nuclear": 2140.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 339.2,
+      "chubu->kansai": 4390.0,
+      "chugoku->kansai": 2654.2,
+      "chugoku->kyushu": -734.5,
+      "chugoku->shikoku": -955.2,
+      "hokuriku->kansai": 1175.5,
+      "kansai->shikoku": -2003.5
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}

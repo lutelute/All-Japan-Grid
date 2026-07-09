@@ -80,6 +80,14 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   detail left to refine. Default OFF keeps canonical comparability.
 - 🧾 **Model-intervention registry now at 20 entries** — #19 per-prefecture demand, #20 reactive
   compensation, each with basis / ledger / off-switch.
+- 🗾 **All-island 24 h validation of `--pref-demand --reactive-comp`**
+  ([docs/reports/allisland_24h_reactive_2026-07-09.md](docs/reports/allisland_24h_reactive_2026-07-09.md)).
+  All four islands solve for all 24 hours: hokkaido & okinawa 24/24 AC with healthy voltages
+  (0.77–1.01 / 0.82–1.00 pu), east 22/24 AC (98 % served) with 2 hours honestly falling back to
+  DC, west DC by design (single-synchronous-island AC is known fake convergence — backbone
+  handles its AC). Reactive compensation holds across every island and hour with no BLAS abort.
+  Remaining gap: east's localized 66 kV voltage outliers (vm ceiling ≈1.70, one hour 2.78) — the
+  next mesh-refinement target. Opt-in stays default OFF pending that work.
 
 ### v1.5.0 — 2026-07-09
 

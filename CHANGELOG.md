@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **All-island 24 h validation** of `--pref-demand --reactive-comp`
+  (`docs/reports/allisland_24h_reactive_2026-07-09.md`): all 4 islands solve for all 24 hours
+  (hokkaido & okinawa 24/24 AC with healthy voltages, east 22/24 AC + 2 honest dc_fallback,
+  west DC by design). Compensation is robust across islands/hours (no BLAS abort). Documents the
+  remaining east localized voltage outliers as the next mesh-refinement target; opt-in stays OFF.
 - **Reactive compensation** (opt-in `--reactive-comp`, intervention registry #20): shunt
   capacitor banks at load buses, modelling what real distribution substations carry but OSM
   omits. Diagnosis (`docs/reports/east_network_reactive_2026-07-09.md`) showed the east
