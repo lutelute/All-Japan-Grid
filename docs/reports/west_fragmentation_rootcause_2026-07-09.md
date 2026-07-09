@@ -83,11 +83,52 @@ west も D+Tr+Sn で87%に達する＝west は本質的に east と同等の連�
   west AC の「見せかけ度」は大きく下がり、backbone でなく full での誠実AC が視野に入る**
   （重複除去後に §east と同じ無効補償で再評価する価値がある）。
 
-## 5. 再現
+## 5. 実装と検証（2026-07-09・介入 #21・opt-in）
+
+主因が「同一OSMオブジェクトの二重抽出」と確定したので、**除去**として実装した。
+
+### OSM照合（除去であって接続追加でないことの確証）
+
+- **飛騨変換所** は chubu と hokuriku 両方の生OSM抽出（`data/{chubu,hokuriku}_substations.geojson`）に
+  **同一 osm_id=975217734** で存在＝完全に同一のOSMオブジェクトが二重抽出。
+- west の別region変電所重複633グループの **98.6%（624件）が基底名も一致**（残り9件も
+  「安曇野市変電所_2 vs _3」の連番違い＝同一変電所）。
+- built ノード座標はOSM幾何由来のため、**完全一致（浮動小数点）は同一物理点**。異なる変電所は
+  座標が一致しない → dedup は異物を繋ぐことが原理的に不可能。
+
+### 実装
+
+- `build_island_net(dedup_nodes=True)`（`--dedup-nodes`、`uc_to_pf_built.py` /
+  `run_full_powerflow_from_db.py`、**既定OFF**）。同一座標（6桁≈0.1m）+同一電圧の
+  複数ノードを1バスへ割当（線・変圧器は `bus_of` 経由なので自動で統合）。
+- **不変量**: dedup OFF は従来と完全一致（`n_dedup_merged=0`・バス数不変）。ゲート44件PASS。
+- **効果**（実build・グラフ推定と一致）:
+
+| 島 | dedup | バス | 成分 | 主成分 | 併合 |
+|---|---|---|---|---|---|
+| west | OFF | 10,193 | 2,531 | 69% | 0 |
+| west | **ON** | 8,204 | **544** | **86%** | 1,989 |
+| east | OFF | 6,222 | 532 | 87% | 0 |
+| east | **ON** | 6,002 | 312 | 90% | 220 |
+
+主成分のバス数は不変か微増（west 7,065→7,066）＝**実バスは失わず重複だけ除去**。
+
+### 限界（誠実に）
+
+- **dedup は断片化を直すが west full AC の特効薬ではない。** dedup後（主成分86%＝east並み）でも
+  `--reactive-comp` factor≤0.6・CLI順序では **dc_fallback**（`west_dedup_ac.json`）。
+  「断片化」と「AC収束」は分離できる別問題で、west AC は依然 east より難しい
+  （§east/west比較の順序依存・より強い補償要）。west の DC 既定は当面維持。
+- **既定ON化はYbus指紋・正典潮流の全再生成を伴う**（territory と同じ v5 扱い）ため
+  オーナー判断。dedup は east にも効く（tohoku/tokyo境界220件）ので全国規模の効果。
+
+## 6. 再現
 
 ```bash
 P=docs/reports/probes/west_fragmentation_2026-07-09
 .venv/bin/python $P/diag_west_fragments.py west /tmp/f.json   # §1 内訳
 .venv/bin/python $P/diag_west_lever.py west /tmp/l.json        # §2 分類
 .venv/bin/python $P/diag_west_dedup.py west /tmp/d.json        # §3 効果測定
+.venv/bin/python $P/verify_dedup_osm.py /tmp/v.json            # §5 OSM照合
+# 本番: PYTHONPATH=. .venv/bin/python scripts/uc_to_pf_built.py --islands west --dedup-nodes …
 ```

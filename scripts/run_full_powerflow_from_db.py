@@ -180,7 +180,7 @@ def _get_nameplates():
 
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
-                     territory=True):
+                     territory=True, dedup_nodes=False):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -188,7 +188,11 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     sn_mva/parallel に適用(v4)。None=従来ヒューリスティック容量のみ(回帰比較用)。
     territory: True(既定)=ノードregionを領土(座標→県→エリア)で再属性してから
     バス化する(A案 2026-07-07採用)。bbox重なり由来のzone誤属性(幻tie・実tie不可視化・
-    需要/UC注入の誤帰属)を修正する。物理接続は不変。False=旧挙動(回帰比較用)。"""
+    需要/UC注入の誤帰属)を修正する。物理接続は不変。False=旧挙動(回帰比較用)。
+    dedup_nodes: True=同一座標(6桁≈0.1m)+同一電圧の重複ノードを1バスに畳む
+    (bbox重なりで同一OSMオブジェクトが別regionに二重抽出された分=B案 2026-07-09)。
+    座標はOSM幾何由来ゆえ完全一致は同一物理点=除去であって接続の追加ではない
+    (docs/reports/west_fragmentation_rootcause_2026-07-09.md)。既定OFF(正典比較性)。"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
     rstats = None
@@ -201,15 +205,26 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     isl_nodes = [(i, n) for i, n in enumerate(nodes)
                  if ISLAND_OF.get(n.get("region"), (None, None))[0] == island]
     bus_of = {}
+    dedup_key = {}          # (lat6,lon6,kv1) -> bus (B案: 重複ノードを畳む)
+    n_dedup_merged = 0
     for i, n in isl_nodes:
         vn = float(n.get("kv") or 0.0)
         if vn <= 0:
             vn = 66.0  # unknown -> lowest transmission class (kept solvable)
+        if dedup_nodes:
+            key = (round(float(n["lat"]), 6), round(float(n["lon"]), 6),
+                   round(vn, 1))
+            if key in dedup_key:
+                bus_of[i] = dedup_key[key]   # 同一物理点の二重抽出 -> 既存バスへ
+                n_dedup_merged += 1
+                continue
         b = pp.create_bus(net, vn_kv=vn, name=str(n.get("name") or n["id"]),
                           type="b" if n.get("sub") == 1 else "n",
                           geodata=(n["lon"], n["lat"]))
         net.bus.at[b, "zone"] = n.get("region")
         bus_of[i] = b
+        if dedup_nodes:
+            dedup_key[key] = b
 
     # coord -> node indices in this island (for edge endpoint resolution + trafos)
     coord_nodes = defaultdict(list)
@@ -321,9 +336,10 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
             except (ValueError, TypeError):
                 pass
 
-    return net, bus_of, {"n_bus": len(bus_of), "n_line": n_line,
+    return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "n_edge_skipped": n_edge_skipped,
+                         "n_dedup_merged": n_dedup_merged,
                          "region_reattribution": rstats}
 
 
@@ -717,6 +733,11 @@ def main():
                          "FACTOR=局所供給率(省略時=config)。既定OFF。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--dedup-nodes", action="store_true",
+                    help="同一座標+同一電圧の重複ノードを1バスに畳む(bbox重なりの"
+                         "二重抽出=B案・除去であって接続追加でない)。既定OFF。"
+                         "westの断片化2531→544成分を解消 "
+                         "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
@@ -742,7 +763,8 @@ def main():
         t0 = time.time()
         freq = ISLAND_FREQ[island]
         geom = {}
-        net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom)
+        net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom,
+                                               dedup_nodes=args.dedup_nodes)
         n_gen = attach_generators(net, bus_of, nodes, island)
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
         if args.reactive_comp is not None:

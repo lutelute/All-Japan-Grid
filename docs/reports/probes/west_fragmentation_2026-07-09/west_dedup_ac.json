@@ -1,0 +1,17 @@
+{
+ "probe": "west-dedup-ac",
+ "dedup": true,
+ "n_bus": 8204,
+ "merged": 1989,
+ "cli_order": {
+  "factor_0.0": {
+   "solver": "dc_fallback"
+  },
+  "factor_0.3": {
+   "solver": "dc_fallback"
+  },
+  "factor_0.6": {
+   "solver": "dc_fallback"
+  }
+ }
+}

@@ -370,6 +370,12 @@ def main():
                          "(省略時=config reactive_compensation_factor)。既定OFF。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--dedup-nodes", action="store_true",
+                    help="同一座標+同一電圧の重複ノードを1バスに畳む(bbox重なりで"
+                         "同一OSMオブジェクトが別regionに二重抽出された分=B案)。"
+                         "座標一致は同一物理点ゆえ除去であって接続追加でない。"
+                         "既定OFF。westの断片化2531→544成分を解消 "
+                         "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -398,6 +404,7 @@ def main():
                        "boundary_injection": bool(args.boundary_injection),
                        "pref_demand": bool(args.pref_demand),
                        "reactive_comp": (args.reactive_comp is not None),
+                       "dedup_nodes": bool(args.dedup_nodes),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -417,7 +424,8 @@ def main():
         t0 = time.monotonic()
         geom = {}
         base, bus_of, bstats = build_island_net(
-            island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom)
+            island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom,
+            dedup_nodes=args.dedup_nodes)
         attach_generators(base, bus_of, built["nodes"], island)
         bridge_rep = None
         gen_zone_override = None
