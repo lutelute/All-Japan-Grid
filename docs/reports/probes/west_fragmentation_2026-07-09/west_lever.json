@@ -1,0 +1,265 @@
+{
+ "island": "west",
+ "n_targets_ge154_singlebus_sub": 260,
+ "categories": {
+  "T": 149,
+  "S": 108,
+  "M": 3
+ },
+ "legend": {
+  "T": "変圧器ギャップ(同一変電所別電圧が150m内・コード修正候補)",
+  "S": "スナップギャップ(edge端点600m内・短橋/座標ズレ)",
+  "M": "OSM欠落(2km内に線なし・GridStitch編集)"
+ },
+ "examples": {
+  "T": [
+   {
+    "name": "岩倉変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "関開閉所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     66.0,
+     140
+    ]
+   },
+   {
+    "name": "三河変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     154.0,
+     0
+    ]
+   },
+   {
+    "name": "新三河変電所 (untyped)",
+    "kv": 500,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     275.0,
+     0
+    ]
+   },
+   {
+    "name": "寛政変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "大高変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "中部電力パワーグリッド 日進変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     275.0,
+     0
+    ]
+   },
+   {
+    "name": "東名古屋変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     154.0,
+     0
+    ]
+   },
+   {
+    "name": "大字縄生変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "湖東変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     154.0,
+     0
+    ]
+   },
+   {
+    "name": "甲賀変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "丸山変電所 (Maruyama Hendensho) (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     154.0,
+     0
+    ]
+   },
+   {
+    "name": "犬山開閉所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "北刈谷変電所 (Kita Kariya Hendensho) (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   },
+   {
+    "name": "依佐美変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": [
+     77.0,
+     0
+    ]
+   }
+  ],
+  "S": [
+   {
+    "name": "東京電力駿河変電所",
+    "kv": 154,
+    "near_edge_m": 85,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "須原開閉所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "北勢変電所 (Hokusei Hendensho) (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "川根変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "豊田市変電所 (untyped)",
+    "kv": 275,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "平岡変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "南大垣変電所 (Ogaki Hendensho) (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "中央新幹線 都留変電所",
+    "kv": 154,
+    "near_edge_m": 140,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "みなかみ町変電所_2",
+    "kv": 275,
+    "near_edge_m": 12,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "500 kV switching station (untyped)",
+    "kv": 500,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "小山町変電所",
+    "kv": 154,
+    "near_edge_m": 35,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "新湯沢変電所",
+    "kv": 275,
+    "near_edge_m": 143,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "三福寺町変電所 (untyped)",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "鯖江変電所",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "市場変電所",
+    "kv": 154,
+    "near_edge_m": 0,
+    "near_diffkv_node": null
+   }
+  ],
+  "M": [
+   {
+    "name": "リニア中央新幹線 名城変電所（建設中）",
+    "kv": 154,
+    "near_edge_m": 1618,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "由良開閉所",
+    "kv": 500,
+    "near_edge_m": 2254,
+    "near_diffkv_node": null
+   },
+   {
+    "name": "脇田変電所",
+    "kv": 500,
+    "near_edge_m": 692,
+    "near_diffkv_node": null
+   }
+  ]
+ }
+}

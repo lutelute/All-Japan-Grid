@@ -1,0 +1,207 @@
+{
+ "island": "west",
+ "n_bus": 10193,
+ "n_line": 9793,
+ "n_trafo": 1061,
+ "n_comp_line_only": 2837,
+ "n_comp_with_trafo": 2531,
+ "n_comp": 2531,
+ "main_comp_bus": 7065,
+ "size_buckets": {
+  "1": 2209,
+  "2": 260,
+  "3-5": 38,
+  "6-20": 23,
+  "21-100": 0,
+  ">100": 1
+ },
+ "fragment_max_kv_hist": {
+  "66": 1384,
+  "77": 352,
+  "110": 198,
+  "154": 332,
+  "187": 54,
+  "220": 78,
+  "275": 101,
+  "500": 31
+ },
+ "fragments_with_substation": 1154,
+ "fragment_trapped_load_mw": 17605.9,
+ "fragment_trapped_gen_mw": 30966.7,
+ "total_load_mw": 73865.0,
+ "total_gen_cap_mw": 220311.3,
+ "fragments_ge154kv": {
+  "count": 596,
+  "top": [
+   {
+    "size": 18,
+    "max_kv": 220,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 15,
+    "max_kv": 275,
+    "load_mw": 263.3,
+    "gen_mw": 40.0,
+    "names": [
+     "鹿の子台変電所",
+     "三田変電所",
+     "横山町変電所",
+     "大池変電所",
+     "狭間が丘二丁目変電所"
+    ]
+   },
+   {
+    "size": 4,
+    "max_kv": 154,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 4,
+    "max_kv": 154,
+    "load_mw": 12.3,
+    "gen_mw": 123.3,
+    "names": [
+     "堀口町変電所",
+     "みなかみ町変電所"
+    ]
+   },
+   {
+    "size": 2,
+    "max_kv": 500,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 2,
+    "max_kv": 154,
+    "load_mw": 11.7,
+    "gen_mw": 60.0,
+    "names": [
+     "原子変電所"
+    ]
+   },
+   {
+    "size": 2,
+    "max_kv": 275,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 2,
+    "max_kv": 500,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 2,
+    "max_kv": 154,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 2,
+    "max_kv": 154,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 2,
+    "max_kv": 220,
+    "load_mw": 0.0,
+    "gen_mw": 0.0,
+    "names": []
+   },
+   {
+    "size": 1,
+    "max_kv": 154,
+    "load_mw": 18.3,
+    "gen_mw": 0.0,
+    "names": [
+     "岩倉変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 154,
+    "load_mw": 11.7,
+    "gen_mw": 10.0,
+    "names": [
+     "東京電力駿河変電所"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 275,
+    "load_mw": 5.1,
+    "gen_mw": 0.0,
+    "names": [
+     "関開閉所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 275,
+    "load_mw": 9.1,
+    "gen_mw": 0.0,
+    "names": [
+     "三河変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 500,
+    "load_mw": 3.0,
+    "gen_mw": 0.0,
+    "names": [
+     "新三河変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 154,
+    "load_mw": 18.3,
+    "gen_mw": 0.0,
+    "names": [
+     "寛政変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 154,
+    "load_mw": 18.3,
+    "gen_mw": 0.0,
+    "names": [
+     "大高変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 154,
+    "load_mw": 18.3,
+    "gen_mw": 0.0,
+    "names": [
+     "中部電力パワーグリッド 日進変電所 (untyped)"
+    ]
+   },
+   {
+    "size": 1,
+    "max_kv": 275,
+    "load_mw": 9.1,
+    "gen_mw": 0.0,
+    "names": [
+     "東名古屋変電所 (untyped)"
+    ]
+   }
+  ]
+ }
+}
