@@ -88,6 +88,16 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   handles its AC). Reactive compensation holds across every island and hour with no BLAS abort.
   Remaining gap: east's localized 66 kV voltage outliers (vm ceiling ≈1.70, one hour 2.78) — the
   next mesh-refinement target. Opt-in stays default OFF pending that work.
+- 🔀 **east vs west, diagnosed apart**
+  ([docs/reports/east_vs_west_ac_2026-07-09.md](docs/reports/east_vs_west_ac_2026-07-09.md)).
+  The "east AC / west DC" split hid the real story: applying east's exact diagnosis to west shows
+  **both are reactive-limited, not different in kind** — west's DC angles are healthy too. The
+  difference is fragmentation: east has 533 components (89 % of load in the main one) and reaches
+  honest AC at 30 % compensation, robustly; west has **2,531 components (5×, only 69 % in the
+  main)**, needs 90 % compensation, and even then converges only marginally (the operational CLI
+  ordering fails). west's lower loss / cleaner voltages are a fragmentation by-product, not a
+  better model. Conclusion: **"west = DC" is the right default** — west's real problem is
+  topology (missing OSM ties / substation hubs), not reactive support; we won't force its AC.
 
 ### v1.5.0 — 2026-07-09
 
