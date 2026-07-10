@@ -40,8 +40,8 @@ def main() -> int:
     args = parser.parse_args()
 
     summaries = []
-    print(f"{'region':10s} {'subs':>6s} {'lines':>6s} {'plants':>6s}  {'EQ_obj':>7s} {'GL_obj':>8s}")
-    print("-" * 56)
+    print(f"{'region':10s} {'subs':>6s} {'lines':>6s} {'plants':>6s} {'trafos':>6s}  {'EQ_obj':>7s} {'GL_obj':>8s}")
+    print("-" * 63)
     for region in args.regions:
         summary = export_region(region, args.data_dir, args.out_dir)
         summaries.append(summary)
@@ -50,20 +50,22 @@ def main() -> int:
             f"{region:10s} "
             f"{counts.get('substations', 0):6d} "
             f"{counts.get('lines', 0):6d} "
-            f"{counts.get('plants', 0):6d}  "
+            f"{counts.get('plants', 0):6d} "
+            f"{counts.get('transformers', 0):6d}  "
             f"{summary['eq_objects']:7d} {summary['gl_objects']:8d}"
         )
 
     totals = {
         kind: sum(s["counts"].get(kind, 0) for s in summaries)
-        for kind in ("substations", "lines", "plants")
+        for kind in ("substations", "lines", "plants", "transformers")
     }
-    print("-" * 56)
+    print("-" * 63)
     print(
         f"{'TOTAL':10s} "
         f"{totals['substations']:6d} "
         f"{totals['lines']:6d} "
-        f"{totals['plants']:6d}  "
+        f"{totals['plants']:6d} "
+        f"{totals['transformers']:6d}  "
         f"{sum(s['eq_objects'] for s in summaries):7d} "
         f"{sum(s['gl_objects'] for s in summaries):8d}"
     )

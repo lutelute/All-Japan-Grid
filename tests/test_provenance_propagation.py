@@ -241,3 +241,168 @@ def test_both_provenance_dbs_share_the_validator():
     # 非URL(捏造) → 両系統とも source_url-not-http
     assert "source_url-not-http" in v_cap({**cap_good, "source_url": "記憶"})[1]
     assert "source_url-not-http" in v_tr({**tr_good, "source_url": "記憶"})[1]
+
+
+# ======================================================================
+# Phase 1-B 次段(2026-07-11): _srcurl: マーカー / built透過 / PowerTransformer
+# ======================================================================
+
+
+def test_srcurl_marker_roundtrips_source_url(tmp_path):
+    """出典URLが D層エクスポート(_srcurl:)→再ingest→JSONLバックアップまで生き残る。
+
+    第一弾は「器(4列)」まで。この試験は運搬路そのもの:
+    apply→export(markers)→ingest→dump の全経路で URL が落ちないことを固定する。
+    """
+    from sqlalchemy import select
+
+    from src.db.geojson_sync import (
+        apply_enrichments, dump_enrichments_jsonl, export_geojson,
+        find_feature_keys, ingest_geojson,
+    )
+    from src.db.grid_db import GridDatabase
+    from src.db.schema import Enrichment
+
+    def _fc(props):
+        return {"type": "FeatureCollection", "features": [
+            {"type": "Feature", "properties": props,
+             "geometry": {"type": "Point", "coordinates": [127.7, 26.2]}}]}
+
+    db = GridDatabase(":memory:")
+    src_path = tmp_path / "okinawa_substations.geojson"
+    src_path.write_text(json.dumps(
+        _fc({"name": "テスト変電所", "power": "substation"}),
+        ensure_ascii=False), encoding="utf-8")
+    ingest_geojson(db, "okinawa", "substations", str(src_path))
+    keys = find_feature_keys(db, "substations", "okinawa", name="テスト変電所")
+    assert len(keys) == 1
+
+    apply_enrichments(db, [{
+        "layer": "substations", "region": "okinawa", "feature_key": keys[0],
+        "field": "voltage", "value": "275000", "source": "manual",
+        "source_url": "https://example.com/sub", "quote": "27万5千ボルト",
+        "retrieved_at": "2026-07-11", "collected_by": "test"}])
+
+    fc = export_geojson(db, "okinawa", "substations", markers=True)
+    props = fc["features"][0]["properties"]
+    assert props["voltage"] == "275000"
+    assert props["_src:voltage"] == "manual"
+    assert props["_srcurl:voltage"] == "https://example.com/sub"
+
+    # マーカー付きファイルを新しい DB へ ingest → URL が復元される
+    marked = tmp_path / "marked.geojson"
+    marked.write_text(json.dumps(fc, ensure_ascii=False), encoding="utf-8")
+    db2 = GridDatabase(":memory:")
+    ingest_geojson(db2, "okinawa", "substations", str(marked))
+    with db2.session_factory() as s:
+        rows = s.execute(select(Enrichment).where(
+            Enrichment.field == "voltage")).scalars().all()
+    assert len(rows) == 1
+    assert rows[0].source == "manual"
+    assert rows[0].source_url == "https://example.com/sub"
+
+    # 追跡バックアップ(JSONL)も出典4列を運ぶ(落とすと DB 専有に逆戻り)
+    dump = tmp_path / "enr.jsonl"
+    dump_enrichments_jsonl(db, str(dump))
+    volt = [json.loads(line) for line in
+            dump.read_text(encoding="utf-8").splitlines()
+            if '"voltage"' in line]
+    assert volt and volt[0]["source_url"] == "https://example.com/sub"
+    assert volt[0]["quote"] == "27万5千ボルト"
+    assert volt[0]["retrieved_at"] == "2026-07-11"
+    assert volt[0]["collected_by"] == "test"
+
+
+def test_built_view_carries_marker_provenance_to_nodes(tmp_path):
+    """GeoJSON の _src:/_srcurl: マーカーが built ノードの src に透過する。
+
+    ここが通ると docs/data/built/{region,all}.json(正典グラフ)に出典が乗る
+    (build_editor_data は built_view ノードの src をそのまま書き出す)。
+    """
+    import pytest as _pytest
+    _pytest.importorskip("networkx")
+    from src.server.built_view import built_view
+
+    a, b = [127.70, 26.20], [127.80, 26.30]
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {
+            "name": "出典変電所", "voltage": "66000", "power": "substation",
+            "_src:name": "nominatim",
+            "_srcurl:name": "https://example.com/sub"},
+         "geometry": {"type": "Point", "coordinates": a}},
+        {"type": "Feature", "properties": {
+            "name": "無印変電所", "voltage": "66000", "power": "substation"},
+         "geometry": {"type": "Point", "coordinates": b}},
+    ]}
+    lines = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"power": "line", "voltage": "66000"},
+         "geometry": {"type": "LineString", "coordinates": [a, b]}}]}
+    (tmp_path / "okinawa_substations.geojson").write_text(
+        json.dumps(subs, ensure_ascii=False), encoding="utf-8")
+    (tmp_path / "okinawa_lines.geojson").write_text(
+        json.dumps(lines, ensure_ascii=False), encoding="utf-8")
+
+    v = built_view("okinawa", data_dir=str(tmp_path))
+    assert v is not None
+    by_name = {n["name"]: n for n in v["nodes"] if n.get("name")}
+    assert by_name["出典変電所"]["src"] == {
+        "name": {"src": "nominatim", "url": "https://example.com/sub"}}
+    assert "src" not in by_name["無印変電所"]
+
+
+def test_cim_export_maps_structures_transformer_with_nameplate_url(tmp_path):
+    """構造DBの変圧器が PowerTransformer として CGMES に乗り、銘板URLが貫通する。
+
+    誠実性ピン: ratedS は銘板 spec のみ(structural に定格を捏造しない)・
+    バンク台数は名前の ×N で開示・境界込みで 0 dangling。
+    """
+    region = "okinawa"
+    data_dir = tmp_path / "data"
+    out_dir = tmp_path / "cim"
+    (data_dir / "structures").mkdir(parents=True)
+    subs = {"type": "FeatureCollection", "features": [
+        {"type": "Feature",
+         "properties": {"name": "テスト変電所", "voltage": "275000;66000"},
+         "geometry": {"type": "Point", "coordinates": [127.7, 26.2]}}]}
+    (data_dir / f"{region}_substations.geojson").write_text(
+        json.dumps(subs, ensure_ascii=False), encoding="utf-8")
+    st = {"region": region, "structures": [{
+        "site": {"name": "テスト変電所"},
+        "transformers": [
+            {"hv_vl_id": "s@275", "lv_vl_id": "s@66", "sn_mva": 300.0,
+             "n_parallel": 3, "source": "nameplate",
+             "note": "https://example.com/trafo | 275kV-300MVA ガス絶縁変圧器"},
+            {"hv_vl_id": "s@275", "lv_vl_id": "s@66", "sn_mva": None,
+             "n_parallel": 1, "source": "structural", "note": None},
+        ]}]}
+    (data_dir / "structures" / f"{region}.json").write_text(
+        json.dumps(st, ensure_ascii=False), encoding="utf-8")
+
+    summary = export_region(region, str(data_dir), str(out_dir))
+    eq = (out_dir / f"{region}_EQ.xml").read_text(encoding="utf-8")
+
+    assert summary["counts"]["transformers"] == 2
+    assert eq.count("<cim:PowerTransformer ") == 2
+    # 銘板出典URLが description に貫通(nameplate のみ・structural には付かない)
+    assert eq.count(
+        "<cim:IdentifiedObject.description>https://example.com/trafo"
+        "</cim:IdentifiedObject.description>") == 1
+    # 単機定格 300MVA は銘板 spec の両端のみ = ratedS 要素はファイル全体で2つ
+    # (structural spec に定格を捏造しない)
+    assert eq.count("<cim:PowerTransformerEnd.ratedS>300.0"
+                    "</cim:PowerTransformerEnd.ratedS>") == 2
+    assert eq.count("<cim:PowerTransformerEnd.ratedS>") == 2
+    # バンク台数は名前で開示(CGMES 2.4 に台数属性が無い)
+    assert "テスト変電所 275/66kV変圧器 ×3" in eq
+    # 変電所コンテナに収まる(名寄せ照合)
+    assert "Equipment.EquipmentContainer" in eq
+
+    # 境界(BaseVoltage)込みで 0 dangling(構造妥当ゲートと同条件)
+    from scripts.validate_cgmes import validate_model
+    from src.cim.boundary import generate_boundary
+    generate_boundary(str(out_dir), summary["base_voltages"])
+    rep = validate_model("trafo-test", [
+        str(out_dir / f"{region}_EQ.xml"),
+        str(out_dir / "AllJapan_EQ_BD.xml")])
+    assert rep.dangling == [], rep.dangling[:5]

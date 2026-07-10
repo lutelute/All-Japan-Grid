@@ -158,7 +158,9 @@ def decompose_properties(
     # ORIGINAL source instead of degrading to a raw tag — the exact
     # failure that blocked publishing P03 into the public GeoJSON
     # (task #8, 2026-06-10). The markers themselves are transport only
-    # and are not stored.
+    # and are not stored. ``_srcurl:<field>`` (出典URL, Phase 1-B 次段) is
+    # likewise transport only — it is consumed by :func:`ingest_geojson`
+    # (which re-attaches the URL to the curated row) and stripped here.
     src_markers = {k[5:]: v for k, v in props.items()
                    if k.startswith("_src:") and isinstance(v, str) and v}
     name_enriched = "_name_source" in props
@@ -166,7 +168,7 @@ def decompose_properties(
     raw_tags: Dict[str, Any] = {}
     curated: List[Tuple[str, Any, str]] = []
     for key, value in props.items():
-        if key.startswith("_src:"):
+        if key.startswith("_src:") or key.startswith("_srcurl:"):
             continue
         if key in src_markers:
             curated.append((key, value, src_markers[key]))
@@ -211,6 +213,11 @@ def compose_properties(
         for field, row in best.items():
             if not field.startswith("_"):
                 props[f"_src:{field}"] = row.source
+                # 出典URL(Phase 1-B): 値の出所URLを随伴マーカーとして運ぶ。
+                # ソースラベル(_src:)だけでは「どの一次資料か」まで辿れない。
+                url = getattr(row, "source_url", None)
+                if isinstance(url, str) and url.strip():
+                    props[f"_srcurl:{field}"] = url.strip()
     return props
 
 
@@ -253,9 +260,14 @@ def ingest_geojson(
         seen[key] = count + 1
         if count:
             key = f"{key}#{count + 1}"
-        raw_tags, curated = decompose_properties(
-            feature.get("properties") or {}
-        )
+        props = feature.get("properties") or {}
+        # _srcurl:<field> 出典URLマーカー(transport)を回収し、対応する curated
+        # 行に source_url として再付着させる(Phase 1-B: 出典が roundtrip で
+        # 落ちない)。マーカー自体は decompose が剥がすので raw には残らない。
+        url_markers = {k[8:]: v.strip() for k, v in props.items()
+                       if k.startswith("_srcurl:")
+                       and isinstance(v, str) and v.strip()}
+        raw_tags, curated = decompose_properties(props)
         raw_rows.append(
             {
                 "layer": layer,
@@ -284,6 +296,7 @@ def ingest_geojson(
                     "confidence": None,
                     "run_id": run_id,
                     "updated_at": now,
+                    "source_url": url_markers.get(field),
                 }
             )
 
@@ -308,6 +321,7 @@ def ingest_geojson(
         # rows this ingest deliberately PRESERVED above (e.g. p03_db) —
         # upsert instead of blind insert so re-ingesting a marker-bearing
         # derived file is idempotent.
+        from sqlalchemy import func
         from sqlalchemy.dialects.sqlite import insert as sqlite_insert
         for i in range(0, len(enr_rows), _INSERT_CHUNK):
             stmt = sqlite_insert(Enrichment).values(
@@ -318,7 +332,12 @@ def ingest_geojson(
                 set_={"value": stmt.excluded.value,
                       "confidence": stmt.excluded.confidence,
                       "run_id": stmt.excluded.run_id,
-                      "updated_at": stmt.excluded.updated_at}))
+                      "updated_at": stmt.excluded.updated_at,
+                      # 出典URLは COALESCE: マーカー付きファイルが URL を
+                      # 運んできたら更新、無マーカー再ingestでは既存 URL を
+                      # 消さない(出典は上書きでしか失われない=保全側に倒す)。
+                      "source_url": func.coalesce(
+                          stmt.excluded.source_url, Enrichment.source_url)}))
         session.add(
             Snapshot(
                 snapshot_id=snapshot_id,
@@ -446,12 +465,12 @@ def verify_roundtrip(
             f"feature count {len(orig_feats)} != {len(exp_feats)}"
         )
     def _effective(feat):
-        # _src: fields are provenance TRANSPORT (DB_ARCHITECTURE §6), not
-        # content — equivalence is judged on the effective view, so a
-        # marker-bearing derived file round-trips clean against a
-        # marker-less export and vice versa.
+        # _src: / _srcurl: fields are provenance TRANSPORT
+        # (DB_ARCHITECTURE §6), not content — equivalence is judged on the
+        # effective view, so a marker-bearing derived file round-trips
+        # clean against a marker-less export and vice versa.
         props = {k: v for k, v in (feat.get("properties") or {}).items()
-                 if not k.startswith("_src:")}
+                 if not (k.startswith("_src:") or k.startswith("_srcurl:"))}
         return {**feat, "properties": props}
 
     for i, (a, b) in enumerate(zip(orig_feats, exp_feats)):
@@ -530,6 +549,10 @@ def apply_enrichments(
     wins over — the legacy markers; it is never written into the raw
     feature, so a later OSM re-fetch re-applies it automatically.
 
+    出典4列(Phase 1-B): 行が ``source_url`` / ``quote`` / ``retrieved_at`` /
+    ``collected_by`` を持てばそのまま永続化する。キーが無い行は既存値を
+    温存する(出典は明示指定でしか変わらない)。
+
     Returns:
         Number of rows upserted.
     """
@@ -560,6 +583,10 @@ def apply_enrichments(
                         confidence=row.get("confidence"),
                         run_id=run_id,
                         updated_at=now,
+                        source_url=row.get("source_url"),
+                        quote=row.get("quote"),
+                        retrieved_at=row.get("retrieved_at"),
+                        collected_by=row.get("collected_by"),
                     )
                 )
             else:
@@ -567,6 +594,10 @@ def apply_enrichments(
                 existing.confidence = row.get("confidence", existing.confidence)
                 existing.run_id = run_id
                 existing.updated_at = now
+                for col in ("source_url", "quote",
+                            "retrieved_at", "collected_by"):
+                    if col in row:
+                        setattr(existing, col, row[col])
         session.commit()
     return len(rows)
 
@@ -604,6 +635,13 @@ def dump_enrichments_jsonl(db: GridDatabase, path: str) -> int:
             }
             if r.confidence is not None:
                 record["confidence"] = r.confidence
+            # 出典4列(Phase 1-B): 追跡バックアップが出典を落とすと
+            # 「DBにだけ出典がある」状態に戻ってしまう。retrieved_at は
+            # 取得日(安定値)であり updated_at のような揮発値ではない。
+            for col in ("source_url", "quote", "retrieved_at", "collected_by"):
+                v = getattr(r, col, None)
+                if v is not None:
+                    record[col] = v
             fh.write(
                 json.dumps(
                     record,

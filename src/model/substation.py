@@ -157,6 +157,10 @@ class Substation:
         source_map: Source KML filename for traceability.
         grid_class: Grid hierarchy classification (e.g., 'backbone', 'regional').
         description: Optional description or notes from the KML source.
+        provenance: Per-field provenance recovered from the source GeoJSON's
+            ``_src:<field>`` / ``_srcurl:<field>`` markers, e.g.
+            ``{"name": {"src": "nominatim", "url": "https://…"}}``.
+            None when the feature carried no markers (Phase 1-B 出典透過).
     """
 
     id: str
@@ -170,6 +174,7 @@ class Substation:
     source_map: str = ""
     grid_class: str = ""
     description: str = ""
+    provenance: Optional[dict] = None
 
     def __post_init__(self) -> None:
         """Validate fields after initialization."""

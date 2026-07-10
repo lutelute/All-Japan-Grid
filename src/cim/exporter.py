@@ -19,6 +19,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import unicodedata
 from typing import Dict, List, Optional, Tuple
 
 from ..regions import REGION_EN as REGION_NAME  # noqa: F401
@@ -151,6 +152,24 @@ def _haversine_m(a: Tuple[float, float], b: Tuple[float, float]) -> float:
     return 2 * radius * math.asin(math.sqrt(h))
 
 
+def _norm_site_name(name: object) -> str:
+    """サイト名照合用の正規化(NFKC+空白除去)。
+
+    構造DB(data/structures)のサイト名と GeoJSON の変電所名は同じ OSM 名を
+    源泉に持つが、「新生駒 変電所」のような空白ゆれが実在する
+    (transformer_provenance.normalize_site_key と同旨)。
+    """
+    return "".join(unicodedata.normalize("NFKC", str(name or "")).split())
+
+
+def _vl_kv(vl_id: object) -> Optional[float]:
+    """構造DBの voltage-level id (``…@275``) から kV を取り出す。"""
+    try:
+        return float(str(vl_id).rsplit("@", 1)[1])
+    except (IndexError, ValueError):
+        return None
+
+
 def _polyline_length_m(coords: List[Tuple[float, float]]) -> float:
     """Cumulative great-circle length (metres) of a polyline."""
     if len(coords) < 2:
@@ -170,6 +189,9 @@ class CimExporter:
         self._geo_region_m: Optional[str] = None
         self._sub_region_m: Optional[str] = None
         self._cs_m: Optional[str] = None
+        # 正規化サイト名 -> Substation mRID (構造DB由来の変圧器を正しい
+        # 変電所コンテナへ収めるための照合表。同名は最初の feature 優先)。
+        self._sub_by_name: Dict[str, str] = {}
 
     def header(self) -> "CimExporter":
         """Emit the RDF/XML headers for both profiles."""
@@ -291,6 +313,9 @@ class CimExporter:
         point = _representative_point(geom)
         if point:
             self._location(m, [point])
+        norm = _norm_site_name(name)
+        if norm:
+            self._sub_by_name.setdefault(norm, m)
         return m
 
     def add_line(self, idx: int, props: dict, geom: Optional[dict]) -> str:
@@ -374,6 +399,71 @@ class CimExporter:
             self._location(m, [point])
         return m
 
+    def add_transformer(self, site_idx: int, t_idx: int,
+                        site_name: str, spec: dict) -> Optional[str]:
+        """構造DBの TransformerSpec 1件を PowerTransformer + 2 ends に写像する。
+
+        Phase 1-B「PowerTransformer出力」: 変圧器出典DB
+        (data/transformer_sources.jsonl → 構造DB source="nameplate") の銘板が
+        CGMES まで届く。add_plant と同型で、**出典URLは
+        IdentifiedObject.description に貫通**させる(捏造防止規約の下流貫通)。
+
+        誠実性の規約:
+          - ratedS は銘板(existing出典)を持つ spec のみ(sn_mva が None の
+            structural spec には**書かない** — 定格の捏造をしない)。
+          - ratedS は銘板の単機値。バンク台数(n_parallel)は名前の ``×N`` で
+            開示する(CGMES 2.4 に台数属性が無いため)。
+          - description は source="nameplate" の出典URLのみ(note 形式
+            "url | quote" の URL 部)。
+        """
+        hv, lv = _vl_kv(spec.get("hv_vl_id")), _vl_kv(spec.get("lv_vl_id"))
+        if not hv or not lv:
+            return None   # 電圧階級が読めない spec は写像しない(捏造回避)
+        self._ensure_region()
+        m = mrid("trafo", self.region, site_idx, t_idx)
+        par = int(spec.get("n_parallel") or 1)
+        name = f"{site_name} {hv:g}/{lv:g}kV変圧器"
+        if par > 1:
+            name += f" ×{par}"
+        attrs: Dict[str, object] = {
+            "IdentifiedObject.name": name, "IdentifiedObject.mRID": m}
+        sn = spec.get("sn_mva")
+        if spec.get("source") == "nameplate":
+            url = str(spec.get("note") or "").split(" | ", 1)[0].strip()
+            if url.startswith("http"):
+                attrs["IdentifiedObject.description"] = url
+        refs: Dict[str, str] = {}
+        container = self._sub_by_name.get(_norm_site_name(site_name))
+        if container:
+            refs["Equipment.EquipmentContainer"] = container
+        self.eq.obj("PowerTransformer", m, attrs=attrs, refs=refs)
+        for end, kv in ((1, hv), (2, lv)):
+            cn = mrid("cn", self.region, "trafo", site_idx, t_idx, end)
+            self.eq.obj("ConnectivityNode", cn,
+                        attrs={"IdentifiedObject.mRID": cn})
+            term = mrid("term", self.region, "trafo", site_idx, t_idx, end)
+            self.eq.obj(
+                "Terminal", term,
+                attrs={"IdentifiedObject.mRID": term,
+                       "ACDCTerminal.sequenceNumber": end},
+                refs={"Terminal.ConductingEquipment": m,
+                      "Terminal.ConnectivityNode": cn})
+            pte = mrid("pte", self.region, site_idx, t_idx, end)
+            end_attrs: Dict[str, object] = {
+                "IdentifiedObject.mRID": pte,
+                "TransformerEnd.endNumber": end,
+                "PowerTransformerEnd.ratedU": kv,
+            }
+            if isinstance(sn, (int, float)) and sn > 0:
+                end_attrs["PowerTransformerEnd.ratedS"] = sn
+            self.eq.obj(
+                "PowerTransformerEnd", pte,
+                attrs=end_attrs,
+                refs={"PowerTransformerEnd.PowerTransformer": m,
+                      "TransformerEnd.BaseVoltage": self._base_voltage(kv),
+                      "TransformerEnd.Terminal": term})
+        return m
+
 
 def export_region(region: str, data_dir: str, out_dir: str) -> dict:
     """Export one region's GeoJSON to CGMES EQ + GL RDF/XML files.
@@ -408,6 +498,28 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
                 except Exception:  # noqa: BLE001 — skip a single bad feature, keep going
                     continue
         counts[kind] = n
+
+    # 構造DB(data/structures/{region}.json)の変圧器を PowerTransformer として
+    # 写像する(Phase 1-B「PowerTransformer出力」)。構造DBは生成物(untracked)
+    # なので無い環境ではスキップ = 従来出力と同一(再現には
+    # build_structures_batch.py --all を先に実行)。
+    n_tr = 0
+    st_path = os.path.join(data_dir, "structures", f"{region}.json")
+    if os.path.exists(st_path):
+        with open(st_path, encoding="utf-8") as fh:
+            st = json.load(fh)
+        for s_i, site in enumerate(st.get("structures", [])):
+            trs = site.get("transformers") or []
+            if not trs:
+                continue
+            site_name = (site.get("site") or {}).get("name") or f"site{s_i}"
+            for t_i, tr in enumerate(trs):
+                try:
+                    if exporter.add_transformer(s_i, t_i, site_name, tr):
+                        n_tr += 1
+                except Exception:  # noqa: BLE001 — 1 spec の不備で region を止めない
+                    continue
+    counts["transformers"] = n_tr
 
     os.makedirs(out_dir, exist_ok=True)
     eq_path = os.path.join(out_dir, f"{region}_EQ.xml")

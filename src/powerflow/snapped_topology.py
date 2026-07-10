@@ -531,8 +531,20 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if 0 < vkv < min_voltage_kv:
             vkv = 0.0
         if sid not in sub_info:   # 統合時は最初のヤードの coord/own_cls を温存
+            # 出典透過(Phase 1-B): GeoJSON の _src:/_srcurl: マーカーを
+            # {field: {src, url}} に畳んで持ち回る。built_view がノードに
+            # 載せ、docs/data/built(all.json) まで出典が届く。
+            prov = {}
+            for pk, pv in props.items():
+                if not (isinstance(pv, str) and pv):
+                    continue
+                if pk.startswith("_src:"):
+                    prov.setdefault(pk[5:], {})["src"] = pv
+                elif pk.startswith("_srcurl:"):
+                    prov.setdefault(pk[8:], {})["url"] = pv
             sub_info[sid] = {"name": props.get("name") or sid, "lat": lat,
-                             "lon": lon, "own_cls": _clean_voltage(vkv)}
+                             "lon": lon, "own_cls": _clean_voltage(vkv),
+                             "prov": prov or None}
             sub_coords.append((lat, lon, sid))
         if polygon_bind and feat.get("geometry", {}).get("type") in (
                 "Polygon", "MultiPolygon"):
@@ -1253,7 +1265,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         info = sub_info[sid]
         net.add_substation(Substation(
             id=bus_id, name=name, region=region,
-            latitude=info["lat"], longitude=info["lon"], voltage_kv=vn_kv))
+            latitude=info["lat"], longitude=info["lon"], voltage_kv=vn_kv,
+            provenance=info.get("prov")))
 
     # Line-primacy coordinates (D10, owner directive 2026-06-12 「線を基準に
     # している方がかなりいい」): a substation that BOUND line vertices is

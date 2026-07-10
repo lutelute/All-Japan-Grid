@@ -104,6 +104,13 @@
   .leaflet-control-layers-expanded{padding:9px 12px}
   .leaflet-control-layers label{margin:3px 0}
   .leaflet-bar a{background:var(--card)!important;color:var(--tx)!important;border-color:var(--bd)!important}
+  /* ── モバイル対応(2026-07-10 レイアウト監査B1): 地図が上・パネルは下部ドロワー ── */
+  @media (max-width:768px){
+    #map{right:0;bottom:46vh;bottom:46dvh}
+    #panel{top:auto;left:0;right:0;bottom:0;width:100%;height:46vh;height:46dvh;
+      border-left:none;border-top:1px solid var(--bd)}
+    .statusbar{width:100%;left:0;right:0}
+  }
 </style></head>
 <body>
 <div id="map"></div>

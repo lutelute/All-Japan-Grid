@@ -56,6 +56,12 @@ def build_html(out_path: str, template: str = SRC) -> None:
     html = html.replace("<title>AGJ 接続編集プラットフォーム</title>",
                         "<title>AGJ 接続編集プラットフォーム(Pages 下書き)</title>")
 
+    # (c) :8088 専用のツールダッシュボード導線を剥がす(Pages に /tools は無い=死にリンク)。
+    tools_link = ' <a href="/tools"'
+    if tools_link in html:
+        import re
+        html = re.sub(r' <a href="/tools".*?</a>', '', html, count=1)
+
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(html)
     print(f"[build_pages_editor] wrote {os.path.relpath(out_path, ROOT)} ({len(html):,} bytes)")

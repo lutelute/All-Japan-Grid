@@ -30,12 +30,16 @@
     22.0,
     20.0,
     15.4,
+    15.0,
     13.8,
+    13.0,
     11.0,
     6.6,
     6.0,
     3.3,
+    3.0,
     1.5,
+    1.0,
     0.75,
     0.65,
     0.154,
@@ -46,7 +50,8 @@
   "totals": {
     "substations": 6962,
     "lines": 40077,
-    "plants": 19138
+    "plants": 19138,
+    "transformers": 2385
   },
   "regions": [
     {
@@ -54,9 +59,10 @@
       "counts": {
         "substations": 471,
         "lines": 4136,
-        "plants": 436
+        "plants": 436,
+        "transformers": 125
       },
-      "eq_objects": 22142,
+      "eq_objects": 23019,
       "gl_objects": 52623,
       "base_voltages_kv": [
         500.0,
@@ -70,7 +76,8 @@
         33.0,
         25.0,
         22.0,
-        20.0
+        20.0,
+        6.0
       ],
       "eq_file": "hokkaido_EQ.xml",
       "gl_file": "hokkaido_GL.xml"
@@ -80,9 +87,10 @@
       "counts": {
         "substations": 901,
         "lines": 6628,
-        "plants": 1311
+        "plants": 1311,
+        "transformers": 511
       },
-      "eq_objects": 36424,
+      "eq_objects": 40005,
       "gl_objects": 76512,
       "base_voltages_kv": [
         500.0,
@@ -96,9 +104,13 @@
         25.0,
         22.0,
         20.0,
+        11.0,
         6.6,
+        6.0,
         3.3,
+        3.0,
         1.5,
+        1.0,
         0.05
       ],
       "eq_file": "tohoku_EQ.xml",
@@ -109,9 +121,10 @@
       "counts": {
         "substations": 1726,
         "lines": 8295,
-        "plants": 7207
+        "plants": 7207,
+        "transformers": 558
       },
-      "eq_objects": 52333,
+      "eq_objects": 56240,
       "gl_objects": 92887,
       "base_voltages_kv": [
         500.0,
@@ -123,10 +136,12 @@
         25.0,
         22.0,
         15.4,
+        15.0,
         11.0,
         6.6,
         6.0,
         1.5,
+        1.0,
         0.75,
         0.154
       ],
@@ -138,9 +153,10 @@
       "counts": {
         "substations": 1163,
         "lines": 6589,
-        "plants": 3792
+        "plants": 3792,
+        "transformers": 323
       },
-      "eq_objects": 39326,
+      "eq_objects": 41591,
       "gl_objects": 117666,
       "base_voltages_kv": [
         500.0,
@@ -155,9 +171,12 @@
         30.0,
         25.0,
         22.0,
+        15.0,
         11.0,
         6.6,
+        6.0,
         1.5,
+        1.0,
         0.154
       ],
       "eq_file": "chubu_EQ.xml",
@@ -168,9 +187,10 @@
       "counts": {
         "substations": 267,
         "lines": 2296,
-        "plants": 432
+        "plants": 432,
+        "transformers": 115
       },
-      "eq_objects": 12520,
+      "eq_objects": 13327,
       "gl_objects": 35081,
       "base_voltages_kv": [
         500.0,
@@ -179,7 +199,10 @@
         154.0,
         77.0,
         66.0,
-        1.5
+        22.0,
+        6.0,
+        1.5,
+        1.0
       ],
       "eq_file": "hokuriku_EQ.xml",
       "gl_file": "hokuriku_GL.xml"
@@ -189,9 +212,10 @@
       "counts": {
         "substations": 902,
         "lines": 3994,
-        "plants": 1518
+        "plants": 1518,
+        "transformers": 295
       },
-      "eq_objects": 23378,
+      "eq_objects": 25445,
       "gl_objects": 53026,
       "base_voltages_kv": [
         500.0,
@@ -205,7 +229,9 @@
         25.0,
         22.0,
         6.6,
+        6.0,
         1.5,
+        1.0,
         0.1,
         0.077
       ],
@@ -217,9 +243,10 @@
       "counts": {
         "substations": 531,
         "lines": 3176,
-        "plants": 1173
+        "plants": 1173,
+        "transformers": 169
       },
-      "eq_objects": 18229,
+      "eq_objects": 19414,
       "gl_objects": 58523,
       "base_voltages_kv": [
         500.0,
@@ -234,8 +261,11 @@
         25.0,
         22.0,
         20.0,
+        11.0,
         6.6,
+        6.0,
         1.5,
+        1.0,
         0.65
       ],
       "eq_file": "chugoku_EQ.xml",
@@ -246,9 +276,10 @@
       "counts": {
         "substations": 258,
         "lines": 1532,
-        "plants": 688
+        "plants": 688,
+        "transformers": 63
       },
-      "eq_objects": 8936,
+      "eq_objects": 9378,
       "gl_objects": 25189,
       "base_voltages_kv": [
         500.0,
@@ -258,6 +289,7 @@
         77.0,
         66.0,
         22.0,
+        6.0,
         0.65
       ],
       "eq_file": "shikoku_EQ.xml",
@@ -268,9 +300,10 @@
       "counts": {
         "substations": 684,
         "lines": 3314,
-        "plants": 2549
+        "plants": 2549,
+        "transformers": 204
       },
-      "eq_objects": 20639,
+      "eq_objects": 22068,
       "gl_objects": 63560,
       "base_voltages_kv": [
         660.0,
@@ -282,9 +315,11 @@
         25.0,
         22.0,
         20.0,
+        11.0,
         6.6,
         6.0,
-        1.5
+        1.5,
+        1.0
       ],
       "eq_file": "kyushu_EQ.xml",
       "gl_file": "kyushu_GL.xml"
@@ -294,15 +329,19 @@
       "counts": {
         "substations": 59,
         "lines": 117,
-        "plants": 32
+        "plants": 32,
+        "transformers": 22
       },
-      "eq_objects": 743,
+      "eq_objects": 897,
       "gl_objects": 1724,
       "base_voltages_kv": [
         132.0,
         66.0,
+        22.0,
         13.8,
-        6.6
+        13.0,
+        6.6,
+        6.0
       ],
       "eq_file": "okinawa_EQ.xml",
       "gl_file": "okinawa_GL.xml"

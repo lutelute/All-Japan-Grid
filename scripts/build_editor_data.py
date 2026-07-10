@@ -48,7 +48,7 @@ def _compact_nodes(nodes: list) -> list:
     """Trim a built_view node list to the fields the static editor needs."""
     out = []
     for n in nodes:
-        out.append({
+        rec = {
             "id": n["id"],
             "lat": n["lat"], "lon": n["lon"],
             "kv": round(float(n.get("kv") or 0), 1),
@@ -56,7 +56,12 @@ def _compact_nodes(nodes: list) -> list:
             "deg": int(n.get("deg") or 0),
             "sub": 1 if n.get("sub") else 0,
             "name": n.get("name") or "",
-        })
+        }
+        # 出典透過(Phase 1-B): built_view のノード出典 {field:{src,url}} を
+        # 正典 docs/data/built まで運ぶ(無い節点では省略=バイト増ゼロ)。
+        if n.get("src"):
+            rec["src"] = n["src"]
+        out.append(rec)
     return out
 
 
@@ -150,6 +155,7 @@ def build_national(collected: dict) -> dict:
         "nodes": [{"id": n["id"], "lat": n["lat"], "lon": n["lon"],
                    "kv": n["kv"], "main": n["main"], "deg": n["deg"],
                    "sub": n["sub"], "name": n["name"], "region": n["region"]}
+                  | ({"src": n["src"]} if n.get("src") else {})
                   for n in nodes],
         # National: OSM幾何(path)込み — :8088の built_view_all と同一表現に統一。
         # path省略の直線(弦)描画だと長距離枝が斜めに交差して「無茶苦茶接続」に見えるため。

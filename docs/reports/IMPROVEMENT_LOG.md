@@ -7,6 +7,22 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-11 — **Claude Fable 5** — Phase 1-B次段: 出典が正典グラフ(all.json)とCGMESまで届いた
+
+オーナー「やろう」承認。詳細=`provenance_propagation_2026-07-11.md`。
+
+- **3本の配線**: ①geojson_sync `_srcurl:<field>`マーカー(D層export⇄ingest roundtrip・
+  COALESCE保全) ②built透過(GeoJSONマーカー→Substation.provenance→built_view→
+  **docs/data/built 3,813/17,336ノード(22%)にsrc**) ③CIM Level-1 **PowerTransformer**新設
+  (全国2,385器・銘板13器はdescription=出典URL — tokyo_EQに池上の東芝レビューURLが実際に乗る)
+- **バックアップの穴**: dump/load_enrichments_jsonl・apply_enrichmentsが出典4列を運んでいなかった
+  =追跡バックアップが出典を落とす欠陥を配管
+- 誠実性: ratedSは銘板specのみ(structuralに定格を捏造しない)・バンク台数は名前の×N開示
+- 検証: golden test3本追加・**202 passed**・CGMES 0 dangling(okinawa 2,659 obj/tokyo 149,165 obj)・
+  built再生成は9地域bit安定+**hokuriku追随**(信州154kV型付けのビルダー改良未反映を解消・+3ノード)
+- 併修: editor.htmlドリフト解消(07-10モバイルCSSをテンプレへ移設・Pagesビルダーに/tools剥がし・
+  公開物はバイト一致で不変)。1-F未裁定のokinawa supplementは退避して生成(正典に混入させない)
+
 ## 2026-07-10(夜) — **Claude Fable 5**（収集agent=Claude Opus 4.8） — 城南継続: what-if律速確定→銘板第4弾（PF実効ゼロの確定込み）
 
 午後の精緻化の続き（バックグラウンド3本の統合。前半=`a56ff61`・後半=本コミット）。
