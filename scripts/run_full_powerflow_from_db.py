@@ -106,6 +106,19 @@ def _k5(la, lo):
     return (round(la, 5), round(lo, 5))
 
 
+NOT_IN_SERVICE_PATH = os.path.join(ROOT, "data", "reference",
+                                   "not_in_service_lines.json")
+
+
+def _load_not_in_service():
+    """介入#23: 未供用線リスト(出典URL+quote必須)。無ければ空。"""
+    try:
+        with open(NOT_IN_SERVICE_PATH, encoding="utf-8") as f:
+            return json.load(f).get("lines", [])
+    except FileNotFoundError:
+        return []
+
+
 def _nearest_kv(kv):
     if kv and kv > 0:
         return min(VALID_KV, key=lambda k: abs(k - kv))
@@ -180,7 +193,8 @@ def _get_nameplates():
 
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
-                     territory=True, dedup_nodes=True):
+                     territory=True, dedup_nodes=True, site_trafos=False,
+                     deenergize_unbuilt=False):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -194,7 +208,16 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     された分=B案 2026-07-09)。座標はOSM幾何由来ゆえ完全一致は同一物理点=除去で
     あって接続の追加ではない(docs/reports/west_fragmentation_rootcause_2026-07-09.md)。
     False=従来挙動(回帰比較用・CLIは --no-dedup-nodes)。既定化判断=
-    docs/reports/default_on_decision_2026-07-10.md"""
+    docs/reports/default_on_decision_2026-07-10.md
+    site_trafos: True=介入#22 サイト内変圧器リンク。同名変電所(電圧サフィックス・
+    _N複製サフィックス除去後の正規化名一致+空間クラスタ0.6km以内)の異電圧階級バスを
+    2巻線変圧器で連結する。従来は同一座標(_k5≈1m)のみで、同一サイトでも数十m離れた
+    電圧階級ヤードが未連結だった(west T-gap 57%・東京城南チェーン低電圧の主因)。
+    既定OFF(正典比較性)。
+    deenergize_unbuilt: True=介入#23 未供用線の正直化。建設済みだが供用前の送電線
+    (data/reference/not_in_service_lines.json・出典必須)を in_service=False で建てる。
+    初例=大間幹線(大間原発 運転開始未定・J-POWER一次)。無負荷EHV線のフェランチ
+    過電圧アーティファクトを除く。既定OFF。"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
     rstats = None
@@ -238,6 +261,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     n_line = 0
     n_edge_skipped = 0
     n_edge_dup = 0
+    n_deenergized = 0
+    nis_rules = _load_not_in_service() if deenergize_unbuilt else []
     seen_edges = {}         # (min bus, max bus, kv, path署名) -> line idx(B案 エッジ側)
     for e in edges:
         ka, kb = _k5(*e["a"]), _k5(*e["b"])
@@ -292,6 +317,15 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
             parallel=max(int(e.get("par") or 1), 1))
         if dedup_nodes:
             seen_edges[esig] = li
+        if nis_rules:
+            enm = str(e.get("name") or "")
+            for rule in nis_rules:
+                m = rule.get("match", {})
+                if m.get("name_contains") and m["name_contains"] in enm \
+                        and abs(float(m.get("kv", kv)) - kv) < 0.5:
+                    net.line.at[li, "in_service"] = False
+                    n_deenergized += 1
+                    break
         n_line += 1
         # geometry for export (key by endpoint bus coords, both directions)
         a5 = (_k5(nodes[ja]["lat"], nodes[ja]["lon"]))
@@ -359,11 +393,102 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
             except (ValueError, TypeError):
                 pass
 
+    # ---- 介入#22: サイト内変圧器リンク(opt-in) — 同名変電所の異電圧階級を連結。
+    #      従来の _k5(≈1m)同一座標条件では、同一サイトでも電圧階級ヤードが数十m
+    #      離れていると変圧器が張られない(west T-gap 57%・東京城南チェーンの主因)。
+    #      同名(電圧/_N複製サフィックス除去)+0.6km空間クラスタ=同一物理変電所とみなす。
+    #      接続の「追加」だが根拠は実在変電所の定義そのもの(複数電圧階級を持つ
+    #      変電所は変圧器で階級間を結んでいる)。sub=1ノードのみ・既存連結はスキップ。 ----
+    n_site_trafo = 0
+    if site_trafos:
+        import re as _re22
+        by_site = defaultdict(list)
+        for i, n in isl_nodes:
+            if n.get("sub") != 1:
+                continue
+            nm = n.get("name") or ""
+            if not nm:
+                continue
+            base = _re22.sub(r"_\d+$", "", _site_name_of_node(nm))
+            if base:
+                by_site[base].append(i)
+        linked = {frozenset((int(r["hv_bus"]), int(r["lv_bus"])))
+                  for _, r in net.trafo.iterrows()}
+        R_KM = 0.6
+        for base, idxs in sorted(by_site.items()):
+            if len(idxs) < 2:
+                continue
+            # 空間クラスタ(単リンク・R_KM): 同名でも離れたサイトは別物として扱う
+            clusters = []
+            for j in idxs:
+                placed = False
+                for cl in clusters:
+                    if any(_haversine_km(nodes[j]["lat"], nodes[j]["lon"],
+                                         nodes[k]["lat"], nodes[k]["lon"]) <= R_KM
+                           for k in cl):
+                        cl.append(j)
+                        placed = True
+                        break
+                if not placed:
+                    clusters.append([j])
+            for cl in clusters:
+                by_kv2 = {}
+                for j in cl:
+                    vn = round(float(net.bus.at[bus_of[j], "vn_kv"]), 1)
+                    cur = by_kv2.get(vn)
+                    if cur is None or (nodes[j].get("deg") or 0) > \
+                            (nodes[cur].get("deg") or 0):
+                        by_kv2[vn] = j
+                kvs2 = sorted(by_kv2.keys(), reverse=True)
+                if len(kvs2) < 2:
+                    continue
+                plates = []
+                if nameplates:
+                    seen_site = set()
+                    for j in cl:
+                        key = (nodes[j].get("region"),
+                               _site_name_of_node(nodes[j].get("name") or ""))
+                        if key not in seen_site:
+                            seen_site.add(key)
+                            plates.extend(nameplates.get(key, ()))
+                for hv_kv, lv_kv in zip(kvs2, kvs2[1:]):
+                    hb, lb = bus_of[by_kv2[hv_kv]], bus_of[by_kv2[lv_kv]]
+                    if hb == lb or frozenset((hb, lb)) in linked:
+                        continue
+                    sn = max(100.0, math.sqrt(3) * lv_kv
+                             * (get_line_parameters_safe(
+                                 _nearest_kv(lv_kv) or lv_kv, freq) or
+                                {"max_i_ka": 1.0})["max_i_ka"])
+                    par, tag = 1, ""
+                    for p in plates:
+                        if p["hv_kv"] is None or abs(p["hv_kv"] - hv_kv) > 0.5:
+                            continue
+                        if p["lv_kv"] is None or abs(p["lv_kv"] - lv_kv) > 0.5:
+                            continue
+                        sn, par, tag = p["sn_mva"], p["n_parallel"], "@nameplate"
+                        break
+                    try:
+                        pp.create_transformer_from_parameters(
+                            net, hv_bus=hb, lv_bus=lb, sn_mva=sn,
+                            vn_hv_kv=hv_kv, vn_lv_kv=lv_kv,
+                            vkr_percent=0.5, vk_percent=12.0,
+                            pfe_kw=0.0, i0_percent=0.0, parallel=par,
+                            name=f"site_trafo_{hv_kv:.0f}/{lv_kv:.0f}kV{tag}")
+                        linked.add(frozenset((hb, lb)))
+                        n_site_trafo += 1
+                        n_trafo += 1
+                        if tag:
+                            n_trafo_nameplate += 1
+                    except (ValueError, TypeError):
+                        pass
+
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "n_edge_skipped": n_edge_skipped,
                          "n_dedup_merged": n_dedup_merged,
                          "n_edge_dup_removed": n_edge_dup,
+                         "n_site_trafo": n_site_trafo,
+                         "n_deenergized": n_deenergized,
                          "region_reattribution": rstats}
 
 
@@ -771,6 +896,18 @@ def main():
                          "--no-dedup-nodes=従来挙動(回帰比較用)。west断片化2531→544成分・"
                          "線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
+    ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
+                         "0.6km以内)の異電圧階級を変圧器で連結。従来は同一座標(≈1m)"
+                         "のみで同一サイトの階級ヤードが未連結だった(東京城南チェーン"
+                         "低電圧・west T-gapの主因)。既定OFF(正典比較性)")
+    ap.add_argument("--deenergize-unbuilt", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#23 未供用線の正直化: 建設済み・供用開始前の線"
+                         "(data/reference/not_in_service_lines.json・出典必須)を"
+                         "in_service=Falseで建てる。初例=大間幹線(運転開始未定)。"
+                         "既定OFF")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
@@ -796,8 +933,13 @@ def main():
         t0 = time.time()
         freq = ISLAND_FREQ[island]
         geom = {}
-        net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom,
-                                               dedup_nodes=args.dedup_nodes)
+        net, bus_of, bstats = build_island_net(
+            island, nodes, edges, freq, geom, dedup_nodes=args.dedup_nodes,
+            site_trafos=args.site_trafos,
+            deenergize_unbuilt=args.deenergize_unbuilt)
+        if args.site_trafos or args.deenergize_unbuilt:
+            print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
+                  f"deenergized={bstats['n_deenergized']}")
         n_gen = attach_generators(net, bus_of, nodes, island)
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
         if args.reactive_comp is not None:

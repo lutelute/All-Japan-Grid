@@ -385,6 +385,20 @@ def main():
                          "既定ON(2026-07-10 介入#21既定化)。--no-dedup-nodes=従来挙動"
                          "(回帰比較用)。west断片化2531→544成分・線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
+    ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#22 サイト内変圧器リンク(同名変電所+0.6km以内の"
+                         "異電圧階級を連結)。既定OFF(正典比較性)")
+    ap.add_argument("--deenergize-unbuilt", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#23 未供用線の正直化(出典必須リストの線を"
+                         "in_service=False)。初例=大間幹線。既定OFF")
+    ap.add_argument("--hourly-shunts", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#20の精緻化: 補償シャントを時刻別の地域負荷スケールに"
+                         "追従させる(コンデンサバンクの投入/開放運用のモデル化)。"
+                         "従来はbase断面で固定張りのため軽負荷時刻に過補償過電圧"
+                         "(t=3 vm 2.99)を生んでいた。既定OFF(正典比較性)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -414,6 +428,9 @@ def main():
                        "pref_demand": bool(args.pref_demand),
                        "reactive_comp": (args.reactive_comp is not None),
                        "dedup_nodes": bool(args.dedup_nodes),
+                       "site_trafos": bool(args.site_trafos),
+                       "deenergize_unbuilt": bool(args.deenergize_unbuilt),
+                       "hourly_shunts": bool(args.hourly_shunts),
                        "builder": "run_full_powerflow_from_db.build_island_net"},
               "islands": {}}
     rc = 0
@@ -434,7 +451,11 @@ def main():
         geom = {}
         base, bus_of, bstats = build_island_net(
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom,
-            dedup_nodes=args.dedup_nodes)
+            dedup_nodes=args.dedup_nodes, site_trafos=args.site_trafos,
+            deenergize_unbuilt=args.deenergize_unbuilt)
+        if args.site_trafos or args.deenergize_unbuilt:
+            print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
+                  f"deenergized={bstats['n_deenergized']}")
         attach_generators(base, bus_of, built["nodes"], island)
         bridge_rep = None
         gen_zone_override = None
@@ -543,6 +564,17 @@ def main():
             demand = {r: float(scn.net_demand_r[r][t]) for r in regions}
             inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand,
                                           gen_zone_override=gen_zone_override)
+            if args.hourly_shunts and len(net_t.shunt):
+                # 介入#20精緻化: シャント(コンデンサバンク)を時刻別の地域負荷
+                # スケールに追従(実運用の投入/開放)。base固定張りだと軽負荷時刻に
+                # 過補償→過電圧(factor×Q_load(t)の本来意図に合わせる)
+                zb = net_t.bus["zone"]
+                for si in net_t.shunt.index:
+                    z = zb.at[int(net_t.shunt.at[si, "bus"])]
+                    sc = inj.get(z, {}).get("load_scale")
+                    if sc:
+                        net_t.shunt.at[si, "q_mvar"] = \
+                            float(net_t.shunt.at[si, "q_mvar"]) * float(sc)
             bnd_mw = {}
             for pt in boundary_pts:
                 series = boundary_flows.get(tuple(sorted(pt["pair"])))

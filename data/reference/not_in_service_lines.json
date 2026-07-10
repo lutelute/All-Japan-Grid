@@ -1,0 +1,18 @@
+{
+  "title": "未供用送電線の正直化 (介入#23) — 建設済み・供用開始前の線を in_service=False で建てる",
+  "policy": "出典URL+逐語引用の無い行は追加禁止 (scripts/provenance.py 系の捏造防止規約と同旨)。物理資産としては保持し(可視化・将来供用に備える)、潮流だけを止める。供用開始が確認されたら行を削除し正典を再生成する。",
+  "generated": "2026-07-10",
+  "lines": [
+    {
+      "match": {"name_contains": "大間町変電所~東通", "kv": 500},
+      "real_name": "大間幹線 (500kV設計・約61km・大間原子力発電所〜むつ幹線)",
+      "reason": "大間原子力発電所(建設中・運転開始未定)の送電専用計画線。電源が未稼働のため系統潮流を担っておらず、モデル上通電すると無負荷EHV線のフェランチ効果で大間ポケット(500kV 2バス+66kV 10バス)に vm 1.33-1.75pu の過電圧アーティファクトを生む (docs/reports/probes/east_outliers_2026-07-10/outliers_east.json)。",
+      "source_url": "https://www.jpower.co.jp/bs/nuclear/oma/plan.html",
+      "source_title": "J-POWER 電源開発株式会社 大間原子力発電所建設計画の概要",
+      "quote": "運転開始 未定※ / 亘長約61キロメートルの大間幹線を通じ、東北電力ネットワーク（株）むつ幹線経由で送電される計画",
+      "retrieved_at": "2026-07-10",
+      "collected_by": "Claude Fable 5",
+      "note": "OSM上のエッジ名は端点由来 (大間町変電所~東通変電所線 / 大間町変電所~東通村変電所線)。kv=500のみ照合し、大間町の66kV配電網は通電のまま維持する。"
+    }
+  ]
+}
