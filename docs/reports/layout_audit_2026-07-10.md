@@ -10,7 +10,9 @@
   **B1はオーナー指示「マップをケータイでも・レスポンシブに」で是正済**(地図系6ページ全てに
   `@media(max-width:768px)`を追加。地図が上・パネルは下部ドロワー。index=タブ横スクロール+一覧パネル
   初期閉、compare=2ペイン縦積み、uc_map=パネル全幅化=M2もモバイルでは解消。Playwright 390×844で
-  6ページ実測・デスクトップ1280×900は回帰なしを確認)。I1/I4/M1-M6 はオーナー判断待ち
+  6ページ実測・デスクトップ1280×900は回帰なしを確認)。
+  **I4は取り下げ(2026-07-11 オーナー指摘「二重ではない」で再調査→監査の誤認と確定)**。
+  I1/M1/M3-M6 はオーナー判断待ち(M2はモバイルでは解消・デスクトップは残)
 
 ---
 
@@ -53,6 +55,16 @@
 
 **I4. 「接続編集」ツールが二重に存在** — editor.html（新・洗練されたカードUI）と connection_editor.html（旧・素朴なUI）が両方公開されている。index.htmlのタブは新版を使い、旧版は孤立。体裁も異なり、公開URLとしては重複・混乱の元。→ editor_desktop.png vs connection_editor_desktop.png
 
+> **【取り下げ 2026-07-11】オーナー指摘「二重ではない」→ 実装を再調査し、監査の誤認と確定。**
+> 両者は別ワークフローの別ツール:
+> - `connection_editor.html` = **接続候補の承認ツール**。`reports/connection_candidates_{region}.json`
+>   (候補生成E2)を読み、OSM下地で実在確認→クリック承認→`approved_connections_*.geojson`を
+>   書き出し、`scripts/apply_connections.py`(E3)で `data/{region}_lines_supplement.geojson` に統合
+>   →builderが取込む。okinawa supplement(ロードマップ1-F)を生んだのはこのツール。
+> - `editor.html` = **モデル閲覧+下書き編集プラットフォーム**。builtモデルの閲覧・下書き
+>   (ブラウザ保存)・issue化。検証/反映は :8088。
+> 見た目の新旧・素朴/洗練を「旧版/新版」と誤読した。残る事実はI2の「孤立」(導線なし)のみ。
+
 **I5. ヘッダ/フッタ体裁の不統一** — download.html のみ hero header＋chipナビ＋footer を持つランディング体裁。他6ページは共通ヘッダ/フッタ/ブランドバーを持たず地図フルスクリーン。役割相応ではあるが、ページ間を横断する共通ナビ・ブランド帯がないため「同一サイトの一部」という一貫性が視覚的に希薄。
 
 ### 重大度: 軽微（Minor）
@@ -83,7 +95,9 @@
 ## 4. 修正提案（優先度順・実装はしていない）
 
 1. （I2/I3 高）トップ導線とバージョンの是正: index.html から download.html（配布）への導線を追加。What's newバナーを実リリース(v1.5.0)に更新。孤立している uc_map.html の導線も検討。
-2. （I4 高）重複解消: connection_editor.html（旧版）を廃止 or editor.html へのリダイレクトに。公開「接続編集」を1本化。
+2. ~~（I4 高）重複解消: connection_editor.html（旧版）を廃止 or editor.html へのリダイレクトに。公開「接続編集」を1本化。~~
+   **取り下げ(2026-07-11)**: 二重ではなく別機能（候補承認ツール vs 閲覧/下書きプラットフォーム）。
+   廃止・リダイレクトはしない。役割の混同を防ぐならページ冒頭の役割表記/相互リンクで足りる。
 3. （I1 中）テーマ統一: uc_map.html をダーク化、もしくはダーク背景色を1つ（例 #0d1117）に揃える。共通CSS変数の共有を検討。
 4. （B1 中）モバイル方針の明確化: 地図ツールは「デスクトップ推奨」を明示するか、パネルをモバイルで下部ドロワー/折畳みにする最小対応。少なくとも index.html（トップ）は要対応。
 5. （M1 低）compare.html のペイン <h2> を left から right 寄せ、またはズームコントロールを topright へ移動して重なり解消。
@@ -102,4 +116,4 @@
 | editor_desktop.png / editor_mobile.png | 接続編集(新)。モバイルで地図8px(B1) |
 | review_desktop.png | 候補レビュー。デスクトップ良好 |
 | uc_map_desktop.png | UC潮流。ライトテーマ(I1)＋ラジオ折返し(M2) |
-| connection_editor_desktop.png | 接続編集(旧)。孤立・重複(I4) |
+| connection_editor_desktop.png | 接続候補の承認ツール。孤立(I2)。※「重複(I4)」は取り下げ |
