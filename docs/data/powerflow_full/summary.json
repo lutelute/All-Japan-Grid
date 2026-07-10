@@ -3,101 +3,153 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 17333,
     "n_edges": 19031,
-    "generated": "2026-07-05 00:48:49",
+    "generated": "2026-07-10 11:23:18",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
     "hokkaido": {
       "frequency_hz": 50,
-      "n_bus": 836,
-      "n_line": 853,
-      "n_trafo": 74,
+      "n_bus": 802,
+      "n_line": 815,
+      "n_trafo": 68,
       "n_trafo_nameplate": 1,
-      "n_edge_skipped": 90,
-      "n_gen": 432,
+      "n_edge_skipped": 79,
+      "n_dedup_merged": 17,
+      "n_edge_dup_removed": 4,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 417,
       "total_load_mw": 4420.0,
-      "n_components": 47,
-      "n_slack": 47,
-      "n_synthetic_slack": 40,
+      "n_components": 35,
+      "n_slack": 35,
+      "n_synthetic_slack": 30,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8258129430367481,
-      "ac_vm_max": 1.0034404090927647,
-      "ac_max_loading_pct": 91.24976078088581,
-      "dc_max_loading_pct": 83.7426133096584,
-      "ac_total_loss_mw": 72.22715863671093,
-      "solve_seconds": 4.5
+      "ac_vm_min": 0.743365543679326,
+      "ac_vm_max": 1.007322238952773,
+      "ac_max_loading_pct": 93.13786568130719,
+      "dc_max_loading_pct": 90.20369735383542,
+      "ac_total_loss_mw": 81.74376282051107,
+      "solve_seconds": 6.6
     },
     "east": {
       "frequency_hz": 50,
-      "n_bus": 6205,
-      "n_line": 6315,
+      "n_bus": 6002,
+      "n_line": 6122,
       "n_trafo": 630,
       "n_trafo_nameplate": 6,
-      "n_edge_skipped": 696,
-      "n_gen": 8514,
+      "n_edge_skipped": 695,
+      "n_dedup_merged": 220,
+      "n_edge_dup_removed": 191,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 8235,
       "total_load_mw": 55250.0,
-      "n_components": 517,
-      "n_slack": 517,
-      "n_synthetic_slack": 473,
+      "n_components": 312,
+      "n_slack": 312,
+      "n_synthetic_slack": 268,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8301408297394477,
-      "ac_vm_max": 1.0229063643251426,
-      "ac_max_loading_pct": 930.7184004639626,
-      "dc_max_loading_pct": 1731.902638041636,
-      "ac_total_loss_mw": 2090.5306077132955,
-      "solve_seconds": 64.7
+      "ac_vm_min": 0.7324378492679079,
+      "ac_vm_max": 1.748357895137625,
+      "ac_max_loading_pct": 1255.8712960312844,
+      "dc_max_loading_pct": 1667.8155927256469,
+      "ac_total_loss_mw": 2735.523709256797,
+      "solve_seconds": 147.0
     },
     "west": {
       "frequency_hz": 60,
-      "n_bus": 10193,
-      "n_line": 9793,
+      "n_bus": 8204,
+      "n_line": 8353,
       "n_trafo": 1061,
       "n_trafo_nameplate": 5,
       "n_edge_skipped": 1390,
-      "n_gen": 10087,
+      "n_dedup_merged": 1989,
+      "n_edge_dup_removed": 1440,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 8775,
       "total_load_mw": 73865.0,
-      "n_components": 2531,
-      "n_slack": 2531,
-      "n_synthetic_slack": 2393,
+      "n_components": 544,
+      "n_slack": 544,
+      "n_synthetic_slack": 406,
       "ac_converged": false,
       "ac_solver": null,
-      "ac_error": "island too large for AC (10193 > 7000); DC only",
+      "ac_error": "island too large for AC (8204 > 7000); DC only",
       "dc_converged": true,
       "ac_vm_min": null,
       "ac_vm_max": null,
       "ac_max_loading_pct": null,
-      "dc_max_loading_pct": 984.1798880737138,
+      "dc_max_loading_pct": 1894.2567068671824,
       "ac_total_loss_mw": null,
-      "solve_seconds": 69.5
+      "solve_seconds": 78.4
     },
     "okinawa": {
       "frequency_hz": 60,
-      "n_bus": 99,
+      "n_bus": 98,
       "n_line": 95,
       "n_trafo": 19,
       "n_trafo_nameplate": 0,
       "n_edge_skipped": 19,
+      "n_dedup_merged": 1,
+      "n_edge_dup_removed": 0,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
       "n_gen": 28,
       "total_load_mw": 1360.0,
-      "n_components": 7,
-      "n_slack": 7,
-      "n_synthetic_slack": 5,
+      "n_components": 6,
+      "n_slack": 6,
+      "n_synthetic_slack": 4,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.9169864613820616,
-      "ac_vm_max": 1.0000003321268327,
-      "ac_max_loading_pct": 182.94169293758608,
-      "dc_max_loading_pct": 162.6447410420858,
-      "ac_total_loss_mw": 16.488473109738273,
-      "solve_seconds": 0.3
+      "ac_vm_min": 0.9544386185145809,
+      "ac_vm_max": 1.000000332126833,
+      "ac_max_loading_pct": 173.24733749666262,
+      "dc_max_loading_pct": 165.03687781455187,
+      "ac_total_loss_mw": 15.798156568917205,
+      "solve_seconds": 1.2
     }
   },
   "regions": {
@@ -106,33 +158,33 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8258,
-      "vm_max": 1.0034,
-      "n_buses": 836,
-      "n_buses_exported": 836,
-      "n_lines_exported": 853
+      "vm_min": 0.7434,
+      "vm_max": 1.0073,
+      "n_buses": 802,
+      "n_buses_exported": 802,
+      "n_lines_exported": 815
     },
     "tohoku": {
       "island": "east",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9266,
-      "vm_max": 1.0229,
-      "n_buses": 1990,
-      "n_buses_exported": 1990,
-      "n_lines_exported": 2189
+      "vm_min": 0.9504,
+      "vm_max": 1.7484,
+      "n_buses": 1997,
+      "n_buses_exported": 1997,
+      "n_lines_exported": 2060
     },
     "tokyo": {
       "island": "east",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8301,
-      "vm_max": 1.0103,
-      "n_buses": 4163,
-      "n_buses_exported": 4163,
-      "n_lines_exported": 4174
+      "vm_min": 0.7324,
+      "vm_max": 1.0229,
+      "n_buses": 3936,
+      "n_buses_exported": 3936,
+      "n_lines_exported": 4086
     },
     "chubu": {
       "island": "west",
@@ -141,9 +193,9 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 3069,
-      "n_buses_exported": 3069,
-      "n_lines_exported": 4202
+      "n_buses": 2461,
+      "n_buses_exported": 2461,
+      "n_lines_exported": 2431
     },
     "chugoku": {
       "island": "west",
@@ -152,9 +204,9 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 1582,
-      "n_buses_exported": 1582,
-      "n_lines_exported": 2220
+      "n_buses": 1152,
+      "n_buses_exported": 1152,
+      "n_lines_exported": 1208
     },
     "hokuriku": {
       "island": "west",
@@ -163,9 +215,9 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 784,
-      "n_buses_exported": 784,
-      "n_lines_exported": 331
+      "n_buses": 776,
+      "n_buses_exported": 776,
+      "n_lines_exported": 906
     },
     "kansai": {
       "island": "west",
@@ -174,9 +226,9 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 2292,
-      "n_buses_exported": 2292,
-      "n_lines_exported": 1811
+      "n_buses": 1730,
+      "n_buses_exported": 1730,
+      "n_lines_exported": 1723
     },
     "kyushu": {
       "island": "west",
@@ -185,9 +237,9 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 1749,
-      "n_buses_exported": 1749,
-      "n_lines_exported": 1548
+      "n_buses": 1542,
+      "n_buses_exported": 1542,
+      "n_lines_exported": 1587
     },
     "shikoku": {
       "island": "west",
@@ -196,19 +248,19 @@
       "dc_converged": true,
       "vm_min": 1.0,
       "vm_max": 1.0,
-      "n_buses": 717,
-      "n_buses_exported": 717,
-      "n_lines_exported": 291
+      "n_buses": 543,
+      "n_buses_exported": 543,
+      "n_lines_exported": 573
     },
     "okinawa": {
       "island": "okinawa",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.917,
+      "vm_min": 0.9544,
       "vm_max": 1.0,
-      "n_buses": 99,
-      "n_buses_exported": 99,
+      "n_buses": 98,
+      "n_buses_exported": 98,
       "n_lines_exported": 95
     }
   }
