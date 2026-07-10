@@ -66,7 +66,7 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ## Highlights / ハイライト
 
-### Unreleased — 2026-07 (in progress)
+### v1.6.0 — 2026-07-10
 
 - ✅ **Interventions #19/#20/#21 now default ON / 介入3件の既定ON化**
   ([docs/reports/default_on_decision_2026-07-10.md](docs/reports/default_on_decision_2026-07-10.md)).

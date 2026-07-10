@@ -7,8 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-07-10
+
+Tagged in git as `v1.6.0`. Theme: **the corrected canon becomes the default** —
+interventions #19/#20/#21 flipped to default ON (owner-approved), numeric Ybus canon
+v5.0.0, canonical power-flow regenerated, the compensation factor anchored to primary
+sources, and the 07-07〜09 diagnosis campaign consolidated into a reusable methodology.
+
+### Changed
+- **Interventions #19 (per-prefecture demand) / #20 (reactive compensation) / #21 (bbox
+  dedup) are now DEFAULT ON** across `run_full_powerflow_from_db.py`, `uc_to_pf_built.py`
+  and `gen_ybus_numeric.py` (`build_island_net(dedup_nodes=True)`). `--no-pref-demand` /
+  `--no-reactive-comp` / `--no-dedup-nodes` reproduce the legacy behaviour exactly.
+  Decision package: 4-island before/after probes (no solution regression; fragmentation
+  improves everywhere — west 2,531 → 544 components), 44 gates PASS (2 regression pins
+  intentionally updated), Ybus fingerprint lineage —
+  `docs/reports/default_on_decision_2026-07-10.md`. East losses rise on the probe
+  snapshot (+31 %): that is the *correction* (bbox-duplicated boundary lines had halved
+  impedances before).
+- **Numeric Ybus canon v5.0.0** (`dist/ybus/`): first regeneration since territory
+  re-attribution (07-07) + dedup; buses hokkaido 836 → 802 / east 6,205 → 6,002 /
+  west 10,193 → 8,204 / okinawa 99 → 98; dedup instrumentation stamped into `meta.json`;
+  machine-precision gates PASS on all islands.
+- **Canonical `docs/data/powerflow_full` regenerated** under the new defaults
+  (east 6,002-bus AC; west honest DC by design).
+- Intervention #20's factor 0.6 upgraded from "median setting" to **anchored on primary
+  sources**: Shikoku EGC 2024 measurements convert to ≈0.8 today / ≈0.05 in the 1990s,
+  so 0.6 sits on the conservative side (sending-end pf ≈0.991). Raising to 0.8 is a
+  future re-sweep-gated change. Research with URLs + verbatim quotes:
+  `docs/reports/reactive_comp_provenance_2026-07-10.md`.
+
 ### Added
-- **bbox double-extraction dedup** (opt-in `--dedup-nodes`, intervention registry #21): removes the
+- **Methodology consolidation** (`docs/reports/osm_grid_pitfalls_methodology_2026-07-10.md`):
+  four pitfall classes of OSM-derived grid models, five diagnostic methods
+  (variant probes, process isolation + raw JSON, served_frac guard, DC-angle triage,
+  before/after invariants), a 12-item checklist for other projects, and the negative
+  results recorded honestly — data-paper material.
+- **Citation infrastructure**: `.zenodo.json` + `docs/ZENODO_DOI.md` (concept/version DOI
+  via the GitHub–Zenodo integration; the single manual toggle is documented).
+- **bbox double-extraction dedup** (intervention registry #21; shipped default ON — see
+  *Changed*): removes the
   duplicates that overlapping regional bboxes create — **(a) nodes** at identical coordinate+voltage
   and **(b) edges** with identical bus-pair+path (keeping max `par`). Verified as *removal*, not a
   forced connection: 飛騨変換所 has the same osm_id in both chubu & hokuriku extracts; 98.6 % of
@@ -18,14 +56,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fragmentation 2,531 → 544 components (main 69 → 86 %; east 532 → 312) and removes the line
   double-counting (west 9,793 → 8,353 lines; east AC loss 6,415 → 6,781 MW, i.e. +5.7 % toward a
   realistic value as the artificial impedance-halving is undone). Report:
-  `docs/reports/west_fragmentation_rootcause_2026-07-09.md`. Default OFF (byte-identical to canonical);
-  default-ON needs a full Ybus/powerflow regeneration (owner decision). dedup fixes fragmentation but
-  is not a cure for west full-scale AC.
+  `docs/reports/west_fragmentation_rootcause_2026-07-09.md`. Landed opt-in OFF on 07-09/10;
+  flipped to default ON in this release with the accompanying Ybus/power-flow regeneration
+  (see *Changed*). dedup fixes fragmentation but is not a cure for west full-scale AC.
 - **All-island 24 h validation** of `--pref-demand --reactive-comp`
   (`docs/reports/allisland_24h_reactive_2026-07-09.md`): all 4 islands solve for all 24 hours
   (hokkaido & okinawa 24/24 AC with healthy voltages, east 22/24 AC + 2 honest dc_fallback,
   west DC by design). Compensation is robust across islands/hours (no BLAS abort). Documents the
-  remaining east localized voltage outliers as the next mesh-refinement target; opt-in stays OFF.
+  remaining east localized voltage outliers as the next mesh-refinement target. (Both flags
+  became default ON in this release — see *Changed*.)
 - **Reactive compensation** (opt-in `--reactive-comp`, intervention registry #20): shunt
   capacitor banks at load buses, modelling what real distribution substations carry but OSM
   omits. Diagnosis (`docs/reports/east_network_reactive_2026-07-09.md`) showed the east
@@ -34,7 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of load reactive demand had to flow through high-X radial 66 kV lines with no local support.
   Compensation restores an honest full-scale AC solution (98.2 % served, 98.4 % of buses in
   0.9–1.1 pu). Config `reactive_compensation_factor` (default 0.6); wired into both
-  `uc_to_pf_built.py` and `run_full_powerflow_from_db.py`; ledger in the result JSON. Default OFF.
+  `uc_to_pf_built.py` and `run_full_powerflow_from_db.py`; ledger in the result JSON.
+  (Default ON as of this release — see *Changed*.)
 
 ## [1.5.0] - 2026-07-09
 

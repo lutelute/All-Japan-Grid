@@ -55,6 +55,22 @@ old=従来既定（3フラグOFF相当）、new=新既定。**差分は3介入�
   次の網側精緻化対象であり、本既定化で新たに生じたものではない。
 - west は引き続き **full AC 不成立 = 誠実にDC**（dedupは断片化を直すがACの特効薬ではない: 同§5「限界」）。
 
+### 2b. 追補 — 新既定での全島24h再検証（96断面・v1.6.0出荷ゲート）
+
+07-09の24h検証は#21エッジdedup**前**だったため、新既定（フラグ無し）で再実行した
+（`run_allisland_24h_v16.sh` → `allisland24h/{island}.json`、島ごとプロセス隔離）。
+
+| 島 | 収束 | モード | served_frac最小 | vm範囲 |
+|---|---|---|---|---|
+| okinawa | 24/24 | AC 24 | 1.000 | 0.81–1.00 |
+| hokkaido | 24/24 | AC 24 | 1.000 | 0.71–1.01 |
+| east | 24/24 | AC 22 + 誠実dc_fallback 2 | 0.980 | 0.58–2.99 |
+| west | 24/24 | DC 24（設計どおり） | 1.000 | —(DC) |
+
+07-09検証と同一構造（eastは同じく2断面が誠実DC）。hokkaido vm_min 0.77→0.71 と east
+vm_max 2.78→2.99 は、dedupで断片が本線に再接続され遠端バスが増えた誠実な帰結
+（既知の66kV軽負荷ポケット=残課題§6-1のまま）。BLAS abortなし。
+
 ## 3. 証拠2 — ゲート44件 PASS とピン更新2件
 
 `pytest tests/test_substation_structures.py tests/test_ybus_numeric.py tests/test_transformer_provenance.py

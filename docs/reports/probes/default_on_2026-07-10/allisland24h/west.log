@@ -1,0 +1,34 @@
+UC求解中... (fy2023r2)
+  Optimal
+県別需要重み: 電力調査統計 ３－（２）都道府県別電力需要実績 2024年度（年度計） (47県, split=['新潟県', '群馬県', '神奈川県', '静岡県', '埼玉県', '東京都', '山梨県', '長野県'])
+
+== west (chubu+chugoku+hokuriku+kansai+kyushu+shikoku) mode=dc hours=0..23 (24断面) ==
+  plants dedup: 重複コピー1312件を1回採用に統合(領土地域優先)
+  reactive-comp: factor=0.6 shunt=4131 q_comp=14,567MVar
+  built: 8204バス trafo=1061 (銘板5) 61s
+  t= 0 dc           conv=True demand=  50,596MW slack=7033.0 0.5s
+  t= 1 dc           conv=True demand=  47,926MW slack=7033.0 0.1s
+  t= 2 dc           conv=True demand=  46,153MW slack=8218.7 0.1s
+  t= 3 dc           conv=True demand=  44,377MW slack=6683.0 0.1s
+  t= 4 dc           conv=True demand=  46,166MW slack=7033.0 0.1s
+  t= 5 dc           conv=True demand=  50,193MW slack=7701.3 0.1s
+  t= 6 dc           conv=True demand=  55,716MW slack=7033.0 0.1s
+  t= 7 dc           conv=True demand=  61,609MW slack=7696.5 0.1s
+  t= 8 dc           conv=True demand=  65,604MW slack=7033.0 0.1s
+  t= 9 dc           conv=True demand=  66,943MW slack=7033.0 0.1s
+  t=10 dc           conv=True demand=  67,483MW slack=7033.0 0.1s
+  t=11 dc           conv=True demand=  68,130MW slack=7257.4 0.1s
+  t=12 dc           conv=True demand=  66,833MW slack=7033.0 0.1s
+  t=13 dc           conv=True demand=  66,745MW slack=7033.0 0.1s
+  t=14 dc           conv=True demand=  66,947MW slack=7033.0 0.1s
+  t=15 dc           conv=True demand=  67,442MW slack=7082.6 0.1s
+  t=16 dc           conv=True demand=  69,130MW slack=7268.0 0.1s
+  t=17 dc           conv=True demand=  69,938MW slack=7596.5 0.1s
+  t=18 dc           conv=True demand=  69,150MW slack=7033.0 0.1s
+  t=19 dc           conv=True demand=  66,420MW slack=7033.0 0.1s
+  t=20 dc           conv=True demand=  62,886MW slack=7573.0 0.1s
+  t=21 dc           conv=True demand=  59,366MW slack=7033.0 0.1s
+  t=22 dc           conv=True demand=  55,860MW slack=7033.0 0.1s
+  t=23 dc           conv=True demand=  53,236MW slack=7033.0 0.1s
+
+-> docs/reports/probes/default_on_2026-07-10/allisland24h/west.json

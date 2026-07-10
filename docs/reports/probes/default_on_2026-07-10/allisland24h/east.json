@@ -1,0 +1,766 @@
+{
+ "meta": {
+  "date": "2026-07-10",
+  "git_head": "8e17266",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "full",
+   "n_bus": 6002,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "tohoku": {
+      "青森県": {
+       "n_bus": 203,
+       "gwh": 7555.1,
+       "target_mw": 1124.7
+      },
+      "新潟県": {
+       "n_bus": 136,
+       "gwh": 14469.5,
+       "target_mw": 2154.1
+      },
+      "福島県": {
+       "n_bus": 210,
+       "gwh": 14686.6,
+       "target_mw": 2186.4
+      },
+      "山形県": {
+       "n_bus": 116,
+       "gwh": 7703.1,
+       "target_mw": 1146.8
+      },
+      "宮城県": {
+       "n_bus": 199,
+       "gwh": 13846.9,
+       "target_mw": 2061.4
+      },
+      "秋田県": {
+       "n_bus": 111,
+       "gwh": 6832.1,
+       "target_mw": 1017.1
+      },
+      "岩手県": {
+       "n_bus": 141,
+       "gwh": 9133.1,
+       "target_mw": 1359.6
+      }
+     },
+     "tokyo": {
+      "栃木県": {
+       "n_bus": 220,
+       "gwh": 15319.3,
+       "target_mw": 2618.0
+      },
+      "群馬県": {
+       "n_bus": 204,
+       "gwh": 12941.9,
+       "target_mw": 2211.7
+      },
+      "茨城県": {
+       "n_bus": 222,
+       "gwh": 23149.3,
+       "target_mw": 3956.1
+      },
+      "神奈川県": {
+       "n_bus": 337,
+       "gwh": 44605.1,
+       "target_mw": 7622.8
+      },
+      "静岡県": {
+       "n_bus": 87,
+       "gwh": 8841.6,
+       "target_mw": 1511.0
+      },
+      "埼玉県": {
+       "n_bus": 365,
+       "gwh": 35704.3,
+       "target_mw": 6101.7
+      },
+      "東京都": {
+       "n_bus": 312,
+       "gwh": 76732.6,
+       "target_mw": 13113.3
+      },
+      "山梨県": {
+       "n_bus": 50,
+       "gwh": 3844.1,
+       "target_mw": 656.9
+      },
+      "千葉県": {
+       "n_bus": 310,
+       "gwh": 35246.5,
+       "target_mw": 6023.5
+      },
+      "長野県": {
+       "n_bus": 36,
+       "gwh": 2251.9,
+       "target_mw": 384.8
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.6,
+    "n_shunt": 3259,
+    "q_comp_mvar": 10895.9
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 723220081.3755155
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42933.1,
+     "load_scale": {
+      "tohoku": 0.6516,
+      "tokyo": 0.8084
+     },
+     "served_load_mw": 42166.7,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 10142.6,
+     "solve_s": 44.1,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8433,
+     "vm_max": 1.7783,
+     "loss_mw": 2836.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5029.3
+     }
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 40674.8,
+     "load_scale": {
+      "tohoku": 0.6102,
+      "tokyo": 0.7677
+     },
+     "served_load_mw": 39948.6,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 9781.2,
+     "solve_s": 38.4,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8611,
+     "vm_max": 1.7818,
+     "loss_mw": 2568.2,
+     "tie_mw": {
+      "tohoku->tokyo": 4236.8
+     }
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39177.1,
+     "load_scale": {
+      "tohoku": 0.5833,
+      "tokyo": 0.7405
+     },
+     "served_load_mw": 38477.6,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 8347.3,
+     "solve_s": 29.1,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8724,
+     "vm_max": 1.7841,
+     "loss_mw": 2326.1,
+     "tie_mw": {
+      "tohoku->tokyo": 4658.1
+     }
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 37676.4,
+     "load_scale": {
+      "tohoku": 0.5561,
+      "tokyo": 0.7134
+     },
+     "served_load_mw": 37003.7,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 9223.6,
+     "solve_s": 27.5,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.748,
+     "vm_max": 2.9873,
+     "loss_mw": 2623.3,
+     "tie_mw": {
+      "tohoku->tokyo": 4478.3
+     }
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 39194.8,
+     "load_scale": {
+      "tohoku": 0.5849,
+      "tokyo": 0.7405
+     },
+     "served_load_mw": 38495.0,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 9189.9,
+     "solve_s": 36.2,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8723,
+     "vm_max": 1.7839,
+     "loss_mw": 2310.6,
+     "tie_mw": {
+      "tohoku->tokyo": 4666.7
+     }
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42611.3,
+     "load_scale": {
+      "tohoku": 0.6431,
+      "tokyo": 0.8033
+     },
+     "served_load_mw": 41850.6,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 9741.8,
+     "solve_s": 22.5,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       },
+       "unmatched": {
+        "battery": 186.0
+       }
+      }
+     },
+     "vm_min": 0.8457,
+     "vm_max": 1.7791,
+     "loss_mw": 2802.6,
+     "tie_mw": {
+      "tohoku->tokyo": 4983.0
+     }
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47347.1,
+     "load_scale": {
+      "tohoku": 0.7177,
+      "tokyo": 0.8918
+     },
+     "served_load_mw": 46501.8,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 12101.3,
+     "solve_s": 38.4,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8023,
+     "vm_max": 1.7728,
+     "loss_mw": 4189.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5374.3
+     }
+    },
+    "7": {
+     "solver": "dc_fallback",
+     "converged": true,
+     "net_demand_mw": 52454.0,
+     "load_scale": {
+      "tohoku": 0.7884,
+      "tokyo": 0.9896
+     },
+     "served_load_mw": 52454.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2329.6,
+     "solve_s": 25.7,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "tie_mw": {
+      "tohoku->tokyo": 4537.6
+     }
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55992.7,
+     "load_scale": {
+      "tohoku": 0.8222,
+      "tokyo": 1.0613
+     },
+     "served_load_mw": 54992.8,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 15657.3,
+     "solve_s": 27.3,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6813,
+     "vm_max": 1.7638,
+     "loss_mw": 6168.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5202.0
+     }
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57290.8,
+     "load_scale": {
+      "tohoku": 0.8162,
+      "tokyo": 1.0921
+     },
+     "served_load_mw": 56267.5,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16519.7,
+     "solve_s": 20.5,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6441,
+     "vm_max": 1.7644,
+     "loss_mw": 6678.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5261.3
+     }
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57863.4,
+     "load_scale": {
+      "tohoku": 0.8026,
+      "tokyo": 1.1085
+     },
+     "served_load_mw": 56829.6,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16741.2,
+     "solve_s": 19.1,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6177,
+     "vm_max": 1.7655,
+     "loss_mw": 6818.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5789.6
+     }
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58482.9,
+     "load_scale": {
+      "tohoku": 0.7969,
+      "tokyo": 1.1239
+     },
+     "served_load_mw": 57438.0,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 17320.0,
+     "solve_s": 18.3,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.5806,
+     "vm_max": 1.766,
+     "loss_mw": 7163.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5656.3
+     }
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57403.4,
+     "load_scale": {
+      "tohoku": 0.7742,
+      "tokyo": 1.1052
+     },
+     "served_load_mw": 56377.7,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16815.6,
+     "solve_s": 20.5,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6236,
+     "vm_max": 1.768,
+     "loss_mw": 6781.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5632.9
+     }
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57289.3,
+     "load_scale": {
+      "tohoku": 0.777,
+      "tokyo": 1.1019
+     },
+     "served_load_mw": 56265.7,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 17358.2,
+     "solve_s": 18.8,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6292,
+     "vm_max": 1.7677,
+     "loss_mw": 7043.3,
+     "tie_mw": {
+      "tohoku->tokyo": 4468.3
+     }
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57368.5,
+     "load_scale": {
+      "tohoku": 0.7916,
+      "tokyo": 1.1
+     },
+     "served_load_mw": 56343.6,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16684.8,
+     "solve_s": 18.2,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6322,
+     "vm_max": 1.7665,
+     "loss_mw": 6735.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5505.4
+     }
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57646.8,
+     "load_scale": {
+      "tohoku": 0.8186,
+      "tokyo": 1.0996
+     },
+     "served_load_mw": 56617.1,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16410.8,
+     "solve_s": 22.7,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.633,
+     "vm_max": 1.7641,
+     "loss_mw": 6667.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5864.9
+     }
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58869.9,
+     "load_scale": {
+      "tohoku": 0.8694,
+      "tokyo": 1.1146
+     },
+     "served_load_mw": 57818.7,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 16593.5,
+     "solve_s": 21.8,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6055,
+     "vm_max": 1.7598,
+     "loss_mw": 6940.0,
+     "tie_mw": {
+      "tohoku->tokyo": 6119.3
+     }
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.9075,
+      "tokyo": 1.116
+     },
+     "served_load_mw": 58293.4,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 17025.0,
+     "solve_s": 25.5,
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      },
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6024,
+     "vm_max": 1.7565,
+     "loss_mw": 7106.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5589.4
+     }
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58569.5,
+     "load_scale": {
+      "tohoku": 0.9133,
+      "tokyo": 1.0968
+     },
+     "served_load_mw": 57524.1,
+     "served_frac": 0.9822,
+     "slack_abs_mw": 16111.1,
+     "solve_s": 23.8,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6374,
+     "vm_max": 1.7559,
+     "loss_mw": 6731.6,
+     "tie_mw": {
+      "tohoku->tokyo": 5817.4
+     }
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 56232.5,
+     "load_scale": {
+      "tohoku": 0.8778,
+      "tokyo": 1.0528
+     },
+     "served_load_mw": 55228.8,
+     "served_frac": 0.9822,
+     "slack_abs_mw": 14446.5,
+     "solve_s": 24.6,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6899,
+     "vm_max": 1.759,
+     "loss_mw": 5511.3,
+     "tie_mw": {
+      "tohoku->tokyo": 6092.5
+     }
+    },
+    "20": {
+     "solver": "dc_fallback",
+     "converged": true,
+     "net_demand_mw": 53254.8,
+     "load_scale": {
+      "tohoku": 0.8256,
+      "tokyo": 0.9985
+     },
+     "served_load_mw": 53254.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2270.0,
+     "solve_s": 21.3,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "tie_mw": {
+      "tohoku->tokyo": 6181.9
+     }
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 50294.8,
+     "load_scale": {
+      "tohoku": 0.7749,
+      "tokyo": 0.9442
+     },
+     "served_load_mw": 49306.0,
+     "served_frac": 0.9803,
+     "slack_abs_mw": 18846.8,
+     "solve_s": 19.9,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.7721,
+     "vm_max": 1.7679,
+     "loss_mw": 7839.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5670.8
+     }
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 47352.5,
+     "load_scale": {
+      "tohoku": 0.7258,
+      "tokyo": 0.8899
+     },
+     "served_load_mw": 46507.2,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 12010.6,
+     "solve_s": 30.3,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8033,
+     "vm_max": 1.7721,
+     "loss_mw": 4163.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5419.2
+     }
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 45153.1,
+     "load_scale": {
+      "tohoku": 0.6896,
+      "tokyo": 0.8492
+     },
+     "served_load_mw": 44347.1,
+     "served_frac": 0.9821,
+     "slack_abs_mw": 10957.1,
+     "solve_s": 25.2,
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8242,
+     "vm_max": 1.7751,
+     "loss_mw": 3384.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5230.7
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}

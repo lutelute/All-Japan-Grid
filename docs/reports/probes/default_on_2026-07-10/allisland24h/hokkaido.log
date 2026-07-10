@@ -1,0 +1,33 @@
+UC求解中... (fy2023r2)
+  Optimal
+県別需要重み: 電力調査統計 ３－（２）都道府県別電力需要実績 2024年度（年度計） (47県, split=['新潟県', '群馬県', '神奈川県', '静岡県', '埼玉県', '東京都', '山梨県', '長野県'])
+
+== hokkaido (hokkaido) mode=ac hours=0..23 (24断面) ==
+  reactive-comp: factor=0.6 shunt=523 q_comp=872MVar
+  built: 802バス trafo=68 (銘板1) 6s
+  t= 0 ac           conv=True demand=   3,196MW slack=-487.3 1.4s
+  t= 1 ac           conv=True demand=   3,000MW slack=-686.3 0.1s
+  t= 2 ac           conv=True demand=   2,873MW slack=-814.8 0.1s
+  t= 3 ac           conv=True demand=   2,744MW slack=-944.1 0.1s
+  t= 4 ac           conv=True demand=   2,880MW slack=-807.3 0.1s
+  t= 5 ac           conv=True demand=   3,155MW slack=-529.0 0.1s
+  t= 6 ac           conv=True demand=   3,506MW slack=-169.9 0.1s
+  t= 7 ac           conv=True demand=   3,837MW slack=173.4 0.0s
+  t= 8 ac           conv=True demand=   3,991MW slack=334.9 0.0s
+  t= 9 ac           conv=True demand=   3,956MW slack=298.1 0.0s
+  t=10 ac           conv=True demand=   3,886MW slack=225.2 0.1s
+  t=11 ac           conv=True demand=   3,856MW slack=193.7 0.1s
+  t=12 ac           conv=True demand=   3,748MW slack=80.4 0.1s
+  t=13 ac           conv=True demand=   3,762MW slack=95.5 0.1s
+  t=14 ac           conv=True demand=   3,835MW slack=171.2 0.1s
+  t=15 ac           conv=True demand=   3,968MW slack=310.8 0.1s
+  t=16 ac           conv=True demand=   4,215MW slack=573.2 0.1s
+  t=17 ac           conv=True demand=   4,402MW slack=775.7 0.1s
+  t=18 ac           conv=True demand=   4,434MW slack=810.9 0.1s
+  t=19 ac           conv=True demand=   4,268MW slack=629.3 0.1s
+  t=20 ac           conv=True demand=   4,020MW slack=365.9 0.1s
+  t=21 ac           conv=True demand=   3,780MW slack=114.0 0.1s
+  t=22 ac           conv=True demand=   3,548MW slack=-127.4 0.1s
+  t=23 ac           conv=True demand=   3,376MW slack=-303.5 0.0s
+
+-> docs/reports/probes/default_on_2026-07-10/allisland24h/hokkaido.json

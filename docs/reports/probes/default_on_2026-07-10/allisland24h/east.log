@@ -1,0 +1,34 @@
+UC求解中... (fy2023r2)
+  Optimal
+県別需要重み: 電力調査統計 ３－（２）都道府県別電力需要実績 2024年度（年度計） (47県, split=['新潟県', '群馬県', '神奈川県', '静岡県', '埼玉県', '東京都', '山梨県', '長野県'])
+
+== east (tohoku+tokyo) mode=ac hours=0..23 (24断面) ==
+  plants dedup: 重複コピー279件を1回採用に統合(領土地域優先)
+  reactive-comp: factor=0.6 shunt=3259 q_comp=10,896MVar
+  built: 6002バス trafo=630 (銘板6) 73s
+  t= 0 ac           conv=True demand=  42,933MW slack=10142.6 44.1s
+  t= 1 ac           conv=True demand=  40,675MW slack=9781.2 38.4s
+  t= 2 ac           conv=True demand=  39,177MW slack=8347.3 29.1s
+  t= 3 ac           conv=True demand=  37,676MW slack=9223.6 27.5s
+  t= 4 ac           conv=True demand=  39,195MW slack=9189.9 36.2s
+  t= 5 ac           conv=True demand=  42,611MW slack=9741.8 22.5s
+  t= 6 ac           conv=True demand=  47,347MW slack=12101.3 38.4s
+  t= 7 dc_fallback  conv=True demand=  52,454MW slack=2329.6 25.7s
+  t= 8 ac           conv=True demand=  55,993MW slack=15657.3 27.3s
+  t= 9 ac           conv=True demand=  57,291MW slack=16519.7 20.5s
+  t=10 ac           conv=True demand=  57,863MW slack=16741.2 19.1s
+  t=11 ac           conv=True demand=  58,483MW slack=17320.0 18.3s
+  t=12 ac           conv=True demand=  57,403MW slack=16815.6 20.5s
+  t=13 ac           conv=True demand=  57,289MW slack=17358.2 18.8s
+  t=14 ac           conv=True demand=  57,368MW slack=16684.8 18.2s
+  t=15 ac           conv=True demand=  57,647MW slack=16410.8 22.7s
+  t=16 ac           conv=True demand=  58,870MW slack=16593.5 21.8s
+  t=17 ac           conv=True demand=  59,353MW slack=17025.0 25.5s
+  t=18 ac           conv=True demand=  58,570MW slack=16111.1 23.8s
+  t=19 ac           conv=True demand=  56,232MW slack=14446.5 24.6s
+  t=20 dc_fallback  conv=True demand=  53,255MW slack=2270.0 21.3s
+  t=21 ac           conv=True demand=  50,295MW slack=18846.8 19.9s
+  t=22 ac           conv=True demand=  47,352MW slack=12010.6 30.3s
+  t=23 ac           conv=True demand=  45,153MW slack=10957.1 25.2s
+
+-> docs/reports/probes/default_on_2026-07-10/allisland24h/east.json
