@@ -332,6 +332,16 @@ class Enrichment(Base):
     new ``manual`` and ``audit_fix``.  Resolution priority lives in
     ``src/db/geojson_sync.py:SOURCE_PRIORITY``.
 
+    The ``source`` column is only a short provenance *label*.  The
+    citable provenance an owner can verify — the ``source_url`` and the
+    ``quote`` (verbatim excerpt that backs the value) — lives in the four
+    nullable columns added in migration v5 (Phase 1-B 出典伝播).  They
+    carry the same captation-prevention contract as the
+    ``*_provenance.py`` source DBs (URL + quote or the value is REJECTed
+    upstream); here they are nullable so legacy marker rows without a
+    citation remain valid.  They are *not* part of the primary key, so a
+    citation never forks a row away from its ``(…, field, source)`` slot.
+
     Attributes:
         layer / region / feature_key: Identity of the enriched feature.
         field: Property name (``name``, ``operator``, ``fuel_type``, …;
@@ -340,6 +350,11 @@ class Enrichment(Base):
         source: Provenance label (see above).
         confidence: Optional 0–1 confidence score.
         run_id: Optional id of the enrichment run that wrote this.
+        source_url: Optional citable http(s) URL backing the value.
+        quote: Optional verbatim excerpt from the source that supports
+            the value (the human-verifiable evidence).
+        retrieved_at: Optional ISO date the source was retrieved.
+        collected_by: Optional collector id (model name or person).
         updated_at: ISO timestamp of last update.
     """
 
@@ -353,6 +368,18 @@ class Enrichment(Base):
     value: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     run_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+
+    # Citable provenance (migration v5, Phase 1-B) — nullable so legacy
+    # marker rows stay valid; never part of the PK.
+    source_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    quote: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    retrieved_at: Mapped[Optional[str]] = mapped_column(
+        String(40), nullable=True
+    )
+    collected_by: Mapped[Optional[str]] = mapped_column(
+        String(64), nullable=True
+    )
+
     updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
 
     def __repr__(self) -> str:

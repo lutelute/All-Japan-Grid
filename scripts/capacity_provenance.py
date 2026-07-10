@@ -34,63 +34,37 @@
 """
 import json
 import os
-import re
 import sys
+
+try:  # scripts が package として見えるか(root on path)否か両対応の薄いラッパ
+    from scripts.provenance import ProvenanceSpec, validate
+except ModuleNotFoundError:  # scripts ディレクトリのみ path に載る実行(直接起動)
+    from provenance import ProvenanceSpec, validate
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCES_PATH = os.path.join(ROOT, "data", "generator_capacity_sources.jsonl")
 
-REQUIRED_FIELDS = [
-    "plant_key", "name", "field", "value", "unit",
-    "source_type", "source_url", "source_title", "quote",
-    "retrieved_at", "confidence", "collected_by",
-]
-VALID_SOURCE_TYPES = {"official", "gov", "ir", "wikipedia", "news", "p03", "osm", "other"}
-VALID_CONFIDENCE = {"high", "medium", "low"}
-URL_RE = re.compile(r"^https?://[^\s]+$", re.IGNORECASE)
-DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# 発電容量出典の系統仕様。捏造防止の核心は scripts/provenance.validate が持ち、
+# ここは容量固有の差分(P03/OSM 由来を許容・field は制限しない・status なし)だけを
+# 宣言する薄いラッパ。
+SPEC = ProvenanceSpec(
+    key_field="plant_key",
+    valid_source_types=frozenset(
+        {"official", "gov", "ir", "wikipedia", "news", "p03", "osm", "other"}),
+    extra_required=("unit", "source_title"),
+)
 
 
 def validate_record(rec):
     """1レコードを検証。戻り値 (ok: bool, reasons: list[str])。
 
-    捏造防止の核心:
+    捏造防止規約の実体は :func:`scripts.provenance.validate`(単一実装):
       - source_url が実 http(s) URL でなければ拒否(=出所のない値を入れない)
       - quote(原文抜粋) が空なら拒否(=値の根拠が辿れない)
       - value が数値でなければ拒否
     これらを満たさないレコードは DB に入れない。
     """
-    reasons = []
-    if not isinstance(rec, dict):
-        return False, ["not a dict"]
-    for k in REQUIRED_FIELDS:
-        if k not in rec or rec[k] is None or (isinstance(rec[k], str) and not rec[k].strip()):
-            reasons.append(f"missing:{k}")
-    if reasons:
-        return False, reasons
-
-    # 値は数値
-    try:
-        float(rec["value"])
-    except (TypeError, ValueError):
-        reasons.append("value-not-numeric")
-
-    # 出典 URL は実 http(s)（捏造防止の要）
-    if not URL_RE.match(str(rec["source_url"]).strip()):
-        reasons.append("source_url-not-http")
-
-    # 引用(原文)は実体のある長さ
-    if len(str(rec["quote"]).strip()) < 2:
-        reasons.append("quote-too-short")
-
-    if rec["source_type"] not in VALID_SOURCE_TYPES:
-        reasons.append(f"bad-source_type:{rec['source_type']}")
-    if rec["confidence"] not in VALID_CONFIDENCE:
-        reasons.append(f"bad-confidence:{rec['confidence']}")
-    if not DATE_RE.match(str(rec["retrieved_at"]).strip()):
-        reasons.append("retrieved_at-not-YYYY-MM-DD")
-
-    return (len(reasons) == 0), reasons
+    return validate(rec, SPEC)
 
 
 def load_records(path=SOURCES_PATH):

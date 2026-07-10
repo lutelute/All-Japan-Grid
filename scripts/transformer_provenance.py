@@ -43,6 +43,11 @@ import re
 import sys
 import unicodedata
 
+try:  # scripts が package として見えるか(root on path)否か両対応の薄いラッパ
+    from scripts.provenance import ProvenanceSpec, validate
+except ModuleNotFoundError:  # scripts ディレクトリのみ path に載る実行(直接起動)
+    from provenance import ProvenanceSpec, validate
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCES_PATH = os.path.join(ROOT, "data", "transformer_sources.jsonl")
 
@@ -56,49 +61,29 @@ def normalize_site_key(key):
     """
     return re.sub(r"\s+", "", unicodedata.normalize("NFKC", str(key)))
 
-REQUIRED_FIELDS = [
-    "site_key", "name", "field", "value", "unit",
-    "source_type", "source_url", "source_title", "quote",
-    "retrieved_at", "confidence", "collected_by", "status",
-]
-VALID_STATUS = {"existing", "planned"}
-VALID_FIELDS = {"sn_mva", "n_units", "sn_total_mva", "hv_kv", "lv_kv",
-                "tap_min", "tap_max", "tap_neutral", "tap_step_percent"}
-VALID_SOURCE_TYPES = {"official", "gov", "ir", "wikipedia", "news", "other"}
-VALID_CONFIDENCE = {"high", "medium", "low"}
-URL_RE = re.compile(r"^https?://[^\s]+$", re.IGNORECASE)
-DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# 変圧器出典の系統仕様。捏造防止の核心は scripts/provenance.validate が持ち、
+# ここは変圧器固有の差分(site_key の region 修飾必須・existing/planned の status・
+# 電気量 field の白リスト)だけを宣言する薄いラッパ。
+SPEC = ProvenanceSpec(
+    key_field="site_key",
+    valid_source_types=frozenset(
+        {"official", "gov", "ir", "wikipedia", "news", "other"}),
+    extra_required=("unit", "source_title"),
+    valid_fields=frozenset(
+        {"sn_mva", "n_units", "sn_total_mva", "hv_kv", "lv_kv",
+         "tap_min", "tap_max", "tap_neutral", "tap_step_percent"}),
+    require_status=True,
+    valid_status=frozenset({"existing", "planned"}),
+    require_region_qualified_key=True,
+)
 
 
 def validate_record(rec):
-    """1レコード検証。(ok, reasons)。capacity_provenance と同一の拒否規約。"""
-    reasons = []
-    for f in REQUIRED_FIELDS:
-        if f not in rec or rec[f] in (None, ""):
-            reasons.append(f"missing-{f}")
-    if reasons:
-        return False, reasons
-    if rec["field"] not in VALID_FIELDS:
-        reasons.append("bad-field")
-    try:
-        float(rec["value"])
-    except (TypeError, ValueError):
-        reasons.append("value-not-number")
-    if rec["source_type"] not in VALID_SOURCE_TYPES:
-        reasons.append("bad-source-type")
-    if not URL_RE.match(str(rec["source_url"]).strip()):
-        reasons.append("source_url-not-http")
-    if len(str(rec["quote"]).strip()) < 2:
-        reasons.append("quote-too-short")
-    if not DATE_RE.match(str(rec["retrieved_at"])):
-        reasons.append("bad-date")
-    if rec["confidence"] not in VALID_CONFIDENCE:
-        reasons.append("bad-confidence")
-    if rec["status"] not in VALID_STATUS:
-        reasons.append("bad-status")
-    if ":" not in str(rec["site_key"]):
-        reasons.append("site_key-not-region-qualified")
-    return not reasons, reasons
+    """1レコード検証。(ok, reasons)。capacity_provenance と同一の拒否規約。
+
+    捏造防止規約の実体は :func:`scripts.provenance.validate`(単一実装)。
+    """
+    return validate(rec, SPEC)
 
 
 def load_records(path=SOURCES_PATH):

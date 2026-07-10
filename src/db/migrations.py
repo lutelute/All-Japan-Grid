@@ -32,6 +32,7 @@ Usage::
     applied = manager.apply_pending()
 """
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import List, Sequence
@@ -42,6 +43,13 @@ from sqlalchemy.engine import Engine
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
+
+# ``ALTER TABLE <table> ADD COLUMN <column> …`` — matched so column-adding
+# migrations can be made idempotent (skipped when the ORM's create_all()
+# already materialised the column on a fresh DB).
+_ADD_COLUMN_RE = re.compile(
+    r"^\s*ALTER\s+TABLE\s+(\w+)\s+ADD\s+COLUMN\s+(\w+)", re.IGNORECASE
+)
 
 
 @dataclass(frozen=True)
@@ -98,6 +106,25 @@ MIGRATIONS: Sequence[Migration] = (
         # Tables are created by Base.metadata.create_all() in
         # ensure_schema(); this migration records the version bump.
         statements=[],
+    ),
+    Migration(
+        version=5,
+        description=(
+            "Enrichment citable provenance: source_url/quote/retrieved_at/"
+            "collected_by on enrichments (Phase 1-B 出典伝播 — carry the "
+            "URL+quote citation past the short source label)"
+        ),
+        # Unlike v2–v4 (which add whole tables handled by create_all),
+        # this adds COLUMNS to the existing enrichments table. On a fresh
+        # DB create_all() already materialises these columns from the ORM
+        # schema, so _apply() skips an ADD COLUMN whose column is already
+        # present (idempotent); on a pre-v5 DB these statements add them.
+        statements=[
+            "ALTER TABLE enrichments ADD COLUMN source_url TEXT",
+            "ALTER TABLE enrichments ADD COLUMN quote TEXT",
+            "ALTER TABLE enrichments ADD COLUMN retrieved_at TEXT",
+            "ALTER TABLE enrichments ADD COLUMN collected_by TEXT",
+        ],
     ),
 )
 
@@ -210,6 +237,14 @@ class MigrationManager:
 
         with self._engine.begin() as conn:
             for stmt in migration.statements:
+                if self._add_column_already_present(conn, stmt):
+                    logger.debug(
+                        "migration v%d: column already present, "
+                        "skipping ADD COLUMN: %s",
+                        migration.version,
+                        stmt,
+                    )
+                    continue
                 try:
                     conn.execute(text(stmt))
                 except Exception:
@@ -224,6 +259,31 @@ class MigrationManager:
             version=migration.version,
             description=migration.description,
         )
+
+    @staticmethod
+    def _add_column_already_present(conn, stmt: str) -> bool:
+        """True if ``stmt`` is an ``ADD COLUMN`` whose column already exists.
+
+        Column-adding migrations must be idempotent: on a fresh database
+        ``Base.metadata.create_all()`` materialises the column straight
+        from the ORM schema, so re-adding it here would raise a duplicate
+        column error.  Non ``ADD COLUMN`` statements never match and run
+        as before.
+
+        Args:
+            conn: The open migration connection (inspected in-place so the
+                check works for in-memory databases without a second pool
+                checkout).
+            stmt: The SQL statement about to be executed.
+        """
+        match = _ADD_COLUMN_RE.match(stmt)
+        if not match:
+            return False
+        table, column = match.group(1), match.group(2)
+        inspector = inspect(conn)
+        if table not in inspector.get_table_names():
+            return False
+        return column in {col["name"] for col in inspector.get_columns(table)}
 
     def _record_version(self, version: int, description: str) -> None:
         """Insert a row into ``schema_version`` for a completed migration.

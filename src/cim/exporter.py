@@ -333,11 +333,23 @@ class CimExporter:
         cim_cls = _FUEL_TO_CIM.get(fuel, "GeneratingUnit")
         m = mrid("plant", self.region, idx)
         attrs: Dict[str, object] = {"IdentifiedObject.name": name, "IdentifiedObject.mRID": m}
-        cap = props.get("capacity_mw")
+        # Prefer the sourced capacity: apply_capacity_sources.py stamps a
+        # one-primary-source nameplate value (capacity_mw_sourced) with its
+        # citation. That authoritative value — not the raw OSM/P03
+        # capacity_mw — is what the CIM export must carry (Phase 1-B
+        # 出典伝播: the citation reaches downstream, not just the map popup).
+        sourced_cap = props.get("capacity_mw_sourced")
+        source_url = props.get("capacity_source_url")
+        cap = sourced_cap if isinstance(sourced_cap, (int, float)) else props.get("capacity_mw")
         if isinstance(cap, (int, float)) and cap > 0:
             attrs["GeneratingUnit.ratedP"] = cap
             attrs["GeneratingUnit.maxOperatingP"] = cap
             attrs["GeneratingUnit.minOperatingP"] = 0
+        # Carry the provenance URL into IdentifiedObject.description so the
+        # value's origin is traceable in the CGMES model itself, not only
+        # in the source DB (captation-prevention貫通 to CIM).
+        if isinstance(source_url, str) and source_url.strip():
+            attrs["IdentifiedObject.description"] = source_url.strip()
         self.eq.obj(cim_cls, m, attrs=attrs)
         if cim_cls in _ROTATING:
             sm = mrid("syncmachine", self.region, idx)
