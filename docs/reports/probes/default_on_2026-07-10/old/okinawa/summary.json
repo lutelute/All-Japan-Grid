@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:18:02",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "okinawa": {
+      "frequency_hz": 60,
+      "n_bus": 99,
+      "n_line": 95,
+      "n_trafo": 19,
+      "n_trafo_nameplate": 0,
+      "n_edge_skipped": 19,
+      "n_dedup_merged": 0,
+      "n_edge_dup_removed": 0,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 2855,
+        "changes": {
+          "chubu->hokuriku": 578,
+          "kansai->chubu": 503,
+          "chugoku->shikoku": 322,
+          "tokyo->tohoku": 233,
+          "shikoku->chugoku": 230,
+          "chubu->kansai": 200,
+          "kyushu->chugoku": 184,
+          "hokuriku->chubu": 171,
+          "chugoku->kyushu": 123,
+          "tohoku->tokyo": 117,
+          "kansai->hokuriku": 51,
+          "chugoku->kansai": 48,
+          "kansai->shikoku": 44,
+          "hokkaido->tohoku": 26,
+          "shikoku->kansai": 11,
+          "tohoku->hokkaido": 9,
+          "hokuriku->kansai": 2,
+          "kyushu->shikoku": 2,
+          "kansai->chugoku": 1
+        },
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 28,
+      "total_load_mw": 1360.0,
+      "n_components": 7,
+      "n_slack": 7,
+      "n_synthetic_slack": 5,
+      "ac_converged": true,
+      "ac_solver": "nr",
+      "ac_error": null,
+      "dc_converged": true,
+      "ac_vm_min": 0.9169864613820616,
+      "ac_vm_max": 1.0000003321268327,
+      "ac_max_loading_pct": 182.94169293758608,
+      "dc_max_loading_pct": 162.6447410420858,
+      "ac_total_loss_mw": 16.488473109738273,
+      "solve_seconds": 2.2
+    }
+  },
+  "regions": {
+    "okinawa": {
+      "island": "okinawa",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.917,
+      "vm_max": 1.0,
+      "n_buses": 99,
+      "n_buses_exported": 99,
+      "n_lines_exported": 95
+    }
+  }
+}

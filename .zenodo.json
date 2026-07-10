@@ -1,0 +1,29 @@
+{
+  "title": "All-Japan-Grid: an OSM-derived, externally validated model of Japan's transmission network",
+  "upload_type": "dataset",
+  "description": "Geographic and electrical model of Japan's 10 regional transmission networks built from OpenStreetMap, with provenance-tracked curation in a unified database, CIM/CGMES Level-1/2 exports, AC/DC power-flow cases for all regions, versioned numeric Ybus matrices (.mat/.npz), and external validation against utility disclosures (per-line flow measurements, official line lists). Model interventions (connection, value, and allocation edits) are registered in a public ledger (docs/MODEL_INTERVENTIONS.md) with rationale, instrumentation, and opt-out flags. Code is MIT licensed; OSM-derived data is ODbL-1.0 (attribution: OpenStreetMap contributors).",
+  "creators": [
+    {
+      "name": "Shigenobu, Ryuto",
+      "affiliation": "University of Fukui"
+    }
+  ],
+  "license": "ODbL-1.0",
+  "access_right": "open",
+  "keywords": [
+    "power system",
+    "transmission network",
+    "OpenStreetMap",
+    "CIM CGMES",
+    "power flow",
+    "unit commitment",
+    "Japan"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/lutelute/All-Japan-Grid",
+      "scheme": "url"
+    }
+  ]
+}

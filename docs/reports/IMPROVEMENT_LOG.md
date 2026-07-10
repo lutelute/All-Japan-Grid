@@ -7,6 +7,23 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-07-10 — **Claude Fable 5** — 介入#19/#20/#21の既定ON化＋Ybus v5＋資産化5アクション
+
+オーナー承認（「アクション全て実行しよう」）による既定フリップと資産化アクション一括実施。
+詳細 = `default_on_decision_2026-07-10.md`（判断パッケージ）。
+
+- **既定ON化**: `build_island_net(dedup_nodes=True)`+CLI3本（run_full/uc_to_pf/gen_ybus_numeric）を
+  `--pref-demand`/`--reactive-comp`/`--dedup-nodes` 既定ONへ。`--no-*` で従来挙動を厳密再現
+- **証拠**: 4島×新旧8ランのプロセス隔離プローブ（解成立の退行なし・断片化全島改善
+  west 2,531→544成分）・ゲート44 PASS（回帰ピン2件を意図的更新: okinawa 99→98バス・v5.0.0）・
+  数値Ybus正典 **v5.0.0**（指紋系譜を判断レポートに記録・meta.jsonにdedup計器刻印）
+- **#20補償率の出典化**: 一次資料調査（`reactive_comp_provenance_2026-07-10.md`）で四国EGC 2024
+  実測換算 直近≈0.8・1990年代≈0.05 のレンジを確立。0.6=保守側（送電端力率0.991相当）と裏づけ。
+  0.8への引き上げは要再スイープの将来課題として台帳#20に記録
+- **方法論の資産化**: 07-07〜09診断群を「OSM由来系統の落とし穴4クラス+診断5手法+チェックリスト12項」
+  に統合（`osm_grid_pitfalls_methodology_2026-07-10.md`・データ論文素材）
+- **引用インフラ**: `.zenodo.json`+`docs/ZENODO_DOI.md`（初DOIはv1.6.0タグと連動・オーナー操作のみ残）
+
 ## 2026-07-07(GIF作業中) — **Claude Fable 5** — ハマり⑩: 見せかけAC解の発見と給電率ガード
 
 潮流GIF制作が思わぬ検証になった。full全規模+bridge+境界注入の合成でeastのACが

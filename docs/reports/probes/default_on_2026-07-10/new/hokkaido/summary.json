@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:12:19",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "hokkaido": {
+      "frequency_hz": 50,
+      "n_bus": 802,
+      "n_line": 815,
+      "n_trafo": 68,
+      "n_trafo_nameplate": 1,
+      "n_edge_skipped": 79,
+      "n_dedup_merged": 17,
+      "n_edge_dup_removed": 4,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 417,
+      "total_load_mw": 4420.0,
+      "n_components": 35,
+      "n_slack": 35,
+      "n_synthetic_slack": 30,
+      "ac_converged": true,
+      "ac_solver": "nr",
+      "ac_error": null,
+      "dc_converged": true,
+      "ac_vm_min": 0.743365543679326,
+      "ac_vm_max": 1.007322238952773,
+      "ac_max_loading_pct": 93.13786568130719,
+      "dc_max_loading_pct": 90.20369735383542,
+      "ac_total_loss_mw": 81.74376282051107,
+      "solve_seconds": 4.9
+    }
+  },
+  "regions": {
+    "hokkaido": {
+      "island": "hokkaido",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.7434,
+      "vm_max": 1.0073,
+      "n_buses": 802,
+      "n_buses_exported": 802,
+      "n_lines_exported": 815
+    }
+  }
+}

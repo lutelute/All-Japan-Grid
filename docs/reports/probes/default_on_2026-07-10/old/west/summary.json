@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:15:45",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "west": {
+      "frequency_hz": 60,
+      "n_bus": 10193,
+      "n_line": 9793,
+      "n_trafo": 1061,
+      "n_trafo_nameplate": 5,
+      "n_edge_skipped": 1390,
+      "n_dedup_merged": 0,
+      "n_edge_dup_removed": 0,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 2855,
+        "changes": {
+          "chubu->hokuriku": 578,
+          "kansai->chubu": 503,
+          "chugoku->shikoku": 322,
+          "tokyo->tohoku": 233,
+          "shikoku->chugoku": 230,
+          "chubu->kansai": 200,
+          "kyushu->chugoku": 184,
+          "hokuriku->chubu": 171,
+          "chugoku->kyushu": 123,
+          "tohoku->tokyo": 117,
+          "kansai->hokuriku": 51,
+          "chugoku->kansai": 48,
+          "kansai->shikoku": 44,
+          "hokkaido->tohoku": 26,
+          "shikoku->kansai": 11,
+          "tohoku->hokkaido": 9,
+          "hokuriku->kansai": 2,
+          "kyushu->shikoku": 2,
+          "kansai->chugoku": 1
+        },
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 8775,
+      "total_load_mw": 73865.0,
+      "n_components": 2531,
+      "n_slack": 2531,
+      "n_synthetic_slack": 2393,
+      "ac_converged": false,
+      "ac_solver": null,
+      "ac_error": "island too large for AC (10193 > 7000); DC only",
+      "dc_converged": true,
+      "ac_vm_min": null,
+      "ac_vm_max": null,
+      "ac_max_loading_pct": null,
+      "dc_max_loading_pct": 1895.1058828938706,
+      "ac_total_loss_mw": null,
+      "solve_seconds": 67.1
+    }
+  },
+  "regions": {
+    "chubu": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 2965,
+      "n_buses_exported": 2965,
+      "n_lines_exported": 2877
+    },
+    "chugoku": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 1504,
+      "n_buses_exported": 1504,
+      "n_lines_exported": 1435
+    },
+    "hokuriku": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 1240,
+      "n_buses_exported": 1240,
+      "n_lines_exported": 1236
+    },
+    "kansai": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 1954,
+      "n_buses_exported": 1954,
+      "n_lines_exported": 1885
+    },
+    "kyushu": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 1686,
+      "n_buses_exported": 1686,
+      "n_lines_exported": 1671
+    },
+    "shikoku": {
+      "island": "west",
+      "solved_mode": "dc",
+      "ac_converged": false,
+      "dc_converged": true,
+      "vm_min": 1.0,
+      "vm_max": 1.0,
+      "n_buses": 844,
+      "n_buses_exported": 844,
+      "n_lines_exported": 779
+    }
+  }
+}

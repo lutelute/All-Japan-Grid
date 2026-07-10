@@ -180,7 +180,7 @@ def _get_nameplates():
 
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
-                     territory=True, dedup_nodes=False):
+                     territory=True, dedup_nodes=True):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -189,10 +189,12 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     territory: True(既定)=ノードregionを領土(座標→県→エリア)で再属性してから
     バス化する(A案 2026-07-07採用)。bbox重なり由来のzone誤属性(幻tie・実tie不可視化・
     需要/UC注入の誤帰属)を修正する。物理接続は不変。False=旧挙動(回帰比較用)。
-    dedup_nodes: True=同一座標(6桁≈0.1m)+同一電圧の重複ノードを1バスに畳む
-    (bbox重なりで同一OSMオブジェクトが別regionに二重抽出された分=B案 2026-07-09)。
-    座標はOSM幾何由来ゆえ完全一致は同一物理点=除去であって接続の追加ではない
-    (docs/reports/west_fragmentation_rootcause_2026-07-09.md)。既定OFF(正典比較性)。"""
+    dedup_nodes: True(既定・2026-07-10 介入#21既定化)=同一座標(6桁≈0.1m)+同一電圧の
+    重複ノードを1バスに畳む(bbox重なりで同一OSMオブジェクトが別regionに二重抽出
+    された分=B案 2026-07-09)。座標はOSM幾何由来ゆえ完全一致は同一物理点=除去で
+    あって接続の追加ではない(docs/reports/west_fragmentation_rootcause_2026-07-09.md)。
+    False=従来挙動(回帰比較用・CLIは --no-dedup-nodes)。既定化判断=
+    docs/reports/default_on_decision_2026-07-10.md"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
     rstats = None
@@ -742,23 +744,31 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
-    ap.add_argument("--pref-demand", action="store_true",
+    ap.add_argument("--pref-demand", action=argparse.BooleanOptionalAction,
+                    default=True,
                     help="需要空間配分の細分化: zone内を県別実需要シェア"
                          "(電力調査統計FY2024・出典付き)で配ってから電圧重み。"
-                         "既定OFF=従来のzone一様(正典比較性維持)。"
+                         "既定ON(2026-07-10 介入#19既定化)。--no-pref-demand="
+                         "従来のzone一様(回帰比較用)。"
                          "A案(territory=True)とセットで需要地理が閉じる "
                          "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
     ap.add_argument("--reactive-comp", nargs="?", type=float, const=-1.0,
-                    default=None, metavar="FACTOR",
+                    default=-1.0, metavar="FACTOR",
                     help="負荷バスに容量性シャント(コンデンサバンク)を付与し無効"
                          "電力を局所供給(実配電用変電所のコンデンサをモデル化)。"
-                         "FACTOR=局所供給率(省略時=config)。既定OFF。east full ACの"
+                         "FACTOR=局所供給率(省略時=config)。"
+                         "既定ON(2026-07-10 介入#20既定化)。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
-    ap.add_argument("--dedup-nodes", action="store_true",
+    ap.add_argument("--no-reactive-comp", action="store_const", const=None,
+                    dest="reactive_comp",
+                    help="無効電力補償を無効化(従来挙動・回帰比較用)")
+    ap.add_argument("--dedup-nodes", action=argparse.BooleanOptionalAction,
+                    default=True,
                     help="bbox重なりの二重抽出を除去(B案): 重複ノード(同一座標+kv)を"
                          "1バスへ+重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存)。"
-                         "除去であって接続追加でない。既定OFF。west断片化2531→544成分・"
+                         "除去であって接続追加でない。既定ON(2026-07-10 介入#21既定化)。"
+                         "--no-dedup-nodes=従来挙動(回帰比較用)。west断片化2531→544成分・"
                          "線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     args = ap.parse_args()

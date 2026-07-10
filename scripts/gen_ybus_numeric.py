@@ -42,7 +42,7 @@ ISLANDS = [("hokkaido", 50.0), ("east", 50.0), ("west", 60.0),
 
 # Ybus は「バージョン管理された成果物」(オーナー認識 2026-07-02)。
 # モデル・出荷物・検証が変わるたびに上げ、meta.json と .mat に刻印する。
-YBUS_VERSION = "4.0.0"
+YBUS_VERSION = "5.0.0"
 CHANGELOG = {
     "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・"
              ".mat/.npz/バス表",
@@ -61,6 +61,12 @@ CHANGELOG = {
              "②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) "
              "③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 "
              "④meta.trafo_nameplate に適用数と伝播経路を記録",
+    "5.0.0": "介入#21(bbox二重抽出のdedup)を既定ON化: ①重複ノード(同一座標6桁+kv)を"
+             "1バスへ ②重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存・本物の"
+             "複線par>1は不変)。除去であって接続追加でない。west断片化2531→544成分・"
+             "線二重計上の是正(境界線インピーダンス半減の解消)。"
+             "--no-dedup-nodes で v4 相当(dedup無し)を再現可 "
+             "(docs/reports/default_on_decision_2026-07-10.md)",
 }
 BACKBONE_KV = 154.0     # transforms.reduce_to_backbone と同じ閾値(WEST_AC_ANALYSIS)
 
@@ -335,10 +341,11 @@ def verify(Y, bus_ids, net):
     }
 
 
-def export_island(island, freq, nodes, edges, out_dir):
+def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True):
     t0 = time.time()
     geom = {}
-    net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom)
+    net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom,
+                                           dedup_nodes=dedup_nodes)
     n_refs = add_ref_per_component(net)
     Y, bus_ids, internal = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
@@ -488,6 +495,13 @@ def export_island(island, freq, nodes, edges, out_dir):
             "source": "transformer_sources.jsonl(existing) → structures/*.json"
                       "(source=nameplate) → sn_mva/parallel (v4)",
         },
+        "dedup_nodes": {
+            "enabled": bool(dedup_nodes),
+            "n_node_merged": int(bstats.get("n_dedup_merged", 0)),
+            "n_edge_dup_removed": int(bstats.get("n_edge_dup_removed", 0)),
+            "note": "介入#21(v5既定ON): bbox二重抽出の除去。"
+                    "--no-dedup-nodes=v4相当",
+        },
         "n_components_refs": int(n_refs),
         "dc": {"included": True, "nnz": int(Bbus.nnz),
                "aligned": bool(checks["dc_bus_order_aligned"])},
@@ -513,6 +527,10 @@ def main():
     ap.add_argument("--islands", nargs="*",
                     default=[i for i, _ in ISLANDS])
     ap.add_argument("--out", default=OUT_DIR)
+    ap.add_argument("--dedup-nodes", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="bbox二重抽出のdedup(介入#21)。既定ON(v5.0.0)。"
+                         "--no-dedup-nodes=v4相当(回帰比較用)")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
@@ -522,7 +540,8 @@ def main():
 
     metas = {}
     for island in args.islands:
-        meta = export_island(island, freq_of[island], nodes, edges, args.out)
+        meta = export_island(island, freq_of[island], nodes, edges, args.out,
+                             dedup_nodes=args.dedup_nodes)
         metas[island] = meta
         c = meta["checks"]
         bb = meta["backbone"]

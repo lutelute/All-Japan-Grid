@@ -133,6 +133,10 @@ dist/ybus/*.mat
 dist/ybus/*.npz
 dist/ybus/*_bus.csv
 dist/ybus/*_branch.csv
+dist/ybus/figs/
+
+# 潮流アニメーション(生成物・~41MB。生成器=scripts/animate_powerflow_gif.py)
+dist/pf_animation/
 
 # データセット配布バンドル(生成物・Release経由で配布)。生成器=scripts/make_dataset_bundle.py
 dist/bundle/

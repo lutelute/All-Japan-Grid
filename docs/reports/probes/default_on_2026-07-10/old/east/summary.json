@@ -1,0 +1,91 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:12:27",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "east": {
+      "frequency_hz": 50,
+      "n_bus": 6222,
+      "n_line": 6313,
+      "n_trafo": 630,
+      "n_trafo_nameplate": 6,
+      "n_edge_skipped": 695,
+      "n_dedup_merged": 0,
+      "n_edge_dup_removed": 0,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 2855,
+        "changes": {
+          "chubu->hokuriku": 578,
+          "kansai->chubu": 503,
+          "chugoku->shikoku": 322,
+          "tokyo->tohoku": 233,
+          "shikoku->chugoku": 230,
+          "chubu->kansai": 200,
+          "kyushu->chugoku": 184,
+          "hokuriku->chubu": 171,
+          "chugoku->kyushu": 123,
+          "tohoku->tokyo": 117,
+          "kansai->hokuriku": 51,
+          "chugoku->kansai": 48,
+          "kansai->shikoku": 44,
+          "hokkaido->tohoku": 26,
+          "shikoku->kansai": 11,
+          "tohoku->hokkaido": 9,
+          "hokuriku->kansai": 2,
+          "kyushu->shikoku": 2,
+          "kansai->chugoku": 1
+        },
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 8235,
+      "total_load_mw": 55250.0,
+      "n_components": 532,
+      "n_slack": 532,
+      "n_synthetic_slack": 488,
+      "ac_converged": true,
+      "ac_solver": "nr",
+      "ac_error": null,
+      "dc_converged": true,
+      "ac_vm_min": 0.8262210007108893,
+      "ac_vm_max": 1.5912679841506452,
+      "ac_max_loading_pct": 1256.91675800494,
+      "dc_max_loading_pct": 1671.7219458151426,
+      "ac_total_loss_mw": 2087.0880044644746,
+      "solve_seconds": 93.1
+    }
+  },
+  "regions": {
+    "tohoku": {
+      "island": "east",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.9296,
+      "vm_max": 1.5913,
+      "n_buses": 2097,
+      "n_buses_exported": 2097,
+      "n_lines_exported": 2128
+    },
+    "tokyo": {
+      "island": "east",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.8262,
+      "vm_max": 1.0229,
+      "n_buses": 4067,
+      "n_buses_exported": 4067,
+      "n_lines_exported": 4212
+    }
+  }
+}

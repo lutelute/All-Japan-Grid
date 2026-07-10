@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:18:07",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "okinawa": {
+      "frequency_hz": 60,
+      "n_bus": 98,
+      "n_line": 95,
+      "n_trafo": 19,
+      "n_trafo_nameplate": 0,
+      "n_edge_skipped": 19,
+      "n_dedup_merged": 1,
+      "n_edge_dup_removed": 0,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 28,
+      "total_load_mw": 1360.0,
+      "n_components": 6,
+      "n_slack": 6,
+      "n_synthetic_slack": 4,
+      "ac_converged": true,
+      "ac_solver": "nr",
+      "ac_error": null,
+      "dc_converged": true,
+      "ac_vm_min": 0.9544386185145809,
+      "ac_vm_max": 1.000000332126833,
+      "ac_max_loading_pct": 173.24733749666262,
+      "dc_max_loading_pct": 165.03687781455187,
+      "ac_total_loss_mw": 15.798156568917205,
+      "solve_seconds": 2.3
+    }
+  },
+  "regions": {
+    "okinawa": {
+      "island": "okinawa",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.9544,
+      "vm_max": 1.0,
+      "n_buses": 98,
+      "n_buses_exported": 98,
+      "n_lines_exported": 95
+    }
+  }
+}

@@ -356,26 +356,34 @@ def main():
                          "capacity_patchesを読むため、双方の燃料別容量が一致し"
                          "注入clipが減る(okinawa燃料フリート較正 2026-07-07)。"
                          "既定OFF=07-05正典結果との比較可能性を保つ")
-    ap.add_argument("--pref-demand", action="store_true",
+    ap.add_argument("--pref-demand", action=argparse.BooleanOptionalAction,
+                    default=True,
                     help="需要空間配分の細分化: zone内を県別実需要シェア"
                          "(電力調査統計FY2024・出典付き)で配ってから電圧重み。"
-                         "既定OFF=従来のzone一様(正典比較性維持)。A案の需要地理"
+                         "既定ON(2026-07-10 介入#19既定化)。--no-pref-demand="
+                         "従来のzone一様(回帰比較用)。A案の需要地理"
                          "回帰への中期対応(a) "
                          "(docs/reports/a_plan_east_ac_regression_2026-07-08.md)")
     ap.add_argument("--reactive-comp", nargs="?", type=float, const=-1.0,
-                    default=None, metavar="FACTOR",
+                    default=-1.0, metavar="FACTOR",
                     help="負荷バスに容量性シャント(コンデンサバンク)を付与して"
                          "無効電力を局所供給する。実配電用変電所のコンデンサを"
                          "モデル化(OSM欠落)。FACTOR=各負荷の無効需要の局所供給率"
-                         "(省略時=config reactive_compensation_factor)。既定OFF。"
+                         "(省略時=config reactive_compensation_factor)。"
+                         "既定ON(2026-07-10 介入#20既定化)。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
-    ap.add_argument("--dedup-nodes", action="store_true",
+    ap.add_argument("--no-reactive-comp", action="store_const", const=None,
+                    dest="reactive_comp",
+                    help="無効電力補償を無効化(従来挙動・回帰比較用)")
+    ap.add_argument("--dedup-nodes", action=argparse.BooleanOptionalAction,
+                    default=True,
                     help="bbox重なりの二重抽出を除去(B案): ①同一座標+同一電圧の"
                          "重複ノードを1バスに畳む ②同一バス対+同一経路の重複エッジを"
                          "1本に(回線数parはmax保存・本物の複線=par>1単一エッジは不変)。"
                          "座標/経路一致は同一物理点ゆえ除去であって接続追加でない。"
-                         "既定OFF。west断片化2531→544成分・線の二重計上を是正 "
+                         "既定ON(2026-07-10 介入#21既定化)。--no-dedup-nodes=従来挙動"
+                         "(回帰比較用)。west断片化2531→544成分・線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()

@@ -68,16 +68,31 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ### Unreleased — 2026-07 (in progress)
 
+- ✅ **Interventions #19/#20/#21 now default ON / 介入3件の既定ON化**
+  ([docs/reports/default_on_decision_2026-07-10.md](docs/reports/default_on_decision_2026-07-10.md)).
+  Per-prefecture demand (#19), reactive compensation (#20) and bbox-duplicate dedup (#21) are the
+  default model as of 2026-07-10 (owner-approved). Evidence: 4-island before/after probes (no
+  solution regression, fragmentation improves everywhere — west 2,531→544 components), 44 gates
+  PASS, numeric **Ybus canon v5.0.0** with fingerprint lineage. `--no-pref-demand
+  --no-reactive-comp --no-dedup-nodes` reproduce the legacy behaviour exactly. East losses rise
+  +31 % on the probe snapshot — that is the *correction* (double-counted boundary lines halved
+  impedances before). 東の損失増は二重計上是正の方向であり改悪ではない。
+- 📚 **Methodology consolidation & sourced compensation factor / 方法論統合と補償率の出典化.**
+  Four pitfall classes of OSM-derived grid models + 5 diagnostic methods + a 12-item checklist
+  ([osm_grid_pitfalls_methodology_2026-07-10.md](docs/reports/osm_grid_pitfalls_methodology_2026-07-10.md));
+  intervention #20's factor 0.6 anchored to primary sources — Shikoku EGC 2024 measurements
+  convert to ≈0.8 today / ≈0.05 in the 1990s, so 0.6 sits on the conservative side of the
+  observed range ([reactive_comp_provenance_2026-07-10.md](docs/reports/reactive_comp_provenance_2026-07-10.md)).
 - 🔌 **east full-scale AC solved — root cause was reactive power, not topology / east全規模ACの網側解明.**
   ([docs/reports/east_network_reactive_2026-07-09.md](docs/reports/east_network_reactive_2026-07-09.md)).
   Under honest demand geography the 6,222-bus east AC failed — but the DC angles are healthy
   (the angle-based prune ladder removes ~0 lines) so the breaker is **reactive power / voltage
   collapse**, not an angle bottleneck: ~19 GVar of load reactive demand had to flow through
   high-X radial 66 kV lines with **no local support**. Modelling the shunt capacitor banks that
-  real distribution substations carry (opt-in `--reactive-comp`, intervention #20) restores an
-  honest full-scale AC solution — **98.2 % served, 98.4 % of buses in the 0.9–1.1 pu band**
-  (vs the earlier fake 10.8 %). The remaining ~41 outlier buses (0.66 %) are the localized 66 kV
-  detail left to refine. Default OFF keeps canonical comparability.
+  real distribution substations carry (`--reactive-comp`, intervention #20; default ON since
+  2026-07-10) restores an honest full-scale AC solution — **98.2 % served, 98.4 % of buses in
+  the 0.9–1.1 pu band** (vs the earlier fake 10.8 %). The remaining ~41 outlier buses (0.66 %)
+  are the localized 66 kV detail left to refine.
 - 🧾 **Model-intervention registry now at 20 entries** — #19 per-prefecture demand, #20 reactive
   compensation, each with basis / ledger / off-switch.
 - 🗾 **All-island 24 h validation of `--pref-demand --reactive-comp`**
@@ -87,7 +102,8 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   DC, west DC by design (single-synchronous-island AC is known fake convergence — backbone
   handles its AC). Reactive compensation holds across every island and hour with no BLAS abort.
   Remaining gap: east's localized 66 kV voltage outliers (vm ceiling ≈1.70, one hour 2.78) — the
-  next mesh-refinement target. Opt-in stays default OFF pending that work.
+  next mesh-refinement target. (Both flags became default ON on 2026-07-10 — see the decision
+  report above.)
 - 🔀 **east vs west, diagnosed apart**
   ([docs/reports/east_vs_west_ac_2026-07-09.md](docs/reports/east_vs_west_ac_2026-07-09.md)).
   The "east AC / west DC" split hid the real story: applying east's exact diagnosis to west shows
@@ -147,7 +163,7 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   (99.0 % served)" claim stood on the old bbox-mislabelled demand geography** — treat it as a
   limit solution, not a validated operating point. Full-scale runs now honestly report
   `dc_fallback` (guard above); AC demonstrations live on the backbone model.
-  **Follow-up (registry #19, opt-in `--pref-demand`)**: demand allocation refined to sourced
+  **Follow-up (registry #19, `--pref-demand`, default ON since 2026-07-10)**: demand allocation refined to sourced
   per-prefecture shares (電力調査統計 FY2024) — metro Tokyo now carries a realistic
   ~50 MW/bus vs ~10 MW/bus rural. An early probe seemed to restore full-scale AC, but was
   traced to an enclave-weighting bug that dumped ~2.3 GW of Nagano demand at the Shin-Shinano

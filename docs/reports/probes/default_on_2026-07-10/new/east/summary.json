@@ -1,0 +1,71 @@
+{
+  "_meta": {
+    "source": "docs/data/built/all.json",
+    "n_nodes": 17333,
+    "n_edges": 19031,
+    "generated": "2026-07-10 11:14:03",
+    "scale": "full (no voltage-class reduction)"
+  },
+  "islands": {
+    "east": {
+      "frequency_hz": 50,
+      "n_bus": 6002,
+      "n_line": 6122,
+      "n_trafo": 630,
+      "n_trafo_nameplate": 6,
+      "n_edge_skipped": 695,
+      "n_dedup_merged": 220,
+      "n_edge_dup_removed": 191,
+      "region_reattribution": {
+        "n_nodes": 17333,
+        "n_changed": 0,
+        "changes": {},
+        "skipped_freq": {
+          "chubu->tokyo": 249,
+          "tokyo->chubu": 210,
+          "chubu->tohoku": 41,
+          "hokuriku->tohoku": 22
+        }
+      },
+      "n_gen": 8235,
+      "total_load_mw": 55250.0,
+      "n_components": 312,
+      "n_slack": 312,
+      "n_synthetic_slack": 268,
+      "ac_converged": true,
+      "ac_solver": "nr",
+      "ac_error": null,
+      "dc_converged": true,
+      "ac_vm_min": 0.7324378492679079,
+      "ac_vm_max": 1.748357895137625,
+      "ac_max_loading_pct": 1255.8712960312844,
+      "dc_max_loading_pct": 1667.8155927256469,
+      "ac_total_loss_mw": 2735.523709256797,
+      "solve_seconds": 98.7
+    }
+  },
+  "regions": {
+    "tohoku": {
+      "island": "east",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.9504,
+      "vm_max": 1.7484,
+      "n_buses": 1997,
+      "n_buses_exported": 1997,
+      "n_lines_exported": 2060
+    },
+    "tokyo": {
+      "island": "east",
+      "solved_mode": "ac",
+      "ac_converged": true,
+      "dc_converged": true,
+      "vm_min": 0.7324,
+      "vm_max": 1.0229,
+      "n_buses": 3936,
+      "n_buses_exported": 3936,
+      "n_lines_exported": 4086
+    }
+  }
+}

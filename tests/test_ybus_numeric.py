@@ -67,11 +67,15 @@ def test_bus_table_alignment(okinawa_ybus):
 
 
 def test_regression_pin_okinawa(okinawa_ybus):
-    """ゲート5: 回帰 pin(意図的なモデル改善時のみ更新)。"""
+    """ゲート5: 回帰 pin(意図的なモデル改善時のみ更新)。
+    v5(2026-07-10): 介入#21既定ONで島内重複ノード1件がdedupされ 99→98
+    (docs/reports/default_on_decision_2026-07-10.md)。"""
     _out, meta = okinawa_ybus
-    assert meta["n_bus"] == 99
+    assert meta["n_bus"] == 98
     assert meta["nnz"] == 321
     assert meta["n_trafo"] == 19
+    assert meta["dedup_nodes"]["enabled"]
+    assert meta["dedup_nodes"]["n_node_merged"] == 1
 
 
 def test_v2_version_and_dc(okinawa_ybus):
@@ -132,9 +136,10 @@ def test_v2_kron_equals_dense_schur(okinawa_ybus):
 
 
 def test_v4_version_and_changelog():
-    """v4: バージョン刻印と CHANGELOG の整合。"""
+    """バージョン刻印と CHANGELOG の整合(v5: 介入#21既定ON)。"""
     from scripts.gen_ybus_numeric import YBUS_VERSION, CHANGELOG
-    assert YBUS_VERSION == "4.0.0"
+    assert YBUS_VERSION == "5.0.0"
+    assert "5.0.0" in CHANGELOG and "既定ON" in CHANGELOG["5.0.0"]
     assert "4.0.0" in CHANGELOG and "実容量化" in CHANGELOG["4.0.0"]
 
 

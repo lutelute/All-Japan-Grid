@@ -1,11 +1,12 @@
 {
- "generated": "2026-07-04",
- "ybus_version": "4.0.0",
+ "generated": "2026-07-10",
+ "ybus_version": "5.0.0",
  "changelog": {
   "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・.mat/.npz/バス表",
   "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) ②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) ③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) ④AC/DCバス順序の整合検証",
   "3.0.0": "①枝アドミタンス行列 Yf/Yt 同梱(線潮流 If=Yf·V が MATLAB で完結) ②枝表 {island}_branch.csv(kind/名前/from-to ybus_index/長さ/par/tap) ③再構成恒等式ゲート Ybus == Cf'Yf+Ct'Yt+diag(Ysh) (機械精度) ④枝順序ゲート(lookup範囲=lines→trafos の整合検証)",
-  "4.0.0": "①変圧器の実容量化: 出典必須DB(data/transformer_sources.jsonl, existing銘板のみ)→構造DB(TransformerSpec source=nameplate)→build_island_net の trafo sn_mva/parallel へ接続(電圧ペア厳密一致のみ・枝名に@nameplate刻印) ②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) ③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 ④meta.trafo_nameplate に適用数と伝播経路を記録"
+  "4.0.0": "①変圧器の実容量化: 出典必須DB(data/transformer_sources.jsonl, existing銘板のみ)→構造DB(TransformerSpec source=nameplate)→build_island_net の trafo sn_mva/parallel へ接続(電圧ペア厳密一致のみ・枝名に@nameplate刻印) ②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) ③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 ④meta.trafo_nameplate に適用数と伝播経路を記録",
+  "5.0.0": "介入#21(bbox二重抽出のdedup)を既定ON化: ①重複ノード(同一座標6桁+kv)を1バスへ ②重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存・本物の複線par>1は不変)。除去であって接続追加でない。west断片化2531→544成分・線二重計上の是正(境界線インピーダンス半減の解消)。--no-dedup-nodes で v4 相当(dedup無し)を再現可 (docs/reports/default_on_decision_2026-07-10.md)"
  },
  "source": "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
  "note": "4 frequency islands are asynchronous; the national Ybus is the block-diagonal direct sum of these.",
@@ -13,42 +14,105 @@
   "hokkaido": {
    "island": "hokkaido",
    "f_hz": 50.0,
-   "ybus_version": "4.0.0",
-   "fingerprint": "2acdbc3d0fef5f91",
-   "n_bus": 836,
-   "nnz": 2620,
-   "density": 0.0037487694878780248,
-   "n_line": 853,
-   "n_trafo": 74,
+   "ybus_version": "5.0.0",
+   "fingerprint": "b424beb42770b931",
+   "n_bus": 802,
+   "nnz": 2544,
+   "density": 0.003955199283586545,
+   "n_line": 815,
+   "n_trafo": 68,
    "trafo_nameplate": {
     "n_applied": 1,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
-   "n_components_refs": 47,
+   "dedup_nodes": {
+    "enabled": true,
+    "n_node_merged": 17,
+    "n_edge_dup_removed": 4,
+    "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
+   },
+   "n_components_refs": 35,
    "dc": {
     "included": true,
-    "nnz": 2620,
+    "nnz": 2544,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 927,
+    "n_branch": 883,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 124,
-    "nnz": 1030,
-    "fill_density": 0.067,
-    "n_dropped_buses": 57,
-    "fingerprint": "96b3cff3bd08243e"
+    "n_bus": 117,
+    "nnz": 1001,
+    "fill_density": 0.0731,
+    "n_dropped_buses": 47,
+    "fingerprint": "e263323080665f17"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 908,
+    "offdiag_checked": 882,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.2283674932279337e-16,
+    "offdiag_rel_err_p99": 1.3054215186102413e-16,
+    "branch_order_mismatches": 0,
+    "reconstruction_rel_err": 0.0,
+    "dc_bus_order_aligned": true,
+    "backbone_symmetry_max_abs_err": 9.165725883006586e-13
+   },
+   "gate": {
+    "pass": true,
+    "cond_max": 3736425.732050803,
+    "n_islands": 13
+   },
+   "elapsed_s": 2.9
+  },
+  "east": {
+   "island": "east",
+   "f_hz": 50.0,
+   "ybus_version": "5.0.0",
+   "fingerprint": "d9f56d06cf23142b",
+   "n_bus": 6002,
+   "nnz": 19325,
+   "density": 0.0005364478640408767,
+   "n_line": 6122,
+   "n_trafo": 630,
+   "trafo_nameplate": {
+    "n_applied": 6,
+    "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
+   },
+   "dedup_nodes": {
+    "enabled": true,
+    "n_node_merged": 220,
+    "n_edge_dup_removed": 191,
+    "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
+   },
+   "n_components_refs": 312,
+   "dc": {
+    "included": true,
+    "nnz": 19325,
+    "aligned": true
+   },
+   "branch_matrices": {
+    "included": true,
+    "n_branch": 6752,
+    "order": "lines then trafos (lookup-verified)"
+   },
+   "backbone": {
+    "keep_kv_min": 154.0,
+    "n_bus": 1273,
+    "nnz": 135087,
+    "fill_density": 0.0834,
+    "n_dropped_buses": 561,
+    "fingerprint": "931edff57103c933"
+   },
+   "checks": {
+    "symmetry_max_abs_err": 0.0,
+    "symmetry_rel_err": 0.0,
+    "offdiag_checked": 6728,
+    "offdiag_rel_err_median": 0.0,
+    "offdiag_rel_err_p99": 1.6996299783145752e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
@@ -56,101 +120,56 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 3734420.1039815713,
-    "n_islands": 15
+    "cond_max": 20394700.07474198,
+    "n_islands": 179
    },
-   "elapsed_s": 2.1
-  },
-  "east": {
-   "island": "east",
-   "f_hz": 50.0,
-   "ybus_version": "4.0.0",
-   "fingerprint": "c0392c7804117e90",
-   "n_bus": 6205,
-   "nnz": 19321,
-   "density": 0.000501817761533322,
-   "n_line": 6315,
-   "n_trafo": 630,
-   "trafo_nameplate": {
-    "n_applied": 6,
-    "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
-   },
-   "n_components_refs": 517,
-   "dc": {
-    "included": true,
-    "nnz": 19321,
-    "aligned": true
-   },
-   "branch_matrices": {
-    "included": true,
-    "n_branch": 6945,
-    "order": "lines then trafos (lookup-verified)"
-   },
-   "backbone": {
-    "keep_kv_min": 154.0,
-    "n_bus": 1310,
-    "nnz": 135071,
-    "fill_density": 0.0787,
-    "n_dropped_buses": 729,
-    "fingerprint": "7332f2f098a3a83f"
-   },
-   "checks": {
-    "symmetry_max_abs_err": 0.0,
-    "symmetry_rel_err": 0.0,
-    "offdiag_checked": 6726,
-    "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.7000471781300878e-16,
-    "branch_order_mismatches": 0,
-    "reconstruction_rel_err": 0.0,
-    "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 7.275957614183426e-12
-   },
-   "gate": {
-    "pass": true,
-    "cond_max": 149374207.72843343,
-    "n_islands": 181
-   },
-   "elapsed_s": 14.8
+   "elapsed_s": 16.7
   },
   "west": {
    "island": "west",
    "f_hz": 60.0,
-   "ybus_version": "4.0.0",
-   "fingerprint": "5e196db1f9a3d2df",
-   "n_bus": 10193,
-   "nnz": 26784,
-   "density": 0.0002577931587004772,
-   "n_line": 9793,
+   "ybus_version": "5.0.0",
+   "fingerprint": "4dc8dad77e8523ec",
+   "n_bus": 8204,
+   "nnz": 26776,
+   "density": 0.00039782712931414225,
+   "n_line": 8353,
    "n_trafo": 1061,
    "trafo_nameplate": {
     "n_applied": 5,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
-   "n_components_refs": 2531,
+   "dedup_nodes": {
+    "enabled": true,
+    "n_node_merged": 1989,
+    "n_edge_dup_removed": 1440,
+    "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
+   },
+   "n_components_refs": 544,
    "dc": {
     "included": true,
-    "nnz": 26784,
+    "nnz": 26776,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 10854,
+    "n_branch": 9414,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 2779,
+    "n_bus": 2202,
     "nnz": 28048,
-    "fill_density": 0.0036,
-    "n_dropped_buses": 2488,
-    "fingerprint": "79f5b6d167c4f75d"
+    "fill_density": 0.0058,
+    "n_dropped_buses": 1075,
+    "fingerprint": "91d3c8943aca1904"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 9400,
+    "offdiag_checked": 9398,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.672492767187394e-16,
+    "offdiag_rel_err_p99": 1.7042634288927947e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
@@ -158,26 +177,32 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 30901563.160175182,
-    "n_islands": 322
+    "cond_max": 62450073.20739263,
+    "n_islands": 320
    },
-   "elapsed_s": 29.2
+   "elapsed_s": 25.0
   },
   "okinawa": {
    "island": "okinawa",
    "f_hz": 60.0,
-   "ybus_version": "4.0.0",
-   "fingerprint": "2a5c0ef0ca6210e7",
-   "n_bus": 99,
+   "ybus_version": "5.0.0",
+   "fingerprint": "de38456ec9b77fec",
+   "n_bus": 98,
    "nnz": 321,
-   "density": 0.0327517600244873,
+   "density": 0.033423573511037065,
    "n_line": 95,
    "n_trafo": 19,
    "trafo_nameplate": {
     "n_applied": 0,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
-   "n_components_refs": 7,
+   "dedup_nodes": {
+    "enabled": true,
+    "n_node_merged": 1,
+    "n_edge_dup_removed": 0,
+    "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
+   },
+   "n_components_refs": 6,
    "dc": {
     "included": true,
     "nnz": 321,
@@ -193,7 +218,7 @@
     "n_bus": 23,
     "nnz": 239,
     "fill_density": 0.4518,
-    "n_dropped_buses": 6,
+    "n_dropped_buses": 5,
     "fingerprint": "c0bc6f4ab04e9225"
    },
    "checks": {
@@ -209,10 +234,10 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 28647.429846706174,
+    "cond_max": 41379.87214356339,
     "n_islands": 1
    },
-   "elapsed_s": 0.3
+   "elapsed_s": 1.1
   }
  }
 }
