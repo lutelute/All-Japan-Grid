@@ -33,6 +33,23 @@
   .hl{color:#69f0ae;font-weight:700}
   .bad{color:#ff8a80;font-weight:700}
   .mapdiv{width:100%;height:100%}
+  /* ── モバイル対応(2026-07-10 レイアウト監査B1): 2ペインを縦積み・ヘッダ圧縮 ── */
+  @media (max-width:768px){
+    body{display:flex;flex-direction:column;height:100vh;height:100dvh}
+    #top,#ctl{flex:0 0 auto}
+    #top{padding:8px 12px}
+    #top h1{font-size:14px}
+    #top p{display:none}   /* 長文説明は畳んで地図の面積を確保 */
+    #ctl{padding:6px 12px;gap:8px}
+    #legend{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    #legend::-webkit-scrollbar{display:none}
+    #legend .k{flex:0 0 auto;white-space:nowrap}
+    #wrap{flex:1 1 auto;height:auto;min-height:0;flex-direction:column}
+    .pane{border-right:none;border-bottom:2px solid #000}
+    .pane:last-child{border-bottom:none}
+    .pane h2{left:auto;right:8px;font-size:12px;padding:4px 9px}  /* ズーム±との重なり回避 */
+    .stat{font-size:10px;line-height:1.45;padding:5px 8px}
+  }
 </style>
 </head>
 <body>

@@ -1351,6 +1351,11 @@ document.addEventListener("DOMContentLoaded", function () {
     initRegionList();
     buildFuelCheckboxes();
 
+    // モバイル(≤768px)は一覧パネルを初期非表示にして地図を主役に(「☰ リスト」で開ける)
+    if (window.matchMedia && window.matchMedia("(max-width: 768px)").matches) {
+        toggleListPanel(false);
+    }
+
     // Layer visibility checkboxes (synced across tabs)
     document.querySelectorAll(".layer-cb").forEach(function (cb) {
         cb.addEventListener("change", function () {

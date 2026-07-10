@@ -828,3 +828,40 @@ input[type="range"]{ accent-color:var(--p-acc); }
     70%  { transform: scale(1.25); opacity: .55; }
     100% { transform: scale(.85); opacity: 1; }
 }
+
+/* ===== 2026-07-10 モバイル対応(レイアウト監査 B1) =====
+   768px以下では「地図が主役・サイドバーは下部パネル」に切り替える。
+   デスクトップ表示はこのブロック外に一切影響しない。 */
+@media (max-width: 768px) {
+    body { flex-direction: column; height: 100vh; height: 100dvh; }
+
+    /* タブ8個は等分せず横スクロール(「潮流解/析」の2行折返し崩れを解消) */
+    .tab-bar { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 0 0 auto; padding: 11px 13px !important; white-space: nowrap; }
+
+    /* 地図を上(主役)・サイドバーを下部パネルへ */
+    #map { order: 0; flex: 1 1 auto; min-height: 0;
+           height: auto !important; margin-top: var(--tabbar-h) !important; }
+    #sidebar {
+        order: 1; width: 100% !important; min-width: 0 !important;
+        flex: 0 0 44%; height: auto; min-height: 0;
+        padding-top: 0 !important;
+        border-right: none !important; border-top: 1px solid var(--p-bd, #262d38);
+    }
+    #sidebar h1 { font-size: .9rem !important; padding: 9px 14px !important; }
+
+    /* 右下の一覧パネル/トグルはサイドバーに重ねず地図領域内に収める */
+    #sublist { bottom: calc(44% + 12px); right: 8px;
+               width: min(250px, 62vw); max-height: 30vh; }
+    #list-toggle-btn { bottom: calc(44% + 12px); right: 8px; }
+
+    /* 全画面系タブはアドレスバー分を除いた実表示高さに合わせる */
+    #tab-compare.active, #tab-ybus.active,
+    #tab-editor.active, #tab-review.active {
+        height: calc(100dvh - var(--tabbar-h)) !important;
+    }
+
+    /* Ybusタブ: 図+統計の2カラムを1カラム化 */
+    #ybus-viewer { grid-template-columns: 1fr !important; }
+}

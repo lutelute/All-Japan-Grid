@@ -26,6 +26,12 @@
   .err { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
     z-index: 1100; background: #fff3f3; border: 1px solid #e99; border-radius: 8px;
     padding: 18px 22px; font-size: 14px; max-width: 480px; display: none; }
+  /* ── モバイル対応(2026-07-10 レイアウト監査B1): パネルを全幅化(ラジオ折返しも解消) ── */
+  @media (max-width:768px){
+    .panel { left: 10px; right: 10px; max-width: none; max-height: 46vh; overflow-y: auto; }
+    .legend { max-width: 46vw; }
+    .err { max-width: 88vw; }
+  }
 </style>
 </head>
 <body>

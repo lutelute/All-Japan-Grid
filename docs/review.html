@@ -39,6 +39,12 @@
   .leaflet-tooltip.lbl-isl{background:#f0883e;color:#1a1100}
   .leaflet-tooltip.lbl-tgt{background:#388bfd;color:#02122b}
   .leaflet-control-layers{background:#161b22;color:#e6edf3;border:1px solid #30363d;font-size:12px}
+  /* ── モバイル対応(2026-07-10 レイアウト監査B1): 地図が上・パネルは下部ドロワー ── */
+  @media (max-width:768px){
+    #map{right:0;bottom:46vh;bottom:46dvh}
+    #panel{top:auto;left:0;right:0;bottom:0;width:100%;height:46vh;height:46dvh;
+      border-top:1px solid #21262d}
+  }
 </style></head>
 <body>
 <div id="map"></div>

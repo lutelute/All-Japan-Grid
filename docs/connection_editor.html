@@ -20,6 +20,12 @@
   #out{white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:10px;background:#161b22;
        padding:8px;border-radius:6px;max-height:220px;overflow:auto;margin-top:8px}
   hr{border:0;border-top:1px solid #30363d;margin:10px 0}
+  /* ── モバイル対応(2026-07-10 レイアウト監査B1): 地図が上・パネルは下部ドロワー ── */
+  @media (max-width:768px){
+    #map{right:0;bottom:46vh;bottom:46dvh}
+    #panel{top:auto;left:0;right:0;bottom:0;width:100%;height:46vh;height:46dvh;
+      border-top:1px solid #30363d}
+  }
 </style></head>
 <body>
 <div id="map"></div>
