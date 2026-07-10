@@ -1,0 +1,34 @@
+UC求解中... (fy2023r2)
+  Optimal
+県別需要重み: 電力調査統計 ３－（２）都道府県別電力需要実績 2024年度（年度計） (47県, split=['新潟県', '群馬県', '神奈川県', '静岡県', '埼玉県', '東京都', '山梨県', '長野県'])
+
+== east (tohoku+tokyo) mode=ac hours=0..23 (24断面) ==
+  plants dedup: 重複コピー279件を1回採用に統合(領土地域優先)
+  reactive-comp: factor=0.6 shunt=3259 q_comp=10,896MVar
+  built: 6002バス trafo=630 (銘板6) 46s
+  t= 0 ac           conv=True demand=  42,933MW slack=10149.6 39.0s
+  t= 1 ac           conv=True demand=  40,675MW slack=9788.4 31.0s
+  t= 2 ac           conv=True demand=  39,177MW slack=8354.4 32.3s
+  t= 3 ac           conv=True demand=  37,676MW slack=8722.9 52.7s
+  t= 4 ac           conv=True demand=  39,195MW slack=9197.1 44.5s
+  t= 5 ac           conv=True demand=  42,611MW slack=9748.8 31.6s
+  t= 6 ac           conv=True demand=  47,347MW slack=12106.9 35.5s
+  t= 7 dc_fallback  conv=True demand=  52,454MW slack=2329.6 23.6s
+  t= 8 ac           conv=True demand=  55,993MW slack=15648.9 18.2s
+  t= 9 ac           conv=True demand=  57,291MW slack=16504.4 15.5s
+  t=10 ac           conv=True demand=  57,863MW slack=16719.6 21.9s
+  t=11 ac           conv=True demand=  58,483MW slack=17285.6 19.5s
+  t=12 ac           conv=True demand=  57,403MW slack=16795.4 25.7s
+  t=13 ac           conv=True demand=  57,289MW slack=17339.1 28.3s
+  t=14 ac           conv=True demand=  57,368MW slack=16666.7 24.2s
+  t=15 ac           conv=True demand=  57,647MW slack=16393.1 24.7s
+  t=16 ac           conv=True demand=  58,870MW slack=16568.9 25.8s
+  t=17 ac           conv=True demand=  59,353MW slack=16999.4 21.7s
+  t=18 ac           conv=True demand=  58,570MW slack=16094.9 18.6s
+  t=19 ac           conv=True demand=  56,232MW slack=14439.9 25.8s
+  t=20 dc_fallback  conv=True demand=  53,255MW slack=2270.0 26.1s
+  t=21 ac           conv=True demand=  50,295MW slack=18851.6 35.3s
+  t=22 ac           conv=True demand=  47,352MW slack=12016.4 30.4s
+  t=23 ac           conv=True demand=  45,153MW slack=10963.6 30.4s
+
+-> docs/reports/probes/east_outliers_2026-07-10/hourly_shunts/east_24h_hourly.json

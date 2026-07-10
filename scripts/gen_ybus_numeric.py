@@ -341,11 +341,14 @@ def verify(Y, bus_ids, net):
     }
 
 
-def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True):
+def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True,
+                  site_trafos=False, deenergize_unbuilt=False):
     t0 = time.time()
     geom = {}
     net, bus_of, bstats = build_island_net(island, nodes, edges, freq, geom,
-                                           dedup_nodes=dedup_nodes)
+                                           dedup_nodes=dedup_nodes,
+                                           site_trafos=site_trafos,
+                                           deenergize_unbuilt=deenergize_unbuilt)
     n_refs = add_ref_per_component(net)
     Y, bus_ids, internal = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
@@ -502,6 +505,17 @@ def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True):
             "note": "介入#21(v5既定ON): bbox二重抽出の除去。"
                     "--no-dedup-nodes=v4相当",
         },
+        "site_trafos": {
+            "enabled": bool(site_trafos),
+            "n_added": int(bstats.get("n_site_trafo", 0)),
+            "note": "介入#22(既定OFF): 同名変電所+0.6kmの異電圧階級を連結",
+        },
+        "deenergize_unbuilt": {
+            "enabled": bool(deenergize_unbuilt),
+            "n_lines": int(bstats.get("n_deenergized", 0)),
+            "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる"
+                    "(out-of-service枝はpandapowerがYbusから自動除外)",
+        },
         "n_components_refs": int(n_refs),
         "dc": {"included": True, "nnz": int(Bbus.nnz),
                "aligned": bool(checks["dc_bus_order_aligned"])},
@@ -531,6 +545,13 @@ def main():
                     default=True,
                     help="bbox二重抽出のdedup(介入#21)。既定ON(v5.0.0)。"
                          "--no-dedup-nodes=v4相当(回帰比較用)")
+    ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#22 サイト内変圧器リンク。既定OFF(正典比較性)")
+    ap.add_argument("--deenergize-unbuilt", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#23 未供用線の正直化。既定OFF。ONにすると"
+                         "out-of-service枝はYbusから自動除外される")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
@@ -541,7 +562,9 @@ def main():
     metas = {}
     for island in args.islands:
         meta = export_island(island, freq_of[island], nodes, edges, args.out,
-                             dedup_nodes=args.dedup_nodes)
+                             dedup_nodes=args.dedup_nodes,
+                             site_trafos=args.site_trafos,
+                             deenergize_unbuilt=args.deenergize_unbuilt)
         metas[island] = meta
         c = meta["checks"]
         bb = meta["backbone"]
