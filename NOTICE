@@ -33,7 +33,20 @@ or validated against, several third-party sources. Attributions and licenses:
    - Wikipedia content is (c) Wikipedia contributors, CC-BY-SA 4.0.
    - Every record cites its own source_url; see the file for per-value provenance.
 
-5. Validation-only sources — NOT redistributed in this repository
+5. Global Energy Monitor (GEM) — capacity provenance records citing gem.wiki
+   - (c) Global Energy Monitor
+   - Licensed under CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+   - Source: Global Energy Monitor wiki (https://www.gem.wiki/), the public
+     page layer of GEM's Global Integrated Power Tracker family (nuclear /
+     coal / oil & gas / solar / wind / hydro / geothermal / bioenergy).
+   - Usage: individual capacity_mw records in
+     data/generator_capacity_sources.jsonl cite per-plant gem.wiki page URLs
+     with verbatim quotes (source_type "other"). The GEM dataset itself is
+     NOT redistributed here; only per-value citations with quotes.
+   - Suggested citation: "Global Integrated Power Tracker, Global Energy
+     Monitor" (release current at the retrieved_at date of each record).
+
+6. Validation-only sources — NOT redistributed in this repository
    - TEPCO published per-line power flows, and Kansai Transmission & Distribution
      (関西電力送配電) line / voltage disclosures, are used PRIVATELY as ground
      truth for validation. These are publicly disclosed but All-Rights-Reserved;

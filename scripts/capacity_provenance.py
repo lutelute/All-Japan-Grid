@@ -29,7 +29,7 @@
 
 使い方:
   from capacity_provenance import validate_record, append_records, verify_file
-  append_records(PATH, [rec, ...])     # 検証を通った行だけ追記、rejectは戻り値に
+  append_records([rec, ...])           # 検証を通った行だけ正本に追記、rejectは戻り値に
   python scripts/capacity_provenance.py verify   # 正本ファイルを全行検証
 """
 import json
