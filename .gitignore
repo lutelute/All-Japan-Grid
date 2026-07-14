@@ -2,14 +2,14 @@ data/external/
 # License-restricted utility data — MUST NOT be committed (redistribution prohibited).
 # Owner-placed 関西TD 空容量マップ; see memory reference_utility_data_licensing.
 /k_line.csv
-# Pending connection-editor proposals for Okinawa (untracked by design).
-# Read by the builder at runtime (snapped_topology) but NOT yet adopted: adopting them
-# changes docs/data/built/okinawa.json (99->105 buses) and breaks regression pins, so they
-# require the proper integration workflow (regen okinawa.json + pin update + before/after).
-# Un-ignore to adopt. See docs/reports/formal_review_2026-06-26.md (H4).
-/data/okinawa_lines_supplement.geojson
-/data/okinawa_substations_supplement.geojson
-/data/okinawa_cuts.json
+# Pending connection-editor proposals awaiting adjudication (1-F), quarantined.
+# These used to live in data/ where the builder auto-picks them up by naming
+# convention (snapped_topology) — contaminating the canonical build (okinawa
+# 99->105 buses) and failing 3 regression pins on any full-suite run. Moved to
+# data/pending_1f/ (2026-07-14) so the canon stays supplement-free until the
+# proper adoption workflow runs (move back + regen okinawa.json + pin update +
+# before/after). See docs/reports/formal_review_2026-06-26.md (H4).
+/data/pending_1f/
 __pycache__/
 *.egg-info/
 build/
