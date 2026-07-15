@@ -261,30 +261,33 @@ function updateLegend() {
     legendControl = L.control({ position: "bottomright" });
     legendControl.onAdd = function () {
         var div = L.DomUtil.create("div", "legend");
+        var body = "";
 
         if (colorMode === "region") {
-            div.innerHTML = "<h4>Region</h4>";
+            body += "<h4>Region</h4><div class='legend-grid'>";
             for (var i = 0; i < REGION_ORDER.length; i++) {
                 var rid = REGION_ORDER[i];
-                div.innerHTML +=
+                body +=
                     '<div class="legend-item">' +
                     '<span class="legend-color" style="background:' + REGION_COLORS[rid] + '"></span>' +
                     REGION_NAMES_JA[rid] + '</div>';
             }
+            body += "</div>";
         } else {
-            div.innerHTML = "<h4>Voltage Class</h4>";
+            body += "<h4>Voltage Class</h4><div class='legend-grid'>";
             var voltages = [500, 275, 220, 187, 154, 132, 110, 77, 66];
             for (var j = 0; j < voltages.length; j++) {
                 var kv = voltages[j];
-                div.innerHTML +=
+                body +=
                     '<div class="legend-item">' +
                     '<span class="legend-color" style="background:' + VOLTAGE_COLORS[kv] + '"></span>' +
                     kv + ' kV</div>';
             }
+            body += "</div>";
         }
 
         // Plants legend (always shown)
-        div.innerHTML += "<h4 style='margin-top:8px'>Power Plants</h4>";
+        body += "<h4 style='margin-top:8px'>Power Plants</h4><div class='legend-grid'>";
         var fuelEntries = [
             ["nuclear","Nuclear"],["coal","Coal"],["gas","Gas"],["oil","Oil"],
             ["hydro","Hydro"],["wind","Wind"],["solar","Solar"],
@@ -292,12 +295,35 @@ function updateLegend() {
         ];
         for (var k = 0; k < fuelEntries.length; k++) {
             var fkey = fuelEntries[k][0], flabel = fuelEntries[k][1];
-            div.innerHTML +=
+            body +=
                 '<div class="legend-item">' +
                 '<span class="legend-color" style="background:' + FUEL_COLORS[fkey] +
                 ';height:6px;border-radius:50%"></span>' +
                 flabel + '</div>';
         }
+        body += "</div>";
+
+        // Collapsible header: on narrow screens the legend starts collapsed so it
+        // does not cover the (already short) map. Desktop hides the toggle via CSS
+        // and always shows the body, so desktop layout is unchanged.
+        var collapsed = window.innerWidth <= 768;
+        div.innerHTML =
+            '<button type="button" class="legend-toggle" aria-expanded="' + (!collapsed) + '">' +
+            '<span>凡例 / Legend</span>' +
+            '<span class="legend-chevron">' + (collapsed ? "▸" : "▾") + '</span>' +
+            '</button>' +
+            '<div class="legend-body">' + body + '</div>';
+        if (collapsed) div.classList.add("legend-collapsed");
+
+        var toggle = div.querySelector(".legend-toggle");
+        L.DomEvent.on(toggle, "click", function (ev) {
+            L.DomEvent.stop(ev);
+            var isCollapsed = div.classList.toggle("legend-collapsed");
+            toggle.setAttribute("aria-expanded", String(!isCollapsed));
+            div.querySelector(".legend-chevron").textContent = isCollapsed ? "▸" : "▾";
+        });
+        L.DomEvent.disableClickPropagation(div);
+        L.DomEvent.disableScrollPropagation(div);
         return div;
     };
     legendControl.addTo(map);

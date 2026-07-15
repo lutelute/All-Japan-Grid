@@ -250,7 +250,12 @@ body.fullscreen-tab #tab-review.active { top: 44px; height: calc(100vh - 44px); 
 .legend-item { display: flex; align-items: center; gap: 6px; }
 .legend-color {
     width: 18px; height: 3px; border-radius: 2px; display: inline-block;
+    flex: 0 0 18px;
 }
+/* Desktop: legend always expanded, no toggle chrome (mobile overrides below). */
+.legend-toggle { display: none; }
+.legend-body { display: block; }
+.legend-grid { display: block; }
 
 /* ── Download buttons ── */
 .download-section { margin-top: auto; }
@@ -840,21 +845,44 @@ input[type="range"]{ accent-color:var(--p-acc); }
     .tab-bar::-webkit-scrollbar { display: none; }
     .tab-btn { flex: 0 0 auto; padding: 11px 13px !important; white-space: nowrap; }
 
-    /* 地図を上(主役)・サイドバーを下部パネルへ */
+    /* 地図を上(主役・60%)・サイドバーを下部パネル(40%)へ */
     #map { order: 0; flex: 1 1 auto; min-height: 0;
            height: auto !important; margin-top: var(--tabbar-h) !important; }
     #sidebar {
         order: 1; width: 100% !important; min-width: 0 !important;
-        flex: 0 0 44%; height: auto; min-height: 0;
+        flex: 0 0 40%; height: auto; min-height: 0; overflow-y: auto;
         padding-top: 0 !important;
         border-right: none !important; border-top: 1px solid var(--p-bd, #262d38);
     }
     #sidebar h1 { font-size: .9rem !important; padding: 9px 14px !important; }
 
+    /* モバイルでは選択UI(電圧階級・表示レイヤ)を最優先で見せる。
+       リリース告知バナーとDLボタン群は下部パネルの尺を食うので隠す(機能はDLページ/デスクトップに存置)。 */
+    #whats-new { display: none !important; }
+    .download-section { display: none !important; }
+    /* 電圧・レイヤの各セクションは余白を詰めてスクロールなしで届く範囲に収める */
+    #tab-map .section { padding: 9px 14px !important; }
+    #tab-map .section h2 { font-size: .8rem !important; margin-bottom: 6px !important; }
+    .layer-toggles.compact { gap: 8px; }
+    .layer-toggle .toggle-label { font-size: .82rem; }
+
+    /* 凡例: 既定は畳んで「凡例▸」チップ化(地図を覆わない)・展開時は2カラムのコンパクト表示 */
+    .legend { max-width: 62vw; padding: 7px 11px !important; }
+    .legend-toggle {
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        width: 100%; background: none; border: 0; padding: 0; cursor: pointer;
+        color: #fff; font-size: .74rem; font-weight: 650; letter-spacing: .2px;
+    }
+    .legend-chevron { color: var(--p-acc, #388bfd); font-size: .72rem; }
+    .legend-body { margin-top: 7px; max-height: 40vh; overflow-y: auto; }
+    .legend-collapsed .legend-body { display: none; }
+    .legend h4 { font-size: .72rem; }
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+
     /* 右下の一覧パネル/トグルはサイドバーに重ねず地図領域内に収める */
-    #sublist { bottom: calc(44% + 12px); right: 8px;
+    #sublist { bottom: calc(40% + 12px); right: 8px;
                width: min(250px, 62vw); max-height: 30vh; }
-    #list-toggle-btn { bottom: calc(44% + 12px); right: 8px; }
+    #list-toggle-btn { bottom: calc(40% + 12px); right: 8px; }
 
     /* 全画面系タブはアドレスバー分を除いた実表示高さに合わせる */
     #tab-compare.active, #tab-ybus.active,
