@@ -59,6 +59,14 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
   <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/figs/fig_satellite_validation.png" alt="Satellite validation (Kashima / Anan FC / Reinan)" width="100%">
 </p>
 
+**24-hour power flow.** The UC dispatch solved on the reconstructed grid, animated hour by hour — line width/shade = |P|, generation bubbles, FC / Kita-Hon interconnector transfers, with the west island shown in DC (honest labelling) and the intervention-registry caveat on every frame. Reproduce with `scripts/animate_powerflow_gif.py`.
+
+24時間の潮流。再構築した系統上で解いた UC ディスパッチを時間ごとにアニメーション表示（線幅・濃淡 = |P|、発電バブル、FC・北本連系の融通、西側は DC 表示で正直にラベル、各フレームに介入台帳の注記）。`scripts/animate_powerflow_gif.py` で再現できます。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/lutelute/All-Japan-Grid/main/docs/assets/gif/national_pf_24h.gif" alt="24-hour national power-flow animation" width="72%">
+</p>
+
 > Detailed methodology figures (validation ρ progression, recall tiers, regional networks, Ybus, unit commitment, transient stability) live in the manuscript under [`papers/`](papers/).
 > 詳細な方法論の図（検証ρの推移・recall・地域別ネットワーク・Ybus・UC・過渡安定）は [`papers/`](papers/) の論文に収録。
 
