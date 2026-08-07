@@ -10,9 +10,14 @@
 ## 使い方
 
 ```bash
-python3 scripts/keitouzu/fetch_keitouzu.py       # ピン留めコミットから data/external/keitouzu/ へ取得（sha256検証）
-python3 scripts/keitouzu/crosscheck_keitouzu.py  # docs/reports/keitouzu_crosscheck_<date>.{md,json} を生成
+python3 scripts/keitouzu/fetch_keitouzu.py             # ピン留めコミットから data/external/keitouzu/ へ取得（sha256検証）
+python3 scripts/keitouzu/crosscheck_keitouzu.py        # docs/reports/keitouzu_crosscheck_<date>.{md,json} を生成
+python3 scripts/keitouzu/export_divergent_geojson.py   # 食い違い候補を docs/data/keitouzu_divergent.geojson へ（地図オーバーレイ用）
 ```
+
+地図（`docs/index.html`）のサイドバー「系統図突合」トグルで、食い違い候補が
+**マゼンタ破線**のオーバーレイとして表示される（両端直線・実経路ではない）。
+本線レイヤとは完全に分離しており、built 正典・lines_*.geojson には一切影響しない。
 
 `data/external/` は untracked（家訓: 外部データは源泉に留める）。tracked なのは
 本スクリプトと生成レポートのみ。

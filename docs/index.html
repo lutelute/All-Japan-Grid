@@ -555,6 +555,17 @@
                 <input type="range" id="score-opacity" min="0" max="100" value="50" oninput="setScoreOpacity(this.value)" style="flex:1;margin-left:6px">
             </div>
         </details>
+
+        <!-- ⑦ オーバーレイ: 系統図突合(open-keitouzu 食い違い候補・未採用) -->
+        <details class="ov-details">
+            <summary>系統図突合 <span class="ov-hint">(未採用145本)</span></summary>
+            <div class="layer-toggles compact" style="margin-top:8px">
+                <label class="layer-toggle"><input type="checkbox" id="chk-keitouzu" onchange="toggleKeitouzu(this.checked)"/><span class="toggle-label"><span style="color:#e91e63">━ ━</span> 系統図のみの接続</span></label>
+            </div>
+            <p style="font-size:10.5px;color:#888;margin:6px 0 0">
+                公式系統図(<a href="https://github.com/ibarapascal/open-keitouzu" target="_blank" rel="noopener">open-keitouzu</a>, CC BY 4.0)は接続を主張するが本モデルで未再現の裁定待ち候補。直線描画=実経路ではない。
+            </p>
+        </details>
     </div>
 
     <!-- ━━ Tab 2: エリア (region coloring) ━━ -->

@@ -17,6 +17,11 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 実装: `scripts/keitouzu/`（SHAピン留めfetch+突合レポート生成）・
 `docs/reports/keitouzu_crosscheck_2026-08-07.{md,json}`・README Data Source 節に謝辞。
 候補の自動採用なし（採用は人間判断+MODEL_INTERVENTIONS.md 記帳が必須）。
+続報（同日）: オーナー指示「色変えて実装」で食い違い145本を地図の**マゼンタ破線
+オーバーレイ**として実装（`export_divergent_geojson.py`→`docs/data/keitouzu_divergent.geojson`、
+index.html「系統図突合」トグル・既定OFF・本線レイヤと完全分離・ポップアップに判読根拠+
+未採用警告）。副産物: 直線描画が2度超の長大線12本を露出=crosswalk誤マッチ疑い
+（潮見×2・平田—郡山7.8deg・中越—小国町9.1deg・沖縄番号站×5など）→裁定時の優先確認対象。
 
 ## 2026-07-16 — **Claude Fable 5** — auto-claudeブランチ5本の採点: マージ0(3本取り込み済み・2本不採用)
 

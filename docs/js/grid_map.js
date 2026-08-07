@@ -143,6 +143,9 @@ var regionsData = [];
 var scoreTileLayer = null;
 var scoreOpacity = 0.5;
 var scoreVisible = false;
+var keitouzuLayer = null;
+var keitouzuVisible = false;
+var keitouzuData = null;
 var SCORE_TILE_BASE = "https://lutelute.github.io/japan-re-potential/tiles";
 
 // 地形オーバーレイ
@@ -1332,6 +1335,53 @@ function toggleScore(on) {
 function setScoreOpacity(val) {
     scoreOpacity = val / 100;
     if (scoreTileLayer) scoreTileLayer.setOpacity(scoreOpacity);
+}
+
+// ── 系統図突合オーバーレイ (open-keitouzu 食い違い候補・未採用) ─────────
+// 公式系統図のみが主張する接続。built正典には未採用(人間判断待ち)なので
+// 本線とは別レイヤ・破線マゼンタで描く。幾何は両端直線で実経路ではない。
+var KEITOUZU_COLOR = "#e91e63";
+function toggleKeitouzu(on) {
+    keitouzuVisible = (on !== undefined) ? on : !keitouzuVisible;
+    var chk = document.getElementById("chk-keitouzu");
+    if (chk) chk.checked = keitouzuVisible;
+    if (!keitouzuVisible) {
+        if (keitouzuLayer) map.removeLayer(keitouzuLayer);
+        return;
+    }
+    if (keitouzuLayer) { keitouzuLayer.addTo(map); return; }
+    fetch("./data/keitouzu_divergent.geojson")
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            keitouzuData = data;
+            keitouzuLayer = L.geoJSON(data, {
+                style: function () {
+                    return {
+                        color: KEITOUZU_COLOR,
+                        weight: 2.5,
+                        opacity: 0.85,
+                        dashArray: "7 6",
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    var p = feature.properties;
+                    var fromN = p.from_alias || p.from_name;
+                    var toN = p.to_alias || p.to_name;
+                    layer.bindPopup(
+                        "<b style='color:" + KEITOUZU_COLOR + "'>系統図のみの接続(未採用)</b><br>" +
+                        "<b>" + (p.line || "無名") + "</b> " + p.voltage_kv + "kV<br>" +
+                        fromN + " — " + toN + "<br>" +
+                        "<span style='font-size:11px;color:#666'>根拠: " + (p.evidence || "") + "</span><br>" +
+                        "<span style='font-size:11px;color:#666'>出典: " + p.source_ref + " (open-keitouzu)</span><br>" +
+                        "<span style='font-size:11px'>⚠ built正典で未再現の裁定待ち候補。直線描画=実経路ではない</span>"
+                    );
+                    layer.bindTooltip(
+                        "系統図のみ(未採用) " + (p.line || fromN + "—" + toN) + " | " + p.voltage_kv + "kV",
+                        { sticky: true });
+                },
+            }).addTo(map);
+        })
+        .catch(function (e) { console.error("keitouzu overlay load error:", e); });
 }
 
 function toggleListPanel(show) {
