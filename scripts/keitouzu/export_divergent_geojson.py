@@ -50,6 +50,8 @@ def main() -> None:
         if fc is None or tc is None:
             skipped += 1
             continue
+        # 直線スパン(度)。2度超は跨region名前一致などcrosswalk誤マッチの疑いが濃い
+        span = round(((fc[0] - tc[0]) ** 2 + (fc[1] - tc[1]) ** 2) ** 0.5, 2)
         features.append({
             "type": "Feature",
             "geometry": {
@@ -70,6 +72,9 @@ def main() -> None:
                 "keitouzu_uuid": c["keitouzu_uuid"],
                 "_status": "unadopted_candidate",  # 未採用・裁定待ち
                 "_geometry_note": "straight_line_between_substations_not_actual_route",
+                "_built_hops": c.get("built_hops"),  # builtでの実ホップ数。null=断絶(別成分)
+                "_span_deg": span,
+                "_xwalk_suspect": span > 2.0,  # crosswalk誤マッチ疑い
             },
         })
 

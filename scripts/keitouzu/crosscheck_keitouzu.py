@@ -83,21 +83,22 @@ def build_sub_graph(built: dict) -> tuple[set[str], dict[str, set[str]], dict[st
     return node_ids, dict(base_ids), dict(sub_adj)
 
 
-def min_hops(sub_adj: dict[str, set[str]], srcs: set[str], dsts: set[str], maxd: int) -> int | None:
+def min_hops(sub_adj: dict[str, set[str]], srcs: set[str], dsts: set[str], maxd: int | None) -> int | None:
+    """srcs→dsts の変電所レベル最短ホップ。maxd=None で上限なし。"""
     best = None
     for s in srcs:
         dist = {s: 0}
         q = deque([s])
         while q:
             cur = q.popleft()
-            if dist[cur] >= maxd:
+            if maxd is not None and dist[cur] >= maxd:
                 continue
             for nb in sub_adj.get(cur, ()):
                 if nb not in dist:
                     dist[nb] = dist[cur] + 1
                     q.append(nb)
         for d in dsts:
-            if d in dist and (best is None or dist[d] < best):
+            if d in dist and 0 < dist[d] and (best is None or dist[d] < best):
                 best = dist[d]
     return best
 
@@ -152,6 +153,8 @@ def main() -> None:
             key = "divergent"
             fname = subs.get(fu, {}).get("name_official", "?")
             tname = subs.get(tu, {}).get("name_official", "?")
+            # 裁定優先度のため正確なホップ数を測る(上限なし)。None=別成分(完全断絶)
+            exact_hops = min_hops(sub_adj, fb, tb, None)
             candidates.append({
                 "keitouzu_uuid": r["uuid"],
                 "line": r.get("name_official", ""),
@@ -162,12 +165,16 @@ def main() -> None:
                 "confidence": r["confidence"],
                 "source_ref": r["source_ref"],
                 "evidence": r.get("notes", ""),
+                "built_hops": exact_hops,  # null=断絶
             })
         counts[key] += 1
         by_region[reg][key] += 1
 
     mapped = counts["hop1"] + counts["hop2_4"] + counts["divergent"]
     compatible = counts["hop1"] + counts["hop2_4"]
+    n_cut = sum(1 for c in candidates if c["built_hops"] is None)
+    n_near = sum(1 for c in candidates if c["built_hops"] is not None and c["built_hops"] <= 6)
+    n_far = counts["divergent"] - n_cut - n_near
 
     out_json = REPORTS / f"keitouzu_crosscheck_{date}.json"
     out_md = REPORTS / f"keitouzu_crosscheck_{date}.md"
@@ -201,6 +208,7 @@ def main() -> None:
         f"  - 直接隣接一致 (hop=1): **{counts['hop1']}** ({counts['hop1']/mapped:.1%})",
         f"  - 粒度差整合 (hop=2..{GRANULARITY_MAX_HOPS}): **{counts['hop2_4']}** ({counts['hop2_4']/mapped:.1%}) — builtが中間変電所で区間分割",
         f"  - **食い違い候補: {counts['divergent']}** ({counts['divergent']/mapped:.1%}) — 公式図は接続を主張、builtで再現されず",
+        f"    - 内訳: **完全断絶(別成分) {n_cut}** ／ 遠距離接続 hop7+ {n_far} ／ 近距離 hop5-6 {n_near} — 断絶が裁定の最優先",
         f"- 両端未解決（crosswalk 未対応の站を含む辺）: {counts['unmappable']} 本 — 将来の充填候補",
         "",
         "## region 別",

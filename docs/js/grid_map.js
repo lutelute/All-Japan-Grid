@@ -1367,10 +1367,14 @@ function toggleKeitouzu(on) {
                     var p = feature.properties;
                     var fromN = p.from_alias || p.from_name;
                     var toN = p.to_alias || p.to_name;
+                    var sev = (p._built_hops === null || p._built_hops === undefined)
+                        ? "断絶(builtでは別成分)" : "builtでは " + p._built_hops + " ホップ先";
                     layer.bindPopup(
                         "<b style='color:" + KEITOUZU_COLOR + "'>系統図のみの接続(未採用)</b><br>" +
                         "<b>" + (p.line || "無名") + "</b> " + p.voltage_kv + "kV<br>" +
                         fromN + " — " + toN + "<br>" +
+                        "<span style='font-size:11px'>" + sev + "</span><br>" +
+                        (p._xwalk_suspect ? "<span style='font-size:11px;color:#ff9800'>⚠ 直線" + p._span_deg + "度 — 名前照合の誤マッチ疑い(crosswalk側)</span><br>" : "") +
                         "<span style='font-size:11px;color:#666'>根拠: " + (p.evidence || "") + "</span><br>" +
                         "<span style='font-size:11px;color:#666'>出典: " + p.source_ref + " (open-keitouzu)</span><br>" +
                         "<span style='font-size:11px'>⚠ built正典で未再現の裁定待ち候補。直線描画=実経路ではない</span>"
