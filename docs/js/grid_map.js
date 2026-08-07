@@ -1354,6 +1354,8 @@ function toggleKeitouzu(on) {
         .then(function (r) { return r.json(); })
         .then(function (data) {
             keitouzuData = data;
+            var hint = document.getElementById("keitouzu-ov-hint");
+            if (hint && data.features) hint.textContent = "(未採用" + data.features.length + "本)";
             keitouzuLayer = L.geoJSON(data, {
                 style: function () {
                     return {

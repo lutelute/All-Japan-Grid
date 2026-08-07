@@ -10,10 +10,16 @@
 ## 使い方
 
 ```bash
-python3 scripts/keitouzu/fetch_keitouzu.py             # ピン留めコミットから data/external/keitouzu/ へ取得（sha256検証）
-python3 scripts/keitouzu/crosscheck_keitouzu.py        # docs/reports/keitouzu_crosscheck_<date>.{md,json} を生成
-python3 scripts/keitouzu/export_divergent_geojson.py   # 食い違い候補を docs/data/keitouzu_divergent.geojson へ（地図オーバーレイ用）
+python3 scripts/keitouzu/fetch_keitouzu.py             # ① ピン留めコミットから data/external/keitouzu/ へ取得（sha256検証）
+python3 scripts/keitouzu/adjudicate_xwalk.py           # ② crosswalk の地理整合裁定（同名異地の誤マッチ検出→excluded_mappings）
+python3 scripts/keitouzu/crosscheck_keitouzu.py        # ③ 突合（②の除外を自動適用）→ keitouzu_crosscheck_<date>.{md,json}
+python3 scripts/keitouzu/export_divergent_geojson.py   # ④ 食い違い候補を docs/data/keitouzu_divergent.geojson へ（地図オーバーレイ用）
+python3 scripts/keitouzu/gen_adjudication_queue.py     # ⑤ 原図リンク付き人間裁定キュー → keitouzu_adjudication_queue_<date>.{md,json}
 ```
+
+②の裁定則: AGJノード座標 vs 発行regionのbbox（+バッファ）とエッジ文脈（隣接局対応座標の
+中央値からの乖離）。接頭辞regionの不一致だけでは誤マッチと断定しない（OSM抽出bboxの
+越境スピルオーバー・他社エリア内自社設備があるため）。
 
 地図（`docs/index.html`）のサイドバー「系統図突合」トグルで、食い違い候補が
 **マゼンタ破線**のオーバーレイとして表示される（両端直線・実経路ではない）。

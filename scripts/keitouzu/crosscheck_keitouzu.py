@@ -121,9 +121,20 @@ def main() -> None:
     for a in load_csv("aliases"):
         aliases[a["uuid"]].append(a["alias"])
 
+    # 裁定済みの誤マッチ対応（adjudicate_xwalk.py の excluded_mappings）があれば除外する
+    excluded: set[tuple[str, str]] = set()
+    adj_reports = sorted(REPORTS.glob("keitouzu_xwalk_adjudication_*.json"))
+    if adj_reports:
+        adj = json.load(open(adj_reports[-1]))
+        excluded = {tuple(p) for p in adj.get("excluded_mappings", [])}
+
     ajg_map: dict[str, list[str]] = defaultdict(list)
+    n_excluded_maps = 0
     for r in xw:
         if r["target_system"] == "ajg":
+            if (r["uuid"], r["target_id"]) in excluded:
+                n_excluded_maps += 1
+                continue
             ajg_map[r["uuid"]].append(r["target_id"])
 
     # 1) ID 解決
@@ -132,7 +143,8 @@ def main() -> None:
 
     # 2) 辺の分類
     active = [r for r in routes if r["status"] == "active"]
-    counts = {"hop1": 0, "hop2_4": 0, "divergent": 0, "unmappable": 0}
+    counts = {"hop1": 0, "hop2_4": 0, "divergent": 0, "unmappable": 0, "xwalk_excluded": 0}
+    excluded_uuids = {u for u, _ in excluded}
     by_region: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     candidates = []
     for r in active:
@@ -141,8 +153,11 @@ def main() -> None:
         tb = {t.split("@")[0] for t in ajg_map.get(tu, ()) if t.split("@")[0] in base_ids}
         reg = r["region"]
         if not fb or not tb:
-            counts["unmappable"] += 1
-            by_region[reg]["unmappable"] += 1
+            # 誤マッチ除外の結果マップ不能になった辺は別勘定（正直な帳簿）
+            key = "xwalk_excluded" if (not fb and fu in excluded_uuids) or (not tb and tu in excluded_uuids) \
+                else "unmappable"
+            counts[key] += 1
+            by_region[reg][key] += 1
             continue
         h = min_hops(sub_adj, fb, tb, GRANULARITY_MAX_HOPS)
         if h == 1:
@@ -210,15 +225,18 @@ def main() -> None:
         f"  - **食い違い候補: {counts['divergent']}** ({counts['divergent']/mapped:.1%}) — 公式図は接続を主張、builtで再現されず",
         f"    - 内訳: **完全断絶(別成分) {n_cut}** ／ 遠距離接続 hop7+ {n_far} ／ 近距離 hop5-6 {n_near} — 断絶が裁定の最優先",
         f"- 両端未解決（crosswalk 未対応の站を含む辺）: {counts['unmappable']} 本 — 将来の充填候補",
+        f"- crosswalk 誤マッチ裁定による除外で検査対象外となった辺: {counts['xwalk_excluded']} 本"
+        f"（除外対応 {n_excluded_maps} 件、`keitouzu_xwalk_adjudication_*.md` 参照）",
         "",
         "## region 別",
         "",
-        "| region | hop=1 | hop=2..4 | 食い違い | 未解決 |",
-        "|---|---:|---:|---:|---:|",
+        "| region | hop=1 | hop=2..4 | 食い違い | 未解決 | 誤マッチ除外 |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for reg, c in sorted(by_region.items(), key=lambda x: -sum(x[1].values())):
         lines.append(
-            f"| {reg} | {c.get('hop1',0)} | {c.get('hop2_4',0)} | {c.get('divergent',0)} | {c.get('unmappable',0)} |"
+            f"| {reg} | {c.get('hop1',0)} | {c.get('hop2_4',0)} | {c.get('divergent',0)} | "
+            f"{c.get('unmappable',0)} | {c.get('xwalk_excluded',0)} |"
         )
     lines += [
         "",

@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-08 — **Claude Fable 5** — keitouzu crosswalk裁定+裁定キュー資産化（「任せる・資産に」指示）
+
+crosswalk誤マッチの機械裁定を実装(`adjudicate_xwalk.py`): 地理bbox整合(okinawa跨ぎ=confirmed 3・
+1°超逸脱=likely 9)+エッジ文脈(隣接局対応座標の中央値乖離>1°、bbox内同名異地の高田も捕捉)で
+**除外16対応を確定**。crosscheckに自動適用し正直な帳簿で再集計: **整合率81.6%→83.5%**・
+食い違い145→127(断絶69/hop7+ 31/hop5-6 27)・誤マッチ除外26辺は別勘定。
+原図(archive_url)直リンク付き**人間裁定キュー127本**を生成(`gen_adjudication_queue.py`、
+verdict記入欄つきJSON)。**A群筆頭に飛騨信濃直流幹線(実在900MW HVDC)=built欠落の大物**。
+教訓: 接頭辞region不一致だけでは誤マッチと断定不可(OSM bboxスピルオーバー・他社エリア内
+自社設備。新福島/南いわき/成出は正当)。座標+エッジ文脈で裁定する。3コミットpush済→本件もpush。
+
 ## 2026-08-07 — **Claude Fable 5** — open-keitouzu統合: 公式系統図由来トポロジとの突合パイプライン+attribution
 
 第三者公開の [open-keitouzu](https://github.com/ibarapascal/open-keitouzu)（十社系統図PDFの
