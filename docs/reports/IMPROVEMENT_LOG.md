@@ -7,6 +7,17 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-07 — **Claude Fable 5** — open-keitouzu統合: 公式系統図由来トポロジとの突合パイプライン+attribution
+
+第三者公開の [open-keitouzu](https://github.com/ibarapascal/open-keitouzu)（十社系統図PDFの
+論理トポロジ、CC BY 4.0）が AGJ v1.6.0 への crosswalk 657件を同梱して公開されたのを受け、
+統合価値をデータで検証→採用。**657/657 が built ノードIDに完全解決**。keitouzu active辺
+1,487本中、両端解決790本の整合 81.6%（hop1=360・粒度差hop2-4=285）、**食い違い候補145本**
+（東京都心の地中送電線に集中=OSMの構造的盲点）、端点未解決697本=将来の充填候補。
+実装: `scripts/keitouzu/`（SHAピン留めfetch+突合レポート生成）・
+`docs/reports/keitouzu_crosscheck_2026-08-07.{md,json}`・README Data Source 節に謝辞。
+候補の自動採用なし（採用は人間判断+MODEL_INTERVENTIONS.md 記帳が必須）。
+
 ## 2026-07-16 — **Claude Fable 5** — auto-claudeブランチ5本の採点: マージ0(3本取り込み済み・2本不採用)
 
 オーナー指示「採点してマージ」。詳細=`auto_claude_branches_review_2026-07-16.md`。

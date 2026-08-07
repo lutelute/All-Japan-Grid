@@ -382,6 +382,22 @@ validated-vs-synthetic snapshot, or run `ajgrid coverage` for the live figure. T
 **not redistributed** here — fetch it from the source above; only the derived,
 attributed overlay lives in the DB.
 
+**Independent topology cross-check / 独立トポロジ突合:** connectivity is cross-checked
+against **[open-keitouzu](https://github.com/ibarapascal/open-keitouzu)** — a logical
+topology of the trunk + 154 kV grid extracted from the ten utilities' official system
+diagram PDFs (CC BY 4.0). Its crosswalk maps 657 stations directly onto this dataset's
+node IDs; 81.6 % of mappable diagram edges are reproduced by our built model, and the
+divergent remainder is kept as a human-review screening list — see
+`scripts/keitouzu/` and `docs/reports/keitouzu_crosscheck_*.md`. Many thanks to
+the open-keitouzu author for publishing this dataset **with an AGJ crosswalk included**.
+
+**独立トポロジ突合:** 接続関係は **[open-keitouzu](https://github.com/ibarapascal/open-keitouzu)**
+（十社の公式系統図PDFから抽出された基幹＋154kV の論理トポロジ、CC BY 4.0）と突合しています。
+先方の crosswalk は本データセットのノードIDへの対応657件を同梱しており、突合可能な系統図辺の
+81.6% が本モデルで再現、残る食い違いは人間判断用スクリーニング一覧として保持しています
+（`scripts/keitouzu/`・`docs/reports/keitouzu_crosscheck_*.md`）。**AGJ への crosswalk を
+同梱した形で公開してくださった** open-keitouzu 作者に感謝します。
+
 ### Data Enrichment Pipeline / データエンリッチメント パイプライン
 
 Raw OSM data contains many features with missing attributes (name, operator, fuel type). A 6-stage enrichment pipeline fills these gaps programmatically.
@@ -610,6 +626,7 @@ To build a usable electrical model, this geographic topology needs to be combine
 | **PyPSA-Earth / atlite** | Renewable resource data, synthetic grid enrichment / 再エネ資源データ、合成系統補完 | [pypsa-earth.readthedocs.io](https://pypsa-earth.readthedocs.io/) |
 | **MATPOWER test cases** | Validated IEEE/PGLIB models for benchmarking / 検証済みベンチマークモデル | [matpower.org](https://matpower.org/) |
 | **Synthetic line parameters** / 合成線路パラメータ | R/X/B estimation by voltage class and conductor type / 電圧階級・導体種別による推定値 | Literature values (e.g. Glover, Sarma & Overbye) |
+| **open-keitouzu** (十社系統図の論理トポロジ) | Official-diagram connectivity cross-check — **integrated**, see Data Source / 公式系統図の接続関係との突合 — **統合済み**（Data Source 節参照） | [github.com/ibarapascal/open-keitouzu](https://github.com/ibarapascal/open-keitouzu) |
 
 Contributions and collaborations welcome. If you have access to additional data sources or are working on Japanese grid modeling, please open an issue.
 
