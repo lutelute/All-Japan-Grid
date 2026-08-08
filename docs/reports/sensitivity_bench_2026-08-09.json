@@ -1,0 +1,208 @@
+{
+ "date": "2026-08-09",
+ "profile": [
+  0.78,
+  0.74,
+  0.72,
+  0.71,
+  0.72,
+  0.76,
+  0.83,
+  0.9,
+  0.95,
+  0.98,
+  1.0,
+  0.99,
+  0.94,
+  0.97,
+  1.0,
+  0.99,
+  0.96,
+  0.94,
+  0.95,
+  0.97,
+  0.95,
+  0.9,
+  0.85,
+  0.81
+ ],
+ "note": "hokkaido/okinawaは24断面、east/westは本番ACのはしごが1断面あたり数十秒のため4断面で評価",
+ "islands": [
+  {
+   "island": "hokkaido",
+   "n_bus_full": 802,
+   "n_bus": 753,
+   "main_bus_share": 0.9389,
+   "sec_build_ptdf": 0.01,
+   "n_branch": 868,
+   "ptdf_mb": 5.2,
+   "validation": {
+    "max_abs_mw": 3.880131771438755e-10,
+    "mean_abs_mw": 1.4831353422784788e-11
+   },
+   "ac_served_frac": 1.0,
+   "n_branch_compared": 868,
+   "timing": {
+    "n_snapshots": 24,
+    "n_ac_converged": 24,
+    "ac_per_snapshot_ms": 89.2,
+    "dc_per_snapshot_ms": 8.3,
+    "ptdf_per_snapshot_ms": 0.0622,
+    "speedup_vs_ac": 1433.5,
+    "speedup_vs_dc": 134.1,
+    "breakeven_snapshots": 0.1
+   },
+   "accuracy": {
+    "mae_mw": 1.118,
+    "p50_mw": 0.212,
+    "p95_mw": 4.61,
+    "max_mw": 44.1,
+    "p95_rel": 0.2156,
+    "mean_ac_flow_mw": 28.5,
+    "p95_rel_top10pct": 0.1127
+   },
+   "sec_build_lodf": 0.04,
+   "n_bridge_branches": 303,
+   "bridge_share": 0.3491,
+   "n1": {
+    "n_sampled": 40,
+    "lodf_total_ms": 0.337,
+    "resolve_total_s": 0.3,
+    "speedup": 881.2,
+    "max_abs_mw": 0.0
+   }
+  },
+  {
+   "island": "east",
+   "n_bus_full": 6002,
+   "n_bus": 5393,
+   "main_bus_share": 0.8985,
+   "sec_build_ptdf": 2.05,
+   "n_branch": 6437,
+   "ptdf_mb": 277.7,
+   "validation": {
+    "max_abs_mw": 5.60683588446409e-09,
+    "mean_abs_mw": 3.89406862492168e-11
+   },
+   "ac_served_frac": 0.9688,
+   "n_branch_compared": 6437,
+   "timing": {
+    "n_snapshots": 4,
+    "n_ac_converged": 4,
+    "ac_per_snapshot_ms": 63828.6,
+    "dc_per_snapshot_ms": 21.2,
+    "ptdf_per_snapshot_ms": 4.1211,
+    "speedup_vs_ac": 15488.1,
+    "speedup_vs_dc": 5.2,
+    "breakeven_snapshots": 0.0
+   },
+   "accuracy": {
+    "mae_mw": 13.184,
+    "p50_mw": 0.631,
+    "p95_mw": 48.12,
+    "max_mw": 2738.1,
+    "p95_rel": 0.5896,
+    "mean_ac_flow_mw": 110.8,
+    "p95_rel_top10pct": 0.3926
+   },
+   "sec_build_lodf": 0.51,
+   "n_bridge_branches": 2287,
+   "bridge_share": 0.3553,
+   "n1": {
+    "n_sampled": 30,
+    "lodf_total_ms": 16.383,
+    "resolve_total_s": 0.46,
+    "speedup": 28.0,
+    "max_abs_mw": 0.0
+   }
+  },
+  {
+   "island": "west",
+   "n_bus_full": 8213,
+   "n_bus": 7087,
+   "main_bus_share": 0.8629,
+   "sec_build_ptdf": 5.39,
+   "n_branch": 8802,
+   "ptdf_mb": 499.0,
+   "validation": {
+    "max_abs_mw": 9.02650754142087e-09,
+    "mean_abs_mw": 8.322504685790606e-11
+   },
+   "ac_served_frac": 0.9943,
+   "n_branch_compared": 8802,
+   "timing": {
+    "n_snapshots": 4,
+    "n_ac_converged": 4,
+    "ac_per_snapshot_ms": 42174.3,
+    "dc_per_snapshot_ms": 26.7,
+    "ptdf_per_snapshot_ms": 4.1264,
+    "speedup_vs_ac": 10220.7,
+    "speedup_vs_dc": 6.5,
+    "breakeven_snapshots": 0.1
+   },
+   "accuracy": {
+    "mae_mw": 6.981,
+    "p50_mw": 0.389,
+    "p95_mw": 30.91,
+    "max_mw": 1213.8,
+    "p95_rel": 0.4739,
+    "mean_ac_flow_mw": 74.6,
+    "p95_rel_top10pct": 0.2759
+   },
+   "sec_build_lodf": 0.83,
+   "n_bridge_branches": 2905,
+   "bridge_share": 0.33,
+   "n1": {
+    "n_sampled": 30,
+    "lodf_total_ms": 32.157,
+    "resolve_total_s": 0.56,
+    "speedup": 17.5,
+    "max_abs_mw": 0.0
+   }
+  },
+  {
+   "island": "okinawa",
+   "n_bus_full": 98,
+   "n_bus": 93,
+   "main_bus_share": 0.949,
+   "sec_build_ptdf": 0.0,
+   "n_branch": 114,
+   "ptdf_mb": 0.1,
+   "validation": {
+    "max_abs_mw": 1.5376144801848568e-11,
+    "mean_abs_mw": 9.820409668063524e-13
+   },
+   "ac_served_frac": 1.0,
+   "n_branch_compared": 114,
+   "timing": {
+    "n_snapshots": 24,
+    "n_ac_converged": 24,
+    "ac_per_snapshot_ms": 36.9,
+    "dc_per_snapshot_ms": 6.5,
+    "ptdf_per_snapshot_ms": 0.0081,
+    "speedup_vs_ac": 4545.1,
+    "speedup_vs_dc": 804.5,
+    "breakeven_snapshots": 0.0
+   },
+   "accuracy": {
+    "mae_mw": 0.935,
+    "p50_mw": 0.403,
+    "p95_mw": 4.09,
+    "max_mw": 12.3,
+    "p95_rel": 0.048,
+    "mean_ac_flow_mw": 55.0,
+    "p95_rel_top10pct": 0.0379
+   },
+   "sec_build_lodf": 0.0,
+   "n_bridge_branches": 34,
+   "bridge_share": 0.2982,
+   "n1": {
+    "n_sampled": 40,
+    "lodf_total_ms": 0.105,
+    "resolve_total_s": 0.22,
+    "speedup": 2147.5,
+    "max_abs_mw": 0.0
+   }
+  }
+ ]
+}

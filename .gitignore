@@ -146,3 +146,6 @@ dataset/02_uc_from_excel/uc_result.xlsx
 dataset/02_uc_from_excel/uc_result.png
 dataset/**/out/
 dataset/**/*_res_bus.csv
+
+# 感度行列(PTDF/LODF)の生成物。密行列で数百MBになるためスクリプトから再生成する
+dist/sensitivity/
