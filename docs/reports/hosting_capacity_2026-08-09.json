@@ -1,0 +1,106 @@
+{
+ "date": "2026-08-09",
+ "sens_floor": 0.001,
+ "islands": [
+  {
+   "island": "hokkaido",
+   "n_bus": 753,
+   "n_branch": 868,
+   "sec_build_ptdf": 0.01,
+   "sec_hosting_capacity_all_buses": 0.0054,
+   "n_branch_over_capacity": 2,
+   "n_branch_capacity_known": 868,
+   "min_kv": 154.0,
+   "n_branch_in_scope": 181,
+   "n_bus_computable": 170,
+   "equivalent_ac_solves": 753,
+   "stress_stats": {
+    "median_pct_per_gw": 333.5540756748312,
+    "p10_pct_per_gw": 98.54030788844673,
+    "p90_pct_per_gw": 611.6678087279281
+   },
+   "stats": {
+    "median_mw": 130.1398682153154,
+    "p10_mw": 66.43812399160869,
+    "p90_mw": 1180.4248348717613,
+    "n_below_100mw": 31,
+    "n_above_1gw": 20
+   }
+  },
+  {
+   "island": "east",
+   "n_bus": 5393,
+   "n_branch": 6437,
+   "sec_build_ptdf": 1.53,
+   "sec_hosting_capacity_all_buses": 0.2507,
+   "n_branch_over_capacity": 175,
+   "n_branch_capacity_known": 6437,
+   "min_kv": 154.0,
+   "n_branch_in_scope": 1971,
+   "n_bus_computable": 2,
+   "equivalent_ac_solves": 5393,
+   "stress_stats": {
+    "median_pct_per_gw": 162.61318991636006,
+    "p10_pct_per_gw": 59.35653475978975,
+    "p90_pct_per_gw": 379.13851162875136
+   },
+   "stats": {
+    "median_mw": 3691.9881849243,
+    "p10_mw": 3660.531036784984,
+    "p90_mw": 3723.445333063617,
+    "n_below_100mw": 0,
+    "n_above_1gw": 2
+   }
+  },
+  {
+   "island": "west",
+   "n_bus": 7087,
+   "n_branch": 8802,
+   "sec_build_ptdf": 3.14,
+   "sec_hosting_capacity_all_buses": 0.4698,
+   "n_branch_over_capacity": 77,
+   "n_branch_capacity_known": 8802,
+   "min_kv": 154.0,
+   "n_branch_in_scope": 3466,
+   "n_bus_computable": 0,
+   "equivalent_ac_solves": 7087,
+   "stress_stats": {
+    "median_pct_per_gw": 150.00023020725916,
+    "p10_pct_per_gw": 89.86231463045127,
+    "p90_pct_per_gw": 392.9928752814376
+   },
+   "stats": {
+    "median_mw": null,
+    "p10_mw": null,
+    "p90_mw": null,
+    "n_below_100mw": 0,
+    "n_above_1gw": 0
+   }
+  },
+  {
+   "island": "okinawa",
+   "n_bus": 93,
+   "n_branch": 114,
+   "sec_build_ptdf": 0.0,
+   "sec_hosting_capacity_all_buses": 0.0001,
+   "n_branch_over_capacity": 0,
+   "n_branch_capacity_known": 114,
+   "min_kv": 154.0,
+   "n_branch_in_scope": 0,
+   "n_bus_computable": 0,
+   "equivalent_ac_solves": 93,
+   "stress_stats": {
+    "median_pct_per_gw": NaN,
+    "p10_pct_per_gw": NaN,
+    "p90_pct_per_gw": NaN
+   },
+   "stats": {
+    "median_mw": null,
+    "p10_mw": null,
+    "p90_mw": null,
+    "n_below_100mw": 0,
+    "n_above_1gw": 0
+   }
+  }
+ ]
+}
