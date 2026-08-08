@@ -82,18 +82,48 @@ def _style_dark(ax):
 
 
 def load_graph(path):
-    """建造モデルJSON -> (nodes, pairs).  pairs=実エッジの (i,j) ノード索引対。"""
+    """建造モデルJSON -> (nodes, pairs).  pairs=実エッジの (i,j) ノード索引対。
+
+    1つの座標には複数ノードが載る（多層変電所の各電圧層は座標を完全に共有し、
+    地域抽出bboxの重なりで跨region重複コピーも生じる）。座標→単一索引に潰すと
+    **層間リンク=変圧器ブランチ 2,180 本が ia==ib で全滅**し、スパイ図が実際の
+    Ybus より疎に見える（2026-08-08 に検出）。座標には索引の**群**を持たせ、
+    端点どうしの全組み合わせを結ぶ。同一座標のエッジはその地点の層間を結ぶ
+    ＝変圧器の非対角要素になる。
+    """
     with open(path, encoding="utf-8") as f:
         d = json.load(f)
     nodes = d["nodes"]
     edges = d["edges"]
-    idx = {_ckey(n["lat"], n["lon"]): i for i, n in enumerate(nodes)}
+    idx = {}
+    for i, n in enumerate(nodes):
+        idx.setdefault(_ckey(n["lat"], n["lon"]), []).append(i)
+
+    def ends(pt, kv):
+        """端点の解決。線路はその電圧の層に着く（全層に着けると過剰結線になる）。"""
+        cand = idx.get(_ckey(*pt), ())
+        if kv is not None:
+            m = [i for i in cand
+                 if nodes[i].get("kv") is not None and abs(nodes[i]["kv"] - kv) < 0.5]
+            if m:
+                return m
+        return list(cand)
+
     pairs = []
-    for e in edges:
-        ia = idx.get(_ckey(*e["a"]))
-        ib = idx.get(_ckey(*e["b"]))
-        if ia is not None and ib is not None and ia != ib:
-            pairs.append((ia, ib))
+    for e in edges:                       # 線路: 同電圧の層どうしを結ぶ
+        kv = e.get("kv")
+        for i in ends(e["a"], kv):
+            for j in ends(e["b"], kv):
+                if i != j:
+                    pairs.append((i, j))
+    for group in idx.values():            # 変圧器: 同一地点の電圧層どうしを結ぶ
+        for a in range(len(group)):
+            for b in range(a + 1, len(group)):
+                pairs.append((group[a], group[b]))
+    # スパイ図は非対角要素の有無だけを見るので並行分は畳む。
+    # なお本図は **dedup 前の built モデル**（跨region重複ノードを含む）を描く。
+    # 実際に解かれる行列は gen_ybus_numeric.py が潮流と同一の dedup 済みモデルから出す。
+    pairs = sorted({(min(i, j), max(i, j)) for i, j in pairs})
     return nodes, pairs, d.get("stats", {})
 
 
