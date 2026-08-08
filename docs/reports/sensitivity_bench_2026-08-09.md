@@ -60,5 +60,24 @@ screening（過負荷になりうる枝の洗い出し）には十分だが、�
 
 ![ベンチマーク](../assets/sensitivity/bench_2026-08-09.png)
 
+## 5. 行列そのものの姿
+
+Ybus のスパイ図は非ゼロの位置だけを見れば足りるが、PTDF / LODF は**符号を持つ密行列**なので
+発散配色（負=青 / 0=白 / 正=赤）と対数スケールで描く。行と列は電圧階級の高い順に並べ替えた。
+
+![西日本の感度行列](../assets/sensitivity/matrix_west_2026-08-09.png)
+
+PTDF の**濃い横帯**はどこに注入しても動く枝＝基幹の背骨。白い矩形は電気的に切り離された領域。
+LODF の**ブロック対角構造**は電気的近傍で、停止の影響がその塊に閉じることを示す。
+西日本では **154kV 層の感度が最も強い**（500kV より高い）——1,561 枝でメッシュを組み
+実質的な輸送層になっているため。
+
+![東日本の感度行列](../assets/sensitivity/matrix_east_2026-08-09.png)
+![北海道の感度行列](../assets/sensitivity/matrix_hokkaido_2026-08-09.png)
+![沖縄の感度行列](../assets/sensitivity/matrix_okinawa_2026-08-09.png)
+
+生成: `scripts/sensitivity/plot_matrices.py`
+
+
 ---
 生成: `scripts/sensitivity/benchmark_sensitivity.py` → `plot_sensitivity.py`
