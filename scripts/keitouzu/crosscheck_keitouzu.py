@@ -48,19 +48,41 @@ def build_sub_graph(built: dict) -> tuple[set[str], dict[str, set[str]], dict[st
     nodes, edges = built["nodes"], built["edges"]
     node_ids = {n["id"] for n in nodes}
     base_ids: dict[str, set[str]] = defaultdict(set)
-    coord2id: dict[tuple[float, float], str] = {}
+    # 1つの座標に複数ノードが載る（多層站の各電圧層、および地域抽出bboxの重なりで
+    # 生じる跨region重複コピー）。座標→単一IDにすると 610 変電所が隣接グラフから
+    # 脱落するため、座標には必ずノード**群**を持たせる。
+    coord_nodes: dict[tuple[float, float], list[dict]] = defaultdict(list)
     for n in nodes:
         base_ids[n["id"].split("@")[0]].add(n["id"])
-        coord2id[(round(n["lat"], 5), round(n["lon"], 5))] = n["id"]
+        coord_nodes[(round(n["lat"], 5), round(n["lon"], 5))].append(n)
 
     adj: dict[str, set[str]] = defaultdict(set)
+    # 同一座標のノードどうしは同一の物理サイト（層間＝変圧器、重複コピー＝同一設備）
+    for group in coord_nodes.values():
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                adj[group[i]["id"]].add(group[j]["id"])
+                adj[group[j]["id"]].add(group[i]["id"])
+
+    def endpoints(pt: list[float], kv) -> list[str]:
+        """辺の端点を解決する。電圧が一致する層を優先し、無ければその地点の全ノード。"""
+        cands = coord_nodes.get((round(pt[0], 5), round(pt[1], 5)))
+        if not cands:
+            return []
+        if kv is not None:
+            m = [c["id"] for c in cands
+                 if c.get("kv") is not None and abs(c["kv"] - kv) < 0.5]
+            if m:
+                return m
+        return [c["id"] for c in cands]
+
     for e in edges:
-        ia = coord2id.get((round(e["a"][0], 5), round(e["a"][1], 5)))
-        ib = coord2id.get((round(e["b"][0], 5), round(e["b"][1], 5)))
-        if ia is None or ib is None:
-            continue
-        adj[ia].add(ib)
-        adj[ib].add(ia)
+        kv = e.get("kv")
+        for ia in endpoints(e["a"], kv):
+            for ib in endpoints(e["b"], kv):
+                if ia != ib:
+                    adj[ia].add(ib)
+                    adj[ib].add(ia)
 
     sub_adj: dict[str, set[str]] = defaultdict(set)
     for n in nodes:

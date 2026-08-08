@@ -1,22 +1,17 @@
 # keitouzu 食い違い裁定キュー — 2026-08-08
 
-元データ: `keitouzu_crosscheck_2026-08-08.json`（crosswalk 誤マッチ裁定後の食い違い 127 本）。
+元データ: `keitouzu_crosscheck_2026-08-08.json`（crosswalk 誤マッチ裁定後の食い違い 92 本）。
 各行の原図リンク（Internet Archive）で公式系統図に当たり、verdict を JSON に記入する。
 **採用（builtへの接続追加）は人間判断＋`docs/MODEL_INTERVENTIONS.md` 記帳が必須。**
 
-- **A: 完全断絶（別成分） 69 本** — builtに経路が全く無い。最優先
-- B: 遠距離接続 hop7+ 31 本
-- C: 近距離 hop5-6 27 本 — 粒度差の可能性も残る
+- **A: 完全断絶（別成分） 30 本** — builtに経路が全く無い。最優先
+- B: 遠距離接続 hop7+ 34 本
+- C: 近距離 hop5-6 28 本 — 粒度差の可能性も残る
 
-## A: 完全断絶（69本）
+## A: 完全断絶（30本）
 
 | ☐ | kV | 線名 | from — to | region | hops | 原図 |
 |---|---|---|---|---|---:|---|
-| ☐ | DC | 飛騨信濃直流幹線 | 飛騨変換所 — 新信濃 | inter | 断絶 | interconnect-pass-20260803 |
-| ☐ | DC | 阿南紀北直流幹線 | 阿南変換所 — 無名p1-3 | inter | 断絶 | interconnect-pass-20260803 |
-| ☐ | 500 | 70 | 飛騨変換所 — 岐阜開閉所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 500 | 71 | 南福光変電所 — 飛騨変換所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 500 | 南阿波幹線（送電線No.5） | 阿南変換所 — 阿波変電所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
 | ☐ | 500 | 基L46 | 無名発電所P1（基L46・基L47、基S24西） — 基S24 | chugoku | 断絶 | [原図](https://web.archive.org/web/20260806093657/https://www.energia.co.jp/nw/service/retailer/keitou/access/pdf/keitoukousei2025.pdf) |
 | ☐ | 500 | 24 | Q — P | kansai | 断絶 | [原図](https://web.archive.org/web/20260806093636/https://www.kansai-td.co.jp/consignment/disclosure/pdf/01_keitou_2024.pdf) |
 | ☐ | 275 | 世田谷線 | 世田谷 — 荏田 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
@@ -34,58 +29,25 @@
 | ☐ | 275 | 高輪線 | 東内幸町 — 高輪 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 墨東線 | 北葛飾 — 墨東 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 墨東線 | 墨東 — 永代橋 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
-| ☐ | 275 | 170 | 鈴鹿開閉所 — 西濃変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 180 | 伊勢開閉所 — 鈴鹿開閉所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 230 | 亀山変電所 — 西名古屋変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 240 | 新鈴鹿変電所 — 亀山変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 260 | 海部開閉所 — 西名古屋変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 270 | 海部開閉所 — 西名古屋変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 275 | 280 | 海部開閉所 — 西名古屋変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 275 | 760 | 東清水変電所 — 駿河変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 275 | 753/751/780 | 駿河変電所 — 静岡変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 220 | 基L16 | 基S4 — 基S3 | chugoku | 断絶 | [原図](https://web.archive.org/web/20260806093657/https://www.energia.co.jp/nw/service/retailer/keitou/access/pdf/keitoukousei2025.pdf) |
 | ☐ | 220 | 基L47 | 無名発電所P1（基L46・基L47、基S24西） — 基S24 | chugoku | 断絶 | [原図](https://web.archive.org/web/20260806093657/https://www.energia.co.jp/nw/service/retailer/keitou/access/pdf/keitoukousei2025.pdf) |
-| ☐ | 220 | 基L51 | 基S15 — 無名開閉所F（基L51線上、基S15東） | chugoku | 断絶 | [原図](https://web.archive.org/web/20260806093657/https://www.energia.co.jp/nw/service/retailer/keitou/access/pdf/keitoukousei2025.pdf) |
-| ☐ | 187 | 松山幹線（送電線No.12） | 川内変電所 — 松山変電所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 松山西線（送電線No.13） | 松山変電所 — 北松山変電所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 松山東線（送電線No.15） | 西条変電所 — 北松山変電所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 本川線（送電線No.20） | 東予変電所 — 本川開閉所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 高知幹線（送電線No.21） | 高知変電所 — 本川開閉所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 阿波鳴門線（送電線No.34） | 阿波変電所 — 鳴門変電所 | shikoku | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 187 | 線87（西淡連系） | EA — 鳴門変電所 | inter | 断絶 | [原図](https://web.archive.org/web/20260806093852/https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_map_202608_08.pdf) |
-| ☐ | 154 | 下滝線 | 下滝 — 鬼怒川 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 常盤台線 | 常盤台 — 戸田 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 犀川線 | 新町 — 松川 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
-| ☐ | 154 | 猪苗代旧幹線（里） | 膳棚 — 那須野 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 豊常線 | 常盤台 — 豊島 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
-| ☐ | 154 | 栃那線 | 下滝 — 那須野 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
-| ☐ | 154 | H034 | 伏木 — 塚原 | hokuriku | 断絶 | [原図](https://web.archive.org/web/20260806093448/https://www.rikuden.co.jp/nw_notification/attach/keitou_kikan01_jisseki_05.pdf) |
-| ☐ | 154 | — | 塚原 — 伏木 | hokuriku | 断絶 | [原図](https://web.archive.org/web/20260806093448/https://www.rikuden.co.jp/nw_notification/attach/keitou_kikan01_jisseki_05.pdf) |
-| ☐ | 154 | 10071 | 西尾張変電所 — 稲沢変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 10201 | 西尾張変電所 — 七宝変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 30011 | 西名古屋変電所 — 南大垣変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 30081 | 四日市火力変電所 — 西名古屋変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 30100 | 西名古屋変電所 — 四日市火力変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 40020 | 西濃変電所 — 大垣変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 40060 | 南大垣変電所 — 大垣変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 154 | 60070 | 玉川変電所 — 三河変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 154 | 0587 | 中仙台 — 五ツ橋 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
 | ☐ | 154 | 0588 | 中仙台 — 南仙台 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
-| ☐ | 154 | 0637/0638/0736 | いわき — 郡山 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
-| ☐ | 154 | 0639 | いわき — 北平 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
-| ☐ | 154 | 0640 | いわき — 平 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
 | ☐ | 154 | 0674/0675 | 中新潟 — 寄居浜 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
 | ☐ | 154 | 0703/0706 | 東上越 — 魚沼 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
-| ☐ | 154 | — | 下北 — 六ケ所 | tohoku | 断絶 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
-| ☐ | 154 | 10011 | 岩倉変電所 — 稲沢変電所 | chubu | 断絶 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
-| ☐ | 154 | 猪苗代旧幹線(里) | 豊原 — 那須野 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 栃山線 | 簗瀬町 — 小山 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 栃山線 | 簗瀬町 — 新栃木 | tokyo | 断絶 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 
-## B: hop7+（31本）
+## B: hop7+（34本）
 
 | ☐ | kV | 線名 | from — to | region | hops | 原図 |
 |---|---|---|---|---|---:|---|
+| ☐ | DC | 飛騨信濃直流幹線 | 飛騨変換所 — 新信濃 | inter | 12 | interconnect-pass-20260803 |
 | ☐ | 500 | 新豊洲線 | 新京葉 — 新豊洲 | tokyo | 8 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 北武蔵野線 | 新座 — 練馬 | tokyo | 11 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 千葉葛南線 | 千葉中央 — 葛南 | tokyo | 10 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
@@ -102,6 +64,8 @@
 | ☐ | 154 | 群馬幹線(里) | 南川越 — 群馬 | tokyo | 7 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | H044 | 御所 — 加賀 | hokuriku | 10 | [原図](https://web.archive.org/web/20260806093448/https://www.rikuden.co.jp/nw_notification/attach/keitou_kikan01_jisseki_05.pdf) |
 | ☐ | 154 | H063 | 御所 — 北金沢 | hokuriku | 12 | [原図](https://web.archive.org/web/20260806093448/https://www.rikuden.co.jp/nw_notification/attach/keitou_kikan01_jisseki_05.pdf) |
+| ☐ | 154 | 30081 | 四日市火力変電所 — 西名古屋変電所 | chubu | 7 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
+| ☐ | 154 | 30100 | 西名古屋変電所 — 四日市火力変電所 | chubu | 7 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 154 | 121 | CU — CV | kansai | 15 | [原図](https://web.archive.org/web/20260806093636/https://www.kansai-td.co.jp/consignment/disclosure/pdf/01_keitou_2024.pdf) |
 | ☐ | 154 | 0574 | 仙台 — 泉 | tohoku | 7 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
 | ☐ | 154 | 0583 | 五ツ橋 — 仙台港 | tohoku | 8 | [原図](https://web.archive.org/web/20251017083234/https://nw.tohoku-epco.co.jp/consignment/system/demand/pdf/jisseki_kikan01_map_2024_02.pdf) |
@@ -118,7 +82,7 @@
 | ☐ | 66 | (43) | 21 — 10 | okinawa | 14 | [原図](https://web.archive.org/web/20260806095015/https://www.okiden.co.jp/shared/pdf/business-support/service/juyo-and-sohaiden/keitouzu1.pdf) |
 | ☐ | 66 | (44) | 10 — 9 | okinawa | 12 | [原図](https://web.archive.org/web/20260806095015/https://www.okiden.co.jp/shared/pdf/business-support/service/juyo-and-sohaiden/keitouzu1.pdf) |
 
-## C: hop5-6（27本）
+## C: hop5-6（28本）
 
 | ☐ | kV | 線名 | from — to | region | hops | 原図 |
 |---|---|---|---|---|---:|---|
@@ -131,6 +95,7 @@
 | ☐ | 275 | 江東線 | 新京葉 — 葛南 | tokyo | 6 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 港北線 | 港北 — 西東京 | tokyo | 6 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 275 | 西南川越線 | 南川越 — 多摩 | tokyo | 6 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
+| ☐ | 275 | 170 | 鈴鹿開閉所 — 西濃変電所 | chubu | 6 | [原図](https://web.archive.org/web/20260806093227/https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_63.pdf) |
 | ☐ | 154 | 下総線 | 下総 — 新京葉 | tokyo | 5 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 亀戸線 | 亀戸 — 北葛飾 | tokyo | 5 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |
 | ☐ | 154 | 北多摩線 | 千歳 — 武蔵野 | tokyo | 5 | [原図](http://web.archive.org/web/20260413144431/https://www4.tepco.co.jp/pg/consignment/system/pdf/jisseki_kikan.pdf?251028) |

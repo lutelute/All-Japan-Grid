@@ -9,24 +9,24 @@
  },
  "edges": {
   "active": 1487,
-  "hop1": 360,
-  "hop2_4": 285,
-  "divergent": 127,
+  "hop1": 386,
+  "hop2_4": 294,
+  "divergent": 92,
   "unmappable": 689,
   "xwalk_excluded": 26
  },
  "by_region": {
   "chubu": {
-   "hop2_4": 28,
-   "hop1": 44,
+   "hop2_4": 35,
+   "hop1": 51,
    "unmappable": 105,
-   "divergent": 21,
+   "divergent": 7,
    "xwalk_excluded": 11
   },
   "chugoku": {
-   "hop1": 28,
+   "hop1": 30,
    "hop2_4": 4,
-   "divergent": 4,
+   "divergent": 2,
    "unmappable": 9
   },
   "hokkaido": {
@@ -35,16 +35,16 @@
    "unmappable": 13
   },
   "hokuriku": {
-   "hop1": 8,
+   "hop1": 10,
    "hop2_4": 9,
    "unmappable": 38,
-   "divergent": 4,
+   "divergent": 2,
    "xwalk_excluded": 1
   },
   "inter": {
    "unmappable": 5,
-   "hop1": 4,
-   "divergent": 4,
+   "hop1": 6,
+   "divergent": 2,
    "hop2_4": 4
   },
   "kansai": {
@@ -67,54 +67,25 @@
   },
   "shikoku": {
    "unmappable": 19,
-   "hop1": 16,
-   "hop2_4": 1,
-   "divergent": 7
+   "hop1": 23,
+   "hop2_4": 1
   },
   "tohoku": {
    "unmappable": 123,
-   "hop1": 73,
-   "divergent": 13,
-   "hop2_4": 37,
+   "hop1": 76,
+   "divergent": 9,
+   "hop2_4": 38,
    "xwalk_excluded": 5
   },
   "tokyo": {
    "unmappable": 137,
-   "hop2_4": 154,
-   "divergent": 66,
-   "hop1": 92,
+   "hop2_4": 155,
+   "divergent": 62,
+   "hop1": 95,
    "xwalk_excluded": 2
   }
  },
  "divergent_candidates": [
-  {
-   "keitouzu_uuid": "0afb43f0-3e83-4af1-b3f2-11cfbaf7a663",
-   "line": "下滝線",
-   "voltage_kv": "154",
-   "region": "tokyo",
-   "from": {
-    "name": "下滝",
-    "aliases": [
-     "下滝"
-    ],
-    "ajg": [
-     "tokyo_sub_1672@154"
-    ]
-   },
-   "to": {
-    "name": "鬼怒川",
-    "aliases": [
-     "鬼怒川"
-    ],
-    "ajg": [
-     "tohoku_sub_77@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tokyo-keitozu-tokyo_kikan154",
-   "evidence": "ev:同一線名ラベル「下滝線」が 下滝 と 鬼怒川 の2ノードにのみ出現（両端一致）",
-   "built_hops": null
-  },
   {
    "keitouzu_uuid": "c3c31cf5-44f9-4ab3-ad8f-1ff39b607011",
    "line": "下総線",
@@ -844,34 +815,6 @@
    "built_hops": 11
   },
   {
-   "keitouzu_uuid": "6365e5c8-cb16-48a1-a38b-683a0fd491a8",
-   "line": "猪苗代旧幹線（里）",
-   "voltage_kv": "154",
-   "region": "tokyo",
-   "from": {
-    "name": "膳棚",
-    "aliases": [
-     "膳棚"
-    ],
-    "ajg": [
-     "tokyo_sub_1422@154"
-    ]
-   },
-   "to": {
-    "name": "那須野",
-    "aliases": [
-     "那須野"
-    ],
-    "ajg": [
-     "tohoku_sub_163@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tokyo-keitozu-tokyo_kikan154",
-   "evidence": "母線下側へ引出;ev:同一線名ラベル「猪苗代旧幹線（里）」が 膳棚 と 那須野 の2ノードにのみ出現（両端一致）",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "1ba064ea-abac-47a0-b1ff-72f9c48aea0e",
    "line": "福島東幹線(里)",
    "voltage_kv": "500",
@@ -1292,34 +1235,6 @@
    "built_hops": 6
   },
   {
-   "keitouzu_uuid": "eaf3dd8a-52d5-4682-9be7-37472470c94d",
-   "line": "栃那線",
-   "voltage_kv": "154",
-   "region": "tokyo",
-   "from": {
-    "name": "下滝",
-    "aliases": [
-     "下滝"
-    ],
-    "ajg": [
-     "tokyo_sub_1672@154"
-    ]
-   },
-   "to": {
-    "name": "那須野",
-    "aliases": [
-     "那須野"
-    ],
-    "ajg": [
-     "tohoku_sub_163@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tokyo-keitozu-tokyo_kikan154",
-   "evidence": "同一線名が3ノード以上に出現した多端線。定向復核パスで隣接を確定。原confidence=clear。復核メモ: 下滝は幹線中間のT分岐（幹線は下滝の分岐点を貫通している）。したがって 新栃木–那須野 も分岐点経由で直結している;ev:同じ水平幹線が下滝分岐点を通過してさらに東へ伸び、右端で下降して那須野「栃那線 ↑169」のベイに入る（那須野側の縦線 x=1655 y[625..744] が幹線末端 x=1672 の直下で連続）",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "b1317f30-cac6-43ed-9c99-f02995851b0d",
    "line": "江東線",
    "voltage_kv": "275",
@@ -1432,66 +1347,6 @@
    "built_hops": 6
   },
   {
-   "keitouzu_uuid": "c4beeac4-60f5-40dd-baf1-b8dc20432f01",
-   "line": "H034",
-   "voltage_kv": "154",
-   "region": "hokuriku",
-   "from": {
-    "name": "伏木",
-    "aliases": [
-     "伏木",
-     "HSS026"
-    ],
-    "ajg": [
-     "chubu_sub_575@154"
-    ]
-   },
-   "to": {
-    "name": "塚原",
-    "aliases": [
-     "塚原",
-     "HSS024"
-    ],
-    "ajg": [
-     "hokuriku_sub_106@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "hokuriku-keitozu-hokuriku_kikan154",
-   "evidence": "×平常時開放点が線上にある;ev:両丸記号間の横線、ラベル垂線距離。クロップ画像で目視確認",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "26bb7bd9-22cf-401c-abd6-46bcb7e2f847",
-   "line": "",
-   "voltage_kv": "154",
-   "region": "hokuriku",
-   "from": {
-    "name": "塚原",
-    "aliases": [
-     "塚原",
-     "HSS024"
-    ],
-    "ajg": [
-     "hokuriku_sub_106@154"
-    ]
-   },
-   "to": {
-    "name": "伏木",
-    "aliases": [
-     "伏木",
-     "HSS026"
-    ],
-    "ajg": [
-     "chubu_sub_575@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "hokuriku-keitozu-hokuriku_kikan154",
-   "evidence": "線番号ラベルなし。塚原寄りに×平常時開放点あり;uncertain;ev:塚原から北西へ伸びる線が新能登–伏木線(H038)上にT分岐。分岐点は伏木寄り（伏木まで49、新能登まで66）。クロップ画像で目視確認",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "1be6d21c-dfa9-411b-9580-7a95535a63e0",
    "line": "H044",
    "voltage_kv": "154",
@@ -1553,62 +1408,6 @@
    "built_hops": 12
   },
   {
-   "keitouzu_uuid": "067a90e7-18a4-44c5-954b-0813f0a00fa4",
-   "line": "70",
-   "voltage_kv": "500",
-   "region": "chubu",
-   "from": {
-    "name": "飛騨変換所",
-    "aliases": [
-     "飛騨変換所"
-    ],
-    "ajg": [
-     "chubu_sub_889"
-    ]
-   },
-   "to": {
-    "name": "岐阜開閉所",
-    "aliases": [
-     "岐阜開閉所"
-    ],
-    "ajg": [
-     "chubu_sub_120@500"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "ev:p1「500kV・275kV系統構成図」の太線(500kV)をベクトル追跡し、高倍率切出図で母線・開閉所記号を目視確認",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "d7251f77-497d-40fa-acc2-b2803cfec829",
-   "line": "71",
-   "voltage_kv": "500",
-   "region": "chubu",
-   "from": {
-    "name": "南福光変電所",
-    "aliases": [
-     "南福光変電所"
-    ],
-    "ajg": [
-     "chubu_sub_109"
-    ]
-   },
-   "to": {
-    "name": "飛騨変換所",
-    "aliases": [
-     "飛騨変換所"
-    ],
-    "ajg": [
-     "chubu_sub_889"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "ev:p1「500kV・275kV系統構成図」の太線(500kV)をベクトル追跡し、高倍率切出図で母線・開閉所記号を目視確認",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "7c6a3ed7-51d7-4cc1-9bf0-882c8f14b8c9",
    "line": "170",
    "voltage_kv": "275",
@@ -1635,272 +1434,7 @@
    "confidence": "extracted",
    "source_ref": "chubu-keitozu-chubu_kikan154",
    "evidence": "ev:ベクトル解析：赤字送電線番号170が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "db6a24cb-ff31-40a8-9210-a60f299da85c",
-   "line": "180",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "伊勢開閉所",
-    "aliases": [
-     "伊勢開閉所"
-    ],
-    "ajg": [
-     "kansai_sub_180@275"
-    ]
-   },
-   "to": {
-    "name": "鈴鹿開閉所",
-    "aliases": [
-     "鈴鹿開閉所"
-    ],
-    "ajg": [
-     "chubu_sub_538@77"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号180が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "c55fb9cb-191b-49d7-8c9c-4c6558dd9b29",
-   "line": "230",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "亀山変電所",
-    "aliases": [
-     "亀山変電所",
-     "3606"
-    ],
-    "ajg": [
-     "chubu_sub_816"
-    ]
-   },
-   "to": {
-    "name": "西名古屋変電所",
-    "aliases": [
-     "西名古屋変電所",
-     "3601"
-    ],
-    "ajg": [
-     "chubu_sub_131@275"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;uncertain;ev:ベクトル解析：赤字送電線番号230が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "e2ddb71a-d38c-46bf-9052-be3551a64574",
-   "line": "240",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "新鈴鹿変電所",
-    "aliases": [
-     "新鈴鹿変電所",
-     "3607"
-    ],
-    "ajg": [
-     "chubu_sub_316@275"
-    ]
-   },
-   "to": {
-    "name": "亀山変電所",
-    "aliases": [
-     "亀山変電所",
-     "3606"
-    ],
-    "ajg": [
-     "chubu_sub_816"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号240が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "47d3767f-c953-498c-9c82-f15fec370575",
-   "line": "260",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "海部開閉所",
-    "aliases": [
-     "海部開閉所"
-    ],
-    "ajg": [
-     "chubu_sub_324@275"
-    ]
-   },
-   "to": {
-    "name": "西名古屋変電所",
-    "aliases": [
-     "西名古屋変電所",
-     "3601"
-    ],
-    "ajg": [
-     "chubu_sub_131@275"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan(2025年度基本系統)版のみに記載;uncertain;ev:交差検証源（kikan）のベクトル解析",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "645f7caa-17b3-4163-85ae-bd945ed502d9",
-   "line": "270",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "海部開閉所",
-    "aliases": [
-     "海部開閉所"
-    ],
-    "ajg": [
-     "chubu_sub_324@275"
-    ]
-   },
-   "to": {
-    "name": "西名古屋変電所",
-    "aliases": [
-     "西名古屋変電所",
-     "3601"
-    ],
-    "ajg": [
-     "chubu_sub_131@275"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "交差検証版では 川越変電所=西名古屋変電所（不一致）;uncertain;ev:ベクトル解析：赤字送電線番号270が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "0d3a3aec-2a5e-48aa-92b9-a0dd42a6743e",
-   "line": "280",
-   "voltage_kv": "275",
-   "region": "chubu",
-   "from": {
-    "name": "海部開閉所",
-    "aliases": [
-     "海部開閉所"
-    ],
-    "ajg": [
-     "chubu_sub_324@275"
-    ]
-   },
-   "to": {
-    "name": "西名古屋変電所",
-    "aliases": [
-     "西名古屋変電所",
-     "3601"
-    ],
-    "ajg": [
-     "chubu_sub_131@275"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号280が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "848dec0b-d398-48f8-b5e6-34dce348cf8d",
-   "line": "10071",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "西尾張変電所",
-    "aliases": [
-     "西尾張変電所",
-     "1005"
-    ],
-    "ajg": [
-     "chubu_sub_132@275"
-    ]
-   },
-   "to": {
-    "name": "稲沢変電所",
-    "aliases": [
-     "稲沢変電所",
-     "1014"
-    ],
-    "ajg": [
-     "chubu_sub_198"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号10071が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "08ca277a-a1d9-446b-adac-96fd93e67503",
-   "line": "10201",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "西尾張変電所",
-    "aliases": [
-     "西尾張変電所",
-     "1005"
-    ],
-    "ajg": [
-     "chubu_sub_132@275"
-    ]
-   },
-   "to": {
-    "name": "七宝変電所",
-    "aliases": [
-     "七宝変電所",
-     "1021"
-    ],
-    "ajg": [
-     "chubu_sub_221@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "交差検証版では 七宝変電所=北勢変電所（不一致）;uncertain;ev:ベクトル解析：赤字送電線番号10201が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "01a0340e-5650-4731-a9e3-aaa799d9e52a",
-   "line": "30011",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "西名古屋変電所",
-    "aliases": [
-     "西名古屋変電所",
-     "3601"
-    ],
-    "ajg": [
-     "chubu_sub_131@275"
-    ]
-   },
-   "to": {
-    "name": "南大垣変電所",
-    "aliases": [
-     "南大垣変電所",
-     "4006"
-    ],
-    "ajg": [
-     "chubu_sub_268@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "local(2025年度基本系統)版のみに記載;uncertain;ev:交差検証源（local p1）のベクトル解析",
-   "built_hops": null
+   "built_hops": 6
   },
   {
    "keitouzu_uuid": "ab36fc6e-44ec-4401-a2bc-532ba317aed7",
@@ -1930,7 +1464,7 @@
    "confidence": "extracted",
    "source_ref": "chubu-keitozu-chubu_kikan154",
    "evidence": "uncertain;ev:ベクトル解析：赤字送電線番号30081が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
+   "built_hops": 7
   },
   {
    "keitouzu_uuid": "bc9145a4-d95f-4231-b32f-333a687c6ac1",
@@ -1960,67 +1494,7 @@
    "confidence": "extracted",
    "source_ref": "chubu-keitozu-chubu_kikan154",
    "evidence": "ev:ベクトル解析：赤字送電線番号30100が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "cb654a3b-bd3d-4414-8408-dc9189d1e64d",
-   "line": "40020",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "西濃変電所",
-    "aliases": [
-     "西濃変電所",
-     "4001"
-    ],
-    "ajg": [
-     "chubu_sub_96@275"
-    ]
-   },
-   "to": {
-    "name": "大垣変電所",
-    "aliases": [
-     "大垣変電所",
-     "4005"
-    ],
-    "ajg": [
-     "chubu_sub_98@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号40020が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "c2d79dda-1007-45ef-b91a-45029f74dba8",
-   "line": "40060",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "南大垣変電所",
-    "aliases": [
-     "南大垣変電所",
-     "4006"
-    ],
-    "ajg": [
-     "chubu_sub_268@154"
-    ]
-   },
-   "to": {
-    "name": "大垣変電所",
-    "aliases": [
-     "大垣変電所",
-     "4005"
-    ],
-    "ajg": [
-     "chubu_sub_98@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "kikan/local版と一致;ev:ベクトル解析：赤字送電線番号40060が付いた線分から両方向に追跡し、最初に到達した母線／変電所記号",
-   "built_hops": null
+   "built_hops": 7
   },
   {
    "keitouzu_uuid": "6cd800e2-858a-468c-b7cd-1f5d0aa4fc75",
@@ -2083,217 +1557,6 @@
    "built_hops": null
   },
   {
-   "keitouzu_uuid": "dcf6dfbb-c443-4516-b51f-a3d116963413",
-   "line": "南阿波幹線（送電線No.5）",
-   "voltage_kv": "500",
-   "region": "shikoku",
-   "from": {
-    "name": "阿南変換所",
-    "aliases": [
-     "阿南変換所",
-     "6"
-    ],
-    "ajg": [
-     "kansai_sub_87"
-    ]
-   },
-   "to": {
-    "name": "阿波変電所",
-    "aliases": [
-     "阿波変電所",
-     "5"
-    ],
-    "ajg": [
-     "shikoku_sub_50@500"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "安定度限界、6,580MW/2,530MW;ev:p3表 潮流方向「阿南変換所→変5」／p1図 □5",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "995258b8-a8b0-4d8a-ba45-e62292fb3c45",
-   "line": "松山幹線（送電線No.12）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "川内変電所",
-    "aliases": [
-     "川内変電所",
-     "2"
-    ],
-    "ajg": [
-     "shikoku_sub_32@500"
-    ]
-   },
-   "to": {
-    "name": "松山変電所",
-    "aliases": [
-     "松山変電所",
-     "19"
-    ],
-    "ajg": [
-     "chugoku_sub_38@187"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "1,420MW/808MW;ev:p3表 潮流方向「変2→変19」／p1図 □12",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "a4950f93-2a73-4cb3-8663-36c81885fdd6",
-   "line": "松山西線（送電線No.13）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "松山変電所",
-    "aliases": [
-     "松山変電所",
-     "19"
-    ],
-    "ajg": [
-     "chugoku_sub_38@187"
-    ]
-   },
-   "to": {
-    "name": "北松山変電所",
-    "aliases": [
-     "北松山変電所",
-     "20"
-    ],
-    "ajg": [
-     "chugoku_sub_281@187"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "710MW/404MW;ev:p3表 潮流方向「変19→変20」／p1図 □13",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "6b16e549-af39-45f6-bc63-c68fb1c701ca",
-   "line": "松山東線（送電線No.15）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "西条変電所",
-    "aliases": [
-     "西条変電所",
-     "25",
-     "伊予開閉所"
-    ],
-    "ajg": [
-     "shikoku_sub_33@187"
-    ]
-   },
-   "to": {
-    "name": "北松山変電所",
-    "aliases": [
-     "北松山変電所",
-     "20"
-    ],
-    "ajg": [
-     "chugoku_sub_281@187"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "906MW/494MW。送電線No.14は欠番（一覧表に行なし）;ev:p3表 潮流方向「変25→変20」／p1図 □15が◯20と◯25を結ぶ線上",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "8455e9ce-cb85-443d-9ebb-e67f1e9810ea",
-   "line": "本川線（送電線No.20）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "東予変電所",
-    "aliases": [
-     "東予変電所",
-     "3"
-    ],
-    "ajg": [
-     "shikoku_sub_31@500"
-    ]
-   },
-   "to": {
-    "name": "本川開閉所",
-    "aliases": [
-     "本川開閉所",
-     "17"
-    ],
-    "ajg": [
-     "chugoku_sub_408"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "1,420MW/760MW;ev:p3表 潮流方向「変3→変17」／p1図 □20が◯3と⊗17を結ぶ線上",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "7193891d-afeb-44b7-97b7-5b98c339ed85",
-   "line": "高知幹線（送電線No.21）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "高知変電所",
-    "aliases": [
-     "高知変電所",
-     "13"
-    ],
-    "ajg": [
-     "shikoku_sub_82@187"
-    ]
-   },
-   "to": {
-    "name": "本川開閉所",
-    "aliases": [
-     "本川開閉所",
-     "17"
-    ],
-    "ajg": [
-     "chugoku_sub_408"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "1,420MW/808MW;ev:p3表 潮流方向「変13→変17」／p1図 □21",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "120349c7-844d-46af-a0aa-b793ac962a52",
-   "line": "阿波鳴門線（送電線No.34）",
-   "voltage_kv": "187",
-   "region": "shikoku",
-   "from": {
-    "name": "阿波変電所",
-    "aliases": [
-     "阿波変電所",
-     "5"
-    ],
-    "ajg": [
-     "shikoku_sub_50@500"
-    ]
-   },
-   "to": {
-    "name": "鳴門変電所",
-    "aliases": [
-     "鳴門変電所",
-     "9"
-    ],
-    "ajg": [
-     "kansai_sub_86@187"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "1,846MW/923MW;ev:p3表 潮流方向「変5→変9」／p1図 □34",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "7c2ef90e-d866-4b66-86e1-8e18c3ddcc38",
    "line": "基L46",
    "voltage_kv": "500",
@@ -2324,35 +1587,6 @@
    "built_hops": null
   },
   {
-   "keitouzu_uuid": "84aad143-d62c-49b6-91d7-b65fe3408ee1",
-   "line": "基L16",
-   "voltage_kv": "220",
-   "region": "chugoku",
-   "from": {
-    "name": "基S4",
-    "aliases": [
-     "基S4"
-    ],
-    "ajg": [
-     "chugoku_sub_196@220"
-    ]
-   },
-   "to": {
-    "name": "基S3",
-    "aliases": [
-     "基S3",
-     "山口変電所"
-    ],
-    "ajg": [
-     "chugoku_sub_179@220"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chugoku-keitozu-chugoku_kikan",
-   "evidence": "相手端は基L15上の分岐点であり基S3と直結ではない。分岐点は基S3寄り（水平距離で基S3まで約50pt、基S5まで約63pt）;uncertain;ev:灰色矢印付きラベルが、基L15幹線から基S4の円へ下りる短い引下線を指す",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "64bc831b-2274-49f8-b643-14a964f8c624",
    "line": "基L47",
    "voltage_kv": "220",
@@ -2380,35 +1614,6 @@
    "confidence": "extracted",
    "source_ref": "chugoku-keitozu-chugoku_kikan",
    "evidence": "ラベル位置が発電所の北東側にあり、別方向の線を指す可能性も否定できない;uncertain;ev:□発電所と基S24の間には太線（基L46）とやや細い線の2条があり、細い方に基L47ラベル（細字＝22万V）が対応すると判断",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "61c54a00-b978-43d6-8223-282b289109cd",
-   "line": "基L51",
-   "voltage_kv": "220",
-   "region": "chugoku",
-   "from": {
-    "name": "基S15",
-    "aliases": [
-     "基S15",
-     "黒瀬変電所"
-    ],
-    "ajg": [
-     "chugoku_sub_115@220"
-    ]
-   },
-   "to": {
-    "name": "無名開閉所F（基L51線上、基S15東）",
-    "aliases": [
-     "無名開閉所F（基L51線上、基S15東）"
-    ],
-    "ajg": [
-     "chugoku_sub_417@220"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chugoku-keitozu-chugoku_kikan",
-   "evidence": "基L51/基L52のラベル帰属は位置関係からの判断で、入替の可能性を排除できない;uncertain;ev:細線。基S15から東へ、途中でT分岐（基L52）を分けたのち□基S16へ着線。ラベル基L51の垂線距離は東行き区間に対して約7pt",
    "built_hops": null
   },
   {
@@ -2792,90 +1997,6 @@
    "built_hops": null
   },
   {
-   "keitouzu_uuid": "378c5c95-d326-42c1-b2ba-bba269227ee6",
-   "line": "0637/0638/0736",
-   "voltage_kv": "154",
-   "region": "tohoku",
-   "from": {
-    "name": "いわき",
-    "aliases": [
-     "いわき"
-    ],
-    "ajg": [
-     "tohoku_sub_162@275"
-    ]
-   },
-   "to": {
-    "name": "郡山",
-    "aliases": [
-     "郡山"
-    ],
-    "ajg": [
-     "tohoku_sub_147@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tohoku-keitozu-tohoku_kikan",
-   "evidence": "経路上で分岐点を2回通過（直進側を継続として追跡）；同一経路に複数の送電線番号が帰属（分岐タップ点で2線が合流して描かれているため、どこで別線に分かれるかは未確定）;ev:送電線番号ラベル 0637/0638/0736（番号枠→引出線→矢印先端で線分に帰属、先端-線分距離 4.9pt）；線幅1.5pt=154kV；図上経路 (662.3,959.3)→(600.4,890.2) 長さ103pt",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "a4f7b7f8-4001-4159-8fe6-7d55fd16ed5a",
-   "line": "0639",
-   "voltage_kv": "154",
-   "region": "tohoku",
-   "from": {
-    "name": "いわき",
-    "aliases": [
-     "いわき"
-    ],
-    "ajg": [
-     "tohoku_sub_162@275"
-    ]
-   },
-   "to": {
-    "name": "北平",
-    "aliases": [
-     "北平"
-    ],
-    "ajg": [
-     "tohoku_sub_219@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tohoku-keitozu-tohoku_kikan",
-   "evidence": "経路上で分岐点を1回通過（直進側を継続として追跡）;ev:送電線番号ラベル 0639（番号枠→引出線→矢印先端で線分に帰属、先端-線分距離 0.4pt）；線幅1.5pt=154kV；図上経路 (662.3,959.3)→(685.3,940.9) 長さ28pt",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "1a339ce5-f91d-46c6-822d-83a0000207fa",
-   "line": "0640",
-   "voltage_kv": "154",
-   "region": "tohoku",
-   "from": {
-    "name": "いわき",
-    "aliases": [
-     "いわき"
-    ],
-    "ajg": [
-     "tohoku_sub_162@275"
-    ]
-   },
-   "to": {
-    "name": "平",
-    "aliases": [
-     "平"
-    ],
-    "ajg": [
-     "tohoku_sub_234@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tohoku-keitozu-tohoku_kikan",
-   "evidence": "ev:送電線番号ラベル 0640（番号枠→引出線→矢印先端で線分に帰属、先端-線分距離 5.4pt）；線幅1.5pt=154kV；図上経路 (662.3,959.3)→(685.3,962.3) 長さ25pt",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "10101c92-8aea-4fdf-8d23-1bb42c1dce6a",
    "line": "0674/0675",
    "voltage_kv": "154",
@@ -2989,34 +2110,6 @@
    "built_hops": 7
   },
   {
-   "keitouzu_uuid": "1b31a1e1-363f-4b24-a7be-edd689cd2300",
-   "line": "",
-   "voltage_kv": "154",
-   "region": "tohoku",
-   "from": {
-    "name": "下北",
-    "aliases": [
-     "下北"
-    ],
-    "ajg": [
-     "hokkaido_sub_30@154"
-    ]
-   },
-   "to": {
-    "name": "六ケ所",
-    "aliases": [
-     "六ケ所"
-    ],
-    "ajg": [
-     "tohoku_sub_801@154"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "tohoku-keitozu-tohoku_kikan",
-   "evidence": "経路上で分岐点を5回通過（直進側を継続として追跡）；送電線番号が図上に無い／帰属できず;ev:線幅1.5pt=154kV；図上経路 (621.2,115.8)→(648.6,172.0) 長さ128pt",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "83d2abf8-9c98-4abf-98a8-16b6d7e4bbc2",
    "line": "飛騨信濃直流幹線",
    "voltage_kv": "DC",
@@ -3042,7 +2135,7 @@
    "confidence": "verified",
    "source_ref": "interconnect-pass-20260803",
    "evidence": "link_class=inter_area | R2:中部側=chuden kikan p1 を x150-430/y130-330 で描画：ラベル『飛騨変換所／交直変換装置』の付いた交直変換所記号が、南福光BTB直下の自社500kV縦線(線番70/71)からタップされ、そこから東へ破線＋波線で『至 東京』(至264.4,234.2／東京276.4,234.2)。同じ縦線の北端には別に『至 北陸』波線とBTB記 | 輪1の未確定点『起点は飛騨変換所本体か岐阜開閉所経由か』：図では交直変換装置は岐阜開閉所の北の500kV縦線(70/71)上のタップで、岐阜開閉所そのものではない。東京側 変換所（中部電力）(adf40388) を飛騨変換所の他社スタブとし",
-   "built_hops": null
+   "built_hops": 12
   },
   {
    "keitouzu_uuid": "b18e7494-8424-4b3e-ba4e-ec031ac5e7ca",
@@ -3073,36 +2166,6 @@
    "source_ref": "interconnect-pass-20260803",
    "evidence": "link_class=inter_ac | R2:中国側=同じ9倍描画で基S27(○)から東へ太破線1本のみが県境を越え（関西）へ延びるのを確認（他に基L3が西、基L41が北）。基S1/基S21 校正(173pt/deg等方)による智頭の予測位置(725.6,216.4)に対し基S27実測ノード(721.1,206.7)＝残差10.7pt(≒0.06°)。智頭の実座標は AJG subs_all の chu | 裁定②：基S27=智頭 成立、confidence=inferred。AJG には『智頭』の名称が無く、当該500kV開閉所は無名で収録されているため名称自体は未確証（位置のみ一致）。関西側 同定候選：山崎=連3（開D, 11dabf47）",
    "built_hops": 5
-  },
-  {
-   "keitouzu_uuid": "c2284d14-7a3d-4fa8-a228-7163c8f16e06",
-   "line": "阿南紀北直流幹線",
-   "voltage_kv": "DC",
-   "region": "inter",
-   "from": {
-    "name": "阿南変換所",
-    "aliases": [
-     "阿南変換所",
-     "6"
-    ],
-    "ajg": [
-     "kansai_sub_87"
-    ]
-   },
-   "to": {
-    "name": "無名p1-3",
-    "aliases": [
-     "無名p1-3",
-     "紀北変換所"
-    ],
-    "ajg": [
-     "kansai_sub_13"
-    ]
-   },
-   "confidence": "inferred",
-   "source_ref": "interconnect-pass-20260803",
-   "evidence": "link_class=inter_area | R2:四国側=shikoku kikan p1 のテキスト層で『阿南』(670.9,341.1)『阿南紀北』(692.8,348.3)『関西エリア』(745.3,333.5)『紀北変換所』(745.3,343.5)を直接確認＝相手名が実名で明記。関西側=kansai p1 を x150-400/y580-720 で6倍描画：⊗記号(無名p1-2, ≈229.7,6 | 終点は変換所記号ノード無名p1-3(eda080c6)とした。連5の打切り記号自体は隣の⊗無名p1-2(db5d7dbb)に付いており、これは紀伊水道横断の陸揚/開閉点と解釈（＝連5＝本DCの引込）。この解釈が正しければ関西図に西淡向けの連",
-   "built_hops": null
   },
   {
    "keitouzu_uuid": "b9284cf7-d1e7-4ff1-9609-d1928105fad2",
@@ -3162,36 +2225,6 @@
    "confidence": "extracted",
    "source_ref": "chubu-keitozu-chubu_kikan154",
    "evidence": "孤立站の原図照合で補完 2026-08-04; agent_conf=uncertain; ev:駿河母線から V(798.6,577.0→567.9) が線751の水平導体 H(751.1,567.4)-(799.3,567.4) w=2.0 に接続。その導体は V(769.4,566.9→541.4)(番号780)で静岡変電所の275kV母線(y≈541)へ。番号「753」(801.9,56",
-   "built_hops": null
-  },
-  {
-   "keitouzu_uuid": "c020ca4e-5cd8-4853-9b55-fb81585d2ef5",
-   "line": "10011",
-   "voltage_kv": "154",
-   "region": "chubu",
-   "from": {
-    "name": "岩倉変電所",
-    "aliases": [
-     "岩倉変電所",
-     "1015"
-    ],
-    "ajg": [
-     "chubu_sub_57@154"
-    ]
-   },
-   "to": {
-    "name": "稲沢変電所",
-    "aliases": [
-     "稲沢変電所",
-     "1014"
-    ],
-    "ajg": [
-     "chubu_sub_198"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "chubu-keitozu-chubu_kikan154",
-   "evidence": "孤立站の原図照合で補完 2026-08-04; agent_conf=verified; ev:岩倉母線から V(232.5,303.0→310.1)→H(211.9,309.8)-(232.5,309.8) w=1.0 が西へ。番号「10011」(211.5,310.8)。稲沢変電所の円(204.1,289.4)へ到達",
    "built_hops": null
   },
   {
@@ -3587,34 +2620,6 @@
    "built_hops": 6
   },
   {
-   "keitouzu_uuid": "4354e43f-0033-489a-8554-411d5ebaaec7",
-   "line": "猪苗代旧幹線(里)",
-   "voltage_kv": "154",
-   "region": "tokyo",
-   "from": {
-    "name": "豊原",
-    "aliases": [
-     "豊原"
-    ],
-    "ajg": [
-     "tohoku_sub_319"
-    ]
-   },
-   "to": {
-    "name": "那須野",
-    "aliases": [
-     "那須野"
-    ],
-    "ajg": [
-     "tohoku_sub_163@154"
-    ]
-   },
-   "confidence": "inferred",
-   "source_ref": "tokyo-keitozu-tokyo_kikan154",
-   "evidence": "孤立站の原図照合で補完 2026-08-04; agent_conf=likely; ev:p7 abs(3290,750) bank 0+0+0MWh。導体 cid1823 (x3039-3544,y672-727) の左端 abs(3039,680) が 那須野 bay「猪苗代旧幹線(里)」↓130",
-   "built_hops": null
-  },
-  {
    "keitouzu_uuid": "8de9cc8b-cce1-4dd3-992e-16423e5b42d9",
    "line": "栃山線",
    "voltage_kv": "154",
@@ -3697,38 +2702,6 @@
    "source_ref": "tokyo-keitozu-tokyo_kikan154",
    "evidence": "孤立站の原図照合で補完 2026-08-04; agent_conf=likely; ev:p7 abs(1724,1120) 緑⊠ のみ(母線・bank表記なし)＝線路上の開閉所。導体 cid3045 上に位置し、下端 abs(1727,1359) が 小山 bay「栃山線」",
    "built_hops": 14
-  },
-  {
-   "keitouzu_uuid": "a3d4f2c1-104c-4573-8133-7e1d8c42959e",
-   "line": "線87（西淡連系）",
-   "voltage_kv": "187",
-   "region": "inter",
-   "from": {
-    "name": "EA",
-    "aliases": [
-     "EA",
-     "西淡（変）",
-     "西淡変電所",
-     "松帆西路変電所"
-    ],
-    "ajg": [
-     "kansai_sub_90@187"
-    ]
-   },
-   "to": {
-    "name": "鳴門変電所",
-    "aliases": [
-     "鳴門変電所",
-     "9"
-    ],
-    "ajg": [
-     "kansai_sub_86@187"
-    ]
-   },
-   "confidence": "extracted",
-   "source_ref": "shikoku-keitozu-shikoku_kikan",
-   "evidence": "link_class=inter_ac | 関西図 p1 で EA から線番87 が南西へ延び打切り波線で域外流出。四国図 p4 表の鳴門変電所欄に『関西エリア西淡(変)への連系点』と明記。⚠️ AJG は松帆西路→撫養変電所 187kV 4回線と示しており相手が異なる。一次資料（四国図）を採った。PROVENANCE S21",
-   "built_hops": null
   }
  ]
 }
