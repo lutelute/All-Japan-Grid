@@ -2,7 +2,7 @@
 """topoRAG 方式の送電網ベクトル化 — 変電所エゴグラフを 1/0・個数でベクトル化する。
 
 回路のネットリスト類似度（素子種の 1/0 と個数 → コサイン類似度）を送電網へ一般化する。
-「部分」= 変電所ひとつのエゴグラフ（その站の電圧層構成 + 外部接続 + 隣接局の素性）。
+「部分」= 変電所ひとつのエゴグラフ（その変電所の電圧層構成 + 外部接続 + 隣接変電所の素性）。
 
 built 正典と keitouzu の両方から**同一の特徴軸**でベクトルを作れるようにしてある
 （keitouzu 側は座標も下位網も持たないため、比較時は同一電圧宇宙へ射影する）。
@@ -41,8 +41,8 @@ FEATURE_NAMES = (
     [f"has_{l}" for l in KV_LABEL]           # 電圧階級の 1/0（素子種の有無に相当）
     + [f"deg_{l}" for l in KV_LABEL]         # 階級別の外部接続本数（個数）
     + ["n_layers", "deg_total"]              # 電圧層数（変圧段数の代理）・総次数
-    + [f"nbr_{l}" for l in KV_LABEL]         # 隣接局の最高電圧ヒストグラム
-    + ["nbr_deg_min", "nbr_deg_med", "nbr_deg_max"]  # 隣接局の次数分布
+    + [f"nbr_{l}" for l in KV_LABEL]         # 隣接変電所の最高電圧ヒストグラム
+    + ["nbr_deg_min", "nbr_deg_med", "nbr_deg_max"]  # 隣接変電所の次数分布
 )
 N_FEAT = len(FEATURE_NAMES)
 
@@ -51,13 +51,13 @@ BLOCKS = {
     "電圧構成(1/0)": (0, 10),
     "階級別次数": (10, 20),
     "層数・規模": (20, 22),
-    "隣接局の電圧": (22, 32),
-    "隣接局の次数": (32, 35),
+    "隣接変電所の電圧": (22, 32),
+    "隣接変電所の次数": (32, 35),
 }
 
 
 class EgoFeatures:
-    """站 base id → 特徴ベクトルと素の統計。"""
+    """変電所 base id → 特徴ベクトルと素の統計。"""
 
     def __init__(self) -> None:
         self.layers_kv: dict[str, set[int]] = defaultdict(set)
@@ -106,8 +106,8 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
     def endpoints(pt: list[float], kv: float | None) -> list[str]:
         """辺の端点を解決する。電圧一致層を優先、無ければその地点の全ノード。
 
-        1座標に複数ノードが載る（多層站の各電圧層 / 地域抽出bboxの重なりによる
-        跨region重複コピー）。単一IDに潰すと多数の站が隣接グラフから脱落する。
+        1座標に複数ノードが載る（多層変電所の各電圧層 / 地域抽出bboxの重なりによる
+        跨region重複コピー）。単一IDに潰すと多数の変電所が隣接グラフから脱落する。
         """
         cands = coord_nodes.get((round(pt[0], 5), round(pt[1], 5)))
         if not cands:
@@ -149,7 +149,7 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
         k = n.get("kv") or 0.0
         F.max_kv[base] = max(F.max_kv.get(base, 0.0), k)
 
-    # 層間リンク（= 変圧器段）と外部接続（jct のみ経由して他站へ）
+    # 層間リンク（= 変圧器段）と外部接続（jct のみ経由して他の変電所へ）
     for n in nodes:
         nid = n["id"]
         if "_sub_" not in nid:
@@ -172,7 +172,7 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
                     q.append((nb, fk))
 
     # 変圧段数 = 電圧層数 - 1。
-    # built では多層站(1655件)の層ノードが座標を完全に共有するため、層間リンクを
+    # built では多層変電所(1655件)の層ノードが座標を完全に共有するため、層間リンクを
     # 幾何から復元できない(同一座標エッジ2180本は層ペアを特定できない)。
     # keitouzu 側も同じ定義にして**ソース間で同一の特徴軸**を保つ。
     for b in F.layers_kv:

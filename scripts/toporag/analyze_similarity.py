@@ -7,7 +7,7 @@
   Q2 何が何と似ているか        — region を跨ぐ構造的双子（cos 上位ペア）
   Q3 どう似ているか            — コサイン類似度の次元別寄与分解
   Q4 その類似度は意味を持つか  — crosswalk 検証済み対応 vs 誤マッチ16件で判別性能を測る
-                                 （正例=同一站のはず / 負例=別站と確定済み）
+                                 （正例=同一変電所のはず / 負例=別の変電所と確定済み）
 
 usage: python3 scripts/toporag/analyze_similarity.py [--k 8] [--kv-floor 110]
 出力: docs/reports/toporag_phase0_<date>.{md,json} と図
@@ -84,9 +84,9 @@ def main() -> None:
     Xn = V.l2_normalize(X)
     print(f"built: 変電所 {len(ids)} 個をエゴグラフに分割 → {X.shape[1]} 次元")
 
-    # 骨幹のみ（次数のある実局に限定。孤立站はベクトルが縮退するため型分析から除く）
+    # 骨幹のみ（外部接続を持つ変電所に限定。孤立変電所はベクトルが縮退するため型分析から除く）
     live = np.array([Fb.deg_kv[i].sum() > 0 for i in ids])
-    print(f"  うち外部接続を持つ実局: {int(live.sum())}（孤立 {int((~live).sum())} は型分析から除外）")
+    print(f"  うち外部接続を持つ変電所: {int(live.sum())}（孤立 {int((~live).sum())} は型分析から除外）")
 
     # ── Q1 構造類型 ───────────────────────────────────────────────
     from sklearn.cluster import KMeans
@@ -118,7 +118,7 @@ def main() -> None:
     types.sort(key=lambda t: -t["mean_deg"])
 
     # ── Q2/Q3 region を跨ぐ構造的双子 ────────────────────────────────
-    # 500/275kV 級の主要局に絞って総当たり（意味のある比較に限定）
+    # 500/275kV 級の主要変電所に絞って総当たり（意味のある比較に限定）
     major = [j for j, i in enumerate(idl)
              if Fb.max_kv.get(i, 0) >= 187 and Fb.deg_kv[i].sum() >= 3]
     Xm, idm = Xl[major], [idl[j] for j in major]
@@ -182,11 +182,52 @@ def main() -> None:
     dup_regions: dict[str, int] = defaultdict(int)
     for d in dups:
         dup_regions["↔".join(sorted([d["a"].split("_")[0], d["b"].split("_")[0]]))] += 1
-    print(f"\nQ5 跨region 重複站（同名・2km以内）: {len(dups)} 組")
+
+    # 反証テスト①「重複に見えるのは電圧階級の違う変圧を伴っているだけでは？」
+    # → 対の電圧層集合を比べる。変圧の対なら層は互いに素になるはず。
+    layers_of: dict[str, set] = defaultdict(set)
+    for n in built_raw["nodes"]:
+        if "_sub_" in n["id"]:
+            layers_of[n["id"].split("@")[0]].add(n.get("kv"))
+    lay = {"identical": 0, "overlap": 0, "disjoint": 0, "disjoint_kv_missing": 0}
+    for d in dups:
+        l1, l2 = layers_of[d["a"]], layers_of[d["b"]]
+        if l1 == l2:
+            lay["identical"] += 1
+        elif l1 & l2:
+            lay["overlap"] += 1
+        else:
+            lay["disjoint"] += 1
+            if not any(l1) or not any(l2):     # 片側が電圧不明＝属性欠落
+                lay["disjoint_kv_missing"] += 1
+
+    # 反証テスト②「重複エッジも異電圧の並行回線では？」
+    # → 同一端点のエッジ群を電圧と線名で分類する。
+    by_edge: dict[tuple, list] = defaultdict(list)
+    for e2 in built_raw["edges"]:
+        k = tuple(sorted([(round(e2["a"][0], 5), round(e2["a"][1], 5)),
+                          (round(e2["b"][0], 5), round(e2["b"][1], 5))]))
+        by_edge[k].append(e2)
+    edg = {"diff_kv": 0, "same_kv_same_name": 0, "same_kv_diff_name": 0}
+    for g in (v for v in by_edge.values() if len(v) > 1):
+        kvs = {x.get("kv") for x in g}
+        nms = {x.get("name") for x in g}
+        if len(kvs) > 1:
+            edg["diff_kv"] += 1                # 異電圧＝並行回線として正当な可能性
+        elif len(nms) == 1:
+            edg["same_kv_same_name"] += 1      # 同電圧・同線名＝二重取得
+        else:
+            edg["same_kv_diff_name"] += 1
+
+    print(f"\nQ5 跨region 重複変電所（同名・2km以内）: {len(dups)} 組")
     for k, v in sorted(dup_regions.items(), key=lambda x: -x[1])[:6]:
         print(f"   {k}: {v}")
+    print(f"   電圧層: 完全一致 {lay['identical']} / 一部重なり {lay['overlap']} / "
+          f"互いに素 {lay['disjoint']}（うち片側が電圧不明 {lay['disjoint_kv_missing']}）")
+    print(f"   同一端点エッジ群: 異電圧 {edg['diff_kv']}（並行回線として正当な可能性）/ "
+          f"同電圧同線名 {edg['same_kv_same_name']}（二重取得）/ 同電圧別線名 {edg['same_kv_diff_name']}")
 
-    # ── Q4 cross-source 判別性能（この類似度は「同じ站」を当てられるか） ──
+    # ── Q4 cross-source 判別性能（この類似度は「同じ変電所」を当てられるか） ──
     Fk = V.from_keitouzu()
     kids, XK = Fk.vectors()
     XKn = V.l2_normalize(XK)
@@ -227,7 +268,7 @@ def main() -> None:
                 continue
             ci = [bpos[c] for c in cand]
             sims = Ab[ci] @ Ak[kpos[u]]
-            # ランダム対照: 同 region の無関係な站との類似度
+            # ランダム対照: 同 region の無関係な変電所との類似度
             rnd.append(float(sims[rng.integers(len(sims))]))
             rank = int((sims > sims[cand.index(base)]).sum()) + 1
             nq += 1
@@ -244,7 +285,7 @@ def main() -> None:
     def stratified(wl: int) -> list[dict]:
         """構造の「豊かさ」別の検索性能。
 
-        平凡な站（次数1-2の通過局）は構造だけでは原理的に区別できないはずで、
+        平凡な変電所（次数1-2の通過変電所）は構造だけでは原理的に区別できないはずで、
         逆に多層・高次数のハブは個体識別できるはず——という仮説を実測する。
         層別は keitouzu 側の外部次数（＝系統図から読める情報だけ）で行う。
         """
@@ -291,7 +332,7 @@ def main() -> None:
     print("\nQ4 判別・検索性能（WL ラウンド別）")
     for e in evals:
         print(f"  WL{e['wl']} ({e['dim']:>3}次元): 正例中央値 {np.median(e['pos']):.3f} / "
-              f"誤マッチ {np.median(e['neg']):.3f} / 無関係站 {np.median(e['rnd']):.3f} | "
+              f"誤マッチ {np.median(e['neg']):.3f} / 無関係な変電所 {np.median(e['rnd']):.3f} | "
               f"AUC(vs誤マッチ)={e['auc_vs_neg']:.3f} AUC(vs無関係)={e['auc_vs_random']:.3f} | "
               f"recall@1={e['recall'][1]:.1%} @5={e['recall'][5]:.1%} @10={e['recall'][10]:.1%}")
     best = max(evals, key=lambda e: e["recall"][5])
@@ -319,11 +360,11 @@ def main() -> None:
     plt.colorbar(im, ax=axes[1])
 
     bins = np.linspace(0, 1, 41)
-    axes[2].hist(best["rnd"], bins=bins, alpha=0.5, label=f"無関係站(対照) n={len(best['rnd'])}",
+    axes[2].hist(best["rnd"], bins=bins, alpha=0.5, label=f"無関係な変電所(対照) n={len(best['rnd'])}",
                  color="#9e9e9e", density=True)
     axes[2].hist(pos, bins=bins, alpha=0.6, label=f"検証済み対応 n={len(pos)}", color="#2196f3", density=True)
     axes[2].hist(neg, bins=bins, alpha=0.75, label=f"誤マッチ確定 n={len(neg)}", color="#e91e63", density=True)
-    axes[2].set_title(f"同一站 vs 別站 の構造類似度 (WL{best['wl']}, AUC={auc:.3f})")
+    axes[2].set_title(f"同一変電所 vs 別の変電所 の構造類似度 (WL{best['wl']}, AUC={auc:.3f})")
     axes[2].set_xlabel("コサイン類似度"); axes[2].set_ylabel("密度"); axes[2].legend(fontsize=8)
 
     xs = np.arange(len(strata))
@@ -359,16 +400,16 @@ def main() -> None:
         f"# topoRAG Phase 0 — 送電網を部分に切って似ているかを測る（{date}）",
         "",
         "回路のネットリスト類似度（素子種の 1/0 と個数 → コサイン）を送電網に一般化した。",
-        f"**分割単位** = 変電所ひとつのエゴグラフ（電圧層構成・階級別次数・変圧段数・隣接局の素性、計 {X.shape[1]} 次元）。",
-        f"built 正典の変電所 {len(ids)} 個（うち外部接続を持つ実局 {int(live.sum())}）をベクトル化した。",
+        f"**分割単位** = 変電所ひとつのエゴグラフ（電圧層構成・階級別次数・変圧段数・隣接変電所の素性、計 {X.shape[1]} 次元）。",
+        f"built 正典の変電所 {len(ids)} 個（うち外部接続を持つもの {int(live.sum())}）をベクトル化した。",
         "",
         "## Q4 まず「この類似度は意味があるか」",
         "",
-        "検証済み crosswalk 対応を正例（＝同一站のはず）、地理裁定で確定した誤マッチを負例（＝別站と確定）とし、",
-        "さらに**同 region の無関係な站をランダム対照**に置いて、**構造だけで判別できるか**を測った。",
+        "検証済み crosswalk 対応を正例（＝同一変電所のはず）、地理裁定で確定した誤マッチを負例（＝別の変電所と確定）とし、",
+        "さらに**同 region の無関係な変電所をランダム対照**に置いて、**構造だけで判別できるか**を測った。",
         "名前も座標も使っていない。WL は近傍集約の反復回数（語彙の深さ）。",
         "",
-        "| WL | 次元 | 正例 中央値 | 誤マッチ 中央値 | 無関係站 中央値 | AUC(vs誤マッチ) | AUC(vs無関係) | recall@1 | @5 | @10 |",
+        "| WL | 次元 | 正例 中央値 | 誤マッチ 中央値 | 無関係な変電所 中央値 | AUC(vs誤マッチ) | AUC(vs無関係) | recall@1 | @5 | @10 |",
         "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ] + [
         f"| {e['wl']} | {e['dim']} | {np.median(e['pos']):.3f} | {np.median(e['neg']):.3f} | "
@@ -376,7 +417,7 @@ def main() -> None:
         f"{e['recall'][1]:.1%} | {e['recall'][5]:.1%} | {e['recall'][10]:.1%} |" for e in evals
     ] + [
         "",
-        "**読み方**: AUC(vs誤マッチ) が高いのは「別站だと確定したペアを構造で弾ける」ことを意味する。",
+        "**読み方**: AUC(vs誤マッチ) が高いのは「別の変電所だと確定したペアを構造で弾ける」ことを意味する。",
         "一方 AUC(vs無関係) と recall@k は「候補集合から正解を引き当てられるか」を測る。",
         "この2つは別問題で、前者が高くても後者が低いなら**照合器としては使えるが検索器としては足りない**。",
         "",
@@ -387,7 +428,7 @@ def main() -> None:
         "",
         "### 構造の豊かさで層別すると像が変わる",
         "",
-        "全体 recall@1 = 7.2% は「使えない」に見えるが、これは**平凡な通過局が大半を占めるため**の",
+        "全体 recall@1 = 7.2% は「使えない」に見えるが、これは**平凡な通過変電所が大半を占めるため**の",
         "平均値だった。keitouzu 側の外部次数で層別すると単調に効いている:",
         "",
         "| 系統図から読める次数 | 件数 | 正解の cos 中央値 | recall@1 | @5 | @10 |",
@@ -397,18 +438,18 @@ def main() -> None:
         f"{s['recall'][5]:.1%} | {s['recall'][10]:.1%} |" for s in strata
     ] + [
         "",
-        "**次数6+のハブ局では recall@5 = 50.6%**（次数1の 5.5% の 9 倍）。",
+        "**次数6+のハブ変電所では recall@5 = 50.6%**（次数1の 5.5% の 9 倍）。",
         "構造しか手がかりが無い状況で、名前も座標も使わず候補5件に半数を絞れる。",
-        "逆に次数1-2の通過局は**原理的に区別できない**——同じ形の部分グラフが網の中に大量にあるため。",
+        "逆に次数1-2の通過変電所は**原理的に区別できない**——同じ形の部分グラフが網の中に大量にあるため。",
         "これは手法の失敗ではなく、送電網という対象の性質である。",
         "",
         "**運用上の含意**: 構造照合は「ハブから攻める」道具として設計すべきで、",
-        "全站一括の同定器としては設計してはいけない。Phase 1（関西の匿名站実名化）は",
-        "高次数の站から着手し、確定したハブを錨として周辺の低次数站へ広げる順序になる。",
+        "全変電所一括の同定器としては設計してはいけない。Phase 1（関西の匿名変電所実名化）は",
+        "高次数の変電所から着手し、確定したハブを錨として周辺の低次数の変電所へ広げる順序になる。",
         "",
         "## Q1 どんな構造の「型」があるか",
         "",
-        f"実局 {int(live.sum())} 個を k={args.k} で類型化（外部接続の多い順）。",
+        f"外部接続のある変電所 {int(live.sum())} 個を k={args.k} で類型化（外部接続の多い順）。",
         "",
         "| 型 | 数 | 平均次数 | 平均層数 | 代表局 | 代表の構造 | 主な region |",
         "|---|---:|---:|---:|---|---|---|",
@@ -452,6 +493,29 @@ def main() -> None:
         "例: 高千帆変電所220kV（chugoku_sub_268 / kyushu_sub_386、18m 離れ）は",
         "両コピーとも次数11・隣接9の**並行部分グラフ**を持つ。全国集計・潮流・島判定で",
         "境界設備を二重計上している可能性があるため、正典側の課題として要検討。",
+        "",
+        "### 反証テスト —「電圧階級の違う変圧を伴っているだけでは？」",
+        "",
+        "同じ変電所を電圧ごとに別ノードで表しているなら、対の電圧層集合は**互いに素**になるはず。",
+        "実測はそうならない。",
+        "",
+        "| 対の電圧層集合 | 組数 | 解釈 |",
+        "|---|---:|---|",
+        f"| 完全一致 | **{lay['identical']}** | 両方が同じ電圧構成を丸ごと持つ＝変圧では説明できない |",
+        f"| 一部重なり | {lay['overlap']} | — |",
+        f"| 互いに素 | {lay['disjoint']} | うち {lay['disjoint_kv_missing']} 組は片側が電圧不明（属性欠落であって変圧の対ではない） |",
+        "",
+        "エッジ側も同様に分類した。**指摘のとおり一部は正当な並行回線**である。",
+        "",
+        "| 同一端点のエッジ群 | 箇所 | 解釈 |",
+        "|---|---:|---|",
+        f"| 電圧が異なる | {edg['diff_kv']} | 異電圧の並行回線として**正当**。重複ではない |",
+        f"| 電圧も線名も同一 | **{edg['same_kv_same_name']}** | 同じ線を二度取得している |",
+        f"| 電圧同一・線名違い | {edg['same_kv_diff_name']} | 並行回線と重複が混在。個別確認が要る |",
+        "",
+        f"したがって**エッジの重複本数は {edg['same_kv_same_name']} 箇所**（同電圧・同線名）であり、",
+        "同一端点エッジをすべて重複と数えるのは過大。変電所側の二重計上は電圧層集合の",
+        "完全一致で裏づけられるが、エッジ側は正当な並行回線を差し引いて数える必要がある。",
         "",
         "---",
         f"図: `docs/assets/toporag/phase0_{date}.png`　生成: `scripts/toporag/analyze_similarity.py`",

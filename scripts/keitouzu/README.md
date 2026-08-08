@@ -35,7 +35,7 @@ python3 scripts/keitouzu/gen_adjudication_queue.py     # ⑤ 原図リンク付�
 | hop=1 | keitouzu の辺が built で直接の変電所隣接として再現 |
 | hop=2..4 | built が中間変電所で区間分割している粒度差（実質整合） |
 | 食い違い候補 | 公式図は接続を主張するが built で再現されない。**どちらかが誤り** |
-| 未解決 | 端点が crosswalk 未対応（地下変電所・匿名站・発電所白枠など） |
+| 未解決 | 端点が crosswalk 未対応（地下変電所・匿名変電所・発電所白枠など） |
 
 ## 厳守事項
 

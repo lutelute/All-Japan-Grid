@@ -48,7 +48,7 @@ def build_sub_graph(built: dict) -> tuple[set[str], dict[str, set[str]], dict[st
     nodes, edges = built["nodes"], built["edges"]
     node_ids = {n["id"] for n in nodes}
     base_ids: dict[str, set[str]] = defaultdict(set)
-    # 1つの座標に複数ノードが載る（多層站の各電圧層、および地域抽出bboxの重なりで
+    # 1つの座標に複数ノードが載る（多層変電所の各電圧層、および地域抽出bboxの重なりで
     # 生じる跨region重複コピー）。座標→単一IDにすると 610 変電所が隣接グラフから
     # 脱落するため、座標には必ずノード**群**を持たせる。
     coord_nodes: dict[tuple[float, float], list[dict]] = defaultdict(list)
@@ -246,7 +246,7 @@ def main() -> None:
         f"  - 粒度差整合 (hop=2..{GRANULARITY_MAX_HOPS}): **{counts['hop2_4']}** ({counts['hop2_4']/mapped:.1%}) — builtが中間変電所で区間分割",
         f"  - **食い違い候補: {counts['divergent']}** ({counts['divergent']/mapped:.1%}) — 公式図は接続を主張、builtで再現されず",
         f"    - 内訳: **完全断絶(別成分) {n_cut}** ／ 遠距離接続 hop7+ {n_far} ／ 近距離 hop5-6 {n_near} — 断絶が裁定の最優先",
-        f"- 両端未解決（crosswalk 未対応の站を含む辺）: {counts['unmappable']} 本 — 将来の充填候補",
+        f"- 両端未解決（crosswalk 未対応の変電所を含む辺）: {counts['unmappable']} 本 — 将来の充填候補",
         f"- crosswalk 誤マッチ裁定による除外で検査対象外となった辺: {counts['xwalk_excluded']} 本"
         f"（除外対応 {n_excluded_maps} 件、`keitouzu_xwalk_adjudication_*.md` 参照）",
         "",
