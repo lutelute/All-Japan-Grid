@@ -1,0 +1,283 @@
+{
+ "date": "2026-08-09",
+ "default_cap": {
+  "nuclear": 1000.0,
+  "coal": 600.0,
+  "gas": 400.0,
+  "oil": 300.0,
+  "hydro": 50.0,
+  "solar": 10.0,
+  "wind": 10.0,
+  "biomass": 20.0
+ },
+ "cap_fallback": 30.0,
+ "total_real_mw": 246572.7,
+ "total_synth_mw": 230600.0,
+ "synth_share": 0.4833,
+ "n_plants": 19138,
+ "n_negative_sentinel": 3936,
+ "regions": [
+  {
+   "region": "chubu",
+   "real_mw": 44297.1,
+   "synth_mw": 39210.0,
+   "synth_share": 0.4695,
+   "n_real": 515,
+   "n_synth": 3277,
+   "n_negative_sentinel": 424,
+   "model_solar_mw": 31844.1,
+   "model_solar_real_mw": 904.1,
+   "actual_solar_peak_mw": 10320.0,
+   "model_over_actual_solar": 3.0857
+  },
+  {
+   "region": "chugoku",
+   "real_mw": 20527.5,
+   "synth_mw": 17060.0,
+   "synth_share": 0.4539,
+   "n_real": 64,
+   "n_synth": 1109,
+   "n_negative_sentinel": 100,
+   "model_solar_mw": 11524.5,
+   "model_solar_real_mw": 1554.5,
+   "actual_solar_peak_mw": 5298.0,
+   "model_over_actual_solar": 2.1753
+  },
+  {
+   "region": "hokkaido",
+   "real_mw": 10748.0,
+   "synth_mw": 4800.0,
+   "synth_share": 0.3087,
+   "n_real": 95,
+   "n_synth": 341,
+   "n_negative_sentinel": 14,
+   "model_solar_mw": 4556.6,
+   "model_solar_real_mw": 1506.6,
+   "actual_solar_peak_mw": 2235.0,
+   "model_over_actual_solar": 2.0387
+  },
+  {
+   "region": "hokuriku",
+   "real_mw": 8264.3,
+   "synth_mw": 6190.0,
+   "synth_share": 0.4282,
+   "n_real": 53,
+   "n_synth": 379,
+   "n_negative_sentinel": 28,
+   "model_solar_mw": 3548.6,
+   "model_solar_real_mw": 378.6,
+   "actual_solar_peak_mw": 1260.0,
+   "model_over_actual_solar": 2.8163
+  },
+  {
+   "region": "kansai",
+   "real_mw": 42375.1,
+   "synth_mw": 16820.0,
+   "synth_share": 0.2841,
+   "n_real": 73,
+   "n_synth": 1445,
+   "n_negative_sentinel": 132,
+   "model_solar_mw": 14703.3,
+   "model_solar_real_mw": 833.3,
+   "actual_solar_peak_mw": 5864.0,
+   "model_over_actual_solar": 2.5074
+  },
+  {
+   "region": "kyushu",
+   "real_mw": 0.0,
+   "synth_mw": 46650.0,
+   "synth_share": 1.0,
+   "n_real": 0,
+   "n_synth": 2549,
+   "n_negative_sentinel": 2549,
+   "model_solar_mw": 23740.0,
+   "model_solar_real_mw": 0.0,
+   "actual_solar_peak_mw": 9134.0,
+   "model_over_actual_solar": 2.5991
+  },
+  {
+   "region": "okinawa",
+   "real_mw": 0.0,
+   "synth_mw": 3100.0,
+   "synth_share": 1.0,
+   "n_real": 0,
+   "n_synth": 32,
+   "n_negative_sentinel": 32,
+   "model_solar_mw": 210.0,
+   "model_solar_real_mw": 0.0,
+   "actual_solar_peak_mw": 340.0,
+   "model_over_actual_solar": 0.6176
+  },
+  {
+   "region": "shikoku",
+   "real_mw": 12771.7,
+   "synth_mw": 9110.0,
+   "synth_share": 0.4163,
+   "n_real": 33,
+   "n_synth": 655,
+   "n_negative_sentinel": 77,
+   "model_solar_mw": 6362.6,
+   "model_solar_real_mw": 252.5,
+   "actual_solar_peak_mw": 2686.0,
+   "model_over_actual_solar": 2.3688
+  },
+  {
+   "region": "tohoku",
+   "real_mw": 39904.3,
+   "synth_mw": 15860.0,
+   "synth_share": 0.2844,
+   "n_real": 180,
+   "n_synth": 1131,
+   "n_negative_sentinel": 51,
+   "model_solar_mw": 12155.9,
+   "model_solar_real_mw": 1575.9,
+   "actual_solar_peak_mw": 7833.0,
+   "model_over_actual_solar": 1.5519
+  },
+  {
+   "region": "tokyo",
+   "real_mw": 67684.7,
+   "synth_mw": 71800.0,
+   "synth_share": 0.5148,
+   "n_real": 267,
+   "n_synth": 6940,
+   "n_negative_sentinel": 529,
+   "model_solar_mw": 71485.4,
+   "model_solar_real_mw": 2905.5,
+   "actual_solar_peak_mw": 11714.0,
+   "model_over_actual_solar": 6.1026
+  }
+ ],
+ "synth_by_fuel": {
+  "solar": {
+   "n_synth": 17022,
+   "n_total": 17622,
+   "share": 0.966
+  },
+  "hydro": {
+   "n_synth": 453,
+   "n_total": 866,
+   "share": 0.5231
+  },
+  "unknown": {
+   "n_synth": 233,
+   "n_total": 233,
+   "share": 1.0
+  },
+  "coal": {
+   "n_synth": 32,
+   "n_total": 101,
+   "share": 0.3168
+  },
+  "gas": {
+   "n_synth": 13,
+   "n_total": 81,
+   "share": 0.1605
+  },
+  "biomass": {
+   "n_synth": 34,
+   "n_total": 57,
+   "share": 0.5965
+  },
+  "wind": {
+   "n_synth": 15,
+   "n_total": 39,
+   "share": 0.3846
+  },
+  "oil": {
+   "n_synth": 7,
+   "n_total": 33,
+   "share": 0.2121
+  },
+  "waste": {
+   "n_synth": 22,
+   "n_total": 29,
+   "share": 0.7586
+  },
+  "geothermal": {
+   "n_synth": 9,
+   "n_total": 28,
+   "share": 0.3214
+  },
+  "nuclear": {
+   "n_synth": 2,
+   "n_total": 27,
+   "share": 0.0741
+  },
+  "bing": {
+   "n_synth": 3,
+   "n_total": 3,
+   "share": 1.0
+  },
+  "mixed": {
+   "n_synth": 3,
+   "n_total": 3,
+   "share": 1.0
+  },
+  "gsimaps/ort": {
+   "n_synth": 2,
+   "n_total": 2,
+   "share": 1.0
+  },
+  "https://www.sumikyo.co.jp/equipment/heat/heat04.html": {
+   "n_synth": 0,
+   "n_total": 2,
+   "share": 0.0
+  },
+  "battery": {
+   "n_synth": 1,
+   "n_total": 2,
+   "share": 0.5
+  },
+  "https://www.ogj.com/refining-processing/refining/optimization/article/17296716/jx-nippon-commissions-unit-at-mizushima-refinery": {
+   "n_synth": 0,
+   "n_total": 1,
+   "share": 0.0
+  },
+  "https://www.nipponpapergroup.com/about/branch/factory/npi/shiraoi/": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "bing,2011-4": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "https://www.gem.wiki/t-point_2_power_station": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "image": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "https://www.gem.wiki/iwanuma_mill_power_station": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "biofuel": {
+   "n_synth": 0,
+   "n_total": 1,
+   "share": 0.0
+  },
+  "gsimaps/seamlessphoto": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "https://www.industryabout.com/country-territories-3/2253-japan/waste-to-energy/35929-hitachinaka-katsuta-incineration-plant": {
+   "n_synth": 1,
+   "n_total": 1,
+   "share": 1.0
+  },
+  "https://www.jfe-steel.co.jp/release/2015/07/150710.html": {
+   "n_synth": 0,
+   "n_total": 1,
+   "share": 0.0
+  }
+ }
+}
