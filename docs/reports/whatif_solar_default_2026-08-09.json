@@ -1,0 +1,491 @@
+{
+ "date": "2026-08-09",
+ "baseline_solar_default_mw": 10.0,
+ "ladder": [
+  10.0,
+  1.0,
+  0.1
+ ],
+ "runs": [
+  {
+   "island": "hokkaido",
+   "solar_default_mw": 10.0,
+   "n_gen": 417,
+   "total_load_mw": 4420.0,
+   "zone_capacity_mw": {
+    "hokkaido": 14284.2
+   },
+   "zones": {
+    "hokkaido": {
+     "total_mw": 4641.0,
+     "solar_mw": 1252.3,
+     "n_gen": 417,
+     "n_solar": 324,
+     "solar_share": 0.2698
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 90.2,
+    "p95_pct": 42.0,
+    "excess_mw": 0.0,
+    "over_share": 0.0
+   },
+   "seconds": 4.0
+  },
+  {
+   "island": "hokkaido",
+   "solar_default_mw": 1.0,
+   "n_gen": 417,
+   "total_load_mw": 4420.0,
+   "zone_capacity_mw": {
+    "hokkaido": 11548.2
+   },
+   "zones": {
+    "hokkaido": {
+     "total_mw": 4641.0,
+     "solar_mw": 449.5,
+     "n_gen": 417,
+     "n_solar": 324,
+     "solar_share": 0.0968
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 124.5,
+    "p95_pct": 45.9,
+    "excess_mw": 16.8,
+    "over_share": 0.0012
+   },
+   "seconds": 3.5
+  },
+  {
+   "island": "hokkaido",
+   "solar_default_mw": 0.1,
+   "n_gen": 417,
+   "total_load_mw": 4420.0,
+   "zone_capacity_mw": {
+    "hokkaido": 11274.6
+   },
+   "zones": {
+    "hokkaido": {
+     "total_mw": 4641.0,
+     "solar_mw": 347.7,
+     "n_gen": 417,
+     "n_solar": 324,
+     "solar_share": 0.0749
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 128.8,
+    "p95_pct": 46.7,
+    "excess_mw": 19.8,
+    "over_share": 0.0012
+   },
+   "seconds": 3.5
+  },
+  {
+   "island": "east",
+   "solar_default_mw": 10.0,
+   "n_gen": 8235,
+   "total_load_mw": 55250.0,
+   "zone_capacity_mw": {
+    "tohoku": 50962.7,
+    "tokyo": 135634.7
+   },
+   "zones": {
+    "tohoku": {
+     "total_mw": 11602.5,
+     "solar_mw": 2206.4,
+     "n_gen": 1046,
+     "n_solar": 850,
+     "solar_share": 0.1902
+    },
+    "tokyo": {
+     "total_mw": 46410.0,
+     "solar_mw": 24415.6,
+     "n_gen": 7189,
+     "n_solar": 6952,
+     "solar_share": 0.5261
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "p95_pct": 154.7,
+    "excess_mw": 122493.3,
+    "over_share": 0.0985
+   },
+   "seconds": 44.9
+  },
+  {
+   "island": "east",
+   "solar_default_mw": 1.0,
+   "n_gen": 8235,
+   "total_load_mw": 55250.0,
+   "zone_capacity_mw": {
+    "tohoku": 43573.7,
+    "tokyo": 74029.7
+   },
+   "zones": {
+    "tohoku": {
+     "total_mw": 11602.5,
+     "solar_mw": 613.1,
+     "n_gen": 1046,
+     "n_solar": 850,
+     "solar_share": 0.0528
+    },
+    "tokyo": {
+     "total_mw": 46410.0,
+     "solar_mw": 6112.7,
+     "n_gen": 7189,
+     "n_solar": 6952,
+     "solar_share": 0.1317
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 369,
+    "max_pct": 3087.6,
+    "p95_pct": 109.2,
+    "excess_mw": 120723.1,
+    "over_share": 0.0603
+   },
+   "seconds": 45.4
+  },
+  {
+   "island": "east",
+   "solar_default_mw": 0.1,
+   "n_gen": 8235,
+   "total_load_mw": 55250.0,
+   "zone_capacity_mw": {
+    "tohoku": 42834.8,
+    "tokyo": 67869.2
+   },
+   "zones": {
+    "tohoku": {
+     "total_mw": 11602.5,
+     "solar_mw": 423.5,
+     "n_gen": 1046,
+     "n_solar": 850,
+     "solar_share": 0.0365
+    },
+    "tokyo": {
+     "total_mw": 46410.0,
+     "solar_mw": 2454.9,
+     "n_gen": 7189,
+     "n_solar": 6952,
+     "solar_share": 0.0529
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 387,
+    "max_pct": 3371.3,
+    "p95_pct": 113.7,
+    "excess_mw": 138960.1,
+    "over_share": 0.0632
+   },
+   "seconds": 44.6
+  },
+  {
+   "island": "west",
+   "solar_default_mw": 10.0,
+   "n_gen": 8775,
+   "total_load_mw": 73865.0,
+   "zone_capacity_mw": {
+    "chubu": 77047.2,
+    "chugoku": 27100.1,
+    "hokuriku": 21398.5,
+    "kansai": 32719.7,
+    "kyushu": 46211.0,
+    "shikoku": 15834.9
+   },
+   "zones": {
+    "chubu": {
+     "total_mw": 21420.0,
+     "solar_mw": 9181.1,
+     "n_gen": 3819,
+     "n_solar": 3578,
+     "solar_share": 0.4286
+    },
+    "hokuriku": {
+     "total_mw": 4641.0,
+     "solar_mw": 541.9,
+     "n_gen": 311,
+     "n_solar": 225,
+     "solar_share": 0.1168
+    },
+    "kansai": {
+     "total_mw": 24097.5,
+     "solar_mw": 6205.5,
+     "n_gen": 821,
+     "n_solar": 740,
+     "solar_share": 0.2575
+    },
+    "shikoku": {
+     "total_mw": 4194.8,
+     "solar_mw": 1499.5,
+     "n_gen": 599,
+     "n_solar": 544,
+     "solar_share": 0.3575
+    },
+    "chugoku": {
+     "total_mw": 9371.3,
+     "solar_mw": 2314.1,
+     "n_gen": 781,
+     "n_solar": 661,
+     "solar_share": 0.2469
+    },
+    "kyushu": {
+     "total_mw": 13833.8,
+     "solar_mw": 6906.2,
+     "n_gen": 2444,
+     "n_solar": 2272,
+     "solar_share": 0.4992
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 285,
+    "max_pct": 1894.3,
+    "p95_pct": 80.0,
+    "excess_mw": 37954.5,
+    "over_share": 0.0341
+   },
+   "seconds": 62.3
+  },
+  {
+   "island": "west",
+   "solar_default_mw": 1.0,
+   "n_gen": 8775,
+   "total_load_mw": 73865.0,
+   "zone_capacity_mw": {
+    "chubu": 48139.2,
+    "chugoku": 21295.1,
+    "hokuriku": 19490.5,
+    "kansai": 26176.7,
+    "kyushu": 25772.0,
+    "shikoku": 10966.0
+   },
+   "zones": {
+    "chubu": {
+     "total_mw": 21420.0,
+     "solar_mw": 1831.6,
+     "n_gen": 3819,
+     "n_solar": 3578,
+     "solar_share": 0.0855
+    },
+    "hokuriku": {
+     "total_mw": 4641.0,
+     "solar_mw": 140.6,
+     "n_gen": 311,
+     "n_solar": 225,
+     "solar_share": 0.0303
+    },
+    "kansai": {
+     "total_mw": 24097.5,
+     "solar_mw": 1733.3,
+     "n_gen": 821,
+     "n_solar": 740,
+     "solar_share": 0.0719
+    },
+    "shikoku": {
+     "total_mw": 4194.7,
+     "solar_mw": 302.7,
+     "n_gen": 599,
+     "n_solar": 544,
+     "solar_share": 0.0722
+    },
+    "chugoku": {
+     "total_mw": 9371.3,
+     "solar_mw": 390.3,
+     "n_gen": 781,
+     "n_solar": 661,
+     "solar_share": 0.0417
+    },
+    "kyushu": {
+     "total_mw": 13833.8,
+     "solar_mw": 1412.3,
+     "n_gen": 2444,
+     "n_solar": 2272,
+     "solar_share": 0.1021
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 317,
+    "max_pct": 2377.4,
+    "p95_pct": 85.9,
+    "excess_mw": 57932.9,
+    "over_share": 0.0379
+   },
+   "seconds": 62.0
+  },
+  {
+   "island": "west",
+   "solar_default_mw": 0.1,
+   "n_gen": 8775,
+   "total_load_mw": 73865.0,
+   "zone_capacity_mw": {
+    "chubu": 45248.4,
+    "chugoku": 20714.6,
+    "hokuriku": 19299.7,
+    "kansai": 25522.4,
+    "kyushu": 23728.1,
+    "shikoku": 10479.1
+   },
+   "zones": {
+    "chubu": {
+     "total_mw": 21420.0,
+     "solar_mw": 580.1,
+     "n_gen": 3819,
+     "n_solar": 3578,
+     "solar_share": 0.0271
+    },
+    "hokuriku": {
+     "total_mw": 4641.0,
+     "solar_mw": 96.1,
+     "n_gen": 311,
+     "n_solar": 225,
+     "solar_share": 0.0207
+    },
+    "kansai": {
+     "total_mw": 24097.5,
+     "solar_mw": 1159.9,
+     "n_gen": 821,
+     "n_solar": 740,
+     "solar_share": 0.0481
+    },
+    "shikoku": {
+     "total_mw": 4194.7,
+     "solar_mw": 121.9,
+     "n_gen": 599,
+     "n_solar": 544,
+     "solar_share": 0.0291
+    },
+    "chugoku": {
+     "total_mw": 9371.2,
+     "solar_mw": 138.7,
+     "n_gen": 781,
+     "n_solar": 661,
+     "solar_share": 0.0148
+    },
+    "kyushu": {
+     "total_mw": 13833.7,
+     "solar_mw": 342.3,
+     "n_gen": 2444,
+     "n_solar": 2272,
+     "solar_share": 0.0247
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 339,
+    "max_pct": 2439.3,
+    "p95_pct": 89.6,
+    "excess_mw": 63897.0,
+    "over_share": 0.0405
+   },
+   "seconds": 61.9
+  },
+  {
+   "island": "okinawa",
+   "solar_default_mw": 10.0,
+   "n_gen": 28,
+   "total_load_mw": 1360.0,
+   "zone_capacity_mw": {
+    "okinawa": 3040.0
+   },
+   "zones": {
+    "okinawa": {
+     "total_mw": 1428.0,
+     "solar_mw": 93.9,
+     "n_gen": 28,
+     "n_solar": 20,
+     "solar_share": 0.0658
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "p95_pct": 113.5,
+    "excess_mw": 211.4,
+    "over_share": 0.0947
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "solar_default_mw": 1.0,
+   "n_gen": 28,
+   "total_load_mw": 1360.0,
+   "zone_capacity_mw": {
+    "okinawa": 2860.0
+   },
+   "zones": {
+    "okinawa": {
+     "total_mw": 1428.0,
+     "solar_mw": 10.0,
+     "n_gen": 28,
+     "n_solar": 20,
+     "solar_share": 0.007
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 173.6,
+    "p95_pct": 133.3,
+    "excess_mw": 330.4,
+    "over_share": 0.1263
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "solar_default_mw": 0.1,
+   "n_gen": 28,
+   "total_load_mw": 1360.0,
+   "zone_capacity_mw": {
+    "okinawa": 2842.0
+   },
+   "zones": {
+    "okinawa": {
+     "total_mw": 1428.0,
+     "solar_mw": 1.0,
+     "n_gen": 28,
+     "n_solar": 20,
+     "solar_share": 0.0007
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 174.5,
+    "p95_pct": 137.8,
+    "excess_mw": 348.5,
+    "over_share": 0.1263
+   },
+   "seconds": 1.2
+  }
+ ]
+}

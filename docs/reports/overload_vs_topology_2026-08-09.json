@@ -1,0 +1,1124 @@
+{
+ "date": "2026-08-09",
+ "islands": [
+  {
+   "gen_by_kv": {
+    "66.0": {
+     "n": 317,
+     "mw": 5328.3,
+     "share": 0.373
+    },
+    "110.0": {
+     "n": 9,
+     "mw": 390.0,
+     "share": 0.0273
+    },
+    "187.0": {
+     "n": 72,
+     "mw": 3721.9,
+     "share": 0.2606
+    },
+    "275.0": {
+     "n": 19,
+     "mw": 4844.0,
+     "share": 0.3391
+    }
+   },
+   "gen_mw_at_or_below_110kv_share": 0.4003,
+   "n_misplaced_big_gen": 1,
+   "misplaced_big_gen_mw": 400.0,
+   "misplaced_big_gen": [
+    {
+     "mw": 400.0,
+     "kv": 66.0,
+     "name": "京極発電所",
+     "fuel": "hydro"
+    }
+   ],
+   "island": "hokkaido",
+   "site_trafos": false,
+   "seconds": 4.1,
+   "n_bus": 802,
+   "dc_converged": true,
+   "n_site_trafo": 0,
+   "median_detour_hops": null,
+   "max_loading_pct": 90.2,
+   "n_line": 815,
+   "n_over": 0,
+   "n_bridge": 136,
+   "bridge_share": 0.1669,
+   "n_major_bridge": 0,
+   "overload_rate_bridge": 0.0,
+   "overload_rate_major_bridge": 0.0,
+   "overload_rate_meshed": 0.0,
+   "over_that_are_bridges": 0.0,
+   "radial_stub_over": 0,
+   "detour_hist": {},
+   "by_kv": {
+    "66.0": {
+     "n": 668,
+     "n_over": 0,
+     "n_bridge": 125
+    },
+    "110.0": {
+     "n": 24,
+     "n_over": 0,
+     "n_bridge": 4
+    },
+    "187.0": {
+     "n": 105,
+     "n_over": 0,
+     "n_bridge": 7
+    },
+    "275.0": {
+     "n": 18,
+     "n_over": 0,
+     "n_bridge": 0
+    }
+   },
+   "worst": []
+  },
+  {
+   "gen_by_kv": {
+    "66.0": {
+     "n": 6987,
+     "mw": 99107.5,
+     "share": 0.5311
+    },
+    "77.0": {
+     "n": 5,
+     "mw": 202.0,
+     "share": 0.0011
+    },
+    "154.0": {
+     "n": 585,
+     "mw": 21173.8,
+     "share": 0.1135
+    },
+    "275.0": {
+     "n": 338,
+     "mw": 39001.8,
+     "share": 0.209
+    },
+    "500.0": {
+     "n": 320,
+     "mw": 27112.2,
+     "share": 0.1453
+    }
+   },
+   "gen_mw_at_or_below_110kv_share": 0.5322,
+   "n_misplaced_big_gen": 18,
+   "misplaced_big_gen_mw": 23645.9,
+   "misplaced_big_gen": [
+    {
+     "mw": 3600.0,
+     "kv": 66.0,
+     "name": "姉崎火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 3420.0,
+     "kv": 66.0,
+     "name": "川崎火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 2800.0,
+     "kv": 66.0,
+     "name": "横浜火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 2000.0,
+     "kv": 66.0,
+     "name": "東扇島火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1600.0,
+     "kv": 66.0,
+     "name": "奥清津発電所",
+     "fuel": "hydro"
+    },
+    {
+     "mw": 1221.3,
+     "kv": 66.0,
+     "name": "扇島パワーステーション",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1200.0,
+     "kv": 66.0,
+     "name": "磯子火力発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 1152.0,
+     "kv": 66.0,
+     "name": "日本製鉄鹿島火力発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 1150.0,
+     "kv": 66.0,
+     "name": "南横浜火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1050.0,
+     "kv": 66.0,
+     "name": "大井火力発電所跡地",
+     "fuel": "oil"
+    },
+    {
+     "mw": 1000.0,
+     "kv": 66.0,
+     "name": "鹿島共同発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 900.0,
+     "kv": 66.0,
+     "name": "塩原発電所",
+     "fuel": "hydro"
+    },
+    {
+     "mw": 600.0,
+     "kv": 66.0,
+     "name": "Shin Anegasaki Power Plant",
+     "fuel": "gas"
+    },
+    {
+     "mw": 446.0,
+     "kv": 66.0,
+     "name": "東北電力株式会社仙台火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 446.0,
+     "kv": 66.0,
+     "name": "仙台火力発電所",
+     "fuel": "solar"
+    },
+    {
+     "mw": 400.0,
+     "kv": 66.0,
+     "name": "H.I.S. Kakuda Biomass Park",
+     "fuel": "gas"
+    },
+    {
+     "mw": 342.0,
+     "kv": 66.0,
+     "name": "ENEOS根岸製油所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 318.6,
+     "kv": 66.0,
+     "name": "鹿島南共同発電所",
+     "fuel": "gas"
+    }
+   ],
+   "island": "east",
+   "site_trafos": false,
+   "seconds": 45.9,
+   "n_bus": 6002,
+   "dc_converged": true,
+   "n_site_trafo": 0,
+   "median_detour_hops": 1,
+   "max_loading_pct": 1667.8,
+   "n_line": 6122,
+   "n_over": 602,
+   "n_bridge": 943,
+   "bridge_share": 0.154,
+   "n_major_bridge": 0,
+   "overload_rate_bridge": 0.0106,
+   "overload_rate_major_bridge": 0.0,
+   "overload_rate_meshed": 0.1143,
+   "over_that_are_bridges": 0.0166,
+   "radial_stub_over": 15,
+   "detour_hist": {
+    "10+": 11,
+    "1(並行回線)": 481,
+    "3-4": 54,
+    "5-9": 29,
+    "bridge/迂回なし": 10,
+    "2": 17
+   },
+   "by_kv": {
+    "66.0": {
+     "n": 4746,
+     "n_over": 521,
+     "n_bridge": 823
+    },
+    "77.0": {
+     "n": 22,
+     "n_over": 0,
+     "n_bridge": 19
+    },
+    "132.0": {
+     "n": 1,
+     "n_over": 0,
+     "n_bridge": 0
+    },
+    "154.0": {
+     "n": 908,
+     "n_over": 71,
+     "n_bridge": 74
+    },
+    "275.0": {
+     "n": 302,
+     "n_over": 10,
+     "n_bridge": 16
+    },
+    "500.0": {
+     "n": 143,
+     "n_over": 0,
+     "n_bridge": 11
+    }
+   },
+   "worst": [
+    {
+     "idx": 4064,
+     "name": "leadin",
+     "kv": 66.0,
+     "loading_pct": 1667.8,
+     "p_mw": 1143.9,
+     "is_bridge": true,
+     "minor_side": 1,
+     "min_deg": 1,
+     "len_km": 0.3,
+     "u": 4780,
+     "v": 4779,
+     "detour_hops": null
+    },
+    {
+     "idx": 5243,
+     "name": "鉾田線",
+     "kv": 66.0,
+     "loading_pct": 1594.7,
+     "p_mw": 2187.6,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 5.3,
+     "u": 3214,
+     "v": 3215,
+     "detour_hops": 1
+    },
+    {
+     "idx": 5246,
+     "name": "鉾田線",
+     "kv": 66.0,
+     "loading_pct": 1407.6,
+     "p_mw": 1930.9,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 8.8,
+     "u": 3215,
+     "v": 5826,
+     "detour_hops": 1
+    },
+    {
+     "idx": 3708,
+     "name": "塩浜南線",
+     "kv": 66.0,
+     "loading_pct": 1253.7,
+     "p_mw": 1719.8,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 0.5,
+     "u": 4672,
+     "v": 2541,
+     "detour_hops": 1
+    },
+    {
+     "idx": 5500,
+     "name": "高浜線",
+     "kv": 66.0,
+     "loading_pct": 1186.0,
+     "p_mw": 1626.9,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 1.9,
+     "u": 5742,
+     "v": 5889,
+     "detour_hops": 1
+    },
+    {
+     "idx": 5501,
+     "name": "高浜線",
+     "kv": 66.0,
+     "loading_pct": 1153.5,
+     "p_mw": 1582.3,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 3.0,
+     "u": 5742,
+     "v": 3306,
+     "detour_hops": 1
+    },
+    {
+     "idx": 5248,
+     "name": "鉾田線",
+     "kv": 66.0,
+     "loading_pct": 988.5,
+     "p_mw": 1356.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 1.5,
+     "u": 5826,
+     "v": 3216,
+     "detour_hops": 1
+    },
+    {
+     "idx": 4524,
+     "name": "東京電力パワーグリッド 66.0kV線",
+     "kv": 66.0,
+     "loading_pct": 966.1,
+     "p_mw": 662.7,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.7,
+     "u": 2872,
+     "v": 5286,
+     "detour_hops": 4
+    },
+    {
+     "idx": 4011,
+     "name": "東日本旅客鉄道株式会社 66.0kV線",
+     "kv": 66.0,
+     "loading_pct": 908.8,
+     "p_mw": 623.3,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.0,
+     "u": 2622,
+     "v": 2754,
+     "detour_hops": 2
+    },
+    {
+     "idx": 5783,
+     "name": "新治線 / 鉾田線 / 高浜線",
+     "kv": 66.0,
+     "loading_pct": 862.8,
+     "p_mw": 591.8,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.6,
+     "u": 3468,
+     "v": 5532,
+     "detour_hops": 15
+    },
+    {
+     "idx": 5265,
+     "name": "筑南線 / 筑館線",
+     "kv": 66.0,
+     "loading_pct": 858.8,
+     "p_mw": 589.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.5,
+     "u": 5693,
+     "v": 5738,
+     "detour_hops": 3
+    },
+    {
+     "idx": 4009,
+     "name": "姉原線",
+     "kv": 66.0,
+     "loading_pct": 847.0,
+     "p_mw": 1161.9,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.9,
+     "u": 2621,
+     "v": 2626,
+     "detour_hops": 1
+    },
+    {
+     "idx": 4023,
+     "name": "姉原線",
+     "kv": 66.0,
+     "loading_pct": 829.4,
+     "p_mw": 1137.8,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 2.0,
+     "u": 4915,
+     "v": 2626,
+     "detour_hops": 1
+    },
+    {
+     "idx": 3657,
+     "name": "姉原線",
+     "kv": 66.0,
+     "loading_pct": 811.9,
+     "p_mw": 1113.7,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 2.9,
+     "u": 4717,
+     "v": 4915,
+     "detour_hops": 1
+    },
+    {
+     "idx": 5244,
+     "name": "鉾田線 / 貝地線",
+     "kv": 66.0,
+     "loading_pct": 796.1,
+     "p_mw": 2184.3,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.9,
+     "u": 3214,
+     "v": 3306,
+     "detour_hops": 1
+    }
+   ]
+  },
+  {
+   "gen_by_kv": {
+    "66.0": {
+     "n": 3749,
+     "mw": 61989.7,
+     "share": 0.2814
+    },
+    "77.0": {
+     "n": 2059,
+     "mw": 28156.2,
+     "share": 0.1278
+    },
+    "110.0": {
+     "n": 734,
+     "mw": 20385.0,
+     "share": 0.0925
+    },
+    "154.0": {
+     "n": 858,
+     "mw": 25714.7,
+     "share": 0.1167
+    },
+    "187.0": {
+     "n": 71,
+     "mw": 3793.5,
+     "share": 0.0172
+    },
+    "220.0": {
+     "n": 600,
+     "mw": 18188.0,
+     "share": 0.0826
+    },
+    "275.0": {
+     "n": 313,
+     "mw": 31731.5,
+     "share": 0.144
+    },
+    "500.0": {
+     "n": 391,
+     "mw": 30352.7,
+     "share": 0.1378
+    }
+   },
+   "gen_mw_at_or_below_110kv_share": 0.5017,
+   "n_misplaced_big_gen": 43,
+   "misplaced_big_gen_mw": 33507.0,
+   "misplaced_big_gen": [
+    {
+     "mw": 2000.0,
+     "kv": 77.0,
+     "name": "堺港火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1800.0,
+     "kv": 66.0,
+     "name": "舞鶴火力発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 1800.0,
+     "kv": 66.0,
+     "name": "新小倉火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1600.0,
+     "kv": 66.0,
+     "name": "葛野川地下発電所",
+     "fuel": "hydro"
+    },
+    {
+     "mw": 1600.0,
+     "kv": 66.0,
+     "name": "奥清津発電所",
+     "fuel": "hydro"
+    },
+    {
+     "mw": 1542.0,
+     "kv": 110.0,
+     "name": "柳井火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 1400.0,
+     "kv": 66.0,
+     "name": "神鋼神戸発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 1200.0,
+     "kv": 110.0,
+     "name": "玉島火力発電所",
+     "fuel": "oil"
+    },
+    {
+     "mw": 1175.0,
+     "kv": 77.0,
+     "name": "武豊火力発電所",
+     "fuel": "oil"
+    },
+    {
+     "mw": 891.0,
+     "kv": 66.0,
+     "name": "戸畑共同火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 844.0,
+     "kv": 110.0,
+     "name": "福山共同発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 820.0,
+     "kv": 110.0,
+     "name": "島根原子力発電所",
+     "fuel": "nuclear"
+    },
+    {
+     "mw": 781.0,
+     "kv": 66.0,
+     "name": "水島火力発電所",
+     "fuel": "gas"
+    },
+    {
+     "mw": 750.0,
+     "kv": 77.0,
+     "name": "宮津エネルギー研究所",
+     "fuel": "oil"
+    },
+    {
+     "mw": 614.0,
+     "kv": 110.0,
+     "name": "倉敷共同発電所",
+     "fuel": "oil"
+    },
+    {
+     "mw": 600.0,
+     "kv": 66.0,
+     "name": "糸魚川発電所",
+     "fuel": "coal"
+    },
+    {
+     "mw": 600.0,
+     "kv": 110.0,
+     "name": "Hofu Energy Service (Daini) Power Plant",
+     "fuel": "coal"
+    },
+    {
+     "mw": 600.0,
+     "kv": 110.0,
+     "name": "Tosoh Nanyo Power Plant",
+     "fuel": "coal"
+    },
+    {
+     "mw": 600.0,
+     "kv": 66.0,
+     "name": "Tokuyama Central power station",
+     "fuel": "coal"
+    },
+    {
+     "mw": 600.0,
+     "kv": 66.0,
+     "name": "苓北火力発電所",
+     "fuel": "coal"
+    }
+   ],
+   "island": "west",
+   "site_trafos": false,
+   "seconds": 62.9,
+   "n_bus": 8213,
+   "dc_converged": true,
+   "n_site_trafo": 0,
+   "median_detour_hops": 3,
+   "max_loading_pct": 1894.3,
+   "n_line": 8361,
+   "n_over": 285,
+   "n_bridge": 1821,
+   "bridge_share": 0.2178,
+   "n_major_bridge": 0,
+   "overload_rate_bridge": 0.022,
+   "overload_rate_major_bridge": 0.0,
+   "overload_rate_meshed": 0.0375,
+   "over_that_are_bridges": 0.1404,
+   "radial_stub_over": 15,
+   "detour_hist": {
+    "2": 14,
+    "1(並行回線)": 92,
+    "5-9": 44,
+    "3-4": 31,
+    "10+": 64,
+    "bridge/迂回なし": 40
+   },
+   "by_kv": {
+    "66.0": {
+     "n": 2760,
+     "n_over": 79,
+     "n_bridge": 873
+    },
+    "77.0": {
+     "n": 2066,
+     "n_over": 171,
+     "n_bridge": 425
+    },
+    "110.0": {
+     "n": 848,
+     "n_over": 15,
+     "n_bridge": 160
+    },
+    "154.0": {
+     "n": 1260,
+     "n_over": 15,
+     "n_bridge": 206
+    },
+    "187.0": {
+     "n": 130,
+     "n_over": 0,
+     "n_bridge": 6
+    },
+    "220.0": {
+     "n": 475,
+     "n_over": 2,
+     "n_bridge": 53
+    },
+    "275.0": {
+     "n": 536,
+     "n_over": 3,
+     "n_bridge": 67
+    },
+    "500.0": {
+     "n": 286,
+     "n_over": 0,
+     "n_bridge": 31
+    }
+   },
+   "worst": [
+    {
+     "idx": 4567,
+     "name": "市場変電所~西屋変電所線",
+     "kv": 66.0,
+     "loading_pct": 1894.3,
+     "p_mw": 1299.3,
+     "is_bridge": true,
+     "minor_side": 1,
+     "min_deg": 1,
+     "len_km": 2.6,
+     "u": 4654,
+     "v": 4655,
+     "detour_hops": null
+    },
+    {
+     "idx": 4566,
+     "name": "市場変電所~西屋変電所線",
+     "kv": 66.0,
+     "loading_pct": 1855.7,
+     "p_mw": 1272.8,
+     "is_bridge": true,
+     "minor_side": 2,
+     "min_deg": 2,
+     "len_km": 1.5,
+     "u": 4586,
+     "v": 4654,
+     "detour_hops": null
+    },
+    {
+     "idx": 4373,
+     "name": "関西送電線_405",
+     "kv": 66.0,
+     "loading_pct": 1817.2,
+     "p_mw": 1246.4,
+     "is_bridge": true,
+     "minor_side": 3,
+     "min_deg": 2,
+     "len_km": 1.7,
+     "u": 3707,
+     "v": 4586,
+     "detour_hops": null
+    },
+    {
+     "idx": 3830,
+     "name": "関西電力（株）小浜変電所~森変電所線",
+     "kv": 66.0,
+     "loading_pct": 1365.8,
+     "p_mw": 936.8,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 1.9,
+     "u": 3527,
+     "v": 3707,
+     "detour_hops": 14
+    },
+    {
+     "idx": 3274,
+     "name": "関西送電線_129",
+     "kv": 77.0,
+     "loading_pct": 1267.2,
+     "p_mw": 1183.0,
+     "is_bridge": true,
+     "minor_side": 13,
+     "min_deg": 2,
+     "len_km": 0.7,
+     "u": 4520,
+     "v": 3257,
+     "detour_hops": null
+    },
+    {
+     "idx": 3831,
+     "name": "七日市変電所~森変電所線",
+     "kv": 66.0,
+     "loading_pct": 1137.7,
+     "p_mw": 910.4,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 6.6,
+     "u": 3527,
+     "v": 4546,
+     "detour_hops": 14
+    },
+    {
+     "idx": 3355,
+     "name": "敷津変電所~御崎七丁目変電所線",
+     "kv": 77.0,
+     "loading_pct": 933.7,
+     "p_mw": 1245.2,
+     "is_bridge": true,
+     "minor_side": 10,
+     "min_deg": 2,
+     "len_km": 1.7,
+     "u": 3257,
+     "v": 4321,
+     "detour_hops": null
+    },
+    {
+     "idx": 5857,
+     "name": "leadin",
+     "kv": 66.0,
+     "loading_pct": 824.6,
+     "p_mw": 565.6,
+     "is_bridge": true,
+     "minor_side": 1,
+     "min_deg": 1,
+     "len_km": 2.7,
+     "u": 5262,
+     "v": 5800,
+     "detour_hops": null
+    },
+    {
+     "idx": 8297,
+     "name": "渡辺通変電所~九州電力 住吉変電所線",
+     "kv": 66.0,
+     "loading_pct": 711.9,
+     "p_mw": 488.3,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 4,
+     "len_km": 0.4,
+     "u": 7513,
+     "v": 8113,
+     "detour_hops": 7
+    },
+    {
+     "idx": 7939,
+     "name": "都城変電所~志和池変電所線",
+     "kv": 66.0,
+     "loading_pct": 688.2,
+     "p_mw": 472.0,
+     "is_bridge": true,
+     "minor_side": 1,
+     "min_deg": 1,
+     "len_km": 6.6,
+     "u": 7749,
+     "v": 7880,
+     "detour_hops": null
+    },
+    {
+     "idx": 3273,
+     "name": "我孫子線",
+     "kv": 77.0,
+     "loading_pct": 617.0,
+     "p_mw": 1152.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 0.5,
+     "u": 3243,
+     "v": 4520,
+     "detour_hops": 1
+    },
+    {
+     "idx": 3270,
+     "name": "我孫子線",
+     "kv": 77.0,
+     "loading_pct": 600.3,
+     "p_mw": 1120.9,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 1.4,
+     "u": 4082,
+     "v": 3243,
+     "detour_hops": 1
+    },
+    {
+     "idx": 3421,
+     "name": "金田線",
+     "kv": 66.0,
+     "loading_pct": 596.8,
+     "p_mw": 955.1,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 0.7,
+     "u": 4033,
+     "v": 4082,
+     "detour_hops": 1
+    },
+    {
+     "idx": 3348,
+     "name": "金田線",
+     "kv": 77.0,
+     "loading_pct": 575.2,
+     "p_mw": 920.6,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 1.3,
+     "u": 3251,
+     "v": 4033,
+     "detour_hops": 1
+    },
+    {
+     "idx": 4169,
+     "name": "松原変電所~安智変電所線",
+     "kv": 77.0,
+     "loading_pct": 569.5,
+     "p_mw": 531.6,
+     "is_bridge": true,
+     "minor_side": 3,
+     "min_deg": 3,
+     "len_km": 7.6,
+     "u": 3611,
+     "v": 4396,
+     "detour_hops": null
+    }
+   ]
+  },
+  {
+   "gen_by_kv": {
+    "66.0": {
+     "n": 19,
+     "mw": 190.0,
+     "share": 0.0625
+    },
+    "132.0": {
+     "n": 9,
+     "mw": 2850.0,
+     "share": 0.9375
+    }
+   },
+   "gen_mw_at_or_below_110kv_share": 0.0625,
+   "n_misplaced_big_gen": 0,
+   "misplaced_big_gen_mw": 0,
+   "misplaced_big_gen": [],
+   "island": "okinawa",
+   "site_trafos": false,
+   "seconds": 1.2,
+   "n_bus": 98,
+   "dc_converged": true,
+   "n_site_trafo": 0,
+   "median_detour_hops": 3,
+   "max_loading_pct": 165.0,
+   "n_line": 95,
+   "n_over": 9,
+   "n_bridge": 27,
+   "bridge_share": 0.2842,
+   "n_major_bridge": 2,
+   "overload_rate_bridge": 0.0,
+   "overload_rate_major_bridge": 0.0,
+   "overload_rate_meshed": 0.1324,
+   "over_that_are_bridges": 0.0,
+   "radial_stub_over": 0,
+   "detour_hist": {
+    "3-4": 6,
+    "10+": 2,
+    "1(並行回線)": 1
+   },
+   "by_kv": {
+    "66.0": {
+     "n": 71,
+     "n_over": 7,
+     "n_bridge": 25
+    },
+    "132.0": {
+     "n": 24,
+     "n_over": 2,
+     "n_bridge": 2
+    }
+   },
+   "worst": [
+    {
+     "idx": 17,
+     "name": "友寄変電所~南風原変電所線",
+     "kv": 66.0,
+     "loading_pct": 165.0,
+     "p_mw": 113.2,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 1.9,
+     "u": 67,
+     "v": 28,
+     "detour_hops": 3
+    },
+    {
+     "idx": 69,
+     "name": "伊佐一丁目変電所_2~牧港五丁目変電所線",
+     "kv": 66.0,
+     "loading_pct": 148.6,
+     "p_mw": 101.9,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 3.9,
+     "u": 54,
+     "v": 31,
+     "detour_hops": 3
+    },
+    {
+     "idx": 58,
+     "name": "石川東山二丁目変電所~石川東山一丁目変電所線",
+     "kv": 66.0,
+     "loading_pct": 129.8,
+     "p_mw": 89.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 1.3,
+     "u": 62,
+     "v": 9,
+     "detour_hops": 10
+    },
+    {
+     "idx": 60,
+     "name": "石川東山一丁目変電所~石川東山二丁目変電所線",
+     "kv": 132.0,
+     "loading_pct": 123.7,
+     "p_mw": 339.4,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 0.3,
+     "u": 61,
+     "v": 59,
+     "detour_hops": 3
+    },
+    {
+     "idx": 68,
+     "name": "牧港五丁目変電所~港川変電所線",
+     "kv": 66.0,
+     "loading_pct": 116.6,
+     "p_mw": 160.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 1.2,
+     "u": 54,
+     "v": 52,
+     "detour_hops": 1
+    },
+    {
+     "idx": 82,
+     "name": "曙変電所~久茂地変電所線",
+     "kv": 66.0,
+     "loading_pct": 112.2,
+     "p_mw": 77.0,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 2,
+     "len_km": 1.1,
+     "u": 88,
+     "v": 97,
+     "detour_hops": 3
+    },
+    {
+     "idx": 54,
+     "name": "仲泊変電所~石川東山一丁目変電所線",
+     "kv": 132.0,
+     "loading_pct": 104.6,
+     "p_mw": 287.1,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 2.1,
+     "u": 32,
+     "v": 59,
+     "detour_hops": 3
+    },
+    {
+     "idx": 20,
+     "name": "南風原変電所~与那原変電所線",
+     "kv": 66.0,
+     "loading_pct": 104.2,
+     "p_mw": 71.5,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 2.5,
+     "u": 28,
+     "v": 50,
+     "detour_hops": 3
+    },
+    {
+     "idx": 28,
+     "name": "恩納村変電所~喜瀬変電所線",
+     "kv": 66.0,
+     "loading_pct": 101.8,
+     "p_mw": 69.8,
+     "is_bridge": false,
+     "minor_side": null,
+     "min_deg": 3,
+     "len_km": 17.0,
+     "u": 4,
+     "v": 9,
+     "detour_hops": 10
+    }
+   ]
+  }
+ ]
+}
