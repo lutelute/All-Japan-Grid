@@ -27,6 +27,9 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+import sys
+sys.path.insert(0, str(ROOT))
+from src.topology.coords import CoordIndex
 KZ = ROOT / "data" / "external" / "keitouzu"
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 REPORTS = ROOT / "docs" / "reports"
@@ -48,41 +51,23 @@ def build_sub_graph(built: dict) -> tuple[set[str], dict[str, set[str]], dict[st
     nodes, edges = built["nodes"], built["edges"]
     node_ids = {n["id"] for n in nodes}
     base_ids: dict[str, set[str]] = defaultdict(set)
-    # 1つの座標に複数ノードが載る（多層変電所の各電圧層、および地域抽出bboxの重なりで
-    # 生じる跨region重複コピー）。座標→単一IDにすると 610 変電所が隣接グラフから
-    # 脱落するため、座標には必ずノード**群**を持たせる。
-    coord_nodes: dict[tuple[float, float], list[dict]] = defaultdict(list)
     for n in nodes:
         base_ids[n["id"].split("@")[0]].add(n["id"])
-        coord_nodes[(round(n["lat"], 5), round(n["lon"], 5))].append(n)
 
+    # 座標の解決は src.topology.coords.CoordIndex に一本化（1座標に複数ノードが
+    # 載る性質と、潰すと 610 変電所が脱落する事故の経緯はそちらの docstring）。
+    ix = CoordIndex(nodes)
     adj: dict[str, set[str]] = defaultdict(set)
-    # 同一座標のノードどうしは同一の物理サイト（層間＝変圧器、重複コピー＝同一設備）
-    for group in coord_nodes.values():
-        for i in range(len(group)):
-            for j in range(i + 1, len(group)):
-                adj[group[i]["id"]].add(group[j]["id"])
-                adj[group[j]["id"]].add(group[i]["id"])
-
-    def endpoints(pt: list[float], kv) -> list[str]:
-        """辺の端点を解決する。電圧が一致する層を優先し、無ければその地点の全ノード。"""
-        cands = coord_nodes.get((round(pt[0], 5), round(pt[1], 5)))
-        if not cands:
-            return []
-        if kv is not None:
-            m = [c["id"] for c in cands
-                 if c.get("kv") is not None and abs(c["kv"] - kv) < 0.5]
-            if m:
-                return m
-        return [c["id"] for c in cands]
-
+    for i, j in ix.colocated_pairs():     # 同一地点＝同一物理サイト（層間・重複コピー）
+        adj[nodes[i]["id"]].add(nodes[j]["id"])
+        adj[nodes[j]["id"]].add(nodes[i]["id"])
     for e in edges:
         kv = e.get("kv")
-        for ia in endpoints(e["a"], kv):
-            for ib in endpoints(e["b"], kv):
-                if ia != ib:
-                    adj[ia].add(ib)
-                    adj[ib].add(ia)
+        for i in ix.endpoints(e["a"], kv):
+            for j in ix.endpoints(e["b"], kv):
+                if i != j:
+                    adj[nodes[i]["id"]].add(nodes[j]["id"])
+                    adj[nodes[j]["id"]].add(nodes[i]["id"])
 
     sub_adj: dict[str, set[str]] = defaultdict(set)
     for n in nodes:

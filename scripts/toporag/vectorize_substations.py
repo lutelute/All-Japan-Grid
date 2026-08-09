@@ -19,6 +19,9 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
+import sys
+sys.path.insert(0, str(ROOT))
+from src.topology.coords import CoordIndex
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 KZ = ROOT / "data" / "external" / "keitouzu"
 
@@ -98,44 +101,23 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
     built = json.load(open(BUILT))
     nodes, edges = built["nodes"], built["edges"]
 
-    # 座標→その地点のノード群（同一変電所の複数電圧層は座標を共有する）
-    coord_nodes: dict[tuple[float, float], list[dict]] = defaultdict(list)
-    for n in nodes:
-        coord_nodes[(round(n["lat"], 5), round(n["lon"], 5))].append(n)
 
-    def endpoints(pt: list[float], kv: float | None) -> list[str]:
-        """辺の端点を解決する。電圧一致層を優先、無ければその地点の全ノード。
-
-        1座標に複数ノードが載る（多層変電所の各電圧層 / 地域抽出bboxの重なりによる
-        跨region重複コピー）。単一IDに潰すと多数の変電所が隣接グラフから脱落する。
-        """
-        cands = coord_nodes.get((round(pt[0], 5), round(pt[1], 5)))
-        if not cands:
-            return []
-        if kv is not None:
-            m = [c["id"] for c in cands
-                 if c.get("kv") is not None and abs(c["kv"] - kv) < 0.5]
-            if m:
-                return m
-        return [c["id"] for c in cands]
-
-    # ノード間隣接（辺の電圧を保持）
+    # 座標の解決は src.topology.coords.CoordIndex に一本化
+    # （1座標に複数ノードが載る性質と、潰したときに壊れる範囲はそちらの docstring）。
+    ix = CoordIndex(nodes)
     adj: dict[str, set[tuple[str, float]]] = defaultdict(set)
-    # 同一座標のノード = 同一物理サイト（層間＝変圧器、重複コピー＝同一設備）
-    for group in coord_nodes.values():
-        for i in range(len(group)):
-            for j in range(i + 1, len(group)):
-                adj[group[i]["id"]].add((group[j]["id"], None))
-                adj[group[j]["id"]].add((group[i]["id"], None))
+    for i, j in ix.colocated_pairs():   # 同一地点＝同一物理サイト（層間・重複コピー）
+        adj[nodes[i]["id"]].add((nodes[j]["id"], None))
+        adj[nodes[j]["id"]].add((nodes[i]["id"], None))
     for e in edges:
         kv = e.get("kv")
         if kv_floor is not None and (kv is None or kv < kv_floor):
             continue
-        for ia in endpoints(e["a"], kv):
-            for ib in endpoints(e["b"], kv):
-                if ia != ib:
-                    adj[ia].add((ib, kv))
-                    adj[ib].add((ia, kv))
+        for i in ix.endpoints(e["a"], kv):
+            for j in ix.endpoints(e["b"], kv):
+                if i != j:
+                    adj[nodes[i]["id"]].add((nodes[j]["id"], kv))
+                    adj[nodes[j]["id"]].add((nodes[i]["id"], kv))
 
     F = EgoFeatures()
     node_by_id = {n["id"]: n for n in nodes}
@@ -158,7 +140,9 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
         seen, q = {nid}, deque([(nid, None)])
         while q:
             cur, first_kv = q.popleft()
-            for nb, kv in adj.get(cur, ()):
+            # sorted: 集合の走査順は実行ごとに変わる。BFS の到達順で
+            # deg_kv に記録される「最初の辺の電圧」が揺れるため固定する。
+            for nb, kv in sorted(adj.get(cur, ())):
                 if nb in seen:
                     continue
                 seen.add(nb)
