@@ -41,8 +41,6 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import math
-import os
 import subprocess
 import sys
 import time
@@ -65,171 +63,19 @@ def load_pf():
     return mod
 
 
-def bus_incident_mva(net) -> dict[int, float]:
-    """各バスに集まる枝の合計容量（MVA）。これがそのバスの受電能力の上限を決める。"""
-    cap: dict[int, float] = defaultdict(float)
-    for _li, r in net.line.iterrows():
-        if not r["in_service"]:
-            continue
-        kv = float(net.bus.at[int(r["from_bus"]), "vn_kv"])
-        mva = float(r["max_i_ka"]) * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
-        cap[int(r["from_bus"])] += mva
-        cap[int(r["to_bus"])] += mva
-    for _ti, r in net.trafo.iterrows():
-        if not r["in_service"]:
-            continue
-        s = float(r["sn_mva"]) * max(1, int(r.get("parallel") or 1))
-        cap[int(r["hv_bus"])] += s
-        cap[int(r["lv_bus"])] += s
-    return cap
-
-
-def class_branch_mva(net) -> dict[float, float]:
-    """電圧階級ごとの「1 回線あたり容量の中央値」をモデル自身の導体定数から測る。
-
-    外部の接続電圧表を持ち込まずに「この出力はこの階級では運べない」を言うための基準。
-    並列回線は 1 回線あたりに戻して数える（`parallel` で割る）。
-    """
-    per: dict[float, list[float]] = defaultdict(list)
-    for _li, r in net.line.iterrows():
-        if not r["in_service"]:
-            continue
-        kv = round(float(net.bus.at[int(r["from_bus"]), "vn_kv"]), 1)
-        per[kv].append(float(r["max_i_ka"]) * kv * math.sqrt(3.0))
-    out = {}
-    for kv, v in per.items():
-        v.sort()
-        out[kv] = v[len(v) // 2]
-    return out
-
-
-def required_kv(p_mw: float, ladder: list[tuple[float, float]]) -> float:
-    """その出力を 1 回線で運べる最下位の電圧階級。無ければ最上位。"""
-    for kv, mva in ladder:
-        if mva >= p_mw:
-            return kv
-    return ladder[-1][0] if ladder else 0.0
-
-
 def attach_generators_variant(pf, net, bus_of, nodes, island, mode: str,
                               site_km: float = 1.5, max_km: float = 20.0,
                               kvfit_km: float = 25.0) -> dict:
-    """`pf.attach_generators` の繋ぎ先だけを差し替えた版。
+    """繋ぎ先の規則を差し替えて接続する（**本番の実装をそのまま呼ぶ**）。
 
-    発電所の集め方・重複除去（領土地域優先）は本番と同じ手順を踏む。ここを自前で
-    書き直すと本番と診断が食い違うので、**本番の関数から手順をなぞる**。
+    2026-08-09 の採否判断に向けて、この規則は本番 `run_full_powerflow_from_db` の
+    `attach_generators(attach_mode=…)`（介入#24・`--gen-attach`）に移した。
+    ここに写しを残すと「診断と本番の実装が食い違って二度誤った」を三度目にするので、
+    本関数は**薄い委譲**に徹する。回帰は `tests/test_gen_attach_modes.py`。
     """
-    import pandapower as pp
-    from src.powerflow.region_attribution import area_of_coord
-
-    sub_bus = [(i, bus_of[i], nodes[i]["lat"], nodes[i]["lon"])
-               for i in bus_of if nodes[i].get("sub") == 1]
-    if not sub_bus:
-        return {"n_gen": 0}
-    regions = [r for r, (isl, _f) in pf.ISLAND_OF.items() if isl == island]
-    feats = []
-    for region in regions:
-        path = os.path.join(pf.ROOT, "data", f"{region}_plants.geojson")
-        if not os.path.exists(path):
-            continue
-        with open(path, encoding="utf-8") as f:
-            for feat in json.load(f).get("features", []):
-                feats.append((region, feat))
-    chosen, extra = {}, []
-    for region, feat in feats:
-        g = feat.get("geometry") or {}
-        oid = (feat.get("properties") or {}).get("osm_id")
-        if oid is None or g.get("type") != "Point":
-            extra.append((region, feat))
-            continue
-        cur = chosen.get(oid)
-        if cur is None:
-            chosen[oid] = (region, feat)
-        else:
-            lon, lat = g["coordinates"][0], g["coordinates"][1]
-            home = area_of_coord(lat, lon)
-            if region == home and cur[0] != home:
-                chosen[oid] = (region, feat)
-    feats = list(chosen.values()) + extra
-
-    incident = bus_incident_mva(net) if mode == "cap" else {}
-    ladder: list[tuple[float, float]] = []
-    if mode == "kvfit":
-        ladder = sorted(class_branch_mva(net).items())
-        max_km = max(max_km, kvfit_km)
-    n_gen = 0
-    n_moved = 0
-    moved_mw = 0.0
-    kv_hist: dict[float, float] = defaultdict(float)
-    for k, (region, feat) in enumerate(feats):
-        g = feat.get("geometry") or {}
-        if g.get("type") != "Point":
-            continue
-        lon, lat = g["coordinates"][0], g["coordinates"][1]
-        props = feat.get("properties", {})
-        try:
-            cap_mw = float(props.get("capacity_mw"))
-        except (TypeError, ValueError):
-            cap_mw = None
-        fuel = props.get("fuel_type") or props.get("plant:source") or "unknown"
-        if not isinstance(fuel, str) or fuel.startswith("http"):
-            fuel = "unknown"
-        if cap_mw is None or cap_mw <= 0:
-            cap_mw = pf._DEFAULT_CAP.get(fuel, pf._CAP_FALLBACK)
-
-        cands = [(pf._haversine_km(lat, lon, s[2], s[3]), s) for s in sub_bus]
-        cands.sort(key=lambda t: t[0])
-        near = [(d, s) for d, s in cands if d <= max_km]
-        if not near:
-            continue
-        # 現行の繋ぎ先は 20km 以内の最寄り（kvfit で半径を伸ばしても比較の基準は動かさない）
-        base_near = [(d, s) for d, s in near if d <= 20.0]
-        if not base_near:
-            continue
-        base_pick = base_near[0][1][1]
-        pick = base_pick
-        if mode == "site":
-            same_site = [(d, s) for d, s in near if d <= site_km]
-            if same_site:
-                # 同一サイト内で最高電圧、同点なら近い方
-                pick = max(same_site,
-                           key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
-        elif mode == "cap":
-            ok = next((s for d, s in near if incident.get(s[1], 0.0) >= cap_mw), None)
-            if ok is not None:
-                pick = ok[1]
-            else:
-                # どこも受けきれない → 20km 内で最も受電容量の大きいバス
-                pick = max(near, key=lambda t: incident.get(t[1][1], 0.0))[1][1]
-        elif mode == "kvfit":
-            need = required_kv(cap_mw, ladder)
-            ok = next((s for d, s in near
-                       if float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
-            if ok is not None:
-                pick = ok[1]
-            else:
-                # 必要階級が半径内に無い → 半径内で最も高い階級（同点なら近い方）
-                pick = max(near,
-                           key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
-        if pick != base_pick:
-            n_moved += 1
-            moved_mw += cap_mw
-        kv_hist[round(float(net.bus.at[pick, "vn_kv"]), 1)] += cap_mw
-        try:
-            pp.create_gen(net, bus=int(pick), p_mw=cap_mw, vm_pu=1.0,
-                          name=str(props.get("name") or f"{region}_gen_{k}"),
-                          type=fuel, max_p_mw=cap_mw, min_p_mw=0.0,
-                          max_q_mvar=0.5 * cap_mw, min_q_mvar=-0.3 * cap_mw)
-            n_gen += 1
-        except (ValueError, TypeError):
-            pass
-    tot = sum(kv_hist.values()) or 1.0
-    return {"n_gen": n_gen, "n_moved": n_moved, "moved_mw": round(moved_mw, 1),
-            "ladder_note": (" / ".join(f"{kv:.0f}kV {mva:,.0f}MVA" for kv, mva in ladder)
-                            if ladder else None),
-            "kv_share": {str(k): round(v / tot, 4) for k, v in sorted(kv_hist.items())},
-            "share_at_or_below_110kv": round(
-                sum(v for k, v in kv_hist.items() if k <= 110.0) / tot, 4)}
+    return pf.attach_generators(net, bus_of, nodes, island,
+                                attach_mode=mode, site_km=site_km,
+                                kvfit_km=kvfit_km, stats=True)
 
 
 def overload_stats(net) -> dict:

@@ -495,14 +495,81 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
 # ──────────────────────────────────────────────────────────────────────────
 #  Generators from OSM plants (nearest substation bus)
 # ──────────────────────────────────────────────────────────────────────────
-def attach_generators(net, bus_of, nodes, island, territory=True):
-    """Attach OSM plants to the nearest in-island substation bus (<=20 km).
+ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
+
+
+def bus_incident_mva(net):
+    """各バスに集まる枝の合計容量(MVA)。そのバスが受けられる出力の上限を決める。"""
+    cap = defaultdict(float)
+    for _li, r in net.line.iterrows():
+        if not r["in_service"]:
+            continue
+        kv = float(net.bus.at[int(r["from_bus"]), "vn_kv"])
+        mva = float(r["max_i_ka"]) * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
+        cap[int(r["from_bus"])] += mva
+        cap[int(r["to_bus"])] += mva
+    for _ti, r in net.trafo.iterrows():
+        if not r["in_service"]:
+            continue
+        s = float(r["sn_mva"]) * max(1, int(r.get("parallel") or 1))
+        cap[int(r["hv_bus"])] += s
+        cap[int(r["lv_bus"])] += s
+    return cap
+
+
+def class_branch_mva(net):
+    """電圧階級ごとの「1回線あたり容量の中央値」を**モデル自身の導体定数から**測る。
+
+    外部の接続電圧表を持ち込まずに「この出力はこの階級では運べない」と言うための基準。
+    並列回線は1回線あたりに戻して数える。
+    """
+    per = defaultdict(list)
+    for _li, r in net.line.iterrows():
+        if not r["in_service"]:
+            continue
+        kv = round(float(net.bus.at[int(r["from_bus"]), "vn_kv"]), 1)
+        per[kv].append(float(r["max_i_ka"]) * kv * math.sqrt(3.0))
+    out = {}
+    for kv, v in per.items():
+        v.sort()
+        out[kv] = v[len(v) // 2]
+    return out
+
+
+def required_kv(p_mw, ladder):
+    """その出力を1回線で運べる最下位の電圧階級。無ければ最上位。"""
+    for kv, mva in ladder:
+        if mva >= p_mw:
+            return kv
+    return ladder[-1][0] if ladder else 0.0
+
+
+def attach_generators(net, bus_of, nodes, island, territory=True,
+                      attach_mode="nearest", site_km=1.5, kvfit_km=25.0,
+                      stats=False):
+    """Attach OSM plants to an in-island substation bus (<=20 km).
 
     territory: True(既定)=同一 osm_id が複数地域ファイルに存在する場合
     (bbox重なりのスピルオーバー)、1回だけ採用し、領土地域(座標→県→エリア)の
     コピーを優先する。旧挙動は同一発電所を二重付与していた(zone汚染レポート⑤:
-    下関火力がkyushu既定容量+chugoku 575MWの二重など、west同名重複750件超)。"""
+    下関火力がkyushu既定容量+chugoku 575MWの二重など、west同名重複750件超)。
+
+    attach_mode: **介入#24**（`docs/MODEL_INTERVENTIONS.md`）。繋ぎ先の選び方。
+      nearest 現行既定。最寄りの変電所バス。66kV変電所が桁違いに多いので最寄りは
+              ほぼ66kVになり、east は発電容量の53.2%(99GW)が66kVバスに載る
+              （姉崎火力3,600MW・川崎火力3,420MWまで66kV接続）。
+      site    半径 site_km 以内に複数階級があれば最高電圧へ。
+      cap     バスに集まる枝の合計容量がその発電所の出力以上になる最寄りのバスへ。
+      kvfit   出力を1回線で運べる最下位の階級を必要階級とし、kvfit_km 以内で
+              必要階級以上の最寄りバスへ。
+    いずれも**判定基準はモデル自身のデータだけ**から作る（外部の接続電圧表を
+    持ち込むと捏造になる）。評価は `docs/reports/repair_search_2026-08-09.md`。
+
+    stats=True で件数だけでなく繋ぎ替え内訳を dict で返す（既定は従来どおり n_gen）。
+    """
     import glob
+    if attach_mode not in ATTACH_MODES:
+        raise ValueError(f"attach_mode は {ATTACH_MODES} のいずれか: {attach_mode!r}")
     # substation bus coords for nearest search
     sub_bus = [(i, bus_of[i], nodes[i]["lat"], nodes[i]["lon"])
                for i in bus_of if nodes[i].get("sub") == 1]
@@ -541,7 +608,15 @@ def attach_generators(net, bus_of, nodes, island, territory=True):
                   f"(領土地域優先)")
         feats = list(chosen.values()) + extra
 
+    incident = bus_incident_mva(net) if attach_mode == "cap" else {}
+    ladder = sorted(class_branch_mva(net).items()) if attach_mode == "kvfit" else []
+    # kvfit だけは大型機の引込線に相当する分だけ探索半径を伸ばす（比較の基準は 20km のまま）
+    max_km = max(20.0, kvfit_km) if attach_mode == "kvfit" else 20.0
+
     n_gen = 0
+    n_moved = 0
+    moved_mw = 0.0
+    kv_hist = defaultdict(float)
     for k, (region, feat) in enumerate(feats):
         g = feat.get("geometry") or {}
         if g.get("type") != "Point":
@@ -557,19 +632,53 @@ def attach_generators(net, bus_of, nodes, island, territory=True):
             fuel = "unknown"
         if cap is None or cap <= 0:
             cap = _DEFAULT_CAP.get(fuel, _CAP_FALLBACK)
-        # nearest substation bus
-        best = min(sub_bus, key=lambda s: _haversine_km(lat, lon, s[2], s[3]))
-        if _haversine_km(lat, lon, best[2], best[3]) > 20.0:
+
+        cands = sorted(((_haversine_km(lat, lon, s[2], s[3]), s) for s in sub_bus),
+                       key=lambda t: t[0])
+        near = [(d, s) for d, s in cands if d <= max_km]
+        # 現行の繋ぎ先＝20km 以内の最寄り。ここに繋がらない発電所はどのモードでも入れない
+        base_near = [(d, s) for d, s in near if d <= 20.0]
+        if not base_near:
             continue
+        base_pick = base_near[0][1][1]
+        pick = base_pick
+        if attach_mode == "site":
+            same_site = [(d, s) for d, s in near if d <= site_km]
+            if same_site:            # 同一サイト内で最高電圧、同点なら近い方
+                pick = max(same_site,
+                           key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
+        elif attach_mode == "cap":
+            ok = next((s for d, s in near if incident.get(s[1], 0.0) >= cap), None)
+            pick = ok[1] if ok is not None else \
+                max(near, key=lambda t: incident.get(t[1][1], 0.0))[1][1]
+        elif attach_mode == "kvfit":
+            need = required_kv(cap, ladder)
+            ok = next((s for d, s in near
+                       if float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
+            pick = ok[1] if ok is not None else \
+                max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
+        if pick != base_pick:
+            n_moved += 1
+            moved_mw += cap
+        kv_hist[round(float(net.bus.at[pick, "vn_kv"]), 1)] += cap
         try:
-            pp.create_gen(net, bus=best[1], p_mw=cap, vm_pu=1.0,
+            pp.create_gen(net, bus=int(pick), p_mw=cap, vm_pu=1.0,
                           name=str(props.get("name") or f"{region}_gen_{k}"),
                           type=fuel, max_p_mw=cap, min_p_mw=0.0,
                           max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
             n_gen += 1
         except (ValueError, TypeError):
             pass
-    return n_gen
+    if not stats:
+        return n_gen
+    tot = sum(kv_hist.values()) or 1.0
+    return {"n_gen": n_gen, "n_moved": n_moved, "moved_mw": round(moved_mw, 1),
+            "attach_mode": attach_mode,
+            "ladder_note": (" / ".join(f"{kv:.0f}kV {mva:,.0f}MVA" for kv, mva in ladder)
+                            if ladder else None),
+            "kv_share": {str(k): round(v / tot, 4) for k, v in sorted(kv_hist.items())},
+            "share_at_or_below_110kv": round(
+                sum(v for k, v in kv_hist.items() if k <= 110.0) / tot, 4)}
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -869,6 +978,24 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
+    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default="nearest",
+                    help="発電機の繋ぎ先の選び方(**介入#24**)。既定 nearest=最寄りの"
+                         "変電所バス。66kV変電所が桁違いに多いので east は発電容量の"
+                         "53.2%%(99GW)が66kVバスに載り、姉崎火力3,600MWまで66kV接続に"
+                         "なっている。cap=バスの受電容量が出力以上になる最寄り、"
+                         "kvfit=出力を1回線で運べる階級以上の最寄り、site=同一サイトの"
+                         "最高電圧。判定基準はモデル自身の導体定数だけから作る。"
+                         "評価=docs/reports/repair_search_2026-08-09.md "
+                         "(east cap で過負荷603→551・太陽光是正と併せて303)。"
+                         "無効化=--gen-attach nearest(既定)")
+    ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
+                    help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
+                         "発電所はこの値で埋まる=**出典のない合成容量**。既定は "
+                         "solar=10.0 だが OSM 実容量の中央値は 0.10MW で 100倍の水増し"
+                         "(太陽光180GW=実績ピークの318%%)。`balance_by_zone` は容量比例で"
+                         "配分するので、この既定値が**そのままゾーン内の空間配分**になる。"
+                         "例: --default-cap solar=0.10。評価="
+                         "docs/reports/repair_search_2026-08-09.md。無効化=本引数を省略")
     ap.add_argument("--pref-demand", action=argparse.BooleanOptionalAction,
                     default=True,
                     help="需要空間配分の細分化: zone内を県別実需要シェア"
@@ -910,6 +1037,14 @@ def main():
                          "既定OFF")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
+    for spec in (args.default_cap or []):
+        fuel, _, val = spec.partition("=")
+        if not _ or not fuel:
+            raise SystemExit(f"--default-cap は FUEL=MW 形式: {spec!r}")
+        old = _DEFAULT_CAP.get(fuel, _CAP_FALLBACK)
+        _DEFAULT_CAP[fuel] = float(val)
+        # 介入#25 の帳簿: 既定値を動かしたら必ず出す（合成容量の量が変わる）
+        print(f"  介入#25 default-cap: {fuel} {old} → {float(val)} MW")
 
     with open(BUILT, encoding="utf-8") as f:
         db = json.load(f)
@@ -940,7 +1075,14 @@ def main():
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
-        n_gen = attach_generators(net, bus_of, nodes, island)
+        gstats = attach_generators(net, bus_of, nodes, island,
+                                   attach_mode=args.gen_attach, stats=True)
+        n_gen = gstats["n_gen"]
+        if args.gen_attach != "nearest":
+            # 介入#24 の帳簿: 何機・何MW を最寄り以外へ繋いだかを必ず出す
+            print(f"  介入#24 gen-attach={args.gen_attach}: 繋ぎ替え "
+                  f"{gstats['n_moved']:,}機/{gstats['moved_mw']:,.0f}MW "
+                  f"110kV以下に載る容量 {gstats['share_at_or_below_110kv']:.1%}")
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
         if args.reactive_comp is not None:
             from src.powerflow.pipeline import add_reactive_compensation
