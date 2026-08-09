@@ -1,0 +1,200 @@
+{
+ "date": "2026-08-09",
+ "min_hops": 3,
+ "radius_km": 10.0,
+ "runs": [
+  {
+   "island": "hokkaido",
+   "variant": "既定",
+   "n_trafo": 68,
+   "n_components": 35,
+   "n_added": 0,
+   "added_mva": 0.0,
+   "n_far_buses": 0,
+   "far_load_mw": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 90.2,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "seconds": 5.0
+  },
+  {
+   "island": "hokkaido",
+   "variant": "＋降圧点",
+   "n_trafo": 145,
+   "n_components": 21,
+   "n_added": 77,
+   "added_mva": 7700.0,
+   "n_far_buses": 250,
+   "far_load_mw": 2343.6,
+   "by_ratio": {
+    "187/66": 59,
+    "275/66": 11,
+    "110/66": 7
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 88.4,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "seconds": 4.2
+  },
+  {
+   "island": "east",
+   "variant": "既定",
+   "n_trafo": 630,
+   "n_components": 312,
+   "n_added": 0,
+   "added_mva": 0.0,
+   "n_far_buses": 0,
+   "far_load_mw": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "excess_mw": 122493.3,
+    "over_share": 0.0985,
+    "over_lv": 521,
+    "over_hv": 82
+   },
+   "seconds": 53.2
+  },
+  {
+   "island": "east",
+   "variant": "＋降圧点",
+   "n_trafo": 1581,
+   "n_components": 188,
+   "n_added": 951,
+   "added_mva": 95100.0,
+   "n_far_buses": 1264,
+   "far_load_mw": 24234.8,
+   "by_ratio": {
+    "154/66": 601,
+    "275/66": 247,
+    "500/66": 98,
+    "154/77": 4,
+    "275/77": 1
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 422,
+    "max_pct": 1407.6,
+    "excess_mw": 79424.3,
+    "over_share": 0.0689,
+    "over_lv": 332,
+    "over_hv": 90
+   },
+   "seconds": 50.8
+  },
+  {
+   "island": "west",
+   "variant": "既定",
+   "n_trafo": 1068,
+   "n_components": 541,
+   "n_added": 0,
+   "added_mva": 0.0,
+   "n_far_buses": 0,
+   "far_load_mw": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 285,
+    "max_pct": 1894.3,
+    "excess_mw": 37954.5,
+    "over_share": 0.0341,
+    "over_lv": 265,
+    "over_hv": 20
+   },
+   "seconds": 68.8
+  },
+  {
+   "island": "west",
+   "variant": "＋降圧点",
+   "n_trafo": 1849,
+   "n_components": 365,
+   "n_added": 781,
+   "added_mva": 78100.0,
+   "n_far_buses": 1134,
+   "far_load_mw": 24412.4,
+   "by_ratio": {
+    "154/66": 159,
+    "154/77": 134,
+    "220/66": 121,
+    "275/77": 111,
+    "110/66": 69,
+    "500/66": 51,
+    "275/66": 50,
+    "500/77": 43
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 205,
+    "max_pct": 1257.7,
+    "excess_mw": 22537.9,
+    "over_share": 0.0245,
+    "over_lv": 176,
+    "over_hv": 29
+   },
+   "seconds": 81.0
+  },
+  {
+   "island": "okinawa",
+   "variant": "既定",
+   "n_trafo": 19,
+   "n_components": 6,
+   "n_added": 0,
+   "added_mva": 0.0,
+   "n_far_buses": 0,
+   "far_load_mw": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "excess_mw": 211.4,
+    "over_share": 0.0947,
+    "over_lv": 7,
+    "over_hv": 0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "variant": "＋降圧点",
+   "n_trafo": 32,
+   "n_components": 4,
+   "n_added": 13,
+   "added_mva": 1300.0,
+   "n_far_buses": 25,
+   "far_load_mw": 478.9,
+   "by_ratio": {
+    "132/66": 13
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 5,
+    "max_pct": 137.3,
+    "excess_mw": 198.5,
+    "over_share": 0.0526,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "seconds": 1.3
+  }
+ ]
+}
