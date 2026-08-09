@@ -62,7 +62,8 @@ def branch_capacity_mw(sub, n_branch: int) -> np.ndarray:
     return cap
 
 
-def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0) -> dict:
+def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
+        cap_factor: float = 1.0) -> dict:
     # 座標が要るので bus_of（built ノード索引 → バス）を自前で受け取る
     from src.powerflow.pipeline import add_reactive_compensation
     from scripts.run_full_powerflow_from_db import (
@@ -84,7 +85,10 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0) -> dict
     sec_ptdf = time.perf_counter() - t0
 
     f0 = np.abs(ppc["branch"][:, PF].real.astype(float))
-    cap = branch_capacity_mw(sub, ptdf.shape[0])
+    cap = branch_capacity_mw(sub, ptdf.shape[0]) * cap_factor
+    # cap_factor: 理論値(√3·V·I)を公表運用容量に寄せる較正係数。
+    # 関西送配電の公表値との比較では全電圧階級で 0.47〜0.54（約 0.5）だった
+    # — docs/reports/line_capacity_calibration_*.md。既定 1.0（未適用）。
     head = np.maximum(cap - f0, 0.0)                    # 各枝の空き容量 [MW]
 
     # 制約に取る枝を電圧で絞る。基幹系への接続を評価する以上、下位系(66kV等)は
@@ -146,6 +150,7 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0) -> dict
         "sec_build_ptdf": round(sec_ptdf, 2),
         "sec_hosting_capacity_all_buses": round(sec_hc, 4),
         "n_branch_over_capacity": n_over, "n_branch_capacity_known": n_cap_known,
+        "capacity_factor": cap_factor,
         "min_kv": min_kv, "n_branch_in_scope": int(in_scope.sum()),
         "n_bus_computable": int(ok.sum()),
         "equivalent_ac_solves": int(len(hc)),
@@ -169,6 +174,8 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0) -> dict
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--islands", nargs="*", default=None)
+    ap.add_argument("--capacity-factor", type=float, default=1.0,
+                    help="線路容量に掛ける較正係数(公表値との比較では約0.5)。既定1.0=未適用")
     ap.add_argument("--min-kv", type=float, default=154.0,
                     help="制約に取る枝の下限電圧(既定154kV。下位系は対象外)")
     ap.add_argument("--date", default=None)
@@ -182,7 +189,7 @@ def main() -> None:
     from src.powerflow.pref_demand import pref_zone_gwh
     pref_gwh, _ = pref_zone_gwh(nodes)
 
-    res = [run(i, nodes, edges, cfg, pref_gwh, args.min_kv) for i in (args.islands or list(ISLAND_FREQ.keys()))]
+    res = [run(i, nodes, edges, cfg, pref_gwh, args.min_kv, args.capacity_factor) for i in (args.islands or list(ISLAND_FREQ.keys()))]
     # 制約対象の枝が無い島（沖縄は最高 132kV なので 154kV しきい値では対象外）は図から外す
     drawable = [r for r in res if r["n_branch_in_scope"] > 0 and np.isfinite(r["stress"]).any()]
 
