@@ -1,0 +1,248 @@
+{
+ "date": "2026-08-10",
+ "scenario": "fy2023r2",
+ "hour": 17,
+ "gen_attach": "cap",
+ "runs": [
+  {
+   "island": "east",
+   "mode": "nameplate",
+   "note": "",
+   "n_components": 312,
+   "n_synth_slack": 291,
+   "load_mw": 55250.0,
+   "injection": {
+    "total_mw": 58012.5,
+    "n_gen_on": 8235,
+    "solar_mw": 26622.1,
+    "solar_share": 0.4589,
+    "top_fuel": {
+     "solar": 26622.1,
+     "gas": 14509.6,
+     "coal": 5646.3,
+     "hydro": 4061.1,
+     "oil": 3891.9,
+     "nuclear": 2144.4
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 551,
+    "max_pct": 1594.7,
+    "p95_pct": 141.8,
+    "excess_mw": 90360.1,
+    "over_share": 0.09,
+    "over_lv": 484,
+    "over_hv": 67
+   },
+   "overload_power_basis": {
+    "n_over": 551,
+    "max_pct": 1594.7,
+    "excess_mw": 90360.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 49.8
+  },
+  {
+   "island": "east",
+   "mode": "uc",
+   "note": "t=17 scenario=fy2023r2",
+   "n_components": 312,
+   "n_synth_slack": 291,
+   "load_mw": 59353.0,
+   "injection": {
+    "total_mw": 56602.6,
+    "n_gen_on": 359,
+    "solar_mw": 0.0,
+    "solar_share": 0.0,
+    "top_fuel": {
+     "gas": 35784.5,
+     "coal": 17790.0,
+     "hydro": 1918.4,
+     "biomass": 462.8,
+     "geothermal": 309.3,
+     "waste": 291.4
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 396,
+    "max_pct": 847.9,
+    "p95_pct": 116.7,
+    "excess_mw": 118622.1,
+    "over_share": 0.0647,
+    "over_lv": 304,
+    "over_hv": 92
+   },
+   "overload_power_basis": {
+    "n_over": 396,
+    "max_pct": 847.9,
+    "excess_mw": 118622.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 48.9
+  },
+  {
+   "island": "east",
+   "mode": "uc_norm",
+   "note": "t=17 scenario=fy2023r2 normalized(需要復元・総注入=1.05×需要)",
+   "n_components": 312,
+   "n_synth_slack": 291,
+   "load_mw": 55250.0,
+   "injection": {
+    "total_mw": 58012.5,
+    "n_gen_on": 359,
+    "solar_mw": 0.0,
+    "solar_share": 0.0,
+    "top_fuel": {
+     "gas": 36675.8,
+     "coal": 18233.1,
+     "hydro": 1966.2,
+     "biomass": 474.3,
+     "geothermal": 317.0,
+     "waste": 298.7
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 370,
+    "max_pct": 738.2,
+    "p95_pct": 112.7,
+    "excess_mw": 125697.1,
+    "over_share": 0.0604,
+    "over_lv": 272,
+    "over_hv": 98
+   },
+   "overload_power_basis": {
+    "n_over": 370,
+    "max_pct": 738.2,
+    "excess_mw": 125697.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 48.7
+  },
+  {
+   "island": "west",
+   "mode": "nameplate",
+   "note": "",
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "load_mw": 73865.0,
+   "injection": {
+    "total_mw": 77558.3,
+    "n_gen_on": 8775,
+    "solar_mw": 26963.5,
+    "solar_share": 0.3477,
+    "top_fuel": {
+     "solar": 26963.5,
+     "gas": 17136.4,
+     "coal": 10864.0,
+     "hydro": 10042.2,
+     "oil": 5669.5,
+     "nuclear": 4691.2
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 291,
+    "max_pct": 708.2,
+    "p95_pct": 81.7,
+    "excess_mw": 33950.2,
+    "over_share": 0.0348,
+    "over_lv": 236,
+    "over_hv": 55
+   },
+   "overload_power_basis": {
+    "n_over": 291,
+    "max_pct": 708.2,
+    "excess_mw": 33950.2,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 69.6
+  },
+  {
+   "island": "west",
+   "mode": "uc",
+   "note": "t=17 scenario=fy2023r2",
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "load_mw": 69937.7,
+   "injection": {
+    "total_mw": 60643.3,
+    "n_gen_on": 488,
+    "solar_mw": 0.0,
+    "solar_share": 0.0,
+    "top_fuel": {
+     "gas": 26336.5,
+     "coal": 25465.1,
+     "hydro": 4542.6,
+     "nuclear": 2890.0,
+     "biomass": 942.8,
+     "geothermal": 240.0
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 389,
+    "max_pct": 963.7,
+    "p95_pct": 95.4,
+    "excess_mw": 82517.2,
+    "over_share": 0.0465,
+    "over_lv": 300,
+    "over_hv": 89
+   },
+   "overload_power_basis": {
+    "n_over": 389,
+    "max_pct": 963.7,
+    "excess_mw": 82517.2,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 69.1
+  },
+  {
+   "island": "west",
+   "mode": "uc_norm",
+   "note": "t=17 scenario=fy2023r2 normalized(需要復元・総注入=1.05×需要)",
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "load_mw": 73865.0,
+   "injection": {
+    "total_mw": 77558.3,
+    "n_gen_on": 488,
+    "solar_mw": 0.0,
+    "solar_share": 0.0,
+    "top_fuel": {
+     "gas": 33682.4,
+     "coal": 32568.0,
+     "hydro": 5809.6,
+     "nuclear": 3696.1,
+     "biomass": 1205.8,
+     "geothermal": 306.9
+    }
+   },
+   "dc_converged": true,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 388,
+    "max_pct": 737.7,
+    "p95_pct": 96.5,
+    "excess_mw": 59083.6,
+    "over_share": 0.0464,
+    "over_lv": 316,
+    "over_hv": 72
+   },
+   "overload_power_basis": {
+    "n_over": 388,
+    "max_pct": 737.7,
+    "excess_mw": 59083.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 69.0
+  }
+ ]
+}
