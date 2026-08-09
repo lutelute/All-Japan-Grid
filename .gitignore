@@ -147,5 +147,8 @@ dataset/02_uc_from_excel/uc_result.png
 dataset/**/out/
 dataset/**/*_res_bus.csv
 
-# 感度行列(PTDF/LODF)の生成物。密行列で数百MBになるためスクリプトから再生成する
-dist/sensitivity/
+# 感度行列(PTDF/LODF)の行列本体。密行列で west は 339MB になるため git には入れず
+# scripts/sensitivity/build_sensitivity.py で再生成する。索引表(bus/branch csv)・
+# meta.json・README は同梱する（再生成物の解釈と sha256 による同一性確認に要る）。
+dist/sensitivity/*.npz
+dist/sensitivity/*.mat
