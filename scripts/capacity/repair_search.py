@@ -306,7 +306,7 @@ def run_config(pf, wgv, wsd, island, nodes, edges, cfg, pref_gwh,
         fab = fabrication_stats(pf, net, sinfo)
         from src.powerflow.pipeline import add_reactive_compensation
         add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
-        n_comp, _ns, _nsy = pf.add_per_component_slacks(net)
+        n_comp, _ns, n_synth = pf.add_per_component_slacks(net)
         pf.balance_by_zone(net, cfg)
         net_dc, dc, _a, _b = pf.solve_island(net, max_ac_buses=0)
     finally:
@@ -319,6 +319,10 @@ def run_config(pf, wgv, wsd, island, nodes, edges, cfg, pref_gwh,
            "share_le_110kv": ginfo.get("share_at_or_below_110kv"),
            "kv_share": ginfo.get("kv_share"),
            "n_trafo": int(net.trafo["in_service"].sum()), "n_components": n_comp,
+           # 合成slack=発電機を持たない成分に置く**実在しない電源**。捏造の一種なので
+           # 目的関数に入れる（2026-08-09 の初版はこれを数えておらず、既定ON化のあとで
+           # west が 406→490 に増えていたと判明した＝目的関数の欠落）
+           "n_synth_slack": int(n_synth),
            **{f"fab_{k}": v for k, v in fab.items()},
            "dc_converged": bool(dc.get("converged")),
            "overload": overload_stats(net_dc),
@@ -387,7 +391,7 @@ def main() -> None:
                           f"solar={solar:5.2f}MW | 過負荷 {o['n_over']:4,}/{o['n_line']:,} "
                           f"({o['over_share']:6.2%}) 最大 {o['max_pct']:>8}% "
                           f"超過 {o['excess_mw']:>10,.0f}MW | 捏造 容量 "
-                          f"{r['fab_unsourced_mw']:>9,.0f}MW 設備 {r['fab_n_fab_trafo']:4,}台 "
+                          f"{r['fab_unsourced_mw']:>9,.0f}MW 設備 {r['fab_n_fab_trafo']:4,}台 偽電源 {r['n_synth_slack']:4,} "
                           f"| 独立経路 超過 {o2['excess_mw']:>10,.0f}MW "
                           f"(乖離 {o2['max_gap_pt']}pt) {r['seconds']:.0f}s", flush=True)
                     res.append(r)
@@ -408,14 +412,18 @@ def main() -> None:
               f"{residuals[island].get('n_over')} 本", flush=True)
         checkpoint()
 
-    # パレート境界（島ごと・3目的の最小化）
+    # パレート境界（島ごと・4目的の最小化）
+    # 合成slack を4つ目に加えた（2026-08-10）。3目的版で cap を採用したあと、
+    # west の合成slack が 406→490 と増えていたと判明したため。
+    OBJ = ["unsourced_mw", "n_fab_trafo", "n_synth_slack", "excess_mw"]
     fronts: dict[str, list[dict]] = {}
     for island in args.islands:
         rows = [r for r in res if r["island"] == island]
         flat = [{"unsourced_mw": r["fab_unsourced_mw"],
                  "n_fab_trafo": r["fab_n_fab_trafo"],
+                 "n_synth_slack": r["n_synth_slack"],
                  "excess_mw": r["overload"]["excess_mw"]} for r in rows]
-        idx = pareto_front(flat, ["unsourced_mw", "n_fab_trafo", "excess_mw"])
+        idx = pareto_front(flat, OBJ)
         fronts[island] = [rows[i] for i in idx]
 
     out = {"date": date, "islands": args.islands, "gen_modes": args.gen_modes,
@@ -424,6 +432,7 @@ def main() -> None:
            "pareto": {k: [{"gen": r["gen"], "sd": r["sd"], "solar_mw": r["solar_mw"],
                            "unsourced_mw": r["fab_unsourced_mw"],
                            "n_fab_trafo": r["fab_n_fab_trafo"],
+                           "n_synth_slack": r["n_synth_slack"],
                            "excess_mw": r["overload"]["excess_mw"],
                            "n_over": r["overload"]["n_over"],
                            "max_pct": r["overload"]["max_pct"]} for r in v]

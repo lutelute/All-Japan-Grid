@@ -200,20 +200,27 @@ def main() -> None:
          "| 目的（すべて最小化） | 意味 |", "|---|---|",
          "| 捏造容量 (MW) | 出典が無く既定値で埋めた発電容量。太陽光の是正はこれを**減らす** |",
          "| 捏造設備 (台) | OSM にも公開系統図にも無い、こちらで足した変圧器 |",
+         "| 偽電源 (台) | 発電機を持たない成分に置く合成 slack＝**実在しない電源** |",
          "| 超過潮流 (MW) | 定格を超えて流れている分＝物理的に成立していない量 |", "",
+         "> **2026-08-10 訂正**: 初版は偽電源（合成 slack）を目的に数えていなかった。",
+         "> そのため east で「現行を全目的で支配する構成が 4 件ある＝トレードオフではない」",
+         "> と書いたが、**偽電源を数えると 0 件**になる。接続規則を電圧に見合わせると、",
+         "> 孤立ポケットに誤接続されていた発電機が本来の階級のバスへ移り、残されたポケットが",
+         "> 合成 slack で賄われるため（east +23・west +84）。改善は実在するが**無償ではない**。", "",
          f"![パレート境界](../assets/analysis/{png.name})", ""]
 
     for island in islands:
         rows = sorted([r for r in runs if r["island"] == island],
                       key=lambda r: r["overload"]["excess_mw"])
         flat = [{"u": r["fab_unsourced_mw"], "t": r["fab_n_fab_trafo"],
+                 "s": r.get("n_synth_slack", 0),
                  "e": r["overload"]["excess_mw"]} for r in rows]
-        front = set(pareto_front(flat, ["u", "t", "e"]))
+        front = set(pareto_front(flat, ["u", "t", "s", "e"]))
         cur = next((r for r in rows if r["gen"] == "base" and not r["sd"]
                     and abs(r["solar_mw"] - 10.0) < 1e-9), None)
         L += [f"## {island}", "",
-              "| | 接続規則 | 降圧点 | 太陽光既定 | 捏造容量 | 捏造設備 | 過負荷 | 最大負荷率 | 超過潮流 |",
-              "|---|---|---|---:|---:|---:|---:|---:|---:|"]
+              "| | 接続規則 | 降圧点 | 太陽光既定 | 捏造容量 | 捏造設備 | 偽電源 | 過負荷 | 最大負荷率 | 超過潮流 |",
+              "|---|---|---|---:|---:|---:|---:|---:|---:|---:|"]
         for i, r in enumerate(rows):
             o = r["overload"]
             mark = "**◆**" if i in front else ""
@@ -221,10 +228,11 @@ def main() -> None:
                 mark = (mark + " 現行").strip()
             L.append(f"| {mark} | {r['gen']} | {'あり' if r['sd'] else 'なし'} | "
                      f"{r['solar_mw']:g} MW | {r['fab_unsourced_mw']:,.0f} MW | "
-                     f"{r['fab_n_fab_trafo']:,} 台 | {o['n_over']:,} ({o['over_share']:.2%}) | "
+                     f"{r['fab_n_fab_trafo']:,} 台 | {r.get('n_synth_slack', 0):,} | "
+                     f"{o['n_over']:,} ({o['over_share']:.2%}) | "
                      f"{o['max_pct']}% | {o['excess_mw']:,.0f} MW |")
         L.append("")
-        L.append("◆ = 3 目的の非劣解（他のどの構成にも全項目で負けていない）")
+        L.append("◆ = 4 目的の非劣解（他のどの構成にも全項目で負けていない）")
         L.append("")
         best = rows[0]
         if cur is not None and best is not cur:
@@ -257,7 +265,10 @@ def main() -> None:
                     (lambda r: r["overload"]["n_over"]),
                     (lambda r: r["overload"]["max_pct"] or 0),
                     (lambda r: r["fab_unsourced_mw"]),
-                    (lambda r: r["fab_n_fab_trafo"])]
+                    (lambda r: r["fab_n_fab_trafo"]),
+                    # 2026-08-10 追加。これを数えないと east で4件が「支配」に見えるが
+                    # 数えると0件になる（初版の「トレードオフではない」は目的関数の欠落）
+                    (lambda r: r.get("n_synth_slack", 0))]
             dom = [r for r in rows if r is not cur
                    and all(k(r) <= k(cur) for k in keys)
                    and any(k(r) < k(cur) for k in keys)]
