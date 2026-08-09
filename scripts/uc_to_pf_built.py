@@ -47,6 +47,7 @@ from scripts.run_full_powerflow_from_db import (  # noqa: E402
     add_per_component_slacks,
     allocate_loads,
     attach_generators,
+    GEN_ATTACH_DEFAULT,
     build_island_net,
 )
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
@@ -456,7 +457,8 @@ def main():
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
-        attach_generators(base, bus_of, built["nodes"], island)
+        attach_generators(base, bus_of, built["nodes"], island,
+                          attach_mode=GEN_ATTACH_DEFAULT)
         bridge_rep = None
         gen_zone_override = None
         if args.bridge:

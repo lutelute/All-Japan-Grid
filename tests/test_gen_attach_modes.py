@@ -168,6 +168,84 @@ def test_whatif_delegates_to_production():
         assert leaked not in src, f"規則の写しが what-if に戻っている: {leaked}"
 
 
+def test_model_default_is_cap_but_function_default_stays_nearest():
+    """既定ON化(2026-08-09)の形を固定する。
+
+    モデルを組む側は `GEN_ATTACH_DEFAULT="cap"`。しかし**関数の引数既定は nearest**。
+    what-if 群は引数なしで `attach_generators(...)` を呼び「旧既定＝最寄り」を比較の
+    ベースラインにしているので、関数側を cap にすると公表済み診断の base が
+    黙って cap に化ける。この分離が崩れたらここで落とす。
+    """
+    import inspect
+    pf = _pf()
+    assert pf.GEN_ATTACH_DEFAULT == "cap", "モデル既定が cap でない"
+    sig = inspect.signature(pf.attach_generators)
+    assert sig.parameters["attach_mode"].default == "nearest", \
+        "関数の引数既定を動かすと what-if の base が汚染される"
+
+
+def test_model_building_pipelines_use_the_shared_default():
+    """モデルを組む経路が全部同じ定数を使っていること（食い違うと成果物が混ざる）。"""
+    for rel in ("scripts/uc_to_pf_built.py",
+                "scripts/sensitivity/build_sensitivity.py",
+                "scripts/sensitivity/benchmark_sensitivity.py",
+                "scripts/sensitivity/hosting_capacity.py",
+                "scripts/diagnose_pf_frontier.py"):
+        src = (ROOT / rel).read_text(encoding="utf-8")
+        assert "attach_mode=GEN_ATTACH_DEFAULT" in src, f"{rel} が旧既定のまま"
+
+
+def test_whatif_baselines_still_call_without_a_mode():
+    """what-if の base 呼び出しに mode を付けてはいけない（旧既定を指すため）。"""
+    for rel in ("scripts/capacity/whatif_solar_default.py",
+                "scripts/capacity/whatif_stepdown.py",
+                "scripts/capacity/overload_vs_topology.py"):
+        src = (ROOT / rel).read_text(encoding="utf-8")
+        assert "attach_generators(net, bus_of, nodes, island)" in src, \
+            f"{rel} の比較ベースラインが書き換わっている"
+
+
+def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
+    """既定を cap に倒したときの**実モデルの数値**を固定する。
+
+    2026-08-09 に既定を倒したとき、既存 1,266 本のうち **1 本も落ちなかった**。
+    潮流の出力値を押さえたテストが無かったということなので、ここで塞ぐ。
+    hokkaido は 815 線・DC で数秒なのでゲートに載る。
+    """
+    pytest.importorskip("pandapower")
+    pf = _pf()
+    if not Path(pf.BUILT).exists():
+        pytest.skip("built DB が無い")
+    import json as _json
+    with open(pf.BUILT, encoding="utf-8") as f:
+        db = _json.load(f)
+    nodes, edges = db["nodes"], db["edges"]
+    cfg = pf.load_demand_config()
+    from src.powerflow.pref_demand import pref_zone_gwh
+    pref_gwh, _ = pref_zone_gwh(nodes)
+
+    got = {}
+    for mode in ("nearest", pf.GEN_ATTACH_DEFAULT):
+        net, bus_of, _ = pf.build_island_net(
+            "hokkaido", nodes, edges, pf.ISLAND_FREQ["hokkaido"], {},
+            dedup_nodes=True, site_trafos=False, deenergize_unbuilt=False)
+        pf.attach_generators(net, bus_of, nodes, "hokkaido", attach_mode=mode)
+        pf.allocate_loads(net, cfg, pref_gwh=pref_gwh)
+        from src.powerflow.pipeline import add_reactive_compensation
+        add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
+        pf.add_per_component_slacks(net)
+        pf.balance_by_zone(net, cfg)
+        solved, _dc, _a, _b = pf.solve_island(net, max_ac_buses=0)
+        got[mode] = round(float(solved.res_line["loading_percent"].dropna().max()), 1)
+
+    # 2026-08-09 実測。動いたら「なぜ動いたか」を IMPROVEMENT_LOG に書いてから更新すること
+    assert got["nearest"] == pytest.approx(90.2, abs=0.15), \
+        f"旧既定の最大負荷率が動いた: {got['nearest']}%"
+    assert got["cap"] == pytest.approx(86.0, abs=0.15), \
+        f"新既定の最大負荷率が動いた: {got['cap']}%"
+    assert got["cap"] < got["nearest"], "既定ON化が改善になっていない"
+
+
 def test_disable_switch_is_documented_in_the_ledger():
     """介入#24/#25 が台帳に登録され、無効化手段が書かれていること。"""
     led = (ROOT / "docs" / "MODEL_INTERVENTIONS.md").read_text(encoding="utf-8")

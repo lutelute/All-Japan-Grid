@@ -7,6 +7,44 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-09m — **Claude Opus 5** — 介入#24 を既定ON化（第1段）: east の AC 最大負荷率 1,256%→853%
+
+オーナー承認「進めて」で `repair_adoption_decision_2026-08-09.md` の**第1段だけ**を採用。
+`GEN_ATTACH_DEFAULT = "cap"`（無効化=`--gen-attach nearest`）。第2段（太陽光既定値）は見送り。
+
+**本番パイプラインの実測 before/after**（DC の探索値ではなく実際の解）:
+
+| 島 | 解 | 旧既定 nearest | 新既定 cap |
+|---|---|---|---|
+| hokkaido | AC | 93.14% | 93.16%（**改善しない**） |
+| east | AC | **1,255.9%** / vm下限 0.7324 | **853.4%** / vm下限 0.7572 |
+| west | DC（AC は新旧とも FAIL） | — | 変化なし＝本変更による回帰ではない |
+| okinawa | AC | 173.25% | 173.25%（繋ぎ替え0機で完全同一） |
+
+**DC と AC で結論が違う点を明記した**。判断パッケージ §2 の「4島すべてで最大負荷率が
+悪化しない」は DC 限定の主張で、**AC では hokkaido の改善は消える**（DC 90.2→86.0% は
+別の線が律速して AC では出ない）。効果が確実なのは east（AC −32%）。
+
+**設計上の分岐（重要）**: 関数 `attach_generators` の**引数既定は `nearest` のまま**にした。
+what-if 群（`whatif_solar_default`/`whatif_stepdown`/`overload_vs_topology`/`repair_search`
+の base）は引数なし呼び出しで「旧既定＝最寄り」を比較のベースラインにしているので、
+関数側を動かすと**公表済み診断の base が黙って cap に化ける**。モデルを組む側
+（`run_full_powerflow_from_db` CLI・`uc_to_pf_built`・`sensitivity/*`・`diagnose_pf_frontier`）
+だけが定数 `GEN_ATTACH_DEFAULT` を明示的に渡す。この分離は
+`test_model_default_is_cap_but_function_default_stays_nearest` ほか3本で固定。
+
+**発見したゲートの穴**: 既定を倒しても既存 1,266 本のうち**1 本も落ちなかった** =
+潮流の出力値を押さえたテストが無かった。`test_hokkaido_dc_pins_the_effect_of_the_default_flip`
+（hokkaido DC の 90.2%/86.0% を固定・数秒）で塞いだ。
+
+**未了（要再生成）**: `uc_to_pf_built` の UC→PF 結果・`sensitivity/*` の PTDF/LODF
+（データセット v1.6.0 の指紋を含む）・`diagnose_pf_frontier`。本コミットでは再生成していない。
+**別件の疑問**: west の AC が新旧とも FAIL で、`project_agj_pf_frontier` の
+「全4島 AC 収束」と食い違う（既定 `--max-ac-buses 7000` に対し west 8,213 バス）。要確認。
+
+gate: 1,269 passed / 0 failed / 3 skipped。作法: 本件から commit 前に `git branch --show-current`
+を確認し、ブランチ `feat/gen-attach-cap-default` を切ってから作業した。
+
 ## 2026-08-09l — **Claude Opus 5** — 修復候補の組み合わせ探索: **正直にすると物理的にも正しくなる**
 
 前項（08-09k）は真因を 3 つ挙げたが、**すべて単独で**測っていた。交互作用のある系で

@@ -497,6 +497,18 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
 # ──────────────────────────────────────────────────────────────────────────
 ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
 
+# ── 介入#24 の**モデル既定**（2026-08-09 オーナー承認で既定ON化・第1段）─────────
+# `docs/reports/repair_adoption_decision_2026-08-09.md`。4島すべてで最大負荷率が
+# 悪化しない（hokkaido 90.2→86.0% / east 1,668→1,595% / west 1,894→708% /
+# okinawa 165.0%据置）。無効化は `--gen-attach nearest`。
+#
+# **関数 `attach_generators` の引数既定は "nearest" のまま**にしてある。
+# what-if 群（whatif_solar_default / whatif_stepdown / overload_vs_topology /
+# repair_search の base）は「現行＝最寄り」を**比較のベースライン**として
+# 引数なしで呼んでいるので、関数側を動かすと公表済み診断の base が黙って cap に化ける。
+# モデルを組む側だけがこの定数を明示的に渡す。
+GEN_ATTACH_DEFAULT = "cap"
+
 
 def bus_incident_mva(net):
     """各バスに集まる枝の合計容量(MVA)。そのバスが受けられる出力の上限を決める。"""
@@ -978,16 +990,17 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
-    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default="nearest",
-                    help="発電機の繋ぎ先の選び方(**介入#24**)。既定 nearest=最寄りの"
-                         "変電所バス。66kV変電所が桁違いに多いので east は発電容量の"
-                         "53.2%%(99GW)が66kVバスに載り、姉崎火力3,600MWまで66kV接続に"
-                         "なっている。cap=バスの受電容量が出力以上になる最寄り、"
+    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default=GEN_ATTACH_DEFAULT,
+                    help="発電機の繋ぎ先の選び方(**介入#24**)。**既定 cap**"
+                         "(2026-08-09 既定ON化)=バスに集まる枝の合計容量がその発電所の"
+                         "出力以上になる最寄りのバスへ。旧既定 nearest は最寄りの変電所"
+                         "バスで、66kV変電所が桁違いに多いため east は発電容量の"
+                         "53.2%%(99GW)が66kVバスに載り姉崎火力3,600MWまで66kV接続だった。"
                          "kvfit=出力を1回線で運べる階級以上の最寄り、site=同一サイトの"
                          "最高電圧。判定基準はモデル自身の導体定数だけから作る。"
-                         "評価=docs/reports/repair_search_2026-08-09.md "
-                         "(east cap で過負荷603→551・太陽光是正と併せて303)。"
-                         "無効化=--gen-attach nearest(既定)")
+                         "評価=docs/reports/repair_search_2026-08-09.md・判断="
+                         "repair_adoption_decision_2026-08-09.md。"
+                         "**無効化=--gen-attach nearest**")
     ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
                     help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
                          "発電所はこの値で埋まる=**出典のない合成容量**。既定は "
@@ -1079,7 +1092,7 @@ def main():
                                    attach_mode=args.gen_attach, stats=True)
         n_gen = gstats["n_gen"]
         if args.gen_attach != "nearest":
-            # 介入#24 の帳簿: 何機・何MW を最寄り以外へ繋いだかを必ず出す
+            # 介入#24 の帳簿: 何機・何MW を最寄り以外へ繋いだかを必ず出す（既定でも出す）
             print(f"  介入#24 gen-attach={args.gen_attach}: 繋ぎ替え "
                   f"{gstats['n_moved']:,}機/{gstats['moved_mw']:,.0f}MW "
                   f"110kV以下に載る容量 {gstats['share_at_or_below_110kv']:.1%}")

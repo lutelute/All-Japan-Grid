@@ -41,7 +41,8 @@ import pandapower.topology as top
 from pandapower.pypower.idx_brch import F_BUS, PF, T_BUS
 
 from scripts.run_full_powerflow_from_db import (
-    ISLAND_FREQ, add_per_component_slacks, allocate_loads, attach_generators,
+    GEN_ATTACH_DEFAULT, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    attach_generators,
     balance_by_zone, build_island_net, load_demand_config, solve_island,
 )
 
@@ -58,7 +59,7 @@ LOAD_PROFILE = np.array([
 def production_net(island: str, nodes, edges, cfg, pref_gwh):
     """本番（run_full_powerflow_from_db）と同一手順で島ネットを組む。"""
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
-    attach_generators(net, bus_of, nodes, island)
+    attach_generators(net, bus_of, nodes, island, attach_mode=GEN_ATTACH_DEFAULT)
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))

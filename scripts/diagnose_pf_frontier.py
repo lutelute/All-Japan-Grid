@@ -29,7 +29,8 @@ import numpy as np
 import pandapower.topology as top
 
 from scripts.run_full_powerflow_from_db import (
-    ISLAND_FREQ, add_per_component_slacks, allocate_loads, attach_generators,
+    GEN_ATTACH_DEFAULT, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    attach_generators,
     balance_by_zone, build_island_net, load_demand_config, solve_island,
 )
 
@@ -41,7 +42,7 @@ def analyze(island: str, nodes, edges, cfg, pref_gwh, solve: bool = True) -> dic
     """潮流本体と同じ手順で島ネットを組み、成分構造・収束・電圧品質を測る。"""
     freq = ISLAND_FREQ[island]
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
-    attach_generators(net, bus_of, nodes, island)
+    attach_generators(net, bus_of, nodes, island, attach_mode=GEN_ATTACH_DEFAULT)
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
 
     g = top.create_nxgraph(net, respect_switches=False)
