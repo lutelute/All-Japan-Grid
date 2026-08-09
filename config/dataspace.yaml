@@ -74,6 +74,30 @@ providers:
       (2009〜 → JEPXプロバイダ候補) も所在。検証ループ設計は
       docs/UC_VALIDATION_PLAN.md。
 
+  nas03_era5_solar:
+    title: ERA5 再解析 日射・気象（Open-Meteo 経由、研究室NAS03 PWS_DB ミラー）
+    custodian: 研究室 pws-nas03 (UGREEN DXP4800 Plus) /volume1/PWS_DB/openmeteo_raw
+    location: "env:AJGRID_NAS03_ROOT"   # 例 ssh://pwslab@100.102.148.23/volume1/PWS_DB
+    license: ERA5 は Copernicus (CC-BY-4.0 相当)。Open-Meteo 経由取得。出典明記で利用可
+    redistribute_raw: false       # 152地点×3年の生CSV(178MB)はリポジトリへ複製しない
+    redistribute_derived: true    # エリア集約した時系列はコミット可
+    connector: nas03
+    variables:
+      - {name: shortwave_radiation, desc: "全天日射 GHI [W/m²] → 太陽光CFの基礎"}
+      - {name: temperature_2m, desc: "気温 [°C] → PV温度損失・需要気温感応度"}
+      - {name: windspeed_10m, desc: "10m風速 [m/s] → 風力CF（要ハブ高補正）"}
+      - {name: cloudcover, desc: "雲量 [%]"}
+    granularity: 152地点 × 1時間 × 2024/2025/2026年
+    notes: >-
+      所在確定(2026-08-09調査)。**各地点CSVのヘッダに緯度経度が入っている**ため
+      地点ID対応表なしで地理的にエリア割当できる（msm_stations の 47xxx 番号は
+      NAS上に対応表が無く、名称推測は捏造になるため使わない）。
+      集約は源泉側で実行: scripts/dataspace/aggregate_solar_from_nas.py を
+      pws-160core へ送って走らせ、178MB → 10エリア×8,760時間(1.2MB)に畳む。
+      成果は data/cache/dataspace/solar_by_area_{year}.csv、
+      割当監査は solar_stations_{year}.csv。
+      検証済み: 正午ピーク581W/m²・夜間ゼロ・夏>冬・北海道152→沖縄193の緯度勾配。
+
   jepx_spot:
     title: JEPXスポット市場価格（研究室NAS03 PWS_DB ミラー）
     custodian: JEPX（一般社団法人 日本卸電力取引所）— NAS03に年度CSVミラー

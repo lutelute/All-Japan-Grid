@@ -7,6 +7,30 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-09h — **Claude Fable 5** — NAS接続とERA5日射のエリア集約（zero-copy実践）
+
+オーナー「NASのデータも使ってよい／pws-server見てnas03見ればいい／このPCは容量が無い」。
+**原因はTailscaleの停止**で、起動したら全ホストに到達（LAN 10.0.70.x はMacが別網のため不可、
+Tailscaleが唯一の経路）。Tailscale SSHのブラウザ承認だけオーナーに依頼し、以降は自動で進行。
+
+NAS(`/mnt/nas03` = PWS_DB, 6.5TB)を調査。README.mdが正本で、msm_raw(GRIB2 1.2TB)・
+amedas_raw・demand_*・price_raw・openmeteo_raw・msm_stations 等を確認。
+
+**採用したのは `openmeteo_raw`（ERA5実況・152地点×3年・178MB）**。理由は
+**各地点CSVのヘッダに緯度経度が入っており、地点ID対応表なしで地理的にエリア割当できる**こと。
+`msm_stations` の 47xxx 番号はNAS上に対応表が無く、名称を記憶で埋めると捏造になるため見送った
+（[[feedback-verify-before-claiming]]）。実況ベースなので資源量の時系列にも適切。
+
+**zero-copy を実践**: 集約スクリプトを pws-160core へ送って**源泉側で実行**し、
+178MB → 10エリア×8,760時間(1.2MB)に畳んで結果だけ持ち帰り。ディスク残27GBのMacに
+生データを一切置いていない。検証: 正午ピーク581W/m²・夜間ゼロ・夏>冬・
+北海道152→沖縄193の緯度勾配・151地点が全10エリアに分散。
+
+契約 `config/dataspace.yaml` に `nas03_era5_solar` を登録（raw不可/derived可）、
+出所を `provenance.jsonl` に記録、成果を `data/dataspace/` に配置。
+**用途**: 過負荷の原因が需要でないと分かったので、発電側（太陽光の時空間パターン）の
+寄与を切り分けるのに使う。
+
 ## 2026-08-09g — **Claude Fable 5** — 需要配分をOCCTO実績で検証: **配分は正確・過負荷の原因は網の欠け**
 
 較正で露出した過負荷(8.3%)の原因を切り分けるため、まず需要側を OCCTO のエリア需給実績
