@@ -56,12 +56,20 @@ from scripts.run_full_powerflow_from_db import (
 OUT = ROOT / "dist" / "sensitivity"
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 CHANGELOG = {
     "1.0.0": "初出荷。最大連結成分の PTDF/LODF・索引表(容量/橋フラグ込み)・"
              "sha256指紋。潮流本体と同一の build_island_net + 無効電力補償を通す。"
              "橋の判定は LODF の分母(自己感度 PTDF[k,f]-PTDF[k,t] が 1)で行う"
              "— makeLODF は inf を返さないため isfinite では検出できない。",
+    "1.0.1": "介入#24 の既定ON化(2026-08-09・発電機の接続規則 nearest→cap)に追随。"
+             "**行列の物理的内容は変わっていない** — slack は『各成分で最大発電機を"
+             "持つ母線』なので接続規則を変えると参照バスが動き、PTDF は参照依存の"
+             "ぶんだけずれる。east のみ該当(slack_col 4275→5179)で hokkaido/west/"
+             "okinawa は sha256 まで完全一致(west は861機46GW繋ぎ替わったが最大機の"
+             "母線が動かず不変)。実測: PTDF の差は行ごとに定数(行内 std 3.7e-12)="
+             "参照の付け替えのみ、LODF は橋(分母≈0・2,287枝で新旧一致)を除いた"
+             "2,671万要素で最大差 2.2e-11=数値誤差。索引表(bus/branch csv)は不変。",
 }
 
 
