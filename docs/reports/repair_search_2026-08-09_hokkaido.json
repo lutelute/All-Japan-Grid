@@ -1,0 +1,824 @@
+{
+ "date": "2026-08-09",
+ "islands": [
+  "hokkaido"
+ ],
+ "gen_modes": [
+  "base",
+  "site",
+  "cap",
+  "kvfit"
+ ],
+ "solar_levels": [
+  10.0,
+  0.1
+ ],
+ "min_hops": 3,
+ "radius_km": 10.0,
+ "runs": [
+  {
+   "island": "hokkaido",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.4003,
+   "kv_share": {
+    "66.0": 0.373,
+    "110.0": 0.0273,
+    "187.0": 0.2606,
+    "275.0": 0.3391
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 90.2,
+    "p95_pct": 42.0,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 90.2,
+    "excess_mw": 0.0,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 5.2
+  },
+  {
+   "island": "hokkaido",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.2877,
+   "kv_share": {
+    "66.0": 0.254,
+    "110.0": 0.0337,
+    "187.0": 0.295,
+    "275.0": 0.4173
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 128.8,
+    "p95_pct": 46.7,
+    "excess_mw": 19.8,
+    "over_share": 0.0012,
+    "over_lv": 1,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 1,
+    "max_pct": 128.8,
+    "excess_mw": 19.8,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 4.6
+  },
+  {
+   "island": "hokkaido",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.4003,
+   "kv_share": {
+    "66.0": 0.373,
+    "110.0": 0.0273,
+    "187.0": 0.2606,
+    "275.0": 0.3391
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 88.4,
+    "p95_pct": 37.4,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 88.4,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.3
+  },
+  {
+   "island": "hokkaido",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.2877,
+   "kv_share": {
+    "66.0": 0.254,
+    "110.0": 0.0337,
+    "187.0": 0.295,
+    "275.0": 0.4173
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 129.2,
+    "p95_pct": 41.0,
+    "excess_mw": 20.0,
+    "over_share": 0.0012,
+    "over_lv": 1,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 1,
+    "max_pct": 129.2,
+    "excess_mw": 20.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.1
+  },
+  {
+   "island": "hokkaido",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 1,
+   "moved_mw": 13.0,
+   "share_le_110kv": 0.3994,
+   "kv_share": {
+    "66.0": 0.3721,
+    "110.0": 0.0273,
+    "187.0": 0.2615,
+    "275.0": 0.3391
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 90.2,
+    "p95_pct": 42.0,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 90.2,
+    "excess_mw": 0.0,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 5.1
+  },
+  {
+   "island": "hokkaido",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 1,
+   "moved_mw": 13.0,
+   "share_le_110kv": 0.2865,
+   "kv_share": {
+    "66.0": 0.2528,
+    "110.0": 0.0337,
+    "187.0": 0.2961,
+    "275.0": 0.4173
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 128.8,
+    "p95_pct": 46.7,
+    "excess_mw": 19.8,
+    "over_share": 0.0012,
+    "over_lv": 1,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 1,
+    "max_pct": 128.8,
+    "excess_mw": 19.8,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 4.9
+  },
+  {
+   "island": "hokkaido",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 1,
+   "moved_mw": 13.0,
+   "share_le_110kv": 0.3994,
+   "kv_share": {
+    "66.0": 0.3721,
+    "110.0": 0.0273,
+    "187.0": 0.2615,
+    "275.0": 0.3391
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 88.4,
+    "p95_pct": 37.4,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 88.4,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.0
+  },
+  {
+   "island": "hokkaido",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 1,
+   "moved_mw": 13.0,
+   "share_le_110kv": 0.2865,
+   "kv_share": {
+    "66.0": 0.2528,
+    "110.0": 0.0337,
+    "187.0": 0.2961,
+    "275.0": 0.4173
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 129.2,
+    "p95_pct": 41.0,
+    "excess_mw": 20.0,
+    "over_share": 0.0012,
+    "over_lv": 1,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 1,
+    "max_pct": 129.2,
+    "excess_mw": 20.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.1
+  },
+  {
+   "island": "hokkaido",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 4,
+   "moved_mw": 415.4,
+   "share_le_110kv": 0.3994,
+   "kv_share": {
+    "66.0": 0.3721,
+    "110.0": 0.0273,
+    "187.0": 0.2615,
+    "275.0": 0.3391
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 86.0,
+    "p95_pct": 43.1,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 86.0,
+    "excess_mw": 0.0,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 4.9
+  },
+  {
+   "island": "hokkaido",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 4,
+   "moved_mw": 405.5,
+   "share_le_110kv": 0.2874,
+   "kv_share": {
+    "66.0": 0.2537,
+    "110.0": 0.0337,
+    "187.0": 0.2953,
+    "275.0": 0.4173
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 87.1,
+    "p95_pct": 47.9,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 87.1,
+    "excess_mw": 0.0,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 5.0
+  },
+  {
+   "island": "hokkaido",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 4,
+   "moved_mw": 415.4,
+   "share_le_110kv": 0.3994,
+   "kv_share": {
+    "66.0": 0.3721,
+    "110.0": 0.0273,
+    "187.0": 0.2615,
+    "275.0": 0.3391
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 82.4,
+    "p95_pct": 37.9,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 82.4,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.3
+  },
+  {
+   "island": "hokkaido",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 4,
+   "moved_mw": 405.5,
+   "share_le_110kv": 0.2874,
+   "kv_share": {
+    "66.0": 0.2537,
+    "110.0": 0.0337,
+    "187.0": 0.2953,
+    "275.0": 0.4173
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 80.2,
+    "p95_pct": 41.0,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 80.2,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.1
+  },
+  {
+   "island": "hokkaido",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 6,
+   "moved_mw": 1002.0,
+   "share_le_110kv": 0.3302,
+   "kv_share": {
+    "66.0": 0.3029,
+    "110.0": 0.0273,
+    "187.0": 0.3027,
+    "275.0": 0.3671
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 2,
+    "max_pct": 108.4,
+    "p95_pct": 45.2,
+    "excess_mw": 7.1,
+    "over_share": 0.0025,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 2,
+    "max_pct": 108.4,
+    "excess_mw": 7.1,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 5.3
+  },
+  {
+   "island": "hokkaido",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 6,
+   "moved_mw": 1002.0,
+   "share_le_110kv": 0.1988,
+   "kv_share": {
+    "66.0": 0.1651,
+    "110.0": 0.0337,
+    "187.0": 0.3484,
+    "275.0": 0.4528
+   },
+   "n_trafo": 68,
+   "n_components": 35,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 1,
+    "max_pct": 102.6,
+    "p95_pct": 48.3,
+    "excess_mw": 1.8,
+    "over_share": 0.0012,
+    "over_lv": 1,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 1,
+    "max_pct": 102.6,
+    "excess_mw": 1.8,
+    "max_gap_pt": 14.58
+   },
+   "seconds": 5.1
+  },
+  {
+   "island": "hokkaido",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 417,
+   "n_moved": 6,
+   "moved_mw": 1002.0,
+   "share_le_110kv": 0.3302,
+   "kv_share": {
+    "66.0": 0.3029,
+    "110.0": 0.0273,
+    "187.0": 0.3027,
+    "275.0": 0.3671
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 4450.0,
+   "fab_nameplate_mw": 14284.2,
+   "fab_unsourced_share": 0.3115,
+   "fab_unsourced_by_fuel": {
+    "solar": 3040.0,
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 82.0,
+    "p95_pct": 37.7,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 82.0,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.2
+  },
+  {
+   "island": "hokkaido",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 417,
+   "n_moved": 6,
+   "moved_mw": 1002.0,
+   "share_le_110kv": 0.1988,
+   "kv_share": {
+    "66.0": 0.1651,
+    "110.0": 0.0337,
+    "187.0": 0.3484,
+    "275.0": 0.4528
+   },
+   "n_trafo": 145,
+   "n_components": 21,
+   "fab_n_gen_default": 337,
+   "fab_unsourced_mw": 1440.4,
+   "fab_nameplate_mw": 11274.6,
+   "fab_unsourced_share": 0.1278,
+   "fab_unsourced_by_fuel": {
+    "hydro": 1100.0,
+    "unknown": 270.0,
+    "solar": 30.4,
+    "bing": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 77,
+   "fab_fab_trafo_mva": 7700.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 815,
+    "n_over": 0,
+    "max_pct": 79.7,
+    "p95_pct": 40.2,
+    "excess_mw": 0.0,
+    "over_share": 0.0,
+    "over_lv": 0,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 0,
+    "max_pct": 79.7,
+    "excess_mw": 0.0,
+    "max_gap_pt": 9.67
+   },
+   "seconds": 5.6
+  }
+ ],
+ "pareto": {
+  "hokkaido": [
+   {
+    "gen": "cap",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 1440.4,
+    "n_fab_trafo": 0,
+    "excess_mw": 0.0,
+    "n_over": 0,
+    "max_pct": 87.1
+   }
+  ]
+ },
+ "residual": {
+  "hokkaido": {
+   "config": "gen=base sd=off solar=10.0",
+   "n_over": 0
+  }
+ }
+}

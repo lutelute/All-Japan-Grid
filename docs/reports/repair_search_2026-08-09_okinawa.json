@@ -1,0 +1,1017 @@
+{
+ "date": "2026-08-09",
+ "islands": [
+  "okinawa"
+ ],
+ "gen_modes": [
+  "base",
+  "site",
+  "cap",
+  "kvfit"
+ ],
+ "solar_levels": [
+  10.0,
+  0.1
+ ],
+ "min_hops": 3,
+ "radius_km": 10.0,
+ "runs": [
+  {
+   "island": "okinawa",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "p95_pct": 113.5,
+    "excess_mw": 211.4,
+    "over_share": 0.0947,
+    "over_lv": 7,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 9,
+    "max_pct": 165.0,
+    "excess_mw": 211.4,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.7
+  },
+  {
+   "island": "okinawa",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 174.5,
+    "p95_pct": 137.8,
+    "excess_mw": 348.5,
+    "over_share": 0.1263,
+    "over_lv": 10,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 12,
+    "max_pct": 174.5,
+    "excess_mw": 348.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 5,
+    "max_pct": 137.3,
+    "p95_pct": 99.9,
+    "excess_mw": 198.5,
+    "over_share": 0.0526,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 5,
+    "max_pct": 137.3,
+    "excess_mw": 198.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 8,
+    "max_pct": 165.0,
+    "p95_pct": 122.5,
+    "excess_mw": 307.6,
+    "over_share": 0.0842,
+    "over_lv": 5,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 8,
+    "max_pct": 165.0,
+    "excess_mw": 307.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "p95_pct": 113.5,
+    "excess_mw": 211.4,
+    "over_share": 0.0947,
+    "over_lv": 7,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 9,
+    "max_pct": 165.0,
+    "excess_mw": 211.4,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 174.5,
+    "p95_pct": 137.8,
+    "excess_mw": 348.5,
+    "over_share": 0.1263,
+    "over_lv": 10,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 12,
+    "max_pct": 174.5,
+    "excess_mw": 348.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 5,
+    "max_pct": 137.3,
+    "p95_pct": 99.9,
+    "excess_mw": 198.5,
+    "over_share": 0.0526,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 5,
+    "max_pct": 137.3,
+    "excess_mw": 198.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.2
+  },
+  {
+   "island": "okinawa",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 8,
+    "max_pct": 165.0,
+    "p95_pct": 122.5,
+    "excess_mw": 307.6,
+    "over_share": 0.0842,
+    "over_lv": 5,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 8,
+    "max_pct": 165.0,
+    "excess_mw": 307.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "p95_pct": 113.5,
+    "excess_mw": 211.4,
+    "over_share": 0.0947,
+    "over_lv": 7,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 9,
+    "max_pct": 165.0,
+    "excess_mw": 211.4,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 174.5,
+    "p95_pct": 137.8,
+    "excess_mw": 348.5,
+    "over_share": 0.1263,
+    "over_lv": 10,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 12,
+    "max_pct": 174.5,
+    "excess_mw": 348.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 5,
+    "max_pct": 137.3,
+    "p95_pct": 99.9,
+    "excess_mw": 198.5,
+    "over_share": 0.0526,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 5,
+    "max_pct": 137.3,
+    "excess_mw": 198.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 8,
+    "max_pct": 165.0,
+    "p95_pct": 122.5,
+    "excess_mw": 307.6,
+    "over_share": 0.0842,
+    "over_lv": 5,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 8,
+    "max_pct": 165.0,
+    "excess_mw": 307.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 9,
+    "max_pct": 165.0,
+    "p95_pct": 113.5,
+    "excess_mw": 211.4,
+    "over_share": 0.0947,
+    "over_lv": 7,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 9,
+    "max_pct": 165.0,
+    "excess_mw": 211.4,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.4
+  },
+  {
+   "island": "okinawa",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 19,
+   "n_components": 6,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 12,
+    "max_pct": 174.5,
+    "p95_pct": 137.8,
+    "excess_mw": 348.5,
+    "over_share": 0.1263,
+    "over_lv": 10,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 12,
+    "max_pct": 174.5,
+    "excess_mw": 348.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0625,
+   "kv_share": {
+    "66.0": 0.0625,
+    "132.0": 0.9375
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 3040.0,
+   "fab_nameplate_mw": 3040.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "solar": 200.0,
+    "unknown": 30.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 5,
+    "max_pct": 137.3,
+    "p95_pct": 99.9,
+    "excess_mw": 198.5,
+    "over_share": 0.0526,
+    "over_lv": 2,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 5,
+    "max_pct": 137.3,
+    "excess_mw": 198.5,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  },
+  {
+   "island": "okinawa",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 28,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.0042,
+   "kv_share": {
+    "66.0": 0.0042,
+    "132.0": 0.9958
+   },
+   "n_trafo": 32,
+   "n_components": 4,
+   "fab_n_gen_default": 28,
+   "fab_unsourced_mw": 2842.0,
+   "fab_nameplate_mw": 2842.0,
+   "fab_unsourced_share": 1.0,
+   "fab_unsourced_by_fuel": {
+    "coal": 1800.0,
+    "oil": 600.0,
+    "gas": 400.0,
+    "unknown": 30.0,
+    "wind": 10.0
+   },
+   "fab_n_fab_trafo": 13,
+   "fab_fab_trafo_mva": 1300.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 95,
+    "n_over": 8,
+    "max_pct": 165.0,
+    "p95_pct": 122.5,
+    "excess_mw": 307.6,
+    "over_share": 0.0842,
+    "over_lv": 5,
+    "over_hv": 0
+   },
+   "overload_power_basis": {
+    "n_over": 8,
+    "max_pct": 165.0,
+    "excess_mw": 307.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 1.3
+  }
+ ],
+ "pareto": {
+  "okinawa": [
+   {
+    "gen": "base",
+    "sd": false,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 211.4,
+    "n_over": 9,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "base",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 348.5,
+    "n_over": 12,
+    "max_pct": 174.5
+   },
+   {
+    "gen": "base",
+    "sd": true,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 198.5,
+    "n_over": 5,
+    "max_pct": 137.3
+   },
+   {
+    "gen": "base",
+    "sd": true,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 307.6,
+    "n_over": 8,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "site",
+    "sd": false,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 211.4,
+    "n_over": 9,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "site",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 348.5,
+    "n_over": 12,
+    "max_pct": 174.5
+   },
+   {
+    "gen": "site",
+    "sd": true,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 198.5,
+    "n_over": 5,
+    "max_pct": 137.3
+   },
+   {
+    "gen": "site",
+    "sd": true,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 307.6,
+    "n_over": 8,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "cap",
+    "sd": false,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 211.4,
+    "n_over": 9,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "cap",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 348.5,
+    "n_over": 12,
+    "max_pct": 174.5
+   },
+   {
+    "gen": "cap",
+    "sd": true,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 198.5,
+    "n_over": 5,
+    "max_pct": 137.3
+   },
+   {
+    "gen": "cap",
+    "sd": true,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 307.6,
+    "n_over": 8,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "kvfit",
+    "sd": false,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 211.4,
+    "n_over": 9,
+    "max_pct": 165.0
+   },
+   {
+    "gen": "kvfit",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 0,
+    "excess_mw": 348.5,
+    "n_over": 12,
+    "max_pct": 174.5
+   },
+   {
+    "gen": "kvfit",
+    "sd": true,
+    "solar_mw": 10.0,
+    "unsourced_mw": 3040.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 198.5,
+    "n_over": 5,
+    "max_pct": 137.3
+   },
+   {
+    "gen": "kvfit",
+    "sd": true,
+    "solar_mw": 0.1,
+    "unsourced_mw": 2842.0,
+    "n_fab_trafo": 13,
+    "excess_mw": 307.6,
+    "n_over": 8,
+    "max_pct": 165.0
+   }
+  ]
+ },
+ "residual": {
+  "okinawa": {
+   "config": "gen=base sd=on solar=10.0",
+   "n_over": 5,
+   "by_kv": {
+    "132": 3,
+    "66": 2
+   },
+   "n_radial_endpoint": 0,
+   "n_single_circuit": 5,
+   "n_gen_dominated": 3,
+   "n_load_dominated": 2,
+   "worst": [
+    {
+     "loading_pct": 137.3,
+     "p_mw": 376.8,
+     "kv": 132.0,
+     "parallel": 1,
+     "deg_from": 4,
+     "deg_to": 3,
+     "gen_from_mw": 422.8,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 13.4,
+     "load_to_mw": 13.4,
+     "name": "石川東山一丁目変電所~石川東山二丁目変電所線"
+    },
+    {
+     "loading_pct": 129.6,
+     "p_mw": 88.9,
+     "kv": 66.0,
+     "parallel": 1,
+     "deg_from": 4,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 19.2,
+     "load_to_mw": 0.0,
+     "name": "石川東山二丁目変電所~石川東山一丁目変電所線"
+    },
+    {
+     "loading_pct": 118.2,
+     "p_mw": -324.4,
+     "kv": 132.0,
+     "parallel": 1,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 14.1,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 13.4,
+     "load_to_mw": 13.4,
+     "name": "仲泊変電所~石川東山一丁目変電所線"
+    },
+    {
+     "loading_pct": 108.9,
+     "p_mw": -298.9,
+     "kv": 132.0,
+     "parallel": 1,
+     "deg_from": 6,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 14.1,
+     "load_from_mw": 13.4,
+     "load_to_mw": 13.4,
+     "name": "うるま市変電所~仲泊変電所線"
+    },
+    {
+     "loading_pct": 101.7,
+     "p_mw": -69.8,
+     "kv": 66.0,
+     "parallel": 1,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "恩納村変電所~喜瀬変電所線"
+    }
+   ]
+  }
+ }
+}

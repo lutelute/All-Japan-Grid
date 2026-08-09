@@ -1,0 +1,1028 @@
+{
+ "date": "2026-08-09",
+ "islands": [
+  "east"
+ ],
+ "gen_modes": [
+  "base",
+  "site",
+  "cap",
+  "kvfit"
+ ],
+ "solar_levels": [
+  10.0,
+  0.1
+ ],
+ "min_hops": 3,
+ "radius_km": 10.0,
+ "runs": [
+  {
+   "island": "east",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.5322,
+   "kv_share": {
+    "66.0": 0.5311,
+    "77.0": 0.0011,
+    "154.0": 0.1135,
+    "275.0": 0.209,
+    "500.0": 0.1453
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "p95_pct": 154.7,
+    "excess_mw": 122493.3,
+    "over_share": 0.0985,
+    "over_lv": 521,
+    "over_hv": 82
+   },
+   "overload_power_basis": {
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "excess_mw": 122493.3,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 71.1
+  },
+  {
+   "island": "east",
+   "gen": "base",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.3078,
+   "kv_share": {
+    "66.0": 0.3061,
+    "77.0": 0.0017,
+    "154.0": 0.1466,
+    "275.0": 0.3267,
+    "500.0": 0.2188
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 387,
+    "max_pct": 3371.3,
+    "p95_pct": 113.7,
+    "excess_mw": 138960.1,
+    "over_share": 0.0632,
+    "over_lv": 304,
+    "over_hv": 83
+   },
+   "overload_power_basis": {
+    "n_over": 387,
+    "max_pct": 3371.3,
+    "excess_mw": 138960.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 68.9
+  },
+  {
+   "island": "east",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.5322,
+   "kv_share": {
+    "66.0": 0.5311,
+    "77.0": 0.0011,
+    "154.0": 0.1135,
+    "275.0": 0.209,
+    "500.0": 0.1453
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 422,
+    "max_pct": 1407.6,
+    "p95_pct": 120.7,
+    "excess_mw": 79424.3,
+    "over_share": 0.0689,
+    "over_lv": 332,
+    "over_hv": 90
+   },
+   "overload_power_basis": {
+    "n_over": 422,
+    "max_pct": 1407.6,
+    "excess_mw": 79424.3,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 74.9
+  },
+  {
+   "island": "east",
+   "gen": "base",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 0,
+   "moved_mw": 0.0,
+   "share_le_110kv": 0.3078,
+   "kv_share": {
+    "66.0": 0.3061,
+    "77.0": 0.0017,
+    "154.0": 0.1466,
+    "275.0": 0.3267,
+    "500.0": 0.2188
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 288,
+    "max_pct": 2436.6,
+    "p95_pct": 96.8,
+    "excess_mw": 104528.6,
+    "over_share": 0.047,
+    "over_lv": 209,
+    "over_hv": 79
+   },
+   "overload_power_basis": {
+    "n_over": 288,
+    "max_pct": 2436.6,
+    "excess_mw": 104528.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 65.1
+  },
+  {
+   "island": "east",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 68,
+   "moved_mw": 4459.5,
+   "share_le_110kv": 0.5223,
+   "kv_share": {
+    "66.0": 0.5207,
+    "77.0": 0.0015,
+    "154.0": 0.1085,
+    "275.0": 0.2182,
+    "500.0": 0.1511
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "p95_pct": 153.9,
+    "excess_mw": 121408.7,
+    "over_share": 0.0985,
+    "over_lv": 521,
+    "over_hv": 82
+   },
+   "overload_power_basis": {
+    "n_over": 603,
+    "max_pct": 1667.8,
+    "excess_mw": 121408.7,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 59.7
+  },
+  {
+   "island": "east",
+   "gen": "site",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 68,
+   "moved_mw": 4014.0,
+   "share_le_110kv": 0.2939,
+   "kv_share": {
+    "66.0": 0.2914,
+    "77.0": 0.0025,
+    "154.0": 0.1371,
+    "275.0": 0.3418,
+    "500.0": 0.2272
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 386,
+    "max_pct": 3371.3,
+    "p95_pct": 113.5,
+    "excess_mw": 136844.3,
+    "over_share": 0.0631,
+    "over_lv": 303,
+    "over_hv": 83
+   },
+   "overload_power_basis": {
+    "n_over": 386,
+    "max_pct": 3371.3,
+    "excess_mw": 136844.3,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 60.5
+  },
+  {
+   "island": "east",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 68,
+   "moved_mw": 4459.5,
+   "share_le_110kv": 0.5223,
+   "kv_share": {
+    "66.0": 0.5207,
+    "77.0": 0.0015,
+    "154.0": 0.1085,
+    "275.0": 0.2182,
+    "500.0": 0.1511
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 424,
+    "max_pct": 1407.6,
+    "p95_pct": 120.9,
+    "excess_mw": 78821.0,
+    "over_share": 0.0693,
+    "over_lv": 334,
+    "over_hv": 90
+   },
+   "overload_power_basis": {
+    "n_over": 424,
+    "max_pct": 1407.6,
+    "excess_mw": 78821.0,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 64.3
+  },
+  {
+   "island": "east",
+   "gen": "site",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 68,
+   "moved_mw": 4014.0,
+   "share_le_110kv": 0.2939,
+   "kv_share": {
+    "66.0": 0.2914,
+    "77.0": 0.0025,
+    "154.0": 0.1371,
+    "275.0": 0.3418,
+    "500.0": 0.2272
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 286,
+    "max_pct": 2436.6,
+    "p95_pct": 96.6,
+    "excess_mw": 103336.4,
+    "over_share": 0.0467,
+    "over_lv": 207,
+    "over_hv": 79
+   },
+   "overload_power_basis": {
+    "n_over": 286,
+    "max_pct": 2436.6,
+    "excess_mw": 103336.4,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 64.9
+  },
+  {
+   "island": "east",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 167,
+   "moved_mw": 45464.2,
+   "share_le_110kv": 0.4171,
+   "kv_share": {
+    "66.0": 0.4155,
+    "77.0": 0.0016,
+    "154.0": 0.1344,
+    "275.0": 0.2496,
+    "500.0": 0.1989
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 551,
+    "max_pct": 1594.7,
+    "p95_pct": 141.8,
+    "excess_mw": 90360.1,
+    "over_share": 0.09,
+    "over_lv": 484,
+    "over_hv": 67
+   },
+   "overload_power_basis": {
+    "n_over": 551,
+    "max_pct": 1594.7,
+    "excess_mw": 90360.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 70.8
+  },
+  {
+   "island": "east",
+   "gen": "cap",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 167,
+   "moved_mw": 44177.2,
+   "share_le_110kv": 0.117,
+   "kv_share": {
+    "66.0": 0.1152,
+    "77.0": 0.0017,
+    "154.0": 0.1816,
+    "275.0": 0.3922,
+    "500.0": 0.3092
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 303,
+    "max_pct": 822.8,
+    "p95_pct": 99.4,
+    "excess_mw": 80528.6,
+    "over_share": 0.0495,
+    "over_lv": 239,
+    "over_hv": 64
+   },
+   "overload_power_basis": {
+    "n_over": 303,
+    "max_pct": 822.8,
+    "excess_mw": 80528.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 68.5
+  },
+  {
+   "island": "east",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 167,
+   "moved_mw": 45464.2,
+   "share_le_110kv": 0.4171,
+   "kv_share": {
+    "66.0": 0.4155,
+    "77.0": 0.0016,
+    "154.0": 0.1344,
+    "275.0": 0.2496,
+    "500.0": 0.1989
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 370,
+    "max_pct": 1407.6,
+    "p95_pct": 111.1,
+    "excess_mw": 63120.7,
+    "over_share": 0.0604,
+    "over_lv": 284,
+    "over_hv": 86
+   },
+   "overload_power_basis": {
+    "n_over": 370,
+    "max_pct": 1407.6,
+    "excess_mw": 63120.7,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 65.0
+  },
+  {
+   "island": "east",
+   "gen": "cap",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 167,
+   "moved_mw": 44177.2,
+   "share_le_110kv": 0.117,
+   "kv_share": {
+    "66.0": 0.1152,
+    "77.0": 0.0017,
+    "154.0": 0.1816,
+    "275.0": 0.3922,
+    "500.0": 0.3092
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 214,
+    "max_pct": 518.8,
+    "p95_pct": 82.9,
+    "excess_mw": 68565.9,
+    "over_share": 0.035,
+    "over_lv": 148,
+    "over_hv": 66
+   },
+   "overload_power_basis": {
+    "n_over": 214,
+    "max_pct": 518.8,
+    "excess_mw": 68565.9,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 65.4
+  },
+  {
+   "island": "east",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 57,
+   "moved_mw": 59134.9,
+   "share_le_110kv": 0.3937,
+   "kv_share": {
+    "66.0": 0.3926,
+    "77.0": 0.0011,
+    "154.0": 0.0472,
+    "275.0": 0.1454,
+    "500.0": 0.4137
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 602,
+    "max_pct": 1594.7,
+    "p95_pct": 154.6,
+    "excess_mw": 126730.1,
+    "over_share": 0.0983,
+    "over_lv": 488,
+    "over_hv": 114
+   },
+   "overload_power_basis": {
+    "n_over": 602,
+    "max_pct": 1594.7,
+    "excess_mw": 126730.1,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 64.3
+  },
+  {
+   "island": "east",
+   "gen": "kvfit",
+   "sd": false,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 57,
+   "moved_mw": 59134.9,
+   "share_le_110kv": 0.0743,
+   "kv_share": {
+    "66.0": 0.0726,
+    "77.0": 0.0017,
+    "154.0": 0.0349,
+    "275.0": 0.2196,
+    "500.0": 0.6713
+   },
+   "n_trafo": 630,
+   "n_components": 312,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 0,
+   "fab_fab_trafo_mva": 0.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 406,
+    "max_pct": 871.5,
+    "p95_pct": 122.4,
+    "excess_mw": 106223.6,
+    "over_share": 0.0663,
+    "over_lv": 281,
+    "over_hv": 125
+   },
+   "overload_power_basis": {
+    "n_over": 406,
+    "max_pct": 871.5,
+    "excess_mw": 106223.6,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 66.8
+  },
+  {
+   "island": "east",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 10.0,
+   "n_gen": 8235,
+   "n_moved": 57,
+   "moved_mw": 59134.9,
+   "share_le_110kv": 0.3937,
+   "kv_share": {
+    "66.0": 0.3926,
+    "77.0": 0.0011,
+    "154.0": 0.0472,
+    "275.0": 0.1454,
+    "500.0": 0.4137
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7821,
+   "fab_unsourced_mw": 85670.0,
+   "fab_nameplate_mw": 186597.4,
+   "fab_unsourced_share": 0.4591,
+   "fab_unsourced_by_fuel": {
+    "solar": 76670.0,
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 461,
+    "max_pct": 1407.6,
+    "p95_pct": 130.7,
+    "excess_mw": 106052.7,
+    "over_share": 0.0753,
+    "over_lv": 327,
+    "over_hv": 134
+   },
+   "overload_power_basis": {
+    "n_over": 461,
+    "max_pct": 1407.6,
+    "excess_mw": 106052.7,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 215.5
+  },
+  {
+   "island": "east",
+   "gen": "kvfit",
+   "sd": true,
+   "solar_mw": 0.1,
+   "n_gen": 8235,
+   "n_moved": 57,
+   "moved_mw": 59134.9,
+   "share_le_110kv": 0.0743,
+   "kv_share": {
+    "66.0": 0.0726,
+    "77.0": 0.0017,
+    "154.0": 0.0349,
+    "275.0": 0.2196,
+    "500.0": 0.6713
+   },
+   "n_trafo": 1581,
+   "n_components": 188,
+   "fab_n_gen_default": 7820,
+   "fab_unsourced_mw": 9766.6,
+   "fab_nameplate_mw": 110704.0,
+   "fab_unsourced_share": 0.0882,
+   "fab_unsourced_by_fuel": {
+    "hydro": 2950.0,
+    "coal": 2400.0,
+    "unknown": 1770.0,
+    "gas": 1200.0,
+    "solar": 766.6
+   },
+   "fab_n_fab_trafo": 951,
+   "fab_fab_trafo_mva": 95100.0,
+   "dc_converged": true,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 310,
+    "max_pct": 3261.5,
+    "p95_pct": 100.4,
+    "excess_mw": 86595.8,
+    "over_share": 0.0506,
+    "over_lv": 214,
+    "over_hv": 96
+   },
+   "overload_power_basis": {
+    "n_over": 310,
+    "max_pct": 3261.5,
+    "excess_mw": 86595.8,
+    "max_gap_pt": 0.0
+   },
+   "seconds": 64.2
+  }
+ ],
+ "pareto": {
+  "east": [
+   {
+    "gen": "cap",
+    "sd": false,
+    "solar_mw": 0.1,
+    "unsourced_mw": 9766.6,
+    "n_fab_trafo": 0,
+    "excess_mw": 80528.6,
+    "n_over": 303,
+    "max_pct": 822.8
+   },
+   {
+    "gen": "cap",
+    "sd": true,
+    "solar_mw": 10.0,
+    "unsourced_mw": 85670.0,
+    "n_fab_trafo": 951,
+    "excess_mw": 63120.7,
+    "n_over": 370,
+    "max_pct": 1407.6
+   },
+   {
+    "gen": "cap",
+    "sd": true,
+    "solar_mw": 0.1,
+    "unsourced_mw": 9766.6,
+    "n_fab_trafo": 951,
+    "excess_mw": 68565.9,
+    "n_over": 214,
+    "max_pct": 518.8
+   }
+  ]
+ },
+ "residual": {
+  "east": {
+   "config": "gen=cap sd=on solar=10.0",
+   "n_over": 370,
+   "by_kv": {
+    "66": 284,
+    "154": 69,
+    "275": 17
+   },
+   "n_radial_endpoint": 6,
+   "n_single_circuit": 100,
+   "n_gen_dominated": 88,
+   "n_load_dominated": 282,
+   "worst": [
+    {
+     "loading_pct": 1407.6,
+     "p_mw": -1930.9,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 595.4,
+     "load_from_mw": 0.0,
+     "load_to_mw": 20.4,
+     "name": "鉾田線"
+    },
+    {
+     "loading_pct": 1176.9,
+     "p_mw": -1614.4,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "鉾田線"
+    },
+    {
+     "loading_pct": 988.5,
+     "p_mw": -1356.0,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 595.4,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 20.4,
+     "load_to_mw": 0.0,
+     "name": "鉾田線"
+    },
+    {
+     "loading_pct": 703.0,
+     "p_mw": -964.4,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 4,
+     "deg_to": 3,
+     "gen_from_mw": 65.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 20.4,
+     "load_to_mw": 0.0,
+     "name": "高浜線"
+    },
+    {
+     "loading_pct": 656.6,
+     "p_mw": -900.8,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "北浦線"
+    },
+    {
+     "loading_pct": 628.8,
+     "p_mw": 862.6,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 4,
+     "deg_to": 3,
+     "gen_from_mw": 65.0,
+     "gen_to_mw": 30.8,
+     "load_from_mw": 20.4,
+     "load_to_mw": 20.4,
+     "name": "高浜線"
+    },
+    {
+     "loading_pct": 500.8,
+     "p_mw": 1373.9,
+     "kv": 66.0,
+     "parallel": 4,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "鉾田線 / 貝地線"
+    },
+    {
+     "loading_pct": 456.5,
+     "p_mw": -626.3,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 2,
+     "deg_to": 3,
+     "gen_from_mw": 17.1,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 20.4,
+     "load_to_mw": 0.0,
+     "name": "出島線"
+    },
+    {
+     "loading_pct": 456.5,
+     "p_mw": -626.3,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "出島線"
+    },
+    {
+     "loading_pct": 456.5,
+     "p_mw": -626.3,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 3,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "出島線"
+    },
+    {
+     "loading_pct": 456.5,
+     "p_mw": -626.3,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 3,
+     "deg_to": 2,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 646.7,
+     "load_from_mw": 0.0,
+     "load_to_mw": 20.4,
+     "name": "出島線"
+    },
+    {
+     "loading_pct": 447.3,
+     "p_mw": -613.6,
+     "kv": 66.0,
+     "parallel": 2,
+     "deg_from": 4,
+     "deg_to": 4,
+     "gen_from_mw": 0.0,
+     "gen_to_mw": 0.0,
+     "load_from_mw": 0.0,
+     "load_to_mw": 0.0,
+     "name": "高幡線"
+    }
+   ]
+  }
+ },
+ "complete": true
+}
