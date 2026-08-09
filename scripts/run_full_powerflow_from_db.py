@@ -497,6 +497,15 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
 # ──────────────────────────────────────────────────────────────────────────
 ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
 
+
+def _operator_region():
+    """operator → 管内 の表。**単一出典は `src/uc/scenario.OPERATOR_REGION`**。
+
+    ここで写しを作ると `_DEFAULT_CAP` が 4 箇所に散った二の舞になるので import する。
+    """
+    from src.uc.scenario import OPERATOR_REGION
+    return OPERATOR_REGION
+
 # ── 介入#24 の**モデル既定**（2026-08-09 オーナー承認で既定ON化・第1段）─────────
 # `docs/reports/repair_adoption_decision_2026-08-09.md`。4島すべてで最大負荷率が
 # 悪化しない（hokkaido 90.2→86.0% / east 1,668→1,595% / west 1,894→708% /
@@ -629,6 +638,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     n_moved = 0
     moved_mw = 0.0
     kv_hist = defaultdict(float)
+    zone_src: dict[int, str] = {}
     for k, (region, feat) in enumerate(feats):
         g = feat.get("geometry") or {}
         if g.get("type") != "Point":
@@ -674,13 +684,24 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
             moved_mw += cap
         kv_hist[round(float(net.bus.at[pick, "vn_kv"]), 1)] += cap
         try:
-            pp.create_gen(net, bus=int(pick), p_mw=cap, vm_pu=1.0,
-                          name=str(props.get("name") or f"{region}_gen_{k}"),
-                          type=fuel, max_p_mw=cap, min_p_mw=0.0,
-                          max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
+            gi = pp.create_gen(net, bus=int(pick), p_mw=cap, vm_pu=1.0,
+                               name=str(props.get("name") or f"{region}_gen_{k}"),
+                               type=fuel, max_p_mw=cap, min_p_mw=0.0,
+                               max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
             n_gen += 1
+            # 介入#26 の材料: operator タグから管内を引いて持たせる（使うかは別判断）。
+            # 嶺南原発群(大飯/高浜)は立地=福井(hokuriku)だが関西電力の電源。
+            # 表は src/uc/scenario.OPERATOR_REGION（既存の単一出典）。
+            op = props.get("operator")
+            if isinstance(op, str) and op:
+                for k_op, reg in _operator_region().items():
+                    if k_op in op:
+                        zone_src[gi] = reg
+                        break
         except (ValueError, TypeError):
             pass
+    if zone_src:
+        net.gen["zone_src"] = net.gen.index.map(lambda i: zone_src.get(int(i)))
     if not stats:
         return n_gen
     tot = sum(kv_hist.values()) or 1.0
@@ -827,16 +848,31 @@ def add_per_component_slacks(net):
     return len(comps), n_slack, n_synth
 
 
-def balance_by_zone(net, cfg):
+def balance_by_zone(net, cfg, use_zone_src=False):
     """Scale each zone's generation toward its load so the slacks don't carry
-    the whole region (keeps the AC solution physical). ext_grid absorbs residual."""
+    the whole region (keeps the AC solution physical). ext_grid absorbs residual.
+
+    use_zone_src: **介入#26**。発電機の計上エリアを、バスの座標 zone ではなく
+    `attach_generators` が operator タグから引いた `zone_src` 列で決める。
+    嶺南原発群(大飯4,494MW/高浜3,392MW)は立地=福井県(hokuriku)だが関西電力の電源で、
+    座標 zone のままだと hokuriku の容量として数えられ scale=0.20 で**出力が1/3**になる
+    (`docs/reports/zone_attribution_dispatch_2026-08-10.md`)。
+    `capacity_bridge` が UC 経路向けに同じ上書きを既に行っており(その docstring に
+    嶺南の事情が明記されている)、こちらは銘板経路をそれに揃えるもの。
+    **需要側の bus.zone は動かさない**（capacity_bridge の設計意図どおり）。
+    """
     load_by_zone = defaultdict(float)
     for _, r in net.load.iterrows():
         z = net.bus.at[int(r["bus"]), "zone"]
         load_by_zone[z] += float(r["p_mw"])
+    has_src = use_zone_src and "zone_src" in net.gen.columns
     gens_by_zone = defaultdict(list)
     for gi, r in net.gen.iterrows():
         z = net.bus.at[int(r["bus"]), "zone"]
+        if has_src:
+            src = r.get("zone_src")
+            if isinstance(src, str) and src:
+                z = src
         gens_by_zone[z].append(gi)
     reserve = 1.0 + cfg.get("reserve_margin", 0.05)
     for z, gis in gens_by_zone.items():
@@ -1001,6 +1037,14 @@ def main():
                          "評価=docs/reports/repair_search_2026-08-09.md・判断="
                          "repair_adoption_decision_2026-08-09.md。"
                          "**無効化=--gen-attach nearest**")
+    ap.add_argument("--gen-zone-by-operator", action="store_true", default=False,
+                    help="発電機の計上エリアを operator タグで決める(**介入#26**・既定OFF)。"
+                         "既定はバスの座標zoneなので、嶺南原発群(大飯4,494MW/高浜3,392MW)は"
+                         "立地=福井(hokuriku)として数えられ scale=0.20 で**出力が1/3**になる。"
+                         "表は src/uc/scenario.OPERATOR_REGION(既存の単一出典)。"
+                         "需要側の bus.zone は動かさない。"
+                         "評価=docs/reports/zone_attribution_dispatch_2026-08-10.md。"
+                         "無効化=本フラグを付けない(既定)")
     ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
                     help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
                          "発電所はこの値で埋まる=**出典のない合成容量**。既定は "
@@ -1104,7 +1148,16 @@ def main():
             n_shunt = add_reactive_compensation(net, factor=rfac)
             print(f"  reactive-comp: factor={rfac} shunt={n_shunt}")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
-        balance_by_zone(net, cfg)
+        balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator)
+        if args.gen_zone_by_operator and "zone_src" in net.gen.columns:
+            n_ov = int((net.gen["zone_src"].notna()
+                        & (net.gen["zone_src"] != net.gen["bus"].map(net.bus["zone"]))).sum())
+            mw_ov = float(net.gen.loc[
+                net.gen["zone_src"].notna()
+                & (net.gen["zone_src"] != net.gen["bus"].map(net.bus["zone"])),
+                "max_p_mw"].sum())
+            print(f"  介入#26 gen-zone-by-operator: 計上エリアを変えた "
+                  f"{n_ov:,}機 / {mw_ov:,.0f}MW")
         net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)
         net_used = net_ac if ac.get("converged") else net_dc
         mode = "ac" if ac.get("converged") else "dc"

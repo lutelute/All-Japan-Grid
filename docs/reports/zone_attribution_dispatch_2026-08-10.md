@@ -79,7 +79,32 @@ west 全体の過負荷は **291 → 290 本**・最大負荷率 708.2%（不変
    外から帰属表を持ち込むと捏造になる
 3. 需要側の `bus.zone` は座標のまま（`capacity_bridge` の設計意図どおり）
 
+## 5. 実装した（介入#26・**既定OFF**）
+
+`--gen-zone-by-operator` を用意し、台帳に #26 として登録した。既定の挙動は変えていない。
+
+- `attach_generators` が OSM の `operator` タグから管内を引いて `zone_src` 列に持たせる
+  （表は `src/uc/scenario.OPERATOR_REGION` を import＝写しを作らない）
+- `balance_by_zone(use_zone_src=True)` がそれを使う。**需要側の bus.zone は動かさない**
+- 帳簿: 実行ログ `介入#26 gen-zone-by-operator: 計上エリアを変えた N機/M MW`
+
+### 全島での効果 — 集計は小さく、方向も混在
+
+| 島 | 座標zone（既定） | operator帰属 | 変更 |
+|---|---|---|---|
+| hokkaido | 0本 / 86.0% / 0MW | 0本 / 86.0% / 0MW | 0機 |
+| east | 551本 / 1,594.7% / 90,360MW | **544本 / 1,531.3% / 85,392MW** | 18機 / 5,556MW |
+| west | 291本 / 708.2% / 33,950MW | 293本 / 708.1% / **35,993MW** | 73機 / 17,541MW |
+| okinawa | 9本 / 165.0% / 211MW | 9本 / 165.0% / 211MW | 0機 |
+
+east は微改善（超過 −5.5%）、west は微悪化（+6%）。**これは過負荷を減らす梃子ではない。**
+価値は「大飯 4,494MW の機が 899MW と出る」のをやめられることにあり、
+**個別発電所の出力の正しさ**のための修正である。台帳「読み方」節に
+「発電機の個別出力を引用しない」を追加した。
+
+回帰: `tests/test_gen_attach_modes.py`（単一出典の import・既定 OFF・嶺南の帰属を固定）。
+
 ---
-**未適用**。採るなら介入台帳に①根拠②帳簿③無効化を登録する。
+**既定OFF で実装済み・既定ON化は未判断**。介入台帳 #26 に①根拠②帳簿③無効化を登録済み。
 測定: `docs/data/built/all.json`・`data/kansai_plants.geojson`・
 `scripts/run_full_powerflow_from_db.py::balance_by_zone`。

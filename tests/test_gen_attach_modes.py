@@ -251,3 +251,56 @@ def test_disable_switch_is_documented_in_the_ledger():
     led = (ROOT / "docs" / "MODEL_INTERVENTIONS.md").read_text(encoding="utf-8")
     assert "--gen-attach" in led, "介入#24 が台帳に無い"
     assert "--default-cap" in led, "介入#25 が台帳に無い"
+
+
+# ── 介入#26: 発電機の計上エリアを operator で決める ──────────────────────
+def test_zone_src_comes_from_the_single_source_table():
+    """operator→管内 の表は `src/uc/scenario.OPERATOR_REGION` を import すること。
+
+    `_DEFAULT_CAP` が 4 箇所に散った二の舞を防ぐ構造ゲート。
+    """
+    src = PF.read_text(encoding="utf-8")
+    assert "from src.uc.scenario import OPERATOR_REGION" in src, \
+        "operator→管内 の表を写している（単一出典を import すること）"
+
+
+def test_balance_by_zone_defaults_to_coordinate_zone():
+    """既定は従来どおり座標 zone（介入#26 は opt-in）。"""
+    import inspect
+    pf = _pf()
+    sig = inspect.signature(pf.balance_by_zone)
+    assert sig.parameters["use_zone_src"].default is False, \
+        "介入#26 が既定 ON になっている"
+
+
+def test_operator_override_moves_kansai_nuclear_out_of_hokuriku():
+    """嶺南原発群が hokuriku 計上のままでないこと（2026-08-10 の実測を固定）。
+
+    大飯4,494MW・高浜3,392MW は立地=福井県だが関西電力の電源。座標 zone のままだと
+    hokuriku の容量として数えられ scale=0.20 で出力が 1/3 になる。
+    """
+    pytest.importorskip("pandapower")
+    pf = _pf()
+    if not Path(pf.BUILT).exists():
+        pytest.skip("built DB が無い")
+    import json as _json
+    with open(pf.BUILT, encoding="utf-8") as f:
+        db = _json.load(f)
+    nodes, edges = db["nodes"], db["edges"]
+    net, bus_of, _ = pf.build_island_net(
+        "west", nodes, edges, pf.ISLAND_FREQ["west"], {},
+        dedup_nodes=True, site_trafos=False, deenergize_unbuilt=False)
+    pf.attach_generators(net, bus_of, nodes, "west",
+                         attach_mode=pf.GEN_ATTACH_DEFAULT)
+    if "zone_src" not in net.gen.columns:
+        pytest.fail("zone_src 列が付いていない（operator タグを読めていない）")
+    got = {}
+    for _i, r in net.gen.iterrows():
+        nm = str(r["name"])
+        if nm in ("大飯原子力発電所", "高浜原子力発電所"):
+            got[nm] = (str(net.bus.at[int(r["bus"]), "zone"]), r.get("zone_src"))
+    assert got, "嶺南原発群が west に載っていない"
+    for nm, (bus_zone, src) in got.items():
+        assert src == "kansai", f"{nm} の operator 由来エリアが kansai でない: {src}"
+        assert bus_zone == "hokuriku", \
+            f"{nm} の座標 zone が hokuriku でなくなった（レポートの前提が変わった）: {bus_zone}"
