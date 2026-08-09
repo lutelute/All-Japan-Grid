@@ -7,6 +7,34 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-09i — **Claude Fable 5** — 発電側を追って出典伝播の穴2件を発見（CGMES誤りの仮説は棄却）
+
+過負荷の原因を発電側に絞って調査。潮流モデルの発電機は **8,775台に対し出力値が314種**しかなく、
+上位6値で87%（2.780MW×3,213台など）＝ゾーン需要に合わせた一律スケールの結果と判明。
+そこから出典の充足を辿って**別の2件**を発見した。
+
+**発見①: 発電容量の出典がCGMESに届いていない。** `src/cim/exporter.py` は
+`capacity_mw_sourced` を優先し出典URLを `IdentifiedObject.description` に刻む実装
+（Phase 1-B 出典伝播）だが、出典を書き込む `apply_capacity_sources.py` の対象は
+`docs/data/` の4ファイルのみで、**CIMが読む `data/*_plants.geojson`(19,138件)は対象外＝出典0件**。
+CGMES内の出典URL 9種は**すべて変圧器由来**で、発電容量DB(336種)からは0件。
+変圧器側が届いているせいで「伝播できている」ように見えるのが厄介だった。
+
+**発見②: 出典値の単純合計は73%過大。** `capacity_mw_sourced` は発電所全体の値
+（柏崎刈羽8,212MW=7号機合計）だが号機単位レコードに複製されるため、レコード単位で
+合計すると 650,572MW（正しくは発電所単位174,287MW）。**現時点で合計している消費者は無く
+実害は出ていない**が、集計を書いた瞬間に踏む罠。
+
+**棄却した仮説**: 当初「CGMESのratedPが多重計上されている」と考えたが、出荷済みCGMESを
+直接検査すると ratedP=8212 は0件・4119は1件のみで**多重計上は起きていなかった**。
+CIM入力に出典が入っていないためで、[[feedback-verify-before-claiming]]どおり第二経路で
+確かめて誤報を回避した（striking数値の誤検出はこれで3件目）。
+
+実装 `scripts/capacity/audit_capacity_provenance_reach.py`、ゲート
+`tests/test_capacity_provenance_reach.py` 4件（**穴が塞がったら失敗する**形にして、
+塞いだ人が期待値を更新する動線にした）。正本
+`docs/reports/capacity_provenance_reach_2026-08-09.md`。直し方は提案のみで未適用。
+
 ## 2026-08-09h — **Claude Fable 5** — NAS接続とERA5日射のエリア集約（zero-copy実践）
 
 オーナー「NASのデータも使ってよい／pws-server見てnas03見ればいい／このPCは容量が無い」。

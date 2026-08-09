@@ -1,0 +1,36 @@
+{
+ "date": "2026-08-09",
+ "generator_source_db": {
+  "n_urls": 336
+ },
+ "transformer_source_db": {
+  "n_urls": 35
+ },
+ "applied_geojson": {
+  "file": "docs/data/generators.geojson",
+  "n_features": 688,
+  "n_sourced": 304,
+  "n_plants": 111,
+  "n_plants_multi_record": 75,
+  "sum_per_record_mw": 650572.4,
+  "sum_per_plant_mw": 174287.1,
+  "sum_unit_capacity_mw": 205446.3,
+  "overcount_mw": 476285.3,
+  "overcount_share": 0.7321
+ },
+ "cim_input": {
+  "glob": "data/*_plants.geojson",
+  "n_features": 19138,
+  "n_sourced": 0
+ },
+ "cim_output": {
+  "n_description_urls": 13,
+  "n_unique": 9,
+  "n_from_generator_db": 0,
+  "n_from_transformer_db": 9
+ },
+ "findings": {
+  "capacity_provenance_reaches_cim": false,
+  "sourced_sum_is_safe": false
+ }
+}
