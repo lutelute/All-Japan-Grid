@@ -70,7 +70,26 @@ python 02_uc_from_excel/run_uc.py              # 解いて uc_result.xlsx / uc_r
 
 ---
 
-## 4. ライセンスと出典（引用時は必ず確認）
+## 4. 回し方その3 — 感度行列で高速スクリーニング → [`03_sensitivity_screening/`](03_sensitivity_screening/)
+
+配布物 `dist/sensitivity/` の **PTDF / LODF** を読み、反復解法を使わずに行列の掛け算だけで
+潮流・N-1・地点別の混雑を評価します。
+
+```bash
+python 03_sensitivity_screening/screen.py            # 沖縄（最小・数秒）
+python 03_sensitivity_screening/screen.py west       # 主成分 7,087 バス
+```
+
+要点は「全地点を一度に」評価できること。西日本 7,087 地点の混雑感度が **0.5 秒**で出ます
+（同じ答えを潮流の解き直しで得ると単純計算で 3.4 日）。行列本体は容量が大きいため git に
+入っておらず、無ければスクリプトが生成します（west で約 5 秒）。
+
+直流近似のスクリーニングであり確定値ではありません。詳細と限界は
+[`03_sensitivity_screening/README.md`](03_sensitivity_screening/README.md)。
+
+---
+
+## 5. ライセンスと出典（引用時は必ず確認）
 
 | 対象 | ライセンス |
 |---|---|
@@ -83,7 +102,7 @@ python 02_uc_from_excel/run_uc.py              # 解いて uc_result.xlsx / uc_r
 
 ---
 
-## 5. データの限界（誠実な注意）
+## 6. データの限界（誠実な注意）
 
 このデータセットは**モデル**であり、実系統そのものではありません。使う前に押さえてください。
 
@@ -96,5 +115,8 @@ python 02_uc_from_excel/run_uc.py              # 解いて uc_result.xlsx / uc_r
   の typical estimates）で、特定発電所の実測値ではありません。実データがあれば Excel 上で
   上書きしてください。発電所名・燃料・定格（Pmax）は OSM 由来の実在フリートです。
 - 変圧器・線路定数は電圧階級の代表値中心（銘板適用は一部）。詳細は `dist/ybus/README.md`。
+- **線路の熱容量は理論値**（`√3·V·I`）で実運用容量ではありません。本モデルでは基準潮流が
+  既にこれを超える枝があり（66kV 層に集中）、感度行列による接続可能量は絶対値ではなく
+  **地点間の相対比較**として読んでください。詳細は `dist/sensitivity/README.md`。
 
 失敗事例・既知の限界・国際ベンチマークは `docs/reports/` に整理されています。

@@ -152,3 +152,6 @@ dataset/**/*_res_bus.csv
 # meta.json・README は同梱する（再生成物の解釈と sha256 による同一性確認に要る）。
 dist/sensitivity/*.npz
 dist/sensitivity/*.mat
+
+# 例題の実行結果（再生成できるので同梱しない）
+dataset/03_sensitivity_screening/screening_*.csv
