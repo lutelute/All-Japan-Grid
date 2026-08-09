@@ -1,0 +1,403 @@
+{
+ "date": "2026-08-09",
+ "min_kv": 154.0,
+ "near_km": 20.0,
+ "links": [
+  {
+   "occto_name": "北海道・本州間電力連系設備",
+   "note": "北本 HVDC。海底ケーブルは OSM に載りにくい",
+   "capacity_fwd_mw": 900.0,
+   "capacity_rev_mw": 900.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      41.79,
+      140.64
+     ],
+     "nearest": [
+      5.8,
+      187.0,
+      "JR北海道 新函館変電所 intra-substation 187kV stub"
+     ]
+    },
+    {
+     "spot": [
+      41.17,
+      140.49
+     ],
+     "nearest": [
+      2.7,
+      275.0,
+      "JR北海道 今別変電所 intra-substation 275kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "相馬双葉幹線",
+   "note": "東北↔東京の最大連系。500kV",
+   "capacity_fwd_mw": 6400.0,
+   "capacity_rev_mw": 2360.0,
+   "name_candidates": [
+    {
+     "name": "新福島変電所~南相馬変電所線",
+     "kv": 275.0,
+     "groups_hit": 2
+    }
+   ],
+   "geo_evidence": [
+    {
+     "spot": [
+      37.8,
+      140.95
+     ],
+     "nearest": [
+      3.9,
+      154.0,
+      "新地町変電所~駒ヶ嶺変電所線"
+     ]
+    },
+    {
+     "spot": [
+      37.45,
+      141.0
+     ],
+     "nearest": [
+      3.9,
+      275.0,
+      "大熊変電所 intra-substation 275kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補あり"
+  },
+  {
+   "occto_name": "周波数変換設備",
+   "note": "東西 FC。3〜4 か所の変換所の合計",
+   "capacity_fwd_mw": 2100.0,
+   "capacity_rev_mw": 2100.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      35.09,
+      137.8
+     ],
+     "nearest": [
+      0.3,
+      275.0,
+      "佐久間周波数変換所連絡線"
+     ]
+    },
+    {
+     "spot": [
+      36.48,
+      138.02
+     ],
+     "nearest": [
+      13.4,
+      275.0,
+      "長野市変電所 intra-substation 275kV stub"
+     ]
+    },
+    {
+     "spot": [
+      35.05,
+      138.5
+     ],
+     "nearest": [
+      0.8,
+      275.0,
+      "東清水変電所 intra-substation 275kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "南福光連系所・南福光変電所の連系設備",
+   "note": "北陸↔中部 BTB",
+   "capacity_fwd_mw": 1310.0,
+   "capacity_rev_mw": 1980.0,
+   "name_candidates": [
+    {
+     "name": "中能登変電所~南福光変電所線",
+     "kv": 500.0,
+     "groups_hit": 1
+    }
+   ],
+   "geo_evidence": [
+    {
+     "spot": [
+      36.55,
+      136.9
+     ],
+     "nearest": [
+      2.4,
+      154.0,
+      "下吉江変電所~城端開閉所線"
+     ]
+    }
+   ],
+   "verdict": "名前候補あり"
+  },
+  {
+   "occto_name": "越前嶺南線",
+   "note": "北陸↔関西 500kV",
+   "capacity_fwd_mw": 1900.0,
+   "capacity_rev_mw": 1600.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      35.9,
+      136.2
+     ],
+     "nearest": [
+      2.7,
+      154.0,
+      "高木町変電所~千原町変電所線"
+     ]
+    },
+    {
+     "spot": [
+      35.55,
+      136.05
+     ],
+     "nearest": [
+      5.8,
+      154.0,
+      "北陸幹線"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "三重東近江線",
+   "note": "中部↔関西 500kV",
+   "capacity_fwd_mw": 1700.0,
+   "capacity_rev_mw": 2500.0,
+   "name_candidates": [
+    {
+     "name": "東近江開閉所~三重開閉所線",
+     "kv": 500.0,
+     "groups_hit": 2
+    }
+   ],
+   "geo_evidence": [
+    {
+     "spot": [
+      34.95,
+      136.35
+     ],
+     "nearest": [
+      9.2,
+      275.0,
+      "伊勢幹線"
+     ]
+    },
+    {
+     "spot": [
+      35.1,
+      136.25
+     ],
+     "nearest": [
+      4.9,
+      500.0,
+      "西浅井町塩津浜変電所~東近江開閉所線"
+     ]
+    }
+   ],
+   "verdict": "名前候補あり"
+  },
+  {
+   "occto_name": "関西-中国（東）",
+   "note": "関西↔中国 東ルート",
+   "capacity_fwd_mw": 4600.0,
+   "capacity_rev_mw": 4850.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      34.87,
+      134.35
+     ],
+     "nearest": [
+      1.9,
+      500.0,
+      "上郡変電所~久崎変電所線"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "関西-中国（西）",
+   "note": "関西↔中国 西ルート",
+   "capacity_fwd_mw": 4600.0,
+   "capacity_rev_mw": 4850.0,
+   "name_candidates": [
+    {
+     "name": "新岡山変電所~日野変電所線",
+     "kv": 500.0,
+     "groups_hit": 2
+    }
+   ],
+   "geo_evidence": [
+    {
+     "spot": [
+      35.3,
+      133.4
+     ],
+     "nearest": [
+      0.8,
+      220.0,
+      "日野変電所 intra-substation 220kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補あり"
+  },
+  {
+   "occto_name": "本四連系線",
+   "note": "中国↔四国",
+   "capacity_fwd_mw": 1200.0,
+   "capacity_rev_mw": 1450.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      34.25,
+      134.05
+     ],
+     "nearest": [
+      5.9,
+      187.0,
+      "香川変電所 intra-substation 187kV stub"
+     ]
+    },
+    {
+     "spot": [
+      34.35,
+      133.95
+     ],
+     "nearest": [
+      7.8,
+      187.0,
+      "高松変電所 intra-substation 187kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "阿南紀北直流幹線",
+   "note": "四国↔関西 HVDC（紀伊水道）",
+   "capacity_fwd_mw": 109.0,
+   "capacity_rev_mw": 700.0,
+   "name_candidates": [],
+   "geo_evidence": [
+    {
+     "spot": [
+      33.95,
+      134.6
+     ],
+     "nearest": [
+      9.7,
+      187.0,
+      "阿南発電所 (Anan Power Station) intra-substation 187kV stub"
+     ]
+    },
+    {
+     "spot": [
+      34.2,
+      135.15
+     ],
+     "nearest": [
+      6.5,
+      275.0,
+      "海南港変電所 intra-substation 275kV stub"
+     ]
+    }
+   ],
+   "verdict": "名前候補なし・地理のみ"
+  },
+  {
+   "occto_name": "関門連系線",
+   "note": "中国↔九州",
+   "capacity_fwd_mw": 850.0,
+   "capacity_rev_mw": 2850.0,
+   "name_candidates": [
+    {
+     "name": "関門連系線",
+     "kv": 500.0,
+     "groups_hit": 1
+    },
+    {
+     "name": "北九州変電所 intra-substation 500kV stub",
+     "kv": 500.0,
+     "groups_hit": 1
+    },
+    {
+     "name": "北九州幹線",
+     "kv": 500.0,
+     "groups_hit": 1
+    },
+    {
+     "name": "下有木変電所~北九州変電所線",
+     "kv": 500.0,
+     "groups_hit": 1
+    },
+    {
+     "name": "北九州変電所~西谷変電所線",
+     "kv": 220.0,
+     "groups_hit": 1
+    }
+   ],
+   "geo_evidence": [
+    {
+     "spot": [
+      33.95,
+      130.95
+     ],
+     "nearest": [
+      3.4,
+      500.0,
+      "関門連系線"
+     ]
+    }
+   ],
+   "verdict": "名前候補あり"
+  },
+  {
+   "occto_name": "北陸フェンス",
+   "note": "断面の集約概念（個別設備ではない）",
+   "capacity_fwd_mw": 2820.0,
+   "capacity_rev_mw": 3970.0,
+   "name_candidates": [],
+   "geo_evidence": [],
+   "verdict": "集約概念（対応づけ対象外）"
+  },
+  {
+   "occto_name": "中部フェンス",
+   "note": "断面の集約概念（個別設備ではない）",
+   "capacity_fwd_mw": 2630.0,
+   "capacity_rev_mw": 3530.0,
+   "name_candidates": [],
+   "geo_evidence": [],
+   "verdict": "集約概念（対応づけ対象外）"
+  },
+  {
+   "occto_name": "関西フェンス",
+   "note": "断面の集約概念（個別設備ではない）",
+   "capacity_fwd_mw": 3260.0,
+   "capacity_rev_mw": 4100.0,
+   "name_candidates": [],
+   "geo_evidence": [],
+   "verdict": "集約概念（対応づけ対象外）"
+  }
+ ]
+}
