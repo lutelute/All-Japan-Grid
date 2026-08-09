@@ -29,10 +29,14 @@
 | 1 | `scripts/run_full_powerflow_from_db.py:85` | 正本（潮流本体） | 生 |
 | 2 | `scripts/capacity/audit_generation_fleet.py:41` | 監査スクリプトの写し | 生（合成率の算出元） |
 | 3 | `src/powerflow/snapped_topology.py:60` | snapped 系譜の写し | **生**（`rebuild_ab`・`connection_candidates`・`island_substations`・`analyze_transformer_nodes` が import） |
+
+※ 台帳の「snapped 系譜の旧介入は退役」は**誤りではない** — 退役したのは本番モデルの
+系譜（最近傍drop法・合成橋）であり、上の 4 本は A/B 比較・接続候補生成・島の性質分析の
+ツールとして別途生きている。それでも `_DEFAULT_CAP` の写しは実在するので、
+既定値を変えるならここも直す必要がある、という実務上の話。
 | 4 | `tests/test_generation_fleet.py:25` | テストの写し（照合用） | 生 |
 
 ⚠ **テストが守っているのは #1 と #4 の一致だけ**で、#2 と #3 は黙ってずれ得る。
-snapped 系譜は介入台帳では「退役」扱いだが、**コードは 4 スクリプトから現役で使われている**。
 既定値を変えるなら #1〜#3 の 3 箇所を同時に直す必要がある。
 
 ## 3. 落ちるテスト — 逃げ道は無い（意図された設計）
