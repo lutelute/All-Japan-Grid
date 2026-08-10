@@ -1,7 +1,48 @@
 {
-  "model_version": "f8ebec7",
+  "model_version": "438cb33",
   "git_dirty": true,
-  "generated_at": "2026-06-20T04:11:22+00:00",
-  "steps": {},
+  "generated_at": "2026-08-10T05:08:34+00:00",
+  "steps": {
+    "build_editor_data": {
+      "status": "ok",
+      "elapsed_s": 17.8
+    },
+    "export_map_tiers": {
+      "status": "ok",
+      "elapsed_s": 2.7
+    },
+    "gen_sld": {
+      "status": "ok",
+      "elapsed_s": 0.8
+    },
+    "run_full_powerflow": {
+      "status": "ok",
+      "elapsed_s": 271.1
+    },
+    "gen_national_overview": {
+      "status": "ok",
+      "elapsed_s": 26.8
+    },
+    "export_national_matpower": {
+      "status": "ok",
+      "elapsed_s": 188.7
+    },
+    "export_cim": {
+      "status": "ok",
+      "elapsed_s": 5.8
+    },
+    "build_static_site": {
+      "status": "ok",
+      "elapsed_s": 2.0
+    },
+    "apply_capacity_sources": {
+      "status": "ok",
+      "elapsed_s": 6.4
+    },
+    "build_pages_editor": {
+      "status": "ok",
+      "elapsed_s": 0.1
+    }
+  },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。"
 }
