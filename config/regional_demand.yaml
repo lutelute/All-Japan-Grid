@@ -33,7 +33,20 @@ power_factor: 0.95
 # because ~19 GVar of load reactive demand must flow through high-X radial
 # 66 kV lines with no local support. Compensation restores honest AC (98 %
 # served, vs the fake 10.8 %). 0.6 is a reasonable central value.
-reactive_compensation_factor: 0.6
+#
+# 2026-08-11 再較正 0.6 -> 0.8。**0.6 は太陽光の既定容量が 10MW（＝太陽光 180GW）
+# だった頃に決めた値**で、介入#25 でそれを実測中央値 0.10MW へ正したときに合わなくなった。
+# モデルの発電機は max_q_mvar = 0.5 × 容量 を持つ無効電力源でもあるので、
+# 水増し太陽光を消すと**捏造されていた無効電力サポートも一緒に消える**
+# （hokkaido の vm<0.80 が 8 → 45 バスへ悪化した。原因分解は
+#  docs/reports/reactive_factor_recalibration_2026-08-11.md）。
+# 0.8 は 4 島すべてで電圧・最大負荷率のどちらも悪化させない:
+#   hokkaido vm<0.80 38->1 / okinawa 2->0 / east 0->0 / west 11->10
+# ⚠ これは**捏造の付け替え**でもある（実在しない太陽光の q → 台帳に載るコンデンサ
+#   バンク・4島計 +9,000 MVar 弱）。後者は数えられ・開示され・切れる分だけ誠実だが、
+#   「電圧が持つように上げた」が独り歩きするとモデルが健全だという誤読を生む。
+#   無効化は `--no-reactive-comp`、値の上書きは `--reactive-comp <FACTOR>`。
+reactive_compensation_factor: 0.8
 
 # Voltage-class weights for distributing demand across buses
 # Lower voltage levels carry proportionally more distribution load
