@@ -22,7 +22,7 @@ PLANTS = sorted(glob.glob(str(ROOT / "data" / "*_plants.geojson")))
 
 # 潮流本体（scripts/run_full_powerflow_from_db.py）と揃えること
 DEFAULT_CAP = {"nuclear": 1000.0, "coal": 600.0, "gas": 400.0, "oil": 300.0,
-               "hydro": 50.0, "solar": 10.0, "wind": 10.0, "biomass": 20.0}
+               "hydro": 50.0, "solar": 0.10, "wind": 10.0, "biomass": 20.0}
 
 pytestmark = pytest.mark.skipif(not PLANTS, reason="plants geojson が無い")
 
@@ -62,19 +62,26 @@ def test_powerflow_does_not_ingest_negative_capacity():
         "非正容量のガードが消えた。負の発電出力がモデルに入る"
 
 
-def test_solar_default_is_far_above_observed_median():
-    """太陽光の既定値が実容量中央値から桁で乖離している（既知の水増し）。
+def test_solar_default_tracks_the_observed_median():
+    """太陽光の既定値が実容量の中央値に張り付いていること（介入#25・2026-08-10 是正）。
 
-    既定値を下げるなどして乖離が解消されたら失敗するので、
-    直した人が監査レポートの数字を更新する動線になる。
+    **かつてこのテストは逆を主張していた** — 既定 10MW が中央値 0.10MW の 100 倍
+    乖離している事実を固定し、「直した人が監査レポートを更新する動線」として働いていた。
+    2026-08-10 に既定を 0.10 へ是正したので、いまは**中央値から離れたら失敗する**
+    向きへ入れ替える。10MW へ戻すとここで落ちる。
+
+    経緯: 10MW は太陽光を 180GW＝実績ピークの 318% に膨らませ、`balance_by_zone` が
+    容量比例で配るためゾーン内の空間配分そのものを歪めていた（夕方17時の断面で
+    east 注入の 45.9% が太陽光ノード＝17時の太陽光出力はゼロ）。合成率 48.3%→20.1%。
     """
     obs = [c for _, f, c in _iter_plants() if "solar" in f and c is not None and c > 0]
     assert obs, "実容量の付いた太陽光が無い"
     med = st.median(obs)
     ratio = DEFAULT_CAP["solar"] / med
-    if ratio < 10:
-        pytest.fail(f"太陽光の既定値と実容量中央値の比が {ratio:.1f} 倍まで縮んだ。"
-                    "水増しが解消されたなら generation_fleet_audit の記述を更新すること")
+    assert 0.2 <= ratio <= 5.0, (
+        f"太陽光の既定値 {DEFAULT_CAP['solar']}MW が実容量中央値 {med:.3f}MW から "
+        f"{ratio:.1f} 倍ずれている。既定値を戻したか、実容量の分布が動いた。"
+        "どちらであれ generation_fleet_audit を取り直して記述を更新すること")
 
 
 def test_synthetic_share_is_disclosed_not_hidden():

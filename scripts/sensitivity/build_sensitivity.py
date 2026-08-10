@@ -48,7 +48,7 @@ from pandapower.pypower.makeLODF import makeLODF
 from pandapower.pypower.makePTDF import makePTDF
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config,
 )
@@ -81,7 +81,7 @@ def main_component_net(island: str, nodes, edges, cfg, pref_gwh):
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)
-    balance_by_zone(net, cfg)
+    balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR)
 
     g = top.create_nxgraph(net, respect_switches=False)
     main = sorted(max(nx.connected_components(g), key=len))

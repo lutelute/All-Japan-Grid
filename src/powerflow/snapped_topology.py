@@ -55,9 +55,11 @@ from src.regions import REGION_FREQUENCY_HZ as REGION_FREQ
 # here from examples/ — Phase C pipeline promotion).
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 
+# 介入#25 の写し（潮流本体 `run_full_powerflow_from_db._DEFAULT_CAP` と揃えること）。
+# solar は 2026-08-10 に 10.0 → 0.10（OSM 実容量中央値）へ是正。
 _DEFAULT_CAPACITY_MW = {
     "nuclear": 1000.0, "coal": 600.0, "gas": 400.0, "oil": 300.0,
-    "hydro": 50.0, "solar": 10.0, "wind": 10.0, "biomass": 20.0,
+    "hydro": 50.0, "solar": 0.10, "wind": 10.0, "biomass": 20.0,
 }
 _DEFAULT_CAPACITY_FALLBACK = 30.0
 

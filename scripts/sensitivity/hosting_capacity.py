@@ -67,7 +67,7 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
     # 座標が要るので bus_of（built ノード索引 → バス）を自前で受け取る
     from src.powerflow.pipeline import add_reactive_compensation
     from scripts.run_full_powerflow_from_db import (
-        GEN_ATTACH_DEFAULT, add_per_component_slacks, allocate_loads,
+        GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
         attach_generators, balance_by_zone,
         build_island_net)
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
@@ -75,7 +75,7 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)
-    balance_by_zone(net, cfg)
+    balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR)
     sub, _ = main_component_subnet(net)
     pp.rundcpp(sub)
     ppc = sub._ppc

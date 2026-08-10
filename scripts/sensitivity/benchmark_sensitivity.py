@@ -41,7 +41,7 @@ import pandapower.topology as top
 from pandapower.pypower.idx_brch import F_BUS, PF, T_BUS
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config, solve_island,
 )
@@ -64,7 +64,7 @@ def production_net(island: str, nodes, edges, cfg, pref_gwh):
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)
-    balance_by_zone(net, cfg)
+    balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR)
     return net
 
 

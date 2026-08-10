@@ -81,8 +81,15 @@ ISLAND_OF = {
 ISLAND_FREQ = {"hokkaido": 50, "east": 50, "west": 60, "okinawa": 60}
 
 VALID_KV = [66, 77, 110, 132, 154, 187, 220, 275, 500]
+# 介入#25: `capacity_mw` 欠損を埋める燃料別既定容量＝**出典のない合成容量**。
+# solar は 2026-08-10 に 10.0 → 0.10（OSM 実容量 600 件の中央値）へ是正した。
+# 10.0 は中央値の 100 倍で、太陽光を 180GW＝実績ピークの 318% に膨らませ、
+# `balance_by_zone` が容量比例で配分するため**そのままゾーン内の空間配分**になっていた
+# （夕方17時の断面で east 注入の 45.9% が太陽光ノードに載る＝17時の太陽光出力はゼロ）。
+# 合成率 48.3% → 20.1%。無効化は `--default-cap solar=10.0`。
+# 出典と波及: `docs/reports/intervention25_impact_inventory_2026-08-10.md`
 _DEFAULT_CAP = {"nuclear": 1000.0, "coal": 600.0, "gas": 400.0, "oil": 300.0,
-                "hydro": 50.0, "solar": 10.0, "wind": 10.0, "biomass": 20.0}
+                "hydro": 50.0, "solar": 0.10, "wind": 10.0, "biomass": 20.0}
 _CAP_FALLBACK = 30.0
 
 
@@ -517,6 +524,14 @@ def _operator_region():
 # 引数なしで呼んでいるので、関数側を動かすと公表済み診断の base が黙って cap に化ける。
 # モデルを組む側だけがこの定数を明示的に渡す。
 GEN_ATTACH_DEFAULT = "cap"
+
+# ── 介入#26 の**モデル既定**（2026-08-10 オーナー承認で既定ON）─────────────
+# 発電機の計上エリアを OSM の operator タグで決める。座標 zone のままだと嶺南原発群
+# （大飯4,494MW/高浜3,392MW）と舞鶴火力1,800MW が hokuriku 計上になり出力が1/3になる
+# （`docs/reports/zone_attribution_dispatch_2026-08-10.md`）。無効化は `--no-gen-zone-by-operator`。
+# **関数 `balance_by_zone` の引数既定は False のまま** — what-if 群は引数なしで呼び、
+# 旧挙動を比較のベースラインにしている（#24 と同じ理由）。モデルを組む側だけが渡す。
+GEN_ZONE_BY_OPERATOR = True
 
 
 def bus_incident_mva(net):
@@ -1037,14 +1052,16 @@ def main():
                          "評価=docs/reports/repair_search_2026-08-09.md・判断="
                          "repair_adoption_decision_2026-08-09.md。"
                          "**無効化=--gen-attach nearest**")
-    ap.add_argument("--gen-zone-by-operator", action="store_true", default=False,
-                    help="発電機の計上エリアを operator タグで決める(**介入#26**・既定OFF)。"
+    ap.add_argument("--gen-zone-by-operator", action=argparse.BooleanOptionalAction,
+                    default=GEN_ZONE_BY_OPERATOR,
+                    help="発電機の計上エリアを operator タグで決める(**介入#26**・"
+                         "**既定ON**/2026-08-10)。"
                          "既定はバスの座標zoneなので、嶺南原発群(大飯4,494MW/高浜3,392MW)は"
                          "立地=福井(hokuriku)として数えられ scale=0.20 で**出力が1/3**になる。"
                          "表は src/uc/scenario.OPERATOR_REGION(既存の単一出典)。"
                          "需要側の bus.zone は動かさない。"
                          "評価=docs/reports/zone_attribution_dispatch_2026-08-10.md。"
-                         "無効化=本フラグを付けない(既定)")
+                         "**無効化=--no-gen-zone-by-operator**")
     ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
                     help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
                          "発電所はこの値で埋まる=**出典のない合成容量**。既定は "

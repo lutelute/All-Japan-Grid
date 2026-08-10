@@ -29,7 +29,7 @@ import numpy as np
 import pandapower.topology as top
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config, solve_island,
 )
@@ -92,7 +92,7 @@ def analyze(island: str, nodes, edges, cfg, pref_gwh, solve: bool = True) -> dic
     r["reactive_comp_factor"] = rfac
     r["n_shunt"] = int(add_reactive_compensation(net, factor=rfac))
     n_comp, n_slack, n_synth = add_per_component_slacks(net)
-    balance_by_zone(net, cfg)
+    balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR)
     t0 = time.time()
     net_dc, dc, net_ac, ac = solve_island(net, max_ac_buses=10**9)
     r["n_synthetic_slack"] = int(n_synth)
