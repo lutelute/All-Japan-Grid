@@ -54,6 +54,13 @@ SPEC = ProvenanceSpec(
     extra_required=("unit", "source_title"),
 )
 
+# D層の出典付き容量の索引は **`src/capacity_sources`** が単一の出典。
+# ここに写しを置かない（`_DEFAULT_CAP` が 4 箇所に散った轍を踏まないため）。
+from src.capacity_sources import (  # noqa: E402,F401
+    geo_key as sourced_geo_key,
+    sourced_capacity_index,
+)
+
 
 def validate_record(rec):
     """1レコードを検証。戻り値 (ok: bool, reasons: list[str])。

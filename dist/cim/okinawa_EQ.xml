@@ -3447,10 +3447,15 @@
   <cim:ThermalGeneratingUnit rdf:ID="_b20eaf28-208e-57b5-9b39-d9b2fd0d71fd">
     <cim:IdentifiedObject.name>金武火力発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b20eaf28-208e-57b5-9b39-d9b2fd0d71fd</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>440</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>440</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://ja.wikipedia.org/wiki/金武火力発電所</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_426e2de2-2a87-5b76-8d20-44b170dfb261">
     <cim:IdentifiedObject.name>金武火力発電所 gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>426e2de2-2a87-5b76-8d20-44b170dfb261</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>440</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_b20eaf28-208e-57b5-9b39-d9b2fd0d71fd"/>
   </cim:SynchronousMachine>
   <cim:WindGeneratingUnit rdf:ID="_9d278c18-93f6-5d2e-8c36-e54f7afbe2e8">
@@ -3472,32 +3477,51 @@
   <cim:ThermalGeneratingUnit rdf:ID="_0f312a92-f1db-56a2-ba33-a152a04851ff">
     <cim:IdentifiedObject.name>石川火力発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0f312a92-f1db-56a2-ba33-a152a04851ff</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>353</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>353</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://ja.wikipedia.org/wiki/石川火力発電所</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_79117366-7768-5748-a041-316151976aba">
     <cim:IdentifiedObject.name>石川火力発電所 gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>79117366-7768-5748-a041-316151976aba</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>353</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_0f312a92-f1db-56a2-ba33-a152a04851ff"/>
   </cim:SynchronousMachine>
   <cim:ThermalGeneratingUnit rdf:ID="_fd4bcc67-6df4-5770-94c9-d83df4be5949">
     <cim:IdentifiedObject.name>Gushikawa Power Plant</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>fd4bcc67-6df4-5770-94c9-d83df4be5949</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>312</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>312</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Gushikawa_power_station</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_ae4f67c1-18da-5703-bcc4-92e11a7cd7cd">
     <cim:IdentifiedObject.name>Gushikawa Power Plant gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ae4f67c1-18da-5703-bcc4-92e11a7cd7cd</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>312</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_fd4bcc67-6df4-5770-94c9-d83df4be5949"/>
   </cim:SynchronousMachine>
   <cim:SolarGeneratingUnit rdf:ID="_17aef331-e838-5ae4-abdf-776d1f68c92d">
     <cim:IdentifiedObject.name>与那城平宮うるま市発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>17aef331-e838-5ae4-abdf-776d1f68c92d</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>12</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>12</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Okinawa_Prefecture_Uruma_solar_project</cim:IdentifiedObject.description>
   </cim:SolarGeneratingUnit>
   <cim:ThermalGeneratingUnit rdf:ID="_3da9c9b3-711d-5574-8f2b-1ada456caa04">
     <cim:IdentifiedObject.name>吉の浦火力発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>3da9c9b3-711d-5574-8f2b-1ada456caa04</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>502</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>502</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://ja.wikipedia.org/wiki/吉の浦火力発電所</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_76dd7b39-4723-5ad5-9240-8a0f510bc5c5">
     <cim:IdentifiedObject.name>吉の浦火力発電所 gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>76dd7b39-4723-5ad5-9240-8a0f510bc5c5</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>502</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_3da9c9b3-711d-5574-8f2b-1ada456caa04"/>
   </cim:SynchronousMachine>
   <cim:SolarGeneratingUnit rdf:ID="_010223b5-5bcc-57e7-b810-568b4804257a">
@@ -3507,10 +3531,15 @@
   <cim:ThermalGeneratingUnit rdf:ID="_640bf486-e3cb-5396-a2d2-0aa9b8445cb9">
     <cim:IdentifiedObject.name>牧港火力発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>640bf486-e3cb-5396-a2d2-0aa9b8445cb9</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>333</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>333</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://ja.wikipedia.org/wiki/牧港火力発電所</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_debae2e9-929a-56c7-a5d2-2f4e776e89c6">
     <cim:IdentifiedObject.name>牧港火力発電所 gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>debae2e9-929a-56c7-a5d2-2f4e776e89c6</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>333</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_640bf486-e3cb-5396-a2d2-0aa9b8445cb9"/>
   </cim:SynchronousMachine>
   <cim:SolarGeneratingUnit rdf:ID="_c77089ed-a1d7-5d0e-a05d-4d80081e4fd2">
@@ -3536,10 +3565,15 @@
   <cim:ThermalGeneratingUnit rdf:ID="_1625eaf1-3f64-5b27-aca4-2ed6ce11eede">
     <cim:IdentifiedObject.name>Ishikawa J-Power Coal Power Plant</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>1625eaf1-3f64-5b27-aca4-2ed6ce11eede</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>312</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>312</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Ishikawa_power_station</cim:IdentifiedObject.description>
   </cim:ThermalGeneratingUnit>
   <cim:SynchronousMachine rdf:ID="_ff30a59f-a69c-561a-88d8-8be91a623432">
     <cim:IdentifiedObject.name>Ishikawa J-Power Coal Power Plant gen</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ff30a59f-a69c-561a-88d8-8be91a623432</cim:IdentifiedObject.mRID>
+    <cim:RotatingMachine.ratedS>312</cim:RotatingMachine.ratedS>
     <cim:RotatingMachine.GeneratingUnit rdf:resource="#_1625eaf1-3f64-5b27-aca4-2ed6ce11eede"/>
   </cim:SynchronousMachine>
   <cim:SolarGeneratingUnit rdf:ID="_2d998380-5531-51b9-8fca-cd8a0012a0c0">
@@ -3549,6 +3583,10 @@
   <cim:SolarGeneratingUnit rdf:ID="_0ac89103-1daa-57e2-9c45-53961ed6fdf9">
     <cim:IdentifiedObject.name>山川本部町発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0ac89103-1daa-57e2-9c45-53961ed6fdf9</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>2</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>2</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Okinawa_Prefecture_Motobu_Town_solar_project</cim:IdentifiedObject.description>
   </cim:SolarGeneratingUnit>
   <cim:SolarGeneratingUnit rdf:ID="_8e8a5050-34d9-51bf-8c91-2c4f8db1effb">
     <cim:IdentifiedObject.name>山川本部町発電所</cim:IdentifiedObject.name>
@@ -3561,10 +3599,18 @@
   <cim:SolarGeneratingUnit rdf:ID="_d80b60ae-96f0-5902-b8b5-471a716ef3d0">
     <cim:IdentifiedObject.name>二見名護市発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>d80b60ae-96f0-5902-b8b5-471a716ef3d0</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>6.5</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>6.5</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Okinawa_Prefecture_Nago_solar_project_IV</cim:IdentifiedObject.description>
   </cim:SolarGeneratingUnit>
   <cim:SolarGeneratingUnit rdf:ID="_9971c636-f832-5dfa-89bc-43e34ff3a8c6">
     <cim:IdentifiedObject.name>添石中城村発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9971c636-f832-5dfa-89bc-43e34ff3a8c6</cim:IdentifiedObject.mRID>
+    <cim:GeneratingUnit.ratedP>2</cim:GeneratingUnit.ratedP>
+    <cim:GeneratingUnit.maxOperatingP>2</cim:GeneratingUnit.maxOperatingP>
+    <cim:GeneratingUnit.minOperatingP>0</cim:GeneratingUnit.minOperatingP>
+    <cim:IdentifiedObject.description>https://www.gem.wiki/Okinawa_Prefecture_Nakagusuku_solar_project</cim:IdentifiedObject.description>
   </cim:SolarGeneratingUnit>
   <cim:SolarGeneratingUnit rdf:ID="_e55cb34d-e82b-51c8-9a4b-d8425d17b03b">
     <cim:IdentifiedObject.name>北浜中城村発電所</cim:IdentifiedObject.name>

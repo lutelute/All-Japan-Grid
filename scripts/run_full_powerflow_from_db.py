@@ -524,20 +524,11 @@ def sourced_capacity_index():
     global _SOURCED_CAP_CACHE
     if _SOURCED_CAP_CACHE is not None:
         return _SOURCED_CAP_CACHE
-    idx = {}
-    path = os.path.join(ROOT, "docs", "data", "plants_all.geojson")
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            for ft in json.load(f).get("features", []):
-                p = ft.get("properties") or {}
-                g = ft.get("geometry") or {}
-                if "capacity_mw_sourced" not in p or g.get("type") != "Point":
-                    continue
-                lon, lat = g["coordinates"][0], g["coordinates"][1]
-                idx[f"{p.get('_region')}:{lon:.4f},{lat:.4f}"] = float(
-                    p["capacity_mw_sourced"])
-    _SOURCED_CAP_CACHE = idx
-    return idx
+    from src.capacity_sources import sourced_capacity_index as _idx
+    _SOURCED_CAP_CACHE = {k: float(v["capacity_mw_sourced"])
+                          for k, v in _idx().items()
+                          if "capacity_mw_sourced" in v}
+    return _SOURCED_CAP_CACHE
 
 
 def _operator_region():

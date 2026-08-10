@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-09",
+ "generated": "2026-08-10",
  "sensitivity_version": "1.0.1",
  "changelog": {
   "1.0.0": "初出荷。最大連結成分の PTDF/LODF・索引表(容量/橋フラグ込み)・sha256指紋。潮流本体と同一の build_island_net + 無効電力補償を通す。橋の判定は LODF の分母(自己感度 PTDF[k,f]-PTDF[k,t] が 1)で行う— makeLODF は inf を返さないため isfinite では検出できない。",
@@ -16,16 +16,16 @@
    "n_bus": 5393,
    "n_branch": 6437,
    "main_bus_share": 0.8985,
-   "slack_col": 5179,
+   "slack_col": 4791,
    "n_bridge": 2287,
    "bridge_share": 0.3553,
-   "sec_prepare": 49.3,
-   "sec_ptdf": 1.57,
+   "sec_prepare": 58.2,
+   "sec_ptdf": 1.61,
    "ptdf_mb": 277.7,
-   "sec_lodf": 0.35,
+   "sec_lodf": 0.39,
    "lodf_mb": 331.5,
-   "file_mb": 182.8,
-   "sha256": "297cf38d24454a7787cc83343b84ff80bcd9ffc75c65c7e48fb823001dd3ebc0"
+   "file_mb": 182.6,
+   "sha256": "cf618e738c1be285c5527977070c0af0368b4b0074d6cc3437f88eea898df2e8"
   },
   {
    "island": "hokkaido",
@@ -37,7 +37,7 @@
    "slack_col": 467,
    "n_bridge": 303,
    "bridge_share": 0.3491,
-   "sec_prepare": 4.0,
+   "sec_prepare": 4.6,
    "sec_ptdf": 0.01,
    "ptdf_mb": 5.2,
    "sec_lodf": 0.03,
@@ -55,7 +55,7 @@
    "slack_col": 60,
    "n_bridge": 34,
    "bridge_share": 0.2982,
-   "sec_prepare": 1.2,
+   "sec_prepare": 1.8,
    "sec_ptdf": 0.0,
    "ptdf_mb": 0.1,
    "sec_lodf": 0.0,
@@ -70,16 +70,16 @@
    "n_bus": 7087,
    "n_branch": 8802,
    "main_bus_share": 0.8629,
-   "slack_col": 1661,
+   "slack_col": 3694,
    "n_bridge": 2905,
    "bridge_share": 0.33,
-   "sec_prepare": 70.8,
-   "sec_ptdf": 3.3,
+   "sec_prepare": 91.1,
+   "sec_ptdf": 5.5,
    "ptdf_mb": 499.0,
-   "sec_lodf": 0.67,
+   "sec_lodf": 1.24,
    "lodf_mb": 619.8,
-   "file_mb": 338.7,
-   "sha256": "0595ec8086806f9dc1d3f92351bb2f5caf2f8ae7d3b87e0c08c82a2a13d0fb73"
+   "file_mb": 341.5,
+   "sha256": "34d5ed94cd56b3727cc5597a3ff812443e84f7f247915f9c10bd3f8c1b9330c0"
   }
  ]
 }

@@ -106,19 +106,24 @@ def test_cim_input_lacks_capacity_provenance_is_known_gap():
 
 
 @pytest.mark.skipif(not CIM_OUT, reason="CGMES出力が無い")
-def test_capacity_provenance_does_not_reach_cgmes_yet():
-    """CGMES に届いている出典URLは変圧器由来のみ（既知の穴）。
+def test_capacity_provenance_reaches_cgmes():
+    """発電容量の出典が CGMES まで届いていること（2026-08-10 に開通）。
 
-    発電容量DBのURLが CGMES に現れたら伝播が繋がったということなので、
-    このテストを更新する。
+    **かつてこのテストは逆を主張していた** — `..._does_not_reach_cgmes_yet` として
+    「届いていない」ことを固定し、届いたら失敗して更新を促す動線だった。
+    2026-08-10 に `src/cim/exporter` が D層の出典付き容量を引くようにして開通し、
+    設計どおりこのテストが落ちたので向きを入れ替える。
+
+    経緯: 出典付き容量は D層 `docs/data/plants_all.geojson` にあったが、CIM は R層
+    `data/<region>_plants.geojson` を読むため誰も使っていなかった
+    （`capacity_provenance_reach_2026-08-09.md`）。R層は書き換えず読む側がD層を引く。
     """
     urls: set[str] = set()
     for f in CIM_OUT:
         s = open(f, encoding="utf-8", errors="replace").read()
         urls |= set(re.findall(r"IdentifiedObject\.description>(https?://[^<]+)", s))
+    assert urls, "CGMES に出典URLが1件も無い（伝播が壊れた）"
     from_gen = urls & _gen_source_urls()
-    if from_gen:
-        pytest.fail(f"発電容量の出典がCGMESに届いた（{len(from_gen)}種）。"
-                    "Phase 1-B 出典伝播が完成したので期待値を更新すること")
-    # 変圧器側は届いている＝経路自体は生きている、という対比を固定する
-    assert urls, "CGMES に出典URLが1件も無い（変圧器側の伝播まで壊れた可能性）"
+    assert from_gen, (
+        "発電容量DBの出典URLが CGMES から消えた。"
+        "`src/capacity_sources.sourced_capacity_index` を CIM が引けているか確認すること")

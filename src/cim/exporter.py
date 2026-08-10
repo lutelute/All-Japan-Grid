@@ -483,6 +483,14 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
         "lines": exporter.add_line,
         "plants": exporter.add_plant,
     }
+    # R層（OSM 生抽出）には出典付き容量の欄が無い。本 exporter は
+    # `capacity_mw_sourced` を優先する実装だが、入力に欄が無いため 2026-08-09 時点で
+    # CGMES の `GeneratingUnit.ratedP` は生値のままだった
+    # （`capacity_provenance_reach_2026-08-09.md`）。R層は書き換えず、ここでD層を引く。
+    from src.capacity_sources import geo_key as sourced_geo_key
+    from src.capacity_sources import sourced_capacity_index
+    sourced = sourced_capacity_index()
+
     for kind, adder in adders.items():
         path = os.path.join(data_dir, f"{region}_{kind}.geojson")
         n = 0
@@ -492,6 +500,12 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
             for i, feature in enumerate(collection.get("features", [])):
                 props = feature.get("properties") or {}
                 geom = feature.get("geometry")
+                if (kind == "plants" and sourced
+                        and isinstance(geom, dict) and geom.get("type") == "Point"):
+                    hit = sourced.get(sourced_geo_key(
+                        region, geom["coordinates"][0], geom["coordinates"][1]))
+                    if hit:
+                        props = {**props, **hit}
                 try:
                     adder(i, props, geom)
                     n += 1

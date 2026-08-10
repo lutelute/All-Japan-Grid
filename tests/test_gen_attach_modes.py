@@ -85,8 +85,12 @@ def _attach(pf, monkeypatch, mode, mw):
         return real_open(path, *a, **k)
 
     monkeypatch.setattr("builtins.open", fake_open)
+    # use_sourced=False — 合成系統に出典付き容量は関係ない。**そして本物のD層を
+    # 引かせない**: このヘルパーは `os.path.exists` をグローバルに差し替えているので、
+    # その最中に索引を引くと 0 件がキャッシュに焼き付き、後続テストへ漏れる
+    # （2026-08-10 に実際に 2 本落とした）。
     info = pf.attach_generators(net, bus_of, nodes, "testisland", territory=False,
-                                attach_mode=mode, stats=True)
+                                attach_mode=mode, stats=True, use_sourced=False)
     monkeypatch.setattr("builtins.open", real_open)
     kv = float(net.bus.at[int(net.gen.at[0, "bus"]), "vn_kv"]) if len(net.gen) else None
     return info, kv
