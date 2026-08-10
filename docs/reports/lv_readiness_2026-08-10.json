@@ -1,0 +1,132 @@
+{
+ "date": "2026-08-10",
+ "scale": {
+  "n_node_total": 17336,
+  "n_lv_node": 9676,
+  "n_lv_sub": 5281,
+  "n_node_untagged_kv": 2488,
+  "n_edge_lv": 10102,
+  "n_edge_untagged_kv": 1676,
+  "lv_node_share": 0.5581
+ },
+ "sourced_stepdowns": {
+  "keitouzu": 14,
+  "keitouzu_regions": {
+   "okinawa": 14
+  },
+  "osm_same_name_2km": 7,
+  "osm_same_name_any": 41,
+  "osm_pairs": [
+   [
+    "南庄町一丁目変電所",
+    66.0,
+    187.0,
+    0.0
+   ],
+   [
+    "高森",
+    66.0,
+    110.0,
+    0.0
+   ],
+   [
+    "下諏訪変電所",
+    77.0,
+    154.0,
+    0.11
+   ],
+   [
+    "鯖江変電所",
+    77.0,
+    154.0,
+    0.26
+   ],
+   [
+    "鯖江変電所",
+    77.0,
+    154.0,
+    0.26
+   ],
+   [
+    "新城変電所",
+    77.0,
+    154.0,
+    0.34
+   ],
+   [
+    "上北沢変電所",
+    66.0,
+    154.0,
+    1.41
+   ]
+  ]
+ },
+ "islands": [
+  {
+   "island": "hokkaido",
+   "n_lv_bus": 660,
+   "n_lv_in_main": 613,
+   "lv_main_share": 0.9288,
+   "n_stepdown": 57,
+   "bus_per_stepdown": 11.6,
+   "lv_demand_mw": 3881.0,
+   "share_hop0": 0.1377,
+   "share_hop_ge3": 0.5242,
+   "unreachable_mw": 309.4,
+   "unreachable_share": 0.0797,
+   "lv_gen_mw": 5315.2,
+   "lv_gen_synth_share": 0.651
+  },
+  {
+   "island": "east",
+   "n_lv_bus": 4727,
+   "n_lv_in_main": 4161,
+   "lv_main_share": 0.8803,
+   "n_stepdown": 487,
+   "bus_per_stepdown": 9.7,
+   "lv_demand_mw": 46553.2,
+   "share_hop0": 0.2132,
+   "share_hop_ge3": 0.4247,
+   "unreachable_mw": 4463.0,
+   "unreachable_share": 0.0959,
+   "lv_gen_mw": 77825.2,
+   "lv_gen_synth_share": 0.9001
+  },
+  {
+   "island": "west",
+   "n_lv_bus": 5294,
+   "n_lv_in_main": 4232,
+   "lv_main_share": 0.7994,
+   "n_stepdown": 815,
+   "bus_per_stepdown": 6.5,
+   "lv_demand_mw": 56036.0,
+   "share_hop0": 0.3118,
+   "share_hop_ge3": 0.2614,
+   "unreachable_mw": 9765.6,
+   "unreachable_share": 0.1743,
+   "lv_gen_mw": 75929.1,
+   "lv_gen_synth_share": 0.8615
+  },
+  {
+   "island": "okinawa",
+   "n_lv_bus": 75,
+   "n_lv_in_main": 70,
+   "lv_main_share": 0.9333,
+   "n_stepdown": 19,
+   "bus_per_stepdown": 3.9,
+   "lv_demand_mw": 1091.8,
+   "share_hop0": 0.3158,
+   "share_hop_ge3": 0.3509,
+   "unreachable_mw": 95.8,
+   "unreachable_share": 0.0877,
+   "lv_gen_mw": 190.0,
+   "lv_gen_synth_share": 1.0
+  }
+ ],
+ "reopen_conditions_2026_06": [
+  "OSM 都心地中ケーブルの収載",
+  "他社の線別開示の発見",
+  "常開点情報",
+  "TSO別需給実績フェッチャ（再エネ実績）"
+ ]
+}
