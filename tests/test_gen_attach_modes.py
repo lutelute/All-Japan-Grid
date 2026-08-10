@@ -240,14 +240,17 @@ def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
 
     # 実測値。動いたら「なぜ動いたか」を IMPROVEMENT_LOG に書いてから更新すること。
     #   2026-08-09: nearest 90.2% / cap 86.0%（太陽光既定 10MW のとき）
+    #   2026-08-10b: nearest 136.3% / cap 88.4% ← **出典付き容量を潮流へ届けた**
+    #     （hokkaido は 11 件 4,989MW が出典値に置換）。cap 側は 87.1→88.4% とほぼ動かず、
+    #     ここでも接続規則が効いていることが確認できる。
     #   2026-08-10: nearest 128.8% / cap 87.1% ← **介入#25（太陽光既定 10→0.10MW）を既定ON**。
     #     水増し太陽光が消えて発電が実在の電源へ集中したため、旧接続規則(nearest)では
     #     最大負荷率が上がる。cap ではほぼ動かない（87.1%）＝接続規則が効いている証拠で、
     #     「太陽光の是正は接続規則と組み合わせて初めて効く」という交互作用そのもの。
     #     このテストは実際にこの変更を検知して落ちた（設計どおり働いた）。
-    assert got["nearest"] == pytest.approx(128.8, abs=0.15), \
+    assert got["nearest"] == pytest.approx(136.3, abs=0.15), \
         f"旧接続規則での最大負荷率が動いた: {got['nearest']}%"
-    assert got["cap"] == pytest.approx(87.1, abs=0.15), \
+    assert got["cap"] == pytest.approx(88.4, abs=0.15), \
         f"既定接続規則での最大負荷率が動いた: {got['cap']}%"
     assert got["cap"] < got["nearest"], "既定ON化が改善になっていない"
 

@@ -11,59 +11,59 @@
   "biomass": 20.0
  },
  "cap_fallback": 30.0,
- "total_real_mw": 246572.7,
- "total_synth_mw": 62082.2,
- "synth_share": 0.2011,
+ "total_real_mw": 291594.9,
+ "total_synth_mw": 47587.6,
+ "synth_share": 0.1403,
  "n_plants": 19138,
- "n_negative_sentinel": 3936,
+ "n_negative_sentinel": 3734,
  "regions": [
   {
    "region": "chubu",
-   "real_mw": 44297.1,
-   "synth_mw": 8579.4,
-   "synth_share": 0.1623,
-   "n_real": 515,
-   "n_synth": 3277,
+   "real_mw": 57168.0,
+   "synth_mw": 8529.4,
+   "synth_share": 0.1298,
+   "n_real": 516,
+   "n_synth": 3276,
    "n_negative_sentinel": 424,
-   "model_solar_mw": 1213.5,
-   "model_solar_real_mw": 904.1,
+   "model_solar_mw": 14681.5,
+   "model_solar_real_mw": 14372.1,
    "actual_solar_peak_mw": 10320.0,
-   "model_over_actual_solar": 0.1176
+   "model_over_actual_solar": 1.4226
   },
   {
    "region": "chugoku",
-   "real_mw": 20527.5,
-   "synth_mw": 7189.7,
-   "synth_share": 0.2594,
-   "n_real": 64,
-   "n_synth": 1109,
+   "real_mw": 17515.0,
+   "synth_mw": 7169.7,
+   "synth_share": 0.2905,
+   "n_real": 65,
+   "n_synth": 1108,
    "n_negative_sentinel": 100,
-   "model_solar_mw": 1654.2,
-   "model_solar_real_mw": 1554.5,
+   "model_solar_mw": 1650.6,
+   "model_solar_real_mw": 1551.0,
    "actual_solar_peak_mw": 5298.0,
-   "model_over_actual_solar": 0.3122
+   "model_over_actual_solar": 0.3116
   },
   {
    "region": "hokkaido",
-   "real_mw": 10748.0,
+   "real_mw": 9218.2,
    "synth_mw": 1780.5,
-   "synth_share": 0.1421,
+   "synth_share": 0.1619,
    "n_real": 95,
    "n_synth": 341,
    "n_negative_sentinel": 14,
-   "model_solar_mw": 1537.1,
-   "model_solar_real_mw": 1506.6,
+   "model_solar_mw": 845.6,
+   "model_solar_real_mw": 815.1,
    "actual_solar_peak_mw": 2235.0,
-   "model_over_actual_solar": 0.6877
+   "model_over_actual_solar": 0.3783
   },
   {
    "region": "hokuriku",
-   "real_mw": 8264.3,
-   "synth_mw": 3051.7,
-   "synth_share": 0.2697,
-   "n_real": 53,
-   "n_synth": 379,
-   "n_negative_sentinel": 28,
+   "real_mw": 10513.3,
+   "synth_mw": 3031.7,
+   "synth_share": 0.2238,
+   "n_real": 54,
+   "n_synth": 378,
+   "n_negative_sentinel": 27,
    "model_solar_mw": 410.3,
    "model_solar_real_mw": 378.6,
    "actual_solar_peak_mw": 1260.0,
@@ -71,48 +71,48 @@
   },
   {
    "region": "kansai",
-   "real_mw": 42375.1,
-   "synth_mw": 3088.7,
-   "synth_share": 0.0679,
-   "n_real": 73,
-   "n_synth": 1445,
+   "real_mw": 46515.4,
+   "synth_mw": 3038.7,
+   "synth_share": 0.0613,
+   "n_real": 74,
+   "n_synth": 1444,
    "n_negative_sentinel": 132,
-   "model_solar_mw": 972.0,
-   "model_solar_real_mw": 833.3,
+   "model_solar_mw": 4466.0,
+   "model_solar_real_mw": 4327.3,
    "actual_solar_peak_mw": 5864.0,
-   "model_over_actual_solar": 0.1658
+   "model_over_actual_solar": 0.7616
   },
   {
    "region": "kyushu",
-   "real_mw": 0.0,
-   "synth_mw": 23147.4,
-   "synth_share": 1.0,
-   "n_real": 0,
-   "n_synth": 2549,
-   "n_negative_sentinel": 2549,
-   "model_solar_mw": 237.4,
-   "model_solar_real_mw": 0.0,
+   "real_mw": 23296.3,
+   "synth_mw": 11643.2,
+   "synth_share": 0.3332,
+   "n_real": 191,
+   "n_synth": 2358,
+   "n_negative_sentinel": 2358,
+   "model_solar_mw": 3250.8,
+   "model_solar_real_mw": 3027.6,
    "actual_solar_peak_mw": 9134.0,
-   "model_over_actual_solar": 0.026
+   "model_over_actual_solar": 0.3559
   },
   {
    "region": "okinawa",
-   "real_mw": 0.0,
-   "synth_mw": 2892.1,
-   "synth_share": 1.0,
-   "n_real": 0,
-   "n_synth": 32,
-   "n_negative_sentinel": 32,
-   "model_solar_mw": 2.1,
-   "model_solar_real_mw": 0.0,
+   "real_mw": 2274.5,
+   "synth_mw": 91.7,
+   "synth_share": 0.0388,
+   "n_real": 10,
+   "n_synth": 22,
+   "n_negative_sentinel": 22,
+   "model_solar_mw": 24.2,
+   "model_solar_real_mw": 22.5,
    "actual_solar_peak_mw": 340.0,
-   "model_over_actual_solar": 0.0062
+   "model_over_actual_solar": 0.0712
   },
   {
    "region": "shikoku",
-   "real_mw": 12771.7,
+   "real_mw": 10107.7,
    "synth_mw": 3061.1,
-   "synth_share": 0.1933,
+   "synth_share": 0.2325,
    "n_real": 33,
    "n_synth": 655,
    "n_negative_sentinel": 77,
@@ -123,86 +123,86 @@
   },
   {
    "region": "tohoku",
-   "real_mw": 39904.3,
-   "synth_mw": 5385.8,
-   "synth_share": 0.1189,
-   "n_real": 180,
-   "n_synth": 1131,
+   "real_mw": 32872.8,
+   "synth_mw": 5335.8,
+   "synth_share": 0.1396,
+   "n_real": 181,
+   "n_synth": 1130,
    "n_negative_sentinel": 51,
-   "model_solar_mw": 1681.7,
-   "model_solar_real_mw": 1575.9,
+   "model_solar_mw": 1269.2,
+   "model_solar_real_mw": 1163.4,
    "actual_solar_peak_mw": 7833.0,
-   "model_over_actual_solar": 0.2147
+   "model_over_actual_solar": 0.162
   },
   {
    "region": "tokyo",
-   "real_mw": 67684.7,
+   "real_mw": 82113.7,
    "synth_mw": 3905.8,
-   "synth_share": 0.0546,
+   "synth_share": 0.0454,
    "n_real": 267,
    "n_synth": 6940,
    "n_negative_sentinel": 529,
-   "model_solar_mw": 3591.3,
-   "model_solar_real_mw": 2905.5,
+   "model_solar_mw": 15621.2,
+   "model_solar_real_mw": 14935.4,
    "actual_solar_peak_mw": 11714.0,
-   "model_over_actual_solar": 0.3066
+   "model_over_actual_solar": 1.3336
   }
  ],
  "synth_by_fuel": {
   "solar": {
-   "n_synth": 17022,
+   "n_synth": 16876,
    "n_total": 17622,
-   "share": 0.966
+   "share": 0.9577
   },
   "hydro": {
-   "n_synth": 453,
+   "n_synth": 433,
    "n_total": 866,
-   "share": 0.5231
+   "share": 0.5
   },
   "unknown": {
-   "n_synth": 233,
+   "n_synth": 232,
    "n_total": 233,
-   "share": 1.0
+   "share": 0.9957
   },
   "coal": {
-   "n_synth": 32,
+   "n_synth": 18,
    "n_total": 101,
-   "share": 0.3168
+   "share": 0.1782
   },
   "gas": {
-   "n_synth": 13,
+   "n_synth": 10,
    "n_total": 81,
-   "share": 0.1605
+   "share": 0.1235
   },
   "biomass": {
-   "n_synth": 34,
+   "n_synth": 28,
    "n_total": 57,
-   "share": 0.5965
+   "share": 0.4912
   },
   "wind": {
-   "n_synth": 15,
+   "n_synth": 13,
    "n_total": 39,
-   "share": 0.3846
+   "share": 0.3333
   },
   "oil": {
-   "n_synth": 7,
+   "n_synth": 2,
    "n_total": 33,
-   "share": 0.2121
+   "share": 0.0606
   },
   "waste": {
-   "n_synth": 22,
+   "n_synth": 21,
    "n_total": 29,
-   "share": 0.7586
+   "share": 0.7241
   },
   "geothermal": {
-   "n_synth": 9,
+   "n_synth": 4,
    "n_total": 28,
-   "share": 0.3214
+   "share": 0.1429
   },
   "nuclear": {
-   "n_synth": 2,
+   "n_synth": 0,
    "n_total": 27,
-   "share": 0.0741
+   "share": 0.0
   },
   "bing": {
    "n_synth": 3,
@@ -210,9 +210,9 @@
    "share": 1.0
   },
   "mixed": {
-   "n_synth": 3,
+   "n_synth": 2,
    "n_total": 3,
-   "share": 1.0
+   "share": 0.6667
   },
   "gsimaps/ort": {
    "n_synth": 2,

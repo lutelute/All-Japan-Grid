@@ -92,7 +92,56 @@ def test_synthetic_share_is_disclosed_not_hidden():
     d = json.load(open(reports[-1]))
     assert 0 < d["synth_share"] < 1, "合成割合が記録されていない"
     assert d["n_negative_sentinel"] > 0, "番兵値の件数が記録されていない"
-    # 100% 合成のエリア（実容量ゼロ）は特に開示が要る
+    # **かつてここは「kyushu と okinawa は 100% 合成」を固定していた。**
+    # 2026-08-10 に出典付き容量を潮流へ届けて解消した（kyushu 100%→33.3% /
+    # okinawa 100%→3.9%）ので、向きを入れ替える — **実容量ゼロのエリアは無い**が
+    # 新しい不変条件。1 エリアでも 100% 合成に戻ったら、出典の伝播が切れた合図。
     all_synth = [r["region"] for r in d["regions"] if r["synth_share"] == 1.0]
-    assert "kyushu" in all_synth and "okinawa" in all_synth, \
-        f"実容量ゼロのエリアが変わった: {all_synth}（監査の記述を更新すること）"
+    assert not all_synth, (
+        f"実容量ゼロのエリアが復活した: {all_synth}。"
+        "出典付き容量（D層 capacity_mw_sourced）の伝播が切れていないか確認すること")
+
+
+# ── 出典付き容量が潮流まで届いているか（2026-08-10 に塞いだ穴） ─────────────
+def test_sourced_capacity_reaches_the_powerflow():
+    """D層の `capacity_mw_sourced` を潮流が読めること。
+
+    2026-08-09 の監査で「出典DBの値が潮流/CIM に届いていない」穴が見つかった
+    （`capacity_provenance_reach_2026-08-09.md`）。R層 `data/*_plants.geojson` には
+    この欄が無く、潮流はそちらを読むため出典値が丸ごと無視されていた。
+    R層は書き換えず**読む側がD層を引く**形で塞いだ。ここが外れたら穴が再発する。
+    """
+    import importlib.util
+    import sys
+    src = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+    spec = importlib.util.spec_from_file_location("pf_sourced_test", src)
+    pf = importlib.util.module_from_spec(spec)
+    sys.modules["pf_sourced_test"] = pf
+    spec.loader.exec_module(pf)
+
+    idx = pf.sourced_capacity_index()
+    assert len(idx) >= 300, f"出典付き容量の索引が痩せている: {len(idx)} 件"
+    # 座標キーの書式が apply_capacity_sources と揃っていること
+    k = next(iter(idx))
+    assert k.count(":") == 1 and "," in k, f"座標キーの書式が違う: {k}"
+    # 出典値 0（大間原発=運転開始未定 等）が索引から落ちていないこと
+    assert any(v == 0.0 for v in idx.values()), \
+        "出典値 0 が索引から消えている（0 も出典のある値として残すこと）"
+
+
+def test_sourced_capacity_is_on_by_default():
+    """既定で出典値を使うこと。切るなら --no-sourced-capacity。"""
+    src = (ROOT / "scripts" / "run_full_powerflow_from_db.py").read_text(encoding="utf-8")
+    assert "USE_SOURCED_CAPACITY = True" in src, "出典付き容量が既定OFFになっている"
+    assert "--sourced-capacity" in src, "無効化スイッチが無い"
+
+
+def test_audit_reads_the_same_sourced_layer():
+    """監査も同じD層を引くこと。
+
+    片方だけ直すと「潮流は出典値を使っているのに監査は九州の実容量ゼロと報告する」
+    という食い違いが残る。実際 2026-08-10 にその状態を一度作った。
+    """
+    src = (ROOT / "scripts" / "capacity" / "audit_generation_fleet.py").read_text(encoding="utf-8")
+    assert "capacity_mw_sourced" in src and "plants_all.geojson" in src, \
+        "監査がD層の出典付き容量を見ていない"

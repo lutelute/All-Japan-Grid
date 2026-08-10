@@ -505,6 +505,41 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
 ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
 
 
+# 出典付き容量を潮流へ届ける（2026-08-10）。既定 ON・無効化は `--no-sourced-capacity`。
+USE_SOURCED_CAPACITY = True
+_SOURCED_CAP_CACHE = None
+
+
+def sourced_capacity_index():
+    """D層 `docs/data/plants_all.geojson` の `capacity_mw_sourced` を座標キーで引ける形に。
+
+    潮流が読むのは R層 `data/<region>_plants.geojson`（OSM 生抽出）で、出典付き容量は
+    D層にしか無い。2026-08-09 の監査（`capacity_provenance_reach_2026-08-09.md`）が
+    「CIM が読む plants geojson で `capacity_mw_sourced` を持つのは 0 件」と指摘した穴。
+    **R層は書き換えない**（層の分離を守る）— 読む側がD層を引く。
+
+    キーは `apply_capacity_sources.py` と同じ規約（region + 4桁丸め座標）。
+    実測で 350/350 が一致し重複キーは 0（kyushu 191・okinawa 10 を含む 227,093MW）。
+    """
+    global _SOURCED_CAP_CACHE
+    if _SOURCED_CAP_CACHE is not None:
+        return _SOURCED_CAP_CACHE
+    idx = {}
+    path = os.path.join(ROOT, "docs", "data", "plants_all.geojson")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            for ft in json.load(f).get("features", []):
+                p = ft.get("properties") or {}
+                g = ft.get("geometry") or {}
+                if "capacity_mw_sourced" not in p or g.get("type") != "Point":
+                    continue
+                lon, lat = g["coordinates"][0], g["coordinates"][1]
+                idx[f"{p.get('_region')}:{lon:.4f},{lat:.4f}"] = float(
+                    p["capacity_mw_sourced"])
+    _SOURCED_CAP_CACHE = idx
+    return idx
+
+
 def _operator_region():
     """operator → 管内 の表。**単一出典は `src/uc/scenario.OPERATOR_REGION`**。
 
@@ -582,7 +617,7 @@ def required_kv(p_mw, ladder):
 
 def attach_generators(net, bus_of, nodes, island, territory=True,
                       attach_mode="nearest", site_km=1.5, kvfit_km=25.0,
-                      stats=False):
+                      stats=False, use_sourced=USE_SOURCED_CAPACITY):
     """Attach OSM plants to an in-island substation bus (<=20 km).
 
     territory: True(既定)=同一 osm_id が複数地域ファイルに存在する場合
@@ -654,6 +689,9 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     moved_mw = 0.0
     kv_hist = defaultdict(float)
     zone_src: dict[int, str] = {}
+    sourced = sourced_capacity_index() if use_sourced else {}
+    n_sourced = 0
+    sourced_mw = 0.0
     for k, (region, feat) in enumerate(feats):
         g = feat.get("geometry") or {}
         if g.get("type") != "Point":
@@ -667,7 +705,14 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
         fuel = props.get("fuel_type") or props.get("plant:source") or "unknown"
         if not isinstance(fuel, str) or fuel.startswith("http"):
             fuel = "unknown"
-        if cap is None or cap <= 0:
+        # 出典付き容量があればそれを正とする（0 も「発電していない」という出典値として
+        # 尊重する — 大間原発の 0MW 等。既定値へフォールバックさせない）
+        srcd = sourced.get(f"{region}:{lon:.4f},{lat:.4f}") if sourced else None
+        if srcd is not None:
+            cap = srcd
+            n_sourced += 1
+            sourced_mw += cap
+        elif cap is None or cap <= 0:
             cap = _DEFAULT_CAP.get(fuel, _CAP_FALLBACK)
 
         cands = sorted(((_haversine_km(lat, lon, s[2], s[3]), s) for s in sub_bus),
@@ -722,6 +767,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     tot = sum(kv_hist.values()) or 1.0
     return {"n_gen": n_gen, "n_moved": n_moved, "moved_mw": round(moved_mw, 1),
             "attach_mode": attach_mode,
+            "n_sourced_cap": n_sourced, "sourced_cap_mw": round(sourced_mw, 1),
             "ladder_note": (" / ".join(f"{kv:.0f}kV {mva:,.0f}MVA" for kv, mva in ladder)
                             if ladder else None),
             "kv_share": {str(k): round(v / tot, 4) for k, v in sorted(kv_hist.items())},
@@ -1052,6 +1098,15 @@ def main():
                          "評価=docs/reports/repair_search_2026-08-09.md・判断="
                          "repair_adoption_decision_2026-08-09.md。"
                          "**無効化=--gen-attach nearest**")
+    ap.add_argument("--sourced-capacity", action=argparse.BooleanOptionalAction,
+                    default=USE_SOURCED_CAPACITY,
+                    help="出典付き容量(D層 docs/data/plants_all.geojson の "
+                         "`capacity_mw_sourced`)を OSM 生値・既定値より優先する(**既定ON**)。"
+                         "2026-08-09 の監査で「出典DBの値が潮流/CIM に届いていない」"
+                         "穴が見つかったのを塞ぐもの。R層は書き換えず読む側がD層を引く。"
+                         "実測 350/350 一致・west 247件110GW / east 62件87GW。"
+                         "出典値 0(大間原発=運転開始未定 等)は 0 のまま尊重する。"
+                         "無効化=--no-sourced-capacity")
     ap.add_argument("--gen-zone-by-operator", action=argparse.BooleanOptionalAction,
                     default=GEN_ZONE_BY_OPERATOR,
                     help="発電機の計上エリアを operator タグで決める(**介入#26**・"
@@ -1150,8 +1205,12 @@ def main():
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
         gstats = attach_generators(net, bus_of, nodes, island,
-                                   attach_mode=args.gen_attach, stats=True)
+                                   attach_mode=args.gen_attach, stats=True,
+                                   use_sourced=args.sourced_capacity)
         n_gen = gstats["n_gen"]
+        if gstats.get("n_sourced_cap"):
+            print(f"  出典付き容量: {gstats['n_sourced_cap']:,}件 / "
+                  f"{gstats['sourced_cap_mw']:,.0f}MW を出典値で置換")
         if args.gen_attach != "nearest":
             # 介入#24 の帳簿: 何機・何MW を最寄り以外へ繋いだかを必ず出す（既定でも出す）
             print(f"  介入#24 gen-attach={args.gen_attach}: 繋ぎ替え "

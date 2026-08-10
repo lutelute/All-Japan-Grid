@@ -100,6 +100,22 @@ def main() -> None:
     solar_real = defaultdict(float); solar_synth = defaultdict(float)
     by_fuel_synth = defaultdict(int); by_fuel_total = defaultdict(int)
 
+    # D層の出典付き容量（潮流は 2026-08-10 からこれを優先して読む）。
+    # R層 `data/*_plants.geojson` にはこの欄が無いので、監査もD層を引かないと
+    # 「九州の実容量ゼロ」という**実態と食い違う数字**を出してしまう。
+    sourced_idx = {}
+    dpath = ROOT / "docs" / "data" / "plants_all.geojson"
+    if dpath.exists():
+        for ft in json.load(open(dpath, encoding="utf-8")).get("features", []):
+            p = ft.get("properties") or {}
+            g = ft.get("geometry") or {}
+            if "capacity_mw_sourced" not in p or g.get("type") != "Point":
+                continue
+            sourced_idx[f"{p.get('_region')}:{g['coordinates'][0]:.4f}," \
+                        f"{g['coordinates'][1]:.4f}"] = float(p["capacity_mw_sourced"])
+    n_sourced_used = defaultdict(int)
+    sourced_mw = defaultdict(float)
+
     for f in sorted(glob.glob(PLANTS_GLOB)):
         reg = Path(f).name.replace("_plants.geojson", "")
         for ft in json.load(open(f)).get("features", []):
@@ -110,9 +126,26 @@ def main() -> None:
                 cap = float(p.get("capacity_mw"))
             except (TypeError, ValueError):
                 cap = None
+            g = ft.get("geometry") or {}
+            is_src = False
+            if g.get("type") == "Point":
+                sk = f"{reg}:{g['coordinates'][0]:.4f},{g['coordinates'][1]:.4f}"
+                if sk in sourced_idx:
+                    cap = sourced_idx[sk]      # 出典値を正とする
+                    is_src = True
+                    n_sourced_used[reg] += 1
+                    sourced_mw[reg] += cap
             if cap is not None and cap < 0:
                 neg[reg] += 1
-            if cap is None or cap <= 0:
+            # 出典値は 0 でも「出典のある値」— 合成に落とさない（大間原発 0MW 等）
+            if is_src:
+                real[reg] += cap
+                n_real[reg] += 1
+                if "solar" in fuel:
+                    solar_real[reg] += cap
+                    if cap > 0:
+                        _solar_real_values.append(cap)
+            elif cap is None or cap <= 0:
                 v = DEFAULT_CAP.get(fuel, CAP_FALLBACK)
                 synth[reg] += v; n_synth[reg] += 1; by_fuel_synth[fuel] += 1
                 if "solar" in fuel:
