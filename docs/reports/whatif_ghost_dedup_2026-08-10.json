@@ -1,0 +1,165 @@
+{
+ "date": "2026-08-10",
+ "runs": [
+  {
+   "island": "east",
+   "radius_km": 0.0,
+   "n_ghost": 0,
+   "n_merged": 0,
+   "merged_km_max": 0.0,
+   "n_components": 312,
+   "n_synth_slack": 290,
+   "overload": {
+    "n_line": 6122,
+    "n_over": 303,
+    "max_pct": 882.8,
+    "p95_pct": 99.3,
+    "excess_mw": 58407.6,
+    "over_share": 0.0495,
+    "over_lv": 236,
+    "over_hv": 67
+   },
+   "seconds": 63.4
+  },
+  {
+   "island": "east",
+   "radius_km": 0.05,
+   "n_ghost": 133,
+   "n_merged": 1,
+   "merged_km_max": 0.012,
+   "n_components": 311,
+   "n_synth_slack": 289,
+   "overload": {
+    "n_line": 6123,
+    "n_over": 303,
+    "max_pct": 882.8,
+    "p95_pct": 99.3,
+    "excess_mw": 58407.6,
+    "over_share": 0.0495,
+    "over_lv": 236,
+    "over_hv": 67
+   },
+   "seconds": 63.8
+  },
+  {
+   "island": "east",
+   "radius_km": 0.15,
+   "n_ghost": 133,
+   "n_merged": 2,
+   "merged_km_max": 0.147,
+   "n_components": 310,
+   "n_synth_slack": 288,
+   "overload": {
+    "n_line": 6124,
+    "n_over": 303,
+    "max_pct": 882.8,
+    "p95_pct": 99.3,
+    "excess_mw": 58407.6,
+    "over_share": 0.0495,
+    "over_lv": 236,
+    "over_hv": 67
+   },
+   "seconds": 60.2
+  },
+  {
+   "island": "east",
+   "radius_km": 0.3,
+   "n_ghost": 133,
+   "n_merged": 2,
+   "merged_km_max": 0.147,
+   "n_components": 310,
+   "n_synth_slack": 288,
+   "overload": {
+    "n_line": 6124,
+    "n_over": 303,
+    "max_pct": 882.8,
+    "p95_pct": 99.3,
+    "excess_mw": 58407.6,
+    "over_share": 0.0495,
+    "over_lv": 236,
+    "over_hv": 67
+   },
+   "seconds": 67.6
+  },
+  {
+   "island": "west",
+   "radius_km": 0.0,
+   "n_ghost": 0,
+   "n_merged": 0,
+   "merged_km_max": 0.0,
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 279,
+    "max_pct": 735.9,
+    "p95_pct": 80.9,
+    "excess_mw": 24457.4,
+    "over_share": 0.0334,
+    "over_lv": 247,
+    "over_hv": 32
+   },
+   "seconds": 86.4
+  },
+  {
+   "island": "west",
+   "radius_km": 0.05,
+   "n_ghost": 224,
+   "n_merged": 0,
+   "merged_km_max": 0.0,
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 279,
+    "max_pct": 735.9,
+    "p95_pct": 80.9,
+    "excess_mw": 24457.4,
+    "over_share": 0.0334,
+    "over_lv": 247,
+    "over_hv": 32
+   },
+   "seconds": 89.8
+  },
+  {
+   "island": "west",
+   "radius_km": 0.15,
+   "n_ghost": 224,
+   "n_merged": 0,
+   "merged_km_max": 0.0,
+   "n_components": 541,
+   "n_synth_slack": 490,
+   "overload": {
+    "n_line": 8361,
+    "n_over": 279,
+    "max_pct": 735.9,
+    "p95_pct": 80.9,
+    "excess_mw": 24457.4,
+    "over_share": 0.0334,
+    "over_lv": 247,
+    "over_hv": 32
+   },
+   "seconds": 84.0
+  },
+  {
+   "island": "west",
+   "radius_km": 0.3,
+   "n_ghost": 224,
+   "n_merged": 1,
+   "merged_km_max": 0.237,
+   "n_components": 540,
+   "n_synth_slack": 489,
+   "overload": {
+    "n_line": 8362,
+    "n_over": 279,
+    "max_pct": 735.9,
+    "p95_pct": 80.9,
+    "excess_mw": 24459.3,
+    "over_share": 0.0334,
+    "over_lv": 247,
+    "over_hv": 32
+   },
+   "seconds": 86.5
+  }
+ ]
+}
