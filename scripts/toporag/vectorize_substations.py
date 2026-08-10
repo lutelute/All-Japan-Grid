@@ -142,7 +142,10 @@ def from_built(kv_floor: float | None = None) -> EgoFeatures:
             cur, first_kv = q.popleft()
             # sorted: 集合の走査順は実行ごとに変わる。BFS の到達順で
             # deg_kv に記録される「最初の辺の電圧」が揺れるため固定する。
-            for nb, kv in sorted(adj.get(cur, ())):
+            # key が要る: 同一座標ペアは kv=None で入るので、同じ隣接IDに None と
+            # float が両方載ると素の tuple 比較が TypeError になる（潜在バグ）。
+            for nb, kv in sorted(adj.get(cur, ()),
+                                 key=lambda t: (t[0], -1.0 if t[1] is None else t[1])):
                 if nb in seen:
                     continue
                 seen.add(nb)

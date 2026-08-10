@@ -1,0 +1,166 @@
+{
+ "date": "2026-08-10",
+ "n_sub": 6820,
+ "n_feature": 23,
+ "blocks": {
+  "層数・規模": [
+   0,
+   2
+  ],
+  "隣接変電所の次数": [
+   2,
+   5
+  ],
+  "並列度": [
+   5,
+   8
+  ],
+  "電気的容量": [
+   8,
+   11
+  ],
+  "2ホップ構造": [
+   11,
+   15
+  ],
+  "役割(冗長性)": [
+   15,
+   18
+  ],
+  "位置づけ": [
+   18,
+   20
+  ],
+  "線路長(幾何由来)": [
+   20,
+   23
+  ]
+ },
+ "geometry_included": true,
+ "k": 4,
+ "silhouette": {
+  "4": 0.20256111871407367,
+  "5": 0.18235278162050436,
+  "6": 0.18495205661030065,
+  "7": 0.18725295750569157,
+  "8": 0.19046920693592173,
+  "9": 0.17684969565961542,
+  "10": 0.1781850610494348,
+  "11": 0.1915967828838188,
+  "12": 0.18019046253517718
+ },
+ "clusters": [
+  {
+   "cluster": 3,
+   "n": 1888,
+   "share": 0.2768,
+   "max_kv": 154.0,
+   "n_layer": 2.0,
+   "deg": 9.0,
+   "n_nbr": 7.0,
+   "mva_total": 8.246,
+   "par_max": 4.0,
+   "hop2_n": 2.398,
+   "n_bridge_incident": 0.0,
+   "is_articulation": 0.0,
+   "on_main": 1.0,
+   "touches_tie": 0.0,
+   "clustering": 0.0,
+   "regions": {
+    "chubu": 417,
+    "tokyo": 353,
+    "kansai": 294
+   },
+   "examples": [
+    "久々湊変電所 154kV",
+    "野村変電所 154kV",
+    "東射水変電所 275kV",
+    "六条大溝二丁目変電所"
+   ]
+  },
+  {
+   "cluster": 0,
+   "n": 1296,
+   "share": 0.19,
+   "max_kv": 66.0,
+   "n_layer": 1.0,
+   "deg": 4.0,
+   "n_nbr": 3.0,
+   "mva_total": 6.022,
+   "par_max": 2.0,
+   "hop2_n": 1.609,
+   "n_bridge_incident": 1.099,
+   "is_articulation": 1.0,
+   "on_main": 1.0,
+   "touches_tie": 0.0,
+   "clustering": 0.0,
+   "regions": {
+    "tokyo": 421,
+    "tohoku": 226,
+    "kyushu": 170
+   },
+   "examples": [
+    "田口変電所",
+    "西相模変電所",
+    "羽栗変電所",
+    "篠原町変電所"
+   ]
+  },
+  {
+   "cluster": 2,
+   "n": 3080,
+   "share": 0.4516,
+   "max_kv": 66.0,
+   "n_layer": 1.0,
+   "deg": 3.0,
+   "n_nbr": 3.0,
+   "mva_total": 5.332,
+   "par_max": 2.0,
+   "hop2_n": 1.386,
+   "n_bridge_incident": 0.693,
+   "is_articulation": 0.0,
+   "on_main": 1.0,
+   "touches_tie": 0.0,
+   "clustering": 0.0,
+   "regions": {
+    "tokyo": 869,
+    "tohoku": 452,
+    "chubu": 350
+   },
+   "examples": [
+    "日置江八丁目変電所",
+    "太田変電所",
+    "尾崎町変電所",
+    "美合町変電所"
+   ]
+  },
+  {
+   "cluster": 1,
+   "n": 556,
+   "share": 0.0815,
+   "max_kv": 0.0,
+   "n_layer": 1.0,
+   "deg": 0.0,
+   "n_nbr": 0.0,
+   "mva_total": 0.0,
+   "par_max": 0.0,
+   "hop2_n": 0.0,
+   "n_bridge_incident": 0.0,
+   "is_articulation": 0.0,
+   "on_main": 0.0,
+   "touches_tie": 0.0,
+   "clustering": 0.0,
+   "regions": {
+    "chubu": 152,
+    "tokyo": 135,
+    "kansai": 108
+   },
+   "examples": [
+    "土肥六丁目変電所",
+    "平出発電所",
+    "生坂村変電所",
+    "北陸電力送配電(株)美川変電所"
+   ]
+  }
+ ]
+}
