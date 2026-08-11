@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -153,6 +154,63 @@ def parse_file(path: Path, utility: str) -> tuple[list[dict], list[dict]]:
     return lines, trs
 
 
+NUM_RX = re.compile(r"^-?[\d,]+(?:\.\d+)?$")
+
+
+def _is_num(tok: str) -> bool:
+    return bool(NUM_RX.match(tok))
+
+
+def parse_pdf(path: Path, utility: str) -> tuple[list[dict], list[dict]]:
+    """東京・関西はPDFで公表している。pdftotext -layout が列を空白で揃えるので、
+    2連以上の空白でトークン化し、**右から連続3つの数値**（R, X, Y/2）を探す。
+
+    トークン例:
+      東京 ['基幹500kV 1','500','川内線1L','南いわき開閉所','新いわき開閉所','0.127','3.203','1.632','1L、2Lを併用運用']
+      関西 ['1','500','播磨線1L','北摂変電所','西播変電所','0.558','10.332','4.632']
+    電圧(500)は単独なので連続3数値には含まれず、誤検出しない。
+    """
+    txt = subprocess.run(
+        ["pdftotext", "-layout", str(path), "-"],
+        capture_output=True, text=True, check=True,
+    ).stdout
+    scope = "kikan"
+    lines: list[dict] = []
+    for raw in txt.split("\n"):
+        toks = [t.strip() for t in re.split(r"\s{2,}", raw.strip()) if t.strip()]
+        if len(toks) < 6:
+            continue
+        # 右から連続3数値を探す
+        trio = None
+        for i in range(len(toks) - 3, -1, -1):
+            if all(_is_num(toks[i + k]) for k in range(3)):
+                trio = i
+                break
+        if trio is None or trio < 3:
+            continue
+        r, x, b2 = (float(toks[trio + k].replace(",", "")) for k in range(3))
+        frm, to = toks[trio - 2], toks[trio - 1]
+        name = toks[trio - 3]
+        kv = None
+        for t in toks[: trio - 3]:
+            m = re.search(r"(\d{2,3})\s*$", t)
+            if m and 22 <= int(m.group(1)) <= 500:
+                kv = float(m.group(1))
+        if kv is None or not name:
+            continue
+        lines.append({
+            "utility": utility, "scope": scope,
+            "equipment_no": toks[0], "name": name, "voltage_kv": kv,
+            "note": toks[trio + 3] if len(toks) > trio + 3 else "",
+            "base_mva": 1000, "source_file": str(path.relative_to(ROOT)),
+            "layer": "observed",
+            "from_node": frm, "to_node": to,
+            "R_pct": r, "X_pct": x, "B_half_pct": b2,
+            "anonymized": bool(ANON_RX.search(name) or ANON_RX.search(frm) or ANON_RX.search(to)),
+        })
+    return lines, []
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--outdir", default=str(OUT))
@@ -160,6 +218,19 @@ def main() -> int:
 
     all_lines: list[dict] = []
     all_trs: list[dict] = []
+    for path in sorted(SRC.glob("*/impedance/*.pdf")):
+        utility = path.parts[len(SRC.parts)]
+        # 関西は年度別に複数版がある。最新のみ採用（ファイル名昇順の最後）
+        if utility == "kansai" and path.name != "01_roop_2024_1.pdf":
+            continue
+        try:
+            ln, _ = parse_pdf(path, utility)
+        except Exception as exc:  # noqa: BLE001
+            print(f"! {path.name}: {exc}")
+            continue
+        all_lines += ln
+        print(f"{utility:9s} {path.name:36s} lines={len(ln):4d} (PDF)")
+
     for path in sorted(SRC.glob("*/impedance/*.xlsx")):
         utility = path.parts[len(SRC.parts)]
         try:

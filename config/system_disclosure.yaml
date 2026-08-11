@@ -63,6 +63,10 @@ utilities:
         link_pattern: 'impedance\.pdf'
         verified: true     # 2026-08-11 実DL成功 impedance.pdf (74,473B / 8ページ)
         format: pdf
+        extracted: 103     # pdftotext -layout で機械抽出成功（parse_impedance.py の parse_pdf）
+        caveat: >-
+          分岐点までの極短区間に R=0.0/X=0.001 の行が2件（新古河線1L/2L）。実データであって
+          パースミスではないが、Ybusに素で入れると特異行列を生む。併合かクランプが要る。
       flow_actual:
         link_pattern: 'tyouryu_(kikan|154kV|66kV)\.zip'
         note: 既取得。730列×8760時間（VALIDATION_SOURCES.md 項目2）
@@ -98,6 +102,7 @@ utilities:
         link_pattern: '01_roop_\d{4}_\d\.pdf'
         verified: true     # 2026-08-11 実DL成功 01_roop_2024_1.pdf (93,850B)
         format: pdf
+        extracted: 80      # pdftotext -layout で機械抽出成功。2022/2023/2024年度版のうち最新のみ採用
       capacity:
         direct_url: https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
         verified: true     # 既取得(data/external/kansai_td/)。2026-08-07更新を確認。ほぼ毎日更新
