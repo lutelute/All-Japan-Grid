@@ -1,0 +1,158 @@
+# 系統情報の公表（一般送配電事業者10社） — 取得台帳
+#
+# 制度的根拠: 資源エネルギー庁「系統情報の公表の考え方」(平成24年12月制定・令和3年5月改定)
+#   https://www.enecho.meti.go.jp/category/electricity_and_gas/electric/summary/regulations/pdf/keitou_kangaekata_20241209.pdf
+#   → 全一般送配電事業者に対し、様式を定めて系統情報の公表を求めている。
+#     このため10社すべてに同等のデータが存在する（＝1社の発見は全社に展開できる）。
+#
+# 様式の対応（四国・中国・北陸で「様式5」のシート名を実確認、2026-08-11）:
+#   様式5 = 送電線インピーダンス / 変圧器インピーダンス  … R(%), X(%), Y/2(%), Xps(%) [1000MVAベース]
+#   空容量一覧 (sys_capa/akiyoryo)  … 設備容量・運用容量・運用容量制約要因・予想潮流・空容量
+#   潮流実績  (jisseki)             … 8760時間×線路の実潮流(MW)
+#
+# ★層の区別（重要 / オーナー指示 2026-08-11）
+#   ここで取得するのは全て **observed（事業者公表値）** であって、AGJの解析出力ではない。
+#   「空容量」はAGJの潮流計算でも算出できる量だが、両者は決して同一テーブルに混ぜない。
+#   - observed: 本台帳が取得したもの。出典URL・公表日・取得日・様式を必ず伴う。
+#   - derived : AGJのPF/N-1が出す潮流・空容量・過負荷率。docs/data/powerflow/ 等。
+#   突き合わせは比較ビュー（scripts/compare_observed_derived.py）でのみ行い、
+#   derived が observed を上書きすることはない。詳細は docs/OBSERVED_VS_DERIVED.md。
+#
+# ライセンス方針（既存慣行を継続）:
+#   生ファイルは data/external/system_disclosure/ に置き gitignore。**再配布しない**。
+#   事業者により All Rights Reserved（関西TD・TEPCO等）。集計値・照合スコアのみ docs/reports/ に記録。
+#
+# 取得: python -m scripts.fetch_system_disclosure [--utility shikoku] [--kind impedance]
+#   index_url を取得し link_pattern にマッチするリンクを拾うため、
+#   ファイル名の年月が更新されても追従する（URL直書きの陳腐化を避ける堅実策）。
+
+meta:
+  basis: 資源エネルギー庁「系統情報の公表の考え方」（令和3年5月改定）
+  verified_date: "2026-08-11"
+  layer: observed          # このファイルが扱うのは全て公表値
+  redistribute_raw: false  # 生ファイルはコミットしない
+
+utilities:
+  hokkaido:
+    name: 北海道電力ネットワーク
+    index_url: https://www.hepco.co.jp/network/con_service/public_document/bid_info.html
+    kinds:
+      impedance:
+        link_pattern: 'impedance_(kikan|local)[^"]*\.xlsx'
+        verified: true     # 2026-08-11 実DL成功 impedance_kikan_2026_01.xlsx (23,435B)
+        sheet_dialect: ["インピーダンス（ループ系統）"]
+        caveat: 送電線と変圧器が1シートに縦連結（行110から変圧器）。パーサは複数セクション対応済
+      congestion:
+        link_pattern: 'konzatsu_(sokuho|nendoho)_\d+_\d+[^"]*\.csv'
+        verified: true     # 2026-08-11 リンク確認。混雑（空容量の近縁）— observed層
+
+  tohoku:
+    name: 東北電力ネットワーク
+    index_url: https://nw.tohoku-epco.co.jp/consignment/system/announcement/index.html
+    kinds:
+      impedance:
+        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
+        verified: false    # 未発見。当該ページはPDF中心（01.pdf/02.pdf）。別ページに存在する可能性 → 要追加調査
+        note: 制度上は存在するはず。系統情報公表の別階層を要探索
+
+  tokyo:
+    name: 東京電力パワーグリッド
+    index_url: https://www.tepco.co.jp/pg/consignment/system/
+    kinds:
+      impedance:
+        link_pattern: 'impedance\.pdf'
+        verified: true     # 2026-08-11 実DL成功 impedance.pdf (74,473B / 8ページ)
+        format: pdf
+      flow_actual:
+        link_pattern: 'tyouryu_(kikan|154kV|66kV)\.zip'
+        note: 既取得。730列×8760時間（VALIDATION_SOURCES.md 項目2）
+
+  chubu:
+    name: 中部電力パワーグリッド
+    index_url: https://powergrid.chuden.co.jp/goannai/hatsuden_kouri/takuso_kyokyu/rule/
+    kinds:
+      impedance:
+        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
+        verified: false    # 未発見。konzatsukeito_kikan/local の下位ページを要探索
+      capacity:
+        index_url: https://powergrid.chuden.co.jp/goannai/hatsuden_kouri/takuso_kyokyu/rule/map/index.html
+        note: 系統空容量・予想潮流マッピング
+
+  hokuriku:
+    name: 北陸電力送配電
+    index_url: https://www.rikuden.co.jp/nw_notification/U_154seiyaku.html
+    kinds:
+      impedance:
+        link_pattern: 'impedance_(kikan|local)[^"]*\.xlsx'
+        verified: true     # 2026-08-11 実DL成功 impedance_kikan01_2025_05.xlsx (17,462B)
+        sheet_dialect: ["様式5(送電線インピーダンス)", "様式5(変圧器インピーダンス)"]
+      flow_actual:
+        link_pattern: 'jisseki_kikan\d*_(line|tr)_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-11 リンク確認（jisseki_kikan01_line_2025_05.csv 等）
+
+  kansai:
+    name: 関西電力送配電
+    index_url: https://www.kansai-td.co.jp/consignment/disclosure/distribution-equipment/index.html
+    kinds:
+      impedance:
+        link_pattern: '01_roop_\d{4}_\d\.pdf'
+        verified: true     # 2026-08-11 実DL成功 01_roop_2024_1.pdf (93,850B)
+        format: pdf
+      capacity:
+        direct_url: https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
+        verified: true     # 既取得(data/external/kansai_td/)。2026-08-07更新を確認。ほぼ毎日更新
+        note: 変圧器版は同ディレクトリの _trans.csv
+
+  chugoku:
+    name: 中国電力ネットワーク
+    index_url: https://www.energia.co.jp/nw/service/retailer/keitou/access/
+    kinds:
+      impedance:
+        link_pattern: 'impedance_(kikan|local)\d*_\d{4}_\d{2}\.xlsx'
+        verified: true     # 2026-08-11 実DL成功 impedance_kikan00_2026_07.xlsx (20,974B) + local×4
+        sheet_dialect: ["様式5(送電線インピーダンス)", "様式5(変圧器インピーダンス)"]
+      flow_actual:
+        link_pattern: 'jisseki_kikan\d*_(line|tr)_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-11 リンク確認（jisseki_kikan00_line_2025_07.csv 等）
+
+  shikoku:
+    name: 四国電力送配電
+    index_url: https://www.yonden.co.jp/nw/line_access/data.html
+    kinds:
+      impedance:
+        link_pattern: 'impedance_(kikan|local)\d*_\d{4}_\d{2}\.xlsx'
+        verified: true     # 2026-08-11 実DL成功。基幹50線路のR/X/Y/2+区間(変電所ペア)を確認
+        sheet_dialect: ["様式5(送電線インピーダンス)", "様式5(変圧器インピーダンス)"]
+      capacity:
+        link_pattern: 'sys_capa_(kikan|local)\d*_(line|tr)_\d{6}_\d{2}\.csv'
+        verified: true     # 2026-08-11 実DL成功。49線路×18列(設備容量/運用容量/制約要因/予想潮流/空容量)
+      flow_actual:
+        link_pattern: 'jisseki_(kikan|local)\d*_(line|tr)_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-11 実DL成功。50列×8765行 = 1年間1時間値
+      outage_plan:
+        link_pattern: 'sagyouteishikeikaku[^"]*\.csv'
+        note: 作業停止計画（N-1検証の実運用条件）
+
+  kyushu:
+    name: 九州電力送配電
+    index_url: https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure
+    kinds:
+      impedance:
+        link_pattern: 'impedance_(kikan|local)\d*_\d{4}_\d{2}\.xlsx'
+        verified: true     # 2026-08-11 実DL成功 impedance_kikan01_2025_09.xlsx (25,499B / 144行)
+        sheet_dialect: ["インピーダンス"]
+        caveat: 設備名が一部匿名化（□□□□線１Ｌ / 6発電所）。正規化CSVの anonymized 列で識別
+      flow_actual:
+        link_pattern: 'jisseki_kikan\d*_(line|tr)_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-11 リンク確認（jisseki_kikan00_line_2024_09.csv 等）
+
+  okinawa:
+    name: 沖縄電力
+    index_url: https://www.okiden.co.jp/business-support/service/rule/plan/index.html
+    kinds:
+      impedance:
+        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
+        verified: false    # 未発見。沖縄は独立系統でループ系統が限定的なため様式適用が異なる可能性
+      capacity:
+        verified: true     # 既取得(2026-08-05)。con_res_map01_01〜03.csv（132kV/66kV線路・変電所の空容量）
+        note: data/external/okiden/akiyoryo_map/
