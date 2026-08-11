@@ -129,6 +129,19 @@
   kml_style: "medium_thick"
   notes: "Used as Level 2 voltage in Hokkaido and Shikoku."
 
+  # 介入#27（既定OFF / docs/MODEL_INTERVENTIONS.md）
+  # 事業者公表の様式5インピーダンス107本から、実測 X/R = 5.83 と判明。
+  # 上の標準値は X/R = 0.350/0.038 = 9.21 で、実測の 1.58 倍。
+  # 187kV は定義上そのまま北海道・四国のみなので、この107本は実質全数であり、
+  # 両社が独立に一致する（北海道65本 5.63 / 四国42本 6.15）。標本の偏りではない。
+  # 「x 2（2導体）」の仮定が抵抗を半分に見積もっていたのが原因と考えられ、
+  # 逆算値 0.060 は単導体 ACSR 330mm2（154kV の 0.050、132kV の 0.045）と整合する。
+  # x は据え置く: 迂回係数からの示唆は n=22 と弱く端点照合の誤差も混じるため。
+  # 出典: docs/reports/system_disclosure_survey_2026-08-11.md
+  calibrated:
+    r_ohm_per_km: 0.060       # = x_ohm_per_km / 5.83（実測X/Rに一致させる）
+    conductor: "ACSR 330mm2 (実測X/Rからの逆算。単導体相当)"
+
 132:
   description: "132kV backbone (Okinawa)"
   description_ja: "132kV 基幹送電線 (沖縄)"

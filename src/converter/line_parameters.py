@@ -126,6 +126,7 @@ def get_line_parameters(
     f_hz: float,
     config_path: Optional[Path] = None,
     kind: str = "overhead",
+    calibrated: bool = False,
 ) -> Dict[str, Any]:
     """Get electrical parameters for a Japanese transmission line type.
 
@@ -137,6 +138,10 @@ def get_line_parameters(
         voltage_kv: Nominal voltage in kilovolts (e.g., 500, 275, 154, 66).
         f_hz: System frequency in Hertz (50 for east Japan, 60 for west).
         config_path: Optional override for the config file path.
+        calibrated: Opt in to values re-derived from utility-published
+            impedance (intervention #27, see docs/MODEL_INTERVENTIONS.md).
+            Defaults to False so the published standard table stays the
+            baseline; callers must ask for the calibration explicitly.
 
     Returns:
         Dictionary containing:
@@ -180,6 +185,12 @@ def get_line_parameters(
     if kind == "cable" and isinstance(raw_params.get("cable"), dict):
         raw_params = {**raw_params, **raw_params["cable"]}
 
+    # Calibration against utility-published impedance (intervention #27).
+    # Off by default: the standard table remains the baseline, and any run
+    # that uses the calibration has to say so, so results stay attributable.
+    if calibrated and isinstance(raw_params.get("calibrated"), dict):
+        raw_params = {**raw_params, **raw_params["calibrated"]}
+
     # Extract required electrical parameters
     r_ohm = raw_params["r_ohm_per_km"]
     x_ohm = raw_params["x_ohm_per_km"]
@@ -218,6 +229,7 @@ def get_line_parameters_safe(
     f_hz: float,
     config_path: Optional[Path] = None,
     kind: str = "overhead",
+    calibrated: bool = False,
 ) -> Optional[Dict[str, Any]]:
     """Get line parameters with fallback to nearest voltage class.
 
@@ -235,7 +247,9 @@ def get_line_parameters_safe(
         if no suitable fallback exists.
     """
     try:
-        return get_line_parameters(voltage_kv, f_hz, config_path, kind=kind)
+        return get_line_parameters(
+            voltage_kv, f_hz, config_path, kind=kind, calibrated=calibrated
+        )
     except ValueError:
         pass
 
@@ -258,7 +272,12 @@ def get_line_parameters_safe(
         nearest_kv,
     )
 
-    return get_line_parameters(float(nearest_kv), f_hz, config_path)
+    # kind/calibrated also carry through the fallback; dropping them here
+    # would silently hand back overhead-uncalibrated values for a caller
+    # that asked for a cable or the calibration.
+    return get_line_parameters(
+        float(nearest_kv), f_hz, config_path, kind=kind, calibrated=calibrated
+    )
 
 
 def get_available_voltage_classes(
