@@ -56,6 +56,14 @@ def variants(s: str) -> list[str]:
     return [v for v in dict.fromkeys(out) if v]
 
 
+# モデル側に `変電所` `発電所` だけのノードが実在し、contains 照合で
+# `変電所` ⊂ `新小野田変電所` が成立して 255km 先の別施設に誤爆した（実測 2026-08-11）。
+# 施設種別そのものや短すぎるキーは照合の手掛かりにならないので index から除く。
+GENERIC = {"変電所", "発電所", "開閉所", "変換所", "switchingstation", "substation", "powerplant"}
+MIN_KEY_LEN = 3          # これ未満のキーは登録しない
+MIN_CONTAINS_LEN = 4     # contains 照合は双方これ以上の長さを要求する
+
+
 def load_model(region: str) -> tuple[dict[str, list], list[dict]]:
     path = BUILT / f"{region}.json"
     if not path.exists():
@@ -67,6 +75,8 @@ def load_model(region: str) -> tuple[dict[str, list], list[dict]]:
         if not name or "junction" in name:
             continue
         for v in variants(name):
+            if v in GENERIC or len(v) < MIN_KEY_LEN:
+                continue
             index[v].append(n)
     return index, d["edges"]
 
@@ -82,11 +92,13 @@ def resolve(name: str, index: dict[str, list]) -> tuple[str, dict | None]:
     for level, v in zip(["exact", "paren", "suffix", "suffix", "suffix"], vs):
         if v in index:
             return level, index[v][0]
-    # 4. contains
+    # 4. contains — 双方が十分長いときだけ。generic語の誤爆を防ぐ
     for v in vs:
-        if len(v) < 2:
+        if len(v) < MIN_CONTAINS_LEN:
             continue
         for key, nodes in index.items():
+            if len(key) < MIN_CONTAINS_LEN:
+                continue
             if v in key or key in v:
                 return "contains", nodes[0]
     return "unknown", None
