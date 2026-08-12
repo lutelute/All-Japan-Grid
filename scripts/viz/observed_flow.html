@@ -187,6 +187,34 @@ map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
 
 let SERIES=null, GEN=null, NSTEP=168, FLOWSTEP=168, HALF=false, T0=null, idx=0, timer=null;
 
+
+// 時系列のミニチャート。潮流は正負があるので0線を必ず引き、
+// 運用容量（±）を破線で示す。現在時刻を縦線で示す。
+function sparkline(vals, cur, cap, color){
+  const W=272,H=76,P=6;
+  const nums=vals.filter(v=>v!=null);
+  if(!nums.length) return '<div style="color:var(--dim);font-size:11px">系列データなし</div>';
+  const amp=Math.max(...nums.map(v=>Math.abs(v)), cap||0, 1);
+  const x=i=>P+i*(W-2*P)/Math.max(vals.length-1,1);
+  const y=v=>H/2 - (v/amp)*(H/2-P);
+  let d='',pen=false;
+  vals.forEach((v,i)=>{ if(v==null){pen=false;return;}
+    d += (pen?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' '; pen=true; });
+  const capLine = cap ? `<line x1="${P}" y1="${y(cap)}" x2="${W-P}" y2="${y(cap)}"
+      stroke="#d94040" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+    <line x1="${P}" y1="${y(-cap)}" x2="${W-P}" y2="${y(-cap)}"
+      stroke="#d94040" stroke-width="1" stroke-dasharray="3 3" opacity=".45"/>` : '';
+  const now = (cur!=null && cur>=0 && cur<vals.length)
+    ? `<line x1="${x(cur)}" y1="2" x2="${x(cur)}" y2="${H-2}" stroke="#5ac8fa" stroke-width="1.2"/>
+       ${vals[cur]!=null?`<circle cx="${x(cur)}" cy="${y(vals[cur])}" r="2.8" fill="#5ac8fa"/>`:''}` : '';
+  return `<svg width="${W}" height="${H}" style="display:block;margin:6px 0">
+    <line x1="${P}" y1="${H/2}" x2="${W-P}" y2="${H/2}" stroke="#2a3646" stroke-width="1"/>
+    ${capLine}<path d="${d}" fill="none" stroke="${color||'#5ac8fa'}" stroke-width="1.4"/>${now}
+  </svg>
+  <div style="display:flex;justify-content:space-between;color:var(--dim);font-size:10px">
+    <span>${vals.length}断面</span><span>±${amp.toFixed(0)} MW</span></div>`;
+}
+
 function loadFactorExpr(){
   // その時刻の負荷率(feature-state.lf) → 無ければ p95 → それも無ければ「データ無し」色。
   // 運用容量が公表されていない線を 0% と同じ色で塗ると「空いている」と誤読される。
@@ -516,8 +544,41 @@ Promise.all([
         <tr><td>R / X / (Y/2)</td><td>${f(p.R_pct,'',3)} / ${f(p.X_pct,'',3)} / ${f(p.B_half_pct,'',3)} %<br>
           <span style="color:var(--dim);font-size:10px">1000MVAベース</span></td></tr>
         <tr><td>観測断面数</td><td>${f(p.n_obs,'',0)}</td></tr>
-      </table>`;
+      </table>
+      ${SERIES&&SERIES.series&&SERIES.series[p.line_id]
+        ? '<div style="margin-top:10px;color:var(--dim);font-size:10.5px">潮流の推移（赤破線＝運用容量）</div>'
+          + sparkline(SERIES.series[p.line_id], HALF?Math.floor(idx/2):idx, p.operational_mw, '#5ac8fa')
+        : ''}`;
   });
+  // 発電ユニットのクリック
+  ['gen-out','gen-cap','gen-peak'].forEach(lid=>{
+    map.on('click',lid,ev=>{
+      const p=ev.features[0].properties, st=map.getFeatureState({source:'gen',id:ev.features[0].id});
+      const cap=p.nameplate_mw||p.peak_mw;
+      const vals=(GEN&&GEN.series&&GEN.series[p.uid])||[];
+      const col=(GENFUEL.find(g=>g[0]===p.fuel)||[])[1]||'#5ac8fa';
+      const f=(v,u='',d=1)=>(v==null||v==='')?'—':(typeof v==='number'?v.toFixed(d):v)+u;
+      document.getElementById('info').style.display='block';
+      document.getElementById('info').innerHTML=`
+        <h3>${p.plant} ${p.unit}</h3>
+        <div class="path">${p.fuel} ／ ${p.area}
+          <span class="badge">${p.basis==='nameplate'?'定格基準':'期間ピーク基準'}</span></div>
+        <table>
+          <tr><td>この時刻の出力</td><td><b>${f(st.mw,' MW')}</b></td></tr>
+          <tr><td>出力率</td><td><b>${st.r!=null?(st.r*100).toFixed(1)+' %':'—'}</b></td></tr>
+          <tr><td>${p.basis==='nameplate'?'定格容量':'期間ピーク'}</td><td>${f(cap,' MW')}</td></tr>
+          <tr><td>発電所コード</td><td>${p.code}</td></tr>
+          <tr><td>照合先(AGJ)</td><td>${p.matched_plant||'—'}</td></tr>
+        </table>
+        ${p.basis!=='nameplate'?'<div class="warn" style="font-size:10.5px;margin-top:6px">'
+          +'分母が定格でなく期間内ピーク。設備利用率ではない</div>':''}
+        <div style="margin-top:10px;color:var(--dim);font-size:10.5px">出力の推移</div>
+        ${sparkline(vals, idx, cap, col)}`;
+    });
+    map.on('mouseenter',lid,()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave',lid,()=>map.getCanvas().style.cursor='');
+  });
+
   map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
   map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
   map.on('click',ev=>{
