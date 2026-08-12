@@ -147,10 +147,23 @@ def main() -> int:
     ap.add_argument("--min-obs", type=int, default=1)
     ap.add_argument("--steps", type=int, default=168,
                     help="時系列に出す断面数（既定168=1週間の1時間値）")
+    ap.add_argument("--fy", default="2024",
+                    help="対象年度。社ごとに公表年度が違うため揃えないと"
+                         "別の年の値を同じ時刻軸に重ねることになる")
     args = ap.parse_args()
 
     df = pd.read_csv(NORM / "line_observations.csv")
     df = df[df.n_obs.fillna(0) >= args.min_obs]
+
+    # 年度を揃える。東京は2024年度・四国は2025年度…と公表年度がまちまちで、
+    # 揃えずに1本のスライダーで動かすと「異なる年の断面」を同時刻として
+    # 並べてしまう。年度で絞り、落ちた社は明示する。
+    if args.fy and "year" in df.columns:
+        before = set(df.utility)
+        df = df[df.year.astype(str) == str(args.fy)]
+        dropped = before - set(df.utility)
+        if dropped:
+            print(f"年度{args.fy}に無いため除外: {', '.join(sorted(dropped))}")
 
     features = []
     stat = defaultdict(int)

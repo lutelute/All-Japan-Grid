@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 from pathlib import Path
 
 import pandas as pd
@@ -34,8 +35,14 @@ ARROW_RX = re.compile(r"[→⇒]")
 
 
 def scope_of(filename: str) -> str:
-    """jisseki_kikan01_line_2025_08.csv → 'kikan01' / sys_capa_local20_line_… → 'local20'"""
+    """jisseki_kikan01_line_2025_08.csv → 'kikan01' / sys_capa_local20_line_… → 'local20'
+
+    東京は独自命名（jisseki_154kV03.csv 等）なので電圧表記をそのまま scope にする。
+    """
     m = re.search(r"_((?:kikan|local)\d*)_", filename)
+    if m:
+        return m.group(1)
+    m = re.search(r"(154kV|66kV|kikan)", filename)
     return m.group(1) if m else "?"
 
 
@@ -44,12 +51,82 @@ def scope_family(scope: str) -> str:
     return "kikan" if scope.startswith("kikan") else scope
 
 
+TEPCO_COL_RX = re.compile(r"^(.+?)\s*[-−–]\s*(.+)$")
+# `1B` `1･2･3･4B` は変圧器バンク。送電線ではないので落とす。
+TEPCO_BANK_RX = re.compile(r"^[0-9０-９･・,\s]*[BＢ]$")
+
+
+CIRCUIT_TAIL_RX = re.compile(r"[0-9０-９･・,、\s]*[LＬ]\s*$")
+
+
+def norm_name(s: object) -> str:
+    """線路名の照合キー。回線表記（1･2L / 2L）と記号ゆれを落とす。"""
+    n = unicodedata.normalize("NFKC", str(s))
+    n = re.sub(r"[\s　・･,，]", "", n)
+    return CIRCUIT_TAIL_RX.sub("", n).strip()
+
+
+def fy_from_stamp(stamp: object) -> str | None:
+    """`2024年04月01日 00時` → "2024"（日本の年度は4月始まり。1〜3月は前年度）。"""
+    m = re.search(r"(\d{4})\s*[年/\-.]\s*(\d{1,2})", str(stamp))
+    if not m:
+        return None
+    y, mo = int(m.group(1)), int(m.group(2))
+    return str(y - 1 if mo <= 3 else y)
+
+
+def _tepco_voltage(path: Path) -> float | None:
+    """東京はファイル名/フォルダ名でしか電圧が分からない。"""
+    s = str(path)
+    if "66kV" in s:
+        return 66.0
+    if "154kV" in s:
+        return 154.0
+    if "kikan" in s:
+        return 275.0     # 基幹（500/275混在。低い方を採り過大評価を避ける）
+    return None
+
+
+def read_flow_tepco(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """東京電力PGの潮流実績。標準様式と違い **ヘッダ1行** で、
+    列名が `京浜(変) - 東京南線1･2L`（変電所 - 設備名）という独自形式。
+
+    変圧器バンクと送電線が同じ表に混在するので、送電線だけ拾う。
+    相手側変電所は列名からは分からない（to は空になる）。
+    線路名は OSM の name と直接照合できるので、地図には載せられる。
+    """
+    raw = pd.read_csv(path, encoding="cp932", header=None, dtype=str)
+    kv = _tepco_voltage(path)
+    meta = []
+    for c in range(1, raw.shape[1]):
+        col = str(raw.iloc[0, c]).strip()
+        m = TEPCO_COL_RX.match(col)
+        if not m:
+            continue
+        sub, tail = m.group(1).strip(), m.group(2).strip()
+        if TEPCO_BANK_RX.match(tail):
+            continue                     # 変圧器バンクは対象外
+        meta.append({
+            "col": c,
+            "equipment_no": f"c{c}",     # 東京は設備番号が無いので列位置で代用
+            "voltage_kv": kv,
+            "name": tail,
+            "flow_positive_from": sub,
+            "flow_positive_to": "",      # 相手端は非公開
+        })
+    ts = raw.iloc[1:].reset_index(drop=True)
+    return pd.DataFrame(meta), ts
+
+
 def read_flow(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     """潮流実績CSVを (メタ, 時系列) に分ける。
 
-    ヘッダは4行: 送電線No. / 電圧(kV) / 送電線名 / 潮流正方向。5行目以降が時刻×MW。
+    標準様式はヘッダ4行: 送電線No. / 電圧(kV) / 送電線名 / 潮流正方向。
+    東京だけ独自形式（ヘッダ1行）なので自動で振り分ける。
     """
     raw = pd.read_csv(path, encoding="cp932", header=None, dtype=str)
+    if str(raw.iloc[0, 0]).strip() in ("日時", "年月日時"):
+        return read_flow_tepco(path)
     hdr = {}
     for i in range(min(8, len(raw))):
         key = str(raw.iloc[i, 0]).strip()
@@ -98,9 +175,45 @@ def summarize_flow(ts: pd.DataFrame, col: int) -> dict:
     }
 
 
+def _read_any(path: Path) -> pd.DataFrame:
+    """社によって CP932 と UTF-8(BOM) が混在するので順に試す。
+
+    東京の空容量CSVは UTF-8 BOM、潮流実績は CP932。決め打ちすると片方で落ちる。
+    """
+    last: Exception | None = None
+    for enc in ("utf-8-sig", "cp932", "utf-8"):
+        try:
+            return pd.read_csv(path, encoding=enc, header=None, dtype=str)
+        except UnicodeDecodeError as exc:
+            last = exc
+    raise last or ValueError(f"decode failed: {path}")
+
+
 def read_capacity(path: Path) -> pd.DataFrame:
-    d = pd.read_csv(path, encoding="cp932", header=1)
-    d.columns = [re.sub(r"\s", "", str(c)) for c in d.columns]
+    """空容量一覧を読む。
+
+    ヘッダが1行の社（四国）と、`送電線名 / 電圧 / 回線数…` が2〜3行に
+    分かれる社（東京）がある。**「送電線名」を含む行を起点に、続く行を
+    縦に連結して1つの列名**にすることで両方を同じ形に均す。
+    """
+    raw = _read_any(path)
+    hrow = None
+    for i in range(min(12, len(raw))):
+        if any("送電線名" in str(v) for v in raw.iloc[i]):
+            hrow = i
+            break
+    if hrow is None:
+        raise ValueError(f"ヘッダ行が見つからない: {path.name}")
+
+    # ヘッダは最大3行ぶん縦に連結（"運用"+"容量値"+"(MW)" → "運用容量値(MW)"）
+    span = min(3, len(raw) - hrow)
+    names = []
+    for c in range(raw.shape[1]):
+        parts = [str(raw.iloc[hrow + k, c]) for k in range(span)]
+        parts = [re.sub(r"\s", "", p) for p in parts if p and p != "nan"]
+        names.append("".join(parts))
+    d = raw.iloc[hrow + span:].reset_index(drop=True)
+    d.columns = names
     cols = list(d.columns)
 
     def pick(*keys):
@@ -135,13 +248,16 @@ def main() -> int:
     imp["equipment_no"] = imp.equipment_no.astype(str).str.strip()
 
     rows: list[dict] = []
-    for flow_path in sorted(SRC.glob("*/flow_actual/jisseki_*_line_*.csv")):
+    # 標準様式（社共通の命名）＋ 東京の独自配置（ZIP展開したサブフォルダ）
+    flow_paths = (sorted(SRC.glob("*/flow_actual/jisseki_*_line_*.csv"))
+                  + sorted(SRC.glob("tokyo/flow_actual/*/*/*.csv")))
+    for flow_path in flow_paths:
         utility = flow_path.parts[len(SRC.parts)]
         if args.utility and utility != args.utility:
             continue
         scope = scope_of(flow_path.name)
         year = re.search(r"_(\d{4})_\d{2}\.csv", flow_path.name)
-        year = year.group(1) if year else "?"
+        year = year.group(1) if year else None
 
         try:
             meta, ts = read_flow(flow_path)
@@ -149,16 +265,36 @@ def main() -> int:
             print(f"! {flow_path.name}: {exc}")
             continue
 
+        # 東京はファイル名に年度が入らない（jisseki_154kV03.csv）。
+        # 年度をハードコードすると翌年に黙って古い値を指すので、
+        # **データ自身の最初の日時**から年度を決める（4月始まり）。
+        if year is None:
+            year = fy_from_stamp(ts.iloc[0, 0]) if len(ts) else None
+        year = year or "?"
+
         # 同じ系統区分の空容量CSV（最新のもの）
         cap = pd.DataFrame()
-        cands = sorted(SRC.glob(f"{utility}/capacity/sys_capa_{scope}*_line_*.csv"))
-        if not cands:  # kikan00 と kikan01 の採番ゆれを吸収
-            cands = sorted(SRC.glob(f"{utility}/capacity/sys_capa_{scope_family(scope)}*_line_*.csv"))
-        if cands:
-            try:
-                cap = read_capacity(cands[-1])
-            except Exception as exc:  # noqa: BLE001
-                print(f"  (capacity読めず {cands[-1].name}: {exc})")
+        if utility == "tokyo":
+            # 東京は空容量が**県別**・潮流実績が**電圧別**で1:1に対応しない。
+            # 全県を縦に積んで1つの表にし、線路名で引く。
+            frames = []
+            for p in sorted(SRC.glob("tokyo/capacity/*/*soudensen*.csv")):
+                try:
+                    frames.append(read_capacity(p))
+                except Exception:  # noqa: BLE001
+                    continue
+            if frames:
+                cap = pd.concat(frames, ignore_index=True)
+        else:
+            cands = sorted(SRC.glob(f"{utility}/capacity/sys_capa_{scope}*_line_*.csv"))
+            if not cands:  # kikan00 と kikan01 の採番ゆれを吸収
+                cands = sorted(SRC.glob(
+                    f"{utility}/capacity/sys_capa_{scope_family(scope)}*_line_*.csv"))
+            if cands:
+                try:
+                    cap = read_capacity(cands[-1])
+                except Exception as exc:  # noqa: BLE001
+                    print(f"  (capacity読めず {cands[-1].name}: {exc})")
 
         sub_imp = imp[(imp.utility == utility) & (imp.scope_f == scope_family(scope))]
 
@@ -175,6 +311,11 @@ def main() -> int:
 
             if not cap.empty:
                 c = cap[cap.equipment_no == m.equipment_no]
+                if not len(c) and m["name"]:
+                    # 東京は潮流実績側に設備番号が無い（列位置を代用している）ため
+                    # 番号では突き合わない。**線路名**で結ぶ。
+                    key = norm_name(m["name"])
+                    c = cap[cap["name"].map(norm_name) == key]
                 if len(c):
                     c = c.iloc[0]
                     rec.update({
