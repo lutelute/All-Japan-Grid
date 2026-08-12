@@ -96,7 +96,18 @@
   </div>
 
   <div class="grp">
-    <h2>発電所</h2>
+    <h2>発電実績（OCCTO・30分値）</h2>
+    <label class="row"><input type="checkbox" id="l-gen" checked>
+      <span>稼働ユニット<span class="badge" id="n-gen"></span>
+        <span class="d">外円=容量、内側の塗り=その時刻の出力。色=燃料</span></span></label>
+    <label class="row"><input type="checkbox" id="l-gen-peak">
+      <span>容量が不明なユニットも含める<span class="badge" id="n-gen-peak"></span>
+        <span class="d">分母が定格でなく<b>期間内ピーク</b>になるため、
+        出力率の意味が違う。設備利用率ではない</span></span></label>
+  </div>
+
+  <div class="grp">
+    <h2>発電所（設備）</h2>
     <label class="row"><input type="checkbox" id="l-plant" checked>
       <span>容量が判明<span class="badge" id="n-plant"></span>
         <span class="d">円の大きさ=設備容量、色=燃料。広域では大規模電源だけ残る</span></span></label>
@@ -174,7 +185,7 @@ const map = new maplibregl.Map({
 map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
 map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
 
-let SERIES=null, NSTEP=168, T0=null, idx=0, timer=null;
+let SERIES=null, GEN=null, NSTEP=168, FLOWSTEP=168, HALF=false, T0=null, idx=0, timer=null;
 
 function loadFactorExpr(){
   // その時刻の負荷率(feature-state.lf) → 無ければ p95 → それも無ければ「データ無し」色。
@@ -192,6 +203,10 @@ function widthExpr(){
 }
 
 // 変電所の種別。OSM の substation タグをそのまま使う（推定を足さない）。
+// HKS の「発電方式・燃種」表記に対応させる（OSMのfuel_typeとは別語彙）
+const GENFUEL=[['原子力','#c084fc'],['水力','#3bc9db'],['火力（石炭）','#8d99ae'],
+               ['火力（ガス）','#4dabf7'],['火力（石油）','#ff922b'],['地熱','#ff8787'],
+               ['風力','#69db7c'],['太陽光・太陽熱','#ffd43b'],['その他','#868e96']];
 const CAT=[['transmission','送電用','#5ac8fa'],['distribution','配電用','#4dd4ac'],
            ['traction','鉄道用','#f783ac'],['industrial','需要家・産業','#ffa94d'],
            ['transition','架空・地中切替','#ffd43b'],['generation','発電所構内','#a9e34b'],
@@ -213,13 +228,22 @@ Promise.all([
   fetch('./flow_series.json').then(r=>r.json()).catch(()=>null),
   fetch('./lines.geojson').then(r=>r.json()).catch(()=>null),
   fetch('./substations.geojson').then(r=>r.json()).catch(()=>null),
-  fetch('./plants.geojson').then(r=>r.json()).catch(()=>null)
-]).then(([gj,ser,net,subs,plants])=>{
+  fetch('./plants.geojson').then(r=>r.json()).catch(()=>null),
+  fetch('./generation.geojson').then(r=>r.json()).catch(()=>null),
+  fetch('./generation_series.json').then(r=>r.json()).catch(()=>null)
+]).then(([gj,ser,net,subs,plants,gen,genser])=>{
   SERIES = ser;
-  if(ser){ NSTEP = ser.n_steps||168; T0 = ser.t0;
-    document.getElementById('slider').max = NSTEP-1;
-    document.getElementById('tmeta').textContent = `${Object.keys(ser.series).length}本 × ${NSTEP}断面`;
-  }
+  // 潮流は1時間値、発電は30分値。**細かい方(30分)を時間軸の基準**にし、
+  // 潮流は index//2 で引く。粗い方に合わせると発電の半分を捨てることになる。
+  GEN = genser;
+  const genN = genser ? (genser.n_steps||0) : 0;
+  if(ser){ FLOWSTEP = ser.n_steps||168; T0 = ser.t0; }
+  NSTEP = genN || FLOWSTEP;
+  HALF  = !!genN;               // 30分刻みなら潮流は2断面で1つ
+  if(genser && genser.t0) T0 = genser.t0;
+  document.getElementById('slider').max = Math.max(NSTEP-1,0);
+  document.getElementById('tmeta').textContent =
+    `潮流${ser?Object.keys(ser.series).length:0}本 / 発電${genser?Object.keys(genser.series).length:0}機 × ${NSTEP}断面`;
   gj.features.forEach((f,i)=>f.id=i);
 
   map.on('load',()=>{
@@ -296,6 +320,41 @@ Promise.all([
           'circle-opacity':.85,'circle-stroke-width':.6,'circle-stroke-color':'#0a0e13'}});
     }
 
+    // ---- 発電実績（OCCTO ユニット別・30分値）----
+    if(gen){
+      gen.features.forEach((f,i)=>f.id=100000+i);   // flow と id 空間を分ける
+      map.addSource('gen',{type:'geojson',data:gen});
+      const capExpr = ['coalesce',['get','nameplate_mw'],['get','peak_mw'],1];
+      const capAt = (a,b,c,d) => ['interpolate',['linear'],['sqrt',capExpr], 0,a, 10,b, 32,c, 75,d];
+      const fill = ['sqrt',['coalesce',['feature-state','r'],0]];
+      // zoom は最上位の interpolate にしか置けないので、掛け算は各ズーム段の中で行う
+      const radFilled = () => ['interpolate',['linear'],['zoom'],
+        5, ['*', capAt(0,1.4,3.6,6.5), fill],
+        9, ['*', capAt(1.4,3.4,7,12), fill]];
+      const rad = k => ['interpolate',['linear'],['zoom'],
+        5,['*',k,['interpolate',['linear'],['sqrt',capExpr], 0,0, 10,1.4, 32,3.6, 75,6.5]],
+        9,['*',k,['interpolate',['linear'],['sqrt',capExpr], 0,1.4, 10,3.4, 32,7, 75,12]]];
+      // 外円＝容量の枠。塗らずに輪郭だけ置く
+      map.addLayer({id:'gen-cap',type:'circle',source:'gen',minzoom:4,
+        filter:['==',['get','basis'],'nameplate'],
+        paint:{'circle-radius':rad(1),'circle-color':'rgba(0,0,0,0)',
+               'circle-stroke-width':1,'circle-stroke-color':'#9fb0c6','circle-stroke-opacity':.55}});
+      // 内円＝その時刻の出力。feature-state.r（0..1）で半径が満ちる
+      map.addLayer({id:'gen-out',type:'circle',source:'gen',minzoom:4,
+        filter:['==',['get','basis'],'nameplate'],
+        paint:{'circle-radius':radFilled(),
+               'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
+               'circle-opacity':.85}});
+      // 容量不明（分母が期間ピーク）は別レイヤ。既定OFF
+      map.addLayer({id:'gen-peak',type:'circle',source:'gen',minzoom:6,
+        filter:['!=',['get','basis'],'nameplate'],
+        layout:{visibility:'none'},
+        paint:{'circle-radius':radFilled(),
+               'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
+               'circle-opacity':.6,
+               'circle-stroke-width':1,'circle-stroke-color':'#ffb454','circle-stroke-opacity':.5}});
+    }
+
     map.addSource('flow',{type:'geojson',data:gj,promoteId:undefined});
 
     // 下地: 太い暗線で経路を見せる
@@ -334,6 +393,11 @@ Promise.all([
       document.getElementById('n-cable').textContent = fmt(nf.filter(f=>f.properties.c).length);
       document.getElementById('n-nokv').textContent = fmt(nf.filter(f=>!f.properties.kv).length);
     }
+    if(gen){
+      const np = gen.features.filter(f=>f.properties.basis==='nameplate').length;
+      document.getElementById('n-gen').textContent = fmt(np);
+      document.getElementById('n-gen-peak').textContent = fmt(gen.features.length-np);
+    }
     if(plants){
       const withMw = plants.features.filter(f=>f.properties.mw!=null).length;
       document.getElementById('n-plant').textContent = fmt(withMw);
@@ -368,9 +432,18 @@ Promise.all([
   function setStep(i){
     idx=i;
     document.getElementById('slider').value=i;
+    if(GEN&&GEN.series&&gen){
+      gen.features.forEach(f=>{
+        const v=(GEN.series[f.properties.uid]||[])[i];
+        const cap=f.properties.nameplate_mw||f.properties.peak_mw;
+        const r=(v!=null&&cap)?Math.max(0,Math.min(1.25,v/cap)):null;
+        map.setFeatureState({source:'gen',id:f.id},{r:r, mw:v??null});
+      });
+    }
     if(SERIES&&SERIES.series){
+      const fi = HALF ? Math.floor(i/2) : i;
       gj.features.forEach(f=>{
-        const v=(SERIES.series[f.properties.line_id]||[])[i];
+        const v=(SERIES.series[f.properties.line_id]||[])[fi];
         const op=f.properties.operational_mw;
         let lf=null;
         if(v!==undefined&&v!==null&&op) lf=Math.abs(v)/op;
@@ -381,7 +454,7 @@ Promise.all([
     // ISO へ変換しようとすると "2025-4-1T1:00"（ゼロ埋め無し）になり NaN になる。
     const d = T0 ? new Date(T0) : null;
     if(d && !isNaN(d)){
-      const t = new Date(d.getTime() + i*3600*1000);
+      const t = new Date(d.getTime() + i*(HALF?1800:3600)*1000);
       document.getElementById('stamp').textContent =
         t.toLocaleString('ja-JP',{month:'numeric',day:'numeric',weekday:'short',
                                   hour:'2-digit',minute:'2-digit'});
@@ -408,6 +481,9 @@ Promise.all([
     ['net-hv','net-mv','net-lv'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-cable').onchange=e=>vis('net-cable',e.target.checked);
   document.getElementById('l-nokv').onchange=e=>vis('net-nokv',e.target.checked);
+  document.getElementById('l-gen').onchange=e=>
+    ['gen-cap','gen-out'].forEach(l=>vis(l,e.target.checked));
+  document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
   document.getElementById('l-plant').onchange=e=>vis('plants',e.target.checked);
   document.getElementById('l-plant-nomw').onchange=e=>vis('plants-nomw',e.target.checked);
   // 変電所は種別ごとに出し入れする（OSMの分類をそのまま見せる）
