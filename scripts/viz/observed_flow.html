@@ -83,7 +83,36 @@
   </div>
 
   <div class="grp">
-    <h2>電圧</h2>
+    <h2>送電網（OpenStreetMap）</h2>
+    <label class="row"><input type="checkbox" id="l-net" checked>
+      <span>送電線<span class="badge" id="n-net"></span>
+        <span class="d">実線形。66kV未満と電圧不明はズーム9以上で表示</span></span></label>
+    <label class="row"><input type="checkbox" id="l-cable" checked>
+      <span>地下ケーブル<span class="badge" id="n-cable"></span>
+        <span class="d">power=cable / location=underground</span></span></label>
+    <label class="row"><input type="checkbox" id="l-nokv">
+      <span>電圧不明の線を含める<span class="badge" id="n-nokv"></span>
+        <span class="d">OSMに voltage タグが無い線。潮流計算には使えない</span></span></label>
+  </div>
+
+  <div class="grp">
+    <h2>発電所</h2>
+    <label class="row"><input type="checkbox" id="l-plant" checked>
+      <span>容量が判明<span class="badge" id="n-plant"></span>
+        <span class="d">円の大きさ=設備容量、色=燃料。広域では大規模電源だけ残る</span></span></label>
+    <label class="row"><input type="checkbox" id="l-plant-nomw">
+      <span>容量不明<span class="badge" id="n-plant-nomw"></span>
+        <span class="d">OSMに出力の記載が無い。円の大きさで語れないので点で置く（ズーム9以上）</span></span></label>
+    <div id="fuellegend" style="margin-top:6px"></div>
+  </div>
+
+  <div class="grp">
+    <h2>変電所</h2>
+    <div id="catlegend"></div>
+  </div>
+
+  <div class="grp">
+    <h2>電圧（線の太さ）</h2>
     <div id="kvlegend"></div>
   </div>
 
@@ -162,10 +191,30 @@ function widthExpr(){
     ...KV.slice().reverse().flatMap(k=>[k[0],k[1]])];
 }
 
+// 変電所の種別。OSM の substation タグをそのまま使う（推定を足さない）。
+const CAT=[['transmission','送電用','#5ac8fa'],['distribution','配電用','#4dd4ac'],
+           ['traction','鉄道用','#f783ac'],['industrial','需要家・産業','#ffa94d'],
+           ['transition','架空・地中切替','#ffd43b'],['generation','発電所構内','#a9e34b'],
+           ['converter','変換所(直流・周波数)','#ff6b6b'],['minor_distribution','小規模配電','#748ffc'],
+           ['unknown','種別不明','#8b98a9']];
+const FUEL=[['nuclear','原子力','#c084fc'],['coal','石炭','#8d99ae'],['gas','ガス','#4dabf7'],
+            ['oil','石油','#ff922b'],['hydro','水力','#3bc9db'],['solar','太陽光','#ffd43b'],
+            ['wind','風力','#69db7c'],['biomass','バイオマス','#94d82d'],
+            ['geothermal','地熱','#ff8787'],['','その他・不明','#868e96']];
+
+document.getElementById('catlegend').innerHTML = CAT.map(c=>
+  `<label class="row"><input type="checkbox" class="cat" value="${c[0]}">
+   <span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c[2]};margin-right:5px"></i>${c[1]}<span class="badge" data-cat="${c[0]}"></span></span></label>`).join('');
+document.getElementById('fuellegend').innerHTML = FUEL.map(f=>
+  `<div class="kvrow"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${f[2]}"></i>${f[1]}</div>`).join('');
+
 Promise.all([
   fetch('./flow_lines.geojson').then(r=>r.json()),
-  fetch('./flow_series.json').then(r=>r.json()).catch(()=>null)
-]).then(([gj,ser])=>{
+  fetch('./flow_series.json').then(r=>r.json()).catch(()=>null),
+  fetch('./lines.geojson').then(r=>r.json()).catch(()=>null),
+  fetch('./substations.geojson').then(r=>r.json()).catch(()=>null),
+  fetch('./plants.geojson').then(r=>r.json()).catch(()=>null)
+]).then(([gj,ser,net,subs,plants])=>{
   SERIES = ser;
   if(ser){ NSTEP = ser.n_steps||168; T0 = ser.t0;
     document.getElementById('slider').max = NSTEP-1;
@@ -174,17 +223,90 @@ Promise.all([
   gj.features.forEach((f,i)=>f.id=i);
 
   map.on('load',()=>{
+    // ---- 送電網（潮流レイヤより下に敷く。追加順がそのまま重なり順）----
+    if(net){
+      map.addSource('net',{type:'geojson',data:net});
+      const kvw = ['interpolate',['linear'],['coalesce',['get','kv'],20],
+                   20,0.5, 66,0.9, 154,1.3, 275,1.8, 500,2.4];
+      // 電圧階級でレイヤを分け、低い階級は minzoom で遅らせる。
+      // 40,075本を初期ズームから全部描くと重く、基幹系も埋もれて読めない。
+      const tiers=[
+        ['net-hv', ['>=',['coalesce',['get','kv'],0],187], 0,   '#5b6675', .8],
+        ['net-mv', ['all',['>=',['coalesce',['get','kv'],0],66],
+                          ['<',['coalesce',['get','kv'],0],187]], 7, '#49525f', .7],
+        ['net-lv', ['all',['>',['coalesce',['get','kv'],0],0],
+                          ['<',['coalesce',['get','kv'],0],66]], 9, '#3b434e', .6],
+      ];
+      tiers.forEach(([id,filt,mz,col,op])=>{
+        map.addLayer({id,type:'line',source:'net',minzoom:mz,
+          filter:['all',filt,['==',['get','c'],0]],
+          layout:{'line-cap':'round','line-join':'round'},
+          paint:{'line-color':col,'line-width':kvw,'line-opacity':op}});
+      });
+      // 電圧不明（OSMに voltage が無い）。既定OFF。潮流計算には使えない線
+      map.addLayer({id:'net-nokv',type:'line',source:'net',minzoom:9,
+        filter:['all',['==',['coalesce',['get','kv'],0],0],['==',['get','c'],0]],
+        layout:{'line-cap':'round','visibility':'none'},
+        paint:{'line-color':'#3d4652','line-width':0.6,'line-opacity':.55,
+               'line-dasharray':[2,2]}});
+      // 地下ケーブルは破線で区別
+      map.addLayer({id:'net-cable',type:'line',source:'net',
+        filter:['==',['get','c'],1],
+        layout:{'line-cap':'butt'},
+        paint:{'line-color':'#57c7ff','line-width':['*',kvw,0.9],
+               'line-opacity':.75,'line-dasharray':[1.5,1.5]}});
+    }
+
+    // ---- 発電所（容量で円、燃料で色）----
+    if(plants){
+      map.addSource('plants',{type:'geojson',data:plants});
+      // 容量が判明している発電所。半径はズームと容量の両方で決め、
+      // 広域では大規模電源だけが残るようにする（19,138件を一度に出すと
+      // 地図が円で埋まり、主役の潮流線が読めなくなる）。
+      map.addLayer({id:'plants',type:'circle',source:'plants',minzoom:5,
+        filter:['has','mw'],
+        paint:{
+          'circle-radius':['interpolate',['linear'],['zoom'],
+            5,['interpolate',['linear'],['sqrt',['coalesce',['get','mw'],0]], 0,0, 10,1.2, 32,3.4, 75,6],
+            9,['interpolate',['linear'],['sqrt',['coalesce',['get','mw'],0]], 0,1.2, 10,3, 32,6.5, 75,11]],
+          'circle-color':['match',['coalesce',['get','f'],''],
+            ...FUEL.slice(0,-1).flatMap(f=>[f[0],f[2]]), '#868e96'],
+          'circle-opacity':.62,
+          'circle-stroke-width':.5,'circle-stroke-color':'#0a0e13'}});
+      // 容量不明の発電所は「点」で置く。円の大きさで語れないので大きさを持たせない。
+      map.addLayer({id:'plants-nomw',type:'circle',source:'plants',minzoom:9,
+        filter:['!',['has','mw']],
+        layout:{visibility:'none'},
+        paint:{'circle-radius':1.5,
+          'circle-color':['match',['coalesce',['get','f'],''],
+            ...FUEL.slice(0,-1).flatMap(f=>[f[0],f[2]]), '#868e96'],
+          'circle-opacity':.5}});
+    }
+
+    // ---- 変電所（OSMの種別をそのまま）----
+    if(subs){
+      map.addSource('subs',{type:'geojson',data:subs});
+      map.addLayer({id:'subs',type:'circle',source:'subs',minzoom:6,
+        layout:{visibility:'none'},
+        filter:['in',['get','cat'],['literal',['transmission']]],
+        paint:{
+          'circle-radius':['interpolate',['linear'],['coalesce',['get','kv'],20],
+                           20,2, 154,3.4, 500,5.5],
+          'circle-color':['match',['get','cat'],...CAT.flatMap(c=>[c[0],c[2]]),'#8b98a9'],
+          'circle-opacity':.85,'circle-stroke-width':.6,'circle-stroke-color':'#0a0e13'}});
+    }
+
     map.addSource('flow',{type:'geojson',data:gj,promoteId:undefined});
 
     // 下地: 太い暗線で経路を見せる
     map.addLayer({id:'flow-casing',type:'line',source:'flow',
       layout:{'line-cap':'round','line-join':'round'},
-      paint:{'line-color':'#05080c','line-width':['+',widthExpr(),2.4],'line-opacity':.85}});
+      paint:{'line-color':'#05080c','line-width':['+',['*',widthExpr(),1.5],3.2],'line-opacity':.9}});
 
     // 本体: 負荷率で着色
     map.addLayer({id:'flow-line',type:'line',source:'flow',
       layout:{'line-cap':'round','line-join':'round'},
-      paint:{'line-color':loadFactorExpr(),'line-width':widthExpr(),'line-opacity':.95}});
+      paint:{'line-color':loadFactorExpr(),'line-width':['*',widthExpr(),1.5],'line-opacity':1}});
 
     // 流れの向き: 破線パターンを送って流す。
     // 幾何は from→to（潮流の正方向）に揃えてあるので、
@@ -192,7 +314,7 @@ Promise.all([
     map.addLayer({id:'flow-dash',type:'line',source:'flow',
       filter:['==',['get','oriented'],true],
       layout:{'line-cap':'butt'},
-      paint:{'line-color':'#eaf2ff','line-width':['*',widthExpr(),0.5],
+      paint:{'line-color':'#eaf2ff','line-width':['*',widthExpr(),0.7],
              'line-opacity':.7,'line-dasharray':[0,4,3]}});
 
     // 安定度限界の強調（既定OFF）
@@ -202,9 +324,28 @@ Promise.all([
       paint:{'line-color':'#ffb454','line-width':['+',widthExpr(),5],'line-opacity':.30,'line-blur':2}});
 
     const n = s => gj.features.filter(s).length;
-    document.getElementById('n-flow').textContent = gj.features.length;
+    const fmt = v => v.toLocaleString('ja-JP');
+    document.getElementById('n-flow').textContent = fmt(gj.features.length);
     document.getElementById('n-stab').textContent = n(f=>f.properties.constraint==='安定度限界');
     document.getElementById('n-straight').textContent = n(f=>f.properties.geometry_kind==='straight');
+    if(net){
+      const nf=net.features;
+      document.getElementById('n-net').textContent = fmt(nf.filter(f=>!f.properties.c).length);
+      document.getElementById('n-cable').textContent = fmt(nf.filter(f=>f.properties.c).length);
+      document.getElementById('n-nokv').textContent = fmt(nf.filter(f=>!f.properties.kv).length);
+    }
+    if(plants){
+      const withMw = plants.features.filter(f=>f.properties.mw!=null).length;
+      document.getElementById('n-plant').textContent = fmt(withMw);
+      document.getElementById('n-plant-nomw').textContent = fmt(plants.features.length-withMw);
+    }
+    if(subs){
+      const by={};
+      subs.features.forEach(f=>{const c=f.properties.cat||'unknown'; by[c]=(by[c]||0)+1;});
+      document.querySelectorAll('[data-cat]').forEach(el=>{
+        el.textContent = fmt(by[el.dataset.cat]||0);
+      });
+    }
 
     animateDash();
     setStep(0);
@@ -261,8 +402,22 @@ Promise.all([
   document.getElementById('l-stab').onchange=e=>vis('flow-stab',e.target.checked);
   document.getElementById('l-straight').onchange=e=>{
     const f=e.target.checked?null:['!=',['get','geometry_kind'],'straight'];
-    ['flow-casing','flow-line','flow-dash'].forEach(l=>map.getLayer(l)&&map.setFilter(l,f));
+    ['flow-casing','flow-line'].forEach(l=>map.getLayer(l)&&map.setFilter(l,f));
   };
+  document.getElementById('l-net').onchange=e=>
+    ['net-hv','net-mv','net-lv'].forEach(l=>vis(l,e.target.checked));
+  document.getElementById('l-cable').onchange=e=>vis('net-cable',e.target.checked);
+  document.getElementById('l-nokv').onchange=e=>vis('net-nokv',e.target.checked);
+  document.getElementById('l-plant').onchange=e=>vis('plants',e.target.checked);
+  document.getElementById('l-plant-nomw').onchange=e=>vis('plants-nomw',e.target.checked);
+  // 変電所は種別ごとに出し入れする（OSMの分類をそのまま見せる）
+  const syncCats=()=>{
+    const on=[...document.querySelectorAll('.cat:checked')].map(i=>i.value);
+    if(!map.getLayer('subs')) return;
+    map.setLayoutProperty('subs','visibility',on.length?'visible':'none');
+    if(on.length) map.setFilter('subs',['in',['get','cat'],['literal',on]]);
+  };
+  document.querySelectorAll('.cat').forEach(i=>i.onchange=syncCats);
 
   // クリックで詳細
   map.on('click','flow-line',ev=>{
