@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>All-Japan-Grid — 実測潮流（observed）</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0e13; --panel:#111823; --line:#1e2836; --fg:#dfe6ef; --dim:#8b98a9;
+    --accent:#5ac8fa;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;background:rgba(17,24,35,.93);border:1px solid var(--line);
+    border-radius:10px;backdrop-filter:blur(8px)}
+  #side{top:14px;left:14px;width:274px;max-height:calc(100% - 190px);overflow-y:auto;padding:14px}
+  #side h1{margin:0 0 2px;font-size:15px;letter-spacing:.04em}
+  #side .sub{color:var(--dim);font-size:11px;line-height:1.5;margin-bottom:12px}
+  .grp{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+  .grp:first-of-type{border-top:0;padding-top:0}
+  .grp h2{margin:0 0 8px;font-size:11px;color:var(--dim);letter-spacing:.1em;font-weight:600}
+  label.row{display:flex;gap:8px;align-items:flex-start;margin:7px 0;font-size:12px;cursor:pointer}
+  label.row input{margin-top:2px;accent-color:var(--accent)}
+  label.row .d{color:var(--dim);font-size:10.5px;line-height:1.45;margin-top:1px}
+  .scale{display:flex;height:7px;border-radius:4px;overflow:hidden;margin:8px 0 3px}
+  .scale i{flex:1}
+  .ticks{display:flex;justify-content:space-between;color:var(--dim);font-size:10px}
+  .kvrow{display:flex;align-items:center;gap:7px;font-size:11px;margin:4px 0;color:var(--dim)}
+  .kvrow s{display:block;height:0;border-top-style:solid;width:24px;text-decoration:none}
+  #time{bottom:14px;left:50%;transform:translateX(-50%);width:min(720px,calc(100% - 28px));padding:12px 16px}
+  #time .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  #stamp{font-variant-numeric:tabular-nums;font-size:14px;letter-spacing:.03em}
+  #time .meta{color:var(--dim);font-size:11px}
+  #slider{width:100%;accent-color:var(--accent)}
+  button{background:#1b2534;color:var(--fg);border:1px solid var(--line);border-radius:6px;
+    padding:4px 11px;font-size:11.5px;cursor:pointer}
+  button:hover{background:#22304a}
+  #info{top:14px;right:14px;width:296px;padding:14px;display:none;font-size:12px}
+  #info h3{margin:0 0 3px;font-size:14px}
+  #info .path{color:var(--dim);font-size:11px;margin-bottom:10px}
+  #info table{width:100%;border-collapse:collapse}
+  #info td{padding:3px 0;vertical-align:top}
+  #info td:first-child{color:var(--dim);width:42%}
+  #info .warn{color:#ffb454}
+  .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;
+    border:1px solid var(--line);color:var(--dim);margin-left:6px}
+  .maplibregl-popup-content{background:#111823;color:#dfe6ef}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="side" class="panel">
+  <h1>All-Japan-Grid</h1>
+  <div class="sub">実測潮流 — 一般送配電事業者の公表値（observed）<br>
+    負荷率は<b>公表の運用容量</b>で割った値。理論熱容量ではない。</div>
+
+  <div class="grp">
+    <h2>潮流</h2>
+    <label class="row"><input type="checkbox" id="l-flow" checked>
+      <span>実測潮流<span class="badge" id="n-flow"></span>
+        <span class="d">色=負荷率、太さ=電圧、流れ=潮流の向き</span></span></label>
+    <div class="scale" id="scale"></div>
+    <div class="ticks"><span>0%</span><span>50%</span><span>100%</span><span>125%+</span></div>
+  </div>
+
+  <div class="grp">
+    <h2>運用容量の制約要因</h2>
+    <label class="row"><input type="checkbox" id="l-stab">
+      <span>安定度限界の線を強調<span class="badge" id="n-stab"></span>
+        <span class="d">熱容量では出せない値。理論値で代替すると最大3倍の過大評価になる</span></span></label>
+  </div>
+
+  <div class="grp">
+    <h2>ジオメトリの出所</h2>
+    <label class="row"><input type="checkbox" id="l-straight" checked>
+      <span>端点直線も表示<span class="badge" id="n-straight"></span>
+        <span class="d">実線形が特定できた線は OSM の実際の経路で描く（routed）。
+        特定できない分だけ端点を結ぶ直線</span></span></label>
+  </div>
+
+  <div class="grp">
+    <h2>電圧</h2>
+    <div id="kvlegend"></div>
+  </div>
+
+  <div class="grp">
+    <h2>出典</h2>
+    <div class="sub" style="margin:0">
+      系統情報の公表（様式5・空容量・潮流実績）／ 送電線形状 OpenStreetMap ODbL ／
+      背景 <a href="https://maps.gsi.go.jp/development/ichiran.html" style="color:var(--accent)">地理院タイル</a><br>
+      <span style="color:#ffb454">生値は再配布不可。私的検証用。</span>
+    </div>
+  </div>
+</div>
+
+<div id="info" class="panel"></div>
+
+<div id="time" class="panel">
+  <div class="head">
+    <div id="stamp">—</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="meta" id="tmeta"></span>
+      <button id="play">▶ 再生</button>
+    </div>
+  </div>
+  <input type="range" id="slider" min="0" max="167" value="0" step="1">
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+// 負荷率のカラーランプ。100%で赤に振り切り、125%超は白熱させる。
+const RAMP = [[0,'#2b7bba'],[.25,'#3fb27f'],[.5,'#e2c044'],[.75,'#e8833a'],[1,'#d94040'],[1.25,'#ff9de2']];
+// 電圧は「太さ」だけで表す。色は負荷率に一本化する
+// （凡例に電圧色を出すと、線の色が電圧なのか負荷率なのか読めなくなる）。
+const KV = [[500,3.4],[275,2.6],[220,2.1],[187,1.9],[154,1.7],[132,1.5],[110,1.3],[66,1.0]];
+const NODATA = '#48566a';   // 運用容量が無く負荷率を出せない線
+
+document.getElementById('scale').innerHTML =
+  RAMP.map(r=>`<i style="background:${r[1]}"></i>`).join('')
+  + `<i style="flex:0 0 26px;background:${NODATA}"></i>`;
+document.getElementById('kvlegend').innerHTML =
+  KV.map(k=>`<div class="kvrow"><s style="border-top-width:${k[1]}px;border-color:#9fb0c6"></s>${k[0]} kV</div>`).join('');
+
+const map = new maplibregl.Map({
+  container:'map',
+  style:{
+    version:8,
+    sources:{
+      gsi:{type:'raster',tileSize:256,
+        tiles:['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],
+        attribution:'地理院タイル'}
+    },
+    layers:[
+      {id:'bg',type:'background',paint:{'background-color':'#0a0e13'}},
+      {id:'gsi',type:'raster',source:'gsi',
+       paint:{'raster-opacity':0.30,'raster-saturation':-0.85,'raster-contrast':-0.1,'raster-brightness-max':0.55}}
+    ]
+  },
+  center:[134.0,34.2], zoom:6.6, hash:true
+});
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
+map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
+
+let SERIES=null, NSTEP=168, T0=null, idx=0, timer=null;
+
+function loadFactorExpr(){
+  // その時刻の負荷率(feature-state.lf) → 無ければ p95 → それも無ければ「データ無し」色。
+  // 運用容量が公表されていない線を 0% と同じ色で塗ると「空いている」と誤読される。
+  // negative は取らない（-1 を番兵に使う）。
+  return ['case',
+    ['<',['coalesce',['feature-state','lf'],['get','load_factor_p95'],-1],0], NODATA,
+    ['interpolate',['linear'],
+      ['coalesce',['feature-state','lf'],['get','load_factor_p95'],0],
+      ...RAMP.flatMap(r=>[r[0],r[1]])]];
+}
+function widthExpr(){
+  return ['interpolate',['linear'],['coalesce',['get','kv'],66],
+    ...KV.slice().reverse().flatMap(k=>[k[0],k[1]])];
+}
+
+Promise.all([
+  fetch('./flow_lines.geojson').then(r=>r.json()),
+  fetch('./flow_series.json').then(r=>r.json()).catch(()=>null)
+]).then(([gj,ser])=>{
+  SERIES = ser;
+  if(ser){ NSTEP = ser.n_steps||168; T0 = ser.t0;
+    document.getElementById('slider').max = NSTEP-1;
+    document.getElementById('tmeta').textContent = `${Object.keys(ser.series).length}本 × ${NSTEP}断面`;
+  }
+  gj.features.forEach((f,i)=>f.id=i);
+
+  map.on('load',()=>{
+    map.addSource('flow',{type:'geojson',data:gj,promoteId:undefined});
+
+    // 下地: 太い暗線で経路を見せる
+    map.addLayer({id:'flow-casing',type:'line',source:'flow',
+      layout:{'line-cap':'round','line-join':'round'},
+      paint:{'line-color':'#05080c','line-width':['+',widthExpr(),2.4],'line-opacity':.85}});
+
+    // 本体: 負荷率で着色
+    map.addLayer({id:'flow-line',type:'line',source:'flow',
+      layout:{'line-cap':'round','line-join':'round'},
+      paint:{'line-color':loadFactorExpr(),'line-width':widthExpr(),'line-opacity':.95}});
+
+    // 流れの向き: 破線パターンを送って流す。
+    // 幾何は from→to（潮流の正方向）に揃えてあるので、
+    // 正の潮流は前進、負の潮流は後退して見えるように位相を進める向きを変える。
+    map.addLayer({id:'flow-dash',type:'line',source:'flow',
+      filter:['==',['get','oriented'],true],
+      layout:{'line-cap':'butt'},
+      paint:{'line-color':'#eaf2ff','line-width':['*',widthExpr(),0.5],
+             'line-opacity':.7,'line-dasharray':[0,4,3]}});
+
+    // 安定度限界の強調（既定OFF）
+    map.addLayer({id:'flow-stab',type:'line',source:'flow',
+      filter:['==',['get','constraint'],'安定度限界'],
+      layout:{'line-cap':'round','visibility':'none'},
+      paint:{'line-color':'#ffb454','line-width':['+',widthExpr(),5],'line-opacity':.30,'line-blur':2}});
+
+    const n = s => gj.features.filter(s).length;
+    document.getElementById('n-flow').textContent = gj.features.length;
+    document.getElementById('n-stab').textContent = n(f=>f.properties.constraint==='安定度限界');
+    document.getElementById('n-straight').textContent = n(f=>f.properties.geometry_kind==='straight');
+
+    animateDash();
+    setStep(0);
+  });
+
+  // 破線パターンを1コマずつ送ると、線に沿って流れて見える。
+  // dasharray の先頭に空白を足していくのが定石（line-offset では流れない）。
+  const DASH=[[0,4,3],[0.5,4,2.5],[1,4,2],[1.5,4,1.5],[2,4,1],[2.5,4,0.5],[3,4,0],
+              [0,0.5,3,3.5],[0,1,3,3],[0,1.5,3,2.5],[0,2,3,2],[0,2.5,3,1.5],[0,3,3,1],[0,3.5,3,0.5]];
+  let step=0, lastT=0;
+  function animateDash(t){
+    if(t-lastT>70){            // 毎フレームだと速すぎるので間引く
+      lastT=t; step=(step+1)%DASH.length;
+      if(map.getLayer('flow-dash'))
+        map.setPaintProperty('flow-dash','line-dasharray',DASH[step]);
+    }
+    requestAnimationFrame(animateDash);
+  }
+
+  function setStep(i){
+    idx=i;
+    document.getElementById('slider').value=i;
+    if(SERIES&&SERIES.series){
+      gj.features.forEach(f=>{
+        const v=(SERIES.series[f.properties.line_id]||[])[i];
+        const op=f.properties.operational_mw;
+        let lf=null;
+        if(v!==undefined&&v!==null&&op) lf=Math.abs(v)/op;
+        map.setFeatureState({source:'flow',id:f.id},{lf:lf, mw:v??null});
+      });
+    }
+    // t0 は "2025/4/1 1:00" 形式。スラッシュ区切りはそのまま Date が解釈できる。
+    // ISO へ変換しようとすると "2025-4-1T1:00"（ゼロ埋め無し）になり NaN になる。
+    const d = T0 ? new Date(T0) : null;
+    if(d && !isNaN(d)){
+      const t = new Date(d.getTime() + i*3600*1000);
+      document.getElementById('stamp').textContent =
+        t.toLocaleString('ja-JP',{month:'numeric',day:'numeric',weekday:'short',
+                                  hour:'2-digit',minute:'2-digit'});
+    } else {
+      document.getElementById('stamp').textContent = `断面 ${i+1}/${NSTEP}`;
+    }
+  }
+  document.getElementById('slider').oninput=e=>setStep(+e.target.value);
+  document.getElementById('play').onclick=e=>{
+    if(timer){clearInterval(timer);timer=null;e.target.textContent='▶ 再生';}
+    else{timer=setInterval(()=>setStep((idx+1)%NSTEP),260);e.target.textContent='❚❚ 停止';}
+  };
+
+  // レイヤ切替
+  const vis=(id,on)=>map.getLayer(id)&&map.setLayoutProperty(id,'visibility',on?'visible':'none');
+  document.getElementById('l-flow').onchange=e=>
+    ['flow-casing','flow-line','flow-dash'].forEach(l=>vis(l,e.target.checked));
+  document.getElementById('l-stab').onchange=e=>vis('flow-stab',e.target.checked);
+  document.getElementById('l-straight').onchange=e=>{
+    const f=e.target.checked?null:['!=',['get','geometry_kind'],'straight'];
+    ['flow-casing','flow-line','flow-dash'].forEach(l=>map.getLayer(l)&&map.setFilter(l,f));
+  };
+
+  // クリックで詳細
+  map.on('click','flow-line',ev=>{
+    const p=ev.features[0].properties, st=map.getFeatureState({source:'flow',id:ev.features[0].id});
+    const f=(v,u='',d=1)=>(v===null||v===undefined||v==='')?'—':(typeof v==='number'?v.toFixed(d):v)+u;
+    const lf=st.lf!=null?st.lf:p.load_factor_p95;
+    document.getElementById('info').style.display='block';
+    document.getElementById('info').innerHTML=`
+      <h3>${p.line}</h3>
+      <div class="path">${p.from||'?'} → ${p.to||'?'} ／ ${f(p.kv,' kV',0)}
+        <span class="badge">${p.geometry_kind==='routed'?'実線形':'端点直線'}</span></div>
+      <table>
+        <tr><td>この時刻の潮流</td><td><b>${f(st.mw,' MW')}</b></td></tr>
+        <tr><td>負荷率</td><td><b>${lf!=null?(lf*100).toFixed(1)+' %':'—'}</b></td></tr>
+        <tr><td>運用容量</td><td>${f(p.operational_mw,' MW',0)}</td></tr>
+        <tr><td>制約要因</td><td class="${p.constraint==='安定度限界'?'warn':''}">${p.constraint||'—'}</td></tr>
+        <tr><td>設備容量</td><td>${f(p.facility_mw,' MW',0)} ／ ${f(p.circuits,'回線',0)}</td></tr>
+        <tr><td>実測 平均 / p95</td><td>${f(p.flow_mean_mw,' MW')} / ${f(p.flow_p95_abs_mw,' MW')}</td></tr>
+        <tr><td>逆潮流の割合</td><td>${p.reverse_share!=null?(p.reverse_share*100).toFixed(0)+' %':'—'}</td></tr>
+        <tr><td>R / X / (Y/2)</td><td>${f(p.R_pct,'',3)} / ${f(p.X_pct,'',3)} / ${f(p.B_half_pct,'',3)} %<br>
+          <span style="color:var(--dim);font-size:10px">1000MVAベース</span></td></tr>
+        <tr><td>観測断面数</td><td>${f(p.n_obs,'',0)}</td></tr>
+      </table>`;
+  });
+  map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
+  map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
+  map.on('click',ev=>{
+    if(!map.queryRenderedFeatures(ev.point,{layers:['flow-line']}).length)
+      document.getElementById('info').style.display='none';
+  });
+});
+</script>
+</body>
+</html>

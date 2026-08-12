@@ -44,10 +44,23 @@ def norm(s: str) -> str:
     return s
 
 
+# 事業者は施設種別を略記する: 西島根(変) / 本川(開) / 阿南(変換)。
+# 略記のままだと `西島根変電所` と一致しないので、展開した候補も作る。
+ABBREV = {
+    "(変)": "変電所", "(開)": "開閉所", "(発)": "発電所",
+    "(変換)": "変換所", "(switching)": "開閉所",
+}
+
+
 def variants(s: str) -> list[str]:
     """1つの名前から照合候補を作る。"""
     n = norm(s)
     out = [n]
+    # 略記の展開 `西島根(変)` → `西島根変電所` / `西島根`
+    for ab, full in ABBREV.items():
+        if n.endswith(ab):
+            stem = n[: -len(ab)]
+            out += [stem + full, stem]
     # 括弧併記 `新改開閉所（新改変電所）` → 両方を候補に
     m = re.match(r"^(.*?)[（(](.+?)[)）]$", n)
     if m:
@@ -64,21 +77,72 @@ MIN_KEY_LEN = 3          # これ未満のキーは登録しない
 MIN_CONTAINS_LEN = 4     # contains 照合は双方これ以上の長さを要求する
 
 
+SUBSTATIONS = ROOT / "docs" / "data" / "substations.geojson"
+_subs_cache: dict[str, list[dict]] | None = None
+
+
+def _centroid(geom: dict) -> tuple[float, float] | None:
+    """Point はそのまま、Polygon は外環の平均を代表点にする。"""
+    g, c = geom.get("type"), geom.get("coordinates")
+    if g == "Point":
+        return c[0], c[1]
+    ring = c[0] if g == "Polygon" else (c[0][0] if g == "MultiPolygon" else None)
+    if not ring:
+        return None
+    return sum(p[0] for p in ring) / len(ring), sum(p[1] for p in ring) / len(ring)
+
+
+def _substations_by_region() -> dict[str, list[dict]]:
+    """6,962件の変電所を地域別に索引する（1回だけ読む）。"""
+    global _subs_cache
+    if _subs_cache is not None:
+        return _subs_cache
+    _subs_cache = defaultdict(list)
+    if SUBSTATIONS.exists():
+        for f in json.loads(SUBSTATIONS.read_text(encoding="utf-8"))["features"]:
+            p = f.get("properties") or {}
+            name = p.get("name") or p.get("_display_name") or ""
+            xy = _centroid(f.get("geometry") or {})
+            if not name or not xy:
+                continue
+            _subs_cache[p.get("region") or ""].append(
+                {"name": name, "lon": xy[0], "lat": xy[1],
+                 "kv": p.get("voltage_kv"), "src": "substations"}
+            )
+    return _subs_cache
+
+
 def load_model(region: str) -> tuple[dict[str, list], list[dict]]:
-    path = BUILT / f"{region}.json"
-    if not path.exists():
-        return {}, []
-    d = json.loads(path.read_text(encoding="utf-8"))
+    """照合の母集団を作る。
+
+    建造モデルのノードだけでは足りない（`西島根変電所` `中能登変電所` などが
+    built に無く、四国500kV基幹すら引けなかった）。**6,962件の変電所レイヤも
+    母集団に入れる**。built を先に登録するので、両方にある名前は built が勝つ
+    （潮流計算の座標系と揃うため）。
+    """
     index: dict[str, list] = defaultdict(list)
-    for n in d["nodes"]:
-        name = n.get("name") or ""
-        if not name or "junction" in name:
-            continue
-        for v in variants(name):
+    edges: list[dict] = []
+
+    path = BUILT / f"{region}.json"
+    if path.exists():
+        d = json.loads(path.read_text(encoding="utf-8"))
+        edges = d["edges"]
+        for n in d["nodes"]:
+            name = n.get("name") or ""
+            if not name or "junction" in name:
+                continue
+            for v in variants(name):
+                if v in GENERIC or len(v) < MIN_KEY_LEN:
+                    continue
+                index[v].append(n)
+
+    for s in _substations_by_region().get(region, []):
+        for v in variants(s["name"]):
             if v in GENERIC or len(v) < MIN_KEY_LEN:
                 continue
-            index[v].append(n)
-    return index, d["edges"]
+            index[v].append(s)
+
+    return index, edges
 
 
 def resolve(name: str, index: dict[str, list]) -> tuple[str, dict | None]:
