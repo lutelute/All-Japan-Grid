@@ -38,6 +38,18 @@
   button{background:#1b2534;color:var(--fg);border:1px solid var(--line);border-radius:6px;
     padding:4px 11px;font-size:11.5px;cursor:pointer}
   button:hover{background:#22304a}
+  #summary{bottom:92px;left:50%;transform:translateX(-50%);width:min(720px,calc(100% - 28px));padding:11px 16px}
+  .sumhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  #sum-title{font-size:12.5px;letter-spacing:.03em}
+  #sum-area{background:#1b2534;color:var(--fg);border:1px solid var(--line);border-radius:5px;
+    padding:2px 7px;font-size:11px}
+  .sumrow{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;color:var(--dim)}
+  .suml{letter-spacing:.08em}
+  .bar{display:flex;height:11px;border-radius:3px;overflow:hidden;margin:5px 0 3px;background:#161f2c}
+  .bar i{display:block;height:100%}
+  .sumleg{display:flex;flex-wrap:wrap;gap:9px;font-size:10px;color:var(--dim)}
+  .sumleg span{display:flex;align-items:center;gap:4px}
+  .sumleg b{font-weight:600;color:var(--fg)}
   #info{top:14px;right:14px;width:296px;padding:14px;display:none;font-size:12px}
   #info h3{margin:0 0 3px;font-size:14px}
   #info .path{color:var(--dim);font-size:11px;margin-bottom:10px}
@@ -138,6 +150,19 @@
 </div>
 
 <div id="info" class="panel"></div>
+
+<div id="summary" class="panel">
+  <div class="sumhead">
+    <span id="sum-title">全国</span>
+    <select id="sum-area"></select>
+  </div>
+  <div class="sumrow"><span class="suml">電源構成</span><span id="sum-gen-total"></span></div>
+  <div id="sum-bar" class="bar"></div>
+  <div id="sum-legend" class="sumleg"></div>
+  <div class="sumrow" style="margin-top:9px"><span class="suml">潮流の負荷率</span><span id="sum-flow-total"></span></div>
+  <div id="sum-lf" class="bar"></div>
+  <div id="sum-lf-legend" class="sumleg"></div>
+</div>
 
 <div id="time" class="panel">
   <div class="head">
@@ -489,7 +514,70 @@ Promise.all([
     } else {
       document.getElementById('stamp').textContent = `断面 ${i+1}/${NSTEP}`;
     }
+    if (typeof updateSummary === 'function') updateSummary(i);
   }
+  // ---- エリア別サマリ ----
+  const AREAS = gen ? [...new Set(gen.features.map(f=>f.properties.area))].filter(Boolean).sort() : [];
+  const sel = document.getElementById('sum-area');
+  sel.innerHTML = ['<option value="">全国</option>']
+    .concat(AREAS.map(a=>`<option value="${a}">${a}</option>`)).join('');
+  // 潮流側の事業者キー → 発電側のエリア名（公表の表記が違う）
+  const U2A={hokkaido:'北海道',tohoku:'東北',tokyo:'東京',chubu:'中部',hokuriku:'北陸',
+             kansai:'関西',chugoku:'中国',shikoku:'四国',kyushu:'九州',okinawa:'沖縄'};
+  const LFBINS=[[0,.5,'#2b7bba','〜50%'],[.5,.8,'#3fb27f','50-80%'],
+                [.8,1,'#e8833a','80-100%'],[1,99,'#d94040','100%超']];
+
+  function updateSummary(i){
+    const area = sel.value;
+    document.getElementById('sum-title').textContent = area || '全国';
+    // 電源構成（その時刻の出力を燃料別に合計）
+    let byFuel={}, tot=0;
+    if(gen && GEN && GEN.series){
+      gen.features.forEach(f=>{
+        const p=f.properties;
+        if(area && p.area!==area) return;
+        const v=(GEN.series[p.uid]||[])[i];
+        if(v==null) return;
+        byFuel[p.fuel]=(byFuel[p.fuel]||0)+v; tot+=v;
+      });
+    }
+    const bar=document.getElementById('sum-bar'), leg=document.getElementById('sum-legend');
+    if(tot>0){
+      const ordered=GENFUEL.filter(g=>byFuel[g[0]]).sort((a,b)=>byFuel[b[0]]-byFuel[a[0]]);
+      bar.innerHTML = ordered.map(g=>
+        `<i style="width:${(byFuel[g[0]]/tot*100).toFixed(2)}%;background:${g[1]}"></i>`).join('');
+      leg.innerHTML = ordered.slice(0,6).map(g=>
+        `<span><i style="width:8px;height:8px;border-radius:2px;background:${g[1]};display:inline-block"></i>
+         ${g[0]} <b>${Math.round(byFuel[g[0]]).toLocaleString('ja-JP')}</b>MW</span>`).join('');
+    } else { bar.innerHTML=''; leg.innerHTML='<span>この時刻の実測なし</span>'; }
+    document.getElementById('sum-gen-total').textContent =
+      tot>0 ? `計 ${Math.round(tot).toLocaleString('ja-JP')} MW（実測ユニットのみ）` : '—';
+
+    // 潮流の負荷率分布（運用容量が公表されている線だけが対象）
+    const fi = HALF ? Math.floor(i/2) : i;
+    let bins=[0,0,0,0], n=0, nodata=0;
+    gj.features.forEach(f=>{
+      const p=f.properties;
+      if(area && U2A[p.utility]!==area) return;
+      const v=(SERIES&&SERIES.series&&SERIES.series[p.line_id]||[])[fi];
+      if(v==null || !p.operational_mw){ nodata++; return; }
+      const lf=Math.abs(v)/p.operational_mw; n++;
+      for(let k=0;k<LFBINS.length;k++) if(lf>=LFBINS[k][0]&&lf<LFBINS[k][1]){bins[k]++;break;}
+    });
+    const lfbar=document.getElementById('sum-lf'), lfleg=document.getElementById('sum-lf-legend');
+    if(n>0){
+      lfbar.innerHTML = LFBINS.map((b,k)=>
+        `<i style="width:${(bins[k]/n*100).toFixed(2)}%;background:${b[2]}"></i>`).join('');
+      lfleg.innerHTML = LFBINS.map((b,k)=>
+        `<span><i style="width:8px;height:8px;border-radius:2px;background:${b[2]};display:inline-block"></i>
+         ${b[3]} <b>${bins[k]}</b></span>`).join('')
+        + `<span style="color:#8b98a9">容量未公表 <b>${nodata}</b></span>`;
+    } else { lfbar.innerHTML=''; lfleg.innerHTML='<span>対象なし</span>'; }
+    document.getElementById('sum-flow-total').textContent =
+      n>0 ? `${n} 本で算定` : '—';
+  }
+  sel.onchange=()=>updateSummary(idx);
+
   document.getElementById('slider').oninput=e=>setStep(+e.target.value);
   document.getElementById('play').onclick=e=>{
     if(timer){clearInterval(timer);timer=null;e.target.textContent='▶ 再生';}

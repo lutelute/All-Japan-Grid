@@ -42,8 +42,15 @@ def scope_of(filename: str) -> str:
     m = re.search(r"_((?:kikan|local)\d*)_", filename)
     if m:
         return m.group(1)
-    m = re.search(r"(154kV|66kV|kikan)", filename)
-    return m.group(1) if m else "?"
+    # 東京は jisseki_154kV05.csv / jisseki_chiba01.csv のように
+    # **電圧別と県別の連番ファイル**が混在する。ここを潰すと東京の設備IDは
+    # 列位置なので `tokyo:?:c12` が別ファイルの列12と衝突し、
+    # **別の線路の系列が混ざる**（運用容量の5.6倍という不可能な潮流が出た）。
+    # 取りこぼしを作らないため、jisseki_ 以降をそのまま scope にする。
+    m = re.search(r"jisseki_(.+?)\.csv$", filename)
+    if m:
+        return m.group(1)
+    return re.sub(r"\.csv$", "", filename)
 
 
 def scope_family(scope: str) -> str:
@@ -275,14 +282,20 @@ def main() -> int:
         # 同じ系統区分の空容量CSV（最新のもの）
         cap = pd.DataFrame()
         if utility == "tokyo":
-            # 東京は空容量が**県別**・潮流実績が**電圧別**で1:1に対応しない。
-            # 全県を縦に積んで1つの表にし、線路名で引く。
+            # 東京の潮流実績は「電圧別（154kV/kikan）」と「県別（chiba01…）」が混在する。
+            # **県別ファイルはその県の空容量だけで照合する** — 同名線路が複数県に
+            # 実在する（小北線=埼玉126MW/栃木1131MW）ため、全県を混ぜると誤マッチする。
+            pref = re.sub(r"\d+$", "", scope)          # chiba01 → chiba
+            pats = ([f"tokyo/capacity/csv_yosochoryu_{pref}/*soudensen*.csv"]
+                    if pref not in ("154kV", "kikan", "")
+                    else ["tokyo/capacity/*/*soudensen*.csv"])
             frames = []
-            for p in sorted(SRC.glob("tokyo/capacity/*/*soudensen*.csv")):
-                try:
-                    frames.append(read_capacity(p))
-                except Exception:  # noqa: BLE001
-                    continue
+            for pat in pats:
+                for path in sorted(SRC.glob(pat)):
+                    try:
+                        frames.append(read_capacity(path))
+                    except Exception:  # noqa: BLE001
+                        continue
             if frames:
                 cap = pd.concat(frames, ignore_index=True)
         else:
@@ -311,11 +324,21 @@ def main() -> int:
 
             if not cap.empty:
                 c = cap[cap.equipment_no == m.equipment_no]
+                rec["capacity_match"] = "by_no" if len(c) else None
                 if not len(c) and m["name"]:
                     # 東京は潮流実績側に設備番号が無い（列位置を代用している）ため
                     # 番号では突き合わない。**線路名**で結ぶ。
                     key = norm_name(m["name"])
                     c = cap[cap["name"].map(norm_name) == key]
+                    if len(c) > 1:
+                        # 同名の線路が複数県に実在する（小北線=埼玉126MW/栃木1131MW 等、
+                        # 1,057本中159本が重複）。東京の潮流実績には県の情報が無いので
+                        # **名前だけでは一意に決まらない**。誤った容量で負荷率を出すより、
+                        # 容量を付けない方がよい。
+                        rec["capacity_match"] = "ambiguous"
+                        c = c.iloc[0:0]
+                    elif len(c):
+                        rec["capacity_match"] = "by_name"
                 if len(c):
                     c = c.iloc[0]
                     rec.update({
@@ -323,6 +346,17 @@ def main() -> int:
                         "operational_mw": c.operational_mw, "constraint": c.constraint,
                         "expected_flow_mw": c.expected_flow_mw,
                     })
+                    # 実測が**設備容量(100%×回線数)**を超えるのは物理的にありえない。
+                    # 起きているなら別設備に結んでいる。容量を外して負荷率を出さない。
+                    # 判定は p95 ではなく **最大値**で行う。p95 だと 1 断面でも
+                    # 設備容量を超える明確な誤マッチを取りこぼす（66kV で多発した）。
+                    fac = rec.get("facility_mw")
+                    peak = rec.get("flow_max_abs_mw")
+                    if fac and peak and peak > fac:
+                        rec["capacity_match"] = "rejected_over_facility"
+                        for k in ("circuits", "facility_mw", "operational_mw",
+                                  "constraint", "expected_flow_mw"):
+                            rec.pop(k, None)
 
             i = sub_imp[sub_imp.equipment_no == m.equipment_no]
             if len(i):
