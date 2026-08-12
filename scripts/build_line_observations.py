@@ -134,17 +134,19 @@ def read_flow(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     raw = pd.read_csv(path, encoding="cp932", header=None, dtype=str)
     if str(raw.iloc[0, 0]).strip() in ("日時", "年月日時"):
         return read_flow_tepco(path)
+    # ラベルは社と年度で揺れる。関西は2020年度以降で
+    # 「送電線No.」→「No.」、「送電線名」→「線路名」に短縮され、電圧行が消えた。
     hdr = {}
     for i in range(min(8, len(raw))):
         key = str(raw.iloc[i, 0]).strip()
-        if "送電線No" in key:
-            hdr["no"] = i
+        if "送電線No" in key or key in ("No.", "No", "ＮＯ."):
+            hdr.setdefault("no", i)
         elif key.startswith("電圧"):
-            hdr["kv"] = i
-        elif "送電線名" in key:
-            hdr["name"] = i
+            hdr.setdefault("kv", i)
+        elif "送電線名" in key or key in ("線路名", "設備名"):
+            hdr.setdefault("name", i)
         elif "潮流正方向" in key:
-            hdr["dir"] = i
+            hdr.setdefault("dir", i)
     if "no" not in hdr or "name" not in hdr:
         raise ValueError(f"ヘッダを特定できない: {path.name}")
 
@@ -256,7 +258,8 @@ def main() -> int:
 
     rows: list[dict] = []
     # 標準様式（社共通の命名）＋ 東京の独自配置（ZIP展開したサブフォルダ）
-    flow_paths = (sorted(SRC.glob("*/flow_actual/jisseki_*_line_*.csv"))
+    # ZIP展開でサブフォルダが挟まる社がある（北海道は2階層下）ので再帰で拾う
+    flow_paths = (sorted(SRC.glob("*/flow_actual/**/jisseki_*_line_*.csv"))
                   + sorted(SRC.glob("tokyo/flow_actual/*/*/*.csv")))
     for flow_path in flow_paths:
         utility = flow_path.parts[len(SRC.parts)]

@@ -23,6 +23,7 @@ import json
 import re
 import sys
 import urllib.request
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin
@@ -67,6 +68,32 @@ def record(entry: dict) -> None:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
+def unzip_cp932(path: Path) -> int:
+    """ZIPを展開する。
+
+    日本の事業者ZIPはファイル名が CP932 で、UTF-8フラグが立っていない。
+    そのまま展開すると macOS の unzip が "Illegal byte sequence" で失敗するので、
+    cp437 経由で復号する（zipfile が格納名を cp437 として渡してくるため）。
+    """
+    out = path.with_suffix("")
+    out.mkdir(exist_ok=True)
+    n = 0
+    with zipfile.ZipFile(path) as zf:
+        for info in zf.infolist():
+            name = info.filename
+            if not (info.flag_bits & 0x800):
+                name = name.encode("cp437", errors="replace").decode("cp932", errors="replace")
+            name = name.replace("\\", "/")
+            dst = out / name
+            if info.is_dir() or name.endswith("/"):
+                dst.mkdir(parents=True, exist_ok=True)
+                continue
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(zf.read(info))
+            n += 1
+    return n
+
+
 def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
     name = url.split("/")[-1].split("?")[0]
     dest = OUTDIR / utility / kind / name
@@ -80,6 +107,12 @@ def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
         print(f"  ! FAIL {utility}/{kind}/{name}: {exc}")
         return None
     dest.write_bytes(blob)
+    if dest.suffix.lower() == ".zip":
+        try:
+            n = unzip_cp932(dest)
+            print(f"    展開 {n} ファイル")
+        except Exception as exc:  # noqa: BLE001
+            print(f"    ! 展開失敗 {name}: {exc}")
     entry = {
         "utility": utility,
         "kind": kind,

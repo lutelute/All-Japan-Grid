@@ -45,6 +45,12 @@ utilities:
       congestion:
         link_pattern: 'konzatsu_(sokuho|nendoho)_\d+_\d+[^"]*\.csv'
         verified: true     # 2026-08-11 リンク確認。混雑（空容量の近縁）— observed層
+      flow_actual:
+        link_pattern: 'tide_results_transmission\.zip'
+        verified: true     # 2026-08-12 確認。送電線の潮流実績(2021〜2025年度)。ZIPは自動展開
+      capacity:
+        link_pattern: 'sys_capa_(kikan|local\d+)\.zip'
+        verified: true     # 2026-08-12 確認。予想潮流等一覧表（基幹+ローカル24）
 
   tohoku:
     name: 東北電力ネットワーク
@@ -103,6 +109,9 @@ utilities:
         verified: true     # 2026-08-11 実DL成功 01_roop_2024_1.pdf (93,850B)
         format: pdf
         extracted: 80      # pdftotext -layout で機械抽出成功。2022/2023/2024年度版のうち最新のみ採用
+      flow_actual:
+        link_pattern: 'jisseki_kikan_line_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-12 確認。潮流実績（送電線）約11.9MB
       capacity:
         direct_url: https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
         verified: true     # 既取得(data/external/kansai_td/)。2026-08-07更新を確認。ほぼ毎日更新
