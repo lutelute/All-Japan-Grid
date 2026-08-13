@@ -140,6 +140,14 @@
   </div>
 
   <div class="grp">
+    <h2>再エネ設備（FIT認定・1MW以上）</h2>
+    <label class="row"><input type="checkbox" id="l-genfit">
+      <span>FIT再エネ<span class="badge" id="n-genfit"></span>
+        <span class="d">太陽光・風力・水力・バイオマス・地熱。円=認定出力、色=区分。
+        座標は市区町村代表点（番地ではない）</span></span></label>
+  </div>
+
+  <div class="grp">
     <h2>発電所（設備）</h2>
     <label class="row"><input type="checkbox" id="l-plant" checked>
       <span>容量が判明<span class="badge" id="n-plant"></span>
@@ -316,8 +324,9 @@ Promise.all([
   fetch('./plants.geojson').then(r=>r.json()).catch(()=>null),
   fetch('./generation.geojson').then(r=>r.json()).catch(()=>null),
   fetch('./generation_series.json').then(r=>r.json()).catch(()=>null),
-  fetch('./generators_large.geojson').then(r=>r.json()).catch(()=>null)
-]).then(([gj,ser,net,subs,plants,gen,genser,genmaster])=>{
+  fetch('./generators_large.geojson').then(r=>r.json()).catch(()=>null),
+  fetch('./generators_fit.geojson').then(r=>r.json()).catch(()=>null)
+]).then(([gj,ser,net,subs,plants,gen,genser,genmaster,genfit])=>{
   SERIES = ser;
   // 潮流は1時間値、発電は30分値。**細かい方(30分)を時間軸の基準**にし、
   // 潮流は index//2 で引く。粗い方に合わせると発電の半分を捨てることになる。
@@ -461,6 +470,19 @@ Promise.all([
           'circle-stroke-width':1.4,'circle-stroke-color':'#e8f0fb','circle-stroke-opacity':.9}});
     }
 
+    // ---- FIT再エネ設備（1MW以上・市区町村代表点）----
+    if(genfit){
+      map.addSource('genfit',{type:'geojson',data:genfit});
+      map.addLayer({id:'genfit',type:'circle',source:'genfit',minzoom:4,
+        layout:{visibility:'none'},
+        paint:{
+          'circle-radius':['interpolate',['linear'],['zoom'],
+            5,['interpolate',['linear'],['sqrt',['coalesce',['get','capacity_mw'],1]], 0,1.2, 5,2.5, 30,5],
+            10,['interpolate',['linear'],['sqrt',['coalesce',['get','capacity_mw'],1]], 0,2.5, 5,5, 30,11]],
+          'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
+          'circle-opacity':.6,'circle-stroke-width':.4,'circle-stroke-color':'#0a0e13'}});
+    }
+
     map.addSource('flow',{type:'geojson',data:gj,promoteId:undefined});
 
     // 下地: 太い暗線で経路を見せる
@@ -509,6 +531,7 @@ Promise.all([
       document.getElementById('n-nokv').textContent = fmt(nf.filter(f=>!f.properties.kv).length);
     }
     if(genmaster) document.getElementById('n-genm').textContent = fmt(genmaster.features.length);
+    if(genfit) document.getElementById('n-genfit').textContent = fmt(genfit.features.length);
     if(gen){
       const np = gen.features.filter(f=>f.properties.basis==='nameplate').length;
       document.getElementById('n-gen').textContent = fmt(np);
@@ -666,6 +689,7 @@ Promise.all([
     ['gen-cap','gen-base','gen-out'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
   document.getElementById('l-genm').onchange=e=>vis('genm',e.target.checked);
+  document.getElementById('l-genfit').onchange=e=>vis('genfit',e.target.checked);
   document.getElementById('l-plant').onchange=e=>vis('plants',e.target.checked);
   document.getElementById('l-plant-nomw').onchange=e=>vis('plants-nomw',e.target.checked);
   // 変電所は種別ごとに出し入れする（OSMの分類をそのまま見せる）
