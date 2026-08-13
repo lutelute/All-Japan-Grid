@@ -122,6 +122,16 @@
   </div>
 
   <div class="grp">
+    <h2>UC最適 vs 実績（構造チェック）</h2>
+    <label class="row"><input type="checkbox" id="l-uc">
+      <span>燃料構成シェアを比較<span class="badge" id="n-uc"></span>
+        <span class="d">fy2023 UC（<b>合成需要</b>・代表日24h）の燃料構成を、実績（FY2024週集計）と
+        地域別にシェア比較する。火力・原子力・水力に限定（実データに他電源が無いため）。
+        需要が合成なので<b>実測検証ではなくメリットオーダーの構造チェック</b>。
+        下の需給パネルに比較バーが出る。実測需要での厳密検証(fy2025r1)はその下に併記</span></span></label>
+  </div>
+
+  <div class="grp">
     <h2>電圧（線の太さ）</h2>
     <div id="kvlegend"></div>
   </div>
@@ -150,6 +160,15 @@
   <div class="sumrow" style="margin-top:9px"><span class="suml">潮流の負荷率</span><span id="sum-flow-total"></span></div>
   <div id="sum-lf" class="bar"></div>
   <div id="sum-lf-legend" class="sumleg"></div>
+  <div id="uccmp" style="display:none;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)">
+    <div class="sumrow"><span class="suml">UC最適 vs 実績（燃料シェア）</span><span id="uc-l1"></span></div>
+    <div style="font-size:9.5px;color:var(--dim);margin:3px 0 1px">実績（FY2024週集計）</div>
+    <div id="uc-obs" class="bar"></div>
+    <div style="font-size:9.5px;color:var(--dim);margin:4px 0 1px">UC最適（fy2023・合成需要・代表日24h）</div>
+    <div id="uc-uc" class="bar"></div>
+    <div id="uc-leg" class="sumleg" style="margin-top:4px"></div>
+    <div id="uc-ctx" style="font-size:9.5px;color:#8b98a9;margin-top:5px;white-space:pre-line"></div>
+  </div>
 </div>
 
 <div id="time" class="panel">
@@ -274,12 +293,23 @@ const GENFUEL=[['原子力','#c084fc'],['水力','#3bc9db'],['火力（石炭）
                ['火力（ガス）','#4dabf7'],['火力（石油）','#ff922b'],['地熱','#ff8787'],
                ['風力','#69db7c'],['太陽光・太陽熱','#ffd43b'],['その他','#868e96']];
 
+// UC突合用の対応表（実績=日本語 → UC=英字）。
+const AREA_JA2EN={'北海道':'hokkaido','東北':'tohoku','東京':'tokyo','中部':'chubu',
+  '北陸':'hokuriku','関西':'kansai','中国':'chugoku','四国':'shikoku','九州':'kyushu','沖縄':'okinawa'};
+const FUEL_JA2UC={'原子力':'nuclear','火力（ガス）':'lng','火力（石炭）':'coal','火力（石油）':'oil','水力':'hydro'};
+// 突合できるのは実データ312機が持つ火力・原子力・水力だけ。
+// solar/wind/揚水/地熱/バイオ/電池はOCCTOユニット別実績に無いので比較から外す（非対称を避ける）。
+const UCSET=[['nuclear','原子力','#c084fc'],['lng','火力(ガス)','#4dabf7'],
+  ['coal','火力(石炭)','#8d99ae'],['oil','火力(石油)','#ff922b'],['hydro','水力','#3bc9db']];
+
 Promise.all([
   fetch('./flow_lines.geojson').then(r=>r.json()),
   fetch('./flow_series.json').then(r=>r.json()).catch(()=>null),
   fetch('./generation.geojson').then(r=>r.json()).catch(()=>null),
-  fetch('./generation_series.json').then(r=>r.json()).catch(()=>null)
-]).then(([gj,ser,gen,genser])=>{
+  fetch('./generation_series.json').then(r=>r.json()).catch(()=>null),
+  fetch('./uc_dispatch.json').then(r=>r.json()).catch(()=>null),      // A: オフラインfy2023 UC
+  fetch('./uc_validation.json').then(r=>r.json()).catch(()=>null)     // B: 実測需要検証(fy2025r1)
+]).then(([gj,ser,gen,genser,ucd,ucv])=>{
   SERIES = ser;
   // 潮流は1時間値、発電は30分値。細かい方(30分)を時間軸の基準にし、
   // 潮流は index//2 で引く。粗い方に合わせると発電の半分を捨てることになる。
@@ -524,7 +554,64 @@ Promise.all([
       n>0 ? `${n} 本で算定` : '—';
   }
   window.updateSummary = updateSummary;
-  sel.onchange=()=>updateSummary(idx);
+
+  // ---- UC最適 vs 実績（構造チェック・静的な集計比較）----
+  // 実績を region(en)×ucfuel で週集計（MW合計＝エネルギー比例）。時刻に依らない静的値。
+  const obsAgg={};
+  if(gen && GEN && GEN.series){
+    gen.features.forEach(f=>{
+      const p=f.properties;
+      const reg=AREA_JA2EN[p.area], uf=FUEL_JA2UC[p.fuel];
+      if(!reg||!uf) return;
+      const arr=GEN.series[p.uid]||[];
+      let s=0; for(const v of arr) if(v!=null) s+=v;
+      (obsAgg[reg]=obsAgg[reg]||{})[uf]=(obsAgg[reg][uf]||0)+s;
+    });
+  }
+  const shareOf=m=>{ let tot=0; UCSET.forEach(([k])=>tot+=(m[k]||0));
+    const out={}; UCSET.forEach(([k])=>out[k]=tot>0?(m[k]||0)/tot:0); return {out,tot}; };
+  const ucAggFor=region=>{ const s=(ucd&&ucd.series&&ucd.series[region])||{};
+    const m={}; UCSET.forEach(([k])=>{ m[k]=(s[k]||[]).reduce((x,y)=>x+(y||0),0); }); return m; };
+
+  function renderUC(){
+    const box=document.getElementById('uccmp');
+    if(!document.getElementById('l-uc').checked){ box.style.display='none'; return; }
+    box.style.display='block';
+    const areaJa=sel.value;
+    const regions = areaJa ? [AREA_JA2EN[areaJa]].filter(Boolean)
+                           : Object.values(AREA_JA2EN);
+    const obs={}, ucm={}; UCSET.forEach(([k])=>{obs[k]=0;ucm[k]=0;});
+    regions.forEach(r=>{
+      const o=obsAgg[r]||{}; UCSET.forEach(([k])=>obs[k]+=(o[k]||0));
+      const u=ucAggFor(r);   UCSET.forEach(([k])=>ucm[k]+=(u[k]||0));
+    });
+    const os=shareOf(obs), us=shareOf(ucm);
+    const bar=sh=>UCSET.map(([k,,c])=>`<i style="width:${(sh.out[k]*100).toFixed(2)}%;background:${c}"></i>`).join('');
+    document.getElementById('uc-obs').innerHTML = os.tot>0?bar(os):'';
+    document.getElementById('uc-uc').innerHTML  = us.tot>0?bar(us):'';
+    document.getElementById('uc-leg').innerHTML = UCSET.map(([k,lab,c])=>
+      `<span><i style="width:8px;height:8px;border-radius:2px;background:${c};display:inline-block"></i>${lab}</span>`).join('');
+    // 構造L1（share L1 pp = Σ|obs share − uc share|×100）。uc_validate の share_l1_pp と同じ定義。
+    let l1=null;
+    if(os.tot>0&&us.tot>0){ l1=0; UCSET.forEach(([k])=>l1+=Math.abs(os.out[k]-us.out[k])); l1*=100; }
+    document.getElementById('uc-l1').textContent = l1!=null?`構造L1 ${l1.toFixed(1)} pp`:'—';
+    // ラベル（需要の出所と暦ズレを必ず明示）＋ B: 実測需要検証(fy2025r1)の該当値
+    let ctx='UC=fy2023 合成需要・代表日24h ／ 実績=FY2024週集計・火力/原子力/水力に限定。生の暦は一致しない。';
+    if(ucv&&ucv.summary&&ucv.summary.l1_pp_by_region){
+      const byr=ucv.summary.l1_pp_by_region;
+      if(areaJa){ const r=AREA_JA2EN[areaJa];
+        if(byr[r]!=null) ctx+=`\n実測需要検証(fy2025r1・2025-08-06): この地域 L1 ${byr[r]} pp`; }
+      ctx+=`\n実測需要検証 全体平均 ${ucv.summary.l1_pp_mean} pp（${Object.keys(byr).length}社・実測需要）`;
+    }
+    document.getElementById('uc-ctx').textContent = ctx;
+  }
+  window.renderUC = renderUC;
+  if(gen){
+    const withUC = Object.keys(obsAgg).length;
+    document.getElementById('n-uc').textContent = ucd ? `${withUC}地域` : 'UC無';
+  }
+
+  sel.onchange=()=>{ updateSummary(idx); renderUC(); };
 
   document.getElementById('slider').oninput=e=>setStep(+e.target.value);
   document.getElementById('play').onclick=e=>{
@@ -540,6 +627,7 @@ Promise.all([
   document.getElementById('l-straight').onchange=e=>{ showStraight=e.target.checked; applyFlowFilters(); };
   document.getElementById('l-gen').onchange=e=>vis('gen-out',e.target.checked);
   document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
+  document.getElementById('l-uc').onchange=()=>renderUC();
 
   // 電圧フィルタ（排他ボタン）
   document.querySelectorAll('#kvfilter button').forEach(b=>b.onclick=()=>{
