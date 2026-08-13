@@ -69,12 +69,12 @@ def from_occto() -> pd.DataFrame:
 
 def from_fit() -> pd.DataFrame:
     """FIT 認定情報 → 再エネ設備マスタ（個人情報は落とす）。"""
-    files = sorted(glob.glob(str(FIT / "fit_*.xlsx")))
+    files = sorted(glob.glob(str(FIT / "*.xlsx")))
     if not files:
         return pd.DataFrame()
     rows = []
     for f in files:
-        pref = re.search(r"fit_\d+\.(.+?)_\d+\.xlsx", Path(f).name)
+        pref = re.search(r"\d+\.(.+?)_\d+\.xlsx", Path(f).name)
         pref = pref.group(1) if pref else ""
         try:
             d = pd.read_excel(f, sheet_name="認定設備", header=2, dtype=str)
