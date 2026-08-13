@@ -45,6 +45,10 @@ import math
 # 端点直線の上限。実在の送電線区間はどんなに長くてもこの程度に収まる。
 # これを超える直線は、同名の別施設を掴んだ誤対応（画面を斜めに横切る線になる）。
 MAX_SPAN_KM = 120.0
+# 同名 way を1本の線路にまとめるとき、離れすぎたセグメントは別の同名線路。
+# つなげると地図上で飛び地になり「ブツギレ」に見える。**繋げずに落とす**
+# （実データに無い接続を描くのは捏造なので、隙間は隙間のまま残す）。
+SEGMENT_LINK_KM = 3.0
 
 
 def haversine_km(a_lon, a_lat, b_lon, b_lat) -> float:
@@ -120,6 +124,51 @@ def load_osm_lines(region: str) -> dict[str, list[dict]]:
             if len(key) >= 3:
                 index[key].append({"coords": geom["coordinates"], "props": p})
     return index
+
+
+def keep_main_cluster(parts: list[list]) -> list[list]:
+    """端点が近いセグメントだけを1本の線路とみなし、最大の塊を返す。
+
+    同名 way には別地域の同名線路が混ざる（実測で最大135kmの飛びがあった）。
+    近接グラフの連結成分に分け、**最も総延長が長い成分だけ**を採る。
+    落とした分は繋がない — 無い接続を描くより、描かない方がよい。
+    """
+    n = len(parts)
+    if n <= 1:
+        return parts
+    ends = [(p[0], p[-1]) for p in parts]
+
+    def near(i, j) -> bool:
+        return min(haversine_km(a[0], a[1], b[0], b[1])
+                   for a in ends[i] for b in ends[j]) <= SEGMENT_LINK_KM
+
+    parent = list(range(n))
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            if near(i, j):
+                parent[find(i)] = find(j)
+
+    groups: dict[int, list[int]] = defaultdict(list)
+    for i in range(n):
+        groups[find(i)].append(i)
+
+    def length(idx_list) -> float:
+        t = 0.0
+        for i in idx_list:
+            c = parts[i]
+            for k in range(len(c) - 1):
+                t += haversine_km(c[k][0], c[k][1], c[k + 1][0], c[k + 1][1])
+        return t
+
+    best = max(groups.values(), key=length)
+    return [parts[i] for i in best]
 
 
 def line_id(utility: str, scope: str, no: object) -> str:
@@ -246,8 +295,12 @@ def main() -> int:
                 else:
                     # 複数way に分割された線路。セグメントの並び順までは決められないので
                     # 向きは保証しない（oriented=False のまま）。
-                    geometry = {"type": "MultiLineString",
-                                "coordinates": [h["coords"] for h in hits]}
+                    parts = keep_main_cluster([h["coords"] for h in hits])
+                    if len(parts) < len(hits):
+                        stat["dropped_far_segments"] += len(hits) - len(parts)
+                    geometry = ({"type": "LineString", "coordinates": parts[0]}
+                                if len(parts) == 1
+                                else {"type": "MultiLineString", "coordinates": parts})
             else:
                 frm = str(clean(r.get("from_node")) or "")
                 to = str(clean(r.get("to_node")) or "")
@@ -327,6 +380,7 @@ def main() -> int:
     print(f"  実線形 routed   {stat['routed']}")
     print(f"  端点直線 straight {stat['straight']}")
     print(f"  距離超過で棄却    {stat['rejected_span']}  (>{MAX_SPAN_KM:.0f}km)")
+    print(f"  飛び地セグメント除去 {stat['dropped_far_segments']}  (>{SEGMENT_LINK_KM:.0f}km離れ)")
     print(f"  配置できず       {stat['unplaced']}")
     print(f"  運用容量つき {n_cap} / インピーダンスつき {n_imp}")
     print(f"→ {dest.relative_to(ROOT)}  {dest.stat().st_size:,}B")
