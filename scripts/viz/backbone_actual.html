@@ -578,8 +578,11 @@ Promise.all([
     if(!document.getElementById('l-uc').checked){ box.style.display='none'; return; }
     box.style.display='block';
     const areaJa=sel.value;
+    // 全国は「実績に存在する地域だけ」でUC側も合算し、対象地域を揃える。
+    // 沖縄は実データ(OCCTOユニット別実績)に無いので、UCの沖縄を混ぜると
+    // 分母の地域数が食い違い、シェア比較が非対称になる。
     const regions = areaJa ? [AREA_JA2EN[areaJa]].filter(Boolean)
-                           : Object.values(AREA_JA2EN);
+                           : Object.keys(obsAgg);
     const obs={}, ucm={}; UCSET.forEach(([k])=>{obs[k]=0;ucm[k]=0;});
     regions.forEach(r=>{
       const o=obsAgg[r]||{}; UCSET.forEach(([k])=>obs[k]+=(o[k]||0));
