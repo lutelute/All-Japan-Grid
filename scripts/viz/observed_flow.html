@@ -124,7 +124,7 @@
     <h2>発電実績（OCCTO・30分値）</h2>
     <label class="row"><input type="checkbox" id="l-gen" checked>
       <span>稼働ユニット<span class="badge" id="n-gen"></span>
-        <span class="d">円形ゲージ: 全周=容量、満ちた弧=その時刻の出力率。色=燃料、125%超=白</span></span></label>
+        <span class="d">円形ゲージ: リング=定格容量(円の大きさ)、満ち具合=定格に対する出力率(弧＋内側の面積)。色=燃料、125%超=白</span></span></label>
     <label class="row"><input type="checkbox" id="l-gen-peak">
       <span>容量が不明なユニットも含める<span class="badge" id="n-gen-peak"></span>
         <span class="d">分母が定格でなく<b>期間内ピーク</b>になるため、
@@ -443,13 +443,18 @@ Promise.all([
         return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
       }
       function gaugeSVG(color, frac, over){
+        // 外リング(固定)＝定格100%の基準。中の弧＝定格比の出力(HPゲージ)。
+        // さらに**内側ディスクの面積を定格比に比例**させる(半径=√frac)ので、
+        // 円が小さい発電所でも「どれだけ満ちているか＝定格に対する割合」が一目で分かる。
         const ring = over ? '#ffffff' : color;
-        const arc = arcPath(Math.min(frac,1));
+        const f = Math.min(frac,1);
+        const arc = arcPath(f);
+        const inner = (R-SW*0.5)*Math.sqrt(f);   // 面積 ∝ frac
         return `<svg xmlns="http://www.w3.org/2000/svg" width="${2*C}" height="${2*C}" viewBox="0 0 ${2*C} ${2*C}">
-          <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="#0c1118" stroke-width="${SW}" stroke-opacity="0.85"/>
+          <circle cx="${C}" cy="${C}" r="${R}" fill="#0c1118" fill-opacity="0.45"/>
           <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="#2a3646" stroke-width="${SW}" stroke-opacity="0.7"/>
+          ${inner>0.3?`<circle cx="${C}" cy="${C}" r="${inner.toFixed(2)}" fill="${ring}" fill-opacity="0.9"/>`:''}
           ${arc?`<path d="${arc}" fill="none" stroke="${ring}" stroke-width="${SW}" stroke-linecap="round"/>`:''}
-          <circle cx="${C}" cy="${C}" r="${R-SW}" fill="${color}" fill-opacity="${0.12+0.25*Math.min(frac,1)}"/>
         </svg>`;
       }
       function addImg(id, svg){
