@@ -67,6 +67,9 @@ CIRCUIT_TAIL_RX = re.compile(r"[0-9０-９･・,、\s]*[LＬ]\s*$")
 # 潮流実績の表には変圧器が混じる（東京の `1･2号連絡Tr` 等）。
 # 送電線として地図に載せると偽の設備を描くことになるので取り込み時点で落とす。
 TRANSFORMER_RX = re.compile(r"(Tr|ＴＲ|TR|変圧器|連絡Tr)\s*$", re.IGNORECASE)
+# 端点側にも変圧器が現れる（関西の `12T（西京都向町線）`）。
+# 数字+T で始まる端点は変圧器のバンク番号であって変電所名ではない。
+TRANSFORMER_NODE_RX = re.compile(r"^[0-9０-９]+\s*[TＴ][（(]")
 
 
 def norm_name(s: object) -> str:
@@ -321,6 +324,8 @@ def main() -> int:
             nm = str(m["name"] or "").strip()
             if not nm or nm.lower() == "nan" or TRANSFORMER_RX.search(nm):
                 continue          # 名前欠損と変圧器は送電線ではない
+            if TRANSFORMER_NODE_RX.match(str(m["flow_positive_from"] or "")):
+                continue          # 端点が変圧器バンク = 送電線ではない
             rec = {
                 "utility": utility, "scope": scope, "year": year,
                 "equipment_no": m.equipment_no, "name": m["name"],

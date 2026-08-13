@@ -50,6 +50,9 @@ ABBREV = {
     "(変)": "変電所", "(開)": "開閉所", "(発)": "発電所",
     "(変換)": "変換所", "(switching)": "開閉所",
 }
+# 英字の略記も使われる（四国は `高知SS` `坂出SS` 形式が主）。
+# SS=Substation / PS=Power Station / SW=Switching station。
+ABBREV_ALPHA = {"SS": "変電所", "PS": "発電所", "SW": "開閉所", "CS": "変換所"}
 
 
 def variants(s: str) -> list[str]:
@@ -61,10 +64,22 @@ def variants(s: str) -> list[str]:
         if n.endswith(ab):
             stem = n[: -len(ab)]
             out += [stem + full, stem]
+    # 英字略記 `高知SS` → `高知変電所` / `高知`
+    for ab, full in ABBREV_ALPHA.items():
+        if n.upper().endswith(ab) and len(n) > len(ab):
+            stem = n[: -len(ab)]
+            out += [stem + full, stem]
     # 括弧併記 `新改開閉所（新改変電所）` → 両方を候補に
     m = re.match(r"^(.*?)[（(](.+?)[)）]$", n)
     if m:
         out += [m.group(1), m.group(2)]
+    # 発電所併設の変電所は、OSM側では発電所として登録されていることがある
+    # （公表 `坂出火力変電所` ⇔ OSM `坂出火力発電所`）。両向きに候補を作る。
+    for v in list(out):
+        if v.endswith("変電所"):
+            out.append(v[:-3] + "発電所")
+        elif v.endswith("発電所"):
+            out.append(v[:-3] + "変電所")
     out += [SUFFIX_RX.sub("", v) for v in list(out)]
     return [v for v in dict.fromkeys(out) if v]
 
@@ -78,7 +93,9 @@ MIN_CONTAINS_LEN = 4     # contains 照合は双方これ以上の長さを要�
 
 
 SUBSTATIONS = ROOT / "docs" / "data" / "substations.geojson"
+PLANTS = ROOT / "docs" / "data" / "plants_all.geojson"
 _subs_cache: dict[str, list[dict]] | None = None
+_plants_cache: dict[str, list[dict]] | None = None
 
 
 def _centroid(geom: dict) -> tuple[float, float] | None:
@@ -112,6 +129,57 @@ def _substations_by_region() -> dict[str, list[dict]]:
     return _subs_cache
 
 
+def _plants_by_region() -> dict[str, list[dict]]:
+    """発電所19,138件を地域別に索引する。
+
+    公表の潮流実績は端点に発電所を挙げることがある（`坂出火力変電所`
+    `橘湾火力線`の相手端など）。変電所レイヤだけを母集団にすると
+    **両端のうち片方だけ解決できて線が引けない**状態になる。
+    """
+    global _plants_cache
+    if _plants_cache is not None:
+        return _plants_cache
+    _plants_cache = defaultdict(list)
+    if PLANTS.exists():
+        for f in json.loads(PLANTS.read_text(encoding="utf-8"))["features"]:
+            p = f.get("properties") or {}
+            name = p.get("_display_name") or ""
+            xy = _centroid(f.get("geometry") or {})
+            if not name or not xy:
+                continue
+            _plants_cache[p.get("_region") or ""].append(
+                {"name": name, "lon": xy[0], "lat": xy[1], "src": "plant"}
+            )
+    return _plants_cache
+
+
+_national_cache: dict[str, list] | None = None
+
+
+def _national_index() -> dict[str, list]:
+    """地域を跨いだ全国索引。
+
+    AGJ の region は**地理bboxで機械的に振っており、電力会社の供給エリアとは
+    一致しない**（`西播変電所`(兵庫/関西エリア)も `坂出火力発電所`(香川/四国エリア)も
+    region は `chugoku`）。事業者名で region を絞ると、これらが見えず端点が引けない。
+    地域内で見つからないときのフォールバックとして使う。
+    **候補が複数ある名前は同名別施設の恐れがあるので採らない**。
+    """
+    global _national_cache
+    if _national_cache is not None:
+        return _national_cache
+    idx: dict[str, list] = defaultdict(list)
+    for src in (_substations_by_region(), _plants_by_region()):
+        for items in src.values():
+            for s in items:
+                for v in variants(s["name"]):
+                    if v in GENERIC or len(v) < MIN_KEY_LEN:
+                        continue
+                    idx[v].append(s)
+    _national_cache = idx
+    return idx
+
+
 def load_model(region: str) -> tuple[dict[str, list], list[dict]]:
     """照合の母集団を作る。
 
@@ -142,10 +210,19 @@ def load_model(region: str) -> tuple[dict[str, list], list[dict]]:
                 continue
             index[v].append(s)
 
+    # 発電所は最後に登録する。変電所と同名のキーがあれば変電所が優先される
+    # （潮流の端点としては変電所側の座標の方が妥当なため）。
+    for s in _plants_by_region().get(region, []):
+        for v in variants(s["name"]):
+            if v in GENERIC or len(v) < MIN_KEY_LEN:
+                continue
+            index[v].append(s)
+
     return index, edges
 
 
-def resolve(name: str, index: dict[str, list]) -> tuple[str, dict | None]:
+def resolve(name: str, index: dict[str, list],
+            skip_national: bool = False) -> tuple[str, dict | None]:
     """名前をモデルノードへ解決し、(match_level, node) を返す。"""
     if ANON_RX.search(norm(name)):
         return "anonymized", None
@@ -165,6 +242,16 @@ def resolve(name: str, index: dict[str, list]) -> tuple[str, dict | None]:
                 continue
             if v in key or key in v:
                 return "contains", nodes[0]
+
+    # 5. national — 地域を跨いで探す。AGJ の region は地理bbox由来で
+    #    供給エリアと一致しないため、県境をまたぐ施設がここで拾える。
+    #    **一意に決まるときだけ**採る（同名別施設を掴まないため）。
+    if not skip_national:
+        nat = _national_index()
+        for v in vs:
+            hits = nat.get(v)
+            if hits and len({(round(h["lat"], 4), round(h["lon"], 4)) for h in hits}) == 1:
+                return "national", hits[0]
     return "unknown", None
 
 

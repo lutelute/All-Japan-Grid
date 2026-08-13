@@ -169,6 +169,21 @@ def main() -> int:
         if dropped:
             print(f"年度{args.fy}に無いため除外: {', '.join(sorted(dropped))}")
 
+    # 東京は相手端を公表しない（to が空）が、**同じ線路名が両端の変電所に
+    # 別々の列として現れる**（`釜無白根(変) - 天竜南線` と `新富士(変) - 天竜南線`）。
+    # 同名を持つ変電所がちょうど2つなら、その2点を結べば線になる。
+    # 3つ以上（分岐や同名別線）は一意に決まらないので採らない。
+    endpoint_pairs: dict[tuple[str, str], list[str]] = defaultdict(list)
+    for _, r in df.iterrows():
+        # clean() を通さないと NaN が str() で "nan" になり、
+        # 「相手端あり」と誤判定されてペア復元の分岐に入らない
+        frm = str(clean(r.get("from_node")) or "").strip()
+        to = str(clean(r.get("to_node")) or "").strip()
+        if frm and not to:
+            key = (r["utility"], norm_line(r["name"]))
+            if frm not in endpoint_pairs[key]:
+                endpoint_pairs[key].append(frm)
+
     features = []
     stat = defaultdict(int)
     for utility, sub in df.groupby("utility"):
@@ -219,7 +234,15 @@ def main() -> int:
                     geometry = {"type": "MultiLineString",
                                 "coordinates": [h["coords"] for h in hits]}
             else:
-                frm, to = str(r.get("from_node") or ""), str(r.get("to_node") or "")
+                frm = str(clean(r.get("from_node")) or "")
+                to = str(clean(r.get("to_node")) or "")
+                if frm and not to:
+                    # 相手端が非公開の社（東京）。同名線路が現れる変電所が
+                    # ちょうど2つのときだけ、その相手を to とみなす。
+                    peers = endpoint_pairs.get((utility, norm_line(r["name"])), [])
+                    if len(peers) == 2:
+                        to = peers[1] if peers[0] == frm else peers[0]
+                        stat["paired_endpoints"] += 1
                 if frm and to:
                     _, na = resolve(frm, node_index)
                     _, nb = resolve(to, node_index)
