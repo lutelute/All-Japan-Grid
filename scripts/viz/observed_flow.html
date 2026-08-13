@@ -102,6 +102,12 @@
     <label class="row"><input type="checkbox" id="l-cable" checked>
       <span>地下ケーブル<span class="badge" id="n-cable"></span>
         <span class="d">power=cable / location=underground</span></span></label>
+    <label class="row"><input type="checkbox" id="l-gsi">
+      <span>地理院の送電線を重ねる<span class="badge">ズーム14+</span>
+        <span class="d">国土地理院ベクトルタイル(PwrTrnsmL/vt_code=8202)。
+        提供がズーム14以上のみのため拡大時だけ出る。
+        <b>OSMと独立な幾何</b>なので、桃色の破線だけが出ている所は
+        <b>OSMに送電線が無い</b>区間。名前・電圧は持たないので潮流とは紐付かない</span></span></label>
     <label class="row"><input type="checkbox" id="l-nokv">
       <span>電圧不明の線を含める<span class="badge" id="n-nokv"></span>
         <span class="d">OSMに voltage タグが無い線。潮流計算には使えない</span></span></label>
@@ -197,7 +203,13 @@ const map = new maplibregl.Map({
     sources:{
       gsi:{type:'raster',tileSize:256,
         tiles:['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],
-        attribution:'地理院タイル'}
+        attribution:'地理院タイル'},
+      // 国土地理院 最適化ベクトルタイル。PwrTrnsmL(vt_code=8202)が送電線。
+      // OSMとは**独立した**幾何なので、OSMに無い線を炙り出せる。
+      // ただし属性は vt_code だけで名前も電圧も無く、潮流実績とは紐付けられない。
+      gsivt:{type:'vector',minzoom:14,maxzoom:16,
+        tiles:['https://cyberjapandata.gsi.go.jp/xyz/optimal_bvmap-v1/{z}/{x}/{y}.pbf'],
+        attribution:'地理院ベクトルタイル'}
     },
     layers:[
       {id:'bg',type:'background',paint:{'background-color':'#0a0e13'}},
@@ -372,6 +384,12 @@ Promise.all([
           'circle-color':['match',['get','cat'],...CAT.flatMap(c=>[c[0],c[2]]),'#8b98a9'],
           'circle-opacity':.85,'circle-stroke-width':.6,'circle-stroke-color':'#0a0e13'}});
     }
+
+    // ---- 地理院ベクトルタイルの送電線（OSMと独立な第2の幾何ソース）----
+    map.addLayer({id:'gsi-pwr',type:'line',source:'gsivt','source-layer':'PwrTrnsmL',
+      minzoom:14, layout:{'line-cap':'round','visibility':'none'},
+      paint:{'line-color':'#ff8fab','line-width':1.4,'line-opacity':.75,
+             'line-dasharray':[3,2]}});
 
     // ---- 発電実績（OCCTO ユニット別・30分値）----
     if(gen){
@@ -597,6 +615,7 @@ Promise.all([
     ['net-hv','net-mv','net-lv'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-cable').onchange=e=>vis('net-cable',e.target.checked);
   document.getElementById('l-nokv').onchange=e=>vis('net-nokv',e.target.checked);
+  document.getElementById('l-gsi').onchange=e=>vis('gsi-pwr',e.target.checked);
   document.getElementById('l-gen').onchange=e=>
     ['gen-cap','gen-out'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
