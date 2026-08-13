@@ -188,7 +188,7 @@ const RAMP = [[0,'#2b7bba'],[.25,'#3fb27f'],[.5,'#e2c044'],[.75,'#e8833a'],[1,'#
 // 電圧は「太さ」だけで表す。色は負荷率に一本化する
 // （凡例に電圧色を出すと、線の色が電圧なのか負荷率なのか読めなくなる）。
 const KV = [[500,3.4],[275,2.6],[220,2.1],[187,1.9],[154,1.7],[132,1.5],[110,1.3],[66,1.0]];
-const NODATA = '#48566a';   // 運用容量が無く負荷率を出せない線
+const NODATA = '#39434f';   // 運用容量が無く負荷率を出せない線（主役より必ず沈める）
 
 document.getElementById('scale').innerHTML =
   RAMP.map(r=>`<i style="background:${r[1]}"></i>`).join('')
@@ -214,7 +214,7 @@ const map = new maplibregl.Map({
     layers:[
       {id:'bg',type:'background',paint:{'background-color':'#0a0e13'}},
       {id:'gsi',type:'raster',source:'gsi',
-       paint:{'raster-opacity':0.22,'raster-saturation':-0.9,'raster-contrast':-0.15,'raster-brightness-max':0.45}}
+       paint:{'raster-opacity':0.34,'raster-saturation':-0.8,'raster-contrast':-0.05,'raster-brightness-max':0.62}}
     ]
   },
   center:[137.6,36.3], zoom:5.3, hash:true
