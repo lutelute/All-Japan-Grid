@@ -824,8 +824,12 @@ Promise.all([
   map.on('mouseleave','genm',()=>map.getCanvas().style.cursor='');
   map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
   map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
+  // 何もない所をクリックしたら情報パネルを閉じる。詳細を開くレイヤ
+  // （潮流・発電ユニット・大規模電源）を除外しないと、それらをクリックした
+  // 瞬間に開いた情報が同じクリックで閉じてしまう（発電クリックが効かない不具合）。
   map.on('click',ev=>{
-    if(!map.queryRenderedFeatures(ev.point,{layers:['flow-line']}).length)
+    const layers=['flow-line','gen-out','gen-peak','genm'].filter(l=>map.getLayer(l));
+    if(!map.queryRenderedFeatures(ev.point,{layers}).length)
       document.getElementById('info').style.display='none';
   });
 });
