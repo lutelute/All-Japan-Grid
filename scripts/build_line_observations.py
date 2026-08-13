@@ -64,6 +64,9 @@ TEPCO_BANK_RX = re.compile(r"^[0-9０-９･・,\s]*[BＢ]$")
 
 
 CIRCUIT_TAIL_RX = re.compile(r"[0-9０-９･・,、\s]*[LＬ]\s*$")
+# 潮流実績の表には変圧器が混じる（東京の `1･2号連絡Tr` 等）。
+# 送電線として地図に載せると偽の設備を描くことになるので取り込み時点で落とす。
+TRANSFORMER_RX = re.compile(r"(Tr|ＴＲ|TR|変圧器|連絡Tr)\s*$", re.IGNORECASE)
 
 
 def norm_name(s: object) -> str:
@@ -315,6 +318,9 @@ def main() -> int:
         sub_imp = imp[(imp.utility == utility) & (imp.scope_f == scope_family(scope))]
 
         for _, m in meta.iterrows():
+            nm = str(m["name"] or "").strip()
+            if not nm or nm.lower() == "nan" or TRANSFORMER_RX.search(nm):
+                continue          # 名前欠損と変圧器は送電線ではない
             rec = {
                 "utility": utility, "scope": scope, "year": year,
                 "equipment_no": m.equipment_no, "name": m["name"],

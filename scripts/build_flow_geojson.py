@@ -41,6 +41,9 @@ NORM = ROOT / "data" / "external" / "system_disclosure" / "normalized"
 OUT = ROOT / "data" / "external" / "system_disclosure" / "viz"
 
 CIRCUIT_RX = re.compile(r"[0-9０-９]+\s*[LＬ]\s*$")
+# `玄海幹線２Ｌ北線` のように回線番号のあとに方向が付く枝がある。
+# OSM 側は本線名（玄海幹線）で登録されているので、この尾を落として寄せる。
+BRANCH_RX = re.compile(r"[0-9０-９]+\s*[LＬ]\s*[東西南北][線]?\s*$")
 PAREN_RX = re.compile(r"[（(][^）)]*[）)]")
 
 
@@ -49,6 +52,7 @@ def norm_line(s: str) -> str:
     n = unicodedata.normalize("NFKC", str(s))
     n = PAREN_RX.sub("", n)
     n = re.sub(r"[\s　・,，]", "", n)
+    n = BRANCH_RX.sub("", n)
     n = CIRCUIT_RX.sub("", n)
     return n.strip()
 
