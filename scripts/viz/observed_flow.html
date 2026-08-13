@@ -132,6 +132,14 @@
   </div>
 
   <div class="grp">
+    <h2>大規模電源マスタ（OCCTO＋出典容量）</h2>
+    <label class="row"><input type="checkbox" id="l-genm">
+      <span>大規模電源<span class="badge" id="n-genm"></span>
+        <span class="d">原子力・火力・大水力など系統直結の電源。円=定格容量、色=燃料。
+        OSM由来の発電所DBに無い電源も含む（例: 柏崎刈羽は座標が無く未表示）</span></span></label>
+  </div>
+
+  <div class="grp">
     <h2>発電所（設備）</h2>
     <label class="row"><input type="checkbox" id="l-plant" checked>
       <span>容量が判明<span class="badge" id="n-plant"></span>
@@ -307,8 +315,9 @@ Promise.all([
   fetch('./substations.geojson').then(r=>r.json()).catch(()=>null),
   fetch('./plants.geojson').then(r=>r.json()).catch(()=>null),
   fetch('./generation.geojson').then(r=>r.json()).catch(()=>null),
-  fetch('./generation_series.json').then(r=>r.json()).catch(()=>null)
-]).then(([gj,ser,net,subs,plants,gen,genser])=>{
+  fetch('./generation_series.json').then(r=>r.json()).catch(()=>null),
+  fetch('./generators_large.geojson').then(r=>r.json()).catch(()=>null)
+]).then(([gj,ser,net,subs,plants,gen,genser,genmaster])=>{
   SERIES = ser;
   // 潮流は1時間値、発電は30分値。**細かい方(30分)を時間軸の基準**にし、
   // 潮流は index//2 で引く。粗い方に合わせると発電の半分を捨てることになる。
@@ -438,6 +447,20 @@ Promise.all([
                'circle-stroke-width':1,'circle-stroke-color':'#ffb454','circle-stroke-opacity':.5}});
     }
 
+    // ---- 大規模電源マスタ（OCCTO＋出典付き容量DB）----
+    if(genmaster){
+      map.addSource('genm',{type:'geojson',data:genmaster});
+      map.addLayer({id:'genm',type:'circle',source:'genm',minzoom:4,
+        layout:{visibility:'none'},
+        paint:{
+          'circle-radius':['interpolate',['linear'],['zoom'],
+            5,['interpolate',['linear'],['sqrt',['coalesce',['get','capacity_mw'],100]], 0,2, 30,4, 90,8],
+            9,['interpolate',['linear'],['sqrt',['coalesce',['get','capacity_mw'],100]], 0,4, 30,9, 90,17]],
+          'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
+          'circle-opacity':.5,
+          'circle-stroke-width':1.4,'circle-stroke-color':'#e8f0fb','circle-stroke-opacity':.9}});
+    }
+
     map.addSource('flow',{type:'geojson',data:gj,promoteId:undefined});
 
     // 下地: 太い暗線で経路を見せる
@@ -485,6 +508,7 @@ Promise.all([
       document.getElementById('n-cable').textContent = fmt(nf.filter(f=>f.properties.c).length);
       document.getElementById('n-nokv').textContent = fmt(nf.filter(f=>!f.properties.kv).length);
     }
+    if(genmaster) document.getElementById('n-genm').textContent = fmt(genmaster.features.length);
     if(gen){
       const np = gen.features.filter(f=>f.properties.basis==='nameplate').length;
       document.getElementById('n-gen').textContent = fmt(np);
@@ -641,6 +665,7 @@ Promise.all([
   document.getElementById('l-gen').onchange=e=>
     ['gen-cap','gen-base','gen-out'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
+  document.getElementById('l-genm').onchange=e=>vis('genm',e.target.checked);
   document.getElementById('l-plant').onchange=e=>vis('plants',e.target.checked);
   document.getElementById('l-plant-nomw').onchange=e=>vis('plants-nomw',e.target.checked);
   // 変電所は種別ごとに出し入れする（OSMの分類をそのまま見せる）
@@ -708,6 +733,24 @@ Promise.all([
     map.on('mouseleave',lid,()=>map.getCanvas().style.cursor='');
   });
 
+  map.on('click','genm',ev=>{
+    const p=ev.features[0].properties;
+    const f=(v,u='')=>(v==null||v==='')?'—':v+u;
+    document.getElementById('info').style.display='block';
+    document.getElementById('info').innerHTML=`
+      <h3>${p.name}</h3>
+      <div class="path">${p.fuel} ／ ${p.area} ／ ${f(p.n_units,'ユニット')}
+        <span class="badge">大規模電源マスタ</span></div>
+      <table>
+        <tr><td>定格容量</td><td><b>${f(p.capacity_mw,' MW')}</b></td></tr>
+        <tr><td>容量の出典</td><td>${p.capacity_source?('<a href="'+p.capacity_source+'" style="color:var(--accent)">'+String(p.capacity_source).slice(0,42)+'…</a>'):'—'}</td></tr>
+        <tr><td>ソース</td><td>OCCTO ユニット別発電実績</td></tr>
+      </table>
+      <div style="color:var(--dim);font-size:10.5px;margin-top:6px">
+        系統に直結する大規模電源。OSM由来の発電所DBを補う権威データ</div>`;
+  });
+  map.on('mouseenter','genm',()=>map.getCanvas().style.cursor='pointer');
+  map.on('mouseleave','genm',()=>map.getCanvas().style.cursor='');
   map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
   map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
   map.on('click',ev=>{

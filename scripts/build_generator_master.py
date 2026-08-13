@@ -42,23 +42,66 @@ def read_any(path: Path) -> pd.DataFrame:
     raise ValueError(f"decode failed: {path}")
 
 
+CAP_SOURCES = ROOT / "data" / "generator_capacity_sources.jsonl"
+
+
+def _capacity_lookup() -> dict[str, dict]:
+    """出典付き容量DB（generator_capacity_sources.jsonl・検証済み354行）を
+    発電所名で引けるようにする。定格容量を**出典つき**で補える。"""
+    import json as _json
+    idx: dict[str, dict] = {}
+    if not CAP_SOURCES.exists():
+        return idx
+    for line in CAP_SOURCES.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        r = _json.loads(line)
+        if r.get("field") != "capacity_mw" or r.get("value") in (None, ""):
+            continue
+        key = re.sub(r"[\s　]", "", str(r.get("name") or ""))
+        if key:
+            idx.setdefault(key, r)
+    return idx
+
+
+def _norm_plant(name: str) -> str:
+    n = re.sub(r"[\s　]", "", str(name))
+    # OCCTOは事業者を前置することがある（東京柏崎刈羽）。末尾の発電所名で引けるよう素の形も返す
+    return n
+
+
 def from_occto() -> pd.DataFrame:
     """OCCTO ユニット別発電実績 → 発電所単位の大規模電源マスタ。"""
     files = sorted(HKS.glob("hks_*.csv"))
     if not files:
         return pd.DataFrame()
     df = pd.concat([read_any(f) for f in files], ignore_index=True)
-    # 発電所コード単位に畳む（ユニットは束ねる）
+    caps = _capacity_lookup()
     rows = []
     for code, g in df.groupby("発電所コード"):
         r0 = g.iloc[0]
+        name = str(r0.get("発電所名") or "")
+        # 出典付き容量DBから定格を補完（名前一致・部分一致）
+        cap = None
+        cap_src = None
+        k = _norm_plant(name)
+        hit = caps.get(k)
+        if not hit:
+            for ck, cv in caps.items():
+                if ck and (ck in k or k in ck) and len(ck) >= 3:
+                    hit = cv
+                    break
+        if hit:
+            cap = hit.get("value")
+            cap_src = hit.get("source_url") or hit.get("source_title")
         rows.append({
             "gen_id": f"occto:{code}",
-            "name": str(r0.get("発電所名") or ""),
+            "name": name,
             "area": str(r0.get("エリア") or ""),
             "fuel": str(r0.get("発電方式・燃種") or ""),
             "n_units": g["ユニット名"].nunique(),
-            "capacity_mw": None,          # OCCTOは定格を持たない。供給計画/GEMで後補完
+            "capacity_mw": cap,           # 出典付き容量DBから補完（無ければ None）
+            "capacity_source": cap_src,
             "scale": "large",
             "source": "occto_hks",
             "source_note": "OCCTO ユニット別発電実績公開システム（速報値）",
