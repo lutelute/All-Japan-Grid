@@ -124,7 +124,7 @@
     <h2>発電実績（OCCTO・30分値）</h2>
     <label class="row"><input type="checkbox" id="l-gen" checked>
       <span>稼働ユニット<span class="badge" id="n-gen"></span>
-        <span class="d">外円=容量、内側の塗り=その時刻の出力。色=燃料</span></span></label>
+        <span class="d">円形ゲージ: 全周=容量、満ちた弧=その時刻の出力率。色=燃料、125%超=白</span></span></label>
     <label class="row"><input type="checkbox" id="l-gen-peak">
       <span>容量が不明なユニットも含める<span class="badge" id="n-gen-peak"></span>
         <span class="d">分母が定格でなく<b>期間内ピーク</b>になるため、
@@ -422,38 +422,72 @@ Promise.all([
              'line-dasharray':[3,2]}});
 
     // ---- 発電実績（OCCTO ユニット別・30分値）----
+    // 「円形の体力ゲージ」: 暗い全周リングの上に、その時刻の出力率ぶんだけ
+    // 燃料色の弧が12時位置から時計回りに満ちる（HPゲージのように）。
+    // MapLibreのcircleでは弧が描けないので、燃料×出力率(0..100%を刻む)の
+    // ドーナツSVGアイコンを動的生成し、icon-image を feature-state で切り替える。
     if(gen){
       gen.features.forEach((f,i)=>f.id=100000+i);   // flow と id 空間を分ける
       map.addSource('gen',{type:'geojson',data:gen});
-      const capExpr = ['coalesce',['get','nameplate_mw'],['get','peak_mw'],1];
-      const capAt = (a,b,c,d) => ['interpolate',['linear'],['sqrt',capExpr], 0,a, 10,b, 32,c, 75,d];
-      const fill = ['sqrt',['coalesce',['feature-state','r'],0]];
-      // zoom は最上位の interpolate にしか置けないので、掛け算は各ズーム段の中で行う
-      const radFilled = () => ['interpolate',['linear'],['zoom'],
-        5, ['*', capAt(0,1.4,3.6,6.5), fill],
-        9, ['*', capAt(1.4,3.4,7,12), fill]];
-      const rad = k => ['interpolate',['linear'],['zoom'],
-        5,['*',k,['interpolate',['linear'],['sqrt',capExpr], 0,0, 10,3.0, 32,6.8, 75,12]],
-        9,['*',k,['interpolate',['linear'],['sqrt',capExpr], 0,2.6, 10,6.5, 32,13, 75,22]]];
-      // 外円＝容量の枠。塗らずに輪郭だけ置く
-      map.addLayer({id:'gen-cap',type:'circle',source:'gen',minzoom:4,
+
+      const STEPS=20;   // 出力率の刻み（5%刻み）。over は125%超（過出力=白熱）
+      const R=15, SW=4.2, C=R+SW+2;   // アイコン半径・リング幅・キャンバス半径
+      function arcPath(frac){
+        // 12時起点・時計回りに frac(0..1) の弧
+        if(frac<=0) return '';
+        if(frac>=1) frac=0.9999;
+        const a0=-Math.PI/2, a1=a0+frac*2*Math.PI;
+        const x0=C+R*Math.cos(a0), y0=C+R*Math.sin(a0);
+        const x1=C+R*Math.cos(a1), y1=C+R*Math.sin(a1);
+        const large=frac>0.5?1:0;
+        return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+      }
+      function gaugeSVG(color, frac, over){
+        const ring = over ? '#ffffff' : color;
+        const arc = arcPath(Math.min(frac,1));
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${2*C}" height="${2*C}" viewBox="0 0 ${2*C} ${2*C}">
+          <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="#0c1118" stroke-width="${SW}" stroke-opacity="0.85"/>
+          <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="#2a3646" stroke-width="${SW}" stroke-opacity="0.7"/>
+          ${arc?`<path d="${arc}" fill="none" stroke="${ring}" stroke-width="${SW}" stroke-linecap="round"/>`:''}
+          <circle cx="${C}" cy="${C}" r="${R-SW}" fill="${color}" fill-opacity="${0.12+0.25*Math.min(frac,1)}"/>
+        </svg>`;
+      }
+      function addImg(id, svg){
+        return new Promise(res=>{
+          const img=new Image(2*C,2*C);
+          img.onload=()=>{ if(!map.hasImage(id)) map.addImage(id,img,{pixelRatio:2}); res(); };
+          img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+        });
+      }
+      // 燃料×出力率 の全アイコンを先に焼く
+      const jobs=[];
+      GENFUEL.forEach(([fuel,color])=>{
+        for(let k=0;k<=STEPS;k++) jobs.push(addImg(`g_${fuel}_${k}`, gaugeSVG(color,k/STEPS,false)));
+        jobs.push(addImg(`g_${fuel}_over`, gaugeSVG(color,1,true)));
+      });
+      Promise.all(jobs).then(()=>{ map.triggerRepaint&&map.triggerRepaint(); });
+
+      // icon-image は feature-state.step（0..STEPS / 'over'）で選ぶ
+      // layout プロパティは feature-state 不可。properties.step を setData で焼く。
+      const iconExpr = ['concat','g_',
+        ['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[0]]),'その他'],'_',
+        ['coalesce',['get','step'],'0']];
+      // アイコンサイズは容量で決める（体力ゲージの大きさ＝設備の大きさ）
+      const capExpr=['coalesce',['get','nameplate_mw'],['get','peak_mw'],1];
+      const sizeExpr = ['interpolate',['linear'],['zoom'],
+        5,['interpolate',['linear'],['sqrt',capExpr], 0,0.10, 30,0.28, 90,0.5],
+        10,['interpolate',['linear'],['sqrt',capExpr], 0,0.22, 30,0.55, 90,1.0]];
+
+      map.addLayer({id:'gen-out',type:'symbol',source:'gen',minzoom:4,
         filter:['==',['get','basis'],'nameplate'],
-        paint:{'circle-radius':rad(1),'circle-color':'rgba(0,0,0,0)',
-               'circle-stroke-width':1.2,'circle-stroke-color':'#c8d4e2','circle-stroke-opacity':.8}});
-      // 内円＝その時刻の出力。feature-state.r（0..1）で半径が満ちる
-      map.addLayer({id:'gen-out',type:'circle',source:'gen',minzoom:4,
-        filter:['==',['get','basis'],'nameplate'],
-        paint:{'circle-radius':radFilled(),
-               'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
-               'circle-opacity':.95}});
+        layout:{'icon-image':iconExpr,'icon-size':sizeExpr,
+                'icon-allow-overlap':true,'icon-ignore-placement':true}});
       // 容量不明（分母が期間ピーク）は別レイヤ。既定OFF
-      map.addLayer({id:'gen-peak',type:'circle',source:'gen',minzoom:6,
+      map.addLayer({id:'gen-peak',type:'symbol',source:'gen',minzoom:6,
         filter:['!=',['get','basis'],'nameplate'],
-        layout:{visibility:'none'},
-        paint:{'circle-radius':radFilled(),
-               'circle-color':['match',['get','fuel'],...GENFUEL.flatMap(f=>[f[0],f[1]]),'#868e96'],
-               'circle-opacity':.6,
-               'circle-stroke-width':1,'circle-stroke-color':'#ffb454','circle-stroke-opacity':.5}});
+        layout:{'icon-image':iconExpr,'icon-size':sizeExpr,visibility:'none',
+                'icon-allow-overlap':true,'icon-ignore-placement':true}});
+      window._GEN_STEPS=STEPS;
     }
 
     // ---- 大規模電源マスタ（OCCTO＋出典付き容量DB）----
@@ -507,11 +541,13 @@ Promise.all([
     // 流れの向き: 破線パターンを送って流す。
     // 幾何は from→to（潮流の正方向）に揃えてあるので、
     // 正の潮流は前進、負の潮流は後退して見えるように位相を進める向きを変える。
+    // 流れは**実線形(routed)だけ**に出す。端点直線に白い破線を乗せると
+    // 実在しない経路が鉄道のように目立ち、誤読を招く（straight は除外）。
     map.addLayer({id:'flow-dash',type:'line',source:'flow',
-      filter:['==',['get','oriented'],true],
+      filter:['all',['==',['get','oriented'],true],['==',['get','geometry_kind'],'routed']],
       layout:{'line-cap':'butt'},
-      paint:{'line-color':'#f5faff','line-width':['*',widthExpr(),0.85],
-             'line-opacity':.9,'line-dasharray':[0,4,3]}});
+      paint:{'line-color':'#dce8f5','line-width':['*',widthExpr(),0.6],
+             'line-opacity':.55,'line-dasharray':[0,4,3]}});
 
     // 安定度限界の強調（既定OFF）
     map.addLayer({id:'flow-stab',type:'line',source:'flow',
@@ -573,12 +609,19 @@ Promise.all([
     idx=i;
     document.getElementById('slider').value=i;
     if(GEN&&GEN.series&&gen){
+      const N=window._GEN_STEPS||20;
+      let changed=false;
       gen.features.forEach(f=>{
         const v=(GEN.series[f.properties.uid]||[])[i];
         const cap=f.properties.nameplate_mw||f.properties.peak_mw;
-        const r=(v!=null&&cap)?Math.max(0,Math.min(1.25,v/cap)):null;
-        map.setFeatureState({source:'gen',id:f.id},{r:r, mw:v??null});
+        const r=(v!=null&&cap)?Math.max(0,v/cap):null;
+        let step='0';
+        if(r!=null) step = r>1.25 ? 'over' : String(Math.round(Math.min(r,1)*N));
+        if(f.properties.step!==step){ f.properties.step=step; changed=true; }
+        f.properties._mw=v; f.properties._r=r;
       });
+      // 312ユニットぶんの step を焼いて一括更新（layoutはfeature-state不可のため）
+      const src=map.getSource('gen'); if(changed&&src) src.setData(gen);
     }
     if(SERIES&&SERIES.series){
       const fi = HALF ? Math.floor(i/2) : i;
@@ -686,7 +729,7 @@ Promise.all([
   document.getElementById('l-nokv').onchange=e=>vis('net-nokv',e.target.checked);
   document.getElementById('l-gsi').onchange=e=>vis('gsi-pwr',e.target.checked);
   document.getElementById('l-gen').onchange=e=>
-    ['gen-cap','gen-base','gen-out'].forEach(l=>vis(l,e.target.checked));
+    ['gen-out'].forEach(l=>vis(l,e.target.checked));
   document.getElementById('l-gen-peak').onchange=e=>vis('gen-peak',e.target.checked);
   document.getElementById('l-genm').onchange=e=>vis('genm',e.target.checked);
   document.getElementById('l-genfit').onchange=e=>vis('genfit',e.target.checked);
@@ -729,9 +772,10 @@ Promise.all([
         : ''}`;
   });
   // 発電ユニットのクリック
-  ['gen-out','gen-cap','gen-peak'].forEach(lid=>{
+  ['gen-out','gen-peak'].forEach(lid=>{
     map.on('click',lid,ev=>{
-      const p=ev.features[0].properties, st=map.getFeatureState({source:'gen',id:ev.features[0].id});
+      const p=ev.features[0].properties;
+      const st={mw:p._mw, r:p._r};
       const cap=p.nameplate_mw||p.peak_mw;
       const vals=(GEN&&GEN.series&&GEN.series[p.uid])||[];
       const col=(GENFUEL.find(g=>g[0]===p.fuel)||[])[1]||'#5ac8fa';
