@@ -214,7 +214,7 @@ const map = new maplibregl.Map({
     layers:[
       {id:'bg',type:'background',paint:{'background-color':'#0a0e13'}},
       {id:'gsi',type:'raster',source:'gsi',
-       paint:{'raster-opacity':0.30,'raster-saturation':-0.85,'raster-contrast':-0.1,'raster-brightness-max':0.55}}
+       paint:{'raster-opacity':0.22,'raster-saturation':-0.9,'raster-contrast':-0.15,'raster-brightness-max':0.45}}
     ]
   },
   center:[137.6,36.3], zoom:5.3, hash:true
@@ -316,15 +316,15 @@ Promise.all([
     if(net){
       map.addSource('net',{type:'geojson',data:net});
       const kvw = ['interpolate',['linear'],['coalesce',['get','kv'],20],
-                   20,0.5, 66,0.9, 154,1.3, 275,1.8, 500,2.4];
+                   20,0.8, 66,1.3, 154,1.9, 275,2.6, 500,3.4];
       // 電圧階級でレイヤを分け、低い階級は minzoom で遅らせる。
       // 40,075本を初期ズームから全部描くと重く、基幹系も埋もれて読めない。
       const tiers=[
-        ['net-hv', ['>=',['coalesce',['get','kv'],0],187], 0,   '#5b6675', .8],
+        ['net-hv', ['>=',['coalesce',['get','kv'],0],187], 0,   '#5aa9e6', .95],
         ['net-mv', ['all',['>=',['coalesce',['get','kv'],0],66],
-                          ['<',['coalesce',['get','kv'],0],187]], 7, '#49525f', .7],
+                          ['<',['coalesce',['get','kv'],0],187]], 6, '#4a86c8', .85],
         ['net-lv', ['all',['>',['coalesce',['get','kv'],0],0],
-                          ['<',['coalesce',['get','kv'],0],66]], 9, '#3b434e', .6],
+                          ['<',['coalesce',['get','kv'],0],66]], 8, '#3f6d9e', .7],
       ];
       tiers.forEach(([id,filt,mz,col,op])=>{
         map.addLayer({id,type:'line',source:'net',minzoom:mz,

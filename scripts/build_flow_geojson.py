@@ -40,6 +40,21 @@ from scripts.match_impedance_to_model import load_model, resolve  # noqa: E402
 NORM = ROOT / "data" / "external" / "system_disclosure" / "normalized"
 OUT = ROOT / "data" / "external" / "system_disclosure" / "viz"
 
+import math
+
+# 端点直線の上限。実在の送電線区間はどんなに長くてもこの程度に収まる。
+# これを超える直線は、同名の別施設を掴んだ誤対応（画面を斜めに横切る線になる）。
+MAX_SPAN_KM = 120.0
+
+
+def haversine_km(a_lon, a_lat, b_lon, b_lat) -> float:
+    r = 6371.0088
+    p1, p2 = math.radians(a_lat), math.radians(b_lat)
+    dp, dl = p2 - p1, math.radians(b_lon - a_lon)
+    h = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(h))
+
+
 CIRCUIT_RX = re.compile(r"[0-9０-９]+\s*[LＬ]\s*$")
 # `玄海幹線２Ｌ北線` のように回線番号のあとに方向が付く枝がある。
 # OSM 側は本線名（玄海幹線）で登録されているので、この尾を落として寄せる。
@@ -247,12 +262,17 @@ def main() -> int:
                     _, na = resolve(frm, node_index)
                     _, nb = resolve(to, node_index)
                     if na and nb:
-                        kind = "straight"
-                        stat["straight"] += 1
-                        oriented = True   # from→to の順で作るので向きは定義どおり
-                        geometry = {"type": "LineString",
-                                    "coordinates": [[na["lon"], na["lat"]],
-                                                    [nb["lon"], nb["lat"]]]}
+                        span = haversine_km(na["lon"], na["lat"], nb["lon"], nb["lat"])
+                        if span > MAX_SPAN_KM:
+                            # 同名の別施設を掴んだ誤対応。地図を斜めに横切る線になるので捨てる
+                            stat["rejected_span"] += 1
+                        else:
+                            kind = "straight"
+                            stat["straight"] += 1
+                            oriented = True   # from→to の順で作るので向きは定義どおり
+                            geometry = {"type": "LineString",
+                                        "coordinates": [[na["lon"], na["lat"]],
+                                                        [nb["lon"], nb["lat"]]]}
             if geometry is None:
                 stat["unplaced"] += 1
                 continue
@@ -306,6 +326,7 @@ def main() -> int:
     print(f"features {len(features)}")
     print(f"  実線形 routed   {stat['routed']}")
     print(f"  端点直線 straight {stat['straight']}")
+    print(f"  距離超過で棄却    {stat['rejected_span']}  (>{MAX_SPAN_KM:.0f}km)")
     print(f"  配置できず       {stat['unplaced']}")
     print(f"  運用容量つき {n_cap} / インピーダンスつき {n_imp}")
     print(f"→ {dest.relative_to(ROOT)}  {dest.stat().st_size:,}B")
