@@ -310,7 +310,11 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     max(int(e.get("par") or 1), 1))
                 n_edge_dup += 1
                 continue
-        params = get_line_parameters_safe(_nearest_kv(kv) or kv, freq)
+        # AGJ_CALIBRATED_LINES=1 で line_types.yaml の calibrated 値（介入#27:
+        # 187kV r=0.060 等・既定OFF）を使う。影響測定・採否判断用のスイッチ。
+        params = get_line_parameters_safe(
+            _nearest_kv(kv) or kv, freq,
+            calibrated=os.environ.get("AGJ_CALIBRATED_LINES", "") == "1")
         if params is None:
             n_edge_skipped += 1
             continue
