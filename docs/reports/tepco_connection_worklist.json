@@ -1,8 +1,17 @@
 {
   "note": "TEPCO公表(独立一次源)で解決した孤立変電所の接続worklist。正典built/all.jsonは不変=これを外せば元に戻る(③無効化)。座標は接続端点の位置情報のみ、生の潮流値は非収録。",
   "evidence": "TEPCO PG 系統情報公表 潮流実績CSV(変電所×線路名)",
+  "region_fix": [
+    {
+      "match": "大間町変電所",
+      "from": "hokkaido",
+      "to": "tohoku",
+      "evidence": "地理(下北半島=青森)・近隣佐井/大畑/東通がtohoku(calibrate_islands)・J-POWER大間幹線→上北"
+    }
+  ],
+  "region_fix_nodes": 6,
   "dryrun_off_main_before": 2130,
-  "dryrun_off_main_after": 2112,
+  "dryrun_off_main_after": 2107,
   "joined_subs": [
     "世田谷変電所",
     "墨東変電所",
@@ -15,7 +24,8 @@
     "東内幸町変電所",
     "常盤台変電所",
     "由良開閉所",
-    "上ノ国町変電所"
+    "上ノ国町変電所",
+    "大間町変電所_3 500kV"
   ],
   "worklist": [
     {

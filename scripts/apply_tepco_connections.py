@@ -86,14 +86,27 @@ def main() -> int:
                 "dc_tie": w["dc"],
             })
 
+    # region誤タグの是正(接続の前提)。大間町は青森県下北半島=tohoku(east島)だが
+    # hokkaidoタグ。calibrate_islands は operator無で検出できないが、地理と
+    # 近隣(佐井/大畑/東通=tohoku是正済)とJ-POWER大間幹線→上北から tohoku が正。
+    import copy
+    REGION_FIX = [{"match": "大間町変電所", "from": "hokkaido", "to": "tohoku",
+                   "evidence": "地理(下北半島=青森)・近隣佐井/大畑/東通がtohoku(calibrate_islands)・J-POWER大間幹線→上北"}]
+    nodes_fixed = copy.deepcopy(nodes)
+    n_relabel = 0
+    for n in nodes_fixed:
+        for rf in REGION_FIX:
+            if n.get("name") and rf["match"] in n["name"] and n.get("region") == rf["from"]:
+                n["region"] = rf["to"]; n_relabel += 1
+
     # 連結性: 適用前
     cc0 = compute_connectivity(nodes, edges)
     off0 = sum(1 for n in nodes if _k5(n["lat"], n["lon"]) not in cc0["main_keys"])
 
-    # 適用後(枝を足してドライラン再計算・正典は書かない)
+    # 適用後(region是正＋枝を足してドライラン再計算・正典は書かない)
     new_edges = edges + [{"a": w["from_pt"], "b": w["to_pt"]} for w in worklist]
-    cc1 = compute_connectivity(nodes, new_edges)
-    off1 = sum(1 for n in nodes if _k5(n["lat"], n["lon"]) not in cc1["main_keys"])
+    cc1 = compute_connectivity(nodes_fixed, new_edges)
+    off1 = sum(1 for n in nodes_fixed if _k5(n["lat"], n["lon"]) not in cc1["main_keys"])
 
     # 対象の孤立変電所が実際に合流したか
     joined = []
@@ -102,7 +115,8 @@ def main() -> int:
         if k not in cc0["main_keys"] and k in cc1["main_keys"]:
             joined.append(w["from_sub"])
 
-    print(f"適用worklist {len(worklist)} 本(TEPCO公表エビデンス)")
+    print(f"適用worklist {len(worklist)} 本(独立実証: TEPCO公表＋Wikipedia/J-POWER)")
+    print(f"region是正 {n_relabel}ノード(大間町 hokkaido→tohoku・接続の前提)")
     print(f"本系統外ノード: 適用前 {off0} → 適用後 {off1}  （{off0-off1} 減）")
     print(f"合流した孤立変電所 {len(joined)}: " + "、".join(joined))
     print("\n--- worklist(孤立→本系統) ---")
@@ -117,6 +131,7 @@ def main() -> int:
                  "正典built/all.jsonは不変=これを外せば元に戻る(③無効化)。"
                  "座標は接続端点の位置情報のみ、生の潮流値は非収録。"),
         "evidence": "TEPCO PG 系統情報公表 潮流実績CSV(変電所×線路名)",
+        "region_fix": REGION_FIX, "region_fix_nodes": n_relabel,
         "dryrun_off_main_before": off0, "dryrun_off_main_after": off1,
         "joined_subs": joined,
         "worklist": worklist,
