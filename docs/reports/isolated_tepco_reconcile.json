@@ -1,0 +1,541 @@
+{
+  "note": "東京の孤立A変電所をTEPCO公表接続(法定・系統情報公表)で突合。生CSV・潮流値は非収録(転載禁止)。ここは接続事実の派生のみ。",
+  "source": "TEPCO PG 潮流実績CSV 列名 (jisseki_kikan/154kV/県別) の変電所×線路",
+  "n_isolated_A_tokyo": 81,
+  "n_resolved": 10,
+  "n_partial": 1,
+  "n_notfound": 70,
+  "resolved": [
+    {
+      "name": "世田谷変電所",
+      "kv": 275.0,
+      "tepco_sub": "世田谷",
+      "lines": [
+        "世田谷線",
+        "葛南世田谷線"
+      ],
+      "connects_to_main": [
+        "荏田変電所 275kV",
+        "葛南変電所 275kV"
+      ],
+      "all_neighbors": [
+        "荏田",
+        "葛南"
+      ]
+    },
+    {
+      "name": "墨東変電所",
+      "kv": 275.0,
+      "tepco_sub": "墨東",
+      "lines": [
+        "墨東線"
+      ],
+      "connects_to_main": [
+        "北葛飾変電所 275kV"
+      ],
+      "all_neighbors": [
+        "北葛飾",
+        "永代橋"
+      ]
+    },
+    {
+      "name": "池上変電所",
+      "kv": 66.0,
+      "tepco_sub": "池上",
+      "lines": [
+        "南池上線"
+      ],
+      "connects_to_main": [
+        "南川崎変電所 154kV"
+      ],
+      "all_neighbors": [
+        "南川崎"
+      ]
+    },
+    {
+      "name": "永代橋変電所",
+      "kv": 275.0,
+      "tepco_sub": "永代橋",
+      "lines": [
+        "墨東線",
+        "豊洲永代橋線"
+      ],
+      "connects_to_main": [
+        "北葛飾変電所 275kV",
+        "新豊洲変電所"
+      ],
+      "all_neighbors": [
+        "北葛飾",
+        "墨東",
+        "新豊洲"
+      ]
+    },
+    {
+      "name": "新宿変電所",
+      "kv": 275.0,
+      "tepco_sub": "新宿",
+      "lines": [
+        "新宿城南線",
+        "新宿線"
+      ],
+      "connects_to_main": [
+        "北多摩変電所 66kV"
+      ],
+      "all_neighbors": [
+        "北多摩",
+        "城南"
+      ]
+    },
+    {
+      "name": "東新宿変電所",
+      "kv": 275.0,
+      "tepco_sub": "東新宿",
+      "lines": [
+        "東新宿水道橋線",
+        "東新宿線"
+      ],
+      "connects_to_main": [
+        "北多摩変電所 66kV",
+        "水道橋変電所"
+      ],
+      "all_neighbors": [
+        "北多摩",
+        "水道橋"
+      ]
+    },
+    {
+      "name": "城南変電所",
+      "kv": 275.0,
+      "tepco_sub": "城南",
+      "lines": [
+        "城南線",
+        "新宿城南線"
+      ],
+      "connects_to_main": [
+        "江東変電所 275kV"
+      ],
+      "all_neighbors": [
+        "新宿",
+        "江東"
+      ]
+    },
+    {
+      "name": "高輪変電所",
+      "kv": 275.0,
+      "tepco_sub": "高輪",
+      "lines": [
+        "川崎高輪線",
+        "高輪線"
+      ],
+      "connects_to_main": [
+        "東川崎変電所"
+      ],
+      "all_neighbors": [
+        "東内幸町",
+        "東川崎"
+      ]
+    },
+    {
+      "name": "東内幸町変電所",
+      "kv": 275.0,
+      "tepco_sub": "東内幸町",
+      "lines": [
+        "東内幸町線",
+        "豊洲内幸町線",
+        "高輪線"
+      ],
+      "connects_to_main": [
+        "新豊洲変電所",
+        "豊島変電所"
+      ],
+      "all_neighbors": [
+        "新豊洲",
+        "豊島",
+        "高輪"
+      ]
+    },
+    {
+      "name": "常盤台変電所",
+      "kv": 154.0,
+      "tepco_sub": "常盤台",
+      "lines": [
+        "常盤台線",
+        "豊常線"
+      ],
+      "connects_to_main": [
+        "戸田変電所 154kV",
+        "豊島変電所"
+      ],
+      "all_neighbors": [
+        "戸田",
+        "豊島"
+      ]
+    }
+  ],
+  "partial": [
+    {
+      "name": "栄町変電所",
+      "kv": 66.0,
+      "tepco_sub": "栄町",
+      "lines": [
+        "栄町線"
+      ],
+      "connects_to_main": [],
+      "all_neighbors": [
+        "横浜大黒"
+      ]
+    }
+  ],
+  "notfound": [
+    {
+      "name": "亀井野変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "布田変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "清水変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "乙黒変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "蒲原一丁目変電所 154kV",
+      "kv": 154.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "蒲原一丁目変電所 77kV",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "蒲原一丁目変電所_2 154kV",
+      "kv": 154.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "蒲原一丁目変電所_2 77kV",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "NEC府中変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "椿本チエイン変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "秋ヶ瀬変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "天野変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "立花二丁目変電所 66kV",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "東池袋変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "南池袋変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "巣鴨変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "北の原変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "天王洲変電所",
+      "kv": 154.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "六郷変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "篠崎変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "淀橋変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "尾久変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "三河島変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "西新宿変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "東川口変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "川口変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "川口本町変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "前野変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "中丸変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "王子変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "西巣鴨変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "上富士変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "戸山変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "萩中一丁目変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "小海町変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "薄根変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "勝間変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "川上村変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "小海町変電所_2",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "羽刈町変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "小海町変電所_3",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "小海町変電所_4",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "佐久穂町変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "牛久変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "出島変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "国分寺変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "新光町変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "黒磯変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "白梅変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "平井変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "塩原3号配電塔",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "塩原2号配電塔",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "簗瀬町変電所",
+      "kv": 154.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "渡里町変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "北竜台変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1730",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1732",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1733",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1736",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1737",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "白州変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "小出",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1748",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "中部電力パワーグリッド 川中島変電所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "東上越変電所 275kV",
+      "kv": 275.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "東上越変電所 154kV",
+      "kv": 154.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "高田変電所",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1787",
+      "kv": 66.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "tokyo_sub_1791",
+      "kv": 275.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    },
+    {
+      "name": "島田電力所",
+      "kv": 77.0,
+      "reason": "TEPCO列に該当変電所名なし"
+    }
+  ]
+}
