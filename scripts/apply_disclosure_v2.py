@@ -202,6 +202,24 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
                     continue
                 break
 
+    # M: 系統構成図の判読 — 公表の局所系統構成図PDF(転載禁止・data/external内)から
+    # 人手判読で確定した接続。図の変電所位置とAGJ座標の照合まで済んだもののみ載せる。
+    MAPS = [
+        {"frm": "佐井変電所", "to": "大間町変電所_2", "kv": 66.0,
+         "line": "161F線（佐井—大間）",
+         "src": "東北NW 系統構成図(青森県66kV以下・2024年度実績) "
+                "jisseki_local01_map_2024_02.pdf — 佐井○—161F—大間●の沿岸線。"
+                "大間側はAGJの大間町変電所_2〜_5クラスタ(41.508,140.911・main)に対応"},
+    ]
+    for m in MAPS:
+        a = frame.pick(m["frm"], m["kv"], "tohoku", want_main=False) \
+            or frame.pick(m["frm"], m["kv"], "tohoku")
+        b = frame.pick(m["to"], m["kv"], "tohoku", want_main=True) \
+            or frame.pick(m["to"], m["kv"], "tohoku")
+        if a and b and a["id"] != b["id"]:
+            add_edge(a, b, "disclosure_map", m["kv"], m["line"],
+                     f"局所系統構成図の判読: {m['src']}")
+
     # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
     for k, fam in frame.by_norm.items():
         if k not in tr_names:
@@ -355,7 +373,8 @@ def main() -> int:
     for e in fresh:
         kv = f"{e['kv']:>5.0f}kV" if e.get("kv") else "  —  "
         tag = {"disclosure_line": "線", "disclosure_tap": "岐",
-               "disclosure_trafo": "変", "same_site_identity": "同"}[e["class"]]
+               "disclosure_trafo": "変", "same_site_identity": "同",
+               "disclosure_map": "図"}[e["class"]]
         print(f"  [{tag}] {kv} {e['from_sub']:<24} → {e['to_sub']}"
               + (f"  [{e['line']}]" if e.get("line") else "")
               + (f"  ({e['dist_m']}m)" if e.get("dist_m") is not None else ""))
@@ -369,7 +388,15 @@ def main() -> int:
             "disclosure_tap": "公表from-toの「◯◯線分岐」経由タップ",
             "disclosure_trafo": "変圧器潮流実績CSV（変電所名×一次/二次電圧）",
             "same_site_identity": "同名・同電圧・≤300mの本系統/孤立ペア＝同一変電所",
+            "disclosure_map": "局所系統構成図PDF(転載禁止・external内)の人手判読・座標照合済のみ",
         },
+        "map_reading_notes": [
+            "東通変電所—162C線—北東岸の他社変電所(発電所310605連系)が図にあるが、"
+            "AGJ候補が岩屋変電所(41.3795,141.4030)と東通村変電所(41.4106,141.4421)の"
+            "2サイトあり判別不能→未追加(発電所番号310605の対応表が要る)",
+            "孤立側の大間町変電所(41.4652,140.8900)は図の大間●(=main側_2〜_5クラスタ)と"
+            "対応しない。佐井変電所の480m隣にあり素性不明→未解決のまま",
+        ],
         "dryrun_off_main_before": off0, "dryrun_off_main_after": off1,
         "n_new": len(fresh), "by_class": dict(by_cls),
         "region_fixes": region_fixes, "joined_subs": joined,

@@ -57,9 +57,14 @@ utilities:
     index_url: https://nw.tohoku-epco.co.jp/consignment/system/announcement/index.html
     kinds:
       impedance:
-        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
-        verified: false    # 未発見。当該ページはPDF中心（01.pdf/02.pdf）。別ページに存在する可能性 → 要追加調査
-        note: 制度上は存在するはず。系統情報公表の別階層を要探索
+        # 潮流実績と同じ /consignment/system/demand/ 階層にある（announcementページではない）
+        index_url: https://nw.tohoku-epco.co.jp/consignment/system/demand/
+        link_pattern: 'impedance_\d{4}_\d{2}\.xlsx'
+        verified: true     # 2026-08-15 発見・実DL成功 impedance_2025_02.xlsx（demandページ）
+        note: 様式5の区間(from-to)が東北の新しい接続事実源。局所162C線等の相手端名の解決に使う
+      outage_plan:
+        link_pattern: 'teishi-keikaku_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-15 リンク確認（作業停止計画・2024-2026）
       flow_actual:
         # 潮流実績は別階層 /consignment/system/demand/data/ に。
         index_url: https://nw.tohoku-epco.co.jp/consignment/system/demand/

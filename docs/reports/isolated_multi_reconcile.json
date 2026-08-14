@@ -14,7 +14,7 @@
     "shikoku",
     "tohoku"
   ],
-  "pool_connections": 2336,
+  "pool_connections": 2461,
   "disclosure_coverage": {
     "chugoku": {
       "connections": 294,
@@ -70,9 +70,10 @@
       }
     },
     "tohoku": {
-      "connections": 955,
-      "distinct_endpoints": 952,
+      "connections": 1080,
+      "distinct_endpoints": 971,
       "by_source": {
+        "impedance_section": 125,
         "flow_direction": 955
       }
     }
@@ -637,7 +638,8 @@
             "大町変電所"
           ],
           "sources": [
-            "flow_direction"
+            "flow_direction",
+            "impedance_section"
           ]
         },
         {
