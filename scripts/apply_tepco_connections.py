@@ -61,6 +61,31 @@ def main() -> int:
                 "source_type": "independent_primary",
             })
 
+    # Wikipedia/J-POWER(独立二次)で解決した非東京の名指し接続を足す。
+    # 繋ぎ先はモデルの実ノード名(変異名で実在)。同一島でなければ
+    # compute_connectivity が枝を無視するので、ドライランで実合流可否が正直に出る。
+    WIKI = [
+        {"from_model": "由良開閉所", "to_model": "紀北変換所",
+         "line": "阿南紀北直流幹線(DC連系)", "dc": True,
+         "src": "ja.wikipedia.org/wiki/紀伊水道直流連系設備"},
+        {"from_model": "上ノ国町変電所", "to_model": "江差変電所 66kV",
+         "line": "上ノ国ウインドファーム連系", "dc": False,
+         "src": "ja.wikipedia.org/wiki/上ノ国ウインドファーム"},
+        {"from_model": "大間町変電所_3 500kV", "to_model": "上北変電所 500kV",
+         "line": "大間幹線→むつ幹線", "dc": False,
+         "src": "aec.go.jp J-POWER 大間幹線資料 / wikipedia 東通原子力発電所"},
+    ]
+    for w in WIKI:
+        if w["from_model"] in name_pt and w["to_model"] in name_pt:
+            worklist.append({
+                "from_sub": w["from_model"], "to_sub": w["to_model"],
+                "from_pt": name_pt[w["from_model"]], "to_pt": name_pt[w["to_model"]],
+                "kv": None, "lines": [w["line"]],
+                "evidence": f"独立二次(Wikipedia/J-POWER): {w['src']}",
+                "source_type": "independent_secondary",
+                "dc_tie": w["dc"],
+            })
+
     # 連結性: 適用前
     cc0 = compute_connectivity(nodes, edges)
     off0 = sum(1 for n in nodes if _k5(n["lat"], n["lon"]) not in cc0["main_keys"])
@@ -82,7 +107,10 @@ def main() -> int:
     print(f"合流した孤立変電所 {len(joined)}: " + "、".join(joined))
     print("\n--- worklist(孤立→本系統) ---")
     for w in worklist:
-        print(f"  {w['kv']:>5.0f}kV {w['from_sub']:<16} → {w['to_sub']}  [{('・'.join(w['lines'][:1]))}]")
+        kv = f"{w['kv']:>5.0f}kV" if w.get("kv") else "  —  "
+        tag = " [DC]" if w.get("dc_tie") else ""
+        src = "TEPCO" if w.get("source_type") == "independent_primary" else "Wiki"
+        print(f"  {kv} {w['from_sub']:<18} → {w['to_sub']}  [{('・'.join(w['lines'][:1]))}]{tag} ({src})")
 
     OUT.write_text(json.dumps({
         "note": ("TEPCO公表(独立一次源)で解決した孤立変電所の接続worklist。"

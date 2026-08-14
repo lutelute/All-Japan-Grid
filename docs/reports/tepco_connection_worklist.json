@@ -2,7 +2,7 @@
   "note": "TEPCO公表(独立一次源)で解決した孤立変電所の接続worklist。正典built/all.jsonは不変=これを外せば元に戻る(③無効化)。座標は接続端点の位置情報のみ、生の潮流値は非収録。",
   "evidence": "TEPCO PG 系統情報公表 潮流実績CSV(変電所×線路名)",
   "dryrun_off_main_before": 2130,
-  "dryrun_off_main_after": 2115,
+  "dryrun_off_main_after": 2112,
   "joined_subs": [
     "世田谷変電所",
     "墨東変電所",
@@ -13,7 +13,9 @@
     "城南変電所",
     "高輪変電所",
     "東内幸町変電所",
-    "常盤台変電所"
+    "常盤台変電所",
+    "由良開閉所",
+    "上ノ国町変電所"
   ],
   "worklist": [
     {
@@ -204,6 +206,63 @@
       ],
       "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
       "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "由良開閉所",
+      "to_sub": "紀北変換所",
+      "from_pt": [
+        33.97687,
+        135.08917
+      ],
+      "to_pt": [
+        34.21324,
+        135.50355
+      ],
+      "kv": null,
+      "lines": [
+        "阿南紀北直流幹線(DC連系)"
+      ],
+      "evidence": "独立二次(Wikipedia/J-POWER): ja.wikipedia.org/wiki/紀伊水道直流連系設備",
+      "source_type": "independent_secondary",
+      "dc_tie": true
+    },
+    {
+      "from_sub": "上ノ国町変電所",
+      "to_sub": "江差変電所 66kV",
+      "from_pt": [
+        41.73942,
+        140.12642
+      ],
+      "to_pt": [
+        41.86974,
+        140.14287
+      ],
+      "kv": null,
+      "lines": [
+        "上ノ国ウインドファーム連系"
+      ],
+      "evidence": "独立二次(Wikipedia/J-POWER): ja.wikipedia.org/wiki/上ノ国ウインドファーム",
+      "source_type": "independent_secondary",
+      "dc_tie": false
+    },
+    {
+      "from_sub": "大間町変電所_3 500kV",
+      "to_sub": "上北変電所 500kV",
+      "from_pt": [
+        41.50864,
+        140.91221
+      ],
+      "to_pt": [
+        40.78362,
+        141.17285
+      ],
+      "kv": null,
+      "lines": [
+        "大間幹線→むつ幹線"
+      ],
+      "evidence": "独立二次(Wikipedia/J-POWER): aec.go.jp J-POWER 大間幹線資料 / wikipedia 東通原子力発電所",
+      "source_type": "independent_secondary",
+      "dc_tie": false
     }
   ]
 }
