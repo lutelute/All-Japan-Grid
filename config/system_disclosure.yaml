@@ -107,11 +107,18 @@ utilities:
     index_url: https://powergrid.chuden.co.jp/goannai/hatsuden_kouri/takuso_kyokyu/rule/
     kinds:
       impedance:
-        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
-        verified: false    # 未発見。konzatsukeito_kikan/local の下位ページを要探索
+        # 2026-08-15 発見: rule/ページ直下の固定名 rule_37.xlsx が
+        # 「送変電設備のインピーダンス（ループ系統）」= 様式5相当（区間from-to・1000MVAベース）
+        direct_url: https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_37.xlsx
+        verified: true     # 2026-08-15 実DL成功。500kV三岐幹1号線(三重開閉所-岐阜開閉所)等を確認
+        sheet_dialect: ["送変電設備のインピーダンス（ループ系統）"]
+        caveat: 固定ファイル名(年月なし)なので更新検知はsha256で。送電線と変圧器が1シート縦連結の可能性
       capacity:
         index_url: https://powergrid.chuden.co.jp/goannai/hatsuden_kouri/takuso_kyokyu/rule/map/index.html
-        note: 系統空容量・予想潮流マッピング
+        note: >-
+          系統空容量・予想潮流マッピング。rule/直下の rule_29/30(空容量系)・rule_41/42・
+          rule_44/45(公表用・送電線/変圧器×275kV以上/154kV)も同族(2026-08-15確認)。
+          潮流実績に相当する時系列CSVは未発見（混雑速報konzatsu_sokuho_*_kikan.csvのみ）
 
   hokuriku:
     name: 北陸電力送配電
