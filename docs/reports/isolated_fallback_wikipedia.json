@@ -1,0 +1,232 @@
+{
+  "_meta": {
+    "title": "孤立変電所(cls=isolated_sub, verdict=A)の接続先フォールバック調査 — 東京以外・kv>=154",
+    "purpose": "機械可読CSV(各社が基幹系のみ公開)で解けなかった孤立変電所について、日本語Wikipedia の送電線/変電所記事・各社系統図など人手記載の独立二次源で『どの線でどの変電所に繋がるか』を特定する。",
+    "generated": "2026-08-15",
+    "source_geojson": "data/external/system_disclosure/viz/audit_nodes.geojson",
+    "filter": "properties.cls=='isolated_sub' AND verdict=='A' AND region!='tokyo' AND kv>=154",
+    "target_count_features": 21,
+    "note_duplicates": "下北半島の 154kV クラスタ(東通村/下北/東通/岩屋/岩屋_2)は hokkaido と tohoku の両region に同一座標で重複計上されている(跨region重複)。実体は各1変電所。",
+    "confidence_legend": {
+      "verified": "独立二次源の本文に相手変電所名・線名が明記されている",
+      "inferred": "本文に直接の明記が無く、周辺記述・系統トポロジ・地理から推定。相手不明なら counterpart を空にする"
+    },
+    "constraints": "外部への送信・恒久DLは行わず、出典URLの記録のみ。捏造禁止(出典URL必須)。commitはしない。"
+  },
+
+  "resolved": [
+    {
+      "node_id": "kansai_sub_43",
+      "name": "由良開閉所",
+      "region": "kansai",
+      "kv": 500,
+      "deg": 0,
+      "coord_latlon": [33.9769, 135.0892],
+      "priority_named_target": true,
+      "connections": [
+        {
+          "counterpart_substation": "紀北変換所",
+          "line_name": "阿南紀北直流幹線 (架空線区間 50.9km)",
+          "voltage": "±500kV DC",
+          "confidence": "verified",
+          "source_url": "https://ja.wikipedia.org/wiki/紀伊水道直流連系設備",
+          "quote": "架空線50.9km(紀北変換所・由良開閉所間)"
+        },
+        {
+          "counterpart_substation": "阿南変換所",
+          "line_name": "阿南紀北直流幹線 (地中線区間 48.9km、うち海底46.5km・陸上2.4km)",
+          "voltage": "±500kV DC",
+          "confidence": "verified",
+          "source_url": "https://ja.wikipedia.org/wiki/紀伊水道直流連系設備",
+          "quote": "地中線48.9km(由良開閉所・阿南変換所間、海底部46.5km、陸上部2.4km)"
+        }
+      ],
+      "notes": "紀伊水道直流連系設備(阿南紀北直流幹線)の中継開閉所。関西側=紀北変換所へ架空線、四国側=阿南変換所へ海底ケーブル。モデルでは deg=0(完全孤立)なので両接続が欠落。"
+    },
+    {
+      "node_id": "hokkaido_sub_90",
+      "name": "上ノ国町変電所",
+      "region": "hokkaido",
+      "kv": 187,
+      "deg": 1,
+      "coord_latlon": [41.7394, 140.1264],
+      "priority_named_target": true,
+      "connections": [
+        {
+          "counterpart_substation": "北海道電力 江差変電所",
+          "line_name": "(名称記載なし) 上ノ国ウインドファーム連系送電線",
+          "voltage": "kV は audit ノード値=187kV。Wikipedia本文には電圧記載なし",
+          "confidence": "verified",
+          "source_url": "https://ja.wikipedia.org/wiki/上ノ国ウインドファーム",
+          "quote": "送電線は北海道電力江差変電所に連系している"
+        }
+      ],
+      "notes": "既存メモ『上ノ国町187kV→江差へ連系』と一致。相手変電所=江差変電所は verified。線名は独立源に明記なし。上ノ国町は檜山沖洋上風力の連系候補地でもある。"
+    },
+    {
+      "node_id": "hokkaido_sub_75@500",
+      "name": "大間町変電所_3 (500kV)",
+      "region": "hokkaido",
+      "kv": 500,
+      "deg": 2,
+      "coord_latlon": [41.5086, 140.9122],
+      "priority_named_target": true,
+      "note_region_label": "audit上は hokkaido region だが実体は青森県下北郡大間町(大間原発の500kV開閉所)。",
+      "connections": [
+        {
+          "counterpart_substation": "東北電力ネットワーク むつ幹線 接続点(東通原子力発電所敷地内) → 上北変電所",
+          "line_name": "大間幹線 (500kV, 2回線, 亘長61.2km, 鉄塔129基)",
+          "voltage": "500kV",
+          "confidence": "verified",
+          "source_url": "https://www.aec.go.jp/kaigi/teirei/2016/siryo38/3-3_haifu.pdf",
+          "quote": "◆大間幹線概要 / 区間: 大間原子力発電所～東北電力(株)むつ幹線(東通原子力発電所敷地内) / 亘長: 61.2km / 電圧: 50万V / 回線数: 2回線 / 鉄塔: 129基"
+        },
+        {
+          "counterpart_substation": "上北変電所",
+          "line_name": "むつ幹線 (500kV) — 大間幹線が接続する東北電力側の幹線。上北変電所へ至る",
+          "voltage": "500kV",
+          "confidence": "verified",
+          "source_url": "https://ja.wikipedia.org/wiki/東通原子力発電所",
+          "quote": "大間原子力発電所と本発電所(東通原発)の一次変電所が上北変電所を共用し、送電ルートの多重化がなされていない"
+        }
+      ],
+      "notes": "J-POWER(電源開発)自身の原子力委員会提出資料で大間幹線の区間・諸元が明記。大間幹線(500kV)は東通原発敷地内でむつ幹線に接続し、むつ幹線経由で上北変電所へ。上北変電所は大間・東通両原発の共用一次変電所(Wikipedia)。J-POWER概要ページ(https://www.jpower.co.jp/bs/nuclear/oma/plan.html)も『大間幹線を通じ、東北電力NWむつ幹線経由で送電』と一致。"
+    }
+  ],
+
+  "partially_resolved_region_context": [
+    {
+      "cluster": "下北半島 154kV クラスタ (東通村変電所 / 下北変電所 / 東通変電所 / 岩屋変電所 / 岩屋変電所_2)",
+      "node_ids": [
+        "hokkaido_sub_1@154", "hokkaido_sub_30@154", "hokkaido_sub_63@154", "hokkaido_sub_73@154", "hokkaido_sub_74@154",
+        "tohoku_sub_791@154", "tohoku_sub_802@154", "tohoku_sub_855@154", "tohoku_sub_891@154", "tohoku_sub_892@154"
+      ],
+      "region": "青森県下北郡(東通村・むつ市)。hokkaido/tohoku 両regionに重複計上",
+      "kv": 154,
+      "inferred_hub": "上北変電所 (500kV) — むつ幹線経由。下北半島の基幹は上北変電所に収束",
+      "confidence": "inferred",
+      "source_url": "https://ja.wikipedia.org/wiki/東通原子力発電所",
+      "quote": "むつ幹線および東北白糠線が停止したため、外部からの電源供給が停止した / …上北変電所を共用し…",
+      "notes": "下北半島の154kV網は東通原子力発電所(東通村)・下北変電所(むつ市)を中心に構成され、上位はむつ幹線(500kV)で上北変電所へ収束する。ただし各154kV変電所ごとの相手変電所名・個別線名は独立二次源(公開系統図が画像PDFで本文抽出不可)からは特定できず。個別edgeは inferred。相手変電所を1件ずつ verified で埋めるには東北電力ネットワークの系統構成図(画像)を人手判読する必要がある。"
+    }
+  ],
+
+  "unresolved": [
+    {
+      "node_id": "kansai_sub_386@275",
+      "name": "山口町金仙寺二丁目変電所 (275kV)",
+      "region": "kansai",
+      "kv": 275,
+      "deg": 3,
+      "coord_latlon": [34.8209, 135.2505],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "兵庫県西宮市山口町金仙寺(旧・有馬郡山口村域、金仙寺湖付近)の275kV変電所。OSM由来の住所ベース命名。Wikipedia に単独記事なし。関西電力送配電の275kV系統構成図(基幹系)にも該当名が現れず、独立二次源からは相手変電所・線名を特定できなかった。近傍の500/275kV拠点は猪名川変電所(500kV)・新神戸/北摂方面だが確証なし。"
+    },
+    {
+      "node_id": "tohoku_sub_695",
+      "name": "餅田変電所",
+      "region": "tohoku",
+      "kv": 154,
+      "deg": 0,
+      "coord_latlon": [40.2796, 140.5167],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "秋田県大館市付近の154kV変電所と推定(座標=大館市南部)。Wikipedia記事なし。東北電力ネットワークの154kV系統図は画像PDFで本文抽出不可。相手変電所・線名の特定に至らず。大館エリアの154kV拠点(大館変電所等)への接続が想定されるが確証なし。"
+    },
+    {
+      "node_id": "chubu_sub_87",
+      "name": "東京電力駿河変電所",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 0,
+      "coord_latlon": [35.1762, 138.6921],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡県(駿河区/富士川周辺)の154kV変電所。名称に『東京電力』を含むがこの地域は中部/東電の境界域。Wikipedia記事なし、独立二次源で相手変電所・線名を特定できず。"
+    },
+    {
+      "node_id": "chubu_sub_513",
+      "name": "原子変電所",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 1,
+      "coord_latlon": [34.7891, 138.0453],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡県(焼津/牧之原付近)の154kV変電所。Wikipedia記事なし。独立二次源から特定できず。"
+    },
+    {
+      "node_id": "chubu_sub_656@154",
+      "name": "蒲原一丁目変電所 (154kV)",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 3,
+      "coord_latlon": [35.1224, 138.6139],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡市清水区蒲原の154kV変電所(日本軽金属蒲原製造所の自家発地帯に近い)。Wikipedia記事なし。独立二次源から特定できず。"
+    },
+    {
+      "node_id": "chubu_sub_769",
+      "name": "小山町変電所",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 0,
+      "coord_latlon": [35.3654, 138.9631],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡県駿東郡小山町の154kV変電所。Wikipedia記事なし。独立二次源から特定できず。"
+    },
+    {
+      "node_id": "chubu_sub_968",
+      "name": "葵区変電所_3",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 2,
+      "coord_latlon": [35.2645, 138.226],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡市葵区の154kV変電所。OSM由来の行政区名ベース命名。Wikipedia記事なし。独立二次源から特定できず。"
+    },
+    {
+      "node_id": "chubu_sub_1105",
+      "name": "大村一丁目変電所",
+      "region": "chubu",
+      "kv": 154,
+      "deg": 1,
+      "coord_latlon": [34.8743, 138.3108],
+      "counterpart_substation": "",
+      "line_name": "",
+      "confidence": "inferred",
+      "source_url": "",
+      "notes": "静岡市駿河区大村付近の154kV変電所。OSM由来の住所ベース命名。Wikipedia記事なし。独立二次源から特定できず。"
+    }
+  ],
+
+  "consulted_sources": [
+    "https://ja.wikipedia.org/wiki/紀伊水道直流連系設備",
+    "https://ja.wikipedia.org/wiki/上ノ国ウインドファーム",
+    "https://ja.wikipedia.org/wiki/東通原子力発電所",
+    "https://ja.wikipedia.org/wiki/大間原子力発電所",
+    "https://www.jpower.co.jp/bs/nuclear/oma/plan.html",
+    "https://www.aec.go.jp/kaigi/teirei/2016/siryo38/3-3_haifu.pdf",
+    "https://www.kepco.co.jp/corporate/pr/2012/pdf/0816_2j_05.pdf",
+    "https://nw.tohoku-epco.co.jp/consignment/retailservice/g-charge/pdf/ex-hi_kei.pdf",
+    "https://www.tohoku-epco.co.jp/jiyuka/karyoku/renkei.pdf"
+  ]
+}
