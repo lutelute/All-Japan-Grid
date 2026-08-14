@@ -1,0 +1,209 @@
+{
+  "note": "TEPCO公表(独立一次源)で解決した孤立変電所の接続worklist。正典built/all.jsonは不変=これを外せば元に戻る(③無効化)。座標は接続端点の位置情報のみ、生の潮流値は非収録。",
+  "evidence": "TEPCO PG 系統情報公表 潮流実績CSV(変電所×線路名)",
+  "dryrun_off_main_before": 2130,
+  "dryrun_off_main_after": 2115,
+  "joined_subs": [
+    "世田谷変電所",
+    "墨東変電所",
+    "池上変電所",
+    "永代橋変電所",
+    "新宿変電所",
+    "東新宿変電所",
+    "城南変電所",
+    "高輪変電所",
+    "東内幸町変電所",
+    "常盤台変電所"
+  ],
+  "worklist": [
+    {
+      "from_sub": "世田谷変電所",
+      "to_sub": "荏田変電所 275kV",
+      "from_pt": [
+        35.63181,
+        139.6502
+      ],
+      "to_pt": [
+        35.55527,
+        139.54881
+      ],
+      "kv": 275.0,
+      "lines": [
+        "世田谷線",
+        "葛南世田谷線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "墨東変電所",
+      "to_sub": "北葛飾変電所 275kV",
+      "from_pt": [
+        35.69845,
+        139.82026
+      ],
+      "to_pt": [
+        35.86972,
+        139.87106
+      ],
+      "kv": 275.0,
+      "lines": [
+        "墨東線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "池上変電所",
+      "to_sub": "南川崎変電所 154kV",
+      "from_pt": [
+        35.5669,
+        139.69581
+      ],
+      "to_pt": [
+        35.50005,
+        139.71186
+      ],
+      "kv": 66.0,
+      "lines": [
+        "南池上線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "永代橋変電所",
+      "to_sub": "北葛飾変電所 275kV",
+      "from_pt": [
+        35.67561,
+        139.78442
+      ],
+      "to_pt": [
+        35.86972,
+        139.87106
+      ],
+      "kv": 275.0,
+      "lines": [
+        "墨東線",
+        "豊洲永代橋線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "新宿変電所",
+      "to_sub": "北多摩変電所 66kV",
+      "from_pt": [
+        35.69106,
+        139.68922
+      ],
+      "to_pt": [
+        35.65263,
+        139.50193
+      ],
+      "kv": 275.0,
+      "lines": [
+        "新宿城南線",
+        "新宿線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "東新宿変電所",
+      "to_sub": "北多摩変電所 66kV",
+      "from_pt": [
+        35.69206,
+        139.71037
+      ],
+      "to_pt": [
+        35.65263,
+        139.50193
+      ],
+      "kv": 275.0,
+      "lines": [
+        "東新宿水道橋線",
+        "東新宿線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "城南変電所",
+      "to_sub": "江東変電所 275kV",
+      "from_pt": [
+        35.67296,
+        139.72302
+      ],
+      "to_pt": [
+        35.6629,
+        139.84068
+      ],
+      "kv": 275.0,
+      "lines": [
+        "城南線",
+        "新宿城南線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "高輪変電所",
+      "to_sub": "東川崎変電所",
+      "from_pt": [
+        35.63499,
+        139.73387
+      ],
+      "to_pt": [
+        35.51531,
+        139.7591
+      ],
+      "kv": 275.0,
+      "lines": [
+        "川崎高輪線",
+        "高輪線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "東内幸町変電所",
+      "to_sub": "新豊洲変電所",
+      "from_pt": [
+        35.6702,
+        139.75844
+      ],
+      "to_pt": [
+        35.64706,
+        139.7904
+      ],
+      "kv": 275.0,
+      "lines": [
+        "東内幸町線",
+        "豊洲内幸町線",
+        "高輪線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    },
+    {
+      "from_sub": "常盤台変電所",
+      "to_sub": "戸田変電所 154kV",
+      "from_pt": [
+        35.75755,
+        139.69128
+      ],
+      "to_pt": [
+        35.79445,
+        139.67301
+      ],
+      "kv": 154.0,
+      "lines": [
+        "常盤台線",
+        "豊常線"
+      ],
+      "evidence": "TEPCO系統情報公表(潮流実績CSV 変電所×線路名)",
+      "source_type": "independent_primary"
+    }
+  ]
+}
