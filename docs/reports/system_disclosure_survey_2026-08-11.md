@@ -231,3 +231,19 @@ URL・sha256・バイト数・取得時刻・`layer: observed`）。
 python -m scripts.fetch_system_disclosure --kind impedance   # 取得（一覧ページから最新に追従）
 python  scripts/parse_impedance.py                           # 正規化 → normalized/impedance_*.csv
 ```
+
+---
+
+## 追記(2026-08-15) — 未発見だった2社を発見・空白は沖縄のみに
+
+- **東北**: `impedance_2025_02.xlsx` が announcement ページでなく **/consignment/system/demand/**
+  (潮流実績と同階層)にあった。基幹133線+変圧器72基・様式5標準。同階層に
+  **局所系統構成図PDF** `jisseki_(kikan|local)NN_map_*.pdf`(66kV結線図・転載禁止)と
+  作業停止計画CSV・地点別需要(ju-sohai)系列も確認。
+- **中部**: rule/ ページ直下の固定名 **`rule_37.xlsx`**「送変電設備のインピーダンス(ループ系統)」
+  (500kV 30本+275kV 25本+変圧器・様式5相当)。⚠変電所名は仮名化の疑い(西部/北部変電所等・
+  九州の匿名化と同型)。名前照合は不可、R/X統計には有効。時系列の潮流実績CSVは中部には
+  見当たらず(混雑速報のみ)。
+- 残る未発見は**沖縄のみ**(独立系統でループ限定のため様式適用が異なる可能性・従来判断のまま)。
+- 275kV較正の再検算: 全数 n=119(中部・東北込み)で X/R 中央値 12.66 vs 標準 11.61 →
+  8/15の撤回判断(`impedance_calibration_review_2026-08-15.md`)は維持・強化。
