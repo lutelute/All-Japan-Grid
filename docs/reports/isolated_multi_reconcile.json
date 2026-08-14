@@ -6,25 +6,12 @@
     "viz/flow_lines.geojson の from/to（既構築の観測フロー・補助）"
   ],
   "regions": [
-    "chugoku",
     "hokkaido",
-    "hokuriku",
     "kansai",
-    "kyushu",
-    "shikoku",
-    "tohoku",
-    "tokyo"
+    "tohoku"
   ],
-  "pool_connections": 1335,
+  "pool_connections": 1266,
   "disclosure_coverage": {
-    "chugoku": {
-      "connections": 294,
-      "distinct_endpoints": 173,
-      "by_source": {
-        "impedance_section": 256,
-        "flow_direction": 38
-      }
-    },
     "hokkaido": {
       "connections": 189,
       "distinct_endpoints": 56,
@@ -32,14 +19,6 @@
         "impedance_section": 103,
         "flow_direction": 44,
         "flow_lines_geojson": 42
-      }
-    },
-    "hokuriku": {
-      "connections": 27,
-      "distinct_endpoints": 11,
-      "by_source": {
-        "impedance_section": 20,
-        "flow_lines_geojson": 7
       }
     },
     "kansai": {
@@ -51,33 +30,11 @@
         "flow_lines_geojson": 85
       }
     },
-    "kyushu": {
-      "connections": 173,
-      "distinct_endpoints": 71,
-      "by_source": {
-        "impedance_section": 121,
-        "flow_lines_geojson": 52
-      }
-    },
-    "shikoku": {
-      "connections": 272,
-      "distinct_endpoints": 166,
-      "by_source": {
-        "impedance_section": 48,
-        "flow_direction": 138,
-        "flow_lines_geojson": 86
-      }
-    },
     "tohoku": {
-      "connections": 0,
-      "distinct_endpoints": 0,
-      "by_source": {}
-    },
-    "tokyo": {
-      "connections": 103,
-      "distinct_endpoints": 41,
+      "connections": 800,
+      "distinct_endpoints": 911,
       "by_source": {
-        "impedance_section": 103
+        "flow_direction": 800
       }
     }
   },
@@ -101,50 +58,10 @@
       "in_audit": true,
       "status": "notfound",
       "name": "大間町変電所",
-      "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+      "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
     }
   ],
   "by_region": {
-    "chugoku": {
-      "n_isolated_A": 6,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 6,
-      "resolved": [],
-      "partial": [],
-      "notfound": [
-        {
-          "name": "中原東四丁目変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中国電力和気変電所",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "松江四丁目変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "山陽小野田市変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "三津変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中央南変電所",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        }
-      ]
-    },
     "hokkaido": {
       "n_isolated_A": 33,
       "n_resolved": 0,
@@ -319,15 +236,6 @@
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         }
       ]
-    },
-    "hokuriku": {
-      "n_isolated_A": 0,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 0,
-      "resolved": [],
-      "partial": [],
-      "notfound": []
     },
     "kansai": {
       "n_isolated_A": 36,
@@ -519,596 +427,217 @@
         }
       ]
     },
-    "kyushu": {
-      "n_isolated_A": 11,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 11,
-      "resolved": [],
-      "partial": [],
-      "notfound": [
-        {
-          "name": "中原東四丁目変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "日田市変電所 110kV",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小国町変電所",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "犬飼変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "郷ノ浦変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "天瀬町赤岩変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "山陽小野田市変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "岱明町野口変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "都農変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "敷川内町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中央南変電所",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        }
-      ]
-    },
-    "shikoku": {
-      "n_isolated_A": 12,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 12,
-      "resolved": [],
-      "partial": [],
-      "notfound": [
-        {
-          "name": "夜須町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "多良変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "佐川変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "四国電力 甲浦変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "牟岐変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "美波町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "三津変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大渡変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "黒川変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中央南変電所",
-          "kv": 110.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "須崎変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "鉢変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        }
-      ]
-    },
     "tohoku": {
       "n_isolated_A": 31,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 31,
-      "resolved": [],
-      "partial": [],
-      "notfound": [
-        {
-          "name": "青山一丁目変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "ときめき東一丁目変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "平五丁目変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "渋川変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "塩原3号配電塔",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "塩原2号配電塔",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
+      "n_resolved": 4,
+      "n_partial": 7,
+      "n_notfound": 20,
+      "resolved": [
         {
           "name": "中仙台変電所",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "飯舘変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "中仙台三居沢線",
+            "中仙台大町線",
+            "仙台本町線"
+          ],
+          "connects_to_main": [
+            "大町変電所"
+          ],
+          "all_neighbors": [
+            "4705",
+            "仙台本町変電所",
+            "大町変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "土樋変電所",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "黒磯変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "原町区大谷変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "由利本荘市変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "鳥海町下直根変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "門前寺変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "福山変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "大間町変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "餅田変電所",
-          "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "仲崎変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "佐井変電所",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "東通村変電所 154kV",
-          "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "東通村変電所 66kV",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "愛宕線"
+          ],
+          "connects_to_main": [
+            "五ツ橋変電所"
+          ],
+          "all_neighbors": [
+            "五ツ橋変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "下北変電所 154kV",
           "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "三本松線",
+            "大湊線",
+            "大畑線"
+          ],
+          "connects_to_main": [
+            "三本松変電所",
+            "大畑変電所 154kV"
+          ],
+          "all_neighbors": [
+            "三本松変電所",
+            "大湊変電所",
+            "大畑変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "下北変電所 66kV",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "三本松線",
+            "大湊線",
+            "大畑線"
+          ],
+          "connects_to_main": [
+            "三本松変電所",
+            "大畑変電所 154kV"
+          ],
+          "all_neighbors": [
+            "三本松変電所",
+            "大湊変電所",
+            "大畑変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
+        }
+      ],
+      "partial": [
+        {
+          "name": "飯舘変電所",
+          "kv": 66.0,
+          "lines": [
+            "飯舘支線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "原町線分岐"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
+        },
+        {
+          "name": "仲崎変電所",
+          "kv": 66.0,
+          "lines": [
+            "仲崎線",
+            "佐井線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "佐井変電所",
+            "大湊変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
+        },
+        {
+          "name": "佐井変電所",
+          "kv": 66.0,
+          "lines": [
+            "佐井線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "仲崎変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "大湊変電所",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "仲崎線",
+            "大湊線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "下北変電所",
+            "仲崎変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "大畑変電所",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "大畑線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "下北変電所"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "東通変電所 154kV",
           "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "162C線",
+            "東通支線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "大畑線分岐",
+            "需要家"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         },
         {
           "name": "東通変電所 66kV",
           "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "岩屋変電所 154kV",
-          "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "岩屋変電所 66kV",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "岩屋変電所_2 154kV",
-          "kv": 154.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
-        },
-        {
-          "name": "岩屋変電所_2 66kV",
-          "kv": 66.0,
-          "reason": "系統情報の公表データ未取得（当該regionの from-to 源が空）"
+          "lines": [
+            "162C線",
+            "東通支線"
+          ],
+          "connects_to_main": [],
+          "all_neighbors": [
+            "大畑線分岐",
+            "需要家"
+          ],
+          "sources": [
+            "flow_direction"
+          ]
         }
-      ]
-    },
-    "tokyo": {
-      "n_isolated_A": 77,
-      "n_resolved": 0,
-      "n_partial": 0,
-      "n_notfound": 77,
-      "resolved": [],
-      "partial": [],
+      ],
       "notfound": [
         {
-          "name": "亀井野変電所",
+          "name": "青山一丁目変電所",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "布田変電所",
+          "name": "ときめき東一丁目変電所",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "清水変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "乙黒変電所",
+          "name": "平五丁目変電所",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "蒲原一丁目変電所 154kV",
-          "kv": 154.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "蒲原一丁目変電所 77kV",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "蒲原一丁目変電所_2 154kV",
-          "kv": 154.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "蒲原一丁目変電所_2 77kV",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "世田谷変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "秋ヶ瀬変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "天野変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "立花二丁目変電所 66kV",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東池袋変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "南池袋変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "巣鴨変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "墨東変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "北の原変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "池上変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "天王洲変電所",
-          "kv": 154.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "栄町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "永代橋変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "六郷変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "篠崎変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "淀橋変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "新宿変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "西新宿変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東新宿変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "城南変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "高輪変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東内幸町変電所",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "常盤台変電所",
-          "kv": 154.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東川口変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "川口変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "川口本町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "前野変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中丸変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "王子変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "西巣鴨変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "上富士変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "戸山変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "萩中一丁目変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小海町変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "薄根変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "勝間変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "川上村変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小海町変電所_2",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "羽刈町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小海町変電所_3",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小海町変電所_4",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "佐久穂町変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "牛久変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "出島変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "国分寺変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "新光町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "黒磯変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "白梅変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "平井変電所",
+          "name": "渋川変電所",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
@@ -1123,93 +652,73 @@
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "簗瀬町変電所",
+          "name": "黒磯変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "原町区大谷変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "由利本荘市変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "鳥海町下直根変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "門前寺変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "福山変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "大間町変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "餅田変電所",
           "kv": 154.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "渡里町変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "北竜台変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1730",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1732",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1733",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1736",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1737",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "白州変電所",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "小出",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "tokyo_sub_1748",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "中部電力パワーグリッド 川中島変電所",
-          "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東上越変電所 275kV",
-          "kv": 275.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "東上越変電所 154kV",
+          "name": "東通村変電所 154kV",
           "kv": 154.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "高田変電所",
+          "name": "東通村変電所 66kV",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "tokyo_sub_1787",
+          "name": "岩屋変電所 154kV",
+          "kv": 154.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "岩屋変電所 66kV",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "tokyo_sub_1791",
-          "kv": 275.0,
+          "name": "岩屋変電所_2 154kV",
+          "kv": 154.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "島田電力所",
-          "kv": 77.0,
+          "name": "岩屋変電所_2 66kV",
+          "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         }
       ]
