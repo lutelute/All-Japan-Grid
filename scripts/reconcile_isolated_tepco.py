@@ -66,11 +66,15 @@ def main() -> int:
     truth = parse_tepco_headers_banded(
         csv_path=str(TEP / "jisseki_kikan.csv"),
         csv154=str(TEP / "jisseki_154kV*.csv"),
+        # 66kV県別ファイルは全県を拾う（kikan/154kV 以外の jisseki_*.csv）。
+        # 静岡・長野・新潟・福島 の取りこぼしで蒲原一丁目等が未解決だったため全県に。
         csv66=[str(TEP / "jisseki_tokyo_23_*.csv"), str(TEP / "jisseki_tokyo_tama*.csv"),
                str(TEP / "jisseki_chiba*.csv"), str(TEP / "jisseki_saitama*.csv"),
                str(TEP / "jisseki_gunma*.csv"), str(TEP / "jisseki_tochigi*.csv"),
                str(TEP / "jisseki_ibaraki*.csv"), str(TEP / "jisseki_kanagawa*.csv"),
-               str(TEP / "jisseki_yamanasi*.csv")])
+               str(TEP / "jisseki_yamanasi*.csv"), str(TEP / "jisseki_shizuoka*.csv"),
+               str(TEP / "jisseki_nagano*.csv"), str(TEP / "jisseki_niigata*.csv"),
+               str(TEP / "jisseki_fukushima*.csv")])
     line_subs = defaultdict(set)   # line -> set(TEPCO sub raw)
     tep_sub_norm = {}              # norm -> raw
     for (sub, line), floor in truth["pairs"].items():

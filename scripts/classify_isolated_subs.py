@@ -34,6 +34,12 @@ RESEARCH_MD = ROOT / "docs" / "reports" / "island_substation_research_2026-06-16
 VIZ = ROOT / "data" / "external" / "system_disclosure" / "viz"
 
 RAIL_WORDS = ("鉄道", "電鉄", "ＪＲ", "JR", "軌道", "き電", "饋電", "traction", "Railway")
+# 企業自家用の明確なマーカー(工場・製造業・ブランド名)。これらは需要家側の
+# 私設変電所で「送電網に繋ぐべきA」ではなく別系統B。過検出を避け明確語のみ。
+PRIVATE_WORDS = ("製作所", "製鉄", "製鋼", "製紙", "化学", "工場", "製造", "精機", "チエイン",
+                 "セメント", "硝子", "ガラス", "電線", "アルミ", "金属", "製薬", "食品",
+                 "株式会社", "(株)", "㈱", "ＮＥＣ", "NEC", "東芝", "日立", "三菱", "住友",
+                 "新日鐵", "ＪＦＥ", "JFE", "神戸製鋼", "パナソニック", "キヤノン", "トヨタ")
 
 
 def norm_name(s: str) -> str:
@@ -43,6 +49,11 @@ def norm_name(s: str) -> str:
 def is_railway(name: str, operator: str, operator_kind: str) -> bool:
     blob = f"{name} {operator} {operator_kind}"
     return any(w in blob for w in RAIL_WORDS) or (operator_kind or "").lower() == "railway"
+
+
+def is_private(name: str, operator: str) -> bool:
+    blob = f"{name} {operator}"
+    return any(w in blob for w in PRIVATE_WORDS)
 
 
 def load_verified() -> dict:
@@ -106,6 +117,9 @@ def main() -> int:
         # 2) 鉄道
         elif is_railway(name or cname, op, opk):
             v = "B"; reason["railway→B"] += 1
+        # 2b) 企業自家用(工場・製造業)は繋ぐべきAでなく別系統B
+        elif is_private(name or cname, op):
+            v = "B"; reason["private→B"] += 1
         # 3) 高圧
         elif kv >= 66:
             v = "A"; reason["kv>=66→A"] += 1

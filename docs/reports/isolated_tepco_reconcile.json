@@ -1,10 +1,10 @@
 {
   "note": "東京の孤立A変電所をTEPCO公表接続(法定・系統情報公表)で突合。生CSV・潮流値は非収録(転載禁止)。ここは接続事実の派生のみ。",
   "source": "TEPCO PG 潮流実績CSV 列名 (jisseki_kikan/154kV/県別) の変電所×線路",
-  "n_isolated_A_tokyo": 81,
+  "n_isolated_A_tokyo": 77,
   "n_resolved": 10,
   "n_partial": 1,
-  "n_notfound": 70,
+  "n_notfound": 66,
   "resolved": [
     {
       "name": "世田谷変電所",
@@ -228,16 +228,6 @@
       "reason": "TEPCO列に該当変電所名なし"
     },
     {
-      "name": "NEC府中変電所",
-      "kv": 66.0,
-      "reason": "TEPCO列に該当変電所名なし"
-    },
-    {
-      "name": "椿本チエイン変電所",
-      "kv": 66.0,
-      "reason": "TEPCO列に該当変電所名なし"
-    },
-    {
       "name": "秋ヶ瀬変電所",
       "kv": 66.0,
       "reason": "TEPCO列に該当変電所名なし"
@@ -289,16 +279,6 @@
     },
     {
       "name": "淀橋変電所",
-      "kv": 66.0,
-      "reason": "TEPCO列に該当変電所名なし"
-    },
-    {
-      "name": "尾久変電所",
-      "kv": 66.0,
-      "reason": "TEPCO列に該当変電所名なし"
-    },
-    {
-      "name": "三河島変電所",
       "kv": 66.0,
       "reason": "TEPCO列に該当変電所名なし"
     },
