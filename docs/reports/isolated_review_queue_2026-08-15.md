@@ -34,14 +34,14 @@ v2 の同一敷地同定は保守的に ≤300m で切った。以下は同名�
 
 ## 3. 介入#27（187kV較正）の採否 — 判断パッケージ完成
 
-`impedance_calibration_review_2026-08-15.md` 参照。今夜の追加測定で
-**採用時は #20 補償係数を 0.8→0.7 に下げるのが最適**と判明
-（北海道・cal187 ON でのスイープ: factor 0.7 が vm_min 0.868 で最良、現行 0.8 は
-0.716 で最悪。非単調）。east/west/okinawa の 0.7 整合確認は
-`sweep_cal187_f0.7_rest`（測定済み・本レポート追記予定 or handover 参照）。
+`impedance_calibration_review_2026-08-15.md` 参照（スイープ全表を収録）。要点:
+- hokkaido は cal187 ON なら factor **0.7 が最良**（vm_min 0.868）、現行 0.8 は最悪（0.716）
+- しかし **0.7 の全球適用は west が危険**（cal187×0.7 の west AC は32分未収束で打ち切り。
+  east も微悪化）→ 単一グローバル係数のままなら**「cal187 ON + 0.8 維持」が安全側**
+- hokkaido も救うには per-island factor（新機構）が要る
 
-採用手順案: `AGJ_CALIBRATED_LINES=1` を既定化する実装 + `--reactive-comp 0.7` 既定化 +
-regenerate_all + 介入台帳 #27 を既定ONに更新。
+採用の選択肢: ①cal187 ON+0.8維持（安全・hokkaido vm_min悪化を受容） ②per-island factor を
+実装して hokkaido=0.7 ③現状維持（cal187 OFF）。いずれもオーナー判断。
 
 ## 4. dedup キャンペーンの開始点
 
