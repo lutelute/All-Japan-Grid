@@ -2,15 +2,15 @@
   "_meta": {
     "source": "docs/data/built/all.json",
     "n_nodes": 17336,
-    "n_edges": 19038,
-    "generated": "2026-08-11 03:21:20",
+    "n_edges": 19127,
+    "generated": "2026-08-15 05:42:45",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
     "hokkaido": {
       "frequency_hz": 50,
       "n_bus": 802,
-      "n_line": 815,
+      "n_line": 818,
       "n_trafo": 68,
       "n_trafo_nameplate": 1,
       "n_edge_skipped": 79,
@@ -23,33 +23,33 @@
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "chubu->tokyo": 249,
-          "tokyo->chubu": 210,
+          "chubu->tokyo": 198,
+          "tokyo->chubu": 194,
           "chubu->tohoku": 41,
           "hokuriku->tohoku": 22
         }
       },
       "n_gen": 417,
       "total_load_mw": 4420.0,
-      "n_components": 35,
-      "n_slack": 35,
-      "n_synthetic_slack": 32,
+      "n_components": 32,
+      "n_slack": 32,
+      "n_synthetic_slack": 30,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.79151384040177,
-      "ac_vm_max": 1.0058294704055903,
-      "ac_max_loading_pct": 93.3028537998124,
-      "dc_max_loading_pct": 88.4023724110071,
-      "ac_total_loss_mw": 95.24255636215625,
-      "solve_seconds": 5.6
+      "ac_vm_min": 0.7699256148878186,
+      "ac_vm_max": 1.005988426329906,
+      "ac_max_loading_pct": 305.1109281590045,
+      "dc_max_loading_pct": 315.5845051715343,
+      "ac_total_loss_mw": 110.31495110577495,
+      "solve_seconds": 6.7
     },
     "east": {
       "frequency_hz": 50,
-      "n_bus": 6002,
-      "n_line": 6122,
-      "n_trafo": 630,
+      "n_bus": 6037,
+      "n_line": 6189,
+      "n_trafo": 629,
       "n_trafo_nameplate": 6,
       "n_edge_skipped": 695,
       "n_dedup_merged": 220,
@@ -61,37 +61,37 @@
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "chubu->tokyo": 249,
-          "tokyo->chubu": 210,
+          "chubu->tokyo": 198,
+          "tokyo->chubu": 194,
           "chubu->tohoku": 41,
           "hokuriku->tohoku": 22
         }
       },
       "n_gen": 8235,
       "total_load_mw": 55250.0,
-      "n_components": 312,
-      "n_slack": 312,
-      "n_synthetic_slack": 290,
+      "n_components": 291,
+      "n_slack": 291,
+      "n_synthetic_slack": 269,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8495045459576027,
-      "ac_vm_max": 1.7625178045385312,
-      "ac_max_loading_pct": 755.6566301209839,
-      "dc_max_loading_pct": 882.7678672042232,
-      "ac_total_loss_mw": 1235.1872783031188,
-      "solve_seconds": 118.2
+      "ac_vm_min": 0.8532099844885026,
+      "ac_vm_max": 1.0229063643251433,
+      "ac_max_loading_pct": 761.185241699382,
+      "dc_max_loading_pct": 864.8466391213706,
+      "ac_total_loss_mw": 1261.9075310197502,
+      "solve_seconds": 158.2
     },
     "west": {
       "frequency_hz": 60,
-      "n_bus": 8213,
-      "n_line": 8361,
-      "n_trafo": 1068,
+      "n_bus": 8179,
+      "n_line": 8365,
+      "n_trafo": 1069,
       "n_trafo_nameplate": 5,
-      "n_edge_skipped": 1393,
-      "n_dedup_merged": 1983,
-      "n_edge_dup_removed": 1436,
+      "n_edge_skipped": 1395,
+      "n_dedup_merged": 1982,
+      "n_edge_dup_removed": 1437,
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
@@ -99,27 +99,27 @@
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "chubu->tokyo": 249,
-          "tokyo->chubu": 210,
+          "chubu->tokyo": 198,
+          "tokyo->chubu": 194,
           "chubu->tohoku": 41,
           "hokuriku->tohoku": 22
         }
       },
-      "n_gen": 8775,
+      "n_gen": 8769,
       "total_load_mw": 73865.0,
-      "n_components": 541,
-      "n_slack": 541,
-      "n_synthetic_slack": 490,
+      "n_components": 506,
+      "n_slack": 506,
+      "n_synthetic_slack": 461,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7623444751991495,
-      "ac_vm_max": 1.0247858664892928,
-      "ac_max_loading_pct": 739.6197589712398,
-      "dc_max_loading_pct": 735.8938460401538,
-      "ac_total_loss_mw": 1184.1576931886405,
-      "solve_seconds": 94.0
+      "ac_vm_min": 0.7623449997054352,
+      "ac_vm_max": 1.0247256823280335,
+      "ac_max_loading_pct": 739.6197584091746,
+      "dc_max_loading_pct": 735.8938452214127,
+      "ac_total_loss_mw": 1236.0158169978893,
+      "solve_seconds": 108.4
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -137,8 +137,8 @@
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "chubu->tokyo": 249,
-          "tokyo->chubu": 210,
+          "chubu->tokyo": 198,
+          "tokyo->chubu": 194,
           "chubu->tohoku": 41,
           "hokuriku->tohoku": 22
         }
@@ -166,11 +166,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.7915,
-      "vm_max": 1.0058,
+      "vm_min": 0.7699,
+      "vm_max": 1.006,
       "n_buses": 802,
       "n_buses_exported": 802,
-      "n_lines_exported": 815
+      "n_lines_exported": 818
     },
     "tohoku": {
       "island": "east",
@@ -178,32 +178,32 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9618,
-      "vm_max": 1.7625,
-      "n_buses": 1997,
-      "n_buses_exported": 1997,
-      "n_lines_exported": 2060
+      "vm_max": 1.0181,
+      "n_buses": 1996,
+      "n_buses_exported": 1996,
+      "n_lines_exported": 2069
     },
     "tokyo": {
       "island": "east",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8495,
+      "vm_min": 0.8532,
       "vm_max": 1.0229,
-      "n_buses": 3968,
-      "n_buses_exported": 3968,
-      "n_lines_exported": 4088
+      "n_buses": 4003,
+      "n_buses_exported": 4003,
+      "n_lines_exported": 4146
     },
     "chubu": {
       "island": "west",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9457,
-      "vm_max": 1.0151,
-      "n_buses": 2470,
-      "n_buses_exported": 2470,
-      "n_lines_exported": 2439
+      "vm_min": 0.9435,
+      "vm_max": 1.0149,
+      "n_buses": 2436,
+      "n_buses_exported": 2436,
+      "n_lines_exported": 2442
     },
     "chugoku": {
       "island": "west",
@@ -222,7 +222,7 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9896,
-      "vm_max": 1.0248,
+      "vm_max": 1.0247,
       "n_buses": 776,
       "n_buses_exported": 776,
       "n_lines_exported": 906
@@ -232,11 +232,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.7944,
+      "vm_min": 0.7942,
       "vm_max": 1.0219,
       "n_buses": 1730,
       "n_buses_exported": 1730,
-      "n_lines_exported": 1723
+      "n_lines_exported": 1724
     },
     "kyushu": {
       "island": "west",
