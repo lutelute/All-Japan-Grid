@@ -1,0 +1,5018 @@
+{
+ "note": "同一座標(round5≈1m)に別周波数島ラベルのノードが載る衝突キーの全量。連結性の島判定バグ(e54186f修正)の原因データ。junction重複は跨region二重登録(topoRAG 884組)の一部で、将来のdedupキャンペーンの対象リスト。青森箱20ノードは介入#29のregion是正で解消予定。",
+ "n_keys": 220,
+ "patterns": {
+  "east+west": 203,
+  "east+hokkaido": 17
+ },
+ "collisions": [
+  {
+   "key": [
+    34.81855,
+    137.92693
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8186:137.9269:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8186:137.9269:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.82524,
+    138.04084
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8252:138.0408:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8252:138.0408:275",
+     "kv": 275.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.82928,
+    138.16421
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8293:138.1642:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8293:138.1642:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.83325,
+    138.1617
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8332:138.1617:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8332:138.1617:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.85136,
+    138.22185
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8514:138.2218:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8514:138.2218:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.85532,
+    138.23366
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8553:138.2337:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8553:138.2337:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.85547,
+    138.22483
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8555:138.2248:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8555:138.2248:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.85765,
+    138.13985
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8577:138.1398:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8577:138.1398:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.86107,
+    138.13417
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8611:138.1342:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8611:138.1342:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.88522,
+    138.32776
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8852:138.3278:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8852:138.3278:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.89638,
+    138.32152
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.8964:138.3215:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.8964:138.3215:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.90069,
+    138.11133
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.9007:138.1113:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.9007:138.1113:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.90595,
+    138.28979
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.9059:138.2898:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.9059:138.2898:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.90815,
+    138.31277
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.9082:138.3128:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.9082:138.3128:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.95073,
+    138.36581
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1726",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "駿河区変電所_2",
+     "kv": 110.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    34.95398,
+    138.34796
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.954:138.348:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.954:138.348:0",
+     "kv": 275.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.98058,
+    138.4147
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.9806:138.4147:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.9806:138.4147:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    34.99118,
+    138.42608
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 34.9912:138.4261:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 34.9912:138.4261:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.00877,
+    138.37124
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.0088:138.3712:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.0088:138.3712:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.01025,
+    137.90819
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.0103:137.9082:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.0103:137.9082:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.01091,
+    137.90791
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.0109:137.9079:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.0109:137.9079:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.01104,
+    138.40863
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.011:138.4086:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.011:138.4086:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.01663,
+    138.38038
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.0166:138.3804:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.0166:138.3804:110",
+     "kv": 110.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.11345,
+    138.35188
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1135:138.3519:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1135:138.3519:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.11595,
+    138.61777
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.116:138.6178:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.116:138.6178:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.12095,
+    138.35308
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.121:138.3531:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.121:138.3531:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.12237,
+    138.61395
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "蒲原一丁目変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "蒲原一丁目変電所 77kV",
+     "kv": 77.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "蒲原一丁目変電所 (untyped)",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "蒲原一丁目変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "蒲原一丁目変電所 77kV",
+     "kv": 77.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "蒲原一丁目変電所 (untyped)",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.12573,
+    138.85057
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "中沢田変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "中沢田変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.12587,
+    138.84965
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "西沢田変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "西沢田変電所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.12803,
+    138.91931
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.128:138.9193:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.128:138.9193:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.13425,
+    138.62448
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1343:138.6245:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1343:138.6245:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.139,
+    138.9151
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.139:138.9151:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.139:138.9151:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.14564,
+    138.62279
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1456:138.6228:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1456:138.6228:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.1467,
+    138.72319
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "富士岡南変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "富士岡南変電所 (untyped)",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "富士岡南変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.17092,
+    138.12833
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1709:138.1283:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1709:138.1283:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.18964,
+    138.64262
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1896:138.6426:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1896:138.6426:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.19628,
+    138.64022
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.1963:138.6402:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.1963:138.6402:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.20005,
+    138.56187
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2:138.5619:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2:138.5619:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.20021,
+    138.63015
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2002:138.6302:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2002:138.6302:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.2064,
+    138.23452
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2064:138.2345:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2064:138.2345:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.20822,
+    138.62457
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2082:138.6246:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2082:138.6246:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.21001,
+    138.62816
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.21:138.6282:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.21:138.6282:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.21112,
+    138.62752
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2111:138.6275:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2111:138.6275:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.23909,
+    138.58939
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2391:138.5894:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2391:138.5894:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.23931,
+    138.61206
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2393:138.6121:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2393:138.6121:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.24767,
+    139.05967
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2477:139.0597:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2477:139.0597:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.24901,
+    138.64743
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.249:138.6474:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.249:138.6474:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.2506,
+    139.06087
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2506:139.0609:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2506:139.0609:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.2534,
+    138.90498
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "駒門一丁目変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "駒門一丁目変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.25396,
+    139.04313
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.254:139.0431:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.254:139.0431:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.25524,
+    139.04744
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2552:139.0474:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2552:139.0474:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.25579,
+    139.04353
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2558:139.0435:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2558:139.0435:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.25834,
+    139.04862
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2583:139.0486:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2583:139.0486:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.25926,
+    138.5803
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2593:138.5803:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2593:138.5803:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.26112,
+    138.64372
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2611:138.6437:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2611:138.6437:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.26165,
+    138.49759
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "佐野川変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "佐野川変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.26265,
+    138.56198
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2627:138.562:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2627:138.562:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.27012,
+    139.16599
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2701:139.166:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2701:139.166:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.28234,
+    139.14285
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2823:139.1428:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2823:139.1428:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.28718,
+    138.58689
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2872:138.5869:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2872:138.5869:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.28782,
+    138.58164
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.2878:138.5816:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.2878:138.5816:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.33085,
+    139.127
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3309:139.127:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3309:139.127:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.33129,
+    139.1282
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3313:139.1282:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3313:139.1282:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.34677,
+    139.09926
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3468:139.0993:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3468:139.0993:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.34684,
+    139.09898
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3468:139.099:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3468:139.099:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.3489,
+    139.0899
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3489:139.0899:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3489:139.0899:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.3499,
+    139.10801
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3499:139.108:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3499:139.108:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.36856,
+    138.1955
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3686:138.1955:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3686:138.1955:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.37061,
+    138.20068
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.3706:138.2007:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.3706:138.2007:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.41003,
+    138.43742
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.41:138.4374:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.41:138.4374:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.41232,
+    138.43524
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.4123:138.4352:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.4123:138.4352:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.4404,
+    138.83402
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.4404:138.834:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.4404:138.834:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.44431,
+    138.83677
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.4443:138.8368:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.4443:138.8368:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.52558,
+    138.31237
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5256:138.3124:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5256:138.3124:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.53121,
+    137.91259
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5312:137.9126:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5312:137.9126:500",
+     "kv": 500.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.53265,
+    137.93889
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5327:137.9389:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5327:137.9389:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.53315,
+    137.94255
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5332:137.9425:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5332:137.9425:500",
+     "kv": 500.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.53558,
+    138.86952
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "東桂変電所",
+     "kv": 500.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "東桂変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.54632,
+    138.05666
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5463:138.0567:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5463:138.0567:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.54894,
+    138.02218
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5489:138.0222:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5489:138.0222:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.55717,
+    137.89753
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5572:137.8975:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5572:137.8975:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.56935,
+    138.47482
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5693:138.4748:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5693:138.4748:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.58456,
+    138.56528
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5846:138.5653:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5846:138.5653:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.58459,
+    138.53087
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5846:138.5309:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5846:138.5309:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.58632,
+    138.56139
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "高部変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "高部変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.58903,
+    138.54839
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "乙黒変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "乙黒変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.59173,
+    138.5556
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.5917:138.5556:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.5917:138.5556:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.59205,
+    137.93195
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.592:137.9319:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.592:137.9319:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.60268,
+    138.82472
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "笹子変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "笹子変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.60338,
+    138.91173
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6034:138.9117:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6034:138.9117:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.60608,
+    138.55988
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "堀之内町変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "堀之内町変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "堀之内町変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.60892,
+    138.53303
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "常永変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "常永変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.60898,
+    139.24138
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.609:139.2414:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.609:139.2414:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.61734,
+    139.02165
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6173:139.0216:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6173:139.0216:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.62192,
+    138.55078
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6219:138.5508:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6219:138.5508:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.6222,
+    138.55013
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6222:138.5501:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6222:138.5501:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.62276,
+    138.55365
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6228:138.5536:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6228:138.5536:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.64726,
+    138.29659
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6473:138.2966:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6473:138.2966:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.65261,
+    138.13267
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6526:138.1327:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6526:138.1327:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.66113,
+    138.63759
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "石和町松本変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "石和町松本変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.68744,
+    138.69093
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6874:138.6909:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6874:138.6909:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.68819,
+    138.69232
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.6882:138.6923:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.6882:138.6923:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.70611,
+    138.93569
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.7061:138.9357:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.7061:138.9357:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.71283,
+    138.71899
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.7128:138.719:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.7128:138.719:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.74472,
+    137.93525
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.7447:137.9353:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 35.7447:137.9353:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.76596,
+    138.08412
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.766:138.0841:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.766:138.0841:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.7661,
+    138.084
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.7661:138.084:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.7661:138.084:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.81409,
+    138.07882
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.8141:138.0788:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.8141:138.0788:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.82605,
+    138.05519
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.8261:138.0552:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.8261:138.0552:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.83127,
+    137.96511
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.8313:137.9651:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.8313:137.9651:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.83271,
+    138.05713
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.8327:138.0571:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.8327:138.0571:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.83284,
+    137.94864
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.8328:137.9486:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.8328:137.9486:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.96888,
+    138.17391
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1736",
+     "kv": 77.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "茅野市変電所_2",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    35.98247,
+    139.10431
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.9825:139.1043:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.9825:139.1043:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.98272,
+    139.0552
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.9827:139.0552:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.9827:139.0552:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.98291,
+    139.10436
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 35.9829:139.1044:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 35.9829:139.1044:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    35.98342,
+    138.51143
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "川上村変電所",
+     "kv": 77.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "川上村変電所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.05629,
+    138.46627
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "小海町変電所_2",
+     "kv": 77.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "小海町変電所_2",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.05653,
+    137.89072
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.0565:137.8907:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.0565:137.8907:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.0565:137.8907:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.14065,
+    138.23408
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.1406:138.2341:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.1406:138.2341:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.16566,
+    138.17455
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.1657:138.1745:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.1657:138.1745:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.18502,
+    139.18194
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.185:139.1819:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.185:139.1819:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.18575,
+    139.18418
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.1858:139.1842:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.1858:139.1842:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.20693,
+    137.9815
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.2069:137.9815:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.2069:137.9815:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.24531,
+    139.12696
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "堤変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "堤変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.2575,
+    137.93446
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.2575:137.9345:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.2575:137.9345:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.28752,
+    139.17197
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.2875:139.172:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.2875:139.172:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.28988,
+    139.17644
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "堀口町変電所",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "堀口町変電所",
+     "kv": 154.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.29858,
+    137.98402
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.2986:137.984:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.2986:137.984:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.30048,
+    139.09768
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3005:139.0977:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3005:139.0977:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.30157,
+    139.09901
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3016:139.099:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3016:139.099:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.30191,
+    137.93128
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3019:137.9313:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3019:137.9313:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.30368,
+    139.08156
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "綿貫町変電所",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "綿貫町変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.30738,
+    138.93003
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3074:138.93:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3074:138.93:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.31031,
+    139.0904
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3103:139.0904:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3103:139.0904:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.32587,
+    138.3021
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3259:138.3021:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3259:138.3021:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.32847,
+    138.43299
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3285:138.433:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3285:138.433:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.32945,
+    138.43587
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3294:138.4359:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3294:138.4359:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.33678,
+    138.99453
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "並榎町変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "並榎町変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.33715,
+    139.01107
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "芝塚町変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "芝塚町変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.34303,
+    138.64481
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "軽井沢東変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "軽井沢東変電所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.3442,
+    137.99388
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3442:137.9939:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3442:137.9939:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.3583,
+    137.89132
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3583:137.8913:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3583:137.8913:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.3583:137.8913:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.36114,
+    139.00922
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "小八木町変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "小八木町変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.37229,
+    137.8997
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3723:137.8997:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3723:137.8997:77",
+     "kv": 77.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.3723:137.8997:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.37588,
+    138.00494
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.3759:138.0049:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.3759:138.0049:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.38131,
+    139.04931
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "新前橋町変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "新前橋町変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.39503,
+    138.24222
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.395:138.2422:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.395:138.2422:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.39699,
+    138.24395
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.397:138.2439:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.397:138.2439:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.40615,
+    138.26579
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4062:138.2658:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4062:138.2658:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.40647,
+    138.26751
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4065:138.2675:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4065:138.2675:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.41564,
+    137.89561
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4156:137.8956:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4156:137.8956:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.4156:137.8956:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.43528,
+    139.04626
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4353:139.0463:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4353:139.0463:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.43542,
+    139.04646
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4354:139.0465:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4354:139.0465:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.4389,
+    137.92444
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.4389:137.9244:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.4389:137.9244:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.4389:137.9244:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.50445,
+    138.17335
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5044:138.1734:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5044:138.1734:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.50611,
+    138.07521
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5061:138.0752:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5061:138.0752:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.52294,
+    138.6203
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5229:138.6203:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5229:138.6203:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.52332,
+    138.61718
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5233:138.6172:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5233:138.6172:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.52471,
+    138.62029
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5247:138.6203:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5247:138.6203:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.53762,
+    138.16543
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5376:138.1654:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5376:138.1654:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.54063,
+    138.13197
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "新屋代補助き電区分所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "新屋代補助き電区分所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.55067,
+    138.61188
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5507:138.6119:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5507:138.6119:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.55305,
+    138.19453
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "松代変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "松代変電所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.5541,
+    138.14922
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5541:138.1492:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5541:138.1492:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.56263,
+    138.81539
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5626:138.8154:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5626:138.8154:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.57184,
+    138.73297
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5718:138.733:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5718:138.733:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.57516,
+    138.72839
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5752:138.7284:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5752:138.7284:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.58973,
+    138.13749
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.5897:138.1375:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.5897:138.1375:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.59134,
+    138.14656
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1753",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "川中島町今井原変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.60263,
+    139.04633
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6026:139.0463:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6026:139.0463:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.60327,
+    139.04948
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6033:139.0495:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6033:139.0495:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.62619,
+    138.26004
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1755",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "加美町変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.62763,
+    138.15745
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1757",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "安茂里小市一丁目変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.63505,
+    138.17757
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1756",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "安茂里変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.64534,
+    139.11047
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6453:139.1105:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6453:139.1105:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.6454,
+    139.1106
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6454:139.1106:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6454:139.1106:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.64575,
+    139.11028
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6458:139.1103:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6458:139.1103:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.64809,
+    139.1087
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6481:139.1087:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6481:139.1087:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.66284,
+    138.21946
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo_sub_1752",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "中越一丁目変電所",
+     "kv": 77.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.67878,
+    138.98311
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "みなかみ町変電所",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "みなかみ町変電所",
+     "kv": 154.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.69374,
+    138.23528
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.6937:138.2353:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.6937:138.2353:77",
+     "kv": 77.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.70568,
+    138.27174
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.7057:138.2717:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.7057:138.2717:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.70751,
+    138.26727
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.7075:138.2673:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.7075:138.2673:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.72448,
+    137.96762
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "奥裾花地下発電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "奥裾花地下発電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.80037,
+    139.0471
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "みなかみ町変電所",
+     "kv": 275.0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "みなかみ町変電所_2",
+     "kv": 275.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.80882,
+    138.61891
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.8088:138.6189:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.8088:138.6189:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.88219,
+    138.63784
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.8822:138.6378:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.8822:138.6378:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.89126,
+    138.74913
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.8913:138.7491:275",
+     "kv": 275.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.8913:138.7491:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.90169,
+    138.79945
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9017:138.7995:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9017:138.7995:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.90939,
+    138.80929
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9094:138.8093:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9094:138.8093:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.90986,
+    137.90943
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9099:137.9094:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9099:137.9094:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "hokuriku",
+     "name": "hokuriku junction 36.9099:137.9094:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.91295,
+    138.80891
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.913:138.8089:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.913:138.8089:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.91369,
+    138.80805
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "神立変電所_2",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "神立変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.92529,
+    138.84121
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "土樽変電所_2",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "土樽変電所_2",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.92751,
+    138.81258
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9275:138.8126:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9275:138.8126:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.94919,
+    138.8022
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "湯沢変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "湯沢変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.96939,
+    138.79935
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9694:138.7993:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9694:138.7993:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.97017,
+    138.80026
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9702:138.8003:0",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9702:138.8003:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.97145,
+    138.80002
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9714:138.8:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9714:138.8:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    36.98364,
+    138.22599
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "えちごトキめき鉄道(株)二本木変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "えちごトキめき鉄道(株)二本木変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.99291,
+    138.59129
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "灰雨変電所",
+     "kv": 0,
+     "sub": true
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "灰雨変電所",
+     "kv": 0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    36.9997,
+    138.00634
+   ],
+   "nodes": [
+    {
+     "island": "east",
+     "region": "tokyo",
+     "name": "tokyo junction 36.9997:138.0063:0",
+     "kv": 0,
+     "sub": false
+    },
+    {
+     "island": "west",
+     "region": "chubu",
+     "name": "chubu junction 36.9997:138.0063:0",
+     "kv": 0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.18808,
+    141.30998
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.1881:141.31:154",
+     "kv": 154.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.1881:141.31:154",
+     "kv": 154.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.30572,
+    141.19351
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "下北変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "下北変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "下北変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "下北変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.33696,
+    141.2024
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.337:141.2024:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.337:141.2024:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.35383,
+    141.34125
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "東通変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "東通変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "東通変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "東通変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.3768,
+    141.40013
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "岩屋変電所_2 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "岩屋変電所_2 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "岩屋変電所_2 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "岩屋変電所_2 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.37949,
+    141.40299
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "岩屋変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "岩屋変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "岩屋変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "岩屋変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.39963,
+    141.15657
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "大畑変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "大畑変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.41063,
+    141.44214
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "東通村変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "東通村変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "東通村変電所 154kV",
+     "kv": 154.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "東通村変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.42357,
+    140.18427
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.4236:140.1843:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.4236:140.1843:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.43029,
+    140.07513
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "松前変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "松前変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.434,
+    140.11255
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "福山変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "福山変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.44241,
+    140.22546
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.4424:140.2255:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.4424:140.2255:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.443,
+    140.23467
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "JR北海道吉岡変電所 187kV",
+     "kv": 187.0,
+     "sub": true
+    },
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "JR北海道吉岡変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "JR北海道吉岡変電所 187kV",
+     "kv": 187.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "JR北海道吉岡変電所 66kV",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.44708,
+    140.88993
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.4471:140.8899:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.4471:140.8899:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.46118,
+    140.8871
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "佐井変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "佐井変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  },
+  {
+   "key": [
+    41.47137,
+    140.91285
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "hokkaido junction 41.4714:140.9129:66",
+     "kv": 66.0,
+     "sub": false
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "tohoku junction 41.4714:140.9129:66",
+     "kv": 66.0,
+     "sub": false
+    }
+   ]
+  },
+  {
+   "key": [
+    41.49855,
+    140.25102
+   ],
+   "nodes": [
+    {
+     "island": "hokkaido",
+     "region": "hokkaido",
+     "name": "福島変電所",
+     "kv": 66.0,
+     "sub": true
+    },
+    {
+     "island": "east",
+     "region": "tohoku",
+     "name": "福島変電所",
+     "kv": 66.0,
+     "sub": true
+    }
+   ]
+  }
+ ]
+}

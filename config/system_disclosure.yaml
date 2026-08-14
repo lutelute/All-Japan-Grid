@@ -69,7 +69,17 @@ utilities:
         note: >-
           大間ほか東北の孤立変電所の解決源。基幹系統図は
           /retailservice/g-charge/pdf/ex-hi_kei.pdf（転載禁止・表紙明示）。
-          取得後は列形式（TEPCO型「変電所名(変) - 線路名」or 関西型「潮流正方向 A→B」）を要判別
+          取得後は列形式（TEPCO型「変電所名(変) - 線路名」or 関西型「潮流正方向 A→B」）を要判別。
+          2026-08-15取得済(kikan01+local01-07×line/tr×2022-2024=48件)。kikan01は名前が
+          Excel引用符付き('中仙台変電所)。変圧器台帳は normalized/tohoku_tr_registry.csv
+      flow_maps:
+        # 潮流実績と対をなす局所系統構成図（66kV以下の変電所×線の結線図・PDF）
+        link_pattern: 'jisseki_(kikan|local)\d+_map_\d{4}_\d{2}\.pdf'
+        verified: true     # 2026-08-15 実DL成功 8枚(kikan01+local01-07 2024_02)
+        format: pdf
+        note: >-
+          転載禁止（data/external内に留める）。CSVで解けない孤立変電所
+          （岩屋・東通村・餅田等）の人手判読用一次源。取得先 flow_maps/
 
   tokyo:
     name: 東京電力パワーグリッド
