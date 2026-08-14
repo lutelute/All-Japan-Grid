@@ -67,6 +67,12 @@
   .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;
     border:1px solid var(--line);color:var(--dim);margin-left:6px}
   .maplibregl-popup-content{background:#111823;color:#dfe6ef}
+  /* ホバー用の軽量ポップアップ（カーソル追従・クリックを邪魔しない） */
+  .hoverpop{pointer-events:none}
+  .hoverpop .maplibregl-popup-content{padding:6px 9px;font-size:11px;line-height:1.5;
+    border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+  .hoverpop .maplibregl-popup-tip{display:none}
+  .hoverpop b{font-size:11.5px}
 </style>
 </head>
 <body>
@@ -824,6 +830,30 @@ Promise.all([
   map.on('mouseleave','genm',()=>map.getCanvas().style.cursor='');
   map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
   map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
+
+  // ---- ホバー・ツールチップ（クリックせずに要点を読む。backbone_actual と共通）----
+  const hoverPop=new maplibregl.Popup({closeButton:false,closeOnClick:false,offset:12,className:'hoverpop'});
+  const hn=(v,u='',d=0)=>(v==null||v==='')?'—':(typeof v==='number'?v.toFixed(d):v)+u;
+  map.on('mousemove','flow-line',e=>{
+    const f=e.features[0], st=map.getFeatureState({source:'flow',id:f.id}), p=f.properties;
+    const lf=st.lf!=null?st.lf:p.load_factor_p95;
+    hoverPop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.line}</b><br>${hn(p.kv,' kV')}`
+      +`${st.mw!=null?`　<b>${hn(st.mw,' MW')}</b>`:''}`
+      +`${lf!=null?`　負荷率 ${(lf*100).toFixed(0)}%`:''}`).addTo(map);
+  });
+  map.on('mouseleave','flow-line',()=>hoverPop.remove());
+  ['gen-out','gen-peak'].forEach(lid=>{
+    map.on('mousemove',lid,e=>{
+      const p=e.features[0].properties;
+      hoverPop.setLngLat(e.lngLat).setHTML(
+        `<b>${p.plant} ${p.unit||''}</b><br>${p.fuel}`
+        +`${p._mw!=null?`　<b>${hn(p._mw,' MW')}</b>`:''}`
+        +`${p._r!=null?`　出力率 ${(p._r*100).toFixed(0)}%`:''}`).addTo(map);
+    });
+    map.on('mouseleave',lid,()=>hoverPop.remove());
+  });
+
   // 何もない所をクリックしたら情報パネルを閉じる。詳細を開くレイヤ
   // （潮流・発電ユニット・大規模電源）を除外しないと、それらをクリックした
   // 瞬間に開いた情報が同じクリックで閉じてしまう（発電クリックが効かない不具合）。
