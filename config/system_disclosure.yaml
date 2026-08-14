@@ -61,15 +61,15 @@ utilities:
         verified: false    # 未発見。当該ページはPDF中心（01.pdf/02.pdf）。別ページに存在する可能性 → 要追加調査
         note: 制度上は存在するはず。系統情報公表の別階層を要探索
       flow_actual:
-        # 2026-08-15 Web調査で発見した候補（未取得・pattern要現物確認）。
-        # 潮流実績は別階層 /consignment/system/demand/ に「送電線名・変電所名を含むCSV」。
+        # 潮流実績は別階層 /consignment/system/demand/data/ に。
         index_url: https://nw.tohoku-epco.co.jp/consignment/system/demand/
-        link_pattern: 'jisseki[^"]*\.(csv|zip)'
-        verified: false    # ランディング実在は確認・ファイル名patternは現物で要調整
+        link_pattern: 'jisseki_(kikan|local)\d+_(line|tr)_\d{4}_\d{2}\.csv'
+        verified: true     # 2026-08-15 dry-run確認。kikan01(基幹)+local01〜07(ローカル)×line/tr。
+                           # TEPCO同様に基幹+ローカルまで機械可読で公表(=東北の孤立系も解ける見込み)
         note: >-
-          大間町変電所の解決に必要。基幹系統図は
+          大間ほか東北の孤立変電所の解決源。基幹系統図は
           /retailservice/g-charge/pdf/ex-hi_kei.pdf（転載禁止・表紙明示）。
-          取得後は列形式（TEPCO型 or 関西型「潮流正方向 A→B」）を要判別
+          取得後は列形式（TEPCO型「変電所名(変) - 線路名」or 関西型「潮流正方向 A→B」）を要判別
 
   tokyo:
     name: 東京電力パワーグリッド
