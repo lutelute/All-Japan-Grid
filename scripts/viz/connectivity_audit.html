@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>All-Japan-Grid — 連結性監査（途切れを赤くする）</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+  :root{--bg:#0a0e13;--panel:#111823;--line:#1e2836;--fg:#dfe6ef;--dim:#8b98a9;--accent:#5ac8fa;
+    --sub:#ff3b30;--tip:#ff6b6b;--frag:#ffa94d;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;background:rgba(17,24,35,.94);border:1px solid var(--line);
+    border-radius:10px;backdrop-filter:blur(8px)}
+  #side{top:14px;left:14px;width:290px;max-height:calc(100% - 28px);overflow-y:auto;padding:14px}
+  #side h1{margin:0 0 2px;font-size:15px;letter-spacing:.03em}
+  #side .sub{color:var(--dim);font-size:11px;line-height:1.55;margin:6px 0 10px}
+  .grp{margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line)}
+  .grp h2{margin:0 0 8px;font-size:11px;color:var(--dim);letter-spacing:.08em;font-weight:600}
+  label.row{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:12px;cursor:pointer}
+  label.row input{accent-color:var(--accent)}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .num{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--fg);font-weight:600}
+  .big{font-size:22px;font-weight:700;letter-spacing:.02em}
+  table{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px}
+  td{padding:2px 0;color:var(--dim)} td:last-child{text-align:right;color:var(--fg);font-variant-numeric:tabular-nums}
+  #info{bottom:14px;left:14px;width:290px;padding:12px 14px;display:none;font-size:12px}
+  #info h3{margin:0 0 4px;font-size:13px;color:var(--tip)}
+  #info .k{color:var(--dim)}
+  a{color:var(--accent)}
+  .maplibregl-popup-content{background:#111823;color:#dfe6ef}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="side" class="panel">
+  <h1>連結性監査</h1>
+  <div class="sub">建造モデル(docs/data/built)を<b>物理的な連結性</b>で見る。
+    コード上は node が edge で繋がっていても、<b>本系統(最大成分)に載らない断片</b>は
+    実質「途切れ」。<b>周波数島ごと・越境stitch(110m)・ACタイを入れた後でもなお</b>
+    孤立している点を赤く塗る。</div>
+
+  <div class="grp">
+    <h2>本系統に載らないノード</h2>
+    <div class="big" id="offpct">—</div>
+    <div class="sub" id="offline" style="margin:2px 0 0"></div>
+  </div>
+
+  <div class="grp">
+    <h2>表示レイヤ</h2>
+    <label class="row"><input type="checkbox" id="l-sub" checked>
+      <span class="dot" style="background:var(--sub)"></span>孤立した変電所<span class="num" id="n-sub"></span></label>
+    <label class="row"><input type="checkbox" id="l-tip" checked>
+      <span class="dot" style="background:var(--tip)"></span>宙に浮いた終点(deg1)<span class="num" id="n-tip"></span></label>
+    <label class="row"><input type="checkbox" id="l-frag" checked>
+      <span class="dot" style="background:var(--frag)"></span>その他の断片<span class="num" id="n-frag"></span></label>
+    <label class="row" style="margin-top:10px"><input type="checkbox" id="l-mainedge" checked>
+      <span class="dot" style="background:#3a4757"></span>本系統の枝(背景)</span></label>
+    <label class="row"><input type="checkbox" id="l-fragedge" checked>
+      <span class="dot" style="background:var(--frag)"></span>断片の枝</label>
+    <label class="row"><input type="checkbox" id="l-mainnode">
+      <span class="dot" style="background:#4b5a6c"></span>本系統のノード<span class="num" id="n-main"></span></label>
+  </div>
+
+  <div class="grp">
+    <h2>地域別の断片ノード数</h2>
+    <table id="regtab"></table>
+  </div>
+
+  <div class="grp">
+    <h2>出典・注意</h2>
+    <div class="sub" style="margin:0">連結性 = src/powerflow/connectivity.py（周波数島・越境stitch・OCCTO ACタイ）。
+      背景 <a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>。<br>
+      赤は「繋げられていない」であって「繋がってはいけない」ではない。要因は
+      孤立変電所・端点未接続・降圧点欠損など個別に精査する。</div>
+  </div>
+</div>
+
+<div id="info" class="panel"></div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const COL={isolated_sub:'#ff3b30',orphan_tip:'#ff6b6b',fragment:'#ffa94d'};
+const map=new maplibregl.Map({
+  container:'map',
+  style:{version:8,
+    sources:{gsi:{type:'raster',tileSize:256,
+      tiles:['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],attribution:'地理院タイル'}},
+    layers:[{id:'bg',type:'background',paint:{'background-color':'#0a0e13'}},
+      {id:'gsi',type:'raster',source:'gsi',
+       paint:{'raster-opacity':0.30,'raster-saturation':-0.85,'raster-brightness-max':0.55}}]},
+  center:[137.6,37.0], zoom:5.0, hash:true});
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
+map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
+
+const fmt=v=>(v==null?'—':v.toLocaleString('ja-JP'));
+
+Promise.all([
+  fetch('./audit_nodes.geojson').then(r=>r.json()),
+  fetch('./audit_edges.geojson').then(r=>r.json()),
+  fetch('./audit_summary.json').then(r=>r.json()).catch(()=>null),
+]).then(([nodes,edges,sum])=>{
+  map.on('load',()=>{
+    map.addSource('edges',{type:'geojson',data:edges});
+    // 本系統の枝: 暗く沈める背景
+    map.addLayer({id:'edge-main',type:'line',source:'edges',
+      filter:['==',['get','main'],true],
+      paint:{'line-color':'#3a4757','line-width':['interpolate',['linear'],['zoom'],5,0.4,10,1.0],
+             'line-opacity':.5}});
+    // 断片の枝: 橙。本系統に載らない線分
+    map.addLayer({id:'edge-frag',type:'line',source:'edges',
+      filter:['==',['get','main'],false],
+      paint:{'line-color':'#e8833a','line-width':['interpolate',['linear'],['zoom'],5,0.7,10,1.8],
+             'line-opacity':.85}});
+
+    map.addSource('nodes',{type:'geojson',data:nodes});
+    // 本系統ノード（既定OFF・薄い点）
+    map.addLayer({id:'node-main',type:'circle',source:'nodes',minzoom:7,
+      filter:['==',['get','cls'],'main'],
+      layout:{visibility:'none'},
+      paint:{'circle-radius':1.4,'circle-color':'#4b5a6c','circle-opacity':.5}});
+    // 断片（橙・小）
+    map.addLayer({id:'node-frag',type:'circle',source:'nodes',
+      filter:['==',['get','cls'],'fragment'],
+      paint:{'circle-radius':['interpolate',['linear'],['zoom'],5,2,10,4],
+             'circle-color':COL.fragment,'circle-opacity':.85,
+             'circle-stroke-width':.5,'circle-stroke-color':'#0a0e13'}});
+    // 宙に浮いた終点（赤）
+    map.addLayer({id:'node-tip',type:'circle',source:'nodes',
+      filter:['==',['get','cls'],'orphan_tip'],
+      paint:{'circle-radius':['interpolate',['linear'],['zoom'],5,2.4,10,5],
+             'circle-color':COL.orphan_tip,'circle-opacity':.9,
+             'circle-stroke-width':.6,'circle-stroke-color':'#0a0e13'}});
+    // 孤立した変電所（濃赤・大・白縁で最も目立たせる＝実設備が孤立＝主要問題）
+    map.addLayer({id:'node-sub',type:'circle',source:'nodes',
+      filter:['==',['get','cls'],'isolated_sub'],
+      paint:{'circle-radius':['interpolate',['linear'],['zoom'],5,3.2,10,7],
+             'circle-color':COL.isolated_sub,'circle-opacity':.95,
+             'circle-stroke-width':1.4,'circle-stroke-color':'#ffe0dd'}});
+
+    // 件数
+    const cnt={main:0,fragment:0,orphan_tip:0,isolated_sub:0};
+    nodes.features.forEach(f=>{cnt[f.properties.cls]=(cnt[f.properties.cls]||0)+1;});
+    const off=cnt.fragment+cnt.orphan_tip+cnt.isolated_sub, tot=nodes.features.length;
+    document.getElementById('n-sub').textContent=fmt(cnt.isolated_sub);
+    document.getElementById('n-tip').textContent=fmt(cnt.orphan_tip);
+    document.getElementById('n-frag').textContent=fmt(cnt.fragment);
+    document.getElementById('n-main').textContent=fmt(cnt.main);
+    document.getElementById('offpct').textContent=`${(off/tot*100).toFixed(1)}% が本系統外`;
+    const isl=(sum&&sum.islands)||{};
+    document.getElementById('offline').innerHTML=
+      `${fmt(off)} / ${fmt(tot)} ノード・<b>${fmt(sum&&sum.n_components)}成分</b>`
+      +`（本系統＋${fmt((sum&&sum.n_components||1)-1)}浮島）<br>`
+      +`stitch ${fmt(sum&&sum.n_stitch)}件＋ACタイ ${fmt(sum&&sum.n_tie)}本を入れても なお孤立`;
+
+    // 地域別テーブル
+    const byreg=(sum&&sum.off_main_by_region)||{};
+    document.getElementById('regtab').innerHTML=Object.entries(byreg).map(([r,c])=>{
+      const t=(c.isolated_sub||0)+(c.orphan_tip||0)+(c.fragment||0);
+      return `<tr><td>${r}</td><td>${fmt(t)}<span style="color:var(--sub)"> ●${c.isolated_sub||0}</span></td></tr>`;
+    }).join('');
+
+    // トグル
+    const vis=(id,on)=>map.getLayer(id)&&map.setLayoutProperty(id,'visibility',on?'visible':'none');
+    document.getElementById('l-sub').onchange=e=>vis('node-sub',e.target.checked);
+    document.getElementById('l-tip').onchange=e=>vis('node-tip',e.target.checked);
+    document.getElementById('l-frag').onchange=e=>vis('node-frag',e.target.checked);
+    document.getElementById('l-mainedge').onchange=e=>vis('edge-main',e.target.checked);
+    document.getElementById('l-fragedge').onchange=e=>vis('edge-frag',e.target.checked);
+    document.getElementById('l-mainnode').onchange=e=>vis('node-main',e.target.checked);
+
+    // クリックで詳細
+    const CLSJA={isolated_sub:'孤立した変電所',orphan_tip:'宙に浮いた終点(deg1)',fragment:'断片ノード',main:'本系統'};
+    ['node-sub','node-tip','node-frag'].forEach(lid=>{
+      map.on('click',lid,ev=>{
+        const p=ev.features[0].properties;
+        document.getElementById('info').style.display='block';
+        document.getElementById('info').innerHTML=
+          `<h3>${CLSJA[p.cls]||p.cls}</h3>`
+          +`<div><span class="k">名称</span> ${p.name||'—'}</div>`
+          +`<div><span class="k">電圧</span> ${p.kv!=null?p.kv+' kV':'—'}　`
+          +`<span class="k">次数</span> ${p.deg}　<span class="k">地域</span> ${p.region}</div>`
+          +`<div style="color:var(--dim);margin-top:4px">id: ${p.id}</div>`
+          +`<div style="color:var(--dim);margin-top:6px;font-size:10.5px">`
+          +`本系統(最大成分)に載っていない。stitch/タイでも繋がらなかった端点。`
+          +`要因（孤立変電所・端点未接続・降圧点欠損）は個別精査する。</div>`;
+      });
+      map.on('mouseenter',lid,()=>map.getCanvas().style.cursor='pointer');
+      map.on('mouseleave',lid,()=>map.getCanvas().style.cursor='');
+    });
+    map.on('click',ev=>{
+      const ls=['node-sub','node-tip','node-frag'].filter(l=>map.getLayer(l));
+      if(!map.queryRenderedFeatures(ev.point,{layers:ls}).length)
+        document.getElementById('info').style.display='none';
+    });
+  });
+});
+</script>
+</body>
+</html>
