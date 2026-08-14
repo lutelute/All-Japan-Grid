@@ -27,12 +27,29 @@ sys.path.insert(0, str(ROOT))
 from src.powerflow.connectivity import compute_connectivity  # noqa: E402
 
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
+BAK = ROOT / "docs" / "data" / "built" / "all.json.pre_worklist.bak"
 RECON = ROOT / "docs" / "reports" / "isolated_tepco_reconcile.json"
 VIZ = ROOT / "data" / "external" / "system_disclosure" / "viz"
 OUT = ROOT / "docs" / "reports" / "tepco_connection_worklist.json"
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--write", action="store_true",
+                    help="正典 all.json に適用(バックアップを取る・可逆)")
+    ap.add_argument("--revert", action="store_true",
+                    help="バックアップから all.json を復元(③無効化)")
+    args = ap.parse_args()
+
+    if args.revert:
+        if BAK.exists():
+            BUILT.write_text(BAK.read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"復元: {BAK.name} → all.json（正典を適用前に戻した）")
+        else:
+            print("バックアップが無い（未適用）")
+        return 0
+
     built = json.loads(BUILT.read_text(encoding="utf-8"))
     nodes = built["nodes"]
     edges = built["edges"]
@@ -137,6 +154,44 @@ def main() -> int:
         "worklist": worklist,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n保存: {OUT.relative_to(ROOT)}")
+
+    # ---- 正典への可逆適用 (--write) ----
+    if args.write:
+        if not BAK.exists():
+            BAK.write_text(BUILT.read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"バックアップ作成: {BAK.name}")
+        maink = cc1["main_keys"]
+        for n in nodes_fixed:
+            n["main"] = _k5(n["lat"], n["lon"]) in maink
+        applied_edges = list(edges)
+        for w in worklist:
+            ka, kb = tuple(w["from_pt"]), tuple(w["to_pt"])
+            applied_edges.append({
+                "path": [list(w["from_pt"]), list(w["to_pt"])],
+                "a": list(w["from_pt"]), "b": list(w["to_pt"]),
+                "main": (ka in maink and kb in maink), "par": 1,
+                "kv": w.get("kv") or 0,
+                "name": "・".join(w.get("lines", [])) or "公表接続",
+                "disclosure": w["evidence"], "dc_tie": bool(w.get("dc_tie")),
+            })
+        built["nodes"] = nodes_fixed
+        built["edges"] = applied_edges
+        st = built.setdefault("stats", {})
+        st["main_size"] = sum(1 for n in nodes_fixed if n["main"])
+        st["n_island_nodes"] = sum(1 for n in nodes_fixed if not n["main"])
+        st["n_components"] = sum(cc1["meta"]["components"].values())
+        built["disclosure_worklist_applied"] = {
+            "worklist": str(OUT.relative_to(ROOT)), "n_conn": len(worklist),
+            "region_fix_nodes": n_relabel, "off_main": st["n_island_nodes"],
+            "note": ("独立実証(TEPCO公表/Wikipedia/J-POWER)の接続13本+大間region是正を適用。"
+                     "--revert で戻せる。DC連系(由良-紀北)は tie 属性で識別。"),
+        }
+        BUILT.write_text(json.dumps(built, ensure_ascii=False,
+                                    separators=(",", ":")), encoding="utf-8")
+        print(f"★正典適用: all.json 更新（本系統外→{st['n_island_nodes']}）。"
+              f"--revert で戻せる。バックアップ={BAK.name}")
+    else:
+        print("（正典は不変。適用するなら --write / 戻すなら --revert）")
     return 0
 
 
