@@ -35,6 +35,22 @@ region優先pickで回避した実例つき。`disclosure_connection_worklist_v2
 負の結果の確定: 中国/九州/北陸/四国も潮流実績・様式5とも基幹系のみ開示で
 孤立局所系は解けない(kansai/hokkaidoに続き**西日本全社で確定**)。
 
+**第2部(オーナー起床後「まだまだできることあるはず」「正典も実行許可」)**:
+- **正典適用**: `apply_disclosure_v2.py --write` → 本系統外1885→1799・**孤立変電所533/
+  繋ぐべきA139**(セッション開始時705/257)。可逆(bak/--revert/git)。監査系の整合も修正
+  (audit --recompute・classifyの母集合を監査geojsonに統一・判定上書きはoverrides.yaml承認制)。
+- **様式5調査コンプリート**: 中部(rule_37.xlsx・固定名・仮名化)に続き**沖縄**
+  (juyo-and-sohaidenページのkikan/local_impedance.xlsx・66kV実名)を発見。
+  **10社全社の所在確定・正規化1,009線/213変圧器**。局所実名はTEPCO/東北/沖縄の3社。
+- **#27×#20の交互作用を実測**: cal187 ON の hokkaido は factor 0.7 が最良(vm_min 0.868)で
+  現行0.8が最悪(0.716)の非単調。**ただし0.7の全球適用は west AC が32分未収束**(打ち切り)で
+  危険→安全側は「cal187 ON+0.8維持」、hokkaido改善には per-island factor が要る。
+  採用3案を`isolated_review_queue_2026-08-15.md`に整理。
+- **dedupキャンペーン起点**: 同名・同kv・≤300mの重複**1,392ペア**をscreening
+  (跨region1,174・同一座標766はPF#21併合済み・非同一座標626が未処理)。
+- 系統図判読の負の証拠6件は`config/isolated_verdict_overrides.yaml`(承認制)へ。
+  regenerate_all で出荷物一式を正典適用後の状態に再生成。
+
 ## 2026-08-11 — **Claude Opus 5** — 未調査だった電圧悪化を追跡: 犯人は#25単独、係数0.6が陳腐化していた
 
 08-10 に「hokkaido と沖縄の電圧品質が悪化（vm<0.80 が 8→38バス）」を記録しながら
