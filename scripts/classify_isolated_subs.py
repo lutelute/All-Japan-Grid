@@ -32,6 +32,22 @@ BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 CALIB = ROOT / "docs" / "reports" / "island_calibration_2026-06-16.json"
 RESEARCH_MD = ROOT / "docs" / "reports" / "island_substation_research_2026-06-16.md"
 VIZ = ROOT / "data" / "external" / "system_disclosure" / "viz"
+OVERRIDES = ROOT / "config" / "isolated_verdict_overrides.yaml"
+
+
+def load_overrides() -> tuple[dict, int]:
+    """(name,region)→verdict の承認済み上書きと、未承認提案の数を返す。"""
+    if not OVERRIDES.exists():
+        return {}, 0
+    import yaml
+    d = yaml.safe_load(OVERRIDES.read_text(encoding="utf-8")) or {}
+    approved, proposed = {}, 0
+    for o in d.get("overrides", []):
+        if o.get("approved"):
+            approved[(o.get("name"), o.get("region"))] = str(o.get("verdict"))
+        else:
+            proposed += 1
+    return approved, proposed
 
 RAIL_WORDS = ("鉄道", "電鉄", "ＪＲ", "JR", "軌道", "き電", "饋電", "traction", "Railway")
 # 企業自家用の明確なマーカー(工場・製造業・ブランド名)。これらは需要家側の
@@ -97,9 +113,28 @@ def main() -> int:
         return 1
     verified = load_verified()
     calib = load_calib_index()
-    nodes = json.loads(BUILT.read_text(encoding="utf-8")).get("nodes", [])
-    subs = [n for n in nodes if n.get("sub") and not n.get("main")]
 
+    # 母集合は監査 geojson の isolated_sub を単一の真実とする（あれば）。
+    # built の main フラグは古い計算（島判定バグ修正前の --write）で焼かれている
+    # ことがあり、build_connectivity_audit --recompute の結果とズレるため。
+    audit_f = VIZ / "audit_nodes.geojson"
+    subs = None
+    if audit_f.exists():
+        feats = json.loads(audit_f.read_text(encoding="utf-8"))["features"]
+        subs = [{"name": f["properties"].get("name"),
+                 "kv": f["properties"].get("kv"),
+                 "lat": f["geometry"]["coordinates"][1],
+                 "lon": f["geometry"]["coordinates"][0],
+                 "id": f["properties"].get("id"),
+                 "region": f["properties"].get("region")}
+                for f in feats if f["properties"].get("cls") == "isolated_sub"]
+        print(f"母集合: audit_nodes.geojson の isolated_sub {len(subs)} 件"
+              "（built の main フラグは不使用）")
+    if subs is None:
+        nodes = json.loads(BUILT.read_text(encoding="utf-8")).get("nodes", [])
+        subs = [n for n in nodes if n.get("sub") and not n.get("main")]
+
+    overrides, n_proposed = load_overrides()
     verdicts = {}   # id -> A/B/?
     reason = Counter()
     by_region = {}
@@ -126,6 +161,10 @@ def main() -> int:
         # 4) 不明
         else:
             v = "?"; reason["kv0→?"] += 1
+        # 0) 承認済みオーバーライド（config/isolated_verdict_overrides.yaml）が最優先
+        ov = overrides.get((name, n.get("region")))
+        if ov:
+            v = ov; reason["override"] += 1
         verdicts[n.get("id")] = v
         by_region.setdefault(n.get("region"), Counter())[v] += 1
         if v == "A":
@@ -137,6 +176,9 @@ def main() -> int:
     print(f"  B 除外(正)   {total['B']:4}  (鉄道/別系統＝繋がなくて正しい赤)")
     print(f"  ? 不明       {total['?']:4}  (配電寄り推定・要個別確認)")
     print(f"  判定根拠: {dict(reason)}")
+    if n_proposed:
+        print(f"  ⚠ 未承認の上書き提案 {n_proposed} 件"
+              f"（config/isolated_verdict_overrides.yaml で approved: true にすると適用）")
     print("\n地域別 A/B/?:")
     for r, c in sorted(by_region.items(), key=lambda kv: -kv[1]["A"]):
         print(f"  {r:9} A={c['A']:3} B={c['B']:3} ?={c['?']:3}")

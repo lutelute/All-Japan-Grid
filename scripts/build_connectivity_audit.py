@@ -21,11 +21,14 @@
 """
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 SRC = ROOT / "docs" / "data" / "built" / "all.json"
 OUT = ROOT / "data" / "external" / "system_disclosure" / "viz"
 
@@ -41,6 +44,13 @@ def classify(n: dict) -> str:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--recompute", action="store_true",
+                    help="all.json の main フラグを信用せず compute_connectivity で"
+                         "再計算する（正典は書かない）。フラグが古い計算（例: 島判定"
+                         "バグ修正 e54186f 以前の --write）で焼かれている場合に使う")
+    args = ap.parse_args()
+
     if not SRC.exists():
         print(f"{SRC} が無い。先に built モデルを生成する")
         return 1
@@ -50,6 +60,27 @@ def main() -> int:
     if not nodes:
         print("all.json に nodes が無い")
         return 1
+
+    recomputed = False
+    if args.recompute:
+        from src.powerflow.connectivity import compute_connectivity
+
+        def _k5(la, lo):
+            return (round(la, 5), round(lo, 5))
+        cc = compute_connectivity(nodes, edges)
+        mk = cc["main_keys"]
+        n_flip = 0
+        for n in nodes:            # メモリ上のみ。正典 all.json は書かない
+            new = _k5(n["lat"], n["lon"]) in mk
+            if bool(n.get("main")) != new:
+                n_flip += 1
+            n["main"] = new
+        for e in edges:
+            a, b = e.get("a"), e.get("b")
+            if a and b:
+                e["main"] = (tuple(a) in mk and tuple(b) in mk)
+        recomputed = True
+        print(f"--recompute: main フラグを再計算（{n_flip} ノードが反転・正典不変）")
 
     OUT.mkdir(parents=True, exist_ok=True)
 
@@ -103,8 +134,11 @@ def main() -> int:
     st = d.get("stats", {})
     summary = {
         "source": "docs/data/built/all.json",
+        "recomputed": recomputed,
         "note": ("main は周波数島ごと・越境stitch(110m)・ACタイ適用後の最大成分。"
-                 "赤/橙は合成接続を入れてもなお本系統に載らない断片。"),
+                 "赤/橙は合成接続を入れてもなお本系統に載らない断片。"
+                 + ("main フラグは --recompute で再計算（正典のフラグは不使用）。"
+                    if recomputed else "")),
         "n_nodes": len(nodes),
         "class_counts": dict(cls_count),
         "n_components": st.get("n_components"),

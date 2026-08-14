@@ -1,0 +1,44 @@
+# 孤立変電所の判定(A=繋ぐべき/B=除外/?=不明)の証拠付き上書き台帳
+#
+# 運用（[[梃子候補は人間判断]]の実装）:
+#   機械はスクリーニングと根拠提示まで。ここに verdict 案+evidence を積み、
+#   オーナーが approved: true を立てたものだけ classify_isolated_subs.py が適用する。
+#   approved: false のうちは「提案」として集計にのみ表示される。
+#
+# match は name(完全一致) + region。
+
+overrides:
+  # --- 2026-08-15 深夜判読: 公表66kV系統図(東北NW local02/06/07)にも潮流実績CSVにも
+  #     名前付き変電所として不在（新潟市街は目視でも確認・該当位置は無名の他社変電所●のみ）。
+  #     東北NW自社の66kV系統変電所ではない＝A(繋ぐべき送電網変電所)の根拠が崩れる。
+  #     他社受電点(JR等)か配電(<66kV)の可能性 → ? へ降格を提案。
+  - name: 青山一丁目変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 新潟66kV系統図(jisseki_local07_map_2024_02)に不在・潮流実績CSVにも不在(2026-08-15判読)
+  - name: ときめき東一丁目変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 新潟66kV系統図に不在・潮流実績CSVにも不在(2026-08-15判読)
+  - name: 平五丁目変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 新潟66kV系統図に不在・潮流実績CSVにも不在(2026-08-15判読)
+  - name: 渋川変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 新潟66kV系統図に不在・潮流実績CSVにも不在(2026-08-15判読)。長岡近郊(37.35,139.05)
+  - name: 門前寺変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 岩手66kV系統図(local02)に不在・潮流実績CSVにも不在(2026-08-15判読)
+  - name: 原町区大谷変電所
+    region: tohoku
+    verdict: "?"
+    approved: false
+    evidence: 福島66kV系統図(local06)に不在・潮流実績CSVにも不在(2026-08-15判読)。飯舘は同図で解決済との対比

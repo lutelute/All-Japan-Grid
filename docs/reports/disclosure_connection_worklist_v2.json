@@ -17,10 +17,10 @@
   ],
   "dryrun_off_main_before": 1885,
   "dryrun_off_main_after": 1799,
-  "n_new": 83,
+  "n_new": 76,
   "by_class": {
-    "disclosure_line": 10,
-    "disclosure_tap": 2,
+    "disclosure_line": 4,
+    "disclosure_tap": 1,
     "disclosure_map": 1,
     "same_site_identity": 70
   },
@@ -932,120 +932,6 @@
       "src": "flow_direction"
     },
     {
-      "class": "disclosure_line",
-      "from_sub": "仲崎変電所",
-      "to_sub": "大湊変電所",
-      "from_id": "tohoku_sub_727",
-      "to_id": "tohoku_sub_848",
-      "from_pt": [
-        41.20389,
-        140.99613
-      ],
-      "to_pt": [
-        41.24608,
-        141.13189
-      ],
-      "kv": 66,
-      "line": "仲崎線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
-      "class": "disclosure_line",
-      "from_sub": "仲崎変電所",
-      "to_sub": "佐井変電所",
-      "from_id": "tohoku_sub_727",
-      "to_id": "tohoku_sub_728",
-      "from_pt": [
-        41.20389,
-        140.99613
-      ],
-      "to_pt": [
-        41.46118,
-        140.8871
-      ],
-      "kv": 66,
-      "line": "佐井線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
-      "class": "disclosure_line",
-      "from_sub": "下北変電所 154kV",
-      "to_sub": "六ヶ所変電所 154kV",
-      "from_id": "tohoku_sub_802@154",
-      "to_id": "tohoku_sub_801@154",
-      "from_pt": [
-        41.30572,
-        141.19351
-      ],
-      "to_pt": [
-        40.95062,
-        141.29966
-      ],
-      "kv": null,
-      "line": "下北Ａ，Ｂ線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
-      "class": "disclosure_line",
-      "from_sub": "下北変電所 66kV",
-      "to_sub": "大湊変電所",
-      "from_id": "tohoku_sub_802@66",
-      "to_id": "tohoku_sub_848",
-      "from_pt": [
-        41.30572,
-        141.19351
-      ],
-      "to_pt": [
-        41.24608,
-        141.13189
-      ],
-      "kv": 66,
-      "line": "大湊線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
-      "class": "disclosure_line",
-      "from_sub": "下北変電所 66kV",
-      "to_sub": "大畑変電所",
-      "from_id": "tohoku_sub_802@66",
-      "to_id": "tohoku_sub_849",
-      "from_pt": [
-        41.30572,
-        141.19351
-      ],
-      "to_pt": [
-        41.39963,
-        141.15657
-      ],
-      "kv": 66,
-      "line": "大畑線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
-      "class": "disclosure_line",
-      "from_sub": "下北変電所 66kV",
-      "to_sub": "三本松変電所",
-      "from_id": "tohoku_sub_802@66",
-      "to_id": "tohoku_sub_846",
-      "from_pt": [
-        41.30572,
-        141.19351
-      ],
-      "to_pt": [
-        41.29155,
-        141.18535
-      ],
-      "kv": 66,
-      "line": "三本松線",
-      "evidence": "東北NW系統情報公表 潮流実績CSV「潮流正方向」",
-      "src": "flow_direction"
-    },
-    {
       "class": "disclosure_tap",
       "from_sub": "飯舘変電所",
       "to_sub": "原町変電所",
@@ -1065,37 +951,18 @@
       "via": "原町線分岐（原町の分岐）"
     },
     {
-      "class": "disclosure_tap",
-      "from_sub": "東通変電所 154kV",
-      "to_sub": "下北変電所 66kV",
-      "from_id": "tohoku_sub_855@154",
-      "to_id": "tohoku_sub_802@66",
-      "from_pt": [
-        41.35383,
-        141.34125
-      ],
-      "to_pt": [
-        41.30572,
-        141.19351
-      ],
-      "kv": 66,
-      "line": "東通支線",
-      "evidence": "東北NW公表: 分岐タップ（公表 from-to の分岐点経由）",
-      "via": "大畑線分岐（大畑の分岐）"
-    },
-    {
       "class": "disclosure_map",
       "from_sub": "佐井変電所",
-      "to_sub": "大間町変電所_2",
+      "to_sub": "大間町変電所",
       "from_id": "tohoku_sub_728",
-      "to_id": "hokkaido_sub_67",
+      "to_id": "hokkaido_sub_23",
       "from_pt": [
         41.46118,
         140.8871
       ],
       "to_pt": [
-        41.50811,
-        140.91146
+        41.46523,
+        140.88999
       ],
       "kv": 66.0,
       "line": "161F線（佐井—大間）",
