@@ -34,6 +34,14 @@ MODEL_VERSION_PATH = os.path.join(ROOT, "docs", "data", "MODEL_VERSION.json")
 # (name, argv, heavy?) — heavy 段は pandapower 等が要る・遅い
 STEPS = [
     ("build_editor_data", [sys.executable, "scripts/build_editor_data.py"], False),
+    # 実証接続の再適用（介入#28/#29） — build_editor_data が all.json を基底から
+    # 再構築するため、in-place 適用した公表接続worklistは build のたびに消える
+    # （2026-08-15 に実害: regen が v1(13本)+v2(83本) を黙って落とし、PF が 8/11 の
+    # pre-apply 数値に戻った）。apply_capacity_sources と同じ「再構築後に必ず再適用」
+    # パターンでパイプラインに組み込む。両スクリプトとも冪等（既存 disclosure 枝は skip）。
+    ("apply_disclosure_v1", [sys.executable, "scripts/apply_tepco_connections.py", "--write"], False),
+    ("apply_disclosure_v2", [sys.executable, "scripts/apply_disclosure_v2.py",
+                             "--from-worklist", "--write"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)

@@ -164,8 +164,16 @@ def main() -> int:
         for n in nodes_fixed:
             n["main"] = _k5(n["lat"], n["lon"]) in maink
         applied_edges = list(edges)
+        # 冪等ガード: 既に同じ端点対の disclosure 枝があれば追加しない
+        # （build が all.json を再構築した直後は空なので全件入り、二重実行では0件）
+        existing = set()
+        for e in edges:
+            if e.get("disclosure") and e.get("a") and e.get("b"):
+                existing.add(frozenset((_k5(*e["a"]), _k5(*e["b"]))))
         for w in worklist:
             ka, kb = tuple(w["from_pt"]), tuple(w["to_pt"])
+            if frozenset((_k5(*w["from_pt"]), _k5(*w["to_pt"]))) in existing:
+                continue
             applied_edges.append({
                 "path": [list(w["from_pt"]), list(w["to_pt"])],
                 "a": list(w["from_pt"]), "b": list(w["to_pt"]),
