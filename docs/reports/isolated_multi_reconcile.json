@@ -6,12 +6,24 @@
     "viz/flow_lines.geojson の from/to（既構築の観測フロー・補助）"
   ],
   "regions": [
+    "chugoku",
     "hokkaido",
+    "hokuriku",
     "kansai",
+    "kyushu",
+    "shikoku",
     "tohoku"
   ],
-  "pool_connections": 1266,
+  "pool_connections": 2336,
   "disclosure_coverage": {
+    "chugoku": {
+      "connections": 294,
+      "distinct_endpoints": 173,
+      "by_source": {
+        "impedance_section": 256,
+        "flow_direction": 38
+      }
+    },
     "hokkaido": {
       "connections": 189,
       "distinct_endpoints": 56,
@@ -19,6 +31,15 @@
         "impedance_section": 103,
         "flow_direction": 44,
         "flow_lines_geojson": 42
+      }
+    },
+    "hokuriku": {
+      "connections": 40,
+      "distinct_endpoints": 14,
+      "by_source": {
+        "impedance_section": 20,
+        "flow_direction": 13,
+        "flow_lines_geojson": 7
       }
     },
     "kansai": {
@@ -30,28 +51,44 @@
         "flow_lines_geojson": 85
       }
     },
-    "tohoku": {
-      "connections": 800,
-      "distinct_endpoints": 911,
+    "kyushu": {
+      "connections": 267,
+      "distinct_endpoints": 90,
       "by_source": {
-        "flow_direction": 800
+        "impedance_section": 121,
+        "flow_direction": 94,
+        "flow_lines_geojson": 52
+      }
+    },
+    "shikoku": {
+      "connections": 314,
+      "distinct_endpoints": 174,
+      "by_source": {
+        "impedance_section": 48,
+        "flow_direction": 180,
+        "flow_lines_geojson": 86
+      }
+    },
+    "tohoku": {
+      "connections": 955,
+      "distinct_endpoints": 952,
+      "by_source": {
+        "flow_direction": 955
       }
     }
   },
   "targets": [
     {
       "target": "関西 500kV 由良開閉所",
-      "in_audit": true,
-      "status": "notfound",
-      "name": "由良開閉所",
-      "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+      "in_audit": false,
+      "status": "no_audit_node",
+      "note": "当該regionの孤立A監査ノードに該当なし"
     },
     {
       "target": "北海道 187kV 上ノ国町変電所",
-      "in_audit": true,
-      "status": "notfound",
-      "name": "上ノ国町変電所",
-      "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+      "in_audit": false,
+      "status": "no_audit_node",
+      "note": "当該regionの孤立A監査ノードに該当なし"
     },
     {
       "target": "東北 大間町変電所（J-POWER 大間幹線）",
@@ -62,11 +99,51 @@
     }
   ],
   "by_region": {
-    "hokkaido": {
-      "n_isolated_A": 33,
+    "chugoku": {
+      "n_isolated_A": 6,
       "n_resolved": 0,
       "n_partial": 0,
-      "n_notfound": 33,
+      "n_notfound": 6,
+      "resolved": [],
+      "partial": [],
+      "notfound": [
+        {
+          "name": "中原東四丁目変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "中国電力和気変電所",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "松江四丁目変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "山陽小野田市変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "三津変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "中央南変電所",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        }
+      ]
+    },
+    "hokkaido": {
+      "n_isolated_A": 26,
+      "n_resolved": 0,
+      "n_partial": 0,
+      "n_notfound": 26,
       "resolved": [],
       "partial": [],
       "notfound": [
@@ -82,11 +159,6 @@
         },
         {
           "name": "東通村変電所 66kV",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大間町変電所",
           "kv": 66.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
@@ -121,11 +193,6 @@
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
-          "name": "大間町変電所_2",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
           "name": "岩屋変電所 154kV",
           "kv": 154.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
@@ -143,31 +210,6 @@
         {
           "name": "岩屋変電所_2 66kV",
           "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大間町変電所_3 500kV",
-          "kv": 500.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大間町変電所_3 66kV",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大間町変電所_4",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "大間町変電所_5",
-          "kv": 66.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "上ノ国町変電所",
-          "kv": 187.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
@@ -237,11 +279,20 @@
         }
       ]
     },
-    "kansai": {
-      "n_isolated_A": 36,
+    "hokuriku": {
+      "n_isolated_A": 0,
       "n_resolved": 0,
       "n_partial": 0,
-      "n_notfound": 36,
+      "n_notfound": 0,
+      "resolved": [],
+      "partial": [],
+      "notfound": []
+    },
+    "kansai": {
+      "n_isolated_A": 35,
+      "n_resolved": 0,
+      "n_partial": 0,
+      "n_notfound": 35,
       "resolved": [],
       "partial": [],
       "notfound": [
@@ -263,11 +314,6 @@
         {
           "name": "土生変電所",
           "kv": 77.0,
-          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
-        },
-        {
-          "name": "由良開閉所",
-          "kv": 500.0,
           "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
         },
         {
@@ -427,26 +473,167 @@
         }
       ]
     },
+    "kyushu": {
+      "n_isolated_A": 11,
+      "n_resolved": 0,
+      "n_partial": 0,
+      "n_notfound": 11,
+      "resolved": [],
+      "partial": [],
+      "notfound": [
+        {
+          "name": "中原東四丁目変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "日田市変電所 110kV",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "小国町変電所",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "犬飼変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "郷ノ浦変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "天瀬町赤岩変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "山陽小野田市変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "岱明町野口変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "都農変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "敷川内町変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "中央南変電所",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        }
+      ]
+    },
+    "shikoku": {
+      "n_isolated_A": 12,
+      "n_resolved": 0,
+      "n_partial": 0,
+      "n_notfound": 12,
+      "resolved": [],
+      "partial": [],
+      "notfound": [
+        {
+          "name": "夜須町変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "多良変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "佐川変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "四国電力 甲浦変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "牟岐変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "美波町変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "三津変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "大渡変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "黒川変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "中央南変電所",
+          "kv": 110.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "須崎変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
+        {
+          "name": "鉢変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        }
+      ]
+    },
     "tohoku": {
-      "n_isolated_A": 31,
+      "n_isolated_A": 32,
       "n_resolved": 4,
       "n_partial": 7,
-      "n_notfound": 20,
+      "n_notfound": 21,
       "resolved": [
         {
           "name": "中仙台変電所",
           "kv": 66.0,
           "lines": [
+            "中五線",
             "中仙台三居沢線",
             "中仙台大町線",
+            "中仙台線",
             "仙台本町線"
           ],
           "connects_to_main": [
+            "五ツ橋変電所",
+            "南仙台変電所 154kV",
             "大町変電所"
           ],
           "all_neighbors": [
             "4705",
+            "五ツ橋変電所",
             "仙台本町変電所",
+            "南仙台変電所",
             "大町変電所"
           ],
           "sources": [
@@ -473,18 +660,23 @@
           "name": "下北変電所 154kV",
           "kv": 154.0,
           "lines": [
+            "0505線",
             "三本松線",
+            "下北Ａ，Ｂ線",
             "大湊線",
             "大畑線"
           ],
           "connects_to_main": [
             "三本松変電所",
+            "六ヶ所変電所 154kV",
             "大畑変電所 154kV"
           ],
           "all_neighbors": [
             "三本松変電所",
+            "六ヶ所変電所",
             "大湊変電所",
-            "大畑変電所"
+            "大畑変電所",
+            "電気所"
           ],
           "sources": [
             "flow_direction"
@@ -494,18 +686,23 @@
           "name": "下北変電所 66kV",
           "kv": 66.0,
           "lines": [
+            "0505線",
             "三本松線",
+            "下北Ａ，Ｂ線",
             "大湊線",
             "大畑線"
           ],
           "connects_to_main": [
             "三本松変電所",
+            "六ヶ所変電所 154kV",
             "大畑変電所 154kV"
           ],
           "all_neighbors": [
             "三本松変電所",
+            "六ヶ所変電所",
             "大湊変電所",
-            "大畑変電所"
+            "大畑変電所",
+            "電気所"
           ],
           "sources": [
             "flow_direction"
@@ -621,6 +818,11 @@
         }
       ],
       "notfound": [
+        {
+          "name": "大間町変電所",
+          "kv": 66.0,
+          "reason": "公表 from-to に該当変電所名なし（当該社の開示は基幹系に限られる）"
+        },
         {
           "name": "青山一丁目変電所",
           "kv": 66.0,

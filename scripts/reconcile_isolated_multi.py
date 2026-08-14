@@ -91,12 +91,17 @@ def _endpoint_ok(name: str) -> bool:
 # from-to 接続事実プールの構築（社差を吸収）
 # ---------------------------------------------------------------------------
 def _latest_per_family(paths: list[Path]) -> list[Path]:
-    """同一系統区分の年違いファイルは最新年だけ採る（from-toは年で変わらない）。"""
+    """同一系統区分の年違いファイルは最新年だけ採る（from-toは年で変わらない）。
+
+    族キーは **社ディレクトリ込み**。ファイル名だけだと jisseki_kikan01_line が
+    東北と北陸で衝突し、年の新しい社が他社のファイルを丸ごと食う（実際に東北の
+    解決4件が消えた）。
+    """
     best: dict[str, tuple[str, Path]] = {}
     for p in paths:
         m = re.search(r"_(\d{4})_\d{2}\.csv$", p.name)
         year = m.group(1) if m else "0000"
-        fam = re.sub(r"_\d{4}_\d{2}\.csv$", "", p.name)   # 年月を除いた族キー
+        fam = str(p.parent) + "/" + re.sub(r"_\d{4}_\d{2}\.csv$", "", p.name)
         if fam not in best or year > best[fam][0]:
             best[fam] = (year, p)
     return [v[1] for v in best.values()]
@@ -110,12 +115,16 @@ def build_pool(regions: set[str]) -> tuple[list[dict], dict]:
     def add(util, frm, to, line, kv, src):
         if util not in regions:
             return
+        # 東北kikan01等は名前が Excel引用符 `'中仙台変電所` で来る — 剥がす
+        frm = str(frm or "").strip().lstrip("'’")
+        to = str(to or "").strip().lstrip("'’")
+        line = str(line or "").strip().lstrip("'’")
         if not (_endpoint_ok(frm) and _endpoint_ok(to)):
             return
         if norm(frm) == norm(to):
             return
-        pool.append({"utility": util, "from": str(frm).strip(), "to": str(to).strip(),
-                     "line": (str(line).strip() if line and str(line) != "nan" else None),
+        pool.append({"utility": util, "from": frm, "to": to,
+                     "line": (line if line and line != "nan" else None),
                      "kv": kv, "src": src})
         provenance[util][src] += 1
 
