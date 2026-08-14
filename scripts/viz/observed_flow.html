@@ -170,6 +170,15 @@
   </div>
 
   <div class="grp">
+    <h2>連結性の断片（監査）</h2>
+    <label class="row"><input type="checkbox" id="l-audit">
+      <span>本系統に載らない点を重ねる<span class="badge" id="n-audit"></span>
+        <span class="d">建造モデルで本系統(最大成分)に繋がっていない断片。
+        <b>赤=繋ぐべき孤立変電所(A)</b>・暗赤=鉄道等で正しく孤立(B)・橙=不明/断片。
+        「コード上は繋がって見えるが物理的に途切れている」箇所。重いので押した時に読む</span></span></label>
+  </div>
+
+  <div class="grp">
     <h2>電圧（線の太さ）</h2>
     <div id="kvlegend"></div>
   </div>
@@ -744,6 +753,39 @@ Promise.all([
   document.getElementById('l-genfit').onchange=e=>vis('genfit',e.target.checked);
   document.getElementById('l-plant').onchange=e=>vis('plants',e.target.checked);
   document.getElementById('l-plant-nomw').onchange=e=>vis('plants-nomw',e.target.checked);
+
+  // 連結性の断片オーバーレイ（重いので初回ONで遅延ロード。backbone_actual と共通）
+  let auditLoaded=false;
+  document.getElementById('l-audit').onchange=async e=>{
+    if(e.target.checked && !auditLoaded){
+      auditLoaded=true;
+      const badge=document.getElementById('n-audit'); badge.textContent='…';
+      try{
+        const [an,ae]=await Promise.all([
+          fetch('./audit_nodes.geojson').then(r=>r.json()),
+          fetch('./audit_edges.geojson').then(r=>r.json())]);
+        // スタイル読み込み前だと addSource が例外になる。idle待ちだと
+        // タイルが延々読まれる環境で永久待ちになるので、上限付きで待つ。
+        for(let i=0;i<40 && !map.isStyleLoaded();i++) await new Promise(r=>setTimeout(r,250));
+        map.addSource('audit-e',{type:'geojson',data:ae});
+        map.addLayer({id:'audit-frag',type:'line',source:'audit-e',
+          filter:['==',['get','main'],false],
+          paint:{'line-color':'#e8833a','line-width':1.4,'line-opacity':.8}});
+        map.addSource('audit-n',{type:'geojson',data:an});
+        map.addLayer({id:'audit-sub',type:'circle',source:'audit-n',
+          filter:['==',['get','cls'],'isolated_sub'],
+          paint:{'circle-radius':['match',['get','verdict'],'A',6,'B',3.5,4.5],
+                 'circle-color':['match',['get','verdict'],'A','#ff2d20','B','#7a4a48','#ffb44a'],
+                 'circle-opacity':.9,'circle-stroke-width':['match',['get','verdict'],'A',1.4,.5],
+                 'circle-stroke-color':'#ffe0dd'}});
+        const na=an.features.filter(f=>f.properties.cls==='isolated_sub'
+          && f.properties.verdict==='A').length;
+        badge.textContent=`赤${na}`;
+      }catch(err){ badge.textContent='失敗'; }
+    }
+    ['audit-frag','audit-sub'].forEach(l=>map.getLayer(l)
+      && map.setLayoutProperty(l,'visibility',e.target.checked?'visible':'none'));
+  };
   // 変電所は種別ごとに出し入れする（OSMの分類をそのまま見せる）
   const syncCats=()=>{
     const on=[...document.querySelectorAll('.cat:checked')].map(i=>i.value);

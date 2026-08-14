@@ -53,6 +53,7 @@
     <h2>表示レイヤ</h2>
     <label class="row"><input type="checkbox" id="l-sub" checked>
       <span class="dot" style="background:var(--sub)"></span>孤立した変電所<span class="num" id="n-sub"></span></label>
+    <div class="sub" id="verdict" style="margin:-2px 0 4px 19px"></div>
     <label class="row"><input type="checkbox" id="l-tip" checked>
       <span class="dot" style="background:var(--tip)"></span>宙に浮いた終点(deg1)<span class="num" id="n-tip"></span></label>
     <label class="row"><input type="checkbox" id="l-frag" checked>
@@ -134,16 +135,28 @@ Promise.all([
       paint:{'circle-radius':['interpolate',['linear'],['zoom'],5,2.4,10,5],
              'circle-color':COL.orphan_tip,'circle-opacity':.9,
              'circle-stroke-width':.6,'circle-stroke-color':'#0a0e13'}});
-    // 孤立した変電所（濃赤・大・白縁で最も目立たせる＝実設備が孤立＝主要問題）
+    // 孤立した変電所。verdict で色分け: A=繋ぐべき(濃赤・最優先)/
+    // B=鉄道等で正しく孤立(暗い赤褐色・沈める)/?=不明(橙)。
     map.addLayer({id:'node-sub',type:'circle',source:'nodes',
       filter:['==',['get','cls'],'isolated_sub'],
-      paint:{'circle-radius':['interpolate',['linear'],['zoom'],5,3.2,10,7],
-             'circle-color':COL.isolated_sub,'circle-opacity':.95,
-             'circle-stroke-width':1.4,'circle-stroke-color':'#ffe0dd'}});
+      paint:{'circle-radius':['interpolate',['linear'],['zoom'],
+               5,['match',['get','verdict'],'A',3.6,'B',2.2,3.0],
+               10,['match',['get','verdict'],'A',8,'B',4.5,6]],
+             'circle-color':['match',['get','verdict'],
+               'A','#ff2d20','B','#7a4a48','#ffb44a'],
+             'circle-opacity':['match',['get','verdict'],'B',.7,.95],
+             'circle-stroke-width':['match',['get','verdict'],'A',1.6,0.6],
+             'circle-stroke-color':'#ffe0dd'}});
 
     // 件数
     const cnt={main:0,fragment:0,orphan_tip:0,isolated_sub:0};
-    nodes.features.forEach(f=>{cnt[f.properties.cls]=(cnt[f.properties.cls]||0)+1;});
+    const vd={A:0,B:0,'?':0};
+    nodes.features.forEach(f=>{cnt[f.properties.cls]=(cnt[f.properties.cls]||0)+1;
+      if(f.properties.cls==='isolated_sub') vd[f.properties.verdict||'?']=(vd[f.properties.verdict||'?']||0)+1;});
+    document.getElementById('verdict').innerHTML=
+      `<b style="color:#ff2d20">A 繋ぐべき ${vd.A}</b> ／ `
+      +`<span style="color:#c98a86">B 鉄道等 ${vd.B}</span> ／ `
+      +`<span style="color:#ffb44a">? 不明 ${vd['?']}</span>`;
     const off=cnt.fragment+cnt.orphan_tip+cnt.isolated_sub, tot=nodes.features.length;
     document.getElementById('n-sub').textContent=fmt(cnt.isolated_sub);
     document.getElementById('n-tip').textContent=fmt(cnt.orphan_tip);
@@ -178,8 +191,10 @@ Promise.all([
       map.on('click',lid,ev=>{
         const p=ev.features[0].properties;
         document.getElementById('info').style.display='block';
+        const VJA={A:'A 繋ぐべき(要連系)',B:'B 鉄道等で正しく孤立','?':'? 不明(要確認)'};
         document.getElementById('info').innerHTML=
           `<h3>${CLSJA[p.cls]||p.cls}</h3>`
+          +(p.cls==='isolated_sub'?`<div style="color:${p.verdict==='A'?'#ff6b6b':'var(--dim)'};font-weight:600;margin-bottom:3px">${VJA[p.verdict]||'—'}</div>`:'')
           +`<div><span class="k">名称</span> ${p.name||'—'}</div>`
           +`<div><span class="k">電圧</span> ${p.kv!=null?p.kv+' kV':'—'}　`
           +`<span class="k">次数</span> ${p.deg}　<span class="k">地域</span> ${p.region}</div>`
