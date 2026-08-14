@@ -79,12 +79,15 @@ def compute_connectivity(nodes, edges, stitch_cell=STITCH_CELL):
     # 島ごとに node を仕分け + 座標→島 索引
     by_island = defaultdict(list)
     island_of = {}
+    island_keys = defaultdict(set)   # island -> その島に属する座標キー集合
     for n in nodes:
         isl = REGION_ISLAND.get(n.get("region"))
         if not isl:
             continue
         by_island[isl].append(n)
-        island_of.setdefault(_k5(n["lat"], n["lon"]), isl)
+        k = _k5(n["lat"], n["lon"])
+        island_of.setdefault(k, isl)
+        island_keys[isl].add(k)
 
     main_keys = set()
     tie_edges = []
@@ -99,13 +102,18 @@ def compute_connectivity(nodes, edges, stitch_cell=STITCH_CELL):
         g = nx.Graph()
         for n in isl_nodes:
             g.add_node(_k5(n["lat"], n["lon"]))
-        # intra: 両端がこの島の枝
+        # intra: 両端がこの島の枝。
+        # 判定は「先勝ちの island_of」でなく **島ごとのキー集合**で行う。
+        # 境界スライスの重複で同一座標に別島ラベルのコピーが載ると（東西境界203キー・
+        # 北海道/東北17キーを実測）、先勝ち判定では片島がキーを奪い、もう片島の枝が
+        # 黙って捨てられて境界が断片化する（下北半島が本系統に合流できなかった実害）。
+        keys = island_keys[isl]
         for e in edges:
             a, b = e.get("a"), e.get("b")
             if not a or not b:
                 continue
             ka, kb = tuple(a), tuple(b)
-            if island_of.get(ka) == isl and island_of.get(kb) == isl:
+            if ka in keys and kb in keys:
                 g.add_edge(ka, kb)
         # 越境stitch: 同一電圧階級・~cell・異なる region(national と同一規則)
         cellmap = defaultdict(list)
