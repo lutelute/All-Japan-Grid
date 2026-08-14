@@ -1,0 +1,434 @@
+#!/usr/bin/env python3
+"""孤立変電所の実証接続 v2 — 公表線路・分岐タップ・変圧器実証・同一敷地同定。
+
+v1 (apply_tepco_connections.py, 介入#28) は TEPCO東京10件+Wikipedia3件だった。
+v2 は東北の系統情報公表（潮流実績 line/tr・3年分）と、監査から見つかった
+**跨region重複**（同名・同電圧・至近距離で本系統側コピーと孤立コピーが併存）を扱う。
+
+証拠クラス（disable フラグで個別に無効化できる＝③無効化）:
+  C  disclosure_line   公表potential from-to（潮流正方向/様式5区間）の実線。プールを
+                       直接読み、電圧階級の対応する側のノードに枝を付ける。
+  E  disclosure_tap    公表の「◯◯線分岐」経由（分岐タップ）。線の端点へ接続し
+                       via を記録（例: 東通→[162C線→大畑線分岐]→下北）。
+  G  disclosure_trafo  変圧器潮流実績CSV（変電所名×一次/二次電圧）で実証される
+                       同名・異電圧ノード間の変圧器タイ（例: 下北154-66）。
+  F  same_site_identity 同名(正規化)・電圧一致・≤300m の本系統/孤立ペア＝同一変電所の
+                       跨region二重登録。孤立コピーを本系統コピーへタイで同定し、
+                       region が違えば本系統側の region に是正（島判定の前提）。
+                       B判定（鉄道/自家用）は対象外。汎用名（tokyo_sub等）は距離以前に除外。
+
+v1 で適用済みの枝は座標で重複検知してスキップする（冪等）。
+ドライランが既定。--write は BAK を取り可逆（--revert で v2 適用直前に戻す）。
+生の潮流値・R/X 等は一切収録しない（転載禁止・接続事実のみ）。
+"""
+from __future__ import annotations
+
+import argparse
+import copy
+import csv
+import json
+import math
+import re
+import sys
+import unicodedata
+from collections import defaultdict
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from src.powerflow.connectivity import compute_connectivity  # noqa: E402
+from scripts.reconcile_isolated_multi import build_pool, norm  # noqa: E402
+
+BUILT = ROOT / "docs" / "data" / "built" / "all.json"
+BAK = ROOT / "docs" / "data" / "built" / "all.json.pre_v2.bak"
+AUDIT = ROOT / "data" / "external" / "system_disclosure" / "viz" / "audit_nodes.geojson"
+TR_REG = ROOT / "data" / "external" / "system_disclosure" / "normalized" / "tohoku_tr_registry.csv"
+OUT = ROOT / "docs" / "reports" / "disclosure_connection_worklist_v2.json"
+
+GENERIC_NAME = re.compile(r"^[a-z]+_sub$")          # tokyo_sub_123 等の汎用名（norm後）
+SAME_SITE_MAX_M = 300.0                              # 同一敷地とみなす距離
+BRANCH_RX = re.compile(r"^(.+?)(線)?分岐$")
+
+
+def hav_m(a: tuple[float, float], b: tuple[float, float]) -> float:
+    la1, lo1, la2, lo2 = map(math.radians, [a[0], a[1], b[0], b[1]])
+    return 6371000 * 2 * math.asin(math.sqrt(
+        math.sin((la2 - la1) / 2) ** 2
+        + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2))
+
+
+def _k5(la, lo):
+    return (round(la, 5), round(lo, 5))
+
+
+# ---------------------------------------------------------------------------
+# ノード台帳（audit を参照系にする — 同名重複があるので id 基準）
+# ---------------------------------------------------------------------------
+class Frame:
+    def __init__(self) -> None:
+        feats = json.loads(AUDIT.read_text(encoding="utf-8"))["features"]
+        self.nodes = []            # {id,name,latlon,cls,verdict,region,kv,sub}
+        for f in feats:
+            p = f["properties"]
+            lon, lat = f["geometry"]["coordinates"][:2]
+            self.nodes.append({
+                "id": p.get("id"), "name": p.get("name") or "",
+                "latlon": (lat, lon), "cls": p.get("cls"),
+                "verdict": p.get("verdict"), "region": p.get("region"),
+                "kv": p.get("kv") or 0, "sub": bool(p.get("sub")),
+            })
+        self.by_norm: dict[str, list[dict]] = defaultdict(list)
+        for n in self.nodes:
+            k = norm(n["name"])
+            if k and not GENERIC_NAME.match(k):
+                self.by_norm[k].append(n)
+
+    def isolated_subs(self) -> list[dict]:
+        return [n for n in self.nodes if n["cls"] == "isolated_sub"]
+
+    def variants(self, name: str) -> list[dict]:
+        return self.by_norm.get(norm(name), [])
+
+    def pick(self, name: str, kv: float | None, region: str | None,
+             want_main: bool | None = None) -> dict | None:
+        """名前（正規化）でノードを選ぶ。kv一致 > 高kv、region一致を優先。"""
+        cands = self.variants(name)
+        if region:
+            reg = [c for c in cands if c["region"] == region]
+            cands = reg or cands
+        if want_main is not None:
+            cands = [c for c in cands if (c["cls"] == "main") == want_main]
+        if not cands:
+            return None
+        if kv:
+            exact = [c for c in cands if abs((c["kv"] or 0) - kv) < 1]
+            if exact:
+                return exact[0]
+        return max(cands, key=lambda c: c["kv"] or 0)
+
+
+def load_tr_registry() -> set[str]:
+    """東北 tr CSV から作った変圧器台帳 → 変電所名(正規化)の集合。"""
+    names: set[str] = set()
+    if TR_REG.exists():
+        with TR_REG.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                k = norm(row.get("name", ""))
+                if k:
+                    names.add(k)
+    return names
+
+
+# ---------------------------------------------------------------------------
+# worklist 構築
+# ---------------------------------------------------------------------------
+def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
+    """(edges, region_fixes, review) を返す。edges は適用候補、review は人間確認送り。"""
+    edges: list[dict] = []
+    region_fixes: list[dict] = []
+    review: list[dict] = []
+    seen_pairs: set[frozenset] = set()
+
+    def add_edge(a: dict, b: dict, cls: str, kv, line, evidence, **extra):
+        key = frozenset((_k5(*a["latlon"]), _k5(*b["latlon"])))
+        if len(key) < 2 or key in seen_pairs:
+            return
+        seen_pairs.add(key)
+        edges.append({
+            "class": cls, "from_sub": a["name"], "to_sub": b["name"],
+            "from_id": a["id"], "to_id": b["id"],
+            "from_pt": list(a["latlon"]), "to_pt": list(b["latlon"]),
+            "kv": kv, "line": line, "evidence": evidence, **extra,
+        })
+
+    # --- 東北: 公表プール直読（kv対応付けを report で失う前に使う） ---
+    pool, _cov = build_pool({"tohoku"})
+    ep_index: dict[str, list[dict]] = defaultdict(list)
+    line_index: dict[str, list[dict]] = defaultdict(list)
+    for x in pool:
+        ep_index[norm(x["from"])].append(x)
+        ep_index[norm(x["to"])].append(x)
+        if x.get("line"):
+            line_index[norm(x["line"])].append(x)
+
+    tr_names = load_tr_registry()
+    isos = frame.isolated_subs()
+    iso_tohoku_A = [n for n in isos if n["region"] == "tohoku" and n["verdict"] == "A"]
+
+    # C: 公表線路 — 孤立ノードの正規化名がプール端点にあり、他端がモデルに実在する
+    done_norm: set[tuple[str, str]] = set()
+    for iso in iso_tohoku_A:
+        k = norm(iso["name"])
+        for x in ep_index.get(k, []):
+            other = x["to"] if norm(x["from"]) == k else x["from"]
+            if norm(other) == k:
+                continue
+            kv = x.get("kv")
+            # 電圧階級の対応する側の孤立ノードに付ける（154kV線は154kVノードへ）
+            if kv and iso["kv"] and abs(iso["kv"] - kv) > 1:
+                continue
+            tgt = frame.pick(other, kv, "tohoku", want_main=True) \
+                or frame.pick(other, kv, "tohoku", want_main=False)
+            if tgt is None or tgt["id"] == iso["id"]:
+                continue
+            pair = (k, norm(other))
+            if pair in done_norm:
+                continue
+            done_norm.add(pair)
+            add_edge(iso, tgt, "disclosure_line", kv, x.get("line"),
+                     "東北NW系統情報公表 潮流実績CSV「潮流正方向」", src=x.get("src"))
+
+    # E: 分岐タップ — 相手端が「◯◯線分岐」のとき、その線の端点へ via 付きで繋ぐ
+    for iso in iso_tohoku_A:
+        k = norm(iso["name"])
+        for x in ep_index.get(k, []):
+            other = x["to"] if norm(x["from"]) == k else x["from"]
+            m = BRANCH_RX.match(str(other).strip())
+            if not m:
+                continue
+            trunk = m.group(1)
+            for tx in line_index.get(norm(trunk), []) + line_index.get(norm(trunk + "線"), []):
+                for end in (tx["from"], tx["to"]):
+                    tgt = frame.pick(end, tx.get("kv"), "tohoku", want_main=True) \
+                        or frame.pick(end, tx.get("kv"), "tohoku", want_main=False)
+                    if tgt is None or tgt["id"] == iso["id"]:
+                        continue
+                    add_edge(iso, tgt, "disclosure_tap", x.get("kv"), x.get("line"),
+                             "東北NW公表: 分岐タップ（公表 from-to の分岐点経由）",
+                             via=f"{other}（{trunk}の分岐）")
+                    break
+                else:
+                    continue
+                break
+
+    # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
+    for k, fam in frame.by_norm.items():
+        if k not in tr_names:
+            continue
+        fam_iso = [n for n in fam if n["cls"] == "isolated_sub" and n["verdict"] != "B"]
+        fam_any = [n for n in fam if n["cls"] in ("main", "isolated_sub")]
+        for iso in fam_iso:
+            best = None
+            for o in fam_any:
+                if o["id"] == iso["id"] or abs((o["kv"] or 0) - (iso["kv"] or 0)) < 1:
+                    continue
+                d = hav_m(iso["latlon"], o["latlon"])
+                if d <= 800 and (best is None or d < best[0]):
+                    best = (d, o)
+            if best:
+                add_edge(iso, best[1], "disclosure_trafo",
+                         min(iso["kv"], best[1]["kv"]) or None, None,
+                         "東北NW変圧器潮流実績CSV（変電所名×一次/二次電圧）",
+                         trafo=True, dist_m=round(best[0]))
+
+    # F: 同一敷地同定 — 同名・電圧一致・≤300m の (孤立, 本系統) ペア
+    for k, fam in frame.by_norm.items():
+        fam_iso = [n for n in fam if n["cls"] == "isolated_sub"
+                   and n["verdict"] in ("A", "?")]
+        fam_main = [n for n in fam if n["cls"] == "main"]
+        if not fam_iso or not fam_main:
+            continue
+        for iso in fam_iso:
+            best = None
+            for mn in fam_main:
+                d = hav_m(iso["latlon"], mn["latlon"])
+                if best is None or d < best[0]:
+                    best = (d, mn)
+            d, mn = best
+            kv_ok = (not iso["kv"]) or (not mn["kv"]) or abs(iso["kv"] - mn["kv"]) < 1
+            if d <= SAME_SITE_MAX_M and kv_ok:
+                add_edge(iso, mn, "same_site_identity", iso["kv"] or mn["kv"] or None,
+                         None, "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+                         same_site=True, dist_m=round(d))
+                if iso["region"] != mn["region"]:
+                    region_fixes.append({
+                        "id": iso["id"], "name": iso["name"],
+                        "from": iso["region"], "to": mn["region"],
+                        "evidence": f"本系統側コピー({mn['name']}/{mn['region']})と同一敷地"
+                                    f"（{round(d)}m）。島判定は本系統側が正",
+                    })
+            elif d <= SAME_SITE_MAX_M and not kv_ok:
+                # 電圧違いの至近ペア: 同一敷地の別階級（変圧器で内部接続されるのが物理）
+                add_edge(iso, mn, "same_site_identity", None, None,
+                         "同名(正規化)・至近距離の異電圧ペア＝同一変電所の別電圧階級"
+                         "（変電所内部は変圧器で接続されるのが物理）",
+                         same_site=True, kv_pair=[iso["kv"], mn["kv"]], dist_m=round(d))
+                if iso["region"] != mn["region"]:
+                    region_fixes.append({
+                        "id": iso["id"], "name": iso["name"],
+                        "from": iso["region"], "to": mn["region"],
+                        "evidence": f"本系統側コピー({mn['name']}/{mn['region']})と同一敷地"
+                                    f"（{round(d)}m・異電圧階級）",
+                    })
+            elif d <= 800:
+                review.append({"iso": iso["name"], "main": mn["name"],
+                               "dist_m": round(d), "kv": [iso["kv"], mn["kv"]],
+                               "regions": [iso["region"], mn["region"]],
+                               "note": "300-800m: 同一敷地か要人間確認"})
+    return edges, region_fixes, review
+
+
+# ---------------------------------------------------------------------------
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--write", action="store_true", help="正典 all.json に適用（可逆）")
+    ap.add_argument("--out", default=None,
+                    help="適用結果をこのパスへ書く（正典は不変。影響測定・査読用）")
+    ap.add_argument("--revert", action="store_true", help="v2適用直前に戻す")
+    ap.add_argument("--disable", default="",
+                    help="無効化する証拠クラス（カンマ区切り: disclosure_line,"
+                         "disclosure_tap,disclosure_trafo,same_site_identity）")
+    args = ap.parse_args()
+
+    if args.revert:
+        if BAK.exists():
+            BUILT.write_text(BAK.read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"復元: {BAK.name} → all.json（v2適用前に戻した）")
+        else:
+            print("v2バックアップが無い（未適用）")
+        return 0
+
+    disabled = {s.strip() for s in args.disable.split(",") if s.strip()}
+    frame = Frame()
+    edges, region_fixes, review = build_worklist(frame)
+    if disabled:
+        edges = [e for e in edges if e["class"] not in disabled]
+        if "same_site_identity" in disabled:
+            region_fixes = []
+
+    built = json.loads(BUILT.read_text(encoding="utf-8"))
+    nodes, bedges = built["nodes"], built["edges"]
+
+    # 青森箱のregion是正（大間の一般化）: 下北半島(lat<41.6, lon>140.6)にある
+    # hokkaidoラベルは region bbox 重複の混入（下北・佐井・大畑・東通・東通村・
+    # 岩屋 + junction 群を実測20ノード）。地理的に青森県＝tohoku(east島)が正。
+    # 同一座標に tohoku コピーが併存し、島判定を汚染して東側の枝を殺していた。
+    if "aomori_box" not in disabled:
+        for n in nodes:
+            if (n.get("region") == "hokkaido"
+                    and n.get("lat") is not None
+                    and n["lat"] < 41.6 and n["lon"] > 140.6):
+                region_fixes.append({
+                    "id": n.get("id"), "name": n.get("name") or "(無名)",
+                    "from": "hokkaido", "to": "tohoku",
+                    "evidence": "地理(下北半島=青森県)。大間是正(介入#28)と同じbbox混入。"
+                                "同一座標にtohokuコピーが併存する完全重複を含む",
+                })
+
+    # v1 適用済み等の既存 disclosure 枝と重複する候補はスキップ（冪等）
+    existing = set()
+    for e in bedges:
+        if e.get("disclosure") and e.get("a") and e.get("b"):
+            existing.add(frozenset((_k5(*e["a"]), _k5(*e["b"]))))
+    fresh = [e for e in edges
+             if frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) not in existing]
+
+    # region fix を先に適用したコピーで連結性ドライラン
+    id_fix = {rf["id"]: rf["to"] for rf in region_fixes}
+    nodes_fixed = copy.deepcopy(nodes)
+    n_relabel = 0
+    for n in nodes_fixed:
+        to = id_fix.get(n.get("id"))
+        if to and n.get("region") != to:
+            n["region"] = to
+            n_relabel += 1
+
+    cc0 = compute_connectivity(nodes, bedges)
+    off0 = sum(1 for n in nodes if _k5(n["lat"], n["lon"]) not in cc0["main_keys"])
+    new_edges = bedges + [{"a": e["from_pt"], "b": e["to_pt"]} for e in fresh]
+    cc1 = compute_connectivity(nodes_fixed, new_edges)
+    off1 = sum(1 for n in nodes_fixed
+               if _k5(n["lat"], n["lon"]) not in cc1["main_keys"])
+
+    joined = [e["from_sub"] for e in fresh
+              if _k5(*e["from_pt"]) not in cc0["main_keys"]
+              and _k5(*e["from_pt"]) in cc1["main_keys"]]
+
+    from collections import Counter
+    by_cls = Counter(e["class"] for e in fresh)
+    print(f"worklist v2: 候補 {len(edges)} → 新規 {len(fresh)}（既存重複スキップ {len(edges)-len(fresh)}）")
+    print(f"  クラス別: {dict(by_cls)}")
+    print(f"  region是正 {n_relabel} ノード / 人間確認送り(review) {len(review)} 件")
+    print(f"本系統外ノード: 適用前 {off0} → 適用後 {off1} （{off0-off1} 減）")
+    print(f"合流した孤立変電所 {len(joined)}")
+    for e in fresh:
+        kv = f"{e['kv']:>5.0f}kV" if e.get("kv") else "  —  "
+        tag = {"disclosure_line": "線", "disclosure_tap": "岐",
+               "disclosure_trafo": "変", "same_site_identity": "同"}[e["class"]]
+        print(f"  [{tag}] {kv} {e['from_sub']:<24} → {e['to_sub']}"
+              + (f"  [{e['line']}]" if e.get("line") else "")
+              + (f"  ({e['dist_m']}m)" if e.get("dist_m") is not None else ""))
+
+    OUT.write_text(json.dumps({
+        "note": ("実証接続 v2。公表線路/分岐タップ/変圧器実証（東北NW系統情報公表）と"
+                 "同一敷地同定（跨region二重登録）。生の潮流値・R/X等は非収録。"
+                 "--disable <class> で証拠クラス単位の無効化、--revert で全戻し。"),
+        "classes": {
+            "disclosure_line": "東北NW潮流実績CSV 潮流正方向（3年分・kikan+local01-07）",
+            "disclosure_tap": "公表from-toの「◯◯線分岐」経由タップ",
+            "disclosure_trafo": "変圧器潮流実績CSV（変電所名×一次/二次電圧）",
+            "same_site_identity": "同名・同電圧・≤300mの本系統/孤立ペア＝同一変電所",
+        },
+        "dryrun_off_main_before": off0, "dryrun_off_main_after": off1,
+        "n_new": len(fresh), "by_class": dict(by_cls),
+        "region_fixes": region_fixes, "joined_subs": joined,
+        "review_300_800m": review,
+        "worklist": fresh,
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"\n保存: {OUT.relative_to(ROOT)}")
+
+    if args.write or args.out:
+        if not fresh and not n_relabel:
+            print("適用する新規なし")
+            return 0
+        if args.write and not BAK.exists():
+            BAK.write_text(BUILT.read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"バックアップ作成: {BAK.name}")
+        maink = cc1["main_keys"]
+        for n in nodes_fixed:
+            n["main"] = _k5(n["lat"], n["lon"]) in maink
+        applied = list(bedges)
+        for e in fresh:
+            ka, kb = tuple(e["from_pt"]), tuple(e["to_pt"])
+            applied.append({
+                "path": [list(e["from_pt"]), list(e["to_pt"])],
+                "a": list(e["from_pt"]), "b": list(e["to_pt"]),
+                "main": (ka in maink and kb in maink), "par": 1,
+                "kv": e.get("kv") or 0,
+                "name": e.get("line") or {"disclosure_trafo": "変圧器タイ(公表実証)",
+                                          "same_site_identity": "同一敷地タイ(同定)",
+                                          "disclosure_tap": "分岐タップ(公表)",
+                                          }.get(e["class"], "公表接続"),
+                "disclosure": e["evidence"], "conn_class": e["class"],
+                **({"trafo": True} if e.get("trafo") else {}),
+                **({"same_site": True} if e.get("same_site") else {}),
+            })
+        built["nodes"] = nodes_fixed
+        built["edges"] = applied
+        st = built.setdefault("stats", {})
+        st["main_size"] = sum(1 for n in nodes_fixed if n["main"])
+        st["n_island_nodes"] = sum(1 for n in nodes_fixed if not n["main"])
+        st["n_components"] = sum(cc1["meta"]["components"].values())
+        built.setdefault("disclosure_worklist_applied_v2", {}).update({
+            "worklist": str(OUT.relative_to(ROOT)), "n_conn": len(fresh),
+            "by_class": dict(by_cls), "region_fix_nodes": n_relabel,
+            "off_main": st["n_island_nodes"],
+            "note": "実証接続v2。--revert(apply_disclosure_v2)で戻せる。",
+        })
+        blob = json.dumps(built, ensure_ascii=False, separators=(",", ":"))
+        if args.out:
+            Path(args.out).write_text(blob, encoding="utf-8")
+            print(f"適用結果を書き出し（正典は不変）: {args.out} "
+                  f"（本系統外→{st['n_island_nodes']}）")
+        if args.write:
+            BUILT.write_text(blob, encoding="utf-8")
+            print(f"★正典適用: all.json 更新（本系統外→{st['n_island_nodes']}）。"
+                  f"--revert で戻せる。バックアップ={BAK.name}")
+    else:
+        print("（正典は不変。適用するなら --write / 戻すなら --revert）")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

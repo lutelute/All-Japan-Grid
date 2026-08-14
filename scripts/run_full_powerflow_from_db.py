@@ -66,7 +66,9 @@ from src.powerflow.load_estimator import load_demand_config
 from src.powerflow.batch_solve import run_powerflow
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BUILT = os.path.join(ROOT, "docs", "data", "built", "all.json")
+# AGJ_BUILT_PATH: 適用候補モデル(scratch)での影響測定用。正典を書かずに before/after を取る。
+BUILT = os.environ.get("AGJ_BUILT_PATH",
+                       os.path.join(ROOT, "docs", "data", "built", "all.json"))
 OUT_DEFAULT = os.path.join(ROOT, "docs", "data", "powerflow_full")
 
 # Synchronous AC islands (region -> island, freq). Mirrors src.powerflow.national
