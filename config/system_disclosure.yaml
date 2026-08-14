@@ -197,8 +197,15 @@ utilities:
     index_url: https://www.okiden.co.jp/business-support/service/rule/plan/index.html
     kinds:
       impedance:
-        link_pattern: 'impedance[^"]*\.(xlsx|pdf)'
-        verified: false    # 未発見。沖縄は独立系統でループ系統が限定的なため様式適用が異なる可能性
+        # 2026-08-15 発見: 「需要・送配電に関する情報の公開」ページに全セットがあった
+        index_url: https://www.okiden.co.jp/business-support/service/juyo-and-sohaiden/
+        link_pattern: '(kikan|local)_impedance\.xlsx'
+        verified: true     # 2026-08-15 実DL成功。kikan(132kV)+local。これで10社全社の所在が確定
+      flow_actual:
+        index_url: https://www.okiden.co.jp/business-support/service/juyo-and-sohaiden/
+        link_pattern: 'keitouzu[_]?\d+\.pdf'
+        verified: true     # 2026-08-15 確認。実績系統図PDF(潮流実績も同ページ)
+        note: 予想潮流 sys_yoso_(kikan|local)_(line|tr).csv・作業停止 sagyou_teishi_*.xlsx も同ページ
       capacity:
         verified: true     # 既取得(2026-08-05)。con_res_map01_01〜03.csv（132kV/66kV線路・変電所の空容量）
         note: data/external/okiden/akiyoryo_map/
