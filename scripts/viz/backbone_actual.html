@@ -71,6 +71,12 @@
   .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;
     border:1px solid var(--line);color:var(--dim);margin-left:6px}
   .maplibregl-popup-content{background:#111823;color:#dfe6ef}
+  /* ホバー用の軽量ポップアップ（カーソル追従・クリックを邪魔しない） */
+  .hoverpop{pointer-events:none}
+  .hoverpop .maplibregl-popup-content{padding:6px 9px;font-size:11px;line-height:1.5;
+    border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+  .hoverpop .maplibregl-popup-tip{display:none}
+  .hoverpop b{font-size:11.5px}
 </style>
 </head>
 <body>
@@ -589,7 +595,12 @@ Promise.all([
       const u=ucAggFor(r);   UCSET.forEach(([k])=>ucm[k]+=(u[k]||0));
     });
     const os=shareOf(obs), us=shareOf(ucm);
-    const bar=sh=>UCSET.map(([k,,c])=>`<i style="width:${(sh.out[k]*100).toFixed(2)}%;background:${c}"></i>`).join('');
+    // 各セグメントに「実績% ／ UC% ／ 差」をホバー説明として付ける（両バー共通）。
+    const segTitle=k=>{ const lab=(UCSET.find(x=>x[0]===k)||[])[1]||k;
+      const o=os.out[k]*100, u=us.out[k]*100, d=o-u;
+      return `${lab}: 実績 ${o.toFixed(1)}% ／ UC ${u.toFixed(1)}%（差 ${d>=0?'+':''}${d.toFixed(1)}pp）`; };
+    const bar=sh=>UCSET.map(([k,,c])=>
+      `<i title="${segTitle(k)}" style="width:${(sh.out[k]*100).toFixed(2)}%;background:${c}"></i>`).join('');
     document.getElementById('uc-obs').innerHTML = os.tot>0?bar(os):'';
     document.getElementById('uc-uc').innerHTML  = us.tot>0?bar(us):'';
     document.getElementById('uc-leg').innerHTML = UCSET.map(([k,lab,c])=>
@@ -597,7 +608,10 @@ Promise.all([
     // 構造L1（share L1 pp = Σ|obs share − uc share|×100）。uc_validate の share_l1_pp と同じ定義。
     let l1=null;
     if(os.tot>0&&us.tot>0){ l1=0; UCSET.forEach(([k])=>l1+=Math.abs(os.out[k]-us.out[k])); l1*=100; }
-    document.getElementById('uc-l1').textContent = l1!=null?`構造L1 ${l1.toFixed(1)} pp`:'—';
+    const l1el=document.getElementById('uc-l1');
+    l1el.textContent = l1!=null?`構造L1 ${l1.toFixed(1)} pp`:'—';
+    // 乖離度で色分け（緑<20 / 黄<40 / 赤≥40 pp）。近い/遠いが一目で分かる。
+    l1el.style.color = l1==null?'' : (l1<20?'#69db7c':l1<40?'#ffd43b':'#ff8787');
     // ラベル（需要の出所と暦ズレを必ず明示）＋ B: 実測需要検証(fy2025r1)の該当値
     let ctx='UC=fy2023 合成需要・代表日24h ／ 実績=FY2024週集計・火力/原子力/水力に限定。生の暦は一致しない。';
     if(ucv&&ucv.summary&&ucv.summary.l1_pp_by_region){
@@ -696,6 +710,30 @@ Promise.all([
   });
   map.on('mouseenter','flow-line',()=>map.getCanvas().style.cursor='pointer');
   map.on('mouseleave','flow-line',()=>map.getCanvas().style.cursor='');
+
+  // ---- ホバー・ツールチップ（クリックせずに要点を読む）----
+  const hoverPop=new maplibregl.Popup({closeButton:false,closeOnClick:false,offset:12,className:'hoverpop'});
+  const hn=(v,u='',d=0)=>(v==null||v==='')?'—':(typeof v==='number'?v.toFixed(d):v)+u;
+  map.on('mousemove','flow-line',e=>{
+    const f=e.features[0], st=map.getFeatureState({source:'flow',id:f.id}), p=f.properties;
+    const lf=st.lf!=null?st.lf:p.load_factor_p95;
+    hoverPop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.line}</b><br>${hn(p.kv,' kV')}`
+      +`${st.mw!=null?`　<b>${hn(st.mw,' MW')}</b>`:''}`
+      +`${lf!=null?`　負荷率 ${(lf*100).toFixed(0)}%`:''}`).addTo(map);
+  });
+  map.on('mouseleave','flow-line',()=>hoverPop.remove());
+  ['gen-out','gen-peak'].forEach(lid=>{
+    map.on('mousemove',lid,e=>{
+      const p=e.features[0].properties;
+      hoverPop.setLngLat(e.lngLat).setHTML(
+        `<b>${p.plant} ${p.unit||''}</b><br>${p.fuel}`
+        +`${p._mw!=null?`　<b>${hn(p._mw,' MW')}</b>`:''}`
+        +`${p._r!=null?`　出力率 ${(p._r*100).toFixed(0)}%`:''}`).addTo(map);
+    });
+    map.on('mouseleave',lid,()=>hoverPop.remove());
+  });
+
   // 何もない所をクリックしたら情報パネルを閉じる（潮流・発電のどちらでもない時だけ）
   map.on('click',ev=>{
     const layers=['flow-line','gen-out','gen-peak'].filter(l=>map.getLayer(l));
