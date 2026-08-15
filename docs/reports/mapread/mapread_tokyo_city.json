@@ -1,0 +1,287 @@
+{
+  "region": "tokyo",
+  "agent": "tokyo_city",
+  "assigned": ["西新宿", "西巣鴨", "王子", "淀橋", "巣鴨", "東池袋", "戸山", "天王洲", "栄町", "川口", "川口本町", "東川口", "秋ヶ瀬", "布田", "篠崎", "牛久", "平井", "高田", "立花二丁目", "天野", "小田原市", "神谷新町"],
+  "source_files": [
+    "data/external/system_disclosure/tokyo/keitouzu/tokyo23_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/tama_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/kanagawa_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/saitama_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/ibaraki_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/shizuoka_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/niigata_yosochoryu.pdf"
+  ],
+  "method_note": "各PDFの pdftotext テキスト層で対象名の載るページを特定 → 該当ページを pdftoppm(250-300dpi) で画像化 → crop して図中の線を目視追跡。tama p13 で「テキスト層に出る名前＝図に描かれた名前」が完全一致することを検証済みなので、テキスト層に無い＝図に描かれていない、と判断してよい。",
+
+  "resolved": [
+    {
+      "target": "天王洲変電所",
+      "target_kv": 154,
+      "partner_as_printed": "戸越",
+      "partner_in_main_subs": null,
+      "line_label": "送電線 (東京[23区] 154kV No.28)",
+      "kv_of_line": 154,
+      "file": "tokyo23_yosochoryu.pdf",
+      "page": 8,
+      "crop": "scratchpad/img_city/crop_line28_path.png",
+      "confidence": "高",
+      "note": "154kV系統構成図。戸越【154kV20】154kV母線から立上り→右→下→右の折線で天王洲【154kV32】154kV母線の左端に接続。折線上に(28)のラベル。線名は一覧表でも「送電線」とマスクされ両端も非開示のため名称不明。備考欄の上位系(基幹275kV92/144)が戸越と一致し整合。相手端の戸越変電所はAGJ main_subs に存在しない(モデル欠落)。"
+    },
+    {
+      "target": "天王洲変電所",
+      "target_kv": 154,
+      "partner_as_printed": "大井ふ頭",
+      "partner_in_main_subs": null,
+      "line_label": "送電線 (東京[23区] 154kV No.32)",
+      "kv_of_line": 154,
+      "file": "tokyo23_yosochoryu.pdf",
+      "page": 8,
+      "crop": "scratchpad/img_city/crop_tennozu.png",
+      "confidence": "高",
+      "note": "大井ふ頭【31】154kV母線から天王洲154kV母線へ垂直に1本、(32)ラベル付き。天王洲母線側の接続点直後に赤×(母線区分の常時開路)。独立検証: 潮流実績CSV(tyouryu_154kV/jisseki_154kV03.csv)の列名『基幹_送電線No.4』が大井ふ頭と天王洲の2局にのみ出現し、同じ接続を裏付ける。相手端の大井ふ頭変電所はAGJ main_subs に存在しない(モデル欠落)。"
+    },
+    {
+      "target": "篠崎変電所",
+      "target_kv": 66,
+      "partner_as_printed": "小松川",
+      "partner_in_main_subs": "小松川変電所 66kV",
+      "line_label": "篠崎線 (東京[23区] 66kV No.35)",
+      "kv_of_line": 66,
+      "file": "tokyo23_yosochoryu.pdf",
+      "page": 11,
+      "crop": "scratchpad/img_city/crop_shinozaki2.png",
+      "confidence": "高",
+      "note": "66kV江東系統・小松川系統図。小松川【66kV9】66kV母線から出る(35)のフィーダが右へ延び、鹿骨→篠崎の順に配電用変電所(○)がタップ。同PDFの送電線一覧表も『66kV 35 篠崎線 小松川→篠崎』と明記。さらに潮流実績CSVの列名『篠崎線』が篠崎と小松川の2局に出現し三重に一致。篠崎の同一フィーダ上の直近隣接は鹿骨(main_subsに無し)。"
+    },
+    {
+      "target": "淀橋変電所",
+      "target_kv": 66,
+      "partner_as_printed": "和田堀",
+      "partner_in_main_subs": "和田堀変電所 66kV",
+      "line_label": null,
+      "kv_of_line": 66,
+      "file": "tokyo23_yosochoryu.pdf",
+      "page": 12,
+      "crop": "scratchpad/img_city/crop_yodobashi.png",
+      "confidence": "中",
+      "note": "66kV千歳系統・和田堀系統図。和田堀【66kV10】66kV母線から分岐した導体が縦のトランクに合流し、そのトランクは上へ(58)杉並線で野方(端に赤×)、下へ淀橋66kV母線(端に赤×)へ達する。淀橋側の区間には線番号ラベルが無いため line_label は null(公表66kV一覧表の(58)杉並線は和田堀→野方であり淀橋区間ではない)。両端の赤×は常時開路点を示すとみられ、淀橋にとっては平常時の供給元ではなく系統間の連系(タイ)である可能性が高い。淀橋の平常時供給元は additional_evidence の新淀線(新宿)側と考えられる。"
+    },
+    {
+      "target": "牛久変電所",
+      "target_kv": 66,
+      "partner_as_printed": "北竜台",
+      "partner_in_main_subs": null,
+      "line_label": "牛久線 (茨城県 66kV No.52)",
+      "kv_of_line": 66,
+      "file": "ibaraki_yosochoryu.pdf",
+      "page": 12,
+      "crop": "scratchpad/img_city/crop_ushiku.png",
+      "confidence": "高",
+      "note": "66kV筑波南系統図。筑波南【3】66kV母線から下るトランク(50=筑波南線)の途中から右へ分岐し、北竜台(○)をタップした先に(52)牛久(○)。同PDFの送電線一覧表も『66kV 52 牛久線 北竜台分岐→牛久』と明記。北竜台は本タスクのtargets側(孤立)なのでmain_subsにはヒットせず連鎖解決用。トランク起点の筑波南変電所 66kV は main_subs に存在(9.4km)。"
+    },
+    {
+      "target": "平井変電所",
+      "target_kv": 66,
+      "partner_as_printed": "神栖",
+      "partner_in_main_subs": "神栖変電所 66kV",
+      "line_label": "船津線 (茨城県 66kV No.63)",
+      "kv_of_line": 66,
+      "file": "ibaraki_yosochoryu.pdf",
+      "page": 13,
+      "crop": "scratchpad/img_city/crop_hirai.png",
+      "confidence": "中",
+      "note": "66kV鹿島系統図。鹿島(【4】鹿島5,7,8B/【10】鹿島6,9B)の66kV母線から下る(63)のトランクに、上から順に神栖(○)、平井(○ ※発電所《1034048》も同じ分岐点に併結)、船津(○)がタップ。一覧表は『66kV 63 船津線 鹿島→船津』でトランクの起点=鹿島・終点=船津。平井自身は線名を持たないタップなので、partner はトランク上の直近上流である神栖を採った。母線側で採るなら鹿島変電所 66kV(main_subsに存在)、直近下流なら船津変電所(同じくmain_subsに存在)。confidence を中にしたのはこの「どの隣接を相手端とするか」の曖昧さのため(線が描かれていること自体は明瞭)。"
+    }
+  ],
+
+  "additional_evidence": [
+    {
+      "_source_kind": "潮流実績CSV(列名)。図ではなく、TEPCO『潮流実績』CSVのヘッダ命名『<変電所名>(変) - <線路名>』を用いた突合。ある線名が2局に出現すればその2局が同一線の測定端＝接続、と読む。この読み方は篠崎(図・一覧表・CSVの三者一致)と大井ふ頭-天王洲(図・CSV一致)で校正済み。契約の『resolved は図で線が確認できたものだけ』に従い resolved には入れていない。採否はリード判断。",
+      "_source_files": [
+        "data/external/system_disclosure/tokyo/flow_actual/tyouryu_66kV/潮流実績_66kV/jisseki_tokyo_23_01.csv",
+        "data/external/system_disclosure/tokyo/flow_actual/tyouryu_66kV/潮流実績_66kV/jisseki_tokyo_23_02.csv",
+        "data/external/system_disclosure/tokyo/flow_actual/tyouryu_66kV/潮流実績_66kV/jisseki_saitama01.csv",
+        "data/external/system_disclosure/tokyo/flow_actual/tyouryu_66kV/潮流実績_66kV/jisseki_kanagawa02.csv"
+      ],
+      "links": [
+        {
+          "target": "西新宿変電所", "target_kv": 66,
+          "partners_as_printed": ["新宿", "東新宿"],
+          "partners_in_main_subs": ["新宿変電所", "東新宿変電所"],
+          "line_label": "西新宿線", "kv_of_line": 66,
+          "distance_km": [0.9, 1.1],
+          "confidence": "中",
+          "note": "西新宿線が新宿(変)と東新宿(変)の2局で計測。西新宿自身は1B/2B/3B(バンク)のみ。西新宿がこの線のループイン/ループアウト点。新宿・東新宿はいずれも275/66kV(一覧表 変154kV26/24)なので66kV直送で整合。"
+        },
+        {
+          "target": "西巣鴨変電所", "target_kv": 66,
+          "partners_as_printed": ["豊島"],
+          "partners_in_main_subs": ["豊島変電所"],
+          "line_label": "西巣鴨線", "kv_of_line": 66,
+          "distance_km": [1.0],
+          "confidence": "中",
+          "note": "西巣鴨線は豊島(変)のみで計測。豊島は154kV系統構成図では275/154kVとしか描かれないが、潮流実績66kVでは上富士線・南池袋線・小石川線・東池袋線・氷川線・西巣鴨線・西板橋線という66kVフィーダ群を持つ。"
+        },
+        {
+          "target": "東池袋変電所", "target_kv": 66,
+          "partners_as_printed": ["常盤台", "豊島"],
+          "partners_in_main_subs": ["常盤台変電所", "豊島変電所"],
+          "line_label": "東池袋線", "kv_of_line": 66,
+          "distance_km": [3.7, 0.5],
+          "confidence": "中",
+          "note": "東池袋線が常盤台(変)と豊島(変)の2局で計測。東池袋自身はバンク列のみ。"
+        },
+        {
+          "target": "戸山変電所", "target_kv": 66,
+          "partners_as_printed": ["東新宿", "水道橋"],
+          "partners_in_main_subs": ["東新宿変電所", "水道橋変電所"],
+          "line_label": "戸山線", "kv_of_line": 66,
+          "distance_km": [1.0, 4.0],
+          "confidence": "中",
+          "note": "戸山線が東新宿(変)と水道橋(変)の2局で計測。両局とも275/66kV。"
+        },
+        {
+          "target": "淀橋変電所", "target_kv": 66,
+          "partners_as_printed": ["新宿"],
+          "partners_in_main_subs": ["新宿変電所"],
+          "line_label": "新淀線", "kv_of_line": 66,
+          "distance_km": [0.5],
+          "confidence": "中",
+          "note": "新淀線が新宿(変)と淀橋(変)の2局で計測。淀橋は自局にも66kVフィーダ(新淀線・淀橋線)を持つ66kV母線ノード。resolved の和田堀側(常時開路×)と併せると、淀橋の平常時供給は新宿側・和田堀側は連系タイ、という構図になる。"
+        },
+        {
+          "target": "川口変電所", "target_kv": 66,
+          "partners_as_printed": ["鳩ヶ谷"],
+          "partners_in_main_subs": ["鳩ヶ谷変電所 66kV"],
+          "line_label": "川口線1･2･3L", "kv_of_line": 66,
+          "distance_km": [1.8],
+          "confidence": "中",
+          "note": "川口線1･2･3L は鳩ヶ谷(変)のみで計測(川口自身はバンク列のみ)。埼玉66kV系統構成図(p14 鳩ヶ谷系統)には川口・東川口とも描かれていない。"
+        },
+        {
+          "target": "東川口変電所", "target_kv": 66,
+          "partners_as_printed": ["鳩ヶ谷"],
+          "partners_in_main_subs": ["鳩ヶ谷変電所 66kV"],
+          "line_label": "東川口線1･2L", "kv_of_line": 66,
+          "distance_km": [1.8],
+          "confidence": "中",
+          "note": "東川口線1･2L は鳩ヶ谷(変)のみで計測。東川口自身は1B/3Bのみ。"
+        },
+        {
+          "target": "栄町変電所", "target_kv": 66,
+          "partners_as_printed": ["横浜大黒"],
+          "partners_in_main_subs": null,
+          "line_label": "栄町線1･2L", "kv_of_line": 66,
+          "distance_km": null,
+          "confidence": "中",
+          "note": "栄町線1･2L が栄町(変)と横浜大黒(変)の2局で計測。相手端の横浜大黒変電所はAGJ main_subs に存在しない(モデル欠落)。栄町は自局にも66kVフィーダ(寺尾線1･2L、鶴見栄町線1･2L)を持つ66kVノードで、単なる配電用変電所ではない。なお寺尾線の相手端は北寺尾変電所(main_subsに存在・3.4km)の可能性があるが、CSVでは栄町側にしか出現しないため断定しない。"
+        }
+      ]
+    }
+  ],
+
+  "unresolved": [
+    {
+      "target": "王子変電所",
+      "reason": "tokyo23の66kV系統構成図(p9-13)は10系統分しか収録されておらず、王子を含む都心部の66kV系統(角筈・新宿・東新宿・水道橋・上野・田端・常盤台・豊島 等)は図が非公開。王子の名は配電用変電所一覧表(p19)にあるのみで、66kV送電線一覧表の開示行にも王子を端とする線は無い。潮流実績CSVにも『王子線』は存在せず(『八王子線』『北八王子線』は多摩の別変電所)、王子(変)の列は2B/3Bのみ。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "saitama_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_01.csv", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "巣鴨変電所",
+      "reason": "同上。図(p9-13)に描画なし、一覧表(p20)のみ。潮流実績CSVにも『巣鴨線』は無く(『西巣鴨線』@豊島 は別変電所=西巣鴨のもの)、巣鴨(変)の列は1B/2B/3Bのみ。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_01.csv", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "西新宿変電所",
+      "reason": "66kV系統構成図に描画なし(該当系統の図が非公開)。ただし潮流実績CSVに両端根拠あり → additional_evidence 参照。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "西巣鴨変電所",
+      "reason": "66kV系統構成図に描画なし。潮流実績CSVに片端根拠あり → additional_evidence 参照。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "東池袋変電所",
+      "reason": "66kV系統構成図に描画なし。潮流実績CSVに両端根拠あり → additional_evidence 参照。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "戸山変電所",
+      "reason": "66kV系統構成図に描画なし。潮流実績CSVに両端根拠あり → additional_evidence 参照。",
+      "files_checked": ["tokyo23_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_23_01.csv", "tyouryu_66kV/jisseki_tokyo_23_02.csv"]
+    },
+    {
+      "target": "川口変電所",
+      "reason": "埼玉66kV系統構成図(p9-18)に描画なし。p14の鳩ヶ谷系統には川口市内の別変電所(川口芝・宮前・白幡 等)は載るが川口本体は無い。配電用変電所一覧表(p27)にのみ記載。潮流実績CSVに片端根拠あり → additional_evidence 参照。",
+      "files_checked": ["saitama_yosochoryu.pdf", "tyouryu_66kV/jisseki_saitama01.csv"]
+    },
+    {
+      "target": "東川口変電所",
+      "reason": "埼玉66kV系統構成図に描画なし、一覧表(p27)のみ。潮流実績CSVに片端根拠あり → additional_evidence 参照。",
+      "files_checked": ["saitama_yosochoryu.pdf", "tyouryu_66kV/jisseki_saitama01.csv"]
+    },
+    {
+      "target": "栄町変電所",
+      "reason": "神奈川66kV系統構成図(p9-23)に描画なし。川崎区を扱うp9(東川崎系統・塩浜系統)は塩浜中間・桜橋・稲荷中間と発電所のみの小規模な図で栄町は不在。配電用変電所一覧表(p31 神奈川県 配電用変電所55)にのみ記載。潮流実績CSVに両端根拠あり → additional_evidence 参照。",
+      "files_checked": ["kanagawa_yosochoryu.pdf", "tyouryu_66kV/jisseki_kanagawa02.csv"]
+    },
+    {
+      "target": "川口本町変電所",
+      "reason": "埼玉66kV系統構成図に描画なし、配電用変電所一覧表(p27 埼玉県 配電用変電所182)のみ。潮流実績CSVでも川口本町(変)は1B/2B/3Bのみで、『川口本町線』という線名は全ファイルに存在しない。相手端の手がかりが一切ない。",
+      "files_checked": ["saitama_yosochoryu.pdf", "tyouryu_66kV/jisseki_saitama01.csv"]
+    },
+    {
+      "target": "秋ヶ瀬変電所",
+      "reason": "埼玉66kV系統構成図に描画なし、配電用変電所一覧表(p27 埼玉県 配電用変電所134)のみ。潮流実績CSVでも秋ヶ瀬(変)は1B/2Bのみで『秋ヶ瀬線』は全ファイルに存在しない。",
+      "files_checked": ["saitama_yosochoryu.pdf", "tyouryu_66kV/jisseki_saitama01.csv"]
+    },
+    {
+      "target": "布田変電所",
+      "reason": "多摩66kV系統構成図(p9-14)に描画なし。調布市域を扱うp13(北多摩系統)には飛田給・柴崎・調布・三鷹・狛江・稲城・長峰・車返・梶野・井口が載るが布田は無い(このページで『テキスト層の名前＝図の名前』の完全一致を目視確認済み)。配電用変電所一覧表(p21)のみ。潮流実績CSVでも布田(変)は1B/2B/3Bのみで『布田線』は存在しない。",
+      "files_checked": ["tama_yosochoryu.pdf", "tyouryu_66kV/jisseki_tokyo_tama01.csv"]
+    },
+    {
+      "target": "立花二丁目変電所 66kV",
+      "reason": "静岡(富士川以東)PDFのテキスト層に『立花』が1件も無い。66kV系統構成図は湯船・北駿(p8)/駿東(p9)/田方(p10)/駿河(p11)/岳南(p12)の5系統で、所在地(伊豆の国市付近)を含む田方系統p10にも記載なし。送電線一覧表・変電所一覧表・潮流実績CSVのいずれにも該当名なし。TEPCOの配電用変電所ではない可能性が高い(flags参照)。",
+      "files_checked": ["shizuoka_yosochoryu.pdf", "kanagawa_yosochoryu.pdf", "tyouryu_66kV/jisseki_shizuoka01.csv"]
+    },
+    {
+      "target": "天野変電所",
+      "reason": "静岡(富士川以東)PDFのテキスト層に『天野』が1件も無い。TEPCO全14県PDFを横断検索した結果、唯一のヒットは群馬県66kV24『野中旧線・天野線』(潮流実績でも野中(変)の線)で、所在(伊豆の国市付近)と無関係。立花二丁目と同様にTEPCOの配電用変電所ではない可能性が高い(flags参照)。",
+      "files_checked": ["shizuoka_yosochoryu.pdf", "gunma_yosochoryu.pdf", "tyouryu_66kV/jisseki_shizuoka01.csv"]
+    },
+    {
+      "target": "高田変電所",
+      "reason": "所在(lat 37.10565, lon 138.24034 = 新潟県上越市高田)は東北電力ネットワーク管内であり、TEPCOの開示範囲外。TEPCO niigata_yosochoryu.pdf は『新潟県[一部]』=信濃川・清津川・中津川の水力関連区間のみ(66kV系統構成図p7は清津川【1】と湯沢だけ)で上越市域を含まない。他県PDFの『高田』ヒットは柏高田(千葉)・高田(横浜市港北区)・上高田1/2番線(中野区)で全て別物。→ region誤ラベルの疑い(flags参照)。",
+      "files_checked": ["niigata_yosochoryu.pdf", "kanagawa_yosochoryu.pdf", "chiba_yosochoryu.pdf", "tokyo23_yosochoryu.pdf"]
+    }
+  ],
+
+  "flags": [
+    {
+      "target": "高田変電所",
+      "issue": "region誤ラベルの疑い。座標は新潟県上越市高田で東北電力ネットワーク管内。TEPCOの新潟開示は信濃川水系の一部のみで上越市を含まない。targets_tohoku.json にも該当なし(『大字高田』『岩手高田』は岩手の別物)。同じtargets_tokyo内の『東上越変電所 275kV/154kV』(37.18831,138.37398=上越市)も同じ理由で東北側の可能性があり、あわせて所属地域の再判定を推奨。"
+    },
+    {
+      "target": "小田原市変電所 / 神谷新町変電所",
+      "issue": "担当指示に名前があったが、いずれも targets_tokyo.json の targets(孤立A)ではなく main_subs(本系統側)に存在する。小田原市変電所 66kV(35.2041,139.1394)・神谷新町変電所 66kV(35.1547,138.742)。孤立解消の対象外と判断し判読していない。指示側の名寄せミスか、別リスト由来の可能性。"
+    },
+    {
+      "target": "天王洲変電所",
+      "issue": "図で読めた相手端2局(戸越変電所・大井ふ頭変電所)がどちらも AGJ main_subs / targets のどちらにも存在しない。いずれもTEPCOの実在変電所(戸越=154/66kV【154kV20】、大井ふ頭=275/154kV【31】)なので、モデル側のノード欠落。天王洲を繋ぐには先にこの2ノードを建てる必要がある。"
+    },
+    {
+      "target": "淀橋変電所",
+      "issue": "モデルの淀橋変電所は、TEPCO図の『淀橋 66kV』(母線ノード)に対応する。TEPCOには別に『淀橋局配変電所』(配電用)があり、潮流実績CSVでも淀橋(変)と淀橋局配(変)が別列で存在する。同名2ノードの取り違えに注意。同じ関係が野方/野方局配、千歳/千歳局配、和田堀/和田堀局配、高井戸/高井戸局配、小松川/小松川局配にもある。"
+    },
+    {
+      "target": "立花二丁目変電所 66kV / 天野変電所",
+      "issue": "2件は約0.6km しか離れておらず(35.03028,138.95111 と 35.03048,138.94434)、ともに伊豆の国市域。TEPCO静岡(富士川以東)の配電用変電所一覧・系統構成図・潮流実績のいずれにも名前が無い。TEPCOの図では需要家(自家用受電)は無名の二重丸で描かれる規約なので、この2件は鉄道・工場等の自家用受電設備をOSMが power=substation として拾ったものである可能性が高い。モデル上の扱い(需要家として落とすか、66kVノードとして残すか)の再検討を推奨。"
+    },
+    {
+      "target": "(手法)",
+      "issue": "TEPCOの23区66kV系統構成図は10系統分しか収録されておらず、都心部(角筈・新宿・東新宿・水道橋・上野・墨東・田端・常盤台・豊島・常盤橋・八重洲・北新橋・南新橋・北渋谷・戸越・南大田 各系統)の図は非公開。66kV送電線一覧表も同区間の行が欠番。したがって『図に無い』は本件では非常に多く、都心の孤立変電所を図だけで解くのは原理的に不可能。代替として潮流実績CSVのヘッダ命名(<変電所>(変) - <線路名>)が有効で、本タスクでは8件を追加解決できた(additional_evidence)。他エージェント/今後の再スイープでも使える。"
+    }
+  ]
+}

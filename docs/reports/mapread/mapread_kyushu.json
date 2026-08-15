@@ -1,0 +1,238 @@
+{
+  "region": "kyushu",
+  "source_note": "九州電力送配電の系統情報公表ページ(https://www.kyuden.co.jp/td/service/wheeling/disclosure.html)から、連系マップ td_renkeimap_260730.pdf のリンク注釈を抽出して全31地区の『周辺の送電系統図』と対応する『予想潮流・空容量一覧表』(2026-07-30版)を取得した。取得先は data/external/system_disclosure/kyushu/keitouzu/ (図) と .../keitouzu/kuyoryo/ (一覧表)。いずれも転載禁止データで data/external/ は .gitignore 済み。一覧表は『送電線名』と『潮流方向 A→B』を持つため、図の線番号→線名→両端変電所名 を突き合わせて判読した。",
+  "source_files": [
+    "data/external/system_disclosure/kyushu/keitouzu/td_renkeimap_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_16hita_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_17saiki_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_15oita_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_26miyazaki_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_31ritou_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_02kokura_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_03wakamatsu_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_04yahata_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_14omuta_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_22kumamoto_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/td_23yatsushiro_map_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_hita_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_saiki_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_oita_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_miyazaki_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_ritou_260730.pdf",
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_kokura_260730.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_yama.pdf"
+  ],
+  "method_note": "図中の変電所記号(丸囲み番号)はPDFのテキスト層に数字として埋まっているため、pdftotext -bbox で記号位置を取り、AGJ main_subs の実座標を制御点にしてアフィン変換(最小二乗+外れ値除去)を当て、ターゲット緯度経度を図上に逆投影して該当記号を特定した。各図の制御点残差はコメントに記載。名前一致が取れないものは resolved に上げていない。",
+
+  "resolved": [
+    {
+      "target": "小国町変電所",
+      "target_kv": 110,
+      "partner_as_printed": "女子畑",
+      "partner_in_main_subs": null,
+      "line_label": "小国線",
+      "kv_of_line": 66,
+      "circuits": 2,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_16hita_map_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_oguni_corridor.png",
+      "confidence": "高",
+      "note": "〔16 日田〕図で『小国』の名前ラベル付き丸囲み⑭を確認。一覧表 送電線No.14『小国線』66kV 2回線 の区間が『女子畑→小国』と明記され、図でも女子畑⑨から南下する2回線が小国⑭に入るのを追跡できる。ジオリファレンス(6制御点・最大残差1.30km)でターゲットに最も近い記号も⑭小国(3.5km、次点は杖立6.4km)。ただし公表値では小国は66kVで、AGJのkvタグ110kVは実系統と食い違う。相手端『女子畑』はAGJ main_subs に存在しない(最寄りは日田市変電所_2 が2.4km)ので、この接続だけでは本系統に載らない。"
+    },
+    {
+      "target": "小国町変電所",
+      "target_kv": 110,
+      "partner_as_printed": "杖立",
+      "partner_in_main_subs": null,
+      "line_label": "杖立線",
+      "kv_of_line": 11,
+      "circuits": 1,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_16hita_map_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_oguni_full.png",
+      "confidence": "高",
+      "note": "一覧表 送電線No.16『杖立線』11kV 1回線、区間『小国→杖立』。図でも小国⑭と杖立⑮の間に線番号16の線が描かれている。11kVなので送電系統というより配電級。杖立もmain_subsに無し。"
+    },
+    {
+      "target": "犬飼変電所",
+      "target_kv": 66,
+      "partner_as_printed": "大南",
+      "partner_in_main_subs": null,
+      "line_label": null,
+      "kv_of_line": 66,
+      "circuits": 2,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_17saiki_map_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_inukai_up.png",
+      "confidence": "中",
+      "note": "〔17 佐伯〕図で『犬飼』ラベル付き丸囲み⑤を確認。ジオリファレンス(4制御点)で⑤の推定座標33.041,131.629 はターゲット(33.050,131.643)から1.7kmで同定は堅い。犬飼から北へ66kV 2回線が伸びるが、佐伯図での相手端は名前ラベルの無い丸記号(crop kys_inukai_node.png)。この無名記号は図の北端にあり、推定座標33.154,131.645。隣接する〔15 大分〕図の『大南』⑲(crop kys_oita_dainan.png)が (a)北東へ66kV2回線(線番号19=大南分岐線 西大分→大南)、(b)右隣の△他社変電所へ2回線、(c)南へ2回線が枠外へ抜ける、という同一の接続形状を持ち、位置も一致するため大南と判断した。ただし『大南』の名前は佐伯図には印字されておらず、隣図からの同定である点は割り引くこと。犬飼を端点とする送電線名は佐伯・大分どちらの一覧表にも無い(犬飼は佐伯地区 変電所No.5 66kV としてのみ記載)。大南はAGJ main_subs に存在しない(最寄り金の手7.6km)。"
+    },
+    {
+      "target": "都農変電所",
+      "target_kv": 66,
+      "partner_as_printed": "高鍋",
+      "partner_in_main_subs": "九州電力 高鍋変電所 66kV",
+      "line_label": "都農高鍋線",
+      "kv_of_line": 66,
+      "circuits": 2,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_26miyazaki_map_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_tsuno_corridor.png",
+      "confidence": "高",
+      "note": "〔26 宮崎〕図で『都農』ラベル付き丸囲み⑦-1/⑦-2(2バンク)を確認。一覧表 送電線No.9『都農高鍋線』66kV 2回線、区間『都農→高鍋』。図でも線番号9が都農から海岸沿いに南下して高鍋⑤-1/⑤-2に入るのを連続して追跡できる。ジオリファレンス(7制御点・RMS約1.2km)で⑦-1の推定座標は32.2470,131.5501、ターゲット(32.25773,131.55311)との差は約1.2kmで同定は堅い。相手端の高鍋はAGJ main_subs の『九州電力 高鍋変電所 66kV/110kV』(32.1341,131.4991)と一致。本バッチで唯一、相手端が main_subs に実在する接続。"
+    },
+    {
+      "target": "都農変電所",
+      "target_kv": 66,
+      "partner_as_printed": "川原sws",
+      "partner_in_main_subs": null,
+      "line_label": "川原支線",
+      "kv_of_line": 66,
+      "circuits": 2,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_miyazaki_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_tsuno_corridor.png",
+      "confidence": "中",
+      "note": "一覧表 送電線No.11『川原支線』66kV 2回線、区間『都農→川原sws』(swsは開閉所)。線名と区間は一覧表に明記されているが、図上では線番号11のラベルが都農から離れた分岐点付近にあり、都農の母線から直接出る形かタップかは図だけでは断定できないため中とした。川原はmain_subsに無し。"
+    },
+    {
+      "target": "郷ノ浦変電所",
+      "target_kv": 66,
+      "partner_as_printed": "新壱岐",
+      "partner_in_main_subs": null,
+      "line_label": "新壱岐郷ノ浦線",
+      "kv_of_line": 22,
+      "circuits": 1,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_31ritou_map_260730.pdf",
+      "page": 2,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_gonoura.png",
+      "confidence": "高",
+      "note": "〔31 離島〕図p2(壱岐)で『郷ノ浦』ラベル付き丸囲み⑮を確認。一覧表 送電線No.15『新壱岐郷ノ浦線』22kV 1回線、区間『新壱岐→郷ノ浦』。図でも線番号15が郷ノ浦⑮から北東へ伸び、『新壱岐』とラベルされた発電所記号(□)に入る。相手端は変電所ではなく内燃力発電所である点に注意。公表値は22kVで、AGJのkvタグ66kVは実系統と食い違う。"
+    },
+    {
+      "target": "郷ノ浦変電所",
+      "target_kv": 66,
+      "partner_as_printed": "湯ノ本",
+      "partner_in_main_subs": null,
+      "line_label": "郷ノ浦湯ノ本線",
+      "kv_of_line": 22,
+      "circuits": 1,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_31ritou_map_260730.pdf",
+      "page": 2,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_gonoura.png",
+      "confidence": "中",
+      "note": "一覧表 送電線No.21『郷ノ浦湯ノ本線』22kV 1回線(区間欄は『―』で非公開)。図では郷ノ浦⑮の直上の開閉器(⊠)から線番号21の破線(配電線22kV)が北上し、『湯ノ本』とラベルされた配電塔(◇22)に入る。線名から両端は明らかだが区間欄が伏せられているため中。"
+    },
+    {
+      "target": "日田市変電所 110kV",
+      "target_kv": 110,
+      "partner_as_printed": "女子畑",
+      "partner_in_main_subs": null,
+      "line_label": "下筌支線",
+      "kv_of_line": 66,
+      "circuits": 1,
+      "file": "data/external/system_disclosure/kyushu/keitouzu/td_16hita_map_260730.pdf",
+      "page": 1,
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_oguni_corridor.png",
+      "confidence": "中",
+      "note": "ターゲット名は住所由来(日田市)で図には出ないが、座標33.16461,130.98453 は下筌ダム(北緯33度09分35秒/東経130度59分02秒=33.1597,130.9839、出典:ダム便覧・Wikipedia)から0.55km。この実測座標を制御点に加えて〔16 日田〕図を再フィット(6制御点・最大残差1.30km)すると、ターゲットに最も近い記号は⑬下筌で0.36km、次点の②大山は2.59kmと明確に離れる。よって下筌変電所と同定した。一覧表 送電線No.15『下筌支線』66kV 1回線、区間『女子畑→下筌』。図でも下筌⑬から発電所(□)経由で女子畑回廊へ入る放射状のタップとして描かれている。注意: 公表値では下筌は66kV(変電所No.13 下筌 66kV)で、AGJのkvタグ110kVは食い違う。同定は座標一致に依るもので図中に『日田市』の名前ラベルは無いため中とした。"
+    }
+  ],
+
+  "unresolved": [
+    {
+      "target": "天瀬町赤岩変電所",
+      "reason": "『赤岩』『天瀬』は全31地区の空容量一覧表のいずれにも変電所名・線名として現れない。〔16 日田〕図を6制御点(最大残差1.30km)でジオリファレンスしてターゲット(33.25876,131.03349)を逆投影すると、女子畑⑨—湯山⑩を結ぶ66kV線の線上(図上331.2,326.0)に落ち、そこに変電所記号は無い。最も近い名前付き記号は⑩湯山で1.72km(次点の⑨女子畑は6.66km)。湯山であれば接続は一覧表 送電線No.11『湯山支線』66kV 2回線・区間『女子畑→湯山』だが、1.72kmは本図の制御点残差1.30kmをやや超えており、名称の裏づけも無いため同定できない。九州電力の湯山発電所が日田市内にあることはWikipediaで確認できたが大字までは特定できなかった。追試するなら湯山変電所の正確な所在地(住所または座標)を別途押さえるのが決定打になる。",
+      "candidate": "湯山 (湯山支線 66kV 2回線・女子畑→湯山)",
+      "files_checked": [
+        "data/external/system_disclosure/kyushu/keitouzu/td_16hita_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_hita_260730.pdf",
+        "全31地区の空容量一覧表(td_*_260730.pdf)を『赤岩』『天瀬』で全文検索"
+      ],
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_akaiwa.png"
+    },
+    {
+      "target": "岱明町野口変電所",
+      "reason": "『岱明』は全31地区の空容量一覧表に現れない。〔14 大牟田〕図(6制御点・RMS1.47km・最大2.35km)でターゲット(32.92288,130.53216)を逆投影すると玉名⑪のごく近傍に落ちるが、玉名は制御点として使っているので独立な証拠にならない。図上その位置にある九電変電所記号は玉名⑪ただ一つで、周囲の△は名前ラベルの無い他社変電所。AGJ main_subs には既に『玉名変電所』(32.92240,130.55070)が1.7kmの距離で存在しており、ターゲットが玉名変電所の重複オブジェクトなのか、無名の他社変電所なのか、公表図だけでは判別できない。",
+      "files_checked": [
+        "data/external/system_disclosure/kyushu/keitouzu/td_14omuta_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/td_22kumamoto_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_omuta_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_kumamoto_260730.pdf"
+      ],
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_tamana.png"
+    },
+    {
+      "target": "敷川内町変電所",
+      "reason": "『敷川内』は全31地区の空容量一覧表に現れない。〔23 八代〕図(12制御点・RMS2.02km)でターゲット(32.44995,130.59448)を逆投影すると図上(477.4,304.4)に落ちるが、そこは日奈久分岐線(線番号23)の走る空白地で変電所記号は無い。最も近い名前付き記号は⑨日奈久で4.9kmあり、本図のRMS2.0kmに照らしても遠い。公表される送電系統に載っていない設備(配電用変電所など)の可能性が高い。",
+      "files_checked": [
+        "data/external/system_disclosure/kyushu/keitouzu/td_23yatsushiro_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_yatsushiro_260730.pdf"
+      ],
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_shikikawauchi.png"
+    },
+    {
+      "target": "中原東四丁目変電所",
+      "reason": "『中原』は全31地区の空容量一覧表に現れない。〔02 小倉〕図は制御点6点でRMS0.48km・最大0.66kmと本作業で最も精度の高いジオリファレンスが得られたが、ターゲット(33.90154,130.84917)の投影位置に名前付きの変電所記号は無く、近傍にあるのは無名の発電所記号(□)。最も近い名前付きラベルは港町1.66km・日明1.79km・大門2.34km・井堀2.38km・戸畑2.42kmで、RMS0.48kmに対していずれも遠すぎるため同定できない。隣接する〔03 若松〕〔04 八幡〕図でも最寄りは4.6km以上で該当なし。戸畑区中原東の日本製鉄構内設備(公表図では無名の△他社変電所)である可能性がある。",
+      "files_checked": [
+        "data/external/system_disclosure/kyushu/keitouzu/td_02kokura_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/td_03wakamatsu_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/td_04yahata_map_260730.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_kokura_260730.pdf"
+      ],
+      "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kys_tobata.png"
+    },
+    {
+      "target": "山陽小野田市変電所",
+      "reason": "region誤ラベル。座標(34.04645,131.13256)は山口県山陽小野田市で中国電力ネットワーク管内。九州電力送配電の全31地区一覧表に該当なし。中国電力ネットワークの『系統構成(110kV以下)(山口県)』2025年度版(リポジトリに取得済)を確認すると、『山陽小野田市』は下関市・宇部市・美祢市などと並ぶ**市名ラベル**であって変電所名ではない。同図で当該エリアの変電所は山野井・厚狭・小野田・高千帆・厚南など。flags 参照。",
+      "files_checked": [
+        "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_yama.pdf",
+        "全31地区の九電空容量一覧表(td_*_260730.pdf)"
+      ]
+    },
+    {
+      "target": "中央南変電所",
+      "reason": "region誤ラベル。座標(33.95013,132.04881)は山口県熊毛郡田布施町付近で中国電力ネットワーク管内。九州電力送配電の全31地区一覧表で『中央南』にヒットするのは〔南福岡〕地区の送電線名『中央南福岡線』220kV(区間: 中央→南福岡)のみで、これは『中央』変電所と『南福岡』変電所を結ぶ線名であり『中央南』という変電所は存在しない。中国電力ネットワークの山口県系統構成図(③ページ=柳井・光・田布施エリア)にも『中央南』の変電所は無く、当該エリアの変電所は田布施・光・柳井・久保・末武・周防・神代など。flags 参照。",
+      "files_checked": [
+        "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_yama.pdf",
+        "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_minami_fukuoka_260730.pdf",
+        "全31地区の九電空容量一覧表(td_*_260730.pdf)"
+      ]
+    }
+  ],
+
+  "flags": [
+    {
+      "target": "山陽小野田市変電所",
+      "issue": "region誤ラベル確定。座標は山口県山陽小野田市=中国電力ネットワーク管内で、kyushuラベルは誤り。さらにAGJ main_subs には『山野井変電所』が0.2km、『山野井変電所_2 110kV/66kV』が0.7kmに既に存在する。中国電力の山口県系統構成図でも当該地点の変電所は山野井であり、『山陽小野田市』は市名ラベル。孤立解消は『接続』ではなく『山野井変電所との重複統合(dedup)』として扱うのが妥当。"
+    },
+    {
+      "target": "中央南変電所",
+      "issue": "region誤ラベル確定。座標は山口県熊毛郡田布施町付近=中国電力ネットワーク管内。九州・中国どちらの公表資料にも『中央南変電所』は存在しない。AGJ main_subs には『田布施町変電所 220kV/110kV』が1.5km、『古開作変電所』が4.3kmに存在。座標破損というより、名称由来が不明な(あるいは九州の500kV中央変電所と取り違えた)オブジェクトの疑い。region再判定と名称の出所確認を推奨。"
+    },
+    {
+      "target": "中原東四丁目変電所",
+      "issue": "**担当指示の推測(山口県=中国電力管内のregion誤ラベル疑い)は誤り**。座標(33.90154,130.84917)は北九州市戸畑区中原東で九州電力送配電管内、kyushuラベルは正しい。誤ラベルではなく『公表送電系統図に載っていない設備』としての未解決。"
+    },
+    {
+      "target": "(バッチ共通)",
+      "issue": "AGJのkvタグが公表値と食い違うケースが3件。郷ノ浦=タグ66kVだが実際は22kV、小国町=タグ110kVだが実際は66kV、日田市変電所110kV(=下筌)=タグ110kVだが実際は66kV。九州分の孤立変電所のkvタグは信頼できないので、接続を入れる際に電圧をタグから決めないこと。"
+    },
+    {
+      "target": "(AGJモデルの欠落)",
+      "issue": "今回判読で相手端として出てきた実在の九電変電所のうち、main_subs に存在するのは高鍋のみ。女子畑・杖立・下筌・大南・湯山・川原sws・新壱岐・湯ノ本はいずれも main_subs に無い。特に**大南変電所**(推定33.154,131.645、西大分と66kV2回線で結ばれる系統上の実ノード)は最寄りのmain_subsが7.6kmで完全に欠落している。孤立の一部は『線が無い』のではなく『中間の変電所ノードごと無い』ことが原因なので、接続を張る前にこれらのノード追加を検討すべき。"
+    },
+    {
+      "target": "郷ノ浦変電所",
+      "issue": "壱岐は本土系統と接続しない独立離島系統(新壱岐発電所を電源とする22kV系)。したがってAGJがこれを『孤立』と判定しているのは**モデルの誤りではなく正しい**。本系統への接続を張ってはいけない。離島系統として別扱いにするフラグが必要。"
+    },
+    {
+      "target": "岱明町野口変電所",
+      "issue": "AGJ main_subs の『玉名変電所』(32.92240,130.55070)と1.7km。公表図では当該地点の九電変電所は玉名ただ一つなので、接続対象ではなく重複(dedup)候補として再検討する価値がある。"
+    },
+    {
+      "target": "(データ取得)",
+      "issue": "九州電力送配電の系統図は連系マップPDF(td_renkeimap_260730.pdf)のリンク注釈に全31地区のURLが埋まっており、各地区図PDFにも対応する空容量一覧表PDFのURLが埋まっている。一覧表は『送電線名』+『潮流方向 A→B』を持つため、**実質的に名前付きのエッジリスト**として使える。九州は様式5(インピーダンス)がローカル系統6行しか無い代わりに、この一覧表が局所系統の接続情報を広くカバーしている。他地域でも同じ手が使えるはず。"
+    }
+  ]
+}

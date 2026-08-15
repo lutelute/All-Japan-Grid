@@ -1,0 +1,290 @@
+{
+  "region": "shikoku+chugoku",
+  "agent": "map-shikoku-chugoku",
+  "read_date": "2026-08-15",
+  "source_files": [
+    "data/external/system_disclosure/shikoku/keitouzu/keitoukousei_kochi_2025.pdf",
+    "data/external/system_disclosure/shikoku/keitouzu/keitoukousei_tokushima_2025.pdf",
+    "data/external/system_disclosure/shikoku/keitouzu/keitoukousei_ehime_2025.pdf",
+    "data/external/system_disclosure/shikoku/keitouzu/keitoukousei_kagawa_2025.pdf",
+    "data/external/system_disclosure/shikoku/keitouzu/keitoukousei_2025.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_oka.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_yama.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_hiro.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_shima.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025_tori.pdf",
+    "data/external/system_disclosure/chugoku/keitouzu/keitoukousei2025.pdf"
+  ],
+  "legend_notes": {
+    "shikoku": "大○=187kV変電所 / 小○=110・66kV変電所 / ⊗=開閉所 / ●=需要家 / ■=発電所(情報提供あり) / 太線=66kV送電線 / 細線=22kV送電線。□内数値=送電線番号、○内数値=電気所番号。",
+    "chugoku": "○(楕円)=変電所 / 赤✕=系統常時切箇所 / 太線=110kV送電線(L○,L○○) / 細線=66kV送電線(L1○○) / 破線=22kV送電線・配電線。黄=変電所No(S○)、緑=送電線No(L○)、点線枠=市町名ラベル(変電所ではない)。"
+  },
+
+  "resolved": [
+    {
+      "region": "shikoku", "target": "大渡変電所", "target_kv": 66,
+      "partner_as_printed": "加枝", "partner_in_main_subs": null,
+      "line_label": "39", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_oowatari.png",
+      "confidence": "高",
+      "note": "大渡○から東へ延びる太線(66kV)が線番39。加枝○はこの線に短い縦のスタブでT分岐して接続(加枝には発電所■が2基、線番40・41で接続)。"
+    },
+    {
+      "region": "shikoku", "target": "大渡変電所", "target_kv": 66,
+      "partner_as_printed": "佐川", "partner_in_main_subs": null,
+      "line_label": "39 + 38", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_oowatari.png",
+      "confidence": "高",
+      "note": "同一の連続した太線。大渡—(39)—加枝分岐点—(38)—佐川⑲。加枝はこの線にT分岐する形で描かれており、大渡と佐川は導体として連続している。"
+    },
+    {
+      "region": "shikoku", "target": "佐川変電所", "target_kv": 66,
+      "partner_as_printed": "須崎", "partner_in_main_subs": null,
+      "line_label": "50 + 45", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_junction.png",
+      "confidence": "高",
+      "note": "佐川⑲から南下する太線が線番50、途中のT分岐点(押岡向け線番44が分かれる)を経て線番45となり須崎㉓へ入る。分岐点は1400dpiで実接続(T字)であることを確認済み。"
+    },
+    {
+      "region": "shikoku", "target": "佐川変電所", "target_kv": 66,
+      "partner_as_printed": "分水第三", "partner_in_main_subs": null,
+      "line_label": "51 + 52", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_sakawa_ne.png",
+      "confidence": "高",
+      "note": "佐川⑲から北東へ延びる太線。途中に発電所■が線番53でT分岐し、その先が線番52となって分水第三○に入る。"
+    },
+    {
+      "region": "shikoku", "target": "佐川変電所", "target_kv": 66,
+      "partner_as_printed": "伊野", "partner_in_main_subs": null,
+      "line_label": "34 (伊野引込は36)", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_ino_tap.png",
+      "confidence": "高",
+      "note": "佐川⑲から東へ延びる太線が線番34。伊野○は短い縦スタブ(線番36)でこの線にT分岐。分岐点から東は線番33となり無名の187kV大○(高知市街の枠内)へ続く。"
+    },
+    {
+      "region": "shikoku", "target": "佐川変電所", "target_kv": 66,
+      "partner_as_printed": "加枝", "partner_in_main_subs": null,
+      "line_label": "38", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_oowatari.png",
+      "confidence": "高",
+      "note": "佐川⑲から北西へ延びる太線が線番38、加枝分岐点に至る。"
+    },
+    {
+      "region": "shikoku", "target": "須崎変電所", "target_kv": 66,
+      "partner_as_printed": "押岡", "partner_in_main_subs": null,
+      "line_label": "44", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_junction.png",
+      "confidence": "高",
+      "note": "須崎㉓の直上のT分岐点から東へ分かれる太線が線番44で押岡㉒へ。押岡には需要家●が線番47・48で接続。"
+    },
+    {
+      "region": "shikoku", "target": "須崎変電所", "target_kv": 66,
+      "partner_as_printed": "久礼", "partner_in_main_subs": null,
+      "line_label": "49", "kv_of_line": 66,
+      "file": "keitoukousei_kochi_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_kochi_wide.png",
+      "confidence": "高",
+      "note": "須崎㉓から南西へ延びる太線が線番49、久礼○に至る。"
+    },
+    {
+      "region": "shikoku", "target": "三津変電所", "target_kv": 66,
+      "partner_as_printed": "勝岡", "partner_in_main_subs": null,
+      "line_label": "36 (引込) / 本線 40・34", "kv_of_line": 66,
+      "file": "keitoukousei_ehime_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_mitsu_tap.png",
+      "confidence": "高",
+      "note": "三津㉒は短い水平スタブ(線番36)で南北に走る2条の並行線のうち西側の1条にT分岐。その本線を北へ辿ると勝岡㉕(線番40)。1400dpiでスタブが西側線に接続していることを確認。"
+    },
+    {
+      "region": "shikoku", "target": "三津変電所", "target_kv": 66,
+      "partner_as_printed": "衣山", "partner_in_main_subs": null,
+      "line_label": "34 → 37", "kv_of_line": 66,
+      "file": "keitoukousei_ehime_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_mitsu_south.png",
+      "confidence": "中",
+      "note": "三津のタップ点から本線を南へ辿ると線番34、衣山手前の合流点で線番37が衣山○へ分岐する。同合流点から南は線番35で吉田浜方向へ続く。三津—衣山は合流点経由のため中。"
+    },
+    {
+      "region": "shikoku", "target": "四国電力 甲浦変電所", "target_kv": 66,
+      "partner_as_printed": "海南", "partner_in_main_subs": null,
+      "line_label": "96 (海南引込は97)", "kv_of_line": 66,
+      "file": "keitoukousei_tokushima_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_kannoura_mugi.png",
+      "confidence": "高",
+      "note": "甲浦○は線路の末端。北東へ延びる太線が線番96で、海南○が短いスタブ(線番97)でT分岐している。"
+    },
+    {
+      "region": "shikoku", "target": "四国電力 甲浦変電所", "target_kv": 66,
+      "partner_as_printed": "牟岐", "partner_in_main_subs": null,
+      "line_label": "96 + 95", "kv_of_line": 66,
+      "file": "keitoukousei_tokushima_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_kannoura_mugi.png",
+      "confidence": "高",
+      "note": "甲浦から続く同一の連続線。海南分岐点の先が線番95となり、牟岐のタップ点に至る。海岸沿いの放射状1回線。"
+    },
+    {
+      "region": "shikoku", "target": "牟岐変電所", "target_kv": 66,
+      "partner_as_printed": "海南", "partner_in_main_subs": null,
+      "line_label": "93 (引込) / 本線 95", "kv_of_line": 66,
+      "file": "keitoukousei_tokushima_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_kannoura_mugi.png",
+      "confidence": "高",
+      "note": "牟岐○は短いスタブ(線番93)で本線にT分岐。南西側の本線が線番95で海南分岐点へ。"
+    },
+    {
+      "region": "shikoku", "target": "牟岐変電所", "target_kv": 66,
+      "partner_as_printed": "日和佐", "partner_in_main_subs": null,
+      "line_label": "92 (日和佐引込は94)", "kv_of_line": 66,
+      "file": "keitoukousei_tokushima_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_mugi_ne.png",
+      "confidence": "高",
+      "note": "牟岐のタップ点から北東へ本線が線番92で続き、日和佐○が線番94でT分岐する。"
+    },
+    {
+      "region": "shikoku", "target": "牟岐変電所", "target_kv": 66,
+      "partner_as_printed": "川口(開閉所)", "partner_in_main_subs": null,
+      "line_label": "92 + 91", "kv_of_line": 66,
+      "file": "keitoukousei_tokushima_2025.pdf", "page": 1,
+      "crop": "scratchpad/crop_sk_mugi_ne.png",
+      "confidence": "中",
+      "note": "日和佐分岐点の先が線番91となり川口⊗(開閉所)に至る。川口は線番90・88で北側の線番86(日野谷方面)へ接続。牟岐からは日和佐分岐点経由のため中。"
+    },
+    {
+      "region": "chugoku", "target": "中国電力和気変電所", "target_kv": 110,
+      "partner_as_printed": "備前", "partner_in_main_subs": "備前変電所 110kV",
+      "line_label": "L8", "kv_of_line": 110,
+      "file": "keitoukousei2025_oka.pdf", "page": 2,
+      "crop": "scratchpad/crop_cg_wake_wide.png",
+      "confidence": "高",
+      "note": "和気(S20)は110kV太線に短い水平スタブでT分岐。南側の区間が L8 で備前(S12)に至る。備前変電所110kVはmain_subsに存在(34.7584,134.1670、targetから約7km)。"
+    },
+    {
+      "region": "chugoku", "target": "中国電力和気変電所", "target_kv": 110,
+      "partner_as_printed": "南津山", "partner_in_main_subs": null,
+      "line_label": "L9", "kv_of_line": 110,
+      "file": "keitoukousei2025_oka.pdf", "page": 2,
+      "crop": "scratchpad/crop_cg_wake_wide.png",
+      "confidence": "中",
+      "note": "和気のタップ点から北側の区間が L9。矢印で岡山⑥エリアへ抜け、行き先ラベルは「南津山」。南津山は岡山図の別ページ(p1概観・p7)にも記載あり。エリア跨ぎのため中。"
+    }
+  ],
+
+  "unresolved": [
+    {
+      "region": "shikoku", "target": "夜須町変電所", "kv": 66, "coord": [33.55286, 133.74903],
+      "reason": "高知県図のテキスト層・図面のいずれにも「夜須」の記載なし。当該沿岸(香南市)に描かれている変電所は 立田・香我美・安芸 の3所のみで、夜須町に相当する記号は描かれていない。",
+      "files_checked": ["keitoukousei_kochi_2025.pdf", "keitoukousei_2025.pdf"],
+      "crop": "scratchpad/crop_sk_kagami.png"
+    },
+    {
+      "region": "shikoku", "target": "多良変電所", "kv": 66, "coord": [33.60321, 134.34902],
+      "reason": "徳島県図に「多良」の記載なし。甲浦—牟岐間(海陽町域)に描かれている変電所は「海南」1所のみ。",
+      "files_checked": ["keitoukousei_tokushima_2025.pdf", "keitoukousei_kochi_2025.pdf", "keitoukousei_2025.pdf"],
+      "crop": "scratchpad/crop_sk_kannoura_mugi.png"
+    },
+    {
+      "region": "shikoku", "target": "美波町変電所", "kv": 66, "coord": [33.73659, 134.52553],
+      "reason": "徳島県図に「美波」の記載なし。美波町域に描かれている変電所は「日和佐」1所のみ。",
+      "files_checked": ["keitoukousei_tokushima_2025.pdf", "keitoukousei_2025.pdf"],
+      "crop": "scratchpad/crop_sk_mugi_ne.png"
+    },
+    {
+      "region": "shikoku", "target": "黒川変電所", "kv": 66, "coord": [33.45621, 133.12264],
+      "reason": "高知県図に「黒川」の記載なし。当該座標に相当する大渡と須崎/久礼の中間域は図上で空白で、変電所記号も送電線も描かれていない(500dpiで目視確認)。",
+      "files_checked": ["keitoukousei_kochi_2025.pdf", "keitoukousei_2025.pdf"],
+      "crop": "scratchpad/crop_sk_kochi_west.png"
+    },
+    {
+      "region": "shikoku", "target": "鉢変電所", "kv": 66, "coord": [33.80187, 134.46749],
+      "reason": "徳島県図に「鉢」の記載なし。那賀川上流域に描かれているのは 蔭平(187kV)・広野・日野谷 のみ。",
+      "files_checked": ["keitoukousei_tokushima_2025.pdf", "keitoukousei_2025.pdf"],
+      "crop": "scratchpad/crop_sk_naka_valley.png"
+    },
+    {
+      "region": "shikoku", "target": "中央南変電所", "kv": 110, "coord": [33.95013, 132.04881],
+      "reason": "座標は山口県田布施町(中国電力管内)。四国の図には該当なし。region誤ラベル。→ flags 参照。",
+      "files_checked": ["keitoukousei_ehime_2025.pdf", "keitoukousei_2025.pdf"]
+    },
+    {
+      "region": "chugoku", "target": "中央南変電所", "kv": 110, "coord": [33.95013, 132.04881],
+      "reason": "中国電力の全6ファイル(全32ページ)のテキスト層に「中央南」および「中央」を含む変電所名なし(広島中央・吉備中央町は別物)。田布施町域に描かれている変電所は 光(S13)・周防(S11)・田布施(S14)・柳井(S15) のみ。",
+      "files_checked": ["keitoukousei2025_yama.pdf", "keitoukousei2025_hiro.pdf", "keitoukousei2025_oka.pdf", "keitoukousei2025_shima.pdf", "keitoukousei2025_tori.pdf", "keitoukousei2025.pdf"],
+      "crop": "scratchpad/crop_cg_tabuse.png"
+    },
+    {
+      "region": "chugoku", "target": "山陽小野田市変電所", "kv": 66, "coord": [34.04645, 131.13256],
+      "reason": "山口県図の「山陽小野田市」は点線枠の市町名ラベルであって変電所ではない(宇部市・下関市・美祢市と同じ書式)。同市域の変電所は 山野井(S13)・厚狭(S14)・厚南(S20)・小野田(S19)・高千帆 等。→ flags 参照。",
+      "files_checked": ["keitoukousei2025_yama.pdf", "keitoukousei2025.pdf"],
+      "crop": "scratchpad/crop_cg_sanyoonoda.png"
+    },
+    {
+      "region": "chugoku", "target": "松江四丁目変電所", "kv": 66, "coord": [34.51007, 133.76776],
+      "reason": "座標は岡山県倉敷市水島地区。岡山③(倉敷・水島)の図に「松江」の記載なし。中国電力全図の「松江」は全て島根県松江市(北松江・松江・松江市ラベル)で座標が130km離れる。水島地区の変電所は 水島・中畝・串田・連島・古新田・宮前・生坂 等の名称で描かれており、住所由来の丁目名は不掲載。",
+      "files_checked": ["keitoukousei2025_oka.pdf", "keitoukousei2025_shima.pdf", "keitoukousei2025.pdf"]
+    },
+    {
+      "region": "chugoku", "target": "中原東四丁目変電所", "kv": 66, "coord": [33.9015, 130.84903],
+      "reason": "中国電力の全6ファイルのテキスト層に「中原」の記載が一切なし。座標は北九州市戸畑区/小倉北区=九州電力送配電管内。region誤ラベル。→ flags 参照。",
+      "files_checked": ["keitoukousei2025_yama.pdf", "keitoukousei2025_hiro.pdf", "keitoukousei2025_oka.pdf", "keitoukousei2025_shima.pdf", "keitoukousei2025_tori.pdf", "keitoukousei2025.pdf"]
+    },
+    {
+      "region": "chugoku", "target": "三津変電所", "kv": 66, "coord": [33.86872, 132.7311],
+      "reason": "座標は愛媛県松山市三津(四国電力管内)。region誤ラベル。ただし中国電力管内にも同名の三津変電所(広島県)が実在する → flags 参照。",
+      "files_checked": ["keitoukousei2025_hiro.pdf", "keitoukousei2025_yama.pdf"]
+    }
+  ],
+
+  "flags": [
+    {
+      "target": "三津変電所",
+      "issue": "region誤ラベル + 同名別所の見落とし。targets_shikoku と targets_chugoku の両方に同一座標(33.86872,132.7311)で登録。座標は松山市三津で、最寄り main_subs は吉田浜変電所(3.9km)・北松山変電所(4.3km)・松山変電所(7.8km)といずれも愛媛。したがって shikoku が正・chugoku が誤ラベル。加えて、中国電力の広島県図(keitoukousei2025_hiro.pdf p6)には別個の『三津変電所(S14、広島県東広島市安芸津町付近)』が実在し、竹原(S11)とL23で結ばれているが、この広島の三津は AGJ の targets にも main_subs にも一切存在しない(chugoku main_subs に三津/安芸津/竹原いずれも無し)。名前の重複に引きずられて別所を取り違えないよう注意。crop: scratchpad/crop_cg_hiro_mitsu.png"
+    },
+    {
+      "target": "中央南変電所",
+      "issue": "『座標破損(海上)』という前提は誤り。(33.95013,132.04881)は海上ではなく山口県熊毛郡田布施町の陸上(田布施町役場の東約1km)。最寄り main_subs は田布施町変電所110kV(33.9630,132.0549、約1.4km)・古開作変電所(約4km)・柳井市変電所。したがって region は chugoku が正で、targets_shikoku と targets_kyushu の2件が誤ラベル(計3region重複)。ただし『中央南』という名称は中国電力の全図(全32ページ)に存在せず、実証接続は取れなかった。"
+    },
+    {
+      "target": "山陽小野田市変電所",
+      "issue": "region重複(chugoku/kyushu の2件)。座標(34.04645,131.13256)は山口県山陽小野田市なので chugoku が正・kyushu が誤ラベル。さらに重複ノードの疑いが強い: main_subs の山野井変電所(34.04780,131.13450)まで約230m、山野井変電所_2 110kV/66kV(34.04820,131.12530)まで約660m。図では山野井(S13)が66kV線に引込でT分岐し、西は L107、東は L110 で厚狭(S14)に至る(厚狭手前に赤✕=系統常時切箇所)。『繋ぐべき孤立変電所』ではなく既存ノードの重複として処理すべき可能性が高い。crop: scratchpad/crop_cg_yanoi.png"
+    },
+    {
+      "target": "中原東四丁目変電所",
+      "issue": "region重複(chugoku/kyushu の2件)。座標(33.9015,130.84903)は北九州市戸畑区中原東〜小倉北区で、九州電力送配電管内。最寄り main_subs は井堀三丁目変電所(1.9km)・日明系統開閉所・大門変電所・小倉北区変電所・到津変電所と全て北九州市内。したがって kyushu が正・chugoku が誤ラベル。中国電力の図に手掛かりは無いので、九州担当側で判読すべき。"
+    },
+    {
+      "target": "松江四丁目変電所",
+      "issue": "『名前と座標の矛盾』の結論: 座標(34.51007,133.76776)が正しく、名前は倉敷市の住所由来。島根県松江市とは無関係(最寄り main_subs は潮通三丁目変電所1.0km・潮通一丁目1.8km・福田町南畝1.8km・水島西通二丁目3.7km と全て倉敷市水島地区)。中国電力図の水島地区は 水島・中畝・串田・連島・古新田 等の事業者名称で描かれ、OSM由来の丁目名は図と突合できない。"
+    },
+    {
+      "target": "美波町変電所",
+      "issue": "未検証の同定仮説(採用しないこと)。図に『美波町』は無いが、美波町の中心地区は日和佐であり、図の日和佐変電所は牟岐—川口線に線番94でT分岐している。targetの座標(33.73659,134.52553)は日和佐地区に相当する。同一設備の可能性はあるが図面上の根拠は無いので、別ソース(OSM実体・住所)での確認が必要。"
+    },
+    {
+      "target": "多良変電所",
+      "issue": "未検証の同定仮説(採用しないこと)。target座標(33.60321,134.34902)は海陽町大字多良に相当し、甲浦—牟岐間で図に描かれている唯一の変電所『海南』の想定位置と重なる。事業者名称と住所名称の食い違いの可能性があるが、図面上の根拠は無い。"
+    },
+    {
+      "target": "夜須町変電所",
+      "issue": "未検証の同定仮説(採用しないこと)。target座標(33.55286,133.74903)は香南市夜須町。図では立田—香我美—安芸の海岸線ルート(線番78/79/81/83)しか描かれておらず、香我美変電所が最も近いが町名は異なる。"
+    },
+    {
+      "target": "大渡変電所",
+      "issue": "線番42(66kV)が大渡から北西へ延び、高知/愛媛県境を越えた位置で図の外に切れている(相手端が高知県図に無い)。愛媛県図では面一(久万高原町、線番195/196/201系統)から南東へ延びる線が同様に県境付近で切れており、対応する可能性があるが、図面上に接続を示すラベルや矢印は無いため resolved には入れていない。crop: scratchpad/crop_sk_oowatari_nw.png / scratchpad/crop_sk_yanadani.png"
+    },
+    {
+      "target": "佐川変電所",
+      "issue": "佐川⑲から東へ延びる線番34/33の相手端は高知市街の枠内にある187kV大○だが、この記号には名前ラベルが付いていない(高知市街の密集部は無名の○が多数)。契約に従い無名記号は相手端として報告していない。同様に線番130の先の発電所■も無名。"
+    },
+    {
+      "target": "(地域全体)",
+      "issue": "今回特定した相手端の変電所(加枝・分水第三・押岡・久礼・伊野・勝岡・衣山・海南・日和佐・広野・川口)は、いずれも targets_shikoku の main_subs に存在しない。図中の変電所名とモデル側名称の一致率は 高知 17/58・徳島 20/61・愛媛 29/90 で、四国の66kV網は名称ベースでは約2/3がモデル未収載。孤立の原因は『辺の欠落』だけでなく『隣接ノード自体の欠落』でもあるため、今回のresolvedはまず新規ノード追加を伴う前提で扱う必要がある。"
+    }
+  ]
+}

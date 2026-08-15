@@ -1,0 +1,158 @@
+{
+  "region": "hokkaido",
+  "agent": "map-hokkaido",
+  "source_files": [
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_01.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_04.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_06.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_11.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_14.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_21.pdf",
+    "data/external/system_disclosure/hokkaido/keitouzu/map_forecast_tide_list_24.pdf"
+  ],
+  "source_note": "着手時point で存在したのは 01-06 のみ。北海道電力ネットワークの公表資料一覧(bid_info.html)には 110kV以下系統が 01〜24 あることを確認し、07〜24 を同一URLパターンで追加取得して keitouzu/ に保存済み(計24件)。判読には図(1ページ目)と予想潮流等一覧表(2ページ目以降の「潮流正方向」欄=実名 from→to)の両方を用いた。",
+  "resolved": [
+    {
+      "target": "北海道電力 大通変電所",
+      "target_kv": 66,
+      "partner_as_printed": "南九条変電所",
+      "partner_in_main_subs": null,
+      "line_label": "南九条大通地中線 (設備No.20)",
+      "kv_of_line": 66,
+      "file": "map_forecast_tide_list_06.pdf",
+      "page": 1,
+      "crop": "scratchpad/hk_img/crop_f06_odori.png",
+      "confidence": "高",
+      "note": "06南九条系統。図で大通(箱No.21)から南下する地中線が南九条(箱No.1)へ入るのが追跡でき、2ページ目の一覧表の潮流正方向欄にも『南九条変電所 → 大通変電所』と実名で明記。南九条変電所はAGJモデルに不在(札幌都心クラスタのハブ)。"
+    },
+    {
+      "target": "北海道電力 大通変電所",
+      "target_kv": 66,
+      "partner_as_printed": "札幌中央",
+      "partner_in_main_subs": null,
+      "line_label": "大通地中線 (設備No.22)",
+      "kv_of_line": 66,
+      "file": "map_forecast_tide_list_06.pdf",
+      "page": 1,
+      "crop": "scratchpad/hk_img/crop_f06_odori.png",
+      "confidence": "中",
+      "note": "図では大通(箱No.21)の右辺から線No.22が東へ伸び『札幌中央』と注記された箱に入る。線名も相手名も図中に明記されており推測ではない。ただし札幌中央の箱には設備番号が無く当系統の設備表に載らない(=系統境界の外側設備)ため、一覧表の潮流方向欄は『―』で非開示。よって中。"
+    },
+    {
+      "target": "円山変電所",
+      "target_kv": 66,
+      "partner_as_printed": "南九条変電所",
+      "partner_in_main_subs": null,
+      "line_label": "南九条円山地中線 (設備No.10)",
+      "kv_of_line": 66,
+      "file": "map_forecast_tide_list_06.pdf",
+      "page": 1,
+      "crop": "scratchpad/hk_img/crop_f06_sapporo_core.png",
+      "confidence": "高",
+      "note": "図で円山(箱No.11)から東へ出る地中線が南九条(箱No.1)の放射状母線群の一本に入る。一覧表にも『南九条変電所 → 円山変電所』と実名で明記。"
+    },
+    {
+      "target": "円山変電所",
+      "target_kv": 66,
+      "partner_as_printed": "桑園変電所分岐（→桑園変電所）",
+      "partner_in_main_subs": null,
+      "line_label": "円山地中線 (設備No.12)",
+      "kv_of_line": 66,
+      "file": "map_forecast_tide_list_06.pdf",
+      "page": 1,
+      "crop": "scratchpad/hk_img/crop_f06_sapporo_core.png",
+      "confidence": "高",
+      "note": "図で円山(箱No.11)から真北へ線No.12が伸び桑園(箱No.16)に入る。一覧表は『円山変電所 → 桑園変電所分岐』。桑園変電所はAGJモデルに存在する(43.06374,141.33044・OSM実名・本系統には未接続)。flags の chain-maruyama-kuwazono-nijuyonken を参照。"
+    },
+    {
+      "target": "生田原変電所",
+      "target_kv": 66,
+      "partner_as_printed": "生田原支線分岐（遠軽線上のT分岐。遠軽線は 留辺蘂変電所 〜 遠軽変電所 を結ぶ）",
+      "partner_in_main_subs": null,
+      "line_label": "生田原支線 (設備No.47) / 分岐先の幹線は 遠軽線 (設備No.31・No.32)",
+      "kv_of_line": 66,
+      "file": "map_forecast_tide_list_04.pdf",
+      "page": 1,
+      "crop": "scratchpad/hk_img/crop_f04_ikutahara.png",
+      "confidence": "高",
+      "note": "04留辺蘂系統。図で生田原(箱No.48)から短い引込線(No.47)が西へ出て、留辺蘂(箱No.1)と遠軽(箱No.33)を結ぶ縦の幹線上のT分岐点に接続するのが明瞭。一覧表も『生田原支線分岐 → 生田原変電所』(No.47)、『留辺蘂変電所 → 生田原支線分岐』(No.31)、『生田原支線分岐 → 遠軽変電所』(No.32)。分岐点ノードを作らない場合、生田原に近いのは遠軽変電所(main_subs 44.0233,143.5092・約11km)で、留辺蘂変電所(main_subs 43.7756,143.6003)は約17km。両端とも main_subs に実在。"
+    }
+  ],
+  "unresolved": [
+    {
+      "target": "長都駅前三丁目変電所",
+      "reason": "「長都駅前三丁目」の名称は全24図のテキスト層・図中いずれにも存在しない。当該座標を含む 11恵庭系統 図には『上長都変電所』(箱No.44) があり有力候補だが、同定は地理的近接のみが根拠になるため resolved に載せない。flags の candidate-kaminaganotsu を参照。",
+      "files_checked": ["map_forecast_tide_list_01〜24.pdf (全24件のテキスト層を全文検索)", "map_forecast_tide_list_11.pdf (図を精査)"]
+    },
+    {
+      "target": "千歳市変電所",
+      "reason": "当該座標(42.789,141.438)は千歳市西部・支笏湖方面で、11恵庭系統 図のこの領域に描かれているのは『他社線』(設備No.45/46/64/65 いずれも備考◇=非開示)のみ。名前ラベルの付いた変電所記号が無い。",
+      "files_checked": ["map_forecast_tide_list_11.pdf", "map_forecast_tide_list_01〜24.pdf (テキスト層全文検索)"]
+    },
+    {
+      "target": "あけぼの町五丁目変電所",
+      "reason": "「あけぼの」「曙」の名称は全24図に存在しない。当該座標を含む 21苫小牧系統 図の開示変電所は 苫小牧/泉沢/錦岡/白老/竹浦/緑町/苫小牧中央/明野/沼ノ端 の9件だが、いずれとも同定できなかった(図中の箱位置を実測してもターゲット座標に一致する箱が無い)。",
+      "files_checked": ["map_forecast_tide_list_21.pdf", "map_forecast_tide_list_22.pdf", "map_forecast_tide_list_01〜24.pdf (テキスト層全文検索)"]
+    },
+    {
+      "target": "沼牛変電所",
+      "reason": "「沼牛」の名称は全24図に存在しない。ただし 01西中川・西名寄系統 図の『幌加内変電所』(箱No.72) の描画位置が本ノード座標と実測0.76kmで一致する(下記 flags の identity-numaushi-horokanai)。名称ラベルが一致しない以上 resolved には載せない。",
+      "files_checked": ["map_forecast_tide_list_01.pdf", "map_forecast_tide_list_14.pdf", "map_forecast_tide_list_03.pdf", "map_forecast_tide_list_01〜24.pdf (テキスト層全文検索)"]
+    },
+    {
+      "target": "福山変電所",
+      "reason": "「福山」の名称は全24図に存在しない。松前町内で開示されている変電所は 24北七飯・大野系統 図の『松前変電所』(箱No.136) ただ1件。flags の dup-fukuyama-matsumae を参照。",
+      "files_checked": ["map_forecast_tide_list_24.pdf", "map_forecast_tide_list_01〜24.pdf (テキスト層全文検索)"]
+    }
+  ],
+  "flags": [
+    {
+      "target": "福山変電所",
+      "issue": "重複ノードの疑いが強い（region是正済みの件）",
+      "detail": "(1) HEPCOの24系統図で松前町内に開示されている変電所は『松前変電所』1件のみで、松前支線(No.135)により松前支線分岐(福島線上)へ接続する構成。図上でも松前町の南西端に箱が1つだけ描かれる。(2) AGJ側のノード属性を確認したところ、福山変電所は _name_source='geocoded' / _enriched_by='geocode_promotion' で、名称『福山』は地名からの自動命名(=実名の根拠なし)。tagsも power=substation のみで voltage/operator 無し。(3) 対して 松前変電所ノード(41.4302,140.0746) は OSM実名 + name:en=Matsumae substation + voltage=66000 + operator=北海道電力ネットワーク を持つ。(4) 両者の距離は約3.1km。→ 福山変電所は松前変電所の重複、もしくは変電所でない設備を誤って拾ったノードの可能性が高い。統合する場合の接続は 松前変電所 --松前支線(No.135)--> 松前支線分岐（福島線 No.128/No.129 上）。",
+      "crop": "scratchpad/hk_img/crop_f24_matsumae.png"
+    },
+    {
+      "target": "沼牛変電所",
+      "issue": "identity-numaushi-horokanai: 図01の『幌加内変電所』の描画位置が沼牛変電所ノードと一致し、main_subsの幌加内町変電所とは36kmずれる",
+      "detail": "測定手順: 01図の名称一致アンカー13点(豊富/幌延/天塩/小頓別/咲来/美深/名寄/西名寄/羽幌/苫前/歌登/中頓別/上興部、いずれもmain_subsに実在)で図面座標⇔経緯度のアフィン変換を最小二乗фит。稚内地区拡大インセットは除外。残差RMS=16.2pt(≒4.6km)。南側の外挿妥当性は剣淵町中心(44.1107,142.4211・図中y≈607で幌加内の箱y≈648に近い)で検証し誤差11.7pt(≒3.4km)。この変換で『幌加内』箱(No.72)の中心(237.5,648.0)を逆ジオコードすると lat=43.9743 lon=142.1867。沼牛変電所ノード(43.9701,142.1792)との距離0.76km、main_subsの幌加内町変電所(44.3005,142.1793)との距離は約36km(RMSの8倍)。→ 沼牛変電所ノード = HEPCO 幌加内変電所 の可能性が高い。その場合の接続は 幌加内変電所 --幌加内支線(No.71)--> 幌加内支線分岐（雨竜線上。雨竜線は 剣淵開閉器柱 --No.64--> 幌加内支線分岐 --No.65(備考◇非開示)--> 南方へ継続）。なお main_subs の幌加内町変電所/幌加内町変電所_2 は substation=generation・voltage=66000;33000 で、雨竜(朱鞠内)の発電所付帯変電所の疑いがあり、配電用の幌加内変電所とは別物と考えられる。名称ラベルは『幌加内』であって『沼牛』ではないため、採否はオーナー判断に委ねる。",
+      "crop": "scratchpad/hk_img/crop_f01_horokanai_grid.png"
+    },
+    {
+      "target": "長都駅前三丁目変電所",
+      "issue": "candidate-kaminaganotsu: 候補は『上長都変電所』(11恵庭系統 箱No.44)。同定未確定",
+      "detail": "AGJ側ノードは _name_source='geocoded'(=『長都駅前三丁目』は住所からの自動命名で実名の根拠なし)。voltage=66000, substation=industrial。11恵庭系統 図で当該一帯にある開示変電所は 上長都変電所(No.44) のみで、接続は 上長都変電所 --上長都地中支線(No.43)--> 上長都地中支線分岐（千歳線上。千歳線は 恵南変電所 --No.32--> 上長都地中支線分岐 --No.33--> 他社分岐 --No.35--> 千歳変電所）。恵南変電所・千歳変電所はいずれも main_subs に実在。同定根拠が地理的近接のみのため resolved には載せていない。",
+      "crop": "scratchpad/hk_img/crop_f11_chitose.png"
+    },
+    {
+      "target": "あけぼの町五丁目変電所",
+      "issue": "21苫小牧系統の開示変電所と同定できず",
+      "detail": "AGJ側ノードは _name_source='geocoded' だが voltage=66000 / operator=北海道電力ネットワーク / substation=transmission を持ち、HEPCOの66kV変電所であることは確実。21苫小牧系統 図の箱位置をグリッド実測して座標照合を試みたが、ターゲット(42.6810,141.6429)に一致する箱が無く、近傍の 明野(No.50)・沼ノ端(No.55)・緑町(No.45)・苫小牧中央(No.47) のいずれとも1.5〜2km級のずれが残った(この図のアフィン残差RMSは約3kmで判別能力不足)。同定は保留。",
+      "crop": "scratchpad/hk_img/crop_f21_tomakomai_grid.png"
+    },
+    {
+      "target": "円山変電所 / 北海道電力 大通変電所",
+      "issue": "chain-maruyama-kuwazono-nijuyonken: 札幌都心クラスタを本系統に繋ぐ経路は 桑園変電所 経由の1本",
+      "detail": "06南九条系統 は 南九条(No.1) をハブに 円山(11)/桑園(16)/大通(21)/南三条(32)/豊平(42)/薄野(43)/山鼻(51) が地中線でぶら下がる札幌都心の66kVクラスタ。このうち AGJ の main_subs に載っているのは1つも無い。一方、図の北端で『二十四軒』と注記された箱(設備番号なし=当系統外)へ桑園地中線(設備No.13/14/15、途中に他社分岐あり)が伸びており、二十四軒変電所は main_subs に実在(43.07741,141.31509)。さらに桑園変電所自体もAGJモデルに存在する(43.06374,141.33044・OSM実名・現状は本系統に未接続)。→ 円山 --円山地中線--> 桑園 --桑園地中線--> 二十四軒 の2ホップで、大通を含む札幌都心クラスタ全体を本系統に接続できる。なお南九条変電所はAGJモデルに見当たらず(札幌都心bbox内を走査済み)、クラスタのハブが欠落している。",
+      "crop": "scratchpad/hk_img/crop_f06_kuwazono_grid.png"
+    },
+    {
+      "target": "北海道電力 大通変電所",
+      "issue": "『札幌中央』に対応しうるモデル内の無名ノード",
+      "detail": "AGJの札幌都心データに name='北海道電力'(voltage無し)のノードが 43.06169,141.35834 に存在し、大通変電所(43.06037,141.34463)の東約1.1kmという位置関係が図の『大通 --No.22--> 札幌中央』の東向き配置と整合する。候補として提示するのみで、名称一致の根拠は無い。",
+      "crop": "scratchpad/hk_img/crop_f06_odori.png"
+    },
+    {
+      "target": "(データ取得)",
+      "issue": "北海道の110kV以下 混雑状況マップは 01〜24 の24系統ぶん公表されている",
+      "detail": "着手時にリポジトリにあったのは 01〜06 の6件のみだった。公表資料一覧(https://www.hepco.co.jp/network/con_service/public_document/bid_info.html)で24系統ぶん存在することを確認し、07〜24 を追加取得して data/external/system_disclosure/hokkaido/keitouzu/ に保存した(未コミット)。系統名: 01西中川・西名寄 / 02西旭川 / 03旭川 / 04留辺蘂 / 05女満別 / 06南九条 / 07西札幌 / 08苗穂 / 09篠路 / 10南札幌 / 11恵庭 / 12西小樽 / 13北江別 / 14西滝川 / 15宇円別 / 16東釧路 / 17西春別 / 18北芽室・西音更 / 19西伊達 / 20室蘭 / 21苫小牧 / 22南早来・東苫小牧 / 23北静内 / 24北七飯・大野。今回担当外の孤立変電所についても、この24件で北海道の66kV系統がほぼ網羅されるので再走査の価値がある。",
+      "crop": null
+    },
+    {
+      "target": "(手法)",
+      "issue": "予想潮流等一覧表の『潮流正方向』欄が実名 from→to の一次ソースとして使える",
+      "detail": "この一覧表(各PDFの2ページ目以降)はテキスト層を持ち、『A変電所 → B変電所』『X支線分岐 → Y変電所』の形で区間端点が実名で入っている。pdftotext -layout で機械可読。図の判読はこの表の裏取り(どの箱がどの番号か・分岐がどこか)に使うのが効率的。非開示区間は備考『◇』で端点が『―』になる。",
+      "crop": null
+    }
+  ]
+}

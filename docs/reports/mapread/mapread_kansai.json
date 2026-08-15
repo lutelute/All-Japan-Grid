@@ -1,0 +1,498 @@
+{
+ "region": "kansai",
+ "source_files": [
+  "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+  "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+  "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+  "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+ ],
+ "resolved": [
+  {
+   "target": "難波変電所",
+   "target_kv": 77,
+   "partner_as_printed": "萩之茶屋（匿名コードDI）",
+   "partner_in_main_subs": null,
+   "line_label": "萩之茶屋難波線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 23,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南28.png",
+   "confidence": "中",
+   "note": "表B 南28 の潮流正方向が DI→南U（南U=難波, 表A p4）。相手端は公表資料で匿名コード。同コードを端点とする複数行の線路名（○○△△線＝両端名の連結）から実名を特定し、154kV以上の送電線一覧でも同名線を確認した派生同定（萩之茶屋○○線が6本、154kV以上表に敷津萩之茶屋線）。なお南27 難波線の相手端は「開放点」表記で変電所名なし。萩之茶屋はmain_subs不在"
+  },
+  {
+   "target": "湊町変電所",
+   "target_kv": 77,
+   "partner_as_printed": "萩之茶屋（匿名コードDI）",
+   "partner_in_main_subs": null,
+   "line_label": "萩之茶屋湊町線 / 湊町線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 23,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南23.png",
+   "confidence": "中",
+   "note": "表B 南23・南24 とも DI→南S（南S=湊町, 表A p4）。DIの同定は上記と同じ。萩之茶屋はmain_subs不在"
+  },
+  {
+   "target": "関西電力桃谷変電所",
+   "target_kv": 77,
+   "partner_as_printed": "萩之茶屋（匿名コードDI）",
+   "partner_in_main_subs": null,
+   "line_label": "萩之茶屋桃谷線 / 桃谷線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 23,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南31.png",
+   "confidence": "中",
+   "note": "表B 南31・南29 とも DI→南W（南W=桃谷, 表A p4）。萩之茶屋はmain_subs不在"
+  },
+  {
+   "target": "関西電力下寺変電所",
+   "target_kv": 77,
+   "partner_as_printed": "萩之茶屋（匿名コードDI）",
+   "partner_in_main_subs": null,
+   "line_label": "下寺町線 / 下寺町支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 23,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南32.png",
+   "confidence": "中",
+   "note": "表B 南32・南30 とも DI→南X。ただし表A p4 の名称は「下寺町」でターゲット名「下寺」と厳密一致ではない（大阪市浪速区下寺の同一設備とみられるが断定せず）"
+  },
+  {
+   "target": "泉北港変電所",
+   "target_kv": 77,
+   "partner_as_printed": "堺港（匿名コードCW）",
+   "partner_in_main_subs": null,
+   "line_label": "泉北線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 24,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南128.png",
+   "confidence": "中",
+   "note": "表B 南128 が CW→南DB（南DB=泉北港, 表A p5）。CWは154kV以上表で堺港八尾線・堺港長曽根線・堺港新生駒線・堺港松屋線の4本すべての起点＝堺港と同定。data/external/system_disclosure/kansai/capacity/154kv_more_line.csv。堺港はmain_subs不在"
+  },
+  {
+   "target": "高石変電所",
+   "target_kv": 77,
+   "partner_as_printed": "泉北（匿名コードBP）",
+   "partner_in_main_subs": "泉北変電所",
+   "line_label": "高石支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 24,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南146.png",
+   "confidence": "中",
+   "note": "表B 南146 が BP→南DI（南DI=高石, 表A p5）。BPは泉北三宅線・泉北金田線の起点、154kV以上表の南大阪泉北線でも確認。相手端は公表資料で匿名コード。同コードを端点とする複数行の線路名（○○△△線＝両端名の連結）から実名を特定し、154kV以上の送電線一覧でも同名線を確認した派生同定"
+  },
+  {
+   "target": "助松変電所",
+   "target_kv": 77,
+   "partner_as_printed": "南大阪（匿名コードBO）",
+   "partner_in_main_subs": "南大阪変電所 77kV",
+   "line_label": "助松支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 24,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南177.png",
+   "confidence": "中",
+   "note": "表B 南177 が BO→南DM（南DM=助松, 表A p5）。BOは南大阪滝谷線・南大阪岸和田線の起点、154kV以上表の南大阪線・南大阪泉北線でも確認"
+  },
+  {
+   "target": "土生変電所",
+   "target_kv": 77,
+   "partner_as_printed": "泉南（匿名コードBN）",
+   "partner_in_main_subs": null,
+   "line_label": "土生支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 25,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_南191.png",
+   "confidence": "中",
+   "note": "表B 南191 が BN→南EO（南EO=土生, 表A p6）。BNは泉南佐野線の起点、154kV以上表の泉南東大阪線でも確認。泉南はmain_subs不在"
+  },
+  {
+   "target": "鹿の子台変電所",
+   "target_kv": 77,
+   "partner_as_printed": "北摂（匿名コードAK）",
+   "partner_in_main_subs": "北摂変電所 77kV",
+   "line_label": "北摂鹿の子台線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神12.png",
+   "confidence": "高",
+   "note": "表B 神12「北摂鹿の子台線」が AK→神O（神O=鹿の子台, 表A p9）。線名が両端名を含み、同ページの神11 北摂弥生が丘線・神10 北摂滝野線も AK 起点でAK=北摂が確定"
+  },
+  {
+   "target": "沢谷変電所",
+   "target_kv": 77,
+   "partner_as_printed": "北摂（匿名コードAK）",
+   "partner_in_main_subs": "北摂変電所 77kV",
+   "line_label": "沢谷支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神13.png",
+   "confidence": "中",
+   "note": "表B 神13 が AK→神K（神K=沢谷, 表A p9）。AK=北摂は神12等の複合線名から確定済だが、本行自体には北摂の文字はない"
+  },
+  {
+   "target": "広野変電所",
+   "target_kv": 77,
+   "partner_as_printed": "北摂（匿名コードAK）",
+   "partner_in_main_subs": "北摂変電所 77kV",
+   "line_label": "広野支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神14.png",
+   "confidence": "中",
+   "note": "表B 神14 が AK→神J（神J=広野, 表A p9）。AKの同定根拠は神12と同じ"
+  },
+  {
+   "target": "広野変電所_2",
+   "target_kv": 77,
+   "partner_as_printed": "北摂（匿名コードAK）",
+   "partner_in_main_subs": "北摂変電所 77kV",
+   "line_label": "広野支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神14.png",
+   "confidence": "中",
+   "note": "広野変電所と同一設備の重複ノードとみられる（座標が約230m差）。根拠行は同じ表B 神14"
+  },
+  {
+   "target": "丹南変電所 77kV",
+   "target_kv": 77,
+   "partner_as_printed": "北摂（匿名コードAK）",
+   "partner_in_main_subs": "北摂変電所 77kV",
+   "line_label": "丹南線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神9.png",
+   "confidence": "中",
+   "note": "表B 神9 が AK→神I（神I=丹南, 表A p9・一次77kV）。AKの同定根拠は神12と同じ"
+  },
+  {
+   "target": "丹南変電所 66kV",
+   "target_kv": 66,
+   "partner_as_printed": "篠山",
+   "partner_in_main_subs": "（篠山はmain_subs不在）",
+   "line_label": "丹南篠山線",
+   "kv_of_line": 22,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神8.png",
+   "confidence": "高",
+   "note": "表B 神8「丹南篠山線」が 神I→神H（丹南→篠山）。ただし本線は22kVで、丹南の77kV側の接続は神9（→北摂）。AGJの66kVラベルは公表資料と一致しない"
+  },
+  {
+   "target": "篠山変電所",
+   "target_kv": 66,
+   "partner_as_printed": "丹南",
+   "partner_in_main_subs": "（丹南はmain_subs不在）",
+   "line_label": "丹南篠山線",
+   "kv_of_line": 22,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神8.png",
+   "confidence": "高",
+   "note": "表B 神8 が 神I→神H。両端とも表Aに実名あり。ただし表A p9 で篠山は一次22kV／二次6.6kVの配電用であり、66kV設備ではない。公表資料上、篠山の接続はこの22kV1本のみ"
+  },
+  {
+   "target": "三田変電所",
+   "target_kv": 77,
+   "partner_as_printed": "弥生が丘",
+   "partner_in_main_subs": null,
+   "line_label": "三田弥生が丘線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神16.png",
+   "confidence": "高",
+   "note": "表B 神16「三田弥生が丘線」が 神M→神N（弥生が丘→三田, 表A p9）。線名が両端名を含む。弥生が丘はmain_subs不在。別に神17 神戸三田線 AP→神N があるがAPは神戸/新神戸の判別がつかず未採用"
+  },
+  {
+   "target": "尼崎変電所",
+   "target_kv": 66,
+   "partner_as_printed": "立花",
+   "partner_in_main_subs": "立花変電所 77kV",
+   "line_label": "尼崎線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神49.png",
+   "confidence": "高",
+   "note": "表B 神49 が 神AR→神AS（立花→尼崎, 表A p9）。両端とも実名。線は77kVでAGJの66kVラベルとは不一致"
+  },
+  {
+   "target": "潮江変電所",
+   "target_kv": 66,
+   "partner_as_printed": "神崎",
+   "partner_in_main_subs": "神崎変電所 77kV",
+   "line_label": "潮江支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神43.png",
+   "confidence": "高",
+   "note": "表B 神43 が 神AN→神AO（神崎→潮江, 表A p9）。両端とも実名。線は77kV"
+  },
+  {
+   "target": "潮江変電所",
+   "target_kv": 66,
+   "partner_as_printed": "杭瀬",
+   "partner_in_main_subs": null,
+   "line_label": "潮江杭瀬線",
+   "kv_of_line": 22,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 27,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_神44.png",
+   "confidence": "中",
+   "note": "表B 神44 が 神AO→神AP（潮江→杭瀬）。22kVの配電連系であり66/77kVモデルへの投入可否は要判断。main_subsの「杭瀬南新町一丁目変電所」と同一かは名称からは断定できない"
+  },
+  {
+   "target": "関西電力 岡崎変電所",
+   "target_kv": 77,
+   "partner_as_printed": "和歌山",
+   "partner_in_main_subs": "和歌山電力所",
+   "line_label": "岡崎線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 32,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_和27.png",
+   "confidence": "高",
+   "note": "表B 和27 が 和U→和AF（和歌山→岡崎, 表A p16）。両端とも実名。main_subs側は「和歌山電力所」で名称形が異なるため同一性は中程度"
+  },
+  {
+   "target": "学園前変電所",
+   "target_kv": 77,
+   "partner_as_printed": "奈良",
+   "partner_in_main_subs": "奈良変電所 77kV",
+   "line_label": "学園前支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈12.png",
+   "confidence": "高",
+   "note": "表B 奈12 が 奈D→奈N（奈良→学園前, 表A p12）。両端とも実名"
+  },
+  {
+   "target": "富雄変電所",
+   "target_kv": 77,
+   "partner_as_printed": "奈良",
+   "partner_in_main_subs": "奈良変電所 77kV",
+   "line_label": "奈良西線（富雄）",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈10.png",
+   "confidence": "高",
+   "note": "表B 奈10 が 奈D→奈O（奈良→富雄, 表A p12）"
+  },
+  {
+   "target": "富雄変電所",
+   "target_kv": 77,
+   "partner_as_printed": "新生駒（匿名コードBK）",
+   "partner_in_main_subs": "新生駒 変電所 77kV",
+   "line_label": "新生駒富雄線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈6.png",
+   "confidence": "高",
+   "note": "表B 奈6「新生駒富雄線」が BK→奈O。線名が両端名を含みBK=新生駒が確定（154kV以上表でも新生駒線・東大阪新生駒線・新生駒古川橋線など12本がBKに接続）"
+  },
+  {
+   "target": "六条西変電所",
+   "target_kv": 77,
+   "partner_as_printed": "奈良",
+   "partner_in_main_subs": "奈良変電所 77kV",
+   "line_label": "六条西支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈14.png",
+   "confidence": "高",
+   "note": "表B 奈14 が 奈D→奈Q（奈良→六条西, 表A p12）"
+  },
+  {
+   "target": "奈良阪町変電所",
+   "target_kv": 77,
+   "partner_as_printed": "奈良",
+   "partner_in_main_subs": "奈良変電所 77kV",
+   "line_label": "奈良阪町支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈17.png",
+   "confidence": "高",
+   "note": "表B 奈17 が 奈D→奈F（奈良→奈良阪町, 表A p12）"
+  },
+  {
+   "target": "秋篠変電所",
+   "target_kv": 77,
+   "partner_as_printed": "新生駒（匿名コードBK）",
+   "partner_in_main_subs": "新生駒 変電所 77kV",
+   "line_label": "秋篠支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈4.png",
+   "confidence": "中",
+   "note": "表B 奈4 が BK→奈H（→秋篠, 表A p12）。BK=新生駒は奈6の複合線名から確定済だが本行には新生駒の文字はない"
+  },
+  {
+   "target": "南生駒変電所",
+   "target_kv": 77,
+   "partner_as_printed": "新生駒（匿名コードBK）",
+   "partner_in_main_subs": "新生駒 変電所 77kV",
+   "line_label": "南生駒支線",
+   "kv_of_line": 77,
+   "file": "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+   "page": 30,
+   "crop": "/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad/kansai/crops/line_奈9.png",
+   "confidence": "中",
+   "note": "表B 奈9 が BK→奈L（→南生駒, 表A p12）。BKの同定根拠は奈6と同じ"
+  }
+ ],
+ "unresolved": [
+  {
+   "target": "大浜北町二丁変電所",
+   "reason": "表中の「大浜」(神AU)は尼崎市の別変電所。相手端が前浜・北鳴尾・立花・南大浜で、いずれもmain_subsの尼崎/西宮座標(34.70-34.73,135.37-135.41)に一致するのに対し本ターゲットは堺市堺区(34.577,135.464)。堺側の設備は本表に記載なし",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "西区変電所_2 77kV",
+   "reason": "「西区」は行政区名で、公表表に同名の変電所なし（OSM由来の暫定名と思われる）",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "石津西町変電所",
+   "reason": "同名なし。近傍に「石津川」(南CO, 77/6.6, 表B 南122 石津川線でCW=堺港と接続)があるが名称が一致せず、同一設備と断定できないため採らない",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "宮ノ上変電所",
+   "reason": "関西の表に同名なし。座標(34.081,136.192)は三重県紀北町付近で中部電力管内の可能性があり、関西の資料では解けない",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "高田町変電所",
+   "reason": "表中の「高田」(奈AJ)は奈良県大和高田の変電所（相手が千代・田原本・北葛城）で、本ターゲットの尼崎市高田町(34.744,135.453)とは別。尼崎側の設備は本表に記載なし",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "山口町金仙寺二丁目変電所 275kV",
+   "reason": "「金仙寺」の記載なし。近い「山口」(神Q)は一次22kV/二次6.6kVの配電用で275kV設備と規模が合わず、相手端も匿名コード(DN)。誤同定を避けて採らない",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "山口町金仙寺二丁目変電所 77kV",
+   "reason": "同上。77kVでの該当記載なし",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "横山町変電所",
+   "reason": "表中の「横山」(滋DA)は滋賀ブロックの別変電所で送電線行も無く、三田市横山町(34.880,135.228)の設備は本表に記載なし",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "狭間が丘二丁目変電所",
+   "reason": "表に同名・類似名なし（三田市域では弥生が丘・ゆりのき台が記載されるが別名称）",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "target": "尼辻西町変電所",
+   "reason": "表に同名なし。奈良変電所(奈D)からの分岐一覧17本にも尼辻は現れない",
+   "files_checked": [
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_space.pdf",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_trans.csv",
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv"
+   ]
+  }
+ ],
+ "flags": [
+  {
+   "target": "広野変電所 / 広野変電所_2",
+   "issue": "約230m差の同一設備の重複ノードとみられる。公表資料の広野(神J)は1件のみ"
+  },
+  {
+   "target": "篠山変電所",
+   "issue": "公表資料では一次22kVの配電用変電所。AGJの66kVは過大で、66kV系統としての接続は資料上存在しない"
+  },
+  {
+   "target": "丹南変電所 66kV / 尼崎変電所 66kV / 潮江変電所 66kV / 高田町変電所 66kV",
+   "issue": "公表資料では該当設備・線路はいずれも77kV。AGJの66kVラベルが疑わしい"
+  },
+  {
+   "target": "山口町金仙寺二丁目変電所 275kV",
+   "issue": "西宮市山口町に275kV設備がある想定だが、関西の154kV未満資料にも154kV以上マッピングにも実名記載がない。基幹側は全て匿名コードのため確認不能"
+  },
+  {
+   "target": "宮ノ上変電所",
+   "issue": "座標が三重県紀北町付近。region誤ラベル（中部エリア）の疑い"
+  },
+  {
+   "target": "大浜北町二丁変電所 / 高田町変電所 / 横山町変電所",
+   "issue": "公表表に同名の別変電所が存在し、地理照合しないと誤接続を作る典型例。いずれも別市の同名設備だった"
+  },
+  {
+   "target": "（方法上の注意）",
+   "issue": "関西の公表資料は154kV以上の基幹変電所が全て匿名コード（AK/BK/DI/CW/BP/BO/BN等）。本結果では、同一コードを端点とする複数の線路名（○○△△線＝両端名の連結）と154kV以上送電線一覧の同名線から実名を特定した。この派生同定によるものはconfidence=中とし、両端の実名が表に印字されているものだけを高とした"
+  },
+  {
+   "target": "（資料の性格）",
+   "issue": "指定された154kv_less_space.pdfは系統図ではなくA:変圧器一覧(p1-19)・B:送電線一覧(p20-36)の表。B表の「潮流正方向」欄が両端の変電所コードを明示しており、A表のコード→実名対応と突き合わせて接続を確定した。同内容の機械可読版が154kv_less_line.csv / 154kv_less_trans.csv にある"
+  }
+ ]
+}

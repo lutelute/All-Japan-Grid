@@ -1,0 +1,196 @@
+{
+  "region": "tokyo (北関東・甲信越担当: 栃木/群馬/茨城/山梨/新潟)",
+  "agent": "tokyo_north",
+  "source_files": [
+    "data/external/system_disclosure/tokyo/keitouzu/tochigi_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/gunma_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/ibaraki_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/saitama_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/yamanashi_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/niigata_yosochoryu.pdf",
+    "data/external/system_disclosure/tokyo/keitouzu/nagano_yosochoryu.pdf"
+  ],
+  "method_note": "各PDFの『系統構成』図(単線図)でターゲットを特定し、接続されている送電線番号(◯◯)を読取り、同PDF巻末の『予想潮流等一覧表(送電線)』で送電線番号→線名・潮流方向(両端名)を照合した。相手端の実在は targets_tokyo.json の main_subs で確認。",
+  "resolved": [
+    {
+      "target": "黒磯変電所",
+      "target_kv": 66,
+      "partner_as_printed": "那須野",
+      "partner_in_main_subs": "那須野変電所 66kV",
+      "line_label": "那須線 (栃木県 66kV 送電線No.1, 2回線)",
+      "kv_of_line": 66,
+      "file": "tochigi_yosochoryu.pdf",
+      "page": 9,
+      "crop": "scratchpad/north/crop_kuroiso.png",
+      "confidence": "高",
+      "note": "系統構成-66kV 栃木県 那須野系統。黒磯は配電用変電所記号(○)として、那須野変電所の66kV母線から立ち上がる送電線(1)にタップ接続されている。一覧表で『栃木県 66kV 1 那須線 潮流方向 那須野→那須湯本』。線路の他端は那須湯本(配電用変電所、main_subsに不在)。座標も那須野VS(36.938,140.038)の北3kmで整合。"
+    },
+    {
+      "target": "国分寺変電所",
+      "target_kv": 66,
+      "partner_as_printed": "小山",
+      "partner_in_main_subs": "小山変電所 66kV",
+      "line_label": "上三川線 (栃木県 66kV 送電線No.48, 2回線)",
+      "kv_of_line": 66,
+      "file": "tochigi_yosochoryu.pdf",
+      "page": 14,
+      "crop": "scratchpad/north/crop_kokubunji_wide.png",
+      "confidence": "高",
+      "note": "系統構成-66kV 栃木県 小山系統(p14)と芳賀系統(p13)の両方に同じ形で描かれる。国分寺(○)は小山変電所66kV母線から立ち上がる送電線(48)にタップ。一覧表で『栃木県 66kV 48 上三川線 潮流方向 小山→上郷』。他端の上郷変電所もmain_subsに存在(36.454,139.938)。国分寺(36.365,139.847)は小山VS(36.326,139.817)と上郷VSの中間に位置し幾何も整合。"
+    },
+    {
+      "target": "簗瀬町変電所",
+      "target_kv": 154,
+      "partner_as_printed": "栃山（開）＝栃山開閉所",
+      "partner_in_main_subs": "栃山開閉所 154kV",
+      "line_label": "栃山線（新栃木～栃山開閉所） (栃木県 154kV 送電線No.6, 2回線)",
+      "kv_of_line": 154,
+      "file": "tochigi_yosochoryu.pdf",
+      "page": 8,
+      "crop": "scratchpad/north/crop_yanagase3.png",
+      "confidence": "中",
+      "note": "系統構成-154kV 栃木県。簗瀬町(配電用変電所○, 154kV)は栃山線の2回線それぞれに引出線を持ち(片側に開放点✕)、その2回線は新栃木変電所154kV母線から下って栃山開閉所154kV母線へ至る。一覧表『栃木県 154kV 6 栃山線（新栃木～栃山開閉所） 潮流方向 新栃木→栃山開閉所』。図上のタップ位置は栃山開閉所側。反対端は新栃木変電所154kV(main_subsに存在, 36.655,139.918)。座標も簗瀬町(36.548)が栃山開閉所(36.471)と新栃木(36.655)の間・ほぼ同経度で整合。中判定の理由は新栃木側/栃山側どちらを1本のエッジにするかが図から一意に決まらないため。"
+    },
+    {
+      "target": "薄根変電所",
+      "target_kv": 66,
+      "partner_as_printed": "小松",
+      "partner_in_main_subs": "小松変電所 66kV",
+      "line_label": "上久屋小松線 (群馬県 66kV 送電線No.33, 2回線)",
+      "kv_of_line": 66,
+      "file": "gunma_yosochoryu.pdf",
+      "page": 14,
+      "crop": "scratchpad/north/crop_usune2.png",
+      "confidence": "高",
+      "note": "系統構成-66kV 群馬県 金井系統。薄根(○)は小松変電所66kV母線から下る送電線(33)にタップ。一覧表『群馬県 66kV 33 上久屋小松線 潮流方向 上久屋→岩室線分岐』。同じ線の他端側に上久屋(main_subsに上久屋開閉所36.658,139.091／上久屋町変電所36.667,139.109)。薄根(36.662,139.033)は小松VS(36.717,138.979)と上久屋の中間に位置し幾何も整合。"
+    },
+    {
+      "target": "白州変電所",
+      "target_kv": 66,
+      "partner_as_printed": "北巨摩",
+      "partner_in_main_subs": null,
+      "line_label": "白州線 (山梨県 66kV 送電線No.16, 1回線)",
+      "kv_of_line": 66,
+      "file": "yamanashi_yosochoryu.pdf",
+      "page": 12,
+      "crop": "scratchpad/north/crop_hakushu2.png",
+      "confidence": "高",
+      "note": "系統構成-66kV 山梨県 北巨摩系統。白州(○)は北巨摩変電所66kV母線から下る送電線(16)の末端に接続(上側=接続、下側の発電所母線への連絡は開放点✕)。一覧表『山梨県 66kV 16 白州線 1回線 潮流方向 北巨摩→白州』。相手端の北巨摩変電所(154/66kV)がmain_subsに存在しないため partner_in_main_subs=null。"
+    },
+    {
+      "target": "白梅変電所",
+      "target_kv": 66,
+      "partner_as_printed": "大町",
+      "partner_in_main_subs": "大町変電所",
+      "line_label": "水戸南町線 (茨城県 66kV 送電線No.80, 2回線)",
+      "kv_of_line": 66,
+      "file": "ibaraki_yosochoryu.pdf",
+      "page": 15,
+      "crop": "scratchpad/north/crop_hakubai2.png",
+      "confidence": "中",
+      "note": "系統構成-66kV 茨城県 茨城系統。白梅(○)は送電線(80)の分岐上に描かれ、同じ分岐に需要家1件と大町(○)がぶら下がる。大町変電所はmain_subsに存在(36.378,140.470)、白梅(36.362,140.483)との距離は約2km。中判定の理由は白梅-大町が直列か同一T分岐かが図から一意でないため。"
+    },
+    {
+      "target": "白梅変電所",
+      "target_kv": 66,
+      "partner_as_printed": "西水戸",
+      "partner_in_main_subs": "西水戸変電所 66kV",
+      "line_label": "水戸南町線 (茨城県 66kV 送電線No.80, 2回線)",
+      "kv_of_line": 66,
+      "file": "ibaraki_yosochoryu.pdf",
+      "page": 15,
+      "crop": "scratchpad/north/crop_hakubai2.png",
+      "confidence": "中",
+      "note": "同じ(80)水戸南町線の送出端。一覧表『茨城県 66kV 80 水戸南町線 潮流方向 西水戸→大町』。ただし系統構成図では(80)の右端が青柳線(69)/湊線(71)の縦系統(茨城変電所66kV母線から下る)に接続して描かれており、図と一覧表で上位端の描き方が食い違う(西水戸66kV母線からの引出しには開放点✕が付く)。したがって上位端候補は西水戸変電所と茨城変電所の2つ。距離は西水戸→白梅 約7km、茨城→白梅 約11km。"
+    },
+    {
+      "target": "塩原2号配電塔",
+      "target_kv": 66,
+      "partner_as_printed": "塩原第１ / 塩原第３",
+      "partner_in_main_subs": null,
+      "line_label": "塩原特配線 (栃木県 22kV 送電線No.1, 2回線)",
+      "kv_of_line": 22,
+      "file": "tochigi_yosochoryu.pdf",
+      "page": 6,
+      "crop": "scratchpad/north/crop_shiobara.png",
+      "confidence": "中",
+      "note": "栃木県 系統連系空容量マッピング～22kVの電力系統～(地理図)。塩原特配線(1)の上に 関谷変電所①—③塩原第１—④塩原第２—⑤塩原第３ の直列チェーンが描かれる。塩原2号配電塔(36.9745,139.8150)は位置と並び順から④塩原第２に対応すると判断(図から推定した④の座標≈36.96,139.82)。図上の隣接は塩原第１(東側)と塩原第３(西側)。塩原第１・第２・第３はいずれもmain_subsに不在、上流の関谷変電所66kV(36.9533,139.8889)はmain_subsに存在するので、本系統への接続経路は 関谷変電所—(塩原第１:モデル未収録)—塩原2号—塩原3号 となる。名称が『第2』と『2号配電塔』で一致しないため中判定。"
+    },
+    {
+      "target": "塩原3号配電塔",
+      "target_kv": 66,
+      "partner_as_printed": "塩原第２",
+      "partner_in_main_subs": null,
+      "line_label": "塩原特配線 (栃木県 22kV 送電線No.1, 2回線)",
+      "kv_of_line": 22,
+      "file": "tochigi_yosochoryu.pdf",
+      "page": 6,
+      "crop": "scratchpad/north/crop_shiobara.png",
+      "confidence": "中",
+      "note": "同上のチェーンの西端(⑤塩原第３)。図上の唯一の隣接は④塩原第２。塩原3号配電塔(36.9773,139.8066)は最西端でチェーン末端という点で整合。名称不一致のため中判定。"
+    }
+  ],
+  "unresolved": [
+    {
+      "target": "羽刈町変電所",
+      "reason": "テキスト層・図とも『羽刈』の記載なし。該当地域(佐野市羽刈町 36.285,139.474)を含む tochigi p15『系統構成-66kV 栃木県 佐野系統』および gunma p9『東太田系統』を画像で確認したが、名称ラベル付きのノードとしては描かれていない(無名の需要家◎の可能性が高い)。",
+      "files_checked": ["tochigi_yosochoryu.pdf", "gunma_yosochoryu.pdf", "saitama_yosochoryu.pdf"]
+    },
+    {
+      "target": "渡里町変電所",
+      "reason": "テキスト層に『渡里』の記載が全く無い。水戸市域を扱う ibaraki p14『西水戸,水戸北部系統』・p15『茨城系統』を画像で確認したが該当ノードは描かれていない。予想潮流等一覧表(変電所)にも渡里町は無い。",
+      "files_checked": ["ibaraki_yosochoryu.pdf"]
+    },
+    {
+      "target": "新光町変電所",
+      "reason": "『新光町線(茨城県 66kV 送電線No.147)』は一覧表に存在し、系統構成図(ibaraki p15 茨城系統の常陸海浜まわり)にも(147)として描かれているが、その両端はいずれも無名の需要家記号(◎)で、変電所名ラベルが無い。一覧表の潮流方向も『需要家分岐→需要家』。契約の禁止事項(無名記号を相手端として報告しない)によりunresolved。",
+      "files_checked": ["ibaraki_yosochoryu.pdf"]
+    },
+    {
+      "target": "東上越変電所 275kV",
+      "reason": "TEPCO PGの新潟県PDFは新潟県の一部(信濃川・清津川・湯宿・湯沢まわり)しか収録しておらず、東上越は不在。東北電力ネットワークの設備であることを別途確認した(flags参照)。",
+      "files_checked": ["niigata_yosochoryu.pdf", "gunma_yosochoryu.pdf", "nagano_yosochoryu.pdf"]
+    },
+    {
+      "target": "東上越変電所 154kV",
+      "reason": "同上。TEPCO PG新潟県PDFに不在。東北電力ネットワーク設備(flags参照)。",
+      "files_checked": ["niigata_yosochoryu.pdf", "gunma_yosochoryu.pdf", "nagano_yosochoryu.pdf"]
+    },
+    {
+      "target": "高田変電所",
+      "reason": "同上。TEPCO PG新潟県PDFに不在。東北電力ネットワーク設備(flags参照)。",
+      "files_checked": ["niigata_yosochoryu.pdf", "gunma_yosochoryu.pdf", "nagano_yosochoryu.pdf"]
+    },
+    {
+      "target": "小出",
+      "reason": "同上。TEPCO PG新潟県PDFに不在。東北電力ネットワーク設備(flags参照)。",
+      "files_checked": ["niigata_yosochoryu.pdf", "gunma_yosochoryu.pdf", "nagano_yosochoryu.pdf"]
+    }
+  ],
+  "flags": [
+    {
+      "target": "東上越変電所 275kV / 東上越変電所 154kV / 高田変電所 / 小出",
+      "issue": "【JR東自営線説は否定】依頼にあった『JR東日本 信濃川発電所系の自営送電線設備では』という仮説は支持されなかった。3件とも東北電力ネットワークの設備である。(a) 東上越幹線(27万V)および東上越変電所は1982年に東北電力が新設したものと東北電力ネットワークが自社サイトで明記 https://nw.tohoku-epco.co.jp/bridge/generalarticle/2022/posts0126.html (引用: 「１９８２年に需要の増加に対応するため、２７万Ｖ東上越幹線および東上越変電所を新設し」)。同ページは中越-東上越間154kV増強で2021/11/30に上越の標準供給点を他社系統から東北電力ネットワーク自社系統へ変更した旨も記す。(b) リポジトリ内の東北電力ネットワーク公表資料でも実在を確認: 東上越は data/external/system_disclosure/tohoku/flow_maps/jisseki_kikan01_map_2024_02.pdf(系統構成 500/275/154kV)に、高田・小出は同 jisseki_local07_map_2024_02.pdf(系統構成 新潟県66kV以下)に記載。(c) JR東日本の自営送電線側にはこれらの名称は見当たらず、信濃川発電所(千手/小千谷/小千谷第二)の自営154kV送電線は清水峠越えで武蔵境交流変電所へ向かうルート https://www.jreast.co.jp/en/company/csr/environment/shinanogawa/ (WebSearch経由で取得したURL。JR東の自営送電線経路一覧 https://henndennkidenntushinnmoromoro.blogspot.com/2018/11/844jr.html にも東上越・高田の記載は無く、新潟県内は小千谷変電所・六日町交流変電所・湯沢変電所・土樽変電所・宮内変電所などJR東固有名で構成される)。よって『JR東自営線=別系統(B判定)』ではなく『東北電力ネットワーク管内設備のregion誤ラベル(tokyo→tohoku)』が正しい扱い。接続としては報告しない。"
+    },
+    {
+      "target": "東上越変電所 / 高田変電所 / 小出 (参考情報・本担当の一次資料外)",
+      "issue": "東北電力ネットワークの新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf)を確認したところ、高田変電所は上越変電所と太線で結ばれる位置に描かれ(高田側の線に常時開放記号あり)、小出変電所は堀之内変電所および設備番号7F10(371510)側へ7D3C等で結ばれて描かれている。ただしこれは本担当に割当てられた一次資料(TEPCO PG系統図)ではなく、記号凡例の解釈も未検証のため接続としては報告しない。tohoku担当が同PDFで判読するのが筋。"
+    },
+    {
+      "target": "塩原2号配電塔 / 塩原3号配電塔",
+      "issue": "AGJモデルでは 66kV とされているが、TEPCO PG公表資料では22kV系統(塩原特配線=栃木県22kV送電線No.1、塩原第１/第２/第３=変栃木県22kV No.3/4/5)。電圧クラスの誤りの疑い。また『2号配電塔/3号配電塔』と『塩原第２/第３』の名称も一致しない(同一設備の別称と推定)。さらにチェーン中間の『塩原第１』がmain_subsにもtargetsにも存在せず、モデル側にノード欠損がある。"
+    },
+    {
+      "target": "白州変電所",
+      "issue": "相手端の北巨摩変電所(154/66kV, 山梨県北杜市)が main_subs に存在しない。白州線は北巨摩からの1回線末端であり、北巨摩をモデルに追加しない限り白州は本系統に繋がらない。同じ北巨摩66kV母線にぶら下がる清里・長坂・津金・小淵沢もmain_subsに見当たらず、北巨摩系統ごとモデルから欠落している可能性がある。"
+    },
+    {
+      "target": "新光町変電所 / 渡里町変電所 / 羽刈町変電所",
+      "issue": "いずれもTEPCO PGの系統構成図に名称ラベル付きノードとして現れない。新光町については『新光町線(茨城県66kV No.147)』が存在し潮流方向が『需要家分岐→需要家』であることから、新光町変電所は需要家(自家用)変電所である可能性が高い。渡里町・羽刈町も同様に需要家設備か、公表対象外の配電用設備と考えられる。この3件は系統図判読では解けない類型。"
+    },
+    {
+      "target": "niigata_yosochoryu.pdf の収録範囲",
+      "issue": "TEPCO PGの『新潟県一部』PDFは全11ページで、信濃川・清津川・湯宿・湯沢・中津川第一/第二など TEPCO が新潟県内に持つ水力系のごく一部しか収録していない(154kV変電所は信濃川1件、66kVは清津川1件のみ)。新潟県の大部分は東北電力ネットワーク管内。targets_tokyo.json に含まれる新潟県の孤立点(東上越・高田・小出のほか tokyo_sub_1748(37.257,138.909)・tokyo_sub_1787(37.270,138.865) も小千谷市付近)は region 割当ての見直しが必要。"
+    }
+  ]
+}
