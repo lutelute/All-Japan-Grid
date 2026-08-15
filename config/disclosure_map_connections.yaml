@@ -160,3 +160,22 @@ connections:
     src: >-
       関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
       confidence=中)。BK→奈L(=南生駒)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 生田原変電所
+    to: 遠軽変電所
+    region: hokkaido
+    kv: 66
+    line: 生田原支線（遠軽線 留辺蘂〜遠軽 へのT分岐）
+    src: >-
+      ほくでんNW 混雑状況マップ(map_forecast_tide_list_04.pdf・04北見系統・2026-08-15判読
+      confidence=高)。生田原支線(No.47)が遠軽線(No.31/32)の生田原支線分岐へ接続。
+      一覧表テキスト(実名from→to)で確認
+  - frm: 円山変電所
+    to: 桑園変電所
+    region: hokkaido
+    kv: 66
+    line: 円山地中線→桑園変電所分岐→桑園地中線
+    src: >-
+      ほくでんNW 混雑状況マップ(map_forecast_tide_list_06.pdf・06南九条系統・2026-08-15判読
+      confidence=高)。一覧表テキスト「円山変電所→桑園変電所分岐」を確認。
+      ⚠桑園自体もモデルで孤立のため本系統合流はしない(南九条/山鼻/薄野/豊平がモデル不在=
+      札幌都心の被覆ギャップ)。実在エッジの忠実度向上として登録

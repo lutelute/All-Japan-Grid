@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1799,
-  "dryrun_off_main_after": 1765,
-  "n_new": 92,
+  "dryrun_off_main_before": 1765,
+  "dryrun_off_main_after": 1764,
+  "n_new": 94,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 17,
+    "disclosure_map": 19,
     "same_site_identity": 70
   },
   "region_fixes": [
@@ -692,22 +692,7 @@
     }
   ],
   "joined_subs": [
-    "高石変電所",
-    "助松変電所",
-    "鹿の子台変電所",
-    "沢谷変電所",
-    "広野変電所",
-    "丹南変電所 77kV",
-    "尼崎変電所",
-    "潮江変電所",
-    "関西電力 岡崎変電所",
-    "学園前変電所",
-    "富雄変電所",
-    "富雄変電所",
-    "六条西変電所",
-    "奈良阪町変電所",
-    "秋篠変電所",
-    "南生駒変電所"
+    "生田原変電所"
   ],
   "review_300_800m": [
     {
@@ -2628,6 +2613,42 @@
       "kv": 77.0,
       "line": "南生駒支線",
       "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。BK→奈L(=南生駒)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "円山変電所",
+      "to_sub": "桑園変電所",
+      "from_id": "hokkaido_sub_155",
+      "to_id": "hokkaido_sub_209",
+      "from_pt": [
+        43.05123,
+        141.32876
+      ],
+      "to_pt": [
+        43.06369,
+        141.33075
+      ],
+      "kv": 66.0,
+      "line": "円山地中線→桑園変電所分岐→桑園地中線",
+      "evidence": "系統図判読: ほくでんNW 混雑状況マップ(map_forecast_tide_list_06.pdf・06南九条系統・2026-08-15判読 confidence=高)。一覧表テキスト「円山変電所→桑園変電所分岐」を確認。 ⚠桑園自体もモデルで孤立のため本系統合流はしない(南九条/山鼻/薄野/豊平がモデル不在= 札幌都心の被覆ギャップ)。実在エッジの忠実度向上として登録"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "生田原変電所",
+      "to_sub": "遠軽変電所",
+      "from_id": "hokkaido_sub_288",
+      "to_id": "hokkaido_sub_270",
+      "from_pt": [
+        43.9222,
+        143.52945
+      ],
+      "to_pt": [
+        44.02333,
+        143.50924
+      ],
+      "kv": 66.0,
+      "line": "生田原支線（遠軽線 留辺蘂〜遠軽 へのT分岐）",
+      "evidence": "系統図判読: ほくでんNW 混雑状況マップ(map_forecast_tide_list_04.pdf・04北見系統・2026-08-15判読 confidence=高)。生田原支線(No.47)が遠軽線(No.31/32)の生田原支線分岐へ接続。 一覧表テキスト(実名from→to)で確認"
     }
   ]
 }
