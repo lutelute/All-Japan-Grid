@@ -193,8 +193,15 @@ def build_series(df: pd.DataFrame, wanted: set[str], n_steps: int) -> dict:
             continue
         utility = path.parts[len(ROOT.parts) + 3]
         scope = scope_of(path.name)
-        if t0 is None and len(ts):
-            t0 = str(ts.iloc[0, 0])
+        if len(ts):
+            # t0=時間軸の起点ラベル。社ごとfallbackで年度が混在しうるので、
+            # 最も古い年度の4/1を代表にする（各系列は先頭位置=年度第1週で揃う）
+            cand = str(ts.iloc[0, 0])
+            try:
+                if t0 is None or pd.to_datetime(cand) < pd.to_datetime(t0):
+                    t0 = cand
+            except Exception:  # noqa: BLE001
+                t0 = t0 or cand
         col_of = {str(m.equipment_no): int(m.col) for _, m in meta.iterrows()}
         for _, r in sub.iterrows():
             lid = line_id(utility, scope, r.equipment_no)
@@ -227,11 +234,17 @@ def main() -> int:
     # 揃えずに1本のスライダーで動かすと「異なる年の断面」を同時刻として
     # 並べてしまう。年度で絞り、落ちた社は明示する。
     if args.fy and "year" in df.columns:
-        before = set(df.utility)
-        df = df[df.year.astype(str) == str(args.fy)]
-        dropped = before - set(df.utility)
-        if dropped:
-            print(f"年度{args.fy}に無いため除外: {', '.join(sorted(dropped))}")
+        # 社ごとに公表年度が違う（中国/沖縄は2025のみ等）。指定年度が無い社は
+        # その社の最新年度へフォールバックし、featureのfy注記で開示する。
+        # 時系列は各ファイルの先頭からの位置合わせ＝「年度第1週」同士の比較になる。
+        keep = []
+        for utility, sub in df.groupby("utility"):
+            years = sorted(sub.year.astype(str).unique())
+            use = str(args.fy) if str(args.fy) in years else years[-1]
+            if use != str(args.fy):
+                print(f"年度{args.fy}が無い {utility} は {use} を使用（fy注記つき）")
+            keep.append(sub[sub.year.astype(str) == use])
+        df = pd.concat(keep, ignore_index=True)
 
     # 東京は相手端を公表しない（to が空）が、**同じ線路名が両端の変電所に
     # 別々の列として現れる**（`釜無白根(変) - 天竜南線` と `新富士(変) - 天竜南線`）。
@@ -259,6 +272,15 @@ def main() -> int:
             kind = None
 
             hits = osm.get(key)
+            if not hits and "/" in key:
+                # 沖縄の複合列（例: 阿波根線/真壁線＝直列区間の合算計測）。
+                # 直列区間には同一潮流が流れるので、各構成線のOSM線形を合併して置く。
+                part_hits = []
+                for part in key.split("/"):
+                    part_hits.extend(osm.get(norm_line(part)) or [])
+                if part_hits:
+                    hits = part_hits
+                    stat["composite_parts"] += 1
             if not hits:
                 # 第2経路: 端点ペア。OSM側に `阿波変電所~讃岐変電所線` のような
                 # 端点由来の名前が入っているため、両端の語幹を含む線路を探す。
@@ -304,6 +326,11 @@ def main() -> int:
             else:
                 frm = str(clean(r.get("from_node")) or "")
                 to = str(clean(r.get("to_node")) or "")
+                # 沖縄の複合端点（阿波根変電所/真壁変電所）は先頭区間の相手で近似
+                if "/" in frm:
+                    frm = frm.split("/")[0]
+                if "/" in to:
+                    to = to.split("/")[0]
                 if frm and not to:
                     # 相手端が非公開の社（東京）。同名線路が現れる変電所が
                     # ちょうど2つのときだけ、その相手を to とみなす。
@@ -339,6 +366,7 @@ def main() -> int:
                 "oriented": oriented,   # 線形の向き＝潮流正方向 に揃えたか
                 "n_obs": int(r.n_obs),
                 "osm_segments": len(hits) if hits else 0,
+                "fy": str(r.get("year") or ""),   # 社ごとfallbackで年度が違いうるため開示
             }
             for k in ("flow_mean_mw", "flow_p95_abs_mw", "flow_max_abs_mw", "reverse_share",
                       "operational_mw", "facility_mw", "constraint", "circuits",
@@ -379,6 +407,7 @@ def main() -> int:
     print(f"features {len(features)}")
     print(f"  実線形 routed   {stat['routed']}")
     print(f"  端点直線 straight {stat['straight']}")
+    print(f"  複合列の分割照合  {stat['composite_parts']}  (沖縄 阿波根線/真壁線 等)")
     print(f"  距離超過で棄却    {stat['rejected_span']}  (>{MAX_SPAN_KM:.0f}km)")
     print(f"  飛び地セグメント除去 {stat['dropped_far_segments']}  (>{SEGMENT_LINK_KM:.0f}km離れ)")
     print(f"  配置できず       {stat['unplaced']}")

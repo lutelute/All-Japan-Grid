@@ -154,6 +154,11 @@ def read_flow(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         elif "潮流正方向" in key:
             hdr.setdefault("dir", i)
     if "no" not in hdr or "name" not in hdr:
+        # 沖縄 tyoryu_YYYY_2.csv は変圧器（配変バンク）実績で「変電所No.」ヘッダ。
+        # 送電線ファイルではないので、原因つきでスキップさせる
+        first_col = " ".join(str(raw.iloc[i, 0]) for i in range(min(8, len(raw))))
+        if "変電所No" in first_col:
+            raise ValueError(f"変圧器(配変)実績ファイル=送電線でない: {path.name}")
         raise ValueError(f"ヘッダを特定できない: {path.name}")
 
     first_data = max(hdr.values()) + 1
