@@ -396,7 +396,7 @@ def main() -> int:
               if _k5(*e["from_pt"]) not in cc0["main_keys"]
               and _k5(*e["from_pt"]) in cc1["main_keys"]]
 
-    from collections import Counter
+    from collections import Counter  # noqa: F401 (帳簿マージでも使用)
     by_cls = Counter(e["class"] for e in fresh)
     print(f"worklist v2: 候補 {len(edges)} → 新規 {len(fresh)}（既存重複スキップ {len(edges)-len(fresh)}）")
     print(f"  クラス別: {dict(by_cls)}")
@@ -415,6 +415,28 @@ def main() -> int:
     if not args.update_ledger:
         print("（帳簿は不変。書き換えるには --update-ledger を明示）")
     else:
+        # 帳簿は**累積マージ**: 既存エントリを残し、新規(端点対が未登録)だけ足す。
+        # 置き換えにすると適用済み分が帳簿から消え、パイプライン --from-worklist の
+        # 入力が欠ける（帳簿=全実証接続の正本）。
+        prev_wl, prev_rf = [], []
+        if OUT.exists():
+            prev = json.loads(OUT.read_text(encoding="utf-8"))
+            prev_wl = prev.get("worklist", [])
+            prev_rf = prev.get("region_fixes", [])
+        have = {frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) for e in prev_wl}
+        merged_wl = prev_wl + [e for e in edges
+                               if frozenset((_k5(*e["from_pt"]),
+                                             _k5(*e["to_pt"]))) not in have]
+        have_rf = {(r.get("id"), r.get("to")) for r in prev_rf}
+        merged_rf = prev_rf + [r for r in region_fixes
+                               if (r.get("id"), r.get("to")) not in have_rf]
+        n_new_wl = len(merged_wl) - len(prev_wl)
+        n_new_rf = len(merged_rf) - len(prev_rf)
+        print(f"帳簿マージ: worklist +{n_new_wl}（計{len(merged_wl)}）"
+              f" region_fixes +{n_new_rf}（計{len(merged_rf)}）")
+        fresh = merged_wl               # 帳簿に書くのは累積の全量
+        region_fixes = merged_rf
+        by_cls = Counter(e["class"] for e in fresh)
         OUT.write_text(json.dumps({
         "note": ("実証接続 v2。公表線路/分岐タップ/変圧器実証（東北NW系統情報公表）と"
                  "同一敷地同定（跨region二重登録）。生の潮流値・R/X等は非収録。"
