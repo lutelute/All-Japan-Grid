@@ -16,12 +16,12 @@
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
   "dryrun_off_main_before": 1799,
-  "dryrun_off_main_after": 1799,
-  "n_new": 76,
+  "dryrun_off_main_after": 1765,
+  "n_new": 92,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 1,
+    "disclosure_map": 17,
     "same_site_identity": 70
   },
   "region_fixes": [
@@ -691,7 +691,24 @@
       "evidence": "地理(松前半島=北海道)。福山=松前の旧称(福山城)。青森箱の鏡像のbbox混入"
     }
   ],
-  "joined_subs": [],
+  "joined_subs": [
+    "高石変電所",
+    "助松変電所",
+    "鹿の子台変電所",
+    "沢谷変電所",
+    "広野変電所",
+    "丹南変電所 77kV",
+    "尼崎変電所",
+    "潮江変電所",
+    "関西電力 岡崎変電所",
+    "学園前変電所",
+    "富雄変電所",
+    "富雄変電所",
+    "六条西変電所",
+    "奈良阪町変電所",
+    "秋篠変電所",
+    "南生駒変電所"
+  ],
   "review_300_800m": [
     {
       "iso": "小田原市変電所",
@@ -2323,6 +2340,294 @@
       "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
       "same_site": true,
       "dist_m": 120
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "高石変電所",
+      "to_sub": "泉北変電所",
+      "from_id": "kansai_sub_159",
+      "to_id": "kansai_sub_32",
+      "from_pt": [
+        34.52218,
+        135.42812
+      ],
+      "to_pt": [
+        34.52372,
+        135.47329
+      ],
+      "kv": 77.0,
+      "line": "高石支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p24(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。方向BP→南DI・南DI=高石をtrans表で確認。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "助松変電所",
+      "to_sub": "南大阪変電所 77kV",
+      "from_id": "kansai_sub_164",
+      "to_id": "kansai_sub_3@77",
+      "from_pt": [
+        34.51108,
+        135.41866
+      ],
+      "to_pt": [
+        34.46787,
+        135.47162
+      ],
+      "kv": 77.0,
+      "line": "助松支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p24(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。方向BO→南DM・南DM=助松。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "鹿の子台変電所",
+      "to_sub": "北摂変電所 77kV",
+      "from_id": "kansai_sub_327",
+      "to_id": "kansai_sub_270@77",
+      "from_pt": [
+        34.86505,
+        135.21447
+      ],
+      "to_pt": [
+        34.93221,
+        135.11071
+      ],
+      "kv": 77.0,
+      "line": "北摂鹿の子台線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。線名が両端を明示・AK→神O(=鹿の子台)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "沢谷変電所",
+      "to_sub": "北摂変電所 77kV",
+      "from_id": "kansai_sub_351",
+      "to_id": "kansai_sub_270@77",
+      "from_pt": [
+        34.91803,
+        135.17124
+      ],
+      "to_pt": [
+        34.93221,
+        135.11071
+      ],
+      "kv": 77.0,
+      "line": "沢谷支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。AK→神K(=沢谷)・AK=北摂は北摂鹿の子台線等で同定。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "広野変電所",
+      "to_sub": "北摂変電所 77kV",
+      "from_id": "kansai_sub_366",
+      "to_id": "kansai_sub_270@77",
+      "from_pt": [
+        34.92867,
+        135.19359
+      ],
+      "to_pt": [
+        34.93221,
+        135.11071
+      ],
+      "kv": 77.0,
+      "line": "広野支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。AK→神J(=広野)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "丹南変電所 77kV",
+      "to_sub": "北摂変電所 77kV",
+      "from_id": "kansai_sub_415@77",
+      "to_id": "kansai_sub_270@77",
+      "from_pt": [
+        35.06015,
+        135.18943
+      ],
+      "to_pt": [
+        34.93221,
+        135.11071
+      ],
+      "kv": 77.0,
+      "line": "丹南線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。AK→神I(=丹南)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "尼崎変電所",
+      "to_sub": "立花変電所 77kV",
+      "from_id": "kansai_sub_352",
+      "to_id": "kansai_sub_427@77",
+      "from_pt": [
+        34.72398,
+        135.41604
+      ],
+      "to_pt": [
+        34.72893,
+        135.40113
+      ],
+      "kv": 77.0,
+      "line": "尼崎線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "潮江変電所",
+      "to_sub": "神崎変電所 77kV",
+      "from_id": "kansai_sub_450",
+      "to_id": "kansai_sub_287@77",
+      "from_pt": [
+        34.73935,
+        135.44182
+      ],
+      "to_pt": [
+        34.7429,
+        135.42638
+      ],
+      "kv": 77.0,
+      "line": "潮江支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "関西電力 岡崎変電所",
+      "to_sub": "和歌山電力所",
+      "from_id": "kansai_sub_71",
+      "to_id": "kansai_sub_55",
+      "from_pt": [
+        34.20546,
+        135.2273
+      ],
+      "to_pt": [
+        34.2412,
+        135.20805
+      ],
+      "kv": 77.0,
+      "line": "岡崎線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p32(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "学園前変電所",
+      "to_sub": "奈良変電所 77kV",
+      "from_id": "kansai_sub_585",
+      "to_id": "kansai_sub_855@77",
+      "from_pt": [
+        34.70036,
+        135.74839
+      ],
+      "to_pt": [
+        34.68315,
+        135.80612
+      ],
+      "kv": 77.0,
+      "line": "学園前支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。奈D(=奈良)→奈N(=学園前)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "富雄変電所",
+      "to_sub": "奈良変電所 77kV",
+      "from_id": "kansai_sub_674",
+      "to_id": "kansai_sub_855@77",
+      "from_pt": [
+        34.68668,
+        135.7379
+      ],
+      "to_pt": [
+        34.68315,
+        135.80612
+      ],
+      "kv": 77.0,
+      "line": "奈良西線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。奈D→奈O(=富雄)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "富雄変電所",
+      "to_sub": "新生駒 変電所 77kV",
+      "from_id": "kansai_sub_674",
+      "to_id": "kansai_sub_614@77",
+      "from_pt": [
+        34.68668,
+        135.7379
+      ],
+      "to_pt": [
+        34.73448,
+        135.71482
+      ],
+      "kv": 77.0,
+      "line": "新生駒富雄線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。BK→奈O・線名が両端を明示。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "六条西変電所",
+      "to_sub": "奈良変電所 77kV",
+      "from_id": "kansai_sub_757",
+      "to_id": "kansai_sub_855@77",
+      "from_pt": [
+        34.67015,
+        135.77051
+      ],
+      "to_pt": [
+        34.68315,
+        135.80612
+      ],
+      "kv": 77.0,
+      "line": "六条西支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。奈D→奈Q(=六条西)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "奈良阪町変電所",
+      "to_sub": "奈良変電所 77kV",
+      "from_id": "kansai_sub_834",
+      "to_id": "kansai_sub_855@77",
+      "from_pt": [
+        34.70348,
+        135.82659
+      ],
+      "to_pt": [
+        34.68315,
+        135.80612
+      ],
+      "kv": 77.0,
+      "line": "奈良阪町支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。奈D→奈F(=奈良阪町)。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "秋篠変電所",
+      "to_sub": "新生駒 変電所 77kV",
+      "from_id": "kansai_sub_833",
+      "to_id": "kansai_sub_614@77",
+      "from_pt": [
+        34.71012,
+        135.77511
+      ],
+      "to_pt": [
+        34.73448,
+        135.71482
+      ],
+      "kv": 77.0,
+      "line": "秋篠支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。BK→奈H(=秋篠)・BK=新生駒は新生駒富雄線で同定。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "南生駒変電所",
+      "to_sub": "新生駒 変電所 77kV",
+      "from_id": "kansai_sub_864",
+      "to_id": "kansai_sub_614@77",
+      "from_pt": [
+        34.66451,
+        135.7218
+      ],
+      "to_pt": [
+        34.73448,
+        135.71482
+      ],
+      "kv": 77.0,
+      "line": "南生駒支線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=中)。BK→奈L(=南生駒)。CSV(154kv_less_line/trans)で機械検算済"
     }
   ]
 }

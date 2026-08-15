@@ -16,3 +16,147 @@ connections:
     src: >-
       東北NW 系統構成図(青森県66kV以下・2024年度実績) jisseki_local01_map_2024_02.pdf —
       佐井○—161F—大間●の沿岸線。大間側はAGJの大間町変電所_2〜_5クラスタ(41.508,140.911)に対応
+  - frm: 高石変電所
+    to: 泉北変電所
+    region: kansai
+    kv: 77
+    line: 高石支線
+    src: >-
+      関西TD 154kv_less_space.pdf p24(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。方向BP→南DI・南DI=高石をtrans表で確認。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 助松変電所
+    to: 南大阪変電所 77kV
+    region: kansai
+    kv: 77
+    line: 助松支線
+    src: >-
+      関西TD 154kv_less_space.pdf p24(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。方向BO→南DM・南DM=助松。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 鹿の子台変電所
+    to: 北摂変電所 77kV
+    region: kansai
+    kv: 77
+    line: 北摂鹿の子台線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。線名が両端を明示・AK→神O(=鹿の子台)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 沢谷変電所
+    to: 北摂変電所 77kV
+    region: kansai
+    kv: 77
+    line: 沢谷支線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。AK→神K(=沢谷)・AK=北摂は北摂鹿の子台線等で同定。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 広野変電所
+    to: 北摂変電所 77kV
+    region: kansai
+    kv: 77
+    line: 広野支線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。AK→神J(=広野)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 広野変電所_2
+    to: 広野変電所
+    region: kansai
+    kv: 77
+    line: null
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。公表の広野(神J)は1件のみ=約230m差の重複ノードの同一敷地タイ。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 丹南変電所 77kV
+    to: 北摂変電所 77kV
+    region: kansai
+    kv: 77
+    line: 丹南線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。AK→神I(=丹南)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 丹南変電所 66kV
+    to: 丹南変電所 77kV
+    region: kansai
+    kv: null
+    line: null
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。同一敷地タイ。trans表の神I=丹南に77/6.6と77/22の2バンク(1サイト)。丹南篠山線は22kVで66kV系統接続は存在しない。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 尼崎変電所
+    to: 立花変電所 77kV
+    region: kansai
+    kv: 77
+    line: 尼崎線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 潮江変電所
+    to: 神崎変電所 77kV
+    region: kansai
+    kv: 77
+    line: 潮江支線
+    src: >-
+      関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 関西電力 岡崎変電所
+    to: 和歌山電力所
+    region: kansai
+    kv: 77
+    line: 岡崎線
+    src: >-
+      関西TD 154kv_less_space.pdf p32(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 学園前変電所
+    to: 奈良変電所 77kV
+    region: kansai
+    kv: 77
+    line: 学園前支線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。奈D(=奈良)→奈N(=学園前)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 富雄変電所
+    to: 奈良変電所 77kV
+    region: kansai
+    kv: 77
+    line: 奈良西線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。奈D→奈O(=富雄)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 富雄変電所
+    to: 新生駒変電所 77kV
+    region: kansai
+    kv: 77
+    line: 新生駒富雄線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。BK→奈O・線名が両端を明示。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 六条西変電所
+    to: 奈良変電所 77kV
+    region: kansai
+    kv: 77
+    line: 六条西支線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。奈D→奈Q(=六条西)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 奈良阪町変電所
+    to: 奈良変電所 77kV
+    region: kansai
+    kv: 77
+    line: 奈良阪町支線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=高)。奈D→奈F(=奈良阪町)。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 秋篠変電所
+    to: 新生駒変電所 77kV
+    region: kansai
+    kv: 77
+    line: 秋篠支線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。BK→奈H(=秋篠)・BK=新生駒は新生駒富雄線で同定。CSV(154kv_less_line/trans)で機械検算済
+  - frm: 南生駒変電所
+    to: 新生駒変電所 77kV
+    region: kansai
+    kv: 77
+    line: 南生駒支線
+    src: >-
+      関西TD 154kv_less_space.pdf p30(送電線一覧B表/変圧器一覧A表・2026-08-15判読・
+      confidence=中)。BK→奈L(=南生駒)。CSV(154kv_less_line/trans)で機械検算済
