@@ -152,6 +152,33 @@ def build_pool(regions: set[str]) -> tuple[list[dict], dict]:
             add(util, m.get("flow_positive_from"), m.get("flow_positive_to"),
                 m.get("name"), m.get("voltage_kv"), "flow_direction")
 
+    # 2b) TEPCO 予想潮流CSV（系統構成マッピング付属・エリア別）:
+    # 送電線行に from,→,to が**実名の別列**で入る（潮流実績CSVは相手端非公開だったが
+    # こちらは両端公表）。csv_yosochoryu_{pref}_soudensen.csv (utf-8-sig・ヘッダ7行)。
+    if "tokyo" in regions:
+        for path in sorted((SD / "tokyo" / "yosochoryu_csv").glob("*/csv_yosochoryu_*_soudensen.csv")):
+            txt = None
+            for enc in ("utf-8-sig", "cp932"):   # 県によりUTF-8(BOM)とcp932が混在
+                try:
+                    txt = path.read_text(encoding=enc)
+                    break
+                except Exception:  # noqa: BLE001
+                    continue
+            if txt is None:
+                print(f"! 予想潮流CSV読めず {path.name}")
+                continue
+            import csv as _csv
+            for row in _csv.reader(txt.splitlines()):
+                if len(row) < 11 or "→" not in (row[8] if len(row) > 8 else ""):
+                    continue
+                name, kv = row[1], row[2]
+                frm, to = row[7], row[9]
+                try:
+                    kvf = float(kv)
+                except Exception:  # noqa: BLE001
+                    kvf = None
+                add("tokyo", frm, to, name, kvf, "yosochoryu")
+
     # 3) 既構築の観測フロー geojson の from/to（補助）
     gj = VIZ / "flow_lines.geojson"
     if gj.exists():
