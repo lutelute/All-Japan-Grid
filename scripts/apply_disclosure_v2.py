@@ -202,23 +202,25 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
                     continue
                 break
 
-    # M: 系統構成図の判読 — 公表の局所系統構成図PDF(転載禁止・data/external内)から
-    # 人手判読で確定した接続。図の変電所位置とAGJ座標の照合まで済んだもののみ載せる。
-    MAPS = [
-        {"frm": "佐井変電所", "to": "大間町変電所_2", "kv": 66.0,
-         "line": "161F線（佐井—大間）",
-         "src": "東北NW 系統構成図(青森県66kV以下・2024年度実績) "
-                "jisseki_local01_map_2024_02.pdf — 佐井○—161F—大間●の沿岸線。"
-                "大間側はAGJの大間町変電所_2〜_5クラスタ(41.508,140.911・main)に対応"},
-    ]
-    for m in MAPS:
-        a = frame.pick(m["frm"], m["kv"], "tohoku", want_main=False) \
-            or frame.pick(m["frm"], m["kv"], "tohoku")
-        b = frame.pick(m["to"], m["kv"], "tohoku", want_main=True) \
-            or frame.pick(m["to"], m["kv"], "tohoku")
-        if a and b and a["id"] != b["id"]:
-            add_edge(a, b, "disclosure_map", m["kv"], m["line"],
-                     f"局所系統構成図の判読: {m['src']}")
+    # M: 系統構成図の判読 — 台帳は config/disclosure_map_connections.yaml（外部化）。
+    # 図PDF(転載禁止・data/external内)の判読で確認できた接続のみ。運用規約はyaml冒頭。
+    map_yaml = ROOT / "config" / "disclosure_map_connections.yaml"
+    if map_yaml.exists():
+        import yaml as _yaml
+        for m in (_yaml.safe_load(map_yaml.read_text(encoding="utf-8")) or {}).get(
+                "connections", []):
+            reg = m.get("region")
+            kv = float(m["kv"]) if m.get("kv") else None
+            a = frame.pick(m["frm"], kv, reg, want_main=False) \
+                or frame.pick(m["frm"], kv, reg)
+            b = frame.pick(m["to"], kv, reg, want_main=True) \
+                or frame.pick(m["to"], kv, reg)
+            if a is None or b is None:
+                print(f"! disclosure_map 未解決ノード: {m['frm']} → {m['to']}（skip）")
+                continue
+            if a["id"] != b["id"]:
+                add_edge(a, b, "disclosure_map", kv, m.get("line"),
+                         f"系統図判読: {m.get('src','')}")
 
     # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
     for k, fam in frame.by_norm.items():

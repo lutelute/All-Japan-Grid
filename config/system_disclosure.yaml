@@ -51,6 +51,11 @@ utilities:
       capacity:
         link_pattern: 'sys_capa_(kikan|local\d+)\.zip'
         verified: true     # 2026-08-12 確認。予想潮流等一覧表（基幹+ローカル24）
+      keitouzu:
+        # 予想潮流マップ(エリア別PDF)。2026-08-15 発見・7枚取得
+        link_pattern: 'map_forecast_tide_list(_\d+)?\.pdf'
+        verified: true
+        format: pdf
 
   tohoku:
     name: 東北電力ネットワーク
@@ -101,6 +106,16 @@ utilities:
       flow_actual:
         link_pattern: 'tyouryu_(kikan|154kV|66kV)\.zip'
         note: 既取得。730列×8760時間（VALIDATION_SOURCES.md 項目2）
+      keitouzu:
+        # 系統構成マッピング・予想潮流(エリア別PDF)。2026-08-15 発見・14枚取得
+        link_pattern: '(kikan|tokyo23|tama|tochigi|gunma|ibaraki|saitama|chiba|kanagawa|yamanashi|shizuoka|niigata|nagano|fukushima)_yosochoryu\.pdf'
+        verified: true     # tokyo/keitouzu/ に取得済(転載禁止・判読用)
+        format: pdf
+      yosochoryu_csv:
+        # 予想潮流CSV(zip・県別)。送電線行に from,→,to が実名の別列で入る(66kV 847本)
+        link_pattern: 'csv_yosochoryu_[a-z0-9]+\.zip'
+        verified: true     # 2026-08-15 14県分取得・reconcileのyosochoryu源として稼働
+        caveat: 空容量算定対象のサブセット。都心地中網・北関東の細部は不収録(→PDF判読)
 
   chubu:
     name: 中部電力パワーグリッド
@@ -148,6 +163,14 @@ utilities:
         direct_url: https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
         verified: true     # 既取得(data/external/kansai_td/)。2026-08-07更新を確認。ほぼ毎日更新
         note: 変圧器版は同ディレクトリの _trans.csv
+      capacity_less:
+        # 154kV未満(77/66kV)の空容量。line CSV 1,590行は変電所名がコード化(北A等)だが
+        # 線名は実名。**154kv_less_space.pdf(36p)は実名の77kV系統図=判読源**
+        direct_url: https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_line.csv
+        verified: true     # 2026-08-15 取得(space.pdf/trans.csv/line.csv)
+      keitouzu:
+        direct_url: https://www.kansai-td.co.jp/consignment/disclosure/pdf/01_keitou_2024.pdf
+        verified: true     # 2026-08-15 取得。基幹系統図+154kv_more_mapping.pdf
 
   chugoku:
     name: 中国電力ネットワーク
@@ -160,6 +183,11 @@ utilities:
       flow_actual:
         link_pattern: 'jisseki_kikan\d*_(line|tr)_\d{4}_\d{2}\.csv'
         verified: true     # 2026-08-11 リンク確認（jisseki_kikan00_line_2025_07.csv 等）
+      keitouzu:
+        # 県別系統構成図。2026-08-15 発見・6枚取得(全体+鳥取/島根/岡山/広島/山口)
+        link_pattern: 'keitoukousei\d{4}(_[a-z]+)?\.pdf'
+        verified: true
+        format: pdf
 
   shikoku:
     name: 四国電力送配電
@@ -178,6 +206,11 @@ utilities:
       outage_plan:
         link_pattern: 'sagyouteishikeikaku[^"]*\.csv'
         note: 作業停止計画（N-1検証の実運用条件）
+      keitouzu:
+        # 県別系統構成図(66kV含む)。2026-08-15 発見・5枚取得(main+香川/愛媛/徳島/高知)
+        link_pattern: 'keitoukousei(_[a-z]+)?_\d{4}\.pdf'
+        verified: true
+        format: pdf
 
   kyushu:
     name: 九州電力送配電

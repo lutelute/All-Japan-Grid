@@ -1,0 +1,18 @@
+# 系統図判読による実証接続の台帳（apply_disclosure_v2 の disclosure_map クラスが読む）
+#
+# 運用: 図PDF（転載禁止・data/external内）の判読で確認できた接続だけを載せる。
+#   - frm = 孤立側のモデル実名 / to = 相手側のモデル実名（変異名可・region優先でpickされる）
+#   - src に 図ファイル名とページ、判読の根拠（線名ラベル等）を必ず書く
+#   - 判読エージェントの出力は人間(主セッション)がサンプル検証してからここに移す
+#   - 図に無い接続・無名記号への接続は載せない（捏造禁止）
+# 無効化: 行を消す or apply_disclosure_v2 --disable disclosure_map。
+
+connections:
+  - frm: 佐井変電所
+    to: 大間町変電所_2
+    region: tohoku
+    kv: 66
+    line: 161F線（佐井—大間）
+    src: >-
+      東北NW 系統構成図(青森県66kV以下・2024年度実績) jisseki_local01_map_2024_02.pdf —
+      佐井○—161F—大間●の沿岸線。大間側はAGJの大間町変電所_2〜_5クラスタ(41.508,140.911)に対応
