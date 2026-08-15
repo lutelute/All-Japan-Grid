@@ -179,3 +179,97 @@ connections:
       confidence=高)。一覧表テキスト「円山変電所→桑園変電所分岐」を確認。
       ⚠桑園自体もモデルで孤立のため本系統合流はしない(南九条/山鼻/薄野/豊平がモデル不在=
       札幌都心の被覆ギャップ)。実在エッジの忠実度向上として登録
+  - frm: 都農変電所
+    to: 九州電力 高鍋変電所 66kV
+    region: kyushu
+    kv: 66
+    line: 都農高鍋線（2回線）
+    src: >-
+      九州電送 地区系統図+予想潮流・空容量一覧表(2026-08-15取得・map-kyushu判読
+      confidence=高)。一覧表の潮流方向に実名both-ends
+  - frm: 中国電力和気変電所
+    to: 備前変電所 110kV
+    region: chugoku
+    kv: 110
+    line: 図の線番L8（和気—備前）
+    src: >-
+      中国電力NW 県別系統構成図(keitoukousei2025_oka.pdf・map-shikoku-chugoku判読
+      confidence=高)。和気S20から備前へL8
+  - frm: 中国電力和気変電所
+    to: 南津山変電所 110kV
+    region: chugoku
+    kv: 110
+    line: 図の線番L9（和気—南津山）
+    src: >-
+      中国電力NW 県別系統構成図(keitoukousei2025_oka.pdf・同上)。和気S20から南津山へL9
+  - frm: 大渡変電所
+    to: 佐川変電所
+    region: shikoku
+    kv: 66
+    line: 線番39+38（加枝T分岐経由）
+    src: >-
+      四国電送 高知県系統構成図(keitoukousei_kochi_2025.pdf・map-shikoku-chugoku判読
+      confidence=高・分岐は1200dpiで実接続確認)。⚠相手端の加枝等はモデル不在のため
+      ターゲット同士の実証チェーン(本系統合流はしない=断片統合と忠実度向上)
+  - frm: 佐川変電所
+    to: 須崎変電所
+    region: shikoku
+    kv: 66
+    line: 線番50+45
+    src: >-
+      四国電送 高知県系統構成図(同上・confidence=高)。佐川⑲—須崎㉓。同上のチェーン
+  - frm: 四国電力 甲浦変電所
+    to: 牟岐変電所
+    region: shikoku
+    kv: 66
+    line: 線番96+95（海南経由・海南はモデル不在）
+    src: >-
+      四国電送 徳島県系統構成図(keitoukousei_tokushima_2025.pdf・同判読 confidence=高)。
+      甲浦—海南—牟岐の順だが海南(徳島)がモデル不在のため甲浦—牟岐の実証チェーンとして登録
+  - frm: 黒磯変電所
+    to: 那須野変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 那須線
+    src: >-
+      TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p9・map-tokyo-north判読 confidence=高)。
+      黒磯のバンク列(栃木CSV)でも実在確認済み
+  - frm: 国分寺変電所
+    to: 小山変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 上三川線
+    src: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p14・同判読 confidence=高)
+  - frm: 簗瀬町変電所
+    to: 栃山開閉所 154kV
+    region: tokyo
+    kv: 154
+    line: 栃山線（新栃木〜栃山開閉所）
+    src: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p8・同判読 confidence=中)
+  - frm: 薄根変電所
+    to: 小松変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 上久屋小松線
+    src: TEPCO 系統構成マッピング(gunma_yosochoryu.pdf p14・同判読 confidence=高)
+  - frm: 白梅変電所
+    to: 大町変電所
+    region: tokyo
+    kv: 66
+    line: 水戸南町線
+    src: TEPCO 系統構成マッピング(ibaraki_yosochoryu.pdf p15・同判読 confidence=中)
+  - frm: 白梅変電所
+    to: 西水戸変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 水戸南町線
+    src: TEPCO 系統構成マッピング(ibaraki_yosochoryu.pdf p15・同判読 confidence=中)
+  - frm: 小出
+    to: 堀之内町変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 東北NW新潟県図の設備7F10（小出—堀之内）
+    src: >-
+      東北NW 新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf・map-tokyo-north判読)。
+      小出はTEPCO新潟図に不在=東北NW設備(東上越/高田も同様・region誤ラベルはreview送り)。
+      堀之内はモデルの堀之内町変電所(魚沼市)に対応

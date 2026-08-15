@@ -54,3 +54,56 @@ overrides:
     verdict: "?"
     approved: false
     evidence: 座標(34.081,136.192)=三重県紀北町=中部電力管内の可能性。関西の公表表に同名なし(region誤ラベル疑い)
+
+  # --- 2026-08-15 九州/四国/中国判読(map-kyushu, map-shikoku-chugoku)のflags由来 ---
+  - name: 郷ノ浦変電所
+    region: kyushu
+    verdict: B
+    approved: false
+    evidence: 壱岐の離島独立系統(新壱岐発電所電源の22kV系・本土と非連系)。孤立判定が物理的に正しい。kvタグ66も実際は22(公表一覧表)
+  - name: 山陽小野田市変電所
+    region: chugoku
+    verdict: "?"
+    approved: false
+    evidence: 中国電力NW系統構成図では「山陽小野田市」は市名ラベル(宇部市・下関市と同書式)で変電所ではない。0.2kmに山野井変電所(main)=OSMアーティファクト/重複の疑い
+  - name: 山陽小野田市変電所
+    region: kyushu
+    verdict: "?"
+    approved: false
+    evidence: 同上+kyushuラベル自体が誤り(山口県=中国管内)
+  - name: 中原東四丁目変電所
+    region: kyushu
+    verdict: "?"
+    approved: false
+    evidence: 北九州市戸畑区。小倉地区図(RMS0.48km)の投影位置に名前付き記号なし=日本製鉄構内の無名△(自家用)の疑い
+  - name: 中央南変電所
+    region: shikoku
+    verdict: "?"
+    approved: false
+    evidence: 座標は山口県田布施町(陸上・regionはchugokuが正)。中国電力の公表全図に「中央南」不在。3region重複登録
+  - name: 中央南変電所
+    region: kyushu
+    verdict: "?"
+    approved: false
+    evidence: 同上
+  - name: 中央南変電所
+    region: chugoku
+    verdict: "?"
+    approved: false
+    evidence: 同上(regionは正だが公表資料に存在しない)
+
+  # --- 2026-08-15 北関東判読(map-tokyo-north)のflags由来 ---
+  - {name: 塩原2号配電塔, region: tokyo, verdict: "?", approved: false,
+     evidence: TEPCO公表では22kV系(塩原特配線=栃木22kV No.1)。66kVタグ誤り・相手の塩原第1-3もモデル不在}
+  - {name: 塩原3号配電塔, region: tokyo, verdict: "?", approved: false,
+     evidence: 同上}
+  - {name: 塩原2号配電塔, region: tohoku, verdict: "?", approved: false,
+     evidence: 同上(tohokuコピー)}
+  - {name: 塩原3号配電塔, region: tohoku, verdict: "?", approved: false,
+     evidence: 同上(tohokuコピー)}
+  - {name: 新光町変電所, region: tokyo, verdict: "?", approved: false,
+     evidence: 新光町線(茨城66kV No.147)の潮流方向が「需要家分岐→需要家」=需要家(自家用)変電所の可能性が高い}
+  - {name: 渡里町変電所, region: tokyo, verdict: "?", approved: false,
+     evidence: TEPCO系統構成図(水戸域p14/p15)に名称ラベル付きノードとして不在(目視確認済)}
+  - {name: 羽刈町変電所, region: tokyo, verdict: "?", approved: false,
+     evidence: TEPCO系統構成図(佐野/東毛系統)に不在(目視確認済)}
