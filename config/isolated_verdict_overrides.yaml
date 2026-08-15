@@ -113,3 +113,9 @@ overrides:
      evidence: TEPCO静岡(富士川以東)の配電用一覧・系統構成図・潮流実績のいずれにも不在。0.6km隣の天野と共に伊豆の国市の需要家(自家用受電)疑い}
   - {name: 天野変電所, region: tokyo, verdict: "?", approved: false,
      evidence: 同上(TEPCO全14県PDF横断検索でも該当なし)}
+
+  # --- 2026-08-16 九州31地区プール全面突合の副産物: モデル名は住所合成でkv=66も誤り ---
+  - {name: 岱明町野口変電所, region: kyushu, verdict: B, approved: false,
+     evidence: "OSM way/691691048 = substation=traction・voltage=20000(交流き電20kV・新玉名駅近傍)。九州31地区表・31図のどこにも不在。真の66kV局は1.7km東の玉名変電所(モデル実在)。モデルkv=66は合成誤り"}
+  - {name: 敷川内町変電所, region: kyushu, verdict: "?", approved: false,
+     evidence: "OSM way/759869575 = substation=distribution・電圧タグ無し・周囲はソーラー発電所群(plant:source=solar)。九電の配電用変電所は66kV受電なら地区表に全記載されるが不在 → 66kV系統ノードでない(6kV配電or太陽光連系)疑い。モデルkv=66は根拠不明"}

@@ -1,0 +1,4107 @@
+{
+ "source": "九州電力送配電 予想潮流・空容量一覧表(2026-07-30版・31地区・831行)×built正典の名前突合",
+ "note": "機械スクリーニング。採用は人間判断([[梃子候補は人間判断]])。similar_in_kyushuは注記であり同定ではない(罠10)。接続事実のみ・容量生値なし",
+ "method": "norm(reconcile_isolated_multi)+事業者接頭辞剥がしエイリアス。true_missing=モデル九州に正規化一致も部分一致もなし / name_variant=部分一致あり(名前揺れ疑い) / other_region=隣接regionに実在",
+ "counts": {
+  "true_missing": 171,
+  "name_variant": 51,
+  "other_region": 29
+ },
+ "true_missing": [
+  {
+   "name": "東豊前",
+   "count": 7,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "中津",
+    "宇島",
+    "岸井",
+    "泉",
+    "築城",
+    "豊前"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "相浦",
+   "count": 7,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "佐々",
+    "吉井",
+    "大久保",
+    "大野",
+    "木風sws",
+    "熊野"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "一ツ瀬",
+   "count": 5,
+   "kv": [
+    110,
+    220
+   ],
+   "districts": [
+    "hyuga",
+    "miyazaki"
+   ],
+   "partners": [
+    "ひむか",
+    "新日向",
+    "柏田",
+    "西都",
+    "高鍋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "簑島",
+   "count": 4,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "higashi_fukuoka"
+   ],
+   "partners": [
+    "住吉",
+    "堅粕",
+    "竹下",
+    "野間"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "川上川第一",
+   "count": 4,
+   "kv": [
+    22,
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "―",
+    "北佐賀",
+    "小関",
+    "広滝第一"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "高野sws",
+   "count": 4,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "kirishima"
+   ],
+   "partners": [
+    "南九州",
+    "南宮崎",
+    "宮崎",
+    "都城"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "苅田",
+   "count": 4,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "南苅田",
+    "行橋",
+    "西谷",
+    "雨窪"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "小佐井",
+   "count": 4,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "佐賀関",
+    "新大分",
+    "臼杵",
+    "金の手"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "古月",
+   "count": 4,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yahata"
+   ],
+   "partners": [
+    "上津役",
+    "海老津",
+    "芦屋",
+    "遠賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "上椎葉",
+   "count": 3,
+   "kv": [
+    110,
+    220
+   ],
+   "districts": [
+    "hyuga",
+    "kumamoto"
+   ],
+   "partners": [
+    "塚原",
+    "新日向",
+    "熊本"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大霧",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kirishima"
+   ],
+   "partners": [
+    "えびの",
+    "横川",
+    "霧島"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "旦過",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "堺町",
+    "小倉",
+    "日明"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "西山鹿",
+   "count": 3,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "三池",
+    "山鹿",
+    "西合志"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大江",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "坪井",
+    "神水",
+    "銀座橋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "銀座橋",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "大江",
+    "慶徳",
+    "新町"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "賑橋",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "宮の下",
+    "長崎",
+    "飽ノ浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "江川",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "―",
+    "長崎",
+    "香焼"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "港",
+   "count": 3,
+   "kv": [
+    66,
+    110
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "万田",
+    "三池",
+    "新開"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "阿瀬津",
+   "count": 3,
+   "kv": [
+    22,
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "奈良尾",
+    "小値賀",
+    "浦桑"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "奈良尾",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "奥浦sws",
+    "松島",
+    "阿瀬津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "奥浦sws",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "二本楠",
+    "奈良尾",
+    "福江"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "沈堕",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "saiki"
+   ],
+   "partners": [
+    "三重",
+    "西大分",
+    "軸丸"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "米之津",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "出水",
+    "高尾野"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "木風sws",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "佐世保",
+    "東佐世保",
+    "相浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "野原",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "宇佐",
+    "速見"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "杵築",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "安岐",
+    "速見"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "行橋",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen",
+    "moji"
+   ],
+   "partners": [
+    "泉",
+    "苅田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "夜明",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "chuo",
+    "hita"
+   ],
+   "partners": [
+    "日田",
+    "浮羽"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "土居町",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "higashi_fukuoka"
+   ],
+   "partners": [
+    "住吉",
+    "古門戸"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "天神",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "higashi_fukuoka"
+   ],
+   "partners": [
+    "住吉",
+    "須崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "小国",
+   "count": 2,
+   "kv": [
+    11,
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "女子畑",
+    "杖立"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "石原町",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "iizuka",
+    "kokura"
+   ],
+   "partners": [
+    "西谷",
+    "香春"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "御館",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya"
+   ],
+   "partners": [
+    "諫早"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "藤棚",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya",
+    "nagasaki"
+   ],
+   "partners": [
+    "諫早",
+    "長与"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "他社",
+   "count": 2,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "kagoshima"
+   ],
+   "partners": [
+    "山川",
+    "新鹿児島"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "槻田sws",
+   "count": 2,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "到津",
+    "北九州"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "砂津",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "堺町",
+    "西谷"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "堺町",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "旦過",
+    "砂津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "保田窪",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "御領",
+    "神水"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "原古賀",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "久留米",
+    "京町"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "木屋",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "大渕",
+    "忠見"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "川原sws",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "miyazaki"
+   ],
+   "partners": [
+    "―",
+    "都農"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "南苅田",
+   "count": 2,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "北九州",
+    "苅田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "横代",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "西谷",
+    "門司"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "銭座",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "長与"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "飽ノ浦",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "北長崎",
+    "賑橋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "岡川",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "大分",
+    "西大分"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "臼杵",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita",
+    "saiki"
+   ],
+   "partners": [
+    "小佐井",
+    "津久見"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "浦桑",
+   "count": 2,
+   "kv": [
+    22,
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "小値賀",
+    "阿瀬津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "小値賀",
+   "count": 2,
+   "kv": [
+    22
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "浦桑",
+    "阿瀬津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "中種子",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "新種子",
+    "種子島第一"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "豊玉",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "佐須奈",
+    "厳原"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新壱岐",
+   "count": 2,
+   "kv": [
+    22
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "芦辺",
+    "郷ノ浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "名瀬",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "新住用",
+    "竜郷"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "津久見",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "saiki"
+   ],
+   "partners": [
+    "海崎",
+    "臼杵"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "軸丸",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "saiki"
+   ],
+   "partners": [
+    "沈堕",
+    "竹田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐志",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "川内"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "西佐世保",
+   "count": 2,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "武雄",
+    "相浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "黒崎",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yahata"
+   ],
+   "partners": [
+    "上津役",
+    "藤田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大平sws",
+   "count": 2,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "中九州",
+    "人吉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "苓北",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "一の勢",
+    "志岐"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "五木川",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "―",
+    "八代"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "芦北",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "新水俣",
+    "田浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "築城",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "東豊前"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "宇島",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "東豊前"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "岸井",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "東豊前"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "加来",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "中津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "柳ヶ浦",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "宇佐"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "竹田津",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "高田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大刀洗",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "chuo"
+   ],
+   "partners": [
+    "山家"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "中州",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "higashi_fukuoka"
+   ],
+   "partners": [
+    "住吉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大山",
+   "count": 1,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "日田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "三芳",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "女子畑"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "湯山",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "女子畑"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大岳",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "野上"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "下筌",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "女子畑"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "杖立",
+   "count": 1,
+   "kv": [
+    11
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "小国"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "田迎",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hitoyoshi"
+   ],
+   "partners": [
+    "人吉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "村所",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hitoyoshi"
+   ],
+   "partners": [
+    "木上"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新菅原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hyuga"
+   ],
+   "partners": [
+    "高千穂"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大内原sws",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hyuga"
+   ],
+   "partners": [
+    "新日向"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "三城",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya"
+   ],
+   "partners": [
+    "諫早"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "船越",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya"
+   ],
+   "partners": [
+    "諫早"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "小豆崎",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya"
+   ],
+   "partners": [
+    "諫早"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "矢上",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "isahaya"
+   ],
+   "partners": [
+    "長与"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "元石",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "徳須恵",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大財",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "北佐賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "高木瀬",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "北佐賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "鍋島",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "北佐賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "小関",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "川上川第一"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "東小城",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "北佐賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "広滝第一",
+   "count": 1,
+   "kv": [
+    22
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "川上川第一"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "妙見",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kirishima"
+   ],
+   "partners": [
+    "霧島"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "アイランドシティ",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "koga"
+   ],
+   "partners": [
+    "香椎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "金鶏町",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "到津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "戸畑",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "到津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "三萩野",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "大門"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "日吉線",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "春日町"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "慶徳",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "銀座橋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "御領",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "保田窪"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "江津",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "神水"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "近見",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "川尻"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "健軍",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "広崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "菊池川第三",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "―"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "伊倉",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "植木"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "的石",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "熊本"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "神辺",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "鳥栖"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "広川",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "羽犬塚"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "八女",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "羽犬塚"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大渕",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "木屋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "木室",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "木佐木"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "柳川",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "木佐木"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "南畑",
+   "count": 1,
+   "kv": [
+    22
+   ],
+   "districts": [
+    "minami_fukuoka"
+   ],
+   "partners": [
+    "上白水"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大淀川第二",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "miyazaki"
+   ],
+   "partners": [
+    "柏田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "めかり",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "門司"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "錦町",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "門司"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "貫",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "門司"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "若久",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "雨窪"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "時津",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "北長崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "浦上",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "長与"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "花丘",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "長与"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "宮の下",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "賑橋"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "丸山",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "長崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "香焼",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "江川"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "金池",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "上野"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "寒田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "大分"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "王ノ瀬",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "新大分"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐賀関",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "小佐井"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "田の湯",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "西大分"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "荘園",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "西大分"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "幸野",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "篠原"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "滝上",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "篠原"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大牟田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "三池"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "延命寺",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "三池"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新開",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "港"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "横須",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "三池"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "沖洲",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "荒尾"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "笠之原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "osumi"
+   ],
+   "partners": [
+    "大隅"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "二本楠",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "奥浦sws"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "種子島第一",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "中種子"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新種子",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "中種子"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "厳原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "豊玉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐須奈",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "豊玉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "芦辺",
+   "count": 1,
+   "kv": [
+    22
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "新壱岐"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "竜郷",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "名瀬"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新住用",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "名瀬"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "上岡",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "saiki"
+   ],
+   "partners": [
+    "海崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐伯",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "saiki"
+   ],
+   "partners": [
+    "海崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "川薩sws",
+   "count": 1,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "南九州"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大口",
+   "count": 1,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "人吉"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "向田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "川内"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "田平",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "吉井"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "平戸",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "吉井"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐々",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "相浦"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "早岐",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "江迎",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "吉井"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大島",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "面高"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "波佐見",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "木風",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "山代"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "嬉野",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "武雄"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "東彼杵",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "武雄"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "佐世保",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "木風sws"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "針尾",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "川棚",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "遠賀",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yahata"
+   ],
+   "partners": [
+    "古月"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "古閑",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "八代"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "本渡",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "一の勢"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "牛深",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "一町田"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "日奈久",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "八代"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "田浦",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "芦北"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": []
+  }
+ ],
+ "name_variant": [
+  {
+   "name": "川内",
+   "count": 9,
+   "kv": [
+    66,
+    110,
+    220
+   ],
+   "districts": [
+    "kagoshima",
+    "sendai"
+   ],
+   "partners": [
+    "上川内",
+    "串木野",
+    "佐志",
+    "入来",
+    "南九州",
+    "向田"
+   ],
+   "other_region": "chugoku",
+   "similar_in_kyushu": [
+    "薩摩川内市",
+    "川内電力所",
+    "敷川内町"
+   ]
+  },
+  {
+   "name": "西九州",
+   "count": 9,
+   "kv": [
+    220,
+    500
+   ],
+   "districts": [
+    "karatsu",
+    "takeo"
+   ],
+   "partners": [
+    "―",
+    "北佐賀",
+    "唐津",
+    "東佐世保",
+    "武雄",
+    "脊振"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力西九州"
+   ]
+  },
+  {
+   "name": "唐津",
+   "count": 9,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "―",
+    "元石",
+    "大鶴",
+    "岩屋",
+    "徳須恵",
+    "横竹"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "東唐津二丁目"
+   ]
+  },
+  {
+   "name": "久留米",
+   "count": 7,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "三潴",
+    "上津",
+    "北野",
+    "千本杉",
+    "原古賀",
+    "箱崎"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "久留米;久留米工務所"
+   ]
+  },
+  {
+   "name": "長尾",
+   "count": 6,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "akasaka"
+   ],
+   "partners": [
+    "七隈",
+    "中尾",
+    "大濠",
+    "西福岡",
+    "重留",
+    "野間"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": [
+    "九州電力長尾",
+    "長尾四丁目"
+   ]
+  },
+  {
+   "name": "脊振",
+   "count": 5,
+   "kv": [
+    220,
+    500
+   ],
+   "districts": [
+    "ito",
+    "karatsu",
+    "kurume",
+    "yahata"
+   ],
+   "partners": [
+    "―",
+    "伊都",
+    "北九州",
+    "西九州",
+    "鳥栖"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力脊振"
+   ]
+  },
+  {
+   "name": "日明",
+   "count": 5,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "到津",
+    "大門",
+    "旦過",
+    "港町",
+    "西谷"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "日明系統"
+   ]
+  },
+  {
+   "name": "吉井",
+   "count": 5,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "平戸",
+    "志佐",
+    "江迎",
+    "田平",
+    "相浦"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "吉井町大渡"
+   ]
+  },
+  {
+   "name": "今宿",
+   "count": 4,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "akasaka",
+    "ito"
+   ],
+   "partners": [
+    "伊都",
+    "壱岐",
+    "西福岡",
+    "重留"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "今宿東一丁目"
+   ]
+  },
+  {
+   "name": "面高",
+   "count": 4,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "―",
+    "大島",
+    "東佐世保",
+    "瀬戸"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力送配電面高"
+   ]
+  },
+  {
+   "name": "中央",
+   "count": 3,
+   "kv": [
+    220,
+    500
+   ],
+   "districts": [
+    "buzen",
+    "iizuka",
+    "minami_fukuoka"
+   ],
+   "partners": [
+    "南福岡",
+    "筑豊",
+    "豊前"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "泉中央四丁目",
+    "久米中央三丁目",
+    "九州電力中央"
+   ]
+  },
+  {
+   "name": "高田",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "かなえ台",
+    "宇佐",
+    "竹田津"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "高田町上楠田"
+   ]
+  },
+  {
+   "name": "緑川",
+   "count": 3,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "南熊本",
+    "川尻",
+    "広崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力緑川"
+   ]
+  },
+  {
+   "name": "川尻",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "日吉",
+    "緑川",
+    "近見"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "九州電力川尻"
+   ]
+  },
+  {
+   "name": "京町",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "原古賀",
+    "東町",
+    "鳥栖"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "京町(KyomachiSubstation)",
+    "京町二丁目(untyped)",
+    "九州電力京町(KyomachiSubstation)"
+   ]
+  },
+  {
+   "name": "雨窪",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "苅田",
+    "若久",
+    "門司"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "大字雨窪"
+   ]
+  },
+  {
+   "name": "安岐",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "杵築",
+    "鶴川"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "安岐町馬場"
+   ]
+  },
+  {
+   "name": "箱崎浜",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "higashi_fukuoka"
+   ],
+   "partners": [
+    "多の津",
+    "東浜"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力箱崎浜"
+   ]
+  },
+  {
+   "name": "神野",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "北佐賀",
+    "松原"
+   ],
+   "other_region": "chubu",
+   "similar_in_kyushu": [
+    "神野西一丁目"
+   ]
+  },
+  {
+   "name": "久保",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "koga"
+   ],
+   "partners": [
+    "古賀",
+    "宗像"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "大久保二丁目",
+    "九州電力久保(untyped)",
+    "九州電力久保"
+   ]
+  },
+  {
+   "name": "池田",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "北熊本",
+    "坪井"
+   ],
+   "other_region": "hokkaido",
+   "similar_in_kyushu": [
+    "池田四丁目"
+   ]
+  },
+  {
+   "name": "新町",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "北熊本",
+    "銀座橋"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "清武町新町二丁目"
+   ]
+  },
+  {
+   "name": "上白水",
+   "count": 2,
+   "kv": [
+    22,
+    66
+   ],
+   "districts": [
+    "minami_fukuoka"
+   ],
+   "partners": [
+    "南畑",
+    "南福岡"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "上白水九丁目"
+   ]
+  },
+  {
+   "name": "王子",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "寿町",
+    "西大分"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "九州電力送配電王子"
+   ]
+  },
+  {
+   "name": "塩田",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "武雄",
+    "鹿島"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "東塩田町"
+   ]
+  },
+  {
+   "name": "松橋",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "南熊本",
+    "宇土"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力松橋"
+   ]
+  },
+  {
+   "name": "鶴川",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "安岐"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "国東町鶴川"
+   ]
+  },
+  {
+   "name": "上穂波",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "iizuka"
+   ],
+   "partners": [
+    "吉隈"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力上穂波"
+   ]
+  },
+  {
+   "name": "周船寺",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ito"
+   ],
+   "partners": [
+    "伊都"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "周船寺一丁目"
+   ]
+  },
+  {
+   "name": "前原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ito"
+   ],
+   "partners": [
+    "伊都"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "前原東一丁目"
+   ]
+  },
+  {
+   "name": "横竹",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "鎮西町横竹"
+   ]
+  },
+  {
+   "name": "浜玉",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "浜玉町横田上"
+   ]
+  },
+  {
+   "name": "松原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "神野"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": [
+    "西松原四丁目"
+   ]
+  },
+  {
+   "name": "立花",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "武雄"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": [
+    "立花寺二丁目"
+   ]
+  },
+  {
+   "name": "福間",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "koga"
+   ],
+   "partners": [
+    "古賀"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力福間"
+   ]
+  },
+  {
+   "name": "井堀",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "到津"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "井堀三丁目"
+   ]
+  },
+  {
+   "name": "港町",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kokura"
+   ],
+   "partners": [
+    "日明"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "長府港町"
+   ]
+  },
+  {
+   "name": "飛田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "北熊本"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力飛田"
+   ]
+  },
+  {
+   "name": "一の宮",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "熊本"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力一の宮"
+   ]
+  },
+  {
+   "name": "千本杉",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "久留米"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力千本杉"
+   ]
+  },
+  {
+   "name": "村田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "鳥栖"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "村田町五反三歩"
+   ]
+  },
+  {
+   "name": "瀬高",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kurume"
+   ],
+   "partners": [
+    "羽犬塚"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "瀬高町山門",
+    "瀬高町坂田"
+   ]
+  },
+  {
+   "name": "宇美",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "minami_fukuoka"
+   ],
+   "partners": [
+    "南福岡"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "宇美六丁目"
+   ]
+  },
+  {
+   "name": "平田台",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "minami_fukuoka"
+   ],
+   "partners": [
+    "南福岡"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "平田台一丁目"
+   ]
+  },
+  {
+   "name": "原町",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "門司"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "笠之原町"
+   ]
+  },
+  {
+   "name": "京泊",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "北長崎"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "京泊一丁目"
+   ]
+  },
+  {
+   "name": "高野",
+   "count": 1,
+   "kv": [
+    220
+   ],
+   "districts": [
+    "osumi"
+   ],
+   "partners": [
+    "大隅"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "高野系統"
+   ]
+  },
+  {
+   "name": "志佐",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "吉井"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力(株)志佐"
+   ]
+  },
+  {
+   "name": "大久保",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "相浦"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": [
+    "大久保二丁目"
+   ]
+  },
+  {
+   "name": "大野",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "相浦"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": [
+    "大野町小倉木"
+   ]
+  },
+  {
+   "name": "日宇",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": null,
+   "similar_in_kyushu": [
+    "九州電力日宇"
+   ]
+  }
+ ],
+ "other_region": [
+  {
+   "name": "速見",
+   "count": 6,
+   "kv": [
+    66,
+    220
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "別府",
+    "日出",
+    "杵築",
+    "豊前",
+    "野原"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "塚原",
+   "count": 4,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "hyuga"
+   ],
+   "partners": [
+    "上椎葉",
+    "新日向",
+    "日向",
+    "高千穂"
+   ],
+   "other_region": "chubu",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "別府",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen",
+    "oita"
+   ],
+   "partners": [
+    "石垣",
+    "西大分",
+    "速見"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "坪井",
+   "count": 3,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "大江",
+    "池田",
+    "花畑"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "泉",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "buzen"
+   ],
+   "partners": [
+    "東豊前",
+    "行橋"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "野上",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "hita"
+   ],
+   "partners": [
+    "大岳",
+    "女子畑"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "新宮",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "koga"
+   ],
+   "partners": [
+    "古賀",
+    "塩屋"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大津",
+   "count": 2,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "弓削",
+    "熊本"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "神田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "岩屋",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "karatsu"
+   ],
+   "partners": [
+    "唐津"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "末吉",
+   "count": 1,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "kirishima"
+   ],
+   "partners": [
+    "都城"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "若葉",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kirishima"
+   ],
+   "partners": [
+    "鷹尾"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "塩屋",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "koga"
+   ],
+   "partners": [
+    "新宮"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "花畑",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "kumamoto"
+   ],
+   "partners": [
+    "坪井"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "旭",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "miyazaki"
+   ],
+   "partners": [
+    "恒久"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "大里",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "moji"
+   ],
+   "partners": [
+    "門司"
+   ],
+   "other_region": "okinawa",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "富士見",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "nagasaki"
+   ],
+   "partners": [
+    "北長崎"
+   ],
+   "other_region": "chugoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "末広",
+   "count": 1,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "大分"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "中島",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "東大分"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "柿原",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "篠原"
+   ],
+   "other_region": "chugoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "石垣",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "oita"
+   ],
+   "partners": [
+    "別府"
+   ],
+   "other_region": "chubu",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "浜田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "omuta"
+   ],
+   "partners": [
+    "三池"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "福江",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "ritou"
+   ],
+   "partners": [
+    "奥浦sws"
+   ],
+   "other_region": "chubu",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "上川内",
+   "count": 1,
+   "kv": [
+    110
+   ],
+   "districts": [
+    "sendai"
+   ],
+   "partners": [
+    "川内"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "熊野",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "相浦"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "有田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "東佐世保"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "鹿島",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "takeo"
+   ],
+   "partners": [
+    "塩田"
+   ],
+   "other_region": "tohoku",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "藤田",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yahata"
+   ],
+   "partners": [
+    "黒崎"
+   ],
+   "other_region": "kansai",
+   "similar_in_kyushu": []
+  },
+  {
+   "name": "松崎",
+   "count": 1,
+   "kv": [
+    66
+   ],
+   "districts": [
+    "yatsushiro"
+   ],
+   "partners": [
+    "八代"
+   ],
+   "other_region": "tokyo",
+   "similar_in_kyushu": []
+  }
+ ]
+}

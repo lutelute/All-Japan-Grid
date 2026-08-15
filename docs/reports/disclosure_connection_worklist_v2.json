@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1717,
-  "dryrun_off_main_after": 1708,
-  "n_new": 153,
+  "dryrun_off_main_before": 1690,
+  "dryrun_off_main_after": 1689,
+  "n_new": 157,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 77,
+    "disclosure_map": 81,
     "same_site_identity": 71
   },
   "region_fixes": [
@@ -691,10 +691,7 @@
       "evidence": "地理(松前半島=北海道)。福山=松前の旧称(福山城)。青森箱の鏡像のbbox混入"
     }
   ],
-  "joined_subs": [
-    "女子畑変電所",
-    "上郷変電所"
-  ],
+  "joined_subs": [],
   "review_300_800m": [
     {
       "iso": "小田原市変電所",
@@ -3728,6 +3725,78 @@
       "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
       "same_site": true,
       "dist_m": 47
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田市変電所_2",
+      "to_sub": "女子畑変電所",
+      "from_id": "kyushu_sub_492",
+      "to_id": "suppl_kyushu_女子畑変電所",
+      "from_pt": [
+        33.29435,
+        130.94539
+      ],
+      "to_pt": [
+        33.29416,
+        130.97424
+      ],
+      "kv": 66.0,
+      "line": "下筌支線",
+      "evidence": "系統図判読: 九州地区図(map-kyushu 中・日田市110=下筌の実態)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西大分変電所 66kV",
+      "to_sub": "大南変電所",
+      "from_id": "kyushu_sub_3@66",
+      "to_id": "suppl_kyushu_大南変電所",
+      "from_pt": [
+        33.18835,
+        131.51139
+      ],
+      "to_pt": [
+        33.14598,
+        131.67477
+      ],
+      "kv": 66.0,
+      "line": "大南分岐線（2回線）",
+      "evidence": "系統図判読: 九州 大分地区一覧表(td_oita#19): 西大分→大南・実名両端。大分図#19の描線一致（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "大南変電所",
+      "to_sub": "犬飼変電所",
+      "from_id": "suppl_kyushu_大南変電所",
+      "to_id": "kyushu_sub_305",
+      "from_pt": [
+        33.14598,
+        131.67477
+      ],
+      "to_pt": [
+        33.05038,
+        131.64273
+      ],
+      "kv": 66.0,
+      "line": "大南分岐線の継続（犬飼供給・2回線）",
+      "evidence": "系統図判読: 大分図: 大南から南下する66kV描線が佐伯図上端の無名開閉所経由で犬飼(変電所No.5)に到達。佐伯表No.5犬飼の上位系=15地区変電所No.5西大分と整合（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "天瀬町赤岩変電所",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "kyushu_sub_319",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.25876,
+        131.03349
+      ],
+      "kv": 66.0,
+      "line": "湯山支線（2回線）",
+      "evidence": "系統図判読: 日田表#11: 女子畑→湯山・実名両端。同定根拠: モデル名「天瀬町赤岩」はOSM無名way/509498536の住所合成名で、同wayは湯山発電所(way/509498537)に隣接同敷地・表No.10湯山66/6kVと電圧一致・日田図の湯山位置(女子畑SE6.8km)一致（31地区プール 2026-08-16）"
     }
   ]
 }

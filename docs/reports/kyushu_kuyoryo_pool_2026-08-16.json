@@ -1,0 +1,7485 @@
+{
+ "source": "九州電力送配電 予想潮流・空容量一覧表(2026-07-30版・31地区)",
+ "note": "接続事実のみ。容量・潮流の生値は data/external/ に保持(転載禁止)",
+ "rows": [
+  {
+   "district": "akasaka",
+   "no": 1,
+   "line": "西福岡赤坂線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西福岡",
+   "to": "赤坂"
+  },
+  {
+   "district": "akasaka",
+   "no": 2,
+   "line": "赤坂須崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "赤坂",
+   "to": "須崎"
+  },
+  {
+   "district": "akasaka",
+   "no": 3,
+   "line": "赤坂渡辺通線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "赤坂",
+   "to": "渡辺通"
+  },
+  {
+   "district": "akasaka",
+   "no": 4,
+   "line": "赤坂荒戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "赤坂",
+   "to": "荒戸"
+  },
+  {
+   "district": "akasaka",
+   "no": 5,
+   "line": "赤坂百道線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "赤坂",
+   "to": "百道"
+  },
+  {
+   "district": "akasaka",
+   "no": 6,
+   "line": "大濠西新線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大濠",
+   "to": "西新"
+  },
+  {
+   "district": "akasaka",
+   "no": 7,
+   "line": "西新百道線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "百道",
+   "to": "西新"
+  },
+  {
+   "district": "akasaka",
+   "no": 8,
+   "line": "百道姪浜線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "百道",
+   "to": "姪浜"
+  },
+  {
+   "district": "akasaka",
+   "no": 9,
+   "line": "福陵分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "百道",
+   "to": "福陵"
+  },
+  {
+   "district": "akasaka",
+   "no": 10,
+   "line": "七隈福陵線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "七隈",
+   "to": "福陵"
+  },
+  {
+   "district": "akasaka",
+   "no": 11,
+   "line": "長尾七隈線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長尾",
+   "to": "七隈"
+  },
+  {
+   "district": "akasaka",
+   "no": 12,
+   "line": "長尾大濠線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長尾",
+   "to": "大濠"
+  },
+  {
+   "district": "akasaka",
+   "no": 13,
+   "line": "長尾野間線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長尾",
+   "to": "野間"
+  },
+  {
+   "district": "akasaka",
+   "no": 14,
+   "line": "中尾分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長尾",
+   "to": "中尾"
+  },
+  {
+   "district": "akasaka",
+   "no": 15,
+   "line": "長尾重留線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長尾",
+   "to": "重留"
+  },
+  {
+   "district": "akasaka",
+   "no": 16,
+   "line": "西福岡長尾線",
+   "kv": 66,
+   "circuits": 4,
+   "frm": "西福岡",
+   "to": "長尾"
+  },
+  {
+   "district": "akasaka",
+   "no": 17,
+   "line": "野間渡辺通線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "渡辺通",
+   "to": "野間"
+  },
+  {
+   "district": "akasaka",
+   "no": 18,
+   "line": "那の川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "渡辺通",
+   "to": "那の川"
+  },
+  {
+   "district": "akasaka",
+   "no": 19,
+   "line": "西福岡今宿線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "今宿",
+   "to": "西福岡"
+  },
+  {
+   "district": "akasaka",
+   "no": 20,
+   "line": "壱岐分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "今宿",
+   "to": "壱岐"
+  },
+  {
+   "district": "akasaka",
+   "no": 21,
+   "line": "重留分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "今宿",
+   "to": "重留"
+  },
+  {
+   "district": "buzen",
+   "no": 1,
+   "line": "豊前西幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "豊前",
+   "to": "中央"
+  },
+  {
+   "district": "buzen",
+   "no": 2,
+   "line": "東九州幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "東九州",
+   "to": "豊前"
+  },
+  {
+   "district": "buzen",
+   "no": 3,
+   "line": "東豊前線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "豊前"
+  },
+  {
+   "district": "buzen",
+   "no": 4,
+   "line": "大分北線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "豊前",
+   "to": "速見"
+  },
+  {
+   "district": "buzen",
+   "no": 5,
+   "line": "速見分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "豊前",
+   "to": "速見"
+  },
+  {
+   "district": "buzen",
+   "no": 6,
+   "line": "東豊前泉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "泉"
+  },
+  {
+   "district": "buzen",
+   "no": 7,
+   "line": "築城分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "築城"
+  },
+  {
+   "district": "buzen",
+   "no": 8,
+   "line": "東豊前宇島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "宇島"
+  },
+  {
+   "district": "buzen",
+   "no": 9,
+   "line": "東豊前中津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "中津"
+  },
+  {
+   "district": "buzen",
+   "no": 10,
+   "line": "岸井分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "岸井"
+  },
+  {
+   "district": "buzen",
+   "no": 11,
+   "line": "東豊前中津新線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東豊前",
+   "to": "中津"
+  },
+  {
+   "district": "buzen",
+   "no": 12,
+   "line": "中津如水線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "中津",
+   "to": "如水"
+  },
+  {
+   "district": "buzen",
+   "no": 13,
+   "line": "宇佐中津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "中津",
+   "to": "宇佐"
+  },
+  {
+   "district": "buzen",
+   "no": 14,
+   "line": "加来分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "中津",
+   "to": "加来"
+  },
+  {
+   "district": "buzen",
+   "no": 15,
+   "line": "野原宇佐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "宇佐",
+   "to": "野原"
+  },
+  {
+   "district": "buzen",
+   "no": 16,
+   "line": "柳ヶ浦分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "宇佐",
+   "to": "柳ヶ浦"
+  },
+  {
+   "district": "buzen",
+   "no": 17,
+   "line": "宇佐高田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "宇佐",
+   "to": "高田"
+  },
+  {
+   "district": "buzen",
+   "no": 18,
+   "line": "高田竹田津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "高田",
+   "to": "竹田津"
+  },
+  {
+   "district": "buzen",
+   "no": 19,
+   "line": "かなえ台分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "高田",
+   "to": "かなえ台"
+  },
+  {
+   "district": "buzen",
+   "no": 20,
+   "line": "宇佐安心院線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "宇佐",
+   "to": "安心院"
+  },
+  {
+   "district": "buzen",
+   "no": 21,
+   "line": "速見野原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "速見",
+   "to": "野原"
+  },
+  {
+   "district": "buzen",
+   "no": 22,
+   "line": "速見杵築線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "速見",
+   "to": "杵築"
+  },
+  {
+   "district": "buzen",
+   "no": 23,
+   "line": "杵築安岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "杵築",
+   "to": "安岐"
+  },
+  {
+   "district": "buzen",
+   "no": 24,
+   "line": "安岐鶴川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "安岐",
+   "to": "鶴川"
+  },
+  {
+   "district": "buzen",
+   "no": 25,
+   "line": "速見日出線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "速見",
+   "to": "日出"
+  },
+  {
+   "district": "buzen",
+   "no": 26,
+   "line": "別府分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "速見",
+   "to": "別府"
+  },
+  {
+   "district": "buzen",
+   "no": 27,
+   "line": "行橋泉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "行橋",
+   "to": "泉"
+  },
+  {
+   "district": "chuo",
+   "no": 6,
+   "line": "山家浮羽線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "山家",
+   "to": "浮羽"
+  },
+  {
+   "district": "chuo",
+   "no": 7,
+   "line": "三輪分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "山家",
+   "to": "三輪"
+  },
+  {
+   "district": "chuo",
+   "no": 8,
+   "line": "山家甘木線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "山家",
+   "to": "甘木"
+  },
+  {
+   "district": "chuo",
+   "no": 9,
+   "line": "大刀洗分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "山家",
+   "to": "大刀洗"
+  },
+  {
+   "district": "chuo",
+   "no": 10,
+   "line": "甘木田主丸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "甘木",
+   "to": "田主丸"
+  },
+  {
+   "district": "chuo",
+   "no": 11,
+   "line": "二日市分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "山家",
+   "to": "二日市"
+  },
+  {
+   "district": "chuo",
+   "no": 12,
+   "line": "夜明浮羽線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "浮羽",
+   "to": "夜明"
+  },
+  {
+   "district": "chuo",
+   "no": 18,
+   "line": "甘木１号線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 1,
+   "line": "東福岡住吉線",
+   "kv": 220,
+   "circuits": 3,
+   "frm": "東福岡",
+   "to": "住吉"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 2,
+   "line": "篠栗分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東福岡",
+   "to": "篠栗"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 3,
+   "line": "東福岡長者原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東福岡",
+   "to": "長者原"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 4,
+   "line": "東福岡亀山線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東福岡",
+   "to": "亀山"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 5,
+   "line": "東福岡多の津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東福岡",
+   "to": "多の津"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 6,
+   "line": "多の津箱崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "多の津",
+   "to": "箱崎"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 7,
+   "line": "多の津箱崎浜線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "多の津",
+   "to": "箱崎浜"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 8,
+   "line": "東浜古門戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古門戸",
+   "to": "東浜"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 9,
+   "line": "千代分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "住吉",
+   "to": "千代"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 10,
+   "line": "住吉古門戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "住吉",
+   "to": "古門戸"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 11,
+   "line": "古門戸土居町線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "古門戸",
+   "to": "土居町"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 12,
+   "line": "住吉土居町線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "住吉",
+   "to": "土居町"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 13,
+   "line": "住吉中洲線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "住吉",
+   "to": "中州"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 14,
+   "line": "箱崎浜東浜線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "東浜",
+   "to": "箱崎浜"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 15,
+   "line": "多の津東浜線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "多の津",
+   "to": "東浜"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 16,
+   "line": "簑島堅粕線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "簑島",
+   "to": "堅粕"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 17,
+   "line": "簑島住吉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "住吉",
+   "to": "簑島"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 18,
+   "line": "簑島竹下線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "簑島",
+   "to": "竹下"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 19,
+   "line": "野間簑島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "野間",
+   "to": "簑島"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 20,
+   "line": "住吉須崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "住吉",
+   "to": "須崎"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 21,
+   "line": "天神須崎線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "天神",
+   "to": "須崎"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 22,
+   "line": "住吉天神線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "住吉",
+   "to": "天神"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 23,
+   "line": "堅粕住吉線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "住吉",
+   "to": "堅粕"
+  },
+  {
+   "district": "higashi_fukuoka",
+   "no": 24,
+   "line": "堅粕竹下線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "竹下",
+   "to": "堅粕"
+  },
+  {
+   "district": "hita",
+   "no": 1,
+   "line": "熊本日田線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "日田"
+  },
+  {
+   "district": "hita",
+   "no": 2,
+   "line": "大山日田線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "日田",
+   "to": "大山"
+  },
+  {
+   "district": "hita",
+   "no": 3,
+   "line": "日田夜明線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日田",
+   "to": "夜明"
+  },
+  {
+   "district": "hita",
+   "no": 4,
+   "line": "日田城町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日田",
+   "to": "城町"
+  },
+  {
+   "district": "hita",
+   "no": 5,
+   "line": "玉川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日田",
+   "to": "玉川"
+  },
+  {
+   "district": "hita",
+   "no": 6,
+   "line": "女子畑城町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "女子畑",
+   "to": "城町"
+  },
+  {
+   "district": "hita",
+   "no": 7,
+   "line": "女子畑三芳線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "女子畑",
+   "to": "三芳"
+  },
+  {
+   "district": "hita",
+   "no": 8,
+   "line": "女子畑溝部線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "女子畑",
+   "to": "溝部"
+  },
+  {
+   "district": "hita",
+   "no": 9,
+   "line": "日田女子畑線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日田",
+   "to": "女子畑"
+  },
+  {
+   "district": "hita",
+   "no": 10,
+   "line": "野上女子畑線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "女子畑",
+   "to": "野上"
+  },
+  {
+   "district": "hita",
+   "no": 11,
+   "line": "湯山支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "女子畑",
+   "to": "湯山"
+  },
+  {
+   "district": "hita",
+   "no": 12,
+   "line": "森分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "女子畑",
+   "to": "森"
+  },
+  {
+   "district": "hita",
+   "no": 13,
+   "line": "大岳支線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "野上",
+   "to": "大岳"
+  },
+  {
+   "district": "hita",
+   "no": 14,
+   "line": "小国線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "女子畑",
+   "to": "小国"
+  },
+  {
+   "district": "hita",
+   "no": 15,
+   "line": "下筌支線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "女子畑",
+   "to": "下筌"
+  },
+  {
+   "district": "hita",
+   "no": 16,
+   "line": "杖立線",
+   "kv": 11,
+   "circuits": 1,
+   "frm": "小国",
+   "to": "杖立"
+  },
+  {
+   "district": "hitoyoshi",
+   "no": 1,
+   "line": "人吉木上線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "人吉",
+   "to": "木上"
+  },
+  {
+   "district": "hitoyoshi",
+   "no": 3,
+   "line": "多良木分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "人吉",
+   "to": "多良木"
+  },
+  {
+   "district": "hitoyoshi",
+   "no": 4,
+   "line": "田迎支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "人吉",
+   "to": "田迎"
+  },
+  {
+   "district": "hitoyoshi",
+   "no": 6,
+   "line": "村所木上線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "木上",
+   "to": "村所"
+  },
+  {
+   "district": "hyuga",
+   "no": 1,
+   "line": "日向幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "東九州",
+   "to": "ひむか"
+  },
+  {
+   "district": "hyuga",
+   "no": 2,
+   "line": "新日向分岐線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "新日向",
+   "to": "一ツ瀬"
+  },
+  {
+   "district": "hyuga",
+   "no": 3,
+   "line": "上椎葉新日向線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "上椎葉",
+   "to": "新日向"
+  },
+  {
+   "district": "hyuga",
+   "no": 4,
+   "line": "塚原高千穂線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "塚原",
+   "to": "高千穂"
+  },
+  {
+   "district": "hyuga",
+   "no": 5,
+   "line": "塚原日向線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "日向",
+   "to": "塚原"
+  },
+  {
+   "district": "hyuga",
+   "no": 6,
+   "line": "新日向西分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "塚原"
+  },
+  {
+   "district": "hyuga",
+   "no": 7,
+   "line": "塚原上椎葉線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "上椎葉",
+   "to": "塚原"
+  },
+  {
+   "district": "hyuga",
+   "no": 8,
+   "line": "岩屋戸支線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 9,
+   "line": "送電線",
+   "kv": 110,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 10,
+   "line": "送電線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 11,
+   "line": "西郷支線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 12,
+   "line": "恒富分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 13,
+   "line": "新日向延岡線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "延岡"
+  },
+  {
+   "district": "hyuga",
+   "no": 14,
+   "line": "新日向恒富線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "恒富"
+  },
+  {
+   "district": "hyuga",
+   "no": 15,
+   "line": "新日向日向線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "日向"
+  },
+  {
+   "district": "hyuga",
+   "no": 16,
+   "line": "日向富高線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日向",
+   "to": "富高"
+  },
+  {
+   "district": "hyuga",
+   "no": 17,
+   "line": "新日向財光寺線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "財光寺"
+  },
+  {
+   "district": "hyuga",
+   "no": 18,
+   "line": "都農分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新日向",
+   "to": "都農"
+  },
+  {
+   "district": "hyuga",
+   "no": 19,
+   "line": "菅原高千穂線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "高千穂",
+   "to": "新菅原"
+  },
+  {
+   "district": "hyuga",
+   "no": 20,
+   "line": "西郷大内原線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 21,
+   "line": "大内原新日向線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "新日向",
+   "to": "大内原sws"
+  },
+  {
+   "district": "hyuga",
+   "no": 22,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 23,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 24,
+   "line": "長井",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 25,
+   "line": "北浦",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "hyuga",
+   "no": 26,
+   "line": "北方",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "iizuka",
+   "no": 1,
+   "line": "筑豊線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "中央",
+   "to": "筑豊"
+  },
+  {
+   "district": "iizuka",
+   "no": 2,
+   "line": "筑豊川崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "筑豊",
+   "to": "川崎"
+  },
+  {
+   "district": "iizuka",
+   "no": 3,
+   "line": "川崎山田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川崎",
+   "to": "山田"
+  },
+  {
+   "district": "iizuka",
+   "no": 4,
+   "line": "川崎添田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川崎",
+   "to": "添田"
+  },
+  {
+   "district": "iizuka",
+   "no": 5,
+   "line": "筑豊田川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "筑豊",
+   "to": "田川"
+  },
+  {
+   "district": "iizuka",
+   "no": 6,
+   "line": "田川香春線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "田川",
+   "to": "香春"
+  },
+  {
+   "district": "iizuka",
+   "no": 7,
+   "line": "白鳥分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "田川",
+   "to": "白鳥"
+  },
+  {
+   "district": "iizuka",
+   "no": 8,
+   "line": "田川糸田線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "田川",
+   "to": "糸田"
+  },
+  {
+   "district": "iizuka",
+   "no": 9,
+   "line": "筑豊飯塚線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "筑豊",
+   "to": "飯塚"
+  },
+  {
+   "district": "iizuka",
+   "no": 10,
+   "line": "飯塚嘉穂線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "飯塚",
+   "to": "嘉穂"
+  },
+  {
+   "district": "iizuka",
+   "no": 11,
+   "line": "嘉穂鯰田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "嘉穂",
+   "to": "鯰田"
+  },
+  {
+   "district": "iizuka",
+   "no": 12,
+   "line": "鯰田有木線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鯰田",
+   "to": "有木"
+  },
+  {
+   "district": "iizuka",
+   "no": 13,
+   "line": "宮田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鯰田",
+   "to": "宮田"
+  },
+  {
+   "district": "iizuka",
+   "no": 14,
+   "line": "鯰田糸田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鯰田",
+   "to": "糸田"
+  },
+  {
+   "district": "iizuka",
+   "no": 15,
+   "line": "鯰田二瀬線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鯰田",
+   "to": "二瀬"
+  },
+  {
+   "district": "iizuka",
+   "no": 16,
+   "line": "筑豊吉隈線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "筑豊",
+   "to": "吉隈"
+  },
+  {
+   "district": "iizuka",
+   "no": 17,
+   "line": "吉隈嘉穂線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉隈",
+   "to": "嘉穂"
+  },
+  {
+   "district": "iizuka",
+   "no": 18,
+   "line": "平恒分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉隈",
+   "to": "平恒"
+  },
+  {
+   "district": "iizuka",
+   "no": 19,
+   "line": "吉隈上穂波線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉隈",
+   "to": "上穂波"
+  },
+  {
+   "district": "iizuka",
+   "no": 20,
+   "line": "石原町香春線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "香春",
+   "to": "石原町"
+  },
+  {
+   "district": "iizuka",
+   "no": 21,
+   "line": "川崎分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "香春",
+   "to": "川崎"
+  },
+  {
+   "district": "iizuka",
+   "no": 22,
+   "line": "鯰田１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "iizuka",
+   "no": 23,
+   "line": "鯰田２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "iizuka",
+   "no": 24,
+   "line": "星ヶ丘",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "iizuka",
+   "no": 25,
+   "line": "三井",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 1,
+   "line": "諫早分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "諫早"
+  },
+  {
+   "district": "isahaya",
+   "no": 2,
+   "line": "諫早大村線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "大村"
+  },
+  {
+   "district": "isahaya",
+   "no": 3,
+   "line": "三城分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "三城"
+  },
+  {
+   "district": "isahaya",
+   "no": 4,
+   "line": "御館分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "御館"
+  },
+  {
+   "district": "isahaya",
+   "no": 5,
+   "line": "御館連絡線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "諫早",
+   "to": "御館"
+  },
+  {
+   "district": "isahaya",
+   "no": 6,
+   "line": "船越分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "船越"
+  },
+  {
+   "district": "isahaya",
+   "no": 7,
+   "line": "小豆崎分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "小豆崎"
+  },
+  {
+   "district": "isahaya",
+   "no": 8,
+   "line": "諫早愛野乙線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "愛野"
+  },
+  {
+   "district": "isahaya",
+   "no": 9,
+   "line": "諫早愛野甲線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "愛野"
+  },
+  {
+   "district": "isahaya",
+   "no": 10,
+   "line": "愛野島原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "愛野",
+   "to": "島原"
+  },
+  {
+   "district": "isahaya",
+   "no": 11,
+   "line": "大三東分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "愛野",
+   "to": "大三東"
+  },
+  {
+   "district": "isahaya",
+   "no": 12,
+   "line": "愛野橘線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "愛野",
+   "to": "橘"
+  },
+  {
+   "district": "isahaya",
+   "no": 13,
+   "line": "橘有家線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "橘",
+   "to": "有家"
+  },
+  {
+   "district": "isahaya",
+   "no": 14,
+   "line": "島原有家線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "有家",
+   "to": "島原"
+  },
+  {
+   "district": "isahaya",
+   "no": 15,
+   "line": "矢上分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "矢上"
+  },
+  {
+   "district": "isahaya",
+   "no": 16,
+   "line": "諫早藤棚線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "諫早",
+   "to": "藤棚"
+  },
+  {
+   "district": "isahaya",
+   "no": 17,
+   "line": "東部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 18,
+   "line": "北部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 19,
+   "line": "中部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 20,
+   "line": "諫早Ａ",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 21,
+   "line": "島原東部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 22,
+   "line": "島原南部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 23,
+   "line": "島原西部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 24,
+   "line": "太良幹",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 25,
+   "line": "島原北部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 26,
+   "line": "諫早南",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 27,
+   "line": "諫早北",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "isahaya",
+   "no": 28,
+   "line": "北小豆",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ito",
+   "no": 2,
+   "line": "脊振伊都線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "脊振",
+   "to": "伊都"
+  },
+  {
+   "district": "ito",
+   "no": 3,
+   "line": "伊都今宿線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "伊都",
+   "to": "今宿"
+  },
+  {
+   "district": "ito",
+   "no": 4,
+   "line": "伊都周船寺線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "伊都",
+   "to": "周船寺"
+  },
+  {
+   "district": "ito",
+   "no": 5,
+   "line": "前原分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "伊都",
+   "to": "前原"
+  },
+  {
+   "district": "kagoshima",
+   "no": 1,
+   "line": "鹿児島南線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "鹿児島"
+  },
+  {
+   "district": "kagoshima",
+   "no": 2,
+   "line": "新鹿児島線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "他社",
+   "to": "新鹿児島"
+  },
+  {
+   "district": "kagoshima",
+   "no": 3,
+   "line": "鹿児島帖佐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "帖佐"
+  },
+  {
+   "district": "kagoshima",
+   "no": 4,
+   "line": "鹿児島滝之神線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "滝之神"
+  },
+  {
+   "district": "kagoshima",
+   "no": 5,
+   "line": "鹿児島清滝線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "清滝"
+  },
+  {
+   "district": "kagoshima",
+   "no": 6,
+   "line": "滝之神名山線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "滝之神",
+   "to": "名山"
+  },
+  {
+   "district": "kagoshima",
+   "no": 7,
+   "line": "名山天文館線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "名山",
+   "to": "天文館"
+  },
+  {
+   "district": "kagoshima",
+   "no": 8,
+   "line": "清滝天文館線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "清滝",
+   "to": "天文館"
+  },
+  {
+   "district": "kagoshima",
+   "no": 9,
+   "line": "清滝鴨池線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鴨池",
+   "to": "清滝"
+  },
+  {
+   "district": "kagoshima",
+   "no": 10,
+   "line": "紫原鴨池線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "紫原",
+   "to": "鴨池"
+  },
+  {
+   "district": "kagoshima",
+   "no": 11,
+   "line": "鹿児島田上線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "田上"
+  },
+  {
+   "district": "kagoshima",
+   "no": 12,
+   "line": "原良分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "原良"
+  },
+  {
+   "district": "kagoshima",
+   "no": 13,
+   "line": "田上紫原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "紫原",
+   "to": "田上"
+  },
+  {
+   "district": "kagoshima",
+   "no": 14,
+   "line": "新鹿児島紫原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "紫原"
+  },
+  {
+   "district": "kagoshima",
+   "no": 15,
+   "line": "鹿児島新鹿児島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "新鹿児島"
+  },
+  {
+   "district": "kagoshima",
+   "no": 16,
+   "line": "宮川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "宮川"
+  },
+  {
+   "district": "kagoshima",
+   "no": 17,
+   "line": "大田支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "大田"
+  },
+  {
+   "district": "kagoshima",
+   "no": 18,
+   "line": "新鹿児島永田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "永田"
+  },
+  {
+   "district": "kagoshima",
+   "no": 19,
+   "line": "新鹿児島谷山線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "谷山"
+  },
+  {
+   "district": "kagoshima",
+   "no": 20,
+   "line": "五位野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "五位野"
+  },
+  {
+   "district": "kagoshima",
+   "no": 21,
+   "line": "新鹿児島青戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "青戸"
+  },
+  {
+   "district": "kagoshima",
+   "no": 22,
+   "line": "大田北支線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川内",
+   "to": "大田"
+  },
+  {
+   "district": "kagoshima",
+   "no": 23,
+   "line": "伊集院分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿児島",
+   "to": "伊集院"
+  },
+  {
+   "district": "kagoshima",
+   "no": 24,
+   "line": "大田伊作線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大田",
+   "to": "伊作"
+  },
+  {
+   "district": "kagoshima",
+   "no": 25,
+   "line": "新鹿児島枕崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "枕崎"
+  },
+  {
+   "district": "kagoshima",
+   "no": 26,
+   "line": "万之瀬支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "万之瀬"
+  },
+  {
+   "district": "kagoshima",
+   "no": 27,
+   "line": "加世田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "加世田"
+  },
+  {
+   "district": "kagoshima",
+   "no": 28,
+   "line": "新鹿児島青戸西線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新鹿児島",
+   "to": "青戸"
+  },
+  {
+   "district": "kagoshima",
+   "no": 29,
+   "line": "枕崎青戸連系線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "新鹿児島",
+   "to": "青戸"
+  },
+  {
+   "district": "kagoshima",
+   "no": 30,
+   "line": "青戸山川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "青戸",
+   "to": "山川"
+  },
+  {
+   "district": "kagoshima",
+   "no": 31,
+   "line": "指宿分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "青戸",
+   "to": "指宿"
+  },
+  {
+   "district": "kagoshima",
+   "no": 32,
+   "line": "山川Ｔ線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "山川",
+   "to": "他社"
+  },
+  {
+   "district": "kagoshima",
+   "no": 33,
+   "line": "郡分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "青戸",
+   "to": "郡"
+  },
+  {
+   "district": "kagoshima",
+   "no": 34,
+   "line": "笠浦線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 35,
+   "line": "別府線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 36,
+   "line": "加治佐線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 37,
+   "line": "塩屋線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 38,
+   "line": "大野岳",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 39,
+   "line": "谷山４番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 40,
+   "line": "蒲生線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 41,
+   "line": "頴娃線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 42,
+   "line": "伊集院１番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kagoshima",
+   "no": 43,
+   "line": "勝目線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 1,
+   "line": "玄海幹線１号線",
+   "kv": 500,
+   "circuits": 1,
+   "frm": "―",
+   "to": "西九州"
+  },
+  {
+   "district": "karatsu",
+   "no": 2,
+   "line": "玄海幹線２号線北線",
+   "kv": 500,
+   "circuits": 1,
+   "frm": "―",
+   "to": "脊振"
+  },
+  {
+   "district": "karatsu",
+   "no": 3,
+   "line": "玄海幹線２号線南線",
+   "kv": 500,
+   "circuits": 1,
+   "frm": "西九州",
+   "to": "脊振"
+  },
+  {
+   "district": "karatsu",
+   "no": 4,
+   "line": "唐津西九州線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西九州",
+   "to": "唐津"
+  },
+  {
+   "district": "karatsu",
+   "no": 5,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "―",
+   "to": "西九州"
+  },
+  {
+   "district": "karatsu",
+   "no": 6,
+   "line": "西九州北佐賀線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西九州",
+   "to": "北佐賀"
+  },
+  {
+   "district": "karatsu",
+   "no": 7,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西九州",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 8,
+   "line": "佐賀西線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "佐賀"
+  },
+  {
+   "district": "karatsu",
+   "no": 9,
+   "line": "大町分岐新線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "大町"
+  },
+  {
+   "district": "karatsu",
+   "no": 10,
+   "line": "牛津分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "牛津"
+  },
+  {
+   "district": "karatsu",
+   "no": 11,
+   "line": "唐津横竹線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "横竹"
+  },
+  {
+   "district": "karatsu",
+   "no": 12,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "唐津",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 13,
+   "line": "大鶴第二分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "大鶴"
+  },
+  {
+   "district": "karatsu",
+   "no": 14,
+   "line": "大鶴分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "伊万里",
+   "to": "大鶴"
+  },
+  {
+   "district": "karatsu",
+   "no": 15,
+   "line": "唐津神田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "神田"
+  },
+  {
+   "district": "karatsu",
+   "no": 16,
+   "line": "唐津元石線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "元石"
+  },
+  {
+   "district": "karatsu",
+   "no": 17,
+   "line": "浜玉分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "浜玉"
+  },
+  {
+   "district": "karatsu",
+   "no": 18,
+   "line": "徳須恵分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "徳須恵"
+  },
+  {
+   "district": "karatsu",
+   "no": 19,
+   "line": "岩屋分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "唐津",
+   "to": "岩屋"
+  },
+  {
+   "district": "karatsu",
+   "no": 20,
+   "line": "北佐賀佐賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "佐賀"
+  },
+  {
+   "district": "karatsu",
+   "no": 21,
+   "line": "大財分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "大財"
+  },
+  {
+   "district": "karatsu",
+   "no": 22,
+   "line": "佐賀南佐賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "佐賀",
+   "to": "南佐賀"
+  },
+  {
+   "district": "karatsu",
+   "no": 23,
+   "line": "北佐賀神野線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "神野"
+  },
+  {
+   "district": "karatsu",
+   "no": 24,
+   "line": "高木瀬分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "高木瀬"
+  },
+  {
+   "district": "karatsu",
+   "no": 25,
+   "line": "鍋島分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "鍋島"
+  },
+  {
+   "district": "karatsu",
+   "no": 26,
+   "line": "神野松原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "神野",
+   "to": "松原"
+  },
+  {
+   "district": "karatsu",
+   "no": 27,
+   "line": "北佐賀東多久線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "東多久"
+  },
+  {
+   "district": "karatsu",
+   "no": 28,
+   "line": "東多久牛津線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "東多久",
+   "to": "牛津"
+  },
+  {
+   "district": "karatsu",
+   "no": 29,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "北佐賀",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 30,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川上川第一",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 31,
+   "line": "川上北佐賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "川上川第一"
+  },
+  {
+   "district": "karatsu",
+   "no": 32,
+   "line": "武雄伊万里線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "伊万里"
+  },
+  {
+   "district": "karatsu",
+   "no": 33,
+   "line": "立花分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "立花"
+  },
+  {
+   "district": "karatsu",
+   "no": 34,
+   "line": "山代分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "山代"
+  },
+  {
+   "district": "karatsu",
+   "no": 36,
+   "line": "伊万里土谷線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "伊万里",
+   "to": "土谷"
+  },
+  {
+   "district": "karatsu",
+   "no": 37,
+   "line": "白石分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "白石"
+  },
+  {
+   "district": "karatsu",
+   "no": 38,
+   "line": "東多久武雄線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "東多久"
+  },
+  {
+   "district": "karatsu",
+   "no": 39,
+   "line": "東多久分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "東多久"
+  },
+  {
+   "district": "karatsu",
+   "no": 40,
+   "line": "小関川上川第１線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川上川第一",
+   "to": "小関"
+  },
+  {
+   "district": "karatsu",
+   "no": 41,
+   "line": "東小城分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "東小城"
+  },
+  {
+   "district": "karatsu",
+   "no": 43,
+   "line": "大町分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "大町"
+  },
+  {
+   "district": "karatsu",
+   "no": 44,
+   "line": "広滝第１線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "川上川第一",
+   "to": "広滝第一"
+  },
+  {
+   "district": "karatsu",
+   "no": 45,
+   "line": "送電線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 46,
+   "line": "送電線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 47,
+   "line": "神野１号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 48,
+   "line": "神野２号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 49,
+   "line": "神野３号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 50,
+   "line": "鍋島１号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "karatsu",
+   "no": 51,
+   "line": "鍋島２号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 1,
+   "line": "南宮崎線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "高野sws",
+   "to": "南宮崎"
+  },
+  {
+   "district": "kirishima",
+   "no": 2,
+   "line": "宮崎分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "宮崎",
+   "to": "高野sws"
+  },
+  {
+   "district": "kirishima",
+   "no": 3,
+   "line": "高野線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "高野sws"
+  },
+  {
+   "district": "kirishima",
+   "no": 4,
+   "line": "霧島分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "霧島"
+  },
+  {
+   "district": "kirishima",
+   "no": 5,
+   "line": "都城線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "高野sws",
+   "to": "都城"
+  },
+  {
+   "district": "kirishima",
+   "no": 7,
+   "line": "末吉分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "末吉"
+  },
+  {
+   "district": "kirishima",
+   "no": 10,
+   "line": "大霧えびの線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大霧",
+   "to": "えびの"
+  },
+  {
+   "district": "kirishima",
+   "no": 11,
+   "line": "横川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大霧",
+   "to": "横川"
+  },
+  {
+   "district": "kirishima",
+   "no": 12,
+   "line": "霧島大霧線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "霧島",
+   "to": "大霧"
+  },
+  {
+   "district": "kirishima",
+   "no": 13,
+   "line": "牧園分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "霧島",
+   "to": "牧園"
+  },
+  {
+   "district": "kirishima",
+   "no": 14,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "霧島",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 15,
+   "line": "霧島隼人線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "霧島",
+   "to": "隼人"
+  },
+  {
+   "district": "kirishima",
+   "no": 16,
+   "line": "隼人帖佐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "帖佐",
+   "to": "隼人"
+  },
+  {
+   "district": "kirishima",
+   "no": 17,
+   "line": "霧島国分線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "霧島",
+   "to": "国分"
+  },
+  {
+   "district": "kirishima",
+   "no": 18,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "国分",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 19,
+   "line": "霧島妙見線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "霧島",
+   "to": "妙見"
+  },
+  {
+   "district": "kirishima",
+   "no": 20,
+   "line": "都城志和池線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "志和池"
+  },
+  {
+   "district": "kirishima",
+   "no": 21,
+   "line": "都城川東線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "川東"
+  },
+  {
+   "district": "kirishima",
+   "no": 22,
+   "line": "都北分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "都北"
+  },
+  {
+   "district": "kirishima",
+   "no": 23,
+   "line": "都城鷹尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "鷹尾"
+  },
+  {
+   "district": "kirishima",
+   "no": 24,
+   "line": "鷹尾若葉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鷹尾",
+   "to": "若葉"
+  },
+  {
+   "district": "kirishima",
+   "no": 25,
+   "line": "都城日南線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "日南"
+  },
+  {
+   "district": "kirishima",
+   "no": 26,
+   "line": "飫肥分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都城",
+   "to": "飫肥"
+  },
+  {
+   "district": "kirishima",
+   "no": 27,
+   "line": "田野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "田野"
+  },
+  {
+   "district": "kirishima",
+   "no": 28,
+   "line": "南宮崎青島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "青島"
+  },
+  {
+   "district": "kirishima",
+   "no": 29,
+   "line": "加治木分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "帖佐",
+   "to": "加治木"
+  },
+  {
+   "district": "kirishima",
+   "no": 30,
+   "line": "末吉1番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 31,
+   "line": "折生迫",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 32,
+   "line": "配電線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 33,
+   "line": "高崎",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 34,
+   "line": "鷹尾１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 35,
+   "line": "鷹尾２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 36,
+   "line": "北郷",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 37,
+   "line": "縄瀬",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 38,
+   "line": "横川1番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kirishima",
+   "no": 39,
+   "line": "えびの1番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "koga",
+   "no": 1,
+   "line": "古賀分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "北九州",
+   "to": "古賀"
+  },
+  {
+   "district": "koga",
+   "no": 3,
+   "line": "赤間分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "宗像",
+   "to": "赤間"
+  },
+  {
+   "district": "koga",
+   "no": 4,
+   "line": "久保宗像線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久保",
+   "to": "宗像"
+  },
+  {
+   "district": "koga",
+   "no": 5,
+   "line": "久保分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古賀",
+   "to": "久保"
+  },
+  {
+   "district": "koga",
+   "no": 6,
+   "line": "古賀福間線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古賀",
+   "to": "福間"
+  },
+  {
+   "district": "koga",
+   "no": 7,
+   "line": "古賀新宮線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古賀",
+   "to": "新宮"
+  },
+  {
+   "district": "koga",
+   "no": 8,
+   "line": "和白分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古賀",
+   "to": "和白"
+  },
+  {
+   "district": "koga",
+   "no": 9,
+   "line": "前松原古賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古賀",
+   "to": "前松原"
+  },
+  {
+   "district": "koga",
+   "no": 10,
+   "line": "新宮塩屋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新宮",
+   "to": "塩屋"
+  },
+  {
+   "district": "koga",
+   "no": 11,
+   "line": "東福岡前松原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東福岡",
+   "to": "前松原"
+  },
+  {
+   "district": "koga",
+   "no": 12,
+   "line": "前松原香椎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "前松原",
+   "to": "香椎"
+  },
+  {
+   "district": "koga",
+   "no": 13,
+   "line": "香椎アイランドシティ線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "香椎",
+   "to": "アイランドシティ"
+  },
+  {
+   "district": "koga",
+   "no": 14,
+   "line": "香椎１番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "koga",
+   "no": 15,
+   "line": "香椎２番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "koga",
+   "no": 16,
+   "line": "香椎３番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "koga",
+   "no": 17,
+   "line": "香椎４番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kokura",
+   "no": 1,
+   "line": "槻田線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "槻田sws",
+   "to": "北九州"
+  },
+  {
+   "district": "kokura",
+   "no": 2,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kokura",
+   "no": 3,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kokura",
+   "no": 4,
+   "line": "到津線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "到津",
+   "to": "槻田sws"
+  },
+  {
+   "district": "kokura",
+   "no": 5,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kokura",
+   "no": 6,
+   "line": "西谷線",
+   "kv": 220,
+   "circuits": 3,
+   "frm": "北九州",
+   "to": "西谷"
+  },
+  {
+   "district": "kokura",
+   "no": 7,
+   "line": "西谷嘉穂線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "嘉穂"
+  },
+  {
+   "district": "kokura",
+   "no": 8,
+   "line": "到津金鶏町線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "到津",
+   "to": "金鶏町"
+  },
+  {
+   "district": "kokura",
+   "no": 9,
+   "line": "到津井堀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "到津",
+   "to": "井堀"
+  },
+  {
+   "district": "kokura",
+   "no": 10,
+   "line": "戸畑分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "到津",
+   "to": "戸畑"
+  },
+  {
+   "district": "kokura",
+   "no": 11,
+   "line": "到津日明線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "到津",
+   "to": "日明"
+  },
+  {
+   "district": "kokura",
+   "no": 12,
+   "line": "港町日明線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "港町",
+   "to": "日明"
+  },
+  {
+   "district": "kokura",
+   "no": 13,
+   "line": "日明西谷線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日明",
+   "to": "西谷"
+  },
+  {
+   "district": "kokura",
+   "no": 14,
+   "line": "日明大門線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "日明",
+   "to": "大門"
+  },
+  {
+   "district": "kokura",
+   "no": 15,
+   "line": "大門三萩野線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "大門",
+   "to": "三萩野"
+  },
+  {
+   "district": "kokura",
+   "no": 16,
+   "line": "日明旦過線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "日明",
+   "to": "旦過"
+  },
+  {
+   "district": "kokura",
+   "no": 17,
+   "line": "西谷砂津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "砂津"
+  },
+  {
+   "district": "kokura",
+   "no": 18,
+   "line": "堺町砂津線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "堺町",
+   "to": "砂津"
+  },
+  {
+   "district": "kokura",
+   "no": 19,
+   "line": "西谷小倉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "小倉"
+  },
+  {
+   "district": "kokura",
+   "no": 20,
+   "line": "小倉旦過線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "小倉",
+   "to": "旦過"
+  },
+  {
+   "district": "kokura",
+   "no": 21,
+   "line": "旦過堺町線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "旦過",
+   "to": "堺町"
+  },
+  {
+   "district": "kokura",
+   "no": 22,
+   "line": "西谷前田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "前田"
+  },
+  {
+   "district": "kokura",
+   "no": 23,
+   "line": "西谷石原町線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "西谷",
+   "to": "石原町"
+  },
+  {
+   "district": "kokura",
+   "no": 24,
+   "line": "大門金田線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 1,
+   "line": "中九州幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "中九州",
+   "to": "熊本"
+  },
+  {
+   "district": "kumamoto",
+   "no": 2,
+   "line": "熊本三池線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "三池"
+  },
+  {
+   "district": "kumamoto",
+   "no": 3,
+   "line": "北熊本分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "北熊本"
+  },
+  {
+   "district": "kumamoto",
+   "no": 4,
+   "line": "熊本南熊本線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "南熊本"
+  },
+  {
+   "district": "kumamoto",
+   "no": 5,
+   "line": "弓削分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "弓削"
+  },
+  {
+   "district": "kumamoto",
+   "no": 6,
+   "line": "南熊本緑川線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "緑川"
+  },
+  {
+   "district": "kumamoto",
+   "no": 7,
+   "line": "熊本上椎葉線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "上椎葉"
+  },
+  {
+   "district": "kumamoto",
+   "no": 8,
+   "line": "西山鹿三池線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "西山鹿"
+  },
+  {
+   "district": "kumamoto",
+   "no": 9,
+   "line": "南関分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "南関"
+  },
+  {
+   "district": "kumamoto",
+   "no": 10,
+   "line": "西合志西山鹿線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "西合志",
+   "to": "西山鹿"
+  },
+  {
+   "district": "kumamoto",
+   "no": 11,
+   "line": "西山鹿山鹿線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "西山鹿",
+   "to": "山鹿"
+  },
+  {
+   "district": "kumamoto",
+   "no": 12,
+   "line": "弓削西合志線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "弓削",
+   "to": "西合志"
+  },
+  {
+   "district": "kumamoto",
+   "no": 13,
+   "line": "弓削南分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "弓削"
+  },
+  {
+   "district": "kumamoto",
+   "no": 14,
+   "line": "南熊本神水線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "神水"
+  },
+  {
+   "district": "kumamoto",
+   "no": 15,
+   "line": "北熊本春日町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "春日町"
+  },
+  {
+   "district": "kumamoto",
+   "no": 16,
+   "line": "北熊本池田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "池田"
+  },
+  {
+   "district": "kumamoto",
+   "no": 17,
+   "line": "新町分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "新町"
+  },
+  {
+   "district": "kumamoto",
+   "no": 18,
+   "line": "池田坪井線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "池田",
+   "to": "坪井"
+  },
+  {
+   "district": "kumamoto",
+   "no": 19,
+   "line": "坪井花畑線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "坪井",
+   "to": "花畑"
+  },
+  {
+   "district": "kumamoto",
+   "no": 20,
+   "line": "春日町日吉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "春日町",
+   "to": "日吉線"
+  },
+  {
+   "district": "kumamoto",
+   "no": 21,
+   "line": "大江坪井線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "坪井",
+   "to": "大江"
+  },
+  {
+   "district": "kumamoto",
+   "no": 22,
+   "line": "大江銀座橋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大江",
+   "to": "銀座橋"
+  },
+  {
+   "district": "kumamoto",
+   "no": 23,
+   "line": "新町銀座橋線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "新町",
+   "to": "銀座橋"
+  },
+  {
+   "district": "kumamoto",
+   "no": 24,
+   "line": "銀座橋慶徳線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "銀座橋",
+   "to": "慶徳"
+  },
+  {
+   "district": "kumamoto",
+   "no": 25,
+   "line": "神水大江線",
+   "kv": 66,
+   "circuits": 3,
+   "frm": "神水",
+   "to": "大江"
+  },
+  {
+   "district": "kumamoto",
+   "no": 26,
+   "line": "神水保田窪線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "神水",
+   "to": "保田窪"
+  },
+  {
+   "district": "kumamoto",
+   "no": 27,
+   "line": "保田窪御領線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "保田窪",
+   "to": "御領"
+  },
+  {
+   "district": "kumamoto",
+   "no": 28,
+   "line": "神水江津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "神水",
+   "to": "江津"
+  },
+  {
+   "district": "kumamoto",
+   "no": 29,
+   "line": "日吉川尻線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川尻",
+   "to": "日吉"
+  },
+  {
+   "district": "kumamoto",
+   "no": 30,
+   "line": "近見分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川尻",
+   "to": "近見"
+  },
+  {
+   "district": "kumamoto",
+   "no": 31,
+   "line": "広崎弓削線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "弓削",
+   "to": "広崎"
+  },
+  {
+   "district": "kumamoto",
+   "no": 32,
+   "line": "広崎健軍線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "広崎",
+   "to": "健軍"
+  },
+  {
+   "district": "kumamoto",
+   "no": 33,
+   "line": "緑川川尻線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "緑川",
+   "to": "川尻"
+  },
+  {
+   "district": "kumamoto",
+   "no": 34,
+   "line": "緑川広崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "緑川",
+   "to": "広崎"
+  },
+  {
+   "district": "kumamoto",
+   "no": 35,
+   "line": "須屋分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "須屋"
+  },
+  {
+   "district": "kumamoto",
+   "no": 36,
+   "line": "飛田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "飛田"
+  },
+  {
+   "district": "kumamoto",
+   "no": 37,
+   "line": "菊池分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川辺",
+   "to": "菊池"
+  },
+  {
+   "district": "kumamoto",
+   "no": 38,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "菊池川第三",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 39,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川辺",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 40,
+   "line": "川辺菊池線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川辺",
+   "to": "菊池"
+  },
+  {
+   "district": "kumamoto",
+   "no": 41,
+   "line": "熊本川辺線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "川辺"
+  },
+  {
+   "district": "kumamoto",
+   "no": 42,
+   "line": "熊本大津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "大津"
+  },
+  {
+   "district": "kumamoto",
+   "no": 43,
+   "line": "熊本東大津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "東大津"
+  },
+  {
+   "district": "kumamoto",
+   "no": 44,
+   "line": "弓削大津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "弓削",
+   "to": "大津"
+  },
+  {
+   "district": "kumamoto",
+   "no": 45,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 46,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 47,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 48,
+   "line": "熊本一の宮線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "一の宮"
+  },
+  {
+   "district": "kumamoto",
+   "no": 49,
+   "line": "高森分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "高森"
+  },
+  {
+   "district": "kumamoto",
+   "no": 50,
+   "line": "広崎矢部線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "広崎",
+   "to": "矢部"
+  },
+  {
+   "district": "kumamoto",
+   "no": 51,
+   "line": "御船分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "広崎",
+   "to": "御船"
+  },
+  {
+   "district": "kumamoto",
+   "no": 52,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "広崎",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 53,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "広崎",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 54,
+   "line": "須屋弓削線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "弓削",
+   "to": "須屋"
+  },
+  {
+   "district": "kumamoto",
+   "no": 55,
+   "line": "北熊本植木線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北熊本",
+   "to": "植木"
+  },
+  {
+   "district": "kumamoto",
+   "no": 56,
+   "line": "植木玉名線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "植木",
+   "to": "玉名"
+  },
+  {
+   "district": "kumamoto",
+   "no": 57,
+   "line": "伊倉分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "植木",
+   "to": "伊倉"
+  },
+  {
+   "district": "kumamoto",
+   "no": 58,
+   "line": "川辺弓削線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "弓削",
+   "to": "川辺"
+  },
+  {
+   "district": "kumamoto",
+   "no": 59,
+   "line": "的石分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "熊本",
+   "to": "的石"
+  },
+  {
+   "district": "kumamoto",
+   "no": 61,
+   "line": "色出",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 62,
+   "line": "津田",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 63,
+   "line": "鹿北",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 64,
+   "line": "オレンジ",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 66,
+   "line": "花房",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 67,
+   "line": "きくどみ",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 68,
+   "line": "川辺６－１",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 69,
+   "line": "中核",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 70,
+   "line": "菊陽東部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 71,
+   "line": "菊陽西部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 72,
+   "line": "菊陽南部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 73,
+   "line": "中核１号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 74,
+   "line": "中核２号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 75,
+   "line": "慶徳・花畑連系",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 76,
+   "line": "北部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 77,
+   "line": "清和",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 78,
+   "line": "砥用",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 79,
+   "line": "テクノ１",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 80,
+   "line": "南部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 81,
+   "line": "テクノ２",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 82,
+   "line": "西部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 83,
+   "line": "堅志田",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 84,
+   "line": "岩古曽",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kumamoto",
+   "no": 85,
+   "line": "網田",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "kurume",
+   "no": 1,
+   "line": "脊振鳥栖線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "脊振",
+   "to": "鳥栖"
+  },
+  {
+   "district": "kurume",
+   "no": 2,
+   "line": "鳥栖木佐木線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "鳥栖"
+  },
+  {
+   "district": "kurume",
+   "no": 3,
+   "line": "久留米分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "久留米"
+  },
+  {
+   "district": "kurume",
+   "no": 4,
+   "line": "北佐賀木佐木線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "北佐賀",
+   "to": "木佐木"
+  },
+  {
+   "district": "kurume",
+   "no": 5,
+   "line": "鳥栖基山線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "基山"
+  },
+  {
+   "district": "kurume",
+   "no": 6,
+   "line": "原田分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "原田"
+  },
+  {
+   "district": "kurume",
+   "no": 7,
+   "line": "佐賀三池線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "佐賀",
+   "to": "三池"
+  },
+  {
+   "district": "kurume",
+   "no": 8,
+   "line": "鳥栖上峰線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "上峰"
+  },
+  {
+   "district": "kurume",
+   "no": 9,
+   "line": "鳥栖神辺線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "神辺"
+  },
+  {
+   "district": "kurume",
+   "no": 10,
+   "line": "鳥栖曽根崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "曽根崎"
+  },
+  {
+   "district": "kurume",
+   "no": 11,
+   "line": "轟木分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "轟木"
+  },
+  {
+   "district": "kurume",
+   "no": 12,
+   "line": "鳥栖京町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "京町"
+  },
+  {
+   "district": "kurume",
+   "no": 13,
+   "line": "久留米三潴線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "久留米",
+   "to": "三潴"
+  },
+  {
+   "district": "kurume",
+   "no": 14,
+   "line": "京町原古賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "京町",
+   "to": "原古賀"
+  },
+  {
+   "district": "kurume",
+   "no": 15,
+   "line": "東町分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "京町",
+   "to": "東町"
+  },
+  {
+   "district": "kurume",
+   "no": 16,
+   "line": "久留米原古賀線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久留米",
+   "to": "原古賀"
+  },
+  {
+   "district": "kurume",
+   "no": 17,
+   "line": "久留米千本杉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久留米",
+   "to": "千本杉"
+  },
+  {
+   "district": "kurume",
+   "no": 18,
+   "line": "北野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久留米",
+   "to": "北野"
+  },
+  {
+   "district": "kurume",
+   "no": 19,
+   "line": "旗崎分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久留米",
+   "to": "箱崎"
+  },
+  {
+   "district": "kurume",
+   "no": 20,
+   "line": "久留米上津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "久留米",
+   "to": "上津"
+  },
+  {
+   "district": "kurume",
+   "no": 21,
+   "line": "村田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鳥栖",
+   "to": "村田"
+  },
+  {
+   "district": "kurume",
+   "no": 22,
+   "line": "上峰分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上峰",
+   "to": "佐賀"
+  },
+  {
+   "district": "kurume",
+   "no": 23,
+   "line": "佐賀神埼線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上峰",
+   "to": "神埼"
+  },
+  {
+   "district": "kurume",
+   "no": 24,
+   "line": "木佐木三潴線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "三潴"
+  },
+  {
+   "district": "kurume",
+   "no": 25,
+   "line": "羽犬塚上津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "羽犬塚",
+   "to": "上津"
+  },
+  {
+   "district": "kurume",
+   "no": 26,
+   "line": "広川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "羽犬塚",
+   "to": "広川"
+  },
+  {
+   "district": "kurume",
+   "no": 27,
+   "line": "羽犬塚忠見線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "羽犬塚",
+   "to": "八女"
+  },
+  {
+   "district": "kurume",
+   "no": 28,
+   "line": "忠見分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "羽犬塚",
+   "to": "忠見"
+  },
+  {
+   "district": "kurume",
+   "no": 29,
+   "line": "木屋忠見線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "忠見",
+   "to": "木屋"
+  },
+  {
+   "district": "kurume",
+   "no": 30,
+   "line": "大渕木屋線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "木屋",
+   "to": "大渕"
+  },
+  {
+   "district": "kurume",
+   "no": 31,
+   "line": "羽犬塚瀬高線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "羽犬塚",
+   "to": "瀬高"
+  },
+  {
+   "district": "kurume",
+   "no": 32,
+   "line": "木佐木大川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "大川"
+  },
+  {
+   "district": "kurume",
+   "no": 33,
+   "line": "諸富分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "佐賀",
+   "to": "諸富"
+  },
+  {
+   "district": "kurume",
+   "no": 34,
+   "line": "大川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "大川"
+  },
+  {
+   "district": "kurume",
+   "no": 35,
+   "line": "木室分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "木室"
+  },
+  {
+   "district": "kurume",
+   "no": 36,
+   "line": "木佐木柳川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "柳川"
+  },
+  {
+   "district": "kurume",
+   "no": 37,
+   "line": "大和分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "木佐木",
+   "to": "大和"
+  },
+  {
+   "district": "kurume",
+   "no": 38,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 39,
+   "line": "木佐木羽犬塚線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木佐木",
+   "to": "羽犬塚"
+  },
+  {
+   "district": "kurume",
+   "no": 40,
+   "line": "佐賀木佐木線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "佐賀",
+   "to": "木佐木"
+  },
+  {
+   "district": "kurume",
+   "no": 41,
+   "line": "送電線",
+   "kv": 11,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 42,
+   "line": "城戸",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 43,
+   "line": "丘陵",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 44,
+   "line": "柚比",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 45,
+   "line": "永吉",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 46,
+   "line": "幸津",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 47,
+   "line": "原古賀",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 48,
+   "line": "東中",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 49,
+   "line": "大和",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 50,
+   "line": "千本杉１号線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 51,
+   "line": "木室２号線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 52,
+   "line": "羽犬塚１号線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 53,
+   "line": "羽犬塚２号線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 54,
+   "line": "上陽線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "kurume",
+   "no": 55,
+   "line": "忠見黒木線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "－",
+   "to": "－"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 1,
+   "line": "中央南福岡線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "中央",
+   "to": "南福岡"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 2,
+   "line": "南福岡宇美線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "宇美"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 3,
+   "line": "山家南福岡線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "山家"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 4,
+   "line": "太宰府分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "太宰府"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 5,
+   "line": "南福岡西春線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "西春"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 6,
+   "line": "野間西春線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西春",
+   "to": "野間"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 7,
+   "line": "白木原分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "白木原"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 8,
+   "line": "南福岡上白水線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "上白水"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 9,
+   "line": "平田台分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "平田台"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 10,
+   "line": "井尻分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西春",
+   "to": "井尻"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 11,
+   "line": "南福岡亀山線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "亀山"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 12,
+   "line": "志免分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "志免"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 13,
+   "line": "板付分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南福岡",
+   "to": "板付"
+  },
+  {
+   "district": "minami_fukuoka",
+   "no": 14,
+   "line": "南畑上白水線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "上白水",
+   "to": "南畑"
+  },
+  {
+   "district": "miyazaki",
+   "no": 1,
+   "line": "送電線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "ひむか",
+   "to": "宮崎"
+  },
+  {
+   "district": "miyazaki",
+   "no": 2,
+   "line": "宮崎幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "宮崎",
+   "to": "南九州"
+  },
+  {
+   "district": "miyazaki",
+   "no": 3,
+   "line": "一ツ瀬柏田線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "一ツ瀬",
+   "to": "柏田"
+  },
+  {
+   "district": "miyazaki",
+   "no": 4,
+   "line": "ひむか一ツ瀬線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "ひむか",
+   "to": "一ツ瀬"
+  },
+  {
+   "district": "miyazaki",
+   "no": 5,
+   "line": "一ツ瀬高鍋線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "一ツ瀬",
+   "to": "高鍋"
+  },
+  {
+   "district": "miyazaki",
+   "no": 6,
+   "line": "送電線",
+   "kv": 110,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 7,
+   "line": "西都分岐線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "一ツ瀬",
+   "to": "西都"
+  },
+  {
+   "district": "miyazaki",
+   "no": 9,
+   "line": "都農高鍋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都農",
+   "to": "高鍋"
+  },
+  {
+   "district": "miyazaki",
+   "no": 10,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川原sws",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 11,
+   "line": "川原支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "都農",
+   "to": "川原sws"
+  },
+  {
+   "district": "miyazaki",
+   "no": 12,
+   "line": "広瀬高鍋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "高鍋",
+   "to": "広瀬"
+  },
+  {
+   "district": "miyazaki",
+   "no": 13,
+   "line": "柏田広瀬線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "柏田",
+   "to": "広瀬"
+  },
+  {
+   "district": "miyazaki",
+   "no": 14,
+   "line": "佐土原分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "柏田",
+   "to": "佐土原"
+  },
+  {
+   "district": "miyazaki",
+   "no": 15,
+   "line": "柏田平原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "柏田",
+   "to": "平原"
+  },
+  {
+   "district": "miyazaki",
+   "no": 16,
+   "line": "大淀川第２柏田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "柏田",
+   "to": "大淀川第二"
+  },
+  {
+   "district": "miyazaki",
+   "no": 17,
+   "line": "本庄分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "柏田",
+   "to": "本庄"
+  },
+  {
+   "district": "miyazaki",
+   "no": 18,
+   "line": "南宮崎柏田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "柏田"
+  },
+  {
+   "district": "miyazaki",
+   "no": 19,
+   "line": "清水分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "清水"
+  },
+  {
+   "district": "miyazaki",
+   "no": 20,
+   "line": "清水青葉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "清水",
+   "to": "青葉"
+  },
+  {
+   "district": "miyazaki",
+   "no": 21,
+   "line": "南宮崎大塚線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "大塚"
+  },
+  {
+   "district": "miyazaki",
+   "no": 22,
+   "line": "南宮崎恒久線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南宮崎",
+   "to": "恒久"
+  },
+  {
+   "district": "miyazaki",
+   "no": 23,
+   "line": "恒久旭線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "恒久",
+   "to": "旭"
+  },
+  {
+   "district": "miyazaki",
+   "no": 24,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 25,
+   "line": "清水１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 26,
+   "line": "清水２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 27,
+   "line": "一ツ葉１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 28,
+   "line": "一ツ葉２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 29,
+   "line": "佐土原１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 30,
+   "line": "西都１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "miyazaki",
+   "no": 31,
+   "line": "都農１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "moji",
+   "no": 1,
+   "line": "西谷門司線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "門司"
+  },
+  {
+   "district": "moji",
+   "no": 2,
+   "line": "苅田分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "苅田"
+  },
+  {
+   "district": "moji",
+   "no": 3,
+   "line": "苅田連絡線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "南苅田",
+   "to": "苅田"
+  },
+  {
+   "district": "moji",
+   "no": 4,
+   "line": "南苅田線",
+   "kv": 220,
+   "circuits": 1,
+   "frm": "南苅田",
+   "to": "北九州"
+  },
+  {
+   "district": "moji",
+   "no": 5,
+   "line": "めかり線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "めかり"
+  },
+  {
+   "district": "moji",
+   "no": 6,
+   "line": "門司大里線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "大里"
+  },
+  {
+   "district": "moji",
+   "no": 7,
+   "line": "錦町分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "錦町"
+  },
+  {
+   "district": "moji",
+   "no": 8,
+   "line": "門司原町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "原町"
+  },
+  {
+   "district": "moji",
+   "no": 9,
+   "line": "門司今津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "今津"
+  },
+  {
+   "district": "moji",
+   "no": 10,
+   "line": "曽根線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "曽根"
+  },
+  {
+   "district": "moji",
+   "no": 11,
+   "line": "松ヶ江分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "松ヶ江"
+  },
+  {
+   "district": "moji",
+   "no": 12,
+   "line": "西谷横代線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西谷",
+   "to": "横代"
+  },
+  {
+   "district": "moji",
+   "no": 13,
+   "line": "門司横代線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "横代"
+  },
+  {
+   "district": "moji",
+   "no": 14,
+   "line": "雨窪分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "雨窪"
+  },
+  {
+   "district": "moji",
+   "no": 15,
+   "line": "貫分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "門司",
+   "to": "貫"
+  },
+  {
+   "district": "moji",
+   "no": 16,
+   "line": "苅田行橋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "苅田",
+   "to": "行橋"
+  },
+  {
+   "district": "moji",
+   "no": 17,
+   "line": "苅田雨窪線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "苅田",
+   "to": "雨窪"
+  },
+  {
+   "district": "moji",
+   "no": 18,
+   "line": "雨窪若久線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "雨窪",
+   "to": "若久"
+  },
+  {
+   "district": "moji",
+   "no": 19,
+   "line": "鉄工1番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "moji",
+   "no": 20,
+   "line": "若久1番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "moji",
+   "no": 21,
+   "line": "若久2番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 1,
+   "line": "北長崎線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "北長崎"
+  },
+  {
+   "district": "nagasaki",
+   "no": 2,
+   "line": "松島線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "松島"
+  },
+  {
+   "district": "nagasaki",
+   "no": 3,
+   "line": "北長崎京泊線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北長崎",
+   "to": "京泊"
+  },
+  {
+   "district": "nagasaki",
+   "no": 4,
+   "line": "北長崎時津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北長崎",
+   "to": "時津"
+  },
+  {
+   "district": "nagasaki",
+   "no": 5,
+   "line": "北長崎長与上下線",
+   "kv": 66,
+   "circuits": 4,
+   "frm": "北長崎",
+   "to": "長与"
+  },
+  {
+   "district": "nagasaki",
+   "no": 6,
+   "line": "藤棚長与線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "藤棚"
+  },
+  {
+   "district": "nagasaki",
+   "no": 7,
+   "line": "浦上分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "浦上"
+  },
+  {
+   "district": "nagasaki",
+   "no": 8,
+   "line": "長与分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "銭座"
+  },
+  {
+   "district": "nagasaki",
+   "no": 10,
+   "line": "花丘分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "花丘"
+  },
+  {
+   "district": "nagasaki",
+   "no": 11,
+   "line": "長崎銭座線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長与",
+   "to": "銭座"
+  },
+  {
+   "district": "nagasaki",
+   "no": 12,
+   "line": "北長崎飽の浦線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北長崎",
+   "to": "飽ノ浦"
+  },
+  {
+   "district": "nagasaki",
+   "no": 13,
+   "line": "富士見分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "北長崎",
+   "to": "富士見"
+  },
+  {
+   "district": "nagasaki",
+   "no": 14,
+   "line": "長崎賑橋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長崎",
+   "to": "賑橋"
+  },
+  {
+   "district": "nagasaki",
+   "no": 15,
+   "line": "賑橋飽ノ浦線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "飽ノ浦",
+   "to": "賑橋"
+  },
+  {
+   "district": "nagasaki",
+   "no": 16,
+   "line": "賑橋宮の下線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "賑橋",
+   "to": "宮の下"
+  },
+  {
+   "district": "nagasaki",
+   "no": 17,
+   "line": "長崎丸山線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長崎",
+   "to": "丸山"
+  },
+  {
+   "district": "nagasaki",
+   "no": 18,
+   "line": "新地分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長崎",
+   "to": "新地"
+  },
+  {
+   "district": "nagasaki",
+   "no": 19,
+   "line": "長崎江川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "長崎",
+   "to": "江川"
+  },
+  {
+   "district": "nagasaki",
+   "no": 20,
+   "line": "江川香焼線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "江川",
+   "to": "香焼"
+  },
+  {
+   "district": "nagasaki",
+   "no": 21,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "江川",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 22,
+   "line": "西彼",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 23,
+   "line": "長浦",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 24,
+   "line": "岳路",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 25,
+   "line": "富士見1号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 26,
+   "line": "富士見2号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "nagasaki",
+   "no": 27,
+   "line": "斧木場",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "oita",
+   "no": 1,
+   "line": "東大分線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東大分",
+   "to": "大分"
+  },
+  {
+   "district": "oita",
+   "no": 2,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "新大分",
+   "to": "東大分"
+  },
+  {
+   "district": "oita",
+   "no": 3,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "新大分",
+   "to": "東九州"
+  },
+  {
+   "district": "oita",
+   "no": 4,
+   "line": "海崎線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東九州",
+   "to": "海崎"
+  },
+  {
+   "district": "oita",
+   "no": 5,
+   "line": "大分南線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "西大分"
+  },
+  {
+   "district": "oita",
+   "no": 6,
+   "line": "大分末広線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "末広"
+  },
+  {
+   "district": "oita",
+   "no": 7,
+   "line": "王子寿町線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "王子",
+   "to": "寿町"
+  },
+  {
+   "district": "oita",
+   "no": 8,
+   "line": "西大分王子線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "王子"
+  },
+  {
+   "district": "oita",
+   "no": 9,
+   "line": "上野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "上野"
+  },
+  {
+   "district": "oita",
+   "no": 10,
+   "line": "大分上野線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "上野"
+  },
+  {
+   "district": "oita",
+   "no": 11,
+   "line": "上野金池線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上野",
+   "to": "金池"
+  },
+  {
+   "district": "oita",
+   "no": 12,
+   "line": "東大分大分線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東大分",
+   "to": "大分"
+  },
+  {
+   "district": "oita",
+   "no": 13,
+   "line": "小佐井金の手線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "小佐井",
+   "to": "金の手"
+  },
+  {
+   "district": "oita",
+   "no": 14,
+   "line": "東大分鶴崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東大分",
+   "to": "鶴崎"
+  },
+  {
+   "district": "oita",
+   "no": 15,
+   "line": "岡川大分線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "岡川"
+  },
+  {
+   "district": "oita",
+   "no": 16,
+   "line": "寒田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "寒田"
+  },
+  {
+   "district": "oita",
+   "no": 17,
+   "line": "西大分岡川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "岡川"
+  },
+  {
+   "district": "oita",
+   "no": 18,
+   "line": "大分西大分線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "大分"
+  },
+  {
+   "district": "oita",
+   "no": 19,
+   "line": "大南分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "大南"
+  },
+  {
+   "district": "oita",
+   "no": 20,
+   "line": "大分金の手線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大分",
+   "to": "金の手"
+  },
+  {
+   "district": "oita",
+   "no": 21,
+   "line": "新大分小佐井線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新大分",
+   "to": "小佐井"
+  },
+  {
+   "district": "oita",
+   "no": 22,
+   "line": "王ノ瀬分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新大分",
+   "to": "王ノ瀬"
+  },
+  {
+   "district": "oita",
+   "no": 23,
+   "line": "中島分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東大分",
+   "to": "中島"
+  },
+  {
+   "district": "oita",
+   "no": 24,
+   "line": "小佐井佐賀関線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "小佐井",
+   "to": "佐賀関"
+  },
+  {
+   "district": "oita",
+   "no": 25,
+   "line": "西大分田の湯線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "田の湯"
+  },
+  {
+   "district": "oita",
+   "no": 26,
+   "line": "西大分別府線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "別府"
+  },
+  {
+   "district": "oita",
+   "no": 27,
+   "line": "荘園分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "西大分",
+   "to": "荘園"
+  },
+  {
+   "district": "oita",
+   "no": 28,
+   "line": "小佐井分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "小佐井",
+   "to": "臼杵"
+  },
+  {
+   "district": "oita",
+   "no": 29,
+   "line": "西大分篠原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "篠原"
+  },
+  {
+   "district": "oita",
+   "no": 30,
+   "line": "篠原安心院線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "篠原",
+   "to": "安心院"
+  },
+  {
+   "district": "oita",
+   "no": 31,
+   "line": "篠原湯布院線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "篠原",
+   "to": "湯布院"
+  },
+  {
+   "district": "oita",
+   "no": 32,
+   "line": "柿原支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "篠原",
+   "to": "柿原"
+  },
+  {
+   "district": "oita",
+   "no": 33,
+   "line": "幸野支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "篠原",
+   "to": "幸野"
+  },
+  {
+   "district": "oita",
+   "no": 34,
+   "line": "滝上第２支線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "篠原",
+   "to": "滝上"
+  },
+  {
+   "district": "oita",
+   "no": 35,
+   "line": "別府石垣線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "別府",
+   "to": "石垣"
+  },
+  {
+   "district": "omuta",
+   "no": 2,
+   "line": "港三池新線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "港"
+  },
+  {
+   "district": "omuta",
+   "no": 3,
+   "line": "三池荒尾線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "荒尾"
+  },
+  {
+   "district": "omuta",
+   "no": 4,
+   "line": "大牟田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "大牟田"
+  },
+  {
+   "district": "omuta",
+   "no": 5,
+   "line": "浜田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "浜田"
+  },
+  {
+   "district": "omuta",
+   "no": 6,
+   "line": "三池延命寺線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "延命寺"
+  },
+  {
+   "district": "omuta",
+   "no": 7,
+   "line": "港万田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "港",
+   "to": "万田"
+  },
+  {
+   "district": "omuta",
+   "no": 8,
+   "line": "港新開線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "港",
+   "to": "新開"
+  },
+  {
+   "district": "omuta",
+   "no": 9,
+   "line": "三池横須線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "三池",
+   "to": "横須"
+  },
+  {
+   "district": "omuta",
+   "no": 10,
+   "line": "荒尾万田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "荒尾",
+   "to": "万田"
+  },
+  {
+   "district": "omuta",
+   "no": 11,
+   "line": "三池大和線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "三池",
+   "to": "大和"
+  },
+  {
+   "district": "omuta",
+   "no": 12,
+   "line": "荒尾沖洲線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "荒尾",
+   "to": "沖洲"
+  },
+  {
+   "district": "omuta",
+   "no": 13,
+   "line": "荒尾玉名線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "荒尾",
+   "to": "玉名"
+  },
+  {
+   "district": "osumi",
+   "no": 1,
+   "line": "大隅線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "高野",
+   "to": "大隅"
+  },
+  {
+   "district": "osumi",
+   "no": 2,
+   "line": "大隅野方線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "野方"
+  },
+  {
+   "district": "osumi",
+   "no": 3,
+   "line": "大隅志布志線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "志布志"
+  },
+  {
+   "district": "osumi",
+   "no": 4,
+   "line": "志布志福島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "志布志",
+   "to": "福島"
+  },
+  {
+   "district": "osumi",
+   "no": 5,
+   "line": "福島飫肥線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "飫肥",
+   "to": "福島"
+  },
+  {
+   "district": "osumi",
+   "no": 6,
+   "line": "本城川分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "本城川"
+  },
+  {
+   "district": "osumi",
+   "no": 7,
+   "line": "大隅笠之原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "笠之原"
+  },
+  {
+   "district": "osumi",
+   "no": 8,
+   "line": "大隅鹿屋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "鹿屋"
+  },
+  {
+   "district": "osumi",
+   "no": 9,
+   "line": "大隅串良線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "大隅",
+   "to": "串良"
+  },
+  {
+   "district": "osumi",
+   "no": 10,
+   "line": "雄川鹿屋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿屋",
+   "to": "雄川"
+  },
+  {
+   "district": "osumi",
+   "no": 11,
+   "line": "高山川支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "鹿屋",
+   "to": "高山川"
+  },
+  {
+   "district": "osumi",
+   "no": 12,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "本城川",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 13,
+   "line": "南郷",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 14,
+   "line": "岸良１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 15,
+   "line": "団地１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 16,
+   "line": "団地２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 17,
+   "line": "松山1番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 18,
+   "line": "牛根",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "osumi",
+   "no": 19,
+   "line": "桜島",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 1,
+   "line": "浦桑小値賀線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "浦桑",
+   "to": "小値賀"
+  },
+  {
+   "district": "ritou",
+   "no": 2,
+   "line": "阿瀬津小値賀線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "阿瀬津",
+   "to": "小値賀"
+  },
+  {
+   "district": "ritou",
+   "no": 3,
+   "line": "阿瀬津浦桑線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "阿瀬津",
+   "to": "浦桑"
+  },
+  {
+   "district": "ritou",
+   "no": 4,
+   "line": "阿瀬津奈良尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "奈良尾",
+   "to": "阿瀬津"
+  },
+  {
+   "district": "ritou",
+   "no": 5,
+   "line": "松島奈良尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "松島",
+   "to": "奈良尾"
+  },
+  {
+   "district": "ritou",
+   "no": 6,
+   "line": "奥浦奈良尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "奈良尾",
+   "to": "奥浦sws"
+  },
+  {
+   "district": "ritou",
+   "no": 7,
+   "line": "奥浦福江線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "奥浦sws",
+   "to": "福江"
+  },
+  {
+   "district": "ritou",
+   "no": 8,
+   "line": "二本楠分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "奥浦sws",
+   "to": "二本楠"
+  },
+  {
+   "district": "ritou",
+   "no": 9,
+   "line": "種子島第１中種子線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "中種子",
+   "to": "種子島第一"
+  },
+  {
+   "district": "ritou",
+   "no": 10,
+   "line": "新種子島中種子線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新種子",
+   "to": "中種子"
+  },
+  {
+   "district": "ritou",
+   "no": 11,
+   "line": "厳原豊玉線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "豊玉",
+   "to": "厳原"
+  },
+  {
+   "district": "ritou",
+   "no": 12,
+   "line": "佐須奈支線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "豊玉",
+   "to": "佐須奈"
+  },
+  {
+   "district": "ritou",
+   "no": 13,
+   "line": "新徳之島亀津線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 14,
+   "line": "新壱岐芦辺線",
+   "kv": 22,
+   "circuits": 2,
+   "frm": "新壱岐",
+   "to": "芦辺"
+  },
+  {
+   "district": "ritou",
+   "no": 15,
+   "line": "新壱岐郷ノ浦線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "新壱岐",
+   "to": "郷ノ浦"
+  },
+  {
+   "district": "ritou",
+   "no": 16,
+   "line": "竜郷名瀬線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "竜郷",
+   "to": "名瀬"
+  },
+  {
+   "district": "ritou",
+   "no": 17,
+   "line": "名瀬新住用川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "名瀬",
+   "to": "新住用"
+  },
+  {
+   "district": "ritou",
+   "no": 18,
+   "line": "新魚目",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 19,
+   "line": "宇久",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 20,
+   "line": "芦辺湯ノ本線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 21,
+   "line": "郷ノ浦湯ノ本線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 22,
+   "line": "新徳亀津",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 23,
+   "line": "篠川",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 24,
+   "line": "瀬戸内",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 25,
+   "line": "笠利",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 26,
+   "line": "喜瀬",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 27,
+   "line": "下甑",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 28,
+   "line": "甑島",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 29,
+   "line": "和泊１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 30,
+   "line": "和泊２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "ritou",
+   "no": 31,
+   "line": "喜界",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "saiki",
+   "no": 1,
+   "line": "臼杵津久見線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "津久見",
+   "to": "臼杵"
+  },
+  {
+   "district": "saiki",
+   "no": 2,
+   "line": "海崎津久見線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "海崎",
+   "to": "津久見"
+  },
+  {
+   "district": "saiki",
+   "no": 3,
+   "line": "海崎上岡線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "海崎",
+   "to": "上岡"
+  },
+  {
+   "district": "saiki",
+   "no": 4,
+   "line": "海崎佐伯線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "海崎",
+   "to": "佐伯"
+  },
+  {
+   "district": "saiki",
+   "no": 5,
+   "line": "沈堕三重線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "沈堕",
+   "to": "三重"
+  },
+  {
+   "district": "saiki",
+   "no": 6,
+   "line": "沈堕軸丸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "沈堕",
+   "to": "軸丸"
+  },
+  {
+   "district": "saiki",
+   "no": 7,
+   "line": "軸丸竹田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "軸丸",
+   "to": "竹田"
+  },
+  {
+   "district": "saiki",
+   "no": 8,
+   "line": "西大分沈堕線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西大分",
+   "to": "沈堕"
+  },
+  {
+   "district": "sendai",
+   "no": 1,
+   "line": "送電線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 2,
+   "line": "出水分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "出水"
+  },
+  {
+   "district": "sendai",
+   "no": 3,
+   "line": "川薩南九州線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "川薩sws",
+   "to": "南九州"
+  },
+  {
+   "district": "sendai",
+   "no": 4,
+   "line": "川内分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "川内"
+  },
+  {
+   "district": "sendai",
+   "no": 5,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 6,
+   "line": "人吉大口線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "人吉",
+   "to": "大口"
+  },
+  {
+   "district": "sendai",
+   "no": 7,
+   "line": "川内上川内線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "川内",
+   "to": "上川内"
+  },
+  {
+   "district": "sendai",
+   "no": 8,
+   "line": "新水俣米之津線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "出水",
+   "to": "米之津"
+  },
+  {
+   "district": "sendai",
+   "no": 9,
+   "line": "出水北分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "出水",
+   "to": "米之津"
+  },
+  {
+   "district": "sendai",
+   "no": 10,
+   "line": "出水向江線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "出水",
+   "to": "向江"
+  },
+  {
+   "district": "sendai",
+   "no": 11,
+   "line": "米之津高尾野線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "米之津",
+   "to": "高尾野"
+  },
+  {
+   "district": "sendai",
+   "no": 13,
+   "line": "川内佐志線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川内",
+   "to": "佐志"
+  },
+  {
+   "district": "sendai",
+   "no": 14,
+   "line": "佐志分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "川内",
+   "to": "佐志"
+  },
+  {
+   "district": "sendai",
+   "no": 15,
+   "line": "川内入来線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川内",
+   "to": "入来"
+  },
+  {
+   "district": "sendai",
+   "no": 16,
+   "line": "川内平佐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川内",
+   "to": "平佐"
+  },
+  {
+   "district": "sendai",
+   "no": 17,
+   "line": "向田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川内",
+   "to": "向田"
+  },
+  {
+   "district": "sendai",
+   "no": 18,
+   "line": "川内串木野線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "川内",
+   "to": "串木野"
+  },
+  {
+   "district": "sendai",
+   "no": 19,
+   "line": "長島１番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 20,
+   "line": "長島２番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 21,
+   "line": "大久保",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 22,
+   "line": "野田",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 23,
+   "line": "上場",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "sendai",
+   "no": 24,
+   "line": "大口１番線",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 1,
+   "line": "送電線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "―",
+   "to": "西九州"
+  },
+  {
+   "district": "takeo",
+   "no": 2,
+   "line": "西九州武雄線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西九州",
+   "to": "武雄"
+  },
+  {
+   "district": "takeo",
+   "no": 3,
+   "line": "西佐世保武雄線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "西佐世保",
+   "to": "武雄"
+  },
+  {
+   "district": "takeo",
+   "no": 4,
+   "line": "東佐世保分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "東佐世保"
+  },
+  {
+   "district": "takeo",
+   "no": 5,
+   "line": "長崎幹線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "長崎"
+  },
+  {
+   "district": "takeo",
+   "no": 6,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "―",
+   "to": "東佐世保"
+  },
+  {
+   "district": "takeo",
+   "no": 7,
+   "line": "送電線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "西九州"
+  },
+  {
+   "district": "takeo",
+   "no": 8,
+   "line": "大村北線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "大村"
+  },
+  {
+   "district": "takeo",
+   "no": 9,
+   "line": "田平分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉井",
+   "to": "田平"
+  },
+  {
+   "district": "takeo",
+   "no": 10,
+   "line": "吉井平戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉井",
+   "to": "平戸"
+  },
+  {
+   "district": "takeo",
+   "no": 11,
+   "line": "吉井志佐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉井",
+   "to": "志佐"
+  },
+  {
+   "district": "takeo",
+   "no": 12,
+   "line": "佐々分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "佐々"
+  },
+  {
+   "district": "takeo",
+   "no": 13,
+   "line": "相浦吉井線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "吉井"
+  },
+  {
+   "district": "takeo",
+   "no": 14,
+   "line": "相浦大久保線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "大久保"
+  },
+  {
+   "district": "takeo",
+   "no": 15,
+   "line": "大野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "大野"
+  },
+  {
+   "district": "takeo",
+   "no": 16,
+   "line": "相浦木風線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "木風sws"
+  },
+  {
+   "district": "takeo",
+   "no": 17,
+   "line": "熊野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "相浦",
+   "to": "熊野"
+  },
+  {
+   "district": "takeo",
+   "no": 18,
+   "line": "東佐世保木風線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "木風sws"
+  },
+  {
+   "district": "takeo",
+   "no": 19,
+   "line": "日宇分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "日宇"
+  },
+  {
+   "district": "takeo",
+   "no": 20,
+   "line": "東佐世保早岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "早岐"
+  },
+  {
+   "district": "takeo",
+   "no": 21,
+   "line": "東佐世保面高線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "面高"
+  },
+  {
+   "district": "takeo",
+   "no": 22,
+   "line": "江迎分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "吉井",
+   "to": "江迎"
+  },
+  {
+   "district": "takeo",
+   "no": 23,
+   "line": "面高瀬戸線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "面高",
+   "to": "瀬戸"
+  },
+  {
+   "district": "takeo",
+   "no": 24,
+   "line": "大島分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "面高",
+   "to": "大島"
+  },
+  {
+   "district": "takeo",
+   "no": 25,
+   "line": "波佐見分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "波佐見"
+  },
+  {
+   "district": "takeo",
+   "no": 26,
+   "line": "有田分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "有田"
+  },
+  {
+   "district": "takeo",
+   "no": 27,
+   "line": "東佐世保武雄線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "武雄"
+  },
+  {
+   "district": "takeo",
+   "no": 28,
+   "line": "木風山代線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木風",
+   "to": "山代"
+  },
+  {
+   "district": "takeo",
+   "no": 29,
+   "line": "武雄大村線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "大村"
+  },
+  {
+   "district": "takeo",
+   "no": 30,
+   "line": "嬉野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "嬉野"
+  },
+  {
+   "district": "takeo",
+   "no": 31,
+   "line": "東彼杵分岐線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "武雄",
+   "to": "東彼杵"
+  },
+  {
+   "district": "takeo",
+   "no": 32,
+   "line": "武雄塩田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "武雄",
+   "to": "塩田"
+  },
+  {
+   "district": "takeo",
+   "no": 33,
+   "line": "塩田鹿島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "塩田",
+   "to": "鹿島"
+  },
+  {
+   "district": "takeo",
+   "no": 34,
+   "line": "西佐世保相浦線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "西佐世保",
+   "to": "相浦"
+  },
+  {
+   "district": "takeo",
+   "no": 35,
+   "line": "木風佐世保線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "木風sws",
+   "to": "佐世保"
+  },
+  {
+   "district": "takeo",
+   "no": 36,
+   "line": "針尾分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "針尾"
+  },
+  {
+   "district": "takeo",
+   "no": 37,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "面高",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 38,
+   "line": "東佐世保大村線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "大村"
+  },
+  {
+   "district": "takeo",
+   "no": 39,
+   "line": "川棚分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "東佐世保",
+   "to": "川棚"
+  },
+  {
+   "district": "takeo",
+   "no": 40,
+   "line": "七浦幹",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 41,
+   "line": "太良幹",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 42,
+   "line": "紐差",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 43,
+   "line": "生月",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 44,
+   "line": "松浦西部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 45,
+   "line": "松浦東部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 46,
+   "line": "北松南部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 47,
+   "line": "相浦西部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 48,
+   "line": "西彼",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "takeo",
+   "no": 49,
+   "line": "伏原北部",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 1,
+   "line": "若松分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "北九州",
+   "to": "若松"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 2,
+   "line": "若松安瀬下線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "若松",
+   "to": "安瀬"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 3,
+   "line": "若松二島線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "若松",
+   "to": "二島"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 4,
+   "line": "二島東畑線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "二島",
+   "to": "東畑"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 5,
+   "line": "二島浅川線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "二島",
+   "to": "浅川"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 6,
+   "line": "二島折尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "二島",
+   "to": "折尾"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 7,
+   "line": "二島洞海線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "二島",
+   "to": "洞海"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 8,
+   "line": "若松安瀬上線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "若松",
+   "to": "安瀬"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 9,
+   "line": "響南",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 10,
+   "line": "玄海",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 11,
+   "line": "灘",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "wakamatsu",
+   "no": 12,
+   "line": "海岸",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yahata",
+   "no": 1,
+   "line": "北九州幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "脊振",
+   "to": "北九州"
+  },
+  {
+   "district": "yahata",
+   "no": 2,
+   "line": "豊前北幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "豊前",
+   "to": "北九州"
+  },
+  {
+   "district": "yahata",
+   "no": 3,
+   "line": "上津役線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "北九州",
+   "to": "上津役"
+  },
+  {
+   "district": "yahata",
+   "no": 4,
+   "line": "北九州豊前線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "豊前",
+   "to": "北九州"
+  },
+  {
+   "district": "yahata",
+   "no": 5,
+   "line": "上津役中間線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "中間"
+  },
+  {
+   "district": "yahata",
+   "no": 6,
+   "line": "通谷分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "通谷"
+  },
+  {
+   "district": "yahata",
+   "no": 7,
+   "line": "上津役折尾線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "折尾"
+  },
+  {
+   "district": "yahata",
+   "no": 8,
+   "line": "穴生分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "穴生"
+  },
+  {
+   "district": "yahata",
+   "no": 9,
+   "line": "上津役黒崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "黒崎"
+  },
+  {
+   "district": "yahata",
+   "no": 10,
+   "line": "黒崎藤田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "黒崎",
+   "to": "藤田"
+  },
+  {
+   "district": "yahata",
+   "no": 11,
+   "line": "上津役古月線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "古月"
+  },
+  {
+   "district": "yahata",
+   "no": 12,
+   "line": "上津役古月線（香月分岐）",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "香月"
+  },
+  {
+   "district": "yahata",
+   "no": 13,
+   "line": "芦屋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古月",
+   "to": "芦屋"
+  },
+  {
+   "district": "yahata",
+   "no": 14,
+   "line": "遠賀分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古月",
+   "to": "遠賀"
+  },
+  {
+   "district": "yahata",
+   "no": 15,
+   "line": "海老津分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "古月",
+   "to": "海老津"
+  },
+  {
+   "district": "yahata",
+   "no": 16,
+   "line": "上津役嘉穂線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "嘉穂"
+  },
+  {
+   "district": "yahata",
+   "no": 17,
+   "line": "上頓野分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "上頓野"
+  },
+  {
+   "district": "yahata",
+   "no": 18,
+   "line": "直方分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "上津役",
+   "to": "直方"
+  },
+  {
+   "district": "yahata",
+   "no": 19,
+   "line": "黒崎１号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yahata",
+   "no": 20,
+   "line": "黒崎２号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yahata",
+   "no": 21,
+   "line": "黒崎３号",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yahata",
+   "no": 22,
+   "line": "星ヶ丘",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yahata",
+   "no": 23,
+   "line": "三井",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 1,
+   "line": "南九州幹線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "南九州",
+   "to": "中九州"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 2,
+   "line": "送電線",
+   "kv": 500,
+   "circuits": 2,
+   "frm": "―",
+   "to": "中九州"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 3,
+   "line": "中九州南熊本線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "中九州",
+   "to": "南熊本"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 4,
+   "line": "中九州大平線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "中九州",
+   "to": "大平sws"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 5,
+   "line": "八代分岐線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "中九州",
+   "to": "八代"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 6,
+   "line": "大平人吉線",
+   "kv": 220,
+   "circuits": 2,
+   "frm": "大平sws",
+   "to": "人吉"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 7,
+   "line": "南熊本宇土線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "宇土"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 8,
+   "line": "宇土三角線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "宇土",
+   "to": "三角"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 9,
+   "line": "人吉新水俣新線",
+   "kv": 110,
+   "circuits": 2,
+   "frm": "人吉",
+   "to": "新水俣"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 10,
+   "line": "送電線",
+   "kv": 110,
+   "circuits": 1,
+   "frm": "新水俣",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 11,
+   "line": "八代宮原線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "八代",
+   "to": "宮原"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 12,
+   "line": "古閑分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "八代",
+   "to": "古閑"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 13,
+   "line": "八代松崎線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "八代",
+   "to": "松崎"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 15,
+   "line": "一の勢内野河内線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "一の勢",
+   "to": "内野河内"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 16,
+   "line": "内野河内姫浦線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "内野河内",
+   "to": "姫浦"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 17,
+   "line": "本渡分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "一の勢",
+   "to": "本渡"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 18,
+   "line": "苓北一の勢線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "苓北",
+   "to": "一の勢"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 19,
+   "line": "志岐分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "苓北",
+   "to": "志岐"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 20,
+   "line": "一の勢一町田線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "一の勢",
+   "to": "一町田"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 21,
+   "line": "一町田牛深線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "一町田",
+   "to": "牛深"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 22,
+   "line": "五木川八代線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "八代",
+   "to": "五木川"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 23,
+   "line": "日奈久分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "八代",
+   "to": "日奈久"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 24,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "八代",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 25,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "八代",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 26,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "五木川",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 27,
+   "line": "新水俣芦北線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新水俣",
+   "to": "芦北"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 28,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 29,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "新水俣",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 30,
+   "line": "芦北田浦線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "芦北",
+   "to": "田浦"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 31,
+   "line": "宇土松橋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "宇土",
+   "to": "松橋"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 32,
+   "line": "南熊本松橋線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "松橋"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 33,
+   "line": "宮原分岐線",
+   "kv": 66,
+   "circuits": 2,
+   "frm": "南熊本",
+   "to": "宮原"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 34,
+   "line": "送電線",
+   "kv": 66,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 35,
+   "line": "長島1番",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 36,
+   "line": "沖町",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 37,
+   "line": "鳴川",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 38,
+   "line": "松島",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 39,
+   "line": "棚底",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  },
+  {
+   "district": "yatsushiro",
+   "no": 40,
+   "line": "二江",
+   "kv": 22,
+   "circuits": 1,
+   "frm": "―",
+   "to": "―"
+  }
+ ]
+}
