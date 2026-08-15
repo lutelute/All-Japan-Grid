@@ -3,7 +3,7 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 17352,
     "n_edges": 19204,
-    "generated": "2026-08-16 03:29:04",
+    "generated": "2026-08-16 04:21:28",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -43,7 +43,7 @@
       "ac_max_loading_pct": 305.25413936693064,
       "dc_max_loading_pct": 315.72913336132325,
       "ac_total_loss_mw": 110.85436574726188,
-      "solve_seconds": 5.0
+      "solve_seconds": 4.9
     },
     "east": {
       "frequency_hz": 50,
@@ -81,7 +81,7 @@
       "ac_max_loading_pct": 754.5790296970058,
       "dc_max_loading_pct": 864.8466391213708,
       "ac_total_loss_mw": 1278.6015549641484,
-      "solve_seconds": 101.9
+      "solve_seconds": 100.1
     },
     "west": {
       "frequency_hz": 60,
@@ -114,12 +114,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.762347702522989,
-      "ac_vm_max": 1.0247262914995727,
-      "ac_max_loading_pct": 734.1580000747751,
+      "ac_vm_min": 0.7623477025229126,
+      "ac_vm_max": 1.0247262914995376,
+      "ac_max_loading_pct": 734.1580000747747,
       "dc_max_loading_pct": 730.0953091166531,
-      "ac_total_loss_mw": 1321.6602932695073,
-      "solve_seconds": 82.6
+      "ac_total_loss_mw": 1321.6602804220875,
+      "solve_seconds": 81.1
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -157,7 +157,7 @@
       "ac_max_loading_pct": 185.88206276364758,
       "dc_max_loading_pct": 175.4445953494147,
       "ac_total_loss_mw": 22.29317208577602,
-      "solve_seconds": 1.2
+      "solve_seconds": 1.1
     }
   },
   "regions": {

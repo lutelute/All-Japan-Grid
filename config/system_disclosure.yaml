@@ -235,9 +235,18 @@ utilities:
         link_pattern: '(kikan|local)_impedance\.xlsx'
         verified: true     # 2026-08-15 実DL成功。kikan(132kV)+local。これで10社全社の所在が確定
       flow_actual:
+        # 実績は2階層: jisseki1/(基幹 tyoryujisseki_YYYY.xlsx+実績系統図) と
+        # local-jisseki/(ローカル tyoryu_YYYY_N.csv=8760h・潮流正方向が実名A→B!)
+        index_url: https://www.okiden.co.jp/business-support/service/juyo-and-sohaiden/local-jisseki/index.html
+        link_pattern: 'tyoryu_\d{4}_\d\.csv'
+        verified: true     # 2026-08-16 実DL成功 tyoryu_2025_1/2.csv(標準4行ヘッダ・実名from→to)
+        note: >-
+          基幹側は /juyo-and-sohaiden/jisseki1/ の tyoryujisseki_YYYY.xlsx(2023取得済)。
+          実績系統図 jissekikeitouzu_YYYY.pdf / local keitouzu_YYYY.pdf も取得済
+      keitouzu:
         index_url: https://www.okiden.co.jp/business-support/service/juyo-and-sohaiden/
         link_pattern: 'keitouzu[_]?\d+\.pdf'
-        verified: true     # 2026-08-15 確認。実績系統図PDF(潮流実績も同ページ)
+        verified: true     # 2026-08-15 確認。実績系統図PDF
         note: 予想潮流 sys_yoso_(kikan|local)_(line|tr).csv・作業停止 sagyou_teishi_*.xlsx も同ページ
       capacity:
         verified: true     # 既取得(2026-08-05)。con_res_map01_01〜03.csv（132kV/66kV線路・変電所の空容量）

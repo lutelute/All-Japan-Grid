@@ -266,7 +266,9 @@ def main() -> int:
     # 標準様式（社共通の命名）＋ 東京の独自配置（ZIP展開したサブフォルダ）
     # ZIP展開でサブフォルダが挟まる社がある（北海道は2階層下）ので再帰で拾う
     flow_paths = (sorted(SRC.glob("*/flow_actual/**/jisseki_*_line_*.csv"))
-                  + sorted(SRC.glob("tokyo/flow_actual/*/*/*.csv")))
+                  + sorted(SRC.glob("tokyo/flow_actual/*/*/*.csv"))
+                  # 沖縄はローカル実績が tyoryu_YYYY_N.csv（標準4行ヘッダ・実名from→to）
+                  + sorted(SRC.glob("okinawa/flow_actual/tyoryu_*.csv")))
     for flow_path in flow_paths:
         utility = flow_path.parts[len(SRC.parts)]
         if args.utility and utility != args.utility:
