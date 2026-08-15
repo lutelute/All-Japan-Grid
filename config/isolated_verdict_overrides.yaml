@@ -42,3 +42,15 @@ overrides:
     verdict: "?"
     approved: false
     evidence: 福島66kV系統図(local06)に不在・潮流実績CSVにも不在(2026-08-15判読)。飯舘は同図で解決済との対比
+
+  # --- 2026-08-15 関西判読(map-kansai)のflags由来 ---
+  - name: 篠山変電所
+    region: kansai
+    verdict: "?"
+    approved: false
+    evidence: 関西TD公表(154kv_less A表)で篠山=一次22kV/二次6.6kVの配電用。丹南篠山線も22kV。AGJのkv=66は過大で66kV系統接続は公表上存在しない
+  - name: 宮ノ上変電所
+    region: kansai
+    verdict: "?"
+    approved: false
+    evidence: 座標(34.081,136.192)=三重県紀北町=中部電力管内の可能性。関西の公表表に同名なし(region誤ラベル疑い)
