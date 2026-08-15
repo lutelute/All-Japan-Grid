@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1743,
-  "dryrun_off_main_after": 1741,
-  "n_new": 120,
+  "dryrun_off_main_before": 1757,
+  "dryrun_off_main_after": 1717,
+  "n_new": 150,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 45,
+    "disclosure_map": 75,
     "same_site_identity": 70
   },
   "region_fixes": [
@@ -692,7 +692,22 @@
     }
   ],
   "joined_subs": [
-    "国分寺変電所"
+    "難波変電所",
+    "湊町変電所",
+    "関西電力桃谷変電所",
+    "関西電力下寺変電所",
+    "泉北港変電所",
+    "佐川変電所",
+    "須崎変電所",
+    "須崎変電所",
+    "天王洲変電所",
+    "天王洲変電所",
+    "栄町変電所",
+    "萩之茶屋変電所",
+    "堺港変電所",
+    "須崎変電所",
+    "戸越変電所",
+    "横浜大黒変電所"
   ],
   "review_300_800m": [
     {
@@ -3117,6 +3132,546 @@
       "kv": 66.0,
       "line": "上三川線（CSVで小山・上郷の2局計測=国分寺はタップ）",
       "evidence": "系統図判読: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p14・同判読 confidence=高)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "難波変電所",
+      "to_sub": "萩之茶屋変電所",
+      "from_id": "kansai_sub_338",
+      "to_id": "suppl_kansai_萩之茶屋変電所",
+      "from_pt": [
+        34.65997,
+        135.50323
+      ],
+      "to_pt": [
+        34.64629,
+        135.5007
+      ],
+      "kv": 77.0,
+      "line": "萩之茶屋難波線",
+      "evidence": "系統図判読: 関西TD B表 南U(=難波)—DI(=萩之茶屋)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "湊町変電所",
+      "to_sub": "萩之茶屋変電所",
+      "from_id": "kansai_sub_563",
+      "to_id": "suppl_kansai_萩之茶屋変電所",
+      "from_pt": [
+        34.66533,
+        135.49265
+      ],
+      "to_pt": [
+        34.64629,
+        135.5007
+      ],
+      "kv": 77.0,
+      "line": "萩之茶屋湊町線/湊町線",
+      "evidence": "系統図判読: 関西TD B表 南S—DI（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "関西電力桃谷変電所",
+      "to_sub": "萩之茶屋変電所",
+      "from_id": "kansai_sub_299",
+      "to_id": "suppl_kansai_萩之茶屋変電所",
+      "from_pt": [
+        34.65596,
+        135.52383
+      ],
+      "to_pt": [
+        34.64629,
+        135.5007
+      ],
+      "kv": 77.0,
+      "line": "萩之茶屋桃谷線/桃谷線",
+      "evidence": "系統図判読: 関西TD B表 南W—DI（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "関西電力下寺変電所",
+      "to_sub": "萩之茶屋変電所",
+      "from_id": "kansai_sub_297",
+      "to_id": "suppl_kansai_萩之茶屋変電所",
+      "from_pt": [
+        34.6559,
+        135.50932
+      ],
+      "to_pt": [
+        34.64629,
+        135.5007
+      ],
+      "kv": 77.0,
+      "line": "下寺町線/下寺町支線",
+      "evidence": "系統図判読: 関西TD B表 南X(=下寺町)—DI（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "泉北港変電所",
+      "to_sub": "堺港変電所",
+      "from_id": "kansai_sub_35",
+      "to_id": "suppl_kansai_堺港変電所",
+      "from_pt": [
+        34.54034,
+        135.40585
+      ],
+      "to_pt": [
+        34.5731,
+        135.43974
+      ],
+      "kv": 77.0,
+      "line": "泉北線",
+      "evidence": "系統図判読: 関西TD B表 CW(=堺港)—南DB(=泉北港)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "三田変電所",
+      "to_sub": "弥生が丘変電所",
+      "from_id": "kansai_sub_539",
+      "to_id": "suppl_kansai_弥生が丘変電所",
+      "from_pt": [
+        34.88092,
+        135.23103
+      ],
+      "to_pt": [
+        34.88429,
+        135.20038
+      ],
+      "kv": 77.0,
+      "line": "三田弥生が丘線",
+      "evidence": "系統図判読: 関西TD B表(map-kansai判読 confidence=高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "北海道電力 大通変電所",
+      "to_sub": "南九条変電所",
+      "from_id": "hokkaido_sub_152",
+      "to_id": "suppl_hokkaido_南九条変電所",
+      "from_pt": [
+        43.06037,
+        141.34463
+      ],
+      "to_pt": [
+        43.04841,
+        141.35225
+      ],
+      "kv": 66.0,
+      "line": "南九条大通地中線(No.20)",
+      "evidence": "系統図判読: ほくでん06図・一覧表テキスト（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "円山変電所",
+      "to_sub": "南九条変電所",
+      "from_id": "hokkaido_sub_155",
+      "to_id": "suppl_hokkaido_南九条変電所",
+      "from_pt": [
+        43.05123,
+        141.32876
+      ],
+      "to_pt": [
+        43.04841,
+        141.35225
+      ],
+      "kv": 66.0,
+      "line": "南九条円山地中線(No.10)",
+      "evidence": "系統図判読: ほくでん06図・一覧表テキスト（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "白州変電所",
+      "to_sub": "北巨摩変電所",
+      "from_id": "tokyo_sub_1741",
+      "to_id": "suppl_tokyo_北巨摩変電所",
+      "from_pt": [
+        35.81586,
+        138.33161
+      ],
+      "to_pt": [
+        35.78585,
+        138.39794
+      ],
+      "kv": 66.0,
+      "line": "白州線(山梨66kV No.16)",
+      "evidence": "系統図判読: TEPCO山梨図p12(map-tokyo-north 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "小国町変電所",
+      "to_sub": "女子畑変電所",
+      "from_id": "kyushu_sub_250",
+      "to_id": "suppl_kyushu_女子畑変電所",
+      "from_pt": [
+        33.10039,
+        131.08991
+      ],
+      "to_pt": [
+        33.29416,
+        130.97424
+      ],
+      "kv": 66.0,
+      "line": "小国線(2回線)",
+      "evidence": "系統図判読: 九州地区図+一覧表(map-kyushu 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田市変電所 110kV",
+      "to_sub": "女子畑変電所",
+      "from_id": "kyushu_sub_249@110",
+      "to_id": "suppl_kyushu_女子畑変電所",
+      "from_pt": [
+        33.16461,
+        130.98453
+      ],
+      "to_pt": [
+        33.29416,
+        130.97424
+      ],
+      "kv": 66.0,
+      "line": "下筌支線",
+      "evidence": "系統図判読: 九州地区図(map-kyushu 中・日田市110=下筌の実態)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "佐川変電所",
+      "to_sub": "伊野変電所",
+      "from_id": "shikoku_sub_73",
+      "to_id": "suppl_shikoku_伊野変電所",
+      "from_pt": [
+        33.51392,
+        133.27333
+      ],
+      "to_pt": [
+        33.54872,
+        133.42781
+      ],
+      "kv": 66.0,
+      "line": "線34(佐川—伊野)",
+      "evidence": "系統図判読: 四国高知図(map-shikoku-chugoku 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "須崎変電所",
+      "to_sub": "押岡変電所",
+      "from_id": "shikoku_sub_256",
+      "to_id": "suppl_shikoku_押岡変電所",
+      "from_pt": [
+        33.38942,
+        133.27175
+      ],
+      "to_pt": [
+        33.40492,
+        133.32332
+      ],
+      "kv": 66.0,
+      "line": "線44",
+      "evidence": "系統図判読: 四国高知図(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "須崎変電所",
+      "to_sub": "久礼変電所",
+      "from_id": "shikoku_sub_256",
+      "to_id": "suppl_shikoku_久礼変電所",
+      "from_pt": [
+        33.38942,
+        133.27175
+      ],
+      "to_pt": [
+        33.3372,
+        133.21153
+      ],
+      "kv": 66.0,
+      "line": "線49",
+      "evidence": "系統図判読: 四国高知図(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "四国電力 甲浦変電所",
+      "to_sub": "四国電力海南変電所",
+      "from_id": "shikoku_sub_123",
+      "to_id": "suppl_shikoku_四国電力海南変電所",
+      "from_pt": [
+        33.54758,
+        134.28884
+      ],
+      "to_pt": [
+        33.61054,
+        134.36436
+      ],
+      "kv": 66.0,
+      "line": "線96+引込97",
+      "evidence": "系統図判読: 四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "牟岐変電所",
+      "to_sub": "四国電力海南変電所",
+      "from_id": "shikoku_sub_210",
+      "to_id": "suppl_shikoku_四国電力海南変電所",
+      "from_pt": [
+        33.67362,
+        134.42005
+      ],
+      "to_pt": [
+        33.61054,
+        134.36436
+      ],
+      "kv": 66.0,
+      "line": "引込93/本線95",
+      "evidence": "系統図判読: 四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "牟岐変電所",
+      "to_sub": "日和佐変電所",
+      "from_id": "shikoku_sub_210",
+      "to_id": "suppl_shikoku_日和佐変電所",
+      "from_pt": [
+        33.67362,
+        134.42005
+      ],
+      "to_pt": [
+        33.72658,
+        134.53848
+      ],
+      "kv": 66.0,
+      "line": "線92(日和佐は引込94)",
+      "evidence": "系統図判読: 四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "天王洲変電所",
+      "to_sub": "戸越変電所",
+      "from_id": "tokyo_sub_606",
+      "to_id": "suppl_tokyo_戸越変電所",
+      "from_pt": [
+        35.62171,
+        139.75706
+      ],
+      "to_pt": [
+        35.60984,
+        139.71744
+      ],
+      "kv": 154.0,
+      "line": "東京23区154kV No.28",
+      "evidence": "系統図判読: TEPCO23区図p8(map-tokyo-city 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "天王洲変電所",
+      "to_sub": "大井ふ頭変電所",
+      "from_id": "tokyo_sub_606",
+      "to_id": "suppl_tokyo_大井ふ頭変電所",
+      "from_pt": [
+        35.62171,
+        139.75706
+      ],
+      "to_pt": [
+        35.60393,
+        139.76375
+      ],
+      "kv": 154.0,
+      "line": "東京23区154kV No.32",
+      "evidence": "系統図判読: TEPCO23区図p8(同 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "栄町変電所",
+      "to_sub": "横浜大黒変電所",
+      "from_id": "tokyo_sub_633",
+      "to_id": "suppl_tokyo_横浜大黒変電所",
+      "from_pt": [
+        35.51283,
+        139.68512
+      ],
+      "to_pt": [
+        35.48048,
+        139.6759
+      ],
+      "kv": 66.0,
+      "line": "栄町線1・2L",
+      "evidence": "系統図判読: TEPCO潮流実績CSV両端法(栄町・横浜大黒の2局計測)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "萩之茶屋変電所",
+      "to_sub": "敷津変電所 154kV",
+      "from_id": "suppl_kansai_萩之茶屋変電所",
+      "to_id": "kansai_sub_280@154",
+      "from_pt": [
+        34.64629,
+        135.5007
+      ],
+      "to_pt": [
+        34.62072,
+        135.46956
+      ],
+      "kv": 154.0,
+      "line": "敷津萩之茶屋線",
+      "evidence": "系統図判読: 154kv_more_line.csv: DI(萩之茶屋)→DH(敷津)・機械確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "堺港変電所",
+      "to_sub": "長曽根変電所 154kV",
+      "from_id": "suppl_kansai_堺港変電所",
+      "to_id": "kansai_sub_21@154",
+      "from_pt": [
+        34.5731,
+        135.43974
+      ],
+      "to_pt": [
+        34.57653,
+        135.50676
+      ],
+      "kv": 154.0,
+      "line": "堺港長曽根線",
+      "evidence": "系統図判読: 154kv_more_line.csv: CW(堺港)→DF(長曽根)・機械確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "須崎変電所",
+      "to_sub": "高知変電所 110kV",
+      "from_id": "shikoku_sub_256",
+      "to_id": "shikoku_sub_82@110",
+      "from_pt": [
+        33.38942,
+        133.27175
+      ],
+      "to_pt": [
+        33.5658,
+        133.47652
+      ],
+      "kv": 110.0,
+      "line": "須崎線(110kV 2回線×3)",
+      "evidence": "系統図判読: sys_capa_local04: 変1→変23(須崎)。変1=高知は高知連絡線行で確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "戸越変電所",
+      "to_sub": "南武変電所 154kV",
+      "from_id": "suppl_tokyo_戸越変電所",
+      "to_id": "tokyo_sub_73@154",
+      "from_pt": [
+        35.60984,
+        139.71744
+      ],
+      "to_pt": [
+        35.58063,
+        139.62572
+      ],
+      "kv": 154.0,
+      "line": "戸越線",
+      "evidence": "系統図判読: TEPCO予想潮流CSV(tokyo/kanagawa): 南武→戸越・実名両端（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "横浜大黒変電所",
+      "to_sub": "旭変電所 154kV",
+      "from_id": "suppl_tokyo_横浜大黒変電所",
+      "to_id": "tokyo_sub_108@154",
+      "from_pt": [
+        35.48048,
+        139.6759
+      ],
+      "to_pt": [
+        35.52875,
+        139.65133
+      ],
+      "kv": 154.0,
+      "line": "(154kV・旭→横浜大黒)",
+      "evidence": "系統図判読: TEPCO予想潮流CSV(kanagawa): 旭(川崎区)→横浜大黒・実名両端（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "川口開閉所",
+      "to_sub": "桑野変電所",
+      "from_id": "suppl_shikoku_川口開閉所",
+      "to_id": "shikoku_sub_77",
+      "from_pt": [
+        33.808388,
+        134.46611
+      ],
+      "to_pt": [
+        33.87277,
+        134.61566
+      ],
+      "kv": 66.0,
+      "line": "川口線+川口連絡線",
+      "evidence": "系統図判読: sys_capa_local03: 変31(=桑野)→川口開閉所・機械確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日和佐変電所",
+      "to_sub": "川口開閉所",
+      "from_id": "suppl_shikoku_日和佐変電所",
+      "to_id": "suppl_shikoku_川口開閉所",
+      "from_pt": [
+        33.72658,
+        134.53848
+      ],
+      "to_pt": [
+        33.808388,
+        134.46611
+      ],
+      "kv": 66.0,
+      "line": "日和佐支線",
+      "evidence": "系統図判読: sys_capa_local03: 川口開閉所→変37(=日和佐)（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "牟岐変電所",
+      "to_sub": "川口開閉所",
+      "from_id": "shikoku_sub_210",
+      "to_id": "suppl_shikoku_川口開閉所",
+      "from_pt": [
+        33.67362,
+        134.42005
+      ],
+      "to_pt": [
+        33.808388,
+        134.46611
+      ],
+      "kv": 66.0,
+      "line": "牟岐線(91-93)",
+      "evidence": "系統図判読: sys_capa_local03: 川口開閉所→変38(=牟岐)（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "四国電力海南変電所",
+      "to_sub": "川口開閉所",
+      "from_id": "suppl_shikoku_四国電力海南変電所",
+      "to_id": "suppl_shikoku_川口開閉所",
+      "from_pt": [
+        33.61054,
+        134.36436
+      ],
+      "to_pt": [
+        33.808388,
+        134.46611
+      ],
+      "kv": 66.0,
+      "line": "海南支線",
+      "evidence": "系統図判読: sys_capa_local03: 川口開閉所→変39(=海南)（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "四国電力 甲浦変電所",
+      "to_sub": "川口開閉所",
+      "from_id": "shikoku_sub_123",
+      "to_id": "suppl_shikoku_川口開閉所",
+      "from_pt": [
+        33.54758,
+        134.28884
+      ],
+      "to_pt": [
+        33.808388,
+        134.46611
+      ],
+      "kv": 66.0,
+      "line": "甲浦支線(95/96)",
+      "evidence": "系統図判読: sys_capa_local03: 川口開閉所→変40(=甲浦)（アンカー補完 2026-08-16）"
     }
   ]
 }

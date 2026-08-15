@@ -1,0 +1,124 @@
+# 供給ノード台帳 — 判読で実在確定したがモデル(OSM抽出)に無い変電所の補完
+#
+# 「西日本の孤立主因は隣接ノード自体の欠落」(mapread_campaign_2026-08-15.md)への対処。
+# 運用規約:
+#   - 公表資料の判読で実在・接続が確定した局のみ(figures/CSVのevidence必須)
+#   - 座標は OSM(Overpass)実在ノードを第一候補(osm: type/id を記録)。OSMにも無い場合は
+#     公表図の位置関係から近似し approx: true を明示(座標精度を偽らない)
+#   - apply_disclosure_v2 が nodes に注入(id=suppl_<slug>・supplement:true 刻印・冪等)
+#   - 無効化: 行を消す or --disable supplement
+#
+# nodes: (name, kv, lat, lon, region, osm, evidence)
+nodes:
+  - name: 萩之茶屋変電所
+    kv: 77
+    lat: 34.64629
+    lon: 135.5007
+    region: kansai
+    approx: true
+    evidence: "関西TD B表: 萩之茶屋難波線/湊町線/桃谷線/下寺町線のハブ(DI)。位置=地名(西成区萩之茶屋)"
+  - name: 堺港変電所
+    kv: 77
+    lat: 34.5731
+    lon: 135.43974
+    region: kansai
+    approx: true
+    evidence: "関西TD B表: 泉北線(CW→南DB)の起点。位置=地名(堺市西区築港新町)"
+  - name: 弥生が丘変電所
+    kv: 77
+    lat: 34.88429
+    lon: 135.20038
+    region: kansai
+    approx: true
+    evidence: "関西TD B表: 三田弥生が丘線の相手。位置=地名(三田市弥生が丘)"
+  - name: 南九条変電所
+    kv: 66
+    lat: 43.04841
+    lon: 141.35225
+    region: hokkaido
+    approx: true
+    evidence: "ほくでん06南九条系統図のハブ(大通/円山/山鼻/薄野へ放射)。位置=地名(南9条西5)"
+  - name: 北巨摩変電所
+    kv: 154
+    lat: 35.78585
+    lon: 138.39794
+    region: tokyo
+    osm: way/209324330
+    evidence: "OSM実在(154000;66000)。TEPCO山梨図: 白州線の親"
+  - name: 上郷変電所
+    kv: 66
+    lat: 36.45463
+    lon: 139.93784
+    region: tokyo
+    osm: way/106655150
+    evidence: "OSM実在。TEPCO栃木CSV: 上三川線の小山側対向端"
+  - name: 女子畑変電所
+    kv: 66
+    lat: 33.29416
+    lon: 130.97424
+    region: kyushu
+    osm: way/216619528
+    evidence: "OSM実在(女子畑水力発電所サイト)。九州図: 小国線・下筌支線の相手"
+  - name: 久礼変電所
+    kv: 110
+    lat: 33.3372
+    lon: 133.21153
+    region: shikoku
+    approx: true
+    evidence: "四国高知図: 須崎の相手(線49)。位置=地名(中土佐町久礼)"
+  - name: 押岡変電所
+    kv: 110
+    lat: 33.40492
+    lon: 133.32332
+    region: shikoku
+    approx: true
+    evidence: "四国高知図: 須崎の相手(線44)。位置=地名(須崎市押岡)"
+  - name: 伊野変電所
+    kv: 66
+    lat: 33.54872
+    lon: 133.42781
+    region: shikoku
+    approx: true
+    evidence: "四国高知図: 佐川の相手(線34)。位置=地名(いの町)"
+  - name: 四国電力海南変電所
+    kv: 66
+    lat: 33.61054
+    lon: 134.36436
+    region: shikoku
+    approx: true
+    evidence: "四国徳島図: 甲浦—海南—牟岐(線96/97)。位置=地名(海陽町大里・旧海南町)。関西の海南変電所と別物"
+  - name: 日和佐変電所
+    kv: 66
+    lat: 33.72658
+    lon: 134.53848
+    region: shikoku
+    approx: true
+    evidence: "四国徳島図: 牟岐の相手(線92/94)。位置=地名(美波町日和佐)"
+  - name: 戸越変電所
+    kv: 154
+    lat: 35.60984
+    lon: 139.71744
+    region: tokyo
+    approx: true
+    evidence: "TEPCO23区図p8: 天王洲の相手(154kV No.28)。位置=地名(戸越)"
+  - name: 大井ふ頭変電所
+    kv: 275
+    lat: 35.60393
+    lon: 139.76375
+    region: tokyo
+    approx: true
+    evidence: "TEPCO23区図p8: 天王洲の相手(No.32)・豊洲永代橋系。位置=地名(八潮)"
+  - name: 横浜大黒変電所
+    kv: 66
+    lat: 35.48048
+    lon: 139.6759
+    region: tokyo
+    approx: true
+    evidence: "TEPCO CSV両端法: 栄町線1・2Lの相手。位置=地名(鶴見区大黒町)"
+  - name: 川口開閉所
+    kv: 66
+    lat: 33.808388
+    lon: 134.46611
+    region: shikoku
+    approx: true
+    evidence: "四国sys_capa local03: 変31(=桑野)→川口開閉所(川口線/連絡線)・川口開閉所→日和佐/牟岐/海南/甲浦のハブ。位置=地名(那賀町吉野・川口ダム付近)"

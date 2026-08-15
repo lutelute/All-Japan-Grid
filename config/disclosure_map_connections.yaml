@@ -377,3 +377,183 @@ connections:
     src: >-
       TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。
       CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 難波変電所
+    to: 萩之茶屋変電所
+    region: kansai
+    kv: 77
+    line: "萩之茶屋難波線"
+    src: "関西TD B表 南U(=難波)—DI(=萩之茶屋)（供給ノード補完 2026-08-16）"
+  - frm: 湊町変電所
+    to: 萩之茶屋変電所
+    region: kansai
+    kv: 77
+    line: "萩之茶屋湊町線/湊町線"
+    src: "関西TD B表 南S—DI（供給ノード補完 2026-08-16）"
+  - frm: 関西電力桃谷変電所
+    to: 萩之茶屋変電所
+    region: kansai
+    kv: 77
+    line: "萩之茶屋桃谷線/桃谷線"
+    src: "関西TD B表 南W—DI（供給ノード補完 2026-08-16）"
+  - frm: 関西電力下寺変電所
+    to: 萩之茶屋変電所
+    region: kansai
+    kv: 77
+    line: "下寺町線/下寺町支線"
+    src: "関西TD B表 南X(=下寺町)—DI（供給ノード補完 2026-08-16）"
+  - frm: 泉北港変電所
+    to: 堺港変電所
+    region: kansai
+    kv: 77
+    line: "泉北線"
+    src: "関西TD B表 CW(=堺港)—南DB(=泉北港)（供給ノード補完 2026-08-16）"
+  - frm: 三田変電所
+    to: 弥生が丘変電所
+    region: kansai
+    kv: 77
+    line: "三田弥生が丘線"
+    src: "関西TD B表(map-kansai判読 confidence=高)（供給ノード補完 2026-08-16）"
+  - frm: 北海道電力 大通変電所
+    to: 南九条変電所
+    region: hokkaido
+    kv: 66
+    line: "南九条大通地中線(No.20)"
+    src: "ほくでん06図・一覧表テキスト（供給ノード補完 2026-08-16）"
+  - frm: 円山変電所
+    to: 南九条変電所
+    region: hokkaido
+    kv: 66
+    line: "南九条円山地中線(No.10)"
+    src: "ほくでん06図・一覧表テキスト（供給ノード補完 2026-08-16）"
+  - frm: 白州変電所
+    to: 北巨摩変電所
+    region: tokyo
+    kv: 66
+    line: "白州線(山梨66kV No.16)"
+    src: "TEPCO山梨図p12(map-tokyo-north 高)（供給ノード補完 2026-08-16）"
+  - frm: 小国町変電所
+    to: 女子畑変電所
+    region: kyushu
+    kv: 66
+    line: "小国線(2回線)"
+    src: "九州地区図+一覧表(map-kyushu 高)（供給ノード補完 2026-08-16）"
+  - frm: 日田市変電所 110kV
+    to: 女子畑変電所
+    region: kyushu
+    kv: 66
+    line: "下筌支線"
+    src: "九州地区図(map-kyushu 中・日田市110=下筌の実態)（供給ノード補完 2026-08-16）"
+  - frm: 佐川変電所
+    to: 伊野変電所
+    region: shikoku
+    kv: 66
+    line: "線34(佐川—伊野)"
+    src: "四国高知図(map-shikoku-chugoku 高)（供給ノード補完 2026-08-16）"
+  - frm: 須崎変電所
+    to: 押岡変電所
+    region: shikoku
+    kv: 66
+    line: "線44"
+    src: "四国高知図(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 須崎変電所
+    to: 久礼変電所
+    region: shikoku
+    kv: 66
+    line: "線49"
+    src: "四国高知図(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 四国電力 甲浦変電所
+    to: 四国電力海南変電所
+    region: shikoku
+    kv: 66
+    line: "線96+引込97"
+    src: "四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 牟岐変電所
+    to: 四国電力海南変電所
+    region: shikoku
+    kv: 66
+    line: "引込93/本線95"
+    src: "四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 牟岐変電所
+    to: 日和佐変電所
+    region: shikoku
+    kv: 66
+    line: "線92(日和佐は引込94)"
+    src: "四国徳島図(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 天王洲変電所
+    to: 戸越変電所
+    region: tokyo
+    kv: 154
+    line: "東京23区154kV No.28"
+    src: "TEPCO23区図p8(map-tokyo-city 高)（供給ノード補完 2026-08-16）"
+  - frm: 天王洲変電所
+    to: 大井ふ頭変電所
+    region: tokyo
+    kv: 154
+    line: "東京23区154kV No.32"
+    src: "TEPCO23区図p8(同 高)（供給ノード補完 2026-08-16）"
+  - frm: 栄町変電所
+    to: 横浜大黒変電所
+    region: tokyo
+    kv: 66
+    line: "栄町線1・2L"
+    src: "TEPCO潮流実績CSV両端法(栄町・横浜大黒の2局計測)（供給ノード補完 2026-08-16）"
+  - frm: 萩之茶屋変電所
+    to: 敷津変電所 154kV
+    region: kansai
+    kv: 154
+    line: "敷津萩之茶屋線"
+    src: "154kv_more_line.csv: DI(萩之茶屋)→DH(敷津)・機械確認（アンカー補完 2026-08-16）"
+  - frm: 堺港変電所
+    to: 長曽根変電所 154kV
+    region: kansai
+    kv: 154
+    line: "堺港長曽根線"
+    src: "154kv_more_line.csv: CW(堺港)→DF(長曽根)・機械確認（アンカー補完 2026-08-16）"
+  - frm: 須崎変電所
+    to: 高知変電所 110kV
+    region: shikoku
+    kv: 110
+    line: "須崎線(110kV 2回線×3)"
+    src: "sys_capa_local04: 変1→変23(須崎)。変1=高知は高知連絡線行で確認（アンカー補完 2026-08-16）"
+  - frm: 戸越変電所
+    to: 南武変電所 154kV
+    region: tokyo
+    kv: 154
+    line: "戸越線"
+    src: "TEPCO予想潮流CSV(tokyo/kanagawa): 南武→戸越・実名両端（アンカー補完 2026-08-16）"
+  - frm: 横浜大黒変電所
+    to: 旭変電所 154kV
+    region: tokyo
+    kv: 154
+    line: "(154kV・旭→横浜大黒)"
+    src: "TEPCO予想潮流CSV(kanagawa): 旭(川崎区)→横浜大黒・実名両端（アンカー補完 2026-08-16）"
+  - frm: 川口開閉所
+    to: 桑野変電所
+    region: shikoku
+    kv: 66
+    line: "川口線+川口連絡線"
+    src: "sys_capa_local03: 変31(=桑野)→川口開閉所・機械確認（アンカー補完 2026-08-16）"
+  - frm: 日和佐変電所
+    to: 川口開閉所
+    region: shikoku
+    kv: 66
+    line: "日和佐支線"
+    src: "sys_capa_local03: 川口開閉所→変37(=日和佐)（アンカー補完 2026-08-16）"
+  - frm: 牟岐変電所
+    to: 川口開閉所
+    region: shikoku
+    kv: 66
+    line: "牟岐線(91-93)"
+    src: "sys_capa_local03: 川口開閉所→変38(=牟岐)（アンカー補完 2026-08-16）"
+  - frm: 四国電力海南変電所
+    to: 川口開閉所
+    region: shikoku
+    kv: 66
+    line: "海南支線"
+    src: "sys_capa_local03: 川口開閉所→変39(=海南)（アンカー補完 2026-08-16）"
+  - frm: 四国電力 甲浦変電所
+    to: 川口開閉所
+    region: shikoku
+    kv: 66
+    line: "甲浦支線(95/96)"
+    src: "sys_capa_local03: 川口開閉所→変40(=甲浦)（アンカー補完 2026-08-16）"

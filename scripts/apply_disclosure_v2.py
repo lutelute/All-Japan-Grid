@@ -42,6 +42,27 @@ from scripts.reconcile_isolated_multi import build_pool, norm  # noqa: E402
 
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 BAK = ROOT / "docs" / "data" / "built" / "all.json.pre_v2.bak"
+SUPPL = ROOT / "config" / "disclosure_supplement_nodes.yaml"
+
+
+def load_supplements() -> list[dict]:
+    """供給ノード台帳(判読で実在確定・モデル不在の変電所)を読む。"""
+    if not SUPPL.exists():
+        return []
+    import yaml as _yaml
+    out = []
+    for m in (_yaml.safe_load(SUPPL.read_text(encoding="utf-8")) or {}).get("nodes", []):
+        slug = re.sub(r"[^0-9A-Za-z一-龥ぁ-んァ-ン]", "", str(m["name"]))[:24]
+        out.append({
+            "id": f"suppl_{m.get('region','x')}_{slug}",
+            "name": m["name"], "lat": float(m["lat"]), "lon": float(m["lon"]),
+            "kv": float(m["kv"]) if m.get("kv") else 0.0,
+            "region": m.get("region"), "sub": 1, "deg": 0,
+            "supplement": True,
+            "suppl_src": (f"OSM {m['osm']}" if m.get("osm") else "図位置近似")
+                         + " / " + str(m.get("evidence", "")),
+        })
+    return out
 AUDIT = ROOT / "data" / "external" / "system_disclosure" / "viz" / "audit_nodes.geojson"
 TR_REG = ROOT / "data" / "external" / "system_disclosure" / "normalized" / "tohoku_tr_registry.csv"
 OUT = ROOT / "docs" / "reports" / "disclosure_connection_worklist_v2.json"
@@ -77,6 +98,14 @@ class Frame:
                 "latlon": (lat, lon), "cls": p.get("cls"),
                 "verdict": p.get("verdict"), "region": p.get("region"),
                 "kv": p.get("kv") or 0, "sub": bool(p.get("sub")),
+            })
+        # 供給ノード(台帳)も参照系に足す — MAPS の相手として pick 可能にする
+        for s in load_supplements():
+            self.nodes.append({
+                "id": s["id"], "name": s["name"],
+                "latlon": (s["lat"], s["lon"]), "cls": "supplement",
+                "verdict": None, "region": s.get("region"),
+                "kv": s.get("kv") or 0, "sub": True,
             })
         self.by_norm: dict[str, list[dict]] = defaultdict(list)
         for n in self.nodes:
@@ -355,6 +384,17 @@ def main() -> int:
 
     built = json.loads(BUILT.read_text(encoding="utf-8"))
     nodes, bedges = built["nodes"], built["edges"]
+
+    # 供給ノード注入（判読で実在確定・モデル不在の変電所の補完。冪等・出典必須）
+    if "supplement" not in disabled:
+        have_ids = {n.get("id") for n in nodes}
+        n_suppl = 0
+        for s in load_supplements():
+            if s["id"] not in have_ids:
+                nodes.append(s)
+                n_suppl += 1
+        if n_suppl:
+            print(f"供給ノード注入: {n_suppl}件（config/disclosure_supplement_nodes.yaml）")
 
     # 青森箱のregion是正（大間の一般化）: 下北半島(lat<41.6, lon>140.6)にある
     # hokkaidoラベルは region bbox 重複の混入（下北・佐井・大畑・東通・東通村・
