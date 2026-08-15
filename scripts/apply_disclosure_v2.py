@@ -300,6 +300,11 @@ def main() -> int:
                          "(docs/reports/disclosure_connection_worklist_v2.json)から適用する。"
                          "build（build_editor_data）が all.json を基底から再構築して介入を"
                          "消すため、regenerate_all のパイプラインステップとして使う（冪等）")
+    ap.add_argument("--update-ledger", action="store_true",
+                    help="帳簿(docs/reports/disclosure_connection_worklist_v2.json)を"
+                         "今回の worklist で書き換える。既定では帳簿は不変"
+                         "（適用済み状態でのドライランが帳簿を空にする事故の防止。"
+                         "帳簿はパイプライン --from-worklist の入力=介入の正本）")
     ap.add_argument("--revert", action="store_true", help="v2適用直前に戻す")
     ap.add_argument("--disable", default="",
                     help="無効化する証拠クラス（カンマ区切り: disclosure_line,"
@@ -407,8 +412,8 @@ def main() -> int:
               + (f"  [{e['line']}]" if e.get("line") else "")
               + (f"  ({e['dist_m']}m)" if e.get("dist_m") is not None else ""))
 
-    if args.from_worklist:
-        print("（--from-worklist: 帳簿は書き換えない）")
+    if not args.update_ledger:
+        print("（帳簿は不変。書き換えるには --update-ledger を明示）")
     else:
         OUT.write_text(json.dumps({
         "note": ("実証接続 v2。公表線路/分岐タップ/変圧器実証（東北NW系統情報公表）と"
