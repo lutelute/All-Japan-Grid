@@ -557,3 +557,15 @@ connections:
     kv: 66
     line: "甲浦支線(95/96)"
     src: "sys_capa_local03: 川口開閉所→変40(=甲浦)（アンカー補完 2026-08-16）"
+  - frm: 弥生が丘変電所
+    to: 北摂変電所 77kV
+    region: kansai
+    kv: 77
+    line: "北摂弥生が丘線"
+    src: "154kv_less_line.csv: AK(=北摂)→神M(=弥生が丘)・機械確認（アンカー補完 2026-08-16）"
+  - frm: 女子畑変電所
+    to: 日田変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "日田女子畑線（2回線）"
+    src: "九州 日田地区一覧表(td_hita): 日田→女子畑・実名両端（アンカー補完 2026-08-16）"

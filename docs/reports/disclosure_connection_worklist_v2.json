@@ -15,14 +15,14 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1757,
-  "dryrun_off_main_after": 1717,
-  "n_new": 150,
+  "dryrun_off_main_before": 1717,
+  "dryrun_off_main_after": 1708,
+  "n_new": 153,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 75,
-    "same_site_identity": 70
+    "disclosure_map": 77,
+    "same_site_identity": 71
   },
   "region_fixes": [
     {
@@ -692,22 +692,8 @@
     }
   ],
   "joined_subs": [
-    "難波変電所",
-    "湊町変電所",
-    "関西電力桃谷変電所",
-    "関西電力下寺変電所",
-    "泉北港変電所",
-    "佐川変電所",
-    "須崎変電所",
-    "須崎変電所",
-    "天王洲変電所",
-    "天王洲変電所",
-    "栄町変電所",
-    "萩之茶屋変電所",
-    "堺港変電所",
-    "須崎変電所",
-    "戸越変電所",
-    "横浜大黒変電所"
+    "女子畑変電所",
+    "上郷変電所"
   ],
   "review_300_800m": [
     {
@@ -791,6 +777,20 @@
       "regions": [
         "chubu",
         "hokuriku"
+      ],
+      "note": "300-800m: 同一敷地か要人間確認"
+    },
+    {
+      "iso": "西区変電所_7",
+      "main": "西区変電所_3",
+      "dist_m": 582,
+      "kv": [
+        0,
+        0
+      ],
+      "regions": [
+        "kansai",
+        "kansai"
       ],
       "note": "300-800m: 同一敷地か要人間確認"
     }
@@ -3672,6 +3672,62 @@
       "kv": 66.0,
       "line": "甲浦支線(95/96)",
       "evidence": "系統図判読: sys_capa_local03: 川口開閉所→変40(=甲浦)（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "弥生が丘変電所",
+      "to_sub": "北摂変電所 77kV",
+      "from_id": "suppl_kansai_弥生が丘変電所",
+      "to_id": "kansai_sub_270@77",
+      "from_pt": [
+        34.88429,
+        135.20038
+      ],
+      "to_pt": [
+        34.93221,
+        135.11071
+      ],
+      "kv": 77.0,
+      "line": "北摂弥生が丘線",
+      "evidence": "系統図判読: 154kv_less_line.csv: AK(=北摂)→神M(=弥生が丘)・機械確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "日田変電所 66kV",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "kyushu_sub_28@66",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.30473,
+        130.87468
+      ],
+      "kv": 66.0,
+      "line": "日田女子畑線（2回線）",
+      "evidence": "系統図判読: 九州 日田地区一覧表(td_hita): 日田→女子畑・実名両端（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "上郷変電所",
+      "to_sub": "上郷変電所",
+      "from_id": "suppl_tokyo_上郷変電所",
+      "to_id": "tokyo_sub_1373",
+      "from_pt": [
+        36.45463,
+        139.93784
+      ],
+      "to_pt": [
+        36.45421,
+        139.9379
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 47
     }
   ]
 }
