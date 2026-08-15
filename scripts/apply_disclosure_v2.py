@@ -55,7 +55,8 @@ def load_supplements() -> list[dict]:
         slug = re.sub(r"[^0-9A-Za-z一-龥ぁ-んァ-ン]", "", str(m["name"]))[:24]
         out.append({
             "id": f"suppl_{m.get('region','x')}_{slug}",
-            "name": m["name"], "lat": float(m["lat"]), "lon": float(m["lon"]),
+            "name": m["name"],
+            "lat": round(float(m["lat"]), 5), "lon": round(float(m["lon"]), 5),
             "kv": float(m["kv"]) if m.get("kv") else 0.0,
             "region": m.get("region"), "sub": 1, "deg": 0,
             "supplement": True,
