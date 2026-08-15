@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1762,
-  "dryrun_off_main_after": 1745,
-  "n_new": 107,
+  "dryrun_off_main_before": 1745,
+  "dryrun_off_main_after": 1735,
+  "n_new": 121,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 32,
+    "disclosure_map": 46,
     "same_site_identity": 70
   },
   "region_fixes": [
@@ -692,13 +692,19 @@
     }
   ],
   "joined_subs": [
-    "黒磯変電所",
-    "国分寺変電所",
-    "簗瀬町変電所",
-    "薄根変電所",
-    "白梅変電所",
-    "白梅変電所",
-    "小出"
+    "篠崎変電所",
+    "淀橋変電所",
+    "淀橋変電所",
+    "平井変電所",
+    "西新宿変電所",
+    "西新宿変電所",
+    "西巣鴨変電所",
+    "東池袋変電所",
+    "東池袋変電所",
+    "戸山変電所",
+    "戸山変電所",
+    "川口変電所",
+    "東川口変電所"
   ],
   "review_300_800m": [
     {
@@ -2889,6 +2895,258 @@
       "kv": 66.0,
       "line": "東北NW新潟県図の設備7F10（小出—堀之内）",
       "evidence": "系統図判読: 東北NW 新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf・map-tokyo-north判読)。 小出はTEPCO新潟図に不在=東北NW設備(東上越/高田も同様・region誤ラベルはreview送り)。 堀之内はモデルの堀之内町変電所(魚沼市)に対応"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "篠崎変電所",
+      "to_sub": "小松川変電所 66kV",
+      "from_id": "tokyo_sub_776",
+      "to_id": "tokyo_sub_574@66",
+      "from_pt": [
+        35.68999,
+        139.901
+      ],
+      "to_pt": [
+        35.68767,
+        139.8693
+      ],
+      "kv": 66.0,
+      "line": "篠崎線(東京23区66kV No.35)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=高)。図p11+一覧表+潮流実績CSVの三者一致(map-tokyo-city)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "淀橋変電所",
+      "to_sub": "新宿変電所",
+      "from_id": "tokyo_sub_807",
+      "to_id": "tokyo_sub_815",
+      "from_pt": [
+        35.69462,
+        139.68653
+      ],
+      "to_pt": [
+        35.69106,
+        139.68922
+      ],
+      "kv": 66.0,
+      "line": "新淀線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(新宿・淀橋の2局で計測)。淀橋の平常時供給側。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "淀橋変電所",
+      "to_sub": "和田堀変電所 66kV",
+      "from_id": "tokyo_sub_807",
+      "to_id": "tokyo_sub_21@66",
+      "from_pt": [
+        35.69462,
+        139.68653
+      ],
+      "to_pt": [
+        35.68042,
+        139.64768
+      ],
+      "kv": 66.0,
+      "line": "淀橋和田堀方面(図p12)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。系統構成図(tokyo23 p12)。⚠常時開路の連系タイ(平常時は新宿側から供給)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "平井変電所",
+      "to_sub": "神栖変電所 66kV",
+      "from_id": "tokyo_sub_1668",
+      "to_id": "tokyo_sub_1464@66",
+      "from_pt": [
+        35.95242,
+        140.66532
+      ],
+      "to_pt": [
+        35.91824,
+        140.65663
+      ],
+      "kv": 66.0,
+      "line": "船津線(茨城66kV No.63)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。系統構成図(ibaraki p13)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "牛久変電所",
+      "to_sub": "北竜台変電所",
+      "from_id": "tokyo_sub_1433",
+      "to_id": "tokyo_sub_1712",
+      "from_pt": [
+        35.97156,
+        140.14741
+      ],
+      "to_pt": [
+        35.93192,
+        140.16416
+      ],
+      "kv": 66.0,
+      "line": "牛久線(茨城66kV No.52)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=高)。系統構成図(ibaraki p12)。⚠北竜台も孤立=実証チェーン。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西新宿変電所",
+      "to_sub": "新宿変電所",
+      "from_id": "tokyo_sub_816",
+      "to_id": "tokyo_sub_815",
+      "from_pt": [
+        35.69265,
+        139.69857
+      ],
+      "to_pt": [
+        35.69106,
+        139.68922
+      ],
+      "kv": 66.0,
+      "line": "西新宿線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(新宿・東新宿の2局で計測=西新宿はループイン点)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西新宿変電所",
+      "to_sub": "東新宿変電所",
+      "from_id": "tokyo_sub_816",
+      "to_id": "tokyo_sub_817",
+      "from_pt": [
+        35.69265,
+        139.69857
+      ],
+      "to_pt": [
+        35.69206,
+        139.71037
+      ],
+      "kv": 66.0,
+      "line": "西新宿線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西巣鴨変電所",
+      "to_sub": "豊島変電所",
+      "from_id": "tokyo_sub_971",
+      "to_id": "tokyo_sub_818",
+      "from_pt": [
+        35.73463,
+        139.72804
+      ],
+      "to_pt": [
+        35.72879,
+        139.72021
+      ],
+      "kv": 66.0,
+      "line": "西巣鴨線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV(豊島(変)の66kVフィーダ列・線名が相手を名指す=v1と同手法)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "東池袋変電所",
+      "to_sub": "常盤台変電所",
+      "from_id": "tokyo_sub_535",
+      "to_id": "tokyo_sub_955",
+      "from_pt": [
+        35.73227,
+        139.7172
+      ],
+      "to_pt": [
+        35.75755,
+        139.69128
+      ],
+      "kv": 66.0,
+      "line": "東池袋線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(常盤台・豊島の2局で計測)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "東池袋変電所",
+      "to_sub": "豊島変電所",
+      "from_id": "tokyo_sub_535",
+      "to_id": "tokyo_sub_818",
+      "from_pt": [
+        35.73227,
+        139.7172
+      ],
+      "to_pt": [
+        35.72879,
+        139.72021
+      ],
+      "kv": 66.0,
+      "line": "東池袋線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "戸山変電所",
+      "to_sub": "東新宿変電所",
+      "from_id": "tokyo_sub_973",
+      "to_id": "tokyo_sub_817",
+      "from_pt": [
+        35.70058,
+        139.70853
+      ],
+      "to_pt": [
+        35.69206,
+        139.71037
+      ],
+      "kv": 66.0,
+      "line": "戸山線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(東新宿・水道橋の2局で計測)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "戸山変電所",
+      "to_sub": "水道橋変電所",
+      "from_id": "tokyo_sub_973",
+      "to_id": "tokyo_sub_667",
+      "from_pt": [
+        35.70058,
+        139.70853
+      ],
+      "to_pt": [
+        35.70007,
+        139.75293
+      ],
+      "kv": 66.0,
+      "line": "戸山線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "川口変電所",
+      "to_sub": "鳩ヶ谷変電所 66kV",
+      "from_id": "tokyo_sub_957",
+      "to_id": "tokyo_sub_564@66",
+      "from_pt": [
+        35.80674,
+        139.73394
+      ],
+      "to_pt": [
+        35.82284,
+        139.73626
+      ],
+      "kv": 66.0,
+      "line": "川口線1・2・3L",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV(鳩ヶ谷(変)の列・線名が相手を名指す)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "東川口変電所",
+      "to_sub": "鳩ヶ谷変電所 66kV",
+      "from_id": "tokyo_sub_956",
+      "to_id": "tokyo_sub_564@66",
+      "from_pt": [
+        35.79684,
+        139.73616
+      ],
+      "to_pt": [
+        35.82284,
+        139.73626
+      ],
+      "kv": 66.0,
+      "line": "東川口線1・2L",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
     }
   ]
 }

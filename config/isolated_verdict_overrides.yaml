@@ -107,3 +107,9 @@ overrides:
      evidence: TEPCO系統構成図(水戸域p14/p15)に名称ラベル付きノードとして不在(目視確認済)}
   - {name: 羽刈町変電所, region: tokyo, verdict: "?", approved: false,
      evidence: TEPCO系統構成図(佐野/東毛系統)に不在(目視確認済)}
+
+  # --- 2026-08-15 東京都市部判読(map-tokyo-city)のflags由来 ---
+  - {name: 立花二丁目変電所 66kV, region: tokyo, verdict: "?", approved: false,
+     evidence: TEPCO静岡(富士川以東)の配電用一覧・系統構成図・潮流実績のいずれにも不在。0.6km隣の天野と共に伊豆の国市の需要家(自家用受電)疑い}
+  - {name: 天野変電所, region: tokyo, verdict: "?", approved: false,
+     evidence: 同上(TEPCO全14県PDF横断検索でも該当なし)}

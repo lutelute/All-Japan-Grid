@@ -273,3 +273,115 @@ connections:
       東北NW 新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf・map-tokyo-north判読)。
       小出はTEPCO新潟図に不在=東北NW設備(東上越/高田も同様・region誤ラベルはreview送り)。
       堀之内はモデルの堀之内町変電所(魚沼市)に対応
+  - frm: 篠崎変電所
+    to: 小松川変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 篠崎線(東京23区66kV No.35)
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=高)。図p11+一覧表+潮流実績CSVの三者一致(map-tokyo-city)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 淀橋変電所
+    to: 新宿変電所
+    region: tokyo
+    kv: 66
+    line: 新淀線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(新宿・淀橋の2局で計測)。淀橋の平常時供給側。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 淀橋変電所
+    to: 和田堀変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 淀橋和田堀方面(図p12)
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。系統構成図(tokyo23 p12)。⚠常時開路の連系タイ(平常時は新宿側から供給)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 平井変電所
+    to: 神栖変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 船津線(茨城66kV No.63)
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。系統構成図(ibaraki p13)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 牛久変電所
+    to: 北竜台変電所
+    region: tokyo
+    kv: 66
+    line: 牛久線(茨城66kV No.52)
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=高)。系統構成図(ibaraki p12)。⚠北竜台も孤立=実証チェーン。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 西新宿変電所
+    to: 新宿変電所
+    region: tokyo
+    kv: 66
+    line: 西新宿線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(新宿・東新宿の2局で計測=西新宿はループイン点)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 西新宿変電所
+    to: 東新宿変電所
+    region: tokyo
+    kv: 66
+    line: 西新宿線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 西巣鴨変電所
+    to: 豊島変電所
+    region: tokyo
+    kv: 66
+    line: 西巣鴨線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV(豊島(変)の66kVフィーダ列・線名が相手を名指す=v1と同手法)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 東池袋変電所
+    to: 常盤台変電所
+    region: tokyo
+    kv: 66
+    line: 東池袋線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(常盤台・豊島の2局で計測)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 東池袋変電所
+    to: 豊島変電所
+    region: tokyo
+    kv: 66
+    line: 東池袋線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 戸山変電所
+    to: 東新宿変電所
+    region: tokyo
+    kv: 66
+    line: 戸山線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(東新宿・水道橋の2局で計測)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 戸山変電所
+    to: 水道橋変電所
+    region: tokyo
+    kv: 66
+    line: 戸山線
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 川口変電所
+    to: 鳩ヶ谷変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 川口線1・2・3L
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV(鳩ヶ谷(変)の列・線名が相手を名指す)。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
+  - frm: 東川口変電所
+    to: 鳩ヶ谷変電所 66kV
+    region: tokyo
+    kv: 66
+    line: 東川口線1・2L
+    src: >-
+      TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。
+      CSV両端法はv1都心275kV網10本と同一手法(校正済)
