@@ -236,9 +236,10 @@ connections:
       黒磯のバンク列(栃木CSV)でも実在確認済み
   - frm: 国分寺変電所
     to: 小山変電所 66kV
+    to_near: [36.3256, 139.8169]   # 栃木の小山(同名の町田小山_3=96km誤pickの再発防止)
     region: tokyo
     kv: 66
-    line: 上三川線
+    line: 上三川線（CSVで小山・上郷の2局計測=国分寺はタップ）
     src: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p14・同判読 confidence=高)
   - frm: 簗瀬町変電所
     to: 栃山開閉所 154kV
@@ -264,15 +265,6 @@ connections:
     kv: 66
     line: 水戸南町線
     src: TEPCO 系統構成マッピング(ibaraki_yosochoryu.pdf p15・同判読 confidence=中)
-  - frm: 小出
-    to: 堀之内町変電所 66kV
-    region: tokyo
-    kv: 66
-    line: 東北NW新潟県図の設備7F10（小出—堀之内）
-    src: >-
-      東北NW 新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf・map-tokyo-north判読)。
-      小出はTEPCO新潟図に不在=東北NW設備(東上越/高田も同様・region誤ラベルはreview送り)。
-      堀之内はモデルの堀之内町変電所(魚沼市)に対応
   - frm: 篠崎変電所
     to: 小松川変電所 66kV
     region: tokyo

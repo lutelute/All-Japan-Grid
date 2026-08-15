@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1745,
-  "dryrun_off_main_after": 1735,
-  "n_new": 121,
+  "dryrun_off_main_before": 1743,
+  "dryrun_off_main_after": 1741,
+  "n_new": 120,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 46,
+    "disclosure_map": 45,
     "same_site_identity": 70
   },
   "region_fixes": [
@@ -692,19 +692,7 @@
     }
   ],
   "joined_subs": [
-    "篠崎変電所",
-    "淀橋変電所",
-    "淀橋変電所",
-    "平井変電所",
-    "西新宿変電所",
-    "西新宿変電所",
-    "西巣鴨変電所",
-    "東池袋変電所",
-    "東池袋変電所",
-    "戸山変電所",
-    "戸山変電所",
-    "川口変電所",
-    "東川口変電所"
+    "国分寺変電所"
   ],
   "review_300_800m": [
     {
@@ -2790,24 +2778,6 @@
     },
     {
       "class": "disclosure_map",
-      "from_sub": "国分寺変電所",
-      "to_sub": "小山変電所_3",
-      "from_id": "tokyo_sub_1470",
-      "to_id": "tokyo_sub_489",
-      "from_pt": [
-        36.36459,
-        139.84743
-      ],
-      "to_pt": [
-        35.5832,
-        139.3789
-      ],
-      "kv": 66.0,
-      "line": "上三川線",
-      "evidence": "系統図判読: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p14・同判読 confidence=高)"
-    },
-    {
-      "class": "disclosure_map",
       "from_sub": "簗瀬町変電所",
       "to_sub": "栃山開閉所 154kV",
       "from_id": "tokyo_sub_1678",
@@ -2877,24 +2847,6 @@
       "kv": 66.0,
       "line": "水戸南町線",
       "evidence": "系統図判読: TEPCO 系統構成マッピング(ibaraki_yosochoryu.pdf p15・同判読 confidence=中)"
-    },
-    {
-      "class": "disclosure_map",
-      "from_sub": "小出",
-      "to_sub": "堀之内町変電所 66kV",
-      "from_id": "tokyo_sub_1746",
-      "to_id": "tokyo_sub_305@66",
-      "from_pt": [
-        37.22661,
-        138.96677
-      ],
-      "to_pt": [
-        35.60608,
-        138.55988
-      ],
-      "kv": 66.0,
-      "line": "東北NW新潟県図の設備7F10（小出—堀之内）",
-      "evidence": "系統図判読: 東北NW 新潟県66kV系統構成図(jisseki_local07_map_2024_02.pdf・map-tokyo-north判読)。 小出はTEPCO新潟図に不在=東北NW設備(東上越/高田も同様・region誤ラベルはreview送り)。 堀之内はモデルの堀之内町変電所(魚沼市)に対応"
     },
     {
       "class": "disclosure_map",
@@ -3147,6 +3099,24 @@
       "kv": 66.0,
       "line": "東川口線1・2L",
       "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "国分寺変電所",
+      "to_sub": "小山変電所 154kV",
+      "from_id": "tokyo_sub_1470",
+      "to_id": "tokyo_sub_1391@154",
+      "from_pt": [
+        36.36459,
+        139.84743
+      ],
+      "to_pt": [
+        36.32556,
+        139.81691
+      ],
+      "kv": 66.0,
+      "line": "上三川線（CSVで小山・上郷の2局計測=国分寺はタップ）",
+      "evidence": "系統図判読: TEPCO 系統構成マッピング(tochigi_yosochoryu.pdf p14・同判読 confidence=高)"
     }
   ]
 }

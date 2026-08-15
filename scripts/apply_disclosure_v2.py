@@ -207,20 +207,39 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
     map_yaml = ROOT / "config" / "disclosure_map_connections.yaml"
     if map_yaml.exists():
         import yaml as _yaml
+
+        def pick_near(name, kv, reg, hint, want_main=None):
+            """near ヒントがあれば同名候補から最寄り(≤50km)を選ぶ。同名別所の罠対策。"""
+            if hint is None:
+                return (frame.pick(name, kv, reg, want_main=want_main)
+                        or frame.pick(name, kv, reg))
+            cands = frame.variants(name)
+            if not cands:
+                return None
+            best = min(cands, key=lambda c: hav_m(tuple(hint), c["latlon"]))
+            return best if hav_m(tuple(hint), best["latlon"]) <= 50_000 else None
+
         for m in (_yaml.safe_load(map_yaml.read_text(encoding="utf-8")) or {}).get(
                 "connections", []):
             reg = m.get("region")
             kv = float(m["kv"]) if m.get("kv") else None
-            a = frame.pick(m["frm"], kv, reg, want_main=False) \
-                or frame.pick(m["frm"], kv, reg)
-            b = frame.pick(m["to"], kv, reg, want_main=True) \
-                or frame.pick(m["to"], kv, reg)
+            a = pick_near(m["frm"], kv, reg, m.get("frm_near"), want_main=False)
+            b = pick_near(m["to"], kv, reg, m.get("to_near"), want_main=True)
             if a is None or b is None:
                 print(f"! disclosure_map 未解決ノード: {m['frm']} → {m['to']}（skip）")
                 continue
-            if a["id"] != b["id"]:
-                add_edge(a, b, "disclosure_map", kv, m.get("line"),
-                         f"系統図判読: {m.get('src','')}")
+            if a["id"] == b["id"]:
+                continue
+            # 距離ガード: 同名別所の誤pickが正典に届いた実害(小山_3=96km/八王子堀之内=184km)
+            # への防壁。実在の長距離幹線は max_km で明示して通す(例: 大間幹線)。
+            km = hav_m(a["latlon"], b["latlon"]) / 1000
+            limit = float(m.get("max_km") or 60)
+            if km > limit:
+                print(f"! disclosure_map 距離ガード: {m['frm']}→{m['to']} {km:.0f}km"
+                      f" > {limit:.0f}km（skip。実在ならyamlに max_km を明示）")
+                continue
+            add_edge(a, b, "disclosure_map", kv, m.get("line"),
+                     f"系統図判読: {m.get('src','')}")
 
     # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
     for k, fam in frame.by_norm.items():
