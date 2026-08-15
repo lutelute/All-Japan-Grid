@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1690,
+  "dryrun_off_main_before": 1693,
   "dryrun_off_main_after": 1689,
-  "n_new": 157,
+  "n_new": 161,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 81,
+    "disclosure_map": 85,
     "same_site_identity": 71
   },
   "region_fixes": [
@@ -691,7 +691,9 @@
       "evidence": "地理(松前半島=北海道)。福山=松前の旧称(福山城)。青森箱の鏡像のbbox混入"
     }
   ],
-  "joined_subs": [],
+  "joined_subs": [
+    "野上変電所"
+  ],
   "review_300_800m": [
     {
       "iso": "小田原市変電所",
@@ -3312,24 +3314,6 @@
     },
     {
       "class": "disclosure_map",
-      "from_sub": "日田市変電所 110kV",
-      "to_sub": "女子畑変電所",
-      "from_id": "kyushu_sub_249@110",
-      "to_id": "suppl_kyushu_女子畑変電所",
-      "from_pt": [
-        33.16461,
-        130.98453
-      ],
-      "to_pt": [
-        33.29416,
-        130.97424
-      ],
-      "kv": 66.0,
-      "line": "下筌支線",
-      "evidence": "系統図判読: 九州地区図(map-kyushu 中・日田市110=下筌の実態)（供給ノード補完 2026-08-16）"
-    },
-    {
-      "class": "disclosure_map",
       "from_sub": "佐川変電所",
       "to_sub": "伊野変電所",
       "from_id": "shikoku_sub_73",
@@ -3728,24 +3712,6 @@
     },
     {
       "class": "disclosure_map",
-      "from_sub": "日田市変電所_2",
-      "to_sub": "女子畑変電所",
-      "from_id": "kyushu_sub_492",
-      "to_id": "suppl_kyushu_女子畑変電所",
-      "from_pt": [
-        33.29435,
-        130.94539
-      ],
-      "to_pt": [
-        33.29416,
-        130.97424
-      ],
-      "kv": 66.0,
-      "line": "下筌支線",
-      "evidence": "系統図判読: 九州地区図(map-kyushu 中・日田市110=下筌の実態)（供給ノード補完 2026-08-16）"
-    },
-    {
-      "class": "disclosure_map",
       "from_sub": "西大分変電所 66kV",
       "to_sub": "大南変電所",
       "from_id": "kyushu_sub_3@66",
@@ -3797,6 +3763,114 @@
       "kv": 66.0,
       "line": "湯山支線（2回線）",
       "evidence": "系統図判読: 日田表#11: 女子畑→湯山・実名両端。同定根拠: モデル名「天瀬町赤岩」はOSM無名way/509498536の住所合成名で、同wayは湯山発電所(way/509498537)に隣接同敷地・表No.10湯山66/6kVと電圧一致・日田図の湯山位置(女子畑SE6.8km)一致（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田変電所 110kV",
+      "to_sub": "日田市変電所 110kV",
+      "from_id": "kyushu_sub_28@110",
+      "to_id": "kyushu_sub_249@110",
+      "from_pt": [
+        33.30473,
+        130.87468
+      ],
+      "to_pt": [
+        33.16461,
+        130.98453
+      ],
+      "kv": 110.0,
+      "line": "大山日田線（2回線）",
+      "evidence": "系統図判読: 日田表#2: 日田→大山110kV・地区唯一の110kV局。同定: モデル「日田市変電所110kV」(OSM無名way/362349560)はOSM接続が110kVのみ(66kV層なし)・日田図の大山(2)=線2終端・下筌(13)の北東と位置一致=大山変電所。旧判定「=下筌」(map-kyushu 中)を自己訂正（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "日田市変電所_2",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "kyushu_sub_492",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.29435,
+        130.94539
+      ],
+      "kv": 66.0,
+      "line": "女子畑三芳線（1回線）",
+      "evidence": "系統図判読: 日田表#7: 女子畑→三芳。同定: モデル「日田市変電所_2」(way/762320863)は三芳発電所(way/762320864)の800m隣・下筌ダムからは20km=旧線名「下筌支線」は誤りを訂正（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "下筌変電所",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "suppl_kyushu_下筌変電所",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.1403,
+        130.95258
+      ],
+      "kv": 66.0,
+      "line": "下筌支線（1回線）",
+      "evidence": "系統図判読: 日田表#15: 女子畑→下筌・実名両端。位置=中津江村栃野approx（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田変電所 66kV",
+      "to_sub": "夜明変電所",
+      "from_id": "kyushu_sub_28@66",
+      "to_id": "suppl_kyushu_夜明変電所",
+      "from_pt": [
+        33.30473,
+        130.87468
+      ],
+      "to_pt": [
+        33.33744,
+        130.869
+      ],
+      "kv": 66.0,
+      "line": "日田夜明線（2回線）",
+      "evidence": "系統図判読: 日田表#3: 日田→夜明・実名両端（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "野上変電所",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "suppl_kyushu_野上変電所",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.23515,
+        131.2484
+      ],
+      "kv": 66.0,
+      "line": "野上女子畑線（2回線）",
+      "evidence": "系統図判読: 日田表#10: 女子畑→野上・実名両端。玖珠川沿い長距離のためmax_km明示 （31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "野上変電所",
+      "to_sub": "大岳変電所",
+      "from_id": "suppl_kyushu_野上変電所",
+      "to_id": "suppl_kyushu_大岳変電所",
+      "from_pt": [
+        33.23515,
+        131.2484
+      ],
+      "to_pt": [
+        33.12063,
+        131.19082
+      ],
+      "kv": 66.0,
+      "line": "大岳支線（1回線）",
+      "evidence": "系統図判読: 日田表#13: 野上→大岳・実名両端。大岳はOSM地熱発電所サイト（31地区プール 2026-08-16）"
     }
   ]
 }

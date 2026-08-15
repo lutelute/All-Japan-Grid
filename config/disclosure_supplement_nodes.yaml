@@ -129,3 +129,31 @@ nodes:
     region: kyushu
     approx: true
     evidence: "大分図#19大南分岐線の終端(実名)・佐伯図で同線が犬飼へ継続。OSM不在(Overpass確認済)。位置=地名(大分市中戸次・大南地区)"
+  - name: 夜明変電所
+    kv: 66
+    lat: 33.33744
+    lon: 130.869
+    region: kyushu
+    approx: true
+    evidence: "日田表#3日田夜明線の相手・変電所No.7(66/6kV 3バンク)。位置=地名(日田市夜明)。夜明水力発電所(way/176458153)は別施設"
+  - name: 野上変電所
+    kv: 66
+    lat: 33.23515
+    lon: 131.2484
+    region: kyushu
+    approx: true
+    evidence: "日田表#10野上女子畑線の相手・変電所No.11(66/6kV)。#13大岳支線の起点。位置=地名(玖珠郡九重町野上)"
+  - name: 大岳変電所
+    kv: 66
+    lat: 33.12063
+    lon: 131.19082
+    region: kyushu
+    osm: way/744441184
+    evidence: "日田表#13大岳支線の相手・変電所No.12(66/6kV 2バンク)。位置=OSM大岳発電所(地熱)サイト"
+  - name: 下筌変電所
+    kv: 66
+    lat: 33.1403
+    lon: 130.95258
+    region: kyushu
+    approx: true
+    evidence: "日田表#15下筌支線の相手・変電所No.13(66/6kV)。位置=地名(日田市中津江村栃野・下筌ダム西)。※モデル「日田市変電所110kV」は下筌でなく大山(110kV接続のみ・地区唯一の110/6kV局)と再同定(2026-08-16)"
