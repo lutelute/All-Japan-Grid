@@ -42,6 +42,9 @@ STEPS = [
     ("apply_disclosure_v1", [sys.executable, "scripts/apply_tepco_connections.py", "--write"], False),
     ("apply_disclosure_v2", [sys.executable, "scripts/apply_disclosure_v2.py",
                              "--from-worklist", "--write"], False),
+    # 実証コードのOSM実線形吸着（断片=公表線そのもの の12本のみ・オーナー指示 2026-08-16
+    # 「ちゃんと線があるものにおいては地形的に線を辿ってほしい」）。冪等・直線維持分は台帳に理由記録
+    ("route_disclosure", [sys.executable, "scripts/route_disclosure_edges.py", "--write"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
