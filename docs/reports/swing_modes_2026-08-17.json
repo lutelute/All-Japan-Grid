@@ -1,0 +1,54 @@
+{
+ "note": "古典モデル(機械集約・容量加重H・xd''並列合成・フラット近似)のモード周波数帯。inter-area最低モード: west 0.37Hz / east 0.57Hz",
+ "typical_params": "IEEJ/教科書帯の型式別典型値(machine_agg.TYPE_PARAMS)",
+ "islands": {
+  "hokkaido": {
+   "n_machines_sync": 91,
+   "n_machines_ibr": 325,
+   "n_sync_buses": 64,
+   "S_sync_mva": 9720,
+   "S_ibr_mva": 855,
+   "f_min_hz": 1.3,
+   "f_median_hz": 2.776,
+   "f_max_hz": 3.049,
+   "n_modes": 62,
+   "n_electromech_band": 20
+  },
+  "east": {
+   "n_machines_sync": 405,
+   "n_machines_ibr": 7821,
+   "n_sync_buses": 266,
+   "S_sync_mva": 100796,
+   "S_ibr_mva": 17335,
+   "f_min_hz": 0.572,
+   "f_median_hz": 2.803,
+   "f_max_hz": 3.085,
+   "n_modes": 251,
+   "n_electromech_band": 61
+  },
+  "west": {
+   "n_machines_sync": 732,
+   "n_machines_ibr": 8026,
+   "n_sync_buses": 421,
+   "S_sync_mva": 146000,
+   "S_ibr_mva": 24152,
+   "f_min_hz": 0.375,
+   "f_median_hz": 2.936,
+   "f_max_hz": 3.383,
+   "n_modes": 379,
+   "n_electromech_band": 79
+  },
+  "okinawa": {
+   "n_machines_sync": 7,
+   "n_machines_ibr": 21,
+   "n_sync_buses": 6,
+   "S_sync_mva": 2282,
+   "S_ibr_mva": 34,
+   "f_min_hz": 1.702,
+   "f_median_hz": 2.644,
+   "f_max_hz": 2.897,
+   "n_modes": 6,
+   "n_electromech_band": 2
+  }
+ }
+}
