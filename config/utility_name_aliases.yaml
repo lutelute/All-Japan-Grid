@@ -1,0 +1,42 @@
+# 事業者名⇔モデル名(住所合成名) 対応台帳
+#
+# 背景(2026-08-16 重要知見の続き): 西日本のOSM無名変電所はモデル名が住所から合成され、
+# 事業者の公表名と一致しない。九州31地区プールの「真欠落171」を精査した結果、
+# 上位ハブの多くがモデルに住所合成名で実在していた(沈堕=大野町小倉木 等)。
+#
+# 運用規約:
+#   - 同定には必ず独立証拠を2つ以上(隣接発電所名・電圧構成一致・図の位置・接続次数の一致)
+#   - この台帳は「名前の対応」のみ。モデルのノード名は変えない(build由来のまま)
+#   - 突合ツール(reconcile/pool系)はこの台帳を読み、事業者名をモデル名に解決する
+#   - 誤りが分かったら行を消す(git履歴が台帳)
+#
+# alias: (utility_name, model_name, region, evidence)
+aliases:
+  - utility_name: 湯山変電所
+    model_name: 天瀬町赤岩変電所
+    region: kyushu
+    evidence: "湯山発電所(way/509498537)隣接同敷地・日田表No.10(66/6kV)・日田図の位置一致。接続済(湯山支線 2026-08-16)"
+  - utility_name: 大山変電所
+    model_name: 日田市変電所 110kV
+    region: kyushu
+    evidence: "OSM接続が110kVのみ・日田地区唯一の110/6kV局・日田図の大山(2)=線2終端と位置一致。接続済(大山日田線)"
+  - utility_name: 三芳変電所
+    model_name: 日田市変電所_2
+    region: kyushu
+    evidence: "三芳発電所(way/762320864)の800m隣・日田表#7女子畑→三芳。接続済(女子畑三芳線)"
+  - utility_name: 沈堕変電所
+    model_name: 大野町小倉木変電所
+    region: kyushu
+    evidence: "沈堕発電所(way/417730321)隣接60m・佐伯表のハブ(#5沈堕三重/#6沈堕軸丸/#8西大分沈堕)と接続次数3が一致・main接続済"
+  - utility_name: 東豊前変電所
+    model_name: 豊前市変電所
+    region: kyushu
+    evidence: "way/405806514(220/66kV)=モデル豊前市変電所と同一way・豊前表の東豊前(220/66)と電圧構成一致・main接続済(deg6)"
+  - utility_name: 相浦変電所
+    model_name: 光町変電所
+    region: kyushu
+    evidence: "相浦火力発電所(way/219579622)隣接・住所=佐世保市光町・武雄表の相浦(220/66)と電圧構成一致・main接続済"
+  - utility_name: 古月変電所
+    model_name: 大字木月変電所
+    region: kyushu
+    evidence: "OSM way/1050769194が後年「古月変電所」と命名(66/6kV)・座標一致(鞍手町大字木月)・main接続済"

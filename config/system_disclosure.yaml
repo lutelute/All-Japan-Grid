@@ -131,9 +131,31 @@ utilities:
       capacity:
         index_url: https://powergrid.chuden.co.jp/goannai/hatsuden_kouri/takuso_kyokyu/rule/map/index.html
         note: >-
-          系統空容量・予想潮流マッピング。rule/直下の rule_29/30(空容量系)・rule_41/42・
-          rule_44/45(公表用・送電線/変圧器×275kV以上/154kV)も同族(2026-08-15確認)。
-          潮流実績に相当する時系列CSVは未発見（混雑速報konzatsu_sokuho_*_kikan.csvのみ）
+          系統空容量・予想潮流マッピングはWebアプリ(gridmap.powergrid.chuden.co.jp)。
+          静的な空容量一覧ファイルは他社と違い rule/ 直下には無い
+      flow_actual:
+        # 2026-08-16 発見(「潮流実績は未発見」は誤りだった):
+        # 「地点別需要・系統潮流実績」= rule_NN 連番のExcel。2018年度〜あり・
+        # **ローカル系統(154kV/77kV以下)まで実名**の線名+潮流正方向+時間値
+        # (「中部は仮名化」という以前の記録は誤り。実名開示の最上位グループ)
+        direct_urls:
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_87.pdf   # 2025基幹 系統構成図
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_88.xlsm  # 2025基幹 潮流実績line
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_89.xlsm  # 2025基幹 潮流実績tr
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_90.pdf   # 2025ローカル 系統構成図
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_91.xlsx  # 2025ローカル line
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_92.xlsx  # 2025ローカル tr
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_78.pdf   # 2024基幹 図
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_79.xlsm  # 2024基幹 line
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_80.xlsm  # 2024基幹 tr
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_81.pdf   # 2024ローカル 図
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_82.xlsx  # 2024ローカル line
+          - https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_83.xlsx  # 2024ローカル tr
+        verified: true     # 2026-08-16 全13実DL成功(+rule_63 予想潮流図)。実名確認: 岩倉稲沢線/駿遠島田線 等
+        caveat: >-
+          Excel公表・シート分割・先頭空行パディングのため scripts/convert_chubu_flow.py で
+          標準4行ヘッダCSV(jisseki_kikan01/local01/local02_line_<FY>_04.csv)へ変換してから
+          build_line_observations に読ませる。rule_NN は年度ごとに番号が増える(2018=28〜, 2025=87〜)
 
   hokuriku:
     name: 北陸電力送配電

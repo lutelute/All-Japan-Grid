@@ -270,6 +270,15 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
                 continue
             add_edge(a, b, "disclosure_map", kv, m.get("line"),
                      f"系統図判読: {m.get('src','')}")
+            # fix_region: true — 同一敷地同定のreview帯個体(300m超)を人間判断で採用する
+            # 場合、孤立側(frm)のregionを本系統側(to)に是正する。是正しないと
+            # 周波数島ラベルが違うままタイが両島のどちらのグラフにも入らず無効になる
+            if m.get("fix_region") and a.get("region") != b.get("region"):
+                region_fixes.append({
+                    "id": a["id"], "name": a["name"],
+                    "from": a.get("region"), "to": b.get("region"),
+                    "evidence": f"disclosure_map fix_region指定: {m.get('src','')[:80]}",
+                })
 
     # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
     for k, fam in frame.by_norm.items():
@@ -432,6 +441,15 @@ def main() -> int:
     for e in bedges:
         if e.get("disclosure") and e.get("a") and e.get("b"):
             existing.add(frozenset((_k5(*e["a"]), _k5(*e["b"]))))
+    # OSM実線形吸着(route_disclosure_edges)でスタブ置換されたコードも適用済み扱い。
+    # 置換後の正典にはコードが無いため、これを見ないと同じ対を直線で再追加し
+    # スタブ+実線形と並列の偽回線を作ってしまう(regen順=apply→routeでは無害だが
+    # ad-hoc実行に対する防波堤)
+    routed_report = ROOT / "docs/reports/routed_disclosure_edges.json"
+    if routed_report.exists():
+        rd = json.loads(routed_report.read_text(encoding="utf-8"))
+        for r in rd.get("replaced", []):
+            existing.add(frozenset((_k5(*r["a"]), _k5(*r["b"]))))
     fresh = [e for e in edges
              if frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) not in existing]
 

@@ -15,13 +15,13 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1693,
-  "dryrun_off_main_after": 1689,
-  "n_new": 161,
+  "dryrun_off_main_before": 1689,
+  "dryrun_off_main_after": 1688,
+  "n_new": 162,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 85,
+    "disclosure_map": 86,
     "same_site_identity": 71
   },
   "region_fixes": [
@@ -689,11 +689,16 @@
       "from": "tohoku",
       "to": "hokkaido",
       "evidence": "地理(松前半島=北海道)。福山=松前の旧称(福山城)。青森箱の鏡像のbbox混入"
+    },
+    {
+      "id": "tokyo_sub_1795",
+      "name": "島田電力所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "disclosure_map fix_region指定: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変"
     }
   ],
-  "joined_subs": [
-    "野上変電所"
-  ],
+  "joined_subs": [],
   "review_300_800m": [
     {
       "iso": "小田原市変電所",
@@ -3871,6 +3876,24 @@
       "kv": 66.0,
       "line": "大岳支線（1回線）",
       "evidence": "系統図判読: 日田表#13: 野上→大岳・実名両端。大岳はOSM地熱発電所サイト（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "島田電力所",
+      "to_sub": "島田電力所",
+      "from_id": "tokyo_sub_1795",
+      "to_id": "chubu_sub_295",
+      "from_pt": [
+        34.83937,
+        138.17515
+      ],
+      "to_pt": [
+        34.8399,
+        138.17054
+      ],
+      "kv": 77.0,
+      "line": null,
+      "evidence": "系統図判読: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変電所=77kVハブ(駿遠島田/島田志太/大井川島田の3線・実名)を独立確認（中部実施 2026-08-16）"
     }
   ]
 }

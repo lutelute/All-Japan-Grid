@@ -475,6 +475,15 @@ connections:
     kv: 66
     line: "大岳支線（1回線）"
     src: "日田表#13: 野上→大岳・実名両端。大岳はOSM地熱発電所サイト（31地区プール 2026-08-16）"
+  - frm: 島田電力所
+    frm_near: [34.83937, 138.17515]
+    to: 島田電力所
+    to_near: [34.8399, 138.17054]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: true
+    src: "同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変電所=77kVハブ(駿遠島田/島田志太/大井川島田の3線・実名)を独立確認。fix_region=島跨ぎタイ無効化の回避（中部実施 2026-08-16）"
   - frm: 佐川変電所
     to: 伊野変電所
     region: shikoku
