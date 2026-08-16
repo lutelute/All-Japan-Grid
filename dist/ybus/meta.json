@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-10",
+ "generated": "2026-08-17",
  "ybus_version": "5.0.0",
  "changelog": {
   "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・.mat/.npz/バス表",
@@ -15,56 +15,66 @@
    "island": "hokkaido",
    "f_hz": 50.0,
    "ybus_version": "5.0.0",
-   "fingerprint": "b424beb42770b931",
-   "n_bus": 802,
-   "nnz": 2544,
-   "density": 0.003955199283586545,
-   "n_line": 815,
-   "n_trafo": 68,
+   "fingerprint": "2785e1d4919a2f72",
+   "n_bus": 831,
+   "nnz": 2651,
+   "density": 0.0038389077865677327,
+   "n_line": 850,
+   "n_trafo": 69,
    "trafo_nameplate": {
     "n_applied": 1,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
     "enabled": true,
-    "n_node_merged": 17,
+    "n_node_merged": 14,
     "n_edge_dup_removed": 4,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
-   "n_components_refs": 35,
+   "site_trafos": {
+    "enabled": false,
+    "n_added": 0,
+    "note": "介入#22(既定OFF): 同名変電所+0.6kmの異電圧階級を連結"
+   },
+   "deenergize_unbuilt": {
+    "enabled": false,
+    "n_lines": 0,
+    "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
+   },
+   "n_components_refs": 30,
    "dc": {
     "included": true,
-    "nnz": 2544,
+    "nnz": 2651,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 883,
+    "n_branch": 919,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
     "n_bus": 117,
-    "nnz": 1001,
-    "fill_density": 0.0731,
-    "n_dropped_buses": 47,
-    "fingerprint": "e263323080665f17"
+    "nnz": 1073,
+    "fill_density": 0.0784,
+    "n_dropped_buses": 44,
+    "fingerprint": "dfff9e5a3bb3c721"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 882,
+    "offdiag_checked": 918,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.3054215186102413e-16,
+    "offdiag_rel_err_p99": 1.5216396751903868e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 9.165725883006586e-13
+    "backbone_symmetry_max_abs_err": 1.1368683772161603e-13
    },
    "gate": {
     "pass": true,
-    "cond_max": 3736425.732050803,
-    "n_islands": 13
+    "cond_max": 1336203.0961964414,
+    "n_islands": 14
    },
    "elapsed_s": 2.9
   },
@@ -72,125 +82,145 @@
    "island": "east",
    "f_hz": 50.0,
    "ybus_version": "5.0.0",
-   "fingerprint": "d9f56d06cf23142b",
-   "n_bus": 6002,
-   "nnz": 19325,
-   "density": 0.0005364478640408767,
-   "n_line": 6122,
-   "n_trafo": 630,
+   "fingerprint": "6090b36c6750af9a",
+   "n_bus": 6140,
+   "nnz": 19824,
+   "density": 0.0005258411229827373,
+   "n_line": 6299,
+   "n_trafo": 635,
    "trafo_nameplate": {
     "n_applied": 6,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
     "enabled": true,
-    "n_node_merged": 220,
-    "n_edge_dup_removed": 191,
+    "n_node_merged": 222,
+    "n_edge_dup_removed": 211,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
-   "n_components_refs": 312,
+   "site_trafos": {
+    "enabled": false,
+    "n_added": 0,
+    "note": "介入#22(既定OFF): 同名変電所+0.6kmの異電圧階級を連結"
+   },
+   "deenergize_unbuilt": {
+    "enabled": false,
+    "n_lines": 0,
+    "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
+   },
+   "n_components_refs": 305,
    "dc": {
     "included": true,
-    "nnz": 19325,
+    "nnz": 19824,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 6752,
+    "n_branch": 6934,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 1273,
-    "nnz": 135087,
-    "fill_density": 0.0834,
-    "n_dropped_buses": 561,
-    "fingerprint": "931edff57103c933"
+    "n_bus": 1308,
+    "nnz": 141063,
+    "fill_density": 0.0825,
+    "n_dropped_buses": 543,
+    "fingerprint": "30c05a60c39ddaae"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 6728,
+    "offdiag_checked": 6908,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.6996299783145752e-16,
+    "offdiag_rel_err_p99": 1.7324628334301594e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 9.094947017729282e-13
+    "backbone_symmetry_max_abs_err": 1.4551915228366852e-11
    },
    "gate": {
     "pass": true,
-    "cond_max": 20394700.07474198,
-    "n_islands": 179
+    "cond_max": 49166292.34074739,
+    "n_islands": 173
    },
-   "elapsed_s": 16.7
+   "elapsed_s": 15.7
   },
   "west": {
    "island": "west",
    "f_hz": 60.0,
    "ybus_version": "5.0.0",
-   "fingerprint": "4dc8dad77e8523ec",
-   "n_bus": 8204,
-   "nnz": 26776,
-   "density": 0.00039782712931414225,
-   "n_line": 8353,
-   "n_trafo": 1061,
+   "fingerprint": "d7ee7c414e7d0aee",
+   "n_bus": 8236,
+   "nnz": 26208,
+   "density": 0.0003863680483530885,
+   "n_line": 8157,
+   "n_trafo": 944,
    "trafo_nameplate": {
-    "n_applied": 5,
+    "n_applied": 4,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
     "enabled": true,
-    "n_node_merged": 1989,
-    "n_edge_dup_removed": 1440,
+    "n_node_merged": 2318,
+    "n_edge_dup_removed": 2100,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
-   "n_components_refs": 544,
+   "site_trafos": {
+    "enabled": false,
+    "n_added": 0,
+    "note": "介入#22(既定OFF): 同名変電所+0.6kmの異電圧階級を連結"
+   },
+   "deenergize_unbuilt": {
+    "enabled": false,
+    "n_lines": 0,
+    "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
+   },
+   "n_components_refs": 562,
    "dc": {
     "included": true,
-    "nnz": 26776,
+    "nnz": 26208,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 9414,
+    "n_branch": 9101,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 2202,
-    "nnz": 28048,
-    "fill_density": 0.0058,
-    "n_dropped_buses": 1075,
-    "fingerprint": "91d3c8943aca1904"
+    "n_bus": 2102,
+    "nnz": 18481,
+    "fill_density": 0.0042,
+    "n_dropped_buses": 1056,
+    "fingerprint": "634fdea4b1447208"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 9398,
+    "offdiag_checked": 9082,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.7042634288927947e-16,
+    "offdiag_rel_err_p99": 8.636733058610992e-17,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 7.332580706405269e-12
+    "backbone_symmetry_max_abs_err": 2.2737367544323206e-12
    },
    "gate": {
     "pass": true,
-    "cond_max": 62450073.20739263,
-    "n_islands": 320
+    "cond_max": 408429821.4303347,
+    "n_islands": 370
    },
-   "elapsed_s": 25.0
+   "elapsed_s": 22.8
   },
   "okinawa": {
    "island": "okinawa",
    "f_hz": 60.0,
    "ybus_version": "5.0.0",
-   "fingerprint": "de38456ec9b77fec",
-   "n_bus": 98,
-   "nnz": 321,
-   "density": 0.033423573511037065,
-   "n_line": 95,
+   "fingerprint": "e06d6f156408cf67",
+   "n_bus": 100,
+   "nnz": 324,
+   "density": 0.0324,
+   "n_line": 96,
    "n_trafo": 19,
    "trafo_nameplate": {
     "n_applied": 0,
@@ -202,15 +232,25 @@
     "n_edge_dup_removed": 0,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
-   "n_components_refs": 6,
+   "site_trafos": {
+    "enabled": false,
+    "n_added": 0,
+    "note": "介入#22(既定OFF): 同名変電所+0.6kmの異電圧階級を連結"
+   },
+   "deenergize_unbuilt": {
+    "enabled": false,
+    "n_lines": 0,
+    "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
+   },
+   "n_components_refs": 7,
    "dc": {
     "included": true,
-    "nnz": 321,
+    "nnz": 324,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 114,
+    "n_branch": 115,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
@@ -218,26 +258,26 @@
     "n_bus": 23,
     "nnz": 239,
     "fill_density": 0.4518,
-    "n_dropped_buses": 5,
-    "fingerprint": "c0bc6f4ab04e9225"
+    "n_dropped_buses": 6,
+    "fingerprint": "52c26d1e6c24d387"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 114,
+    "offdiag_checked": 115,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.7829505604930805e-16,
+    "offdiag_rel_err_p99": 1.9590875042103485e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 4.296434007659337e-14
+    "backbone_symmetry_max_abs_err": 1.8189894035458565e-12
    },
    "gate": {
     "pass": true,
-    "cond_max": 41379.87214356339,
+    "cond_max": 44953.86624898188,
     "n_islands": 1
    },
-   "elapsed_s": 1.1
+   "elapsed_s": 1.0
   }
  }
 }
