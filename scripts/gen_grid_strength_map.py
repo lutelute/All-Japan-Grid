@@ -10,7 +10,7 @@ import scipy.sparse as sp
 from scipy.sparse.linalg import splu
 
 from scripts.run_full_powerflow_from_db import build_island_net, attach_generators
-from scripts.gen_ybus_numeric import ISLANDS
+from scripts.gen_ybus_numeric import ISLANDS, load_ybus_npz
 
 ROOT = '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid'
 S = 'docs/reports/figs'
@@ -23,9 +23,8 @@ out = {}
 for island, freq in ISLANDS:
     t0 = time.time()
     z = np.load(f'{ROOT}/dist/ybus/{island}.npz', allow_pickle=True)
-    base = float(z['base_mva'])
-    # npzのYbusは pu×base_mva 格納(1線照合で確定・2026-08-17) → puへ正規化
-    Y = (sp.csr_matrix((z['data'], z['indices'], z['indptr']), shape=tuple(z['shape'])) / base).tocsc()
+    Y, base, _z = load_ybus_npz(f'{ROOT}/dist/ybus/{island}.npz' if isinstance(island,str) else island)
+    Y = Y.tocsc()
     n = Y.shape[0]
     bus_pp = np.asarray(z['bus_pp'])
     lat, lon, kv = np.asarray(z['bus_lat']), np.asarray(z['bus_lon']), np.asarray(z['bus_kv'])

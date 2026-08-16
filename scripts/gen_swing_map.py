@@ -12,6 +12,7 @@ from scripts.run_full_powerflow_from_db import (build_island_net, attach_generat
 from src.powerflow.load_estimator import load_demand_config
 from src.powerflow.pipeline import add_reactive_compensation
 from src.powerflow.pref_demand import pref_zone_gwh
+from scripts.gen_ybus_numeric import load_ybus_npz  # noqa: E402
 from src.dynamics.machine_agg import aggregate_machines
 
 ROOT = '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid'
@@ -22,8 +23,8 @@ cfg = load_demand_config()
 results = {}
 for island, freq in (('east',50), ('west',60)):
     z = np.load(f'{ROOT}/dist/ybus/{island}.npz', allow_pickle=True)
-    base = float(z['base_mva'])
-    Y = (sp.csr_matrix((z['data'], z['indices'], z['indptr']), shape=tuple(z['shape'])) / base).tocsc()
+    Y, base, _z = load_ybus_npz(f'{ROOT}/dist/ybus/{island}.npz')
+    Y = Y.tocsc()
     n = Y.shape[0]
     bus_pp = np.asarray(z['bus_pp'])
     pos = {int(b): i for i, b in enumerate(bus_pp)}

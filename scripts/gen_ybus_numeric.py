@@ -42,8 +42,9 @@ ISLANDS = [("hokkaido", 50.0), ("east", 50.0), ("west", 60.0),
 
 # Ybus は「バージョン管理された成果物」(オーナー認識 2026-07-02)。
 # モデル・出荷物・検証が変わるたびに上げ、meta.json と .mat に刻印する。
-YBUS_VERSION = "5.0.0"
+YBUS_VERSION = "5.0.1"
 CHANGELOG = {
+    "5.0.1": "base_mva表記バグ修正: 行列はnet.sn_mva(=1MVA)基準puなのにnpz/matがbase_mva=100と誤表記(×100見え・SCRマップ検算で発覚2026-08-17)。base_mvaを実基準(net.sn_mva)で書く。行列値は不変",
     "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・"
              ".mat/.npz/バス表",
     "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) "
@@ -69,6 +70,22 @@ CHANGELOG = {
              "(docs/reports/default_on_decision_2026-07-10.md)",
 }
 BACKBONE_KV = 154.0     # transforms.reduce_to_backbone と同じ閾値(WEST_AC_ANALYSIS)
+
+
+
+def load_ybus_npz(path):
+    """出荷npzを正しい基準で読む共有ローダ。
+
+    v5.0.0以前は base_mva=100 と誤表記(実体は net.sn_mva=1MVA基準pu)。
+    v5.0.1以降は base_mva が実基準。返り値: (Y_csr[pu@base], base_mva, dict(z))
+    """
+    z = np.load(path, allow_pickle=True)
+    ver = str(np.asarray(z["ybus_version"]).ravel()[0]) if "ybus_version" in z else "0"
+    stored = float(np.asarray(z["base_mva"]).ravel()[0])
+    base = 1.0 if tuple(int(x) for x in ver.split(".")[:3]) <= (5, 0, 0) else stored
+    import scipy.sparse as _sp
+    Y = _sp.csr_matrix((z["data"], z["indices"], z["indptr"]), shape=tuple(z["shape"]))
+    return Y, base, z
 
 
 def fingerprint(Y) -> str:
@@ -425,7 +442,7 @@ def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True,
         os.path.join(out_dir, f"{island}.npz"),
         ybus_version=np.array([YBUS_VERSION]),
         data=Y.data, indices=Y.indices, indptr=Y.indptr,
-        shape=np.array(Y.shape), base_mva=np.array([100.0]), f_hz=np.array([freq]),
+        shape=np.array(Y.shape), base_mva=np.array([float(net.sn_mva or 1.0)]), f_hz=np.array([freq]),
         bdc_data=Bbus.data, bdc_indices=Bbus.indices, bdc_indptr=Bbus.indptr,
         yf_data=Yf.data, yf_indices=Yf.indices, yf_indptr=Yf.indptr,
         yt_data=Yt.data, yt_indices=Yt.indices, yt_indptr=Yt.indptr,

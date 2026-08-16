@@ -6,7 +6,7 @@
 運転点込みは次段)。出力: docs/reports/swing_modes_<date>.json
 
 実行: PYTHONPATH=. python3 scripts/gen_swing_modes.py
-前提: dist/ybus/{island}.npz (gen_ybus_numeric出荷・pu×base格納 → /baseで正規化)
+前提: dist/ybus/{island}.npz (gen_ybus_numeric出荷。基準は load_ybus_npz が吸収)
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ import scipy.sparse as sp              # noqa: E402
 
 from scripts.run_full_powerflow_from_db import (  # noqa: E402
     build_island_net, attach_generators)
+from scripts.gen_ybus_numeric import load_ybus_npz  # noqa: E402
 from src.dynamics.machine_agg import (  # noqa: E402
     aggregate_machines, build_classical_model)
 
@@ -36,11 +37,8 @@ def main() -> int:
     nodes, edges = built["nodes"], built["edges"]
     res = {}
     for island, freq in ISLANDS:
-        z = np.load(ROOT / f"dist/ybus/{island}.npz", allow_pickle=True)
-        base = float(z["base_mva"])
-        # 注意: npzは pu×base 格納(README表記と相違・×100バグとして記録済み)
-        Y = (sp.csr_matrix((z["data"], z["indices"], z["indptr"]),
-                           shape=tuple(z["shape"])) / base).tocsc()
+        Y, base, z = load_ybus_npz(ROOT / f"dist/ybus/{island}.npz")
+        Y = Y.tocsc()   # pu@base(共有ローダがv5.0.0以前の表記バグを吸収)
         net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
         attach_generators(net, bus_of, nodes, island)
         pos = {b: i for i, b in enumerate(np.asarray(z["bus_pp"]))}

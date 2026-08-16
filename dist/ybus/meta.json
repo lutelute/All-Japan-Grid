@@ -1,7 +1,8 @@
 {
  "generated": "2026-08-17",
- "ybus_version": "5.0.0",
+ "ybus_version": "5.0.1",
  "changelog": {
+  "5.0.1": "base_mva表記バグ修正: 行列はnet.sn_mva(=1MVA)基準puなのにnpz/matがbase_mva=100と誤表記(×100見え・SCRマップ検算で発覚2026-08-17)。base_mvaを実基準(net.sn_mva)で書く。行列値は不変",
   "1.0.0": "数値Ybus初出荷: built→makeYbus正典・対称/教科書式/条件数の3層検証・.mat/.npz/バス表",
   "2.0.0": "①バージョン刻印+行列フィンガープリント(sha256) ②Kron縮約バックボーン(≥154kV, 回路論的に厳密・密Schur突合) ③DC行列 Bbus 同梱(pandapower公式・PTDF/DC潮流用) ④AC/DCバス順序の整合検証",
   "3.0.0": "①枝アドミタンス行列 Yf/Yt 同梱(線潮流 If=Yf·V が MATLAB で完結) ②枝表 {island}_branch.csv(kind/名前/from-to ybus_index/長さ/par/tap) ③再構成恒等式ゲート Ybus == Cf'Yf+Ct'Yt+diag(Ysh) (機械精度) ④枝順序ゲート(lookup範囲=lines→trafos の整合検証)",
@@ -14,7 +15,7 @@
   "hokkaido": {
    "island": "hokkaido",
    "f_hz": 50.0,
-   "ybus_version": "5.0.0",
+   "ybus_version": "5.0.1",
    "fingerprint": "2785e1d4919a2f72",
    "n_bus": 831,
    "nnz": 2651,
@@ -73,7 +74,7 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 1336203.0961964414,
+    "cond_max": 1665464.132515696,
     "n_islands": 14
    },
    "elapsed_s": 2.9
@@ -81,7 +82,7 @@
   "east": {
    "island": "east",
    "f_hz": 50.0,
-   "ybus_version": "5.0.0",
+   "ybus_version": "5.0.1",
    "fingerprint": "6090b36c6750af9a",
    "n_bus": 6140,
    "nnz": 19824,
@@ -148,7 +149,7 @@
   "west": {
    "island": "west",
    "f_hz": 60.0,
-   "ybus_version": "5.0.0",
+   "ybus_version": "5.0.1",
    "fingerprint": "d7ee7c414e7d0aee",
    "n_bus": 8236,
    "nnz": 26208,
@@ -207,15 +208,15 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 408429821.4303347,
+    "cond_max": 416775654.50788414,
     "n_islands": 370
    },
-   "elapsed_s": 22.8
+   "elapsed_s": 22.5
   },
   "okinawa": {
    "island": "okinawa",
    "f_hz": 60.0,
-   "ybus_version": "5.0.0",
+   "ybus_version": "5.0.1",
    "fingerprint": "e06d6f156408cf67",
    "n_bus": 100,
    "nnz": 324,
