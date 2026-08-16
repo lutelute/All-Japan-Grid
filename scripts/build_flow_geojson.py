@@ -126,6 +126,119 @@ def load_osm_lines(region: str) -> dict[str, list[dict]]:
     return index
 
 
+_MODEL_GRAPH = None
+
+
+def model_graph():
+    """built正典の枝から頂点グラフを作る(観測の端点直線をOSM実線形へ寄せる用)。
+
+    オーナー指示(2026-08-16)「東北がかなり直線多い。幹線の接続をちゃんとOSMに
+    寄せたい」「全国その判定やってほしい」。OSM名照合に失敗した観測でも、両端の
+    変電所はモデル上で実線形の枝で結ばれていることが多い。Dijkstraで実経路を
+    復元して geometry にする(kind=routed_graph)。実証コード(直線)は経路に使わない。
+    """
+    global _MODEL_GRAPH
+    if _MODEL_GRAPH is not None:
+        return _MODEL_GRAPH
+    built = json.loads((ROOT / "docs/data/built/all.json").read_text(encoding="utf-8"))
+    adj: dict = defaultdict(list)
+    grid: dict = defaultdict(list)
+    for e in built["edges"]:
+        if e.get("disclosure") and not e.get("stub"):
+            continue      # 実証コードは直線なので経路に使わない(スタブは物理)
+        ka = (round(e["a"][0], 5), round(e["a"][1], 5))
+        kb = (round(e["b"][0], 5), round(e["b"][1], 5))
+        pts = e.get("path") or [e["a"], e["b"]]
+        km = sum(haversine_km(pts[i][1], pts[i][0], pts[i + 1][1], pts[i + 1][0])
+                 for i in range(len(pts) - 1))
+        rec = {"km": max(km, 0.001), "kv": e.get("kv") or 0, "path": pts}
+        adj[ka].append((kb, rec))
+        adj[kb].append((ka, rec))
+    for v in adj:
+        grid[(int(v[0] / 0.02), int(v[1] / 0.02))].append(v)
+    _MODEL_GRAPH = (adj, grid)
+    return _MODEL_GRAPH
+
+
+def graph_route(na: dict, nb: dict, kv) -> list | None:
+    """変電所na→nbのモデル枝経路。成功時は[lon,lat]列を返す(from→to向き)。"""
+    adj, grid = model_graph()
+
+    def near(lat, lon, r_km=1.5):
+        cx, cy = int(lat / 0.02), int(lon / 0.02)
+        out = []
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for v in grid.get((cx + dx, cy + dy), []):
+                    d = haversine_km(lon, lat, v[1], v[0])
+                    if d <= r_km:
+                        out.append((d, v))
+        return sorted(out)[:8]
+
+    starts = near(na["lat"], na["lon"])
+    goals = near(nb["lat"], nb["lon"])
+    if not starts or not goals:
+        return None
+    chord = haversine_km(na["lon"], na["lat"], nb["lon"], nb["lat"])
+    limit = max(chord * 2.5, chord + 10)
+    gd = {v: d for d, v in sorted(goals, reverse=True)}
+
+    def w(rec) -> float:
+        # 電圧不適合ペナルティ: 275kV観測を66kV網へ迂回させない(逆は緩め)
+        if kv and rec["kv"]:
+            if rec["kv"] < kv * 0.7:
+                return rec["km"] * 4
+            if rec["kv"] > kv * 2.2:
+                return rec["km"] * 2
+        return rec["km"]
+
+    import heapq
+    dist: dict = {}
+    prev: dict = {}
+    seq = 0
+    pq = []
+    for d, v in starts:
+        pq.append((d, seq, v, None, None))
+        seq += 1
+    heapq.heapify(pq)
+    hit = None
+    while pq:
+        dcur, _, v, pv, rec = heapq.heappop(pq)
+        if v in dist:
+            continue
+        dist[v] = dcur
+        prev[v] = (pv, rec)
+        if dcur > limit:
+            break
+        if v in gd:
+            hit = v
+            break
+        for u, r in adj[v]:
+            if u not in dist:
+                seq += 1
+                heapq.heappush(pq, (dcur + w(r), seq, u, v, r))
+    if hit is None:
+        return None
+    # 経路復元: goal→startへ辿り、各枝pathを向きを揃えて連結
+    chain = []
+    v = hit
+    while prev.get(v) and prev[v][0] is not None:
+        pv, rec = prev[v]
+        pts = list(rec["path"])
+        # 現在頂点vに近い端が末尾に来る向きへ
+        if haversine_km(pts[0][1], pts[0][0], v[1], v[0]) < \
+           haversine_km(pts[-1][1], pts[-1][0], v[1], v[0]):
+            pts.reverse()
+        chain.append(pts)
+        v = pv
+    chain.reverse()
+    coords = [[na["lon"], na["lat"]]]
+    for pts in chain:
+        coords.extend([[p[1], p[0]] for p in pts])
+    coords.append([nb["lon"], nb["lat"]])
+    return coords
+
+
 def keep_main_cluster(parts: list[list]) -> list[list]:
     """端点が近いセグメントだけを1本の線路とみなし、最大の塊を返す。
 
@@ -343,7 +456,16 @@ def main() -> int:
                     _, nb = resolve(to, node_index)
                     if na and nb:
                         span = haversine_km(na["lon"], na["lat"], nb["lon"], nb["lat"])
-                        if span > MAX_SPAN_KM:
+                        # まずモデル枝グラフの実経路を試す(幹線をOSM線形へ寄せる)。
+                        # 実経路が見つかれば span>120km でも実在の長距離線として採用
+                        routed = graph_route(
+                            na, nb, float(r.voltage_kv) if pd.notna(r.voltage_kv) else None)
+                        if routed:
+                            kind = "routed_graph"
+                            stat["routed_graph"] += 1
+                            oriented = True
+                            geometry = {"type": "LineString", "coordinates": routed}
+                        elif span > MAX_SPAN_KM:
                             # 同名の別施設を掴んだ誤対応。地図を斜めに横切る線になるので捨てる
                             stat["rejected_span"] += 1
                         else:
@@ -407,6 +529,7 @@ def main() -> int:
     print(f"features {len(features)}")
     print(f"  実線形 routed   {stat['routed']}")
     print(f"  端点直線 straight {stat['straight']}")
+    print(f"  枝グラフ経路復元 routed_graph {stat['routed_graph']}  (端点直線をOSM実線形へ)")
     print(f"  複合列の分割照合  {stat['composite_parts']}  (沖縄 阿波根線/真壁線 等)")
     print(f"  距離超過で棄却    {stat['rejected_span']}  (>{MAX_SPAN_KM:.0f}km)")
     print(f"  飛び地セグメント除去 {stat['dropped_far_segments']}  (>{SEGMENT_LINK_KM:.0f}km離れ)")
