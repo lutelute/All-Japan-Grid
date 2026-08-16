@@ -406,6 +406,45 @@ def main() -> int:
         if n_suppl:
             print(f"供給ノード注入: {n_suppl}件（config/disclosure_supplement_nodes.yaml）")
 
+    # 帳簿座標の現ノードスナップ（罠15の基底刷新版・2026-08-16）: OSMのway編集で
+    # 変電所重心が数十mずれると、帳簿の固定座標が幽霊頂点になり適用済みエッジが
+    # 誰とも繋がらない(OSM再抽出で162本中34箇所を実測)。from-worklist適用時に
+    # 端点を最寄りの現ノード(≤500m)へスナップする。決定的なので冪等性は保たれる
+    if args.from_worklist:
+        node_keys = {}
+        for n in nodes:
+            node_keys[_k5(n["lat"], n["lon"])] = (n["lat"], n["lon"])
+        from collections import defaultdict as _dd
+        _grid = _dd(list)
+        for k in node_keys:
+            _grid[(int(k[0] * 200), int(k[1] * 200))].append(k)
+
+        def _snap(p):
+            k = _k5(*p)
+            if k in node_keys:
+                return p, 0.0
+            best = None
+            cx, cy = int(p[0] * 200), int(p[1] * 200)
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for kk in _grid.get((cx + dx, cy + dy), []):
+                        dm = hav_m(tuple(p), kk)
+                        if best is None or dm < best[1]:
+                            best = (kk, dm)
+            if best and best[1] <= 500:
+                return list(best[0]), best[1]
+            return p, None
+
+        n_snap = 0
+        for e in edges:
+            for side in ("from_pt", "to_pt"):
+                newp, dm = _snap(e[side])
+                if dm and dm > 0:
+                    e[side] = newp
+                    n_snap += 1
+        if n_snap:
+            print(f"帳簿端点スナップ: {n_snap}箇所を現ノードへ吸着（way編集による重心移動の追従）")
+
     # 青森箱のregion是正（大間の一般化）: 下北半島(lat<41.6, lon>140.6)にある
     # hokkaidoラベルは region bbox 重複の混入（下北・佐井・大畑・東通・東通村・
     # 岩屋 + junction 群を実測20ノード）。地理的に青森県＝tohoku(east島)が正。

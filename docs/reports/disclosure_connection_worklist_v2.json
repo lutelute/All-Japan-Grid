@@ -15,14 +15,14 @@
     "餅田変電所154kV(40.28,140.52=北秋田)は基幹図(275/154kV)のテキスト層に不在→要精査",
     "塩原2号/3号配電塔・黒磯変電所(栃木=TEPCO領)はtohoku/tokyo両コピーとも孤立。東北の公表対象外でTEPCO側CSV名にも無し(配電塔)→TEPCO詳細源での解決待ち"
   ],
-  "dryrun_off_main_before": 1689,
-  "dryrun_off_main_after": 1688,
-  "n_new": 162,
+  "dryrun_off_main_before": 1868,
+  "dryrun_off_main_after": 1800,
+  "n_new": 192,
   "by_class": {
     "disclosure_line": 4,
     "disclosure_tap": 1,
-    "disclosure_map": 86,
-    "same_site_identity": 71
+    "disclosure_map": 108,
+    "same_site_identity": 79
   },
   "region_fixes": [
     {
@@ -696,10 +696,427 @@
       "from": "tokyo",
       "to": "chubu",
       "evidence": "disclosure_map fix_region指定: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変"
+    },
+    {
+      "id": "tokyo_sub_1852",
+      "name": "島田電力所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "disclosure_map fix_region指定: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変"
+    },
+    {
+      "id": "tokyo_sub_196",
+      "name": "清水変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(清水変電所 154kV/chubu)と同一敷地（142m・異電圧階級）"
+    },
+    {
+      "id": "chubu_sub_630",
+      "name": "新町変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(新町変電所_2/tokyo)と同一敷地（236m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1107",
+      "name": "鮎川変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(鮎川変電所/tokyo)と同一敷地（137m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_443",
+      "name": "土肥六丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(土肥六丁目変電所/tokyo)と同一敷地（267m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_529",
+      "name": "土肥六丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(土肥六丁目変電所/tokyo)と同一敷地（272m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_452",
+      "name": "中島町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(中島町変電所/tokyo)と同一敷地（94m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_454",
+      "name": "昭和町変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(昭和町変電所 154kV/tokyo)と同一敷地（62m・異電圧階級）"
+    },
+    {
+      "id": "chubu_sub_459",
+      "name": "東京電力駿河変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(東京電力駿河変電所 154kV/tokyo)と同一敷地（135m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_469",
+      "name": "土肥一丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(土肥一丁目変電所/tokyo)と同一敷地（30m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_492",
+      "name": "函南町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(函南町変電所/tokyo)と同一敷地（96m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_494",
+      "name": "山中湖村変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(山中湖村変電所/tokyo)と同一敷地（41m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_499",
+      "name": "沼津市変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(沼津市変電所/tokyo)と同一敷地（111m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_523",
+      "name": "田野倉変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(田野倉変電所/tokyo)と同一敷地（100m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_524",
+      "name": "田野倉変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(田野倉変電所_2/tokyo)と同一敷地（32m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_533",
+      "name": "小諏訪変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(小諏訪変電所/tokyo)と同一敷地（157m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_536",
+      "name": "伊豆市変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(伊豆市変電所/tokyo)と同一敷地（152m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_537",
+      "name": "伊豆市変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(伊豆市変電所_2/tokyo)と同一敷地（10m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_538",
+      "name": "安良里変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(安良里変電所/tokyo)と同一敷地（115m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_543",
+      "name": "伊東市変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(伊東市変電所/tokyo)と同一敷地（206m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_549",
+      "name": "玉川変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(玉川変電所/tokyo)と同一敷地（99m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_588",
+      "name": "渋沢二丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(渋沢二丁目変電所/tokyo)と同一敷地（249m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_320",
+      "name": "富士市変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(富士市変電所 154kV/chubu)と同一敷地（103m・異電圧階級）"
+    },
+    {
+      "id": "chubu_sub_691",
+      "name": "富士市変電所_3",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(富士市変電所_3/tokyo)と同一敷地（18m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_321",
+      "name": "清水区変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(清水区変電所/chubu)と同一敷地（157m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_326@154",
+      "name": "蒲原一丁目変電所_2 154kV",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(蒲原一丁目変電所_2 154kV/chubu)と同一敷地（208m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_326@77",
+      "name": "蒲原一丁目変電所_2 77kV",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(蒲原一丁目変電所_2 154kV/chubu)と同一敷地（208m・異電圧階級）"
+    },
+    {
+      "id": "tokyo_sub_326@u",
+      "name": "蒲原一丁目変電所_2 (untyped)",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(蒲原一丁目変電所_2 (untyped)/chubu)と同一敷地（208m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_610",
+      "name": "浅間上町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(浅間上町変電所/tokyo)と同一敷地（180m・異電圧階級）"
+    },
+    {
+      "id": "chubu_sub_629",
+      "name": "駒門一丁目変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(駒門一丁目変電所/tokyo)と同一敷地（100m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_631",
+      "name": "小山町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(小山町変電所 154kV/tokyo)と同一敷地（35m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_632",
+      "name": "三屋変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(三屋変電所/tokyo)と同一敷地（26m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_634",
+      "name": "三屋変電所_2",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(三屋変電所_2/tokyo)と同一敷地（106m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_633",
+      "name": "金子変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(金子変電所/tokyo)と同一敷地（196m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_696",
+      "name": "上吉田七丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(上吉田七丁目変電所/tokyo)と同一敷地（122m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_922",
+      "name": "総社町四丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(総社町四丁目変電所/tokyo)と同一敷地（43m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1062",
+      "name": "小海町変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(小海町変電所/chubu)と同一敷地（73m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1349",
+      "name": "小海町変電所_3",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(小海町変電所_3/chubu)と同一敷地（65m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1350",
+      "name": "小海町変電所_4",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(小海町変電所_4/chubu)と同一敷地（10m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_998",
+      "name": "田口発電所変電設備",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(田口発電所変電設備 66kV/tokyo)と同一敷地（61m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1013",
+      "name": "中宿変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(中宿変電所/tokyo)と同一敷地（92m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1047",
+      "name": "西横手町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(西横手町変電所/tokyo)と同一敷地（71m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1051",
+      "name": "小八木町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(小八木町変電所/tokyo)と同一敷地（151m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1203",
+      "name": "大字御代田変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(大字御代田変電所/chubu)と同一敷地（102m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1204",
+      "name": "小諸市変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(小諸市変電所/chubu)と同一敷地（69m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1063",
+      "name": "鳥取町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(鳥取町変電所/tokyo)と同一敷地（22m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1064",
+      "name": "児玉町蛭川変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(児玉町蛭川変電所/tokyo)と同一敷地（21m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1066",
+      "name": "北橘町分郷八崎変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(北橘町分郷八崎変電所 154kV/tokyo)と同一敷地（1m・異電圧階級）"
+    },
+    {
+      "id": "chubu_sub_1068",
+      "name": "南大類町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(南大類町変電所/tokyo)と同一敷地（52m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1102",
+      "name": "昭電秩父変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(昭電秩父変電所/tokyo)と同一敷地（38m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1104",
+      "name": "東大室町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(東大室町変電所/tokyo)と同一敷地（262m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1106@66",
+      "name": "大胡変電所 66kV",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(大胡変電所/tokyo)と同一敷地（133m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1113",
+      "name": "中宿一丁目変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(中宿一丁目変電所/tokyo)と同一敷地（117m）。島判定は本系統側が正"
+    },
+    {
+      "id": "chubu_sub_1119",
+      "name": "苗ヶ島町変電所",
+      "from": "chubu",
+      "to": "tokyo",
+      "evidence": "本系統側コピー(苗ヶ島町変電所/tokyo)と同一敷地（123m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1351",
+      "name": "佐久穂町変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(佐久穂町変電所/chubu)と同一敷地（169m）。島判定は本系統側が正"
+    },
+    {
+      "id": "tokyo_sub_1815",
+      "name": "中部電力パワーグリッド 川中島変電所",
+      "from": "tokyo",
+      "to": "chubu",
+      "evidence": "本系統側コピー(中部電力パワーグリッド 川中島変電所/chubu)と同一敷地（90m）。島判定は本系統側が正"
     }
   ],
-  "joined_subs": [],
+  "joined_subs": [
+    "九州電力 千代変電所",
+    "穴生変電所",
+    "通谷変電所",
+    "富士見変電所",
+    "荘園変電所",
+    "土肥六丁目変電所",
+    "東京電力駿河変電所",
+    "小八木町変電所",
+    "東大室町変電所",
+    "大胡変電所 66kV"
+  ],
   "review_300_800m": [
+    {
+      "iso": "中村変電所_2",
+      "main": "中村変電所",
+      "dist_m": 383,
+      "kv": [
+        66.0,
+        66.0
+      ],
+      "regions": [
+        "chubu",
+        "tokyo"
+      ],
+      "note": "300-800m: 同一敷地か要人間確認"
+    },
     {
       "iso": "小田原市変電所",
       "main": "小田原市変電所",
@@ -715,15 +1132,29 @@
       "note": "300-800m: 同一敷地か要人間確認"
     },
     {
-      "iso": "神谷新町変電所",
-      "main": "神谷新町変電所",
-      "dist_m": 549,
+      "iso": "東桂変電所",
+      "main": "東桂変電所",
+      "dist_m": 604,
       "kv": [
-        0,
-        66.0
+        66.0,
+        500.0
       ],
       "regions": [
         "chubu",
+        "tokyo"
+      ],
+      "note": "300-800m: 同一敷地か要人間確認"
+    },
+    {
+      "iso": "常盤台変電所",
+      "main": "常盤台変電所",
+      "dist_m": 581,
+      "kv": [
+        0,
+        154.0
+      ],
+      "regions": [
+        "tokyo",
         "tokyo"
       ],
       "note": "300-800m: 同一敷地か要人間確認"
@@ -747,7 +1178,21 @@
       "main": "渋川市変電所_2",
       "dist_m": 398,
       "kv": [
-        0,
+        66.0,
+        66.0
+      ],
+      "regions": [
+        "chubu",
+        "tokyo"
+      ],
+      "note": "300-800m: 同一敷地か要人間確認"
+    },
+    {
+      "iso": "磯部二丁目変電所",
+      "main": "磯部二丁目変電所",
+      "dist_m": 348,
+      "kv": [
+        66.0,
         66.0
       ],
       "regions": [
@@ -759,10 +1204,24 @@
     {
       "iso": "島田電力所",
       "main": "島田電力所",
-      "dist_m": 425,
+      "dist_m": 358,
       "kv": [
         77.0,
         77.0
+      ],
+      "regions": [
+        "tokyo",
+        "chubu"
+      ],
+      "note": "300-800m: 同一敷地か要人間確認"
+    },
+    {
+      "iso": "大桑村変電所_4",
+      "main": "大桑村変電所",
+      "dist_m": 675,
+      "kv": [
+        154.0,
+        154.0
       ],
       "regions": [
         "tokyo",
@@ -3894,6 +4353,566 @@
       "kv": 77.0,
       "line": null,
       "evidence": "系統図判読: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変電所=77kVハブ(駿遠島田/島田志太/大井川島田の3線・実名)を独立確認（中部実施 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "尼崎変電所",
+      "to_sub": "立花変電所 77kV",
+      "from_id": "kansai_sub_396",
+      "to_id": "kansai_sub_576@77",
+      "from_pt": [
+        34.72401,
+        135.41606
+      ],
+      "to_pt": [
+        34.72893,
+        135.40113
+      ],
+      "kv": 77.0,
+      "line": "尼崎線",
+      "evidence": "系統図判読: 関西TD 154kv_less_space.pdf p27(送電線一覧B表/変圧器一覧A表・2026-08-15判読・ confidence=高)。両端実名印字。CSV(154kv_less_line/trans)で機械検算済"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "中国電力和気変電所",
+      "to_sub": "備前変電所 110kV",
+      "from_id": "chugoku_sub_229",
+      "to_id": "chugoku_sub_147@110",
+      "from_pt": [
+        34.82237,
+        134.17559
+      ],
+      "to_pt": [
+        34.75835,
+        134.16705
+      ],
+      "kv": 110.0,
+      "line": "図の線番L8（和気—備前）",
+      "evidence": "系統図判読: 中国電力NW 県別系統構成図(keitoukousei2025_oka.pdf・map-shikoku-chugoku判読 confidence=高)。和気S20から備前へL8"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "大渡変電所",
+      "to_sub": "佐川変電所",
+      "from_id": "shikoku_sub_231",
+      "to_id": "shikoku_sub_72",
+      "from_pt": [
+        33.54408,
+        133.12784
+      ],
+      "to_pt": [
+        33.51359,
+        133.27332
+      ],
+      "kv": 66.0,
+      "line": "線番39+38（加枝T分岐経由）",
+      "evidence": "系統図判読: 四国電送 高知県系統構成図(keitoukousei_kochi_2025.pdf・map-shikoku-chugoku判読 confidence=高・分岐は1200dpiで実接続確認)。⚠相手端の加枝等はモデル不在のため ターゲット同士の実証チェーン(本系統合流はしない=断片統合と忠実度向上)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "佐川変電所",
+      "to_sub": "須崎変電所",
+      "from_id": "shikoku_sub_72",
+      "to_id": "shikoku_sub_255",
+      "from_pt": [
+        33.51359,
+        133.27332
+      ],
+      "to_pt": [
+        33.38942,
+        133.27175
+      ],
+      "kv": 66.0,
+      "line": "線番50+45",
+      "evidence": "系統図判読: 四国電送 高知県系統構成図(同上・confidence=高)。佐川⑲—須崎㉓。同上のチェーン"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "篠崎変電所",
+      "to_sub": "小松川変電所 66kV",
+      "from_id": "tokyo_sub_806",
+      "to_id": "tokyo_sub_584@66",
+      "from_pt": [
+        35.68999,
+        139.901
+      ],
+      "to_pt": [
+        35.6866,
+        139.87065
+      ],
+      "kv": 66.0,
+      "line": "篠崎線(東京23区66kV No.35)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=高)。図p11+一覧表+潮流実績CSVの三者一致(map-tokyo-city)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "淀橋変電所",
+      "to_sub": "和田堀変電所 66kV",
+      "from_id": "tokyo_sub_840",
+      "to_id": "tokyo_sub_19@66",
+      "from_pt": [
+        35.69462,
+        139.68653
+      ],
+      "to_pt": [
+        35.68058,
+        139.64752
+      ],
+      "kv": 66.0,
+      "line": "淀橋和田堀方面(図p12)",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。系統構成図(tokyo23 p12)。⚠常時開路の連系タイ(平常時は新宿側から供給)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西新宿変電所",
+      "to_sub": "東新宿変電所",
+      "from_id": "tokyo_sub_849",
+      "to_id": "tokyo_sub_850",
+      "from_pt": [
+        35.69265,
+        139.69857
+      ],
+      "to_pt": [
+        35.69192,
+        139.71042
+      ],
+      "kv": 66.0,
+      "line": "西新宿線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "戸山変電所",
+      "to_sub": "東新宿変電所",
+      "from_id": "tokyo_sub_1006",
+      "to_id": "tokyo_sub_850",
+      "from_pt": [
+        35.70058,
+        139.70853
+      ],
+      "to_pt": [
+        35.69192,
+        139.71042
+      ],
+      "kv": 66.0,
+      "line": "戸山線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。潮流実績CSV両端法(東新宿・水道橋の2局で計測)。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "戸山変電所",
+      "to_sub": "水道橋変電所",
+      "from_id": "tokyo_sub_1006",
+      "to_id": "tokyo_sub_1045",
+      "from_pt": [
+        35.70058,
+        139.70853
+      ],
+      "to_pt": [
+        35.70051,
+        139.75258
+      ],
+      "kv": 66.0,
+      "line": "戸山線",
+      "evidence": "系統図判読: TEPCO(2026-08-15 map-tokyo-city判読 confidence=中)。同上。 CSV両端法はv1都心275kV網10本と同一手法(校正済)"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田変電所 110kV",
+      "to_sub": "日田市変電所 110kV",
+      "from_id": "kyushu_sub_583@110",
+      "to_id": "kyushu_sub_646@110",
+      "from_pt": [
+        33.30482,
+        130.87475
+      ],
+      "to_pt": [
+        33.16461,
+        130.98453
+      ],
+      "kv": 110.0,
+      "line": "大山日田線（2回線）",
+      "evidence": "系統図判読: 日田表#2: 日田→大山110kV・地区唯一の110kV局。同定: モデル「日田市変電所110kV」(OSM無名way/362349560)はOSM接続が110kVのみ(66kV層なし)・日田図の大山(2)=線2終端・下筌(13)の北東と位置一致=大山変電所。旧判定「=下筌」(map-kyushu 中)を自己訂正（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "日田変電所 66kV",
+      "to_sub": "夜明変電所",
+      "from_id": "kyushu_sub_583@66",
+      "to_id": "suppl_kyushu_夜明変電所",
+      "from_pt": [
+        33.30482,
+        130.87475
+      ],
+      "to_pt": [
+        33.33744,
+        130.869
+      ],
+      "kv": 66.0,
+      "line": "日田夜明線（2回線）",
+      "evidence": "系統図判読: 日田表#3: 日田→夜明・実名両端（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "島田電力所",
+      "to_sub": "島田電力所",
+      "from_id": "tokyo_sub_1852",
+      "to_id": "chubu_sub_512",
+      "from_pt": [
+        34.83937,
+        138.17515
+      ],
+      "to_pt": [
+        34.83964,
+        138.17124
+      ],
+      "kv": 77.0,
+      "line": null,
+      "evidence": "系統図判読: 同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変電所=77kVハブ(駿遠島田/島田志太/大井川島田の3線・実名)を独立確認。fix_region=島跨ぎタイ無効化の回避（中部実施 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "九州電力 千代変電所",
+      "to_sub": "住吉変電所 66kV",
+      "from_id": "kyushu_sub_306",
+      "to_id": "kyushu_sub_244@66",
+      "from_pt": [
+        33.60306,
+        130.42016
+      ],
+      "to_pt": [
+        33.58827,
+        130.41167
+      ],
+      "kv": 66.0,
+      "line": "千代分岐線",
+      "evidence": "系統図判読: 九州 東福岡地区一覧表(td_higashi_fukuoka#9): 住吉→千代・実名両端1.8km。OSM再抽出で両局とも実名収載（プールスイープ 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "穴生変電所",
+      "to_sub": "上津役変電所 66kV",
+      "from_id": "kyushu_sub_416",
+      "to_id": "kyushu_sub_351@66",
+      "from_pt": [
+        33.85462,
+        130.74333
+      ],
+      "to_pt": [
+        33.83516,
+        130.76224
+      ],
+      "kv": 66.0,
+      "line": "穴生分岐線",
+      "evidence": "系統図判読: 九州 八幡地区一覧表(td_yahata#8): 上津役→穴生・実名両端2.8km（プールスイープ 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "通谷変電所",
+      "to_sub": "上津役変電所 66kV",
+      "from_id": "kyushu_sub_413",
+      "to_id": "kyushu_sub_351@66",
+      "from_pt": [
+        33.82624,
+        130.73331
+      ],
+      "to_pt": [
+        33.83516,
+        130.76224
+      ],
+      "kv": 66.0,
+      "line": "通谷分岐線",
+      "evidence": "系統図判読: 九州 八幡地区一覧表(td_yahata#6): 上津役→通谷・実名両端2.9km（プールスイープ 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "富士見変電所",
+      "to_sub": "北長崎変電所 66kV",
+      "from_id": "kyushu_sub_559",
+      "to_id": "kyushu_sub_369@66",
+      "from_pt": [
+        32.77153,
+        129.85291
+      ],
+      "to_pt": [
+        32.82061,
+        129.83456
+      ],
+      "kv": 66.0,
+      "line": "富士見分岐線",
+      "evidence": "系統図判読: 九州 長崎地区一覧表(td_nagasaki#13): 北長崎→富士見・実名両端5.7km（プールスイープ 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "荘園変電所",
+      "to_sub": "西大分変電所 66kV",
+      "from_id": "kyushu_sub_799",
+      "to_id": "kyushu_sub_580@66",
+      "from_pt": [
+        33.29262,
+        131.47556
+      ],
+      "to_pt": [
+        33.18835,
+        131.51143
+      ],
+      "kv": 66.0,
+      "line": "荘園分岐線",
+      "evidence": "系統図判読: 九州 大分地区一覧表(td_oita#27): 西大分→荘園・実名両端12.1km（プールスイープ 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "佐川変電所",
+      "to_sub": "伊野変電所",
+      "from_id": "shikoku_sub_72",
+      "to_id": "suppl_shikoku_伊野変電所",
+      "from_pt": [
+        33.51359,
+        133.27332
+      ],
+      "to_pt": [
+        33.54872,
+        133.42781
+      ],
+      "kv": 66.0,
+      "line": "線34(佐川—伊野)",
+      "evidence": "系統図判読: 四国高知図(map-shikoku-chugoku 高)（供給ノード補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "須崎変電所",
+      "to_sub": "高知変電所 110kV",
+      "from_id": "shikoku_sub_255",
+      "to_id": "shikoku_sub_81@110",
+      "from_pt": [
+        33.38942,
+        133.27175
+      ],
+      "to_pt": [
+        33.56585,
+        133.47654
+      ],
+      "kv": 110.0,
+      "line": "須崎線(110kV 2回線×3)",
+      "evidence": "系統図判読: sys_capa_local04: 変1→変23(須崎)。変1=高知は高知連絡線行で確認（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "女子畑変電所",
+      "to_sub": "日田変電所 66kV",
+      "from_id": "suppl_kyushu_女子畑変電所",
+      "to_id": "kyushu_sub_583@66",
+      "from_pt": [
+        33.29416,
+        130.97424
+      ],
+      "to_pt": [
+        33.30482,
+        130.87475
+      ],
+      "kv": 66.0,
+      "line": "日田女子畑線（2回線）",
+      "evidence": "系統図判読: 九州 日田地区一覧表(td_hita): 日田→女子畑・実名両端（アンカー補完 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "西大分変電所 66kV",
+      "to_sub": "大南変電所",
+      "from_id": "kyushu_sub_580@66",
+      "to_id": "suppl_kyushu_大南変電所",
+      "from_pt": [
+        33.18835,
+        131.51143
+      ],
+      "to_pt": [
+        33.14598,
+        131.67477
+      ],
+      "kv": 66.0,
+      "line": "大南分岐線（2回線）",
+      "evidence": "系統図判読: 九州 大分地区一覧表(td_oita#19): 西大分→大南・実名両端。大分図#19の描線一致（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "disclosure_map",
+      "from_sub": "大南変電所",
+      "to_sub": "犬飼変電所",
+      "from_id": "suppl_kyushu_大南変電所",
+      "to_id": "kyushu_sub_674",
+      "from_pt": [
+        33.14598,
+        131.67477
+      ],
+      "to_pt": [
+        33.05011,
+        131.64269
+      ],
+      "kv": 66.0,
+      "line": "大南分岐線の継続（犬飼供給・2回線）",
+      "evidence": "系統図判読: 大分図: 大南から南下する66kV描線が佐伯図上端の無名開閉所経由で犬飼(変電所No.5)に到達。佐伯表No.5犬飼の上位系=15地区変電所No.5西大分と整合（31地区プール 2026-08-16）"
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "土肥六丁目変電所",
+      "to_sub": "土肥六丁目変電所",
+      "from_id": "chubu_sub_529",
+      "to_id": "tokyo_sub_276",
+      "from_pt": [
+        35.14099,
+        139.09496
+      ],
+      "to_pt": [
+        35.14048,
+        139.09204
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 272
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "東京電力駿河変電所",
+      "to_sub": "東京電力駿河変電所 154kV",
+      "from_id": "chubu_sub_459",
+      "to_id": "tokyo_sub_151@154",
+      "from_pt": [
+        35.17429,
+        138.69178
+      ],
+      "to_pt": [
+        35.17546,
+        138.69219
+      ],
+      "kv": 154.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 135
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "伊東市変電所",
+      "to_sub": "伊東市変電所",
+      "from_id": "chubu_sub_543",
+      "to_id": "tokyo_sub_284",
+      "from_pt": [
+        34.86834,
+        139.0944
+      ],
+      "to_pt": [
+        34.86837,
+        139.09214
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 206
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "富士市変電所",
+      "to_sub": "富士市変電所 154kV",
+      "from_id": "tokyo_sub_320",
+      "to_id": "chubu_sub_592@154",
+      "from_pt": [
+        35.13532,
+        138.61121
+      ],
+      "to_pt": [
+        35.13446,
+        138.6108
+      ],
+      "kv": null,
+      "line": null,
+      "evidence": "同名(正規化)・至近距離の異電圧ペア＝同一変電所の別電圧階級（変電所内部は変圧器で接続されるのが物理）",
+      "same_site": true,
+      "kv_pair": [
+        77.0,
+        154.0
+      ],
+      "dist_m": 103
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "小八木町変電所",
+      "to_sub": "小八木町変電所",
+      "from_id": "chubu_sub_1051",
+      "to_id": "tokyo_sub_1192",
+      "from_pt": [
+        36.36013,
+        139.00809
+      ],
+      "to_pt": [
+        36.36114,
+        139.00922
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 151
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "東大室町変電所",
+      "to_sub": "東大室町変電所",
+      "from_id": "chubu_sub_1104",
+      "to_id": "tokyo_sub_1288",
+      "from_pt": [
+        36.36787,
+        139.18507
+      ],
+      "to_pt": [
+        36.37017,
+        139.18446
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 262
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "大胡変電所 66kV",
+      "to_sub": "大胡変電所",
+      "from_id": "chubu_sub_1106@66",
+      "to_id": "tokyo_sub_1290",
+      "from_pt": [
+        36.41093,
+        139.1572
+      ],
+      "to_pt": [
+        36.41192,
+        139.15636
+      ],
+      "kv": 66.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 133
+    },
+    {
+      "class": "same_site_identity",
+      "from_sub": "中部電力パワーグリッド 川中島変電所",
+      "to_sub": "中部電力パワーグリッド 川中島変電所",
+      "from_id": "tokyo_sub_1815",
+      "to_id": "chubu_sub_935",
+      "from_pt": [
+        36.59506,
+        138.17704
+      ],
+      "to_pt": [
+        36.59584,
+        138.1773
+      ],
+      "kv": 77.0,
+      "line": null,
+      "evidence": "同名(正規化)・同電圧・至近距離＝同一変電所の跨region二重登録",
+      "same_site": true,
+      "dist_m": 90
     }
   ]
 }

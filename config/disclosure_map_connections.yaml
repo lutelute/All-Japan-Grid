@@ -484,6 +484,36 @@ connections:
     line: null
     fix_region: true
     src: "同一敷地同定(review帯425m): 同名・同kv77の跨region二重登録(tokyo孤立コピー/chubu本系統コピー)。中部2025潮流実績で島田変電所=77kVハブ(駿遠島田/島田志太/大井川島田の3線・実名)を独立確認。fix_region=島跨ぎタイ無効化の回避（中部実施 2026-08-16）"
+  - frm: 九州電力 千代変電所
+    to: 住吉変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "千代分岐線"
+    src: "九州 東福岡地区一覧表(td_higashi_fukuoka#9): 住吉→千代・実名両端1.8km。OSM再抽出で両局とも実名収載（プールスイープ 2026-08-16）"
+  - frm: 穴生変電所
+    to: 上津役変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "穴生分岐線"
+    src: "九州 八幡地区一覧表(td_yahata#8): 上津役→穴生・実名両端2.8km（プールスイープ 2026-08-16）"
+  - frm: 通谷変電所
+    to: 上津役変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "通谷分岐線"
+    src: "九州 八幡地区一覧表(td_yahata#6): 上津役→通谷・実名両端2.9km（プールスイープ 2026-08-16）"
+  - frm: 富士見変電所
+    to: 北長崎変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "富士見分岐線"
+    src: "九州 長崎地区一覧表(td_nagasaki#13): 北長崎→富士見・実名両端5.7km（プールスイープ 2026-08-16）"
+  - frm: 荘園変電所
+    to: 西大分変電所 66kV
+    region: kyushu
+    kv: 66
+    line: "荘園分岐線"
+    src: "九州 大分地区一覧表(td_oita#27): 西大分→荘園・実名両端12.1km（プールスイープ 2026-08-16）"
   - frm: 佐川変電所
     to: 伊野変電所
     region: shikoku
