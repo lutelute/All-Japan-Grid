@@ -1,19 +1,23 @@
 {
-  "model_version": "99611b0",
-  "git_dirty": false,
-  "generated_at": "2026-08-15T19:21:10+00:00",
+  "model_version": "10b5c9b",
+  "git_dirty": true,
+  "generated_at": "2026-08-16T06:03:34+00:00",
   "steps": {
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 10.6
+      "elapsed_s": 10.4
     },
     "apply_disclosure_v1": {
       "status": "ok",
-      "elapsed_s": 0.6
+      "elapsed_s": 0.7
     },
     "apply_disclosure_v2": {
       "status": "ok",
       "elapsed_s": 1.1
+    },
+    "route_disclosure": {
+      "status": "ok",
+      "elapsed_s": 0.4
     },
     "export_map_tiers": {
       "status": "ok",
@@ -25,7 +29,7 @@
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 191.1
+      "elapsed_s": 160.7
     },
     "gen_national_overview": {
       "status": "ok",
@@ -33,15 +37,15 @@
     },
     "export_national_matpower": {
       "status": "ok",
-      "elapsed_s": 147.8
+      "elapsed_s": 170.5
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.3
+      "elapsed_s": 4.0
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 1.6
+      "elapsed_s": 1.3
     },
     "apply_capacity_sources": {
       "status": "ok",

@@ -443,13 +443,19 @@ def main() -> int:
             existing.add(frozenset((_k5(*e["a"]), _k5(*e["b"]))))
     # OSM実線形吸着(route_disclosure_edges)でスタブ置換されたコードも適用済み扱い。
     # 置換後の正典にはコードが無いため、これを見ないと同じ対を直線で再追加し
-    # スタブ+実線形と並列の偽回線を作ってしまう(regen順=apply→routeでは無害だが
-    # ad-hoc実行に対する防波堤)
+    # スタブ+実線形と並列の偽回線を作ってしまう(ad-hoc実行に対する防波堤)。
+    # ★ただし「正典に当該スタブが実在する」場合のみ。フレッシュ再構築(build直後)は
+    #   スタブも消えているので、ここでスキップするとコードが二度と書かれず
+    #   route も置換対象を失い接続自体が消える(2026-08-16の再構築で実害)。
     routed_report = ROOT / "docs/reports/routed_disclosure_edges.json"
     if routed_report.exists():
         rd = json.loads(routed_report.read_text(encoding="utf-8"))
+        stub_anchors = {_k5(*e["a"]) for e in bedges if e.get("stub")} | \
+                       {_k5(*e["b"]) for e in bedges if e.get("stub")}
         for r in rd.get("replaced", []):
-            existing.add(frozenset((_k5(*r["a"]), _k5(*r["b"]))))
+            ka, kb = _k5(*r["a"]), _k5(*r["b"])
+            if ka in stub_anchors or kb in stub_anchors:
+                existing.add(frozenset((ka, kb)))
     fresh = [e for e in edges
              if frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) not in existing]
 

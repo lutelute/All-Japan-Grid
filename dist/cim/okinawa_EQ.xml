@@ -35,182 +35,183 @@
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_9ba45c53-e4a1-5b44-bd20-e56d947fb24a"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_7f1046b4-9f41-5857-b1f0-f507ed8df9e0">
-    <cim:IdentifiedObject.name>海洋博変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>小禄変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>7f1046b4-9f41-5857-b1f0-f507ed8df9e0</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_ddd7e8a2-11af-5817-929d-c7ac7e5811ac">
-    <cim:IdentifiedObject.name>海洋博変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>小禄変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ddd7e8a2-11af-5817-929d-c7ac7e5811ac</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_7f1046b4-9f41-5857-b1f0-f507ed8df9e0"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd">
-    <cim:IdentifiedObject.name>小禄変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>上間変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_94ce128d-eb95-53fb-8d99-2f956f62542f">
-    <cim:IdentifiedObject.name>小禄変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>上間変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>94ce128d-eb95-53fb-8d99-2f956f62542f</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_c0cc387d-c3e4-55f9-949d-48cd2e3b3540">
-    <cim:IdentifiedObject.name>上間変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>南風原変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>c0cc387d-c3e4-55f9-949d-48cd2e3b3540</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_2ad8d74a-7567-5141-b2b0-c32aa2f01608">
-    <cim:IdentifiedObject.name>上間変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>南風原変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>2ad8d74a-7567-5141-b2b0-c32aa2f01608</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_9781f7b7-a9f2-5803-859e-d722b89aefce">
-    <cim:IdentifiedObject.name>南風原変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>長毛変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9781f7b7-a9f2-5803-859e-d722b89aefce</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_58885850-2d76-5af5-a943-0c3bdac587ea">
-    <cim:IdentifiedObject.name>南風原変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>長毛変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>58885850-2d76-5af5-a943-0c3bdac587ea</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_9781f7b7-a9f2-5803-859e-d722b89aefce"/>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_6236d018-7d77-528e-9b98-46bed4233139">
-    <cim:IdentifiedObject.name>長毛変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>伊佐一丁目変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>6236d018-7d77-528e-9b98-46bed4233139</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_a358381a-a75c-5f5b-9e09-1e810e89b987">
-    <cim:IdentifiedObject.name>長毛変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>a358381a-a75c-5f5b-9e09-1e810e89b987</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_9d5f17c3-65cf-5840-9ed3-4121880eff7f">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>仲泊変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9d5f17c3-65cf-5840-9ed3-4121880eff7f</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_0f73abeb-b81f-5754-87b9-a6996389aea1">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>仲泊変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0f73abeb-b81f-5754-87b9-a6996389aea1</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_0fe8cb29-9c8b-58ad-b341-3eed4318502c">
-    <cim:IdentifiedObject.name>仲泊変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>奥間変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0fe8cb29-9c8b-58ad-b341-3eed4318502c</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_1c795b4d-51b0-5bb9-84c8-7997c662c6b9">
-    <cim:IdentifiedObject.name>仲泊変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>奥間変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>1c795b4d-51b0-5bb9-84c8-7997c662c6b9</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_61e77a76-ca06-5100-8964-e7e32bc8d227"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_7d70a869-d8f9-5b94-92cd-6b2b4daccdc6">
-    <cim:IdentifiedObject.name>奥間変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>伊佐一丁目変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>7d70a869-d8f9-5b94-92cd-6b2b4daccdc6</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_ee6bab73-eeb4-5a4f-9841-d01465236c92">
-    <cim:IdentifiedObject.name>奥間変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ee6bab73-eeb4-5a4f-9841-d01465236c92</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_7d70a869-d8f9-5b94-92cd-6b2b4daccdc6"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_61e77a76-ca06-5100-8964-e7e32bc8d227"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_07b8921a-6b65-5286-9de4-d7f2000a1d7d">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所_2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>泊変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>07b8921a-6b65-5286-9de4-d7f2000a1d7d</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_ca8c615b-9b02-50c1-b58d-b10a1928b40a">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所_2 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>泊変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ca8c615b-9b02-50c1-b58d-b10a1928b40a</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_07b8921a-6b65-5286-9de4-d7f2000a1d7d"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1">
-    <cim:IdentifiedObject.name>泊変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>久茂地変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>3639e9b9-16c7-51ca-b7ab-05f0abbc41e1</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_3d867657-e974-5e6f-937c-86b72f877dfa">
-    <cim:IdentifiedObject.name>泊変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>久茂地変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>3d867657-e974-5e6f-937c-86b72f877dfa</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_b9d17c3c-295a-537b-bdf0-80b30e79f695">
-    <cim:IdentifiedObject.name>久茂地変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>Henoko Substation</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b9d17c3c-295a-537b-bdf0-80b30e79f695</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_47c84971-ef71-5fd9-b7b1-a15984bd1737">
-    <cim:IdentifiedObject.name>久茂地変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>Henoko Substation VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>47c84971-ef71-5fd9-b7b1-a15984bd1737</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_b9d17c3c-295a-537b-bdf0-80b30e79f695"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_a0654589-49dc-54b7-befa-8358447a3e91">
-    <cim:IdentifiedObject.name>Henoko Substation</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>西那覇変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>a0654589-49dc-54b7-befa-8358447a3e91</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_9d950b20-2e54-594a-8292-25969c92bb5a">
-    <cim:IdentifiedObject.name>Henoko Substation VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>西那覇変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9d950b20-2e54-594a-8292-25969c92bb5a</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_8f343696-dbfb-5865-8102-93cbb22b82fd">
-    <cim:IdentifiedObject.name>西那覇変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>与根変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8f343696-dbfb-5865-8102-93cbb22b82fd</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_142c914c-e849-5798-9932-732a86b8923e">
-    <cim:IdentifiedObject.name>西那覇変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>与根変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>142c914c-e849-5798-9932-732a86b8923e</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_b1677e1f-afd3-5bab-a5b6-60f64851a006">
-    <cim:IdentifiedObject.name>沖縄電力与根変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b1677e1f-afd3-5bab-a5b6-60f64851a006</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_347371eb-a9a3-5b8f-a665-43521a1160a2">
-    <cim:IdentifiedObject.name>沖縄電力与根変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>347371eb-a9a3-5b8f-a665-43521a1160a2</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_b1677e1f-afd3-5bab-a5b6-60f64851a006"/>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_9f878f55-0016-58a1-aff5-ab2353bb9058">
-    <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>松田変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9f878f55-0016-58a1-aff5-ab2353bb9058</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_41ea05cd-297e-5346-828e-601f2c2a9b17">
-    <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>松田変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>41ea05cd-297e-5346-828e-601f2c2a9b17</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_9f878f55-0016-58a1-aff5-ab2353bb9058"/>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_8a91a01a-e985-5638-b7a2-7d556eb4baf3">
-    <cim:IdentifiedObject.name>松田変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>名護電力所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8a91a01a-e985-5638-b7a2-7d556eb4baf3</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_16b6a2bc-7dd8-5f81-a2c4-4ba2b4fe0bd4">
-    <cim:IdentifiedObject.name>松田変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>名護電力所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>16b6a2bc-7dd8-5f81-a2c4-4ba2b4fe0bd4</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_8a91a01a-e985-5638-b7a2-7d556eb4baf3"/>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_7328152f-801e-5c3b-92c0-d273c58b0f54">
-    <cim:IdentifiedObject.name>名護電力所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>海洋博変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>7328152f-801e-5c3b-92c0-d273c58b0f54</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_5980a08f-5406-55a5-87d6-ecc777bddff0">
-    <cim:IdentifiedObject.name>名護電力所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>海洋博変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>5980a08f-5406-55a5-87d6-ecc777bddff0</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
@@ -543,104 +544,114 @@
     <cim:VoltageLevel.Substation rdf:resource="#_a8f37b47-6cec-50d8-b308-b677b8ecd13e"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_68e40856-d788-5f8c-9f60-ddaa0c6b6efe">
-    <cim:IdentifiedObject.name>壷川変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>曙変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>68e40856-d788-5f8c-9f60-ddaa0c6b6efe</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_c199c3eb-698d-5768-8b10-0aa80fc3278d">
-    <cim:IdentifiedObject.name>壷川変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>曙変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>c199c3eb-698d-5768-8b10-0aa80fc3278d</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_d3f3556f-b7be-5d32-b3a7-829fb32afc3d">
-    <cim:IdentifiedObject.name>曙変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>古波蔵一丁目変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>d3f3556f-b7be-5d32-b3a7-829fb32afc3d</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_077e41d4-a7c5-5d69-83c3-a5bb337e43dc">
-    <cim:IdentifiedObject.name>曙変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>古波蔵一丁目変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>077e41d4-a7c5-5d69-83c3-a5bb337e43dc</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_d3f3556f-b7be-5d32-b3a7-829fb32afc3d"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_f815051b-6cb5-5a81-90c7-e2966c2300f1">
-    <cim:IdentifiedObject.name>古波蔵一丁目変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>沖縄電力 竹富配電塔</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>f815051b-6cb5-5a81-90c7-e2966c2300f1</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_3e25397a-f833-5e93-b746-59e424093fac">
-    <cim:IdentifiedObject.name>古波蔵一丁目変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>沖縄電力 竹富配電塔 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>3e25397a-f833-5e93-b746-59e424093fac</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_f815051b-6cb5-5a81-90c7-e2966c2300f1"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_42cbeb33-365b-5e66-87d9-24dc7c3f6f18">
-    <cim:IdentifiedObject.name>沖縄電力 竹富配電塔</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>津花波変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>42cbeb33-365b-5e66-87d9-24dc7c3f6f18</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_f3b1fa13-3c8d-5bf4-9c3d-ed1fae0a3859">
-    <cim:IdentifiedObject.name>沖縄電力 竹富配電塔 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>津花波変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>f3b1fa13-3c8d-5bf4-9c3d-ed1fae0a3859</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_2dcd5445-4069-5a3e-bde2-b53f066abb8f">
-    <cim:IdentifiedObject.name>津花波変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>知念久手堅変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>2dcd5445-4069-5a3e-bde2-b53f066abb8f</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_7b40591d-bb91-5b3d-99e4-fba4fa421f9e">
-    <cim:IdentifiedObject.name>津花波変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>知念久手堅変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>7b40591d-bb91-5b3d-99e4-fba4fa421f9e</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_2dcd5445-4069-5a3e-bde2-b53f066abb8f"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_11694907-c496-5015-a439-d66aafcdbd89">
-    <cim:IdentifiedObject.name>知念久手堅変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>赤嶺変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>11694907-c496-5015-a439-d66aafcdbd89</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_be8e8eb1-e871-53a0-9dbb-fe69734d6e4f">
-    <cim:IdentifiedObject.name>知念久手堅変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>赤嶺変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>be8e8eb1-e871-53a0-9dbb-fe69734d6e4f</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_11694907-c496-5015-a439-d66aafcdbd89"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_8157c425-1b0a-57fb-b67e-8d29dfd0aeb0">
-    <cim:IdentifiedObject.name>赤嶺変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>美浜三丁目変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8157c425-1b0a-57fb-b67e-8d29dfd0aeb0</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_6059fdd2-4be9-58e9-88c1-89ae466346ba">
-    <cim:IdentifiedObject.name>赤嶺変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>美浜三丁目変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>6059fdd2-4be9-58e9-88c1-89ae466346ba</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_8157c425-1b0a-57fb-b67e-8d29dfd0aeb0"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_b574d87d-e6b6-5813-81d2-2cad6eb68d90">
-    <cim:IdentifiedObject.name>美浜三丁目変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>首里大名町三丁目変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b574d87d-e6b6-5813-81d2-2cad6eb68d90</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_69c0c159-4fdc-5b32-8a1c-9d69ce80148b">
-    <cim:IdentifiedObject.name>美浜三丁目変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>首里大名町三丁目変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>69c0c159-4fdc-5b32-8a1c-9d69ce80148b</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_b574d87d-e6b6-5813-81d2-2cad6eb68d90"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_276dbb59-20b6-542c-8d43-84a36c98ab23">
-    <cim:IdentifiedObject.name>首里大名町三丁目変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>泊変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>276dbb59-20b6-542c-8d43-84a36c98ab23</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_5cc98a46-aeff-5123-8a55-68b0b664021e">
-    <cim:IdentifiedObject.name>首里大名町三丁目変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>泊変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>5cc98a46-aeff-5123-8a55-68b0b664021e</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_276dbb59-20b6-542c-8d43-84a36c98ab23"/>
   </cim:VoltageLevel>
   <cim:Substation rdf:ID="_7e638064-cc77-58fd-8933-bf847de3010c">
-    <cim:IdentifiedObject.name>上之屋一丁目変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>壷川変電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>7e638064-cc77-58fd-8933-bf847de3010c</cim:IdentifiedObject.mRID>
     <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
   </cim:Substation>
   <cim:VoltageLevel rdf:ID="_a274cc52-86ec-5cd5-ae55-11d416266569">
-    <cim:IdentifiedObject.name>上之屋一丁目変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>壷川変電所 VL</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>a274cc52-86ec-5cd5-ae55-11d416266569</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.Substation rdf:resource="#_7e638064-cc77-58fd-8933-bf847de3010c"/>
+  </cim:VoltageLevel>
+  <cim:Substation rdf:ID="_29292f87-d92a-512b-81b9-b865339e1316">
+    <cim:IdentifiedObject.name>海洋博変電所</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>29292f87-d92a-512b-81b9-b865339e1316</cim:IdentifiedObject.mRID>
+    <cim:Substation.Region rdf:resource="#_d291361d-7890-5f27-9a02-a94df43f4e1b"/>
+  </cim:Substation>
+  <cim:VoltageLevel rdf:ID="_29836667-595e-5ec9-b4d0-be30631cb896">
+    <cim:IdentifiedObject.name>海洋博変電所 VL</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>29836667-595e-5ec9-b4d0-be30631cb896</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.Substation rdf:resource="#_29292f87-d92a-512b-81b9-b865339e1316"/>
   </cim:VoltageLevel>
   <cim:ACLineSegment rdf:ID="_414ee90e-51bb-5e22-a535-9c9736ccf6b7">
     <cim:IdentifiedObject.name>那覇高安線; 那覇小禄線</cim:IdentifiedObject.name>
@@ -3651,7 +3662,7 @@
   <cim:PowerTransformer rdf:ID="_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08">
     <cim:IdentifiedObject.name>南風原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>05ac863e-4cf8-5abd-af1f-5c1c8db6ef08</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_9781f7b7-a9f2-5803-859e-d722b89aefce"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_2233181b-599e-56e3-96d2-b2c819ab0854">
     <cim:IdentifiedObject.mRID>2233181b-599e-56e3-96d2-b2c819ab0854</cim:IdentifiedObject.mRID>
@@ -3690,7 +3701,7 @@
   <cim:PowerTransformer rdf:ID="_0302762b-d428-5e49-af6d-323d45128ace">
     <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0302762b-d428-5e49-af6d-323d45128ace</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_0375eeb8-1bf4-5105-9f41-1436cbd06abf">
     <cim:IdentifiedObject.mRID>0375eeb8-1bf4-5105-9f41-1436cbd06abf</cim:IdentifiedObject.mRID>
@@ -3729,7 +3740,7 @@
   <cim:PowerTransformer rdf:ID="_addaddb7-bfb1-5742-b906-e361bf42957a">
     <cim:IdentifiedObject.name>仲泊変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>addaddb7-bfb1-5742-b906-e361bf42957a</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_565a3cd3-5f14-5492-947f-dee9378f3bc7">
     <cim:IdentifiedObject.mRID>565a3cd3-5f14-5492-947f-dee9378f3bc7</cim:IdentifiedObject.mRID>
@@ -3768,7 +3779,6 @@
   <cim:PowerTransformer rdf:ID="_8fb85c3a-c91d-5138-979d-b9cf9b363737">
     <cim:IdentifiedObject.name>伊佐一丁目変電所_2 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8fb85c3a-c91d-5138-979d-b9cf9b363737</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_07b8921a-6b65-5286-9de4-d7f2000a1d7d"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_fb2ff0f7-a334-5e54-8505-da11c6555ef0">
     <cim:IdentifiedObject.mRID>fb2ff0f7-a334-5e54-8505-da11c6555ef0</cim:IdentifiedObject.mRID>
@@ -4470,7 +4480,7 @@
   <cim:PowerTransformer rdf:ID="_6bf61e46-cb34-5881-b93c-1e5c94d1a048">
     <cim:IdentifiedObject.name>津花波変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>6bf61e46-cb34-5881-b93c-1e5c94d1a048</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_2dcd5445-4069-5a3e-bde2-b53f066abb8f"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_a9feaaf2-b2ff-5e80-96ae-cc358af47028">
     <cim:IdentifiedObject.mRID>a9feaaf2-b2ff-5e80-96ae-cc358af47028</cim:IdentifiedObject.mRID>
