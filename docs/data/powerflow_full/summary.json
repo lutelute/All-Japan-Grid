@@ -2,8 +2,8 @@
   "_meta": {
     "source": "docs/data/built/all.json",
     "n_nodes": 17881,
-    "n_edges": 19705,
-    "generated": "2026-08-16 15:03:52",
+    "n_edges": 19719,
+    "generated": "2026-08-16 15:35:27",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -45,7 +45,7 @@
       "ac_max_loading_pct": 91.95458737616599,
       "dc_max_loading_pct": 86.98529742111646,
       "ac_total_loss_mw": 98.51828702875243,
-      "solve_seconds": 5.6
+      "solve_seconds": 5.7
     },
     "east": {
       "frequency_hz": 50,
@@ -85,17 +85,17 @@
       "ac_max_loading_pct": 674.0079537726044,
       "dc_max_loading_pct": 862.6408896183661,
       "ac_total_loss_mw": 1143.0028975506325,
-      "solve_seconds": 74.3
+      "solve_seconds": 73.4
     },
     "west": {
       "frequency_hz": 60,
       "n_bus": 8268,
-      "n_line": 8132,
+      "n_line": 8137,
       "n_trafo": 941,
       "n_trafo_nameplate": 4,
       "n_edge_skipped": 1381,
       "n_dedup_merged": 2323,
-      "n_edge_dup_removed": 2095,
+      "n_edge_dup_removed": 2102,
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
@@ -113,19 +113,19 @@
       },
       "n_gen": 8775,
       "total_load_mw": 73865.0,
-      "n_components": 605,
-      "n_slack": 605,
-      "n_synthetic_slack": 556,
+      "n_components": 601,
+      "n_slack": 601,
+      "n_synthetic_slack": 553,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7199086058427964,
-      "ac_vm_max": 1.036876082901992,
-      "ac_max_loading_pct": 817.3690610600516,
-      "dc_max_loading_pct": 821.1811788284649,
-      "ac_total_loss_mw": 1423.654523685453,
-      "solve_seconds": 75.7
+      "ac_vm_min": 0.7199085997148391,
+      "ac_vm_max": 1.037444387832334,
+      "ac_max_loading_pct": 817.3697878502269,
+      "dc_max_loading_pct": 821.1816696350743,
+      "ac_total_loss_mw": 1457.8399582937664,
+      "solve_seconds": 83.5
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -165,7 +165,7 @@
       "ac_max_loading_pct": 234.84695902099423,
       "dc_max_loading_pct": 181.26806156448583,
       "ac_total_loss_mw": 27.665589942492865,
-      "solve_seconds": 1.2
+      "solve_seconds": 1.4
     }
   },
   "regions": {
@@ -230,7 +230,7 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9835,
-      "vm_max": 1.0369,
+      "vm_max": 1.0374,
       "n_buses": 661,
       "n_buses_exported": 661,
       "n_lines_exported": 690
@@ -244,7 +244,7 @@
       "vm_max": 1.0174,
       "n_buses": 1759,
       "n_buses_exported": 1759,
-      "n_lines_exported": 1750
+      "n_lines_exported": 1752
     },
     "kyushu": {
       "island": "west",
@@ -262,11 +262,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9799,
-      "vm_max": 1.0057,
+      "vm_min": 0.8845,
+      "vm_max": 1.0055,
       "n_buses": 496,
       "n_buses_exported": 496,
-      "n_lines_exported": 481
+      "n_lines_exported": 484
     },
     "okinawa": {
       "island": "okinawa",
