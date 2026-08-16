@@ -245,7 +245,16 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
                         or frame.pick(name, kv, reg))
             cands = frame.variants(name)
             if not cands:
-                return None
+                # 無名ノード(tokyo_sub_1790等のビルド添字名)は罠10対処でindexから
+                # 除外されている。frm_nearヒントがあるときだけ、指定名の一致を要求して
+                # 純座標(≤300m)で拾う — 松本圏のtokyo/chubu二重登録の同定に必要
+                same_id = [n for n in frame.nodes if n.get("name") == name]
+                pool = same_id or [n for n in frame.nodes
+                                   if hav_m(tuple(hint), n["latlon"]) <= 300]
+                if not pool:
+                    return None
+                best = min(pool, key=lambda c: hav_m(tuple(hint), c["latlon"]))
+                return best if hav_m(tuple(hint), best["latlon"]) <= 300 else None
             best = min(cands, key=lambda c: hav_m(tuple(hint), c["latlon"]))
             return best if hav_m(tuple(hint), best["latlon"]) <= 50_000 else None
 
@@ -270,15 +279,19 @@ def build_worklist(frame: Frame) -> tuple[list[dict], list[dict], list[dict]]:
                 continue
             add_edge(a, b, "disclosure_map", kv, m.get("line"),
                      f"系統図判読: {m.get('src','')}")
-            # fix_region: true — 同一敷地同定のreview帯個体(300m超)を人間判断で採用する
-            # 場合、孤立側(frm)のregionを本系統側(to)に是正する。是正しないと
+            # fix_region — 同一敷地同定のreview帯個体等で孤立側(frm)のregionを是正する。
+            # true=本系統側(to)のregionへ / 文字列=そのregionへ明示(両側とも誤ラベルの
+            # 場合に使う。例: 松本圏のtokyoラベル二重登録はchubuが正)。是正しないと
             # 周波数島ラベルが違うままタイが両島のどちらのグラフにも入らず無効になる
-            if m.get("fix_region") and a.get("region") != b.get("region"):
-                region_fixes.append({
-                    "id": a["id"], "name": a["name"],
-                    "from": a.get("region"), "to": b.get("region"),
-                    "evidence": f"disclosure_map fix_region指定: {m.get('src','')[:80]}",
-                })
+            fr = m.get("fix_region")
+            if fr:
+                target = fr if isinstance(fr, str) else b.get("region")
+                if a.get("region") != target:
+                    region_fixes.append({
+                        "id": a["id"], "name": a["name"],
+                        "from": a.get("region"), "to": target,
+                        "evidence": f"disclosure_map fix_region指定: {m.get('src','')[:80]}",
+                    })
 
     # G: 変圧器実証 — tr台帳にある変電所の、同名・異電圧の孤立/本系統ノード間タイ
     for k, fam in frame.by_norm.items():
@@ -491,9 +504,15 @@ def main() -> int:
         rd = json.loads(routed_report.read_text(encoding="utf-8"))
         stub_anchors = {_k5(*e["a"]) for e in bedges if e.get("stub")} | \
                        {_k5(*e["b"]) for e in bedges if e.get("stub")}
+        # スタブ0本置換(端点が断片頂点と完全一致)の対はスタブ実在で判定できない。
+        # 両端点が正典エッジ頂点として実在=断片が直結済み、も「置換が生きている」証拠
+        vert = set()
+        for e in bedges:
+            vert.add(_k5(*e["a"]))
+            vert.add(_k5(*e["b"]))
         for r in rd.get("replaced", []):
             ka, kb = _k5(*r["a"]), _k5(*r["b"])
-            if ka in stub_anchors or kb in stub_anchors:
+            if ka in stub_anchors or kb in stub_anchors or (ka in vert and kb in vert):
                 existing.add(frozenset((ka, kb)))
     fresh = [e for e in edges
              if frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) not in existing]

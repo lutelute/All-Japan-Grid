@@ -191,19 +191,30 @@ def main() -> int:
         print(f"  吸着 {r['name'][:26]:26} chord={r['chord_km']:5.1f}km "
               f"→ 実線形 {r['route_km']:5.1f}km (off={r['off_main_share']})")
 
-    # 置換0の再実行(適用済み状態)で台帳を空上書きしない
-    # （disclosure帳簿の空上書き事故 2026-08-15 と同族の防波堤）
-    if replaced or not REPORT.exists():
+    # 台帳は**累積マージ**（disclosure帳簿と同じ設計）。部分的な再実行(置換N件)が
+    # 過去の置換記録を消すと、applyのスキップ防波堤が守備範囲を失い
+    # コードがスタブ+実線形の横に並列復活する(2026-08-16に置換2件の正常実行で
+    # 12件記録が消えた実害)。ペア(a,b)キーで過去分と統合する。
+    prev_replaced = []
+    if REPORT.exists():
+        try:
+            prev_replaced = json.loads(REPORT.read_text(encoding="utf-8")).get("replaced", [])
+        except Exception:  # noqa: BLE001
+            pass
+    pairkey = lambda r: frozenset((tuple(k5(r["a"])), tuple(k5(r["b"]))))  # noqa: E731
+    have = {pairkey(r) for r in replaced}
+    merged = replaced + [r for r in prev_replaced if pairkey(r) not in have]
+    if merged or not REPORT.exists():
         REPORT.write_text(json.dumps({
-            "note": "実証接続のOSM実線形吸着。replaced=コードをスタブ2本に置換(断片=公表線)。"
-                    "kept=直線維持とその理由(未収載の線形は捏造しない)",
+            "note": "実証接続のOSM実線形吸着。replaced=コードをスタブ2本に置換(断片=公表線)・"
+                    "累積(過去の置換も保持)。kept=直近実行の直線維持とその理由",
             "params": {"stub_km": R_STUB_KM, "max_ratio": MAX_RATIO,
                        "off_share_min": OFF_SHARE_MIN},
-            "replaced": replaced, "kept": kept,
+            "replaced": merged, "kept": kept,
         }, ensure_ascii=False, indent=1), encoding="utf-8")
-        print(f"台帳: {REPORT.relative_to(ROOT)}")
+        print(f"台帳: {REPORT.relative_to(ROOT)}（累積 {len(merged)}件）")
     else:
-        print(f"台帳は保持（置換0のため上書きしない）: {REPORT.relative_to(ROOT)}")
+        print(f"台帳は保持: {REPORT.relative_to(ROOT)}")
 
     if not args.write:
         print("（正典は不変。適用するなら --write）")

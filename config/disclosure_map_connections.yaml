@@ -514,6 +514,169 @@ connections:
     kv: 66
     line: "荘園分岐線"
     src: "九州 大分地区一覧表(td_oita#27): 西大分→荘園・実名両端12.1km（プールスイープ 2026-08-16）"
+  # --- 東京23区 線名逆引き両端法(tokyo_23_01/02 潮流実績・2026-08-16) ---
+  # 同一線名が2局で計測される場合、その2局が線の両端で、線名の行き先局が中間。
+  # 巣鴨(西巣鴨変電所が別局で実在)・前野(北前野の素性不明)は罠14回避で不採用。
+  - frm: 千石町変電所
+    to: 墨東変電所
+    region: tokyo
+    kv: 66
+    line: "千石町線"
+    src: "TEPCO 23区潮流実績(tokyo_23_01): 千石町線が墨東(変)・江東(変)の両端で計測=千石町は中間(墨東2.1km/江東2.7kmに挟在)"
+  - frm: 千石町変電所
+    to: 江東変電所 275kV
+    region: tokyo
+    kv: 66
+    line: "千石町線"
+    src: "同上(江東側)"
+  - frm: 茅場町変電所
+    to: 永代橋変電所
+    region: tokyo
+    kv: 66
+    line: "茅場町線"
+    src: "TEPCO 23区潮流実績(tokyo_23_01): 茅場町線が八重洲(変)・永代橋(変)で計測。永代橋0.5km(八重洲はモデル不在)"
+  - frm: 福住変電所
+    to: 永代橋変電所
+    region: tokyo
+    kv: 66
+    line: "福住線"
+    src: "TEPCO 23区潮流実績(tokyo_23_01): 福住線が永代橋(変)・江東(変)の両端で計測=福住は中間(永代橋0.9km)"
+  - frm: 福住変電所
+    to: 江東変電所 275kV
+    region: tokyo
+    kv: 66
+    line: "福住線"
+    src: "同上(江東側4.4km)"
+  - frm: 南池袋変電所
+    to: 豊島変電所
+    region: tokyo
+    kv: 66
+    line: "南池袋線"
+    src: "TEPCO 23区潮流実績(tokyo_23_02): 南池袋線が豊島(変)で計測・0.6km"
+  - frm: 東海町変電所
+    to: 南大田変電所
+    region: tokyo
+    kv: 66
+    line: "東海町線"
+    src: "TEPCO 23区潮流実績(tokyo_23_02): 東海町線が南大田/天王洲/池上で計測・南大田4.0km"
+  - frm: 東海町変電所
+    to: 天王洲変電所
+    region: tokyo
+    kv: 66
+    line: "東海町線"
+    src: "同上(天王洲側4.8km)"
+  - frm: 上富士変電所
+    to: 田端変電所
+    region: tokyo
+    kv: 66
+    line: "上富士線"
+    src: "TEPCO 23区潮流実績(tokyo_23_01/02): 上富士線が田端(変)・豊島(変)の両端で計測=上富士は中間(田端2.2km)"
+  - frm: 上富士変電所
+    to: 豊島変電所
+    region: tokyo
+    kv: 66
+    line: "上富士線"
+    src: "同上(豊島側2.9km)"
+  - frm: 大井変電所
+    to: 天王洲変電所
+    region: tokyo
+    kv: 66
+    line: "大井線"
+    src: "TEPCO 23区潮流実績(tokyo_23_02): 大井線が天王洲(変)で計測・3.9km"
+  - frm: 板橋変電所
+    to: 常盤台変電所
+    to_near: [35.75755, 139.69128]
+    region: tokyo
+    kv: 66
+    line: "板橋線"
+    src: "TEPCO 23区潮流実績(tokyo_23_02): 板橋線が常盤台(変)・戸田(変)の両端で計測=板橋は中間(常盤台1.9km・154kV main側をto_nearで指定)"
+  - frm: 板橋変電所
+    to: 戸田変電所 154kV
+    region: tokyo
+    kv: 66
+    line: "板橋線"
+    src: "同上(戸田側6.1km)"
+  - frm: 美野里変電所
+    to: 石岡変電所 154kV
+    region: tokyo
+    kv: 66
+    line: "美野里線1・2L"
+    src: "TEPCO茨城潮流実績(ibaraki01): 美野里線1・2Lが石岡(変)で計測・10.2km"
+  # --- 松本圏 tokyo/chubu二重登録の同一敷地同定(中部77kV長野図の判読とセット 2026-08-16) ---
+  # 無名tokyoコピーが実名chubu局の30〜225m隣に併存(bbox重複の典型)。F類は名前不一致で
+  # 見落とすためMAPSで同定。fix_region: chubu(長野=中部エリアが正)
+  # ※frmのtokyo_sub_NNNN名はビルド添字由来で不安定。帳簿登録後は座標+スナップで安定
+  - frm: tokyo_sub_1790
+    frm_near: [36.3370, 137.8866]
+    to: 穂高変電所
+    to_near: [36.3355, 137.8848]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定220m: 無名tokyoコピー=穂高変電所(中部77kV長野図に穂高系統あり・安曇野市穂高)"
+  - frm: tokyo_sub_1789
+    frm_near: [36.2557, 137.9862]
+    to: 浅間温泉一丁目変電所
+    to_near: [36.2559, 137.9859]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定30m: 無名tokyoコピー=浅間温泉一丁目(松本市)。中部77kV長野図の松本圏系統"
+  - frm: tokyo_sub_1791
+    frm_near: [36.2474, 137.9397]
+    to: 新橋変電所
+    to_near: [36.2454, 137.9393]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定225m: 無名tokyoコピー=新橋変電所(松本市島内新橋)"
+  - frm: tokyo_sub_1787
+    frm_near: [36.0081, 138.0948]
+    to: 大字湖南変電所
+    to_near: [36.0068, 138.0932]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定200m: 無名tokyoコピー=大字湖南(諏訪市湖南)。中部77kV長野図の湖南"
+  - frm: tokyo_sub_1794
+    frm_near: [35.9761, 137.9889]
+    to: 辰野町変電所
+    to_near: [35.9750, 137.9885]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定125m: 無名tokyoコピー=辰野町変電所"
+  - frm: tokyo_sub_1792
+    frm_near: [36.2753, 137.9192]
+    to: 安曇野市変電所_4
+    to_near: [36.2749, 137.9194]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定45m: 無名tokyoコピー=安曇野市変電所_4"
+  - frm: tokyo_sub_1797
+    frm_near: [36.2091, 137.9739]
+    to: 出川二丁目変電所
+    to_near: [36.2085, 137.9739]
+    region: chubu
+    kv: 77
+    line: null
+    fix_region: chubu
+    src: "同一敷地同定66m: 無名tokyoコピー=出川二丁目(松本市出川)。中部77kV長野図の「出川」"
+  - frm: 出川二丁目変電所
+    frm_near: [36.2085, 137.9739]
+    to: 中信変電所 77kV
+    region: chubu
+    kv: 77
+    line: "中信52150系(大門・片丘・寿・出川・笹部)"
+    fix_region: chubu
+    src: "中部77kV長野図(local_2025 p11)判読: 出川は中信(5007)の52150幹の分岐(×常開点で北松本52110系の筑摩と接する)。中間局(大門/片丘/寿/笹部)はモデル未収載のため中信へ直結・9.8km"
   - frm: 佐川変電所
     to: 伊野変電所
     region: shikoku
