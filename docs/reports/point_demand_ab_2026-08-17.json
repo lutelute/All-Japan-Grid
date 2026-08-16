@@ -1,0 +1,87 @@
+{
+ "east:A_baseline": {
+  "ac": true,
+  "match": {
+   "n": 1641,
+   "spearman": 0.016,
+   "ratio_med": 0.0
+  },
+  "vm": [
+   0.9827,
+   1.0058
+  ]
+ },
+ "east:B_pinned": {
+  "ac": true,
+  "match": {
+   "n": 1641,
+   "spearman": 0.016,
+   "ratio_med": 0.0
+  },
+  "ledger": {
+   "n_obs_points": 70,
+   "n_pinned_buses": 10,
+   "n_unmatched": 60,
+   "n_ambiguous_skipped": 0,
+   "pinned_mw": 212.9
+  },
+  "vm": [
+   0.9827,
+   1.0058
+  ]
+ },
+ "west:A_baseline": {
+  "ac": true,
+  "match": {
+   "n": 783,
+   "spearman": 0.412,
+   "ratio_med": 1.12
+  },
+  "vm": [
+   0.797,
+   1.0171
+  ]
+ },
+ "west:B_pinned": {
+  "ac": true,
+  "match": {
+   "n": 783,
+   "spearman": 0.413,
+   "ratio_med": 1.12
+  },
+  "ledger": {
+   "n_obs_points": 70,
+   "n_pinned_buses": 5,
+   "n_unmatched": 65,
+   "n_ambiguous_skipped": 0,
+   "pinned_mw": 73.6
+  },
+  "vm": [
+   0.797,
+   1.0171
+  ]
+ },
+ "okinawa:A_baseline": {
+  "ac": true,
+  "match": null,
+  "vm": [
+   0.7075,
+   1.0
+  ]
+ },
+ "okinawa:B_pinned": {
+  "ac": true,
+  "match": null,
+  "ledger": {
+   "n_obs_points": 70,
+   "n_pinned_buses": 0,
+   "n_unmatched": 70,
+   "n_ambiguous_skipped": 0,
+   "pinned_mw": 0
+  },
+  "vm": [
+   0.7075,
+   1.0
+  ]
+ }
+}
