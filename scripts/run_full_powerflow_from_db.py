@@ -775,7 +775,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
 # ──────────────────────────────────────────────────────────────────────────
 #  Load allocation: substation buses only, per region, voltage-class weighted
 # ──────────────────────────────────────────────────────────────────────────
-def allocate_loads(net, cfg, pref_gwh=None):
+def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
     """zone別ピーク需要をバスへ空間配分する。
 
     pref_gwh: None(既定)=従来のzone一様×電圧階級重み(正典比較性維持)。
@@ -785,6 +785,11 @@ def allocate_loads(net, cfg, pref_gwh=None):
        docs/reports/a_plan_east_ac_regression_2026-07-08.md の中期対応(a))。
       zone合計は従来どおり regional_peak_demand_mw がアンカー。
       帳簿は net._pref_demand_ledger に残す。
+
+    point_demand: **介入#30(L_DBハイブリッド 2026-08-17)**。{bus: 観測平均MW}
+      (src.powerflow.point_demand.match_buses の出力)。観測地点はその実測値で
+      ピン留めし、zone残余(target−Σpinned)を非ピンバスへ従来重みで配る。
+      zone合計アンカーは不変。None=従来(③無効化)。帳簿=net._point_demand_ledger。
     """
     peak = cfg["regional_peak_demand_mw"]
     lf = cfg.get("load_factor", 0.85)
@@ -793,6 +798,21 @@ def allocate_loads(net, cfg, pref_gwh=None):
     tan_phi = math.tan(math.acos(pf))
     total = 0.0
     is_sub = net.bus["type"] != "n"
+
+    pinned = dict(point_demand or {})
+    pinned_by_zone: dict = {}
+    if pinned:
+        for b, p in pinned.items():
+            z = net.bus.at[b, "zone"]
+            pinned_by_zone[z] = pinned_by_zone.get(z, 0.0) + p
+            pp.create_load(net, bus=b, p_mw=p, q_mvar=p * tan_phi,
+                           name=f"load_obs_{b}")
+            total += p
+        net._point_demand_ledger = {
+            "n_pinned": len(pinned),
+            "pinned_mw": round(sum(pinned.values()), 1),
+            "by_zone": {z: round(v, 1) for z, v in pinned_by_zone.items()},
+        }
 
     def _vweight(b):
         vn = float(net.bus.at[b, "vn_kv"])
@@ -835,9 +855,15 @@ def allocate_loads(net, cfg, pref_gwh=None):
         target = peak.get(zone, 0) * lf
         if target <= 0:
             continue
-        idxs = [b for b in grp.index if is_sub.get(b, False)]
+        # 介入#30: 観測ピン留め分をzone目標から控除(アンカー不変)。
+        # 観測合計が目標を超えたら残余0(超過は帳簿で開示・ピン値は削らない)
+        if pinned_by_zone.get(zone):
+            target = max(target - pinned_by_zone[zone], 0.0)
+            if target == 0.0:
+                continue
+        idxs = [b for b in grp.index if is_sub.get(b, False) and b not in pinned]
         if not idxs:
-            idxs = list(grp.index)
+            idxs = [b for b in grp.index if b not in pinned] or list(grp.index)
         if pref_gwh is None:
             _spread(idxs, target)
             continue
