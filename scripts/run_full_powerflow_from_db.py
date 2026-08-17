@@ -201,9 +201,15 @@ def _get_nameplates():
     return _NAMEPLATES_CACHE
 
 
+# 介入#31: 通電のまま残す合成タイ(実線形が未完で連結を代表している断面のみ)。
+# 東北東京=相馬双葉幹線の南いわき地点に340m切れ端未縫合(tie_duplication_audit)。
+# 縫合が完了したらこの集合から外して除外に揃える。
+KEEP_LIVE_TIES = {"東北東京間連系線"}
+
+
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
-                     deenergize_unbuilt=False):
+                     deenergize_unbuilt=False, synthetic_ties_live=False):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -271,6 +277,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     n_edge_skipped = 0
     n_edge_dup = 0
     n_deenergized = 0
+    n_tie_nis = 0
     nis_rules = _load_not_in_service() if deenergize_unbuilt else []
     seen_edges = {}         # (min bus, max bus, kv, path署名) -> line idx(B案 エッジ側)
     for e in edges:
@@ -322,12 +329,22 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         if length <= 0:
             length = max(_haversine_km(*e["a"], *e["b"]), 0.05)
         x = params["x_ohm_per_km"] or 0.001
+        # 介入#31(2026-08-17 オーナー承認): 合成連系タイ(tie)とDC連系枝(dc_tie/dc)は
+        # in_service=False で建てる。実連系線の実線形が既にあり二重計上(タイは直線・
+        # kv=0が500継承で低Z並列路)、DCは交流ループを形成してはならない。
+        # 例外=東北東京間連系線: 相馬双葉幹線の南いわき地点に340mの切れ端未縫合が
+        # あり実線形が未完のため、縫合完了まで通電のまま残す(台帳に記録)。
+        synthetic = bool(e.get("tie") or e.get("dc_tie") or e.get("dc"))
+        keep_live = str(e.get("name") or "") in KEEP_LIVE_TIES
         li = pp.create_line_from_parameters(
             net, from_bus=fa, to_bus=ta, length_km=length,
             r_ohm_per_km=params["r_ohm_per_km"], x_ohm_per_km=x,
             c_nf_per_km=params["c_nf_per_km"], max_i_ka=params["max_i_ka"],
             name=str(e.get("name") or f"line_{n_line}"),
-            parallel=max(int(e.get("par") or 1), 1))
+            parallel=max(int(e.get("par") or 1), 1),
+            in_service=(not synthetic) or keep_live or synthetic_ties_live)
+        if synthetic and not (keep_live or synthetic_ties_live):
+            n_tie_nis += 1
         if dedup_nodes:
             seen_edges[esig] = li
         if nis_rules:
@@ -502,6 +519,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_edge_dup_removed": n_edge_dup,
                          "n_site_trafo": n_site_trafo,
                          "n_deenergized": n_deenergized,
+                         "n_tie_nis": n_tie_nis,
                          "region_reattribution": rstats}
 
 
@@ -1184,6 +1202,14 @@ def main():
                          "カバレッジMW比68%%(30バス)・再A/Bで害なし+沖縄微改善"
                          "(point_demand_ab_round2_2026-08-17.json)。"
                          "無効化=--no-point-demand")
+    ap.add_argument("--synthetic-ties-live", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#31(2026-08-17 オーナー承認・既定=非通電): 合成連系タイ"
+                         "(OCCTO直線タイ7本)とDC連系枝(阿南紀北)を in_service=False で"
+                         "建てる。実連系線の実線形と二重計上(kv=0が500kV継承の低Z並列路)"
+                         "だったため。A/B=tie_duplication_ab_2026-08-17.json(観測整合は"
+                         "不変・潮流は実線へ転流)。東北東京のみ切れ端未縫合のため通電維持"
+                         "(KEEP_LIVE_TIES)。本引数=Trueで従来挙動(回帰比較用)")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1232,7 +1258,12 @@ def main():
         net, bus_of, bstats = build_island_net(
             island, nodes, edges, freq, geom, dedup_nodes=args.dedup_nodes,
             site_trafos=args.site_trafos,
-            deenergize_unbuilt=args.deenergize_unbuilt)
+            deenergize_unbuilt=args.deenergize_unbuilt,
+            synthetic_ties_live=args.synthetic_ties_live)
+        if bstats.get("n_tie_nis"):
+            # 介入#31 の帳簿: 何本の合成タイ/DC枝を非通電化したかを必ず出す
+            print(f"  介入#31 synthetic-ties: {bstats['n_tie_nis']}本を非通電で建てた"
+                  f"(通電維持={sorted(KEEP_LIVE_TIES)})")
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")

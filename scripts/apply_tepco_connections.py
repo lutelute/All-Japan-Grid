@@ -84,7 +84,15 @@ def main() -> int:
     WIKI = [
         {"from_model": "由良開閉所", "to_model": "紀北変換所",
          "line": "阿南紀北直流幹線(DC連系)", "dc": True,
+         "path_key": "overhead",
          "src": "ja.wikipedia.org/wiki/紀伊水道直流連系設備"},
+        # 海底ケーブル区間(オーナー承認 2026-08-17): OSMにunderwater cableの実線形あり。
+        # これで阿南—由良—紀北のDC実ルートが完成し由良開閉所のdead-endが解消。
+        # DC枝は介入#31によりPF交流枝には入らない(in_service=False)
+        {"from_model": "阿南周波数変換所", "to_model": "由良開閉所",
+         "line": "阿南紀北直流幹線(海底ケーブル区間)", "dc": True,
+         "path_key": "submarine",
+         "src": "ja.wikipedia.org/wiki/紀伊水道直流連系設備 + OSM way(location=underwater)"},
         {"from_model": "上ノ国町変電所", "to_model": "江差変電所 66kV",
          "line": "上ノ国ウインドファーム連系", "dc": False,
          "src": "ja.wikipedia.org/wiki/上ノ国ウインドファーム"},
@@ -101,6 +109,7 @@ def main() -> int:
                 "evidence": f"独立二次(Wikipedia/J-POWER): {w['src']}",
                 "source_type": "independent_secondary",
                 "dc_tie": w["dc"],
+                "path_key": w.get("path_key"),
             })
 
     # region誤タグの是正(接続の前提)。大間町は青森県下北半島=tohoku(east島)だが
@@ -174,8 +183,23 @@ def main() -> int:
             ka, kb = tuple(w["from_pt"]), tuple(w["to_pt"])
             if frozenset((_k5(*w["from_pt"]), _k5(*w["to_pt"]))) in existing:
                 continue
+            # 実線形(OSM抽出・data/reference/anan_kihoku_route.json)があれば直線でなく
+            # 実路pathを使う(EGGCの精神・オーナー承認 2026-08-17)。端点はモデルノード
+            # 座標に接ぎ、向きはpath端との距離で自動判定
+            epath = [list(w["from_pt"]), list(w["to_pt"])]
+            if w.get("path_key"):
+                try:
+                    route = json.loads((ROOT / "data/reference/anan_kihoku_route.json")
+                                       .read_text(encoding="utf-8"))[w["path_key"]]
+                    d_fwd = abs(route[0][0]-w["from_pt"][0])+abs(route[0][1]-w["from_pt"][1])
+                    d_rev = abs(route[-1][0]-w["from_pt"][0])+abs(route[-1][1]-w["from_pt"][1])
+                    if d_rev < d_fwd:
+                        route = list(reversed(route))
+                    epath = [list(w["from_pt"])] + route + [list(w["to_pt"])]
+                except Exception as ex:  # noqa: BLE001
+                    print(f"! path_key {w['path_key']} 読込失敗: {ex} — 直線で継続")
             applied_edges.append({
-                "path": [list(w["from_pt"]), list(w["to_pt"])],
+                "path": epath,
                 "a": list(w["from_pt"]), "b": list(w["to_pt"]),
                 "main": (ka in maink and kb in maink), "par": 1,
                 "kv": w.get("kv") or 0,

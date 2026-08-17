@@ -2,8 +2,8 @@
   "_meta": {
     "source": "docs/data/built/all.json",
     "n_nodes": 17872,
-    "n_edges": 19771,
-    "generated": "2026-08-17 13:18:10",
+    "n_edges": 19772,
+    "generated": "2026-08-17 13:49:24",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -18,6 +18,7 @@
       "n_edge_dup_removed": 4,
       "n_site_trafo": 0,
       "n_deenergized": 0,
+      "n_tie_nis": 0,
       "region_reattribution": {
         "n_nodes": 17872,
         "n_changed": 0,
@@ -45,7 +46,7 @@
       "ac_max_loading_pct": 304.24927791329645,
       "dc_max_loading_pct": 318.0031364735077,
       "ac_total_loss_mw": 110.73153279498894,
-      "solve_seconds": 5.5
+      "solve_seconds": 6.2
     },
     "east": {
       "frequency_hz": 50,
@@ -58,6 +59,7 @@
       "n_edge_dup_removed": 217,
       "n_site_trafo": 0,
       "n_deenergized": 0,
+      "n_tie_nis": 0,
       "region_reattribution": {
         "n_nodes": 17872,
         "n_changed": 0,
@@ -85,12 +87,12 @@
       "ac_max_loading_pct": 980.7852250416043,
       "dc_max_loading_pct": 863.4380739699462,
       "ac_total_loss_mw": 1348.423043468249,
-      "solve_seconds": 54.7
+      "solve_seconds": 57.1
     },
     "west": {
       "frequency_hz": 60,
       "n_bus": 8241,
-      "n_line": 8162,
+      "n_line": 8163,
       "n_trafo": 944,
       "n_trafo_nameplate": 4,
       "n_edge_skipped": 1390,
@@ -98,6 +100,7 @@
       "n_edge_dup_removed": 2113,
       "n_site_trafo": 0,
       "n_deenergized": 0,
+      "n_tie_nis": 8,
       "region_reattribution": {
         "n_nodes": 17872,
         "n_changed": 0,
@@ -113,19 +116,19 @@
       },
       "n_gen": 8771,
       "total_load_mw": 73865.0,
-      "n_components": 562,
-      "n_slack": 562,
-      "n_synthetic_slack": 527,
+      "n_components": 563,
+      "n_slack": 563,
+      "n_synthetic_slack": 528,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7245252446420037,
-      "ac_vm_max": 1.0368099043576346,
-      "ac_max_loading_pct": 816.9116777081399,
-      "dc_max_loading_pct": 820.756351322594,
-      "ac_total_loss_mw": 1492.616603893392,
-      "solve_seconds": 78.6
+      "ac_vm_min": 0.7245251003154781,
+      "ac_vm_max": 1.0363283062677568,
+      "ac_max_loading_pct": 816.9137759509448,
+      "dc_max_loading_pct": 820.7554059415858,
+      "ac_total_loss_mw": 1505.9057765823088,
+      "solve_seconds": 83.7
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -138,6 +141,7 @@
       "n_edge_dup_removed": 0,
       "n_site_trafo": 0,
       "n_deenergized": 0,
+      "n_tie_nis": 0,
       "region_reattribution": {
         "n_nodes": 17872,
         "n_changed": 0,
@@ -208,10 +212,10 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9322,
-      "vm_max": 1.0112,
+      "vm_max": 1.0111,
       "n_buses": 2596,
       "n_buses_exported": 2596,
-      "n_lines_exported": 2492
+      "n_lines_exported": 2491
     },
     "chugoku": {
       "island": "west",
@@ -222,7 +226,7 @@
       "vm_max": 1.015,
       "n_buses": 1097,
       "n_buses_exported": 1097,
-      "n_lines_exported": 1105
+      "n_lines_exported": 1102
     },
     "hokuriku": {
       "island": "west",
@@ -230,32 +234,32 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9835,
-      "vm_max": 1.0368,
+      "vm_max": 1.0363,
       "n_buses": 661,
       "n_buses_exported": 661,
-      "n_lines_exported": 690
+      "n_lines_exported": 689
     },
     "kansai": {
       "island": "west",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8166,
+      "vm_min": 0.8165,
       "vm_max": 1.0174,
       "n_buses": 1756,
       "n_buses_exported": 1756,
-      "n_lines_exported": 1752
+      "n_lines_exported": 1748
     },
     "kyushu": {
       "island": "west",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9587,
-      "vm_max": 1.0041,
+      "vm_min": 0.9588,
+      "vm_max": 1.0043,
       "n_buses": 1635,
       "n_buses_exported": 1635,
-      "n_lines_exported": 1702
+      "n_lines_exported": 1701
     },
     "shikoku": {
       "island": "west",
@@ -263,10 +267,10 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.8854,
-      "vm_max": 1.0055,
+      "vm_max": 1.0054,
       "n_buses": 496,
       "n_buses_exported": 496,
-      "n_lines_exported": 487
+      "n_lines_exported": 485
     },
     "okinawa": {
       "island": "okinawa",
