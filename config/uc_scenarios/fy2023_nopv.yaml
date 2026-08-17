@@ -1,0 +1,268 @@
+meta:
+  name: fy2023
+  fiscal_year: 2023
+  description: 2023年度断面 — OCCTO 2023年度統計ベースの需要・RE、再稼働12基の原子力
+  note: PVなし対照(2026-08-17 PV有無×動的比較・fy2023から機械生成)
+demand:
+  shape_24h:
+  - 0.6
+  - 0.57
+  - 0.55
+  - 0.53
+  - 0.55
+  - 0.6
+  - 0.68
+  - 0.78
+  - 0.87
+  - 0.93
+  - 0.97
+  - 1.0
+  - 0.99
+  - 0.98
+  - 0.96
+  - 0.93
+  - 0.9
+  - 0.86
+  - 0.82
+  - 0.78
+  - 0.74
+  - 0.7
+  - 0.66
+  - 0.63
+  regional_peak_mw:
+    hokkaido: 6000
+    tohoku: 14000
+    tokyo: 60000
+    chubu: 22000
+    hokuriku: 5000
+    kansai: 28000
+    chugoku: 10000
+    shikoku: 5000
+    kyushu: 18000
+    okinawa: 2000
+renewables:
+  solar:
+    capacity_mw:
+      hokkaido: 0
+      tohoku: 0
+      tokyo: 0
+      chubu: 0
+      hokuriku: 0
+      kansai: 0
+      chugoku: 0
+      shikoku: 0
+      kyushu: 0
+      okinawa: 0
+    cf_base_24h:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0.02
+    - 0.1
+    - 0.25
+    - 0.45
+    - 0.65
+    - 0.8
+    - 0.9
+    - 0.92
+    - 0.88
+    - 0.78
+    - 0.62
+    - 0.4
+    - 0.18
+    - 0.04
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    regional_multiplier:
+      hokkaido: 0.83
+      tohoku: 0.92
+      tokyo: 1.0
+      chubu: 1.03
+      hokuriku: 0.9
+      kansai: 1.04
+      chugoku: 1.06
+      shikoku: 1.06
+      kyushu: 1.1
+      okinawa: 1.13
+  wind:
+    capacity_mw:
+      hokkaido: 4500
+      tohoku: 4000
+      tokyo: 300
+      chubu: 200
+      hokuriku: 100
+      kansai: 100
+      chugoku: 300
+      shikoku: 100
+      kyushu: 1200
+      okinawa: 100
+    cf_base_24h:
+    - 0.38
+    - 0.4
+    - 0.41
+    - 0.42
+    - 0.4
+    - 0.38
+    - 0.34
+    - 0.3
+    - 0.28
+    - 0.27
+    - 0.28
+    - 0.29
+    - 0.3
+    - 0.31
+    - 0.32
+    - 0.33
+    - 0.35
+    - 0.37
+    - 0.38
+    - 0.39
+    - 0.4
+    - 0.4
+    - 0.39
+    - 0.38
+    regional_multiplier:
+      hokkaido: 1.25
+      tohoku: 1.2
+      tokyo: 0.7
+      chubu: 0.85
+      hokuriku: 0.95
+      kansai: 0.8
+      chugoku: 0.9
+      shikoku: 0.9
+      kyushu: 1.0
+      okinawa: 1.1
+battery:
+  hokkaido:
+    mw: 300
+    mwh: 1200
+  tohoku:
+    mw: 400
+    mwh: 1600
+  tokyo:
+    mw: 500
+    mwh: 2000
+  chubu:
+    mw: 200
+    mwh: 800
+  hokuriku:
+    mw: 100
+    mwh: 400
+  kansai:
+    mw: 300
+    mwh: 1200
+  chugoku:
+    mw: 200
+    mwh: 800
+  shikoku:
+    mw: 150
+    mwh: 600
+  kyushu:
+    mw: 1200
+    mwh: 4800
+  okinawa:
+    mw: 100
+    mwh: 400
+fuel_costs_per_mwh:
+  coal: 4500
+  lng: 7000
+  oil: 9000
+  nuclear: 1500
+  hydro: 0
+  pumped_hydro: 0
+  battery: 0
+  biomass: 3000
+  geothermal: 0
+  waste: 5000
+  unknown: 5000
+startup_profiles:
+  nuclear:
+    hot: 10000
+    warm: 30000
+    cold: 100000
+    warm_start_h: 8
+    cold_start_h: 48
+    min_up_h: 8
+    min_down_h: 8
+  coal:
+    hot: 5000
+    warm: 15000
+    cold: 40000
+    warm_start_h: 4
+    cold_start_h: 12
+    min_up_h: 4
+    min_down_h: 4
+  lng:
+    hot: 2000
+    warm: 5000
+    cold: 15000
+    warm_start_h: 2
+    cold_start_h: 8
+    min_up_h: 2
+    min_down_h: 2
+  oil:
+    hot: 1500
+    warm: 3000
+    cold: 8000
+    warm_start_h: 2
+    cold_start_h: 6
+    min_up_h: 1
+    min_down_h: 1
+capacity_defaults_mw:
+  nuclear: 900
+  coal: 100
+  lng: 100
+  gas: 100
+  oil: 100
+  geothermal: 30
+  waste: 15
+  biomass: 20
+annual:
+  demand_month_mult:
+  - 0.95
+  - 0.93
+  - 0.85
+  - 0.78
+  - 0.75
+  - 0.8
+  - 0.95
+  - 1.0
+  - 0.88
+  - 0.78
+  - 0.8
+  - 0.9
+  solar_month_mult:
+  - 0.75
+  - 0.85
+  - 1.05
+  - 1.15
+  - 1.15
+  - 1.0
+  - 1.0
+  - 1.0
+  - 0.95
+  - 0.9
+  - 0.75
+  - 0.7
+  wind_month_mult:
+  - 1.3
+  - 1.25
+  - 1.15
+  - 1.0
+  - 0.85
+  - 0.7
+  - 0.65
+  - 0.7
+  - 0.85
+  - 1.0
+  - 1.15
+  - 1.25
+references:
+  nuclear_status: data/reference/nuclear_status.yaml
+  pumped_storage: data/reference/pumped_storage.yaml
+  capacity_patches: data/reference/capacity_patches.yaml
