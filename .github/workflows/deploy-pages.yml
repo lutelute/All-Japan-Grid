@@ -39,13 +39,16 @@ jobs:
           python-version: '3.12'
       - run: pip install pyyaml
       - run: python scripts/build_static_site.py
+        env: {PYTHONPATH: "."}
       # 出典付き容量の overlay を、再生成後の plant geojson へ再適用する。
       # build_static_site が plants_utility/ipp/all を作り直すため、ここで apply しないと
       # ライブサイトで capacity_mw_sourced/出典リンクが消える(generators.geojsonのみ生き残る)。
       - run: python scripts/apply_capacity_sources.py
+        env: {PYTHONPATH: "."}
       # 全面改修Phase5フル統合: Pagesエディタを単一の正(src/server/templates/editor.html)から
       # 再生成(静的shim方式)。:8088テンプレが正・Pagesは派生 → 二度と分岐しない。
       - run: python scripts/build_pages_editor.py --out docs/editor.html
+        env: {PYTHONPATH: "."}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/

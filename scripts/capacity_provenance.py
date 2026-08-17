@@ -56,6 +56,10 @@ SPEC = ProvenanceSpec(
 
 # D層の出典付き容量の索引は **`src/capacity_sources`** が単一の出典。
 # ここに写しを置かない（`_DEFAULT_CAP` が 4 箇所に散った轍を踏まないため）。
+# ROOTをsys.pathへ(scripts/直下から起動されるCI環境で `src` が見えず
+# Pagesデプロイが3連続FAILした 2026-08-17→18 の恒久修正)
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
 from src.capacity_sources import (  # noqa: E402,F401
     geo_key as sourced_geo_key,
     sourced_capacity_index,
