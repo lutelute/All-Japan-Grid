@@ -1,9 +1,9 @@
 {
   "_meta": {
     "source": "docs/data/built/all.json",
-    "n_nodes": 17868,
-    "n_edges": 19765,
-    "generated": "2026-08-17 12:50:25",
+    "n_nodes": 17872,
+    "n_edges": 19771,
+    "generated": "2026-08-17 13:18:10",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -19,7 +19,7 @@
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
-        "n_nodes": 17868,
+        "n_nodes": 17872,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
@@ -45,12 +45,12 @@
       "ac_max_loading_pct": 304.24927791329645,
       "dc_max_loading_pct": 318.0031364735077,
       "ac_total_loss_mw": 110.73153279498894,
-      "solve_seconds": 5.8
+      "solve_seconds": 5.5
     },
     "east": {
       "frequency_hz": 50,
-      "n_bus": 6143,
-      "n_line": 6301,
+      "n_bus": 6145,
+      "n_line": 6305,
       "n_trafo": 635,
       "n_trafo_nameplate": 6,
       "n_edge_skipped": 710,
@@ -59,7 +59,7 @@
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
-        "n_nodes": 17868,
+        "n_nodes": 17872,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
@@ -80,17 +80,17 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8836156796734371,
+      "ac_vm_min": 0.8301653852972801,
       "ac_vm_max": 1.0229069426775537,
-      "ac_max_loading_pct": 678.2115826135732,
-      "dc_max_loading_pct": 863.3688824075447,
-      "ac_total_loss_mw": 1245.0565703307195,
-      "solve_seconds": 83.8
+      "ac_max_loading_pct": 980.7852250416043,
+      "dc_max_loading_pct": 863.4380739699462,
+      "ac_total_loss_mw": 1348.423043468249,
+      "solve_seconds": 54.7
     },
     "west": {
       "frequency_hz": 60,
-      "n_bus": 8239,
-      "n_line": 8160,
+      "n_bus": 8241,
+      "n_line": 8162,
       "n_trafo": 944,
       "n_trafo_nameplate": 4,
       "n_edge_skipped": 1390,
@@ -99,7 +99,7 @@
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
-        "n_nodes": 17868,
+        "n_nodes": 17872,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
@@ -120,12 +120,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7245252444960828,
-      "ac_vm_max": 1.0368137137325162,
-      "ac_max_loading_pct": 816.9116748978347,
-      "dc_max_loading_pct": 820.7563484992223,
-      "ac_total_loss_mw": 1492.6667050224619,
-      "solve_seconds": 79.2
+      "ac_vm_min": 0.7245252446420037,
+      "ac_vm_max": 1.0368099043576346,
+      "ac_max_loading_pct": 816.9116777081399,
+      "dc_max_loading_pct": 820.756351322594,
+      "ac_total_loss_mw": 1492.616603893392,
+      "solve_seconds": 78.6
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -139,7 +139,7 @@
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "region_reattribution": {
-        "n_nodes": 17868,
+        "n_nodes": 17872,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
@@ -185,18 +185,18 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9639,
+      "vm_min": 0.8302,
       "vm_max": 1.0181,
-      "n_buses": 2020,
-      "n_buses_exported": 2020,
-      "n_lines_exported": 2098
+      "n_buses": 2049,
+      "n_buses_exported": 2049,
+      "n_lines_exported": 2103
     },
     "tokyo": {
       "island": "east",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8836,
+      "vm_min": 0.8848,
       "vm_max": 1.0229,
       "n_buses": 4096,
       "n_buses_exported": 4096,
@@ -207,11 +207,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9321,
+      "vm_min": 0.9322,
       "vm_max": 1.0112,
-      "n_buses": 2594,
-      "n_buses_exported": 2594,
-      "n_lines_exported": 2490
+      "n_buses": 2596,
+      "n_buses_exported": 2596,
+      "n_lines_exported": 2492
     },
     "chugoku": {
       "island": "west",
