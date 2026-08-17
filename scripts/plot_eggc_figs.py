@@ -39,37 +39,48 @@ def xy(pts, lat0):
     return [p[1] * k for p in pts], [p[0] for p in pts]
 
 
-def draw_scene(ax, rec, after: bool):
+def route_edge_idx(rec):
+    """このケースの経路を構成する scene エッジの添字。"""
+    on = set()
+    if not rec.get("path"):
+        return on
+    pk = {(round(p[0], 5), round(p[1], 5)) for p in rec["path"]}
+    for i, e in enumerate(rec["scene"]["edges"]):
+        hit = sum(1 for q in e["path"] if (round(q[0], 5), round(q[1], 5)) in pk)
+        if hit >= max(2, len(e["path"]) * 0.6):
+            on.add(i)
+    return on
+
+
+def draw_scene(ax, rec, after: bool, mode: str = "panel", lw_scale: float = 1.0):
+    """mode='panel' は before/after の片側だけ。'both' は同じ絵に重ねる（一覧用）。"""
     sc = rec["scene"]
     lat0 = (sc["bbox"][0] + sc["bbox"][2]) / 2
-    on = set()
-    if rec.get("path"):
-        pk = {(round(p[0], 5), round(p[1], 5)) for p in rec["path"]}
-        for i, e in enumerate(sc["edges"]):
-            hit = sum(1 for q in e["path"] if (round(q[0], 5), round(q[1], 5)) in pk)
-            if hit >= max(2, len(e["path"]) * 0.6):
-                on.add(i)
+    on = route_edge_idx(rec)
+    both = mode == "both"
     for i, e in enumerate(sc["edges"]):
         x, y = xy(e["path"], lat0)
-        if after and i in on and not e["main"]:
-            ax.plot(x, y, color=C_MAIN, lw=2.4, zorder=3, solid_capstyle="round")
+        if (after or both) and i in on:
+            ax.plot(x, y, color=C_MAIN, lw=2.4 * lw_scale, zorder=3,
+                    solid_capstyle="round")
         else:
             ax.plot(x, y, color=C_MAIN if e["main"] else C_OFF,
-                    lw=1.5 if e["main"] else 1.3, alpha=.55, zorder=2,
+                    lw=(1.5 if e["main"] else 1.3) * lw_scale, alpha=.5, zorder=2,
                     solid_capstyle="round")
     A, B = rec["a"], rec["b"]
-    if not after:
+    if both or not after:
         x, y = xy([A, B], lat0)
-        ax.plot(x, y, color=C_CHORD, lw=2.6, ls=(0, (5, 3)), zorder=5)
-    else:
+        ax.plot(x, y, color=C_CHORD, lw=2.6 * lw_scale, ls=(0, (5, 3)), zorder=5)
+    if both or after:
         for p, v, km in ((A, rec.get("vA"), rec.get("stub_a_km", 0)),
                          (B, rec.get("vB"), rec.get("stub_b_km", 0))):
             if v and km and km > 0.001:
                 x, y = xy([p, v], lat0)
-                ax.plot(x, y, color=C_STUB, lw=2.6, zorder=6)
+                ax.plot(x, y, color=C_STUB, lw=2.6 * lw_scale, zorder=6)
     for p in (A, B):
         x, y = xy([p], lat0)
-        ax.plot(x, y, "o", color=C_CHORD, ms=6, mec="white", mew=1.2, zorder=7)
+        ax.plot(x, y, "o", color=C_CHORD, ms=6 * lw_scale, mec="white",
+                mew=1.2, zorder=7)
     ax.set_aspect("equal")
     ax.set_xticks([]); ax.set_yticks([])
     for s in ax.spines.values():

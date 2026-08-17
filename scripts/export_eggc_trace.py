@@ -144,6 +144,9 @@ def main() -> int:
                          "＝適用後なので、断片が既にmain化していて証拠ゲートは"
                          "ほぼ閉じる(冪等性の裏返し)")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--names", default="",
+                    help="カンマ区切り。名前がこれを含むケースは判定によらず"
+                         "代表に含める（後発ケースの図を作るため）")
     args = ap.parse_args()
 
     src = args.built or BUILT
@@ -244,6 +247,11 @@ def main() -> int:
     nons = sorted([r for r in recs if r["verdict"] == "no_route"],
                   key=lambda r: -r["chord_km"])
     picked = reps[:args.cases] + dets[:3] + nons[:1]
+    if args.names:
+        want = [s.strip() for s in args.names.split(",") if s.strip()]
+        for rec in recs:
+            if any(w in rec["name"] for w in want) and rec not in picked:
+                picked.append(rec)
 
     for rec in picked:
         pts = [rec["a"], rec["b"]] + rec.get("path", [])

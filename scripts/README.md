@@ -117,6 +117,7 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 | `gen_uc_dispatch_profile.py` / `gen_uc_national_overview.py` / `gen_uc_regional.py` | UC ディスパッチ・全国概況・地域別図 |
 | `capture_combined_gif.py` / `capture_ybus_gif.py` / `capture_network_gifs.mjs` | README 用アニメーション GIF（Network+Ybus ツアー等） |
 | `plot_eggc_figs.py` | EGGC のスライド用 3 図（before/after・証拠ゲート散布・判定内訳と線長）→ `docs/reports/figs/eggc_*.png`。入力は `docs/data/eggc_trace.json` |
+| `plot_eggc_gallery.py` | EGGC で置換された線の**全数**を画像化（一覧 1 枚・エリア別 4 枚・特徴的な 10 本の before/after）。台帳の累積 replaced が正で、後発ケースは `docs/data/eggc_trace_current.json`（現行正典から `--names` 指定で抽出）で補う。台帳の二重登録（端点数十m差）も検出して図に印を付ける |
 
 > ⚠ 図版スクリプト群にはヘルパー（haversine・色表・フォント設定）の重複が多い。
 > 共有モジュール化は Phase C（`REVIEW_FINDINGS.md`）で対応予定。
