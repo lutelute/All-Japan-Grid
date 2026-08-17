@@ -19,7 +19,8 @@ mkdir -p data/realtime
   # 並行アクター配慮: pull --rebase してから該当ファイルのみ commit
   git pull --rebase --autostash origin main >/dev/null 2>&1 || true
   git add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
-          docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json
+          docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json \
+          docs/data/flow_map/days/ 2>/dev/null
   if ! git diff --cached --quiet; then
     git commit -q -m "data(realtime): でんき予報スナップショット+NOW断面 $(date '+%F %H:%M')
 
