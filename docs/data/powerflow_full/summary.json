@@ -2,8 +2,8 @@
   "_meta": {
     "source": "docs/data/built/all.json",
     "n_nodes": 17872,
-    "n_edges": 19772,
-    "generated": "2026-08-17 13:49:24",
+    "n_edges": 19748,
+    "generated": "2026-08-17 19:58:45",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -46,17 +46,17 @@
       "ac_max_loading_pct": 304.24927791329645,
       "dc_max_loading_pct": 318.0031364735077,
       "ac_total_loss_mw": 110.73153279498894,
-      "solve_seconds": 6.2
+      "solve_seconds": 5.6
     },
     "east": {
       "frequency_hz": 50,
       "n_bus": 6145,
-      "n_line": 6305,
+      "n_line": 6302,
       "n_trafo": 635,
       "n_trafo_nameplate": 6,
-      "n_edge_skipped": 710,
+      "n_edge_skipped": 708,
       "n_dedup_merged": 222,
-      "n_edge_dup_removed": 217,
+      "n_edge_dup_removed": 211,
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "n_tie_nis": 0,
@@ -82,12 +82,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8301653852972801,
+      "ac_vm_min": 0.8301591287129882,
       "ac_vm_max": 1.0229069426775537,
-      "ac_max_loading_pct": 980.7852250416043,
-      "dc_max_loading_pct": 863.4380739699462,
-      "ac_total_loss_mw": 1348.423043468249,
-      "solve_seconds": 57.1
+      "ac_max_loading_pct": 980.7852256398844,
+      "dc_max_loading_pct": 863.4380739699468,
+      "ac_total_loss_mw": 1356.743527582149,
+      "solve_seconds": 51.9
     },
     "west": {
       "frequency_hz": 60,
@@ -97,7 +97,7 @@
       "n_trafo_nameplate": 4,
       "n_edge_skipped": 1390,
       "n_dedup_merged": 2318,
-      "n_edge_dup_removed": 2113,
+      "n_edge_dup_removed": 2100,
       "n_site_trafo": 0,
       "n_deenergized": 0,
       "n_tie_nis": 8,
@@ -128,7 +128,7 @@
       "ac_max_loading_pct": 816.9137759509448,
       "dc_max_loading_pct": 820.7554059415858,
       "ac_total_loss_mw": 1505.9057765823088,
-      "solve_seconds": 83.7
+      "solve_seconds": 79.2
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -200,11 +200,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8848,
+      "vm_min": 0.8616,
       "vm_max": 1.0229,
       "n_buses": 4096,
       "n_buses_exported": 4096,
-      "n_lines_exported": 4230
+      "n_lines_exported": 4227
     },
     "chubu": {
       "island": "west",

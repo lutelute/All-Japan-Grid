@@ -571,10 +571,31 @@ def main() -> int:
             prev = json.loads(OUT.read_text(encoding="utf-8"))
             prev_wl = prev.get("worklist", [])
             prev_rf = prev.get("region_fixes", [])
-        have = {frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) for e in prev_wl}
-        merged_wl = prev_wl + [e for e in edges
-                               if frozenset((_k5(*e["from_pt"]),
-                                             _k5(*e["to_pt"]))) not in have]
+        # 同一性判定は**意味キー**(from_sub,to_sub,class,line)。座標(_k5)キーだと
+        # OSM再抽出でノードが数m動いた後の再計算エントリが「別物」扱いになり、
+        # 座標微差の重複が帳簿に蓄積→regenで同一接続が2本適用される
+        # (2026-08-17 実害25組: 尼崎線・戸山線・大山日田線ほか。issue #42)。
+        # 既登録の意味キーは座標を**新値に更新**(ノード移動への追従)。
+        def _mkey(e):
+            return (e.get("from_sub"), e.get("to_sub"), e.get("class"),
+                    str(e.get("line")))
+        prev_by_key = {}
+        for e in prev_wl:
+            prev_by_key.setdefault(_mkey(e), e)
+        n_coord_upd = 0
+        merged_wl = list(prev_by_key.values())
+        for e in edges:
+            k = _mkey(e)
+            if k in prev_by_key:
+                old = prev_by_key[k]
+                if (old["from_pt"], old["to_pt"]) != (e["from_pt"], e["to_pt"]):
+                    old["from_pt"], old["to_pt"] = e["from_pt"], e["to_pt"]
+                    n_coord_upd += 1
+            else:
+                merged_wl.append(e)
+                prev_by_key[k] = e
+        if n_coord_upd:
+            print(f"帳簿座標更新: {n_coord_upd}件（ノード移動への追従）")
         have_rf = {(r.get("id"), r.get("to")) for r in prev_rf}
         merged_rf = prev_rf + [r for r in region_fixes
                                if (r.get("id"), r.get("to")) not in have_rf]
