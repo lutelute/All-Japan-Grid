@@ -192,3 +192,10 @@ nodes:
     region: tohoku
     approx: true
     evidence: "東北NW 基幹系統図 jisseki_kikan01_map_2024_02.pdf(新潟154kV): 三条と2回線(0685/0687)の末端局。tr実績(154/6.6kV・地点需要18.4MW=L_DB)。※青森おいらせの東下田(66kV)とは別実体(kV不整合で棄却済・point_demand_matcher_round2)。位置=地名(三条市荻堀=旧下田村)"
+  - name: 豊田変電所
+    kv: 77
+    lat: 34.970768
+    lon: 138.409531
+    region: chubu
+    approx: true
+    evidence: "中部NW local_2025.pdf p7(静岡77kV): 豊田変電所母線(77/22変圧器2基=2037)・22kV網(本通・日吉)の親。豊田市の275kV(豊田市変電所)とは別実体(観測一次77kV・図の安西/江尻文脈で確定)。地点需要16.0MW(L_DB)。位置=地名(静岡市駿河区豊田)"

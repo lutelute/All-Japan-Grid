@@ -135,6 +135,12 @@ class Frame:
             exact = [c for c in cands if abs((c["kv"] or 0) - kv) < 1]
             if exact:
                 return exact[0]
+            # 完全一致が無ければ最近接階級(対数比)。max(kv)既定だと77kV枝が
+            # 275kV基幹バスへ張られる(駿河で実害 2026-08-17)。kv不明候補は除外
+            with_kv = [c for c in cands if (c["kv"] or 0) > 0]
+            if with_kv:
+                import math
+                return min(with_kv, key=lambda c: abs(math.log(c["kv"] / kv)))
         return max(cands, key=lambda c: c["kv"] or 0)
 
 
