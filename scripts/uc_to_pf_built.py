@@ -32,6 +32,7 @@ import subprocess
 import sys
 import time
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
@@ -336,6 +337,9 @@ def main():
     ap.add_argument("--islands", nargs="+", default=["east"])
     ap.add_argument("--scenario", default="fy2023r2")
     ap.add_argument("--all-hours", action="store_true")
+    ap.add_argument("--dump-line-flows", default=None, metavar="DIR",
+                    help="各時刻の全線潮流(p_from_mw/loading)をDIRへダンプ"
+                         "(powerjp系タイムスライダー用・flows_ts_<island>.json)")
     ap.add_argument("--hours", nargs="*", type=int, default=None,
                     help="解く時刻(0-23)。省略時=島純需要ピーク時刻のみ")
     ap.add_argument("--model", choices=["full", "backbone"], default="full",
@@ -558,6 +562,7 @@ def main():
             continue
 
         n_ok = 0
+        ts_dump = {"hours": list(hours), "p_mw": None, "loading": None}             if args.dump_line_flows else None
         for t in hours:
             th = time.monotonic()
             net_t = copy.deepcopy(base)
@@ -620,11 +625,31 @@ def main():
                           + net_s.res_trafo.pl_mw.sum()), 1)
             if conv:
                 hrep["tie_mw"] = tie_flows_by_pair(net_s)
+            if ts_dump is not None and conv:
+                pf = net_s.res_line.p_from_mw.round(1)
+                ld = net_s.res_line.loading_percent.round(1)
+                if ts_dump["p_mw"] is None:
+                    n = len(net_s.line)
+                    ts_dump["p_mw"] = [[None]*len(hours) for _ in range(n)]
+                    ts_dump["loading"] = [[None]*len(hours) for _ in range(n)]
+                    ts_dump["names"] = [str(x) for x in net_s.line.name]
+                    ts_dump["in_service"] = [bool(x) for x in net_s.line.in_service]
+                hi = list(hours).index(t)
+                for li, (pv, lv) in enumerate(zip(pf, ld)):
+                    ts_dump["p_mw"][li][hi] = None if pv != pv else float(pv)
+                    ts_dump["loading"][li][hi] = None if lv != lv else float(lv)
             isl_rep["hours"][str(t)] = hrep
             print(f"  t={t:2d} {used:12s} conv={conv} "
                   f"demand={float(net_dem[t]):8,.0f}MW "
                   f"slack={hrep['slack_abs_mw']} {hrep['solve_s']}s", flush=True)
 
+        if ts_dump is not None and ts_dump["p_mw"] is not None:
+            dd = Path(args.dump_line_flows)
+            dd.mkdir(parents=True, exist_ok=True)
+            (dd / f"flows_ts_{island}.json").write_text(json.dumps(
+                ts_dump, ensure_ascii=False, separators=(",", ":")))
+            print(f"  線潮流ダンプ -> {dd}/flows_ts_{island}.json "
+                  f"({len(ts_dump['p_mw'])}線×{len(hours)}時刻)")
         isl_rep["n_hours"] = len(hours)
         isl_rep["n_converged"] = n_ok
         isl_rep["all_converged"] = (n_ok == len(hours))

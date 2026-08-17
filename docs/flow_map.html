@@ -31,6 +31,8 @@
   select{background:#1c2735;color:#dde5ee;border:1px solid #46586e;border-radius:4px;padding:2px}
   label{display:block;margin:2px 0}
   .leaflet-popup-content{font-size:12px}
+  .flowGlow{filter:drop-shadow(0 0 3px rgba(255,209,102,.9))}
+  input[type=range]{accent-color:#3d7bd9}
 </style>
 </head>
 <body>
@@ -53,6 +55,15 @@
   <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
   <b>発電</b> 円=定格・塗り濃=出力率高
 </div>
+<div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="btnPlay" style="background:#3d7bd9;color:#fff;border:none;border-radius:6px;
+      padding:3px 10px;cursor:pointer">▶ 再生</button>
+    <input type="range" id="hourSlider" min="0" max="23" value="12" step="1" style="flex:1">
+    <b id="hourLabel" style="min-width:64px;text-align:right">12:00</b>
+  </div>
+  <div class="muted" style="margin-top:2px">UC(fy2023)の時刻別ディスパッチによる全線潮流 — 流光=方向</div>
+</div>
 <div class="panel min" id="ucpanel">
   <h4 id="uchead">📊 UC稼働率(fy2023・24h) <span class="muted" id="ucmin">▲ひらく</span></h4>
   <div id="ucwrap">
@@ -74,8 +85,16 @@ L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
   {attribution:"地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ",
    opacity:0.55}).addTo(map);
 const canvasR = L.canvas({padding:0.3});
+map.createPane("glowPane");
+map.getPane("glowPane").style.zIndex = 460;   // canvas(overlayPane=400)より前面
+map.getPane("glowPane").style.pointerEvents = "none";
+const svgR = L.svg({padding:0.3, pane:"glowPane"});   // 流光アニメ用SVG
 let lineLayer=null, genLayer=null, arrowLayer=L.layerGroup().addTo(map);
+let glowLayer=null, glowPolys=[];
 let cur="west", flows=null, gens=null, topFlows=[];
+let HOUR=12, playing=false, dashPhase=0;
+const fp=(f)=>{const a=f.properties.p24; return (a&&a[HOUR]!=null)?a[HOUR]:f.properties.p_mw;};
+const fld=(f)=>{const a=f.properties.ld24; return (a&&a[HOUR]!=null)?a[HOUR]:f.properties.loading_pct;};
 
 const loadColor=l=>l>120?"#e35d5d":l>80?"#e6a23c":l>40?"#43b581":"#4f8fd9";
 const pw=p=>Math.max(0.6, Math.min(0.9+1.35*Math.log10(1+Math.abs(p)), 6.5));
@@ -113,7 +132,7 @@ function renderArrows(){
   const minP = z>=8?0.5 : z>=7?30 : 150;
   const grid = new Map();
   for(const f of flows.features){
-    const p=f.properties.p_mw;
+    const p=fp(f);
     if(Math.abs(p)<minP) continue;
     if(obsOnly && f.properties.obs_dir===undefined) continue;
     const m=midSegment(f.geometry.coordinates);
@@ -162,20 +181,34 @@ async function show(island){
   lineLayer=L.geoJSON(fl,{renderer:canvasR,
     filter:f=>!obsOnly()||f.properties.obs_dir!==undefined,
     style:f=>{
-      const p=f.properties;
-      if(p.obs_dir!==undefined)
-        return {color:p.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p.p_mw)+2.2,opacity:1};
-      return {color:loadColor(p.loading_pct),weight:pw(p.p_mw),
-              opacity:Math.abs(p.p_mw)<1?0.25:0.8};
+      const pr=f.properties, p=fp(f), ld=fld(f);
+      if(pr.obs_dir!==undefined)
+        return {color:pr.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p)+2.2,opacity:1};
+      return {color:loadColor(ld),weight:pw(p),
+              opacity:Math.abs(p)<1?0.25:0.8};
     },
     onEachFeature:(f,ly)=>{
-      const p=f.properties;
-      let s=`<b>${p.name||"(無名)"}</b><br>潮流 <b>${Math.abs(p.p_mw).toLocaleString()} MW</b>`+
-            ` / loading ${p.loading_pct}%`;
-      if(p.obs_dir!==undefined)
-        s+=`<br>観測方向: ${p.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
-      ly.bindPopup(s);
+      ly.on("click",()=>{
+        const pr=f.properties, p=fp(f), ld=fld(f);
+        let s=`<b>${pr.name||"(無名)"}</b><br>${String(HOUR).padStart(2,"0")}:00 潮流 `+
+              `<b>${Math.abs(p).toLocaleString()} MW</b> / loading ${ld}%`;
+        if(pr.p24) s+=`<br><canvas class="spark" width="180" height="34"></canvas>`;
+        if(pr.obs_dir!==undefined)
+          s+=`<br>観測方向: ${pr.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
+        ly.bindPopup(s).openPopup();
+        setTimeout(()=>{
+          const cv=document.querySelector(".spark:not([data-d])");
+          if(cv&&pr.p24){cv.dataset.d=1;
+            const ctx=cv.getContext("2d");
+            const mx=Math.max(...pr.p24.map(x=>Math.abs(x||0)),1);
+            ctx.fillStyle="#2a3646";ctx.fillRect(0,0,180,34);
+            pr.p24.forEach((x,i)=>{ctx.fillStyle=i===HOUR?"#ffd76b":"#5a9bd8";
+              const h=Math.abs(x||0)/mx*30;
+              ctx.fillRect(i*7.5,34-h,6,h);});}
+        },50);
+      });
     }}).addTo(map);
+  buildGlow();
   buildGenLayer();
   renderArrows();
   const nb=fl.features.filter(f=>f.properties.obs_dir!==undefined);
@@ -205,6 +238,52 @@ function buildGenLayer(){
   }
   genLayer.addTo(map);
 }
+
+function buildGlow(){
+  if(glowLayer){map.removeLayer(glowLayer);}
+  glowLayer=L.layerGroup(); glowPolys=[];
+  if(!flows){glowLayer.addTo(map);return;}
+  // 選定=|P|×線長(輸送モーメント)。|P|上位だけだと都市部の短い線分に集中し
+  // 全国ズームでdash周期より短く視認不能(2026-08-18デバッグで判明)
+  const lineLen=f=>{const cs=f.geometry.coordinates;let L2=0;
+    for(let i=0;i<cs.length-1;i++)L2+=Math.hypot(cs[i+1][0]-cs[i][0],cs[i+1][1]-cs[i][1]);
+    return L2;};
+  const top=[...flows.features]
+    .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04)
+    .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
+  for(const f of top){
+    const latlngs=f.geometry.coordinates.map(c=>[c[1],c[0]]);
+    const pl=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffd166",weight:2.8,opacity:.95,
+      dashArray:"9 26",interactive:false,className:"flowGlow"});
+    pl._agjFeature=f;
+    pl.addTo(glowLayer); glowPolys.push(pl);
+  }
+  glowLayer.addTo(map);
+}
+function animate(){
+  dashPhase=(dashPhase+0.9)%35;
+  for(const pl of glowPolys){
+    const p=fp(pl._agjFeature);
+    const off = p>=0 ? -dashPhase : dashPhase;
+    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off*3);
+  }
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+function setHour(h){
+  HOUR=h;
+  document.getElementById("hourSlider").value=h;
+  document.getElementById("hourLabel").textContent=String(h).padStart(2,"0")+":00";
+  if(lineLayer) lineLayer.setStyle(lineLayer.options.style);
+  buildGlow(); renderArrows();
+}
+document.getElementById("hourSlider").oninput=e=>setHour(+e.target.value);
+document.getElementById("btnPlay").onclick=()=>{
+  playing=!playing;
+  document.getElementById("btnPlay").textContent=playing?"⏸ 停止":"▶ 再生";
+};
+setInterval(()=>{if(playing) setHour((HOUR+1)%24);},1100);
 
 const tabs=document.getElementById("tabs");
 for(const k of Object.keys(ISLANDS)){
