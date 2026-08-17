@@ -73,7 +73,7 @@
   </div>
 </div>
 <script>
-const ISLANDS = {all:[37.0,137.0,5.4], east:[37.3,139.5,6], west:[34.6,134.8,6], hokkaido:[43.2,142.8,6], okinawa:[26.4,127.9,9]};
+const ISLANDS = {all:[37.0,137.0,5.4], now:[37.0,137.0,5.4], east:[37.3,139.5,6], west:[34.6,134.8,6], hokkaido:[43.2,142.8,6], okinawa:[26.4,127.9,9]};
 const ALLPARTS = ["hokkaido","east","west","okinawa"];
 const FUELCOL = {nuclear:"#b07fe0", coal:"#8d6e63", lng:"#e69a4c", oil:"#9aa5ad",
   hydro:"#4f9fe0", pumped_hydro:"#7fc8e8", solar:"#e8cf4f", wind:"#4fd0b8",
@@ -163,10 +163,12 @@ async function show(island){
   cur=island;
   document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("on",t.dataset.k===island));
   let fl, gn;
-  if(island==="all"){
+  if(island==="all"||island==="now"){
+    const sfx = island==="now"?"_now":"";
     const parts=await Promise.all(ALLPARTS.flatMap(k=>[
-      fetch(`data/flow_map/flows_${k}.geojson`).then(r=>r.json()),
-      fetch(`data/flow_map/gens_${k}.geojson`).then(r=>r.json())]));
+      fetch(`data/flow_map/flows${sfx}_${k}.geojson`).then(r=>r.json()),
+      fetch(`data/flow_map/gens${sfx}_${k}.geojson`).then(r=>r.json())]));
+    document.getElementById("timebar").style.display = island==="now"?"none":"";
     fl={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===0).flatMap(d=>d.features)};
     gn={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===1).flatMap(d=>d.features)};
   }else{
@@ -214,8 +216,13 @@ async function show(island){
   renderArrows();
   const nb=fl.features.filter(f=>f.properties.obs_dir!==undefined);
   const ok=nb.filter(f=>f.properties.obs_dir).length;
-  document.getElementById("stat").textContent=
-    `線${fl.features.length.toLocaleString()} / 発電バス${gn.features.length} / 観測方向照合${nb.length}(一致${ok})`;
+  let statTxt=`線${fl.features.length.toLocaleString()} / 発電バス${gn.features.length} / 観測方向照合${nb.length}(一致${ok})`;
+  if(island==="now"){
+    try{const nm=await fetch("data/flow_map/now_meta.json").then(r=>r.json());
+      statTxt=`⚡NOW: でんき予報 実績需要スナップショット(取得 ${nm.fetched_at||"?"}) / `+statTxt;
+    }catch(e){}
+  }
+  document.getElementById("stat").textContent=statTxt;
   const v=ISLANDS[island]; map.setView([v[0],v[1]],v[2]);
 }
 
@@ -297,7 +304,9 @@ setInterval(()=>{if(playing) setHour((HOUR+1)%24);},1100);
 const tabs=document.getElementById("tabs");
 for(const k of Object.keys(ISLANDS)){
   const t=document.createElement("span");
-  t.className="tab"; t.dataset.k=k; t.textContent=k;
+  t.className="tab"; t.dataset.k=k;
+  t.textContent = k==="now"?"⚡NOW":k;
+  if(k==="now") t.style.borderColor="#ffd166", t.style.color="#ffd166";
   t.onclick=()=>show(k); tabs.appendChild(t);
 }
 map.on("zoomend",()=>{renderArrows();buildGenLayer();});

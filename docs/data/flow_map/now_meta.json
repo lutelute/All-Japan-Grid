@@ -1,0 +1,80 @@
+{
+ "islands": {
+  "hokkaido": {
+   "ac": true,
+   "n_lines": 850,
+   "n_genbus": 81,
+   "obs_dir_match": 7,
+   "obs_dir_mismatch": 3
+  },
+  "east": {
+   "ac": true,
+   "n_lines": 6302,
+   "n_genbus": 476,
+   "obs_dir_match": 20,
+   "obs_dir_mismatch": 10
+  },
+  "west": {
+   "ac": true,
+   "n_lines": 8155,
+   "n_genbus": 659,
+   "obs_dir_match": 14,
+   "obs_dir_mismatch": 7
+  },
+  "okinawa": {
+   "ac": true,
+   "n_lines": 96,
+   "n_genbus": 10,
+   "obs_dir_match": 0,
+   "obs_dir_mismatch": 0
+  }
+ },
+ "fetched_at": "2026-08-18T02:13:20",
+ "zone_hour": {
+  "hokkaido": {
+   "hour": 1,
+   "mw": 2630.0,
+   "date": "2026/8/18"
+  },
+  "tohoku": {
+   "hour": 1,
+   "mw": 7420.0,
+   "date": "2026/8/18"
+  },
+  "tokyo": {
+   "hour": 1,
+   "mw": 25350.0,
+   "date": "2026/8/18"
+  },
+  "chubu": {
+   "hour": 0,
+   "mw": 13750.0,
+   "date": "2026/08/18"
+  },
+  "hokuriku": {
+   "hour": 0,
+   "mw": 2740.0,
+   "date": "2026/8/18"
+  },
+  "chugoku": {
+   "hour": 1,
+   "mw": 5460.0,
+   "date": "2026/8/18"
+  },
+  "shikoku": {
+   "hour": 23,
+   "mw": 2660.0,
+   "date": "2026/08/17"
+  },
+  "kyushu": {
+   "hour": 1,
+   "mw": 8870.0,
+   "date": "2026/8/18"
+  },
+  "okinawa": {
+   "hour": 0,
+   "mw": 1090.0,
+   "date": "2026/08/18"
+  }
+ }
+}

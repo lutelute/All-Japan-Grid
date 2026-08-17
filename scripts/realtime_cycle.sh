@@ -1,0 +1,28 @@
+#!/bin/bash
+# でんき予報リアルタイムサイクル: 取得 → NOW断面PF → Pages更新(commit+push)
+# 手動実行 or launchd/cron から30-60分間隔で呼ぶ。
+# 蓄積はローカル data/realtime/(nas03再起動期間のため)。復帰後は
+# scripts/sync_realtime_to_nas.sh で退避。
+set -e
+cd "$(dirname "$0")/.."
+LOG=data/realtime/cycle.log
+mkdir -p data/realtime
+{
+  echo "===== $(date '+%F %T') ====="
+  python3 scripts/fetch_denkiyoho.py || { echo "fetch失敗(過半未達)"; exit 1; }
+  python3 scripts/export_flow_map_data.py --realtime
+  # 並行アクター配慮: pull --rebase してから該当ファイルのみ commit
+  git pull --rebase --autostash origin main >/dev/null 2>&1 || true
+  git add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
+          docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json
+  if ! git diff --cached --quiet; then
+    git commit -q -m "data(realtime): でんき予報スナップショット+NOW断面 $(date '+%F %H:%M')
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+    git push -q origin main
+    echo "push済"
+  else
+    echo "変更なし"
+  fi
+} >> "$LOG" 2>&1
+tail -3 "$LOG"

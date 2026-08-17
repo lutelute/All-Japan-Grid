@@ -62,7 +62,9 @@ def load_obs_direction() -> dict:
 
 
 def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
-                  demand, obs_dir) -> dict:
+                  demand, obs_dir, realtime_mw=None, suffix="") -> dict:
+    """realtime_mw: {zone: 実績需要MW}を与えるとzone負荷をその値へスケールした
+    「NOW断面」を計算し、flows_now_*.geojsonとして出力する(でんき予報連携)。"""
     from scripts.run_full_powerflow_from_db import (
         add_per_component_slacks, allocate_loads, attach_generators,
         balance_by_zone, build_island_net, solve_island)
@@ -76,6 +78,17 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get(
         "reactive_compensation_factor", 0.6))
+    if realtime_mw:
+        # zone負荷合計を実績需要へスケール(比例・P/Q同率)。帳簿はmetaに出す
+        zl = net.load.groupby(net.load.bus.map(net.bus["zone"])).p_mw.sum()
+        for z, target in realtime_mw.items():
+            cur = float(zl.get(z, 0) or 0)
+            if cur <= 0 or not target:
+                continue
+            sc = float(target) / cur
+            mask = net.load.bus.map(net.bus["zone"]) == z
+            net.load.loc[mask, "p_mw"] *= sc
+            net.load.loc[mask, "q_mvar"] *= sc
     add_per_component_slacks(net)
     balance_by_zone(net, cfg, use_zone_src=True)
     net_dc, dc, net_ac, ac = solve_island(net, max_ac_buses=99999)
@@ -135,7 +148,7 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
                            "loading_pct": round(ld, 1),
                            **({"obs_dir": od} if od is not None else {})},
         })
-    (OUT / f"flows_{island}.geojson").write_text(json.dumps(
+    (OUT / f"flows{suffix}_{island}.geojson").write_text(json.dumps(
         {"type": "FeatureCollection", "features": feats},
         ensure_ascii=False, separators=(",", ":")))
 
@@ -173,7 +186,7 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
                            "cf": round(v["pg"] / v["pmax"], 3) if v["pmax"] else 0,
                            "fuel": main_fuel},
         })
-    (OUT / f"gens_{island}.geojson").write_text(json.dumps(
+    (OUT / f"gens{suffix}_{island}.geojson").write_text(json.dumps(
         {"type": "FeatureCollection", "features": gfeats},
         ensure_ascii=False, separators=(",", ":")))
     print(f"[{island}] AC={'OK' if conv else 'DC'} lines={len(feats)} "
@@ -208,6 +221,7 @@ def export_uc_utilization() -> None:
 
 
 def main() -> int:
+    realtime = "--realtime" in sys.argv
     OUT.mkdir(parents=True, exist_ok=True)
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import load_demand_config
@@ -219,11 +233,33 @@ def main() -> int:
     demand = pdm.load_point_demand()
     obs_dir = load_obs_direction()
     print(f"観測方向テーブル: {len(obs_dir)}線", flush=True)
+    rt_mw, rt_meta = None, None
+    if realtime:
+        lat = json.loads((ROOT / "docs/data/realtime/latest.json").read_text())
+        rt_mw = {}
+        rt_meta = {"fetched_at": lat.get("fetched_at"), "zone_hour": {}}
+        for z, v in lat.get("zones", {}).items():
+            hm = v.get("hourly_mw") or {}
+            if not hm:
+                continue
+            h = max(hm, key=lambda k: int(k))
+            rt_mw[z] = float(hm[h])
+            rt_meta["zone_hour"][z] = {"hour": int(h), "mw": float(hm[h]),
+                                       "date": v.get("date")}
+        print(f"NOW断面: {len(rt_mw)}zoneの実績需要でスケール "
+              f"({rt_meta['fetched_at']})", flush=True)
     meta = {}
     for island, freq in (("hokkaido", 50), ("east", 50), ("west", 60),
                          ("okinawa", 60)):
-        meta[island] = export_island(island, freq, nodes, edges, cfg,
-                                     pref_gwh, demand, obs_dir)
+        meta[island] = export_island(
+            island, freq, nodes, edges, cfg, pref_gwh, demand, obs_dir,
+            realtime_mw=rt_mw if realtime else None,
+            suffix="_now" if realtime else "")
+    if realtime:
+        (OUT / "now_meta.json").write_text(json.dumps(
+            {"islands": meta, **(rt_meta or {})}, ensure_ascii=False, indent=1))
+        print("NOW断面出力完了")
+        return 0
     export_uc_utilization()
     (OUT / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
     print("done ->", OUT)

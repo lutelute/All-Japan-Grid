@@ -1,0 +1,107 @@
+{
+ "fetched_at": "2026-08-18T02:13:20",
+ "unit": "MW",
+ "zones": {
+  "hokkaido": {
+   "hourly_mw": {
+    "0": 2710.0,
+    "1": 2630.0
+   },
+   "updated": "2026/8/18 2:05",
+   "date": "2026/8/18",
+   "source": "https://denkiyoho.hepco.co.jp/area/data/juyo_01_20260818.csv"
+  },
+  "tohoku": {
+   "hourly_mw": {
+    "0": 7660.0,
+    "1": 7420.0
+   },
+   "updated": "2026/8/18 2:12",
+   "date": "2026/8/18",
+   "source": "https://setsuden.nw.tohoku-epco.co.jp/common/demand/juyo_02_20260818.csv"
+  },
+  "tokyo": {
+   "hourly_mw": {
+    "0": 27000.0,
+    "1": 25350.0
+   },
+   "updated": "2026/8/18 2:05",
+   "date": "2026/8/18",
+   "source": "https://www.tepco.co.jp/forecast/html/images/juyo-d1-j.csv"
+  },
+  "chubu": {
+   "hourly_mw": {
+    "0": 13750.0
+   },
+   "updated": "2026/08/18 02:00",
+   "date": "2026/08/18",
+   "source": "https://powergrid.chuden.co.jp/denki_yoho_content_data/juyo_cepco003.csv"
+  },
+  "hokuriku": {
+   "hourly_mw": {
+    "0": 2740.0
+   },
+   "updated": "2026/8/18 2:12",
+   "date": "2026/8/18",
+   "source": "https://www.rikuden.co.jp/nw/denki-yoho/csv/juyo_05_20260818.csv"
+  },
+  "chugoku": {
+   "hourly_mw": {
+    "0": 5680.0,
+    "1": 5460.0
+   },
+   "updated": "2026/08/18 02:12",
+   "date": "2026/8/18",
+   "source": "https://www.energia.co.jp/nw/jukyuu/sys/juyo_07_20260818.csv"
+  },
+  "shikoku": {
+   "hourly_mw": {
+    "0": 2140.0,
+    "1": 2030.0,
+    "2": 2020.0,
+    "3": 2110.0,
+    "4": 2230.0,
+    "5": 2390.0,
+    "6": 2420.0,
+    "7": 2630.0,
+    "8": 3190.0,
+    "9": 3510.0,
+    "10": 3630.0,
+    "11": 3750.0,
+    "12": 3600.0,
+    "13": 3810.0,
+    "14": 3810.0,
+    "15": 3750.0,
+    "16": 3710.0,
+    "17": 3610.0,
+    "18": 3550.0,
+    "19": 3380.0,
+    "20": 3180.0,
+    "21": 2980.0,
+    "22": 2790.0,
+    "23": 2660.0
+   },
+   "updated": "2026/08/18 00:00",
+   "date": "2026/08/17",
+   "source": "https://www.yonden.co.jp/nw/denkiyoho/csv/juyo_shikoku_2026.csv"
+  },
+  "kyushu": {
+   "hourly_mw": {
+    "0": 9390.0,
+    "1": 8870.0
+   },
+   "updated": "2026/8/18 2:03",
+   "date": "2026/8/18",
+   "source": "https://www.kyuden.co.jp/td_power_usages/csv/juyo-hourly-20260818.csv"
+  },
+  "okinawa": {
+   "hourly_mw": {
+    "0": 1090.0
+   },
+   "updated": "2026/08/18 02:07",
+   "date": "2026/08/18",
+   "source": "https://www.okiden.co.jp/denki2/juyo_10_20260818.csv"
+  }
+ },
+ "note": "各一般送配電事業者「でんき予報」当日実績(1時間値・万kW)を10倍でMW化。出典=各社でんき予報(下記URL)。kansai=URL未特定のため未収載(TODO)・shikoku=年次CSV(前日まで)"
+}
