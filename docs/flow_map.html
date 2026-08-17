@@ -41,9 +41,28 @@
 <div class="panel" id="ctrl">
   <h4>⚡ 潮流方向・発電稼働率 <span class="muted">(AGJモデル計算値)</span></h4>
   <div id="tabs"></div>
-  <label><input type="checkbox" id="cbArrow" checked> 潮流方向(▲=主要潮流は常時表示)</label>
-  <label><input type="checkbox" id="cbGen" checked> 発電バス(円=定格・塗り=出力率)</label>
+  <div style="margin:6px 0 2px"><b>表示レイヤ</b></div>
+  <label>電圧階級
+    <select id="selKv">
+      <option value="0" selected>全電圧</option>
+      <option value="500">500kV+</option>
+      <option value="275">275kV+</option>
+      <option value="154">154kV+</option>
+      <option value="110">110-77kV</option>
+      <option value="66">66kV以下</option>
+    </select></label>
+  <label><input type="checkbox" id="cbLines" checked> 送電線(潮流)</label>
+  <label style="margin-left:14px"><input type="checkbox" id="cbGlow" checked> 流光(主要潮流)</label>
+  <label style="margin-left:14px"><input type="checkbox" id="cbArrow" checked> 方向矢印</label>
+  <label><input type="checkbox" id="cbGen" checked> 発電所(円周ゲージ)</label>
+  <label><input type="checkbox" id="cbSubs"> 変電所(9,298局・ズームで詳細)</label>
   <label><input type="checkbox" id="cbObs"> 観測方向の検証線のみ</label>
+  <label>背景
+    <select id="selBase">
+      <option value="pale" selected>地理院 淡色</option>
+      <option value="photo">地理院 航空写真</option>
+      <option value="none">なし(ダーク)</option>
+    </select></label>
   <div class="muted" id="stat"></div>
 </div>
 <div class="panel" id="legend">
@@ -82,9 +101,12 @@ const FUELJA = {nuclear:"原子力", coal:"石炭", lng:"LNG", oil:"石油", hyd
   pumped_hydro:"揚水", solar:"太陽光", wind:"風力", geothermal:"地熱",
   biomass:"バイオマス", other:"その他", "?":"その他"};
 const map = L.map("map",{preferCanvas:true}).setView([36.5,137.5],6);
-L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-  {attribution:"地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ",
-   opacity:0.55}).addTo(map);
+const ATTR = "地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ";
+const BASES = {
+  pale: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",{attribution:ATTR,opacity:0.55}),
+  photo: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",{attribution:ATTR,opacity:0.75}),
+};
+let baseLayer = BASES.pale.addTo(map);
 const canvasR = L.canvas({padding:0.3});
 map.createPane("glowPane");
 map.getPane("glowPane").style.zIndex = 460;   // canvas(overlayPane=400)より前面
@@ -98,6 +120,17 @@ const fp=(f)=>{const a=f.properties.p24; return (a&&a[HOUR]!=null)?a[HOUR]:f.pro
 const fld=(f)=>{const a=f.properties.ld24; return (a&&a[HOUR]!=null)?a[HOUR]:f.properties.loading_pct;};
 
 const loadColor=l=>l>120?"#e35d5d":l>80?"#e6a23c":l>40?"#43b581":"#4f8fd9";
+function kvPass(kv){
+  const sel=document.getElementById("selKv").value;
+  if(sel==="0") return true;
+  const k=kv||0;
+  if(sel==="500") return k>=400;
+  if(sel==="275") return k>=200;
+  if(sel==="154") return k>=140;
+  if(sel==="110") return k>=70 && k<140;
+  if(sel==="66") return k<70;
+  return true;
+}
 const pw=p=>Math.max(0.6, Math.min(0.9+1.35*Math.log10(1+Math.abs(p)), 6.5));
 
 function midSegment(cs){
@@ -128,14 +161,15 @@ function renderArrows(){
   const obsOnly=document.getElementById("cbObs").checked;
   // 空間分散: グリッドセル毎に|P|上位K本(団子防止・全域カバー)
   // 低zoomでは大セル+高閾値=「主要潮流の向きだけ」。ズームインで細部
-  const cell = z>=10?0.08 : z>=8?0.2 : z>=7?0.45 : 1.1;
-  const perCell = z>=10?3 : z>=8?2 : 1;
-  const minP = z>=8?0.5 : z>=7?30 : 150;
+  const cell = z>=10?0.15 : z>=8?0.25 : z>=7?0.45 : 1.1;
+  const perCell = z>=10?2 : 1;
+  const minP = z>=10?5 : z>=8?20 : z>=7?30 : 150;
   const grid = new Map();
   for(const f of flows.features){
     const p=fp(f);
     if(Math.abs(p)<minP) continue;
     if(obsOnly && f.properties.obs_dir===undefined) continue;
+    if(!kvPass(f.properties.kv)) continue;
     const m=midSegment(f.geometry.coordinates);
     if(!bb.contains(m.mid)) continue;
     const key=`${Math.round(m.mid[0]/cell)}:${Math.round(m.mid[1]/cell)}`;
@@ -182,7 +216,9 @@ async function show(island){
   if(genLayer) map.removeLayer(genLayer);
   const obsOnly=()=>document.getElementById("cbObs").checked;
   lineLayer=L.geoJSON(fl,{renderer:canvasR,
-    filter:f=>!obsOnly()||f.properties.obs_dir!==undefined,
+    filter:f=>(document.getElementById("cbLines").checked)
+      &&(!obsOnly()||f.properties.obs_dir!==undefined)
+      &&kvPass(f.properties.kv),
     style:f=>{
       const pr=f.properties, p=fp(f), ld=fld(f);
       if(pr.obs_dir!==undefined)
@@ -264,8 +300,9 @@ function buildGlow(){
   const lineLen=f=>{const cs=f.geometry.coordinates;let L2=0;
     for(let i=0;i<cs.length-1;i++)L2+=Math.hypot(cs[i+1][0]-cs[i][0],cs[i+1][1]-cs[i][1]);
     return L2;};
+  if(!document.getElementById("cbGlow").checked){glowLayer=L.layerGroup().addTo(map);glowPolys=[];return;}
   const top=[...flows.features]
-    .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04)
+    .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04 && kvPass(f.properties.kv))
     .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
   for(const f of top){
     const latlngs=f.geometry.coordinates.map(c=>[c[1],c[0]]);
@@ -301,6 +338,31 @@ document.getElementById("btnPlay").onclick=()=>{
 };
 setInterval(()=>{if(playing) setHour((HOUR+1)%24);},1100);
 
+// 変電所レイヤ(AGJ連結性色: main=#388bfd / 孤立=#f0883e — editor_coreのAGJ_COLORS準拠)
+let subsData=null, subsLayer=null;
+async function buildSubs(){
+  if(subsLayer){map.removeLayer(subsLayer); subsLayer=null;}
+  if(!document.getElementById("cbSubs").checked) return;
+  if(!subsData) subsData=await fetch("data/flow_map/subs_light.geojson").then(r=>r.json());
+  const z=map.getZoom(), bb=map.getBounds();
+  const minKv = z>=10?0 : z>=8?60 : 140;
+  subsLayer=L.layerGroup();
+  let n=0;
+  for(const f of subsData.features){
+    const pr=f.properties, c=f.geometry.coordinates;
+    if((pr.kv||0)<minKv) continue;
+    if(!kvPass(pr.kv)) continue;
+    if(!bb.contains([c[1],c[0]])) continue;
+    if(n>3500) break;
+    const col=pr.m? "#388bfd":"#f0883e";
+    const mk=L.circleMarker([c[1],c[0]],{renderer:canvasR,radius:z>=10?4:2.6,
+      color:col,weight:1,fillColor:col,fillOpacity:.55})
+      .bindPopup(`<b>${pr.n||"(無名)"}</b><br>${pr.kv||"?"}kV / ${pr.m?"本系統":"本系統外"}`);
+    mk.addTo(subsLayer); n++;
+  }
+  subsLayer.addTo(map);
+}
+
 const tabs=document.getElementById("tabs");
 for(const k of Object.keys(ISLANDS)){
   const t=document.createElement("span");
@@ -309,11 +371,20 @@ for(const k of Object.keys(ISLANDS)){
   if(k==="now") t.style.borderColor="#ffd166", t.style.color="#ffd166";
   t.onclick=()=>show(k); tabs.appendChild(t);
 }
-map.on("zoomend",()=>{renderArrows();buildGenLayer();});
-map.on("moveend",renderArrows);
+map.on("zoomend",()=>{renderArrows();buildGenLayer();buildSubs();});
+map.on("moveend",()=>{renderArrows();buildSubs();});
 document.getElementById("cbArrow").onchange=renderArrows;
+document.getElementById("cbGlow").onchange=buildGlow;
 document.getElementById("cbGen").onchange=buildGenLayer;
+document.getElementById("cbSubs").onchange=buildSubs;
+document.getElementById("cbLines").onchange=()=>show(cur);
 document.getElementById("cbObs").onchange=()=>show(cur);
+document.getElementById("selKv").onchange=()=>{show(cur);buildSubs();};
+document.getElementById("selBase").onchange=e=>{
+  if(baseLayer){map.removeLayer(baseLayer); baseLayer=null;}
+  const v=e.target.value;
+  if(v!=="none"){baseLayer=BASES[v].addTo(map); baseLayer.bringToBack&&baseLayer.bringToBack();}
+};
 document.getElementById("uchead").onclick=()=>{
   const p=document.getElementById("ucpanel");
   p.classList.toggle("min");
