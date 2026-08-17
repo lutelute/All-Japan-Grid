@@ -1175,6 +1175,15 @@ def main():
                          "--no-dedup-nodes=従来挙動(回帰比較用)。west断片化2531→544成分・"
                          "線の二重計上を是正 "
                          "(docs/reports/west_fragmentation_rootcause_2026-07-09.md)")
+    ap.add_argument("--point-demand", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="介入#30 L_DB地点需要ピン留め: 観測地点(変圧器バンク潮流実績の"
+                         "需要ビュー・src/powerflow/point_demand)の年平均MWをバスに"
+                         "ピン留めし、zone残余を従来配分(アンカー不変)。"
+                         "**既定ON(2026-08-17 オーナー承認)**。マッチャー第2ラウンドで"
+                         "カバレッジMW比68%%(30バス)・再A/Bで害なし+沖縄微改善"
+                         "(point_demand_ab_round2_2026-08-17.json)。"
+                         "無効化=--no-point-demand")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1239,7 +1248,15 @@ def main():
             print(f"  介入#24 gen-attach={args.gen_attach}: 繋ぎ替え "
                   f"{gstats['n_moved']:,}機/{gstats['moved_mw']:,.0f}MW "
                   f"110kV以下に載る容量 {gstats['share_at_or_below_110kv']:.1%}")
-        total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh)
+        pinned = None
+        if args.point_demand:
+            from src.powerflow.point_demand import load_point_demand, match_buses
+            pinned, pd_ledger = match_buses(net, load_point_demand())
+            # 介入#30 の帳簿: 何地点・何MWをピン留めしたかを必ず出す
+            print(f"  介入#30 point-demand: ピン留め {pd_ledger['n_pinned_buses']}バス"
+                  f"/{pd_ledger['pinned_mw']}MW (未突合{pd_ledger['n_unmatched']}地点)")
+        total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh,
+                                    point_demand=pinned)
         if args.reactive_comp is not None:
             from src.powerflow.pipeline import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)

@@ -1,0 +1,106 @@
+{
+ "east:A_baseline": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.8829972434583336,
+   1.0229069426775539
+  ],
+  "max_loading_pct": 678.1239078072858,
+  "match": {
+   "n": 260,
+   "spearman": 0.532,
+   "ratio_med": 0.78
+  }
+ },
+ "east:B_pinned": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.8829972483192429,
+   1.0229069426775537
+  ],
+  "max_loading_pct": 678.1358403931425,
+  "ledger": {
+   "n_obs_points": 67,
+   "n_pinned_buses": 10,
+   "n_unmatched": 57,
+   "n_ambiguous_skipped": 0,
+   "n_containment": 0,
+   "pinned_mw": 212.9
+  },
+  "match": {
+   "n": 260,
+   "spearman": 0.53,
+   "ratio_med": 0.77
+  }
+ },
+ "west:A_baseline": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.7245251819657833,
+   1.0368296600235118
+  ],
+  "max_loading_pct": 816.9102947094486,
+  "match": {
+   "n": 262,
+   "spearman": 0.612,
+   "ratio_med": 0.69
+  }
+ },
+ "west:B_pinned": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.724525244328315,
+   1.0368242733363182
+  ],
+  "max_loading_pct": 816.9116622879832,
+  "ledger": {
+   "n_obs_points": 67,
+   "n_pinned_buses": 11,
+   "n_unmatched": 56,
+   "n_ambiguous_skipped": 0,
+   "n_containment": 5,
+   "pinned_mw": 167.4
+  },
+  "match": {
+   "n": 262,
+   "spearman": 0.616,
+   "ratio_med": 0.67
+  }
+ },
+ "okinawa:A_baseline": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.750278579581262,
+   1.000000332126833
+  ],
+  "max_loading_pct": 234.84695902099423,
+  "match": {
+   "n": 1
+  }
+ },
+ "okinawa:B_pinned": {
+  "ac": true,
+  "dc": true,
+  "vm": [
+   0.7582350561984126,
+   1.0000003321268325
+  ],
+  "max_loading_pct": 230.69518887651793,
+  "ledger": {
+   "n_obs_points": 67,
+   "n_pinned_buses": 9,
+   "n_unmatched": 58,
+   "n_ambiguous_skipped": 0,
+   "n_containment": 1,
+   "pinned_mw": 37.6
+  },
+  "match": {
+   "n": 1
+  }
+ }
+}
