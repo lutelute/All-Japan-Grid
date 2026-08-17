@@ -27,6 +27,7 @@
   h4{margin:2px 0 8px;font-size:13px}
   .muted{color:#8a99aa}
   .fchip{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:3px}
+  .genGauge{filter:drop-shadow(0 0 2px rgba(0,0,0,.7))}
   #uchead{cursor:pointer}
   select{background:#1c2735;color:#dde5ee;border:1px solid #46586e;border-radius:4px;padding:2px}
   label{display:block;margin:2px 0}
@@ -53,7 +54,7 @@
   <span class="sw" style="background:#e35d5d"></span>&gt;120<br>
   <b>観測方向</b> <span style="color:#2eea8f">■一致</span>
   <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
-  <b>発電</b> 円=定格・塗り濃=出力率高
+  <b>発電</b> 円=定格・<b>円周ゲージ=出力/定格</b>高
 </div>
 <div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
   <div style="display:flex;align-items:center;gap:8px">
@@ -228,12 +229,20 @@ function buildGenLayer(){
     const p=f.properties, c=f.geometry.coordinates;
     if(p.pmax_mw<minP) continue;
     const col=FUELCOL[p.fuel]||FUELCOL.other;
-    L.circleMarker([c[1],c[0]],{renderer:canvasR,radius:genRadius(p.pmax_mw),
-      color:col,weight:1.6,opacity:0.9,fillColor:col,
-      fillOpacity:0.35+0.55*Math.min(p.cf,1)})
+    const R=genRadius(p.pmax_mw), cf=Math.min(Math.max(p.cf,0),1);
+    const C=2*Math.PI*(R-1.2);
+    const svg=`<svg width="${2*R+6}" height="${2*R+6}" viewBox="0 0 ${2*R+6} ${2*R+6}">`+
+      `<circle cx="${R+3}" cy="${R+3}" r="${R-1.2}" fill="${col}" fill-opacity="0.3" `+
+        `stroke="rgba(255,255,255,0.35)" stroke-width="2.6"/>`+
+      `<circle cx="${R+3}" cy="${R+3}" r="${R-1.2}" fill="none" stroke="${col}" `+
+        `stroke-width="2.6" stroke-linecap="round" `+
+        `stroke-dasharray="${(C*cf).toFixed(1)} ${C.toFixed(1)}" `+
+        `transform="rotate(-90 ${R+3} ${R+3})"/></svg>`;
+    L.marker([c[1],c[0]],{icon:L.divIcon({className:"genGauge",html:svg,
+        iconSize:[2*R+6,2*R+6],iconAnchor:[R+3,R+3]})})
      .bindPopup(`<b>${p.name}</b><br>定格 ${p.pmax_mw.toLocaleString()} MW / `+
                 `出力 ${p.pg_mw.toLocaleString()} MW<br>出力率 <b>${(p.cf*100).toFixed(1)}%</b>`+
-                ` / 主燃料 ${FUELJA[p.fuel]||p.fuel}`)
+                `(円周ゲージ) / 主燃料 ${FUELJA[p.fuel]||p.fuel}`)
      .addTo(genLayer);
   }
   genLayer.addTo(map);
