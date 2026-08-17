@@ -171,3 +171,24 @@ nodes:
     region: chubu
     approx: true
     evidence: "中部NW local_2025.pdf p8(三重77kV): 末広変電所母線(末広(1)3616/末広(2))。32253で神戸方面幹線・32031玉垣方面・32480×常開。地点需要19.3MW(L_DB)。位置=地名(四日市市末広町)"
+  - name: 新飯田変電所
+    kv: 154
+    lat: 37.692959
+    lon: 138.98468
+    region: tohoku
+    approx: true
+    evidence: "東北NW 基幹系統図 jisseki_kikan01_map_2024_02.pdf(新潟154kV): 南新潟—新潟線(0671)上のタップ局。tr実績あり(154/6.6kV・地点需要31.2MW=L_DB)。位置=地名(新潟市南区新飯田)"
+  - name: 三条変電所
+    kv: 154
+    lat: 37.636387
+    lon: 138.96167
+    region: tohoku
+    approx: true
+    evidence: "東北NW 基幹系統図 jisseki_kikan01_map_2024_02.pdf(新潟154kV): 下田と2回線(0685/0687)・上位は新潟方面の線(0684)。位置=地名代表点(三条市・所番地未詳)"
+  - name: 下田変電所
+    kv: 154
+    lat: 37.571781
+    lon: 139.033508
+    region: tohoku
+    approx: true
+    evidence: "東北NW 基幹系統図 jisseki_kikan01_map_2024_02.pdf(新潟154kV): 三条と2回線(0685/0687)の末端局。tr実績(154/6.6kV・地点需要18.4MW=L_DB)。※青森おいらせの東下田(66kV)とは別実体(kV不整合で棄却済・point_demand_matcher_round2)。位置=地名(三条市荻堀=旧下田村)"
