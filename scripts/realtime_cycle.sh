@@ -11,6 +11,11 @@ mkdir -p data/realtime
   echo "===== $(date '+%F %T') ====="
   python3 scripts/fetch_denkiyoho.py || { echo "fetch失敗(過半未達)"; exit 1; }
   python3 scripts/export_flow_map_data.py --realtime
+  # 日付別断面: 前日分が未生成なら生成(1日1回だけ走る)
+  YD=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)
+  if [ ! -f "docs/data/flow_map/days/${YD}.json" ]; then
+    PYTHONPATH=. python3 scripts/export_day_flows.py --date "$YD" || true
+  fi
   # 並行アクター配慮: pull --rebase してから該当ファイルのみ commit
   git pull --rebase --autostash origin main >/dev/null 2>&1 || true
   git add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \

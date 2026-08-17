@@ -73,10 +73,18 @@
   <span class="sw" style="background:#e35d5d"></span>&gt;120<br>
   <b>観測方向</b> <span style="color:#2eea8f">■一致</span>
   <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
-  <b>発電</b> 円=定格・<b>円周ゲージ=出力/定格</b>高
+  <b>発電</b> 円=定格・<b>円周ゲージ=出力/定格</b><br>
+  <b>差分モード</b> <span style="color:#ff7850">■実績&gt;UC</span>
+  <span style="color:#50a0ff">■実績&lt;UC</span> <span class="muted">太さ=|差|</span>高
 </div>
 <div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
   <div style="display:flex;align-items:center;gap:8px">
+    <select id="selDate" title="日付(実績需要の断面)"><option value="uc">UC代表日</option></select>
+    <select id="selCmp" title="表示モード" disabled>
+      <option value="act" selected>実績</option>
+      <option value="uc">UC</option>
+      <option value="diff">差分(実績−UC)</option>
+    </select>
     <button id="btnPlay" style="background:#3d7bd9;color:#fff;border:none;border-radius:6px;
       padding:3px 10px;cursor:pointer">▶ 再生</button>
     <input type="range" id="hourSlider" min="0" max="23" value="12" step="1" style="flex:1">
@@ -116,8 +124,16 @@ let lineLayer=null, genLayer=null, arrowLayer=L.layerGroup().addTo(map);
 let glowLayer=null, glowPolys=[];
 let cur="west", flows=null, gens=null, topFlows=[];
 let HOUR=12, playing=false, dashPhase=0;
-const fp=(f)=>{const a=f.properties.p24; return (a&&a[HOUR]!=null)?a[HOUR]:f.properties.p_mw;};
-const fld=(f)=>{const a=f.properties.ld24; return (a&&a[HOUR]!=null)?a[HOUR]:f.properties.loading_pct;};
+function cmpMode(){const s=document.getElementById("selCmp"); return s.disabled?"act":s.value;}
+const _pick=(f,key,fallback)=>{const m=cmpMode();
+  const act=f.properties[key], uc=f.properties["_"+key+"uc"]||act;
+  const a=(m==="uc")?uc:act;
+  return (a&&a[HOUR]!=null)?a[HOUR]:f.properties[fallback];};
+const fp=(f)=>_pick(f,"p24","p_mw");
+const fld=(f)=>_pick(f,"ld24","loading_pct");
+const fdiff=(f)=>{const a=f.properties.p24, u=f.properties._p24uc;
+  if(!a||!u||a[HOUR]==null||u[HOUR]==null) return null;
+  return Math.abs(a[HOUR])-Math.abs(u[HOUR]);};   // 潮流の増減(絶対値ベース)
 
 const loadColor=l=>l>120?"#e35d5d":l>80?"#e6a23c":l>40?"#43b581":"#4f8fd9";
 function kvPass(kv){
@@ -156,7 +172,7 @@ function midSegment(cs){
 
 function renderArrows(){
   arrowLayer.clearLayers();
-  if(!flows || !document.getElementById("cbArrow").checked) return;
+  if(!flows || !document.getElementById("cbArrow").checked || cmpMode()==="diff") return;
   const bb=map.getBounds(), z=map.getZoom();
   const obsOnly=document.getElementById("cbObs").checked;
   // 空間分散: グリッドセル毎に|P|上位K本(団子防止・全域カバー)
@@ -203,12 +219,15 @@ async function show(island){
       fetch(`data/flow_map/flows${sfx}_${k}.geojson`).then(r=>r.json()),
       fetch(`data/flow_map/gens${sfx}_${k}.geojson`).then(r=>r.json())]));
     document.getElementById("timebar").style.display = island==="now"?"none":"";
-    fl={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===0).flatMap(d=>d.features)};
+    const flParts=parts.filter((_,i)=>i%2===0);
+    ALLPARTS.forEach((k,i)=>flParts[i].features.forEach(f=>f.properties._isl=k));
+    fl={type:"FeatureCollection",features:flParts.flatMap(d=>d.features)};
     gn={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===1).flatMap(d=>d.features)};
   }else{
     [fl,gn]=await Promise.all([
       fetch(`data/flow_map/flows_${island}.geojson`).then(r=>r.json()),
       fetch(`data/flow_map/gens_${island}.geojson`).then(r=>r.json())]);
+    fl.features.forEach(f=>f.properties._isl=island);
   }
   flows=fl; gens=gn;
   topFlows=[...fl.features].sort((a,b)=>Math.abs(b.properties.p_mw)-Math.abs(a.properties.p_mw)).slice(0,220);
@@ -221,6 +240,14 @@ async function show(island){
       &&kvPass(f.properties.kv),
     style:f=>{
       const pr=f.properties, p=fp(f), ld=fld(f);
+      if(cmpMode()==="diff"){
+        const d=fdiff(f);
+        if(d===null) return {color:"#3a4a5c",weight:0.5,opacity:0.2};
+        const mag=Math.min(Math.abs(d)/300,1);
+        const col = d>0 ? `rgba(255,${Math.round(120-90*mag)},80,1)`
+                        : `rgba(80,${Math.round(150+60*mag)},255,1)`;
+        return {color:col,weight:0.7+4.5*mag,opacity:0.25+0.65*mag};
+      }
       if(pr.obs_dir!==undefined)
         return {color:pr.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p)+2.2,opacity:1};
       return {color:loadColor(ld),weight:pw(p),
@@ -231,6 +258,12 @@ async function show(island){
         const pr=f.properties, p=fp(f), ld=fld(f);
         let s=`<b>${pr.name||"(無名)"}</b><br>${String(HOUR).padStart(2,"0")}:00 潮流 `+
               `<b>${Math.abs(p).toLocaleString()} MW</b> / loading ${ld}%`;
+        if(pr._p24uc&&pr.p24&&pr.p24!==pr._p24uc){
+          const av=pr.p24[HOUR], uv=pr._p24uc[HOUR];
+          if(av!=null&&uv!=null)
+            s+=`<br>実績断面 ${Math.abs(av).toLocaleString()} / UC ${Math.abs(uv).toLocaleString()}`+
+               ` / 差 <b>${(Math.abs(av)-Math.abs(uv)>=0?"+":"")}${(Math.abs(av)-Math.abs(uv)).toFixed(0)} MW</b>`;
+        }
         if(pr.p24) s+=`<br><canvas class="spark" width="180" height="34"></canvas>`;
         if(pr.obs_dir!==undefined)
           s+=`<br>観測方向: ${pr.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
@@ -260,6 +293,7 @@ async function show(island){
   }
   document.getElementById("stat").textContent=statTxt;
   const v=ISLANDS[island]; map.setView([v[0],v[1]],v[2]);
+  if(curDate!=="uc") applyDate(curDate);
 }
 
 function buildGenLayer(){
@@ -300,7 +334,7 @@ function buildGlow(){
   const lineLen=f=>{const cs=f.geometry.coordinates;let L2=0;
     for(let i=0;i<cs.length-1;i++)L2+=Math.hypot(cs[i+1][0]-cs[i][0],cs[i+1][1]-cs[i][1]);
     return L2;};
-  if(!document.getElementById("cbGlow").checked){glowLayer=L.layerGroup().addTo(map);glowPolys=[];return;}
+  if(!document.getElementById("cbGlow").checked||cmpMode()==="diff"){glowLayer=L.layerGroup().addTo(map);glowPolys=[];return;}
   const top=[...flows.features]
     .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04 && kvPass(f.properties.kv))
     .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
@@ -324,6 +358,43 @@ function animate(){
 }
 requestAnimationFrame(animate);
 
+// 日付別断面(days/<date>.json)の適用。UC代表日に戻すため元p24を退避
+let dayCache={}, curDate="uc";
+async function loadDates(){
+  try{
+    const mf=await fetch("data/flow_map/days/manifest.json").then(r=>r.json());
+    const sel=document.getElementById("selDate");
+    for(const d of (mf.dates||[]).slice().reverse()){
+      const o=document.createElement("option");
+      o.value=d; o.textContent=`${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}(実績)`;
+      sel.appendChild(o);
+    }
+  }catch(e){}
+}
+async function applyDate(d){
+  curDate=d;
+  if(!flows) return;
+  if(d==="uc"){
+    for(const f of flows.features){
+      if(f.properties._p24uc){f.properties.p24=f.properties._p24uc; f.properties.ld24=f.properties._ld24uc;}
+    }
+  }else{
+    if(!dayCache[d]) dayCache[d]=await fetch(`data/flow_map/days/${d}.json`).then(r=>r.json());
+    const dd=dayCache[d];
+    // 島別に線順一致でp24/ld24を差し替え(featuresは島連結順=ALLPARTS順で並ぶ)
+    let idx={};
+    for(const isl of ALLPARTS) idx[isl]=0;
+    for(const f of flows.features){
+      const isl=f.properties._isl;
+      const D=dd.islands[isl];
+      if(!D){idx[isl]++; continue;}
+      const i=idx[isl]++;
+      if(!f.properties._p24uc){f.properties._p24uc=f.properties.p24; f.properties._ld24uc=f.properties.ld24;}
+      if(D.p[i]) {f.properties.p24=D.p[i]; f.properties.ld24=D.ld[i];}
+    }
+  }
+  setHour(HOUR);
+}
 function setHour(h){
   HOUR=h;
   document.getElementById("hourSlider").value=h;
@@ -380,6 +451,13 @@ document.getElementById("cbSubs").onchange=buildSubs;
 document.getElementById("cbLines").onchange=()=>show(cur);
 document.getElementById("cbObs").onchange=()=>show(cur);
 document.getElementById("selKv").onchange=()=>{show(cur);buildSubs();};
+document.getElementById("selDate").onchange=e=>{
+  const d=e.target.value;
+  document.getElementById("selCmp").disabled = (d==="uc");
+  if(d==="uc") document.getElementById("selCmp").value="act";
+  applyDate(d);
+};
+document.getElementById("selCmp").onchange=()=>setHour(HOUR);
 document.getElementById("selBase").onchange=e=>{
   if(baseLayer){map.removeLayer(baseLayer); baseLayer=null;}
   const v=e.target.value;
@@ -431,7 +509,7 @@ fetch("data/flow_map/uc_utilization.json").then(r=>r.json()).then(d=>{
   selEl.onchange=draw; draw();
 }).catch(()=>{document.getElementById("ucbody").textContent="uc_utilization.json 未生成";});
 
-show("all");
+loadDates(); show("all");
 </script>
 </body>
 </html>
