@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EGGC — 証拠ゲート付き系統コンフレーションを観る</title>
+<style>
+  :root{
+    --bg:#faf8f1; --panel:#ffffff; --panel-2:#fffdf6; --line:#dcd8cc; --grid:#e7e3d8;
+    --text:#1a1a17; --muted:#52504a; --faint:#928f84;
+    --accent:#1f9e8a; --warm:#b3812f; --neg:#cf4f5f; --upd:#6f54c4;
+    /* 系統図の意味色 */
+    --main:#3a6ea5;     /* 本系統(mainに繋がっている線) */
+    --off:#cf4f5f;      /* 宙に浮いた断片(off-main) */
+    --chord:#6f54c4;    /* 公表資料由来の直線コード */
+    --stub:#1f9e8a;     /* 取付スタブ */
+    --scan:#b3812f;     /* 探索の広がり */
+    --mincho:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Songti SC",serif;
+    --gothic:"Hiragino Sans","Yu Gothic",YuGothic,"Noto Sans JP",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--gothic);
+    -webkit-font-smoothing:antialiased;line-height:1.6;}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 60px;}
+  .nav{font-size:12.5px;margin-bottom:14px;color:var(--faint);}
+  .nav a{color:var(--accent);text-decoration:none;} .nav a:hover{text-decoration:underline;}
+  h1{font-family:var(--mincho);font-weight:600;font-size:26px;margin:0 0 6px;letter-spacing:.02em;}
+  h1 .en{font-size:14px;color:var(--faint);font-family:var(--mono);letter-spacing:.04em;
+    display:block;margin-top:4px;}
+  .lead{color:var(--muted);font-size:13.5px;max-width:780px;margin-bottom:16px;}
+  .lead b{color:var(--text);}
+  .kpis{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    padding:8px 13px;min-width:104px;}
+  .kpi .v{font-family:var(--mono);font-size:19px;font-weight:700;line-height:1.25;}
+  .kpi .k{font-size:11px;color:var(--faint);}
+  .kpi.rep .v{color:var(--stub);} .kpi.det .v{color:var(--warm);} .kpi.non .v{color:var(--faint);}
+
+  .stage{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+  .stepper{display:flex;background:var(--panel-2);border-bottom:1px solid var(--line);}
+  .stp{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;
+    cursor:pointer;position:relative;border-right:1px solid var(--line);transition:.18s;}
+  .stp:last-child{border-right:none;}
+  .stp .n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-family:var(--mono);font-size:12px;background:#fff;
+    color:var(--faint);border:1px solid var(--line);transition:.18s;}
+  .stp .t{font-size:12px;color:var(--faint);transition:.18s;text-align:center;}
+  .stp.done .n{background:#e4f4ef;color:var(--accent);border-color:var(--accent);}
+  .stp.done .t{color:var(--muted);}
+  .stp.active{background:var(--panel);}
+  .stp.active .n{background:var(--c);color:#fff;border-color:var(--c);font-weight:700;}
+  .stp.active .t{color:var(--text);font-weight:600;}
+  .stp.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--c);}
+
+  .body{display:grid;grid-template-columns:1.12fr 1fr;}
+  .vis{padding:14px;border-right:1px solid var(--line);display:flex;flex-direction:column;}
+  .cvwrap{position:relative;}
+  canvas#map{display:block;width:100%;height:430px;border-radius:11px;
+    background:var(--panel-2);border:1px solid var(--grid);}
+  .caseTag{position:absolute;left:11px;top:10px;font-size:11.5px;font-family:var(--mono);
+    background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:7px;
+    padding:3px 8px;color:var(--muted);}
+  .verd{position:absolute;right:11px;top:10px;font-size:11.5px;border-radius:7px;
+    padding:3px 9px;font-weight:600;}
+  .verd.replaced{background:#e4f4ef;color:#126b5c;border:1px solid #9fd9cc;}
+  .verd.kept_detour{background:#fbf1de;color:#8a6316;border:1px solid #e3ca94;}
+  .verd.no_route{background:#f1efe8;color:#6a675f;border:1px solid var(--line);}
+  .mini{display:flex;gap:16px;font-family:var(--mono);font-size:12px;color:var(--muted);
+    margin-top:10px;flex-wrap:wrap;}
+  .mini b{color:var(--text);font-weight:700;}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11.5px;color:var(--faint);margin-top:8px;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .sw{width:14px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block;}
+  .sw.dot{width:9px;height:9px;border-radius:50%;border:none;}
+
+  .explain{padding:16px 18px 14px;}
+  .explain .lbl{display:inline-block;font-size:11px;font-family:var(--mono);letter-spacing:.08em;
+    color:var(--c,var(--accent));border:1px solid var(--line);border-radius:6px;padding:2px 8px;
+    margin-bottom:10px;}
+  .explain h3{font-family:var(--mincho);font-size:17.5px;margin:0 0 8px;}
+  .desc{font-size:13px;color:var(--muted);} .desc b{color:var(--text);}
+  .desc p{margin:0 0 9px;}
+  .eq{font-family:var(--mono);font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:9px;padding:10px 12px;margin:9px 0;line-height:1.95;}
+  .eq .num{color:var(--accent);} .eq .res{color:var(--c,var(--accent));font-weight:700;}
+  .eq .no{color:var(--neg);font-weight:700;}
+  .eq .cmt{color:var(--faint);}
+  .bars{margin:10px 0 4px;}
+  .barrow{display:flex;align-items:center;gap:8px;font-size:11.5px;font-family:var(--mono);
+    color:var(--muted);margin-bottom:5px;}
+  .barrow .lb{width:74px;text-align:right;color:var(--faint);}
+  .track{flex:1;height:13px;background:var(--grid);border-radius:3px;overflow:hidden;display:flex;}
+  .track i{height:100%;display:block;}
+  .note{font-size:12px;color:var(--faint);border-left:2px solid var(--line);padding-left:9px;
+    margin-top:10px;}
+  .misread{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .misread .h{background:var(--panel-2);padding:7px 11px;font-size:11.5px;color:var(--warm);
+    border-bottom:1px solid var(--line);}
+  .misread .b{padding:9px 11px;font-size:12.2px;color:var(--muted);}
+  .misread .x{color:var(--neg);} .misread .o{color:var(--accent);}
+
+  .bar{display:flex;align-items:center;gap:9px;padding:12px 15px;border-top:1px solid var(--line);
+    background:var(--panel-2);flex-wrap:wrap;}
+  button{font-family:var(--gothic);font-size:13.5px;border-radius:9px;padding:8px 14px;
+    border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;transition:.15s;}
+  button:hover:not(:disabled){border-color:var(--faint);}
+  button:disabled{opacity:.4;cursor:default;}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;}
+  select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;
+    padding:7px 9px;font-family:var(--gothic);font-size:12.5px;cursor:pointer;max-width:290px;}
+  .bar .spacer{flex:1;}
+  .slid{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);
+    font-family:var(--mono);}
+  input[type=range]{width:170px;accent-color:var(--accent);}
+  .ba{display:flex;align-items:center;gap:7px;font-size:12px;font-family:var(--mono);}
+  .ba .l{color:var(--chord);} .ba .r{color:var(--stub);}
+
+  details{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;}
+  summary{padding:12px 15px;cursor:pointer;font-size:13.5px;color:var(--muted);}
+  summary:hover{color:var(--text);}
+  .det{padding:0 15px 15px;font-size:13px;color:var(--muted);}
+  .det table{border-collapse:collapse;width:100%;font-size:12.3px;margin:8px 0;}
+  .det th,.det td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;}
+  .det th{background:var(--panel-2);font-weight:600;color:var(--text);}
+  .det code{font-family:var(--mono);font-size:12px;background:var(--panel-2);padding:1px 4px;
+    border-radius:4px;}
+  .det h4{font-family:var(--mincho);color:var(--text);font-size:14.5px;margin:14px 0 6px;}
+  .det ul{margin:6px 0 6px 18px;padding:0;} .det li{margin-bottom:4px;}
+  .foot{margin-top:20px;font-size:12px;color:var(--faint);line-height:1.9;}
+  @media(max-width:900px){
+    .body{grid-template-columns:1fr;}
+    .vis{border-right:none;border-bottom:1px solid var(--line);}
+    .stp .t{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav">All-Japan-Grid ／ 手法を観る ／ <b>EGGC</b></div>
+  <h1>EGGC — 証拠ゲート付き系統コンフレーションを観る
+    <span class="en">Evidence-Gated Grid Conflation — how a straight chord becomes a real corridor</span></h1>
+  <p class="lead">
+    公表資料は「A と B が繋がっている」ことしか教えてくれない。だから機械は<b>直線</b>を引く。
+    けれど OSM には、その線の<b>実線形</b>が「本系統から浮いた断片」として実在していることがある。
+    EGGC は、その断片を<b>証拠として認められるときだけ</b>直線を実線形に置き換える手法。
+    ここでは実際の判定を、<b>本物のデータ・本物の探索</b>で 1 ステップずつ観る。
+  </p>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="stage">
+    <div class="stepper" id="stepper"></div>
+    <div class="body">
+      <div class="vis">
+        <div class="cvwrap">
+          <canvas id="map"></canvas>
+          <div class="caseTag" id="caseTag"></div>
+          <div class="verd" id="verdTag"></div>
+        </div>
+        <div class="mini" id="mini"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="explain" id="explain"></div>
+    </div>
+    <div class="bar">
+      <button id="prevBtn">← 前へ</button>
+      <button id="nextBtn" class="primary">次へ →</button>
+      <button id="autoBtn">⏵ 自動</button>
+      <button id="resetBtn">最初から</button>
+      <div class="spacer"></div>
+      <select id="caseSel" title="実データの判定ケース"></select>
+    </div>
+    <div class="bar" id="ctlBar" style="display:none"></div>
+  </div>
+
+  <details>
+    <summary>この手法は何の仲間か（アルゴリズムの系譜と、新しい点）</summary>
+    <div class="det">
+      <table>
+        <tr><th>分野</th><th>代表</th><th>EGGC との関係</th></tr>
+        <tr><td>マップマッチング</td><td>HMM マップマッチング（Newson &amp; Krumm 2009）</td>
+          <td>軌跡（多点）→道路網への吸着。EGGC は入力が「端点 2 点＋論理接続」だけの<b>退化ケース</b></td></tr>
+        <tr><td>地図コンフレーション</td><td>Saalfeld (1988) 以来の map conflation</td>
+          <td>同一実体の 2 表現を統合する親概念。<b>論理系統図 × OSM 物理図</b>の統合が EGGC</td></tr>
+        <tr><td>経路推定</td><td>path inference（疎な GPS 2 点間の経路復元）</td>
+          <td>2 点間の物理経路を推定する問題設定が同型</td></tr>
+        <tr><td>電力網 × OSM</td><td>GridKit (Wiegmans 2016) / SciGRID / osmTGmod / PyPSA-Eur</td>
+          <td>いずれも OSM → トポロジ抽出（逆方向）。<b>外部の論理トポロジ → OSM 幾何</b>への写像が新規</td></tr>
+      </table>
+      <h4>言葉の分解</h4>
+      <ul>
+        <li><b>Conflation（コンフレーション）</b> — ラテン語 <i>conflare</i>「吹き合わせて melt する」。
+          地図学では「同じ実体を写した 2 枚の地図を、1 枚に融かし合わせる」こと。合併ではなく<b>同定</b>が主眼。</li>
+        <li><b>Evidence-Gated（証拠ゲート付き）</b> — 「経路が見つかった」だけでは採らない。
+          <b>その経路が公表線そのものだと言える証拠</b>（＝経路の大半が宙に浮いた断片であること）が
+          閾値を超えたときだけゲートが開く。ゲートが閉じたら直線のまま残す＝<b>無い線形を捏造しない</b>。</li>
+        <li><b>chord（コード＝弦）</b> — 円弧に対する弦。ここでは「実線形という弧」に対する<b>直線の弦</b>。
+          公表資料から作った A—B 直線を指す。</li>
+        <li><b>off-main</b> — 本系統（main）に繋がっていない線。地図上では宙に浮いて見える。
+          <b>浮いていること自体が「まだ誰も繋いでいない実線形」の目印</b>になる、というのが EGGC の着眼。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>パラメータ・可逆性・限界（何を信じてよくて、何を信じてはいけないか）</summary>
+    <div class="det" id="detParams"></div>
+  </details>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const TRACE_EMBED = /*__EGGC_TRACE__*/ null;
+
+/* ---------- 幾何ユーティリティ ---------- */
+const R = 6371;
+function hav(a, b){
+  const r = Math.PI/180;
+  const la1=a[0]*r, lo1=a[1]*r, la2=b[0]*r, lo2=b[1]*r;
+  const s = Math.sin((la2-la1)/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin((lo2-lo1)/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));
+}
+const key = p => p[0].toFixed(5)+','+p[1].toFixed(5);
+function polyKm(p){ let s=0; for(let i=0;i<p.length-1;i++) s+=hav(p[i],p[i+1]); return s; }
+
+/* 経路をNサンプルに等分（before/afterのモーフィング用） */
+function resample(pts, n){
+  if(pts.length<2) return Array.from({length:n},()=>pts[0]||[0,0]);
+  const cum=[0];
+  for(let i=0;i<pts.length-1;i++) cum.push(cum[i]+hav(pts[i],pts[i+1]));
+  const tot=cum[cum.length-1]||1e-9, out=[];
+  for(let k=0;k<n;k++){
+    const d=tot*k/(n-1); let i=1;
+    while(i<cum.length-1 && cum[i]<d) i++;
+    const t=(d-cum[i-1])/((cum[i]-cum[i-1])||1e-9);
+    out.push([pts[i-1][0]+(pts[i][0]-pts[i-1][0])*t, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*t]);
+  }
+  return out;
+}
+
+/* ---------- 状態 ---------- */
+let T=null, CASES=[], ci=0, stepIdx=0, auto=false, autoT=null;
+let proj=null, cv=null, ctx=null, DPR=1;
+let G=null;                 // ブラウザ内グラフ
+let scan={on:false, settled:[], edges:[], done:false, found:null, i:0};
+let gate=0.7, morph=0;      // STEP4の閾値 / STEP5のbefore→after
+let anim=null;
+
+const STEPS=[
+  {key:'problem', t:'問題',   c:'#6f54c4'},
+  {key:'snap',    t:'端点スナップ', c:'#3a6ea5'},
+  {key:'search',  t:'経路探索',  c:'#b3812f'},
+  {key:'gate',    t:'証拠ゲート', c:'#cf4f5f'},
+  {key:'result',  t:'置換と結果', c:'#1f9e8a'},
+];
+
+/* ---------- 描画 ---------- */
+function fit(){
+  const rect = cv.getBoundingClientRect();
+  DPR = window.devicePixelRatio||1;
+  const w=Math.round(rect.width*DPR), h=Math.round(rect.height*DPR);
+  // width/height への代入は canvas 全体の再確保。毎フレーム走らせるとレンダラが詰まる
+  if(cv.width!==w || cv.height!==h){ cv.width=w; cv.height=h; }
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  return [rect.width, rect.height];
+}
+function makeProj(bbox, W, H, pad){
+  const [la0,lo0,la1,lo1]=bbox;
+  const k=Math.cos((la0+la1)/2*Math.PI/180);
+  const w=(lo1-lo0)*k, h=(la1-la0);
+  const s=Math.min((W-2*pad)/w, (H-2*pad)/h);
+  const ox=(W-w*s)/2, oy=(H-h*s)/2;
+  return p => [ox+(p[1]-lo0)*k*s, oy+(la1-p[0])*s];
+}
+function kmToPx(){   // 1km が何pxか（縮尺バー用）
+  const c=cur(), b=c.scene.bbox;
+  const p1=proj([b[0],b[1]]), p2=proj([b[0],b[1]+0.01]);
+  const km=hav([b[0],b[1]],[b[0],b[1]+0.01]);
+  return Math.hypot(p2[0]-p1[0],p2[1]-p1[1])/km;
+}
+function line(pts, col, w, dash){
+  if(pts.length<2) return;
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.lineCap='round'; ctx.lineJoin='round';
+  if(dash) ctx.setLineDash(dash);
+  ctx.beginPath();
+  pts.forEach((p,i)=>{ const q=proj(p); i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]); });
+  ctx.stroke(); ctx.restore();
+}
+function dot(p, col, r, ring){
+  const q=proj(p);
+  ctx.beginPath(); ctx.arc(q[0],q[1],r,0,7); ctx.fillStyle=col; ctx.fill();
+  if(ring){ ctx.lineWidth=1.4; ctx.strokeStyle=ring; ctx.stroke(); }
+}
+function circleKm(p, km, col){
+  const q=proj(p), r=km*kmToPx();
+  ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle=col; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.arc(q[0],q[1],r,0,7); ctx.stroke(); ctx.restore();
+}
+function label(p, txt, col, dy){
+  const q=proj(p);
+  ctx.save(); ctx.font='11px ui-monospace,Menlo,monospace';
+  const w=ctx.measureText(txt).width;
+  ctx.fillStyle='rgba(255,255,255,.82)'; ctx.fillRect(q[0]+7,q[1]+(dy||0)-9,w+7,15);
+  ctx.fillStyle=col; ctx.fillText(txt,q[0]+10.5,q[1]+(dy||0)+2); ctx.restore();
+}
+function lw(kv){ return kv>=275?3.0 : kv>=154?2.4 : kv>=100?2.0 : 1.6; }
+
+function drawScale(W,H){
+  const ppk=kmToPx();
+  let km=1; const cand=[0.5,1,2,5,10,20,50];
+  for(const c of cand){ if(c*ppk<=120) km=c; }
+  const px=km*ppk;
+  ctx.save(); ctx.strokeStyle='#928f84'; ctx.lineWidth=1.2;
+  const x=W-px-16, y=H-16;
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+px,y);
+  ctx.moveTo(x,y-4); ctx.lineTo(x,y+4); ctx.moveTo(x+px,y-4); ctx.lineTo(x+px,y+4); ctx.stroke();
+  ctx.fillStyle='#928f84'; ctx.font='10.5px ui-monospace,Menlo,monospace';
+  ctx.fillText(km+' km', x+px/2-14, y-7); ctx.restore();
+}
+
+function draw(){
+  const c=cur(), sc=c.scene, k=STEPS[stepIdx].key;
+  const [W,H]=fit();
+  proj=makeProj(sc.bbox, W, H, 26);
+  ctx.clearRect(0,0,W,H);
+
+  // 背景: 周辺のOSM線。main=青系 / off-main=赤系（＝宙に浮いた断片）
+  // 「このエッジは経路の一部か」はケースごとに一度だけ判定してキャッシュする
+  // （毎フレーム数千回の座標→文字列化をやるとアニメが詰まる）
+  sc.edges.forEach((e,ei)=>{
+    const onRoute = c._onRoute[ei];
+    let col = e.main ? 'rgba(58,110,165,.42)' : 'rgba(207,79,95,.5)';
+    let w = lw(e.kv||66)*0.85;
+    // STEP5: 採用後は経路上の断片が本系統に合流する＝色が変わる
+    if(k==='result' && c.verdict==='replaced' && onRoute && !e.main){
+      const t=morph;
+      col = `rgba(${Math.round(207+(58-207)*t)},${Math.round(79+(110-79)*t)},${Math.round(95+(165-95)*t)},${.5+.35*t})`;
+      w = lw(e.kv||66)*(0.85+0.9*t);
+    }
+    line(e.path, col, w);
+  });
+  // ノード（変電所・分岐点）
+  sc.nodes.forEach(n=>{
+    dot([n.lat,n.lon], n.main?'rgba(58,110,165,.55)':'rgba(207,79,95,.6)', n.kv>=154?3.2:2.3);
+  });
+
+  const A=c.a, B=c.b;
+
+  if(k==='problem'){
+    line([A,B], '#6f54c4', 3.2, [7,5]);
+    dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+    label(A,'A','#6f54c4',-2); label(B,'B','#6f54c4',-2);
+  }
+  if(k==='snap'){
+    line([A,B], '#6f54c4', 2.2, [7,5]);
+    circleKm(A, T.params.stub_km, '#3a6ea5'); circleKm(B, T.params.stub_km, '#3a6ea5');
+    if(G) G.verts.forEach(v=>{
+      if(hav(v.p,A)<=T.params.stub_km || hav(v.p,B)<=T.params.stub_km)
+        dot(v.p, '#3a6ea5', 3.4, '#fff');
+    });
+    dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+    if(c.vA){ dot(c.vA,'#1f9e8a',5.5,'#fff'); label(c.vA,'vA','#126b5c',-2); }
+    if(c.vB){ dot(c.vB,'#1f9e8a',5.5,'#fff'); label(c.vB,'vB','#126b5c',-2); }
+    if(c.stub_a_km!=null) line([A,c.vA],'#1f9e8a',2.2,[4,3]);
+    if(c.stub_b_km!=null) line([B,c.vB],'#1f9e8a',2.2,[4,3]);
+  }
+  if(k==='search'){
+    line([A,B], '#6f54c4', 1.6, [7,5]);
+    scan.edges.slice(0,scan.i).forEach(e=> line(e, 'rgba(179,129,47,.55)', 2.4));
+    scan.settled.slice(0,scan.i+1).forEach(v=> dot(v, 'rgba(179,129,47,.75)', 2.6));
+    if(scan.done && scan.found) line(scan.found, '#b3812f', 3.6);
+    dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+  }
+  if(k==='gate'){
+    line([A,B], '#6f54c4', 1.4, [7,5]);
+    // 経路を main / off-main に塗り分ける（＝ゲートの分母と分子そのもの）
+    sc.edges.forEach((e,ei)=>{
+      if(!c._onRoute[ei]) return;
+      line(e.path, e.main?'#3a6ea5':'#cf4f5f', lw(e.kv||66)*1.6);
+    });
+    dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+    if(c.vA) dot(c.vA,'#1f9e8a',4.5,'#fff');
+    if(c.vB) dot(c.vB,'#1f9e8a',4.5,'#fff');
+  }
+  if(k==='result'){
+    const pass = passes(c);
+    if(!pass || !c.path || !c.path.length){
+      line([A,B], '#6f54c4', 3.2, [7,5]);
+      dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+    } else {
+      const N=90, straight=resample([A,B],N), curve=resample([[A[0],A[1]]].concat(c.path,[[B[0],B[1]]]),N);
+      const mixed=straight.map((p,i)=>[p[0]+(curve[i][0]-p[0])*morph, p[1]+(curve[i][1]-p[1])*morph]);
+      // 直線コード(紫) → 本系統に合流した実線形(青)。スタブだけが緑で残る
+      const col=`rgb(${Math.round(111+(58-111)*morph)},${Math.round(84+(110-84)*morph)},${Math.round(196+(165-196)*morph)})`;
+      line(mixed, col, 3.4-1.0*morph, morph<0.5?[7,5]:null);
+      if(morph>0.15){
+        if(c.stub_a_km>0.001) line([A,c.vA],'#1f9e8a',3.0*morph);
+        if(c.stub_b_km>0.001) line([B,c.vB],'#1f9e8a',3.0*morph);
+      }
+      dot(A,'#6f54c4',5,'#fff'); dot(B,'#6f54c4',5,'#fff');
+      if(morph>0.3){ dot(c.vA,'#1f9e8a',4.6,'#fff'); dot(c.vB,'#1f9e8a',4.6,'#fff'); }
+    }
+  }
+  drawScale(W,H);
+}
+
+/* ---------- ブラウザ内 Dijkstra（実計算） ---------- */
+function buildGraph(sc){
+  // 頂点キーはデータ側が持つ ka/kb（本家 route_disclosure_edges.py と同じ e.a/e.b の丸め）。
+  // path の端点で代用すると、path が a/b と厳密一致しない線でグラフが切れる。
+  const adj=new Map(), pos=new Map();
+  sc.edges.forEach((e,ei)=>{
+    const ka=e.ka||key(e.path[0]), kb=e.kb||key(e.path[e.path.length-1]);
+    pos.set(ka, e.pa||e.path[0]); pos.set(kb, e.pb||e.path[e.path.length-1]);
+    const w=polyKm(e.path);
+    if(!adj.has(ka)) adj.set(ka,[]); if(!adj.has(kb)) adj.set(kb,[]);
+    adj.get(ka).push({to:kb,w,ei});
+    adj.get(kb).push({to:ka,w,ei});
+  });
+  const verts=[...pos.entries()].map(([k,p])=>({k,p}));
+  return {adj,pos,verts,edges:sc.edges};
+}
+const ekey = e => e.ka || key(e.path[0]);   // エッジの始端キー（向き判定用）
+function near(g, p, rkm){
+  return g.verts.map(v=>({d:hav(p,v.p), k:v.k})).filter(x=>x.d<=rkm)
+          .sort((a,b)=>a.d-b.d).slice(0,16);
+}
+/** 本家と同じ探索を、確定順つきで走らせる（教材はアニメでこの順を見せる） */
+function dijkstra(g, A, B, rkm, chordKm){
+  const starts=near(g,A,rkm), goals=near(g,B,rkm);
+  const order=[], usedEdges=[];
+  if(!starts.length||!goals.length) return {order,usedEdges,hit:null,starts,goals};
+  const gd=new Map(goals.map(x=>[x.k,x.d]));
+  const limit=Math.max(chordKm*2*1.5, chordKm+15);
+  const dist=new Map(), prev=new Map();
+  const pq=starts.map(s=>({d:s.d,k:s.k,pv:null,ei:null}));
+  let hit=null;
+  while(pq.length){
+    pq.sort((a,b)=>a.d-b.d);
+    const cur=pq.shift();
+    if(dist.has(cur.k)) continue;
+    dist.set(cur.k,cur.d); prev.set(cur.k,[cur.pv,cur.ei]);
+    order.push({k:cur.k, p:g.pos.get(cur.k), from:cur.pv?g.pos.get(cur.pv):null, ei:cur.ei});
+    if(cur.d>limit) break;
+    if(gd.has(cur.k)){ hit=cur.k; break; }
+    (g.adj.get(cur.k)||[]).forEach(e=>{
+      if(!dist.has(e.to)) pq.push({d:cur.d+e.w, k:e.to, pv:cur.k, ei:e.ei});
+    });
+  }
+  let pathPts=null, total=null, off=0, tot=0;
+  if(hit){
+    const seq=[]; let v=hit;
+    while(prev.get(v) && prev.get(v)[0]!==null){ seq.push(prev.get(v)[1]); v=prev.get(v)[0]; }
+    seq.reverse();
+    const vs=[]; let vv=hit; const chain=[hit];
+    while(prev.get(vv) && prev.get(vv)[0]!==null){ vv=prev.get(vv)[0]; chain.push(vv); }
+    chain.reverse();
+    pathPts=[];
+    seq.forEach((ei,i)=>{
+      const e=g.edges[ei]; let p=e.path.slice();
+      if(ekey(e)!==chain[i]) p.reverse();
+      if(pathPts.length && key(pathPts[pathPts.length-1])===key(p[0])) p=p.slice(1);
+      pathPts.push(...p);
+      const km=polyKm(e.path); tot+=km; if(!e.main) off+=km;
+      usedEdges.push(ei);
+    });
+    const sd=starts.find(s=>s.k===chain[0]);
+    total=dist.get(hit)+gd.get(hit);
+  }
+  return {order,usedEdges,hit,starts,goals,pathPts,total,off,tot};
+}
+
+/* ---------- 判定（閾値スライダーで再評価できる＝ゲートを手で開閉できる） ---------- */
+function cur(){ return CASES[ci]; }
+function passes(c, g){
+  const th = g===undefined ? gate : g;
+  if(c.off_main_share==null) return false;
+  if(c.ratio>T.params.max_ratio) return false;
+  return c.off_main_share>=th;
+}
+function countPass(th){
+  return T.summary.filter(s=> s.off!=null && s.ratio<=T.params.max_ratio && s.off>=th).length;
+}
+
+/* ---------- 右パネル ---------- */
+function fmt(x,n){ return x==null?'—':Number(x).toFixed(n===undefined?2:n); }
+function renderExplain(){
+  const c=cur(), k=STEPS[stepIdx].key, el=document.getElementById('explain');
+  el.style.setProperty('--c', STEPS[stepIdx].c);
+  let h='<span class="lbl">STEP '+(stepIdx+1)+' / 5 — '+STEPS[stepIdx].t+'</span>';
+
+  if(k==='problem'){
+    h+='<h3>公表資料は「繋がっている」としか言わない</h3><div class="desc">'
+      +'<p>系統情報公表の様式や局所系統図から読み取れるのは、<b>「'+c.name+'」が A と B を結ぶ</b>という'
+      +'<b>論理接続</b>だけ。座標は端点しか無いので、機械は素直に<b class="x">直線（chord＝弦）</b>を引く。</p>'
+      + (c.verdict==='replaced'
+        ? '<p>ところが同じ場所の OSM を見ると、<b style="color:#cf4f5f">赤い線</b>＝'
+          +'<b>本系統に繋がっていない断片（off-main）</b>が宙に浮いている。'
+          +'人の目には「根本的には繋がっている」と見えるのに、機械は論理接続を得た時点で満足して'
+          +'物理線形の探索を省いていた。</p></div>'
+        : c.verdict==='kept_detour'
+        ? '<p>この場所の OSM にも線はある。ただし<b style="color:#3a6ea5">青い線</b>＝'
+          +'<b>すでに本系統に繋がっている既設線</b>で、宙に浮いた断片は見当たらない。'
+          +'この後の判定は「<b>その既設線をこの公表線だと言ってよいか</b>」を問うことになる。'
+          +'——結論を先に言えば、言ってはいけない。</p></div>'
+        : '<p>そして OSM には、この区間を通る線が<b>見当たらない</b>。'
+          +'地中線であるか、まだ誰もマッピングしていないか。'
+          +'辿るべき線形が存在しないケースで、EGGC が<b>何もしないこと</b>を確かめる例。</p></div>')
+      +'<div class="eq">直線コード chord = <span class="num">'+fmt(c.chord_km)+'</span> km'
+      +'<br><span class="cmt">// 端点 A '+c.a.join(', ')+'</span>'
+      +'<br><span class="cmt">// 端点 B '+c.b.join(', ')+'</span></div>'
+      +'<div class="note">この赤い断片を見つけたのは機械ではなく<b>人の目</b>だった'
+      +'（2026-08-16・オーナー観察「ちゃんと線があるものにおいては地形的に線を辿ってほしい」）。'
+      +'EGGC はその直観を、再現できる判定条件に落としたもの。</div>';
+  }
+
+  if(k==='snap'){
+    h+='<h3>まず端点を、地図上の実在頂点へ寄せる</h3><div class="desc">'
+      +'<p>公表資料の端点座標は変電所の代表点で、OSM の線の端とは数百 m ずれる。'
+      +'そこで両端から半径 <b>'+T.params.stub_km+' km</b> 以内にある OSM 頂点を候補として集め、'
+      +'最も近いものを起点 <b>vA</b>・終点 <b>vB</b> にする。</p>'
+      +'<p>端点と vA/vB の間は<b style="color:#1f9e8a">取付スタブ</b>で繋ぐ。'
+      +'この「スナップ→スタブ」があるおかげで、基底モデルが更新されて頂点が動いても判定が追従する。</p></div>'
+      +'<div class="eq">候補（A 側） = <span class="num">'+c.n_start+'</span> 頂点'
+      +'　候補（B 側） = <span class="num">'+c.n_goal+'</span> 頂点'
+      +'<br>取付スタブ = <span class="num">'+fmt(c.stub_a_km)+'</span> km ＋ '
+      +'<span class="num">'+fmt(c.stub_b_km)+'</span> km'
+      +(c.stub_a_km===0?'<br><span class="cmt">// A 側は端点が断片の頂点そのもの＝スタブ不要</span>':'')
+      +'</div>'
+      + (c.verdict==='no_route'
+        ? '<div class="note">このケースは候補は取れても、この先の探索が<b>両端を結べない</b>。'
+          +'結論は「OSM 未収載」＝直線のまま残す。</div>'
+        : '<div class="note">スナップ半径を大きくすると「近くの無関係な線」に取り付いてしまう。'
+          +'2 km は<b>取付スタブとして許せる長さ</b>の上限として置いた値で、'
+          +'物理的必然ではない（限界の項を参照）。</div>');
+  }
+
+  if(k==='search'){
+    const done=scan.done, ok=scan.found&&scan.found.length;
+    h+='<h3>OSM の線だけを辿って、両端を結べるか探す</h3><div class="desc">'
+      +'<p>OSM 由来のエッジ<b>だけ</b>（合成エッジは除外）で頂点グラフを組み、'
+      +'vA から Dijkstra で最短路を探す。<b>この画面の探索はサーバの結果を再生しているのではなく、'
+      +'ブラウザがその場で走らせた本物の探索</b>。黄色が確定していく順序そのもの。</p></div>'
+      +'<div class="eq">確定した頂点 = <span class="num">'+scan.i+'</span>'
+      +(done? '<br>結果 = '+(ok?'<span class="res">経路あり</span>':'<span class="no">経路なし</span>'):'')
+      +(done&&ok? '<br>route = <span class="num">'+fmt(scan.km)+'</span> km'
+        +'　chord = <span class="num">'+fmt(c.chord_km)+'</span> km'
+        +'<br>ratio = route / chord = <span class="res">'+fmt(scan.km/Math.max(c.chord_km,0.1),2)+'</span>'
+        +' <span class="cmt">// ≤ '+T.params.max_ratio+' なら迂回として許容</span>':'')
+      +'</div>'
+      + (done && ok && c.route_km!=null
+        ? '<div class="note">サーバ（全国グラフ）の値は route = <b>'+fmt(c.route_km)+' km</b>。'
+          +(Math.abs(scan.km-c.route_km)<0.35
+            ? 'ブラウザの局所探索と<b>一致</b>している。'
+            : 'ここでは周辺 6 km だけを切り出しているため差が出ることがある（表示は局所値）。')
+          +'</div>'
+        : (done && !ok
+          ? '<div class="note">この線は OSM に収載されていない（地中線・未マッピング等）。'
+            +'EGGC はここで<b>何もしない</b>。直線コードをそのまま残すのが正しい振る舞い。</div>'
+          : '<div class="note">探索中は「まだ答えを知らない」状態。到達した瞬間に打ち切る。</div>'));
+  }
+
+  if(k==='gate'){
+    const share=c.off_main_share, pass=passes(c);
+    h+='<h3>経路が見つかった。では、それは<em>公表線そのもの</em>か？</h3><div class="desc">'
+      +'<p>ここが EGGC の核。経路が存在しても、それが<b>既設の別の線をぐるっと回っただけ</b>なら、'
+      +'公表線は OSM に載っていないということ。両者を分ける証拠が'
+      +'<b>経路のうち「宙に浮いた断片」が占める長さの比率</b>。</p>'
+      +'<p>浮いた断片は「まだ誰も本系統に繋いでいない線」＝<b>この公表線の正体である蓋然性が高い</b>。'
+      +'逆に経路が既に main の線ばかりなら、それは他人の線。</p></div>';
+    if(share==null){
+      h+='<div class="eq"><span class="no">経路なし</span> → ゲート以前に判定不能。直線を維持。</div>';
+    } else {
+      const offKm=(c.parts||[]).filter(p=>!p.main).reduce((s,p)=>s+p.km,0);
+      const totKm=(c.parts||[]).reduce((s,p)=>s+p.km,0);
+      h+='<div class="bars"><div class="barrow"><span class="lb">経路の内訳</span>'
+        +'<span class="track">'
+        +'<i style="width:'+(share*100).toFixed(1)+'%;background:#cf4f5f"></i>'
+        +'<i style="width:'+((1-share)*100).toFixed(1)+'%;background:#3a6ea5"></i></span></div>'
+        +'<div class="barrow"><span class="lb"></span><span style="font-size:11px">'
+        +'<span style="color:#cf4f5f">off-main '+fmt(offKm)+' km</span> ／ '
+        +'<span style="color:#3a6ea5">main '+fmt(totKm-offKm)+' km</span></span></div></div>'
+        +'<div class="eq">share = off / total = <span class="num">'+fmt(offKm)+'</span> / '
+        +'<span class="num">'+fmt(totKm)+'</span> = <span class="res">'+fmt(share,2)+'</span>'
+        +'<br>判定: share <span class="'+(pass?'res':'no')+'">'+(share>=gate?'≥':'&lt;')+'</span> '
+        +'閾値 '+fmt(gate,2)+' → '
+        +(pass?'<span class="res">ゲートを開く（実線形に置換）</span>'
+              :'<span class="no">ゲートは閉じたまま（直線を維持）</span>')
+        +'</div>';
+    }
+    h+='<div class="misread"><div class="h">⚠ よくある誤解 ①</div><div class="b">'
+      +'<span class="x">✗</span> 経路が見つかった＝その経路が公表線だ<br>'
+      +'<span class="o">✓</span> 経路は<b>ほぼ必ず見つかる</b>（送電網は繋がっているので）。'
+      +'見つかったかどうかは証拠にならない。<b>何で出来た経路か</b>が証拠になる。</div></div>'
+      +'<div class="note">下のスライダーで閾値を動かすと、90 本の採否がその場で変わる。'
+      +'0.7 という値は「断片が主体」と言い切れる線として置いたもので、'
+      +'実データでは採用 12 本すべてが share = 1.00（経路が 100% 断片）だった＝'
+      +'この問題では<b>ゲートが極端に効いていて、閾値の微調整に鈍感</b>。</div>';
+  }
+
+  if(k==='result'){
+    const pass=passes(c);
+    if(!pass){
+      h+='<h3>直線のまま残す — それも成果</h3><div class="desc">'
+        +'<p>'+(c.verdict==='no_route'
+          ? '<b>OSM に線が無い</b>ので、辿るべき線形が存在しない。'
+          : '経路は<b>他人の線</b>だった（'+c.reason+'）。')
+        +' ここで無理に線形を当てはめると、<b>実在しない経路をデータに書き込む</b>ことになる。</p>'
+        +'<p>EGGC は「分からないときは直線のまま」を選ぶ。'
+        +'直線は<b>「論理接続は確かだが、線形は未収載」という正直な表現</b>であって、失敗ではない。</p></div>'
+        +'<div class="eq">chord = <span class="num">'+fmt(c.chord_km)+'</span> km '
+        +'<span class="cmt">// 変更なし</span></div>';
+    } else {
+      const grow=(c.route_km/c.chord_km-1)*100;
+      h+='<h3>直線が、地形どおりの線形になる</h3><div class="desc">'
+        +'<p>コードを削除し、<b style="color:#1f9e8a">取付スタブ 2 本</b>に置き換える。'
+        +'すると断片は次の連結性再計算で<b>本系統に合流</b>し（赤 → 青）、'
+        +'A—B は<b>OSM の実線形を通って</b>繋がる。スライダーで前後を比べられる。</p></div>'
+        +'<div class="eq">before: 直線 <span class="num">'+fmt(c.chord_km)+'</span> km'
+        +'<br>after&nbsp;: 実線形 <span class="res">'+fmt(c.route_km)+'</span> km '
+        +'＋ スタブ <span class="num">'+fmt(c.stub_a_km+c.stub_b_km)+'</span> km'
+        +'<br>ブランチ長の変化 = <span class="res">+'+fmt(grow,1)+' %</span> '
+        +'<span class="cmt">// PF/Ybus のインピーダンスが実長基準になる</span></div>';
+    }
+    h+='<div class="misread"><div class="h">⚠ よくある誤解 ②</div><div class="b">'
+      +'<span class="x">✗</span> 吸着すると連結性（孤立ノード数）が改善する<br>'
+      +'<span class="o">✓</span> <b>連結性は不変</b>。同じ接続の表現替えだから。'
+      +'変わるのは<b>幾何の質</b>（線長・経路の実在性）。'
+      +'——だからこそ「孤立が減ったか」だけを見ていた評価軸では<b>この欠陥は指標に現れず</b>、'
+      +'半年以上見落とされた。</div></div>';
+  }
+  el.innerHTML=h;
+}
+
+function renderMini(){
+  const c=cur(), k=STEPS[stepIdx].key, m=document.getElementById('mini');
+  const items=[['chord', fmt(c.chord_km)+' km']];
+  if(c.route_km!=null) items.push(['route', fmt(c.route_km)+' km']);
+  if(c.off_main_share!=null) items.push(['off-main比率', fmt(c.off_main_share,2)]);
+  if(k==='search') items.push(['確定頂点', scan.i]);
+  if(c.kv) items.push(['kV', c.kv]);
+  m.innerHTML=items.map(([a,b])=>'<div>'+a+' <b>'+b+'</b></div>').join('');
+  const leg=[['#3a6ea5','本系統 main'],['#cf4f5f','浮いた断片 off-main'],
+             ['#6f54c4','直線コード chord'],['#1f9e8a','取付スタブ']];
+  if(k==='search') leg.push(['#b3812f','探索が確定した範囲']);
+  document.getElementById('legend').innerHTML=leg.map(([c2,t])=>
+    '<span><i class="sw" style="border-top-color:'+c2+'"></i>'+t+'</span>').join('');
+  document.getElementById('caseTag').textContent=c.name+(c.kv?'（'+c.kv+' kV）':'');
+  const vt=document.getElementById('verdTag');
+  vt.className='verd '+c.verdict;
+  vt.textContent={replaced:'吸着（実線形に置換）',kept_detour:'直線維持（別線迂回）',
+                  no_route:'直線維持（OSM未収載）'}[c.verdict];
+}
+
+function renderStepper(){
+  document.getElementById('stepper').innerHTML=STEPS.map((s,i)=>
+    '<div class="stp '+(i===stepIdx?'active':(i<stepIdx?'done':''))+'" data-i="'+i+'" '
+    +'style="--c:'+s.c+'"><div class="n">'+(i<stepIdx?'✓':(i+1))+'</div>'
+    +'<div class="t">'+s.t+'</div></div>').join('');
+  document.querySelectorAll('.stp').forEach(d=>d.onclick=()=>{stopAuto();goStep(+d.dataset.i);});
+}
+
+/* 操作バー（ステップ固有のコントロール） */
+function renderCtl(){
+  const k=STEPS[stepIdx].key, bar=document.getElementById('ctlBar');
+  if(k==='gate'){
+    bar.style.display='flex';
+    bar.innerHTML='<div class="slid">証拠ゲート閾値 off-main比率 ≥ '
+      +'<input type="range" id="gateR" min="0" max="1" step="0.05" value="'+gate+'">'
+      +'<b id="gateV">'+fmt(gate,2)+'</b></div>'
+      +'<div class="spacer"></div>'
+      +'<div class="slid">この閾値での採用 <b id="gateN">'+countPass(gate)+'</b> / '
+      +T.stats.n_targets+' 本</div>';
+    document.getElementById('gateR').oninput=e=>{
+      gate=+e.target.value;
+      document.getElementById('gateV').textContent=fmt(gate,2);
+      document.getElementById('gateN').textContent=countPass(gate);
+      renderExplain(); renderMini(); draw();
+    };
+  } else if(k==='result'){
+    bar.style.display='flex';
+    bar.innerHTML='<div class="ba"><span class="l">before 直線</span>'
+      +'<input type="range" id="morphR" min="0" max="1" step="0.01" value="'+morph+'">'
+      +'<span class="r">after 実線形</span></div>'
+      +'<div class="spacer"></div>'
+      +'<button id="baBtn">▶ 変化を再生</button>';
+    document.getElementById('morphR').oninput=e=>{ morph=+e.target.value; draw(); };
+    document.getElementById('baBtn').onclick=()=>playMorph();
+  } else bar.style.display='none';
+}
+
+/* ---------- 進行 ---------- */
+function stopAnim(){ if(anim){ cancelAnimationFrame(anim); anim=null; } }
+function goStep(i){
+  stopAnim();
+  stepIdx=Math.max(0,Math.min(STEPS.length-1,i));
+  const k=STEPS[stepIdx].key, c=cur();
+  if(k==='search'){
+    const r=dijkstra(G, c.a, c.b, T.params.stub_km, c.chord_km);
+    scan={on:true, i:0, done:false,
+          settled:r.order.map(o=>o.p),
+          edges:r.order.filter(o=>o.from).map(o=>[o.from,o.p]),
+          found:r.pathPts, km:r.total, res:r};
+    playScan();
+  }
+  if(k==='result') morph=0;
+  renderAll();
+}
+function playScan(){
+  const total=scan.settled.length;
+  const per=Math.max(1, Math.round(total/70));
+  const tick=()=>{
+    scan.i=Math.min(total, scan.i+per);
+    draw(); renderMini(); renderExplain();
+    if(scan.i<total) anim=requestAnimationFrame(tick);
+    else { scan.done=true; anim=null; draw(); renderExplain(); }
+  };
+  if(total===0){ scan.done=true; draw(); renderExplain(); return; }
+  anim=requestAnimationFrame(tick);
+}
+function playMorph(){
+  stopAnim(); morph=0;
+  const tick=()=>{
+    morph=Math.min(1, morph+0.022);
+    const r=document.getElementById('morphR'); if(r) r.value=morph;
+    draw();
+    if(morph<1) anim=requestAnimationFrame(tick); else anim=null;
+  };
+  anim=requestAnimationFrame(tick);
+}
+function renderAll(){
+  renderStepper(); renderMini(); renderExplain(); renderCtl(); draw();
+  document.getElementById('prevBtn').disabled=(stepIdx===0);
+  document.getElementById('nextBtn').disabled=(stepIdx===STEPS.length-1);
+}
+function stopAuto(){ auto=false; clearTimeout(autoT);
+  document.getElementById('autoBtn').textContent='⏵ 自動'; }
+function autoTick(){
+  if(!auto) return;
+  if(stepIdx<STEPS.length-1){
+    goStep(stepIdx+1);
+    const k=STEPS[stepIdx].key;
+    const wait=()=>{ if(!auto) return;
+      if(anim){ requestAnimationFrame(wait); }
+      else if(k==='result'){ playMorph(); autoT=setTimeout(autoTick,2600); }
+      else autoT=setTimeout(autoTick, 1900); };
+    requestAnimationFrame(wait);
+  } else stopAuto();
+}
+function selectCase(i){
+  ci=i;
+  const c=cur();
+  G=buildGraph(c.scene);
+  if(!c._onRoute){        // エッジが経路の一部かの判定（ケースごとに一度だけ）
+    const rs=new Set((c.path||[]).map(key));
+    c._onRoute=c.scene.edges.map(e=>
+      (c.path&&c.path.length)
+      ? e.path.filter(p=>rs.has(key(p))).length >= Math.max(2, e.path.length*0.6)
+      : false);
+  }
+  gate=T.params.off_share_min; morph=0;
+  const sel=document.getElementById('caseSel'); if(sel) sel.value=String(i);
+  goStep(0);
+}
+
+/* ---------- 起動 ---------- */
+function renderHead(){
+  const s=T.stats;
+  const reps=T.summary.filter(x=>x.verdict==='replaced');
+  const gained=reps.reduce((a,b)=>a+(b.route_km-b.chord_km),0);
+  document.getElementById('kpis').innerHTML=[
+    ['対象の直線コード', s.n_targets+' 本', ''],
+    ['吸着（実線形に置換）', s.n_replaced+' 本', 'rep'],
+    ['直線維持（別線迂回）', s.n_kept_detour+' 本', 'det'],
+    ['直線維持（OSM未収載）', s.n_no_route+' 本', 'non'],
+    ['線長の増分（吸着分）', '+'+gained.toFixed(1)+' km', ''],
+  ].map(([k,v,c])=>'<div class="kpi '+c+'"><div class="v">'+v+'</div><div class="k">'+k+'</div></div>').join('');
+
+  document.getElementById('caseSel').innerHTML=CASES.map((c,i)=>
+    '<option value="'+i+'">'+({replaced:'◆吸着',kept_detour:'◇迂回',no_route:'◇未収載'}[c.verdict])
+    +'　'+c.name+'</option>').join('');
+
+  document.getElementById('detParams').innerHTML=
+    '<table><tr><th>パラメータ</th><th>値</th><th>意味と、外したときに起きること</th></tr>'
+    +'<tr><td><code>stub_km</code></td><td>'+T.params.stub_km+' km</td>'
+    +'<td>端点スナップの半径。大きくすると<b>無関係な近くの線に取り付く</b>。小さくすると取り付けず未収載扱いが増える</td></tr>'
+    +'<tr><td><code>max_ratio</code></td><td>'+T.params.max_ratio+'</td>'
+    +'<td>route / chord の上限。大きくすると<b>大回りの別ルートを実線形と誤認</b>しやすい</td></tr>'
+    +'<tr><td><code>off_share_min</code></td><td>'+T.params.off_share_min+'</td>'
+    +'<td>証拠ゲートの閾値。下げると採用が増えるが、<b>他人の線を公表線と誤認</b>する危険が増す</td></tr></table>'
+    +'<h4>可逆性（この介入は取り消せる）</h4><ul>'
+    +'<li>正典適用の前に <code>all.json.pre_route.bak</code> を必ず作る</li>'
+    +'<li>置換の全記録は <code>docs/reports/routed_disclosure_edges.json</code>（採否と理由つき・累積マージ）</li>'
+    +'<li>無効化は <code>regenerate_all.py</code> の STEPS から外すだけ。介入台帳 #29 追補 5 に登録済み</li></ul>'
+    +'<h4>限界（この教材で誇張していないこと）</h4><ul>'
+    +'<li><b>閾値 0.7 に強い根拠は無い</b>。実データでは採用 12 本すべてが share = 1.00 で、'
+    +'0.3〜1.0 のどこに置いても採否が変わらなかった＝<b>今回はたまたま鈍感だった</b>だけ。'
+    +'別の地域で中間値が出たら、その時に再検討が要る</li>'
+    +'<li><b>off-main であることは「公表線である」ことの証明ではない</b>。'
+    +'「本系統に未接続の線が、ちょうどその区間に実在する」という状況証拠にすぎない</li>'
+    +'<li>この画面の探索は<b>周辺 6 km を切り出した局所グラフ</b>で走る。'
+    +'全国グラフのサーバ結果と一致しないことがあり、その場合は画面に注記が出る</li>'
+    +'<li>吸着しても<b>連結性 KPI は変わらない</b>。改善したのは幾何の質であって、系統規模ではない</li></ul>';
+
+  document.getElementById('foot').innerHTML=
+    'データ: <code>docs/data/eggc_trace.json</code>（入力 = EGGC 適用前スナップショット '
+    +(T.source||'')+' ・判定ロジックは <code>scripts/route_disclosure_edges.py</code> と同一）<br>'
+    +'手法の正本: <code>docs/reports/osm_geometry_snapping_2026-08-16.md</code> ／ '
+    +'台帳: <code>docs/reports/routed_disclosure_edges.json</code> ／ 介入台帳 #29 追補 5<br>'
+    +'原則の提示はオーナー（2026-08-16 の目視観察）、判定条件への落とし込みと実装は AI。';
+}
+
+async function boot(){
+  cv=document.getElementById('map'); ctx=cv.getContext('2d');
+  T = TRACE_EMBED || await fetch('data/eggc_trace.json').then(r=>r.json());
+  // 採用例を先頭に（主役は「直線が実線形になる」ケース）。棄却例は後ろで対照に使う
+  const ord={replaced:0, kept_detour:1, no_route:2};
+  CASES = T.records.filter(r=>r.scene)
+                   .sort((a,b)=> (ord[a.verdict]-ord[b.verdict]) || (b.chord_km-a.chord_km));
+  renderHead();
+  document.getElementById('caseSel').onchange=e=>{stopAuto(); selectCase(+e.target.value);};
+  document.getElementById('prevBtn').onclick=()=>{stopAuto(); goStep(stepIdx-1);};
+  document.getElementById('nextBtn').onclick=()=>{stopAuto(); goStep(stepIdx+1);};
+  document.getElementById('resetBtn').onclick=()=>{stopAuto(); goStep(0);};
+  document.getElementById('autoBtn').onclick=()=>{
+    if(auto) stopAuto();
+    else { auto=true; document.getElementById('autoBtn').textContent='⏸ 停止';
+           if(stepIdx===STEPS.length-1) goStep(0); autoTick(); }
+  };
+  window.addEventListener('resize', ()=>draw());
+  window.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'){stopAuto(); goStep(stepIdx+1);}
+    if(e.key==='ArrowLeft'){stopAuto(); goStep(stepIdx-1);}
+  });
+  // ディープリンク: ?case=<番号 or 名前の一部>&step=1..5&after=1
+  // （スライドから「この線のこのステップ」へ直接飛ばすため）
+  const q=new URLSearchParams(location.search);
+  let qc=0;
+  const cq=q.get('case');
+  if(cq!==null){
+    const byIdx=Number(cq);
+    qc = Number.isInteger(byIdx) && CASES[byIdx] ? byIdx
+       : Math.max(0, CASES.findIndex(c=>c.name.includes(cq)));
+  }
+  selectCase(qc);
+  const qs=Number(q.get('step'));
+  if(Number.isInteger(qs) && qs>=1 && qs<=5){
+    goStep(qs-1);
+    if(qs===5 && q.get('after')==='1'){
+      morph=1; const mr=document.getElementById('morphR'); if(mr) mr.value=1; draw();
+    }
+  }
+}
+boot();
+</script>
+</body>
+</html>

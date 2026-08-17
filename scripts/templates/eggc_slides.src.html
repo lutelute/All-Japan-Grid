@@ -1,0 +1,410 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EGGC — 直線が地形を辿るまで</title>
+<style>
+:root{
+  --ground:#0f1620; --surface:#18222e; --line:#26374a;
+  --ink:#e9edf2; --muted:#8fa0b2; --faint:#5b6b7d;
+  --red:#e4572e; --blue:#4f9fd8; --green:#58b368; --amber:#e0a13a;
+  --purple:#9b8ae0;
+}
+html{scroll-snap-type:x mandatory}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Hiragino Sans","Yu Gothic UI","Yu Gothic",system-ui,sans-serif;overflow-y:hidden}
+.deck{display:flex;height:100vh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
+.slide{scroll-snap-align:start;flex:0 0 100vw;height:100vh;box-sizing:border-box;
+  padding:4.2vh 5vw 7.5vh;display:flex;flex-direction:column;gap:1.9vh;position:relative}
+.eyebrow{font-size:.8rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;font-weight:600}
+.eyebrow b{color:var(--amber);font-weight:700}
+h1{font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.18;margin:0;font-weight:800;text-wrap:balance}
+h2{font-size:clamp(1.4rem,2.7vw,2.1rem);line-height:1.25;margin:0;font-weight:800;text-wrap:balance}
+h3{font-size:clamp(1rem,1.5vw,1.2rem);margin:0;font-weight:800;color:var(--amber)}
+p,li{font-size:clamp(.92rem,1.28vw,1.1rem);line-height:1.72;margin:0}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:.7vh}
+mark{background:none;color:var(--amber);font-weight:800}
+.muted{color:var(--muted)} .small{font-size:.83rem;color:var(--muted);line-height:1.6}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:3vw;align-items:center;flex:1;min-height:0}
+.cols.wideimg{grid-template-columns:.86fr 1.14fr}
+figure{margin:0;height:100%;min-height:0;display:flex;flex-direction:column;gap:.8vh;
+  align-items:center;justify-content:center}
+figure img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;background:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.45)}
+figcaption{font-size:.78rem;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
+.kpis{display:flex;gap:2.4vw;flex-wrap:wrap}
+.kpi{border-left:3px solid var(--line);padding-left:1rem}
+.kpi .n{font-size:clamp(1.6rem,3vw,2.5rem);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{font-size:.8rem;color:var(--muted)}
+.kpi.red{border-color:var(--red)}.kpi.blue{border-color:var(--blue)}
+.kpi.green{border-color:var(--green)}.kpi.amber{border-color:var(--amber)}
+.kpi.purple{border-color:var(--purple)}
+table{border-collapse:collapse;width:100%;font-size:clamp(.83rem,1.15vw,1rem)}
+th,td{padding:.55em .85em;text-align:left;border-bottom:1px solid var(--line);line-height:1.5;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.78rem;letter-spacing:.08em}
+.pass{color:var(--green);font-weight:800;white-space:nowrap}
+.no{color:var(--red);font-weight:800;white-space:nowrap}
+.foot{position:absolute;left:5vw;right:5vw;bottom:3.2vh;display:flex;justify-content:space-between;
+  border-top:1px solid var(--line);padding-top:1vh;gap:2vw}
+.foot .idx{font-variant-numeric:tabular-nums;color:var(--faint);font-size:.78rem;letter-spacing:.1em;
+  white-space:nowrap}
+.foot .note{font-size:.72rem;color:var(--faint);text-align:right;max-width:68ch}
+.hero{justify-content:center;gap:3vh}
+.hero .sub{font-size:clamp(1rem,1.7vw,1.35rem);color:var(--muted);max-width:64ch;line-height:1.8}
+.claimbox{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:2vh 2vw;max-width:78ch}
+.claimbox p{font-size:clamp(1rem,1.6vw,1.3rem);line-height:1.8}
+.tag{display:inline-block;font-size:.7rem;padding:.15em .55em;border-radius:4px;border:1px solid var(--line);
+  color:var(--muted);letter-spacing:.08em;margin-right:.5em}
+.navhint{position:fixed;right:1.2rem;bottom:.45rem;color:var(--faint);font-size:.72rem;z-index:9}
+.code{font-family:ui-monospace,"SF Mono",Menlo,monospace;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:1.5vh 1.3vw;
+  font-size:clamp(.8rem,1.08vw,.98rem);line-height:1.85;color:var(--ink);white-space:pre-wrap}
+.code .c{color:var(--faint)} .code .k{color:var(--amber)} .code .g{color:var(--green)}
+.code .r{color:var(--red)}
+.steps{display:flex;flex-direction:column;gap:1.1vh}
+.step{display:grid;grid-template-columns:2.2rem 1fr;gap:1rem;align-items:start}
+.step .n{width:2.2rem;height:2.2rem;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.95rem;color:var(--amber)}
+.step .t b{color:var(--ink)} .step .t{font-size:clamp(.88rem,1.2vw,1.05rem);line-height:1.6;color:var(--muted)}
+.gate{display:flex;align-items:center;gap:1vw;flex-wrap:wrap;font-size:clamp(.9rem,1.3vw,1.1rem)}
+.gate .b{padding:.4em 1em;border-radius:999px;font-weight:800;border:1px solid}
+.gate .open{background:rgba(88,179,104,.16);color:var(--green);border-color:var(--green)}
+.gate .shut{background:rgba(228,87,46,.16);color:var(--red);border-color:var(--red)}
+@media (max-width:820px){
+  html{scroll-snap-type:none} body{overflow-y:auto}
+  .deck{flex-direction:column;height:auto;overflow:visible}
+  .slide{flex:none;height:auto;min-height:100vh}
+  .cols,.cols.wideimg{grid-template-columns:1fr}
+  .foot{position:static;margin-top:2vh}
+}
+</style>
+
+<div class="deck">
+
+<section class="slide hero">
+  <div class="eyebrow">All-Japan-Grid ／ 手法 <b>EGGC</b></div>
+  <h1>直線が、地形を辿るまで</h1>
+  <div class="sub">
+    <b style="color:var(--ink)">EGGC — 証拠ゲート付き系統コンフレーション</b><br>
+    Evidence-Gated Grid Conflation<br><br>
+    公表資料から得られるのは「A と B が繋がっている」という<b style="color:var(--ink)">論理接続</b>だけ。
+    だから機械は直線を引く。けれど OSM には、その線の<b style="color:var(--ink)">実線形</b>が
+    「本系統から浮いた断片」として実在していることがある。
+    <mark>証拠として認められるときだけ</mark>、直線をその実線形に置き換える。
+  </div>
+  <div class="kpis">
+    <div class="kpi purple"><div class="n">90</div><div class="l">対象の直線コード</div></div>
+    <div class="kpi green"><div class="n">12</div><div class="l">吸着（実線形に置換）</div></div>
+    <div class="kpi red"><div class="n">30</div><div class="l">直線維持（別線迂回）</div></div>
+    <div class="kpi"><div class="n">48</div><div class="l">直線維持（OSM未収載）</div></div>
+  </div>
+  <p class="small">原則の提示はオーナー（2026-08-16 の目視観察）／判定条件への落とし込みと実装は AI。
+  正本 <span class="tag">docs/reports/osm_geometry_snapping_2026-08-16.md</span></p>
+  <div class="foot"><span class="idx">01 / 11</span><span class="note">実装 scripts/route_disclosure_edges.py・介入台帳 #29 追補5・全記録は台帳 JSON</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">問題</div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>公表資料は、<br>線形を教えてくれない</h2>
+      <p>系統情報公表の様式や局所系統図から取れるのは、線名と両端の変電所だけ。
+      座標は端点しか無いので、機械は素直に<b>直線（chord＝弦）</b>を引いて満足する。</p>
+      <p>ところが同じ場所の OSM には、
+      <b style="color:var(--red)">本系統に繋がっていない断片</b>が宙に浮いて実在している。
+      <mark>人の目には「根本的には繋がっている」と見えていた</mark>。</p>
+      <div class="claimbox">
+        <p>「細い線もあるかもしれないが、根本的には OSM の線で繋がっているように見える。
+        簡略化すると確かに直線に見えるが、<mark>ちゃんと線があるものにおいては地形的に線を辿ってほしい</mark>。
+        これは全部に言えること」</p>
+        <p class="small" style="margin-top:1vh">— オーナー観察（2026-08-16）</p>
+      </div>
+    </div>
+    <figure>
+      <img src="{{FIG:eggc_before_after.png}}" alt="before/after">
+      <figcaption>甲浦支線（66 kV）。左＝直線コード 33.3 km と、その脇に浮く実線形（赤）。
+        右＝EGGC 適用後、断片が本系統に合流し 38.9 km の実線形になる</figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">02 / 11</span><span class="note">図は docs/data/eggc_trace.json（適用前スナップショットで再走した実データ）から生成</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">なぜ半年見落としたか</div>
+  <h2>この欠陥は、<mark>指標に現れなかった</mark></h2>
+  <div class="cols">
+    <div class="stack">
+      <p>接続キャンペーンの評価軸は「孤立ノードが減ったか」＝連結性 KPI だった。
+      ところが <b>直線で繋いでも実線形で繋いでも、連結性は同じだけ改善する</b>。</p>
+      <div class="claimbox" style="border-color:var(--red)">
+        <p><b style="color:var(--red)">幾何の質は、連結性 KPI には一切現れない。</b>
+        だから機械は「達成した」と報告し続け、誰も気づかなかった。</p>
+      </div>
+      <p>発見したのは人の目視だった（「遠い赤点」の距離監査に続き 2 度目）。
+      機械は論理接続を得た時点で満足し、<b>物理線形の探索そのものを省いていた</b>。</p>
+    </div>
+    <div class="stack">
+      <h3>教訓 — 検算の軸を足す</h3>
+      <table>
+        <tr><th>軸</th><th>見えるもの</th><th>見えないもの</th></tr>
+        <tr><td>連結性 KPI<br><span class="small">孤立ノード数・成分数</span></td>
+            <td>繋がったか</td><td class="no">どう繋がったか</td></tr>
+        <tr><td>経路の物理妥当性<br><span class="small">off-main 断片の見落とし・線形の実在</span></td>
+            <td class="pass">線形が実在するか</td><td>—</td></tr>
+      </table>
+      <p class="small">トポロジ介入の検算には、連結性だけでなく「経路の物理妥当性」を含める。
+      名前 pick の距離検算（罠14）と対をなす、幾何側の検算。</p>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">03 / 11</span><span class="note">[[feedback_osm_trust]] 線中心主義の、実証接続への拡張</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">手法</div>
+  <h2>EGGC の 4 ステップ</h2>
+  <div class="cols">
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div class="t">
+        <b>端点スナップ</b> — コード端点を最寄りの OSM 頂点へ（≤ 2 km）。
+        基底モデルが更新されて頂点が動いても追従する</div></div>
+      <div class="step"><div class="n">2</div><div class="t">
+        <b>経路探索</b> — OSM 由来のエッジ<b>だけ</b>で頂点グラフを組み、Dijkstra で最短路。
+        合成エッジは除外し、kV 不適合にはペナルティ</div></div>
+      <div class="step"><div class="n">3</div><div class="t">
+        <b>証拠ゲート</b> — 経路のうち<b>宙に浮いた断片（off-main）が占める長さの比率</b>が
+        閾値 0.7 以上のときだけ「その断片が公表線そのもの」と認める</div></div>
+      <div class="step"><div class="n">4</div><div class="t">
+        <b>スタブ置換</b> — 認めた場合のみコードを削除し、両端の取付スタブ 2 本に置換。
+        断片は次の連結性再計算で本系統に合流する</div></div>
+    </div>
+    <div class="stack">
+      <div class="code"><span class="c"># 判定の中核（route_disclosure_edges.py）</span>
+route, used = dijkstra(osm_graph, A, B)
+off  = Σ len(e) <span class="k">for</span> e <span class="k">in</span> used <span class="k">if not</span> e.main
+tot  = Σ len(e) <span class="k">for</span> e <span class="k">in</span> used
+
+<span class="k">if</span> route/chord &gt; 2.0:        <span class="c"># 迂回過大</span>
+    <span class="r">keep_chord()</span>
+<span class="k">elif</span> off/tot &lt; 0.7:          <span class="c"># 他人の線</span>
+    <span class="r">keep_chord()</span>
+<span class="k">else</span>:
+    <span class="g">replace_with_stubs()</span>       <span class="c"># 断片＝公表線</span></div>
+      <p class="small">「経路が見つかったか」ではなく「<b>何で出来た経路か</b>」で採否を決めるのが、
+      単なる最短路吸着との違い。</p>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">04 / 11</span><span class="note">パラメータ: stub_km 2.0 / max_ratio 2.0 / off_share_min 0.7</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">核心</div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>なぜ「浮いていること」が<br>証拠になるのか</h2>
+      <p>送電網は繋がっているので、<b>経路はほぼ必ず見つかる</b>。
+      見つかったこと自体は何の証拠にもならない。</p>
+      <div class="gate">
+        <span class="b open">off-main 比率 ≥ 0.7</span>
+        <span class="muted">→ 断片＝公表線。置換する</span>
+      </div>
+      <div class="gate">
+        <span class="b shut">off-main 比率 &lt; 0.7</span>
+        <span class="muted">→ 既設の別線を回っただけ。直線を保つ</span>
+      </div>
+      <p><b>浮いた断片＝「まだ誰も本系統に繋いでいない線」</b>。
+      その区間にちょうど存在するなら、それがこの公表線である蓋然性が高い。
+      逆に経路が main の線ばかりなら、それは<b>他人の線</b>。</p>
+      <p class="small">実測では採用 12 本すべてが比率 <b style="color:var(--green)">1.00</b>（経路が 100 % 断片）、
+      棄却側は 30 本すべてが <b style="color:var(--red)">0.00</b>。
+      <mark>中間が存在しない</mark>＝この問題ではゲートが極端に効いている。</p>
+    </div>
+    <figure>
+      <img src="{{FIG:eggc_gate_scatter.png}}" alt="証拠ゲートの散布図">
+      <figcaption>90 本の判定。縦軸が証拠、破線が閾値。0.3〜1.0 のどこに閾値を置いても
+        採否は変わらなかった</figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">05 / 11</span><span class="note">閾値の妥当性はこのデータでは検証できない（後述の限界）</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">結果</div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>90 本のうち、置き換えたのは 12 本</h2>
+      <p>残り 78 本は<b>直線のまま</b>。うち 30 本は経路が別線の迂回、48 本はそもそも
+      OSM に線が無い（地中線・未マッピング）。</p>
+      <div class="claimbox">
+        <p><b>直線を残すことも成果である。</b>
+        直線は「論理接続は確かだが、線形は未収載」という<mark>正直な表現</mark>であって、
+        埋めるべき失敗ではない。無い線形を捏造しないことが、この手法の設計思想。</p>
+      </div>
+      <p>置換した 12 本ではブランチ長が直線近似から実線長になる
+      （合計 160 → 197 km、+23 %）。PF / Ybus のインピーダンスが実長基準になる。</p>
+    </div>
+    <figure>
+      <img src="{{FIG:eggc_summary.png}}" alt="判定内訳と線長の変化">
+      <figcaption>左＝判定の内訳。右＝吸着 12 本の before / after 線長</figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">06 / 11</span><span class="note">吸着 12 本＝四国東部チェーン 8・泉北線・三田弥生が丘線・牛久線・美野里線</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">誠実性</div>
+  <h2>変わったのは<mark>幾何の質だけ</mark> — 系統規模は 1 ノードも増えていない</h2>
+  <div class="cols">
+    <div class="stack">
+      <table>
+        <tr><th>指標</th><th>EGGC 適用の影響</th></tr>
+        <tr><td>孤立ノード数・連結成分数</td><td><b>不変</b>（同じ接続の表現替え）</td></tr>
+        <tr><td>バス数・発電機数・負荷</td><td><b>不変</b></td></tr>
+        <tr><td>ブランチ長（吸着 12 本）</td><td class="pass">直線近似 → 実線長（+23 %）</td></tr>
+        <tr><td>線路インピーダンス</td><td class="pass">実長基準になる</td></tr>
+        <tr><td>経路の物理的実在性</td><td class="pass">OSM 幾何で裏が取れる</td></tr>
+      </table>
+      <p class="small">「吸着すると連結性が改善する」は誤解。
+      改善したのは<b>データの正しさ</b>であって、モデルの規模でも収束性でもない。</p>
+    </div>
+    <div class="stack">
+      <h3>この手法が主張しないこと</h3>
+      <ul>
+        <li><b>off-main であることは「公表線である」ことの証明ではない</b> —
+          「本系統に未接続の線が、ちょうどその区間に実在する」という状況証拠にすぎない</li>
+        <li><b>閾値 0.7 に強い根拠は無い</b> — 今回は 0.3〜1.0 のどこでも同じ答えになったので、
+          <mark>この閾値はまだ検証されていない</mark>。中間値が出る地域が現れたら再検討が要る</li>
+        <li><b>棄却した 78 本が「正しく棄却された」保証も無い</b> —
+          OSM 未収載を確認したのであって、実線形が無いことを確認したわけではない</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">07 / 11</span><span class="note">失敗・未検証も記録に残す（負の結果は資産）</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">位置づけ</div>
+  <h2>この手法は何の仲間か</h2>
+  <table>
+    <tr><th>分野</th><th>代表</th><th>EGGC との関係</th></tr>
+    <tr><td>マップマッチング</td><td>HMM マップマッチング（Newson &amp; Krumm 2009）</td>
+      <td>軌跡（多点）→ 道路網への吸着。EGGC は入力が「端点 2 点＋論理接続」だけの<b>退化ケース</b></td></tr>
+    <tr><td>地図コンフレーション</td><td>Saalfeld (1988) 以来の map conflation</td>
+      <td>同一実体の 2 表現を統合する親概念。<b>論理系統図 × OSM 物理図</b>の統合が EGGC</td></tr>
+    <tr><td>経路推定</td><td>path inference（疎な GPS 2 点間の経路復元）</td>
+      <td>2 点間の物理経路を推定する問題設定が同型</td></tr>
+    <tr><td>電力網 × OSM</td><td>GridKit (2016) / SciGRID / osmTGmod / PyPSA-Eur</td>
+      <td>いずれも <b>OSM → トポロジ抽出</b>（逆方向）。外部の論理トポロジ → OSM 幾何への写像は例が無い</td></tr>
+  </table>
+  <div class="cols" style="flex:0">
+    <div class="stack">
+      <h3>新規性の主張点</h3>
+      <ul>
+        <li>公表資料由来の<b>論理エッジを入力とする</b>（GridKit 系は OSM のみ）</li>
+        <li>off-main 比率という<b>検証可能な採否基準</b>で、吸着すべき断片と未収載を機械判別</li>
+        <li><b>可逆な台帳駆動</b>（累積マージ・regen 再現・BAK）</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>別名候補</h3>
+      <p class="small">Chord Conflation（コード・コンフレーション法）／
+      Chord-to-Corridor Mapping。<br>
+      命名はオーナー発意（2026-08-16「この作業に名前をつけたい。アルゴリズムもあるはず」）。</p>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">08 / 11</span><span class="note">先行研究の位置づけは docs/reports/osm_geometry_snapping_2026-08-16.md に正本</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">運用</div>
+  <h2>取り消せるように作ってある</h2>
+  <div class="cols">
+    <div class="stack">
+      <h3>可逆性の 3 点セット</h3>
+      <ul>
+        <li><b>BAK</b> — 正典適用の前に <span class="tag">all.json.pre_route.bak</span> を必ず作る</li>
+        <li><b>台帳</b> — 採否の全記録を <span class="tag">routed_disclosure_edges.json</span> に。
+          置換 12 件だけでなく<b>直線維持 78 件の理由も</b>残す</li>
+        <li><b>無効化</b> — <span class="tag">regenerate_all.py</span> の STEPS から外すだけ。
+          介入台帳 #29 追補 5 に登録済み</li>
+      </ul>
+      <p class="small">台帳は<b>累積マージ</b>。部分再実行が過去の記録を消すと、
+      apply 側の防波堤が守備範囲を失いコードが実線形の横に復活する（実害あり・対策済み）。</p>
+    </div>
+    <div class="stack">
+      <h3>冪等であることの意味</h3>
+      <p>適用後の正典で再実行すると、断片はすでに main なので
+      <b>証拠ゲートはほとんど閉じる</b>。同じ線が二重に置換されることはない。</p>
+      <div class="claimbox">
+        <p class="small">この性質のため、教材とスライドの図は
+        <b style="color:var(--ink)">適用前スナップショット</b>を入力に再走させて作っている。
+        現行正典で走らせると「吸着 2 本」しか出ず、手法の姿が見えない。</p>
+      </div>
+      <p class="small">regenerate_all の STEPS に組み込み済みで、
+      再生成のたびに自動適用される。</p>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">09 / 11</span><span class="note">冪等・可逆・台帳駆動は介入台帳の登録要件（根拠・帳簿・無効化の 3 点）</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">触って確かめる</div>
+  <h2>教材ページ — <mark>本物のデータで、本物の探索を走らせる</mark></h2>
+  <div class="cols">
+    <div class="stack">
+      <p><span class="tag">docs/eggc_explainer.html</span>
+      単一ファイルで完結。ブラウザで開くだけ。</p>
+      <ul>
+        <li><b>5 ステップ誘導</b> — 問題 → 端点スナップ → 経路探索 → 証拠ゲート → 置換と結果</li>
+        <li><b>Dijkstra はその場で走る</b> — サーバ結果の再生ではない。
+          16 ケース全てでサーバ判定と<b>完全一致</b>することを検証済み</li>
+        <li><b>閾値スライダー</b> — 証拠ゲートを手で開閉し、90 本の採否が動くのを見る</li>
+        <li><b>before / after スライダー</b> — 直線が実線形へモーフィングし、
+          断片の色が赤（浮いている）から青（本系統）へ変わる</li>
+        <li><b>16 ケース</b> — 吸着 12 本すべて＋別線迂回 3＋OSM 未収載 1</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>ディープリンク</h3>
+      <div class="code">eggc_explainer.html<span class="c">?case=甲浦&step=4</span>
+eggc_explainer.html<span class="c">?case=0&step=5&after=1</span></div>
+      <p class="small"><b>case</b> は番号か線名の一部、<b>step</b> は 1–5、
+      <b>after=1</b> で結果を適用後の状態で開く。発表中に特定の線へ直接飛べる。</p>
+      <h3>再生成</h3>
+      <div class="code">python3 scripts/export_eggc_trace.py \
+  --built docs/data/built/<span class="k">all.json.pre_route.bak</span>
+python3 scripts/build_eggc_explainer.py
+python3 scripts/plot_eggc_figs.py</div>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">10 / 11</span><span class="note">教材の判定ロジックは本家スクリプトと同一。乖離したら教材が嘘になるのでパラメータも共有</span></div>
+</section>
+
+<section class="slide hero">
+  <div class="eyebrow">まとめ</div>
+  <h1 style="font-size:clamp(1.7rem,3.4vw,2.7rem)">
+    線があるものは地形的に辿る。<br>無い線は、捏造しない。</h1>
+  <div class="claimbox">
+    <p>EGGC は「繋げる」手法ではなく、<b>「繋ぎ方を証拠で選ぶ」</b>手法。
+    ゲートが開けば実線形へ、閉じれば直線のまま。<br>
+    <mark>どちらも記録に残り、どちらも取り消せる。</mark></p>
+  </div>
+  <div class="kpis">
+    <div class="kpi green"><div class="n">12 / 90</div><div class="l">証拠が揃った線だけ置換</div></div>
+    <div class="kpi purple"><div class="n">78 / 90</div><div class="l">理由つきで直線を維持</div></div>
+    <div class="kpi amber"><div class="n">±0</div><div class="l">連結性 KPI の変化</div></div>
+    <div class="kpi blue"><div class="n">+23 %</div><div class="l">吸着分のブランチ長（実長化）</div></div>
+  </div>
+  <p class="small">見つけたのは人の目、条件に落としたのは機械。
+  次に必要なのは、閾値の中間値が出る地域を見つけて<b>ゲートを本当に検証すること</b>。</p>
+  <div class="foot"><span class="idx">11 / 11</span><span class="note">All-Japan-Grid ／ 2026-08-17</span></div>
+</section>
+
+</div>
+<div class="navhint">← → / スクロールで移動</div>
+<script>
+document.addEventListener('keydown', e=>{
+  const d=document.querySelector('.deck');
+  if(e.key==='ArrowRight'||e.key===' ') d.scrollBy({left:window.innerWidth,behavior:'smooth'});
+  if(e.key==='ArrowLeft') d.scrollBy({left:-window.innerWidth,behavior:'smooth'});
+});
+</script>
