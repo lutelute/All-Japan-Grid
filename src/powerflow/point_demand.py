@@ -30,18 +30,21 @@ UTIL_ZONE = {"tohoku": "tohoku", "chubu": "chubu", "hokuriku": "hokuriku",
 def _norm(s: str) -> str:
     s = unicodedata.normalize("NFKC", str(s or ""))
     s = re.sub(r"\s+", "", s)
-    s = re.sub(r"(変電所|開閉所|電力所).*$", "", s)
+    s = re.sub(r"配変[0-9]+号$", "", s)          # 沖縄「与那原配変4号」→与那原
+    s = re.sub(r"(変電所|開閉所|電力所|配電変電所).*$", "", s)
     s = re.sub(r"[0-9]+kV$", "", s)
     return s
 
 
 def load_point_demand() -> dict[tuple[str, str], float]:
     """{(zone, 正規化変電所名): 年平均需要MW} を返す(需要ビュー)。"""
-    alias = {}
+    # (zone, 事業者名)→モデル名。zoneキー必須: 沖縄の大山(宜野湾)に九州用
+    # 「大山→日田市」が誤適用された事故(2026-08-17)の再発防止
+    alias: dict[tuple[str, str], str] = {}
     try:
         import yaml
         for a in yaml.safe_load(ALIAS.read_text(encoding="utf-8"))["aliases"]:
-            alias[_norm(a["utility_name"])] = _norm(a["model_name"])
+            alias[(a["region"], _norm(a["utility_name"]))] = _norm(a["model_name"])
     except Exception:  # noqa: BLE001
         pass
     out: dict[tuple[str, str], float] = {}
@@ -59,7 +62,7 @@ def load_point_demand() -> dict[tuple[str, str], float]:
             if not zone:
                 continue
             k = _norm(r["substation"])
-            k = alias.get(k, k)
+            k = alias.get((zone, k), k)
             if not k:
                 continue
             out[(zone, k)] = out.get((zone, k), 0.0) + mean
@@ -75,12 +78,56 @@ def match_buses(net, demand: dict[tuple[str, str], float]):
     (配電バンクは最下層送電バスから受電、の近似)。
     """
     by_key: dict[tuple[str, str], list[int]] = {}
+    zone_names: dict[str, list[tuple[str, int]]] = {}
     for b in net.bus.index:
         nm = _norm(net.bus.at[b, "name"])
         if not nm:
             continue
         zone = net.bus.at[b, "zone"]
         by_key.setdefault((zone, nm), []).append(b)
+        zone_names.setdefault(zone, []).append((nm, b))
+
+    # 観測一次kV(包含経路の電圧階級ガード用)。豊田77kV→豊田市275kVの誤採用で導入
+    obs_kv: dict[tuple[str, str], set[float]] = {}
+    try:
+        with open(CSV, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                z = UTIL_ZONE.get(r["utility"])
+                if not z:
+                    continue
+                try:
+                    pk = float(r.get("primary_kv") or 0)
+                except ValueError:
+                    continue
+                if pk > 0:
+                    obs_kv.setdefault((z, _norm(r["substation"])), set()).add(pk)
+    except OSError:
+        pass
+
+    def kv_compatible(key: tuple[str, str], cands: list[int]) -> bool:
+        """候補バス群に観測一次kVと同階級(比0.8〜1.25)のバスがあるか。観測kV不明は通す。"""
+        kvs = obs_kv.get(key)
+        if not kvs:
+            return True
+        for b in cands:
+            vn = float(net.bus.at[b, "vn_kv"])
+            if any(0.8 <= vn / k <= 1.25 for k in kvs if k > 0):
+                return True
+        return False
+
+    def containment_cands(zone: str, obs: str) -> list[int]:
+        """住所合成名への前方一致(詫間⊂詫間町詫間・南箕輪⊂南箕輪村等)。
+        中間一致は別地名の偶発部分文字列(松島⊂南小松島町・番町⊂浮津二番町で実証)
+        のため前方のみ。方角接頭辞(春近⊂東春近)は個別検証してエイリアス台帳で扱う。
+        罠10対策: obs≥2文字・前方一致先は一意の正規化名のみ採用。"""
+        if len(obs) < 2:
+            return []
+        hit_names = {nm for nm, _ in zone_names.get(zone, [])
+                     if nm.startswith(obs) and nm != obs}
+        if len(hit_names) != 1:
+            return []
+        nm = hit_names.pop()
+        return by_key.get((zone, nm), [])
 
     def _lonlat(b):
         g = net.bus_geodata if hasattr(net, "bus_geodata") else None
@@ -89,9 +136,15 @@ def match_buses(net, demand: dict[tuple[str, str], float]):
         return None, None
 
     pinned: dict[int, float] = {}
-    n_multi = n_miss = 0
+    n_multi = n_miss = n_contain = 0
     for key, mw in demand.items():
         cands = by_key.get(key)
+        if not cands:
+            cands = containment_cands(key[0], key[1])
+            if cands and not kv_compatible(key, cands):
+                cands = None
+            if cands:
+                n_contain += 1
         if not cands:
             n_miss += 1
             continue
@@ -113,5 +166,6 @@ def match_buses(net, demand: dict[tuple[str, str], float]):
             pinned[b] = mw
     ledger = {"n_obs_points": len(demand), "n_pinned_buses": len(pinned),
               "n_unmatched": n_miss, "n_ambiguous_skipped": n_multi,
+              "n_containment": n_contain,
               "pinned_mw": round(sum(pinned.values()), 1)}
     return pinned, ledger
