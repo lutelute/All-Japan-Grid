@@ -74,7 +74,8 @@
   <b>観測方向</b> <span style="color:#2eea8f">■一致</span>
   <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
   <b>発電</b> 円=定格・<b>円周ゲージ=出力/定格</b><br>
-  <b>差分モード</b> <span style="color:#ff7850">■実績&gt;UC</span>
+  <b>差分モード</b> <span style="color:#2eea8f">■±許容内=概ね一致</span>
+  <span style="color:#ff7850">■実績&gt;UC</span>
   <span style="color:#50a0ff">■実績&lt;UC</span> <span class="muted">太さ=|差|</span>高
 </div>
 <div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
@@ -85,12 +86,19 @@
       <option value="uc">UC</option>
       <option value="diff">差分(実績−UC)</option>
     </select>
+    <select id="selTol" title="一致とみなす許容差" style="display:none">
+      <option value="10">±10MW</option>
+      <option value="50" selected>±50MW</option>
+      <option value="100">±100MW</option>
+      <option value="200">±200MW</option>
+    </select>
     <button id="btnPlay" style="background:#3d7bd9;color:#fff;border:none;border-radius:6px;
       padding:3px 10px;cursor:pointer">▶ 再生</button>
     <input type="range" id="hourSlider" min="0" max="23" value="12" step="1" style="flex:1">
     <b id="hourLabel" style="min-width:64px;text-align:right">12:00</b>
   </div>
-  <div class="muted" style="margin-top:2px">UC(fy2023)の時刻別ディスパッチによる全線潮流 — 流光=方向</div>
+  <div class="muted" style="margin-top:2px">UC(fy2023)の時刻別ディスパッチによる全線潮流 — 流光=方向
+    <span id="diffstat" style="margin-left:10px"></span></div>
 </div>
 <div class="panel min" id="ucpanel">
   <h4 id="uchead">📊 UC稼働率(fy2023・24h) <span class="muted" id="ucmin">▲ひらく</span></h4>
@@ -243,10 +251,13 @@ async function show(island){
       if(cmpMode()==="diff"){
         const d=fdiff(f);
         if(d===null) return {color:"#3a4a5c",weight:0.5,opacity:0.2};
+        const tol=+document.getElementById("selTol").value;
+        if(Math.abs(d)<=tol)
+          return {color:"#2eea8f",weight:1.1,opacity:0.55};   // 概ね一致
         const mag=Math.min(Math.abs(d)/300,1);
         const col = d>0 ? `rgba(255,${Math.round(120-90*mag)},80,1)`
                         : `rgba(80,${Math.round(150+60*mag)},255,1)`;
-        return {color:col,weight:0.7+4.5*mag,opacity:0.25+0.65*mag};
+        return {color:col,weight:0.9+4.5*mag,opacity:0.35+0.6*mag};
       }
       if(pr.obs_dir!==undefined)
         return {color:pr.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p)+2.2,opacity:1};
@@ -401,6 +412,22 @@ function setHour(h){
   document.getElementById("hourLabel").textContent=String(h).padStart(2,"0")+":00";
   if(lineLayer) lineLayer.setStyle(lineLayer.options.style);
   buildGlow(); renderArrows();
+  updateDiffStat();
+}
+function updateDiffStat(){
+  const el=document.getElementById("diffstat");
+  if(cmpMode()!=="diff"||!flows){el.textContent="";return;}
+  const tol=+document.getElementById("selTol").value;
+  let n=0, ok=0, big=0;
+  for(const f of flows.features){
+    const d=fdiff(f);
+    if(d===null) continue;
+    n++;
+    if(Math.abs(d)<=tol) ok++;
+    else if(Math.abs(d)>300) big++;
+  }
+  el.innerHTML=`差分±${tol}MW以内: <b style="color:#2eea8f">${(100*ok/Math.max(n,1)).toFixed(1)}%</b>`+
+    ` (${ok.toLocaleString()}/${n.toLocaleString()}線) / 300MW超の乖離 ${big}線`;
 }
 document.getElementById("hourSlider").oninput=e=>setHour(+e.target.value);
 document.getElementById("btnPlay").onclick=()=>{
@@ -457,7 +484,11 @@ document.getElementById("selDate").onchange=e=>{
   if(d==="uc") document.getElementById("selCmp").value="act";
   applyDate(d);
 };
-document.getElementById("selCmp").onchange=()=>setHour(HOUR);
+document.getElementById("selCmp").onchange=e=>{
+  document.getElementById("selTol").style.display = e.target.value==="diff"?"":"none";
+  setHour(HOUR);
+};
+document.getElementById("selTol").onchange=()=>setHour(HOUR);
 document.getElementById("selBase").onchange=e=>{
   if(baseLayer){map.removeLayer(baseLayer); baseLayer=null;}
   const v=e.target.value;
