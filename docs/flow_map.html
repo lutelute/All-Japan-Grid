@@ -8,131 +8,202 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   html,body{margin:0;height:100%;font-family:"Hiragino Sans","Noto Sans JP",sans-serif}
-  #map{position:absolute;inset:0}
-  .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.95);
-         border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.3);padding:10px 12px;font-size:12px}
-  #ctrl{top:10px;left:10px;max-width:280px}
-  #ucpanel{bottom:10px;left:10px;max-width:340px;max-height:44vh;overflow:auto}
-  #legend{top:10px;right:10px}
-  .tab{display:inline-block;padding:3px 10px;margin:2px;border:1px solid #888;
-       border-radius:12px;cursor:pointer;user-select:none}
-  .tab.on{background:#2c3e50;color:#fff;border-color:#2c3e50}
-  .sw{display:inline-block;width:14px;height:8px;border-radius:2px;vertical-align:middle}
-  .arrowIcon{pointer-events:none;font-size:14px;line-height:14px;color:#1b4f72;
-             text-shadow:0 0 2px #fff,0 0 2px #fff}
-  .bar{height:9px;background:#e8edf2;border-radius:4px;overflow:hidden;margin:1px 0}
-  .bar>i{display:block;height:100%;background:#2980b9}
-  h4{margin:4px 0 6px}
-  .muted{color:#777}
+  #map{position:absolute;inset:0;background:#0e1621}
+  .panel{position:absolute;z-index:1000;background:rgba(20,28,38,.92);color:#dde5ee;
+         border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.5);padding:10px 12px;font-size:12px}
+  .panel a{color:#7fb3ff}
+  #ctrl{top:10px;left:10px;width:270px}
+  #ucpanel{bottom:10px;left:10px;width:330px;max-height:46vh;overflow:auto}
+  #ucpanel.min{max-height:32px;overflow:hidden}
+  #legend{top:10px;right:10px;line-height:1.7}
+  .tab{display:inline-block;padding:3px 11px;margin:2px;border:1px solid #46586e;
+       border-radius:12px;cursor:pointer;user-select:none;color:#aebdcd}
+  .tab.on{background:#3d7bd9;color:#fff;border-color:#3d7bd9}
+  .sw{display:inline-block;width:16px;height:7px;border-radius:2px;vertical-align:middle}
+  .arrowIcon{pointer-events:none;font-size:13px;line-height:13px;color:#fff;opacity:.85;
+             text-shadow:0 0 3px #000,0 0 3px #000}
+  .bar{height:8px;background:#2a3646;border-radius:4px;overflow:hidden;margin:1px 0 5px}
+  .bar>i{display:block;height:100%}
+  h4{margin:2px 0 8px;font-size:13px}
+  .muted{color:#8a99aa}
   .fchip{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:3px}
+  #uchead{cursor:pointer}
+  select{background:#1c2735;color:#dde5ee;border:1px solid #46586e;border-radius:4px;padding:2px}
+  label{display:block;margin:2px 0}
+  .leaflet-popup-content{font-size:12px}
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="panel" id="ctrl">
-  <h4>潮流方向・発電稼働率</h4>
+  <h4>⚡ 潮流方向・発電稼働率 <span class="muted">(AGJモデル計算値)</span></h4>
   <div id="tabs"></div>
-  <label><input type="checkbox" id="cbArrow" checked> 潮流方向の矢印(zoom≥9)</label><br>
-  <label><input type="checkbox" id="cbGen" checked> 発電バス(円=定格・塗り=出力率)</label><br>
-  <label><input type="checkbox" id="cbObs"> 観測方向の検証のみ表示</label>
+  <label><input type="checkbox" id="cbArrow" checked> 潮流方向(▲=主要潮流は常時表示)</label>
+  <label><input type="checkbox" id="cbGen" checked> 発電バス(円=定格・塗り=出力率)</label>
+  <label><input type="checkbox" id="cbObs"> 観測方向の検証線のみ</label>
   <div class="muted" id="stat"></div>
 </div>
 <div class="panel" id="legend">
-  <b>線 loading[%]</b><br>
-  <span class="sw" style="background:#2980b9"></span>&lt;40
-  <span class="sw" style="background:#27ae60"></span>40-80
-  <span class="sw" style="background:#f39c12"></span>80-120
-  <span class="sw" style="background:#e74c3c"></span>&gt;120<br>
-  <b>観測方向</b>: <span style="color:#27ae60">●一致</span> /
-  <span style="color:#c0392b">●不一致</span><br>
-  <b>発電</b>: 円=定格MW・塗り=出力率
+  <b>線=潮流</b> 太さ∝|P| / 色=loading<br>
+  <span class="sw" style="background:#4f8fd9"></span>&lt;40%
+  <span class="sw" style="background:#43b581"></span>40-80
+  <span class="sw" style="background:#e6a23c"></span>80-120
+  <span class="sw" style="background:#e35d5d"></span>&gt;120<br>
+  <b>観測方向</b> <span style="color:#2eea8f">■一致</span>
+  <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
+  <b>発電</b> 円=定格・塗り濃=出力率高
 </div>
-<div class="panel" id="ucpanel">
-  <h4>UC稼働率(fy2023・24h) <span class="muted">定格に対する出力</span></h4>
-  <div id="ucsel"></div>
-  <div id="ucbody" class="muted">読み込み中…</div>
+<div class="panel min" id="ucpanel">
+  <h4 id="uchead">📊 UC稼働率(fy2023・24h) <span class="muted" id="ucmin">▲ひらく</span></h4>
+  <div id="ucwrap">
+    <div id="ucsel"></div>
+    <div id="ucbody" class="muted">読み込み中…</div>
+  </div>
 </div>
 <script>
-const ISLANDS = {east:[37.5,139.8,6], west:[34.7,134.5,6], hokkaido:[43.2,142.5,6], okinawa:[26.4,127.8,9]};
-const FUELCOL = {nuclear:"#8e44ad", coal:"#5d4037", lng:"#e67e22", oil:"#95a5a6",
-                 hydro:"#2980b9", pumped_hydro:"#5dade2", solar:"#f1c40f",
-                 wind:"#1abc9c", geothermal:"#c0392b", biomass:"#27ae60"};
-const map = L.map("map").setView([37.5,137.5],5);
+const ISLANDS = {all:[37.0,137.0,5.4], east:[37.3,139.5,6], west:[34.6,134.8,6], hokkaido:[43.2,142.8,6], okinawa:[26.4,127.9,9]};
+const ALLPARTS = ["hokkaido","east","west","okinawa"];
+const FUELCOL = {nuclear:"#b07fe0", coal:"#8d6e63", lng:"#e69a4c", oil:"#9aa5ad",
+  hydro:"#4f9fe0", pumped_hydro:"#7fc8e8", solar:"#e8cf4f", wind:"#4fd0b8",
+  geothermal:"#e0705f", biomass:"#5fc46f", other:"#78909c", "?":"#78909c"};
+const FUELJA = {nuclear:"原子力", coal:"石炭", lng:"LNG", oil:"石油", hydro:"水力",
+  pumped_hydro:"揚水", solar:"太陽光", wind:"風力", geothermal:"地熱",
+  biomass:"バイオマス", other:"その他", "?":"その他"};
+const map = L.map("map",{preferCanvas:true}).setView([36.5,137.5],6);
 L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-  {attribution:"地理院タイル | AGJ (潮流=モデル計算値・観測方向は公表実績との一致のみ)"}).addTo(map);
+  {attribution:"地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ",
+   opacity:0.55}).addTo(map);
+const canvasR = L.canvas({padding:0.3});
 let lineLayer=null, genLayer=null, arrowLayer=L.layerGroup().addTo(map);
-let cur="west", flows=null, gens=null;
+let cur="west", flows=null, gens=null, topFlows=[];
 
-function loadColor(l){return l>120?"#e74c3c":l>80?"#f39c12":l>40?"#27ae60":"#2980b9";}
-function bearing(a,b){return Math.atan2(b[0]-a[0], b[1]-a[1])*180/Math.PI;}
+const loadColor=l=>l>120?"#e35d5d":l>80?"#e6a23c":l>40?"#43b581":"#4f8fd9";
+const pw=p=>Math.max(0.6, Math.min(0.9+1.35*Math.log10(1+Math.abs(p)), 6.5));
+
+function midSegment(cs){
+  // 実線形pathの中間セグメント(矢印の位置と向き)
+  let L2=0; const seg=[];
+  for(let i=0;i<cs.length-1;i++){
+    const d=Math.hypot(cs[i+1][0]-cs[i][0],(cs[i+1][1]-cs[i][1]));
+    seg.push(d); L2+=d;
+  }
+  let acc=0;
+  for(let i=0;i<seg.length;i++){
+    if(acc+seg[i]>=L2/2){
+      const a=cs[i], b=cs[i+1];
+      return {mid:[(a[1]+b[1])/2,(a[0]+b[0])/2],
+              ang:Math.atan2(b[0]-a[0], b[1]-a[1])*180/Math.PI};
+    }
+    acc+=seg[i];
+  }
+  const a=cs[0], b=cs[cs.length-1];
+  return {mid:[(a[1]+b[1])/2,(a[0]+b[0])/2],
+          ang:Math.atan2(b[0]-a[0], b[1]-a[1])*180/Math.PI};
+}
 
 function renderArrows(){
   arrowLayer.clearLayers();
-  if(!flows || !document.getElementById("cbArrow").checked || map.getZoom()<9) return;
-  const bb = map.getBounds();
-  let n=0;
+  if(!flows || !document.getElementById("cbArrow").checked) return;
+  const bb=map.getBounds(), z=map.getZoom();
+  const obsOnly=document.getElementById("cbObs").checked;
+  // 空間分散: グリッドセル毎に|P|上位K本(団子防止・全域カバー)
+  // 低zoomでは大セル+高閾値=「主要潮流の向きだけ」。ズームインで細部
+  const cell = z>=10?0.08 : z>=8?0.2 : z>=7?0.45 : 1.1;
+  const perCell = z>=10?3 : z>=8?2 : 1;
+  const minP = z>=8?0.5 : z>=7?30 : 150;
+  const grid = new Map();
   for(const f of flows.features){
-    if(n>600) break;
-    const cs = f.geometry.coordinates;
-    const p = f.properties.p_mw;
-    if(Math.abs(p) < 0.5) continue;
-    if(document.getElementById("cbObs").checked && f.properties.obs_dir===undefined) continue;
-    const mid=[(cs[0][1]+cs[1][1])/2,(cs[0][0]+cs[1][0])/2];
-    if(!bb.contains(mid)) continue;
-    let a=[cs[0][1],cs[0][0]], b=[cs[1][1],cs[1][0]];
-    if(p<0){const t=a;a=b;b=t;}
-    const ang = bearing(a,b);
-    L.marker(mid,{icon:L.divIcon({className:"arrowIcon",
-      html:`<div style="transform:rotate(${ang}deg)">▲</div>`,iconSize:[14,14]}),
-      interactive:false}).addTo(arrowLayer);
-    n++;
+    const p=f.properties.p_mw;
+    if(Math.abs(p)<minP) continue;
+    if(obsOnly && f.properties.obs_dir===undefined) continue;
+    const m=midSegment(f.geometry.coordinates);
+    if(!bb.contains(m.mid)) continue;
+    const key=`${Math.round(m.mid[0]/cell)}:${Math.round(m.mid[1]/cell)}`;
+    let arr=grid.get(key); if(!arr){arr=[];grid.set(key,arr);}
+    arr.push({m,p,ld:f.properties.loading_pct});
+  }
+  let n=0;
+  for(const arr of grid.values()){
+    arr.sort((a,b)=>Math.abs(b.p)-Math.abs(a.p));
+    for(const it of arr.slice(0,perCell)){
+      if(n>800) return;
+      const ang = it.p>=0 ? it.m.ang : it.m.ang+180;
+      const sz = Math.abs(it.p)>500?13:10;
+      L.marker(it.m.mid,{icon:L.divIcon({className:"arrowIcon",
+        html:`<div style="transform:rotate(${ang}deg);font-size:${sz}px">▲</div>`,
+        iconSize:[sz,sz]}),interactive:false}).addTo(arrowLayer);
+      n++;
+    }
   }
 }
+
+function genRadius(pmax){return Math.min(3+2.2*Math.log10(1+pmax/10), 11);}
 
 async function show(island){
   cur=island;
   document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("on",t.dataset.k===island));
-  const [fl,gn]=await Promise.all([
-    fetch(`data/flow_map/flows_${island}.geojson`).then(r=>r.json()),
-    fetch(`data/flow_map/gens_${island}.geojson`).then(r=>r.json())]);
+  let fl, gn;
+  if(island==="all"){
+    const parts=await Promise.all(ALLPARTS.flatMap(k=>[
+      fetch(`data/flow_map/flows_${k}.geojson`).then(r=>r.json()),
+      fetch(`data/flow_map/gens_${k}.geojson`).then(r=>r.json())]));
+    fl={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===0).flatMap(d=>d.features)};
+    gn={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===1).flatMap(d=>d.features)};
+  }else{
+    [fl,gn]=await Promise.all([
+      fetch(`data/flow_map/flows_${island}.geojson`).then(r=>r.json()),
+      fetch(`data/flow_map/gens_${island}.geojson`).then(r=>r.json())]);
+  }
   flows=fl; gens=gn;
+  topFlows=[...fl.features].sort((a,b)=>Math.abs(b.properties.p_mw)-Math.abs(a.properties.p_mw)).slice(0,220);
   if(lineLayer) map.removeLayer(lineLayer);
   if(genLayer) map.removeLayer(genLayer);
   const obsOnly=()=>document.getElementById("cbObs").checked;
-  lineLayer=L.geoJSON(fl,{
+  lineLayer=L.geoJSON(fl,{renderer:canvasR,
     filter:f=>!obsOnly()||f.properties.obs_dir!==undefined,
-    style:f=>({color:loadColor(f.properties.loading_pct),
-               weight:Math.min(1+Math.abs(f.properties.p_mw)/300,6),
-               opacity: f.properties.obs_dir===undefined?0.55:0.95}),
+    style:f=>{
+      const p=f.properties;
+      if(p.obs_dir!==undefined)
+        return {color:p.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p.p_mw)+2.2,opacity:1};
+      return {color:loadColor(p.loading_pct),weight:pw(p.p_mw),
+              opacity:Math.abs(p.p_mw)<1?0.25:0.8};
+    },
     onEachFeature:(f,ly)=>{
       const p=f.properties;
-      let s=`<b>${p.name||"(無名)"}</b><br>p=${p.p_mw} MW / loading ${p.loading_pct}%`;
+      let s=`<b>${p.name||"(無名)"}</b><br>潮流 <b>${Math.abs(p.p_mw).toLocaleString()} MW</b>`+
+            ` / loading ${p.loading_pct}%`;
       if(p.obs_dir!==undefined)
-        s+=`<br>観測方向: ${p.obs_dir?"<span style=color:#27ae60>一致</span>":"<span style=color:#c0392b>不一致</span>"}`;
+        s+=`<br>観測方向: ${p.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
       ly.bindPopup(s);
-      if(p.obs_dir!==undefined)
-        ly.setStyle({color:p.obs_dir?"#27ae60":"#c0392b"});
     }}).addTo(map);
-  genLayer=L.layerGroup();
-  if(document.getElementById("cbGen").checked){
-    for(const f of gn.features){
-      const p=f.properties, c=f.geometry.coordinates;
-      const r=Math.max(3,Math.sqrt(p.pmax_mw)/3);
-      const col=FUELCOL[p.fuel]||"#7f8c8d";
-      L.circleMarker([c[1],c[0]],{radius:r,color:col,weight:1.5,
-        fillColor:col,fillOpacity:Math.min(0.15+0.85*p.cf,1)})
-       .bindPopup(`<b>${p.name}</b><br>定格 ${p.pmax_mw} MW / 出力 ${p.pg_mw} MW`+
-                  `<br>出力率 <b>${(p.cf*100).toFixed(1)}%</b> / 主燃料 ${p.fuel}`)
-       .addTo(genLayer);
-    }
-  }
-  genLayer.addTo(map);
+  buildGenLayer();
   renderArrows();
   const nb=fl.features.filter(f=>f.properties.obs_dir!==undefined);
   const ok=nb.filter(f=>f.properties.obs_dir).length;
   document.getElementById("stat").textContent=
-    `線${fl.features.length} / 発電バス${gn.features.length} / 観測方向照合${nb.length}(一致${ok})`;
+    `線${fl.features.length.toLocaleString()} / 発電バス${gn.features.length} / 観測方向照合${nb.length}(一致${ok})`;
   const v=ISLANDS[island]; map.setView([v[0],v[1]],v[2]);
+}
+
+function buildGenLayer(){
+  if(genLayer) map.removeLayer(genLayer);
+  genLayer=L.layerGroup();
+  if(!gens || !document.getElementById("cbGen").checked){genLayer.addTo(map);return;}
+  const z=map.getZoom();
+  const minP = z<7?300 : z<9?50 : 0;
+  for(const f of gens.features){
+    const p=f.properties, c=f.geometry.coordinates;
+    if(p.pmax_mw<minP) continue;
+    const col=FUELCOL[p.fuel]||FUELCOL.other;
+    L.circleMarker([c[1],c[0]],{renderer:canvasR,radius:genRadius(p.pmax_mw),
+      color:col,weight:1.6,opacity:0.9,fillColor:col,
+      fillOpacity:0.35+0.55*Math.min(p.cf,1)})
+     .bindPopup(`<b>${p.name}</b><br>定格 ${p.pmax_mw.toLocaleString()} MW / `+
+                `出力 ${p.pg_mw.toLocaleString()} MW<br>出力率 <b>${(p.cf*100).toFixed(1)}%</b>`+
+                ` / 主燃料 ${FUELJA[p.fuel]||p.fuel}`)
+     .addTo(genLayer);
+  }
+  genLayer.addTo(map);
 }
 
 const tabs=document.getElementById("tabs");
@@ -141,52 +212,58 @@ for(const k of Object.keys(ISLANDS)){
   t.className="tab"; t.dataset.k=k; t.textContent=k;
   t.onclick=()=>show(k); tabs.appendChild(t);
 }
-map.on("zoomend moveend",renderArrows);
-["cbArrow","cbGen","cbObs"].forEach(id=>
-  document.getElementById(id).onchange=()=>show(cur));
+map.on("zoomend",()=>{renderArrows();buildGenLayer();});
+map.on("moveend",renderArrows);
+document.getElementById("cbArrow").onchange=renderArrows;
+document.getElementById("cbGen").onchange=buildGenLayer;
+document.getElementById("cbObs").onchange=()=>show(cur);
+document.getElementById("uchead").onclick=()=>{
+  const p=document.getElementById("ucpanel");
+  p.classList.toggle("min");
+  document.getElementById("ucmin").textContent=p.classList.contains("min")?"▲ひらく":"▼折りたたむ";
+};
 
-// --- UC稼働率パネル ---
 fetch("data/flow_map/uc_utilization.json").then(r=>r.json()).then(d=>{
-  const regions=[...new Set(Object.keys(d.groups).map(k=>k.split("|")[0]))];
-  const sel=document.getElementById("ucsel");
+  const regions=[...new Set(Object.keys(d.groups).map(k=>k.split("|")[0]))].sort();
   const selEl=document.createElement("select");
   regions.forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;selEl.appendChild(o);});
-  selEl.value=regions.includes("kansai")?"kansai":regions[0];
-  sel.appendChild(selEl);
+  selEl.value=regions.includes("tokyo")?"tokyo":regions[0];
+  document.getElementById("ucsel").appendChild(selEl);
   const body=document.getElementById("ucbody");
   function draw(){
     const reg=selEl.value; body.innerHTML=""; body.className="";
-    for(const [k,v] of Object.entries(d.groups)){
-      const [r,fuel]=k.split("|");
-      if(r!==reg||!v.capacity_mw) continue;
-      const col=FUELCOL[fuel]||"#7f8c8d";
+    const rows=Object.entries(d.groups)
+      .filter(([k,v])=>k.split("|")[0]===reg && v.capacity_mw>0)
+      .sort((a,b)=>b[1].capacity_mw-a[1].capacity_mw);
+    for(const [k,v] of rows){
+      const fuel=k.split("|")[1];
+      const col=FUELCOL[fuel]||FUELCOL.other;
       const row=document.createElement("div");
       row.innerHTML=`<span class="fchip" style="background:${col}"></span>`+
-        `${fuel} <span class="muted">${v.capacity_mw.toLocaleString()}MW</span>`+
-        ` 平均<b>${v.cf_mean!=null?(v.cf_mean*100).toFixed(0):"—"}%</b>`+
-        `/ピーク${v.cf_peak!=null?(v.cf_peak*100).toFixed(0):"—"}%`+
-        `<div class="bar"><i style="width:${Math.min((v.cf_mean||0)*100,100)}%;background:${col}"></i></div>`;
+        `${FUELJA[fuel]||fuel} <span class="muted">${v.capacity_mw.toLocaleString()}MW</span>`+
+        ` — 平均<b>${v.cf_mean!=null?(v.cf_mean*100).toFixed(0):"—"}%</b>`+
+        ` / ピーク${v.cf_peak!=null?(v.cf_peak*100).toFixed(0):"—"}%`;
       const cv=document.createElement("canvas");
-      cv.width=320; cv.height=26; cv.style.width="100%";
+      cv.width=300; cv.height=30; cv.style.width="100%"; cv.style.display="block";
       const ctx=cv.getContext("2d");
-      const arr=v.dispatch24_mw||[];
-      const mx=Math.max(v.capacity_mw,1);
+      const arr=v.dispatch24_mw||[], mx=Math.max(v.capacity_mw,1);
+      ctx.fillStyle="#2a3646"; ctx.fillRect(0,0,300,30);
       arr.forEach((x,i)=>{ctx.fillStyle=col;
-        const h=Math.max(1,24*x/mx);
-        ctx.fillRect(i*13.3,26-h,11,h);});
-      ctx.strokeStyle="#bbb"; ctx.strokeRect(0,0,320,26);
+        const h=Math.max(x>0?2:0, 28*x/mx);
+        ctx.fillRect(i*12.5+1,29-h,10,h);});
       row.appendChild(cv);
+      const cap=document.createElement("div");
+      cap.className="muted"; cap.style.fontSize="10px";
+      cap.textContent="0時 ─ 23時(棒=出力・枠上端=定格)";
+      row.appendChild(cap);
       body.appendChild(row);
     }
-    const note=document.createElement("div");
-    note.className="muted";
-    note.textContent=`シナリオ: ${d.scenario}(棒=時刻別出力/枠上端=定格)`;
-    body.appendChild(note);
+    if(!rows.length) body.innerHTML='<span class="muted">この地域の系列なし</span>';
   }
   selEl.onchange=draw; draw();
 }).catch(()=>{document.getElementById("ucbody").textContent="uc_utilization.json 未生成";});
 
-show("west");
+show("all");
 </script>
 </body>
 </html>

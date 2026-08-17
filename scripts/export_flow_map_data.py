@@ -68,7 +68,7 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
         balance_by_zone, build_island_net, solve_island)
     import src.powerflow.point_demand as pdm
 
-    geom = {}
+    geom = {}  # (k5(lat,lon)from, k5to) -> [[lon,lat],...] 実線形(build時に充填)
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, geom)
     attach_generators(net, bus_of, nodes, island, attach_mode="cap", stats=True)
     pinned, _ = pdm.match_buses(net, demand)
@@ -103,6 +103,10 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
             c1 = json.loads(g[1])["coordinates"]
         except Exception:  # noqa: BLE001
             continue
+        # 実線形(OSM path)があれば直線でなくそれを使う(品質改修 2026-08-18)
+        fk = (round(c0[1], 5), round(c0[0], 5))
+        tk = (round(c1[1], 5), round(c1[0], 5))
+        coords = geom.get((fk, tk)) or [c0, c1]
         nm = str(net_u.line.at[li, "name"] or "")
         # 観測方向: 線名一致+両端局名の対応で判定
         od = None
@@ -124,7 +128,9 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
                     n_obs_mismatch += 1
         feats.append({
             "type": "Feature",
-            "geometry": {"type": "LineString", "coordinates": [c0, c1]},
+            "geometry": {"type": "LineString",
+                         "coordinates": [[round(x, 5), round(y, 5)]
+                                         for x, y in coords]},
             "properties": {"name": nm, "p_mw": round(p, 1),
                            "loading_pct": round(ld, 1),
                            **({"obs_dir": od} if od is not None else {})},

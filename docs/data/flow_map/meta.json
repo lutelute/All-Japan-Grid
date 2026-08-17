@@ -1,22 +1,30 @@
 {
+ "hokkaido": {
+  "ac": true,
+  "n_lines": 850,
+  "n_genbus": 81,
+  "obs_dir_match": 7,
+  "obs_dir_mismatch": 3
+ },
  "east": {
+  "ac": true,
   "n_lines": 6302,
-  "n_obs": 30,
-  "n_match": 20
+  "n_genbus": 476,
+  "obs_dir_match": 20,
+  "obs_dir_mismatch": 10
  },
  "west": {
+  "ac": true,
   "n_lines": 8155,
-  "n_obs": 21,
-  "n_match": 14
- },
- "hokkaido": {
-  "n_lines": 850,
-  "n_obs": 10,
-  "n_match": 7
+  "n_genbus": 659,
+  "obs_dir_match": 14,
+  "obs_dir_mismatch": 7
  },
  "okinawa": {
+  "ac": true,
   "n_lines": 96,
-  "n_obs": 0,
-  "n_match": 0
+  "n_genbus": 10,
+  "obs_dir_match": 0,
+  "obs_dir_mismatch": 0
  }
 }
