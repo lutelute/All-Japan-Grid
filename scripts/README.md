@@ -92,6 +92,9 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 | `gen_pf_geojson.py` | 潮流結果 → `pf_buses.geojson` / `pf_branches.geojson` |
 | `gen_backbone_ring.py` | 500/275kV バックボーンのリング構造検出（networkx 二重連結成分） |
 | `optimize_sld_layout.py` | 単線結線図（SLD）の配置最適化 — Barycenter 反復で交差最小化 |
+| `export_eggc_trace.py` | EGGC（証拠ゲート付き系統コンフレーション）の判定を再走し、**過程**（端点スナップ候補・経路ポリライン・main/off-main 内訳・周辺OSM線）を `docs/data/eggc_trace.json` へ。**入力は適用前スナップショット `--built docs/data/built/all.json.pre_route.bak`**（現行正典で走らせると断片が既に main のため証拠ゲートがほぼ閉じる＝冪等性の裏返し） |
+| `build_eggc_explainer.py` | 上記トレースを埋め込んだ**自己完結の教材ページ** `docs/eggc_explainer.html`（テンプレは `scripts/templates/eggc_explainer.src.html`）。ブラウザ内で Dijkstra を実走させる |
+| `build_eggc_slides.py` | EGGC の発表デッキ `docs/slides/eggc_2026-08-17.html`（図は data URI 埋め込み・テンプレは `scripts/templates/eggc_slides.src.html`）。pptx 版は `docs/slides/eggc_2026-08-17.md` を marp-pptx で変換 |
 
 > Pages のポップアップは2系統のデータを使う: 地図レイヤ用（`build_static_site.py` 生成）と
 > 詳細ポップアップ用（`export_substations_geojson.py` / `export_generators_geojson.py` 生成）。
@@ -113,6 +116,7 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 | `gen_ybus_national.py` / `gen_ybus_white.py` | Ybus 図（論文/README 用・白背景の `papers/figs` `fig_ybus_*`）。※最近傍近似のため**アプリ表示には使わない**（アプリは `gen_ybus_from_db.py`） |
 | `gen_uc_dispatch_profile.py` / `gen_uc_national_overview.py` / `gen_uc_regional.py` | UC ディスパッチ・全国概況・地域別図 |
 | `capture_combined_gif.py` / `capture_ybus_gif.py` / `capture_network_gifs.mjs` | README 用アニメーション GIF（Network+Ybus ツアー等） |
+| `plot_eggc_figs.py` | EGGC のスライド用 3 図（before/after・証拠ゲート散布・判定内訳と線長）→ `docs/reports/figs/eggc_*.png`。入力は `docs/data/eggc_trace.json` |
 
 > ⚠ 図版スクリプト群にはヘルパー（haversine・色表・フォント設定）の重複が多い。
 > 共有モジュール化は Phase C（`REVIEW_FINDINGS.md`）で対応予定。

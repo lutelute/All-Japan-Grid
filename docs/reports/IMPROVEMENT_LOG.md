@@ -7,6 +7,29 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-08-17 — **Claude Opus 5** — EGGC を観るための教材ページ＋発表デッキ（ブランチ `feature/eggc-explainer`）
+
+- **目的**: 手法 EGGC（証拠ゲート付き系統コンフレーション）の適用過程・概念・見た目の変化を、
+  実データで辿れる形にする（オーナー依頼。参考にした流儀 = 別リポジトリ `process_nn` の
+  「単一ページ・5ステップ・実計算」）
+- **変更**（モデルの数値・トポロジには一切触れていない。教材と出荷物のみ）:
+  - `scripts/export_eggc_trace.py` — 本家 `route_disclosure_edges.py` と同じ判定を再走し、
+    **過程**（スナップ候補・経路ポリライン・main/off-main内訳・周辺OSM線）を書き出す
+  - `scripts/build_eggc_explainer.py` + テンプレ → `docs/eggc_explainer.html`（自己完結・480KB）
+  - `scripts/plot_eggc_figs.py` → `docs/reports/figs/eggc_*.png` 3枚
+  - `scripts/build_eggc_slides.py` + テンプレ → `docs/slides/eggc_2026-08-17.html`（11枚）、
+    `docs/slides/eggc_2026-08-17.md` → `EGGC_2026-08-17.pptx`（marp-pptx・doctor error 0）
+- **検証**: 適用前スナップショットでの再走が正本レポートの数字（対象90本 / 吸着12 / 別線迂回30 /
+  経路なし48）を**完全再現**。教材のブラウザ内 Dijkstra は 16 ケース全てで
+  サーバの route_km・off比率と**差 0**（ページ上で一括照合して確認）
+- **副産物（正本レポートに追記した知見3件）**:
+  1. 冪等性の裏返し — 適用後の正典で再走すると証拠ゲートはほぼ閉じるので、
+     手法を見せるには `all.json.pre_route.bak`（.gitignore）が要る
+  2. **証拠ゲートは二値に割れていた** — 採用12本すべて off=1.00 / 棄却30本すべて 0.00 で中間が無い。
+     閾値0.7は0.3〜1.0のどこでも同じ答え＝**まだ検証されていない**（教材・スライドに限界として明記）
+  3. 頂点キーの定義（`e.a/e.b` の5桁丸め）を移植し損ねるとグラフが分断され別の答えになる
+- **未了**: README / docs/index.html への導線は未追加（他アクターとの競合を避けて保留）
+
 ## 2026-08-16(3) — **Claude Fable 5** — 承認2件の実施: 東京23区線名逆引き9局+松本圏二重登録7局の同定
 
 オーナー承認「1と2についてやっておいて」。孤立490→481・A123→**108**。
