@@ -7,6 +7,10 @@
 `synthetic_edges_top.png`(長い直線の周辺を拡大)
 生成: `scripts/plot_synthetic_edges.py`
 
+**起票済み**: 二重登録 → [#42](https://github.com/lutelute/All-Japan-Grid/issues/42)(bug) /
+直線130本の削減 → [#43](https://github.com/lutelute/All-Japan-Grid/issues/43)(enhancement)。
+本監査では**いずれも未修正**(潮流に効くため、是正は方針確認の後)。
+
 ## 1. モデル全体に占める割合
 
 正典 `docs/data/built/all.json` の全 19,765 本 / 88,877 km を出自で分けた。
