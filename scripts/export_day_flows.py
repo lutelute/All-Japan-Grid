@@ -183,7 +183,14 @@ def main() -> int:
     pref_gwh, _ = pref_zone_gwh(nodes)
     demand_pd = pdm.load_point_demand()
 
+    # 実績需要が1zoneでもある時刻のみ計算(当日の増分更新に対応)
+    avail = sorted({h for hh in dem.values() for h in hh})
+    prev = None
+    prev_path = OUT / f"{args.date}.json"
+    if prev_path.exists():
+        prev = json.loads(prev_path.read_text())
     result = {"date": args.date, "hours": list(range(24)), "islands": {},
+              "available_hours": avail,
               "demand_zones": sorted(dem.keys()),
               "note": ("実績需要(でんき予報)でzone負荷を時刻別スケールした全ノーダルPF。"
                        "未取得zoneはfy2023既定需要のまま。UCディスパッチでなく容量比例"
@@ -205,7 +212,23 @@ def main() -> int:
         P, LD = None, None
         names = None
         n_ok = 0
+        prev_isl = (prev or {}).get("islands", {}).get(island)
+        prev_avail = set((prev or {}).get("available_hours") or [])
         for h in range(24):
+            if h not in avail:
+                continue
+            if prev_isl and h in prev_avail:
+                # 既計算時刻は再利用(増分更新)
+                if P is None:
+                    n = len(prev_isl["p"])
+                    P = [[None]*24 for _ in range(n)]
+                    LD = [[None]*24 for _ in range(n)]
+                    names = None
+                for i in range(len(prev_isl["p"])):
+                    P[i][h] = prev_isl["p"][i][h]
+                    LD[i][h] = prev_isl["ld"][i][h]
+                n_ok += 1
+                continue
             nt = copy.deepcopy(base)
             for z, hh in dem.items():
                 tgt = hh.get(h)
@@ -238,11 +261,13 @@ def main() -> int:
         gj = json.loads((ROOT / f"docs/data/flow_map/flows_{island}.geojson")
                         .read_text())
         gj_names = [f["properties"].get("name") for f in gj["features"]]
+        if names is None and P is not None and len(P) == len(gj_names):
+            names = gj_names   # 全時刻再利用時(線数一致で検証)
         if names != gj_names:
             print(f"! {island}: 線順不一致 — 出力しない(要調査)")
             continue
         result["islands"][island] = {"p": P, "ld": LD}
-        print(f"[{island}] {n_ok}/24時刻 {time.time()-t0:.0f}s", flush=True)
+        print(f"[{island}] {n_ok}/{len(avail)}時刻(実績あり) {time.time()-t0:.0f}s", flush=True)
 
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{args.date}.json").write_text(json.dumps(

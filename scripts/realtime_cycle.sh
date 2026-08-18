@@ -16,6 +16,8 @@ mkdir -p data/realtime
   if [ ! -f "docs/data/flow_map/days/${YD}.json" ]; then
     PYTHONPATH=. python3 scripts/export_day_flows.py --date "$YD" || true
   fi
+  # 当日断面の増分更新(新しい実績時刻だけPF・既計算分は再利用)
+  PYTHONPATH=. python3 scripts/export_day_flows.py --date "$(date +%Y%m%d)" || true
   # 並行アクター配慮: pull --rebase してから該当ファイルのみ commit
   git pull --rebase --autostash origin main >/dev/null 2>&1 || true
   git add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
