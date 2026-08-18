@@ -278,6 +278,13 @@ async function show(island){
         if(pr.p24) s+=`<br><canvas class="spark" width="180" height="34"></canvas>`;
         if(pr.obs_dir!==undefined)
           s+=`<br>観測方向: ${pr.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
+        if(obsLocal){
+          const o=obsLocal[normName((pr.name||"").split(" ")[0])];
+          if(o) s+=`<br><span style="color:#ffd166">観測実績(年統計)</span>: `+
+                   `平均${o.mean!=null?Math.abs(o.mean).toLocaleString():"—"} / `+
+                   `p95 ${o.p95.toLocaleString()} / 最大${o.max!=null?o.max.toLocaleString():"—"} MW`+
+                   `<br><span class="muted" style="font-size:10px">※ローカル限定表示(非公開データ・${o.util})</span>`;
+        }
         ly.bindPopup(s).openPopup();
         setTimeout(()=>{
           const cv=document.querySelector(".spark:not([data-d])");
@@ -378,6 +385,11 @@ requestAnimationFrame(animate);
 
 // 日付別断面(days/<date>.json)の適用。UC代表日に戻すため元p24を退避
 let dayCache={}, curDate="uc";
+// 観測実績オーバーレイ(untrackedファイル: ローカルでのみ存在・Pagesでは404で自動無効)
+let obsLocal=null;
+fetch("data/flow_map/obs_local.json").then(r=>r.ok?r.json():null)
+  .then(d=>{obsLocal=d&&d.lines?d.lines:null;}).catch(()=>{});
+const normName=s=>String(s||"").normalize("NFKC").replace(/[\s・()（）]/g,"");
 async function loadDates(){
   try{
     const mf=await fetch("data/flow_map/days/manifest.json").then(r=>r.json());
