@@ -350,9 +350,11 @@ function buildGlow(){
     .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04 && kvPass(f.properties.kv))
     .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
   for(const f of top){
-    const latlngs=f.geometry.coordinates.map(c=>[c[1],c[0]]);
-    // 彗星型2層: 尾(半透明の長dash)+頭(明るい短dash・進行方向の先端)。
-    // 等間隔dash+高速はワゴンホイール効果で逆流に見える(2026-08-18実測)ため
+    // 進行方向を常に「パス正方向」に統一(p<0の線は座標を反転)。
+    // offset相対計算のmod折り返しで頭が尾の後ろに付く事故を構造的に排除
+    let coords = f.geometry.coordinates;
+    if(fp(f) < 0) coords = coords.slice().reverse();
+    const latlngs=coords.map(c=>[c[1],c[0]]);
     const tail=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffd166",
       weight:2.6,opacity:.5,dashArray:"14 30",interactive:false});
     const head=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffffff",
@@ -364,12 +366,11 @@ function buildGlow(){
   glowLayer.addTo(map);
 }
 function animate(){
-  dashPhase=(dashPhase+0.28)%44;   // 周期44px・約38px/s=知覚的に追える速度
+  dashPhase=(dashPhase+0.65)%44;   // 約39px/s(offset減少=パス正方向へ進む・実測確認済)
   for(const pl of glowPolys){
-    const p=fp(pl._agjFeature);
-    let off = p>=0 ? -dashPhase : dashPhase;
-    if(pl._isHead) off += (p>=0 ? -12 : 12);   // 頭を尾dashの進行方向前端へ
-    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off*2);
+    let off = -dashPhase;                 // 全線: 進行=パス正方向に統一済み
+    if(pl._isHead) off -= 14;             // 頭=尾dash(0-14)の直後[14..18]=進行方向の先端
+    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off);
   }
   requestAnimationFrame(animate);
 }
