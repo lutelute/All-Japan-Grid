@@ -351,19 +351,25 @@ function buildGlow(){
     .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
   for(const f of top){
     const latlngs=f.geometry.coordinates.map(c=>[c[1],c[0]]);
-    const pl=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffd166",weight:2.8,opacity:.95,
-      dashArray:"9 26",interactive:false,className:"flowGlow"});
-    pl._agjFeature=f;
-    pl.addTo(glowLayer); glowPolys.push(pl);
+    // 彗星型2層: 尾(半透明の長dash)+頭(明るい短dash・進行方向の先端)。
+    // 等間隔dash+高速はワゴンホイール効果で逆流に見える(2026-08-18実測)ため
+    const tail=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffd166",
+      weight:2.6,opacity:.5,dashArray:"14 30",interactive:false});
+    const head=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffffff",
+      weight:3.4,opacity:.95,dashArray:"4 40",interactive:false,className:"flowGlow"});
+    tail._agjFeature=f; head._agjFeature=f; head._isHead=true;
+    tail.addTo(glowLayer); head.addTo(glowLayer);
+    glowPolys.push(tail, head);
   }
   glowLayer.addTo(map);
 }
 function animate(){
-  dashPhase=(dashPhase+0.9)%35;
+  dashPhase=(dashPhase+0.28)%44;   // 周期44px・約38px/s=知覚的に追える速度
   for(const pl of glowPolys){
     const p=fp(pl._agjFeature);
-    const off = p>=0 ? -dashPhase : dashPhase;
-    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off*3);
+    let off = p>=0 ? -dashPhase : dashPhase;
+    if(pl._isHead) off += (p>=0 ? -12 : 12);   // 頭を尾dashの進行方向前端へ
+    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off*2);
   }
   requestAnimationFrame(animate);
 }
