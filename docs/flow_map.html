@@ -283,7 +283,7 @@ async function show(island){
           if(o) s+=`<br><span style="color:#ffd166">観測実績(年統計)</span>: `+
                    `平均${o.mean!=null?Math.abs(o.mean).toLocaleString():"—"} / `+
                    `p95 ${o.p95.toLocaleString()} / 最大${o.max!=null?o.max.toLocaleString():"—"} MW`+
-                   `<br><span class="muted" style="font-size:10px">※ローカル限定表示(非公開データ・${o.util})</span>`;
+                   `<br><span class="muted" style="font-size:10px">出典: ${o.util} 系統情報公表(年統計・集計値)</span>`;
         }
         ly.bindPopup(s).openPopup();
         setTimeout(()=>{

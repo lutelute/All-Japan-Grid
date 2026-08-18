@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""線クリック用の観測実績オーバーレイ(ローカル限定・非公開)を生成する.
+"""線クリック用の観測実績オーバーレイ(年統計=集計値)を生成する.
 
-出力: docs/data/flow_map/obs_local.json — **untracked(.gitignore)**。
-Pagesにはpushされないため、ローカルで開いたときだけ実績が表示される。
-観測生値(All-Rights-Reserved)を公開配信しない方針とクリック表示要望の両立。
+出力: docs/data/flow_map/obs_local.json — 公開(2026-08-18オーナー判断)。
+収録は年統計3値(平均/p95/最大)のみ=集計値。生の時系列(30分値×8760)は
+従来どおり非公開。出典=各一般送配電事業者の系統情報公表(潮流実績)。
 """
 import csv, json, re, unicodedata
 from pathlib import Path
@@ -32,6 +32,6 @@ with OBS.open(encoding="utf-8") as f:
                       "max": None if mx != mx else round(mx, 1),
                       "n": r.get("n_obs")}
 dst = ROOT / "docs/data/flow_map/obs_local.json"
-dst.write_text(json.dumps({"note": "ローカル限定・観測実績(非公開データ)。untracked",
+dst.write_text(json.dumps({"note": "観測実績の年統計(集計値)。出典=各一般送配電事業者 系統情報公表(潮流実績・2024年度)。生の時系列は収録しない",
                            "lines": out}, ensure_ascii=False))
 print(f"obs_local: {len(out)}線 -> {dst.name} (untracked)")
