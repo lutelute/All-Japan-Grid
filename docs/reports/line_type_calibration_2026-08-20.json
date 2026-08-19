@@ -1,0 +1,191 @@
+{
+ "note": "公表インピーダンス(様式5)から逆算した実効 x/r [Ω/km]。X_ohm_obs / route_km（route_km=モデルの実線形長）。**derived（解析値）であって observed ではない**。採用は介入台帳を経ること。",
+ "method": {
+  "length": "モデルのグラフ上でDijkstra復元した実線形長 (scripts/plot_impedance_routed_map.py → route_len.csv)",
+  "exclude": "線名に地中/ケーブル/洞道を含むもの、x_eff<0.15 または >0.8（架空線として説明できない値）",
+  "source_layer": "observed = data/external/system_disclosure/normalized（.gitignore・再配布不可）"
+ },
+ "generated": {
+  "date": "2026-08-20",
+  "head": "f1e8508",
+  "n_total": 238
+ },
+ "by_voltage": [
+  {
+   "voltage_kv": 66,
+   "n": 7,
+   "utilities": [
+    "chugoku",
+    "hokkaido",
+    "okinawa"
+   ],
+   "x_std": 0.4,
+   "x_eff_median": 0.4365,
+   "x_ratio": 1.091,
+   "x_q25": 0.3984,
+   "x_q75": 0.5261,
+   "r_std": 0.12,
+   "r_eff_median": 0.1413,
+   "r_ratio": 1.178,
+   "conductor_assumed": "ACSR 160mm2"
+  },
+  {
+   "voltage_kv": 110,
+   "n": 8,
+   "utilities": [
+    "chugoku"
+   ],
+   "x_std": 0.385,
+   "x_eff_median": 0.3727,
+   "x_ratio": 0.968,
+   "x_q25": 0.3581,
+   "x_q75": 0.3874,
+   "r_std": 0.055,
+   "r_eff_median": 0.0474,
+   "r_ratio": 0.861,
+   "conductor_assumed": "ACSR 240mm2"
+  },
+  {
+   "voltage_kv": 132,
+   "n": 10,
+   "utilities": [
+    "okinawa"
+   ],
+   "x_std": 0.37,
+   "x_eff_median": 0.2127,
+   "x_ratio": 0.575,
+   "x_q25": 0.1968,
+   "x_q75": 0.3476,
+   "r_std": 0.045,
+   "r_eff_median": 0.0401,
+   "r_ratio": 0.891,
+   "conductor_assumed": "ACSR 330mm2"
+  },
+  {
+   "voltage_kv": 154,
+   "n": 43,
+   "utilities": [
+    "hokuriku",
+    "kansai",
+    "tohoku",
+    "tokyo"
+   ],
+   "x_std": 0.38,
+   "x_eff_median": 0.4253,
+   "x_ratio": 1.119,
+   "x_q25": 0.4122,
+   "x_q75": 0.4658,
+   "r_std": 0.05,
+   "r_eff_median": 0.0814,
+   "r_ratio": 1.628,
+   "conductor_assumed": "ACSR 330mm2"
+  },
+  {
+   "voltage_kv": 187,
+   "n": 31,
+   "utilities": [
+    "hokkaido",
+    "shikoku"
+   ],
+   "x_std": 0.35,
+   "x_eff_median": 0.4159,
+   "x_ratio": 1.188,
+   "x_q25": 0.364,
+   "x_q75": 0.492,
+   "r_std": 0.038,
+   "r_eff_median": 0.0567,
+   "r_ratio": 1.492,
+   "conductor_assumed": "ACSR 330mm2 x 2"
+  },
+  {
+   "voltage_kv": 220,
+   "n": 15,
+   "utilities": [
+    "chugoku",
+    "kyushu"
+   ],
+   "x_std": 0.335,
+   "x_eff_median": 0.3774,
+   "x_ratio": 1.127,
+   "x_q25": 0.3615,
+   "x_q75": 0.4299,
+   "r_std": 0.032,
+   "r_eff_median": 0.0338,
+   "r_ratio": 1.057,
+   "conductor_assumed": "ACSR 410mm2 x 2"
+  },
+  {
+   "voltage_kv": 275,
+   "n": 41,
+   "utilities": [
+    "chubu",
+    "hokkaido",
+    "hokuriku",
+    "tohoku",
+    "tokyo"
+   ],
+   "x_std": 0.325,
+   "x_eff_median": 0.3216,
+   "x_ratio": 0.989,
+   "x_q25": 0.3047,
+   "x_q75": 0.3285,
+   "r_std": 0.028,
+   "r_eff_median": 0.0242,
+   "r_ratio": 0.865,
+   "conductor_assumed": "ACSR 410mm2 x 2"
+  },
+  {
+   "voltage_kv": 500,
+   "n": 83,
+   "utilities": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku",
+    "tohoku",
+    "tokyo"
+   ],
+   "x_std": 0.29,
+   "x_eff_median": 0.3265,
+   "x_ratio": 1.126,
+   "x_q25": 0.269,
+   "x_q75": 0.3421,
+   "r_std": 0.012,
+   "r_eff_median": 0.0124,
+   "r_ratio": 1.032,
+   "conductor_assumed": "ACSR 810mm2 x 4"
+  }
+ ],
+ "cable_observed": [
+  {
+   "utility": "hokkaido",
+   "voltage_kv": 66,
+   "line_name": "昭和地中線1L",
+   "route_km": 2.81,
+   "x_eff": 0.1402
+  },
+  {
+   "utility": "hokkaido",
+   "voltage_kv": 66,
+   "line_name": "東雲西地中線",
+   "route_km": 3.33,
+   "x_eff": 0.1298
+  },
+  {
+   "utility": "hokkaido",
+   "voltage_kv": 66,
+   "line_name": "中の橋地中線1L",
+   "route_km": 1.55,
+   "x_eff": 0.1428
+  },
+  {
+   "utility": "hokkaido",
+   "voltage_kv": 66,
+   "line_name": "東雲地中線",
+   "route_km": 2.09,
+   "x_eff": 0.1424
+  }
+ ]
+}

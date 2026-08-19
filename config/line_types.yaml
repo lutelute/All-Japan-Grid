@@ -35,6 +35,10 @@
   grid_class: "backbone"
   kml_style: "extra_thick"
   notes: "Main inter-regional backbone lines (基幹系統). Quad-bundle conductors."
+  calibrated:
+    # 2026-08-20（介入#31）: 様式5 実測から逆算。x が 1.13 倍過小（n=83・最多標本）。
+    # r は 1.03 倍でほぼ一致するため据え置きが妥当。
+    x_ohm_per_km: 0.326
 
   cable:                      # XLPE/OF地中(新豊洲線型; 典型値)
     r_ohm_per_km: 0.008
@@ -73,6 +77,12 @@
   grid_class: "regional"
   kml_style: "thin"
   notes: "Regional supply lines. Used in Tohoku, Tokyo, Chubu, Hokuriku, Kansai, Chugoku."
+  calibrated:
+    # 2026-08-20（介入#31）: 様式5 実測から逆算。r が 1.63 倍過小（n=43）。
+    # 187kV(#27) と同じ症状で、単導体 ACSR 330mm2 として整合する。
+    # x は 1.12 倍とずれが小さいので候補としてのみ記載（採用は r を優先）。
+    r_ohm_per_km: 0.081
+    x_ohm_per_km: 0.425
 
   cable:                      # 154kV XLPE地中(典型値)
     r_ohm_per_km: 0.025
@@ -92,6 +102,10 @@
   grid_class: "sub_transmission"
   kml_style: "thin"
   notes: "Sub-transmission connecting to distribution substations. Widely used across all regions."
+  calibrated:
+    # 2026-08-20（介入#31）: x 1.09 / r 1.18 倍過小（n=7・標本が少ない）。
+    x_ohm_per_km: 0.437
+    r_ohm_per_km: 0.141
 
 # Additional voltage classes used in specific regions
 # These are less common but appear in certain regional grids
@@ -114,6 +128,9 @@
   grid_class: "backbone"
   kml_style: "medium_thick"
   notes: "Used as Level 2 voltage in Kyushu (220kV) and lower level in Chugoku."
+  calibrated:
+    # 2026-08-20（介入#31）: x が 1.13 倍過小（n=15）。r は 1.06 倍でほぼ一致。
+    x_ohm_per_km: 0.377
 
 187:
   description: "187kV regional backbone (Hokkaido, Shikoku)"
@@ -140,6 +157,11 @@
   # 出典: docs/reports/system_disclosure_survey_2026-08-11.md
   calibrated:
     r_ohm_per_km: 0.060       # = x_ohm_per_km / 5.83（実測X/Rに一致させる）
+    # 2026-08-20 追補（介入#31）: x も実測から逆算。#27 時点で「x は据え置き」と
+    # したのは弦距離ベース n=22 と弱かったため。実線形長ベース n=31 で
+    # 実効 x = 0.4159（標準 0.350 の 1.19 倍）。r の 1.49 倍過小と符合し、
+    # 「ACSR 330mm2 ×2導体」仮定の誤りという説明と整合する。
+    x_ohm_per_km: 0.416
     conductor: "ACSR 330mm2 (実測X/Rからの逆算。単導体相当)"
 
 132:
