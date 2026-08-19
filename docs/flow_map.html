@@ -415,6 +415,14 @@ async function applyDate(d){
   }else{
     if(!dayCache[d]) dayCache[d]=await fetch(`data/flow_map/days/${d}.json`).then(r=>r.json());
     const dd=dayCache[d];
+    // 手法の開示: 発電側が燃料別実績注入(手法(a))か容量比例balanceかをセレクタに反映
+    const fa=(dd.fuel_actuals_zones||[]).length;
+    const sel=document.getElementById("selDate");
+    const opt=[...sel.options].find(o=>o.value===d);
+    if(opt&&!opt.dataset.m){opt.dataset.m=1;
+      opt.textContent+=fa?` 発電=実績${fa}社`:" 発電=容量比例";}
+    sel.title=fa?`需要+発電とも公表実績(エリア需給実績 ${fa}社・原発停止等を自動反映)。残りは容量比例`:
+      "需要=実績スケール・発電=容量比例balance";
     // 島別に線順一致でp24/ld24を差し替え(featuresは島連結順=ALLPARTS順で並ぶ)
     let idx={};
     for(const isl of ALLPARTS) idx[isl]=0;

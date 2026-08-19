@@ -10,6 +10,8 @@ mkdir -p data/realtime
 {
   echo "===== $(date '+%F %T') ====="
   python3 scripts/fetch_denkiyoho.py || { echo "fetch失敗(過半未達)"; exit 1; }
+  # 燃料別実績(エリア需給実績・手法(a)): 前日+当日を取得(関西は当日配信の蓄積)
+  python3 scripts/fetch_area_fuelmix.py || true
   python3 scripts/export_flow_map_data.py --realtime
   # 日付別断面: 前日分が未生成なら生成(1日1回だけ走る)
   YD=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)
