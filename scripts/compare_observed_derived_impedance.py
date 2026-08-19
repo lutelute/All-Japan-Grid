@@ -24,13 +24,16 @@ from __future__ import annotations
 
 import math
 import re
+import os
 from pathlib import Path
 
 import pandas as pd
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-NORM = ROOT / "data" / "external" / "system_disclosure" / "normalized"
+NORM = Path(os.environ.get("AGJ_DISCLOSURE_NORM",
+                           ROOT / "data" / "external" / "system_disclosure" / "normalized"))
+OUT = Path(os.environ.get("AGJ_DISCLOSURE_OUT", NORM))
 LINE_TYPES = ROOT / "config" / "line_types.yaml"
 REPORT = ROOT / "docs" / "reports"
 
@@ -98,7 +101,7 @@ def main() -> int:
         v.groupby("vclass")[["xr_obs", "xr_std"]].median().round(2).to_string()
     )
 
-    out = NORM / "compare_observed_derived_impedance.csv"
+    out = OUT / "compare_observed_derived_impedance.csv"
     v.to_csv(out, index=False, encoding="utf-8")
     print(f"\n→ {out.relative_to(ROOT)}")
     return 0
