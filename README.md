@@ -74,6 +74,31 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ## Highlights / ハイライト
 
+### v1.7.0 — 2026-08-20
+
+- 🔌 **Interconnector & converter layer corrected against primary sources /
+  連系線・変換所層の正本化** (interventions #31/#32/#33). Synthetic straight-line
+  ties de-energised (real geometries carry the flow; Anan–Kihoku DC got its actual
+  submarine+overhead route), the 南福光 BTB no longer passes AC through, and
+  `interconnections.yaml` is rebuilt from OCCTO published operating capacities with
+  **direction-aware limits** (関門 850/2,850 MW). A UC formulation bug (regional
+  balance as `>=` = free surplus disposal) was found and fixed with an explicit
+  spill ledger — all 10 links now stay within capacity in all 24 hours.
+  合成タイ非通電化・南福光BTB切断・OCCTO正本の方向別容量・UC収支等式化。
+- 📄 **Disclosure-driven completion / 公表資料による網の補完.** 全10社の様式5
+  (インピーダンス)正規化 1,009線/213変圧器 → 89 disclosed connections applied as
+  pipeline steps; EGGC snaps disclosed codes to real OSM geometry only under an
+  evidence gate; local grids (新潟154 kV・静岡77 kV・四日市77 kV) node-ified from
+  disclosed diagrams. Point demand (#30) pins observed substation loads.
+- 🏷️ **Sourced capacities / 出典付き容量の拡充.** GEM fill +194 records / 22.5 GW
+  (provenance DB 354 rows, all verified); OCCTO interconnector operating
+  capacities (14 links × 2 directions) as a sourced canon.
+- 📊 **Live observability / 公表実績で動く可視化** (Pages, not in the bundles):
+  24 h nodal flow map with date snapshots injected from area supply-demand
+  actuals of 9/10 TSOs — nuclear outages propagate automatically from official
+  actuals (zone net positions validated to 39–129 MW against the published
+  interchange column).
+
 ### v1.6.0 — 2026-07-10
 
 - ✅ **Interventions #19/#20/#21 now default ON / 介入3件の既定ON化**

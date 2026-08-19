@@ -7,6 +7,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-08-20
+
+Tagged in git as `v1.7.0`. Theme: **the disclosed grid** — official disclosure data
+(様式5 impedance sheets, point-demand records, OCCTO interconnector capacities, area
+supply-demand actuals) is now wired into the canon, and the interconnector/converter
+layer is corrected against primary sources.
+
+### Interconnectors & converters (interventions #31/#32/#33)
+
+- **#31 — synthetic tie de-energisation.** The 7 straight-line OCCTO ties (kv=0
+  inheriting 500 kV) double-counted the real interconnector geometries and are now
+  built `in_service=False` (kept for connectivity/display; exception: 東北東京間連系線
+  stays live until the 340 m 南いわき stitch). The Anan–Kihoku DC trunk got its real
+  OSM geometry (submarine 46 km + overhead 50.6 km) and 由良開閉所's dead-end fixed.
+- **#32 — Minami-Fukumitsu BTB split.** Chubu–Hokuriku is a back-to-back DC link;
+  the model had an AC pass-through carrying 575–1,210 MW (vs the 300 MW rating).
+  The bus is now split (`--no-btb-split` to disable). A/B: pass-through → 0,
+  AC convergence and vm_min unchanged.
+- **#33 — `interconnections.yaml` rebuilt from OCCTO published capacities**
+  (28 sourced records): direction-aware capacities (関門 850/2,850 MW — the old
+  symmetric 2,780 overstated the forward direction 3.3×), ic_005 corrected to the
+  南福光 BTB 300 MW (the old "加賀–越前 1,900 MW" conflated an intra-Hokuriku line
+  with the Hokuriku–Kansai corridor), ic_010 (越前嶺南線) added, 関西四国 typed HVDC.
+  Legacy file preserved as `interconnections_legacy_2024.yaml`.
+- **UC formulation fix.** Regional balance was an inequality (`>=`) allowing free
+  disposal of surplus — Kyushu could "generate" 5.7 GW above its scheduled export
+  and the resulting phantom flow showed up as a 2× capacity violation on 関門.
+  Now an equality with an explicit penalised spill variable
+  (`UCResult.regional_spill_mw`); pumped-storage charging is counted on the demand
+  side and intra-island DC schedules are injected at the converter buses. Verified:
+  every region balances to 0.0 MW and all 10 links stay within direction-aware
+  capacity in all 24 hours.
+
+### Disclosure-driven network completion
+
+- **Disclosed connections (interventions #28/#29, 89 edges)** from the 様式5
+  impedance sheets of all 10 TSOs (normalization: 1,009 lines / 213 transformers),
+  re-applied as pipeline steps so regeneration can no longer silently drop them.
+  Isolated substations: 本系統外 → 1,780 nodes (was 2,000 before v2 apply).
+- **EGGC** (evidence-gated grid conflation): disclosed codes snap to real OSM
+  geometry only when the fragment *is* the disclosed line (off-main ratio ≥ 0.7);
+  14 routed edges ledgered, no fabricated geometry.
+- **Map-read nodes**: 新潟154 kV (新飯田・下田ほか)・中越 backbone・静岡77 kV・
+  四日市77 kV local grids read from disclosed single-line diagrams and connected
+  with per-edge provenance.
+- **Point demand (intervention #30, default ON)**: L_DB observed per-substation
+  demand pins ~30 buses; zone totals unchanged.
+
+### Capacity & provenance
+
+- **GEM capacity fill shipped**: 194 sourced records / 22.5 GW appended to the
+  provenance-first capacity DB (354 rows, verify all-PASS), applied to the
+  distributed GeoJSONs with source URLs.
+- OCCTO interconnector operating capacities (14 links × 2 directions) established
+  as a sourced canon (`data/interconnector_capacity_sources.jsonl`).
+
+### Observability (GitHub Pages, not part of the dataset bundles)
+
+- Live flow map (`flow_map.html`): 24 h nodal flows, comet-style direction-true
+  animation, date snapshots driven by published demand actuals, and — new —
+  **fuel-wise actual injection** (area supply-demand actuals of 9/10 TSOs):
+  nuclear outages and fuel mix propagate from official actuals into the daily
+  snapshots automatically, with zone net positions matching the published
+  interchange column to 39–129 MW in validation.
+
+### Ledger hygiene
+
+- Issue #42: 25 coordinate-jitter duplicate pairs in the disclosed-connection
+  ledger purged; merges are now keyed semantically, not by coordinates.
+- Ybus export now excludes de-energised branches (post-#31 consistency) and the
+  numeric Ybus set is regenerated from the current canon.
+
 ## [1.6.0] - 2026-07-10
 
 Tagged in git as `v1.6.0`. Theme: **the corrected canon becomes the default** —

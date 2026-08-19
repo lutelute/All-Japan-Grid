@@ -2,7 +2,7 @@
   "name": "all-japan-grid",
   "title": "All-Japan-Grid: an OSM-derived, externally validated model of Japan's transmission network",
   "description": "Japan's 10 regional transmission networks (50/60 Hz) extracted from OpenStreetMap with per-field provenance, exported to interchange formats (GeoJSON, CIM/CGMES Level 1+2, MATPOWER, pandapower), and scored against utility ground truth (TEPCO per-line flows; Kansai-TD voltage disclosure). Substation counts differ by layer: the source OSM substation count is 6,962 (see `substations.geojson`), while the published display/built view `subs_all.geojson` expands to 8,994 by voltage class (site-aware, one bus per voltage class). Sourced plant capacity (`capacity_mw_sourced`) is a display/provenance layer and is NOT used by the power-flow builder, which reads `capacity_mw`. See docs/reports/ for the formal review, international benchmark, and known limitations.",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "created": "2026-06-27",
   "homepage": "https://github.com/lutelute/All-Japan-Grid",
   "licenses": [

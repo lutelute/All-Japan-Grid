@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-17",
+ "generated": "2026-08-20",
  "ybus_version": "5.0.1",
  "changelog": {
   "5.0.1": "base_mva表記バグ修正: 行列はnet.sn_mva(=1MVA)基準puなのにnpz/matがbase_mva=100と誤表記(×100見え・SCRマップ検算で発覚2026-08-17)。base_mvaを実基準(net.sn_mva)で書く。行列値は不変",
@@ -74,20 +74,20 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 1665464.132515696,
+    "cond_max": 1368252.6830803275,
     "n_islands": 14
    },
-   "elapsed_s": 2.9
+   "elapsed_s": 3.0
   },
   "east": {
    "island": "east",
    "f_hz": 50.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "6090b36c6750af9a",
-   "n_bus": 6140,
-   "nnz": 19824,
-   "density": 0.0005258411229827373,
-   "n_line": 6299,
+   "fingerprint": "656f5e0606b1feb0",
+   "n_bus": 6145,
+   "nnz": 19835,
+   "density": 0.0005252770548468957,
+   "n_line": 6302,
    "n_trafo": 635,
    "trafo_nameplate": {
     "n_applied": 6,
@@ -112,49 +112,49 @@
    "n_components_refs": 305,
    "dc": {
     "included": true,
-    "nnz": 19824,
+    "nnz": 19835,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 6934,
+    "n_branch": 6937,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 1308,
-    "nnz": 141063,
-    "fill_density": 0.0825,
+    "n_bus": 1313,
+    "nnz": 141090,
+    "fill_density": 0.0818,
     "n_dropped_buses": 543,
-    "fingerprint": "30c05a60c39ddaae"
+    "fingerprint": "a9d3086cd02a14a4"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 6908,
+    "offdiag_checked": 6911,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.7324628334301594e-16,
+    "offdiag_rel_err_p99": 1.7324024498997125e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 1.4551915228366852e-11
+    "backbone_symmetry_max_abs_err": 2.873967505387993e-13
    },
    "gate": {
     "pass": true,
-    "cond_max": 49166292.34074739,
+    "cond_max": 49007674.83959803,
     "n_islands": 173
    },
-   "elapsed_s": 15.7
+   "elapsed_s": 16.2
   },
   "west": {
    "island": "west",
    "f_hz": 60.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "d7ee7c414e7d0aee",
-   "n_bus": 8236,
-   "nnz": 26208,
-   "density": 0.0003863680483530885,
-   "n_line": 8157,
+   "fingerprint": "8be7a94c2d5ffe49",
+   "n_bus": 8242,
+   "nnz": 26211,
+   "density": 0.00038584988047500975,
+   "n_line": 8155,
    "n_trafo": 944,
    "trafo_nameplate": {
     "n_applied": 4,
@@ -176,31 +176,31 @@
     "n_lines": 0,
     "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
    },
-   "n_components_refs": 562,
+   "n_components_refs": 563,
    "dc": {
     "included": true,
-    "nnz": 26208,
+    "nnz": 26211,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 9101,
+    "n_branch": 9099,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 2102,
-    "nnz": 18481,
+    "n_bus": 2103,
+    "nnz": 18385,
     "fill_density": 0.0042,
     "n_dropped_buses": 1056,
-    "fingerprint": "634fdea4b1447208"
+    "fingerprint": "e37a25e8b9926a12"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 9082,
+    "offdiag_checked": 9081,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 8.636733058610992e-17,
+    "offdiag_rel_err_p99": 8.638085483049194e-17,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
@@ -208,10 +208,10 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 416775654.50788414,
+    "cond_max": 251188265.76872456,
     "n_islands": 370
    },
-   "elapsed_s": 22.5
+   "elapsed_s": 23.5
   },
   "okinawa": {
    "island": "okinawa",
@@ -275,10 +275,10 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 44953.86624898188,
+    "cond_max": 31259.279452265895,
     "n_islands": 1
    },
-   "elapsed_s": 1.0
+   "elapsed_s": 1.1
   }
  }
 }

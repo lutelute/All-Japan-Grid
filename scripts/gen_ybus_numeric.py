@@ -366,6 +366,15 @@ def export_island(island, freq, nodes, edges, out_dir, dedup_nodes=True,
                                            dedup_nodes=dedup_nodes,
                                            site_trafos=site_trafos,
                                            deenergize_unbuilt=deenergize_unbuilt)
+    # 介入#31以降、合成連系タイ等が in_service=False で建つ。pandapowerの
+    # 内部行列(ppci)は非通電枝を落とすため、全量lookupと形状が合わなくなる
+    # (branch_bundleのshape mismatch)。Ybusは通電網の行列なので、非通電枝は
+    # 組む前に行ごと除去して ppc==ppci の整合を保つ(帳簿: n_dropped_oos)。
+    n_oos = int((~net.line.in_service).sum()) + int((~net.trafo.in_service).sum())
+    if n_oos:
+        net.line.drop(net.line.index[~net.line.in_service], inplace=True)
+        net.trafo.drop(net.trafo.index[~net.trafo.in_service], inplace=True)
+        print(f"  [{island}] 非通電枝 {n_oos} 本をYbus対象から除去(介入#31/#32)")
     n_refs = add_ref_per_component(net)
     Y, bus_ids, internal = extract_ybus(net)
     checks = verify(Y, bus_ids, net)
