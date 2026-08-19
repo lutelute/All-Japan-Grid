@@ -1,0 +1,135 @@
+{
+ "note": "比 = 実効値/標準値。中央値のブートストラップ95%CI(B=4000, seed=20260820)。CIが1を含まなければ標準値と有意に異なる。",
+ "by_voltage": [
+  {
+   "voltage_kv": 66,
+   "n": 7,
+   "x_ratio_median": 1.091,
+   "x_ratio_ci95": [
+    0.966,
+    1.345
+   ],
+   "r_ratio_median": 1.178,
+   "r_ratio_ci95": [
+    0.901,
+    1.38
+   ],
+   "significant": []
+  },
+  {
+   "voltage_kv": 110,
+   "n": 8,
+   "x_ratio_median": 0.968,
+   "x_ratio_ci95": [
+    0.92,
+    1.067
+   ],
+   "r_ratio_median": 0.861,
+   "r_ratio_ci95": [
+    0.701,
+    1.053
+   ],
+   "significant": []
+  },
+  {
+   "voltage_kv": 132,
+   "n": 10,
+   "x_ratio_median": 0.575,
+   "x_ratio_ci95": [
+    0.499,
+    1.001
+   ],
+   "r_ratio_median": 0.891,
+   "r_ratio_ci95": [
+    0.393,
+    1.749
+   ],
+   "significant": []
+  },
+  {
+   "voltage_kv": 154,
+   "n": 43,
+   "x_ratio_median": 1.119,
+   "x_ratio_ci95": [
+    1.093,
+    1.161
+   ],
+   "r_ratio_median": 1.628,
+   "r_ratio_ci95": [
+    1.433,
+    1.936
+   ],
+   "significant": [
+    "x",
+    "r"
+   ]
+  },
+  {
+   "voltage_kv": 187,
+   "n": 31,
+   "x_ratio_median": 1.188,
+   "x_ratio_ci95": [
+    1.097,
+    1.364
+   ],
+   "r_ratio_median": 1.492,
+   "r_ratio_ci95": [
+    1.051,
+    2.226
+   ],
+   "significant": [
+    "x",
+    "r"
+   ]
+  },
+  {
+   "voltage_kv": 220,
+   "n": 15,
+   "x_ratio_median": 1.127,
+   "x_ratio_ci95": [
+    1.073,
+    1.183
+   ],
+   "r_ratio_median": 1.057,
+   "r_ratio_ci95": [
+    0.747,
+    1.155
+   ],
+   "significant": [
+    "x"
+   ]
+  },
+  {
+   "voltage_kv": 275,
+   "n": 41,
+   "x_ratio_median": 0.989,
+   "x_ratio_ci95": [
+    0.956,
+    1.006
+   ],
+   "r_ratio_median": 0.865,
+   "r_ratio_ci95": [
+    0.613,
+    1.515
+   ],
+   "significant": []
+  },
+  {
+   "voltage_kv": 500,
+   "n": 83,
+   "x_ratio_median": 1.126,
+   "x_ratio_ci95": [
+    1.093,
+    1.158
+   ],
+   "r_ratio_median": 1.032,
+   "r_ratio_ci95": [
+    0.888,
+    1.461
+   ],
+   "significant": [
+    "x"
+   ]
+  }
+ ]
+}
