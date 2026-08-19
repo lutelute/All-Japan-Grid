@@ -60,6 +60,28 @@
   `docs/WEST_AC_ANALYSIS.md`(Q無関係→負荷/発電偏在→下位網変圧器の悪条件)。
 - **状態: 完了**。
 
+### P8. 配布を用途別に分ける (Distribution Profiles) — **[計画]**
+- 現状は core(13MB) / full(24MB) の全部入り 2 種類のみで、用途で切れていない。
+  MATPOWER で潮流を回したいだけの人には UC ソルバや GeoJSON が不要で、
+  AI エージェントに読ませたい人には機械可読な入口が示されていない。
+- 追加するプロファイル:
+  - **`matpower`**(目標 5MB 以下) — `.m` 形式のケース関数 + `.mat` + 3 行の README。
+    `addpath` → `runpf(case_agj_okinawa)` で終わる形。gencost 無し(runopf 不可)を明記し、
+    Octave 互換も確認する
+  - **`ai`** — `AGENTS.md`(最初に読む入口) + スキーマ + 出典 DB + 介入台帳 +
+    observed/derived の区別を**バンドル内で完結**させる
+- `docs/download.html` を「何をしたいか」で分岐する導線に。core / full は後方互換で残す。
+- 起票: #45。オーナー発意(2026-08-19)。公開は従来どおりオーナー確認後。
+
+### P9. 合成直線の削減 (Reduce Synthetic Straight Lines) — **[計画]**
+- 合成直線は **1,079 本 / 3,018 km**(亘長 3.4%): disclosure 130 + leadin 674 + namebind 275。
+- 全国 7,049 変電所の **76.5%** は OSM 線が構内まで入っており、
+  合成直線 949 本のうち **446 本(1,363 km)** はその線を使えば消せる可能性がある。
+- `namebind` は「線名と変電所名が一致」だけの証拠で距離上限が無く、最長 55.3 km。
+  EGGC 相当の証拠ゲートを課す。`leadin` の終点は代表点でなく構内の線端へ。
+- `leadin`/`namebind` は `parallel=1` 固定なので、接続元の `circuits` から継承させる。
+- 起票: #44(本体) / #42(直線コードの二重登録) / #43(disclosure の削減) / #38(OSM 逆貢献)。
+
 ---
 
 ## 全体評価 (Overall Assessment)
