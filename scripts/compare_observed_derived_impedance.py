@@ -53,6 +53,29 @@ def nearest_class(kv: float, classes: list[int]) -> int:
     return min(classes, key=lambda c: abs(c - kv))
 
 
+# 同名異所の誤マッチ除去（2026-08-19）。
+# 名前が exact 一致でも、同名の変電所が全国に複数あると別地点に解決される。
+# 実測で東北 275kV に弦距離 466km、関西 154kV に 438km の「線」が現れた。
+# 1 回線の亘長として物理的にありえない対応付けを電圧階級ごとに棄却する。
+# 値は「その電圧階級の基幹線として現実的な上限」で、厳密な根拠のある定数ではない
+# ため、棄却した本数と内訳を必ず表示する（黙って捨てない）。
+SPAN_LIMIT_KM = {66: 50, 77: 50, 110: 100, 132: 100, 154: 100,
+                 187: 150, 220: 150, 275: 250, 500: 400}
+
+
+# 地中ケーブルは架空線より x が 1/3〜1/5 なので、架空線の標準値で比べると
+# 比が 0.3 前後になる。誤マッチではなく線種違いなので分けて数える。
+CABLE_RX = re.compile(r"地中|ケーブル|洞道|C\.?V")
+# 幾何の矛盾チェック: 実線長 >= 弦距離 なので、線種が合っていれば比 >= 1 が原則。
+# 比が 0.5 を割るのは「モデルの弦距離が実線長の 2 倍以上」を意味し、
+# 幾何的に説明できない ＝ 同名異所の誤マッチとみなす（地中線は除く）。
+RATIO_FLOOR = 0.5
+
+
+def span_limit(kv: float) -> float:
+    return SPAN_LIMIT_KM.get(int(kv), 300)
+
+
 def main() -> int:
     cw = pd.read_csv(NORM / "crosswalk_impedance_to_model.csv")
     lt = yaml.safe_load(LINE_TYPES.read_text(encoding="utf-8"))
@@ -75,7 +98,30 @@ def main() -> int:
     d["L_implied_km"] = d.X_ohm_obs / d.x_std
     d["X_derived_pct"] = 100 * (d.x_std * d.L_straight_km) * 1000 / d.voltage_kv**2
 
+    d["span_limit_km"] = d.voltage_kv.map(span_limit)
+    over = d[d.L_straight_km > d.span_limit_km]
+    if len(over):
+        print(f"⚠ 同名異所の疑いで棄却 {len(over)} 本（弦距離が電圧階級の上限超え）:")
+        print(over[["utility", "voltage_kv", "line_name", "L_straight_km",
+                    "match_level"]].sort_values("L_straight_km", ascending=False)
+              .head(12).to_string(index=False))
+        print()
+    d = d[d.L_straight_km <= d.span_limit_km]
+
     v = d[(d.L_straight_km > 0.5) & (d.X_pct > 0)].copy()
+    v["x_ratio_pre"] = v.X_pct / v.X_derived_pct
+    v["is_cable"] = v.line_name.astype(str).str.contains(CABLE_RX)
+    susp = v[(v.x_ratio_pre < RATIO_FLOOR) & (~v.is_cable)]
+    if len(susp):
+        print(f"⚠ 幾何矛盾で棄却 {len(susp)} 本（比<{RATIO_FLOOR}＝弦距離が実線長の2倍超・地中線を除く）:")
+        print(susp[["utility", "voltage_kv", "line_name", "L_straight_km",
+                    "x_ratio_pre", "match_level"]].sort_values("x_ratio_pre")
+              .head(12).round(2).to_string(index=False))
+        print()
+    n_cable = int(v.is_cable.sum())
+    if n_cable:
+        print(f"※ 地中線 {n_cable} 本は線種が違う（架空線の標準値で比べると比が下がる）ため別掲\n")
+    v = v[(v.x_ratio_pre >= RATIO_FLOOR) | (v.is_cable)].copy()
     v["detour"] = v.L_implied_km / v.L_straight_km
     v["x_ratio"] = v.X_pct / v.X_derived_pct
 
