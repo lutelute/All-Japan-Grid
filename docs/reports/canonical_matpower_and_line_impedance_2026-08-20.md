@@ -121,3 +121,20 @@ west全規模の厳密AC真解に到達する。6月の真因命題は最終形�
 - SCの規模0.35Pは標準的仮置き — **vm_max 1.266の過電圧が出ており**、SCの
   サイズ・箇所の精緻化(または開閉制御)が必要。既定ONにはこの精緻化が前提
 - 既定パイプラインへは未組込(--voltage-regulationオプション化が次)
+
+### MATPOWER実機検証(west_vr) — 「matpowerで解けるの?」への答え=YES
+
+LTC(タップ172本→branch TAP列)+調相SC(→bus BS列)込みの全部入りwestを
+`west_vr.mat`として出力(`scripts/diagnostics/export_west_vr.py`・
+roundtrip ΔVM/ΔVA=0.0)し、MATPOWER 8.1 `runpf`で3通りの初期値を実機検証:
+
+| 初期値 | 結果 | 損失 | vm範囲 |
+|---|---|---|---|
+| a) 焼き込み電圧(warm) | ✅ success | 1,833.3MW | [0.945, 1.266] |
+| **b) フラットスタート** | ✅ **success** | 1,833.3MW | 同一 |
+| c) DC初期化(rundcpf→runpf) | ✅ success | 1,833.3MW | 同一 |
+
+**フラットスタートでも解ける**(=利用者が何も工夫しなくてもrunpf一発)。
+3通りとも同一解に収束し、pandapower側の厳密解ともvm一致(3桁)。
+これで「構造を消す」(west_reduced)と「物理を足す」(west_vr)の両ルートが
+MATPOWER実機で成立した。過電圧vm_max 1.266(SC 0.35P仮置き)の開示は変わらず。
