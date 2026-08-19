@@ -1,0 +1,310 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公開データで系統インピーダンスを較正する</title>
+<style>
+:root{
+  --ground:#0f1620; --surface:#18222e; --line:#26374a;
+  --ink:#e9edf2; --muted:#8fa0b2; --faint:#5b6b7d;
+  --red:#e4572e; --blue:#4f9fd8; --green:#58b368; --amber:#e0a13a;
+  --purple:#9b8ae0;
+}
+html{scroll-snap-type:x mandatory}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Hiragino Sans","Yu Gothic UI","Yu Gothic",system-ui,sans-serif;overflow-y:hidden}
+.deck{display:flex;height:100vh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
+.slide{scroll-snap-align:start;flex:0 0 100vw;height:100vh;box-sizing:border-box;
+  padding:4.2vh 5vw 7.5vh;display:flex;flex-direction:column;gap:1.9vh;position:relative}
+.eyebrow{font-size:.8rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;font-weight:600}
+.eyebrow b{color:var(--amber);font-weight:700}
+h1{font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.18;margin:0;font-weight:800;text-wrap:balance}
+h2{font-size:clamp(1.4rem,2.7vw,2.1rem);line-height:1.25;margin:0;font-weight:800;text-wrap:balance}
+h3{font-size:clamp(1rem,1.5vw,1.2rem);margin:0;font-weight:800;color:var(--amber)}
+p,li{font-size:clamp(.92rem,1.28vw,1.1rem);line-height:1.72;margin:0}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:.7vh}
+mark{background:none;color:var(--amber);font-weight:800}
+.muted{color:var(--muted)} .small{font-size:.83rem;color:var(--muted);line-height:1.6}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:3vw;align-items:center;flex:1;min-height:0}
+.cols.wideimg{grid-template-columns:.86fr 1.14fr}
+figure{margin:0;height:100%;min-height:0;display:flex;flex-direction:column;gap:.8vh;
+  align-items:center;justify-content:center}
+figure img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;background:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.45)}
+figcaption{font-size:.78rem;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
+.kpis{display:flex;gap:2.4vw;flex-wrap:wrap}
+.kpi{border-left:3px solid var(--line);padding-left:1rem}
+.kpi .n{font-size:clamp(1.6rem,3vw,2.5rem);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{font-size:.8rem;color:var(--muted)}
+.kpi.red{border-color:var(--red)}.kpi.blue{border-color:var(--blue)}
+.kpi.green{border-color:var(--green)}.kpi.amber{border-color:var(--amber)}
+.kpi.purple{border-color:var(--purple)}
+table{border-collapse:collapse;width:100%;font-size:clamp(.83rem,1.15vw,1rem)}
+th,td{padding:.55em .85em;text-align:left;border-bottom:1px solid var(--line);line-height:1.5;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.78rem;letter-spacing:.08em}
+.pass{color:var(--green);font-weight:800;white-space:nowrap}
+.no{color:var(--red);font-weight:800;white-space:nowrap}
+.foot{position:absolute;left:5vw;right:5vw;bottom:3.2vh;display:flex;justify-content:space-between;
+  border-top:1px solid var(--line);padding-top:1vh;gap:2vw}
+.foot .idx{font-variant-numeric:tabular-nums;color:var(--faint);font-size:.78rem;letter-spacing:.1em;
+  white-space:nowrap}
+.foot .note{font-size:.72rem;color:var(--faint);text-align:right;max-width:68ch}
+.hero{justify-content:center;gap:3vh}
+.hero .sub{font-size:clamp(1rem,1.7vw,1.35rem);color:var(--muted);max-width:64ch;line-height:1.8}
+.claimbox{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:2vh 2vw;max-width:78ch}
+.claimbox p{font-size:clamp(1rem,1.6vw,1.3rem);line-height:1.8}
+.tag{display:inline-block;font-size:.7rem;padding:.15em .55em;border-radius:4px;border:1px solid var(--line);
+  color:var(--muted);letter-spacing:.08em;margin-right:.5em}
+.navhint{position:fixed;right:1.2rem;bottom:.45rem;color:var(--faint);font-size:.72rem;z-index:9}
+.code{font-family:ui-monospace,"SF Mono",Menlo,monospace;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:1.5vh 1.3vw;
+  font-size:clamp(.8rem,1.08vw,.98rem);line-height:1.85;color:var(--ink);white-space:pre-wrap}
+.code .c{color:var(--faint)} .code .k{color:var(--amber)} .code .g{color:var(--green)}
+.code .r{color:var(--red)}
+.steps{display:flex;flex-direction:column;gap:1.1vh}
+.step{display:grid;grid-template-columns:2.2rem 1fr;gap:1rem;align-items:start}
+.step .n{width:2.2rem;height:2.2rem;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.95rem;color:var(--amber)}
+.step .t b{color:var(--ink)} .step .t{font-size:clamp(.88rem,1.2vw,1.05rem);line-height:1.6;color:var(--muted)}
+.gate{display:flex;align-items:center;gap:1vw;flex-wrap:wrap;font-size:clamp(.9rem,1.3vw,1.1rem)}
+.gate .b{padding:.4em 1em;border-radius:999px;font-weight:800;border:1px solid}
+.gate .open{background:rgba(88,179,104,.16);color:var(--green);border-color:var(--green)}
+.gate .shut{background:rgba(228,87,46,.16);color:var(--red);border-color:var(--red)}
+@media (max-width:820px){
+  html{scroll-snap-type:none} body{overflow-y:auto}
+  .deck{flex-direction:column;height:auto;overflow:visible}
+  .slide{flex:none;height:auto;min-height:100vh}
+  .cols,.cols.wideimg{grid-template-columns:1fr}
+  .foot{position:static;margin-top:2vh}
+}
+</style>
+<div class="deck">
+
+<section class="slide hero">
+  <div class="eyebrow">All-Japan-Grid ／ 検証 <b>インピーダンス較正</b></div>
+  <h1>公開データだけで、<br>系統インピーダンスを較正する</h1>
+  <div class="sub">
+    OSM 由来の系統モデルは、線路の R/X を<b style="color:var(--ink)">電圧階級別の典型値 × こう長</b>で作る。
+    典型値は設計値であって<b style="color:var(--ink)">実測との照合が無い</b>。<br><br>
+    日本では全一般送配電事業者が様式5 で R/X/B を公表している。
+    これを正解に使えば較正できる —— <mark>ただし、素直にやると 3 回間違える。</mark>
+  </div>
+  <div class="kpis">
+    <div class="kpi blue"><div class="n">1,009</div><div class="l">公表線路（10社・様式5）</div></div>
+    <div class="kpi green"><div class="n">249</div><div class="l">検証に使えた線</div></div>
+    <div class="kpi amber"><div class="n">1.3 %</div><div class="l">Ybus のうち検算できた割合</div></div>
+    <div class="kpi red"><div class="n">1.63×</div><div class="l">154kV の r が過小</div></div>
+  </div>
+  <p class="small">2026-08-20 ／ 較正値は介入 #31 として<b>既定OFF</b>で登録。採用は影響測定の後。</p>
+  <div class="foot"><span class="idx">01 / 10</span><span class="note">実装 scripts/*.py・機械可読 line_type_calibration_2026-08-20.json</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">手法</div>
+  <h2>5 段の手順 — 落とし穴は ②③④ に集中する</h2>
+  <table>
+    <tr><th>段</th><th>やること</th><th>落とし穴</th></tr>
+    <tr><td>① 取得</td><td>10社の様式5 を機械収集</td><td>公表は<b>ループ系統のみ</b>。放射状は制度上対象外</td></tr>
+    <tr><td><b>② 照合</b></td><td>公表の端点名 → モデルのバス</td><td class="no">匿名化の判定を誤ると 1 社が丸ごと落ちる</td></tr>
+    <tr><td><b>③ 検証</b></td><td>誤マッチを落とす</td><td class="no">exact 一致でも<b>同名異所</b>がある</td></tr>
+    <tr><td><b>④ 逆算</b></td><td>実効 x = X<sub>公表</sub> / こう長</td><td class="no"><b>モデルが使う長さと一致させる</b></td></tr>
+    <tr><td>⑤ 記録</td><td>既定OFF で台帳に登録</td><td>採用の前に影響測定</td></tr>
+  </table>
+  <p class="small">以降、実際に踏んだ 3 つの落とし穴を順に示す。
+  <b>いずれも「数字は正常に見えていた」</b>のが共通点。</p>
+  <div class="foot"><span class="idx">02 / 10</span><span class="note">手法の詳細: docs/reports/impedance_calibration_method_2026-08-20.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">落とし穴 ①</div>
+  <div class="cols">
+    <div class="stack">
+      <h2>「匿名化」の判定を誤ると<br>1 社が丸ごと消える</h2>
+      <p>九州電力送配電の様式5 は端点が「<b>1北九州</b>」「<b>26山家</b>」のように
+      <b>連番＋実名</b>で書かれている。</p>
+      <div class="code">ANON_RX = r"[□■○×]{2,}|^&lt;\d+&gt;|<span class="r">^\d+[^\d]</span>"
+                        <span class="c">↑ これが犯人</span></div>
+      <p>先頭が数字なら匿名化、と判定して<b>九州 121 本を照合前に全部捨てていた</b>（解決率 <b class="no">0%</b>）。
+      実際は端点ラベル 46 種のうち <b>25 種が番号を剥がすだけで一致</b>する。</p>
+    </div>
+    <div class="stack">
+      <h3>直した結果</h3>
+      <div class="kpis" style="flex-direction:column;gap:1.4vh">
+        <div class="kpi green"><div class="n">109 → 270</div><div class="l">評価できた線（本）</div></div>
+        <div class="kpi blue"><div class="n">6 → 10 社</div><div class="l">評価に入った事業者</div></div>
+      </div>
+      <div class="claimbox">
+        <p><b>教訓</b>: 「解決率 0%」という<mark>極端な値は仕様ではなくバグの兆候</mark>として扱う。
+        事業者別に率を出していなければ気づけなかった。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">03 / 10</span><span class="note">真の匿名化（□□□□線・&lt;12&gt;）だけを除外するよう修正</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">落とし穴 ②</div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>exact 一致でも<br>同名異所がある</h2>
+      <p>母集団を増やしたら、<b style="color:var(--red)">東北を縦断する比 0.1 の長大直線</b>が現れた。
+      「高津線」は関西にも東京にもあり、<b>both:exact</b> で 438 km の「線」が生まれていた。</p>
+      <div class="claimbox" style="border-color:var(--red)">
+        <p><b style="color:var(--red)">中央値は 1.241 → 1.202 とほとんど動かず、集計値では異常が見えなかった。</b>
+        発覚したのは<mark>地図に描いたとき</mark>。</p>
+      </div>
+      <p class="small">対策は<b>結論と独立な 2 つの基準</b>: (1) 電圧階級ごとの亘長上限（7本棄却）、
+      (2) 実線長 ≥ 弦距離という幾何の矛盾＝比 0.5 未満（14本棄却）。
+      <b>比そのものでフィルタしない</b> — 「整合するものだけ残す」は循環論法。</p>
+    </div>
+    <figure>
+      <img src="{{FIG:impedance_routed_map.png}}" alt="実線形地図">
+      <figcaption>誤マッチを落とし、経路を復元して実線形で描いた図。423 本中 402 本で経路が取れた</figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">04 / 10</span><span class="note">線名による第二の照合経路も作り、162 本が独立に裏付けられた</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">落とし穴 ③ <b>最重要</b></div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>モデルが使う長さと、<br>評価が使う長さを一致させる</h2>
+      <div class="code">length = _path_len_km(e["path"])   <span class="c"># モデル=実線形長</span>
+X_model = x_std * <span class="r">L_straight</span>       <span class="c"># 評価=弦距離</span></div>
+      <p>同じ 246 本を両方で計算すると:</p>
+      <table>
+        <tr><th>基準</th><th>比の中央値</th><th>四分位</th></tr>
+        <tr><td>弦距離（従来の評価）</td><td>1.227</td><td>1.06–1.38</td></tr>
+        <tr><td><b>実線形長（モデルの実際）</b></td><td class="pass"><b>1.091</b></td><td>0.94–1.18</td></tr>
+      </table>
+      <p><b>「比 1.22」はモデルの誤差ではなく、評価方法の不整合だった。</b>
+      <mark>新規データを 1 件も取らずに、検証の精度がこれだけ動いた。</mark></p>
+    </div>
+    <figure>
+      <img src="{{FIG:ratio_chord_vs_route.png}}" alt="弦距離 vs 実線形長">
+      <figcaption>左＝分布（緑が 1 のすぐ右に移動）／右＝電圧階級別（全階級で 1 に寄る）</figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">05 / 10</span><span class="note">検証の設計ミスは、モデルの欠陥として報告されてしまう</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">結果</div>
+  <h2>ずれているのは<mark>特定の階級だけ</mark></h2>
+  <table>
+    <tr><th>kV</th><th>n</th><th>標準 x</th><th>実効 x</th><th>比</th><th>標準 r</th><th>実効 r</th><th>比</th><th>判定</th></tr>
+    <tr><td>110</td><td>8</td><td>0.385</td><td>0.373</td><td class="pass">0.97</td><td>0.055</td><td>0.047</td><td>0.86</td><td class="pass">ほぼ一致</td></tr>
+    <tr><td>275</td><td>41</td><td>0.325</td><td>0.322</td><td class="pass">0.99</td><td>0.028</td><td>0.024</td><td>0.86</td><td class="pass">ほぼ一致</td></tr>
+    <tr><td><b>154</b></td><td>43</td><td>0.380</td><td>0.425</td><td>1.12</td><td>0.050</td><td><b>0.081</b></td><td class="no"><b>1.63</b></td><td>r が過小</td></tr>
+    <tr><td><b>187</b></td><td>31</td><td>0.350</td><td><b>0.416</b></td><td class="no"><b>1.19</b></td><td>0.038</td><td>0.057</td><td class="no">1.49</td><td>x も r も過小</td></tr>
+    <tr><td><b>500</b></td><td>83</td><td>0.290</td><td><b>0.326</b></td><td class="no"><b>1.13</b></td><td>0.012</td><td>0.012</td><td>1.03</td><td>x が過小</td></tr>
+    <tr><td>132</td><td>10</td><td>0.370</td><td>0.213</td><td>0.57</td><td colspan="3">—</td><td>沖縄のみ・地中線混在</td></tr>
+  </table>
+  <div class="claimbox">
+    <p><b>110kV と 275kV がほぼ一致していることが、この較正の妥当性を支えている。</b>
+    標準表が全体として壊れているなら全階級がずれるはず。
+    ずれている 154kV と 187kV は、<mark>「ACSR 330mm² ×2導体」仮定が単導体の実態と合っていない</mark>
+    という一つの説明で繋がる。</p>
+  </div>
+  <div class="foot"><span class="idx">06 / 10</span><span class="note">副産物: 線名に「地中」を含む線は x_eff 0.13–0.14 ＝架空線の約1/3。線名で分離できる</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">誠実性</div>
+  <div class="cols wideimg">
+    <div class="stack">
+      <h2>何が言えて、何が言えないか</h2>
+      <h3>言えること</h3>
+      <ul>
+        <li>実効値は<b>公表データ由来</b>で推定ではない（n = 83 / 43 / 41 …）</li>
+        <li>110kV・275kV の一致が<b>手法自体の妥当性</b>を裏づける</li>
+        <li>採用は<b>既定OFF＋介入台帳</b>で可逆</li>
+      </ul>
+      <h3>言えないこと</h3>
+      <ul>
+        <li><b>Ybus の 39,530 非零のうち検算できたのは 498 = 1.3%</b></li>
+        <li>66kV(n=7)・110kV(n=8)・220kV(n=15) は標本が小さい</li>
+        <li><b>なぜ</b>その値かは公表データからは出ない（導体構成・線間距離は電線諸元が要る）</li>
+      </ul>
+    </div>
+    <figure>
+      <img src="{{FIG:impedance_ybus.png}}" alt="Ybusカバレッジ">
+      <figcaption>灰＝Ybus の全非零、色＝公表 X で検算できた要素。<b>1.3%</b></figcaption>
+    </figure>
+  </div>
+  <div class="foot"><span class="idx">07 / 10</span><span class="note">「整合した」は行列の 1.3% での話 — カバレッジは必ず併記する</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">運用</div>
+  <h2>較正値は<mark>既定 OFF</mark> で入れる</h2>
+  <div class="cols">
+    <div class="stack">
+      <h3>3 箇所に、役割を分けて記録</h3>
+      <ul>
+        <li><b>機械可読の正本</b> — <span class="tag">line_type_calibration_2026-08-20.json</span>
+          電圧別の n・四分位・除外条件・<b>observed/derived の層の別</b>・生成コミット</li>
+        <li><b>設定</b> — <span class="tag">line_types.yaml</span> の各電圧 <code>calibrated</code> ブロック。
+          <b>既定 False</b> で、明示的に要求した経路だけが使う</li>
+        <li><b>台帳</b> — 介入 #31（根拠・帳簿・無効化の 3 点）</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>採用までの順序</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="t">既定OFF で記録（<b>いまここ</b>）</div></div>
+        <div class="step"><div class="n">2</div><div class="t"><code>AGJ_CALIBRATED_LINES=1</code> で影響測定（収束・vm・過負荷・損失）</div></div>
+        <div class="step"><div class="n">3</div><div class="t">オーナー承認 → 既定ON</div></div>
+      </div>
+      <p class="small">#27（187kV の r）が同じ手順を踏んでいる。
+      本件はその <b>x の追補</b>でもある — #27 は「x は据え置き」としたが、
+      それは弦距離ベース n=22 で弱かったため。実線形長 n=31 で更新できた。</p>
+    </div>
+  </div>
+  <div class="foot"><span class="idx">08 / 10</span><span class="note">値を動かす介入は必ず台帳に登録する（根拠・帳簿・無効化）</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">一般化</div>
+  <h2>他のモデルにも使える 7 手順</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div class="t">モデルが<b>実際に使っている</b>パラメータの定義を読む（長さ・並列数・線種）</div></div>
+    <div class="step"><div class="n">2</div><div class="t">公開されている実測値を、<b>同じ定義</b>に揃えて突き合わせる</div></div>
+    <div class="step"><div class="n">3</div><div class="t">照合は<b>2 経路以上</b>で行う（施設名 × 線名）。一致した分だけを信頼する</div></div>
+    <div class="step"><div class="n">4</div><div class="t">誤マッチは<b>結論と独立な基準</b>（幾何・物理）で落とす。<b>比でフィルタしない</b></div></div>
+    <div class="step"><div class="n">5</div><div class="t">件数を増やす変更は<b>必ず可視化して確認</b>する</div></div>
+    <div class="step"><div class="n">6</div><div class="t">較正は<b>既定OFF・台帳登録・影響測定</b>を経てから採用する</div></div>
+    <div class="step"><div class="n">7</div><div class="t"><b>カバレッジを必ず併記</b>する（何 % を検算できたのか）</div></div>
+  </div>
+  <div class="foot"><span class="idx">09 / 10</span><span class="note">4 と 5 は、今回の失敗から追加した手順</span></div>
+</section>
+
+<section class="slide hero">
+  <div class="eyebrow">まとめ</div>
+  <h1 style="font-size:clamp(1.7rem,3.4vw,2.7rem)">
+    数字が動いた理由の大半は、<br>モデルではなく<mark>測り方</mark>にあった。</h1>
+  <div class="claimbox">
+    <p>3 つの落とし穴のうち 2 つ（照合バグ・長さの取り違え）は<b>評価側の欠陥</b>で、
+    1 つ（同名異所）は<b>集計値では見えず地図で見えた</b>。<br>
+    <mark>較正の前に、まず測り方を検算する。</mark></p>
+  </div>
+  <div class="kpis">
+    <div class="kpi green"><div class="n">1.227 → 1.091</div><div class="l">長さの定義を揃えただけ</div></div>
+    <div class="kpi blue"><div class="n">109 → 249</div><div class="l">検証できた線（本）</div></div>
+    <div class="kpi amber"><div class="n">1.3 %</div><div class="l">Ybus のカバレッジ（正直な限界）</div></div>
+    <div class="kpi red"><div class="n">#31</div><div class="l">既定OFF で登録した較正候補</div></div>
+  </div>
+  <p class="small">次: 影響測定（潮流 KPI）→ 採否。187kV の導体構成は電線諸元での裏取りが要る。</p>
+  <div class="foot"><span class="idx">10 / 10</span><span class="note">All-Japan-Grid ／ 2026-08-20</span></div>
+</section>
+
+</div>
+<div class="navhint">← → / スクロールで移動</div>
+<script>
+document.addEventListener('keydown', e=>{
+  const d=document.querySelector('.deck');
+  if(e.key==='ArrowRight'||e.key===' ') d.scrollBy({left:window.innerWidth,behavior:'smooth'});
+  if(e.key==='ArrowLeft') d.scrollBy({left:-window.innerWidth,behavior:'smooth'});
+});
+</script>
