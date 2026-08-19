@@ -137,6 +137,7 @@ def main():
     cmap = plt.get_cmap("coolwarm")
     lo, hi = 0.7, 1.8
     n_route = n_line = n_drop = 0
+    routed = []
     for _, r in cw.iterrows():
         A, B = [r.from_lat, r.from_lon], [r.to_lat, r.to_lon]
         chord = hav(A, B)
@@ -152,7 +153,10 @@ def main():
         col = cmap((min(max(rr, lo), hi)-lo)/(hi-lo)) if rr and rr == rr else "#9aa5ae"
         lw = 1.0 + min(2.4, chord/45)
         if rt:
-            _, eids, _ = rt
+            _, eids, rlen = rt
+            routed.append({"utility": r.utility, "line_name": r.line_name,
+                           "voltage_kv": r.voltage_kv, "chord_km": round(chord, 3),
+                           "route_km": round(rlen, 3)})
             n_route += 1
             for ei in eids:
                 p = geo[ei]
@@ -184,7 +188,14 @@ def main():
     fig.tight_layout()
     out = FIGS / "impedance_routed_map.png"
     fig.savefig(out, dpi=180, facecolor=BG); plt.close(fig)
+    import csv as _csv
+    rp = FIGS.parent / "route_len.csv"
+    with open(rp, "w", encoding="utf-8", newline="") as fh:
+        w = _csv.DictWriter(fh, fieldnames=["utility", "line_name", "voltage_kv",
+                                            "chord_km", "route_km"])
+        w.writeheader(); w.writerows(routed)
     print(f"  {out.name}  実線形 {n_route} / 直線 {n_line}")
+    print(f"  経路長を {rp.name} に出力（{len(routed)} 本）")
     return 0
 
 
