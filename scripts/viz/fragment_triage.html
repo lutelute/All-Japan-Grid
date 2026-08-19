@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>断片トリアージ — 孤立成分の証拠探索ビューア</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:"Hiragino Sans",sans-serif}
+  #map{position:absolute;inset:0}
+  #panel{position:absolute;top:10px;left:10px;z-index:1000;background:#fff;
+    border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.25);padding:10px 12px;
+    width:340px;max-height:92vh;display:flex;flex-direction:column;font-size:12.5px}
+  #panel h3{margin:0 0 6px;font-size:14px}
+  #list{overflow-y:auto;flex:1;margin-top:6px;border-top:1px solid #ddd}
+  .row{padding:5px 4px;border-bottom:1px solid #f855;cursor:pointer}
+  .row:hover{background:#f0f4f8}
+  .row b{color:#2b4a63}
+  .gap{color:#8c3326;font-weight:bold}
+  .meta{color:#667}
+  select,input{font-size:12.5px;margin:2px 4px 2px 0}
+  .legend{font-size:11.5px;color:#555;margin-top:4px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <h3>断片トリアージ <span id="stat" class="meta"></span></h3>
+  <div>
+    島 <select id="selIsland">
+      <option value="west">west</option><option value="east">east</option>
+      <option value="hokkaido">hokkaido</option><option value="okinawa">okinawa</option>
+    </select>
+    ギャップ <select id="selGap">
+      <option value="1">≤1km</option><option value="3" selected>≤3km</option>
+      <option value="10">≤10km</option><option value="999">全部</option>
+    </select>
+    最小ノード数 <input id="minN" type="number" value="1" min="1" style="width:3em">
+  </div>
+  <div class="legend">点=断片ノード(色=成分)・赤破線=最近傍の本系統ノードへのギャップ候補。
+    行クリックでズーム。優先度=規模×kV÷ギャップ。正典探索の照準:
+    ギャップ短=OSM欠測/抽出漏れ疑い(→OSM精査・EGGC)、名前あり大型=様式5/判読候補</div>
+  <div id="list"></div>
+</div>
+<script>
+const map = L.map("map").setView([35.2, 135.5], 7);
+L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
+  {attribution: "地理院タイル", maxZoom: 18}).addTo(map);
+let DATA = null, layer = L.layerGroup().addTo(map);
+const COLS = ["#c65a49","#3d7ea6","#3c7a4f","#8b6f2f","#7a4a8b","#2b6f6f","#a04a68"];
+
+fetch("../../docs/data/fragments/worklist.json").then(r=>r.json()).then(d=>{
+  DATA = d; render();
+});
+["selIsland","selGap","minN"].forEach(id=>
+  document.getElementById(id).onchange = render);
+
+function render(){
+  if(!DATA) return;
+  const isl = document.getElementById("selIsland").value;
+  const gapMax = +document.getElementById("selGap").value;
+  const minN = +document.getElementById("minN").value;
+  const d = DATA.islands[isl];
+  layer.clearLayers();
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  let shown = 0;
+  d.fragments.forEach((f, i) => {
+    const gap = f.nearest ? f.nearest.gap_km : null;
+    if(f.n_nodes < minN) return;
+    if(gap === null || gap > gapMax) return;
+    shown++;
+    const col = COLS[i % COLS.length];
+    f.nodes.forEach(n => {
+      L.circleMarker([n.lat, n.lon], {radius:4, color:col, weight:1,
+        fillColor:col, fillOpacity:.85})
+       .bindPopup(`<b>${n.name||"(無名)"}</b><br>${n.kv||"?"}kV<br>`+
+                  `成分#${f.comp} (${f.n_nodes}ノード)`)
+       .addTo(layer);
+    });
+    if(f.nearest){
+      const a=f.nearest.frag_node, b=f.nearest.main_node;
+      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],
+        {color:"#8c3326", weight:2, dashArray:"6 5"}).addTo(layer);
+      L.circleMarker([b.lat,b.lon],{radius:5,color:"#333",weight:1.5,
+        fillColor:"#fff",fillOpacity:1})
+       .bindPopup(`本系統側: <b>${b.name||"(無名)"}</b> ${b.kv||"?"}kV`)
+       .addTo(layer);
+    }
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `<b>${(f.names[0]||"(無名成分)")}</b> ほか ${f.n_nodes}ノード `+
+      `<span class="meta">${(f.kv||[]).join("/")}kV</span><br>`+
+      `<span class="gap">gap ${gap!==null?gap+"km":"—"}</span> `+
+      `<span class="meta">→ ${f.nearest? (f.nearest.main_node.name||"(無名)"):"—"} `+
+      `| 優先度${f.priority}${f.disclosure_worklist.length?
+        " | 様式5候補:"+f.disclosure_worklist.join(","):""}</span>`;
+    row.onclick = () => map.setView(f.centroid, 13);
+    list.appendChild(row);
+  });
+  document.getElementById("stat").textContent =
+    `${shown}/${d.fragments.length}断片 表示(本系統${d.main_nodes}ノード)`;
+}
+</script>
+</body>
+</html>
