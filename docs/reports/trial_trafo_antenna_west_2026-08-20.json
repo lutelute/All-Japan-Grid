@@ -1,0 +1,109 @@
+{
+ "E0": {
+  "info": {},
+  "naive": {
+   "conv": false,
+   "s": 0.7,
+   "err": "LoadflowNotConverged"
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 11.6,
+   "vm_min": 0.725,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E1": {
+  "info": {
+   "trafo_applied": 7,
+   "sample": [
+    [
+     "東部変電所",
+     500.0,
+     15.695
+    ],
+    [
+     "新三河変電所",
+     500.0,
+     10.59
+    ],
+    [
+     "駿遠変電所",
+     500.0,
+     15.996666666666664
+    ],
+    [
+     "駿遠変電所",
+     500.0,
+     15.996666666666664
+    ],
+    [
+     "静岡変電所",
+     500.0,
+     15.667
+    ],
+    [
+     "小郡変電所",
+     110.0,
+     180.0
+    ]
+   ]
+  },
+  "naive": {
+   "conv": false,
+   "s": 0.5,
+   "err": "LoadflowNotConverged"
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 10.5,
+   "vm_min": 0.725,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E3": {
+  "info": {
+   "antenna_removed": 2103,
+   "bus_after": 6139
+  },
+  "naive": {
+   "conv": true,
+   "s": 0.2,
+   "vm_min": 0.927,
+   "vm_max": 1.074
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 5.0,
+   "vm_min": 0.927,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E13": {
+  "info": {
+   "trafo_applied": 7,
+   "antenna_removed": 2103,
+   "bus_after": 6139
+  },
+  "naive": {
+   "conv": true,
+   "s": 0.1,
+   "vm_min": 0.927,
+   "vm_max": 1.074
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 1.8,
+   "vm_min": 0.927,
+   "served": 1.0,
+   "note": ""
+  }
+ }
+}

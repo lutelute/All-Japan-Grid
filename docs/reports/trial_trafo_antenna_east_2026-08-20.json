@@ -1,0 +1,80 @@
+{
+ "E0": {
+  "info": {},
+  "naive": {
+   "conv": true,
+   "s": 0.2,
+   "vm_min": 0.83,
+   "vm_max": 1.023
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 4.9,
+   "vm_min": 0.83,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E1": {
+  "info": {
+   "trafo_applied": 0,
+   "sample": []
+  },
+  "naive": {
+   "conv": true,
+   "s": 0.1,
+   "vm_min": 0.83,
+   "vm_max": 1.023
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 4.1,
+   "vm_min": 0.83,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E3": {
+  "info": {
+   "antenna_removed": 1637,
+   "bus_after": 4508
+  },
+  "naive": {
+   "conv": true,
+   "s": 0.1,
+   "vm_min": 0.866,
+   "vm_max": 1.023
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 7.7,
+   "vm_min": 0.866,
+   "served": 1.0,
+   "note": ""
+  }
+ },
+ "E13": {
+  "info": {
+   "trafo_applied": 0,
+   "antenna_removed": 1637,
+   "bus_after": 4508
+  },
+  "naive": {
+   "conv": true,
+   "s": 0.1,
+   "vm_min": 0.866,
+   "vm_max": 1.023
+  },
+  "ladder": {
+   "dc": true,
+   "ac": true,
+   "s": 7.7,
+   "vm_min": 0.866,
+   "served": 1.0,
+   "note": ""
+  }
+ }
+}
