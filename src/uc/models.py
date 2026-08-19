@@ -105,8 +105,15 @@ class Interconnection:
         name_en: English name of the interconnection.
         from_region: Source region identifier.
         to_region: Destination region identifier.
-        capacity_mw: Maximum transfer capacity in MW.
-        type: Interconnection type (``'AC'``, ``'HVDC'``, ``'FC'``).
+        capacity_mw: Maximum transfer capacity in MW (legacy symmetric
+            value; kept as ``max(fwd, rev)`` for consumers that do not
+            distinguish direction).
+        type: Interconnection type (``'AC'``, ``'HVDC'``, ``'FC'``,
+            ``'BTB'``).
+        capacity_fwd_mw: Capacity in the from→to direction (OCCTO 順方向
+            運用容量の期間最大). ``None`` falls back to ``capacity_mw``.
+        capacity_rev_mw: Capacity in the to→from direction (逆方向).
+            ``None`` falls back to ``capacity_mw``.
     """
 
     id: str
@@ -115,6 +122,8 @@ class Interconnection:
     to_region: str
     capacity_mw: float
     type: str = "AC"
+    capacity_fwd_mw: Optional[float] = None
+    capacity_rev_mw: Optional[float] = None
 
     def __post_init__(self) -> None:
         """Validate interconnection parameters."""
@@ -124,10 +133,27 @@ class Interconnection:
             raise ValueError(
                 f"Interconnection capacity_mw must be positive, got {self.capacity_mw}"
             )
+        for attr in ("capacity_fwd_mw", "capacity_rev_mw"):
+            v = getattr(self, attr)
+            if v is not None and v < 0:
+                raise ValueError(
+                    f"Interconnection {attr} must be non-negative, got {v}")
         if self.from_region == self.to_region:
             raise ValueError(
                 f"from_region and to_region must differ, both are '{self.from_region}'"
             )
+
+    @property
+    def cap_fwd(self) -> float:
+        """Effective from→to capacity (falls back to symmetric value)."""
+        return self.capacity_mw if self.capacity_fwd_mw is None \
+            else self.capacity_fwd_mw
+
+    @property
+    def cap_rev(self) -> float:
+        """Effective to→from capacity (falls back to symmetric value)."""
+        return self.capacity_mw if self.capacity_rev_mw is None \
+            else self.capacity_rev_mw
 
 
 @dataclass
@@ -339,6 +365,10 @@ class UCResult:
     interconnection_flows: List[InterconnectionFlow] = field(default_factory=list)
     system_lambda: Optional[List[float]] = None
     regional_lmp: Dict[str, List[float]] = field(default_factory=dict)
+    # 地域収支等式化(2026-08-19)で導入: 各地域・各時刻の余剰(自由廃棄でなく
+    # 明示変数でペナルティ課金)。>0 は「その地域で需要+輸出可能量を超えて
+    # 発電せざるを得なかった量」= 実運用なら出力制御に相当する帳簿。
+    regional_spill_mw: Dict[str, List[float]] = field(default_factory=dict)
 
     @property
     def is_optimal(self) -> bool:

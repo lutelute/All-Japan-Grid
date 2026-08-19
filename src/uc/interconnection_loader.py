@@ -72,6 +72,10 @@ class InterconnectionLoader:
                         f"required field '{field_name}'"
                     )
 
+            def _opt(key: str):
+                v = record.get(key)
+                return None if v is None else float(v)
+
             ic = Interconnection(
                 id=record["id"],
                 name_en=record.get("name_en", ""),
@@ -79,6 +83,8 @@ class InterconnectionLoader:
                 to_region=record["to_region"],
                 capacity_mw=float(record["capacity_mw"]),
                 type=record.get("type", "AC"),
+                capacity_fwd_mw=_opt("capacity_fwd_mw"),
+                capacity_rev_mw=_opt("capacity_rev_mw"),
             )
             interconnections.append(ic)
 

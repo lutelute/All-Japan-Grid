@@ -634,8 +634,12 @@ class TestInterconnectionOverrides:
         ic10 = next(ic for ic in scn.interconnections if ic.id == "ic_010")
         assert (ic10.from_region, ic10.to_region) == ("hokuriku", "kansai")
 
-    def test_fy2023_unchanged(self, tmp_path):
-        # 凍結シナリオ fy2023 は従来の連系線のまま（再現性保持）
+    def test_fy2023_inherits_canonical_base(self, tmp_path):
+        # 2026-08-19 介入#33: yaml本体を正本化(ic_005=南福光BTB 300MW・
+        # ic_010=越前嶺南線を本体へ)。旧テストは「fy2023は凍結=旧yamlのまま」
+        # を主張していたが、旧値(ic_005=1900・加賀〜越前)は定義誤りと確定
+        # したため凍結を解除し、fy2023も正本を継承する。旧yamlは
+        # data/reference/interconnections_legacy_2024.yaml に保存(回帰用)。
         _write_geojson(tmp_path / "tokyo_plants.geojson",
                        [_feat("A", "coal", 600, 1)])
         scn = build_national_scenario(
@@ -643,8 +647,12 @@ class TestInterconnectionOverrides:
             pumped_storage=False, nuclear_status=False,
         )
         caps = {ic.id: ic.capacity_mw for ic in scn.interconnections}
-        assert caps["ic_005"] == pytest.approx(1900)
-        assert "ic_010" not in caps
+        assert caps["ic_005"] == pytest.approx(300)
+        assert caps["ic_010"] == pytest.approx(1900)
+        # 非対称容量: 関門は順(中国→九州)850/逆2,850
+        ic9 = next(ic for ic in scn.interconnections if ic.id == "ic_009")
+        assert ic9.cap_fwd == pytest.approx(850)
+        assert ic9.cap_rev == pytest.approx(2850)
 
 
 class TestDemandProfileRef:

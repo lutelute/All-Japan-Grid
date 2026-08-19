@@ -206,10 +206,25 @@ def _get_nameplates():
 # 縫合が完了したらこの集合から外して除外に揃える。
 KEEP_LIVE_TIES = {"東北東京間連系線"}
 
+# 介入#32(2026-08-19): 南福光BTBのAC素通し切断。中部北陸間は南福光連系所の
+# BTB(back-to-back DC・非同期)による連系で、交流の直通は実在しない。モデルは
+# 中部側(越美幹線)と北陸側(加賀福光線・能越幹線)が同一バスに合流し、実績断面
+# 575MW・UC断面1,210MWがAC素通しになっていた(運用容量の中央値300MWの2〜4倍)。
+# バスを中部側/北陸側に分割し、指定線名の枝を中部側バスへ付け替える。
+# 根拠=OCCTO連系設備定義(interconnections.yaml ic_005・正本jsonl)。
+# 帳簿=build統計 n_btb_split。無効化=--no-btb-split。
+BTB_SPLITS = [
+    {"bus_name": "南福光連系所",
+     "move_lines_containing": ["越美幹線"],
+     "new_zone": "chubu",
+     "source": "OCCTO 中部北陸間連系設備=南福光BTB(非同期・中央値300MW)"},
+]
+
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
-                     deenergize_unbuilt=False, synthetic_ties_live=False):
+                     deenergize_unbuilt=False, synthetic_ties_live=False,
+                     btb_split=True):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -512,6 +527,39 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     except (ValueError, TypeError):
                         pass
 
+    # ---- 介入#32: BTB連系所のAC素通し切断(既定ON) — BTB_SPLITS参照。
+    #      同名バスを設備の両側に分割し、指定線名の枝のみ新バスへ付け替える。
+    #      変圧器・負荷・発電機は元バス(北陸側)に残る。 ----
+    n_btb_split = 0
+    if btb_split:
+        for spec in BTB_SPLITS:
+            hits = net.bus.index[net.bus.name.astype(str) == spec["bus_name"]]
+            for b in hits:
+                mask = ((net.line.from_bus == b) | (net.line.to_bus == b)) & \
+                    net.line.name.astype(str).str.contains(
+                        "|".join(spec["move_lines_containing"]), regex=True)
+                if not mask.any():
+                    continue
+                try:
+                    gd = net.bus_geodata.loc[b]
+                    geodata = (float(gd["x"]), float(gd["y"]))
+                except (AttributeError, KeyError):
+                    geodata = None
+                # type="n"(junction)が重要: allocate_loads は type!="n" のバスへ
+                # 需要を配るため、"b"で作ると(chubu,富山県)の県別需要がこの
+                # 1バスに集中する(診断で1,556MW集中を実測)。BTB端子は無負荷。
+                nb = pp.create_bus(
+                    net, vn_kv=float(net.bus.at[b, "vn_kv"]),
+                    name=f"{spec['bus_name']}(中部側)", type="n",
+                    geodata=geodata)
+                net.bus.at[nb, "zone"] = spec.get("new_zone")
+                for li in net.line.index[mask]:
+                    if int(net.line.at[li, "from_bus"]) == int(b):
+                        net.line.at[li, "from_bus"] = nb
+                    if int(net.line.at[li, "to_bus"]) == int(b):
+                        net.line.at[li, "to_bus"] = nb
+                    n_btb_split += 1
+
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "n_edge_skipped": n_edge_skipped,
@@ -520,6 +568,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_site_trafo": n_site_trafo,
                          "n_deenergized": n_deenergized,
                          "n_tie_nis": n_tie_nis,
+                         "n_btb_split": n_btb_split,
                          "region_reattribution": rstats}
 
 
@@ -1210,6 +1259,14 @@ def main():
                          "だったため。A/B=tie_duplication_ab_2026-08-17.json(観測整合は"
                          "不変・潮流は実線へ転流)。東北東京のみ切れ端未縫合のため通電維持"
                          "(KEEP_LIVE_TIES)。本引数=Trueで従来挙動(回帰比較用)")
+    ap.add_argument("--btb-split", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="介入#32(2026-08-19・既定ON): 南福光BTBのAC素通し切断。"
+                         "中部北陸間はBTB(非同期)連系で交流直通は実在しないが、"
+                         "モデルは南福光連系所バスで越美幹線(中部)と加賀福光線・"
+                         "能越幹線(北陸)が合流しAC素通し(実績断面575MW・UC断面"
+                         "1,210MW vs 運用容量中央値300MW)だった。バスを両側に分割"
+                         "する。無効化=--no-btb-split(回帰比較用)")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1259,11 +1316,16 @@ def main():
             island, nodes, edges, freq, geom, dedup_nodes=args.dedup_nodes,
             site_trafos=args.site_trafos,
             deenergize_unbuilt=args.deenergize_unbuilt,
-            synthetic_ties_live=args.synthetic_ties_live)
+            synthetic_ties_live=args.synthetic_ties_live,
+            btb_split=args.btb_split)
         if bstats.get("n_tie_nis"):
             # 介入#31 の帳簿: 何本の合成タイ/DC枝を非通電化したかを必ず出す
             print(f"  介入#31 synthetic-ties: {bstats['n_tie_nis']}本を非通電で建てた"
                   f"(通電維持={sorted(KEEP_LIVE_TIES)})")
+        if bstats.get("n_btb_split"):
+            # 介入#32 の帳簿: BTB切断で付け替えた枝数を必ず出す
+            print(f"  介入#32 btb-split: 南福光BTBを分割"
+                  f"(中部側へ{bstats['n_btb_split']}本付け替え)")
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")

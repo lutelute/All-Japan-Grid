@@ -53,6 +53,12 @@ from src.utils.logging_config import get_logger
 logger = get_logger(__name__)
 
 # PuLP status code to human-readable string mapping
+# 地域余剰(spill)のペナルティ [¥/MWh]。どの燃料の限界費用よりも十分高く、
+# 「余らせるくらいなら出力を下げる/停止する/輸出する」を必ず優先させる。
+# spill>0 が残るのは物理的に不可避な場合のみ(最低出力・must-run と輸出上限の
+# 衝突=実運用の出力制御に相当)。総コスト報告からはペナルティ分を除外する。
+SPILL_PENALTY = 100_000.0
+
 _STATUS_MAP = {
     pulp.constants.LpStatusOptimal: "Optimal",
     pulp.constants.LpStatusNotSolved: "Not Solved",
@@ -209,7 +215,7 @@ def solve_uc(params: UCParameters) -> UCResult:
                      y_hot=y_hot, y_warm=y_warm, y_cold=y_cold)
 
     # --- Constraints -------------------------------------------------------
-    _add_all_constraints(
+    spill = _add_all_constraints(
         model, u, p, v, w, generators, timesteps, demand, params.reserve_margin,
         p_ch=p_ch, p_dis=p_dis, z_ch=z_ch, soc=soc,
         period_duration_h=params.time_horizon.period_duration_h,
@@ -251,7 +257,7 @@ def solve_uc(params: UCParameters) -> UCResult:
         _extract_solution(
             result, model, u, p, v, w, generators, timesteps,
             p_ch=p_ch, p_dis=p_dis, soc=soc, storage_ids=storage_ids,
-            interconnections=interconnections, f=f,
+            interconnections=interconnections, f=f, spill=spill,
         )
         if params.extract_duals:
             _extract_duals(result, model, solver, timesteps)
@@ -364,7 +370,7 @@ def _add_all_constraints(
     regional_demands: Optional[Dict[str, List[float]]] = None,
     initial_commitment: Optional[Dict[str, int]] = None,
     initial_history_h: Optional[Dict[str, int]] = None,
-) -> None:
+) -> Optional[Dict[Tuple[str, int], pulp.LpVariable]]:
     """Add all constraint classes to the model.
 
     When interconnections are present, uses per-region nodal balance
@@ -372,7 +378,12 @@ def _add_all_constraints(
     transmission capacity constraints on flow variables.
     ``initial_commitment`` / ``initial_history_h`` carry pre-horizon state
     for rolling-horizon solves.
+
+    Returns:
+        The spill variable dict ``(region, t) -> LpVariable`` when nodal
+        balance is active (等式化に伴う地域余剰の明示変数), else ``None``.
     """
+    spill: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None
     if interconnections and f:
         # Nodal balance replaces system-wide demand balance.
         # Use caller-supplied regional demands when available (physically
@@ -382,9 +393,19 @@ def _add_all_constraints(
             if regional_demands
             else _split_demand_by_region(generators, demand)
         )
+        # 2026-08-19: 地域収支を等式化し、余剰は明示spill変数(ペナルティ
+        # 課金)へ。従来の >= は余剰の自由廃棄=連系制約が発電を拘束しない
+        # 抜け穴だった(九州昼間に純需要+輸出上限を5.7GW超えて発電)。
+        spill_indices = [
+            (r, t) for r in regional_demand for t in timesteps
+        ]
+        spill = pulp.LpVariable.dicts(
+            "spill", spill_indices, lowBound=0, cat="Continuous"
+        )
+        model.objective += SPILL_PENALTY * pulp.lpSum(spill.values())
         add_nodal_balance_constraints(
             model, p, f, generators, interconnections, timesteps,
-            regional_demand,
+            regional_demand, spill=spill,
         )
         add_transmission_capacity_constraints(
             model, f, interconnections, timesteps,
@@ -415,6 +436,7 @@ def _add_all_constraints(
         add_startup_type_constraints(
             model, u, v, y_hot, y_warm, y_cold, generators, timesteps,
         )
+    return spill
 
 
 def _split_demand_by_region(
@@ -695,6 +717,7 @@ def _extract_solution(
     storage_ids: Optional[set] = None,
     interconnections: Optional[List[Interconnection]] = None,
     f: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    spill: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> None:
     """Extract solution values into GeneratorSchedule objects.
 
@@ -705,6 +728,27 @@ def _extract_solution(
     logs saturation summary.
     """
     result.total_cost = pulp.value(model.objective)
+
+    # 地域余剰(spill)の帳簿化。総コストからはペナルティ分を除外して
+    # 実コストのみ報告する(ペナルティは挙動誘導のための人工項)。
+    if spill:
+        by_region: Dict[str, List[float]] = {}
+        total_spill_mwh = 0.0
+        for (r, t) in sorted(spill.keys(), key=lambda k: (k[0], k[1])):
+            sv = float(pulp.value(spill[(r, t)]) or 0.0)
+            by_region.setdefault(r, []).append(sv)
+            total_spill_mwh += sv
+        result.regional_spill_mw = by_region
+        if total_spill_mwh > 1e-6:
+            result.total_cost -= SPILL_PENALTY * total_spill_mwh
+            worst = max(by_region.items(),
+                        key=lambda kv: max(kv[1]) if kv[1] else 0.0)
+            result.warnings.append(
+                f"regional spill (=出力制御相当) 合計 {total_spill_mwh:,.0f} MWh; "
+                f"最大 {worst[0]} {max(worst[1]):,.0f} MW")
+            logger.warning(
+                "Regional spill present: total %.0f MWh (max %s %.0f MW)",
+                total_spill_mwh, worst[0], max(worst[1]))
 
     if p_ch is None:
         p_ch = {}

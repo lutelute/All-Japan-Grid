@@ -92,6 +92,57 @@ BOUNDARY_POINTS = {
 }
 
 
+# 島内DC/BTB連系(交流枝を持たない設備)のUCスケジュール注入(2026-08-19・#32/#33)。
+# #31で阿南紀北DCのAC枝を非通電化・#32で南福光BTBを切断した結果、UCがその
+# リンクに割り付けた融通(例: 四国→関西700MW)がPFで行き場を失い、並行AC
+# (本四連系線)へ上乗せされて容量超過に見えていた。両端の変換所バスへ±ペアの
+# sgenを置き、スケジュール潮流をDCリンクとして注入する(島合計は不変=±0)。
+# バス名はbuiltノード実名で解決(捏造回避)。南福光(中部側)は#32のbtb_splitが
+# 作るバス — split無効時は解決不能となり自動でskip(帳簿に出る)。
+INTRA_DC_POINTS = {
+    "west": [
+        {"ic_id": "ic_007", "from_bus": "紀北変換所",
+         "to_bus": "阿南周波数変換所"},
+        {"ic_id": "ic_005", "from_bus": "南福光連系所(中部側)",
+         "to_bus": "南福光連系所"},
+    ],
+}
+
+
+def setup_intra_dc_sgens(net, island, scn):
+    """島内DC/BTBの両端バスを名前解決し ±ペアsgen(p=0)を用意する。"""
+    pts, dropped = [], []
+    for spec in INTRA_DC_POINTS.get(island, []):
+        ic = next((i for i in scn.interconnections
+                   if i.id == spec["ic_id"]), None)
+        if ic is None:
+            dropped.append(spec["ic_id"])
+            continue
+        buses = {}
+        for side in ("from_bus", "to_bus"):
+            mask = net.bus.name.astype(str) == spec[side]
+            if not mask.any():
+                mask = net.bus.name.astype(str).str.contains(
+                    spec[side], regex=False)
+            if not mask.any():
+                buses = None
+                break
+            buses[side] = int(net.bus.loc[mask, "vn_kv"].idxmax())
+        if buses is None:
+            dropped.append(spec["ic_id"])
+            continue
+        pts.append({
+            "ic_id": spec["ic_id"],
+            "sgen_from": int(pp.create_sgen(
+                net, bus=buses["from_bus"], p_mw=0.0, q_mvar=0.0,
+                name=f"dclink_{spec['ic_id']}_from")),
+            "sgen_to": int(pp.create_sgen(
+                net, bus=buses["to_bus"], p_mw=0.0, q_mvar=0.0,
+                name=f"dclink_{spec['ic_id']}_to")),
+        })
+    return pts, dropped
+
+
 def island_boundary_flows(uc, scn, island_regions):
     """島境界を跨ぐUC連系フローを {pairキー: [24h 正味輸入MW]} で返す。"""
     out = {}
@@ -351,6 +402,12 @@ def main():
                          "ため、容量比例注入が断片に落ちる分(east実測~17GW/59GW)を"
                          "排除する。断片の負荷は synthetic slack 供給のまま"
                          "(=fragment_unserved としてレポート)")
+    ap.add_argument("--intra-dc-injection", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="島内DC/BTB連系(阿南紀北・南福光)のUCスケジュールを両端"
+                         "変換所バスへ±ペアsgenで注入する(既定ON・2026-08-19)。"
+                         "#31/#32でAC枝を切った分の融通に道を与え、並行AC(本四等)"
+                         "への上乗せ超過を解消する。無効化=--no-intra-dc-injection")
     ap.add_argument("--boundary-injection", action="store_true",
                     help="UCの島間連系フロー(東西FC・北本)を境界設備バスへ"
                          "sgen注入する。PF島が表現できない島間融通の構造項"
@@ -414,6 +471,21 @@ def main():
     if not uc.is_optimal:
         print("UCがOptimalでないため中止")
         return 1
+
+    # 揚水等の充電(負出力)を地域別・時刻別に集計(2026-08-19)。
+    # uc_snapshot は正味発電のみを返すため、充電は需要側へ加算しないと
+    # UCのゾーン収支(発電+輸入-充電-spill=需要)がPFで崩れる
+    # (九州昼: 充電3.5GWの落とし分がそのまま幻の輸出になっていた)。
+    _gmap = {g.id: g for g in scn.generators}
+    charge_r: dict[str, list] = {}
+    for s in uc.schedules:
+        g = _gmap.get(s.generator_id)
+        if g is None:
+            continue
+        arr = charge_r.setdefault(g.region, [0.0] * len(s.power_output_mw))
+        for i, pv in enumerate(s.power_output_mw):
+            if pv < 0:
+                arr[i] += -float(pv)
 
     built = json.load(open(BUILT))
     cfg = load_demand_config()
@@ -511,6 +583,15 @@ def main():
                       f"(share {pt['share']:.2f})")
             if bdropped:
                 print(f"  boundary: 未解決(重み再配分) {bdropped}")
+        intra_dc_pts, intra_dc_flows = [], {}
+        if args.intra_dc_injection:
+            intra_dc_pts, ddropped = setup_intra_dc_sgens(base, island, scn)
+            for fr in getattr(uc, "interconnection_flows", []) or []:
+                intra_dc_flows[fr.interconnection_id] = fr.flow_mw
+            for pt in intra_dc_pts:
+                print(f"  intra-dc: {pt['ic_id']} ±ペア注入を準備")
+            if ddropped:
+                print(f"  intra-dc: 未解決skip {ddropped}")
         print(f"  built: {len(base.bus)}バス trafo={len(base.trafo)} "
               f"(銘板{bstats['n_trafo_nameplate']}) {time.monotonic()-t0:.0f}s")
 
@@ -548,6 +629,8 @@ def main():
                         "pair": list(p["pair"]),
                         "share": round(p["share"], 3)}
                        for p in boundary_pts] if boundary_pts else None),
+                   "intra_dc_injection": ([p["ic_id"] for p in intra_dc_pts]
+                                          if intra_dc_pts else None),
                    "inject_main_comp_only": bool(args.inject_main_comp_only),
                    "n_fragment_gen_off": n_gen_off,
                    "fragment_unserved_load_mw": round(fragment_load_mw, 1),
@@ -568,7 +651,31 @@ def main():
             net_t = copy.deepcopy(base)
             fuel_by_zone = {r: uc_snapshot(uc, scn.generators, t, region=r)
                             for r in regions}
-            demand = {r: float(scn.net_demand_r[r][t]) for r in regions}
+            # 需要=純需要+充電(揚水汲み上げ等の負出力分)。充電を落とすと
+            # ゾーン純位置が崩れる(上の charge_r コメント参照)
+            demand = {}
+            for r in regions:
+                ch = charge_r.get(r) or []
+                demand[r] = float(scn.net_demand_r[r][t]) + \
+                    (float(ch[t]) if t < len(ch) else 0.0)
+            # 地域余剰(spill=UC等式収支の明示余剰・2026-08-19)は注入前に
+            # 燃料比例で差し引く。差し引かないと UC のゾーン純位置
+            # (発電-需要=スケジュール純輸出) が PF 側で崩れ、連系断面が
+            # 運用容量を超える潮流を再現してしまう(関門5.8GWの真因)。
+            spill_mw = {}
+            for r in regions:
+                sp = (uc.regional_spill_mw.get(r) or [])
+                v = float(sp[t]) if t < len(sp) else 0.0
+                if v <= 1e-6:
+                    continue
+                tot = sum(fuel_by_zone[r].values())
+                if tot > v:
+                    sc = (tot - v) / tot
+                    fuel_by_zone[r] = {k: mw * sc
+                                       for k, mw in fuel_by_zone[r].items()}
+                else:
+                    fuel_by_zone[r] = {k: 0.0 for k in fuel_by_zone[r]}
+                spill_mw[r] = round(v, 1)
             inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand,
                                           gen_zone_override=gen_zone_override)
             if args.hourly_shunts and len(net_t.shunt):
@@ -590,6 +697,16 @@ def main():
                 p_pt = float(series[t]) * pt["share"]
                 net_t.sgen.at[pt["sgen"], "p_mw"] = p_pt
                 bnd_mw[pt["name"]] = round(p_pt, 1)
+            dc_mw = {}
+            for pt in intra_dc_pts:
+                series = intra_dc_flows.get(pt["ic_id"])
+                if series is None or t >= len(series):
+                    continue
+                fv = float(series[t])   # + = from_region -> to_region
+                # from側の変換所からfvが抜け、to側の変換所にfvが入る(島計±0)
+                net_t.sgen.at[pt["sgen_from"], "p_mw"] = -fv
+                net_t.sgen.at[pt["sgen_to"], "p_mw"] = fv
+                dc_mw[pt["ic_id"]] = round(fv, 1)
             net_s, used = solve_hour(net_t, mode)
             conv = bool(net_s.converged)
             n_ok += int(conv)
@@ -608,6 +725,16 @@ def main():
                     "solve_s": round(time.monotonic() - th, 1)}
             if bnd_mw:
                 hrep["boundary_mw"] = bnd_mw
+            if dc_mw:
+                hrep["intra_dc_mw"] = dc_mw
+            if spill_mw:
+                hrep["spill_mw"] = spill_mw
+            ch_rep = {r: round(float((charge_r.get(r) or [])[t]), 1)
+                      for r in regions
+                      if t < len(charge_r.get(r) or [])
+                      and (charge_r.get(r) or [])[t] > 1.0}
+            if ch_rep:
+                hrep["charge_mw"] = ch_rep
             inj_issues = {r: {k: v for k, v in
                               (("clipped", inj[r]["injection"]["clipped"]),
                                ("unmatched", inj[r]["injection"]["unmatched"]))
