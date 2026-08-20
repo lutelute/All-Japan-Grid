@@ -71,6 +71,21 @@ def min_dist_to_path(p, path):
         dist_km(p, path[0])
 
 
+def nearest_vertex_idx(p, path):
+    """点pに最も近いpath頂点のindex(接触点間の切り出し用)。"""
+    return min(range(len(path)), key=lambda i: dist_km(p, path[i]))
+
+
+def clip_path(path, p_from, p_to):
+    """pathをp_from/p_toの最近傍頂点間で切り出す(向きはfrom→to)。"""
+    i, j = nearest_vertex_idx(p_from, path), nearest_vertex_idx(p_to, path)
+    if i <= j:
+        sub = path[i:j + 1]
+    else:
+        sub = list(reversed(path[j:i + 1]))
+    return sub if len(sub) >= 1 else path
+
+
 def norm_base(s):
     s = unicodedata.normalize("NFKC", str(s or "")).replace(" ", "")
     s = re.sub(r"(_\d+|\s*\d+kV)$", "", s)
@@ -248,7 +263,10 @@ def main() -> int:
         for b in bridges:
             fk, mk = b["frag"]["k"], b["main"]["k"]
             kv = b["line_kv"] or b["frag"]["kv"] or b["main"]["kv"] or 66.0
-            path = [[fk[0], fk[1]]] + [[p[0], p[1]] for p in b["path"]] + \
+            # 接触点間だけを切り出す(線全体を繋ぐとループ状の過大経路になり
+            # 電気長も過大 — before/after図の検証で発見したバグの修正)
+            sub = clip_path(b["path"], fk, mk)
+            path = [[fk[0], fk[1]]] + [[p[0], p[1]] for p in sub] + \
                    [[mk[0], mk[1]]]
             built["edges"].append({
                 "a": [fk[0], fk[1]], "b": [mk[0], mk[1]], "main": True,
