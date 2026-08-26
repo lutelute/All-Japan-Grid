@@ -23,6 +23,22 @@ function foot(s, n) {
     fontSize: 10, color: MUT, align: "right", margin: 0 });
 }
 
+
+// ネイティブ数式: 斜体変数+下付き/上付きの実テキスト(画像貼りをしない)
+// runs: [text, opts] opts: i=italic, sub, sup, jp(和文), b=bold
+function meq(s, x, y, w, runs, fs) {
+  const rr = runs.map(([t, o]) => {
+    o = o || {};
+    return { text: t, options: {
+      fontFace: o.jp ? F : "Times New Roman",
+      italic: !!o.i, subscript: !!o.sub, superscript: !!o.sup,
+      bold: !!o.b, color: o.c || INK,
+      fontSize: o.fs || fs || 16,
+    } };
+  });
+  s.addText(rr, { x, y, w, h: 0.5, margin: 0, valign: "middle" });
+}
+
 // ---------- 1. タイトル ----------
 {
   const s = pres.addSlide(); base(s);
@@ -81,8 +97,20 @@ function foot(s, n) {
   s.addText("入力はOSM由来の地域別データ（変電所ポリゴン・送電線way・タグ）。座標は約1m格子に量子化して同一設備を融合し、同期島ごとの座標グラフを構成する。", {
     x: 0.7, y: 1.6, w: 12.0, h: 0.75, fontFace: F, fontSize: 13.5,
     color: INK, lineSpacing: 21, margin: 0 });
-  s.addImage({ path: "assets/eq_quant.png", x: 0.9, y: 2.5, w: 10.8, h: 1.15,
-    sizing: { type: "contain", w: 10.8, h: 1.15 } });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 2.45, w: 12.0, h: 1.3,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  meq(s, 1.0, 2.55, 11.5, [
+    ["q", {i:1}], ["(p)", {}], [" = ( round(", {}], ["φ", {i:1}],
+    [", 5),  round(", {}], ["λ", {i:1}], [", 5) )", {}],
+    ["    …… 約1m格子への量子化（同一設備の融合キー）", {jp:1, fs:12, c:MUT}],
+  ]);
+  meq(s, 1.0, 3.15, 11.5, [
+    ["G", {i:1}], ["I", {i:1, sub:1}], [" = (", {}], ["V", {i:1}],
+    ["I", {i:1, sub:1}], [", ", {}], ["E", {i:1}], ["I", {i:1, sub:1}],
+    [")", {}],
+    ["    …… 同期島 ", {jp:1, fs:12, c:MUT}], ["I", {i:1, fs:12, c:MUT}],
+    [" ごとの座標グラフ", {jp:1, fs:12, c:MUT}],
+  ]);
   const syms = [
     ["s,  Poly(s)", "変電所サイトとその敷地ポリゴン"],
     ["W_busbar / W_bay / W_main", "構内way（line=busbar / bay）と本線way"],
@@ -194,8 +222,25 @@ function foot(s, n) {
   // binding 述語
   s.addText("端子束縛の証拠語彙（強い順に採用）", { x: 7.5, y: 1.75, w: 5.2,
     h: 0.4, fontFace: F, fontSize: 14, bold: true, color: NAVY, margin: 0 });
-  s.addImage({ path: "assets/eq_binding.png", x: 7.5, y: 2.3, w: 5.35,
-    h: 1.85, sizing: { type: "contain", w: 5.35, h: 1.85 } });
+  s.addShape(pres.ShapeType.roundRect, { x: 7.4, y: 2.25, w: 5.35, h: 2.0,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  meq(s, 7.65, 2.42, 5.0, [
+    ["vertex(", {}], ["t", {i:1}], ["):  ∃", {}], ["v", {i:1}], [" ∈ ", {}],
+    ["W", {i:1}], ["ℓ", {i:1, sub:1}], [" ∩ ", {}], ["W", {i:1}],
+    ["s", {i:1, sub:1}],
+    ["   （way頂点の共有）", {jp:1, fs:11, c:MUT}],
+  ], 14);
+  meq(s, 7.65, 3.02, 5.0, [
+    ["polygon(", {}], ["t", {i:1}], ["):  ", {}], ["p", {i:1}],
+    ["end", {sub:1}], ["(", {}], ["ℓ", {i:1}], [") ∈ Poly(", {}],
+    ["s", {i:1}], [")", {}],
+    ["   （敷地内包）", {jp:1, fs:11, c:MUT}],
+  ], 14);
+  meq(s, 7.65, 3.62, 5.0, [
+    ["leadin(", {}], ["t", {i:1}], ["):  ", {}], ["d", {i:1}], ["(", {}],
+    ["p", {i:1}], ["end", {sub:1}], [", Poly(", {}], ["s", {i:1}],
+    [")) ≤ ", {}], ["δ", {i:1}], ["lead", {sub:1}], [" = 0.6 km", {}],
+  ], 14);
   s.addText("弱い証拠は図上でも弱く描く（leadin＝破線）。証拠の無い接続は作らない（捏造ゼロ）。name-evidence（「A~B線」等の線名）は connections 欠測時の対向解決のみに用い、接続そのものは作らない。", {
     x: 7.5, y: 4.35, w: 5.2, h: 1.7, fontFace: F, fontSize: 12,
     color: MUT, lineSpacing: 19, margin: 0 });
@@ -209,8 +254,14 @@ function foot(s, n) {
   s.addText("物理的に近接していても電気的に接続してはならない対（併架・並走回廊）を、電圧の相対乖離で棄却する。", {
     x: 0.7, y: 1.6, w: 12.0, h: 0.5, fontFace: F, fontSize: 13.5,
     color: INK, margin: 0 });
-  s.addImage({ path: "assets/eq_gate.png", x: 1.6, y: 2.35, w: 8.5, h: 0.8,
-    sizing: { type: "contain", w: 8.5, h: 0.8 } });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 2.3, w: 12.0, h: 0.85,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  meq(s, 1.05, 2.48, 11.3, [
+    ["reject(", {}], ["ℓ", {i:1}], [", ", {}], ["n", {i:1}],
+    [")   ⇔   | ", {}], ["kv", {i:1}], ["ℓ", {i:1, sub:1}], [" − ", {}],
+    ["kv", {i:1}], ["n", {i:1, sub:1}], [" |  >  0.25 · max(", {}],
+    ["kv", {i:1}], ["n", {i:1, sub:1}], [", 1)", {}],
+  ], 17);
   s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 3.6, w: 12.0, h: 2.7,
     fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.07 });
   s.addText("正当性の事例（2026-08-20 断片解消キャンペーン c1）", { x: 1.0,
@@ -229,8 +280,27 @@ function foot(s, n) {
   s.addText("線タグ（circuits / cables / wires）を terminal の line_key で構造DBに接合し、変電所×電圧階級の単位に集約する。証拠のある値と推計値を分離して保持し、無タグを推測で埋めない。", {
     x: 0.7, y: 1.6, w: 12.0, h: 0.8, fontFace: F, fontSize: 13.5,
     color: INK, lineSpacing: 21, margin: 0 });
-  s.addImage({ path: "assets/eq_circuits.png", x: 0.9, y: 2.6, w: 11.4,
-    h: 1.35, sizing: { type: "contain", w: 11.4, h: 1.35 } });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 2.55, w: 12.0, h: 1.45,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  meq(s, 1.05, 2.72, 11.4, [
+    ["ĉ", {i:1}], ["(", {}], ["w", {i:1}], [") = ", {}],
+    ["c", {i:1}], ["tag", {sub:1}], ["(", {}], ["w", {i:1}], [")", {}],
+    ["（circuitsタグ）", {jp:1, fs:11, c:MUT}],
+    ["  /  ", {}], ["n", {i:1}], ["cables", {sub:1}], ["(", {}],
+    ["w", {i:1}], [")/3", {}],
+    ["（cablesのみ・切り捨て）", {jp:1, fs:11, c:MUT}],
+    ["  /  1", {}], ["（証拠なし・下限）", {jp:1, fs:11, c:MUT}],
+  ], 15);
+  meq(s, 1.05, 3.38, 11.4, [
+    ["c", {i:1}], ["est", {sub:1}], ["(", {}], ["s", {i:1}], [", ", {}],
+    ["v", {i:1}], [") = Σ", {}], ["w∈L(s,v)", {i:1, sub:1}], [" ", {}],
+    ["ĉ", {i:1}], ["(", {}], ["w", {i:1}], [")", {}],
+    [",    ", {}],
+    ["c", {i:1}], ["sum", {sub:1}], [" = Σ", {}],
+    ["w:evidence", {i:1, sub:1}], [" ", {}], ["ĉ", {i:1}], ["(", {}],
+    ["w", {i:1}], [")", {}],
+    ["   …… 推計と証拠を分離保持", {jp:1, fs:11, c:MUT}],
+  ], 15);
   // wires 対応表
   s.addText("導体数（wiresタグ）の写像", { x: 0.7, y: 4.35, w: 5, h: 0.4,
     fontFace: F, fontSize: 13.5, bold: true, color: NAVY, margin: 0 });
@@ -273,8 +343,25 @@ function foot(s, n) {
   });
   s.addText("流向（入/出）の推定規則", { x: 0.7, y: 4.95, w: 6, h: 0.4,
     fontFace: F, fontSize: 14, bold: true, color: NAVY, margin: 0 });
-  s.addImage({ path: "assets/eq_dir.png", x: 0.9, y: 5.42, w: 11.4, h: 1.55,
-    sizing: { type: "contain", w: 11.4, h: 1.55 } });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 5.38, w: 12.0, h: 1.62,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  meq(s, 1.05, 5.5, 11.4, [
+    ["dir(", {}], ["g", {i:1}], [") = in", {}],
+    ["    if  max", {}], ["s′∈far(g)", {i:1, sub:1}], [" ", {}],
+    ["kv", {i:1}], ["max", {sub:1}], ["(", {}], ["s′", {i:1}],
+    [")  >  ", {}], ["kv", {i:1}], ["v", {i:1, sub:1}],
+    ["   （対向に上位電圧階級）", {jp:1, fs:11.5, c:MUT}],
+  ], 15);
+  meq(s, 1.05, 6.0, 11.4, [
+    ["dir(", {}], ["g", {i:1}], [") = in", {}],
+    ["    if  ", {}], ["kv", {i:1}], ["v", {i:1, sub:1}], [" = ", {}],
+    ["kv", {i:1}], ["top", {sub:1}], ["(", {}], ["s", {i:1}], [")", {}],
+    ["   （自所トップ階級の同位対向＝系統側）", {jp:1, fs:11.5, c:MUT}],
+  ], 15);
+  meq(s, 1.05, 6.5, 11.4, [
+    ["dir(", {}], ["g", {i:1}], [") = out    otherwise", {}],
+    ["   （同位対向＝配下へ・すべて推定として凡例に明記）", {jp:1, fs:11.5, c:MUT}],
+  ], 15);
   foot(s, 8);
 }
 
@@ -284,7 +371,7 @@ function foot(s, n) {
   head(s, "8", "RESULTS", "実証ペア図 — 新京葉変電所（500/275/154/66kV）");
   s.addImage({ path: "assets/pair_full.png", x: 0.85, y: 1.62, w: 11.6,
     h: 5.15, sizing: { type: "contain", w: 11.6, h: 5.15 } });
-  s.addText("左: GeoPane（構内幾何・端子根拠・鉄塔・インセット）　右: SLDPane（母線セクション・回線ストローク・流向・変圧器・スルー）", {
+  s.addText("図1  実証ペア図（新京葉変電所）。左: GeoPane（構内幾何・端子根拠・鉄塔・インセット）　右: SLDPane（母線セクション・回線ストローク・流向・変圧器・スルー）", {
     x: 0.85, y: 6.78, w: 11.8, h: 0.35, fontFace: F, fontSize: 11,
     color: MUT, margin: 0 });
   foot(s, 9);
@@ -307,7 +394,7 @@ function foot(s, n) {
     s.addText(cap, { x, y: 5.66, w: 2.9, h: 0.36, fontFace: F,
       fontSize: 10.5, color: INK, margin: 0 });
   });
-  s.addText("バッチ生成器（再開可能・タイルキャッシュ・礼儀スロットル）により全所を一括描画。約1〜6秒/所、10地域並列で全国を約1時間で処理（pws-160core 実測）。", {
+  s.addText("図2  各地域の代表例（GeoPane 抜粋）。バッチ生成器（再開可能・タイルキャッシュ）により全所を一括描画 — 約1〜6秒/所・10地域並列で全国約1時間（pws-160core 実測）。", {
     x: 0.7, y: 6.25, w: 12.2, h: 0.65, fontFace: F, fontSize: 12,
     color: MUT, lineSpacing: 18, margin: 0 });
   foot(s, 10);
