@@ -344,6 +344,69 @@ def extract_structure(region, ft, pways):
 # ---------------------------------------------------------------- 検証図
 
 
+def _gsi_underlay(ax, x0, y0, x1, y1,
+                  cache_dir="data/cache/gsi_tiles", max_tiles=196):
+    """GeoPane 下敷きの地理院シームレスフォト(全国最新写真)。
+
+    座標は (lon,lat)。タイルはキャッシュ(data/cache/gsi_tiles)し、取得失敗は
+    静かにスキップ(オフラインでも図は成立)。出典表記は呼び出し側で入れる。
+    z はサイト bbox から自動(タイル数が max_tiles 以下になる最大ズーム)。
+    サイトスケールではメルカトル歪みは軽微(検証図用途)。
+    """
+    import math
+    import urllib.request
+
+    from PIL import Image
+
+    def ll2t(lat, lon, z):
+        n = 2 ** z
+        xt = (lon + 180.0) / 360.0 * n
+        yt = (1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * n
+        return xt, yt
+
+    def t2lon(xt, z):
+        return xt / 2 ** z * 360.0 - 180.0
+
+    def t2lat(yt, z):
+        return math.degrees(math.atan(math.sinh(
+            math.pi * (1 - 2 * yt / 2 ** z))))
+
+    for z in range(18, 13, -1):
+        xa, yb = ll2t(y1, x0, z)     # 北西
+        xb, ya = ll2t(y0, x1, z)     # 南東
+        tx0, tx1 = int(xa), int(xb)
+        ty0, ty1 = int(yb), int(ya)
+        if (tx1 - tx0 + 1) * (ty1 - ty0 + 1) <= max_tiles:
+            break
+    os.makedirs(cache_dir, exist_ok=True)
+    W = (tx1 - tx0 + 1) * 256
+    H = (ty1 - ty0 + 1) * 256
+    mosaic = Image.new("RGB", (W, H), (245, 245, 245))
+    got = 0
+    for tx in range(tx0, tx1 + 1):
+        for ty in range(ty0, ty1 + 1):
+            fp = os.path.join(cache_dir, f"{z}_{tx}_{ty}.jpg")
+            if not os.path.exists(fp):
+                url = ("https://cyberjapandata.gsi.go.jp/xyz/"
+                       f"seamlessphoto/{z}/{tx}/{ty}.jpg")
+                try:
+                    urllib.request.urlretrieve(url, fp)
+                except Exception:   # noqa: BLE001 — オフライン/欠タイルは白のまま
+                    continue
+            try:
+                mosaic.paste(Image.open(fp), ((tx - tx0) * 256,
+                                              (ty - ty0) * 256))
+                got += 1
+            except Exception:       # noqa: BLE001
+                continue
+    if not got:
+        return False
+    ext = (t2lon(tx0, z), t2lon(tx1 + 1, z),
+           t2lat(ty1 + 1, z), t2lat(ty0, z))
+    ax.imshow(mosaic, extent=ext, zorder=0, alpha=0.9)
+    return True
+
+
 def render_figure(structure, ways, poly, out_png, conns_by_key=None,
                   site_kvmax=None, name_kvmax=None):
     """SubSLD(変電所単線結線ビュー) — 実証ペア図(オーナー命名 2026-08-26)。
@@ -359,7 +422,10 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
     _font()
 
     n_vl = max(len(structure.voltage_levels), 1)
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, max(11, 3.6 * n_vl + 3)))
+    fig = plt.figure(figsize=(24, max(10.5, 3.2 * n_vl + 3)))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 1.45], wspace=0.06)
+    ax1 = fig.add_subplot(gs[0])
+    ax2 = fig.add_subplot(gs[1])
     _VC = {500: "#d62728", 275: "#ff7f0e", 220: "#e377c2", 187: "#bcbd22",
            154: "#9467bd", 110: "#1f77b4", 77: "#2ca02c", 66: "#17becf",
            0: "#999999"}
@@ -373,9 +439,12 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         rings = []
         ax1.plot(poly.centroid.x, poly.centroid.y, "*", color="#4444aa",
                  ms=14, zorder=5)
+    x0, y0, x1, y1 = poly.bounds
+    sat = _gsi_underlay(ax1, x0 - 0.002, y0 - 0.002, x1 + 0.002, y1 + 0.002)
     for r in rings:
-        ax1.plot([c[0] for c in r], [c[1] for c in r], color="#4444aa",
-                 lw=1.2, alpha=0.8, zorder=2)
+        ax1.plot([c[0] for c in r], [c[1] for c in r],
+                 color="#ffd54f" if sat else "#4444aa",
+                 lw=1.6, alpha=0.9, zorder=2)
     bykey = {w["key"]: w for w in ways}
     for bb in structure.busbars:
         kv = int(next(vl.nominal_kv for vl in structure.voltage_levels
@@ -392,12 +461,17 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
             ax1.plot([c[0] for c in cs], [c[1] for c in cs],
                      color=_VC.get(kv, "#999"), lw=1.2, ls="--", zorder=3)
     seen_lines = set()
+    from scripts.substation_scope import _vclasses
     for t in structure.terminals:
         if t.line_key in bykey and t.line_key not in seen_lines:
             seen_lines.add(t.line_key)
-            cs = bykey[t.line_key]["coords"]
-            ax1.plot([c[0] for c in cs], [c[1] for c in cs], color="#333",
-                     lw=0.9, alpha=0.6, zorder=2)
+            w = bykey[t.line_key]
+            cs = w["coords"]
+            vcs = _vclasses((w["props"] or {}).get("voltage"))
+            lkv = int(vcs[0]) if vcs else 0
+            lcol = _VC.get(lkv, "#e8e8e8" if sat else "#333")
+            ax1.plot([c[0] for c in cs], [c[1] for c in cs], color=lcol,
+                     lw=1.5 if lkv else 1.0, alpha=0.85, zorder=2)
     mk = {"vertex-shared": ("o", "#d62728"), "polygon": ("s", "#1f77b4"),
           "leadin": ("^", "#ff7f0e")}
     for t in structure.terminals:
@@ -407,12 +481,16 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         for endc in (cs[0], cs[-1]):
             m, col = mk[t.binding]
             ax1.plot(endc[0], endc[1], m, color=col, ms=5, zorder=6)
-    x0, y0, x1, y1 = poly.bounds
     ax1.set_xlim(x0 - 0.002, x1 + 0.002)
     ax1.set_ylim(y0 - 0.002, y1 + 0.002)
     ax1.set_title(f"{structure.site.name} 構内幾何(太=母線/破線=ベイ/●=vertex ■=polygon ▲=leadin)",
                   fontsize=11)
     ax1.set_aspect("equal")
+    if sat:
+        ax1.text(0.995, 0.008, "出典: 地理院タイル(全国最新写真)",
+                 transform=ax1.transAxes, ha="right", va="bottom",
+                 fontsize=7, color="#fff",
+                 bbox=dict(fc="#0008", ec="none", pad=1.5))
 
     # --- 右: SLDPane v3(オーナーFB 2026-08-26「入/出・構内接続・変換とスルーを
     # 見せる」): 上スタブ=流入(対向が上位電圧 or 自所トップ階級)・下スタブ=流出
@@ -502,14 +580,14 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         total_par = sum(g["par"] for _, g in groups_of[vl.vl_id])
         label = f"{kv}kV" if kv else "無印(@u)"
         ax2.text(-0.5, y + 0.12, label, ha="right", va="center",
-                 fontsize=13, color=col, fontweight="bold")
+                 fontsize=16, color=col, fontweight="bold")
         sub = f"母線×{max(len(bbs), 1)}・{len(groups_of[vl.vl_id])}線・{total_par}回線"
         if vl.vl_id not in tr_vls and n_tr:
             sub += "\nスルー(変圧器なし)"
         elif not n_tr:
             sub += "\nスルー/開閉(全体に変圧器なし)"
         ax2.text(-0.5, y - 0.55, sub, ha="right", va="top",
-                 fontsize=7.5, color=col)
+                 fontsize=8.5, color=col)
         # 母線セクション(実セクション位置に接着するため span を記録)
         nb = max(len(bbs), 1)
         span = {}
@@ -542,6 +620,7 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
             xa, xb = span.get(bb_id, (0.0, W))
             for si, (nm, g) in enumerate(gs):
                 x = xa + (xb - xa) * (si + 0.5) / len(gs)
+                tier = 0.95 * (si % 2)          # 段違い配置でラベル衝突回避
                 par = min(g["par"], 4)
                 up = g["dir"] != "out"
                 gray = g["dir"] == "unknown"
@@ -553,6 +632,10 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
                     ax2.plot([x + dx, x + dx], [y, y + sgn * STUB],
                              color=scol, lw=1.4,
                              ls=(0, (2.5, 2)) if dashed else "-", zorder=2)
+                if tier:                        # 上段ラベルへのリーダー線
+                    ax2.plot([x, x], [y + sgn * STUB,
+                                      y + sgn * (STUB + tier)],
+                             color=scol, lw=0.6, alpha=0.5, zorder=1)
                 wmax = max((_parse_wires(props_of.get(k) or {}) or 0
                             for k in g["keys"]), default=0)
                 note = []
@@ -562,23 +645,23 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
                     note.append(f"{wmax}導体")
                 nm_s = nm if len(nm) <= 15 else nm[:14] + "…"
                 if up:
-                    ax2.text(x, y + STUB + 0.12, nm_s, rotation=60,
-                             ha="left", va="bottom", fontsize=6.8,
-                             color="#666" if gray else "#222",
+                    ax2.text(x, y + STUB + tier + 0.12, nm_s, rotation=60,
+                             ha="left", va="bottom", fontsize=7.6,
+                             color="#666" if gray else "#111",
                              rotation_mode="anchor")
                     if note:
-                        ax2.text(x + 0.22, y + STUB + 0.02, "・".join(note),
-                                 rotation=60, ha="left", va="top",
-                                 fontsize=6.2, color=scol,
+                        ax2.text(x + 0.30, y + STUB + tier + 0.02,
+                                 "・".join(note), rotation=60, ha="left",
+                                 va="top", fontsize=6.8, color=scol,
                                  rotation_mode="anchor")
                 else:
-                    ax2.text(x, y - STUB - 0.12, nm_s, rotation=60,
-                             ha="right", va="top", fontsize=6.8,
-                             color="#222", rotation_mode="anchor")
+                    ax2.text(x, y - STUB - tier - 0.12, nm_s, rotation=60,
+                             ha="right", va="top", fontsize=7.6,
+                             color="#111", rotation_mode="anchor")
                     if note:
-                        ax2.text(x + 0.22, y - STUB - 0.02, "・".join(note),
-                                 rotation=60, ha="right", va="bottom",
-                                 fontsize=6.2, color=scol,
+                        ax2.text(x + 0.30, y - STUB - tier - 0.02,
+                                 "・".join(note), rotation=60, ha="right",
+                                 va="bottom", fontsize=6.8, color=scol,
                                  rotation_mode="anchor")
         if len(groups_of[vl.vl_id]) > MAXS:
             ax2.text(W + 0.15, y + 0.5, f"+{len(groups_of[vl.vl_id]) - MAXS}線",
@@ -609,13 +692,13 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
     ax2.axis("off")
     s = structure.summary()
     ax2.set_title(
-        f"SLDPane 単線結線図: VL{len(structure.voltage_levels)} 母線{s['n_busbars']} "
-        f"ベイ{s['n_bays']} 端子{s['n_terminals']} 変圧器{s['n_transformers']}(structural)",
-        fontsize=11)
+        f"SLDPane 単線結線図 — VL{len(structure.voltage_levels)}・母線{s['n_busbars']}・"
+        f"ベイ{s['n_bays']}・端子{s['n_terminals']}・変圧器{s['n_transformers']}(structural)",
+        fontsize=10, color="#555", loc="left")
     fig.suptitle(f"{structure.site.name} 実証ペア図 SubSLD (OSM=正・全端子に根拠付き) — "
                  "上スタブ=流入/下=流出(対向変電所の電圧階層による推定・灰=対向不明)・"
-                 "破線=leadin・BT=バスタイ・⧉=変圧器", fontsize=12)
-    fig.tight_layout()
+                 "破線=leadin・BT=バスタイ・⧉=変圧器", fontsize=12, y=0.995)
+    fig.tight_layout(rect=(0, 0, 1, 0.97))
     fig.savefig(out_png, dpi=110)
     plt.close(fig)
     return out_png
