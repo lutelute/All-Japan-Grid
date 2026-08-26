@@ -396,9 +396,13 @@ def _gsi_underlay(ax, x0, y0, x1, y1,
     サイトスケールではメルカトル歪みは軽微(検証図用途)。
     """
     import math
+    import time
     import urllib.request
 
     from PIL import Image
+
+    if os.environ.get("SUBSLD_NO_SAT"):     # バッチの白背景モード
+        return False
 
     def ll2t(lat, lon, z):
         n = 2 ** z
@@ -433,6 +437,7 @@ def _gsi_underlay(ax, x0, y0, x1, y1,
                        f"seamlessphoto/{z}/{tx}/{ty}.jpg")
                 try:
                     urllib.request.urlretrieve(url, fp)
+                    time.sleep(0.02)          # タイルサーバへの礼儀
                 except Exception:   # noqa: BLE001 — オフライン/欠タイルは白のまま
                     continue
             try:
@@ -791,7 +796,7 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         fontsize=10, color="#555", loc="left")
     fig.suptitle(f"{structure.site.name} 実証ペア図 SubSLD (OSM=正・全端子に根拠付き) — "
                  "上スタブ=流入/下=流出(対向変電所の電圧階層による推定・灰=対向不明)・"
-                 "破線=leadin・BT=バスタイ・⧉=変圧器", fontsize=12, y=0.995)
+                 "破線=leadin・BT=バスタイ・二重円=変圧器", fontsize=12, y=0.995)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
     fig.savefig(out_png, dpi=110)
     plt.close(fig)
