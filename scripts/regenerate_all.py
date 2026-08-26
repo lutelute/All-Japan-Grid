@@ -64,6 +64,12 @@ STEPS = [
     ("satellite_connections", [sys.executable,
                                "scripts/apply_satellite_connections.py",
                                "--write"], False),
+    # 変電所プロパティ層(オーナー指示 2026-08-26「導体数・回線数を変電所の
+    # プロパティに」): 構造DB terminal × OSM線タグ(circuits/wires/cables)を
+    # 変電所ごとに集約し、built の sub ノードへ sub_props を付与。冪等
+    ("substation_properties", [sys.executable,
+                               "scripts/build_substation_properties.py",
+                               "--attach"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
