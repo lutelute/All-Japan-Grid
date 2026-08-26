@@ -342,8 +342,8 @@ function mnote(s, x, y, w, txt) {
     line: { color: V66, width: 2.2 } });
   s.addShape(pres.ShapeType.ellipse, { x: 3.38, y: 6.54, w: 0.16, h: 0.16,
     fill: { color: V66 }, line: { type: "none" } });
-  s.addText([{ text: "66kV線 → 66kVノード:  ", options: { color: INK } },
-    { text: "|66−66| = 0 ≤ 25%", options: { color: "2E7D32" } }],
+  s.addText([{ text: "66kV線→66kVノード  ", options: { color: INK } },
+    { text: "乖離0% ≤ 25%", options: { color: "2E7D32" } }],
     { x: 3.7, y: 6.5, w: 2.8, h: 0.42, fontFace: F, fontSize: 10.5,
       margin: 0 });
   caseBox(6.85, "ケースB 棄却（c1 実例）", false);
@@ -351,7 +351,7 @@ function mnote(s, x, y, w, txt) {
     line: { color: V66, width: 2.2 } });
   s.addShape(pres.ShapeType.ellipse, { x: 9.53, y: 6.54, w: 0.16, h: 0.16,
     fill: { color: V154 }, line: { type: "none" } });
-  s.addText([{ text: "66kV線 → 154kVノード:  ", options: { color: INK } },
+  s.addText([{ text: "66kV線→154kVノード  ", options: { color: INK } },
     { text: "乖離133% > 25%", options: { color: V500 } }],
     { x: 9.85, y: 6.5, w: 2.9, h: 0.42, fontFace: F, fontSize: 10.5,
       margin: 0 });
@@ -443,8 +443,8 @@ function mnote(s, x, y, w, txt) {
     line: { color: V66, width: 2, beginArrowType: "triangle" } });
   s.addText("out", { x: 11.05, y: 4.25, w: 0.7, h: 0.3, fontFace: FL,
     fontSize: 11, bold: true, color: V66, margin: 0 });
-  s.addText("far=∅ → ⊥（灰）", { x: 11.55, y: 4.6, w: 1.4, h: 0.3,
-    fontFace: F, fontSize: 9, color: MUT, margin: 0 });
+  s.addText("far=∅ → ⊥（灰・39.4%）", { x: 9.55, y: 4.6, w: 3.0, h: 0.3,
+    fontFace: F, fontSize: 9.5, color: MUT, margin: 0 });
   meq(s, 0.9, 2.75, 7.9, [
     ["d̂", {i:1}], [" :  ", {}], ["G", {i:1}],
     ["  →  { in,  out,  ⊥ }", {}],
@@ -461,7 +461,7 @@ function mnote(s, x, y, w, txt) {
     ["   ⇔   far(", {}], ["g", {i:1}], [") = ∅", {}],
     ["      （対向が解決できない時は棄権 — 埋めない）", {jp:1, fs:12, c:MUT}],
   ], 18);
-  s.addText("far(g) は connections（両端束縛線）を第一資料とし、欠測時のみ線名の name-evidence（「A~B線」等）で補完する。棄権率は隠さず評価指標として報告する — 棄権の主因は対向変電所自体の OSM 欠測であり、手法の誤りではなくデータ被覆の測定値である。", {
+  s.addText("far(g) は connections（両端束縛線）を第一資料とし、欠測時のみ線名の name-evidence（「A~B線」等）で補完する。全国実測（18,851線グループ）: in 55.4%・out 5.2%・⊥ 39.4%（§10）。棄権の主因は対向変電所自体の OSM 欠測であり、手法の誤りではなくデータ被覆の測定値である。", {
     x: 0.7, y: 5.2, w: 12.0, h: 1.0, fontFace: F, fontSize: 12.5,
     color: INK, lineSpacing: 20, margin: 0 });
   foot(s, 9);
@@ -505,32 +505,44 @@ function mnote(s, x, y, w, txt) {
 // ---------- 11. 被覆評価 ----------
 {
   const s = pres.addSlide(); base(s);
-  head(s, "10", "EVALUATION", "被覆の定量評価");
-  const stats = [
-    ["6,956", "対象変電所（構造抽出は全数成功）", INK],
-    ["68.2%", "回線数のOSM証拠被覆（線ベース）", NAVY],
-    ["13.9%", "母線way記載率 — 最大の欠測（issue #49）", V500],
-  ];
-  stats.forEach(([v, l, c], i) => {
-    const y = 1.8 + i * 1.65;
-    s.addText(v, { x: 0.7, y, w: 3.4, h: 0.9, fontFace: FL, fontSize: 46,
-      bold: true, color: c, margin: 0 });
-    s.addText(l, { x: 0.74, y: y + 0.95, w: 3.7, h: 0.55, fontFace: F,
-      fontSize: 11.5, color: MUT, lineSpacing: 15, margin: 0 });
-  });
+  head(s, "10", "EVALUATION", "定量評価 — 被覆・証拠分布・棄権率（全国実測）");
+  const stat=(x,v,l,c)=>{
+    s.addText(v,{x,y:1.5,w:3.9,h:0.75,fontFace:FL,fontSize:38,bold:true,color:c,margin:0});
+    s.addText(l,{x:x+0.04,y:2.28,w:4.0,h:0.42,fontFace:F,fontSize:11.5,color:MUT,margin:0});
+  };
+  stat(0.7,"6,956","対象変電所（構造抽出は全数・エラー0）",INK);
+  stat(5.0,"68.2%","回線数のOSM証拠被覆（27,352/40,087線）",NAVY);
+  stat(9.3,"14.2%","母線way記載率（985/6,956・issue #49）",V500);
+  // 積み上げバー2本(実測)
+  const sbar=(y,parts)=>{
+    let x=0.7;
+    parts.forEach(([pct,col,lab,tcol])=>{
+      const w=5.9*pct/100;
+      s.addShape(pres.ShapeType.rect,{x,y,w,h:0.46,fill:{color:col},line:{type:"none"}});
+      if(w>0.55) s.addText(lab,{x,y,w,h:0.46,fontFace:F,fontSize:9.5,bold:true,color:tcol||"FFFFFF",align:"center",valign:"middle",margin:0});
+      x+=w;
+    });
+  };
+  s.addText("端子束縛の証拠分布（48,081端子）",{x:0.7,y:3.1,w:5.9,h:0.32,fontFace:F,fontSize:12.5,bold:true,color:NAVY,margin:0});
+  sbar(3.5,[[15.7,V500,"vertex 15.7%"],[29.3,"1F77B4","polygon 29.3%"],[55.0,V275,"leadin 55.0%"]]);
+  s.addText("弱い証拠(leadin)が過半 — 図では破線で明示され、証拠の強さが読める",{x:0.7,y:4.02,w:5.9,h:0.32,fontFace:F,fontSize:10,color:MUT,margin:0});
+  s.addText("流向推定の内訳（18,851線グループ）",{x:0.7,y:4.6,w:5.9,h:0.32,fontFace:F,fontSize:12.5,bold:true,color:NAVY,margin:0});
+  sbar(5.0,[[55.4,NAVY,"in 55.4%"],[5.2,V66,"out 5.2%"],[39.4,"B9B9C2","⊥ 39.4%","3A3A44"]]);
+  s.addText("in 55.4% ／ out 5.2% ／ ⊥(棄権) 39.4% — 棄権を隠さない。主因は対向変電所のOSM欠測（§11）",{x:0.7,y:5.52,w:5.9,h:0.32,fontFace:F,fontSize:10,color:MUT,margin:0});
+  s.addText("命題1の決定性は再生成テストで、命題2の下界性は構成により全所で成立。",{x:0.7,y:6.15,w:5.9,h:0.6,fontFace:F,fontSize:11,color:INK,lineSpacing:16,margin:0});
   s.addChart(pres.ChartType.bar, [{
     name: "母線way記載率",
-    labels: ["北海道", "東北", "北陸", "四国", "中国", "中部", "九州", "関西", "沖縄", "東京"],
-    values: [53, 25, 25, 12, 11, 10, 10, 8, 5, 5],
+    labels: ["北海道","北陸","東北","四国","中国","九州","中部","関西","東京","沖縄"],
+    values: [53.3,25.5,25.2,11.7,10.9,10.3,10.0,8.1,5.2,5.1],
   }], {
-    x: 4.9, y: 1.6, w: 7.8, h: 5.1, barDir: "bar",
+    x: 7.0, y: 3.0, w: 5.7, h: 3.9, barDir: "bar",
     chartColors: [NAVY], showLegend: false,
-    showTitle: true, title: "母線way記載率(%) — OSMマッピング粒度の地域差",
-    titleColor: INK, titleFontSize: 13, titleFontFace: F,
+    showTitle: true, title: "母線way記載率(%) — 地域差の実測",
+    titleColor: INK, titleFontSize: 12, titleFontFace: F,
     showValue: true, dataLabelPosition: "outEnd", dataLabelColor: INK,
-    dataLabelFontSize: 10, dataLabelFontFace: FL,
-    catAxisLabelColor: INK, catAxisLabelFontSize: 11, catAxisLabelFontFace: F,
-    valAxisLabelColor: MUT, valAxisLabelFontSize: 10, valAxisLabelFontFace: FL,
+    dataLabelFontSize: 9, dataLabelFontFace: FL, dataLabelFormatCode: "0.0",
+    catAxisLabelColor: INK, catAxisLabelFontSize: 10, catAxisLabelFontFace: F,
+    valAxisLabelColor: MUT, valAxisLabelFontSize: 9, valAxisLabelFontFace: FL,
     valGridLine: { color: "E3E3E8", size: 0.5 },
     catGridLine: { style: "none" },
     valAxisMaxVal: 60,
@@ -543,8 +555,8 @@ function mnote(s, x, y, w, txt) {
   const s = pres.addSlide(); base(s);
   head(s, "11", "DISCUSSION", "限界と考察 — 欠測を欠測として見せる");
   const lims = [
-    ["母線wayの欠測 86%", "OSMマッピング粒度の地域差（北海道53% ⇔ 東京5%）。母線なしサイトは1母線仮定で描画される。推定母線の導入は inferred マーカー前提で検討（issue #49）"],
-    ["流向不明（灰スタブ）", "主因は対向変電所自体のOSM欠測。connections＋線名 name-evidence で低減したが、残余は「不明」を明示する設計を保つ"],
+    ["母線wayの欠測 85.8%", "OSMマッピング粒度の地域差（北海道53% ⇔ 東京5%）。母線なしサイトは1母線仮定で描画される。推定母線の導入は inferred マーカー前提で検討（issue #49）"],
+    ["流向不明（灰スタブ）", "主因は対向変電所自体のOSM欠測。connections＋線名 name-evidence で低減し、残余 39.4% は「不明」を明示する設計を保つ"],
     ["leadin の偽陽性", "引込帯0.6kmは近傍通過線を拾い得る。弱い証拠を弱く描く（破線）ことで図上でも可視化"],
     ["導体数被覆 12.7%", "wiresタグ自体が希少。航空写真からの検出（TTPLA系）が補完候補"],
   ];
