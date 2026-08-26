@@ -345,7 +345,13 @@ def extract_structure(region, ft, pways):
 
 
 def render_figure(structure, ways, poly, out_png):
-    """左=構内幾何(成分色分け) / 右=node-breaker 構造図 の検証ペア図。"""
+    """SubSLD(変電所単線結線ビュー) — 実証ペア図(オーナー命名 2026-08-26)。
+
+    左=GeoPane: 構内幾何(敷地ポリゴン・母線・ベイ・端子根拠マーカー)
+    右=SLDPane: 単線結線図(沖電式) — 母線=太い水平線・線=刺さる縦ストローク
+      (平行ストローク本数=回線数par・破線=leadin根拠・導体数=wiresタグ注記)・
+      変圧器=母線間の⧉。データは構造DB(node-breaker)+OSM線タグのみ(捏造ゼロ)。
+    """
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -406,65 +412,112 @@ def render_figure(structure, ways, poly, out_png):
                   fontsize=11)
     ax1.set_aspect("equal")
 
-    # --- 右: node-breaker 構造図 ---
+    # --- 右: 単線結線図(オーナーFB 2026-08-26「垂直リスト形式は読めない」を受け
+    # 沖電式SLDに刷新): 母線=太い水平線 / 線=母線に刺さる縦ストローク
+    # (平行ストローク本数=回線数par・破線=leadin根拠) / 変圧器=母線間の⧉ ---
+    from scripts.build_substation_properties import _parse_wires
+    props_of = {w["key"]: w["props"] for w in ways}
     lv_order = sorted(structure.voltage_levels, key=lambda v: -v.nominal_kv)
-    ypos = {vl.vl_id: -i * 3.0 for i, vl in enumerate(lv_order)}
+    ROW, STUB = 4.6, 1.15
+    ypos = {vl.vl_id: -i * ROW for i, vl in enumerate(lv_order)}
+    # 線グループ(名前単位)を電圧階級ごとに整列 → スロット割当
+    groups_of = {}
+    for vl in lv_order:
+        terms = [t for t in structure.terminals if t.vl_id == vl.vl_id]
+        groups = {}
+        for t in terms:
+            g = groups.setdefault(t.line_name or t.line_key or "?", {
+                "par": 1, "bindings": set(), "keys": set()})
+            g["par"] = max(g["par"], t.par or 1)
+            g["bindings"].add(t.binding)
+            if t.line_key:
+                g["keys"].add(t.line_key)
+        groups_of[vl.vl_id] = sorted(groups.items())
+    MAXS = 26                       # 1母線あたり表示スロット上限
+    n_tr = len(structure.transformers)
+    max_slots = max((min(len(g), MAXS) for g in groups_of.values()),
+                    default=1)
+    W = max(9.0, 0.72 * max_slots)          # 母線長(スロット数に追随)
+    trx0 = W + 1.2                          # 変圧器ゾーン
     for vl in lv_order:
         y = ypos[vl.vl_id]
-        bbs = [b for b in structure.busbars if b.vl_id == vl.vl_id]
         kv = int(vl.nominal_kv)
         col = _VC.get(kv, "#999")
+        bbs = [b for b in structure.busbars if b.vl_id == vl.vl_id]
+        groups = groups_of[vl.vl_id]
+        shown = groups[:MAXS]
+        total_par = sum(g["par"] for _, g in groups)
         label = f"{kv}kV" if kv else "無印(@u)"
-        ax2.text(-0.5, y, f"{label} 母線×{len(bbs)}", ha="right", va="center",
-                 fontsize=12, color=col, fontweight="bold")
-        n = max(len(bbs), 1)
-        for i, bb in enumerate(bbs):
-            xa, xb = 10.0 * i / n, 10.0 * (i + 0.92) / n
-            ax2.plot([xa, xb], [y, y], color=col, lw=4, zorder=3)
-            if n <= 8:
-                nb = len([b for b in structure.bays
-                          if bb.busbar_id in b.busbar_ids])
-                tag = f"bb{i+1}(way{len(bb.osm_way_keys)}/bay{nb})"
-                if bb.kv_inferred:
-                    tag += f" 推定{int(bb.kv_inferred)}kV"
-                ax2.text((xa + xb) / 2, y + 0.25, tag,
-                         ha="center", fontsize=7, color=col)
-        bays = [b for b in structure.bays if b.vl_id == vl.vl_id]
-        if bays:
-            ax2.text(10.6, y, f"ベイ成分×{len(bays)}", fontsize=9,
-                     color=col, va="center")
-        terms = [t for t in structure.terminals if t.vl_id == vl.vl_id]
-        named = sorted({(t.line_name or "?") for t in terms})
-        for j, nm in enumerate(named[:12]):
-            ts = [t for t in terms if (t.line_name or "?") == nm]
-            bind = ts[0].binding
-            parmax = max(t.par for t in ts)
-            ax2.text(0.2 + (j % 3) * 3.4, y - 0.55 - (j // 3) * 0.42,
-                     f"{nm}[{len(ts)}端子/par{parmax}/{bind}]",
-                     fontsize=7, color="#333")
-    for tr in structure.transformers:
+        ax2.text(-0.5, y + 0.12, f"{label}", ha="right", va="center",
+                 fontsize=13, color=col, fontweight="bold")
+        ax2.text(-0.5, y - 0.42, f"母線×{max(len(bbs), 1)}・{len(groups)}線"
+                 f"・{total_par}回線", ha="right", va="center",
+                 fontsize=7.5, color=col)
+        # 母線(セクション数ぶん分割・変圧器ゾーンまで細線で延長)
+        nb = max(len(bbs), 1)
+        for i in range(nb):
+            xa = W * i / nb + (0.18 if i else 0.0)
+            xb = W * (i + 1) / nb
+            ax2.plot([xa, xb], [y, y], color=col, lw=4.5, zorder=3,
+                     solid_capstyle="butt")
+        if n_tr:
+            ax2.plot([W, trx0 + 0.9 * n_tr], [y, y], color=col, lw=1.1,
+                     alpha=0.55, zorder=2)
+        # 線スタブ(上向き)・回線数=平行ストローク・leadin=破線
+        for si, (nm, g) in enumerate(shown):
+            x = W * (si + 0.5) / max(len(shown), 1)
+            par = min(g["par"], 4)
+            dashed = g["bindings"] <= {"leadin"}
+            for p in range(par):
+                dx = (p - (par - 1) / 2) * 0.09
+                ax2.plot([x + dx, x + dx], [y, y + STUB], color=col,
+                         lw=1.4, ls=(0, (2.5, 2)) if dashed else "-",
+                         zorder=2)
+            # 導体数(wiresタグ・全way最大)
+            wmax = max((_parse_wires(props_of.get(k) or {}) or 0
+                        for k in g["keys"]), default=0)
+            note = []
+            if g["par"] > 1:
+                note.append(f"{g['par']}回線")
+            if wmax > 1:
+                note.append(f"{wmax}導体")
+            nm_s = nm if len(nm) <= 15 else nm[:14] + "…"
+            ax2.text(x, y + STUB + 0.12, nm_s, rotation=60, ha="left",
+                     va="bottom", fontsize=6.8, color="#222",
+                     rotation_mode="anchor")
+            if note:
+                ax2.text(x + 0.22, y + STUB + 0.02, "・".join(note),
+                         rotation=60, ha="left", va="top", fontsize=6.2,
+                         color=col, rotation_mode="anchor")
+        if len(groups) > MAXS:
+            ax2.text(W + 0.15, y + 0.5, f"+{len(groups) - MAXS}線",
+                     fontsize=8, color="#666")
+    # 変圧器: hv母線→lv母線を貫く縦線 + ⧉(交差する中間母線とは無接続=ドット無し)
+    for ti, tr in enumerate(structure.transformers):
+        x = trx0 + 0.9 * ti
         ya, yb = ypos[tr.hv_vl_id], ypos[tr.lv_vl_id]
-        ax2.plot([10.9, 10.9], [ya, yb], color="#555", lw=1.5, zorder=2)
+        ax2.plot([x, x], [ya, yb], color="#444", lw=1.6, zorder=4)
         ym = (ya + yb) / 2
-        ax2.add_patch(plt.Circle((10.9, ym + 0.12), 0.11, fill=False,
-                                 color="#555", lw=1.5))
-        ax2.add_patch(plt.Circle((10.9, ym - 0.12), 0.11, fill=False,
-                                 color="#555", lw=1.5))
-        ax2.text(11.15, ym, tr.trafo_id.split("/")[-1] + "(structural)",
-                 fontsize=8, color="#555", va="center")
+        r = 0.30
+        ax2.add_patch(plt.Circle((x, ym + r * 0.62), r, fill=False,
+                                 color="#444", lw=1.6, zorder=5))
+        ax2.add_patch(plt.Circle((x, ym - r * 0.62), r, fill=False,
+                                 color="#444", lw=1.6, zorder=5))
+        ax2.text(x + 0.38, ym, tr.trafo_id.split("/")[-1], fontsize=8,
+                 color="#444", va="center")
     if not ypos:                # 無タグ・孤立(VL ゼロ)でも空図で成立させる
         ax2.text(5.0, -1.5, "電圧階級なし(voltage 無タグ・構内線/引込なし)",
                  ha="center", fontsize=11, color="#888")
-    ax2.set_xlim(-3.2, 13.5)
-    ax2.set_ylim(min(ypos.values(), default=-3.0) - 2.5, 1.5)
+    ax2.set_xlim(-3.4, (trx0 + 0.9 * max(n_tr, 1)) + 1.2)
+    ax2.set_ylim(min(ypos.values(), default=-ROW) - 1.2, STUB + 3.2)
     ax2.axis("off")
     s = structure.summary()
     ax2.set_title(
-        f"node-breaker 構造: VL{len(structure.voltage_levels)} 母線{s['n_busbars']} "
+        f"SLDPane 単線結線図: VL{len(structure.voltage_levels)} 母線{s['n_busbars']} "
         f"ベイ{s['n_bays']} 端子{s['n_terminals']} 変圧器{s['n_transformers']}(structural)",
         fontsize=11)
-    fig.suptitle(f"{structure.site.name} 内部構造 実証抽出 (OSM=正・全端子に根拠付き)",
-                 fontsize=13)
+    fig.suptitle(f"{structure.site.name} 実証ペア図 SubSLD (OSM=正・全端子に根拠付き・"
+                 "破線スタブ=leadin根拠)", fontsize=13)
     fig.tight_layout()
     fig.savefig(out_png, dpi=110)
     plt.close(fig)
