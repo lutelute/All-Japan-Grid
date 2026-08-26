@@ -59,6 +59,11 @@ STEPS = [
     # 名前つき未解決が残る断片はスキップ(部分手術しない)。冪等(適用後は対象が消える)
     ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
                       "--write"], False),
+    # 介入#36: 衛星判読クラスの接続(オーナー承認制・スクリプト内CONNECTIONS表が
+    # 承認台帳)。approved のみ適用・冪等。第1号=小千谷66kV(衛星のみ証拠)
+    ("satellite_connections", [sys.executable,
+                               "scripts/apply_satellite_connections.py",
+                               "--write"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
