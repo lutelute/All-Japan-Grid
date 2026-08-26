@@ -56,11 +56,11 @@ function mnote(s, x, y, w, txt) {
   s.addText("All-Japan-Grid Project  /  2026-08-26", {
     x: 0.93, y: 3.6, w: 11.5, h: 0.4, fontFace: F, fontSize: 13,
     color: MUT, margin: 0 });
-  s.addImage({ path: "assets/geo_shinkeiyo.png", x: 0, y: 4.55, w: 13.33,
-    h: 2.95, sizing: { type: "cover", w: 13.33, h: 2.95 } });
+  s.addImage({ path: "assets/title_strip.png", x: 0, y: 4.55, w: 13.33,
+    h: 2.95 });
   s.addShape(pres.ShapeType.rect, { x: 0, y: 4.55, w: 13.33, h: 2.95,
     fill: { color: "000000", transparency: 78 }, line: { type: "none" } });
-  s.addText("図: GeoPane(新京葉変電所) — OSM実証拠を地理院写真上に重畳した実出力", {
+  s.addText("図: GeoPane（駿遠変電所・500/275/154/77kV）— OSM実証拠を地理院写真上に重畳した実出力", {
     x: 0.7, y: 6.95, w: 10, h: 0.35, fontFace: F, fontSize: 10.5,
     color: "FFFFFF", margin: 0 });
 }
@@ -470,12 +470,24 @@ function mnote(s, x, y, w, txt) {
 // ---------- 9. 結果: 実証ペア図 ----------
 {
   const s = pres.addSlide(); base(s);
-  head(s, "8", "RESULTS", "実証ペア図 — 新京葉変電所（500/275/154/66kV）");
-  s.addImage({ path: "assets/pair_full.png", x: 0.85, y: 1.62, w: 11.6,
-    h: 5.15, sizing: { type: "contain", w: 11.6, h: 5.15 } });
-  s.addText("図1  実証ペア図（新京葉変電所）。左: GeoPane（構内幾何・端子根拠・鉄塔・インセット）　右: SLDPane（母線セクション・回線ストローク・流向・変圧器・スルー）", {
-    x: 0.85, y: 6.78, w: 11.8, h: 0.35, fontFace: F, fontSize: 11,
+  head(s, "8", "RESULTS", "結果 — 実証ペア図");
+  // (a) GeoPane / (b) SLDPane を個別画像として並置(アスペクト完全一致)
+  s.addImage({ path: "assets/geo_shinkeiyo.png", x: 1.15, y: 1.62, w: 4.72,
+    h: 5.04 });
+  s.addShape(pres.ShapeType.roundRect, { x: 6.45, y: 1.62, w: 5.9, h: 5.04,
+    fill: { color: "FBFBF9" }, line: { color: "E3E3E8", width: 0.8 },
+    rectRadius: 0.05 });
+  s.addImage({ path: "assets/sld_shinkeiyo.png", x: 7.5, y: 1.74, w: 3.8,
+    h: 4.8 });
+  s.addText("(a) GeoPane — 構内幾何・端子根拠・鉄塔・インセット", {
+    x: 1.15, y: 6.74, w: 4.9, h: 0.32, fontFace: F, fontSize: 10.5,
     color: MUT, margin: 0 });
+  s.addText("(b) SLDPane — 母線セクション・回線ストローク・流向・変圧器・スルー", {
+    x: 6.45, y: 6.74, w: 6.2, h: 0.32, fontFace: F, fontSize: 10.5,
+    color: MUT, margin: 0 });
+  s.addText("図1  実証ペア図（新京葉変電所・500/275/154/66kV・80端子・変圧器3）", {
+    x: 0.7, y: 1.3, w: 11.8, h: 0.32, fontFace: F, fontSize: 11.5,
+    bold: true, color: INK, margin: 0 });
   foot(s, 10);
 }
 
@@ -484,21 +496,20 @@ function mnote(s, x, y, w, txt) {
   const s = pres.addSlide(); base(s);
   head(s, "9", "RESULTS", "全国適用 — 10地域・6,956所を同一コードで処理");
   const gs = [
-    ["assets/geo_minamihayakita.png", "南早来（北海道）275/187/66"],
-    ["assets/geo_sunen.png", "駿遠（中部）500/275/154/77"],
-    ["assets/geo_hitoyoshi.png", "人吉（九州）220/110/66"],
-    ["assets/geo_zukeran.png", "瑞慶覧（沖縄）132/66"],
+    ["assets/tile_miyagi.png", "宮城（東北）500/275/154/66"],
+    ["assets/tile_minamihayakita.png", "南早来（北海道）275/187/66"],
+    ["assets/tile_hitoyoshi.png", "人吉（九州）220/110/66"],
+    ["assets/tile_kochi.png", "高知（四国）187/110/66"],
   ];
   gs.forEach(([p, cap], i) => {
     const x = 0.7 + i * 3.08;
-    s.addImage({ path: p, x, y: 1.7, w: 2.9, h: 3.9,
-      sizing: { type: "cover", w: 2.9, h: 3.9 } });
-    s.addText(cap, { x, y: 5.66, w: 2.9, h: 0.36, fontFace: F,
+    s.addImage({ path: p, x, y: 1.7, w: 2.92, h: 4.6 });
+    s.addText(cap, { x, y: 6.36, w: 2.92, h: 0.36, fontFace: F,
       fontSize: 10.5, color: INK, margin: 0 });
   });
-  s.addText("図2  各地域の代表例（GeoPane 抜粋）。バッチ生成器（再開可能・タイルキャッシュ）により全所を一括描画 — 約1〜6秒/所・10地域並列で全国約1時間（pws-160core 実測）。", {
-    x: 0.7, y: 6.25, w: 12.2, h: 0.65, fontFace: F, fontSize: 12,
-    color: MUT, lineSpacing: 18, margin: 0 });
+  s.addText("図2  各地域の代表例（GeoPane・各所個別クロップ）。バッチ生成器により全所一括描画 — 約1〜6秒/所・10地域並列で全国約1時間（pws-160core 実測）。", {
+    x: 0.7, y: 6.78, w: 12.2, h: 0.35, fontFace: F, fontSize: 11,
+    color: MUT, margin: 0 });
   foot(s, 11);
 }
 
