@@ -344,6 +344,48 @@ def extract_structure(region, ft, pways):
 # ---------------------------------------------------------------- 検証図
 
 
+_TOWER_CACHE = {}
+
+
+def _load_towers(region):
+    """data/osm_raw_towers/tw_{region}_t*.json (Overpass power=tower) を
+    粗グリッド索引で返す(地域単位キャッシュ)。無ければ空。"""
+    if region in _TOWER_CACHE:
+        return _TOWER_CACHE[region]
+    import glob
+    from collections import defaultdict as _dd
+    grid = _dd(list)
+    for fp in glob.glob(os.path.join("data", "osm_raw_towers",
+                                     f"tw_{region}_t*.json")):
+        try:
+            for el in json.load(open(fp)).get("elements", []):
+                la, lo = el.get("lat"), el.get("lon")
+                if la is None:
+                    continue
+                grid[(round(la, 2), round(lo, 2))].append((lo, la))
+        except Exception:   # noqa: BLE001
+            continue
+    _TOWER_CACHE[region] = grid
+    return grid
+
+
+def _towers_in(region, x0, y0, x1, y1):
+    grid = _load_towers(region)
+    out = []
+    la0, la1 = round(y0, 2) - 0.01, round(y1, 2) + 0.01
+    lo0, lo1 = round(x0, 2) - 0.01, round(x1, 2) + 0.01
+    la = la0
+    while la <= la1 + 1e-9:
+        lo = lo0
+        while lo <= lo1 + 1e-9:
+            for pt in grid.get((round(la, 2), round(lo, 2)), []):
+                if x0 <= pt[0] <= x1 and y0 <= pt[1] <= y1:
+                    out.append(pt)
+            lo = round(lo + 0.01, 2)
+        la = round(la + 0.01, 2)
+    return out
+
+
 def _gsi_underlay(ax, x0, y0, x1, y1,
                   cache_dir="data/cache/gsi_tiles", max_tiles=196):
     """GeoPane 下敷きの地理院シームレスフォト(全国最新写真)。
@@ -486,6 +528,50 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
     ax1.set_title(f"{structure.site.name} 構内幾何(太=母線/破線=ベイ/●=vertex ■=polygon ▲=leadin)",
                   fontsize=11)
     ax1.set_aspect("equal")
+    # ① 鉄塔マーカー(OSM power=tower・視認補助)
+    tws = _towers_in(structure.site.region, x0 - 0.002, y0 - 0.002,
+                     x1 + 0.002, y1 + 0.002)
+    if tws:
+        ax1.plot([t[0] for t in tws], [t[1] for t in tws], "^",
+                 ms=4.5, mfc="none", mec="#ffee58" if sat else "#8860d0",
+                 mew=1.1, zorder=5, ls="none")
+    # ④ ズームインセット: 母線クラスタが敷地に対して小さい大規模所のみ
+    core_ws = [bykey[k]["coords"] for bb in structure.busbars
+               for k in bb.osm_way_keys if k in bykey]
+    if core_ws:
+        cxs = [c[0] for w in core_ws for c in w]
+        cys = [c[1] for w in core_ws for c in w]
+        cw, fw = max(cxs) - min(cxs), (x1 - x0) + 0.004
+        if cw > 0 and cw < 0.30 * fw:
+            pad = cw * 0.35 + 0.0002
+            ix0, ix1 = min(cxs) - pad, max(cxs) + pad
+            iy0, iy1 = min(cys) - pad, max(cys) + pad
+            axi = ax1.inset_axes([0.66, 0.66, 0.335, 0.335])
+            _gsi_underlay(axi, ix0, iy0, ix1, iy1)
+            for bb in structure.busbars:
+                kv = int(next(vl.nominal_kv for vl in structure.voltage_levels
+                              if vl.vl_id == bb.vl_id))
+                for k in bb.osm_way_keys:
+                    cs = bykey[k]["coords"]
+                    axi.plot([c[0] for c in cs], [c[1] for c in cs],
+                             color=_VC.get(kv, "#999"), lw=2.6, zorder=4)
+            for bay in structure.bays:
+                kv = int(next(vl.nominal_kv for vl in structure.voltage_levels
+                              if vl.vl_id == bay.vl_id))
+                for k in bay.osm_way_keys:
+                    cs = bykey[k]["coords"]
+                    axi.plot([c[0] for c in cs], [c[1] for c in cs],
+                             color=_VC.get(kv, "#999"), lw=1.0, ls="--",
+                             zorder=3)
+            axi.set_xlim(ix0, ix1)
+            axi.set_ylim(iy0, iy1)
+            axi.set_xticks([])
+            axi.set_yticks([])
+            axi.set_aspect("equal")
+            for sp in axi.spines.values():
+                sp.set_color("#ffd54f")
+                sp.set_linewidth(1.6)
+            ax1.indicate_inset_zoom(axi, edgecolor="#ffd54f", lw=1.2)
     if sat:
         ax1.text(0.995, 0.008, "出典: 地理院タイル(全国最新写真)",
                  transform=ax1.transAxes, ha="right", va="bottom",
@@ -632,6 +718,9 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
                     ax2.plot([x + dx, x + dx], [y, y + sgn * STUB],
                              color=scol, lw=1.4,
                              ls=(0, (2.5, 2)) if dashed else "-", zorder=2)
+                if g["dir"] in ("in", "out"):   # ② 流向矢印(推定)
+                    ax2.plot([x], [y + sgn * STUB * 0.55], marker="v",
+                             ms=4.5, color=scol, zorder=3, ls="none")
                 if tier:                        # 上段ラベルへのリーダー線
                     ax2.plot([x, x], [y + sgn * STUB,
                                       y + sgn * (STUB + tier)],
@@ -682,6 +771,11 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         lab = tr.trafo_id.split("/")[-1]
         if (tr.n_parallel or 1) > 1:
             lab += f" ×{tr.n_parallel}"
+        if getattr(tr, "sn_mva", None):
+            lab += f"\n{tr.sn_mva:g}MVA"
+        if getattr(tr, "tap_min", None) is not None and \
+                getattr(tr, "tap_max", None) is not None:
+            lab += f"\ntap{tr.tap_min:g}〜{tr.tap_max:g}"
         ax2.text(x + 0.42, ym, lab, fontsize=8, color="#444", va="center")
     if not ypos:                # 無タグ・孤立(VL ゼロ)でも空図で成立させる
         ax2.text(5.0, -1.5, "電圧階級なし(voltage 無タグ・構内線/引込なし)",
@@ -745,6 +839,21 @@ def main():
             snm = (st["site"].get("name") or "").replace(" ", "")
             if snm:
                 name_kvmax[snm] = max(name_kvmax.get(snm, 0), max(kvs))
+    # ③ 変圧器銘板: batch生成の構造DBにはtransformer_provenance(出典付き)が
+    # 適用済み。同一site_idのレコードから sn_mva/tap を引き継ぐ(捏造ゼロ)
+    reg_json = os.path.join("data", "structures", f"{args.region}.json")
+    if os.path.exists(reg_json):
+        for st in json.load(open(reg_json)).get("structures", []):
+            if st["site"]["site_id"] != structure.site.site_id:
+                continue
+            byid = {t["trafo_id"]: t for t in st.get("transformers", [])}
+            for tr in structure.transformers:
+                rec = byid.get(tr.trafo_id)
+                if rec:
+                    for f_ in ("sn_mva", "tap_min", "tap_max", "tap_neutral"):
+                        if rec.get(f_) is not None:
+                            setattr(tr, f_, rec[f_])
+            break
     render_figure(structure, ways, poly, out_png, conns_by_key, site_kvmax,
                   name_kvmax)
 
