@@ -199,6 +199,68 @@ function mnote(s, x, y, w, txt) {
   foot(s, 4);
 }
 
+// ---------- 4b. 概念図 ----------
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "3", "CONCEPT", "概念図 — 観測から証拠閉包、実証ペア図へ");
+  const L = (x1,y1,x2,y2,o)=>{o=o||{};s.addShape(pres.ShapeType.line,{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1),h:Math.abs(y2-y1),flipH:x2<x1,flipV:y2<y1,line:Object.assign({color:o.c||INK,width:o.w||1.5},o.d?{dashType:"dash"}:{}, o.a?{endArrowType:"triangle"}:{})});};
+  // ===== 左: 観測 O =====
+  s.addShape(pres.ShapeType.roundRect,{x:0.6,y:1.6,w:4.6,h:4.9,fill:{color:PANEL},line:{type:"none"},rectRadius:0.08});
+  s.addText("観測 O（OSM）",{x:0.85,y:1.75,w:3.5,h:0.35,fontFace:F,fontSize:13,bold:true,color:NAVY,margin:0});
+  // δ_lead帯(破線六角形の代わりに破線角丸)と敷地
+  s.addShape(pres.ShapeType.roundRect,{x:1.25,y:2.5,w:3.2,h:2.6,fill:{type:"none"},line:{color:"9A9AA6",width:1.2,dashType:"dash"},rectRadius:0.25});
+  s.addShape(pres.ShapeType.roundRect,{x:1.75,y:2.95,w:2.2,h:1.7,fill:{color:"FFFDF2"},line:{color:"E0A800",width:2.2},rectRadius:0.12});
+  // 母線way(赤太線)
+  L(2.0,3.5,3.7,3.5,{c:V500,w:4});
+  s.addText("母線 way",{x:2.55,y:3.05,w:1.6,h:0.3,fontFace:F,fontSize:9.5,color:V500,margin:0});
+  // 線1: vertex共有(端点=母線上の●)
+  L(0.75,2.2,2.55,3.5,{c:V66,w:1.8});
+  s.addShape(pres.ShapeType.ellipse,{x:2.47,y:3.42,w:0.16,h:0.16,fill:{color:V500},line:{color:"FFFFFF",width:1}});
+  // 線2: polygon内包(端点=敷地内の■)
+  L(0.75,4.9,3.15,4.15,{c:V66,w:1.8});
+  s.addShape(pres.ShapeType.rect,{x:3.07,y:4.07,w:0.16,h:0.16,fill:{color:"1F77B4"},line:{color:"FFFFFF",width:1}});
+  // 線3: leadin(帯内で途切れる・▲)
+  L(4.95,2.1,4.05,2.75,{c:V66,w:1.8,d:1});
+  s.addShape(pres.ShapeType.triangle,{x:3.95,y:2.66,w:0.18,h:0.16,fill:{color:V275},line:{color:"FFFFFF",width:1}});
+  // 凡例
+  s.addText([{text:"● vertex（頂点共有）  ",options:{color:V500}},{text:"■ polygon（内包）  ",options:{color:"1F77B4"}},{text:"▲ leadin（帯 δ）",options:{color:V275}}],{x:0.85,y:5.35,w:4.2,h:0.6,fontFace:F,fontSize:10,margin:0,lineSpacing:14});
+  s.addText("黄=敷地 Poly(s) ／ 破線=引込帯 0.6km",{x:0.85,y:5.95,w:4.2,h:0.3,fontFace:F,fontSize:10,color:MUT,margin:0});
+  // ===== 中央: F =====
+  s.addShape(pres.ShapeType.rightArrow,{x:5.35,y:3.5,w:1.5,h:0.85,fill:{color:NAVY},line:{type:"none"}});
+  s.addText("F",{x:5.35,y:3.5,w:1.3,h:0.85,fontFace:"Cambria Math",fontSize:20,italic:true,bold:true,color:"FFFFFF",align:"center",valign:"middle",margin:0});
+  s.addText("証拠閉包",{x:5.25,y:4.45,w:1.7,h:0.3,fontFace:F,fontSize:10.5,color:NAVY,align:"center",margin:0});
+  // ===== 右: 構造 S* とミニSLD =====
+  s.addShape(pres.ShapeType.roundRect,{x:7.05,y:1.6,w:5.6,h:4.9,fill:{color:PANEL},line:{type:"none"},rectRadius:0.08});
+  s.addText("構造 S*（node-breaker） → SubSLD",{x:7.3,y:1.75,w:5.1,h:0.35,fontFace:F,fontSize:13,bold:true,color:NAVY,margin:0});
+  // 構造ツリー
+  const tx=7.45, ty=2.25;
+  s.addText("Site s",{x:tx,y:ty,w:1.5,h:0.3,fontFace:FM,fontSize:11,color:INK,margin:0});
+  L(tx+0.12,ty+0.32,tx+0.12,ty+1.32,{c:MUT,w:1});
+  L(tx+0.12,ty+0.52,tx+0.42,ty+0.52,{c:MUT,w:1});
+  s.addText("VL 500kV ─ Busbar ─ Terminal(●)",{x:tx+0.5,y:ty+0.36,w:4.6,h:0.3,fontFace:FM,fontSize:10.5,color:V500,margin:0});
+  L(tx+0.12,ty+0.92,tx+0.42,ty+0.92,{c:MUT,w:1});
+  s.addText("VL 66kV  ─ Terminal(▲)",{x:tx+0.5,y:ty+0.76,w:4.6,h:0.3,fontFace:FM,fontSize:10.5,color:V66,margin:0});
+  L(tx+0.12,ty+1.32,tx+0.42,ty+1.32,{c:MUT,w:1});
+  s.addText("Trafo(structural)",{x:tx+0.5,y:ty+1.16,w:4.6,h:0.3,fontFace:FM,fontSize:10.5,color:"444444",margin:0});
+  // ミニSLD
+  const bx=7.6, by=4.5, bw=3.6;
+  L(bx,by,bx+bw,by,{c:V500,w:3.5});
+  L(bx+0.5,by,bx+0.5,by-0.45,{c:V500,w:1.5}); L(bx+0.64,by,bx+0.64,by-0.45,{c:V500,w:1.5});
+  L(bx+1.6,by,bx+1.6,by-0.45,{c:V500,w:1.5});
+  L(bx,by+1.15,bx+bw,by+1.15,{c:V66,w:3.5});
+  L(bx+0.9,by+1.15,bx+0.9,by+1.6,{c:V66,w:1.5,d:1});
+  const txx=bx+2.9;
+  L(txx,by,txx,by+1.15,{c:"444444",w:1.5});
+  s.addShape(pres.ShapeType.ellipse,{x:txx-0.14,y:by+0.32,w:0.28,h:0.28,fill:{type:"none"},line:{color:"444444",width:1.5}});
+  s.addShape(pres.ShapeType.ellipse,{x:txx-0.14,y:by+0.52,w:0.28,h:0.28,fill:{type:"none"},line:{color:"444444",width:1.5}});
+  s.addText("2回線=2ストローク ／ 破線=leadin ／ 二重円=変圧器",{x:7.45,y:6.05,w:5.0,h:0.3,fontFace:F,fontSize:10,color:MUT,margin:0});
+  // 証人の対応(点線)
+  L(3.05,4.15,7.42,2.62,{c:"9A9AA6",w:1,d:1});
+  s.addText("witnesses（全要素が観測へ遡れる）",{x:4.7,y:3.05,w:2.6,h:0.55,fontFace:F,fontSize:9.5,color:MUT,align:"center",margin:0,lineSpacing:13});
+  s.addText("観測に証人を持つ要素だけが構造になり、その構造だけが描かれる — 概念図の全要素が §4-7 の定義に対応する。",{x:0.7,y:6.62,w:12.2,h:0.4,fontFace:F,fontSize:11.5,color:MUT,margin:0});
+  foot(s, 5);
+}
+
 // ---------- 5. 定式化: 証拠閉包作用素 ----------
 {
   const s = pres.addSlide(); base(s);
@@ -232,7 +294,7 @@ function mnote(s, x, y, w, txt) {
   s.addText("Algorithm 1（構内wayの連結成分分解＋端子束縛）は F の計算的実現である。擬似コードは補遺に。", {
     x: 0.7, y: 6.4, w: 12, h: 0.4, fontFace: F, fontSize: 11.5,
     color: MUT, margin: 0 });
-  foot(s, 5);
+  foot(s, 6);
 }
 
 // ---------- 6. 証拠の辞書式順序とゲート ----------
@@ -264,10 +326,38 @@ function mnote(s, x, y, w, txt) {
     [" | > 0.25 ⋅ max(", {}], ["kv", {i:1}], ["n", {i:1, sub:1}],
     [", 1) )", {}],
   ], 19);
-  s.addText("ゲートは閉包の制約として作用する。実証: 併架・並走回廊での偽接続（66kV断片×154kV系）を正しく棄却し、後にその断片自体が登録人工物と判明（2026-08-20 c1）。", {
-    x: 0.7, y: 6.0, w: 12.0, h: 0.7, fontFace: F, fontSize: 12,
-    color: MUT, lineSpacing: 18, margin: 0 });
-  foot(s, 6);
+  // 2ケースの事例図: 適合 / 棄却
+  const caseBox = (x, title, ok) => {
+    s.addShape(pres.ShapeType.roundRect, { x, y: 5.95, w: 5.85, h: 1.05,
+      fill: { color: "FFFFFF" }, line: { color: ok ? "2E7D32" : V500,
+      width: 1.1 }, rectRadius: 0.06 });
+    s.addText(title, { x: x + 0.85, y: 6.03, w: 2.2, h: 0.3, fontFace: F,
+      fontSize: 10.5, bold: true, color: ok ? "2E7D32" : V500, margin: 0 });
+    s.addText(ok ? "✓" : "✗", { x: x + 0.2, y: 6.15, w: 0.55, h: 0.6,
+      fontFace: F, fontSize: 26, bold: true,
+      color: ok ? "2E7D32" : V500, margin: 0 });
+  };
+  caseBox(0.7, "ケースA 適合（接続）", true);
+  s.addShape(pres.ShapeType.line, { x: 1.7, y: 6.62, w: 1.7, h: 0,
+    line: { color: V66, width: 2.2 } });
+  s.addShape(pres.ShapeType.ellipse, { x: 3.38, y: 6.54, w: 0.16, h: 0.16,
+    fill: { color: V66 }, line: { type: "none" } });
+  s.addText([{ text: "66kV線 → 66kVノード:  ", options: { color: INK } },
+    { text: "|66−66| = 0 ≤ 25%", options: { color: "2E7D32" } }],
+    { x: 3.7, y: 6.5, w: 2.8, h: 0.42, fontFace: F, fontSize: 10.5,
+      margin: 0 });
+  caseBox(6.85, "ケースB 棄却（c1 実例）", false);
+  s.addShape(pres.ShapeType.line, { x: 7.85, y: 6.62, w: 1.7, h: 0,
+    line: { color: V66, width: 2.2 } });
+  s.addShape(pres.ShapeType.ellipse, { x: 9.53, y: 6.54, w: 0.16, h: 0.16,
+    fill: { color: V154 }, line: { type: "none" } });
+  s.addText([{ text: "66kV線 → 154kVノード:  ", options: { color: INK } },
+    { text: "乖離133% > 25%", options: { color: V500 } }],
+    { x: 9.85, y: 6.5, w: 2.9, h: 0.42, fontFace: F, fontSize: 10.5,
+      margin: 0 });
+  s.addText("ケースBは併架・並走回廊の物理近接（80m以内）だったが棄却が正解 — 後に断片側が登録人工物と判明（2026-08-20 c1）。", {
+    x: 0.7, y: 7.06, w: 12.2, h: 0.32, fontFace: F, fontSize: 10,
+    color: MUT, margin: 0 });
 }
 
 // ---------- 7. 下界性命題 ----------
@@ -286,7 +376,7 @@ function mnote(s, x, y, w, txt) {
     ["      （タグあり／cablesのみ／証拠なし）", {jp:1, fs:12, c:MUT}],
   ], 21);
   // 命題2
-  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 3.8, w: 12.0, h: 1.65,
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 3.8, w: 12.0, h: 2.75,
     fill: { color: "FFFFFF" }, line: { color: NAVY, width: 1.2 },
     rectRadius: 0.06 });
   s.addText("命題 2（下界性）", { x: 1.0, y: 3.98, w: 5, h: 0.4,
@@ -302,10 +392,26 @@ function mnote(s, x, y, w, txt) {
   s.addText("∵ 各線で ĉ(w) ≤ c_true(w)：タグ値は真値（仮定A1: circuitsタグは正しい）、⌊cables/3⌋ は3相導体数からの下界（A2）、実在する線は1回線以上。", {
     x: 1.0, y: 5.0, w: 11.4, h: 0.4, fontFace: F, fontSize: 11.5,
     color: MUT, margin: 0 });
-  s.addText("系: SubSLD の表示回線数は「少なくともこれだけ存在する」の主張であり、系統計算に用いる際も容量を過大評価しない側に誤る。導体数（wires）も同じ構成で下界を保持する。", {
-    x: 0.7, y: 5.75, w: 12.0, h: 0.75, fontFace: F, fontSize: 12.5,
-    color: INK, lineSpacing: 19, margin: 0 });
-  foot(s, 7);
+  // 下界性の数直線(概念図)
+  s.addShape(pres.ShapeType.line, { x: 2.2, y: 5.62, w: 8.9, h: 0,
+    line: { color: INK, width: 1.5, endArrowType: "triangle" } });
+  const tick = (x, lab, col, it) => {
+    s.addShape(pres.ShapeType.line, { x, y: 5.5, w: 0, h: 0.24,
+      line: { color: col, width: 2.2 } });
+    s.addText(lab, { x: x - 0.7, y: 5.8, w: 1.4, h: 0.3,
+      fontFace: "Cambria Math", italic: true, fontSize: 13, color: col,
+      align: "center", margin: 0 });
+  };
+  tick(3.4, "c sum", V66); tick(5.6, "c est", NAVY); tick(9.2, "c true", V500);
+  s.addShape(pres.ShapeType.rect, { x: 5.6, y: 5.54, w: 3.6, h: 0.16,
+    fill: { color: "F2C4C4" }, line: { type: "none" } });
+  s.addText("未観測ぶん（欠測）— 推測で埋めず、この幅自体を測って報告", {
+    x: 5.3, y: 6.12, w: 5.5, h: 0.3, fontFace: F, fontSize: 10,
+    color: MUT, margin: 0 });
+  s.addText("系: 表示回線数は「少なくともこれだけ存在する」の主張 — 系統計算でも容量を過大評価しない側に誤る（導体数 wires も同構成で下界）。", {
+    x: 0.7, y: 6.7, w: 12.0, h: 0.4, fontFace: F, fontSize: 12,
+    color: INK, margin: 0 });
+  foot(s, 8);
 }
 
 // ---------- 8. 三値流向推定器 ----------
@@ -315,20 +421,42 @@ function mnote(s, x, y, w, txt) {
   s.addText("変電所集合に「最大電圧階級」による半順序を入れ、線グループ g の流向を三値推定器 d̂ で与える。判定不能は無理に埋めず、棄権 ⊥ を第三の出力として原理化する（図では灰）。", {
     x: 0.7, y: 1.58, w: 12.0, h: 0.8, fontFace: F, fontSize: 13.5,
     color: INK, lineSpacing: 21, margin: 0 });
-  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 2.6, w: 12.0, h: 2.35,
+  s.addShape(pres.ShapeType.roundRect, { x: 0.7, y: 2.6, w: 8.35, h: 2.35,
     fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
-  meq(s, 0.9, 2.75, 11.6, [
+  // 概念図: 電圧半順序の梯子
+  s.addShape(pres.ShapeType.roundRect, { x: 9.3, y: 2.6, w: 3.4, h: 2.35,
+    fill: { color: "FFFFFF" }, line: { color: "D8D8DE", width: 0.9 },
+    rectRadius: 0.06 });
+  s.addText("s′ ≻ v", { x: 9.55, y: 2.75, w: 1.3, h: 0.3, fontFace: "Cambria Math",
+    italic: true, fontSize: 12, color: V500, margin: 0 });
+  s.addShape(pres.ShapeType.line, { x: 10.9, y: 2.98, w: 0, h: 0.5,
+    line: { color: V500, width: 2, endArrowType: "triangle" } });
+  s.addText("in", { x: 11.05, y: 3.05, w: 0.6, h: 0.3, fontFace: FL,
+    fontSize: 11, bold: true, color: V500, margin: 0 });
+  s.addShape(pres.ShapeType.line, { x: 9.55, y: 3.62, w: 2.9, h: 0,
+    line: { color: INK, width: 2.5 } });
+  s.addText("v（自所の階級）", { x: 9.55, y: 3.7, w: 2.5, h: 0.28,
+    fontFace: F, fontSize: 9.5, color: INK, margin: 0 });
+  s.addText("s′ ∼ v", { x: 9.55, y: 4.08, w: 1.3, h: 0.3, fontFace: "Cambria Math",
+    italic: true, fontSize: 12, color: V66, margin: 0 });
+  s.addShape(pres.ShapeType.line, { x: 10.9, y: 4.05, w: 0, h: 0.5,
+    line: { color: V66, width: 2, beginArrowType: "triangle" } });
+  s.addText("out", { x: 11.05, y: 4.25, w: 0.7, h: 0.3, fontFace: FL,
+    fontSize: 11, bold: true, color: V66, margin: 0 });
+  s.addText("far=∅ → ⊥（灰）", { x: 11.55, y: 4.6, w: 1.4, h: 0.3,
+    fontFace: F, fontSize: 9, color: MUT, margin: 0 });
+  meq(s, 0.9, 2.75, 7.9, [
     ["d̂", {i:1}], [" :  ", {}], ["G", {i:1}],
     ["  →  { in,  out,  ⊥ }", {}],
   ], 21);
-  meq(s, 0.9, 3.38, 11.6, [
+  meq(s, 0.9, 3.38, 7.9, [
     ["d̂", {i:1}], ["(", {}], ["g", {i:1}], [") = in", {}],
     ["   ⇔   ∃", {}], ["s′", {i:1}], ["∈far(", {}], ["g", {i:1}],
     ["):  ", {}], ["s′", {i:1}], [" ≻ ", {}], ["v", {i:1}],
     ["      ∨      ", {c:MUT}], ["kv", {i:1}], ["v", {i:1, sub:1}],
     [" = kv", {}], ["top", {sub:1}], ["(", {}], ["s", {i:1}], [")", {}],
   ], 18);
-  meq(s, 0.9, 3.98, 11.6, [
+  meq(s, 0.9, 3.98, 7.9, [
     ["d̂", {i:1}], ["(", {}], ["g", {i:1}], [") = ⊥", {}],
     ["   ⇔   far(", {}], ["g", {i:1}], [") = ∅", {}],
     ["      （対向が解決できない時は棄権 — 埋めない）", {jp:1, fs:12, c:MUT}],
@@ -336,7 +464,7 @@ function mnote(s, x, y, w, txt) {
   s.addText("far(g) は connections（両端束縛線）を第一資料とし、欠測時のみ線名の name-evidence（「A~B線」等）で補完する。棄権率は隠さず評価指標として報告する — 棄権の主因は対向変電所自体の OSM 欠測であり、手法の誤りではなくデータ被覆の測定値である。", {
     x: 0.7, y: 5.2, w: 12.0, h: 1.0, fontFace: F, fontSize: 12.5,
     color: INK, lineSpacing: 20, margin: 0 });
-  foot(s, 8);
+  foot(s, 9);
 }
 
 // ---------- 9. 結果: 実証ペア図 ----------
@@ -348,7 +476,7 @@ function mnote(s, x, y, w, txt) {
   s.addText("図1  実証ペア図（新京葉変電所）。左: GeoPane（構内幾何・端子根拠・鉄塔・インセット）　右: SLDPane（母線セクション・回線ストローク・流向・変圧器・スルー）", {
     x: 0.85, y: 6.78, w: 11.8, h: 0.35, fontFace: F, fontSize: 11,
     color: MUT, margin: 0 });
-  foot(s, 9);
+  foot(s, 10);
 }
 
 // ---------- 10. 結果: 全国適用 ----------
@@ -371,7 +499,7 @@ function mnote(s, x, y, w, txt) {
   s.addText("図2  各地域の代表例（GeoPane 抜粋）。バッチ生成器（再開可能・タイルキャッシュ）により全所を一括描画 — 約1〜6秒/所・10地域並列で全国約1時間（pws-160core 実測）。", {
     x: 0.7, y: 6.25, w: 12.2, h: 0.65, fontFace: F, fontSize: 12,
     color: MUT, lineSpacing: 18, margin: 0 });
-  foot(s, 10);
+  foot(s, 11);
 }
 
 // ---------- 11. 被覆評価 ----------
@@ -407,7 +535,7 @@ function mnote(s, x, y, w, txt) {
     catGridLine: { style: "none" },
     valAxisMaxVal: 60,
   });
-  foot(s, 11);
+  foot(s, 12);
 }
 
 // ---------- 12. 限界と考察 ----------
@@ -429,7 +557,7 @@ function mnote(s, x, y, w, txt) {
     s.addText(b, { x: x + 0.3, y: y + 0.72, w: 5.4, h: 1.4, fontFace: F,
       fontSize: 11.5, color: MUT, lineSpacing: 17, margin: 0 });
   });
-  foot(s, 12);
+  foot(s, 13);
 }
 
 // ---------- 13. 結論 ----------
@@ -455,7 +583,7 @@ function mnote(s, x, y, w, txt) {
   s.addText("資料: docs/SUBSLD_METHOD.md ・ github.com/lutelute/All-Japan-Grid ・ issue #49", {
     x: 0.7, y: 6.35, w: 12, h: 0.4, fontFace: FM, fontSize: 11,
     color: MUT, margin: 0 });
-  foot(s, 13);
+  foot(s, 14);
 }
 
 pres.writeFile({ fileName: "SubSLD_academic.pptx" }).then(() => console.log("written"));
