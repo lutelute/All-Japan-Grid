@@ -344,7 +344,8 @@ def extract_structure(region, ft, pways):
 # ---------------------------------------------------------------- 検証図
 
 
-def render_figure(structure, ways, poly, out_png):
+def render_figure(structure, ways, poly, out_png, conns_by_key=None,
+                  site_kvmax=None):
     """SubSLD(変電所単線結線ビュー) — 実証ペア図(オーナー命名 2026-08-26)。
 
     左=GeoPane: 構内幾何(敷地ポリゴン・母線・ベイ・端子根拠マーカー)
@@ -357,7 +358,8 @@ def render_figure(structure, ways, poly, out_png):
     import matplotlib.pyplot as plt
     _font()
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 11))
+    n_vl = max(len(structure.voltage_levels), 1)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, max(11, 3.6 * n_vl + 3)))
     _VC = {500: "#d62728", 275: "#ff7f0e", 220: "#e377c2", 187: "#bcbd22",
            154: "#9467bd", 110: "#1f77b4", 77: "#2ca02c", 66: "#17becf",
            0: "#999999"}
@@ -412,112 +414,184 @@ def render_figure(structure, ways, poly, out_png):
                   fontsize=11)
     ax1.set_aspect("equal")
 
-    # --- 右: 単線結線図(オーナーFB 2026-08-26「垂直リスト形式は読めない」を受け
-    # 沖電式SLDに刷新): 母線=太い水平線 / 線=母線に刺さる縦ストローク
-    # (平行ストローク本数=回線数par・破線=leadin根拠) / 変圧器=母線間の⧉ ---
+    # --- 右: SLDPane v3(オーナーFB 2026-08-26「入/出・構内接続・変換とスルーを
+    # 見せる」): 上スタブ=流入(対向が上位電圧 or 自所トップ階級)・下スタブ=流出
+    # (対向が同位=配下, 推定)・灰=対向不明。線は実際の母線セクションに接着。
+    # バスタイ(bay跨ぎ)=BT・変圧器=⧉(バンク数注記)・トランス無し階級=スルー明示 ---
     from scripts.build_substation_properties import _parse_wires
+    conns_by_key = conns_by_key or {}
+    site_kvmax = site_kvmax or {}
     props_of = {w["key"]: w["props"] for w in ways}
     lv_order = sorted(structure.voltage_levels, key=lambda v: -v.nominal_kv)
-    ROW, STUB = 4.6, 1.15
+    top_kv = lv_order[0].nominal_kv if lv_order else 0
+    ROW, STUB = 7.4, 1.0
     ypos = {vl.vl_id: -i * ROW for i, vl in enumerate(lv_order)}
-    # 線グループ(名前単位)を電圧階級ごとに整列 → スロット割当
+    tr_vls = {tr.hv_vl_id for tr in structure.transformers} | {
+        tr.lv_vl_id for tr in structure.transformers}
+    # 線グループ(名前単位): 接着セクション・方向(in/out/不明)を集約
     groups_of = {}
     for vl in lv_order:
         terms = [t for t in structure.terminals if t.vl_id == vl.vl_id]
+        bb_of_bay = {b.bay_id: (b.busbar_ids[0] if b.busbar_ids else None)
+                     for b in structure.bays}
         groups = {}
         for t in terms:
             g = groups.setdefault(t.line_name or t.line_key or "?", {
-                "par": 1, "bindings": set(), "keys": set()})
+                "par": 1, "bindings": set(), "keys": set(), "bb": None})
             g["par"] = max(g["par"], t.par or 1)
             g["bindings"].add(t.binding)
             if t.line_key:
                 g["keys"].add(t.line_key)
+            bb = (t.attach_id if t.attach_kind == "busbar"
+                  else bb_of_bay.get(t.attach_id)
+                  if t.attach_kind == "bay" else None)
+            if bb and not g["bb"]:
+                g["bb"] = bb
+        for nm, g in groups.items():
+            far_kvs = []
+            for k in g["keys"]:
+                for c in conns_by_key.get(k, []):
+                    far = (c["to_site"] if c["from_site"]
+                           == structure.site.site_id else c["from_site"])
+                    if far in site_kvmax:
+                        far_kvs.append(site_kvmax[far])
+            if not far_kvs:
+                g["dir"] = "unknown"
+            elif max(far_kvs) > vl.nominal_kv + 1e-6:
+                g["dir"] = "in"          # 対向に上位電圧階級=上流側(推定)
+            elif abs(vl.nominal_kv - top_kv) < 1e-6:
+                g["dir"] = "in"          # 自所トップ階級の同位対向=系統側(推定)
+            else:
+                g["dir"] = "out"         # 同位対向=配下へ(推定)
         groups_of[vl.vl_id] = sorted(groups.items())
-    MAXS = 26                       # 1母線あたり表示スロット上限
+    MAXS = 26
     n_tr = len(structure.transformers)
     max_slots = max((min(len(g), MAXS) for g in groups_of.values()),
                     default=1)
-    W = max(9.0, 0.72 * max_slots)          # 母線長(スロット数に追随)
-    trx0 = W + 1.2                          # 変圧器ゾーン
+    W = max(9.0, 0.72 * max_slots)
+    trx0 = W + 1.2
     for vl in lv_order:
         y = ypos[vl.vl_id]
         kv = int(vl.nominal_kv)
         col = _VC.get(kv, "#999")
         bbs = [b for b in structure.busbars if b.vl_id == vl.vl_id]
-        groups = groups_of[vl.vl_id]
-        shown = groups[:MAXS]
-        total_par = sum(g["par"] for _, g in groups)
+        groups = groups_of[vl.vl_id][:MAXS]
+        total_par = sum(g["par"] for _, g in groups_of[vl.vl_id])
         label = f"{kv}kV" if kv else "無印(@u)"
-        ax2.text(-0.5, y + 0.12, f"{label}", ha="right", va="center",
+        ax2.text(-0.5, y + 0.12, label, ha="right", va="center",
                  fontsize=13, color=col, fontweight="bold")
-        ax2.text(-0.5, y - 0.42, f"母線×{max(len(bbs), 1)}・{len(groups)}線"
-                 f"・{total_par}回線", ha="right", va="center",
+        sub = f"母線×{max(len(bbs), 1)}・{len(groups_of[vl.vl_id])}線・{total_par}回線"
+        if vl.vl_id not in tr_vls and n_tr:
+            sub += "\nスルー(変圧器なし)"
+        elif not n_tr:
+            sub += "\nスルー/開閉(全体に変圧器なし)"
+        ax2.text(-0.5, y - 0.55, sub, ha="right", va="top",
                  fontsize=7.5, color=col)
-        # 母線(セクション数ぶん分割・変圧器ゾーンまで細線で延長)
+        # 母線セクション(実セクション位置に接着するため span を記録)
         nb = max(len(bbs), 1)
+        span = {}
         for i in range(nb):
-            xa = W * i / nb + (0.18 if i else 0.0)
+            xa = W * i / nb + (0.22 if i else 0.0)
             xb = W * (i + 1) / nb
+            bid = bbs[i].busbar_id if i < len(bbs) else None
+            span[bid] = (xa, xb)
             ax2.plot([xa, xb], [y, y], color=col, lw=4.5, zorder=3,
                      solid_capstyle="butt")
         if n_tr:
             ax2.plot([W, trx0 + 0.9 * n_tr], [y, y], color=col, lw=1.1,
                      alpha=0.55, zorder=2)
-        # 線スタブ(上向き)・回線数=平行ストローク・leadin=破線
-        for si, (nm, g) in enumerate(shown):
-            x = W * (si + 0.5) / max(len(shown), 1)
-            par = min(g["par"], 4)
-            dashed = g["bindings"] <= {"leadin"}
-            for p in range(par):
-                dx = (p - (par - 1) / 2) * 0.09
-                ax2.plot([x + dx, x + dx], [y, y + STUB], color=col,
-                         lw=1.4, ls=(0, (2.5, 2)) if dashed else "-",
-                         zorder=2)
-            # 導体数(wiresタグ・全way最大)
-            wmax = max((_parse_wires(props_of.get(k) or {}) or 0
-                        for k in g["keys"]), default=0)
-            note = []
-            if g["par"] > 1:
-                note.append(f"{g['par']}回線")
-            if wmax > 1:
-                note.append(f"{wmax}導体")
-            nm_s = nm if len(nm) <= 15 else nm[:14] + "…"
-            ax2.text(x, y + STUB + 0.12, nm_s, rotation=60, ha="left",
-                     va="bottom", fontsize=6.8, color="#222",
-                     rotation_mode="anchor")
-            if note:
-                ax2.text(x + 0.22, y + STUB + 0.02, "・".join(note),
-                         rotation=60, ha="left", va="top", fontsize=6.2,
-                         color=col, rotation_mode="anchor")
-        if len(groups) > MAXS:
-            ax2.text(W + 0.15, y + 0.5, f"+{len(groups) - MAXS}線",
+        # バスタイ(2セクション以上に触れる bay)= 母線下の BT ブリッジ
+        for b in structure.bays:
+            if b.vl_id == vl.vl_id and len(set(b.busbar_ids)) >= 2:
+                ids = [x for x in b.busbar_ids if x in span]
+                if len(ids) >= 2:
+                    xm = [sum(span[x]) / 2 for x in ids[:2]]
+                    ax2.plot(xm, [y - 0.42, y - 0.42], color=col, lw=1.3)
+                    for xx in xm:
+                        ax2.plot([xx, xx], [y, y - 0.42], color=col, lw=1.3)
+                    ax2.text(sum(xm) / 2, y - 0.52, "BT", ha="center",
+                             va="top", fontsize=6.5, color=col)
+        # セクションごとにスロットを配る(接着先不明は全幅)
+        by_bb = {}
+        for nm, g in groups:
+            by_bb.setdefault(g["bb"], []).append((nm, g))
+        for bb_id, gs in by_bb.items():
+            xa, xb = span.get(bb_id, (0.0, W))
+            for si, (nm, g) in enumerate(gs):
+                x = xa + (xb - xa) * (si + 0.5) / len(gs)
+                par = min(g["par"], 4)
+                up = g["dir"] != "out"
+                gray = g["dir"] == "unknown"
+                scol = "#999" if gray else col
+                sgn = 1 if up else -1
+                dashed = g["bindings"] <= {"leadin"}
+                for pp in range(par):
+                    dx = (pp - (par - 1) / 2) * 0.09
+                    ax2.plot([x + dx, x + dx], [y, y + sgn * STUB],
+                             color=scol, lw=1.4,
+                             ls=(0, (2.5, 2)) if dashed else "-", zorder=2)
+                wmax = max((_parse_wires(props_of.get(k) or {}) or 0
+                            for k in g["keys"]), default=0)
+                note = []
+                if g["par"] > 1:
+                    note.append(f"{g['par']}回線")
+                if wmax > 1:
+                    note.append(f"{wmax}導体")
+                nm_s = nm if len(nm) <= 15 else nm[:14] + "…"
+                if up:
+                    ax2.text(x, y + STUB + 0.12, nm_s, rotation=60,
+                             ha="left", va="bottom", fontsize=6.8,
+                             color="#666" if gray else "#222",
+                             rotation_mode="anchor")
+                    if note:
+                        ax2.text(x + 0.22, y + STUB + 0.02, "・".join(note),
+                                 rotation=60, ha="left", va="top",
+                                 fontsize=6.2, color=scol,
+                                 rotation_mode="anchor")
+                else:
+                    ax2.text(x, y - STUB - 0.12, nm_s, rotation=60,
+                             ha="right", va="top", fontsize=6.8,
+                             color="#222", rotation_mode="anchor")
+                    if note:
+                        ax2.text(x + 0.22, y - STUB - 0.02, "・".join(note),
+                                 rotation=60, ha="right", va="bottom",
+                                 fontsize=6.2, color=scol,
+                                 rotation_mode="anchor")
+        if len(groups_of[vl.vl_id]) > MAXS:
+            ax2.text(W + 0.15, y + 0.5, f"+{len(groups_of[vl.vl_id]) - MAXS}線",
                      fontsize=8, color="#666")
-    # 変圧器: hv母線→lv母線を貫く縦線 + ⧉(交差する中間母線とは無接続=ドット無し)
+    # 変圧器: hv母線→lv母線 + ⧉ + 接続ドット + バンク数
     for ti, tr in enumerate(structure.transformers):
         x = trx0 + 0.9 * ti
         ya, yb = ypos[tr.hv_vl_id], ypos[tr.lv_vl_id]
         ax2.plot([x, x], [ya, yb], color="#444", lw=1.6, zorder=4)
+        for yy in (ya, yb):
+            ax2.plot([x], [yy], "o", color="#444", ms=5, zorder=6)
         ym = (ya + yb) / 2
-        r = 0.30
+        r = 0.34
         ax2.add_patch(plt.Circle((x, ym + r * 0.62), r, fill=False,
                                  color="#444", lw=1.6, zorder=5))
         ax2.add_patch(plt.Circle((x, ym - r * 0.62), r, fill=False,
                                  color="#444", lw=1.6, zorder=5))
-        ax2.text(x + 0.38, ym, tr.trafo_id.split("/")[-1], fontsize=8,
-                 color="#444", va="center")
+        lab = tr.trafo_id.split("/")[-1]
+        if (tr.n_parallel or 1) > 1:
+            lab += f" ×{tr.n_parallel}"
+        ax2.text(x + 0.42, ym, lab, fontsize=8, color="#444", va="center")
     if not ypos:                # 無タグ・孤立(VL ゼロ)でも空図で成立させる
         ax2.text(5.0, -1.5, "電圧階級なし(voltage 無タグ・構内線/引込なし)",
                  ha="center", fontsize=11, color="#888")
-    ax2.set_xlim(-3.4, (trx0 + 0.9 * max(n_tr, 1)) + 1.2)
-    ax2.set_ylim(min(ypos.values(), default=-ROW) - 1.2, STUB + 3.2)
+    ax2.set_xlim(-3.6, (trx0 + 0.9 * max(n_tr, 1)) + 1.2)
+    ax2.set_ylim(min(ypos.values(), default=-ROW) - STUB - 2.6,
+                 STUB + 3.2)
     ax2.axis("off")
     s = structure.summary()
     ax2.set_title(
         f"SLDPane 単線結線図: VL{len(structure.voltage_levels)} 母線{s['n_busbars']} "
         f"ベイ{s['n_bays']} 端子{s['n_terminals']} 変圧器{s['n_transformers']}(structural)",
         fontsize=11)
-    fig.suptitle(f"{structure.site.name} 実証ペア図 SubSLD (OSM=正・全端子に根拠付き・"
-                 "破線スタブ=leadin根拠)", fontsize=13)
+    fig.suptitle(f"{structure.site.name} 実証ペア図 SubSLD (OSM=正・全端子に根拠付き) — "
+                 "上スタブ=流入/下=流出(対向変電所の電圧階層による推定・灰=対向不明)・"
+                 "破線=leadin・BT=バスタイ・⧉=変圧器", fontsize=12)
     fig.tight_layout()
     fig.savefig(out_png, dpi=110)
     plt.close(fig)
@@ -541,7 +615,19 @@ def main():
     with open(out_json, "w") as f:
         json.dump(asdict(structure), f, ensure_ascii=False, indent=1)
     out_png = os.path.join(args.fig, f"structure_{args.region}_{args.name}_nb.png")
-    render_figure(structure, ways, poly, out_png)
+    # 方向推定用: 地域構造DB(batch生成物)から connections と各サイト最大kvを読む
+    conns_by_key, site_kvmax = {}, {}
+    reg_json = os.path.join("data", "structures", f"{args.region}.json")
+    if os.path.exists(reg_json):
+        reg = json.load(open(reg_json))
+        for c in reg.get("connections", []):
+            conns_by_key.setdefault(c["line_key"], []).append(c)
+        for st in reg.get("structures", []):
+            kvs = [v["nominal_kv"] for v in st.get("voltage_levels", [])
+                   if v.get("nominal_kv")]
+            if kvs:
+                site_kvmax[st["site"]["site_id"]] = max(kvs)
+    render_figure(structure, ways, poly, out_png, conns_by_key, site_kvmax)
 
     print("構造JSON:", out_json)
     print("検証図  :", out_png)
