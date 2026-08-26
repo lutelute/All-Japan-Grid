@@ -345,7 +345,7 @@ def extract_structure(region, ft, pways):
 
 
 def render_figure(structure, ways, poly, out_png, conns_by_key=None,
-                  site_kvmax=None):
+                  site_kvmax=None, name_kvmax=None):
     """SubSLD(変電所単線結線ビュー) — 実証ペア図(オーナー命名 2026-08-26)。
 
     左=GeoPane: 構内幾何(敷地ポリゴン・母線・ベイ・端子根拠マーカー)
@@ -421,6 +421,7 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
     from scripts.build_substation_properties import _parse_wires
     conns_by_key = conns_by_key or {}
     site_kvmax = site_kvmax or {}
+    name_kvmax = name_kvmax or {}
     props_of = {w["key"]: w["props"] for w in ways}
     lv_order = sorted(structure.voltage_levels, key=lambda v: -v.nominal_kv)
     top_kv = lv_order[0].nominal_kv if lv_order else 0
@@ -449,12 +450,34 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
                 g["bb"] = bb
         for nm, g in groups.items():
             far_kvs = []
+            _my = structure.site.site_id.split("site_")[-1]   # 幾何ハッシュ
             for k in g["keys"]:
                 for c in conns_by_key.get(k, []):
-                    far = (c["to_site"] if c["from_site"]
-                           == structure.site.site_id else c["from_site"])
-                    if far in site_kvmax:
-                        far_kvs.append(site_kvmax[far])
+                    for far in (c["from_site"], c["to_site"]):
+                        if far.split("site_")[-1] == _my:
+                            continue          # 自サイト(別region別名含む)
+                        if far in site_kvmax:
+                            far_kvs.append(site_kvmax[far])
+            if not far_kvs:
+                # name-evidence フォールバック: 「A~B線」「X線」から対向サイト名
+                # を引く(binding語彙の name-evidence と同思想・推定)
+                import unicodedata as _ud
+                base = _ud.normalize("NFKC", nm).replace(" ", "")
+                base = base[:-1] if base.endswith("線") else base
+                mynm = _ud.normalize("NFKC",
+                                     structure.site.name or "").replace(" ", "")
+                import re as _re
+                for part in _re.split(r"[~/・]", base):
+                    part = part.strip()
+                    part = part[:-1] if part.endswith("線") else part
+                    part = part.replace("変電所", "").replace("開閉所", "")
+                    if not part or part in mynm:
+                        continue
+                    for suf in ("変電所", "開閉所", ""):
+                        kvm = name_kvmax.get(part + suf)
+                        if kvm:
+                            far_kvs.append(kvm)
+                            break
             if not far_kvs:
                 g["dir"] = "unknown"
             elif max(far_kvs) > vl.nominal_kv + 1e-6:
@@ -581,8 +604,8 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         ax2.text(5.0, -1.5, "電圧階級なし(voltage 無タグ・構内線/引込なし)",
                  ha="center", fontsize=11, color="#888")
     ax2.set_xlim(-3.6, (trx0 + 0.9 * max(n_tr, 1)) + 1.2)
-    ax2.set_ylim(min(ypos.values(), default=-ROW) - STUB - 2.6,
-                 STUB + 3.2)
+    ax2.set_ylim(min(ypos.values(), default=-ROW) - STUB - 3.6,
+                 STUB + 3.4)
     ax2.axis("off")
     s = structure.summary()
     ax2.set_title(
@@ -615,19 +638,32 @@ def main():
     with open(out_json, "w") as f:
         json.dump(asdict(structure), f, ensure_ascii=False, indent=1)
     out_png = os.path.join(args.fig, f"structure_{args.region}_{args.name}_nb.png")
-    # 方向推定用: 地域構造DB(batch生成物)から connections と各サイト最大kvを読む
-    conns_by_key, site_kvmax = {}, {}
-    reg_json = os.path.join("data", "structures", f"{args.region}.json")
-    if os.path.exists(reg_json):
+    # 方向推定用: 構造DB(batch生成物)の connections と各サイト最大kv。
+    # 跨region線の対向解決のため**全region分をマージ**して読む(v3.1 2026-08-26)。
+    # site_id は幾何ハッシュ由来なので同一物理サイトの別region登録は
+    # aliases で同値(kvmaxはmax側を採用)
+    conns_by_key, site_kvmax, name_kvmax = {}, {}, {}
+    from src.regions import REGIONS as _ALL_REGIONS
+    for _r in _ALL_REGIONS:
+        reg_json = os.path.join("data", "structures", f"{_r}.json")
+        if not os.path.exists(reg_json):
+            continue
         reg = json.load(open(reg_json))
         for c in reg.get("connections", []):
             conns_by_key.setdefault(c["line_key"], []).append(c)
         for st in reg.get("structures", []):
             kvs = [v["nominal_kv"] for v in st.get("voltage_levels", [])
                    if v.get("nominal_kv")]
-            if kvs:
-                site_kvmax[st["site"]["site_id"]] = max(kvs)
-    render_figure(structure, ways, poly, out_png, conns_by_key, site_kvmax)
+            if not kvs:
+                continue
+            ids = [st["site"]["site_id"]] + list(st["site"].get("aliases") or [])
+            for sid in ids:
+                site_kvmax[sid] = max(site_kvmax.get(sid, 0), max(kvs))
+            snm = (st["site"].get("name") or "").replace(" ", "")
+            if snm:
+                name_kvmax[snm] = max(name_kvmax.get(snm, 0), max(kvs))
+    render_figure(structure, ways, poly, out_png, conns_by_key, site_kvmax,
+                  name_kvmax)
 
     print("構造JSON:", out_json)
     print("検証図  :", out_png)
