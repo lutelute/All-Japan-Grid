@@ -53,6 +53,12 @@ STEPS = [
     ("fragment_recovery_chains", [sys.executable,
                                   "scripts/hunt_fragment_osm_chains.py",
                                   "--write"], False),
+    # 介入#35: 偽断片のノード衛生(跨region二重登録の解消・オーナー承認 2026-08-26)。
+    # 衛星判読パイロットc1で発見した「断片=登録人工物」を機械判定して双子側へ寄せる
+    # (完全双子=削除/近傍双子≤150m・kv一致=リマップ/残余junction=再帰属)。
+    # 名前つき未解決が残る断片はスキップ(部分手術しない)。冪等(適用後は対象が消える)
+    ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
+                      "--write"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
