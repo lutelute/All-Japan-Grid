@@ -1,6 +1,6 @@
 # SubSLD法 発表台本
 
-対象デッキ: `SubSLD法_academic.pptx`（14枚・白基調・定式化と評価）
+対象デッキ: `SubSLD法_academic.pptx`（14枚・白基調・定式化と評価。SubSLDのデッキはこれ1本）
 所要: **15分想定**（質疑5分別）。学会発表・研究会・ゼミ共通で使える構成。
 短縮版（8分）とデモ手順、想定質疑は後半に記載。
 
@@ -140,7 +140,6 @@ A. なる部分とならない部分を分けています。回線数・接続�
 | 資料 | 場所 |
 |---|---|
 | アカデミック版デッキ（本台本の対象） | `SubSLD法_academic.pptx` |
-| ビジュアル版デッキ（一般向け・ダーク基調） | `SubSLD法_ビジュアル版.pptx` |
 | 論文（IEEEtran・6ページ） | `papers/subsld/subsld.pdf` |
 | 手法文書（実装寄り） | `docs/SUBSLD_METHOD.md` |
 | ビューア | https://lutelute.github.io/All-Japan-Grid/subsld.html |
