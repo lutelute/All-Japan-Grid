@@ -45,7 +45,14 @@ function mnote(s, x, y, w, txt) {
 }
 
 // ---------- 1. タイトル ----------
-{
+// タイトルは2パターン用意してある。使う方を TITLE_LAYOUT で選ぶ:
+//   "band" = 上下（文字が上・全幅の写真帯が下）… 論文タイトル型・情報量が多い
+//   "split" = 左右（文字が左・写真が右半分フルブリード）… 引きが強く掴みが良い
+// 好みで切り替える。両方とも assets/ の素材だけで完結する。
+const TITLE_LAYOUT = "band";   // "band" | "split"
+
+if (TITLE_LAYOUT === "band") {
+  // --- (A) 上下パターン: 文字ブロック + 下部に全幅の写真帯 ---
   const s = pres.addSlide(); base(s);
   s.addText("SubSLD法：公開地理データからの\n変電所内部構成の実証的機械生成", {
     x: 0.9, y: 1.15, w: 11.6, h: 1.75, fontFace: F, fontSize: 33, bold: true,
@@ -63,6 +70,29 @@ function mnote(s, x, y, w, txt) {
   s.addText("図: GeoPane（駿遠変電所・500/275/154/77kV）— OSM実証拠を地理院写真上に重畳した実出力", {
     x: 0.7, y: 6.95, w: 10, h: 0.35, fontFace: F, fontSize: 10.5,
     color: "FFFFFF", margin: 0 });
+
+} else {
+  // --- (B) 左右パターン: 左に文字・右半分に写真フルブリード ---
+  // 旧ビジュアル版デッキの構図を、白基調のアカデミック配色に移植したもの。
+  const s = pres.addSlide(); base(s);
+  s.addImage({ path: "assets/geo_shinkeiyo.png", x: 7.5, y: 0, w: 5.83, h: 7.5,
+    sizing: { type: "cover", w: 5.83, h: 7.5 } });
+  s.addText("ALL-JAPAN-GRID  /  2026-08-27", { x: 0.7, y: 0.9, w: 6.4, h: 0.32,
+    fontFace: FL, fontSize: 11.5, bold: true, color: NAVY, charSpacing: 2,
+    margin: 0 });
+  s.addText("SubSLD法", { x: 0.62, y: 1.5, w: 6.6, h: 1.3, fontFace: F,
+    fontSize: 54, bold: true, color: INK, margin: 0 });
+  s.addText("公開地理データからの\n変電所内部構成の実証的機械生成", {
+    x: 0.66, y: 2.95, w: 6.5, h: 1.1, fontFace: F, fontSize: 19,
+    color: INK, lineSpacing: 30, margin: 0 });
+  s.addText("Evidence-Paired Substation Single-Line Diagramming", {
+    x: 0.66, y: 4.15, w: 6.5, h: 0.4, fontFace: FL, fontSize: 13.5,
+    italic: true, color: NAVY, margin: 0 });
+  s.addText("OSM＝正・捏造ゼロ・全端子に根拠。衛星写真上の構内幾何と単線結線図のペアで、全国7,239変電所を描く。", {
+    x: 0.66, y: 4.95, w: 6.3, h: 1.2, fontFace: F, fontSize: 14,
+    color: MUT, lineSpacing: 23, margin: 0 });
+  s.addText("All-Japan-Grid Project", { x: 0.68, y: 6.75, w: 6.4, h: 0.3,
+    fontFace: F, fontSize: 11.5, color: MUT, margin: 0 });
 }
 
 // ---------- 2. 背景と貢献 ----------

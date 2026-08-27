@@ -23,6 +23,23 @@ soffice --headless --convert-to pdf SubSLD_academic.pptx
 pdftoppm -jpeg -r 100 SubSLD_academic.pdf pg   # 全ページを目視
 ```
 
+## タイトルスライドの切り替え
+
+タイトルは2パターン用意してある。`build_deck_academic.js` 冒頭付近の
+`TITLE_LAYOUT` を書き換えて再生成する。
+
+| 値 | 構図 | 性格 |
+|---|---|---|
+| `"band"`（既定） | 上下（文字が上・全幅の写真帯が下） | 論文タイトル型。副題・所属まで入り情報量が多い |
+| `"split"` | 左右（文字が左・写真が右半分フルブリード） | 引きが強く掴みが良い。写真が主役 |
+
+```js
+const TITLE_LAYOUT = "band";   // "band" | "split"
+```
+
+どちらも `assets/` の既存素材だけで完結する（band は `title_strip.png`、
+split は `geo_shinkeiyo.png`）。場に合わせて選ぶ。
+
 ## 数値の同期
 
 デッキ内の実測値（母線way 14.2%・棄権 39.4%・CIM BusbarSection 4,743 / Bay 8,475 等）は
