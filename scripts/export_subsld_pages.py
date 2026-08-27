@@ -171,7 +171,7 @@ def main() -> int:
                    "kv": sorted({round(v) for v in vls.values() if v},
                                 reverse=True),
                    "vl": [{"k": round(vls[vid]),
-                           "b": max(len(bb_idx[vid]), 1),
+                           "b": len(bb_idx[vid]),   # 実母線数(0=なし→ビューアは推定破線)
                            "thru": 0 if vid in tr_vls else 1,
                            "g": gs}
                           for vid, gs in sorted(vl_out.items(),

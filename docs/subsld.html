@@ -67,9 +67,10 @@ const REGIONS=["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku"
 let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
 const BUILT={};  // 地域別ways(実線形)のオンデマンドキャッシュ
 let RB=null;      // 地域bbox(越境ロード判定)
+let BASE="photo"; // GeoPane基図: photo=航空写真 / map=地理院地図
 const $=id=>document.getElementById(id);
 
-fetch("data/subsld_pages.json?v=3").then(r=>r.json()).then(j=>{
+fetch("data/subsld_pages.json?v=4").then(r=>r.json()).then(j=>{
  DATA=j.sites;
  DATA.forEach(s=>{s._nl=(s.n||s.i);s._pr=(Math.max(...(s.kv.length?s.kv:[0])))*100+s.vl.reduce((a,v)=>a+v.g.length,0)});
  DATA.sort((a,b)=>b._pr-a._pr);
@@ -113,7 +114,8 @@ function select(s){
    <span id="dmeta">${s.r}${s.ty?" ・ "+s.ty:""} ・ ${s.la.toFixed(4)}, ${s.lo.toFixed(4)}
     ・ <a href="https://www.openstreetmap.org/#map=17/${s.la}/${s.lo}" target="_blank">OSM</a></span></div>
   <div id="panes">
-   <div class="pane"><h3>GeoPane — 構内幾何（地理院写真＋敷地・●vertex ■polygon ▲leadin）</h3>
+   <div class="pane"><h3>GeoPane — 構内幾何（●vertex ■polygon ▲leadin）
+     <button id="baseBtn" style="float:right;background:#26262e;color:#f2f1ec;border:1px solid #444;border-radius:5px;padding:1px 10px;font-size:11px;cursor:pointer"></button></h3>
     <div id="geo"></div></div>
    <div class="pane"><h3>SLDPane — 単線結線図（上=流入/下=流出・推定、灰=対向不明、破線=leadin、二重円=変圧器）</h3>
     <div id="sld"></div></div>
@@ -150,7 +152,9 @@ function drawGeo(s){
  const y0=Math.floor(cy-H/512-1),y1=Math.ceil(cy+H/512+1);
  for(let tx=x0;tx<=x1;tx++)for(let ty=y0;ty<=y1;ty++){
   const im=document.createElement("img");
-  im.src=`https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${tx}/${ty}.jpg`;
+  im.src=BASE==="photo"
+   ?`https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${tx}/${ty}.jpg`
+   :`https://cyberjapandata.gsi.go.jp/xyz/std/${z}/${tx}/${ty}.png`;
   im.style.left=px(tx)+"px";im.style.top=py(ty)+"px";
   el.appendChild(im)}
  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -176,7 +180,10 @@ function drawGeo(s){
  }
  el.appendChild(svg);
  const a=document.createElement("div");a.id="attrib";
- a.textContent="出典: 地理院タイル(全国最新写真)";el.appendChild(a);
+ a.textContent=BASE==="photo"?"出典: 地理院タイル(全国最新写真)":"出典: 地理院タイル(標準地図)";el.appendChild(a);
+ const bb=document.getElementById("baseBtn");
+ if(bb){bb.textContent=BASE==="photo"?"地図に切替":"写真に切替";
+  bb.onclick=()=>{BASE=BASE==="photo"?"map":"photo";drawGeo(s)};}
  // 送電線オーバーレイ: 生のOSM実線形(簡約済み)を重畳。
  // builtのpathは途中切れがあり端点補完すると偽の直線(スターバースト)になるため使わない
  const mla0=la0-0.012,mla1=la1+0.012,mlo0=lo0-0.012,mlo1=lo1+0.012;
@@ -225,16 +232,18 @@ function drawSLD(s){
   const y=PAD+vi*ROW+70;
   const col=vcol(v.k);
   const nsec=Math.max(v.b,1);
+  const inferred=(v.b===0);
   // 母線ラベル
   out.push(`<text x="118" y="${y+5}" text-anchor="end" font-size="17" font-weight="bold" fill="${col}">${v.k?v.k+"kV":"無印"}</text>`);
   const tot=v.g.reduce((a,g)=>a+g[1],0);
-  out.push(`<text x="118" y="${y+22}" text-anchor="end" font-size="9.5" fill="${col}">母線×${nsec}・${v.g.length}線・${tot}回線${v.thru&&s.tr.length?"・スルー":""}</text>`);
+  out.push(`<text x="118" y="${y+22}" text-anchor="end" font-size="9.5" fill="${col}">母線×${inferred?"推定":nsec}・${v.g.length}線・${tot}回線${v.thru&&s.tr.length?"・スルー":""}</text>`);
   if(v.thru&&!s.tr.length&&vi===0)
    out.push(`<text x="118" y="${y+34}" text-anchor="end" font-size="9" fill="#999">スルー/開閉(変圧器なし)</text>`);
   // 母線セクション
   for(let i=0;i<nsec;i++){
    const xa=128+bw*i/nsec+(i?4:0),xb=128+bw*(i+1)/nsec;
-   out.push(`<line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" stroke="${col}" stroke-width="5"/>`)}
+   out.push(`<line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" stroke="${col}" stroke-width="${inferred?3.5:5}" ${inferred?'stroke-dasharray="10 6" opacity="0.75"':''}/>`)}
+  if(inferred) out.push(`<text x="${128+bw/2}" y="${y+16}" text-anchor="middle" font-size="8.5" fill="#999">推定母線（OSMにbusbar way無し — issue #49）</text>`);
   if(s.tr.length)
    out.push(`<line x1="${128+bw}" y1="${y}" x2="${trx0+s.tr.length*34}" y2="${y}" stroke="${col}" stroke-width="1" opacity="0.5"/>`);
   // 線スタブ(セクションごとにスロット)
