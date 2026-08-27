@@ -120,7 +120,7 @@ function select(s){
   <div id="legend">実証ペア図（SubSLD法）: 全要素はOSMの証拠に遡れる。回線数=平行ストローク本数（下界推定・過大評価しない）。
    変圧器の無い電圧階級は「スルー」。流向は対向変電所の電圧階層による推定。<br>
    証拠語彙（本手法の定義・OSM仕様ではない）: <b>vertex</b>=線wayが構内wayと頂点共有（最強）／
-   <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。GeoPaneの線=モデルの枝（電圧階級色・OSM実線形）。</div>`;
+   <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。GeoPaneの線=OSM実線形（電圧階級色・無タグ=灰）。</div>`;
  drawGeo(s);drawSLD(s);
 }
 
@@ -159,26 +159,24 @@ function drawGeo(s){
  el.appendChild(svg);
  const a=document.createElement("div");a.id="attrib";
  a.textContent="出典: 地理院タイル(全国最新写真)";el.appendChild(a);
- // 送電線オーバーレイ(Pages既存の built/{region}.json をオンデマンド取得)
- const mla0=la0-0.01,mla1=la1+0.01,mlo0=lo0-0.01,mlo1=lo1+0.01;
- const drawLines=(edges)=>{
+ // 送電線オーバーレイ: 生のOSM実線形(簡約済み)を重畳。
+ // builtのpathは途中切れがあり端点補完すると偽の直線(スターバースト)になるため使わない
+ const mla0=la0-0.012,mla1=la1+0.012,mlo0=lo0-0.012,mlo1=lo1+0.012;
+ const drawLines=(ways)=>{
   if(SEL!==s) return;
   const frag=[];
-  edges.forEach(e=>{
-   // pathはway幾何で端点a/bに達しない場合がある(モデルは吸着で論理接続)→端点を補完
-   const pth=(e.path&&e.path.length>1)?[e.a,...e.path,e.b]:[e.a,e.b];
+  ways.forEach(([k,pth])=>{
    if(!pth.some(pt=>pt[0]>=mla0&&pt[0]<=mla1&&pt[1]>=mlo0&&pt[1]<=mlo1)) return;
-   const k=Math.round(e.kv||0);
    const pts=pth.map(pt=>`${px(t2x(pt[1],z)).toFixed(1)},${py(t2y(pt[0],z)).toFixed(1)}`).join(" ");
-   const w=k>=187?3:2.2;
-   frag.push(`<polyline points="${pts}" fill="none" stroke="#000" stroke-width="${w+2}" opacity="0.45"/>`);
-   frag.push(`<polyline points="${pts}" fill="none" stroke="${vcol(k)}" stroke-width="${w}"/>`);
+   const w=k>=187?2.8:(k?2:1.2);
+   frag.push(`<polyline points="${pts}" fill="none" stroke="#000" stroke-width="${w+1.6}" opacity="0.4"/>`);
+   frag.push(`<polyline points="${pts}" fill="none" stroke="${k?vcol(k):"#cfcfd6"}" stroke-width="${w}" opacity="${k?1:0.8}"/>`);
   });
   svg.insertAdjacentHTML("afterbegin",frag.join(""));
  };
  if(BUILT[s.r]) drawLines(BUILT[s.r]);
- else fetch(`data/built/${s.r}.json`).then(r=>r.json())
-  .then(j=>{BUILT[s.r]=j.edges||[];drawLines(BUILT[s.r])}).catch(()=>{});
+ else fetch(`data/subsld_ways/${s.r}.json`).then(r=>r.json())
+  .then(j=>{BUILT[s.r]=j.ways||[];drawLines(BUILT[s.r])}).catch(()=>{});
 }
 
 /* ---------- SLDPane: SVG 単線結線図 ---------- */
