@@ -70,6 +70,10 @@ STEPS = [
     ("substation_properties", [sys.executable,
                                "scripts/build_substation_properties.py",
                                "--attach"], False),
+    # SubSLD Pages機能(docs/subsld.html)のデータ書き出し(オーナー指示 2026-08-27)。
+    # 構造DB+方向推定→compact JSON(≈2.4MB)。ブラウザ側でSLDPaneをSVG描画
+    ("subsld_pages", [sys.executable,
+                      "scripts/export_subsld_pages.py"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)

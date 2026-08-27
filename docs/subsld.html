@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SubSLD — 変電所単線結線ビュー</title>
+<style>
+:root{--bg:#141417;--panel:#1f1f26;--panel2:#26262e;--txt:#f2f1ec;--mut:#9c9aa3;
+ --yel:#ffd54f;--v500:#d62728;--v275:#ff7f0e;--v154:#9467bd;--v66:#17becf;--navy:#7a8ac9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+ font-family:"Hiragino Sans","Noto Sans CJK JP",sans-serif}
+header{position:sticky;top:0;z-index:10;background:#141417ee;border-bottom:1px solid #333;
+ padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+h1{font-size:16px;margin:0}
+h1 small{color:var(--mut);font-weight:normal;margin-left:8px;font-size:11px}
+#q{background:var(--panel2);border:1px solid #444;color:var(--txt);padding:6px 10px;
+ border-radius:6px;width:240px;font-size:13px}
+.chip{background:var(--panel2);border:1px solid #444;color:var(--mut);padding:3px 10px;
+ border-radius:12px;font-size:12px;cursor:pointer;user-select:none}
+.chip.on{background:var(--yel);color:#141417;border-color:var(--yel);font-weight:bold}
+#wrap{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 54px)}
+#list{overflow-y:auto;border-right:1px solid #2a2a30}
+.row{padding:8px 14px;border-bottom:1px solid #222228;cursor:pointer;font-size:13px}
+.row:hover{background:var(--panel)}
+.row.sel{background:var(--panel2)}
+.row .kv{color:var(--mut);font-size:11px;margin-top:2px}
+#more{display:block;width:100%;padding:10px;background:var(--panel);color:var(--mut);
+ border:none;cursor:pointer;font-size:12px}
+#detail{overflow-y:auto;padding:16px 20px}
+#dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+#dname{font-size:22px;font-weight:bold}
+#dmeta{color:var(--mut);font-size:12px}
+.kvchip{display:inline-block;padding:1px 8px;border-radius:4px;color:#fff;
+ font-size:11px;font-weight:bold;margin-right:4px}
+#panes{display:grid;grid-template-columns:minmax(320px,44%) 1fr;gap:16px;align-items:start}
+@media (max-width:1000px){#panes{grid-template-columns:1fr}}
+.pane{background:var(--panel);border-radius:10px;overflow:hidden}
+.pane h3{margin:0;padding:8px 12px;font-size:12px;color:var(--mut);font-weight:normal}
+#geo{position:relative;overflow:hidden;background:#0a0a0c}
+#geo img{position:absolute;width:256px;height:256px;image-rendering:auto}
+#geoSvg{position:absolute;inset:0}
+#attrib{position:absolute;right:4px;bottom:3px;background:#0009;color:#fff;
+ font-size:9px;padding:1px 5px;border-radius:3px}
+#sld{background:#fbfbf9;border-radius:0 0 10px 10px}
+#legend{color:var(--mut);font-size:11px;padding:10px 4px;line-height:1.7}
+#empty{color:var(--mut);padding:40px;text-align:center}
+a{color:var(--navy)}
+</style>
+</head>
+<body>
+<header>
+ <h1>SubSLD 変電所単線結線ビュー<small>実証ペア図・全国 <span id="cnt">…</span> 所（OSM=正・捏造ゼロ）</small></h1>
+ <input id="q" placeholder="変電所名で検索（例: 新京葉）">
+ <span id="chips"></span>
+</header>
+<div id="wrap">
+ <nav id="list"></nav>
+ <main id="detail"><div id="empty">読み込み中…</div></main>
+</div>
+<script>
+const VC={500:"#d62728",275:"#ff7f0e",250:"#e377c2",220:"#e377c2",187:"#bcbd22",
+ 154:"#9467bd",132:"#8c564b",110:"#1f77b4",77:"#2ca02c",66:"#17becf",33:"#7f7f7f",
+ 22:"#7f7f7f",0:"#999999"};
+const vcol=k=>VC[k]||"#999";
+const REGIONS=["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
+let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
+const $=id=>document.getElementById(id);
+
+fetch("data/subsld_pages.json").then(r=>r.json()).then(j=>{
+ DATA=j.sites;
+ DATA.forEach(s=>{s._nl=(s.n||s.i);s._pr=(Math.max(...(s.kv.length?s.kv:[0])))*100+s.vl.reduce((a,v)=>a+v.g.length,0)});
+ DATA.sort((a,b)=>b._pr-a._pr);
+ $("cnt").textContent=DATA.length.toLocaleString();
+ const ch=$("chips");
+ REGIONS.forEach(r=>{const c=document.createElement("span");c.className="chip";
+  c.textContent=r;c.onclick=()=>{FILTER.r=FILTER.r===r?null:r;
+   [...ch.children].forEach(x=>x.classList.toggle("on",x.textContent===FILTER.r));
+   render()};ch.appendChild(c)});
+ $("q").addEventListener("input",e=>{FILTER.q=e.target.value.trim();render()});
+ render();
+ const first=DATA[0];if(first)select(first);
+});
+
+function filtered(){return DATA.filter(s=>(!FILTER.r||s.r===FILTER.r)&&
+ (!FILTER.q||s._nl.includes(FILTER.q)))}
+function render(){
+ const L=$("list");L.innerHTML="";shown=0;
+ const f=filtered();addRows(f,L);
+ if(!SEL&&f.length)select(f[0]);
+}
+function addRows(f,L){
+ const seg=f.slice(shown,shown+250);
+ seg.forEach(s=>{
+  const d=document.createElement("div");d.className="row"+(SEL===s?" sel":"");
+  d.innerHTML=`<div>${s._nl}</div><div class="kv">${s.r} ・ ${s.kv.join("/")||"?"}kV ・ ${s.vl.reduce((a,v)=>a+v.g.length,0)}線</div>`;
+  d.onclick=()=>select(s);L.appendChild(d)});
+ shown+=seg.length;
+ const rest=f.length-shown;
+ if(rest>0){const m=document.createElement("button");m.id="more";
+  m.textContent=`さらに表示（残り ${rest.toLocaleString()} 所）`;
+  m.onclick=()=>{m.remove();addRows(f,L)};L.appendChild(m)}
+}
+
+function select(s){
+ SEL=s;
+ [...document.querySelectorAll(".row")].forEach(r=>r.classList.remove("sel"));
+ $("detail").innerHTML=`
+  <div id="dhead"><span id="dname">${s._nl}</span>
+   <span>${s.kv.map(k=>`<span class="kvchip" style="background:${vcol(k)}">${k}kV</span>`).join("")}</span>
+   <span id="dmeta">${s.r}${s.ty?" ・ "+s.ty:""} ・ ${s.la.toFixed(4)}, ${s.lo.toFixed(4)}
+    ・ <a href="https://www.openstreetmap.org/#map=17/${s.la}/${s.lo}" target="_blank">OSM</a></span></div>
+  <div id="panes">
+   <div class="pane"><h3>GeoPane — 構内幾何（地理院写真＋敷地）</h3>
+    <div id="geo"></div></div>
+   <div class="pane"><h3>SLDPane — 単線結線図（上=流入/下=流出・推定、灰=対向不明、破線=leadin、二重円=変圧器）</h3>
+    <div id="sld"></div></div>
+  </div>
+  <div id="legend">実証ペア図（SubSLD法）: 全要素はOSMの証拠に遡れる。回線数=平行ストローク本数（下界推定・過大評価しない）。
+   変圧器の無い電圧階級は「スルー」。流向は対向変電所の電圧階層による推定。<br>
+   証拠語彙（本手法の定義・OSM仕様ではない）: <b>vertex</b>=線wayが構内wayと頂点共有（最強）／
+   <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。</div>`;
+ drawGeo(s);drawSLD(s);
+}
+
+/* ---------- GeoPane: 地理院タイル + 敷地ポリゴン ---------- */
+function drawGeo(s){
+ const el=$("geo");const W=el.clientWidth||460,H=Math.round(W*0.95);
+ el.style.height=H+"px";
+ // bboxからz選択
+ let la0=s.la-0.004,la1=s.la+0.004,lo0=s.lo-0.004,lo1=s.lo+0.004;
+ if(s.pg){la0=Math.min(...s.pg.map(p=>p[0]))-0.0015;la1=Math.max(...s.pg.map(p=>p[0]))+0.0015;
+  lo0=Math.min(...s.pg.map(p=>p[1]))-0.0015;lo1=Math.max(...s.pg.map(p=>p[1]))+0.0015}
+ const t2x=(lo,z)=> (lo+180)/360*Math.pow(2,z);
+ const t2y=(la,z)=>{const r=la*Math.PI/180;
+  return (1-Math.asinh(Math.tan(r))/Math.PI)/2*Math.pow(2,z)};
+ let z=18;
+ for(;z>14;z--){if((t2x(lo1,z)-t2x(lo0,z))*256<=W*1.6&&(t2y(la0,z)-t2y(la1,z))*256<=H*1.6)break}
+ const cx=t2x((lo0+lo1)/2,z),cy=t2y((la0+la1)/2,z);
+ const px=x=> (x-cx)*256+W/2, py=y=> (y-cy)*256+H/2;
+ el.innerHTML="";
+ const x0=Math.floor(cx-W/512-1),x1=Math.ceil(cx+W/512+1);
+ const y0=Math.floor(cy-H/512-1),y1=Math.ceil(cy+H/512+1);
+ for(let tx=x0;tx<=x1;tx++)for(let ty=y0;ty<=y1;ty++){
+  const im=document.createElement("img");
+  im.src=`https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${tx}/${ty}.jpg`;
+  im.style.left=px(tx)+"px";im.style.top=py(ty)+"px";
+  el.appendChild(im)}
+ const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+ svg.id="geoSvg";svg.setAttribute("width",W);svg.setAttribute("height",H);
+ if(s.pg){
+  const pts=s.pg.map(p=>`${px(t2x(p[1],z))},${py(t2y(p[0],z))}`).join(" ");
+  svg.innerHTML=`<polygon points="${pts}" fill="none" stroke="#ffd54f" stroke-width="2.2"/>`;
+ }else{
+  const x=px(t2x(s.lo,z)),y=py(t2y(s.la,z));
+  svg.innerHTML=`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#ffd54f" stroke-width="2.5"/>`;
+ }
+ el.appendChild(svg);
+ const a=document.createElement("div");a.id="attrib";
+ a.textContent="出典: 地理院タイル(全国最新写真)";el.appendChild(a);
+}
+
+/* ---------- SLDPane: SVG 単線結線図 ---------- */
+function drawSLD(s){
+ const el=$("sld");const W=el.clientWidth||700;
+ const vls=s.vl;const nvl=Math.max(vls.length,1);
+ const maxg=Math.max(1,...vls.map(v=>v.g.length));
+ const ROW=170,PAD=46;
+ const H=nvl*ROW+40;
+ const bw=Math.max(W-260,320);      // 母線長
+ const trx0=128+bw+30;              // 変圧器ゾーン
+ let out=[];
+ const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+ vls.forEach((v,vi)=>{
+  const y=PAD+vi*ROW+70;
+  const col=vcol(v.k);
+  const nsec=Math.max(v.b,1);
+  // 母線ラベル
+  out.push(`<text x="118" y="${y+5}" text-anchor="end" font-size="17" font-weight="bold" fill="${col}">${v.k?v.k+"kV":"無印"}</text>`);
+  const tot=v.g.reduce((a,g)=>a+g[1],0);
+  out.push(`<text x="118" y="${y+22}" text-anchor="end" font-size="9.5" fill="${col}">母線×${nsec}・${v.g.length}線・${tot}回線${v.thru&&s.tr.length?"・スルー":""}</text>`);
+  if(v.thru&&!s.tr.length&&vi===0)
+   out.push(`<text x="118" y="${y+34}" text-anchor="end" font-size="9" fill="#999">スルー/開閉(変圧器なし)</text>`);
+  // 母線セクション
+  for(let i=0;i<nsec;i++){
+   const xa=128+bw*i/nsec+(i?4:0),xb=128+bw*(i+1)/nsec;
+   out.push(`<line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" stroke="${col}" stroke-width="5"/>`)}
+  if(s.tr.length)
+   out.push(`<line x1="${128+bw}" y1="${y}" x2="${trx0+s.tr.length*34}" y2="${y}" stroke="${col}" stroke-width="1" opacity="0.5"/>`);
+  // 線スタブ(セクションごとにスロット)
+  const bySec={};
+  v.g.forEach(g=>{(bySec[g[4]>=0&&g[4]<nsec?g[4]:-1]=bySec[g[4]>=0&&g[4]<nsec?g[4]:-1]||[]).push(g)});
+  Object.entries(bySec).forEach(([sec,gs])=>{
+   const si=+sec;
+   const xa=si>=0?128+bw*si/nsec:128, xb=si>=0?128+bw*(si+1)/nsec:128+bw;
+   gs.forEach((g,gi)=>{
+    const x=xa+(xb-xa)*(gi+0.5)/gs.length;
+    const [nm,par,dir,lead]=g;
+    const up=dir!==1, gray=dir===2;
+    const c=gray?"#999":col;
+    const stub=34, sgn=up?-1:1, tier=(gi%2)*16;
+    for(let p=0;p<Math.min(par,4);p++){
+     const dx=(p-(Math.min(par,4)-1)/2)*3.2;
+     out.push(`<line x1="${x+dx}" y1="${y}" x2="${x+dx}" y2="${y+sgn*stub}" stroke="${c}" stroke-width="1.6" ${lead?'stroke-dasharray="4 3"':''}/>`)}
+    if(!gray) out.push(`<path d="M ${x-3.4} ${y+sgn*stub*0.5-3} l 3.4 5 l 3.4 -5 z" fill="${c}" transform="rotate(${up?0:180} ${x} ${y+sgn*stub*0.5})"/>`);
+    if(tier) out.push(`<line x1="${x}" y1="${y+sgn*stub}" x2="${x}" y2="${y+sgn*(stub+tier)}" stroke="${c}" stroke-width="0.7" opacity="0.5"/>`);
+    const ly=y+sgn*(stub+tier+6);
+    out.push(`<text x="${x}" y="${ly}" font-size="8.6" fill="${gray?"#888":"#222"}" transform="rotate(-52 ${x} ${ly})" text-anchor="${up?"start":"end"}">${esc(nm)}${par>1?` ・${par}回線`:""}</text>`);
+   })});
+ });
+ // 変圧器
+ s.tr.forEach((t,ti)=>{
+  const yi=vls.findIndex(v=>v.k===t[0]),yo=vls.findIndex(v=>v.k===t[1]);
+  if(yi<0||yo<0)return;
+  const ya=PAD+yi*ROW+70, yb=PAD+yo*ROW+70, x=trx0+ti*34;
+  const ym=(ya+yb)/2;
+  out.push(`<line x1="${x}" y1="${ya}" x2="${x}" y2="${yb}" stroke="#444" stroke-width="1.6"/>`);
+  out.push(`<circle cx="${x}" cy="${ya}" r="2.4" fill="#444"/><circle cx="${x}" cy="${yb}" r="2.4" fill="#444"/>`);
+  out.push(`<circle cx="${x}" cy="${ym-6}" r="9" fill="none" stroke="#444" stroke-width="1.6"/>`);
+  out.push(`<circle cx="${x}" cy="${ym+6}" r="9" fill="none" stroke="#444" stroke-width="1.6"/>`);
+  out.push(`<text x="${x+13}" y="${ym+3}" font-size="9" fill="#444">tr${ti+1}${t[2]>1?`×${t[2]}`:""}</text>`);
+ });
+ el.innerHTML=`<svg width="100%" viewBox="0 0 ${Math.max(W,trx0+s.tr.length*34+30)} ${H}" xmlns="http://www.w3.org/2000/svg">${out.join("")}</svg>`;
+}
+window.addEventListener("resize",()=>{if(SEL){drawGeo(SEL);drawSLD(SEL)}});
+</script>
+</body>
+</html>
