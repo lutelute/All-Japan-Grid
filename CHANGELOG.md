@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-08-27
+
+Tagged in git as `v1.8.0`. Theme: **the visible substation（SubSLD法）** — the model now
+looks *inside* substations. A three-stage pipeline (GridStitch P2 extraction → property
+aggregation → evidence-paired rendering) turns OSM evidence into per-substation
+single-line diagrams for every site in Japan, with every drawn element traceable to a
+witness and every estimate marked as such.
+
+### Added
+- **SubSLD法 (Evidence-Paired Substation Single-Line Diagramming)** — method doc
+  `docs/SUBSLD_METHOD.md`, academic slide deck, and formal framing (evidence-closure
+  operator, lexicographic binding, certified lower-bound circuit estimator, three-valued
+  direction inference with explicit abstention ⊥).
+- **Substation property layer** (`scripts/build_substation_properties.py`):
+  circuits / conductor-bundle / cable counts aggregated per substation×voltage-level
+  from OSM line tags (evidence and estimate kept separate; lower-bound guarantee).
+  Attached to built sub nodes as `sub_props` (9,139 nodes).
+- **Evidence-pair figures for all 7,239 sites**: batch generator
+  (`scripts/build_subsld_batch.py`, resumable, GSI tile cache) rendered the full country
+  (searchable PNG gallery, NAS-backed), and a **Pages viewer** `docs/subsld.html`
+  (compact JSON 3.2 MB + raw way overlay 4.4 MB) draws GeoPane (GSI photo/std-map
+  toggle, site outline, real way geometry, binding markers ●■▲) and SLDPane
+  (busbar sections, circuit strokes, direction arrows, dashed leadin, transformers,
+  through-voltage annotation) live in the browser.
+- **Inferred busbars** (`inferred-topology`, +2,669 nationally): voltage levels with ≥2
+  strongly-bound terminals and no busbar way get a logical busbar, drawn dashed and
+  labeled 推定 in both PNG and Pages renderers (issue #49 design).
+- **Fragment campaign interventions #35 & #36**: node hygiene resolved 55 false
+  fragments / 139 nodes from cross-region double registration (east components
+  230→196, west 433→412); the satellite-evidence connection class applied its first
+  link (Ojiya 66 kV, `recovery="satellite"`), with Yuzawa held after voltage-bus review
+  (the substation is `traction`).
+- **False-fragment screening** (`scripts/screen_false_fragments.py`) and the satellite
+  photointerpretation pilot report (4 gaps, 3 corridor-confirmed, one revealed as a
+  registration artifact).
+- **issue #49 measurements**: busbar-way coverage 14.2 % (Point-type 3.2 %), terminal
+  binding distribution (vertex 15.7 / polygon 29.3 / leadin 55.0 %), direction
+  abstention 39.4 % of 18,851 line groups; 14-site satellite review (64 % mappable
+  omissions) and an OSM edit candidate list (10 entries,
+  `docs/reports/osm_edit_candidates_2026-08-27.md`).
+
+### Changed
+- Structure DB regenerated against enrichment-updated extracts — site-id matching now
+  100 % (was 363 unmatched); okinawa regression pin deliberately moved to 60/167/59.
+- `regenerate_all.py` STEPS extended with `node_hygiene`, `satellite_connections`,
+  `substation_properties`, `subsld_pages`, `subsld_ways` — the whole 1.8 layer is
+  one-command reproducible (verified with a full `--light` pass).
+
+### Fixed
+- Cross-region duplicate registrations no longer masquerade as island fragments
+  (the c1 "Kofu 66 kV backbone" class); the voltage-consistency gate remains untouched.
+
+
 ## [1.7.0] - 2026-08-20
 
 Tagged in git as `v1.7.0`. Theme: **the disclosed grid** — official disclosure data

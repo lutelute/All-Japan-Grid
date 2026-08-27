@@ -11,8 +11,26 @@ OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**し�
 10 地域、送電線 40,000 本超、変電所 7,000 箇所超、発電所 19,000 箇所超。東京電力の公開する線路別潮流との回廊使用率の順位相関（容量・トポロジの代理指標）は **内部 Spearman ρ = 0.721**。合成負荷で解いた AC 潮流の相関は **ρ ≈ 0.46（内部）/ 0.60（基幹）** です。
 
 **Live Map / ライブマップ:** https://lutelute.github.io/All-Japan-Grid/
+**SubSLD Viewer / 変電所単線結線ビュー:** https://lutelute.github.io/All-Japan-Grid/subsld.html
 
 ---
+
+## SubSLD法 — Substation Single-Line Diagrams / 変電所単線結線ビュー *(v1.8.0)*
+
+Every substation now carries an **evidence-paired figure**: GeoPane (site outline,
+real OSM way geometry and terminal-binding markers over GSI aerial photography)
+× SLDPane (busbar sections, circuit-count strokes, direction arrows, transformers —
+rendered live in the browser). All 7,239 sites, all estimates explicitly marked.
+
+全変電所に**実証ペア図**が付きました。GeoPane（地理院写真上の敷地・実線形・端子束縛マーカー）×
+SLDPane（母線セクション・回線数ストローク・流向・変圧器）をブラウザ内で描画します。
+推定値（流向・推定母線）はすべて推定と明記されます。
+
+- **Viewer:** https://lutelute.github.io/All-Japan-Grid/subsld.html
+- **Method:** [`docs/SUBSLD_METHOD.md`](docs/SUBSLD_METHOD.md) — evidence-closure
+  formulation, lower-bound circuit estimation, three-valued direction inference
+- Coverage (measured): circuits evidence 68 % of lines, busbar ways 14.2 % of sites
+  (gap tracked in [issue #49](https://github.com/lutelute/All-Japan-Grid/issues/49))
 
 ## Disclaimer / 免責事項
 

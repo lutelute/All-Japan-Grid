@@ -1,11 +1,11 @@
 {
-  "model_version": "ba92fb3",
+  "model_version": "11b0005",
   "git_dirty": true,
-  "generated_at": "2026-08-17T10:58:27+00:00",
+  "generated_at": "2026-08-27T12:41:26+00:00",
   "steps": {
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 10.4
+      "elapsed_s": 10.6
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -13,35 +13,60 @@
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.0
+      "elapsed_s": 1.2
     },
     "route_disclosure": {
       "status": "ok",
       "elapsed_s": 0.7
     },
+    "fragment_recovery": {
+      "status": "ok",
+      "elapsed_s": 2.4
+    },
+    "fragment_recovery_chains": {
+      "status": "ok",
+      "elapsed_s": 22.2
+    },
+    "node_hygiene": {
+      "status": "ok",
+      "elapsed_s": 1.7
+    },
+    "satellite_connections": {
+      "status": "ok",
+      "elapsed_s": 0.4
+    },
+    "substation_properties": {
+      "status": "ok",
+      "elapsed_s": 1.5
+    },
+    "subsld_pages": {
+      "status": "ok",
+      "elapsed_s": 1.8
+    },
+    "subsld_ways": {
+      "status": "ok",
+      "elapsed_s": 1.2
+    },
     "export_map_tiers": {
       "status": "ok",
-      "elapsed_s": 1.9
+      "elapsed_s": 2.0
     },
     "gen_sld": {
       "status": "ok",
-      "elapsed_s": 0.5
+      "elapsed_s": 32.9
     },
     "run_full_powerflow": {
-      "status": "ok",
-      "elapsed_s": 141.6
+      "status": "skipped"
     },
     "gen_national_overview": {
       "status": "ok",
-      "elapsed_s": 0.9
+      "elapsed_s": 12.7
     },
     "export_national_matpower": {
-      "status": "ok",
-      "elapsed_s": 170.1
+      "status": "skipped"
     },
     "export_cim": {
-      "status": "ok",
-      "elapsed_s": 4.0
+      "status": "skipped"
     },
     "build_static_site": {
       "status": "ok",
@@ -49,7 +74,7 @@
     },
     "apply_capacity_sources": {
       "status": "ok",
-      "elapsed_s": 0.3
+      "elapsed_s": 0.7
     },
     "build_pages_editor": {
       "status": "ok",
