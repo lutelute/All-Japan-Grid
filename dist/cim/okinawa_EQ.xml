@@ -3659,49 +3659,88 @@
     <cim:IdentifiedObject.name>石垣市発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>2921e8b1-1130-5556-b648-7dc5c8c7a73f</cim:IdentifiedObject.mRID>
   </cim:SolarGeneratingUnit>
-  <cim:PowerTransformer rdf:ID="_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08">
+  <cim:PowerTransformer rdf:ID="_9dd35c0c-9c07-57b9-86e2-070b664d978a">
     <cim:IdentifiedObject.name>南風原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>05ac863e-4cf8-5abd-af1f-5c1c8db6ef08</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>9dd35c0c-9c07-57b9-86e2-070b664d978a</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
   </cim:PowerTransformer>
-  <cim:ConnectivityNode rdf:ID="_2233181b-599e-56e3-96d2-b2c819ab0854">
-    <cim:IdentifiedObject.mRID>2233181b-599e-56e3-96d2-b2c819ab0854</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_e7ab5266-1e83-59b9-b83b-580b747bd893">
+    <cim:IdentifiedObject.mRID>e7ab5266-1e83-59b9-b83b-580b747bd893</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_36ea3959-98f3-5e8d-934b-7d845535b24d">
-    <cim:IdentifiedObject.mRID>36ea3959-98f3-5e8d-934b-7d845535b24d</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_99fa7590-43a2-5c96-955b-49d041bf32db">
+    <cim:IdentifiedObject.mRID>99fa7590-43a2-5c96-955b-49d041bf32db</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_2233181b-599e-56e3-96d2-b2c819ab0854"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e7ab5266-1e83-59b9-b83b-580b747bd893"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_9263db10-0147-5b3e-a2de-502ef2a3e106">
-    <cim:IdentifiedObject.mRID>9263db10-0147-5b3e-a2de-502ef2a3e106</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_f55f99cc-7032-5c52-8cea-f618dd4af9f2">
+    <cim:IdentifiedObject.mRID>f55f99cc-7032-5c52-8cea-f618dd4af9f2</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_36ea3959-98f3-5e8d-934b-7d845535b24d"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_99fa7590-43a2-5c96-955b-49d041bf32db"/>
   </cim:PowerTransformerEnd>
-  <cim:ConnectivityNode rdf:ID="_49a9fd98-0b27-54b1-b507-638853a81563">
-    <cim:IdentifiedObject.mRID>49a9fd98-0b27-54b1-b507-638853a81563</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_6bba0855-9a5b-526e-a167-2313aaff7809">
+    <cim:IdentifiedObject.mRID>6bba0855-9a5b-526e-a167-2313aaff7809</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_d641682d-5349-5773-952b-8a2fa9a7c563">
-    <cim:IdentifiedObject.mRID>d641682d-5349-5773-952b-8a2fa9a7c563</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_4af186fd-db35-54ae-aede-bf9f53f34874">
+    <cim:IdentifiedObject.mRID>4af186fd-db35-54ae-aede-bf9f53f34874</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_49a9fd98-0b27-54b1-b507-638853a81563"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_6bba0855-9a5b-526e-a167-2313aaff7809"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_684345ea-59e8-5589-884a-753c116624ae">
-    <cim:IdentifiedObject.mRID>684345ea-59e8-5589-884a-753c116624ae</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_c14d9ce7-2dd3-52d6-91ed-f450dffb0a21">
+    <cim:IdentifiedObject.mRID>c14d9ce7-2dd3-52d6-91ed-f450dffb0a21</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_05ac863e-4cf8-5abd-af1f-5c1c8db6ef08"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_d641682d-5349-5773-952b-8a2fa9a7c563"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_4af186fd-db35-54ae-aede-bf9f53f34874"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_48cbe179-34a8-5761-abff-db1c5b573961">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>48cbe179-34a8-5761-abff-db1c5b573961</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_4bf3d803-756d-5b6e-a734-a4312f985233">
+    <cim:IdentifiedObject.mRID>4bf3d803-756d-5b6e-a734-a4312f985233</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_fa524377-4761-531f-9a2d-c840ab5adf7b">
+    <cim:IdentifiedObject.mRID>fa524377-4761-531f-9a2d-c840ab5adf7b</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_48cbe179-34a8-5761-abff-db1c5b573961"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_4bf3d803-756d-5b6e-a734-a4312f985233"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_2efe7f1b-2c55-54e6-ae66-ee637b884b4d">
+    <cim:IdentifiedObject.mRID>2efe7f1b-2c55-54e6-ae66-ee637b884b4d</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_48cbe179-34a8-5761-abff-db1c5b573961"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_fa524377-4761-531f-9a2d-c840ab5adf7b"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_cb5d6e49-b616-51c1-a60a-df11fe623d50">
+    <cim:IdentifiedObject.mRID>cb5d6e49-b616-51c1-a60a-df11fe623d50</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_142ef063-be91-51cf-9edf-15453e6866a8">
+    <cim:IdentifiedObject.mRID>142ef063-be91-51cf-9edf-15453e6866a8</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_48cbe179-34a8-5761-abff-db1c5b573961"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_cb5d6e49-b616-51c1-a60a-df11fe623d50"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_c43cde8d-02b2-5f02-87d7-24a9906e9f1a">
+    <cim:IdentifiedObject.mRID>c43cde8d-02b2-5f02-87d7-24a9906e9f1a</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_48cbe179-34a8-5761-abff-db1c5b573961"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_142ef063-be91-51cf-9edf-15453e6866a8"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_0302762b-d428-5e49-af6d-323d45128ace">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>仲泊変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>0302762b-d428-5e49-af6d-323d45128ace</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
   </cim:PowerTransformer>
   <cim:ConnectivityNode rdf:ID="_0375eeb8-1bf4-5105-9f41-1436cbd06abf">
     <cim:IdentifiedObject.mRID>0375eeb8-1bf4-5105-9f41-1436cbd06abf</cim:IdentifiedObject.mRID>
@@ -3737,82 +3776,44 @@
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_836e8cae-094a-5cd7-a945-35fa23f0a91a"/>
   </cim:PowerTransformerEnd>
-  <cim:PowerTransformer rdf:ID="_addaddb7-bfb1-5742-b906-e361bf42957a">
-    <cim:IdentifiedObject.name>仲泊変電所 132/66kV変圧器</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>addaddb7-bfb1-5742-b906-e361bf42957a</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
+  <cim:PowerTransformer rdf:ID="_1c79e1d9-b491-5a48-9896-b36c32b0e96b">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1c79e1d9-b491-5a48-9896-b36c32b0e96b</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
   </cim:PowerTransformer>
-  <cim:ConnectivityNode rdf:ID="_565a3cd3-5f14-5492-947f-dee9378f3bc7">
-    <cim:IdentifiedObject.mRID>565a3cd3-5f14-5492-947f-dee9378f3bc7</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_59e3a607-8eee-5ce7-90f0-cdddfaf24d65">
+    <cim:IdentifiedObject.mRID>59e3a607-8eee-5ce7-90f0-cdddfaf24d65</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_cc6b5304-ccbd-5c56-a991-04711109a977">
-    <cim:IdentifiedObject.mRID>cc6b5304-ccbd-5c56-a991-04711109a977</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_1e6ca967-08cd-576c-87a9-7bef6fdc3b54">
+    <cim:IdentifiedObject.mRID>1e6ca967-08cd-576c-87a9-7bef6fdc3b54</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_565a3cd3-5f14-5492-947f-dee9378f3bc7"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1c79e1d9-b491-5a48-9896-b36c32b0e96b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_59e3a607-8eee-5ce7-90f0-cdddfaf24d65"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_6f3e7533-f3dd-5b83-aead-0e24dfc739a7">
-    <cim:IdentifiedObject.mRID>6f3e7533-f3dd-5b83-aead-0e24dfc739a7</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_7d2d97fe-f5e2-53cd-a355-21f155b99dea">
+    <cim:IdentifiedObject.mRID>7d2d97fe-f5e2-53cd-a355-21f155b99dea</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1c79e1d9-b491-5a48-9896-b36c32b0e96b"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_cc6b5304-ccbd-5c56-a991-04711109a977"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_1e6ca967-08cd-576c-87a9-7bef6fdc3b54"/>
   </cim:PowerTransformerEnd>
-  <cim:ConnectivityNode rdf:ID="_27c09eda-7ca9-5743-b0ae-7a2947b2b4cd">
-    <cim:IdentifiedObject.mRID>27c09eda-7ca9-5743-b0ae-7a2947b2b4cd</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_2187ee86-0fc4-584f-96f4-753807fe889e">
+    <cim:IdentifiedObject.mRID>2187ee86-0fc4-584f-96f4-753807fe889e</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_ae2d1cfb-5480-5ef5-9713-da6c694be636">
-    <cim:IdentifiedObject.mRID>ae2d1cfb-5480-5ef5-9713-da6c694be636</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_ab448bc7-8fb0-5e0f-a6fa-0ff7384dbd7b">
+    <cim:IdentifiedObject.mRID>ab448bc7-8fb0-5e0f-a6fa-0ff7384dbd7b</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_27c09eda-7ca9-5743-b0ae-7a2947b2b4cd"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1c79e1d9-b491-5a48-9896-b36c32b0e96b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_2187ee86-0fc4-584f-96f4-753807fe889e"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_6deff08b-5628-556b-a879-ff4773b65011">
-    <cim:IdentifiedObject.mRID>6deff08b-5628-556b-a879-ff4773b65011</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_88ed2115-ad6d-5157-9924-1935bf0075b6">
+    <cim:IdentifiedObject.mRID>88ed2115-ad6d-5157-9924-1935bf0075b6</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1c79e1d9-b491-5a48-9896-b36c32b0e96b"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_ae2d1cfb-5480-5ef5-9713-da6c694be636"/>
-  </cim:PowerTransformerEnd>
-  <cim:PowerTransformer rdf:ID="_8fb85c3a-c91d-5138-979d-b9cf9b363737">
-    <cim:IdentifiedObject.name>伊佐一丁目変電所_2 132/66kV変圧器</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>8fb85c3a-c91d-5138-979d-b9cf9b363737</cim:IdentifiedObject.mRID>
-  </cim:PowerTransformer>
-  <cim:ConnectivityNode rdf:ID="_fb2ff0f7-a334-5e54-8505-da11c6555ef0">
-    <cim:IdentifiedObject.mRID>fb2ff0f7-a334-5e54-8505-da11c6555ef0</cim:IdentifiedObject.mRID>
-  </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_273dfdf9-0083-56cd-a2d3-ff9db33cf5e8">
-    <cim:IdentifiedObject.mRID>273dfdf9-0083-56cd-a2d3-ff9db33cf5e8</cim:IdentifiedObject.mRID>
-    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_fb2ff0f7-a334-5e54-8505-da11c6555ef0"/>
-  </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_ed4241e8-5d4d-5f6c-a558-182b89ad3175">
-    <cim:IdentifiedObject.mRID>ed4241e8-5d4d-5f6c-a558-182b89ad3175</cim:IdentifiedObject.mRID>
-    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_273dfdf9-0083-56cd-a2d3-ff9db33cf5e8"/>
-  </cim:PowerTransformerEnd>
-  <cim:ConnectivityNode rdf:ID="_4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d">
-    <cim:IdentifiedObject.mRID>4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d</cim:IdentifiedObject.mRID>
-  </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_378f6cae-8ef8-54d7-9020-b1a4b17505a8">
-    <cim:IdentifiedObject.mRID>378f6cae-8ef8-54d7-9020-b1a4b17505a8</cim:IdentifiedObject.mRID>
-    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d"/>
-  </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_cbeec504-e15f-523c-8990-20d81f0b51d3">
-    <cim:IdentifiedObject.mRID>cbeec504-e15f-523c-8990-20d81f0b51d3</cim:IdentifiedObject.mRID>
-    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_378f6cae-8ef8-54d7-9020-b1a4b17505a8"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_ab448bc7-8fb0-5e0f-a6fa-0ff7384dbd7b"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_bf97a156-e3b5-58b7-8cbd-3a7ac8532ddc">
     <cim:IdentifiedObject.name>うるま市変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -4477,43 +4478,817 @@
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_2a9d91f7-36bb-533f-8767-87aee05a801d"/>
   </cim:PowerTransformerEnd>
-  <cim:PowerTransformer rdf:ID="_6bf61e46-cb34-5881-b93c-1e5c94d1a048">
+  <cim:PowerTransformer rdf:ID="_a0ddd020-e62b-5f24-8384-6c80ec575d2a">
     <cim:IdentifiedObject.name>津花波変電所 132/66kV変圧器</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>6bf61e46-cb34-5881-b93c-1e5c94d1a048</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>a0ddd020-e62b-5f24-8384-6c80ec575d2a</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
   </cim:PowerTransformer>
-  <cim:ConnectivityNode rdf:ID="_a9feaaf2-b2ff-5e80-96ae-cc358af47028">
-    <cim:IdentifiedObject.mRID>a9feaaf2-b2ff-5e80-96ae-cc358af47028</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6">
+    <cim:IdentifiedObject.mRID>95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_c080f871-a036-585c-b5c9-0d1bdb46a022">
-    <cim:IdentifiedObject.mRID>c080f871-a036-585c-b5c9-0d1bdb46a022</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_af826d9c-674f-5f3e-9450-4fcf91e768f9">
+    <cim:IdentifiedObject.mRID>af826d9c-674f-5f3e-9450-4fcf91e768f9</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_6bf61e46-cb34-5881-b93c-1e5c94d1a048"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_a9feaaf2-b2ff-5e80-96ae-cc358af47028"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_28ca5ec4-2a5a-57ac-8a3e-a78bbfee244f">
-    <cim:IdentifiedObject.mRID>28ca5ec4-2a5a-57ac-8a3e-a78bbfee244f</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_4c8e2c5e-d220-5264-9741-31d7d9b6f00f">
+    <cim:IdentifiedObject.mRID>4c8e2c5e-d220-5264-9741-31d7d9b6f00f</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6bf61e46-cb34-5881-b93c-1e5c94d1a048"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_c080f871-a036-585c-b5c9-0d1bdb46a022"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_af826d9c-674f-5f3e-9450-4fcf91e768f9"/>
   </cim:PowerTransformerEnd>
-  <cim:ConnectivityNode rdf:ID="_d5083aab-ea90-5ec3-a372-7baeba1dc529">
-    <cim:IdentifiedObject.mRID>d5083aab-ea90-5ec3-a372-7baeba1dc529</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_ed563171-cdb6-5aa7-8c64-6e37c25b9a8b">
+    <cim:IdentifiedObject.mRID>ed563171-cdb6-5aa7-8c64-6e37c25b9a8b</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_f53d9e89-bd98-5398-b8f1-efaa5e327e13">
-    <cim:IdentifiedObject.mRID>f53d9e89-bd98-5398-b8f1-efaa5e327e13</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_61e35449-ecfa-5177-b865-950cc751b31f">
+    <cim:IdentifiedObject.mRID>61e35449-ecfa-5177-b865-950cc751b31f</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_6bf61e46-cb34-5881-b93c-1e5c94d1a048"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_d5083aab-ea90-5ec3-a372-7baeba1dc529"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_ed563171-cdb6-5aa7-8c64-6e37c25b9a8b"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_1646a4ad-749d-5442-b53d-2d61cc769f41">
-    <cim:IdentifiedObject.mRID>1646a4ad-749d-5442-b53d-2d61cc769f41</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_e35f7a61-1b85-563c-b24c-68d8577536d7">
+    <cim:IdentifiedObject.mRID>e35f7a61-1b85-563c-b24c-68d8577536d7</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6bf61e46-cb34-5881-b93c-1e5c94d1a048"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_f53d9e89-bd98-5398-b8f1-efaa5e327e13"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_61e35449-ecfa-5177-b865-950cc751b31f"/>
   </cim:PowerTransformerEnd>
+  <cim:VoltageLevel rdf:ID="_18d79fac-4abd-5aa9-9733-0d1c1015e3fd">
+    <cim:IdentifiedObject.name>久茂地二丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>18d79fac-4abd-5aa9-9733-0d1c1015e3fd</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_60a8e5ae-e22e-5db2-8a1f-9c6edcb8d8cf"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_718ac479-3951-57f8-b4f8-2ad2a9153266">
+    <cim:IdentifiedObject.name>伊芸変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>718ac479-3951-57f8-b4f8-2ad2a9153266</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_ae393e57-0681-5e2a-88e5-4e99664c4586"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_21ff0983-4158-58c6-8270-7a1574189058">
+    <cim:IdentifiedObject.name>小禄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>21ff0983-4158-58c6-8270-7a1574189058</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7f1046b4-9f41-5857-b1f0-f507ed8df9e0"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e639f954-4e2d-5033-a698-f260a7c1424b">
+    <cim:IdentifiedObject.name>上間変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e639f954-4e2d-5033-a698-f260a7c1424b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_027ed7a3-a2e8-5525-b79e-cecacc9fb9cb">
+    <cim:IdentifiedObject.name>上間変電所 66kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>027ed7a3-a2e8-5525-b79e-cecacc9fb9cb</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_e639f954-4e2d-5033-a698-f260a7c1424b"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_43399eb1-a560-5a36-81e0-7afac9465f12">
+    <cim:IdentifiedObject.mRID>43399eb1-a560-5a36-81e0-7afac9465f12</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_e639f954-4e2d-5033-a698-f260a7c1424b"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_27eafc00-2d84-5b90-9db0-7ef192b279c9">
+    <cim:IdentifiedObject.mRID>27eafc00-2d84-5b90-9db0-7ef192b279c9</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_027ed7a3-a2e8-5525-b79e-cecacc9fb9cb"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_43399eb1-a560-5a36-81e0-7afac9465f12"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_d76c0e06-1794-5502-97b4-cd8c98d5c3c1">
+    <cim:IdentifiedObject.name>南風原変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d76c0e06-1794-5502-97b4-cd8c98d5c3c1</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_b872c23c-2dfd-523e-9878-3041a9d19594">
+    <cim:IdentifiedObject.name>南風原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>b872c23c-2dfd-523e-9878-3041a9d19594</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_286035f1-2874-5095-862d-9fbd56c3c141">
+    <cim:IdentifiedObject.name>長毛変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>286035f1-2874-5095-862d-9fbd56c3c141</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_9781f7b7-a9f2-5803-859e-d722b89aefce"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_169d50e8-88ad-5a07-8376-03248e9543c0">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>169d50e8-88ad-5a07-8376-03248e9543c0</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_aa49a7ff-9692-5220-9a6b-bd7d002b1034">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>aa49a7ff-9692-5220-9a6b-bd7d002b1034</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_6c6ac763-6464-57ea-b0f8-5fd83c21eb6c">
+    <cim:IdentifiedObject.name>仲泊変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6c6ac763-6464-57ea-b0f8-5fd83c21eb6c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_3b9925a3-b996-5bae-bcd7-018bd3c240e4">
+    <cim:IdentifiedObject.name>仲泊変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>3b9925a3-b996-5bae-bcd7-018bd3c240e4</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_9d5f17c3-65cf-5840-9ed3-4121880eff7f"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_78b38cf4-9146-5b6c-a02f-6de5fcce68a9">
+    <cim:IdentifiedObject.name>奥間変電所 13kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>78b38cf4-9146-5b6c-a02f-6de5fcce68a9</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_6ba31080-a984-5e1a-86f0-3aba9915a0ad">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6ba31080-a984-5e1a-86f0-3aba9915a0ad</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_3e426bcc-cd88-52e7-9f4b-79a8e4c3bd8a">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>3e426bcc-cd88-52e7-9f4b-79a8e4c3bd8a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6236d018-7d77-528e-9b98-46bed4233139"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_62d84170-1176-546d-ba8e-9c9773f0101a">
+    <cim:IdentifiedObject.name>伊佐一丁目変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>62d84170-1176-546d-ba8e-9c9773f0101a</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_6ba31080-a984-5e1a-86f0-3aba9915a0ad"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_b1c84161-ab9c-5d4b-a927-cb2efbe44738">
+    <cim:IdentifiedObject.mRID>b1c84161-ab9c-5d4b-a927-cb2efbe44738</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_6ba31080-a984-5e1a-86f0-3aba9915a0ad"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_8eeea263-20d2-5980-a366-b0e5bdf1ab18">
+    <cim:IdentifiedObject.mRID>8eeea263-20d2-5980-a366-b0e5bdf1ab18</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_62d84170-1176-546d-ba8e-9c9773f0101a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b1c84161-ab9c-5d4b-a927-cb2efbe44738"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_b22ca367-f51c-5724-8756-5553f96eff19">
+    <cim:IdentifiedObject.name>久茂地変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>b22ca367-f51c-5724-8756-5553f96eff19</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_d6ccf1a1-2516-5b8e-a0b5-c6d01cd454d7">
+    <cim:IdentifiedObject.name>Henoko Substation 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d6ccf1a1-2516-5b8e-a0b5-c6d01cd454d7</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_b9d17c3c-295a-537b-bdf0-80b30e79f695"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_55476554-1ffc-5b71-ad69-fb742151c814">
+    <cim:IdentifiedObject.name>西那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>55476554-1ffc-5b71-ad69-fb742151c814</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e4207faf-d3f7-5b15-97c8-3ad34f64dfe3">
+    <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e4207faf-d3f7-5b15-97c8-3ad34f64dfe3</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_b1677e1f-afd3-5bab-a5b6-60f64851a006"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ccff7670-ddb7-528a-a2b9-5ea6a52a81e7">
+    <cim:IdentifiedObject.name>松田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ccff7670-ddb7-528a-a2b9-5ea6a52a81e7</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_9f878f55-0016-58a1-aff5-ab2353bb9058"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_da480665-4802-556c-b89d-b91ce3690644">
+    <cim:IdentifiedObject.name>名護電力所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>da480665-4802-556c-b89d-b91ce3690644</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_8a91a01a-e985-5638-b7a2-7d556eb4baf3"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_4bdab2af-3002-53e6-a2e8-1bbb94372df6">
+    <cim:IdentifiedObject.name>名護電力所 66kV 母線1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>4bdab2af-3002-53e6-a2e8-1bbb94372df6</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_da480665-4802-556c-b89d-b91ce3690644"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_dd1c291d-3099-5fd8-bd1f-6276df762870">
+    <cim:IdentifiedObject.mRID>dd1c291d-3099-5fd8-bd1f-6276df762870</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_da480665-4802-556c-b89d-b91ce3690644"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_ba91985f-7bdb-5d71-8234-0c829a8fbcba">
+    <cim:IdentifiedObject.mRID>ba91985f-7bdb-5d71-8234-0c829a8fbcba</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_4bdab2af-3002-53e6-a2e8-1bbb94372df6"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_dd1c291d-3099-5fd8-bd1f-6276df762870"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_dc588be4-b1f7-5c5d-8e99-94eb21bef2b1">
+    <cim:IdentifiedObject.name>海洋博変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>dc588be4-b1f7-5c5d-8e99-94eb21bef2b1</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_cff576ac-5d1f-5c3c-a17b-386489ecb541">
+    <cim:IdentifiedObject.name>うるま市変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>cff576ac-5d1f-5c3c-a17b-386489ecb541</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_95a61451-6b5c-570f-960d-2a5bee77a3c2"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_617affec-e4b0-5b5d-98b2-fceec2cfe1d2">
+    <cim:IdentifiedObject.name>うるま市変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>617affec-e4b0-5b5d-98b2-fceec2cfe1d2</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_95a61451-6b5c-570f-960d-2a5bee77a3c2"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_ca7342f6-0203-5408-96e1-b8eb06a279d0">
+    <cim:IdentifiedObject.name>うるま市変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ca7342f6-0203-5408-96e1-b8eb06a279d0</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_cff576ac-5d1f-5c3c-a17b-386489ecb541"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_e1ff73a5-60a1-5fc8-a38b-f22600bdb066">
+    <cim:IdentifiedObject.mRID>e1ff73a5-60a1-5fc8-a38b-f22600bdb066</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_cff576ac-5d1f-5c3c-a17b-386489ecb541"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_e68e8fb8-2a43-5b09-92aa-6dec947dcdb3">
+    <cim:IdentifiedObject.mRID>e68e8fb8-2a43-5b09-92aa-6dec947dcdb3</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_ca7342f6-0203-5408-96e1-b8eb06a279d0"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e1ff73a5-60a1-5fc8-a38b-f22600bdb066"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_6f1f6e04-df87-5dd8-81e1-9c7306252c3f">
+    <cim:IdentifiedObject.name>渡口変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6f1f6e04-df87-5dd8-81e1-9c7306252c3f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5">
+    <cim:IdentifiedObject.name>渡口変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5f22ff07-17e9-5046-bdcf-67b19f8aeeb5</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_cbdf51dc-449c-5dcd-8ffe-560d9bb43666">
+    <cim:IdentifiedObject.name>渡口変電所 66kV 母線1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>cbdf51dc-449c-5dcd-8ffe-560d9bb43666</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_db5275ae-44c3-5938-bfbd-d7b6cfbc9aea">
+    <cim:IdentifiedObject.mRID>db5275ae-44c3-5938-bfbd-d7b6cfbc9aea</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_4794ec12-bfc3-53f7-b192-2f89f50fce5a">
+    <cim:IdentifiedObject.mRID>4794ec12-bfc3-53f7-b192-2f89f50fce5a</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_cbdf51dc-449c-5dcd-8ffe-560d9bb43666"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_db5275ae-44c3-5938-bfbd-d7b6cfbc9aea"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_6828ff53-54f7-597d-be48-905002cc7f78">
+    <cim:IdentifiedObject.name>与那原変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6828ff53-54f7-597d-be48-905002cc7f78</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_c980231f-45d4-5fa9-9957-b7b123e37d7a">
+    <cim:IdentifiedObject.name>与那原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c980231f-45d4-5fa9-9957-b7b123e37d7a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_ddf3e171-3174-57a5-b3fa-0f66f6670b5b">
+    <cim:IdentifiedObject.name>与那原変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ddf3e171-3174-57a5-b3fa-0f66f6670b5b</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x4]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_6828ff53-54f7-597d-be48-905002cc7f78"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_64f5bbc8-78bd-5f12-bffb-a2aa589e759e">
+    <cim:IdentifiedObject.mRID>64f5bbc8-78bd-5f12-bffb-a2aa589e759e</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_6828ff53-54f7-597d-be48-905002cc7f78"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_87cbef20-2949-552f-bedb-48f02f0e44de">
+    <cim:IdentifiedObject.mRID>87cbef20-2949-552f-bedb-48f02f0e44de</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_ddf3e171-3174-57a5-b3fa-0f66f6670b5b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_64f5bbc8-78bd-5f12-bffb-a2aa589e759e"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_67f2ba77-9986-58f3-847f-d53dc655bdbe">
+    <cim:IdentifiedObject.name>那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>67f2ba77-9986-58f3-847f-d53dc655bdbe</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_5aff9b48-32e7-51db-8e67-3ba470327cfc">
+    <cim:IdentifiedObject.name>那覇変電所 66kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5aff9b48-32e7-51db-8e67-3ba470327cfc</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_67f2ba77-9986-58f3-847f-d53dc655bdbe"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_0df88120-d1cd-5413-abe3-bf4c3521ac76">
+    <cim:IdentifiedObject.mRID>0df88120-d1cd-5413-abe3-bf4c3521ac76</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_67f2ba77-9986-58f3-847f-d53dc655bdbe"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_2e67bcd8-349c-5376-bb2d-3ad0ddf10cd5">
+    <cim:IdentifiedObject.mRID>2e67bcd8-349c-5376-bb2d-3ad0ddf10cd5</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_5aff9b48-32e7-51db-8e67-3ba470327cfc"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_0df88120-d1cd-5413-abe3-bf4c3521ac76"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_37c79b0c-de33-50a0-8245-7405a116c1e7">
+    <cim:IdentifiedObject.name>港川変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>37c79b0c-de33-50a0-8245-7405a116c1e7</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_b4dcf946-88df-5088-91dc-d1949b9a7408"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_5a19bd2b-de5c-5fbb-a8f8-3dce6770d9b4">
+    <cim:IdentifiedObject.name>牧港五丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5a19bd2b-de5c-5fbb-a8f8-3dce6770d9b4</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_06b19339-76b8-57e6-b6c7-d0ad3f6328e4"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_18d0fda3-aa00-5a78-b70a-1cd329752eed">
+    <cim:IdentifiedObject.name>牧港五丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>18d0fda3-aa00-5a78-b70a-1cd329752eed</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_06b19339-76b8-57e6-b6c7-d0ad3f6328e4"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_afd2ea97-3b0b-5d9b-ae01-15d7de632130">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>afd2ea97-3b0b-5d9b-ae01-15d7de632130</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_87e6e0bd-7bc1-5492-bfc3-80452246345a">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>87e6e0bd-7bc1-5492-bfc3-80452246345a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_d4749fc2-e7a4-53af-bfd9-57c6184254f4">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d4749fc2-e7a4-53af-bfd9-57c6184254f4</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_afd2ea97-3b0b-5d9b-ae01-15d7de632130"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_b9a7eb65-fd03-5b45-97e5-40795b27782f">
+    <cim:IdentifiedObject.mRID>b9a7eb65-fd03-5b45-97e5-40795b27782f</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_afd2ea97-3b0b-5d9b-ae01-15d7de632130"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_464a8ec7-d8b0-5b0b-8b4f-b215d2b1ee89">
+    <cim:IdentifiedObject.mRID>464a8ec7-d8b0-5b0b-8b4f-b215d2b1ee89</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_d4749fc2-e7a4-53af-bfd9-57c6184254f4"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b9a7eb65-fd03-5b45-97e5-40795b27782f"/>
+  </cim:Terminal>
+  <cim:BusbarSection rdf:ID="_f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 66kV 母線2 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_87e6e0bd-7bc1-5492-bfc3-80452246345a"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_feb49795-831f-54fb-a671-756725cf78e1">
+    <cim:IdentifiedObject.mRID>feb49795-831f-54fb-a671-756725cf78e1</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_87e6e0bd-7bc1-5492-bfc3-80452246345a"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_92b05990-155f-5f0b-9433-cc320166298a">
+    <cim:IdentifiedObject.mRID>92b05990-155f-5f0b-9433-cc320166298a</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_feb49795-831f-54fb-a671-756725cf78e1"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_5f843642-32f8-55f1-bb06-3224b6e0540c">
+    <cim:IdentifiedObject.name>美里六丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5f843642-32f8-55f1-bb06-3224b6e0540c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4af2e51e-0f24-5ef5-90e4-a936849ff105"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_c81ce3e9-3c3f-5043-9105-46bd6889148c">
+    <cim:IdentifiedObject.name>美里六丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c81ce3e9-3c3f-5043-9105-46bd6889148c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4af2e51e-0f24-5ef5-90e4-a936849ff105"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_9a0613c4-1472-594e-9ed4-7ce29e2d85b2">
+    <cim:IdentifiedObject.name>石川東山一丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9a0613c4-1472-594e-9ed4-7ce29e2d85b2</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_39a43c79-9d52-5207-bfea-223a6543f2bd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_5627c0eb-edd0-51a1-a40e-57e6fe5d7454">
+    <cim:IdentifiedObject.name>石川東山一丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5627c0eb-edd0-51a1-a40e-57e6fe5d7454</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_39a43c79-9d52-5207-bfea-223a6543f2bd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_42c2b81b-6aa5-5924-9d4e-12231abf210a">
+    <cim:IdentifiedObject.name>石川東山二丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>42c2b81b-6aa5-5924-9d4e-12231abf210a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_751b22ce-680d-5e67-ac0d-c1d8a7e9bc4b"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_a7b77aa2-bb37-52c1-8304-78f5b885c689">
+    <cim:IdentifiedObject.name>石川東山二丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a7b77aa2-bb37-52c1-8304-78f5b885c689</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_751b22ce-680d-5e67-ac0d-c1d8a7e9bc4b"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_231be4b6-fc55-5585-85b0-450635a3edb4">
+    <cim:IdentifiedObject.name>石川東山二丁目変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>231be4b6-fc55-5585-85b0-450635a3edb4</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_42c2b81b-6aa5-5924-9d4e-12231abf210a"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_692872de-88c7-5d96-9423-e64429946af2">
+    <cim:IdentifiedObject.mRID>692872de-88c7-5d96-9423-e64429946af2</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_42c2b81b-6aa5-5924-9d4e-12231abf210a"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_1f3fe53d-1cd2-5b8d-8214-b3a0bc742855">
+    <cim:IdentifiedObject.mRID>1f3fe53d-1cd2-5b8d-8214-b3a0bc742855</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_231be4b6-fc55-5585-85b0-450635a3edb4"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_692872de-88c7-5d96-9423-e64429946af2"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_69b77e86-701c-57a9-9b36-06aa0c6d290a">
+    <cim:IdentifiedObject.name>前田変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>69b77e86-701c-57a9-9b36-06aa0c6d290a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4ed6efc7-333c-562b-b000-f4fd5f52dad6"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_359ea9dc-32ae-5531-a940-e3f5f40779f5">
+    <cim:IdentifiedObject.name>前田変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>359ea9dc-32ae-5531-a940-e3f5f40779f5</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4ed6efc7-333c-562b-b000-f4fd5f52dad6"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_86ec2b5a-ee25-5cda-b3cc-19d1096c92ee">
+    <cim:IdentifiedObject.name>前田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>86ec2b5a-ee25-5cda-b3cc-19d1096c92ee</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4ed6efc7-333c-562b-b000-f4fd5f52dad6"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_56ac3357-45fc-57a5-bc5a-485afbf6e053">
+    <cim:IdentifiedObject.name>前田変電所 66kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>56ac3357-45fc-57a5-bc5a-485afbf6e053</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_86ec2b5a-ee25-5cda-b3cc-19d1096c92ee"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_f3b47ca9-1297-52fb-8bfe-82cccc327611">
+    <cim:IdentifiedObject.mRID>f3b47ca9-1297-52fb-8bfe-82cccc327611</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_86ec2b5a-ee25-5cda-b3cc-19d1096c92ee"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_8163c270-dac4-5afb-981e-93a6937b9547">
+    <cim:IdentifiedObject.mRID>8163c270-dac4-5afb-981e-93a6937b9547</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_56ac3357-45fc-57a5-bc5a-485afbf6e053"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_f3b47ca9-1297-52fb-8bfe-82cccc327611"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_faf615b0-9c51-5610-834c-db21f83eabb8">
+    <cim:IdentifiedObject.name>小那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>faf615b0-9c51-5610-834c-db21f83eabb8</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_56a36898-affb-5d52-b003-ba6f478e6747">
+    <cim:IdentifiedObject.name>友寄変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>56a36898-affb-5d52-b003-ba6f478e6747</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_cde4d887-ddba-5a93-b683-4fd649755ea9">
+    <cim:IdentifiedObject.name>友寄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>cde4d887-ddba-5a93-b683-4fd649755ea9</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_db063718-9a82-53e0-85df-aa32dd8aea88">
+    <cim:IdentifiedObject.name>友寄変電所 132kV 母線1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>db063718-9a82-53e0-85df-aa32dd8aea88</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_56a36898-affb-5d52-b003-ba6f478e6747"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_a7edf327-7a14-5e82-bf05-bdb402a0640a">
+    <cim:IdentifiedObject.mRID>a7edf327-7a14-5e82-bf05-bdb402a0640a</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_56a36898-affb-5d52-b003-ba6f478e6747"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_73474d48-18b1-5bc9-ad02-d70080c38cd8">
+    <cim:IdentifiedObject.mRID>73474d48-18b1-5bc9-ad02-d70080c38cd8</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_db063718-9a82-53e0-85df-aa32dd8aea88"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_a7edf327-7a14-5e82-bf05-bdb402a0640a"/>
+  </cim:Terminal>
+  <cim:BusbarSection rdf:ID="_30617de7-7e82-58b2-b5de-d4401d8ca508">
+    <cim:IdentifiedObject.name>友寄変電所 66kV 母線2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>30617de7-7e82-58b2-b5de-d4401d8ca508</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_e16d1ad2-2801-5639-9682-40e4271c1272">
+    <cim:IdentifiedObject.mRID>e16d1ad2-2801-5639-9682-40e4271c1272</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_7fab6cc2-25c2-5ee4-a459-24130079968f">
+    <cim:IdentifiedObject.mRID>7fab6cc2-25c2-5ee4-a459-24130079968f</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_30617de7-7e82-58b2-b5de-d4401d8ca508"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e16d1ad2-2801-5639-9682-40e4271c1272"/>
+  </cim:Terminal>
+  <cim:BusbarSection rdf:ID="_0ac98d20-2d04-5846-be61-bad1c7a72e31">
+    <cim:IdentifiedObject.name>友寄変電所 66kV 母線3</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>0ac98d20-2d04-5846-be61-bad1c7a72e31</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_47c75771-fa9a-51b6-b051-01d952775701">
+    <cim:IdentifiedObject.mRID>47c75771-fa9a-51b6-b051-01d952775701</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_63535641-d662-5fb1-82f6-de550e4778db">
+    <cim:IdentifiedObject.mRID>63535641-d662-5fb1-82f6-de550e4778db</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_0ac98d20-2d04-5846-be61-bad1c7a72e31"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_47c75771-fa9a-51b6-b051-01d952775701"/>
+  </cim:Terminal>
+  <cim:Bay rdf:ID="_94e8bf9b-2334-5440-bc95-a07f7fe050f8">
+    <cim:IdentifiedObject.name>友寄変電所 ベイ1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>94e8bf9b-2334-5440-bc95-a07f7fe050f8</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  </cim:Bay>
+  <cim:VoltageLevel rdf:ID="_8f179e63-2be6-5369-a9a0-d0356d186570">
+    <cim:IdentifiedObject.name>佐敷変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>8f179e63-2be6-5369-a9a0-d0356d186570</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_7c0100d6-965a-5082-b667-f057f1fb1772">
+    <cim:IdentifiedObject.name>東変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>7c0100d6-965a-5082-b667-f057f1fb1772</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_113b5893-6398-5e99-8f7b-3addd3d5a44b"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_c3b6bea6-c851-5fff-9272-d30ca75b436c">
+    <cim:IdentifiedObject.name>大里変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c3b6bea6-c851-5fff-9272-d30ca75b436c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_8ab1ecf0-4733-5578-8698-e78990c556a5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_881df7bd-77e9-5b56-9f1e-6ee56399b73c">
+    <cim:IdentifiedObject.name>田港変電所 13kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>881df7bd-77e9-5b56-9f1e-6ee56399b73c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3703de76-5aa0-5ee0-979b-59ccc348ad40"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_aa3150f4-200a-5d4e-9b87-86b953c1e5ff">
+    <cim:IdentifiedObject.name>田港変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>aa3150f4-200a-5d4e-9b87-86b953c1e5ff</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3703de76-5aa0-5ee0-979b-59ccc348ad40"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_f93a71cd-4d69-5393-87a7-eb718ffc7dde">
+    <cim:IdentifiedObject.name>川田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f93a71cd-4d69-5393-87a7-eb718ffc7dde</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_0d2d318e-47f1-5ccf-b220-74bf4bfe944b"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_7c513c84-a03f-574a-999e-653d8d7c1bc0">
+    <cim:IdentifiedObject.name>宇堅変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>7c513c84-a03f-574a-999e-653d8d7c1bc0</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6cdeadf3-fa6e-51dc-9d87-0a67e332b2e3"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_c1682e25-eb16-582a-9cb7-0222cb408789">
+    <cim:IdentifiedObject.name>宇堅変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c1682e25-eb16-582a-9cb7-0222cb408789</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7c513c84-a03f-574a-999e-653d8d7c1bc0"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_b14a1a8c-b6f2-52fd-8a7c-8ca569380529">
+    <cim:IdentifiedObject.mRID>b14a1a8c-b6f2-52fd-8a7c-8ca569380529</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_7c513c84-a03f-574a-999e-653d8d7c1bc0"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_229d57c8-1edc-553c-aa8e-665f1f850d88">
+    <cim:IdentifiedObject.mRID>229d57c8-1edc-553c-aa8e-665f1f850d88</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c1682e25-eb16-582a-9cb7-0222cb408789"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b14a1a8c-b6f2-52fd-8a7c-8ca569380529"/>
+  </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_c7ed8398-f611-5b93-bc22-f29900e1104b">
+    <cim:IdentifiedObject.name>石川東恩納変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c7ed8398-f611-5b93-bc22-f29900e1104b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7a7b05f5-8aa9-55fa-b829-659c43ec66dd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_a937ca3d-7168-5142-95c0-fe0caf036e7a">
+    <cim:IdentifiedObject.name>石川東恩納変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a937ca3d-7168-5142-95c0-fe0caf036e7a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7a7b05f5-8aa9-55fa-b829-659c43ec66dd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_b300a07e-658d-5732-b61d-4e3509653703">
+    <cim:IdentifiedObject.name>仲宗根変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>b300a07e-658d-5732-b61d-4e3509653703</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_4415c18f-6532-57c6-8982-bbf907807901"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_1173de27-42a0-5d77-9648-b255ccb5585b">
+    <cim:IdentifiedObject.name>山入端変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1173de27-42a0-5d77-9648-b255ccb5585b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_d7002ab2-1461-5dc6-bc4f-3ac5f52a0c1f"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e516b118-ebe1-553d-935b-cab05473c30f">
+    <cim:IdentifiedObject.name>名護市変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e516b118-ebe1-553d-935b-cab05473c30f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_6fbe84ec-2c22-59d0-b6c7-0cc7a37a6b14"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_f6255ff1-cc36-58ed-95d4-a3d75a5721b1">
+    <cim:IdentifiedObject.name>喜瀬変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f6255ff1-cc36-58ed-95d4-a3d75a5721b1</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_1079a00f-3623-5d50-8500-6858f8ee5125"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_07d18132-b5b4-5be4-92be-aa1b001ca824">
+    <cim:IdentifiedObject.name>恩納村変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>07d18132-b5b4-5be4-92be-aa1b001ca824</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_bd9b3620-b2e1-5b0d-a965-95de761e7007"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_50b95916-dc29-584b-871e-0a486c26fcdf">
+    <cim:IdentifiedObject.name>石川曙三丁目変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>50b95916-dc29-584b-871e-0a486c26fcdf</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_a5c3a2d6-2369-5255-bc37-37de44db8e5a"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_f5f4030b-200e-5a34-aff3-3ef2b0dba84f">
+    <cim:IdentifiedObject.name>石川曙三丁目変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f5f4030b-200e-5a34-aff3-3ef2b0dba84f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_a5c3a2d6-2369-5255-bc37-37de44db8e5a"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea">
+    <cim:IdentifiedObject.name>西原変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7995a601-f7b9-522c-b176-b47982161ba5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e7d4fc0e-a3e4-5fdf-9f64-2c39719eab3e">
+    <cim:IdentifiedObject.name>西原変電所 22kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e7d4fc0e-a3e4-5fdf-9f64-2c39719eab3e</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7995a601-f7b9-522c-b176-b47982161ba5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_4b9e6ded-9319-58ac-854d-f6fc4ed7400d">
+    <cim:IdentifiedObject.name>西原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>4b9e6ded-9319-58ac-854d-f6fc4ed7400d</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7995a601-f7b9-522c-b176-b47982161ba5"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_54372ec3-0754-5239-bf0b-219f82e6ea90">
+    <cim:IdentifiedObject.name>西原変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>54372ec3-0754-5239-bf0b-219f82e6ea90</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_be6cd346-60b8-5d64-bb66-65787d844b9b">
+    <cim:IdentifiedObject.mRID>be6cd346-60b8-5d64-bb66-65787d844b9b</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_77329290-97fd-586f-a71f-2add60344baa">
+    <cim:IdentifiedObject.mRID>77329290-97fd-586f-a71f-2add60344baa</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_54372ec3-0754-5239-bf0b-219f82e6ea90"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_be6cd346-60b8-5d64-bb66-65787d844b9b"/>
+  </cim:Terminal>
+  <cim:Bay rdf:ID="_9b37dd1e-06cf-5b49-a02a-c3d46619dd04">
+    <cim:IdentifiedObject.name>西原変電所 ベイ1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9b37dd1e-06cf-5b49-a02a-c3d46619dd04</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_5fd881d4-5495-5f0c-b93e-199af829e681">
+    <cim:IdentifiedObject.name>西原変電所 ベイ2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5fd881d4-5495-5f0c-b93e-199af829e681</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_29ab8a7f-f0b7-5486-9c1c-6caf0c011b30">
+    <cim:IdentifiedObject.name>西原変電所 ベイ3</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>29ab8a7f-f0b7-5486-9c1c-6caf0c011b30</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_0ac5cf2a-5948-56f3-aac5-0e0cb3cadeea"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_de2e9367-f0fa-5644-971e-4b943a7f65e0">
+    <cim:IdentifiedObject.name>西原変電所 ベイ4</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>de2e9367-f0fa-5644-971e-4b943a7f65e0</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_4b9e6ded-9319-58ac-854d-f6fc4ed7400d"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_171e7666-1792-519a-a422-49323e75b733">
+    <cim:IdentifiedObject.name>西原変電所 ベイ5</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>171e7666-1792-519a-a422-49323e75b733</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_4b9e6ded-9319-58ac-854d-f6fc4ed7400d"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_903ebd46-7ec4-5e52-be21-272e84b6cc6a">
+    <cim:IdentifiedObject.name>西原変電所 ベイ6</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>903ebd46-7ec4-5e52-be21-272e84b6cc6a</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_4b9e6ded-9319-58ac-854d-f6fc4ed7400d"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_42554961-d6ca-5039-8eb0-d2597c232335">
+    <cim:IdentifiedObject.name>西原変電所 ベイ7</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>42554961-d6ca-5039-8eb0-d2597c232335</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_4b9e6ded-9319-58ac-854d-f6fc4ed7400d"/>
+  </cim:Bay>
+  <cim:VoltageLevel rdf:ID="_d8ccb561-7cb5-5dc8-a00c-375b38ce4f7c">
+    <cim:IdentifiedObject.name>上田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d8ccb561-7cb5-5dc8-a00c-375b38ce4f7c</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_f55463d7-0d24-5457-859b-f8ce029eb8be"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_24915032-290f-577d-8046-39fd6e201648">
+    <cim:IdentifiedObject.name>北那覇変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>24915032-290f-577d-8046-39fd6e201648</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_785f0298-ab74-56c0-8cc1-17060781508f">
+    <cim:IdentifiedObject.name>北那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>785f0298-ab74-56c0-8cc1-17060781508f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_d3e770e6-4036-595a-9dda-3977ad3dcf2f">
+    <cim:IdentifiedObject.name>曙変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d3e770e6-4036-595a-9dda-3977ad3dcf2f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_44b20f0b-81af-5b11-974e-c20bc7c0fe25">
+    <cim:IdentifiedObject.name>津花波変電所 132kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>44b20f0b-81af-5b11-974e-c20bc7c0fe25</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_9fcb083f-148d-57eb-b59c-b6f1d02fa29a">
+    <cim:IdentifiedObject.name>津花波変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9fcb083f-148d-57eb-b59c-b6f1d02fa29a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
+  </cim:VoltageLevel>
+  <cim:BusbarSection rdf:ID="_eade60a4-45f1-50b8-ab23-34737ea73998">
+    <cim:IdentifiedObject.name>津花波変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>eade60a4-45f1-50b8-ab23-34737ea73998</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
+  </cim:BusbarSection>
+  <cim:ConnectivityNode rdf:ID="_1145177f-d98e-5ef4-976c-bd5538075656">
+    <cim:IdentifiedObject.mRID>1145177f-d98e-5ef4-976c-bd5538075656</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_a43373da-3e37-5326-93ce-abaa87f6cc9f">
+    <cim:IdentifiedObject.mRID>a43373da-3e37-5326-93ce-abaa87f6cc9f</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_eade60a4-45f1-50b8-ab23-34737ea73998"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_1145177f-d98e-5ef4-976c-bd5538075656"/>
+  </cim:Terminal>
+  <cim:Bay rdf:ID="_968f5a1f-0b01-5d5b-8bf6-bb44a9402b24">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>968f5a1f-0b01-5d5b-8bf6-bb44a9402b24</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_3ede67bb-9ea9-5c05-9474-6787344c0282">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>3ede67bb-9ea9-5c05-9474-6787344c0282</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_81fd1b78-0e58-56df-93ad-3141ad4a80a3">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ3</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>81fd1b78-0e58-56df-93ad-3141ad4a80a3</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_e91bb18f-d31a-55da-9e59-96f487d531dc">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ4</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e91bb18f-d31a-55da-9e59-96f487d531dc</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ5</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_bebc25f8-bf8f-5d42-8c14-3094b19d4eaf">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ6</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>bebc25f8-bf8f-5d42-8c14-3094b19d4eaf</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
+  </cim:Bay>
+  <cim:Bay rdf:ID="_4b6fbfbf-d1de-589c-b9d0-b150e95280f5">
+    <cim:IdentifiedObject.name>津花波変電所 ベイ7</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>4b6fbfbf-d1de-589c-b9d0-b150e95280f5</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
+  </cim:Bay>
+  <cim:VoltageLevel rdf:ID="_fd387c24-c445-5251-93f5-8b7ac9c5dc2b">
+    <cim:IdentifiedObject.name>壷川変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>fd387c24-c445-5251-93f5-8b7ac9c5dc2b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7e638064-cc77-58fd-8933-bf847de3010c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_371aeef3-489c-5a83-ab09-394525c04c8e">
+    <cim:IdentifiedObject.name>海洋博変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>371aeef3-489c-5a83-ab09-394525c04c8e</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:VoltageLevel>
 </rdf:RDF>
