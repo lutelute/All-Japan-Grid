@@ -68,7 +68,7 @@ let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
 const BUILT={};  // 地域別built(線形path付き)のオンデマンドキャッシュ
 const $=id=>document.getElementById(id);
 
-fetch("data/subsld_pages.json").then(r=>r.json()).then(j=>{
+fetch("data/subsld_pages.json?v=3").then(r=>r.json()).then(j=>{
  DATA=j.sites;
  DATA.forEach(s=>{s._nl=(s.n||s.i);s._pr=(Math.max(...(s.kv.length?s.kv:[0])))*100+s.vl.reduce((a,v)=>a+v.g.length,0)});
  DATA.sort((a,b)=>b._pr-a._pr);
@@ -112,7 +112,7 @@ function select(s){
    <span id="dmeta">${s.r}${s.ty?" ・ "+s.ty:""} ・ ${s.la.toFixed(4)}, ${s.lo.toFixed(4)}
     ・ <a href="https://www.openstreetmap.org/#map=17/${s.la}/${s.lo}" target="_blank">OSM</a></span></div>
   <div id="panes">
-   <div class="pane"><h3>GeoPane — 構内幾何（地理院写真＋敷地）</h3>
+   <div class="pane"><h3>GeoPane — 構内幾何（地理院写真＋敷地・●vertex ■polygon ▲leadin）</h3>
     <div id="geo"></div></div>
    <div class="pane"><h3>SLDPane — 単線結線図（上=流入/下=流出・推定、灰=対向不明、破線=leadin、二重円=変圧器）</h3>
     <div id="sld"></div></div>
@@ -156,6 +156,18 @@ function drawGeo(s){
   const x=px(t2x(s.lo,z)),y=py(t2y(s.la,z));
   svg.innerHTML=`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#ffd54f" stroke-width="2.5"/>`;
  }
+ // 証拠マーカー(●vertex ■polygon ▲leadin — PNG版GeoPaneと同じ)
+ if(s.tm){
+  const mk=[];
+  s.tm.forEach(([la,lo,b])=>{
+   const x=px(t2x(lo,z)),y=py(t2y(la,z));
+   if(x<-8||x>W+8||y<-8||y>H+8) return;
+   if(b===0) mk.push(`<circle cx="${x}" cy="${y}" r="4.2" fill="#d62728" stroke="#fff" stroke-width="1.1"/>`);
+   else if(b===1) mk.push(`<rect x="${x-3.8}" y="${y-3.8}" width="7.6" height="7.6" fill="#1f77b4" stroke="#fff" stroke-width="1.1"/>`);
+   else mk.push(`<path d="M ${x} ${y-4.6} L ${x+4.2} ${y+3.6} L ${x-4.2} ${y+3.6} Z" fill="#ff7f0e" stroke="#fff" stroke-width="1.1"/>`);
+  });
+  svg.insertAdjacentHTML("beforeend",mk.join(""));
+ }
  el.appendChild(svg);
  const a=document.createElement("div");a.id="attrib";
  a.textContent="出典: 地理院タイル(全国最新写真)";el.appendChild(a);
@@ -175,7 +187,7 @@ function drawGeo(s){
   svg.insertAdjacentHTML("afterbegin",frag.join(""));
  };
  if(BUILT[s.r]) drawLines(BUILT[s.r]);
- else fetch(`data/subsld_ways/${s.r}.json`).then(r=>r.json())
+ else fetch(`data/subsld_ways/${s.r}.json?v=3`).then(r=>r.json())
   .then(j=>{BUILT[s.r]=j.ways||[];drawLines(BUILT[s.r])}).catch(()=>{});
 }
 

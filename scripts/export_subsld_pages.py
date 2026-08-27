@@ -27,7 +27,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 
-from scripts.build_substation_structure import _geom_key  # noqa: E402
+from scripts.build_substation_structure import _geom_key, prepare_ways  # noqa: E402
+from scripts.substation_scope import load as load_region  # noqa: E402
 from src.regions import REGIONS                            # noqa: E402
 
 
@@ -80,8 +81,15 @@ def main() -> int:
         print(f"(敷地リング省略: {e})")
 
     sites, seen = [], set()
+    BIND = {"vertex-shared": 0, "polygon": 1, "leadin": 2}
     for r in REGIONS:
         d = json.load(open(f"data/structures/{r}.json"))
+        # 端子マーカー用: line_key → way座標(セグメント)
+        try:
+            _subs, _lines = load_region(r)
+            wcoords = {w["key"]: w["coords"] for w in prepare_ways(_lines)}
+        except Exception:   # noqa: BLE001
+            wcoords = {}
         for st in d["structures"]:
             site = st["site"]
             gkey = site["site_id"].split("site_")[-1]
@@ -169,8 +177,26 @@ def main() -> int:
                           for vid, gs in sorted(vl_out.items(),
                                                 key=lambda x: -vls.get(x[0], 0))],
                    "tr": trs}
+            # 証拠マーカー(PNG版GeoPaneと同じ ●vertex ■polygon ▲leadin):
+            # 端子のway両端のうちサイト重心に近い端点に binding を刻む
+            tm = set()
+            for t in st.get("terminals", []):
+                cs = wcoords.get(t.get("line_key"))
+                b = BIND.get(t.get("binding"))
+                if not cs or b is None:
+                    continue
+                e0, e1 = cs[0], cs[-1]
+                d0 = (e0[1]-site["lat"])**2 + (e0[0]-site["lon"])**2
+                d1 = (e1[1]-site["lat"])**2 + (e1[0]-site["lon"])**2
+                ex = e0 if d0 <= d1 else e1
+                tm.add((round(ex[1], 5), round(ex[0], 5), b))
+            if tm:
+                rec_tm = sorted(tm)
+                rec = rec   # noqa: PLW0127 (明示)
             if site.get("substation_type"):
                 rec["ty"] = site["substation_type"]
+            if tm:
+                rec["tm"] = [list(x) for x in sorted(tm)]
             if site["site_id"] in rings:
                 rec["pg"] = rings[site["site_id"]]
             sites.append(rec)
