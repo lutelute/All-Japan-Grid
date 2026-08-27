@@ -65,6 +65,7 @@ const VC={500:"#d62728",275:"#ff7f0e",250:"#e377c2",220:"#e377c2",187:"#bcbd22",
 const vcol=k=>VC[k]||"#999";
 const REGIONS=["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
 let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
+const BUILT={};  // 地域別built(線形path付き)のオンデマンドキャッシュ
 const $=id=>document.getElementById(id);
 
 fetch("data/subsld_pages.json").then(r=>r.json()).then(j=>{
@@ -119,7 +120,7 @@ function select(s){
   <div id="legend">実証ペア図（SubSLD法）: 全要素はOSMの証拠に遡れる。回線数=平行ストローク本数（下界推定・過大評価しない）。
    変圧器の無い電圧階級は「スルー」。流向は対向変電所の電圧階層による推定。<br>
    証拠語彙（本手法の定義・OSM仕様ではない）: <b>vertex</b>=線wayが構内wayと頂点共有（最強）／
-   <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。</div>`;
+   <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。GeoPaneの線=モデルの枝（電圧階級色・OSM実線形）。</div>`;
  drawGeo(s);drawSLD(s);
 }
 
@@ -158,6 +159,26 @@ function drawGeo(s){
  el.appendChild(svg);
  const a=document.createElement("div");a.id="attrib";
  a.textContent="出典: 地理院タイル(全国最新写真)";el.appendChild(a);
+ // 送電線オーバーレイ(Pages既存の built/{region}.json をオンデマンド取得)
+ const mla0=la0-0.01,mla1=la1+0.01,mlo0=lo0-0.01,mlo1=lo1+0.01;
+ const drawLines=(edges)=>{
+  if(SEL!==s) return;
+  const frag=[];
+  edges.forEach(e=>{
+   // pathはway幾何で端点a/bに達しない場合がある(モデルは吸着で論理接続)→端点を補完
+   const pth=(e.path&&e.path.length>1)?[e.a,...e.path,e.b]:[e.a,e.b];
+   if(!pth.some(pt=>pt[0]>=mla0&&pt[0]<=mla1&&pt[1]>=mlo0&&pt[1]<=mlo1)) return;
+   const k=Math.round(e.kv||0);
+   const pts=pth.map(pt=>`${px(t2x(pt[1],z)).toFixed(1)},${py(t2y(pt[0],z)).toFixed(1)}`).join(" ");
+   const w=k>=187?3:2.2;
+   frag.push(`<polyline points="${pts}" fill="none" stroke="#000" stroke-width="${w+2}" opacity="0.45"/>`);
+   frag.push(`<polyline points="${pts}" fill="none" stroke="${vcol(k)}" stroke-width="${w}"/>`);
+  });
+  svg.insertAdjacentHTML("afterbegin",frag.join(""));
+ };
+ if(BUILT[s.r]) drawLines(BUILT[s.r]);
+ else fetch(`data/built/${s.r}.json`).then(r=>r.json())
+  .then(j=>{BUILT[s.r]=j.edges||[];drawLines(BUILT[s.r])}).catch(()=>{});
 }
 
 /* ---------- SLDPane: SVG 単線結線図 ---------- */
