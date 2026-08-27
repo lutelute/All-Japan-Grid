@@ -1,0 +1,125 @@
+{
+ "note": "OSM編集候補(issue #49 判読 2026-08-27 + 介入#36)。判読はSubSLD実証ペア図(地理院シームレスフォト重畳)による。地理院タイルはOSMトレース利用が許諾済みだが、編集時は各自最新のライセンス状況を確認のこと。編集は提案であり強制しない",
+ "candidates": [
+  {
+   "site_id": "tokyo_site_958bf28f3a31",
+   "name": "新坂戸変電所",
+   "class": "A",
+   "kv": 500,
+   "lat": 35.962199,
+   "lon": 139.436352,
+   "region": "tokyo",
+   "finding": "屋外AIS・母線列明瞭",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/35.962199/139.436352",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "tokyo_site_8b78423760bb",
+   "name": "新新田変電所",
+   "class": "A",
+   "kv": 500,
+   "lat": 36.326245,
+   "lon": 139.304743,
+   "region": "tokyo",
+   "finding": "屋外AIS・母線列視認",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/36.326245/139.304743",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "kyushu_site_811a894fef53",
+   "name": "南九州変電所",
+   "class": "A",
+   "kv": 500,
+   "lat": 31.957715,
+   "lon": 130.655602,
+   "region": "kyushu",
+   "finding": "大規模AIS・ベイ列明瞭",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/31.957715/130.655602",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "chubu_site_d849a8a1f508",
+   "name": "三河変電所",
+   "class": "A",
+   "kv": 275,
+   "lat": 34.844231,
+   "lon": 137.470462,
+   "region": "chubu",
+   "finding": "巨大AIS・全面にベイ列(本命)",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/34.844231/137.470462",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "tokyo_site_307e8b721ace",
+   "name": "北総変電所",
+   "class": "A",
+   "kv": 275,
+   "lat": 35.711218,
+   "lon": 140.265613,
+   "region": "tokyo",
+   "finding": "AIS・北縁に母線/門型列",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/35.711218/140.265613",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "tohoku_site_9923ffe5ad44",
+   "name": "東仙台変電所",
+   "class": "A-",
+   "kv": 275,
+   "lat": 38.278234,
+   "lon": 141.041151,
+   "region": "tohoku",
+   "finding": "小規模AIS・短母線視認可",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/38.278234/141.041151",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "chubu_site_dd1fa8ef8d81",
+   "name": "田原(変電所)",
+   "class": "A-",
+   "kv": 275,
+   "lat": 34.658468,
+   "lon": 137.307283,
+   "region": "chubu",
+   "finding": "小規模AIS・屋外機器視認",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/34.658468/137.307283",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "chubu_site_4de2faf98125",
+   "name": "清水変電所",
+   "class": "A-",
+   "kv": 154,
+   "lat": 35.016661,
+   "lon": 138.454735,
+   "region": "chubu",
+   "finding": "都市AIS・機器列視認",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/35.016661/138.454735",
+   "recommended": "構内way(line=busbar/bay)の新規描画"
+  },
+  {
+   "site_id": "chubu_site_cd650d730bbf",
+   "name": "Gifu Substation",
+   "class": "A'",
+   "kv": 500,
+   "lat": 35.635684,
+   "lon": 136.962608,
+   "region": "chubu",
+   "finding": "構内way・vertexあり busbarタグ欠落(タグ付与のみで母線化)",
+   "edit_url": "https://www.openstreetmap.org/edit#map=18/35.635684/136.962608",
+   "recommended": "line=busbar タグ付与(既存構内way)"
+  },
+  {
+   "site_id": "(line) ojiya66",
+   "name": "小千谷近郊 66kV接続線",
+   "class": "line-missing",
+   "kv": 66,
+   "lat": 37.3082,
+   "lon": 138.8228,
+   "region": "tokyo",
+   "finding": "衛星で導体視認・OSMに線featureなし(介入#36 sat-001で正典適用済み)",
+   "edit_url": "https://www.openstreetmap.org/edit#map=17/37.3082/138.8228",
+   "recommended": "power=line way の新規描画(z18判読図: docs/reports/figs/satellite_pilot/z18_c3_ojiya66.png)"
+  }
+ ]
+}

@@ -335,6 +335,23 @@ def extract_structure(region, ft, pways):
             trafo_id=f"{site_id}/tr{i}", site_id=site_id,
             hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id))
 
+    # --- 推定母線(inferred-topology, issue #49 設計 2026-08-27) ---
+    # 母線wayゼロのVLに強束縛端子(vertex/polygon)が2本以上ある場合、内部共通母線の
+    # 存在は電気的に必然。osm_way_keys=[] + kv_evidence で「推定」と明記(捏造ゼロ:
+    # 存在のみ主張・幾何も端子束縛も主張しない)。GIS/屋内型・Point型の受け皿
+    _vl_has_bb = {b.vl_id for b in structure.busbars}
+    _strong = defaultdict(int)
+    for t in structure.terminals:
+        if t.binding in ("vertex-shared", "polygon"):
+            _strong[t.vl_id] += 1
+    for _vl_id in sorted(_strong):
+        if _vl_id in _vl_has_bb or _strong[_vl_id] < 2:
+            continue
+        structure.busbars.append(BusbarSection(
+            busbar_id=f"{_vl_id}/bb-inferred", vl_id=_vl_id,
+            osm_way_keys=[], name="(inferred)",
+            kv_evidence=f"inferred-topology: strong-bound terminals x{_strong[_vl_id]}"))
+
     # VoltageLevel の確定は全段階の後(bay/terminal が @u を遅延生成しうるため。
     # busbar 直後に確定すると terminals の vl_id が dangling になる)。
     structure.voltage_levels = [vls[k] for k in sorted(vls, reverse=True)]
@@ -667,12 +684,16 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
         kv = int(vl.nominal_kv)
         col = _VC.get(kv, "#999")
         bbs = [b for b in structure.busbars if b.vl_id == vl.vl_id]
+        real_bbs = [b for b in bbs if b.osm_way_keys]
+        bb_inferred = not real_bbs           # 実way母線なし→破線「推定」(issue #49)
+        bbs = real_bbs or bbs[:1]
         groups = groups_of[vl.vl_id][:MAXS]
         total_par = sum(g["par"] for _, g in groups_of[vl.vl_id])
         label = f"{kv}kV" if kv else "無印(@u)"
         ax2.text(-0.5, y + 0.12, label, ha="right", va="center",
                  fontsize=16, color=col, fontweight="bold")
-        sub = f"母線×{max(len(bbs), 1)}・{len(groups_of[vl.vl_id])}線・{total_par}回線"
+        sub = (f"母線×{'推定' if bb_inferred else len(bbs)}"
+               f"・{len(groups_of[vl.vl_id])}線・{total_par}回線")
         if vl.vl_id not in tr_vls and n_tr:
             sub += "\nスルー(変圧器なし)"
         elif not n_tr:
@@ -687,8 +708,10 @@ def render_figure(structure, ways, poly, out_png, conns_by_key=None,
             xb = W * (i + 1) / nb
             bid = bbs[i].busbar_id if i < len(bbs) else None
             span[bid] = (xa, xb)
-            ax2.plot([xa, xb], [y, y], color=col, lw=4.5, zorder=3,
-                     solid_capstyle="butt")
+            ax2.plot([xa, xb], [y, y], color=col, lw=3.5 if bb_inferred else 4.5,
+                     zorder=3, solid_capstyle="butt",
+                     ls=(0, (7, 4)) if bb_inferred else "-",
+                     alpha=0.8 if bb_inferred else 1.0)
         if n_tr:
             ax2.plot([W, trx0 + 0.9 * n_tr], [y, y], color=col, lw=1.1,
                      alpha=0.55, zorder=2)

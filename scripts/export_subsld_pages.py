@@ -64,6 +64,8 @@ def main() -> int:
             for ft in subs["features"]:
                 try:
                     poly = shape(ft["geometry"])
+                    if not poly.is_valid:          # 無効ジオメトリの修復
+                        poly = poly.buffer(0)      # (issue #49: 照合不能363所の主因)
                     nm = (ft.get("properties") or {}).get("name") or ""
                     sid = (f"{r}_site_"
                            f"{_geom_key([[poly.centroid.x, poly.centroid.y]], nm)[2:]}")
@@ -102,6 +104,8 @@ def main() -> int:
             bb_of_bay = {}
             bb_idx = defaultdict(dict)   # vl_id -> busbar_id -> section idx
             for b in st.get("busbars", []):
+                if not b.get("osm_way_keys"):
+                    continue          # 推定母線(inferred)はb数に含めない→ビューアは破線表示
                 bb_idx[b["vl_id"]].setdefault(
                     b["busbar_id"], len(bb_idx[b["vl_id"]]))
             for b in st.get("bays", []):
