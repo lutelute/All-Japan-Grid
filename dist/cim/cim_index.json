@@ -8,7 +8,11 @@
     "TP_BD": "boundary"
   },
   "boundary_voltages_kv": [
-    660.0,
+    27500066.0,
+    15400077.0,
+    15400066.0,
+    660001.0,
+    330006.0,
     500.0,
     275.0,
     250.0,
@@ -51,7 +55,7 @@
     "substations": 7240,
     "lines": 40087,
     "plants": 19138,
-    "transformers": 2385
+    "transformers": 2590
   },
   "regions": [
     {
@@ -60,11 +64,15 @@
         "substations": 488,
         "lines": 4591,
         "plants": 436,
-        "transformers": 125
+        "transformers": 155,
+        "busbar_sections": 613,
+        "busbar_sections_inferred": 92,
+        "bays": 1886
       },
-      "eq_objects": 25328,
+      "eq_objects": 29857,
       "gl_objects": 59313,
       "base_voltages_kv": [
+        330006.0,
         500.0,
         275.0,
         250.0,
@@ -88,9 +96,12 @@
         "substations": 904,
         "lines": 6644,
         "plants": 1311,
-        "transformers": 511
+        "transformers": 508,
+        "busbar_sections": 739,
+        "busbar_sections_inferred": 343,
+        "bays": 1964
       },
-      "eq_objects": 40091,
+      "eq_objects": 45590,
       "gl_objects": 76674,
       "base_voltages_kv": [
         500.0,
@@ -98,7 +109,6 @@
         250.0,
         187.0,
         154.0,
-        132.0,
         66.0,
         33.0,
         25.0,
@@ -122,11 +132,17 @@
         "substations": 1783,
         "lines": 8335,
         "plants": 7207,
-        "transformers": 558
+        "transformers": 575,
+        "busbar_sections": 1035,
+        "busbar_sections_inferred": 793,
+        "bays": 710
       },
-      "eq_objects": 56554,
+      "eq_objects": 62632,
       "gl_objects": 93403,
       "base_voltages_kv": [
+        27500066.0,
+        15400066.0,
+        660001.0,
         500.0,
         275.0,
         154.0,
@@ -154,11 +170,15 @@
         "substations": 1172,
         "lines": 6235,
         "plants": 3792,
-        "transformers": 323
+        "transformers": 321,
+        "busbar_sections": 575,
+        "busbar_sections_inferred": 302,
+        "bays": 848
       },
-      "eq_objects": 39839,
+      "eq_objects": 43471,
       "gl_objects": 90636,
       "base_voltages_kv": [
+        15400077.0,
         500.0,
         275.0,
         200.0,
@@ -171,7 +191,6 @@
         30.0,
         25.0,
         22.0,
-        15.0,
         11.0,
         6.6,
         6.0,
@@ -188,11 +207,15 @@
         "substations": 271,
         "lines": 2196,
         "plants": 432,
-        "transformers": 115
+        "transformers": 118,
+        "busbar_sections": 249,
+        "busbar_sections_inferred": 94,
+        "bays": 611
       },
-      "eq_objects": 12835,
+      "eq_objects": 14537,
       "gl_objects": 26338,
       "base_voltages_kv": [
+        15400077.0,
         500.0,
         275.0,
         200.0,
@@ -214,9 +237,12 @@
         "substations": 934,
         "lines": 4017,
         "plants": 1518,
-        "transformers": 295
+        "transformers": 297,
+        "busbar_sections": 410,
+        "busbar_sections_inferred": 159,
+        "bays": 654
       },
-      "eq_objects": 25624,
+      "eq_objects": 28334,
       "gl_objects": 53227,
       "base_voltages_kv": [
         500.0,
@@ -245,9 +271,12 @@
         "substations": 565,
         "lines": 3112,
         "plants": 1173,
-        "transformers": 169
+        "transformers": 195,
+        "busbar_sections": 413,
+        "busbar_sections_inferred": 172,
+        "bays": 679
       },
-      "eq_objects": 19162,
+      "eq_objects": 21884,
       "gl_objects": 43896,
       "base_voltages_kv": [
         500.0,
@@ -279,9 +308,12 @@
         "substations": 261,
         "lines": 1449,
         "plants": 688,
-        "transformers": 63
+        "transformers": 63,
+        "busbar_sections": 174,
+        "busbar_sections_inferred": 82,
+        "bays": 349
       },
-      "eq_objects": 8969,
+      "eq_objects": 10082,
       "gl_objects": 19538,
       "base_voltages_kv": [
         500.0,
@@ -303,12 +335,14 @@
         "substations": 802,
         "lines": 3391,
         "plants": 2549,
-        "transformers": 204
+        "transformers": 336,
+        "busbar_sections": 518,
+        "busbar_sections_inferred": 240,
+        "bays": 759
       },
-      "eq_objects": 22689,
+      "eq_objects": 26944,
       "gl_objects": 50709,
       "base_voltages_kv": [
-        660.0,
         500.0,
         220.0,
         110.0,
@@ -332,9 +366,12 @@
         "substations": 60,
         "lines": 117,
         "plants": 32,
-        "transformers": 22
+        "transformers": 22,
+        "busbar_sections": 17,
+        "busbar_sections_inferred": 12,
+        "bays": 15
       },
-      "eq_objects": 899,
+      "eq_objects": 1037,
       "gl_objects": 1715,
       "base_voltages_kv": [
         132.0,

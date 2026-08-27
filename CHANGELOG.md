@@ -48,6 +48,13 @@ witness and every estimate marked as such.
   omissions) and an OSM edit candidate list (10 entries,
   `docs/reports/osm_edit_candidates_2026-08-27.md`).
 
+- **CIM/CGMES export of the node-breaker layer** (`src/cim/exporter.py`):
+  `BusbarSection` (4,743 nationally; 2,289 of them inferred and flagged in
+  `IdentifiedObject.description`), `Bay` (8,475; couplers disclosed by name),
+  and per-site `VoltageLevel` now reach CGMES EQ alongside the existing
+  `PowerTransformer` mapping — the SubSLD structure is consumable by standard
+  power-system tooling, caveats included.
+
 ### Changed
 - Structure DB regenerated against enrichment-updated extracts — site-id matching now
   100 % (was 363 unmatched); okinawa regression pin deliberately moved to 60/167/59.

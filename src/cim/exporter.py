@@ -464,6 +464,75 @@ class CimExporter:
                       "TransformerEnd.Terminal": term})
         return m
 
+    # -- SubSLD node-breaker 層 (Phase 1-C: BusbarSection / Bay) --------------
+    def add_structure_level(self, site_idx: int, site_name: str,
+                            vl_idx: int, kv: float) -> str:
+        """構造DBの VoltageLevel を CGMES VoltageLevel として確保する。
+
+        add_substation が feature タグの代表電圧で 1 つ作るのに対し、構造DBは
+        構内線から観測した**全電圧階級**を持つ。母線/ベイの EquipmentContainer
+        になるのはこちらなので、site 名で紐づく Substation の下に追加する。
+        """
+        self._ensure_region()
+        vl = mrid("st_vl", self.region, site_idx, vl_idx)
+        refs = {"VoltageLevel.BaseVoltage": self._base_voltage(kv)}
+        sub = self._sub_by_name.get(_norm_site_name(site_name))
+        if sub:
+            refs["VoltageLevel.Substation"] = sub
+        self.eq.obj(
+            "VoltageLevel", vl,
+            attrs={"IdentifiedObject.name": f"{site_name} {kv:g}kV",
+                   "IdentifiedObject.mRID": vl},
+            refs=refs)
+        return vl
+
+    def add_busbar_section(self, site_idx: int, site_name: str, vl_idx: int,
+                           bb_idx: int, kv: float, vl_mrid: str,
+                           inferred: bool = False,
+                           evidence: Optional[str] = None) -> str:
+        """BusbarSection 1件を写像する(SubSLD法の母線)。
+
+        誠実性の規約: 推定母線(osm_way_keys が空 = inferred-topology)は
+        **description に推定である旨と根拠を貫通**させる。CGMES 2.4 に
+        「推定」属性は無いため、下流が読める唯一の場所が description になる。
+        """
+        m = mrid("busbar", self.region, site_idx, vl_idx, bb_idx)
+        nm = f"{site_name} {kv:g}kV 母線{bb_idx + 1}"
+        attrs: Dict[str, object] = {
+            "IdentifiedObject.name": nm + (" (推定)" if inferred else ""),
+            "IdentifiedObject.mRID": m}
+        if inferred:
+            attrs["IdentifiedObject.description"] = (
+                "inferred-topology (SubSLD): no busbar way in OSM; "
+                "existence derived from strongly-bound terminals"
+                + (f" [{evidence}]" if evidence else ""))
+        self.eq.obj("BusbarSection", m, attrs=attrs,
+                    refs={"Equipment.EquipmentContainer": vl_mrid})
+        cn = mrid("cn", self.region, "busbar", site_idx, vl_idx, bb_idx)
+        self.eq.obj("ConnectivityNode", cn,
+                    attrs={"IdentifiedObject.mRID": cn},
+                    refs={"ConnectivityNode.ConnectivityNodeContainer": vl_mrid})
+        term = mrid("term", self.region, "busbar", site_idx, vl_idx, bb_idx)
+        self.eq.obj("Terminal", term,
+                    attrs={"IdentifiedObject.mRID": term,
+                           "ACDCTerminal.sequenceNumber": 1},
+                    refs={"Terminal.ConductingEquipment": m,
+                          "Terminal.ConnectivityNode": cn})
+        return m
+
+    def add_bay(self, site_idx: int, site_name: str, vl_idx: int,
+                bay_idx: int, vl_mrid: str, n_busbars: int = 0) -> str:
+        """Bay 1件を写像する。2母線以上に接するベイは連結器候補として名前に開示。"""
+        m = mrid("bay", self.region, site_idx, vl_idx, bay_idx)
+        nm = f"{site_name} ベイ{bay_idx + 1}"
+        if n_busbars >= 2:
+            nm += " (coupler candidate)"
+        self.eq.obj("Bay", m,
+                    attrs={"IdentifiedObject.name": nm,
+                           "IdentifiedObject.mRID": m},
+                    refs={"Bay.VoltageLevel": vl_mrid})
+        return m
+
 
 def export_region(region: str, data_dir: str, out_dir: str) -> dict:
     """Export one region's GeoJSON to CGMES EQ + GL RDF/XML files.
@@ -534,6 +603,55 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
                 except Exception:  # noqa: BLE001 — 1 spec の不備で region を止めない
                     continue
     counts["transformers"] = n_tr
+
+    # SubSLD の node-breaker 層(BusbarSection / Bay)を CGMES に写像する
+    # (Phase 1-C)。スキーマは設計時から CIM 整合(substation_structure.py の
+    # docstring 参照)なので、ここは素直な 1:1 写像になる。推定母線は
+    # description に「推定」と根拠を貫通させる(捏造ゼロの下流貫通)。
+    n_bb = n_bb_inf = n_bay = 0
+    if os.path.exists(st_path):
+        for s_i, site in enumerate(st.get("structures", [])):
+            site_name = (site.get("site") or {}).get("name") or f"site{s_i}"
+            vls = {v["vl_id"]: v for v in site.get("voltage_levels") or []}
+            vl_order = {vid: i for i, vid in enumerate(sorted(vls))}
+            vl_mrid: dict = {}
+            for vid, v in sorted(vls.items()):
+                kv = v.get("nominal_kv") or 0
+                if not kv:
+                    continue      # 電圧不明の階級は写像しない(捏造回避)
+                try:
+                    vl_mrid[vid] = exporter.add_structure_level(
+                        s_i, site_name, vl_order[vid], float(kv))
+                except Exception:  # noqa: BLE001
+                    continue
+            for b_i, bb in enumerate(site.get("busbars") or []):
+                vid = bb.get("vl_id")
+                if vid not in vl_mrid:
+                    continue
+                inferred = not bb.get("osm_way_keys")
+                try:
+                    exporter.add_busbar_section(
+                        s_i, site_name, vl_order[vid], b_i,
+                        float(vls[vid].get("nominal_kv") or 0), vl_mrid[vid],
+                        inferred=inferred, evidence=bb.get("kv_evidence"))
+                    n_bb += 1
+                    n_bb_inf += 1 if inferred else 0
+                except Exception:  # noqa: BLE001
+                    continue
+            for y_i, bay in enumerate(site.get("bays") or []):
+                vid = bay.get("vl_id")
+                if vid not in vl_mrid:
+                    continue
+                try:
+                    exporter.add_bay(s_i, site_name, vl_order[vid], y_i,
+                                     vl_mrid[vid],
+                                     len(set(bay.get("busbar_ids") or [])))
+                    n_bay += 1
+                except Exception:  # noqa: BLE001
+                    continue
+    counts["busbar_sections"] = n_bb
+    counts["busbar_sections_inferred"] = n_bb_inf
+    counts["bays"] = n_bay
 
     os.makedirs(out_dir, exist_ok=True)
     eq_path = os.path.join(out_dir, f"{region}_EQ.xml")
