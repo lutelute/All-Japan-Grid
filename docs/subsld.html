@@ -65,7 +65,8 @@ const VC={500:"#d62728",275:"#ff7f0e",250:"#e377c2",220:"#e377c2",187:"#bcbd22",
 const vcol=k=>VC[k]||"#999";
 const REGIONS=["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
 let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
-const BUILT={};  // 地域別built(線形path付き)のオンデマンドキャッシュ
+const BUILT={};  // 地域別ways(実線形)のオンデマンドキャッシュ
+let RB=null;      // 地域bbox(越境ロード判定)
 const $=id=>document.getElementById(id);
 
 fetch("data/subsld_pages.json?v=3").then(r=>r.json()).then(j=>{
@@ -119,6 +120,11 @@ function select(s){
   </div>
   <div id="legend">実証ペア図（SubSLD法）: 全要素はOSMの証拠に遡れる。回線数=平行ストローク本数（下界推定・過大評価しない）。
    変圧器の無い電圧階級は「スルー」。流向は対向変電所の電圧階層による推定。<br>
+   <b>GeoPaneのマーカー</b>: <span style="color:#d62728">●</span> vertex（赤）=way頂点共有の最強証拠 ／
+   <span style="color:#1f77b4">■</span> polygon（青）=敷地内包（構内に多数表示されるもの） ／
+   <span style="color:#ff7f0e">▲</span> leadin（橙）=引込帯の弱い証拠（縁辺に並ぶ三角）。
+   いずれも白縁取りで衛星上でも視認可、端子のway端点（サイト側）に配置。
+   実線形（電圧色）・敷地黄縁・地理院写真と合わせて、PNG版GeoPaneの全要素をPages上で再現している。<br>
    証拠語彙（本手法の定義・OSM仕様ではない）: <b>vertex</b>=線wayが構内wayと頂点共有（最強）／
    <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。GeoPaneの線=OSM実線形（電圧階級色・無タグ=灰）。</div>`;
  drawGeo(s);drawSLD(s);
@@ -180,15 +186,28 @@ function drawGeo(s){
   ways.forEach(([k,pth])=>{
    if(!pth.some(pt=>pt[0]>=mla0&&pt[0]<=mla1&&pt[1]>=mlo0&&pt[1]<=mlo1)) return;
    const pts=pth.map(pt=>`${px(t2x(pt[1],z)).toFixed(1)},${py(t2y(pt[0],z)).toFixed(1)}`).join(" ");
-   const w=k>=187?2.8:(k?2:1.2);
+   const w=k>=187?2.8:(k?2:1.6);
    frag.push(`<polyline points="${pts}" fill="none" stroke="#000" stroke-width="${w+1.6}" opacity="0.4"/>`);
-   frag.push(`<polyline points="${pts}" fill="none" stroke="${k?vcol(k):"#cfcfd6"}" stroke-width="${w}" opacity="${k?1:0.8}"/>`);
+   frag.push(`<polyline points="${pts}" fill="none" stroke="${k?vcol(k):"#cfcfd6"}" stroke-width="${w}" opacity="${k?1:0.9}"/>`);
   });
   svg.insertAdjacentHTML("afterbegin",frag.join(""));
  };
- if(BUILT[s.r]) drawLines(BUILT[s.r]);
- else fetch(`data/subsld_ways/${s.r}.json?v=3`).then(r=>r.json())
-  .then(j=>{BUILT[s.r]=j.ways||[];drawLines(BUILT[s.r])}).catch(()=>{});
+ // region境界跨ぎ対応: 表示bboxに交差する全地域のwaysを読み込む
+ const loadWays=(reg)=>BUILT[reg]?Promise.resolve(BUILT[reg])
+  :fetch(`data/subsld_ways/${reg}.json?v=3`).then(r=>r.json())
+   .then(j=>(BUILT[reg]=j.ways||[])).catch(()=>[]);
+ const regsFor=()=>{
+  if(!RB) return [s.r];
+  const out=[];
+  for(const [rg,b] of Object.entries(RB)){
+   if(mla1>=b.lat_min&&mla0<=b.lat_max&&mlo1>=b.lon_min&&mlo0<=b.lon_max) out.push(rg);
+  }
+  return out.length?out:[s.r];
+ };
+ (RB?Promise.resolve(RB):fetch("data/built/regions_bbox.json").then(r=>r.json())
+   .then(j=>(RB=j.regions)).catch(()=>null))
+  .then(()=>Promise.all(regsFor().map(loadWays)))
+  .then(all=>drawLines([].concat(...all)));
 }
 
 /* ---------- SLDPane: SVG 単線結線図 ---------- */
