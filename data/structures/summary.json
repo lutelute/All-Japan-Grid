@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-27",
+ "generated": "2026-08-28",
  "regions": {
   "hokkaido": {
    "region": "hokkaido",
@@ -17,7 +17,7 @@
    "n_busbars": 627,
    "n_busbars_inferred": 0,
    "n_bays": 1911,
-   "n_transformers": 155,
+   "n_transformers": 154,
    "n_trafo_nameplate": 1,
    "sites_with_known_kv": 439,
    "n_connections": 807,
@@ -43,7 +43,7 @@
    "n_trafo_nameplate": 3,
    "sites_with_known_kv": 831,
    "n_connections": 1860,
-   "elapsed_s": 0.5
+   "elapsed_s": 0.6
   },
   "tokyo": {
    "region": "tokyo",
@@ -61,11 +61,11 @@
    "n_busbars": 1116,
    "n_busbars_inferred": 5,
    "n_bays": 718,
-   "n_transformers": 575,
+   "n_transformers": 574,
    "n_trafo_nameplate": 4,
    "sites_with_known_kv": 1569,
    "n_connections": 2974,
-   "elapsed_s": 1.0
+   "elapsed_s": 1.1
   },
   "chubu": {
    "region": "chubu",
@@ -83,7 +83,7 @@
    "n_busbars": 696,
    "n_busbars_inferred": 13,
    "n_bays": 872,
-   "n_transformers": 321,
+   "n_transformers": 320,
    "n_trafo_nameplate": 0,
    "sites_with_known_kv": 752,
    "n_connections": 1618,
@@ -105,11 +105,11 @@
    "n_busbars": 259,
    "n_busbars_inferred": 0,
    "n_bays": 611,
-   "n_transformers": 118,
+   "n_transformers": 117,
    "n_trafo_nameplate": 0,
    "sites_with_known_kv": 205,
    "n_connections": 446,
-   "elapsed_s": 0.1
+   "elapsed_s": 0.2
   },
   "kansai": {
    "region": "kansai",
@@ -153,7 +153,7 @@
    "n_trafo_nameplate": 0,
    "sites_with_known_kv": 427,
    "n_connections": 975,
-   "elapsed_s": 0.2
+   "elapsed_s": 0.3
   },
   "shikoku": {
    "region": "shikoku",
@@ -227,7 +227,7 @@
   "terminals": 47979,
   "busbars": 5228,
   "bays": 8753,
-  "transformers": 2590,
+  "transformers": 2586,
   "connections": 11586,
   "cross_region_alias_pairs": 1093
  }

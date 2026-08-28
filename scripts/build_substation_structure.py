@@ -27,6 +27,7 @@ from dataclasses import asdict
 from scripts.substation_scope import _font, _segments, _vclasses, load
 from src.model.substation_structure import (
     Bay,
+    SwitchSpec,
     BusbarSection,
     SubstationSite,
     SubstationStructure,
@@ -334,6 +335,36 @@ def extract_structure(region, ft, pways):
         structure.transformers.append(TransformerSpec(
             trafo_id=f"{site_id}/tr{i}", site_id=site_id,
             hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id))
+
+    # --- SwitchSpec: ベイから開閉点を導出(オーナー指示 2026-08-28
+    # 「開閉器などで経路を選択できるようにしたい」) ---
+    # OSM に breaker タグは通常無い。ここで主張するのは「このベイはどの母線区間と
+    # どの回線の間にあり、運用上そこが開閉点になりうる」という位置づけだけで、
+    # source="inferred-bay" として観測でないことを明示する。
+    _bay_terms = defaultdict(list)
+    for t in structure.terminals:
+        if t.attach_kind == "bay":
+            _bay_terms[t.attach_id].append(t)
+    _trafo_vls = {tr.hv_vl_id for tr in structure.transformers} | \
+                 {tr.lv_vl_id for tr in structure.transformers}
+    _sw_n = defaultdict(int)
+    for bay in structure.bays:
+        bbs = sorted(set(bay.busbar_ids))
+        terms = _bay_terms.get(bay.bay_id, [])
+        if len(bbs) >= 2:
+            kind, nopen = "coupler", True      # 母線連絡は常時開の運用が多い
+        elif terms:
+            kind, nopen = "feeder", False      # 回線引出は平常時投入
+        elif bay.vl_id in _trafo_vls:
+            kind, nopen = "trafo", False       # 変圧器引出
+        else:
+            continue                            # 端子も母線も無いベイは開閉点と見ない
+        _sw_n[bay.vl_id] += 1
+        structure.switches.append(SwitchSpec(
+            switch_id=f"{bay.vl_id}/sw{_sw_n[bay.vl_id]}", vl_id=bay.vl_id,
+            kind=kind, bay_id=bay.bay_id, busbar_ids=bbs,
+            line_keys=sorted({t.line_key for t in terms if t.line_key}),
+            normal_open=nopen, source="inferred-bay"))
 
     # --- 推定母線(inferred-topology, issue #49 設計 2026-08-27) ---
     # 母線wayゼロのVLに強束縛端子(vertex/polygon)が2本以上ある場合、内部共通母線の

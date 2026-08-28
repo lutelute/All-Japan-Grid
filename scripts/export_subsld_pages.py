@@ -164,6 +164,19 @@ def main() -> int:
                 vl_out[vl_id].append([label, min(g["par"], 8), dr,
                                       1 if g["lead"] else 0,
                                       g["bb"] if g["bb"] is not None else -1])
+            # 開閉器(ベイ由来・運用ビュー用): [kind, normal_open, 母線index列]
+            sw_out = defaultdict(list)
+            for sw in st.get("switches", []):
+                vid = sw.get("vl_id")
+                if vid not in vls:
+                    continue
+                secs = [bb_idx[vid][b] for b in (sw.get("busbar_ids") or [])
+                        if b in bb_idx.get(vid, {})]
+                sw_out[vid].append([
+                    {"coupler": 0, "feeder": 1, "trafo": 2}.get(sw.get("kind"), 1),
+                    1 if sw.get("normal_open") else 0,
+                    sorted(set(secs)),
+                ])
             tr_vls = set()
             trs = []
             for t in st.get("transformers", []):
@@ -175,6 +188,7 @@ def main() -> int:
                    "kv": sorted({round(v) for v in vls.values() if v},
                                 reverse=True),
                    "vl": [{"k": round(vls[vid]),
+                           "sw": sw_out.get(vid, []),
                            "b": len(bb_idx[vid]),   # 実母線数(0=なし→ビューアは推定破線)
                            "thru": 0 if vid in tr_vls else 1,
                            "g": gs}

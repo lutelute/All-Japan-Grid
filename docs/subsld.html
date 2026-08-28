@@ -52,6 +52,10 @@ a{color:var(--navy)}
 <header>
  <h1>SubSLD 変電所単線結線ビュー<small>実証ペア図・全国 <span id="cnt">…</span> 所（OSM=正・捏造ゼロ）</small></h1>
  <input id="q" placeholder="変電所名で検索（例: 新京葉）">
+ <span id="roles">
+  <span class="chip role on" data-role="control">制御所</span>
+  <span class="chip role" data-role="dispatch">中央給電指令所</span>
+ </span>
  <span id="chips"></span>
 </header>
 <div id="wrap">
@@ -68,9 +72,14 @@ let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
 const BUILT={};  // 地域別ways(実線形)のオンデマンドキャッシュ
 let RB=null;      // 地域bbox(越境ロード判定)
 let BASE="photo"; // GeoPane基図: photo=航空写真 / map=地理院地図
+// 運用ビュー(2026-08-28): 役割は2つ。
+//   control  = 制御所 … 1変電所の開閉器を操作し、母線の充電状態を見る
+//   dispatch = 中央給電指令所 … 全国/島を俯瞰し、開閉操作の影響範囲を見る
+let ROLE="control";
+let SWSTATE={};    // {site_id: {"<vl>/<i>": true(開) | false(閉)}} 平常時からの差分
 const $=id=>document.getElementById(id);
 
-fetch("data/subsld_pages.json?v=4").then(r=>r.json()).then(j=>{
+fetch("data/subsld_pages.json?v=5").then(r=>r.json()).then(j=>{
  DATA=j.sites;
  DATA.forEach(s=>{s._nl=(s.n||s.i);s._pr=(Math.max(...(s.kv.length?s.kv:[0])))*100+s.vl.reduce((a,v)=>a+v.g.length,0)});
  DATA.sort((a,b)=>b._pr-a._pr);
@@ -81,6 +90,10 @@ fetch("data/subsld_pages.json?v=4").then(r=>r.json()).then(j=>{
    [...ch.children].forEach(x=>x.classList.toggle("on",x.textContent===FILTER.r));
    render()};ch.appendChild(c)});
  $("q").addEventListener("input",e=>{FILTER.q=e.target.value.trim();render()});
+ document.querySelectorAll("#roles .role").forEach(el=>{
+  el.onclick=()=>{ROLE=el.dataset.role;
+   document.querySelectorAll("#roles .role").forEach(x=>x.classList.toggle("on",x===el));
+   if(ROLE==="dispatch") showDispatch(); else if(SEL) select(SEL);};});
  render();
  const first=DATA[0];if(first)select(first);
 });
@@ -117,8 +130,10 @@ function select(s){
    <div class="pane"><h3>GeoPane — 構内幾何（●vertex ■polygon ▲leadin）
      <button id="baseBtn" style="float:right;background:#26262e;color:#f2f1ec;border:1px solid #444;border-radius:5px;padding:1px 10px;font-size:11px;cursor:pointer"></button></h3>
     <div id="geo"></div></div>
-   <div class="pane"><h3>SLDPane — 単線結線図（上=流入/下=流出・推定、灰=対向不明、破線=leadin、二重円=変圧器）</h3>
-    <div id="sld"></div></div>
+   <div class="pane"><h3>SLDPane — 単線結線図（上=流入/下=流出・推定、灰=対向不明、破線=leadin、二重円=変圧器）<br>
+     <span style="color:#7a8ac9">制御所ビュー: □=開閉器（閉=塗り／開=斜線）をクリックで開閉。母線の明暗が充電状態</span></h3>
+    <div id="sld"></div>
+    <div id="opsNote" style="padding:6px 12px 10px;font-size:11px;color:var(--mut)"></div></div>
   </div>
   <div id="legend">実証ペア図（SubSLD法）: 全要素はOSMの証拠に遡れる。回線数=平行ストローク本数（下界推定・過大評価しない）。
    変圧器の無い電圧階級は「スルー」。流向は対向変電所の電圧階層による推定。<br>
@@ -129,7 +144,7 @@ function select(s){
    実線形（電圧色）・敷地黄縁・地理院写真と合わせて、PNG版GeoPaneの全要素をPages上で再現している。<br>
    証拠語彙（本手法の定義・OSM仕様ではない）: <b>vertex</b>=線wayが構内wayと頂点共有（最強）／
    <b>polygon</b>=線端が敷地ポリゴン内／<b>leadin</b>=敷地外0.6km以内で途切れる引込み（弱い証拠→破線表示）。GeoPaneの線=OSM実線形（電圧階級色・無タグ=灰）。</div>`;
- drawGeo(s);drawSLD(s);
+ drawGeo(s);drawSLD(s);updateOpsNote(s);
 }
 
 /* ---------- GeoPane: 地理院タイル + 敷地ポリゴン ---------- */
@@ -217,6 +232,98 @@ function drawGeo(s){
   .then(all=>drawLines([].concat(...all)));
 }
 
+/* ---------- 開閉器(制御所ビュー) ---------- */
+// 平常時状態 = データの normal_open。ユーザ操作は SWSTATE に差分として持つ。
+function swKey(vi,i){return vi+"/"+i}
+function swOpen(s,vi,i,sw){
+ const st=SWSTATE[s.i]; const k=swKey(vi,i);
+ return (st && k in st) ? st[k] : !!sw[1];
+}
+function swToggle(s,vi,i,sw){
+ const k=swKey(vi,i); SWSTATE[s.i]=SWSTATE[s.i]||{};
+ SWSTATE[s.i][k]=!swOpen(s,vi,i,sw);
+ drawSLD(s); updateOpsNote(s);
+}
+// 母線区間の充電状態: その区間に「閉」の引出(feeder/trafo)が1つでも繋がれば充電。
+// 母線連絡(coupler)が閉なら、繋がる区間どうしを同一系にまとめる(Union-Find)。
+function energized(s,vl,vi){
+ const n=Math.max(vl.b,1); const par=[...Array(n).keys()];
+ const find=x=>{while(par[x]!==x){par[x]=par[par[x]];x=par[x]}return x};
+ const uni=(a,b)=>{a=find(a);b=find(b);if(a!==b)par[a]=b};
+ (vl.sw||[]).forEach((sw,i)=>{
+  if(sw[0]===0 && !swOpen(s,vi,i,sw)){            // 閉じた母線連絡
+   const secs=sw[2]||[]; for(let j=1;j<secs.length;j++) uni(secs[0],secs[j]);
+  }});
+ const live=new Set();
+ (vl.sw||[]).forEach((sw,i)=>{
+  if(sw[0]!==0 && !swOpen(s,vi,i,sw)){            // 閉じた引出=給電あり
+   (sw[2]||[]).forEach(x=>live.add(find(x)));
+  }});
+ // 引出が1つも無い階級は、判定材料が無いので「不明」= 充電扱いにしない
+ const hasFeeder=(vl.sw||[]).some(sw=>sw[0]!==0);
+ return {live, find, hasFeeder, n};
+}
+function updateOpsNote(s){
+ const el=document.getElementById("opsNote"); if(!el) return;
+ let opened=0, tot=0;
+ s.vl.forEach((vl,vi)=>(vl.sw||[]).forEach((sw,i)=>{tot++; if(swOpen(s,vi,i,sw))opened++}));
+ const diff=SWSTATE[s.i]?Object.keys(SWSTATE[s.i]).length:0;
+ el.innerHTML=`開閉器 ${tot} 台中 <b>開 ${opened}</b> / 閉 ${tot-opened}`+
+  (diff?` ・ 平常時から <b style="color:var(--yel)">${diff}台</b> 操作` +
+        ` <button id="swReset" style="margin-left:8px;background:#26262e;color:#f2f1ec;border:1px solid #444;border-radius:4px;padding:1px 8px;font-size:11px;cursor:pointer">平常時に戻す</button>`:"");
+ const rb=document.getElementById("swReset");
+ if(rb) rb.onclick=()=>{delete SWSTATE[s.i];drawSLD(s);updateOpsNote(s)};
+}
+
+/* ---------- 中央給電指令所ビュー ---------- */
+function showDispatch(){
+ const byReg={};
+ DATA.forEach(s=>{
+  const r=byReg[s.r]=byReg[s.r]||{sites:0,sw:0,coupler:0,kvmax:0,ops:0};
+  // kv は数値配列。Math.max に文字列が混じると連結になるため Number 固定
+
+  r.sites++;
+  s.vl.forEach(vl=>{(vl.sw||[]).forEach(sw=>{r.sw++; if(sw[0]===0)r.coupler++})});
+  r.kvmax=Math.max(r.kvmax, ...(s.kv.length?s.kv.map(Number):[0]));
+  if(SWSTATE[s.i]) r.ops+=Object.keys(SWSTATE[s.i]).length;
+ });
+ const opsSites=Object.keys(SWSTATE).filter(k=>Object.keys(SWSTATE[k]).length);
+ const rows=REGIONS.filter(r=>byReg[r]).map(r=>{
+  const v=byReg[r];
+  return `<tr><td>${r}</td><td style="text-align:right">${v.sites.toLocaleString()}</td>
+   <td style="text-align:right">${v.sw.toLocaleString()}</td>
+   <td style="text-align:right">${v.coupler.toLocaleString()}</td>
+   <td style="text-align:right">${Number(v.kvmax)||0}kV</td>
+   <td style="text-align:right;color:${v.ops?"var(--yel)":"var(--mut)"}">${v.ops||"—"}</td></tr>`;
+ }).join("");
+ const opsList=opsSites.length?opsSites.map(k=>{
+  const s=DATA.find(x=>x.i===k); const n=Object.keys(SWSTATE[k]).length;
+  return `<li><a href="#" data-site="${k}">${s?s._nl:k}</a> — ${n}台操作中（${s?s.r:"?"}）</li>`;
+ }).join(""):`<li style="color:var(--mut)">平常時からの操作はありません</li>`;
+ $("detail").innerHTML=`
+  <div id="dhead"><span id="dname">中央給電指令所ビュー</span>
+   <span id="dmeta">全国 ${DATA.length.toLocaleString()} 変電所の開閉点を俯瞰し、操作中の所を追跡する</span></div>
+  <div class="pane" style="padding:14px 16px">
+   <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="color:var(--mut);font-size:11px;text-align:left">
+     <th>地域</th><th style="text-align:right">変電所</th><th style="text-align:right">開閉器</th>
+     <th style="text-align:right">母線連絡</th><th style="text-align:right">最高電圧</th>
+     <th style="text-align:right">操作中</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+  </div>
+  <div class="pane" style="padding:14px 16px;margin-top:14px">
+   <div style="font-size:13px;font-weight:bold;margin-bottom:6px">操作中の変電所</div>
+   <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.9">${opsList}</ul>
+  </div>
+  <div id="legend">開閉器はベイの位置づけから導いたもので（<code>inferred-bay</code>）、
+   遮断器そのものを観測したわけではありません。平常時の開閉状態も運用上の既定です。
+   制御所ビューで操作した内容はこの画面に集約されます（ブラウザ内のみ・保存されません）。</div>`;
+ document.querySelectorAll("#detail a[data-site]").forEach(a=>{
+  a.onclick=e=>{e.preventDefault();const s=DATA.find(x=>x.i===a.dataset.site);
+   if(s){ROLE="control";document.querySelectorAll("#roles .role").forEach(x=>
+    x.classList.toggle("on",x.dataset.role==="control"));select(s);}};});
+}
+
 /* ---------- SLDPane: SVG 単線結線図 ---------- */
 function drawSLD(s){
  const el=$("sld");const W=el.clientWidth||700;
@@ -239,10 +346,36 @@ function drawSLD(s){
   out.push(`<text x="118" y="${y+22}" text-anchor="end" font-size="9.5" fill="${col}">母線×${inferred?"推定":nsec}・${v.g.length}線・${tot}回線${v.thru&&s.tr.length?"・スルー":""}</text>`);
   if(v.thru&&!s.tr.length&&vi===0)
    out.push(`<text x="118" y="${y+34}" text-anchor="end" font-size="9" fill="#999">スルー/開閉(変圧器なし)</text>`);
-  // 母線セクション
+  // 母線セクション(制御所ビューでは充電状態で明暗を付ける)
+  const E=(ROLE==="control")?energized(s,v,vi):null;
   for(let i=0;i<nsec;i++){
    const xa=128+bw*i/nsec+(i?4:0),xb=128+bw*(i+1)/nsec;
-   out.push(`<line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" stroke="${col}" stroke-width="${inferred?3.5:5}" ${inferred?'stroke-dasharray="10 6" opacity="0.75"':''}/>`)}
+   let op=1, dash=inferred?'stroke-dasharray="10 6"':'';
+   if(E && E.hasFeeder && !E.live.has(E.find(i))) op=0.22;   // 無充電=薄く
+   out.push(`<line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" stroke="${col}" stroke-width="${inferred?3.5:5}" ${dash} opacity="${inferred?op*0.75:op}"/>`);
+   if(E && E.hasFeeder && !E.live.has(E.find(i)))
+    out.push(`<text x="${(xa+xb)/2}" y="${y-9}" text-anchor="middle" font-size="8" fill="#999">無充電</text>`);
+  }
+  // 開閉器(クリックで開閉)。□=閉(導通) / 斜線□=開
+  (v.sw||[]).forEach((sw,i)=>{
+   const isOpen=swOpen(s,vi,i,sw);
+   const kindLbl=["母線連絡","回線引出","変圧器引出"][sw[0]]||"開閉器";
+   const xs=(sw[2]&&sw[2].length)
+     ? sw[2].map(k=>128+bw*(k+0.5)/nsec)
+     : [128+bw*(i+0.5)/Math.max((v.sw||[]).length,1)];
+   const x=xs.reduce((a,b)=>a+b,0)/xs.length;
+   const yy=y+ (sw[0]===0 ? 26 : -26);
+   if(sw[0]===0 && xs.length>1){   // 母線連絡は区間どうしを結ぶ
+    out.push(`<line x1="${Math.min(...xs)}" y1="${yy}" x2="${Math.max(...xs)}" y2="${yy}" stroke="${col}" stroke-width="1.2" opacity="${isOpen?0.35:1}"/>`);
+    xs.forEach(xx=>out.push(`<line x1="${xx}" y1="${y}" x2="${xx}" y2="${yy}" stroke="${col}" stroke-width="1.2" opacity="${isOpen?0.35:1}"/>`));
+   } else {
+    out.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${yy}" stroke="${col}" stroke-width="1.2" opacity="${isOpen?0.35:1}"/>`);
+   }
+   out.push(`<g class="sw" data-vi="${vi}" data-i="${i}" style="cursor:pointer">`+
+     `<rect x="${x-5}" y="${yy-5}" width="10" height="10" fill="${isOpen?"#fff":col}" stroke="${col}" stroke-width="1.6"/>`+
+     (isOpen?`<line x1="${x-5}" y1="${yy+5}" x2="${x+5}" y2="${yy-5}" stroke="${col}" stroke-width="1.4"/>`:``)+
+     `<title>${kindLbl} — ${isOpen?"開":"閉"}（クリックで切替）</title></g>`);
+  });
   if(inferred) out.push(`<text x="${128+bw/2}" y="${y+16}" text-anchor="middle" font-size="8.5" fill="#999">推定母線（OSMにbusbar way無し — issue #49）</text>`);
   if(s.tr.length)
    out.push(`<line x1="${128+bw}" y1="${y}" x2="${trx0+s.tr.length*34}" y2="${y}" stroke="${col}" stroke-width="1" opacity="0.5"/>`);
@@ -280,6 +413,9 @@ function drawSLD(s){
   out.push(`<text x="${x+13}" y="${ym+3}" font-size="9" fill="#444">tr${ti+1}${t[2]>1?`×${t[2]}`:""}</text>`);
  });
  el.innerHTML=`<svg width="100%" viewBox="0 0 ${Math.max(W,trx0+s.tr.length*34+30)} ${H}" xmlns="http://www.w3.org/2000/svg">${out.join("")}</svg>`;
+ if(ROLE==="control") el.querySelectorAll("g.sw").forEach(g=>{
+  g.onclick=()=>{const vi=+g.dataset.vi,i=+g.dataset.i;
+   swToggle(s,vi,i,s.vl[vi].sw[i]);};});
 }
 window.addEventListener("resize",()=>{if(SEL){drawGeo(SEL);drawSLD(SEL)}});
 </script>

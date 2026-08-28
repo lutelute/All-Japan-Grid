@@ -520,6 +520,56 @@ class CimExporter:
                           "Terminal.ConnectivityNode": cn})
         return m
 
+    def add_switch(self, site_idx: int, site_name: str, vl_idx: int,
+                   sw_idx: int, spec: dict, vl_mrid: str,
+                   bay_mrid: Optional[str] = None) -> str:
+        """SwitchSpec 1件を cim:Breaker として写像する。
+
+        誠実性の規約: OSM に breaker タグは無く、**開閉器を観測したわけではない**。
+        ベイの位置づけから導いたものなので description にその旨と種別を貫通させる。
+        normalOpen は運用上の既定(母線連絡は常時開が多い)であって事実ではない。
+        """
+        m = mrid("switch", self.region, site_idx, vl_idx, sw_idx)
+        kind = spec.get("kind") or "?"
+        label = {"coupler": "母線連絡", "feeder": "回線引出",
+                 "trafo": "変圧器引出"}.get(kind, kind)
+        attrs: Dict[str, object] = {
+            "IdentifiedObject.name": f"{site_name} {label}{sw_idx + 1}",
+            "IdentifiedObject.mRID": m,
+            "Switch.normalOpen": bool(spec.get("normal_open")),
+            "IdentifiedObject.description": (
+                f"inferred-bay (SubSLD): derived from bay position ({kind}); "
+                "not an observed breaker. normalOpen is an operating default."),
+        }
+        refs = {"Equipment.EquipmentContainer": bay_mrid or vl_mrid}
+        self.eq.obj("Breaker", m, attrs=attrs, refs=refs)
+        return m
+
+    def add_tap_changer(self, site_idx: int, t_idx: int, spec: dict,
+                        end_mrid: str) -> Optional[str]:
+        """出典付き tap がある変圧器にだけ RatioTapChanger を付ける。
+
+        **合成値は書かない** — tap は電気定数であり、モデルには出典のあるものだけ
+        載せる規約(substation_structure.py の Fabrication rules)。潮流層が使う
+        クラス標準値はここには来ない。
+        """
+        lo, hi = spec.get("tap_min"), spec.get("tap_max")
+        if lo is None or hi is None:
+            return None
+        m = mrid("tapchanger", self.region, site_idx, t_idx)
+        attrs: Dict[str, object] = {
+            "IdentifiedObject.mRID": m,
+            "TapChanger.lowStep": lo, "TapChanger.highStep": hi,
+        }
+        if spec.get("tap_neutral") is not None:
+            attrs["TapChanger.neutralStep"] = spec["tap_neutral"]
+        if spec.get("tap_step_percent") is not None:
+            attrs["RatioTapChanger.stepVoltageIncrement"] = \
+                spec["tap_step_percent"]
+        self.eq.obj("RatioTapChanger", m, attrs=attrs,
+                    refs={"RatioTapChanger.TransformerEnd": end_mrid})
+        return m
+
     def add_bay(self, site_idx: int, site_name: str, vl_idx: int,
                 bay_idx: int, vl_mrid: str, n_busbars: int = 0) -> str:
         """Bay 1件を写像する。2母線以上に接するベイは連結器候補として名前に開示。"""
@@ -608,7 +658,7 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
     # (Phase 1-C)。スキーマは設計時から CIM 整合(substation_structure.py の
     # docstring 参照)なので、ここは素直な 1:1 写像になる。推定母線は
     # description に「推定」と根拠を貫通させる(捏造ゼロの下流貫通)。
-    n_bb = n_bb_inf = n_bay = 0
+    n_bb = n_bb_inf = n_bay = n_sw = 0
     if os.path.exists(st_path):
         for s_i, site in enumerate(st.get("structures", [])):
             site_name = (site.get("site") or {}).get("name") or f"site{s_i}"
@@ -638,20 +688,34 @@ def export_region(region: str, data_dir: str, out_dir: str) -> dict:
                     n_bb_inf += 1 if inferred else 0
                 except Exception:  # noqa: BLE001
                     continue
+            bay_mrid = {}
             for y_i, bay in enumerate(site.get("bays") or []):
                 vid = bay.get("vl_id")
                 if vid not in vl_mrid:
                     continue
                 try:
-                    exporter.add_bay(s_i, site_name, vl_order[vid], y_i,
-                                     vl_mrid[vid],
-                                     len(set(bay.get("busbar_ids") or [])))
+                    bay_mrid[bay.get("bay_id")] = exporter.add_bay(
+                        s_i, site_name, vl_order[vid], y_i, vl_mrid[vid],
+                        len(set(bay.get("busbar_ids") or [])))
                     n_bay += 1
+                except Exception:  # noqa: BLE001
+                    continue
+            # 開閉器(ベイ由来・観測ではない)
+            for w_i, sw in enumerate(site.get("switches") or []):
+                vid = sw.get("vl_id")
+                if vid not in vl_mrid:
+                    continue
+                try:
+                    exporter.add_switch(
+                        s_i, site_name, vl_order[vid], w_i, sw, vl_mrid[vid],
+                        bay_mrid.get(sw.get("bay_id")))
+                    n_sw += 1
                 except Exception:  # noqa: BLE001
                     continue
     counts["busbar_sections"] = n_bb
     counts["busbar_sections_inferred"] = n_bb_inf
     counts["bays"] = n_bay
+    counts["switches"] = n_sw
 
     os.makedirs(out_dir, exist_ok=True)
     eq_path = os.path.join(out_dir, f"{region}_EQ.xml")
