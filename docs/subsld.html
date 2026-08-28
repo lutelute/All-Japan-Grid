@@ -71,6 +71,9 @@ const REGIONS=["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku"
 let DATA=[],FILTER={q:"",r:null},shown=0,SEL=null;
 const BUILT={};  // 地域別ways(実線形)のオンデマンドキャッシュ
 let RB=null;      // 地域bbox(越境ロード判定)
+let LOOPS=null;   // ループ(閉路)構造。中央給電指令所ビューと制御所の注記で使う
+fetch("data/loops.json?v=1").then(r=>r.json()).then(j=>{LOOPS=j;
+ if(ROLE==="dispatch") showDispatch(); else if(SEL) updateOpsNote(SEL);}).catch(()=>{});
 let BASE="photo"; // GeoPane基図: photo=航空写真 / map=地理院地図
 // 運用ビュー(2026-08-28): 役割は2つ。
 //   control  = 制御所 … 1変電所の開閉器を操作し、母線の充電状態を見る
@@ -263,12 +266,30 @@ function energized(s,vl,vi){
  const hasFeeder=(vl.sw||[]).some(sw=>sw[0]!==0);
  return {live, find, hasFeeder, n};
 }
+// この変電所がループ(閉路)の中にあるか。座標一致で loops.json を引く
+function loopInfo(s){
+ if(!LOOPS) return null;
+ // 構造DBの座標は敷地重心、loops.json は built のノード座標なので数十m ずれる。
+ // 約200m 以内で最も近いものを採り、同一所の複数電圧ノードは
+ // 「1つでもループ内なら ループ内」とみなす(運用上、迂回経路の有無が知りたい)
+ let best=null, bd=Infinity, any=false, hit=false;
+ for(const x of LOOPS.sites){
+  const d=Math.abs(x.la-s.la)+Math.abs(x.lo-s.lo);
+  if(d<0.002){ hit=true; if(!x.br) any=true; if(d<bd){bd=d;best=x;} }
+ }
+ return hit ? {...best, br: any?0:1} : null;
+}
 function updateOpsNote(s){
  const el=document.getElementById("opsNote"); if(!el) return;
  let opened=0, tot=0;
  s.vl.forEach((vl,vi)=>(vl.sw||[]).forEach((sw,i)=>{tot++; if(swOpen(s,vi,i,sw))opened++}));
  const diff=SWSTATE[s.i]?Object.keys(SWSTATE[s.i]).length:0;
- el.innerHTML=`開閉器 ${tot} 台中 <b>開 ${opened}</b> / 閉 ${tot-opened}`+
+ const li=loopInfo(s);
+ const loopTxt = li ? (li.br
+   ? ` ・ <span style="color:var(--mut)">ループ外（放射状：この所を切ると下位が停電）</span>`
+   : ` ・ <span style="color:#4caf50">ループ内（別経路あり：開放しても迂回できる）</span>`)
+   : "";
+ el.innerHTML=`開閉器 ${tot} 台中 <b>開 ${opened}</b> / 閉 ${tot-opened}`+loopTxt+
   (diff?` ・ 平常時から <b style="color:var(--yel)">${diff}台</b> 操作` +
         ` <button id="swReset" style="margin-left:8px;background:#26262e;color:#f2f1ec;border:1px solid #444;border-radius:4px;padding:1px 8px;font-size:11px;cursor:pointer">平常時に戻す</button>`:"");
  const rb=document.getElementById("swReset");
@@ -311,6 +332,26 @@ function showDispatch(){
      <th style="text-align:right">操作中</th></tr></thead>
     <tbody>${rows}</tbody></table>
   </div>
+  ${LOOPS?`<div class="pane" style="padding:14px 16px;margin-top:14px">
+   <div style="font-size:13px;font-weight:bold;margin-bottom:6px">ループ（閉路）構造 — 系統の環状度合い</div>
+   <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="color:var(--mut);font-size:11px;text-align:left">
+     <th>同期島</th><th style="text-align:right">節点</th><th style="text-align:right">枝</th>
+     <th style="text-align:right">独立ループ</th><th style="text-align:right">ループ率</th>
+     <th style="text-align:right">連結成分</th></tr></thead>
+    <tbody>${Object.entries(LOOPS.islands).map(([k,v])=>
+     `<tr><td>${k}</td><td style="text-align:right">${v.V.toLocaleString()}</td>
+      <td style="text-align:right">${v.E.toLocaleString()}</td>
+      <td style="text-align:right"><b>${v.circuit_rank.toLocaleString()}</b></td>
+      <td style="text-align:right">${(v.loop_ratio*100).toFixed(1)}%</td>
+      <td style="text-align:right;color:var(--mut)">${v.components}</td></tr>`).join("")}</tbody></table>
+   <div style="color:var(--mut);font-size:11px;margin-top:8px">
+    独立ループ数 = 枝 − 節点 + 連結成分（circuit rank）。ループが多いほど迂回経路があり、
+    1本の開放で停電しにくい。ループ外（周囲がすべて橋）の変電所は
+    <b>${LOOPS.sites.filter(x=>x.br).length.toLocaleString()}</b> / ${LOOPS.n_sites.toLocaleString()} 所。
+    ただし OSM 欠測で切れて見える箇所も橋として現れるため、放射状に見えても実系統では
+    ループしている場合がある（issue #49）。</div>
+  </div>`:""}
   <div class="pane" style="padding:14px 16px;margin-top:14px">
    <div style="font-size:13px;font-weight:bold;margin-bottom:6px">操作中の変電所</div>
    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.9">${opsList}</ul>

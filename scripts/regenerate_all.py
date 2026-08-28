@@ -76,6 +76,9 @@ STEPS = [
                       "scripts/export_subsld_pages.py"], False),
     ("subsld_ways", [sys.executable,
                      "scripts/export_subsld_ways.py"], False),
+    # ループ(閉路)構造(オーナー指示 2026-08-28「ループとかも見れるの?」)。
+    # circuit_rank=E-V+C と橋判定。開閉操作の意味(迂回できるか)を読むのに使う
+    ("loops", [sys.executable, "scripts/export_loops.py"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
