@@ -32,6 +32,7 @@ TARGETS=(
   "dist/cim_level2"           # CGMES Level-2(EQ/TP/SSH/SV・解ける潮流ケース)
   "dist/matpower_canonical"   # MATPOWER 正典エクスポート
   "data/structures"           # 変電所構造DB(node-breaker)
+  "data/subsld"               # 実証ペア図ギャラリー(7,239所・745MB・再生成に約1時間)
   "data/osm_raw_towers"       # OSM 鉄塔(Overpass生)
   "docs/data/powerflow_full"  # 全国潮流の結果
   "docs/data/flow_map"        # 潮流方向マップ(NOW断面+日別断面)

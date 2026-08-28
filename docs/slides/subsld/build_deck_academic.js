@@ -108,7 +108,7 @@ if (TITLE_LAYOUT === "band") {
   ], { x: 0.7, y: 1.7, w: 5.9, h: 4.4, fontFace: F, fontSize: 14,
     color: INK, lineSpacing: 23, margin: 0, valign: "top" });
   const cons = [
-    ["C1", "全国6,956変電所の内部構造（母線・ベイ・端子・変圧器）をOSM実証拠のみから決定的に抽出"],
+    ["C1", "全国7,239変電所の内部構造（母線・ベイ・端子・変圧器）をOSM実証拠のみから決定的に抽出"],
     ["C2", "回線数・導体数を線タグから変電所単位に集約（証拠と推計を分離保持）"],
     ["C3", "構内幾何×単線結線図の「実証ペア図」を全所自動生成（衛星重畳・根拠付き）"],
     ["C4", "捏造ゼロ・全端子根拠・推定明記・再現可能という検証可能性の設計"],
@@ -196,7 +196,7 @@ if (TITLE_LAYOUT === "band") {
   data(6.9, 3.3, 2.55, 1.0, "substation_properties\n（5,920サイト）+ sub_props", 10.5);
   // 段3
   proc(10.1, 1.85, 2.45, 0.95, "③ SubSLD 描画\nGeoPane × SLDPane");
-  data(10.05, 3.3, 2.55, 1.0, "実証ペア図 PNG\n× 6,956所", 11);
+  data(10.05, 3.3, 2.55, 1.0, "実証ペア図 PNG\n× 7,239所", 11);
   arrow(3.2, 2.32, 3.82, 2.32);
   arrow(5.02, 2.82, 5.02, 3.28);
   arrow(6.22, 2.32, 6.97, 2.32);
@@ -524,7 +524,7 @@ if (TITLE_LAYOUT === "band") {
 // ---------- 10. 結果: 全国適用 ----------
 {
   const s = pres.addSlide(); base(s);
-  head(s, "9", "RESULTS", "全国適用 — 10地域・6,956所を同一コードで処理");
+  head(s, "9", "RESULTS", "全国適用 — 10地域・7,239所を同一コードで処理");
   const gs = [
     ["assets/tile_miyagi.png", "宮城（東北）500/275/154/66"],
     ["assets/tile_minamihayakita.png", "南早来（北海道）275/187/66"],
@@ -551,9 +551,9 @@ if (TITLE_LAYOUT === "band") {
     s.addText(v,{x,y:1.5,w:3.9,h:0.75,fontFace:FL,fontSize:38,bold:true,color:c,margin:0});
     s.addText(l,{x:x+0.04,y:2.28,w:4.0,h:0.42,fontFace:F,fontSize:11.5,color:MUT,margin:0});
   };
-  stat(0.7,"6,956","対象変電所（構造抽出は全数・エラー0）",INK);
+  stat(0.7,"7,239","対象変電所（構造抽出は全数・エラー0）",INK);
   stat(5.0,"68.2%","回線数のOSM証拠被覆（27,352/40,087線）",NAVY);
-  stat(9.3,"14.2%","母線way記載率（985/6,956・issue #49）",V500);
+  stat(9.3,"14.2%","母線way記載率（issue #49 の測定値）",V500);
   // 積み上げバー2本(実測)
   const sbar=(y,parts)=>{
     let x=0.7;

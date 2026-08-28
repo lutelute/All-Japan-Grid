@@ -95,6 +95,13 @@ dist/cim/*_GL.xml
 !dist/cim/okinawa_GL.xml
 dist/cim/*.zip
 
+# MATPOWER 正典エクスポート（18MB・scripts/export_national_matpower.py で再生成）
+dist/matpower_canonical/
+
+# SubSLD 実証ペア図ギャラリー（745MB / 7,239所ぶんのPNG。
+# scripts/build_substation_structure.py --fig で再生成、実物は nas03 に退避）
+data/subsld/
+
 # Level-2 CGMES (EQ/TP/SSH/SV/GL per region; regenerate via export_cim_level2.py)
 dist/cim_level2/*.xml
 !dist/cim_level2/okinawa_L2_EQ.xml
@@ -158,6 +165,9 @@ dataset/03_sensitivity_screening/screening_*.csv
 docs/data/built/all.json.pre_worklist.bak
 docs/data/built/all.json.pre_v2.bak
 docs/data/built/all.json.pre_route.bak
+docs/data/built/all.json.pre_hygiene.bak
+docs/data/built/all.json.pre_frag.bak
+docs/data/built/all.json.pre_frag2.bak
 data/osm_refresh/
 ~$*
 docs/data/powerjp/
