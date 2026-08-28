@@ -5011,6 +5011,13 @@
     <cim:IdentifiedObject.mRID>94e8bf9b-2334-5440-bc95-a07f7fe050f8</cim:IdentifiedObject.mRID>
     <cim:Bay.VoltageLevel rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
   </cim:Bay>
+  <cim:Breaker rdf:ID="_75181d0e-e9b2-53ad-ba80-700c2070a21b">
+    <cim:IdentifiedObject.name>友寄変電所 回線引出1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>75181d0e-e9b2-53ad-ba80-700c2070a21b</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_94e8bf9b-2334-5440-bc95-a07f7fe050f8"/>
+  </cim:Breaker>
   <cim:VoltageLevel rdf:ID="_8f179e63-2be6-5369-a9a0-d0356d186570">
     <cim:IdentifiedObject.name>佐敷変電所 66kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8f179e63-2be6-5369-a9a0-d0356d186570</cim:IdentifiedObject.mRID>
@@ -5192,6 +5199,55 @@
     <cim:IdentifiedObject.mRID>42554961-d6ca-5039-8eb0-d2597c232335</cim:IdentifiedObject.mRID>
     <cim:Bay.VoltageLevel rdf:resource="#_4b9e6ded-9319-58ac-854d-f6fc4ed7400d"/>
   </cim:Bay>
+  <cim:Breaker rdf:ID="_986fda48-f9c2-5675-af10-91b5dcfd886f">
+    <cim:IdentifiedObject.name>西原変電所 回線引出1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>986fda48-f9c2-5675-af10-91b5dcfd886f</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_9b37dd1e-06cf-5b49-a02a-c3d46619dd04"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_f97f781e-cc7d-566f-904f-5e35ad0eac6b">
+    <cim:IdentifiedObject.name>西原変電所 回線引出2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f97f781e-cc7d-566f-904f-5e35ad0eac6b</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_5fd881d4-5495-5f0c-b93e-199af829e681"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_51a0aa46-1320-596c-8540-a3bbfd2b9b3e">
+    <cim:IdentifiedObject.name>西原変電所 回線引出3</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>51a0aa46-1320-596c-8540-a3bbfd2b9b3e</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_29ab8a7f-f0b7-5486-9c1c-6caf0c011b30"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_7ac24d90-a9e8-5ba2-bb37-fcdf4cb7a07b">
+    <cim:IdentifiedObject.name>西原変電所 回線引出4</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>7ac24d90-a9e8-5ba2-bb37-fcdf4cb7a07b</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_de2e9367-f0fa-5644-971e-4b943a7f65e0"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_4315ecb0-f3ee-5fb7-bc09-742b2455bccb">
+    <cim:IdentifiedObject.name>西原変電所 変圧器引出5</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>4315ecb0-f3ee-5fb7-bc09-742b2455bccb</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_171e7666-1792-519a-a422-49323e75b733"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_ddc551d0-6e77-5c14-a64e-514cd7ee2212">
+    <cim:IdentifiedObject.name>西原変電所 変圧器引出6</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ddc551d0-6e77-5c14-a64e-514cd7ee2212</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_903ebd46-7ec4-5e52-be21-272e84b6cc6a"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_d6ff656f-3719-5f33-a032-9edd9c7cfa14">
+    <cim:IdentifiedObject.name>西原変電所 変圧器引出7</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d6ff656f-3719-5f33-a032-9edd9c7cfa14</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_42554961-d6ca-5039-8eb0-d2597c232335"/>
+  </cim:Breaker>
   <cim:VoltageLevel rdf:ID="_d8ccb561-7cb5-5dc8-a00c-375b38ce4f7c">
     <cim:IdentifiedObject.name>上田変電所 66kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>d8ccb561-7cb5-5dc8-a00c-375b38ce4f7c</cim:IdentifiedObject.mRID>
@@ -5279,6 +5335,55 @@
     <cim:IdentifiedObject.mRID>4b6fbfbf-d1de-589c-b9d0-b150e95280f5</cim:IdentifiedObject.mRID>
     <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
   </cim:Bay>
+  <cim:Breaker rdf:ID="_5e48c682-94c3-5d09-8e6d-1255f0c23555">
+    <cim:IdentifiedObject.name>津花波変電所 回線引出1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5e48c682-94c3-5d09-8e6d-1255f0c23555</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_968f5a1f-0b01-5d5b-8bf6-bb44a9402b24"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_ed10d7a9-5d42-521a-890a-cd731a2d2b14">
+    <cim:IdentifiedObject.name>津花波変電所 回線引出2</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ed10d7a9-5d42-521a-890a-cd731a2d2b14</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3ede67bb-9ea9-5c05-9474-6787344c0282"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_00929e27-8ab6-5ed2-821a-45741f004a66">
+    <cim:IdentifiedObject.name>津花波変電所 回線引出3</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>00929e27-8ab6-5ed2-821a-45741f004a66</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_81fd1b78-0e58-56df-93ad-3141ad4a80a3"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_fa8fc801-2a15-58a9-8cde-55b5b06703a2">
+    <cim:IdentifiedObject.name>津花波変電所 回線引出4</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>fa8fc801-2a15-58a9-8cde-55b5b06703a2</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_e91bb18f-d31a-55da-9e59-96f487d531dc"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_d3279006-8f89-50a0-a93d-4d0b9e417e48">
+    <cim:IdentifiedObject.name>津花波変電所 変圧器引出5</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d3279006-8f89-50a0-a93d-4d0b9e417e48</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_7f27cfdd-890f-50d3-8a5d-5fd110c26529">
+    <cim:IdentifiedObject.name>津花波変電所 変圧器引出6</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>7f27cfdd-890f-50d3-8a5d-5fd110c26529</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_bebc25f8-bf8f-5d42-8c14-3094b19d4eaf"/>
+  </cim:Breaker>
+  <cim:Breaker rdf:ID="_0f468dfb-5eb2-5d8b-9603-5f02f4cf3c1b">
+    <cim:IdentifiedObject.name>津花波変電所 変圧器引出7</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>0f468dfb-5eb2-5d8b-9603-5f02f4cf3c1b</cim:IdentifiedObject.mRID>
+    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
+    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_4b6fbfbf-d1de-589c-b9d0-b150e95280f5"/>
+  </cim:Breaker>
   <cim:VoltageLevel rdf:ID="_fd387c24-c445-5251-93f5-8b7ac9c5dc2b">
     <cim:IdentifiedObject.name>壷川変電所 66kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>fd387c24-c445-5251-93f5-8b7ac9c5dc2b</cim:IdentifiedObject.mRID>

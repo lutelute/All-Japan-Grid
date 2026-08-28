@@ -8,11 +8,6 @@
     "TP_BD": "boundary"
   },
   "boundary_voltages_kv": [
-    27500066.0,
-    15400077.0,
-    15400066.0,
-    660001.0,
-    330006.0,
     500.0,
     275.0,
     250.0,
@@ -55,7 +50,7 @@
     "substations": 7240,
     "lines": 40087,
     "plants": 19138,
-    "transformers": 2590
+    "transformers": 2586
   },
   "regions": [
     {
@@ -64,15 +59,15 @@
         "substations": 488,
         "lines": 4591,
         "plants": 436,
-        "transformers": 155,
+        "transformers": 154,
         "busbar_sections": 613,
         "busbar_sections_inferred": 92,
-        "bays": 1886
+        "bays": 1886,
+        "switches": 1732
       },
-      "eq_objects": 29857,
+      "eq_objects": 31581,
       "gl_objects": 59313,
       "base_voltages_kv": [
-        330006.0,
         500.0,
         275.0,
         250.0,
@@ -99,9 +94,10 @@
         "transformers": 508,
         "busbar_sections": 739,
         "busbar_sections_inferred": 343,
-        "bays": 1964
+        "bays": 1964,
+        "switches": 1895
       },
-      "eq_objects": 45590,
+      "eq_objects": 47485,
       "gl_objects": 76674,
       "base_voltages_kv": [
         500.0,
@@ -132,17 +128,15 @@
         "substations": 1783,
         "lines": 8335,
         "plants": 7207,
-        "transformers": 575,
+        "transformers": 574,
         "busbar_sections": 1035,
         "busbar_sections_inferred": 793,
-        "bays": 710
+        "bays": 710,
+        "switches": 706
       },
-      "eq_objects": 62632,
+      "eq_objects": 63330,
       "gl_objects": 93403,
       "base_voltages_kv": [
-        27500066.0,
-        15400066.0,
-        660001.0,
         500.0,
         275.0,
         154.0,
@@ -170,15 +164,15 @@
         "substations": 1172,
         "lines": 6235,
         "plants": 3792,
-        "transformers": 321,
+        "transformers": 320,
         "busbar_sections": 575,
         "busbar_sections_inferred": 302,
-        "bays": 848
+        "bays": 848,
+        "switches": 841
       },
-      "eq_objects": 43471,
+      "eq_objects": 44304,
       "gl_objects": 90636,
       "base_voltages_kv": [
-        15400077.0,
         500.0,
         275.0,
         200.0,
@@ -207,15 +201,15 @@
         "substations": 271,
         "lines": 2196,
         "plants": 432,
-        "transformers": 118,
+        "transformers": 117,
         "busbar_sections": 249,
         "busbar_sections_inferred": 94,
-        "bays": 611
+        "bays": 611,
+        "switches": 607
       },
-      "eq_objects": 14537,
+      "eq_objects": 15136,
       "gl_objects": 26338,
       "base_voltages_kv": [
-        15400077.0,
         500.0,
         275.0,
         200.0,
@@ -240,9 +234,10 @@
         "transformers": 297,
         "busbar_sections": 410,
         "busbar_sections_inferred": 159,
-        "bays": 654
+        "bays": 654,
+        "switches": 652
       },
-      "eq_objects": 28334,
+      "eq_objects": 28986,
       "gl_objects": 53227,
       "base_voltages_kv": [
         500.0,
@@ -274,9 +269,10 @@
         "transformers": 195,
         "busbar_sections": 413,
         "busbar_sections_inferred": 172,
-        "bays": 679
+        "bays": 679,
+        "switches": 653
       },
-      "eq_objects": 21884,
+      "eq_objects": 22537,
       "gl_objects": 43896,
       "base_voltages_kv": [
         500.0,
@@ -311,9 +307,10 @@
         "transformers": 63,
         "busbar_sections": 174,
         "busbar_sections_inferred": 82,
-        "bays": 349
+        "bays": 349,
+        "switches": 348
       },
-      "eq_objects": 10082,
+      "eq_objects": 10430,
       "gl_objects": 19538,
       "base_voltages_kv": [
         500.0,
@@ -338,9 +335,10 @@
         "transformers": 336,
         "busbar_sections": 518,
         "busbar_sections_inferred": 240,
-        "bays": 759
+        "bays": 759,
+        "switches": 725
       },
-      "eq_objects": 26944,
+      "eq_objects": 27669,
       "gl_objects": 50709,
       "base_voltages_kv": [
         500.0,
@@ -369,9 +367,10 @@
         "transformers": 22,
         "busbar_sections": 17,
         "busbar_sections_inferred": 12,
-        "bays": 15
+        "bays": 15,
+        "switches": 15
       },
-      "eq_objects": 1037,
+      "eq_objects": 1052,
       "gl_objects": 1715,
       "base_voltages_kv": [
         132.0,
