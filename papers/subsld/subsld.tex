@@ -365,7 +365,7 @@ Evidence-bound terminals & 47{,}979 \\
 Busbar sections (observed) & 2{,}559 \\
 Busbar sections (inferred, marked) & 2{,}669 \\
 Bays & 8{,}753 \\
-Transformers (structural) & 2{,}590 \\
+Transformers (structural) & 2{,}586 \\
 Site-to-site connections derived & 11{,}586 \\
 Extraction time (whole country) & $\approx 4$\,s \\
 Paired-figure rendering & 1--6\,s per site \\
@@ -435,7 +435,7 @@ transmission substations that lack busbar ways, using their own SubSLD GeoPanes
 over aerial imagery. Nine ($64\,\%$) show outdoor air-insulated busbars and bay
 rows plainly visible from above---mappable omissions. One has in-yard ways and
 vertex-shared terminals but no \texttt{line=busbar} tag, i.e.\ a tagging omission
-repairable without new geometry. The remaining five are gas-insulated or indoor
+repairable without new geometry. The remaining four are gas-insulated or indoor
 installations in which no busbar exists as a visible line and for which the
 inferred-busbar mechanism is the appropriate answer.
 
@@ -464,11 +464,19 @@ VoltageLevel     & \texttt{cim:VoltageLevel}    & per site, per class \\
 BusbarSection    & \texttt{cim:BusbarSection}   & 4{,}743 \\
 \quad of which inferred & (flagged, see text)   & 2{,}289 \\
 Bay              & \texttt{cim:Bay}             & 8{,}475 \\
-TransformerSpec  & \texttt{cim:PowerTransformer} & 2{,}590 \\
+TransformerSpec  & \texttt{cim:PowerTransformer} & 2{,}586 \\
 Terminal         & \texttt{cim:Terminal}        & with \texttt{ConnectivityNode} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+The counts in Table~\ref{tab:cim} are lower than the corresponding rows of
+Table~\ref{tab:scale} (4{,}743 versus 5{,}228 busbar sections, 8{,}475 versus
+8{,}753 bays). The difference is deliberate: a voltage level whose magnitude
+could not be established is not serialised, because CGMES would require a
+\texttt{BaseVoltage} that we do not have. Rather than invent one, those
+containers---and the equipment inside them---are left out of the export and
+remain visible only in the structure database.
 
 Two points of discipline carry over into the export. First, a bay touching two
 busbar sections of the same voltage level is a coupler candidate, and this is
