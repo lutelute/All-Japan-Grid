@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>jp.ac.u-fukui.alljapangrid.realtime</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/scripts/realtime_cycle.sh</string>
+  </array>
+  <!-- 1時間ごと。でんき予報の実績が毎時更新なので30分間隔にしても新しい断面は増えず、
+       commit だけが倍になる。Macがスリープしていた場合は復帰後に1回だけ走る -->
+  <key>StartInterval</key><integer>3600</integer>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/data/realtime/launchd.log</string>
+  <key>StandardErrorPath</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/data/realtime/launchd.log</string>
+  <key>WorkingDirectory</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid</string>
+  <!-- PATH: python3/git を launchd の最小環境でも見つけられるように -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>
