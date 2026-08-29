@@ -520,23 +520,68 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("7,239 は構造DBのサイト数で、第1幕の 6,962（データセットfeature・v1.2測定）とは定義が違う — 聞かれたら即答する。深掘りは姉妹デッキへ誘導。");
 }
 
-/* ===================== 15. 終幕: UC→潮流→AGC ===================== */
+/* ===================== 15. 終幕: AGCとは ===================== */
 {
   const s = pres.addSlide(); base(s);
-  head(s, "終幕 v1.9へ", "計画から制御まで：UC → 潮流 → AGC が同一断面で閉じた", NAVY);
-  s.addImage({ path: A + "fig_agc_national.png", x: 0.62, y: 1.15, w: 12.1,
-    h: 3.35 });
-  s.addText("発電機・制御はIEEJ標準モデル AGC30(技術報告1386号)の簡易実装。全パラメータ典型値・出所つき — 構造実証であり運用予測ではない", {
-    x: 0.9, y: 4.55, w: 11.6, h: 0.3, fontFace: F, fontSize: 10.5, color: MUT,
-    margin: 0 });
-  card(s, 0.9, 5.0, 3.7, 1.65, "UCが慣性と余力を決める",
-    "オンライン機集合→慣性(東245.6 GW·s)、基点→調整余力、最大オンライン機→N-1外乱。三層が同一運用断面を共有", ACT[0], 11.5);
-  card(s, 4.85, 5.0, 3.7, 1.65, "連系の硬さは実網から測る",
-    "T_ab=SΣ1/x を抽出網で実測(東北-東京3,572 pu/rad)。関西-四国206=本四の細さを正しく拾う — 仮定していた量が測定値になる", ACT[3], 11.5);
-  card(s, 8.8, 5.0, 3.7, 1.65, "苫東厚真の構図が出る",
-    "同プラント1,650MW喪失(4.4GW系統)でRoCoF−2.9Hz/s・nadir−2.5Hz — UFLSだけが止める。2018年北海道の構図と整合", RED, 11.5);
+  head(s, "終幕 v1.9へ", "最後の問い：発電所が突然落ちたら、この系統は生き残れるか", NAVY);
+  s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 1.25, w: 11.6, h: 1.3,
+    fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+  s.addText([
+    { text: "電気は貯められない。", options: { bold: true } },
+    { text: "作る量と使う量がズレると、周波数(50/60 Hz)がズレる。ズレすぎると発電機が次々止まり、大停電になる。\n", options: {} },
+    { text: "AGC（自動発電制御）", options: { bold: true, color: NAVY } },
+    { text: " ＝ 周波数のズレを見て発電所の出力を自動で増減し、系統を守る仕組み。", options: {} },
+  ], { x: 1.2, y: 1.25, w: 11.0, h: 1.3, fontFace: F, fontSize: 14,
+    color: INK, lineSpacing: 22, margin: 0, valign: "middle" });
+  // 3段チェーン(平易な言葉で)
+  const steps = [
+    ["① 計画する", "UC", "「今日どの発電所を動かす？」\n24時間の起動停止を最適化。\nこの選択が、事故時に系統を支える\n「慣性」と「調整余力」も決める", ACT[0]],
+    ["② 流してみる", "潮流計算", "「その電気、送りきれる？」\n計画した発電を実際の送電線網に\n流して確認 — 4島すべて100%供給", ACT[1]],
+    ["③ 事故らせる", "AGC", "「突然、最大の発電所が落ちたら？」\n周波数の急落と自動復帰を秒単位で\n再現 — 制御の仕組みは電気学会の\n標準モデル(AGC30)に準拠", ACT[4]],
+  ];
+  steps.forEach(([t, tag, b, col], i) => {
+    const x = 0.9 + i * 4.0;
+    s.addShape(pres.ShapeType.roundRect, { x, y: 2.85, w: 3.6, h: 2.6,
+      fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.07 });
+    s.addShape(pres.ShapeType.rect, { x, y: 2.85, w: 3.6, h: 0.12,
+      fill: { color: col }, line: { type: "none" } });
+    s.addText(t, { x: x + 0.2, y: 3.08, w: 2.2, h: 0.35, fontFace: F,
+      fontSize: 15, bold: true, color: INK, margin: 0 });
+    s.addText(tag, { x: x + 2.3, y: 3.1, w: 1.15, h: 0.32, fontFace: FL,
+      fontSize: 11, bold: true, color: col === "9A9AA6" ? MUT : col,
+      align: "right", margin: 0 });
+    s.addText(b, { x: x + 0.2, y: 3.5, w: 3.25, h: 1.85, fontFace: F,
+      fontSize: 11, color: MUT, lineSpacing: 16, margin: 0 });
+    if (i < 2) s.addText("→", { x: x + 3.62, y: 3.85, w: 0.4, h: 0.4,
+      fontFace: FL, fontSize: 20, bold: true, color: MUT, margin: 0 });
+  });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 5.75, w: 11.6, h: 1.05,
+    fill: { color: NAVY }, line: { type: "none" }, rectRadius: 0.06 });
+  s.addText("この3つは本来、別々の組織の、別々の非公開データの仕事。ここでは地図から作った1つの公開モデルの上で、1コマンドで全部つながって動く。", {
+    x: 1.2, y: 5.75, w: 11.0, h: 1.05, fontFace: F, fontSize: 14, bold: true,
+    color: "FFFFFF", lineSpacing: 21, margin: 0, valign: "middle" });
   foot(s, 15, "1:00");
-  s.addNotes("2%ステップは198-788sで復帰し外乱エリアが全量引き受け(TBC)。プラント粒度=ユニットN-1の上界、UFLSは典型3段、は聞かれたら即答。");
+  s.addNotes("AGCを知らない聴衆向けの1枚。「電気は貯められない」から始める。次の枚で実際に事故らせる。");
+}
+
+/* ===================== 16. 終幕: 事故を起こしてみた ===================== */
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "終幕 v1.9へ", "事故を起こしてみた：最大の発電所を、いきなり落とす", NAVY);
+  // 左: 地図(島の色=波形の色)
+  s.addImage({ path: A + "fig_agc_map.png", x: 0.55, y: 1.2, w: 4.35,
+    h: 5.44 });
+  // 右: 注釈付き波形
+  s.addImage({ path: A + "fig_agc_story.png", x: 5.05, y: 1.35, w: 7.75,
+    h: 4.45 });
+  s.addText("地図の島の色 ＝ グラフの線の色。★が落とした発電所の実在の場所。", {
+    x: 5.15, y: 5.85, w: 7.6, h: 0.3, fontFace: F, fontSize: 11.5, bold: true,
+    color: INK, margin: 0 });
+  s.addText("小さな北海道(4.4 GW)は苫東厚真を失うと負荷遮断まで落ち込む。大きな東日本(59 GW)は3倍の規模(富津 5,040 MW)を失っても踏みとどまる — 系統の大きさ(慣性)の差が、そのまま運命の差になる。", {
+    x: 5.15, y: 6.2, w: 7.6, h: 0.6, fontFace: F, fontSize: 11,
+    color: MUT, lineSpacing: 16, margin: 0 });
+  foot(s, 16, "1:30");
+  s.addNotes("2018年9月6日の実話(北海道ブラックアウト)から入る。「あの構図が、地図から作ったモデルで出る」。動特性は典型値の構造実証、プラント粒度=ユニットN-1の上界、は聞かれたら答える。");
 }
 
 /* ===================== 16. いまの姿（スタック） ===================== */
@@ -575,7 +620,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("下の層ほど古い幕の成果。上の幕は下を壊さず積んだ — 幕の色がそのまま層の色。", {
     x: 0.9, y: 6.3, w: 11.6, h: 0.35, fontFace: F, fontSize: 12, color: INK,
     margin: 0 });
-  foot(s, 16, "1:00");
+  foot(s, 17, "1:00");
   s.addNotes("年表（S4）の5幕がそのまま5層に堆積している、という視覚的な回収。層の色＝幕の色。");
 }
 
@@ -605,7 +650,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("この4つはどれも、一度「良い数字」を出してから学び直したものである。", {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
-  foot(s, 17, "1:00");
+  foot(s, 18, "1:00");
   s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
 }
 
@@ -641,7 +686,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("github.com/lutelute/All-Japan-Grid　|　lutelute.github.io/All-Japan-Grid　|　データ: ODbL（OSM由来）・コード: MIT　|　航空写真: 国土地理院", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.28, fontFace: FM, fontSize: 9, color: MUT,
     margin: 0 });
-  foot(s, 18, "0:30");
+  foot(s, 19, "0:30");
   s.addNotes("論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 
