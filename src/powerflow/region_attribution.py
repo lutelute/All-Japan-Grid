@@ -63,6 +63,29 @@ AREA_FREQ = {"hokkaido": 50, "tohoku": 50, "tokyo": 50,
              "chubu": 60, "hokuriku": 60, "kansai": 60,
              "chugoku": 60, "shikoku": 60, "kyushu": 60, "okinawa": 60}
 
+# 介入#38 (2026-08-30): 周波数跨ぎガードの精緻化。
+# 上のガードの動機は「混在県(長野・新潟・静岡)の飛び地・越境幹線の保護」で
+# あって、周波数が県内で一意な県への抽出こぼれ(例: 群馬・埼玉座標なのに
+# region=chubu)まで保護するのは過剰だった — westのAC発散の一因として恒久
+# 残留していた(docs/reports/west_ac_onset_full_2026-08-30.json、
+# 神保原/嬬恋の関東設備がwest島に混入)。座標の県の周波数が一意で、是正先
+# エリアの周波数がそれと一致する場合に限り、跨ぎ再属性を許可する。
+# 混在県は従来どおりガード(長野=東信の一部50Hz、新潟=60Hz飛び地、静岡=富士川)。
+UNIFORM_FREQ_PREFS = {
+    "北海道": 50, "青森県": 50, "岩手県": 50, "宮城県": 50, "秋田県": 50,
+    "山形県": 50, "福島県": 50,
+    "茨城県": 50, "栃木県": 50, "群馬県": 50, "埼玉県": 50, "千葉県": 50,
+    "東京都": 50, "神奈川県": 50, "山梨県": 50,
+    "愛知県": 60, "岐阜県": 60, "三重県": 60,
+    "富山県": 60, "石川県": 60, "福井県": 60,
+    "滋賀県": 60, "京都府": 60, "大阪府": 60, "兵庫県": 60, "奈良県": 60,
+    "和歌山県": 60,
+    "鳥取県": 60, "島根県": 60, "岡山県": 60, "広島県": 60, "山口県": 60,
+    "徳島県": 60, "香川県": 60, "愛媛県": 60, "高知県": 60,
+    "福岡県": 60, "佐賀県": 60, "長崎県": 60, "熊本県": 60, "大分県": 60,
+    "宮崎県": 60, "鹿児島県": 60, "沖縄県": 60,
+}
+
 
 @lru_cache(maxsize=1)
 def _pref_index():
@@ -111,18 +134,22 @@ def area_of_coord(lat: float, lon: float) -> Optional[str]:
     return PREF_AREA.get(pref)
 
 
-def reattribute_node_regions(nodes: List[dict]) -> Dict:
+def reattribute_node_regions(nodes: List[dict], freq_fix: bool = True) -> Dict:
     """ノード列の region を領土ベースで再割当する(in-place)。
 
     - 元のラベルは region_src に退避(初回のみ・監査用)
-    - **周波数を跨ぐ移動はスキップ**(AREA_FREQ参照 — 50/60Hz境界の県近似は
+    - **周波数を跨ぐ移動は原則スキップ**(AREA_FREQ参照 — 50/60Hz境界の県近似は
       実態と乖離するため。skipped_freq に計上して開示)
+    - freq_fix=True(既定・介入#38 2026-08-30): 座標の県の周波数が一意
+      (UNIFORM_FREQ_PREFS)で是正先エリアの周波数と一致する場合に限り、
+      跨ぎ再属性を実行する(freq_fixed に計上して開示)。False=旧挙動(回帰比較用)
     - Returns: {"n_nodes", "n_changed", "changes": {"from->to": count},
-                "skipped_freq": {"from->to": count}}
+                "skipped_freq": {...}, "freq_fixed": {...}}
     """
     n_changed = 0
     changes: Dict[str, int] = {}
     skipped: Dict[str, int] = {}
+    fixed: Dict[str, int] = {}
     for n in nodes:
         src = n.get("region")
         if "region_src" not in n:
@@ -130,16 +157,21 @@ def reattribute_node_regions(nodes: List[dict]) -> Dict:
         area = area_of_coord(float(n["lat"]), float(n["lon"]))
         if not area or area == src:
             continue
+        key = f"{src}->{area}"
         if (src in AREA_FREQ and AREA_FREQ.get(area) is not None
                 and AREA_FREQ[src] != AREA_FREQ[area]):
-            key = f"{src}->{area}"
-            skipped[key] = skipped.get(key, 0) + 1
-            continue
-        key = f"{src}->{area}"
+            pref = prefecture_of(float(n["lat"]), float(n["lon"]))
+            if not (freq_fix and
+                    UNIFORM_FREQ_PREFS.get(pref) == AREA_FREQ[area]):
+                skipped[key] = skipped.get(key, 0) + 1
+                continue
+            fixed[key] = fixed.get(key, 0) + 1   # 介入#38: 一意周波数県は是正
         changes[key] = changes.get(key, 0) + 1
         n["region"] = area
         n_changed += 1
     return {"n_nodes": len(nodes), "n_changed": n_changed,
             "changes": dict(sorted(changes.items(), key=lambda kv: -kv[1])),
             "skipped_freq": dict(sorted(skipped.items(),
-                                        key=lambda kv: -kv[1]))}
+                                        key=lambda kv: -kv[1])),
+            "freq_fixed": dict(sorted(fixed.items(),
+                                      key=lambda kv: -kv[1]))}

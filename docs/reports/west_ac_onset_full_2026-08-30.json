@@ -1,0 +1,662 @@
+{
+ "note": "第6波 onset診断(フル・#37適用後)",
+ "n_bus": 7928,
+ "provisional_infeed": 9,
+ "iters": [
+  {
+   "iter": 1,
+   "vm_min": 0.798,
+   "vm_max": 1.031,
+   "n_dev15": 11,
+   "layers": {
+    "66": 7,
+    "77": 4
+   },
+   "top": [
+    {
+     "vm": 0.798,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "江田島変電所"
+    },
+    {
+     "vm": 0.804,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "能美変電所"
+    },
+    {
+     "vm": 0.807,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿変電所"
+    },
+    {
+     "vm": 0.814,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三津屋変電所 77kV"
+    },
+    {
+     "vm": 0.814,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "kansai junction 34.7328:135."
+    },
+    {
+     "vm": 0.814,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三国本町二丁目変電所"
+    },
+    {
+     "vm": 0.816,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "阪急電鉄 三国変電所"
+    },
+    {
+     "vm": 0.817,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "西三国変電所 77kV"
+    },
+    {
+     "vm": 0.819,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿町大君変電所"
+    },
+    {
+     "vm": 0.819,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.1649:132"
+    },
+    {
+     "vm": 0.841,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "倉橋変電所"
+    },
+    {
+     "vm": 0.86,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "西三国変電所 154kV"
+    },
+    {
+     "vm": 0.866,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "味生変電所 154kV"
+    },
+    {
+     "vm": 0.887,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力 甲浦変電所"
+    },
+    {
+     "vm": 0.89,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力海南変電所"
+    },
+    {
+     "vm": 0.891,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "多良変電所"
+    },
+    {
+     "vm": 0.894,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "shikoku junction 33.6115:134"
+    },
+    {
+     "vm": 0.913,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "宮原変電所 66kV"
+    },
+    {
+     "vm": 0.914,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2165:132"
+    },
+    {
+     "vm": 0.914,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2034:132"
+    },
+    {
+     "vm": 0.919,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "牟岐変電所"
+    },
+    {
+     "vm": 0.938,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "7丁目変電所"
+    },
+    {
+     "vm": 0.939,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町二丁目変電所"
+    },
+    {
+     "vm": 0.939,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町一丁目変電所 66kV"
+    },
+    {
+     "vm": 0.939,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "呉変電所 66kV"
+    }
+   ]
+  },
+  {
+   "iter": 2,
+   "vm_min": 0.712,
+   "vm_max": 1.029,
+   "n_dev15": 13,
+   "layers": {
+    "66": 7,
+    "77": 4,
+    "154": 2
+   },
+   "top": [
+    {
+     "vm": 0.712,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "江田島変電所"
+    },
+    {
+     "vm": 0.719,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "能美変電所"
+    },
+    {
+     "vm": 0.725,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿変電所"
+    },
+    {
+     "vm": 0.741,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿町大君変電所"
+    },
+    {
+     "vm": 0.741,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.1649:132"
+    },
+    {
+     "vm": 0.748,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三津屋変電所 77kV"
+    },
+    {
+     "vm": 0.748,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "kansai junction 34.7328:135."
+    },
+    {
+     "vm": 0.749,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三国本町二丁目変電所"
+    },
+    {
+     "vm": 0.751,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "阪急電鉄 三国変電所"
+    },
+    {
+     "vm": 0.752,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "西三国変電所 77kV"
+    },
+    {
+     "vm": 0.773,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "倉橋変電所"
+    },
+    {
+     "vm": 0.816,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "西三国変電所 154kV"
+    },
+    {
+     "vm": 0.824,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "味生変電所 154kV"
+    },
+    {
+     "vm": 0.872,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力 甲浦変電所"
+    },
+    {
+     "vm": 0.876,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力海南変電所"
+    },
+    {
+     "vm": 0.876,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "宮原変電所 66kV"
+    },
+    {
+     "vm": 0.877,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "多良変電所"
+    },
+    {
+     "vm": 0.878,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2165:132"
+    },
+    {
+     "vm": 0.878,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2034:132"
+    },
+    {
+     "vm": 0.88,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "shikoku junction 33.6115:134"
+    },
+    {
+     "vm": 0.909,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "牟岐変電所"
+    },
+    {
+     "vm": 0.912,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "7丁目変電所"
+    },
+    {
+     "vm": 0.914,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "呉変電所 66kV"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町二丁目変電所"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町一丁目変電所 66kV"
+    }
+   ]
+  },
+  {
+   "iter": 3,
+   "vm_min": 0.677,
+   "vm_max": 1.029,
+   "n_dev15": 13,
+   "layers": {
+    "66": 7,
+    "77": 4,
+    "154": 2
+   },
+   "top": [
+    {
+     "vm": 0.677,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "江田島変電所"
+    },
+    {
+     "vm": 0.685,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "能美変電所"
+    },
+    {
+     "vm": 0.691,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿変電所"
+    },
+    {
+     "vm": 0.71,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿町大君変電所"
+    },
+    {
+     "vm": 0.71,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.1649:132"
+    },
+    {
+     "vm": 0.729,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三津屋変電所 77kV"
+    },
+    {
+     "vm": 0.729,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "kansai junction 34.7328:135."
+    },
+    {
+     "vm": 0.73,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三国本町二丁目変電所"
+    },
+    {
+     "vm": 0.732,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "阪急電鉄 三国変電所"
+    },
+    {
+     "vm": 0.734,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "西三国変電所 77kV"
+    },
+    {
+     "vm": 0.745,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "倉橋変電所"
+    },
+    {
+     "vm": 0.803,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "西三国変電所 154kV"
+    },
+    {
+     "vm": 0.812,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "味生変電所 154kV"
+    },
+    {
+     "vm": 0.861,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "宮原変電所 66kV"
+    },
+    {
+     "vm": 0.863,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2165:132"
+    },
+    {
+     "vm": 0.863,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2034:132"
+    },
+    {
+     "vm": 0.872,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力 甲浦変電所"
+    },
+    {
+     "vm": 0.875,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力海南変電所"
+    },
+    {
+     "vm": 0.877,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "多良変電所"
+    },
+    {
+     "vm": 0.879,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "shikoku junction 33.6115:134"
+    },
+    {
+     "vm": 0.902,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "7丁目変電所"
+    },
+    {
+     "vm": 0.903,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "呉変電所 66kV"
+    },
+    {
+     "vm": 0.909,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "牟岐変電所"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町二丁目変電所"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町一丁目変電所 66kV"
+    }
+   ]
+  },
+  {
+   "iter": 4,
+   "vm_min": 0.668,
+   "vm_max": 1.029,
+   "n_dev15": 13,
+   "layers": {
+    "66": 7,
+    "77": 4,
+    "154": 2
+   },
+   "top": [
+    {
+     "vm": 0.668,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "江田島変電所"
+    },
+    {
+     "vm": 0.676,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "能美変電所"
+    },
+    {
+     "vm": 0.683,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿変電所"
+    },
+    {
+     "vm": 0.702,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "大柿町大君変電所"
+    },
+    {
+     "vm": 0.702,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.1649:132"
+    },
+    {
+     "vm": 0.727,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三津屋変電所 77kV"
+    },
+    {
+     "vm": 0.727,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "kansai junction 34.7328:135."
+    },
+    {
+     "vm": 0.728,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "三国本町二丁目変電所"
+    },
+    {
+     "vm": 0.73,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "阪急電鉄 三国変電所"
+    },
+    {
+     "vm": 0.731,
+     "kv": 77.0,
+     "zone": "kansai",
+     "name": "西三国変電所 77kV"
+    },
+    {
+     "vm": 0.738,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "倉橋変電所"
+    },
+    {
+     "vm": 0.802,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "西三国変電所 154kV"
+    },
+    {
+     "vm": 0.811,
+     "kv": 154.0,
+     "zone": "kansai",
+     "name": "味生変電所 154kV"
+    },
+    {
+     "vm": 0.857,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "宮原変電所 66kV"
+    },
+    {
+     "vm": 0.859,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2165:132"
+    },
+    {
+     "vm": 0.859,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "chugoku junction 34.2034:132"
+    },
+    {
+     "vm": 0.872,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力 甲浦変電所"
+    },
+    {
+     "vm": 0.875,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "四国電力海南変電所"
+    },
+    {
+     "vm": 0.877,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "多良変電所"
+    },
+    {
+     "vm": 0.879,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "shikoku junction 33.6115:134"
+    },
+    {
+     "vm": 0.899,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "7丁目変電所"
+    },
+    {
+     "vm": 0.901,
+     "kv": 66.0,
+     "zone": "chugoku",
+     "name": "呉変電所 66kV"
+    },
+    {
+     "vm": 0.909,
+     "kv": 66.0,
+     "zone": "shikoku",
+     "name": "牟岐変電所"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町二丁目変電所"
+    },
+    {
+     "vm": 0.935,
+     "kv": 66.0,
+     "zone": "kansai",
+     "name": "杭瀬南新町一丁目変電所 66kV"
+    }
+   ]
+  },
+  {
+   "iter": 5,
+   "converged": true
+  }
+ ]
+}

@@ -71,7 +71,7 @@ def add_reactive_compensation(net, factor=0.6):
     return n
 
 
-def add_provisional_infeed(net, min_load_mw=100.0):
+def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
     """介入#37: 都心給電の必然接続(仮) — オーナー承認 2026-08-30.
 
     「良い。仮が事実でないかもしれないなら、それを明記しておけば正典として
@@ -89,6 +89,10 @@ def add_provisional_infeed(net, min_load_mw=100.0):
     変圧器を持たず (b)クラスタ負荷合計≥min_load_mw のもの。
     接続: クラスタ最大負荷バス → 地理的最近傍の≥275kVバスへ変圧器1台
     (sn=負荷×1.5・vk12%=階級典型値)。**実在の経路が判明したら置換される暫定**。
+    max_dist_km(2026-08-30追加): 最近傍がこれより遠い場合は縫合せず台帳のみ
+    (capped=True)。動機=誤帰属ノード同士の遠距離縫合の検出面化(神保原104MWが
+    誤region由来の榛名へ44km縫合された事例 — 介入#38で帰属自体は是正済みだが、
+    将来の同型を電気接続でなく台帳に浮かせる)。
 
     Returns: ledger list(dict) — kv/load_mw/n_bus/cluster_names/to_upper/
     upper_kv/dist_km/sn_mva。呼び出し側は結果JSONへ全件保存すること。
@@ -139,6 +143,15 @@ def add_provisional_infeed(net, min_load_mw=100.0):
             continue
         ub, ug = min(ups, key=lambda bg: (bg[1][0]-ga[0])**2 +
                      (bg[1][1]-ga[1])**2)
+        dist_km = _math.hypot((ug[0]-ga[0])*91, (ug[1]-ga[1])*111)
+        if dist_km > max_dist_km:
+            ledger.append(dict(
+                kv=c["kv"], load_mw=c["load_mw"], n_bus=c["n_bus"],
+                cluster_names=c["names"],
+                to_upper=str(net.bus.at[ub, "name"])[:20],
+                upper_kv=float(net.bus.at[ub, "vn_kv"]),
+                dist_km=round(dist_km, 1), sn_mva=0.0, capped=True))
+            continue
         sn = max(300.0, 1.5 * c["load_mw"])
         pp.create_transformer_from_parameters(
             net, hv_bus=int(ub), lv_bus=int(c["anchor_bus"]), sn_mva=sn,

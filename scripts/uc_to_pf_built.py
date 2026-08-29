@@ -58,7 +58,11 @@ from src.uc.scenario import build_national_scenario  # noqa: E402
 from src.uc.solver import solve_uc  # noqa: E402
 
 ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
-ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "dc", "okinawa": "ac"}
+# west: 2026-08-30 介入#38(周波数跨ぎ再属性の精緻化)で長野東信〜群馬の誤帰属
+# ポケット(旧・AC発散震源)が除去され、フルNRが収束するようになったため "ac" へ
+# (docs/reports/west_ac_onset_full_2026-08-30.json)。失敗時はsolve_hourが
+# dc_fallbackするため安全側。旧挙動比較は --no-freq-fix-reattr
+ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "ac", "okinawa": "ac"}
 BACKBONE_KV = 154.0
 
 # ── 島境界の連系設備(東西FC・北本) ──────────────────────────────
@@ -435,6 +439,11 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--freq-fix-reattr",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
+                         "一意周波数県への抽出こぼれのみ跨ぎ是正、混在県は"
+                         "ガード維持。--no-freq-fix-reattr=旧挙動(回帰比較用)")
     ap.add_argument("--provisional-infeed",
                     action=argparse.BooleanOptionalAction, default=True,
                     help="介入#37 都心給電の必然接続(仮)・既定ON"
@@ -497,7 +506,8 @@ def main():
     pref_gwh = None
     if args.pref_demand:
         from src.powerflow.pref_demand import pref_zone_gwh
-        pref_gwh, pw_ledger = pref_zone_gwh(built["nodes"])
+        pref_gwh, pw_ledger = pref_zone_gwh(built["nodes"],
+                                            freq_fix=args.freq_fix_reattr)
         print(f"県別需要重み: {pw_ledger['title']} "
               f"({pw_ledger['n_pref_weighted']}県, "
               f"split={list(pw_ledger['split_prefs'])})")
@@ -534,7 +544,8 @@ def main():
         base, bus_of, bstats = build_island_net(
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom,
             dedup_nodes=args.dedup_nodes, site_trafos=args.site_trafos,
-            deenergize_unbuilt=args.deenergize_unbuilt)
+            deenergize_unbuilt=args.deenergize_unbuilt,
+            freq_fix=args.freq_fix_reattr)
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")

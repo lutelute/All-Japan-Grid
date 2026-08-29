@@ -224,7 +224,7 @@ BTB_SPLITS = [
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=False, synthetic_ties_live=False,
-                     btb_split=True):
+                     btb_split=True, freq_fix=True):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -253,7 +253,10 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     rstats = None
     if territory:
         from src.powerflow.region_attribution import reattribute_node_regions
-        rstats = reattribute_node_regions(nodes)   # in-place・冪等
+        # freq_fix=介入#38(2026-08-30): 周波数一意県への抽出こぼれは跨ぎ是正
+        rstats = reattribute_node_regions(nodes, freq_fix=freq_fix)  # in-place・冪等
+        if rstats.get("freq_fixed"):
+            print(f"  介入#38 跨ぎ是正(一意周波数県): {rstats['freq_fixed']}")
     net = pp.create_empty_network(name=f"full_{island}", f_hz=freq)
 
     # candidate buses = nodes whose region maps to this island
@@ -1231,6 +1234,13 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--freq-fix-reattr",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
+                         "周波数が県内で一意な県(関東+山梨=50Hz純、愛知以西+"
+                         "北陸=60Hz純)への抽出こぼれは跨ぎ是正する。混在県"
+                         "(長野・新潟・静岡)は従来どおりガード。"
+                         "--no-freq-fix-reattr=旧挙動(回帰比較用)")
     ap.add_argument("--provisional-infeed",
                     action=argparse.BooleanOptionalAction, default=True,
                     help="介入#37 都心給電の必然接続(仮)。上位変圧器を持たない"
@@ -1305,7 +1315,8 @@ def main():
     pref_gwh = None
     if args.pref_demand:
         from src.powerflow.pref_demand import pref_zone_gwh
-        pref_gwh, pw_ledger = pref_zone_gwh(nodes)
+        pref_gwh, pw_ledger = pref_zone_gwh(nodes,
+                                            freq_fix=args.freq_fix_reattr)
         print(f"県別需要重み: {pw_ledger['title']} "
               f"({pw_ledger['n_pref_weighted']}県, split={list(pw_ledger['split_prefs'])})")
 
@@ -1325,7 +1336,7 @@ def main():
             site_trafos=args.site_trafos,
             deenergize_unbuilt=args.deenergize_unbuilt,
             synthetic_ties_live=args.synthetic_ties_live,
-            btb_split=args.btb_split)
+            btb_split=args.btb_split, freq_fix=args.freq_fix_reattr)
         if bstats.get("n_tie_nis"):
             # 介入#31 の帳簿: 何本の合成タイ/DC枝を非通電化したかを必ず出す
             print(f"  介入#31 synthetic-ties: {bstats['n_tie_nis']}本を非通電で建てた"

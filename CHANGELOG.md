@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #38 — frequency-crossing reattribution refinement**
+  (`src/powerflow/region_attribution.py` `UNIFORM_FREQ_PREFS` +
+  `reattribute_node_regions(freq_fix=True)`, `--freq-fix-reattr` on both
+  drivers, default ON; same guard added to `apply_node_hygiene.py` (#35)).
+  Wave-6 diagnosis pinned the west full-scale AC divergence epicenter to the
+  eastern-Nagano / Gunma 66-77 kV pocket: extraction-bbox spillover left
+  Kantō-territory equipment labelled `region=chubu` (Tsumagoi 77 kV strings,
+  the JR-East Jimbohara substation, Haruna-area 275/500 kV junctions,
+  Kamonomiya, the Chuo-Shinkansen Tsuru substation …), and the blanket
+  frequency-crossing guard prevented the territory reattribution from ever
+  correcting them, while #35 (no guard) leaked 8 tokyo junctions into chubu.
+  The guard's real purpose is protecting **mixed-frequency prefectures**
+  (Nagano/Niigata/Shizuoka enclaves and cross-border 50 Hz trunks); for
+  prefectures with a single frequency (Kantō + Yamanashi = 50 Hz, Aichi and
+  westward + Hokuriku = 60 Hz) the correction is now allowed. Dry run:
+  275 nodes fixed (chubu→tokyo 266, tokyo→chubu 9); Nagano's 50 Hz assets
+  (143 nodes) stay guarded. Physical connectivity untouched. Also
+  `add_provisional_infeed` gained `max_dist_km=40`: a nearest-upper-bus
+  farther than that is ledgered (`capped: true`) instead of sewn — the
+  Jimbohara 44 km mis-suture pattern surfaces in the ledger rather than the
+  electrical model. Registry: `docs/MODEL_INTERVENTIONS.md` #38.
 - **Intervention #37 — provisional metro infeed ((仮)都心給電の必然接続)**
   (`src/powerflow/pipeline.add_provisional_infeed`, `--provisional-infeed`
   on `run_full_powerflow_from_db.py` / `uc_to_pf_built.py`, default ON;

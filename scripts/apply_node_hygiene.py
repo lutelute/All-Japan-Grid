@@ -260,6 +260,19 @@ def main() -> int:
                     reg_cnt[m.get("region")] += 1
         new_reg = (reg_cnt.most_common(1)[0][0] if reg_cnt else twin_regs[0])
         for n in p["reattrs"]:
+            # 介入#38ガード(2026-08-30): 周波数跨ぎ再帰属は、座標の県の周波数が
+            # 一意で行き先と一致する場合のみ許可。混在県(長野等)では跨がない —
+            # 本スクリプトが東信のtokyo junctionをchubuへ流し込みwest AC発散の
+            # 一因になった実績があるため(docs/reports/west_ac_onset_full)
+            from src.powerflow.region_attribution import (
+                AREA_FREQ, UNIFORM_FREQ_PREFS, prefecture_of)
+            f_from = AREA_FREQ.get(n.get("region"))
+            f_to = AREA_FREQ.get(new_reg)
+            if f_from is not None and f_to is not None and f_from != f_to:
+                pref = prefecture_of(float(n["lat"]), float(n["lon"]))
+                if UNIFORM_FREQ_PREFS.get(pref) != f_to:
+                    rec["reattr_skipped_freq"] =                         rec.get("reattr_skipped_freq", 0) + 1
+                    continue
             rec["reattributed"].append({
                 "name": n.get("name"), "lat": n["lat"], "lon": n["lon"],
                 "region_from": n.get("region"), "region_to": new_reg})
