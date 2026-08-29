@@ -524,14 +524,50 @@ def main() -> int:
              if frozenset((_k5(*e["from_pt"]), _k5(*e["to_pt"]))) not in existing]
 
     # region fix を先に適用したコピーで連結性ドライラン
-    id_fix = {rf["id"]: rf["to"] for rf in region_fixes}
+    # 介入#39 (2026-08-30): 名前アサート適用+誤爆revert。帳簿には再採番前の
+    # 旧IDが混在し(第7波監査: west_ac_wave7_2026-08-30.md §4)、ID直引きは
+    # 旧IDを現在持つ無関係ノードを誤爆していた(実害14件 — 例:「小海町」fix が
+    # 佃野町変電所(神奈川)に命中)。対策:
+    #   (1) idの指す先の正規化名が帳簿nameと一致する場合のみ適用
+    #   (2) 不一致(旧ID)は name+from で唯一解決できればそのノードへ(未達の救済)、
+    #       できなければ stale として棄却(件数開示)
+    #   (3) 誤爆痕(名前不一致なのに region==to のノード)は領土(座標→県→エリア)へ
+    #       revert(全件ログ)
+    from src.powerflow.region_attribution import area_of_coord
     nodes_fixed = copy.deepcopy(nodes)
-    n_relabel = 0
+    by_id = {n.get("id"): n for n in nodes_fixed}
+    by_name: dict[str, list] = {}
     for n in nodes_fixed:
-        to = id_fix.get(n.get("id"))
-        if to and n.get("region") != to:
-            n["region"] = to
-            n_relabel += 1
+        by_name.setdefault(norm(n.get("name") or ""), []).append(n)
+    n_relabel = n_stale = n_rescued = n_reverted = 0
+    for rf in region_fixes:
+        tgt = by_id.get(rf["id"])
+        if tgt is not None and norm(tgt.get("name") or "") == norm(rf["name"]):
+            if tgt.get("region") != rf["to"]:
+                tgt["region"] = rf["to"]
+                n_relabel += 1
+            continue
+        # 旧IDエントリ: 誤爆痕をrevertし、本来の対象を名前で救済
+        if tgt is not None and tgt.get("region") == rf["to"]:
+            terr = area_of_coord(float(tgt["lat"]), float(tgt["lon"]))
+            if terr and terr != tgt.get("region"):
+                print(f"  [#39 revert] {tgt.get('id')} {tgt.get('name')} "
+                      f"{tgt['region']}→{terr} (誤爆痕・領土へ)")
+                tgt["region"] = terr
+                n_reverted += 1
+        cands = [c for c in by_name.get(norm(rf["name"]), [])
+                 if c.get("region") == rf["from"]]
+        if len(cands) == 1:
+            print(f"  [#39 rescue] {cands[0].get('id')} {rf['name']} "
+                  f"{rf['from']}→{rf['to']} (旧ID={rf['id']}を名前で解決)")
+            cands[0]["region"] = rf["to"]
+            n_rescued += 1
+        else:
+            n_stale += 1
+    if n_reverted or n_rescued or n_stale:
+        print(f"  介入#39: 名前アサート — revert {n_reverted} / "
+              f"rescue {n_rescued} / stale棄却 {n_stale}")
+    n_relabel += n_rescued + n_reverted
 
     cc0 = compute_connectivity(nodes, bedges)
     off0 = sum(1 for n in nodes if _k5(n["lat"], n["lon"]) not in cc0["main_keys"])

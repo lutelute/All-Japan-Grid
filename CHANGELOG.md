@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #39 — name-asserted region-fix application**
+  (`scripts/apply_disclosure_v2.py`): the disclosure-v2 ledger's region fixes
+  were applied by node ID alone, but the ledger contains stale pre-renumbering
+  IDs (wave-7 audit), so fixes landed on unrelated nodes that now hold those
+  IDs (e.g. the "Koumi-machi" fix hit the Tsukuno-cho substation in Kanagawa).
+  Application now requires the normalized name at that ID to match the ledger
+  entry; stale entries are resolved by name+from-region when unique (rescuing
+  previously unreached fixes) or dropped with a disclosed count, and collateral
+  stamps (name mismatch but region==to) are reverted to territory. Canon
+  `all.json` repaired via `--from-worklist --write`: **22 reverts, 11 rescues,
+  73 stale entries dropped**; west/east full AC and west backbone AC all
+  regression-free.
 - **Intervention #37 wave-8 refinement — downstream-exclusive load accounting**
   (`add_provisional_infeed`): cluster load now includes the net load of
   source-less components that become isolated when the cluster is removed
