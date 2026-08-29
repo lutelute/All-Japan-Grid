@@ -14,7 +14,7 @@
 //      （データセットfeature 6,962 [v1.2確定] と 構造DBサイト 7,239 [v1.8] は別物）。
 //      ieee-openaccess.tex 本文の 8,164 は既知の誤記（同論文の表は 6,962）— 使わない。
 //
-// 本編16枚で 20:00。
+// 本編19枚で 22:00(第6幕3枚を2026-08-30追加)。
 const pptxgen = require("pptxgenjs");
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.33 x 7.5
@@ -729,6 +729,71 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("年表（S4）の5幕がそのまま5層に堆積している、という視覚的な回収。層の色＝幕の色。");
 }
 
+/* ===================== 第6幕A. 最後のDC島 ===================== */
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "第6幕 2026-08-30", "最後のDC島 — 西のACを一夜で正典にする", "0F7B6C",
+    "4島のうち西日本だけがAC不成立のまま「今後」に残っていた — その宿題を今夜のうちに");
+  card(s, 0.9, 1.35, 5.65, 1.85, "謎: バックボーンでも解けない",
+    "≥154 kVに絞っても dc_fallback。プローブ第1〜4波(サイト変圧器・無効電力・時刻別シャント)は全て空振り。反復を止めて観察する onset 診断に切替", RED, 12);
+  card(s, 6.85, 1.35, 5.65, 1.85, "第一容疑者: 大阪都心154 kVクラスタ",
+    "梅田・北浜・小曽根…上位(≥275 kV)への変圧器がゼロ。関西の275 kV地中網はOSM未収載で、開示系統図は実名匿名化=出典回復が不可能(#28型が使えない)", ACT[3], 12);
+  s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 3.45, w: 11.6, h: 1.75,
+    fill: { color: "0F7B6C" }, line: { type: "none" }, rectRadius: 0.08 });
+  s.addText([
+    { text: "介入#37「都心給電の必然接続(仮)」 — ", options: { fontFace: F, fontSize: 14.5, bold: true, color: "FFFFFF" } },
+    { text: "負荷が現に供給されている以上、上位系からの給電経路の存在は電気的必然。存在のみを主張し、経路・容量は(仮)と明記して全件台帳に載せる。\n", options: { fontFace: F, fontSize: 12.5, color: "E6F4F1" } },
+    { text: "オーナー裁定「仮が事実でないかもしれないなら、それを明記しておけば正典として良い」", options: { fontFace: F, fontSize: 12.5, bold: true, color: "FFE082" } },
+  ], { x: 1.2, y: 3.45, w: 11.0, h: 1.75, margin: 0, valign: "middle", lineSpacing: 20 });
+  card(s, 0.9, 5.45, 11.6, 1.15, "結果: 西バックボーンAC初成立 — しかしフルは落ちたまま",
+    "(仮)変圧器のみで mode=ac・served 96.5%。ならばフルを殺している犯人は154 kV未満の層にいる — 捜査は66/77 kV層へ", GRN, 12.5);
+  foot(s, 23, "1:00");
+  s.addNotes("第6幕は一夜のデバッグ記。(仮)の哲学=推定母線と同じ「存在の必然性だけ主張」。承認の一文がこの幕の転回点。数値の出典: provisional_infeed_decision_2026-08-30.md");
+}
+
+/* ===================== 第6幕B. 犯人は大阪ではなかった ===================== */
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "第6幕 2026-08-30", "犯人は大阪ではなかった — 50Hz設備の混入", "0F7B6C",
+    "onset診断: NRを反復1回で止めて観察 → 最初に暴れたのは軽井沢・御代田・嬬恋の66/77 kV(|V|→6.6)");
+  const steps = [
+    ["観察", "発散の初動は長野東信〜群馬の66/77 kVポケット。大阪はもう鎮まっていた", ACT[1]],
+    ["裏取り(3方向並列)", "コード: 島分けはregionラベルのみ / データ: 群馬・埼玉座標なのにregion=chubuが混在 / 実世界: 軽井沢一帯は中部電力領で、東西は新信濃FCでしか繋がらない(出典つき)", ACT[2]],
+    ["機序(3変種)", "①抽出bboxこぼれ(嬬恋・神保原・榛名・鴨宮・都留) ②座標是正ロジックが「周波数跨ぎ全面禁止」ガードで恒久スキップ ③衛生介入#35にガードが無く逆流8件", ACT[3]],
+    ["介入#38", "ガードを精緻化: 周波数が県内で一意な県(関東+山梨/愛知以西+北陸)への是正だけ跨ぎを許可。混在県(長野・新潟・静岡)は従来どおり保護 — 安曇幹線は切らない", "0F7B6C"],
+  ];
+  steps.forEach(([t, b, c], i) => {
+    const y = 1.35 + i * 1.32;
+    s.addShape(pres.ShapeType.roundRect, { x: 0.9, y, w: 11.6, h: 1.18,
+      fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
+    s.addShape(pres.ShapeType.rect, { x: 1.1, y: y + 0.15, w: 0.14, h: 0.88,
+      fill: { color: c }, line: { type: "none" } });
+    s.addText(t, { x: 1.45, y: y + 0.1, w: 2.6, h: 0.98, fontFace: F,
+      fontSize: 13, bold: true, color: INK, margin: 0, valign: "middle" });
+    s.addText(b, { x: 4.15, y: y + 0.1, w: 8.2, h: 0.98, fontFace: F,
+      fontSize: 10.5, color: MUT, lineSpacing: 14, margin: 0, valign: "middle" });
+  });
+  s.addText("誤帰属ノードは是正後もregion_srcに原ラベルを退避 — 何を動かしたかは常に監査可能", {
+    x: 0.9, y: 6.7, w: 11.6, h: 0.3, fontFace: F, fontSize: 10.5, color: MUT, margin: 0 });
+  foot(s, 24, "1:15");
+  s.addNotes("探偵編の核心。裏取りは3エージェント並列(コード読解/生データ/Web出典)。#38の設計原則=ガードの動機(混在県の飛び地保護)を殺さずに過剰防衛だけ解く。証跡: west_ac_wave6_2026-08-30.md");
+}
+
+/* ===================== 第6幕C. 西日本AC点灯 ===================== */
+{
+  const s = pres.addSlide();
+  s.background = { color: "0A0D1A" };
+  s.addImage({ path: A + "fig_west_ac_map.png", x: 0.15, y: 0.75, w: 13.03, h: 6.68 });
+  s.addText("そして、西日本が点灯する", { x: 0.7, y: 0.12, w: 9.0, h: 0.55,
+    fontFace: F, fontSize: 22, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("4島フルAC / 24時間中19時刻がAC(残りは太陽光ピーク帯=次の敵) / slack 13%と局所低電圧も正直に開示",
+    { x: 0.7, y: 7.14, w: 11.0, h: 0.3, fontFace: F, fontSize: 11,
+      color: "8E96B8", margin: 0 });
+  s.addText("25", { x: 12.4, y: 7.12, w: 0.5, h: 0.28, fontFace: FL,
+    fontSize: 10, color: "8E96B8", align: "right", margin: 0 });
+  s.addNotes("クライマックス。左=初のAC解の電圧分布(7,928バス・6.6s)。右=介入#38の検挙簿(誤帰属275点)。「点灯」の演出で締め、総括へ。数値出典: west_ac_wave6/wave7_2026-08-30.md");
+}
+
 /* ===================== 15. 6ヶ月で学んだこと ===================== */
 {
   const s = pres.addSlide(); base(s);
@@ -755,7 +820,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("この4つはどれも、一度「良い数字」を出してから学び直したものである。", {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
-  foot(s, 23, "1:00");
+  foot(s, 26, "1:00");
   s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
 }
 
@@ -779,7 +844,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("今後", { x: 0.9, y: 5.3, w: 2, h: 0.3, fontFace: F,
     fontSize: 12.5, bold: true, color: NAVY, margin: 0 });
   [["論文2本の文献・投稿先", "BibTeX整備と体裁確定が先頭"],
-   ["西日本フルAC", "66 kVメッシュ表現（並列回線・変圧器容量・無効電力支援）"],
+   ["昼間帯(太陽光ピーク)のAC", "24hのうち残る5時刻。負荷配分の市区町村粒度化も(第7波監査済)"],
    ["OSMへの還流", "issue #49 の編集候補リスト10件を実行 — 欠測を貢献に変える"]]
     .forEach(([t, b], i) => {
       const x = 0.9 + i * 3.95;
@@ -791,7 +856,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("github.com/lutelute/All-Japan-Grid　|　lutelute.github.io/All-Japan-Grid　|　データ: ODbL（OSM由来）・コード: MIT　|　航空写真: 国土地理院", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.28, fontFace: FM, fontSize: 9, color: MUT,
     margin: 0 });
-  foot(s, 24, "0:30");
+  foot(s, 27, "0:30");
   s.addNotes("論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 
