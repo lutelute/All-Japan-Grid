@@ -1,0 +1,350 @@
+{
+ "note": "多機(AGC-N)共シミュレーション帳簿。AGC30機種定数×UCオンライン全機×実網Kron縮約。負荷=定Z・UFLS=負荷Y一様縮小(ラッチ)・S=定格/0.9・H,Xd',DはFUEL_DEFAULT_PARAMS典型値 — 構造実証",
+ "n_machines": 54,
+ "tripped": "苫東厚真火力発電所",
+ "trip_mw": 1650.0,
+ "events": [
+  {
+   "t_s": 1.0,
+   "event": "トリップ: 苫東厚真火力発電所"
+  },
+  {
+   "t_s": 1.64,
+   "event": "UFLS 第1段"
+  },
+  {
+   "t_s": 1.98,
+   "event": "UFLS 第2段"
+  },
+  {
+   "t_s": 2.71,
+   "event": "UFLS 第3段"
+  }
+ ],
+ "machines": [
+  {
+   "name": "砥山発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "紋別バイオマス発電所",
+   "fuel": "biomass",
+   "p_mw": 50.0,
+   "H": 4.0
+  },
+  {
+   "name": "高見発電所",
+   "fuel": "hydro",
+   "p_mw": 55.4,
+   "H": 3.0
+  },
+  {
+   "name": "本別発電所",
+   "fuel": "hydro",
+   "p_mw": 6.9,
+   "H": 3.0
+  },
+  {
+   "name": "芽登第一発電所",
+   "fuel": "hydro",
+   "p_mw": 7.6,
+   "H": 3.0
+  },
+  {
+   "name": "下津別発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "苫東厚真火力発電所",
+   "fuel": "coal",
+   "p_mw": 1650.0,
+   "H": 4.0
+  },
+  {
+   "name": "砂川火力発電所",
+   "fuel": "coal",
+   "p_mw": 250.0,
+   "H": 4.0
+  },
+  {
+   "name": "奈井江火力発電所",
+   "fuel": "coal",
+   "p_mw": 175.0,
+   "H": 4.0
+  },
+  {
+   "name": "雨竜発電所",
+   "fuel": "hydro",
+   "p_mw": 14.1,
+   "H": 3.0
+  },
+  {
+   "name": "志比内発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "忠別川発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "新忠別発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "江卸発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "野花南水力発電所",
+   "fuel": "hydro",
+   "p_mw": 8.3,
+   "H": 3.0
+  },
+  {
+   "name": "滝里水力発電所",
+   "fuel": "hydro",
+   "p_mw": 15.8,
+   "H": 3.0
+  },
+  {
+   "name": "十勝発電所",
+   "fuel": "hydro",
+   "p_mw": 11.1,
+   "H": 3.0
+  },
+  {
+   "name": "上岩松発電所",
+   "fuel": "hydro",
+   "p_mw": 8.4,
+   "H": 3.0
+  },
+  {
+   "name": "富村変電所",
+   "fuel": "hydro",
+   "p_mw": 11.4,
+   "H": 3.0
+  },
+  {
+   "name": "静内発電所",
+   "fuel": "hydro",
+   "p_mw": 12.9,
+   "H": 3.0
+  },
+  {
+   "name": "春別発電所",
+   "fuel": "hydro",
+   "p_mw": 7.9,
+   "H": 3.0
+  },
+  {
+   "name": "下新冠発電所",
+   "fuel": "hydro",
+   "p_mw": 5.5,
+   "H": 3.0
+  },
+  {
+   "name": "新冠発電所",
+   "fuel": "hydro",
+   "p_mw": 55.4,
+   "H": 3.0
+  },
+  {
+   "name": "奥新冠発電所",
+   "fuel": "hydro",
+   "p_mw": 12.2,
+   "H": 3.0
+  },
+  {
+   "name": "東の沢発電所",
+   "fuel": "hydro",
+   "p_mw": 5.8,
+   "H": 3.0
+  },
+  {
+   "name": "層雲峡発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "真勲別発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "上川発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "上川町発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "安足間発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "愛別町発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "愛別発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "南富良野町発電所",
+   "fuel": "hydro",
+   "p_mw": 6.9,
+   "H": 3.0
+  },
+  {
+   "name": "定山渓温泉東2札幌市発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "南区札幌市発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "藻岩発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "日高町発電所",
+   "fuel": "hydro",
+   "p_mw": 7.1,
+   "H": 3.0
+  },
+  {
+   "name": "サニックスエナジー",
+   "fuel": "biomass",
+   "p_mw": 350.0,
+   "H": 4.0
+  },
+  {
+   "name": "京極発電所",
+   "fuel": "hydro",
+   "p_mw": 110.7,
+   "H": 3.0
+  },
+  {
+   "name": "北海道企業局 川端発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "電源開発 桂沢発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "北海道企業局　滝の上発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "北海道企業局夕張川発電管理事務所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "NSC Muroran Works Power Plant",
+   "fuel": "coal",
+   "p_mw": 100.0,
+   "H": 4.0
+  },
+  {
+   "name": "王子製紙(株)苫小牧工場",
+   "fuel": "coal",
+   "p_mw": 25.0,
+   "H": 4.0
+  },
+  {
+   "name": "糠平発電所",
+   "fuel": "hydro",
+   "p_mw": 12.2,
+   "H": 3.0
+  },
+  {
+   "name": "Kushiro Power Plant",
+   "fuel": "coal",
+   "p_mw": 112.0,
+   "H": 4.0
+  },
+  {
+   "name": "Nippon Paper Industries Kushiro Mill IPP Power Station",
+   "fuel": "coal",
+   "p_mw": 80.0,
+   "H": 4.0
+  },
+  {
+   "name": "Nippon Paper Industries Kushiro Mill Power Station",
+   "fuel": "coal",
+   "p_mw": 80.0,
+   "H": 4.0
+  },
+  {
+   "name": "下川町発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "夕張市発電所",
+   "fuel": "hydro",
+   "p_mw": 13.8,
+   "H": 3.0
+  },
+  {
+   "name": "シューパロ発電所",
+   "fuel": "hydro",
+   "p_mw": 7.9,
+   "H": 3.0
+  },
+  {
+   "name": "勇払バイオマス発電",
+   "fuel": "biomass",
+   "p_mw": 75.0,
+   "H": 4.0
+  },
+  {
+   "name": "Nippon Paper Industries Power Generation",
+   "fuel": "coal",
+   "p_mw": 80.0,
+   "H": 4.0
+  }
+ ]
+}

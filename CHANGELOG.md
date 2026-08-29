@@ -24,7 +24,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was caught by the owner). An animated map of the Tomato-atsuma trip
   (`scripts/gen_agc_map_anim.py` → `docs/slides/ajg/assets/agc_hokkaido_trip.gif`)
   shows the event geographically: grid color = frequency, shed amount from the
-  simulation (which substations to shed is not public — marked as staging). All dynamic parameters carry provenance
+  simulation (which substations to shed is not public — marked as staging).
+- **Multi-machine swing co-simulation (AGC30 → AGC-N)**
+  (`scripts/run_multimachine_hokkaido.py`): every UC-committed plant becomes its
+  own machine (AGC30 class governor + per-fuel H/Xd′) on the **Kron-reduced Ybus
+  of the extracted network** — classical swing + governor + LFC + latching UFLS
+  (integration events switch precomputed reduced matrices). Hokkaido
+  Tomato-atsuma trip: 54 machines, exact initialisation against the AC power-flow
+  solution (max |Pe(δ0)−P_PF| = 0.0 MW), inter-machine oscillations ±40° visible,
+  UFLS stages at 1.6/2.0/2.7 s. Two disclosed calibration gaps vs the COI layer
+  (constant-Z loads, GF-width implementation) leave the multi-machine nadir
+  slightly deeper (−3.0 vs −2.5 Hz). Root-caused en route: ppc baseMVA=1 vs the
+  100 MVA system base (Ybus rescaling), and res_bus↔ppc index ordering. All dynamic parameters carry provenance
   labels; results are structural demonstrations, not operational predictions.
   Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
   `docs/assets/figs/fig_agc_national.png`.
