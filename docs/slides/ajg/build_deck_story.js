@@ -472,9 +472,9 @@ function meq(s, x, y, w, runs, fs, align) {
 {
   const s = pres.addSlide(); base(s);
   head(s, "第4幕 v1.7→", "観測と突合し、動かし続ける", ACT[3]);
-  s.addImage({ path: A + "flow_map_frame.png", x: 0.9, y: 1.3, w: 7.2,
+  s.addImage({ path: A + "flow_map_demo.gif", x: 0.9, y: 1.3, w: 7.2,
     h: 4.89 });
-  s.addText("flow_map.html — 24時間ノード潮流・方向つきアニメーション（Pages実画面）", {
+  s.addText("flow_map.html — 24時間ノード潮流・方向つきアニメーション（Pages実画面・スライドショーで動きます）", {
     x: 0.9, y: 6.25, w: 7.2, h: 0.3, fontFace: F, fontSize: 10.5, color: MUT,
     margin: 0 });
   card(s, 8.4, 1.3, 4.1, 1.8, "燃料別の実績注入",
@@ -584,7 +584,39 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("2018年9月6日の実話(北海道ブラックアウト)から入る。「あの構図が、地図から作ったモデルで出る」。動特性は典型値の構造実証、プラント粒度=ユニットN-1の上界、は聞かれたら答える。");
 }
 
-/* ===================== 16. いまの姿（スタック） ===================== */
+/* ===================== 17. 実況: 事故が地図の上を走る ===================== */
+{
+  const s = pres.addSlide();
+  s.background = { color: "0A0D1A" };
+  // GIF 960x720 — スライドショー再生でアニメーション
+  s.addImage({ path: A + "agc_hokkaido_trip.gif", x: 3.53, y: 0.15, w: 9.3,
+    h: 6.98 });
+  s.addText("実況リプレイ", { x: 0.55, y: 0.7, w: 2.9, h: 0.5, fontFace: F,
+    fontSize: 24, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("苫東厚真の脱落を、北海道の\n実系統地図の上で再生する。", {
+    x: 0.57, y: 1.35, w: 2.95, h: 0.85, fontFace: F, fontSize: 13,
+    color: "C8CDD8", lineSpacing: 19, margin: 0 });
+  [["線の色", "周波数(青白50Hz → 深赤47.5Hz)"],
+   ["✕", "落ちた発電所(実座標)"],
+   ["消える白点", "UFLSで遮断された変電所ぶん"],
+   ["時間軸", "直後スロー→復帰タイムラプス"]].forEach(([k, v], i) => {
+    const y = 2.5 + i * 0.62;
+    s.addText(k, { x: 0.57, y, w: 1.6, h: 0.3, fontFace: F, fontSize: 11.5,
+      bold: true, color: "FFFFFF", margin: 0 });
+    s.addText(v, { x: 0.57, y: y + 0.28, w: 2.95, h: 0.3, fontFace: F,
+      fontSize: 10.5, color: "8E96B8", margin: 0 });
+  });
+  s.addText("遮断量はシミュレーション実値。\nどの変電所を切るかは非公開のため\n消灯箇所は演出(画面内にも明記)。", {
+    x: 0.57, y: 5.3, w: 2.95, h: 1.0, fontFace: F, fontSize: 10,
+    color: "5A648F", lineSpacing: 14, margin: 0 });
+  s.addText("スライドショー再生で動きます(GIF)", { x: 0.57, y: 6.6, w: 2.9,
+    h: 0.3, fontFace: F, fontSize: 10, italic: true, color: "8E96B8",
+    margin: 0 });
+  foot(s, 17, "1:00");
+  s.addNotes("ここは喋らず30秒流す。止め絵になる環境ではPDF版の1コマ目が出るので「動画はGIF参照」と言う。");
+}
+
+/* ===================== 18. いまの姿（スタック） ===================== */
 {
   const s = pres.addSlide(); base(s);
   head(s, "現在", "いまの姿：1コマンドで再生成できる5層スタック", NAVY);
@@ -620,7 +652,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("下の層ほど古い幕の成果。上の幕は下を壊さず積んだ — 幕の色がそのまま層の色。", {
     x: 0.9, y: 6.3, w: 11.6, h: 0.35, fontFace: F, fontSize: 12, color: INK,
     margin: 0 });
-  foot(s, 17, "1:00");
+  foot(s, 18, "1:00");
   s.addNotes("年表（S4）の5幕がそのまま5層に堆積している、という視覚的な回収。層の色＝幕の色。");
 }
 
@@ -650,7 +682,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("この4つはどれも、一度「良い数字」を出してから学び直したものである。", {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
-  foot(s, 18, "1:00");
+  foot(s, 19, "1:00");
   s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
 }
 
@@ -686,7 +718,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("github.com/lutelute/All-Japan-Grid　|　lutelute.github.io/All-Japan-Grid　|　データ: ODbL（OSM由来）・コード: MIT　|　航空写真: 国土地理院", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.28, fontFace: FM, fontSize: 9, color: MUT,
     margin: 0 });
-  foot(s, 19, "0:30");
+  foot(s, 20, "0:30");
   s.addNotes("論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 
