@@ -1,12 +1,17 @@
 # All-Japan-Grid 全史デッキ（the making of）
 
-プロジェクトを最初から作った記録の発表資料。**5幕構成・16枚・20分**。
+プロジェクトを最初から作った記録の発表資料。**5幕構成＋終幕・18枚・約22分**。
 
 | ファイル | 内容 |
 |---|---|
 | `AllJapanGrid_story.pptx` | 本編デッキ（各枚のノート欄に話し方入り） |
 | `build_deck_story.js` | pptxgenjs 生成スクリプト |
-| `assets/` | 図版（既存の docs/assets/figs・subsldデッキ素材の再利用＋flow_mapフレーム） |
+| `assets/` | 図版（既存の docs/assets/figs・subsldデッキ素材の再利用＋flow_mapフレーム＋系統ヒーロー） |
+
+S2 のヒーロー画像（暗背景・電圧クラス発光の全国系統）は `scripts/gen_grid_hero.py` が
+built正典から生成する（`hero_grid.png` と素材比較用の `hero_grid_raw.png`）。
+S15 は UC→潮流→AGC チェーン（`scripts/run_agc_from_uc.py` の実出力
+`fig_agc_national.png`、AGC30簡易実装・全パラメータ出所つき）。
 
 ## 構成（5幕）
 

@@ -113,7 +113,40 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("30秒。右の図は本プロジェクトの実出力（全国の電圧クラス別送電網）。「地図はある、モデルが無い」だけ言って次へ。");
 }
 
-/* ===================== 2. 動機 ===================== */
+/* ===================== 2. HERO: 出来上がったもの ===================== */
+{
+  const s = pres.addSlide();
+  s.background = { color: "0A0D1A" };
+  s.addImage({ path: A + "hero_grid.png", x: 0, y: 0, w: 13.33, h: 7.5 });
+  s.addText("これが、出来上がったもの。", { x: 0.7, y: 0.75, w: 7.2, h: 0.75,
+    fontFace: F, fontSize: 34, bold: true, color: "FFFFFF", margin: 0 });
+  s.addText("OpenStreetMapに描かれた「線」から復元した、日本全国の送電系統。\n電圧階級つき・4同期島 — そのままUC・潮流・周波数制御まで解ける。", {
+    x: 0.72, y: 1.65, w: 6.8, h: 0.95, fontFace: F, fontSize: 14.5,
+    color: "C8CDD8", lineSpacing: 22, margin: 0 });
+  // 素材との対比(同構図の単色細線)
+  s.addImage({ path: A + "hero_grid_raw.png", x: 0.72, y: 3.0, w: 3.0,
+    h: 1.69 });
+  s.addShape(pres.ShapeType.rect, { x: 0.72, y: 3.0, w: 3.0, h: 1.69,
+    fill: { type: "none" }, line: { color: "3A4266", width: 1 } });
+  s.addText("素材はこれ — OSMの power=line/cable 40,077本の\n「ただの線」(同構図・装飾なし)", {
+    x: 0.72, y: 4.75, w: 3.6, h: 0.6, fontFace: F, fontSize: 10.5,
+    color: "8E96B8", lineSpacing: 14, margin: 0 });
+  // 電圧凡例
+  [["500 kV級", "FF3B30"], ["275 kV級", "FF9500"], ["154/187", "BF5AF2"],
+   ["110 kV級", "34C759"], ["66/77 kV", "32ADE6"]].forEach(([t, c], i) => {
+    const y = 3.12 + i * 0.3;
+    s.addShape(pres.ShapeType.rect, { x: 4.1, y: y + 0.07, w: 0.3, h: 0.06,
+      fill: { color: c }, line: { type: "none" } });
+    s.addText(t, { x: 4.5, y, w: 1.6, h: 0.26, fontFace: FL, fontSize: 10,
+      color: "C8CDD8", margin: 0 });
+  });
+  s.addText("built正典 v1.8: 実線形19,895枝 / ノード17,745(うち変電所9,139) — 全要素がOSM実体か出典つき介入に遡れる", {
+    x: 2.75, y: 7.08, w: 10.0, h: 0.3, fontFace: F, fontSize: 10,
+    color: "5A648F", margin: 0 });
+  s.addNotes("30秒黙って見せてから一言。「素材はただの線。ここから解ける系統までが本発表」。数字はbuilt正典の実測。");
+}
+
+/* ===================== 3. 動機 ===================== */
 {
   const s = pres.addSlide(); base(s);
   head(s, "序", "日本には、公開のバスレベル系統モデルが無い", NAVY);
@@ -139,7 +172,7 @@ function meq(s, x, y, w, runs, fs, align) {
     x: 1.2, y: 5.35, w: 11.0, h: 1.15, fontFace: F, fontSize: 13.5,
     bold: true, color: "FFFFFF", lineSpacing: 20, margin: 0,
     valign: "middle" });
-  foot(s, 2, "1:00");
+  foot(s, 3, "1:00");
   s.addNotes("論文（ieee-openaccess）§I の構図そのまま。日本だけ赤。下段で OSM に橋を架けると宣言。");
 }
 
@@ -153,7 +186,7 @@ function meq(s, x, y, w, runs, fs, align) {
     "位置・経路・電圧タグ・回線数タグ・運用者名。\n「どこに何があり、空間的にどう繋がるか」", GRN, 12);
   card(s, 6.9, 5.45, 5.6, 1.35, "OSMに無いもの（電気）",
     "インピーダンス・変圧器特性・ノード需要。\n→ 無いものは推定と明記して分離保持する（捏造ゼロ）", RED, 12);
-  foot(s, 3, "1:00");
+  foot(s, 4, "1:00");
   s.addNotes("3層（線・変電所・発電所）を見せて、下2枚で線引き。「捏造ゼロ」はここで一度だけ宣言し、以後は行動で見せる。");
 }
 
@@ -214,7 +247,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("6月上旬に5連リリース（v1.1.0〜v1.4.0）— 標準化と解ける化の集中期", {
     x: 0.9, y: 6.15, w: 11.5, h: 0.3, fontFace: F, fontSize: 10.5, color: MUT,
     margin: 0 });
-  foot(s, 4, "1:00");
+  foot(s, 5, "1:00");
   s.addNotes("この1枚が地図。以降のスライドは左上バッジ（幕色つき）で現在地を示す。斜体の問いの連鎖だけ読み上げる。");
 }
 
@@ -227,7 +260,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("Overpassタイル分割抽出 → 7段の属性補完（Nominatim / MLIT P03、欠損87%削減）→ Haversine端点マッチング → 電圧クラス別の合成パラメータ → pandapower / MATPOWER / Ybus / UC", {
     x: 0.9, y: 6.4, w: 11.6, h: 0.55, fontFace: F, fontSize: 11.5, color: INK,
     lineSpacing: 16, margin: 0 });
-  foot(s, 5, "1:30");
+  foot(s, 6, "1:30");
   s.addNotes("論文 §III–VI をこの1枚に圧縮。「電気パラメータは合成＝推定と明記」を図の緑ブロックを指して言う。87%は補完の欠損削減率（論文値）。");
 }
 
@@ -262,7 +295,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("限界も初版から明記：インピーダンスは合成推定・端点マッチング誤接続 ~2–3 %・運用計画には使えない（研究・教育用）。", {
     x: 0.9, y: 5.8, w: 11.6, h: 0.6, fontFace: F, fontSize: 12, color: RED,
     lineSpacing: 17, margin: 0 });
-  foot(s, 6, "1:30");
+  foot(s, 7, "1:30");
   s.addNotes("数値は論文 Table I / II。本文の 8,164 は誤記（同論文の表合計は 6,962）で、この版から 6,962 に統一している。限界の明記が第3幕への伏線。");
 }
 
@@ -296,7 +329,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("→ 修正後は vm差 < 1e-4 pu の電気的同一性を回帰テストで固定。\n標準に書き出せる＝独立実装に読ませて突き合わせられる、ということ。", {
     x: 7.15, y: 5.75, w: 5.15, h: 0.8, fontFace: F, fontSize: 11.5,
     bold: true, color: NAVY, lineSpacing: 16, margin: 0 });
-  foot(s, 7, "1:30");
+  foot(s, 8, "1:30");
   s.addNotes("この枚の主張は右の赤枠。「標準対応しました」ではなく「標準が検証器になった」。5つのバグはどれも自前レンダラだけなら気づけない。");
 }
 
@@ -324,7 +357,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("全国ACPF：14,647母線・10/10地域が解けた（v1.4, CGMES往復後の実測図）", {
     x: 7.35, y: 6.5, w: 5.3, h: 0.5, fontFace: F, fontSize: 10.5, color: MUT,
     lineSpacing: 14, margin: 0 });
-  foot(s, 8, "1:30");
+  foot(s, 9, "1:30");
   s.addNotes("左下の衛星3連画像は v1.1 の比較タブ（衛星写真で位置を目視検証）。右図は自慢の1枚だが、次の幕でこれを自分で疑いにいく。");
 }
 
@@ -356,7 +389,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("あわせて v1.5 で配布基盤も整備：自己完結バンドル（SHA256 MANIFEST）・pandapower/MATLAB両チュートリアルを実ダウンロード→新環境E2Eで検証してから公開。", {
     x: 0.9, y: 6.05, w: 11.6, h: 0.6, fontFace: F, fontSize: 11.5, color: MUT,
     lineSpacing: 16, margin: 0 });
-  foot(s, 9, "2:00");
+  foot(s, 10, "2:00");
   s.addNotes("プロジェクトの転回点。8枚目の全国AC図を自分で解体した話。「結果を悪くする訂正」の一文をゆっくり。ここが第5幕の『完全性を主張せず測定する』の源流。");
 }
 
@@ -394,7 +427,7 @@ function meq(s, x, y, w, runs, fs, align) {
     { text: "OSM由来系統モデルの落とし穴4クラス／診断手法5種（変種プローブ・プロセス分離・served_fracガード・DC角トリアージ・不変量比較）／他プロジェクト向け12項目チェックリスト — 負の結果も記録", options: {} },
   ], { x: 1.15, y: 5.35, w: 11.1, h: 1.2, fontFace: F, fontSize: 11.5,
     color: INK, lineSpacing: 17, margin: 0, valign: "middle" });
-  foot(s, 10, "1:30");
+  foot(s, 11, "1:30");
   s.addNotes("デバッグ譚として一番話せる枚。「+5.7%が訂正」の反直感を丁寧に。方法論文書は osm_grid_pitfalls_methodology_2026-07-10.md。");
 }
 
@@ -431,7 +464,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("発電容量・変圧器銘板・連系線容量はすべて「出典URL＋原文引用つきレコード」の provenance DB 経由でだけモデルに入る。出典が無い値は既定値のまま、既定値と明記される。", {
     x: 7.15, y: 5.6, w: 5.2, h: 1.15, fontFace: F, fontSize: 11.5, color: INK,
     lineSpacing: 16, margin: 0 });
-  foot(s, 11, "1:30");
+  foot(s, 12, "1:30");
   s.addNotes("第3幕の規律が開示データにも適用される、が主題。「開示があるから正しい」ではなく開示も証拠ゲートを通す（EGGC）。UC訂正は開示容量と突き合わせて初めて見えた。");
 }
 
@@ -450,7 +483,7 @@ function meq(s, x, y, w, runs, fs, align) {
     "でんき予報の実績需要スナップショットでNOW断面PFを毎時再計算（launchd常駐・v1.8後）", ACT[3], 11.5);
   card(s, 8.4, 5.05, 4.1, 1.55, "観測方向の照合",
     "モデル潮流の向きを公表実績の向きと突合し、一致/不一致を地図に描く — 隠さず可視化", ACT[3], 11.5);
-  foot(s, 12, "1:00");
+  foot(s, 13, "1:00");
   s.addNotes("静的データセットが「動く系統の観測器」になった枚。39–129 MWの一致幅は検証時点の実測。デモできるならここで flow_map を開く。");
 }
 
@@ -483,18 +516,37 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("→ 手法の詳細は姉妹デッキ SubSLD_paper_talk.pptx（16枚）と論文 papers/subsld/（IEEEtran 6p）", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.32, fontFace: F, fontSize: 11, color: MUT,
     margin: 0 });
-  foot(s, 13, "2:00");
+  foot(s, 14, "2:00");
   s.addNotes("7,239 は構造DBのサイト数で、第1幕の 6,962（データセットfeature・v1.2測定）とは定義が違う — 聞かれたら即答する。深掘りは姉妹デッキへ誘導。");
 }
 
-/* ===================== 14. いまの姿（スタック） ===================== */
+/* ===================== 15. 終幕: UC→潮流→AGC ===================== */
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "終幕 v1.9へ", "計画から制御まで：UC → 潮流 → AGC が同一断面で閉じた", NAVY);
+  s.addImage({ path: A + "fig_agc_national.png", x: 0.62, y: 1.15, w: 12.1,
+    h: 3.35 });
+  s.addText("発電機・制御はIEEJ標準モデル AGC30(技術報告1386号)の簡易実装。全パラメータ典型値・出所つき — 構造実証であり運用予測ではない", {
+    x: 0.9, y: 4.55, w: 11.6, h: 0.3, fontFace: F, fontSize: 10.5, color: MUT,
+    margin: 0 });
+  card(s, 0.9, 5.0, 3.7, 1.65, "UCが慣性と余力を決める",
+    "オンライン機集合→慣性(東245.6 GW·s)、基点→調整余力、最大オンライン機→N-1外乱。三層が同一運用断面を共有", ACT[0], 11.5);
+  card(s, 4.85, 5.0, 3.7, 1.65, "連系の硬さは実網から測る",
+    "T_ab=SΣ1/x を抽出網で実測(東北-東京3,572 pu/rad)。関西-四国206=本四の細さを正しく拾う — 仮定していた量が測定値になる", ACT[3], 11.5);
+  card(s, 8.8, 5.0, 3.7, 1.65, "苫東厚真の構図が出る",
+    "同プラント1,650MW喪失(4.4GW系統)でRoCoF−2.9Hz/s・nadir−2.5Hz — UFLSだけが止める。2018年北海道の構図と整合", RED, 11.5);
+  foot(s, 15, "1:00");
+  s.addNotes("2%ステップは198-788sで復帰し外乱エリアが全量引き受け(TBC)。プラント粒度=ユニットN-1の上界、UFLSは典型3段、は聞かれたら即答。");
+}
+
+/* ===================== 16. いまの姿（スタック） ===================== */
 {
   const s = pres.addSlide(); base(s);
   head(s, "現在", "いまの姿：1コマンドで再生成できる5層スタック", NAVY);
   const layers = [
     ["観測・UI", "Pages: flow map（毎時更新）/ SubSLDビューア / エディタ / ダウンロード", ACT[4]],
     ["標準出力", "CIM/CGMES EQ+GL＋Level-2（node-breaker層込み）/ MATPOWER / GeoJSON / Ybus", ACT[3]],
-    ["モデル", "built canon（介入台帳つき）/ 全国UC / 島別PF / 変電所構造DB", ACT[2]],
+    ["モデル", "built canon（介入台帳つき）/ 全国UC / 島別PF / AGC連鎖 / 変電所構造DB", ACT[2]],
     ["統一DB", "SQLite R/C/D 3層 — 生feature不変・キュレーション出所つき・導出は再生成可能", ACT[1]],
     ["基底データ", "OSMスナップショット + 開示（様式5・OCCTO）+ 出典つき容量/銘板DB", ACT[0]],
   ];
@@ -523,7 +575,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("下の層ほど古い幕の成果。上の幕は下を壊さず積んだ — 幕の色がそのまま層の色。", {
     x: 0.9, y: 6.3, w: 11.6, h: 0.35, fontFace: F, fontSize: 12, color: INK,
     margin: 0 });
-  foot(s, 14, "1:00");
+  foot(s, 16, "1:00");
   s.addNotes("年表（S4）の5幕がそのまま5層に堆積している、という視覚的な回収。層の色＝幕の色。");
 }
 
@@ -553,7 +605,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("この4つはどれも、一度「良い数字」を出してから学び直したものである。", {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
-  foot(s, 15, "1:00");
+  foot(s, 17, "1:00");
   s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
 }
 
@@ -569,8 +621,8 @@ function meq(s, x, y, w, runs, fs, align) {
   // 論文2本
   s.addText("論文", { x: 0.9, y: 3.05, w: 2, h: 0.3, fontFace: F,
     fontSize: 12.5, bold: true, color: NAVY, margin: 0 });
-  card(s, 0.9, 3.4, 5.65, 1.7, "① データセット論文（IEEE OA体裁・草稿）",
-    "抽出パイプライン・7段補完・UC/PF一式。papers/ieee-openaccess.tex\n※ 本文の変電所数8,164は誤記（表は6,962）— 投稿前に要修正", ACT[1], 11.5);
+  card(s, 0.9, 3.4, 5.65, 1.7, "① データセット論文（IEEE OA体裁・5p）",
+    "抽出パイプライン・7段補完・UC/潮流/AGC連鎖。papers/ieee-openaccess.tex\n※ 8,164誤記は修正済(6,962)。残る宿題=文献整備と著者名", ACT[1], 11.5);
   card(s, 6.85, 3.4, 5.65, 1.7, "② SubSLD論文（IEEEtran 6p・ビルド済）",
     "変電所内部構成の実証的機械生成。papers/subsld/\n※ 参考文献が未記載（\\cite 0件）— 両論文とも投稿先未定", ACT[4], 11.5);
   // 今後
@@ -589,7 +641,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("github.com/lutelute/All-Japan-Grid　|　lutelute.github.io/All-Japan-Grid　|　データ: ODbL（OSM由来）・コード: MIT　|　航空写真: 国土地理院", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.28, fontFace: FM, fontSize: 9, color: MUT,
     margin: 0 });
-  foot(s, 16, "0:30");
+  foot(s, 18, "0:30");
   s.addNotes("論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 
