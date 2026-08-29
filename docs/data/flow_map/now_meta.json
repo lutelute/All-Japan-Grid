@@ -9,15 +9,15 @@
   },
   "east": {
    "ac": true,
-   "n_lines": 6344,
+   "n_lines": 6489,
    "n_genbus": 478,
    "obs_dir_match": 20,
    "obs_dir_mismatch": 10
   },
   "west": {
-   "ac": false,
-   "n_lines": 8244,
-   "n_genbus": 653,
+   "ac": true,
+   "n_lines": 8077,
+   "n_genbus": 637,
    "obs_dir_match": 15,
    "obs_dir_mismatch": 6
   },
@@ -29,31 +29,36 @@
    "obs_dir_mismatch": 0
   }
  },
- "fetched_at": "2026-08-30T01:35:59",
+ "fetched_at": "2026-08-30T02:45:33",
  "zone_hour": {
   "hokkaido": {
-   "hour": 0,
-   "mw": 2310.0,
+   "hour": 1,
+   "mw": 2260.0,
    "date": "2026/8/30"
   },
   "tohoku": {
-   "hour": 0,
-   "mw": 6480.0,
+   "hour": 1,
+   "mw": 6300.0,
    "date": "2026/8/30"
   },
   "tokyo": {
-   "hour": 0,
-   "mw": 23440.0,
+   "hour": 1,
+   "mw": 22140.0,
    "date": "2026/8/30"
   },
+  "chubu": {
+   "hour": 1,
+   "mw": 11060.0,
+   "date": "2026/08/30"
+  },
   "hokuriku": {
-   "hour": 0,
-   "mw": 2300.0,
+   "hour": 1,
+   "mw": 2240.0,
    "date": "2026/8/30"
   },
   "chugoku": {
-   "hour": 0,
-   "mw": 5720.0,
+   "hour": 1,
+   "mw": 5490.0,
    "date": "2026/8/30"
   },
   "shikoku": {
@@ -62,13 +67,13 @@
    "date": "2026/08/29"
   },
   "kyushu": {
-   "hour": 0,
-   "mw": 9600.0,
+   "hour": 1,
+   "mw": 9020.0,
    "date": "2026/8/30"
   },
   "okinawa": {
-   "hour": 0,
-   "mw": 1100.0,
+   "hour": 1,
+   "mw": 1050.0,
    "date": "2026/08/30"
   }
  }
