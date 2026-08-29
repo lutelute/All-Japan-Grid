@@ -1231,6 +1231,14 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--provisional-infeed",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#37 都心給電の必然接続(仮)。上位変圧器を持たない"
+                         "負荷クラスタ(≥100MW)へ最近傍≥275kVから(仮)変圧器を"
+                         "張る。名前に(仮)・実経路未確認を明記・全件台帳。"
+                         "既定ON(オーナー承認 2026-08-30「仮が事実でないかも"
+                         "しれないなら、それを明記しておけば正典として良い」)。"
+                         "--no-provisional-infeed=従来(回帰比較用)")
     ap.add_argument("--no-reactive-comp", action="store_const", const=None,
                     dest="reactive_comp",
                     help="無効電力補償を無効化(従来挙動・回帰比較用)")
@@ -1356,6 +1364,14 @@ def main():
                     if args.reactive_comp == -1.0 else args.reactive_comp)
             n_shunt = add_reactive_compensation(net, factor=rfac)
             print(f"  reactive-comp: factor={rfac} shunt={n_shunt}")
+        infeed_ledger = []          # 介入#37 台帳(JSONへ保存)
+        if args.provisional_infeed:
+            from src.powerflow.pipeline import add_provisional_infeed
+            infeed_ledger = add_provisional_infeed(net)
+            if infeed_ledger:
+                print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
+                      f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW"
+                      f"の孤立負荷クラスタへ(仮)変圧器(実経路未確認・全件台帳)")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
         balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator)
         if args.gen_zone_by_operator and "zone_src" in net.gen.columns:
@@ -1384,6 +1400,7 @@ def main():
             }
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
+            "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
             "total_load_mw": round(total_load, 1),
             "n_components": n_comp, "n_slack": n_slack, "n_synthetic_slack": n_synth,
             "ac_converged": bool(ac.get("converged")),

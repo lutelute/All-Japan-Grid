@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #37 — provisional metro infeed ((仮)都心給電の必然接続)**
+  (`src/powerflow/pipeline.add_provisional_infeed`, `--provisional-infeed`
+  on `run_full_powerflow_from_db.py` / `uc_to_pf_built.py`, default ON;
+  owner-approved 2026-08-30). Load clusters ≥100 MW at 60–274 kV with **no
+  transformer to the upper grid** get one provisional transformer to the
+  nearest ≥275 kV bus. Rationale mirrors the inferred-busbar argument: a load
+  that is actually served proves an upper-grid path **exists**; only the
+  existence is claimed — path, voltage and rating are explicitly **provisional
+  and may not be factual** (「(仮)・実経路未確認」 is stamped into every
+  transformer name, and the full ledger — cluster, MW, chosen upper bus,
+  distance, rating — is exported in result JSON as `provisional_infeed`).
+  Root cause it addresses: the west AC non-convergence epicenter is the Osaka
+  metro 154 kV cluster whose 275 kV underground network is missing from OSM
+  (`docs/reports/west_ac_probe2_2026-08-30.md`), and Kansai's disclosed
+  single-line diagrams are anonymized, so a #28-style source recovery is
+  impossible. Effect: **first-ever AC solution on the west backbone**
+  (7 provisional links → mode=ac, served 96.5 %, vm∈[0.941, 1.037];
+  `docs/reports/west_ac_infeed_probe_2026-08-30.md`). To be replaced by real
+  routes if ever published; `--no-provisional-infeed` restores the old
+  behaviour for regression comparison. Registry: `docs/MODEL_INTERVENTIONS.md`
+  #37.
 - **AGC layer — the operations chain UC → power flow → AGC now closes on the
   dataset** (`src/dynamics/agc.py`, `scripts/run_agc_from_uc.py`,
   `tests/test_agc.py`). Multi-area LFC per synchronous island following the

@@ -43,78 +43,9 @@ from src.uc.solver import solve_uc  # noqa: E402
 import pandapower as pp
 
 
-def geo_of(net, b):
-    try:
-        g = json.loads(net.bus.at[b, "geo"])
-        return float(g["coordinates"][0]), float(g["coordinates"][1])
-    except Exception:  # noqa: BLE001
-        return None
-
-
-def detect_isolated_clusters(net, min_load_mw=100.0):
-    """上位変圧器を持たない同階級線クラスタ(負荷つき)を検出."""
-    from collections import defaultdict
-    import networkx as nx
-    # 電圧階級ごとの線グラフ
-    g = nx.Graph()
-    for _, r in net.line[net.line.in_service].iterrows():
-        fb, tb = int(r.from_bus), int(r.to_bus)
-        if abs(net.bus.at[fb, "vn_kv"] - net.bus.at[tb, "vn_kv"]) < 0.5:
-            g.add_edge(fb, tb)
-    has_up = set()   # 上位(自階級より高い)へのtrafoを持つバス
-    for _, r in net.trafo[net.trafo.in_service].iterrows():
-        hv, lv = int(r.hv_bus), int(r.lv_bus)
-        has_up.add(lv)          # lv側は上位(hv)へ繋がる
-    load_at = defaultdict(float)
-    for _, r in net.load[net.load.in_service].iterrows():
-        load_at[int(r.bus)] += float(r.p_mw)
-    out = []
-    for comp in nx.connected_components(g):
-        kv = float(net.bus.at[next(iter(comp)), "vn_kv"])
-        if kv < 60 or kv >= 275:
-            continue
-        if any(b in has_up for b in comp):
-            continue
-        load = sum(load_at.get(b, 0.0) for b in comp)
-        if load < min_load_mw:
-            continue
-        big = max(comp, key=lambda b: load_at.get(b, 0.0))
-        names = sorted({str(net.bus.at[b, "name"])[:14] for b in comp
-                        if load_at.get(b, 0) > 0})[:4]
-        out.append(dict(kv=kv, n_bus=len(comp), load_mw=round(load, 1),
-                        anchor_bus=int(big), names=names))
-    return sorted(out, key=lambda c: -c["load_mw"])
-
-
-def add_provisional_infeed(net, clusters):
-    """(仮)給電変圧器を追加。全件台帳を返す(正典不変更・このnet限り)."""
-    ups = [b for b in net.bus.index
-           if net.bus.at[b, "in_service"] and net.bus.at[b, "vn_kv"] >= 275]
-    up_geo = [(b, geo_of(net, b)) for b in ups]
-    up_geo = [(b, g) for b, g in up_geo if g]
-    ledger = []
-    for c in clusters:
-        a = c["anchor_bus"]
-        ga = geo_of(net, a)
-        if not ga:
-            continue
-        best = min(up_geo, key=lambda bg: (bg[1][0]-ga[0])**2 +
-                   (bg[1][1]-ga[1])**2)
-        ub, ug = best
-        dist_km = math.hypot((ug[0]-ga[0])*91, (ug[1]-ga[1])*111)
-        sn = max(300.0, 1.5 * c["load_mw"])
-        pp.create_transformer_from_parameters(
-            net, hv_bus=int(ub), lv_bus=int(a), sn_mva=sn,
-            vn_hv_kv=float(net.bus.at[ub, "vn_kv"]), vn_lv_kv=c["kv"],
-            vkr_percent=0.5, vk_percent=12.0, pfe_kw=0.0, i0_percent=0.0,
-            name=f"(仮)都心給電 {c['kv']:.0f}kV #37candidate")
-        ledger.append(dict(
-            kv=c["kv"], load_mw=c["load_mw"], n_bus=c["n_bus"],
-            cluster_names=c["names"],
-            to_upper=str(net.bus.at[ub, "name"])[:20],
-            upper_kv=float(net.bus.at[ub, "vn_kv"]),
-            dist_km=round(dist_km, 1), sn_mva=round(sn, 0)))
-    return ledger
+from src.powerflow.pipeline import add_provisional_infeed  # noqa: E402
+# 検出+適用の実装は介入#37として src/powerflow/pipeline.py に正典化
+# (2026-08-30 オーナー承認)。本プローブは再現ハーネスとして残す
 
 
 def main():
@@ -151,8 +82,7 @@ def main():
         net = copy.deepcopy(base)
         if thr:
             net, _led = build_backbone_net(net, threshold_kv=thr)
-        clusters = detect_isolated_clusters(net)
-        ledger = add_provisional_infeed(net, clusters)
+        ledger = add_provisional_infeed(net)
         add_per_component_slacks(net)
         inject_dispatch_by_zone(net, fuel_by_zone, demand)
         pre = float(net.load.loc[net.load.in_service, "p_mw"].sum())

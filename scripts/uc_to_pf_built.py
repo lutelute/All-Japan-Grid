@@ -435,6 +435,11 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--provisional-infeed",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#37 都心給電の必然接続(仮)・既定ON"
+                         "(オーナー承認 2026-08-30)。(仮)・実経路未確認を明記"
+                         "し全件台帳。--no-provisional-infeed=回帰比較用")
     ap.add_argument("--no-reactive-comp", action="store_const", const=None,
                     dest="reactive_comp",
                     help="無効電力補償を無効化(従来挙動・回帰比較用)")
@@ -572,6 +577,14 @@ def main():
                   f"gen集約{ledger['gens']['moved']}件"
                   f"(断片から{ledger['gens']['from_fragment_mw']:,.0f}MW) "
                   f"銘板残{ledger['n_trafo_nameplate_kept']}")
+        infeed_ledger = []
+        if args.provisional_infeed:
+            from src.powerflow.pipeline import add_provisional_infeed
+            infeed_ledger = add_provisional_infeed(base)
+            if infeed_ledger:
+                print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
+                      f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW "
+                      f"(実経路未確認・全件台帳)")
         add_per_component_slacks(base)
         boundary_pts, boundary_flows = [], {}
         if args.boundary_injection:
@@ -616,6 +629,7 @@ def main():
         gate = ybus_gate(base)
         isl_rep = {"mode": mode, "regions": regions,
                    "model": args.model,
+                   "provisional_infeed": infeed_ledger,  # 介入#37 台帳((仮)明記)
                    "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,
