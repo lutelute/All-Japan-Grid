@@ -1,0 +1,382 @@
+{
+ "note": "UC→潮流→AGC 運用チェーン。AGC層は IEEJ AGC30(GH1386) の簡易実装(GF/LFC/EDC三階層) — パラメータ出所と簡約は src/dynamics/agc.py 冒頭に記載。構造実証であり運用予測ではない",
+ "scenario": "fy2023r2",
+ "islands": {
+  "hokkaido": {
+   "regions": [
+    "hokkaido"
+   ],
+   "f0_hz": 50.0,
+   "peak_hour": 18,
+   "net_demand_mw": 4434.3,
+   "pf": {
+    "mode": "dc",
+    "served_mw": 4434.3,
+    "load_mw": 4434.3,
+    "served_frac": 1.0,
+    "line_loading_max_pct": 176.0,
+    "note": "DC断面検証。AC正典は uc_to_pf_built.py (east AC実績 2026-07-04) を参照"
+   },
+   "tie_pu_per_rad": {},
+   "agc": {
+    "disturbance": {
+     "unit": "苫東厚真火力発電所",
+     "region": "hokkaido",
+     "fuel": "coal",
+     "p_mw": 1650.0
+    },
+    "inertia_gws": 14.3,
+    "areas": {
+     "hokkaido": {
+      "M_pu_s": 286.3,
+      "beta_pu": 1062.9,
+      "load_mw": 4434.3
+     }
+    },
+    "ref_2pct_step": {
+     "dp_mw": 88.7,
+     "area": "hokkaido",
+     "nadir_primary_hz": -0.2047,
+     "qss_primary_hz": -0.0301,
+     "nadir_lfc_hz": -0.2046,
+     "restore_s": 239.5
+    },
+    "plant_trip_upper_bound": {
+     "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
+     "rocof_hz_s": -2.882,
+     "nadir_hz": -2.4988,
+     "restore_s": null
+    },
+    "ledger": {
+     "model": "IEEJ AGC30 (GH1386) simplified — 2nd-order per-class aggregates; reductions stated in src/dynamics/agc.py",
+     "reduction": "coherent-island (COI) — 測定した連系剛性 T_ab がLFC帯域外の動揺周波数を与えるため、島内は単一周波数・連系偏差は収支から代数復元",
+     "mode": "tbc",
+     "lfc": {
+      "KP": 1.0,
+      "KI": 0.003,
+      "Ts_s": 15.0,
+      "deadband_mw": 10.0,
+      "cycle_lag_s": 5.0
+     },
+     "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
+     "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
+     "M_pu_s": {
+      "hokkaido": 286.3
+     },
+     "beta_pu": {
+      "hokkaido": 1062.9
+     },
+     "tie_pu_per_rad": {},
+     "disturbance": {
+      "area": "hokkaido",
+      "dp_mw": 1650.0,
+      "t_step": 1.0,
+      "label": "苫東厚真火力発電所 trip (plant-granularity)"
+     },
+     "provenance": "class constants from AGC30 定数.xlsx (GH1386); H per fuel = FUEL_DEFAULT_PARAMS (Anderson&Fouad/Kundur/PSSE lib). Structural demonstration on the open model — not operational data."
+    }
+   }
+  },
+  "east": {
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "f0_hz": 50.0,
+   "peak_hour": 17,
+   "net_demand_mw": 59353.0,
+   "pf": {
+    "mode": "dc",
+    "served_mw": 59353.0,
+    "load_mw": 59353.0,
+    "served_frac": 1.0,
+    "line_loading_max_pct": 752.6,
+    "note": "DC断面検証。AC正典は uc_to_pf_built.py (east AC実績 2026-07-04) を参照"
+   },
+   "tie_pu_per_rad": {
+    "tohoku-tokyo": 3572.0
+   },
+   "agc": {
+    "disturbance": {
+     "unit": "富津火力発電所",
+     "region": "tokyo",
+     "fuel": "lng",
+     "p_mw": 5040.0
+    },
+    "inertia_gws": 245.6,
+    "areas": {
+     "tohoku": {
+      "M_pu_s": 1591.6,
+      "beta_pu": 5539.9,
+      "load_mw": 10027.5
+     },
+     "tokyo": {
+      "M_pu_s": 3319.9,
+      "beta_pu": 11716.1,
+      "load_mw": 49325.5
+     }
+    },
+    "ref_2pct_step": {
+     "dp_mw": 1187.1,
+     "area": "tokyo",
+     "nadir_primary_hz": -0.1388,
+     "qss_primary_hz": -0.0323,
+     "nadir_lfc_hz": -0.1388,
+     "restore_s": 346.7
+    },
+    "plant_trip_upper_bound": {
+     "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
+     "rocof_hz_s": -0.5131,
+     "nadir_hz": -1.357,
+     "restore_s": null
+    },
+    "ledger": {
+     "model": "IEEJ AGC30 (GH1386) simplified — 2nd-order per-class aggregates; reductions stated in src/dynamics/agc.py",
+     "reduction": "coherent-island (COI) — 測定した連系剛性 T_ab がLFC帯域外の動揺周波数を与えるため、島内は単一周波数・連系偏差は収支から代数復元",
+     "mode": "tbc",
+     "lfc": {
+      "KP": 1.0,
+      "KI": 0.003,
+      "Ts_s": 15.0,
+      "deadband_mw": 10.0,
+      "cycle_lag_s": 5.0
+     },
+     "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
+     "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
+     "M_pu_s": {
+      "tohoku": 1591.6,
+      "tokyo": 3319.9
+     },
+     "beta_pu": {
+      "tohoku": 5539.9,
+      "tokyo": 11716.1
+     },
+     "tie_pu_per_rad": {
+      "tohoku-tokyo": 3572.0
+     },
+     "disturbance": {
+      "area": "tokyo",
+      "dp_mw": 5040.0,
+      "t_step": 1.0,
+      "label": "富津火力発電所 trip (plant-granularity)"
+     },
+     "provenance": "class constants from AGC30 定数.xlsx (GH1386); H per fuel = FUEL_DEFAULT_PARAMS (Anderson&Fouad/Kundur/PSSE lib). Structural demonstration on the open model — not operational data."
+    }
+   }
+  },
+  "west": {
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "f0_hz": 60.0,
+   "peak_hour": 17,
+   "net_demand_mw": 69937.7,
+   "pf": {
+    "mode": "dc",
+    "served_mw": 69937.7,
+    "load_mw": 69937.7,
+    "served_frac": 1.0,
+    "line_loading_max_pct": 4418.1,
+    "note": "DC断面検証。AC正典は uc_to_pf_built.py (east AC実績 2026-07-04) を参照"
+   },
+   "tie_pu_per_rad": {
+    "chubu-hokuriku": 16333.9,
+    "chubu-kansai": 2058.0,
+    "chugoku-kansai": 1238.7,
+    "chugoku-kyushu": 552.7,
+    "chugoku-shikoku": 1360.8,
+    "hokuriku-kansai": 4404.5,
+    "kansai-shikoku": 205.6
+   },
+   "agc": {
+    "disturbance": {
+     "unit": "川越火力発電所",
+     "region": "chubu",
+     "fuel": "lng",
+     "p_mw": 4802.0
+    },
+    "inertia_gws": 332.5,
+    "areas": {
+     "chubu": {
+      "M_pu_s": 1479.8,
+      "beta_pu": 5252.9,
+      "load_mw": 17220.5
+     },
+     "chugoku": {
+      "M_pu_s": 977.9,
+      "beta_pu": 3446.2,
+      "load_mw": 7816.5
+     },
+     "hokuriku": {
+      "M_pu_s": 271.8,
+      "beta_pu": 993.8,
+      "load_mw": 3678.6
+     },
+     "kansai": {
+      "M_pu_s": 2020.0,
+      "beta_pu": 4352.4,
+      "load_mw": 23079.1
+     },
+     "kyushu": {
+      "M_pu_s": 1399.2,
+      "beta_pu": 3114.0,
+      "load_mw": 14197.9
+     },
+     "shikoku": {
+      "M_pu_s": 500.8,
+      "beta_pu": 1399.6,
+      "load_mw": 3945.0
+     }
+    },
+    "ref_2pct_step": {
+     "dp_mw": 1398.8,
+     "area": "kansai",
+     "nadir_primary_hz": -0.1768,
+     "qss_primary_hz": -0.0428,
+     "nadir_lfc_hz": -0.1768,
+     "restore_s": 787.5
+    },
+    "plant_trip_upper_bound": {
+     "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
+     "rocof_hz_s": -0.4333,
+     "nadir_hz": -1.0936,
+     "restore_s": 744.3
+    },
+    "ledger": {
+     "model": "IEEJ AGC30 (GH1386) simplified — 2nd-order per-class aggregates; reductions stated in src/dynamics/agc.py",
+     "reduction": "coherent-island (COI) — 測定した連系剛性 T_ab がLFC帯域外の動揺周波数を与えるため、島内は単一周波数・連系偏差は収支から代数復元",
+     "mode": "tbc",
+     "lfc": {
+      "KP": 1.0,
+      "KI": 0.003,
+      "Ts_s": 15.0,
+      "deadband_mw": 10.0,
+      "cycle_lag_s": 5.0
+     },
+     "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
+     "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
+     "M_pu_s": {
+      "chubu": 1479.8,
+      "chugoku": 977.9,
+      "hokuriku": 271.8,
+      "kansai": 2020.0,
+      "kyushu": 1399.2,
+      "shikoku": 500.8
+     },
+     "beta_pu": {
+      "chubu": 5252.9,
+      "chugoku": 3446.2,
+      "hokuriku": 993.8,
+      "kansai": 4352.4,
+      "kyushu": 3114.0,
+      "shikoku": 1399.6
+     },
+     "tie_pu_per_rad": {
+      "chubu-hokuriku": 16333.9,
+      "chubu-kansai": 2058.0,
+      "chugoku-kansai": 1238.7,
+      "chugoku-kyushu": 552.7,
+      "chugoku-shikoku": 1360.8,
+      "hokuriku-kansai": 4404.5,
+      "kansai-shikoku": 205.6
+     },
+     "disturbance": {
+      "area": "chubu",
+      "dp_mw": 4802.0,
+      "t_step": 1.0,
+      "label": "川越火力発電所 trip (plant-granularity)"
+     },
+     "provenance": "class constants from AGC30 定数.xlsx (GH1386); H per fuel = FUEL_DEFAULT_PARAMS (Anderson&Fouad/Kundur/PSSE lib). Structural demonstration on the open model — not operational data."
+    }
+   }
+  },
+  "okinawa": {
+   "regions": [
+    "okinawa"
+   ],
+   "f0_hz": 60.0,
+   "peak_hour": 11,
+   "net_demand_mw": 1682.2,
+   "pf": {
+    "mode": "dc",
+    "served_mw": 1682.2,
+    "load_mw": 1682.2,
+    "served_frac": 1.0,
+    "line_loading_max_pct": 238.4,
+    "note": "DC断面検証。AC正典は uc_to_pf_built.py (east AC実績 2026-07-04) を参照"
+   },
+   "tie_pu_per_rad": {},
+   "agc": {
+    "disturbance": {
+     "unit": "吉の浦火力発電所",
+     "region": "okinawa",
+     "fuel": "lng",
+     "p_mw": 502.0
+    },
+    "inertia_gws": 6.3,
+    "areas": {
+     "okinawa": {
+      "M_pu_s": 126.3,
+      "beta_pu": 471.1,
+      "load_mw": 1682.2
+     }
+    },
+    "ref_2pct_step": {
+     "dp_mw": 33.6,
+     "area": "okinawa",
+     "nadir_primary_hz": -0.2473,
+     "qss_primary_hz": -0.0348,
+     "nadir_lfc_hz": -0.2471,
+     "restore_s": 198.3
+    },
+    "plant_trip_upper_bound": {
+     "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
+     "rocof_hz_s": -2.3852,
+     "nadir_hz": -2.2858,
+     "restore_s": null
+    },
+    "ledger": {
+     "model": "IEEJ AGC30 (GH1386) simplified — 2nd-order per-class aggregates; reductions stated in src/dynamics/agc.py",
+     "reduction": "coherent-island (COI) — 測定した連系剛性 T_ab がLFC帯域外の動揺周波数を与えるため、島内は単一周波数・連系偏差は収支から代数復元",
+     "mode": "tbc",
+     "lfc": {
+      "KP": 1.0,
+      "KI": 0.003,
+      "Ts_s": 15.0,
+      "deadband_mw": 10.0,
+      "cycle_lag_s": 5.0
+     },
+     "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
+     "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
+     "M_pu_s": {
+      "okinawa": 126.3
+     },
+     "beta_pu": {
+      "okinawa": 471.1
+     },
+     "tie_pu_per_rad": {},
+     "disturbance": {
+      "area": "okinawa",
+      "dp_mw": 502.0,
+      "t_step": 1.0,
+      "label": "吉の浦火力発電所 trip (plant-granularity)"
+     },
+     "provenance": "class constants from AGC30 定数.xlsx (GH1386); H per fuel = FUEL_DEFAULT_PARAMS (Anderson&Fouad/Kundur/PSSE lib). Structural demonstration on the open model — not operational data."
+    }
+   }
+  }
+ }
+}

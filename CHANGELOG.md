@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **AGC layer — the operations chain UC → power flow → AGC now closes on the
+  dataset** (`src/dynamics/agc.py`, `scripts/run_agc_from_uc.py`,
+  `tests/test_agc.py`). Multi-area LFC per synchronous island following the
+  **IEEJ AGC30 standard model (技術報告 第1386号)** in a simplified per-class
+  2nd-order form: AGC30 droop / governor-free width / LFC ramp-rate constants
+  per plant class, TBC/FFC secondary control (KP=1.0, KI=0.003 s⁻¹, 10 MW AR
+  deadband) and a continuous approximation of the 5-minute EDC layer. The UC
+  solution supplies online inertia and regulation headroom; the inter-area tie
+  stiffness T_ab = SΣ1/x is **measured from the extracted network**, not
+  assumed. Two disturbance scenarios: a 2 % load step (LFC benchmark) and the
+  largest-online-plant trip (plant-granularity upper bound of unit N-1, with a
+  simple 3-step typical-value UFLS). All dynamic parameters carry provenance
+  labels; results are structural demonstrations, not operational predictions.
+  Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
+  `docs/assets/figs/fig_agc_national.png`.
+- `papers/ieee-openaccess.tex`: new AGC subsection (§VI) + AGC30 reference;
+  the long-standing substation-count typo fixed (prose 8,164 → measured 6,962,
+  matching the paper's own table — was a Known Issue since v1.5.0).
+
 ## [1.8.0] - 2026-08-27
 
 Tagged in git as `v1.8.0`. Theme: **the visible substation（SubSLD法）** — the model now

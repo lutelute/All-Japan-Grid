@@ -23,7 +23,7 @@
 \title{All-Japan-Grid: Automated Extraction of Japan's Nationwide Transmission Grid Topology from OpenStreetMap}
 
 \author{
-  \IEEEauthorblockN{Hayashi~○○ and Ryuto~Shigenobu}
+  \IEEEauthorblockN{Hayashi~(given name TBD) and Ryuto~Shigenobu}
   \IEEEauthorblockA{Department of Electrical, Electronic, and Computer Engineering,\\
   University of Fukui, Fukui, Japan}
 }
@@ -34,7 +34,7 @@
 \maketitle
 
 \begin{abstract}
-Japan's power system lacks publicly available bus-level network models comparable to FERC Form~715 (U.S.) or ENTSO-E datasets (Europe). This paper presents \textit{All-Japan-Grid}, an open-source pipeline that automatically extracts the geographic topology of Japan's transmission grid from OpenStreetMap~(OSM) crowdsourced data. The resulting dataset covers all 10 regional power systems (50/60~Hz dual-frequency), comprising 8,164~substations, 40,077~transmission lines, and 19,138~power plants. The pipeline incorporates a seven-stage data enrichment process that reduces attribute gaps by 87\%, geographic endpoint matching with Haversine distance for topology construction, and synthetic electrical parameter estimation based on voltage-class reference tables. The framework provides conversion to pandapower and MATPOWER formats, 20~AC power flow solvers, and a mixed-integer linear programming~(MILP) unit commitment solver with storage and inter-regional interconnection constraints. A national-scale unit commitment test with 757~generators across 9~interconnections was solved to optimality in under 10~seconds, revealing a 1.4\% congestion cost premium when transmission constraints are enforced. While the synthetic parameters preclude engineering-grade accuracy, the dataset serves as a reproducible baseline for power systems research, algorithm benchmarking, and educational applications in data-scarce environments.
+Japan's power system lacks publicly available bus-level network models comparable to FERC Form~715 (U.S.) or ENTSO-E datasets (Europe). This paper presents \textit{All-Japan-Grid}, an open-source pipeline that automatically extracts the geographic topology of Japan's transmission grid from OpenStreetMap~(OSM) crowdsourced data. The resulting dataset covers all 10 regional power systems (50/60~Hz dual-frequency), comprising 6,962~substations, 40,077~transmission lines, and 19,138~power plants. The pipeline incorporates a seven-stage data enrichment process that reduces attribute gaps by 87\%, geographic endpoint matching with Haversine distance for topology construction, and synthetic electrical parameter estimation based on voltage-class reference tables. The framework provides conversion to pandapower and MATPOWER formats, 20~AC power flow solvers, and a mixed-integer linear programming~(MILP) unit commitment solver with storage and inter-regional interconnection constraints. A national-scale unit commitment test with 757~generators across 9~interconnections was solved to optimality in under 10~seconds, revealing a 1.4\% congestion cost premium when transmission constraints are enforced. The framework further closes the operations chain from scheduling to frequency control: the unit commitment solution supplies online inertia and regulation headroom to a multi-area load-frequency control (AGC) simulation whose per-class generator dynamics follow the IEEJ AGC30 standard model, and whose inter-area tie stiffness is measured from the extracted network topology rather than assumed. While the synthetic parameters preclude engineering-grade accuracy, the dataset serves as a reproducible baseline for power systems research, algorithm benchmarking, and educational applications in data-scarce environments.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -55,8 +55,8 @@ The contributions of this work are:
 \begin{enumerate}
   \item A fully automated, reproducible pipeline for extracting Japan's nationwide transmission grid topology from public OSM data.
   \item A seven-stage attribute enrichment process achieving 87\% gap reduction using Overpass API, MLIT P03 facility data, and Nominatim geocoding.
-  \item Integration of 20~AC power flow solvers and a MILP-based unit commitment solver with inter-regional transmission constraints.
-  \item A national-scale dataset with 8,164~substations, 40,077~lines, and 19,138~plants, openly available for research and education.
+  \item Integration of 20~AC power flow solvers, a MILP-based unit commitment solver with inter-regional transmission constraints, and a multi-area AGC (load-frequency control) simulation layer that consumes the UC solution directly --- closing the operations chain UC $\to$ power flow $\to$ AGC on the same dataset.
+  \item A national-scale dataset with 6,962~substations, 40,077~lines, and 19,138~plants, openly available for research and education.
 \end{enumerate}
 
 %% ========================================
@@ -165,6 +165,17 @@ A MILP formulation minimizes total operating cost:
 \end{equation}
 subject to demand balance, capacity bounds, startup/shutdown logic, minimum up/down times, ramp rates, reserve margins, maintenance windows, and interconnection capacity constraints. Storage models incorporate SOC dynamics with charging/discharging efficiency. The solver uses HiGHS~\cite{highs} as primary backend.
 
+\subsection{Load-Frequency Control (AGC)}
+The AGC layer closes the loop from scheduling to frequency control on the same dataset. Each synchronous island (Hokkaido, East 50~Hz, West 60~Hz, Okinawa) is modeled as a set of control areas (TSO zones) in the deviation domain:
+\begin{align}
+  M_a \frac{d\Delta f_a}{dt} &= \sum_g \Delta P_{m,g} - \Delta P_{L,a} - D_a \Delta f_a - \Delta P_{\text{tie},a}, \label{eq:lfc_swing}\\
+  \Delta P_{\text{tie},a} &= \textstyle\sum_b T_{ab}\,(\Delta\delta_a - \Delta\delta_b),
+  \label{eq:lfc_tie}
+\end{align}
+where the inter-area synchronizing coefficient $T_{ab} = S_\text{base}\sum 1/x$ is \emph{measured} from the in-service extracted corridors crossing each area boundary --- a quantity conventional LFC studies must assume, but which the geographic model supplies directly. The area inertia $M_a$ and the regulation headroom of each responding group are taken from the UC solution (online units and base points at the studied hour), so the three layers share one consistent operating point.
+
+Generator dynamics follow the IEEJ AGC30 standard model~\cite{ieej_agc30} in a simplified per-class second-order form (governor and turbine lags with the AGC30 droop, governor-free width, and LFC ramp-rate constants per plant class; nuclear units run governor-free). Secondary control implements tie-line bias control (TBC; flat-frequency control on single-area islands) with the AGC30 LFC constants ($K_P=1.0$, $K_I=0.003\,\mathrm{s}^{-1}$, 10~MW area-regulation deadband, 5~s cycle) and a continuous-time approximation of the 5-minute EDC layer that redispatches the sustained imbalance. All dynamic parameters are typical published values and are labeled as such in the result ledgers; the simulation is a structural demonstration on the open model, not an operational prediction.
+
 \subsection{Inter-Regional Interconnections}
 Nine links model Japan's inter-regional transmission (Table~\ref{tab:ic}), including the Hokkaido--Honshu HVDC (900~MW), Tokyo--Chubu frequency converters (2,100~MW), and six AC interconnections, totaling 24,050~MW.
 
@@ -195,7 +206,7 @@ Nine links model Japan's inter-regional transmission (Table~\ref{tab:ic}), inclu
 \section{Results}
 
 \subsection{Dataset Statistics}
-Table~\ref{tab:dataset} summarizes the extracted dataset. Total coverage: 8,164 substations, 40,077 lines, 19,138 plants, with approximately 274~GW total generation capacity.
+Table~\ref{tab:dataset} summarizes the extracted dataset. Total coverage: 6,962 substations, 40,077 lines, 19,138 plants, with approximately 274~GW total generation capacity.
 
 \begin{table}[t]
   \centering
@@ -240,15 +251,48 @@ A 757-generator, 10-region, 24-hour UC was solved with and without interconnecti
   \end{tabular}
 \end{table}
 
+\subsection{Operations Chain: UC $\to$ Power Flow $\to$ AGC}
+Fig.~\ref{fig:agc} and Table~\ref{tab:agc} close the chain on one consistent operating point per synchronous island: the UC solution at the island peak hour fixes the online fleet (inertia, headroom) and the largest online plant; the extracted network verifies the dispatch (DC snapshot, 100\,\% served on all four islands) and supplies the measured inter-area stiffness ($T_{ab}$ of $2\times10^2$--$1.6\times10^4$~pu/rad; the weakest western corridor, Kansai--Shikoku at 206~pu/rad, correctly identifies the thin Honshi link). Because these measured stiffnesses place inter-area swing modes far above the LFC band, the AGC layer uses a coherent-island reduction with tie-flow deviations recovered algebraically; swing dynamics proper remain the domain of the transient-stability suite.
+
+Two disturbances are simulated per island. A 2\,\%-of-demand load step --- the standard LFC benchmark --- is restored to within $\pm$0.02~Hz in 198--788~s by TBC with AGC30 constants, with the disturbed area absorbing the full correction and neighboring-area commands returning to zero (Fig.~\ref{fig:agc}c). The largest-online-plant trip is an \emph{upper bound} of unit-level $N$-1 (the P03-derived generator granularity is one plant, not one unit) and is run with a typical-value three-step UFLS: the two large islands absorb their worst plant loss with nadirs of $-1.4$/$-1.1$~Hz, while on Hokkaido the loss of the To\-ma\-to-atsuma plant (1,650~MW on a 4.4~GW, 14.3~GW$\cdot$s system) drives $-$2.9~Hz/s RoCoF and a $-$2.5~Hz nadir that only load shedding arrests --- structurally consistent with the September 2018 Hokkaido blackout sequence.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figs/fig_agc.pdf}
+  \caption{UC $\to$ PF $\to$ AGC chain. (a)~2\,\% load step on the east island: primary response settles at the analytic $-\Delta P/\beta$ offset (dashed); LFC+EDC restores frequency. (b)~Largest-online-plant trip per island with typical-value UFLS. (c)~Under TBC the disturbed area's command converges to the lost power while its tie deviation and the neighboring areas' commands return to zero. All generator/control constants follow the IEEJ AGC30 standard model~\cite{ieej_agc30}; parameters are typical published values (structural demonstration, not an operational study).}
+  \label{fig:agc}
+\end{figure*}
+
+\begin{table}[t]
+  \centering
+  \caption{AGC chain at island peak hour (UC scenario FY2023)}
+  \label{tab:agc}
+  \begin{tabular}{lrrrr}
+    \toprule
+     & Hokkaido & East & West & Okinawa \\
+    \midrule
+    Peak demand (MW) & 4,434 & 59,353 & 69,938 & 1,682 \\
+    Online inertia (GW$\cdot$s) & 14.3 & 245.6 & 332.5 & 6.3 \\
+    Largest online plant (MW) & 1,650 & 5,040 & 4,802 & 502 \\
+    Trip RoCoF (Hz/s) & $-$2.88 & $-$0.51 & $-$0.43 & $-$2.39 \\
+    Trip nadir (Hz)$^{\dagger}$ & $-$2.50 & $-$1.36 & $-$1.09 & $-$2.29 \\
+    2\,\% step restore (s) & 240 & 347 & 788 & 198 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{2pt}
+  {\footnotesize $^{\dagger}$Plant-granularity trip (upper bound of unit $N$-1), with three-step typical-value UFLS active on all islands.}
+\end{table}
+
 %% ========================================
 \section{Limitations}
 
-This dataset is generated from crowdsourced OSM data and has inherent limitations: (1)~line impedances and transformer characteristics are synthetic estimates; (2)~endpoint matching may produce false connections ($\sim$2--3\% error rate); (3)~some operators, fuel types, and capacities remain unknown; (4)~no breaker-level data for contingency analysis; (5)~nodal demand uses voltage-class weights rather than measured profiles. The dataset is suitable for research and education, but \textbf{not} for operational planning.
+This dataset is generated from crowdsourced OSM data and has inherent limitations: (1)~line impedances and transformer characteristics are synthetic estimates; (2)~endpoint matching may produce false connections ($\sim$2--3\% error rate); (3)~some operators, fuel types, and capacities remain unknown; (4)~no breaker-level data for contingency analysis; (5)~nodal demand uses voltage-class weights rather than measured profiles; (6)~all AGC dynamic parameters (inertia constants, droop, governor/turbine lags, UFLS settings) are typical published values --- the frequency-response results are structural demonstrations, and generator granularity is plant-level, so trip scenarios upper-bound unit $N$-1. The dataset is suitable for research and education, but \textbf{not} for operational planning.
 
 %% ========================================
 \section{Conclusion}
 
-This paper presented \textit{All-Japan-Grid}, an automated pipeline producing the first openly available geographic representation of Japan's 10-region, dual-frequency transmission grid from OSM data. The dataset (8,164 substations, 40,077 lines, 19,138 plants) with 20 power flow solvers and MILP unit commitment provides a research-ready baseline. A national UC test demonstrated optimality in under 10~s with 1.4\% congestion cost. Future work includes supplementation with official OCCTO data for engineering-grade accuracy.
+This paper presented \textit{All-Japan-Grid}, an automated pipeline producing the first openly available geographic representation of Japan's 10-region, dual-frequency transmission grid from OSM data. The dataset (6,962 substations, 40,077 lines, 19,138 plants) with 20 power flow solvers and MILP unit commitment provides a research-ready baseline. A national UC test demonstrated optimality in under 10~s with 1.4\% congestion cost, and the operations chain now extends through power-flow verification to multi-area AGC: the same UC solution supplies inertia and regulation headroom to an IEEJ-AGC30-based load-frequency simulation whose inter-area coupling is measured from the extracted network. Future work includes supplementation with official OCCTO data for engineering-grade accuracy.
 
 The dataset and code are available at \url{https://github.com/lutelute/All-Japan-Grid}.
 
@@ -290,6 +334,9 @@ R.~D.~Zimmerman \textit{et al.}, ``MATPOWER: Steady-state operations, planning, 
 
 \bibitem{padhy2004}
 N.~P.~Padhy, ``Unit commitment---A bibliographical survey,'' \textit{IEEE Trans. Power Syst.}, vol.~19, no.~2, pp.~1196--1205, 2004.
+
+\bibitem{ieej_agc30}
+IEEJ Technical Committee on Standard Analytical Models for Power Supply-Demand Analysis, ``Standard analytical models for power supply-demand and frequency simulations (AGC30),'' IEEJ Technical Report no.~1386, 2016 (in Japanese).
 
 \bibitem{highs}
 Q.~Huangfu and J.~A.~J.~Hall, ``Parallelizing the dual revised simplex method,'' \textit{Math. Prog. Comp.}, vol.~10, pp.~119--142, 2018.
