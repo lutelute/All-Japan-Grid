@@ -103,10 +103,14 @@ LFC_TS = 15.0         # ACE平滑: α=0.3 @5s周期 の連続近似 (5/0.3 ≈ 1
 LFC_DB_MW = 10.0      # AR不感帯 XAR [MW] (AGC30)
 # 簡易UFLS(周波数低下時の負荷遮断) — プラント粒度のN-1上界シナリオ用。
 # 段数・整定は典型値(実整定は事業者ごとで非公開): Δf −1.5/−2.0/−2.5 Hz で
-# 各エリア負荷の10%を段階遮断。シグモイド近似(幅0.05Hz)・非ラッチ
-# (復帰時の手動再閉路は捨象) — 簡易実装であることを台帳に明記
+# 各エリア負荷の10%を段階遮断。**ラッチ式**: リレーが切ったら切りっぱなし
+# (手動再閉路は時間スケール外)。トリガはtanh近似(幅0.05Hz)、ラッチは
+# 片方向追従 dL/dt = max(0, σ−L)/τ (τ=リレー+遮断器の動作遅れ)。
+# 旧実装の非ラッチ(遮断量がΔfに追従して戻る)は「深い周波数に張り付く」
+# 非物理な平衡を作っていた(オーナー指摘 2026-08-29)
 UFLS_STEPS_HZ = (-1.5, -2.0, -2.5)
 UFLS_SHED_FRAC = 0.10
+UFLS_TRIP_S = 0.15    # リレー検出+遮断器動作の遅れ [s] (典型値)
 LFC_TLAG = 5.0        # LFC制御周期→群への指令一次遅れ [s]
 LFC_CAP_FRAC = 0.05   # LFC確保容量 = エリア需要の5% (AGC30のPMAX/PMIN方式に
                       # 倣った上限。日本のLFC確保容量の典型値≈需要数%)。
@@ -191,7 +195,8 @@ class LFCResult:
     ace_mw: Dict[str, np.ndarray]
     pm_mw: Dict[str, np.ndarray]
     agc_mw: Dict[str, np.ndarray]
-    f0: float
+    shed_mw: Dict[str, np.ndarray] = dataclasses.field(default_factory=dict)
+    f0: float = 50.0
     nadir_hz: float = 0.0
     rocof_hz_s: float = 0.0             # COI initial RoCoF (analytic ΔP/M)
     qss_hz: float = 0.0                 # β線形の参考値 (GF幅拘束は考慮せず)
@@ -238,7 +243,7 @@ class MultiAreaLFC:
     #   surplus_a = ΣΔPm − ΔPL − D_a·Δf
     # (測定した T_ab はこの簡約の妥当性根拠として ledger に残す。
     #  動揺そのものは transient suite(swing_solver)の守備範囲)
-    # state: [Δf(1), x1(ng), x2(ng), s(ng), z(n), w(n), e(n)]
+    # state: [Δf(1), x1(ng), x2(ng), s(ng), z(n), w(n), e(n), L(3n:UFLSラッチ)]
     def simulate(self, dist: Disturbance, t_end: float = 300.0) -> LFCResult:
         n = len(self.areas)
         gs = self._groups()
@@ -273,7 +278,8 @@ class MultiAreaLFC:
             sg = y[1 + 2 * ng:1 + 3 * ng]
             z = y[1 + 3 * ng:1 + 3 * ng + n]
             w = y[1 + 3 * ng + n:1 + 3 * ng + 2 * n]
-            e = y[1 + 3 * ng + 2 * n:]
+            e = y[1 + 3 * ng + 2 * n:1 + 3 * ng + 3 * n]
+            L = y[1 + 3 * ng + 3 * n:].reshape(len(UFLS_STEPS_HZ), n)
             u_raw = -(LFC_KP * z + LFC_KI * w) if lfc_on else np.zeros(n)
             u = np.clip(u_raw, -lfc_cap, lfc_cap)
             dx1 = (-df * invR + sg - x1) / Tg
@@ -285,12 +291,15 @@ class MultiAreaLFC:
             pl = np.zeros(n)
             if t >= dist.t_step:
                 pl[di] = dp_pu
+            dL = np.zeros_like(L)
+            shed = np.zeros(n)
             if self.ufls:
                 df_hz_now = df * self.f0
-                shed = sum(UFLS_SHED_FRAC * 0.5 *
-                           (1.0 - np.tanh((df_hz_now - thr) / 0.1))
-                           for thr in UFLS_STEPS_HZ)
-                pl -= shed * load_pu
+                for k, thr in enumerate(UFLS_STEPS_HZ):
+                    sig = 0.5 * (1.0 - np.tanh((df_hz_now - thr) / 0.05))
+                    dL[k] = np.maximum(0.0, sig - L[k]) / UFLS_TRIP_S
+                shed = UFLS_SHED_FRAC * L.sum(axis=0) * load_pu
+                pl -= shed
             surplus = pm - pl - D * df
             dfdot = surplus.sum() / m_tot
             ptie = surplus - (M / m_tot) * surplus.sum()
@@ -302,13 +311,14 @@ class MultiAreaLFC:
             # ハードな条件付き積分は不連続でLSODAが刻むため逆算式を使う
             dw = z - (u_raw - u) / (LFC_KI * 30.0)
             de = (-(ptie + beta_a * df) / T_EDC) if lfc_on else np.zeros(n)
-            return (np.concatenate([[dfdot], dx1, dx2, ds, dz, dw, de]),
-                    ptie, ace, pm, u + e)
+            return (np.concatenate([[dfdot], dx1, dx2, ds, dz, dw, de,
+                                     dL.ravel()]),
+                    ptie, ace, pm, u + e, shed)
 
         def rhs(t, y):
             return parts(t, y)[0]
 
-        y0 = np.zeros(1 + 3 * ng + 3 * n)
+        y0 = np.zeros(1 + 3 * ng + 3 * n + len(UFLS_STEPS_HZ) * n)
         sol = solve_ivp(rhs, (0.0, t_end), y0, method="LSODA",
                         max_step=1.0, rtol=1e-7, atol=1e-10,
                         t_eval=np.arange(0.0, t_end, 0.1))
@@ -317,9 +327,11 @@ class MultiAreaLFC:
         nt = len(t)
         ptie = np.zeros((n, nt)); ace = np.zeros((n, nt))
         pm = np.zeros((n, nt)); cmd = np.zeros((n, nt))
+        shed_t = np.zeros((n, nt))
         for k in range(nt):
-            _d, p_, a_, m_, c_ = parts(t[k], sol.y[:, k])
+            _d, p_, a_, m_, c_, sh_ = parts(t[k], sol.y[:, k])
             ptie[:, k], ace[:, k], pm[:, k], cmd[:, k] = p_, a_, m_, c_
+            shed_t[:, k] = sh_
 
         beta = sum(a.beta for a in self.areas)
         res = LFCResult(
@@ -329,6 +341,8 @@ class MultiAreaLFC:
             ace_mw={a: ace[i] * S_BASE_MVA for i, a in enumerate(self.names)},
             pm_mw={a: pm[i] * S_BASE_MVA for i, a in enumerate(self.names)},
             agc_mw={a: cmd[i] * S_BASE_MVA for i, a in enumerate(self.names)},
+            shed_mw={a: shed_t[i] * S_BASE_MVA
+                     for i, a in enumerate(self.names)},
             f0=self.f0,
             nadir_hz=float(df.min() * self.f0),
             rocof_hz_s=float(-dp_pu / m_tot * self.f0),
@@ -353,7 +367,8 @@ class MultiAreaLFC:
                    "β_aバイアスで外乱エリアへ帰属)",
             "bias": f"K={K_SYS:.2f} pu(=10%MW/Hz) × area demand (系統定数方式)",
             "ufls": (f"典型3段 Δf{UFLS_STEPS_HZ}Hz×{UFLS_SHED_FRAC:.0%}/段・"
-                     "tanh近似・非ラッチ(簡易)" if self.ufls else "off"),
+                     f"ラッチ式(遮断は復帰しない・動作遅れ{UFLS_TRIP_S}s)"
+                     if self.ufls else "off"),
             "load_damping": f"K_L={K_LOAD}%MW/%Hz (AGC30 initset_inertia.m)",
             "M_pu_s": {a.name: round(a.M, 1) for a in self.areas},
             "beta_pu": {a.name: round(a.beta, 1) for a in self.areas},

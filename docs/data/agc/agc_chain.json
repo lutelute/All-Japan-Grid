@@ -44,7 +44,7 @@
     "plant_trip_upper_bound": {
      "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
      "rocof_hz_s": -2.882,
-     "nadir_hz": -2.4988,
+     "nadir_hz": -2.5143,
      "restore_s": null
     },
     "ledger": {
@@ -60,7 +60,7 @@
      },
      "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
      "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
-     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・ラッチ式(遮断は復帰しない・動作遅れ0.15s)",
      "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
      "M_pu_s": {
       "hokkaido": 286.3
@@ -129,7 +129,7 @@
     "plant_trip_upper_bound": {
      "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
      "rocof_hz_s": -0.5131,
-     "nadir_hz": -1.357,
+     "nadir_hz": -1.414,
      "restore_s": null
     },
     "ledger": {
@@ -145,7 +145,7 @@
      },
      "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
      "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
-     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・ラッチ式(遮断は復帰しない・動作遅れ0.15s)",
      "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
      "M_pu_s": {
       "tohoku": 1591.6,
@@ -248,7 +248,7 @@
     "plant_trip_upper_bound": {
      "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
      "rocof_hz_s": -0.4333,
-     "nadir_hz": -1.0936,
+     "nadir_hz": -1.0942,
      "restore_s": 744.3
     },
     "ledger": {
@@ -264,7 +264,7 @@
      },
      "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
      "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
-     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・ラッチ式(遮断は復帰しない・動作遅れ0.15s)",
      "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
      "M_pu_s": {
       "chubu": 1479.8,
@@ -343,7 +343,7 @@
     "plant_trip_upper_bound": {
      "note": "UC発電機はプラント粒度 — ユニットN-1の上界。簡易UFLS込み",
      "rocof_hz_s": -2.3852,
-     "nadir_hz": -2.2858,
+     "nadir_hz": -2.3091,
      "restore_s": null
     },
     "ledger": {
@@ -359,7 +359,7 @@
      },
      "edc": "T_EDC=300s (AGC30 EDC周期5分の連続近似・β_aバイアスで外乱エリアへ帰属)",
      "bias": "K=0.10 pu(=10%MW/Hz) × area demand (系統定数方式)",
-     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・tanh近似・非ラッチ(簡易)",
+     "ufls": "典型3段 Δf(-1.5, -2.0, -2.5)Hz×10%/段・ラッチ式(遮断は復帰しない・動作遅れ0.15s)",
      "load_damping": "K_L=2.0%MW/%Hz (AGC30 initset_inertia.m)",
      "M_pu_s": {
       "okinawa": 126.3

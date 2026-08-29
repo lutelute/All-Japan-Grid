@@ -254,7 +254,7 @@ A 757-generator, 10-region, 24-hour UC was solved with and without interconnecti
 \subsection{Operations Chain: UC $\to$ Power Flow $\to$ AGC}
 Fig.~\ref{fig:agc} and Table~\ref{tab:agc} close the chain on one consistent operating point per synchronous island: the UC solution at the island peak hour fixes the online fleet (inertia, headroom) and the largest online plant; the extracted network verifies the dispatch (DC snapshot, 100\,\% served on all four islands) and supplies the measured inter-area stiffness ($T_{ab}$ of $2\times10^2$--$1.6\times10^4$~pu/rad; the weakest western corridor, Kansai--Shikoku at 206~pu/rad, correctly identifies the thin Honshi link). Because these measured stiffnesses place inter-area swing modes far above the LFC band, the AGC layer uses a coherent-island reduction with tie-flow deviations recovered algebraically; swing dynamics proper remain the domain of the transient-stability suite.
 
-Two disturbances are simulated per island. A 2\,\%-of-demand load step --- the standard LFC benchmark --- is restored to within $\pm$0.02~Hz in 198--788~s by TBC with AGC30 constants, with the disturbed area absorbing the full correction and neighboring-area commands returning to zero (Fig.~\ref{fig:agc}c). The largest-online-plant trip is an \emph{upper bound} of unit-level $N$-1 (the P03-derived generator granularity is one plant, not one unit) and is run with a typical-value three-step UFLS: the two large islands absorb their worst plant loss with nadirs of $-1.4$/$-1.1$~Hz, while on Hokkaido the loss of the To\-ma\-to-atsuma plant (1,650~MW on a 4.4~GW, 14.3~GW$\cdot$s system) drives $-$2.9~Hz/s RoCoF and a $-$2.5~Hz nadir that only load shedding arrests --- structurally consistent with the September 2018 Hokkaido blackout sequence.
+Two disturbances are simulated per island. A 2\,\%-of-demand load step --- the standard LFC benchmark --- is restored to within $\pm$0.02~Hz in 198--788~s by TBC with AGC30 constants, with the disturbed area absorbing the full correction and neighboring-area commands returning to zero (Fig.~\ref{fig:agc}c). The largest-online-plant trip is an \emph{upper bound} of unit-level $N$-1 (the P03-derived generator granularity is one plant, not one unit) and is run with a typical-value three-step \emph{latching} UFLS (relays shed and stay shed): the two large islands absorb their worst plant loss with nadirs of $-1.4$/$-1.1$~Hz without shedding, while on Hokkaido the loss of the To\-ma\-to-atsuma plant (1,650~MW on a 4.4~GW, 14.3~GW$\cdot$s system) drives $-$2.9~Hz/s RoCoF to a $-$2.5~Hz nadir; only shedding 1,141~MW of load arrests the fall, after which frequency rebounds and recovers slowly --- structurally consistent with the September 2018 Hokkaido blackout sequence.
 
 \begin{figure*}[t]
   \centering
@@ -275,13 +275,13 @@ Two disturbances are simulated per island. A 2\,\%-of-demand load step --- the s
     Online inertia (GW$\cdot$s) & 14.3 & 245.6 & 332.5 & 6.3 \\
     Largest online plant (MW) & 1,650 & 5,040 & 4,802 & 502 \\
     Trip RoCoF (Hz/s) & $-$2.88 & $-$0.51 & $-$0.43 & $-$2.39 \\
-    Trip nadir (Hz)$^{\dagger}$ & $-$2.50 & $-$1.36 & $-$1.09 & $-$2.29 \\
+    Trip nadir (Hz)$^{\dagger}$ & $-$2.51 & $-$1.41 & $-$1.09 & $-$2.31 \\
     2\,\% step restore (s) & 240 & 347 & 788 & 198 \\
     \bottomrule
   \end{tabular}
 
   \vspace{2pt}
-  {\footnotesize $^{\dagger}$Plant-granularity trip (upper bound of unit $N$-1), with three-step typical-value UFLS active on all islands.}
+  {\footnotesize $^{\dagger}$Plant-granularity trip (upper bound of unit $N$-1), with a three-step latching typical-value UFLS active on all islands (shed load does not restore within the simulation).}
 \end{table}
 
 %% ========================================

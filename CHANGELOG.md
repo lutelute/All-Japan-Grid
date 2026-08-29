@@ -19,7 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stiffness T_ab = SΣ1/x is **measured from the extracted network**, not
   assumed. Two disturbance scenarios: a 2 % load step (LFC benchmark) and the
   largest-online-plant trip (plant-granularity upper bound of unit N-1, with a
-  simple 3-step typical-value UFLS). All dynamic parameters carry provenance
+  3-step typical-value **latching** UFLS — relays shed and stay shed; the first
+  non-latching draft made frequency sit unphysically at the shed boundary and
+  was caught by the owner). An animated map of the Tomato-atsuma trip
+  (`scripts/gen_agc_map_anim.py` → `docs/slides/ajg/assets/agc_hokkaido_trip.gif`)
+  shows the event geographically: grid color = frequency, shed amount from the
+  simulation (which substations to shed is not public — marked as staging). All dynamic parameters carry provenance
   labels; results are structural demonstrations, not operational predictions.
   Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
   `docs/assets/figs/fig_agc_national.png`.

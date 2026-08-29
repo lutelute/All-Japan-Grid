@@ -64,15 +64,21 @@ def test_governor_free_width_saturates_primary(two_area):
     assert big.df_hz["A"][-1] < big.qss_hz * 1.5   # 線形予測より有意に深い
 
 
-def test_ufls_bounds_small_island_collapse():
+def test_ufls_latches_and_frequency_rebounds():
     # 単エリア小島(需要1,700MW)で30%喪失 — UFLS無しでは非物理的な深さまで
-    # 落ち、UFLS(典型3段)ありでは −3 Hz 以内に留まる
+    # 落ちる。ラッチ式UFLSは: ①落下を−3Hz以内で止め ②遮断は単調非減少
+    # (切りっぱなし) ③遮断後に周波数が跳ね返り復帰に向かう
+    import numpy as np
     a = AreaSpec("O", M=2 * 3.5 * 1500 / S_BASE_MVA, load_mw=1700,
                  groups=[_grp("O", "lng", 1200, 200, 400)])
     d = Disturbance(area="O", dp_mw=500.0)
     off = MultiAreaLFC(60.0, [a], {}, mode="tbc", ufls=False).simulate(
         d, t_end=120.0)
     on = MultiAreaLFC(60.0, [a], {}, mode="tbc", ufls=True).simulate(
-        d, t_end=120.0)
+        d, t_end=300.0)
     assert off.nadir_hz < -4.0
-    assert -3.0 < on.nadir_hz < -1.0
+    assert -3.0 < on.nadir_hz < -1.5
+    shed = on.shed_mw["O"]
+    assert np.all(np.diff(shed) > -1.0)            # ラッチ(数値誤差の余裕1MW)
+    assert shed[-1] > 250.0                        # 実際に大きく遮断した
+    assert on.df_hz["O"][-1] > -0.2                # 跳ね返って復帰に向かう

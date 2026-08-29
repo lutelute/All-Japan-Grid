@@ -85,15 +85,15 @@ def main():
                 xy=(6, -2.1), xytext=(60, -2.42), fontsize=11,
                 color="#1A1A1A",
                 arrowprops=dict(arrowstyle="->", color="#555", lw=1.2))
-    ax.annotate("② UFLSが3段で負荷を切り\n落下がようやく止まる(−2.5 Hz)",
-                xy=(30, -2.49), xytext=(210, -2.75), fontsize=11,
+    ax.annotate("② UFLSが負荷1,141 MWを遮断(切りっぱなし)\n— 落下が止まり、周波数が跳ね返る",
+                xy=(12, -2.1), xytext=(150, -2.72), fontsize=11,
                 arrowprops=dict(arrowstyle="->", color="#555", lw=1.2))
-    ax.annotate("③ ガバナ→LFC→EDCの三段構えが\n15分かけてじわじわ戻す",
-                xy=(620, rh.df_hz[a_h][6200]), xytext=(430, -1.98),
+    ax.annotate("③ ガバナ→LFC→EDCの三段構えが\nじわじわ戻す — それでも15分で49 Hz台前半\n(実際の2018年は全域停電・完全復旧に約45時間)",
+                xy=(620, rh.df_hz[a_h][6200]), xytext=(380, -2.1),
                 fontsize=11,
                 arrowprops=dict(arrowstyle="->", color="#555", lw=1.2))
-    ax.annotate("大きい系統は同じ事故でも耐える:\n5,040 MW失っても −1.4 Hz で踏みとどまり回復",
-                xy=(120, re_.df_hz[a_e][1200]), xytext=(300, -0.6),
+    ax.annotate("大きい系統は同じ事故でも耐える: 5,040 MWを失っても\n−1.4 Hz で踏みとどまり、負荷を切らずに自力回復",
+                xy=(120, re_.df_hz[a_e][1200]), xytext=(280, -0.55),
                 fontsize=11, color="#8A5200",
                 arrowprops=dict(arrowstyle="->", color="#FF9500", lw=1.2))
     ax.set_xlim(-15, 900)
