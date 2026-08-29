@@ -174,8 +174,20 @@ def extract_model(net, mode, f0):
             cap = p
         S_i = cap / 0.9
         prm = FUEL_DEFAULT_PARAMS.get(fuel) or FUEL_DEFAULT_PARAMS["unknown"]
+        lon = lat = float("nan")
+        try:      # pandapower 3.x: bus.geo (GeoJSON文字列)
+            import json as _json
+            g = _json.loads(net.bus.at[int(net.gen.at[gi, "bus"]), "geo"])
+            lon, lat = float(g["coordinates"][0]), float(g["coordinates"][1])
+        except Exception:  # noqa: BLE001
+            try:  # 旧API
+                gd = net.bus_geodata.loc[int(net.gen.at[gi, "bus"])]
+                lon, lat = float(gd["x"]), float(gd["y"])
+            except Exception:  # noqa: BLE001
+                pass
         machines.append(dict(
             name=str(net.gen.at[gi, "name"]), fuel=fuel, cls=cls, bus=b,
+            lon=lon, lat=lat,
             P=p / S_BASE_MVA, Q=q / S_BASE_MVA, S=S_i,
             H=prm["H"], Ddyn=prm["D"],
             Xdp=prm["Xd_p"] * S_BASE_MVA / S_i,
@@ -569,6 +581,17 @@ def main():
                           for te, m in r["log"]]}
         json.dump(doc, open(f"docs/data/agc/multimachine_{island}.json", "w"),
                   ensure_ascii=False, indent=1)
+        # 伝播アニメ等の下流用に全機トレースを保存(再生成可能・gitignore)
+        np.savez_compressed(
+            f"docs/data/agc/mm_traces_{island}.npz",
+            t=r["t"], w=r["w"], f0=f0, trip=r["trip"],
+            lon=np.array([m["lon"] for m in machines]),
+            lat=np.array([m["lat"] for m in machines]),
+            S=np.array([m["S"] for m in machines]),
+            M=r["M"], live=r["live"],
+            names=np.array([m["name"] for m in machines]),
+            ev_t=np.array([te for te, _m in r["log"]]),
+            ev_s=np.array([m for _te, m in r["log"]]))
         print(f"   [{island}] 計 {time.monotonic()-t0:.0f}s")
     national_figure(results)
 

@@ -55,7 +55,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   island per hour. Night-time inertia drops ~30 % on the large islands; on
   Hokkaido the worst hour is 3 am (nadir −7.1 Hz, beyond the 3-step UFLS) —
   the same hour of night as the actual 2018 blackout (3:08), stated as a
-  structural correspondence, not a reproduction. All dynamic parameters carry provenance
+  structural correspondence, not a reproduction.
+- **Electromechanical wave-propagation animation**
+  (`scripts/gen_swing_wave_anim.py` → `agc_east_wave.gif`, deck slide 19):
+  the Futtsu trip replayed on the map with每-machine local frequency as
+  color — the disturbance visibly propagates over the real network impedance
+  (Kanto reddens within ~200 ms while northern Tohoku is still blue), with a
+  synchronized all-machine strip chart + time cursor. Trace dumps
+  (`mm_traces_*.npz`, gitignored) added to the multimachine runner, which now
+  also captures machine coordinates via the pandapower-3 `bus.geo` API (the
+  old `bus_geodata` path silently returned none).
+- **West full-AC canonisation campaign, probe wave 1**
+  (`scripts/probe_west_ac.py` → `docs/reports/west_ac_probe_2026-08-29.*`):
+  site_trafos (#22), reactive-comp 0.8, hourly shunts and combinations all
+  fall back to DC at the west peak snapshot — and #22 only creates 22
+  site-transformer links on west (vs the 57 % T-gap), so the site-name
+  matching itself is the prime suspect for wave 2. Canon unchanged. All dynamic parameters carry provenance
   labels; results are structural demonstrations, not operational predictions.
   Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
   `docs/assets/figs/fig_agc_national.png`.
