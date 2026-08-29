@@ -600,7 +600,20 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("「動揺がないのが違和感」への回答。UFLSの3段が1.6/2.0/2.7秒に入るのが拡大で見える。AGC100の話が出たら『これはAGC-54。Nは任意で、東なら数百機』。");
 }
 
-/* ===================== 18. 実況: 事故が地図の上を走る ===================== */
+/* ===================== 18. 全国・全機の動揺 ===================== */
+{
+  const s = pres.addSlide(); base(s);
+  head(s, "終幕 v1.9へ", "系統ごと、全部解く：4島・542機の動揺", NAVY);
+  s.addImage({ path: A + "fig_swing_national.png", x: 1.9, y: 1.05, w: 9.55,
+    h: 5.80 });
+  s.addText("東182機は富津3,893MWを失っても−0.45Hzで踏みとどまり、全機がうねりながら回復する。西302機は±0.3Hzの機間動揺が10秒で減衰。弱結合の小規模機7機は脱調保護が切り離す(切離しの瞬間まで描画・全経過は帳簿)。", {
+    x: 0.9, y: 7.0 - 0.05, w: 11.6, h: 0.55, fontFace: F, fontSize: 11,
+    color: INK, lineSpacing: 15, margin: 0 });
+  foot(s, 18, "1:00");
+  s.addNotes("west はDC断面初期化(フルACは不成立が正典)と断面ごとに開示。542=53+182+302+5。「AGC100?」→「これはAGC-542」。");
+}
+
+/* ===================== 19. 実況: 事故が地図の上を走る ===================== */
 {
   const s = pres.addSlide();
   s.background = { color: "0A0D1A" };
@@ -628,7 +641,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("スライドショー再生で動きます(GIF)", { x: 0.57, y: 6.6, w: 2.9,
     h: 0.3, fontFace: F, fontSize: 10, italic: true, color: "8E96B8",
     margin: 0 });
-  foot(s, 18, "1:00");
+  foot(s, 19, "1:00");
   s.addNotes("ここは喋らず30秒流す。止め絵になる環境ではPDF版の1コマ目が出るので「動画はGIF参照」と言う。");
 }
 
@@ -668,7 +681,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("下の層ほど古い幕の成果。上の幕は下を壊さず積んだ — 幕の色がそのまま層の色。", {
     x: 0.9, y: 6.3, w: 11.6, h: 0.35, fontFace: F, fontSize: 12, color: INK,
     margin: 0 });
-  foot(s, 19, "1:00");
+  foot(s, 20, "1:00");
   s.addNotes("年表（S4）の5幕がそのまま5層に堆積している、という視覚的な回収。層の色＝幕の色。");
 }
 
@@ -698,7 +711,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("この4つはどれも、一度「良い数字」を出してから学び直したものである。", {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
-  foot(s, 20, "1:00");
+  foot(s, 21, "1:00");
   s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
 }
 
@@ -734,7 +747,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("github.com/lutelute/All-Japan-Grid　|　lutelute.github.io/All-Japan-Grid　|　データ: ODbL（OSM由来）・コード: MIT　|　航空写真: 国土地理院", {
     x: 0.9, y: 6.62, w: 11.6, h: 0.28, fontFace: FM, fontSize: 9, color: MUT,
     margin: 0 });
-  foot(s, 21, "0:30");
+  foot(s, 22, "0:30");
   s.addNotes("論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 

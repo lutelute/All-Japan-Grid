@@ -35,7 +35,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   UFLS stages at 1.6/2.0/2.7 s. Two disclosed calibration gaps vs the COI layer
   (constant-Z loads, GF-width implementation) leave the multi-machine nadir
   slightly deeper (−3.0 vs −2.5 Hz). Root-caused en route: ppc baseMVA=1 vs the
-  100 MVA system base (Ybus rescaling), and res_bus↔ppc index ordering. All dynamic parameters carry provenance
+  100 MVA system base (Ybus rescaling), and res_bus↔ppc index ordering.
+- **…generalised to all four islands** (`scripts/run_multimachine_national.py`,
+  replacing the hokkaido-only script): 542 machines total (hokkaido 53 /
+  east 182 / west 302 / okinawa 5) with sparse-LU Kron reduction (west 8,183
+  buses). West is initialised from the DC snapshot (V=1 pu approximation,
+  disclosed — full-AC infeasibility is canon) with self-consistent Pm=Pe(δ0).
+  Two new honesty devices: an **out-of-step protection** event (|Δ(δ−δ_COI)|
+  > 180° trips the machine and re-reduces the network — 7 weakly-coupled small
+  units across east/west, all logged) and a **capacity-suspect guard**
+  (rating > 10× operating point and +500 MW falls back to operating-point
+  base; caught 奥吉野 97 MW/1,206 MW and 奥多々良木 155 MW/1,932 MW pumped-storage
+  entries, disclosed not edited). East rides through its largest plant loss at
+  −0.45 Hz with all machines visibly swinging; west shows ±0.3 Hz inter-machine
+  oscillation decaying over ~10 s. Deck slide 18 (全国・全機の動揺) added. All dynamic parameters carry provenance
   labels; results are structural demonstrations, not operational predictions.
   Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
   `docs/assets/figs/fig_agc_national.png`.
