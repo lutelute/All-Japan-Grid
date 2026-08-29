@@ -1,0 +1,877 @@
+{
+ "note": "24時間の周波数セキュリティ断面。各時刻のUCコミットメントから慣性・最大オンラインプラント・トリップ応答(COI層・UFLS込み)を算出。プラント粒度=ユニットN-1の上界。連系剛性は実測(agc_chain.json)・網は時刻不変",
+ "islands": {
+  "hokkaido": [
+   {
+    "hour": 0,
+    "demand_mw": 3196.2,
+    "inertia_gws": 14.61,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -2.823,
+    "nadir_hz": -4.526
+   },
+   {
+    "hour": 1,
+    "demand_mw": 3000.0,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -5.611
+   },
+   {
+    "hour": 2,
+    "demand_mw": 2872.5,
+    "inertia_gws": 7.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -5.348,
+    "nadir_hz": -6.86
+   },
+   {
+    "hour": 3,
+    "demand_mw": 2743.8,
+    "inertia_gws": 7.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -5.348,
+    "nadir_hz": -7.053
+   },
+   {
+    "hour": 4,
+    "demand_mw": 2880.0,
+    "inertia_gws": 7.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -5.348,
+    "nadir_hz": -6.823
+   },
+   {
+    "hour": 5,
+    "demand_mw": 3155.3,
+    "inertia_gws": 13.51,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.053,
+    "nadir_hz": -4.806
+   },
+   {
+    "hour": 6,
+    "demand_mw": 3506.3,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -3.729
+   },
+   {
+    "hour": 7,
+    "demand_mw": 3836.9,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -2.775
+   },
+   {
+    "hour": 8,
+    "demand_mw": 3990.7,
+    "inertia_gws": 15.11,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -2.729,
+    "nadir_hz": -2.566
+   },
+   {
+    "hour": 9,
+    "demand_mw": 3955.7,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -2.622
+   },
+   {
+    "hour": 10,
+    "demand_mw": 3886.3,
+    "inertia_gws": 13.51,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.053,
+    "nadir_hz": -2.614
+   },
+   {
+    "hour": 11,
+    "demand_mw": 3856.3,
+    "inertia_gws": 13.51,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.053,
+    "nadir_hz": -2.627
+   },
+   {
+    "hour": 12,
+    "demand_mw": 3747.8,
+    "inertia_gws": 12.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.245,
+    "nadir_hz": -2.946
+   },
+   {
+    "hour": 13,
+    "demand_mw": 3762.3,
+    "inertia_gws": 12.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.245,
+    "nadir_hz": -2.906
+   },
+   {
+    "hour": 14,
+    "demand_mw": 3834.8,
+    "inertia_gws": 12.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.245,
+    "nadir_hz": -2.717
+   },
+   {
+    "hour": 15,
+    "demand_mw": 3967.8,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -2.618
+   },
+   {
+    "hour": 16,
+    "demand_mw": 4215.0,
+    "inertia_gws": 13.51,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.053,
+    "nadir_hz": -2.547
+   },
+   {
+    "hour": 17,
+    "demand_mw": 4402.3,
+    "inertia_gws": 12.71,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.245,
+    "nadir_hz": -2.529
+   },
+   {
+    "hour": 18,
+    "demand_mw": 4434.3,
+    "inertia_gws": 14.31,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -2.882,
+    "nadir_hz": -2.514
+   },
+   {
+    "hour": 19,
+    "demand_mw": 4267.5,
+    "inertia_gws": 13.51,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.053,
+    "nadir_hz": -2.54
+   },
+   {
+    "hour": 20,
+    "demand_mw": 4020.0,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -2.603
+   },
+   {
+    "hour": 21,
+    "demand_mw": 3780.0,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -2.925
+   },
+   {
+    "hour": 22,
+    "demand_mw": 3547.5,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -3.6
+   },
+   {
+    "hour": 23,
+    "demand_mw": 3376.2,
+    "inertia_gws": 11.91,
+    "largest_mw": 1650.0,
+    "largest": "苫東厚真火力発電所",
+    "rocof_hz_s": -3.463,
+    "nadir_hz": -4.158
+   }
+  ],
+  "east": [
+   {
+    "hour": 0,
+    "demand_mw": 42933.1,
+    "inertia_gws": 224.74,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.561,
+    "nadir_hz": -1.402
+   },
+   {
+    "hour": 1,
+    "demand_mw": 40674.8,
+    "inertia_gws": 202.14,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.542,
+    "nadir_hz": -1.285
+   },
+   {
+    "hour": 2,
+    "demand_mw": 39177.1,
+    "inertia_gws": 172.32,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.635,
+    "nadir_hz": -1.451
+   },
+   {
+    "hour": 3,
+    "demand_mw": 37676.4,
+    "inertia_gws": 172.32,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.635,
+    "nadir_hz": -1.457
+   },
+   {
+    "hour": 4,
+    "demand_mw": 39194.8,
+    "inertia_gws": 172.32,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.635,
+    "nadir_hz": -1.451
+   },
+   {
+    "hour": 5,
+    "demand_mw": 42611.3,
+    "inertia_gws": 178.27,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.614,
+    "nadir_hz": -1.427
+   },
+   {
+    "hour": 6,
+    "demand_mw": 47347.1,
+    "inertia_gws": 214.02,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.589,
+    "nadir_hz": -1.416
+   },
+   {
+    "hour": 7,
+    "demand_mw": 52454.0,
+    "inertia_gws": 232.0,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.472,
+    "nadir_hz": -0.902
+   },
+   {
+    "hour": 8,
+    "demand_mw": 55992.7,
+    "inertia_gws": 235.71,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.535,
+    "nadir_hz": -1.425
+   },
+   {
+    "hour": 9,
+    "demand_mw": 57290.8,
+    "inertia_gws": 238.04,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.529,
+    "nadir_hz": -1.428
+   },
+   {
+    "hour": 10,
+    "demand_mw": 57863.4,
+    "inertia_gws": 241.59,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.522,
+    "nadir_hz": -1.285
+   },
+   {
+    "hour": 11,
+    "demand_mw": 58482.9,
+    "inertia_gws": 237.03,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.532,
+    "nadir_hz": -1.435
+   },
+   {
+    "hour": 12,
+    "demand_mw": 57403.4,
+    "inertia_gws": 243.61,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.517,
+    "nadir_hz": -1.221
+   },
+   {
+    "hour": 13,
+    "demand_mw": 57289.3,
+    "inertia_gws": 234.72,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.467,
+    "nadir_hz": -0.94
+   },
+   {
+    "hour": 14,
+    "demand_mw": 57368.5,
+    "inertia_gws": 239.77,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.526,
+    "nadir_hz": -1.316
+   },
+   {
+    "hour": 15,
+    "demand_mw": 57646.8,
+    "inertia_gws": 240.73,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.523,
+    "nadir_hz": -1.414
+   },
+   {
+    "hour": 16,
+    "demand_mw": 58869.9,
+    "inertia_gws": 246.73,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.511,
+    "nadir_hz": -1.452
+   },
+   {
+    "hour": 17,
+    "demand_mw": 59353.0,
+    "inertia_gws": 245.58,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.513,
+    "nadir_hz": -1.414
+   },
+   {
+    "hour": 18,
+    "demand_mw": 58569.5,
+    "inertia_gws": 247.92,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.508,
+    "nadir_hz": -1.28
+   },
+   {
+    "hour": 19,
+    "demand_mw": 56232.5,
+    "inertia_gws": 236.25,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.533,
+    "nadir_hz": -1.452
+   },
+   {
+    "hour": 20,
+    "demand_mw": 53254.8,
+    "inertia_gws": 230.73,
+    "largest_mw": 5040.0,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.546,
+    "nadir_hz": -1.066
+   },
+   {
+    "hour": 21,
+    "demand_mw": 50294.8,
+    "inertia_gws": 225.68,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.485,
+    "nadir_hz": -0.834
+   },
+   {
+    "hour": 22,
+    "demand_mw": 47352.5,
+    "inertia_gws": 223.73,
+    "largest_mw": 4380.0,
+    "largest": "千葉火力発電所",
+    "rocof_hz_s": -0.489,
+    "nadir_hz": -0.897
+   },
+   {
+    "hour": 23,
+    "demand_mw": 45153.1,
+    "inertia_gws": 223.37,
+    "largest_mw": 4926.8,
+    "largest": "富津火力発電所",
+    "rocof_hz_s": -0.551,
+    "nadir_hz": -1.23
+   }
+  ],
+  "west": [
+   {
+    "hour": 0,
+    "demand_mw": 50596.0,
+    "inertia_gws": 302.62,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.406,
+    "nadir_hz": -1.17
+   },
+   {
+    "hour": 1,
+    "demand_mw": 47926.3,
+    "inertia_gws": 263.48,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.467,
+    "nadir_hz": -1.429
+   },
+   {
+    "hour": 2,
+    "demand_mw": 46152.6,
+    "inertia_gws": 219.31,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.561,
+    "nadir_hz": -1.476
+   },
+   {
+    "hour": 3,
+    "demand_mw": 44376.7,
+    "inertia_gws": 219.31,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.561,
+    "nadir_hz": -1.477
+   },
+   {
+    "hour": 4,
+    "demand_mw": 46166.3,
+    "inertia_gws": 219.21,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.561,
+    "nadir_hz": -1.476
+   },
+   {
+    "hour": 5,
+    "demand_mw": 50193.2,
+    "inertia_gws": 268.07,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.459,
+    "nadir_hz": -1.413
+   },
+   {
+    "hour": 6,
+    "demand_mw": 55715.6,
+    "inertia_gws": 289.38,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.425,
+    "nadir_hz": -1.117
+   },
+   {
+    "hour": 7,
+    "demand_mw": 61608.8,
+    "inertia_gws": 315.34,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.39,
+    "nadir_hz": -0.9
+   },
+   {
+    "hour": 8,
+    "demand_mw": 65603.8,
+    "inertia_gws": 318.6,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.386,
+    "nadir_hz": -0.832
+   },
+   {
+    "hour": 9,
+    "demand_mw": 66942.7,
+    "inertia_gws": 322.35,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.447,
+    "nadir_hz": -1.241
+   },
+   {
+    "hour": 10,
+    "demand_mw": 67483.0,
+    "inertia_gws": 324.27,
+    "largest_mw": 4119.0,
+    "largest": "姫路第二発電所",
+    "rocof_hz_s": -0.381,
+    "nadir_hz": -0.951
+   },
+   {
+    "hour": 11,
+    "demand_mw": 68129.7,
+    "inertia_gws": 331.12,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.435,
+    "nadir_hz": -1.191
+   },
+   {
+    "hour": 12,
+    "demand_mw": 66833.2,
+    "inertia_gws": 319.26,
+    "largest_mw": 4119.0,
+    "largest": "姫路第二発電所",
+    "rocof_hz_s": -0.387,
+    "nadir_hz": -1.016
+   },
+   {
+    "hour": 13,
+    "demand_mw": 66745.1,
+    "inertia_gws": 326.26,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.442,
+    "nadir_hz": -1.407
+   },
+   {
+    "hour": 14,
+    "demand_mw": 66946.5,
+    "inertia_gws": 318.73,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.452,
+    "nadir_hz": -1.417
+   },
+   {
+    "hour": 15,
+    "demand_mw": 67442.0,
+    "inertia_gws": 329.7,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.437,
+    "nadir_hz": -1.108
+   },
+   {
+    "hour": 16,
+    "demand_mw": 69129.8,
+    "inertia_gws": 337.71,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.427,
+    "nadir_hz": -0.966
+   },
+   {
+    "hour": 17,
+    "demand_mw": 69937.7,
+    "inertia_gws": 332.48,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.433,
+    "nadir_hz": -1.094
+   },
+   {
+    "hour": 18,
+    "demand_mw": 69150.4,
+    "inertia_gws": 328.23,
+    "largest_mw": 4802.0,
+    "largest": "川越火力発電所",
+    "rocof_hz_s": -0.439,
+    "nadir_hz": -1.252
+   },
+   {
+    "hour": 19,
+    "demand_mw": 66420.0,
+    "inertia_gws": 317.61,
+    "largest_mw": 4119.0,
+    "largest": "姫路第二発電所",
+    "rocof_hz_s": -0.389,
+    "nadir_hz": -0.994
+   },
+   {
+    "hour": 20,
+    "demand_mw": 62886.3,
+    "inertia_gws": 320.76,
+    "largest_mw": 4119.0,
+    "largest": "姫路第二発電所",
+    "rocof_hz_s": -0.385,
+    "nadir_hz": -0.977
+   },
+   {
+    "hour": 21,
+    "demand_mw": 59366.3,
+    "inertia_gws": 302.34,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.407,
+    "nadir_hz": -0.9
+   },
+   {
+    "hour": 22,
+    "demand_mw": 55860.0,
+    "inertia_gws": 302.49,
+    "largest_mw": 4119.0,
+    "largest": "姫路第二発電所",
+    "rocof_hz_s": -0.409,
+    "nadir_hz": -1.158
+   },
+   {
+    "hour": 23,
+    "demand_mw": 53236.0,
+    "inertia_gws": 309.84,
+    "largest_mw": 4100.0,
+    "largest": "碧南火力発電所",
+    "rocof_hz_s": -0.397,
+    "nadir_hz": -0.941
+   }
+  ],
+  "okinawa": [
+   {
+    "hour": 0,
+    "demand_mw": 1186.6,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.484
+   },
+   {
+    "hour": 1,
+    "demand_mw": 1125.9,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.505
+   },
+   {
+    "hour": 2,
+    "demand_mw": 1085.6,
+    "inertia_gws": 4.55,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.899,
+    "nadir_hz": -2.582
+   },
+   {
+    "hour": 3,
+    "demand_mw": 1045.2,
+    "inertia_gws": 3.56,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -3.713,
+    "nadir_hz": -3.092
+   },
+   {
+    "hour": 4,
+    "demand_mw": 1085.9,
+    "inertia_gws": 4.55,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.899,
+    "nadir_hz": -2.582
+   },
+   {
+    "hour": 5,
+    "demand_mw": 1179.7,
+    "inertia_gws": 4.55,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.899,
+    "nadir_hz": -2.532
+   },
+   {
+    "hour": 6,
+    "demand_mw": 1313.8,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.39
+   },
+   {
+    "hour": 7,
+    "demand_mw": 1464.0,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.074
+   },
+   {
+    "hour": 8,
+    "demand_mw": 1576.4,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.457
+   },
+   {
+    "hour": 9,
+    "demand_mw": 1628.4,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.43
+   },
+   {
+    "hour": 10,
+    "demand_mw": 1656.8,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.396
+   },
+   {
+    "hour": 11,
+    "demand_mw": 1682.2,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.309
+   },
+   {
+    "hour": 12,
+    "demand_mw": 1654.9,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.4
+   },
+   {
+    "hour": 13,
+    "demand_mw": 1648.5,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.41
+   },
+   {
+    "hour": 14,
+    "demand_mw": 1642.3,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.417
+   },
+   {
+    "hour": 15,
+    "demand_mw": 1636.4,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.423
+   },
+   {
+    "hour": 16,
+    "demand_mw": 1651.0,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.406
+   },
+   {
+    "hour": 17,
+    "demand_mw": 1645.6,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.414
+   },
+   {
+    "hour": 18,
+    "demand_mw": 1612.7,
+    "inertia_gws": 6.31,
+    "largest_mw": 502.0,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.385,
+    "nadir_hz": -2.44
+   },
+   {
+    "hour": 19,
+    "demand_mw": 1546.2,
+    "inertia_gws": 6.31,
+    "largest_mw": 482.2,
+    "largest": "吉の浦火力発電所",
+    "rocof_hz_s": -2.291,
+    "nadir_hz": -2.439
+   },
+   {
+    "hour": 20,
+    "demand_mw": 1465.9,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.074
+   },
+   {
+    "hour": 21,
+    "demand_mw": 1385.9,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.111
+   },
+   {
+    "hour": 22,
+    "demand_mw": 1306.2,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.409
+   },
+   {
+    "hour": 23,
+    "demand_mw": 1246.6,
+    "inertia_gws": 6.31,
+    "largest_mw": 440.0,
+    "largest": "金武火力発電所",
+    "rocof_hz_s": -2.092,
+    "nadir_hz": -2.459
+   }
+  ]
+ }
+}

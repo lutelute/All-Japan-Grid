@@ -48,7 +48,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   base; caught 奥吉野 97 MW/1,206 MW and 奥多々良木 155 MW/1,932 MW pumped-storage
   entries, disclosed not edited). East rides through its largest plant loss at
   −0.45 Hz with all machines visibly swinging; west shows ±0.3 Hz inter-machine
-  oscillation decaying over ~10 s. Deck slide 18 (全国・全機の動揺) added. All dynamic parameters carry provenance
+  oscillation decaying over ~10 s. Deck slide 18 (全国・全機の動揺) added.
+- **24-hour frequency-security profile** (`scripts/gen_agc_24h_profile.py` →
+  `fig_agc_24h.png`, deck slide 19): every hourly UC commitment becomes a
+  snapshot — online inertia, largest online plant, trip RoCoF and nadir per
+  island per hour. Night-time inertia drops ~30 % on the large islands; on
+  Hokkaido the worst hour is 3 am (nadir −7.1 Hz, beyond the 3-step UFLS) —
+  the same hour of night as the actual 2018 blackout (3:08), stated as a
+  structural correspondence, not a reproduction. All dynamic parameters carry provenance
   labels; results are structural demonstrations, not operational predictions.
   Outputs: `docs/data/agc/agc_chain.json`, `papers/figs/fig_agc.pdf`,
   `docs/assets/figs/fig_agc_national.png`.
