@@ -1,0 +1,254 @@
+{
+ "note": "(仮)都心給電プローブ。正典不変更。論法=推定母線と同じ『存在は必然・経路とパラメータは(仮)明記』。適用可否はオーナー承認(介入#37候補)",
+ "peak_hour": 17,
+ "results": {
+  "backbone154": {
+   "mode": "ac",
+   "n_infeed": 7,
+   "infeed_ledger": [
+    {
+     "kv": 154.0,
+     "load_mw": 607.0,
+     "n_bus": 10,
+     "cluster_names": [
+      "九条変電所",
+      "信濃橋変電所",
+      "北浜変電所",
+      "南港南二丁目変電所"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 14.9,
+     "sn_mva": 910.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 492.1,
+     "n_bus": 2,
+     "cluster_names": [
+      "味生変電所 154kV",
+      "西三国変電所 154kV"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 6.8,
+     "sn_mva": 738.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 344.9,
+     "n_bus": 2,
+     "cluster_names": [
+      "chubu junction"
+     ],
+     "to_upper": "東清水変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 21.5,
+     "sn_mva": 517.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 322.4,
+     "n_bus": 4,
+     "cluster_names": [
+      "kansai_sub_910",
+      "千舟一丁目変電所 154kV",
+      "春日出北一丁目変電所",
+      "酉島変電所 154kV"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 8.8,
+     "sn_mva": 484.0
+    },
+    {
+     "kv": 220.0,
+     "load_mw": 225.2,
+     "n_bus": 6,
+     "cluster_names": [
+      "chugoku juncti",
+      "藤生町一丁目変電所 220k",
+      "藤生町三丁目変電所 220k"
+     ],
+     "to_upper": "新西広島変電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 30.6,
+     "sn_mva": 338.0
+    },
+    {
+     "kv": 220.0,
+     "load_mw": 151.7,
+     "n_bus": 2,
+     "cluster_names": [
+      "shikoku juncti"
+     ],
+     "to_upper": "新西広島変電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 0.3,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 104.4,
+     "n_bus": 2,
+     "cluster_names": [
+      "chubu junction",
+      "東日本旅客鉄道(株)神保原変"
+     ],
+     "to_upper": "chubu junction 36.54",
+     "upper_kv": 275.0,
+     "dist_km": 44.2,
+     "sn_mva": 300.0
+    }
+   ],
+   "served_frac": 0.9649,
+   "vm_min": 0.941,
+   "vm_max": 1.037,
+   "elapsed_s": 9.3
+  },
+  "full": {
+   "mode": "dc_fallback",
+   "n_infeed": 9,
+   "infeed_ledger": [
+    {
+     "kv": 77.0,
+     "load_mw": 218.4,
+     "n_bus": 13,
+     "cluster_names": [
+      "フタバ産業",
+      "中部電力(株) 赤坂変電所",
+      "幸田町変電所",
+      "美合町変電所"
+     ],
+     "to_upper": "幸田変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 5.0,
+     "sn_mva": 328.0
+    },
+    {
+     "kv": 77.0,
+     "load_mw": 206.7,
+     "n_bus": 15,
+     "cluster_names": [
+      "南海電鉄堺変電所",
+      "堺港変電所",
+      "泉北港変電所",
+      "石津西町変電所"
+     ],
+     "to_upper": "南大阪変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 12.0,
+     "sn_mva": 310.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 177.2,
+     "n_bus": 10,
+     "cluster_names": [
+      "九条変電所",
+      "信濃橋変電所",
+      "北浜変電所",
+      "南港南二丁目変電所"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 7.5,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 173.4,
+     "n_bus": 11,
+     "cluster_names": [
+      "国府変電所",
+      "桜木通三丁目変電所",
+      "諏訪三丁目変電所",
+      "豊川変電所"
+     ],
+     "to_upper": "chubu junction 34.88",
+     "upper_kv": 275.0,
+     "dist_km": 7.5,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 77.0,
+     "load_mw": 147.6,
+     "n_bus": 5,
+     "cluster_names": [
+      "湊町変電所",
+      "萩之茶屋変電所",
+      "関西電力下寺変電所",
+      "関西電力桃谷変電所"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 12.2,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 133.2,
+     "n_bus": 9,
+     "cluster_names": [
+      "九州電力 一の勢変電所 66",
+      "九州電力 一町田変電所",
+      "九州電力 内野河内変電所",
+      "九州電力 姫浦変電所"
+     ],
+     "to_upper": "kyushu junction 32.4",
+     "upper_kv": 500.0,
+     "dist_km": 12.0,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 131.2,
+     "n_bus": 4,
+     "cluster_names": [
+      "西区変電所",
+      "西区変電所_3",
+      "西区変電所_4",
+      "西区変電所_5"
+     ],
+     "to_upper": "南大阪変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 11.4,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 103.4,
+     "n_bus": 6,
+     "cluster_names": [
+      "4丁目変電所",
+      "4丁目変電所_2",
+      "広町変電所"
+     ],
+     "to_upper": "新広島変電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 27.6,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 101.2,
+     "n_bus": 9,
+     "cluster_names": [
+      "大波下変電所",
+      "市場変電所",
+      "森変電所",
+      "西屋変電所"
+     ],
+     "to_upper": "kansai junction 35.5",
+     "upper_kv": 500.0,
+     "dist_km": 8.2,
+     "sn_mva": 300.0
+    }
+   ],
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 4.7
+  }
+ }
+}
