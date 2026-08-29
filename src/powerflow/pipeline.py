@@ -87,6 +87,12 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
 
     検出: 同一電圧階級(60≤kv<275)の線連結クラスタで、(a)どのバスも上位への
     変圧器を持たず (b)クラスタ負荷合計≥min_load_mw のもの。
+    負荷集計(2026-08-30 第8波改良): クラスタ自階級の負荷に加え、**クラスタを
+    取り除くと系統から孤立する無電源成分の純負荷**(下流変圧器配下など、
+    クラスタが唯一の給電元である負荷)を算入する。動機=大阪三国型の見逃し:
+    味生/西三国154クラスタ(自負荷39MW)の下に77kV 118MWがぶら下がり、旧集計
+    では閾値100MW未満で不検出→大阪77網から2段直列変圧器の逆潮給電になって
+    いた(vm 0.73、docs/reports/west_ac_wave7_2026-08-30.md)。
     接続: クラスタ最大負荷バス → 地理的最近傍の≥275kVバスへ変圧器1台
     (sn=負荷×1.5・vk12%=階級典型値)。**実在の経路が判明したら置換される暫定**。
     max_dist_km(2026-08-30追加): 最近傍がこれより遠い場合は縫合せず台帳のみ
@@ -116,6 +122,41 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
             g.add_edge(fb, tb)
     has_up = {int(r.lv_bus) for _, r in
               net.trafo[net.trafo.in_service].iterrows()}
+    # 全結線グラフ(線+変圧器) — 下流専属負荷の判定用
+    g_all = _nx.Graph()
+    for _, r in net.line[net.line.in_service].iterrows():
+        g_all.add_edge(int(r.from_bus), int(r.to_bus))
+    for _, r in net.trafo[net.trafo.in_service].iterrows():
+        g_all.add_edge(int(r.hv_bus), int(r.lv_bus))
+    gen_at = defaultdict(float)
+    for tbl in ("gen", "sgen", "ext_grid"):
+        df = getattr(net, tbl)
+        if len(df) == 0:
+            continue
+        sel = df[df.in_service] if "in_service" in df.columns else df
+        for _, r in sel.iterrows():
+            gen_at[int(r.bus)] += 1.0   # 電源の存在のみ見る(出力は不問)
+
+    def _downstream_mw(comp):
+        """クラスタcompを除去したとき孤立する無電源成分の純負荷合計。"""
+        if not all(b in g_all for b in comp):
+            gsub = g_all.subgraph([b for b in g_all if b not in comp])
+        else:
+            gsub = g_all.subgraph(set(g_all.nodes) - set(comp))
+        # comp に隣接していた成分だけ調べれば十分
+        seen, total = set(), 0.0
+        for b in comp:
+            for nb in g_all.neighbors(b):
+                if nb in comp or nb in seen or nb not in gsub:
+                    continue
+                cc = _nx.node_connected_component(gsub, nb)
+                seen |= cc
+                lo = sum(load_at.get(x, 0.0) for x in cc)
+                ge = sum(gen_at.get(x, 0.0) for x in cc)
+                # 主系統(電源つき成分)は数えない。無電源の孤立成分のみ
+                if lo > 0 and ge < 1e-6:
+                    total += lo
+        return total
     load_at = defaultdict(float)
     for _, r in net.load[net.load.in_service].iterrows():
         load_at[int(r.bus)] += float(r.p_mw)
@@ -124,15 +165,21 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
         kv = float(net.bus.at[next(iter(comp)), "vn_kv"])
         if kv < 60 or kv >= 275 or any(b in has_up for b in comp):
             continue
-        load = sum(load_at.get(b, 0.0) for b in comp)
+        own = sum(load_at.get(b, 0.0) for b in comp)
+        down = _downstream_mw(comp)
+        load = own + down
         if load < min_load_mw:
             continue
         big = max(comp, key=lambda b: load_at.get(b, 0.0))
         names = sorted({str(net.bus.at[b, "name"])[:14] for b in comp
                         if load_at.get(b, 0) > 0})[:4]
+        if not names:
+            names = sorted({str(net.bus.at[b, "name"])[:14]
+                            for b in comp})[:2]
         clusters.append(dict(kv=kv, n_bus=len(comp),
-                             load_mw=round(load, 1), anchor_bus=int(big),
-                             names=names))
+                             load_mw=round(load, 1),
+                             downstream_mw=round(down, 1),
+                             anchor_bus=int(big), names=names))
     ups = [(b, _geo(b)) for b in net.bus.index
            if net.bus.at[b, "in_service"] and net.bus.at[b, "vn_kv"] >= 275]
     ups = [(b, gg) for b, gg in ups if gg]
@@ -159,7 +206,8 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
             vkr_percent=0.5, vk_percent=12.0, pfe_kw=0.0, i0_percent=0.0,
             name=f"(仮)都心給電#37 {c['kv']:.0f}kV 実経路未確認")
         ledger.append(dict(
-            kv=c["kv"], load_mw=c["load_mw"], n_bus=c["n_bus"],
+            kv=c["kv"], load_mw=c["load_mw"],
+            downstream_mw=c.get("downstream_mw", 0.0), n_bus=c["n_bus"],
             cluster_names=c["names"],
             to_upper=str(net.bus.at[ub, "name"])[:20],
             upper_kv=float(net.bus.at[ub, "vn_kv"]),

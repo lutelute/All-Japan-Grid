@@ -7,8 +7,13 @@ backbone154は介入#37でAC成立(2026-08-30, reports/provisional_infeed_decisi
 
 出力: docs/reports/west_ac_onset_full_2026-08-30.{md,json}
 """
+import argparse
 import copy, json, os, sys
 import numpy as np
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--hour", type=int, default=None,
+                 help="診断する時刻(既定=ピーク)。昼間帯調査は例: 12")
+_args = _ap.parse_args()
 os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, os.getcwd())
 from scripts.run_full_powerflow_from_db import (BUILT, ISLAND_OF,
@@ -24,7 +29,9 @@ import pandapower as pp
 scn = build_national_scenario(scenario="fy2023r2")
 uc = solve_uc(scn.to_uc_parameters()); assert uc.is_optimal
 regions = sorted(r for r,(i,_f) in ISLAND_OF.items() if i=="west")
-h = int(np.argmax(sum(np.asarray(scn.net_demand_r[r]) for r in regions)))
+h = (_args.hour if _args.hour is not None else
+     int(np.argmax(sum(np.asarray(scn.net_demand_r[r]) for r in regions))))
+print(f"診断時刻 t={h}")
 built = json.load(open(BUILT)); cfg = load_demand_config()
 from src.powerflow.pref_demand import pref_zone_gwh
 pref_gwh,_ = pref_zone_gwh(built["nodes"])
@@ -90,6 +97,8 @@ for it in range(1,7):
                          "vm_max":round(float(vm.max()),3),
                          "n_dev15":int(sum(layers.values())),
                          "layers":layers,"top":top})
-json.dump(doc, open("docs/reports/west_ac_onset_full_2026-08-30.json","w"),
-          ensure_ascii=False, indent=1)
-print("-> docs/reports/west_ac_onset_full_2026-08-30.json")
+doc["hour"] = h
+_out = ("docs/reports/west_ac_onset_full_2026-08-30.json" if _args.hour is None
+        else f"docs/reports/west_ac_onset_full_t{h}_2026-08-30.json")
+json.dump(doc, open(_out, "w"), ensure_ascii=False, indent=1)
+print(f"-> {_out}")

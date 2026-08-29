@@ -786,7 +786,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addImage({ path: A + "fig_west_ac_map.png", x: 0.15, y: 0.75, w: 13.03, h: 6.68 });
   s.addText("そして、西日本が点灯する", { x: 0.7, y: 0.12, w: 9.0, h: 0.55,
     fontFace: F, fontSize: 22, bold: true, color: "FFFFFF", margin: 0 });
-  s.addText("4島フルAC / 24時間中19時刻がAC(残りは太陽光ピーク帯=次の敵) / slack 13%と局所低電圧も正直に開示",
+  s.addText("4島フルAC / 西も24時間全時刻AC(第8波: 下流専属負荷の見逃しを塞いで昼間帯も点灯) / slack 13%と局所低電圧も正直に開示",
     { x: 0.7, y: 7.14, w: 11.0, h: 0.3, fontFace: F, fontSize: 11,
       color: "8E96B8", margin: 0 });
   s.addText("25", { x: 12.4, y: 7.12, w: 0.5, h: 0.28, fontFace: FL,

@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #37 wave-8 refinement — downstream-exclusive load accounting**
+  (`add_provisional_infeed`): cluster load now includes the net load of
+  source-less components that become isolated when the cluster is removed
+  (load whose only supply path runs through the cluster). Motivation: the
+  Osaka Mikuni pattern — the Ajifu/Nishi-Mikuni 154 kV pair (own load 39 MW,
+  under the 100 MW threshold) exclusively feeds a 118 MW 77 kV subnetwork and
+  was being back-fed through two series 100 MVA transformers (vm 0.73).
+  Detected now as 158 MW (118 MW downstream) with no threshold change; west
+  full gains 3 links (9→12, one 44 km candidate capped to ledger-only), AC
+  unchanged and the t=12 daytime snapshot now converges in 3 NR iterations.
+  Ledger rows carry `downstream_mw`.
 - **Intervention #38 — frequency-crossing reattribution refinement**
   (`src/powerflow/region_attribution.py` `UNIFORM_FREQ_PREFS` +
   `reattribute_node_regions(freq_fix=True)`, `--freq-fix-reattr` on both
