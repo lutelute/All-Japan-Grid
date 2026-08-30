@@ -111,7 +111,10 @@ def frame(step_no, title, sub, *, edge_frac=1.0, colored=False, show_jct=False,
 F = []; D = []
 def hold(img, n): F.append(img); D.append(200 * n)
 
-hold(frame(0, "OSMから、日本全体の系統モデルを組む", "6段階の組み上げ — 全フレーム実データ", edge_frac=0.0), 8)
+# 総題「OSMから、日本全体の系統モデルを組む」はスライド側のテキストボックスへ
+# 移した(GIFに焼き込むとPowerPointで直せない — オーナー指摘)。①〜⑥の段階名は
+# アニメの内容そのものなのでGIF内に残し、先頭カードは行程表に置き換える。
+hold(frame(0, "これから6段階で組み上げる", "① 送電線 → ② 電圧 → ③ 結線 → ④ 変電所 → ⑤ 発電所 → ⑥ 需要配分", edge_frac=0.0), 8)
 for fr in (0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.0):
     hold(frame(1, "① 送電線をOSMから拾う", "40,077本の送電線ジオメトリ(西→東へ描画中)", edge_frac=fr), 2)
 hold(frame(1, "① 送電線をOSMから拾う", "40,077本の送電線ジオメトリ", edge_frac=1.0), 6)

@@ -247,9 +247,9 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 3.5 動: OSM→モデルの組み上げ(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "pipeline_buildup.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("pipeline_buildup.gif",
+    "OSMから、日本全体の系統モデルを組む",
+    "6段階の組み上げ — 全フレーム実データ");
   s.addNotes("[標準]【手順の本体】OSM→モデルの6段階を1本のアニメで。①送電線の幾何(西→東に描画) ②電圧を7段補完で決定(色が付く) ③端点マッチングで結線(黄点=ジャンクション) ④変電所(白丸)と変圧器 ⑤発電所(★)を最寄り接続 ⑥県別需要×電圧重みで需要配分。全フレーム実データ。ここで手順の全体像を掴ませてから年表へ。1:30");
 }
 
@@ -598,9 +598,11 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 14.5 動: SubSLDの読み方と全国展開(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "subsld_flipbook.gif", x: 0.17, y: 0, w: 13.0, h: 7.5 });
+  // 見出し(変電所名)はフレームごとに変わる=アニメの内容なのでGIF内に残し、
+  // スライド側には総題だけを置く(PowerPointで編集できる)。
+  const s = gifSlide("subsld_flipbook.gif",
+    "変電所の中を機械生成する — SubSLD法",
+    "第5幕 v1.8");
   s.addNotes("[標準]SubSLDを動きで: 読み方3段(左=構内幾何/右=単線結線図/捏造ゼロ)→全国406所の機械生成を流す。第5幕の実物提示。詳細はSubSLD論文デッキへ。1:00");
 }
 
@@ -890,9 +892,11 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 第6幕B2 動: 発散が育つ→収束する(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "west_ac_onset.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
+  // 「介入前 / 介入後」の場面見出しは2場面構成そのもの=アニメの内容なのでGIF内に
+  // 残し、スライド側には総題だけを置く(PowerPointで編集できる)。
+  const s = gifSlide("west_ac_onset.gif",
+    "発散が育つ → 収束する — ニュートン反復を1回ずつ止めて観察する",
+    "西日本フル網・介入#37/#38/#39");
   s.addNotes("[フル]第6幕の核心を動きで: ニュートン反復を1回ずつ止めて電圧場を観察。介入前(#37/#38なし)=大阪都心と軽井沢・嬬恋から逸脱が育ち発散 / 介入後=(仮)12件+誤帰属275点の是正だけで5回収束。補足(2026-08-30再検証): #37v2(下流込み集計)実装後は#38なしでも収束する — 両介入は独立に正当(regionの正しさはAC以前の問題)だが、AC成立の必要条件としては#37v2が主。『反復を止めて観察する』手法そのものが見える。1:00");
 }
 

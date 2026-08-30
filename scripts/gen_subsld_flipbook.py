@@ -118,8 +118,11 @@ def base_frame(png_path, name, reg):
         d.rectangle(card, fill=(255, 255, 255))
         fr.paste(q, (x + pad, top + (ch - q.height) // 2))
         x += q.width + 2 * pad + gap
+    # 総題「変電所の中を機械生成する — SubSLD法」はスライド側のテキストボックスへ
+    # 移した(GIFに焼き込むとPowerPointで直せない — オーナー指摘)。変電所名は
+    # フレームごとに変わる=アニメの内容なのでGIF内に残す。
     d.text((30, 18), name, font=font(34), fill=(255, 255, 255))
-    d.text((30, 64), f"SubSLD法 — 構造DB+OSMタグのみで機械生成({reg})",
+    d.text((30, 64), f"構造DB+OSMタグのみで機械生成({reg})",
            font=font(19), fill=(142, 150, 184))
     return fr
 
