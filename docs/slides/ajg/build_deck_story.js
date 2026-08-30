@@ -734,19 +734,28 @@ function meq(s, x, y, w, runs, fs, align) {
   const s = pres.addSlide(); base(s);
   head(s, "第6幕 2026-08-30", "最後のDC島 — 西のACを一夜で正典にする", "0F7B6C",
     "4島のうち西日本だけがAC不成立のまま「今後」に残っていた — その宿題を今夜のうちに");
-  card(s, 0.9, 1.35, 5.65, 1.85, "謎: バックボーンでも解けない",
-    "≥154 kVに絞っても dc_fallback。プローブ第1〜4波(サイト変圧器・無効電力・時刻別シャント)は全て空振り。反復を止めて観察する onset 診断に切替", RED, 12);
-  card(s, 6.85, 1.35, 5.65, 1.85, "第一容疑者: 大阪都心154 kVクラスタ",
+  card(s, 0.9, 1.35, 7.0, 1.85, "謎: バックボーンでも解けない",
+    "≥154 kVに絞っても dc_fallback。プローブ第1〜4波(サイト変圧器・無効電力・時刻別シャント)は全て空振り。NR最終ミスマッチは右図のとおり全域が瓦礫で、震源が読めない → 反復を1回で止めて観察する onset 診断に切替", RED, 12);
+  s.addShape(pres.ShapeType.roundRect, { x: 8.15, y: 1.35, w: 4.35, h: 3.85,
+    fill: { color: "FFFFFF" }, line: { color: "D9D9E0", width: 1 },
+    rectRadius: 0.05 });
+  s.addImage({ path: A + "fig_west_wreckage.png", x: 8.3, y: 1.45,
+    w: 4.05, h: 3.4 });
+  s.addText("証拠物件: 発散後の最終ミスマッチ — 全域瓦礫(ここから犯人は読めない)", {
+    x: 8.3, y: 4.85, w: 4.05, h: 0.32, fontFace: F, fontSize: 8.5,
+    color: MUT, margin: 0 });
+  card(s, 0.9, 3.35, 7.0, 1.85, "第一容疑者: 大阪都心154 kVクラスタ",
     "梅田・北浜・小曽根…上位(≥275 kV)への変圧器がゼロ。関西の275 kV地中網はOSM未収載で、開示系統図は実名匿名化=出典回復が不可能(#28型が使えない)", ACT[3], 12);
-  s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 3.45, w: 11.6, h: 1.75,
+  s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 5.42, w: 11.6, h: 1.28,
     fill: { color: "0F7B6C" }, line: { type: "none" }, rectRadius: 0.08 });
   s.addText([
-    { text: "介入#37「都心給電の必然接続(仮)」 — ", options: { fontFace: F, fontSize: 14.5, bold: true, color: "FFFFFF" } },
-    { text: "負荷が現に供給されている以上、上位系からの給電経路の存在は電気的必然。存在のみを主張し、経路・容量は(仮)と明記して全件台帳に載せる。\n", options: { fontFace: F, fontSize: 12.5, color: "E6F4F1" } },
-    { text: "オーナー裁定「仮が事実でないかもしれないなら、それを明記しておけば正典として良い」", options: { fontFace: F, fontSize: 12.5, bold: true, color: "FFE082" } },
-  ], { x: 1.2, y: 3.45, w: 11.0, h: 1.75, margin: 0, valign: "middle", lineSpacing: 20 });
-  card(s, 0.9, 5.45, 11.6, 1.15, "結果: 西バックボーンAC初成立 — しかしフルは落ちたまま",
-    "(仮)変圧器のみで mode=ac・served 96.5%。ならばフルを殺している犯人は154 kV未満の層にいる — 捜査は66/77 kV層へ", GRN, 12.5);
+    { text: "介入#37「都心給電の必然接続(仮)」 — ", options: { fontFace: F, fontSize: 13.5, bold: true, color: "FFFFFF" } },
+    { text: "負荷が現に供給されている以上、給電経路の存在は電気的必然。存在のみ主張し、経路・容量は(仮)明記+全件台帳。", options: { fontFace: F, fontSize: 11.5, color: "E6F4F1" } },
+    { text: "オーナー裁定「仮が事実でないかもしれないなら、それを明記しておけば正典として良い」", options: { fontFace: F, fontSize: 11.5, bold: true, color: "FFE082" } },
+  ], { x: 1.2, y: 5.42, w: 11.0, h: 1.28, margin: 0, valign: "middle", lineSpacing: 16 });
+  s.addText("→ (仮)のみで西バックボーンAC初成立(served 96.5%)。ならばフルの犯人は154 kV未満の層 — 捜査は66/77 kVへ", {
+    x: 0.9, y: 6.76, w: 11.6, h: 0.3, fontFace: F, fontSize: 11.5, bold: true,
+    color: GRN, margin: 0 });
   foot(s, 23, "1:00");
   s.addNotes("第6幕は一夜のデバッグ記。(仮)の哲学=推定母線と同じ「存在の必然性だけ主張」。承認の一文がこの幕の転回点。数値の出典: provisional_infeed_decision_2026-08-30.md");
 }
@@ -821,7 +830,7 @@ function meq(s, x, y, w, runs, fs, align) {
     x: 1.2, y: 5.75, w: 11.0, h: 0.95, fontFace: F, fontSize: 14.5,
     bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
   foot(s, 26, "1:00");
-  s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。下帯の一文がこのデッキの結論。");
+  s.addNotes("各原則が生まれた事件と対応：①=v1.8証拠閉包 ②=v1.5介入台帳 ③=v1.5東AC解体 ④=v1.8 issue#49。最新の実例(2026-08-30深夜): 介入#40(人口傾斜)は実装→検証行列が退行を検出→既定OFFで台帳化、介入#39は帳簿の旧ID事故を名前アサートで修復 — どちらも③『収束は正しさではない』と②『台帳』が数字を守った夜。下帯の一文がこのデッキの結論。");
 }
 
 /* ===================== 16. まとめ・論文・今後 ===================== */
