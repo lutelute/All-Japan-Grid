@@ -66,11 +66,11 @@ T_TRIP = 1.0
 T_END = 60.0
 
 
-def build_case(island, scn, uc, built, cfg, pref_gwh):
+def build_case(island, scn, uc, built, cfg, pref_gwh, hour=None):
     regions = sorted(r for r, (isl, _f) in ISLAND_OF.items() if isl == island)
     f0 = ISLAND_FREQ[island]
     net_dem = sum(np.asarray(scn.net_demand_r[r]) for r in regions)
-    h = int(np.argmax(net_dem))
+    h = int(np.argmax(net_dem)) if hour is None else int(hour)
     print(f"② [{island}] ネット構築+UC断面注入+{ISLAND_MODE[island].upper()}解 "
           f"(t={h}, 需要{net_dem[h]:,.0f}MW)...")
     geom = {}
@@ -269,15 +269,19 @@ def extract_model(net, mode, f0):
     return machines, Em, delta0, kron, load0_pu
 
 
-def simulate(island, f0, machines, Em, delta0, kron, load0_pu):
+def simulate(island, f0, machines, Em, delta0, kron, load0_pu, trip_top=1):
     n = len(machines)
     omega_s = 2.0 * math.pi * f0
     M = np.array([2 * m["H"] * m["S"] / S_BASE_MVA for m in machines])
     Dd = np.array([m["Ddyn"] * m["S"] / S_BASE_MVA for m in machines])
     Msum = M.sum()
-    trip = int(np.argmax([m["P"] for m in machines]))
-    print(f"④ トリップ: {machines[trip]['name']} "
-          f"({machines[trip]['P']*S_BASE_MVA:,.0f} MW)")
+    order = np.argsort([-m["P"] for m in machines])
+    trips = [int(i) for i in order[:max(1, trip_top)]]
+    trip = trips[0]
+    for ti in trips:
+        print(f"④ トリップ: {machines[ti]['name']} "
+              f"({machines[ti]['P']*S_BASE_MVA:,.0f} MW)"
+              + (" [N-%d同時デモ]" % len(trips) if len(trips) > 1 else ""))
 
     cls = [AGC30_CLASSES.get(m["cls"]) for m in machines]
     has_gov = np.array([c is not None for c in cls])
@@ -298,7 +302,8 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu):
     print("⑤ 縮約Ybus事前計算(トリップ前後×UFLS 0..3段)...")
     t0 = time.monotonic()
     Y_pre = kron(0.0)
-    Y_post = {k: kron(UFLS_SHED_FRAC * k, tripped={trip}) for k in range(4)}
+    Y_post = {k: kron(UFLS_SHED_FRAC * k, tripped=set(trips))
+              for k in range(4)}
     print(f"   {time.monotonic()-t0:.0f}s")
 
     def Pe(delta, Yred):
@@ -403,7 +408,7 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu):
             state["Yred"] = kron(
                 UFLS_SHED_FRAC * state["stage"]
                 if state["tripped"] else 0.0,
-                tripped=({trip} | oos) if state["tripped"] else oos)
+                tripped=(set(trips) | oos) if state["tripped"] else oos)
             log.append((te, f"脱調保護: {machines[k_oos]['name']}"
                         f"({machines[k_oos]['P']*S_BASE_MVA:,.0f}MW)"))
             tcur = te
@@ -411,16 +416,18 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu):
         name = events_left[hit][0]
         if name == "trip":
             state["tripped"] = True
-            live[trip] = False
-            t_drop[trip] = te
+            for ti in trips:
+                live[ti] = False
+                t_drop[ti] = te
             state["Yred"] = kron(UFLS_SHED_FRAC * state["stage"],
-                                 tripped={trip} | oos) if oos \
+                                 tripped=set(trips) | oos) if oos \
                 else Y_post[state["stage"]]
-            log.append((te, f"トリップ: {machines[trip]['name']}"))
+            log.append((te, "トリップ: " + "+".join(
+                machines[ti]["name"] for ti in trips)))
         else:
             state["stage"] += 1
             state["Yred"] = kron(UFLS_SHED_FRAC * state["stage"],
-                                 tripped={trip} | oos) if oos \
+                                 tripped=set(trips) | oos) if oos \
                 else Y_post[state["stage"]]
             log.append((te, name))
         events_left.pop(hit)
@@ -444,7 +451,8 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu):
         if np.isfinite(t_drop[k]):
             w[k, t > t_drop[k]] = np.nan
             d[k, t > t_drop[k]] = np.nan
-    return dict(t=t, d=d, w=w, M=M, live=live, trip=trip, log=log,
+    return dict(t=t, d=d, w=w, M=M, live=live, trip=trip, trips=trips,
+                log=log,
                 oos=sorted(machines[k]["name"] for k in oos),
                 err_mw=float(err.max() * S_BASE_MVA))
 
@@ -548,6 +556,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--islands", nargs="+",
                     default=["hokkaido", "east", "west", "okinawa"])
+    ap.add_argument("--hour", type=int, default=None,
+                    help="UC断面の時刻(既定=島ピーク)。最小慣性実験は例: 3")
+    ap.add_argument("--trip-top", type=int, default=1,
+                    help="同時トリップする上位プラント数(>1は設計外N-kデモ)")
+    ap.add_argument("--tag", default=None,
+                    help="出力サフィックス(正典成果物を上書きしない)。図は省略")
     args = ap.parse_args()
     print("① UC求解...")
     scn = build_national_scenario(scenario="fy2023r2")
@@ -561,10 +575,13 @@ def main():
     results = {}
     for island in args.islands:
         t0 = time.monotonic()
-        net, mode, f0 = build_case(island, scn, uc, built, cfg, pref_gwh)
+        net, mode, f0 = build_case(island, scn, uc, built, cfg, pref_gwh,
+                                   hour=args.hour)
         machines, Em, delta0, kron, load0 = extract_model(net, mode, f0)
-        r = simulate(island, f0, machines, Em, delta0, kron, load0)
-        island_figure(island, f0, machines, r)
+        r = simulate(island, f0, machines, Em, delta0, kron, load0,
+                     trip_top=args.trip_top)
+        if not args.tag:
+            island_figure(island, f0, machines, r)
         results[island] = (machines, r, f0)
         doc = {"note": ("多機(AGC-N)共シミュレーション帳簿。AGC30機種定数×"
                         "UCオンライン全機×実網Kron縮約。負荷=定Z・UFLS=負荷Y"
@@ -579,12 +596,29 @@ def main():
                "out_of_step_tripped": r["oos"],
                "events": [{"t_s": round(te, 2), "event": m}
                           for te, m in r["log"]]}
-        json.dump(doc, open(f"docs/data/agc/multimachine_{island}.json", "w"),
-                  ensure_ascii=False, indent=1)
+        sfx = f"_{args.tag}" if args.tag else ""
+        doc["trips"] = [machines[ti]["name"] for ti in r["trips"]]
+        doc["hour"] = args.hour
+        json.dump(doc, open(f"docs/data/agc/multimachine_{island}{sfx}.json",
+                            "w"), ensure_ascii=False, indent=1)
         # 伝播アニメ等の下流用に全機トレースを保存(再生成可能・gitignore)
+        import json as _json
+        lp = []
+        for _, lo in net.load[net.load.in_service].iterrows():
+            if float(lo.p_mw) <= 0:
+                continue
+            try:
+                g = _json.loads(net.bus.at[int(lo.bus), "geo"])
+                lp.append((g["coordinates"][0], g["coordinates"][1],
+                           float(lo.p_mw)))
+            except Exception:  # noqa: BLE001
+                pass
         np.savez_compressed(
-            f"docs/data/agc/mm_traces_{island}.npz",
-            t=r["t"], w=r["w"], f0=f0, trip=r["trip"],
+            f"docs/data/agc/mm_traces_{island}{sfx}.npz",
+            t=r["t"], w=r["w"], f0=f0, trip=r["trip"], trips=np.array(r["trips"]),
+            load_lon=np.array([x[0] for x in lp]),
+            load_lat=np.array([x[1] for x in lp]),
+            load_mw=np.array([x[2] for x in lp]),
             lon=np.array([m["lon"] for m in machines]),
             lat=np.array([m["lat"] for m in machines]),
             S=np.array([m["S"] for m in machines]),
@@ -593,7 +627,8 @@ def main():
             ev_t=np.array([te for te, _m in r["log"]]),
             ev_s=np.array([m for _te, m in r["log"]]))
         print(f"   [{island}] 計 {time.monotonic()-t0:.0f}s")
-    national_figure(results)
+    if not args.tag:
+        national_figure(results)
 
 
 if __name__ == "__main__":
