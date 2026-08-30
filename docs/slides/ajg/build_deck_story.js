@@ -51,11 +51,30 @@ function foot(s, n, mins) {
   s.addText(String(n), { x: 12.4, y: 7.12, w: 0.5, h: 0.28, fontFace: FL,
     fontSize: 10, color: MUT, align: "right", margin: 0 });
 }
+// ── 尺トラック(2026-08-31) ────────────────────────────────
+// TRACK=core|std|full で出力する版を切り替える。番号はスライドの通し順。
+// コア=物語の骨格だけで完結する最小構成 / 標準=+動きと深掘りの代表
+// 使い方: TRACK=core node build_deck_story.js → AllJapanGrid_story_core.pptx
+const TRACK = (process.env.TRACK || "full").toLowerCase();
+const CORE = new Set([1, 2, 3, 4, 5, 7, 8, 12, 14, 16, 19, 23, 32, 33, 35,
+                      36, 38, 40, 41]);
+const STD_EXTRA = new Set([6, 11, 17, 25, 26, 29, 30, 31]);
+const NOOP = new Proxy(function () {}, {
+  get: () => NOOP, set: () => true, apply: () => NOOP,
+});
+let _sn = 0;
+function newSlide() {
+  _sn += 1;
+  const keep = TRACK === "full" || (TRACK === "core" && CORE.has(_sn)) ||
+    (TRACK === "std" && (CORE.has(_sn) || STD_EXTRA.has(_sn)));
+  return keep ? pres.addSlide() : NOOP;
+}
+
 // GIF全画面スライド + 編集できるタイトル帯。
 // GIF内に文字を焼き込むとPowerPointで直せない(オーナー指摘)ため、見出しは
 // スライド側のテキストボックスに置く。GIFは16:9を保ったまま帯の下に敷く。
 function gifSlide(file, title, sub) {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   const H = 6.86, W = H * 16 / 9;                 // 帯0.64インチ分を空ける
   s.addImage({ path: A + file, x: (13.33 - W) / 2, y: 0.64, w: W, h: H });
@@ -101,7 +120,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 1. タイトル ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   // 右: 全国電圧クラス図（フルブリード縦）
   s.addImage({ path: A + "fig_national_all.png", x: 7.9, y: 0.35, w: 5.1,
     h: 6.56 });
@@ -125,12 +144,12 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("地図はある。モデルが無い。だから作った。", { x: 0.75, y: 6.1,
     w: 6.7, h: 0.4, fontFace: F, fontSize: 14.5, bold: true, color: INK,
     margin: 0 });
-  s.addNotes("【尺の設計 — 実測41枚45.3分】枠に応じて3トラックで運用する(構成はcodex助言で改稿: 位置づけは早く・検証は遅く・第6幕は検証の前)。■コア(約22分): p1,2,3,4,5(先行研究の位置),7(年表),8(第1幕),12(収束は正しさではない),14(公式開示と照合),16(SubSLD),19(事故),23(東N-3 GIF),32,33,35(西点灯),36(検証と限界),38(失敗も台帳に),40,41。■標準(約31分): コア+6(組み上げGIF),11(解ける化),17(SubSLDフリップ),25(逆位相),26(回復),29(UC),30(潮流),31(SCR)。■フル(45分): 全41枚。削る順(codex助言): ①深掘り29-31を付録へ ②動揺の実験カタログ20-28を代表2件に ③第6幕32-35を1-2枚に圧縮 ④年表+第1〜5幕を圧縮(つまずきは各幕1文で残す)。削ってはいけないもの: 全国モデルの定義・CGMES化・SubSLD・検証・限界・先行研究上の位置。失敗談は量を減らしても『失敗→台帳→修正→再検証』の因果を1本残せば意図は伝わる。0:30");
+  s.addNotes("【尺の設計 — 3トラックを実ファイルで出し分け】ビルド時に TRACK を指定すると版が切り替わる:\n  node build_deck_story.js            → AllJapanGrid_story.pptx      フル 41枚 45.3分\n  TRACK=std  node build_deck_story.js → AllJapanGrid_story_std.pptx  標準 27枚 27.0分\n  TRACK=core node build_deck_story.js → AllJapanGrid_story_core.pptx コア 19枚 17.2分\n目安: 20分枠=コア / 30分枠=標準 / 45分枠=フル。質疑込みなら1段下げる。コア(物語の骨格だけで完結): 動機→OSMの限界→先行研究の位置→年表→第1幕→収束は正しさではない→公式開示と照合→SubSLD→事故→東N-3→第6幕(DC島/犯人/点灯)→検証と限界→失敗も台帳に→総括→まとめ。標準はこれに 組み上げGIF・解ける化・SubSLDフリップ・逆位相・回復・UC・潮流・SCR を足す。削ってはいけないもの: 全国モデルの定義・CGMES化・SubSLD・検証・限界・先行研究上の位置。失敗談は量を減らしても『失敗→台帳→修正→再検証』の因果を1本残せば意図は伝わる(codex助言)。0:30");
 }
 
 /* ===================== 2. HERO: 出来上がったもの ===================== */
 {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   s.addImage({ path: A + "hero_grid.png", x: 0, y: 0, w: 13.33, h: 7.5 });
   s.addText("これが、出来上がったもの。", { x: 0.7, y: 0.75, w: 7.2, h: 0.75,
@@ -163,7 +182,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 3. 動機 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "序", "日本には、公開のバスレベル系統モデルが無い", NAVY);
   const rows = [
     ["米国", "FERC Form 715", "ネットワークモデルの開示義務。バスレベルで研究利用できる", GRN],
@@ -193,7 +212,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 3. 出発点と設計原則 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "序", "OSMが持つもの・持たないもの — そして最初に置いた原則", NAVY);
   s.addImage({ path: A + "fig_layer_combined.png", x: 0.9, y: 1.2, w: 11.6,
     h: 4.1 });
@@ -207,7 +226,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 23.1 位置づけ: 先行研究の中で ============ */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "現在", "先行研究の中での位置 — 勝っている軸と、負けている軸", NAVY,
     "OSM由来の公開系統データセット10件と全軸で照合した(2026-06-27・出典URL付き)");
   const rows = [
@@ -255,7 +274,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 4. 年表（5幕） ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "序", "6ヶ月の道筋：5幕 — すんなりは、行っていない", NAVY);
   const acts = [
     ["第1幕", "v1.0", "地理を掘る", "OSM抽出・7段補完・UC/PF 一式",
@@ -323,7 +342,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 5. 第1幕: 抽出パイプライン ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第1幕 v1.0", "地理を掘る：抽出から解析まで、最初から一本のパイプライン", ACT[0]);
   s.addImage({ path: A + "fig_pipeline_flow.png", x: 0.62, y: 1.3, w: 12.1,
     h: 5.02 });
@@ -342,7 +361,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 6. 第1幕: v1.0 の結果 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第1幕 v1.0", "初版で出た数字：全国10地域・50/60 Hz を1つのデータセットに", ACT[0]);
   stat(s, 0.9, 1.35, 2.75, "6,962", "変電所 feature", "測定 v1.2 で確定", INK);
   stat(s, 3.85, 1.35, 2.75, "40,077", "送電線", "測定 v1.2 で確定", INK);
@@ -377,7 +396,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 7. 第2幕: 標準で渡す ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第2幕 v1.2", "標準で渡す：CIM/CGMES は輸出先ではなく検証器だった", ACT[1]);
   card(s, 0.9, 1.3, 5.6, 1.45, "IEC 61970 CIM (CGMES 2.4.15) 書き出し",
     "EQ + GL の全10地域。決定的 UUIDv5 mRID・dangling参照 0。\n独立実装 pandapower cim2pp で読み戻して検証", ACT[1], 13.5);
@@ -411,7 +430,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 8. 第2幕: 解ける化と外部検証 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第2幕 v1.3–1.4", "解ける化：トポロジのバグを潰したら 10/10 地域が解けた", ACT[1]);
   // 左: 修正と検証
   card(s, 0.9, 1.3, 6.2, 1.4, "並列回線の数え方（v1.3）",
@@ -439,7 +458,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 9. 第3幕: 収束は正しさではない ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第3幕 v1.5", "収束は正しさではない — 誠実さを仕組みに変えた", ACT[2]);
   s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 1.25, w: 11.6, h: 1.0,
     fill: { color: NAVY }, line: { type: "none" }, rectRadius: 0.06 });
@@ -471,7 +490,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 10. 第3幕: 二重抽出の根治 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第3幕 v1.6", "西日本 2,531成分の謎：バグは1つ、見え方は3つ", ACT[2]);
   // 因果チェーン
   const chain = [
@@ -509,7 +528,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 11. 第4幕: 公式開示と接続 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第4幕 v1.7", "公式開示と接続する：開示データは「上書き」ではなく「照合」", ACT[3]);
   card(s, 0.9, 1.3, 5.6, 1.45, "様式5 インピーダンス表（全10 TSO）",
     "1,009線・213変圧器を正規化し、実証接続89本を canon に適用。\n再生成のたびに再適用されるパイプライン段として組込（黙って消えない）", ACT[3], 13);
@@ -546,7 +565,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 12. 第4幕: 観測と突合し、動かし続ける ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第4幕 v1.7→", "観測と突合し、動かし続ける", ACT[3]);
   s.addImage({ path: A + "flow_map_demo.gif", x: 0.9, y: 1.3, w: 7.2,
     h: 4.89 });
@@ -565,7 +584,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 13. 第5幕: 変電所の中へ ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第5幕 v1.8", "最後の暗箱：変電所の中へ — SubSLD法", ACT[4]);
   s.addImage({ path: A + "geo_shinkeiyo.png", x: 0.9, y: 1.35, w: 3.85,
     h: 4.11 });
@@ -608,7 +627,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 15. 終幕: AGCとは ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "終幕 v1.9へ", "最後の問い：発電所が突然落ちたら、この系統は生き残れるか", NAVY);
   s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 1.25, w: 11.6, h: 1.3,
     fill: { color: PANEL }, line: { type: "none" }, rectRadius: 0.06 });
@@ -652,7 +671,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 16. 終幕: 事故を起こしてみた ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "終幕 v1.9へ", "事故を起こしてみた：最大の発電所を、いきなり落とす", NAVY);
   // 左: 地図(島の色=波形の色)
   s.addImage({ path: A + "fig_agc_map.png", x: 0.55, y: 1.2, w: 4.35,
@@ -672,7 +691,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 17. 動揺も解ける(AGC-N) ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "終幕 v1.9へ", "動揺も解ける：同じ事故を、54機を1機ずつ解く（AGC30 → AGC-N）", NAVY);
   s.addImage({ path: A + "fig_swing_hokkaido.png", x: 0.85, y: 1.15, w: 11.6,
     h: 5.28 });
@@ -688,7 +707,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 18. 全国・全機の動揺 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "終幕 v1.9へ", "系統ごと、全部解く：4島・541機の動揺", NAVY);
   s.addImage({ path: A + "fig_swing_national.png", x: 1.9, y: 1.02, w: 9.55,
     h: 5.52 });
@@ -701,7 +720,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 19. 波が走る(GIF) ===================== */
 {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   s.addImage({ path: A + "agc_east_wave.gif", x: 3.53, y: 0.15, w: 9.3,
     h: 6.98 });
@@ -764,7 +783,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 20. 24時間の断面 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "終幕 v1.9へ", "24時間の断面：同じ事故でも、夜がいちばん危ない", NAVY);
   s.addImage({ path: A + "fig_agc_24h.png", x: 2.5, y: 1.05, w: 8.35,
     h: 5.48 });
@@ -777,7 +796,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 20. 実況: 事故が地図の上を走る ===================== */
 {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   // GIF 960x720 — スライドショー再生でアニメーション
   s.addImage({ path: A + "agc_hokkaido_trip.gif", x: 3.53, y: 0.15, w: 9.3,
@@ -833,7 +852,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 第6幕A. 最後のDC島 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第6幕 2026-08-30", "最後のDC島 — 西のACを一夜で正典にする", "0F7B6C",
     "4島のうち西日本だけがAC不成立のまま「今後」に残っていた — その宿題を今夜のうちに");
   card(s, 0.9, 1.35, 7.0, 1.45, "謎: バックボーンでも解けない",
@@ -864,7 +883,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 第6幕B. 犯人は大阪ではなかった ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第6幕 2026-08-30", "犯人は大阪ではなかった — 50Hz設備の混入", "0F7B6C",
     "onset診断: NRを反復1回で止めて観察 → 最初に暴れたのは軽井沢・御代田・嬬恋の66/77 kV(|V|→6.6)");
   const steps = [
@@ -902,7 +921,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 第6幕C. 西日本AC点灯 ===================== */
 {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   s.addImage({ path: A + "fig_west_ac_map.png", x: 0.15, y: 0.75, w: 13.03, h: 5.95 });
   s.addText("そして、西日本が点灯する", { x: 0.7, y: 0.12, w: 9.0, h: 0.55,
@@ -916,7 +935,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 22.9 検証: このモデルは正しいのか ============ */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "現在", "このモデルは正しいのか — 3つの検証と、その限界", NAVY,
     "「解けた」は正しさではない(第3幕)。ならば外の実測と突き合わせる — 限界を同じ文で開示する");
   card(s, 0.9, 1.45, 3.85, 1.95, "① 実測潮流との順位相関(東京)",
@@ -940,7 +959,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 18. いまの姿（スタック） ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "現在", "いまの姿：1コマンドで再生成できる5層スタック", NAVY);
   const layers = [
     ["観測・UI", "Pages: flow map（毎時更新）/ SubSLDビューア / エディタ / ダウンロード", ACT[4]],
@@ -980,7 +999,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 第6幕E. 失敗も台帳に載せる ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "第6幕 2026-08-30", "失敗も、台帳に載せる", "C0392B",
     "成功だけを並べたスライドは、開発の実像ではない — 直近2週間だけでもこれだけ転んだ");
   card(s, 0.9, 1.4, 5.7, 1.95, "✗ 介入#40 人口傾斜 — 退行して不採用",
@@ -1000,7 +1019,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 第6幕D 動: 全史トレーラー(GIF) ============ */
 {
-  const s = pres.addSlide();
+  const s = newSlide();
   s.background = { color: "0A0D1A" };
   s.addImage({ path: A + "grand_trailer.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
   s.addNotes("[標準]全史トレーラー第2版(20フレーム・37秒): 従来の5幕(組み上げ→UC→3島AC→探偵編→点灯→東N-3)に、第6幕『綱引き』(西の逆位相2カット、電力矢印はΔδ実符号で反転)と第7幕『戻るさま』(東N-3の900秒アーク・4局面チャート)を追加。締めは『いまは、ある。』。0:45");
@@ -1008,7 +1027,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 15. 6ヶ月で学んだこと ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "総括", "6ヶ月で学んだこと：正直さは態度ではなく、仕組み", NAVY);
   const lessons = [
     ["捏造ゼロは構成的に成立させる", "「気をつける」では守れない。証拠の無い要素が出力に到達できない構造にする（第5幕の証拠閉包はその極致）"],
@@ -1038,7 +1057,7 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ===================== 16. まとめ・論文・今後 ===================== */
 {
-  const s = pres.addSlide(); base(s);
+  const s = newSlide(); base(s);
   head(s, "結", "まとめと今後", NAVY);
   s.addShape(pres.ShapeType.roundRect, { x: 0.9, y: 1.3, w: 11.6, h: 1.5,
     fill: { color: NAVY }, line: { type: "none" }, rectRadius: 0.08 });
@@ -1078,7 +1097,8 @@ function meq(s, x, y, w, runs, fs, align) {
 // オーナーの編集が入っていた場合は .bak から戻せる。
 const fs = require("fs");
 const path = require("path");
-const OUT = "AllJapanGrid_story.pptx";
+const OUT = TRACK === "full" ? "AllJapanGrid_story.pptx"
+  : `AllJapanGrid_story_${TRACK}.pptx`;
 const BAKDIR = ".deck_backups";
 if (fs.existsSync(OUT)) {
   if (!fs.existsSync(BAKDIR)) fs.mkdirSync(BAKDIR);
