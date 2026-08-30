@@ -129,14 +129,20 @@ def render(phase_label, sub, k, vm, geo, conv, frames):
     ax.text(0.03,0.74,f"|V|の1puからの逸脱 最大 {vmax:.2f}",transform=ax.transAxes,
             color="#8E96B8",fontsize=11,va="top")
     if not conv and phase_label.startswith("介入前"):
+        # 注釈は海側の空白へ逃がし、背景ボックスで確実に読ませる
+        # (旧: 軽井沢ラベルが見出しに食い込み、大阪ラベルが点群に埋もれた)
+        _bx = lambda c: dict(boxstyle="round,pad=0.28", facecolor="#0A0D1A",
+                             edgecolor=c, linewidth=0.7, alpha=0.80)
         ax.annotate("軽井沢・嬬恋(誤帰属の50Hz設備)", xy=(138.45,36.35),
-                    xytext=(133.0,37.6), color="#FF8A80", fontsize=12,
-                    fontweight="bold",
-                    arrowprops=dict(arrowstyle="->", color="#FF8A80", lw=1.3))
+                    xytext=(135.6,32.5), color="#FF8A80", fontsize=12,
+                    fontweight="bold", bbox=_bx("#FF8A80"),
+                    arrowprops=dict(arrowstyle="->", color="#FF8A80", lw=1.3,
+                                    connectionstyle="arc3,rad=-0.18"))
         ax.annotate("大阪都心(上位接続の欠測)", xy=(135.5,34.75),
-                    xytext=(130.9,32.9), color="#FFB74D", fontsize=12,
-                    fontweight="bold",
-                    arrowprops=dict(arrowstyle="->", color="#FFB74D", lw=1.3))
+                    xytext=(129.1,31.2), color="#FFB74D", fontsize=12,
+                    fontweight="bold", bbox=_bx("#FFB74D"),
+                    arrowprops=dict(arrowstyle="->", color="#FFB74D", lw=1.3,
+                                    connectionstyle="arc3,rad=0.15"))
     ax.text(0.03,0.03,"点=バス 色=|V|の逸脱(淡青=正常 → 白 → 赤=暴走)。tolerance 1e-2 MVA / init=dc",
             transform=ax.transAxes,color="#5A648F",fontsize=9.5)
     fig.canvas.draw()

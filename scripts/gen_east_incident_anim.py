@@ -162,19 +162,19 @@ def render(ts, flash=False, speed=1, act=1):
                 transform=ax.transAxes,
                 color="#FF8A80" if st else "#5A648F", fontsize=12.5, va="top")
         if tt < 3.0:   # 凡例は序盤のみ(情報を減らす)
-            ax.add_patch(FancyBboxPatch((0.018, 0.295), 0.40, 0.135,
+            ax.add_patch(FancyBboxPatch((0.018, 0.295), 0.61, 0.135,
                          transform=ax.transAxes, boxstyle="round,pad=0.012",
                          facecolor="#11152A", edgecolor="#3A4266", alpha=0.94,
                          zorder=9))
             ax.text(0.03, 0.415,
-                    "● 発電機 — 色=その機の周波数(青=50Hz↔赤=低下)",
-                    transform=ax.transAxes, color="#9EC1FF", fontsize=10.5,
+                    "● 発電機 — 色=周波数(青=50Hz↔赤=低下)",
+                    transform=ax.transAxes, color="#9EC1FF", fontsize=9.0,
                     va="top", zorder=10)
             ax.text(0.03, 0.375, "■ 負荷(黄) — UFLSの段ごとに1割ずつ縮む",
-                    transform=ax.transAxes, color="#E0B93C", fontsize=10.5,
+                    transform=ax.transAxes, color="#E0B93C", fontsize=9.0,
                     va="top", zorder=10)
             ax.text(0.03, 0.335, "× 脱落 — 赤=落とした3プラント / 灰=脱調保護",
-                    transform=ax.transAxes, color="#FF8A80", fontsize=10.5,
+                    transform=ax.transAxes, color="#FF8A80", fontsize=9.0,
                     va="top", zorder=10)
     ax.text(0.03, 0.03, "AGC-N 多機共シミュレーション(AGC30定数・実網Kron縮約"
             "・UCピーク断面59.4GW)", transform=ax.transAxes,

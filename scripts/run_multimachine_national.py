@@ -479,7 +479,11 @@ def island_figure(island, f0, machines, r):
              label=f"系統平均(COI) — {int(live.sum())}機")
     for te, _msg in log:
         ax1.axvline(te, color="#C62828", lw=0.9, ls=":", alpha=0.7)
-    axz = ax1.inset_axes([0.42, 0.12, 0.55, 0.55])
+    # インセットは本図の曲線の上に不透明で載せる(旧実装はタイトルが親軸の
+    # 空間にあり、COI曲線がタイトルを横切って読めなかった — 見出しは枠内へ)
+    axz = ax1.inset_axes([0.34, 0.20, 0.53, 0.52], zorder=6)
+    axz.set_facecolor("#FFFFFF")
+    axz.patch.set_alpha(1.0)
     for k in range(n):
         if k == trip:
             continue
@@ -487,16 +491,21 @@ def island_figure(island, f0, machines, r):
     axz.plot(t, f0 + coi * f0, lw=1.6, color="#111111")
     axz.set_xlim(0.5, 9.0)
     lo = float(np.nanmin((f0 + coi * f0)[(t > 0.5) & (t < 9.0)]))
-    axz.set_ylim(lo - 0.25, f0 + 0.2)
-    axz.set_title("拡大: 事故直後の全機動揺", fontsize=10)
+    axz.set_ylim(lo - 0.25, f0 + 0.35)
+    axz.text(0.03, 0.965, "拡大: 事故直後の全機動揺", transform=axz.transAxes,
+             fontsize=10, va="top", ha="left",
+             bbox=dict(boxstyle="round,pad=0.25", facecolor="#FFFFFF",
+                       edgecolor="#BBBBBB", alpha=0.95))
     axz.grid(alpha=0.3)
     for te, msg in log:
         axz.axvline(te, color="#C62828", lw=0.8, ls=":", alpha=0.7)
-        axz.text(te + 0.05, lo - 0.15, msg, rotation=90, fontsize=8,
-                 color="#C62828", va="bottom")
+        # 枠内に収める(旧実装は縦書きラベルがインセット上辺を突き抜けて
+        # 親軸へ溢れていた — east で顕著)
+        axz.text(te + 0.05, lo - 0.18, msg[:18], rotation=90, fontsize=6.5,
+                 color="#C62828", va="bottom", clip_on=True)
     ax1.indicate_inset_zoom(axz, edgecolor="#888888")
     ax1.set_ylabel("各機の周波数 [Hz]", fontsize=11)
-    ax1.legend(fontsize=10, loc="lower right")
+    ax1.legend(fontsize=10, loc="lower left")
     ax1.grid(alpha=0.25)
     ax1.set_title(
         f"{island}: {machines[trip]['name']}"

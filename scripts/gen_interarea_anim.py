@@ -57,9 +57,13 @@ def gang(idx):
         (M[idx][:, None] * np.isfinite(x)).sum(axis=0), 1e-9)
 ddeg = np.degrees(gang(gW) - gang(gE))
 ddeg = ddeg - ddeg[0]                   # 初期潮流分を除いた角度差の偏差 [deg]
-ddot = np.gradient(ddeg, t)             # dΔδ/dt [deg/s] — 4拍子の判定に使う
+with np.errstate(divide="ignore", invalid="ignore"):
+    ddot = np.gradient(ddeg, t)         # dΔδ/dt [deg/s] — 4拍子の判定に使う
+# イベント境界は時刻が重複し gradient が NaN/inf を返す → 0 に潰す
+ddot = np.nan_to_num(ddot, nan=0.0, posinf=0.0, neginf=0.0)
 kwin = int(8.7 / (t[1] - t[0]))
 dmax = float(np.nanmax(np.abs(ddeg[:kwin])))
+ddotmax = float(np.nanmax(np.abs(ddot[:kwin])))
 # 色の飽和スパン: 表示窓内の全機|位相偏差|の95パーセンタイル(脱調機の裾を除く)
 PSPAN = float(np.nanpercentile(np.abs(pang[:, :kwin]), 95))
 cW = (float(np.average(lon[gW], weights=M[gW])),
@@ -89,7 +93,10 @@ STATES = ["① 西Gが前へ — 綱が張っていく",
           "③ 東Gが前へ — 綱が逆に張る",
           "④ 綱が東Gを引き戻す(東G減速)"]
 def state_at(k):
+    """4拍子のどこか。トリップ前は綱がまだ張っていない(-1=該当なし)。"""
     dd, dv = ddeg[k], ddot[k]
+    if abs(dd) < 0.05 * dmax and abs(dv) < 0.05 * ddotmax:
+        return -1                       # 不感帯: まだ動いていない
     if dd > 0:
         return 0 if dv > 0 else 1
     return 2 if dv <= 0 else 3
@@ -131,12 +138,13 @@ for ts in np.arange(1.0, 8.62, 0.12):
             fontweight="bold", va="top")
     ax.text(0.03, 0.895,
             f"西日本{w.shape[0]}機・最大機トリップ後の位相角の偏差"
-            f"(青=位相進み / 赤=位相遅れ、±{PSPAN:.0f}°で飽和)",
+            f"(青=位相進み / 赤=位相遅れ、各機±{PSPAN:.0f}°で飽和)",
             transform=ax.transAxes, color="#A7B0CB", fontsize=12, va="top")
     ax.text(0.03, 0.845, f"事故から {ts-1.0:4.2f} 秒",
             transform=ax.transAxes, color="#FFD60A", fontsize=15,
             fontweight="bold", va="top")
     ax.text(0.03, 0.05,
+            f"地図の色=各機の位相偏差(±{PSPAN:.0f}°) / 右上のΔδ=群間の差 — 別量。\n"
             "しくみ: 2つの慣性群が長い送電回廊(=ばね)で繋がれた2重り系 — 綱引き。\n"
             f"西G(九州側{len(gW)}機)×東G(関西以東{len(gE)}機) "
             "相関 −0.999 / 周期 2.4 s(実網の連系剛性T_abが決める固有値)",
@@ -147,9 +155,12 @@ for ts in np.arange(1.0, 8.62, 0.12):
                  transform=ax.transAxes, boxstyle="round,pad=0.012",
                  facecolor="#11152A", edgecolor="#3A4266", alpha=0.94,
                  zorder=9))
-    ax.text(0.55, 0.303, "綱引きの4拍子(いまの局面)", transform=ax.transAxes,
-            color="#C8CDD8", fontsize=9.5, fontweight="bold", va="top",
-            zorder=10)
+    ax.text(0.55, 0.303,
+            "綱引きの4拍子(いまの局面)" if st >= 0
+            else "綱引きの4拍子(事故前 — 綱はまだ張っていない)",
+            transform=ax.transAxes,
+            color="#C8CDD8" if st >= 0 else "#5A648F",
+            fontsize=9.5, fontweight="bold", va="top", zorder=10)
     for si, lbl in enumerate(STATES):
         cur = (si == st)
         ax.text(0.55, 0.262 - 0.042 * si,
@@ -188,6 +199,8 @@ for ts in np.arange(1.0, 8.62, 0.12):
                   color="#C8CDD8", fontsize=10)
     axw.text(0.03, 0.06, "振り子と同じ: 綱が最も張った瞬間、速度はゼロ",
              transform=axw.transAxes, color="#8FD3A5", fontsize=8.2)
+    axw.text(0.03, 0.90, "t≈2.8sの段差=脱調保護で1機切離し",
+             transform=axw.transAxes, color="#8E96B8", fontsize=7.8)
     axw.set_xlabel("時間 [s]", color="#8E96B8", fontsize=9)
     fig.canvas.draw()
     frames.append(np.asarray(fig.canvas.buffer_rgba())[..., :3].copy())

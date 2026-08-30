@@ -127,7 +127,9 @@ for island in ("east", "west"):
         fn0 = str(net.bus.at[int(row.from_bus), "name"])
         tn0 = str(net.bus.at[int(row.to_bus), "name"])
         fn, tn = _cl(fn0), _cl(tn0)
-        if v >= 60 and kv >= 187 and fn and tn and \
+        # fn == tn は同一構内の並列回線/電圧間渡り — 「同じ変電所同士を結ぶ線?」
+        # と誤解されるだけなのでラベル候補から外し、次点を採用する
+        if v >= 60 and kv >= 187 and fn and tn and fn != tn and \
                 not any(x in (fn0 + tn0).lower()
                         for x in ("junc", "jun", "slack", "tie")):
             mx, my = (flon + tlon) / 2, (flat + tlat) / 2
@@ -157,7 +159,9 @@ BG = "#0D1120"
 X0, X1, Y0, Y1 = 128.9, 142.9, 30.7, 41.9
 fig = plt.figure(figsize=(12.8, 7.2), dpi=150)
 fig.patch.set_facecolor(BG)
-ax = fig.add_axes([0.0, 0.0, 1.0, 1.0]); ax.set_facecolor(BG)
+# 下端0.105を注記帯として空ける(旧: 地図が下端まで伸び、四国・九州の線と
+# 「定格は推定」の開示が重なった — この開示は技術報告の要なので確実に読ませる)
+ax = fig.add_axes([0.0, 0.105, 1.0, 0.895]); ax.set_facecolor(BG)
 ax.set_xlim(X0, X1); ax.set_ylim(Y0, Y1)
 ax.set_aspect(1.0 / math.cos(math.radians(36.0))); ax.axis("off")
 for island in ("east", "west"):
@@ -190,18 +194,18 @@ ax.text(0.02, 0.915,
         linespacing=1.5)
 for i, (c, lab) in enumerate((("#2E4A7A", "<40%"), ("#E8C36A", "40–70%"),
                               ("#E8833A", "70–90%"), ("#D62728", ">90%"))):
-    ax.plot([0.025 + i * 0.085, 0.055 + i * 0.085], [0.855, 0.855],
+    ax.plot([0.025 + i * 0.105, 0.050 + i * 0.105], [0.812, 0.812],
             transform=ax.transAxes, color=c, lw=3.5)
-    ax.text(0.058 + i * 0.085, 0.848, lab, transform=ax.transAxes,
-            color="#8E96B8", fontsize=9)
-ax.text(0.02, 0.03,
-        f"fy2023r2・UCピーク断面をuc_to_pf_built正典手順(#37(仮)infeed込み)で注入しAC求解。"
-        f"ラベル=基幹系(≥187kV・実名)の負荷率上位。\n"
-        "重要な開示: 線路定格は電圧階級の代表値推定(OSMに定格情報なし)のため、"
-        "負荷率は絶対値でなく相対的な混雑指標。>90%の大半は66-77kV系の推定定格超過。\n"
-        f"変圧器は地図に出さず開示: 最大負荷率 東{e['tr_max']:.0f}% / 西{w['tr_max']:.0f}%。"
-        "線形は実OSMジオメトリ(edge path)。", transform=ax.transAxes,
-        color="#5A648F", fontsize=8.5, va="bottom")
+    ax.text(0.056 + i * 0.105, 0.805, lab, transform=ax.transAxes,
+            color="#A7B0CB", fontsize=9)
+fig.text(0.030, 0.014,
+         f"fy2023r2・UCピーク断面をuc_to_pf_built正典手順(#37(仮)infeed込み)で注入しAC求解。"
+         f"ラベル=基幹系(≥187kV・実名)の負荷率上位。\n"
+         "重要な開示: 線路定格は電圧階級の代表値推定(OSMに定格情報なし)のため、"
+         "負荷率は絶対値でなく相対的な混雑指標。>90%の大半は66-77kV系の推定定格超過。\n"
+         f"変圧器は地図に出さず開示: 最大負荷率 東{e['tr_max']:.0f}% / 西{w['tr_max']:.0f}%。"
+         "線形は実OSMジオメトリ(edge path)。",
+         color="#9AA3C0", fontsize=8.5, va="bottom", linespacing=1.5)
 out = "docs/slides/ajg/assets/loading_map_peak.png"
 fig.savefig(out, dpi=150, facecolor=BG)
 print(f"-> {out} ({os.path.getsize(out)/1e6:.1f}MB)")

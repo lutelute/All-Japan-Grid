@@ -8,33 +8,127 @@
 """
 import json, os
 os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-W, H = 1280, 720
+W, H = 1600, 900
 BG = (10, 13, 26)
 FONT = "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc"
 def font(sz):
     try: return ImageFont.truetype(FONT, sz)
     except Exception: return ImageFont.load_default()
 
+def _content_bbox(a, x0, x1):
+    """列範囲[x0,x1)の非白画素の外接矩形。"""
+    sub = a[:, x0:x1]
+    ys, xs = np.where(sub)
+    if len(xs) == 0:
+        return None
+    return (x0 + int(xs.min()), int(ys.min()),
+            x0 + int(xs.max()) + 1, int(ys.max()) + 1)
+
+
+def split_panels(im):
+    """実証ペア図を [左=構内幾何, 右=単線結線図] に分割し、各々の余白を除去.
+
+    元図は左右2パネル+大量の白余白で、そのまま16:9に嵌めると縦が律速して
+    横幅の6割しか使えず図中ラベルが読めなかった(監査指摘)。パネルごとに
+    外接矩形で切り出し、同じ高さに揃えて並べる。
+    """
+    a = (np.asarray(im).astype(int).sum(axis=2) < 720)   # 非白マスク
+    colfrac = a.mean(axis=0)
+    ink = np.where(colfrac >= 0.005)[0]
+    if len(ink) == 0:
+        return [im]
+    lo, hi = int(ink.min()), int(ink.max()) + 1
+    # 内側で最も広い白ガター = パネル境界
+    blank, runs, cur = colfrac[lo:hi] < 0.005, [], None
+    for i, v in enumerate(blank):
+        if v and cur is None:
+            cur = i
+        elif not v and cur is not None:
+            runs.append((cur, i)); cur = None
+    runs = [r for r in runs if r[1] - r[0] > 25]
+    def _drop_top_band(a, bb):
+        """図の共通タイトル帯(左右に跨る1行)とその下の白余白を落とす。"""
+        x0, y0, x1, y1 = bb
+        rows = a[y0:y1, x0:x1].mean(axis=1)
+        blank, run0 = rows < 0.004, None
+        for i, v in enumerate(blank):
+            if v and run0 is None:
+                run0 = i
+            elif not v and run0 is not None:
+                if i - run0 >= 40 and run0 <= 0.45 * len(rows):
+                    return (x0, y0 + i, x1, y1)     # 白帯の直後から採用
+                run0 = None
+        return bb
+
+    # 中央寄りのガターだけを採用する。図の右端にある変圧器列との隙間を
+    # 拾うと「細い帯」が独立パネルになって破綻するため(小曽根で実際に発生)
+    span = hi - lo
+    runs = [r for r in runs
+            if 0.25 <= ((r[0] + r[1]) / 2) / span <= 0.75]
+    panels = []
+    if runs:
+        g = min(runs, key=lambda r: abs((r[0] + r[1]) / 2 - span / 2))
+        cut = lo + (g[0] + g[1]) // 2
+        for x0, x1 in ((lo, cut), (cut, hi)):
+            bb = _content_bbox(a, x0, x1)
+            if bb:
+                bb = _drop_top_band(a, bb)
+                sub = _content_bbox(a[bb[1]:bb[3]], bb[0], bb[2])
+                if sub:                      # subのyは相対 → 絶対へ戻す
+                    panels.append(im.crop((sub[0], bb[1] + sub[1],
+                                           sub[2], bb[1] + sub[3])))
+    if not panels:
+        bb = _content_bbox(a, lo, hi)
+        if bb:
+            bb = _drop_top_band(a, bb)
+            sub = _content_bbox(a[bb[1]:bb[3]], bb[0], bb[2])
+            bb = (sub[0], bb[1] + sub[1], sub[2], bb[1] + sub[3]) if sub else bb
+            panels = [im.crop(bb)]
+        else:
+            panels = [im]
+    return panels
+
+
 def base_frame(png_path, name, reg):
     im = Image.open(png_path).convert("RGB")
-    r = min((W - 40) / im.width, (H - 120) / im.height)
-    im = im.resize((int(im.width * r), int(im.height * r)), Image.LANCZOS)
+    panels = split_panels(im)
+    top, bot, gap, pad = 104, 118, 26, 10          # 見出し / 字幕 / パネル間
+    ch = H - top - bot
+    # 各パネルを同じ高さに揃える(横は成り行き)→ 中央寄せで並べる
+    scaled = []
+    for q in panels:
+        r = (ch - 2 * pad) / q.height
+        scaled.append(q.resize((max(1, int(q.width * r)),
+                                max(1, int(q.height * r))), Image.LANCZOS))
+    tw = sum(q.width for q in scaled) + gap * (len(scaled) - 1) + 2 * pad * len(scaled)
+    if tw > W - 32:                                 # 幅が溢れる場合だけ縮める
+        k = (W - 32) / tw
+        scaled = [q.resize((max(1, int(q.width * k)), max(1, int(q.height * k))),
+                           Image.LANCZOS) for q in scaled]
+        tw = sum(q.width for q in scaled) + gap * (len(scaled) - 1) + 2 * pad * len(scaled)
     fr = Image.new("RGB", (W, H), BG)
-    fr.paste(im, ((W - im.width) // 2, 96))
     d = ImageDraw.Draw(fr)
-    d.text((28, 16), name, font=font(30), fill=(255, 255, 255))
-    d.text((28, 58), f"SubSLD法 — 構造DB+OSMタグのみで機械生成({reg})",
-           font=font(17), fill=(142, 150, 184))
+    x = (W - tw) // 2
+    for q in scaled:
+        card = (x, top + (ch - q.height) // 2 - pad,
+                x + q.width + 2 * pad, top + (ch + q.height) // 2 + pad)
+        d.rectangle(card, fill=(255, 255, 255))
+        fr.paste(q, (x + pad, top + (ch - q.height) // 2))
+        x += q.width + 2 * pad + gap
+    d.text((30, 18), name, font=font(34), fill=(255, 255, 255))
+    d.text((30, 64), f"SubSLD法 — 構造DB+OSMタグのみで機械生成({reg})",
+           font=font(19), fill=(142, 150, 184))
     return fr
 
 def caption(fr, lines, color=(255, 214, 10)):
     fr = fr.copy(); d = ImageDraw.Draw(fr)
-    y = H - 34 - 30 * len(lines)
-    d.rectangle([16, y - 10, W - 16, H - 14], fill=(17, 21, 42))
+    y = H - 30 - 34 * len(lines)
+    d.rectangle([16, y - 12, W - 16, H - 12], fill=(17, 21, 42))
     for i, t in enumerate(lines):
-        d.text((30, y + 30 * i - 2), t, font=font(20), fill=color)
+        d.text((32, y + 34 * i - 2), t, font=font(23), fill=color)
     return fr
 
 SHOW = ("kansai", "新生駒変電所 500/275/154/77kV — 母線9・ベイ27・変圧器3",

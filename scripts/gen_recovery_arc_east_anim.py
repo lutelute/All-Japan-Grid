@@ -61,6 +61,8 @@ def render(tc, final=False):
                             ha="center", color=c, fontsize=10,
                             fontweight="bold")
     # COI進行描画
+    # 全区間をゴースト描画(1コマ目から「これから何が起きるか」の形が見える)
+    ax.plot(t, coi, lw=1.8, color="#FFFFFF", alpha=0.15, zorder=5)
     ax.plot(t[:k + 1], coi[:k + 1], lw=2.6, color="#FFFFFF", zorder=6)
     if not final:
         ax.scatter([t[k]], [coi[k]], s=60, color="#FFD60A", zorder=7)

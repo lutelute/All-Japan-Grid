@@ -48,6 +48,11 @@ COLOR = {"hokkaido": "#D62728", "east": "#FF9500",
 
 
 def main():
+    if "--replot" in sys.argv:
+        # レイアウト調整用: 既存の断面JSONから作図のみやり直す(計算は不変)
+        prof = json.load(open("docs/data/agc/agc_24h_profile.json"))["islands"]
+        draw(prof)
+        return
     print("UC求解...")
     scn = build_national_scenario(scenario="fy2023r2")
     uc = solve_uc(scn.to_uc_parameters())
@@ -97,6 +102,19 @@ def main():
               f"(慣性{worst['inertia_gws']}GW·s, {worst['largest']} "
               f"{worst['largest_mw']:,.0f}MW)")
 
+    draw(prof)
+
+    doc = {"note": ("24時間の周波数セキュリティ断面。各時刻のUCコミットメント"
+                    "から慣性・最大オンラインプラント・トリップ応答(COI層・"
+                    "UFLS込み)を算出。プラント粒度=ユニットN-1の上界。"
+                    "連系剛性は実測(agc_chain.json)・網は時刻不変"),
+           "islands": prof}
+    json.dump(doc, open("docs/data/agc/agc_24h_profile.json", "w"),
+              ensure_ascii=False, indent=1)
+    print("-> docs/data/agc/agc_24h_profile.json")
+
+
+def draw(prof):
     # ── 図: 4段 × 4島。需要・慣性はスケール差が大きいので2軸
     #    (左=east/west・右=hokkaido/okinawa)、RoCoF/ナディアは同一軸で比較 ──
     fig, axes = plt.subplots(4, 1, figsize=(11.5, 9.4), dpi=150, sharex=True)
@@ -137,13 +155,17 @@ def main():
     axes[3].set_xticks(range(0, 24, 2))
     # UFLS帯と設計域外(崩壊域=モデル外挿)の網掛け
     axes[3].axhline(-1.5, color="#C62828", lw=0.9, ls="--", alpha=0.6)
-    axes[3].text(23.6, -1.30, "UFLS開始(第1段)", ha="right", fontsize=9,
+    # 破線の直下(east/west線と okinawa線の間の空白帯)に置く
+    axes[3].text(23.2, -1.92, "← UFLS開始(第1段)", ha="right", fontsize=9,
                  color="#C62828")
-    ymin = axes[3].get_ylim()[0]
-    axes[3].axhspan(ymin, -2.5, color="#C62828", alpha=0.07, zorder=0)
-    axes[3].text(0.2, -2.75, "UFLS設計域外(第3段より下) — 崩壊域・モデル外挿",
+    # 注記は最深ナディアより下に空白帯を作ってそこへ置く(データ線と重ねない)
+    nadir_min = min(x["nadir_hz"] for isl in ISLANDS for x in prof[isl] if x)
+    ybot = nadir_min - 1.55
+    axes[3].axhspan(ybot, -2.5, color="#C62828", alpha=0.07, zorder=0)
+    axes[3].text(0.2, nadir_min - 1.12,
+                 "UFLS設計域外(第3段より下) — 崩壊域・モデル外挿",
                  fontsize=9, color="#8A1F1F")
-    axes[3].set_ylim(ymin, axes[3].get_ylim()[1])
+    axes[3].set_ylim(ybot, axes[3].get_ylim()[1])
     # 北海道の夜間トラフに事実注記
     hn = prof["hokkaido"]
     kmin = min(range(24), key=lambda h: hn[h]["nadir_hz"])
@@ -156,19 +178,10 @@ def main():
     fig.suptitle("周波数セキュリティの24時間断面 — 各時刻のUC断面で"
                  "最大オンラインプラントを落とす(COI層・AGC30簡易・"
                  "プラント粒度=ユニットN-1の上界)", fontsize=12)
-    fig.tight_layout()
+    fig.tight_layout(rect=[0.012, 0, 1, 1])
     out = "docs/slides/ajg/assets/fig_agc_24h.png"
     fig.savefig(out)
     print(f"-> {out}")
-
-    doc = {"note": ("24時間の周波数セキュリティ断面。各時刻のUCコミットメント"
-                    "から慣性・最大オンラインプラント・トリップ応答(COI層・"
-                    "UFLS込み)を算出。プラント粒度=ユニットN-1の上界。"
-                    "連系剛性は実測(agc_chain.json)・網は時刻不変"),
-           "islands": prof}
-    json.dump(doc, open("docs/data/agc/agc_24h_profile.json", "w"),
-              ensure_ascii=False, indent=1)
-    print("-> docs/data/agc/agc_24h_profile.json")
 
 
 if __name__ == "__main__":

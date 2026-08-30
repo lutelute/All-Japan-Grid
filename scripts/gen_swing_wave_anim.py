@@ -133,12 +133,15 @@ def main():
                 transform=ax.transAxes,
                 color=freq_cmap(coi[k] - f0, span), fontsize=15,
                 fontweight="bold", va="top")
+        # 右下の波形パネル(x≥0.585)の下に潜らない幅に折り返す
         ax.text(0.025, 0.075,
                 "丸=発電機(実座標・大きさ=定格)\n"
-                "色=その機のローカル周波数(青=50Hz、赤=−0.25Hz以深で飽和)\n"
-                "事故点から遠い機ほど遅れて落ち始める(実網インピーダンス由来)",
-                transform=ax.transAxes, color="#5A648F", fontsize=9.5,
-                va="bottom")
+                "色=その機のローカル周波数\n"
+                "  (青=50Hz → 赤=−0.25Hz以深で飽和)\n"
+                "事故点から遠い機ほど遅れて落ち始める\n"
+                "  (実網インピーダンス由来)",
+                transform=ax.transAxes, color="#6E79A8", fontsize=8.5,
+                va="bottom", linespacing=1.45)
         # 右下(太平洋上): 同期波形パネル — 東北の機と重ならない位置
         axw = fig.add_axes([0.585, 0.09, 0.385, 0.30])
         axw.set_facecolor("#11152A")

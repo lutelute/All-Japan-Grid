@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""全系統動揺GIF — 4島542機、各島の最大機N-1を同時刻表示(2026-08-30).
+"""全系統動揺GIF — 4島541機、各島の最大機N-1を同時刻表示(2026-08-30).
 
 各島の正典多機トレース(mm_traces_{island}.npz・独立実験)を同一時間軸に
 並べて国土全図で見る。合成表示であることを明記(実験は島ごとに独立・連系
 線は跨がない)。右=4島のCOI周波数(規模差が一目で分かる)。
 
 出力: docs/slides/ajg/assets/national_swing.gif
+注: 2026-08-30以降デッキ未使用(19.6は eastwest_swing.gif に差し替え・沖縄/北海道は
+    連系線の文脈が別のため)。素材として残置。
 """
 import json, math, os
 import numpy as np
@@ -78,7 +80,8 @@ for ts, du in TL:
             ax.scatter([d["lon"][i]], [d["lat"][i]], s=ms[i],
                        color=fcol(v * d["f0"]), zorder=5,
                        edgecolors="#FFFFFF", linewidths=0.22, alpha=0.95)
-    ax.text(0.025, 0.955, "全系統動揺 — 4島542機、それぞれの最大機N-1",
+    n_all = sum(d["w"].shape[0] for d in data.values())
+    ax.text(0.025, 0.955, f"全系統動揺 — 4島{n_all}機、それぞれの最大機N-1",
             transform=ax.transAxes, color="#FFFFFF", fontsize=18,
             fontweight="bold", va="top")
     ax.text(0.025, 0.90,

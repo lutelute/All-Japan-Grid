@@ -91,6 +91,16 @@ fuels = [f for f in ORDER if f in fuels_seen] + \
         sorted(fuels_seen - set(ORDER))
 for f in fuels_seen - set(ORDER):
     COL.setdefault(f, "#9E9E9E"); JP.setdefault(f, f)
+# 全24時刻・全系で50MW未満の燃料は積み上げにも凡例にも出さない。
+# とくに「不明」が凡例だけに居ると『燃料不明の機があるのか』と説明時間を取られる
+_MIN_MW = 50.0
+_drop = [f for f in fuels
+         if max(float(np.max(data[g].get(f, np.zeros(1)))) for g in GROUPS)
+         < _MIN_MW]
+if _drop:
+    print("凡例から除外(全時刻で50MW未満): " + ", ".join(JP.get(f, f)
+                                                        for f in _drop))
+    fuels = [f for f in fuels if f not in _drop]
 
 # 整合チェック(レンダ前に必ず出す): 発電合計 vs 需要+充電
 for gname in GROUPS:

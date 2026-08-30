@@ -38,7 +38,7 @@ segs = [[(p[1], p[0]) for p in e["path"]] for e in b["edges"]
         and Y0 <= e["path"][0][0] <= Y1 and X0 <= e["path"][0][1] <= X1]
 
 BG = "#0A0D1A"
-def fcol(df, span=0.6):
+def fcol(df, span=0.45):
     x = min(max(-df / span, 0.0), 1.0)
     if x < 0.5:
         u = x / 0.5
@@ -80,9 +80,11 @@ for ts, du in TL:
     ax.text(0.02, 0.965, "東西動揺 — 50Hz系統と60Hz系統、それぞれの最大機N-1",
             transform=ax.transAxes, color="#FFFFFF", fontsize=17.5,
             fontweight="bold", va="top")
+    tt = ts - 1.0
+    tlbl = "事故前" if tt < 0 else f"事故から {tt:5.1f} 秒"
     ax.text(0.02, 0.912,
-            f"事故から {ts-1.0:5.1f} 秒 — ●の色=その機の周波数偏差"
-            "(青=定格 → 白 → 赤=−0.6Hz以深)",
+            f"{tlbl} — ●の色=その機の周波数偏差"
+            "(青=定格 → 白 → 赤=−0.45Hz以深)",
             transform=ax.transAxes, color="#A7B0CB", fontsize=11.5, va="top")
     ax.text(0.33, 0.13, "西日本(60Hz・298機)", transform=ax.transAxes,
             color="#4E9BFF", fontsize=12.5, fontweight="bold")
