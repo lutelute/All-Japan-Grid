@@ -148,9 +148,9 @@ for tc in range(T):
                                     transform=axl.transAxes))
         axl.text(0.14, y + 0.01, JP[f], transform=axl.transAxes,
                  color="#C8CDD8", fontsize=9.5)
-    fig.text(0.075, 0.965, "一日の起動停止計画(UC) — 757機・9連系線・fy2023r2",
-             color="#FFFFFF", fontsize=16, fontweight="bold", va="top")
-    fig.text(0.075, 0.922,
+    # タイトルはスライド側のテキストボックスへ(PowerPointで編集可能に
+    # するため — オーナー指摘「GIFに焼き込むと編集できない」)
+    fig.text(0.075, 0.962,
              "全て全国UC最適解(求解約10秒)の数値。スピルは燃料比例で控除(正典と同式)"
              " / 積み上げと白線の差=連系線・FC経由の純輸出入",
              color="#8E96B8", fontsize=9.5, va="top")

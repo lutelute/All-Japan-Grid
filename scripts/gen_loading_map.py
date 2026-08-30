@@ -180,10 +180,9 @@ for island in ("east", "west"):
                     arrowprops=dict(arrowstyle="-", color="#FFB4A8",
                                     lw=0.6, alpha=0.55))
 e, w = results["east"], results["west"]
-ax.text(0.02, 0.97, "ピーク断面の線路負荷率 — 東西フル網のAC潮流(UC断面注入)",
-        transform=ax.transAxes, color="#FFFFFF", fontsize=16.5,
-        fontweight="bold", va="top")
-ax.text(0.02, 0.915,
+# タイトルはスライド側のテキストボックスへ(PowerPointで編集可能にするため
+# — オーナー指摘「GIFに焼き込むと編集できない」)
+ax.text(0.02, 0.965,
         f"東: {e['t']}時 需要{e['demand']/1e3:.1f}GW 解={e['mode']}  "
         f"基幹(≥187kV)最大{e['bb_max']:.0f}%・90%超{e['bb_n90']}本"
         f"(全電圧では{e['n90']}本/{e['n_line']:,}本)\n"

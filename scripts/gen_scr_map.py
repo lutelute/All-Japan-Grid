@@ -183,10 +183,9 @@ fig.patches.append(FancyBboxPatch(
     alpha=0.72, zorder=20))
 # 見出しも図座標に置く(fig.patchesはaxesより前面に描かれるため、帯を使うなら
 # 文字も図レベルに揃える必要がある — ax.textのままだと帯に隠れる)
-fig.text(0.175, 0.975, "系統の強さの地図 — 全バス短絡容量(SCC)",
-         color="#FFFFFF", fontsize=18, fontweight="bold", va="top",
-         zorder=21)
-fig.text(0.175, 0.928,
+# タイトルはスライド側のテキストボックスへ(PowerPointで編集可能にするため
+# — オーナー指摘「GIFに焼き込むと編集できない」)
+fig.text(0.175, 0.970,
          f"UCピーク断面・全4島 {int(conn.sum()):,}バス — 青=強い / 赤=弱い"
          f"(対数) / 灰={int(frag.sum()):,}孤立断片(電源経路なし)",
          color="#A7B0CB", fontsize=11.5, va="top", zorder=21)

@@ -746,17 +746,17 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 19.7 動: 逆位相動揺(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "interarea_mode.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("interarea_mode.gif",
+    "逆位相動揺 — 九州側と関西側の綱引き",
+    "西日本298機・最大機トリップ後");
   s.addNotes("[標準]逆位相動揺+綱引きの機構: 右下に新設した『綱の張り=群間位相角差Δδ』パネルと、地図上の電力矢印(位相の進んだ群→遅れた群、振れ幅で太さが変わる)で、なぜ逆位相になるかを説明 — 2つの慣性群が長い送電回廊(ばね)で繋がれた2重り系。西G(九州側61機)×東G(関西以東181機)、相関−0.999・周期2.4s。オーナー指摘『綱引きがわかりにくい』への応答。1:00");
 }
 
 /* ============ 19.8 動: 周波数が戻るさま(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "freq_recovery_east.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("freq_recovery_east.gif",
+    "周波数が戻るさま — 東N-3(10,618MW脱落)から15分",
+    "多機層(AGC-N)・第10波LFC修正済み");
   s.addNotes("[標準]周波数が戻るさま(東N-3・900秒に一本化): 前スライドと同じ事故・同じデータで、COI曲線が左から描かれ局面バナーが順に出る進行チャート — ①慣性急落 ②UFLS底打ち(48.49Hz) ③高速登坂 ④停滞 ⑤緩回復。終端で『15分で49.84Hz、50.00への完全復帰はさらに数十分先』を正直に。オーナー指摘『p25がわからない』への応答: 北海道・COI層2,400秒の別実験(旧版)は文脈が飛ぶため差し替え。旧freq_recovery.gifはリポジトリに残置。1:00");
 }
 
@@ -807,25 +807,25 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 22.3 深掘り①: UC 24時間ディスパッチ(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "uc_dispatch_stack.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("uc_dispatch_stack.gif",
+    "一日の起動停止計画(UC) — 757機・9連系線・fy2023r2",
+    "全国UC最適解(求解約10秒)");
   s.addNotes("[標準]深掘り① 計画(UC): fy2023r2・757機・9連系線UCの24時間ディスパッチを燃料別積み上げで掃引。需要線との一致・揚水/スピルも正直に描く。以降の潮流・動揺実験は全てこの解を土台にしている、という位置づけを一言。1:00");
 }
 
 /* ============ 22.5 深掘り②: ピーク断面ローディング(静止画) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "loading_map_peak.png", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("loading_map_peak.png",
+    "ピーク断面の線路負荷率 — 東西フル網のAC潮流(UC断面注入)",
+    "定格は電圧階級の推定 — 相対的な混雑指標");
   s.addNotes("[標準]深掘り② 流れ(潮流): UCピーク断面のAC解による送電線負荷率マップ。混んでいる回廊(赤・太)に名前ラベル。UCが検出した混雑費用+1.4%が『どこの線の話か』を地図で回収。1:00");
 }
 
 /* ============ 22.7 深掘り③: 系統の強さ(SCC/SCR・静止画) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "scr_map.png", x: 0, y: 0, w: 13.33, h: 7.5 });
+  const s = gifSlide("scr_map.png",
+    "系統の強さの地図 — 全バス短絡容量(SCC)",
+    "UCピーク断面・古典近似(図中に開示)");
   s.addNotes("[フル]深掘り③ 強さ(SCR): 全4島・全バスの短絡容量SCCマップ(古典近似: 運転中機のXd'背後V=1.0・負荷除外・実網Ybus — 近似は図中に開示)。青=強い/赤=弱い。SCR=SCC÷設備容量なので、赤い場所ほどインバータ電源の連系が難しい。『負荷があるのに弱い』全国ワーストに注記。逆位相動揺の連系剛性ともつながる話。1:00");
 }
 
@@ -1068,5 +1068,30 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addNotes("[コア]論文カードの※は正直に残す（既知の宿題を隠さない — それ自体がこのプロジェクトの流儀）。質疑へ。");
 }
 
-pres.writeFile({ fileName: "AllJapanGrid_story.pptx" })
-  .then(() => console.log("written: AllJapanGrid_story.pptx"));
+// ── 上書き事故の防止(2026-08-30) ──────────────────────────────
+// オーナーもPowerPointで直接編集・保存する。ビルドは既存pptxを問答無用で
+// 上書きするため、書き出す前に必ず退避しておく(直近5世代)。
+// オーナーの編集が入っていた場合は .bak から戻せる。
+const fs = require("fs");
+const path = require("path");
+const OUT = "AllJapanGrid_story.pptx";
+const BAKDIR = ".deck_backups";
+if (fs.existsSync(OUT)) {
+  if (!fs.existsSync(BAKDIR)) fs.mkdirSync(BAKDIR);
+  const st = fs.statSync(OUT);
+  const stamp = new Date(st.mtimeMs).toISOString()
+    .replace(/[-:]/g, "").replace("T", "_").slice(0, 15);
+  const bak = path.join(BAKDIR, `AllJapanGrid_story_${stamp}.pptx`);
+  if (!fs.existsSync(bak)) fs.copyFileSync(OUT, bak);
+  const olds = fs.readdirSync(BAKDIR).filter(f => f.endsWith(".pptx")).sort();
+  olds.slice(0, Math.max(0, olds.length - 5))
+      .forEach(f => fs.unlinkSync(path.join(BAKDIR, f)));
+  const age = (Date.now() - st.mtimeMs) / 60000;
+  console.log(`退避: ${bak}  (既存pptxの更新は${age.toFixed(0)}分前)`);
+  if (age < 20) {
+    console.log("  ⚠️  20分以内に更新されています — 手編集が入っていた場合は");
+    console.log("      上の .deck_backups/ から復元してください");
+  }
+}
+pres.writeFile({ fileName: OUT })
+  .then(() => console.log("written: " + OUT));

@@ -133,14 +133,13 @@ for ts in np.arange(1.0, 8.62, 0.12):
         ax.text(mx, my, "電力 西→東" if dv > 0 else "電力 東→西",
                 color="#FFC94A", fontsize=11.5, fontweight="bold",
                 ha="center", zorder=9)
-    ax.text(0.03, 0.955, "逆位相動揺 — 九州側と関西側の綱引き",
-            transform=ax.transAxes, color="#FFFFFF", fontsize=19,
-            fontweight="bold", va="top")
-    ax.text(0.03, 0.895,
+    # タイトルはスライド側のテキストボックスへ(PowerPointで編集可能に
+    # するため — オーナー指摘「GIFに焼き込むと編集できない」)
+    ax.text(0.03, 0.955,
             f"西日本{w.shape[0]}機・最大機トリップ後の位相角の偏差"
             f"(青=位相進み / 赤=位相遅れ、各機±{PSPAN:.0f}°で飽和)",
             transform=ax.transAxes, color="#A7B0CB", fontsize=12, va="top")
-    ax.text(0.03, 0.845, f"事故から {ts-1.0:4.2f} 秒",
+    ax.text(0.03, 0.898, f"事故から {ts-1.0:4.2f} 秒",
             transform=ax.transAxes, color="#FFD60A", fontsize=15,
             fontweight="bold", va="top")
     ax.text(0.03, 0.05,

@@ -79,8 +79,8 @@ def render(tc, final=False):
     ax.set_xlabel("事故からの時間 [s]", color="#8E96B8", fontsize=11)
     ax.set_ylabel("系統平均(COI)周波数 [Hz]", color="#8E96B8", fontsize=11)
     # ヘッダ
-    fig.text(0.085, 0.955, "周波数が戻るさま — 東N-3(10.9GW脱落)から15分",
-             color="#FFFFFF", fontsize=20, fontweight="bold", va="top")
+    # タイトルはスライド側のテキストボックスへ(PowerPointで編集可能にするため
+    # — オーナー指摘「GIFに焼き込むと編集できない」)
     tt = tc - 1.0
     tl = ("事故前" if tt < 0 else
           f"t = {tt:5.1f} 秒" if tt < 90 else
@@ -89,10 +89,10 @@ def render(tc, final=False):
              fontsize=13.5, va="top", ha="right")
     # 現在局面バナー
     if cur is not None and not final:
-        fig.text(0.085, 0.885, "▸ " + cur[0], color=cur[1], fontsize=16.5,
+        fig.text(0.085, 0.945, "▸ " + cur[0], color=cur[1], fontsize=16.5,
                  fontweight="bold", va="top")
     if final:
-        fig.text(0.085, 0.885,
+        fig.text(0.085, 0.945,
                  f"{end_min:.0f}分で {f_end:.2f} Hz — 50.00 Hzへの完全復帰は"
                  "さらに数十分先(遅い火力のランプとLFCの仕事)",
                  color="#69F0AE", fontsize=15, fontweight="bold", va="top")
