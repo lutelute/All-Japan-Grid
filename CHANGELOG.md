@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #40 (experimental, default OFF) — census-mesh population
+  tilt for intra-prefecture load allocation** (`allocate_loads(pop_tilt=)`,
+  `--pop-tilt`): multiplies the voltage-class weights by a bounded tilt
+  (0.5+0.5·pop/mean) from the e-Stat 1 km census mesh (Voronoi-assigned to
+  nearest delivery bus). Default OFF after the validation matrix showed the
+  on-disk mesh covers only the Kanto/Chubu tiles: the target Etajima pocket
+  (outside coverage) was unchanged while the partial tilt distorted covered
+  areas enough to regress east and west full-scale AC to dc_fallback. To be
+  re-judged once nationwide mesh tiles are acquired; ledger and run-log
+  disclosure included. Registry: `docs/MODEL_INTERVENTIONS.md` #40.
 - **Intervention #39 — name-asserted region-fix application**
   (`scripts/apply_disclosure_v2.py`): the disclosure-v2 ledger's region fixes
   were applied by node ID alone, but the ledger contains stale pre-renumbering

@@ -845,7 +845,8 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
 # ──────────────────────────────────────────────────────────────────────────
 #  Load allocation: substation buses only, per region, voltage-class weighted
 # ──────────────────────────────────────────────────────────────────────────
-def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
+def allocate_loads(net, cfg, pref_gwh=None, point_demand=None,
+                   pop_tilt=False):
     """zone別ピーク需要をバスへ空間配分する。
 
     pref_gwh: None(既定)=従来のzone一様×電圧階級重み(正典比較性維持)。
@@ -860,6 +861,15 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
       (src.powerflow.point_demand.match_buses の出力)。観測地点はその実測値で
       ピン留めし、zone残余(target−Σpinned)を非ピンバスへ従来重みで配る。
       zone合計アンカーは不変。None=従来(③無効化)。帳簿=net._point_demand_ledger。
+
+    pop_tilt: **介入#40(2026-08-30)**。True=県内(またはzone内)の電圧重み按分に
+      e-Stat 1km国勢調査メッシュ人口のVoronoi集計(load_estimator.
+      population_factors, bounded tilt 0.5+0.5·pop/mean)を乗じる。動機=
+      県別×電圧階級の一様按分が過疎地に過大配分する(江田島市4バスに137.9MW
+      vs 実勢≈30MW — reports/west_ac_wave7_2026-08-30.md §2)。bounded tilt
+      なのは生Voronoiシェアが需要を過集中させた実測(台帳43)による。
+      住民人口は代理変数(工業・業務需要は乖離) — 帳簿に開示。
+      False=従来(回帰比較用)。帳簿=net._pop_tilt_ledger。
     """
     peak = cfg["regional_peak_demand_mw"]
     lf = cfg.get("load_factor", 0.85)
@@ -884,6 +894,19 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
             "by_zone": {z: round(v, 1) for z, v in pinned_by_zone.items()},
         }
 
+    pop_f = None
+    if pop_tilt:
+        from src.powerflow.load_estimator import population_factors
+        pop_f = population_factors(net) or None
+        net._pop_tilt_ledger = {
+            "enabled": bool(pop_f),
+            "n_bus_tilted": len(pop_f) if pop_f else 0,
+            "note": "bounded tilt 0.5+0.5·pop/mean(1kmメッシュVoronoi)。"
+                    "住民人口は代理変数(工業・業務は乖離)。欠測バスは中立1.0"}
+        if pop_f:
+            print(f"  介入#40 人口傾斜: {len(pop_f)}バス"
+                  f"(1kmメッシュVoronoi・bounded tilt)")
+
     def _vweight(b):
         vn = float(net.bus.at[b, "vn_kv"])
         key = int(round(vn))
@@ -893,7 +916,8 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
 
     def _spread(idxs, target):
         nonlocal total
-        weights = [_vweight(b) for b in idxs]
+        weights = [_vweight(b) * (pop_f.get(b, 1.0) if pop_f else 1.0)
+                   for b in idxs]
         tw = sum(weights) or len(idxs)
         for b, w in zip(idxs, weights):
             p = target * (w / tw)
@@ -1234,6 +1258,12 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--pop-tilt",
+                    action=argparse.BooleanOptionalAction, default=False,
+                    help="介入#40 県内按分の人口メッシュ傾斜・既定OFF"
+                         "(2026-08-30)。e-Stat 1km国勢調査メッシュのVoronoi"
+                         "集計で電圧重みを傾斜(bounded tilt)。"
+                         "--no-pop-tilt=従来一様(回帰比較用)")
     ap.add_argument("--freq-fix-reattr",
                     action=argparse.BooleanOptionalAction, default=True,
                     help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
@@ -1368,7 +1398,8 @@ def main():
             print(f"  介入#30 point-demand: ピン留め {pd_ledger['n_pinned_buses']}バス"
                   f"/{pd_ledger['pinned_mw']}MW (未突合{pd_ledger['n_unmatched']}地点)")
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh,
-                                    point_demand=pinned)
+                                    point_demand=pinned,
+                                    pop_tilt=args.pop_tilt)
         if args.reactive_comp is not None:
             from src.powerflow.pipeline import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)

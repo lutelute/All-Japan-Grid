@@ -439,6 +439,10 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--pop-tilt",
+                    action=argparse.BooleanOptionalAction, default=False,
+                    help="介入#40 県内按分の人口メッシュ傾斜・既定OFF"
+                         "(2026-08-30)。--no-pop-tilt=従来一様(回帰比較用)")
     ap.add_argument("--freq-fix-reattr",
                     action=argparse.BooleanOptionalAction, default=True,
                     help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
@@ -565,7 +569,8 @@ def main():
                   f"nuclear={bridge_rep['nuclear_set']}set/"
                   f"{bridge_rep['nuclear_stopped']}stop "
                   f"Δ{bridge_rep['mw_delta']:+,.0f}MW")
-        allocate_loads(base, cfg, pref_gwh=pref_gwh)
+        allocate_loads(base, cfg, pref_gwh=pref_gwh,
+                       pop_tilt=args.pop_tilt)
         pref_ledger = getattr(base, "_pref_demand_ledger", None) if pref_gwh else None
         reactive_rep = None
         if args.reactive_comp is not None:
