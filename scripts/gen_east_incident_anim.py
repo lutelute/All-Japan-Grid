@@ -41,8 +41,10 @@ for i in range(len(t)):
         coi[i] = f0 + (M[m] * w[m, i]).sum() / M[m].sum() * f0
 
 # 数値衛生: 表示値は全てデータから
-trip_mw = float(sum(S[i] for i in trips))  # 参考(定格) — 脱落量は台帳値でなくP
+P_mw = z["P"] if "P" in z.files else None
+trip_mw = float(sum(P_mw[i] for i in trips)) if P_mw is not None else float("nan")
 tot_mw = float(lmw.sum())
+tot_mw_pre = tot_mw   # 遮断前の総負荷[MW]
 floor_hz = float(np.nanmin(coi))
 k60 = min(len(t) - 1, int(np.searchsorted(t, 60.0)))
 f60 = float(coi[k60])
@@ -75,7 +77,26 @@ def fcmap(df, span=0.8):
 
 BG = "#0A0D1A"
 ms = 20.0 * np.sqrt(np.maximum(S, 5.0) / 500.0)
-lsz0 = 3.2 * np.sqrt(lmw / max(lmw.mean(), 1.0))
+lsz0 = 5.0 * np.sqrt(lmw / max(lmw.mean(), 1.0))
+
+# ── UFLSの可視化(2026-08-30 v4) ──────────────────────────────
+# モデルのUFLSは「系統全体の負荷を一律10%/段で削減」する集約近似。面積比10%の
+# 縮小は人間の目に見えない(オーナー指摘「黄色の数の変更が見えない」)ため、
+# 等価なMW量を『個別負荷の消灯』として描く。実系統のUFLSはフィーダ単位で
+# 落とすので見た目はむしろ実態に近いが、どの負荷が落ちるかはモデルの主張では
+# ないため、選定は再現可能な擬似乱数(seed固定)で行い、画面にその旨を明記する。
+_rng = np.random.default_rng(20260830)
+_order = _rng.permutation(len(lmw))          # 遮断順(再現可能・地理的偏りなし)
+_cum = np.cumsum(lmw[_order])
+def shed_mask(stage):
+    """UFLS第stage段までで消灯する負荷のbool配列(累積MWが目標に達するまで)."""
+    if stage <= 0:
+        return np.zeros(len(lmw), bool)
+    target = tot_mw_pre * 0.1 * stage
+    k = int(np.searchsorted(_cum, target)) + 1
+    m = np.zeros(len(lmw), bool)
+    m[_order[:k]] = True
+    return m
 # 第2幕の局面(帯バナー): (開始s, 終了s, ラベル, 色)
 PHASES = [(5.3, 60.0, "高速登坂 — ガバナ+水力LFC(速い余力)", "#8FD3A5"),
           (60.0, 180.0, "停滞 — 速い余力が尽き、遅い火力だけが登る", "#FFD60A"),
@@ -92,15 +113,23 @@ def render(ts, flash=False, speed=1, act=1):
     st = stage_at(ts)
     fig = plt.figure(figsize=(12.8, 7.2), dpi=110)
     fig.patch.set_facecolor(BG)
-    ax = fig.add_axes([0.0, 0.0, 0.66, 1.0]); ax.set_facecolor(BG)
+    ax = fig.add_axes([0.0, 0.085, 0.66, 0.915]); ax.set_facecolor(BG)
     ax.set_xlim(X0, X1); ax.set_ylim(Y0, Y1)
     ax.set_aspect(1.0 / math.cos(math.radians(38.0))); ax.axis("off")
     ax.add_collection(LineCollection(segs, colors="#232A45", linewidths=0.45,
                                      alpha=0.8, zorder=1))
-    sc = 1.0 - 0.1 * st
-    ax.scatter(llon, llat, s=lsz0 * sc, marker="s",
-               c=("#FF5252" if flash else "#C9A227"),
-               alpha=0.75 if flash else 0.38, zorder=3, linewidths=0)
+    shed_m = shed_mask(st)
+    live_m = ~shed_m
+    # 消灯した負荷: 暗赤の枠だけ残す(「ここが落ちた」が見える)
+    if shed_m.any():
+        ax.scatter(llon[shed_m], llat[shed_m], s=lsz0[shed_m], marker="s",
+                   facecolors="none",
+                   edgecolors=("#FF5252" if flash else "#8C2F2F"),
+                   linewidths=(1.1 if flash else 0.7),
+                   alpha=(1.0 if flash else 0.85), zorder=4)
+    # 生きている負荷: 黄色の実塗り
+    ax.scatter(llon[live_m], llat[live_m], s=lsz0[live_m], marker="s",
+               c="#E8C227", alpha=0.62, zorder=3, linewidths=0)
     for i in range(n):
         if not np.isfinite(lon[i]):
             continue
@@ -141,44 +170,50 @@ def render(ts, flash=False, speed=1, act=1):
                 fontweight="bold", va="top")
         shed = tot_mw * 0.1 * st
         if st:
-            ax.text(0.03, 0.775, f"UFLS 第{st}段 遮断 {shed:,.0f} MW(継続中)",
+            ax.text(0.03, 0.775,
+                    f"UFLS 第{st}段 — 負荷 {int(shed_m.sum()):,}件 / "
+                    f"{shed:,.0f} MW を遮断したまま",
                     transform=ax.transAxes, color="#8E96B8", fontsize=10,
                     va="top")
     else:
         # ── 第1幕: 事故の数十秒(ほぼ実速)
-        ax.text(0.03, 0.965, "東日本全域 N-3実験 — 富津+東新潟+千葉 "
-                "10.9GW同時脱落(設計外デモ)",
-                transform=ax.transAxes, color="#C8CDD8", fontsize=13.5,
-                fontweight="bold", va="top")
-        ax.text(0.03, 0.915, lbl, transform=ax.transAxes, color="#FFFFFF",
+        # タイトルはスライド側のテキストボックスに置く(PowerPointで編集可能に
+        # するため — オーナー指摘「GIFに焼き込むと編集できない」)。
+        # GIF内には動くもの・データに紐づく値だけを描く。
+        ax.text(0.03, 0.955, lbl, transform=ax.transAxes, color="#FFFFFF",
                 fontsize=18, fontweight="bold", va="top")
         cv = coi[k]
-        ax.text(0.03, 0.862, f"系統平均 {cv:6.2f} Hz",
+        ax.text(0.03, 0.902, f"系統平均 {cv:6.2f} Hz",
                 transform=ax.transAxes, color=fcmap(cv - f0), fontsize=14,
                 fontweight="bold", va="top")
         shed = tot_mw * 0.1 * st
-        ax.text(0.03, 0.815,
-                f"UFLS 第{st}段 / 遮断 {shed:,.0f} MW" if st else "UFLS 未発動",
+        ax.text(0.03, 0.855,
+                (f"UFLS 第{st}段 発動 — 負荷 {int(shed_m.sum()):,}件 / "
+                 f"{shed:,.0f} MW を遮断" if st else "UFLS 未発動"),
                 transform=ax.transAxes,
                 color="#FF8A80" if st else "#5A648F", fontsize=12.5, va="top")
         if tt < 3.0:   # 凡例は序盤のみ(情報を減らす)
-            ax.add_patch(FancyBboxPatch((0.018, 0.295), 0.61, 0.135,
+            ax.add_patch(FancyBboxPatch((0.018, 0.135), 0.61, 0.135,
                          transform=ax.transAxes, boxstyle="round,pad=0.012",
                          facecolor="#11152A", edgecolor="#3A4266", alpha=0.94,
                          zorder=9))
-            ax.text(0.03, 0.415,
+            ax.text(0.03, 0.255,
                     "● 発電機 — 色=周波数(青=50Hz↔赤=低下)",
                     transform=ax.transAxes, color="#9EC1FF", fontsize=9.0,
                     va="top", zorder=10)
-            ax.text(0.03, 0.375, "■ 負荷(黄) — UFLSの段ごとに1割ずつ縮む",
+            ax.text(0.03, 0.215, "■ 負荷(黄) — UFLSで消灯し、暗い枠だけが残る",
                     transform=ax.transAxes, color="#E0B93C", fontsize=9.0,
                     va="top", zorder=10)
-            ax.text(0.03, 0.335, "× 脱落 — 赤=落とした3プラント / 灰=脱調保護",
+            ax.text(0.03, 0.175, "× 脱落 — 赤=落とした3プラント / 灰=脱調保護",
                     transform=ax.transAxes, color="#FF8A80", fontsize=9.0,
                     va="top", zorder=10)
-    ax.text(0.03, 0.03, "AGC-N 多機共シミュレーション(AGC30定数・実網Kron縮約"
-            "・UCピーク断面59.4GW)", transform=ax.transAxes,
-            color="#5A648F", fontsize=8.5, va="bottom")
+    fig.text(0.028, 0.052,
+             "モデルのUFLSは全負荷を一律10%/段で削減する集約近似 — 地図では等価なMW量を"
+             "『個別負荷の消灯』として描く(実系統はフィーダ単位の遮断。\n"
+             "どの負荷が落ちるかはモデルの主張ではないため、選定は再現可能な擬似乱数)",
+             color="#6B7599", fontsize=7.8, va="bottom", linespacing=1.5)
+    fig.text(0.028, 0.018, "AGC-N 多機共シミュレーション(AGC30定数・実網Kron縮約"
+             "・UCピーク断面59.4GW)", color="#5A648F", fontsize=8.0, va="bottom")
     # 右: 全機周波数+COI
     axw = fig.add_axes([0.70, 0.10, 0.28, 0.80])
     axw.set_facecolor("#11152A")
@@ -214,6 +249,28 @@ def render(ts, flash=False, speed=1, act=1):
                   + ("" if act == 2 else " — 最初の20秒"),
                   color="#C8CDD8", fontsize=10.5)
     axw.set_xlabel("時間 [s]", color="#8E96B8", fontsize=9)
+    # ── 需給ギャップの埋め方(遮断が何をしたか) ──
+    axg = fig.add_axes([0.043, 0.405, 0.235, 0.15])
+    axg.set_facecolor("#11152A")
+    shed_now = tot_mw_pre * 0.1 * st
+    rest = max(trip_mw - shed_now, 0.0)
+    bars = [("脱落した発電", trip_mw, "#D62728"),
+            ("UFLSの負荷遮断", shed_now, "#E8C227"),
+            ("残り(ガバナ+LFC)", rest, "#8FD3A5")]
+    for bi, (lb2, v, c) in enumerate(bars):
+        y = 2 - bi
+        axg.barh([y], [v / 1000.0], height=0.46, color=c,
+                 alpha=0.9 if bi else 0.95)
+        axg.text(0.06, y + 0.36, lb2, color="#C8CDD8", fontsize=7.0,
+                 va="bottom")
+        axg.text(v / 1000.0 + 0.22, y, f"{v:,.0f} MW", color=c, fontsize=7.8,
+                 va="center", fontweight="bold")
+    axg.set_xlim(0, trip_mw / 1000.0 * 1.62); axg.set_ylim(-0.55, 2.95)
+    axg.set_yticks([]); axg.tick_params(colors="#8E96B8", labelsize=7)
+    axg.set_xlabel("GW", color="#8E96B8", fontsize=7.5, labelpad=1)
+    for sp in axg.spines.values():
+        sp.set_color("#3A4266")
+    axg.set_title("需給ギャップの埋め方", color="#C8CDD8", fontsize=9.0, pad=2)
     fig.canvas.draw()
     img = np.asarray(fig.canvas.buffer_rgba())[..., :3].copy()
     plt.close(fig)

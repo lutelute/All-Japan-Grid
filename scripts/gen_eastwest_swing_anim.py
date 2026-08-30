@@ -27,9 +27,17 @@ for isl in ISLANDS:
     coi = np.array([f0 + (M[m] * w[m, i]).sum() / M[m].sum() * f0
                     if (m := fin[:, i]).any() else np.nan
                     for i in range(len(t))])
+    P = z["P"] if "P" in z.files else None
+    dem = float(z["load_mw"].sum())
+    Msum = float(M.sum())                       # Σ2HS/S_base [pu·s]
+    dP = float(P[int(z["trip"])]) if P is not None else float("nan")
+    nadir = float(np.nanmin(coi))
     data[isl] = dict(t=t, w=w, f0=f0, lon=z["lon"], lat=z["lat"], S=z["S"],
                      coi=coi, trip=int(z["trip"]),
-                     name=str(z["names"][int(z["trip"])]))
+                     name=str(z["names"][int(z["trip"])]),
+                     n=w.shape[0], dem=dem, Msum=Msum, dP=dP, nadir=nadir,
+                     ratio=dP / dem * 100.0,           # 脱落量/需要 [%]
+                     dfpu=(nadir - f0) / f0 * 100.0)   # 最大偏差 [%](pu換算)
 
 X0, X1, Y0, Y1 = 128.9, 142.9, 30.7, 41.9
 b = json.load(open("docs/data/built/all.json"))
@@ -77,12 +85,10 @@ for ts, du in TL:
             ax.scatter([d["lon"][i]], [d["lat"][i]], s=ms[i],
                        color=fcol(v * d["f0"]), zorder=5,
                        edgecolors="#FFFFFF", linewidths=0.22, alpha=0.95)
-    ax.text(0.02, 0.965, "東西動揺 — 50Hz系統と60Hz系統、それぞれの最大機N-1",
-            transform=ax.transAxes, color="#FFFFFF", fontsize=17.5,
-            fontweight="bold", va="top")
+    # タイトルはスライド側のテキストボックスへ(PowerPointで編集可能にするため)
     tt = ts - 1.0
     tlbl = "事故前" if tt < 0 else f"事故から {tt:5.1f} 秒"
-    ax.text(0.02, 0.912,
+    ax.text(0.02, 0.955,
             f"{tlbl} — ●の色=その機の周波数偏差"
             "(青=定格 → 白 → 赤=−0.45Hz以深)",
             transform=ax.transAxes, color="#A7B0CB", fontsize=11.5, va="top")
@@ -94,7 +100,7 @@ for ts, du in TL:
             "東西はFC(周波数変換所)経由の直流連系のみ — 動揺は互いに伝わらない\n"
             "各系統独立の実験を同時刻表示。×=脱落: 富津3,893MW(東)/川越3,990MW(西)",
             transform=ax.transAxes, color="#5A648F", fontsize=9.5, va="bottom")
-    axw = fig.add_axes([0.715, 0.12, 0.265, 0.76]); axw.set_facecolor("#11152A")
+    axw = fig.add_axes([0.715, 0.575, 0.265, 0.335]); axw.set_facecolor("#11152A")
     for isl in ISLANDS:
         d = data[isl]
         axw.plot(d["t"], d["coi"] - d["f0"], lw=1.8, color=COL[isl],
@@ -106,9 +112,40 @@ for ts, du in TL:
         sp.set_color("#3A4266")
     axw.legend(loc="lower right", fontsize=9, facecolor="#11152A",
                labelcolor="#C8CDD8", edgecolor="#3A4266")
-    axw.set_title("東西のCOI周波数偏差 [Hz] — 同規模の事故・同じ沈み方",
-                  color="#C8CDD8", fontsize=10)
-    axw.set_xlabel("時間 [s]", color="#8E96B8", fontsize=9)
+    axw.set_title("東西のCOI周波数偏差 [Hz]", color="#C8CDD8", fontsize=10)
+    axw.tick_params(labelbottom=True)
+    # ── 下段: なぜ落ち方が違うのか(考察) ──
+    axc = fig.add_axes([0.715, 0.075, 0.265, 0.375]); axc.set_facecolor("#11152A")
+    axc.set_xticks([]); axc.set_yticks([])
+    for sp in axc.spines.values():
+        sp.set_color("#3A4266")
+    de, dw = data["east"], data["west"]
+    rows = [
+        ("", "東 50Hz", "西 60Hz"),
+        ("脱落量", f"{de['dP']:,.0f} MW", f"{dw['dP']:,.0f} MW"),
+        ("需要に対する比", f"{de['ratio']:.2f} %", f"{dw['ratio']:.2f} %"),
+        ("慣性 ΣM [pu·s]", f"{de['Msum']:,.0f}", f"{dw['Msum']:,.0f}"),
+        ("最大偏差 [Hz]", f"{de['nadir']-de['f0']:+.3f}", f"{dw['nadir']-dw['f0']:+.3f}"),
+        ("同 [%](pu換算)", f"{de['dfpu']:+.3f}", f"{dw['dfpu']:+.3f}"),
+    ]
+    for ri, (a, b2, c2) in enumerate(rows):
+        y = 0.93 - ri * 0.118
+        hd = (ri == 0)
+        axc.text(0.03, y, a, transform=axc.transAxes, fontsize=8.2,
+                 color="#C8CDD8" if hd else "#8E96B8", va="center",
+                 fontweight="bold" if hd else "normal")
+        axc.text(0.63, y, b2, transform=axc.transAxes, fontsize=8.2,
+                 color="#FFB300", va="center", ha="right",
+                 fontweight="bold")
+        axc.text(0.985, y, c2, transform=axc.transAxes, fontsize=8.2,
+                 color="#4E9BFF", va="center", ha="right", fontweight="bold")
+    axc.text(0.03, 0.185,
+             "西が浅いのは①系統が大きく脱落比が小さい②慣性が1.15倍\n"
+             "③速い余力(水力)が1.7倍。落とし穴: 60Hz系は同じpu変化でも\n"
+             "Hz表示が1.2倍大きく出る — Hzのまま直接比べると誤読する",
+             transform=axc.transAxes, fontsize=7.4, color="#9EC1FF",
+             va="top", linespacing=1.45)
+    axc.set_title("なぜ落ち方が違うのか", color="#C8CDD8", fontsize=10, pad=3)
     fig.canvas.draw()
     frames.append(np.asarray(fig.canvas.buffer_rgba())[..., :3].copy())
     plt.close(fig)

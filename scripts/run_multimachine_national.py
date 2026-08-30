@@ -641,6 +641,8 @@ def main():
             lon=np.array([m["lon"] for m in machines]),
             lat=np.array([m["lat"] for m in machines]),
             S=np.array([m["S"] for m in machines]),
+            P=np.array([m["P"] * S_BASE_MVA for m in machines]),  # 運転点[MW]
+            H=np.array([m["H"] for m in machines]),               # 慣性定数[s]
             M=r["M"], live=r["live"],
             names=np.array([m["name"] for m in machines]),
             ev_t=np.array([te for te, _m in r["log"]]),

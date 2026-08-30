@@ -51,6 +51,21 @@ function foot(s, n, mins) {
   s.addText(String(n), { x: 12.4, y: 7.12, w: 0.5, h: 0.28, fontFace: FL,
     fontSize: 10, color: MUT, align: "right", margin: 0 });
 }
+// GIF全画面スライド + 編集できるタイトル帯。
+// GIF内に文字を焼き込むとPowerPointで直せない(オーナー指摘)ため、見出しは
+// スライド側のテキストボックスに置く。GIFは16:9を保ったまま帯の下に敷く。
+function gifSlide(file, title, sub) {
+  const s = pres.addSlide();
+  s.background = { color: "0A0D1A" };
+  const H = 6.86, W = H * 16 / 9;                 // 帯0.64インチ分を空ける
+  s.addImage({ path: A + file, x: (13.33 - W) / 2, y: 0.64, w: W, h: H });
+  s.addText(title, { x: 0.55, y: 0.10, w: 11.4, h: 0.44, fontFace: F,
+    fontSize: 19, bold: true, color: "FFFFFF", margin: 0, valign: "middle" });
+  if (sub) s.addText(sub, { x: 0.55, y: 0.10, w: 12.3, h: 0.44, fontFace: F,
+    fontSize: 11, color: "8E96B8", margin: 0, valign: "middle",
+    align: "right" });
+  return s;
+}
 function card(s, x, y, w, h, title, body, col, fs) {
   s.addShape(pres.ShapeType.roundRect, { x, y, w, h, fill: { color: PANEL },
     line: { type: "none" }, rectRadius: 0.06 });
@@ -715,18 +730,18 @@ function meq(s, x, y, w, runs, fs, align) {
 
 /* ============ 19.5 動: 東全域N-3とUFLS(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "east_incident.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
-  s.addNotes("[コア]東全域の大擾乱実験(設計外N-3デモと明記): ピーク断面59.4GWで富津+東新潟+千葉10.9GWを同時脱落、900秒の全アーク。t≈5.3sでUFLS第1段(遮断5,935MW)が底48.49Hzを打ち、4局面 — ①慣性で急落 ②高速登坂(ガバナ+水力LFC、60sで49.19) ③停滞(60-180s、速い余力が尽きる) ④緩回復(15分で49.84、完全復帰はさらに数十分先)。可変速再生(×10/×30/×120バッジ付き)。オーナー指摘『リニアに戻るのは違和感、どこかで停滞するはず』への回答 — 停滞は実在し、900秒窓で見せる。1:15");
+  const s = gifSlide("east_incident.gif",
+    "東日本全域 N-3実験 — 富津+東新潟+千葉 10,618MW同時脱落(設計外デモ)",
+    "UCピーク断面 59.4GW");
+  s.addNotes("[コア]東全域の大擾乱(設計外N-3デモ): ピーク断面59.4GWで富津+東新潟+千葉10,618MWを同時脱落、900秒の全アーク。負荷遮断の見せ方(オーナー指摘「黄色の数の変更が見えない」への対応): モデルのUFLSは全負荷を一律10%/段で削減する集約近似で、面積比10%の縮小は目に見えない → 等価なMW量を『個別負荷の消灯』として描く(361件・5,935MW)。実系統はフィーダ単位の遮断なので見た目はむしろ実態に近いが、どの負荷が落ちるかはモデルの主張ではないため選定は再現可能な擬似乱数、その旨を画面に明記。左下の需給パネルで『脱落10,618 → UFLS遮断5,935 → 残り4,683はガバナ+LFCが埋める』の因果を数量で見せる。4局面: ①慣性で急落 ②UFLS第1段が底48.49Hzを打つ ③高速登坂 ④停滞(60-180s) ⑤緩回復(15分で49.84)。1:15");
 }
 
 /* ============ 19.6 動: 全系統動揺(GIF) ============ */
 {
-  const s = pres.addSlide();
-  s.background = { color: "0A0D1A" };
-  s.addImage({ path: A + "eastwest_swing.gif", x: 0, y: 0, w: 13.33, h: 7.5 });
-  s.addNotes("[フル]東西動揺: 東183機(富津3,893MW)×西298機(川越3,990MW)、各系統最大機N-1を同時刻表示。東西はFC経由の直流連系のみで動揺は互いに伝わらない(独立実験と明記)。右=東西COIの比較 — 同規模の事故で同じ沈み方。オーナー指摘『沖縄は無関係・北海道は連系線の話になる』を受けて4島合成から東西2系統に絞った版。1:00");
+  const s = gifSlide("eastwest_swing.gif",
+    "東西動揺 — ほぼ同じ4GW級の脱落。なぜ落ち方が違うのか",
+    "東 富津3,893MW / 西 川越3,990MW");
+  s.addNotes("[標準]東西動揺 — 主題は『ほぼ同じ4GW級の脱落なのに、なぜ落ち方が違うのか』(オーナー指摘「考察がない」への対応)。右下の比較表は全てnpz実測: 脱落量3,893/3,990MW、需要比6.56%/5.70%、慣性ΣM 7,079/8,151 pu·s、最大偏差−0.436/−0.276Hz。西が浅い理由は①系統が大きく脱落比が小さい②慣性が1.15倍③速い余力(水力)が1.7倍(UC断面で東2.7GW・西4.5GW)。重要な落とし穴として『60Hz系は同じpu変化でもHz表示が1.2倍大きく出る — Hzのまま直接比べると誤読する』を明示(pu換算では東−0.872%/西−0.461%で約1.9倍の差)。東西はFC経由の直流連系のみで動揺は伝わらないため、独立実験の同時刻表示である旨も明記。1:00");
 }
 
 /* ============ 19.7 動: 逆位相動揺(GIF) ============ */
