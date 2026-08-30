@@ -1,0 +1,32 @@
+{
+ "note": "多機(AGC-N)共シミュレーション帳簿。AGC30機種定数×UCオンライン全機×実網Kron縮約。負荷=定Z・UFLS=負荷Y一様縮小(ラッチ)・S=定格/0.9・H,Xd',D=典型値。AC正典解で初期化",
+ "island": "hokkaido",
+ "pf_mode": "ac",
+ "n_machines": 54,
+ "init_err_max_mw": 0.0013815491911373101,
+ "tripped": "苫東厚真火力発電所",
+ "trip_mw": 1650.0,
+ "out_of_step_tripped": [],
+ "events": [
+  {
+   "t_s": 1.0,
+   "event": "トリップ: 苫東厚真火力発電所"
+  },
+  {
+   "t_s": 1.64,
+   "event": "UFLS 第1段"
+  },
+  {
+   "t_s": 1.98,
+   "event": "UFLS 第2段"
+  },
+  {
+   "t_s": 2.71,
+   "event": "UFLS 第3段"
+  }
+ ],
+ "trips": [
+  "苫東厚真火力発電所"
+ ],
+ "hour": null
+}

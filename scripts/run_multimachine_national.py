@@ -560,9 +560,14 @@ def main():
                     help="UC断面の時刻(既定=島ピーク)。最小慣性実験は例: 3")
     ap.add_argument("--trip-top", type=int, default=1,
                     help="同時トリップする上位プラント数(>1は設計外N-kデモ)")
+    ap.add_argument("--t-end", type=float, default=None,
+                    help="シミュレーション終了時刻[s](既定60)。回復まで見るなら900")
     ap.add_argument("--tag", default=None,
                     help="出力サフィックス(正典成果物を上書きしない)。図は省略")
     args = ap.parse_args()
+    if args.t_end:
+        global T_END
+        T_END = float(args.t_end)
     print("① UC求解...")
     scn = build_national_scenario(scenario="fy2023r2")
     uc = solve_uc(scn.to_uc_parameters())
