@@ -56,9 +56,11 @@ function foot(s, n, mins) {
 // コア=物語の骨格だけで完結する最小構成 / 標準=+動きと深掘りの代表
 // 使い方: TRACK=core node build_deck_story.js → AllJapanGrid_story_core.pptx
 const TRACK = (process.env.TRACK || "full").toLowerCase();
-const CORE = new Set([1, 2, 3, 4, 5, 7, 8, 12, 14, 16, 19, 23, 32, 33, 35,
-                      36, 38, 40, 41]);
-const STD_EXTRA = new Set([6, 11, 17, 25, 26, 29, 30, 31]);
+// 6=組み上げGIF・39=全史トレーラーはコアにも入れる — このプロジェクトは
+// 動くものが伝わるので、骨格版でも「見せ場」を落とさない
+const CORE = new Set([1, 2, 3, 4, 5, 6, 7, 8, 12, 14, 16, 19, 23, 32, 33,
+                      35, 36, 38, 39, 40, 41]);
+const STD_EXTRA = new Set([11, 17, 22, 25, 26, 29, 30, 31]);
 const NOOP = new Proxy(function () {}, {
   get: () => NOOP, set: () => true, apply: () => NOOP,
 });
@@ -144,7 +146,7 @@ function meq(s, x, y, w, runs, fs, align) {
   s.addText("地図はある。モデルが無い。だから作った。", { x: 0.75, y: 6.1,
     w: 6.7, h: 0.4, fontFace: F, fontSize: 14.5, bold: true, color: INK,
     margin: 0 });
-  s.addNotes("【尺の設計 — 3トラックを実ファイルで出し分け】ビルド時に TRACK を指定すると版が切り替わる:\n  node build_deck_story.js            → AllJapanGrid_story.pptx      フル 41枚 45.3分\n  TRACK=std  node build_deck_story.js → AllJapanGrid_story_std.pptx  標準 27枚 27.0分\n  TRACK=core node build_deck_story.js → AllJapanGrid_story_core.pptx コア 19枚 17.2分\n目安: 20分枠=コア / 30分枠=標準 / 45分枠=フル。質疑込みなら1段下げる。コア(物語の骨格だけで完結): 動機→OSMの限界→先行研究の位置→年表→第1幕→収束は正しさではない→公式開示と照合→SubSLD→事故→東N-3→第6幕(DC島/犯人/点灯)→検証と限界→失敗も台帳に→総括→まとめ。標準はこれに 組み上げGIF・解ける化・SubSLDフリップ・逆位相・回復・UC・潮流・SCR を足す。削ってはいけないもの: 全国モデルの定義・CGMES化・SubSLD・検証・限界・先行研究上の位置。失敗談は量を減らしても『失敗→台帳→修正→再検証』の因果を1本残せば意図は伝わる(codex助言)。0:30");
+  s.addNotes("【尺の設計 — 3トラックを実ファイルで出し分け】ビルド時に TRACK を指定すると版が切り替わる:\n  node build_deck_story.js            → AllJapanGrid_story.pptx      フル 41枚 45.3分(動くGIF 11本)\n  TRACK=std  node build_deck_story.js → AllJapanGrid_story_std.pptx  標準 29枚 28.8分(GIF 9本)\n  TRACK=core node build_deck_story.js → AllJapanGrid_story_core.pptx コア 21枚 19.3分(GIF 5本 — 組み上げ・東N-3・トレーラー等)\n目安: 20分枠=コア / 30分枠=標準 / 45分枠=フル。質疑込みなら1段下げる。コア(物語の骨格だけで完結): 動機→OSMの限界→先行研究の位置→年表→第1幕→収束は正しさではない→公式開示と照合→SubSLD→事故→東N-3→第6幕(DC島/犯人/点灯)→検証と限界→失敗も台帳に→総括→まとめ。標準はこれに 組み上げGIF・解ける化・SubSLDフリップ・逆位相・回復・UC・潮流・SCR を足す。削ってはいけないもの: 全国モデルの定義・CGMES化・SubSLD・検証・限界・先行研究上の位置。失敗談は量を減らしても『失敗→台帳→修正→再検証』の因果を1本残せば意図は伝わる(codex助言)。0:30");
 }
 
 /* ===================== 2. HERO: 出来上がったもの ===================== */
