@@ -230,6 +230,14 @@ function card(s, x, y, w, h, title, body, col, fs) {
   s.addNotes("先に現物。以降の説明は全部「この1枚をなぜ信じてよいか」の話。●■▲を指して『証拠の強さが線の描き方に出ている』を1回だけ言い切る。");
 }
 
+/* ============ 4.5 動: 読み方と全国展開(GIF) ============ */
+{
+  const s = pres.addSlide();
+  s.background = { color: "0A0D1A" };
+  s.addImage({ path: A + "subsld_flipbook.gif", x: 0.17, y: 0, w: 13.0, h: 7.5 });
+  s.addNotes("動きで読み方を3段(左=構内幾何/右=SLD/捏造ゼロ)→全国406所の機械生成を流す。新京葉の次に『これが1所ではない』ことを見せる。0:45");
+}
+
 /* ===================== 5. 関連研究 ===================== */
 {
   const s = pres.addSlide(); base(s);
