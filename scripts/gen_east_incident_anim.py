@@ -68,7 +68,7 @@ tot_mw = float(lmw.sum())
 ms = 20.0 * np.sqrt(np.maximum(S, 5.0) / 500.0)
 lsz0 = 3.2 * np.sqrt(lmw / max(lmw.mean(), 1.0))
 
-def render(ts, flash=False):
+def render(ts, flash=False, speed=1):
     k = min(len(t) - 1, int(np.searchsorted(t, ts)))
     st = stage_at(ts)
     fig = plt.figure(figsize=(12.8, 7.2), dpi=110)
@@ -103,7 +103,13 @@ def render(ts, flash=False):
     # HUD
     tt = ts - 1.0
     lbl = ("事故前" if tt < 0 else
-           f"事故から {tt:5.1f} 秒")
+           f"事故から {tt:5.1f} 秒" if tt < 90 else
+           f"事故から {int(tt)//60}分{int(tt)%60:02d}秒")
+    if speed > 1:
+        ax.text(0.03, 0.755, f"×{speed} 早送り", transform=ax.transAxes,
+                color="#FFD60A", fontsize=11.5, fontweight="bold", va="top",
+                bbox=dict(boxstyle="round,pad=0.3", facecolor="#11152A",
+                          edgecolor="#FFD60A", alpha=0.9))
     ax.text(0.03, 0.965, "東日本全域 N-3実験 — 富津+東新潟+千葉 10.9GW同時脱落(設計外デモ)",
             transform=ax.transAxes, color="#C8CDD8", fontsize=13.5,
             fontweight="bold", va="top")
@@ -117,6 +123,15 @@ def render(ts, flash=False):
     ax.text(0.03, 0.815, f"UFLS 第{st}段 / 遮断 {shed:,.0f} MW" if st else
             "UFLS 未発動", transform=ax.transAxes,
             color="#FF8A80" if st else "#5A648F", fontsize=12.5, va="top")
+    # 局面ラベル(900sアークの4局面 — COI実測: 底48.50→60s 49.19→停滞→899s 49.84)
+    ph = ("慣性で急落中" if tt < 4.3 else
+          "UFLS第1段が底を打つ(48.50 Hz)" if tt < 8.0 else
+          "高速登坂 — ガバナ+水力LFC(速い余力)" if tt < 59 else
+          "停滞 — 速い余力が尽き、遅い火力だけが登る" if tt < 179 else
+          "緩やかな回復 — 15分で49.84 Hz(50.00復帰はさらに数十分先)")
+    if tt >= 0:
+        ax.text(0.03, 0.712, "▸ " + ph, transform=ax.transAxes,
+                color="#8FD3A5", fontsize=11.5, fontweight="bold", va="top")
     # 凡例(負荷と発電機を明確に)
     from matplotlib.patches import FancyBboxPatch
     ax.add_patch(FancyBboxPatch((0.018, 0.295), 0.40, 0.135,
@@ -138,11 +153,13 @@ def render(ts, flash=False):
     # 右: 全機周波数パネル
     axw = fig.add_axes([0.70, 0.10, 0.28, 0.80])
     axw.set_facecolor("#11152A")
+    stride = max(1, len(t) // 2500)
     for i in range(n):
         if i in trips:
             continue
-        axw.plot(t, fm[i], lw=0.35, color="#5A78B8", alpha=0.30)
-    axw.plot(t, coi, lw=1.8, color="#FFFFFF")
+        axw.plot(t[::stride], fm[i, ::stride], lw=0.35, color="#5A78B8",
+                 alpha=0.30)
+    axw.plot(t[::stride], coi[::stride], lw=1.8, color="#FFFFFF")
     for s_hz, lb in ((-1.5, "第1段"), (-2.0, "第2段"), (-2.5, "第3段")):
         axw.axhline(f0 + s_hz, color="#C62828", lw=0.8, ls="--", alpha=0.6)
         axw.text(float(t[-1]) * 0.99, f0 + s_hz + 0.03, f"UFLS{lb}",
@@ -165,18 +182,22 @@ def render(ts, flash=False):
     return img
 
 # タイムライン(可変速): 事故直前→UFLSの数秒は細かく→回復はまばら
-TL = [(0.0, 1200)]
-TL += [(1.0 + 0.5 * i, 600) for i in range(10)]      # 1〜6s
-TL += [(6.0 + 1.0 * i, 450) for i in range(9)]       # 〜15s
-TL += [(15.0 + 3.0 * i, 450) for i in range(int((float(t[-1]) - 15) / 3))]
+T_LAST = float(t[-1])
+TL = [(0.0, 1200, 1)]
+TL += [(1.0 + 0.5 * i, 600, 1) for i in range(10)]        # 1〜6s 実速
+TL += [(6.0 + 1.0 * i, 450, 1) for i in range(9)]         # 〜15s
+TL += [(15.0 + 5.0 * i, 400, 10) for i in range(9)]       # 〜60s ×10
+TL += [(60.0 + 15.0 * i, 400, 30) for i in range(8)]      # 〜180s ×30 停滞帯
+TL += [(180.0 + 60.0 * i, 400, 120)
+       for i in range(int((T_LAST - 180) / 60))]          # 〜900s ×120
 frames, durs = [], []
 ev_ufls = [te for te, sname in zip(ev_t, ev_s) if "UFLS" in str(sname)]
-for ts, du in TL:
+for ts, du, spd in TL:
     if ts > float(t[-1]):
         break
     flash = any(0 <= ts - te < 0.6 for te in ev_ufls)
-    frames.append(render(ts, flash=flash)); durs.append(du)
-frames.append(render(float(t[-1]) - 0.02)); durs.append(3200)
+    frames.append(render(ts, flash=flash, speed=spd)); durs.append(du)
+frames.append(render(T_LAST - 0.02, speed=120)); durs.append(3200)
 from PIL import Image
 ims = [Image.fromarray(f) for f in frames]
 out = "docs/slides/ajg/assets/east_incident.gif"

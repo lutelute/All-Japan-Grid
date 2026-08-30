@@ -625,7 +625,7 @@ def main():
                 pass
         np.savez_compressed(
             f"docs/data/agc/mm_traces_{island}{sfx}.npz",
-            t=r["t"], w=r["w"], f0=f0, trip=r["trip"], trips=np.array(r["trips"]),
+            t=r["t"], w=r["w"], d=r["d"], f0=f0, trip=r["trip"], trips=np.array(r["trips"]),
             load_lon=np.array([x[0] for x in lp]),
             load_lat=np.array([x[1] for x in lp]),
             load_mw=np.array([x[2] for x in lp]),

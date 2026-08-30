@@ -116,7 +116,7 @@ ax.text(0.5, 0.56, "All-Japan-Grid", transform=ax.transAxes, color="#FFFFFF",
         fontsize=44, fontweight="bold", ha="center")
 ax.text(0.5, 0.46, "公開データだけで、日本全体の系統モデルを作り、動かす",
         transform=ax.transAxes, color="#C8CDD8", fontsize=16, ha="center")
-ax.text(0.5, 0.40, "— 6ヶ月の全記録、45秒 —", transform=ax.transAxes,
+ax.text(0.5, 0.40, "— 6ヶ月の全記録、約40秒 —", transform=ax.transAxes,
         color="#69F0AE", fontsize=12.5, ha="center")
 add(snap(fig), 3000)
 
@@ -218,6 +218,94 @@ for ts, du in ((0.9, 900), (1.6, 900), (3.0, 900), (5.3, 1300), (12.0, 900),
         "●=発電機(色=各機の周波数) ×=脱落 — AGC30定数・実網Kron縮約",
         col=("#FF8A80" if cv < 49 else "#FFFFFF"))
     add(snap(fig), du)
+
+# ── 幕6: 綱引き(西・実シミュ) — 逆位相の2カット
+zw = np.load("docs/data/agc/mm_traces_west.npz", allow_pickle=True)
+wt, ww, wf0, wM = zw["t"], zw["w"], float(zw["f0"]), zw["M"]
+wlon, wlat, wS = zw["lon"], zw["lat"], zw["S"]
+wfin = np.isfinite(ww)
+wcoi = np.array([(wM[m] * ww[m, i]).sum() / wM[m].sum()
+                 if (m := wfin[:, i]).any() else np.nan
+                 for i in range(len(wt))])
+wrel = (ww - wcoi[None, :]) * wf0
+gW = np.where(np.isfinite(wlon) & (wlon < 132.5))[0]
+gE = np.where(np.isfinite(wlon) & (wlon > 134.5))[0]
+cWc = (float(np.average(wlon[gW], weights=wM[gW])),
+       float(np.average(wlat[gW], weights=wM[gW])))
+cEc = (float(np.average(wlon[gE], weights=wM[gE])),
+       float(np.average(wlat[gE], weights=wM[gE])))
+ms_w = 15.0 * np.sqrt(np.maximum(wS, 5.0) / 500.0)
+def rcol_t(v, SPAN=0.12):
+    x = max(-1.0, min(1.0, v / SPAN))
+    if x >= 0:
+        c0, c1 = np.array([0.16, 0.19, 0.33]), np.array([0.30, 0.62, 1.0])
+        return c0 + (c1 - c0) * x
+    c0, c1 = np.array([0.16, 0.19, 0.33]), np.array([1.0, 0.32, 0.28])
+    return c0 + (c1 - c0) * (-x)
+# 群速度差(a-b)の正負ピーク2カット(色の対比が最大) — 矢印はΔδ実符号で決める
+def _gm(idx):
+    x = wrel[idx]
+    return np.nansum(wM[idx][:, None] * x, axis=0) / np.maximum(
+        (wM[idx][:, None] * np.isfinite(x)).sum(axis=0), 1e-9)
+_diff = _gm(gW) - _gm(gE)
+_dlt = zw["d"]
+_dd = np.degrees(
+    np.nansum(wM[gW][:, None] * _dlt[gW], axis=0) / wM[gW].sum()
+    - np.nansum(wM[gE][:, None] * _dlt[gE], axis=0) / wM[gE].sum())
+_dd = _dd - _dd[0]
+_w0, _w1 = np.searchsorted(wt, 1.5), np.searchsorted(wt, 6.0)
+_k1 = _w0 + int(np.nanargmax(_diff[_w0:_w1]))
+_k2 = _w0 + int(np.nanargmin(_diff[_w0:_w1]))
+for ts in (float(wt[_k1]), float(wt[_k2])):
+    k = min(len(wt) - 1, int(np.searchsorted(wt, ts)))
+    wlead = _dd[k] > 0
+    fig, ax = canvas()
+    draw_grid(ax, colored=True, dim_isl={"hokkaido", "east", "okinawa"})
+    for i in range(ww.shape[0]):
+        if not np.isfinite(wlon[i]) or not np.isfinite(wrel[i, k]):
+            continue
+        ax.scatter([wlon[i]], [wlat[i]], s=ms_w[i], color=rcol_t(wrel[i, k]),
+                   zorder=6, edgecolors="#FFFFFF", linewidths=0.2, alpha=0.95)
+    src, dst = (cWc, cEc) if wlead else (cEc, cWc)
+    acol = "#FF6B5E" if wlead else "#4E9BFF"
+    ax.annotate("", xy=dst, xytext=src, zorder=9,
+                arrowprops=dict(arrowstyle="-|>", color=acol, lw=4.5,
+                                mutation_scale=34, alpha=0.95,
+                                connectionstyle="arc3,rad=-0.18"))
+    hud(ax, "第6幕 — 綱引き(西・実シミュ)",
+        "九州と関西が、逆位相で揺れ始める",
+        f"事故から{ts-1.0:.1f}秒 — 電力 {'西→東' if wlead else '東→西'}"
+        "(位相の進んだ群→遅れた群へ流れ、受けた側が加速=青) 周期2.4s",
+        "色=COI相対周波数(青=進み/赤=遅れ) — 実網の連系剛性が決める固有モード")
+    add(snap(fig), 1800)
+
+# ── 幕7: 戻るさま(東N-3・900秒の全アーク) — チャートカット
+fig = plt.figure(figsize=(12.8, 7.2), dpi=110)
+fig.patch.set_facecolor(BG)
+axc = fig.add_axes([0.10, 0.14, 0.86, 0.66]); axc.set_facecolor("#11152A")
+axc.plot(mt, mcoi, lw=2.4, color="#FFFFFF")
+axc.axhline(50.0, color="#69F0AE", lw=1.0, ls="--", alpha=0.8)
+axc.axhline(48.5, color="#C62828", lw=0.9, ls="--", alpha=0.7)
+axc.text(880, 48.53, "UFLS第1段", ha="right", color="#C62828", fontsize=9)
+for x0, x1, lb, c, ly in ((1, 5.3, "急落", "#FF8A80", 48.85),
+                          (5.3, 60, "高速登坂\n(水力LFC)", "#8FD3A5", 50.13),
+                          (60, 180, "停滞\n(速い余力枯渇)", "#FFD60A", 50.13),
+                          (180, 899, "緩やかな回復(遅い火力)", "#9EC1FF", 50.18)):
+    axc.axvspan(x0, x1, color=c, alpha=0.06)
+    axc.text((x0 + x1) / 2, ly, lb, ha="center", color=c, fontsize=10.5,
+             fontweight="bold")
+axc.set_xlim(0, 900); axc.set_ylim(48.3, 50.45)
+axc.tick_params(colors="#8E96B8", labelsize=9)
+for sp in axc.spines.values():
+    sp.set_color("#3A4266")
+axc.set_xlabel("時間 [s]", color="#8E96B8", fontsize=10)
+fig.text(0.10, 0.930, "第7幕 — 戻るさま(東N-3・15分)", color="#69F0AE",
+         fontsize=12.5, fontweight="bold")
+fig.text(0.10, 0.875, "落ちた周波数は、余力が戻す", color="#FFFFFF",
+         fontsize=19, fontweight="bold")
+fig.text(0.10, 0.055, "COI周波数 [Hz] — 15分で49.84、50.00への完全復帰はさらに"
+         "数十分先(それが現実の速さ)", color="#8E96B8", fontsize=10)
+add(snap(fig), 2400)
 
 # ── フィナーレ
 fig, ax = canvas()
