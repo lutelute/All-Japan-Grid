@@ -56,7 +56,7 @@ from src.uc.scenario import build_national_scenario  # noqa: E402
 from src.uc.solver import solve_uc  # noqa: E402
 from src.dynamics.models.sync_generator import FUEL_DEFAULT_PARAMS  # noqa: E402
 from src.dynamics.agc import (  # noqa: E402
-    AGC30_CLASSES, FUEL_TO_CLASS, K_LOAD, S_BASE_MVA, UFLS_STEPS_HZ,
+    AGC30_CLASSES, FUEL_TO_CLASS, K_LOAD, K_SYS, S_BASE_MVA, UFLS_STEPS_HZ,
     UFLS_SHED_FRAC, LFC_KP, LFC_KI, LFC_TS, LFC_TLAG)
 
 ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
@@ -315,6 +315,7 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu, trip_top=1):
     err = np.abs(Pm0 - p_set)
     print(f"   初期化整合: max|Pe(δ0)−P_PF| = {err.max()*S_BASE_MVA:,.1f} MW "
           f"(中央値 {np.median(err)*S_BASE_MVA:,.1f} MW)")
+    B_bias = K_SYS * load0_pu * f0   # [puMW/pu速度] = COI層のBと同一(load0_puはスカラ総負荷)
     state = {"Yred": Y_pre, "stage": 0, "tripped": False}
     live = np.ones(n, bool)
     t_drop = np.full(n, np.inf)      # 各機の切離し時刻(表示マスク用)
@@ -337,7 +338,11 @@ def simulate(island, f0, machines, Em, delta0, kron, load0_pu, trip_top=1):
         dload = K_LOAD * load_now * coi_w
         dw = (pm - pe * live - Dd * w) / M - dload / Msum
         dd = omega_s * w
-        ace = coi_w
+        # LFCバグ修正(2026-08-30 第10波): ACEに周波数バイアスB[puMW/pu速度]を
+        # 乗じる。COI層(agc.py L306: ace=ptie+B·df)と同一の系統定数K_SYS。
+        # 旧実装は生のpu速度(≈-0.02)をACEにしており二次制御が実質無効だった
+        # (900sラン4本で回復せず張り付き — reports参照)。単島FFCなのでptie項なし
+        ace = B_bias * coi_w
         dzv = (ace - z) / LFC_TS
         dwi = z
         out = np.concatenate([dd, dw, dx1, dx2, ds, [dzv, dwi]])

@@ -2,8 +2,8 @@
 """周波数が戻るさまGIF — 北海道トリップ→UFLS→LFC/EDCで50.00Hzへ(2026-08-30).
 
 COI制御層(src/dynamics/agc.py・AGC30 LFC/EDC)による回復の実シミュレーション。
-多機層(AGC-N)は動揺の道具でLFC回復を再現しない(既知の限界・要調査) — 回復は
-制御層で描くのが正直な役割分担。
+多機層(AGC-N)も第10波のLFCバイアス修正(ace=B·ω)で回復を再現する(900s検証:
+47.29→49.81Hz)が、数十分スケールの完全復帰はCOI制御層で描く(計算コストの分担)。
 
 出力: docs/slides/ajg/assets/freq_recovery.gif
 """
@@ -86,7 +86,7 @@ def render(ts):
     fig.text(0.52, 0.075,
              "COI制御層(AGC30: GF+LFC+EDC・ラッチUFLS)の実シミュレーション\n"
              "回復速度はLFCレート(0.012-0.047 pu/min)が支配 — 約35分で復帰\n"
-             "多機層(AGC-N)は動揺専用でLFC回復は再現しない(役割分担・既知の限界)\n"
+             "多機層(AGC-N)も第10波LFC修正で回復するが長時間はCOI層が担当\n"
              "終端の+0.1Hzの行き過ぎはLFC積分が戻し中(そのまま開示)",
              color="#5A648F", fontsize=9.5, va="bottom")
     fig.canvas.draw()
