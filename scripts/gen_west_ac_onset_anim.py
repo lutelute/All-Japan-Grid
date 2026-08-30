@@ -34,8 +34,13 @@ h = int(np.argmax(sum(np.asarray(scn.net_demand_r[r]) for r in regions)))
 cfg = load_demand_config()
 from src.powerflow.pref_demand import pref_zone_gwh
 
-def build(freq_fix):
-    built = json.load(open(BUILT))   # 毎回ロード(reattributeのin-place汚染回避)
+PRE39 = ("/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-"
+         "project-Hayashi/b3996338-d240-4a57-8deb-7846dbc1c7a8/scratchpad/"
+         "all_pre39.json")   # git f170850 = 介入#39のデータ修復以前の正典
+
+def build(freq_fix, infeed=True, built_path=None):
+    # 毎回ロード(reattributeのin-place汚染回避)。built_path=歴史再現用
+    built = json.load(open(built_path or BUILT))
     pref_gwh,_ = pref_zone_gwh(built["nodes"], freq_fix=freq_fix)
     geom={}
     net,bus_of,_ = build_island_net("west", built["nodes"], built["edges"],
@@ -44,7 +49,8 @@ def build(freq_fix):
                       attach_mode=GEN_ATTACH_DEFAULT)
     allocate_loads(net,cfg,pref_gwh=pref_gwh)
     add_reactive_compensation(net, factor=0.8)
-    add_provisional_infeed(net)
+    if infeed:
+        add_provisional_infeed(net)
     add_per_component_slacks(net)
     fz={r: uc_snapshot(uc, scn.generators, h, region=r) for r in regions}
     for r in regions:
@@ -84,8 +90,9 @@ def iter_fields(net, kmax=6):
         if conv: break
     return frames
 
-print("build #38前..."); net0=build(False)
-print("build #38後..."); net1=build(True)
+print("build 介入前(当時の正典データ・#37/#38/#39なし)...")
+net0=build(False, infeed=False, built_path=PRE39)
+print("build 介入後(正典)..."); net1=build(True)
 f0=iter_fields(net0); f1=iter_fields(net1)
 g0, g1 = geo_of(net0), geo_of(net1)
 segs=[]
@@ -99,28 +106,38 @@ def render(phase_label, sub, k, vm, geo, conv, frames):
     ax=fig.add_axes([0,0,1,1]); ax.set_facecolor(BG)
     ax.set_xlim(128.8,139.9); ax.set_ylim(30.4,38.4)
     ax.set_aspect(1.0/np.cos(np.radians(34.5))); ax.axis("off")
-    ax.add_collection(LineCollection(segs, colors="#232A45", linewidths=0.4, alpha=0.8, zorder=1))
-    xs,ys,cs=[],[],[]
+    ax.add_collection(LineCollection(segs, colors="#2E3658", linewidths=0.5, alpha=0.9, zorder=1))
+    xs,ys,cols,devs=[],[],[],[]
+    c_ok=np.array([0.56,0.72,1.0]); c_mid=np.array([1.0,0.97,0.85])
+    c_bad=np.array([0.90,0.12,0.12])
     for b,(lon,lat) in geo.items():
         v=vm.get(b)
         if v is None: continue
-        xs.append(lon); ys.append(lat); cs.append(min(abs(v-1.0),1.0))
-    sc=ax.scatter(xs,ys,c=cs,s=6,cmap="inferno",vmin=0.0,vmax=0.6,zorder=5,linewidths=0)
+        dev=min(abs(v-1.0)/0.35, 1.0)
+        col=(c_ok+(c_mid-c_ok)*(dev/0.4) if dev<0.4
+             else c_mid+(c_bad-c_mid)*((dev-0.4)/0.6))
+        xs.append(lon); ys.append(lat); cols.append(col)
+        devs.append(abs(v-1.0))
+    ax.scatter(xs,ys,c=cols,s=9,zorder=5,linewidths=0,alpha=0.95)
     ax.text(0.03,0.95,phase_label,transform=ax.transAxes,color="#FFFFFF",
             fontsize=21,fontweight="bold",va="top")
     ax.text(0.03,0.885,sub,transform=ax.transAxes,color="#8E96B8",fontsize=12.5,va="top")
     st = "収束 ✓ 西日本フルAC成立" if conv else f"ニュートン反復 {k} 回目"
     ax.text(0.03,0.80,st,transform=ax.transAxes,
             color=("#69F0AE" if conv else "#FFD60A"),fontsize=17,fontweight="bold",va="top")
-    vmax=max(cs) if cs else 0
+    vmax=max(devs) if devs else 0
     ax.text(0.03,0.74,f"|V|の1puからの逸脱 最大 {vmax:.2f}",transform=ax.transAxes,
             color="#8E96B8",fontsize=11,va="top")
-    if not conv and phase_label.startswith("#38前"):
-        ax.annotate("軽井沢・嬬恋ポケット(50Hz設備の混入)", xy=(138.45,36.35),
-                    xytext=(132.0,36.05), color="#FF8A80", fontsize=12.5,
+    if not conv and phase_label.startswith("介入前"):
+        ax.annotate("軽井沢・嬬恋(誤帰属の50Hz設備)", xy=(138.45,36.35),
+                    xytext=(133.0,37.6), color="#FF8A80", fontsize=12,
                     fontweight="bold",
-                    arrowprops=dict(arrowstyle="->", color="#FF8A80", lw=1.4))
-    ax.text(0.03,0.03,"色=|V|の逸脱(暗=正常・明=暴走)。tolerance 1e-2 MVA / init=dc",
+                    arrowprops=dict(arrowstyle="->", color="#FF8A80", lw=1.3))
+        ax.annotate("大阪都心(上位接続の欠測)", xy=(135.5,34.75),
+                    xytext=(130.9,32.9), color="#FFB74D", fontsize=12,
+                    fontweight="bold",
+                    arrowprops=dict(arrowstyle="->", color="#FFB74D", lw=1.3))
+    ax.text(0.03,0.03,"点=バス 色=|V|の逸脱(淡青=正常 → 白 → 赤=暴走)。tolerance 1e-2 MVA / init=dc",
             transform=ax.transAxes,color="#5A648F",fontsize=9.5)
     fig.canvas.draw()
     img=np.asarray(fig.canvas.buffer_rgba())[...,:3].copy(); plt.close(fig)
@@ -129,10 +146,10 @@ def render(phase_label, sub, k, vm, geo, conv, frames):
 
 imgs=[]; durs=[]
 for i,(k,vm,conv) in enumerate(f0):
-    im=render("#38前 — 発散が育つ","誤帰属の50Hz設備がwest島に混入していた頃",k,vm,g0,conv,[])
+    im=render("介入前 — 発散が育つ","当時の正典データ(2026-08-30朝以前)・(仮)都心給電も是正も無し",k,vm,g0,conv,[])
     imgs.append(im); durs.append(1600 if i==len(f0)-1 else 750)
 for k,vm,conv in f1:
-    im=render("#38後 — 同じ系統、同じ手順","誤帰属275点を検挙(是正)しただけ",k,vm,g1,conv,[])
+    im=render("介入#37/#38/#39後 — 同じ系統、同じ手順","(仮)都心給電12件+誤帰属の是正だけ",k,vm,g1,conv,[])
     imgs.append(im); durs.append(3400 if conv else 750)
 from PIL import Image
 ims=[Image.fromarray(f) for f in imgs]

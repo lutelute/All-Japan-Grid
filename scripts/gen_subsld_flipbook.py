@@ -37,19 +37,20 @@ def caption(fr, lines, color=(255, 214, 10)):
         d.text((30, y + 30 * i - 2), t, font=font(20), fill=color)
     return fr
 
-SHOW = ("tokyo", "東京電力 三鷹台変電所", "data/subsld/tokyo/tokyo_site_af6d03102200.png")
+SHOW = ("kansai", "新生駒変電所 500/275/154/77kV — 母線9・ベイ27・変圧器3",
+        "data/subsld/kansai/kansai_site_81537a63e186.png")
 FLIP = [
-    ("okinawa", "南風原変電所",   "data/subsld/okinawa/okinawa_site_12e0c2352999.png"),
-    ("tokyo",   "大字上赤坂変電所", "data/subsld/tokyo/tokyo_site_da6cd9b9e722.png"),
-    ("kansai",  "学園前変電所",   "data/subsld/kansai/kansai_site_2f6e6aabae4b.png"),
-    ("tokyo",   "上麻生分岐所",   "data/subsld/tokyo/tokyo_site_1ebed50bbb36.png"),
-    ("tokyo",   "和田堀変電所",   "data/subsld/tokyo/tokyo_site_4e87fe9e2c07.png"),
+    ("kansai", "新奈良変電所(5階級)", "data/subsld/kansai/kansai_site_3c0fe6a96c0c.png"),
+    ("tohoku", "新庄変電所 275/154/66", "data/subsld/tohoku/tohoku_site_974f25bb3e1f.png"),
+    ("tokyo",  "西東京変電所 275/154", "data/subsld/tokyo/tokyo_site_1d18838708d5.png"),
+    ("kansai", "小曽根電力所 275/154/77", "data/subsld/kansai/kansai_site_ff3251c9a1e0.png"),
+    ("chubu",  "西名古屋変電所 275/154/77", "data/subsld/chubu/chubu_site_0bb01c8e2e01.png"),
 ]
 F = []; D = []
 b = base_frame(SHOW[2], SHOW[1], SHOW[0])
 F.append(caption(b, ["読み方① 左=構内幾何 — 衛星写真の上に敷地・母線way・ベイ(実OSM要素)"])); D.append(3200)
 F.append(caption(b, ["読み方② 右=単線結線図 — 横の太線=母線 / 縦ストローク=出線(本数=回線数)",
-                     "⧉=変圧器 / 破線=leadin根拠 / BT=バスタイ"])); D.append(3800)
+                     "二重円=変圧器 / 破線=leadin根拠 / BT=バスタイ"])); D.append(3800)
 F.append(caption(b, ["読み方③ 全要素が構造DB(node-breaker)+OSM線タグ由来 — 捏造ゼロ",
                      "根拠が無い要素は描かれない(欠測は欠測のまま見せる)"],
                  color=(105, 240, 174))); D.append(3200)
