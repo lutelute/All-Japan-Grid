@@ -211,12 +211,14 @@ def test_whatif_baselines_still_call_without_a_mode():
 
 @pytest.mark.xfail(
     strict=True,
-    reason="2026-09-01 未解決の劣化: cap の最大負荷率が 88.4% -> 318.0% になり "
-           "cap < nearest が反転した(nearest も 136.3 -> 133.3)。最悪線は "
-           "2026-08-16 導入の『同一敷地タイ(同定)』で、母線連絡に架空線の定格が "
-           "当たっている疑い。計器の artifact か接続規則の問題かは未確定 — "
+    reason="2026-09-01 真因確定・既定は据え置き: cap は『バスに集まる枝の合計容量 "
+           ">= 出力』だけを見て電圧階級を見ないため、枝が多ければ 66kV でも選ぶ。"
+           "京極発電所400MW(実系統は275kV)が札幌市南区の66kVに載り、68.6MVA定格の "
+           "同一敷地タイに218MWを流して 88.4% -> 318.0% に劣化した。是正候補 capkv は "
+           "hokkaido を 86.3%(過負荷0本)にするが east が 725.5->1031.4% と悪化する "
+           "(降圧点の欠損)ため既定は cap のまま — 島別既定の可否はオーナー判断。"
            "docs/reports/hokkaido_cap_attach_regression_2026-09-01.md。"
-           "strict=True なので直れば xpass で落ちて気づける")
+           "strict=True なので既定変更で直れば xpass で落ちて気づける")
 def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
     """既定を cap に倒したときの**実モデルの数値**を固定する。
 
@@ -265,6 +267,53 @@ def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
     assert got["cap"] == pytest.approx(88.4, abs=0.15), \
         f"既定接続規則での最大負荷率が動いた: {got['cap']}%"
     assert got["cap"] < got["nearest"], "既定ON化が改善になっていない"
+
+
+def test_capkv_keeps_large_units_off_66kv():
+    """介入#24 の欠陥(cap が電圧階級を見ない)を capkv が塞ぐこと。
+
+    cap の判定は「バスに集まる枝の**合計**容量 >= 出力」だけなので、枝が多ければ
+    66kV バスでも選ばれる。北海道では京極発電所400MW(実系統は275kV・西双葉開閉所)が
+    札幌市南区の66kVに載り、68.6MVA定格の同一敷地タイに218MWを流して318%を作った。
+    capkv は必要階級(出力を1回線で運べる最下位階級)も課すので大型機が66kVに落ちない。
+
+    数値そのものではなく**構造的な主張**を pin する(基底データの更新で桁は動くため)。
+    """
+    pytest.importorskip("pandapower")
+    pf = _pf()
+    if not Path(pf.BUILT).exists():
+        pytest.skip("built DB が無い")
+    import json as _json
+    with open(pf.BUILT, encoding="utf-8") as f:
+        db = _json.load(f)
+    nodes, edges = db["nodes"], db["edges"]
+
+    def big_on_66kv(mode):
+        net, bus_of, _ = pf.build_island_net(
+            "hokkaido", nodes, edges, pf.ISLAND_FREQ["hokkaido"], {},
+            dedup_nodes=True, site_trafos=False, deenergize_unbuilt=False)
+        pf.attach_generators(net, bus_of, nodes, "hokkaido", attach_mode=mode)
+        g = net.gen.copy()
+        g["kv"] = [float(net.bus.at[int(b), "vn_kv"]) for b in g.bus]
+        big = g[g.p_mw >= 200.0]
+        return len(big), len(big[big.kv <= 66.0])
+
+    n_big_cap, n_bad_cap = big_on_66kv("cap")
+    n_big_kv, n_bad_kv = big_on_66kv("capkv")
+
+    assert n_big_cap == n_big_kv and n_big_cap >= 5, "大型機の母数が両モードで揃わない"
+    # 欠陥が現存すること(既定は cap のまま据え置きなので、ここは 1 以上であるべき)
+    assert n_bad_cap >= 1, "cap の欠陥が消えている — 既定が変わったなら台帳を更新すること"
+    # capkv では 200MW 超が 66kV 以下に落ちない
+    assert n_bad_kv == 0, f"capkv でも大型機が66kVに載った: {n_bad_kv}台"
+
+
+def test_capkv_is_a_registered_mode():
+    """capkv が選択肢として提供され、既定は cap のまま据え置きであること。"""
+    pf = _pf()
+    assert "capkv" in pf.ATTACH_MODES, "capkv が ATTACH_MODES に無い"
+    assert pf.GEN_ATTACH_DEFAULT == "cap", \
+        "既定が動いた — east が悪化するため一律変更はオーナー判断が要る"
 
 
 def test_disable_switch_is_documented_in_the_ledger():

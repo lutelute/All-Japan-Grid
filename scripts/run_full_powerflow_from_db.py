@@ -578,7 +578,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
 # ──────────────────────────────────────────────────────────────────────────
 #  Generators from OSM plants (nearest substation bus)
 # ──────────────────────────────────────────────────────────────────────────
-ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
+ATTACH_MODES = ("nearest", "site", "cap", "kvfit", "capkv")
 
 
 # 出典付き容量を潮流へ届ける（2026-08-10）。既定 ON・無効化は `--no-sourced-capacity`。
@@ -700,6 +700,8 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
       cap     バスに集まる枝の合計容量がその発電所の出力以上になる最寄りのバスへ。
       kvfit   出力を1回線で運べる最下位の階級を必要階級とし、kvfit_km 以内で
               必要階級以上の最寄りバスへ。
+      capkv   cap ∧ kvfit。合計容量と必要階級の両方を満たす最寄りバスへ
+              (2026-09-01。cap 単独の「電圧を見ない」欠陥を塞ぐ)。
     いずれも**判定基準はモデル自身のデータだけ**から作る（外部の接続電圧表を
     持ち込むと捏造になる）。評価は `docs/reports/repair_search_2026-08-09.md`。
 
@@ -746,10 +748,11 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                   f"(領土地域優先)")
         feats = list(chosen.values()) + extra
 
-    incident = bus_incident_mva(net) if attach_mode == "cap" else {}
-    ladder = sorted(class_branch_mva(net).items()) if attach_mode == "kvfit" else []
+    incident = bus_incident_mva(net) if attach_mode in ("cap", "capkv") else {}
+    ladder = (sorted(class_branch_mva(net).items())
+              if attach_mode in ("kvfit", "capkv") else [])
     # kvfit だけは大型機の引込線に相当する分だけ探索半径を伸ばす（比較の基準は 20km のまま）
-    max_km = max(20.0, kvfit_km) if attach_mode == "kvfit" else 20.0
+    max_km = max(20.0, kvfit_km) if attach_mode in ("kvfit", "capkv") else 20.0
 
     n_gen = 0
     n_moved = 0
@@ -806,6 +809,19 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                        if float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
             pick = ok[1] if ok is not None else \
                 max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
+        elif attach_mode == "capkv":
+            # cap ∧ kvfit。cap 単独は電圧階級を見ないので、枝が多ければ 66kV でも
+            # 選ばれてしまう（京極 400MW が札幌の 66kV に載り、68.6MVA の同一敷地
+            # タイに 218MW を流して 318% を作った）。kvfit 単独は逆に合計容量を
+            # 見ないので east で悪化する。両方を満たす最寄りバスを採る。
+            need = required_kv(cap, ladder)
+            ok = next((s for d, s in near
+                       if incident.get(s[1], 0.0) >= cap
+                       and float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
+            # 両立するバスが無いときは階級を優先し、同級なら受けられる容量の大きい方
+            pick = ok[1] if ok is not None else \
+                max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]),
+                                         incident.get(t[1][1], 0.0), -t[0]))[1][1]
         if pick != base_pick:
             n_moved += 1
             moved_mw += cap
