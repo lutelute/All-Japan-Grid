@@ -31,6 +31,7 @@ import pandapower.topology as top
 
 from src.reconstruction.isolator import IsolationResult
 from src.utils.logging_config import get_logger
+from src.utils.pandapower_compat import drop_buses as pp_drop_buses
 
 logger = get_logger(__name__)
 
@@ -228,7 +229,7 @@ class Simplifier:
             return
 
         try:
-            pp.drop_buses(net, buses_to_drop, drop_elements=True)
+            pp_drop_buses(net, buses_to_drop, drop_elements=True)
             logger.info(
                 "Dropped %d buses and their connected elements",
                 len(buses_to_drop),

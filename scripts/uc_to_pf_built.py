@@ -56,6 +56,7 @@ from src.powerflow.ybus_gate import ybus_gate  # noqa: E402
 from src.uc.pf_injection import inject_dispatch_by_zone, uc_snapshot  # noqa: E402
 from src.uc.scenario import build_national_scenario  # noqa: E402
 from src.uc.solver import solve_uc  # noqa: E402
+from src.utils.pandapower_compat import drop_buses as pp_drop_buses  # noqa: E402
 
 ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
 # west: 2026-08-30 介入#38(周波数跨ぎ再属性の精緻化)で長野東信〜群馬の誤帰属
@@ -286,7 +287,7 @@ def build_backbone_net(base, threshold_kv=BACKBONE_KV):
     ledger["fragment_geo_km_max"] = round(ledger["fragment_geo_km_max"], 1)
 
     drop = [int(b) for b in net.bus.index if int(b) not in bb]
-    pp.drop_buses(net, drop)          # 参照要素(線/変圧器/旧slack)ごと落ちる
+    pp_drop_buses(net, drop)          # 参照要素(線/変圧器/旧slack)ごと落ちる
     if len(net.ext_grid):
         net.ext_grid.drop(net.ext_grid.index, inplace=True)
 

@@ -43,8 +43,13 @@ def test_build_info_shape(okinawa_solved):
     # 2026-06-13 (ledger 106): mixed-voltage class expansion default-on
     # (expand_mixed_voltage) restores 154;66 etc. under-built circuits to each
     # class: 96 -> 99 buses, 84 -> 98 lines, 16 -> 18 trafos.
-    assert info["n_buses"] == 99
-    assert info["n_lines"] == 98
+    # 2026-08-16 OSM再抽出の基底データ刷新(0e1bd177 +524ノード / ec57bc3d 幽霊端点治癒)
+    # がピン後(06-13)に入り、沖縄の基底が動いた。孤立6件(奥間/与根/宮古島市/
+    # 竹富配電塔/知念久手堅/美浜三丁目)はいずれも離島または線路未マッピングで、
+    # 主成分シェアは 0.941(floor 0.80)を維持している。
+    # (99->101 buses, 98->100 lines)。n_gens / n_trafos は不変。
+    assert info["n_buses"] == 101
+    assert info["n_lines"] == 100
     assert info["n_gens"] == 22
     assert info["n_trafos"] == 18
 
@@ -53,9 +58,10 @@ def test_dc_and_ac_converge(okinawa_solved):
     _dc, dc_res, net_ac, ac_res, _info, _geom = okinawa_solved
     assert dc_res["converged"] is True
     assert ac_res["converged"] is True
-    assert len(net_ac.bus) == 99
+    assert len(net_ac.bus) == 101
     vmin = float(net_ac.res_bus.vm_pu.min())
-    # 0.647 measured: voltage propagation typed the northern 66 kV spur
+    # 0.770 measured (2026-08-16 の基底刷新前は 0.647): voltage propagation
+    # typed the northern 66 kV spur
     # that previously hid at an inferred higher class — honest sag on an
     # uncompensated radial (the backbone product model sits at 1.006)
     assert 0.60 < vmin <= 1.05

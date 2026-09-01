@@ -68,13 +68,24 @@ class TestReattributeNodeRegions:
         assert stats["n_changed"] == 0
         assert stats["skipped_freq"] == {"tokyo->chubu": 1}
 
-    def test_frequency_guard_keeps_60hz_spillover(self):
-        # 山梨(東京電力50Hz領土)へのchubu抽出はみ出し — 周波数跨ぎなので保持
-        # (既知の限界として開示。修正には運用者/周波数データが必要)
+    def test_uniform_freq_prefecture_spillover_is_fixed(self):
+        # 山梨(東京電力50Hz領土)へのchubu抽出はみ出し。
+        # 2026-08-30 介入#38(既定ON)以降、山梨は県内の周波数が一意(50Hz)で
+        # 是正先 tokyo と一致するため、跨ぎでも再属性する(freq_fixed で開示)。
+        # 旧挙動(=保持)は freq_fix=False で再現でき、混在県(長野/新潟/静岡)の
+        # ガードは test_frequency_guard_keeps_50hz_claims_in_60hz_prefectures
+        # が引き続き担保している。
         nodes = [{"lat": 35.66, "lon": 138.57, "region": "chubu"}]
         stats = reattribute_node_regions(nodes)
-        assert nodes[0]["region"] == "chubu"
-        assert stats["skipped_freq"] == {"chubu->tokyo": 1}
+        assert nodes[0]["region"] == "tokyo"
+        assert stats["freq_fixed"] == {"chubu->tokyo": 1}
+        assert stats["skipped_freq"] == {}
+
+        # 介入#38 を切れば旧挙動(周波数跨ぎはガード)に戻せること
+        old = [{"lat": 35.66, "lon": 138.57, "region": "chubu"}]
+        stats_old = reattribute_node_regions(old, freq_fix=False)
+        assert old[0]["region"] == "chubu"
+        assert stats_old["skipped_freq"] == {"chubu->tokyo": 1}
 
     def test_same_frequency_cross_island_moves_allowed(self):
         # 青函: hokkaido抽出が青森へはみ出し — 同一50Hzなので島所属ごと修正

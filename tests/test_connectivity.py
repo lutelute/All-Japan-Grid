@@ -4,7 +4,7 @@ national.py(潮流)と built_view_all / build_editor_data(表示)が同一権威
 ことで「Pages島色=潮流の島=census」を構造的に一致させる。合成入力で核心規則を高速検証:
   - 4周波数同期島(east 50Hz / west 60Hz)は近接でも AC stitch されない(非同期)
   - 越境 stitch は同一電圧階級のみ(~110m)
-  - OCCTO AC タイの定義は national.load_interconnections に一本化(7本)
+  - OCCTO AC タイの定義は national.load_interconnections に一本化(6本)
 """
 from src.powerflow.connectivity import compute_connectivity, REGION_ISLAND
 from src.powerflow.national import ISLANDS, load_interconnections
@@ -70,8 +70,14 @@ def test_ac_tie_connects_same_island_pair():
 
 
 def test_ac_tie_definitions_single_source():
-    """ACタイ定義は national.load_interconnections に一本化(7本・東北東京+西内)。"""
-    ac, _async = load_interconnections()
-    assert len(ac) == 7
+    """ACタイ定義は national.load_interconnections に一本化(6本・東北東京+西内)。
+
+    2026-08-19 正本化(介入#33)で 7→6: ic_005 中部北陸間は南福光BTB(非同期)、
+    ic_007 関西四国間は紀伊水道直流(HVDC)と判明して AC から外れ、欠落していた
+    ic_010 北陸関西間(越前嶺南線)が加わった。非同期側は 4 本になる。
+    """
+    ac, asyncs = load_interconnections()
+    assert len(ac) == 6
+    assert len(asyncs) == 4
     ids = {t["id"] for t in ac}
     assert "ic_002" in ids  # 東北-東京

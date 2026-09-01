@@ -9,6 +9,13 @@ name: tests
 on:
   push:
     branches: [main]
+    # でんき予報の自動commitは毎時 main に入るが、触るのは表示用スナップショット
+    # だけでモデルには効かない。ここだけを除外して通知の洪水を止める。
+    # data/*.geojson や docs/data/built などモデルの正典は**除外しない** —
+    # 2026-08-16 の基底刷新のように、劣化はデータ側から入ってくる。
+    paths-ignore:
+      - "docs/data/realtime/**"
+      - "docs/data/flow_map/**"
   pull_request:
   schedule:
     - cron: "0 21 * * 0"   # weekly (Mon 06:00 JST): includes the slow sweep

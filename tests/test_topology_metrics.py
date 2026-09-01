@@ -71,12 +71,18 @@ def test_okinawa_builder_pins(okinawa_topo):
     # 20->21 jct, 98->114 branches). multi_circuit/max_parallel UNCHANGED:
     # circ_eff (ledger 105) keeps the main class's original circuits, so only
     # the added low-voltage circuit (parallel=1) appears — no de-aggregation.
-    assert m["n_real_subs"] == 78
-    assert m["n_junctions"] == 21
-    assert m["n_branches"] == 114
+    # 2026-08-16 OSM再抽出の基底データ刷新(0e1bd177 +524ノード / ec57bc3d 幽霊端点治癒)
+    # がピン後(06-13)に入り、沖縄の基底が動いた。孤立6件(奥間/与根/宮古島市/
+    # 竹富配電塔/知念久手堅/美浜三丁目)はいずれも離島または線路未マッピングで、
+    # 主成分シェアは 0.941(floor 0.80)を維持している。
+    # (78->79 real, 21->22 jct, 114->115 branches, 6->7 components,
+    # 37->38 multi)。n_gens / max_parallel は不変。
+    assert m["n_real_subs"] == 79
+    assert m["n_junctions"] == 22
+    assert m["n_branches"] == 115
     assert m["n_gens"] == 22
-    assert m["n_components"] == 6
-    assert m["multi_circuit_branches"] == 37
+    assert m["n_components"] == 7
+    assert m["multi_circuit_branches"] == 38
     assert m["max_parallel"] == 5
 
 
