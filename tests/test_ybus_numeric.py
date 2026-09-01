@@ -6,10 +6,11 @@
      機械精度で一致する
   3. 条件数ゲート(ybus_gate)を通る
   4. .mat / .npz の読み戻しが元行列とバイナリ一致
-  5. 回帰 pin(okinawa: 99バス/nnz321。モデル改善時のみ意図的に更新)
+  5. 回帰 pin(okinawa: 100バス/nnz324。モデル改善時のみ意図的に更新)
 
 okinawa 島(~0.4s)で全ゲートを実行する。
 """
+import glob
 import json
 import os
 
@@ -18,7 +19,17 @@ import pytest
 import scipy.sparse as sp
 
 from scripts.gen_ybus_numeric import export_island
-from scripts.run_full_powerflow_from_db import BUILT
+from scripts.run_full_powerflow_from_db import BUILT, STRUCTURES_DIR
+
+# 銘板(v4)の前提である構造DB data/structures/*.json は .gitignore 済みで、
+# CI のチェックアウトには存在しない。無い環境では検証不能なので skip する
+# (フォールバック側 = ヒューリスティック容量は他のゲートが押さえている)。
+_HAS_STRUCTURES = any(
+    os.path.basename(_p) != "summary.json"
+    for _p in glob.glob(os.path.join(STRUCTURES_DIR, "*.json")))
+requires_structures = pytest.mark.skipif(
+    not _HAS_STRUCTURES,
+    reason="data/structures/*.json が無い(.gitignore・CI 環境)ため銘板は検証不能")
 
 
 @pytest.fixture(scope="module")
@@ -69,10 +80,12 @@ def test_bus_table_alignment(okinawa_ybus):
 def test_regression_pin_okinawa(okinawa_ybus):
     """ゲート5: 回帰 pin(意図的なモデル改善時のみ更新)。
     v5(2026-07-10): 介入#21既定ONで島内重複ノード1件がdedupされ 99→98
-    (docs/reports/default_on_decision_2026-07-10.md)。"""
+    (docs/reports/default_on_decision_2026-07-10.md)。
+    2026-08-16 OSM再抽出の基底データ刷新(0e1bd177)で 98→100・nnz 321→324
+    (n_trafo と dedup 件数は不変)。"""
     _out, meta = okinawa_ybus
-    assert meta["n_bus"] == 98
-    assert meta["nnz"] == 321
+    assert meta["n_bus"] == 100
+    assert meta["nnz"] == 324
     assert meta["n_trafo"] == 19
     assert meta["dedup_nodes"]["enabled"]
     assert meta["dedup_nodes"]["n_node_merged"] == 1
@@ -138,11 +151,14 @@ def test_v2_kron_equals_dense_schur(okinawa_ybus):
 def test_v4_version_and_changelog():
     """バージョン刻印と CHANGELOG の整合(v5: 介入#21既定ON)。"""
     from scripts.gen_ybus_numeric import YBUS_VERSION, CHANGELOG
-    assert YBUS_VERSION == "5.0.0"
+    # 5.0.1(2026-08-17): base_mva表記バグ修正(行列値は不変)
+    assert YBUS_VERSION == "5.0.1"
+    assert YBUS_VERSION in CHANGELOG, "刻印した版が CHANGELOG に無い"
     assert "5.0.0" in CHANGELOG and "既定ON" in CHANGELOG["5.0.0"]
     assert "4.0.0" in CHANGELOG and "実容量化" in CHANGELOG["4.0.0"]
 
 
+@requires_structures
 def test_v4_nameplate_loading():
     """v4: 構造DBの銘板ロード(出典必須DB existing 由来のみ)。信貴 750MVA×3 を pin。"""
     from scripts.run_full_powerflow_from_db import load_nameplates
@@ -154,6 +170,7 @@ def test_v4_nameplate_loading():
                and s["hv_kv"] == 500.0 and s["lv_kv"] == 154.0 for s in shigi)
 
 
+@requires_structures
 def test_v4_nameplate_applied_in_build(okinawa_ybus):
     """v4: build_island_net が銘板を trafo に適用する(hokkaido=南早来 600MVA×2)。
     okinawa は銘板ゼロの負の対照(meta.trafo_nameplate.n_applied == 0)。"""

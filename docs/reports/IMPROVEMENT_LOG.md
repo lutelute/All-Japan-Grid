@@ -7,6 +7,33 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出
+
+- **CI は 2026-06-27 を最後に約2か月・400回近く連続で赤**（19 failed / 1262 passed）。
+  でんき予報の自動commitが毎時 main に入るため、その都度失敗通知が出ていた。
+  Deploy to GitHub Pages は全期間 success（公開サイトは無事）
+- **pandapower 3.5 追随(9件)**: CI は `pandapower>=3.4.0` で 3.5.4 を引き、
+  トップレベルの `pp.drop_buses` が消えていた（実体は
+  `pandapower.toolbox.grid_modification`）。`src/utils/pandapower_compat.py` に
+  解決順を一本化。simplifier は drop 失敗時に「非活性化」へフォールバックする
+  設計だったため、バス数が減らず電圧が nan になる形で **5件が連鎖して落ちていた**。
+  3.12+3.5.4 の実環境を立てて、シムが解決し実際に drop できることまで確認
+- **08-16 基底刷新へのピン追随(6件)**: OSM再抽出(0e1bd177 +524ノード /
+  ec57bc3d 幽霊端点治癒)が入ったのにピンが 06-13 のままだった。沖縄
+  79/22/115/7/38(旧 78/21/114/6/37)、pipeline 101バス100線(旧 99/98)、
+  ybus 100バス nnz324(旧 98/321)、Ybus版数 5.0.1(旧 5.0.0)、AC タイ 6本(旧 7本・
+  介入#33 正本化で BTB/HVDC が非同期側へ移り越前嶺南線が加わった)
+- **CI で検証不能な2件を skip 化**: 銘板テストの前提 `data/structures/*.json` は
+  .gitignore 済みでチェックアウトに存在しない。無い環境では skip する
+- **摘出: 北海道DC で既定接続規則(cap)が 88.4% → 318.0% に劣化**。
+  `cap < nearest` が反転。CI は最初の assert で止まっていたため、**より重大な
+  cap 側の値が2か月見えていなかった**。最悪線は 08-16 導入の
+  「同一敷地タイ(同定)」で、母線連絡に架空線の定格が当たっている疑い。
+  計器の artifact か接続規則の問題かは**未確定**のためピンは更新せず、
+  `xfail(strict=True)` で開示 → `docs/reports/hokkaido_cap_attach_regression_2026-09-01.md`
+- **教訓**: 赤が常態化した CI は 1262 件通っていてもガードとして死ぬ。
+  今回の cap 劣化はその実例（負の結果として記録）
+
 ## 2026-08-20 — **Claude Fable 5** — v1.7.0出荷+AC収束の試験群(アンテナ集約の発見・west緩解の開示)
 
 - **v1.7.0出荷成立**(1e3dd4c・実DL SHA両MATCH): 正典再生成(#33新yamlでタイ構成追従)→ybus(非通電枝除外修正)→MATPOWER→バンドル(core23.0/full34.2MB)→素venv E2E→タグ→Release。MATLAB実機検証=沖縄AC2.64%(pandapowerと0.01pt一致)・北海道AC3.99%・east DC

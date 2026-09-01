@@ -19,6 +19,8 @@ import numpy as np
 import pandapower as pp
 import pandapower.topology as top
 
+from src.utils.pandapower_compat import drop_buses as pp_drop_buses
+
 # Synthetic transformer parameters by (HV kV, LV kV) class, used by
 # insert_transformers / _get_trafo_params.
 _TRAFO_PARAMS = {
@@ -493,7 +495,7 @@ def reduce_to_backbone(net, min_kv=154.0, min_keep_buses=20):
                     net.gen.at[gi, "in_service"] = False
                     n_lost += 1
 
-    pp.drop_buses(net, list(dropped))
+    pp_drop_buses(net, list(dropped))
 
     return {"effective_min_kv": eff_kv,
             "n_dropped_buses": len(dropped),
