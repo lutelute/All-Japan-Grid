@@ -589,6 +589,10 @@ def main(argv=None) -> int:
     ap.add_argument("--detour-max", type=float, default=DETOUR_MAX)
     ap.add_argument("--write", action="store_true",
                     help="正典へ適用(バックアップ all.json.pre_frag3.bak)。親セッション専用")
+    ap.add_argument("--islands", nargs="*", default=None,
+                    choices=["hokkaido", "east", "west", "okinawa"],
+                    help="適用(と仮計上)を島で絞る。2026-09-02: east の 17 本を適用すると east "
+                         "ピーク AC が dc_fallback に退行したため hokkaido/west のみ適用した")
     args = ap.parse_args(argv)
 
     built = json.loads(Path(args.built).read_text(encoding="utf-8"))
@@ -597,7 +601,9 @@ def main(argv=None) -> int:
     paths = rep.pop("_paths")
 
     # 適用段の候補で周波数跨ぎ枝が増えないことを仮計上
-    apply_chains = [c for isl in paths for c in paths[isl].get(args.seam_m, [])]
+    apply_chains = [c for isl in paths for c in paths[isl].get(args.seam_m, [])
+                    if args.islands is None or isl in args.islands]
+    rep["apply_islands"] = args.islands or ["hokkaido", "east", "west", "okinawa"]
     test_edges = built["edges"] + [{"a": list(c["fk"]), "b": list(c["mk"])} for c in apply_chains]
     rep["freq_crossing_edges_after"] = freq_crossing_edges(built["nodes"], test_edges)
     rep["apply_stage_m"] = args.seam_m
