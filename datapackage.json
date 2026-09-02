@@ -119,5 +119,12 @@
       "title": "Prefecture-level electricity demand FY2024 (sourced)",
       "description": "47-prefecture annual electricity demand (特別高圧/高圧/低圧/合計, GWh), extracted from METI/ANRE 電力調査統計 3-(2) 都道府県別電力需要実績 FY2024 with source URL, verbatim quotes and checksum in _meta. Used by the opt-in --pref-demand spatial demand allocation (intervention registry #19)."
     }
-  ]
+  ],
+  "osm_snapshot": {
+    "oldest": "2026-06-15T13:35:44Z",
+    "newest": "2026-06-15T14:25:30Z",
+    "n_files_with_timestamp": 76,
+    "n_files_without": 2,
+    "coverage_note": "在庫のOverpass生レスポンス(data/osm_raw/)から読めた断面時刻の範囲。基底geojsonの抽出時刻そのものではない(変換時にosm3sが落ちるため)。時刻の取れないファイルは n_files_without に計上。"
+  }
 }

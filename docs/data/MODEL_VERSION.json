@@ -81,5 +81,73 @@
       "elapsed_s": 0.1
     }
   },
-  "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。"
+  "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
+  "osm_snapshot": {
+    "oldest": "2026-06-15T13:35:44Z",
+    "newest": "2026-06-15T14:25:30Z",
+    "n_files_with_timestamp": 76,
+    "n_files_without": 2,
+    "coverage_note": "在庫のOverpass生レスポンス(data/osm_raw/)から読めた断面時刻の範囲。基底geojsonの抽出時刻そのものではない(変換時にosm3sが落ちるため)。時刻の取れないファイルは n_files_without に計上。",
+    "by_region": {
+      "chubu": {
+        "oldest": "2026-06-15T14:06:02Z",
+        "newest": "2026-06-15T14:10:01Z",
+        "n": 9
+      },
+      "chugoku": {
+        "oldest": "2026-06-15T13:52:00Z",
+        "newest": "2026-06-15T13:56:00Z",
+        "n": 9
+      },
+      "hokkaido": {
+        "oldest": "2026-06-15T14:15:15Z",
+        "newest": "2026-06-15T14:19:14Z",
+        "n": 9
+      },
+      "hokuriku": {
+        "oldest": "2026-06-15T13:51:00Z",
+        "newest": "2026-06-15T13:52:00Z",
+        "n": 4
+      },
+      "kansai": {
+        "oldest": "2026-06-15T13:57:00Z",
+        "newest": "2026-06-15T14:00:59Z",
+        "n": 9
+      },
+      "kyushu": {
+        "oldest": "2026-06-15T14:02:01Z",
+        "newest": "2026-06-15T14:05:00Z",
+        "n": 9
+      },
+      "okinawa": {
+        "oldest": "2026-06-15T13:44:45Z",
+        "newest": "2026-06-15T13:45:45Z",
+        "n": 4
+      },
+      "power_nodes_reinan.json": {
+        "oldest": "2026-06-15T13:35:44Z",
+        "newest": "2026-06-15T13:35:44Z",
+        "n": 1
+      },
+      "shikoku": {
+        "oldest": "2026-06-15T13:48:51Z",
+        "newest": "2026-06-15T13:49:55Z",
+        "n": 4
+      },
+      "tohoku": {
+        "oldest": "2026-06-15T14:10:01Z",
+        "newest": "2026-06-15T14:14:15Z",
+        "n": 9
+      },
+      "tokyo": {
+        "oldest": "2026-06-15T14:19:14Z",
+        "newest": "2026-06-15T14:25:30Z",
+        "n": 9
+      }
+    },
+    "files_without_timestamp": [
+      "data/osm_raw/b_summary 2.json",
+      "data/osm_raw/b_summary.json"
+    ]
+  }
 }
