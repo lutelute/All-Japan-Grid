@@ -71,6 +71,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   **追記**して上書きを避けた（スクリプトは毎回上書きする設計＝インクリメンタル適用では履歴を失う。残課題）
 - **正典の直列化を HEAD と同じコンパクト形式に戻した**（`json.dumps` 既定の区切りだと +1.4MB・差分が読めない）
 
+- **【是正】容量出典の名前照合が同名の太陽光地物に火力・原子力の容量を塗っていた**（トラックC2 の SCR レポートが検出・
+  `scripts/apply_capacity_sources.py` に燃料種ゲート `fuel_compatible`）: 高崎市の太陽光「高浜発電所」25MW×4 地物（tokyo/chubu 二重抽出で 8）に
+  関電 高浜発電所（原子力 3,392MW・公式）が、姫路第二（gas 4,119MW）の隣接ソーラー 250MW と松浦火力（2,000MW）の隣接ソーラーに各火力の容量が
+  **名前完全一致だけで**塗られ、PF の出典付き容量経路（`sourced_capacity_index`）で **east に幻の太陽光 13,569MW（新箕郷 500kV）・west に 6,119MW** が
+  立っていた。規則＝レコードに `fuel_type` があれば完全一致／無ければ IBR の feature には IBR を指す語を含むレコードだけ／不整合でも
+  **値 ≤ OSM 値（容量を増やさない是正）なら許す**（大間・浪江小高のように OSM が計画原子力の敷地を solar と誤タグした feature を公式「運転容量 0」で消す経路を残す）。
+  高浜レコードは name を D層表示名「高浜原子力発電所」に是正し fuel_type=nuclear を付与（実在の原子力 feature に初めて出典が付いた）。
+  D層 再適用: plants_all 350→**341**（誤反映 10 除去・高浜 +1）、拒否 3 件は `docs/reports/capacity_source_fuel_veto.json` に開示。
+  回帰 `tests/test_apply_capacity_fuel_veto.py`（7 件）＋関連 39 件 pass。
+  **潮流への影響（fy2023r2 ピーク・#42 後の正典・`uc_pf_built_{east,west}_sel_capfix_2026-09-02.json`）**: east AC 維持・slack 5,159.6→**5,329.4MW（+170）**・
+  vm_min 0.815→0.814、west AC 維持・slack 8,796.0→**9,280.3MW（+484）**・損失 2,491→2,976MW。幻の IBR が需要近傍の強い母線で
+  ゾーン注入を吸収し合成 slack を見かけ上 ~650MW 良くしていた＝**是正で数字は悪化するが正直な値**。#41 のゲート値（west 9,087）は
+  この誤反映込みの値として歴史記録に残す。⚠ 本日のフォーク C1/C3 の計測は是正前の D層（`git_head` 記載）
+
 ---
 
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出
