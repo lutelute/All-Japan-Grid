@@ -11,6 +11,7 @@ this directory; absence simply falls back to the voltage-class rule.
 """
 
 import argparse
+import time
 import io
 import os
 import sys
@@ -50,13 +51,34 @@ def fetch(code: str, out_dir: str) -> str | None:
     return None
 
 
+def japan_all_codes() -> list[str]:
+    """日本の陸地を覆う1次メッシュ総当たり(約800候補・実在は約180)。
+
+    1次メッシュ = 緯度40分×経度1度。code = (緯度*1.5を2桁) + (経度-100を2桁)。
+    緯度24-46N(p=36..68)×経度122-149E(q=22..49)。存在しないコードは
+    e-Stat側が404/非zipを返し fetch() が自動スキップする。
+    """
+    return [f"{p}{q}" for p in range(36, 69) for q in range(22, 50)]
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--codes", nargs="*", default=KANTO)
+    ap.add_argument("--all-japan", action="store_true",
+                    help="全国総当たり(既存ファイルはスキップ・1秒スリープ)")
     ap.add_argument("--out", default="data/external/estat")
     args = ap.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
-    ok = sum(1 for c in args.codes if fetch(c, args.out))
+    codes = japan_all_codes() if args.all_japan else args.codes
+    ok = 0
+    for i, c in enumerate(codes):
+        tgt = os.path.join(args.out, f"tblT001140S{c}.txt")
+        if args.all_japan and os.path.exists(tgt):
+            ok += 1
+            continue                      # 再実行時は取得済みを飛ばす(礼儀+冪等)
+        if fetch(c, args.out):
+            ok += 1
+        time.sleep(1.0)                   # e-Statへの礼儀(1リクエスト/秒)
     print(f"{ok}/{len(args.codes)} mesh files in {args.out}")
     return 0 if ok else 1
 

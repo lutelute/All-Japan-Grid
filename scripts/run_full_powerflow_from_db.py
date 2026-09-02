@@ -627,6 +627,21 @@ def _operator_region():
 # モデルを組む側だけがこの定数を明示的に渡す。
 GEN_ATTACH_DEFAULT = "cap"
 
+# ── 介入#41(2026-09-02): 接続規則の島別既定 ─────────────────────────
+# cap は「バスに集まる枝の合計容量」だけで選び電圧階級を見ないため、京極400MWが
+# 札幌66kVに載り北海道DCが318%化した(hokkaido_cap_attach_regression_2026-09-01.md)。
+# capkv(合計容量∧必要電圧階級)は hokkaido 318→86% / west 1103→694% と正すが、
+# east は降圧点(66↔275kV変圧器)の欠損を cap が偶然覆い隠しているため逆に悪化する
+# (725→1031%)。よって既定を島別に分ける — ISLAND_MODE(西のみAC)と同じ島別設計。
+# east は降圧点の出典つき補完が済むまで cap 据え置き(既知の欠陥として登録)。
+# 無効化: --gen-attach cap で全島旧既定に戻る。
+ISLAND_ATTACH_DEFAULT = {"hokkaido": "capkv", "west": "capkv",
+                         "east": "cap", "okinawa": "cap"}
+
+
+def attach_default_for(island: str) -> str:
+    return ISLAND_ATTACH_DEFAULT.get(island, GEN_ATTACH_DEFAULT)
+
 # ── 介入#26 の**モデル既定**（2026-08-10 オーナー承認で既定ON）─────────────
 # 発電機の計上エリアを OSM の operator タグで決める。座標 zone のままだと嶺南原発群
 # （大飯4,494MW/高浜3,392MW）と舞鶴火力1,800MW が hokuriku 計上になり出力が1/3になる
@@ -1220,7 +1235,7 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
-    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default=GEN_ATTACH_DEFAULT,
+    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default=None,
                     help="発電機の繋ぎ先の選び方(**介入#24**)。**既定 cap**"
                          "(2026-08-09 既定ON化)=バスに集まる枝の合計容量がその発電所の"
                          "出力以上になる最寄りのバスへ。旧既定 nearest は最寄りの変電所"
@@ -1395,7 +1410,9 @@ def main():
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
         gstats = attach_generators(net, bus_of, nodes, island,
-                                   attach_mode=args.gen_attach, stats=True,
+                                   attach_mode=(args.gen_attach or
+                                                attach_default_for(island)),
+                                   stats=True,
                                    use_sourced=args.sourced_capacity)
         n_gen = gstats["n_gen"]
         if gstats.get("n_sourced_cap"):

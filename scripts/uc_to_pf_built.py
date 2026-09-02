@@ -49,8 +49,7 @@ from scripts.run_full_powerflow_from_db import (  # noqa: E402
     allocate_loads,
     attach_generators,
     GEN_ATTACH_DEFAULT,
-    build_island_net,
-)
+    build_island_net, attach_default_for)
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
 from src.powerflow.ybus_gate import ybus_gate  # noqa: E402
 from src.uc.pf_injection import inject_dispatch_by_zone, uc_snapshot  # noqa: E402
@@ -555,7 +554,7 @@ def main():
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
         attach_generators(base, bus_of, built["nodes"], island,
-                          attach_mode=GEN_ATTACH_DEFAULT)
+                          attach_mode=attach_default_for(island))
         bridge_rep = None
         gen_zone_override = None
         if args.bridge:
