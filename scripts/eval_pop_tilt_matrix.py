@@ -128,6 +128,11 @@ def run_case(name: str, tilt: bool, date: str) -> dict:
     if r.returncode != 0 or not os.path.exists(out):
         return {"ok": False, "sec": sec, "cmd": " ".join(cmd),
                 "stderr_tail": r.stderr[-1500:]}
+    return summarize_case(name, out, sec)
+
+
+def summarize_case(name: str, out: str, sec) -> dict:
+    islands = CASES[name][0]
     with open(out, encoding="utf-8") as f:
         d = json.load(f)
     isl = d["islands"][islands]
@@ -153,6 +158,9 @@ def main(argv=None) -> int:
     ap.add_argument("--cases", nargs="*", default=list(CASES),
                     choices=list(CASES))
     ap.add_argument("--date", default=_dt.date.today().isoformat())
+    ap.add_argument("--assemble", action="store_true",
+                    help="潮流を解かず、SCRATCH に残る各ケースの JSON から行列を組み直す"
+                         "(長い行列を途中で止めて分割実行したときの集計用)")
     args = ap.parse_args(argv)
 
     rep = {"date": args.date, "purpose": "介入#40 再判定(全国メッシュ整備後)",
@@ -164,7 +172,17 @@ def main(argv=None) -> int:
     e = rep["etajima"]
     print(f"江田島 {e['n_target_bus']}バス: OFF {e['off']['etajima_load_mw']}MW → "
           f"ON {e['on']['etajima_load_mw']}MW (×{e['ratio_on_off']})")
-    if not args.check_only:
+    if args.assemble:
+        rep["matrix"] = {}
+        for name in CASES:
+            for tilt in (False, True):
+                key = f"{name}/{'on' if tilt else 'off'}"
+                out = os.path.join(SCRATCH, f"{name}_{'on' if tilt else 'off'}_{args.date}.json")
+                if os.path.exists(out):
+                    rep["matrix"][key] = summarize_case(name, out, sec=None)
+                else:
+                    rep["matrix"][key] = {"ok": False, "sec": None, "note": "未計測(分割実行で省略)"}
+    elif not args.check_only:
         rep["matrix"] = {}
         for name in args.cases:
             for tilt in (False, True):
@@ -191,7 +209,7 @@ def main(argv=None) -> int:
         md += ["| ケース | tilt | mode | conv | AC/DCfb | slack(MW) | vm_min |", "|---|---|---|---|---|---|---|"]
         for key, r in rep["matrix"].items():
             if not r["ok"]:
-                md.append(f"| {key} | | **失敗** | | | | |")
+                md.append(f"| {key} | | **{r.get('note') or '失敗'}** | | | | |")
                 continue
             sl = ", ".join(f"{h}:{v}" for h, v in list(r["slack_abs_mw"].items())[:3])
             vm = ", ".join(f"{h}:{v}" for h, v in list(r["vm_min"].items())[:3])
