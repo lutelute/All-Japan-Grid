@@ -1,0 +1,8663 @@
+{
+ "date": "2026-09-02",
+ "purpose": "介入#44 候補: 回線数(par)の出典補完",
+ "n_sources": 4913,
+ "sources_by_kind": {
+  "capacity_csv": 3516,
+  "keitouzu": 199,
+  "impedance_tokens": 371,
+  "kyushu_pool": 780,
+  "manual": 1,
+  "flow_records": 46
+ },
+ "n_matched_sources": 2079,
+ "match_methods": {
+  "name": 637,
+  "route": 840,
+  "name+endpoint": 602
+ },
+ "n_edges_proposed": 3844,
+ "n_edges_to_update": 421,
+ "updates_by_kv": {
+  "154.0": 52,
+  "275.0": 24,
+  "77.0": 41,
+  "66.0": 217,
+  "0.0": 15,
+  "0": 1,
+  "500.0": 22,
+  "187.0": 5,
+  "110.0": 18,
+  "220.0": 26
+ },
+ "updates_by_region": {
+  "chubu": 23,
+  "kansai": 96,
+  "tokyo": 183,
+  "tohoku": 2,
+  "chugoku": 49,
+  "shikoku": 40,
+  "kyushu": 95,
+  "hokkaido": 1
+ },
+ "updates_by_method": {
+  "name": 134,
+  "name+endpoint": 102,
+  "route": 185
+ },
+ "updates_by_source_kind": {
+  "capacity_csv": 400,
+  "flow_records": 7,
+  "impedance_tokens": 50,
+  "keitouzu": 27,
+  "kyushu_pool": 99,
+  "manual": 3
+ },
+ "par_transitions": {
+  "1->2": 383,
+  "1->4": 6,
+  "2->3": 6,
+  "1->3": 19,
+  "2->4": 7
+ },
+ "n_conflicts": 66,
+ "conflicts": [
+  {
+   "edge": 12399,
+   "name": "高津線;東意岐部支線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 117,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 89,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 90,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 91,
+     "method": "name"
+    },
+    {
+     "n": 3,
+     "conf": 2,
+     "rid": 4891,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 12931,
+   "name": "高津線;東意岐部支線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 117,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 89,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 90,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 91,
+     "method": "name"
+    },
+    {
+     "n": 3,
+     "conf": 2,
+     "rid": 4891,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 12932,
+   "name": "高津線;意岐部線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 89,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 90,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 91,
+     "method": "name"
+    },
+    {
+     "n": 3,
+     "conf": 2,
+     "rid": 4891,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 14260,
+   "name": "高津線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 89,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 90,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 91,
+     "method": "name"
+    },
+    {
+     "n": 3,
+     "conf": 2,
+     "rid": 4891,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 14092,
+   "name": "神戸港線;上筒井線",
+   "kv": 77.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 910,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 912,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 5556,
+   "name": "群馬幹線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1778,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1785,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2377,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3695,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3696,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3697,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3698,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3701,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3702,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3704,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3605,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3606,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3609,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3610,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3611,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 1,
+     "rid": 3612,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3705,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 5550,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1785,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3705,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 5555,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1785,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3705,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 5605,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 5707,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 5784,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 6151,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 19840,
+   "name": "上越幹線",
+   "kv": 154.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1779,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2372,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 1,
+     "rid": 3706,
+     "method": "name+endpoint"
+    }
+   ]
+  },
+  {
+   "edge": 5800,
+   "name": "赤城南線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1814,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 1893,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 5803,
+   "name": "赤城南線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 1814,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 1893,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 4574,
+   "name": "白石線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 3,
+     "conf": 3,
+     "rid": 2025,
+     "method": "route"
+    },
+    {
+     "n": 3,
+     "conf": 3,
+     "rid": 2782,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2024,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2026,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3527,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 4573,
+   "name": "白石線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 3,
+     "conf": 3,
+     "rid": 2025,
+     "method": "route"
+    },
+    {
+     "n": 3,
+     "conf": 3,
+     "rid": 2782,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2024,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2026,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3527,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3448,
+   "name": "北島線",
+   "kv": 154.0,
+   "par": 10,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2027,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2031,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2032,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3520,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3447,
+   "name": "島崎線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2027,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3520,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3436,
+   "name": "島崎線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2027,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3520,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3435,
+   "name": "新鶴見線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2027,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3520,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3438,
+   "name": "島崎線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2027,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3520,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3485,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3659,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3661,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3663,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3609,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3659,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3661,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3663,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3608,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3659,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3661,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3663,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3468,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3661,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3663,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3467,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3663,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3550,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3549,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3667,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3548,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3668,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3547,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3668,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3256,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3668,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3255,
+   "name": "橋本線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2037,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2038,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2595,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3660,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3662,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3664,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3665,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3666,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3668,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3522,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 4896,
+   "name": "君津線",
+   "kv": 275.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2240,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3781,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3655,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3766,
+   "name": "東富士線;富士岡線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 3792,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2529,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2536,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3771,
+   "name": "東富士線;富士岡線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 3792,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2529,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2536,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3772,
+   "name": "東富士線;富士岡線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 3792,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2529,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2536,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 3818,
+   "name": "東富士線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 3792,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2529,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2536,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 6953,
+   "name": "栃山線",
+   "kv": 154.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2647,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2656,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2657,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 14722,
+   "name": "高松線",
+   "kv": 187.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2888,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4080,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3562,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3560,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 16495,
+   "name": "高松線",
+   "kv": 187.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2888,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4080,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 3562,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 2,
+     "rid": 3560,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 14715,
+   "name": "西通線;上天神線",
+   "kv": 66.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2904,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2910,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2911,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 16488,
+   "name": "西通線;上天神線",
+   "kv": 66.0,
+   "par": 6,
+   "proposals": [
+    {
+     "n": 4,
+     "conf": 3,
+     "rid": 2904,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2910,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 2911,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 13444,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 13821,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 13822,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 14992,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 16686,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 16808,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 16894,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 16895,
+   "name": "需要家線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3017,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3018,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3019,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3021,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3062,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3063,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3064,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3066,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3075,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3179,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3184,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3187,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3197,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3210,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3280,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3281,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3282,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3297,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3312,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3313,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3316,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3327,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3339,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3340,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3452,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3454,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3455,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3466,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3478,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 3479,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2920,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2935,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2936,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2941,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2952,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2957,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2962,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2965,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2973,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2974,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2975,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2976,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2977,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2978,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2979,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2980,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2983,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2986,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2987,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2988,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2989,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 2994,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3000,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3005,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3006,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3011,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3012,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3013,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3020,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3022,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3024,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3025,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3026,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3027,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3031,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3048,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3074,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3092,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3100,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3101,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3102,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3103,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3104,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3109,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3120,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3186,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3198,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3199,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3204,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3205,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3206,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3208,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3226,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3227,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3228,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3236,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3300,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3301,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3302,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3303,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3307,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3315,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3321,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3332,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3338,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3343,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3407,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3408,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3409,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3451,
+     "method": "name"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 3463,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 17254,
+   "name": "熊本南熊本線",
+   "kv": 220.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4032,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4415,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4416,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 4904,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 17895,
+   "name": "熊本南熊本線",
+   "kv": 220.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4032,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4415,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4416,
+     "method": "route"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 4904,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 17897,
+   "name": "熊本南熊本線",
+   "kv": 220.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4032,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4415,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 4904,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 18102,
+   "name": "熊本南熊本線",
+   "kv": 220.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4032,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4413,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4415,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 4904,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 18106,
+   "name": "熊本南熊本線",
+   "kv": 220.0,
+   "par": 4,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4032,
+     "method": "name"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4413,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4415,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 4,
+     "conf": 2,
+     "rid": 4904,
+     "method": "name"
+    }
+   ]
+  },
+  {
+   "edge": 18696,
+   "name": "宇佐高田線;宇佐安心院線",
+   "kv": 66.0,
+   "par": 3,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4117,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4120,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 18389,
+   "name": "住吉土居町線",
+   "kv": 66.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4144,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4146,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 18393,
+   "name": "九州電力 土井町変電所~古門戸変電所線",
+   "kv": 0.0,
+   "par": 1,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4144,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4145,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 17281,
+   "name": "新鹿児島青戸線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4281,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4282,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4286,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4287,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 17343,
+   "name": "新鹿児島青戸線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4282,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4286,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4287,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 17346,
+   "name": "新鹿児島青戸線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4282,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4286,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4287,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 17358,
+   "name": "新鹿児島青戸線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4282,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4286,
+     "method": "route"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4287,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 15201,
+   "name": "日明西谷線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4400,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4395,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 18735,
+   "name": "日明西谷線",
+   "kv": 66.0,
+   "par": 2,
+   "proposals": [
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4400,
+     "method": "name+endpoint"
+    },
+    {
+     "n": 1,
+     "conf": 3,
+     "rid": 4395,
+     "method": "route"
+    }
+   ]
+  },
+  {
+   "edge": 18446,
+   "name": "神水保田窪線",
+   "kv": 66.0,
+   "par": 5,
+   "proposals": [
+    {
+     "n": 3,
+     "conf": 3,
+     "rid": 4436,
+     "method": "route"
+    },
+    {
+     "n": 2,
+     "conf": 3,
+     "rid": 4437,
+     "method": "name+endpoint"
+    }
+   ]
+  }
+ ],
+ "skipped_over_max_par": [],
+ "n_unmatched": 2834,
+ "unmatched_by_kind": {
+  "capacity_csv": 2213,
+  "keitouzu": 34,
+  "impedance_tokens": 168,
+  "kyushu_pool": 403,
+  "flow_records": 16
+ },
+ "unmatched_by_note": {
+  "no name": 926,
+  "unresolved endpoints": 1725,
+  "name found but kv/region mismatch": 84,
+  "name-match rejected: 4 edges none within": 9,
+  "name-match rejected: 2 edges none within": 24,
+  "name-match rejected: 5 edges none within": 13,
+  "name-match rejected: 3 edges none within": 11,
+  "name-match rejected: 1 edges none within": 31,
+  "name-match rejected: 10 edges none withi": 2,
+  "name-match rejected: 8 edges none within": 4,
+  "name-match rejected: 7 edges none within": 2,
+  "name-match rejected: 16 edges none withi": 1,
+  "name-match rejected: 6 edges none within": 2
+ },
+ "unmatched_major": [
+  {
+   "region": "chubu",
+   "line": "愛岐幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "岐阜開閉所",
+   "to": "愛知変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "岐阜連絡線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "岐阜開閉所",
+   "to": "北部変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "東栄幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "東部変電所",
+   "to": "東栄変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "豊根連絡線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "東栄変電所",
+   "to": "豊根開閉所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chugoku",
+   "line": "中国東幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "日野変電所",
+   "to": "智頭変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "東播線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "丹波線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "能勢線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北河内線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨中央線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨西線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨北線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "大河内線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新綾部線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "若狭幹線（山）",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北近江線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "丹後幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "若狭幹線（里）",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "奥多々良木線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "南大和線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "山城南線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北和泉線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "南和泉線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "信貴線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "紀北線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "変換所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨北線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "大河内開閉所(開M)",
+   "to": "山崎開閉所(開D)",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "大河内線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新綾部変電所",
+   "to": "大河内開閉所(開M)",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "山崎智頭線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "山崎開閉所(開D)",
+   "to": "智頭変電所(中国)",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "播磨北線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "発電所",
+   "to": "山崎開閉所（開4）",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "大河内線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新綾部変電所",
+   "to": "発電所",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "山城南支線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "南京都変電所",
+   "to": "１３４T（北大和線）",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "山崎智頭線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "山崎開閉所（開4）",
+   "to": "智頭変電所（中国）",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "山城南支線\n※12/6以降 北大和線（南京都→東大和）",
+   "kv": 500.0,
+   "n": 2,
+   "from": "南京都変電所",
+   "to": "134T（北大和線）\n※12/6以降 北大和線（南京都変電所→東大和開閉所（開C））",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "脊振幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "3脊振",
+   "to": "4中央",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "□□□□線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "68苓北",
+   "to": "7中九州",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "□□□□線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "17発電所",
+   "to": "9南九州",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "宮崎幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "10宮崎",
+   "to": "9南九州",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "日向幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "8東九州",
+   "to": "11ひむか",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "玄海幹線１号線",
+   "kv": 500.0,
+   "n": 1,
+   "from": "",
+   "to": "西九州",
+   "kind": "kyushu_pool",
+   "note": "name-match rejected: 2 edges none within 3.0km of resolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "kyushu_pool",
+   "note": "no name"
+  },
+  {
+   "region": "kyushu",
+   "line": "",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "西九州",
+   "kind": "kyushu_pool",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "中九州",
+   "kind": "kyushu_pool",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kyushu",
+   "line": "苓北火力線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "11発電所",
+   "to": "7中九州",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "shikoku",
+   "line": "阿波幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "shikoku",
+   "line": "南阿波幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "阿南変換所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "shikoku",
+   "line": "橘湾火力線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "<7>発電所",
+   "to": "阿南変換所",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "shikoku",
+   "line": "南阿波幹線（送電線No.5）",
+   "kv": 500.0,
+   "n": 2,
+   "from": "阿南変換所",
+   "to": "阿波変電所",
+   "kind": "keitouzu",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "shikoku",
+   "line": "橘湾火力線（送電線No.6）",
+   "kv": 500.0,
+   "n": 2,
+   "from": "発電所〈7〉",
+   "to": "阿南変換所",
+   "kind": "keitouzu",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "富岡線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "name found but kv/region mismatch"
+  },
+  {
+   "region": "tokyo",
+   "line": "新いわき線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新今市（開）",
+   "to": "新いわき（開）",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "福島中幹線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新茂木",
+   "to": "新いわき（開）",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "福島東幹線里線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新筑波",
+   "to": "新いわき（開）",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "新いわき線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新いわき開閉所",
+   "to": "新今市開閉所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "新古河線",
+   "kv": 500.0,
+   "n": 2,
+   "from": "新坂戸変電所",
+   "to": "(分岐)新古河線",
+   "kind": "impedance_tokens",
+   "note": "name-match rejected: 4 edges none within 3.0km of resolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "佐久間西幹里線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "分岐点",
+   "to": "電源名古屋変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "愛知分岐線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "愛知変電所",
+   "to": "分岐点",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "電名瀬戸線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "電源名古屋変電所",
+   "to": "瀬戸変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "南武平町松ケ枝線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "松ケ枝変電所",
+   "to": "南武平町変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "下広井南武平町線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "南武平町変電所",
+   "to": "下広井変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "東海下広井線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "下広井変電所",
+   "to": "東海変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "遠江駿遠線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "駿遠変電所",
+   "to": "分岐点",
+   "kind": "impedance_tokens",
+   "note": "name-match rejected: 2 edges none within 3.0km of resolved endpoints"
+  },
+  {
+   "region": "chubu",
+   "line": "静岡西分岐線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "静岡変電所",
+   "to": "分岐点",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokkaido",
+   "line": "苫東厚真線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "発電所",
+   "to": "南早来変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "加賀東金津線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "加賀変電所",
+   "to": "東金津変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "東金津新福井線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "東金津変電所",
+   "to": "新福井変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "越前線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "越前変電所",
+   "to": "新福井変電所",
+   "kind": "impedance_tokens",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "加賀東金津線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "加賀",
+   "to": "東金津",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "東金津新福井線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "新福井",
+   "to": "東金津",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "hokuriku",
+   "line": "越前線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "越前",
+   "to": "新福井",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "西播線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "飾磨港線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "姫路支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "姫路南支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西神戸線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "東播支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "六甲線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西神支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北神線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "三宮線",
+   "kv": 275.0,
+   "n": 3,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "宝塚線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西京都線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "宮津線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "発電所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "湖東線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "洛南支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西大阪東支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北大阪線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "淀川線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北豊中線、西大阪小曽根線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西大阪小曽根線、小曽根支線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "北豊中線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "下穂積支線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "東大阪新生駒線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "南河内支線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "紀の川線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "南大阪泉北線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "御母衣北幹線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新北陸幹線（御母衣～栗東）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "大黒部幹線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新祖山線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "発電所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "祖山線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "発電所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新北陸幹線（御母衣～成出）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "陸D",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "鳩谷支線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "発電所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新北陸幹線（成出～城端）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "開閉所",
+   "to": "陸D",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "kansai",
+   "line": "新北陸幹線（新愛本～城端）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "開閉所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "新北陸幹線（黒四～新愛本）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "発電所",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "kansai",
+   "line": "西神戸線（西神戸～44T）",
+   "kv": 275.0,
+   "n": 2,
+   "from": "西神戸変電所",
+   "to": "44T（西神戸線）",
+   "kind": "flow_records",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "北総線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "北千葉線分岐",
+   "to": "北総",
+   "kind": "capacity_csv",
+   "note": "name-match rejected: 1 edges none within 3.0km of resolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "田子倉線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "発電所",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "tokyo",
+   "line": "高瀬川線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "",
+   "to": "",
+   "kind": "capacity_csv",
+   "note": "no name"
+  },
+  {
+   "region": "tokyo",
+   "line": "梓川線",
+   "kv": 275.0,
+   "n": 1,
+   "from": "新信濃",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "佐久間東幹線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "新富士",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "name-match rejected: 7 edges none within 3.0km of resolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "横浜港北線",
+   "kv": 275.0,
+   "n": 4,
+   "from": "港北",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "新宿城南線",
+   "kv": 275.0,
+   "n": 3,
+   "from": "新宿",
+   "to": "城南",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "東京南線1・2L",
+   "kv": 275.0,
+   "n": 2,
+   "from": "京浜",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "東京南線3・4L",
+   "kv": 275.0,
+   "n": 2,
+   "from": "京浜",
+   "to": "発電所",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "南川崎線",
+   "kv": 275.0,
+   "n": 3,
+   "from": "京浜",
+   "to": "南川崎",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "南池上線",
+   "kv": 275.0,
+   "n": 3,
+   "from": "南川崎",
+   "to": "池上",
+   "kind": "capacity_csv",
+   "note": "name found but kv/region mismatch"
+  },
+  {
+   "region": "tokyo",
+   "line": "北武蔵野線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "新座",
+   "to": "練馬",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  },
+  {
+   "region": "tokyo",
+   "line": "上尾線",
+   "kv": 275.0,
+   "n": 2,
+   "from": "東京中線分岐",
+   "to": "上尾",
+   "kind": "capacity_csv",
+   "note": "unresolved endpoints"
+  }
+ ],
+ "flagged_before": {
+  "本四連系(菰池二丁目~福江町三丁目 500kV)": {
+   "n_edges": 2,
+   "par": [
+    1
+   ]
+  },
+  "上野線 275kV": {
+   "n_edges": 5,
+   "par": [
+    1
+   ]
+  },
+  "上野水道橋線 275kV": {
+   "n_edges": 6,
+   "par": [
+    1
+   ]
+  },
+  "山代~久原 500kV": {
+   "n_edges": 3,
+   "par": [
+    1
+   ]
+  }
+ },
+ "written": true,
+ "flagged_sources": {
+  "本四連系": [
+   {
+    "region": "shikoku",
+    "line": "讃岐坂出線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "",
+    "to": "",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "no name"
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐鳴門線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "",
+    "to": "送32 №69",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "四国中央東幹線（送電線No.3）",
+    "kv": 500.0,
+    "n": 2,
+    "from": "東予変電所",
+    "to": "讃岐変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 2,
+    "note": "{\"detour\": 1.0, \"straight_km\": 57.02, \"path_km\": 57.02, \"n_hops\": 1, \"from\": \"東予変電所 500kV\", \"to\": \"讃"
+   },
+   {
+    "region": "shikoku",
+    "line": "阿波幹線（送電線No.4）",
+    "kv": 500.0,
+    "n": 2,
+    "from": "阿波変電所",
+    "to": "讃岐変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 2,
+    "note": "{\"detour\": 1.0, \"straight_km\": 45.71, \"path_km\": 45.71, \"n_hops\": 1, \"from\": \"阿波変電所 500kV\", \"to\": \"讃"
+   },
+   {
+    "region": "shikoku",
+    "line": "吉野川線（送電線No.26）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "井川変電所",
+    "to": "讃岐変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.159, \"straight_km\": 15.86, \"path_km\": 18.39, \"n_hops\": 2, \"from\": \"井川変電所 187kV\", \"to\": "
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐坂出線（送電線No.27）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "坂出火力変電所",
+    "to": "讃岐変電所",
+    "kind": "keitouzu",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "香川線（送電線No.29）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "香川変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.191, \"straight_km\": 8.14, \"path_km\": 9.69, \"n_hops\": 2, \"from\": \"讃岐変電所 187kV\", \"to\": \"香"
+   },
+   {
+    "region": "shikoku",
+    "line": "麻線（送電線No.30）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "麻変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.106, \"straight_km\": 17.84, \"path_km\": 19.72, \"n_hops\": 2, \"from\": \"讃岐変電所 187kV\", \"to\": "
+   },
+   {
+    "region": "shikoku",
+    "line": "高松線（送電線No.31）",
+    "kv": 187.0,
+    "n": 4,
+    "from": "讃岐変電所",
+    "to": "高松変電所",
+    "kind": "keitouzu",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.008, \"straight_km\": 14.26, \"path_km\": 14.37, \"n_hops\": 2, \"from\": \"讃岐変電所 187kV\", \"to\": "
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐鳴門線（送電線No.32）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "讃岐鳴門線 №69分岐点",
+    "kind": "keitouzu",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐鳴門線（送電線No.32）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐鳴門線 №69分岐点",
+    "to": "鳴門変電所",
+    "kind": "keitouzu",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "大川支線（送電線No.33）",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐鳴門線 №69分岐点",
+    "to": "大川変電所",
+    "kind": "keitouzu",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "kansai",
+    "line": "西播東岡山線",
+    "kv": 500.0,
+    "n": 2,
+    "from": "西播変電所",
+    "to": "東岡山変電所(中国)",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 1,
+    "note": "{\"detour\": 1.0, \"straight_km\": 36.64, \"path_km\": 36.64, \"n_hops\": 1, \"from\": \"西播変電所 500kV\", \"to\": \"東"
+   },
+   {
+    "region": "chugoku",
+    "line": "新岡山幹線",
+    "kv": 500.0,
+    "n": 2,
+    "from": "新岡山変電所",
+    "to": "東岡山変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 1,
+    "note": "{\"detour\": 1.0, \"straight_km\": 58.87, \"path_km\": 58.87, \"n_hops\": 1, \"from\": \"新岡山変電所 500kV\", \"to\": \""
+   },
+   {
+    "region": "chugoku",
+    "line": "東岡山連絡線",
+    "kv": 220.0,
+    "n": 2,
+    "from": "岡山変電所",
+    "to": "東岡山変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 1,
+    "note": "{\"detour\": 1.0, \"straight_km\": 21.37, \"path_km\": 21.37, \"n_hops\": 1, \"from\": \"岡山変電所 220kV\", \"to\": \"東"
+   },
+   {
+    "region": "chugoku",
+    "line": "東岡山西大寺線",
+    "kv": 110.0,
+    "n": 2,
+    "from": "東岡山変電所",
+    "to": "西大寺変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 3,
+    "note": "{\"detour\": 1.03, \"straight_km\": 25.32, \"path_km\": 26.09, \"n_hops\": 3, \"from\": \"東岡山変電所 110kV\", \"to\": "
+   },
+   {
+    "region": "chugoku",
+    "line": "南津山連絡線",
+    "kv": 110.0,
+    "n": 2,
+    "from": "東岡山変電所",
+    "to": "岡6L2分岐まで",
+    "kind": "impedance_tokens",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "四国中央東幹線",
+    "kv": 500.0,
+    "n": 2,
+    "from": "東予変電所",
+    "to": "讃岐変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 2,
+    "note": "{\"detour\": 1.0, \"straight_km\": 57.02, \"path_km\": 57.02, \"n_hops\": 1, \"from\": \"東予変電所 500kV\", \"to\": \"讃"
+   },
+   {
+    "region": "shikoku",
+    "line": "阿波幹線",
+    "kv": 500.0,
+    "n": 2,
+    "from": "阿波変電所",
+    "to": "讃岐変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 2,
+    "note": "{\"detour\": 1.0, \"straight_km\": 45.71, \"path_km\": 45.71, \"n_hops\": 1, \"from\": \"阿波変電所 500kV\", \"to\": \"讃"
+   },
+   {
+    "region": "shikoku",
+    "line": "吉野川線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "井川変電所",
+    "to": "讃岐変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.159, \"straight_km\": 15.86, \"path_km\": 18.39, \"n_hops\": 2, \"from\": \"井川変電所 187kV\", \"to\": "
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐坂出線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "坂出火力変電所",
+    "to": "讃岐変電所",
+    "kind": "impedance_tokens",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "shikoku",
+    "line": "香川線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "香川変電所",
+    "kind": "impedance_tokens",
+    "method": "route",
+    "n_edges": 4,
+    "note": "{\"detour\": 1.191, \"straight_km\": 8.14, \"path_km\": 9.69, \"n_hops\": 2, \"from\": \"讃岐変電所 187kV\", \"to\": \"香"
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐鳴門線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "讃岐鳴門線No69",
+    "kind": "impedance_tokens",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "inter",
+    "line": "本四連系線",
+    "kv": 500.0,
+    "n": 2,
+    "from": "讃岐変電所",
+    "to": "東岡山変電所",
+    "kind": "manual",
+    "method": "route",
+    "n_edges": 7,
+    "note": "{\"detour\": 1.295, \"straight_km\": 80.65, \"path_km\": 104.49, \"n_hops\": 5, \"from\": \"讃岐変電所 500kV\", \"to\":"
+   },
+   {
+    "region": "shikoku",
+    "line": "讃岐鳴門線",
+    "kv": 187.0,
+    "n": 2,
+    "from": "讃岐鳴門線№69",
+    "to": "鳴門変電所",
+    "kind": "flow_records",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   }
+  ],
+  "上野線": [
+   {
+    "region": "kansai",
+    "line": "上野線",
+    "kv": 33.0,
+    "n": 1,
+    "from": "",
+    "to": "",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "name found but kv/region mismatch"
+   },
+   {
+    "region": "kansai",
+    "line": "上野線",
+    "kv": 22.0,
+    "n": 1,
+    "from": "",
+    "to": "",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "name found but kv/region mismatch"
+   },
+   {
+    "region": "kansai",
+    "line": "千種上野線",
+    "kv": 33.0,
+    "n": 1,
+    "from": "姫CV",
+    "to": "姫CU",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "kansai",
+    "line": "安積上野線",
+    "kv": 33.0,
+    "n": 1,
+    "from": "姫CW",
+    "to": "姫CV",
+    "kind": "capacity_csv",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   },
+   {
+    "region": "tokyo",
+    "line": "上野線",
+    "kv": 275.0,
+    "n": 3,
+    "from": "北葛飾",
+    "to": "上野",
+    "kind": "capacity_csv",
+    "method": "route",
+    "n_edges": 5,
+    "note": "{\"detour\": 1.024, \"straight_km\": 17.33, \"path_km\": 17.75, \"n_hops\": 5, \"from\": \"北葛飾変電所 275kV\", \"to\":"
+   },
+   {
+    "region": "kyushu",
+    "line": "大分上野線",
+    "kv": 66.0,
+    "n": 2,
+    "from": "大分",
+    "to": "上野",
+    "kind": "kyushu_pool",
+    "method": "route",
+    "n_edges": 2,
+    "note": "{\"detour\": 1.219, \"straight_km\": 2.87, \"path_km\": 3.5, \"n_hops\": 2, \"from\": \"大分変電所 66kV\", \"to\": \"上野変"
+   }
+  ],
+  "上野水道橋線": [
+   {
+    "region": "tokyo",
+    "line": "上野水道橋線",
+    "kv": 275.0,
+    "n": 3,
+    "from": "上野",
+    "to": "水道橋",
+    "kind": "capacity_csv",
+    "method": "name+endpoint",
+    "n_edges": 6,
+    "note": ""
+   }
+  ],
+  "山代~久原": [
+   {
+    "region": "kyushu",
+    "line": "山代分岐線",
+    "kv": 66.0,
+    "n": 2,
+    "from": "武雄",
+    "to": "山代",
+    "kind": "kyushu_pool",
+    "method": "route",
+    "n_edges": 6,
+    "note": "{\"detour\": 1.04, \"straight_km\": 20.58, \"path_km\": 21.41, \"n_hops\": 5, \"from\": \"武雄変電所 66kV\", \"to\": \"山"
+   },
+   {
+    "region": "kyushu",
+    "line": "木風山代線",
+    "kv": 66.0,
+    "n": 2,
+    "from": "木風",
+    "to": "山代",
+    "kind": "kyushu_pool",
+    "method": null,
+    "n_edges": 0,
+    "note": "unresolved endpoints"
+   }
+  ]
+ },
+ "flagged_after": {
+  "本四連系(菰池二丁目~福江町三丁目 500kV)": {
+   "n_edges": 2,
+   "par": [
+    2
+   ]
+  },
+  "上野線 275kV": {
+   "n_edges": 5,
+   "par": [
+    3
+   ]
+  },
+  "上野水道橋線 275kV": {
+   "n_edges": 6,
+   "par": [
+    3
+   ]
+  },
+  "山代~久原 500kV": {
+   "n_edges": 3,
+   "par": [
+    1
+   ]
+  }
+ }
+}
