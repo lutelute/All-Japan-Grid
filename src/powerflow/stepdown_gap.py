@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import re
 import unicodedata
 from collections import defaultdict
@@ -36,6 +37,10 @@ LV_MAX_KV = 100.0       # 66/77kV 層(これ未満を低圧網とみなす)
 HV_MIN_KV = 110.0       # 縮約先の上位電圧
 STD_VK, STD_VKR = 12.0, 0.5   # 既存ヒューリスティック変圧器と同じ定数
 SN_STEP = 100.0
+# #43a の容量規則(2026-09-03): "line"=取付線の熱容量を 100MVA 刻みで切上げ(従来・既定)。
+# "prior"=出典つき銘板の電圧対別中央値(線の熱容量を上限)。既定は従来のまま — 切替は
+# 環境変数 AJG_STEPDOWN_CAPACITY=prior か apply_implicit_stepdown(capacity_rule=)。
+CAPACITY_RULE_DEFAULT = os.environ.get("AJG_STEPDOWN_CAPACITY", "line")
 
 
 def _k5(la, lo):
@@ -197,9 +202,62 @@ def reclass_unknown_kv_buses(net, unknown_kv_buses) -> List[Dict]:
     return ledger
 
 
+# ── 出典つき銘板の分布(電圧対ごと) — 推定容量の事前分布 ──────────────────
+TRAFO_SOURCES = os.path.join(os.path.dirname(__file__), "..", "..",
+                             "data", "transformer_sources.jsonl")
+_PRIOR_CACHE = None
+
+
+def sourced_capacity_prior(path: str = None) -> Dict:
+    """{(hv_kv, lv_kv): {"median","max","n"}} — `status=existing` の銘板の分布。
+
+    2026-09-03 の検証で、#43a の推定(取付線の熱容量を 100MVA 刻みで切上げ)が
+    **出典のある銘板の帯を電圧対ごとに 2〜5 倍上回る**ことが分かった
+    (275/66 で推定 1,000MVA vs 出典最大 300MVA=東川崎・取付線 1 本、
+     275/154 で推定 2,200 vs 出典最大 450)。原因は「線の熱容量」と
+    「バンク容量」の取り違えで、線は通過潮流ぶん太く、降圧バンクは
+    その地点の需要ぶんしか無い。この関数は是正のための実測事前分布を返す。
+
+    site 単位で hv_kv・lv_kv・sn_mva が揃っている existing レコードのみ使う
+    (sn_total_mva は変電所全体の総出力でバンク容量ではないため使わない)。
+    """
+    global _PRIOR_CACHE
+    if path is None and _PRIOR_CACHE is not None:
+        return _PRIOR_CACHE
+    import collections
+    import statistics
+    src = os.path.abspath(path or TRAFO_SOURCES)
+    site = collections.defaultdict(lambda: collections.defaultdict(list))
+    try:
+        with open(src, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                try:
+                    r = json.loads(line)
+                except ValueError:
+                    continue
+                if r.get("status") == "existing" and r.get("field") and "site_key" in r:
+                    site[r["site_key"]][r["field"]].append(r["value"])
+    except OSError:
+        return {}
+    by_pair = collections.defaultdict(list)
+    for v in site.values():
+        if "sn_mva" in v and "hv_kv" in v and "lv_kv" in v:
+            by_pair[(float(max(v["hv_kv"])), float(min(v["lv_kv"])))] += [
+                float(x) for x in v["sn_mva"]]
+    out = {p: {"median": statistics.median(vals), "max": max(vals), "n": len(vals)}
+           for p, vals in by_pair.items()}
+    if path is None:
+        _PRIOR_CACHE = out
+    return out
+
+
 def apply_implicit_stepdown(net, nameplates: Optional[Dict] = None,
                             region_of_bus: Optional[Callable] = None,
-                            unknown_kv_buses=None) -> List[Dict]:
+                            unknown_kv_buses=None,
+                            capacity_rule: str = CAPACITY_RULE_DEFAULT) -> List[Dict]:
     """#43a: 異階級直結の端点に kv_L バス+kv_H/kv_L 変圧器を挿入し線を付け替える。
 
     nameplates: {(region, 正規化サイト名): [{hv_kv, lv_kv, sn_mva, n_parallel}]}
@@ -249,7 +307,17 @@ def apply_implicit_stepdown(net, nameplates: Optional[Dict] = None,
                     break
         if sn is None:
             mva = sum(_line_mva(net, m["line"]) for m in items)
-            sn = max(SN_STEP, math.ceil(mva / SN_STEP) * SN_STEP)
+            line_sn = max(SN_STEP, math.ceil(mva / SN_STEP) * SN_STEP)
+            pri = (sourced_capacity_prior().get((hv_kv, lv_kv))
+                   if capacity_rule == "prior" else None)
+            if pri:
+                # 出典帯の中央値。ただし線の熱容量を超えない(過大な事前分布で
+                # 線より太い変圧器を作らない)。100MVA 刻みは踏襲
+                sn = max(SN_STEP, min(line_sn,
+                                      math.ceil(pri["median"] / SN_STEP) * SN_STEP))
+                tag = "@出典帯"
+            else:
+                sn = line_sn
         pp.create_transformer_from_parameters(
             net, hv_bus=hb, lv_bus=lb, sn_mva=sn, vn_hv_kv=hv_kv, vn_lv_kv=lv_kv,
             vkr_percent=STD_VKR, vk_percent=STD_VK, pfe_kw=0.0, i0_percent=0.0,
@@ -257,7 +325,8 @@ def apply_implicit_stepdown(net, nameplates: Optional[Dict] = None,
         ledger.append({"site": str(net.bus.at[b, "name"]), "bus": int(b), "new_bus": int(nb),
                        "hv_kv": hv_kv, "lv_kv": lv_kv, "n_lines": len(items),
                        "lines": names[:6], "sn_mva": sn, "parallel": par,
-                       "capacity": "nameplate" if tag == "@nameplate" else "estimated",
+                       "capacity": {"@nameplate": "nameplate",
+                                    "@出典帯": "prior"}.get(tag, "estimated"),
                        "lat": lat, "lon": lon})
     return ledger
 
@@ -424,6 +493,7 @@ def builder_hook(net, bus_of, nodes, edges, coord_nodes, nameplates, freq,
         def _region(b):
             return net.bus.at[b, "zone"] if "zone" in net.bus.columns else None
         ledger = apply_implicit_stepdown(net, nameplates=nameplates or None,
-                                         region_of_bus=_region, unknown_kv_buses=unknown)
+                                         region_of_bus=_region, unknown_kv_buses=unknown,
+                                         capacity_rule=CAPACITY_RULE_DEFAULT)
         reclass = getattr(net, "_stepdown_reclass", [])
     return {"line_class": stats, "implicit_stepdown": ledger, "reclass": reclass}
