@@ -37,6 +37,7 @@ os.chdir(ROOT)   # config/*.yaml は repo ルート相対で読まれる
 import networkx as nx
 import numpy as np
 import pandapower as pp
+from src.utils.pandapower_compat import select_subnet as pp_select_subnet
 import pandapower.topology as top
 from pandapower.pypower.idx_brch import F_BUS, PF, T_BUS
 
@@ -72,7 +73,7 @@ def main_component_subnet(net):
     """最大連結成分を切り出し、PTDF の参照バスとして slack を 1 枚だけ残す。"""
     g = top.create_nxgraph(net, respect_switches=False)
     main = sorted(max(nx.connected_components(g), key=len))
-    sub = pp.select_subnet(net, main, keep_everything_else=True)
+    sub = pp_select_subnet(net, main, keep_everything_else=True)
     if len(sub.ext_grid) > 1:
         sub.ext_grid = sub.ext_grid.iloc[:1]
     elif len(sub.ext_grid) == 0:

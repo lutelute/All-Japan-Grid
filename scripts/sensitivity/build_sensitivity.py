@@ -41,6 +41,7 @@ os.chdir(ROOT)   # config/*.yaml は repo ルート相対で読まれる
 import networkx as nx
 import numpy as np
 import pandapower as pp
+from src.utils.pandapower_compat import select_subnet as pp_select_subnet
 import pandapower.topology as top
 from pandapower.pypower.idx_brch import BR_X, F_BUS, T_BUS
 from pandapower.pypower.idx_bus import BASE_KV
@@ -85,7 +86,7 @@ def main_component_net(island: str, nodes, edges, cfg, pref_gwh):
 
     g = top.create_nxgraph(net, respect_switches=False)
     main = sorted(max(nx.connected_components(g), key=len))
-    sub = pp.select_subnet(net, main, keep_everything_else=True)
+    sub = pp_select_subnet(net, main, keep_everything_else=True)
     if len(sub.ext_grid) > 1:                 # PTDF は参照バス 1 枚を要する
         sub.ext_grid = sub.ext_grid.iloc[:1]
     elif len(sub.ext_grid) == 0:
