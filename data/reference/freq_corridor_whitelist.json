@@ -1,0 +1,57 @@
+{
+ "_meta": {
+  "purpose": "混在県個別化(B3)でポリゴン判定だけでは守れない越境幹線・FCの保護リスト。エッジ名の部分一致でフリップ拒否(監査/適用の両方で使用)。",
+  "verified": "2026-09-02 に docs/data/built/all.json のエッジ名と突合済み(件数は下記)"
+ },
+ "edge_name_patterns": [
+  {
+   "pattern": "安曇幹線",
+   "why": "東電PG 500kV(新秩父—新信濃)が長野領土を通過",
+   "edges_matched": 2
+  },
+  {
+   "pattern": "西群馬幹線",
+   "why": "東電PG 500kV — 長野・群馬境界帯",
+   "edges_matched": 1
+  },
+  {
+   "pattern": "神流川線",
+   "why": "東電PG 500kV(神流川揚水)",
+   "edges_matched": 1
+  },
+  {
+   "pattern": "佐久間東幹線",
+   "why": "東電PG 275kV — 富士川以西を通る50Hz幹線(河川ポリゴンでは誤切断する)",
+   "edges_matched": 6
+  },
+  {
+   "pattern": "碓氷線",
+   "why": "東電PG — 軽井沢開閉所への50Hz供給(wave6実世界裏取り)",
+   "edges_matched": 4
+  },
+  {
+   "pattern": "富士川線",
+   "why": "東電PG 154kV — 富士川水系水力(西岸の50Hz設備)",
+   "edges_matched": 1
+  },
+  {
+   "pattern": "富士川第一変電所",
+   "why": "東電の富士川水系水力系(西岸50Hz)接続線",
+   "edges_matched": 3
+  }
+ ],
+ "fc_node_patterns": [
+  {
+   "pattern": "新信濃変電所",
+   "why": "周波数変換所(50/60Hz) — 帰属固定(boundary.pyのDC tie表現と衝突させない)"
+  },
+  {
+   "pattern": "東清水変電所",
+   "why": "周波数変換所 — 同上"
+  },
+  {
+   "pattern": "佐久間周波数変換所",
+   "why": "周波数変換所 — 同上"
+  }
+ ]
+}
