@@ -2217,6 +2217,91 @@
    ],
    "remapped": [],
    "reattributed": []
+  },
+  {
+   "island": "east",
+   "comp": 168,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_sub_1233",
+     "lat": 35.98342,
+     "lon": 138.51143,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 1,
+     "name": "川上村変電所",
+     "region": "tokyo",
+     "sub_props": {
+      "kv": [
+       77.0
+      ],
+      "lines": 1,
+      "circuits": 1,
+      "circuits_src": 0,
+      "wires_max": null,
+      "trafo": 0
+     }
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "applied": "2026-09-02 incremental(--mixed-pref --write 同時)"
+  },
+  {
+   "island": "west",
+   "comp": 11,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_35.2583:139.0486:0",
+     "lat": 35.25834,
+     "lon": 139.04862,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.2583:139.0486:0",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.2506:139.0609:0",
+     "lat": 35.2506,
+     "lon": 139.06087,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.2506:139.0609:0",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.2477:139.0597:0",
+     "lat": 35.24767,
+     "lon": 139.05967,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.2477:139.0597:0",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.2552:139.0474:0",
+     "lat": 35.25524,
+     "lon": 139.04744,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.2552:139.0474:0",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "applied": "2026-09-02 incremental(--mixed-pref --write 同時)"
   }
  ],
  "removed_edges": [
@@ -3105,7 +3190,44 @@
    "kv": 0.0,
    "par": 1,
    "name": "中部送電線_18"
+  },
+  {
+   "a": [
+    35.2506,
+    139.06087
+   ],
+   "b": [
+    35.24767,
+    139.05967
+   ],
+   "main": true,
+   "kv": 0.0,
+   "par": 1,
+   "name": "中部送電線_185"
+  },
+  {
+   "a": [
+    35.25834,
+    139.04862
+   ],
+   "b": [
+    35.25524,
+    139.04744
+   ],
+   "main": true,
+   "kv": 0.0,
+   "par": 1,
+   "name": "中部送電線_184"
   }
  ],
- "self_loops_removed": 9
+ "self_loops_removed": 9,
+ "runs": [
+  {
+   "date": "2026-09-02",
+   "fragments": 2,
+   "dropped_nodes": 5,
+   "removed_edges": 2,
+   "note": "介入#42 適用時に同経路の #35 が保留断片2件を同時適用。本台帳は 08-27 分に追記(上書きしない)"
+  }
+ ]
 }

@@ -92,7 +92,7 @@ rule fragment_recovery_chains:
 rule node_hygiene:
     input: f"{STAMP}/06_fragment_chains.done"
     output: touch(f"{STAMP}/07_node_hygiene.done")
-    shell: f"{PY} scripts/apply_node_hygiene.py --write"
+    shell: f"{PY} scripts/apply_node_hygiene.py --mixed-pref --write"   # #35 + #42
 
 
 rule satellite_connections:

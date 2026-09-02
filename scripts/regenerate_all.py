@@ -57,8 +57,10 @@ STEPS = [
     # 衛星判読パイロットc1で発見した「断片=登録人工物」を機械判定して双子側へ寄せる
     # (完全双子=削除/近傍双子≤150m・kv一致=リマップ/残余junction=再帰属)。
     # 名前つき未解決が残る断片はスキップ(部分手術しない)。冪等(適用後は対象が消える)
+    # 介入#42: 混在県個別化(2026-09-02)も同経路(--mixed-pref)。境界資産+切断ガードで
+    # 長野/新潟/静岡の跨ぎ候補を再帰属(帳簿=fragments/mixed_pref_ledger.json)。冪等
     ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
-                      "--write"], False),
+                      "--mixed-pref", "--write"], False),
     # 介入#36: 衛星判読クラスの接続(オーナー承認制・スクリプト内CONNECTIONS表が
     # 承認台帳)。approved のみ適用・冪等。第1号=小千谷66kV(衛星のみ証拠)
     ("satellite_connections", [sys.executable,

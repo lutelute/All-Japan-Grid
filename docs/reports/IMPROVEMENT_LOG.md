@@ -57,6 +57,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   §8 Snakemake DAG（-n/light/all/--rulegraph）・§9 OSM 断面時刻（被覆の限界つき）・
   §10 検証行列 CI（閾値表・所要時間・銘板無し実測）を追記
 
+- **【トラックB③】介入#42 混在県個別化を採用・正典適用**（フォーク trackB3、`mixed_pref_gate_2026-09-02.md`）:
+  #6/#38 が県単位で丸ごと保持していた長野・新潟・静岡の跨ぎ候補 243 ノードを、出典つき境界資産
+  （長野 50Hz 供給域＝一次/二次別・新潟 60Hz 飛び地・静岡＝富士川主流 W05）＋越境幹線/FC ホワイトリスト＋
+  **切断ガード（仮適用で新規の島跨ぎが生じるフリップを拒否して反復・新規 0 を構造保証）**で再属性。
+  実装は `region_attribution.plan_mixed_pref_flips/apply_mixed_pref_flips` に一本化し、監査スクリプトは呼ぶだけ
+  （写し禁止をテストで固定）。正典適用は #35 と同経路 `apply_node_hygiene.py --mixed-pref --write`（既定 ON・STEPS/Snakefile 組込）。
+  **フリップ 108**（tokyo→chubu 69・chubu→tokyo 20・chubu→tohoku 19）・拒否 38・新規切断 0。
+  効果＝跨ぎエッジ 127→**99**・本系統外ノード 1,292→**1,273**・**west ピーク AC slack −291MW（9,087→8,796）・損失 −291MW**・
+  east/hokkaido AC 維持。3段比較（pre/mid/post）で #42 単独の効果を分離した
+- **同経路の副作用を開示**: `--write` 時に #35 が保留していた断片 2 件（川上村変電所の完全双子 1＋箱根付近 chubu junction 4・
+  余剰エッジ 2）が同時に適用された（規定どおりの挙動・regen でも起きる）。`node_hygiene_ledger.json` は 08-27 分に
+  **追記**して上書きを避けた（スクリプトは毎回上書きする設計＝インクリメンタル適用では履歴を失う。残課題）
+- **正典の直列化を HEAD と同じコンパクト形式に戻した**（`json.dumps` 既定の区切りだと +1.4MB・差分が読めない）
+
 ---
 
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出

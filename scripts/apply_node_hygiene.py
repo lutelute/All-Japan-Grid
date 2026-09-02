@@ -28,9 +28,16 @@ tokyo対応物(同名変電所/junction)を持つ=**23ノード全部が二重�
 
 冪等: 適用後の再実行では suspect が消えるため何もしない。regen(STEPS)組込前提。
 
+介入#42(2026-09-02・混在県個別化): 同じ経路(--mixed-pref)で、混在県(長野・新潟・
+静岡)の周波数跨ぎ候補ノードを境界資産+ホワイトリスト+切断ガードで再帰属する
+(実装は src/powerflow/region_attribution.apply_mixed_pref_flips・ここは呼ぶだけ)。
+帳簿=docs/data/fragments/mixed_pref_ledger.json(全フリップ・逆再生で復元可能)、
+バックアップ=all.json.pre_mixed.bak、マーカー mixed_pref="intervention42"。冪等。
+
 usage:
   PYTHONPATH=. python3 scripts/apply_node_hygiene.py           # 判定のみ
   PYTHONPATH=. python3 scripts/apply_node_hygiene.py --write   # 適用
+  PYTHONPATH=. python3 scripts/apply_node_hygiene.py --mixed-pref --write   # #35+#42
 """
 from __future__ import annotations
 
@@ -52,6 +59,9 @@ ISLAND_OF = {"hokkaido": "hokkaido", "tohoku": "east", "tokyo": "east",
              "chugoku": "west", "shikoku": "west", "kyushu": "west",
              "okinawa": "okinawa"}
 MATCH_M = 150.0   # 近傍双子の許容距離(m)。c1実測: 名前つき最大117m・junction145m
+# 介入#42 の既定。採用ゲート(docs/reports/mixed_pref_gate_2026-09-02.md)の結果で決める:
+#   合格 → True(STEPS/Snakefile は明示 --mixed-pref も渡す) / 不合格 → False
+MIXED_PREF_DEFAULT = True    # 採用 2026-09-02(ゲート全合格・west slack -291MW)
 
 
 def k5(lat, lon):
@@ -110,8 +120,12 @@ def build_components(nodes, edges, island):
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--write", action="store_true")
+    ap.add_argument("--mixed-pref", action=argparse.BooleanOptionalAction,
+                    default=MIXED_PREF_DEFAULT,
+                    help="介入#42 混在県個別化(長野/新潟/静岡の跨ぎ候補を境界資産で"
+                         "再帰属)。--no-mixed-pref で無効化(回帰比較用)")
     args = ap.parse_args()
 
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
@@ -214,11 +228,64 @@ def main() -> int:
 
     if not args.write:
         print("(判定のみ。適用は --write)")
-        return 0
-    if not plans:
+    elif not plans:
         print("適用対象なし(冪等)")
-        return 0
+    else:
+        _apply_hygiene(built, nodes, edges, plans, isl_grid)
 
+    # ── 介入#42: 混在県個別化(#35 と同じ正典適用経路・冪等) ──
+    if args.mixed_pref:
+        _mixed_pref_stage(built, write=args.write)
+    return 0
+
+
+def _mixed_pref_stage(built, write: bool) -> None:
+    from src.powerflow.region_attribution import (
+        MIXED_PREF_MARK, apply_mixed_pref_flips, plan_mixed_pref_flips)
+    nodes, edges = built["nodes"], built["edges"]
+    mp = plan_mixed_pref_flips(nodes, edges)
+    print(f"介入#42 混在県個別化: ガード対象{len(mp['guarded'])} → フリップ計画"
+          f"{len(mp['plan'])} (WL拒否{len(mp['veto_whitelist'])}・切断ガード拒否"
+          f"{len(mp['veto_crossing'])}・ガード維持{len(mp['kept'])}) / "
+          f"既存跨ぎ{mp['pre_cross_edges']}・新規切断{mp['new_cross_edges']}")
+    if not write:
+        return
+    if not mp["plan"]:
+        print("  適用対象なし(冪等)")
+        return
+    if mp["new_cross_edges"] != 0:
+        print("  ★適用しない: 切断ガードが収束せず新規跨ぎが残る")
+        return
+    bak = ROOT / "docs/data/built/all.json.pre_mixed.bak"
+    bak.write_text(json.dumps(built, ensure_ascii=False))
+    res = apply_mixed_pref_flips(nodes, edges)
+    ledger = {"note": ("介入#42 混在県個別化(2026-09-02)。根拠=data/reference/"
+                       "freq_boundary_mixed.geojson(出典つき境界)+freq_corridor_whitelist.json。"
+                       "復元=本台帳 flips の to→from 逆再生 + all.json.pre_mixed.bak"),
+              "marker": MIXED_PREF_MARK,
+              "fixed": res["fixed"], "vetoed": res["vetoed"],
+              "pre_cross_edges": res["plan"]["pre_cross_edges"],
+              "new_cross_edges": res["plan"]["new_cross_edges"],
+              "flips": res["flips"],
+              "vetoed_whitelist": [
+                  {"id": nodes[i].get("id"), "name": nodes[i].get("name"), "why": w}
+                  for i, w in sorted(res["plan"]["veto_whitelist"].items())],
+              "vetoed_crossing": [
+                  {"id": nodes[i].get("id"), "name": nodes[i].get("name"), "cut_edge": w}
+                  for i, w in sorted(res["plan"]["veto_crossing"].items())]}
+    (ROOT / "docs/data/built/all.json").write_text(
+        json.dumps(built, ensure_ascii=False))
+    dst = ROOT / "docs/data/fragments/mixed_pref_ledger.json"
+    dst.write_text(json.dumps(ledger, ensure_ascii=False, indent=1))
+    print(f"★正典適用: 介入#42 フリップ{len(res['flips'])}ノード {res['fixed']} "
+          f"(バックアップ={bak.name})")
+    print(f"-> {dst.relative_to(ROOT)}")
+
+
+def _apply_hygiene(built, nodes, edges, plans, isl_grid) -> None:
+    n_d = sum(len(p["drops"]) for p in plans)
+    n_r = sum(len(p["remaps"]) for p in plans)
+    n_a = sum(len(p["reattrs"]) for p in plans)
     bak = ROOT / "docs/data/built/all.json.pre_hygiene.bak"
     bak.write_text(json.dumps(built, ensure_ascii=False))
 
@@ -351,7 +418,6 @@ def main() -> int:
           f"(自己ループ{ledger['self_loops_removed']}) "
           f"(バックアップ={bak.name}・介入#35)")
     print(f"-> {dst.relative_to(ROOT)}")
-    return 0
 
 
 if __name__ == "__main__":
