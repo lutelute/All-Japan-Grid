@@ -63,14 +63,17 @@ def branch_capacity_mw(sub, n_branch: int) -> np.ndarray:
 
 
 def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
-        cap_factor: float = 1.0) -> dict:
+        cap_factor: float = 1.0, cap_calib=None) -> dict:
     # 座標が要るので bus_of（built ノード索引 → バス）を自前で受け取る
     from src.powerflow.pipeline import add_reactive_compensation
     from scripts.run_full_powerflow_from_db import (
         GEN_ATTACH_DEFAULT, attach_default_for, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
         attach_generators, balance_by_zone,
         build_island_net)
-    net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
+    # cap_calib: 介入#45 線路容量の運用容量較正(エリア×階級の係数を max_i_ka に乗じてから
+    # 容量を測る。None=ビルダー既定/環境変数 AGJ_CAP_CALIB)。cap_factor(単一係数)と併用可
+    net, bus_of, bstats = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {},
+                                           cap_calib=cap_calib)
     attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
@@ -152,6 +155,8 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
         "sec_hosting_capacity_all_buses": round(sec_hc, 4),
         "n_branch_over_capacity": n_over, "n_branch_capacity_known": n_cap_known,
         "capacity_factor": cap_factor,
+        "cap_calib": bool(bstats.get("cap_calib")),
+        "cap_calib_ledger": (bstats.get("cap_calib_ledger") or {}).get("by_source"),
         "min_kv": min_kv, "n_branch_in_scope": int(in_scope.sum()),
         "n_bus_computable": int(ok.sum()),
         "equivalent_ac_solves": int(len(hc)),
@@ -179,6 +184,9 @@ def main() -> None:
                     help="線路容量に掛ける較正係数(公表値との比較では約0.5)。既定1.0=未適用")
     ap.add_argument("--min-kv", type=float, default=154.0,
                     help="制約に取る枝の下限電圧(既定154kV。下位系は対象外)")
+    ap.add_argument("--cap-calib", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#45 線路容量の運用容量較正(config/line_capacity_calibration.yaml・"
+                         "エリア×階級の比)。既定=ビルダー既定(OFF)/環境変数 AGJ_CAP_CALIB")
     ap.add_argument("--date", default=None)
     args = ap.parse_args()
     date = args.date or subprocess.run(["date", "+%Y-%m-%d"], capture_output=True, text=True).stdout.strip()
@@ -190,7 +198,8 @@ def main() -> None:
     from src.powerflow.pref_demand import pref_zone_gwh
     pref_gwh, _ = pref_zone_gwh(nodes)
 
-    res = [run(i, nodes, edges, cfg, pref_gwh, args.min_kv, args.capacity_factor) for i in (args.islands or list(ISLAND_FREQ.keys()))]
+    res = [run(i, nodes, edges, cfg, pref_gwh, args.min_kv, args.capacity_factor, args.cap_calib)
+           for i in (args.islands or list(ISLAND_FREQ.keys()))]
     # 制約対象の枝が無い島（沖縄は最高 132kV なので 154kV しきい値では対象外）は図から外す
     drawable = [r for r in res if r["n_branch_in_scope"] > 0 and np.isfinite(r["stress"]).any()]
 

@@ -479,8 +479,21 @@ def main():
                          "追従させる(コンデンサバンクの投入/開放運用のモデル化)。"
                          "従来はbase断面で固定張りのため軽負荷時刻に過補償過電圧"
                          "(t=3 vm 2.99)を生んでいた。既定OFF(正典比較性)")
+    ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
+                    default=None,
+                    help="介入#43a 異階級直結線の暗黙降圧(2026-09-02)。省略時=ビルダー既定"
+                         "(run_full_powerflow_from_db.IMPLICIT_STEPDOWN_DEFAULT)")
+    ap.add_argument("--lv-aggregate", type=float, default=None, metavar="R_KM",
+                    help="介入#43b 降圧点無し66/77kV網の帳簿付き縮約(≤R km)。0=無効。"
+                         "省略時=ビルダー既定(LV_AGGREGATE_DEFAULT_KM)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
+    from scripts.run_full_powerflow_from_db import (  # noqa: E402
+        IMPLICIT_STEPDOWN_DEFAULT, LV_AGGREGATE_DEFAULT_KM)
+    if args.implicit_stepdown is None:
+        args.implicit_stepdown = IMPLICIT_STEPDOWN_DEFAULT
+    if args.lv_aggregate is None:
+        args.lv_aggregate = LV_AGGREGATE_DEFAULT_KM
 
     print(f"UC求解中... ({args.scenario})")
     scn = build_national_scenario(scenario=args.scenario)
@@ -549,7 +562,11 @@ def main():
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom,
             dedup_nodes=args.dedup_nodes, site_trafos=args.site_trafos,
             deenergize_unbuilt=args.deenergize_unbuilt,
-            freq_fix=args.freq_fix_reattr)
+            freq_fix=args.freq_fix_reattr,
+            implicit_stepdown=args.implicit_stepdown)
+        if bstats.get("n_implicit_stepdown"):
+            print(f"  介入#43a implicit-stepdown: {bstats['n_implicit_stepdown']}サイト"
+                  f"(銘板{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']=='nameplate')})")
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
@@ -601,6 +618,14 @@ def main():
                 print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
                       f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW "
                       f"(実経路未確認・全件台帳)")
+        lv_agg_ledger = None
+        if args.lv_aggregate and args.lv_aggregate > 0:
+            from src.powerflow.stepdown_gap import aggregate_lv_islands
+            lv_agg_ledger = aggregate_lv_islands(base, r_max_km=args.lv_aggregate)
+            print(f"  介入#43b lv-aggregate(R≤{args.lv_aggregate}km): "
+                  f"{lv_agg_ledger['n_aggregated']}成分/{lv_agg_ledger['aggregated_mw']:,.0f}MW"
+                  f" 集約・未給電網 {lv_agg_ledger['n_unserved']}成分/"
+                  f"{lv_agg_ledger['unserved_mw']:,.0f}MW")
         add_per_component_slacks(base)
         boundary_pts, boundary_flows = [], {}
         if args.boundary_injection:
@@ -646,6 +671,8 @@ def main():
         isl_rep = {"mode": mode, "regions": regions,
                    "model": args.model,
                    "provisional_infeed": infeed_ledger,  # 介入#37 台帳((仮)明記)
+                   "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
+                   "lv_aggregate": lv_agg_ledger,        # 介入#43b 台帳(None=無効)
                    "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,

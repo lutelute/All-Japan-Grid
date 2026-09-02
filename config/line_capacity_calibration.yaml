@@ -1,0 +1,71 @@
+# 線路容量の運用容量較正係数（介入#45・2026-09-02）
+#
+# factor = 公表運用容量 ÷ モデル理論容量(√3·V·I_model·回線数) の中央値（無次元）。
+# 生値（線路別の設備容量・運用容量）は各社 All-Rights-Reserved のため**比だけ**を置く。
+# 生成: scripts/capacity/calibrate_line_capacity.py --write-config（data/external が要る）。
+# 無いエリア/階級は src/powerflow/line_capacity.py が「全国中央値 → 全体中央値」へ
+# フォールバックし、帳簿(net._cap_calib_ledger)に fallback を記録する。
+date: '2026-09-02'
+unit: dimensionless
+min_samples: 3
+model_ika_ka: {66: 0.6, 77: 0.7, 110: 0.9, 132: 1.2, 154: 1.0, 187: 1.5, 220: 1.8, 275: 2.0, 500: 4.0}
+overall_median_factor: 0.556
+national:
+  66: {median_factor: 0.627, n_areas: 3, spread: 0.182, within_band: false}
+  77: {median_factor: 0.407, n_areas: 1, spread: 0.0, within_band: false}
+  110: {median_factor: 0.271, n_areas: 2, spread: 0.035, within_band: false}
+  154: {median_factor: 0.679, n_areas: 2, spread: 0.001, within_band: false}
+  187: {median_factor: 0.648, n_areas: 1, spread: 0.0, within_band: false}
+  220: {median_factor: 0.512, n_areas: 1, spread: 0.0, within_band: false}
+  275: {median_factor: 0.493, n_areas: 2, spread: 0.088, within_band: false}
+  500: {median_factor: 0.593, n_areas: 4, spread: 0.585, within_band: false}
+areas:
+  hokkaido: {}   # 公表容量の入手無し → national へフォールバック
+  tohoku: {}   # 公表容量の入手無し → national へフォールバック
+  tokyo:
+    66: {factor: 0.758, n: 988, p25_p75: [0.539, 1.254]}
+    154: {factor: 0.678, n: 210, p25_p75: [0.443, 1.125]}
+    275: {factor: 0.449, n: 81, p25_p75: [0.349, 0.907]}
+    500: {factor: 0.95, n: 39, p25_p75: [0.475, 0.95]}
+  chubu: {}   # 公表容量の入手無し → national へフォールバック
+  hokuriku: {}   # 公表容量の入手無し → national へフォールバック
+  kansai:
+    77: {factor: 0.407, n: 1020, p25_p75: [0.257, 0.647]}
+    154: {factor: 0.679, n: 94, p25_p75: [0.44, 0.926]}
+    275: {factor: 0.537, n: 63, p25_p75: [0.429, 1.102]}
+    500: {factor: 0.475, n: 27, p25_p75: [0.442, 0.475]}
+  chugoku: {}   # 公表容量の入手無し → national へフォールバック
+  shikoku:
+    66: {factor: 0.576, n: 424, p25_p75: [0.423, 0.911]}
+    110: {factor: 0.254, n: 13, p25_p75: [0.207, 0.424]}
+    187: {factor: 0.648, n: 30, p25_p75: [0.451, 0.914]}
+    500: {factor: 0.365, n: 5, p25_p75: [0.297, 0.413]}
+  kyushu:
+    66: {factor: 0.627, n: 496, p25_p75: [0.437, 0.948]}
+    110: {factor: 0.289, n: 31, p25_p75: [0.283, 0.49]}
+    220: {factor: 0.512, n: 66, p25_p75: [0.393, 0.791]}
+    500: {factor: 0.712, n: 14, p25_p75: [0.475, 0.804]}
+  okinawa: {}   # 公表容量の入手無し → national へフォールバック
+sources:
+  kansai:
+    title: "関西電力送配電 空容量マッピング（154kV以上・154kV未満の線路一覧）"
+    urls:
+      - https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
+      - https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_line.csv
+    retrieved: '2026-09-02'
+  shikoku:
+    title: "四国電力送配電 系統空容量（基幹・ローカル 送電線）"
+    urls:
+      - https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_line_202608_08.csv
+      - https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_local0N_line_202608_08.csv
+    retrieved: '2026-09-02'
+  kyushu:
+    title: "九州電力送配電 予想潮流・空容量一覧表（31地区・PDF 判読プール）"
+    urls:
+      - https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure
+    retrieved: '2026-09-02'
+  tokyo:
+    title: "東京電力パワーグリッド 送電線 予想潮流・空容量（基幹＋13地域 CSV）"
+    urls:
+      - https://www.tepco.co.jp/pg/consignment/system/
+    retrieved: '2026-09-02'

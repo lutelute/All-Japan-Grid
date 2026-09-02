@@ -146,7 +146,7 @@ def _ac_loading_map(net_ac, elems, cap, mon):
 
 def run(island, nodes, edges, cfg, pref_gwh, args) -> dict:
     t_all = time.perf_counter()
-    net = production_net(island, nodes, edges, cfg, pref_gwh)
+    net = production_net(island, nodes, edges, cfg, pref_gwh, cap_calib=args.cap_calib)
     sub, _main = main_component_subnet(net)
     pp.rundcpp(sub)
     ppc = sub._ppc
@@ -290,6 +290,7 @@ def run(island, nodes, edges, cfg, pref_gwh, args) -> dict:
         "n_outage_evaluated": int(ok.sum()), "n_islanding": int(res_p.islanding.sum()),
         "n_islanding_pseudo": n_pseudo, "single_circuit": not args.no_single_circuit,
         "min_kv": min_kv, "min_kv_requested": args.min_kv, "capacity_factor": args.cap_factor,
+        "cap_calib": bool(getattr(sub, "_cap_calib", False) or args.cap_calib),
         "n_monitor_physical": int(mon_phys.sum()), "n_monitor_all": int(mon_all.sum()),
         "base_n_over_physical": int(res_p.base_over.sum()), "base_n_over_all": int(res_a.base_over.sum()),
         "base_max_loading_physical_pct": round(float(np.nanmax(np.where(mon_phys, res_p.base_loading, 0))), 1),
@@ -398,7 +399,9 @@ def write_md(res, date, path, args):
                  f"{r['islanding_n_over_100mw']} | {r['sec_build_ptdf']:.1f}s | {r['sec_screen_physical']:.1f}s |")
     L += ["", f"監視は ≥{args.min_kv:.0f}kV（最高階級が届かない島はその階級: "
           + "、".join(f"{r['island']} {r['min_kv']:.0f}kV" for r in res)
-          + f"）・容量係数 {args.cap_factor}（理論値 √3·V·I に対する較正。公表運用容量との比較では約 0.5）。", ""]
+          + f"）・容量係数 {args.cap_factor}（理論値 √3·V·I に対する較正。公表運用容量との比較では約 0.5）"
+          + ("・**介入#45 運用容量較正 ON**（config/line_capacity_calibration.yaml のエリア×階級係数）" if args.cap_calib else "")
+          + "。", ""]
     for r in res:
         L += [f"## {r['island']}", "",
               f"要素の内訳: " + "、".join(f"{CLASS_LABEL.get(k, k)} {v:,}" for k, v in r["elem_class_counts"].items()), "",
@@ -444,6 +447,9 @@ def main() -> None:
     ap.add_argument("--top", type=int, default=20)
     ap.add_argument("--ac-verify", type=int, default=0, help="上位 K 件を本番 AC で開放して解き直す")
     ap.add_argument("--cap-factor", type=float, default=1.0, help="容量係数（理論値→運用容量の較正。既定 1.0）")
+    ap.add_argument("--cap-calib", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#45 線路容量の運用容量較正(config/line_capacity_calibration.yaml・エリア×階級の比)。"
+                         "既定=ビルダー既定(OFF)/環境変数 AGJ_CAP_CALIB。--cap-factor と併用可")
     ap.add_argument("--min-kv", type=float, default=154.0, help="監視する枝の下限電圧（既定 154kV）")
     ap.add_argument("--no-single-circuit", action="store_true", help="並列回線も全回線開放として扱う")
     ap.add_argument("--date", default=None)

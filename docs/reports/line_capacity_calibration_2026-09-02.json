@@ -1,0 +1,577 @@
+{
+ "date": "2026-09-02",
+ "license": "All-Rights-Reserved。生値は再配布せず、公開するのは比・本数・制約要因の分布のみ",
+ "n_rows_parsed": 3968,
+ "model_ika_ka": {
+  "66": 0.6,
+  "77": 0.7,
+  "110": 0.9,
+  "132": 1.2,
+  "154": 1.0,
+  "187": 1.5,
+  "220": 1.8,
+  "275": 2.0,
+  "500": 4.0
+ },
+ "by_area_voltage": [
+  {
+   "area": "kansai",
+   "kv": 66,
+   "n_lines": 3,
+   "n_with_operational": 2,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.829,
+   "operational_over_equipment": 1.0,
+   "model_over_operational": 1.869,
+   "suggested_factor": 0.535,
+   "suggested_factor_p25_p75": null,
+   "usable": false,
+   "constraint_reasons": {
+    "熱容量": 2,
+    "－": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 77,
+   "n_lines": 1087,
+   "n_with_operational": 1020,
+   "theoretical_mva_per_circuit": 93.4,
+   "model_over_equipment": 1.482,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 2.457,
+   "suggested_factor": 0.407,
+   "suggested_factor_p25_p75": [
+    0.257,
+    0.647
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 1020,
+    "－": 67
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv",
+    "kansai/capacity_less/154kv_less_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 154,
+   "n_lines": 113,
+   "n_with_operational": 94,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.218,
+   "operational_over_equipment": 0.75,
+   "model_over_operational": 1.474,
+   "suggested_factor": 0.679,
+   "suggested_factor_p25_p75": [
+    0.44,
+    0.926
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 88,
+    "－": 19,
+    "同期安定性": 6
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 187,
+   "n_lines": 1,
+   "n_with_operational": 1,
+   "theoretical_mva_per_circuit": 485.8,
+   "model_over_equipment": 1.35,
+   "operational_over_equipment": 0.55,
+   "model_over_operational": 2.454,
+   "suggested_factor": 0.408,
+   "suggested_factor_p25_p75": null,
+   "usable": false,
+   "constraint_reasons": {
+    "熱容量": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 275,
+   "n_lines": 73,
+   "n_with_operational": 63,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.444,
+   "operational_over_equipment": 0.751,
+   "model_over_operational": 1.862,
+   "suggested_factor": 0.537,
+   "suggested_factor_p25_p75": [
+    0.429,
+    1.102
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 57,
+    "－": 10,
+    "同期安定性": 6
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 500,
+   "n_lines": 34,
+   "n_with_operational": 27,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.106,
+   "suggested_factor": 0.475,
+   "suggested_factor_p25_p75": [
+    0.442,
+    0.475
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 26,
+    "－": 7,
+    "電圧安定性": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 66,
+   "n_lines": 505,
+   "n_with_operational": 496,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.868,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 1.595,
+   "suggested_factor": 0.627,
+   "suggested_factor_p25_p75": [
+    0.437,
+    0.948
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 505
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 110,
+   "n_lines": 37,
+   "n_with_operational": 31,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 2.017,
+   "operational_over_equipment": 0.571,
+   "model_over_operational": 3.464,
+   "suggested_factor": 0.289,
+   "suggested_factor_p25_p75": [
+    0.283,
+    0.49
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 37
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 220,
+   "n_lines": 71,
+   "n_with_operational": 66,
+   "theoretical_mva_per_circuit": 685.9,
+   "model_over_equipment": 1.121,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 1.951,
+   "suggested_factor": 0.512,
+   "suggested_factor_p25_p75": [
+    0.393,
+    0.791
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 71
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 500,
+   "n_lines": 15,
+   "n_with_operational": 14,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 0.814,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.404,
+   "suggested_factor": 0.712,
+   "suggested_factor_p25_p75": [
+    0.475,
+    0.804
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 15
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 66,
+   "n_lines": 570,
+   "n_with_operational": 424,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.868,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.736,
+   "suggested_factor": 0.576,
+   "suggested_factor_p25_p75": [
+    0.423,
+    0.911
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 561,
+    "安定度限界": 8
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_local01_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local02_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local03_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local04_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 110,
+   "n_lines": 17,
+   "n_with_operational": 13,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 2.382,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 3.942,
+   "suggested_factor": 0.254,
+   "suggested_factor_p25_p75": [
+    0.207,
+    0.424
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 17
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_local04_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 187,
+   "n_lines": 39,
+   "n_with_operational": 30,
+   "theoretical_mva_per_circuit": 485.8,
+   "model_over_equipment": 1.004,
+   "operational_over_equipment": 0.571,
+   "model_over_operational": 1.544,
+   "suggested_factor": 0.648,
+   "suggested_factor_p25_p75": [
+    0.451,
+    0.914
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 39
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_kikan00_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 500,
+   "n_lines": 6,
+   "n_with_operational": 5,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.384,
+   "model_over_operational": 2.738,
+   "suggested_factor": 0.365,
+   "suggested_factor_p25_p75": [
+    0.297,
+    0.413
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "安定度限界": 4,
+    "熱容量": 2
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_kikan00_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 66,
+   "n_lines": 1017,
+   "n_with_operational": 988,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.746,
+   "operational_over_equipment": 0.565,
+   "model_over_operational": 1.319,
+   "suggested_factor": 0.758,
+   "suggested_factor_p25_p75": [
+    0.539,
+    1.254
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 847,
+    "0": 123,
+    "-": 29,
+    "100": 3,
+    "233": 3,
+    "41": 2,
+    "72": 2,
+    "181": 2,
+    "89": 1,
+    "50": 1,
+    "215": 1,
+    "31": 1,
+    "95": 1,
+    "30": 1
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 154,
+   "n_lines": 238,
+   "n_with_operational": 210,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.038,
+   "operational_over_equipment": 0.573,
+   "model_over_operational": 1.474,
+   "suggested_factor": 0.678,
+   "suggested_factor_p25_p75": [
+    0.443,
+    1.125
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 195,
+    "-": 28,
+    "0": 11,
+    "397": 3,
+    "電圧安定性": 1
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 275,
+   "n_lines": 95,
+   "n_with_operational": 81,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.441,
+   "operational_over_equipment": 0.566,
+   "model_over_operational": 2.226,
+   "suggested_factor": 0.449,
+   "suggested_factor_p25_p75": [
+    0.349,
+    0.907
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 81,
+    "-": 14
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 500,
+   "n_lines": 47,
+   "n_with_operational": 39,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 0.583,
+   "operational_over_equipment": 0.554,
+   "model_over_operational": 1.053,
+   "suggested_factor": 0.95,
+   "suggested_factor_p25_p75": [
+    0.475,
+    0.95
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 36,
+    "-": 11
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv"
+   ]
+  }
+ ],
+ "national_by_voltage": {
+  "66": {
+   "n_areas": 3,
+   "median_factor": 0.627,
+   "spread": 0.182,
+   "within_0.1": false,
+   "areas": {
+    "kyushu": 0.627,
+    "shikoku": 0.576,
+    "tokyo": 0.758
+   }
+  },
+  "77": {
+   "n_areas": 1,
+   "median_factor": 0.407,
+   "spread": 0.0,
+   "within_0.1": false,
+   "areas": {
+    "kansai": 0.407
+   }
+  },
+  "110": {
+   "n_areas": 2,
+   "median_factor": 0.271,
+   "spread": 0.035,
+   "within_0.1": false,
+   "areas": {
+    "kyushu": 0.289,
+    "shikoku": 0.254
+   }
+  },
+  "154": {
+   "n_areas": 2,
+   "median_factor": 0.679,
+   "spread": 0.001,
+   "within_0.1": false,
+   "areas": {
+    "kansai": 0.679,
+    "tokyo": 0.678
+   }
+  },
+  "187": {
+   "n_areas": 1,
+   "median_factor": 0.648,
+   "spread": 0.0,
+   "within_0.1": false,
+   "areas": {
+    "shikoku": 0.648
+   }
+  },
+  "220": {
+   "n_areas": 1,
+   "median_factor": 0.512,
+   "spread": 0.0,
+   "within_0.1": false,
+   "areas": {
+    "kyushu": 0.512
+   }
+  },
+  "275": {
+   "n_areas": 2,
+   "median_factor": 0.493,
+   "spread": 0.088,
+   "within_0.1": false,
+   "areas": {
+    "kansai": 0.537,
+    "tokyo": 0.449
+   }
+  },
+  "500": {
+   "n_areas": 4,
+   "median_factor": 0.593,
+   "spread": 0.585,
+   "within_0.1": false,
+   "areas": {
+    "kansai": 0.475,
+    "kyushu": 0.712,
+    "shikoku": 0.365,
+    "tokyo": 0.95
+   }
+  }
+ },
+ "overall_median_factor": 0.556,
+ "sources": {
+  "kansai": {
+   "title": "関西電力送配電 空容量マッピング（154kV以上・154kV未満の線路一覧）",
+   "urls": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv",
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_line.csv"
+   ]
+  },
+  "shikoku": {
+   "title": "四国電力送配電 系統空容量（基幹・ローカル 送電線）",
+   "urls": [
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_line_202608_08.csv",
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_local0N_line_202608_08.csv"
+   ]
+  },
+  "kyushu": {
+   "title": "九州電力送配電 予想潮流・空容量一覧表（31地区・PDF 判読プール）",
+   "urls": [
+    "https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure"
+   ]
+  },
+  "tokyo": {
+   "title": "東京電力パワーグリッド 送電線 予想潮流・空容量（基幹＋13地域 CSV）",
+   "urls": [
+    "https://www.tepco.co.jp/pg/consignment/system/"
+   ]
+  }
+ },
+ "note": "model_over_operational = √3·V·I_model·回線数 ÷ 公表運用容量 の中央値。suggested_factor はその逆数。usable=運用容量つき線路が MIN_SAMPLES 本以上"
+}

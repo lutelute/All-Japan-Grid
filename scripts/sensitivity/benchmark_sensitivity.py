@@ -57,9 +57,13 @@ LOAD_PROFILE = np.array([
 ])
 
 
-def production_net(island: str, nodes, edges, cfg, pref_gwh):
-    """本番（run_full_powerflow_from_db）と同一手順で島ネットを組む。"""
-    net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
+def production_net(island: str, nodes, edges, cfg, pref_gwh, cap_calib=None):
+    """本番（run_full_powerflow_from_db）と同一手順で島ネットを組む。
+
+    cap_calib: 介入#45 線路容量の運用容量較正(None=ビルダー既定/環境変数 AGJ_CAP_CALIB)。
+    """
+    net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {},
+                                      cap_calib=cap_calib)
     attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     from src.powerflow.pipeline import add_reactive_compensation

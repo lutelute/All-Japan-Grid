@@ -221,10 +221,20 @@ BTB_SPLITS = [
 ]
 
 
+# ── 介入#45(2026-09-02): 線路容量の運用容量較正 ──────────────────────
+# 理論容量 √3·V·max_i_ka は各社公表の運用容量の 1.5〜2.5 倍(階級×エリアで係数 0.27〜0.95、
+# config/line_capacity_calibration.yaml・比だけ)。**既定 OFF**: 全国化の一致度判定
+# (3 エリア以上が同階級で中央値 ±0.1)をどの階級も満たさず(500kV は 0.37〜0.95・
+# 110kV は 0.27)、公表容量が無いエリアが 6/10 あるため、既定化は係数の出典が揃ってから。
+# 明示 ON = `--cap-calib` または環境変数 AGJ_CAP_CALIB=1(uc_to_pf_built 等の他経路用)。
+CAP_CALIB_DEFAULT = False
+
+
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=False, synthetic_ties_live=False,
-                     btb_split=True, freq_fix=True):
+                     btb_split=True, freq_fix=True, implicit_stepdown=None,
+                     cap_calib=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -250,6 +260,13 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     過電圧アーティファクトを除く。既定OFF。"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
+    # 介入#45: None=環境変数 AGJ_CAP_CALIB(1/0) → 無ければモジュール既定
+    if cap_calib is None:
+        _env = os.environ.get("AGJ_CAP_CALIB", "")
+        cap_calib = (_env == "1") if _env in ("0", "1") else CAP_CALIB_DEFAULT
+    cap_ledger = {} if cap_calib else None
+    if cap_calib:
+        from src.powerflow.line_capacity import capacity_factor as _cap_factor
     rstats = None
     if territory:
         from src.powerflow.region_attribution import reattribute_node_regions
@@ -354,13 +371,23 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         # あり実線形が未完のため、縫合完了まで通電のまま残す(台帳に記録)。
         synthetic = bool(e.get("tie") or e.get("dc_tie") or e.get("dc"))
         keep_live = str(e.get("name") or "") in KEEP_LIVE_TIES
+        # 介入#45: 運用容量較正(係数は (エリア, 階級) → 全国 → 全体 の順に引き帳簿へ)
+        ika = params["max_i_ka"]
+        if cap_calib:
+            ika = ika * _cap_factor(kv, nodes[ja].get("region"), cap_ledger)
         li = pp.create_line_from_parameters(
             net, from_bus=fa, to_bus=ta, length_km=length,
             r_ohm_per_km=params["r_ohm_per_km"], x_ohm_per_km=x,
-            c_nf_per_km=params["c_nf_per_km"], max_i_ka=params["max_i_ka"],
+            c_nf_per_km=params["c_nf_per_km"], max_i_ka=ika,
             name=str(e.get("name") or f"line_{n_line}"),
             parallel=max(int(e.get("par") or 1), 1),
             in_service=(not synthetic) or keep_live or synthetic_ties_live)
+        if cap_calib:
+            # 較正前の理論定格を残す。接続規則(#24 cap/capkv: bus_incident_mva・
+            # class_branch_mva)は**理論定格**で判定する — 較正を通すと繋ぎ先が変わり
+            # 潮流解そのものが動いてしまう(2026-09-02 実測: west AC→dc_fallback)。
+            # 較正は「制約側の数字(loading%)」だけに効かせる
+            net.line.at[li, "max_i_ka_theo"] = float(params["max_i_ka"])
         if synthetic and not (keep_live or synthetic_ties_live):
             n_tie_nis += 1
         if dedup_nodes:
@@ -530,6 +557,19 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     except (ValueError, TypeError):
                         pass
 
+    # ---- 介入#43a(2026-09-02): 異階級直結線の暗黙降圧。線 kv_L の端点座標に kv_L ノードが
+    #      無く別階級バスへ繋がった箇所(新淀線 66kV→新宿 275kV 等)に、同サイトの kv_L バスと
+    #      kv_H/kv_L 変圧器を挿入する(存在は電気的必然・容量は銘板 or 推定を明記)。
+    #      kv_class 列(元エッジの kv)は常に付ける。ロジック= src/powerflow/stepdown_gap.py ----
+    from src.powerflow.stepdown_gap import builder_hook as _stepdown_hook
+    if implicit_stepdown is None:
+        implicit_stepdown = IMPLICIT_STEPDOWN_DEFAULT
+    sd = _stepdown_hook(net, bus_of, nodes, edges, coord_nodes, nameplates, freq,
+                        implicit_stepdown)
+    n_stepdown = len(sd["implicit_stepdown"])
+    n_trafo += n_stepdown
+    n_trafo_nameplate += sum(1 for r in sd["implicit_stepdown"] if r["capacity"] == "nameplate")
+
     # ---- 介入#32: BTB連系所のAC素通し切断(既定ON) — BTB_SPLITS参照。
     #      同名バスを設備の両側に分割し、指定線名の枝のみ新バスへ付け替える。
     #      変圧器・負荷・発電機は元バス(北陸側)に残る。 ----
@@ -571,7 +611,11 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_site_trafo": n_site_trafo,
                          "n_deenergized": n_deenergized,
                          "n_tie_nis": n_tie_nis,
+                         "cap_calib": bool(cap_calib), "cap_calib_ledger": cap_ledger,
                          "n_btb_split": n_btb_split,
+                         "n_implicit_stepdown": n_stepdown,
+                         "implicit_stepdown_ledger": sd["implicit_stepdown"],
+                         "unknown_kv_reclass_ledger": sd.get("reclass", []),
                          "region_reattribution": rstats}
 
 
@@ -638,6 +682,19 @@ GEN_ATTACH_DEFAULT = "cap"
 ISLAND_ATTACH_DEFAULT = {"hokkaido": "capkv", "west": "capkv",
                          "east": "cap", "okinawa": "cap"}
 
+# ── 介入#43(2026-09-02): 降圧点欠損の是正 — 台帳 docs/MODEL_INTERVENTIONS.md #43a/#43b。
+# #43a 暗黙降圧(異階級直結線)= **既定ON**。66kV 線が 275kV 母線に直結することは電気的に
+# あり得ないので、同サイトに kv_L 母線と降圧変圧器が**存在することは必然**(#37 と同じ論法・
+# オーナー承認 2026-08-30「仮が事実でないかもしれないなら、それを明記しておけば正典として良い」)。
+# 存在のみ主張し、容量は銘板があれば銘板・無ければ推定と全件明記する。
+# ゲート(2026-09-02): east 静的AC vm_min 0.819→0.857・実在線過負荷 353→342・
+# N-1 新規過負荷を生む開放 222→166。hokkaido/okinawa は該当 0 で不変。無効化=--no-implicit-stepdown。
+# #43b 低圧網の帳簿付き縮約(R km・0=無効)= **既定OFF**(移設先=最近傍上位バスは経路の推定)。
+# 環境変数 AJG_IMPLICIT_STEPDOWN=1/0・AJG_LV_AGGREGATE_KM=<R> で上書き可(sensitivity/N-1 等、
+# フラグを持たない経路で A/B 比較するため)。build_island_net(implicit_stepdown=None) は既定を引く。
+IMPLICIT_STEPDOWN_DEFAULT = (os.environ.get("AJG_IMPLICIT_STEPDOWN", "1") == "1")
+LV_AGGREGATE_DEFAULT_KM = float(os.environ.get("AJG_LV_AGGREGATE_KM", "0") or 0.0)
+
 
 def attach_default_for(island: str) -> str:
     return ISLAND_ATTACH_DEFAULT.get(island, GEN_ATTACH_DEFAULT)
@@ -658,7 +715,10 @@ def bus_incident_mva(net):
         if not r["in_service"]:
             continue
         kv = float(net.bus.at[int(r["from_bus"]), "vn_kv"])
-        mva = float(r["max_i_ka"]) * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
+        # 介入#45 較正 ON でも接続規則は理論定格(max_i_ka_theo)で判定する
+        ika = r.get("max_i_ka_theo")
+        ika = float(r["max_i_ka"]) if ika is None or ika != ika else float(ika)
+        mva = ika * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
         cap[int(r["from_bus"])] += mva
         cap[int(r["to_bus"])] += mva
     for _ti, r in net.trafo.iterrows():
@@ -681,7 +741,9 @@ def class_branch_mva(net):
         if not r["in_service"]:
             continue
         kv = round(float(net.bus.at[int(r["from_bus"]), "vn_kv"]), 1)
-        per[kv].append(float(r["max_i_ka"]) * kv * math.sqrt(3.0))
+        ika = r.get("max_i_ka_theo")               # 介入#45: 梯子も理論定格で測る
+        ika = float(r["max_i_ka"]) if ika is None or ika != ika else float(ika)
+        per[kv].append(ika * kv * math.sqrt(3.0))
     out = {}
     for kv, v in per.items():
         v.sort()
@@ -1029,7 +1091,9 @@ def add_per_component_slacks(net):
     Prefer the bus carrying the largest generator; else the highest-kv,
     highest-degree substation. Returns (n_components, n_slack, n_synth_slack)."""
     g = nx.Graph()
-    g.add_nodes_from(net.bus.index)
+    # 非通電バス(介入#43b の縮約で in_service=False にした低圧成分)は成分に数えない
+    # (数えると 1 バス 1 合成スラックが立ち、件数だけ膨らむ。解には影響しない)
+    g.add_nodes_from(net.bus.index[net.bus["in_service"]])
     for _, r in net.line.iterrows():
         if r["in_service"]:
             g.add_edge(int(r["from_bus"]), int(r["to_bus"]))
@@ -1346,6 +1410,11 @@ def main():
                          "能越幹線(北陸)が合流しAC素通し(実績断面575MW・UC断面"
                          "1,210MW vs 運用容量中央値300MW)だった。バスを両側に分割"
                          "する。無効化=--no-btb-split(回帰比較用)")
+    ap.add_argument("--cap-calib", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#45 線路容量の運用容量較正: config/line_capacity_calibration.yaml"
+                         "(各社公表の運用容量÷理論容量の比・エリア×階級・生値なし)を線路の "
+                         "max_i_ka に乗じる。既定=CAP_CALIB_DEFAULT(False・2026-09-02 全国化で"
+                         "一致度判定を満たさず)。環境変数 AGJ_CAP_CALIB=1/0 でも指定可")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1358,6 +1427,16 @@ def main():
                          "(data/reference/not_in_service_lines.json・出典必須)を"
                          "in_service=Falseで建てる。初例=大間幹線(運転開始未定)。"
                          "既定OFF")
+    ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
+                    default=IMPLICIT_STEPDOWN_DEFAULT,
+                    help="介入#43a 異階級直結線の暗黙降圧(2026-09-02): 線 kv の端点に同階級"
+                         "ノードが無く別階級バスへ直結している箇所へ kv_L バス+変圧器を挿入"
+                         "(存在は電気的必然・容量は銘板 or @推定)。無効化=--no-implicit-stepdown")
+    ap.add_argument("--lv-aggregate", type=float, default=LV_AGGREGATE_DEFAULT_KM,
+                    metavar="R_KM",
+                    help="介入#43b 降圧点無し66/77kV網の帳簿付き縮約(2026-09-02): 変圧器も"
+                         "(仮)給電も電源も無い低圧成分の負荷を最近傍(≤R km)の≥110kVバスへ移し"
+                         "成分を非通電化。0=無効")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
     for spec in (args.default_cap or []):
@@ -1397,7 +1476,16 @@ def main():
             site_trafos=args.site_trafos,
             deenergize_unbuilt=args.deenergize_unbuilt,
             synthetic_ties_live=args.synthetic_ties_live,
-            btb_split=args.btb_split, freq_fix=args.freq_fix_reattr)
+            btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
+            implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib)
+        if bstats.get("cap_calib"):
+            from src.powerflow.line_capacity import describe as _cap_describe
+            print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))
+        if bstats.get("n_implicit_stepdown"):
+            print(f"  介入#43a implicit-stepdown: {bstats['n_implicit_stepdown']}サイトに"
+                  f"暗黙降圧変圧器(銘板"
+                  f"{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']=='nameplate')}"
+                  f"/推定{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']!='nameplate')})")
         if bstats.get("n_tie_nis"):
             # 介入#31 の帳簿: 何本の合成タイ/DC枝を非通電化したかを必ず出す
             print(f"  介入#31 synthetic-ties: {bstats['n_tie_nis']}本を非通電で建てた"
@@ -1447,6 +1535,14 @@ def main():
                 print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
                       f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW"
                       f"の孤立負荷クラスタへ(仮)変圧器(実経路未確認・全件台帳)")
+        lv_agg_ledger = None          # 介入#43b 台帳(JSONへ保存)
+        if args.lv_aggregate and args.lv_aggregate > 0:
+            from src.powerflow.stepdown_gap import aggregate_lv_islands
+            lv_agg_ledger = aggregate_lv_islands(net, r_max_km=args.lv_aggregate)
+            print(f"  介入#43b lv-aggregate(R≤{args.lv_aggregate}km): "
+                  f"{lv_agg_ledger['n_aggregated']}成分/{lv_agg_ledger['aggregated_mw']:,.0f}MW を"
+                  f"上位バスへ集約・未給電網 {lv_agg_ledger['n_unserved']}成分/"
+                  f"{lv_agg_ledger['unserved_mw']:,.0f}MW(帳簿)")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
         balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator)
         if args.gen_zone_by_operator and "zone_src" in net.gen.columns:
@@ -1476,6 +1572,8 @@ def main():
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
             "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
+            "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
+            "lv_aggregate": lv_agg_ledger,         # 介入#43b 台帳(None=無効)
             "total_load_mw": round(total_load, 1),
             "n_components": n_comp, "n_slack": n_slack, "n_synthetic_slack": n_synth,
             "ac_converged": bool(ac.get("converged")),
