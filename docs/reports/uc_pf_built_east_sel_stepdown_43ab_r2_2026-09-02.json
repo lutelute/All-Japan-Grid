@@ -1,0 +1,3252 @@
+{
+ "meta": {
+  "date": "2026-09-02",
+  "git_head": "cc78830",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "full",
+   "provisional_infeed": [
+    {
+     "kv": 77.0,
+     "load_mw": 171.9,
+     "downstream_mw": 25.3,
+     "n_bus": 14,
+     "cluster_names": [
+      "別堀変電所",
+      "天野変電所",
+      "扇町五丁目変電所 77kV",
+      "立花二丁目変電所"
+     ],
+     "to_upper": "新富士変電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 19.8,
+     "sn_mva": 300.0
+    }
+   ],
+   "implicit_stepdown": [
+    {
+     "site": "tokyo junction 35.4888:138.3281:154",
+     "bus": 2049,
+     "new_bus": 6223,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.48878,
+     "lon": 138.32805
+    },
+    {
+     "site": "tokyo junction 35.1963:138.6402:0",
+     "bus": 2097,
+     "new_bus": 6224,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.19628,
+     "lon": 138.64022
+    },
+    {
+     "site": "tokyo junction 35.1963:138.6402:0",
+     "bus": 2097,
+     "new_bus": 6225,
+     "hv_kv": 154.0,
+     "lv_kv": 77.0,
+     "n_lines": 1,
+     "lines": [
+      "岩渕-沼津線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.19628,
+     "lon": 138.64022
+    },
+    {
+     "site": "tokyo junction 35.2032:139.0561:66",
+     "bus": 2252,
+     "new_bus": 6226,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "JR 西相模-沼津線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.20315,
+     "lon": 139.05607
+    },
+    {
+     "site": "tokyo junction 35.2583:139.0486:66",
+     "bus": 2279,
+     "new_bus": 6227,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "箱根町変電所~須雲川変電所線 / 東京電力パワーグリッド 66.0kV線 / 東京電力パワーグリッド 66.0kV線 /"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.25834,
+     "lon": 139.04862
+    },
+    {
+     "site": "tokyo junction 35.3489:139.0899:0",
+     "bus": 2284,
+     "new_bus": 6228,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 66.0kV線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.3489,
+     "lon": 139.0899
+    },
+    {
+     "site": "tokyo junction 36.3309:138.6205:66",
+     "bus": 3149,
+     "new_bus": 6229,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "leadin"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.33087,
+     "lon": 138.6205
+    },
+    {
+     "site": "tokyo junction 36.3294:138.4359:0",
+     "bus": 3150,
+     "new_bus": 6230,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "大屋変電所~小諸市変電所線 / 小諸市変電所~大字御代田変電所線 / 東京電力海瀬発電所~大字御代田変電所線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.32945,
+     "lon": 138.43587
+    },
+    {
+     "site": "tokyo junction 36.2986:137.984:0",
+     "bus": 3671,
+     "new_bus": 6231,
+     "hv_kv": 154.0,
+     "lv_kv": 77.0,
+     "n_lines": 2,
+     "lines": [
+      "北松本変電所~浅間温泉一丁目変電所線",
+      "浅間温泉一丁目変電所~安曇野市変電所線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.29858,
+     "lon": 137.98402
+    },
+    {
+     "site": "tokyo junction 36.4065:138.2675:0",
+     "bus": 3678,
+     "new_bus": 6232,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "国分変電所~真田変電所線 / 東信坂城連絡線 / 東信大屋線 / 中部電力パワーグリッド 77.0kV線 / 小諸市変電"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.40647,
+     "lon": 138.26751
+    },
+    {
+     "site": "中野台二丁目変電所",
+     "bus": 4197,
+     "new_bus": 6233,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 77.0kV線 / 東清水変電所~清水変電所線 / 東清水変電所~富士市変電所線 / 富士市変電"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.18526,
+     "lon": 138.59222
+    },
+    {
+     "site": "沼津変電所",
+     "bus": 4400,
+     "new_bus": 6234,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "中部送電線_129"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.12587,
+     "lon": 138.84965
+    },
+    {
+     "site": "墨東変電所",
+     "bus": 4531,
+     "new_bus": 6235,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "千石町線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69845,
+     "lon": 139.82026
+    },
+    {
+     "site": "天王洲変電所",
+     "bus": 4541,
+     "new_bus": 6236,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "東海町線",
+      "大井線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.62171,
+     "lon": 139.75706
+    },
+    {
+     "site": "田端変電所",
+     "bus": 4580,
+     "new_bus": 6237,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "上富士線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.74933,
+     "lon": 139.76594
+    },
+    {
+     "site": "永代橋変電所",
+     "bus": 4687,
+     "new_bus": 6238,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "茅場町線",
+      "福住線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.67561,
+     "lon": 139.78442
+    },
+    {
+     "site": "東川崎変電所",
+     "bus": 4723,
+     "new_bus": 6239,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "川崎高輪線・高輪線"
+     ],
+     "sn_mva": 1000.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.51531,
+     "lon": 139.7591
+    },
+    {
+     "site": "新宿変電所",
+     "bus": 4812,
+     "new_bus": 6240,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "新淀線",
+      "西新宿線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69106,
+     "lon": 139.68922
+    },
+    {
+     "site": "東新宿変電所",
+     "bus": 4814,
+     "new_bus": 6241,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "西新宿線",
+      "戸山線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69192,
+     "lon": 139.71042
+    },
+    {
+     "site": "豊島変電所",
+     "bus": 4815,
+     "new_bus": 6242,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 4,
+     "lines": [
+      "西巣鴨線",
+      "東池袋線",
+      "南池袋線",
+      "上富士線"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.72879,
+     "lon": 139.72021
+    },
+    {
+     "site": "常盤台変電所",
+     "bus": 4984,
+     "new_bus": 6243,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "東池袋線",
+      "板橋線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.75755,
+     "lon": 139.69128
+    },
+    {
+     "site": "南大田変電所",
+     "bus": 5003,
+     "new_bus": 6244,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東海町線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.54722,
+     "lon": 139.7335
+    },
+    {
+     "site": "新豊洲変電所",
+     "bus": 5040,
+     "new_bus": 6245,
+     "hv_kv": 500.0,
+     "lv_kv": 275.0,
+     "n_lines": 1,
+     "lines": [
+      "東内幸町線・豊洲内幸町線・高輪線"
+     ],
+     "sn_mva": 1000.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.64706,
+     "lon": 139.7904
+    },
+    {
+     "site": "水道橋変電所",
+     "bus": 5046,
+     "new_bus": 6246,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "戸山線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.70051,
+     "lon": 139.75258
+    },
+    {
+     "site": "軽井沢東変電所",
+     "bus": 5250,
+     "new_bus": 6247,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "leadin"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.34303,
+     "lon": 138.64481
+    },
+    {
+     "site": "大正寺町変電所 154kV",
+     "bus": 5259,
+     "new_bus": 6248,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 66.0kV線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.28871,
+     "lon": 139.20377
+    },
+    {
+     "site": "浅貝変電所 500kV",
+     "bus": 5470,
+     "new_bus": 6249,
+     "hv_kv": 500.0,
+     "lv_kv": 154.0,
+     "n_lines": 1,
+     "lines": [
+      "湯宿線"
+     ],
+     "sn_mva": 600.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.80173,
+     "lon": 138.78387
+    },
+    {
+     "site": "上越変電所",
+     "bus": 5908,
+     "new_bus": 6250,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "0709(東上越—上越)"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 37.15288,
+     "lon": 138.27468
+    },
+    {
+     "site": "浅間上町変電所",
+     "bus": 6156,
+     "new_bus": 6251,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "同一敷地タイ(同定)"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.1682,
+     "lon": 138.67854
+    },
+    {
+     "site": "北巨摩変電所",
+     "bus": 6213,
+     "new_bus": 6252,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "白州線(山梨66kV No.16)"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.78585,
+     "lon": 138.39794
+    },
+    {
+     "site": "大井ふ頭変電所",
+     "bus": 6216,
+     "new_bus": 6253,
+     "hv_kv": 275.0,
+     "lv_kv": 154.0,
+     "n_lines": 1,
+     "lines": [
+      "東京23区154kV No.32"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.60393,
+     "lon": 139.76375
+    },
+    {
+     "site": "横浜大黒変電所",
+     "bus": 6217,
+     "new_bus": 6254,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "(154kV・旭→横浜大黒)"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.48048,
+     "lon": 139.6759
+    }
+   ],
+   "lv_aggregate": {
+    "r_max_km": 2.0,
+    "n_islands": 229,
+    "n_aggregated": 87,
+    "aggregated_mw": 1223.8,
+    "n_unserved": 142,
+    "unserved_mw": 1418.7,
+    "aggregated": [
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 55.01,
+      "anchor_bus": 6211,
+      "anchor_name": "新湯沢変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 0.44,
+      "names": [
+       "土樽変電所",
+       "湯沢変電所",
+       "越後湯沢変電所 66kV"
+      ],
+      "lat": 36.92021,
+      "lon": 138.82479
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4812,
+      "anchor_name": "新宿変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.0,
+      "names": [
+       "北新宿変電所"
+      ],
+      "lat": 35.6953,
+      "lon": 139.69891
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4757,
+      "anchor_name": "南大塚三丁目変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.41,
+      "names": [
+       "巣鴨変電所"
+      ],
+      "lat": 35.73504,
+      "lon": 139.73955
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 6215,
+      "anchor_name": "戸越変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.46,
+      "names": [
+       "広町一丁目変電所"
+      ],
+      "lat": 35.61614,
+      "lon": 139.73158
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4819,
+      "anchor_name": "東内幸町変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.38,
+      "names": [
+       "海岸一丁目変電所"
+      ],
+      "lat": 35.6579,
+      "lon": 139.76049
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4816,
+      "anchor_name": "城南変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 0.82,
+      "names": [
+       "南元町変電所"
+      ],
+      "lat": 35.68022,
+      "lon": 139.72154
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4819,
+      "anchor_name": "東内幸町変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.63,
+      "names": [
+       "芝公園二丁目変電所"
+      ],
+      "lat": 35.65663,
+      "lon": 139.7516
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4817,
+      "anchor_name": "高輪変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.15,
+      "names": [
+       "芝浦四丁目変電所"
+      ],
+      "lat": 35.64166,
+      "lon": 139.74347
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4817,
+      "anchor_name": "高輪変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.89,
+      "names": [
+       "下目黒一丁目変電所"
+      ],
+      "lat": 35.633,
+      "lon": 139.71323
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4757,
+      "anchor_name": "南大塚三丁目変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.45,
+      "names": [
+       "音羽変電所"
+      ],
+      "lat": 35.71611,
+      "lon": 139.72831
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 5046,
+      "anchor_name": "水道橋変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.04,
+      "names": [
+       "新小川町変電所"
+      ],
+      "lat": 35.70588,
+      "lon": 139.74323
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4984,
+      "anchor_name": "常盤台変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.97,
+      "names": [
+       "小豆沢変電所"
+      ],
+      "lat": 35.77419,
+      "lon": 139.69865
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4687,
+      "anchor_name": "永代橋変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.2,
+      "names": [
+       "芳町変電所"
+      ],
+      "lat": 35.68578,
+      "lon": 139.77985
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 5003,
+      "anchor_name": "南大田変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.26,
+      "names": [
+       "糀谷変電所"
+      ],
+      "lat": 35.55725,
+      "lon": 139.73999
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 6215,
+      "anchor_name": "戸越変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.49,
+      "names": [
+       "JR東海 大崎変電所"
+      ],
+      "lat": 35.61674,
+      "lon": 139.73148
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4687,
+      "anchor_name": "永代橋変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.76,
+      "names": [
+       "深川変電所"
+      ],
+      "lat": 35.6701,
+      "lon": 139.80258
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 5034,
+      "anchor_name": "大井ふ頭変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 0.27,
+      "names": [
+       "八潮二丁目変電所"
+      ],
+      "lat": 35.61466,
+      "lon": 139.7596
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4726,
+      "anchor_name": "東尾久五丁目変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.11,
+      "names": [
+       "尾久変電所"
+      ],
+      "lat": 35.73858,
+      "lon": 139.77145
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4631,
+      "anchor_name": "上野変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 0.8,
+      "names": [
+       "三河島変電所"
+      ],
+      "lat": 35.73406,
+      "lon": 139.78526
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4984,
+      "anchor_name": "常盤台変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.34,
+      "names": [
+       "前野変電所"
+      ],
+      "lat": 35.7688,
+      "lon": 139.686
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4984,
+      "anchor_name": "常盤台変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.72,
+      "names": [
+       "中丸変電所"
+      ],
+      "lat": 35.74336,
+      "lon": 139.69882
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4984,
+      "anchor_name": "常盤台変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 0.91,
+      "names": [
+       "ときわ台変電所"
+      ],
+      "lat": 35.76115,
+      "lon": 139.68226
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4815,
+      "anchor_name": "豊島変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.01,
+      "names": [
+       "池袋変電所"
+      ],
+      "lat": 35.73631,
+      "lon": 139.71391
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4984,
+      "anchor_name": "常盤台変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 0.59,
+      "names": [
+       "常盤台変電所"
+      ],
+      "lat": 35.7574,
+      "lon": 139.68484
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 5042,
+      "anchor_name": "有明町変電所",
+      "anchor_kv": 500.0,
+      "dist_km": 1.83,
+      "names": [
+       "枝川町変電所"
+      ],
+      "lat": 35.65907,
+      "lon": 139.8057
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "anchor_bus": 4528,
+      "anchor_name": "羽田変電所",
+      "anchor_kv": 500.0,
+      "dist_km": 1.13,
+      "names": [
+       "森ヶ崎変電所"
+      ],
+      "lat": 35.56136,
+      "lon": 139.74672
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 38.91,
+      "anchor_bus": 2884,
+      "anchor_name": "tokyo junction 35.953:139.635:154",
+      "anchor_kv": 154.0,
+      "dist_km": 1.35,
+      "names": [
+       "本郷町変電所_2",
+       "見沼三丁目変電所"
+      ],
+      "lat": 35.94084,
+      "lon": 139.63639
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 16.85,
+      "anchor_bus": 4113,
+      "anchor_name": "東桂変電所",
+      "anchor_kv": 500.0,
+      "dist_km": 0.6,
+      "names": [
+       "東桂変電所"
+      ],
+      "lat": 35.53015,
+      "lon": 138.86939
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "anchor_bus": 5269,
+      "anchor_name": "北橘町分郷八崎変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.0,
+      "names": [
+       "北橘町分郷八崎変電所"
+      ],
+      "lat": 36.47846,
+      "lon": 139.02987
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "anchor_bus": 5047,
+      "anchor_name": "平出発電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.4,
+      "names": [
+       "平出発電所"
+      ],
+      "lat": 36.65841,
+      "lon": 139.11329
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "anchor_bus": 5269,
+      "anchor_name": "北橘町分郷八崎変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.99,
+      "names": [
+       "中村変電所_2"
+      ],
+      "lat": 36.48901,
+      "lon": 139.01222
+     },
+     {
+      "n_bus": 5,
+      "kv": 66.0,
+      "load_mw": 10.0,
+      "anchor_bus": 1587,
+      "anchor_name": "牛島西三丁目変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.77,
+      "names": [
+       "御野場新町一丁目変電所"
+      ],
+      "lat": 39.67531,
+      "lon": 140.11297
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "anchor_bus": 1953,
+      "anchor_name": "青い森鉄道 陸奥市川き電区分所",
+      "anchor_kv": 154.0,
+      "dist_km": 0.97,
+      "names": [
+       "JR東日本 新市川補助き電区"
+      ],
+      "lat": 40.55424,
+      "lon": 141.44155
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 61,
+      "anchor_name": "tohoku junction 37.8032:139.2753:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.8,
+      "names": [],
+      "lat": 37.79817,
+      "lon": 139.26889
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 435,
+      "anchor_name": "tohoku junction 38.2638:140.9913:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.63,
+      "names": [],
+      "lat": 38.25811,
+      "lon": 140.99148
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 1716,
+      "anchor_name": "長苗代変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.53,
+      "names": [],
+      "lat": 40.51068,
+      "lon": 141.44144
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2191,
+      "anchor_name": "tokyo junction 35.4255:138.403:154",
+      "anchor_kv": 154.0,
+      "dist_km": 1.72,
+      "names": [],
+      "lat": 35.41002,
+      "lon": 138.40292
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4438,
+      "anchor_name": "青梅変電所 275kV",
+      "anchor_kv": 275.0,
+      "dist_km": 1.32,
+      "names": [],
+      "lat": 35.79283,
+      "lon": 139.30255
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 1.61,
+      "names": [],
+      "lat": 35.80813,
+      "lon": 139.30104
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4331,
+      "anchor_name": "中土狩変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.83,
+      "names": [],
+      "lat": 35.13352,
+      "lon": 138.9172
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4482,
+      "anchor_name": "神田交直流変電所",
+      "anchor_kv": 275.0,
+      "dist_km": 1.98,
+      "names": [],
+      "lat": 35.70025,
+      "lon": 139.79289
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2509,
+      "anchor_name": "tokyo junction 35.6826:140.205:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.72,
+      "names": [],
+      "lat": 35.68906,
+      "lon": 140.20461
+     },
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5047,
+      "anchor_name": "平出発電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.09,
+      "names": [],
+      "lat": 36.64615,
+      "lon": 139.11001
+     },
+     {
+      "n_bus": 27,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5459,
+      "anchor_name": "見沼区変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.62,
+      "names": [],
+      "lat": 35.96668,
+      "lon": 139.65918
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 1.52,
+      "names": [],
+      "lat": 35.8089,
+      "lon": 139.30297
+     },
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 1.77,
+      "names": [],
+      "lat": 35.80825,
+      "lon": 139.29907
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 1.16,
+      "names": [],
+      "lat": 35.80679,
+      "lon": 139.30595
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.82,
+      "names": [],
+      "lat": 35.80528,
+      "lon": 139.30942
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.88,
+      "names": [],
+      "lat": 35.80748,
+      "lon": 139.31203
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2059,
+      "anchor_name": "tokyo junction 35.8002:139.3158:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.75,
+      "names": [],
+      "lat": 35.80684,
+      "lon": 139.31431
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2049,
+      "anchor_name": "tokyo junction 35.4888:138.3281:154",
+      "anchor_kv": 154.0,
+      "dist_km": 1.38,
+      "names": [],
+      "lat": 35.48813,
+      "lon": 138.31289
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3682,
+      "anchor_name": "tokyo junction 35.782:138.3916:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.46,
+      "names": [],
+      "lat": 35.78155,
+      "lon": 138.38655
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4145,
+      "anchor_name": "谷村変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.04,
+      "names": [],
+      "lat": 35.55936,
+      "lon": 138.9137
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2097,
+      "anchor_name": "tokyo junction 35.1963:138.6402:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.79,
+      "names": [],
+      "lat": 35.18947,
+      "lon": 138.64275
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4082,
+      "anchor_name": "北駿変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 1.46,
+      "names": [],
+      "lat": 35.22279,
+      "lon": 138.93971
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4050,
+      "anchor_name": "原里変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.07,
+      "names": [],
+      "lat": 35.28695,
+      "lon": 138.90258
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5100,
+      "anchor_name": "金井変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.04,
+      "names": [],
+      "lat": 36.52348,
+      "lon": 138.98861
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5392,
+      "anchor_name": "赤城変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.1,
+      "names": [],
+      "lat": 36.53788,
+      "lon": 139.05816
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5187,
+      "anchor_name": "小松変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.09,
+      "names": [],
+      "lat": 36.71573,
+      "lon": 138.97974
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5360,
+      "anchor_name": "総社変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.26,
+      "names": [],
+      "lat": 36.40994,
+      "lon": 139.02925
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5275,
+      "anchor_name": "美九里変電所 500kV",
+      "anchor_kv": 500.0,
+      "dist_km": 0.07,
+      "names": [],
+      "lat": 36.20734,
+      "lon": 139.06067
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5275,
+      "anchor_name": "美九里変電所 500kV",
+      "anchor_kv": 500.0,
+      "dist_km": 0.25,
+      "names": [],
+      "lat": 36.20753,
+      "lon": 139.06421
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5470,
+      "anchor_name": "浅貝変電所 500kV",
+      "anchor_kv": 500.0,
+      "dist_km": 1.48,
+      "names": [],
+      "lat": 36.81493,
+      "lon": 138.7816
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 325,
+      "anchor_name": "tohoku junction 37.9081:139.3423:0",
+      "anchor_kv": 275.0,
+      "dist_km": 1.57,
+      "names": [],
+      "lat": 37.92088,
+      "lon": 139.34968
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 549,
+      "anchor_name": "tohoku junction 36.9443:140.8286:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.91,
+      "names": [],
+      "lat": 36.94319,
+      "lon": 140.81871
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 625,
+      "anchor_name": "tohoku junction 37.6469:141.0198:0",
+      "anchor_kv": 275.0,
+      "dist_km": 0.74,
+      "names": [],
+      "lat": 37.64083,
+      "lon": 141.02323
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2097,
+      "anchor_name": "tokyo junction 35.1963:138.6402:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.77,
+      "names": [],
+      "lat": 35.18964,
+      "lon": 138.64262
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2123,
+      "anchor_name": "tokyo junction 35.4194:139.4203:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.02,
+      "names": [],
+      "lat": 35.41962,
+      "lon": 139.42044
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2161,
+      "anchor_name": "tokyo junction 35.2611:138.6437:0",
+      "anchor_kv": 275.0,
+      "dist_km": 1.39,
+      "names": [],
+      "lat": 35.24901,
+      "lon": 138.64743
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2384,
+      "anchor_name": "tokyo junction 35.4265:138.403:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.31,
+      "names": [],
+      "lat": 35.42805,
+      "lon": 138.40583
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2384,
+      "anchor_name": "tokyo junction 35.4265:138.403:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.05,
+      "names": [],
+      "lat": 35.42604,
+      "lon": 138.40303
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4050,
+      "anchor_name": "原里変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 0.69,
+      "names": [],
+      "lat": 35.28753,
+      "lon": 138.91052
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2588,
+      "anchor_name": "tokyo junction 35.5628:140.1822:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.55,
+      "names": [],
+      "lat": 35.55868,
+      "lon": 140.18557
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2509,
+      "anchor_name": "tokyo junction 35.6826:140.205:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.46,
+      "names": [],
+      "lat": 35.68644,
+      "lon": 140.20303
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 6009,
+      "anchor_name": "chubu junction 36.6228:138.8006:500",
+      "anchor_kv": 500.0,
+      "dist_km": 0.38,
+      "names": [],
+      "lat": 36.62608,
+      "lon": 138.80157
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3032,
+      "anchor_name": "tokyo junction 36.1858:139.1842:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.22,
+      "names": [],
+      "lat": 36.18502,
+      "lon": 139.18194
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 5376,
+      "anchor_name": "片品変電所 154kV",
+      "anchor_kv": 154.0,
+      "dist_km": 1.88,
+      "names": [],
+      "lat": 36.79879,
+      "lon": 139.2303
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3166,
+      "anchor_name": "tokyo junction 36.9702:138.8003:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.12,
+      "names": [],
+      "lat": 36.96939,
+      "lon": 138.79935
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3261,
+      "anchor_name": "tokyo junction 35.9073:140.5705:0",
+      "anchor_kv": 275.0,
+      "dist_km": 0.47,
+      "names": [],
+      "lat": 35.90538,
+      "lon": 140.56591
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3667,
+      "anchor_name": "tokyo junction 36.2332:137.9878:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.52,
+      "names": [],
+      "lat": 36.23274,
+      "lon": 137.98204
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3670,
+      "anchor_name": "tokyo junction 36.2575:137.9345:0",
+      "anchor_kv": 154.0,
+      "dist_km": 1.36,
+      "names": [],
+      "lat": 36.26891,
+      "lon": 137.93992
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3646,
+      "anchor_name": "tokyo junction 37.0539:138.6829:154",
+      "anchor_kv": 154.0,
+      "dist_km": 1.93,
+      "names": [],
+      "lat": 37.04135,
+      "lon": 138.6682
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2327,
+      "anchor_name": "tokyo junction 35.6222:138.5501:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.05,
+      "names": [],
+      "lat": 35.62189,
+      "lon": 138.54978
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2328,
+      "anchor_name": "tokyo junction 35.6219:138.5508:154",
+      "anchor_kv": 154.0,
+      "dist_km": 0.99,
+      "names": [],
+      "lat": 35.61301,
+      "lon": 138.55097
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 4231,
+      "anchor_name": "三屋変電所",
+      "anchor_kv": 154.0,
+      "dist_km": 2.0,
+      "names": [],
+      "lat": 35.37962,
+      "lon": 139.17233
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 2847,
+      "anchor_name": "tokyo junction 36.8913:138.7491:275",
+      "anchor_kv": 275.0,
+      "dist_km": 0.06,
+      "names": [],
+      "lat": 36.89143,
+      "lon": 138.74971
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "anchor_bus": 3165,
+      "anchor_name": "tokyo junction 36.9714:138.8:0",
+      "anchor_kv": 154.0,
+      "dist_km": 0.25,
+      "names": [],
+      "lat": 36.97275,
+      "lon": 138.8022
+     }
+    ],
+    "unserved": [
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 55.01,
+      "dist_km": 3.19,
+      "names": [
+       "ときめき東一丁目変電所",
+       "東北電力ネットワーク(株)大",
+       "青山一丁目変電所"
+      ],
+      "lat": 37.87135,
+      "lon": 139.00558
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 50.68,
+      "dist_km": 2.38,
+      "names": [
+       "北の原変電所",
+       "市の坪変電所"
+      ],
+      "lat": 35.56279,
+      "lon": 139.6626
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.6,
+      "names": [
+       "布田変電所"
+      ],
+      "lat": 35.64066,
+      "lon": 139.5474
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.3,
+      "names": [
+       "飛田給変電所"
+      ],
+      "lat": 35.65739,
+      "lon": 139.52652
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.08,
+      "names": [
+       "NEC府中変電所"
+      ],
+      "lat": 35.67035,
+      "lon": 139.45196
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.57,
+      "names": [
+       "南田中変電所"
+      ],
+      "lat": 35.73152,
+      "lon": 139.61961
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.36,
+      "names": [
+       "南大井一丁目変電所"
+      ],
+      "lat": 35.5964,
+      "lon": 139.73946
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.18,
+      "names": [
+       "東京電力(株)青海変電所"
+      ],
+      "lat": 35.61769,
+      "lon": 139.78083
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.95,
+      "names": [
+       "袋町変電所"
+      ],
+      "lat": 35.78136,
+      "lon": 139.70565
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 3.07,
+      "names": [
+       "大森西二丁目変電所"
+      ],
+      "lat": 35.57556,
+      "lon": 139.73416
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.11,
+      "names": [
+       "王子変電所"
+      ],
+      "lat": 35.75224,
+      "lon": 139.74307
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 2.68,
+      "names": [
+       "南海橋変電所"
+      ],
+      "lat": 35.57662,
+      "lon": 139.74825
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 3.56,
+      "names": [
+       "大森変電所"
+      ],
+      "lat": 35.58126,
+      "lon": 139.73523
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 42.4,
+      "dist_km": 8.38,
+      "names": [
+       "古里変電所"
+      ],
+      "lat": 35.81609,
+      "lon": 139.15324
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 36.67,
+      "dist_km": 18.81,
+      "names": [
+       "えちごトキめき鉄道(株)二本",
+       "中郷区坂本変電所"
+      ],
+      "lat": 36.98813,
+      "lon": 138.22603
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 3.99,
+      "names": [
+       "小田急電鉄藤沢変電所"
+      ],
+      "lat": 35.33829,
+      "lon": 139.48215
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 2.55,
+      "names": [
+       "磯子変電所"
+      ],
+      "lat": 35.39806,
+      "lon": 139.61716
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 5.41,
+      "names": [
+       "東京電力若宮変電所"
+      ],
+      "lat": 35.3105,
+      "lon": 139.54728
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 3.32,
+      "names": [
+       "辻堂変電所"
+      ],
+      "lat": 35.33683,
+      "lon": 139.45333
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 2.27,
+      "names": [
+       "東京電力パワーグリッド笹下変"
+      ],
+      "lat": 35.39161,
+      "lon": 139.60099
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 6.4,
+      "names": [
+       "高砂町一丁目変電所"
+      ],
+      "lat": 35.43315,
+      "lon": 139.62104
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 10.29,
+      "names": [
+       "小田原市変電所"
+      ],
+      "lat": 35.20059,
+      "lon": 139.1357
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 25.34,
+      "dist_km": 6.08,
+      "names": [
+       "小田急電鉄 松田変電所"
+      ],
+      "lat": 35.34476,
+      "lon": 139.14028
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 19.45,
+      "dist_km": 3.33,
+      "names": [
+       "秋ヶ瀬変電所"
+      ],
+      "lat": 35.85319,
+      "lon": 139.62322
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 19.45,
+      "dist_km": 3.0,
+      "names": [
+       "川口本町変電所"
+      ],
+      "lat": 35.79911,
+      "lon": 139.72052
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 19.45,
+      "dist_km": 2.48,
+      "names": [
+       "若葉変電所"
+      ],
+      "lat": 35.95219,
+      "lon": 139.40436
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 19.45,
+      "dist_km": 2.01,
+      "names": [
+       "越生変電所"
+      ],
+      "lat": 35.95478,
+      "lon": 139.30612
+     },
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 3.94,
+      "names": [
+       "平五丁目変電所"
+      ],
+      "lat": 37.46264,
+      "lon": 139.00688
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 4.6,
+      "names": [
+       "六日町変電所"
+      ],
+      "lat": 37.09594,
+      "lon": 138.87761
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 6.1,
+      "names": [
+       "高田変電所"
+      ],
+      "lat": 37.10565,
+      "lon": 138.24034
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 6.55,
+      "names": [
+       "灰雨変電所"
+      ],
+      "lat": 36.99291,
+      "lon": 138.59129
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 3.2,
+      "names": [
+       "寄居浜変電所"
+      ],
+      "lat": 37.92573,
+      "lon": 139.03077
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 7.05,
+      "names": [
+       "tokyo_sub_1800"
+      ],
+      "lat": 37.17216,
+      "lon": 138.9234
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.34,
+      "dist_km": 31.26,
+      "names": [
+       "東北電力ネットワーク"
+      ],
+      "lat": 36.87771,
+      "lon": 138.20154
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.07,
+      "dist_km": 36.32,
+      "names": [
+       "中変電所"
+      ],
+      "lat": 34.68308,
+      "lon": 138.94975
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.07,
+      "dist_km": 32.37,
+      "names": [
+       "南郷変電所"
+      ],
+      "lat": 34.75314,
+      "lon": 138.80441
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 18.07,
+      "dist_km": 40.95,
+      "names": [
+       "湊変電所"
+      ],
+      "lat": 34.64792,
+      "lon": 138.88513
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 16.85,
+      "dist_km": 6.75,
+      "names": [
+       "波木井変電所"
+      ],
+      "lat": 35.37419,
+      "lon": 138.44282
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 16.85,
+      "dist_km": 8.43,
+      "names": [
+       "JR東海身延変電所"
+      ],
+      "lat": 35.36179,
+      "lon": 138.45349
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 16.85,
+      "dist_km": 6.13,
+      "names": [
+       "長坂変電所"
+      ],
+      "lat": 35.83599,
+      "lon": 138.36978
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 13.01,
+      "dist_km": 5.54,
+      "names": [
+       "塩原3号配電塔"
+      ],
+      "lat": 36.97734,
+      "lon": 139.80664
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 13.01,
+      "dist_km": 4.95,
+      "names": [
+       "塩原2号配電塔"
+      ],
+      "lat": 36.97447,
+      "lon": 139.81502
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.73,
+      "dist_km": 3.96,
+      "names": [
+       "栄町変電所"
+      ],
+      "lat": 37.75563,
+      "lon": 140.46251
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.73,
+      "dist_km": 18.62,
+      "names": [
+       "ふくしま絆"
+      ],
+      "lat": 37.30999,
+      "lon": 141.22407
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "dist_km": 5.1,
+      "names": [
+       "新高崎き電区分所"
+      ],
+      "lat": 36.29434,
+      "lon": 139.02672
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "dist_km": 3.4,
+      "names": [
+       "新大八木き電区分所"
+      ],
+      "lat": 36.35837,
+      "lon": 138.99705
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "dist_km": 16.9,
+      "names": [
+       "松井田変電所"
+      ],
+      "lat": 36.3067,
+      "lon": 138.80225
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "dist_km": 2.3,
+      "names": [
+       "保渡田町変電所"
+      ],
+      "lat": 36.38757,
+      "lon": 138.98873
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.27,
+      "dist_km": 10.81,
+      "names": [
+       "福島変電所"
+      ],
+      "lat": 36.25671,
+      "lon": 138.9309
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.23,
+      "dist_km": 4.98,
+      "names": [
+       "東北電力花京院変電所"
+      ],
+      "lat": 38.2644,
+      "lon": 140.88053
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.23,
+      "dist_km": 4.13,
+      "names": [
+       "美田園一丁目変電所"
+      ],
+      "lat": 38.16295,
+      "lon": 140.90765
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 12.23,
+      "dist_km": 9.48,
+      "names": [
+       "桃生町城内変電所"
+      ],
+      "lat": 38.56401,
+      "lon": 141.26304
+     },
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 10.81,
+      "dist_km": 4.73,
+      "names": [
+       "大字藤田変電所"
+      ],
+      "lat": 38.3732,
+      "lon": 140.20193
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.81,
+      "dist_km": 20.25,
+      "names": [
+       "温海変電所"
+      ],
+      "lat": 38.61628,
+      "lon": 139.60411
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.56,
+      "dist_km": 9.06,
+      "names": [
+       "新二戸き電区分所"
+      ],
+      "lat": 40.2824,
+      "lon": 141.29092
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.56,
+      "dist_km": 3.44,
+      "names": [
+       "JR東日本 新柏木平き電区分"
+      ],
+      "lat": 39.82237,
+      "lon": 141.17514
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.56,
+      "dist_km": 11.22,
+      "names": [
+       "遠野市変電所"
+      ],
+      "lat": 39.2953,
+      "lon": 141.40293
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.0,
+      "dist_km": 3.49,
+      "names": [
+       "川尻町変電所"
+      ],
+      "lat": 39.71501,
+      "lon": 140.0841
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 10.0,
+      "dist_km": 26.28,
+      "names": [
+       "十和田市変電所"
+      ],
+      "lat": 40.42496,
+      "lon": 140.90644
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "dist_km": 6.88,
+      "names": [
+       "JR東日本 新おいらせき電区"
+      ],
+      "lat": 40.5941,
+      "lon": 141.38625
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "dist_km": 6.84,
+      "names": [
+       "JR東日本 新底田き電区分所"
+      ],
+      "lat": 40.74192,
+      "lon": 141.1115
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "dist_km": 20.57,
+      "names": [
+       "青い森鉄道 浅虫き電区分所"
+      ],
+      "lat": 40.91819,
+      "lon": 140.88251
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "dist_km": 8.83,
+      "names": [
+       "JR東日本 新名川補助き電区"
+      ],
+      "lat": 40.39591,
+      "lon": 141.35551
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 6.22,
+      "dist_km": 2.09,
+      "names": [
+       "JR東日本 新六戸補助き電区"
+      ],
+      "lat": 40.65535,
+      "lon": 141.29404
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.44,
+      "names": [],
+      "lat": 37.60582,
+      "lon": 139.83277
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.19,
+      "names": [],
+      "lat": 37.43183,
+      "lon": 139.68514
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 23.72,
+      "names": [],
+      "lat": 38.54559,
+      "lon": 139.54659
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.36,
+      "names": [],
+      "lat": 37.47742,
+      "lon": 140.37597
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.65,
+      "names": [],
+      "lat": 37.3031,
+      "lon": 139.90285
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.93,
+      "names": [],
+      "lat": 37.29143,
+      "lon": 139.90545
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.42,
+      "names": [],
+      "lat": 37.16399,
+      "lon": 140.09885
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.57,
+      "names": [],
+      "lat": 36.82872,
+      "lon": 139.24625
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 29.24,
+      "names": [],
+      "lat": 38.37841,
+      "lon": 139.55526
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.72,
+      "names": [],
+      "lat": 37.56782,
+      "lon": 140.54389
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.53,
+      "names": [],
+      "lat": 37.14653,
+      "lon": 140.1359
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.32,
+      "names": [],
+      "lat": 37.84123,
+      "lon": 140.44215
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 6.9,
+      "names": [],
+      "lat": 37.43667,
+      "lon": 139.8785
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.17,
+      "names": [],
+      "lat": 37.3055,
+      "lon": 139.00277
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.03,
+      "names": [],
+      "lat": 38.22613,
+      "lon": 140.61746
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.14,
+      "names": [],
+      "lat": 38.06871,
+      "lon": 140.80266
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 9.61,
+      "names": [],
+      "lat": 38.08959,
+      "lon": 140.65859
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.59,
+      "names": [],
+      "lat": 38.15937,
+      "lon": 140.93284
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.99,
+      "names": [],
+      "lat": 37.42788,
+      "lon": 140.83855
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.64,
+      "names": [],
+      "lat": 38.33314,
+      "lon": 141.10557
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.71,
+      "names": [],
+      "lat": 38.33748,
+      "lon": 141.11658
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 9.84,
+      "names": [],
+      "lat": 38.33883,
+      "lon": 141.13117
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 22.57,
+      "names": [],
+      "lat": 39.34754,
+      "lon": 141.53879
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 24.4,
+      "names": [],
+      "lat": 39.36856,
+      "lon": 141.55656
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.46,
+      "names": [],
+      "lat": 35.40771,
+      "lon": 139.38405
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.94,
+      "names": [],
+      "lat": 35.25487,
+      "lon": 139.04333
+     },
+     {
+      "n_bus": 3,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.48,
+      "names": [],
+      "lat": 35.34784,
+      "lon": 139.10208
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 10.88,
+      "names": [],
+      "lat": 35.68782,
+      "lon": 138.69162
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.42,
+      "names": [],
+      "lat": 35.41118,
+      "lon": 138.43633
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.29,
+      "names": [],
+      "lat": 35.07503,
+      "lon": 138.91969
+     },
+     {
+      "n_bus": 4,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.9,
+      "names": [],
+      "lat": 35.81725,
+      "lon": 139.24644
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 29.7,
+      "names": [],
+      "lat": 35.12203,
+      "lon": 140.2141
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.64,
+      "names": [],
+      "lat": 35.55532,
+      "lon": 139.69616
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 9.09,
+      "names": [],
+      "lat": 35.44018,
+      "lon": 140.30525
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.78,
+      "names": [],
+      "lat": 36.22125,
+      "lon": 139.60217
+     },
+     {
+      "n_bus": 3,
+      "kv": 77.0,
+      "load_mw": 0.0,
+      "dist_km": 6.44,
+      "names": [],
+      "lat": 36.0982,
+      "lon": 138.47261
+     },
+     {
+      "n_bus": 2,
+      "kv": 77.0,
+      "load_mw": 0.0,
+      "dist_km": 10.41,
+      "names": [],
+      "lat": 36.23941,
+      "lon": 138.41996
+     },
+     {
+      "n_bus": 2,
+      "kv": 77.0,
+      "load_mw": 0.0,
+      "dist_km": 11.62,
+      "names": [],
+      "lat": 36.32276,
+      "lon": 138.36944
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 10.8,
+      "names": [],
+      "lat": 36.78561,
+      "lon": 140.66548
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.6,
+      "names": [],
+      "lat": 35.93945,
+      "lon": 139.98692
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.97,
+      "names": [],
+      "lat": 35.81633,
+      "lon": 139.24441
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.43,
+      "names": [],
+      "lat": 35.81357,
+      "lon": 139.25336
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 11.05,
+      "names": [],
+      "lat": 35.58642,
+      "lon": 138.30448
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.07,
+      "names": [],
+      "lat": 36.39601,
+      "lon": 138.24309
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.38,
+      "names": [],
+      "lat": 36.33132,
+      "lon": 138.28837
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 25.78,
+      "names": [],
+      "lat": 36.92356,
+      "lon": 138.22946
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 12.91,
+      "names": [],
+      "lat": 37.03724,
+      "lon": 138.25943
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.45,
+      "names": [],
+      "lat": 37.16271,
+      "lon": 138.9227
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.52,
+      "names": [],
+      "lat": 37.13395,
+      "lon": 138.90664
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 42.84,
+      "names": [],
+      "lat": 34.63368,
+      "lon": 138.8673
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.29,
+      "names": [],
+      "lat": 35.52556,
+      "lon": 138.31345
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.64,
+      "names": [],
+      "lat": 36.59522,
+      "lon": 138.80837
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.73,
+      "names": [],
+      "lat": 36.29891,
+      "lon": 139.05214
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.85,
+      "names": [],
+      "lat": 36.38002,
+      "lon": 139.10508
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.82,
+      "names": [],
+      "lat": 36.37237,
+      "lon": 139.08483
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.24,
+      "names": [],
+      "lat": 36.51706,
+      "lon": 139.01281
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.11,
+      "names": [],
+      "lat": 36.64072,
+      "lon": 139.05122
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.99,
+      "names": [],
+      "lat": 36.66065,
+      "lon": 139.03324
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 6.09,
+      "names": [],
+      "lat": 36.34951,
+      "lon": 139.13709
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.5,
+      "names": [],
+      "lat": 36.37573,
+      "lon": 138.90654
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 6.47,
+      "names": [],
+      "lat": 36.379,
+      "lon": 138.89581
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.58,
+      "names": [],
+      "lat": 36.50306,
+      "lon": 138.92978
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 2.1,
+      "names": [],
+      "lat": 36.29356,
+      "lon": 139.12906
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.38,
+      "names": [],
+      "lat": 36.31587,
+      "lon": 139.0177
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.19,
+      "names": [],
+      "lat": 36.25391,
+      "lon": 139.08041
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 7.31,
+      "names": [],
+      "lat": 36.25082,
+      "lon": 138.96976
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.72,
+      "names": [],
+      "lat": 36.10093,
+      "lon": 139.19709
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.69,
+      "names": [],
+      "lat": 36.02925,
+      "lon": 139.09548
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 8.96,
+      "names": [],
+      "lat": 36.04014,
+      "lon": 139.06822
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 19.12,
+      "names": [],
+      "lat": 36.61386,
+      "lon": 138.59078
+     },
+     {
+      "n_bus": 2,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 5.2,
+      "names": [],
+      "lat": 35.82914,
+      "lon": 138.37613
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 9.12,
+      "names": [],
+      "lat": 37.28085,
+      "lon": 139.12397
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 3.52,
+      "names": [],
+      "lat": 36.82513,
+      "lon": 139.34701
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 4.87,
+      "names": [],
+      "lat": 35.57941,
+      "lon": 140.3057
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 10.18,
+      "names": [],
+      "lat": 36.88219,
+      "lon": 138.63784
+     },
+     {
+      "n_bus": 1,
+      "kv": 77.0,
+      "load_mw": 0.0,
+      "dist_km": 13.09,
+      "names": [],
+      "lat": 36.27409,
+      "lon": 138.47104
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 6.19,
+      "names": [],
+      "lat": 35.24336,
+      "lon": 139.08515
+     },
+     {
+      "n_bus": 1,
+      "kv": 66.0,
+      "load_mw": 0.0,
+      "dist_km": 6.5,
+      "names": [],
+      "lat": 35.23397,
+      "lon": 139.11282
+     }
+    ],
+    "note": "縮約(需要保存・成分は非通電化)。移設先は最近傍の≥110kVバス=経路の推定。実在の給電経路ではない"
+   },
+   "n_bus": 6255,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "tohoku": {
+      "青森県": {
+       "n_bus": 203,
+       "gwh": 7555.1,
+       "target_mw": 1116.3
+      },
+      "福島県": {
+       "n_bus": 208,
+       "gwh": 14686.6,
+       "target_mw": 2170.0
+      },
+      "新潟県": {
+       "n_bus": 148,
+       "gwh": 15028.4,
+       "target_mw": 2220.5
+      },
+      "山形県": {
+       "n_bus": 116,
+       "gwh": 7703.1,
+       "target_mw": 1138.2
+      },
+      "秋田県": {
+       "n_bus": 111,
+       "gwh": 6832.1,
+       "target_mw": 1009.5
+      },
+      "宮城県": {
+       "n_bus": 200,
+       "gwh": 13846.9,
+       "target_mw": 2046.0
+      },
+      "岩手県": {
+       "n_bus": 142,
+       "gwh": 9133.1,
+       "target_mw": 1349.5
+      }
+     },
+     "tokyo": {
+      "栃木県": {
+       "n_bus": 222,
+       "gwh": 15319.3,
+       "target_mw": 2561.6
+      },
+      "群馬県": {
+       "n_bus": 233,
+       "gwh": 15067.6,
+       "target_mw": 2519.5
+      },
+      "茨城県": {
+       "n_bus": 222,
+       "gwh": 23149.3,
+       "target_mw": 3870.9
+      },
+      "神奈川県": {
+       "n_bus": 358,
+       "gwh": 46841.9,
+       "target_mw": 7832.7
+      },
+      "静岡県": {
+       "n_bus": 92,
+       "gwh": 9003.0,
+       "target_mw": 1505.4
+      },
+      "埼玉県": {
+       "n_bus": 385,
+       "gwh": 36671.9,
+       "target_mw": 6132.1
+      },
+      "東京都": {
+       "n_bus": 368,
+       "gwh": 76976.2,
+       "target_mw": 12871.7
+      },
+      "山梨県": {
+       "n_bus": 65,
+       "gwh": 5803.8,
+       "target_mw": 970.5
+      },
+      "千葉県": {
+       "n_bus": 314,
+       "gwh": 35246.5,
+       "target_mw": 5893.8
+      },
+      "長野県": {
+       "n_bus": 5,
+       "gwh": 249.1,
+       "target_mw": 41.7
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 3392,
+    "q_comp_mvar": 14527.8
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "intra_dc_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 339418390.99730784
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.9075,
+      "tokyo": 1.116
+     },
+     "served_load_mw": 59353.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 5507.4,
+     "solve_s": 8.4,
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      },
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.813,
+     "vm_max": 1.0695,
+     "loss_mw": 2859.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5990.5
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}
