@@ -48,7 +48,7 @@ from pandapower.pypower.makeLODF import makeLODF
 from pandapower.pypower.makePTDF import makePTDF
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, attach_default_for, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config,
 )
@@ -76,7 +76,7 @@ CHANGELOG = {
 def main_component_net(island: str, nodes, edges, cfg, pref_gwh):
     """潮流本体と同じ手順で島を組み、最大連結成分に単一 slack を置いて返す。"""
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
-    attach_generators(net, bus_of, nodes, island, attach_mode=GEN_ATTACH_DEFAULT)
+    attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))

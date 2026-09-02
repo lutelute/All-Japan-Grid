@@ -2,7 +2,7 @@
 
 - 日付: 2026-09-01
 - モデル: **Claude Opus 5**（記録あり）
-- 状態: **真因確定・改善案(capkv)を実装。既定の変更はオーナー判断待ち**
+- 状態: **判断点1 採択（2026-09-02・介入#41）— 島別既定 hokkaido/west=`capkv`、east/okinawa=`cap` 据え置き**。採用ゲート実測は末尾「採択」節と `docs/MODEL_INTERVENTIONS.md` #41
 - 検知: `tests/test_gen_attach_modes.py::test_hokkaido_dc_pins_the_effect_of_the_default_flip`
 
 ## 何が起きていたか
@@ -123,3 +123,20 @@ for mode in ("cap", "kvfit", "capkv"):
 - 介入#24（`--gen-attach`）: `docs/MODEL_INTERVENTIONS.md`
 - 同定タイの生成: `scripts/apply_disclosure_v2.py`（class=`same_site_identity`）
 - モード評価の既往: `docs/reports/repair_search_2026-08-09.md`
+
+## 採択（2026-09-02・介入#41）
+
+判断点1を採択し、既定を島別に分けた（`ISLAND_ATTACH_DEFAULT` / `attach_default_for(island)`）。
+採用ゲート（fy2023r2・built_full_v4_nameplate・ピーク断面）:
+
+| 島 | 既定 | 結果 | slack | 帳簿 |
+|---|---|---|---|---|
+| hokkaido | capkv | AC conv=True | 821 MW | `uc_pf_built_hokkaido_sel_2026-09-02.json` |
+| west | capkv | AC conv=True | 9,087 MW（cap 時 9,167） | `uc_pf_built_west_sel_2026-09-02.json` |
+| west 全時刻 | capkv | **24/24 AC・dc_fallback 0** | — | `uc_pf_built_west_allhours_2026-09-02.json` |
+| okinawa | cap（不変） | AC conv=True | 111 MW | `uc_pf_built_okinawa_sel_2026-09-02.json` |
+| east | cap（据え置き） | 判断点2（降圧点の出典つき補完）が先 | — | — |
+
+回帰ピン: `tests/test_gen_attach_modes.py::test_hokkaido_dc_pins_the_island_default_and_the_cap_defect`
+（銘板無し条件で nearest 133.3 / cap 318.0 / capkv 86.3 %）。cap の 318% は
+**既知の欠陥として据え置き記録**（`--gen-attach cap` で再現可能・#24 の判定式は不変）。

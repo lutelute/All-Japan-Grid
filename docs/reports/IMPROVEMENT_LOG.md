@@ -7,6 +7,38 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-09-02 — **Claude Fable 5.1**（起票・ピン整合・統合。ゲート実測と実装 7f44f28 は 09-01 エントリの同一セッションの続き） — 介入#41 島別接続既定の採択・4トラック「大々的向上」の再開
+
+- **介入#41 採択・起票**（オーナー承認=`hokkaido_cap_attach_regression_2026-09-01.md` 判断点1）:
+  既定接続規則を島別に分けた — **hokkaido/west=`capkv`（合計容量∧必要電圧階級）・east/okinawa=`cap` 据え置き**
+  （`ISLAND_ATTACH_DEFAULT` / `attach_default_for(island)`）。採用ゲート全合格:
+  hokkaido ピーク AC conv・slack 821MW／west ピーク AC conv・slack 9,087MW（cap 時 9,167→改善）／
+  **west 24/24 全時刻 AC・dc_fallback 0**／okinawa 不変（`uc_pf_built_{hokkaido_sel,west_sel,west_allhours,okinawa_sel}_2026-09-02.json`）。
+  east は降圧点（都心 66↔275kV）の欠損を cap が覆い隠しているため capkv で悪化（725→1031%）— **既知の欠陥として据え置き**
+- **経路の一本化**: モデルを組む全経路（uc_to_pf_built / sensitivity 3本 / diagnose_pf_frontier）を
+  `attach_mode=attach_default_for(island)` に統一。定数 `GEN_ATTACH_DEFAULT`（cap）の直渡しは
+  `tests/test_gen_attach_modes.py` が禁止（残ると hokkaido/west だけ 318%/1103% のモデルが混ざる）
+- **ピンの再設計**: xfail(strict) で開示していた北海道DCの数値ピンを**CI同等条件（銘板キャッシュ空）**で
+  nearest 133.3 / cap 318.0 / capkv 86.3 % に固定。cap の 318% は「既知の欠陥」として**据え置き記録**
+  （消えたら判定式が変わった合図）。これでローカルと CI の値が揃う
+- **フォークA（信頼性）の部分成果をコミット**: `Snakefile`（regenerate_all の STEPS を file/センチネル依存の
+  DAG に宣言し直したもの・raw OSM 再取得は含めない設計）・`scripts/record_osm_snapshot.py`
+  （Overpass 生レスポンスの `osm3s.timestamp_osm_base` を走査し **OSM断面時刻 2026-06-15T13:35〜14:25Z
+  （76/78ファイル）** を `MODEL_VERSION.json` / `datapackage.json` に刻印 — 国際ベンチマークで自認した
+  劣位「OSM時刻未記録」の解消）
+- **フォークB3（混在県個別化）の部分成果をコミット**: `data/reference/freq_boundary_mixed.geojson`
+  （長野 50Hz 保護域=一次/二次情報別・新潟 60Hz 飛び地・静岡=富士川主流 W05、全 feature に出典）・
+  `freq_corridor_whitelist.json`（安曇幹線/西群馬幹線/神流川線/佐久間東幹線/碓氷線/富士川線+FC3箇所、
+  all.json のエッジ名と突合済み）・`scripts/audit_mixed_pref_flip.py`（ドライラン専用）。
+  監査結果 `mixed_pref_flip_audit_2026-09-02.json`: ガード対象 243 → フリップ計画 108
+  （静岡 tokyo→chubu 33 / 長野 tokyo→chubu 36 / 静岡 chubu→tokyo 20 / 新潟 chubu→tohoku 19）・
+  ホワイトリスト拒否 10・切断ガード拒否 28・**新規の島跨ぎ切断 0（pass）**。
+  `region_attribution.py` への統合と正典適用は本セッションの後続トラック
+- **でんき予報 launchd の失敗を観測**: 直近サイクルが `latest.json` 書き込みで `OSError: Resource deadlock
+  avoided` → fetch 失敗で commit されず（公開サイトは前回 push 済み値）。原因未調査（記録のみ）
+
+---
+
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出
 
 - **CI は 2026-06-27 を最後に約2か月・400回近く連続で赤**（19 failed / 1262 passed）。

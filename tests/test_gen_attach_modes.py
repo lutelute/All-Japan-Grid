@@ -189,14 +189,22 @@ def test_model_default_is_cap_but_function_default_stays_nearest():
 
 
 def test_model_building_pipelines_use_the_shared_default():
-    """モデルを組む経路が全部同じ定数を使っていること（食い違うと成果物が混ざる）。"""
+    """モデルを組む経路が全部同じ島別既定を使っていること（食い違うと成果物が混ざる）。
+
+    介入#41(2026-09-02)で既定は `ISLAND_ATTACH_DEFAULT` 経由の `attach_default_for(island)`
+    になった。定数 `GEN_ATTACH_DEFAULT` を直接渡す経路が残ると、その経路だけ
+    hokkaido/west が cap(318%/1103%)のモデルを組んで成果物が混ざる。
+    """
     for rel in ("scripts/uc_to_pf_built.py",
                 "scripts/sensitivity/build_sensitivity.py",
                 "scripts/sensitivity/benchmark_sensitivity.py",
                 "scripts/sensitivity/hosting_capacity.py",
                 "scripts/diagnose_pf_frontier.py"):
         src = (ROOT / rel).read_text(encoding="utf-8")
-        assert "attach_mode=GEN_ATTACH_DEFAULT" in src, f"{rel} が旧既定のまま"
+        assert "attach_mode=attach_default_for(island)" in src, \
+            f"{rel} が島別既定(#41)を使っていない"
+        assert "attach_mode=GEN_ATTACH_DEFAULT" not in src, \
+            f"{rel} に定数直渡しが残っている(#41 以前の経路)"
 
 
 def test_whatif_baselines_still_call_without_a_mode():
@@ -209,27 +217,21 @@ def test_whatif_baselines_still_call_without_a_mode():
             f"{rel} の比較ベースラインが書き換わっている"
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="2026-09-01 真因確定・既定は据え置き: cap は『バスに集まる枝の合計容量 "
-           ">= 出力』だけを見て電圧階級を見ないため、枝が多ければ 66kV でも選ぶ。"
-           "京極発電所400MW(実系統は275kV)が札幌市南区の66kVに載り、68.6MVA定格の "
-           "同一敷地タイに218MWを流して 88.4% -> 318.0% に劣化した。是正候補 capkv は "
-           "hokkaido を 86.3%(過負荷0本)にするが east が 725.5->1031.4% と悪化する "
-           "(降圧点の欠損)ため既定は cap のまま — 島別既定の可否はオーナー判断。"
-           "docs/reports/hokkaido_cap_attach_regression_2026-09-01.md。"
-           "strict=True なので既定変更で直れば xpass で落ちて気づける")
-def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
-    """既定を cap に倒したときの**実モデルの数値**を固定する。
+def test_hokkaido_dc_pins_the_island_default_and_the_cap_defect():
+    """既定接続規則の**実モデルの数値**を固定する(CI同等=銘板無し条件)。
 
     2026-08-09 に既定を倒したとき、既存 1,266 本のうち **1 本も落ちなかった**。
     潮流の出力値を押さえたテストが無かったということなので、ここで塞ぐ。
     hokkaido は 815 線・DC で数秒なのでゲートに載る。
+
+    銘板(data/structures/)は gitignore でチェックアウトに無いため、CI とローカルで
+    値が食い違わないよう **銘板キャッシュを空にして**測る(2026-09-01 の再現手順と同じ)。
     """
     pytest.importorskip("pandapower")
     pf = _pf()
     if not Path(pf.BUILT).exists():
         pytest.skip("built DB が無い")
+    pf._NAMEPLATES_CACHE = {}          # CI 相当（構造DB 無し）に揃える
     import json as _json
     with open(pf.BUILT, encoding="utf-8") as f:
         db = _json.load(f)
@@ -238,8 +240,11 @@ def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
     from src.powerflow.pref_demand import pref_zone_gwh
     pref_gwh, _ = pref_zone_gwh(nodes)
 
+    island_default = pf.attach_default_for("hokkaido")
+    assert island_default == "capkv", "介入#41: hokkaido の島別既定は capkv"
+
     got = {}
-    for mode in ("nearest", pf.GEN_ATTACH_DEFAULT):
+    for mode in ("nearest", "cap", island_default):
         net, bus_of, _ = pf.build_island_net(
             "hokkaido", nodes, edges, pf.ISLAND_FREQ["hokkaido"], {},
             dedup_nodes=True, site_trafos=False, deenergize_unbuilt=False)
@@ -252,21 +257,22 @@ def test_hokkaido_dc_pins_the_effect_of_the_default_flip():
         solved, _dc, _a, _b = pf.solve_island(net, max_ac_buses=0)
         got[mode] = round(float(solved.res_line["loading_percent"].dropna().max()), 1)
 
-    # 実測値。動いたら「なぜ動いたか」を IMPROVEMENT_LOG に書いてから更新すること。
+    # 実測値(銘板無し・DC)。動いたら「なぜ動いたか」を IMPROVEMENT_LOG に書いてから更新すること。
     #   2026-08-09: nearest 90.2% / cap 86.0%（太陽光既定 10MW のとき）
-    #   2026-08-10b: nearest 136.3% / cap 88.4% ← **出典付き容量を潮流へ届けた**
-    #     （hokkaido は 11 件 4,989MW が出典値に置換）。cap 側は 87.1→88.4% とほぼ動かず、
-    #     ここでも接続規則が効いていることが確認できる。
-    #   2026-08-10: nearest 128.8% / cap 87.1% ← **介入#25（太陽光既定 10→0.10MW）を既定ON**。
-    #     水増し太陽光が消えて発電が実在の電源へ集中したため、旧接続規則(nearest)では
-    #     最大負荷率が上がる。cap ではほぼ動かない（87.1%）＝接続規則が効いている証拠で、
-    #     「太陽光の是正は接続規則と組み合わせて初めて効く」という交互作用そのもの。
-    #     このテストは実際にこの変更を検知して落ちた（設計どおり働いた）。
-    assert got["nearest"] == pytest.approx(136.3, abs=0.15), \
+    #   2026-08-10: nearest 128.8% / cap 87.1% ← 介入#25（太陽光既定 10→0.10MW）を既定ON
+    #   2026-08-10b: nearest 136.3% / cap 88.4% ← 出典付き容量を潮流へ届けた(銘板あり)
+    #   2026-09-01: nearest 133.3% / cap 318.0% ← 08-16 基底刷新後・銘板無し。cap は
+    #     電圧階級を見ないため京極400MW が札幌66kV に載り 318% 化(真因確定)
+    #   2026-09-02: 介入#41 島別既定 hokkaido=capkv → 86.3%(過負荷0本)。cap の 318% は
+    #     **既知の欠陥として据え置き記録**(--gen-attach cap で再現可能)
+    assert got["nearest"] == pytest.approx(133.3, abs=0.15), \
         f"旧接続規則での最大負荷率が動いた: {got['nearest']}%"
-    assert got["cap"] == pytest.approx(88.4, abs=0.15), \
-        f"既定接続規則での最大負荷率が動いた: {got['cap']}%"
-    assert got["cap"] < got["nearest"], "既定ON化が改善になっていない"
+    assert got["cap"] == pytest.approx(318.0, abs=0.15), \
+        f"cap(電圧階級を見ない・既知の欠陥)の最大負荷率が動いた: {got['cap']}%"
+    assert got["capkv"] == pytest.approx(86.3, abs=0.15), \
+        f"島別既定(capkv)での最大負荷率が動いた: {got['capkv']}%"
+    assert got["capkv"] < got["nearest"] and got["capkv"] < got["cap"], \
+        "島別既定が改善になっていない"
 
 
 def test_capkv_keeps_large_units_off_66kv():
@@ -302,18 +308,30 @@ def test_capkv_keeps_large_units_off_66kv():
     n_big_kv, n_bad_kv = big_on_66kv("capkv")
 
     assert n_big_cap == n_big_kv and n_big_cap >= 5, "大型機の母数が両モードで揃わない"
-    # 欠陥が現存すること(既定は cap のまま据え置きなので、ここは 1 以上であるべき)
-    assert n_bad_cap >= 1, "cap の欠陥が消えている — 既定が変わったなら台帳を更新すること"
+    # cap モード自体の欠陥が現存すること(#41 は既定を島別に変えただけで cap の挙動は不変。
+    # ここが 0 になったら cap の判定式が変わったということなので台帳を更新すること)
+    assert n_bad_cap >= 1, "cap の欠陥が消えている — 判定式が変わったなら台帳を更新すること"
     # capkv では 200MW 超が 66kV 以下に落ちない
     assert n_bad_kv == 0, f"capkv でも大型機が66kVに載った: {n_bad_kv}台"
 
 
-def test_capkv_is_a_registered_mode():
-    """capkv が選択肢として提供され、既定は cap のまま据え置きであること。"""
+def test_capkv_is_a_registered_mode_and_island_defaults_are_pinned():
+    """capkv が選択肢として提供され、既定は**島別**(介入#41)であること。
+
+    east は降圧点(66↔275kV 変圧器)の欠損を cap が偶然覆い隠しているため、capkv に
+    すると 725→1031% と悪化する。出典つき補完が済むまで east/okinawa は cap 据え置き。
+    全島一律の定数 `GEN_ATTACH_DEFAULT` は cap のまま(what-if の base と旧経路の互換)。
+    """
     pf = _pf()
     assert "capkv" in pf.ATTACH_MODES, "capkv が ATTACH_MODES に無い"
-    assert pf.GEN_ATTACH_DEFAULT == "cap", \
-        "既定が動いた — east が悪化するため一律変更はオーナー判断が要る"
+    assert pf.GEN_ATTACH_DEFAULT == "cap", "一律定数が動いた(旧経路の互換が崩れる)"
+    assert pf.ISLAND_ATTACH_DEFAULT == {"hokkaido": "capkv", "west": "capkv",
+                                        "east": "cap", "okinawa": "cap"}, \
+        "島別既定が動いた — 台帳(#41)と IMPROVEMENT_LOG を先に更新すること"
+    for island, mode in pf.ISLAND_ATTACH_DEFAULT.items():
+        assert pf.attach_default_for(island) == mode
+    assert pf.attach_default_for("unknown-island") == pf.GEN_ATTACH_DEFAULT, \
+        "未知の島は一律定数へフォールバックすること"
 
 
 def test_disable_switch_is_documented_in_the_ledger():
