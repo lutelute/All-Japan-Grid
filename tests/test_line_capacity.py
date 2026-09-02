@@ -105,6 +105,10 @@ def test_env_var_switches_default(monkeypatch):
 def test_capacity_functions_agree_and_are_linear_in_factor():
     """contingency と hosting の容量関数が一致し、単一係数は線形（階級別係数と整合）。"""
     pytest.importorskip("pandapower")
+    # hosting_capacity は地図を描くため matplotlib をトップレベルで import する。
+    # CI（`pip install -e ".[dev]"`）には入っていないので、無い環境ではこの照合を飛ばす
+    # — 容量関数そのものは他のテストが実データ無しで押さえている。
+    pytest.importorskip("matplotlib")
     import numpy as np
     import pandapower as pp
     import pandapower.networks as pn
