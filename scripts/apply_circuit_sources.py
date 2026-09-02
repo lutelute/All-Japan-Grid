@@ -390,6 +390,70 @@ def load_kyushu_pool() -> list[dict]:
 
 
 MANUAL = ROOT / "data" / "reference" / "circuit_counts_manual.jsonl"
+ALIASES = ROOT / "data" / "reference" / "tepco_endpoint_aliases.json"
+
+
+class EndpointAliases:
+    """公表資料の端点表記 → 正典の変電所名(別名表・2026-09-03 F2).
+
+    公表側は端点を事業者ごとに違う書き方で出す。実測(未解決 1,454 種)の内訳は
+      匿名コード 1,344(関西 <154kV の「北CZ」等) / 構造マーカー 348(需要家・開放点・〇〇分岐) /
+      正典に不在 453 / 電圧階級違い 42 / 地域違い 53。
+    **別名で解けるのは番号プレフィックス**(九州の「32武雄」= 設備番号32 + 武雄変電所)だけで、
+    匿名コードと不在は原理的に解けない(捏造しない)。後者2つは「端点として扱わない」ことで
+    未照合の理由を正しく分類するために使う。
+
+    ファイルが無ければ全メソッドが素通りする(従来どおりの挙動)。
+    """
+
+    def __init__(self, path=ALIASES, use_low: bool = False):
+        self.map: dict[tuple, str] = {}
+        self.non_endpoint = None
+        self.anonymized = None
+        self.n_entries = 0
+        self.n_skipped_low = 0
+        self.hits: Counter = Counter()
+        p = Path(path)
+        if not p.exists():
+            return
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        for e in doc.get("aliases", []):
+            conf = str(e.get("confidence", "low"))
+            if conf == "low" and not use_low:
+                self.n_skipped_low += 1
+                continue
+            if not (e.get("alias") and e.get("model_name") and e.get("evidence")):
+                continue                                # 根拠の無い行は使わない
+            self.map[(e.get("region"), nfkc(e["alias"]), e.get("kv"))] = e["model_name"]
+            self.n_entries += 1
+        pats = [x["pattern"] for x in doc.get("non_endpoints", {}).get("patterns", [])]
+        if pats:
+            self.non_endpoint = re.compile("|".join(f"(?:{x})" for x in pats))
+        apats = [x["pattern"] for x in doc.get("anonymized", {}).get("patterns", [])]
+        if apats:
+            self.anonymized = re.compile("|".join(f"(?:{x})" for x in apats))
+
+    def resolve(self, name_norm: str, region, kv) -> str:
+        """別名なら正典側の名前へ、そうでなければそのまま返す。"""
+        if not name_norm:
+            return name_norm
+        key = nfkc(name_norm)
+        for k in ((region, key, kv_class(kv)), (region, key, None), (None, key, None)):
+            hit = self.map.get(k)
+            if hit:
+                self.hits[name_norm] += 1
+                return hit
+        return name_norm
+
+    def classify(self, name_norm: str) -> str | None:
+        """端点として解決を試みるべきでない表記なら理由を返す。"""
+        if not name_norm:
+            return None
+        if self.non_endpoint and self.non_endpoint.search(name_norm):
+            return "non-endpoint marker"
+        if self.anonymized and self.anonymized.match(name_norm):
+            return "anonymized endpoint code"
+        return None
 
 
 def load_manual() -> list[dict]:
@@ -579,12 +643,25 @@ class Model:
 
 
 # ── 照合 ─────────────────────────────────────────────────────────────────
-def match_all(model: Model, recs: list[dict]) -> list[dict]:
+def match_all(model: Model, recs: list[dict], aliases: "EndpointAliases | None" = None) -> list[dict]:
     out = []
+    al = aliases if aliases is not None else EndpointAliases(use_low=False)
     for r in recs:
         res = {"rid": r["rid"], "method": None, "edges": [], "note": ""}
-        from_ids = model.resolve_sub(r["from_norm"], r["region"], r["kv"]) if r["from_norm"] else []
-        to_ids = model.resolve_sub(r["to_norm"], r["region"], r["kv"]) if r["to_norm"] else []
+        # 端点の解決: 別名表で正典側の名前へ寄せてから引く。変電所でない表記
+        # (需要家・開放点・〇〇分岐)と匿名コードは端点として扱わない(理由を残す)
+        ep_reasons = []
+        eff = {}
+        for side in ("from", "to"):
+            nm = r[f"{side}_norm"]
+            why = al.classify(nm) if nm else None
+            if why:
+                ep_reasons.append(f"{side}: {why}")
+                eff[side] = ""
+            else:
+                eff[side] = al.resolve(nm, r["region"], r["kv"]) if nm else ""
+        from_ids = model.resolve_sub(eff["from"], r["region"], r["kv"]) if eff["from"] else []
+        to_ids = model.resolve_sub(eff["to"], r["region"], r["kv"]) if eff["to"] else []
         if from_ids and to_ids:
             eids, info = model.route_edges(from_ids, to_ids, r["kv"])
             if eids:
@@ -598,8 +675,15 @@ def match_all(model: Model, recs: list[dict]) -> list[dict]:
                 else:
                     res.update(method="name+endpoint" if anchors else "name", edges=eids)
         if not res["edges"] and not res["note"]:
-            res["note"] = ("unresolved endpoints" if (r["from_norm"] or r["to_norm"]) else "no name") \
-                if not r["name_norm"] or not model.name_index.get(r["name_norm"]) else "name found but kv/region mismatch"
+            if not r["name_norm"] or not model.name_index.get(r["name_norm"]):
+                if eff["from"] or eff["to"]:
+                    res["note"] = "unresolved endpoints"
+                elif ep_reasons:
+                    res["note"] = "no usable endpoint (" + "; ".join(ep_reasons) + ")"
+                else:
+                    res["note"] = "no name"
+            else:
+                res["note"] = "name found but kv/region mismatch"
         out.append(res)
     return out
 
@@ -650,13 +734,21 @@ def main(argv=None) -> int:
     ap.add_argument("--date", default=_dt.date.today().isoformat())
     ap.add_argument("--ledger", default=str(LEDGER))
     ap.add_argument("--out-dir", default=str(REPORTS))
+    ap.add_argument("--use-low-confidence", action="store_true",
+                    help="別名表(data/reference/tepco_endpoint_aliases.json)の confidence=low の行も使う。"
+                         "low は線名からの推定など根拠が弱いので既定では使わない")
     args = ap.parse_args(argv)
 
     built = json.loads(Path(args.built).read_text(encoding="utf-8"))
     model = Model(built)
     recs = load_all_sources()
     print(f"出典レコード {len(recs)}: " + ", ".join(f"{k}={v}" for k, v in Counter(r['kind'] for r in recs).items()))
-    matches = match_all(model, recs)
+    aliases = EndpointAliases(use_low=args.use_low_confidence)
+    if aliases.n_entries or aliases.n_skipped_low:
+        print(f"端点別名表: {aliases.n_entries} 件採用"
+              + (f" / low {aliases.n_skipped_low} 件を除外(--use-low-confidence で使う)"
+                 if aliases.n_skipped_low else ""))
+    matches = match_all(model, recs, aliases)
     decisions, conflicts = aggregate(model, recs, matches)
     before = flagged_status(model)
 
@@ -708,6 +800,10 @@ def main(argv=None) -> int:
         "date": args.date, "purpose": "介入#44 候補: 回線数(par)の出典補完",
         "n_sources": len(recs), "sources_by_kind": dict(Counter(r["kind"] for r in recs)),
         "n_matched_sources": sum(1 for m in matches if m["edges"]),
+        "alias_table": {"entries_used": aliases.n_entries, "low_skipped": aliases.n_skipped_low,
+                        "use_low_confidence": bool(args.use_low_confidence),
+                        "n_alias_hits": int(sum(aliases.hits.values())),
+                        "top_alias_hits": aliases.hits.most_common(12)},
         "match_methods": dict(Counter(m["method"] for m in matches if m["edges"])),
         "n_edges_proposed": len(decisions), "n_edges_to_update": len(plan),
         "updates_by_kv": dict(by_kv), "updates_by_region": dict(by_region),
