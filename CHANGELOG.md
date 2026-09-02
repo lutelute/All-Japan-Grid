@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #43a — implicit step-down transformers at class-mismatched line endpoints**
+  (`src/powerflow/stepdown_gap.py`, default ON): where a 66 kV line was attached straight to a 275 kV busbar
+  (Shin-Yodo line into Shinjuku, Nishi-Shinjuku, Nishi-Sugamo …), a same-site low-voltage bus and a step-down
+  transformer are inserted — the equipment must exist for the connection to be physical. 26 sites in east,
+  35 in west; east static AC vm_min 0.819→0.857 pu, real-line overloads 353→342, N-1 outages causing new
+  overloads 222→166. Capacities are estimates on all 71 sites and are labelled as such. `#43b` (ledgered
+  aggregation of transformer-less 66/77 kV subnets) ships default OFF.
+- **Intervention #44 — circuit counts from published sources** (`scripts/apply_circuit_sources.py`,
+  `data/reference/circuit_counts.jsonl`): 4,913 records from the utilities' published capacity tables,
+  impedance sheets and open-keitouzu were matched to canonical branches and applied in the increase-only
+  direction — 421 branches, including the Honshu–Shikoku 500 kV interconnector (1→2 circuits) and the
+  Ueno / Ueno-Suidobashi 275 kV lines (1→3). West N-1 outages causing new overloads 425→187, islanded load
+  37.1→31.8 GW; east worst new loading 503.6→232.2 %.
+- **Intervention #45 — line capacity calibrated to published operating limits** (`--cap-calib`, default OFF):
+  nationwide ratios (operating ÷ theoretical √3·V·I) per area and voltage class in
+  `config/line_capacity_calibration.yaml`, ratios only — no redistributed capacity values. 154 kV agrees
+  across Kansai and Tokyo (0.679 / 0.678) but 500 kV spans 0.37–0.95, so the default stays off.
 - **Intervention #42 — mixed-prefecture frequency-boundary attribution** (`src/powerflow/region_attribution.plan_mixed_pref_flips`,
   `scripts/apply_node_hygiene.py --mixed-pref`, `data/reference/freq_boundary_mixed.geojson`, `freq_corridor_whitelist.json`):
   the 243 nodes in Nagano/Niigata/Shizuoka that the frequency guard (#6/#38) kept wholesale are now re-attributed by

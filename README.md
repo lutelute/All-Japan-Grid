@@ -679,6 +679,7 @@ stability studies; synthetic impedances and typical machine constants throughout
   Classical machines initialised from the converged AC solution (E∠δ, equilibrium Pe = Pm to machine precision),
   electromechanical modes with participation factors, N-1 generator disconnection transients.
   → `docs/reports/swing_modes_west_ac_<date>.md`
+- **Line-capacity calibration / 線路容量の運用容量較正** *(opt-in)* — `--cap-calib` on the power-flow driver, `scripts/sensitivity/n1_screening.py` and `hosting_capacity.py`: multiplies each line rating by the published operating-limit ratio for its area and voltage class (`config/line_capacity_calibration.yaml`; ratios only, no redistributed capacity values). Off by default — 154 kV agrees across utilities (0.679 / 0.678) but 500 kV spans 0.37–0.95. → `docs/reports/line_capacity_calibration_<date>.md`
 
 ## Future Work — Complementary Data Sources / 今後の展望 — 補完データソース
 
