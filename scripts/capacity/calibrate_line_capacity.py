@@ -14,6 +14,15 @@
   kyushu   31 地区「予想潮流・空容量一覧表」のプール（`scripts/pool_kyushu_kuyoryo.py`）
   tokyo    予想潮流・空容量 CSV（基幹 + 13 地域）
 
+2026-09-03 版で残り 6 社を追加した（`scripts/fetch_capacity_tables.py` が取得）:
+
+  hokkaido/tohoku/chubu/hokuriku/chugoku  `<area>/capacity/` 配下の送電線 CSV
+  okinawa  **PDF のみ**（132kV の設備容量・運用容量表）→ 判読していないので係数は出ない
+
+10 社の様式はほぼ共通（送電線No / 送電線名 / 電圧 / 回線数 / 設備容量(100%×回線数) /
+運用容量値 / 運用容量制約要因 / …）だが、括弧が全角・半角・角括弧で揺れる。
+新規 5 社は**ヘッダ行を読んで列を引き当てる**汎用パーサ（`rows_generic`）で扱う。
+
 出力は較正係数の**提案**であって適用ではない。適用は `config/line_capacity_calibration.yaml`
 を介入#45（`src/powerflow/line_capacity.py`）が読む形で行い、採否は台帳に記帳する。
 
@@ -146,6 +155,78 @@ def rows_tokyo():
             yield ("tokyo", kv, num(r[3]), num(r[4]), num(r[5]), (r[6] or "").strip(), rel)
 
 
+# ── 汎用パーサ: ヘッダ行から列を引き当てる（2026-09-03 追加の 5 社）──────────
+# 括弧の全角/半角/角括弧、"送電線 No" のような空白、列順の微差を吸収する。
+# 送電線ファイルだけを読む（変電所 tr / フェンス集約行は較正対象外）。
+GENERIC_AREAS = {
+    # area: (ファイル名に含まれれば送電線とみなす語, 除外語)
+    "hokkaido": (("_line_",), ("_tr_",)),
+    "tohoku": (("_line_",), ("_tr_",)),
+    "chubu": (("送電線",), ("変電所", "フェンス")),
+    "hokuriku": (("_line_",), ("_tr_",)),
+    "chugoku": (("_line_",), ("_tr_",)),
+}
+
+
+def _decode(raw: bytes) -> str:
+    for enc in ("utf-8-sig", "cp932"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("cp932", errors="replace")
+
+
+def _norm_head(x: str) -> str:
+    """ヘッダの表記ゆれを潰す（全角括弧・空白・単位）。"""
+    return re.sub(r"[\s　（）()\[\]【】]", "", str(x or ""))
+
+
+def _header_map(row) -> dict | None:
+    """ヘッダ行なら {役割: 列index} を返す。違えば None。"""
+    h = [_norm_head(c) for c in row]
+    idx = {}
+    for i, c in enumerate(h):
+        if "電圧" in c and "一次" not in c and "二次" not in c and "kv" not in idx:
+            idx["kv"] = i
+        elif "回線数" in c and "ckt" not in idx:
+            idx["ckt"] = i
+        elif "設備容量" in c and "equip" not in idx:
+            idx["equip"] = i
+        elif "運用容量値" in c and "oper" not in idx:
+            idx["oper"] = i
+        elif "運用容量制約要因" in c and "reason" not in idx:
+            idx["reason"] = i
+    return idx if {"kv", "ckt", "equip", "oper"} <= set(idx) else None
+
+
+def rows_generic(area: str):
+    """<area>/capacity/ の送電線 CSV を、ヘッダ駆動で読む。"""
+    inc, exc = GENERIC_AREAS[area]
+    d = EXT / area / "capacity"
+    if not d.exists():
+        return
+    for p in sorted(d.glob("*.csv")):
+        nm = p.name
+        if not any(t in nm for t in inc) or any(t in nm for t in exc):
+            continue
+        rel = str(p.relative_to(EXT))
+        rows = list(csv.reader(io.StringIO(_decode(p.read_bytes()))))
+        idx = None
+        for r in rows:
+            if idx is None:
+                idx = _header_map(r)
+                continue
+            if len(r) <= max(idx.values()):
+                continue
+            kv = num(r[idx["kv"]])
+            if kv is None:
+                continue
+            yield (area, kv, num(r[idx["ckt"]]), num(r[idx["equip"]]),
+                   num(r[idx["oper"]]),
+                   (r[idx["reason"]].strip() if "reason" in idx else ""), rel)
+
+
 SOURCES = {
     "kansai": ("関西電力送配電 空容量マッピング（154kV以上・154kV未満の線路一覧）",
                ["https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv",
@@ -157,6 +238,18 @@ SOURCES = {
                ["https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure"]),
     "tokyo": ("東京電力パワーグリッド 送電線 予想潮流・空容量（基幹＋13地域 CSV）",
               ["https://www.tepco.co.jp/pg/consignment/system/"]),
+    "hokkaido": ("北海道電力ネットワーク 予想潮流等一覧表（187kV以上＋24ローカル系統・ZIP内CSV）",
+                 ["https://www.hepco.co.jp/network/con_service/public_document/bid_info.html"]),
+    "tohoku": ("東北電力ネットワーク 送電線の予想潮流等一覧表（基幹＋7ローカル系統 CSV）",
+               ["https://nw.tohoku-epco.co.jp/consignment/system/announcement/"]),
+    "chubu": ("中部電力パワーグリッド 空容量・予想潮流一覧表（本店＋6地域・gridmap 配信 ZIP）",
+              ["https://gridmap.powergrid.chuden.co.jp/"]),
+    "hokuriku": ("北陸電力送配電 予想潮流・空容量（154kV以上＋3県 CSV）",
+                 ["https://www.rikuden.co.jp/nw_notification/U_154seiyaku.html"]),
+    "chugoku": ("中国電力ネットワーク 予想潮流・空容量（220kV以上＋5県・ZIP内CSV）",
+                ["https://www.energia.co.jp/nw/service/retailer/keitou/access/"]),
+    "okinawa": ("沖縄電力 地内基幹送電線（132kV）の設備容量および運用容量【PDFのみ・未判読】",
+                ["https://www.okiden.co.jp/shared/pdf/business/free/rule02/operating_capacity.pdf"]),
 }
 
 
@@ -165,7 +258,9 @@ def collect():
                                  "reasons": defaultdict(int), "n": 0, "files": set()})
     ika = model_ika()
     n_rows = 0
-    for gen in (rows_kansai, rows_shikoku, rows_kyushu, rows_tokyo):
+    gens = [rows_kansai, rows_shikoku, rows_kyushu, rows_tokyo]
+    gens += [(lambda a=a: rows_generic(a)) for a in GENERIC_AREAS]
+    for gen in gens:
         for area, kv, ckt, equip, oper, reason, rel in gen():
             cls = nearest_class(kv)
             if cls is None or cls not in ika:
@@ -184,6 +279,18 @@ def collect():
             if ckt and oper and oper > 0:
                 s["model_over_oper"].append(theo * ckt / oper)
     return stats, ika, n_rows
+
+
+def _band(vals):
+    """±0.1 帯の判定(3 エリア以上・全値が中央値の ±0.1)。→ dict or None。"""
+    if len(vals) < 2:
+        return None
+    med = st.median(vals)
+    return {"n_areas": len(vals), "median": round(med, 3),
+            "spread": round(max(vals) - min(vals), 3),
+            "n_within_0.1": sum(1 for v in vals if abs(v - med) <= 0.1),
+            "within_0.1": bool(len(vals) >= 3
+                               and all(abs(v - med) <= 0.1 for v in vals))}
 
 
 def summarize(stats, ika):
@@ -223,14 +330,30 @@ def summarize(stats, ika):
                             "within_0.1": bool(len(fs) >= 3 and
                                                all(abs(f - med) <= 0.1 for f in fs)),
                             "areas": {r["area"]: r["suggested_factor"] for r in by
-                                      if r["kv"] == kv and r["usable"]}}
+                                      if r["kv"] == kv and r["usable"]},
+                            # 係数を 2 成分に分解して、どちらが事業者を跨いで
+                            # 一様かを見る(2026-09-03):
+                            #   conductor = 理論÷設備容量 … モデルの max_i_ka が
+                            #               その階級の実導体をどれだけ外しているか
+                            #   margin    = 運用÷設備容量 … 熱容量に対して実際に
+                            #               流してよい上限(安定度・電圧・上位系の制約)
+                            "components": {
+                                "conductor_model_over_equipment": _band(
+                                    [r["model_over_equipment"] for r in by
+                                     if r["kv"] == kv and r["usable"]
+                                     and r["model_over_equipment"] is not None]),
+                                "margin_operational_over_equipment": _band(
+                                    [r["operational_over_equipment"] for r in by
+                                     if r["kv"] == kv and r["usable"]
+                                     and r["operational_over_equipment"] is not None]),
+                            }}
     all_fs = [r["suggested_factor"] for r in by if r["usable"]]
     return by, national, (round(st.median(all_fs), 3) if all_fs else None)
 
 
 def write_config(by, national, overall, date, ika):
     lines = [
-        "# 線路容量の運用容量較正係数（介入#45・2026-09-02）",
+        f"# 線路容量の運用容量較正係数（介入#45・{date}）",
         "#",
         "# factor = 公表運用容量 ÷ モデル理論容量(√3·V·I_model·回線数) の中央値（無次元）。",
         "# 生値（線路別の設備容量・運用容量）は各社 All-Rights-Reserved のため**比だけ**を置く。",
@@ -322,6 +445,26 @@ def main() -> None:
                  f"{'✅' if v['within_0.1'] else '—'} | "
                  + ", ".join(f"{a} {f}" for a, f in v['areas'].items()) + " |")
     L += ["", f"全体中央値（usable の全 (エリア,階級) の係数）: **{overall}**", "",
+          "## 係数を 2 成分に分解する — 割れているのはどちらか", "",
+          "較正係数 = (設備容量÷理論容量) × (運用容量÷設備容量) の逆数。前者は**モデルの代表電流"
+          "`max_i_ka` がその階級の実導体をどれだけ外しているか**、後者は**熱容量に対して実際に"
+          "流してよい上限**（安定度・電圧・上位系の制約）で、意味がまったく違う。", "",
+          "| kV | エリア数 | 理論÷設備（導体） 中央値 / 幅 / ±0.1内 | 運用÷設備（運用余裕） 中央値 / 幅 / ±0.1内 |",
+          "|---:|---:|---|---|"]
+    for kv, v in sorted(national.items()):
+        c = v["components"]["conductor_model_over_equipment"]
+        mg = v["components"]["margin_operational_over_equipment"]
+        def _f(x):
+            if not x:
+                return "—"
+            return (f"{x['median']} / {x['spread']} / {x['n_within_0.1']}/{x['n_areas']}"
+                    + ("  ✅" if x["within_0.1"] else ""))
+        L.append(f"| {kv} | {v['n_areas']} | {_f(c)} | {_f(mg)} |")
+    L += ["", "**運用余裕は事業者を跨いでほぼ揃うが、導体は揃わない。**",
+          "つまり係数が割れる主因は各社の運用方針の差ではなく、**電圧階級ごとに単一の "
+          "`max_i_ka` を振っているモデル側の粗さ**である（同じ 500kV でも東京と四国では導体が違う）。",
+          "熱容量制約の線だけに絞っても 500kV の幅は 0.475 のままで縮まらない（制約種別の"
+          "混在では説明できない）。", "",
           "## 読み方", "",
           "1. **理論÷設備容量** — 理論式そのものの精度（代表電流 `max_i_ka` の妥当性）。",
           "2. **運用÷設備容量** — 熱容量と、実際に流してよい上限の差（安定度・電圧・上位系の制約）。",

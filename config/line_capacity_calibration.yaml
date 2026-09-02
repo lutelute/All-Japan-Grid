@@ -1,40 +1,61 @@
-# 線路容量の運用容量較正係数（介入#45・2026-09-02）
+# 線路容量の運用容量較正係数（介入#45・2026-09-03）
 #
 # factor = 公表運用容量 ÷ モデル理論容量(√3·V·I_model·回線数) の中央値（無次元）。
 # 生値（線路別の設備容量・運用容量）は各社 All-Rights-Reserved のため**比だけ**を置く。
 # 生成: scripts/capacity/calibrate_line_capacity.py --write-config（data/external が要る）。
 # 無いエリア/階級は src/powerflow/line_capacity.py が「全国中央値 → 全体中央値」へ
 # フォールバックし、帳簿(net._cap_calib_ledger)に fallback を記録する。
-date: '2026-09-02'
+date: '2026-09-03'
 unit: dimensionless
 min_samples: 3
 model_ika_ka: {66: 0.6, 77: 0.7, 110: 0.9, 132: 1.2, 154: 1.0, 187: 1.5, 220: 1.8, 275: 2.0, 500: 4.0}
-overall_median_factor: 0.556
+overall_median_factor: 0.546
 national:
-  66: {median_factor: 0.627, n_areas: 3, spread: 0.182, within_band: false}
-  77: {median_factor: 0.407, n_areas: 1, spread: 0.0, within_band: false}
-  110: {median_factor: 0.271, n_areas: 2, spread: 0.035, within_band: false}
-  154: {median_factor: 0.679, n_areas: 2, spread: 0.001, within_band: false}
-  187: {median_factor: 0.648, n_areas: 1, spread: 0.0, within_band: false}
-  220: {median_factor: 0.512, n_areas: 1, spread: 0.0, within_band: false}
-  275: {median_factor: 0.493, n_areas: 2, spread: 0.088, within_band: false}
-  500: {median_factor: 0.593, n_areas: 4, spread: 0.585, within_band: false}
+  66: {median_factor: 0.569, n_areas: 7, spread: 0.386, within_band: false}
+  77: {median_factor: 0.471, n_areas: 3, spread: 0.166, within_band: false}
+  110: {median_factor: 0.271, n_areas: 4, spread: 0.164, within_band: false}
+  154: {median_factor: 0.678, n_areas: 5, spread: 0.204, within_band: false}
+  187: {median_factor: 0.494, n_areas: 2, spread: 0.309, within_band: false}
+  220: {median_factor: 0.558, n_areas: 2, spread: 0.093, within_band: false}
+  275: {median_factor: 0.54, n_areas: 6, spread: 0.462, within_band: false}
+  500: {median_factor: 0.629, n_areas: 8, spread: 0.585, within_band: false}
 areas:
-  hokkaido: {}   # 公表容量の入手無し → national へフォールバック
-  tohoku: {}   # 公表容量の入手無し → national へフォールバック
+  hokkaido:
+    66: {factor: 0.459, n: 582, p25_p75: [0.357, 0.627]}
+    110: {factor: 0.233, n: 27, p25_p75: [0.099, 0.248]}
+    187: {factor: 0.339, n: 60, p25_p75: [0.251, 0.565]}
+    275: {factor: 0.683, n: 13, p25_p75: [0.571, 0.925]}
+  tohoku:
+    66: {factor: 0.569, n: 1512, p25_p75: [0.408, 0.714]}
+    154: {factor: 0.506, n: 244, p25_p75: [0.39, 0.637]}
+    275: {factor: 0.474, n: 57, p25_p75: [0.352, 0.75]}
+    500: {factor: 0.712, n: 10, p25_p75: [0.712, 0.854]}
   tokyo:
     66: {factor: 0.758, n: 988, p25_p75: [0.539, 1.254]}
     154: {factor: 0.678, n: 210, p25_p75: [0.443, 1.125]}
     275: {factor: 0.449, n: 81, p25_p75: [0.349, 0.907]}
     500: {factor: 0.95, n: 39, p25_p75: [0.475, 0.95]}
-  chubu: {}   # 公表容量の入手無し → national へフォールバック
-  hokuriku: {}   # 公表容量の入手無し → national へフォールバック
+  chubu:
+    77: {factor: 0.573, n: 2438, p25_p75: [0.37, 0.975]}
+    154: {factor: 0.607, n: 178, p25_p75: [0.423, 1.249]}
+    275: {factor: 0.911, n: 74, p25_p75: [0.554, 1.425]}
+    500: {factor: 0.546, n: 8, p25_p75: [0.546, 0.712]}
+  hokuriku:
+    66: {factor: 0.547, n: 129, p25_p75: [0.357, 0.838]}
+    77: {factor: 0.471, n: 127, p25_p75: [0.386, 0.739]}
+    154: {factor: 0.71, n: 50, p25_p75: [0.387, 1.01]}
+    275: {factor: 0.543, n: 7, p25_p75: [0.52, 0.759]}
+    500: {factor: 0.76, n: 4, p25_p75: [0.676, 0.76]}
   kansai:
     77: {factor: 0.407, n: 1020, p25_p75: [0.257, 0.647]}
     154: {factor: 0.679, n: 94, p25_p75: [0.44, 0.926]}
     275: {factor: 0.537, n: 63, p25_p75: [0.429, 1.102]}
     500: {factor: 0.475, n: 27, p25_p75: [0.442, 0.475]}
-  chugoku: {}   # 公表容量の入手無し → national へフォールバック
+  chugoku:
+    66: {factor: 0.372, n: 184, p25_p75: [0.279, 0.576]}
+    110: {factor: 0.397, n: 328, p25_p75: [0.27, 0.612]}
+    220: {factor: 0.605, n: 24, p25_p75: [0.371, 0.948]}
+    500: {factor: 0.475, n: 3, p25_p75: None}
   shikoku:
     66: {factor: 0.576, n: 424, p25_p75: [0.423, 0.911]}
     110: {factor: 0.254, n: 13, p25_p75: [0.207, 0.424]}
@@ -52,20 +73,50 @@ sources:
     urls:
       - https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv
       - https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_line.csv
-    retrieved: '2026-09-02'
+    retrieved: '2026-09-03'
   shikoku:
     title: "四国電力送配電 系統空容量（基幹・ローカル 送電線）"
     urls:
       - https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_line_202608_08.csv
       - https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_local0N_line_202608_08.csv
-    retrieved: '2026-09-02'
+    retrieved: '2026-09-03'
   kyushu:
     title: "九州電力送配電 予想潮流・空容量一覧表（31地区・PDF 判読プール）"
     urls:
       - https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure
-    retrieved: '2026-09-02'
+    retrieved: '2026-09-03'
   tokyo:
     title: "東京電力パワーグリッド 送電線 予想潮流・空容量（基幹＋13地域 CSV）"
     urls:
       - https://www.tepco.co.jp/pg/consignment/system/
-    retrieved: '2026-09-02'
+    retrieved: '2026-09-03'
+  hokkaido:
+    title: "北海道電力ネットワーク 予想潮流等一覧表（187kV以上＋24ローカル系統・ZIP内CSV）"
+    urls:
+      - https://www.hepco.co.jp/network/con_service/public_document/bid_info.html
+    retrieved: '2026-09-03'
+  tohoku:
+    title: "東北電力ネットワーク 送電線の予想潮流等一覧表（基幹＋7ローカル系統 CSV）"
+    urls:
+      - https://nw.tohoku-epco.co.jp/consignment/system/announcement/
+    retrieved: '2026-09-03'
+  chubu:
+    title: "中部電力パワーグリッド 空容量・予想潮流一覧表（本店＋6地域・gridmap 配信 ZIP）"
+    urls:
+      - https://gridmap.powergrid.chuden.co.jp/
+    retrieved: '2026-09-03'
+  hokuriku:
+    title: "北陸電力送配電 予想潮流・空容量（154kV以上＋3県 CSV）"
+    urls:
+      - https://www.rikuden.co.jp/nw_notification/U_154seiyaku.html
+    retrieved: '2026-09-03'
+  chugoku:
+    title: "中国電力ネットワーク 予想潮流・空容量（220kV以上＋5県・ZIP内CSV）"
+    urls:
+      - https://www.energia.co.jp/nw/service/retailer/keitou/access/
+    retrieved: '2026-09-03'
+  okinawa:
+    title: "沖縄電力 地内基幹送電線（132kV）の設備容量および運用容量【PDFのみ・未判読】"
+    urls:
+      - https://www.okiden.co.jp/shared/pdf/business/free/rule02/operating_capacity.pdf
+    retrieved: '2026-09-03'

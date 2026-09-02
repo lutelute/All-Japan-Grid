@@ -1,4 +1,11 @@
-data/external/
+# 外部の公表データ(再配布不可)は一切追跡しない。**例外は取得の来歴 1 ファイルだけ**
+# (URL・sha256・取得日・バイト数のみで生値は入っていない)。どのファイルをいつどこから
+# 取ったかが残らないと較正が検証できないため。git は「除外された親ディレクトリの中の
+# ファイルを再包含できない」ので、* で階層を開けてから該当ファイルだけを戻す。
+data/external/*
+!data/external/system_disclosure/
+data/external/system_disclosure/*
+!data/external/system_disclosure/provenance.jsonl
 # License-restricted utility data — MUST NOT be committed (redistribution prohibited).
 # Owner-placed 関西TD 空容量マップ; see memory reference_utility_data_licensing.
 /k_line.csv

@@ -43,12 +43,15 @@ def test_config_exists_and_has_ratios_only():
 def test_factor_lookup_and_fallback_ledger():
     from src.powerflow.line_capacity import capacity_factor
     led = {}
+    # 2026-09-03: 未取得だった 6 社の公表容量を取得したので、national へ落ちる組が変わった
+    # (chubu/275 は実測 0.911 を持つようになった)。今も公表容量が無いのは okinawa だけ
+    # (PDF のみ・未判読)。fallback の 3 段が全部踏まれる組を選ぶ。
     f_area = capacity_factor(154, "kansai", led)          # エリア×階級あり
-    f_nat = capacity_factor(275, "chubu", led)            # chubu は公表無し → 全国中央値
+    f_nat = capacity_factor(154, "okinawa", led)          # okinawa は公表無し → 全国中央値
     f_over = capacity_factor(132, "tohoku", led)          # 132kV はどこにも無し → 全体中央値
     assert led["by_source"] == {"area": 1, "national": 1, "overall": 1}
     assert led["by_area_kv"]["kansai/154"][0] == "area"
-    assert led["by_area_kv"]["chubu/275"][0] == "national"
+    assert led["by_area_kv"]["okinawa/154"][0] == "national"
     assert led["by_area_kv"]["tohoku/132"][0] == "overall"
     assert all(0.05 < f < 2.0 for f in (f_area, f_nat, f_over))
 
