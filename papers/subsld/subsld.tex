@@ -116,7 +116,7 @@ diagramming). Its contributions are:
 \section{Related Work}
 
 OSM-derived power network models are well established at transmission level.
-Continental extractions such as SciGRID and PyPSA-Eur build node--edge graphs and
+Continental extractions such as SciGRID~\cite{medjroubi2017} and PyPSA-Eur~\cite{pypsa_eur,xiong2025} build node--edge graphs and
 attach electrical parameters by voltage-class heuristics; national efforts
 follow the same pattern. All of them abstract a substation to a single node.
 Where internal structure appears in open modelling, it is usually \emph{assumed}
@@ -126,14 +126,15 @@ observational source was thought to exist.
 Two adjacent literatures inform our approach. In data quality research for
 volunteered geographic information, intrinsic indicators---completeness by
 comparison against reference data, tag coverage, contributor density---are used
-to characterise a dataset without ground truth; we adopt this stance and report
+to characterise a dataset without ground truth~\cite{barron2014}; we adopt this stance and report
 coverage as a primary result. In remote sensing, detection of transmission
 infrastructure from aerial imagery (towers and conductors) is an active topic,
-with public datasets such as TTPLA; we use imagery in a lighter role, as a human
+with public datasets such as TTPLA~\cite{ttpla2020}; we use imagery in a lighter role, as a human
 verification and triage channel rather than as an automatic detector, and we
 mark it as a distinct evidence class when it is used.
 
-Our formulation is closest in spirit to provenance-carrying data integration:
+Our formulation is closest in spirit to provenance-carrying data
+integration~\cite{buneman2001}:
 each asserted element retains the witness that justified it, and the rendering
 layer is required to display evidence strength. To our knowledge, no prior work
 produces machine-generated single-line diagrams for a national fleet of
@@ -551,5 +552,27 @@ from the Geospatial Information Authority of Japan; base map data
 
 The author thanks the OpenStreetMap contributors whose mapping makes this work
 possible.
+
+\begin{thebibliography}{6}
+
+\bibitem{medjroubi2017}
+W.~Medjroubi, U.~P.~M\"{u}ller, M.~Scharf, C.~Matke, and D.~Kleinhans, ``Open data in power grid modelling: New approaches towards transparent grid models,'' \textit{Energy Rep.}, vol.~3, pp.~14--21, 2017.
+
+\bibitem{pypsa_eur}
+J.~H\"{o}rsch, F.~Hofmann, D.~Schlachtberger, and T.~Brown, ``PyPSA-Eur: An open optimisation model of the European transmission system,'' \textit{Energy Strategy Rev.}, vol.~22, pp.~207--215, 2018.
+
+\bibitem{xiong2025}
+B.~Xiong, D.~Fioriti, F.~Neumann, I.~Riepin, and T.~Brown, ``Modelling the high-voltage grid using open data for Europe and beyond,'' \textit{Sci. Data}, vol.~12, 2025, doi:10.1038/s41597-025-04550-7.
+
+\bibitem{barron2014}
+C.~Barron, P.~Neis, and A.~Zipf, ``A comprehensive framework for intrinsic OpenStreetMap quality analysis,'' \textit{Trans. GIS}, vol.~18, no.~6, pp.~877--895, 2014.
+
+\bibitem{ttpla2020}
+R.~Abdelfattah, X.~Wang, and S.~Wang, ``TTPLA: An aerial-image dataset for detection and segmentation of transmission towers and power lines,'' in \textit{Proc. Asian Conf. Computer Vision (ACCV)}, 2020.
+
+\bibitem{buneman2001}
+P.~Buneman, S.~Khanna, and W.-C.~Tan, ``Why and where: A characterization of data provenance,'' in \textit{Proc. Int. Conf. Database Theory (ICDT)}, 2001, pp.~316--330.
+
+\end{thebibliography}
 
 \end{document}
