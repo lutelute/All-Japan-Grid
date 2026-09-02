@@ -133,6 +133,23 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   1 断面(ピーク)。一次周波数応答が無いので解列後の周波数は単調低下(仕様)。PF 側の Q 制限(介入候補)と
   大型機の接続階級(苓北 66kV)が次の改善点
 
+- **【トラックC②】IBR 連系可能量(SCR)を実装**(`src/powerflow/short_circuit.py`・`scripts/sensitivity/ibr_hosting_scr.py`・
+  `tests/test_short_circuit.py` 7件): 全バスのテブナン短絡容量を疎 LU の列ソルブで算出(west 7,386 バス **1.8 s**)、
+  同期機は `machine_agg` の型式別 xd'' を機械ベース→系統ベース換算、IBR と合成 slack は電流源にしない(保守側)。
+  `pandapower.shortcircuit.calc_sc`(IEC 60909, c=1.1)と等価 ext_grid 置換で**相対誤差 8.9e-16 の厳密一致**、
+  線路充電を含めると 11.6% ずれる(IEC が充電を無視する前提の再確認)。SCR=S_sc/P_ibr、
+  P_max_scr=max(S_sc/3 − 既設IBR, 0)。66-77kV 帯の S_sc 中央値 hokkaido 841 / east 2,248 / west 1,783 / okinawa 1,704 MVA
+  (Phase 0 と同帯)、P_max_scr 中央値 279 / 749 / 594 / 568 MW（是正後 D層で再計測・既設IBR east 17,329→**3,861MW**・west 10,439→**4,570MW**）。**既設 IBR で SCR<3 の地点は 0**(既設が OSM 由来で薄い)。
+  熱容量側(`hosting_capacity`)は基準過負荷で 0 になる地点が east/west でほぼ全数=`thermal=0(基準過負荷)` として開示。
+  レポート `docs/reports/ibr_hosting_scr_2026-09-02.md`・地図 `docs/assets/sensitivity/ibr_scr_<island>.png`
+- **【トラックB④】孤立断片の第三波をドライランで準備**（フォーク trackB4、`fragment_third_wave_2026-09-02.md`）:
+  第二波の継ぎ目 60m を 120/200/300m へ段階緩和し OSM 実線形の連鎖だけを辿る `hunt_fragment_third_wave.py` を実装
+  （電圧整合・迂回係数 ≤1.5・跨島双子の 3 ゲート、テスト 9 本）。適用段 ≤200m で **68 本**（hokkaido 3・east 17・west 48）＝
+  断片成分 601→**533**・本系統 +134 ノード・**周波数跨ぎ枝 99 不変**（初回は端点双子で 99→101 になり `twin_endpoint` ゲートを追加）。
+  同一敷地同定は 5 件を承認待ち提案に（第一波 7 件中 5 件は #35 で解消済み）。残存を機械分類: 跨島双子 37（再属性で解く）・
+  鉄道 33・遠隔/離島 21・配電/kv 不明 142・開示台帳に名前あり 22・未分類 346（ギャップ ≤1km 91）。
+  「927」は全文書に不在＝誤記（正しくは定義(i) 成分 601 / 定義(ii) ノード 1,273）。**正典は未変更・適用は親が 200m 段で `--write`**
+
 ---
 
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出

@@ -1,0 +1,3270 @@
+{
+ "stages_m": [
+  60,
+  120,
+  200,
+  300
+ ],
+ "detour_max": 1.5,
+ "th_node_km": 0.08,
+ "max_ways": 6,
+ "freq_crossing_edges_before": 99,
+ "islands": {
+  "hokkaido": {
+   "n_keys": 760,
+   "main": 722,
+   "fragments": 24,
+   "frag_nodes": 38,
+   "frag_subs": 18,
+   "stages": {
+    "60": {
+     "chains": 1,
+     "new_at_stage": 1,
+     "rejected": {
+      "unreachable": 23
+     },
+     "components_after": 23,
+     "nodes_joined": 2,
+     "seam_hist_m": {
+      "60": 1
+     }
+    },
+    "120": {
+     "chains": 3,
+     "new_at_stage": 2,
+     "rejected": {
+      "unreachable": 21
+     },
+     "components_after": 21,
+     "nodes_joined": 6,
+     "seam_hist_m": {
+      "60": 1,
+      "120": 2
+     }
+    },
+    "200": {
+     "chains": 3,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 21
+     },
+     "components_after": 21,
+     "nodes_joined": 6,
+     "seam_hist_m": {
+      "200": 3
+     }
+    },
+    "300": {
+     "chains": 3,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 21
+     },
+     "components_after": 21,
+     "nodes_joined": 6,
+     "seam_hist_m": {
+      "300": 1,
+      "200": 2
+     }
+    }
+   },
+   "same_site": 0,
+   "residual_classes": {
+    "e_named_in_disclosure": 1,
+    "f_unclassified": 11,
+    "f_unclassified_gap_3-10km": 2,
+    "f_unclassified_gap_1-3km": 3,
+    "f_unclassified_gap_≤1km": 3,
+    "f_unclassified_gap_>10km": 3,
+    "d_rail": 2,
+    "d_distribution_kv_unknown": 10
+   },
+   "residual_examples": {
+    "e_named_in_disclosure": [
+     {
+      "name": "円山変電所",
+      "kv": 66.0,
+      "lat": 43.05123,
+      "lon": 141.32876,
+      "n_nodes": 4
+     }
+    ],
+    "f_unclassified": [
+     {
+      "name": "福山変電所",
+      "kv": 66.0,
+      "lat": 41.434,
+      "lon": 140.11255,
+      "n_nodes": 2
+     },
+     {
+      "name": "hokkaido junction 42.3378:140.9857:0",
+      "kv": 0.0,
+      "lat": 42.33785,
+      "lon": 140.98569,
+      "n_nodes": 2
+     },
+     {
+      "name": "hokkaido junction 42.3392:140.9853:0",
+      "kv": 0.0,
+      "lat": 42.33924,
+      "lon": 140.98527,
+      "n_nodes": 2
+     }
+    ],
+    "d_rail": [
+     {
+      "name": "札幌市交通局高速電車 すすきの変電所",
+      "kv": 0.0,
+      "lat": 43.05338,
+      "lon": 141.35759,
+      "n_nodes": 1
+     },
+     {
+      "name": "JR北海道木古内機電区分所",
+      "kv": 0.0,
+      "lat": 41.69107,
+      "lon": 140.44851,
+      "n_nodes": 1
+     }
+    ],
+    "d_distribution_kv_unknown": [
+     {
+      "name": "南18条西11丁目変電所",
+      "kv": 0.0,
+      "lat": 43.03573,
+      "lon": 141.34481,
+      "n_nodes": 1
+     },
+     {
+      "name": "中の島1条1変電所",
+      "kv": 0.0,
+      "lat": 43.03843,
+      "lon": 141.35995,
+      "n_nodes": 1
+     },
+     {
+      "name": "茂辺地変電所",
+      "kv": 0.0,
+      "lat": 41.78074,
+      "lon": 140.57706,
+      "n_nodes": 1
+     }
+    ]
+   }
+  },
+  "east": {
+   "n_keys": 5400,
+   "main": 5086,
+   "fragments": 168,
+   "frag_nodes": 314,
+   "frag_subs": 110,
+   "stages": {
+    "60": {
+     "chains": 8,
+     "new_at_stage": 8,
+     "rejected": {
+      "unreachable": 145,
+      "twin_cross_island": 12,
+      "twin_endpoint": 2,
+      "detour": 1
+     },
+     "components_after": 160,
+     "nodes_joined": 11,
+     "seam_hist_m": {
+      "60": 8
+     }
+    },
+    "120": {
+     "chains": 10,
+     "new_at_stage": 2,
+     "rejected": {
+      "unreachable": 143,
+      "twin_cross_island": 12,
+      "twin_endpoint": 2,
+      "detour": 1
+     },
+     "components_after": 158,
+     "nodes_joined": 15,
+     "seam_hist_m": {
+      "120": 2,
+      "60": 8
+     }
+    },
+    "200": {
+     "chains": 17,
+     "new_at_stage": 7,
+     "rejected": {
+      "unreachable": 134,
+      "detour": 3,
+      "twin_cross_island": 12,
+      "twin_endpoint": 2
+     },
+     "components_after": 151,
+     "nodes_joined": 37,
+     "seam_hist_m": {
+      "200": 7,
+      "120": 2,
+      "60": 8
+     }
+    },
+    "300": {
+     "chains": 21,
+     "new_at_stage": 4,
+     "rejected": {
+      "unreachable": 130,
+      "detour": 3,
+      "twin_cross_island": 12,
+      "twin_endpoint": 2
+     },
+     "components_after": 147,
+     "nodes_joined": 47,
+     "seam_hist_m": {
+      "200": 7,
+      "300": 4,
+      "120": 2,
+      "60": 8
+     }
+    }
+   },
+   "same_site": 4,
+   "residual_classes": {
+    "f_unclassified": 104,
+    "f_unclassified_gap_1-3km": 48,
+    "f_unclassified_gap_≤1km": 36,
+    "c_cross_island_twin": 12,
+    "f_unclassified_gap_3-10km": 14,
+    "d_rail": 12,
+    "f_unclassified_gap_>10km": 6,
+    "e_named_in_disclosure": 7,
+    "d_distribution_kv_unknown": 27,
+    "d_remote_or_island": 6
+   },
+   "residual_examples": {
+    "f_unclassified": [
+     {
+      "name": "tokyo junction 35.9661:139.6611:0",
+      "kv": 0.0,
+      "lat": 35.96606,
+      "lon": 139.66115,
+      "n_nodes": 27
+     },
+     {
+      "name": "南会津町変電所",
+      "kv": 0.0,
+      "lat": 37.20401,
+      "lon": 139.78844,
+      "n_nodes": 10
+     },
+     {
+      "name": "神立変電所_2",
+      "kv": 0.0,
+      "lat": 36.91369,
+      "lon": 138.80805,
+      "n_nodes": 6
+     }
+    ],
+    "c_cross_island_twin": [
+     {
+      "name": "tokyo junction 36.6453:139.1105:0",
+      "kv": 0.0,
+      "lat": 36.64534,
+      "lon": 139.11047,
+      "n_nodes": 4
+     },
+     {
+      "name": "福島変電所",
+      "kv": 66.0,
+      "lat": 41.49855,
+      "lon": 140.25102,
+      "n_nodes": 2
+     },
+     {
+      "name": "tokyo junction 35.254:139.0431:0",
+      "kv": 0.0,
+      "lat": 35.25396,
+      "lon": 139.04313,
+      "n_nodes": 2
+     }
+    ],
+    "d_rail": [
+     {
+      "name": "えちごトキめき鉄道(株)二本木変電所",
+      "kv": 0.0,
+      "lat": 36.98364,
+      "lon": 138.22599,
+      "n_nodes": 3
+     },
+     {
+      "name": "波木井変電所",
+      "kv": 0.0,
+      "lat": 35.374,
+      "lon": 138.44373,
+      "n_nodes": 3
+     },
+     {
+      "name": "JR東日本 新おいらせき電区分所",
+      "kv": 66.0,
+      "lat": 40.5941,
+      "lon": 141.38625,
+      "n_nodes": 1
+     }
+    ],
+    "e_named_in_disclosure": [
+     {
+      "name": "tokyo_sub_1802",
+      "kv": 0.0,
+      "lat": 37.12579,
+      "lon": 139.71911,
+      "n_nodes": 2
+     },
+     {
+      "name": "三条変電所",
+      "kv": 154.0,
+      "lat": 37.63639,
+      "lon": 138.96167,
+      "n_nodes": 2
+     },
+     {
+      "name": "栄町変電所",
+      "kv": 0.0,
+      "lat": 37.75563,
+      "lon": 140.46251,
+      "n_nodes": 1
+     }
+    ],
+    "d_distribution_kv_unknown": [
+     {
+      "name": "寄居浜変電所",
+      "kv": 0.0,
+      "lat": 37.92573,
+      "lon": 139.03077,
+      "n_nodes": 1
+     },
+     {
+      "name": "東北電力花京院変電所",
+      "kv": 0.0,
+      "lat": 38.2644,
+      "lon": 140.88053,
+      "n_nodes": 1
+     },
+     {
+      "name": "美田園一丁目変電所",
+      "kv": 0.0,
+      "lat": 38.16295,
+      "lon": 140.90765,
+      "n_nodes": 1
+     }
+    ],
+    "d_remote_or_island": [
+     {
+      "name": "温海変電所",
+      "kv": 66.0,
+      "lat": 38.61628,
+      "lon": 139.60411,
+      "n_nodes": 1
+     },
+     {
+      "name": "塩原3号配電塔",
+      "kv": 66.0,
+      "lat": 36.97734,
+      "lon": 139.80664,
+      "n_nodes": 1
+     },
+     {
+      "name": "ふくしま絆",
+      "kv": 0.0,
+      "lat": 37.30999,
+      "lon": 141.22407,
+      "n_nodes": 1
+     }
+    ]
+   }
+  },
+  "west": {
+   "n_keys": 7230,
+   "main": 6481,
+   "fragments": 403,
+   "frag_nodes": 749,
+   "frag_subs": 190,
+   "stages": {
+    "60": {
+     "chains": 26,
+     "new_at_stage": 26,
+     "rejected": {
+      "twin_endpoint": 6,
+      "unreachable": 341,
+      "twin_cross_island": 25,
+      "detour": 5
+     },
+     "components_after": 377,
+     "nodes_joined": 42,
+     "seam_hist_m": {
+      "60": 26
+     }
+    },
+    "120": {
+     "chains": 35,
+     "new_at_stage": 9,
+     "rejected": {
+      "twin_endpoint": 7,
+      "unreachable": 330,
+      "twin_cross_island": 25,
+      "detour": 6
+     },
+     "components_after": 368,
+     "nodes_joined": 64,
+     "seam_hist_m": {
+      "120": 10,
+      "60": 25
+     }
+    },
+    "200": {
+     "chains": 48,
+     "new_at_stage": 13,
+     "rejected": {
+      "twin_endpoint": 8,
+      "detour": 11,
+      "unreachable": 311,
+      "twin_cross_island": 25
+     },
+     "components_after": 355,
+     "nodes_joined": 91,
+     "seam_hist_m": {
+      "120": 8,
+      "200": 15,
+      "60": 25
+     }
+    },
+    "300": {
+     "chains": 60,
+     "new_at_stage": 13,
+     "rejected": {
+      "twin_endpoint": 8,
+      "detour": 15,
+      "unreachable": 295,
+      "twin_cross_island": 25
+     },
+     "components_after": 343,
+     "nodes_joined": 116,
+     "seam_hist_m": {
+      "120": 8,
+      "200": 12,
+      "60": 25,
+      "300": 15
+     }
+    }
+   },
+   "same_site": 1,
+   "residual_classes": {
+    "e_named_in_disclosure": 14,
+    "d_rail": 19,
+    "f_unclassified": 231,
+    "f_unclassified_gap_1-3km": 82,
+    "f_unclassified_gap_3-10km": 55,
+    "f_unclassified_gap_>10km": 42,
+    "f_unclassified_gap_≤1km": 52,
+    "c_cross_island_twin": 25,
+    "d_distribution_kv_unknown": 102,
+    "d_remote_or_island": 12
+   },
+   "residual_examples": {
+    "e_named_in_disclosure": [
+     {
+      "name": "西相模変電所",
+      "kv": 77.0,
+      "lat": 35.29205,
+      "lon": 139.1205,
+      "n_nodes": 22
+     },
+     {
+      "name": "清水変電所",
+      "kv": 66.0,
+      "lat": 36.47448,
+      "lon": 140.06508,
+      "n_nodes": 1
+     },
+     {
+      "name": "tokyo_sub_1784",
+      "kv": 0.0,
+      "lat": 35.2652,
+      "lon": 138.22646,
+      "n_nodes": 1
+     }
+    ],
+    "d_rail": [
+     {
+      "name": "大町市変電所_6",
+      "kv": 0.0,
+      "lat": 36.47118,
+      "lon": 137.86063,
+      "n_nodes": 13
+     },
+     {
+      "name": "東日本旅客鉄道(株)神保原変電所",
+      "kv": 154.0,
+      "lat": 36.25018,
+      "lon": 139.15804,
+      "n_nodes": 2
+     },
+     {
+      "name": "新高崎き電区分所",
+      "kv": 66.0,
+      "lat": 36.29434,
+      "lon": 139.02672,
+      "n_nodes": 2
+     }
+    ],
+    "f_unclassified": [
+     {
+      "name": "kansai junction 34.3441:136.7615:77",
+      "kv": 77.0,
+      "lat": 34.34409,
+      "lon": 136.76153,
+      "n_nodes": 12
+     },
+     {
+      "name": "kyushu junction 32.0922:130.829:0",
+      "kv": 0.0,
+      "lat": 32.0922,
+      "lon": 130.82903,
+      "n_nodes": 12
+     },
+     {
+      "name": "kyushu junction 33.206:129.6915:0",
+      "kv": 0.0,
+      "lat": 33.20605,
+      "lon": 129.69149,
+      "n_nodes": 10
+     }
+    ],
+    "c_cross_island_twin": [
+     {
+      "name": "chubu junction 36.6453:139.1105:0",
+      "kv": 0.0,
+      "lat": 36.64534,
+      "lon": 139.11047,
+      "n_nodes": 4
+     },
+     {
+      "name": "tokyo junction 36.8088:138.6189:0",
+      "kv": 0.0,
+      "lat": 36.80882,
+      "lon": 138.61891,
+      "n_nodes": 2
+     },
+     {
+      "name": "chubu junction 35.7091:138.9113:0",
+      "kv": 0.0,
+      "lat": 35.70905,
+      "lon": 138.91126,
+      "n_nodes": 2
+     }
+    ],
+    "d_distribution_kv_unknown": [
+     {
+      "name": "奥裾花地下発電所",
+      "kv": 0.0,
+      "lat": 36.72448,
+      "lon": 137.96762,
+      "n_nodes": 1
+     },
+     {
+      "name": "中部電力パワーグリッド(株) 屋代変電所",
+      "kv": 0.0,
+      "lat": 36.53822,
+      "lon": 138.11757,
+      "n_nodes": 1
+     },
+     {
+      "name": "鶴舞一丁目変電所",
+      "kv": 0.0,
+      "lat": 35.15505,
+      "lon": 136.91898,
+      "n_nodes": 1
+     }
+    ],
+    "d_remote_or_island": [
+     {
+      "name": "白馬村変電所",
+      "kv": 0.0,
+      "lat": 36.68775,
+      "lon": 137.85064,
+      "n_nodes": 1
+     },
+     {
+      "name": "室津変電所",
+      "kv": 0.0,
+      "lat": 34.51319,
+      "lon": 134.86978,
+      "n_nodes": 1
+     },
+     {
+      "name": "室生大野変電所",
+      "kv": 0.0,
+      "lat": 34.56652,
+      "lon": 136.01443,
+      "n_nodes": 1
+     }
+    ]
+   }
+  },
+  "okinawa": {
+   "n_keys": 81,
+   "main": 75,
+   "fragments": 6,
+   "frag_nodes": 6,
+   "frag_subs": 6,
+   "stages": {
+    "60": {
+     "chains": 0,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 6
+     },
+     "components_after": 6,
+     "nodes_joined": 0,
+     "seam_hist_m": {}
+    },
+    "120": {
+     "chains": 0,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 6
+     },
+     "components_after": 6,
+     "nodes_joined": 0,
+     "seam_hist_m": {}
+    },
+    "200": {
+     "chains": 0,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 6
+     },
+     "components_after": 6,
+     "nodes_joined": 0,
+     "seam_hist_m": {}
+    },
+    "300": {
+     "chains": 0,
+     "new_at_stage": 0,
+     "rejected": {
+      "unreachable": 6
+     },
+     "components_after": 6,
+     "nodes_joined": 0,
+     "seam_hist_m": {}
+    }
+   },
+   "same_site": 0,
+   "residual_classes": {
+    "d_remote_or_island": 3,
+    "d_distribution_kv_unknown": 3
+   },
+   "residual_examples": {
+    "d_remote_or_island": [
+     {
+      "name": "奥間変電所",
+      "kv": 0.0,
+      "lat": 26.73094,
+      "lon": 128.16963,
+      "n_nodes": 1
+     },
+     {
+      "name": "宮古島市変電所",
+      "kv": 0.0,
+      "lat": 24.74434,
+      "lon": 125.36296,
+      "n_nodes": 1
+     },
+     {
+      "name": "沖縄電力 竹富配電塔",
+      "kv": 0.0,
+      "lat": 24.33091,
+      "lon": 124.08282,
+      "n_nodes": 1
+     }
+    ],
+    "d_distribution_kv_unknown": [
+     {
+      "name": "与根変電所",
+      "kv": 0.0,
+      "lat": 26.16423,
+      "lon": 127.66237,
+      "n_nodes": 1
+     },
+     {
+      "name": "知念久手堅変電所",
+      "kv": 0.0,
+      "lat": 26.1741,
+      "lon": 127.81938,
+      "n_nodes": 1
+     },
+     {
+      "name": "美浜三丁目変電所",
+      "kv": 0.0,
+      "lat": 26.32553,
+      "lon": 127.75687,
+      "n_nodes": 1
+     }
+    ]
+   }
+  }
+ },
+ "chains": [
+  {
+   "n_ways": 3,
+   "stitch_m": 213,
+   "max_seam_m": 213,
+   "fk": [
+    42.79477,
+    141.50607
+   ],
+   "mk": [
+    42.78943,
+    141.43845
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 34,
+   "island": "hokkaido",
+   "names": [
+    "Ōji Seishi Kabushiki kaisha 66.0kV線",
+    "Ōji Seishi Kabushiki kaisha 66.0kV線",
+    "苫小牧変電所~千歳市変電所線"
+   ],
+   "frag_name": "hokkaido junction 42.7948:141.5061:66",
+   "frag_kv": 66.0,
+   "main_name": "千歳市変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 5.904,
+   "straight_km": 5.54,
+   "detour": 1.07,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 221,
+   "max_seam_m": 133,
+   "fk": [
+    43.46274,
+    141.88112
+   ],
+   "mk": [
+    43.4632,
+    141.89014
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 1,
+   "island": "hokkaido",
+   "names": [
+    "北海道送電線_50",
+    "北海道送電線_57",
+    "空知線"
+   ],
+   "frag_name": "hokkaido junction 43.4627:141.8811:0",
+   "frag_kv": 0.0,
+   "main_name": "hokkaido junction 43.4632:141.8901:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.92,
+   "straight_km": 0.728,
+   "detour": 1.26,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 133,
+   "max_seam_m": 133,
+   "fk": [
+    43.46367,
+    141.88862
+   ],
+   "mk": [
+    43.4632,
+    141.89014
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 1,
+   "island": "hokkaido",
+   "names": [
+    "北海道送電線_57",
+    "空知線"
+   ],
+   "frag_name": "hokkaido junction 43.4637:141.8886:0",
+   "frag_kv": 0.0,
+   "main_name": "hokkaido junction 43.4632:141.8901:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.134,
+   "straight_km": 0.133,
+   "detour": 0.67,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 127,
+   "max_seam_m": 127,
+   "fk": [
+    37.30846,
+    139.9032
+   ],
+   "mk": [
+    37.30944,
+    139.90395
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_34",
+    "東北送電線_2"
+   ],
+   "frag_name": "tohoku junction 37.3085:139.9032:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.3094:139.904:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 10,
+   "length_km": 0.128,
+   "straight_km": 0.127,
+   "detour": 0.64,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 261,
+   "max_seam_m": 261,
+   "fk": [
+    36.97292,
+    140.40334
+   ],
+   "mk": [
+    37.02233,
+    140.39313
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_131",
+    "東北電力ネットワーク 66.0kV線"
+   ],
+   "frag_name": "tohoku junction 36.9729:140.4033:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.0223:140.3931:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 4,
+   "length_km": 5.717,
+   "straight_km": 5.559,
+   "detour": 1.03,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 127,
+   "max_seam_m": 127,
+   "fk": [
+    37.30859,
+    139.90299
+   ],
+   "mk": [
+    37.30944,
+    139.90395
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_35",
+    "東北送電線_2"
+   ],
+   "frag_name": "tohoku junction 37.3086:139.903:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.3094:139.904:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.128,
+   "straight_km": 0.127,
+   "detour": 0.64,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 143,
+   "max_seam_m": 143,
+   "fk": [
+    37.43594,
+    139.87847
+   ],
+   "mk": [
+    37.43572,
+    139.91256
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_50",
+    "東北電力ネットワーク 66.0kV線"
+   ],
+   "frag_name": "tohoku junction 37.4359:139.8785:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.4357:139.9126:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 3.242,
+   "straight_km": 3.005,
+   "detour": 1.08,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 147,
+   "max_seam_m": 147,
+   "fk": [
+    37.30739,
+    139.00155
+   ],
+   "mk": [
+    37.26138,
+    138.98315
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_51",
+    "東北電力ネットワーク 66.0kV線"
+   ],
+   "frag_name": "tohoku junction 37.3074:139.0015:0",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 37.2614:138.9832:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 5.606,
+   "straight_km": 5.359,
+   "detour": 1.05,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 203,
+   "max_seam_m": 203,
+   "fk": [
+    37.79584,
+    139.26631
+   ],
+   "mk": [
+    37.80315,
+    139.27531
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_13",
+    "越後開閉所~新潟変電所線"
+   ],
+   "frag_name": "tohoku junction 37.7958:139.2663:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.8032:139.2753:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.339,
+   "straight_km": 1.132,
+   "detour": 1.18,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 197,
+   "max_seam_m": 197,
+   "fk": [
+    38.25979,
+    140.99187
+   ],
+   "mk": [
+    38.26376,
+    140.99127
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_55",
+    "東若林変電所~仙台港変電所線"
+   ],
+   "frag_name": "tohoku junction 38.2598:140.9919:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 38.2638:140.9913:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.664,
+   "straight_km": 0.444,
+   "detour": 1.5,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 103,
+   "max_seam_m": 103,
+   "fk": [
+    38.08845,
+    140.65819
+   ],
+   "mk": [
+    38.05823,
+    140.71979
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東北送電線_98",
+    "沼辺変電所~蔵王町変電所線"
+   ],
+   "frag_name": "tohoku junction 38.0884:140.6582:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 38.0582:140.7198:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.566,
+   "straight_km": 6.341,
+   "detour": 1.04,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 467,
+   "max_seam_m": 254,
+   "fk": [
+    35.41992,
+    139.31829
+   ],
+   "mk": [
+    35.38214,
+    139.3488
+   ],
+   "d_frag_m": 16,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "粟窪線",
+    "秦浜線;湘南線",
+    "湘南線 / 東秦野線"
+   ],
+   "frag_name": "東富岡変電所",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 35.3821:139.3488:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.457,
+   "straight_km": 5.02,
+   "detour": 1.29,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 197,
+   "max_seam_m": 197,
+   "fk": [
+    35.139,
+    138.9151
+   ],
+   "mk": [
+    35.15057,
+    138.95633
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東京送電線_166",
+    "田方線"
+   ],
+   "frag_name": "tokyo junction 35.139:138.9151:0",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 35.1506:138.9563:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.407,
+   "straight_km": 3.957,
+   "detour": 1.11,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 112,
+   "max_seam_m": 112,
+   "fk": [
+    36.77777,
+    140.67914
+   ],
+   "mk": [
+    36.77572,
+    140.67984
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "横川線",
+    "大北線"
+   ],
+   "frag_name": "tokyo junction 36.7778:140.6791:0",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 36.7757:140.6798:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.255,
+   "straight_km": 0.236,
+   "detour": 1.08,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.78576,
+    138.38904
+   ],
+   "mk": [
+    35.81586,
+    138.33161
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 33,
+   "island": "east",
+   "names": [
+    "白州線"
+   ],
+   "frag_name": "tokyo junction 35.7858:138.389:66",
+   "frag_kv": 66.0,
+   "main_name": "白州変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.419,
+   "straight_km": 6.157,
+   "detour": 1.04,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 127,
+   "max_seam_m": 127,
+   "fk": [
+    37.20168,
+    139.79162
+   ],
+   "mk": [
+    37.30944,
+    139.90395
+   ],
+   "d_frag_m": 16,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "下郷町変電所~南会津町変電所線",
+    "東北送電線_34",
+    "東北送電線_2"
+   ],
+   "frag_name": "tokyo junction 37.2017:139.7916:0",
+   "frag_kv": 0.0,
+   "main_name": "tohoku junction 37.3094:139.904:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 20.436,
+   "straight_km": 15.547,
+   "detour": 1.31,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.21841,
+    138.92653
+   ],
+   "mk": [
+    35.17885,
+    138.91661
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 6,
+   "island": "east",
+   "names": [
+    "深良線"
+   ],
+   "frag_name": "chubu junction 35.2184:138.9265:66",
+   "frag_kv": 66.0,
+   "main_name": "裾野変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.712,
+   "straight_km": 4.482,
+   "detour": 1.05,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.37323,
+    138.9604
+   ],
+   "mk": [
+    35.38841,
+    138.93166
+   ],
+   "d_frag_m": 75,
+   "d_main_m": 1,
+   "island": "east",
+   "names": [
+    "佐久間東幹線 東富士分岐線"
+   ],
+   "frag_name": "chubu junction 35.3732:138.9604:275",
+   "frag_kv": 275.0,
+   "main_name": "tokyo junction 35.3884:138.9317:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.421,
+   "straight_km": 3.099,
+   "detour": 1.43,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 454,
+   "max_seam_m": 229,
+   "fk": [
+    35.28688,
+    138.90268
+   ],
+   "mk": [
+    35.28753,
+    138.91052
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東京電力パワーグリッド 66.0kV線",
+    "東京電力パワーグリッド 66.0kV線",
+    "東京送電線_120"
+   ],
+   "frag_name": "chubu junction 35.2869:138.9027:66",
+   "frag_kv": 66.0,
+   "main_name": "tokyo junction 35.2875:138.9105:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.98,
+   "straight_km": 0.714,
+   "detour": 1.37,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.46678,
+    140.0721
+   ],
+   "mk": [
+    36.48007,
+    140.05761
+   ],
+   "d_frag_m": 6,
+   "d_main_m": 1,
+   "island": "east",
+   "names": [
+    "旭光学益子線",
+    "清水線"
+   ],
+   "frag_name": "益子町変電所",
+   "frag_kv": 66.0,
+   "main_name": "tokyo junction 36.4801:140.0576:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 2.045,
+   "straight_km": 1.962,
+   "detour": 1.04,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.68308,
+    138.94975
+   ],
+   "mk": [
+    34.74902,
+    138.80501
+   ],
+   "d_frag_m": 7,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東京電力パワーグリッド 66.0kV線",
+    "東京電力パワーグリッド 66.0kV線",
+    "中変電所~南郷変電所線"
+   ],
+   "frag_name": "中変電所",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 34.749:138.805:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 22.374,
+   "straight_km": 15.103,
+   "detour": 1.48,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.75314,
+    138.80441
+   ],
+   "mk": [
+    34.74902,
+    138.80501
+   ],
+   "d_frag_m": 48,
+   "d_main_m": 0,
+   "island": "east",
+   "names": [
+    "東京電力パワーグリッド 66.0kV線"
+   ],
+   "frag_name": "南郷変電所",
+   "frag_kv": 0.0,
+   "main_name": "tokyo junction 34.749:138.805:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.545,
+   "straight_km": 0.461,
+   "detour": 1.18,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.38757,
+    138.98873
+   ],
+   "mk": [
+    36.38757,
+    138.98875
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 1,
+   "island": "east",
+   "names": [
+    "東京電力パワーグリッド 66.0kV線"
+   ],
+   "frag_name": "保渡田町変電所",
+   "frag_kv": 66.0,
+   "main_name": "保渡田変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.02,
+   "straight_km": 0.002,
+   "detour": 0.1,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.92247,
+    138.82087
+   ],
+   "mk": [
+    36.92354,
+    138.81998
+   ],
+   "d_frag_m": 76,
+   "d_main_m": 21,
+   "island": "east",
+   "names": [
+    "東京電力パワーグリッド 275.0kV線"
+   ],
+   "frag_name": "新湯沢変電所",
+   "frag_kv": 275.0,
+   "main_name": "新湯沢変電所",
+   "main_kv": 275.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.17,
+   "straight_km": 0.143,
+   "detour": 0.85,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 112,
+   "max_seam_m": 112,
+   "fk": [
+    35.81548,
+    138.07626
+   ],
+   "mk": [
+    35.71023,
+    137.99768
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 3,
+   "island": "west",
+   "names": [
+    "中部送電線_949",
+    "信濃幹線"
+   ],
+   "frag_name": "chubu junction 35.8155:138.0763:0",
+   "frag_kv": 0.0,
+   "main_name": "南信変電所 500kV",
+   "main_kv": 500.0,
+   "n_frag_nodes": 4,
+   "length_km": 14.131,
+   "straight_km": 13.657,
+   "detour": 1.03,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 152,
+   "max_seam_m": 152,
+   "fk": [
+    34.96651,
+    136.82639
+   ],
+   "mk": [
+    35.03089,
+    136.88798
+   ],
+   "d_frag_m": 74,
+   "d_main_m": 1,
+   "island": "west",
+   "names": [
+    "中部送電線_498",
+    "東浜三丁目変電所~浅山一丁目変電所線"
+   ],
+   "frag_name": "chubu junction 34.9665:136.8264:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.0309:136.888:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 4,
+   "length_km": 11.233,
+   "straight_km": 9.08,
+   "detour": 1.24,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.67198,
+    137.46028
+   ],
+   "mk": [
+    36.67217,
+    137.46015
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 24,
+   "island": "west",
+   "names": [
+    "大浦変電所~富山市変電所線"
+   ],
+   "frag_name": "chubu junction 36.672:137.4603:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.6722:137.4601:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 4,
+   "length_km": 0.024,
+   "straight_km": 0.024,
+   "detour": 0.12,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 133,
+   "max_seam_m": 133,
+   "fk": [
+    33.94736,
+    132.09344
+   ],
+   "mk": [
+    34.19798,
+    131.82529
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "九州送電線_544",
+    "古開作変電所~美和町西畑変電所線"
+   ],
+   "frag_name": "chugoku junction 33.9474:132.0934:0",
+   "frag_kv": 0.0,
+   "main_name": "shikoku junction 34.198:131.8253:220",
+   "main_kv": 220.0,
+   "n_frag_nodes": 4,
+   "length_km": 42.382,
+   "straight_km": 37.196,
+   "detour": 1.14,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.3865,
+    138.03224
+   ],
+   "mk": [
+    35.38837,
+    138.0327
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_416"
+   ],
+   "frag_name": "tokyo junction 35.3865:138.0322:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.3884:138.0327:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.213,
+   "straight_km": 0.212,
+   "detour": 1.0,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.31981,
+    138.18681
+   ],
+   "mk": [
+    35.36856,
+    138.1955
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部電力パワーグリッド 154.0kV線"
+   ],
+   "frag_name": "tokyo junction 35.3198:138.1868:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.3686:138.1955:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.322,
+   "straight_km": 5.468,
+   "detour": 1.16,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.45982,
+    138.19049
+   ],
+   "mk": [
+    36.45906,
+    138.19059
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 7,
+   "island": "west",
+   "names": [
+    "四ツ屋変電所~南条変電所線"
+   ],
+   "frag_name": "tokyo junction 36.4598:138.1905:77",
+   "frag_kv": 77.0,
+   "main_name": "四ツ屋変電所",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.085,
+   "straight_km": 0.085,
+   "detour": 0.43,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.60919,
+    138.24832
+   ],
+   "mk": [
+    36.60784,
+    138.24937
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 48,
+   "island": "west",
+   "names": [
+    "中部送電線_23"
+   ],
+   "frag_name": "tokyo junction 36.6092:138.2483:0",
+   "frag_kv": 0.0,
+   "main_name": "田中変電所 77kV",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.177,
+   "straight_km": 0.177,
+   "detour": 0.89,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.04692,
+    138.06711
+   ],
+   "mk": [
+    35.01091,
+    137.90791
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "青部変電所~春野町領家変電所線"
+   ],
+   "frag_name": "tokyo junction 35.0469:138.0671:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.0109:137.9079:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 17.037,
+   "straight_km": 15.009,
+   "detour": 1.14,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 185,
+   "max_seam_m": 185,
+   "fk": [
+    35.41341,
+    136.27756
+   ],
+   "mk": [
+    35.41543,
+    136.27501
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "関西送電線_407",
+    "新長浜支線"
+   ],
+   "frag_name": "chubu junction 35.4134:136.2776:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.4154:136.275:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.378,
+   "straight_km": 0.322,
+   "detour": 1.18,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 281,
+   "max_seam_m": 281,
+   "fk": [
+    34.75691,
+    136.51866
+   ],
+   "mk": [
+    34.82668,
+    136.55694
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "関西送電線_429",
+    "新鈴鹿河芸線"
+   ],
+   "frag_name": "chubu junction 34.7569:136.5187:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 34.8267:136.5569:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 9.209,
+   "straight_km": 8.495,
+   "detour": 1.08,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 151,
+   "max_seam_m": 151,
+   "fk": [
+    35.36202,
+    136.55043
+   ],
+   "mk": [
+    35.50536,
+    136.86981
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "青野町変電所~十六町変電所線",
+    "丸山幹線"
+   ],
+   "frag_name": "chubu junction 35.362:136.5504:0",
+   "frag_kv": 0.0,
+   "main_name": "kansai junction 35.5054:136.8698:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 2,
+   "length_km": 39.099,
+   "straight_km": 33.0,
+   "detour": 1.18,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 265,
+   "max_seam_m": 265,
+   "fk": [
+    34.88002,
+    137.44063
+   ],
+   "mk": [
+    34.88808,
+    137.4126
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_200",
+    "額田三河線"
+   ],
+   "frag_name": "chubu junction 34.88:137.4406:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 34.8881:137.4126:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 2,
+   "length_km": 2.981,
+   "straight_km": 2.705,
+   "detour": 1.1,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 259,
+   "max_seam_m": 259,
+   "fk": [
+    35.06024,
+    137.09442
+   ],
+   "mk": [
+    35.05841,
+    137.09618
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "三好変電所~名古屋鉄道線",
+    "中部電力パワーグリッド 77.0kV線"
+   ],
+   "frag_name": "chubu junction 35.0602:137.0944:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.0584:137.0962:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.345,
+   "straight_km": 0.259,
+   "detour": 1.33,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 220,
+   "max_seam_m": 220,
+   "fk": [
+    35.55862,
+    135.97122
+   ],
+   "mk": [
+    35.55663,
+    135.97246
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 26,
+   "island": "west",
+   "names": [
+    "色浜変電所~疋田変電所線",
+    "関西電力送配電 500.0kV線"
+   ],
+   "frag_name": "chubu junction 35.5586:135.9712:500",
+   "frag_kv": 500.0,
+   "main_name": "嶺南変電所 500kV",
+   "main_kv": 500.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.249,
+   "straight_km": 0.248,
+   "detour": 1.01,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 110,
+   "max_seam_m": 110,
+   "fk": [
+    35.46595,
+    136.46293
+   ],
+   "mk": [
+    35.46463,
+    136.55126
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "揖斐川町変電所~揖斐変電所線",
+    "中部送電線_635"
+   ],
+   "frag_name": "chubu junction 35.4659:136.4629:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.4646:136.5513:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 8.653,
+   "straight_km": 7.987,
+   "detour": 1.08,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 100,
+   "max_seam_m": 100,
+   "fk": [
+    35.33888,
+    136.65145
+   ],
+   "mk": [
+    35.35435,
+    136.6505
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 1,
+   "island": "west",
+   "names": [
+    "中部送電線_857",
+    "中部送電線_346"
+   ],
+   "frag_name": "chubu junction 35.3389:136.6515:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.3543:136.6505:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.907,
+   "straight_km": 1.719,
+   "detour": 1.11,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 229,
+   "max_seam_m": 229,
+   "fk": [
+    35.21079,
+    137.52058
+   ],
+   "mk": [
+    35.15994,
+    137.53939
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_7",
+    "田口変電所~豊田市変電所線"
+   ],
+   "frag_name": "chubu junction 35.2108:137.5206:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.1599:137.5394:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.991,
+   "straight_km": 5.897,
+   "detour": 1.19,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 4,
+   "stitch_m": 43,
+   "max_seam_m": 43,
+   "fk": [
+    35.56439,
+    138.91073
+   ],
+   "mk": [
+    35.63572,
+    138.59034
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 1,
+   "island": "west",
+   "names": [
+    "東海小形山線",
+    "都留線（廃線）",
+    "東海高下線",
+    "御坂線"
+   ],
+   "frag_name": "chubu junction 35.5644:138.9107:154",
+   "frag_kv": 154.0,
+   "main_name": "chubu junction 35.6357:138.5903:154",
+   "main_kv": 154.0,
+   "n_frag_nodes": 2,
+   "length_km": 31.227,
+   "straight_km": 29.993,
+   "detour": 1.04,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 172,
+   "max_seam_m": 89,
+   "fk": [
+    34.68953,
+    137.67158
+   ],
+   "mk": [
+    34.69455,
+    137.68663
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 44,
+   "island": "west",
+   "names": [
+    "中部送電線_373",
+    "遠江高塚線",
+    "竜禅寺高塚線"
+   ],
+   "frag_name": "chubu junction 34.6895:137.6716:0",
+   "frag_kv": 0.0,
+   "main_name": "JR東海 新高塚変電所",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 2.035,
+   "straight_km": 1.482,
+   "detour": 1.37,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 96,
+   "max_seam_m": 96,
+   "fk": [
+    35.74972,
+    138.07668
+   ],
+   "mk": [
+    35.7661,
+    138.084
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "下川手変電所~南信変電所線",
+    "下川手変電所~南信変電所線"
+   ],
+   "frag_name": "chubu junction 35.7497:138.0767:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.7661:138.084:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 2.079,
+   "straight_km": 1.934,
+   "detour": 1.07,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 223,
+   "max_seam_m": 223,
+   "fk": [
+    36.78447,
+    137.05638
+   ],
+   "mk": [
+    36.78341,
+    137.05495
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_254",
+    "中部送電線_253"
+   ],
+   "frag_name": "chubu junction 36.7845:137.0564:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.7834:137.055:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.322,
+   "straight_km": 0.173,
+   "detour": 1.61,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 173,
+   "max_seam_m": 173,
+   "fk": [
+    36.36313,
+    136.43083
+   ],
+   "mk": [
+    36.34701,
+    136.46313
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_938",
+    "粟津線"
+   ],
+   "frag_name": "chubu junction 36.3631:136.4308:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.347:136.4631:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 3.525,
+   "straight_km": 3.397,
+   "detour": 1.04,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 184,
+   "max_seam_m": 184,
+   "fk": [
+    36.72797,
+    136.93915
+   ],
+   "mk": [
+    36.74932,
+    136.96494
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 15,
+   "island": "west",
+   "names": [
+    "中部送電線_1019",
+    "波岡変電所~福岡町下蓑新変電所線"
+   ],
+   "frag_name": "chubu junction 36.728:136.9391:0",
+   "frag_kv": 0.0,
+   "main_name": "四日市変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 3.776,
+   "straight_km": 3.299,
+   "detour": 1.14,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 163,
+   "max_seam_m": 163,
+   "fk": [
+    36.93319,
+    137.84277
+   ],
+   "mk": [
+    37.01094,
+    137.79292
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_445",
+    "白馬村変電所~糸魚川市変電所線"
+   ],
+   "frag_name": "chubu junction 36.9332:137.8428:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 37.0109:137.7929:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 14.471,
+   "straight_km": 9.698,
+   "detour": 1.49,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 102,
+   "max_seam_m": 102,
+   "fk": [
+    36.89166,
+    137.86779
+   ],
+   "mk": [
+    36.98787,
+    137.87404
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_446",
+    "中部送電線_283"
+   ],
+   "frag_name": "chubu junction 36.8917:137.8678:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.9879:137.874:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 13.361,
+   "straight_km": 10.694,
+   "detour": 1.25,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 133,
+   "max_seam_m": 133,
+   "fk": [
+    36.93752,
+    137.85733
+   ],
+   "mk": [
+    36.98787,
+    137.87404
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "朝日町変電所~糸魚川市変電所線",
+    "中部送電線_283"
+   ],
+   "frag_name": "chubu junction 36.9375:137.8573:0",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.9879:137.874:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 7.542,
+   "straight_km": 5.782,
+   "detour": 1.3,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.35359,
+    139.03359
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 72,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "碓氷線",
+    "碓氷線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.3536:139.0336:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 8.542,
+   "straight_km": 7.135,
+   "detour": 1.2,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 4,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.57216,
+    138.73334
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 29,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "榛名線",
+    "榛名線",
+    "榛名線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.5722:138.7333:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 38.013,
+   "straight_km": 31.771,
+   "detour": 1.2,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 6,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.58511,
+    138.84443
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 36,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "中之条線",
+    "吾妻川線",
+    "川戸線",
+    "榛名線",
+    "榛名線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.5851:138.8444:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 42.193,
+   "straight_km": 28.131,
+   "detour": 1.5,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 6,
+   "stitch_m": 22,
+   "max_seam_m": 22,
+   "fk": [
+    36.33206,
+    139.06391
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 20,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "大類線",
+    "多野線/烏川線",
+    "高崎線/多野線/烏川線",
+    "碓氷線",
+    "碓氷線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.3321:139.0639:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 13.149,
+   "straight_km": 9.964,
+   "detour": 1.32,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 4,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.25748,
+    138.86083
+   ],
+   "mk": [
+    36.34737,
+    138.95407
+   ],
+   "d_frag_m": 25,
+   "d_main_m": 12,
+   "island": "west",
+   "names": [
+    "小舟変電所~北甘変電所線",
+    "磯部線",
+    "磯部線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.2575:138.8608:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3474:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 17.149,
+   "straight_km": 13.008,
+   "detour": 1.32,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.95327,
+    138.92771
+   ],
+   "mk": [
+    35.9515,
+    138.93111
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 43,
+   "island": "west",
+   "names": [
+    "宮平線 / 楢平線"
+   ],
+   "frag_name": "chubu junction 35.9533:138.9277:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 35.9515:138.9311:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.425,
+   "straight_km": 0.363,
+   "detour": 1.17,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 5,
+   "stitch_m": 208,
+   "max_seam_m": 208,
+   "fk": [
+    35.9748,
+    139.11105
+   ],
+   "mk": [
+    35.95895,
+    139.05341
+   ],
+   "d_frag_m": 12,
+   "d_main_m": 12,
+   "island": "west",
+   "names": [
+    "西武横瀬線",
+    "秩父線",
+    "影森線 / 秩父線",
+    "秩父線",
+    "浦山線"
+   ],
+   "frag_name": "横瀬変電所",
+   "frag_kv": 66.0,
+   "main_name": "浦山発電所変電設備",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 7.57,
+   "straight_km": 5.469,
+   "detour": 1.38,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 245,
+   "max_seam_m": 245,
+   "fk": [
+    34.7409,
+    134.88175
+   ],
+   "mk": [
+    34.69787,
+    134.91786
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 15,
+   "island": "west",
+   "names": [
+    "野口町坂元北三丁目変電所~岡変電所線",
+    "魚住町錦が丘一丁目変電所~岡変電所線"
+   ],
+   "frag_name": "kansai junction 34.7409:134.8818:0",
+   "frag_kv": 0.0,
+   "main_name": "魚住町錦が丘一丁目変電所",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 6.994,
+   "straight_km": 5.802,
+   "detour": 1.21,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 105,
+   "max_seam_m": 105,
+   "fk": [
+    34.79886,
+    134.73632
+   ],
+   "mk": [
+    34.80742,
+    134.69719
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "関西送電線_275",
+    "城西変電所~別所町佐土一丁目変電所線"
+   ],
+   "frag_name": "kansai junction 34.7989:134.7363:0",
+   "frag_kv": 0.0,
+   "main_name": "kansai junction 34.8074:134.6972:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 3.885,
+   "straight_km": 3.691,
+   "detour": 1.05,
+   "first_stage_m": 120
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 184,
+   "max_seam_m": 184,
+   "fk": [
+    34.9465,
+    135.72704
+   ],
+   "mk": [
+    34.93606,
+    135.7288
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "関西送電線_8",
+    "向日町横大路線"
+   ],
+   "frag_name": "kansai junction 34.9465:135.727:0",
+   "frag_kv": 0.0,
+   "main_name": "kansai junction 34.9361:135.7288:77",
+   "main_kv": 77.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.478,
+   "straight_km": 1.17,
+   "detour": 1.26,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 203,
+   "max_seam_m": 203,
+   "fk": [
+    34.34478,
+    132.50737
+   ],
+   "mk": [
+    34.36279,
+    132.47772
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 5,
+   "island": "west",
+   "names": [
+    "坂変電所~仁保四丁目変電所線",
+    "丹那町変電所~坂変電所線"
+   ],
+   "frag_name": "chugoku junction 34.3448:132.5074:0",
+   "frag_kv": 0.0,
+   "main_name": "丹那町変電所 110kV",
+   "main_kv": 110.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.989,
+   "straight_km": 3.374,
+   "detour": 1.48,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 298,
+   "max_seam_m": 298,
+   "fk": [
+    34.26074,
+    132.22342
+   ],
+   "mk": [
+    34.2816,
+    132.26576
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 65,
+   "island": "west",
+   "names": [
+    "西栄三丁目変電所~沖塩屋一丁目変電所線",
+    "中国電力ネットワーク 66.0kV線"
+   ],
+   "frag_name": "chugoku junction 34.2607:132.2234:0",
+   "frag_kv": 0.0,
+   "main_name": "沖塩屋一丁目変電所",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.849,
+   "straight_km": 4.522,
+   "detour": 1.07,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 265,
+   "max_seam_m": 265,
+   "fk": [
+    33.99222,
+    131.27294
+   ],
+   "mk": [
+    34.01956,
+    131.2915
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "九州送電線_152",
+    "山口市変電所~宇部変電所線"
+   ],
+   "frag_name": "chugoku junction 33.9922:131.2729:0",
+   "frag_kv": 0.0,
+   "main_name": "chugoku junction 34.0196:131.2915:110",
+   "main_kv": 110.0,
+   "n_frag_nodes": 2,
+   "length_km": 4.326,
+   "straight_km": 3.482,
+   "detour": 1.24,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.51834,
+    133.71858
+   ],
+   "mk": [
+    34.5185,
+    133.71859
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 18,
+   "island": "west",
+   "names": [
+    "水島中通三丁目変電所~水島川崎通一丁目変電所線"
+   ],
+   "frag_name": "chugoku junction 34.5183:133.7186:0",
+   "frag_kv": 0.0,
+   "main_name": "chugoku junction 34.5185:133.7186:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 2,
+   "length_km": 0.018,
+   "straight_km": 0.018,
+   "detour": 0.09,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 227,
+   "max_seam_m": 227,
+   "fk": [
+    34.16813,
+    131.21526
+   ],
+   "mk": [
+    34.36719,
+    131.19298
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "九州送電線_338",
+    "新山口変電所~東深川変電所線"
+   ],
+   "frag_name": "chugoku junction 34.1681:131.2153:0",
+   "frag_kv": 0.0,
+   "main_name": "chugoku junction 34.3672:131.193:110",
+   "main_kv": 110.0,
+   "n_frag_nodes": 2,
+   "length_km": 25.456,
+   "straight_km": 22.19,
+   "detour": 1.15,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 124,
+   "max_seam_m": 124,
+   "fk": [
+    35.43131,
+    133.36423
+   ],
+   "mk": [
+    35.41923,
+    133.36905
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中国送電線_316",
+    "上福原三丁目変電所~伯耆大山変電所線"
+   ],
+   "frag_name": "chugoku junction 35.4313:133.3642:0",
+   "frag_kv": 0.0,
+   "main_name": "chugoku junction 35.4192:133.3691:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.895,
+   "straight_km": 1.41,
+   "detour": 1.34,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 130,
+   "max_seam_m": 130,
+   "fk": [
+    35.31477,
+    132.89499
+   ],
+   "mk": [
+    35.32741,
+    132.71943
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 77,
+   "island": "west",
+   "names": [
+    "中国送電線_411",
+    "八雲町変電所~西新町三丁目変電所線"
+   ],
+   "frag_name": "chugoku junction 35.3148:132.895:0",
+   "frag_kv": 0.0,
+   "main_name": "西新町三丁目変電所 110kV",
+   "main_kv": 110.0,
+   "n_frag_nodes": 2,
+   "length_km": 17.255,
+   "straight_km": 15.963,
+   "detour": 1.08,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 192,
+   "max_seam_m": 192,
+   "fk": [
+    34.13381,
+    132.20503
+   ],
+   "mk": [
+    34.14722,
+    132.19679
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中国送電線_426",
+    "中津町三丁目変電所~藤生町一丁目変電所線"
+   ],
+   "frag_name": "chugoku junction 34.1338:132.205:0",
+   "frag_kv": 0.0,
+   "main_name": "chugoku junction 34.1472:132.1968:110",
+   "main_kv": 110.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.957,
+   "straight_km": 1.67,
+   "detour": 1.17,
+   "first_stage_m": 200
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 234,
+   "max_seam_m": 234,
+   "fk": [
+    33.52499,
+    133.49362
+   ],
+   "mk": [
+    33.53524,
+    133.54695
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 38,
+   "island": "west",
+   "names": [
+    "四国送電線_29",
+    "春野変電所~大原町変電所線",
+    "孕変電所~大原町変電所線"
+   ],
+   "frag_name": "shikoku junction 33.525:133.4936:0",
+   "frag_kv": 0.0,
+   "main_name": "孕変電所 66kV",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 5.597,
+   "straight_km": 5.064,
+   "detour": 1.11,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 401,
+   "max_seam_m": 276,
+   "fk": [
+    33.47853,
+    130.40484
+   ],
+   "mk": [
+    33.45774,
+    130.5163
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "九州送電線_178",
+    "北九州幹線",
+    "山家鳥栖線"
+   ],
+   "frag_name": "kyushu junction 33.4785:130.4048:0",
+   "frag_kv": 0.0,
+   "main_name": "kyushu junction 33.4577:130.5163:220",
+   "main_kv": 220.0,
+   "n_frag_nodes": 2,
+   "length_km": 11.831,
+   "straight_km": 10.574,
+   "detour": 1.12,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 2,
+   "stitch_m": 223,
+   "max_seam_m": 223,
+   "fk": [
+    32.87305,
+    130.9325
+   ],
+   "mk": [
+    32.87091,
+    130.94393
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 1,
+   "island": "west",
+   "names": [
+    "九州送電線_548",
+    "九州電力送配電 66.0kV線"
+   ],
+   "frag_name": "kyushu junction 32.873:130.9325:0",
+   "frag_kv": 0.0,
+   "main_name": "kyushu junction 32.8709:130.9439:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 2,
+   "length_km": 1.567,
+   "straight_km": 1.092,
+   "detour": 1.44,
+   "first_stage_m": 300
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.2652,
+    138.22646
+   ],
+   "mk": [
+    35.26452,
+    138.22615
+   ],
+   "d_frag_m": 2,
+   "d_main_m": 33,
+   "island": "west",
+   "names": [
+    "中部送電線_736"
+   ],
+   "frag_name": "tokyo_sub_1784",
+   "frag_kv": 0.0,
+   "main_name": "葵区変電所_3",
+   "main_kv": 154.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.654,
+   "straight_km": 0.081,
+   "detour": 3.27,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.67891,
+    138.07244
+   ],
+   "mk": [
+    36.67883,
+    138.07355
+   ],
+   "d_frag_m": 9,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "新諏訪一丁目変電所~根上変電所線"
+   ],
+   "frag_name": "tokyo_sub_1817",
+   "frag_kv": 0.0,
+   "main_name": "倉平変電所",
+   "main_kv": 0.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.099,
+   "straight_km": 0.099,
+   "detour": 0.5,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.69652,
+    137.95449
+   ],
+   "mk": [
+    36.69651,
+    137.95499
+   ],
+   "d_frag_m": 0,
+   "d_main_m": 2,
+   "island": "west",
+   "names": [
+    "中部送電線_316"
+   ],
+   "frag_name": "tokyo_sub_1818",
+   "frag_kv": 0.0,
+   "main_name": "根上変電所",
+   "main_kv": 0.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.645,
+   "straight_km": 0.045,
+   "detour": 3.23,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.53822,
+    138.11757
+   ],
+   "mk": [
+    36.53825,
+    138.11726
+   ],
+   "d_frag_m": 28,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部送電線_960"
+   ],
+   "frag_name": "中部電力パワーグリッド(株) 屋代変電所",
+   "frag_kv": 0.0,
+   "main_name": "中部電力パワーグリッド(株) 屋代変電所",
+   "main_kv": 77.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.028,
+   "straight_km": 0.028,
+   "detour": 0.14,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.93332,
+    138.36418
+   ],
+   "mk": [
+    34.93382,
+    138.36475
+   ],
+   "d_frag_m": 27,
+   "d_main_m": 65,
+   "island": "west",
+   "names": [
+    "中部送電線_755"
+   ],
+   "frag_name": "tokyo_sub_1847",
+   "frag_kv": 0.0,
+   "main_name": "駿河区変電所",
+   "main_kv": 110.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.092,
+   "straight_km": 0.076,
+   "detour": 0.46,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.99439,
+    138.28625
+   ],
+   "mk": [
+    35.00957,
+    138.25456
+   ],
+   "d_frag_m": 64,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部電力パワーグリッド 275.0kV線"
+   ],
+   "frag_name": "tokyo_sub_1848",
+   "frag_kv": 275.0,
+   "main_name": "chubu junction 35.0096:138.2546:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 1,
+   "length_km": 3.597,
+   "straight_km": 3.338,
+   "detour": 1.08,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    35.08001,
+    138.37914
+   ],
+   "mk": [
+    35.07655,
+    138.37782
+   ],
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "駿河変電所~葵区変電所_2線"
+   ],
+   "frag_name": "tokyo_sub_1857",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 35.0765:138.3778:275",
+   "main_kv": 275.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.518,
+   "straight_km": 0.402,
+   "detour": 1.29,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 1,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    34.97813,
+    138.36297
+   ],
+   "mk": [
+    34.97847,
+    138.36167
+   ],
+   "d_frag_m": 21,
+   "d_main_m": 0,
+   "island": "west",
+   "names": [
+    "中部電力パワーグリッド 100.0kV線"
+   ],
+   "frag_name": "tokyo_sub_1858",
+   "frag_kv": 0.0,
+   "main_name": "田町一丁目変電所",
+   "main_kv": 110.0,
+   "n_frag_nodes": 1,
+   "length_km": 0.124,
+   "straight_km": 0.124,
+   "detour": 0.62,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 6,
+   "stitch_m": 22,
+   "max_seam_m": 22,
+   "fk": [
+    36.33153,
+    139.05403
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 24,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "大類線",
+    "多野線/烏川線",
+    "高崎線/多野線/烏川線",
+    "碓氷線",
+    "碓氷線",
+    "碓氷線"
+   ],
+   "frag_name": "chubu junction 36.3315:139.054:66",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 12.225,
+   "straight_km": 9.106,
+   "detour": 1.34,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 3,
+   "stitch_m": 164,
+   "max_seam_m": 111,
+   "fk": [
+    35.96239,
+    139.04466
+   ],
+   "mk": [
+    35.9515,
+    138.93111
+   ],
+   "d_frag_m": 18,
+   "d_main_m": 43,
+   "island": "west",
+   "names": [
+    "日野田線１号線",
+    "三峰線 / 川又線",
+    "宮平線 / 楢平線"
+   ],
+   "frag_name": "武州中川変電所",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 35.9515:138.9311:0",
+   "main_kv": 0.0,
+   "n_frag_nodes": 1,
+   "length_km": 11.823,
+   "straight_km": 10.273,
+   "detour": 1.15,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 6,
+   "stitch_m": 39,
+   "max_seam_m": 39,
+   "fk": [
+    36.37542,
+    139.04181
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 5,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "新前橋線",
+    "井野線/新前橋線",
+    "井野線/新前橋線",
+    "碓氷線",
+    "碓氷線",
+    "碓氷線"
+   ],
+   "frag_name": "新前橋開閉所",
+   "frag_kv": 66.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 11.585,
+   "straight_km": 8.427,
+   "detour": 1.37,
+   "first_stage_m": 60
+  },
+  {
+   "n_ways": 5,
+   "stitch_m": 0,
+   "max_seam_m": 0,
+   "fk": [
+    36.55178,
+    138.80767
+   ],
+   "mk": [
+    36.34748,
+    138.95414
+   ],
+   "d_frag_m": 19,
+   "d_main_m": 6,
+   "island": "west",
+   "names": [
+    "郷原線",
+    "川戸線",
+    "榛名線",
+    "榛名線",
+    "碓氷線"
+   ],
+   "frag_name": "郷原変電所",
+   "frag_kv": 0.0,
+   "main_name": "chubu junction 36.3475:138.9541:66",
+   "main_kv": 66.0,
+   "n_frag_nodes": 1,
+   "length_km": 36.79,
+   "straight_km": 26.169,
+   "detour": 1.41,
+   "first_stage_m": 60
+  }
+ ],
+ "same_site": [
+  {
+   "island": "east",
+   "frag_name": "羽田変電所",
+   "frag_region": "tokyo",
+   "frag_kv": 500.0,
+   "frag_k": [
+    35.55289,
+    139.75357
+   ],
+   "main_name": "羽田変電所",
+   "main_kv": 66.0,
+   "main_k": [
+    35.55309,
+    139.75415
+   ],
+   "dist_m": 57,
+   "kv_ok": false,
+   "n_frag_nodes": 1
+  },
+  {
+   "island": "east",
+   "frag_name": "新那須変電所",
+   "frag_region": "tokyo",
+   "frag_kv": 275.0,
+   "frag_k": [
+    37.02894,
+    140.10502
+   ],
+   "main_name": "新那須変電所",
+   "main_kv": 275.0,
+   "main_k": [
+    37.02957,
+    140.10356
+   ],
+   "dist_m": 147,
+   "kv_ok": true,
+   "n_frag_nodes": 1
+  },
+  {
+   "island": "east",
+   "frag_name": "保渡田町変電所",
+   "frag_region": "tokyo",
+   "frag_kv": 66.0,
+   "frag_k": [
+    36.38757,
+    138.98873
+   ],
+   "main_name": "保渡田町変電所",
+   "main_kv": 66.0,
+   "main_k": [
+    36.38565,
+    138.99018
+   ],
+   "dist_m": 249,
+   "kv_ok": true,
+   "n_frag_nodes": 1
+  },
+  {
+   "island": "east",
+   "frag_name": "新湯沢変電所",
+   "frag_region": "tohoku",
+   "frag_kv": 275.0,
+   "frag_k": [
+    36.92247,
+    138.82087
+   ],
+   "main_name": "新湯沢変電所",
+   "main_kv": 275.0,
+   "main_k": [
+    36.92354,
+    138.81998
+   ],
+   "dist_m": 143,
+   "kv_ok": true,
+   "n_frag_nodes": 1
+  },
+  {
+   "island": "west",
+   "frag_name": "中部電力パワーグリッド(株) 屋代変電所",
+   "frag_region": "chubu",
+   "frag_kv": 0.0,
+   "frag_k": [
+    36.53822,
+    138.11757
+   ],
+   "main_name": "中部電力パワーグリッド(株) 屋代変電所",
+   "main_kv": 77.0,
+   "main_k": [
+    36.53825,
+    138.11726
+   ],
+   "dist_m": 28,
+   "kv_ok": true,
+   "n_frag_nodes": 1
+  }
+ ],
+ "freq_crossing_edges_after": 99,
+ "apply_stage_m": 200,
+ "apply_candidates": 68
+}

@@ -1,0 +1,76 @@
+# 同一敷地同定の提案 — 第三波(2026-09-02)・**承認待ち**(approved: false)
+# 様式は config/isolated_verdict_overrides.yaml と同じ運用: オーナーが approved: true を
+# 立てたものだけを別介入で適用する(断片ノードを本系統ノードへ同定=枝を張らない)。
+# 根拠=名前基底の一致(NFKC・末尾 _n / kV を除去)+距離 ≤300m。kv_ok=false は電圧不整合
+# (同名でも別階級の設備=同定不可の疑い)。
+proposals:
+  - name: "羽田変電所"
+    region: tokyo
+    island: east
+    verdict: same_site
+    approved: false
+    target: "羽田変電所"
+    frag_kv: 500.0
+    main_kv: 66.0
+    kv_ok: false
+    dist_m: 57
+    frag_latlon: [35.55289, 139.75357]
+    main_latlon: [35.55309, 139.75415]
+    n_frag_nodes: 1
+    evidence: "名前基底一致・57m・kv不整合(第三波 2026-09-02 機械抽出・判読未)"
+  - name: "新湯沢変電所"
+    region: tohoku
+    island: east
+    verdict: same_site
+    approved: false
+    target: "新湯沢変電所"
+    frag_kv: 275.0
+    main_kv: 275.0
+    kv_ok: true
+    dist_m: 143
+    frag_latlon: [36.92247, 138.82087]
+    main_latlon: [36.92354, 138.81998]
+    n_frag_nodes: 1
+    evidence: "名前基底一致・143m・kv整合(第三波 2026-09-02 機械抽出・判読未)"
+  - name: "新那須変電所"
+    region: tokyo
+    island: east
+    verdict: same_site
+    approved: false
+    target: "新那須変電所"
+    frag_kv: 275.0
+    main_kv: 275.0
+    kv_ok: true
+    dist_m: 147
+    frag_latlon: [37.02894, 140.10502]
+    main_latlon: [37.02957, 140.10356]
+    n_frag_nodes: 1
+    evidence: "名前基底一致・147m・kv整合(第三波 2026-09-02 機械抽出・判読未)"
+  - name: "保渡田町変電所"
+    region: tokyo
+    island: east
+    verdict: same_site
+    approved: false
+    target: "保渡田町変電所"
+    frag_kv: 66.0
+    main_kv: 66.0
+    kv_ok: true
+    dist_m: 249
+    frag_latlon: [36.38757, 138.98873]
+    main_latlon: [36.38565, 138.99018]
+    n_frag_nodes: 1
+    evidence: "名前基底一致・249m・kv整合(第三波 2026-09-02 機械抽出・判読未)"
+  - name: "中部電力パワーグリッド(株) 屋代変電所"
+    region: chubu
+    island: west
+    verdict: same_site
+    approved: false
+    target: "中部電力パワーグリッド(株) 屋代変電所"
+    frag_kv: 0.0
+    main_kv: 77.0
+    kv_ok: true
+    dist_m: 28
+    frag_latlon: [36.53822, 138.11757]
+    main_latlon: [36.53825, 138.11726]
+    n_frag_nodes: 1
+    evidence: "名前基底一致・28m・kv整合(第三波 2026-09-02 機械抽出・判読未)"
