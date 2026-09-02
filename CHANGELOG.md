@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Intervention #42 — mixed-prefecture frequency-boundary attribution** (`src/powerflow/region_attribution.plan_mixed_pref_flips`,
+  `scripts/apply_node_hygiene.py --mixed-pref`, `data/reference/freq_boundary_mixed.geojson`, `freq_corridor_whitelist.json`):
+  the 243 nodes in Nagano/Niigata/Shizuoka that the frequency guard (#6/#38) kept wholesale are now re-attributed by
+  sourced boundary polygons + a cross-border trunk/FC whitelist + a cut guard that structurally forbids new
+  cross-island cuts. 108 flips, 0 new cuts, cross-frequency edges 127→99, west peak-hour AC slack −291 MW.
+- **Intervention #41 — island-specific generator attachment default** (`ISLAND_ATTACH_DEFAULT`): hokkaido/west use
+  `capkv` (bus capacity ∧ required voltage class), east/okinawa stay on `cap`. Fixes the 318 % Hokkaido DC overload
+  (Kyogoku 400 MW on a 66 kV bus); west solves AC 24/24 hours with no DC fallback.
+- **Screening CLIs**: N-1 line-outage screening (`src/powerflow/contingency.py`, `scripts/sensitivity/n1_screening.py`),
+  IBR hosting capacity by short-circuit ratio (`src/powerflow/short_circuit.py`, `scripts/sensitivity/ibr_hosting_scr.py`),
+  multi-machine swing model at the AC operating point (`src/dynamics/machine_agg.build_classical_model_ac`,
+  `scripts/gen_swing_modes.py --ac-op`). See README → Analysis Tools → Screening CLIs.
 - **Reproduction DAG + verify-matrix CI** (`Snakefile`, `.github/workflows/verify.yml`,
   `scripts/ci/verify_matrix.py`, `scripts/ci/render_rulegraph.py`, `docs/figures/dag.svg`,
   `tests/test_repro_dag.py`): the regenerate pipeline is declared as a 21-rule Snakemake DAG
@@ -160,6 +172,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `papers/ieee-openaccess.tex`: new AGC subsection (§VI) + AGC30 reference;
   the long-standing substation-count typo fixed (prose 8,164 → measured 6,962,
   matching the paper's own table — was a Known Issue since v1.5.0).
+
+### Fixed
+- **Sourced-capacity name matching painted thermal/nuclear capacities onto same-named solar features**
+  (`scripts/apply_capacity_sources.py`): a fuel-type gate now rejects incompatible name matches unless the record
+  only lowers the capacity. Removes 13.6 GW of phantom "solar" in east (Takasaki "高浜発電所" ← Takahama nuclear
+  3,392 MW) and 6.1 GW in west (Himeji No.2 / Matsuura neighbours); the real Takahama nuclear feature now carries the
+  official source.
+- **Classical swing model flat path** (`machine_agg.build_classical_model`): the synchronising-torque matrix carried an
+  extra −B_ii on the diagonal, losing the rigid-body mode and biasing frequencies upward (`legacy_diag=True` reproduces).
 
 ## [1.8.0] - 2026-08-27
 

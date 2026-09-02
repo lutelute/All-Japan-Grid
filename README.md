@@ -656,6 +656,30 @@ open http://localhost:8000
 | `src/uc/` | Unit Commitment (MILP, PuLP + HiGHS) with inter-regional transmission constraints / 地域間連系線制約付き UC ソルバ | Verified: 646 generators × 24h × 9 interconnections → Optimal in ~38s / 実証済み |
 | `src/converter/` | pandapower / MATPOWER export / エクスポート | Works / 動作可 |
 
+### Screening CLIs / スクリーニング解析 CLI *(2026-09-02)*
+
+All run on the canonical built model (`docs/data/built/all.json`; every modelling assumption is registered in
+[`docs/MODEL_INTERVENTIONS.md`](docs/MODEL_INTERVENTIONS.md)). **Screening only** — not connection, operation or
+stability studies; synthetic impedances and typical machine constants throughout.
+正典 built モデル上のスクリーニングです（仮定はすべて介入台帳に登録）。接続可否・運用可否・安定度の判定ではありません。
+
+- **N-1 line-outage screening / N-1 全枝スクリーニング** —
+  `PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands east west --ac-verify 5`
+  LODF evaluates every single-circuit outage at once (west 6,681 branches in ~2 s); bridges are booked separately
+  with the islanded load; only real branches (OSM geometry, disclosed connections, nameplate transformers) rank in the
+  main table, outages whose worst branch carries a synthetic rating are disclosed apart; the top outages are re-solved
+  with the production AC solver. → `docs/reports/n1_screening_<date>.md`
+- **IBR hosting capacity by short-circuit ratio / 系統強度（SCR）による IBR 連系可能量** —
+  `PYTHONPATH=. python3 scripts/sensitivity/ibr_hosting_scr.py --islands west --scr-min 3`
+  Thevenin short-circuit MVA at every bus (sparse LU; machine xd″ from `src/dynamics/machine_agg`), SCR = S_sc/P_ibr,
+  P_max = S_sc/SCR_min − existing IBR, cross-checked against pandapower `calc_sc` (exact match); combined with the
+  thermal PTDF hosting capacity to show which limit binds. → `docs/reports/ibr_hosting_scr_<date>.md`
+- **Multi-machine swing at the AC operating point / 多機動揺モデルの AC 運転点化** —
+  `PYTHONPATH=. python3 scripts/gen_swing_modes.py --solve-west net.pkl` then `--ac-op west --net-pickle net.pkl`
+  Classical machines initialised from the converged AC solution (E∠δ, equilibrium Pe = Pm to machine precision),
+  electromechanical modes with participation factors, N-1 generator disconnection transients.
+  → `docs/reports/swing_modes_west_ac_<date>.md`
+
 ## Future Work — Complementary Data Sources / 今後の展望 — 補完データソース
 
 > **📐 戦略計画 / Strategic plan:** All-Japan-Grid を日本の電力業界の
