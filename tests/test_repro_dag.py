@@ -26,10 +26,13 @@ WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
 
 # regenerate_all の STEPS を写した介入チェーン(順序が正典)。ここが崩れると
 # 「in-place 変異段の順序」が壊れ、regen で介入が消える事故(2026-08-15)が再発する。
+# 介入チェーンの順序（正典 all.json を in-place で変異させる段を一列に固定する）。
+# 2026-09-03 追加: fragment_recovery_third_wave（#34追補3）と apply_circuit_sources（#44）。
+# どちらも build_editor_data が基底から作り直すと消えるので、再適用が要る。
 CHAIN = ["build_editor_data", "apply_disclosure_v1", "apply_disclosure_v2",
          "route_disclosure", "fragment_recovery", "fragment_recovery_chains",
-         "node_hygiene", "satellite_connections", "substation_properties",
-         "built_ready"]
+         "fragment_recovery_third_wave", "node_hygiene", "apply_circuit_sources",
+         "satellite_connections", "substation_properties", "built_ready"]
 EXPORTS = ["subsld_pages", "map_tiers", "gen_sld", "full_powerflow",
            "national_overview", "matpower", "cim", "static_site",
            "capacity_sources", "pages_editor", "version_stamp", "all", "light"]

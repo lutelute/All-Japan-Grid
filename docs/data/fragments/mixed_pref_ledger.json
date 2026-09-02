@@ -2,17 +2,15 @@
  "note": "介入#42 混在県個別化(2026-09-02)。根拠=data/reference/freq_boundary_mixed.geojson(出典つき境界)+freq_corridor_whitelist.json。復元=本台帳 flips の to→from 逆再生 + all.json.pre_mixed.bak",
  "marker": "intervention42",
  "fixed": {
-  "tokyo->chubu": 69,
-  "chubu->tokyo": 20,
-  "chubu->tohoku": 19
+  "chubu->tokyo": 2
  },
  "vetoed": {
   "whitelist": 10,
-  "crossing_guard": 28,
+  "crossing_guard": 26,
   "river_side_mismatch": 17,
-  "protected_zone": 79
+  "protected_zone": 77
  },
- "pre_cross_edges": 127,
+ "pre_cross_edges": 60,
  "new_cross_edges": 0,
  "flips": [
   {
@@ -1205,16 +1203,6 @@
    "cut_edge": "東京送電線_22"
   },
   {
-   "id": "chubu_jct_35.1449:139.0341:77",
-   "name": "chubu junction 35.1449:139.0341:77",
-   "cut_edge": "JR 西相模-沼津線"
-  },
-  {
-   "id": "chubu_jct_35.1097:138.9237:66",
-   "name": "chubu junction 35.1097:138.9237:66",
-   "cut_edge": "玉川変電所~三島変電所線 / 大仁線 / 三島変電所~函南町"
-  },
-  {
    "id": "chubu_jct_35.1609:138.8457:77",
    "name": "chubu junction 35.1609:138.8457:77",
    "cut_edge": "岩渕-沼津線"
@@ -1289,5 +1277,13 @@
    "name": "沼津変電所",
    "cut_edge": "JR 西相模-沼津線"
   }
- ]
+ ],
+ "runs": [
+  {
+   "at": "2026-09-02T16:18:36+00:00",
+   "added": 2,
+   "total": 110
+  }
+ ],
+ "pf_gate_note": "2026-09-03: #38 の正典化で新たに計画された 2 件(chubu_jct_35.1449:139.0341:77 / chubu_jct_35.1097:138.9237:66)は west ピーク AC の slack/損失が +384MW 悪化したため適用せず、region_attribution.MIXED_PREF_PF_VETO で恒久拒否した"
 }

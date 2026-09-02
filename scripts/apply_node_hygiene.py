@@ -126,6 +126,10 @@ def main() -> int:
                     default=MIXED_PREF_DEFAULT,
                     help="介入#42 混在県個別化(長野/新潟/静岡の跨ぎ候補を境界資産で"
                          "再帰属)。--no-mixed-pref で無効化(回帰比較用)")
+    ap.add_argument("--freq-fix", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="介入#38 の正典化(一意周波数県の跨ぎラベルを正典へ焼く)。"
+                         "既定ON・--no-freq-fix で無効化(回帰比較用)")
     args = ap.parse_args()
 
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
@@ -236,7 +240,83 @@ def main() -> int:
     # ── 介入#42: 混在県個別化(#35 と同じ正典適用経路・冪等) ──
     if args.mixed_pref:
         _mixed_pref_stage(built, write=args.write)
+    if args.freq_fix:
+        _uniform_freq_stage(built, write=args.write)
     return 0
+
+
+def _uniform_freq_stage(built, write: bool) -> None:
+    """介入#38 の正典化(2026-09-03) — 一意周波数県の跨ぎラベルを正典へ焼く。
+
+    #38 は潮流を組むときだけ効いていて、正典のラベルは古いままだった。
+    地図・エディタ・輸出は正典を直接読むので、群馬の設備が「中部」と着色される
+    実害が残っていた。混在県は #42 の担当なので触らない。
+    """
+    from src.powerflow.region_attribution import (
+        UNIFORM_FREQ_MARK, apply_uniform_freq_flips, plan_uniform_freq_flips)
+    nodes, edges = built["nodes"], built["edges"]
+    up = plan_uniform_freq_flips(nodes, edges)
+    print(f"介入#38 正典化: フリップ計画{len(up['plan'])} {up['by_dir']} / "
+          f"島跨ぎ枝 {up['cross_edges_before']} → {up['cross_edges_after']}")
+    if not write:
+        return
+    if not up["plan"]:
+        print("  適用対象なし(冪等)")
+        return
+    bak = ROOT / "docs/data/built/all.json.pre_freqfix.bak"
+    bak.write_text(json.dumps(built, ensure_ascii=False))
+    res = apply_uniform_freq_flips(nodes, edges)
+    if not res["applied"]:
+        print("  ★適用しない: 島跨ぎ枝が増える計画")
+        return
+    ledger = {"note": ("介入#38 の正典化(2026-09-03)。座標の県の周波数が一意で、"
+                       "領土エリアの周波数と一致するノードだけを再属性する"
+                       "(混在県は #42 の担当)。復元=本台帳 flips の to→from 逆再生 + "
+                       "all.json.pre_freqfix.bak"),
+              "marker": UNIFORM_FREQ_MARK,
+              "by_dir": up["by_dir"],
+              "cross_edges_before": up["cross_edges_before"],
+              "cross_edges_after": up["cross_edges_after"],
+              "flips": res["flips"]}
+    (ROOT / "docs/data/built/all.json").write_text(
+        json.dumps(built, ensure_ascii=False))
+    dst = ROOT / "docs/data/fragments/uniform_freq_ledger.json"
+    _merge_ledger(dst, ledger)
+    print(f"★正典適用: 介入#38 フリップ{len(res['flips'])}ノード "
+          f"(バックアップ={bak.name})")
+    print(f"-> {dst.relative_to(ROOT)}")
+
+
+def _merge_ledger(dst, new_ledger: dict) -> None:
+    """帳簿を **追記マージ** する(2026-09-03).
+
+    従来は毎回上書きしていたので、インクリメンタルに適用すると過去のフリップが
+    帳簿から消え、**逆再生できなくなる**(regen は基底から作り直すので上書きでも
+    成立するが、正典に対する追加適用では履歴が失われる)。id で重複排除しつつ
+    既存の flips を保ち、適用の回数と日付を runs に残す。
+    """
+    import datetime as _dt
+    prev = {}
+    if dst.exists():
+        try:
+            prev = json.loads(dst.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            prev = {}
+    merged = dict(prev)
+    merged.update({k: v for k, v in new_ledger.items() if k != "flips"})
+    seen, flips = set(), []
+    for f in list(prev.get("flips", [])) + list(new_ledger.get("flips", [])):
+        key = f.get("id") or (f.get("lat"), f.get("lon"))
+        if key in seen:
+            continue
+        seen.add(key)
+        flips.append(f)
+    merged["flips"] = flips
+    runs = list(prev.get("runs", []))
+    runs.append({"at": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
+                 "added": len(new_ledger.get("flips", [])), "total": len(flips)})
+    merged["runs"] = runs
+    dst.write_text(json.dumps(merged, ensure_ascii=False, indent=1))
 
 
 def _mixed_pref_stage(built, write: bool) -> None:
@@ -276,7 +356,7 @@ def _mixed_pref_stage(built, write: bool) -> None:
     (ROOT / "docs/data/built/all.json").write_text(
         json.dumps(built, ensure_ascii=False))
     dst = ROOT / "docs/data/fragments/mixed_pref_ledger.json"
-    dst.write_text(json.dumps(ledger, ensure_ascii=False, indent=1))
+    _merge_ledger(dst, ledger)
     print(f"★正典適用: 介入#42 フリップ{len(res['flips'])}ノード {res['fixed']} "
           f"(バックアップ={bak.name})")
     print(f"-> {dst.relative_to(ROOT)}")

@@ -60,6 +60,11 @@ FUJIKAWA_LON = 138.62   # 静岡の周波数境界(富士川)の経度近似
 # west島に移すと、eastの実在50Hz幹線(安曇幹線等)が切れて新たな破壊になる。
 # 同一周波数内の誤属性(山口・徳島・岐阜・青函等)だけを直し、周波数境界の
 # 帰属は抽出元ラベル(=OSMトレースの連続性)を保持する。
+_ISLAND_OF = {"hokkaido": "hokkaido", "tohoku": "east", "tokyo": "east",
+              "chubu": "west", "hokuriku": "west", "kansai": "west",
+              "chugoku": "west", "shikoku": "west", "kyushu": "west",
+              "okinawa": "okinawa"}
+
 AREA_FREQ = {"hokkaido": 50, "tohoku": 50, "tokyo": 50,
              "chubu": 60, "hokuriku": 60, "kansai": 60,
              "chugoku": 60, "shikoku": 60, "kyushu": 60, "okinawa": 60}
@@ -113,6 +118,17 @@ MIXED_CORRIDOR_WHITELIST = os.path.join(
     os.path.dirname(__file__), "..", "..",
     "data", "reference", "freq_corridor_whitelist.json")
 MIXED_PREF_MARK = "intervention42"
+
+# 潮流ゲートで落ちたフリップの恒久拒否(2026-09-03)。
+# #38 の正典化で近傍の島構成が変わり、この 2 ノードが構造ガード(新規島跨ぎ 0)を
+# 通るようになった。しかし適用すると **west ピーク AC の slack/損失が +384MW 悪化**
+# する(9,252→9,637MW・output/canonab の 3 状態 A/B で #38 単独は完全に不変と確認済み)。
+# 構造ガードは「切れないこと」しか見ないので、潮流で落ちたものはここに明示的に残す。
+# 解除するには west ピーク AC を取り直して悪化しないことを示すこと。
+MIXED_PREF_PF_VETO = {
+    "chubu_jct_35.1449:139.0341:77": "PFゲート不合格(2026-09-03): west slack +384MW",
+    "chubu_jct_35.1097:138.9237:66": "PFゲート不合格(2026-09-03): west slack +384MW",
+}
 _MIXED_GUARD_ROUNDS = 20
 
 
@@ -291,8 +307,18 @@ def plan_mixed_pref_flips(nodes: List[dict], edges: List[dict],
                     veto_cross[i] = (edges[j].get("name") or "")[:30]
                     del plan[i]
     residual = len(new_cross_edges(plan))       # 検収(収束していれば 0)
+    # (D) 潮流ゲートで落ちたフリップの恒久拒否(2026-09-03・MIXED_PREF_PF_VETO)。
+    # 構造ガード(C)は「島が切れないこと」しか見ない。実際に west ピーク AC を
+    # 悪化させたものはここで落とし、理由を veto_pf に残す。
+    veto_pf: Dict[int, str] = {}
+    for i in list(plan):
+        why = MIXED_PREF_PF_VETO.get(str(nodes[i].get("id")))
+        if why:
+            veto_pf[i] = why
+            del plan[i]
+
     return {"guarded": guarded, "plan": plan, "veto_whitelist": veto_wl,
-            "veto_crossing": veto_cross, "kept": kept,
+            "veto_crossing": veto_cross, "veto_pf": veto_pf, "kept": kept,
             "pre_cross_edges": len(pre_cross), "new_cross_edges": residual}
 
 
@@ -306,7 +332,8 @@ def apply_mixed_pref_flips(nodes: List[dict], edges: List[dict]) -> Dict:
     fixed: Dict[str, int] = {}
     flips = []
     vetoed = {"whitelist": len(mp["veto_whitelist"]),
-              "crossing_guard": len(mp["veto_crossing"])}
+              "crossing_guard": len(mp["veto_crossing"]),
+              "pf_gate": len(mp.get("veto_pf", {}))}
     for r in mp["kept"].values():
         vetoed[r] = vetoed.get(r, 0) + 1
     applied = mp["new_cross_edges"] == 0
@@ -325,6 +352,83 @@ def apply_mixed_pref_flips(nodes: List[dict], edges: List[dict]) -> Dict:
             n["mixed_pref"] = MIXED_PREF_MARK
     return {"fixed": dict(sorted(fixed.items(), key=lambda kv: -kv[1])),
             "vetoed": vetoed, "applied": applied, "plan": mp, "flips": flips}
+
+
+# ── 介入#38 の正典化(2026-09-03) ────────────────────────────────────────
+# #38(周波数跨ぎ再属性の精緻化)は **潮流を組むときだけ** 効いていて、正典
+# docs/data/built/all.json のラベルは古いままだった(実測 253 ノード: 群馬 132・
+# 山梨 56・神奈川 33・埼玉 27・愛知 3・栃木 1・東京 1)。地図・エディタ・輸出は
+# 正典を直接読むので、群馬の設備が「中部」と着色される等の実害が残っていた。
+# #42(混在県)と同じく、**正典に焼く**のがここ。混在県は #42 の担当なので触らない。
+UNIFORM_FREQ_MARK = "intervention38"
+
+
+def plan_uniform_freq_flips(nodes: List[dict], edges: List[dict]) -> Dict:
+    """一意周波数県の跨ぎ再属性を正典へ焼く計画(nodes/edges は不変更)。
+
+    対象は「座標の県の周波数が一意(UNIFORM_FREQ_PREFS)で、領土エリアの周波数と
+    一致する」ノードだけ — 混在県(長野・新潟・静岡)は #42 の担当で触らない。
+    #42 と同じ切断ガードの考え方で、**島跨ぎエッジが増えないこと**を検算する
+    (実測では 103 → 64 と減る: 幻の跨ぎが消えるため)。
+
+    Returns: {plan: {idx: to_region}, by_dir: {"from->to": n},
+              cross_edges_before: int, cross_edges_after: int}
+    """
+    plan: Dict[int, str] = {}
+    by_dir: Dict[str, int] = {}
+    for i, n in enumerate(nodes):
+        src = n.get("region")
+        if src not in AREA_FREQ:
+            continue
+        lat, lon = float(n["lat"]), float(n["lon"])
+        area = area_of_coord(lat, lon)
+        if not area or area == src or AREA_FREQ.get(area) is None:
+            continue
+        if AREA_FREQ[src] == AREA_FREQ[area]:
+            continue                     # 同一周波数の territory 補正は #5 の担当
+        if UNIFORM_FREQ_PREFS.get(prefecture_of(lat, lon)) != AREA_FREQ[area]:
+            continue                     # 混在県 → #42 / ガード維持
+        plan[i] = area
+        key = f"{src}->{area}"
+        by_dir[key] = by_dir.get(key, 0) + 1
+
+    def _cross(overrides: Dict[int, str]) -> int:
+        idx = {}
+        for j, m in enumerate(nodes):
+            reg = overrides.get(j, m.get("region"))
+            idx[(round(float(m["lat"]), 5), round(float(m["lon"]), 5))] = \
+                _ISLAND_OF.get(reg)
+        c = 0
+        for e in edges:
+            ia = idx.get((round(e["a"][0], 5), round(e["a"][1], 5)))
+            ib = idx.get((round(e["b"][0], 5), round(e["b"][1], 5)))
+            if ia and ib and ia != ib:
+                c += 1
+        return c
+
+    return {"plan": plan,
+            "by_dir": dict(sorted(by_dir.items(), key=lambda kv: -kv[1])),
+            "cross_edges_before": _cross({}),
+            "cross_edges_after": _cross(plan)}
+
+
+def apply_uniform_freq_flips(nodes: List[dict], edges: List[dict]) -> Dict:
+    """計画を適用(in-place・冪等)。**島跨ぎエッジが増える計画は適用しない**。"""
+    up = plan_uniform_freq_flips(nodes, edges)
+    applied = up["cross_edges_after"] <= up["cross_edges_before"]
+    flips = []
+    if applied:
+        for i, area in up["plan"].items():
+            n = nodes[i]
+            if "region_src" not in n:
+                n["region_src"] = n.get("region")
+            flips.append({"id": n.get("id"), "name": n.get("name"),
+                          "pref": prefecture_of(float(n["lat"]), float(n["lon"])),
+                          "from": n.get("region"), "to": area,
+                          "lat": n["lat"], "lon": n["lon"]})
+            n["region"] = area
+            n["freq_fix"] = UNIFORM_FREQ_MARK
+    return {"applied": applied, "plan": up, "flips": flips}
 
 
 @lru_cache(maxsize=1)
