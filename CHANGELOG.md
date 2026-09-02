@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Reproduction DAG + verify-matrix CI** (`Snakefile`, `.github/workflows/verify.yml`,
+  `scripts/ci/verify_matrix.py`, `scripts/ci/render_rulegraph.py`, `docs/figures/dag.svg`,
+  `tests/test_repro_dag.py`): the regenerate pipeline is declared as a 21-rule Snakemake DAG
+  (sentinel-ordered in-place intervention chain), and every push now solves the okinawa and
+  hokkaido peak-hour full AC power flow from the canonical `all.json` and gates on
+  convergence / vm_min / slack / served fraction. OSM snapshot timestamps
+  (2026-06-15T13:35–14:25Z, 76/78 raw files) are stamped into `MODEL_VERSION.json`
+  and `datapackage.json`.
 - **Intervention #40 (experimental, default OFF) — census-mesh population
   tilt for intra-prefecture load allocation** (`allocate_loads(pop_tilt=)`,
   `--pop-tilt`): multiplies the voltage-class weights by a bounded tilt

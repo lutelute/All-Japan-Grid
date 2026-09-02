@@ -1,0 +1,65 @@
+# verify-matrix: 正典(docs/data/built/all.json)から **フル AC 潮流が実際に解けるか** を
+# 毎 push で確かめる軽量の検証行列。ci.yml(pytest)は単体のピンを守るが、
+# 「モデル全体が解ける」は 2026-06-27〜09-01 の 2 か月間、誰も見ていなかった
+# (劣化はデータ側から入る — 08-16 基底刷新で北海道 cap 318% が埋もれた教訓)。
+#
+# 載せるのは okinawa(100 バス)と hokkaido(831 バス)のピーク断面 1 本ずつだけ。
+# east(6.2k)/west(10k)フルは数分〜十数分かかるので載せない(手元の
+# scripts/uc_to_pf_built.py --islands east west で個別に)。
+#
+# CI 環境には data/structures(銘板・gitignore)と data/external が無い。
+# uc_to_pf_built.py は両方とも「無ければフォールバック」で走る設計
+# (hokkaido の銘板 1 基はヒューリスティック容量へ戻る。閾値はその差も余裕の内)。
+name: verify-matrix
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/data/realtime/**"
+      - "docs/data/flow_map/**"
+      - "papers/**"
+      - "docs/slides/**"
+      - "**/*.md"
+  pull_request:
+    paths-ignore:
+      - "papers/**"
+      - "docs/slides/**"
+      - "**/*.md"
+  schedule:
+    - cron: "30 21 * * 0"   # weekly (Mon 06:30 JST)・ci.yml の slow sweep の後
+  workflow_dispatch:
+
+concurrency:
+  group: verify-matrix-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-ac-light:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Solve okinawa + hokkaido peak-hour full AC (UC fy2023r2 → built v4)
+        env: {PYTHONPATH: "."}
+        run: |
+          mkdir -p out
+          python scripts/uc_to_pf_built.py --islands hokkaido okinawa --out out/verify_matrix.json
+      - name: Gate (convergence / vm_min / slack / served)
+        env: {PYTHONPATH: "."}
+        run: python scripts/ci/verify_matrix.py --report out/verify_matrix.json --summary out/verify_summary.md
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-matrix-${{ github.sha }}
+          path: out/
+          retention-days: 30

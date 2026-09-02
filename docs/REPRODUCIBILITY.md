@@ -38,7 +38,7 @@ ajgrid validate --topology --all --solve --backbone \
     --json /tmp/now.json --baseline docs/reports/topology_backbone_stack_2026-06-11.json
 ```
 
-ヘッドライン（2026-06-11時点・committed JSONと一致するはず）:
+ヘッドライン（**2026-06-11 当時値**・当時の committed JSON と一致するはず。現状値は §8 の検証行列と `docs/reports/uc_pf_built_*_2026-09-02.json` を正とする）:
 backbone/フル両モデル **AC 10/10**・backbone vm_min ≥0.86・合成線率 関西2.0%。
 
 ## 4. 外部データ（再配布不可 → 各自取得、コマンドは下記）
@@ -93,3 +93,81 @@ ajgrid solve national                                # 全国ゾーナル(west�
 - 唯一の非決定要素は**外部データの取得日**（OSM再fetch・各社CSV・OCCTO窓）。
   キュレーションは enrichments.jsonl（git追跡）に在るため再fetchでも保全される
 - 各改善の判断根拠とKPI変化は `docs/reports/IMPROVEMENT_LOG.md`（モデル名つき台帳）
+
+## 8. ワンコマンド再現DAG（Snakemake・2026-09-02）
+
+`regenerate_all.py` の STEPS を**ファイル/センチネル依存の DAG**として `Snakefile` に
+宣言し直した（21 ルール・ロジックの再実装はせず既存スクリプトを呼ぶだけ）。
+介入適用群（#28/#29/#34/#35/#36 …）は `docs/data/built/all.json` を in-place で
+変異させるため、ファイル時刻では依存を表現できず `.stamps/` のセンチネルで順序を固定する。
+
+```bash
+uv run --with snakemake --no-project snakemake -n --cores 1     # dry-run（実行計画・21ジョブ）
+uv run --with snakemake --no-project snakemake light --cores 1  # 軽い再現: editor + static のみ
+uv run --with snakemake --no-project snakemake --cores 1        # 全再生成（重い・数十分）
+uv run --with snakemake --no-project snakemake --rulegraph --cores 1 \
+  | PYTHONPATH=. python3 scripts/ci/render_rulegraph.py --out docs/figures/dag.svg
+```
+
+![再現DAG](figures/dag.svg)
+
+- 図は `graphviz(dot)` 無しで描く（`scripts/ci/render_rulegraph.py`・networkx+matplotlib）。
+  `dot` がある環境なら `snakemake --dag | dot -Tsvg` でも同じ。
+- **含めないもの（正直に）**: raw OSM の再取得（Overpass）。`data/osm_raw/` の断面
+  （下記 §9）を基底とし、再取得は明示操作。変異チェーンの途中だけの `--forcerun` は
+  中間状態になるため非推奨（`build_editor_data` から作り直すのが正）。
+- 形の回帰: `tests/test_repro_dag.py`（rule の存在・センチネル連鎖の順序・輸出の built_ready 依存）。
+
+## 9. OSM 断面時刻（osm3s・2026-09-02）
+
+Overpass 生レスポンス（`data/osm_raw/*.json`）の `osm3s.timestamp_osm_base` を走査し、
+`docs/data/MODEL_VERSION.json` と `datapackage.json` に `osm_snapshot` として刻印する。
+
+```bash
+PYTHONPATH=. python3 scripts/record_osm_snapshot.py --check   # 表示のみ
+PYTHONPATH=. python3 scripts/record_osm_snapshot.py           # 両ファイルに刻印（冪等）
+```
+
+刻印済みの値（2026-09-02 実測）: **2026-06-15T13:35:44Z 〜 14:25:30Z**、
+時刻が読めたファイル 76 / 読めなかったもの 2（`n_files_without` に計上）。
+
+**被覆の限界**: これは在庫の生レスポンスが写した断面時刻であって、基底
+`data/*_lines.geojson` が抽出された瞬間そのものではない（geojson 変換時に osm3s が
+落ちるため、過去の抽出時刻は復元できない）。以後の OSM 再取得で「生レスポンスを
+`data/osm_raw/` に保存してから変換する」運用を守れば、本スクリプトの再実行だけで更新される。
+
+## 10. 検証行列 CI（`.github/workflows/verify.yml`・2026-09-02）
+
+`ci.yml`（pytest 1,260 本）は単体のピンを守るが、「正典から**フル AC 潮流が実際に解けるか**」は
+2026-06-27〜09-01 の 2 か月間、誰も見ていなかった（08-16 基底刷新で北海道 cap 318% が
+CI の赤の中に埋もれた教訓）。`verify.yml` は毎 push（realtime/flow_map/papers/md は除外）・
+PR・週次で **okinawa と hokkaido のピーク断面フル AC** を解き、
+`scripts/ci/verify_matrix.py` が閾値でゲートする。east/west フルは重いので載せない。
+
+```bash
+PYTHONPATH=. python3 scripts/uc_to_pf_built.py --islands hokkaido okinawa --out out/verify_matrix.json
+PYTHONPATH=. python3 scripts/ci/verify_matrix.py --report out/verify_matrix.json
+```
+
+| 島 | 断面 | 実測（2026-09-02 @55482eb） | 閾値 |
+|---|---|---|---|
+| hokkaido | h18 ピーク | AC conv・vm_min 0.8555・slack 820.8 MW・served 1.0（831 バス） | vm_min ≥0.83・slack ≤1,200・served ≥0.99・solver==ac |
+| okinawa | h11 ピーク | AC conv・vm_min 0.9611・slack 111.2 MW・served 1.0（100 バス） | vm_min ≥0.94・slack ≤200・served ≥0.99・solver==ac |
+
+手元の所要時間: UC 求解 + 2 島構築 + 潮流で **51 秒**（M4 Max）。CI には銘板
+（`data/structures/`・gitignore）が無く hokkaido の銘板 1 基がヒューリスティック容量へ
+戻るが、閾値はその差も余裕の内（下記 §10.1）。`dc_fallback` は不合格（solver==ac 必須）。
+結果 JSON と Markdown 要約は artifact `verify-matrix-<sha>` に 30 日保存。
+
+### 10.1 CI 同等条件（銘板無し）の実測
+
+`data/structures/` を読まない条件（`run_full_powerflow_from_db._NAMEPLATES_CACHE = {}`）で
+同じ 2 島を解いた結果（2026-09-02 @55482eb）:
+
+| 島 | 銘板 | 結果 | 差分 |
+|---|---|---|---|
+| hokkaido h18 | 0 基（1 基がヒューリスティックへ） | AC conv・vm_min 0.8555・slack **824.1** MW | slack +3.3 MW・vm_min 不変 |
+| okinawa h11 | 0 基（元から 0） | AC conv・vm_min 0.9611・slack 111.2 MW | 不変 |
+
+ゲートは両条件で PASS。閾値を更新するときは、この表と committed JSON の両方を根拠に
+「余裕」を明示すること（実測値そのものを閾値にすると基底更新のたびに赤くなる）。

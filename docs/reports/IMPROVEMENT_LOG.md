@@ -37,6 +37,26 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 - **でんき予報 launchd の失敗を観測**: 直近サイクルが `latest.json` 書き込みで `OSError: Resource deadlock
   avoided` → fetch 失敗で commit されず（公開サイトは前回 push 済み値）。原因未調査（記録のみ）
 
+- **【トラックA】検証行列 CI を新設（`.github/workflows/verify.yml` + `scripts/ci/verify_matrix.py`）**:
+  pytest(ci.yml) は単体のピンしか守らず「正典からフル AC 潮流が解けるか」を 2 か月誰も
+  見ていなかった穴を塞ぐ。毎 push（realtime/flow_map/papers/md は除外）・PR・週次で
+  **okinawa h11 + hokkaido h18 のピーク断面フル AC**（`uc_to_pf_built.py --islands hokkaido okinawa`）
+  を解き、solver==ac（dc_fallback 不可）・vm_min・slack・served_frac を閾値ゲート。
+  閾値は committed 実測に余裕（hokkaido vm_min ≥0.83/slack ≤1,200MW、okinawa vm_min ≥0.94/slack ≤200MW、
+  served ≥0.99）。**手元実測**: 通常条件 51 秒（vm_min 0.8555/0.9611・slack 820.8/111.2 MW・
+  committed JSON と一致）、**CI 同等の銘板無し条件**でも PASS（hokkaido slack 824.1 MW・+3.3MW・
+  vm_min 不変、111 秒＝他フォーク並走中）。east/west フルは載せない（重い）。
+  結果 JSON+Markdown 要約は artifact 30 日保存・GITHUB_STEP_SUMMARY に表を出す
+- **再現 DAG の図と回帰**: `docs/figures/dag.svg`（`scripts/ci/render_rulegraph.py`＝graphviz `dot`
+  無しで networkx+matplotlib 描画・CI でも手元でも同じ）。`tests/test_repro_dag.py`（8 本・
+  0.1 秒）: rule 21 個の存在・介入チェーン 10 段のセンチネル連鎖の順序・輸出の built_ready 依存・
+  `record_osm_snapshot.scan()` の形・MODEL_VERSION/datapackage の osm_snapshot 刻印・
+  verify_matrix ゲートが committed 実測で PASS し dc_fallback/電圧崩壊で FAIL すること・
+  verify.yml が east/west を載せていないこと
+- **REPRODUCIBILITY.md を現状化**: §3 の 2026-06-11 ヘッドラインを「当時値」と明記し、
+  §8 Snakemake DAG（-n/light/all/--rulegraph）・§9 OSM 断面時刻（被覆の限界つき）・
+  §10 検証行列 CI（閾値表・所要時間・銘板無し実測）を追記
+
 ---
 
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出
