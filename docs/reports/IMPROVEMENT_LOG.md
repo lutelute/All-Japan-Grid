@@ -194,6 +194,18 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
   接続規則 #24 の `bus_incident_mva` が縮んで繋ぎ先が変わり west AC が dc_fallback に退行した → 理論定格を `max_i_ka_theo` に
   残して接続規則はそれを読む（較正は制約側だけ・テストで固定）。ゲート/再計測は §4–5。テスト 9 件
 
+- **【regen 耐性】今日の 2 介入が再生成で消える穴を塞いだ**（`scripts/regenerate_all.py` STEPS・`Snakefile`）:
+  `build_editor_data` は基底から `all.json` を作り直すので、in-place 適用した介入は regen のたびに消える
+  （2026-08-15 に #28/#29 で実害）。今日入れた **#34追補3 の第三波**（`--seam-m 200 --islands hokkaido west`・
+  east 17 本は AC 退行のため除外）と **#44 の回線数**（`apply_circuit_sources.py --write`）を同じ
+  「再構築後に必ず再適用」パターンで STEPS と DAG（23 ルール・dry-run 確認）に組み込んだ
+- **第三波の非冪等性を発見・ガードを追加**: 適用済みの正典に対して再実行すると、繋がった断片が本系統に
+  なった分だけ**新たな候補が生まれて 12 本増える**（51→63・実測）。連鎖としては正しいが AC ゲートを
+  取っていない枝が regen のたびに増えるのは事故なので、第三波の枝が既にある正典への追加適用は既定で拒否し
+  （`--allow-cascade` で明示・終了コードは 0＝パイプラインの段として再実行可能）、
+  回帰テスト `test_write_is_idempotent_without_allow_cascade` で固定した。
+  `apply_circuit_sources` は再実行で更新 0 件＝元から冪等
+
 ---
 
 ## 2026-09-01 — **Claude Opus 5** — CI 2か月分の赤を解体(19件) — pandapower 3.5 追随・08-16 基底刷新へのピン追随・埋もれていた cap 劣化の摘出

@@ -198,3 +198,43 @@ def test_twin_on_main_endpoint_is_rejected():
     # 仮適用しても周波数跨ぎ枝は増えない(候補が無い)
     assert rep["freq_crossing_edges_before"] == m.freq_crossing_edges(
         built["nodes"], built["edges"])
+
+
+def test_write_is_idempotent_without_allow_cascade(tmp_path, monkeypatch):
+    """二度目の --write は正典を変えない（冪等ガード・2026-09-03）。
+
+    一度適用すると、繋がった断片が本系統になるので次の実行では「その断片を経由して
+    届く別の断片」が新たに候補になる（実測 51→+12）。連鎖としては正しいが、
+    AC ゲートを取っていない枝が regen のたびに増えるのは事故なので既定で拒否する。
+    パイプラインの段として再実行できるよう、終了コードは 0（無変更）で返す。
+    """
+    import hashlib
+    import importlib.util
+    import sys as _sys
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parents[1]
+    built = root / "docs" / "data" / "built" / "all.json"
+    if not built.exists():
+        import pytest
+        pytest.skip("正典が無い")
+    spec = importlib.util.spec_from_file_location(
+        "third_wave_idem", root / "scripts" / "hunt_fragment_third_wave.py")
+    mod = importlib.util.module_from_spec(spec)
+    _sys.modules["third_wave_idem"] = mod
+    spec.loader.exec_module(mod)
+
+    import json as _json
+    with open(built, encoding="utf-8") as f:
+        already = sum(1 for e in _json.load(f)["edges"]
+                      if e.get("recovery") == "osm_chain3")
+    if not already:
+        import pytest
+        pytest.skip("正典に第三波が未適用（このガードの対象外）")
+
+    before = hashlib.sha256(built.read_bytes()).hexdigest()
+    rc = mod.main(["--seam-m", "200", "--islands", "hokkaido", "west", "--write",
+                   "--out-dir", str(tmp_path)])
+    assert rc == 0, "冪等な段は成功で返る"
+    assert hashlib.sha256(built.read_bytes()).hexdigest() == before, \
+        "二度目の --write が正典を書き換えた"

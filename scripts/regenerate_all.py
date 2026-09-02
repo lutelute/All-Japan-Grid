@@ -53,6 +53,15 @@ STEPS = [
     ("fragment_recovery_chains", [sys.executable,
                                   "scripts/hunt_fragment_osm_chains.py",
                                   "--write"], False),
+    # 介入#34 追補3: 第三波(継ぎ目 60m→200m の OSM way 連鎖・2026-09-02)。
+    # **hokkaido/west のみ**適用する — 全 68 本(east 17 本込み)を入れると east ピーク AC が
+    # dc_fallback に退行することを実測済み(却下記録 uc_pf_built_east_sel_frag3_rejected_*.json)。
+    # 電圧整合・迂回係数 ≤1.5・跨島双子の3ゲート。跨ぎ枝が増える候補が混ざると自動中止。冪等
+    ("fragment_recovery_third_wave", [sys.executable,
+                                      "scripts/hunt_fragment_third_wave.py",
+                                      "--seam-m", "200",
+                                      "--islands", "hokkaido", "west",
+                                      "--write"], False),
     # 介入#35: 偽断片のノード衛生(跨region二重登録の解消・オーナー承認 2026-08-26)。
     # 衛星判読パイロットc1で発見した「断片=登録人工物」を機械判定して双子側へ寄せる
     # (完全双子=削除/近傍双子≤150m・kv一致=リマップ/残余junction=再帰属)。
@@ -61,6 +70,12 @@ STEPS = [
     # 長野/新潟/静岡の跨ぎ候補を再帰属(帳簿=fragments/mixed_pref_ledger.json)。冪等
     ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
                       "--mixed-pref", "--write"], False),
+    # 介入#44: 回線数(par)の出典補完(2026-09-02)。公表資料の回線数を台帳
+    # data/reference/circuit_counts.jsonl から引き当てて **増やす方向のみ** 適用。
+    # build_editor_data が基底から作り直すと par は OSM circuits タグ由来へ戻るため、
+    # 再適用が要る(#28/#29 と同じ「再構築後に必ず再適用」パターン)。冪等
+    ("apply_circuit_sources", [sys.executable, "scripts/apply_circuit_sources.py",
+                               "--write"], False),
     # 介入#36: 衛星判読クラスの接続(オーナー承認制・スクリプト内CONNECTIONS表が
     # 承認台帳)。approved のみ適用・冪等。第1号=小千谷66kV(衛星のみ証拠)
     ("satellite_connections", [sys.executable,

@@ -89,14 +89,27 @@ rule fragment_recovery_chains:
     shell: f"{PY} scripts/hunt_fragment_osm_chains.py --write"
 
 
-rule node_hygiene:
+rule fragment_recovery_third_wave:
     input: f"{STAMP}/06_fragment_chains.done"
+    output: touch(f"{STAMP}/06b_fragment_third_wave.done")
+    shell: f"{PY} scripts/hunt_fragment_third_wave.py --seam-m 200 --islands hokkaido west --write"
+
+
+rule node_hygiene:
+    input: f"{STAMP}/06b_fragment_third_wave.done"
     output: touch(f"{STAMP}/07_node_hygiene.done")
     shell: f"{PY} scripts/apply_node_hygiene.py --mixed-pref --write"   # #35 + #42
 
 
-rule satellite_connections:
+# 介入#44: 回線数(par)の出典補完。基底から作り直すと OSM タグ由来へ戻るため再適用が要る
+rule apply_circuit_sources:
     input: f"{STAMP}/07_node_hygiene.done"
+    output: touch(f"{STAMP}/07b_circuit_sources.done")
+    shell: f"{PY} scripts/apply_circuit_sources.py --write"
+
+
+rule satellite_connections:
+    input: f"{STAMP}/07b_circuit_sources.done"
     output: touch(f"{STAMP}/08_satellite.done")
     shell: f"{PY} scripts/apply_satellite_connections.py --write"
 

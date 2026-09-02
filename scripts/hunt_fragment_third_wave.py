@@ -589,6 +589,9 @@ def main(argv=None) -> int:
     ap.add_argument("--detour-max", type=float, default=DETOUR_MAX)
     ap.add_argument("--write", action="store_true",
                     help="正典へ適用(バックアップ all.json.pre_frag3.bak)。親セッション専用")
+    ap.add_argument("--allow-cascade", action="store_true",
+                    help="正典に第三波の枝が既にあっても追加適用する(連鎖の次の波)。"
+                         "既定は冪等ガードで拒否 — 使うなら AC ゲートを取り直すこと")
     ap.add_argument("--islands", nargs="*", default=None,
                     choices=["hokkaido", "east", "west", "okinawa"],
                     help="適用(と仮計上)を島で絞る。2026-09-02: east の 17 本を適用すると east "
@@ -625,6 +628,17 @@ def main(argv=None) -> int:
         if rep["freq_crossing_edges_after"] != rep["freq_crossing_edges_before"]:
             print("★中止: 周波数跨ぎ枝が増える候補が含まれる(構造上あり得ない — 調査せよ)")
             return 2
+        # 冪等ガード(2026-09-03): 一度適用すると、繋がった断片が本系統になるので
+        # 次の実行では「その断片を経由して届く別の断片」が新たに候補になる(実測: 51→+12)。
+        # 波としては正しい連鎖だが、**ゲートを取っていない枝が regen のたびに増える**のは
+        # 事故なので、既に第三波の枝がある正典への追加適用は既定で拒否する。
+        # 次の波を打つときは --allow-cascade を明示し、east/west のピーク AC を取り直すこと
+        # (regenerate_all は基底から作り直すので、この段は毎回 0 本の正典に対して走る)。
+        already = sum(1 for e in built["edges"] if e.get("recovery") == "osm_chain3")
+        if already and not args.allow_cascade:
+            print(f"適用済み: 正典に第三波の枝が既に {already} 本ある(冪等ガード・無変更)。"
+                  f"連鎖の次の波を打つなら --allow-cascade を明示し、AC ゲートを取り直すこと")
+            return 0        # パイプラインの段として再実行できるよう成功で返す
         bak = Path(args.built).with_name(Path(args.built).name + ".pre_frag3.bak")
         bak.write_text(json.dumps(built, ensure_ascii=False), encoding="utf-8")
         for c in apply_chains:
