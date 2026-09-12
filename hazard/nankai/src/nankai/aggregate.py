@@ -42,8 +42,12 @@ def to_municipalities(bus: pd.DataFrame, timeline, muni_path: str = MUNI):
             sv = d[f"served_t{t:g}"]
             r[f"served_t{t:g}"] = float((sv * d.pd_mw).sum() / L) if L > 0 else float(sv.mean())
             r[f"outage_customers_t{t:g}"] = float(((1 - sv) * d.customers).sum())
+            if f"phys_t{t:g}" in d:
+                pv = d[f"phys_t{t:g}"]
+                r[f"phys_t{t:g}"] = float((pv * d.pd_mw).sum() / L) if L > 0 else float(pv.mean())
+                r[f"outage_customers_phys_t{t:g}"] = float(((1 - pv) * d.customers).sum())
         rows.append(r)
-    out = pd.DataFrame(rows)
+    out = pd.DataFrame(rows).drop(columns=["pref_name", "muni_name"])
     res = muni.merge(out, on="muni_code", how="inner")
     # 出力サイズ対策: 行政界は簡略化(≈100m)して返す(N03 原寸は west で 200MB 超)
     res["geometry"] = res.geometry.simplify(0.001, preserve_topology=True)
