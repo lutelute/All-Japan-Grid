@@ -1,0 +1,114 @@
+{
+  "line_voltage_mismatches": [],
+  "transformers_without_site_witness": [
+    {
+      "trafo": 0,
+      "name": "trafo_132/66kV",
+      "hv_bus": 11,
+      "lv_bus": 10,
+      "hv_kv": 132.0,
+      "lv_kv": 66.0,
+      "sn_mva": 100.0,
+      "origins": [
+        {
+          "id": "okinawa_jct_26.4311:127.8401:132",
+          "name": "okinawa junction 26.4311:127.8401:132",
+          "kv": 132.0,
+          "sub": 0,
+          "region": "okinawa",
+          "lat": 26.43108,
+          "lon": 127.84008
+        },
+        {
+          "id": "okinawa_jct_26.4311:127.8401:66",
+          "name": "okinawa junction 26.4311:127.8401:66",
+          "kv": 66.0,
+          "sub": 0,
+          "region": "okinawa",
+          "lat": 26.43108,
+          "lon": 127.84008
+        }
+      ],
+      "mechanism": "coordinate_ladder",
+      "status": "review_no_substation_node_witness"
+    }
+  ],
+  "transformer_source_mapping_missing": [],
+  "counts": {
+    "buses": 100,
+    "lines": 96,
+    "transformers": 19,
+    "switches": 0,
+    "line_voltage_mismatches": 0,
+    "transformers_without_site_witness": 1,
+    "transformer_source_mapping_missing": 0,
+    "unwitnessed_by_mechanism": {
+      "coordinate_ladder": 1
+    }
+  },
+  "unknown_line_components": [],
+  "topology_sensitivity": {
+    "before": {
+      "components": 7,
+      "largest_component": 94
+    },
+    "without_candidates": {
+      "components": 7,
+      "largest_component": 94
+    },
+    "removed": 1
+  },
+  "builder_stats": {
+    "n_bus": 100,
+    "n_line": 96,
+    "n_trafo": 19,
+    "n_trafo_nameplate": 0,
+    "n_edge_skipped": 19,
+    "n_dedup_merged": 1,
+    "n_edge_dup_removed": 0,
+    "n_site_trafo": 0,
+    "n_deenergized": 0,
+    "n_tie_nis": 0,
+    "cap_calib": false,
+    "cap_calib_ledger": null,
+    "n_btb_split": 0,
+    "n_implicit_stepdown": 0,
+    "implicit_stepdown_ledger": [],
+    "unknown_kv_reclass_ledger": [],
+    "region_reattribution": {
+      "n_nodes": 17738,
+      "n_changed": 2869,
+      "changes": {
+        "chubu->hokuriku": 569,
+        "kansai->chubu": 504,
+        "chugoku->shikoku": 324,
+        "tokyo->tohoku": 237,
+        "shikoku->chugoku": 235,
+        "chubu->kansai": 196,
+        "kyushu->chugoku": 185,
+        "hokuriku->chubu": 181,
+        "chugoku->kyushu": 158,
+        "tohoku->tokyo": 117,
+        "kansai->hokuriku": 51,
+        "chugoku->kansai": 49,
+        "kansai->shikoku": 44,
+        "shikoku->kansai": 11,
+        "tohoku->hokkaido": 3,
+        "hokuriku->kansai": 2,
+        "kyushu->shikoku": 2,
+        "kansai->chugoku": 1
+      },
+      "skipped_freq": {
+        "tokyo->chubu": 62,
+        "chubu->tokyo": 25,
+        "chubu->tohoku": 23,
+        "hokuriku->tohoku": 22
+      },
+      "freq_fixed": {},
+      "mixed_pref_fixed": {},
+      "mixed_pref_vetoed": {},
+      "mixed_pref_note": null
+    }
+  },
+  "elapsed_seconds": 1.1
+}

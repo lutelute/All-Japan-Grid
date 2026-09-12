@@ -1,0 +1,327 @@
+{
+  "line_voltage_mismatches": [
+    {
+      "line": 427,
+      "name": "北海道送電線_12",
+      "from_bus": 106,
+      "to_bus": 107,
+      "from_kv": 66.0,
+      "to_kv": 187.0,
+      "recorded_line_kv": 0.0
+    },
+    {
+      "line": 685,
+      "name": "北海道送電線_53",
+      "from_bus": 215,
+      "to_bus": 217,
+      "from_kv": 66.0,
+      "to_kv": 110.0,
+      "recorded_line_kv": 0.0
+    },
+    {
+      "line": 688,
+      "name": "北海道送電線_53",
+      "from_bus": 217,
+      "to_bus": 219,
+      "from_kv": 110.0,
+      "to_kv": 66.0,
+      "recorded_line_kv": 0.0
+    },
+    {
+      "line": 843,
+      "name": "上ノ国ウインドファーム連系",
+      "from_bus": 542,
+      "to_bus": 404,
+      "from_kv": 187.0,
+      "to_kv": 66.0,
+      "recorded_line_kv": 0.0
+    }
+  ],
+  "transformers_without_site_witness": [],
+  "transformer_source_mapping_missing": [],
+  "counts": {
+    "buses": 831,
+    "lines": 858,
+    "transformers": 69,
+    "switches": 0,
+    "line_voltage_mismatches": 4,
+    "transformers_without_site_witness": 0,
+    "transformer_source_mapping_missing": 0,
+    "unwitnessed_by_mechanism": {}
+  },
+  "unknown_line_components": [
+    {
+      "buses": [
+        66,
+        67
+      ],
+      "lines": [
+        302
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        68,
+        69
+      ],
+      "lines": [
+        303
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        101,
+        455
+      ],
+      "lines": [
+        413
+      ],
+      "observed_kv": [
+        66.0
+      ],
+      "status": "single_observed_class",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        106,
+        107
+      ],
+      "lines": [
+        427
+      ],
+      "observed_kv": [
+        187.0
+      ],
+      "status": "single_observed_class",
+      "mismatched_lines": 1
+    },
+    {
+      "buses": [
+        128,
+        129
+      ],
+      "lines": [
+        436
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        130,
+        131
+      ],
+      "lines": [
+        437
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        633,
+        658
+      ],
+      "lines": [
+        575
+      ],
+      "observed_kv": [
+        66.0
+      ],
+      "status": "single_observed_class",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        174,
+        660
+      ],
+      "lines": [
+        596
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        208,
+        209
+      ],
+      "lines": [
+        678
+      ],
+      "observed_kv": [
+        66.0
+      ],
+      "status": "single_observed_class",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        215,
+        217,
+        219,
+        223,
+        224,
+        695,
+        704,
+        809,
+        810
+      ],
+      "lines": [
+        685,
+        688,
+        693,
+        694,
+        706,
+        707,
+        708,
+        709
+      ],
+      "observed_kv": [
+        66.0,
+        110.0
+      ],
+      "status": "conflicting_observed_classes",
+      "mismatched_lines": 2
+    },
+    {
+      "buses": [
+        221,
+        222
+      ],
+      "lines": [
+        697
+      ],
+      "observed_kv": [
+        66.0
+      ],
+      "status": "single_observed_class",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        264,
+        265
+      ],
+      "lines": [
+        798
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        266,
+        267
+      ],
+      "lines": [
+        799
+      ],
+      "observed_kv": [],
+      "status": "unanchored",
+      "mismatched_lines": 0
+    },
+    {
+      "buses": [
+        404,
+        542
+      ],
+      "lines": [
+        843
+      ],
+      "observed_kv": [
+        66.0,
+        187.0
+      ],
+      "status": "conflicting_observed_classes",
+      "mismatched_lines": 1
+    }
+  ],
+  "topology_sensitivity": {
+    "before": {
+      "components": 22,
+      "largest_component": 799
+    },
+    "without_candidates": {
+      "components": 22,
+      "largest_component": 799
+    },
+    "removed": 0
+  },
+  "builder_stats": {
+    "n_bus": 831,
+    "n_line": 858,
+    "n_trafo": 69,
+    "n_trafo_nameplate": 1,
+    "n_edge_skipped": 77,
+    "n_dedup_merged": 14,
+    "n_edge_dup_removed": 4,
+    "n_site_trafo": 0,
+    "n_deenergized": 0,
+    "n_tie_nis": 0,
+    "cap_calib": false,
+    "cap_calib_ledger": null,
+    "n_btb_split": 0,
+    "n_implicit_stepdown": 0,
+    "implicit_stepdown_ledger": [],
+    "unknown_kv_reclass_ledger": [
+      {
+        "bus": 107,
+        "name": "hokkaido junction 42.6995:140.836:0",
+        "from_kv": 66.0,
+        "to_kv": 187.0,
+        "line_classes": [
+          187.0
+        ],
+        "mixed": false
+      }
+    ],
+    "region_reattribution": {
+      "n_nodes": 17738,
+      "n_changed": 2869,
+      "changes": {
+        "chubu->hokuriku": 569,
+        "kansai->chubu": 504,
+        "chugoku->shikoku": 324,
+        "tokyo->tohoku": 237,
+        "shikoku->chugoku": 235,
+        "chubu->kansai": 196,
+        "kyushu->chugoku": 185,
+        "hokuriku->chubu": 181,
+        "chugoku->kyushu": 158,
+        "tohoku->tokyo": 117,
+        "kansai->hokuriku": 51,
+        "chugoku->kansai": 49,
+        "kansai->shikoku": 44,
+        "shikoku->kansai": 11,
+        "tohoku->hokkaido": 3,
+        "hokuriku->kansai": 2,
+        "kyushu->shikoku": 2,
+        "kansai->chugoku": 1
+      },
+      "skipped_freq": {
+        "tokyo->chubu": 62,
+        "chubu->tokyo": 25,
+        "chubu->tohoku": 23,
+        "hokuriku->tohoku": 22
+      },
+      "freq_fixed": {},
+      "mixed_pref_fixed": {},
+      "mixed_pref_vetoed": {},
+      "mixed_pref_note": null
+    }
+  },
+  "elapsed_seconds": 2.63
+}
