@@ -1,134 +1,142 @@
 <title>南海トラフ 電力ハザードマップ</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>/*__LEAFLET_CSS__*/</style>
 <style>
 :root{--bg:#eef0ec;--panel:#fbfbf9;--ink:#1b1f26;--muted:#646a73;--line:#d3d6cf;--accent:#1c5d8c;--accent-ink:#ffffff;--sea:#dfe6ea;--land:#f6f5ef;--land-line:#b9bdb5;
- --r0:#fff4d9;--r1:#f7b267;--r2:#d64b3a;--r3:#5c0d1c;--band:rgba(28,93,140,.14);--phys:#c2361f;--served:#1c5d8c;--shadow:0 10px 30px rgba(20,30,40,.14)}
+ --r0:#fff4d9;--r1:#f7b267;--r2:#d64b3a;--r3:#5c0d1c;--band:rgba(28,93,140,.14);--phys:#c2361f;--served:#1c5d8c;--shadow:0 6px 24px rgba(20,30,40,.18);--label:#3a3f47}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#13161b;--panel:#1b1f26;--ink:#e9e7e0;--muted:#9aa1aa;--line:#2d323b;--accent:#79b4e2;--accent-ink:#0f1a24;--sea:#0f1319;--land:#20252d;--land-line:#3a414b;
- --r0:#3a3325;--r1:#c6832f;--r2:#e0563f;--r3:#ff9aa8;--band:rgba(121,180,226,.18);--phys:#ff7a5c;--served:#79b4e2;--shadow:0 10px 30px rgba(0,0,0,.5)}}
+ --r0:#3a3325;--r1:#c6832f;--r2:#e0563f;--r3:#ff9aa8;--band:rgba(121,180,226,.18);--phys:#ff7a5c;--served:#79b4e2;--shadow:0 6px 24px rgba(0,0,0,.55);--label:#cfd3d8}}
 :root[data-theme="dark"]{--bg:#13161b;--panel:#1b1f26;--ink:#e9e7e0;--muted:#9aa1aa;--line:#2d323b;--accent:#79b4e2;--accent-ink:#0f1a24;--sea:#0f1319;--land:#20252d;--land-line:#3a414b;
- --r0:#3a3325;--r1:#c6832f;--r2:#e0563f;--r3:#ff9aa8;--band:rgba(121,180,226,.18);--phys:#ff7a5c;--served:#79b4e2;--shadow:0 10px 30px rgba(0,0,0,.5)}
+ --r0:#3a3325;--r1:#c6832f;--r2:#e0563f;--r3:#ff9aa8;--band:rgba(121,180,226,.18);--phys:#ff7a5c;--served:#79b4e2;--shadow:0 6px 24px rgba(0,0,0,.55);--label:#cfd3d8}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.55}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;overflow:hidden}
 h1,h2,h3{font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;text-wrap:balance;margin:0}
 .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
-header{padding:14px 20px 10px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline}
-header h1{font-size:20px;font-weight:900;letter-spacing:.01em}
-header .sub{color:var(--muted);font-size:12.5px}
-header .sub b{color:var(--ink);font-weight:500}
-main{display:grid;grid-template-columns:340px 1fr;grid-template-rows:calc(100vh - 62px);min-height:520px}
-aside{padding:16px 18px;overflow:auto;border-right:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;gap:18px}
-#map{background:var(--sea);width:100%;height:100%;min-height:420px}
+#map{position:fixed;inset:0;background:var(--sea)}
 .leaflet-container{font:inherit}
 .leaflet-control-attribution{display:none}
+.leaflet-top.leaflet-right{top:52px}
+.leaflet-touch .leaflet-bar a{width:40px;height:40px;line-height:40px;font-size:22px}
+.leaflet-bar a{background:var(--panel);color:var(--ink);border-bottom-color:var(--line)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
 .leaflet-popup-content{margin:12px 14px;font-size:12.5px;line-height:1.5}
 .leaflet-popup-content b{font-family:"Zen Kaku Gothic New",sans-serif}
-.lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace}
-.block{display:flex;flex-direction:column;gap:8px}
+.city{font-family:"Zen Kaku Gothic New",sans-serif;font-size:11px;font-weight:700;color:var(--label);text-shadow:0 0 3px var(--land),0 0 3px var(--land),0 0 3px var(--land);white-space:nowrap;pointer-events:none}
+.brand{position:fixed;top:10px;left:10px;right:10px;z-index:900;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+.brand h1{font-size:15px;font-weight:900;background:var(--panel);padding:6px 10px;border-radius:6px;box-shadow:var(--shadow);pointer-events:auto}
+.brand button{pointer-events:auto}
+.btn{font:inherit;font-size:12.5px;padding:7px 11px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}
+.btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dock{position:fixed;left:10px;right:10px;bottom:10px;z-index:950;background:var(--panel);border-radius:10px;box-shadow:var(--shadow);padding:10px 14px 12px;display:grid;gap:8px}
 .time-row{display:flex;justify-content:space-between;align-items:baseline}
-.time-row .now{font-family:"Zen Kaku Gothic New",sans-serif;font-size:26px;font-weight:700;line-height:1}
-input[type=range]{width:100%;accent-color:var(--accent);margin:4px 0 0}
-.ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
-.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.lab{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace}
+.time-row .now{font-family:"Zen Kaku Gothic New",sans-serif;font-size:24px;font-weight:700;line-height:1}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:28px}
+.ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:-4px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex:1;min-width:220px}
 .seg button{flex:1;padding:7px 4px;background:transparent;border:0;color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:500}
-.seg button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.kmini{display:flex;gap:14px;font-size:12px;color:var(--muted);align-items:baseline}
+.kmini b{font-family:"Zen Kaku Gothic New",sans-serif;font-size:18px;color:var(--ink);font-weight:700}
+.legend{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted)}
+.ramp{flex:1;height:8px;border-radius:3px;background:linear-gradient(90deg,var(--r0),var(--r1) 40%,var(--r2) 70%,var(--r3))}
+.sheet{position:fixed;inset:auto 10px 10px 10px;max-height:78vh;overflow:auto;z-index:960;background:var(--panel);border-radius:10px;box-shadow:var(--shadow);padding:14px 16px 16px;display:flex;flex-direction:column;gap:16px}
+.sheet[hidden]{display:none}
+.sheet .head{display:flex;justify-content:space-between;align-items:center}
+.block{display:flex;flex-direction:column;gap:8px}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kpi{padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
 .kpi .v{font-family:"Zen Kaku Gothic New",sans-serif;font-size:22px;font-weight:700;line-height:1.1}
 .kpi .k{font-size:11px;color:var(--muted);margin-top:2px}
 .kpi .v small{font-size:12px;font-weight:500;color:var(--muted);margin-left:2px}
-.legend{display:flex;flex-direction:column;gap:4px}
-.ramp{height:10px;border-radius:3px;background:linear-gradient(90deg,var(--r0),var(--r1) 40%,var(--r2) 70%,var(--r3))}
-.legend .ends{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
-.chk{display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer}
-.chk input{accent-color:var(--accent);margin:0}
 table{border-collapse:collapse;width:100%;font-size:12px}
 th,td{text-align:left;padding:4px 2px;border-bottom:1px solid var(--line);vertical-align:top}
 th{color:var(--muted);font-weight:500;font-size:11px}
 td.n{text-align:right;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
 .curve{border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:8px 8px 4px}
 .curve svg{width:100%;height:auto;display:block}
-.curve .cap{display:flex;gap:12px;font-size:11px;color:var(--muted);padding:2px 4px 0}
+.curve .cap{display:flex;gap:12px;font-size:11px;color:var(--muted);padding:2px 4px 0;flex-wrap:wrap}
 .curve .cap i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
-.note{font-size:11.5px;color:var(--muted);line-height:1.5}
-.note a{color:var(--accent)}
-.worst li{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.note{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0}
 .worst{list-style:none;padding:0;margin:0}
+.worst li{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--line)}
 .worst .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media (max-width:820px){main{grid-template-columns:1fr;grid-template-rows:62vh auto}aside{order:2;border-right:0;border-top:1px solid var(--line)}#map{order:1;min-height:0}}
+.chk{display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer}
+.chk input{accent-color:var(--accent);margin:0}
+@media (min-width:900px){
+ .dock{left:14px;right:auto;width:360px;bottom:14px}
+ .sheet{inset:64px auto 190px 14px;width:360px;max-height:none}
+ .brand{left:14px;right:14px}
+}
 @media (prefers-reduced-motion: no-preference){.leaflet-interactive{transition:fill .25s}}
 </style>
-<header>
-  <h1>南海トラフ 電力ハザードマップ</h1>
-  <span class="sub">解析ベース v0 ・ モンテカルロ <b id="nsamp"></b> サンプルの平均 ・ 地震動 <b>J-SHIS 南海トラフ最大クラス Mw9.1</b> ・ 津波 <b>国土数値情報 A40</b> ・ 系統 <b>All-Japan-Grid 正典(west 7,985 / east 6,253 母線)</b></span>
-</header>
-<main>
-  <aside>
-    <div class="block">
-      <div class="time-row"><span class="lab">発災からの時間</span><span class="now mono" id="tnow">直後</span></div>
-      <input id="tslider" type="range" min="0" max="8" value="0" step="1" aria-label="発災からの時間">
-      <div class="ticks"><span>直後</span><span>1日</span><span>4日</span><span>2週</span><span>90日</span></div>
-    </div>
-    <div class="block">
-      <span class="lab">色 = 自治体の停電率(需要加重)</span>
-      <div class="seg" role="group" aria-label="停電の定義">
-        <button id="mode-phys" aria-pressed="true">物理停電</button>
-        <button id="mode-served" aria-pressed="false">供給力不足の遮断込み</button>
-      </div>
-      <div class="legend"><div class="ramp"></div><div class="ends"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div></div>
-      <label class="chk"><input id="showpts" type="checkbox" checked> 変電所を点で重ねる(大きさ = 需要)</label>
-    </div>
-    <div class="kpis">
-      <div class="kpi"><div class="v mono" id="k-west">–</div><div class="k">西日本(60Hz) 受電可能</div></div>
-      <div class="kpi"><div class="v mono" id="k-east">–</div><div class="k">東日本(50Hz・静岡東部〜関東) 受電可能</div></div>
-      <div class="kpi"><div class="v mono" id="k-five">–</div><div class="k">五地域の物理停電 軒数(推定)</div></div>
-      <div class="kpi"><div class="v mono" id="k-nk">–</div><div class="k">同・内閣府 2025 基本ケース</div></div>
-    </div>
-    <div class="block">
-      <span class="lab">復旧曲線(西日本)</span>
-      <div class="curve"><svg id="curve" viewBox="0 0 320 150" role="img" aria-label="復旧曲線"></svg>
-        <div class="cap"><span><i style="background:var(--phys)"></i>受電可能(設備・系統崩壊・孤立)</span><span><i style="background:var(--served)"></i>供給率(供給力不足込み)</span></div></div>
-    </div>
-    <div class="block">
-      <span class="lab">この時点で停電率が高い自治体</span>
-      <ul class="worst" id="worst"></ul>
-    </div>
-    <div class="block">
-      <span class="lab">内閣府想定との比較(五地域・万軒)</span>
-      <table><thead><tr><th>時点</th><th class="n">内閣府2013</th><th class="n">内閣府2025</th><th class="n">本解析 物理</th></tr></thead><tbody id="cmp"></tbody></table>
-    </div>
-    <p class="note">物理停電 = 変電所の損傷(揺れ・津波)・エリアの需給崩壊・上流の線路や上位変電所の損傷による孤立。供給力不足の遮断は 2011 年の計画停電に相当し、内閣府の停電軒数には含まれない。配電(6.6kV 以下)の被害は未考慮のため、実際の停電はこれより多い。軒数は供給地点数の概数で換算(内閣府は電灯軒数)。詳細: リポジトリ docs/reports/nankai_power_hazard_v0_2026-09-13.md</p>
-  </aside>
-  <div id="map"></div>
-</main>
+<div id="map"></div>
+<div class="brand"><h1>南海トラフ 電力ハザードマップ</h1><button class="btn" id="more" aria-pressed="false">詳細</button></div>
+<div class="dock" id="dock">
+  <div class="time-row"><span class="lab">発災からの時間</span><span class="now mono" id="tnow">直後</span></div>
+  <input id="tslider" type="range" min="0" max="8" value="0" step="1" aria-label="発災からの時間">
+  <div class="ticks"><span>直後</span><span>1日</span><span>4日</span><span>2週</span><span>90日</span></div>
+  <div class="row">
+    <div class="seg" role="group" aria-label="停電の定義"><button id="mode-phys" aria-pressed="true">物理停電</button><button id="mode-served" aria-pressed="false">供給力不足込み</button></div>
+    <div class="kmini"><span>西日本 受電可能 <b id="k-west">–</b></span><span>五地域 停電 <b id="k-five">–</b></span></div>
+  </div>
+  <div class="legend"><span>0%</span><div class="ramp"></div><span>100%</span><span style="margin-left:6px">色 = 自治体の停電率 ・ 点 = 変電所(需要が大きいほど大)</span></div>
+</div>
+<div class="sheet" id="sheet" hidden>
+  <div class="head"><h2 style="font-size:15px">詳細</h2><button class="btn" id="close">閉じる</button></div>
+  <div class="kpis">
+    <div class="kpi"><div class="v mono" id="k-west2">–</div><div class="k">西日本(60Hz) 受電可能</div></div>
+    <div class="kpi"><div class="v mono" id="k-east">–</div><div class="k">東日本(静岡東部〜関東) 受電可能</div></div>
+    <div class="kpi"><div class="v mono" id="k-five2">–</div><div class="k">五地域の物理停電 軒数(推定)</div></div>
+    <div class="kpi"><div class="v mono" id="k-nk">–</div><div class="k">同・内閣府 2025 基本ケース</div></div>
+  </div>
+  <div class="block"><span class="lab">復旧曲線(西日本)</span>
+    <div class="curve"><svg id="curve" viewBox="0 0 320 150" role="img" aria-label="復旧曲線"></svg>
+      <div class="cap"><span><i style="background:var(--phys)"></i>受電可能(設備・系統崩壊・孤立)</span><span><i style="background:var(--served)"></i>供給率(供給力不足込み)</span></div></div></div>
+  <div class="block"><span class="lab">この時点で停電率が高い自治体</span><ul class="worst" id="worst"></ul></div>
+  <div class="block"><span class="lab">内閣府想定との比較(五地域・万軒)</span>
+    <table><thead><tr><th>時点</th><th class="n">内閣府2013</th><th class="n">内閣府2025</th><th class="n">本解析 物理</th></tr></thead><tbody id="cmp"></tbody></table></div>
+  <label class="chk"><input id="showpts" type="checkbox" checked> 変電所の点を表示(ズームすると全点)</label>
+  <p class="note">解析ベース v0 ・ モンテカルロ <span id="nsamp"></span> サンプルの平均 ・ 地震動 J-SHIS 南海トラフ最大クラス Mw9.1 ・ 津波 国土数値情報 A40 ・ 系統 All-Japan-Grid 正典。物理停電 = 変電所の損傷(揺れ・津波)・エリアの需給崩壊・上流の損傷による孤立。供給力不足の遮断は 2011 年の計画停電に相当し、内閣府の停電軒数には含まれない。配電(6.6kV 以下)の被害は未考慮のため実際の停電はこれより多い。軒数は供給地点数の概数で換算。</p>
+</div>
 <script>
 const D=/*__DATA__*/null;
 const TS=D.ts, TL=["直後","12時間","1日","2日","4日","7日","14日","30日","90日"];
-let ti=0, mode="p", showPts=true;
+const CITIES=[["東京",35.68,139.77],["横浜",35.44,139.64],["静岡",34.98,138.38],["浜松",34.71,137.73],["名古屋",35.18,136.91],["岐阜",35.42,136.76],["津",34.73,136.51],["京都",35.01,135.77],["大阪",34.69,135.50],["神戸",34.69,135.19],["和歌山",34.23,135.17],["岡山",34.66,133.92],["広島",34.39,132.46],["松江",35.47,133.05],["高松",34.34,134.05],["徳島",34.07,134.55],["松山",33.84,132.77],["高知",33.56,133.53],["福岡",33.59,130.40],["大分",33.24,131.61],["熊本",32.80,130.71],["宮崎",31.91,131.42],["鹿児島",31.60,130.56],["金沢",36.56,136.66],["長野",36.65,138.18],["甲府",35.66,138.57]];
+let ti=0, mode="p";
 document.getElementById("nsamp").textContent=D.n;
 const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
 function mix(a,b,t){const p=x=>parseInt(x,16);const A=[1,3,5].map(i=>p(a.slice(i,i+2)));const B=[1,3,5].map(i=>p(b.slice(i,i+2)));return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("");}
 function ramp(v){const c0=css("--r0"),c1=css("--r1"),c2=css("--r2"),c3=css("--r3");v=Math.max(0,Math.min(1,v));if(v<.4)return mix(c0,c1,v/.4);if(v<.7)return mix(c1,c2,(v-.4)/.3);return mix(c2,c3,(v-.7)/.3);}
-const map=L.map("map",{zoomControl:true,attributionControl:false,preferCanvas:true}).setView([34.0,135.6],6);
+const map=L.map("map",{zoomControl:false,attributionControl:false,preferCanvas:true,touchZoom:true,bounceAtZoomLimits:false,minZoom:5,maxZoom:13}).setView([34.3,135.4],6);
+L.control.zoom({position:"topright",zoomInTitle:"拡大",zoomOutTitle:"縮小"}).addTo(map);
+window.addEventListener("load",()=>setTimeout(()=>map.invalidateSize(),50));window.addEventListener("resize",()=>map.invalidateSize());
+L.control.scale({imperial:false}).addTo(map);
 const pref=L.geoJSON(D.pref,{style:()=>({color:css("--land-line"),weight:.6,fillColor:css("--land"),fillOpacity:1}),interactive:false}).addTo(map);
 function val(p){return (mode==="p"?p.p:p.s)[ti];}
 const muni=L.geoJSON(D.muni,{style:f=>({color:css("--land-line"),weight:.35,fillColor:ramp(val(f.properties)),fillOpacity:.9}),
  onEachFeature:(f,l)=>{l.bindPopup(()=>{const p=f.properties;let s=`<b>${p.n}</b><br>需要 ${p.l} MW ・ 需要家 ${(p.c/1e4).toFixed(1)} 万 ・ 震度 ${p.i}<br>期待停電日数 ${p.d} 日<br><table style="margin-top:6px;font-size:11.5px">`;
   TS.forEach((t,i)=>{s+=`<tr><td style="padding:1px 8px 1px 0;color:var(--muted)">${TL[i]}</td><td style="text-align:right">${Math.round(p.p[i]*100)}%</td><td style="text-align:right;color:var(--muted);padding-left:8px">不足込 ${Math.round(p.s[i]*100)}%</td></tr>`;});
-  return s+"</table>";});}}).addTo(map);
+  return s+"</table>";},{maxWidth:260});}}).addTo(map);
+const cities=L.layerGroup(CITIES.map(c=>L.marker([c[1],c[2]],{icon:L.divIcon({className:"city",html:c[0],iconSize:[0,0],iconAnchor:[-4,6]}),interactive:false,keyboard:false}))).addTo(map);
 const cv=L.canvas({padding:.3});
 const pts=L.layerGroup().addTo(map);
-D.pts.forEach(r=>{const [lat,lon,name,kv,pd,I,ts,ed,po]=r;const m=L.circleMarker([lat,lon],{renderer:cv,radius:2+Math.sqrt(Math.min(pd,500)/500)*7,color:css("--ink"),weight:.4,opacity:.7,fillColor:ramp(po[0]),fillOpacity:.9});
- m._po=po;m.bindPopup(`<b>${name}</b><br>${kv} kV ・ 需要 ${pd} MW ・ 震度 ${I}${ts?` ・ 津波浸水ランク ${ts}`:""}<br>期待停電日数 ${ed} 日<br>停電確率 直後 ${Math.round(po[0]*100)}% / 1日 ${Math.round(po[2]*100)}% / 7日 ${Math.round(po[5]*100)}% / 30日 ${Math.round(po[7]*100)}%`);pts.addLayer(m);});
-function repaint(){muni.eachLayer(l=>l.setStyle({fillColor:ramp(val(l.feature.properties))}));pts.eachLayer(m=>m.setStyle({fillColor:ramp(m._po[ti])}));}
+const markers=D.pts.map(r=>{const [lat,lon,name,kv,pd,I,ts,ed,po]=r;const m=L.circleMarker([lat,lon],{renderer:cv,radius:2+Math.sqrt(Math.min(pd,500)/500)*7,color:css("--ink"),weight:.4,opacity:.7,fillColor:ramp(po[0]),fillOpacity:.9});
+ m._po=po;m._pd=pd;m.bindPopup(`<b>${name}</b><br>${kv} kV ・ 需要 ${pd} MW ・ 震度 ${I}${ts?` ・ 津波浸水ランク ${ts}`:""}<br>期待停電日数 ${ed} 日<br>停電確率 直後 ${Math.round(po[0]*100)}% / 1日 ${Math.round(po[2]*100)}% / 7日 ${Math.round(po[5]*100)}% / 30日 ${Math.round(po[7]*100)}%`);return m;});
+function thin(){const z=map.getZoom();const th=z>=10?0:z>=8?20:60;pts.clearLayers();if(!document.getElementById("showpts").checked)return;markers.forEach(m=>{if(m._pd>=th)pts.addLayer(m);});}
+map.on("zoomend",thin);thin();
+function repaint(){muni.eachLayer(l=>l.setStyle({fillColor:ramp(val(l.feature.properties))}));markers.forEach(m=>m.setStyle({fillColor:ramp(m._po[ti])}));}
 const interp=(xs,ys,x)=>{for(let i=1;i<xs.length;i++){if(x<=xs[i]){const f=(x-xs[i-1])/(xs[i]-xs[i-1]||1);return ys[i-1]+(ys[i]-ys[i-1])*f;}}return ys[ys.length-1];};
 const fmtMan=v=>v==null?"–":(v/1e4).toLocaleString("ja-JP",{maximumFractionDigits:0})+"<small>万軒</small>";
 function kpis(){const t=TS[ti];document.getElementById("tnow").textContent=TL[ti];
- document.getElementById("k-west").innerHTML=interp(D.curves.west.t,D.curves.west.phys,t).toFixed(0)+"<small>%</small>";
- document.getElementById("k-east").innerHTML=interp(D.curves.east.t,D.curves.east.phys,t).toFixed(0)+"<small>%</small>";
- const key="five_t"+t;const c=D.compare[key];document.getElementById("k-five").innerHTML=c?fmtMan(c.ours_phys):"–";document.getElementById("k-nk").innerHTML=c?fmtMan(c.n2025_basic):"–";
+ const w=interp(D.curves.west.t,D.curves.west.phys,t).toFixed(0), e=interp(D.curves.east.t,D.curves.east.phys,t).toFixed(0);
+ document.getElementById("k-west").textContent=w+"%";document.getElementById("k-west2").innerHTML=w+"<small>%</small>";document.getElementById("k-east").innerHTML=e+"<small>%</small>";
+ const c=D.compare["five_t"+t];document.getElementById("k-five").textContent=c?(c.ours_phys/1e4).toFixed(0)+"万軒":"–";
+ document.getElementById("k-five2").innerHTML=c?fmtMan(c.ours_phys):"–";document.getElementById("k-nk").innerHTML=c?fmtMan(c.n2025_basic):"–";
  const rows=D.muni.features.map(f=>[f.properties.n,val(f.properties),f.properties.c]).filter(r=>r[2]>0).sort((a,b)=>b[1]*b[2]-a[1]*a[2]).slice(0,8);
  document.getElementById("worst").innerHTML=rows.map(r=>`<li><span class="nm">${r[0]}</span><span class="mono">${Math.round(r[1]*100)}% <span style="color:var(--muted)">${(r[1]*r[2]/1e4).toFixed(1)}万軒</span></span></li>`).join("");
  drawCurve(t);}
@@ -144,10 +152,15 @@ function drawCurve(tnow){const c=D.curves.west,W=320,H=150,L=30,R=8,T=8,B=24;con
  document.getElementById("curve").innerHTML=s;}
 document.getElementById("cmp").innerHTML=[0,1,4,7].map(t=>{const c=D.compare["five_t"+t];return `<tr><td>${t===0?"直後":t+"日後"}</td><td class="n">${(c.n2013_basic/1e4).toFixed(0)}</td><td class="n">${(c.n2025_basic/1e4).toFixed(0)}</td><td class="n"><b>${(c.ours_phys/1e4).toFixed(0)}</b></td></tr>`;}).join("");
 document.getElementById("tslider").addEventListener("input",e=>{ti=+e.target.value;repaint();kpis();});
+function setSeg(){document.getElementById("mode-phys").setAttribute("aria-pressed",mode==="p");document.getElementById("mode-served").setAttribute("aria-pressed",mode==="s");repaint();kpis();}
 document.getElementById("mode-phys").addEventListener("click",()=>{mode="p";setSeg();});
 document.getElementById("mode-served").addEventListener("click",()=>{mode="s";setSeg();});
-function setSeg(){document.getElementById("mode-phys").setAttribute("aria-pressed",mode==="p");document.getElementById("mode-served").setAttribute("aria-pressed",mode==="s");repaint();kpis();}
-document.getElementById("showpts").addEventListener("change",e=>{showPts=e.target.checked;showPts?pts.addTo(map):map.removeLayer(pts);});
+document.getElementById("showpts").addEventListener("change",thin);
+const sheet=document.getElementById("sheet"), more=document.getElementById("more");
+function toggleSheet(open){sheet.hidden=!open;more.setAttribute("aria-pressed",open);}
+more.addEventListener("click",()=>toggleSheet(sheet.hidden));document.getElementById("close").addEventListener("click",()=>toggleSheet(false));
+function dockH(){document.documentElement.style.setProperty("--dock-h",document.getElementById("dock").offsetHeight+"px");}
+window.addEventListener("resize",dockH);dockH();
 const mq=window.matchMedia("(prefers-color-scheme: dark)");mq.addEventListener("change",()=>{pref.setStyle({color:css("--land-line"),fillColor:css("--land")});repaint();kpis();});
 new MutationObserver(()=>{pref.setStyle({color:css("--land-line"),fillColor:css("--land")});repaint();kpis();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 kpis();

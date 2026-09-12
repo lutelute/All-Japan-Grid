@@ -43,7 +43,8 @@ def main(run_dir, out_html):
             "n": meta["samples"], "generated": meta["generated"]}
     js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     tpl = open(os.path.join(os.path.dirname(__file__), "templates", "artifact_map.html"), encoding="utf-8").read()
-    html = tpl.replace("/*__DATA__*/null", js)
+    css = open(os.path.join(os.path.dirname(__file__), "templates", "leaflet-1.9.4.min.css"), encoding="utf-8").read()
+    html = tpl.replace("/*__LEAFLET_CSS__*/", css.replace("</style", "<\\/style")).replace("/*__DATA__*/null", js)
     open(out_html, "w", encoding="utf-8").write(html)
     print("html MB", round(len(html.encode()) / 1e6, 2), "munis", len(munis), "pts", len(pts))
 
