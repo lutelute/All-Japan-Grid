@@ -2,3 +2,8 @@
 data/*.geojson linguist-generated
 docs/data/*.geojson linguist-generated
 docs/data/*.json linguist-generated
+
+# SHA-pinned Codex audit evidence; keep code and review prose visible in diffs.
+docs/reports/codex_connection_audit_2026-09-12/*.json linguist-generated
+docs/reports/codex_connection_audit_2026-09-12/*.geojson linguist-generated
+docs/reports/codex_model_quality_2026-09-12/*.json linguist-generated
