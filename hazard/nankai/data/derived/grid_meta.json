@@ -1,0 +1,70 @@
+{
+ "islands": {
+  "west": {
+   "n_bus": 7985,
+   "n_branch": 9131,
+   "n_line": 8134,
+   "n_trafo": 997,
+   "n_gen": 8130,
+   "n_slack": 279,
+   "pd_mw": 73865.0,
+   "pg_mw": 77558.2,
+   "gen_columns": [
+    "name",
+    "bus",
+    "p_mw",
+    "vm_pu",
+    "sn_mva",
+    "min_q_mvar",
+    "max_q_mvar",
+    "scaling",
+    "slack",
+    "controllable",
+    "id_q_capability_characteristic",
+    "reactive_capability_curve",
+    "curve_style",
+    "in_service",
+    "slack_weight",
+    "type",
+    "min_p_mw",
+    "max_p_mw",
+    "zone_src"
+   ],
+   "build_s": 68.8
+  },
+  "east": {
+   "n_bus": 6253,
+   "n_branch": 7144,
+   "n_line": 6467,
+   "n_trafo": 677,
+   "n_gen": 8233,
+   "n_slack": 220,
+   "pd_mw": 55250.0,
+   "pg_mw": 58012.5,
+   "gen_columns": [
+    "name",
+    "bus",
+    "p_mw",
+    "vm_pu",
+    "sn_mva",
+    "min_q_mvar",
+    "max_q_mvar",
+    "scaling",
+    "slack",
+    "controllable",
+    "id_q_capability_characteristic",
+    "reactive_capability_curve",
+    "curve_style",
+    "in_service",
+    "slack_weight",
+    "type",
+    "min_p_mw",
+    "max_p_mw",
+    "zone_src"
+   ],
+   "build_s": 52.1
+  }
+ },
+ "source": "docs/data/built/all.json via scripts/export_matpower_canonical.build_canonical_net",
+ "generated": "2026-09-12T23:57:24"
+}

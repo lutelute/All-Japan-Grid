@@ -1,0 +1,61 @@
+# 既定の脆弱性パラメータ(HAZUS-MH 系 + 日本の耐震設計を考慮した係数)。
+# fragility.yaml(文献整理版)が存在すれば同名キーを上書きする。
+# 対数正規: P(DS>=ds | IM) = Φ( ln(IM/median_ds) / beta_ds )。DS: 1=slight 2=moderate 3=extensive 4=complete
+# confidence: medium(HAZUS本体) / low(日本補正・津波・鉄塔)
+substation:
+  im: pga_g
+  model: hazus                   # hazus(対数正規×日本補正) | jma_table(震度階級ごとの機能停止率・fragility.yaml 1c)
+  classes:                       # HAZUS 4.2 SP3 Table 8-29 anchored。区分は fragility.yaml voltage_class_map(≤110 L / 154-220 M / ≥275 H)
+    low:    {kv_max: 130,  median: [0.15, 0.29, 0.45, 0.90], beta: [0.70, 0.55, 0.45, 0.45]}   # ESSL anchored
+    medium: {kv_max: 250,  median: [0.15, 0.25, 0.35, 0.70], beta: [0.60, 0.50, 0.40, 0.40]}   # ESSM anchored
+    high:   {kv_max: 1000, median: [0.11, 0.15, 0.20, 0.47], beta: [0.50, 0.45, 0.35, 0.40]}   # ESSH anchored
+  japan_adjustment: 5.0          # 中央値倍率(fragility.yaml 推奨 3.0・感度範囲 2〜5; 較正スイープ calib_v3 で 5.0 を採用=震度階級表(jma_table)と同水準)。JEAG 5003 耐震設計+熊本/東北の機器被害率が HAZUS より低いことによる。confidence low
+  functional_failure_ds: 3       # DS>=extensive で機能停止(停電)。moderate は確率的に停止
+  p_out_by_ds: {0: 0.0, 1: 0.0, 2: 0.3, 3: 1.0, 4: 1.0}
+  jma_table:                     # 1日以上の供給途絶確率(fragility.yaml 1c・仮定 low)
+    "5弱": 0.003
+    "5強": 0.01
+    "6弱": 0.03
+    "6強": 0.06
+    "7": 0.15
+  junction_like_line: true       # junction ノードは変電所ではなく線路(鉄塔)扱い
+  tsunami:                       # 浸水深ランク → 機能停止確率(fragility.yaml tsunami_substations: <0.3m 5% / 0.3-1m 50% / 1-2m 85% / ≥2m 98%)
+    pfail_by_rank: {0: 0.0, 1: 0.05, 2: 0.50, 3: 0.85, 4: 0.98, 5: 0.98, 6: 0.98, 7: 0.98}
+    ds_if_fail: 3                # 津波被災は extensive 相当の復旧時間
+line:
+  im: pga_g
+  # 鉄塔倒壊: 1基あたり P(collapse|PGA) 対数正規。地震動単独では稀(地すべり・液状化由来が主)
+  tower: {median: 12.0, beta: 0.9, spacing_km: 0.35}   # 東日本大震災(M9)でも倒壊は数十基規模=1基あたり1e-4〜1e-3/6強 の水準に合わせた仮定
+  # 1路線の停止確率 = 1 - (1-p_tower)^(n_towers); 2回線同時停止を停止条件とするため par>=2 は係数
+  parallel_reduction: 0.5
+  # 津波: 1基あたり倒壊確率(fragility.yaml tsunami_rule: <1m 2% / 1-2m 5% / 2-5m 15% / >5m 40%)×浸水域内の基数(仮定 5基)
+  tsunami: {pfail_by_rank: {0: 0.0, 1: 0.05, 2: 0.10, 3: 0.23, 4: 0.56, 5: 0.92, 6: 0.92, 7: 0.92}, ds_if_fail: 4}
+  ds_if_fail: 4
+  # がいし折損等の短期回線停止(熊本2016 支持物被害率に準拠: 6強 1%, 7 1.5%)。復旧 1〜3日
+  short_outage: {p_by_class: {"6弱": 0.001, "6強": 0.01, "7": 0.015}, median_d: 2.0, beta: 0.5}
+generator:
+  im: pga_g
+  # 一次モデル(fragility.yaml 推奨): 震度階級ごとの「停止率の時間推移」(内閣府 2025 と同じ手法; 火力に適用、太陽光/風力/地熱も同率)。
+  # 各機は u~U(0,1) を引き、u < stop_fraction(I, t) の間は停止 → 停止期間が曲線と整合する。
+  stop_curve:
+    applies_to: [thermal, solar, wind, geothermal, unknown]
+    time_axis_days: [0, 1, 3, 7, 14, 21, 30, 35, 42, 49, 60, 90, 120, 240, 270, 330, 365]
+    stop_fraction:
+      "5弱": [0.08, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "5強": [0.20, 0.07, 0.02, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "6弱": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.23, 0.06, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "6強": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.23, 0.06, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "7":   [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0]
+    # 津波浸水深ランク → 停止期間[日](fragility.yaml tsunami_stop_rate_by_depth: 0.3-1m→90日, ≥1m→240日; <0.3m は運転継続)
+    tsunami_stop_days_by_rank: {0: 0, 1: 0, 2: 90, 3: 240, 4: 240, 5: 240, 6: 240, 7: 240}
+  # 原子力: 地表 PGA ≥ 0.2g(基礎版 120gal 相当) で scram、期間内(90日)は再起動しない(fragility.yaml nuclear)
+  nuclear: {scram_pga_g: 0.20, out_days: 365}
+  # 水力: 既定は停止しない(fragility.yaml hydro default_policy)。損傷は低脆弱の対数正規(仮定)
+  classes:
+    hydro:   {median: [0.30, 0.60, 1.00, 1.50], beta: [0.60, 0.60, 0.60, 0.60]}
+  japan_adjustment: 1.0
+  functional_failure_ds: 2
+  p_out_by_ds: {0: 0.0, 1: 0.0, 2: 0.5, 3: 1.0, 4: 1.0}
+  tsunami:
+    pfail_by_rank: {0: 0.0, 1: 0.10, 2: 0.90, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0}
+    ds_if_fail: 4

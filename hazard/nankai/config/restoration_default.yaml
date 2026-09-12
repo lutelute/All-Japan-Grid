@@ -1,0 +1,47 @@
+# 復旧時間の既定(対数正規 中央値[日], beta)。restoration.yaml があれば上書き。
+# HAZUS-MH 復旧関数(平均日数)を参考に、日本の復旧実績(東日本大震災 東北電力: 3日で80%, 8日で94%)へ
+# 寄せた仮定。confidence: low〜medium
+# 値は restoration.yaml(文献整理版: HAZUS 復旧関数の対数正規化 + 日本の実績)の model_defaults を転記
+substation:
+  ds: {1: {median_d: 1.0, beta: 0.5}, 2: {median_d: 3.0, beta: 0.5}, 3: {median_d: 7.0, beta: 0.5}, 4: {median_d: 30.0, beta: 0.6}}
+  tsunami_ds3: {median_d: 60.0, beta: 0.6}      # 津波被災変電所(仮設・復旧)
+line:
+  ds: {4: {median_d: 14.0, beta: 0.5}}         # 鉄塔倒壊→仮復旧(仮鉄柱・迂回; 胆振2018 岩知志線 7日, 狩勝幹線 23日)
+  tsunami_ds4: {median_d: 30.0, beta: 0.6}
+generator:
+  ds: {1: {median_d: 1.0, beta: 0.5}, 2: {median_d: 7.0, beta: 0.6}, 3: {median_d: 45.0, beta: 0.6}, 4: {median_d: 150.0, beta: 0.5}}
+  tsunami_ds4: {median_d: 180.0, beta: 0.5}    # 沿岸火力の津波被災(2011: 2〜9か月)
+crews:
+  # 作業班(同時修理可能数)。地域(zone)ごと。応援(他社)は day 2 から加算。仮定
+  base: {chubu: 40, kansai: 50, kyushu: 40, shikoku: 15, chugoku: 25, hokuriku: 12, tokyo: 60, tohoku: 30, hokkaido: 15, okinawa: 5}
+  mutual_aid_factor: 2.0
+  mutual_aid_start_d: 3.0
+priority: [kv_desc, load_desc]                  # 上位電圧→需要の大きい順
+generation_availability:                        # 復旧期(t≥1日)の健全機の出力上限係数(対 pmax)
+  thermal: 0.85
+  nuclear: 1.0
+  hydro: 0.55
+  solar: 0.20
+  wind: 0.25
+  geothermal: 0.8
+  unknown: 0.5
+immediate_reserve_factor: 1.10                  # 直後(t=0)は前日運転点×1.1 が上限
+# 系統崩壊(ブラックアウト): 直後の成分内供給不足率がしきい値を超えると成分全体が停電(2018北海道: 供給の約半分喪失で全域停電)。
+# 復電(ブラックスタート〜負荷復帰)は対数正規[時間]。以後は通常の需給・潮流評価に戻る。仮定(confidence low)
+blackout:
+  # 評価単位: zone(一般送配電エリア)。エリア内の生存供給力 + 連系線受電上限 で不足率を出す(内閣府2013「需給バランス不安定→広域停電」を模す)
+  level: zone
+  deficit_threshold: 0.25
+  import_cap_mw: {chubu: 4600, kansai: 8900, chugoku: 9000, shikoku: 2200, kyushu: 2800, hokuriku: 2400, tokyo: 2100, tohoku: 5000, hokkaido: 900, okinawa: 0}   # interconnections.yaml(OCCTO運用容量)の受電側合計
+  supply_zone_override_by_pref: {福井県: kansai}   # 若狭の原子力(関西電力)は領土上は北陸zoneだが関西500kVに直結
+  restore_h_median: 24        # 需給起因の停電の解消(内閣府: 数日間)。サイトごとに独立サンプル
+  restore_h_beta: 0.7
+  min_component_load_mw: 500
+# 被災地の需要減(建物被害・産業停止・節電)。震度階級ごとの減少率を t<=hold_d まで保持し、end_d でゼロへ線形回復。
+# 2011年 東京電力管内で需要▲15〜20%等を踏まえた仮定(confidence low)。供給率は「残存需要」に対して定義する。
+demand_reduction:
+  enabled: true
+  by_class: {"7": 0.35, "6強": 0.25, "6弱": 0.15, "5強": 0.05}
+  hold_d: 14
+  end_d: 90
+timeline_days: [0, 0.25, 0.5, 1, 2, 3, 4, 5, 7, 10, 14, 21, 30, 45, 60, 90]

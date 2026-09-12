@@ -1,0 +1,15 @@
+# hazard/nankai/data — 追跡しないもの (再取得/再生成の手順は docs/DATA_MANIFEST.md と ksj_pipeline/ を参照)
+# 国土数値情報の原本 zip と展開物 (合計 ~1.1 GB)。ksj_pipeline/fetch_ksj.sh で再取得
+external/
+# 大容量の派生ファイル。ksj_pipeline/build_*.py で再生成
+*.gpkg
+*.gpkg-journal
+*.gpkg-wal
+*.gpkg-shm
+# 50MB 超は GitHub に置けない。以下は生成されても追跡しない
+derived/tsunami_inundation_A40_simplified.geojson
+derived/*_full.geojson
+# 追跡するもの (参考): ksj_pipeline/*.py ksj_pipeline/*.sh ksj_pipeline/ksj_urls.txt
+#   derived/municipalities_simplified.geojson (~10 MB)
+#   derived/tsunami_inundation_A40_summary.json (~数十 KB)
+# 50MB 超ルール: jshis_*.parquet (57MB) は hazard/nankai/.gitignore 側で既に無視されている (data/derived/jshis_*.parquet)

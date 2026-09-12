@@ -1,0 +1,349 @@
+# =============================================================================
+# hazard/nankai/config/restoration.yaml
+# 南海トラフ巨大地震 電力系統ハザードモデル: 復旧時間パラメータ
+#
+# 単位: 日。分布は各ブロックの dist で指定。
+#   normal    : mean, sd (HAZUS 原典の表現)
+#   lognormal : median, beta  (本モデルの標準形。HAZUS 値からの換算は derived と明記)
+#   discrete  : 経過日数ごとの機能回復率 (内閣府/HAZUS の離散表)
+# confidence の定義は fragility.yaml と同じ (high/medium/low)。
+# 作成日 2026-09-13。
+# =============================================================================
+
+meta:
+  version: "0.1.0"
+  created: "2026-09-13"
+  time_unit: days
+  restoration_definition: >
+    「機能回復」= 当該要素が定格の供給機能を回復 (仮復旧を含む)。需要家の停電解消は
+    系統切替・仮送電・電源車を含む「応急送電」を基準とする (電力各社の停電戸数の定義に一致)。
+  lognormal_from_normal_rule: "median = mean, beta = ln(1 + (sd/mean)^2)^0.5  (モーメント一致近似; derived)"
+
+# -----------------------------------------------------------------------------
+# 1. HAZUS 復旧関数 (原典そのまま)
+# -----------------------------------------------------------------------------
+hazus:
+  source: >
+    FEMA, Hazus Earthquake Model Technical Manual 4.2 SP3 (Oct 2020), §8.5.5 Component Restoration Curves,
+    Table 8-27 "Restoration Functions for Electric Power System Components (All Normal Distributions)" と
+    Table 8-28 "Discretized Restoration Functions for Electric Power Components", p.8-55。
+    変電所と配電回線の復旧曲線は G&E (1994e)、発電施設は ATC-13 (1985) SF-29.a に基づく (原典本文)。
+    https://www.fema.gov/sites/default/files/2020-10/fema_hazus_earthquake_technical_manual_4-2.pdf
+  confidence: high
+  note: >
+    原典は正規分布 (mean, sd)。Table 8-27 の列見出しは "Median (days)" と "σ (days)" と印字されているが
+    表題は "All Normal Distributions"。本ファイルでは mean として扱う。
+  substations:
+    dist: normal
+    slight:    {mean: 1.0,  sd: 0.5}
+    moderate:  {mean: 3.0,  sd: 1.5}
+    extensive: {mean: 7.0,  sd: 3.5}
+    complete:  {mean: 30.0, sd: 15.0}
+    lognormal_equiv:   # derived (moment matching)
+      slight:    {median: 1.0,  beta: 0.47}
+      moderate:  {median: 3.0,  beta: 0.47}
+      extensive: {median: 7.0,  beta: 0.47}
+      complete:  {median: 30.0, beta: 0.47}
+  distribution_circuits:
+    dist: normal
+    slight:    {mean: 0.3, sd: 0.2}
+    moderate:  {mean: 1.0, sd: 0.5}
+    extensive: {mean: 3.0, sd: 1.5}
+    complete:  {mean: 7.0, sd: 3.0}
+  generation_facilities:
+    dist: normal
+    slight:    {mean: 0.5,  sd: 0.1}
+    moderate:  {mean: 3.6,  sd: 3.6}
+    extensive: {mean: 22.0, sd: 21.0}
+    complete:  {mean: 65.0, sd: 30.0}
+  discretized_functional_pct:
+    days: [1, 3, 7, 30, 90]
+    substations:
+      slight:    [50, 100, 100, 100, 100]
+      moderate:  [9, 50, 100, 100, 100]
+      extensive: [4, 13, 50, 100, 100]
+      complete:  [3, 4, 7, 50, 100]
+    distribution_circuits:
+      slight:    [100, 100, 100, 100, 100]
+      moderate:  [50, 100, 100, 100, 100]
+      extensive: [9, 50, 100, 100, 100]
+      complete:  [2, 10, 50, 100, 100]
+    generation_facilities:
+      slight:    [100, 100, 100, 100, 100]
+      moderate:  [24, 44, 83, 100, 100]
+      extensive: [16, 19, 24, 65, 100]
+      complete:  [2, 2, 3, 13, 80]
+
+# -----------------------------------------------------------------------------
+# 2. モデル既定値 (要素種別 × 損傷状態)。HAZUS を出発点に日本の実績で上書き。
+# -----------------------------------------------------------------------------
+model_defaults:
+  substations_shaking:
+    dist: lognormal
+    slight:    {median: 1.0,  beta: 0.5, confidence: medium, source: "HAZUS Table 8-27 と整合; 阪神で系統切替 2 時間・変電所復旧 (二次側母線充電) 26 時間 [能島 1997 p.52]"}
+    moderate:  {median: 3.0,  beta: 0.5, confidence: medium, source: "HAZUS Table 8-27"}
+    extensive: {median: 7.0,  beta: 0.5, confidence: medium, source: "HAZUS Table 8-27; 阪神 葺合変電所 (移動用変圧器で応急復旧) 1/21 02:00 = 4 日 [能島 1997 p.52]"}
+    complete:  {median: 30.0, beta: 0.6, confidence: low, source: "HAZUS Table 8-27 (mean 30, sd 15)。日本での揺れ起因の complete は観測例なし。仮定"}
+    note: >
+      日本の実績では揺れ起因の変電所機能喪失はほぼ全て 1〜4 日以内に系統切替・移動用変圧器・
+      予備品で応急復旧 (阪神: 供給支障 18 変電所, 1/18 08:00 までに変圧器二次側母線充電完了)。
+      HAZUS の値をそのまま採用しつつ beta を 0.5 に広げた。
+  substations_tsunami:
+    dist: lognormal
+    functional_failure: {median: 60.0, beta: 0.6, confidence: low}
+    source: >
+      仮定。アンカー: 東北電力は 2011-06-18 11:03 に「復旧作業に着手可能な地域の停電はすべて復旧」(99 日)
+      [経産省提供資料 参考資料2 p.4]。津波被災 9 変電所の個別復旧日は未公表。津波で建屋流失した変電所は
+      移設・新設で年単位 (南三陸町の例, 同 p.27) だが、需要家側も流失しているため供給機能としては
+      仮設で代替される。
+    note: "浸水深 2 m 以上 (fragility.yaml tsunami_substations complete) は median 90 日を推奨 (感度)"
+  transmission_line_shaking:
+    dist: lognormal
+    insulator_or_conductor: {median: 2.0, beta: 0.6, confidence: medium, source: "東北電力 支持がいし折損の暫定対策 (懸垂がいし連追加) 2011-04 実施 [参考資料2 p.21]; 熊本 がいし折損 3 件は数日で復旧 [九州電力 2016]"}
+    tower_collapse:         {median: 14.0, beta: 0.5, confidence: medium, source: "熊本: 66kV 黒川一の宮線の土砂崩れ区間を仮鉄塔 3 基・仮鉄柱 14 基 (約5 km) で 4/27 仮復旧 = 11.9 日 [経産省 2016-07-13 p.1, 九州電力 2016 p.30]; 胆振: 岩知志線 66kV 鉄塔 2 基倒壊 → 仮鉄柱で 9/13 応急復旧 = 7 日, ルート変更本復旧 12/2 [土木学会 2018 第10章 p.7]; 阪神: 有馬線 鉄塔損壊 → 仮鉄柱で 1/19 18:00 = 2.5 日 [能島 1997 p.52]"}
+    note: "仮復旧 (仮鉄柱) の日数。用地交渉・道路啓開が律速 (熊本)。本復旧は数ヶ月。"
+  transmission_line_tsunami:
+    dist: lognormal
+    tower_collapse: {median: 30.0, beta: 0.6, confidence: low, source: "仮定。東北電力 鉄塔 37 基 (津波) のうち 12 基が 2011-06 末までに復旧 (32%) [参考資料2 p.8] → 中央値は 100 日超と読めるが、鉄塔単位の復旧は線路ルート再構築 (50万V 北上幹線 6/18, 十和田幹線 6/25 前倒し運開) と一体なので線路レベルで 30–100 日と置く"}
+  thermal_shaking:
+    dist: discrete
+    source: "fragility.yaml generation.thermal.japan_stop_rate_by_jma_intensity (内閣府 2025 手法概要 p.42) を復旧曲線として使う。停止率の時間推移 = 1 − 機能回復率"
+    confidence: high
+    summary_by_intensity:
+      "5弱": "直後 8% 停止 → 3 日で全復旧"
+      "5強": "直後 20% → 1 日 7% → 3 日 2% → 1 週 1% → 2 週 0%"
+      "6弱/6強": "3 週間 90% 停止のまま → 1 ヶ月 23% → 5 週 6% → 6 週 0%"
+      "7": "11 ヶ月まで 100% 停止 → 12 ヶ月で復旧"
+    alternative_meti_2014_levels: "A (震度7) 1ヶ月程度以上 / B (6弱・6強) 1ヶ月程度以内 / C (5強以下) 1週間以内または継続 [電中研 湯山 2018 p.2]"
+    boiler_tube_repair: {mean_days: 9, share_within_14days: 0.9, site_access_delay_days: 7, source: "経産省 2015-07-10 p.5", confidence: high}
+    lognormal_equiv_for_6lower_6upper: {median: 28.0, beta: 0.3, note: "derived: 3 週間停止 → 6 週で全復旧 を lognormal に当てはめ"}
+    lognormal_equiv_for_7: {median: 300.0, beta: 0.3, note: "derived"}
+  thermal_tsunami:
+    dist: discrete
+    source: "fragility.yaml generation.thermal.tsunami_stop_rate_by_depth (内閣府 2025 手法概要 p.42)"
+    confidence: high
+    summary_by_depth:
+      "0.3–1 m": "3 ヶ月まで 100% 停止 → 4 ヶ月で復旧"
+      ">= 1 m":  "8 ヶ月まで 100% 停止 → 9 ヶ月で復旧"
+    empirical_2011_days:
+      source: "fragility.yaml generation.thermal.observed_2011_tsunami_plants (土木学会 報告書 + Wikipedia/東北電力プレス)"
+      confidence: medium
+      points:
+        - {plant: "鹿島 4号", depth_m: "<=1", days: 21}
+        - {plant: "鹿島 2,3,5,6号", depth_m: "<=1", days: "26–40"}
+        - {plant: "常陸那珂 1号", depth_m: ">1", days: 65}
+        - {plant: "広野 2,4号", depth_m: ">1", days: 125}
+        - {plant: "新地 2号", depth_m: ">1", days: 283}
+        - {plant: "仙台 4号", depth_m: 4.7, days: "284 (試運転) / 334 (営業)"}
+        - {plant: "新地 1号", depth_m: ">1", days: 291}
+        - {plant: "原町 2号", depth_m: 13.0, days: 749}
+        - {plant: "原町 1号", depth_m: 13.0, days: 777}
+    model_override_for_deep_inundation:
+      depth_m_ge: 5.0
+      dist: lognormal
+      median: 500.0
+      beta: 0.4
+      confidence: low
+      note: "仮定。内閣府表は 1 m 以上を一律 9 ヶ月とするが、原町 (13 m) は 2 年超。5 m 以上を別区分にする。"
+    criepi_restoration_function:
+      source: "電中研 湯山 2018 p.14: G(t|X) = Phi((ln t − Σ β_k X_k)/σ), β: 給排水(C) 1.12, 受電(C) 1.22, ボイラ(B) 1.41, 排煙(C) 1.30, 事務建屋・倉庫(A) 1.74, σ 0.54"
+      confidence: medium
+      note: "X_k は個別設備の被害有無 (0/1)。全て 0 のとき median = 1 日、全て 1 のとき median = exp(6.79) ≈ 890 日。設備別フラジリティ曲線 (PGA/浸水深) は同資料 p.11–13 に図示のみ (数値未公表)。"
+  nuclear:
+    dist: discrete
+    default: {restoration_days: null, note: "時間軸内で再起動しない (内閣府 2025 と同じ)"}
+    sensitivity: {restoration_days: 365, note: "感度ケース。規制判断に依存するため根拠なし (low)"}
+    confidence: high
+  hydro_pumped:
+    dist: lognormal
+    default: {restoration_days: 0, note: "停止しない (内閣府 2025)"}
+    if_optional_outage_enabled: {median: 30.0, beta: 0.8, confidence: low, source: "仮定。熊本 黒川第一 (導水路埋没) は長期、他は数週間 [九州電力 2016 p.20]; 3.11 東北電力 水路 19 箇所中 9 が 2011-07-05 までに復旧 (116 日で 47%) [参考資料2 p.6]"}
+  solar_wind_geothermal:
+    rule: "thermal_shaking と同じ (内閣府 2025 手法概要 p.42)"
+    confidence: medium
+
+# -----------------------------------------------------------------------------
+# 3. 日本の需要家停電の実績復旧曲線 (t = 発災からの日数, restored = 復旧率 = 1 − 停電戸数/最大停電戸数)
+# -----------------------------------------------------------------------------
+japan_empirical_curves:
+  definition_note: >
+    復旧率の定義は 能島 (岐阜大) の「復旧率 = (延べ停電戸数 − 停電戸数)/延べ停電戸数」に準ずる。
+    電力各社の「停電戸数」は停止フィーダにぶら下がる戸数 (直接被害箇所数ではない) [虎谷 名古屋大 資料]。
+    津波で家屋流失した需要家や立入制限区域は各社が復旧対象から除外している (時点により定義が変わる)。
+
+  hanshin_1995_kepco:
+    event: "兵庫県南部地震 1995-01-17 05:46, M7.2 (当時), 最大震度7"
+    max_outage_households: 2600000
+    points:
+      - {t_days: 0.00, outage: 2600000, restored: 0.00, time: "1/17 05:46", note: "地震直後"}
+      - {t_days: 0.07, outage: 1000000, restored: 0.62, time: "1/17 07:30", note: "系統切替 (77kV 健全系統から復旧, 275kV 上位からの方針を変更)"}
+      - {t_days: 1.09, outage: 400000,  restored: 0.85, time: "1/18 08:00", note: "供給支障 18 変電所の変圧器二次側母線充電完了"}
+      - {t_days: 1.47, outage: 260000,  restored: 0.90, time: "1/18 17:00"}
+      - {t_days: 2.55, outage: 120000,  restored: 0.95, time: "1/19 19:00"}
+      - {t_days: 6.39, outage: 0,       restored: 1.00, time: "1/23 15:04", note: "家屋倒壊などにより復旧できない需要家を除き応急送電完了"}
+    sources:
+      - "能島暢呂 (1997) 阪神・淡路大震災における電力・ガス施設の被害と復旧, 安全工学 35(1), pp.50–55 (図4 停電戸数の時間的推移; 7:30 100万, 1/18 8:00 40万, 1/23 15:00 完了) https://www.jstage.jst.go.jp/article/safety/35/1/35_50/_pdf/-char/en"
+      - "関西電力「阪神・淡路大震災～応急送電までの7Days」 https://www.kepco.co.jp/energy_supply/supply/days/index.html (1/18 17:00 26万, 1/19 19:00 12万 は検索要約経由; medium)"
+      - "内閣府 専門調査会 第1回 資料 p.1「発災6日後倒壊家屋等を除き復旧完了」"
+    confidence: high
+    resources:
+      peak_field_staff: {n: 6148, date: "1995-01-21", breakdown: "ネットワーク技術 4,701 (社員 794, 電力各社 291, 協力会社 3,616); 発変電・送電・通信 2,519 (1/18)", source: "能島 1997 p.52"}
+      substation_damage: "変電所 50 箇所被害 (主要 17), 供給支障 18 箇所"
+      equipment_damage_summary: "電柱 (架空支持物) 11,289 基, 架空電線 7,760 径間, 柱上変圧器 5,346 台 [能島 1997 表1]"
+
+  tohoku_2011_tohoku_epco:
+    event: "東北地方太平洋沖地震 2011-03-11 14:46, M9.0, 最大震度7"
+    max_outage_households: 4660000
+    supply_loss_MW: 7900
+    points:
+      - {t_days: 0.00, outage: 4660000, restored: 0.00, time: "3/11 14:46–15:44", note: "青森・岩手・秋田 全域, 宮城・山形 ほぼ全域, 福島 一部 (停止率 65.5%)"}
+      - {t_days: 0.22, outage: 4500000, restored: 0.03, time: "3/11 20:00", note: "県別停電率: 青森 99%, 岩手 95%, 秋田 98%, 宮城 96%, 山形 74%, 福島 22%"}
+      - {t_days: 1.0,  outage: null, restored: null, time: "3/12", note: "新潟県・山形県 復旧完了"}
+      - {t_days: 2.0,  outage: null, restored: null, time: "3/13", note: "秋田県 復旧完了"}
+      - {t_days: 3.0,  outage: 932000, restored: 0.80, time: "3/14", note: "発災後3日で約80% (復旧作業に着手不可能な地域を含む)"}
+      - {t_days: 8.0,  outage: 280000, restored: 0.94, time: "3/19", note: "発災後8日で約94% (同上)"}
+      - {t_days: 26.0, outage: null, restored: null, time: "4/6", note: "青森県 復旧完了 (4/7 23:32 M7.1 余震で再停電, 4/8 青森・秋田・山形 復旧)"}
+      - {t_days: 45.0, outage: null, restored: null, time: "4/25", note: "福島県 復旧完了 (立入制限区域・流失家屋等を除く)"}
+      - {t_days: 70.0, outage: 120000, restored: 0.974, time: "5/20", note: "着手不可能地域を含む残停電 約12万戸; 着手可能分のみでは 1,452 戸"}
+      - {t_days: 99.0, outage: 0, restored: 1.00, time: "6/18 11:03", note: "復旧作業に着手可能な地域の停電はすべて復旧"}
+    sources:
+      - "経済産業省提供資料 参考資料2「3月11日の地震により東北電力で発生した広域停電の概要」2011-09-10, pp.4, 11 (内閣府 東北地方太平洋沖地震を教訓とした地震・津波対策に関する専門調査会 第9回) https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+      - "内閣府 同専門調査会 第1回 資料「被害に関するデータ等」pp.1, 3 https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/1/pdf/sub2.pdf"
+      - "東北電力『東日本大震災復旧記録』2012-09 (支店別停止率・復旧日時) を引く 虎谷 (名古屋大) 資料 p.6"
+    confidence: high
+    resources:
+      mutual_aid: {crew_person_days: 4200, generator_trucks: 41, generator_kVA: 18500, from: "2011-03-13", source: "参考資料2 p.10"}
+      equipment_damage_summary: "変電所 75 箇所, 主要変圧器 90 台, 遮断器 177, 断路器 403; 鉄塔 37 基 (津波); 電柱 傾斜・倒壊 18,228 本 + 流失 15,681 本 (6/18 時点) [参考資料2 pp.7–9]"
+
+  tohoku_2011_tepco:
+    event: "同上 (東京電力管内, 最大震度6強)"
+    max_outage_households: 4050000
+    points:
+      - {t_days: 0.00, outage: 4050000, restored: 0.00, time: "3/11 15:30"}
+      - {t_days: 0.22, outage: 3944650, restored: 0.03, time: "3/11 20:00", note: "県別: 神奈川 1,277,705 (24%), 茨城 823,404 (42%), 栃木 567,925 (43%), 千葉 346,489, 埼玉 342,878, 群馬 225,524, 山梨 145,009, 静岡(富士川以東) 113,051, 東京 102,665 (1%)"}
+      - {t_days: 1.0,  outage: 600000,  restored: 0.85, time: "3/12", note: "東京・神奈川・群馬・山梨・静岡 復旧完了"}
+      - {t_days: 2.0,  outage: null, restored: null, time: "3/13", note: "埼玉 復旧完了"}
+      - {t_days: 4.0,  outage: 7300,    restored: 0.998, time: "3/15", note: "栃木・千葉 復旧完了"}
+      - {t_days: 7.4,  outage: 0,       restored: 1.00, time: "3/19 01:00", note: "茨城 復旧完了 = 全復旧 (発災後7日)"}
+    sources:
+      - "内閣府 専門調査会 第1回 資料 pp.2–3 (東京電力プレスリリースより内閣府作成)"
+      - "内閣府 2025 手法概要 p.41「翌日には 60万戸、4日後には 7,300戸まで減少し、7日後には全ての停電が復旧」"
+    confidence: high
+    note: "3/14 以降の計画停電 (輪番停電) は含まない"
+
+  kumamoto_2016_kyushu_epco:
+    event: "熊本地震 前震 2016-04-14 21:26 M6.5 震度7 / 本震 4/16 01:25 M7.3 震度7"
+    max_outage_households: 476600
+    foreshock: {max_outage: 16700, time: "4/14 22:00", hv_feeders_restored: "4/15 23:00 (1.06 日)"}
+    points:
+      - {t_days: 0.00, outage: 476600, restored: 0.00, time: "4/16 02:00", note: "本震 (基準 t=0 は 4/16 01:25)"}
+      - {t_days: 0.27, outage: 181000, restored: 0.62, time: "4/16 08:00", note: "熊本県 180,200 / 大分 700 / 宮崎 200"}
+      - {t_days: 1.90, outage: 38400,  restored: 0.92, time: "4/17 23:00", note: "8 市町村"}
+      - {t_days: 2.85, outage: null,   restored: null, time: "4/18 21:50", note: "阿蘇地区 (66kV 黒川一の宮線 土砂崩れ) を除き高圧配電線送電完了"}
+      - {t_days: 4.74, outage: 0,      restored: 1.00, time: "4/20 19:10", note: "がけ崩れ・道路損壊で困難な箇所を除き高圧配電線送電完了。一の宮・高森は高圧発電機車 148 台で供給継続"}
+      - {t_days: 11.86, outage: null,  restored: null, time: "4/27 22:00", note: "66kV 黒川一の宮線 仮復旧 (仮鉄塔 3 基・仮鉄柱 14 基, 約5 km)"}
+      - {t_days: 12.84, outage: 0,     restored: 1.00, time: "4/28 21:36", note: "全ての高圧発電機車の切り離し完了 (系統供給に復帰)"}
+    sources:
+      - "経済産業省 電力安全課「平成二十八年熊本地震における設備被害と停電復旧対応について」2016-07-13, pp.1–2 https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/pdf/013_04_00.pdf"
+      - "能島暢呂 (岐阜大)「平成28年熊本地震におけるライフライン復旧概況 (時系列編) Ver.1」pp.4–5 https://www1.gifu-u.ac.jp/~nojima/LLEQreport/160414-16-KumamotoEQ-LL-GUNN-ver.1.pdf"
+    confidence: high
+    resources:
+      utility_staff_max: 3600
+      mutual_aid_staff: 600
+      generator_trucks: {deployed: 162, of_which_mutual_aid: 110, operating: 148}
+      equipment_damage_summary: "送電 支持物 16 基 (倒壊 0, 傾斜 1, 部材損傷 15), がいし 3, 電線 1 径間; 変電 変圧器 5 台, 断路器 19 台; 配電 支持物 3,151 本, 電線 864 径間, 変圧器 1,435 台; 火力・地熱 発電支障なし [経産省 2016-07-13 p.6]"
+
+  iburi_2018_hepco:
+    event: "北海道胆振東部地震 2018-09-06 03:07, M6.7, 最大震度7 → 03:25 全道ブラックアウト"
+    max_outage_households: 2950000
+    points:
+      - {t_days: 0.00, outage: 2950000, restored: 0.00, time: "9/6 03:25", note: "苫東厚真 1,2,4号 停止等で周波数低下, 全道停電 (離島除く)"}
+      - {t_days: 0.46, outage: 2950000, restored: 0.00, time: "9/6 ~14:00", note: "地震発生後 約11時間は全道で停電"}
+      - {t_days: 1.25, outage: 1475000, restored: 0.50, time: "9/7 ~09:00", note: "全道の5割が停電解消となったのは約30時間後"}
+      - {t_days: 2.0,  outage: null,    restored: 0.99, time: "9/8", note: "発生後約2日で約99% が復旧 (消防庁 e-カレッジ)"}
+      - {t_days: 2.66, outage: null,    restored: 0.99, time: "9/8 19:00", note: "北海道電力 復旧宣言 (約64時間後)。以後は節電要請 (目標 20%)"}
+      - {t_days: 3.6,  outage: 387,     restored: 0.9999, time: "9/9 17:30", note: "厚真町 387 戸 / 約2,100 戸"}
+      - {t_days: 29.0, outage: 0,       restored: 1.00, time: "10/5", note: "停電完全解消"}
+    sources:
+      - "総務省「平成30年北海道胆振東部地震」資料 pp.1–2 https://www.soumu.go.jp/main_content/000585075.pdf"
+      - "消防庁 防災危機管理eカレッジ「4. ブラックアウト」 https://www.fdma.go.jp/relocation/e-college/cat63/cat39/cat28/4-3.html"
+      - "土木学会 2018年北海道胆振東部地震被害調査報告書 第10章 電力の被害と停電の影響 (能島) p.7 (送電設備被害と復旧) https://committees.jsce.or.jp/eec2/system/files/10_Ch10-電力の被害と停電の影響-nojima.pdf"
+    confidence: high
+    generation_restart:
+      source: "北海道電力 プレスリリース (苫東厚真 1号機 復旧見通し 第2報, 2号機 復旧 最終報) および Wikipedia 苫東厚真発電所 (検索要約; medium)"
+      confidence: medium
+      units:
+        - {unit: "苫東厚真 1号 (350 MW)", damage: "ボイラー配管 2 本 亀裂・断裂", restart: "2018-09-17〜19", days: "11–13"}
+        - {unit: "苫東厚真 4号 (700 MW)", damage: "タービン損傷 (火災)", restart: "2018-09-25 15:00", days: 19}
+        - {unit: "苫東厚真 2号 (600 MW)", damage: "ボイラー損傷, 微粉炭機不具合", restart: "2018-10-10 06:00", days: 34}
+      transmission_restoration: "狩勝幹線 (275kV) 鉄塔 18 基周辺地崩れ → 9/29 送電再開 (23 日), 基礎補修 11/2; 岩知志線 (66kV) 鉄塔 2 基倒壊 → 仮鉄柱 9/13 (7 日), ルート変更 12/2 [土木学会 第10章 p.7]"
+
+  noto_2024_hokuriku:
+    event: "令和6年能登半島地震 2024-01-01 16:10, M7.6, 最大震度7"
+    max_outage_households: 40000
+    points:
+      - {t_days: 0.04, outage: 34800, restored: 0.13, time: "1/1 17:10", note: "石川県内 (能島); 北陸電力送配電 全体では約4万戸 (輪島 約13,000, 珠洲 約7,800, 能登町 約8,900, 穴水 約5,300, 七尾 約2,300)"}
+      - {t_days: 4.0,  outage: 28500, restored: 0.29, time: "1/5", note: "輪島 約10,500, 珠洲 約7,700, 能登町 約6,200, 穴水 約3,900"}
+      - {t_days: 7.07, outage: 15940, restored: 0.60, time: "1/8 18:00", note: "石川県内"}
+      - {t_days: 14.0, outage: 8700,  restored: 0.78, time: "1/15", note: "輪島 約5,500, 珠洲 約2,700"}
+      - {t_days: 30.0, outage: 2500,  restored: 0.94, time: "1/31", note: "立入困難・建物甚大被害地域を除きおおむね完了 (輪島 約1,400, 珠洲 約910)"}
+    sources:
+      - "経済産業省「令和６年能登半島地震の電力・ガスにおける復旧対応等について」2024-07-31 資料1-3 pp.1–2 (停電復旧の推移, 2024-03-21 第20回 電気設備自然災害等対策WG 資料の転載) https://www.bousai.go.jp/jishin/noto/taisaku_wg_02/pdf/siryo2_1_3.pdf"
+      - "能島暢呂 (岐阜大)「令和6年能登半島地震におけるライフライン復旧概況 (時系列編) Ver.1」pp.4–5 https://www1.gifu-u.ac.jp/~nojima/LLEQreport/20240101-NotoHantoEQ-LL-GUNN-ver.1.pdf"
+      - "電気事業連合会 ENELOG vol.63「能登半島地震で大規模被害 停電復旧は1月中におおむね完了」 https://www.fepc.or.jp/enelog/focus/vol_63.html"
+    confidence: high
+    note: >
+      「現在の停電は、送電線や変電所によるものでなく、配電設備の損傷によるもの」(経産省, 1/1–1/8) [能島 p.4]。
+      七尾大田火力 1,2号 (1,200 MW) が地震で停止したが供給力に影響なし (関西電力からの融通)。
+      基幹系統末端の半島部で道路寸断が律速し、過去地震より復旧が著しく遅い。
+    resources:
+      mutual_aid_staff_daily: 1000
+      mutual_aid_staff_cumulative: 4754
+      generator_trucks_operating_max: 34
+      equipment_damage_summary: "電柱 傾斜 約2,160 本, 折損 約500 本, 配電線 断線・混線 約1,210 箇所 (2/1 時点) [FEPC vol.63]"
+
+  cross_event_reference:
+    source: "経産省 電力安全課 2016-07-13 資料 p.2「近年の大規模地震時における停電戸数の推移」: 阪神 発災後6日で解消 / 東日本 東北電力 3日で約80%・8日で約94%, 東京電力 7日で解消 / 熊本 本震から約5日で解消"
+    confidence: high
+
+# -----------------------------------------------------------------------------
+# 4. 資源制約と復旧優先順位 (モデル既定値)
+# -----------------------------------------------------------------------------
+resource_limits:
+  crews_per_utility:
+    confidence: low
+    note: >
+      仮定。各社の実績動員 (阪神 関西 6,148 人ピーク, 熊本 九州 3,600+600 人, 能登 北陸 約1,000 人/日応援)
+      と、災害時連携計画 (2020-07-10 に一般送配電 10 社が共同策定・経産省に提出) による相互応援を前提に置いた
+      「送変電の復旧班数」の既定値。送変電 (変電所・送電線) の復旧班は配電要員とは別。
+      災害時連携計画の要員・電源車の共同運用は OCCTO「災害時連携計画の確認における考慮事項について」
+      2020-07 https://www.occto.or.jp/assets/oshirase/saigaijirenkei/files/200709_saigai_sankou.pdf に
+      枠組み記載 (台数は非公表)。
+    defaults:
+      chubu:   {substation_crews: 40, line_crews: 30}
+      kansai:  {substation_crews: 50, line_crews: 35}
+      chugoku: {substation_crews: 25, line_crews: 20}
+      shikoku: {substation_crews: 15, line_crews: 12}
+      kyushu:  {substation_crews: 40, line_crews: 30}
+      hokuriku: {substation_crews: 12, line_crews: 10}
+      tokyo:   {substation_crews: 60, line_crews: 40}
+    mutual_aid:
+      start_day: 2
+      multiplier_by_day: {2: 1.2, 4: 1.5, 7: 2.0}
+      note: "熊本: 3/13 (発災2日後) から応援受入 [参考資料2 p.10]; 阪神: 1/18 に他電力 291 人 [能島 1997]"
+    crew_days_per_repair:
+      substation: {slight: 0.5, moderate: 2, extensive: 7, complete: 30}
+      line_tower_temporary: 10
+      confidence: low
+      note: "仮定。HAZUS Table 8-27 の日数を 1 班当たりの所要とみなした。"
+  generator_trucks:
+    reference: {kumamoto_2016: 162, noto_2024: 34, tohoku_2011_aid: 41}
+    note: "配電レベルの応急供給。送電モデルでは需要ノードの「仮復旧」として扱い、容量 (高圧電源車 ~500 kVA 級) から供給可能需要を上限にする。"
+  priority_order:
+    confidence: medium
+    default: ["500kV", "275kV", "220kV", "187kV", "154kV", "110kV", "77kV", "66kV"]
+    rationale: "上位系統から復旧して負荷を順次拾う運用が基本。ただし阪神では 275kV 変電所の被害が大きく、77kV 健全系統から復旧する方針に変更した [能島 1997 p.52]。実装では『健全な上位系統への最短経路』を優先し、電圧階級は同点処理に使う。"
+    tie_breakers: ["下流に接続する需要 (MW) が大きい順", "発電機連系ノード優先 (ブラックスタート起点の水力)", "浸水・道路寸断でアクセス不能なノードは後回し"]
+    out_of_scope: "病院・避難所等の重要施設優先 (配電レベル) は本モデルでは扱わない"
+  access_constraints:
+    note: "津波浸水域・道路寸断は復旧開始を遅らせる (熊本 阿蘇: 道路損壊で 11.9 日, 能登: 道路幅 2.5 m 確保が必要 [経産省 2024 p.4])。既定: 浸水深 >= 1 m のノードは開始遅延 +7 日 (仮定, low)。"
