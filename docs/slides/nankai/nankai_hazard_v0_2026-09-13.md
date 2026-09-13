@@ -12,7 +12,7 @@ marp: true
 
 重信 竜人（福井大学） 2026-09-13
 
-![](../../reports/nankai_hazard_2026-09-13/pout_west_t0.png)
+![](../../reports/nankai_hazard_2026-09-13/pout_t0_west.png)
 
 <div class="caption">図: 発災直後の停電確率（物理）。母線 7,985 点・モンテカルロ 200 サンプルの平均</div>
 
@@ -33,7 +33,7 @@ marp: true
 
 <div class="ga-problem">
   <span class="ga-label">課題</span>
-  ![w:400](../../reports/nankai_hazard_2026-09-13/hazard_west_jshis.png)
+  ![w:400](../../reports/nankai_hazard_2026-09-13/hazard_west.png)
   <span class="ga-body">震度→停電率の統計では、上流が落ちて下流が全部落ちることも、供給力不足も表せない。</span>
 </div>
 
@@ -46,7 +46,7 @@ marp: true
 
 <div class="ga-result">
   <span class="ga-label">成果</span>
-  <span class="ga-kpi">1,001万</span>
+  <span class="ga-kpi">1,003万</span>
   <span class="ga-body">五地域の直後停電軒数。内閣府 2,060 万と同じ桁</span>
 </div>
 
@@ -338,14 +338,14 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 <div class="columns">
 <div>
 
-![w:440](../../reports/nankai_hazard_2026-09-13/pout_west_t0.png)
+![w:440](../../reports/nankai_hazard_2026-09-13/pout_t0_west.png)
 
 <div class="small muted center">直後: 中部エリアが供給不足で崩壊（確率 0.9）</div>
 
 </div>
 <div>
 
-![w:440](../../reports/nankai_hazard_2026-09-13/pout_west_t7.png)
+![w:440](../../reports/nankai_hazard_2026-09-13/pout_t7_west.png)
 
 <div class="small muted center">7 日後: 大阪湾岸・伊勢湾岸・高知・徳島・宮崎の浸水域</div>
 
@@ -362,15 +362,15 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 | 経過 | 受電可能（物理） | 供給率（不足込み） |
 |---|---|---|
-| 直後 | 71.2 | 57.0 |
-| 12h | 74.4 | 60.3 |
-| 1日 | 81.2 | 80.2 |
-| 2日 | 88.1 | 87.1 |
-| 4日 | 91.1 | 90.1 |
-| 7日 | 92.2 | 91.4 |
-| 14日 | 93.1 | 92.7 |
-| 30日 | 94.3 | 93.9 |
-| 90日 | 98.2 | 98.0 |
+| 直後 | 71.1 | 54.8 |
+| 12h | 74.3 | 58.0 |
+| 1日 | 81.1 | 77.9 |
+| 2日 | 88.0 | 84.7 |
+| 4日 | 90.9 | 87.8 |
+| 7日 | 92.1 | 89.0 |
+| 14日 | 93.1 | 89.7 |
+| 30日 | 94.2 | 93.7 |
+| 90日 | 98.1 | 97.9 |
 
 <div class="chart-caption">単位 %（対 残存需要 73.9 GW）。差分が「供給力不足の遮断」= 2011 年の計画停電に相当。内閣府の停電軒数には含まれない勘定。</div>
 
@@ -384,10 +384,10 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 | 時点 | 内閣府 2013 基本 | 内閣府 2025 基本 | 内閣府 2025 陸側 | **本解析 物理停電** | 本解析 不足込み |
 |---|---:|---:|---:|---:|---:|
-| 直後 | 1,930 万 | 2,060 万 | 2,170 万 | **1,001 万** | 1,396 万 |
-| 1 日後 | 1,074 万 | 1,349 万 | 1,620 万 | **697 万** | 749 万 |
-| 4 日後 | 33 万 | 35 万 | 135 万 | **397 万** | 448 万 |
-| 7 日後 | 29 万 | 32 万 | 105 万 | **358 万** | 395 万 |
+| 直後 | 1,930 万 | 2,060 万 | 2,170 万 | **1,003 万** | 1,458 万 |
+| 1 日後 | 1,074 万 | 1,349 万 | 1,620 万 | **701 万** | 820 万 |
+| 4 日後 | 33 万 | 35 万 | 135 万 | **403 万** | 521 万 |
+| 7 日後 | 29 万 | 32 万 | 105 万 | **362 万** | 466 万 |
 
 <div class="box-accent">
 
@@ -424,7 +424,7 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 <div class="zc-right">
   <span class="zc-label">B ポテンシャル法 — 順位づけ</span>
-  <span class="zc-body">中央値ハザードの故障確率を枝重みにして、電源までの最良経路の生存率 × 半径 80 km の供給余力で指標化。乱数も潮流も無しで 0.8 秒。A の 2 日後と需要加重相関 0.55。</span>
+  <span class="zc-body">中央値ハザードの故障確率を枝重みにして、電源までの最良経路の生存率 × 半径 80 km の供給余力で指標化。乱数も潮流も無しで 0.8 秒。A の 2 日後と需要加重相関 0.56。</span>
 </div>
 
 </div>
@@ -452,7 +452,7 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 <div class="sec">
   <span class="sec-title">系統崩壊｜連結成分単位では発火しない</span>
-  <span class="sec-body">西日本は 1 つの成分なので不足率が薄まる。一般送配電エリア単位に連系線受電上限を足して判定する形に変えた。内閣府の地域別停電率の構造と一致する。</span>
+  <span class="sec-body">西日本は 1 つの成分なので不足率が薄まる。一般送配電エリア単位に連系線受電上限を足して判定する形に変えた。内閣府の地域別停電率の構造と一致する。さらに「1 手ずつ」トレースで DC 潮流の ×100 の単位バグを発見し修正した(物理停電は不変)。</span>
 </div>
 
 ---
@@ -465,7 +465,7 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 <li>直後〜1 日後の停電規模は内閣府と同じ桁で、エリア需給崩壊がその主因</li>
 <li>7 日後以降の停電は沿岸の津波浸水域と上流孤立に集中する（地図で場所が言える）</li>
 <li>供給力不足の遮断（計画停電相当）は 2 日でほぼ消える</li>
-<li>ポテンシャル法は優先順位付けに使える（需要加重相関 0.55）</li>
+<li>ポテンシャル法は優先順位付けに使える（需要加重相関 0.56）</li>
 </div>
 
 <div class="pc-cons">
