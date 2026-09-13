@@ -1,0 +1,1086 @@
+{
+ "representative_seed": {
+  "west": 1014,
+  "east": 1006
+ },
+ "candidate_total_crew_days": {
+  "west": [
+   14181,
+   14223,
+   14280,
+   14405,
+   14432,
+   14434,
+   14447,
+   14469,
+   14518,
+   14578,
+   14740,
+   14850,
+   15107,
+   15156,
+   15213,
+   15267,
+   15341,
+   15523,
+   15565,
+   15674,
+   16046
+  ],
+  "east": [
+   2786,
+   2883,
+   2954,
+   2989,
+   3014,
+   3063,
+   3157,
+   3201,
+   3262,
+   3330,
+   3444,
+   3456,
+   3557,
+   3593,
+   3599,
+   3643,
+   3671,
+   3746,
+   3827,
+   3841,
+   3976
+  ]
+ },
+ "schedule_reproduces_simulator_max_abs_diff_d": {
+  "west": 0.0,
+  "east": 0.0
+ },
+ "bases": [
+  {
+   "island": "west",
+   "zone": "chubu",
+   "pref": "愛知県",
+   "lat": 35.028,
+   "lon": 137.059,
+   "crews_nom": 18.139
+  },
+  {
+   "island": "west",
+   "zone": "chubu",
+   "pref": "三重県",
+   "lat": 34.774,
+   "lon": 136.467,
+   "crews_nom": 6.284
+  },
+  {
+   "island": "west",
+   "zone": "chubu",
+   "pref": "静岡県",
+   "lat": 34.862,
+   "lon": 138.069,
+   "crews_nom": 6.08
+  },
+  {
+   "island": "west",
+   "zone": "chubu",
+   "pref": "長野県",
+   "lat": 36.107,
+   "lon": 138.099,
+   "crews_nom": 4.816
+  },
+  {
+   "island": "west",
+   "zone": "chubu",
+   "pref": "岐阜県",
+   "lat": 35.505,
+   "lon": 136.872,
+   "crews_nom": 4.681
+  },
+  {
+   "island": "west",
+   "zone": "chugoku",
+   "pref": "広島県",
+   "lat": 34.389,
+   "lon": 132.695,
+   "crews_nom": 8.97
+  },
+  {
+   "island": "west",
+   "zone": "chugoku",
+   "pref": "岡山県",
+   "lat": 34.672,
+   "lon": 133.829,
+   "crews_nom": 7.192
+  },
+  {
+   "island": "west",
+   "zone": "chugoku",
+   "pref": "山口県",
+   "lat": 34.046,
+   "lon": 131.501,
+   "crews_nom": 4.951
+  },
+  {
+   "island": "west",
+   "zone": "chugoku",
+   "pref": "島根県",
+   "lat": 35.221,
+   "lon": 132.672,
+   "crews_nom": 2.285
+  },
+  {
+   "island": "west",
+   "zone": "chugoku",
+   "pref": "鳥取県",
+   "lat": 35.42,
+   "lon": 133.789,
+   "crews_nom": 1.603
+  },
+  {
+   "island": "west",
+   "zone": "hokuriku",
+   "pref": "富山県",
+   "lat": 36.721,
+   "lon": 137.211,
+   "crews_nom": 4.804
+  },
+  {
+   "island": "west",
+   "zone": "hokuriku",
+   "pref": "石川県",
+   "lat": 36.719,
+   "lon": 136.705,
+   "crews_nom": 3.967
+  },
+  {
+   "island": "west",
+   "zone": "hokuriku",
+   "pref": "福井県",
+   "lat": 35.939,
+   "lon": 136.162,
+   "crews_nom": 3.229
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "大阪府",
+   "lat": 34.656,
+   "lon": 135.509,
+   "crews_nom": 20.422
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "兵庫県",
+   "lat": 34.87,
+   "lon": 134.964,
+   "crews_nom": 14.115
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "京都府",
+   "lat": 35.047,
+   "lon": 135.583,
+   "crews_nom": 5.922
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "滋賀県",
+   "lat": 35.113,
+   "lon": 136.105,
+   "crews_nom": 4.773
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "奈良県",
+   "lat": 34.566,
+   "lon": 135.772,
+   "crews_nom": 2.538
+  },
+  {
+   "island": "west",
+   "zone": "kansai",
+   "pref": "和歌山県",
+   "lat": 34.056,
+   "lon": 135.339,
+   "crews_nom": 2.23
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "福岡県",
+   "lat": 33.647,
+   "lon": 130.66,
+   "crews_nom": 14.91
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "熊本県",
+   "lat": 32.697,
+   "lon": 130.655,
+   "crews_nom": 5.754
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "鹿児島県",
+   "lat": 31.631,
+   "lon": 130.514,
+   "crews_nom": 4.808
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "大分県",
+   "lat": 33.265,
+   "lon": 131.431,
+   "crews_nom": 4.113
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "長崎県",
+   "lat": 32.833,
+   "lon": 129.85,
+   "crews_nom": 3.954
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "宮崎県",
+   "lat": 31.987,
+   "lon": 131.322,
+   "crews_nom": 3.271
+  },
+  {
+   "island": "west",
+   "zone": "kyushu",
+   "pref": "佐賀県",
+   "lat": 33.291,
+   "lon": 130.158,
+   "crews_nom": 3.19
+  },
+  {
+   "island": "west",
+   "zone": "shikoku",
+   "pref": "愛媛県",
+   "lat": 33.907,
+   "lon": 133.054,
+   "crews_nom": 4.893
+  },
+  {
+   "island": "west",
+   "zone": "shikoku",
+   "pref": "香川県",
+   "lat": 34.287,
+   "lon": 133.927,
+   "crews_nom": 4.271
+  },
+  {
+   "island": "west",
+   "zone": "shikoku",
+   "pref": "徳島県",
+   "lat": 33.968,
+   "lon": 134.352,
+   "crews_nom": 3.573
+  },
+  {
+   "island": "west",
+   "zone": "shikoku",
+   "pref": "高知県",
+   "lat": 33.504,
+   "lon": 133.54,
+   "crews_nom": 2.264
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "新潟県",
+   "lat": 37.564,
+   "lon": 139.013,
+   "crews_nom": 6.117
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "福島県",
+   "lat": 37.438,
+   "lon": 140.503,
+   "crews_nom": 5.922
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "宮城県",
+   "lat": 38.343,
+   "lon": 140.959,
+   "crews_nom": 5.678
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "岩手県",
+   "lat": 39.553,
+   "lon": 141.16,
+   "crews_nom": 3.573
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "山形県",
+   "lat": 38.417,
+   "lon": 140.168,
+   "crews_nom": 3.013
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "青森県",
+   "lat": 40.742,
+   "lon": 141.112,
+   "crews_nom": 2.956
+  },
+  {
+   "island": "east",
+   "zone": "tohoku",
+   "pref": "秋田県",
+   "lat": 39.743,
+   "lon": 140.342,
+   "crews_nom": 2.741
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "東京都",
+   "lat": 35.691,
+   "lon": 139.55,
+   "crews_nom": 18.846
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "神奈川県",
+   "lat": 35.436,
+   "lon": 139.467,
+   "crews_nom": 10.632
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "埼玉県",
+   "lat": 35.949,
+   "lon": 139.515,
+   "crews_nom": 8.324
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "千葉県",
+   "lat": 35.651,
+   "lon": 140.117,
+   "crews_nom": 8.001
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "茨城県",
+   "lat": 36.214,
+   "lon": 140.297,
+   "crews_nom": 5.255
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "栃木県",
+   "lat": 36.542,
+   "lon": 139.806,
+   "crews_nom": 3.478
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "群馬県",
+   "lat": 36.38,
+   "lon": 139.105,
+   "crews_nom": 3.421
+  },
+  {
+   "island": "east",
+   "zone": "tokyo",
+   "pref": "静岡県",
+   "lat": 35.109,
+   "lon": 138.881,
+   "crews_nom": 2.044
+  }
+ ],
+ "own_damage_r": {
+  "hokkaido": 0.0,
+  "tohoku": 0.0,
+  "tokyo": 8.2,
+  "chubu": 19.18,
+  "hokuriku": 0.0,
+  "kansai": 10.9,
+  "chugoku": 8.14,
+  "shikoku": 20.53,
+  "kyushu": 7.05,
+  "okinawa": 0.0
+ },
+ "backlog_crew_days": {
+  "hokkaido": 0,
+  "tohoku": 0,
+  "tokyo": 3444,
+  "chubu": 5370,
+  "hokuriku": 0,
+  "kansai": 3815,
+  "chugoku": 1424,
+  "shikoku": 2156,
+  "kyushu": 1975,
+  "okinawa": 0
+ },
+ "senders_crews": {
+  "hokkaido": 8.2,
+  "tohoku": 16.0,
+  "hokuriku": 4.4
+ },
+ "receivers": [
+  "tokyo",
+  "chubu",
+  "kansai",
+  "chugoku",
+  "shikoku",
+  "kyushu"
+ ],
+ "convoys": [
+  {
+   "sender": "hokkaido",
+   "zone": "tokyo",
+   "wave": 0,
+   "crews": 0.62,
+   "depart": 1.25,
+   "arrive": 3.31,
+   "road_km": 502.15,
+   "travel_d": 2.06
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "tokyo",
+   "wave": 1,
+   "crews": 0.54,
+   "depart": 2.25,
+   "arrive": 4.31,
+   "road_km": 502.15,
+   "travel_d": 2.06
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "tokyo",
+   "wave": 2,
+   "crews": 0.39,
+   "depart": 3.25,
+   "arrive": 5.31,
+   "road_km": 502.15,
+   "travel_d": 2.06
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chubu",
+   "wave": 0,
+   "crews": 0.97,
+   "depart": 1.25,
+   "arrive": 3.01,
+   "road_km": 236.96,
+   "travel_d": 1.76
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chubu",
+   "wave": 1,
+   "crews": 0.85,
+   "depart": 2.25,
+   "arrive": 4.01,
+   "road_km": 236.96,
+   "travel_d": 1.76
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chubu",
+   "wave": 2,
+   "crews": 0.61,
+   "depart": 3.25,
+   "arrive": 5.01,
+   "road_km": 236.96,
+   "travel_d": 1.76
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kansai",
+   "wave": 0,
+   "crews": 0.69,
+   "depart": 1.25,
+   "arrive": 3.03,
+   "road_km": 252.38,
+   "travel_d": 1.78
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kansai",
+   "wave": 1,
+   "crews": 0.6,
+   "depart": 2.25,
+   "arrive": 4.03,
+   "road_km": 252.38,
+   "travel_d": 1.78
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kansai",
+   "wave": 2,
+   "crews": 0.43,
+   "depart": 3.25,
+   "arrive": 5.03,
+   "road_km": 252.38,
+   "travel_d": 1.78
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chugoku",
+   "wave": 0,
+   "crews": 0.26,
+   "depart": 1.25,
+   "arrive": 3.34,
+   "road_km": 527.24,
+   "travel_d": 2.09
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chugoku",
+   "wave": 1,
+   "crews": 0.22,
+   "depart": 2.25,
+   "arrive": 4.34,
+   "road_km": 527.24,
+   "travel_d": 2.09
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "chugoku",
+   "wave": 2,
+   "crews": 0.16,
+   "depart": 3.25,
+   "arrive": 5.34,
+   "road_km": 527.24,
+   "travel_d": 2.09
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "shikoku",
+   "wave": 0,
+   "crews": 0.39,
+   "depart": 1.25,
+   "arrive": 3.29,
+   "road_km": 489.03,
+   "travel_d": 2.04
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "shikoku",
+   "wave": 1,
+   "crews": 0.34,
+   "depart": 2.25,
+   "arrive": 4.29,
+   "road_km": 489.03,
+   "travel_d": 2.04
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "shikoku",
+   "wave": 2,
+   "crews": 0.24,
+   "depart": 3.25,
+   "arrive": 5.29,
+   "road_km": 489.03,
+   "travel_d": 2.04
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kyushu",
+   "wave": 0,
+   "crews": 0.36,
+   "depart": 1.25,
+   "arrive": 3.52,
+   "road_km": 689.6,
+   "travel_d": 2.27
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kyushu",
+   "wave": 1,
+   "crews": 0.31,
+   "depart": 2.25,
+   "arrive": 4.52,
+   "road_km": 689.6,
+   "travel_d": 2.27
+  },
+  {
+   "sender": "hokkaido",
+   "zone": "kyushu",
+   "wave": 2,
+   "crews": 0.22,
+   "depart": 3.25,
+   "arrive": 5.52,
+   "road_km": 689.6,
+   "travel_d": 2.27
+  },
+  {
+   "sender": "tohoku",
+   "zone": "tokyo",
+   "wave": 0,
+   "crews": 1.21,
+   "depart": 1.25,
+   "arrive": 2.21,
+   "road_km": 418.18,
+   "travel_d": 0.96
+  },
+  {
+   "sender": "tohoku",
+   "zone": "tokyo",
+   "wave": 1,
+   "crews": 1.06,
+   "depart": 2.25,
+   "arrive": 3.21,
+   "road_km": 418.18,
+   "travel_d": 0.96
+  },
+  {
+   "sender": "tohoku",
+   "zone": "tokyo",
+   "wave": 2,
+   "crews": 0.76,
+   "depart": 3.25,
+   "arrive": 4.21,
+   "road_km": 418.18,
+   "travel_d": 0.96
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chubu",
+   "wave": 0,
+   "crews": 1.89,
+   "depart": 1.25,
+   "arrive": 2.49,
+   "road_km": 665.64,
+   "travel_d": 1.24
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chubu",
+   "wave": 1,
+   "crews": 1.65,
+   "depart": 2.25,
+   "arrive": 3.49,
+   "road_km": 665.64,
+   "travel_d": 1.24
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chubu",
+   "wave": 2,
+   "crews": 1.18,
+   "depart": 3.25,
+   "arrive": 4.49,
+   "road_km": 665.64,
+   "travel_d": 1.24
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kansai",
+   "wave": 0,
+   "crews": 1.34,
+   "depart": 1.25,
+   "arrive": 2.68,
+   "road_km": 838.92,
+   "travel_d": 1.43
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kansai",
+   "wave": 1,
+   "crews": 1.17,
+   "depart": 2.25,
+   "arrive": 3.68,
+   "road_km": 838.92,
+   "travel_d": 1.43
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kansai",
+   "wave": 2,
+   "crews": 0.84,
+   "depart": 3.25,
+   "arrive": 4.68,
+   "road_km": 838.92,
+   "travel_d": 1.43
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chugoku",
+   "wave": 0,
+   "crews": 0.5,
+   "depart": 1.25,
+   "arrive": 3.0,
+   "road_km": 1124.48,
+   "travel_d": 1.75
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chugoku",
+   "wave": 1,
+   "crews": 0.44,
+   "depart": 2.25,
+   "arrive": 4.0,
+   "road_km": 1124.48,
+   "travel_d": 1.75
+  },
+  {
+   "sender": "tohoku",
+   "zone": "chugoku",
+   "wave": 2,
+   "crews": 0.31,
+   "depart": 3.25,
+   "arrive": 5.0,
+   "road_km": 1124.48,
+   "travel_d": 1.75
+  },
+  {
+   "sender": "tohoku",
+   "zone": "shikoku",
+   "wave": 0,
+   "crews": 0.76,
+   "depart": 1.25,
+   "arrive": 2.96,
+   "road_km": 1090.42,
+   "travel_d": 1.71
+  },
+  {
+   "sender": "tohoku",
+   "zone": "shikoku",
+   "wave": 1,
+   "crews": 0.66,
+   "depart": 2.25,
+   "arrive": 3.96,
+   "road_km": 1090.42,
+   "travel_d": 1.71
+  },
+  {
+   "sender": "tohoku",
+   "zone": "shikoku",
+   "wave": 2,
+   "crews": 0.47,
+   "depart": 3.25,
+   "arrive": 4.96,
+   "road_km": 1090.42,
+   "travel_d": 1.71
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kyushu",
+   "wave": 0,
+   "crews": 0.7,
+   "depart": 1.25,
+   "arrive": 3.19,
+   "road_km": 1294.18,
+   "travel_d": 1.94
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kyushu",
+   "wave": 1,
+   "crews": 0.61,
+   "depart": 2.25,
+   "arrive": 4.19,
+   "road_km": 1294.18,
+   "travel_d": 1.94
+  },
+  {
+   "sender": "tohoku",
+   "zone": "kyushu",
+   "wave": 2,
+   "crews": 0.43,
+   "depart": 3.25,
+   "arrive": 5.19,
+   "road_km": 1294.18,
+   "travel_d": 1.94
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "tokyo",
+   "wave": 0,
+   "crews": 0.33,
+   "depart": 1.25,
+   "arrive": 2.13,
+   "road_km": 342.77,
+   "travel_d": 0.88
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "tokyo",
+   "wave": 1,
+   "crews": 0.29,
+   "depart": 2.25,
+   "arrive": 3.13,
+   "road_km": 342.77,
+   "travel_d": 0.88
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "tokyo",
+   "wave": 2,
+   "crews": 0.21,
+   "depart": 3.25,
+   "arrive": 4.13,
+   "road_km": 342.77,
+   "travel_d": 0.88
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chubu",
+   "wave": 0,
+   "crews": 0.52,
+   "depart": 1.25,
+   "arrive": 2.05,
+   "road_km": 271.72,
+   "travel_d": 0.8
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chubu",
+   "wave": 1,
+   "crews": 0.45,
+   "depart": 2.25,
+   "arrive": 3.05,
+   "road_km": 271.72,
+   "travel_d": 0.8
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chubu",
+   "wave": 2,
+   "crews": 0.32,
+   "depart": 3.25,
+   "arrive": 4.05,
+   "road_km": 271.72,
+   "travel_d": 0.8
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kansai",
+   "wave": 0,
+   "crews": 0.37,
+   "depart": 1.25,
+   "arrive": 2.18,
+   "road_km": 383.23,
+   "travel_d": 0.93
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kansai",
+   "wave": 1,
+   "crews": 0.32,
+   "depart": 2.25,
+   "arrive": 3.18,
+   "road_km": 383.23,
+   "travel_d": 0.93
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kansai",
+   "wave": 2,
+   "crews": 0.23,
+   "depart": 3.25,
+   "arrive": 4.18,
+   "road_km": 383.23,
+   "travel_d": 0.93
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chugoku",
+   "wave": 0,
+   "crews": 0.14,
+   "depart": 1.25,
+   "arrive": 2.47,
+   "road_km": 647.18,
+   "travel_d": 1.22
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chugoku",
+   "wave": 1,
+   "crews": 0.12,
+   "depart": 2.25,
+   "arrive": 3.47,
+   "road_km": 647.18,
+   "travel_d": 1.22
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "chugoku",
+   "wave": 2,
+   "crews": 0.09,
+   "depart": 3.25,
+   "arrive": 4.47,
+   "road_km": 647.18,
+   "travel_d": 1.22
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "shikoku",
+   "wave": 0,
+   "crews": 0.21,
+   "depart": 1.25,
+   "arrive": 2.44,
+   "road_km": 623.22,
+   "travel_d": 1.19
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "shikoku",
+   "wave": 1,
+   "crews": 0.18,
+   "depart": 2.25,
+   "arrive": 3.44,
+   "road_km": 623.22,
+   "travel_d": 1.19
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "shikoku",
+   "wave": 2,
+   "crews": 0.13,
+   "depart": 3.25,
+   "arrive": 4.44,
+   "road_km": 623.22,
+   "travel_d": 1.19
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kyushu",
+   "wave": 0,
+   "crews": 0.19,
+   "depart": 1.25,
+   "arrive": 2.66,
+   "road_km": 820.26,
+   "travel_d": 1.41
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kyushu",
+   "wave": 1,
+   "crews": 0.17,
+   "depart": 2.25,
+   "arrive": 3.66,
+   "road_km": 820.26,
+   "travel_d": 1.41
+  },
+  {
+   "sender": "hokuriku",
+   "zone": "kyushu",
+   "wave": 2,
+   "crews": 0.12,
+   "depart": 3.25,
+   "arrive": 4.66,
+   "road_km": 820.26,
+   "travel_d": 1.41
+  }
+ ],
+ "zone_clear_day": {
+  "chubu": 276.17,
+  "chugoku": 102.96,
+  "kansai": 187.08,
+  "kyushu": 133.0,
+  "shikoku": 155.12,
+  "tokyo": 157.12
+ },
+ "jobs_by_zone": {
+  "chubu": 132,
+  "chugoku": 28,
+  "kansai": 88,
+  "kyushu": 46,
+  "shikoku": 56,
+  "tokyo": 66
+ },
+ "customers_out_10k": {
+  "0": {
+   "scenario": 589.1,
+   "default_model": 589.1
+  },
+  "0.5": {
+   "scenario": 590.0,
+   "default_model": 590.0
+  },
+  "1": {
+   "scenario": 550.2,
+   "default_model": 550.2
+  },
+  "3": {
+   "scenario": 549.6,
+   "default_model": 548.0
+  },
+  "7": {
+   "scenario": 552.9,
+   "default_model": 545.4
+  },
+  "14": {
+   "scenario": 522.6,
+   "default_model": 512.0
+  },
+  "30": {
+   "scenario": 424.3,
+   "default_model": 411.1
+  },
+  "60": {
+   "scenario": 280.2,
+   "default_model": 242.9
+  },
+  "90": {
+   "scenario": 146.9,
+   "default_model": 118.5
+  }
+ },
+ "check_default_vs_evaluate_timeline_customers": {
+  "0": [
+   5890759,
+   5890759
+  ],
+  "1": [
+   5501995,
+   5501995
+  ],
+  "7": [
+   5453679,
+   5453679
+  ],
+  "30": [
+   4110650,
+   4110650
+  ]
+ },
+ "local_available_crews_all_bases": {
+  "0": 223.7,
+  "1": 233.6,
+  "3": 246.6,
+  "7": 261.7,
+  "14": 265.8,
+  "30": 267.2
+ },
+ "nominal_crews_all_bases": 272.0,
+ "video": {
+  "mp4_mb": 1.04,
+  "gif_mb": 1.79,
+  "duration_s": 27.4,
+  "unique_frames": 107
+ }
+}

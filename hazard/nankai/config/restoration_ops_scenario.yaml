@@ -1,0 +1,76 @@
+# 復旧オペレーション・シナリオ(v0 試作)。make_restoration_ops.py が読む。
+# 目的: 「作業班の配置 → 班と資機材も被災して動けない → 他社応援が会社規模と距離に応じて遅れて届く → 待ち行列で修理」
+# を 1 つの代表サンプルで動かして見せる。実在の運用計画・応援協定の再現ではない。
+# 各値に kind を付ける: sourced = リポジトリ内の出典つき値を転記 / reused = 既存モデルの仮定値を再利用 / assumption = 本シナリオで置いた仮定
+schema: nankai-restoration-ops-v0
+
+scope:
+  note: 対象は変電所・送電線の修理班(restoration_default.yaml の jobs)。配電(6.6kV 以下)の応援・電源車・資材調達は含めない。
+  islands: [west, east]            # 解析系統。北海道・沖縄は系統解析外(応援の送り手としてのみ扱う)
+
+representative_sample:
+  kind: assumption
+  n_candidates: 21                 # 島ごとに 21 サンプルの損傷を作り、修理総量(班・日)が中央値のものを代表とする
+  seed0: 1000
+
+local_crews:
+  count: {kind: reused, source: config/restoration_default.yaml crews.base(仮定値)}
+  bases:
+    kind: assumption
+    method: "エリア×県ごとに 1 拠点。拠点位置 = その県内のエリア母線の需要重心に最も近い変電所。班数はエリア班数を県の需要比で配分(支店・電力所の実所在ではない)"
+    min_share: 0.03                # エリア需要の 3% 未満の県は最大の県に併合
+
+personnel:                         # 要員の被災(本人・家族の被災、通勤途絶、安否確認)。拠点グループ内の母線ごとに需要加重で平均
+  unavailable_by_class: {kind: assumption, values: {"5弱": 0.03, "5強": 0.08, "6弱": 0.20, "6強": 0.35, "7": 0.50}}
+  tsunami_unavailable: {kind: assumption, value: 0.80}     # A40 浸水想定域(ランク 1 以上)の母線に紐づく要員
+  tau_shake_d: {kind: assumption, value: 2.5}              # 揺れ起因の不在が戻る時定数(指数回復)
+  tau_tsunami_d: {kind: assumption, value: 7.0}
+  permanent_share: {kind: assumption, value: 0.10}         # 初期不在のうち 90 日戻らない割合(死傷・長期離脱)
+
+equipment:                         # 車両・資機材・資材置場の被災
+  loss_if_inundated: {kind: assumption, value: 1.0}        # 浸水想定域の拠点分は全損
+  loss_by_class: {kind: assumption, values: {"6強": 0.10, "7": 0.20}}
+  resupply_d: {kind: assumption, value: 7.0}               # 他拠点・メーカーからの融通で線形に回復するまでの日数
+
+patrol_d: {kind: assumption, value: 0.5}                   # 巡視・安全確認。この間は修理に着手しない
+
+mutual_aid:
+  headquarters:                    # 本店所在都市の概略座標(市中心付近)。応援隊の出発点
+    kind: assumption
+    coords:
+      hokkaido: [43.062, 141.354, 札幌]
+      tohoku:   [38.268, 140.872, 仙台]
+      tokyo:    [35.681, 139.767, 東京]
+      chubu:    [35.170, 136.882, 名古屋]
+      hokuriku: [36.695, 137.213, 富山]
+      kansai:   [34.694, 135.502, 大阪]
+      chugoku:  [34.385, 132.455, 広島]
+      shikoku:  [34.340, 134.047, 高松]
+      kyushu:   [33.590, 130.402, 福岡]
+  company_names: {hokkaido: 北海道, tohoku: 東北, tokyo: 東京, chubu: 中部, hokuriku: 北陸, kansai: 関西, chugoku: 中国, shikoku: 四国, kyushu: 九州, okinawa: 沖縄}
+  size_proxy: {kind: sourced, source: "config/customers.yaml contracts_thousand(供給地点数の概数・confidence low)"}
+  crews_per_million_customers: {kind: assumption, value: 2.0}   # 無被害の会社が出せる送変電班/百万口。restoration_default.yaml の班数は百万口あたり 2.0〜5.5(中央値 約 4)で、その半分を応援に出すと置いた
+  own_damage_horizon_d: {kind: assumption, value: 7.0}         # 自社被害度 r = 自社の修理総量(班・日) ÷ (自社班数 × 7 日)
+  sender_rule: "送り出し係数 = clip(1 − r, 0, 1)。r ≥ 1 の会社は応援を出さず受け手になる"
+  receiver_threshold_r: {kind: assumption, value: 0.5}         # r がこれを超えるエリアが応援を受ける。配分は修理総量(班・日)に比例
+  excluded: {okinawa: "本土と陸路でつながらず、送変電班の応援規模も小さいため除外(仮定)"}
+  decision_delay_d: {kind: assumption, value: 0.5}             # 被害把握と派遣決定
+  mobilization_d: {kind: assumption, value: 0.75}              # 班の招集・資機材積込
+  detour_factor: {kind: assumption, value: 1.3}                # 道路距離 = 大円距離 × 1.3
+  convoy_speed_kmh: {kind: assumption, value: 50}              # 高速道路の通行規制・緊急通行を含む車列の平均速度
+  drive_h_per_day: {kind: assumption, value: 18}               # 交代運転
+  in_area_delay_d: {kind: assumption, value: 0.5}              # 被災域内の道路損傷による追加遅延 × 受け手の被害度(0..1)
+  hokkaido_ferry: {kind: assumption, port_from: [42.636, 141.605, 苫小牧], port_to: [35.655, 136.062, 敦賀], sea_d: 1.0,
+                   sea_waypoints: [[41.55, 141.2], [41.45, 140.1], [40.3, 139.4], [38.3, 138.3], [36.6, 136.3]]}   # 描画用の航路(津軽海峡→日本海)
+  waves: {kind: assumption, offsets_d: [0.0, 1.0, 2.0], shares: [0.40, 0.35, 0.25]}
+  return_after_clear_d: {kind: assumption, value: 1.0}         # 受け手エリアの修理が片付いたら 1 日後に帰還
+
+render:
+  fps: 12
+  frame_times_d:                   # [開始, 終了, 刻み]。各時刻を hold_frames コマ表示
+    - [0.0, 1.0, 0.125]
+    - [1.0, 7.0, 0.25]
+    - [7.0, 21.0, 0.5]
+    - [21.0, 90.0, 1.5]
+  hold_frames: 2
+  hold_at_d: {0.0: 24, 0.5: 12, 3.0: 18, 7.0: 18, 30.0: 18, 90.0: 36}

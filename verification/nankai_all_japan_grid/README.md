@@ -20,6 +20,11 @@
 | `TECHNICAL_NOTE.pdf` / `.md` | 技術ノート（入力データ、地震動・津波の場、損傷、系統評価、系統崩壊と swing 方程式、復旧と待ち行列、モンテカルロ、ポテンシャル法、較正と検証、内閣府の採用手法との対応、限界、再現手順） |
 | `slides_4_summary.pptx` | **プレゼン差し込み用 4 枚**（構図 → 4 つの手 → シネマティック GIF → 数字と一言）。3 枚目は `viewers/cinematic.gif`（PowerPoint のスライドショーで動く）、動画版 `viewers/cinematic.mp4`（1920×1080・34 秒）。旧版のインパクト GIF は `viewers/impact_all_japan.gif` |
 | `viewers/cinematic.mp4` / `.gif` | **「夜の灯りが消えて戻る」シネマティック**：ふだんの夜 → 衝撃波 → 灯りが消える → 津波がトラフ軸から海を渡り A40 浸水想定域を水没 → 引き波 → 90 日で灯りが戻る（停電中の需要家カウンタ・内閣府 2025 併記）。灯り = √需要 × 受電可能確率。津波の到達順は海上最短経路（Dijkstra）の演出で伝播計算ではない。生成: `hazard/nankai/scripts/make_cinematic.py` |
+| `slides_visual_candidates.pptx` | **検討用 7 枚**：地震と津波の到達表現 4 案（現行 / L1 物理の時計 / L2 海面を解く / L3 カメラ）の比較、到達時刻の検算（内閣府 2025 ケース②と照合）、復旧オペレーション試作。動く GIF 5 本。説明は `VISUAL_CANDIDATES.md` |
+| `viewers/arrival_L1.mp4` / `.gif` | L1：破壊 2.7 km/s・S 波 3.82 km/s（内閣府 2012）の到達時刻、J-SHIS 震度の焼き付け、√(gh) 走時の 10 分到達線 |
+| `viewers/arrival_L2.mp4` / `.gif` | L2：線形長波方程式（ETOPO1 1 分角・簡易波源）の海面。上昇 = 暖色、下降 = 寒色、沿岸 4 点の水位変化（振幅は定性） |
+| `viewers/arrival_L3.mp4` / `.gif` | L3：L2 を斜め上から、太平洋から紀伊水道へ寄るカメラ（高さは誇張） |
+| `viewers/restoration_ops.mp4` / `.gif` | 復旧オペレーション試作：作業班の被災、資機材の損失、他社応援の到着、待ち行列（仮定は `hazard/nankai/config/restoration_ops_scenario.yaml`） |
 | `slides_28.pptx` | 解説デッキ 32 枚（系統モデルの意義、需給・周波数・リレー、結果、負の結果）。動く GIF を 4 枚載せている（PowerPoint のスライドショーで再生）：18 枚目 シネマティック `viewers/cinematic.gif`、19 枚目 全国の停電確率 `viewers/impact_all_japan.gif`、21 枚目 西日本の復旧推移 `viewers/restoration_west.gif`、22 枚目 東日本の復旧推移 `viewers/restoration_east.gif`。ファイル名は旧 28 枚版のまま |
 | `viewers/equations_play.html` | 数式スライド 12 枚（教科書の式 → 見えない → 動かす → 具体例 → つまり → なぜモデル化できるか → 文献と歴史の横軸フロー → 良し悪し／総括／参考文献） |
 | `viewers/blackboard_notes.html` | 黒板ノート 15 板書 |
