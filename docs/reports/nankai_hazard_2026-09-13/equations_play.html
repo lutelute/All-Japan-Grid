@@ -84,7 +84,7 @@ select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:6px;border:1p
 </section>
 <section class="slide" id="sl2">
 <div class="hd"><span class="no">2 / 12</span><h2>脆弱性曲線と乱数の判定</h2></div>
-<div class="tex"><div class="lab">教科書ではこう書く</div>$$P(\mathrm{DS}\ge k\mid \mathrm{PGA})=\Phi\!\left(\frac{\ln(\mathrm{PGA}/\alpha\theta_k)}{\beta_k}\right),\qquad P_{\mathrm{out}}=\sum_{k=1}^{4}\big[P(\mathrm{DS}\ge k)-P(\mathrm{DS}\ge k+1)\big]\,q_k,\qquad u<P_{\mathrm{out}}\Rightarrow\text{停止}$$<div class="sym">$\Phi$: 標準正規分布の累積分布、$\theta_k$: 損傷状態 $k$ の中央値 PGA（HAZUS）、$\beta_k$: 対数標準偏差、$\alpha=5$: 日本補正、$q=(0,0.3,1,1)$: 損傷状態ごとに停止する確率、$u\sim U(0,1)$。</div></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$P(\mathrm{DS}\ge k\mid \mathrm{PGA})=\Phi\!\left(\frac{\ln(\mathrm{PGA}/\alpha\theta_k)}{\beta_k}\right),\qquad P_{\mathrm{out}}=\sum_{k=1}^{4}\big[P(\mathrm{DS}\ge k)-P(\mathrm{DS}\ge k+1)\big]\,q_k,\qquad u&lt;P_{\mathrm{out}}\Rightarrow\text{停止}$$<div class="sym">$\Phi$: 標準正規分布の累積分布、$\theta_k$: 損傷状態 $k$ の中央値 PGA（HAZUS）、$\beta_k$: 対数標準偏差、$\alpha=5$: 日本補正、$q=(0,0.3,1,1)$: 損傷状態ごとに停止する確率、$u\sim U(0,1)$。</div></div>
 <p class="doubt"><b>でも、これだけでは見えない。</b>$\Phi$ の中に $\ln$ が入った式を見ても「0.6 g で何割止まるのか」「$\alpha$ を 3 から 5 にすると何が起きるのか」が分からない。乱数 $u$ と比べる、の意味も掴みにくい。</p>
 <div class="card"><div class="row"><div><svg class="plot" id="s2" viewBox="0 0 640 300"></svg><div class="read" id="r2"></div></div>
 <div class="ctl"><label>日本補正 α <b id="v2a">5.0</b><input id="c2a" type="range" min="1" max="8" step="0.5" value="5"></label><label>PGA [g] <b id="v2b">0.60</b><input id="c2b" type="range" min="0.05" max="1.5" step="0.01" value="0.60"></label><label>電圧階級 <select id="c2c"><option value="low">≤110 kV</option><option value="mid">154–220 kV</option><option value="high" selected>≥275 kV</option></select></label><div style="display:flex;gap:6px"><button class="btn p" id="b2">乱数を 1 回引く</button><button class="btn" id="b2m">100 回引く</button><button class="btn" id="b2r">リセット</button></div><div class="note">α を上げると曲線が右へ滑り、同じ PGA での停止確率が下がる。乱数 u が赤線(P_out)より下なら停止。100 回引くと停止の割合が P_out に寄っていく。</div></div></div></div>
@@ -108,13 +108,13 @@ select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:6px;border:1p
 </section>
 <section class="slide" id="sl4">
 <div class="hd"><span class="no">4 / 12</span><h2>停止率曲線の逆変換</h2></div>
-<div class="tex"><div class="lab">教科書ではこう書く</div>$$u\sim U(0,1),\qquad \tau=\sup\{\,t:\ u<f_c(t)\,\},\qquad \text{発電機は } t<\tau \text{ の間停止}$$<div class="sym">$f_c(t)$: 震度階級 $c$ で発災後 $t$ 日に止まっている火力の割合（内閣府 2025 の表、非増加）。$\tau$: その機の停止期間。</div></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$u\sim U(0,1),\qquad \tau=\sup\{\,t:\ u&lt;f_c(t)\,\},\qquad \text{発電機は } t&lt;\tau \text{ の間停止}$$<div class="sym">$f_c(t)$: 震度階級 $c$ で発災後 $t$ 日に止まっている火力の割合（内閣府 2025 の表、非増加）。$\tau$: その機の停止期間。</div></div>
 <p class="doubt"><b>でも、これだけでは見えない。</b>「停止率の表」と「1 機ずつの停止期間」がどうつながるのか。$\sup$ という記号を見た瞬間に思考が止まる。</p>
 <div class="card"><div class="row"><div><svg class="plot" id="s4" viewBox="0 0 640 300"></svg><div class="read" id="r4"></div></div>
 <div class="ctl"><label>震度階級 <select id="c4c"><option value="5弱">5弱</option><option value="5強">5強</option><option value="6弱" selected>6弱・6強</option><option value="7">7</option></select></label><label>乱数 u <b id="v4a">0.50</b><input id="c4a" type="range" min="0" max="1" step="0.01" value="0.5"></label><div style="display:flex;gap:6px"><button class="btn p" id="b4">200 機を引く</button><button class="btn" id="b4r">消す</button></div><div class="note">水平線 u が階段 f_c(t) の下にある間は停止。200 機引いて「時刻 t に止まっている割合」を重ねると、元の階段と一致する。これが逆変換サンプリング。</div></div></div></div>
-<div class="concrete"><b>具体的には。</b>6弱・6強の曲線は 3 週間 0.90、1 か月 0.23、5 週 0.06。$u=0.5$ なら 0.90 の間は停止、0.23 に落ちる手前で「$u\ge f$」に転じるので $\tau\approx$ <b>25 日</b>。$u=0.95$ なら初日から $0.90<u$ で止まらない。川越火力（震度 7）は曲線が 11 か月まで 1.0 なので $\tau=352$ 日。</div>
+<div class="concrete"><b>具体的には。</b>6弱・6強の曲線は 3 週間 0.90、1 か月 0.23、5 週 0.06。$u=0.5$ なら 0.90 の間は停止、0.23 に落ちる手前で「$u\ge f$」に転じるので $\tau\approx$ <b>25 日</b>。$u=0.95$ なら初日から $0.90&lt;u$ で止まらない。川越火力（震度 7）は曲線が 11 か月まで 1.0 なので $\tau=352$ 日。</div>
 <div class="aha"><b>つまり。</b>水平線 $u$ が階段の下にある間だけ停止。200 機に別々の $u$ を配ると、どの時刻で数えても止まっている割合が元の階段に一致する。表を「機ごとの運命」に翻訳する装置。</div>
-<div class="why"><b>なぜこれでモデル化できるのか。</b>確率積分変換: 一様乱数 $u$ を累積分布関数の逆関数に通すと、その分布に従う乱数になる。$f_c(t)$ は「停止期間が $t$ より長い割合」= 生存関数なので、$\sup\{t: u<f_c(t)\}$ がまさにその逆関数。表をそのまま機ごとの運命に翻訳できる。</div>
+<div class="why"><b>なぜこれでモデル化できるのか。</b>確率積分変換: 一様乱数 $u$ を累積分布関数の逆関数に通すと、その分布に従う乱数になる。$f_c(t)$ は「停止期間が $t$ より長い割合」= 生存関数なので、$\sup\{t: u&lt;f_c(t)\}$ がまさにその逆関数。表をそのまま機ごとの運命に翻訳できる。</div>
 <div class="hist"><b>文献と歴史（横軸フロー・左が古い）。</b><svg class="flow" id="h4" viewBox="0 0 900 210" role="img" aria-label="系譜フロー"></svg><div class="note">理論(逆変換法)と入力(内閣府の表)が別々の系譜から来て、本モデルで合流する。</div></div>
 <div class="pc"><div class="pro"><b>良い点</b><ul><li>表を 1 つの乱数で厳密に再現する(どの時刻でも割合が一致)</li><li>内閣府と同じ入力なので比較の土俵が揃う</li><li>震度階級・津波深の区分をそのまま使える</li></ul></div><div class="con"><b>弱い点</b><ul><li>同じ階級の発電所はみな同じ曲線(設備差・耐震補強の差が無い)</li><li>期間だけで出力の段階的回復を表さない</li><li>表自体が 2011 年の東北の経験(津波・石炭火力中心)に依存</li></ul></div></div>
 </section>
