@@ -18,6 +18,7 @@
 |---|---|
 | `REPORT_v0.md` | 判断レポート（方法・較正 24 変種・結果・負の結果・限界・記録） |
 | `TECHNICAL_NOTE.pdf` / `.md` | 技術ノート（入力データ、地震動・津波の場、損傷、系統評価、系統崩壊と swing 方程式、復旧と待ち行列、モンテカルロ、ポテンシャル法、較正と検証、内閣府の採用手法との対応、限界、再現手順） |
+| `slides_4_summary.pptx` | **プレゼン差し込み用 4 枚**（構図 → 4 つの手 → インパクト GIF → 数字と一言）。GIF は `viewers/impact_all_japan.gif`（PowerPoint のスライドショーで動く）、動画版 `impact_all_japan.mp4` |
 | `slides_28.pptx` | 解説デッキ 28 枚（系統モデルの意義、需給・周波数・リレー、結果、負の結果） |
 | `viewers/equations_play.html` | 数式スライド 12 枚（教科書の式 → 見えない → 動かす → 具体例 → つまり → なぜモデル化できるか → 文献と歴史の横軸フロー → 良し悪し／総括／参考文献） |
 | `viewers/blackboard_notes.html` | 黒板ノート 15 板書 |
