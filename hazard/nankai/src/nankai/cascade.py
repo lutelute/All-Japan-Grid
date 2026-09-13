@@ -133,5 +133,7 @@ class CascadeModel:
                 th[keep] = splu(Ar.tocsc() + sp.eye(nb - 1) * 1e-9).solve(p[keep])
             except Exception:
                 continue
-            flows[k] = b * (th[fi] - th[ti]) * 100.0   # pu(100MVA) → MW
+            # 注入 p は MW で与えているので θ は「MW スケール」の角度になり、枝潮流 [MW] = b·Δθ。
+            # (2026-09-13 修正: ×100 を重ねて掛けていたため潮流が 100 倍になり、過負荷を誤検出していた)
+            flows[k] = b * (th[fi] - th[ti])
         return flows

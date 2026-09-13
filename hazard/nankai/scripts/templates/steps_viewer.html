@@ -1,0 +1,118 @@
+<title>南海トラフ 1手ずつ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>/*__LEAFLET_CSS__*/</style>
+<style>
+:root{--bg:#eef0ec;--panel:#fbfbf9;--ink:#1b1f26;--muted:#646a73;--line:#d3d6cf;--accent:#1c5d8c;--accent-ink:#fff;--sea:#dfe6ea;--land:#f6f5ef;--land-line:#b9bdb5;--code:#f1f3ee;
+ --ok:#2e8b57;--shed:#e3a33a;--iso:#7b5ea7;--shake:#e8792b;--tsu:#1f77b4;--black:#3a3f47;--fail:#c2361f;--over:#ff3b30;--hl:#ffd400;--shadow:0 6px 24px rgba(20,30,40,.18);--label:#3a3f47}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#13161b;--panel:#1b1f26;--ink:#e9e7e0;--muted:#9aa1aa;--line:#2d323b;--accent:#79b4e2;--accent-ink:#0f1a24;--sea:#0f1319;--land:#20252d;--land-line:#3a414b;--code:#22272f;--ok:#4cc27a;--black:#8a919c;--label:#cfd3d8;--shadow:0 6px 24px rgba(0,0,0,.55)}}
+:root[data-theme="dark"]{--bg:#13161b;--panel:#1b1f26;--ink:#e9e7e0;--muted:#9aa1aa;--line:#2d323b;--accent:#79b4e2;--accent-ink:#0f1a24;--sea:#0f1319;--land:#20252d;--land-line:#3a414b;--code:#22272f;--ok:#4cc27a;--black:#8a919c;--label:#cfd3d8;--shadow:0 6px 24px rgba(0,0,0,.55)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px;line-height:1.5;overflow:hidden}
+h1,h2,h3{font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;margin:0;text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+#map{position:fixed;inset:0;background:var(--sea)}
+.leaflet-container{font:inherit}.leaflet-control-attribution{display:none}
+.leaflet-top.leaflet-right{top:10px}.leaflet-touch .leaflet-bar a{width:36px;height:36px;line-height:36px;font-size:20px}
+.leaflet-bar a{background:var(--panel);color:var(--ink);border-bottom-color:var(--line)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--ink)}
+.city{font-family:"Zen Kaku Gothic New",sans-serif;font-size:11px;font-weight:700;color:var(--label);text-shadow:0 0 3px var(--land),0 0 3px var(--land);white-space:nowrap;pointer-events:none}
+.panel{position:fixed;left:12px;top:12px;bottom:12px;width:400px;z-index:950;background:var(--panel);border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.panel .top{padding:12px 14px 8px;border-bottom:1px solid var(--line)}
+.panel h1{font-size:15px;font-weight:900}
+.sub{font-size:11.5px;color:var(--muted)}
+.code{padding:8px 10px;background:var(--code);border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:10.5px;line-height:1.35;overflow:auto;max-height:36vh}
+.code div{padding:2px 6px;border-radius:4px;white-space:pre-wrap;color:var(--muted)}
+.code div.on{background:var(--accent);color:var(--accent-ink)}
+.code div.done{color:var(--ink)}
+.step{padding:10px 14px;overflow:auto;flex:1}
+.step .ph{font-size:10.5px;letter-spacing:.08em;color:var(--accent);font-family:"IBM Plex Mono",monospace;text-transform:uppercase}
+.step h2{font-size:15px;font-weight:700;margin:2px 0 6px}
+.step p{margin:0;font-size:13px}
+.ctl{padding:10px 14px 12px;border-top:1px solid var(--line);display:grid;gap:8px}
+.ctl .row{display:flex;gap:6px;align-items:center}
+.btn{font:inherit;font-size:13px;padding:7px 10px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;min-width:40px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);flex:1}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:26px}
+select{font:inherit;font-size:12.5px;padding:6px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:11px;color:var(--muted);padding:6px 14px 10px;border-top:1px solid var(--line)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.legend i.l{width:14px;height:3px;border-radius:2px}
+.kv{display:flex;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}.kv b{color:var(--ink);font-family:"Zen Kaku Gothic New",sans-serif;font-size:15px}
+@media (max-width:820px){.panel{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:62vh}.code{max-height:20vh;font-size:10px}.step{max-height:22vh}.leaflet-top.leaflet-right{top:8px}}
+</style>
+<div id="map"></div>
+<div class="panel">
+  <div class="top"><h1>南海トラフ 電力ハザード解析 — 1手ずつ</h1><div class="sub">1 サンプルの全操作を記録し、地図上で 1 手ずつ再生する。上の擬似コードの光っている行が「いま実行している手」。</div></div>
+  <div class="code" id="code"></div>
+  <div class="step"><div class="ph" id="ph"></div><h2 id="ti"></h2><p id="tx"></p><div class="kv" id="kv" style="margin-top:8px"></div></div>
+  <div class="ctl">
+    <div class="row"><button class="btn" id="first" title="最初へ">⏮</button><button class="btn" id="prev" title="1手戻る">◀</button><button class="btn primary" id="play">▶ 再生</button><button class="btn" id="next" title="1手進む">▶</button><button class="btn" id="last" title="最後へ">⏭</button></div>
+    <input id="sl" type="range" min="0" max="0" value="0" aria-label="手">
+    <div class="row"><span class="sub mono" id="cnt"></span><span style="flex:1"></span><label class="sub">速さ <select id="spd"><option value="1200">ゆっくり</option><option value="500" selected>ふつう</option><option value="150">速い</option><option value="40">一気に</option></select></label><label class="sub">段階 <select id="jump"></select></label></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--ok)"></i>供給</span><span><i style="background:var(--shed)"></i>比例遮断</span><span><i style="background:var(--shake)"></i>変電所 揺れ停止</span><span><i style="background:var(--tsu)"></i>変電所 津波停止</span><span><i style="background:var(--iso)"></i>上流孤立</span><span><i style="background:var(--black)"></i>系統崩壊</span><span><i class="l" style="background:var(--fail)"></i>線路停止</span><span><i class="l" style="background:var(--over)"></i>過負荷</span><span><i style="background:var(--hl);border:1px solid #000"></i>いまの手</span></div>
+</div>
+<script>
+const D=/*__DATA__*/null;
+const S=D.steps, N=S.length, B=D.bus, LN=D.line;
+const PH={1:"① 地震動",2:"② 変電所の損傷",3:"③ 線路の損傷",4:"④ 発電機の停止",5:"⑤ 連結成分",6:"⑥ エリア需給と系統崩壊",7:"⑦ 比例遮断",8:"⑧ DC潮流と過負荷連鎖",9:"⑨ 復旧の割当",10:"⑩ 時刻ごとの再評価"};
+const CITIES=[["静岡",34.98,138.38],["浜松",34.71,137.73],["名古屋",35.18,136.91],["津",34.73,136.51],["京都",35.01,135.77],["大阪",34.69,135.50],["神戸",34.69,135.19],["和歌山",34.23,135.17],["岡山",34.66,133.92],["広島",34.39,132.46],["高松",34.34,134.05],["徳島",34.07,134.55],["松山",33.84,132.77],["高知",33.56,133.53],["福岡",33.59,130.40],["大分",33.24,131.61],["熊本",32.80,130.71],["宮崎",31.91,131.42],["鹿児島",31.60,130.56],["金沢",36.56,136.66],["長野",36.65,138.18]];
+const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+const map=L.map("map",{zoomControl:false,attributionControl:false,preferCanvas:true,minZoom:5,maxZoom:13}).setView([34.3,135.2],6);
+L.control.zoom({position:"topright"}).addTo(map);
+window.addEventListener("load",()=>setTimeout(()=>map.invalidateSize(),50));window.addEventListener("resize",()=>map.invalidateSize());
+L.layerGroup(CITIES.map(c=>L.marker([c[1],c[2]],{icon:L.divIcon({className:"city",html:c[0],iconSize:[0,0],iconAnchor:[-4,6]}),interactive:false,keyboard:false}))).addTo(map);
+const cv=L.canvas({padding:.4});
+// state
+const nb=B.lat.length, nl=LN.f.length;
+let bus=new Array(nb).fill("ok"), shed=new Float32Array(nb).fill(1), line=new Array(nl).fill("ok"), flow=new Float32Array(nl), state=null, phys=null, I=null, restS={}, restL={};
+function reset(){bus.fill("ok");shed.fill(1);line.fill("ok");flow.fill(0);state=null;phys=null;I=null;restS={};restL={};}
+function apply(d){if(d.I)I=d.I;if(d.bus)for(const k in d.bus){const v=d.bus[k];bus[+k]=v==="S"?"shake":v==="T"?"tsu":v==="I"?"iso":v==="B"?"black":bus[+k];}
+ if(d.line)for(const k in d.line){line[+k]=d.line[k]==="F"?"fail":"trip";}
+ if(d.flow){flow.fill(0);for(const k in d.flow)flow[+k]=d.flow[k];}
+ if(d.shed)for(const k in d.shed)shed[+k]=d.shed[k];
+ if(d.state){state=d.state;phys=d.phys;}
+ if(d.rest_site)Object.assign(restS,d.rest_site);if(d.rest_line)Object.assign(restL,d.rest_line);}
+let cur=-1;
+function goto(k){k=Math.max(0,Math.min(N-1,k));if(k<cur||cur<0){reset();for(let i=0;i<=k;i++)apply(S[i].d);}else{for(let i=cur+1;i<=k;i++)apply(S[i].d);}cur=k;render();}
+// layers
+const busM=B.lat.map((la,i)=>L.circleMarker([la,B.lon[i]],{renderer:cv,radius:B.junction[i]?1.2:2+Math.sqrt(Math.min(B.load[i],500)/500)*6,weight:0,fillOpacity:.85,fillColor:"#999"}).bindPopup(()=>popBus(i)));
+const busL=L.layerGroup(busM).addTo(map);
+const lineM=[];const lineL=L.layerGroup().addTo(map);
+for(let k=0;k<nl;k++){const f=LN.f[k],t=LN.t[k];lineM.push(L.polyline([[B.lat[f],B.lon[f]],[B.lat[t],B.lon[t]]],{renderer:cv,color:"#9a9a9a",weight:LN.kv[k]>=275?1.2:.5,opacity:.35,interactive:false}));}
+lineM.forEach(m=>lineL.addLayer(m));
+const hlL=L.layerGroup().addTo(map);
+function popBus(i){const s=S[cur];return `<b>${B.name[i]}</b><br>需要 ${B.load[i]} MW${I?` ・ 震度 ${I[i]}`:""}<br>状態: ${bus[i]}${state?` ・ 供給率 ${Math.round(state[i]*100)}%`:""}`;}
+function busColor(i){const t=S[cur]&&S[cur].t!=null?S[cur].t:null;
+ if(t!=null&&state){ if(!phys[i])return bus[i]==="tsu"?css("--tsu"):bus[i]==="shake"?css("--shake"):bus[i]==="black"&&t<1?css("--black"):css("--iso"); return state[i]<0.99?css("--shed"):css("--ok");}
+ const b=bus[i];if(b==="shake")return css("--shake");if(b==="tsu")return css("--tsu");if(b==="iso")return css("--iso");if(b==="black")return css("--black");if(shed[i]<0.99)return css("--shed");return I?css("--ok"):"#9a9a9a";}
+function render(){const s=S[cur];const t=s.t!=null?s.t:null;
+ // restoration state at time t (phase 10): sites restored when rest <= t
+ busM.forEach((m,i)=>{let col=busColor(i);m.setStyle({fillColor:col,fillOpacity:.85});});
+ lineM.forEach((m,k)=>{let st=line[k];const rl=restL[k];if(t!=null&&rl!=null&&rl<=t)st="ok";
+  if(flow[k]>0&&s.ph===8)m.setStyle({color:css("--over"),weight:2.2,opacity:.95});
+  else if(st==="fail"||st==="trip")m.setStyle({color:css("--fail"),weight:2,opacity:.9});
+  else m.setStyle({color:"#9a9a9a",weight:LN.kv[k]>=275?1.2:.5,opacity:.35});});
+ hlL.clearLayers();const h=s.hl||{};
+ (h.b||[]).forEach(i=>hlL.addLayer(L.circleMarker([B.lat[i],B.lon[i]],{renderer:cv,radius:7,color:"#000",weight:1.2,fillColor:css("--hl"),fillOpacity:.9,interactive:false})));
+ (h.l||[]).forEach(k=>{const f=LN.f[k],tt=LN.t[k];hlL.addLayer(L.polyline([[B.lat[f],B.lon[f]],[B.lat[tt],B.lon[tt]]],{renderer:cv,color:css("--hl"),weight:5,opacity:.9,interactive:false}));});
+ if((h.b||[]).length===1||((h.l||[]).length===1&&!(h.b||[]).length)){const i=(h.b||[])[0];const k=(h.l||[])[0];const la=i!=null?B.lat[i]:(B.lat[LN.f[k]]+B.lat[LN.t[k]])/2,lo=i!=null?B.lon[i]:(B.lon[LN.f[k]]+B.lon[LN.t[k]])/2;if(!map.getBounds().pad(-0.2).contains([la,lo]))map.panTo([la,lo],{animate:true,duration:.4});}
+ document.getElementById("ph").textContent=PH[s.ph]||"";document.getElementById("ti").textContent=s.ti;document.getElementById("tx").textContent=s.tx;
+ document.getElementById("cnt").textContent=`${cur+1} / ${N} 手`;document.getElementById("sl").value=cur;
+ const kv=document.getElementById("kv");if(state){const tot=B.load.reduce((a,b)=>a+b,0);let sv=0,ph=0;for(let i=0;i<nb;i++){sv+=state[i]*B.load[i];ph+=phys[i]*B.load[i];}kv.innerHTML=`<span>受電可能 <b>${Math.round(ph/tot*100)}%</b></span><span>供給率 <b>${Math.round(sv/tot*100)}%</b></span>`;}else{let ns=0,nt=0,ni=0,nbk=0,nf=0;bus.forEach(b=>{if(b==="shake")ns++;else if(b==="tsu")nt++;else if(b==="iso")ni++;else if(b==="black")nbk++;});line.forEach(l=>{if(l!=="ok")nf++;});kv.innerHTML=`<span>揺れ停止 <b>${ns}</b></span><span>津波停止 <b>${nt}</b></span><span>孤立 <b>${ni}</b></span><span>崩壊 <b>${nbk}</b></span><span>線路停止 <b>${nf}</b></span>`;}
+ const code=document.getElementById("code");[...code.children].forEach((el,i)=>{el.className=i===s.ln?"on":(i<s.ln?"done":"");});
+ code.children[s.ln].scrollIntoView({block:"nearest"});}
+document.getElementById("code").innerHTML=D.pseudo.map((l,i)=>`<div>${i+1}. ${l}</div>`).join("");
+const sl=document.getElementById("sl");sl.max=N-1;sl.addEventListener("input",e=>goto(+e.target.value));
+document.getElementById("prev").onclick=()=>goto(cur-1);document.getElementById("next").onclick=()=>goto(cur+1);document.getElementById("first").onclick=()=>goto(0);document.getElementById("last").onclick=()=>goto(N-1);
+let timer=null;const play=document.getElementById("play");
+function stop(){if(timer){clearInterval(timer);timer=null;}play.textContent="▶ 再生";}
+play.onclick=()=>{if(timer){stop();return;}play.textContent="⏸ 停止";const tick=()=>{if(cur>=N-1){stop();return;}goto(cur+1);};timer=setInterval(tick,+document.getElementById("spd").value);};
+document.getElementById("spd").onchange=()=>{if(timer){stop();play.click();}};
+const jump=document.getElementById("jump");const firstOf={};S.forEach((s,i)=>{if(firstOf[s.ph]==null)firstOf[s.ph]=i;});
+jump.innerHTML=Object.keys(PH).filter(p=>firstOf[p]!=null).map(p=>`<option value="${firstOf[p]}">${PH[p]}</option>`).join("");jump.onchange=e=>{stop();goto(+e.target.value);};
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")goto(cur+1);else if(e.key==="ArrowLeft")goto(cur-1);else if(e.key===" "){e.preventDefault();play.click();}});
+goto(0);
+</script>

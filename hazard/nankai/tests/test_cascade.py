@@ -38,3 +38,14 @@ def test_overload_cascade_trips_branch():
     cm = CascadeModel(case, fragment_size=2, min_component_for_pf=2)
     r = cm.evaluate(np.ones(5, bool), np.ones(3, bool), np.array([100.0, 10.0]))
     assert 1 in r.tripped_branches and r.served_mw[2] == 0
+
+
+def test_dc_flow_units_radial():
+    """放射状: 母線0(発電100MW)→1(負荷50)→2(負荷50)。枝 l1 の潮流は下流負荷の合計 100 MW、l2 は 50 MW。"""
+    cm = CascadeModel(toy_case(), fragment_size=2, min_component_for_pf=2)
+    alive = np.ones(5, bool); br = np.ones(3, bool); gen_cap = np.array([100.0, 10.0])
+    lab = cm._components(alive, br)
+    served = np.array([0, 50, 50, 0, 10.0])
+    pinj = np.bincount(np.array([0, 3]), weights=np.array([100.0, 10.0]), minlength=5) - served
+    f = cm._dc_flows(lab, alive, br, pinj, np.zeros(lab.max() + 1, bool))
+    assert np.isclose(abs(f[0]), 100.0, atol=1e-6) and np.isclose(abs(f[1]), 50.0, atol=1e-6)
