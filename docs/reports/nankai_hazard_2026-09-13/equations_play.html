@@ -1,20 +1,22 @@
 <title>数式の動き 南海トラフ電力解析</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
 <style>
-:root{--bg:#f4f1e8;--card:#fffdf7;--ink:#20242a;--muted:#6a6f78;--line:#d9d4c5;--acc:#1f5f8b;--acc2:#c2361f;--ok:#2e8b57;--warn:#e3a33a;--grid:#e6e1d3;--chalk:#1f3b34}
-*{box-sizing:border-box}
+:root{--bg:#f4f1e8;--card:#fffdf7;--ink:#20242a;--muted:#6a6f78;--line:#d9d4c5;--acc:#1f5f8b;--acc2:#c2361f;--ok:#2e8b57;--warn:#e3a33a;--grid:#e6e1d3;--chalk:#1f3b34;--board:#1f3b34;--chalkink:#f3efe4}
+*{box-sizing:border-box}html{scroll-snap-type:y proximity}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14.5px;line-height:1.6}
-.wrap{max-width:1080px;margin:0 auto;padding:16px 16px 60px}
-h1{font-family:"Zen Kaku Gothic New",sans-serif;font-size:26px;margin:8px 0 2px;font-weight:900}
-.lead{color:var(--muted);margin:0 0 14px;max-width:72ch}
-nav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
-nav a{font-size:12px;color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:3px 9px;background:var(--card)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 18px;box-shadow:0 2px 10px rgba(40,40,30,.06)}
-.card h2{font-family:"Zen Kaku Gothic New",sans-serif;font-size:19px;margin:0 0 4px;font-weight:700}
-.card h2 small{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin-left:8px;font-weight:400}
-.formula{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--chalk);background:#eef2ec;border-left:3px solid var(--chalk);padding:6px 10px;margin:6px 0 10px;overflow-x:auto;white-space:nowrap}
-.row{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
-@media (max-width:760px){.row{grid-template-columns:1fr}}
+.slide{min-height:100vh;scroll-snap-align:start;padding:18px 16px 70px;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.hd{display:flex;align-items:baseline;gap:12px}.hd .no{font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:12px}
+.hd h2{font-family:"Zen Kaku Gothic New",sans-serif;font-size:22px;margin:0;font-weight:900}
+.tex{background:var(--board);color:var(--chalkink);border-radius:8px;padding:10px 16px;font-size:17px;overflow-x:auto;box-shadow:inset 0 0 40px rgba(0,0,0,.25)}
+.tex .lab{font-family:"Zen Kaku Gothic New",sans-serif;font-size:12px;color:#ffe08a;letter-spacing:.08em}
+.tex .sym{font-size:13px;color:#d8d3c4;margin-top:2px}
+.doubt{margin:0;padding:8px 12px;border-left:3px solid var(--acc2);background:#fff4f1;font-size:14px}
+.doubt b{color:var(--acc2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:0 2px 10px rgba(40,40,30,.06)}
+.card .row{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
+@media (max-width:760px){.card .row{grid-template-columns:1fr}}
 .ctl{display:grid;gap:8px}
 .ctl label{display:grid;grid-template-columns:1fr auto;font-size:12.5px;color:var(--muted);gap:4px}
 .ctl label b{color:var(--ink);font-family:"IBM Plex Mono",monospace;font-weight:500}
@@ -26,20 +28,35 @@ nav a{font-size:12px;color:var(--acc);text-decoration:none;border:1px solid var(
 .read b{color:var(--acc2)}
 svg.plot{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:6px}
 svg.plot text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:#444}
-svg.plot .ax{stroke:#888;stroke-width:1}
-svg.plot .gr{stroke:var(--grid);stroke-width:1}
-.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+svg.plot .ax{stroke:#888;stroke-width:1}svg.plot .gr{stroke:var(--grid);stroke-width:1}
 select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:#fff}
 .note{font-size:12px;color:var(--muted);margin-top:6px}
+.concrete{padding:9px 12px;border-radius:6px;background:#eef3f8;border:1px solid #cfdcea;font-size:14px}
+.concrete b{color:var(--acc)}
+.aha{padding:9px 12px;border-radius:6px;background:#fff8e6;border:1px solid #efd9a0;font-size:14.5px}
+.aha b{color:#8a6d1f}
+.navbar{position:fixed;left:0;right:0;bottom:0;background:rgba(255,253,247,.96);border-top:1px solid var(--line);display:flex;justify-content:center;align-items:center;gap:8px;padding:8px 12px;z-index:50;backdrop-filter:blur(4px)}
+.navbar .dots{display:flex;gap:5px}.navbar .dots a{width:10px;height:10px;border-radius:50%;background:#cfc9b8;display:block}.navbar .dots a.on{background:var(--acc)}
+.navbar .ttl{font-size:12.5px;color:var(--muted);min-width:8em;text-align:center}
+.intro{min-height:60vh}
+.intro h1{font-family:"Zen Kaku Gothic New",sans-serif;font-size:28px;margin:0;font-weight:900}
+.intro p{max-width:70ch;color:var(--muted)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.flow span{border:1px solid var(--line);border-radius:14px;padding:3px 10px;background:var(--card);font-size:13px}
 @media (prefers-reduced-motion: reduce){.anim{transition:none}}
 </style>
-<div class="wrap">
+<div class="navbar"><button class="btn" id="nprev">◀</button><span class="ttl" id="ntitle"></span><div class="dots" id="ndots"></div><button class="btn" id="nnext">▶</button></div>
+<div id="deck"><section class="slide intro" id="s0">
 <h1>数式の動き</h1>
-<p class="lead">黒板ノートの式を、つまみを動かして体感する。曲線がどう動くか、乱数を引くと何が起きるか、線路を 1 本切ると潮流がどこへ行くか、周波数がどう落ちるか。</p>
-<nav><a href="#p1">1 距離減衰</a><a href="#p2">2 脆弱性曲線と乱数</a><a href="#p3">3 鉄塔の直列系</a><a href="#p4">4 停止率曲線の逆変換</a><a href="#p5">5 周波数と UFLS</a><a href="#p6">6 DC潮流の分流</a><a href="#p7">7 過負荷の連鎖(1手ずつ)</a><a href="#p8">8 復旧と作業班</a><a href="#p9">9 モンテカルロの収束</a><a href="#p10">10 経路の生存率</a></nav>
-
-<div class="card" id="p1"><h2>1 距離減衰式<small>log10 PGV = 0.58Mw + 0.0038D − 1.29 − log10(X + 0.0028·10^0.5Mw) − 0.002X</small></h2>
-<div class="row"><div><svg class="plot" id="s1" viewBox="0 0 640 300"></svg><div class="read" id="r1"></div></div>
+<p>1 枚に 1 つの式。教科書の書き方をまず見て、「これだけでは何が起きるか分からない」を確かめてから、つまみを動かして実感し、実際の数字で具体化し、最後に一言で言い直す。矢印キーか下のボタンで進む。</p>
+<div class="flow"><span>① 教科書ではこう書く</span><span>② でも見えない</span><span>③ 動かして実感</span><span>④ 具体的には</span><span>⑤ つまり</span></div>
+<p>題材は南海トラフ地震の電力系統解析（All-Japan-Grid `hazard/nankai`）。数字はすべて実装と同じ。</p>
+</section>
+<section class="slide" id="s1">
+<div class="hd"><span class="no">1 / 10</span><h2>距離減衰式</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$\log_{10}\mathrm{PGV}_{600}=0.58M_w+0.0038D-1.29-\log_{10}\!\left(X+0.0028\cdot10^{0.5M_w}\right)-0.002X$$<div class="sym">$\mathrm{PGV}_{600}$: 硬い地盤での最大速度 [cm/s]、$M_w$: マグニチュード、$D$: 断層深さ [km]、$X$: 断層最短距離 [km]。地表値は増幅率 $A$ を掛け、計測震度は $I=2.002+2.603\log_{10}\mathrm{PGV}-0.213(\log_{10}\mathrm{PGV})^2$。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>$M_w$ を 0.5 上げると震度がいくつ上がるのか、100 km 離れると何階級落ちるのか、式を眺めても頭に絵が浮かばない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s1" viewBox="0 0 640 300"></svg><div class="read" id="r1"></div></div>
 <div class="ctl"><label>Mw <b id="v1a">8.5</b><input id="c1a" type="range" min="7.0" max="9.1" step="0.1" value="8.5"></label><label>地表増幅 A <b id="v1b">1.6</b><input id="c1b" type="range" min="1.0" max="2.5" step="0.1" value="1.6"></label><label>見たい距離 X [km] <b id="v1c">27</b><input id="c1c" type="range" min="5" max="300" step="1" value="27"></label><div class="note">Mw を上げると近距離は頭打ち(飽和項)、遠方は全体が持ち上がる。増幅 A は曲線を上下に平行移動するだけ。震度は右軸の階級帯で読む。</div></div></div></div>
 
 <div class="card" id="p2"><h2>2 脆弱性曲線と乱数の判定<small>P(DS≥k)=Φ(ln(PGA/αθ_k)/β_k), u&lt;P_out → 停止</small></h2>
@@ -76,7 +93,235 @@ select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:6px;border:1p
 
 <div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
 <div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
-<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>静岡変電所 500 kV は断層から 27 km。$M_w=8.5$、増幅 1.6 で $\log_{10}\mathrm{PGV}_{600}=1.776$、地表 PGV 95.5 cm/s、計測震度 <b>6.32（6強）</b>。同じ式で福岡（200 km）は 5弱。</div>
+<div class="aha"><b>つまり。</b>近くは飽和項で頭打ち、遠くは $-\log_{10}X-0.002X$ で 2 段階に減る。$M_w$ は曲線全体を持ち上げ、増幅 $A$ は上下に平行移動するだけ。</div>
+</section>
+<section class="slide" id="s2">
+<div class="hd"><span class="no">2 / 10</span><h2>脆弱性曲線と乱数の判定</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$P(\mathrm{DS}\ge k\mid \mathrm{PGA})=\Phi\!\left(\frac{\ln(\mathrm{PGA}/\alpha\theta_k)}{\beta_k}\right),\qquad P_{\mathrm{out}}=\sum_{k=1}^{4}\big[P(\mathrm{DS}\ge k)-P(\mathrm{DS}\ge k+1)\big]\,q_k,\qquad u<P_{\mathrm{out}}\Rightarrow\text{停止}$$<div class="sym">$\Phi$: 標準正規分布の累積分布、$\theta_k$: 損傷状態 $k$ の中央値 PGA（HAZUS）、$\beta_k$: 対数標準偏差、$\alpha=5$: 日本補正、$q=(0,0.3,1,1)$: 損傷状態ごとに停止する確率、$u\sim U(0,1)$。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>$\Phi$ の中に $\ln$ が入った式を見ても「0.6 g で何割止まるのか」「$\alpha$ を 3 から 5 にすると何が起きるのか」が分からない。乱数 $u$ と比べる、の意味も掴みにくい。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s2" viewBox="0 0 640 300"></svg><div class="read" id="r2"></div></div>
+<div class="ctl"><label>日本補正 α <b id="v2a">5.0</b><input id="c2a" type="range" min="1" max="8" step="0.5" value="5"></label><label>PGA [g] <b id="v2b">0.60</b><input id="c2b" type="range" min="0.05" max="1.5" step="0.01" value="0.60"></label><label>電圧階級 <select id="c2c"><option value="low">≤110 kV</option><option value="mid">154–220 kV</option><option value="high" selected>≥275 kV</option></select></label><div style="display:flex;gap:6px"><button class="btn p" id="b2">乱数を 1 回引く</button><button class="btn" id="b2m">100 回引く</button><button class="btn" id="b2r">リセット</button></div><div class="note">α を上げると曲線が右へ滑り、同じ PGA での停止確率が下がる。乱数 u が赤線(P_out)より下なら停止。100 回引くと停止の割合が P_out に寄っていく。</div></div></div></div>
+
+<div class="card" id="p3"><h2>3 鉄塔の直列系<small>p_line = 1 − (1 − p_tower)^n, n = ℓ/0.35 km</small></h2>
+<div class="row"><div><svg class="plot" id="s3" viewBox="0 0 640 220"></svg><div class="read" id="r3"></div></div>
+<div class="ctl"><label>PGA [g] <b id="v3a">0.60</b><input id="c3a" type="range" min="0.1" max="2.0" step="0.01" value="0.60"></label><label>線路長 ℓ [km] <b id="v3b">20</b><input id="c3b" type="range" min="1" max="100" step="1" value="20"></label><label>1 基の中央値 θ [g] <b id="v3c">12</b><input id="c3c" type="range" min="1" max="20" step="0.5" value="12"></label><button class="btn p" id="b3">全基に乱数を引く</button><div class="note">1 基の確率は小さくても、基数 n が増えると「どれか 1 基」の確率は 1 − (1−p)^n で伸びる。長い線路ほど止まりやすい。</div></div></div></div>
+
+<div class="card" id="p4"><h2>4 停止率曲線の逆変換<small>τ = sup{ t : u &lt; f_c(t) }</small></h2>
+<div class="row"><div><svg class="plot" id="s4" viewBox="0 0 640 300"></svg><div class="read" id="r4"></div></div>
+<div class="ctl"><label>震度階級 <select id="c4c"><option value="5弱">5弱</option><option value="5強">5強</option><option value="6弱" selected>6弱・6強</option><option value="7">7</option></select></label><label>乱数 u <b id="v4a">0.50</b><input id="c4a" type="range" min="0" max="1" step="0.01" value="0.5"></label><div style="display:flex;gap:6px"><button class="btn p" id="b4">200 機を引く</button><button class="btn" id="b4r">消す</button></div><div class="note">水平線 u が階段 f_c(t) の下にある間は停止。200 機引いて「時刻 t に止まっている割合」を重ねると、元の階段と一致する。これが逆変換サンプリング。</div></div></div></div>
+
+<div class="card" id="p5"><h2>5 需給不足と周波数、UFLS<small>(2H/f₀)·df/dt = P_gen − P_load</small></h2>
+<div class="row"><div><svg class="plot" id="s5" viewBox="0 0 640 300"></svg><div class="read" id="r5"></div></div>
+<div class="ctl"><label>供給不足 ΔP [%] <b id="v5a">20</b><input id="c5a" type="range" min="0" max="60" step="1" value="20"></label><label>慣性定数 H [s] <b id="v5b">4.0</b><input id="c5b" type="range" min="1" max="10" step="0.5" value="4"></label><label>UFLS 1 段あたり遮断 [%] <b id="v5c">8</b><input id="c5c" type="range" min="0" max="15" step="1" value="8"></label><label>負荷の周波数依存 D [%/Hz] <b id="v5d">2</b><input id="c5d" type="range" min="0" max="5" step="0.5" value="2"></label><div class="note">60 Hz から出発。UFLS は 59.0 / 58.7 / 58.4 Hz で段階遮断(3 段、動作遅れ 0.2 s)。57.5 Hz を割ると発電機の低周波数保護で全停。ΔP と H を動かして、どこから助からなくなるかを見る。</div></div></div></div>
+
+<div class="card" id="p6"><h2>6 DC 潮流の分流<small>f_ij = (θ_i − θ_j)/x_ij, Bθ = P</small></h2>
+<div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>275 kV の変電所、PGA 0.60 g、$\alpha=5$: $P(\mathrm{DS}\ge k)=(0.569,0.310,0.072,0.000)$ → 差を取って $(0.259,0.238,0.072,0)$ → $P_{\mathrm{out}}=0.238\times0.3+0.072=$<b>0.144</b>。トレースの海部開閉所は 0.88 g で 0.445、引いた $u=0.210$ が下回ったので停止。</div>
+<div class="aha"><b>つまり。</b>曲線は「その強さで壊れている割合」。$\alpha$ は曲線を横に滑らせる係数。乱数と比べるのは、確率を 1 回の当たり外れに変える操作で、100 回引けば割合が曲線に戻る。</div>
+</section>
+<section class="slide" id="s3">
+<div class="hd"><span class="no">3 / 10</span><h2>鉄塔の直列系</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$p_{\mathrm{tower}}=\Phi\!\left(\frac{\ln(\mathrm{PGA}/\theta)}{\beta}\right),\qquad n=\max\!\left(\frac{\ell}{0.35\,\mathrm{km}},1\right),\qquad p_{\ell}=1-(1-p_{\mathrm{tower}})^{n}$$<div class="sym">$\ell$: 線路長 [km]、$n$: 鉄塔基数、$\theta=12$ g、$\beta=0.9$（地震動単独の倒壊は観測ゼロなので大きく置いた仮定）。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>1 基の確率が $10^{-4}$ なら安心に見える。でも線路は何十基もの鉄塔が直列で、どれか 1 基で止まる。$(1-p)^n$ が効いてくる感覚は式からは出てこない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s3" viewBox="0 0 640 220"></svg><div class="read" id="r3"></div></div>
+<div class="ctl"><label>PGA [g] <b id="v3a">0.60</b><input id="c3a" type="range" min="0.1" max="2.0" step="0.01" value="0.60"></label><label>線路長 ℓ [km] <b id="v3b">20</b><input id="c3b" type="range" min="1" max="100" step="1" value="20"></label><label>1 基の中央値 θ [g] <b id="v3c">12</b><input id="c3c" type="range" min="1" max="20" step="0.5" value="12"></label><button class="btn p" id="b3">全基に乱数を引く</button><div class="note">1 基の確率は小さくても、基数 n が増えると「どれか 1 基」の確率は 1 − (1−p)^n で伸びる。長い線路ほど止まりやすい。</div></div></div></div>
+
+<div class="card" id="p4"><h2>4 停止率曲線の逆変換<small>τ = sup{ t : u &lt; f_c(t) }</small></h2>
+<div class="row"><div><svg class="plot" id="s4" viewBox="0 0 640 300"></svg><div class="read" id="r4"></div></div>
+<div class="ctl"><label>震度階級 <select id="c4c"><option value="5弱">5弱</option><option value="5強">5強</option><option value="6弱" selected>6弱・6強</option><option value="7">7</option></select></label><label>乱数 u <b id="v4a">0.50</b><input id="c4a" type="range" min="0" max="1" step="0.01" value="0.5"></label><div style="display:flex;gap:6px"><button class="btn p" id="b4">200 機を引く</button><button class="btn" id="b4r">消す</button></div><div class="note">水平線 u が階段 f_c(t) の下にある間は停止。200 機引いて「時刻 t に止まっている割合」を重ねると、元の階段と一致する。これが逆変換サンプリング。</div></div></div></div>
+
+<div class="card" id="p5"><h2>5 需給不足と周波数、UFLS<small>(2H/f₀)·df/dt = P_gen − P_load</small></h2>
+<div class="row"><div><svg class="plot" id="s5" viewBox="0 0 640 300"></svg><div class="read" id="r5"></div></div>
+<div class="ctl"><label>供給不足 ΔP [%] <b id="v5a">20</b><input id="c5a" type="range" min="0" max="60" step="1" value="20"></label><label>慣性定数 H [s] <b id="v5b">4.0</b><input id="c5b" type="range" min="1" max="10" step="0.5" value="4"></label><label>UFLS 1 段あたり遮断 [%] <b id="v5c">8</b><input id="c5c" type="range" min="0" max="15" step="1" value="8"></label><label>負荷の周波数依存 D [%/Hz] <b id="v5d">2</b><input id="c5d" type="range" min="0" max="5" step="0.5" value="2"></label><div class="note">60 Hz から出発。UFLS は 59.0 / 58.7 / 58.4 Hz で段階遮断(3 段、動作遅れ 0.2 s)。57.5 Hz を割ると発電機の低周波数保護で全停。ΔP と H を動かして、どこから助からなくなるかを見る。</div></div></div></div>
+
+<div class="card" id="p6"><h2>6 DC 潮流の分流<small>f_ij = (θ_i − θ_j)/x_ij, Bθ = P</small></h2>
+<div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>PGA 0.6 g で $p_{\mathrm{tower}}=4.4\times10^{-4}$。20 km の線路は 57 基 → $p_\ell=1-(1-4.4\times10^{-4})^{57}=$<b>0.025</b>。100 km なら 0.12。</div>
+<div class="aha"><b>つまり。</b>直列系は「全員が生き残る確率」の補集合。基数が増えるほど 1 に近づく。だから長い幹線ほど止まりやすく、2 回線は片方が残る分だけ助かる。</div>
+</section>
+<section class="slide" id="s4">
+<div class="hd"><span class="no">4 / 10</span><h2>停止率曲線の逆変換</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$u\sim U(0,1),\qquad \tau=\sup\{\,t:\ u<f_c(t)\,\},\qquad \text{発電機は } t<\tau \text{ の間停止}$$<div class="sym">$f_c(t)$: 震度階級 $c$ で発災後 $t$ 日に止まっている火力の割合（内閣府 2025 の表、非増加）。$\tau$: その機の停止期間。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>「停止率の表」と「1 機ずつの停止期間」がどうつながるのか。$\sup$ という記号を見た瞬間に思考が止まる。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s4" viewBox="0 0 640 300"></svg><div class="read" id="r4"></div></div>
+<div class="ctl"><label>震度階級 <select id="c4c"><option value="5弱">5弱</option><option value="5強">5強</option><option value="6弱" selected>6弱・6強</option><option value="7">7</option></select></label><label>乱数 u <b id="v4a">0.50</b><input id="c4a" type="range" min="0" max="1" step="0.01" value="0.5"></label><div style="display:flex;gap:6px"><button class="btn p" id="b4">200 機を引く</button><button class="btn" id="b4r">消す</button></div><div class="note">水平線 u が階段 f_c(t) の下にある間は停止。200 機引いて「時刻 t に止まっている割合」を重ねると、元の階段と一致する。これが逆変換サンプリング。</div></div></div></div>
+
+<div class="card" id="p5"><h2>5 需給不足と周波数、UFLS<small>(2H/f₀)·df/dt = P_gen − P_load</small></h2>
+<div class="row"><div><svg class="plot" id="s5" viewBox="0 0 640 300"></svg><div class="read" id="r5"></div></div>
+<div class="ctl"><label>供給不足 ΔP [%] <b id="v5a">20</b><input id="c5a" type="range" min="0" max="60" step="1" value="20"></label><label>慣性定数 H [s] <b id="v5b">4.0</b><input id="c5b" type="range" min="1" max="10" step="0.5" value="4"></label><label>UFLS 1 段あたり遮断 [%] <b id="v5c">8</b><input id="c5c" type="range" min="0" max="15" step="1" value="8"></label><label>負荷の周波数依存 D [%/Hz] <b id="v5d">2</b><input id="c5d" type="range" min="0" max="5" step="0.5" value="2"></label><div class="note">60 Hz から出発。UFLS は 59.0 / 58.7 / 58.4 Hz で段階遮断(3 段、動作遅れ 0.2 s)。57.5 Hz を割ると発電機の低周波数保護で全停。ΔP と H を動かして、どこから助からなくなるかを見る。</div></div></div></div>
+
+<div class="card" id="p6"><h2>6 DC 潮流の分流<small>f_ij = (θ_i − θ_j)/x_ij, Bθ = P</small></h2>
+<div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>6弱・6強の曲線は 3 週間 0.90、1 か月 0.23、5 週 0.06。$u=0.5$ なら 0.90 の間は停止、0.23 に落ちる手前で「$u\ge f$」に転じるので $\tau\approx$ <b>25 日</b>。$u=0.95$ なら初日から $0.90<u$ で止まらない。川越火力（震度 7）は曲線が 11 か月まで 1.0 なので $\tau=352$ 日。</div>
+<div class="aha"><b>つまり。</b>水平線 $u$ が階段の下にある間だけ停止。200 機に別々の $u$ を配ると、どの時刻で数えても止まっている割合が元の階段に一致する。表を「機ごとの運命」に翻訳する装置。</div>
+</section>
+<section class="slide" id="s5">
+<div class="hd"><span class="no">5 / 10</span><h2>需給不足と周波数、UFLS</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$\frac{2H}{f_0}\,\frac{df}{dt}=P_{\mathrm{gen}}-P_{\mathrm{load}}\ [\mathrm{pu}]\qquad\Longrightarrow\qquad \frac{df}{dt}=-\frac{\Delta P\,f_0}{2H}$$<div class="sym">$H$: 慣性定数 [s]（回転機の運動エネルギー÷定格）、$f_0=60$ Hz、$\Delta P$: 供給不足率。UFLS（周波数低下リレー）は 59.0/58.7/58.4 Hz で段階遮断、57.5 Hz で発電機保護が働き全停。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>式は 1 行なのに「不足 20% で何秒で全停するのか」「慣性が半分だとどう変わるのか」「UFLS が間に合う条件は」が全く読めない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s5" viewBox="0 0 640 300"></svg><div class="read" id="r5"></div></div>
+<div class="ctl"><label>供給不足 ΔP [%] <b id="v5a">20</b><input id="c5a" type="range" min="0" max="60" step="1" value="20"></label><label>慣性定数 H [s] <b id="v5b">4.0</b><input id="c5b" type="range" min="1" max="10" step="0.5" value="4"></label><label>UFLS 1 段あたり遮断 [%] <b id="v5c">8</b><input id="c5c" type="range" min="0" max="15" step="1" value="8"></label><label>負荷の周波数依存 D [%/Hz] <b id="v5d">2</b><input id="c5d" type="range" min="0" max="5" step="0.5" value="2"></label><div class="note">60 Hz から出発。UFLS は 59.0 / 58.7 / 58.4 Hz で段階遮断(3 段、動作遅れ 0.2 s)。57.5 Hz を割ると発電機の低周波数保護で全停。ΔP と H を動かして、どこから助からなくなるかを見る。</div></div></div></div>
+
+<div class="card" id="p6"><h2>6 DC 潮流の分流<small>f_ij = (θ_i − θ_j)/x_ij, Bθ = P</small></h2>
+<div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>$H=4$ s、不足 20%: $df/dt=-0.2\times60/8=$<b>−1.5 Hz/s</b>。1 秒で 58.5 Hz。UFLS 3 段（各 8%）が 0.2 秒遅れで動くと 24% を切って持ち直す。不足 40% なら 3 段では足りず 57.5 Hz を割る。北海道 2018 は供給の約半分を失い 46.13 Hz まで落ちた。</div>
+<div class="aha"><b>つまり。</b>周波数は「需給の差の積分」。傾きは $\Delta P/H$ で決まり、慣性が小さいほど速い。本モデルの「エリア不足率 25% 超で崩壊」は、この動きを 1 本のしきい値で代理した仮定。</div>
+</section>
+<section class="slide" id="s6">
+<div class="hd"><span class="no">6 / 10</span><h2>DC 潮流の分流</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$P_{ij}=\frac{V_iV_j}{X_{ij}}\sin(\theta_i-\theta_j)\ \approx\ \frac{\theta_i-\theta_j}{x_{ij}},\qquad B\theta=P,\qquad B_{ii}=\sum_j\frac{1}{x_{ij}},\ B_{ij}=-\frac{1}{x_{ij}}$$<div class="sym">$\theta$: 母線の電圧位相角、$x_{ij}$: 枝のリアクタンス [pu]、$P$: 母線注入（発電 − 負荷、MW で与えれば潮流も MW）。$B$ は $1/x$ で重み付けしたグラフラプラシアン。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>$B\theta=P$ は「行列を解く」としか読めない。潮流がどう分かれるのか、線路を 1 本止めたらどこへ行くのかは式の外にある。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>母線 1 に +90 MW、3 に −90 MW。直通 $x_{13}=0.1$、迂回 $x_{12}+x_{23}=0.2$ → $\theta_1-\theta_3=6$ → 直通 <b>60 MW</b>、迂回 <b>30 MW</b>（$1/x$ の比 2:1）。直通を止めると迂回に 90 MW。</div>
+<div class="aha"><b>つまり。</b>潮流は電流の分流と同じで、リアクタンスの逆数に比例して分かれる。止めた枝の分は残りの枝が肩代わりし（LODF）、容量を超えれば保護リレーが次を切る。</div>
+</section>
+<section class="slide" id="s7">
+<div class="hd"><span class="no">7 / 10</span><h2>過負荷の連鎖を 1 手ずつ</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$|f_{ij}|>\gamma S_{ij}\ \Rightarrow\ \text{枝 }(i,j)\text{ を停止},\qquad f'_{l}=f_l+\mathrm{LODF}_{l,k}f_k,\qquad \mathrm{LODF}_{l,k}=\frac{\mathrm{PTDF}_{l,k}}{1-\mathrm{PTDF}_{k,k}}$$<div class="sym">$S_{ij}$: 熱容量 [MVA]、$\gamma=1.25$: 緊急定格倍率、PTDF: 枝 $k$ に 1 MW 送ったとき各枝に現れる潮流（感度）。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>式は「停止したら潮流が動く」と言うだけ。連鎖が止まるのか、どこまで広がるのか、孤立が生まれるのかは、実際に 1 手ずつ切ってみないと分からない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>トレースでは反復 1 回目に過負荷 45 本、最大 409%（77 kV 線に 382 MW、緊急定格 117 MW）。上位 3 本を止めて解き直すと 32 本、最大 305% … 8 反復で 24 本停止。左の 6 母線網で同じことを手で進められる。</div>
+<div class="aha"><b>つまり。</b>連鎖は「止める → 残りに集中 → また止める」の繰り返し。網目が多ければ分散して収まり、細い所に集まれば孤立を生む。だから停電は壊れた場所だけでは決まらない。</div>
+</section>
+<section class="slide" id="s8">
+<div class="hd"><span class="no">8 / 10</span><h2>復旧のスケジューリング</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$\tau_e\sim\mathrm{LN}(\ln\mu_k,\beta_k),\qquad c_e=\min_{\text{班}}(\text{空く時刻})+\tau_e,\qquad \text{順序: } (\mathrm{kV}\downarrow,\ L\downarrow)$$<div class="sym">$\tau_e$: 修理日数（対数正規、変電所 DS1〜4 の中央値 1/3/7/30 日）、$c_e$: 完了時刻、班は最小ヒープで管理、3 日目から応援で班数 2 倍。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>「班に順に割り当てる」と書いてあっても、班数を 2 倍にしたら復旧が 2 倍速くなるのか、順序を変えると何が起きるのかは式では判断できない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>トレースでは復旧ジョブ 383 件、中部の班 1 は 500 kV 開閉所（71.6 日）、班 2 は第二浜岡幹線（135 日）に張り付き、需要の大きい 275 kV 変電所は班 3 以降。稼働人数はほぼ班数上限に張り付く（人手が律速）。</div>
+<div class="aha"><b>つまり。</b>復旧曲線は「班数 × 修理時間 × 順序」の帰結。上位から直すと下流の多くが早く戻るが、長い修理を先頭に置くと班が塞がる。順序は設計変数。</div>
+</section>
+<section class="slide" id="s9">
+<div class="hd"><span class="no">9 / 10</span><h2>モンテカルロの収束</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$\hat p_N=\frac1N\sum_{s=1}^{N}\mathbb 1[\text{停電}^{(s)}],\qquad \mathrm{SE}(\hat p_N)=\sqrt{\frac{p(1-p)}{N}},\qquad E[T_i]=\int_0^{90}\big(1-\bar\phi_i(t)\big)\,dt$$<div class="sym">$N$: サンプル数（本番 200）、$\bar\phi_i$: 母線 $i$ が受電可能である割合の平均、$E[T_i]$: 期待停電日数。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>「200 回回した平均」がどれだけ信用できるのかは、$1/\sqrt N$ の式を見ても実感がない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>$p=0.3$、$N=200$: SE $=\sqrt{0.3\times0.7/200}=$<b>±0.032</b>。五地域の直後 1,003 万軒は 200 サンプルの平均で、母線 1 点の停電確率は ±0.03 ほど揺れる。</div>
+<div class="aha"><b>つまり。</b>誤差は $1/\sqrt N$ でしか縮まない。4 倍回して半分。だから母線ごとの細かい差を読むより、地域の合計や順位で読む。</div>
+</section>
+<section class="slide" id="s10">
+<div class="hd"><span class="no">10 / 10</span><h2>経路の生存率（ポテンシャル法）</h2></div>
+<div class="tex"><div class="lab">教科書ではこう書く</div>$$S=\prod_{e\in\text{path}}(1-p_e)=\exp\!\Big(-\sum_e w_e\Big),\quad w_e=-\ln(1-p_e),\qquad d_i=\min_{g}\mathrm{dist}_w(g\to i),\qquad P^{\mathrm{pot}}_{\mathrm{out}}=1-e^{-d_i}A^{\mathrm{sup}}_i$$<div class="sym">$p_e$: 要素の停止確率、$w_e$: 重み（積を和に変える）、$d_i$: 電源からの最短路長（Dijkstra）、$A^{\mathrm{sup}}$: 半径 80 km の供給余力。並列 $m$ 本なら $1-(1-S)^m$。</div></div>
+<p class="doubt"><b>でも、これだけでは見えない。</b>「$-\ln(1-p)$ を重みにして最短路」と言われても、なぜそれが生存率になるのか、なぜ被災域で 1 に飽和するのかがつながらない。</p>
+<div class="card"><div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div></div>
+<div class="concrete"><b>具体的には。</b>経路上に $p=0.1$ の変電所が 6 か所: $S=0.9^6=$<b>0.53</b>、重み和 $6\times0.105=0.63$、$e^{-0.63}=0.53$ で一致。迂回路が 2 本あれば $1-(1-0.53)^2=0.78$ に持ち直す。v0 は $m=1$ しか見ていない。</div>
+<div class="aha"><b>つまり。</b>積は対数で和になるから最短路で解ける。ただし直列だけ見ると長い経路はすぐ 0 に飽和する。冗長経路（並列）を数えるのが次の改良。</div>
+</section>
 </div>
 <script>
 const $=id=>document.getElementById(id);
@@ -208,4 +453,13 @@ function p10(){const k=+$("c10a").value,p=+$("c10b").value,m=+$("c10c").value;co
  const S1=Math.pow(1-p,k),Sm=1-Math.pow(1-S1,m);s+=`<circle cx="${a.X(k)}" cy="${a.Y(Sm)}" r="5" fill="#c2361f"/>`;svg.innerHTML=s;
  $("r10").innerHTML=`直列 k=${k}, p=${fmt(p)}: S = (1−p)^k = <b>${fmt(S1,3)}</b>(重み和 Σw = ${fmt(-k*Math.log(1-p),2)})。並列 m=${m} 本なら 1−(1−S)^m = <b>${fmt(Sm,3)}</b>。灰線は m=1〜4。`;}
 ["c10a","c10b","c10c"].forEach((id,i)=>bind(id,["v10a","v10b","v10c"][i],p10,i===1?2:0));p10();
+
+// ── slide navigation
+const slides=[...document.querySelectorAll(".slide")];const titles=["はじめに",...slides.slice(1).map(s=>s.querySelector("h2").textContent)];
+const dots=$("ndots");slides.forEach((s,i)=>{const a=document.createElement("a");a.href="#"+s.id;a.title=titles[i];dots.appendChild(a);});
+let cur=0;function setCur(i){cur=Math.max(0,Math.min(slides.length-1,i));[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===cur));$("ntitle").textContent=`${cur} / ${slides.length-1} ${titles[cur]}`;}
+function go(i){setCur(i);slides[cur].scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});}
+$("nprev").onclick=()=>go(cur-1);$("nnext").onclick=()=>go(cur+1);
+document.addEventListener("keydown",e=>{if(["INPUT","SELECT","BUTTON"].includes(document.activeElement.tagName)&&e.key!=="Escape")return;if(e.key==="ArrowRight"||e.key==="PageDown")go(cur+1);else if(e.key==="ArrowLeft"||e.key==="PageUp")go(cur-1);});
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setCur(slides.indexOf(e.target));});},{threshold:.5});slides.forEach(s=>io.observe(s));setCur(0);
 </script>
