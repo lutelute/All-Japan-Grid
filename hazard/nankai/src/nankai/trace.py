@@ -165,7 +165,7 @@ def trace_sample(sim, seed: int = 7, max_line_events: int = 60, max_gen_events: 
            delta={"state": [round(float(x), 2) for x in out], "phys": [int(x) for x in ph]}, t=float(t))
     return {"pseudo": PSEUDO, "steps": steps,
             "bus": {"lat": [round(float(x), 4) for x in lat], "lon": [round(float(x), 4) for x in lon], "load": [round(float(x), 1) for x in load], "name": [str(x)[:20] for x in bus_name], "junction": [int(x) for x in sim.junction]},
-            "line": {"f": [int(x) for x in sim.bf], "t": [int(x) for x in sim.bt], "kv": [int(x) for x in sim.br_kv]},
+            "line": {"f": [int(x) for x in sim.bf], "t": [int(x) for x in sim.bt], "kv": [int(x) for x in sim.br_kv], "path": line_paths(case, lat, lon)},
             "gen": {"b": [int(x) for x in sim.gb], "p": [round(float(x), 1) for x in gp], "name": [str(x)[:20] for x in gname]},
             "timeline": [float(x) for x in T], "seed": seed, "island": case.island}
 
@@ -267,3 +267,38 @@ def _evaluate_steps(sim, bus_alive, br_alive, gen_cap, load0, I, zones, ev, lat,
     bo_m = blackout > 0; frac[bo_m] = 0; phys[bo_m] = 0
     ev(10, 9, f"t = {t_label}: 直後の状態", f"受電可能 {float((phys*load).sum()/load.sum()):.0%}、供給率 {float((frac*load).sum()/load.sum()):.0%}。連鎖で停止した枝 {len(tripped_all)} 本。", delta={"state": [round(float(x), 2) for x in frac], "phys": [int(x) for x in phys]}, t=0.0)
     return frac, phys, blackout
+
+
+def line_paths(case, lat, lon, tol_deg: float = 0.0015):
+    """枝 → 正典(built all.json)の OSM 実線形。端点座標(1e-4°)で照合し、無ければ 150m 以内の最近傍端点で再照合。
+    見つからない枝(変圧器・座標丸めのずれ)は None(ビューアは点線で描く)。線形は Douglas-Peucker で間引く。"""
+    import json, os
+    from shapely.geometry import LineString
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
+    E = json.load(open(os.path.join(root, "docs", "data", "built", "all.json")))["edges"]
+    def k(la, lo): return (round(la, 4), round(lo, 4))
+    idx = {}
+    for e in E:
+        if not e.get("path") or len(e["path"]) < 2:
+            continue
+        a, b = k(*e["a"]), k(*e["b"]); idx.setdefault((a, b), e["path"]); idx.setdefault((b, a), e["path"][::-1])
+    from scipy.spatial import cKDTree
+    E = [e for e in E if e.get("path") and len(e["path"]) >= 2]
+    ends = np.array([[e["a"][0], e["a"][1]] for e in E] + [[e["b"][0], e["b"][1]] for e in E]); tree = cKDTree(ends); nE = len(E)
+    out = []
+    for f, t, kind in zip(case.branch.f.to_numpy(), case.branch.t.to_numpy(), case.branch.kind.to_numpy()):
+        if kind != "line":
+            out.append(None); continue
+        key = (k(lat[f], lon[f]), k(lat[t], lon[t])); path = idx.get(key)
+        if path is None:
+            df_, jf = tree.query([lat[f], lon[f]], distance_upper_bound=tol_deg); dt_, jt = tree.query([lat[t], lon[t]], distance_upper_bound=tol_deg)
+            if np.isfinite(df_) and np.isfinite(dt_) and (jf % nE) == (jt % nE) and jf != jt:
+                e = E[jf % nE]; path = e["path"] if jf < nE else e["path"][::-1]
+        if path is None or len(path) < 2:
+            out.append(None); continue
+        try:
+            ls = LineString([(p[1], p[0]) for p in path]).simplify(0.0008, preserve_topology=False)
+            out.append([[round(y, 4), round(x, 4)] for x, y in ls.coords])
+        except Exception:
+            out.append(None)
+    return out

@@ -52,7 +52,7 @@ select{font:inherit;font-size:12.5px;padding:6px;border-radius:6px;border:1px so
     <input id="sl" type="range" min="0" max="0" value="0" aria-label="手">
     <div class="row"><span class="sub mono" id="cnt"></span><span style="flex:1"></span><label class="sub">速さ <select id="spd"><option value="1200">ゆっくり</option><option value="500" selected>ふつう</option><option value="150">速い</option><option value="40">一気に</option></select></label><label class="sub">段階 <select id="jump"></select></label></div>
   </div>
-  <div class="legend"><span><i style="background:var(--ok)"></i>供給</span><span><i style="background:var(--shed)"></i>比例遮断</span><span><i style="background:var(--shake)"></i>変電所 揺れ停止</span><span><i style="background:var(--tsu)"></i>変電所 津波停止</span><span><i style="background:var(--iso)"></i>上流孤立</span><span><i style="background:var(--black)"></i>系統崩壊</span><span><i class="l" style="background:var(--fail)"></i>線路停止</span><span><i class="l" style="background:var(--over)"></i>過負荷</span><span><i style="background:var(--hl);border:1px solid #000"></i>いまの手</span></div>
+  <div class="legend"><span><i style="background:var(--ok)"></i>供給</span><span><i style="background:var(--shed)"></i>比例遮断</span><span><i style="background:var(--shake)"></i>変電所 揺れ停止</span><span><i style="background:var(--tsu)"></i>変電所 津波停止</span><span><i style="background:var(--iso)"></i>上流孤立</span><span><i style="background:var(--black)"></i>系統崩壊</span><span><i class="l" style="background:var(--fail)"></i>線路停止</span><span><i class="l" style="background:var(--over)"></i>過負荷</span><span><i class="l" style="background:#9a9a9a;height:0;border-top:2px dashed #9a9a9a"></i>実線形なし(端点を直線で仮描画)</span><span><i style="background:var(--hl);border:1px solid #000"></i>いまの手</span></div>
 </div>
 <script>
 const D=/*__DATA__*/null;
@@ -81,7 +81,9 @@ function goto(k){k=Math.max(0,Math.min(N-1,k));if(k<cur||cur<0){reset();for(let 
 const busM=B.lat.map((la,i)=>L.circleMarker([la,B.lon[i]],{renderer:cv,radius:B.junction[i]?1.2:2+Math.sqrt(Math.min(B.load[i],500)/500)*6,weight:0,fillOpacity:.85,fillColor:"#999"}).bindPopup(()=>popBus(i)));
 const busL=L.layerGroup(busM).addTo(map);
 const lineM=[];const lineL=L.layerGroup().addTo(map);
-for(let k=0;k<nl;k++){const f=LN.f[k],t=LN.t[k];lineM.push(L.polyline([[B.lat[f],B.lon[f]],[B.lat[t],B.lon[t]]],{renderer:cv,color:"#9a9a9a",weight:LN.kv[k]>=275?1.2:.5,opacity:.35,interactive:false}));}
+function lineCoords(k){const p=LN.path&&LN.path[k];if(p&&p.length>1)return p;const f=LN.f[k],t=LN.t[k];return [[B.lat[f],B.lon[f]],[B.lat[t],B.lon[t]]];}
+const hasPath=k=>!!(LN.path&&LN.path[k]&&LN.path[k].length>1);
+for(let k=0;k<nl;k++){lineM.push(L.polyline(lineCoords(k),{renderer:cv,color:"#9a9a9a",weight:LN.kv[k]>=275?1.2:.5,opacity:.35,dashArray:hasPath(k)?null:"3 4",interactive:false}));}
 lineM.forEach(m=>lineL.addLayer(m));
 const hlL=L.layerGroup().addTo(map);
 function popBus(i){const s=S[cur];return `<b>${B.name[i]}</b><br>需要 ${B.load[i]} MW${I?` ・ 震度 ${I[i]}`:""}<br>状態: ${bus[i]}${state?` ・ 供給率 ${Math.round(state[i]*100)}%`:""}`;}
@@ -97,7 +99,7 @@ function render(){const s=S[cur];const t=s.t!=null?s.t:null;
   else m.setStyle({color:"#9a9a9a",weight:LN.kv[k]>=275?1.2:.5,opacity:.35});});
  hlL.clearLayers();const h=s.hl||{};
  (h.b||[]).forEach(i=>hlL.addLayer(L.circleMarker([B.lat[i],B.lon[i]],{renderer:cv,radius:7,color:"#000",weight:1.2,fillColor:css("--hl"),fillOpacity:.9,interactive:false})));
- (h.l||[]).forEach(k=>{const f=LN.f[k],tt=LN.t[k];hlL.addLayer(L.polyline([[B.lat[f],B.lon[f]],[B.lat[tt],B.lon[tt]]],{renderer:cv,color:css("--hl"),weight:5,opacity:.9,interactive:false}));});
+ (h.l||[]).forEach(k=>{hlL.addLayer(L.polyline(lineCoords(k),{renderer:cv,color:css("--hl"),weight:5,opacity:.9,interactive:false}));});
  if((h.b||[]).length===1||((h.l||[]).length===1&&!(h.b||[]).length)){const i=(h.b||[])[0];const k=(h.l||[])[0];const la=i!=null?B.lat[i]:(B.lat[LN.f[k]]+B.lat[LN.t[k]])/2,lo=i!=null?B.lon[i]:(B.lon[LN.f[k]]+B.lon[LN.t[k]])/2;if(!map.getBounds().pad(-0.2).contains([la,lo]))map.panTo([la,lo],{animate:true,duration:.4});}
  document.getElementById("ph").textContent=PH[s.ph]||"";document.getElementById("ti").textContent=s.ti;document.getElementById("tx").textContent=s.tx;
  document.getElementById("cnt").textContent=`${cur+1} / ${N} 手`;document.getElementById("sl").value=cur;

@@ -20,6 +20,7 @@ class DamageSample:
     done_site: np.ndarray; done_line: np.ndarray; done_gen: np.ndarray   # 復旧完了日(健全は 0)
     intensity: np.ndarray; pga_g: np.ndarray
     blackout_until: np.ndarray | None = None   # 母線ごとの系統崩壊からの復電日(0=崩壊なし)
+    jobs: list | None = None                   # 復旧ジョブ(id, zone, kv, load_mw, duration_d) — 資源勘定用
 
 
 class Simulator:
@@ -146,6 +147,7 @@ class Simulator:
                    else self.rm.repair_time_days("line", 4, int(lc[k]), rng))
             jobs.append({"id": ("l", int(k)), "zone": self.br_zone[k], "kv": self.br_kv[k], "load_mw": 0.0, "duration_d": dur})
         done = self.rm.schedule(jobs, rng)
+        self._last_jobs = jobs
         done_site = np.zeros(len(sds)); done_line = np.zeros(len(lf)); done_gen = np.zeros(len(gds))
         for (kind, i), t in done.items():
             (done_site if kind == "s" else done_line)[i] = t
@@ -153,7 +155,7 @@ class Simulator:
         done_gen = gout.copy()
         for i in np.where(gds >= gff)[0]:
             done_gen[i] = max(done_gen[i], self.rm.repair_time_days("generator", int(gds[i]), int(gcause[i]), rng))
-        return DamageSample(sds, scause, lf, lc, gds, gout, gcause, done_site, done_line, done_gen, hs.intensity, hs.pga_g)
+        return DamageSample(sds, scause, lf, lc, gds, gout, gcause, done_site, done_line, done_gen, hs.intensity, hs.pga_g, jobs=jobs)
 
     def _load_factor(self, d: DamageSample, t_days: float) -> np.ndarray:
         """需要減係数(母線ごと)。demand_reduction が無効なら 1。"""
