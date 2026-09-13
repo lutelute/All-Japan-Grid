@@ -18,7 +18,8 @@
 |---|---|
 | `REPORT_v0.md` | 判断レポート（方法・較正 24 変種・結果・負の結果・限界・記録） |
 | `TECHNICAL_NOTE.pdf` / `.md` | 技術ノート（入力データ、地震動・津波の場、損傷、系統評価、系統崩壊と swing 方程式、復旧と待ち行列、モンテカルロ、ポテンシャル法、較正と検証、内閣府の採用手法との対応、限界、再現手順） |
-| `slides_4_summary.pptx` | **プレゼン差し込み用 4 枚**（構図 → 4 つの手 → インパクト GIF → 数字と一言）。GIF は `viewers/impact_all_japan.gif`（PowerPoint のスライドショーで動く）、動画版 `impact_all_japan.mp4` |
+| `slides_4_summary.pptx` | **プレゼン差し込み用 4 枚**（構図 → 4 つの手 → シネマティック GIF → 数字と一言）。3 枚目は `viewers/cinematic.gif`（PowerPoint のスライドショーで動く）、動画版 `viewers/cinematic.mp4`（1920×1080・34 秒）。旧版のインパクト GIF は `viewers/impact_all_japan.gif` |
+| `viewers/cinematic.mp4` / `.gif` | **「夜の灯りが消えて戻る」シネマティック**：ふだんの夜 → 衝撃波 → 灯りが消える → 津波がトラフ軸から海を渡り A40 浸水想定域を水没 → 引き波 → 90 日で灯りが戻る（停電中の需要家カウンタ・内閣府 2025 併記）。灯り = √需要 × 受電可能確率。津波の到達順は海上最短経路（Dijkstra）の演出で伝播計算ではない。生成: `hazard/nankai/scripts/make_cinematic.py` |
 | `slides_28.pptx` | 解説デッキ 28 枚（系統モデルの意義、需給・周波数・リレー、結果、負の結果） |
 | `viewers/equations_play.html` | 数式スライド 12 枚（教科書の式 → 見えない → 動かす → 具体例 → つまり → なぜモデル化できるか → 文献と歴史の横軸フロー → 良し悪し／総括／参考文献） |
 | `viewers/blackboard_notes.html` | 黒板ノート 15 板書 |

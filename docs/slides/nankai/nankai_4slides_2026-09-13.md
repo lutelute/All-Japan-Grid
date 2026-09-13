@@ -58,9 +58,11 @@ flowchart LR
 <!-- _class: figure-full -->
 <!-- source: All-Japan-Grid hazard/nankai run_v1 (N=200), J-SHIS AN177, KSJ A40 -->
 
-# こうなりました — 直後 1,003 万軒、4 日で 4 割が残り、沿岸は 2 か月
+# 夜の灯りが消え、津波が沿岸を呑み、3 か月かけて戻る
 
-![](../../reports/nankai_hazard_2026-09-13/impact_all_japan.gif)
+![](../../reports/nankai_hazard_2026-09-13/cinematic.gif)
+
+<!-- note: 34 秒。ふだんの夜 → 衝撃波 → 灯りが消える → 津波がトラフ軸から海を渡って A40 浸水想定域を水没 → 引き波 → 日ごとに灯りが戻る(停電中の需要家カウンタ・内閣府 2025 の数字を併記)。灯り = √需要 × 受電可能確率(モンテカルロ平均)。津波の到達順は海上最短経路の演出で伝播計算ではない。 -->
 
 ---
 
