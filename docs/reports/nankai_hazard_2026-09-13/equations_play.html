@@ -1,0 +1,211 @@
+<title>数式の動き 南海トラフ電力解析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f4f1e8;--card:#fffdf7;--ink:#20242a;--muted:#6a6f78;--line:#d9d4c5;--acc:#1f5f8b;--acc2:#c2361f;--ok:#2e8b57;--warn:#e3a33a;--grid:#e6e1d3;--chalk:#1f3b34}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14.5px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 16px 60px}
+h1{font-family:"Zen Kaku Gothic New",sans-serif;font-size:26px;margin:8px 0 2px;font-weight:900}
+.lead{color:var(--muted);margin:0 0 14px;max-width:72ch}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+nav a{font-size:12px;color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:3px 9px;background:var(--card)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 18px;box-shadow:0 2px 10px rgba(40,40,30,.06)}
+.card h2{font-family:"Zen Kaku Gothic New",sans-serif;font-size:19px;margin:0 0 4px;font-weight:700}
+.card h2 small{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin-left:8px;font-weight:400}
+.formula{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--chalk);background:#eef2ec;border-left:3px solid var(--chalk);padding:6px 10px;margin:6px 0 10px;overflow-x:auto;white-space:nowrap}
+.row{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+.ctl{display:grid;gap:8px}
+.ctl label{display:grid;grid-template-columns:1fr auto;font-size:12.5px;color:var(--muted);gap:4px}
+.ctl label b{color:var(--ink);font-family:"IBM Plex Mono",monospace;font-weight:500}
+.ctl input[type=range]{width:100%;accent-color:var(--acc);grid-column:1/3;margin:0}
+.btn{font:inherit;font-size:13px;padding:7px 11px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.btn.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.read{font-size:13.5px;padding:8px 10px;border-radius:6px;background:#f2f6f4;border:1px dashed #b9c9c2;margin-top:8px;min-height:2.4em}
+.read b{color:var(--acc2)}
+svg.plot{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:6px}
+svg.plot text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:#444}
+svg.plot .ax{stroke:#888;stroke-width:1}
+svg.plot .gr{stroke:var(--grid);stroke-width:1}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:#fff}
+.note{font-size:12px;color:var(--muted);margin-top:6px}
+@media (prefers-reduced-motion: reduce){.anim{transition:none}}
+</style>
+<div class="wrap">
+<h1>数式の動き</h1>
+<p class="lead">黒板ノートの式を、つまみを動かして体感する。曲線がどう動くか、乱数を引くと何が起きるか、線路を 1 本切ると潮流がどこへ行くか、周波数がどう落ちるか。</p>
+<nav><a href="#p1">1 距離減衰</a><a href="#p2">2 脆弱性曲線と乱数</a><a href="#p3">3 鉄塔の直列系</a><a href="#p4">4 停止率曲線の逆変換</a><a href="#p5">5 周波数と UFLS</a><a href="#p6">6 DC潮流の分流</a><a href="#p7">7 過負荷の連鎖(1手ずつ)</a><a href="#p8">8 復旧と作業班</a><a href="#p9">9 モンテカルロの収束</a><a href="#p10">10 経路の生存率</a></nav>
+
+<div class="card" id="p1"><h2>1 距離減衰式<small>log10 PGV = 0.58Mw + 0.0038D − 1.29 − log10(X + 0.0028·10^0.5Mw) − 0.002X</small></h2>
+<div class="row"><div><svg class="plot" id="s1" viewBox="0 0 640 300"></svg><div class="read" id="r1"></div></div>
+<div class="ctl"><label>Mw <b id="v1a">8.5</b><input id="c1a" type="range" min="7.0" max="9.1" step="0.1" value="8.5"></label><label>地表増幅 A <b id="v1b">1.6</b><input id="c1b" type="range" min="1.0" max="2.5" step="0.1" value="1.6"></label><label>見たい距離 X [km] <b id="v1c">27</b><input id="c1c" type="range" min="5" max="300" step="1" value="27"></label><div class="note">Mw を上げると近距離は頭打ち(飽和項)、遠方は全体が持ち上がる。増幅 A は曲線を上下に平行移動するだけ。震度は右軸の階級帯で読む。</div></div></div></div>
+
+<div class="card" id="p2"><h2>2 脆弱性曲線と乱数の判定<small>P(DS≥k)=Φ(ln(PGA/αθ_k)/β_k), u&lt;P_out → 停止</small></h2>
+<div class="row"><div><svg class="plot" id="s2" viewBox="0 0 640 300"></svg><div class="read" id="r2"></div></div>
+<div class="ctl"><label>日本補正 α <b id="v2a">5.0</b><input id="c2a" type="range" min="1" max="8" step="0.5" value="5"></label><label>PGA [g] <b id="v2b">0.60</b><input id="c2b" type="range" min="0.05" max="1.5" step="0.01" value="0.60"></label><label>電圧階級 <select id="c2c"><option value="low">≤110 kV</option><option value="mid">154–220 kV</option><option value="high" selected>≥275 kV</option></select></label><div style="display:flex;gap:6px"><button class="btn p" id="b2">乱数を 1 回引く</button><button class="btn" id="b2m">100 回引く</button><button class="btn" id="b2r">リセット</button></div><div class="note">α を上げると曲線が右へ滑り、同じ PGA での停止確率が下がる。乱数 u が赤線(P_out)より下なら停止。100 回引くと停止の割合が P_out に寄っていく。</div></div></div></div>
+
+<div class="card" id="p3"><h2>3 鉄塔の直列系<small>p_line = 1 − (1 − p_tower)^n, n = ℓ/0.35 km</small></h2>
+<div class="row"><div><svg class="plot" id="s3" viewBox="0 0 640 220"></svg><div class="read" id="r3"></div></div>
+<div class="ctl"><label>PGA [g] <b id="v3a">0.60</b><input id="c3a" type="range" min="0.1" max="2.0" step="0.01" value="0.60"></label><label>線路長 ℓ [km] <b id="v3b">20</b><input id="c3b" type="range" min="1" max="100" step="1" value="20"></label><label>1 基の中央値 θ [g] <b id="v3c">12</b><input id="c3c" type="range" min="1" max="20" step="0.5" value="12"></label><button class="btn p" id="b3">全基に乱数を引く</button><div class="note">1 基の確率は小さくても、基数 n が増えると「どれか 1 基」の確率は 1 − (1−p)^n で伸びる。長い線路ほど止まりやすい。</div></div></div></div>
+
+<div class="card" id="p4"><h2>4 停止率曲線の逆変換<small>τ = sup{ t : u &lt; f_c(t) }</small></h2>
+<div class="row"><div><svg class="plot" id="s4" viewBox="0 0 640 300"></svg><div class="read" id="r4"></div></div>
+<div class="ctl"><label>震度階級 <select id="c4c"><option value="5弱">5弱</option><option value="5強">5強</option><option value="6弱" selected>6弱・6強</option><option value="7">7</option></select></label><label>乱数 u <b id="v4a">0.50</b><input id="c4a" type="range" min="0" max="1" step="0.01" value="0.5"></label><div style="display:flex;gap:6px"><button class="btn p" id="b4">200 機を引く</button><button class="btn" id="b4r">消す</button></div><div class="note">水平線 u が階段 f_c(t) の下にある間は停止。200 機引いて「時刻 t に止まっている割合」を重ねると、元の階段と一致する。これが逆変換サンプリング。</div></div></div></div>
+
+<div class="card" id="p5"><h2>5 需給不足と周波数、UFLS<small>(2H/f₀)·df/dt = P_gen − P_load</small></h2>
+<div class="row"><div><svg class="plot" id="s5" viewBox="0 0 640 300"></svg><div class="read" id="r5"></div></div>
+<div class="ctl"><label>供給不足 ΔP [%] <b id="v5a">20</b><input id="c5a" type="range" min="0" max="60" step="1" value="20"></label><label>慣性定数 H [s] <b id="v5b">4.0</b><input id="c5b" type="range" min="1" max="10" step="0.5" value="4"></label><label>UFLS 1 段あたり遮断 [%] <b id="v5c">8</b><input id="c5c" type="range" min="0" max="15" step="1" value="8"></label><label>負荷の周波数依存 D [%/Hz] <b id="v5d">2</b><input id="c5d" type="range" min="0" max="5" step="0.5" value="2"></label><div class="note">60 Hz から出発。UFLS は 59.0 / 58.7 / 58.4 Hz で段階遮断(3 段、動作遅れ 0.2 s)。57.5 Hz を割ると発電機の低周波数保護で全停。ΔP と H を動かして、どこから助からなくなるかを見る。</div></div></div></div>
+
+<div class="card" id="p6"><h2>6 DC 潮流の分流<small>f_ij = (θ_i − θ_j)/x_ij, Bθ = P</small></h2>
+<div class="row"><div><svg class="plot" id="s6" viewBox="0 0 640 300"></svg><div class="read" id="r6"></div></div>
+<div class="ctl"><label>注入 P₁ = −P₃ [MW] <b id="v6a">90</b><input id="c6a" type="range" min="10" max="300" step="5" value="90"></label><label>直通 x₁₃ <b id="v6b">0.10</b><input id="c6b" type="range" min="0.02" max="0.5" step="0.01" value="0.10"></label><label>迂回 x₁₂ + x₂₃ <b id="v6c">0.20</b><input id="c6c" type="range" min="0.02" max="0.8" step="0.01" value="0.20"></label><label>直通の容量 [MW] <b id="v6d">80</b><input id="c6d" type="range" min="20" max="300" step="5" value="80"></label><label><input type="checkbox" id="c6e"> 直通 1–3 を停止する</label><div class="note">潮流は 1/x に比例して分かれる(電流の分流と同じ)。直通を止めると全量が迂回路に乗る(LODF = 1)。破線の矢印の速さが潮流の大きさ。</div></div></div></div>
+
+<div class="card" id="p7"><h2>7 過負荷の連鎖を 1 手ずつ<small>|f| &gt; γS → 停止 → 解き直し</small></h2>
+<div class="row"><div><svg class="plot" id="s7" viewBox="0 0 640 320"></svg><div class="read" id="r7"></div></div>
+<div class="ctl"><label>需要 [MW] <b id="v7a">300</b><input id="c7a" type="range" min="100" max="600" step="10" value="300"></label><label>緊急定格 γ <b id="v7b">1.25</b><input id="c7b" type="range" min="1.0" max="2.0" step="0.05" value="1.25"></label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn p" id="b7">1 手進める(最過負荷を停止)</button><button class="btn" id="b7r">リセット</button><button class="btn" id="b7k">左の線路を故障させる</button></div><div class="note">6 母線の小さな網。左上の発電所 2 基から右下の需要へ。線路の色が負荷率(緑→黄→赤)。1 手ごとに最も過負荷の線路を止めて解き直す。孤立した母線は灰色になる。</div></div></div></div>
+
+<div class="card" id="p8"><h2>8 復旧スケジューリング<small>c_e = 空き班の時刻 + τ_e、優先 = 電圧→需要</small></h2>
+<div class="row"><div><svg class="plot" id="s8" viewBox="0 0 640 320"></svg><div class="read" id="r8"></div></div>
+<div class="ctl"><label>作業班数 <b id="v8a">3</b><input id="c8a" type="range" min="1" max="12" step="1" value="3"></label><label>応援開始 [日] <b id="v8b">3</b><input id="c8b" type="range" min="1" max="10" step="1" value="3"></label><label>ジョブ数 <b id="v8c">18</b><input id="c8c" type="range" min="5" max="40" step="1" value="18"></label><label>優先順 <select id="c8d"><option value="kv">電圧が高い順 → 需要大</option><option value="load">需要が大きい順</option><option value="short">修理が短い順</option><option value="random">ランダム</option></select></label><button class="btn" id="b8">ジョブを引き直す</button><div class="note">上: ガント(班ごとの担当)。下: 需要の復旧率。班数と順序で曲線がどう変わるかを見る。</div></div></div></div>
+
+<div class="card" id="p9"><h2>9 モンテカルロの収束<small>p̂ = (1/N)Σ 1[停電], SE = √(p(1−p)/N)</small></h2>
+<div class="row"><div><svg class="plot" id="s9" viewBox="0 0 640 260"></svg><div class="read" id="r9"></div></div>
+<div class="ctl"><label>真の停電確率 p <b id="v9a">0.30</b><input id="c9a" type="range" min="0.02" max="0.98" step="0.01" value="0.30"></label><div style="display:flex;gap:6px"><button class="btn p" id="b9">200 サンプル回す</button><button class="btn" id="b9r">リセット</button></div><div class="note">推定値は 1/√N で真値に寄る。N=200 で p=0.3 なら ±0.03。帯は ±1 標準誤差。</div></div></div></div>
+
+<div class="card" id="p10"><h2>10 経路の生存率(ポテンシャル法)<small>S = Π(1−p_e) = exp(−Σ w_e), w = −ln(1−p)</small></h2>
+<div class="row"><div><svg class="plot" id="s10" viewBox="0 0 640 220"></svg><div class="read" id="r10"></div></div>
+<div class="ctl"><label>経路上の要素数 k <b id="v10a">6</b><input id="c10a" type="range" min="1" max="20" step="1" value="6"></label><label>各要素の停止確率 p <b id="v10b">0.10</b><input id="c10b" type="range" min="0.01" max="0.6" step="0.01" value="0.10"></label><label>迂回路の本数 m <b id="v10c">1</b><input id="c10c" type="range" min="1" max="4" step="1" value="1"></label><div class="note">直列は積で落ちる。同じ経路が m 本並列にあると 1 − (1 − S)^m で持ち直す。ポテンシャル法 v0 は m=1 しか見ていない(飽和の原因)。</div></div></div></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const lin=(a,b,n)=>Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+function erf(x){const s=Math.sign(x);x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+const Phi=z=>0.5*(1+erf(z/Math.SQRT2));
+const fmt=(v,d=2)=>Number(v).toFixed(d);
+function bind(id,vid,fn,d=2){const el=$(id);const upd=()=>{ $(vid).textContent=fmt(el.value,d);fn();};el.addEventListener("input",upd);return upd;}
+// generic plot helper
+function axes(svg,x0,x1,y0,y1,opt={}){const W=640,H=+svg.getAttribute("viewBox").split(" ")[3],L=52,R=opt.right||16,T=14,B=34;const X=x=>L+(W-L-R)*(x-x0)/(x1-x0),Y=y=>T+(H-T-B)*(1-(y-y0)/(y1-y0));let s="";const xt=opt.xt||lin(x0,x1,6),yt=opt.yt||lin(y0,y1,5);
+ yt.forEach(y=>{s+=`<line class="gr" x1="${L}" x2="${W-R}" y1="${Y(y)}" y2="${Y(y)}"/><text x="${L-6}" y="${Y(y)+4}" text-anchor="end">${opt.yf?opt.yf(y):fmt(y,opt.yd??0)}</text>`;});
+ xt.forEach(x=>{s+=`<line class="gr" y1="${T}" y2="${H-B}" x1="${X(x)}" x2="${X(x)}"/><text x="${X(x)}" y="${H-B+14}" text-anchor="middle">${opt.xf?opt.xf(x):fmt(x,opt.xd??0)}</text>`;});
+ s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><line class="ax" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}"/>`;
+ if(opt.xl)s+=`<text x="${(L+W-R)/2}" y="${H-4}" text-anchor="middle">${opt.xl}</text>`;if(opt.yl)s+=`<text x="12" y="${T+8}" >${opt.yl}</text>`;
+ return {s,X,Y,L,R,T,B,W,H};}
+const path=(pts,col,w=2,dash="")=>`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${col}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:""} stroke-linejoin="round"/>`;
+const JMA=[[4.5,"5弱","#ffe600"],[5.0,"5強","#ff9900"],[5.5,"6弱","#ff2800"],[6.0,"6強","#a50021"],[6.5,"7","#b40068"]];
+const I_of=pgv=>{const l=Math.log10(Math.max(pgv,.05));return Math.max(0,Math.min(7,2.002+2.603*l-0.213*l*l));};
+// ── 1 GMPE
+function p1(){const mw=+$("c1a").value,A=+$("c1b").value,Xs=+$("c1c").value,D=20;const f=X=>Math.pow(10,0.58*mw+0.0038*D-1.29-Math.log10(X+0.0028*Math.pow(10,0.5*mw))-0.002*X)*A;
+ const svg=$("s1");const a=axes(svg,0,300,0,7,{xl:"断層最短距離 X [km]",yl:"計測震度 I",yd:0,right:60});let s=a.s;
+ JMA.forEach(([lo,lab,col],i)=>{const hi=i<JMA.length-1?JMA[i+1][0]:7;s+=`<rect x="${a.W-a.R+4}" y="${a.Y(hi)}" width="40" height="${a.Y(lo)-a.Y(hi)}" fill="${col}" opacity=".75"/><text x="${a.W-a.R+24}" y="${(a.Y(lo)+a.Y(hi))/2+4}" text-anchor="middle" fill="#fff" font-size="10">${lab}</text>`;});
+ const xs=lin(3,300,150);s+=path(xs.map(x=>[a.X(x),a.Y(I_of(f(x)))]),"#1f5f8b",2.5);
+ [8.0,9.1].forEach(m2=>{const g=X=>Math.pow(10,0.58*m2+0.0038*D-1.29-Math.log10(X+0.0028*Math.pow(10,0.5*m2))-0.002*X)*A;s+=path(xs.map(x=>[a.X(x),a.Y(I_of(g(x)))]),"#bbb",1,"4 4");s+=`<text x="${a.X(290)}" y="${a.Y(I_of(g(290)))-4}" text-anchor="end" fill="#999">Mw ${m2}</text>`;});
+ const pv=f(Xs),I=I_of(pv);s+=`<line x1="${a.X(Xs)}" x2="${a.X(Xs)}" y1="${a.T}" y2="${a.H-a.B}" stroke="#c2361f" stroke-dasharray="3 3"/><circle cx="${a.X(Xs)}" cy="${a.Y(I)}" r="5" fill="#c2361f"/>`;
+ svg.innerHTML=s;const cls=JMA.filter(j=>I>=j[0]).pop();$("r1").innerHTML=`X = ${Xs} km で PGV = <b>${fmt(pv,1)} cm/s</b>、計測震度 <b>${fmt(I,2)}</b>(${cls?cls[1]:"4以下"})。灰の破線は Mw 8.0 と 9.1。静岡変電所 500 kV は X ≈ 27 km、大阪 ≈ 40 km、福岡 ≈ 200 km。`;}
+["c1a","c1b","c1c"].forEach((id,i)=>bind(id,["v1a","v1b","v1c"][i],p1,i<2?1:0));p1();
+// ── 2 fragility
+const HAZ={low:{th:[.15,.29,.45,.90],be:[.70,.55,.45,.45]},mid:{th:[.15,.25,.35,.70],be:[.60,.50,.40,.40]},high:{th:[.11,.15,.20,.47],be:[.50,.45,.35,.40]}};
+let draws2=[];
+function pout(x,al,cl){const c=HAZ[cl];const pe=c.th.map((t,k)=>Phi(Math.log(x/(al*t))/c.be[k]));const pk=pe.map((v,k)=>v-(pe[k+1]??0));return {pe,pk,po:pk[1]*0.3+pk[2]+pk[3]};}
+function p2(){const al=+$("c2a").value,x=+$("c2b").value,cl=$("c2c").value;const svg=$("s2");const a=axes(svg,0,1.5,0,1,{xl:"PGA [g]",yl:"確率",yd:1,xd:1});let s=a.s;
+ const xs=lin(0.01,1.5,150);const cols=["#9bb","#e3a33a","#c2361f","#5c0d1c"];const names=["slight","moderate","extensive","complete"];
+ cols.forEach((c,k)=>{s+=path(xs.map(v=>[a.X(v),a.Y(pout(v,al,cl).pe[k])]),c,1.5,k<2?"4 3":"");});
+ s+=path(xs.map(v=>[a.X(v),a.Y(pout(v,al,cl).po)]),"#c2361f",3);
+ const r=pout(x,al,cl);s+=`<line x1="${a.X(x)}" x2="${a.X(x)}" y1="${a.T}" y2="${a.H-a.B}" stroke="#333" stroke-dasharray="3 3"/><line x1="${a.L}" x2="${a.W-a.R}" y1="${a.Y(r.po)}" y2="${a.Y(r.po)}" stroke="#c2361f" stroke-width="1" stroke-dasharray="2 3"/>`;
+ draws2.forEach((u,i)=>{s+=`<circle cx="${a.X(x)+((i%9)-4)*4}" cy="${a.Y(u)}" r="3.2" fill="${u<r.po?"#c2361f":"#2e8b57"}" opacity=".8"/>`;});
+ s+=`<text x="${a.X(1.45)}" y="${a.Y(r.po)-6}" text-anchor="end" fill="#c2361f">P_out(太線)</text>`;names.forEach((n,k)=>{s+=`<text x="${a.L+8}" y="${a.T+14+k*13}" fill="${cols[k]}">P(DS≥${k+1}) ${n}</text>`;});
+ svg.innerHTML=s;const nf=draws2.filter(u=>u<r.po).length;$("r2").innerHTML=`PGA ${fmt(x)} g、α=${al}: P(DS≥k) = (${r.pe.map(v=>fmt(v,3)).join(", ")}) → <b>P_out = ${fmt(r.po,3)}</b>。`+(draws2.length?` 乱数 ${draws2.length} 回中 停止 <b>${nf}</b> 回(${fmt(nf/draws2.length,2)})。赤点=停止、緑点=継続。`:" 乱数を引いてみる。");}
+["c2a","c2b"].forEach((id,i)=>bind(id,["v2a","v2b"][i],p2,i?2:1));$("c2c").addEventListener("change",p2);
+$("b2").onclick=()=>{draws2.push(Math.random());if(draws2.length>200)draws2.shift();p2();};$("b2m").onclick=()=>{for(let i=0;i<100;i++)draws2.push(Math.random());draws2=draws2.slice(-200);p2();};$("b2r").onclick=()=>{draws2=[];p2();};p2();
+// ── 3 towers
+let draws3=null;
+function p3(){const x=+$("c3a").value,l=+$("c3b").value,th=+$("c3c").value;const pt=Phi(Math.log(x/th)/0.9),n=Math.max(1,Math.round(l/0.35)),pl=1-Math.pow(1-pt,n);const svg=$("s3");
+ let s="";const W=640,cols=Math.min(n,60),rows=Math.ceil(n/60),cw=(W-40)/60;
+ for(let i=0;i<n;i++){const r=Math.floor(i/60),c=i%60;const failed=draws3&&draws3[i]<pt;s+=`<rect x="${20+c*cw}" y="${20+r*14}" width="${cw-2}" height="10" rx="2" fill="${failed?"#c2361f":"#9fb8c8"}"/>`;}
+ const y0=20+rows*14+30;const a=axes(svg,0,100,0,1,{xl:"線路長 ℓ [km]",yl:"p_line",yd:1});
+ // small inline plot below towers: reuse axes but offset by clipping (simple: draw curve on its own coordinate block)
+ s+=`<g transform="translate(0,${Math.max(0,y0-14)}) scale(1,${(220-y0)/206})">${a.s}${path(lin(1,100,100).map(v=>[a.X(v),a.Y(1-Math.pow(1-pt,Math.max(1,Math.round(v/0.35))))]),"#1f5f8b",2.5)}<circle cx="${a.X(l)}" cy="${a.Y(pl)}" r="5" fill="#c2361f"/></g>`;
+ svg.innerHTML=s;const nf=draws3?draws3.filter(u=>u<pt).length:null;$("r3").innerHTML=`p_tower(${fmt(x)} g, θ=${th}) = <b>${pt.toExponential(2)}</b>、n = ${n} 基 → p_line = 1−(1−p)^n = <b>${fmt(pl,4)}</b>。`+(nf!==null?` 乱数: 倒壊 <b>${nf}</b> 基(赤)。`:"");}
+["c3a","c3b","c3c"].forEach((id,i)=>bind(id,["v3a","v3b","v3c"][i],()=>{draws3=null;p3();},i==0?2:(i==2?1:0)));$("b3").onclick=()=>{const l=+$("c3b").value,n=Math.max(1,Math.round(l/0.35));draws3=Array.from({length:n},()=>Math.random());p3();};p3();
+// ── 4 stop curve inverse transform
+const AX=[0,1,3,7,14,21,30,35,42,49,60,90,120,240,270,330,365];
+const FC={"5弱":[0.08,0.04,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"5強":[0.20,0.07,0.02,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0],"6弱":[.9,.9,.9,.9,.9,.9,.23,.06,0,0,0,0,0,0,0,0,0],"7":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]};
+let taus4=[];
+function fint(f,t){for(let i=1;i<AX.length;i++){if(t<=AX[i]){const a=(t-AX[i-1])/(AX[i]-AX[i-1]);return f[i-1]+(f[i]-f[i-1])*a;}}return f[AX.length-1];}
+function tau_of(f,u){if(u>=f[0])return 0;for(let i=1;i<AX.length;i++){if(u>=f[i]){const a=(f[i-1]-u)/(f[i-1]-f[i]||1);return AX[i-1]+(AX[i]-AX[i-1])*a;}}return AX[AX.length-1];}
+function p4(){const cl=$("c4c").value,u=+$("c4a").value,f=FC[cl];const svg=$("s4");const tmax=cl==="7"?365:60;const a=axes(svg,0,tmax,0,1,{xl:"経過日数 t",yl:"停止率 f_c(t)",yd:1});let s=a.s;
+ const ts=lin(0,tmax,300);s+=path(ts.map(t=>[a.X(t),a.Y(fint(f,t))]),"#1f5f8b",2.5);
+ const tau=tau_of(f,u);s+=`<line x1="${a.L}" x2="${a.W-a.R}" y1="${a.Y(u)}" y2="${a.Y(u)}" stroke="#c2361f" stroke-dasharray="3 3"/><line x1="${a.X(Math.min(tau,tmax))}" x2="${a.X(Math.min(tau,tmax))}" y1="${a.T}" y2="${a.H-a.B}" stroke="#c2361f"/><rect x="${a.L}" y="${a.T}" width="${a.X(Math.min(tau,tmax))-a.L}" height="${a.H-a.B-a.T}" fill="#c2361f" opacity=".08"/>`;
+ if(taus4.length){const frac=ts.map(t=>taus4.filter(x=>x>t).length/taus4.length);s+=path(ts.map((t,i)=>[a.X(t),a.Y(frac[i])]),"#e3a33a",2,"5 3");s+=`<text x="${a.L+8}" y="${a.T+28}" fill="#e3a33a">200 機の「t に止まっている割合」(破線)</text>`;}
+ s+=`<text x="${a.L+8}" y="${a.T+14}" fill="#1f5f8b">内閣府の停止率曲線 ${cl}</text>`;svg.innerHTML=s;
+ $("r4").innerHTML=`u = ${fmt(u)} → 停止期間 τ = <b>${fmt(Math.min(tau,365),1)} 日</b>(赤の帯の間は停止)。${u>=f[0]?"初日から f_c < u なので止まらない。":""}`;}
+bind("c4a","v4a",p4);$("c4c").addEventListener("change",()=>{taus4=[];p4();});$("b4").onclick=()=>{const f=FC[$("c4c").value];taus4=Array.from({length:200},()=>tau_of(f,Math.random()));p4();};$("b4r").onclick=()=>{taus4=[];p4();};p4();
+// ── 5 frequency
+function p5(){const dP=+$("c5a").value/100,H=+$("c5b").value,shed=+$("c5c").value/100,Dl=+$("c5d").value/100;const f0=60,dt=0.005,T=10;let f=f0,t=0,shedTot=0;const stages=[[59.0,false],[58.7,false],[58.4,false]];const pts=[],ev=[];let dead=null;let pend=[];
+ while(t<=T){const gap=-dP+shedTot+Dl*(f0-f)*(-1)*(-1);const dfdt=(-dP+shedTot-Dl*(f-f0)/1)*f0/(2*H);f+=dfdt*dt;t+=dt;pts.push([t,f]);
+  stages.forEach(st=>{if(!st[1]&&f<st[0]){st[1]=true;pend.push(t+0.2);}});pend=pend.filter(tt=>{if(t>=tt){shedTot+=shed;ev.push([t,f,`UFLS +${Math.round(shed*100)}%`]);return false;}return true;});
+  if(f<57.5&&dead===null){dead=t;break;}if(f>60.5)break;}
+ const svg=$("s5");const a=axes(svg,0,T,56,61,{xl:"時間 [s]",yl:"周波数 [Hz]",yd:0});let s=a.s;
+ [[59.0,"UFLS 1"],[58.7,"UFLS 2"],[58.4,"UFLS 3"],[57.5,"発電機保護"]].forEach(([y,l])=>{s+=`<line x1="${a.L}" x2="${a.W-a.R}" y1="${a.Y(y)}" y2="${a.Y(y)}" stroke="${y<58?"#c2361f":"#e3a33a"}" stroke-dasharray="4 4"/><text x="${a.W-a.R-4}" y="${a.Y(y)-3}" text-anchor="end" fill="#666">${l} ${y} Hz</text>`;});
+ s+=path(pts.map(p=>[a.X(p[0]),a.Y(Math.max(56,p[1]))]),dead?"#c2361f":"#1f5f8b",2.5);ev.forEach(e=>{s+=`<circle cx="${a.X(e[0])}" cy="${a.Y(e[1])}" r="4" fill="#e3a33a"/><text x="${a.X(e[0])+6}" y="${a.Y(e[1])+4}" fill="#8a6d1f">${e[2]}</text>`;});
+ svg.innerHTML=s;const slope=-dP*f0/(2*H);$("r5").innerHTML=`初期勾配 df/dt = −ΔP·f₀/(2H) = <b>${fmt(slope,2)} Hz/s</b>。`+(dead?`<b>${fmt(dead,1)} 秒で 57.5 Hz を割り全停</b>(UFLS ${ev.length} 段 ${Math.round(ev.length*shed*100)}% では足りない)。`:(ev.length?`UFLS ${ev.length} 段(計 ${Math.round(ev.length*shed*100)}%)で ${fmt(pts[pts.length-1][1],2)} Hz に落ち着く。`:`遮断なしで ${fmt(pts[pts.length-1][1],2)} Hz に落ち着く(負荷の周波数依存で釣り合う)。`));}
+["c5a","c5b","c5c","c5d"].forEach((id,i)=>bind(id,["v5a","v5b","v5c","v5d"][i],p5,[0,1,0,1][i]));p5();
+// ── 6 DC flow 3-bus
+let ph6=0;
+function solveDC(n,edges,P,ref){const B=Array.from({length:n},()=>Array(n).fill(0));edges.forEach(e=>{const[i,j,x]=e;if(!e[3])return;B[i][i]+=1/x;B[j][j]+=1/x;B[i][j]-=1/x;B[j][i]-=1/x;});const idx=[...Array(n).keys()].filter(i=>i!==ref);const m=idx.length;const A=idx.map(i=>idx.map(j=>B[i][j]));const b=idx.map(i=>P[i]);
+ for(let c=0;c<m;c++){let p=c;for(let r=c+1;r<m;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-12)continue;for(let r=c+1;r<m;r++){const f=A[r][c]/A[c][c];for(let k=c;k<m;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c];}}
+ const th=Array(n).fill(0);for(let c=m-1;c>=0;c--){let sum=b[c];for(let k=c+1;k<m;k++)sum-=A[c][k]*th[idx[k]];th[idx[c]]=Math.abs(A[c][c])<1e-12?0:sum/A[c][c];}
+ return {th,flows:edges.map(e=>e[3]?(th[e[0]]-th[e[1]])/e[2]:0)};}
+function p6(){const P1=+$("c6a").value,x13=+$("c6b").value,xd=+$("c6c").value,cap=+$("c6d").value,off=$("c6e").checked;const edges=[[0,2,x13,!off],[0,1,xd/2,true],[1,2,xd/2,true]];const r=solveDC(3,edges,[P1,0,-P1],0);
+ const svg=$("s6");const pos=[[120,220],[320,70],[520,220]];let s="";const lab=["1 発電","2","3 需要"];
+ edges.forEach((e,k)=>{const[i,j]=e,f=r.flows[k];const[x1,y1]=pos[i],[x2,y2]=pos[j];const over=k===0&&Math.abs(f)>cap*1.25;const col=!e[3]?"#bbb":over?"#c2361f":"#1f5f8b";const w=e[3]?2+Math.min(8,Math.abs(f)/25):2;
+  s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" ${e[3]?"":'stroke-dasharray="6 6"'} stroke-linecap="round"/>`;
+  if(e[3]&&Math.abs(f)>0.5){const n=6;for(let q=0;q<n;q++){const tt=((q/n)+ph6*Math.sign(f)*Math.min(1,Math.abs(f)/100))%1;const u=((tt%1)+1)%1;s+=`<circle cx="${x1+(x2-x1)*u}" cy="${y1+(y2-y1)*u}" r="3.5" fill="#fff" stroke="${col}" stroke-width="1.5"/>`;}}
+  const mx=(x1+x2)/2,my=(y1+y2)/2-10;s+=`<text x="${mx}" y="${my}" text-anchor="middle" fill="${col}" font-size="13">${e[3]?fmt(f,0)+" MW":"停止"}${k===0&&e[3]?` / 容量 ${cap}`:""}</text>`;});
+ pos.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="16" fill="${i===0?"#b8f0c8":i===2?"#ffb3c7":"#eee"}" stroke="#333"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="12">${i+1}</text><text x="${p[0]}" y="${p[1]+36}" text-anchor="middle">${lab[i]} θ=${fmt(r.th[i],2)}</text>`;});
+ svg.innerHTML=s;const f13=r.flows[0],f12=r.flows[1];$("r6").innerHTML=off?`直通停止 → 迂回路に全量 <b>${fmt(f12,0)} MW</b>(LODF = 1)。θ₁−θ₃ = ${fmt(r.th[0]-r.th[2],2)}。`:`分流: 直通 <b>${fmt(f13,0)} MW</b> : 迂回 <b>${fmt(f12,0)} MW</b> = 1/x₁₃ : 1/(x₁₂+x₂₃) = ${fmt(1/x13,1)} : ${fmt(1/xd,1)}。${Math.abs(f13)>cap*1.25?"<b>直通が緊急定格(1.25×容量)を超過 → リレー動作</b>":""}`;}
+["c6a","c6b","c6c","c6d"].forEach((id,i)=>bind(id,["v6a","v6b","v6c","v6d"][i],p6,[0,2,2,0][i]));$("c6e").addEventListener("change",p6);
+(function anim(){ph6=(ph6+0.012)%1;if(!matchMedia("(prefers-reduced-motion: reduce)").matches)p6();requestAnimationFrame(anim);})();
+// ── 7 cascade on 6-bus mesh
+const NODES7=[[90,60],[90,230],[300,60],[300,230],[510,110],[510,240]];const GEN7=[0,1];const LOADN7=[4,5];
+const EDGES7=[[0,2,.1,140],[1,3,.1,140],[0,1,.15,80],[2,3,.15,80],[2,4,.12,160],[3,5,.12,160],[4,5,.15,60],[3,4,.2,90]];
+let st7=null;
+function reset7(){st7={alive:EDGES7.map(()=>true),log:[]};p7();}
+function p7(step=false,kill=null){const Ld=+$("c7a").value,g=+$("c7b").value;const alive=st7.alive;if(kill!==null)alive[kill]=false;
+ // components by BFS
+ const n=6,adj=Array.from({length:n},()=>[]);EDGES7.forEach((e,k)=>{if(alive[k]){adj[e[0]].push(e[1]);adj[e[1]].push(e[0]);}});const comp=Array(n).fill(-1);let nc=0;for(let i=0;i<n;i++){if(comp[i]>=0)continue;const q=[i];comp[i]=nc;while(q.length){const v=q.pop();adj[v].forEach(w=>{if(comp[w]<0){comp[w]=nc;q.push(w);}});}nc++;}
+ const P=Array(n).fill(0);const served=Array(n).fill(0);for(let c=0;c<nc;c++){const gens=GEN7.filter(i=>comp[i]===c),loads=LOADN7.filter(i=>comp[i]===c);const L=loads.length*Ld/2;const G=gens.length?L:0;loads.forEach(i=>{served[i]=gens.length?Ld/2:0;P[i]-=served[i];});gens.forEach(i=>P[i]+=G/gens.length);}
+ // solve per component with ref = first node of comp
+ const flows=Array(EDGES7.length).fill(0);for(let c=0;c<nc;c++){const idx=[...Array(n).keys()].filter(i=>comp[i]===c);if(idx.length<2)continue;const map={};idx.forEach((v,k)=>map[v]=k);const ed=EDGES7.map((e,k)=>[map[e[0]]??-1,map[e[1]]??-1,e[2],alive[k]&&comp[e[0]]===c]).map(e=>[e[0],e[1],e[2],e[3]&&e[0]>=0&&e[1]>=0]);const r=solveDC(idx.length,ed,idx.map(i=>P[i]),0);ed.forEach((e,k)=>{if(e[3])flows[k]=r.flows[k];});}
+ const ratio=EDGES7.map((e,k)=>alive[k]?Math.abs(flows[k])/e[3]:0);
+ if(step){let kmax=-1,rm=g;ratio.forEach((r,k)=>{if(alive[k]&&r>rm){rm=r;kmax=k;}});if(kmax>=0){alive[kmax]=false;st7.log.push(`線路 ${kmax+1} を停止(負荷率 ${Math.round(rm*100)}%)`);return p7(false);}else{st7.log.push("過負荷なし → 連鎖終了");}}
+ const svg=$("s7");let s="";EDGES7.forEach((e,k)=>{const[a,b]=e;const[x1,y1]=NODES7[a],[x2,y2]=NODES7[b];const r=ratio[k];const col=!alive[k]?"#ccc":r>g?"#c2361f":r>1?"#e3a33a":"#2e8b57";s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${alive[k]?3+Math.min(6,r*3):2}" ${alive[k]?"":'stroke-dasharray="6 6"'}/><text x="${(x1+x2)/2}" y="${(y1+y2)/2-8}" text-anchor="middle" fill="${col}" font-size="12">${k+1}: ${alive[k]?Math.round(Math.abs(flows[k]))+"/"+e[3]+" MW":"停止"}</text>`;});
+ NODES7.forEach((p,i)=>{const isG=GEN7.includes(i),isL=LOADN7.includes(i);const dark=comp[i]!==comp[0]&&comp[i]!==comp[1];s+=`<circle cx="${p[0]}" cy="${p[1]}" r="17" fill="${dark&&isL?"#bbb":isG?"#b8f0c8":isL?"#ffb3c7":"#eee"}" stroke="#333"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="12">${isG?"G":isL?"L":i+1}</text>`;});
+ svg.innerHTML=s;const tot=served.reduce((a,b)=>a+b,0);$("r7").innerHTML=`供給 <b>${Math.round(tot)} / ${Ld} MW</b>。`+(st7.log.length?st7.log.map((l,i)=>`手${i+1}: ${l}`).join(" → "):"「1 手進める」で最も過負荷の線路を止める。")+(ratio.some((r,k)=>alive[k]&&r>g)?" <b>過負荷あり</b>":"");}
+["c7a","c7b"].forEach((id,i)=>bind(id,["v7a","v7b"][i],()=>p7(),i?2:0));$("b7").onclick=()=>p7(true);$("b7r").onclick=reset7;$("b7k").onclick=()=>{st7.log.push("線路 3 が地震で停止");p7(false,2);};reset7();
+// ── 8 restoration
+let jobs8=[];
+function newJobs8(){const n=+$("c8c").value;jobs8=Array.from({length:n},(_,i)=>{const kv=[500,275,154,66][Math.floor(Math.random()*4)];return {id:i,kv,load:Math.round(kv/500*300*(0.5+Math.random())),dur:Math.round((0.5+Math.random()*6)*10)/10};});p8();}
+function p8(){const C=+$("c8a").value,aid=+$("c8b").value,ord=$("c8d").value;const jobs=[...jobs8];if(ord==="kv")jobs.sort((a,b)=>b.kv-a.kv||b.load-a.load);else if(ord==="load")jobs.sort((a,b)=>b.load-a.load);else if(ord==="short")jobs.sort((a,b)=>a.dur-b.dur);else jobs.sort(()=>Math.random()-.5);
+ let crews=Array.from({length:C},()=>0);let added=false;const plan=[];jobs.forEach(j=>{let c=crews.indexOf(Math.min(...crews));if(!added&&crews[c]>=aid){crews=crews.concat(Array.from({length:C},()=>aid));added=true;c=crews.indexOf(Math.min(...crews));}const st=crews[c];crews[c]=st+j.dur;plan.push({...j,crew:c,start:st,end:st+j.dur});});
+ const Tmax=Math.max(...plan.map(p=>p.end),1);const svg=$("s8");const W=640;let s="";const rowsN=crews.length;const gh=Math.min(12,160/rowsN);
+ plan.forEach(p=>{const y=20+p.crew*gh;s+=`<rect x="${60+(W-80)*p.start/Tmax}" y="${y}" width="${Math.max(1,(W-80)*p.dur/Tmax)}" height="${gh-2}" fill="${p.kv>=275?"#1f5f8b":p.kv>=154?"#5a9bd4":"#b5c9dc"}" rx="2"/>`;});
+ for(let c=0;c<rowsN;c++)s+=`<text x="54" y="${20+c*gh+gh-3}" text-anchor="end" font-size="10">${c<C?"班"+(c+1):"応援"+(c-C+1)}</text>`;
+ const totalL=jobs.reduce((a,j)=>a+j.load,0);const a=axes(svg,0,Tmax,0,100,{xl:"経過日数",yl:"復旧率 [%]",yd:0,xd:0});const off=200;s+=`<g transform="translate(0,${off}) scale(1,${(320-off)/320})">${a.s}`;const ts=lin(0,Tmax,120);const curve=ts.map(t=>plan.filter(p=>p.end<=t).reduce((x,p)=>x+p.load,0)/totalL*100);s+=path(ts.map((t,i)=>[a.X(t),a.Y(curve[i])]),"#c2361f",2.5)+"</g>";
+ svg.innerHTML=s;const t50=ts[curve.findIndex(v=>v>=50)]??Tmax,t90=ts[curve.findIndex(v=>v>=90)]??Tmax;$("r8").innerHTML=`ジョブ ${jobs.length} 件・班 ${C}(応援後 ${crews.length})。復旧 50% まで <b>${fmt(t50,1)} 日</b>、90% まで <b>${fmt(t90,1)} 日</b>、全完了 ${fmt(Tmax,1)} 日。順序を変えると 50% 到達が動く。`;}
+["c8a","c8b","c8c"].forEach((id,i)=>bind(id,["v8a","v8b","v8c"][i],i===2?newJobs8:p8,0));$("c8d").addEventListener("change",p8);$("b8").onclick=newJobs8;newJobs8();
+// ── 9 Monte Carlo
+let mc9=[];
+function p9(){const p=+$("c9a").value;const svg=$("s9");const a=axes(svg,1,200,0,1,{xl:"サンプル数 N",yl:"推定 p̂",yd:1,xd:0});let s=a.s;s+=`<line x1="${a.L}" x2="${a.W-a.R}" y1="${a.Y(p)}" y2="${a.Y(p)}" stroke="#2e8b57" stroke-dasharray="4 4"/>`;
+ const ns=lin(1,200,200);const up=ns.map(n=>[a.X(n),a.Y(Math.min(1,p+Math.sqrt(p*(1-p)/n)))]),lo=ns.map(n=>[a.X(n),a.Y(Math.max(0,p-Math.sqrt(p*(1-p)/n)))]);s+=`<polygon points="${up.concat(lo.reverse()).map(q=>q.join(",")).join(" ")}" fill="#2e8b57" opacity=".12"/>`;
+ if(mc9.length){let c=0;const pts=mc9.map((v,i)=>{c+=v;return [a.X(i+1),a.Y(c/(i+1))];});s+=path(pts,"#c2361f",2);}
+ svg.innerHTML=s;const est=mc9.length?mc9.reduce((x,y)=>x+y,0)/mc9.length:null;$("r9").innerHTML=(est!==null?`N = ${mc9.length}: p̂ = <b>${fmt(est,3)}</b>(真値 ${fmt(p)}、SE = ±${fmt(Math.sqrt(p*(1-p)/mc9.length),3)})。`:"")+`N=200 の標準誤差 ±${fmt(Math.sqrt(p*(1-p)/200),3)}。`;}
+bind("c9a","v9a",()=>{mc9=[];p9();});$("b9").onclick=()=>{const p=+$("c9a").value;mc9=[];let i=0;const tick=()=>{for(let k=0;k<4&&i<200;k++,i++)mc9.push(Math.random()<p?1:0);p9();if(i<200)requestAnimationFrame(tick);};tick();};$("b9r").onclick=()=>{mc9=[];p9();};p9();
+// ── 10 path survival
+function p10(){const k=+$("c10a").value,p=+$("c10b").value,m=+$("c10c").value;const svg=$("s10");const a=axes(svg,1,20,0,1,{xl:"経路上の要素数 k",yl:"生存率 S",yd:1,xd:0});let s=a.s;const ks=lin(1,20,20);
+ [1,2,3,4].forEach(mm=>{s+=path(ks.map(kk=>[a.X(kk),a.Y(1-Math.pow(1-Math.pow(1-p,kk),mm))]),mm===m?"#1f5f8b":"#ccc",mm===m?2.5:1);});
+ const S1=Math.pow(1-p,k),Sm=1-Math.pow(1-S1,m);s+=`<circle cx="${a.X(k)}" cy="${a.Y(Sm)}" r="5" fill="#c2361f"/>`;svg.innerHTML=s;
+ $("r10").innerHTML=`直列 k=${k}, p=${fmt(p)}: S = (1−p)^k = <b>${fmt(S1,3)}</b>(重み和 Σw = ${fmt(-k*Math.log(1-p),2)})。並列 m=${m} 本なら 1−(1−S)^m = <b>${fmt(Sm,3)}</b>。灰線は m=1〜4。`;}
+["c10a","c10b","c10c"].forEach((id,i)=>bind(id,["v10a","v10b","v10c"][i],p10,i===1?2:0));p10();
+</script>
