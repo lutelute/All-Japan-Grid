@@ -218,3 +218,29 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ── 母線などの任意地点での到達時刻(dyn_cascade.py から使う) ─────────────────────────────
+def point_s_arrival_s(lat, lon, cache=CACHE, sub=2):
+    """任意地点の S 波到達時刻[s](キネマティック近似、seismic.npz の断層点と破壊時刻を使う)。"""
+    sc = np.load(os.path.join(cache, "seismic.npz"))
+    P = to_xyz(sc["fault_lat"], sc["fault_lon"], sc["fault_depth"]).astype(np.float32)[::sub]
+    tr = sc["t_rup"][::sub]
+    X = to_xyz(np.asarray(lat), np.asarray(lon)).astype(np.float32)
+    out = np.empty(len(X), np.float32)
+    for a in range(0, len(X), 4000):
+        d = np.linalg.norm(X[a:a + 4000, None, :] - P[None, :, :], axis=2)
+        out[a:a + 4000] = (tr[None, :] + d / VS).min(1)
+    return out
+
+
+def point_tsunami_arrival_s(lat, lon, cache=CACHE, inland_km_per_min=0.6):
+    """任意地点の津波到達時刻[s]: 最寄りの海の格子(水深 5 m 以上)の √(gh) 走時 + 陸上距離 / 進入速度。"""
+    from scipy.spatial import cKDTree
+    d = np.load(os.path.join(cache, "tsunami.npz"))
+    la, lo, alt, te = d["lat"], d["lon"], d["alt"], d["t_arr_eik"]
+    yy, xx = np.nonzero((alt < -5.0) & np.isfinite(te))
+    k = 111.32 * np.cos(np.radians(35.0))
+    tree = cKDTree(np.c_[lo[xx] * k, la[yy] * 110.57])
+    dist, idx = tree.query(np.c_[np.asarray(lon) * k, np.asarray(lat) * 110.57])
+    return ((te[yy[idx], xx[idx]] + dist / inland_km_per_min) * 60.0).astype(np.float32)

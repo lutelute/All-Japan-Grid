@@ -1,0 +1,83 @@
+# 周波数・保護リレー・系統分離の動的シミュレーション(dynamics.py / dyn_cascade.py)。
+# kind: sourced = 一次資料の値 / assumption = 本モデルの仮定(感度で確かめる対象)
+# 周波数しきい値は「基準周波数に対する比」で持ち、50 Hz / 60 Hz に同じ比で当てる(北海道 2018 の 50 Hz 実値を 60 Hz に比で移す仮定)。
+schema: nankai-dynamics-v0
+
+integration:
+  dt_active_s: 0.02          # 周波数が動いている間の刻み
+  dt_calm_s: 0.2
+  calm_rocof_hz_s: 0.01      # |df/dt| がこれ未満でタイマーも止まっていれば「静穏」→ 次の事象まで飛ぶ
+  t_end_s: 10800             # 3 時間(津波の到達まで含める)
+  dt_active_bus_s: 0.05      # 母線単位のカスケードでの刻み
+  settle_after_event_s: 120  # 事象から 120 秒積分したら次の事象まで飛ぶ(UFLS 遅延 ≤21 秒・発電機保護 ≤30 秒より十分長い)
+  dt_slow_s: 0.2             # 600 秒以降(津波の段階)の刻み
+  settle_slow_s: 60
+
+inertia:                     # 慣性定数 H [s](機器容量基準)。容量 S = pmax / pf
+  kind: assumption
+  note: "Kundur(1994)Table 3.2 の典型範囲(火力 2.5〜9 s・水力 2〜4 s)の中央付近を置いた"
+  H_s: {thermal: 5.0, nuclear: 5.0, hydro: 3.0, geothermal: 3.0, unknown: 4.0, slack: 4.0, solar: 0.0, wind: 0.0}
+  power_factor: 0.9
+
+load:
+  damping_pct_per_hz: {kind: assumption, value: 2.0, note: "負荷の周波数特性 2%/Hz(TECHNICAL_NOTE の例と同じ)"}
+  quake_demand_drop_ramp_s: {kind: assumption, value: 60.0, note: "demand_reduction(震度別)を S 波到達から 60 秒で効かせる(機器停止・電圧低下による脱落の代理)"}
+
+governor:                    # 一次調整(ガバナフリー)。上げ代 = min(pmax − p0, share × pmax)
+  kind: assumption
+  droop: 0.05
+  T_s: {thermal: 6.0, hydro: 10.0, geothermal: 6.0, unknown: 6.0, slack: 6.0}
+  up_share: {thermal: 0.05, hydro: 0.10, geothermal: 0.03, unknown: 0.03, slack: 0.05, nuclear: 0.0, solar: 0.0, wind: 0.0}
+  down_share: 0.10
+
+ufls:                        # 周波数低下リレーによる負荷遮断(UFR)。段ごとに (しきい値比, 遅延の範囲[s], 遮断率)
+  kind: assumption
+  source_anchor: "北海道 2018: 48.5 Hz 時限 0.1〜21 秒、48.0 Hz 時限 0.1〜6 秒(OCCTO 検証委員会 最終報告 本文 事象3)。本州各社の整定と遮断量は非公表のため、比を移し遮断量は仮定"
+  stages:
+    - {ratio: 0.970, delay_s: [0.1, 21.0], shed_frac: 0.15, n_relays: 8}    # 50 Hz → 48.5 Hz / 60 Hz → 58.2 Hz
+    - {ratio: 0.960, delay_s: [0.1, 6.0], shed_frac: 0.15, n_relays: 6}     # 50 Hz → 48.0 Hz / 60 Hz → 57.6 Hz
+  restore_after_min: {kind: assumption, value: 60.0, note: "島が崩壊しなければ UFLS 遮断分は 1 時間で再送電"}
+
+generator_protection:        # 周波数による発電機の解列(比)
+  under:
+    hydro: {ratio: 0.920, delay_s: 0.5, kind: sourced, source: "OCCTO 北海道検証 最終報告 本文 事象6「水力発電所の多くは 46.0Hz でリレーが動作」"}
+    thermal: {ratio: 0.940, delay_s: 30.0, kind: assumption, note: "過励磁(V/Hz)保護の代理。北海道 2018 のヒンドキャスト: 47.0 Hz・2 秒は 1 回目で全停になり否定、46.0 Hz・5 秒も最終段を再現できない。47.0 Hz・30 秒は 1 回目(47 Hz 未満は数秒)の運転継続と矛盾しないが、最終段の全停はどの設定でも再現できていない(残 UFR 約 100 MW の差で分かれる)"}
+    nuclear: {ratio: 0.940, delay_s: 30.0, kind: assumption, note: "火力と同じと仮定"}
+    geothermal: {ratio: 0.940, delay_s: 30.0, kind: assumption}
+    unknown: {ratio: 0.940, delay_s: 30.0, kind: assumption}
+    solar: {ratio: 0.950, delay_s: 0.2, kind: assumption, note: "FRT 要件の下限を 47.5 Hz 相当と仮定"}
+    wind: {ratio: 0.950, delay_s: 0.2, kind: assumption, note: "北海道 2018 は周波数低下で風力 17 万 kW 停止(事象4)"}
+  over:
+    hydro: {ratio: 1.040, delay_s: 1.0, kind: sourced, source: "OCCTO 北海道検証 事象5: 道東の単独系統で周波数上昇(52.0 Hz 超)、水力が OFR で停止"}
+    thermal: {ratio: 1.050, delay_s: 2.0, kind: assumption}
+    default: {ratio: 1.050, delay_s: 2.0, kind: assumption}
+
+collapse:
+  kind: assumption
+  f_min_ratio: 0.900         # これを割った島は全停(発電機が維持できない)
+  f_max_ratio: 1.100
+  min_inertia_mws: 50.0
+  min_system_H_s: 0.5        # 島の慣性 E/負荷 が 0.5 秒未満(同期機がほぼ無い)なら、負荷があれば崩壊
+
+emergency_support:           # 直流の緊急融通(AFC / EPPS)
+  trigger_ratio: {kind: sourced, value: 0.9924, source: "OCCTO 北海道検証 事象2: 北本 AFC が 49.62 Hz で動作"}
+  ramp_mw_s: {kind: assumption, value: 20.0, note: "北海道 2018 は 7→57 万 kW に「徐々に」増加(事象8)。速さは仮定"}
+  afc_gain_mw_per_hz_s: {kind: assumption, value: 200.0, note: "一度動作した AFC は周波数偏差を積分して融通量を動かす(北海道 2018 は北本 AFC で 50 Hz に一時バランス、事象8)"}
+  links:
+    hokuhon_to_tohoku: {to_zone: tohoku, cap_mw: 900, kind: sourced, source: "data/reference/interconnections.yaml ic_001(OCCTO 運用容量 max 900)", note: "北海道は解析外で健全と仮定"}
+    fc_east_west: {zones: [tokyo, chubu], cap_mw: 2100, kind: sourced, source: "data/reference/interconnections.yaml ic_003(東京中部間連系設備)", note: "周波数の低い側へ流す"}
+
+relays:
+  protection_clear_s: {kind: assumption, value: 0.2, note: "損傷した変電所・線路を保護が切り離すまで"}
+  gen_seismic_trip_s: {kind: assumption, value: 2.0, note: "タービン振動検知などで停止するまで(北海道 2018 は振動検知で自動停止)"}
+  nuclear_scram_s: {kind: assumption, value: 1.0}
+  overload_check_delay_s: {kind: assumption, value: 5.0, note: "事象から潮流を再評価して過負荷リレー(1.25 倍)で切るまで"}
+  max_overload_rounds: 12
+  overload_enabled: true
+  overload_min_kv: 0          # 感度: 275 にすると 275 kV 以上だけ過負荷で切る(東の下位網に 5 GW 級の非物理的な潮流が出るため)
+
+tsunami_timing:
+  source: "output/arrival_cache/tsunami.npz の √(gh) 走時(arrival_physics.py)。陸上は 0.6 km/分で奥へ"
+  inland_km_per_min: 0.6
+
+record_times_s: [0, 1, 5, 10, 20, 30, 60, 90, 120, 180, 300, 600, 1800, 3600, 7200, 10800]
