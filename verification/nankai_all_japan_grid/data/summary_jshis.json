@@ -1,0 +1,359 @@
+{
+ "generated": "2026-09-13T10:11:04",
+ "samples": 200,
+ "seed": 0,
+ "islands": {
+  "west": {
+   "n_bus": 7985,
+   "load_mw": 73865.0,
+   "field": "jshis_nankai_intensity.parquet",
+   "tsunami": true,
+   "buses_in_tsunami_zone": 381,
+   "timeline": [
+    {
+     "t_days": 0.0,
+     "served_frac": 0.548,
+     "sites_out": 159.53,
+     "lines_out": 196.665,
+     "gens_out": 4337.81,
+     "gen_cap_mw": 45932.785
+    },
+    {
+     "t_days": 0.25,
+     "served_frac": 0.556,
+     "sites_out": 159.53,
+     "lines_out": 196.665,
+     "gens_out": 4261.95,
+     "gen_cap_mw": 46280.208
+    },
+    {
+     "t_days": 0.5,
+     "served_frac": 0.58,
+     "sites_out": 159.53,
+     "lines_out": 196.655,
+     "gens_out": 4186.365,
+     "gen_cap_mw": 46589.008
+    },
+    {
+     "t_days": 1.0,
+     "served_frac": 0.779,
+     "sites_out": 159.525,
+     "lines_out": 196.255,
+     "gens_out": 4034.855,
+     "gen_cap_mw": 64216.957
+    },
+    {
+     "t_days": 2.0,
+     "served_frac": 0.847,
+     "sites_out": 159.365,
+     "lines_out": 193.945,
+     "gens_out": 3960.61,
+     "gen_cap_mw": 64806.552
+    },
+    {
+     "t_days": 3.0,
+     "served_frac": 0.869,
+     "sites_out": 158.5,
+     "lines_out": 192.425,
+     "gens_out": 3886.48,
+     "gen_cap_mw": 65268.557
+    },
+    {
+     "t_days": 4.0,
+     "served_frac": 0.878,
+     "sites_out": 156.345,
+     "lines_out": 191.145,
+     "gens_out": 3879.605,
+     "gen_cap_mw": 65386.455
+    },
+    {
+     "t_days": 5.0,
+     "served_frac": 0.882,
+     "sites_out": 153.625,
+     "lines_out": 188.23,
+     "gens_out": 3872.555,
+     "gen_cap_mw": 65498.285
+    },
+    {
+     "t_days": 7.0,
+     "served_frac": 0.89,
+     "sites_out": 146.61,
+     "lines_out": 184.765,
+     "gens_out": 3858.545,
+     "gen_cap_mw": 65723.549
+    },
+    {
+     "t_days": 10.0,
+     "served_frac": 0.896,
+     "sites_out": 137.2,
+     "lines_out": 180.64,
+     "gens_out": 3845.505,
+     "gen_cap_mw": 65993.476
+    },
+    {
+     "t_days": 14.0,
+     "served_frac": 0.897,
+     "sites_out": 129.37,
+     "lines_out": 171.01,
+     "gens_out": 3831.775,
+     "gen_cap_mw": 66167.329
+    },
+    {
+     "t_days": 21.0,
+     "served_frac": 0.898,
+     "sites_out": 122.12,
+     "lines_out": 147.125,
+     "gens_out": 3829.195,
+     "gen_cap_mw": 66251.769
+    },
+    {
+     "t_days": 30.0,
+     "served_frac": 0.937,
+     "sites_out": 111.68,
+     "lines_out": 113.56,
+     "gens_out": 1460.45,
+     "gen_cap_mw": 84266.076
+    },
+    {
+     "t_days": 45.0,
+     "served_frac": 0.949,
+     "sites_out": 86.9,
+     "lines_out": 66.965,
+     "gens_out": 645.26,
+     "gen_cap_mw": 90522.125
+    },
+    {
+     "t_days": 60.0,
+     "served_frac": 0.96,
+     "sites_out": 64.105,
+     "lines_out": 37.225,
+     "gens_out": 643.255,
+     "gen_cap_mw": 90583.329
+    },
+    {
+     "t_days": 90.0,
+     "served_frac": 0.979,
+     "sites_out": 32.27,
+     "lines_out": 10.06,
+     "gens_out": 640.17,
+     "gen_cap_mw": 90689.796
+    }
+   ],
+   "potential_vs_analysis": {
+    "corr_pout_t0": 0.3890620903122121,
+    "corr_pout_t2": 0.42982153450389426,
+    "corr_pout_t7": 0.31260507636235224,
+    "wcorr_pout_t2": 0.5611317456082247,
+    "corr_expected_days": 0.27534595441657495
+   },
+   "municipalities": {
+    "n_muni": 659,
+    "outage_customers_t0": 16349179.344606467,
+    "outage_customers_t1": 8280581.762585391,
+    "outage_customers_t7": 4797255.117207266,
+    "outage_customers_t30": 2894007.775456097,
+    "note": "outage_customers は供給率(供給力不足込み)ベース"
+   },
+   "elapsed_s": 234.3
+  },
+  "east": {
+   "n_bus": 6253,
+   "load_mw": 55250.0,
+   "field": "jshis_nankai_intensity.parquet",
+   "tsunami": true,
+   "buses_in_tsunami_zone": 110,
+   "timeline": [
+    {
+     "t_days": 0.0,
+     "served_frac": 0.809,
+     "sites_out": 36.18,
+     "lines_out": 36.625,
+     "gens_out": 962.79,
+     "gen_cap_mw": 49480.076
+    },
+    {
+     "t_days": 0.25,
+     "served_frac": 0.82,
+     "sites_out": 36.18,
+     "lines_out": 36.625,
+     "gens_out": 861.625,
+     "gen_cap_mw": 50236.77
+    },
+    {
+     "t_days": 0.5,
+     "served_frac": 0.834,
+     "sites_out": 36.18,
+     "lines_out": 36.625,
+     "gens_out": 760.135,
+     "gen_cap_mw": 50866.477
+    },
+    {
+     "t_days": 1.0,
+     "served_frac": 0.919,
+     "sites_out": 36.18,
+     "lines_out": 36.325,
+     "gens_out": 560.205,
+     "gen_cap_mw": 69682.897
+    },
+    {
+     "t_days": 2.0,
+     "served_frac": 0.935,
+     "sites_out": 36.15,
+     "lines_out": 35.22,
+     "gens_out": 440.125,
+     "gen_cap_mw": 70444.266
+    },
+    {
+     "t_days": 3.0,
+     "served_frac": 0.939,
+     "sites_out": 35.97,
+     "lines_out": 34.535,
+     "gens_out": 320.33,
+     "gen_cap_mw": 71057.692
+    },
+    {
+     "t_days": 4.0,
+     "served_frac": 0.941,
+     "sites_out": 35.42,
+     "lines_out": 34.025,
+     "gens_out": 314.71,
+     "gen_cap_mw": 71102.315
+    },
+    {
+     "t_days": 5.0,
+     "served_frac": 0.943,
+     "sites_out": 34.755,
+     "lines_out": 33.55,
+     "gens_out": 309.655,
+     "gen_cap_mw": 71147.392
+    },
+    {
+     "t_days": 7.0,
+     "served_frac": 0.943,
+     "sites_out": 33.35,
+     "lines_out": 32.91,
+     "gens_out": 299.12,
+     "gen_cap_mw": 71228.346
+    },
+    {
+     "t_days": 10.0,
+     "served_frac": 0.945,
+     "sites_out": 31.82,
+     "lines_out": 31.785,
+     "gens_out": 289.66,
+     "gen_cap_mw": 71311.371
+    },
+    {
+     "t_days": 14.0,
+     "served_frac": 0.946,
+     "sites_out": 30.79,
+     "lines_out": 29.23,
+     "gens_out": 277.895,
+     "gen_cap_mw": 71387.856
+    },
+    {
+     "t_days": 21.0,
+     "served_frac": 0.948,
+     "sites_out": 29.365,
+     "lines_out": 23.06,
+     "gens_out": 277.375,
+     "gen_cap_mw": 71399.57
+    },
+    {
+     "t_days": 30.0,
+     "served_frac": 0.948,
+     "sites_out": 26.83,
+     "lines_out": 15.845,
+     "gens_out": 103.78,
+     "gen_cap_mw": 74340.45
+    },
+    {
+     "t_days": 45.0,
+     "served_frac": 0.956,
+     "sites_out": 20.985,
+     "lines_out": 8.035,
+     "gens_out": 42.66,
+     "gen_cap_mw": 75271.091
+    },
+    {
+     "t_days": 60.0,
+     "served_frac": 0.963,
+     "sites_out": 15.42,
+     "lines_out": 3.97,
+     "gens_out": 42.225,
+     "gen_cap_mw": 75281.652
+    },
+    {
+     "t_days": 90.0,
+     "served_frac": 0.977,
+     "sites_out": 7.745,
+     "lines_out": 1.025,
+     "gens_out": 41.65,
+     "gen_cap_mw": 75298.576
+    }
+   ],
+   "potential_vs_analysis": {
+    "corr_pout_t0": 0.3085061895960624,
+    "corr_pout_t2": 0.23392262746578493,
+    "corr_pout_t7": 0.19327694543608953,
+    "wcorr_pout_t2": 0.40735634992199365,
+    "corr_expected_days": 0.18228449261012564
+   },
+   "municipalities": {
+    "n_muni": 226,
+    "outage_customers_t0": 5286997.479349155,
+    "outage_customers_t1": 2772912.563347716,
+    "outage_customers_t7": 2116952.933301433,
+    "outage_customers_t30": 1965281.1624466395,
+    "note": "outage_customers は供給率(供給力不足込み)ベース"
+   },
+   "elapsed_s": 169.5
+  }
+ },
+ "naikakufu_compare": {
+  "west": {
+   "tokai_t0": 7453450,
+   "kinki_t0": 1206731,
+   "sanyo_t0": 407777,
+   "shikoku_t0": 510690,
+   "kyushu_t0": 249645,
+   "tokai_t1": 4470384,
+   "kinki_t1": 1203193,
+   "sanyo_t1": 407226,
+   "shikoku_t1": 510781,
+   "kyushu_t1": 249390,
+   "tokai_t4": 1572593,
+   "kinki_t4": 1176627,
+   "sanyo_t4": 405437,
+   "shikoku_t4": 502624,
+   "kyushu_t4": 244965,
+   "tokai_t7": 1265759,
+   "kinki_t7": 1122555,
+   "sanyo_t7": 401174,
+   "shikoku_t7": 483215,
+   "kyushu_t7": 238689
+  },
+  "east": {
+   "tokai_t0": 202227,
+   "kinki_t0": 0,
+   "sanyo_t0": 0,
+   "shikoku_t0": 0,
+   "kyushu_t0": 0,
+   "tokai_t1": 170003,
+   "kinki_t1": 0,
+   "sanyo_t1": 0,
+   "shikoku_t1": 0,
+   "kyushu_t1": 0,
+   "tokai_t4": 129959,
+   "kinki_t4": 0,
+   "sanyo_t4": 0,
+   "shikoku_t4": 0,
+   "kyushu_t4": 0,
+   "tokai_t7": 107407,
+   "kinki_t7": 0,
+   "sanyo_t7": 0,
+   "shikoku_t7": 0,
+   "kyushu_t7": 0
+  }
+ }
+}
