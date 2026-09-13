@@ -342,6 +342,19 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 ---
 
+<!-- _class: figure -->
+<!-- source: All-Japan-Grid hazard/nankai run_v1 (N=200) -->
+
+# 14,238 母線の停電確率が日ごとに引く
+
+![w:900](../../reports/nankai_hazard_2026-09-13/impact_all_japan.gif)
+
+<div class="caption"><span class="fig-num">図.</span> 母線ごとの停電確率（設備損傷・系統崩壊・上流孤立）と全国の復旧曲線。右の軒数は五地域の物理停電。</div>
+
+<!-- note: シネマティックは見せ方、こちらは読み方。色は停電確率、点の大きさは需要。黒点は津波浸水域の変電所で、1 か月たっても残る。 -->
+
+---
+
 <!-- _class: cols-2 -->
 
 # 直後は「エリア崩壊」、1 週間後は「津波の沿岸」が残る
@@ -362,6 +375,32 @@ $$B\,\theta = P, \qquad f_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}, \qquad f' =
 
 </div>
 </div>
+
+---
+
+<!-- _class: figure -->
+<!-- source: All-Japan-Grid hazard/nankai run_v1 west (N=200) -->
+
+# 西日本 — 中部の崩壊が 1 日で解け、沿岸の黒点が残る
+
+![w:880](../../reports/nankai_hazard_2026-09-13/restoration_west.gif)
+
+<div class="caption"><span class="fig-num">図.</span> 西日本 7,985 母線。需要加重の受電可能は直後 71%・1 日 81%・7 日 92%・90 日 98%。帯は 10〜90% 分位。</div>
+
+<!-- note: 赤線は物理的につながっているか、青線は供給力不足まで含めた供給率。直後の差 16 pt が「エリアの需給崩壊」。1 日でほぼ重なるのは、系統崩壊の復電中央値を 24 時間と置いたため。 -->
+
+---
+
+<!-- _class: figure -->
+<!-- source: All-Japan-Grid hazard/nankai run_v1 east (N=200) -->
+
+# 東日本 — 東京湾岸と伊豆の浸水域が残る
+
+![w:880](../../reports/nankai_hazard_2026-09-13/restoration_east.gif)
+
+<div class="caption"><span class="fig-num">図.</span> 東日本 6,253 母線。需要加重の受電可能は直後 90%・1 日 93%・7 日 96%・90 日 98%。帯は 10〜90% 分位。</div>
+
+<!-- note: 東は震源から遠く、直後の供給率 81% の主因は火力の停止率曲線による供給力不足。物理的な孤立は 1 割にとどまる。 -->
 
 ---
 
