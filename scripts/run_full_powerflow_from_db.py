@@ -360,9 +360,13 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         if params is None:
             n_edge_skipped += 1
             continue
-        length = _path_len_km(e.get("path") or [e["a"], e["b"]])
+        # A reviewed identity alias may change a bus coordinate while retaining
+        # the original endpoint-based length estimate (no observed line path).
+        # This reference is an estimate, not a newly observed wire geometry.
+        length_reference = e.get("identity_length_reference") or [e["a"], e["b"]]
+        length = _path_len_km(e.get("path") or length_reference)
         if length <= 0:
-            length = max(_haversine_km(*e["a"], *e["b"]), 0.05)
+            length = max(_haversine_km(*length_reference[0], *length_reference[1]), 0.05)
         x = params["x_ohm_per_km"] or 0.001
         # 介入#31(2026-08-17 オーナー承認): 合成連系タイ(tie)とDC連系枝(dc_tie/dc)は
         # in_service=False で建てる。実連系線の実線形が既にあり二重計上(タイは直線・

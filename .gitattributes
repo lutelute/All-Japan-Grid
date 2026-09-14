@@ -13,3 +13,11 @@ docs/reports/codex_model_quality_2026-09-12/*.svg linguist-generated
 docs/reports/codex_before_after_2026-09-12/index.html linguist-generated
 docs/reports/codex_before_after_2026-09-12/assets/* linguist-generated
 docs/reports/codex_before_after_2026-09-12/*.json linguist-generated
+
+# Same-site trials: generated evidence and offline aerial basemaps.
+docs/reports/codex_same_site_trial_2026-09-13/*.json linguist-generated
+docs/reports/codex_same_site_trial_2026-09-13/index.html linguist-generated
+docs/reports/codex_same_site_trial_2026-09-13/basemap/* linguist-generated
+docs/reports/codex_same_site_trial_2026-09-13/visual_review.json linguist-generated=false
+# Keep provider metadata byte-identical to the recorded SHA (CRLF source).
+docs/reports/codex_same_site_trial_2026-09-13/basemap/spec_*.geojson -text whitespace=cr-at-eol
