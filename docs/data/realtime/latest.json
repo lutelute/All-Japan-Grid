@@ -1,46 +1,56 @@
 {
- "fetched_at": "2026-09-15T01:07:04",
+ "fetched_at": "2026-09-15T02:19:01",
  "unit": "MW",
  "zones": {
   "hokkaido": {
-   "hourly_mw": {},
-   "updated": "2026/9/15 0:50",
+   "hourly_mw": {
+    "0": 2520.0,
+    "1": 2470.0
+   },
+   "updated": "2026/9/15 2:10",
    "date": "2026/9/15",
    "source": "https://denkiyoho.hepco.co.jp/area/data/juyo_01_20260915.csv"
   },
   "tohoku": {
    "hourly_mw": {
-    "0": 7400.0
+    "0": 7400.0,
+    "1": 7190.0
    },
-   "updated": "2026/9/15 1:02",
+   "updated": "2026/9/15 2:17",
    "date": "2026/9/15",
    "source": "https://setsuden.nw.tohoku-epco.co.jp/common/demand/juyo_02_20260915.csv"
   },
   "tokyo": {
    "hourly_mw": {
-    "0": 27780.0
+    "0": 27780.0,
+    "1": 26190.0
    },
-   "updated": "2026/9/15 1:00",
+   "updated": "2026/9/15 2:10",
    "date": "2026/9/15",
    "source": "https://www.tepco.co.jp/forecast/html/images/juyo-d1-j.csv"
   },
   "chubu": {
-   "hourly_mw": {},
-   "updated": "2026/09/15 00:55",
+   "hourly_mw": {
+    "0": 13890.0
+   },
+   "updated": "2026/09/15 02:15",
    "date": "2026/09/15",
    "source": "https://powergrid.chuden.co.jp/denki_yoho_content_data/juyo_cepco003.csv"
   },
   "hokuriku": {
-   "hourly_mw": {},
-   "updated": "2026/9/15 1:02",
+   "hourly_mw": {
+    "0": 2560.0
+   },
+   "updated": "2026/9/15 2:16",
    "date": "2026/9/15",
    "source": "https://www.rikuden.co.jp/nw/denki-yoho/csv/juyo_05_20260915.csv"
   },
   "chugoku": {
    "hourly_mw": {
-    "0": 5570.0
+    "0": 5570.0,
+    "1": 5390.0
    },
-   "updated": "2026/09/15 01:04",
+   "updated": "2026/09/15 02:12",
    "date": "2026/9/15",
    "source": "https://www.energia.co.jp/nw/jukyuu/sys/juyo_07_20260915.csv"
   },
@@ -77,15 +87,18 @@
   },
   "kyushu": {
    "hourly_mw": {
-    "0": 8570.0
+    "0": 8570.0,
+    "1": 8180.0
    },
-   "updated": "2026/9/15 0:58",
+   "updated": "2026/9/15 2:09",
    "date": "2026/9/15",
    "source": "https://www.kyuden.co.jp/td_power_usages/csv/juyo-hourly-20260915.csv"
   },
   "okinawa": {
-   "hourly_mw": {},
-   "updated": "2026/09/15 01:02",
+   "hourly_mw": {
+    "0": 1010.0
+   },
+   "updated": "2026/09/15 02:12",
    "date": "2026/09/15",
    "source": "https://www.okiden.co.jp/denki2/juyo_10_20260915.csv"
   }
