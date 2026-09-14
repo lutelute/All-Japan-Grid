@@ -201,9 +201,27 @@ def build(cfg, ops, buses, rng, sup=None):
     out_t = np.minimum(b.cust.values, brk_t * cpp) * (~lost)
     b = b.assign(cls=cls, poles=poles, brk_s=brk_s * (~lost), brk_t=brk_t * (~lost), out_s=out_s, out_t=out_t, lost_cust=np.where(lost, b.cust.values, 0.0))
     b.attrs["support_used"] = sorted(sup.keys())
-    # 営業所: エリアごとに需要家数で重み付けした k-means
+    # 営業所: 補助 DB の実在の事業所(本社・本店を除く)があれば、同じ会社の最寄りの事業所に母線を割り当てる。無ければ需要家数で重み付けした k-means
     offices = []; b["office"] = -1
+    uo = sup.get("utility_offices")
+    real = None
+    if uo is not None and len(uo):
+        real = uo[uo.lat.notna() & uo.lon.notna() & ~uo.office_type.isin(["本社", "本店"])].assign(zone=lambda d: d.utility.map(UTIL_ZONE))
+        real = real[real.zone.notna()]
+    kx = np.cos(np.radians(35))
     for z, g in b.groupby("zone"):
+        if real is not None and (real.zone == z).any():
+            R = real[real.zone == z].reset_index(drop=True)
+            d2 = ((g.lon.values[:, None] - R.lon.values[None, :]) * kx) ** 2 + (g.lat.values[:, None] - R.lat.values[None, :]) ** 2
+            lab = d2.argmin(1)
+            for j in range(len(R)):
+                m = lab == j
+                if not m.any():
+                    continue
+                gg = g[m]
+                offices.append(dict(zone=z, lat=float(R.lat[j]), lon=float(R.lon[j]), cust=float(gg.cust.sum()), name=str(R.office_name[j]), source="実在の事業所"))
+                b.loc[gg.index, "office"] = len(offices) - 1
+            continue
         k = int(round(g.cust.sum() / v(wf["office_customers"])))
         X = np.c_[g.lon.values * np.cos(np.radians(35)), g.lat.values]
         lab, C = kmeans_w(X, g.cust.values, max(k, 1), rng)
@@ -213,7 +231,7 @@ def build(cfg, ops, buses, rng, sup=None):
             if not m.any():
                 continue
             gg = g[m]; wj = gg.cust.values
-            offices.append(dict(zone=z, lat=float((gg.lat * wj).sum() / wj.sum()), lon=float((gg.lon * wj).sum() / wj.sum()), cust=float(wj.sum())))
+            offices.append(dict(zone=z, lat=float((gg.lat * wj).sum() / wj.sum()), lon=float((gg.lon * wj).sum() / wj.sum()), cust=float(wj.sum()), name=f"{z}-{j}", source="k-means(仮置き)"))
             b.loc[gg.index, "office"] = len(offices) - 1
     O = pd.DataFrame(offices)
     O["work_s"] = b.groupby("office").brk_s.sum().reindex(O.index, fill_value=0) / v(rp["poles_per_person_day"])
@@ -360,7 +378,8 @@ def main():
     for k, rr in R.items():
         curves[k] = [customers_out(rr[0], i) for i in sel]
     summary = {
-        "offices": int(len(O)), "staff_total": float(O.staff.sum()),
+        "offices": int(len(O)), "office_source": O.source.value_counts().to_dict(), "offices_by_company": {JA[c]: int((O.zone == c).sum()) for c in sorted(set(O.zone))},
+        "staff_total": float(O.staff.sum()),
         "staff_by_company": {JA[c]: round(float(O.staff[O.zone == c].sum())) for c in sorted(set(O.zone))},
         "broken_poles_by_company": {JA[c]: round(float((b.brk_s + b.brk_t)[b.zone == c].sum())) for c in sorted(set(b.zone))},
         "broken_poles_tsunami_share": float(b.brk_t.sum() / max((b.brk_s + b.brk_t).sum(), 1e-9)),
@@ -456,7 +475,8 @@ def render(a, b, O, R, CV, T, dt, customers_out, summary):
         ax3.set_title("停電中の需要家 [万軒]", color=TXT, fontsize=13, loc="left"); ax3.legend(loc="upper right", ncol=3, fontsize=10, frameon=False, labelcolor=TXT)
         bp = summary["broken_poles_by_cause"]
         fig.text(0.02, 0.78, f"折れた電柱  揺れ {bp['揺れ']:,} 本・建物の全壊に巻き込まれ {bp['建物全壊']:,} 本・津波 {bp['津波']:,} 本", fontsize=15, color="#c9d3e0", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
-        fig.text(0.02, 0.012, "電柱折損率(揺れ・建物全壊 0.17155×木造全壊率)・1 本あたり停電軒数・作業効率 1.69 本/人日は内閣府・県の手法、木造の建築年次は令和5年住宅・土地統計調査、電柱の本数は各社の有価証券報告書、人員 390 人/百万口と応援 15% は熊本・台風・福島県沖の実績。営業所の位置と全壊率曲線の幅は仮定", fontsize=10.5, color=MUTED)
+        fig.text(0.02, 0.030, "電柱折損率(揺れ・建物全壊 0.17155×木造全壊率)・1 本あたり停電軒数・作業効率 1.69 本/人日は内閣府・県の手法、木造の建築年次は令和5年住宅・土地統計調査、電柱の本数は各社の有価証券報告書", fontsize=10.5, color=MUTED)
+        fig.text(0.02, 0.010, "人員 390 人/百万口と応援 15% は熊本・台風・福島県沖の実績、営業所は各社公表の事業所。全壊率曲線の幅と浸水域の着手 10 日は仮定。送電側の停電は動的カスケード run_v6 の母線平均", fontsize=10.5, color=MUTED)
         fig.savefig(os.path.join(tmp, f"f{fi:04d}.png"), facecolor=BG); plt.close(fig)
         if abs(t - 7) < 1e-9:
             import shutil; shutil.copy(os.path.join(tmp, f"f{fi:04d}.png"), a.out + "_still.png")
