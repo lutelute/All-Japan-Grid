@@ -1,0 +1,20 @@
+# 南海トラフ停電シナリオ卓
+
+前提を切り替えて、揺れの直後 3 時間の系統と 90 日の復旧を比べる 1 枚の HTML。
+
+```
+PYTHONPATH=hazard/nankai/src:hazard/nankai/scripts python3 hazard/nankai/scripts/build_scenario_tool.py \
+  --out docs/reports/nankai_hazard_2026-09-13/tool/nankai_scenario_tool.html
+node hazard/nankai/tool/test_model.mjs     # JS の計算を Python(reference.json)と照合
+```
+
+| ファイル | 中身 |
+|---|---|
+| `model.js` | 計算部。`make_restoration_workforce.py` の build / simulate / customers_out の移植 |
+| `app.js`・`style.css`・`index.template.html` | 画面 |
+| `test_model.mjs`・`reference.json` | 照合(4 通りの前提) |
+| `data.json` | 生成物(HTML に埋め込むデータ。git 管理外) |
+
+- 系統の前提(変圧器台帳・東京湾の浸水・過負荷リレー)は動的カスケードを事前に計算した run を切り替える。対応は `build_scenario_tool.py` の `WEST_RUNS`・`EAST_RUNS`。
+- 被害と復旧の前提はブラウザで計算し直す。補助 DB(`hazard/nankai/data/external/hazard_support/`)が要る。
+- 埋め込むのは母線ごとの解析結果と入力、各社が公表する事業所の位置だけ。送配電事業者の台帳の生値は入れない。

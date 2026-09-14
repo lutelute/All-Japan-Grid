@@ -1,0 +1,201 @@
+<meta charset="utf-8">
+<title>南海トラフ停電シナリオ卓</title>
+<meta name="description" content="南海トラフ巨大地震の停電を、系統・被害・復旧の前提を切り替えて比べる">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+/*__STYLE__*/
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">All-Japan-Grid ・ 南海トラフ巨大地震(J-SHIS Mw9.1)</p>
+      <h1>南海トラフ停電シナリオ卓</h1>
+      <p class="lede">前提を切り替えると、揺れの直後 3 時間の系統と、90 日の復旧が計算し直されます。点線は既定の前提。</p>
+    </div>
+    <div class="top-actions">
+      <span class="diff-chip" id="diffChip">既定の前提</span>
+      <button type="button" class="btn ghost" id="resetBtn">既定に戻す</button>
+      <button type="button" class="btn ghost" id="copyBtn">この前提のリンクをコピー</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="rail" aria-label="前提">
+      <section class="group">
+        <h2><span class="step">系統</span>揺れの直後、系統が持ちこたえるか</h2>
+        <p class="group-note">動的カスケード(周波数・UFLS・リレー・系統分離)を全組み合わせで計算済み。N=200。</p>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">変圧器の容量</span><span class="badge decided">データ</span></div>
+          <div class="seg" role="radiogroup" aria-label="変圧器の容量">
+            <input type="radio" name="tr" id="tr1" value="1" checked><label for="tr1">公表台帳で直す</label>
+            <input type="radio" name="tr" id="tr0" value="0"><label for="tr0">元のモデル</label>
+          </div>
+          <p class="why">元のモデルは東京電力・中部電力の 500 kV 変電所で変圧器 1 台分しか持っていなかった。空容量一覧の台数と設備容量で置き換える。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">東京湾の浸水</span><span class="badge open">判断待ち</span></div>
+          <div class="seg" role="radiogroup" aria-label="東京湾の浸水">
+            <input type="radio" name="tb" id="tb1" value="1" checked><label for="tb1">A40 のまま使う</label>
+            <input type="radio" name="tb" id="tb0" value="0"><label for="tb0">湾奥は被害なし</label>
+          </div>
+          <p class="why">国土数値情報 A40 の神奈川県の東京湾は、県独自の慶長型地震が最大クラス(国土交通省 河川分科会 第52回 資料2-5)。南海トラフ単独より大きい可能性がある。一方で神奈川県は南海トラフでも湾内に 2〜9 m の水位とする。「被害なし」は下限側。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">過負荷リレー</span><span class="badge sens">感度</span></div>
+          <div class="seg" role="radiogroup" aria-label="過負荷リレー">
+            <input type="radio" name="ol" id="ol1" value="1" checked><label for="ol1">主幹系統で動く</label>
+            <input type="radio" name="ol" id="ol0" value="0"><label for="ol0">動かない</label>
+          </div>
+          <p class="why">DC 潮流で緊急定格の 1.25 倍を超えた主幹系統の枝を切る。系統安定化装置と運用者の再給電は入っていない。</p>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2><span class="step">被害</span>配電の電柱が何本折れるか</h2>
+        <p class="group-note">以下はブラウザで計算し直す(母線 7,331・事業所 350)。</p>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">建物全壊の巻き込み</span><span class="badge decided">手法</span></div>
+          <label class="switch"><input type="checkbox" id="collapse" checked><span>入れる(0.17155 × 木造全壊率)</span></label>
+          <p class="why">内閣府 首都直下地震の被害想定手法 資料3「阪神淡路の実態による」。浸水域の母線は津波の被害率 16.3% だけを使う。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="sigma">全壊率曲線の幅 σ</label><output class="val" id="sigmaOut" for="sigma">0.40</output><span class="badge open">判断待ち</span></div>
+          <input type="range" id="sigma" min="0.2" max="0.8" step="0.05" value="0.4">
+          <div class="ticks"><span>0.2 急</span><span class="dflt">既定 0.4</span><span>0.8 なだらか</span></div>
+          <p class="why">曲線は 2005 年首都直下手法の「計測震度 6.4 で旧 71%・中 50%・新 11%」を通る正規分布。σ は内閣府・県の資料に数値が無く図だけ。東京都のベクター図から読み取るかは未決。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">「木造建物全壊率」の読み方</span><span class="badge sens">感度</span></div>
+          <div class="seg" role="radiogroup" aria-label="全壊率の読み方">
+            <input type="radio" name="basis" id="basisW" value="wooden_stock" checked><label for="basisW">木造の中の割合</label>
+            <input type="radio" name="basis" id="basisA" value="all_dwellings"><label for="basisA">全建物に対する割合</label>
+          </div>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="oldSplit">1970 年以前の木造のうち旧築年</label><output class="val" id="oldSplitOut" for="oldSplit">50%</output><span class="badge sens">仮定</span></div>
+          <input type="range" id="oldSplit" min="0.2" max="0.8" step="0.05" value="0.5">
+          <p class="why">住宅・土地統計調査の区分は 1970 年以前、手法の旧築年は 1962 年以前。</p>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2><span class="step">復旧</span>誰が、いつから直すか</h2>
+
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="spm">復旧に動く人(100 万口あたり)</label><output class="val" id="spmOut" for="spm">390 人</output><span class="badge decided">実績</span></div>
+          <input type="range" id="spm" min="200" max="800" step="10" value="390">
+          <div class="ticks"><span>200</span><span class="dflt">既定 390</span><span>800</span></div>
+          <p class="why">熊本地震 390・台風15号 376・2022 福島県沖 356・台風24号 695・台風21号 790(自社と協力会社 / 契約口数)の中央値。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="aid">他社応援(送り手の動員可能数に対して)</label><output class="val" id="aidOut" for="aid">15%</output><span class="badge sens">幅</span></div>
+          <input type="range" id="aid" min="0" max="0.4" step="0.01" value="0.15">
+          <div class="ticks"><span>0%</span><span class="dflt">既定 15%</span><span>40%</span></div>
+          <p class="why">台風15号 17.8%・熊本地震 2.0%。送り手は自社の被害度が 0.25 未満の会社だけ(災害時連携計画のプッシュ型応援の前提条件)。</p>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">社内の融通</span><span class="badge sens">仮定</span></div>
+          <label class="switch"><input type="checkbox" id="internal" checked><span>被害の軽い事業所から半数を回す</span></label>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="access">浸水域に着手できる日</label><output class="val" id="accessOut" for="access">10 日後</output><span class="badge sens">仮定</span></div>
+          <input type="range" id="access" min="3" max="21" step="1" value="10">
+          <p class="why">水が引き、道路が開くまで。内閣府 2025「8 日後には津波等の影響で復旧作業に入れない区域を除いて停電を解消」(東北電力)を踏まえた。</p>
+        </div>
+      </section>
+
+      <p class="rail-foot">電柱の本数は各社の有価証券報告書、営業所は各社が公表する事業所の位置。数値の出典は hazard/nankai/config の YAML と docs/reports/nankai_hazard_2026-09-13 にある。</p>
+    </aside>
+
+    <main class="results" id="results">
+      <section class="kpis" aria-label="主な結果" id="kpis"></section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>揺れの直後 3 時間、受電を続ける需要の割合</h3>
+          <p class="sub">線はサンプルの平均、帯は平均と 10% 点(悪い側の 1 割)のあいだ。点線は既定の前提。</p>
+        </div>
+        <div class="chart" id="chartDyn" role="img" aria-label="直後3時間の受電率"></div>
+        <div class="legend" id="legendDyn"></div>
+      </section>
+
+      <section class="panel two">
+        <div>
+          <div class="panel-head">
+            <h3>停電中の需要家(解析した 8 エリア)</h3>
+            <p class="sub">積み上げの和が合計。津波で全壊相当は復旧対象外として残る。</p>
+          </div>
+          <div class="chart" id="chartOut" role="img" aria-label="90日の停電中の需要家"></div>
+          <div class="legend" id="legendOut"></div>
+        </div>
+        <div>
+          <div class="panel-head">
+            <h3>電柱の修理に当たる人</h3>
+            <p class="sub">地元の事業所・社内の融通・他社応援。</p>
+          </div>
+          <div class="chart" id="chartPeople" role="img" aria-label="働いている人"></div>
+          <div class="legend" id="legendPeople"></div>
+        </div>
+      </section>
+
+      <section class="panel map-panel">
+        <div class="panel-head row">
+          <div>
+            <h3>停電の広がりと事業所</h3>
+            <p class="sub">点は変電所の母線(色 = 停電の確率)、円は事業所(大きさ = 人員、縁の色 = 残っている修理)。線は他社応援の車列。</p>
+          </div>
+          <div class="time-ctl">
+            <label for="mapDay">発災から</label>
+            <input type="range" id="mapDay" min="0" max="100" step="1" value="46">
+            <output id="mapDayOut" for="mapDay" class="val">3 日</output>
+          </div>
+        </div>
+        <div class="map-wrap"><canvas id="map" aria-label="停電の地図"></canvas>
+          <div class="map-scale"><span>停電の確率</span><i class="ramp"></i><span class="lo">0</span><span class="hi">1</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>会社ごとの被害と応援</h3>
+          <p class="sub">被害度 = 残作業(人・日)/(動員可能数 × 7 日)。0.5 以上が受け手、0.25 未満が送り手。</p>
+        </div>
+        <div class="table-wrap"><table id="coTable"></table></div>
+      </section>
+
+      <section class="panel notes">
+        <h3>読み方と限界</h3>
+        <ul>
+          <li>系統の前提は事前計算の組み合わせを切り替えるだけで、再計算はしない(1 本数分)。被害と復旧はこの画面で計算し直す。</li>
+          <li>「送電側」は動的カスケードの母線ごとの物理停電の平均(津波で浸水した変電所と上流の孤立を含む)。4 日以降が内閣府 2025 より 1 桁多い問題は残っている。</li>
+          <li>送電側と配電は母線ごとに独立に重ねた(停電の割合 = 1 −(1 − 送電側)(1 − 配電))。</li>
+          <li>応援の送り手・受け手は被害度のしきい値で決まり、前提を少し動かすと入れ替わる。応援の人数は幅で読む。</li>
+        </ul>
+        <p class="meta" id="metaLine"></p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__MODEL__*/
+</script>
+<script>
+/*__APP__*/
+</script>

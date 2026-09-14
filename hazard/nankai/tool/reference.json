@@ -1,0 +1,121 @@
+{
+ "default": {
+  "override": {},
+  "broken_s": 64761.96405770921,
+  "broken_t": 78449.11618135608,
+  "staff": 32799.0,
+  "aid_total": 1655.651673974973,
+  "senders": [
+   "hokkaido",
+   "hokuriku",
+   "kyushu",
+   "tohoku",
+   "tokyo"
+  ],
+  "receivers": [
+   "chubu",
+   "chugoku",
+   "shikoku"
+  ],
+  "own7": 20447.283625551183,
+  "internal7": 11178.926983471556,
+  "aid7": 1655.6516739749727,
+  "dist_any": {
+   "1d": 1529349.539291691,
+   "7d": 907726.24212644,
+   "14d": 20296.16216221101
+  }
+ },
+ "sigma06_all_aid30": {
+  "override": {
+   "sigma": 0.6,
+   "basis": "all_dwellings",
+   "aid": 0.3
+  },
+  "broken_s": 67483.63072763101,
+  "broken_t": 78449.11618135608,
+  "staff": 32799.0,
+  "aid_total": 2862.1192797946314,
+  "senders": [
+   "hokkaido",
+   "hokuriku",
+   "kyushu",
+   "tohoku",
+   "tokyo"
+  ],
+  "receivers": [
+   "chubu",
+   "chugoku",
+   "shikoku"
+  ],
+  "own7": 20270.47792075068,
+  "internal7": 11355.73268827206,
+  "aid7": 2862.119279794632,
+  "dist_any": {
+   "1d": 1542456.2696648256,
+   "7d": 880636.8677402724,
+   "14d": 1719.6677031626693
+  }
+ },
+ "spm300_noint_access14": {
+  "override": {
+   "spm": 300,
+   "internal": false,
+   "access": 14.0,
+   "old_split": 0.3
+  },
+  "broken_s": 61328.74872796376,
+  "broken_t": 78449.11618135608,
+  "staff": 25230.0,
+  "aid_total": 952.5252241446601,
+  "senders": [
+   "hokkaido",
+   "hokuriku",
+   "kyushu",
+   "tohoku",
+   "tokyo"
+  ],
+  "receivers": [
+   "chubu",
+   "chugoku",
+   "shikoku"
+  ],
+  "own7": 24327.854314632874,
+  "internal7": 0.0,
+  "aid7": 952.5252241446601,
+  "dist_any": {
+   "1d": 1501571.2723503148,
+   "7d": 998936.8084541732,
+   "14d": 862005.6344542232
+  }
+ },
+ "nocollapse_noaid": {
+  "override": {
+   "collapse": false,
+   "aid": 0.0
+  },
+  "broken_s": 3977.3334133978824,
+  "broken_t": 78449.11618135608,
+  "staff": 32799.0,
+  "aid_total": 0.0,
+  "senders": [
+   "hokkaido",
+   "hokuriku",
+   "kyushu",
+   "tohoku",
+   "tokyo"
+  ],
+  "receivers": [
+   "chugoku",
+   "shikoku"
+  ],
+  "own7": 20238.96197570918,
+  "internal7": 11387.248633313557,
+  "aid7": 0.0,
+  "dist_any": {
+   "1d": 877826.5220065776,
+   "7d": 860979.0500903828,
+   "14d": 81441.35827279693
+  }
+ }
+}

@@ -367,12 +367,15 @@ def main():
         f = (t - tl[k]) / (tl[k + 1] - tl[k])
         return 1 - (phys[k] * (1 - f) + phys[k + 1] * f)
     cust = b.cust.values; off = b.office.values
+    lost = b.lost_cust.values; rest = cust - lost
     def customers_out(rr, ti):
+        """戻り: (合計, 送電側, 配電だけ, 復旧対象外, 配電の停電(送電側を問わない))。最初の 4 つは内訳の和が合計。
+        2026-09-14 修正: 以前は復旧対象外(津波で全壊相当)の需要家を送電側の停電確率の分だけ二重に数えていた(合計が過大)。"""
         fs = rr["dist_out_s"][ti][off]; ft = rr["dist_out_t"][ti][off]
-        f_dist = np.clip((b.out_s.values * fs + b.out_t.values * ft) / np.maximum(cust, 1e-9), 0, 1)
+        f_dist = np.clip((b.out_s.values * fs + b.out_t.values * ft) / np.maximum(rest, 1e-9), 0, 1)
         pb = bulk_out(T[ti])
-        tot = cust * (1 - (1 - pb) * (1 - f_dist)) + b.lost_cust.values * (1 - (1 - pb))
-        return float(tot.sum() + b.lost_cust.values.sum() * 0), float((cust * pb).sum()), float((cust * f_dist).sum())
+        bulk = rest * pb; dist = rest * (1 - pb) * f_dist
+        return float((bulk + dist).sum() + lost.sum()), float(bulk.sum()), float(dist.sum()), float(lost.sum()), float((rest * f_dist).sum())
     sel = [int(round(x / dt)) for x in (0.5, 1, 2, 3, 4, 7, 14, 30, 60, 90)]
     curves = {}
     for k, rr in R.items():
@@ -397,7 +400,7 @@ def main():
         "first_arrival_d": {JA[c]: round(float(g.arrive.min()), 2) for c, g in CV.groupby("receiver")} if len(CV) else {},
         "people_on_duty": {f"{T[i]:g}d": {"own": round(res["own"][i]), "internal": round(res["internal"][i]), "aid": round(res["aid"][i])} for i in sel},
         "customers_out_10k": {k: {f"{T[i]:g}d": [round(x / 1e4) for x in vals] for i, vals in zip(sel, cv)} for k, cv in curves.items()},
-        "customers_out_note": "各時点 [合計, 送電側のみ, 配電のみ](万軒)。合計には津波で全壊相当の需要家(復旧対象外)を含む",
+        "customers_out_note": "各時点 [合計, 送電側, 配電だけ(送電側で停電していない需要家のうち), 津波で全壊相当(復旧対象外), 配電の停電(送電側を問わない)](万軒)。最初の 4 つは内訳の和が合計",
         "remaining_poles_by_company": {f"{T[i]:g}d": {JA[c]: round(x) for c, x in res["rem_poles_by_zone"][i].items() if x > 0} for i in sel},
     }
     json.dump(summary, open(a.out + "_summary.json", "w"), ensure_ascii=False, indent=1)
@@ -448,7 +451,7 @@ def render(a, b, O, R, CV, T, dt, customers_out, summary):
         fig.text(0.02, 0.895, "営業所(円の大きさ = 人員、色 = 残っている電柱修理の割合)と他社応援の車列(線の太さ = 人数)", fontsize=14, color=MUTED, bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
         on = res["own"][i] + res["internal"][i] + res["aid"][i]
         fig.text(0.02, 0.85, f"働いている人  {on:,.0f} 人(地元 {res['own'][i]:,.0f}・社内融通 {res['internal'][i]:,.0f}・他社応援 {res['aid'][i]:,.0f})", fontsize=17, color="#ffd696", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
-        fig.text(0.02, 0.815, f"停電中の需要家  {cur['base'][fi]/1e4:,.0f} 万軒(送電側 {parts[fi,1]/1e4:,.0f}・配電 {parts[fi,2]/1e4:,.0f})", fontsize=17, color="#ff9b7a", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
+        fig.text(0.02, 0.815, f"停電中の需要家  {cur['base'][fi]/1e4:,.0f} 万軒(送電側 {parts[fi,1]/1e4:,.0f}・配電 {parts[fi,2]/1e4:,.0f}・津波で全壊相当 {parts[fi,3]/1e4:,.0f})", fontsize=17, color="#ff9b7a", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
         # グラフ 1: 人員の内訳
         m = np.array(idx_all) <= i
         ax1 = fig.add_axes([0.56, 0.66, 0.42, 0.26], facecolor=PANEL)
