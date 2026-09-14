@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """復旧の人員を実規模で見る: 配電の電柱被害 → 営業所の人員(被災で欠ける)→ 社内の融通 → 他社応援の到着 → 電柱の修理 → 停電軒数。
 
-    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v4_red \
+    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v6 \
         --out docs/reports/nankai_hazard_2026-09-13/workforce/restoration_workforce
 
 前の試作(make_restoration_ops.py)は送変電の修理班だけで、営業所の人(配電)・協力会社・被災会社の社内融通が入っておらず、
@@ -80,6 +80,22 @@ def support_tables():
     return out
 
 
+UTIL_ZONE = {"北海道電力ネットワーク": "hokkaido", "東北電力ネットワーク": "tohoku", "東京電力パワーグリッド": "tokyo", "中部電力パワーグリッド": "chubu", "北陸電力送配電": "hokuriku",
+             "関西電力送配電": "kansai", "中国電力ネットワーク": "chugoku", "四国電力送配電": "shikoku", "九州電力送配電": "kyushu", "沖縄電力": "okinawa"}
+
+
+def poles_per_customer_by_company(sup):
+    """会社ごとの 配電設備 支持物数 / 契約口数 合計(補助 DB の utility_scale)。"""
+    us = sup.get("utility_scale")
+    if us is None or us.empty:
+        return {}
+    w = us.pivot_table(index="utility", columns="field", values="value", aggfunc="first")
+    if not {"distribution_supports", "retail_contracts_total"} <= set(w.columns):
+        return {}
+    r = (w.distribution_supports / w.retail_contracts_total).dropna()
+    return {UTIL_ZONE[u]: float(x) for u, x in r.items() if u in UTIL_ZONE}
+
+
 def bus_municipality(b):
     """母線 → 市区町村コード。境界(N03・被害想定の 26 都府県)の中は点を含むポリゴン、範囲外の県は県コード(xx000)。キャッシュつき。"""
     cp = os.path.join(DERIVED, "bus_muni_workforce.parquet")
@@ -153,7 +169,9 @@ def build(cfg, ops, buses, rng, sup=None):
     cls = jma_class(b.intensity_mean.values)
     rate = np.array([dd["shaking_break_rate"]["by_class"].get(str(c), 0.0) for c in cls])
     ts = b.tsunami_rank.values > 0
-    poles = b.cust.values * v(dd["poles_per_customer"])
+    ppc = poles_per_customer_by_company(sup)                       # 有価証券報告書の配電支持物数 / 契約口数(補助 DB)。無ければ一律の仮定
+    b.attrs["poles_per_customer"] = {JA.get(k, k): round(x, 3) for k, x in ppc.items()}
+    poles = b.cust.values * b.zone.map(ppc).fillna(v(dd["poles_per_customer"])).to_numpy(float)
     # 建物全壊による電柱折損 = 係数 × 木造建物全壊率(補助 DB の住宅統計があるときだけ。無ければ入れない)
     bc = dd["building_collapse_poles"]; collapse = np.zeros(len(b)); wshare = np.full(len(b), np.nan)
     if "municipal_housing" in sup and bc.get("enabled", True):
@@ -346,6 +364,7 @@ def main():
         "staff_by_company": {JA[c]: round(float(O.staff[O.zone == c].sum())) for c in sorted(set(O.zone))},
         "broken_poles_by_company": {JA[c]: round(float((b.brk_s + b.brk_t)[b.zone == c].sum())) for c in sorted(set(b.zone))},
         "broken_poles_tsunami_share": float(b.brk_t.sum() / max((b.brk_s + b.brk_t).sum(), 1e-9)),
+        "poles_per_customer": b.attrs.get("poles_per_customer", {}),
         "broken_poles_by_cause": {"揺れ": round(float(b.brk_shake_only.sum())), "建物全壊": round(float((b.brk_s - np.minimum(b.brk_shake_only, b.brk_s)).sum())), "津波": round(float(b.brk_t.sum()))},
         "collapse_settings": {"sigma": v(cfg["distribution_damage"]["wooden_collapse_curve"]["sigma"]), "basis": v(cfg["distribution_damage"]["building_collapse_poles"]["rate_basis"]),
                               "old_split": v(cfg["distribution_damage"]["housing_eras"]["old_share_of_1970_or_earlier"]), "enabled": cfg["distribution_damage"]["building_collapse_poles"].get("enabled", True),
@@ -437,7 +456,7 @@ def render(a, b, O, R, CV, T, dt, customers_out, summary):
         ax3.set_title("停電中の需要家 [万軒]", color=TXT, fontsize=13, loc="left"); ax3.legend(loc="upper right", ncol=3, fontsize=10, frameon=False, labelcolor=TXT)
         bp = summary["broken_poles_by_cause"]
         fig.text(0.02, 0.78, f"折れた電柱  揺れ {bp['揺れ']:,} 本・建物の全壊に巻き込まれ {bp['建物全壊']:,} 本・津波 {bp['津波']:,} 本", fontsize=15, color="#c9d3e0", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
-        fig.text(0.02, 0.012, "電柱折損率(揺れ・建物全壊 0.17155×木造全壊率)・1 本あたり停電軒数・作業効率 1.69 本/人日は内閣府・県の手法、木造の建築年次は令和5年住宅・土地統計調査、人員 300 人/百万口と応援 15% は台風15号・能登の実績。営業所の位置・電柱の本数・全壊率曲線の幅は仮定", fontsize=10.5, color=MUTED)
+        fig.text(0.02, 0.012, "電柱折損率(揺れ・建物全壊 0.17155×木造全壊率)・1 本あたり停電軒数・作業効率 1.69 本/人日は内閣府・県の手法、木造の建築年次は令和5年住宅・土地統計調査、電柱の本数は各社の有価証券報告書、人員 390 人/百万口と応援 15% は熊本・台風・福島県沖の実績。営業所の位置と全壊率曲線の幅は仮定", fontsize=10.5, color=MUTED)
         fig.savefig(os.path.join(tmp, f"f{fi:04d}.png"), facecolor=BG); plt.close(fig)
         if abs(t - 7) < 1e-9:
             import shutil; shutil.copy(os.path.join(tmp, f"f{fi:04d}.png"), a.out + "_still.png")

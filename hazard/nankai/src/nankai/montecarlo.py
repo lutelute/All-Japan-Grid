@@ -21,6 +21,9 @@ class DamageSample:
     intensity: np.ndarray; pga_g: np.ndarray
     blackout_until: np.ndarray | None = None   # 母線ごとの系統崩壊からの復電日(0=崩壊なし)
     jobs: list | None = None                   # 復旧ジョブ(id, zone, kv, load_mw, duration_d) — 資源勘定用
+    site_shake: np.ndarray | None = None       # 揺れでも止まったか(原因が津波に上書きされていても)。動的カスケードの停止時刻に使う
+    line_shake: np.ndarray | None = None
+    gen_shake: np.ndarray | None = None
 
 
 class Simulator:
@@ -160,7 +163,13 @@ class Simulator:
         done_gen = gout.copy()
         for i in np.where(gds >= gff)[0]:
             done_gen[i] = max(done_gen[i], self.rm.repair_time_days("generator", int(gds[i]), int(gcause[i]), rng))
-        return DamageSample(sds, scause, lf, lc, gds, gout, gcause, done_site, done_line, done_gen, hs.intensity, hs.pga_g, jobs=jobs)
+        ssh = getattr(self.fm, "last_site_shake", None); lsh = getattr(self.fm, "last_line_shake", None); gsh = getattr(self.fm, "last_gen_shake", None)
+        if ssh is not None:
+            ssh = np.where(self.site_is_junction, False, ssh)
+        if gsh is not None:
+            gsh = np.where(self.gslack, False, gsh)
+        return DamageSample(sds, scause, lf, lc, gds, gout, gcause, done_site, done_line, done_gen, hs.intensity, hs.pga_g, jobs=jobs,
+                            site_shake=ssh, line_shake=lsh, gen_shake=gsh)
 
     def _load_factor(self, d: DamageSample, t_days: float) -> np.ndarray:
         """需要減係数(母線ごと)。demand_reduction が無効なら 1。"""

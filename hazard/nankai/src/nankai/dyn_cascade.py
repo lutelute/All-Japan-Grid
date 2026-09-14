@@ -58,17 +58,25 @@ class DynCascade:
     def events(self, d):
         sim = self.sim; ev = []
         site_bus = sim.site_rows                          # サイトの代表母線
+        # 原因が津波でも、揺れでも止まっていた設備は揺れの時刻で止める(2026-09-14 修正: 以前は津波の到達まで遅らせていた)
+        ssh = d.site_shake if getattr(d, "site_shake", None) is not None else np.zeros(len(d.site_ds), bool)
+        lsh = d.line_shake if getattr(d, "line_shake", None) is not None else np.zeros(len(d.line_fail), bool)
+        gsh = d.gen_shake if getattr(d, "gen_shake", None) is not None else np.zeros(len(d.gen_cause), bool)
         for i in np.where(d.site_ds >= self.ff_site)[0]:
             buses = np.where(sim.bus_site == i)[0]
-            if d.site_cause[i] == 2:
+            if d.site_cause[i] == 2 and not ssh[i]:
                 t = float(self.t_tsu[site_bus[i]])
+            elif d.site_cause[i] == 2:
+                t = float(min(self.t_tsu[site_bus[i]], self.t_s[site_bus[i]] + self.clear))
             else:
                 t = float(self.t_s[site_bus[i]]) + self.clear
             ev.append((t, "site", buses))
         for k in np.where(d.line_fail)[0]:
             f, t_ = sim.bf[k], sim.bt[k]
-            if d.line_cause[k] == 2:
+            if d.line_cause[k] == 2 and not lsh[k]:
                 t = float(min(self.t_tsu[f], self.t_tsu[t_]))
+            elif d.line_cause[k] == 2:
+                t = float(min(self.t_tsu[f], self.t_tsu[t_], max(self.t_s[f], self.t_s[t_]) + self.clear))
             else:
                 t = float(max(self.t_s[f], self.t_s[t_])) + self.clear
             ev.append((t, "line", np.array([k])))
@@ -77,8 +85,10 @@ class DynCascade:
             b = sim.gb[i]
             if sim.gslack[i]:
                 continue
-            if d.gen_cause[i] == 2:
+            if d.gen_cause[i] == 2 and not gsh[i]:
                 t = float(self.t_tsu[b])
+            elif d.gen_cause[i] == 2:
+                t = float(min(self.t_tsu[b], self.t_s[b] + self.gtrip))
             elif sim.gcls[i] == "nuclear":
                 t = float(self.t_s[b]) + self.scram
             elif d.gen_cause[i] == 1:

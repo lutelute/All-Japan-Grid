@@ -41,11 +41,11 @@ def main():
         s = int((x - x.median()).abs().idxmin())
     else:
         s = args.sample
-    cfg = yaml.safe_load(open(os.path.join(NANKAI, "config", "dynamics_default.yaml"), encoding="utf-8"))
-    case = GridCase.load(args.island); sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
-    ts = ap.point_s_arrival_s(case.bus.lat.values, case.bus.lon.values)
-    tt = ap.point_tsunami_arrival_s(case.bus.lat.values, case.bus.lon.values, inland_km_per_min=float(cfg["tsunami_timing"]["inland_km_per_min"]))
-    dc = DynCascade(sim, cfg, ts, tt)
+    import run_dynamic as RD                                   # モンテカルロと同じ初期化(台帳による容量の置き換え・感度の上書きを含む)
+    meta = json.load(open(os.path.join(od, "meta.json")))
+    RD.init(args.island, args.seed, meta.get("overrides") or {})
+    sim, cfg, dc = RD.G["sim"], RD.G["cfg"], RD.G["dc"]; case = sim.case
+    ts = dc.t_s
     rng = np.random.default_rng([args.seed, s]); d = sim.damage(rng)
     r = dc.run(d, rng, trace=True)
     tr = r["trace"]; T = np.array(tr["t"])
@@ -100,7 +100,7 @@ def main():
         leg = [Line2D([], [], ls="", marker="o", color=ISL[0], label="受電中(最大の島)"), Line2D([], [], ls="", marker="o", color=ISL[1], label="受電中(分かれた島)"),
                Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊"), Line2D([], [], ls="", marker="o", color="#3a4458", label="電源から孤立"),
                Line2D([], [], ls="", marker="x", color="#ff9f40", label="設備損傷"), Line2D([], [], ls="", marker="o", color="#ffd9a0", alpha=0.5, label="S 波の波面")]
-        axm.legend(handles=leg, loc="lower left", fontsize=12, frameon=False, labelcolor=TXT)
+        axm.legend(handles=leg, loc=("center left" if args.island == "east" else "lower left"), fontsize=12, frameon=False, labelcolor=TXT)
         # 右上: 周波数
         ax1 = fig.add_axes([0.56, 0.63, 0.42, 0.30], facecolor=PANEL)
         m = Tn <= tf

@@ -115,6 +115,7 @@ class FragilityModel:
                     p4[m] = p_exceed(np.asarray(pga_g, float)[m], cl[name]["median"][3] * adj, cl[name]["beta"][3])
             ds = np.where(out & (rng.random(n) < p4 / np.maximum(pout, 1e-9)), 4, ds)
         cause = np.where(out, 1, 0)
+        self.last_site_shake = out.copy()          # 揺れでも止まったか(津波が原因に上書きされても、止まる時刻は揺れの方が早い)
         pf = _rank_table(sp["tsunami"]["pfail_by_rank"], ts_rank)
         ts_fail = rng.random(n) < pf
         ds = np.where(ts_fail, np.maximum(ds, sp["tsunami"]["ds_if_fail"]), ds)
@@ -148,11 +149,13 @@ class FragilityModel:
         fail = rng.random(n) < p_line
         ts_fail = rng.random(n) < _rank_table(lp["tsunami"]["pfail_by_rank"], ts_rank, 0.5)
         cause = np.where(ts_fail, 2, np.where(fail, 1, 0))
+        shake = fail.copy()
         so = lp.get("short_outage")
         if so and intensity is not None:
             from .hazard_field import jma_class
             sh = (rng.random(n) < trip_probability(jma_class(intensity), so)) & (cause == 0)
-            cause = np.where(sh, 3, cause)
+            cause = np.where(sh, 3, cause); shake |= sh
+        self.last_line_shake = shake
         return cause > 0, cause
 
     # ── 発電機 ──────────────────────────────────────────────────
@@ -209,12 +212,13 @@ class FragilityModel:
             td = np.where(u[mm] < f[-1], ax[-1], td)
             out_days[mm] = td
         cause = np.where(out_days > 0, 3, 0)
+        shake = out_days > 0
         tsd = _rank_table(sc["tsunami_stop_days_by_rank"], ts_rank, 0.0)
         tsm = m & (tsd > 0)
         out_days = np.where(tsm, np.maximum(out_days, tsd), out_days); cause = np.where(tsm, 2, cause)
         nm = cls == "nuclear"; nuc = gp["nuclear"]
         scram = nm & (np.asarray(pga_g) >= nuc["scram_pga_g"])
-        out_days = np.where(scram, np.maximum(out_days, nuc["out_days"]), out_days); cause = np.where(scram, 3, cause)
+        out_days = np.where(scram, np.maximum(out_days, nuc["out_days"]), out_days); cause = np.where(scram, 3, cause); shake |= scram
         for name, cfg in gp.get("classes", {}).items():
             mm = cls == name
             if mm.any():
@@ -223,9 +227,10 @@ class FragilityModel:
                 pout = np.array([float(pod.get(int(x), 1.0 if x >= ff else 0.0)) for x in d])
                 o = rng.random(mm.sum()) < pout
                 d = np.where(o, np.maximum(d, ff), np.minimum(d, ff - 1))
-                ds[mm] = d; cause[mm] = np.where(o, 1, cause[mm])
+                ds[mm] = d; cause[mm] = np.where(o, 1, cause[mm]); shake[mm] |= o
         others = ~m & ~nm
         pts = _rank_table(gp["tsunami"]["pfail_by_rank"], ts_rank)
         tf = others & (rng.random(n) < pts)
         ds = np.where(tf, np.maximum(ds, gp["tsunami"]["ds_if_fail"]), ds); cause = np.where(tf, 2, cause)
+        self.last_gen_shake = shake
         return out_days, ds, cause

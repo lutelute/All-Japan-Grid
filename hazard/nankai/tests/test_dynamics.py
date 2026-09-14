@@ -58,3 +58,17 @@ def test_external_afc_supports_until_capacity():
     c.trip_gens([1]); c.run_until(120.0)
     assert not c.collapsed.any()
     assert abs(c.links[0].flow - 100.0) < 1e-6          # 容量まで受電する
+
+
+def test_tsunami_cause_keeps_shaking_flag_for_timing():
+    """津波で原因が上書きされても、揺れでも止まった発電機・変電所は shake フラグを持つ(停止時刻を津波の到達まで遅らせない)。"""
+    import numpy as np
+    from nankai.fragility import FragilityModel
+    fm = FragilityModel(); rng = np.random.default_rng(1); n = 400
+    cls = np.array(["thermal"] * n); pga = np.full(n, 0.8); inten = np.full(n, 6.8); ts = np.full(n, 4)
+    out_days, ds, cause = fm.generator_state(cls, pga, inten, ts, rng)
+    sh = fm.last_gen_shake
+    assert ((cause == 2) & sh).any(), "揺れでも止まり、原因が津波に上書きされた発電機があるはず"
+    assert not (sh & (out_days <= 0) & (ds == 0)).any()
+    sds, scause = fm.substation_ds(np.full(n, 275.0), pga, ts, rng, intensity=inten)
+    assert ((scause == 2) & fm.last_site_shake).any()

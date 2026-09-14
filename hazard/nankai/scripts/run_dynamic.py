@@ -34,7 +34,29 @@ def init(island, seed, overrides=None):
         for kk in keys[:-1]:
             node = node[kk]
         node[keys[-1]] = yaml.safe_load(v)
-    case = GridCase.load(island); sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
+    case = GridCase.load(island)
+    go = cfg.get("grid_overrides", {}).get("tepco_transformer_capacity", {})
+    led = None
+    if island == "east" and go.get("enabled", False):                 # 公表台帳で東の変圧器容量を置き換え(grid_overrides.py)
+        from nankai.grid_overrides import apply_transformer_capacity
+        db = os.environ.get("HAZARD_SUPPORT_DB") or os.path.join(NANKAI, go["db"])
+        led = apply_transformer_capacity(case, db, scale_impedance=bool(go.get("scale_impedance", True)))
+        if led.empty:
+            raise SystemExit(f"grid_overrides.tepco_transformer_capacity が有効なのに台帳が読めない: {db}\n"
+                             "  補助 DB(pws-160core ~/agj-hazard-data/hazard_support.sqlite・nas03 db/)を HAZARD_SUPPORT_DB で指すか、"
+                             "--set grid_overrides.tepco_transformer_capacity.enabled=false で前の版(run_v4_red)と同じにする")
+    sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
+    G["override_ledger"] = led
+    boxes = cfg.get("tsunami_exclude_boxes", {}).get("value", []) or []     # 感度: 箱の中の母線は津波の被害を 0 にする(A40 の波源が南海トラフでない海岸)
+    if boxes:
+        lat, lon = case.bus.lat.to_numpy(float), case.bus.lon.to_numpy(float)
+        m = np.zeros(case.n_bus, bool)
+        for bx in boxes:
+            m |= (lat >= bx[0]) & (lat <= bx[1]) & (lon >= bx[2]) & (lon <= bx[3])
+        sim.bus_ts = np.where(m, 0, sim.bus_ts)
+        sim.site_ts = np.zeros(len(sim.site_rows), int); np.maximum.at(sim.site_ts, sim.bus_site, sim.bus_ts)
+        sim.br_ts = np.maximum(sim.bus_ts[sim.bf], sim.bus_ts[sim.bt]); sim.gen_ts = sim.bus_ts[sim.gb]
+        G["tsunami_excluded_buses"] = int(m.sum())
     ts = ap.point_s_arrival_s(case.bus.lat.values, case.bus.lon.values)
     tt = ap.point_tsunami_arrival_s(case.bus.lat.values, case.bus.lon.values, inland_km_per_min=float(cfg["tsunami_timing"]["inland_km_per_min"]))
     G.update(sim=sim, dc=DynCascade(sim, cfg, ts, tt), cfg=cfg, seed=seed)
@@ -91,6 +113,9 @@ def run_island(island, n, workers, seed, out, overrides=None):
            "intensity_mean": acc_int / N, "samples": pd.DataFrame(rows), "n": n}
     od = os.path.join(out, island)
     bus, summ = sim.save(res, od)
+    led = G.get("override_ledger")
+    if led is not None and len(led):                                # 帳簿は output/(git 管理外)にだけ置く。台帳の生値を含むため
+        led.to_csv(os.path.join(od, "grid_override_ledger.csv"), index=False)
     for i, t in enumerate(TD):
         bus[f"dyn_energized_t{int(t)}s"] = acc_dyn[i] / N
     bus["p_collapse"] = acc_col / N; bus["p_isolated_dyn"] = acc_iso / N; bus["p_site_out_dyn"] = acc_site / N
@@ -108,7 +133,8 @@ def run_island(island, n, workers, seed, out, overrides=None):
     pd.DataFrame(logs).fillna(0).to_csv(os.path.join(od, "dyn_event_counts.csv"), index=False)
     meta = json.load(open(os.path.join(od, "meta.json")))
     meta.update({"mode": "dynamic", "record_times_s": TD.tolist(), "seed": seed, "workers": workers, "elapsed_s": round(time.time() - t0, 1),
-                 "config": "config/dynamics_default.yaml", "overrides": overrides or {}, "blackout_rule": "周波数崩壊した島の母線のみ(静的な供給不足 25% 規則は不使用)"})
+                 "config": "config/dynamics_default.yaml", "overrides": overrides or {},
+                 "grid_override": ({"n_branches": int(len(led)), "cap_old_mw": round(float(led.cap_old.sum())), "cap_new_mw": round(float(led.cap_new.sum()))} if led is not None and len(led) else None), "blackout_rule": "周波数崩壊した島の母線のみ(静的な供給不足 25% 規則は不使用)"})
     json.dump(meta, open(os.path.join(od, "meta.json"), "w"), ensure_ascii=False, indent=1)
     print(f"{island}: done {time.time()-t0:.0f}s")
     print(agg[["t_s", "energized_frac", "shed_mw", "collapsed_mw", "isolated_mw", "site_out_mw", "n_islands_mean", "n_islands_p90", "n_islands_max", "n_100mw_mean", "n_1gw_mean", "f_min_p10", "f_min_p50", "p_collapse_any"]].round(3).to_string(index=False))
