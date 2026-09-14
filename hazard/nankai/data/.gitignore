@@ -13,3 +13,9 @@ derived/*_full.geojson
 #   derived/municipalities_simplified.geojson (~10 MB)
 #   derived/tsunami_inundation_A40_summary.json (~数十 KB)
 # 50MB 超ルール: jshis_*.parquet (57MB) は hazard/nankai/.gitignore 側で既に無視されている (data/derived/jshis_*.parquet)
+# 補助データの取得スクリプトのうち、送配電事業者の転載禁止データの値を含むもの・使い捨て(support_pipeline/README.md)
+support_pipeline/records_d1.py
+support_pipeline/records_misc.py
+support_pipeline/d5_peek.py
+support_pipeline/d6_blocks.py
+support_pipeline/d6_links.py

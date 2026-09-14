@@ -97,11 +97,12 @@ grid_overrides:
     enabled: true
     db: data/external/hazard_support/hazard_support.sqlite   # git 管理外。環境変数 HAZARD_SUPPORT_DB で差し替え
     scale_impedance: true
-    source: "東京電力パワーグリッド 空容量一覧(基幹系統・都県別 変電所 CSV)の「台数」と「設備容量(100%×台数)」"
-    rationale: "東 50 Hz の 500/275 kV 変圧器が多くの変電所で 1 バンク分(約 953 MW)しかなく、台帳と照合できた 21 変電所で合計 18.7 GW 対 74.0 GW(比の中央値 0.27)。run_v4_red の東で最初に切れていたのがこの変圧器だった"
+    zones: [tokyo, chubu]      # tokyo = 東 50 Hz、chubu = 西 60 Hz(中部電力の 500/275 kV 変電所表)
+    source: "東京電力パワーグリッド 空容量一覧(基幹系統・都県別 変電所 CSV)と中部電力パワーグリッド 空容量一覧(500/275 kV 変電所・単位 MW)の「台数」と「設備容量(100%×台数)」"
+    rationale: "東 50 Hz の 500/275 kV 変圧器が多くの変電所で 1 バンク分(約 953 MW)しかなく、台帳と照合できた 21 変電所で合計 18.7 GW 対 74.0 GW(比の中央値 0.27)。run_v4_red の東で最初に切れていたのがこの変圧器だった。中部も照合 8 変電所でモデル 8.6 GW 対 台帳 23.1 GW(比の中央値 0.33)で同じ欠け(2026-09-14 追加・run_v7)"
     ledger: "output/<run>/east/grid_override_ledger.csv(台帳の生値を含むので git に載せない)。集計は docs/reports/nankai_hazard_2026-09-13/dynamics/README.md"
     disable: "--set grid_overrides.tepco_transformer_capacity.enabled=false(台帳が無い環境では止まるので、HAZARD_SUPPORT_DB を指すか無効にする。run_v4_red 以前は無効)"
-    note: "scale_impedance は元の枝を 1 バンクとみなしてリアクタンスを台数で割る。容量は MVA を MW と同じに扱う。東北エリアは台帳が無く対象外。MODEL_INTERVENTIONS.md への登録は別アクターの未コミット編集があるため保留"
+    note: "scale_impedance は元の枝を 1 バンクとみなしてリアクタンスを台数で割る。容量は MVA を MW と同じに扱う。東北・関西・北陸・中国・四国・九州は台帳(変電所別の台数と設備容量)が無く対象外。MODEL_INTERVENTIONS.md への登録は別アクターの未コミット編集があるため保留"
 
 tsunami_exclude_boxes:
   kind: assumption

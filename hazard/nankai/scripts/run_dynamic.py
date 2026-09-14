@@ -37,10 +37,12 @@ def init(island, seed, overrides=None):
     case = GridCase.load(island)
     go = cfg.get("grid_overrides", {}).get("tepco_transformer_capacity", {})
     led = None
-    if island == "east" and go.get("enabled", False):                 # 公表台帳で東の変圧器容量を置き換え(grid_overrides.py)
+    zones = {"east": ["tokyo"], "west": ["chubu"]}.get(island, [])
+    zones = [z for z in zones if z in (go.get("zones") or ["tokyo", "chubu"])]
+    if zones and go.get("enabled", False):                            # 公表台帳で変圧器容量を置き換え(grid_overrides.py)
         from nankai.grid_overrides import apply_transformer_capacity
         db = os.environ.get("HAZARD_SUPPORT_DB") or os.path.join(NANKAI, go["db"])
-        led = apply_transformer_capacity(case, db, scale_impedance=bool(go.get("scale_impedance", True)))
+        led = pd.concat([apply_transformer_capacity(case, db, zone=z, scale_impedance=bool(go.get("scale_impedance", True))).assign(zone=z) for z in zones], ignore_index=True)
         if led.empty:
             raise SystemExit(f"grid_overrides.tepco_transformer_capacity が有効なのに台帳が読めない: {db}\n"
                              "  補助 DB(pws-160core ~/agj-hazard-data/hazard_support.sqlite・nas03 db/)を HAZARD_SUPPORT_DB で指すか、"

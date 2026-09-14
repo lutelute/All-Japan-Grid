@@ -4,14 +4,14 @@
 
 - スクリプト: `hazard/nankai/scripts/make_restoration_workforce.py`
 - パラメータと出典: `hazard/nankai/config/restoration_workforce.yaml`(kind = sourced / derived / assumption)
-- 送電側の停電: `hazard/nankai/output/run_v6`(動的カスケード・縮約網・東京電力の変圧器台帳・停止時刻の修正)の母線ごとの平均
+- 送電側の停電: `hazard/nankai/output/run_v7`(動的カスケード・縮約網・東京電力と中部電力の変圧器台帳・停止時刻の修正)の母線ごとの平均
 - 補助データ: `hazard_support.sqlite`(pws-160core で取得。nas03 の `db/hazard_support.sqlite`・`db/parquet/hazard_support/`・生データ `hazard_raw/` に配置済み)。手元の置き場は `hazard/nankai/data/external/hazard_support/`(git 管理外)。本版は 2026-09-14 12:27 JST の最終版で計算
 - 成果物: `restoration_workforce.gif`(77 フレーム)・`.mp4`・`_still.png`(7 日後)・`_summary.json`
 - スライド: `docs/slides/nankai/nankai_restoration_workforce_2026-09-14.pptx`(4 枚)と候補デッキの 3 枚
 
 ```
 PYTHONPATH=hazard/nankai/src HAZARD_SUPPORT_DB=<hazard_support.sqlite> \
-  python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v6 \
+  python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v7 \
   --out docs/reports/nankai_hazard_2026-09-13/workforce/restoration_workforce [--sigma 0.3] [--basis all_dwellings] [--old-split 0.3] [--no-collapse]
 ```
 
@@ -39,7 +39,7 @@ PYTHONPATH=hazard/nankai/src HAZARD_SUPPORT_DB=<hazard_support.sqlite> \
 | 応援の送り手 | 北海道・東北・北陸・九州・東京 |
 | 応援の受け手 | 中部・中国・四国(第 1 陣 1.5〜1.75 日) |
 | 7 日後に働く人 | 33,282 人(地元 20,447・社内融通 11,179・他社応援 1,656) |
-| 停電中の需要家 7 日後(8 エリア) | 716 万軒(送電側 463・配電 91) |
+| 停電中の需要家 7 日後(8 エリア) | 715 万軒(送電側 462・配電 91) |
 
 ## 感度
 
