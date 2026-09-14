@@ -1,0 +1,113 @@
+# 復旧の人員を実規模で見る(配電の電柱被害 × 営業所の人員 × 社内の融通 × 他社応援)。make_restoration_workforce.py が読む。
+# kind: sourced = 一次資料 / derived = 一次資料の数値から計算 / assumption = 仮定(幅を振る)
+schema: nankai-restoration-workforce-v1
+
+distribution_damage:
+  poles_per_customer:
+    kind: assumption
+    value: 0.25
+    range: [0.15, 0.35]
+    note: "電力の電柱の本数を需要家 1 軒あたりに換算した値。全国の電柱は約 3,592 万本(国土交通省調べ・平成 30 年度、電力と通信の合計)で、供給地点数の合計(約 8,900 万口)で割ると 0.40 が上限の目安"
+  shaking_break_rate:
+    kind: sourced
+    source: "内閣府(中央防災会議)首都直下地震に係る被害想定手法 資料3「揺れによる電柱折損率」/ 岡山県 地震・津波被害想定 手法編 表4.3.2 も同値"
+    by_class: {"7": 0.008, "6強": 0.00056, "6弱": 0.00056, "5強": 0.0000005, "5弱": 0.0000005}
+  tsunami_break_rate:
+    kind: sourced
+    value: 0.163
+    source: "内閣府 南海トラフ巨大地震 被害想定手法の概要(2025)4.3 電力「東日本大震災では、東北電力管内では津波による被害が大半を占め、浸水エリア内での被害率は 16.3%」"
+  customers_per_broken_pole:
+    kind: sourced
+    value: 10.975
+    source: "岡山県 手法編 4.3(3)「電柱被害 1 本当たりの停電軒数は、神奈川県(2009)が 1995 年兵庫県南部地震での実績に基づいて設定した 10.975」"
+  not_restorable_tsunami_rank_min:
+    kind: assumption
+    value: 3
+    note: "内閣府は津波浸水で建物全壊した需要家を復旧対象から除く。本モデルは A40 の浸水深ランク 3 以上の母線の需要家を全壊相当として除く(ランクと深さの対応は国土数値情報 A40 の区分)"
+  building_collapse_poles:
+    kind: sourced
+    enabled: true
+    coefficient: 0.17155
+    source:
+      - "内閣府 首都直下地震に係る被害想定手法について 資料3 PDF p.19「建物全壊による電柱折損率＝０．１７１５５×木造建物全壊率（阪神淡路の実態による）」"
+      - "岡山県 地震・津波被害想定 手法編 PDF p.48「電柱被害本数＝0.17155×木造建物全壊率×電柱本数」"
+    rate_basis:
+      kind: assumption
+      value: wooden_stock
+      alternatives: [all_dwellings]
+      note: "「木造建物全壊率」を木造建物の中で全壊した割合と読む(既定)。全建物に対する木造全壊棟数の割合と読むなら木造の比率を掛ける(all_dwellings・感度)。浸水域の母線は津波の被害率だけを使う(二重に数えない)"
+  wooden_collapse_curve:
+    kind: derived
+    form: "木造全壊率 = Σ 建築年次の構成 × Φ((I − μ)/σ)。I は母線の計測震度(J-SHIS 南海トラフ・サンプル平均)"
+    anchor_intensity: 6.4
+    anchor_rates: {old: 0.71, mid: 0.50, new: 0.11}
+    source: "内閣府 首都直下 資料3 PDF p.6「建物が全壊するときの震度が正規分布に従うと仮定」「（推計震度6.4のとき）71％50％11％」(木造 旧築年 S37 以前 / 中築年 S38〜S55 / 新築年 S56 以降)"
+    sigma:
+      kind: assumption
+      value: 0.4
+      range: [0.3, 0.6]
+      note: "正規分布の標準偏差は本文に無く図だけ(補助 DB の missing D4)。震度 6.4 の 3 点から σ を決めると区分ごとの平均 μ が決まる。2005 年の曲線は阪神淡路の実態に基づき、2012 年以降の内閣府の曲線より高めと言われる(一次資料での比較は未確認)"
+  housing_eras:
+    kind: sourced
+    source: "令和5年住宅・土地統計調査 第6-3表(e-Stat・政府標準利用規約)市区町村別 木造住宅数の建築の時期。住宅(戸)の構成を建物(棟)の構成の代わりに使う"
+    old_share_of_1970_or_earlier:
+      kind: assumption
+      value: 0.5
+      range: [0.3, 0.7]
+      note: "統計の区分は 1970 年以前。旧築年は 1962 年以前なので、1970 年以前の木造住宅のうち旧に入る割合を仮定する"
+
+repair:
+  poles_per_person_day:
+    kind: derived
+    value: 1.69
+    source: "内閣府 首都直下 手法 資料3「東京電力一人あたり作業効率(本/人)= 101,360(本)/12,000(人/日)/5(日)= 約 1.69」"
+  patrol_d: {kind: assumption, value: 0.5}
+  tsunami_access_d:
+    kind: assumption
+    value: 10.0
+    note: "浸水域の電柱は水が引き、道路が啓開されるまで着手できない。内閣府 2025 概要「8 日後には津波等の影響で復旧作業に入れない区域を除いて停電を解消」(東北電力)を踏まえ 10 日"
+
+workforce:
+  staff_per_million_customers:
+    kind: derived
+    value: 300
+    range: [280, 390]
+    source:
+      - "台風15号(2019)東京電力PG: 他電力約 2,400 人を含む約 1.1 万人体制(東京電力報) → 自社と協力会社 約 8,600 人 / 3,060 万口 = 281 人/百万口"
+      - "能登半島地震(2024)北陸電力グループ約 650 人(送配電網協議会 応援派遣の状況) / 220 万口 = 295 人/百万口"
+      - "熊本地震(2016)九州電力 最大 3,600 人(本リポジトリ resources_default.yaml の記載。一次資料は未確認) / 920 万口 = 391 人/百万口"
+    note: "地域災害で動員できた人数(協力会社を含む)。南海トラフでは被災会社の全営業所が動くと仮定"
+  office_customers:
+    kind: assumption
+    value: 400000
+    note: "営業所(事業所)1 か所あたりの需要家数。実在の事業所の位置は使っていない。エリアの母線を需要家数で重み付けして k-means で分ける"
+  call_up_d: {kind: assumption, value: 1.0, note: "発災から要員が営業所に揃うまで(線形に増える)"}
+  internal_reallocation:
+    kind: assumption
+    start_d: 1.0
+    share_from_light_offices: 0.5
+    light_backlog_ratio: 0.3
+    note: "同じ会社で被害の小さい営業所(残作業/自所の 7 日分の能力 < 0.3)から、要員の半分を被害の大きい営業所へ回す"
+
+mutual_aid:
+  send_share:
+    kind: derived
+    value: 0.15
+    range: [0.03, 0.30]
+    source:
+      - "台風15号: 他電力 約 2,400 人 / 9 社の動員可能数(5,855 万口 × 300 人) = 13.7%"
+      - "能登半島地震: 他電力 約 750 人 / (約 8,000 万口 × 300 人) = 3.1%"
+    note: "災害時連携計画のプッシュ型応援(送配電網協議会・一般送配電事業者 10 社)を踏まえ、南海トラフ級は台風15号並みの 15% を既定、30% を感度"
+  sender_rule: "自社の被害度 r = 残作業(人・日) / (動員可能数 × 7 日)。受け手(r ≥ 0.5)でなく r < 0.25 の会社が送る。送る人数 = send_share × 動員可能数 × (1 − r/0.25)"
+  receiver_threshold_r: {kind: assumption, value: 0.5}
+  sender_max_r: {kind: assumption, value: 0.25, note: "送配電網協議会 災害時連携計画(2024)別添5: プッシュ型応援の前提条件「応援事業者の供給区域において設備被害がないまたは、被害予想がされない場合」「復旧の目途が立っている場合」"}
+  decision_d: 0.5
+  mobilization_d: 0.75
+  detour_factor: 1.3
+  convoy_speed_kmh: 50
+  drive_h_per_day: 18
+  waves: {offsets_d: [0.0, 1.0, 2.0], shares: [0.4, 0.35, 0.25]}
+
+personnel_damage: {reuse: "config/restoration_ops_scenario.yaml personnel(震度別の不在率・津波 80%・回復の時定数)"}
+headquarters: {reuse: "config/restoration_ops_scenario.yaml mutual_aid.headquarters"}
+bulk_outage: {source: "output/run_v4_red(動的カスケード・縮約網)の母線ごとの物理停電の平均。送変電の修理は既定の班数のまま"}
