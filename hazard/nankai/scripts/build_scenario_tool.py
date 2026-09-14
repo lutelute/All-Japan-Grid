@@ -75,6 +75,82 @@ def dyn_block(run, island, bus_ids):
         pb=b64(q8(pb)), e10=b64(q8(e10)))
 
 
+FRAME_T = np.r_[np.arange(0, 300, 1.0), np.arange(300, 600, 5.0), np.arange(600, 10801, 60.0)]
+OFF, COLLAPSED, ISOLATED, SITE_OUT = 253, 250, 251, 252
+EVENT_KINDS = {"gen_quake", "UFLS", "COLLAPSE", "overload_trip", "site", "isolated", "OF", "UF", "switch_restore"}
+
+
+def key_overrides(key):
+    """組み合わせのキー(ol1_tr0_tb1 など)→ run_dynamic の --set。run のメタデータは当時の既定を前提にしているので使わない。"""
+    ov = {}
+    if "ol0" in key: ov["relays.overload_enabled"] = "false"
+    if "tr0" in key: ov["grid_overrides.tepco_transformer_capacity.enabled"] = "false"
+    if "tb0" in key: ov["tsunami_exclude_boxes.value"] = "[[%s, %s, %s, %s]]" % tuple(TOKYO_BAY_BOX)
+    return ov
+
+
+def trace_block(run, island, bus_ids, key):
+    """代表サンプル(3 分後の受電が中央値に最も近い)を同じ乱数で再計算し、母線ごとの状態を「変わった瞬間」だけで持つ。
+    値: 島の順位 × 21 + 受電の割合(0〜20 段) / 250 周波数崩壊 / 251 電源から孤立 / 252 設備損傷 / 253 もともと受電していない。"""
+    od = os.path.join(NANKAI, "output", run, island)
+    cache = os.path.join(od, "trace_rep.npz")
+    ds = pd.read_csv(os.path.join(od, "dyn_samples.csv"))
+    x = ds[ds.t_s == 180.0].set_index("sample").energized_mw
+    s = int((x - x.median()).abs().idxmin())
+    if not os.path.exists(cache):
+        import run_dynamic as RD
+        meta = json.load(open(os.path.join(od, "meta.json")))
+        RD.init(island, int(meta.get("seed", 0)), key_overrides(key))
+        sim, dc = RD.G["sim"], RD.G["dc"]
+        rng = np.random.default_rng([int(meta.get("seed", 0)), s]); d = sim.damage(rng)
+        r = dc.run(d, rng, trace=True); tr = r["trace"]
+        e180 = float(np.interp(180.0, r["t"], r["energized_mw"]))
+        if abs(e180 - float(x.loc[s])) > 1.0:                        # 同じ乱数・同じ設定なら run の記録と一致するはず
+            raise SystemExit(f"代表サンプルの再計算が run と一致しない: {run}/{island} #{s} {e180:.1f} vs {x.loc[s]:.1f} MW")
+        Tn = np.asarray(tr["t"], float)
+        ks = np.clip(np.searchsorted(Tn, FRAME_T, side="right") - 1, 0, len(Tn) - 1)
+        load = sim.cm.load
+        V = np.zeros((len(FRAME_T), sim.case.n_bus), np.uint8)
+        cache_k = {}
+        for fi, k in enumerate(ks):
+            if k not in cache_k:
+                e = tr["energized"][k].astype(float); lab = tr["island"][k]
+                live = e > 1e-3
+                rank = np.full(sim.case.n_bus, 6)
+                if live.any():
+                    Li = pd.Series(load[live]).groupby(lab[live]).sum().sort_values(ascending=False)
+                    rmap = {int(i): j for j, i in enumerate(Li.index)}
+                    rank = np.array([min(rmap.get(int(i), 6), 6) for i in lab])
+                v = np.where(live, rank * 21 + np.clip(np.round(e * 20), 1, 20), OFF)
+                v = np.where(tr["isolated"][k], ISOLATED, v); v = np.where(tr["collapsed"][k], COLLAPSED, v); v = np.where(tr["site_out"][k], SITE_OUT, v)
+                cache_k[k] = v.astype(np.uint8)
+            V[fi] = cache_k[k]
+        zones = sorted({z for zf in tr["zone_f"] for z in zf})
+        ZF = np.array([[tr["zone_f"][k].get(z, np.nan) for z in zones] for k in ks], np.float32)
+        MW = np.array([[tr["mw"][k][c] for c in ("energized", "shed", "collapsed", "isolated", "site_out")] for k in ks], np.float32)
+        ev = [(float(t), str(w), float(v), int(c)) for t, w, v, c in r["log"] if w in EVENT_KINDS and t <= 10800]
+        np.savez_compressed(cache, V=V, ZF=ZF, MW=MW, zones=np.array(zones), bus_id=sim.case.bus.bus_id.to_numpy(), ev=np.array(ev, dtype=object), sample=s, L=float(load.sum()))
+    z = np.load(cache, allow_pickle=True)
+    pos = pd.Series(np.arange(len(z["bus_id"])), index=z["bus_id"])
+    V = z["V"][:, pos.loc[bus_ids].to_numpy()]
+    # 変わった瞬間だけ: 母線ごとに (フレーム, 値) の列
+    counts, frames, vals = [], [], []
+    for i in range(V.shape[1]):
+        col = V[:, i]; ch = np.r_[0, np.nonzero(col[1:] != col[:-1])[0] + 1]
+        counts.append(len(ch)); frames.append(ch.astype(np.uint16)); vals.append(col[ch])
+    # 事象: 揺れによる発電機停止は 1 秒ごとにまとめる
+    events = []
+    for t, w, v, c in sorted(z["ev"].tolist(), key=lambda e: e[0]):
+        if w == "gen_quake" and events and events[-1]["k"] == "gen_quake" and t - events[-1]["t0"] < 1.0:
+            events[-1]["mw"] += v; events[-1]["n"] += c; continue
+        events.append(dict(t=round(t, 2), t0=t, k=w, mw=round(v, 1), n=c))
+    for e in events:
+        e.pop("t0", None); e["mw"] = round(e["mw"], 1)
+    return dict(sample=int(z["sample"]), load_mw=float(z["L"]), zones=[str(x) for x in z["zones"]],
+                counts=b64(np.array(counts, np.uint16)), frames=b64(np.concatenate(frames)), values=b64(np.concatenate(vals).astype(np.uint8)),
+                zone_f=b64(np.nan_to_num(z["ZF"], nan=0.0).astype(np.float32).ravel()), mw=b64(z["MW"].astype(np.float32).ravel()), events=events)
+
+
 def japan_outline():
     import shapely.geometry as sg
     gj = json.load(open(os.path.join(ROOT, "data", "reference", "japan_prefectures_simplified.geojson"), encoding="utf-8"))
@@ -130,7 +206,8 @@ def main():
     buses = dict(n=int(len(b)), island=b64(isl.astype(np.uint8)), zone=b64(b.zone.map(zi).to_numpy(np.uint8)),
                  lat=b64(lat.astype(np.float32)), lon=b64(lon.astype(np.float32)), cust=b64(b.cust.to_numpy(np.float32)),
                  intensity=b64(b.intensity_mean.to_numpy(np.float32)), ts_rank=b64(b.tsunami_rank.to_numpy(np.uint8)), tokyo_bay=b64(box.astype(np.uint8)),
-                 era=b64(S.astype(np.float32).ravel()), wooden_share=b64(ws.astype(np.float32)), office=b64(b.office.to_numpy(np.uint16)))
+                 era=b64(S.astype(np.float32).ravel()), wooden_share=b64(ws.astype(np.float32)), office=b64(b.office.to_numpy(np.uint16)),
+                 s_arrival=b64(__import__("arrival_physics").point_s_arrival_s(lat, lon).astype(np.float32)))
     offices = dict(zone=[zi[z] for z in O.zone], lat=O.lat.round(4).tolist(), lon=O.lon.round(4).tolist(), name=O.name.tolist())
     ppc = W.poles_per_customer_by_company(sup)
     cust_c = yaml.safe_load(open(os.path.join(NANKAI, "config", "customers.yaml"), encoding="utf-8"))["contracts_thousand"]
@@ -141,6 +218,10 @@ def main():
     west_ids = b.bus_id[~isl].to_numpy(); east_ids = b.bus_id[isl].to_numpy()
     dyn = dict(west={k: dyn_block(r, "west", west_ids) for k, r in WEST_RUNS.items()},
                east={k: dyn_block(r, "east", east_ids) for k, r in EAST_RUNS.items()})
+    traces = dict(frame_t=FRAME_T.tolist(),
+                  west={k: trace_block(r, "west", west_ids, k) for k, r in WEST_RUNS.items()},
+                  east={k: trace_block(r, "east", east_ids, k) for k, r in EAST_RUNS.items()})
+    f0 = yaml.safe_load(open(os.path.join(NANKAI, "config", "dynamics_default.yaml"), encoding="utf-8"))
     dd = cfg["distribution_damage"]; rp = cfg["repair"]; wf = cfg["workforce"]; ma = cfg["mutual_aid"]; per = ops["personnel"]
     params = dict(
         shaking_break_rate=dd["shaking_break_rate"]["by_class"], tsunami_break_rate=dd["tsunami_break_rate"]["value"],
@@ -157,7 +238,8 @@ def main():
         defaults=dict(ol=1, tr=1, tb=1, collapse=True, sigma=dd["wooden_collapse_curve"]["sigma"]["value"], basis=dd["building_collapse_poles"]["rate_basis"]["value"],
                       old_split=dd["housing_eras"]["old_share_of_1970_or_earlier"]["value"], spm=wf["staff_per_million_customers"]["value"],
                       aid=ma["send_share"]["value"], internal=True, access=rp["tsunami_access_d"]["value"]))
-    data = dict(generated=time.strftime("%Y-%m-%d %H:%M"), buses=buses, offices=offices, companies=companies, dyn=dyn, params=params, outline=japan_outline(),
+    traces["ufls_hz"] = {"west": [st["ratio"] * 60 for st in f0["ufls"]["stages"]], "east": [st["ratio"] * 50 for st in f0["ufls"]["stages"]]}
+    data = dict(generated=time.strftime("%Y-%m-%d %H:%M"), buses=buses, offices=offices, companies=companies, dyn=dyn, traces=traces, params=params, outline=japan_outline(),
                 naikakufu_2025=yaml.safe_load(open(os.path.join(NANKAI, "config", "calibration_targets.yaml"), encoding="utf-8"))["naikakufu_2025"]["outage_households"]["①東海_基本"])
     os.makedirs(TOOL, exist_ok=True)
     js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))

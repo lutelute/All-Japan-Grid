@@ -156,3 +156,34 @@ td.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
 .meta { color: var(--muted); font-size: 11.5px; margin: 10px 0 0; font-family: var(--f-num); }
 .busy .results { opacity: .72; transition: opacity .15s; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* 夜の再生(夜景は常に暗い。テーマに依らない設計) */
+.night-panel { padding-bottom: 12px; }
+.play-ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.btn.play { background: var(--accent); color: var(--surface); border-color: var(--accent); font-weight: 700; }
+.btn.play:hover { color: var(--surface); filter: brightness(1.08); }
+.seg.small label { padding: 5px 12px; font-size: 12px; white-space: nowrap; }
+.night-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, 1fr); gap: 14px; }
+@media (max-width: 1100px) { .night-grid { grid-template-columns: 1fr; } }
+.night-wrap { position: relative; background: #060a12; border-radius: 6px; overflow: hidden; }
+#night { display: block; width: 100%; height: auto; aspect-ratio: 16 / 11; max-width: 100%; }
+.night-legend { position: absolute; right: 10px; bottom: 8px; list-style: none; margin: 0; padding: 6px 10px; display: grid; grid-template-columns: auto auto; gap: 2px 14px; font-size: 11px; color: #c9d2e0; background: rgba(6, 10, 18, 0.72); border-radius: 6px; }
+.night-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.night-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.scrub .clock { display: block; font-family: var(--f-num); font-size: 30px; color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.scrub-ticks { display: flex; justify-content: space-between; font-family: var(--f-num); font-size: 10.5px; color: var(--muted); margin-inline: 8px; white-space: nowrap; }
+.bars { display: flex; flex-direction: column; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: 2.6em 1fr 3.6em; gap: 8px; align-items: center; font-size: 12px; }
+.bar-row .lab { color: var(--muted); }
+.bar-row .track { display: flex; height: 12px; border-radius: 3px; overflow: hidden; background: var(--surface-2); }
+.bar-row .track span { display: block; height: 100%; }
+.bar-row .pct { font-family: var(--f-num); text-align: right; font-variant-numeric: tabular-nums; }
+.freq svg { width: 100%; height: auto; display: block; }
+.freq text { fill: var(--muted); font-family: var(--f-num); font-size: 10px; }
+.freq .zone-line { fill: none; stroke-width: 1.4; }
+.ticker { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 12px; min-height: 9.5em; }
+.ticker li { display: grid; grid-template-columns: 4.6em 1.6em 1fr; gap: 6px; color: var(--muted); }
+.ticker li .t { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+.ticker li .isl { font-weight: 700; }
+.ticker li.new { color: var(--ink); }
+.ticker li.relay .msg::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--open); margin-right: 5px; vertical-align: 1px; }

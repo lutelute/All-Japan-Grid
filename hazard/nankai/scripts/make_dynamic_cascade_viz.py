@@ -29,7 +29,8 @@ ISL = ["#f4efe2", "#5ad1ff", "#9be37a", "#c79bff", "#ffd86b", "#ff9ecb", "#7ff0d
 
 def main():
     a = argparse.ArgumentParser(); a.add_argument("--run", required=True); a.add_argument("--island", default="west"); a.add_argument("--out", required=True)
-    a.add_argument("--sample", type=int, default=None); a.add_argument("--seed", type=int, default=0); args = a.parse_args()
+    a.add_argument("--sample", type=int, default=None); a.add_argument("--seed", type=int, default=0)
+    a.add_argument("--style", choices=["dots", "night"], default="dots", help="night = 受電中の母線を灯りで描き、リレーが開くと暗く・色が変わり・消える"); args = a.parse_args()
     import arrival_physics as ap
     from nankai.grid import GridCase
     from nankai.montecarlo import Simulator
@@ -73,6 +74,9 @@ def main():
     Tn = T; zf = pd.DataFrame(tr["zone_f"]); mw = pd.DataFrame(tr["mw"]); nis = np.array(tr["n_islands"]); n100 = np.array(tr["n_100mw"])
     xt = lambda t: np.where(np.asarray(t) <= 300, np.asarray(t), 300 + (np.log10(np.maximum(np.asarray(t), 300)) - np.log10(300)) / (np.log10(10800) - np.log10(300)) * 120)
     events_txt = []
+    first_col = np.full(len(load), -1); first_site = np.full(len(load), -1)
+    AMB = np.array([255, 154, 60]) / 255.0
+    NPAL = np.array([[255, 226, 168], [90, 209, 255], [155, 227, 122], [199, 155, 255], [255, 216, 107], [255, 158, 203], [127, 240, 210], [176, 184, 255]]) / 255.0
     for i, tf in enumerate(frames):
         k = int(np.searchsorted(Tn, tf, side="right") - 1); k = max(k, 0)
         fig = plt.figure(figsize=(19.2, 10.8), dpi=100, facecolor=BG)
@@ -85,11 +89,30 @@ def main():
         Li = pd.Series(load[live]).groupby(lab[live]).sum().sort_values(ascending=False)
         rank = {int(isl): j for j, isl in enumerate(Li.index)}
         c_live = np.array([ISL[min(rank.get(int(x), 7), 7)] for x in lab[live]]) if live.any() else np.array([])
-        axm.scatter(lon[iso] * kx, lat[iso], s=size[iso] * 0.6, c="#3a4458", lw=0, zorder=1)
-        axm.scatter(lon[col] * kx, lat[col], s=size[col], c="#ff3b2f", alpha=0.85, lw=0, zorder=2)
-        if live.any():
-            axm.scatter(lon[live] * kx, lat[live], s=size[live] * (0.35 + 0.65 * e[live]), c=c_live, alpha=0.9, lw=0, zorder=3)
-        axm.scatter(lon[so] * kx, lat[so], s=26, marker="x", c="#ff9f40", lw=1.2, zorder=4)
+        if args.style == "night":
+            # 灯り: 明るさ = 受電の割合、UFLS で削られるほど琥珀色に。周波数崩壊は赤く光ってから沈み、孤立は灰、設備損傷は燃えさし
+            first_col[col & (first_col < 0)] = i; first_col[~col] = -1
+            first_site[so & (first_site < 0)] = i; first_site[~so] = -1
+            axm.scatter(lon[iso] * kx, lat[iso], s=4, c="#56627a", alpha=0.55, lw=0, zorder=1)
+            if live.any():
+                rk = np.array([min(rank.get(int(x), 7), 7) for x in lab[live]]); ee = e[live]
+                mix = np.minimum(1.0, np.round((1 - ee) * 2.4 * 4) / 4)[:, None]
+                rgb = NPAL[rk] * (1 - mix) + AMB * mix
+                axm.scatter(lon[live] * kx, lat[live], s=size[live] * 9, c=np.c_[rgb, 0.035 + 0.06 * ee], lw=0, zorder=2)
+                axm.scatter(lon[live] * kx, lat[live], s=size[live] * (0.35 + 0.55 * ee), c=np.c_[rgb, 0.3 + 0.7 * ee], lw=0, zorder=3)
+            for mask, first, bright, dim in ((col, first_col, [1.0, 0.23, 0.18], [0.59, 0.13, 0.10]), (so, first_site, [1.0, 0.48, 0.24], [1.0, 0.48, 0.24])):
+                if not mask.any():
+                    continue
+                age = i - first[mask]; fl = age < 6
+                if fl.any():
+                    axm.scatter(lon[mask][fl] * kx, lat[mask][fl], s=size[mask][fl] * (14 - 1.8 * age[fl]), c=np.c_[np.tile(bright, (fl.sum(), 1)), 0.5 * (1 - age[fl] / 7)], lw=0, zorder=4)
+                axm.scatter(lon[mask] * kx, lat[mask], s=size[mask] * np.where(fl, 1.4, 0.5), c=np.c_[np.where(fl[:, None], bright, dim), np.where(fl, 1.0, 0.45)], lw=0, zorder=5)
+        else:
+            axm.scatter(lon[iso] * kx, lat[iso], s=size[iso] * 0.6, c="#3a4458", lw=0, zorder=1)
+            axm.scatter(lon[col] * kx, lat[col], s=size[col], c="#ff3b2f", alpha=0.85, lw=0, zorder=2)
+            if live.any():
+                axm.scatter(lon[live] * kx, lat[live], s=size[live] * (0.35 + 0.65 * e[live]), c=c_live, alpha=0.9, lw=0, zorder=3)
+            axm.scatter(lon[so] * kx, lat[so], s=26, marker="x", c="#ff9f40", lw=1.2, zorder=4)
         if tf <= 400:
             front = np.abs(ts - tf) < 2.5
             axm.scatter(lon[front] * kx, lat[front], s=18, c="#ffd9a0", alpha=0.35, lw=0, zorder=5)
@@ -100,7 +123,18 @@ def main():
         leg = [Line2D([], [], ls="", marker="o", color=ISL[0], label="受電中(最大の島)"), Line2D([], [], ls="", marker="o", color=ISL[1], label="受電中(分かれた島)"),
                Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊"), Line2D([], [], ls="", marker="o", color="#3a4458", label="電源から孤立"),
                Line2D([], [], ls="", marker="x", color="#ff9f40", label="設備損傷"), Line2D([], [], ls="", marker="o", color="#ffd9a0", alpha=0.5, label="S 波の波面")]
-        axm.legend(handles=leg, loc=("center left" if args.island == "east" else "lower left"), fontsize=12, frameon=False, labelcolor=TXT)
+        if args.style == "night":
+            leg = [Line2D([], [], ls="", marker="o", color="#ffe2a8", label="灯り = 受電中(明るさ = 受電の割合)"), Line2D([], [], ls="", marker="o", color="#5ad1ff", label="分かれた島で受電"),
+                   Line2D([], [], ls="", marker="o", color="#ff9a3c", label="UFLS で暗くなる"), Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊で赤く光って消える"),
+                   Line2D([], [], ls="", marker="o", color="#56627a", label="電源から孤立"), Line2D([], [], ls="", marker="o", color="#ff7a3d", label="設備の損傷"),
+                   Line2D([], [], ls="", marker="o", color="#ffd9a0", alpha=0.5, label="S 波の波面")]
+        if args.style == "night":                      # 凡例は海の上に置く(西は太平洋、東は三陸沖)
+            if args.island == "west":
+                axm.legend(handles=leg, loc="lower right", fontsize=12, frameon=False, labelcolor=TXT)
+            else:                                        # 縦長の東は地図の枠が陸まで縮むので、画面基準で茨城沖に置く
+                fig.legend(handles=leg, loc="lower left", bbox_to_anchor=(0.38, 0.2), fontsize=11, frameon=False, labelcolor=TXT)
+        else:
+            axm.legend(handles=leg, loc=("center left" if args.island == "east" else "lower left"), fontsize=12, frameon=False, labelcolor=TXT)
         # 右上: 周波数
         ax1 = fig.add_axes([0.56, 0.63, 0.42, 0.30], facecolor=PANEL)
         m = Tn <= tf

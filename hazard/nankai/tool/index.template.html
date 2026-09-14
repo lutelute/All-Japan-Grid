@@ -123,6 +123,45 @@
     <main class="results" id="results">
       <section class="kpis" aria-label="主な結果" id="kpis"></section>
 
+      <section class="panel night-panel" aria-label="直後の再生">
+        <div class="panel-head row">
+          <div>
+            <h3>揺れが届き、リレーが開き、灯りが消えていく</h3>
+            <p class="sub">西と東の代表サンプル(3 分後の受電が 200 サンプルの中央値に最も近いもの)を再生する。灯りの明るさは受電の割合、色は分かれた島。</p>
+          </div>
+          <div class="play-ctl">
+            <button type="button" class="btn play" id="playBtn" aria-pressed="false">▶ 最初から再生</button>
+            <div class="seg small" role="radiogroup" aria-label="再生の速さ">
+              <input type="radio" name="speed" id="sp1" value="1" checked><label for="sp1">ふつう</label>
+              <input type="radio" name="speed" id="sp2" value="2"><label for="sp2">速く</label>
+            </div>
+          </div>
+        </div>
+        <div class="night-grid">
+          <div class="night-wrap">
+            <canvas id="night" aria-label="夜の系統図。受電中の母線が灯り、停電すると消える"></canvas>
+            <ul class="night-legend">
+              <li><i style="background:#ffe2a8;box-shadow:0 0 8px #ffe2a8"></i>受電中</li>
+              <li><i style="background:#5ad1ff;box-shadow:0 0 8px #5ad1ff"></i>分かれた島で受電</li>
+              <li><i style="background:#ff9a3c;opacity:.7"></i>UFLS で暗くなる</li>
+              <li><i style="background:#ff3b2f;box-shadow:0 0 10px #ff3b2f"></i>周波数崩壊で消える</li>
+              <li><i style="background:#56627a"></i>電源から孤立</li>
+              <li><i style="background:#ff7a3d"></i>設備の損傷</li>
+            </ul>
+          </div>
+          <div class="night-side">
+            <div class="scrub">
+              <output class="clock" id="clock" for="frame">0:03:00</output>
+              <input type="range" id="frame" min="0" max="100" step="1" value="0" aria-label="地震からの時間">
+              <div class="scrub-ticks"><span>0</span><span>1分</span><span>3分</span><span>5分</span><span>10分</span><span>1時間</span><span>3時間</span></div>
+            </div>
+            <div class="bars" id="nightBars"></div>
+            <div class="freq" id="freqChart"></div>
+            <ol class="ticker" id="ticker" aria-live="off"></ol>
+          </div>
+        </div>
+      </section>
+
       <section class="panel">
         <div class="panel-head">
           <h3>揺れの直後 3 時間、受電を続ける需要の割合</h3>
