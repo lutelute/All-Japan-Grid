@@ -52,6 +52,12 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 
 ### 監査・補完
 
+**敷地・端子・母線の接続監査（Claude / Codex共通）**：
+[使い方・発想・試行錯誤・再現手順](../docs/SITE_CONNECTION_REVIEW_TOOL.md)。
+`python3 scripts/site_connection_review.py summary` で結果を読む。
+`case SS04` で写真所見と保存枝端、`verify` で証拠のSHAを確認する。
+正典未適用の実験で、候補と確認済み接続は区別する。
+
 | Script | 役割 |
 |---|---|
 | `audit_substation_plant_overlap.py` | 変電所/発電所の分類混在を4カテゴリで検出（`--fix` でカテゴリC タグ誤りを修正、出力: `data/audit/substation_plant_overlap.json`） |
