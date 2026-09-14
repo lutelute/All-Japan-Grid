@@ -34,7 +34,7 @@ def init(island, seed, overrides=None):
         for kk in keys[:-1]:
             node = node[kk]
         node[keys[-1]] = yaml.safe_load(v)
-    case = GridCase.load(island); sim = Simulator(case)
+    case = GridCase.load(island); sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
     ts = ap.point_s_arrival_s(case.bus.lat.values, case.bus.lon.values)
     tt = ap.point_tsunami_arrival_s(case.bus.lat.values, case.bus.lon.values, inland_km_per_min=float(cfg["tsunami_timing"]["inland_km_per_min"]))
     G.update(sim=sim, dc=DynCascade(sim, cfg, ts, tt), cfg=cfg, seed=seed)

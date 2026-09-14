@@ -34,8 +34,9 @@ ufls:                        # 周波数低下リレーによる負荷遮断(UFR
   kind: assumption
   source_anchor: "北海道 2018: 48.5 Hz 時限 0.1〜21 秒、48.0 Hz 時限 0.1〜6 秒(OCCTO 検証委員会 最終報告 本文 事象3)。本州各社の整定と遮断量は非公表のため、比を移し遮断量は仮定"
   stages:
-    - {ratio: 0.970, delay_s: [0.1, 21.0], shed_frac: 0.15, n_relays: 8}    # 50 Hz → 48.5 Hz / 60 Hz → 58.2 Hz
-    - {ratio: 0.960, delay_s: [0.1, 6.0], shed_frac: 0.15, n_relays: 6}     # 50 Hz → 48.0 Hz / 60 Hz → 57.6 Hz
+    - {ratio: 0.970, delay_s: [0.1, 21.0], shed_frac: 0.15, n_relays: 8, spacing: log}    # 50 Hz → 48.5 Hz / 60 Hz → 58.2 Hz
+    - {ratio: 0.960, delay_s: [0.1, 6.0], shed_frac: 0.15, n_relays: 6, spacing: log}     # 50 Hz → 48.0 Hz / 60 Hz → 57.6 Hz
+  spacing_note: "時限は対数間隔(短い時限が多い)。等間隔は北海道 2018 のヒンドキャストで否定(最初の 2 秒でほとんど効かず全停)。2026-09-14 まで南海トラフの MC は等間隔のまま回していた(run_v2_dyn・run_v3_red は旧設定)"
   restore_after_min: {kind: assumption, value: 60.0, note: "島が崩壊しなければ UFLS 遮断分は 1 時間で再送電"}
 
 generator_protection:        # 周波数による発電機の解列(比)
@@ -75,6 +76,14 @@ relays:
   max_overload_rounds: 12
   overload_enabled: true
   overload_min_kv: 0          # 感度: 275 にすると 275 kV 以上だけ過負荷で切る(東の下位網に 5 GW 級の非物理的な潮流が出るため)
+
+network:
+  kind: assumption
+  model: reduced             # mesh = 正典のまま全開閉器を閉じた網 / reduced = ローカル系統(154 kV 以下)を常時開路・主幹系統だけで潮流(radial.py)
+  local_max_kv: 154
+  source: "北陸電力送配電 設備形成ルール(特高編)「77kV 以下の送電系統は原則として放射状運用」「154kV 送電系統は原則として放射状運用」/ 九州電力 系統運用ルール 7.2「ローカル系統(上記以外の 220kV 及び 110kV 以下系統)は放射状系統を基本」"
+switching:
+  tie_close_after_s: {kind: assumption, value: 1800.0, note: "電源を失ったローカル区間を常時開路点の投入で隣の区間から送るまで(遠隔・現地操作を含め 30 分と仮定)"}
 
 tsunami_timing:
   source: "output/arrival_cache/tsunami.npz の √(gh) 走時(arrival_physics.py)。陸上は 0.6 km/分で奥へ"

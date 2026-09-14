@@ -26,12 +26,17 @@ class DamageSample:
 class Simulator:
     def __init__(self, case: GridCase, field=None, tsunami: TsunamiField | None = None,
                  fragility: FragilityModel | None = None, restoration: RestorationModel | None = None,
-                 use_tsunami: bool = True):
+                 use_tsunami: bool = True, network: str = "mesh"):
         self.case = case
         self.field = field or default_field()
         self.fm = fragility or FragilityModel()
         self.rm = restoration or RestorationModel()
-        self.cm = CascadeModel(case)
+        if network == "reduced":                 # ローカル系統を常時開路・主幹系統だけで潮流(radial.py)
+            from .radial import ReducedCascadeModel
+            self.cm = ReducedCascadeModel(case)
+        else:
+            self.cm = CascadeModel(case)
+        self.network = network
         b = case.bus
         self.lat, self.lon = case.bus_xy()
         # サイト(変電所)索引

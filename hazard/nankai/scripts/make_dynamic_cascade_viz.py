@@ -42,7 +42,7 @@ def main():
     else:
         s = args.sample
     cfg = yaml.safe_load(open(os.path.join(NANKAI, "config", "dynamics_default.yaml"), encoding="utf-8"))
-    case = GridCase.load(args.island); sim = Simulator(case)
+    case = GridCase.load(args.island); sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
     ts = ap.point_s_arrival_s(case.bus.lat.values, case.bus.lon.values)
     tt = ap.point_tsunami_arrival_s(case.bus.lat.values, case.bus.lon.values, inland_km_per_min=float(cfg["tsunami_timing"]["inland_km_per_min"]))
     dc = DynCascade(sim, cfg, ts, tt)

@@ -40,7 +40,7 @@ class DynCascade:
         # (使うと発電の配分に含めた負荷が対象外になり、島に偽の余剰が出て潮流がずれる — 東で 1,209 MW・過負荷 40 本の偽分離を起こした)
         self.base_on = (G > 1e-6)[lab0]
         Lb = np.bincount(lab0, weights=cm.load, minlength=nc)
-        self.trunk_bus = (Lb[lab0] >= 100.0) & self.base_on          # 平常時の幹線系統(100 MW 以上の成分)に属する母線
+        self.trunk_bus = (lab0 == int(np.argmax(Lb))) & self.base_on   # 平常時に最大の系統(同期系統の本体)に属する母線
         ff_site = int(sim.fm.p["substation"]["functional_failure_ds"])
         self.ff_site = ff_site
         rel = cfg["relays"]
@@ -49,6 +49,10 @@ class DynCascade:
         self.ol_enabled = bool(rel.get("overload_enabled", True))
         self.ol_mask = case.branch.kv.to_numpy(float) >= float(rel.get("overload_min_kv", 0.0))      # 過負荷リレーを見る枝(電圧の下限)
         self.rec_t = np.array(cfg["record_times_s"], float)
+        self.reduced = hasattr(cm, "refresh_ties")
+        if self.reduced:
+            self.open_base = cm.open_now.copy()
+        self.switch_delay = float(cfg.get("switching", {}).get("tie_close_after_s", {"value": 1800.0})["value"])
 
     # ── 事象の列 ──────────────────────────────────────────
     def events(self, d):
@@ -89,6 +93,8 @@ class DynCascade:
     def run(self, d, rng, trace: bool = False):
         cm = self.cm; sim = self.sim; cfg = self.cfg
         n = self.case.n_bus
+        if self.reduced:
+            cm.open_now = self.open_base.copy()
         red = 1.0 - sim._load_factor(d, 0.0)
         core = FreqCore(cfg, self.f0, self.gcls, sim.gb, self.p0, self.pmax, cm.load, bus_red=red, bus_ts=self.t_s, rng=rng)
         core.cfg = dict(cfg); core.cfg["integration"] = dict(cfg["integration"], dt_active_s=float(cfg["integration"].get("dt_active_bus_s", 0.05)))
@@ -110,7 +116,9 @@ class DynCascade:
             else:
                 bins.append((key, [(kind, idx)]))
         ol_times = [10, 30, 60, 120, 240, 360, 600, 1800, 3600, 7200]
-        schedule = sorted([(t, "events", items) for t, items in bins] + [(float(t), "overload", None) for t in ol_times], key=lambda x: (x[0], x[1] != "events"))
+        switch_times = [self.switch_delay, 3600.0, 7200.0, 10800.0 - 1.0] if self.reduced else []
+        schedule = sorted([(t, "events", items) for t, items in bins] + [(float(t), "overload", None) for t in ol_times] + [(float(t), "switch", None) for t in switch_times],
+                          key=lambda x: (x[0], {"events": 0, "switch": 1, "overload": 2}[x[1]]))
         rec = {"t": [], "energized_mw": [], "n_islands": [], "n_islands_100mw": [], "n_islands_1gw": [], "shed_mw": [], "collapsed_mw": [], "isolated_mw": [], "site_out_mw": [], "f_min": [], "f_max": []}
         bus_state = np.zeros((len(self.rec_t), n), np.float32)
         tr = {"t": [], "zone_f": [], "n_islands": [], "n_100mw": [], "energized": [], "island": [], "collapsed": [], "isolated": [], "site_out": [],
@@ -188,6 +196,21 @@ class DynCascade:
                             br_alive[idx[0]] = False; changed = True
                     else:
                         core.trip_gens(idx, "gen_quake"); changed = changed or False
+            elif what == "switch":
+                # 切替送電: 電源を失った健全区間へのタイを閉じ、孤立していた母線を戻す(崩壊・設備損傷の母線は戻さない)
+                gcap = np.where(core.online, core.p0 + core.pgov, 0.0)
+                closed = cm.refresh_ties(bus_alive & (core.bus_on | isolated), br_alive, gcap)
+                if closed:
+                    lab_new = cm._components(bus_alive & (core.bus_on | isolated), br_alive)
+                    live, L_, Pm_, E_ = core.live_islands()
+                    core.set_islands(lab_new)
+                    Ek = np.bincount(core.gen_island, weights=core.E * core.online, minlength=core.nk)
+                    back = isolated & bus_alive & ~core.collapsed & (Ek[core.bus_island] > 0)
+                    if back.any():
+                        core.bus_on[back] = True; isolated[back] = False
+                        core.log.append((core.t, "switch_restore", float(cm.load[back].sum()), int(closed)))
+                    self._apply_islands(core, cm._components(bus_alive & core.bus_on, br_alive), isolated)
+                continue
             else:
                 # 過負荷リレー: 島ごとに DC 潮流(発電の不足・余剰は慣性比で配る準定常)→ 緊急定格超過の上位 3 本を切る。解消するまで繰り返す
                 for _ in range(self.ol_rounds if self.ol_enabled else 0):
@@ -240,7 +263,7 @@ class DynCascade:
             core.drop_buses(np.where(mb)[0], "isolated")
 
     def _island_stats(self, core):
-        """平常時の幹線系統(負荷 100 MW 以上の基底成分)から分かれて受電を続けている島の数:
+        """平常時に最大の系統(同期系統の本体)から分かれて受電を続けている島の数:
         (負荷 10 MW 以上, 100 MW 以上, 1,000 MW 以上)。平常時からある小さな断片(仮想電源つき)は数えない。"""
         live, L, Pm, E = core.live_islands()
         trunk_bus = self.trunk_bus & core.bus_on
@@ -249,14 +272,22 @@ class DynCascade:
         return int((ok & (L >= 10.0)).sum()), int((ok & (L >= 100.0)).sum()), int((ok & (L >= 1000.0)).sum())
 
     def _flows(self, core, bus_alive, br_alive):
+        """過負荷判定の時点の準定常潮流。発電 = p0 + ガバナ出力(上げ代で頭打ち)、負荷 = 周波数特性つき(UFLS 後)、
+        直流融通 = 受電側エリアの母線に負荷比で注入。島内の残差(数値誤差や整定途中の差)は負荷比で配る。
+        (2026-09-14 修正: 以前は不足を慣性比で配っていたが、慣性の配分は脱落直後 1 秒未満の話で、2 分後の潮流には
+         ガバナの頭打ちが効く。慣性比だと遠方の大型火力に出せない出力を上乗せし、過負荷を過大に出していた)"""
         cm = self.cm
         on = core.online
         pg = (core.p0 + core.pgov) * on
-        L, Pm, E = core.island_sums()
-        aid = core.aid_by_island()
-        imb = L * (1 + core.D * core.df) - Pm - aid                 # 不足(+)
-        share = np.where(E[core.gen_island] > 0, core.E * on / np.maximum(E[core.gen_island], 1e-9), 0.0)
-        pg = pg + imb[core.gen_island] * share
-        pinj = np.bincount(core.gbus, weights=pg, minlength=cm.n) - core.load_now()
+        Lb = core.load_now() * (1.0 + core.D * core.df[core.bus_island])
+        pinj = np.bincount(core.gbus, weights=pg, minlength=cm.n) - Lb
+        for lk in core.links:
+            if lk.kind == "external" and lk.flow > 0:
+                w = core.L0[lk.bus_a] * core.bus_on[lk.bus_a]
+                if w.sum() > 0:
+                    pinj[lk.bus_a] += lk.flow * w / w.sum()
         lab = core.bus_island
+        net = np.bincount(lab, weights=pinj, minlength=core.nk)
+        Lk = np.bincount(lab, weights=Lb, minlength=core.nk)
+        pinj = pinj - np.where(Lk[lab] > 0, net[lab] * Lb / np.maximum(Lk[lab], 1e-9), 0.0)
         return cm._dc_flows(lab, bus_alive & core.bus_on, br_alive, pinj, np.zeros(lab.max() + 1, bool))

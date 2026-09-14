@@ -50,7 +50,7 @@ def sensitivity_table(runs):
 
 def main(dyn, v1, out, *extra):
     os.makedirs(out, exist_ok=True)
-    md = ["# 動的カスケードの集計(run_v2_dyn)", ""]
+    md = [f"# 動的カスケードの集計({os.path.basename(os.path.normpath(dyn))})", ""]
     fig, axes = plt.subplots(2, 2, figsize=(15, 9))
     for j, isl in enumerate(("west", "east")):
         ds = pd.read_csv(os.path.join(dyn, isl, "dyn_samples.csv")); sm = pd.read_csv(os.path.join(dyn, isl, "dyn_summary.csv"))
@@ -87,14 +87,14 @@ def main(dyn, v1, out, *extra):
     a = five_region_customers(v1, cols); b = five_region_customers(dyn, cols)
     dyn_cols = ["dyn_energized_t60s", "dyn_energized_t600s", "dyn_energized_t3600s", "dyn_energized_t10800s"]
     c = five_region_customers(dyn, dyn_cols)
-    md += ["## 五地域の停電軒数(物理停電)", "", "| 時点 | 静的 run_v1 | 動的 run_v2 | 内閣府 2025 基本 |", "|---|---|---|---|"]
+    md += ["## 五地域の停電軒数(物理停電)", "", f"| 時点 | 静的 {os.path.basename(os.path.normpath(v1))} | 動的 {os.path.basename(os.path.normpath(dyn))} | 内閣府 2025 基本 |", "|---|---|---|---|"]
     for t, col in zip((0, 1, 4, 7), cols):
         md.append(f"| {t} 日後 | {a[col]/1e4:,.0f} 万軒 | {b[col]/1e4:,.0f} 万軒 | {nk[t]/1e4:,.0f} 万軒 |")
     md += ["", "動的カスケードの直後の推移(五地域・受電していない需要家。t=0 の `phys_t0` は損傷と津波をすべて一度に入れた値なので、秒・分単位の値とは定義が違う)", "",
            "| 地震から | 停電軒数 |", "|---|---|"]
     for col, lab in zip(dyn_cols, ("1 分", "10 分", "1 時間", "3 時間")):
         md.append(f"| {lab} | {c[col]/1e4:,.0f} 万軒 |")
-    runs = [("既定(全電圧で過負荷リレー)", dyn)] + [tuple(x.split("=", 1)) for x in extra]
+    runs = [("既定(縮約網・主幹系統で過負荷リレー)", dyn)] + [tuple(x.split("=", 1)) for x in extra]
     if len(runs) > 1:
         md += [""] + sensitivity_table(runs)
     open(os.path.join(out, "dynamic_summary.md"), "w", encoding="utf-8").write("\n".join(md) + "\n")
