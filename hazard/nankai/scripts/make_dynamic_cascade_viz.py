@@ -75,6 +75,8 @@ def main():
     xt = lambda t: np.where(np.asarray(t) <= 300, np.asarray(t), 300 + (np.log10(np.maximum(np.asarray(t), 300)) - np.log10(300)) / (np.log10(10800) - np.log10(300)) * 120)
     events_txt = []
     first_col = np.full(len(load), -1); first_site = np.full(len(load), -1)
+    from nankai.ufls_display import bus_priority, ufls_off_mask
+    prio = bus_priority(case.bus.bus_id.to_numpy()); order = np.argsort(prio, kind="stable")
     AMB = np.array([255, 154, 60]) / 255.0
     NPAL = np.array([[255, 226, 168], [90, 209, 255], [155, 227, 122], [199, 155, 255], [255, 216, 107], [255, 158, 203], [127, 240, 210], [176, 184, 255]]) / 255.0
     for i, tf in enumerate(frames):
@@ -94,12 +96,15 @@ def main():
             first_col[col & (first_col < 0)] = i; first_col[~col] = -1
             first_site[so & (first_site < 0)] = i; first_site[~so] = -1
             axm.scatter(lon[iso] * kx, lat[iso], s=4, c="#56627a", alpha=0.55, lw=0, zorder=1)
-            if live.any():
-                rk = np.array([min(rank.get(int(x), 7), 7) for x in lab[live]]); ee = e[live]
-                mix = np.minimum(1.0, np.round((1 - ee) * 2.4 * 4) / 4)[:, None]
-                rgb = NPAL[rk] * (1 - mix) + AMB * mix
-                axm.scatter(lon[live] * kx, lat[live], s=size[live] * 9, c=np.c_[rgb, 0.035 + 0.06 * ee], lw=0, zorder=2)
-                axm.scatter(lon[live] * kx, lat[live], s=size[live] * (0.35 + 0.55 * ee), c=np.c_[rgb, 0.3 + 0.7 * ee], lw=0, zorder=3)
+            # UFLS: 計算は島内で一様に削るが、表示は遮断 MW を保ったまま優先順位の高い母線を丸ごと消灯(実際の UFLS は配電線単位で切る)
+            uoff = ufls_off_mask(e, lab, load, prio, order); lit = live & ~uoff
+            EMB = np.array([200, 116, 42]) / 255.0          # 消灯した変電所の燃えさし(受電中の白い灯りより暗く、地の色より明るい)
+            axm.scatter(lon[uoff] * kx, lat[uoff], s=size[uoff] * 0.8, c=np.c_[np.tile(EMB, (int(uoff.sum()), 1)), np.full(int(uoff.sum()), 0.8)], lw=0, zorder=1)
+            if lit.any():
+                rk = np.array([min(rank.get(int(x), 7), 7) for x in lab[lit]])
+                rgb = NPAL[rk]
+                axm.scatter(lon[lit] * kx, lat[lit], s=size[lit] * 9, c=np.c_[rgb, np.full(len(rgb), 0.095)], lw=0, zorder=2)
+                axm.scatter(lon[lit] * kx, lat[lit], s=size[lit] * 0.9, c=np.c_[rgb, np.ones(len(rgb))], lw=0, zorder=3)
             for mask, first, bright, dim in ((col, first_col, [1.0, 0.23, 0.18], [0.59, 0.13, 0.10]), (so, first_site, [1.0, 0.48, 0.24], [1.0, 0.48, 0.24])):
                 if not mask.any():
                     continue
@@ -124,15 +129,15 @@ def main():
                Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊"), Line2D([], [], ls="", marker="o", color="#3a4458", label="電源から孤立"),
                Line2D([], [], ls="", marker="x", color="#ff9f40", label="設備損傷"), Line2D([], [], ls="", marker="o", color="#ffd9a0", alpha=0.5, label="S 波の波面")]
         if args.style == "night":
-            leg = [Line2D([], [], ls="", marker="o", color="#ffe2a8", label="灯り = 受電中(明るさ = 受電の割合)"), Line2D([], [], ls="", marker="o", color="#5ad1ff", label="分かれた島で受電"),
-                   Line2D([], [], ls="", marker="o", color="#ff9a3c", label="UFLS で暗くなる"), Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊で赤く光って消える"),
+            leg = [Line2D([], [], ls="", marker="o", color="#ffe2a8", label="灯り = 受電中"), Line2D([], [], ls="", marker="o", color="#5ad1ff", label="分かれた島で受電"),
+                   Line2D([], [], ls="", marker="o", color="#ff9a3c", alpha=0.6, label="UFLS で遮断(変電所ごと消灯・対象は仮定)"), Line2D([], [], ls="", marker="o", color="#ff3b2f", label="周波数崩壊で赤く光って消える"),
                    Line2D([], [], ls="", marker="o", color="#56627a", label="電源から孤立"), Line2D([], [], ls="", marker="o", color="#ff7a3d", label="設備の損傷"),
                    Line2D([], [], ls="", marker="o", color="#ffd9a0", alpha=0.5, label="S 波の波面")]
         if args.style == "night":                      # 凡例は海の上に置く(西は太平洋、東は三陸沖)
             if args.island == "west":
                 axm.legend(handles=leg, loc="lower right", fontsize=12, frameon=False, labelcolor=TXT)
             else:                                        # 縦長の東は地図の枠が陸まで縮むので、画面基準で茨城沖に置く
-                fig.legend(handles=leg, loc="lower left", bbox_to_anchor=(0.38, 0.2), fontsize=11, frameon=False, labelcolor=TXT)
+                fig.legend(handles=leg, loc="lower left", bbox_to_anchor=(0.34, 0.2), fontsize=11, frameon=False, labelcolor=TXT)
         else:
             axm.legend(handles=leg, loc=("center left" if args.island == "east" else "lower left"), fontsize=12, frameon=False, labelcolor=TXT)
         # 右上: 周波数

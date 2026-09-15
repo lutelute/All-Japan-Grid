@@ -76,7 +76,7 @@ def dyn_block(run, island, bus_ids):
 
 
 FRAME_T = np.r_[np.arange(0, 300, 1.0), np.arange(300, 600, 5.0), np.arange(600, 10801, 60.0)]
-OFF, COLLAPSED, ISOLATED, SITE_OUT = 253, 250, 251, 252
+OFF, COLLAPSED, ISOLATED, SITE_OUT, UFLS_OFF = 253, 250, 251, 252, 254
 EVENT_KINDS = {"gen_quake", "UFLS", "COLLAPSE", "overload_trip", "site", "isolated", "OF", "UF", "switch_restore"}
 
 
@@ -91,9 +91,11 @@ def key_overrides(key):
 
 def trace_block(run, island, bus_ids, key):
     """代表サンプル(3 分後の受電が中央値に最も近い)を同じ乱数で再計算し、母線ごとの状態を「変わった瞬間」だけで持つ。
-    値: 島の順位 × 21 + 受電の割合(0〜20 段) / 250 周波数崩壊 / 251 電源から孤立 / 252 設備損傷 / 253 もともと受電していない。"""
+    値: 島の順位 × 21 + 20(受電中) / 250 周波数崩壊 / 251 電源から孤立 / 252 設備損傷 / 253 もともと受電していない /
+        254 UFLS で丸ごと消灯(表示用: 遮断 MW を保ったまま優先順位の高い母線を選ぶ。ufls_display.py)。"""
+    from nankai.ufls_display import bus_priority, ufls_off_mask
     od = os.path.join(NANKAI, "output", run, island)
-    cache = os.path.join(od, "trace_rep.npz")
+    cache = os.path.join(od, "trace_rep_v2.npz")
     ds = pd.read_csv(os.path.join(od, "dyn_samples.csv"))
     x = ds[ds.t_s == 180.0].set_index("sample").energized_mw
     s = int((x - x.median()).abs().idxmin())
@@ -109,30 +111,32 @@ def trace_block(run, island, bus_ids, key):
             raise SystemExit(f"代表サンプルの再計算が run と一致しない: {run}/{island} #{s} {e180:.1f} vs {x.loc[s]:.1f} MW")
         Tn = np.asarray(tr["t"], float)
         ks = np.clip(np.searchsorted(Tn, FRAME_T, side="right") - 1, 0, len(Tn) - 1)
-        load = sim.cm.load
-        V = np.zeros((len(FRAME_T), sim.case.n_bus), np.uint8)
-        cache_k = {}
-        for fi, k in enumerate(ks):
-            if k not in cache_k:
-                e = tr["energized"][k].astype(float); lab = tr["island"][k]
-                live = e > 1e-3
-                rank = np.full(sim.case.n_bus, 6)
-                if live.any():
-                    Li = pd.Series(load[live]).groupby(lab[live]).sum().sort_values(ascending=False)
-                    rmap = {int(i): j for j, i in enumerate(Li.index)}
-                    rank = np.array([min(rmap.get(int(i), 6), 6) for i in lab])
-                v = np.where(live, rank * 21 + np.clip(np.round(e * 20), 1, 20), OFF)
-                v = np.where(tr["isolated"][k], ISOLATED, v); v = np.where(tr["collapsed"][k], COLLAPSED, v); v = np.where(tr["site_out"][k], SITE_OUT, v)
-                cache_k[k] = v.astype(np.uint8)
-            V[fi] = cache_k[k]
+        uk = sorted(set(int(k) for k in ks)); kpos = {k: j for j, k in enumerate(uk)}
+        E = np.stack([tr["energized"][k].astype(np.float16) for k in uk]); LAB = np.stack([tr["island"][k].astype(np.int32) for k in uk])
+        COL = np.stack([tr["collapsed"][k] for k in uk]); ISO = np.stack([tr["isolated"][k] for k in uk]); SO = np.stack([tr["site_out"][k] for k in uk])
         zones = sorted({z for zf in tr["zone_f"] for z in zf})
         ZF = np.array([[tr["zone_f"][k].get(z, np.nan) for z in zones] for k in ks], np.float32)
         MW = np.array([[tr["mw"][k][c] for c in ("energized", "shed", "collapsed", "isolated", "site_out")] for k in ks], np.float32)
         ev = [(float(t), str(w), float(v), int(c)) for t, w, v, c in r["log"] if w in EVENT_KINDS and t <= 10800]
-        np.savez_compressed(cache, V=V, ZF=ZF, MW=MW, zones=np.array(zones), bus_id=sim.case.bus.bus_id.to_numpy(), ev=np.array(ev, dtype=object), sample=s, L=float(load.sum()))
+        np.savez_compressed(cache, E=E, LAB=LAB, COL=COL, ISO=ISO, SO=SO, kidx=np.array([kpos[int(k)] for k in ks]), ZF=ZF, MW=MW, zones=np.array(zones),
+                            bus_id=sim.case.bus.bus_id.to_numpy(), load=np.asarray(sim.cm.load, np.float32), ev=np.array(ev, dtype=object), sample=s, L=float(sim.cm.load.sum()))
     z = np.load(cache, allow_pickle=True)
-    pos = pd.Series(np.arange(len(z["bus_id"])), index=z["bus_id"])
-    V = z["V"][:, pos.loc[bus_ids].to_numpy()]
+    load = z["load"].astype(float); n_all = len(load)
+    prio = bus_priority(z["bus_id"]); order = np.argsort(prio, kind="stable")
+    Vk = np.zeros((len(z["E"]), n_all), np.uint8)
+    for j in range(len(z["E"])):
+        e = z["E"][j].astype(float); lab = z["LAB"][j]; live = e > 1e-3
+        rank = np.full(n_all, 6)
+        if live.any():
+            Li = pd.Series(load[live]).groupby(lab[live]).sum().sort_values(ascending=False)
+            rmap = {int(i): j2 for j2, i in enumerate(Li.index)}
+            rank = np.array([min(rmap.get(int(i), 6), 6) for i in lab])
+        off = ufls_off_mask(e, lab, load, prio, order)
+        v = np.where(live, rank * 21 + 20, OFF); v = np.where(off, UFLS_OFF, v)
+        v = np.where(z["ISO"][j], ISOLATED, v); v = np.where(z["COL"][j], COLLAPSED, v); v = np.where(z["SO"][j], SITE_OUT, v)
+        Vk[j] = v
+    pos = pd.Series(np.arange(n_all), index=z["bus_id"])
+    V = Vk[z["kidx"]][:, pos.loc[bus_ids].to_numpy()]
     # 変わった瞬間だけ: 母線ごとに (フレーム, 値) の列
     counts, frames, vals = [], [], []
     for i in range(V.shape[1]):

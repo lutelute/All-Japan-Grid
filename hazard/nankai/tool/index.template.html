@@ -127,7 +127,7 @@
         <div class="panel-head row">
           <div>
             <h3>揺れが届き、リレーが開き、灯りが消えていく</h3>
-            <p class="sub">西と東の代表サンプル(3 分後の受電が 200 サンプルの中央値に最も近いもの)を再生する。灯りの明るさは受電の割合、色は分かれた島。</p>
+            <p class="sub">西と東の代表サンプル(3 分後の受電が 200 サンプルの中央値に最も近いもの)を再生する。UFLS(周波数低下リレー)の遮断は、計算では島の全母線から一様に削るが、表示は遮断 MW を保ったまま優先順位の高い変電所から丸ごと消灯にした(実際の UFLS は配電線単位で切る。対象の変電所は非公表のため仮定)。</p>
           </div>
           <div class="play-ctl">
             <button type="button" class="btn play" id="playBtn" aria-pressed="false">▶ 最初から再生</button>
@@ -143,7 +143,7 @@
             <ul class="night-legend">
               <li><i style="background:#ffe2a8;box-shadow:0 0 8px #ffe2a8"></i>受電中</li>
               <li><i style="background:#5ad1ff;box-shadow:0 0 8px #5ad1ff"></i>分かれた島で受電</li>
-              <li><i style="background:#ff9a3c;opacity:.7"></i>UFLS で暗くなる</li>
+              <li><i style="background:#ff9a3c;opacity:.6"></i>UFLS で遮断(丸ごと消灯)</li>
               <li><i style="background:#ff3b2f;box-shadow:0 0 10px #ff3b2f"></i>周波数崩壊で消える</li>
               <li><i style="background:#56627a"></i>電源から孤立</li>
               <li><i style="background:#ff7a3d"></i>設備の損傷</li>

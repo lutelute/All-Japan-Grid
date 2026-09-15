@@ -303,7 +303,7 @@
   const TR = D.traces, FT = TR.frame_t, NF = FT.length;
   const sArr = M.decode(D.buses.s_arrival, Float32Array);
   const PAL = ["#ffe2a8", "#5ad1ff", "#9be37a", "#c79bff", "#ffd86b", "#ff9ecb", "#7ff0d2"].map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)));
-  const AMBER = [255, 154, 60], RED = [255, 59, 47], EMBER = [255, 122, 61], WAVE = [255, 232, 196];
+  const AMBER = [255, 154, 60], EMBER_UFLS = [200, 116, 42], RED = [255, 59, 47], EMBER = [255, 122, 61], WAVE = [255, 232, 196];
   const ZONE_COL = { chubu: "#d9822b", kansai: "#d94b3f", hokuriku: "#2d9cc4", chugoku: "#4f9a36", shikoku: "#8d5bc2", kyushu: "#b99a17", tokyo: "#d9822b", tohoku: "#2f6db3" };
   const ZONE_JA = { chubu: "中部", kansai: "関西", hokuriku: "北陸", chugoku: "中国", shikoku: "四国", kyushu: "九州", tokyo: "東京", tohoku: "東北" };
   const reduceMotion = (() => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } })();
@@ -405,11 +405,13 @@
       if (v === 253) continue;
       const r0 = 0.9 + Math.min(2.1, Math.sqrt(P.cust[i]) / 85);
       if (v < 250) {
-        const rank = (v / 21) | 0, frac = (v % 21) / 20, mix = Math.min(1, Math.round((1 - frac) * 2.4 * 4) / 4), c = PAL[rank];
-        const rgb = [0, 1, 2].map(k => Math.round(c[k] * (1 - mix) + AMBER[k] * mix));
-        nctx.globalAlpha = 0.03 + 0.07 * frac; const rh = r0 * 5;
-        nctx.drawImage(sprite(rgb), night.px[i] - rh, night.py[i] - rh, 2 * rh, 2 * rh);
-        cores.push([i, rgb, 0.3 + 0.7 * frac, r0 * (1.2 + 0.9 * frac)]);
+        const rank = (v / 21) | 0, frac = (v % 21) / 20, c = PAL[rank];
+        nctx.globalAlpha = 0.02 + 0.03 * frac; const rh = r0 * 4;         // にじみは薄く(都市部が白く飽和しない程度)
+        nctx.drawImage(sprite(c), night.px[i] - rh, night.py[i] - rh, 2 * rh, 2 * rh);
+        cores.push([i, c, 0.3 + 0.7 * frac, r0 * (1.2 + 0.9 * frac)]);
+      } else if (v === 254) {                                            // UFLS で丸ごと消灯(表示用の選択・遮断 MW は計算どおり)
+        const age = flashN ? ageOf(mat, n, b, f, v) : 99;
+        cores.push([i, age < flashN ? AMBER : EMBER_UFLS, age < flashN ? 0.95 - age * 0.05 : 0.7, r0 * (age < flashN ? 1.7 - age * 0.08 : 1.0)]);
       } else if (v === 250 || v === 252) {
         const age = flashN ? ageOf(mat, n, b, f, v) : 99, flash = age < flashN;
         if (flash) { nctx.globalAlpha = 0.55 * (1 - age / (flashN + 1)); const rh = r0 * (11 - age); nctx.drawImage(sprite(v === 250 ? RED : EMBER), night.px[i] - rh, night.py[i] - rh, 2 * rh, 2 * rh); }

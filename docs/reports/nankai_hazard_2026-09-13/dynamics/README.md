@@ -187,7 +187,7 @@
 | `dynamic_summary.md` / `.png` / `.json` | 集計の全表 |
 | `cascade_west.mp4` / `.gif` / `_still.png` | 西の代表サンプル(run_v7) |
 | `cascade_east.mp4` / `.gif` / `_still.png` | 東の代表サンプル(run_v6 = run_v7) |
-| `cascade_west_night.*` / `cascade_east_night.*` | 同じ代表サンプルを夜景の灯りで描いたもの(`--style night`)。明るさ = 受電の割合、UFLS で琥珀色に暗くなり、分かれた島は色が変わり、周波数崩壊は赤く光って沈み、孤立は灰色 |
+| `cascade_west_night.*` / `cascade_east_night.*` | 同じ代表サンプルを夜景の灯りで描いたもの(`--style night`)。受電中は白い灯り、分かれた島は色が変わり、周波数崩壊は赤く光って沈み、孤立は灰色。**UFLS は計算では島内で一様に削るが、表示は遮断 MW を保ったまま優先順位の高い母線を丸ごと消灯(琥珀の燃えさし)にした**(`src/nankai/ufls_display.py`・実際の UFLS は配電線単位で切る・対象の変電所は非公表のため母線 id のハッシュで固定した仮定の順位) |
 | `hindcast_hokkaido2018.png` | ヒンドキャストの周波数 |
 
 出典: 北陸電力送配電「設備形成ルール(特高編)」https://www.rikuden.co.jp/nw_rule/attach/setsubi_tokkou.pdf / 九州電力「系統運用ルール」https://www.kyuden.co.jp/var/rev0/0221/4699/system_rules_1704.pdf / 資源エネルギー庁 第46回 電力・ガス基本政策小委員会 資料3-1 https://www.meti.go.jp/shingikai/enecho/denryoku_gas/denryoku_gas/pdf/046_03_01.pdf / 経済産業省 電気設備自然災害等対策WG 資料1 https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/016_01_00.pdf / 送配電網協議会「大規模停電回避に向けて」 / OCCTO「平成30年北海道胆振東部地震に伴う大規模停電に関する検証委員会 最終報告(本文)」https://www.occto.or.jp/assets/iinkai/hokkaido_kensho/files/hokkaido_kensho_04_03_2.pdf / 内閣府(2012)南海トラフの巨大地震モデル検討会 強震断層モデル編 / data/reference/interconnections.yaml(OCCTO 運用容量) / 国土交通省 社会資本整備審議会 河川分科会 第52回 資料2-5「神奈川県沿岸における津波浸水想定」https://www.mlit.go.jp/river/shinngikai_blog/shaseishin/kasenbunkakai/bunkakai/dai52kai/siryou2-5.pdf / 神奈川県「南海トラフ地震の神奈川県への影響」https://www.pref.kanagawa.jp/docs/j8g/bousai/nankaitorahueikyo.html / 東京電力パワーグリッド 空容量一覧(基幹系統・都県別)/ 中部電力パワーグリッド 空容量一覧(500/275 kV 変電所)
