@@ -1,0 +1,1061 @@
+{
+  "shape": [
+    6253,
+    6253
+  ],
+  "nnz": 20523,
+  "ref_count": 220,
+  "pv_count": 1063,
+  "pq_count": 4970,
+  "zero_diagonal_buses": [
+    {
+      "internal_bus": 3001,
+      "bus": 3001,
+      "name": "tokyo junction 36.8822:138.6378:0",
+      "kv": 66.0,
+      "y_diag_abs": 0.0
+    },
+    {
+      "internal_bus": 3010,
+      "bus": 3010,
+      "name": "tokyo junction 36.2741:138.471:77",
+      "kv": 77.0,
+      "y_diag_abs": 0.0
+    }
+  ],
+  "nonzero_diagonal_min": 0.6052319928721772,
+  "diagonal_max": 53255952.21115851,
+  "nonzero_diagonal_spread": 87992625.70114328,
+  "largest_diagonal": [
+    {
+      "internal_bus": 5994,
+      "bus": 5994,
+      "name": "chubu junction 36.5467:138.8337:500",
+      "kv": 500.0,
+      "y_diag_abs": 53255952.21115851
+    },
+    {
+      "internal_bus": 5995,
+      "bus": 5995,
+      "name": "chubu junction 36.5472:138.8334:500",
+      "kv": 500.0,
+      "y_diag_abs": 53255952.21115851
+    },
+    {
+      "internal_bus": 5946,
+      "bus": 5946,
+      "name": "chubu junction 35.59:138.7996:500",
+      "kv": 500.0,
+      "y_diag_abs": 48615374.693357624
+    },
+    {
+      "internal_bus": 5977,
+      "bus": 5977,
+      "name": "chubu junction 35.5892:138.7997:500",
+      "kv": 500.0,
+      "y_diag_abs": 48615374.693357624
+    },
+    {
+      "internal_bus": 5969,
+      "bus": 5969,
+      "name": "chubu junction 35.3732:138.9604:275",
+      "kv": 275.0,
+      "y_diag_abs": 37383802.849699885
+    },
+    {
+      "internal_bus": 5968,
+      "bus": 5968,
+      "name": "chubu junction 35.3731:138.9605:275",
+      "kv": 275.0,
+      "y_diag_abs": 37383802.849699885
+    },
+    {
+      "internal_bus": 5804,
+      "bus": 5804,
+      "name": "三ヶ尾変電所 275kV",
+      "kv": 275.0,
+      "y_diag_abs": 33433877.178717937
+    },
+    {
+      "internal_bus": 5883,
+      "bus": 5883,
+      "name": "新野田変電所 275kV",
+      "kv": 275.0,
+      "y_diag_abs": 33421727.500794347
+    },
+    {
+      "internal_bus": 5882,
+      "bus": 5882,
+      "name": "新野田変電所 500kV",
+      "kv": 500.0,
+      "y_diag_abs": 31719796.013595685
+    },
+    {
+      "internal_bus": 1265,
+      "bus": 1265,
+      "name": "広野町変電所 500kV",
+      "kv": 500.0,
+      "y_diag_abs": 31562814.878098093
+    },
+    {
+      "internal_bus": 3744,
+      "bus": 3744,
+      "name": "tokyo junction 37.2371:141.0098:500",
+      "kv": 500.0,
+      "y_diag_abs": 31561647.577647794
+    },
+    {
+      "internal_bus": 5803,
+      "bus": 5803,
+      "name": "三ヶ尾変電所 500kV",
+      "kv": 500.0,
+      "y_diag_abs": 29083794.39710408
+    },
+    {
+      "internal_bus": 2123,
+      "bus": 2123,
+      "name": "tokyo junction 35.4194:139.4203:275",
+      "kv": 275.0,
+      "y_diag_abs": 24403463.280634478
+    },
+    {
+      "internal_bus": 5993,
+      "bus": 5993,
+      "name": "chubu junction 36.6224:138.8016:500",
+      "kv": 500.0,
+      "y_diag_abs": 22404738.499082796
+    },
+    {
+      "internal_bus": 6007,
+      "bus": 6007,
+      "name": "chubu junction 36.6228:138.8006:500",
+      "kv": 500.0,
+      "y_diag_abs": 22404738.499082796
+    }
+  ],
+  "grounded_ybus": {
+    "size": 6033,
+    "nnz": 20001,
+    "condition_1norm_estimate": 52663231.49913178,
+    "min_abs_lu_pivot": 138.36322007305404
+  },
+  "equilibrated_grounded_ybus": {
+    "size": 6033,
+    "nnz": 20001,
+    "condition_1norm_estimate": 2984590.8299955144,
+    "min_abs_lu_pivot": 0.00018720799077751932
+  },
+  "flat_start_jacobian": {
+    "size": 11003,
+    "nnz": 68335,
+    "condition_1norm_estimate": 49071173.17383679,
+    "min_abs_lu_pivot": 133.00814183566482
+  },
+  "smallest_line_impedances": [
+    {
+      "line": 6121,
+      "name": "東京電力パワーグリッド 500.0kV線",
+      "from_bus": 5994,
+      "to_bus": 5995,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 1.8777243641845428e-08,
+      "length_km": 0.12938750768238147,
+      "parallel": 8.0
+    },
+    {
+      "line": 6084,
+      "name": "東京電力パワーグリッド 500.0kV線",
+      "from_bus": 5946,
+      "to_bus": 5977,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 2.0569624355302274e-08,
+      "length_km": 0.08858636549843102,
+      "parallel": 5.0
+    },
+    {
+      "line": 6099,
+      "name": "電源開発送変電ネットワーク 275.0kV線",
+      "from_bus": 5968,
+      "to_bus": 5969,
+      "from_kv": 275.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 2.6749552575052866e-08,
+      "length_km": 0.018604327829625053,
+      "parallel": 3.0
+    },
+    {
+      "line": 3368,
+      "name": "鹿島線",
+      "from_bus": 5883,
+      "to_bus": 5804,
+      "from_kv": 275.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 3.006580682038937e-08,
+      "length_km": 0.11849444490268103,
+      "parallel": 17.0
+    },
+    {
+      "line": 6343,
+      "name": "東北送電線_67",
+      "from_bus": 3744,
+      "to_bus": 1265,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 3.1742322910113315e-08,
+      "length_km": 0.027340674486937624,
+      "parallel": 1.0
+    },
+    {
+      "line": 5357,
+      "name": "東京電力パワーグリッド 500.0kV線",
+      "from_bus": 5803,
+      "to_bus": 5882,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 3.439279574972207e-08,
+      "length_km": 0.11849444490268103,
+      "parallel": 4.0
+    },
+    {
+      "line": 6118,
+      "name": "東京電力パワーグリッド 500.0kV線",
+      "from_bus": 5993,
+      "to_bus": 6007,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 4.4633415031072044e-08,
+      "length_km": 0.11533254907593404,
+      "parallel": 3.0
+    },
+    {
+      "line": 2736,
+      "name": "綾瀬浄水場線",
+      "from_bus": 2123,
+      "to_bus": 2124,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.73848892557674e-08,
+      "length_km": 0.021970810201063274,
+      "parallel": 2.0
+    },
+    {
+      "line": 6069,
+      "name": "東京電力パワーグリッド 500.0kV線",
+      "from_bus": 5939,
+      "to_bus": 5947,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 6.318876365100299e-08,
+      "length_km": 0.10885299246096929,
+      "parallel": 2.0
+    },
+    {
+      "line": 6134,
+      "name": "東京電力パワーグリッド 275.0kV線",
+      "from_bus": 6008,
+      "to_bus": 6009,
+      "from_kv": 275.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 7.242868990576334e-08,
+      "length_km": 0.05037419177372589,
+      "parallel": 3.0
+    },
+    {
+      "line": 3985,
+      "name": "富津火力線",
+      "from_bus": 4654,
+      "to_bus": 4652,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 9.772155492941684e-08,
+      "length_km": 0.16834138013455444,
+      "parallel": 2.0
+    },
+    {
+      "line": 2194,
+      "name": "府中線",
+      "from_bus": 2003,
+      "to_bus": 2150,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.0086537168468482e-07,
+      "length_km": 0.046767945899001594,
+      "parallel": 2.0
+    },
+    {
+      "line": 998,
+      "name": "東北電力ネットワーク 500.0kV線",
+      "from_bus": 1510,
+      "to_bus": 1512,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 1.0167214678429839e-07,
+      "length_km": 0.17514692150850664,
+      "parallel": 2.0
+    },
+    {
+      "line": 1649,
+      "name": "大間町変電所~東通村変電所線",
+      "from_bus": 1932,
+      "to_bus": 1971,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 1.1266613014928752e-07,
+      "length_km": 0.19408585810417758,
+      "parallel": 2.0
+    },
+    {
+      "line": 6272,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6191,
+      "to_bus": 5267,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 1.2554368033480497e-07,
+      "length_km": 0.0014268286760860088,
+      "parallel": 1.0
+    },
+    {
+      "line": 4658,
+      "name": "新古河線",
+      "from_bus": 5320,
+      "to_bus": 5093,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 1.2665491124536955e-07,
+      "length_km": 0.2181838241856171,
+      "parallel": 2.0
+    },
+    {
+      "line": 6157,
+      "name": "東京電力パワーグリッド 154.0kV線",
+      "from_bus": 6038,
+      "to_bus": 6039,
+      "from_kv": 154.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 1.293858923233597e-07,
+      "length_km": 0.04003017359210587,
+      "parallel": 5.0
+    },
+    {
+      "line": 5052,
+      "name": "東京電力パワーグリッド 154.0kV線",
+      "from_bus": 3157,
+      "to_bus": 3158,
+      "from_kv": 154.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 1.3661513215995742e-07,
+      "length_km": 0.016906719449765673,
+      "parallel": 2.0
+    },
+    {
+      "line": 3485,
+      "name": "湖西線",
+      "from_bus": 5805,
+      "to_bus": 5884,
+      "from_kv": 154.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 1.3678529498877472e-07,
+      "length_km": 0.11849444490268103,
+      "parallel": 14.0
+    },
+    {
+      "line": 4126,
+      "name": "新京葉変電所~高瀬分岐所線",
+      "from_bus": 4778,
+      "to_bus": 4774,
+      "from_kv": 500.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 1.3926877546523494e-07,
+      "length_km": 0.23991327080704825,
+      "parallel": 2.0
+    }
+  ],
+  "voltage_mismatch_lines": [
+    {
+      "line": 130,
+      "name": "西那須野‐黒磯線",
+      "from_bus": 1232,
+      "to_bus": 947,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00028180197846259007,
+      "length_km": 6.4054700766443,
+      "parallel": 2.0
+    },
+    {
+      "line": 385,
+      "name": "東北送電線_16",
+      "from_bus": 131,
+      "to_bus": 249,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 8.24658589861578e-06,
+      "length_km": 0.08601789646623802,
+      "parallel": 1.0
+    },
+    {
+      "line": 697,
+      "name": "東北送電線_90",
+      "from_bus": 269,
+      "to_bus": 270,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.199063939124225e-05,
+      "length_km": 2.5982625368059127,
+      "parallel": 1.0
+    },
+    {
+      "line": 738,
+      "name": "東北送電線_30",
+      "from_bus": 309,
+      "to_bus": 310,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 0.00016342200434127038,
+      "length_km": 9.280657257643101,
+      "parallel": 1.0
+    },
+    {
+      "line": 752,
+      "name": "東北送電線_10",
+      "from_bus": 325,
+      "to_bus": 427,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 6.784571159713546e-06,
+      "length_km": 1.5728909319707978,
+      "parallel": 1.0
+    },
+    {
+      "line": 753,
+      "name": "東北送電線_11",
+      "from_bus": 325,
+      "to_bus": 327,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.7201222665637476e-06,
+      "length_km": 0.39878197918015595,
+      "parallel": 1.0
+    },
+    {
+      "line": 828,
+      "name": "丸沼線",
+      "from_bus": 385,
+      "to_bus": 386,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00035766106327237546,
+      "length_km": 3.7306653551904247,
+      "parallel": 1.0
+    },
+    {
+      "line": 881,
+      "name": "東北送電線_119",
+      "from_bus": 439,
+      "to_bus": 441,
+      "from_kv": 154.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 4.039134336043023e-06,
+      "length_km": 0.2936571355544118,
+      "parallel": 1.0
+    },
+    {
+      "line": 1232,
+      "name": "東北送電線_109",
+      "from_bus": 549,
+      "to_bus": 621,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.564927372073774e-05,
+      "length_km": 0.968332995788927,
+      "parallel": 1.0
+    },
+    {
+      "line": 1364,
+      "name": "東北送電線_113",
+      "from_bus": 625,
+      "to_bus": 626,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.113528558612502e-06,
+      "length_km": 0.7449149049876227,
+      "parallel": 1.0
+    },
+    {
+      "line": 1624,
+      "name": "牛島変電所~牛島西三丁目変電所線",
+      "from_bus": 1586,
+      "to_bus": 1587,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 2.0299272176669366e-05,
+      "length_km": 0.2307052299893188,
+      "parallel": 1.0
+    },
+    {
+      "line": 1625,
+      "name": "御野場新町一丁目変電所~牛島西三丁目変電所線",
+      "from_bus": 1587,
+      "to_bus": 736,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 6.585670615661067e-06,
+      "length_km": 0.40750275510175926,
+      "parallel": 1.0
+    },
+    {
+      "line": 2194,
+      "name": "府中線",
+      "from_bus": 2003,
+      "to_bus": 2150,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.0086537168468482e-07,
+      "length_km": 0.046767945899001594,
+      "parallel": 2.0
+    },
+    {
+      "line": 2382,
+      "name": "西北線; 稲城線",
+      "from_bus": 3896,
+      "to_bus": 3894,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 8.062316289245827e-07,
+      "length_km": 0.7476460270523939,
+      "parallel": 4.0
+    },
+    {
+      "line": 2647,
+      "name": "中野台二丁目変電所~浅間上町変電所線",
+      "from_bus": 2097,
+      "to_bus": 2098,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.385099722967614e-05,
+      "length_km": 0.7865914904381418,
+      "parallel": 1.0
+    },
+    {
+      "line": 2682,
+      "name": "休止線",
+      "from_bus": 2110,
+      "to_bus": 2423,
+      "from_kv": 154.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 7.463532339329151e-07,
+      "length_km": 0.10852422056515487,
+      "parallel": 2.0
+    },
+    {
+      "line": 2736,
+      "name": "綾瀬浄水場線",
+      "from_bus": 2123,
+      "to_bus": 2124,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.73848892557674e-08,
+      "length_km": 0.021970810201063274,
+      "parallel": 2.0
+    },
+    {
+      "line": 2795,
+      "name": "府中線",
+      "from_bus": 2150,
+      "to_bus": 2216,
+      "from_kv": 66.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 7.036577449912627e-06,
+      "length_km": 0.1879274228262928,
+      "parallel": 2.0
+    },
+    {
+      "line": 2834,
+      "name": "東京送電線_22",
+      "from_bus": 2161,
+      "to_bus": 2162,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 8.077710923662091e-06,
+      "length_km": 1.462784852342642,
+      "parallel": 1.0
+    },
+    {
+      "line": 3132,
+      "name": "東京送電線_35",
+      "from_bus": 2284,
+      "to_bus": 2285,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 7.639482861885912e-05,
+      "length_km": 1.0846064205457908,
+      "parallel": 1.0
+    },
+    {
+      "line": 3186,
+      "name": "東京送電線_57",
+      "from_bus": 4223,
+      "to_bus": 4222,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 2.2333089298321226e-06,
+      "length_km": 0.13819086847977716,
+      "parallel": 1.0
+    },
+    {
+      "line": 3313,
+      "name": "東京送電線_120",
+      "from_bus": 4048,
+      "to_bus": 2444,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.182544776323437e-06,
+      "length_km": 0.5176081887955719,
+      "parallel": 2.0
+    },
+    {
+      "line": 3563,
+      "name": "東京送電線_183",
+      "from_bus": 2509,
+      "to_bus": 2661,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 2.0041512728831276e-06,
+      "length_km": 0.46462942007799624,
+      "parallel": 1.0
+    },
+    {
+      "line": 3840,
+      "name": "大網変電所~外房変電所線",
+      "from_bus": 2585,
+      "to_bus": 2695,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 8.944740021376393e-05,
+      "length_km": 5.534753277383529,
+      "parallel": 1.0
+    },
+    {
+      "line": 3850,
+      "name": "東京送電線_176",
+      "from_bus": 2588,
+      "to_bus": 2589,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.0320578980106298e-05,
+      "length_km": 0.5861007310544517,
+      "parallel": 1.0
+    },
+    {
+      "line": 4283,
+      "name": "山田川線",
+      "from_bus": 5052,
+      "to_bus": 2822,
+      "from_kv": 500.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 4.4204580302594905e-07,
+      "length_km": 0.38074814004865387,
+      "parallel": 1.0
+    },
+    {
+      "line": 4284,
+      "name": "山田川線",
+      "from_bus": 5052,
+      "to_bus": 2923,
+      "from_kv": 500.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 8.033041123423249e-06,
+      "length_km": 6.919114367201008,
+      "parallel": 1.0
+    },
+    {
+      "line": 4853,
+      "name": "千代田四丁目変電所~北坂戸変電所線",
+      "from_bus": 5212,
+      "to_bus": 5454,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00013363941911107276,
+      "length_km": 1.5188383432335308,
+      "parallel": 1.0
+    },
+    {
+      "line": 4869,
+      "name": "東京送電線_213",
+      "from_bus": 5236,
+      "to_bus": 5931,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.000608614187648538,
+      "length_km": 6.917020221916964,
+      "parallel": 1.0
+    },
+    {
+      "line": 4991,
+      "name": "東京送電線_250",
+      "from_bus": 3076,
+      "to_bus": 5374,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00016409639236976577,
+      "length_km": 1.8649878484606786,
+      "parallel": 1.0
+    },
+    {
+      "line": 5335,
+      "name": "東京送電線_272",
+      "from_bus": 3260,
+      "to_bus": 3261,
+      "from_kv": 275.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 2.5664947484518564e-06,
+      "length_km": 0.46476404975758967,
+      "parallel": 1.0
+    },
+    {
+      "line": 5793,
+      "name": "蒲須坂‐矢板線",
+      "from_bus": 5681,
+      "to_bus": 5827,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.0002202036696977139,
+      "length_km": 2.5026581160132273,
+      "parallel": 1.0
+    },
+    {
+      "line": 5794,
+      "name": "蒲須坂-矢板線 / JR矢板線",
+      "from_bus": 5827,
+      "to_bus": 1233,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 6.0708357879821076e-05,
+      "length_km": 7.512924510649068,
+      "parallel": 2.0
+    },
+    {
+      "line": 5949,
+      "name": "tokyo_line_4145",
+      "from_bus": 3665,
+      "to_bus": 3666,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 9.251030219359162e-06,
+      "length_km": 0.525361569832915,
+      "parallel": 1.0
+    },
+    {
+      "line": 5950,
+      "name": "tokyo_line_4146",
+      "from_bus": 3667,
+      "to_bus": 3668,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00013356311077911682,
+      "length_km": 1.3931605122351525,
+      "parallel": 1.0
+    },
+    {
+      "line": 5951,
+      "name": "tokyo_line_4148",
+      "from_bus": 3669,
+      "to_bus": 3670,
+      "from_kv": 154.0,
+      "to_kv": 77.0,
+      "z_abs_pu": 8.664217235013301e-05,
+      "length_km": 4.920367418576331,
+      "parallel": 1.0
+    },
+    {
+      "line": 6012,
+      "name": "tokyo_line_4219",
+      "from_bus": 3713,
+      "to_bus": 5931,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.00026212483349201626,
+      "length_km": 2.9791004066732905,
+      "parallel": 1.0
+    },
+    {
+      "line": 6077,
+      "name": "中部送電線_68",
+      "from_bus": 2201,
+      "to_bus": 6125,
+      "from_kv": 66.0,
+      "to_kv": 77.0,
+      "z_abs_pu": 2.7089045762949807e-05,
+      "length_km": 0.28959751672427514,
+      "parallel": 1.0
+    },
+    {
+      "line": 6078,
+      "name": "足柄線",
+      "from_bus": 2201,
+      "to_bus": 6148,
+      "from_kv": 66.0,
+      "to_kv": 77.0,
+      "z_abs_pu": 4.506033716674749e-05,
+      "length_km": 0.9634419654675684,
+      "parallel": 2.0
+    },
+    {
+      "line": 6089,
+      "name": "中部送電線_186",
+      "from_bus": 5955,
+      "to_bus": 5956,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 2.6073743899812585e-05,
+      "length_km": 0.3701788531065848,
+      "parallel": 1.0
+    },
+    {
+      "line": 6090,
+      "name": "中部送電線_187",
+      "from_bus": 5957,
+      "to_bus": 5958,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.3137297613986174e-05,
+      "length_km": 0.1865152078793039,
+      "parallel": 1.0
+    },
+    {
+      "line": 6100,
+      "name": "中部送電線_342",
+      "from_bus": 5971,
+      "to_bus": 2327,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 4.116695926747719e-06,
+      "length_km": 0.046787060753241995,
+      "parallel": 1.0
+    },
+    {
+      "line": 6101,
+      "name": "昭和町変電所~堀之内町変電所線",
+      "from_bus": 2327,
+      "to_bus": 5975,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.6807336596657366e-05,
+      "length_km": 1.0399906659123126,
+      "parallel": 1.0
+    },
+    {
+      "line": 6103,
+      "name": "韮崎市変電所~市川大門線",
+      "from_bus": 3657,
+      "to_bus": 2049,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.001706507376700556,
+      "length_km": 19.394792748907705,
+      "parallel": 1.0
+    },
+    {
+      "line": 6106,
+      "name": "中部送電線_629",
+      "from_bus": 5980,
+      "to_bus": 5981,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 5.896782978256457e-06,
+      "length_km": 0.08371886938435016,
+      "parallel": 1.0
+    },
+    {
+      "line": 6111,
+      "name": "佐野川線",
+      "from_bus": 4364,
+      "to_bus": 6151,
+      "from_kv": 66.0,
+      "to_kv": 77.0,
+      "z_abs_pu": 0.0002495615891067723,
+      "length_km": 2.66795726610398,
+      "parallel": 1.0
+    },
+    {
+      "line": 6133,
+      "name": "中部送電線_368",
+      "from_bus": 6004,
+      "to_bus": 2847,
+      "from_kv": 66.0,
+      "to_kv": 275.0,
+      "z_abs_pu": 1.6143633168523208e-05,
+      "length_km": 0.2155757822612538,
+      "parallel": 1.0
+    },
+    {
+      "line": 6198,
+      "name": "中部送電線_837",
+      "from_bus": 6098,
+      "to_bus": 6099,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 8.282397155874094e-06,
+      "length_km": 0.08639143395884916,
+      "parallel": 1.0
+    },
+    {
+      "line": 6209,
+      "name": "湯沢変電所~南魚沼変電所線",
+      "from_bus": 3165,
+      "to_bus": 6115,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 5.760694820933678e-06,
+      "length_km": 0.35645557572351627,
+      "parallel": 1.0
+    },
+    {
+      "line": 6211,
+      "name": "浅貝線",
+      "from_bus": 6118,
+      "to_bus": 2824,
+      "from_kv": 66.0,
+      "to_kv": 500.0,
+      "z_abs_pu": 7.936300053980857e-05,
+      "length_km": 1.1910677360613926,
+      "parallel": 1.0
+    },
+    {
+      "line": 6226,
+      "name": "中仙台線",
+      "from_bus": 1259,
+      "to_bus": 1281,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 0.000505353454432548,
+      "length_km": 5.743441632589953,
+      "parallel": 1.0
+    },
+    {
+      "line": 6238,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6123,
+      "to_bus": 3931,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 5.464016035541084e-06,
+      "length_km": 0.06209961939392365,
+      "parallel": 1.0
+    },
+    {
+      "line": 6251,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6145,
+      "to_bus": 4161,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.2735030680254702e-05,
+      "length_km": 0.18530822727451074,
+      "parallel": 1.0
+    },
+    {
+      "line": 6253,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6147,
+      "to_bus": 4165,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 5.8517659520513825e-06,
+      "length_km": 0.08514941206080343,
+      "parallel": 1.0
+    },
+    {
+      "line": 6254,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6148,
+      "to_bus": 4185,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 2.015159659595358e-05,
+      "length_km": 0.2932271413948833,
+      "parallel": 1.0
+    },
+    {
+      "line": 6257,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6153,
+      "to_bus": 4198,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.3269779230892305e-05,
+      "length_km": 0.19308938685270552,
+      "parallel": 1.0
+    },
+    {
+      "line": 6263,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6165,
+      "to_bus": 4362,
+      "from_kv": 77.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 1.3251364226095348e-05,
+      "length_km": 0.1928214289671021,
+      "parallel": 1.0
+    },
+    {
+      "line": 6272,
+      "name": "同一敷地タイ(同定)",
+      "from_bus": 6191,
+      "to_bus": 5267,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 1.2554368033480497e-07,
+      "length_km": 0.0014268286760860088,
+      "parallel": 1.0
+    },
+    {
+      "line": 6427,
+      "name": "東京送電線_84",
+      "from_bus": 2384,
+      "to_bus": 2385,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 5.416270812132795e-06,
+      "length_km": 0.307587422052481,
+      "parallel": 1.0
+    },
+    {
+      "line": 6428,
+      "name": "東京送電線_85",
+      "from_bus": 2388,
+      "to_bus": 2389,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 0.00016223659766263413,
+      "length_km": 9.213338580824217,
+      "parallel": 1.0
+    },
+    {
+      "line": 6438,
+      "name": "武州製薬美里線",
+      "from_bus": 3031,
+      "to_bus": 3032,
+      "from_kv": 154.0,
+      "to_kv": 66.0,
+      "z_abs_pu": 3.5037429607328216e-06,
+      "length_km": 0.216801749281489,
+      "parallel": 1.0
+    },
+    {
+      "line": 6442,
+      "name": "東京送電線_266",
+      "from_bus": 3163,
+      "to_bus": 3164,
+      "from_kv": 66.0,
+      "to_kv": 154.0,
+      "z_abs_pu": 2.268956302794761e-05,
+      "length_km": 0.2366686659663341,
+      "parallel": 1.0
+    }
+  ],
+  "interpretation": "Zero diagonal at isolated reference buses is not proof of AC failure. Grounding removes one voltage reference per component. Condition estimates diagnose numerical sensitivity, not existence of a feasible AC solution."
+}

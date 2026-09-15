@@ -18,6 +18,7 @@
 | `YYYY-MM-DD_<model>_<topic>.md` | 個別の評価・設計判断レポート（台帳から参照） |
 | [敷地・端子・母線の接続監査ツール](../SITE_CONNECTION_REVIEW_TOOL.md) | Claude / Codex共通CLI、判断手順、試行錯誤、再現条件 |
 | [2026-09-13 接続比較HTML](codex_same_site_trial_2026-09-13/index.html) | 全27組のBefore / After / 第三案、航空写真、電気解析、PPT |
+| [2026-09-15 AC・Ybus診断のBefore/After](codex_ac_diagnosis_2026-09-15/index.html) | 目標Q制約付きACは未収束。支線復元・需要重み・再実行・写真・PPT |
 
 ## エントリの書き方（IMPROVEMENT_LOG）
 

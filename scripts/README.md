@@ -52,6 +52,8 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
 
 ### 監査・補完
 
+- `review_ac_solvability.py`：東日本AC・Ybus診断の保存回路を再実行。`summary` / `verify` / `replay`。[説明](../docs/AC_DIAGNOSIS_TOOL.md)。
+
 **敷地・端子・母線の接続監査（Claude / Codex共通）**：
 [使い方・発想・試行錯誤・再現手順](../docs/SITE_CONNECTION_REVIEW_TOOL.md)。
 `python3 scripts/site_connection_review.py summary` で結果を読む。
