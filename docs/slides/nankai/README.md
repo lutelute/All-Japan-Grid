@@ -8,6 +8,8 @@
 | v2〜v4 (09-14) | 同名を上書き(履歴 a50a48b・82ad7e6・4ebcc67〜6c04b39) | 動的カスケード・東の是正・復旧人員・夜景 GIF で 17 枚 |
 | v5 (09-15) | `nankai_visual_candidates_v5_2026-09-15.*` | UFLS を変電所ごとの消灯で描いた夜景 GIF に差し替え |
 | v6 (09-16) | `nankai_visual_candidates_v6_2026-09-16.*` | 東が持ちこたえる例・死ぬ例(津波後・直後)の夜景 GIF 3 枚と比較表を追加 |
+| v7 (09-17) | `nankai_visual_candidates_v7_2026-09-17.*` | run_v8(UFLS の段階的な再送電)で GIF と数値を更新・感度表に再送電なしを追加 |
+| 東 生きる/死ぬ v2 (09-16) | `nankai_east_survive_vs_collapse_v2_2026-09-16.*` | run_v8(UFLS の段階的な再送電あり)で GIF と数値を更新 |
 | 東 生きる/死ぬ v1 (09-16) | `nankai_east_survive_vs_collapse_v1_2026-09-16.*` | 貼り付け用 7 枚: GIF 3 本・比較表・経緯・整定値・限界 |
 | 復旧 v1 (09-14) | `nankai_restoration_workforce_2026-09-14.*` | 復旧人員モデル 4 枚 |
 | 本編 (09-13) | `nankai_hazard_v0_2026-09-13.*`・`nankai_4slides_2026-09-13.*` | 解説 29 枚・4 枚 |

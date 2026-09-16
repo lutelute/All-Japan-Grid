@@ -16,7 +16,8 @@
   "UF": 4,
   "isolated_gen": 4,
   "overload_trip": 2,
-  "collapse_gen": 1
+  "collapse_gen": 1,
+  "UFLS_restore": 1
  },
  "mw_by_kind": {
   "gen_quake": 21604.3,
@@ -30,7 +31,8 @@
   "isolated_gen": 10.5,
   "overload_trip": 4.0,
   "OF": 3465.7,
-  "collapse_gen": 20564.9
+  "collapse_gen": 20564.9,
+  "UFLS_restore": 4.8
  },
  "energized_frac": {
   "60s": 1.0,
@@ -41,9 +43,9 @@
   "1800s": 0.0631,
   "3600s": 0.0622,
   "5400s": 0.0622,
-  "7200s": 0.0622,
-  "9000s": 0.0622,
-  "10800s": 0.0622
+  "7200s": 0.0623,
+  "9000s": 0.0623,
+  "10800s": 0.0623
  },
  "f_min_by_zone": {
   "tokyo": 45.20123966090216,
@@ -2547,6 +2549,12 @@
    "kind": "site",
    "mw": 25.3,
    "n": 1
+  },
+  {
+   "t": 3900.0,
+   "kind": "UFLS_restore",
+   "mw": 4.8,
+   "n": 3
   }
  ]
 }
