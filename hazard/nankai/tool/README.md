@@ -15,7 +15,7 @@ node hazard/nankai/tool/test_model.mjs     # JS の計算を Python(reference.js
 | `test_model.mjs`・`reference.json` | 照合(4 通りの前提) |
 | `data.json` | 生成物(HTML に埋め込むデータ。git 管理外) |
 
-- 系統の前提(変圧器台帳・東京湾の浸水・過負荷リレー)は動的カスケードを事前に計算した run を切り替える。対応は `build_scenario_tool.py` の `WEST_RUNS`・`EAST_RUNS`。
+- 系統の前提(変圧器台帳・東京湾の浸水・過負荷リレー)は動的カスケードを事前に計算した run を切り替える。対応は `build_scenario_tool.py` の `WEST_RUNS`・`EAST_RUNS`(run_v8 系 = UFLS の段階的な再送電あり。12 通りは `scripts/run_v8_batch.sh`)。
 - 被害と復旧の前提はブラウザで計算し直す。補助 DB(`hazard/nankai/data/external/hazard_support/`)が要る。
 - 埋め込むのは母線ごとの解析結果と入力、各社が公表する事業所の位置だけ。送配電事業者の台帳の生値は入れない。
 - 「揺れが届き、リレーが開き、灯りが消えていく」の再生は、組み合わせごとに代表サンプル(3 分後の受電が中央値に最も近いもの)を同じ乱数で再計算した記録を使う(`build_scenario_tool.py` の `trace_block`、run ごとに `output/<run>/<島>/trace_rep.npz` に保存)。再計算した 3 分後の受電がモンテカルロの記録と 1 MW 以上ずれたら止まる。
