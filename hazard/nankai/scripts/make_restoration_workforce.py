@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """復旧の人員を実規模で見る: 配電の電柱被害 → 営業所の人員(被災で欠ける)→ 社内の融通 → 他社応援の到着 → 電柱の修理 → 停電軒数。
 
-    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v7 \
+    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v8 \
         --out docs/reports/nankai_hazard_2026-09-13/workforce/restoration_workforce
 
 前の試作(make_restoration_ops.py)は送変電の修理班だけで、営業所の人(配電)・協力会社・被災会社の社内融通が入っておらず、
@@ -479,7 +479,7 @@ def render(a, b, O, R, CV, T, dt, customers_out, summary):
         bp = summary["broken_poles_by_cause"]
         fig.text(0.02, 0.78, f"折れた電柱  揺れ {bp['揺れ']:,} 本・建物の全壊に巻き込まれ {bp['建物全壊']:,} 本・津波 {bp['津波']:,} 本", fontsize=15, color="#c9d3e0", bbox=dict(fc=BG, ec="none", alpha=0.85, pad=2))
         fig.text(0.02, 0.030, "電柱折損率(揺れ・建物全壊 0.17155×木造全壊率)・1 本あたり停電軒数・作業効率 1.69 本/人日は内閣府・県の手法、木造の建築年次は令和5年住宅・土地統計調査、電柱の本数は各社の有価証券報告書", fontsize=10.5, color=MUTED)
-        fig.text(0.02, 0.010, "人員 390 人/百万口と応援 15% は熊本・台風・福島県沖の実績、営業所は各社公表の事業所。全壊率曲線の幅と浸水域の着手 10 日は仮定。送電側の停電は動的カスケード run_v7 の母線平均", fontsize=10.5, color=MUTED)
+        fig.text(0.02, 0.010, "人員 390 人/百万口と応援 15% は熊本・台風・福島県沖の実績、営業所は各社公表の事業所。全壊率曲線の幅と浸水域の着手 10 日は仮定。送電側の停電は動的カスケード run_v8 の母線平均", fontsize=10.5, color=MUTED)
         fig.savefig(os.path.join(tmp, f"f{fi:04d}.png"), facecolor=BG); plt.close(fig)
         if abs(t - 7) < 1e-9:
             import shutil; shutil.copy(os.path.join(tmp, f"f{fi:04d}.png"), a.out + "_still.png")

@@ -118,4 +118,4 @@ mutual_aid:
 
 personnel_damage: {reuse: "config/restoration_ops_scenario.yaml personnel(震度別の不在率・津波 80%・回復の時定数)"}
 headquarters: {reuse: "config/restoration_ops_scenario.yaml mutual_aid.headquarters"}
-bulk_outage: {source: "output/run_v7(動的カスケード・縮約網・東京電力と中部電力の変圧器台帳・停止時刻の修正)の母線ごとの物理停電の平均。送変電の修理は既定の班数のまま"}
+bulk_outage: {source: "output/run_v8(動的カスケード・縮約網・変圧器台帳・停止時刻の修正・UFLS の段階的な再送電)の母線ごとの物理停電の平均。送変電の修理は既定の班数のまま"}

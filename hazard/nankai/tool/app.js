@@ -346,6 +346,7 @@
     OF: e => [`発電機の周波数上昇保護が ${fmt(e.mw)} MW を解列`, true],
     UF: e => [`発電機の周波数低下保護が ${fmt(e.mw)} MW を解列`, true],
     switch_restore: e => e.mw >= 1 && [`切替送電で需要 ${fmt(e.mw)} MW に再送電`, false],
+    UFLS_restore: e => e.mw >= 1 && [`UFLS で切った負荷 ${fmt(e.mw)} MW を再送電`, false],
   };
   function loadNight(keys) {
     const k = keys.west + "|" + keys.east;

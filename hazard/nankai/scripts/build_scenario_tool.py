@@ -23,10 +23,10 @@ TOOL = os.path.join(NANKAI, "tool")
 ZONES = ["tokyo", "tohoku", "chubu", "hokuriku", "kansai", "chugoku", "shikoku", "kyushu", "hokkaido", "okinawa"]
 TOKYO_BAY_BOX = [35.28, 35.80, 139.60, 140.20]
 
-# 系統の前提の組み合わせ → 計算済みの run(東の run_v6_* は run_v7 と同じ東の設定。run_v7 の東 = run_v6 の東を確認済み)
-WEST_RUNS = {"ol1_tr1": "run_v7", "ol0_tr1": "run_v7_nool", "ol1_tr0": "run_v6", "ol0_tr0": "grid_ol0_tr0_tb1"}
-EAST_RUNS = {"ol1_tr1_tb1": "run_v7", "ol0_tr1_tb1": "run_v6_nool", "ol1_tr0_tb1": "run_v6_notrafo", "ol1_tr1_tb0": "run_v6_notb",
-             "ol0_tr0_tb1": "grid_ol0_tr0_tb1", "ol0_tr1_tb0": "grid_ol0_tr1_tb0", "ol1_tr0_tb0": "grid_ol1_tr0_tb0", "ol0_tr0_tb0": "grid_ol0_tr0_tb0"}
+# 系統の前提の組み合わせ → 計算済みの run(run_v8: UFLS の段階的な再送電を入れた版。scripts/run_v8_batch.sh で全通り)
+WEST_RUNS = {"ol1_tr1": "run_v8", "ol0_tr1": "run_v8_nool", "ol1_tr0": "grid8_ol1_tr0_tb1", "ol0_tr0": "grid8_ol0_tr0_tb1"}
+EAST_RUNS = {"ol1_tr1_tb1": "run_v8", "ol0_tr1_tb1": "run_v8_nool", "ol1_tr0_tb1": "grid8_ol1_tr0_tb1", "ol1_tr1_tb0": "grid8_ol1_tr1_tb0",
+             "ol0_tr0_tb1": "grid8_ol0_tr0_tb1", "ol0_tr1_tb0": "grid8_ol0_tr1_tb0", "ol1_tr0_tb0": "grid8_ol1_tr0_tb0", "ol0_tr0_tb0": "grid8_ol0_tr0_tb0"}
 
 
 def b64(a: np.ndarray) -> str:
@@ -77,7 +77,7 @@ def dyn_block(run, island, bus_ids):
 
 FRAME_T = np.r_[np.arange(0, 300, 1.0), np.arange(300, 600, 5.0), np.arange(600, 10801, 60.0)]
 OFF, COLLAPSED, ISOLATED, SITE_OUT, UFLS_OFF = 253, 250, 251, 252, 254
-EVENT_KINDS = {"gen_quake", "UFLS", "COLLAPSE", "overload_trip", "site", "isolated", "OF", "UF", "switch_restore"}
+EVENT_KINDS = {"gen_quake", "UFLS", "COLLAPSE", "overload_trip", "site", "isolated", "OF", "UF", "switch_restore", "UFLS_restore"}
 
 
 def key_overrides(key):
@@ -200,7 +200,7 @@ def main():
     cfg = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_workforce.yaml"), encoding="utf-8"))
     ops = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_ops_scenario.yaml"), encoding="utf-8"))
     sup = W.support_tables()
-    b0 = W.load_buses(os.path.join(NANKAI, "output", "run_v7"))
+    b0 = W.load_buses(os.path.join(NANKAI, "output", "run_v8"))
     b, O = W.build(cfg, ops, b0.copy(), np.random.default_rng(0), sup)
     S, ws = era_raw(b0.copy(), sup, cfg["distribution_damage"])
     zi = {z: i for i, z in enumerate(ZONES)}

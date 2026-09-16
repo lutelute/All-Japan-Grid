@@ -110,6 +110,10 @@ class DynCascade:
         core.cfg = dict(cfg); core.cfg["integration"] = dict(cfg["integration"], dt_active_s=float(cfg["integration"].get("dt_active_bus_s", 0.05)))
         # 平常時に電源の無い母線は対象外(地震と無関係)
         core.bus_on &= self.base_on
+        rs = cfg["ufls"].get("restore") or {}
+        self.restore_on = bool(rs.get("enabled", False))
+        if self.restore_on:                          # 浸水域(ランク ≥ 閾値)の母線は UFLS で切った負荷を戻さない(点検が要る・再送電できない)
+            core.restorable = np.asarray(sim.bus_ts) < int(rs.get("not_restorable_tsunami_rank_min", 1))
         self._links(core)
         bus_alive = self.base_on.copy(); br_alive = np.ones(len(cm.f), bool)
         lab = cm._components(bus_alive, br_alive); core.set_islands(lab)
@@ -127,8 +131,13 @@ class DynCascade:
                 bins.append((key, [(kind, idx)]))
         ol_times = [10, 30, 60, 120, 240, 360, 600, 1800, 3600, 7200]
         switch_times = [self.switch_delay, 3600.0, 7200.0, 10800.0 - 1.0] if self.reduced else []
-        schedule = sorted([(t, "events", items) for t, items in bins] + [(float(t), "overload", None) for t in ol_times] + [(float(t), "switch", None) for t in switch_times],
-                          key=lambda x: (x[0], {"events": 0, "switch": 1, "overload": 2}[x[1]]))
+        restore_times = []
+        if self.restore_on:                          # UFLS で切った負荷の段階的な再送電の判定時刻
+            r0 = float(rs["after_s"]); rstep = float(rs["step_s"])
+            restore_times = list(np.arange(r0, float(cfg["integration"]["t_end_s"]), rstep))
+        schedule = sorted([(t, "events", items) for t, items in bins] + [(float(t), "overload", None) for t in ol_times] + [(float(t), "switch", None) for t in switch_times]
+                          + [(float(t), "restore", None) for t in restore_times],
+                          key=lambda x: (x[0], {"events": 0, "switch": 1, "restore": 2, "overload": 3}[x[1]]))
         rec = {"t": [], "energized_mw": [], "n_islands": [], "n_islands_100mw": [], "n_islands_1gw": [], "shed_mw": [], "collapsed_mw": [], "isolated_mw": [], "site_out_mw": [], "f_min": [], "f_max": []}
         bus_state = np.zeros((len(self.rec_t), n), np.float32)
         tr = {"t": [], "zone_f": [], "n_islands": [], "n_100mw": [], "energized": [], "island": [], "collapsed": [], "isolated": [], "site_out": [],
@@ -206,6 +215,9 @@ class DynCascade:
                             br_alive[idx[0]] = False; changed = True
                     else:
                         core.trip_gens(idx, "gen_quake"); changed = changed or False
+            elif what == "restore":
+                core.restore_ufls(rs, zone=self.zone)
+                continue
             elif what == "switch":
                 # 切替送電: 電源を失った健全区間へのタイを閉じ、孤立していた母線を戻す(崩壊・設備損傷の母線は戻さない)
                 gcap = np.where(core.online, core.p0 + core.pgov, 0.0)

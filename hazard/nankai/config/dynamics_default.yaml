@@ -37,7 +37,19 @@ ufls:                        # 周波数低下リレーによる負荷遮断(UFR
     - {ratio: 0.970, delay_s: [0.1, 21.0], shed_frac: 0.15, n_relays: 8, spacing: log}    # 50 Hz → 48.5 Hz / 60 Hz → 58.2 Hz
     - {ratio: 0.960, delay_s: [0.1, 6.0], shed_frac: 0.15, n_relays: 6, spacing: log}     # 50 Hz → 48.0 Hz / 60 Hz → 57.6 Hz
   spacing_note: "時限は対数間隔(短い時限が多い)。等間隔は北海道 2018 のヒンドキャストで否定(最初の 2 秒でほとんど効かず全停)。2026-09-14 まで南海トラフの MC は等間隔のまま回していた(run_v2_dyn・run_v3_red は旧設定)"
-  restore_after_min: {kind: assumption, value: 60.0, note: "島が崩壊しなければ UFLS 遮断分は 1 時間で再送電"}
+  restore_after_min: {kind: assumption, value: 60.0, note: "(旧・2026-09-16 まで未実装だった)島が崩壊しなければ UFLS 遮断分は 1 時間で再送電。下の restore に置き換え"}
+  restore:                   # UFLS で切った負荷の再送電(2026-09-16 実装・run_v8 から)。条件つき・段階的で、戻せない母線がある
+    kind: assumption
+    enabled: true
+    after_s: 3600            # 切ってから最短でこの時間は戻さない(点検・指令)
+    step_s: 300              # 判定の間隔。1 回に戻す量は下の block_mw と上げ代で決まる
+    block_mw: 100            # 1 回(5 分)にエリアごとに戻す上限 → 1.2 GW/時。2022 福島県沖: 東京エリアの UFR 遮断 約 210 万戸(約 2.9 GW)が 23:36 の地震から 3 時間 16 分(3/17 2:52)で復電 = 平均 約 0.9 GW/時
+    f_tol_hz: 0.2            # 島の周波数偏差がこれ以下なら戻す
+    headroom_margin: 0.8     # 戻す負荷の合計は島の上げ代(運転中の同期機の pmax − 現出力)の 8 割まで
+    not_restorable_tsunami_rank_min: 1   # 浸水想定域(A40 ランク 1 以上)の母線は戻さない(浸水した配電設備は点検・修理が要る)
+    reset_relays: true       # 戻した母線の UFLS 段は再び動く
+    source: "資源エネルギー庁 第46回 電力・ガス基本政策小委員会 資料3-1(2022 福島県沖: UFR で東京エリア最大約 210 万戸)/ 東京電力パワーグリッド 3/17 2:52 復電。段階復電の手順は各社の非公表の運用で、量と条件は仮定"
+    disable: "--set ufls.restore.enabled=false で run_v7 以前と同じ(3 時間戻さない)"
 
 generator_protection:        # 周波数による発電機の解列(比)
   under:

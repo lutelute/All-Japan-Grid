@@ -72,3 +72,45 @@ def test_tsunami_cause_keeps_shaking_flag_for_timing():
     assert not (sh & (out_days <= 0) & (ds == 0)).any()
     sds, scause = fm.substation_ds(np.full(n, 275.0), pga, ts, rng, intensity=inten)
     assert ((scause == 2) & fm.last_site_shake).any()
+
+
+def test_ufls_restore_is_staged_conditional_and_rearms_relays():
+    """UFLS で切った負荷は、待ち時間の後に、周波数が落ち着いた島で、上げ代と 1 回の上限の範囲で、戻せる母線だけ戻り、その母線の段は再び動く。"""
+    import copy
+    cfg = copy.deepcopy(CFG)
+    load = np.array([300.0, 300.0, 300.0])
+    c = FreqCore(cfg, 50.0, ["thermal", "thermal"], [0, 1], [500.0, 400.0], [700.0, 600.0], load)
+    c.restorable = np.array([True, True, False])              # 母線 2 は浸水域(戻さない)
+    c.shed[:] = 0.3; c.shed_t[:] = 100.0; c.rel_done[:, 0] = True
+    rs = dict(after_s=3600, step_s=300, block_mw=90, f_tol_hz=0.2, headroom_margin=0.8)
+    c.t = 1000.0
+    assert c.restore_ufls(rs) == 0.0                           # まだ待ち時間の中
+    c.t = 4000.0; c.df[:] = 0.5
+    assert c.restore_ufls(rs) == 0.0                           # 周波数が落ち着いていない
+    c.df[:] = 0.0
+    got = c.restore_ufls(rs)                                   # 1 回の上限 90 MW: 90 MW の母線 1 つだけ
+    assert abs(got - 90.0) < 1e-6 and c.shed[0] == 0.0 and c.shed[1] == 0.3 and not c.rel_done[0, 0] and c.rel_done[1, 0]
+    got2 = c.restore_ufls(rs)
+    assert abs(got2 - 90.0) < 1e-6 and c.shed[1] == 0.0 and c.shed[2] == 0.3      # 浸水域の母線 2 は戻らない
+    assert c.restore_ufls(rs) == 0.0
+    assert any(e[1] == "UFLS_restore" for e in c.log)
+
+
+def test_ufls_restore_partial_when_bus_load_exceeds_block():
+    import copy
+    c = FreqCore(copy.deepcopy(CFG), 50.0, ["thermal"], [0], [500.0], [900.0], np.array([1000.0]))
+    c.shed[:] = 0.3; c.shed_t[:] = 0.0; c.t = 5000.0
+    rs = dict(after_s=3600, step_s=300, block_mw=100, f_tol_hz=0.2, headroom_margin=0.8)
+    assert abs(c.restore_ufls(rs) - 100.0) < 1e-6 and abs(c.shed[0] - 0.2) < 1e-9      # 300 MW のうち 100 MW だけ戻る
+    c.rel_done[0, 0] = True; c.restore_ufls(rs)
+    assert c.rel_done[0, 0]                                                              # 一部だけなら段の再使用は完全復電まで待つ
+
+
+def test_ufls_restore_limited_by_headroom():
+    import copy
+    cfg = copy.deepcopy(CFG)
+    load = np.array([1000.0])
+    c = FreqCore(cfg, 50.0, ["thermal"], [0], [500.0], [520.0], load)   # 上げ代 20 MW → 8 割で 16 MW
+    c.shed[:] = 0.1; c.shed_t[:] = 0.0; c.t = 5000.0
+    rs = dict(after_s=3600, step_s=300, block_mw=500, f_tol_hz=0.2, headroom_margin=0.8)
+    assert abs(c.restore_ufls(rs) - 16.0) < 1e-6 and abs(c.shed[0] - 0.084) < 1e-9   # 上げ代 20 MW の 8 割 = 16 MW だけ戻る

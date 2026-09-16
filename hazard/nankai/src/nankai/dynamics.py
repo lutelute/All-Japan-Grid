@@ -61,6 +61,8 @@ class FreqCore:
         self.ts = np.full(nb, np.inf) if bus_ts is None else np.asarray(bus_ts, float)
         self.ramp = float(cfg["load"]["quake_demand_drop_ramp_s"]["value"])
         self.bus_on = np.ones(nb, bool); self.collapsed = np.zeros(nb, bool); self.shed = np.zeros(nb)
+        self.shed_t = np.full(nb, -np.inf)          # 母線ごとに UFLS で最後に切った時刻(再送電の待ち時間の起点)
+        self.restorable = np.ones(nb, bool)         # UFLS で切った負荷を再送電できる母線(浸水域などは点検が要るので False にする)
         # UFLS リレー(段 × 本数)
         rel = []
         for s, st in enumerate(cfg["ufls"]["stages"]):
@@ -184,7 +186,7 @@ class FreqCore:
                 mb = (self.bus_island == k) & self.bus_on & ~self.rel_done[:, r]
                 if mb.any():
                     sh0 = float((self.L0 * self.shed * self.bus_on).sum())
-                    self.shed[mb] = np.minimum(1.0, self.shed[mb] + self.rel_frac[r]); self.rel_done[mb, r] = True
+                    self.shed[mb] = np.minimum(1.0, self.shed[mb] + self.rel_frac[r]); self.rel_done[mb, r] = True; self.shed_t[mb] = self.t
                     self.log.append((self.t, "UFLS", float((self.L0 * self.shed * self.bus_on).sum()) - sh0, int(k)))
                 self.rel_t[k, r] = -1e9          # 同じ島で二度は動かない(母線側でも済み印)
         # 緊急融通(AFC): トリガ周波数を割ったら以後は周波数偏差の積分で融通量を動かす(変化率は ramp で頭打ち)
@@ -243,6 +245,43 @@ class FreqCore:
                 if recorder is not None:
                     recorder(self)
                 break
+
+    # ── UFLS で切った負荷の再送電 ──────────────────────────────
+    def restore_ufls(self, rs: dict, zone=None):
+        """島が落ち着いていれば、UFLS で切った負荷を段階的に戻し、その母線の UFLS 段を再び使えるようにする。
+        条件: 島が生きていて |Δf| ≤ f_tol_hz、切ってから after_s 以上、母線が再送電できる(restorable)。
+        量: 島の上げ代(運転中の同期機の pmax − 現出力)× headroom_margin まで、エリアごとに 1 回 block_mw まで。需要の大きい母線から。
+        戻り: 戻した負荷 [MW]。"""
+        after_s = float(rs["after_s"]); block = float(rs["block_mw"]); f_tol = float(rs["f_tol_hz"]); margin = float(rs["headroom_margin"])
+        live, L, Pm, E = self.live_islands()
+        on = self.online
+        head = np.bincount(self.gen_island, weights=np.maximum(self.pmax - (self.p0 + self.pgov), 0.0) * on, minlength=self.nk) * margin
+        lf = 1.0 - self.red * np.clip((self.t - self.ts) / max(self.ramp, 1e-9), 0.0, 1.0)
+        cand = self.bus_on & (self.shed > 1e-9) & self.restorable & (self.t - self.shed_t >= after_s - 1e-9)
+        cand &= live[self.bus_island] & (np.abs(self.df[self.bus_island]) <= f_tol)
+        if not cand.any():
+            return 0.0
+        zone = np.zeros(len(self.L0), int) if zone is None else np.asarray(zone)
+        amount = self.L0 * lf * self.shed
+        total = 0.0; nres = 0
+        for k in np.unique(self.bus_island[cand]):
+            budget_k = float(head[k])
+            for z in np.unique(zone[cand & (self.bus_island == k)]):
+                idx = np.where(cand & (self.bus_island == k) & (zone == z))[0]
+                idx = idx[np.argsort(-amount[idx], kind="stable")]
+                budget = min(block, budget_k)
+                for i in idx:
+                    take = min(amount[i], budget)                 # 母線の負荷が大きければ一部だけ戻す(縮約網では給電変電所に負荷が集まる)
+                    if take <= 1e-9:
+                        break
+                    budget -= take; budget_k -= take; total += take; nres += 1
+                    if take >= amount[i] - 1e-9:
+                        self.shed[i] = 0.0; self.rel_done[i, :] = False; self.shed_t[i] = -np.inf
+                    else:
+                        self.shed[i] *= 1.0 - take / amount[i]
+        if total > 0:
+            self.log.append((self.t, "UFLS_restore", float(total), int(nres)))
+        return float(total)
 
     def live_islands(self):
         L, Pm, E = self.island_sums()
