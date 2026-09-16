@@ -1,0 +1,2552 @@
+{
+ "island": "east",
+ "sample": 59,
+ "n_frames": 476,
+ "late_step_s": 60.0,
+ "load_mw": 55250.0,
+ "log_counts": {
+  "gen_quake": 328,
+  "UFLS": 36,
+  "site": 9,
+  "isolated": 8,
+  "COLLAPSE": 7,
+  "collapse": 7,
+  "OF": 5,
+  "site_gen": 4,
+  "UF": 4,
+  "isolated_gen": 4,
+  "overload_trip": 2,
+  "collapse_gen": 1
+ },
+ "mw_by_kind": {
+  "gen_quake": 21604.3,
+  "UFLS": 14023.4,
+  "site": 358.1,
+  "site_gen": 254.2,
+  "isolated": 1202.5,
+  "UF": 6001.9,
+  "COLLAPSE": 35659.4,
+  "collapse": 50106.0,
+  "isolated_gen": 10.5,
+  "overload_trip": 4.0,
+  "OF": 3465.7,
+  "collapse_gen": 20564.9
+ },
+ "energized_frac": {
+  "60s": 1.0,
+  "120s": 0.8413,
+  "180s": 0.0631,
+  "300s": 0.0631,
+  "600s": 0.0631,
+  "1800s": 0.0631,
+  "3600s": 0.0622,
+  "5400s": 0.0622,
+  "7200s": 0.0622,
+  "9000s": 0.0622,
+  "10800s": 0.0622
+ },
+ "f_min_by_zone": {
+  "tokyo": 45.20123966090216,
+  "tohoku": 45.20123966090216
+ },
+ "first_collapse_s": 88.35,
+ "largest_collapse": {
+  "t": 127.1,
+  "kind": "COLLAPSE",
+  "mw": 34184.2,
+  "n": 0
+ },
+ "n_islands_max": 3,
+ "events": [
+  {
+   "t": 83.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 83.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 83.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 86.05,
+   "kind": "UFLS",
+   "mw": 1.8,
+   "n": 85
+  },
+  {
+   "t": 86.2,
+   "kind": "UFLS",
+   "mw": 1.8,
+   "n": 85
+  },
+  {
+   "t": 86.25,
+   "kind": "UFLS",
+   "mw": 2.4,
+   "n": 85
+  },
+  {
+   "t": 86.4,
+   "kind": "UFLS",
+   "mw": 2.4,
+   "n": 85
+  },
+  {
+   "t": 86.45,
+   "kind": "UFLS",
+   "mw": 1.8,
+   "n": 85
+  },
+  {
+   "t": 86.5,
+   "kind": "gen_quake",
+   "mw": 28.0,
+   "n": 1
+  },
+  {
+   "t": 86.5,
+   "kind": "gen_quake",
+   "mw": 28.3,
+   "n": 1
+  },
+  {
+   "t": 86.7,
+   "kind": "UFLS",
+   "mw": 2.4,
+   "n": 85
+  },
+  {
+   "t": 86.95,
+   "kind": "UFLS",
+   "mw": 1.8,
+   "n": 85
+  },
+  {
+   "t": 87.0,
+   "kind": "site",
+   "mw": 28.9,
+   "n": 2
+  },
+  {
+   "t": 87.0,
+   "kind": "gen_quake",
+   "mw": 16.7,
+   "n": 1
+  },
+  {
+   "t": 87.2,
+   "kind": "UFLS",
+   "mw": 2.4,
+   "n": 86
+  },
+  {
+   "t": 87.5,
+   "kind": "site_gen",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 87.5,
+   "kind": "site",
+   "mw": 39.8,
+   "n": 3
+  },
+  {
+   "t": 87.5,
+   "kind": "isolated",
+   "mw": 189.8,
+   "n": 30
+  },
+  {
+   "t": 87.95,
+   "kind": "UFLS",
+   "mw": 1.8,
+   "n": 88
+  },
+  {
+   "t": 88.3,
+   "kind": "UF",
+   "mw": 55.3,
+   "n": 3
+  },
+  {
+   "t": 88.3,
+   "kind": "UFLS",
+   "mw": 2.4,
+   "n": 88
+  },
+  {
+   "t": 88.35,
+   "kind": "COLLAPSE",
+   "mw": 75.4,
+   "n": 88
+  },
+  {
+   "t": 88.35,
+   "kind": "collapse",
+   "mw": 97.7,
+   "n": 11
+  },
+  {
+   "t": 88.5,
+   "kind": "isolated",
+   "mw": 18.1,
+   "n": 1
+  },
+  {
+   "t": 88.5,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 88.65,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 88.9,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 89.0,
+   "kind": "gen_quake",
+   "mw": 56.6,
+   "n": 1
+  },
+  {
+   "t": 89.0,
+   "kind": "COLLAPSE",
+   "mw": 35.8,
+   "n": 84
+  },
+  {
+   "t": 89.0,
+   "kind": "collapse",
+   "mw": 36.1,
+   "n": 6
+  },
+  {
+   "t": 89.4,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 90.4,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 91.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 91.5,
+   "kind": "gen_quake",
+   "mw": 0.0,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 92.3,
+   "kind": "UFLS",
+   "mw": 0.9,
+   "n": 242
+  },
+  {
+   "t": 93.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 94.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.6,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 5.7,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "gen_quake",
+   "mw": 28.3,
+   "n": 1
+  },
+  {
+   "t": 95.5,
+   "kind": "isolated_gen",
+   "mw": 0.1,
+   "n": 2
+  },
+  {
+   "t": 95.5,
+   "kind": "isolated",
+   "mw": 51.6,
+   "n": 21
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 96.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 97.5,
+   "kind": "gen_quake",
+   "mw": 10.4,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 98.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 100.0,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 100.0,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 100.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 100.0,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 100.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 101.0,
+   "kind": "gen_quake",
+   "mw": 1.2,
+   "n": 1
+  },
+  {
+   "t": 101.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 102.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 102.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 102.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 103.5,
+   "kind": "gen_quake",
+   "mw": 23.8,
+   "n": 1
+  },
+  {
+   "t": 104.0,
+   "kind": "site",
+   "mw": 25.3,
+   "n": 1
+  },
+  {
+   "t": 104.0,
+   "kind": "site",
+   "mw": 131.8,
+   "n": 6
+  },
+  {
+   "t": 104.0,
+   "kind": "isolated",
+   "mw": 121.6,
+   "n": 8
+  },
+  {
+   "t": 104.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 104.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 104.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 105.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 105.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 106.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 107.0,
+   "kind": "site",
+   "mw": 32.9,
+   "n": 2
+  },
+  {
+   "t": 107.0,
+   "kind": "isolated_gen",
+   "mw": 1.1,
+   "n": 2
+  },
+  {
+   "t": 107.0,
+   "kind": "isolated",
+   "mw": 152.0,
+   "n": 8
+  },
+  {
+   "t": 107.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 108.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 108.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 108.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 108.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 109.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 109.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 109.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 735.7,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 110.5,
+   "kind": "gen_quake",
+   "mw": 650.8,
+   "n": 1
+  },
+  {
+   "t": 111.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 111.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 111.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 112.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 112.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 112.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 112.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 113.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 113.5,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 113.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 113.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 114.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 114.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 1706.8,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 1131.8,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 2920.1,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 4.3,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 7.4,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 1.1,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 479.3,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 1935.4,
+   "n": 1
+  },
+  {
+   "t": 114.5,
+   "kind": "gen_quake",
+   "mw": 1935.4,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.2,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.5,
+   "kind": "site_gen",
+   "mw": 203.5,
+   "n": 2
+  },
+  {
+   "t": 115.5,
+   "kind": "site",
+   "mw": 25.4,
+   "n": 2
+  },
+  {
+   "t": 115.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.5,
+   "kind": "gen_quake",
+   "mw": 357.6,
+   "n": 1
+  },
+  {
+   "t": 115.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 115.5,
+   "kind": "isolated_gen",
+   "mw": 9.2,
+   "n": 2
+  },
+  {
+   "t": 115.5,
+   "kind": "isolated",
+   "mw": 544.9,
+   "n": 27
+  },
+  {
+   "t": 116.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 116.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 117.95,
+   "kind": "UFLS",
+   "mw": 947.7,
+   "n": 0
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.1,
+   "kind": "UFLS",
+   "mw": 947.7,
+   "n": 0
+  },
+  {
+   "t": 118.35,
+   "kind": "UFLS",
+   "mw": 947.7,
+   "n": 0
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 645.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 62.3,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 118.5,
+   "kind": "gen_quake",
+   "mw": 11.3,
+   "n": 1
+  },
+  {
+   "t": 118.85,
+   "kind": "UFLS",
+   "mw": 947.7,
+   "n": 0
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 1.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 2037.3,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 1782.6,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 58.2,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 1103.5,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 119.7,
+   "kind": "UFLS",
+   "mw": 1263.6,
+   "n": 0
+  },
+  {
+   "t": 119.85,
+   "kind": "UFLS",
+   "mw": 947.7,
+   "n": 0
+  },
+  {
+   "t": 119.85,
+   "kind": "UFLS",
+   "mw": 1263.6,
+   "n": 0
+  },
+  {
+   "t": 120.0,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 120.0,
+   "kind": "overload_trip",
+   "mw": 1.0,
+   "n": 0
+  },
+  {
+   "t": 120.0,
+   "kind": "overload_trip",
+   "mw": 3.0,
+   "n": 0
+  },
+  {
+   "t": 120.15,
+   "kind": "UFLS",
+   "mw": 1213.1,
+   "n": 0
+  },
+  {
+   "t": 120.15,
+   "kind": "UFLS",
+   "mw": 11.9,
+   "n": 6
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 120.5,
+   "kind": "isolated",
+   "mw": 77.8,
+   "n": 4
+  },
+  {
+   "t": 120.65,
+   "kind": "UFLS",
+   "mw": 1211.1,
+   "n": 0
+  },
+  {
+   "t": 120.65,
+   "kind": "UFLS",
+   "mw": 11.9,
+   "n": 6
+  },
+  {
+   "t": 121.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "site",
+   "mw": 23.4,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "gen_quake",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "isolated_gen",
+   "mw": 0.1,
+   "n": 1
+  },
+  {
+   "t": 121.0,
+   "kind": "isolated",
+   "mw": 46.7,
+   "n": 6
+  },
+  {
+   "t": 121.1,
+   "kind": "UF",
+   "mw": 1436.3,
+   "n": 7181
+  },
+  {
+   "t": 121.25,
+   "kind": "UF",
+   "mw": 2.4,
+   "n": 43
+  },
+  {
+   "t": 121.5,
+   "kind": "gen_quake",
+   "mw": 17.0,
+   "n": 1
+  },
+  {
+   "t": 121.75,
+   "kind": "UFLS",
+   "mw": 907.0,
+   "n": 0
+  },
+  {
+   "t": 121.75,
+   "kind": "UFLS",
+   "mw": 1209.4,
+   "n": 0
+  },
+  {
+   "t": 121.75,
+   "kind": "UFLS",
+   "mw": 8.9,
+   "n": 6
+  },
+  {
+   "t": 121.75,
+   "kind": "UFLS",
+   "mw": 11.9,
+   "n": 6
+  },
+  {
+   "t": 122.0,
+   "kind": "gen_quake",
+   "mw": 62.3,
+   "n": 1
+  },
+  {
+   "t": 122.0,
+   "kind": "gen_quake",
+   "mw": 60.9,
+   "n": 1
+  },
+  {
+   "t": 122.0,
+   "kind": "gen_quake",
+   "mw": 226.4,
+   "n": 1
+  },
+  {
+   "t": 123.0,
+   "kind": "gen_quake",
+   "mw": 28.2,
+   "n": 1
+  },
+  {
+   "t": 123.0,
+   "kind": "gen_quake",
+   "mw": 24.8,
+   "n": 1
+  },
+  {
+   "t": 123.5,
+   "kind": "gen_quake",
+   "mw": 814.9,
+   "n": 1
+  },
+  {
+   "t": 123.5,
+   "kind": "gen_quake",
+   "mw": 0.8,
+   "n": 1
+  },
+  {
+   "t": 123.5,
+   "kind": "gen_quake",
+   "mw": 2478.7,
+   "n": 1
+  },
+  {
+   "t": 123.65,
+   "kind": "OF",
+   "mw": 97.2,
+   "n": 10
+  },
+  {
+   "t": 123.85,
+   "kind": "UFLS",
+   "mw": 1209.4,
+   "n": 0
+  },
+  {
+   "t": 123.85,
+   "kind": "UFLS",
+   "mw": 11.9,
+   "n": 6
+  },
+  {
+   "t": 125.15,
+   "kind": "OF",
+   "mw": 3315.5,
+   "n": 236
+  },
+  {
+   "t": 125.2,
+   "kind": "COLLAPSE",
+   "mw": 1321.5,
+   "n": 2
+  },
+  {
+   "t": 125.2,
+   "kind": "collapse",
+   "mw": 1543.4,
+   "n": 209
+  },
+  {
+   "t": 125.55,
+   "kind": "UFLS",
+   "mw": 907.0,
+   "n": 0
+  },
+  {
+   "t": 125.55,
+   "kind": "UFLS",
+   "mw": 8.9,
+   "n": 6
+  },
+  {
+   "t": 126.1,
+   "kind": "UF",
+   "mw": 4507.9,
+   "n": 169
+  },
+  {
+   "t": 127.1,
+   "kind": "COLLAPSE",
+   "mw": 34184.2,
+   "n": 0
+  },
+  {
+   "t": 127.1,
+   "kind": "collapse_gen",
+   "mw": 20564.9,
+   "n": 142
+  },
+  {
+   "t": 127.1,
+   "kind": "collapse",
+   "mw": 48375.8,
+   "n": 5347
+  },
+  {
+   "t": 129.85,
+   "kind": "OF",
+   "mw": 18.1,
+   "n": 1
+  },
+  {
+   "t": 129.9,
+   "kind": "COLLAPSE",
+   "mw": 14.5,
+   "n": 469
+  },
+  {
+   "t": 129.9,
+   "kind": "collapse",
+   "mw": 18.1,
+   "n": 1
+  },
+  {
+   "t": 131.85,
+   "kind": "OF",
+   "mw": 18.1,
+   "n": 1
+  },
+  {
+   "t": 131.9,
+   "kind": "COLLAPSE",
+   "mw": 14.5,
+   "n": 468
+  },
+  {
+   "t": 131.9,
+   "kind": "collapse",
+   "mw": 18.1,
+   "n": 1
+  },
+  {
+   "t": 132.85,
+   "kind": "UFLS",
+   "mw": 8.9,
+   "n": 6
+  },
+  {
+   "t": 135.0,
+   "kind": "gen_quake",
+   "mw": 10.3,
+   "n": 1
+  },
+  {
+   "t": 144.75,
+   "kind": "OF",
+   "mw": 16.8,
+   "n": 1
+  },
+  {
+   "t": 144.8,
+   "kind": "COLLAPSE",
+   "mw": 13.5,
+   "n": 466
+  },
+  {
+   "t": 144.8,
+   "kind": "collapse",
+   "mw": 16.8,
+   "n": 1
+  },
+  {
+   "t": 2130.0,
+   "kind": "site_gen",
+   "mw": 25.3,
+   "n": 1
+  },
+  {
+   "t": 2130.0,
+   "kind": "site",
+   "mw": 25.3,
+   "n": 1
+  },
+  {
+   "t": 3360.0,
+   "kind": "site_gen",
+   "mw": 25.3,
+   "n": 1
+  },
+  {
+   "t": 3360.0,
+   "kind": "site",
+   "mw": 25.3,
+   "n": 1
+  }
+ ]
+}

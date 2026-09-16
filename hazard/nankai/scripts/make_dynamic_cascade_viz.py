@@ -30,7 +30,10 @@ ISL = ["#f4efe2", "#5ad1ff", "#9be37a", "#c79bff", "#ffd86b", "#ff9ecb", "#7ff0d
 def main():
     a = argparse.ArgumentParser(); a.add_argument("--run", required=True); a.add_argument("--island", default="west"); a.add_argument("--out", required=True)
     a.add_argument("--sample", type=int, default=None); a.add_argument("--seed", type=int, default=0)
-    a.add_argument("--style", choices=["dots", "night"], default="dots", help="night = 受電中の母線を灯りで描き、リレーが開くと暗く・色が変わり・消える"); args = a.parse_args()
+    a.add_argument("--style", choices=["dots", "night"], default="dots", help="night = 受電中の母線を灯りで描き、リレーが開くと暗く・色が変わり・消える")
+    a.add_argument("--late-step", type=float, default=300.0, help="5 分以降のフレーム間隔 [s](既定 300。津波で 1〜2 時間後に崩れる例は 60 が見やすい)")
+    a.add_argument("--stills", default="180", help="静止画を残す時刻 [s] をカンマ区切り(既定 180)。_still_<t>s.png、最初のものは _still.png にも")
+    a.add_argument("--label", default="", help="図の右下の注記に足す文(例: 東が持ちこたえる例)"); args = a.parse_args()
     import arrival_physics as ap
     from nankai.grid import GridCase
     from nankai.montecarlo import Simulator
@@ -57,7 +60,8 @@ def main():
     # ログから主な事象(文字で出す)
     log = [(float(e[0]), e[1], float(e[2])) for e in r["log"]]
     # フレームの時刻: 0〜300 秒は 1 秒ごと、その後 3 時間まで 5 分ごと
-    frames = list(np.arange(0, 301, 1.0)) + list(np.arange(600, 10801, 300.0))
+    frames = list(np.arange(0, 301, 1.0)) + list(np.arange(300 + args.late_step, 10801, args.late_step))
+    stills = [float(x) for x in args.stills.split(",") if x.strip()]
     tmp = tempfile.mkdtemp()
     lon0, lon1, lat0, lat1 = lon.min() - 0.3, lon.max() + 0.3, lat.min() - 0.3, lat.max() + 0.3
     kx = np.cos(np.radians(35))
@@ -185,14 +189,30 @@ def main():
                 lines.append(f"{t_:6.1f} 秒  UFLS が負荷 {v:,.0f} MW を遮断")
         for j, ln in enumerate(lines):
             fig.text(0.02, 0.835 - j * 0.03, ln, fontsize=14, color="#ffcf9e")
-        fig.text(0.56, 0.02, f"All-Japan-Grid {'西 60 Hz' if f0 == 60 else '東 50 Hz'}・代表サンプル #{s}(3 分後の受電が中央値に最も近い)・同じ島のエリアは周波数の線が重なる",
+        fig.text(0.56, 0.02, (args.label + "・" if args.label else "") + f"All-Japan-Grid {'西 60 Hz' if f0 == 60 else '東 50 Hz'}・サンプル #{s}" + ("(3 分後の受電が中央値に最も近い)" if args.sample is None else "") + "・同じ島のエリアは周波数の線が重なる",
                  fontsize=10, color=MUTED)
         fig.savefig(os.path.join(tmp, f"f{i:04d}.png"), facecolor=BG); plt.close(fig)
-        if tf == 180:
-            import shutil; shutil.copy(os.path.join(tmp, f"f{i:04d}.png"), args.out + "_still.png")
+        for j, st in enumerate(stills):
+            if abs(tf - st) < 1e-9:
+                import shutil; shutil.copy(os.path.join(tmp, f"f{i:04d}.png"), args.out + f"_still_{int(st)}s.png")
+                if j == 0:
+                    shutil.copy(os.path.join(tmp, f"f{i:04d}.png"), args.out + "_still.png")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "15", "-i", os.path.join(tmp, "f%04d.png"), "-vf", "format=yuv420p", "-c:v", "libx264", "-crf", "22", "-movflags", "+faststart", args.out + ".mp4"], check=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", args.out + ".mp4", "-vf", "fps=6,scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=none:diff_mode=rectangle", "-loop", "0", args.out + ".gif"], check=True)
-    json.dump({"island": args.island, "sample": s, "n_frames": len(frames), "log_counts": pd.Series([e_[1] for e_ in log]).value_counts().to_dict()}, open(args.out + "_meta.json", "w"), ensure_ascii=False, indent=1)
+    # 技術的な経緯(スライド用): 事象の全記録と要約
+    ev = [{"t": round(float(e_[0]), 2), "kind": str(e_[1]), "mw": round(float(e_[2]), 1), "n": int(e_[3])} for e_ in r["log"] if float(e_[0]) <= 10800]
+    kinds = pd.Series([e["kind"] for e in ev])
+    mw_by = {k: round(float(sum(e["mw"] for e in ev if e["kind"] == k)), 1) for k in kinds.unique()}
+    rec = {float(t): float(v) for t, v in zip(r["t"], r["energized_mw"])}
+    def at(t):
+        ts_ = np.array(sorted(rec)); return float(rec[ts_[np.searchsorted(ts_, t, side="right") - 1]])
+    fz = {z: (float(np.nanmin(zf[z].values)) if z in zf else None) for z in zones}
+    coll = [e for e in ev if e["kind"] == "COLLAPSE"]
+    summary = {"island": args.island, "sample": s, "n_frames": len(frames), "late_step_s": args.late_step, "load_mw": L, "log_counts": kinds.value_counts().to_dict(), "mw_by_kind": mw_by,
+               "energized_frac": {f"{int(t)}s": round(at(t) / L, 4) for t in (60, 120, 180, 300, 600, 1800, 3600, 5400, 7200, 9000, 10800)},
+               "f_min_by_zone": fz, "first_collapse_s": (coll[0]["t"] if coll else None), "largest_collapse": (max(coll, key=lambda e: e["mw"]) if coll else None),
+               "n_islands_max": int(nis.max()), "events": ev}
+    json.dump(summary, open(args.out + "_meta.json", "w"), ensure_ascii=False, indent=1)
     print("sample", s, "frames", len(frames), "mp4 MB", round(os.path.getsize(args.out + ".mp4") / 1e6, 1), "gif MB", round(os.path.getsize(args.out + ".gif") / 1e6, 1))
 
 
