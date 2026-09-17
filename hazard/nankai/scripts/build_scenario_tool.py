@@ -89,16 +89,16 @@ def key_overrides(key):
     return ov
 
 
-def trace_block(run, island, bus_ids, key):
+def trace_block(run, island, bus_ids, key, sample=None):
     """代表サンプル(3 分後の受電が中央値に最も近い)を同じ乱数で再計算し、母線ごとの状態を「変わった瞬間」だけで持つ。
     値: 島の順位 × 21 + 20(受電中) / 250 周波数崩壊 / 251 電源から孤立 / 252 設備損傷 / 253 もともと受電していない /
         254 UFLS で丸ごと消灯(表示用: 遮断 MW を保ったまま優先順位の高い母線を選ぶ。ufls_display.py)。"""
     from nankai.ufls_display import bus_priority, ufls_off_mask
     od = os.path.join(NANKAI, "output", run, island)
-    cache = os.path.join(od, "trace_rep_v2.npz")
     ds = pd.read_csv(os.path.join(od, "dyn_samples.csv"))
     x = ds[ds.t_s == 180.0].set_index("sample").energized_mw
-    s = int((x - x.median()).abs().idxmin())
+    s = int((x - x.median()).abs().idxmin()) if sample is None else int(sample)
+    cache = os.path.join(od, "trace_rep_v2.npz" if sample is None else f"trace_s{s}_v2.npz")
     if not os.path.exists(cache):
         import run_dynamic as RD
         meta = json.load(open(os.path.join(od, "meta.json")))
@@ -196,7 +196,10 @@ def python_reference(cfg, ops, b0, sup, cases):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--no-reference", action="store_true"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--no-reference", action="store_true")
+    ap.add_argument("--samples", default="", help="書き出し用: 代表サンプルを指定 例 west=81,east=59(既定の前提だけ計算し、他の前提はそれを流用)")
+    a = ap.parse_args()
+    fixed = dict(kv.split("=") for kv in a.samples.split(",") if kv)
     cfg = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_workforce.yaml"), encoding="utf-8"))
     ops = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_ops_scenario.yaml"), encoding="utf-8"))
     sup = W.support_tables()
@@ -222,9 +225,14 @@ def main():
     west_ids = b.bus_id[~isl].to_numpy(); east_ids = b.bus_id[isl].to_numpy()
     dyn = dict(west={k: dyn_block(r, "west", west_ids) for k, r in WEST_RUNS.items()},
                east={k: dyn_block(r, "east", east_ids) for k, r in EAST_RUNS.items()})
-    traces = dict(frame_t=FRAME_T.tolist(),
-                  west={k: trace_block(r, "west", west_ids, k) for k, r in WEST_RUNS.items()},
-                  east={k: trace_block(r, "east", east_ids, k) for k, r in EAST_RUNS.items()})
+    if fixed:                                                  # 書き出し用: 既定の前提だけ指定サンプルで計算し、他の前提には同じものを入れる
+        tw = trace_block(WEST_RUNS["ol1_tr1"], "west", west_ids, "ol1_tr1", fixed.get("west"))
+        te = trace_block(EAST_RUNS["ol1_tr1_tb1"], "east", east_ids, "ol1_tr1_tb1", fixed.get("east"))
+        traces = dict(frame_t=FRAME_T.tolist(), west={k: tw for k in WEST_RUNS}, east={k: te for k in EAST_RUNS})
+    else:
+        traces = dict(frame_t=FRAME_T.tolist(),
+                      west={k: trace_block(r, "west", west_ids, k) for k, r in WEST_RUNS.items()},
+                      east={k: trace_block(r, "east", east_ids, k) for k, r in EAST_RUNS.items()})
     f0 = yaml.safe_load(open(os.path.join(NANKAI, "config", "dynamics_default.yaml"), encoding="utf-8"))
     dd = cfg["distribution_damage"]; rp = cfg["repair"]; wf = cfg["workforce"]; ma = cfg["mutual_aid"]; per = ops["personnel"]
     params = dict(
@@ -247,7 +255,8 @@ def main():
                 naikakufu_2025=yaml.safe_load(open(os.path.join(NANKAI, "config", "calibration_targets.yaml"), encoding="utf-8"))["naikakufu_2025"]["outage_households"]["①東海_基本"])
     os.makedirs(TOOL, exist_ok=True)
     js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-    open(os.path.join(TOOL, "data.json"), "w", encoding="utf-8").write(js)
+    if not fixed:
+        open(os.path.join(TOOL, "data.json"), "w", encoding="utf-8").write(js)
     if not a.no_reference:
         cases = [("default", {}), ("sigma06_all_aid30", dict(sigma=0.6, basis="all_dwellings", aid=0.30)),
                  ("spm300_noint_access14", dict(spm=300, internal=False, access=14.0, old_split=0.3)), ("nocollapse_noaid", dict(collapse=False, aid=0.0))]

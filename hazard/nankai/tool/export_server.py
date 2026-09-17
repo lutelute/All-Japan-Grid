@@ -24,6 +24,9 @@ class H(SimpleHTTPRequestHandler):
             self.send_response(400); self.end_headers(); return
         n = int(self.headers.get("Content-Length", "0"))
         data = self.rfile.read(n)
+        if data.startswith(b"data:image/png;base64,"):
+            import base64
+            data = base64.b64decode(data.split(b",", 1)[1])
         with open(os.path.join(OUT, name), "wb") as f:
             f.write(data)
         self.send_response(200); self.send_header("Content-Length", "2"); self.end_headers(); self.wfile.write(b"ok")

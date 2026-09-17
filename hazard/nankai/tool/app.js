@@ -211,61 +211,134 @@
     return "rgb(110,31,58)";
   }
   function dayLabel(d) { return d === 0 ? "直後" : d < 1 ? `${Math.round(d * 24)} 時間` : `${fmt(d, d % 1 ? 2 : 0)} 日`; }
-  function drawMap() {
-    const rect = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
-    const w = Math.max(320, Math.round(rect.width)), h = Math.round(w * 10 / 16);
-    cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const RPAL_SCREEN = () => ({ bg: css("--map-bg"), land: css("--map-land"), edge: css("--map-edge"), ink: css("--ink"), muted: css("--muted"), outage: css("--outage"), aid: css("--aid"), surface: css("--surface"), dist: css("--dist"), lost: css("--lost"), own: css("--own"), internal: css("--internal") });
+  const RPAL_EXPORT = { bg: "#0f181b", land: "#17242a", edge: "#2a3a40", ink: "#e4ebe9", muted: "#95a4a1", outage: "#ff7a62", aid: "#f0ae50", surface: "#141d20", dist: "#c39bf0", lost: "#8d9b99", own: "#4cbcc5", internal: "#8cca6c" };
+  function paintRestoreMap(ctx, w, h, j, pal, withText = true) {        // 90 日の復旧の地図を 1 フレーム描く(画面と書き出しで共有)
     const sx = (w - 20) / ((EXT.lon1 - EXT.lon0) * KX), sy = (h - 20) / (EXT.lat1 - EXT.lat0), s = Math.min(sx, sy);
     const ox = (w - (EXT.lon1 - EXT.lon0) * KX * s) / 2, oy = (h - (EXT.lat1 - EXT.lat0) * s) / 2;
     const px = lon => ox + (lon - EXT.lon0) * KX * s, py = lat => h - oy - (lat - EXT.lat0) * s;
-    ctx.fillStyle = css("--map-bg"); ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = css("--map-land"); ctx.strokeStyle = css("--map-edge"); ctx.lineWidth = 0.7;
+    const k = w / 1000;
+    ctx.globalAlpha = 1; ctx.fillStyle = pal.bg; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = pal.land; ctx.strokeStyle = pal.edge; ctx.lineWidth = 0.7;
     for (const ring of D.outline) {
       ctx.beginPath(); ring.forEach(([lo, la], i) => i ? ctx.lineTo(px(lo), py(la)) : ctx.moveTo(px(lo), py(la))); ctx.closePath(); ctx.fill(); ctx.stroke();
     }
-    const j = +$("mapDay").value, day = M.REC_DAYS[j];
-    $("mapDayOut").textContent = dayLabel(day);
+    const day = M.REC_DAYS[j];
     const pb = cur.ser.perBus[j], order = Array.from({ length: P.n }, (_, i) => i).sort((a, b) => pb[a] - pb[b]);
     for (const i of order) {
-      const r = 0.9 + Math.min(2.6, Math.sqrt(P.cust[i]) / 90);
+      const r = (0.9 + Math.min(2.6, Math.sqrt(P.cust[i]) / 90)) * k;
       ctx.fillStyle = rampColor(pb[i]); ctx.beginPath(); ctx.arc(px(P.lon[i]), py(P.lat[i]), r, 0, 6.283); ctx.fill();
     }
     // 応援の車列
-    const comp = D.companies, zi = Object.fromEntries(comp.keys.map((z, k) => [z, k])), O = cur.bld.O;
+    const comp = D.companies, zi = Object.fromEntries(comp.keys.map((z, k2) => [z, k2])), O = cur.bld.O;
     const cent = {};
-    for (let k = 0; k < P.nOffice; k++) { const z = O.zone[k]; (cent[z] ||= [0, 0, 0]); cent[z][0] += D.offices.lat[k] * O.cust[k]; cent[z][1] += D.offices.lon[k] * O.cust[k]; cent[z][2] += O.cust[k]; }
+    for (let k2 = 0; k2 < P.nOffice; k2++) { const z = O.zone[k2]; (cent[z] ||= [0, 0, 0]); cent[z][0] += D.offices.lat[k2] * O.cust[k2]; cent[z][1] += D.offices.lon[k2] * O.cust[k2]; cent[z][2] += O.cust[k2]; }
     const groups = {};
     for (const c of cur.sim.convoys) { const key = c.sender + ">" + c.receiver; (groups[key] ||= { s: c.sender, r: c.receiver, dep: 1e9, arr: 0, people: 0 }); const gg = groups[key]; gg.dep = Math.min(gg.dep, c.depart); gg.arr = Math.max(gg.arr, c.arrive); gg.people += c.people; }
-    ctx.strokeStyle = css("--aid"); ctx.globalAlpha = 0.85;
+    ctx.strokeStyle = pal.aid; ctx.globalAlpha = 0.85;
     for (const gg of Object.values(groups)) {
       if (day < gg.dep) continue;
       const hs = comp.hq[zi[gg.s]], ce = cent[zi[gg.r]]; if (!hs || !ce) continue;
       const x0 = px(hs[1]), y0 = py(hs[0]), x1 = px(ce[1] / ce[2]), y1 = py(ce[0] / ce[2]);
       const f = Math.min(1, Math.max(0, (day - gg.dep) / Math.max(gg.arr - gg.dep, 1e-6)));
-      ctx.lineWidth = 0.8 + 3 * Math.sqrt(gg.people / 3000);
+      ctx.lineWidth = (0.8 + 3 * Math.sqrt(gg.people / 3000)) * k;
       ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + (x1 - x0) * f, y0 + (y1 - y0) * f); ctx.stroke();
     }
     ctx.globalAlpha = 1;
-    // 選んだ時刻の数字(地図の左上の海に置く)
-    const o5 = cur.ser.out[j], aidNow = cur.sim.rec.aid[Math.round(day * 24)] || 0;
-    const lines = [[`発災から ${dayLabel(day)}`, css("--ink"), `700 ${Math.max(15, Math.round(w / 55))}px ${css("--f-display")}`],
-      [`停電中 ${man(o5[0])} 万軒`, css("--outage"), `500 ${Math.max(14, Math.round(w / 62))}px ${css("--f-num")}`],
-      [`送電側 ${man(o5[1])}・配電だけ ${man(o5[2])}・全壊相当 ${man(o5[3])} 万軒`, css("--muted"), `400 ${Math.max(11, Math.round(w / 85))}px ${css("--f-body")}`],
-      [`他社応援 ${fmt(aidNow)} 人が作業中`, css("--aid"), `400 ${Math.max(11, Math.round(w / 85))}px ${css("--f-body")}`]];
-    let yy = 18 + Math.max(15, Math.round(w / 55));
-    for (const [txt, col, font] of lines) { ctx.font = font; ctx.fillStyle = col; ctx.fillText(txt, 18, yy); yy += Math.round(parseInt(font.split(" ")[1]) * 1.5); }
+    if (withText) {                                                        // 選んだ時刻の数字(地図の左上の海に置く)
+      const o5 = cur.ser.out[j], aidNow = cur.sim.rec.aid[Math.round(day * 24)] || 0;
+      const lines = [[`発災から ${dayLabel(day)}`, pal.ink, `700 ${Math.max(15, Math.round(w / 55))}px ${css("--f-display")}`],
+        [`停電中 ${man(o5[0])} 万軒`, pal.outage, `500 ${Math.max(14, Math.round(w / 62))}px ${css("--f-num")}`],
+        [`送電側 ${man(o5[1])}・配電だけ ${man(o5[2])}・全壊相当 ${man(o5[3])} 万軒`, pal.muted, `400 ${Math.max(11, Math.round(w / 85))}px ${css("--f-body")}`],
+        [`他社応援 ${fmt(aidNow)} 人が作業中`, pal.aid, `400 ${Math.max(11, Math.round(w / 85))}px ${css("--f-body")}`]];
+      let yy = 18 + Math.max(15, Math.round(w / 55));
+      for (const [txt, col, font] of lines) { ctx.font = font; ctx.fillStyle = col; ctx.fillText(txt, 18, yy); yy += Math.round(parseInt(font.split(" ")[1]) * 1.5); }
+    }
     // 事業所
     const fs = cur.sim.rec.fs[j], ft = cur.sim.rec.ft[j];
-    ctx.lineWidth = 2;
-    for (let k = 0; k < P.nOffice; k++) {
-      const work = O.workS[k] + O.workT[k];
-      const rem = work > 1 ? (fs[k] * O.workS[k] + ft[k] * O.workT[k]) / work : 0;
-      const r = 2 + Math.sqrt(O.staff[k]) * 0.55;
-      ctx.beginPath(); ctx.arc(px(D.offices.lon[k]), py(D.offices.lat[k]), r, 0, 6.283);
-      ctx.fillStyle = css("--surface"); ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
-      ctx.strokeStyle = work > 1 ? rampColor(rem) : css("--map-edge"); ctx.stroke();
+    ctx.lineWidth = 2 * k;
+    for (let k2 = 0; k2 < P.nOffice; k2++) {
+      const work = O.workS[k2] + O.workT[k2];
+      const rem = work > 1 ? (fs[k2] * O.workS[k2] + ft[k2] * O.workT[k2]) / work : 0;
+      const r = (2 + Math.sqrt(O.staff[k2]) * 0.55) * k;
+      ctx.beginPath(); ctx.arc(px(D.offices.lon[k2]), py(D.offices.lat[k2]), r, 0, 6.283);
+      ctx.fillStyle = pal.surface; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = work > 1 ? rampColor(rem) : pal.edge; ctx.stroke();
     }
   }
+  function drawMap() {
+    const rect = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    const w = Math.max(320, Math.round(rect.width)), h = Math.round(w * 10 / 16);
+    cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const j = +$("mapDay").value;
+    $("mapDayOut").textContent = dayLabel(M.REC_DAYS[j]);
+    paintRestoreMap(ctx, w, h, j, RPAL_SCREEN(), true);
+  }
+  function paintRestoreInfo(ctx, x0, y0, W, H, j, pal) {                // 書き出し用の右の情報欄(90 日)
+    const days = cur.ser.days, day = days[j]; const fb = css("--f-body"), fn = css("--f-num"), fd = css("--f-display");
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    ctx.fillStyle = "#0b1119"; ctx.fillRect(x0, y0, W, H); ctx.fillStyle = "#1a2537"; ctx.fillRect(x0, y0, 1, H);
+    const pad = 28, cx = x0 + pad, cw = W - 2 * pad; let y = y0 + pad;
+    ctx.fillStyle = pal.ink; ctx.font = `700 26px ${fd}`; ctx.fillText("停電の広がりと復旧 — 90 日", cx, y + 22); y += 40;
+    ctx.fillStyle = pal.muted; ctx.font = `400 15px ${fb}`; ctx.fillText("送電側(動的カスケードの母線平均)と配電(電柱の折損・営業所の人員・他社応援)", cx, y + 14); y += 28;
+    ctx.fillStyle = "#ffd696"; ctx.font = `500 58px ${fn}`; ctx.fillText(`発災から ${dayLabel(day)}`, cx, y + 56); y += 78;
+    const o5 = cur.ser.out[j];
+    const rows = [["停電中の需要家", man(o5[0]) + " 万軒", pal.outage], ["  送電側(変電所・線路・系統崩壊)", man(o5[1]) + " 万軒", pal.outage], ["  配電だけ(電柱)", man(o5[2]) + " 万軒", pal.dist], ["  津波で全壊相当(復旧対象外)", man(o5[3]) + " 万軒", pal.lost]];
+    for (const [lab, val, col] of rows) { ctx.fillStyle = pal.muted; ctx.font = `400 15px ${fb}`; ctx.fillText(lab, cx, y + 14); ctx.textAlign = "right"; ctx.fillStyle = col; ctx.font = `500 18px ${fn}`; ctx.fillText(val, cx + cw, y + 14); ctx.textAlign = "left"; y += 26; }
+    y += 6;
+    const i24 = Math.round(day * 24), rec = cur.sim.rec, ppl = [rec.own[i24] || 0, rec.internal[i24] || 0, rec.aid[i24] || 0];
+    ctx.fillStyle = pal.muted; ctx.font = `400 15px ${fb}`; ctx.fillText("電柱の修理に当たる人", cx, y + 14); ctx.textAlign = "right"; ctx.fillStyle = pal.ink; ctx.font = `500 18px ${fn}`; ctx.fillText(fmt(ppl[0] + ppl[1] + ppl[2]) + " 人", cx + cw, y + 14); ctx.textAlign = "left"; y += 24;
+    const pc = [pal.own, pal.internal, pal.aid], pn = ["地元の事業所", "社内の融通", "他社応援"]; const ptot = Math.max(1, ppl[0] + ppl[1] + ppl[2]); let xx = cx;
+    ctx.fillStyle = "#1d2733"; ctx.fillRect(cx, y, cw, 14); ppl.forEach((p, k2) => { ctx.fillStyle = pc[k2]; ctx.fillRect(xx, y, p / ptot * cw, 14); xx += p / ptot * cw; }); y += 22;
+    ctx.font = `400 13px ${fb}`; let lx = cx; pn.forEach((n, k2) => { ctx.fillStyle = pc[k2]; ctx.fillRect(lx, y + 2, 12, 10); ctx.fillStyle = pal.muted; ctx.fillText(`${n} ${fmt(ppl[k2])}`, lx + 16, y + 11); lx += 16 + ctx.measureText(`${n} ${fmt(ppl[k2])}`).width + 14; }); y += 30;
+    // 停電中の需要家の推移(積み上げ・対数の日数軸・再生位置)
+    const chH = 150, lxd = d => Math.log10(1 + d) / Math.log10(91), X = d => cx + lxd(d) * cw;
+    ctx.fillStyle = pal.muted; ctx.font = `400 13px ${fb}`; ctx.fillText("停電中の需要家 [万軒]", cx, y + 12); y += 18;
+    const series = [cur.ser.out.map(r => r[3]), cur.ser.out.map(r => r[1]), cur.ser.out.map(r => r[2])], scol = [pal.lost, pal.outage, pal.dist];
+    const tot = days.map((_, jj) => series.reduce((s2, a2) => s2 + a2[jj], 0)), ymax = niceMax(Math.max(...tot)); const Y = v => y + (1 - v / ymax) * chH;
+    ctx.fillStyle = "#0f1720"; ctx.fillRect(cx, y, cw, chH);
+    let lower = days.map(() => 0);
+    series.forEach((s2, k2) => { const upper = lower.map((v, jj) => v + s2[jj]); ctx.fillStyle = scol[k2]; ctx.globalAlpha = 0.85; ctx.beginPath();
+      days.forEach((d, jj) => jj ? ctx.lineTo(X(d), Y(upper[jj])) : ctx.moveTo(X(d), Y(upper[jj]))); for (let jj = days.length - 1; jj >= 0; jj--) ctx.lineTo(X(days[jj]), Y(lower[jj])); ctx.closePath(); ctx.fill(); lower = upper; });
+    ctx.globalAlpha = 1; ctx.strokeStyle = pal.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(day), y); ctx.lineTo(X(day), y + chH); ctx.stroke();
+    ctx.fillStyle = "#6f7b85"; ctx.font = `400 11px ${fn}`; ctx.fillText(fmt(ymax / 1e4) + "万", cx + 4, y + 11);
+    [[0, "直後"], [1, "1日"], [3, "3日"], [7, "1週"], [14, "2週"], [30, "1月"], [90, "3月"]].forEach(([d, l]) => { ctx.textAlign = d === 0 ? "left" : d === 90 ? "right" : "center"; ctx.fillText(l, X(d), y + chH + 14); });
+    ctx.textAlign = "left"; y += chH + 22;
+    ctx.font = `400 12.5px ${fb}`; lx = cx;
+    [[pal.lost, "津波で全壊相当"], [pal.outage, "送電側"], [pal.dist, "配電だけ"]].forEach(([c, n]) => { ctx.fillStyle = c; ctx.fillRect(lx, y + 2, 12, 10); ctx.fillStyle = pal.muted; ctx.fillText(n, lx + 16, y + 11); lx += 16 + ctx.measureText(n).width + 14; }); y += 28;
+    // 応援の一覧
+    const sim = cur.sim;
+    ctx.fillStyle = pal.muted; ctx.font = `400 13px ${fb}`; ctx.fillText("他社応援(受け手 ← 送り手・到着した人数)", cx, y + 12); y += 20;
+    const recv = {}; for (const c of sim.convoys) if (c.arrive <= day) { (recv[c.receiver] ||= {}); recv[c.receiver][c.sender] = (recv[c.receiver][c.sender] || 0) + c.people; }
+    const ja = z => D.companies.ja[D.companies.keys.indexOf(z)] || z;
+    for (const [rc, ss] of Object.entries(recv)) { const tot2 = Object.values(ss).reduce((a2, b2) => a2 + b2, 0); ctx.fillStyle = pal.ink; ctx.font = `400 14px ${fb}`; ctx.fillText(`${ja(rc)} ← ${Object.entries(ss).map(([s2, p]) => `${ja(s2)} ${fmt(p)}`).join("・")}(計 ${fmt(tot2)} 人)`, cx, y + 13); y += 22; }
+    if (!Object.keys(recv).length) { ctx.fillStyle = pal.muted; ctx.font = `400 14px ${fb}`; ctx.fillText(sim.convoys.length ? "まだ着いていない(第 1 陣は 1.5 日頃)" : "応援なし", cx, y + 13); y += 22; }
+    // 凡例と前提(下端)
+    const ly = y0 + H - 84; ctx.font = `400 12.5px ${fb}`; ctx.fillStyle = pal.muted; ctx.fillText("点 = 変電所の母線(色 = 停電の確率 0→1)、円 = 事業所(大きさ = 人員、縁 = 残っている修理)、線 = 応援の車列", cx, ly);
+    const grd = ctx.createLinearGradient(cx, 0, cx + 160, 0); RAMP.forEach(([p, c]) => grd.addColorStop(p, `rgb(${c.join(",")})`)); ctx.fillStyle = grd; ctx.fillRect(cx, ly + 8, 160, 8); ctx.fillStyle = pal.muted; ctx.font = `400 11px ${fn}`; ctx.fillText("0", cx, ly + 28); ctx.textAlign = "right"; ctx.fillText("1", cx + 160, ly + 28); ctx.textAlign = "left";
+    ctx.fillStyle = "#6f7b85"; ctx.font = `400 11.5px ${fb}`;
+    ctx.fillText(`前提: ${$("diffChip").textContent}・人員 ${state.spm} 人/百万口・応援 ${Math.round(state.aid * 100)}%・浸水域の着手 ${state.access} 日後`, cx, y0 + H - 34);
+    ctx.fillText("All-Japan-Grid 南海トラフ停電シナリオ卓・送電側は動的カスケード run_v8 の母線平均・配電は電柱の折損と復旧人員のモデル", cx, y0 + H - 16);
+  }
+  window.exportRestore = async function (opts) {
+    const o = Object.assign({ width: 1920, height: 1080, post: "/frame/r", every: 1, hold: 1 }, opts || {});
+    if (!cur) recompute();
+    const mapW = Math.round(o.width * 0.64), mapH = o.height;
+    const cvx = document.createElement("canvas"); cvx.width = o.width; cvx.height = o.height; const c2 = cvx.getContext("2d");
+    window.__exportProgress = -1; window.__exportDone = false; window.__exportError = null;
+    try {
+      let n = 0;
+      for (let j = 0; j < M.REC_DAYS.length; j += o.every) {
+        c2.setTransform(1, 0, 0, 1, 0, 0); paintRestoreMap(c2, mapW, mapH, j, RPAL_EXPORT, true);
+        paintRestoreInfo(c2, mapW, 0, o.width - mapW, o.height, j, RPAL_EXPORT);
+        const data = cvx.toDataURL("image/png");
+        for (let h2 = 0; h2 < o.hold; h2++) { const res = await fetch(o.post + String(n++).padStart(4, "0") + ".png", { method: "POST", body: data }); if (!res.ok) throw new Error("POST failed " + res.status); }
+        window.__exportProgress = j;
+      }
+      window.__exportDone = true;
+    } catch (e) { window.__exportError = String(e); }
+    return window.__exportProgress;
+  };
   $("mapDay").max = M.REC_DAYS.length - 1;
   $("mapDay").addEventListener("input", () => cur && drawMap());
   let rz = null; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => cur && drawMap(), 120); });
@@ -523,8 +596,8 @@
       for (let f = o.start; f <= o.end; f += o.every) {
         paintMap(ctx, L, f, true);
         paintInfo(ctx, mapW, 0, o.width - mapW, o.height, f);
-        const blob = await new Promise(r => cv.toBlob(r, "image/png"));
-        const res = await fetch(o.post + String(f).padStart(4, "0") + ".png", { method: "POST", body: blob });
+        const data = cv.toDataURL("image/png");                        // toBlob は背景タブで 1 秒に 1 回に絞られるので同期の dataURL を使う
+        const res = await fetch(o.post + String(f).padStart(4, "0") + ".png", { method: "POST", body: data });
         if (!res.ok) throw new Error("POST failed " + res.status);
         window.__exportProgress = f;
       }

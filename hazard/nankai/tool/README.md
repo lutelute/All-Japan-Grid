@@ -27,9 +27,13 @@ node hazard/nankai/tool/test_model.mjs     # JS の計算を Python(reference.js
 ```
 python3 hazard/nankai/tool/export_server.py docs/reports/nankai_hazard_2026-09-13/tool <フレーム保存先> 8733
 # ブラウザで http://127.0.0.1:8733/nankai_scenario_tool.html を開き、前提を選んでからコンソールで
-#   window.exportNight()            # 既定 1920×1080・全フレーム(531 枚)を POST。{width, height, every, start, end} で変えられる
+#   window.exportNight()            # 夜景の再生。既定 1920×1080・全フレーム(531 枚)を POST。{width, height, every, start, end} で変えられる
+#   window.exportRestore()          # 復旧 90 日の地図。REC_DAYS の 103 日点を 1 枚ずつ r_0000.png〜 に
 ffmpeg -framerate 20 -pattern_type glob -i '<フレーム保存先>/f*.png' -vf format=yuv420p -c:v libx264 -crf 20 -movflags +faststart out.mp4
+ffmpeg -framerate 6 -pattern_type glob -i '<フレーム保存先>/r_*.png' -vf format=yuv420p -c:v libx264 -crf 20 -movflags +faststart restore.mp4
 ```
 
-- 書き出しは画面と同じ描画(`paintMap`)に、右の情報欄(時計・受電の内訳・周波数・直近の事象・凡例・前提)を `paintInfo` でキャンバスに足したもの。Artifact の中では POST 先が無いので何もしない。
-- 既定の前提の書き出し: `docs/reports/nankai_hazard_2026-09-13/tool/nankai_scenario_night_default.{mp4,gif}`(20 fps・26.5 秒 / GIF は 1280 px・10 fps)。
+- 書き出しは画面と同じ描画(`paintMap` / `paintRestoreMap`)に、右の情報欄(時計・受電の内訳・周波数・直近の事象・凡例・前提 / 復旧は日・停電の内訳・働く人・推移・応援の到着)を `paintInfo` / `paintRestoreInfo` でキャンバスに足したもの。Artifact の中では POST 先が無いので何もしない。
+- 代表サンプル以外(東京が一気に崩壊する #59 など)は `python3 scripts/build_scenario_tool.py --samples west=81,east=59 --out <書き出し専用の HTML>` で、指定したサンプルの記録を再計算して埋めた HTML を別に作る(既定の前提だけ計算し他の前提はそれを流用。`data.json` は触らない)。記録は `output/<run>/<島>/trace_s<N>_v2.npz` に残る。
+- フレームは `canvas.toDataURL()` の文字列を POST する(`toBlob` はタブが隠れると約 1 fps に絞られる)。長い書き出しは await せずに始め、`window.__exportProgress` / `__exportDone` / `__exportError` を見る。
+- 既定の前提の書き出し(`docs/reports/nankai_hazard_2026-09-13/tool/`): `nankai_scenario_night_default`(西 #81・東 #89)、`nankai_scenario_night_east_collapse_early`(東 #59・揺れの直後に崩れる型)、`nankai_scenario_night_east_collapse_tsunami`(東 #9・90 分後に崩れる型)の各 .mp4(1920×1080・20 fps・26.5 秒)/ .gif(1280 px・10 fps)と静止画、`nankai_scenario_restore_default`(復旧 90 日・103 コマ・6 fps・17 秒)の .mp4 / .gif と 7 日・90 日の静止画。

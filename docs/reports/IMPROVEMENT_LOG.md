@@ -41,6 +41,7 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 - **【修正・オーナー判断「できることやってみて。再送電できないこともたくさんある」】UFLS の段階的な再送電を実装(run_v8)**(`FreqCore.restore_ufls`・`config ufls.restore`・テスト 3 本): 1 時間後から、島が落ち着き上げ代がある範囲で、エリアごとに 5 分に 100 MW(2022 福島県沖 約 0.9 GW/時が目安)、浸水想定域は戻さない、全部戻った変電所の段は再び動く。**負の結果**: 東の全域崩壊 20 サンプルは同じ 20、3 時間受電率は西 +0.8 pt・東 +0.5 pt。90 分の 2 度目の衝撃までに戻せるのは約 1 GW で足りない。12 通りを run_v8 系で再計算(西 4・東 8、`scripts/run_v8_batch.sh`)。復旧人員モデルの送電側(run_v8)は 1 万軒未満の差
 - **【発見・未修正】`ufls.restore_after_min: 60` が未実装**: 設定は「島が崩壊しなければ UFLS 遮断分は 1 時間で再送電」だが、計算は 3 時間戻さず段も再び動かない。後で崩れる全域崩壊(20 例中 17、うち 11 は鹿島の切り離しが直前)はこの挙動に依存。直すと崩壊は減り 3 時間受電率は上がる方向。run_v7 以前の全結果が対象なので、直すかはオーナー判断
 - **補助データの取得スクリプトを commit**(`hazard/nankai/data/support_pipeline/`・README): 東京電力・中部電力の空容量一覧(転載禁止)の値を含む `records_d1.py`・`records_misc.py` と使い捨ての確認用 3 本は gitignore
+- **【出力・オーナー「東京が一気に崩壊するやつも見たい。復旧も見たい」】シナリオ卓から東の崩壊 2 例と復旧 90 日を動画に**(`build_scenario_tool.py --samples`・`window.exportRestore`・`paintRestoreMap/paintRestoreInfo`): 東 #59(揺れの直後・127 秒で 34 GW)と #9(90.8 分・鹿島の切り離し後に 33 GW)を代表サンプルと同じ形式で書き出し(`nankai_scenario_night_east_collapse_{early,tsunami}.*`)。復旧は REC_DAYS 103 日点の地図に右欄(停電の内訳・働く人・推移・応援の到着)を足して `nankai_scenario_restore_default.*`(直後 1,542 万軒 → 7 日 522 万 → 90 日 270 万、うち 219 万は津波で全壊相当)。候補デッキ v9(25 枚)。**踏んだ穴**: 隠れたタブで `canvas.toBlob` が約 1 fps に絞られる → `toDataURL` の文字列を POST に変更(export_server.py が base64 を受ける)。javascript_tool の 45 秒制限 → 書き出しは await せず `window.__exportProgress` を見る
 
 ---
 
