@@ -363,40 +363,44 @@
     night.events = ev.sort((a, b) => a.t - b.t);
     buildFreq();
   }
-  function layoutNight() {
-    const rect = nightCv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
-    const w = Math.max(320, Math.round(rect.width)), h = Math.round(w * 11 / 16);
-    nightCv.width = w * dpr; nightCv.height = h * dpr; nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  function makeLayout(w, h, dpr, shift) {                                // 地図の座標系と背景(海と陸)を用意する。画面用と書き出し用で共有
     const E = { lon0: 128.8, lon1: 142.4, lat0: 30.9, lat1: 41.6 };
     const s = Math.min((w - 16) / ((E.lon1 - E.lon0) * KX), (h - 16) / (E.lat1 - E.lat0));
-    const ox = (w - (E.lon1 - E.lon0) * KX * s) / 2 + w * 0.06, oy = (h - (E.lat1 - E.lat0) * s) / 2;
+    const ox = (w - (E.lon1 - E.lon0) * KX * s) / 2 + w * shift, oy = (h - (E.lat1 - E.lat0) * s) / 2;
     const px = lon => ox + (lon - E.lon0) * KX * s, py = lat => h - oy - (lat - E.lat0) * s;
-    night.px = new Float32Array(P.n); night.py = new Float32Array(P.n);
-    for (let i = 0; i < P.n; i++) { night.px[i] = px(P.lon[i]); night.py[i] = py(P.lat[i]); }
-    night.w = w; night.h = h; night.dpr = dpr; night.scale = s;
-    const bg = document.createElement("canvas"); bg.width = w * dpr; bg.height = h * dpr;
+    const L = { w, h, dpr, scale: s, px: new Float32Array(P.n), py: new Float32Array(P.n) };
+    for (let i = 0; i < P.n; i++) { L.px[i] = px(P.lon[i]); L.py[i] = py(P.lat[i]); }
+    const bg = document.createElement("canvas"); bg.width = Math.round(w * dpr); bg.height = Math.round(h * dpr);
     const g = bg.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.fillStyle = "#060a12"; g.fillRect(0, 0, w, h);
     g.fillStyle = "#0c1422"; g.strokeStyle = "#1a2537"; g.lineWidth = 0.7;
     for (const ring of D.outline) { g.beginPath(); ring.forEach(([lo, la], i) => i ? g.lineTo(px(lo), py(la)) : g.moveTo(px(lo), py(la))); g.closePath(); g.fill(); g.stroke(); }
-    night.bg = bg;
+    L.bg = bg;
+    return L;
+  }
+  function layoutNight() {
+    const rect = nightCv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    const w = Math.max(320, Math.round(rect.width)), h = Math.round(w * 11 / 16);
+    nightCv.width = w * dpr; nightCv.height = h * dpr; nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const L = makeLayout(w, h, dpr, 0.06);
+    Object.assign(night, { px: L.px, py: L.py, w, h, dpr, scale: L.scale, bg: L.bg });
   }
   function ageOf(mat, n, b, f, v) {                                   // 今の状態になってから何フレームか(8 で打ち切り)
     let a = 0;
     while (a < 8 && f - a - 1 >= 0 && mat[(f - a - 1) * n + b] === v) a++;
     return a;
   }
-  function drawNight() {
-    if (!night.bg) layoutNight();
-    const f = night.frame, t = FT[f], w = night.w, h = night.h;
-    nctx.setTransform(night.dpr, 0, 0, night.dpr, 0, 0);
-    nctx.globalCompositeOperation = "source-over"; nctx.globalAlpha = 1;
-    nctx.drawImage(night.bg, 0, 0, w, h);
+  function paintMap(ctx, L, f, withText = true) {                      // 灯りの地図を 1 フレーム描く(L = makeLayout の結果)
+    const t = FT[f], w = L.w, h = L.h;
+    ctx.setTransform(L.dpr, 0, 0, L.dpr, 0, 0);
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+    ctx.drawImage(L.bg, 0, 0, w, h);
     const flashN = reduceMotion ? 0 : 6;
-    nctx.globalCompositeOperation = "lighter";
+    const k = w / 1188;                                                    // 画面の基準幅に対する倍率(書き出しでは大きく描く)
+    ctx.globalCompositeOperation = "lighter";
     if (t > 0 && t < 240) {                                             // S 波の面(揺れが届いたところ)
       const sp = sprite(WAVE);
-      for (let i = 0; i < P.n; i++) if (Math.abs(sArr[i] - t) < 3) { nctx.globalAlpha = 0.18; const r = 9; nctx.drawImage(sp, night.px[i] - r, night.py[i] - r, 2 * r, 2 * r); }
+      for (let i = 0; i < P.n; i++) if (Math.abs(sArr[i] - t) < 3) { ctx.globalAlpha = 0.18; const r = 9 * k; ctx.drawImage(sp, L.px[i] - r, L.py[i] - r, 2 * r, 2 * r); }
     }
     // 2 回に分けて描く: にじみ(足し算・薄く)→ 灯りの芯(上書き・小さく)。足し算だけだと都市部が白く飽和して暗くなるのが見えない
     const iso = [], cores = [];
@@ -404,40 +408,130 @@
       const east = P.island[i], n = east ? P.nEast : P.nWest, b = P.local[i], mat = east ? night.mat.east : night.mat.west;
       const v = mat[f * n + b];
       if (v === 253) continue;
-      const r0 = 0.9 + Math.min(2.1, Math.sqrt(P.cust[i]) / 85);
+      const r0 = (0.9 + Math.min(2.1, Math.sqrt(P.cust[i]) / 85)) * k;
       if (v < 250) {
         const rank = (v / 21) | 0, frac = (v % 21) / 20, c = PAL[rank];
-        nctx.globalAlpha = 0.02 + 0.03 * frac; const rh = r0 * 4;         // にじみは薄く(都市部が白く飽和しない程度)
-        nctx.drawImage(sprite(c), night.px[i] - rh, night.py[i] - rh, 2 * rh, 2 * rh);
+        ctx.globalAlpha = 0.02 + 0.03 * frac; const rh = r0 * 4;         // にじみは薄く(都市部が白く飽和しない程度)
+        ctx.drawImage(sprite(c), L.px[i] - rh, L.py[i] - rh, 2 * rh, 2 * rh);
         cores.push([i, c, 0.3 + 0.7 * frac, r0 * (1.2 + 0.9 * frac)]);
       } else if (v === 254) {                                            // UFLS で丸ごと消灯(表示用の選択・遮断 MW は計算どおり)
         const age = flashN ? ageOf(mat, n, b, f, v) : 99;
         cores.push([i, age < flashN ? AMBER : EMBER_UFLS, age < flashN ? 0.95 - age * 0.05 : 0.7, r0 * (age < flashN ? 1.7 - age * 0.08 : 1.0)]);
       } else if (v === 250 || v === 252) {
         const age = flashN ? ageOf(mat, n, b, f, v) : 99, flash = age < flashN;
-        if (flash) { nctx.globalAlpha = 0.55 * (1 - age / (flashN + 1)); const rh = r0 * (11 - age); nctx.drawImage(sprite(v === 250 ? RED : EMBER), night.px[i] - rh, night.py[i] - rh, 2 * rh, 2 * rh); }
+        if (flash) { ctx.globalAlpha = 0.55 * (1 - age / (flashN + 1)); const rh = r0 * (11 - age); ctx.drawImage(sprite(v === 250 ? RED : EMBER), L.px[i] - rh, L.py[i] - rh, 2 * rh, 2 * rh); }
         cores.push([i, v === 250 ? (flash ? RED : [150, 34, 26]) : EMBER, v === 250 ? (flash ? 1 : 0.55) : 0.8, r0 * (flash ? 2.4 : 1.3)]);
       } else if (v === 251) iso.push(i);
     }
-    nctx.globalCompositeOperation = "source-over";
-    for (const [i, rgb, al, r] of cores) { nctx.globalAlpha = al; nctx.drawImage(sprite(rgb), night.px[i] - r, night.py[i] - r, 2 * r, 2 * r); }
-    nctx.globalCompositeOperation = "source-over"; nctx.globalAlpha = 0.55; nctx.fillStyle = "#56627a";
-    for (const i of iso) { nctx.beginPath(); nctx.arc(night.px[i], night.py[i], 1.3, 0, 6.283); nctx.fill(); }
-    nctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    for (const [i, rgb, al, r] of cores) { ctx.globalAlpha = al; ctx.drawImage(sprite(rgb), L.px[i] - r, L.py[i] - r, 2 * r, 2 * r); }
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 0.55; ctx.fillStyle = "#56627a";
+    for (const i of iso) { ctx.beginPath(); ctx.arc(L.px[i], L.py[i], 1.3 * k, 0, 6.283); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    if (!withText) return;
     // 時計と周波数(左上の海)
     const clock = `${Math.floor(t / 3600)}:${String(Math.floor(t % 3600 / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
-    nctx.fillStyle = "#ffd696"; nctx.font = `500 ${Math.round(w / 22)}px ${css("--f-num")}`; nctx.fillText(clock, 16, 16 + Math.round(w / 22));
+    ctx.fillStyle = "#ffd696"; ctx.font = `500 ${Math.round(w / 22)}px ${css("--f-num")}`; ctx.fillText(clock, 16, 16 + Math.round(w / 22));
     let yy = 26 + Math.round(w / 22) + 8;
     for (const [isl, lab, f0] of [["west", "西 60 Hz", 60], ["east", "東 50 Hz", 50]]) {
       const blk = night.blk[isl], zs = blk.zones, zf = night.zf[isl], mw = night.mw[isl];
       let fr = null;
       zs.forEach((z, j) => { const x = zf[f * zs.length + j]; if (x > 0 && (fr === null || Math.abs(x - f0) > Math.abs(fr - f0))) fr = x; });
       const en = mw[f * 5] / blk.load_mw;
-      nctx.font = `400 ${Math.max(12, Math.round(w / 64))}px ${css("--f-body")}`; nctx.fillStyle = "#c9d2e0";
-      nctx.fillText(`${lab}  受電 ${pct(en, 0)}%  周波数の最も外れたエリア ${fr ? fr.toFixed(2) + " Hz" : "—"}`, 16, yy); yy += Math.round(Math.max(12, w / 64) * 1.6);
+      ctx.font = `400 ${Math.max(12, Math.round(w / 64))}px ${css("--f-body")}`; ctx.fillStyle = "#c9d2e0";
+      ctx.fillText(`${lab}  受電 ${pct(en, 0)}%  周波数の最も外れたエリア ${fr ? fr.toFixed(2) + " Hz" : "—"}`, 16, yy); yy += Math.round(Math.max(12, w / 64) * 1.6);
     }
+  }
+  function drawNight() {
+    if (!night.bg) layoutNight();
+    paintMap(nctx, night, night.frame, true);
     updateSide();
   }
+  // ── 書き出し(スライド用の動画): 地図 + 右の情報欄を 1 枚のキャンバスに描き、フレームごとに PNG を POST する ──
+  function paintInfo(ctx, x0, y0, W, H, f) {
+    const t = FT[f]; const fb = css("--f-body"), fn = css("--f-num"), fd = css("--f-display");
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+    ctx.fillStyle = "#0b1119"; ctx.fillRect(x0, y0, W, H);
+    ctx.fillStyle = "#1a2537"; ctx.fillRect(x0, y0, 1, H);
+    const pad = 28; let y = y0 + pad;
+    ctx.fillStyle = "#e4ebe9"; ctx.font = `700 26px ${fd}`; ctx.fillText("揺れが届き、リレーが開き、灯りが消えていく", x0 + pad, y + 22); y += 40;
+    ctx.fillStyle = "#95a4a1"; ctx.font = `400 15px ${fb}`; ctx.fillText("南海トラフ巨大地震(J-SHIS Mw9.1)・揺れの直後 3 時間・代表サンプル", x0 + pad, y + 14); y += 26;
+    const clock = `${Math.floor(t / 3600)}:${String(Math.floor(t % 3600 / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+    ctx.fillStyle = "#ffd696"; ctx.font = `500 64px ${fn}`; ctx.fillText(clock, x0 + pad, y + 62); y += 84;
+    // 受電の内訳(西・東)
+    const cols = ["#4cbcc5", "#f0ae50", "#ff7a62", "#8d9b99", "#c39bf0"], names = ["受電", "UFLS 遮断", "周波数崩壊", "孤立", "設備損傷"];
+    for (const [isl, lab] of [["west", "西 60 Hz"], ["east", "東 50 Hz"]]) {
+      const mw = night.mw[isl], Lmw = night.blk[isl].load_mw, parts = [0, 1, 2, 3, 4].map(k => Math.max(0, mw[f * 5 + k]) / Lmw);
+      ctx.fillStyle = "#c9d2e0"; ctx.font = `500 16px ${fb}`; ctx.fillText(lab, x0 + pad, y + 15);
+      ctx.fillStyle = "#e4ebe9"; ctx.font = `500 18px ${fn}`; ctx.textAlign = "right"; ctx.fillText(`受電 ${pct(parts[0], 0)}%`, x0 + W - pad, y + 15); ctx.textAlign = "left";
+      let xx = x0 + pad; const bw = W - 2 * pad;
+      ctx.fillStyle = "#1d2733"; ctx.fillRect(xx, y + 24, bw, 16);
+      parts.forEach((p, k) => { ctx.fillStyle = cols[k]; ctx.fillRect(xx, y + 24, Math.max(0, p * bw), 16); xx += p * bw; });
+      y += 54;
+    }
+    ctx.font = `400 13px ${fb}`; let lx = x0 + pad;
+    names.forEach((n, k) => { ctx.fillStyle = cols[k]; ctx.fillRect(lx, y + 2, 12, 10); ctx.fillStyle = "#95a4a1"; ctx.fillText(n, lx + 16, y + 11); lx += 16 + ctx.measureText(n).width + 14; });
+    y += 30;
+    // 周波数(西・東)
+    const chH = 96, chW = W - 2 * pad, cx = x0 + pad;
+    for (const [isl, lo, hi, lab] of [["west", 57.0, 61.0, "西の周波数 [Hz]"], ["east", 47.5, 51.0, "東の周波数 [Hz]"]]) {
+      ctx.fillStyle = "#95a4a1"; ctx.font = `400 13px ${fb}`; ctx.fillText(lab, cx, y + 12); y += 18;
+      ctx.fillStyle = "#0f1720"; ctx.fillRect(cx, y, chW, chH);
+      const Y = v => y + (1 - (v - lo) / (hi - lo)) * chH, X = ff => cx + ff / (NF - 1) * chW;
+      ctx.strokeStyle = "#ff7a62"; ctx.setLineDash([3, 3]); ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+      for (const hz of TR.ufls_hz[isl]) { ctx.beginPath(); ctx.moveTo(cx, Y(hz)); ctx.lineTo(cx + chW, Y(hz)); ctx.stroke(); }
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      const blk = night.blk[isl], zs = blk.zones, zf = night.zf[isl];
+      zs.forEach((z, j) => { ctx.strokeStyle = ZONE_COL[z] || "#888"; ctx.lineWidth = 1.5; ctx.beginPath(); let pen = false;
+        for (let ff = 0; ff <= f; ff++) { const v = zf[ff * zs.length + j]; if (!(v > 0)) { pen = false; continue; } const yy = Math.min(y + chH, Math.max(y, Y(v))); if (pen) ctx.lineTo(X(ff), yy); else ctx.moveTo(X(ff), yy); pen = true; }
+        ctx.stroke(); });
+      ctx.strokeStyle = "#e4ebe9"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(f), y); ctx.lineTo(X(f), y + chH); ctx.stroke();
+      ctx.fillStyle = "#6f7b85"; ctx.font = `400 11px ${fn}`; ctx.fillText(String(hi), cx + 4, y + 11); ctx.fillText(String(lo), cx + 4, y + chH - 3);
+      y += chH + 10;
+    }
+    ctx.fillStyle = "#6f7b85"; ctx.font = `400 11px ${fn}`;
+    [[0, "0"], [60, "1分"], [180, "3分"], [300, "5分"], [600, "10分"], [3600, "1時間"], [10800, "3時間"]].forEach(([tt, l]) => { const xx = cx + FT.indexOf(tt) / (NF - 1) * chW; ctx.textAlign = tt === 0 ? "left" : tt === 10800 ? "right" : "center"; ctx.fillText(l, xx, y + 4); });
+    ctx.textAlign = "left"; y += 26;
+    // 事象の時刻表(直近 8 件)
+    ctx.fillStyle = "#95a4a1"; ctx.font = `400 13px ${fb}`; ctx.fillText("何が起きたか(直近)", cx, y + 12); y += 24;
+    const past = night.events.filter(e => e.t <= t).slice(-8);
+    for (const e of past) {
+      const fresh = t - e.t <= (f > 0 ? (t - FT[f - 1]) * 4 : 4);
+      ctx.fillStyle = fresh ? "#ffe2a8" : "#95a4a1"; ctx.font = `400 14px ${fn}`; ctx.fillText(e.t < 600 ? fmt(e.t, 1) + " 秒" : fmt(e.t / 60, 0) + " 分", cx, y + 13);
+      ctx.fillStyle = e.isl === "west" ? "#ff7a62" : "#71a9ef"; ctx.font = `700 14px ${fb}`; ctx.fillText(e.isl === "west" ? "西" : "東", cx + 86, y + 13);
+      if (e.relay) { ctx.fillStyle = "#f29a5c"; ctx.beginPath(); ctx.arc(cx + 116, y + 8, 3.5, 0, 6.283); ctx.fill(); }
+      ctx.fillStyle = fresh ? "#e4ebe9" : "#95a4a1"; ctx.font = `400 14px ${fb}`; ctx.fillText(e.msg, cx + 128, y + 13); y += 22;
+    }
+    // 凡例と脚注(下端)
+    let ly = y0 + H - 92;
+    const leg = [["#ffe2a8", "受電中"], ["#5ad1ff", "分かれた島で受電"], ["#c8742a", "UFLS で遮断(変電所ごと消灯・対象は仮定)"], ["#ff3b2f", "周波数崩壊で赤く光って消える"], ["#56627a", "電源から孤立"], ["#ff7a3d", "設備の損傷"]];
+    ctx.font = `400 12.5px ${fb}`; let lx2 = cx, ly2 = ly;
+    for (const [c, n] of leg) { const wdt = 14 + ctx.measureText(n).width + 16; if (lx2 + wdt > x0 + W - pad) { lx2 = cx; ly2 += 18; } ctx.fillStyle = c; ctx.beginPath(); ctx.arc(lx2 + 4, ly2 - 4, 4, 0, 6.283); ctx.fill(); ctx.fillStyle = "#95a4a1"; ctx.fillText(n, lx2 + 14, ly2); lx2 += wdt; }
+    const dc = dynOf(cur.keys);
+    ctx.fillStyle = "#6f7b85"; ctx.font = `400 11.5px ${fb}`;
+    ctx.fillText(`前提: ${$("diffChip").textContent}・西 ${dc.west.run} #${night.blk.west.sample}・東 ${dc.east.run} #${night.blk.east.sample}(3 分後の受電が中央値に最も近いサンプル)`, cx, y0 + H - 34);
+    ctx.fillText("All-Japan-Grid 南海トラフ停電シナリオ卓・動的カスケード(慣性中心の周波数・UFLS・発電機保護・過負荷リレー・縮約網)", cx, y0 + H - 16);
+  }
+  window.exportNight = async function (opts) {
+    const o = Object.assign({ width: 1920, height: 1080, post: "/frame/", every: 1, start: 0, end: NF - 1 }, opts || {});
+    if (!cur) recompute();
+    const mapW = Math.round(o.width * 0.64), mapH = o.height;
+    const cv = document.createElement("canvas"); cv.width = o.width; cv.height = o.height; const ctx = cv.getContext("2d");
+    const L = makeLayout(mapW, mapH, 1, 0.0);
+    window.__exportProgress = -1; window.__exportDone = false; window.__exportError = null;
+    try {
+      for (let f = o.start; f <= o.end; f += o.every) {
+        paintMap(ctx, L, f, true);
+        paintInfo(ctx, mapW, 0, o.width - mapW, o.height, f);
+        const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+        const res = await fetch(o.post + String(f).padStart(4, "0") + ".png", { method: "POST", body: blob });
+        if (!res.ok) throw new Error("POST failed " + res.status);
+        window.__exportProgress = f;
+      }
+      window.__exportDone = true;
+    } catch (e) { window.__exportError = String(e); }
+    return window.__exportProgress;
+  };
   function updateSide() {
     const f = night.frame, t = FT[f];
     $("frame").value = f;

@@ -21,3 +21,15 @@ node hazard/nankai/tool/test_model.mjs     # JS の計算を Python(reference.js
 - 「揺れが届き、リレーが開き、灯りが消えていく」の再生は、組み合わせごとに代表サンプル(3 分後の受電が中央値に最も近いもの)を同じ乱数で再計算した記録を使う(`build_scenario_tool.py` の `trace_block`、run ごとに `output/<run>/<島>/trace_rep.npz` に保存)。再計算した 3 分後の受電がモンテカルロの記録と 1 MW 以上ずれたら止まる。
 - 母線ごとの状態は「変わった瞬間」だけを持つ(値: 島の順位 × 21 + 20 受電中 / 250 周波数崩壊 / 251 孤立 / 252 設備損傷 / 253 もともと受電していない / 254 UFLS で丸ごと消灯)。
 - UFLS の表示: 計算(dynamics.FreqCore)は島内の全母線から一様に削るが、表示は遮断 MW を保ったまま優先順位の高い母線を丸ごと消灯にする(`src/nankai/ufls_display.py`、テスト `tests/test_ufls_display.py`)。優先順位は母線 id のハッシュで固定(対象の変電所は非公表のため仮定)。遮断が増えると前の選択に足すので、段が進んでも灯りがちらつかない。
+
+## 再生を動画に書き出す(スライド用)
+
+```
+python3 hazard/nankai/tool/export_server.py docs/reports/nankai_hazard_2026-09-13/tool <フレーム保存先> 8733
+# ブラウザで http://127.0.0.1:8733/nankai_scenario_tool.html を開き、前提を選んでからコンソールで
+#   window.exportNight()            # 既定 1920×1080・全フレーム(531 枚)を POST。{width, height, every, start, end} で変えられる
+ffmpeg -framerate 20 -pattern_type glob -i '<フレーム保存先>/f*.png' -vf format=yuv420p -c:v libx264 -crf 20 -movflags +faststart out.mp4
+```
+
+- 書き出しは画面と同じ描画(`paintMap`)に、右の情報欄(時計・受電の内訳・周波数・直近の事象・凡例・前提)を `paintInfo` でキャンバスに足したもの。Artifact の中では POST 先が無いので何もしない。
+- 既定の前提の書き出し: `docs/reports/nankai_hazard_2026-09-13/tool/nankai_scenario_night_default.{mp4,gif}`(20 fps・26.5 秒 / GIF は 1280 px・10 fps)。
