@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+import os
 import unicodedata
 from collections import defaultdict
 from pathlib import Path
@@ -29,12 +30,17 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-NORM = ROOT / "data" / "external" / "system_disclosure" / "normalized"
+NORM = Path(os.environ.get("AGJ_DISCLOSURE_NORM",
+                           ROOT / "data" / "external" / "system_disclosure" / "normalized"))
+OUT = Path(os.environ.get("AGJ_DISCLOSURE_OUT", NORM))
 BUILT = ROOT / "docs" / "data" / "built"
 
 SUFFIX_RX = re.compile(r"(変電所|開閉所|発電所|変換所|switching|substation)$")
 TOWER_RX = re.compile(r"(№|#|No\.?)\s*\d+|分岐鉄塔|鉄塔")
-ANON_RX = re.compile(r"[□■○×]{2,}|^<\d+>|^\d+[^\d]")  # 九州の匿名化表記
+ANON_RX = re.compile(r"[□■○×]{2,}|^<\d+>")  # 真の匿名化のみ
+# 九州は「1北九州」「26山家」のように **連番+実名**。かつて ^\d+ を匿名化として
+# 捨てていたため九州の解決率が 0% だった。番号を剥がした候補を作って照合する。
+SEQ_PREFIX_RX = re.compile(r"^[0-9]+")
 
 
 def norm(s: str) -> str:
@@ -97,6 +103,15 @@ PLANTS = ROOT / "docs" / "data" / "plants_all.geojson"
 _subs_cache: dict[str, list[dict]] | None = None
 _plants_cache: dict[str, list[dict]] | None = None
 
+
+def with_seq_stripped(cands: list[str]) -> list[str]:
+    """先頭連番を剥がした候補を足す（九州「1北九州」→「北九州」）。"""
+    out = list(cands)
+    for c in cands:
+        t = SEQ_PREFIX_RX.sub("", c).strip()
+        if t and t != c and len(t) >= 2:
+            out.append(t)
+    return out
 
 def _centroid(geom: dict) -> tuple[float, float] | None:
     """Point はそのまま、Polygon は外環の平均を代表点にする。"""
@@ -228,7 +243,7 @@ def resolve(name: str, index: dict[str, list],
         return "anonymized", None
     if TOWER_RX.search(str(name)):
         return "tower", None
-    vs = variants(name)
+    vs = with_seq_stripped(variants(name))
     # 1. exact / 2. paren / 3. suffix — variants の順序がそのまま強さ
     for level, v in zip(["exact", "paren", "suffix", "suffix", "suffix"], vs):
         if v in index:
@@ -289,7 +304,7 @@ def main() -> int:
                 "source_file": r["source_file"],
             })
     out = pd.DataFrame(rows)
-    dest = NORM / "crosswalk_impedance_to_model.csv"
+    dest = OUT / "crosswalk_impedance_to_model.csv"
     out.to_csv(dest, index=False, encoding="utf-8")
 
     print(f"公表線路 {len(out)} 本")
@@ -306,7 +321,11 @@ def main() -> int:
         out.loc[~out.both_resolved, "to_match"],
     ])
     print(reasons[reasons.isin(["tower", "anonymized", "unknown"])].value_counts().to_string())
-    print(f"\n→ {dest.relative_to(ROOT)}")
+    try:
+        _shown = dest.relative_to(ROOT)
+    except ValueError:
+        _shown = dest
+    print(f"\n→ {_shown}")
     return 0
 
 
