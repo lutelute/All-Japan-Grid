@@ -1,0 +1,78 @@
+{
+ "meta": {
+  "date": "2026-09-02",
+  "git_head": "ff01904",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "hokkaido": {
+   "mode": "ac",
+   "regions": [
+    "hokkaido"
+   ],
+   "model": "full",
+   "provisional_infeed": [],
+   "n_bus": 831,
+   "n_trafo_nameplate": 1,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "hokkaido": {
+      "北海道": {
+       "n_bus": 540,
+       "gwh": 27620.5,
+       "target_mw": 4420.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 540,
+    "q_comp_mvar": 1162.2
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "intra_dc_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 1834922.7482244775
+   },
+   "hours": {
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4434.3,
+     "load_scale": {
+      "hokkaido": 1.0032
+     },
+     "served_load_mw": 4434.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 820.8,
+     "solve_s": 2.3,
+     "vm_min": 0.8555,
+     "vm_max": 1.0218,
+     "loss_mw": 148.6,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}

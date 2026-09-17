@@ -82,6 +82,24 @@ def export_island(island_id, isl, out_dir, validate=True):
         island_id, isl, cfg, 0.6)
     ac_ok = bool(ac.get("converged"))
     net = net_ac if ac_ok else net_dc
+    return export_net(island_id, net, ac_ok, out_dir, validate=validate,
+                      regions=isl["regions"], frequency=isl["frequency"])
+
+
+def export_net(island_id, net, ac_ok, out_dir, validate=True,
+               regions=None, frequency=None):
+    """解けた(または解けなかった)pandapower netをMATPOWERケースとして書く。
+
+    系譜非依存の書き出し部(2026-08-20分割): snapped系(export_island)からも
+    正典系(scripts/export_matpower_canonical.py)からも呼ぶ。
+    """
+    import pandapower as pp
+    import pandas as pd
+    from pandapower.converter.matpower import to_mpc
+    from scipy.io import savemat
+
+    from src.converter.matpower_exporter import canonical_mpc
+
     # MATPOWER convention: 100 MVA system base. Rebasing only changes the
     # p.u. scaling, not the physics (verified ΔVA ~1e-6 deg); the rebased
     # net is re-solved so the exported tables and the embedded VM/VA agree.
@@ -200,8 +218,8 @@ def export_island(island_id, isl, out_dir, validate=True):
         df.to_csv(path, index=False)
         stems[name] = len(df)
 
-    rec = {"island": island_id, "regions": isl["regions"],
-           "frequency_hz": isl["frequency"],
+    rec = {"island": island_id, "regions": regions,
+           "frequency_hz": frequency,
            "n_bus": stems["bus"], "n_branch": stems["branch"],
            "n_gen": stems["gen"],
            "n_ref_buses": int((inner["bus"][:, 1] == 3).sum()),
@@ -209,7 +227,7 @@ def export_island(island_id, isl, out_dir, validate=True):
     if validate:
         try:
             rec["validation"] = _roundtrip_check(
-                mat_path, inner, isl["frequency"], ac_ok)
+                mat_path, inner, frequency, ac_ok)
         except Exception as e:  # noqa: BLE001 — record, don't hide
             rec["validation"] = {"roundtrip": f"failed:{type(e).__name__}",
                                  "detail": str(e)[:200]}

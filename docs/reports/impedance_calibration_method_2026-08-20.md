@@ -2,7 +2,7 @@
 
 - 2026-08-20 ／ 対象: All-Japan-Grid（OSM 由来・全国 19,765 枝）
 - データ: 一般送配電事業者10社「系統情報の公表」様式5（1,009 線・213 変圧器）
-- 記録: 介入 #31（既定 OFF）／ `line_type_calibration_2026-08-20.json`・`_ci.json`
+- 記録: 介入 #46（既定 OFF）／ `line_type_calibration_2026-08-20.json`・`_ci.json`
 
 ---
 

@@ -1,0 +1,97 @@
+{
+ "note": "西フルAC正典化の第1波プローブ。正典は不変更。mode=ac が出れば prune ladder + served≥95% ガードを通過した正直なAC解",
+ "peak_hour": 17,
+ "demand_mw": 69937.7,
+ "variants": [
+  {
+   "variant": "v0_base",
+   "config": {
+    "site_trafos": false,
+    "rc": 0.6,
+    "hourly": false
+   },
+   "mode": "dc_fallback",
+   "n_site_trafo": 0,
+   "n_shunt": 3965,
+   "load_mw": 69937.7,
+   "served_mw": 69937.7,
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_p01": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 76.2
+  },
+  {
+   "variant": "v1_site",
+   "config": {
+    "site_trafos": true,
+    "rc": 0.6,
+    "hourly": false
+   },
+   "mode": "dc_fallback",
+   "n_site_trafo": 22,
+   "n_shunt": 3965,
+   "load_mw": 69937.7,
+   "served_mw": 69937.7,
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_p01": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 74.8
+  },
+  {
+   "variant": "v2_rc08",
+   "config": {
+    "site_trafos": false,
+    "rc": 0.8,
+    "hourly": false
+   },
+   "mode": "dc_fallback",
+   "n_site_trafo": 0,
+   "n_shunt": 3965,
+   "load_mw": 69937.7,
+   "served_mw": 69937.7,
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_p01": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 8.4
+  },
+  {
+   "variant": "v3_site_rc08",
+   "config": {
+    "site_trafos": true,
+    "rc": 0.8,
+    "hourly": false
+   },
+   "mode": "dc_fallback",
+   "n_site_trafo": 22,
+   "n_shunt": 3965,
+   "load_mw": 69937.7,
+   "served_mw": 69937.7,
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_p01": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 8.3
+  },
+  {
+   "variant": "v4_site_rc08_hshunt",
+   "config": {
+    "site_trafos": true,
+    "rc": 0.8,
+    "hourly": true
+   },
+   "mode": "dc_fallback",
+   "n_site_trafo": 22,
+   "n_shunt": 3965,
+   "load_mw": 69937.7,
+   "served_mw": 69937.7,
+   "served_frac": 1.0,
+   "vm_min": 1.0,
+   "vm_p01": 1.0,
+   "vm_max": 1.0,
+   "elapsed_s": 9.0
+  }
+ ]
+}

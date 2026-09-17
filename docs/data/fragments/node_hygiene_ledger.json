@@ -1,0 +1,41 @@
+{
+ "note": "介入#35 ノード衛生(2026-08-26 オーナー承認)。根拠=satellite_photointerpretation_pilot c1 + false_fragment_screen。復元=本台帳の逆再生+all.json.pre_hygiene.bak",
+ "params": {
+  "match_m": 150.0
+ },
+ "fragments": [
+  {
+   "island": "east",
+   "comp": 60,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_36.347:138.3221:77",
+     "lat": 36.34702,
+     "lon": 138.32214,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 36.347:138.3221:77",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_36.2985:138.4167:77",
+     "lat": 36.29849,
+     "lon": 138.41674,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 36.2985:138.4167:77",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  }
+ ],
+ "removed_edges": [],
+ "self_loops_removed": 0
+}

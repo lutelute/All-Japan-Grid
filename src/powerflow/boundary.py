@@ -74,16 +74,22 @@ TYPICAL_UTILISATION = {
 # better magnitudes. ic_006 clamps at -1.0: the measured westbound
 # Kansai import (関西-中国 東+西, median ~5.0 GW) exceeds the single
 # yaml capacity figure (4,090 MW), disclosed here rather than hidden.
+# 2026-08-19 介入#33: yaml本体を正本化(ic_005=南福光BTB 300MW・ic_010=
+# 越前嶺南線を追加)。ic_005の旧ハードコード(-0.15=北陸フェンス基準/1,900)は
+# 意味が変わったため削除 — util.get の既定0.0(注入なし)にフォールバックし、
+# DB経路(measured_utilisation_from_db)があればそちらが埋める。
+# ic_010 も同様にDB経路のみ(手置きの凍結値は作らない=捏造回避)。
+# 除数はyaml capacity_mw: ic_004 2,530→2,500 / ic_006 4,090→4,850 /
+# ic_009 2,780→2,850 に変わったため比率を再計算した(分子の中央値MWは不変)。
 MEASURED_UTILISATION = {
     "ic_001": +0.15,   # 北海道・本州間 median +133 MW / 900
-    "ic_002": +0.74,   # 相馬双葉幹線 median +4,098 MW / 5,550
+    "ic_002": +0.74,   # 相馬双葉幹線 median +4,098 MW / 5,550(現6,400なら+0.64)
     "ic_003": -0.33,   # 周波数変換設備 median 683 MW Chubu->Tokyo / 2,100
-    "ic_004": +0.79,   # 三重東近江線 median 2,000 MW Chubu->Kansai / 2,530
-    "ic_005": -0.15,   # 北陸フェンス median 284 MW Hokuriku->out / 1,900
+    "ic_004": +0.80,   # 三重東近江線 median 2,000 MW Chubu->Kansai / 2,500
     "ic_006": -1.0,    # 関西-中国(東+西) median ~5.0 GW Chugoku->Kansai (clamped)
-    "ic_007": -0.05,   # 阿南紀北直流幹線 median 70 MW Shikoku->Kansai / 1,400
+    "ic_007": -0.10,   # 阿南紀北直流幹線 median 70 MW Shikoku->Kansai / 700
     "ic_008": -0.94,   # 本四連系線 median 1,130 MW Shikoku->Chugoku / 1,200
-    "ic_009": -0.49,   # 関門連系線 median 1,373 MW Kyushu->Chugoku / 2,780
+    "ic_009": -0.48,   # 関門連系線 median 1,373 MW Kyushu->Chugoku / 2,850
 }
 
 
@@ -92,16 +98,20 @@ MEASURED_UTILISATION = {
 # ic_004 flips (OCCTO forward = Kansai->Chubu; yaml = Chubu->Kansai) —
 # verified by reproducing every hardcoded MEASURED_UTILISATION value
 # from the raw medians (ledger 54).
+# 2026-08-19: ic_005 を北陸フェンス→南福光(yaml正本化に追従)、ic_010(越前
+# 嶺南線)を追加。順方向: 南福光=中部→北陸(yaml一致=+1)・越前嶺南線=
+# 北陸→関西(yaml一致=+1・要DB検証)。
 _OCCTO_IC = {
     "ic_001": (["北海道・本州間電力連系設備"], +1),
     "ic_002": (["相馬双葉幹線"], +1),
     "ic_003": (["周波数変換設備"], +1),
     "ic_004": (["三重東近江線"], -1),
-    "ic_005": (["北陸フェンス"], +1),
+    "ic_005": (["南福光連系所・南福光変電所の連系設備"], +1),
     "ic_006": (["関西-中国（東）", "関西-中国（西）"], +1),
     "ic_007": (["阿南紀北直流幹線"], +1),
     "ic_008": (["本四連系線"], +1),
     "ic_009": (["関門連系線"], +1),
+    "ic_010": (["越前嶺南線"], +1),
 }
 
 

@@ -1,0 +1,1337 @@
+{
+ "date": "2026-09-02",
+ "island": "west",
+ "freq_hz": 60,
+ "net_source": {
+  "pickle": "west_ac_net.pkl",
+  "used": "ac",
+  "scenario_meta": "uc_to_pf_built 本番経路(fy2023r2・ピーク時刻・既定介入群)",
+  "n_bus": 7931,
+  "n_bus_main": 7354,
+  "base_mva": 1.0
+ },
+ "assumptions": {
+  "machine_model": "古典機(E'一定・xd''背後)。H/xd'' は型式別典型値(machine_agg.TYPE_PARAMS)",
+  "D_mb": 2.0,
+  "D_note": "D は AVR/PSS/ガバナ/負荷周波数依存の総和の代理(仮定値)。減衰比 ζ は帯の目安で実測ではない",
+  "loads": "運転点の定アドミタンス(y=conj(S)/|V|²)。IBR gen・sgen・容量ゼロ gen・停止機の Q・銘板超過機・slack も同様",
+  "slack": "主成分 slack 9087MW を定アドミタンス(負性負荷)に — 無限大母線では無い",
+  "network": "内部順序 Ybus(シャント込み・pandapower 内部行列)= 潮流と同一の網",
+  "committed_only": "運転中(|P|≥0.5MW)の同期機のみ。停止機は Q を定アドミタンスで残す",
+  "capability_check": "|P+jQ| > 銘板 S の機械(Q制限なし PF の artifact)は古典機から外し定アドミタンス",
+  "fragments": "最大連結成分の機械のみ(断片は別同期系・注入は定アドミタンス)"
+ },
+ "classical_model": {
+  "D_mb": 2.0,
+  "P_sync_mw": 53416,
+  "S_sync_mva": 88810,
+  "base_mva": 1.0,
+  "committed_only": true,
+  "ibr_gen_mw": 30.0,
+  "load_mw": 69937.7,
+  "n_bus_internal": 7931,
+  "n_bus_main": 7354,
+  "n_excluded_by_caller": 0,
+  "n_gen_fragment_excluded": 11,
+  "n_gen_off_excluded": 247,
+  "n_ibr_gen": 7476,
+  "n_load": 3924,
+  "n_over_capability_excluded": 50,
+  "n_sgen": 4,
+  "n_slack": 319,
+  "n_sync_buses": 218,
+  "n_zero_cap_gen": 13,
+  "off_gen_mvar": 1445.9,
+  "over_capability_mvar": -369.3,
+  "pe_pm_mismatch_pu_max": 3.298663705209037e-05,
+  "sgen_mw": 0.0,
+  "slack_mode": "admittance",
+  "slack_mw": 9086.9,
+  "zero_cap_gen_mvar": 48.1
+ },
+ "equilibrium_check_pu": 3.298663705209037e-05,
+ "build_s": 0.8,
+ "flat_vs_ac": {
+  "flat_legacy_all_machines(08-17式・対角にB_ii余分)": {
+   "n_modes": 386,
+   "f_min_hz": 0.9694,
+   "f_median_hz": 3.0115,
+   "f_max_hz": 3.506,
+   "n_inter_area_0.1_0.8": 0,
+   "n_local_0.8_2.5": 48,
+   "n_out_of_band": 338
+  },
+  "flat_fixed_all_machines": {
+   "n_modes": 384,
+   "f_min_hz": 0.4434,
+   "f_median_hz": 2.1995,
+   "f_max_hz": 2.6356,
+   "n_inter_area_0.1_0.8": 3,
+   "n_local_0.8_2.5": 373,
+   "n_out_of_band": 8
+  },
+  "flat_fixed_committed": {
+   "n_modes": 217,
+   "f_min_hz": 0.5374,
+   "f_median_hz": 2.2905,
+   "f_max_hz": 2.6466,
+   "n_inter_area_0.1_0.8": 2,
+   "n_local_0.8_2.5": 195,
+   "n_out_of_band": 20
+  },
+  "ac_operating_point_committed": {
+   "n_modes": 217,
+   "f_min_hz": 0.4009,
+   "f_median_hz": 2.1537,
+   "f_max_hz": 2.5342,
+   "n_inter_area_0.1_0.8": 4,
+   "n_local_0.8_2.5": 210,
+   "n_out_of_band": 3
+  },
+  "n_machines": {
+   "all": 392,
+   "committed": 218
+  },
+  "published_2026-08-17": {
+   "flat_npz_ybus_all_machines_f_min_hz": 0.375,
+   "gen_swing_map_ac_no_load_admittance_f0_hz": 0.434
+  }
+ },
+ "ac_modes": {
+  "n_unstable_oscillatory(sigma>0)": 0,
+  "n_negative_real_eigen_of_MinvK": 0,
+  "zeta_min": 0.0068,
+  "zeta_median_interarea": 0.028,
+  "lowest_8": [
+   {
+    "f_hz": 0.4009,
+    "zeta": 0.0397,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "pf": 1.0
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.083
+     },
+     {
+      "name": "碧南火力発電所 / 知多火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 5800,
+      "pf": 0.059
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3000,
+      "pf": 0.035
+     },
+     {
+      "name": "九州電力 松浦火力発電所 / 電源開発 松浦火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 3700,
+      "pf": 0.03
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.138,
+     "chugoku": 0.043,
+     "hokuriku": -0.104,
+     "kansai": -0.086,
+     "kyushu": 0.187,
+     "shikoku": -0.039
+    }
+   },
+   {
+    "f_hz": 0.5046,
+    "zeta": 0.0313,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "pf": 1.0
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.347
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3000,
+      "pf": 0.337
+     },
+     {
+      "name": "九州電力 松浦火力発電所 / 電源開発 松浦火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 3700,
+      "pf": 0.267
+     },
+     {
+      "name": "碧南火力発電所 / 知多火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 5800,
+      "pf": 0.238
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.262,
+     "chugoku": -0.262,
+     "hokuriku": 0.155,
+     "kansai": 0.1,
+     "kyushu": -0.285,
+     "shikoku": -0.059
+    }
+   },
+   {
+    "f_hz": 0.7878,
+    "zeta": 0.0248,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 1.0
+     },
+     {
+      "name": "糸魚川発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 600,
+      "pf": 0.444
+     },
+     {
+      "name": "筏津ダム / 柳瀬石見いの町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.322
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.216
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.177
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.032,
+     "chugoku": 0.02,
+     "hokuriku": 0.057,
+     "kansai": 0.022,
+     "kyushu": -0.029,
+     "shikoku": 0.152
+    }
+   },
+   {
+    "f_hz": 0.7949,
+    "zeta": 0.0236,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "糸魚川発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 600,
+      "pf": 1.0
+     },
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 0.282
+     },
+     {
+      "name": "姫川第六発電所 / 新姫川第六発電所",
+      "zone": "chubu",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.146
+     },
+     {
+      "name": "糸魚川市発電所 / 糸魚川市発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.133
+     },
+     {
+      "name": "姫川第七発電所 / 姫川第七水力発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 86,
+      "pf": 0.124
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.006,
+     "chugoku": -0.012,
+     "hokuriku": 0.123,
+     "kansai": -0.007,
+     "kyushu": 0.017,
+     "shikoku": -0.109
+    }
+   },
+   {
+    "f_hz": 0.8379,
+    "zeta": 0.0268,
+    "band": "local",
+    "participants": [
+     {
+      "name": "神流川水力発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 940,
+      "pf": 1.0
+     },
+     {
+      "name": "八那池第一水力発電所 / 松原発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 100,
+      "pf": 0.095
+     },
+     {
+      "name": "長坂町小荒間北杜市発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.05
+     },
+     {
+      "name": "大字高野町佐久穂町発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.036
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.028
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.011,
+     "chugoku": -0.004,
+     "hokuriku": -0.0,
+     "kansai": -0.005,
+     "kyushu": 0.003,
+     "shikoku": 0.004
+    }
+   },
+   {
+    "f_hz": 0.8683,
+    "zeta": 0.0205,
+    "band": "local",
+    "participants": [
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 1.0
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3000,
+      "pf": 0.83
+     },
+     {
+      "name": "筏津ダム / 柳瀬石見いの町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.306
+     },
+     {
+      "name": "柳井火力発電所",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1539,
+      "pf": 0.294
+     },
+     {
+      "name": "Tokuyama Central Power Plant / Tokuyama ",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1944,
+      "pf": 0.249
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.031,
+     "chugoku": -0.097,
+     "hokuriku": -0.014,
+     "kansai": -0.049,
+     "kyushu": 0.066,
+     "shikoku": -0.052
+    }
+   },
+   {
+    "f_hz": 0.9432,
+    "zeta": 0.0173,
+    "band": "local",
+    "participants": [
+     {
+      "name": "柳井火力発電所",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1539,
+      "pf": 1.0
+     },
+     {
+      "name": "Tokuyama Central Power Plant / Tokuyama ",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1944,
+      "pf": 0.822
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.617
+     },
+     {
+      "name": "Tosoh Nanyo Power Plant / Tosoh Nanyo Po",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1230,
+      "pf": 0.498
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3000,
+      "pf": 0.451
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.052,
+     "chugoku": 0.206,
+     "hokuriku": -0.065,
+     "kansai": -0.132,
+     "kyushu": -0.065,
+     "shikoku": -0.266
+    }
+   },
+   {
+    "f_hz": 1.0567,
+    "zeta": 0.0197,
+    "band": "local",
+    "participants": [
+     {
+      "name": "松川町発電所 / 松川町発電所 / 松川町発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 350,
+      "pf": 1.0
+     },
+     {
+      "name": "松川第三水力発電所 / 松川第三水力発電所 / 松川第三水力発電所",
+      "zone": "chubu",
+      "kv": 66.0,
+      "S_mva": 200,
+      "pf": 0.596
+     },
+     {
+      "name": "第二期南信州おひさま発電所 / 駒場発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 100,
+      "pf": 0.225
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.191
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.17
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.005,
+     "chugoku": -0.001,
+     "hokuriku": 0.028,
+     "kansai": 0.037,
+     "kyushu": 0.0,
+     "shikoku": -0.095
+    }
+   }
+  ],
+  "excluding_slipped_lowest_4": [
+   {
+    "f_hz": 0.4694,
+    "zeta": 0.0336,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 1.0
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3000,
+      "pf": 0.796
+     },
+     {
+      "name": "碧南火力発電所 / 知多火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 5800,
+      "pf": 0.694
+     },
+     {
+      "name": "九州電力 松浦火力発電所 / 電源開発 松浦火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 3700,
+      "pf": 0.649
+     },
+     {
+      "name": "新大分火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 2875,
+      "pf": 0.506
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.641,
+     "chugoku": 0.484,
+     "hokuriku": -0.42,
+     "kansai": -0.303,
+     "kyushu": 0.838,
+     "shikoku": 0.02
+    }
+   },
+   {
+    "f_hz": 0.7872,
+    "zeta": 0.0249,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 1.0
+     },
+     {
+      "name": "糸魚川発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 600,
+      "pf": 0.372
+     },
+     {
+      "name": "筏津ダム / 柳瀬石見いの町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.322
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.223
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.176
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.032,
+     "chugoku": 0.021,
+     "hokuriku": 0.054,
+     "kansai": 0.022,
+     "kyushu": -0.033,
+     "shikoku": 0.154
+    }
+   },
+   {
+    "f_hz": 0.7948,
+    "zeta": 0.0235,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "糸魚川発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 600,
+      "pf": 1.0
+     },
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 0.24
+     },
+     {
+      "name": "姫川第六発電所 / 新姫川第六発電所",
+      "zone": "chubu",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.146
+     },
+     {
+      "name": "糸魚川市発電所 / 糸魚川市発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.133
+     },
+     {
+      "name": "姫川第七発電所 / 姫川第七水力発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 86,
+      "pf": 0.124
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.007,
+     "chugoku": -0.012,
+     "hokuriku": 0.123,
+     "kansai": -0.006,
+     "kyushu": 0.017,
+     "shikoku": -0.102
+    }
+   },
+   {
+    "f_hz": 0.8379,
+    "zeta": 0.0268,
+    "band": "local",
+    "participants": [
+     {
+      "name": "神流川水力発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 940,
+      "pf": 1.0
+     },
+     {
+      "name": "八那池第一水力発電所 / 松原発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 100,
+      "pf": 0.095
+     },
+     {
+      "name": "長坂町小荒間北杜市発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.05
+     },
+     {
+      "name": "大字高野町佐久穂町発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.036
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.028
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.011,
+     "chugoku": -0.004,
+     "hokuriku": -0.0,
+     "kansai": -0.005,
+     "kyushu": 0.004,
+     "shikoku": 0.004
+    }
+   }
+  ],
+  "excluding_slipped_note": "過渡で失歩した弱連系機を定アドミタンス化した残りの同期系(A' と同じ機械集合)の最低モード"
+ },
+ "flat_modes_committed": {
+  "lowest_8": [
+   {
+    "f_hz": 0.5374,
+    "zeta": 0.0296,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "pf": 1.0
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3030,
+      "pf": 0.861
+     },
+     {
+      "name": "九州電力 松浦火力発電所 / 電源開発 松浦火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 3700,
+      "pf": 0.766
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.683
+     },
+     {
+      "name": "新大分火力発電所",
+      "zone": "kyushu",
+      "kv": 500.0,
+      "S_mva": 2905,
+      "pf": 0.654
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.313,
+     "chugoku": 0.273,
+     "hokuriku": -0.195,
+     "kansai": -0.157,
+     "kyushu": 0.571,
+     "shikoku": 0.025
+    }
+   },
+   {
+    "f_hz": 0.769,
+    "zeta": 0.0208,
+    "band": "inter-area",
+    "participants": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "pf": 1.0
+     },
+     {
+      "name": "Tokuyama Central Power Plant / Tokuyama ",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 2834,
+      "pf": 0.027
+     },
+     {
+      "name": "柳井火力発電所",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1539,
+      "pf": 0.018
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.015
+     },
+     {
+      "name": "Tosoh Nanyo Power Plant / Tosoh Nanyo Po",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1230,
+      "pf": 0.012
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.04,
+     "chugoku": -0.087,
+     "hokuriku": 0.006,
+     "kansai": -0.004,
+     "kyushu": 0.024,
+     "shikoku": -0.078
+    }
+   },
+   {
+    "f_hz": 0.8581,
+    "zeta": 0.0211,
+    "band": "local",
+    "participants": [
+     {
+      "name": "糸魚川発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 600,
+      "pf": 1.0
+     },
+     {
+      "name": "姫川第六発電所 / 新姫川第六発電所",
+      "zone": "chubu",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.155
+     },
+     {
+      "name": "糸魚川市発電所 / 糸魚川市発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.14
+     },
+     {
+      "name": "姫川第七発電所 / 姫川第七水力発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 86,
+      "pf": 0.132
+     },
+     {
+      "name": "黒東第三発電所",
+      "zone": "hokuriku",
+      "kv": 66.0,
+      "S_mva": 110,
+      "pf": 0.045
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.02,
+     "chugoku": -0.002,
+     "hokuriku": 0.054,
+     "kansai": -0.004,
+     "kyushu": 0.006,
+     "shikoku": -0.027
+    }
+   },
+   {
+    "f_hz": 0.863,
+    "zeta": 0.0245,
+    "band": "local",
+    "participants": [
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 1.0
+     },
+     {
+      "name": "筏津ダム / 柳瀬石見いの町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 100,
+      "pf": 0.313
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.1
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3030,
+      "pf": 0.038
+     },
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "pf": 0.035
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.02,
+     "chugoku": 0.007,
+     "hokuriku": 0.009,
+     "kansai": 0.008,
+     "kyushu": -0.021,
+     "shikoku": 0.127
+    }
+   },
+   {
+    "f_hz": 0.9254,
+    "zeta": 0.0242,
+    "band": "local",
+    "participants": [
+     {
+      "name": "神流川水力発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 940,
+      "pf": 1.0
+     },
+     {
+      "name": "八那池第一水力発電所 / 松原発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 100,
+      "pf": 0.094
+     },
+     {
+      "name": "長坂町小荒間北杜市発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.049
+     },
+     {
+      "name": "大字高野町佐久穂町発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.035
+     },
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 0.025
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.011,
+     "chugoku": -0.011,
+     "hokuriku": -0.012,
+     "kansai": -0.018,
+     "kyushu": 0.015,
+     "shikoku": -0.006
+    }
+   },
+   {
+    "f_hz": 0.9665,
+    "zeta": 0.0178,
+    "band": "local",
+    "participants": [
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3030,
+      "pf": 1.0
+     },
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "kv": 66.0,
+      "S_mva": 250,
+      "pf": 0.77
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.548
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.417
+     },
+     {
+      "name": "Tokuyama Central Power Plant / Tokuyama ",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 2834,
+      "pf": 0.376
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.064,
+     "chugoku": -0.131,
+     "hokuriku": -0.041,
+     "kansai": -0.055,
+     "kyushu": 0.109,
+     "shikoku": -0.124
+    }
+   },
+   {
+    "f_hz": 1.0327,
+    "zeta": 0.0158,
+    "band": "local",
+    "participants": [
+     {
+      "name": "Tokuyama Central Power Plant / Tokuyama ",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 2834,
+      "pf": 1.0
+     },
+     {
+      "name": "柳井火力発電所",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1539,
+      "pf": 0.785
+     },
+     {
+      "name": "Tosoh Nanyo Power Plant / Tosoh Nanyo Po",
+      "zone": "chugoku",
+      "kv": 220.0,
+      "S_mva": 1230,
+      "pf": 0.41
+     },
+     {
+      "name": "橘湾火力発電所 / 橘湾発電所",
+      "zone": "shikoku",
+      "kv": 500.0,
+      "S_mva": 2800,
+      "pf": 0.39
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "kv": 220.0,
+      "S_mva": 3030,
+      "pf": 0.325
+     }
+    ],
+    "zone_shape": {
+     "chubu": 0.094,
+     "chugoku": 0.246,
+     "hokuriku": -0.1,
+     "kansai": -0.121,
+     "kyushu": -0.106,
+     "shikoku": -0.306
+    }
+   },
+   {
+    "f_hz": 1.1397,
+    "zeta": 0.0191,
+    "band": "local",
+    "participants": [
+     {
+      "name": "松川町発電所 / 松川町発電所 / 松川町発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 350,
+      "pf": 1.0
+     },
+     {
+      "name": "松川第三水力発電所 / 松川第三水力発電所 / 松川第三水力発電所",
+      "zone": "chubu",
+      "kv": 66.0,
+      "S_mva": 200,
+      "pf": 0.605
+     },
+     {
+      "name": "第二期南信州おひさま発電所 / 駒場発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 100,
+      "pf": 0.222
+     },
+     {
+      "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+      "zone": "chubu",
+      "kv": 275.0,
+      "S_mva": 7142,
+      "pf": 0.124
+     },
+     {
+      "name": "三穂飯田市発電所",
+      "zone": "chubu",
+      "kv": 77.0,
+      "S_mva": 50,
+      "pf": 0.105
+     }
+    ],
+    "zone_shape": {
+     "chubu": -0.004,
+     "chugoku": -0.002,
+     "hokuriku": 0.014,
+     "kansai": 0.013,
+     "kyushu": 0.0,
+     "shikoku": -0.046
+    }
+   }
+  ]
+ },
+ "transient_disconnect": {
+  "t_fault_s": 1.0,
+  "t_end_s": 10.0,
+  "solver": "RK45 rtol1e-6",
+  "method": "解列=内部ノードの Kron 消去(swing_solver.run_transient fault='disconnect')。失歩機=COI 相対角の変化が 180° を超えた機械",
+  "cases": [
+   {
+    "label": "A: 最大単独発電所の解列(N-1 gen)",
+    "slip_criterion": "残存機の角度中央値に対する相対角の変化が 180° 超(COI 基準は暴走機に引きずられるため不採用)",
+    "tripped": {
+     "name": "川越火力発電所",
+     "zone": "chubu",
+     "kv": 275.0,
+     "P_mw": 3989.8,
+     "S_mva": 4802
+    },
+    "n_machines": 218,
+    "stable_first_swing_all": false,
+    "max_angle_sep_deg": 24593.7,
+    "t_first_180deg_s": 1.57,
+    "slipped_machines": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "P_mw": 1015.1,
+      "K_ii_per_S": 0.192
+     }
+    ],
+    "stable_excluding_slipped": true,
+    "max_angle_sep_excluding_slipped_deg": 148.6,
+    "coi_freq_dev_hz": {
+     "min": -1.1291,
+     "end": -1.1291
+    },
+    "zone_freq_dev_end_hz": {
+     "chubu": -1.132,
+     "chugoku": -1.1168,
+     "hokuriku": -1.1183,
+     "kansai": -1.1229,
+     "kyushu": -0.0476,
+     "shikoku": -1.1553
+    },
+    "top_swing_machines": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "S_mva": 1400,
+      "swing_deg": 24432.6
+     },
+     {
+      "name": "大霧地熱発電所",
+      "zone": "kyushu",
+      "S_mva": 30,
+      "swing_deg": 31.8
+     },
+     {
+      "name": "四日市火力発電所",
+      "zone": "chubu",
+      "S_mva": 585,
+      "swing_deg": 30.6
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "S_mva": 3000,
+      "swing_deg": 30.5
+     },
+     {
+      "name": "シグマパワー有明三川発電所",
+      "zone": "kyushu",
+      "S_mva": 94,
+      "swing_deg": 28.0
+     }
+    ],
+    "sim_s": 0.08
+   },
+   {
+    "label": "B: 最大集約バスの解列(母線事故相当・参考)",
+    "slip_criterion": "残存機の角度中央値に対する相対角の変化が 180° 超(COI 基準は暴走機に引きずられるため不採用)",
+    "tripped": {
+     "name": "西名古屋火力発電所 / 新名古屋火力発電所 / 知多第二火力発電所",
+     "zone": "chubu",
+     "kv": 275.0,
+     "P_mw": 5934.4,
+     "S_mva": 7142
+    },
+    "n_machines": 218,
+    "stable_first_swing_all": false,
+    "max_angle_sep_deg": 27885.8,
+    "t_first_180deg_s": 1.49,
+    "slipped_machines": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "kv": 66.0,
+      "S_mva": 1400,
+      "P_mw": 1015.1,
+      "K_ii_per_S": 0.192
+     }
+    ],
+    "stable_excluding_slipped": false,
+    "max_angle_sep_excluding_slipped_deg": 199.5,
+    "coi_freq_dev_hz": {
+     "min": -1.9229,
+     "end": -1.9229
+    },
+    "zone_freq_dev_end_hz": {
+     "chubu": -1.9237,
+     "chugoku": -1.949,
+     "hokuriku": -1.8963,
+     "kansai": -1.9309,
+     "kyushu": -0.7477,
+     "shikoku": -1.9021
+    },
+    "top_swing_machines": [
+     {
+      "name": "苓北火力発電所",
+      "zone": "kyushu",
+      "S_mva": 1400,
+      "swing_deg": 27729.0
+     },
+     {
+      "name": "柳井川久万高原町発電所 / 久万高原町発電所 / 蕨谷仁淀川町発電所",
+      "zone": "shikoku",
+      "S_mva": 250,
+      "swing_deg": 91.9
+     },
+     {
+      "name": "筏津ダム / 柳瀬石見いの町発電所",
+      "zone": "shikoku",
+      "S_mva": 100,
+      "swing_deg": 80.6
+     },
+     {
+      "name": "神流川水力発電所",
+      "zone": "chubu",
+      "S_mva": 940,
+      "swing_deg": 79.1
+     },
+     {
+      "name": "長坂町小荒間北杜市発電所",
+      "zone": "chubu",
+      "S_mva": 50,
+      "swing_deg": 77.4
+     }
+    ],
+    "sim_s": 0.08
+   },
+   {
+    "label": "A': 失歩機 1 台を定アドミタンス化した残りの同期系で A を再計算",
+    "slip_criterion": "残存機の角度中央値に対する相対角の変化が 180° 超(COI 基準は暴走機に引きずられるため不採用)",
+    "tripped": {
+     "name": "川越火力発電所",
+     "zone": "chubu",
+     "kv": 275.0,
+     "P_mw": 3989.8,
+     "S_mva": 4802
+    },
+    "n_machines": 217,
+    "stable_first_swing_all": true,
+    "max_angle_sep_deg": 147.3,
+    "t_first_180deg_s": null,
+    "slipped_machines": [],
+    "stable_excluding_slipped": true,
+    "max_angle_sep_excluding_slipped_deg": 147.3,
+    "coi_freq_dev_hz": {
+     "min": -0.8829,
+     "end": -0.8829
+    },
+    "zone_freq_dev_end_hz": {
+     "chubu": -0.8956,
+     "chugoku": -0.8708,
+     "hokuriku": -0.8782,
+     "kansai": -0.8809,
+     "kyushu": -0.8742,
+     "shikoku": -0.9007
+    },
+    "top_swing_machines": [
+     {
+      "name": "四日市火力発電所",
+      "zone": "chubu",
+      "S_mva": 585,
+      "swing_deg": 30.1
+     },
+     {
+      "name": "池島町長崎市発電所 / 池島町長崎市発電所 / 池島町長崎市発電所",
+      "zone": "kyushu",
+      "S_mva": 3000,
+      "swing_deg": 23.0
+     },
+     {
+      "name": "Yokkaichi Biomass Power Plant",
+      "zone": "chubu",
+      "S_mva": 49,
+      "swing_deg": 21.9
+     },
+     {
+      "name": "中部_36.4444_137.9374",
+      "zone": "chubu",
+      "S_mva": 50,
+      "swing_deg": 21.0
+     },
+     {
+      "name": "東京発電株式会社 狩宿発電所 / 内野発電所 / 富士川第一発電所",
+      "zone": "chubu",
+      "S_mva": 148,
+      "swing_deg": 20.9
+     }
+    ],
+    "sim_s": 0.1
+   }
+  ],
+  "note": "負荷=定アドミタンス・ガバナ無し・D のみ → 解列後は周波数が単調低下(一次周波数応答は未モデル)。第一波の同期維持のみ判定"
+ },
+ "transient_legacy_trip_Pm0": {
+  "case": "A と同じ機械",
+  "stable": false,
+  "max_angle_sep_deg": 24431.9,
+  "note": "旧 'trip'(Pm→0・機械は同期網に残る)。解列とは物理が異なる — 後方互換で残す"
+ }
+}

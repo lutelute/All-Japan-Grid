@@ -232,7 +232,28 @@
       ],
       "evidence": "独立二次(Wikipedia/J-POWER): ja.wikipedia.org/wiki/紀伊水道直流連系設備",
       "source_type": "independent_secondary",
-      "dc_tie": true
+      "dc_tie": true,
+      "path_key": "overhead"
+    },
+    {
+      "from_sub": "阿南周波数変換所",
+      "to_sub": "由良開閉所",
+      "from_pt": [
+        33.82823,
+        134.63471
+      ],
+      "to_pt": [
+        33.97687,
+        135.08917
+      ],
+      "kv": null,
+      "lines": [
+        "阿南紀北直流幹線(海底ケーブル区間)"
+      ],
+      "evidence": "独立二次(Wikipedia/J-POWER): ja.wikipedia.org/wiki/紀伊水道直流連系設備 + OSM way(location=underwater)",
+      "source_type": "independent_secondary",
+      "dc_tie": true,
+      "path_key": "submarine"
     },
     {
       "from_sub": "上ノ国町変電所",
@@ -251,7 +272,8 @@
       ],
       "evidence": "独立二次(Wikipedia/J-POWER): ja.wikipedia.org/wiki/上ノ国ウインドファーム",
       "source_type": "independent_secondary",
-      "dc_tie": false
+      "dc_tie": false,
+      "path_key": null
     },
     {
       "from_sub": "大間町変電所_3 500kV",
@@ -270,7 +292,8 @@
       ],
       "evidence": "独立二次(Wikipedia/J-POWER): aec.go.jp J-POWER 大間幹線資料 / wikipedia 東通原子力発電所",
       "source_type": "independent_secondary",
-      "dc_tie": false
+      "dc_tie": false,
+      "path_key": null
     }
   ]
 }

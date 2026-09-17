@@ -1,0 +1,219 @@
+{
+ "date": "2026-09-02",
+ "intervention": 42,
+ "stages": {
+  "pre": "正典 HEAD(55482eb)",
+  "mid": "同経路 #35 の保留断片2件(5ノード・2エッジ)適用後・#42 前 = all.json.pre_mixed.bak",
+  "post": "#42 適用後(フリップ108ノード)"
+ },
+ "connectivity": {
+  "pre": {
+   "n_nodes": 17745,
+   "n_edges": 19895,
+   "off_main_nodes": 1292,
+   "off_main_subs": 373,
+   "cross_freq_edges": 130,
+   "meta": {
+    "n_stitch": 158,
+    "n_tie": 6,
+    "components": {
+     "hokkaido": 25,
+     "east": 186,
+     "west": 407,
+     "okinawa": 7
+    },
+    "main_size": {
+     "hokkaido": 722,
+     "east": 5097,
+     "west": 6470,
+     "okinawa": 75
+    }
+   },
+   "n_mixed_pref_marked": 0
+  },
+  "mid": {
+   "n_nodes": 17740,
+   "n_edges": 19893,
+   "off_main_nodes": 1292,
+   "off_main_subs": 373,
+   "cross_freq_edges": 127,
+   "meta": {
+    "n_stitch": 158,
+    "n_tie": 6,
+    "components": {
+     "hokkaido": 25,
+     "east": 185,
+     "west": 406,
+     "okinawa": 7
+    },
+    "main_size": {
+     "hokkaido": 722,
+     "east": 5097,
+     "west": 6470,
+     "okinawa": 75
+    }
+   },
+   "n_mixed_pref_marked": 0
+  },
+  "post": {
+   "n_nodes": 17740,
+   "n_edges": 19893,
+   "off_main_nodes": 1273,
+   "off_main_subs": 369,
+   "cross_freq_edges": 99,
+   "meta": {
+    "n_stitch": 158,
+    "n_tie": 6,
+    "components": {
+     "hokkaido": 25,
+     "east": 168,
+     "west": 400,
+     "okinawa": 7
+    },
+    "main_size": {
+     "hokkaido": 722,
+     "east": 5086,
+     "west": 6487,
+     "okinawa": 75
+    }
+   },
+   "n_mixed_pref_marked": 108
+  }
+ },
+ "powerflow": {
+  "hokkaido": {
+   "pre": {
+    "hour": 18,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 820.8,
+    "vm_min": 0.8555,
+    "vm_max": 1.0218,
+    "served_frac": 1.0,
+    "loss_mw": 148.6,
+    "n_bus": 831,
+    "git_head": "55482eb"
+   },
+   "mid": {
+    "hour": 18,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 820.8,
+    "vm_min": 0.8555,
+    "vm_max": 1.0218,
+    "served_frac": 1.0,
+    "loss_mw": 148.6,
+    "n_bus": 831,
+    "git_head": "ea0ace3"
+   },
+   "post": {
+    "hour": 18,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 820.8,
+    "vm_min": 0.8555,
+    "vm_max": 1.0218,
+    "served_frac": 1.0,
+    "loss_mw": 148.6,
+    "n_bus": 831,
+    "git_head": "ea0ace3"
+   }
+  },
+  "west": {
+   "pre": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 9086.9,
+    "vm_min": 0.667,
+    "vm_max": 1.0319,
+    "served_frac": 1.0,
+    "loss_mw": 2782.1,
+    "n_bus": 7931,
+    "git_head": "55482eb"
+   },
+   "mid": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 9086.8,
+    "vm_min": 0.667,
+    "vm_max": 1.0319,
+    "served_frac": 1.0,
+    "loss_mw": 2782.1,
+    "n_bus": 7931,
+    "git_head": "ea0ace3"
+   },
+   "post": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 8796.0,
+    "vm_min": 0.667,
+    "vm_max": 1.0328,
+    "served_frac": 1.0,
+    "loss_mw": 2491.2,
+    "n_bus": 7946,
+    "git_head": "ea0ace3"
+   }
+  },
+  "east": {
+   "pre": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 5162.3,
+    "vm_min": 0.8217,
+    "vm_max": 1.0229,
+    "served_frac": 1.0,
+    "loss_mw": 2514.1,
+    "n_bus": 6267,
+    "git_head": "55482eb"
+   },
+   "mid": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 5162.3,
+    "vm_min": 0.8216,
+    "vm_max": 1.0229,
+    "served_frac": 1.0,
+    "loss_mw": 2514.2,
+    "n_bus": 6266,
+    "git_head": "ea0ace3"
+   },
+   "post": {
+    "hour": 17,
+    "mode": "ac",
+    "solver": "ac",
+    "converged": true,
+    "slack_abs_mw": 5159.6,
+    "vm_min": 0.815,
+    "vm_max": 1.0229,
+    "served_frac": 1.0,
+    "loss_mw": 2511.5,
+    "n_bus": 6223,
+    "git_head": "ea0ace3"
+   }
+  }
+ },
+ "criteria": {
+  "cross_freq_edges_not_increased(post<=mid)": true,
+  "off_main_nodes_not_increased(post<=mid)": true,
+  "off_main_subs_not_increased(post<=mid)": true,
+  "west_peak_ac_converged": true,
+  "west_slack_delta_le_50MW(vs mid)": true,
+  "west_slack_delta_le_50MW(vs pre 9087)": true,
+  "east_peak_ac_converged": true,
+  "hokkaido_unchanged(slack±1MW)": true
+ },
+ "pass": true
+}

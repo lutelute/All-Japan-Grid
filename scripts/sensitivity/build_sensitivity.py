@@ -41,6 +41,7 @@ os.chdir(ROOT)   # config/*.yaml は repo ルート相対で読まれる
 import networkx as nx
 import numpy as np
 import pandapower as pp
+from src.utils.pandapower_compat import select_subnet as pp_select_subnet
 import pandapower.topology as top
 from pandapower.pypower.idx_brch import BR_X, F_BUS, T_BUS
 from pandapower.pypower.idx_bus import BASE_KV
@@ -48,7 +49,7 @@ from pandapower.pypower.makeLODF import makeLODF
 from pandapower.pypower.makePTDF import makePTDF
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, attach_default_for, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config,
 )
@@ -76,7 +77,7 @@ CHANGELOG = {
 def main_component_net(island: str, nodes, edges, cfg, pref_gwh):
     """潮流本体と同じ手順で島を組み、最大連結成分に単一 slack を置いて返す。"""
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
-    attach_generators(net, bus_of, nodes, island, attach_mode=GEN_ATTACH_DEFAULT)
+    attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
@@ -85,7 +86,7 @@ def main_component_net(island: str, nodes, edges, cfg, pref_gwh):
 
     g = top.create_nxgraph(net, respect_switches=False)
     main = sorted(max(nx.connected_components(g), key=len))
-    sub = pp.select_subnet(net, main, keep_everything_else=True)
+    sub = pp_select_subnet(net, main, keep_everything_else=True)
     if len(sub.ext_grid) > 1:                 # PTDF は参照バス 1 枚を要する
         sub.ext_grid = sub.ext_grid.iloc[:1]
     elif len(sub.ext_grid) == 0:

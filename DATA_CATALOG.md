@@ -190,3 +190,18 @@ OSM 由来の地域別 GeoJSON。これがパイプライン全体の**一次ソ
 README 冒頭表の Total 行「7,962」誤記は **v1.2.0 で修正済み**（CHANGELOG の Fixed 項参照）。
 2026-06-08 時点で全資料の件数は実測と一致。今後数値を更新する際は、本カタログの実測値を正本として
 README・WHITEPAPER・papers/ を揃えること。
+
+
+## SubSLD法レイヤ（v1.8.0 追加・2026-08-27）
+
+| ファイル | 内容 | 実測 |
+|---|---|---|
+| `data/structures/{region}.json`（非追跡・再生成可能） | node-breaker構造DB（Site/VL/Busbar/Bay/Terminal/Trafo・推定母線含む） | 7,239サイト・端子47,979・母線5,228（うち推定2,669） |
+| `data/structures/summary.json` | 全国カタログ（binding分布等） | vertex 15.7% / polygon 29.3% / leadin 55.0% |
+| `docs/data/substation_properties.json` | 変電所×電圧階級の回線数・導体数集約（証拠/推計分離） | 6,165サイト・6.2MB |
+| `docs/data/subsld_pages.json` | Pagesビューア用compact（結線・敷地リング・証拠マーカー） | 6,165サイト・3.2MB |
+| `docs/data/subsld_ways/{region}.json` | 実線形（20m簡約）・GeoPane重畳用 | 40,087 way・計4.4MB |
+| `docs/subsld.html` | 全所ビューア（GeoPane×SLDPane・地図/写真トグル） | — |
+| `docs/data/fragments/osm_edit_candidates.json` | OSM編集候補（issue #49判読） | 10件 |
+
+生成: `regenerate_all.py` の subsld_pages / subsld_ways / substation_properties 段（全て冪等）。

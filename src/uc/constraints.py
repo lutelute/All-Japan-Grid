@@ -715,14 +715,17 @@ def add_transmission_capacity_constraints(
 ) -> int:
     """Add transmission capacity constraints for interconnections.
 
-    Limits the power flow on each interconnection to its rated capacity
-    in both directions:
+    Limits the power flow on each interconnection to its rated capacity,
+    direction-aware (2026-08-19 — OCCTO運用容量は方向非対称: 例 関門
+    順850/逆2,850MW):
 
-        ``f[ic,t] <= capacity_mw[ic]``   (upper bound)
-        ``f[ic,t] >= -capacity_mw[ic]``  (lower bound)
+        ``f[ic,t] <= cap_fwd[ic]``    (from→to 方向の上限)
+        ``f[ic,t] >= -cap_rev[ic]``   (to→from 方向の上限)
 
     Positive flow represents power transfer from ``from_region`` to
     ``to_region``; negative flow represents the reverse direction.
+    ``cap_fwd``/``cap_rev`` fall back to the legacy symmetric
+    ``capacity_mw`` when per-direction values are absent.
 
     Args:
         model: PuLP model to add constraints to.
@@ -735,16 +738,18 @@ def add_transmission_capacity_constraints(
     """
     count = 0
     for ic in interconnections:
+        cap_fwd = getattr(ic, "cap_fwd", ic.capacity_mw)
+        cap_rev = getattr(ic, "cap_rev", ic.capacity_mw)
         for t in timesteps:
-            # Upper bound: f <= capacity
+            # Upper bound: f <= forward capacity
             model += (
-                f[(ic.id, t)] <= ic.capacity_mw,
+                f[(ic.id, t)] <= cap_fwd,
                 f"tx_cap_ub_{ic.id}_t{t}",
             )
             count += 1
-            # Lower bound: f >= -capacity
+            # Lower bound: f >= -reverse capacity
             model += (
-                f[(ic.id, t)] >= -ic.capacity_mw,
+                f[(ic.id, t)] >= -cap_rev,
                 f"tx_cap_lb_{ic.id}_t{t}",
             )
             count += 1
@@ -859,14 +864,22 @@ def add_nodal_balance_constraints(
     interconnections: List[Interconnection],
     timesteps: List[int],
     regional_demand: Dict[str, List[float]],
+    spill: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
 ) -> int:
     """Add nodal (per-region) power balance constraints.
 
-    Ensures that generation plus net imports meets or exceeds demand in
-    each region at every time step:
+    Enforces exact balance in each region at every time step:
 
         ``Σ_{g∈r} p[g,t] + Σ_{ic: to=r} f[ic,t]
-        - Σ_{ic: from=r} f[ic,t] >= demand[r][idx]``  for all *r*, *t*
+        - Σ_{ic: from=r} f[ic,t] - spill[r,t] == demand[r][idx]``
+
+    2026-08-19 修正: 従来は ``>=`` (不等式)で、地域余剰の自由廃棄を許して
+    いた。九州の昼間断面で純需要2.5GWに対し8.2GWを発電し、スケジュール上の
+    関門潮流(上限2.8GW)と5.7GWの帳尻が合わない解を「Optimal」として返して
+    いた(uc_to_pf注入がこの幻の余剰をそのままPFに再現し、関門実潮流が運用
+    容量の2倍になった)。等式+明示spill変数(目的関数でペナルティ)に変更し、
+    余剰は帳簿(UCResult.regional_spill_mw)に必ず現れる。spill>0 は実運用の
+    出力制御に相当する。
 
     Positive flow on an interconnection represents power transfer from
     ``from_region`` to ``to_region``.
@@ -880,6 +893,9 @@ def add_nodal_balance_constraints(
         timesteps: List of time period indices.
         regional_demand: Mapping of region identifier to demand series
             (MW) aligned with *timesteps*.
+        spill: Non-negative surplus variables indexed by
+            ``(region, timestep)``. ``None`` reproduces the legacy ``>=``
+            relaxation (回帰比較用のみ — 新規コードでは必ず渡すこと).
 
     Returns:
         Number of constraints added.
@@ -907,10 +923,17 @@ def add_nodal_balance_constraints(
             imports = pulp.lpSum(f[(ic.id, t)] for ic in inflows)
             exports = pulp.lpSum(f[(ic.id, t)] for ic in outflows)
 
-            model += (
-                generation + imports - exports >= demands[idx],
-                f"nodal_bal_{region}_t{t}",
-            )
+            if spill is not None:
+                model += (
+                    generation + imports - exports - spill[(region, t)]
+                    == demands[idx],
+                    f"nodal_bal_{region}_t{t}",
+                )
+            else:
+                model += (
+                    generation + imports - exports >= demands[idx],
+                    f"nodal_bal_{region}_t{t}",
+                )
             count += 1
 
     logger.info(

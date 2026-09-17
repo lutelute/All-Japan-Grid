@@ -1,0 +1,1771 @@
+{
+ "date": "2026-09-02",
+ "islands": {
+  "east": {
+   "off/cap": {
+    "island": "east",
+    "implicit_stepdown": false,
+    "lv_aggregate_km": 0.0,
+    "attach": "cap",
+    "n_bus": 6223,
+    "n_line": 6468,
+    "n_trafo": 646,
+    "n_implicit_stepdown": 0,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 95.8,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 34,
+      "n_sites": 26,
+      "n_line_ends_at_unknown_kv_bus": 41,
+      "by_pair": {
+       "66->275": 12,
+       "66->154": 10,
+       "77->66": 6,
+       "154->66": 2,
+       "154->500": 1,
+       "275->66": 1,
+       "275->500": 1,
+       "154->275": 1
+      },
+      "examples": [
+       {
+        "line": "湯宿線",
+        "line_kv": 154.0,
+        "bus": "浅貝変電所 500kV",
+        "bus_kv": 500.0
+       },
+       {
+        "line": "東京電力パワーグリッド 66.0kV線",
+        "line_kv": 66.0,
+        "bus": "大正寺町変電所 154kV",
+        "bus_kv": 154.0
+       },
+       {
+        "line": "leadin",
+        "line_kv": 77.0,
+        "bus": "tokyo junction 36.3309:138.6205:66",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "leadin",
+        "line_kv": 77.0,
+        "bus": "軽井沢東変電所",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "川崎高輪線・高輪線",
+        "line_kv": 275.0,
+        "bus": "東川崎変電所",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "東内幸町線・豊洲内幸町線・高輪線",
+        "line_kv": 275.0,
+        "bus": "新豊洲変電所",
+        "bus_kv": 500.0
+       },
+       {
+        "line": "同一敷地タイ(同定)",
+        "line_kv": 66.0,
+        "bus": "浅間上町変電所",
+        "bus_kv": 154.0
+       },
+       {
+        "line": "新淀線",
+        "line_kv": 66.0,
+        "bus": "新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西新宿線",
+        "line_kv": 66.0,
+        "bus": "新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西新宿線",
+        "line_kv": 66.0,
+        "bus": "東新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西巣鴨線",
+        "line_kv": 66.0,
+        "bus": "豊島変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "東池袋線",
+        "line_kv": 66.0,
+        "bus": "常盤台変電所",
+        "bus_kv": 154.0
+       }
+      ]
+     },
+     "lv_islands": {
+      "n": 250,
+      "n_bus": 431,
+      "load_mw": 3209.5,
+      "n_with_load": 114,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 47,
+        "load_mw": 653.9,
+        "n_bus": 68
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 913.5,
+        "n_bus": 94
+       },
+       "≤5km": {
+        "n": 75,
+        "load_mw": 1104.3,
+        "n_bus": 127
+       },
+       "≤10km": {
+        "n": 51,
+        "load_mw": 292.0,
+        "n_bus": 86
+       },
+       ">10km": {
+        "n": 35,
+        "load_mw": 245.8,
+        "n_bus": 56
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.56,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.56,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.76,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "豊島変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.6,
+        "names": [
+         "南池袋変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "n_components": 221,
+    "n_synth_slack": 209,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 8650.9,
+     "n_real_line": 6131,
+     "n_over_real": 316,
+     "n_over_real_120": 235,
+     "max_loading_real": 863.2,
+     "n_over_all": 320,
+     "n_over_trafo": 127
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": -1005.3,
+     "slack_abs_sum_mw": 6904.1,
+     "vm_min": 0.8193,
+     "n_bus_vm_lt_0_9": 39,
+     "loss_mw": 1757.2,
+     "n_real_line": 6131,
+     "n_over_real": 353,
+     "n_over_real_120": 257,
+     "max_loading_real": 980.3,
+     "n_over_all": 360,
+     "n_over_trafo": 133,
+     "served_frac": 1.0
+    },
+    "solve_s": 108.0
+   },
+   "43a/cap": {
+    "island": "east",
+    "implicit_stepdown": true,
+    "lv_aggregate_km": 0.0,
+    "attach": "cap",
+    "n_bus": 6255,
+    "n_line": 6468,
+    "n_trafo": 678,
+    "n_implicit_stepdown": 32,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 124.8,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 0,
+      "n_sites": 0,
+      "n_line_ends_at_unknown_kv_bus": 0,
+      "by_pair": {},
+      "examples": []
+     },
+     "lv_islands": {
+      "n": 229,
+      "n_bus": 393,
+      "load_mw": 2642.5,
+      "n_with_load": 97,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 45,
+        "load_mw": 357.0,
+        "n_bus": 65
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 866.8,
+        "n_bus": 91
+       },
+       "≤5km": {
+        "n": 64,
+        "load_mw": 918.6,
+        "n_bus": 109
+       },
+       "≤10km": {
+        "n": 49,
+        "load_mw": 290.7,
+        "n_bus": 83
+       },
+       ">10km": {
+        "n": 29,
+        "load_mw": 209.4,
+        "n_bus": 45
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.68,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.18,
+        "names": [
+         "東京電力(株)青海変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "n_components": 221,
+    "n_synth_slack": 209,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 8490.4,
+     "n_real_line": 6131,
+     "n_over_real": 307,
+     "n_over_real_120": 230,
+     "max_loading_real": 875.2,
+     "n_over_all": 311,
+     "n_over_trafo": 136
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": -1028.3,
+     "slack_abs_sum_mw": 6760.6,
+     "vm_min": 0.8572,
+     "n_bus_vm_lt_0_9": 39,
+     "loss_mw": 1734.2,
+     "n_real_line": 6131,
+     "n_over_real": 342,
+     "n_over_real_120": 247,
+     "max_loading_real": 1002.7,
+     "n_over_all": 348,
+     "n_over_trafo": 140,
+     "served_frac": 1.0
+    },
+    "solve_s": 134.5
+   },
+   "43a+43b/cap": {
+    "island": "east",
+    "implicit_stepdown": true,
+    "lv_aggregate_km": 5.0,
+    "attach": "cap",
+    "n_bus": 6255,
+    "n_line": 6468,
+    "n_trafo": 678,
+    "n_implicit_stepdown": 32,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 84.2,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 0,
+      "n_sites": 0,
+      "n_line_ends_at_unknown_kv_bus": 0,
+      "by_pair": {},
+      "examples": []
+     },
+     "lv_islands": {
+      "n": 229,
+      "n_bus": 393,
+      "load_mw": 2642.5,
+      "n_with_load": 97,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 45,
+        "load_mw": 357.0,
+        "n_bus": 65
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 866.8,
+        "n_bus": 91
+       },
+       "≤5km": {
+        "n": 64,
+        "load_mw": 918.6,
+        "n_bus": 109
+       },
+       "≤10km": {
+        "n": 49,
+        "load_mw": 290.7,
+        "n_bus": 83
+       },
+       ">10km": {
+        "n": 29,
+        "load_mw": 209.4,
+        "n_bus": 45
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.68,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.18,
+        "names": [
+         "東京電力(株)青海変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "lv_aggregate": {
+     "r_max_km": 5.0,
+     "n_islands": 229,
+     "n_aggregated": 151,
+     "aggregated_mw": 2142.4,
+     "n_unserved": 78,
+     "unserved_mw": 500.1,
+     "note": "縮約(需要保存・成分は非通電化)。移設先は最近傍の≥110kVバス=経路の推定。実在の給電経路ではない",
+     "unserved_top": [
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 42.4,
+       "dist_km": 8.38,
+       "names": [
+        "古里変電所"
+       ],
+       "lat": 35.81609,
+       "lon": 139.15324
+      },
+      {
+       "n_bus": 3,
+       "kv": 66.0,
+       "load_mw": 36.67,
+       "dist_km": 18.81,
+       "names": [
+        "えちごトキめき鉄道(株)二本",
+        "中郷区坂本変電所"
+       ],
+       "lat": 36.98813,
+       "lon": 138.22603
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 5.41,
+       "names": [
+        "東京電力若宮変電所"
+       ],
+       "lat": 35.3105,
+       "lon": 139.54728
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 6.4,
+       "names": [
+        "高砂町一丁目変電所"
+       ],
+       "lat": 35.43315,
+       "lon": 139.62104
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 10.29,
+       "names": [
+        "小田原市変電所"
+       ],
+       "lat": 35.20059,
+       "lon": 139.1357
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 6.08,
+       "names": [
+        "小田急電鉄 松田変電所"
+       ],
+       "lat": 35.34476,
+       "lon": 139.14028
+      },
+      {
+       "n_bus": 2,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 6.1,
+       "names": [
+        "高田変電所"
+       ],
+       "lat": 37.10565,
+       "lon": 138.24034
+      },
+      {
+       "n_bus": 2,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 6.55,
+       "names": [
+        "灰雨変電所"
+       ],
+       "lat": 36.99291,
+       "lon": 138.59129
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 7.05,
+       "names": [
+        "tokyo_sub_1800"
+       ],
+       "lat": 37.17216,
+       "lon": 138.9234
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 31.26,
+       "names": [
+        "東北電力ネットワーク"
+       ],
+       "lat": 36.87771,
+       "lon": 138.20154
+      }
+     ]
+    },
+    "n_components": 367,
+    "n_synth_slack": 355,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 4699.6,
+     "n_real_line": 5989,
+     "n_over_real": 328,
+     "n_over_real_120": 248,
+     "max_loading_real": 875.2,
+     "n_over_all": 332,
+     "n_over_trafo": 134
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": -893.7,
+     "slack_abs_sum_mw": 2835.0,
+     "vm_min": 0.8617,
+     "n_bus_vm_lt_0_9": 39,
+     "loss_mw": 1868.8,
+     "n_real_line": 5989,
+     "n_over_real": 354,
+     "n_over_real_120": 261,
+     "max_loading_real": 1002.7,
+     "n_over_all": 360,
+     "n_over_trafo": 140,
+     "served_frac": 1.0
+    },
+    "solve_s": 99.4
+   },
+   "off/capkv": {
+    "island": "east",
+    "implicit_stepdown": false,
+    "lv_aggregate_km": 0.0,
+    "attach": "capkv",
+    "n_bus": 6223,
+    "n_line": 6468,
+    "n_trafo": 646,
+    "n_implicit_stepdown": 0,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 89.3,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 34,
+      "n_sites": 26,
+      "n_line_ends_at_unknown_kv_bus": 41,
+      "by_pair": {
+       "66->275": 12,
+       "66->154": 10,
+       "77->66": 6,
+       "154->66": 2,
+       "154->500": 1,
+       "275->66": 1,
+       "275->500": 1,
+       "154->275": 1
+      },
+      "examples": [
+       {
+        "line": "湯宿線",
+        "line_kv": 154.0,
+        "bus": "浅貝変電所 500kV",
+        "bus_kv": 500.0
+       },
+       {
+        "line": "東京電力パワーグリッド 66.0kV線",
+        "line_kv": 66.0,
+        "bus": "大正寺町変電所 154kV",
+        "bus_kv": 154.0
+       },
+       {
+        "line": "leadin",
+        "line_kv": 77.0,
+        "bus": "tokyo junction 36.3309:138.6205:66",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "leadin",
+        "line_kv": 77.0,
+        "bus": "軽井沢東変電所",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "川崎高輪線・高輪線",
+        "line_kv": 275.0,
+        "bus": "東川崎変電所",
+        "bus_kv": 66.0
+       },
+       {
+        "line": "東内幸町線・豊洲内幸町線・高輪線",
+        "line_kv": 275.0,
+        "bus": "新豊洲変電所",
+        "bus_kv": 500.0
+       },
+       {
+        "line": "同一敷地タイ(同定)",
+        "line_kv": 66.0,
+        "bus": "浅間上町変電所",
+        "bus_kv": 154.0
+       },
+       {
+        "line": "新淀線",
+        "line_kv": 66.0,
+        "bus": "新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西新宿線",
+        "line_kv": 66.0,
+        "bus": "新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西新宿線",
+        "line_kv": 66.0,
+        "bus": "東新宿変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "西巣鴨線",
+        "line_kv": 66.0,
+        "bus": "豊島変電所",
+        "bus_kv": 275.0
+       },
+       {
+        "line": "東池袋線",
+        "line_kv": 66.0,
+        "bus": "常盤台変電所",
+        "bus_kv": 154.0
+       }
+      ]
+     },
+     "lv_islands": {
+      "n": 250,
+      "n_bus": 431,
+      "load_mw": 3209.5,
+      "n_with_load": 114,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 47,
+        "load_mw": 653.9,
+        "n_bus": 68
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 913.5,
+        "n_bus": 94
+       },
+       "≤5km": {
+        "n": 75,
+        "load_mw": 1104.3,
+        "n_bus": 127
+       },
+       "≤10km": {
+        "n": 51,
+        "load_mw": 292.0,
+        "n_bus": 86
+       },
+       ">10km": {
+        "n": 35,
+        "load_mw": 245.8,
+        "n_bus": 56
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.56,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.56,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.76,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "豊島変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.6,
+        "names": [
+         "南池袋変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 43.98,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "n_components": 221,
+    "n_synth_slack": 209,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 8650.9,
+     "n_real_line": 6131,
+     "n_over_real": 396,
+     "n_over_real_120": 283,
+     "max_loading_real": 988.7,
+     "n_over_all": 401,
+     "n_over_trafo": 132
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": -211.0,
+     "slack_abs_sum_mw": 6109.7,
+     "vm_min": 0.8174,
+     "n_bus_vm_lt_0_9": 48,
+     "loss_mw": 2551.5,
+     "n_real_line": 6131,
+     "n_over_real": 439,
+     "n_over_real_120": 324,
+     "max_loading_real": 996.6,
+     "n_over_all": 448,
+     "n_over_trafo": 146,
+     "served_frac": 1.0
+    },
+    "solve_s": 102.7
+   },
+   "43a/capkv": {
+    "island": "east",
+    "implicit_stepdown": true,
+    "lv_aggregate_km": 0.0,
+    "attach": "capkv",
+    "n_bus": 6255,
+    "n_line": 6468,
+    "n_trafo": 678,
+    "n_implicit_stepdown": 32,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 104.1,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 0,
+      "n_sites": 0,
+      "n_line_ends_at_unknown_kv_bus": 0,
+      "by_pair": {},
+      "examples": []
+     },
+     "lv_islands": {
+      "n": 229,
+      "n_bus": 393,
+      "load_mw": 2642.5,
+      "n_with_load": 97,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 45,
+        "load_mw": 357.0,
+        "n_bus": 65
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 866.8,
+        "n_bus": 91
+       },
+       "≤5km": {
+        "n": 64,
+        "load_mw": 918.6,
+        "n_bus": 109
+       },
+       "≤10km": {
+        "n": 49,
+        "load_mw": 290.7,
+        "n_bus": 83
+       },
+       ">10km": {
+        "n": 29,
+        "load_mw": 209.4,
+        "n_bus": 45
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.68,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.18,
+        "names": [
+         "東京電力(株)青海変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "n_components": 221,
+    "n_synth_slack": 209,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 8490.4,
+     "n_real_line": 6131,
+     "n_over_real": 407,
+     "n_over_real_120": 295,
+     "max_loading_real": 875.2,
+     "n_over_all": 412,
+     "n_over_trafo": 134
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": -146.4,
+     "slack_abs_sum_mw": 5878.7,
+     "vm_min": 0.8534,
+     "n_bus_vm_lt_0_9": 46,
+     "loss_mw": 2616.1,
+     "n_real_line": 6131,
+     "n_over_real": 447,
+     "n_over_real_120": 327,
+     "max_loading_real": 1002.6,
+     "n_over_all": 455,
+     "n_over_trafo": 152,
+     "served_frac": 1.0
+    },
+    "solve_s": 118.5
+   },
+   "43a+43b/capkv": {
+    "island": "east",
+    "implicit_stepdown": true,
+    "lv_aggregate_km": 5.0,
+    "attach": "capkv",
+    "n_bus": 6255,
+    "n_line": 6468,
+    "n_trafo": 678,
+    "n_implicit_stepdown": 32,
+    "n_stepdown_nameplate": 0,
+    "n_infeed37": 1,
+    "build_s": 88.9,
+    "census": {
+     "mismatch": {
+      "n_line_ends": 0,
+      "n_sites": 0,
+      "n_line_ends_at_unknown_kv_bus": 0,
+      "by_pair": {},
+      "examples": []
+     },
+     "lv_islands": {
+      "n": 229,
+      "n_bus": 393,
+      "load_mw": 2642.5,
+      "n_with_load": 97,
+      "n_ge_100mw": 0,
+      "by_distance": {
+       "≤1km": {
+        "n": 45,
+        "load_mw": 357.0,
+        "n_bus": 65
+       },
+       "≤2km": {
+        "n": 42,
+        "load_mw": 866.8,
+        "n_bus": 91
+       },
+       "≤5km": {
+        "n": 64,
+        "load_mw": 918.6,
+        "n_bus": 109
+       },
+       "≤10km": {
+        "n": 49,
+        "load_mw": 290.7,
+        "n_bus": 83
+       },
+       ">10km": {
+        "n": 29,
+        "load_mw": 209.4,
+        "n_bus": 45
+       }
+      },
+      "top": [
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "網川原変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 3.19,
+        "names": [
+         "ときめき東一丁目変電所",
+         "東北電力ネットワーク(株)大",
+         "青山一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 4,
+        "kv": 66.0,
+        "load_mw": 55.01,
+        "anchor_name": "新湯沢変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 0.44,
+        "names": [
+         "土樽変電所",
+         "湯沢変電所",
+         "越後湯沢変電所 66kV"
+        ]
+       },
+       {
+        "n_bus": 2,
+        "kv": 66.0,
+        "load_mw": 50.68,
+        "anchor_name": "井田変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.38,
+        "names": [
+         "北の原変電所",
+         "市の坪変電所"
+        ]
+       },
+       {
+        "n_bus": 3,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "柴崎変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 2.6,
+        "names": [
+         "布田変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "北多摩変電所 (untyped)",
+        "anchor_kv": 275.0,
+        "dist_km": 2.3,
+        "names": [
+         "飛田給変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "聖蹟桜ヶ丘変電所 154kV",
+        "anchor_kv": 154.0,
+        "dist_km": 2.08,
+        "names": [
+         "NEC府中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "練馬変電所 275kV",
+        "anchor_kv": 275.0,
+        "dist_km": 2.57,
+        "names": [
+         "南田中変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.36,
+        "names": [
+         "南大井一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "新宿変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.0,
+        "names": [
+         "北新宿変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "南大塚三丁目変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 1.41,
+        "names": [
+         "巣鴨変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "戸越変電所",
+        "anchor_kv": 154.0,
+        "dist_km": 1.46,
+        "names": [
+         "広町一丁目変電所"
+        ]
+       },
+       {
+        "n_bus": 1,
+        "kv": 66.0,
+        "load_mw": 42.4,
+        "anchor_name": "大井ふ頭変電所",
+        "anchor_kv": 275.0,
+        "dist_km": 2.18,
+        "names": [
+         "東京電力(株)青海変電所"
+        ]
+       }
+      ]
+     }
+    },
+    "lv_aggregate": {
+     "r_max_km": 5.0,
+     "n_islands": 229,
+     "n_aggregated": 151,
+     "aggregated_mw": 2142.4,
+     "n_unserved": 78,
+     "unserved_mw": 500.1,
+     "note": "縮約(需要保存・成分は非通電化)。移設先は最近傍の≥110kVバス=経路の推定。実在の給電経路ではない",
+     "unserved_top": [
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 42.4,
+       "dist_km": 8.38,
+       "names": [
+        "古里変電所"
+       ],
+       "lat": 35.81609,
+       "lon": 139.15324
+      },
+      {
+       "n_bus": 3,
+       "kv": 66.0,
+       "load_mw": 36.67,
+       "dist_km": 18.81,
+       "names": [
+        "えちごトキめき鉄道(株)二本",
+        "中郷区坂本変電所"
+       ],
+       "lat": 36.98813,
+       "lon": 138.22603
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 5.41,
+       "names": [
+        "東京電力若宮変電所"
+       ],
+       "lat": 35.3105,
+       "lon": 139.54728
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 6.4,
+       "names": [
+        "高砂町一丁目変電所"
+       ],
+       "lat": 35.43315,
+       "lon": 139.62104
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 10.29,
+       "names": [
+        "小田原市変電所"
+       ],
+       "lat": 35.20059,
+       "lon": 139.1357
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 25.34,
+       "dist_km": 6.08,
+       "names": [
+        "小田急電鉄 松田変電所"
+       ],
+       "lat": 35.34476,
+       "lon": 139.14028
+      },
+      {
+       "n_bus": 2,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 6.1,
+       "names": [
+        "高田変電所"
+       ],
+       "lat": 37.10565,
+       "lon": 138.24034
+      },
+      {
+       "n_bus": 2,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 6.55,
+       "names": [
+        "灰雨変電所"
+       ],
+       "lat": 36.99291,
+       "lon": 138.59129
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 7.05,
+       "names": [
+        "tokyo_sub_1800"
+       ],
+       "lat": 37.17216,
+       "lon": 138.9234
+      },
+      {
+       "n_bus": 1,
+       "kv": 66.0,
+       "load_mw": 18.34,
+       "dist_km": 31.26,
+       "names": [
+        "東北電力ネットワーク"
+       ],
+       "lat": 36.87771,
+       "lon": 138.20154
+      }
+     ]
+    },
+    "n_components": 367,
+    "n_synth_slack": 355,
+    "dc": {
+     "mode": "dc",
+     "converged": true,
+     "slack_mw": -2762.5,
+     "slack_abs_sum_mw": 4699.6,
+     "n_real_line": 5989,
+     "n_over_real": 426,
+     "n_over_real_120": 323,
+     "max_loading_real": 875.2,
+     "n_over_all": 431,
+     "n_over_trafo": 142
+    },
+    "ac": {
+     "mode": "ac",
+     "converged": true,
+     "slack_mw": 155.6,
+     "slack_abs_sum_mw": 1785.6,
+     "vm_min": 0.8604,
+     "n_bus_vm_lt_0_9": 39,
+     "loss_mw": 2918.1,
+     "n_real_line": 5989,
+     "n_over_real": 468,
+     "n_over_real_120": 355,
+     "max_loading_real": 1002.6,
+     "n_over_all": 476,
+     "n_over_trafo": 159,
+     "served_frac": 1.0
+    },
+    "solve_s": 115.9
+   }
+  }
+ }
+}

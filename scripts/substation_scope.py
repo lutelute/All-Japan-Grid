@@ -35,15 +35,30 @@ def _font():
     plt.rcParams["axes.unicode_minus"] = False
 
 
+# 日本の交流送配電で実在する上限(UHV 1000kV)にマージンを見た値。これを超える
+# 値は OSM タグの誤記(区切り欠落)なので採らない。
+_MAX_KV = 1100
+
+
 def _vclasses(v):
-    """voltage文字列 '500000;275000' -> ['500','275'](kV・降順)。"""
+    """voltage文字列 '500000;275000' -> ['500','275'](kV・降順)。
+
+    区切りは ';' '/' ',' に加えて**空白も含める**。空白区切り("154000 66000")を
+    数字だけ抜き出して連結すると 15400066 のような架空の電圧が生まれ、下流の
+    最大電圧集計が壊れる(2026-08-28 に中央給電指令所ビューで 15400066kV と
+    表示されて発覚)。桁あふれした値は誤記として捨てる。
+    """
     out = []
-    for tok in str(v or "").replace("／", ";").replace(",", ";").split(";"):
-        tok = "".join(ch for ch in tok if ch.isdigit())
-        if tok:
-            kv = int(tok) // 1000
-            if kv > 0:
-                out.append(str(kv))
+    src = str(v or "")
+    for ch in ("／", "/", ",", "、", " ", "\t", "|"):
+        src = src.replace(ch, ";")
+    for tok in src.split(";"):
+        tok = "".join(c for c in tok if c.isdigit())
+        if not tok:
+            continue
+        kv = int(tok) // 1000
+        if 0 < kv <= _MAX_KV:
+            out.append(str(kv))
     return sorted(set(out), key=lambda s: -int(s))
 
 

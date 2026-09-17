@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>潮流方向・発電稼働率マップ — AGJ</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:"Hiragino Sans","Noto Sans JP",sans-serif}
+  #map{position:absolute;inset:0;background:#0e1621}
+  .panel{position:absolute;z-index:1000;background:rgba(20,28,38,.92);color:#dde5ee;
+         border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.5);padding:10px 12px;font-size:12px}
+  .panel a{color:#7fb3ff}
+  #ctrl{top:10px;left:10px;width:270px}
+  #ucpanel{bottom:10px;left:10px;width:330px;max-height:46vh;overflow:auto}
+  #ucpanel.min{max-height:32px;overflow:hidden}
+  #legend{top:10px;right:10px;line-height:1.7}
+  .tab{display:inline-block;padding:3px 11px;margin:2px;border:1px solid #46586e;
+       border-radius:12px;cursor:pointer;user-select:none;color:#aebdcd}
+  .tab.on{background:#3d7bd9;color:#fff;border-color:#3d7bd9}
+  .sw{display:inline-block;width:16px;height:7px;border-radius:2px;vertical-align:middle}
+  .arrowIcon{pointer-events:none;font-size:13px;line-height:13px;color:#fff;opacity:.85;
+             text-shadow:0 0 3px #000,0 0 3px #000}
+  .bar{height:8px;background:#2a3646;border-radius:4px;overflow:hidden;margin:1px 0 5px}
+  .bar>i{display:block;height:100%}
+  h4{margin:2px 0 8px;font-size:13px}
+  .muted{color:#8a99aa}
+  .fchip{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:3px}
+  .genGauge{filter:drop-shadow(0 0 2px rgba(0,0,0,.7))}
+  #uchead{cursor:pointer}
+  select{background:#1c2735;color:#dde5ee;border:1px solid #46586e;border-radius:4px;padding:2px}
+  label{display:block;margin:2px 0}
+  .leaflet-popup-content{font-size:12px}
+  .flowGlow{filter:drop-shadow(0 0 3px rgba(255,209,102,.9))}
+  input[type=range]{accent-color:#3d7bd9}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel" id="ctrl">
+  <h4>⚡ 潮流方向・発電稼働率 <span class="muted">(AGJモデル計算値)</span></h4>
+  <div id="tabs"></div>
+  <div style="margin:6px 0 2px"><b>表示レイヤ</b></div>
+  <label>電圧階級
+    <select id="selKv">
+      <option value="0" selected>全電圧</option>
+      <option value="500">500kV+</option>
+      <option value="275">275kV+</option>
+      <option value="154">154kV+</option>
+      <option value="110">110-77kV</option>
+      <option value="66">66kV以下</option>
+    </select></label>
+  <label><input type="checkbox" id="cbLines" checked> 送電線(潮流)</label>
+  <label style="margin-left:14px"><input type="checkbox" id="cbGlow" checked> 流光(主要潮流)</label>
+  <label style="margin-left:14px"><input type="checkbox" id="cbArrow" checked> 方向矢印</label>
+  <label><input type="checkbox" id="cbGen" checked> 発電所(円周ゲージ)</label>
+  <label><input type="checkbox" id="cbSubs"> 変電所(9,298局・ズームで詳細)</label>
+  <label><input type="checkbox" id="cbObs"> 観測方向の検証線のみ</label>
+  <label>背景
+    <select id="selBase">
+      <option value="pale" selected>地理院 淡色</option>
+      <option value="photo">地理院 航空写真</option>
+      <option value="none">なし(ダーク)</option>
+    </select></label>
+  <div class="muted" id="stat"></div>
+</div>
+<div class="panel" id="legend">
+  <b>線=潮流</b> 太さ∝|P| / 色=loading<br>
+  <span class="sw" style="background:#4f8fd9"></span>&lt;40%
+  <span class="sw" style="background:#43b581"></span>40-80
+  <span class="sw" style="background:#e6a23c"></span>80-120
+  <span class="sw" style="background:#e35d5d"></span>&gt;120<br>
+  <b>観測方向</b> <span style="color:#2eea8f">■一致</span>
+  <span style="color:#ff5e5e">■不一致</span> <span class="muted">(公表実績と照合)</span><br>
+  <b>発電</b> 円=定格・<b>円周ゲージ=出力/定格</b><br>
+  <b>差分モード</b> <span style="color:#2eea8f">■±許容内=概ね一致</span>
+  <span style="color:#ff7850">■実績&gt;UC</span>
+  <span style="color:#50a0ff">■実績&lt;UC</span> <span class="muted">太さ=|差|</span>高
+</div>
+<div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
+  <div style="display:flex;align-items:center;gap:8px">
+    <select id="selDate" title="日付(実績需要の断面)"><option value="uc">UC代表日</option></select>
+    <select id="selCmp" title="表示モード" disabled>
+      <option value="act" selected>実績</option>
+      <option value="uc">UC</option>
+      <option value="diff">差分(実績−UC)</option>
+    </select>
+    <select id="selTol" title="一致とみなす許容差" style="display:none">
+      <option value="10">±10MW</option>
+      <option value="50" selected>±50MW</option>
+      <option value="100">±100MW</option>
+      <option value="200">±200MW</option>
+    </select>
+    <button id="btnPlay" style="background:#3d7bd9;color:#fff;border:none;border-radius:6px;
+      padding:3px 10px;cursor:pointer">▶ 再生</button>
+    <input type="range" id="hourSlider" min="0" max="23" value="12" step="1" style="flex:1">
+    <b id="hourLabel" style="min-width:64px;text-align:right">12:00</b>
+  </div>
+  <div class="muted" style="margin-top:2px">UC(fy2023)の時刻別ディスパッチによる全線潮流 — 流光=方向
+    <span id="diffstat" style="margin-left:10px"></span></div>
+</div>
+<div class="panel min" id="ucpanel">
+  <h4 id="uchead">📊 UC稼働率(fy2023・24h) <span class="muted" id="ucmin">▲ひらく</span></h4>
+  <div id="ucwrap">
+    <div id="ucsel"></div>
+    <div id="ucbody" class="muted">読み込み中…</div>
+  </div>
+</div>
+<script>
+const ISLANDS = {all:[37.0,137.0,5.4], now:[37.0,137.0,5.4], east:[37.3,139.5,6], west:[34.6,134.8,6], hokkaido:[43.2,142.8,6], okinawa:[26.4,127.9,9]};
+const ALLPARTS = ["hokkaido","east","west","okinawa"];
+const FUELCOL = {nuclear:"#b07fe0", coal:"#8d6e63", lng:"#e69a4c", oil:"#9aa5ad",
+  hydro:"#4f9fe0", pumped_hydro:"#7fc8e8", solar:"#e8cf4f", wind:"#4fd0b8",
+  geothermal:"#e0705f", biomass:"#5fc46f", other:"#78909c", "?":"#78909c"};
+const FUELJA = {nuclear:"原子力", coal:"石炭", lng:"LNG", oil:"石油", hydro:"水力",
+  pumped_hydro:"揚水", solar:"太陽光", wind:"風力", geothermal:"地熱",
+  biomass:"バイオマス", other:"その他", "?":"その他"};
+const map = L.map("map",{preferCanvas:true}).setView([36.5,137.5],6);
+const ATTR = "地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ";
+const BASES = {
+  pale: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",{attribution:ATTR,opacity:0.55}),
+  photo: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",{attribution:ATTR,opacity:0.75}),
+};
+let baseLayer = BASES.pale.addTo(map);
+const canvasR = L.canvas({padding:0.3});
+map.createPane("glowPane");
+map.getPane("glowPane").style.zIndex = 460;   // canvas(overlayPane=400)より前面
+map.getPane("glowPane").style.pointerEvents = "none";
+const svgR = L.svg({padding:0.3, pane:"glowPane"});   // 流光アニメ用SVG
+let lineLayer=null, genLayer=null, arrowLayer=L.layerGroup().addTo(map);
+let glowLayer=null, glowPolys=[];
+let cur="west", flows=null, gens=null, topFlows=[];
+let HOUR=12, playing=false, dashPhase=0;
+function cmpMode(){const s=document.getElementById("selCmp"); return s.disabled?"act":s.value;}
+const _pick=(f,key,fallback)=>{const m=cmpMode();
+  const act=f.properties[key], uc=f.properties["_"+key+"uc"]||act;
+  const a=(m==="uc")?uc:act;
+  return (a&&a[HOUR]!=null)?a[HOUR]:f.properties[fallback];};
+const fp=(f)=>_pick(f,"p24","p_mw");
+const fld=(f)=>_pick(f,"ld24","loading_pct");
+const fdiff=(f)=>{const a=f.properties.p24, u=f.properties._p24uc;
+  if(!a||!u||a[HOUR]==null||u[HOUR]==null) return null;
+  return Math.abs(a[HOUR])-Math.abs(u[HOUR]);};   // 潮流の増減(絶対値ベース)
+
+const loadColor=l=>l>120?"#e35d5d":l>80?"#e6a23c":l>40?"#43b581":"#4f8fd9";
+function kvPass(kv){
+  const sel=document.getElementById("selKv").value;
+  if(sel==="0") return true;
+  const k=kv||0;
+  if(sel==="500") return k>=400;
+  if(sel==="275") return k>=200;
+  if(sel==="154") return k>=140;
+  if(sel==="110") return k>=70 && k<140;
+  if(sel==="66") return k<70;
+  return true;
+}
+const pw=p=>Math.max(0.6, Math.min(0.9+1.35*Math.log10(1+Math.abs(p)), 6.5));
+
+function midSegment(cs){
+  // 実線形pathの中間セグメント(矢印の位置と向き)
+  let L2=0; const seg=[];
+  for(let i=0;i<cs.length-1;i++){
+    const d=Math.hypot(cs[i+1][0]-cs[i][0],(cs[i+1][1]-cs[i][1]));
+    seg.push(d); L2+=d;
+  }
+  let acc=0;
+  for(let i=0;i<seg.length;i++){
+    if(acc+seg[i]>=L2/2){
+      const a=cs[i], b=cs[i+1];
+      return {mid:[(a[1]+b[1])/2,(a[0]+b[0])/2],
+              ang:Math.atan2(b[0]-a[0], b[1]-a[1])*180/Math.PI};
+    }
+    acc+=seg[i];
+  }
+  const a=cs[0], b=cs[cs.length-1];
+  return {mid:[(a[1]+b[1])/2,(a[0]+b[0])/2],
+          ang:Math.atan2(b[0]-a[0], b[1]-a[1])*180/Math.PI};
+}
+
+function renderArrows(){
+  arrowLayer.clearLayers();
+  if(!flows || !document.getElementById("cbArrow").checked || cmpMode()==="diff") return;
+  const bb=map.getBounds(), z=map.getZoom();
+  const obsOnly=document.getElementById("cbObs").checked;
+  // 空間分散: グリッドセル毎に|P|上位K本(団子防止・全域カバー)
+  // 低zoomでは大セル+高閾値=「主要潮流の向きだけ」。ズームインで細部
+  const cell = z>=10?0.15 : z>=8?0.25 : z>=7?0.45 : 1.1;
+  const perCell = z>=10?2 : 1;
+  const minP = z>=10?5 : z>=8?20 : z>=7?30 : 150;
+  const grid = new Map();
+  for(const f of flows.features){
+    const p=fp(f);
+    if(Math.abs(p)<minP) continue;
+    if(obsOnly && f.properties.obs_dir===undefined) continue;
+    if(!kvPass(f.properties.kv)) continue;
+    const m = f._mid || (f._mid = midSegment(f.geometry.coordinates));
+    if(!bb.contains(m.mid)) continue;
+    const key=`${Math.round(m.mid[0]/cell)}:${Math.round(m.mid[1]/cell)}`;
+    let arr=grid.get(key); if(!arr){arr=[];grid.set(key,arr);}
+    arr.push({m,p,ld:f.properties.loading_pct});
+  }
+  let n=0;
+  for(const arr of grid.values()){
+    arr.sort((a,b)=>Math.abs(b.p)-Math.abs(a.p));
+    for(const it of arr.slice(0,perCell)){
+      if(n>800) return;
+      const ang = it.p>=0 ? it.m.ang : it.m.ang+180;
+      const sz = Math.abs(it.p)>500?13:10;
+      L.marker(it.m.mid,{icon:L.divIcon({className:"arrowIcon",
+        html:`<div style="transform:rotate(${ang}deg);font-size:${sz}px">▲</div>`,
+        iconSize:[sz,sz]}),interactive:false}).addTo(arrowLayer);
+      n++;
+    }
+  }
+}
+
+function genRadius(pmax){return Math.min(3+2.2*Math.log10(1+pmax/10), 11);}
+
+async function show(island){
+  cur=island;
+  document.getElementById("stat").textContent="読み込み中…";
+  document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("on",t.dataset.k===island));
+  let fl, gn;
+  if(island==="all"||island==="now"){
+    const sfx = island==="now"?"_now":"";
+    const parts=await Promise.all(ALLPARTS.flatMap(k=>[
+      fetch(`data/flow_map/flows${sfx}_${k}.geojson`).then(r=>r.json()),
+      fetch(`data/flow_map/gens${sfx}_${k}.geojson`).then(r=>r.json())]));
+    document.getElementById("timebar").style.display = island==="now"?"none":"";
+    const flParts=parts.filter((_,i)=>i%2===0);
+    ALLPARTS.forEach((k,i)=>flParts[i].features.forEach(f=>f.properties._isl=k));
+    fl={type:"FeatureCollection",features:flParts.flatMap(d=>d.features)};
+    gn={type:"FeatureCollection",features:parts.filter((_,i)=>i%2===1).flatMap(d=>d.features)};
+  }else{
+    [fl,gn]=await Promise.all([
+      fetch(`data/flow_map/flows_${island}.geojson`).then(r=>r.json()),
+      fetch(`data/flow_map/gens_${island}.geojson`).then(r=>r.json())]);
+    fl.features.forEach(f=>f.properties._isl=island);
+  }
+  flows=fl; gens=gn;
+  topFlows=[...fl.features].sort((a,b)=>Math.abs(b.properties.p_mw)-Math.abs(a.properties.p_mw)).slice(0,220);
+  if(lineLayer) map.removeLayer(lineLayer);
+  if(genLayer) map.removeLayer(genLayer);
+  const obsOnly=()=>document.getElementById("cbObs").checked;
+  lineLayer=L.geoJSON(fl,{renderer:canvasR,
+    filter:f=>(document.getElementById("cbLines").checked)
+      &&(!obsOnly()||f.properties.obs_dir!==undefined)
+      &&kvPass(f.properties.kv),
+    style:f=>{
+      const pr=f.properties, p=fp(f), ld=fld(f);
+      if(cmpMode()==="diff"){
+        const d=fdiff(f);
+        if(d===null) return {color:"#3a4a5c",weight:0.5,opacity:0.2};
+        const tol=+document.getElementById("selTol").value;
+        if(Math.abs(d)<=tol)
+          return {color:"#2eea8f",weight:1.1,opacity:0.55};   // 概ね一致
+        const mag=Math.min(Math.abs(d)/300,1);
+        const col = d>0 ? `rgba(255,${Math.round(120-90*mag)},80,1)`
+                        : `rgba(80,${Math.round(150+60*mag)},255,1)`;
+        return {color:col,weight:0.9+4.5*mag,opacity:0.35+0.6*mag};
+      }
+      if(pr.obs_dir!==undefined)
+        return {color:pr.obs_dir?"#2eea8f":"#ff5e5e",weight:pw(p)+2.2,opacity:1};
+      return {color:loadColor(ld),weight:pw(p),
+              opacity:Math.abs(p)<1?0.25:0.8};
+    },
+    onEachFeature:(f,ly)=>{
+      ly.on("click",()=>{
+        const pr=f.properties, p=fp(f), ld=fld(f);
+        let s=`<b>${pr.name||"(無名)"}</b><br>${String(HOUR).padStart(2,"0")}:00 潮流 `+
+              `<b>${Math.abs(p).toLocaleString()} MW</b> / loading ${ld}%`;
+        if(pr._p24uc&&pr.p24&&pr.p24!==pr._p24uc){
+          const av=pr.p24[HOUR], uv=pr._p24uc[HOUR];
+          if(av!=null&&uv!=null)
+            s+=`<br>実績断面 ${Math.abs(av).toLocaleString()} / UC ${Math.abs(uv).toLocaleString()}`+
+               ` / 差 <b>${(Math.abs(av)-Math.abs(uv)>=0?"+":"")}${(Math.abs(av)-Math.abs(uv)).toFixed(0)} MW</b>`;
+        }
+        if(pr.p24) s+=`<br><canvas class="spark" width="180" height="34"></canvas>`;
+        if(pr.obs_dir!==undefined)
+          s+=`<br>観測方向: ${pr.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
+        if(obsLocal){
+          const o=obsLocal[normName((pr.name||"").split(" ")[0])];
+          if(o) s+=`<br><span style="color:#ffd166">観測実績(年統計)</span>: `+
+                   `平均${o.mean!=null?Math.abs(o.mean).toLocaleString():"—"} / `+
+                   `p95 ${o.p95.toLocaleString()} / 最大${o.max!=null?o.max.toLocaleString():"—"} MW`+
+                   `<br><span class="muted" style="font-size:10px">出典: ${o.util} 系統情報公表(年統計・集計値)</span>`;
+        }
+        ly.bindPopup(s).openPopup();
+        setTimeout(()=>{
+          const cv=document.querySelector(".spark:not([data-d])");
+          if(cv&&pr.p24){cv.dataset.d=1;
+            const ctx=cv.getContext("2d");
+            const mx=Math.max(...pr.p24.map(x=>Math.abs(x||0)),1);
+            ctx.fillStyle="#2a3646";ctx.fillRect(0,0,180,34);
+            pr.p24.forEach((x,i)=>{ctx.fillStyle=i===HOUR?"#ffd76b":"#5a9bd8";
+              const h=Math.abs(x||0)/mx*30;
+              ctx.fillRect(i*7.5,34-h,6,h);});}
+        },50);
+      });
+    }}).addTo(map);
+  buildGlow();
+  buildGenLayer();
+  renderArrows();
+  const nb=fl.features.filter(f=>f.properties.obs_dir!==undefined);
+  const ok=nb.filter(f=>f.properties.obs_dir).length;
+  let statTxt=`線${fl.features.length.toLocaleString()} / 発電バス${gn.features.length} / 観測方向照合${nb.length}(一致${ok})`;
+  if(island==="now"){
+    try{const nm=await fetch("data/flow_map/now_meta.json").then(r=>r.json());
+      statTxt=`⚡NOW: でんき予報 実績需要スナップショット(取得 ${nm.fetched_at||"?"}) / `+statTxt;
+    }catch(e){}
+  }
+  document.getElementById("stat").textContent=statTxt;
+  const v=ISLANDS[island]; map.setView([v[0],v[1]],v[2]);
+  if(curDate!=="uc") applyDate(curDate);
+}
+
+function buildGenLayer(){
+  if(genLayer) map.removeLayer(genLayer);
+  genLayer=L.layerGroup();
+  if(!gens || !document.getElementById("cbGen").checked){genLayer.addTo(map);return;}
+  const z=map.getZoom();
+  const minP = z<7?300 : z<9?50 : 0;
+  for(const f of gens.features){
+    const p=f.properties, c=f.geometry.coordinates;
+    if(p.pmax_mw<minP) continue;
+    const col=FUELCOL[p.fuel]||FUELCOL.other;
+    const R=genRadius(p.pmax_mw), cf=Math.min(Math.max(p.cf,0),1);
+    const C=2*Math.PI*(R-1.2);
+    const svg=`<svg width="${2*R+6}" height="${2*R+6}" viewBox="0 0 ${2*R+6} ${2*R+6}">`+
+      `<circle cx="${R+3}" cy="${R+3}" r="${R-1.2}" fill="${col}" fill-opacity="0.3" `+
+        `stroke="rgba(255,255,255,0.35)" stroke-width="2.6"/>`+
+      `<circle cx="${R+3}" cy="${R+3}" r="${R-1.2}" fill="none" stroke="${col}" `+
+        `stroke-width="2.6" stroke-linecap="round" `+
+        `stroke-dasharray="${(C*cf).toFixed(1)} ${C.toFixed(1)}" `+
+        `transform="rotate(-90 ${R+3} ${R+3})"/></svg>`;
+    L.marker([c[1],c[0]],{icon:L.divIcon({className:"genGauge",html:svg,
+        iconSize:[2*R+6,2*R+6],iconAnchor:[R+3,R+3]})})
+     .bindPopup(`<b>${p.name}</b><br>定格 ${p.pmax_mw.toLocaleString()} MW / `+
+                `出力 ${p.pg_mw.toLocaleString()} MW<br>出力率 <b>${(p.cf*100).toFixed(1)}%</b>`+
+                `(円周ゲージ) / 主燃料 ${FUELJA[p.fuel]||p.fuel}`)
+     .addTo(genLayer);
+  }
+  genLayer.addTo(map);
+}
+
+function buildGlow(){
+  if(glowLayer){map.removeLayer(glowLayer);}
+  glowLayer=L.layerGroup(); glowPolys=[];
+  if(!flows){glowLayer.addTo(map);return;}
+  // 選定=|P|×線長(輸送モーメント)。|P|上位だけだと都市部の短い線分に集中し
+  // 全国ズームでdash周期より短く視認不能(2026-08-18デバッグで判明)
+  const lineLen=f=>{const cs=f.geometry.coordinates;let L2=0;
+    for(let i=0;i<cs.length-1;i++)L2+=Math.hypot(cs[i+1][0]-cs[i][0],cs[i+1][1]-cs[i][1]);
+    return L2;};
+  if(!document.getElementById("cbGlow").checked||cmpMode()==="diff"){glowLayer=L.layerGroup().addTo(map);glowPolys=[];return;}
+  const top=[...flows.features]
+    .filter(f=>Math.abs(fp(f))>30 && lineLen(f)>0.04 && kvPass(f.properties.kv))
+    .sort((a,b)=>Math.abs(fp(b))*lineLen(b)-Math.abs(fp(a))*lineLen(a)).slice(0,300);
+  for(const f of top){
+    // 進行方向を常に「パス正方向」に統一(p<0の線は座標を反転)。
+    // offset相対計算のmod折り返しで頭が尾の後ろに付く事故を構造的に排除
+    let coords = f.geometry.coordinates;
+    if(fp(f) < 0) coords = coords.slice().reverse();
+    const latlngs=coords.map(c=>[c[1],c[0]]);
+    const tail=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffd166",
+      weight:2.6,opacity:.5,dashArray:"14 30",interactive:false});
+    const head=L.polyline(latlngs,{renderer:svgR,pane:"glowPane",color:"#ffffff",
+      weight:3.4,opacity:.95,dashArray:"4 40",interactive:false,className:"flowGlow"});
+    tail._agjFeature=f; head._agjFeature=f; head._isHead=true;
+    tail.addTo(glowLayer); head.addTo(glowLayer);
+    glowPolys.push(tail, head);
+  }
+  glowLayer.addTo(map);
+}
+let _lastAnim=0;
+function animate(ts){
+  requestAnimationFrame(animate);
+  if(ts-_lastAnim<33) return;            // 30fpsに制限(負荷削減)
+  dashPhase=(dashPhase+1.3)%44;
+  const off=-dashPhase-14;
+  for(const pl of glowPolys){
+    if(!pl._isHead) continue;            // 尾は静的・頭のみ更新(要素数半減)
+    if(pl._path) pl._path.setAttribute("stroke-dashoffset", off);
+  }
+  _lastAnim=ts;
+}
+requestAnimationFrame(animate);
+
+// 日付別断面(days/<date>.json)の適用。UC代表日に戻すため元p24を退避
+let dayCache={}, curDate="uc";
+// 観測実績オーバーレイ(untrackedファイル: ローカルでのみ存在・Pagesでは404で自動無効)
+let obsLocal=null;
+fetch("data/flow_map/obs_local.json").then(r=>r.ok?r.json():null)
+  .then(d=>{obsLocal=d&&d.lines?d.lines:null;}).catch(()=>{});
+const normName=s=>String(s||"").normalize("NFKC").replace(/[\s・()（）]/g,"");
+async function loadDates(){
+  try{
+    const mf=await fetch("data/flow_map/days/manifest.json").then(r=>r.json());
+    const sel=document.getElementById("selDate");
+    for(const d of (mf.dates||[]).slice().reverse()){
+      const o=document.createElement("option");
+      o.value=d; o.textContent=`${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}(実績)`;
+      sel.appendChild(o);
+    }
+  }catch(e){}
+}
+async function applyDate(d){
+  curDate=d;
+  if(!flows) return;
+  if(d==="uc"){
+    for(const f of flows.features){
+      if(f.properties._p24uc){f.properties.p24=f.properties._p24uc; f.properties.ld24=f.properties._ld24uc;}
+    }
+  }else{
+    if(!dayCache[d]) dayCache[d]=await fetch(`data/flow_map/days/${d}.json`).then(r=>r.json());
+    const dd=dayCache[d];
+    // 手法の開示: 発電側が燃料別実績注入(手法(a))か容量比例balanceかをセレクタに反映
+    const fa=(dd.fuel_actuals_zones||[]).length;
+    const sel=document.getElementById("selDate");
+    const opt=[...sel.options].find(o=>o.value===d);
+    if(opt&&!opt.dataset.m){opt.dataset.m=1;
+      opt.textContent+=fa?` 発電=実績${fa}社`:" 発電=容量比例";}
+    sel.title=fa?`需要+発電とも公表実績(エリア需給実績 ${fa}社・原発停止等を自動反映)。残りは容量比例`:
+      "需要=実績スケール・発電=容量比例balance";
+    // 島別に線順一致でp24/ld24を差し替え(featuresは島連結順=ALLPARTS順で並ぶ)
+    let idx={};
+    for(const isl of ALLPARTS) idx[isl]=0;
+    for(const f of flows.features){
+      const isl=f.properties._isl;
+      const D=dd.islands[isl];
+      if(!D){idx[isl]++; continue;}
+      const i=idx[isl]++;
+      if(!f.properties._p24uc){f.properties._p24uc=f.properties.p24; f.properties._ld24uc=f.properties.ld24;}
+      if(D.p[i]) {f.properties.p24=D.p[i]; f.properties.ld24=D.ld[i];}
+    }
+  }
+  setHour(HOUR);
+}
+function setHour(h){
+  HOUR=h;
+  document.getElementById("hourSlider").value=h;
+  document.getElementById("hourLabel").textContent=String(h).padStart(2,"0")+":00";
+  if(lineLayer) lineLayer.setStyle(lineLayer.options.style);
+  buildGlow(); renderArrows();
+  updateDiffStat();
+}
+function updateDiffStat(){
+  const el=document.getElementById("diffstat");
+  if(cmpMode()!=="diff"||!flows){el.textContent="";return;}
+  const tol=+document.getElementById("selTol").value;
+  let n=0, ok=0, big=0;
+  for(const f of flows.features){
+    const d=fdiff(f);
+    if(d===null) continue;
+    n++;
+    if(Math.abs(d)<=tol) ok++;
+    else if(Math.abs(d)>300) big++;
+  }
+  el.innerHTML=`差分±${tol}MW以内: <b style="color:#2eea8f">${(100*ok/Math.max(n,1)).toFixed(1)}%</b>`+
+    ` (${ok.toLocaleString()}/${n.toLocaleString()}線) / 300MW超の乖離 ${big}線`;
+}
+document.getElementById("hourSlider").oninput=e=>setHour(+e.target.value);
+document.getElementById("btnPlay").onclick=()=>{
+  playing=!playing;
+  document.getElementById("btnPlay").textContent=playing?"⏸ 停止":"▶ 再生";
+};
+setInterval(()=>{if(playing) setHour((HOUR+1)%24);},1100);
+
+// 変電所レイヤ(AGJ連結性色: main=#388bfd / 孤立=#f0883e — editor_coreのAGJ_COLORS準拠)
+let subsData=null, subsLayer=null;
+async function buildSubs(){
+  if(subsLayer){map.removeLayer(subsLayer); subsLayer=null;}
+  if(!document.getElementById("cbSubs").checked) return;
+  if(!subsData) subsData=await fetch("data/flow_map/subs_light.geojson").then(r=>r.json());
+  const z=map.getZoom(), bb=map.getBounds();
+  const minKv = z>=10?0 : z>=8?60 : 140;
+  subsLayer=L.layerGroup();
+  let n=0;
+  for(const f of subsData.features){
+    const pr=f.properties, c=f.geometry.coordinates;
+    if((pr.kv||0)<minKv) continue;
+    if(!kvPass(pr.kv)) continue;
+    if(!bb.contains([c[1],c[0]])) continue;
+    if(n>3500) break;
+    const col=pr.m? "#388bfd":"#f0883e";
+    const mk=L.circleMarker([c[1],c[0]],{renderer:canvasR,radius:z>=10?4:2.6,
+      color:col,weight:1,fillColor:col,fillOpacity:.55})
+      .bindPopup(`<b>${pr.n||"(無名)"}</b><br>${pr.kv||"?"}kV / ${pr.m?"本系統":"本系統外"}`);
+    mk.addTo(subsLayer); n++;
+  }
+  subsLayer.addTo(map);
+}
+
+const tabs=document.getElementById("tabs");
+for(const k of Object.keys(ISLANDS)){
+  const t=document.createElement("span");
+  t.className="tab"; t.dataset.k=k;
+  t.textContent = k==="now"?"⚡NOW":k;
+  if(k==="now") t.style.borderColor="#ffd166", t.style.color="#ffd166";
+  t.onclick=()=>show(k); tabs.appendChild(t);
+}
+let _mvT=null;
+function _onMove(full){
+  clearTimeout(_mvT);
+  _mvT=setTimeout(()=>{renderArrows(); buildSubs(); if(full) buildGenLayer();},220);
+}
+map.on("zoomend",()=>_onMove(true));
+map.on("moveend",()=>_onMove(false));
+document.getElementById("cbArrow").onchange=renderArrows;
+document.getElementById("cbGlow").onchange=buildGlow;
+document.getElementById("cbGen").onchange=buildGenLayer;
+document.getElementById("cbSubs").onchange=buildSubs;
+document.getElementById("cbLines").onchange=()=>show(cur);
+document.getElementById("cbObs").onchange=()=>show(cur);
+document.getElementById("selKv").onchange=()=>{show(cur);buildSubs();};
+document.getElementById("selDate").onchange=e=>{
+  const d=e.target.value;
+  document.getElementById("selCmp").disabled = (d==="uc");
+  if(d==="uc") document.getElementById("selCmp").value="act";
+  applyDate(d);
+};
+document.getElementById("selCmp").onchange=e=>{
+  document.getElementById("selTol").style.display = e.target.value==="diff"?"":"none";
+  setHour(HOUR);
+};
+document.getElementById("selTol").onchange=()=>setHour(HOUR);
+document.getElementById("selBase").onchange=e=>{
+  if(baseLayer){map.removeLayer(baseLayer); baseLayer=null;}
+  const v=e.target.value;
+  if(v!=="none"){baseLayer=BASES[v].addTo(map); baseLayer.bringToBack&&baseLayer.bringToBack();}
+};
+document.getElementById("uchead").onclick=()=>{
+  const p=document.getElementById("ucpanel");
+  p.classList.toggle("min");
+  document.getElementById("ucmin").textContent=p.classList.contains("min")?"▲ひらく":"▼折りたたむ";
+};
+
+fetch("data/flow_map/uc_utilization.json").then(r=>r.json()).then(d=>{
+  const regions=[...new Set(Object.keys(d.groups).map(k=>k.split("|")[0]))].sort();
+  const selEl=document.createElement("select");
+  regions.forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;selEl.appendChild(o);});
+  selEl.value=regions.includes("tokyo")?"tokyo":regions[0];
+  document.getElementById("ucsel").appendChild(selEl);
+  const body=document.getElementById("ucbody");
+  function draw(){
+    const reg=selEl.value; body.innerHTML=""; body.className="";
+    const rows=Object.entries(d.groups)
+      .filter(([k,v])=>k.split("|")[0]===reg && v.capacity_mw>0)
+      .sort((a,b)=>b[1].capacity_mw-a[1].capacity_mw);
+    for(const [k,v] of rows){
+      const fuel=k.split("|")[1];
+      const col=FUELCOL[fuel]||FUELCOL.other;
+      const row=document.createElement("div");
+      row.innerHTML=`<span class="fchip" style="background:${col}"></span>`+
+        `${FUELJA[fuel]||fuel} <span class="muted">${v.capacity_mw.toLocaleString()}MW</span>`+
+        ` — 平均<b>${v.cf_mean!=null?(v.cf_mean*100).toFixed(0):"—"}%</b>`+
+        ` / ピーク${v.cf_peak!=null?(v.cf_peak*100).toFixed(0):"—"}%`;
+      const cv=document.createElement("canvas");
+      cv.width=300; cv.height=30; cv.style.width="100%"; cv.style.display="block";
+      const ctx=cv.getContext("2d");
+      const arr=v.dispatch24_mw||[], mx=Math.max(v.capacity_mw,1);
+      ctx.fillStyle="#2a3646"; ctx.fillRect(0,0,300,30);
+      arr.forEach((x,i)=>{ctx.fillStyle=col;
+        const h=Math.max(x>0?2:0, 28*x/mx);
+        ctx.fillRect(i*12.5+1,29-h,10,h);});
+      row.appendChild(cv);
+      const cap=document.createElement("div");
+      cap.className="muted"; cap.style.fontSize="10px";
+      cap.textContent="0時 ─ 23時(棒=出力・枠上端=定格)";
+      row.appendChild(cap);
+      body.appendChild(row);
+    }
+    if(!rows.length) body.innerHTML='<span class="muted">この地域の系列なし</span>';
+  }
+  selEl.onchange=draw; draw();
+}).catch(()=>{document.getElementById("ucbody").textContent="uc_utilization.json 未生成";});
+
+loadDates(); show("all");
+</script>
+</body>
+</html>

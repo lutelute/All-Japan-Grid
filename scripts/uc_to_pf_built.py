@@ -32,6 +32,7 @@ import subprocess
 import sys
 import time
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
@@ -48,16 +49,20 @@ from scripts.run_full_powerflow_from_db import (  # noqa: E402
     allocate_loads,
     attach_generators,
     GEN_ATTACH_DEFAULT,
-    build_island_net,
-)
+    build_island_net, attach_default_for)
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
 from src.powerflow.ybus_gate import ybus_gate  # noqa: E402
 from src.uc.pf_injection import inject_dispatch_by_zone, uc_snapshot  # noqa: E402
 from src.uc.scenario import build_national_scenario  # noqa: E402
 from src.uc.solver import solve_uc  # noqa: E402
+from src.utils.pandapower_compat import drop_buses as pp_drop_buses  # noqa: E402
 
 ISLAND_FREQ = {"hokkaido": 50.0, "east": 50.0, "west": 60.0, "okinawa": 60.0}
-ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "dc", "okinawa": "ac"}
+# west: 2026-08-30 介入#38(周波数跨ぎ再属性の精緻化)で長野東信〜群馬の誤帰属
+# ポケット(旧・AC発散震源)が除去され、フルNRが収束するようになったため "ac" へ
+# (docs/reports/west_ac_onset_full_2026-08-30.json)。失敗時はsolve_hourが
+# dc_fallbackするため安全側。旧挙動比較は --no-freq-fix-reattr
+ISLAND_MODE = {"hokkaido": "ac", "east": "ac", "west": "ac", "okinawa": "ac"}
 BACKBONE_KV = 154.0
 
 # ── 島境界の連系設備(東西FC・北本) ──────────────────────────────
@@ -89,6 +94,57 @@ BOUNDARY_POINTS = {
     ],
     "okinawa": [],
 }
+
+
+# 島内DC/BTB連系(交流枝を持たない設備)のUCスケジュール注入(2026-08-19・#32/#33)。
+# #31で阿南紀北DCのAC枝を非通電化・#32で南福光BTBを切断した結果、UCがその
+# リンクに割り付けた融通(例: 四国→関西700MW)がPFで行き場を失い、並行AC
+# (本四連系線)へ上乗せされて容量超過に見えていた。両端の変換所バスへ±ペアの
+# sgenを置き、スケジュール潮流をDCリンクとして注入する(島合計は不変=±0)。
+# バス名はbuiltノード実名で解決(捏造回避)。南福光(中部側)は#32のbtb_splitが
+# 作るバス — split無効時は解決不能となり自動でskip(帳簿に出る)。
+INTRA_DC_POINTS = {
+    "west": [
+        {"ic_id": "ic_007", "from_bus": "紀北変換所",
+         "to_bus": "阿南周波数変換所"},
+        {"ic_id": "ic_005", "from_bus": "南福光連系所(中部側)",
+         "to_bus": "南福光連系所"},
+    ],
+}
+
+
+def setup_intra_dc_sgens(net, island, scn):
+    """島内DC/BTBの両端バスを名前解決し ±ペアsgen(p=0)を用意する。"""
+    pts, dropped = [], []
+    for spec in INTRA_DC_POINTS.get(island, []):
+        ic = next((i for i in scn.interconnections
+                   if i.id == spec["ic_id"]), None)
+        if ic is None:
+            dropped.append(spec["ic_id"])
+            continue
+        buses = {}
+        for side in ("from_bus", "to_bus"):
+            mask = net.bus.name.astype(str) == spec[side]
+            if not mask.any():
+                mask = net.bus.name.astype(str).str.contains(
+                    spec[side], regex=False)
+            if not mask.any():
+                buses = None
+                break
+            buses[side] = int(net.bus.loc[mask, "vn_kv"].idxmax())
+        if buses is None:
+            dropped.append(spec["ic_id"])
+            continue
+        pts.append({
+            "ic_id": spec["ic_id"],
+            "sgen_from": int(pp.create_sgen(
+                net, bus=buses["from_bus"], p_mw=0.0, q_mvar=0.0,
+                name=f"dclink_{spec['ic_id']}_from")),
+            "sgen_to": int(pp.create_sgen(
+                net, bus=buses["to_bus"], p_mw=0.0, q_mvar=0.0,
+                name=f"dclink_{spec['ic_id']}_to")),
+        })
+    return pts, dropped
 
 
 def island_boundary_flows(uc, scn, island_regions):
@@ -230,7 +286,7 @@ def build_backbone_net(base, threshold_kv=BACKBONE_KV):
     ledger["fragment_geo_km_max"] = round(ledger["fragment_geo_km_max"], 1)
 
     drop = [int(b) for b in net.bus.index if int(b) not in bb]
-    pp.drop_buses(net, drop)          # 参照要素(線/変圧器/旧slack)ごと落ちる
+    pp_drop_buses(net, drop)          # 参照要素(線/変圧器/旧slack)ごと落ちる
     if len(net.ext_grid):
         net.ext_grid.drop(net.ext_grid.index, inplace=True)
 
@@ -336,6 +392,9 @@ def main():
     ap.add_argument("--islands", nargs="+", default=["east"])
     ap.add_argument("--scenario", default="fy2023r2")
     ap.add_argument("--all-hours", action="store_true")
+    ap.add_argument("--dump-line-flows", default=None, metavar="DIR",
+                    help="各時刻の全線潮流(p_from_mw/loading)をDIRへダンプ"
+                         "(powerjp系タイムスライダー用・flows_ts_<island>.json)")
     ap.add_argument("--hours", nargs="*", type=int, default=None,
                     help="解く時刻(0-23)。省略時=島純需要ピーク時刻のみ")
     ap.add_argument("--model", choices=["full", "backbone"], default="full",
@@ -347,6 +406,12 @@ def main():
                          "ため、容量比例注入が断片に落ちる分(east実測~17GW/59GW)を"
                          "排除する。断片の負荷は synthetic slack 供給のまま"
                          "(=fragment_unserved としてレポート)")
+    ap.add_argument("--intra-dc-injection", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="島内DC/BTB連系(阿南紀北・南福光)のUCスケジュールを両端"
+                         "変換所バスへ±ペアsgenで注入する(既定ON・2026-08-19)。"
+                         "#31/#32でAC枝を切った分の融通に道を与え、並行AC(本四等)"
+                         "への上乗せ超過を解消する。無効化=--no-intra-dc-injection")
     ap.add_argument("--boundary-injection", action="store_true",
                     help="UCの島間連系フロー(東西FC・北本)を境界設備バスへ"
                          "sgen注入する。PF島が表現できない島間融通の構造項"
@@ -374,6 +439,20 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。"
                          "east full ACの非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--pop-tilt",
+                    action=argparse.BooleanOptionalAction, default=False,
+                    help="介入#40 県内按分の人口メッシュ傾斜・既定OFF"
+                         "(2026-08-30)。--no-pop-tilt=従来一様(回帰比較用)")
+    ap.add_argument("--freq-fix-reattr",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
+                         "一意周波数県への抽出こぼれのみ跨ぎ是正、混在県は"
+                         "ガード維持。--no-freq-fix-reattr=旧挙動(回帰比較用)")
+    ap.add_argument("--provisional-infeed",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#37 都心給電の必然接続(仮)・既定ON"
+                         "(オーナー承認 2026-08-30)。(仮)・実経路未確認を明記"
+                         "し全件台帳。--no-provisional-infeed=回帰比較用")
     ap.add_argument("--no-reactive-comp", action="store_const", const=None,
                     dest="reactive_comp",
                     help="無効電力補償を無効化(従来挙動・回帰比較用)")
@@ -400,8 +479,21 @@ def main():
                          "追従させる(コンデンサバンクの投入/開放運用のモデル化)。"
                          "従来はbase断面で固定張りのため軽負荷時刻に過補償過電圧"
                          "(t=3 vm 2.99)を生んでいた。既定OFF(正典比較性)")
+    ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
+                    default=None,
+                    help="介入#43a 異階級直結線の暗黙降圧(2026-09-02)。省略時=ビルダー既定"
+                         "(run_full_powerflow_from_db.IMPLICIT_STEPDOWN_DEFAULT)")
+    ap.add_argument("--lv-aggregate", type=float, default=None, metavar="R_KM",
+                    help="介入#43b 降圧点無し66/77kV網の帳簿付き縮約(≤R km)。0=無効。"
+                         "省略時=ビルダー既定(LV_AGGREGATE_DEFAULT_KM)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
+    from scripts.run_full_powerflow_from_db import (  # noqa: E402
+        IMPLICIT_STEPDOWN_DEFAULT, LV_AGGREGATE_DEFAULT_KM)
+    if args.implicit_stepdown is None:
+        args.implicit_stepdown = IMPLICIT_STEPDOWN_DEFAULT
+    if args.lv_aggregate is None:
+        args.lv_aggregate = LV_AGGREGATE_DEFAULT_KM
 
     print(f"UC求解中... ({args.scenario})")
     scn = build_national_scenario(scenario=args.scenario)
@@ -411,12 +503,28 @@ def main():
         print("UCがOptimalでないため中止")
         return 1
 
+    # 揚水等の充電(負出力)を地域別・時刻別に集計(2026-08-19)。
+    # uc_snapshot は正味発電のみを返すため、充電は需要側へ加算しないと
+    # UCのゾーン収支(発電+輸入-充電-spill=需要)がPFで崩れる
+    # (九州昼: 充電3.5GWの落とし分がそのまま幻の輸出になっていた)。
+    _gmap = {g.id: g for g in scn.generators}
+    charge_r: dict[str, list] = {}
+    for s in uc.schedules:
+        g = _gmap.get(s.generator_id)
+        if g is None:
+            continue
+        arr = charge_r.setdefault(g.region, [0.0] * len(s.power_output_mw))
+        for i, pv in enumerate(s.power_output_mw):
+            if pv < 0:
+                arr[i] += -float(pv)
+
     built = json.load(open(BUILT))
     cfg = load_demand_config()
     pref_gwh = None
     if args.pref_demand:
         from src.powerflow.pref_demand import pref_zone_gwh
-        pref_gwh, pw_ledger = pref_zone_gwh(built["nodes"])
+        pref_gwh, pw_ledger = pref_zone_gwh(built["nodes"],
+                                            freq_fix=args.freq_fix_reattr)
         print(f"県別需要重み: {pw_ledger['title']} "
               f"({pw_ledger['n_pref_weighted']}県, "
               f"split={list(pw_ledger['split_prefs'])})")
@@ -453,12 +561,17 @@ def main():
         base, bus_of, bstats = build_island_net(
             island, built["nodes"], built["edges"], ISLAND_FREQ[island], geom,
             dedup_nodes=args.dedup_nodes, site_trafos=args.site_trafos,
-            deenergize_unbuilt=args.deenergize_unbuilt)
+            deenergize_unbuilt=args.deenergize_unbuilt,
+            freq_fix=args.freq_fix_reattr,
+            implicit_stepdown=args.implicit_stepdown)
+        if bstats.get("n_implicit_stepdown"):
+            print(f"  介入#43a implicit-stepdown: {bstats['n_implicit_stepdown']}サイト"
+                  f"(銘板{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']=='nameplate')})")
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
         attach_generators(base, bus_of, built["nodes"], island,
-                          attach_mode=GEN_ATTACH_DEFAULT)
+                          attach_mode=attach_default_for(island))
         bridge_rep = None
         gen_zone_override = None
         if args.bridge:
@@ -473,7 +586,8 @@ def main():
                   f"nuclear={bridge_rep['nuclear_set']}set/"
                   f"{bridge_rep['nuclear_stopped']}stop "
                   f"Δ{bridge_rep['mw_delta']:+,.0f}MW")
-        allocate_loads(base, cfg, pref_gwh=pref_gwh)
+        allocate_loads(base, cfg, pref_gwh=pref_gwh,
+                       pop_tilt=args.pop_tilt)
         pref_ledger = getattr(base, "_pref_demand_ledger", None) if pref_gwh else None
         reactive_rep = None
         if args.reactive_comp is not None:
@@ -496,6 +610,22 @@ def main():
                   f"gen集約{ledger['gens']['moved']}件"
                   f"(断片から{ledger['gens']['from_fragment_mw']:,.0f}MW) "
                   f"銘板残{ledger['n_trafo_nameplate_kept']}")
+        infeed_ledger = []
+        if args.provisional_infeed:
+            from src.powerflow.pipeline import add_provisional_infeed
+            infeed_ledger = add_provisional_infeed(base)
+            if infeed_ledger:
+                print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
+                      f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW "
+                      f"(実経路未確認・全件台帳)")
+        lv_agg_ledger = None
+        if args.lv_aggregate and args.lv_aggregate > 0:
+            from src.powerflow.stepdown_gap import aggregate_lv_islands
+            lv_agg_ledger = aggregate_lv_islands(base, r_max_km=args.lv_aggregate)
+            print(f"  介入#43b lv-aggregate(R≤{args.lv_aggregate}km): "
+                  f"{lv_agg_ledger['n_aggregated']}成分/{lv_agg_ledger['aggregated_mw']:,.0f}MW"
+                  f" 集約・未給電網 {lv_agg_ledger['n_unserved']}成分/"
+                  f"{lv_agg_ledger['unserved_mw']:,.0f}MW")
         add_per_component_slacks(base)
         boundary_pts, boundary_flows = [], {}
         if args.boundary_injection:
@@ -507,6 +637,15 @@ def main():
                       f"(share {pt['share']:.2f})")
             if bdropped:
                 print(f"  boundary: 未解決(重み再配分) {bdropped}")
+        intra_dc_pts, intra_dc_flows = [], {}
+        if args.intra_dc_injection:
+            intra_dc_pts, ddropped = setup_intra_dc_sgens(base, island, scn)
+            for fr in getattr(uc, "interconnection_flows", []) or []:
+                intra_dc_flows[fr.interconnection_id] = fr.flow_mw
+            for pt in intra_dc_pts:
+                print(f"  intra-dc: {pt['ic_id']} ±ペア注入を準備")
+            if ddropped:
+                print(f"  intra-dc: 未解決skip {ddropped}")
         print(f"  built: {len(base.bus)}バス trafo={len(base.trafo)} "
               f"(銘板{bstats['n_trafo_nameplate']}) {time.monotonic()-t0:.0f}s")
 
@@ -531,6 +670,9 @@ def main():
         gate = ybus_gate(base)
         isl_rep = {"mode": mode, "regions": regions,
                    "model": args.model,
+                   "provisional_infeed": infeed_ledger,  # 介入#37 台帳((仮)明記)
+                   "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
+                   "lv_aggregate": lv_agg_ledger,        # 介入#43b 台帳(None=無効)
                    "n_bus": int(len(base.bus)),
                    "n_trafo_nameplate": bstats["n_trafo_nameplate"],
                    "backbone_ledger": ledger,
@@ -544,6 +686,8 @@ def main():
                         "pair": list(p["pair"]),
                         "share": round(p["share"], 3)}
                        for p in boundary_pts] if boundary_pts else None),
+                   "intra_dc_injection": ([p["ic_id"] for p in intra_dc_pts]
+                                          if intra_dc_pts else None),
                    "inject_main_comp_only": bool(args.inject_main_comp_only),
                    "n_fragment_gen_off": n_gen_off,
                    "fragment_unserved_load_mw": round(fragment_load_mw, 1),
@@ -558,12 +702,37 @@ def main():
             continue
 
         n_ok = 0
+        ts_dump = {"hours": list(hours), "p_mw": None, "loading": None}             if args.dump_line_flows else None
         for t in hours:
             th = time.monotonic()
             net_t = copy.deepcopy(base)
             fuel_by_zone = {r: uc_snapshot(uc, scn.generators, t, region=r)
                             for r in regions}
-            demand = {r: float(scn.net_demand_r[r][t]) for r in regions}
+            # 需要=純需要+充電(揚水汲み上げ等の負出力分)。充電を落とすと
+            # ゾーン純位置が崩れる(上の charge_r コメント参照)
+            demand = {}
+            for r in regions:
+                ch = charge_r.get(r) or []
+                demand[r] = float(scn.net_demand_r[r][t]) + \
+                    (float(ch[t]) if t < len(ch) else 0.0)
+            # 地域余剰(spill=UC等式収支の明示余剰・2026-08-19)は注入前に
+            # 燃料比例で差し引く。差し引かないと UC のゾーン純位置
+            # (発電-需要=スケジュール純輸出) が PF 側で崩れ、連系断面が
+            # 運用容量を超える潮流を再現してしまう(関門5.8GWの真因)。
+            spill_mw = {}
+            for r in regions:
+                sp = (uc.regional_spill_mw.get(r) or [])
+                v = float(sp[t]) if t < len(sp) else 0.0
+                if v <= 1e-6:
+                    continue
+                tot = sum(fuel_by_zone[r].values())
+                if tot > v:
+                    sc = (tot - v) / tot
+                    fuel_by_zone[r] = {k: mw * sc
+                                       for k, mw in fuel_by_zone[r].items()}
+                else:
+                    fuel_by_zone[r] = {k: 0.0 for k in fuel_by_zone[r]}
+                spill_mw[r] = round(v, 1)
             inj = inject_dispatch_by_zone(net_t, fuel_by_zone, demand,
                                           gen_zone_override=gen_zone_override)
             if args.hourly_shunts and len(net_t.shunt):
@@ -585,6 +754,16 @@ def main():
                 p_pt = float(series[t]) * pt["share"]
                 net_t.sgen.at[pt["sgen"], "p_mw"] = p_pt
                 bnd_mw[pt["name"]] = round(p_pt, 1)
+            dc_mw = {}
+            for pt in intra_dc_pts:
+                series = intra_dc_flows.get(pt["ic_id"])
+                if series is None or t >= len(series):
+                    continue
+                fv = float(series[t])   # + = from_region -> to_region
+                # from側の変換所からfvが抜け、to側の変換所にfvが入る(島計±0)
+                net_t.sgen.at[pt["sgen_from"], "p_mw"] = -fv
+                net_t.sgen.at[pt["sgen_to"], "p_mw"] = fv
+                dc_mw[pt["ic_id"]] = round(fv, 1)
             net_s, used = solve_hour(net_t, mode)
             conv = bool(net_s.converged)
             n_ok += int(conv)
@@ -603,6 +782,16 @@ def main():
                     "solve_s": round(time.monotonic() - th, 1)}
             if bnd_mw:
                 hrep["boundary_mw"] = bnd_mw
+            if dc_mw:
+                hrep["intra_dc_mw"] = dc_mw
+            if spill_mw:
+                hrep["spill_mw"] = spill_mw
+            ch_rep = {r: round(float((charge_r.get(r) or [])[t]), 1)
+                      for r in regions
+                      if t < len(charge_r.get(r) or [])
+                      and (charge_r.get(r) or [])[t] > 1.0}
+            if ch_rep:
+                hrep["charge_mw"] = ch_rep
             inj_issues = {r: {k: v for k, v in
                               (("clipped", inj[r]["injection"]["clipped"]),
                                ("unmatched", inj[r]["injection"]["unmatched"]))
@@ -620,11 +809,31 @@ def main():
                           + net_s.res_trafo.pl_mw.sum()), 1)
             if conv:
                 hrep["tie_mw"] = tie_flows_by_pair(net_s)
+            if ts_dump is not None and conv:
+                pf = net_s.res_line.p_from_mw.round(1)
+                ld = net_s.res_line.loading_percent.round(1)
+                if ts_dump["p_mw"] is None:
+                    n = len(net_s.line)
+                    ts_dump["p_mw"] = [[None]*len(hours) for _ in range(n)]
+                    ts_dump["loading"] = [[None]*len(hours) for _ in range(n)]
+                    ts_dump["names"] = [str(x) for x in net_s.line.name]
+                    ts_dump["in_service"] = [bool(x) for x in net_s.line.in_service]
+                hi = list(hours).index(t)
+                for li, (pv, lv) in enumerate(zip(pf, ld)):
+                    ts_dump["p_mw"][li][hi] = None if pv != pv else float(pv)
+                    ts_dump["loading"][li][hi] = None if lv != lv else float(lv)
             isl_rep["hours"][str(t)] = hrep
             print(f"  t={t:2d} {used:12s} conv={conv} "
                   f"demand={float(net_dem[t]):8,.0f}MW "
                   f"slack={hrep['slack_abs_mw']} {hrep['solve_s']}s", flush=True)
 
+        if ts_dump is not None and ts_dump["p_mw"] is not None:
+            dd = Path(args.dump_line_flows)
+            dd.mkdir(parents=True, exist_ok=True)
+            (dd / f"flows_ts_{island}.json").write_text(json.dumps(
+                ts_dump, ensure_ascii=False, separators=(",", ":")))
+            print(f"  線潮流ダンプ -> {dd}/flows_ts_{island}.json "
+                  f"({len(ts_dump['p_mw'])}線×{len(hours)}時刻)")
         isl_rep["n_hours"] = len(hours)
         isl_rep["n_converged"] = n_ok
         isl_rep["all_converged"] = (n_ok == len(hours))

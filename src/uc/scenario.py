@@ -1159,14 +1159,28 @@ def build_national_scenario(
     ics = InterconnectionLoader().load(interconnections_path)
     # シナリオ別の連系線補正（共有yamlは不変のまま上書き/追加）
     if config.interconnection_overrides:
-        ics = [
-            replace(ic, **{
-                k: v for k, v in
-                config.interconnection_overrides.get(ic.id, {}).items()
-            }) if ic.id in config.interconnection_overrides else ic
-            for ic in ics
-        ]
+        def _apply_override(ic):
+            ov = dict(config.interconnection_overrides.get(ic.id, {}))
+            if not ov:
+                return ic
+            # capacity_mw だけを上書きし方向別値に触れない場合は、方向別値を
+            # リセットして対称フォールバックに戻す(2026-08-19 非対称容量導入
+            # に伴う整合: 旧overrideの意図=「この容量で対称に縛る」を保存)
+            if "capacity_mw" in ov and \
+                    "capacity_fwd_mw" not in ov and \
+                    "capacity_rev_mw" not in ov:
+                ov["capacity_fwd_mw"] = None
+                ov["capacity_rev_mw"] = None
+            return replace(ic, **ov)
+        ics = [_apply_override(ic) for ic in ics]
+    existing_ids = {ic.id for ic in ics}
     for add in config.interconnection_additions:
+        # yaml本体の正本化(#33)で本体に取り込まれたリンク(ic_010等)は
+        # スキップ(冪等)。シナリオ側の旧additionsを残しても二重登録しない
+        if add.get("id") in existing_ids:
+            logger.info("interconnection addition %s は本体に既存 — skip",
+                        add.get("id"))
+            continue
         ics.append(Interconnection(**add))
     profile_sha = None
     if config.demand_profile_ref:

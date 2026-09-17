@@ -1,0 +1,407 @@
+{
+ "_meta": {
+  "purpose": "公表資料の端点表記をモデルの変電所名へ解決する別名表（介入#44 の端点解決）。ファイル名は tepco_ で始まるが、実際に解決できたのは九州の設備番号プレフィックスで、東京の未解決は別名では解けない（下記 _findings 参照）。全事業者を対象にするので region で引く。",
+  "created": "2026-09-03",
+  "used_by": "scripts/apply_circuit_sources.py（--use-low-confidence で low も使う）",
+  "schema": {
+   "alias": "公表資料の表記(norm_sub 正規化後)",
+   "model_name": "正典の変電所名(norm_sub 正規化後)",
+   "region": "出典の地域",
+   "kv": "階級を限定する場合のみ(null=不問)",
+   "evidence": "同定の根拠(必須)",
+   "evidence_type": "根拠の種別",
+   "confidence": "high|medium|low(low は既定で使わない)",
+   "resolved_by": "誰がいつ"
+  },
+  "_findings": "2026-09-03 実測: 未解決端点 1,454 種/2,240 出現の内訳は 匿名コード(関西 <154kV の「北CZ」等) 1,344 / 構造マーカー(需要家・開放点・〇〇分岐) 348 / 正典に不在 453 / 電圧階級違い 42 / 地域違い 53。別名で解けるのは九州の番号プレフィックスのみで、匿名コードと不在は原理的に解けない。"
+ },
+ "non_endpoints": {
+  "_note": "変電所ではない端点表記。端点として解決を試みず、未照合の理由を正しく分類するために使う。",
+  "patterns": [
+   {
+    "pattern": "需要家",
+    "why": "需要家(お客さま)への引込。変電所ではない"
+   },
+   {
+    "pattern": "開放点",
+    "why": "常時開放点。設備ではなく運用上の点"
+   },
+   {
+    "pattern": "分岐",
+    "why": "分岐点(〇〇線分岐・発電所分岐)。変電所ではない"
+   },
+   {
+    "pattern": "^(発電所|開閉所|変電所)$",
+    "why": "種別名だけで固有名が無い"
+   },
+   {
+    "pattern": "^[-－―]$",
+    "why": "空欄のダッシュ"
+   },
+   {
+    "pattern": "#\\d+$",
+    "why": "鉄塔番号(山梨線#29 等)。線上の点であって変電所ではない"
+   },
+   {
+    "pattern": "^No\\.?\\d+$",
+    "why": "設備番号のみ"
+   },
+   {
+    "pattern": "分岐(から|まで)$",
+    "why": "中国電力の区間表記(島2L2分岐から 等)"
+   }
+  ]
+ },
+ "anonymized": {
+  "_note": "公表側で匿名化された端点コード。原理的に解決できないので別名を作らない(捏造禁止)。",
+  "patterns": [
+   {
+    "pattern": "^[一-鿿]{0,2}[A-Za-zＡ-Ｚ]{1,3}$",
+    "why": "関西電力送配電の <154kV 一覧は端点を「北CZ」「奈AT」「BF」等の記号で匿名化している"
+   }
+  ]
+ },
+ "aliases": [
+  {
+   "alias": "7中九州",
+   "model_name": "中九州",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号7＋変電所名」で書く（例: 送電線「中九州幹線」500kV の端点「7中九州」／対向「6熊本」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「中九州」は正典の kyushu に 2 ノード実在（九州電力 中九州変電所 220kV, 九州電力 中九州変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 7
+  },
+  {
+   "alias": "9南九州",
+   "model_name": "南九州",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号9＋変電所名」で書く（例: 送電線「南九州幹線」500kV の端点「9南九州」／対向「7中九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「南九州」は正典の kyushu に 2 ノード実在（南九州変電所 220kV, 南九州変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 6
+  },
+  {
+   "alias": "1北九州",
+   "model_name": "北九州",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号1＋変電所名」で書く（例: 送電線「北九州幹線」500kV の端点「1北九州」／対向「3脊振」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「北九州」は正典の kyushu に 3 ノード実在（北九州変電所 (untyped), 北九州変電所 220kV, 北九州変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 5
+  },
+  {
+   "alias": "2豊前",
+   "model_name": "豊前",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号2＋変電所名」で書く（例: 送電線「豊前北幹線」500kV の端点「2豊前」／対向「1北九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「豊前」は正典の kyushu に 2 ノード実在（豊前変電所 220kV, 豊前変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 5
+  },
+  {
+   "alias": "5西九州",
+   "model_name": "西九州",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号5＋変電所名」で書く（例: 送電線「佐賀幹線」500kV の端点「5西九州」／対向「4中央」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「西九州」は正典の kyushu に 2 ノード実在（九州電力西九州変電所 220kV, 九州電力西九州変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 5
+  },
+  {
+   "alias": "6熊本",
+   "model_name": "熊本",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号6＋変電所名」で書く（例: 送電線「熊本幹線」500kV の端点「6熊本」／対向「4中央」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「熊本」は正典の kyushu に 4 ノード実在（熊本変電所, 熊本変電所 220kV, 熊本変電所 500kV／kv [66.0, 220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 5
+  },
+  {
+   "alias": "4中央",
+   "model_name": "中央",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号4＋変電所名」で書く（例: 送電線「豊前西幹線」500kV の端点「4中央」／対向「2豊前」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「中央」は正典の kyushu に 4 ノード実在（九州電力中央変電所 220kV, 九州電力中央変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 4
+  },
+  {
+   "alias": "8東九州",
+   "model_name": "東九州",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号8＋変電所名」で書く（例: 送電線「東九州幹線」500kV の端点「8東九州」／対向「2豊前」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「東九州」は正典の kyushu に 2 ノード実在（東九州変電所 220kV, 東九州変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 4
+  },
+  {
+   "alias": "10宮崎",
+   "model_name": "宮崎",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号10＋変電所名」で書く（例: 送電線「宮崎幹線」500kV の端点「10宮崎」／対向「9南九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「宮崎」は正典の kyushu に 3 ノード実在（宮崎変電所 (untyped), 宮崎変電所 220kV, 宮崎変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 4
+  },
+  {
+   "alias": "11ひむか",
+   "model_name": "ひむか",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号11＋変電所名」で書く（例: 送電線「小丸川幹線」500kV の端点「11ひむか」／対向「10宮崎」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「ひむか」は正典の kyushu に 3 ノード実在（ひむか変電所 220kV, ひむか変電所 500kV, ひむか変電所 66kV／kv [66.0, 220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 4
+  },
+  {
+   "alias": "32武雄",
+   "model_name": "武雄",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号32＋変電所名」で書く（例: 送電線「武雄線」220kV の端点「32武雄」／対向「5西九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「武雄」は正典の kyushu に 4 ノード実在（武雄変電所 (untyped), 武雄変電所 110kV, 武雄変電所 220kV／kv [66.0, 110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 4
+  },
+  {
+   "alias": "3脊振",
+   "model_name": "脊振",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号3＋変電所名」で書く（例: 送電線「北九州幹線」500kV の端点「3脊振」／対向「1北九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「脊振」は正典の kyushu に 2 ノード実在（九州電力脊振変電所 220kV, 九州電力脊振変電所 500kV／kv [220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "14西谷",
+   "model_name": "西谷",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号14＋変電所名」で書く（例: 送電線「西谷門司線」220kV の端点「14西谷」／対向「13門司」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「西谷」は正典の kyushu に 4 ノード実在（西谷変電所 (untyped), 西谷変電所 110kV, 西谷変電所 220kV／kv [66.0, 110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "51東大分",
+   "model_name": "東大分",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号51＋変電所名」で書く（例: 送電線「東大分線」220kV の端点「51東大分」／対向「50大分」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「東大分」は正典の kyushu に 2 ノード実在（東大分変電所 220kV, 東大分変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "30木佐木",
+   "model_name": "木佐木",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号30＋変電所名」で書く（例: 送電線「鳥栖木佐木線」220kV の端点「30木佐木」／対向「28鳥栖」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「木佐木」は正典の kyushu に 3 ノード実在（九州電力 木佐木変電所 110kV, 九州電力 木佐木変電所 220kV, 九州電力 木佐木変電所 66kV／kv [66.0, 110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "40三池",
+   "model_name": "三池",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号40＋変電所名」で書く（例: 送電線「木佐木三池線」220kV の端点「40三池」／対向「30木佐木」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「三池」は正典の kyushu に 3 ノード実在（三池変電所 110kV, 三池変電所 220kV, 三池変電所 66kV／kv [66.0, 110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "43南熊本",
+   "model_name": "南熊本",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号43＋変電所名」で書く（例: 送電線「熊本南熊本線」220kV の端点「43南熊本」／対向「6熊本」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「南熊本」は正典の kyushu に 2 ノード実在（九州電力 南熊本変電所 110kV, 九州電力 南熊本変電所 220kV／kv [110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "54新日向",
+   "model_name": "新日向",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号54＋変電所名」で書く（例: 送電線「塚原日向線」110kV の端点「54新日向」／対向「塚原」・出典 data/external/system_disclosure/kyushu/impedance/impedance_local01_2025_09.xlsx）。番号を除いた「新日向」は正典の kyushu に 2 ノード実在（新日向変電所 220kV, 新日向変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "46熊本",
+   "model_name": "熊本",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号46＋変電所名」で書く（例: 送電線「熊本三池線」220kV の端点「46熊本」／対向「40三池」・出典 data/external/system_disclosure/kyushu/flow_actual/jisseki_kikan00_line_2024_09.csv）。番号を除いた「熊本」は正典の kyushu に 4 ノード実在（熊本変電所, 熊本変電所 220kV, 熊本変電所 500kV／kv [66.0, 220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 3
+  },
+  {
+   "alias": "48西大分",
+   "model_name": "西大分",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号48＋変電所名」で書く（例: 送電線「大分北線」220kV の端点「48西大分」／対向「2豊前」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「西大分」は正典の kyushu に 2 ノード実在（西大分変電所 220kV, 西大分変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "50大分",
+   "model_name": "大分",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号50＋変電所名」で書く（例: 送電線「大分南線」220kV の端点「50大分」／対向「48西大分」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「大分」は正典の kyushu に 4 ノード実在（大分変電所, 大分変電所 (untyped), 大分変電所 220kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "71新大分",
+   "model_name": "新大分",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号71＋変電所名」で書く（例: 送電線「新大分連絡線」220kV の端点「71新大分」／対向「51東大分」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「新大分」は正典の kyushu に 1 ノード実在（新大分変電所／kv [220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "22東福岡",
+   "model_name": "東福岡",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号22＋変電所名」で書く（例: 送電線「北九州東福岡線」220kV の端点「22東福岡」／対向「1北九州」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「東福岡」は正典の kyushu に 2 ノード実在（東福岡変電所 220kV, 東福岡変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "28鳥栖",
+   "model_name": "鳥栖",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号28＋変電所名」で書く（例: 送電線「脊振鳥栖線」220kV の端点「28鳥栖」／対向「3脊振」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「鳥栖」は正典の kyushu に 3 ノード実在（鳥栖変電所 110kV, 鳥栖変電所 220kV, 鳥栖変電所 66kV／kv [66.0, 110.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "33北佐賀",
+   "model_name": "北佐賀",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号33＋変電所名」で書く（例: 送電線「北佐賀木佐木線」220kV の端点「33北佐賀」／対向「30木佐木」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「北佐賀」は正典の kyushu に 3 ノード実在（北佐賀変電所 (untyped), 北佐賀変電所 220kV, 北佐賀変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "59南宮崎",
+   "model_name": "南宮崎",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号59＋変電所名」で書く（例: 送電線「南宮崎線」220kV の端点「59南宮崎」／対向「高野sws」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「南宮崎」は正典の kyushu に 2 ノード実在（南宮崎変電所 220kV, 南宮崎変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "35東佐世保",
+   "model_name": "東佐世保",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号35＋変電所名」で書く（例: 送電線「東佐世保分岐線」220kV の端点「35東佐世保」／対向「32武雄」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「東佐世保」は正典の kyushu に 2 ノード実在（東佐世保変電所 220kV, 東佐世保変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "56南宮崎",
+   "model_name": "南宮崎",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号56＋変電所名」で書く（例: 送電線「南宮崎線」220kV の端点「56南宮崎」／対向「高野sws」・出典 data/external/system_disclosure/kyushu/flow_actual/jisseki_kikan00_line_2024_09.csv）。番号を除いた「南宮崎」は正典の kyushu に 2 ノード実在（南宮崎変電所 220kV, 南宮崎変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 2
+  },
+  {
+   "alias": "13門司",
+   "model_name": "門司",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号13＋変電所名」で書く（例: 送電線「西谷門司線」220kV の端点「13門司」／対向「14西谷」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「門司」は正典の kyushu に 3 ノード実在（門司変電所, 門司変電所 220kV, 門司変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 1
+  },
+  {
+   "alias": "26山家",
+   "model_name": "山家",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号26＋変電所名」で書く（例: 送電線「山家東福岡線」220kV の端点「26山家」／対向「22東福岡」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「山家」は正典の kyushu に 4 ノード実在（山家変電所 (untyped), 山家変電所 220kV, 山家変電所 500kV／kv [66.0, 220.0, 500.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 1
+  },
+  {
+   "alias": "18苅田",
+   "model_name": "苅田",
+   "region": "kyushu",
+   "kv": null,
+   "evidence": "九州電力送配電の公表表は端点を「設備番号18＋変電所名」で書く（例: 送電線「苅田分岐線」220kV の端点「18苅田」／対向「14西谷」・出典 data/external/system_disclosure/kyushu/impedance/impedance_kikan01_2025_09.xlsx）。番号を除いた「苅田」は正典の kyushu に 2 ノード実在（苅田変電所 220kV, 苅田変電所 66kV／kv [66.0, 220.0]）",
+   "evidence_type": "numbered_prefix_same_source",
+   "confidence": "high",
+   "resolved_by": "F2 2026-09-03 rule=num_prefix（全出典端点を走査し正典と突合）",
+   "_n_occurrences": 1
+  }
+ ]
+}

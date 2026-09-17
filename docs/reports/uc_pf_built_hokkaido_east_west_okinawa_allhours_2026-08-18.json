@@ -1,0 +1,3444 @@
+{
+ "meta": {
+  "date": "2026-08-18",
+  "git_head": "07a1521",
+  "scenario": "fy2023",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": true,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "hokkaido": {
+   "mode": "ac",
+   "regions": [
+    "hokkaido"
+   ],
+   "model": "full",
+   "n_bus": 831,
+   "n_trafo_nameplate": 1,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "hokkaido": {
+      "北海道": {
+       "n_bus": 540,
+       "gwh": 27620.5,
+       "target_mw": 4420.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 540,
+    "q_comp_mvar": 1162.2
+   },
+   "bridge": null,
+   "boundary_injection": [
+    {
+     "name": "北斗変換所",
+     "bus": "北斗変換所 275kV",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 1.0
+    }
+   ],
+   "inject_main_comp_only": true,
+   "n_fragment_gen_off": 10,
+   "fragment_unserved_load_mw": 198.9,
+   "gate": {
+    "pass": true,
+    "cond_max": 1738302.5203177677
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1462.5,
+     "load_scale": {
+      "hokkaido": 0.3309
+     },
+     "served_load_mw": 1462.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 65.6,
+     "solve_s": 2.0,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9766,
+     "vm_max": 1.1568,
+     "loss_mw": 65.6,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1170.0,
+     "load_scale": {
+      "hokkaido": 0.2647
+     },
+     "served_load_mw": 1170.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 60.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9801,
+     "vm_max": 1.1895,
+     "loss_mw": 60.7,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 993.8,
+     "load_scale": {
+      "hokkaido": 0.2248
+     },
+     "served_load_mw": 993.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 58.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9822,
+     "vm_max": 1.2074,
+     "loss_mw": 58.8,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 817.5,
+     "load_scale": {
+      "hokkaido": 0.185
+     },
+     "served_load_mw": 817.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 57.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9841,
+     "vm_max": 1.224,
+     "loss_mw": 57.8,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1050.0,
+     "load_scale": {
+      "hokkaido": 0.2376
+     },
+     "served_load_mw": 1050.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 59.5,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9815,
+     "vm_max": 1.2016,
+     "loss_mw": 59.5,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1396.1,
+     "load_scale": {
+      "hokkaido": 0.3159
+     },
+     "served_load_mw": 1396.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 64.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9774,
+     "vm_max": 1.1645,
+     "loss_mw": 64.3,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1835.5,
+     "load_scale": {
+      "hokkaido": 0.4153
+     },
+     "served_load_mw": 1835.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 74.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.972,
+     "vm_max": 1.1101,
+     "loss_mw": 74.7,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2162.5,
+     "load_scale": {
+      "hokkaido": 0.4893
+     },
+     "served_load_mw": 2162.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 85.6,
+     "solve_s": 0.2,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9678,
+     "vm_max": 1.0647,
+     "loss_mw": 85.6,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2151.0,
+     "load_scale": {
+      "hokkaido": 0.4867
+     },
+     "served_load_mw": 2151.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 85.1,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.968,
+     "vm_max": 1.0661,
+     "loss_mw": 85.1,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1903.2,
+     "load_scale": {
+      "hokkaido": 0.4306
+     },
+     "served_load_mw": 1903.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 76.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9712,
+     "vm_max": 1.1008,
+     "loss_mw": 76.7,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1589.0,
+     "load_scale": {
+      "hokkaido": 0.3595
+     },
+     "served_load_mw": 1589.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 68.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.975,
+     "vm_max": 1.1416,
+     "loss_mw": 68.3,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1380.8,
+     "load_scale": {
+      "hokkaido": 0.3124
+     },
+     "served_load_mw": 1380.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 64.0,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9776,
+     "vm_max": 1.1663,
+     "loss_mw": 64.0,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1198.1,
+     "load_scale": {
+      "hokkaido": 0.2711
+     },
+     "served_load_mw": 1198.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 61.1,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9798,
+     "vm_max": 1.1865,
+     "loss_mw": 61.1,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1214.6,
+     "load_scale": {
+      "hokkaido": 0.2748
+     },
+     "served_load_mw": 1214.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 61.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9796,
+     "vm_max": 1.1847,
+     "loss_mw": 61.3,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1370.4,
+     "load_scale": {
+      "hokkaido": 0.31
+     },
+     "served_load_mw": 1370.4,
+     "served_frac": 1.0,
+     "slack_abs_mw": 63.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9778,
+     "vm_max": 1.1675,
+     "loss_mw": 63.8,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1665.4,
+     "load_scale": {
+      "hokkaido": 0.3768
+     },
+     "served_load_mw": 1665.4,
+     "served_frac": 1.0,
+     "slack_abs_mw": 70.1,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9741,
+     "vm_max": 1.1322,
+     "loss_mw": 70.1,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2103.2,
+     "load_scale": {
+      "hokkaido": 0.4758
+     },
+     "served_load_mw": 2103.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 83.4,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9686,
+     "vm_max": 1.0727,
+     "loss_mw": 83.4,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2481.2,
+     "load_scale": {
+      "hokkaido": 0.5613
+     },
+     "served_load_mw": 2481.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 97.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -883.9
+     },
+     "vm_min": 0.9648,
+     "vm_max": 1.0249,
+     "loss_mw": 97.3,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2649.7,
+     "load_scale": {
+      "hokkaido": 0.5995
+     },
+     "served_load_mw": 2649.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 215.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "injection_issues": {
+      "hokkaido": {
+       "unmatched": {
+        "battery": 111.6
+       }
+      }
+     },
+     "vm_min": 0.9609,
+     "vm_max": 1.0184,
+     "loss_mw": 104.2,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2486.2,
+     "load_scale": {
+      "hokkaido": 0.5625
+     },
+     "served_load_mw": 2486.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 99.2,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9632,
+     "vm_max": 1.0241,
+     "loss_mw": 99.2,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 2190.0,
+     "load_scale": {
+      "hokkaido": 0.4955
+     },
+     "served_load_mw": 2190.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 86.6,
+     "solve_s": 0.2,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9674,
+     "vm_max": 1.0614,
+     "loss_mw": 86.6,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1950.0,
+     "load_scale": {
+      "hokkaido": 0.4412
+     },
+     "served_load_mw": 1950.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 78.2,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9706,
+     "vm_max": 1.0943,
+     "loss_mw": 78.2,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1766.2,
+     "load_scale": {
+      "hokkaido": 0.3996
+     },
+     "served_load_mw": 1766.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 72.7,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9728,
+     "vm_max": 1.1192,
+     "loss_mw": 72.7,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1642.5,
+     "load_scale": {
+      "hokkaido": 0.3716
+     },
+     "served_load_mw": 1642.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 69.6,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "北斗変換所": -900.0
+     },
+     "vm_min": 0.9744,
+     "vm_max": 1.135,
+     "loss_mw": 69.6,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "full",
+   "n_bus": 6145,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "tohoku": {
+      "青森県": {
+       "n_bus": 203,
+       "gwh": 7555.1,
+       "target_mw": 1126.4
+      },
+      "福島県": {
+       "n_bus": 208,
+       "gwh": 14686.6,
+       "target_mw": 2189.7
+      },
+      "新潟県": {
+       "n_bus": 144,
+       "gwh": 14358.3,
+       "target_mw": 2140.7
+      },
+      "山形県": {
+       "n_bus": 116,
+       "gwh": 7703.1,
+       "target_mw": 1148.5
+      },
+      "秋田県": {
+       "n_bus": 111,
+       "gwh": 6832.1,
+       "target_mw": 1018.6
+      },
+      "宮城県": {
+       "n_bus": 200,
+       "gwh": 13846.9,
+       "target_mw": 2064.5
+      },
+      "岩手県": {
+       "n_bus": 142,
+       "gwh": 9133.1,
+       "target_mw": 1361.7
+      }
+     },
+     "tokyo": {
+      "栃木県": {
+       "n_bus": 222,
+       "gwh": 15319.3,
+       "target_mw": 2583.5
+      },
+      "群馬県": {
+       "n_bus": 215,
+       "gwh": 13462.0,
+       "target_mw": 2270.3
+      },
+      "茨城県": {
+       "n_bus": 221,
+       "gwh": 23046.0,
+       "target_mw": 3886.6
+      },
+      "神奈川県": {
+       "n_bus": 346,
+       "gwh": 45284.8,
+       "target_mw": 7637.1
+      },
+      "静岡県": {
+       "n_bus": 98,
+       "gwh": 9765.0,
+       "target_mw": 1646.8
+      },
+      "埼玉県": {
+       "n_bus": 376,
+       "gwh": 35731.6,
+       "target_mw": 6026.0
+      },
+      "東京都": {
+       "n_bus": 355,
+       "gwh": 76761.8,
+       "target_mw": 12945.5
+      },
+      "山梨県": {
+       "n_bus": 57,
+       "gwh": 4315.7,
+       "target_mw": 727.8
+      },
+      "千葉県": {
+       "n_bus": 314,
+       "gwh": 35246.5,
+       "target_mw": 5944.2
+      },
+      "長野県": {
+       "n_bus": 23,
+       "gwh": 1396.9,
+       "target_mw": 235.6
+      },
+      "愛知県": {
+       "n_bus": 6,
+       "gwh": 867.0,
+       "target_mw": 146.2
+      },
+      "滋賀県": {
+       "n_bus": 2,
+       "gwh": 128.8,
+       "target_mw": 21.7
+      },
+      "岐阜県": {
+       "n_bus": 2,
+       "gwh": 142.0,
+       "target_mw": 23.9
+      },
+      "三重県": {
+       "n_bus": 3,
+       "gwh": 342.8,
+       "target_mw": 57.8
+      },
+      "石川県": {
+       "n_bus": 3,
+       "gwh": 161.7,
+       "target_mw": 27.3
+      },
+      "富山県": {
+       "n_bus": 2,
+       "gwh": 69.3,
+       "target_mw": 11.7
+      },
+      "福井県": {
+       "n_bus": 1,
+       "gwh": 47.3,
+       "target_mw": 8.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 3370,
+    "q_comp_mvar": 14527.8
+   },
+   "bridge": null,
+   "boundary_injection": [
+    {
+     "name": "新信濃変電所",
+     "bus": "新信濃変電所",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.833
+    },
+    {
+     "name": "東清水変電所",
+     "bus": "東清水変電所 275kV",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.167
+    },
+    {
+     "name": "上北変電所",
+     "bus": "上北変電所 500kV",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 0.667
+    },
+    {
+     "name": "今別変換所",
+     "bus": "今別変換所",
+     "pair": [
+      "hokkaido",
+      "tohoku"
+     ],
+     "share": 0.333
+    }
+   ],
+   "inject_main_comp_only": true,
+   "n_fragment_gen_off": 279,
+   "fragment_unserved_load_mw": 3927.6,
+   "gate": {
+    "pass": true,
+    "cond_max": 57331533.685315154
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42496.2,
+     "load_scale": {
+      "tohoku": 0.5951,
+      "tokyo": 0.8127
+     },
+     "served_load_mw": 42496.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2317.7,
+     "solve_s": 0.4,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.6901,
+     "vm_max": 1.0717,
+     "loss_mw": 1349.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5722.5
+     }
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 40176.0,
+     "load_scale": {
+      "tohoku": 0.5484,
+      "tokyo": 0.7719
+     },
+     "served_load_mw": 40176.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2161.7,
+     "solve_s": 0.4,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.7816,
+     "vm_max": 1.0721,
+     "loss_mw": 1193.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5094.5
+     }
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 38645.9,
+     "load_scale": {
+      "tohoku": 0.5187,
+      "tokyo": 0.7447
+     },
+     "served_load_mw": 38645.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2088.2,
+     "solve_s": 0.4,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8264,
+     "vm_max": 1.0717,
+     "loss_mw": 1120.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5326.6
+     }
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 37115.8,
+     "load_scale": {
+      "tohoku": 0.489,
+      "tokyo": 0.7175
+     },
+     "served_load_mw": 37115.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2028.4,
+     "solve_s": 0.3,
+     "boundary_mw": {
+      "新信濃変電所": 1734.9,
+      "東清水変電所": 347.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.859,
+     "vm_max": 1.0712,
+     "loss_mw": 1060.4,
+     "tie_mw": {
+      "tohoku->tokyo": 5626.1
+     }
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 38696.0,
+     "load_scale": {
+      "tohoku": 0.5231,
+      "tokyo": 0.7447
+     },
+     "served_load_mw": 38696.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2087.3,
+     "solve_s": 0.3,
+     "boundary_mw": {
+      "新信濃変電所": 1738.3,
+      "東清水変電所": 347.6,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8264,
+     "vm_max": 1.0718,
+     "loss_mw": 1119.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5282.8
+     }
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 42118.2,
+     "load_scale": {
+      "tohoku": 0.5826,
+      "tokyo": 0.8072
+     },
+     "served_load_mw": 42118.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2296.4,
+     "solve_s": 0.4,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.7051,
+     "vm_max": 1.0716,
+     "loss_mw": 1328.4,
+     "tie_mw": {
+      "tohoku->tokyo": 5714.6
+     }
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 46726.6,
+     "load_scale": {
+      "tohoku": 0.6514,
+      "tokyo": 0.8943
+     },
+     "served_load_mw": 46726.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2473.8,
+     "solve_s": 6.3,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8962,
+     "vm_max": 1.0229,
+     "loss_mw": 1505.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5201.4
+     }
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 51492.0,
+     "load_scale": {
+      "tohoku": 0.7018,
+      "tokyo": 0.9895
+     },
+     "served_load_mw": 51492.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2836.6,
+     "solve_s": 6.3,
+     "boundary_mw": {
+      "新信濃変電所": 1428.1,
+      "東清水変電所": 285.6,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8657,
+     "vm_max": 1.0229,
+     "loss_mw": 1868.6,
+     "tie_mw": {
+      "tohoku->tokyo": 5781.2
+     }
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 54472.2,
+     "load_scale": {
+      "tohoku": 0.6996,
+      "tokyo": 1.0575
+     },
+     "served_load_mw": 54472.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3088.2,
+     "solve_s": 10.0,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8407,
+     "vm_max": 1.0229,
+     "loss_mw": 2120.2,
+     "tie_mw": {
+      "tohoku->tokyo": 5777.3
+     }
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55182.3,
+     "load_scale": {
+      "tohoku": 0.6551,
+      "tokyo": 1.0847
+     },
+     "served_load_mw": 55182.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3194.1,
+     "solve_s": 10.3,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8298,
+     "vm_max": 1.0229,
+     "loss_mw": 2226.1,
+     "tie_mw": {
+      "tohoku->tokyo": 5751.9
+     }
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55257.2,
+     "load_scale": {
+      "tohoku": 0.6078,
+      "tokyo": 1.0982
+     },
+     "served_load_mw": 55257.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3246.1,
+     "solve_s": 9.3,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8241,
+     "vm_max": 1.0229,
+     "loss_mw": 2278.1,
+     "tie_mw": {
+      "tohoku->tokyo": 5722.9
+     }
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55537.1,
+     "load_scale": {
+      "tohoku": 0.579,
+      "tokyo": 1.1117
+     },
+     "served_load_mw": 55537.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3304.3,
+     "solve_s": 9.8,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8179,
+     "vm_max": 1.0237,
+     "loss_mw": 2336.3,
+     "tie_mw": {
+      "tohoku->tokyo": 4707.2
+     }
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 54369.0,
+     "load_scale": {
+      "tohoku": 0.5495,
+      "tokyo": 1.0927
+     },
+     "served_load_mw": 54369.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3220.9,
+     "solve_s": 9.5,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8264,
+     "vm_max": 1.0277,
+     "loss_mw": 2252.9,
+     "tie_mw": {
+      "tohoku->tokyo": 5018.2
+     }
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 54334.9,
+     "load_scale": {
+      "tohoku": 0.5575,
+      "tokyo": 1.0899
+     },
+     "served_load_mw": 54334.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3205.3,
+     "solve_s": 9.9,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8276,
+     "vm_max": 1.0229,
+     "loss_mw": 2237.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5690.2
+     }
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 54694.8,
+     "load_scale": {
+      "tohoku": 0.5902,
+      "tokyo": 1.0899
+     },
+     "served_load_mw": 54694.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3247.0,
+     "solve_s": 2.1,
+     "boundary_mw": {
+      "新信濃変電所": 1078.3,
+      "東清水変電所": 215.7,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8276,
+     "vm_max": 1.0229,
+     "loss_mw": 2279.0,
+     "tie_mw": {
+      "tohoku->tokyo": 5712.4
+     }
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55448.7,
+     "load_scale": {
+      "tohoku": 0.6478,
+      "tokyo": 1.0925
+     },
+     "served_load_mw": 55448.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3260.3,
+     "solve_s": 11.0,
+     "boundary_mw": {
+      "新信濃変電所": 1176.5,
+      "東清水変電所": 235.3,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8265,
+     "vm_max": 1.0229,
+     "loss_mw": 2292.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5747.6
+     }
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 57286.5,
+     "load_scale": {
+      "tohoku": 0.7385,
+      "tokyo": 1.1115
+     },
+     "served_load_mw": 57286.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3569.0,
+     "solve_s": 9.1,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      },
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       },
+       "unmatched": {
+        "battery": 144.8
+       }
+      }
+     },
+     "vm_min": 0.8183,
+     "vm_max": 1.0229,
+     "loss_mw": 2347.4,
+     "tie_mw": {
+      "tohoku->tokyo": 5690.4
+     }
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58384.3,
+     "load_scale": {
+      "tohoku": 0.8165,
+      "tokyo": 1.1168
+     },
+     "served_load_mw": 58384.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3417.8,
+     "solve_s": 10.1,
+     "boundary_mw": {
+      "新信濃変電所": 1119.5,
+      "東清水変電所": 223.9,
+      "上北変電所": 589.2,
+      "今別変換所": 294.6
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8159,
+     "vm_max": 1.0229,
+     "loss_mw": 2449.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5828.2
+     }
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 58020.2,
+     "load_scale": {
+      "tohoku": 0.8489,
+      "tokyo": 1.1005
+     },
+     "served_load_mw": 58020.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3362.7,
+     "solve_s": 10.6,
+     "boundary_mw": {
+      "新信濃変電所": 1017.8,
+      "東清水変電所": 203.5,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8231,
+     "vm_max": 1.0229,
+     "loss_mw": 2394.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5840.5
+     }
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 55766.1,
+     "load_scale": {
+      "tohoku": 0.8188,
+      "tokyo": 1.057
+     },
+     "served_load_mw": 55766.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3160.5,
+     "solve_s": 10.7,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       },
+       "unmatched": {
+        "battery": 41.2
+       }
+      }
+     },
+     "vm_min": 0.8409,
+     "vm_max": 1.0229,
+     "loss_mw": 2151.3,
+     "tie_mw": {
+      "tohoku->tokyo": 5831.0
+     }
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 52756.0,
+     "load_scale": {
+      "tohoku": 0.7638,
+      "tokyo": 1.0026
+     },
+     "served_load_mw": 52756.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2888.7,
+     "solve_s": 11.6,
+     "boundary_mw": {
+      "新信濃変電所": 1470.1,
+      "東清水変電所": 294.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8611,
+     "vm_max": 1.0229,
+     "loss_mw": 1920.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5210.0
+     }
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 49796.0,
+     "load_scale": {
+      "tohoku": 0.7131,
+      "tokyo": 0.9483
+     },
+     "served_load_mw": 49796.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2692.8,
+     "solve_s": 8.9,
+     "boundary_mw": {
+      "新信濃変電所": 1361.6,
+      "東清水変電所": 272.3,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8794,
+     "vm_max": 1.0229,
+     "loss_mw": 1724.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5788.6
+     }
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 46886.1,
+     "load_scale": {
+      "tohoku": 0.6668,
+      "tokyo": 0.8941
+     },
+     "served_load_mw": 46886.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2488.5,
+     "solve_s": 10.0,
+     "boundary_mw": {
+      "新信濃変電所": 1750.0,
+      "東清水変電所": 350.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.8962,
+     "vm_max": 1.0229,
+     "loss_mw": 1520.5,
+     "tie_mw": {
+      "tohoku->tokyo": 5765.6
+     }
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 44716.2,
+     "load_scale": {
+      "tohoku": 0.6331,
+      "tokyo": 0.8534
+     },
+     "served_load_mw": 44716.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 2384.8,
+     "solve_s": 8.7,
+     "boundary_mw": {
+      "新信濃変電所": 970.1,
+      "東清水変電所": 194.0,
+      "上北変電所": 600.0,
+      "今別変換所": 300.0
+     },
+     "injection_issues": {
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.908,
+     "vm_max": 1.0229,
+     "loss_mw": 1416.8,
+     "tie_mw": {
+      "tohoku->tokyo": 5747.7
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "west": {
+   "mode": "dc",
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "model": "full",
+   "n_bus": 8241,
+   "n_trafo_nameplate": 4,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "chubu": {
+      "静岡県": {
+       "n_bus": 188,
+       "gwh": 18297.5,
+       "target_mw": 2907.0
+      },
+      "埼玉県": {
+       "n_bus": 10,
+       "gwh": 940.3,
+       "target_mw": 149.4
+      },
+      "神奈川県": {
+       "n_bus": 10,
+       "gwh": 1557.1,
+       "target_mw": 247.4
+      },
+      "長野県": {
+       "n_bus": 190,
+       "gwh": 13240.2,
+       "target_mw": 2103.6
+      },
+      "群馬県": {
+       "n_bus": 26,
+       "gwh": 1605.6,
+       "target_mw": 255.1
+      },
+      "茨城県": {
+       "n_bus": 1,
+       "gwh": 103.3,
+       "target_mw": 16.4
+      },
+      "愛知県": {
+       "n_bus": 344,
+       "gwh": 56066.7,
+       "target_mw": 8907.7
+      },
+      "岐阜県": {
+       "n_bus": 127,
+       "gwh": 14622.1,
+       "target_mw": 2323.1
+      },
+      "三重県": {
+       "n_bus": 96,
+       "gwh": 19309.2,
+       "target_mw": 3067.8
+      },
+      "山梨県": {
+       "n_bus": 20,
+       "gwh": 1488.2,
+       "target_mw": 236.4
+      },
+      "東京都": {
+       "n_bus": 1,
+       "gwh": 214.4,
+       "target_mw": 34.1
+      },
+      "新潟県": {
+       "n_bus": 10,
+       "gwh": 957.2,
+       "target_mw": 152.1
+      }
+     },
+     "chugoku": {
+      "広島県": {
+       "n_bus": 119,
+       "gwh": 19409.9,
+       "target_mw": 3202.2
+      },
+      "山口県": {
+       "n_bus": 115,
+       "gwh": 10713.9,
+       "target_mw": 1767.6
+      },
+      "岡山県": {
+       "n_bus": 138,
+       "gwh": 15562.6,
+       "target_mw": 2567.5
+      },
+      "島根県": {
+       "n_bus": 61,
+       "gwh": 4943.5,
+       "target_mw": 815.6
+      },
+      "鳥取県": {
+       "n_bus": 47,
+       "gwh": 3468.4,
+       "target_mw": 572.2
+      }
+     },
+     "hokuriku": {
+      "福井県": {
+       "n_bus": 84,
+       "gwh": 7188.7,
+       "target_mw": 1193.8
+      },
+      "富山県": {
+       "n_bus": 145,
+       "gwh": 10219.4,
+       "target_mw": 1697.1
+      },
+      "石川県": {
+       "n_bus": 95,
+       "gwh": 8729.7,
+       "target_mw": 1449.7
+      },
+      "新潟県": {
+       "n_bus": 4,
+       "gwh": 478.6,
+       "target_mw": 79.5
+      }
+     },
+     "kansai": {
+      "滋賀県": {
+       "n_bus": 110,
+       "gwh": 12554.9,
+       "target_mw": 2170.7
+      },
+      "奈良県": {
+       "n_bus": 93,
+       "gwh": 6744.6,
+       "target_mw": 1166.1
+      },
+      "大阪府": {
+       "n_bus": 356,
+       "gwh": 54267.9,
+       "target_mw": 9382.8
+      },
+      "兵庫県": {
+       "n_bus": 272,
+       "gwh": 37508.1,
+       "target_mw": 6485.1
+      },
+      "京都府": {
+       "n_bus": 131,
+       "gwh": 15736.3,
+       "target_mw": 2720.8
+      },
+      "和歌山県": {
+       "n_bus": 61,
+       "gwh": 5925.1,
+       "target_mw": 1024.4
+      }
+     },
+     "kyushu": {
+      "福岡県": {
+       "n_bus": 352,
+       "gwh": 31187.2,
+       "target_mw": 4910.9
+      },
+      "熊本県": {
+       "n_bus": 114,
+       "gwh": 12036.1,
+       "target_mw": 1895.3
+      },
+      "鹿児島県": {
+       "n_bus": 129,
+       "gwh": 10056.5,
+       "target_mw": 1583.6
+      },
+      "宮崎県": {
+       "n_bus": 67,
+       "gwh": 6842.0,
+       "target_mw": 1077.4
+      },
+      "佐賀県": {
+       "n_bus": 73,
+       "gwh": 6672.5,
+       "target_mw": 1050.7
+      },
+      "長崎県": {
+       "n_bus": 69,
+       "gwh": 8271.1,
+       "target_mw": 1302.4
+      },
+      "大分県": {
+       "n_bus": 88,
+       "gwh": 8603.2,
+       "target_mw": 1354.7
+      }
+     },
+     "shikoku": {
+      "徳島県": {
+       "n_bus": 54,
+       "gwh": 6073.4,
+       "target_mw": 960.6
+      },
+      "香川県": {
+       "n_bus": 59,
+       "gwh": 7169.4,
+       "target_mw": 1134.0
+      },
+      "愛媛県": {
+       "n_bus": 85,
+       "gwh": 8183.1,
+       "target_mw": 1294.3
+      },
+      "高知県": {
+       "n_bus": 41,
+       "gwh": 3831.3,
+       "target_mw": 606.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 3985,
+    "q_comp_mvar": 19422.6
+   },
+   "bridge": null,
+   "boundary_injection": [
+    {
+     "name": "新信濃変電所",
+     "bus": "新信濃変電所",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.286
+    },
+    {
+     "name": "飛騨変換所",
+     "bus": "飛騨変換所",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.429
+    },
+    {
+     "name": "佐久間周波数変換所",
+     "bus": "佐久間周波数変換所 275kV",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.143
+    },
+    {
+     "name": "東清水変電所",
+     "bus": "東清水変電所 275kV",
+     "pair": [
+      "chubu",
+      "tokyo"
+     ],
+     "share": 0.143
+    }
+   ],
+   "inject_main_comp_only": true,
+   "n_fragment_gen_off": 896,
+   "fragment_unserved_load_mw": 5696.5,
+   "gate": {
+    "pass": true,
+    "cond_max": 247987930.30389726
+   },
+   "hours": {
+    "0": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 52076.1,
+     "load_scale": {
+      "chubu": 0.6439,
+      "chugoku": 0.6608,
+      "hokuriku": 0.6706,
+      "kansai": 0.7307,
+      "kyushu": 0.7851,
+      "shikoku": 0.7424
+     },
+     "served_load_mw": 52076.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 8425.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 1127.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 274.3,
+      "chubu->kansai": 1569.3,
+      "chugoku->kansai": 3692.0,
+      "chugoku->kyushu": -1911.6,
+      "chugoku->shikoku": -1901.7,
+      "hokuriku->kansai": 605.9,
+      "kansai->shikoku": -147.7
+     }
+    },
+    "1": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 49398.0,
+     "load_scale": {
+      "chubu": 0.6114,
+      "chugoku": 0.6266,
+      "hokuriku": 0.6362,
+      "kansai": 0.694,
+      "kyushu": 0.7423,
+      "shikoku": 0.7044
+     },
+     "served_load_mw": 49398.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7713.4,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 414.5
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 92.8,
+      "chubu->kansai": 948.0,
+      "chugoku->kansai": 4691.1,
+      "chugoku->kyushu": -2461.5,
+      "chugoku->shikoku": -2056.0,
+      "hokuriku->kansai": 570.4,
+      "kansai->shikoku": -140.3
+     }
+    },
+    "2": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 47619.0,
+     "load_scale": {
+      "chubu": 0.5897,
+      "chugoku": 0.6038,
+      "hokuriku": 0.6134,
+      "kansai": 0.6696,
+      "kyushu": 0.7141,
+      "shikoku": 0.6791
+     },
+     "served_load_mw": 47619.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7517.4,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "unmatched": {
+        "pumped_hydro": 218.5
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -264.1,
+      "chubu->kansai": -1090.1,
+      "chugoku->kansai": 5322.1,
+      "chugoku->kyushu": -2794.2,
+      "chugoku->shikoku": -2158.5,
+      "hokuriku->kansai": 310.5,
+      "kansai->shikoku": -135.4
+     }
+    },
+    "3": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 45839.9,
+     "load_scale": {
+      "chubu": 0.5681,
+      "chugoku": 0.5811,
+      "hokuriku": 0.5905,
+      "kansai": 0.6452,
+      "kyushu": 0.6858,
+      "shikoku": 0.6539
+     },
+     "served_load_mw": 45839.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 6992.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -594.8,
+      "飛騨変換所": -892.2,
+      "佐久間周波数変換所": -297.4,
+      "東清水変電所": -297.4
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -374.4,
+      "chubu->kansai": -1467.9,
+      "chugoku->kansai": 5832.1,
+      "chugoku->kyushu": -3005.9,
+      "chugoku->shikoku": -2261.1,
+      "hokuriku->kansai": 297.3,
+      "kansai->shikoku": -130.4
+     }
+    },
+    "4": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 47638.0,
+     "load_scale": {
+      "chubu": 0.5898,
+      "chugoku": 0.6041,
+      "hokuriku": 0.6136,
+      "kansai": 0.6696,
+      "kyushu": 0.715,
+      "shikoku": 0.6793
+     },
+     "served_load_mw": 47638.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -596.0,
+      "飛騨変換所": -894.0,
+      "佐久間周波数変換所": -298.0,
+      "東清水変電所": -298.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -302.4,
+      "chubu->kansai": -1389.8,
+      "chugoku->kansai": 5306.9,
+      "chugoku->kyushu": -2782.5,
+      "chugoku->shikoku": -2157.7,
+      "hokuriku->kansai": 271.3,
+      "kansai->shikoku": -135.4
+     }
+    },
+    "5": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 51327.3,
+     "load_scale": {
+      "chubu": 0.6378,
+      "chugoku": 0.6489,
+      "hokuriku": 0.6632,
+      "kansai": 0.7257,
+      "kyushu": 0.7601,
+      "shikoku": 0.7318
+     },
+     "served_load_mw": 51327.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 8125.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "unmatched": {
+        "pumped_hydro": 827.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": -74.9,
+      "chubu->kansai": -702.0,
+      "chugoku->kansai": 4128.2,
+      "chugoku->kyushu": -2203.3,
+      "chugoku->shikoku": -1943.8,
+      "hokuriku->kansai": 287.8,
+      "kansai->shikoku": -146.7
+     }
+    },
+    "6": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 55448.3,
+     "load_scale": {
+      "chubu": 0.7002,
+      "chugoku": 0.6922,
+      "hokuriku": 0.7253,
+      "kansai": 0.8035,
+      "kyushu": 0.7728,
+      "shikoku": 0.7903
+     },
+     "served_load_mw": 55448.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 8293.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "unmatched": {
+        "pumped_hydro": 995.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 262.3,
+      "chubu->kansai": 543.9,
+      "chugoku->kansai": 3348.8,
+      "chugoku->kyushu": -2039.5,
+      "chugoku->shikoku": -1701.7,
+      "hokuriku->kansai": 361.5,
+      "kansai->shikoku": -162.5
+     }
+    },
+    "7": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 58708.5,
+     "load_scale": {
+      "chubu": 0.7629,
+      "chugoku": 0.7164,
+      "hokuriku": 0.7843,
+      "kansai": 0.8883,
+      "kyushu": 0.7252,
+      "shikoku": 0.8368
+     },
+     "served_load_mw": 58708.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7636.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -489.6,
+      "飛騨変換所": -734.4,
+      "佐久間周波数変換所": -244.8,
+      "東清水変電所": -244.8
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 288.0
+       },
+       "unmatched": {
+        "pumped_hydro": 50.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 796.5,
+      "chubu->kansai": 3020.5,
+      "chugoku->kansai": 3585.0,
+      "chugoku->kyushu": -2680.8,
+      "chugoku->shikoku": -1505.0,
+      "hokuriku->kansai": 644.9,
+      "kansai->shikoku": -179.6
+     }
+    },
+    "8": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 59178.6,
+     "load_scale": {
+      "chubu": 0.7996,
+      "chugoku": 0.6991,
+      "hokuriku": 0.8132,
+      "kansai": 0.9483,
+      "kyushu": 0.5995,
+      "shikoku": 0.8438
+     },
+     "served_load_mw": 59178.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 927.8,
+      "chubu->kansai": 3787.0,
+      "chugoku->kansai": 3991.9,
+      "chugoku->kyushu": -2977.4,
+      "chugoku->shikoku": -1466.0,
+      "hokuriku->kansai": 653.3,
+      "kansai->shikoku": -191.7
+     }
+    },
+    "9": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 56989.6,
+     "load_scale": {
+      "chubu": 0.8038,
+      "chugoku": 0.6479,
+      "hokuriku": 0.808,
+      "kansai": 0.9717,
+      "kyushu": 0.432,
+      "shikoku": 0.8129
+     },
+     "served_load_mw": 56989.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 6648.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 886.6,
+      "chubu->kansai": 3722.2,
+      "chugoku->kansai": 5142.6,
+      "chugoku->kyushu": -3572.3,
+      "chugoku->shikoku": -1580.3,
+      "hokuriku->kansai": 634.2,
+      "kansai->shikoku": -196.5
+     }
+    },
+    "10": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 54874.6,
+     "load_scale": {
+      "chubu": 0.8014,
+      "chugoku": 0.6033,
+      "hokuriku": 0.7981,
+      "kansai": 0.9831,
+      "kyushu": 0.2978,
+      "shikoku": 0.7832
+     },
+     "served_load_mw": 54874.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 4948.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 802.7,
+      "chubu->kansai": 3474.5,
+      "chugoku->kansai": 7295.2,
+      "chugoku->kyushu": -5228.1,
+      "chugoku->shikoku": -1693.0,
+      "hokuriku->kansai": 592.5,
+      "kansai->shikoku": -198.8
+     }
+    },
+    "11": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 53751.6,
+     "load_scale": {
+      "chubu": 0.8034,
+      "chugoku": 0.5772,
+      "hokuriku": 0.7951,
+      "kansai": 0.9947,
+      "kyushu": 0.2127,
+      "shikoku": 0.7674
+     },
+     "served_load_mw": 53751.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 4848.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 819.0,
+      "chubu->kansai": 3694.6,
+      "chugoku->kansai": 7650.4,
+      "chugoku->kyushu": -5300.0,
+      "chugoku->shikoku": -1751.5,
+      "hokuriku->kansai": 621.3,
+      "kansai->shikoku": -201.1
+     }
+    },
+    "12": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 52283.7,
+     "load_scale": {
+      "chubu": 0.7864,
+      "chugoku": 0.5538,
+      "hokuriku": 0.7763,
+      "kansai": 0.9775,
+      "kyushu": 0.1867,
+      "shikoku": 0.7441
+     },
+     "served_load_mw": 52283.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 4159.6,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 606.4,
+      "chubu->kansai": 2578.3,
+      "chugoku->kansai": 8437.1,
+      "chugoku->kyushu": -5791.5,
+      "chugoku->shikoku": -1845.3,
+      "hokuriku->kansai": 488.9,
+      "kansai->shikoku": -197.6
+     }
+    },
+    "13": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 52702.2,
+     "load_scale": {
+      "chubu": 0.7877,
+      "chugoku": 0.5661,
+      "hokuriku": 0.7794,
+      "kansai": 0.9752,
+      "kyushu": 0.2086,
+      "shikoku": 0.7526
+     },
+     "served_load_mw": 52702.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 3748.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 540.6,
+      "chubu->kansai": 2083.0,
+      "chugoku->kansai": 8860.3,
+      "chugoku->kyushu": -6398.7,
+      "chugoku->shikoku": -1812.9,
+      "hokuriku->kansai": 409.7,
+      "kansai->shikoku": -197.2
+     }
+    },
+    "14": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 54667.2,
+     "load_scale": {
+      "chubu": 0.7963,
+      "chugoku": 0.6028,
+      "hokuriku": 0.7932,
+      "kansai": 0.9757,
+      "kyushu": 0.3056,
+      "shikoku": 0.7804
+     },
+     "served_load_mw": 54667.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 4243.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -369.7,
+      "飛騨変換所": -554.5,
+      "佐久間周波数変換所": -184.8,
+      "東清水変電所": -184.8
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 790.2,
+      "chubu->kansai": 2944.4,
+      "chugoku->kansai": 8020.3,
+      "chugoku->kyushu": -5936.2,
+      "chugoku->shikoku": -1705.3,
+      "hokuriku->kansai": 600.7,
+      "kansai->shikoku": -197.3
+     }
+    },
+    "15": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 57998.5,
+     "load_scale": {
+      "chubu": 0.8124,
+      "chugoku": 0.6639,
+      "hokuriku": 0.8177,
+      "kansai": 0.979,
+      "kyushu": 0.4641,
+      "shikoku": 0.8275
+     },
+     "served_load_mw": 57998.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 6148.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -403.4,
+      "飛騨変換所": -605.1,
+      "佐久間周波数変換所": -201.7,
+      "東清水変電所": -201.7
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 821.6,
+      "chubu->kansai": 2629.1,
+      "chugoku->kansai": 5457.5,
+      "chugoku->kyushu": -4082.8,
+      "chugoku->shikoku": -1522.5,
+      "hokuriku->kansai": 527.9,
+      "kansai->shikoku": -197.9
+     }
+    },
+    "16": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 63557.2,
+     "load_scale": {
+      "chubu": 0.8465,
+      "chugoku": 0.7603,
+      "hokuriku": 0.864,
+      "kansai": 0.9971,
+      "kyushu": 0.6968,
+      "shikoku": 0.9063
+     },
+     "served_load_mw": 63557.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 888.4,
+      "chubu->kansai": 2568.5,
+      "chugoku->kansai": 3245.2,
+      "chugoku->kyushu": -3009.5,
+      "chugoku->shikoku": -1214.5,
+      "hokuriku->kansai": 398.2,
+      "kansai->shikoku": -201.6
+     }
+    },
+    "17": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 68236.0,
+     "load_scale": {
+      "chubu": 0.8698,
+      "chugoku": 0.8455,
+      "hokuriku": 0.8989,
+      "kansai": 1.0031,
+      "kyushu": 0.9158,
+      "shikoku": 0.9725
+     },
+     "served_load_mw": 68235.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 9984.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -383.8,
+      "飛騨変換所": -575.7,
+      "佐久間周波数変換所": -191.9,
+      "東清水変電所": -191.9
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       },
+       "unmatched": {
+        "battery": 173.1
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 248.4
+       },
+       "unmatched": {
+        "pumped_hydro": 2228.8
+       }
+      },
+      "shikoku": {
+       "unmatched": {
+        "battery": 35.5
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 1206.2,
+      "chubu->kansai": 3410.3,
+      "chugoku->kansai": -151.6,
+      "chugoku->kyushu": -604.4,
+      "chugoku->shikoku": -957.4,
+      "hokuriku->kansai": 567.4,
+      "kansai->shikoku": -202.8
+     }
+    },
+    "18": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 69938.5,
+     "load_scale": {
+      "chubu": 0.869,
+      "chugoku": 0.8835,
+      "hokuriku": 0.9048,
+      "kansai": 0.9891,
+      "kyushu": 1.0356,
+      "shikoku": 0.9965
+     },
+     "served_load_mw": 69938.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 11238.8,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -348.9,
+      "飛騨変換所": -523.4,
+      "佐久間周波数変換所": -174.5,
+      "東清水変電所": -174.5
+     },
+     "injection_issues": {
+      "chubu": {
+       "unmatched": {
+        "battery": 74.4
+       }
+      },
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       },
+       "unmatched": {
+        "battery": 200.0
+       }
+      },
+      "hokuriku": {
+       "unmatched": {
+        "battery": 37.2
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0,
+        "battery": 111.6
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 1170.0
+       },
+       "unmatched": {
+        "pumped_hydro": 2196.7
+       }
+      },
+      "shikoku": {
+       "unmatched": {
+        "battery": 150.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 1186.9,
+      "chubu->kansai": 3240.0,
+      "chugoku->kansai": 380.8,
+      "chugoku->kyushu": 245.7,
+      "chugoku->shikoku": -867.4,
+      "hokuriku->kansai": 523.3,
+      "kansai->shikoku": -200.0
+     }
+    },
+    "19": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 67897.1,
+     "load_scale": {
+      "chubu": 0.8379,
+      "chugoku": 0.8622,
+      "hokuriku": 0.874,
+      "kansai": 0.9503,
+      "kyushu": 1.0301,
+      "shikoku": 0.9674
+     },
+     "served_load_mw": 67897.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 9965.3,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 1170.0
+       },
+       "unmatched": {
+        "pumped_hydro": 1496.4
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 1026.6,
+      "chubu->kansai": 3251.7,
+      "chugoku->kansai": 1301.5,
+      "chugoku->kyushu": -370.8,
+      "chugoku->shikoku": -987.6,
+      "hokuriku->kansai": 493.9,
+      "kansai->shikoku": -192.1
+     }
+    },
+    "20": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 64358.0,
+     "load_scale": {
+      "chubu": 0.7947,
+      "chugoku": 0.817,
+      "hokuriku": 0.8285,
+      "kansai": 0.9014,
+      "kyushu": 0.9746,
+      "shikoku": 0.9171
+     },
+     "served_load_mw": 64358.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -504.0,
+      "飛騨変換所": -756.0,
+      "佐久間周波数変換所": -252.0,
+      "東清水変電所": -252.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 887.8,
+      "chubu->kansai": 2609.7,
+      "chugoku->kansai": 1466.8,
+      "chugoku->kyushu": -1743.0,
+      "chugoku->shikoku": -1191.8,
+      "hokuriku->kansai": 548.2,
+      "kansai->shikoku": -182.3
+     }
+    },
+    "21": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 60838.0,
+     "load_scale": {
+      "chubu": 0.7516,
+      "chugoku": 0.7722,
+      "hokuriku": 0.7833,
+      "kansai": 0.8526,
+      "kyushu": 0.9199,
+      "shikoku": 0.8671
+     },
+     "served_load_mw": 60838.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -466.8,
+      "飛騨変換所": -700.2,
+      "佐久間周波数変換所": -233.4,
+      "東清水変電所": -233.4
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 841.5,
+      "chubu->kansai": 2815.4,
+      "chugoku->kansai": 463.4,
+      "chugoku->kyushu": -150.0,
+      "chugoku->shikoku": -1395.1,
+      "hokuriku->kansai": 694.3,
+      "kansai->shikoku": -172.4
+     }
+    },
+    "22": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 57337.1,
+     "load_scale": {
+      "chubu": 0.7085,
+      "chugoku": 0.7277,
+      "hokuriku": 0.7382,
+      "kansai": 0.8039,
+      "kyushu": 0.8662,
+      "shikoku": 0.8172
+     },
+     "served_load_mw": 57337.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -600.0,
+      "飛騨変換所": -900.0,
+      "佐久間周波数変換所": -300.0,
+      "東清水変電所": -300.0
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 232.3,
+      "chubu->kansai": 46.6,
+      "chugoku->kansai": 3539.8,
+      "chugoku->kyushu": -840.3,
+      "chugoku->shikoku": -1597.6,
+      "hokuriku->kansai": 276.4,
+      "kansai->shikoku": -162.5
+     }
+    },
+    "23": {
+     "solver": "dc",
+     "converged": true,
+     "net_demand_mw": 54716.1,
+     "load_scale": {
+      "chubu": 0.6762,
+      "chugoku": 0.6944,
+      "hokuriku": 0.7045,
+      "kansai": 0.7673,
+      "kyushu": 0.8261,
+      "shikoku": 0.7799
+     },
+     "served_load_mw": 54716.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 7298.9,
+     "solve_s": 0.1,
+     "boundary_mw": {
+      "新信濃変電所": -332.6,
+      "飛騨変換所": -498.9,
+      "佐久間周波数変換所": -166.3,
+      "東清水変電所": -166.3
+     },
+     "injection_issues": {
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      }
+     },
+     "tie_mw": {
+      "chubu->hokuriku": 123.4,
+      "chubu->kansai": -747.7,
+      "chugoku->kansai": 3953.3,
+      "chugoku->kyushu": -1355.1,
+      "chugoku->shikoku": -1749.2,
+      "hokuriku->kansai": 310.8,
+      "kansai->shikoku": -155.1
+     }
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  },
+  "okinawa": {
+   "mode": "ac",
+   "regions": [
+    "okinawa"
+   ],
+   "model": "full",
+   "n_bus": 100,
+   "n_trafo_nameplate": 0,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "okinawa": {
+      "沖縄県": {
+       "n_bus": 78,
+       "gwh": 8180.8,
+       "target_mw": 1360.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 78,
+    "q_comp_mvar": 357.6
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "inject_main_comp_only": true,
+   "n_fragment_gen_off": 2,
+   "fragment_unserved_load_mw": 113.3,
+   "gate": {
+    "pass": true,
+    "cond_max": 42063.99357139445
+   },
+   "hours": {
+    "0": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1158.2,
+     "load_scale": {
+      "okinawa": 0.8516
+     },
+     "served_load_mw": 1158.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 86.8,
+     "solve_s": 0.0,
+     "injection_issues": {
+      "okinawa": {
+       "unmatched": {
+        "battery": 59.4
+       }
+      }
+     },
+     "vm_min": 0.8393,
+     "vm_max": 1.0001,
+     "loss_mw": 27.4,
+     "tie_mw": {}
+    },
+    "1": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1096.0,
+     "load_scale": {
+      "okinawa": 0.8059
+     },
+     "served_load_mw": 1096.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 23.8,
+     "solve_s": 0.0,
+     "vm_min": 0.8657,
+     "vm_max": 1.0007,
+     "loss_mw": 23.8,
+     "tie_mw": {}
+    },
+    "2": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1054.9,
+     "load_scale": {
+      "okinawa": 0.7757
+     },
+     "served_load_mw": 1054.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 21.9,
+     "solve_s": 0.0,
+     "vm_min": 0.8817,
+     "vm_max": 1.0011,
+     "loss_mw": 21.9,
+     "tie_mw": {}
+    },
+    "3": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1013.8,
+     "load_scale": {
+      "okinawa": 0.7454
+     },
+     "served_load_mw": 1013.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": -30.3,
+     "solve_s": 0.0,
+     "vm_min": 0.8968,
+     "vm_max": 1.0014,
+     "loss_mw": 19.9,
+     "tie_mw": {}
+    },
+    "4": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1056.0,
+     "load_scale": {
+      "okinawa": 0.7765
+     },
+     "served_load_mw": 1056.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 22.0,
+     "solve_s": 0.0,
+     "vm_min": 0.8813,
+     "vm_max": 1.0011,
+     "loss_mw": 22.0,
+     "tie_mw": {}
+    },
+    "5": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1146.9,
+     "load_scale": {
+      "okinawa": 0.8433
+     },
+     "served_load_mw": 1146.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 26.1,
+     "solve_s": 0.0,
+     "vm_min": 0.8443,
+     "vm_max": 1.0002,
+     "loss_mw": 26.1,
+     "tie_mw": {}
+    },
+    "6": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1266.1,
+     "load_scale": {
+      "okinawa": 0.931
+     },
+     "served_load_mw": 1266.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 31.2,
+     "solve_s": 0.0,
+     "vm_min": 0.7846,
+     "vm_max": 1.0,
+     "loss_mw": 31.2,
+     "tie_mw": {}
+    },
+    "7": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1385.8,
+     "load_scale": {
+      "okinawa": 1.0189
+     },
+     "served_load_mw": 1385.8,
+     "served_frac": 1.0,
+     "slack_abs_mw": 41.3,
+     "solve_s": 0.0,
+     "vm_min": 0.6951,
+     "vm_max": 1.0,
+     "loss_mw": 41.3,
+     "tie_mw": {}
+    },
+    "8": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1455.0,
+     "load_scale": {
+      "okinawa": 1.0698
+     },
+     "served_load_mw": 1454.9,
+     "served_frac": 1.0,
+     "slack_abs_mw": 34.4,
+     "solve_s": 0.3,
+     "vm_min": 0.9707,
+     "vm_max": 1.0025,
+     "loss_mw": 34.4,
+     "tie_mw": {}
+    },
+    "9": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1463.1,
+     "load_scale": {
+      "okinawa": 1.0758
+     },
+     "served_load_mw": 1463.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 34.8,
+     "solve_s": 0.2,
+     "vm_min": 0.9703,
+     "vm_max": 1.0024,
+     "loss_mw": 34.8,
+     "tie_mw": {}
+    },
+    "10": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1457.2,
+     "load_scale": {
+      "okinawa": 1.0715
+     },
+     "served_load_mw": 1457.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 34.5,
+     "solve_s": 0.2,
+     "vm_min": 0.9706,
+     "vm_max": 1.0025,
+     "loss_mw": 34.5,
+     "tie_mw": {}
+    },
+    "11": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1468.1,
+     "load_scale": {
+      "okinawa": 1.0795
+     },
+     "served_load_mw": 1468.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 35.0,
+     "solve_s": 0.2,
+     "vm_min": 0.9701,
+     "vm_max": 1.0024,
+     "loss_mw": 35.0,
+     "tie_mw": {}
+    },
+    "12": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1447.0,
+     "load_scale": {
+      "okinawa": 1.064
+     },
+     "served_load_mw": 1447.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 55.6,
+     "solve_s": 0.0,
+     "vm_min": 0.5732,
+     "vm_max": 1.0,
+     "loss_mw": 55.6,
+     "tie_mw": {}
+    },
+    "13": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1428.7,
+     "load_scale": {
+      "okinawa": 1.0505
+     },
+     "served_load_mw": 1428.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 48.1,
+     "solve_s": 0.0,
+     "vm_min": 0.6371,
+     "vm_max": 1.0,
+     "loss_mw": 48.1,
+     "tie_mw": {}
+    },
+    "14": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1444.1,
+     "load_scale": {
+      "okinawa": 1.0618
+     },
+     "served_load_mw": 1444.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 53.1,
+     "solve_s": 0.0,
+     "vm_min": 0.5947,
+     "vm_max": 1.0,
+     "loss_mw": 53.1,
+     "tie_mw": {}
+    },
+    "15": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1473.4,
+     "load_scale": {
+      "okinawa": 1.0834
+     },
+     "served_load_mw": 1473.4,
+     "served_frac": 1.0,
+     "slack_abs_mw": 35.2,
+     "solve_s": 0.2,
+     "vm_min": 0.9699,
+     "vm_max": 1.0023,
+     "loss_mw": 35.2,
+     "tie_mw": {}
+    },
+    "16": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1535.5,
+     "load_scale": {
+      "okinawa": 1.129
+     },
+     "served_load_mw": 1535.5,
+     "served_frac": 1.0,
+     "slack_abs_mw": 38.2,
+     "solve_s": 0.2,
+     "vm_min": 0.9673,
+     "vm_max": 1.0016,
+     "loss_mw": 38.2,
+     "tie_mw": {}
+    },
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1577.6,
+     "load_scale": {
+      "okinawa": 1.16
+     },
+     "served_load_mw": 1577.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 52.0,
+     "solve_s": 0.2,
+     "injection_issues": {
+      "okinawa": {
+       "unmatched": {
+        "battery": 11.6
+       }
+      }
+     },
+     "vm_min": 0.9656,
+     "vm_max": 1.001,
+     "loss_mw": 40.4,
+     "tie_mw": {}
+    },
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1575.6,
+     "load_scale": {
+      "okinawa": 1.1585
+     },
+     "served_load_mw": 1575.6,
+     "served_frac": 1.0,
+     "slack_abs_mw": 49.8,
+     "solve_s": 0.2,
+     "injection_issues": {
+      "okinawa": {
+       "unmatched": {
+        "battery": 9.6
+       }
+      }
+     },
+     "vm_min": 0.9656,
+     "vm_max": 1.0011,
+     "loss_mw": 40.2,
+     "tie_mw": {}
+    },
+    "19": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1517.1,
+     "load_scale": {
+      "okinawa": 1.1155
+     },
+     "served_load_mw": 1517.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 37.3,
+     "solve_s": 0.2,
+     "vm_min": 0.9681,
+     "vm_max": 1.0018,
+     "loss_mw": 37.3,
+     "tie_mw": {}
+    },
+    "20": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1436.0,
+     "load_scale": {
+      "okinawa": 1.0559
+     },
+     "served_load_mw": 1436.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 50.0,
+     "solve_s": 0.0,
+     "vm_min": 0.6212,
+     "vm_max": 1.0,
+     "loss_mw": 50.0,
+     "tie_mw": {}
+    },
+    "21": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1356.0,
+     "load_scale": {
+      "okinawa": 0.9971
+     },
+     "served_load_mw": 1356.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 38.1,
+     "solve_s": 0.0,
+     "vm_min": 0.7227,
+     "vm_max": 1.0,
+     "loss_mw": 38.1,
+     "tie_mw": {}
+    },
+    "22": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1277.1,
+     "load_scale": {
+      "okinawa": 0.939
+     },
+     "served_load_mw": 1277.1,
+     "served_frac": 1.0,
+     "slack_abs_mw": 31.9,
+     "solve_s": 0.0,
+     "vm_min": 0.7782,
+     "vm_max": 1.0,
+     "loss_mw": 31.9,
+     "tie_mw": {}
+    },
+    "23": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 1218.2,
+     "load_scale": {
+      "okinawa": 0.8957
+     },
+     "served_load_mw": 1218.2,
+     "served_frac": 1.0,
+     "slack_abs_mw": 28.5,
+     "solve_s": 0.0,
+     "vm_min": 0.8107,
+     "vm_max": 1.0,
+     "loss_mw": 28.5,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 24,
+   "n_converged": 24,
+   "all_converged": true
+  }
+ }
+}

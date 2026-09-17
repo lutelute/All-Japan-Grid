@@ -1,50 +1,80 @@
 # Japan Power Grid - Inter-Regional Interconnection Lines
 # Defines all cross-regional transmission interconnections
 #
-# These links connect the 10 regional power grids into the national system.
-# Data sourced from OCCTO (Organization for Cross-regional Coordination
-# of Transmission Operators) public planning documents.
+# 2026-08-19 正本化(介入#33): 旧版はAI生成の近似定義で、以下の誤りを含んでいた:
+#   - ic_005 中部北陸間を「加賀〜越前」と定義(両方とも北陸域内の変電所。実際は
+#     南福光BTB)。容量1,900MWは越前嶺南線(北陸関西間)の順方向値と一致=混同
+#   - 北陸関西間連系線(越前嶺南線)が丸ごと欠落
+#   - ic_007 関西四国間を type:AC・「淡路島経由」と記載(実際はDC・紀伊水道直流)
+#   - 容量が方向対称(実際は関門 順850/逆2,850 など大きく非対称)
+# 本版の容量値はすべて OCCTO 系統情報公表(kohyo_04・30分値・15か月)の
+# 期間最大運用容量。正本: data/interconnector_capacity_sources.jsonl
+# (1値1行・原文quote・出典URL付き。中央値・分布もそこに記録)。
+# 旧版は data/reference/interconnections_legacy_2024.yaml(回帰比較用)。
 #
 # Types:
 #   AC   - Standard AC transmission line
-#   HVDC - High Voltage Direct Current (used for undersea cables)
+#   HVDC - High Voltage Direct Current (undersea/long-distance DC)
 #   FC   - Frequency Converter (bridges the 50/60 Hz boundary)
+#   BTB  - Back-to-back DC converter (same frequency, asynchronous)
 #
-# Capacity values represent the transmission capability (運用容量)
-# as published by OCCTO for wide-area system operation.
+# 方向の規約: from_region → to_region が OCCTO 公表の「順方向」。
+#   capacity_fwd_mw = 順方向運用容量(期間最大) / capacity_rev_mw = 逆方向。
+#   capacity_mw は後方互換のレガシー値 = max(fwd, rev)。方向を区別できる
+#   消費者(UC制約)は fwd/rev を使うこと。
+#   運用容量は季節・系統状態で変動する。期間最大は「設備能力の下限」として
+#   読む(中央値は正本jsonl参照。特に ic_005 南福光は中央値300MW)。
 
 interconnections:
   - id: "ic_001"
-    name_ja: "北本連系線"
+    name_ja: "北海道本州間連系設備"
     name_en: "Hokkaido-Honshu HVDC Link"
     from_region: "hokkaido"
     to_region: "tohoku"
     capacity_mw: 900
+    capacity_fwd_mw: 900
+    capacity_rev_mw: 900
     voltage_kv: 250
     type: "HVDC"
-    description: "Undersea HVDC cable connecting Hokkaido to Tohoku (北海道本州間連系設備)"
+    description: "Undersea/tunnel HVDC links connecting Hokkaido to Tohoku"
     route:
       from_substation_ja: "函館変換所"
       from_substation_en: "Hakodate Converter"
       to_substation_ja: "上北変換所"
       to_substation_en: "Kamikita Converter"
-    notes: "HVDC undersea cable across Tsugaru Strait. Capacity upgraded from 600 MW to 900 MW (March 2019)."
+    converters:
+      - name_ja: "函館変換所"   # 旧北本(600MW)・モデル未収載(住所待ち)
+        capacity_mw: 600
+      - name_ja: "上北変換所"   # 旧北本 本州側
+        capacity_mw: 600
+        location: {latitude: 40.8017, longitude: 141.1973}
+      - name_ja: "北斗変換所"   # 新北本(300MW) 北海道側
+        capacity_mw: 300
+        location: {latitude: 41.9166, longitude: 140.5859}
+      - name_ja: "今別変換所"   # 新北本 本州側
+        capacity_mw: 300
+        location: {latitude: 41.1337, longitude: 140.5140}
+    provenance: "occto:北海道・本州間電力連系設備:順方向/逆方向 (max 900/900, 中央値 700/900)"
+    notes: "旧北本(函館—上北 600MW)+新北本(北斗—今別 300MW)=計900MW。順方向=北海道→東北。"
 
   - id: "ic_002"
-    name_ja: "東北東京間連系線"
+    name_ja: "東北東京間連系線"   # KEEP_LIVE_TIES が名前参照 — 変更禁止
     name_en: "Tohoku-Tokyo Interconnection"
     from_region: "tohoku"
     to_region: "tokyo"
-    capacity_mw: 5550
+    capacity_mw: 6400
+    capacity_fwd_mw: 6400
+    capacity_rev_mw: 2360
     voltage_kv: 500
     type: "AC"
     description: "AC interconnection between Tohoku and Tokyo regions"
     route:
-      from_substation_ja: "相馬変電所"
-      from_substation_en: "Soma Substation"
-      to_substation_ja: "新いわき変電所"
-      to_substation_en: "Shin-Iwaki Substation"
-    notes: "Multiple 500kV routes. Total capacity includes both existing and reinforced routes."
+      from_substation_ja: "南相馬変電所"
+      from_substation_en: "Minami-Soma Substation"
+      to_substation_ja: "新いわき開閉所"
+      to_substation_en: "Shin-Iwaki Switching Station"
+    provenance: "occto:相馬双葉幹線:順方向/逆方向 (max 6400/2360, 中央値 4810/2360)"
+    notes: "相馬双葉幹線ほか500kVルート。順方向=東北→東京。"
 
   - id: "ic_003"
     name_ja: "東京中部間連系設備"
@@ -52,14 +82,16 @@ interconnections:
     from_region: "tokyo"
     to_region: "chubu"
     capacity_mw: 2100
+    capacity_fwd_mw: 2100
+    capacity_rev_mw: 2100
     voltage_kv: 275
     type: "FC"
     description: "Frequency converter stations bridging 50 Hz (Tokyo) and 60 Hz (Chubu)"
     route:
-      from_substation_ja: "新信濃変換所"
-      from_substation_en: "Shin-Shinano Converter"
-      to_substation_ja: "東清水変換所"
-      to_substation_en: "Higashi-Shimizu Converter"
+      from_substation_ja: "新信濃変電所"
+      from_substation_en: "Shin-Shinano Substation"
+      to_substation_ja: "東清水変電所"
+      to_substation_en: "Higashi-Shimizu Substation"
     frequency_converters:
       - name_ja: "新信濃変換所"
         name_en: "Shin-Shinano Converter"
@@ -79,109 +111,191 @@ interconnections:
         location:
           latitude: 35.0153
           longitude: 138.4956
-    notes: "Crosses the 50/60 Hz boundary. Total 2,100 MW via 3 frequency converter stations (新信濃 600MW + 佐久間 300MW + 東清水 300MW + capacity increase 900MW)."
+      - name_ja: "飛騨変換所"   # 飛騨信濃直流幹線(±200kV DC)の60Hz端。旧版はnotesのみでリスト外だった
+        name_en: "Hida Converter"
+        capacity_mw: 900
+        location:
+          latitude: 36.0684
+          longitude: 137.0589
+    provenance: "occto:周波数変換設備:順方向/逆方向 (max 2100/2100, 中央値 1800/1800)"
+    notes: "新信濃600+佐久間300+東清水300+飛騨信濃900=計2,100MW。順方向=東京→中部。"
 
   - id: "ic_004"
     name_ja: "中部関西間連系線"
     name_en: "Chubu-Kansai Interconnection"
     from_region: "chubu"
     to_region: "kansai"
-    capacity_mw: 2530
+    capacity_mw: 2500
+    capacity_fwd_mw: 2500
+    capacity_rev_mw: 1700
     voltage_kv: 500
     type: "AC"
     description: "AC interconnection between Chubu and Kansai regions"
     route:
-      from_substation_ja: "東近江変電所"
-      from_substation_en: "Higashi-Omi Substation"
-      to_substation_ja: "関ヶ原変電所"
-      to_substation_en: "Sekigahara Substation"
-    notes: "500kV AC lines crossing the Chubu-Kansai boundary."
+      from_substation_ja: "三重開閉所"
+      from_substation_en: "Mie Switching Station"
+      to_substation_ja: "東近江開閉所"
+      to_substation_en: "Higashi-Omi Switching Station"
+    provenance: "occto:三重東近江線:順方向/逆方向 (max 1700/2500, 中央値 1030/2500)"
+    notes: >
+      三重東近江線500kV。OCCTOの順方向=関西→中部(boundary.pyの検証済み
+      対応表・台帳54で実測中央値から再現確認済み)なので、本YAMLの
+      from(chubu)→to(kansai)=OCCTO逆方向2,500 / to→from=OCCTO順1,700。
+      実測中央値潮流は中部→関西2,000MW(容量2,500の内側=整合)。
+      旧版の『東近江〜関ヶ原』は誤り。
 
   - id: "ic_005"
     name_ja: "中部北陸間連系線"
-    name_en: "Chubu-Hokuriku Interconnection"
+    name_en: "Chubu-Hokuriku BTB Interconnection"
     from_region: "chubu"
     to_region: "hokuriku"
-    capacity_mw: 1900
-    voltage_kv: 275
-    type: "AC"
-    description: "AC interconnection between Chubu and Hokuriku regions"
+    capacity_mw: 300
+    capacity_fwd_mw: 300
+    capacity_rev_mw: 300
+    voltage_kv: 500
+    type: "BTB"
+    description: "Back-to-back DC converter at Minami-Fukumitsu (asynchronous, same 60 Hz)"
     route:
-      from_substation_ja: "加賀変電所"
-      from_substation_en: "Kaga Substation"
-      to_substation_ja: "越前変電所"
-      to_substation_en: "Echizen Substation"
-    notes: "275kV AC lines. Hokuriku region is relatively small and interconnected via Chubu."
+      from_substation_ja: "南福光連系所"
+      from_substation_en: "Minami-Fukumitsu Interconnection Station"
+      to_substation_ja: "南福光連系所"
+      to_substation_en: "Minami-Fukumitsu Interconnection Station"
+    converters:
+      - name_ja: "南福光連系所"
+        capacity_mw: 300
+        location: {latitude: 36.4991, longitude: 136.8249}
+    provenance: "occto:南福光連系所・南福光変電所の連系設備:順方向/逆方向 (max 1310/1980, 中央値 300/300)"
+    notes: >
+      中部北陸間はBTB(南福光連系所)による非同期連系で、交流の直通は無い。
+      容量はBTB定格=運用容量の中央値300MW(順逆とも)を採用。公表期間最大
+      (順1,310/逆1,980)は例外状態の包絡値で、常態容量として使うと過大
+      (オーナー既往指摘 2026-06-11「北陸に2,000MWもtielineは無い」・
+      fy2023r2のシナリオ側override 300MWと同判断)。旧版の『加賀〜越前
+      1,900MW AC』は誤り(両方とも北陸域内・1,900は越前嶺南線の値)。
+      順方向=中部→北陸。
 
   - id: "ic_006"
     name_ja: "関西中国間連系線"
     name_en: "Kansai-Chugoku Interconnection"
     from_region: "kansai"
     to_region: "chugoku"
-    capacity_mw: 4090
+    capacity_mw: 4850
+    capacity_fwd_mw: 4600
+    capacity_rev_mw: 4850
     voltage_kv: 500
     type: "AC"
     description: "AC interconnection between Kansai and Chugoku regions"
     route:
       from_substation_ja: "西播変電所"
       from_substation_en: "Seiban Substation"
-      to_substation_ja: "山崎変電所"
-      to_substation_en: "Yamasaki Substation"
-    notes: "500kV AC lines through the Chugoku Mountains corridor."
+      to_substation_ja: "東岡山変電所"
+      to_substation_en: "Higashi-Okayama Substation"
+    provenance: "occto:関西-中国(東)/(西):順方向/逆方向 (max 4600/4850, 中央値 3260/4600)"
+    notes: >
+      西播東岡山線・山崎智頭線の2ルート。OCCTOは(東)(西)を別名で公表するが
+      期間最大は同値=同一断面の合計とみなし単一リンクで扱う(過大計上回避)。
+      順方向=関西→中国。
 
   - id: "ic_007"
     name_ja: "関西四国間連系線"
-    name_en: "Kansai-Shikoku Interconnection"
+    name_en: "Kansai-Shikoku HVDC Interconnection"
     from_region: "kansai"
     to_region: "shikoku"
-    capacity_mw: 1400
-    voltage_kv: 500
-    type: "AC"
-    description: "AC interconnection between Kansai and Shikoku via Awaji Island"
+    capacity_mw: 700
+    capacity_fwd_mw: 109
+    capacity_rev_mw: 700
+    voltage_kv: 250
+    type: "HVDC"
+    description: "Kii Channel HVDC link (Anan-Kihoku DC trunk line)"
     route:
-      from_substation_ja: "紀北変電所"
-      from_substation_en: "Kihoku Substation"
-      to_substation_ja: "阿南変電所"
-      to_substation_en: "Anan Substation"
-    notes: "Crosses the Kii Channel via undersea cable and overhead lines through Awaji Island."
+      from_substation_ja: "紀北変換所"
+      from_substation_en: "Kihoku Converter"
+      to_substation_ja: "阿南周波数変換所"
+      to_substation_en: "Anan Converter"
+    converters:
+      - name_ja: "紀北変換所"
+        location: {latitude: 34.2132, longitude: 135.5035}
+      - name_ja: "阿南周波数変換所"
+        location: {latitude: 33.8282, longitude: 134.6347}
+    provenance: "occto:阿南紀北直流幹線:順方向/逆方向 (max 109/700, 中央値 0/70)"
+    notes: >
+      阿南紀北直流幹線(紀伊水道直流・阿南〜由良〜紀北)。設備設計は1,400MW
+      (700MW×2極)だが公表運用容量の期間最大は逆(四国→関西)700MW・順は109MW。
+      旧版の『AC・淡路島経由』は誤り(DCであり淡路島は経由しない)。
+      順方向=関西→四国。
 
   - id: "ic_008"
     name_ja: "中国四国間連系線"
     name_en: "Chugoku-Shikoku Interconnection"
     from_region: "chugoku"
     to_region: "shikoku"
-    capacity_mw: 1200
+    capacity_mw: 1450
+    capacity_fwd_mw: 1200
+    capacity_rev_mw: 1450
     voltage_kv: 500
     type: "AC"
-    description: "AC interconnection between Chugoku and Shikoku via Seto Ohashi Bridge"
+    description: "AC interconnection between Chugoku and Shikoku via Seto-Ohashi Bridge"
     route:
-      from_substation_ja: "水島変電所"
-      from_substation_en: "Mizushima Substation"
+      from_substation_ja: "東山口変電所"
+      from_substation_en: "Higashi-Yamaguchi(Mizushima side) Substation"
       to_substation_ja: "讃岐変電所"
       to_substation_en: "Sanuki Substation"
-    notes: "500kV lines crossing the Seto Inland Sea via the Great Seto Bridge corridor."
+    provenance: "occto:本四連系線:順方向/逆方向 (max 1200/1450, 中央値 1200/1200)"
+    notes: "本四連系線500kV(瀬戸大橋経由)。順方向=中国→四国。"
 
   - id: "ic_009"
     name_ja: "関門連系線"
     name_en: "Kanmon Interconnection (Chugoku-Kyushu)"
     from_region: "chugoku"
     to_region: "kyushu"
-    capacity_mw: 2780
+    capacity_mw: 2850
+    capacity_fwd_mw: 850
+    capacity_rev_mw: 2850
     voltage_kv: 500
     type: "AC"
-    description: "AC interconnection between Chugoku and Kyushu via Kanmon Strait"
+    description: "AC interconnection between Chugoku and Kyushu across the Kanmon Strait"
     route:
       from_substation_ja: "新山口変電所"
       from_substation_en: "Shin-Yamaguchi Substation"
       to_substation_ja: "北九州変電所"
       to_substation_en: "Kitakyushu Substation"
-    notes: "Named after the Kanmon Strait (関門海峡) between Honshu and Kyushu. Undersea cable crossing."
+    provenance: "occto:関門連系線:順方向/逆方向 (max 850/2850, 中央値 370/2010)"
+    notes: >
+      関門連系線500kV 2回線。運用容量は強い非対称: 順(中国→九州)は期間最大でも
+      850MW・中央値370MW、逆(九州→中国)は最大2,850MW。旧版の対称2,780MWは
+      順方向を3.3倍過大にしていた。順方向=中国→九州。
+
+  - id: "ic_010"
+    name_ja: "北陸関西間連系線"
+    name_en: "Hokuriku-Kansai Interconnection"
+    from_region: "hokuriku"
+    to_region: "kansai"
+    capacity_mw: 1900
+    capacity_fwd_mw: 1900
+    capacity_rev_mw: 1600
+    voltage_kv: 500
+    type: "AC"
+    description: "AC interconnection between Hokuriku and Kansai regions"
+    route:
+      from_substation_ja: "越前変電所"
+      from_substation_en: "Echizen Substation"
+      to_substation_ja: "嶺南変電所"
+      to_substation_en: "Reinan Substation"
+    provenance: "occto:越前嶺南線:順方向/逆方向 (max 1900/1600, 中央値 1900/900)"
+    notes: >
+      越前嶺南線500kV。旧版には丸ごと欠落していた(その容量1,900MWだけが
+      ic_005 中部北陸に誤って割り当てられていた)。順方向=北陸→関西。
 
 # Metadata
 metadata:
-  source: "OCCTO (電力広域的運営推進機関) wide-area system operation data"
-  last_updated: "2024-04"
+  source: >
+    OCCTO 系統情報公表 種別04(連系線運用容量・30分値)。正本=
+    data/interconnector_capacity_sources.jsonl(28レコード・原文quote・
+    出典URL・分布付き)。抽出器=scripts/capacity/occto_interconnector_capacity.py
+  last_updated: "2026-08-19"
+  intervention: "#33 (docs/MODEL_INTERVENTIONS.md)"
   notes: >
-    Capacity values represent the planned operational capability (運用容量).
-    Actual operational capacity may vary due to system conditions.
+    容量=期間最大運用容量(設備能力の下限として読む。中央値は正本参照)。
+    OCCTOはこのほか「中部フェンス」「関西フェンス」「北陸フェンス」の
+    複数連系合成断面も公表するが、リンク単位のモデルでは使用しない。
     Okinawa is an isolated grid with no interconnection to the mainland.

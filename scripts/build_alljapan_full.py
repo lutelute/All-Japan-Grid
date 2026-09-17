@@ -37,6 +37,7 @@ from src.server.geojson_parser import build_grid_network
 from src.converter.pandapower_builder import PandapowerBuilder
 from src.model.generator import Generator
 from src.utils.geo_utils import haversine_distance
+from src.utils.pandapower_compat import drop_buses as pp_drop_buses
 
 OUT_DIR = os.path.join(PROJECT_ROOT, "output", "matpower_alljapan")
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -395,7 +396,7 @@ def _build_full_region(region):
         for comp in comps2[1:]:
             drop_buses |= comp
         if drop_buses:
-            pp.drop_buses(net, drop_buses)
+            pp_drop_buses(net, drop_buses)
 
     # ── Set all gen vm_pu to 1.0 ──
     for idx in net.gen.index:

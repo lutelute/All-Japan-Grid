@@ -14,6 +14,7 @@ CIM alignment (IEC 61970 / CGMES):
     Bay              -> cim:Bay               (feeder/equipment bay)
     Terminal         -> cim:Terminal          (line end bound to structure)
     TransformerSpec  -> cim:PowerTransformer  (+ ends, + RatioTapChanger)
+    SwitchSpec       -> cim:Breaker           (bay-derived switching device)
 
 Two views over the same objects: this node-breaker layer is faithful and
 auditable; the bus-branch view (current builder output, ``{sid}@{kv}`` buses
@@ -109,6 +110,36 @@ class Bay:
 
 
 @dataclass
+class SwitchSpec:
+    """Switching device derived from a bay (cim:Breaker / cim:Switch).
+
+    運用視点(2026-08-28 オーナー指示「開閉器などで経路を選択できるように」)を
+    node-breaker 層に載せるための最小の器。**開閉器そのものを観測したわけでは
+    ない** — OSM に breaker のタグは通常無い。ここで主張するのは「このベイは
+    どの母線区間とどの回線の間にあり、系統運用上そこが開閉点になりうる」という
+    位置づけだけで、それを ``source`` に明示する。
+
+    kind:
+        coupler  母線連絡(2つ以上の母線区間に跨るベイ)。母線分割/連系の切替点
+        feeder   回線引出(1つの母線区間 + 線路端子)。線路の入切
+        trafo    変圧器引出(変圧器に接続するベイ)
+    normal_open:
+        平常時の想定開閉状態。**観測ではなく運用上の既定**(母線連絡は
+        常時開の運用が多いが事業者・所によって異なる)。UI の初期値であって
+        事実の主張ではない。
+    """
+
+    switch_id: str                    # "{vl_id}/sw{n}"
+    vl_id: str
+    kind: str                         # coupler | feeder | trafo
+    bay_id: Optional[str] = None      # 由来のベイ
+    busbar_ids: list = field(default_factory=list)   # 接する母線区間
+    line_keys: list = field(default_factory=list)    # 接する回線(feeder時)
+    normal_open: bool = False
+    source: str = "inferred-bay"      # 導出根拠(観測ではない)
+
+
+@dataclass
 class Terminal:
     """A transmission-line end bound to substation structure (cim:Terminal).
 
@@ -175,6 +206,7 @@ class SubstationStructure:
     bays: list = field(default_factory=list)
     terminals: list = field(default_factory=list)
     transformers: list = field(default_factory=list)
+    switches: list = field(default_factory=list)
 
     def summary(self) -> dict:
         """Compact counts for logs and A/B comparison."""
@@ -186,4 +218,5 @@ class SubstationStructure:
             "n_bays": len(self.bays),
             "n_terminals": len(self.terminals),
             "n_transformers": len(self.transformers),
+            "n_switches": len(self.switches),
         }

@@ -1,0 +1,504 @@
+{
+ "meta": {
+  "date": "2026-09-02",
+  "git_head": "ff01904",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "west": {
+   "mode": "ac",
+   "regions": [
+    "chubu",
+    "chugoku",
+    "hokuriku",
+    "kansai",
+    "kyushu",
+    "shikoku"
+   ],
+   "model": "full",
+   "provisional_infeed": [
+    {
+     "kv": 154.0,
+     "load_mw": 324.8,
+     "downstream_mw": 147.6,
+     "n_bus": 10,
+     "cluster_names": [
+      "九条変電所",
+      "信濃橋変電所",
+      "北浜変電所",
+      "南港南二丁目変電所"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 14.9,
+     "sn_mva": 487.0
+    },
+    {
+     "kv": 77.0,
+     "load_mw": 239.5,
+     "downstream_mw": 32.8,
+     "n_bus": 15,
+     "cluster_names": [
+      "南海電鉄堺変電所",
+      "堺港変電所",
+      "泉北港変電所",
+      "石津西町変電所"
+     ],
+     "to_upper": "南大阪変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 10.8,
+     "sn_mva": 359.0
+    },
+    {
+     "kv": 77.0,
+     "load_mw": 223.2,
+     "downstream_mw": 0.0,
+     "n_bus": 13,
+     "cluster_names": [
+      "フタバ産業",
+      "中部電力(株) 赤坂変電所",
+      "幸田町変電所",
+      "美合町変電所"
+     ],
+     "to_upper": "幸田変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 3.0,
+     "sn_mva": 335.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 212.6,
+     "downstream_mw": 0.0,
+     "n_bus": 14,
+     "cluster_names": [
+      "中部電力麻生田変電所",
+      "国府変電所",
+      "桜木通三丁目変電所",
+      "諏訪三丁目変電所"
+     ],
+     "to_upper": "chubu junction 34.88",
+     "upper_kv": 275.0,
+     "dist_km": 7.1,
+     "sn_mva": 319.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 157.5,
+     "downstream_mw": 118.1,
+     "n_bus": 2,
+     "cluster_names": [
+      "味生変電所 154kV",
+      "西三国変電所 154kV"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 6.8,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 77.0,
+     "load_mw": 147.6,
+     "downstream_mw": 0.0,
+     "n_bus": 5,
+     "cluster_names": [
+      "湊町変電所",
+      "萩之茶屋変電所",
+      "関西電力下寺変電所",
+      "関西電力桃谷変電所"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 10.7,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 154.0,
+     "load_mw": 144.4,
+     "downstream_mw": 65.6,
+     "n_bus": 4,
+     "cluster_names": [
+      "kansai_sub_910",
+      "千舟一丁目変電所 154kV",
+      "春日出北一丁目変電所",
+      "酉島変電所 154kV"
+     ],
+     "to_upper": "小曽根電力所 (untyped)",
+     "upper_kv": 275.0,
+     "dist_km": 5.8,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 133.2,
+     "downstream_mw": 0.0,
+     "n_bus": 9,
+     "cluster_names": [
+      "九州電力 一の勢変電所 66",
+      "九州電力 一町田変電所",
+      "九州電力 内野河内変電所",
+      "九州電力 姫浦変電所"
+     ],
+     "to_upper": "kyushu junction 32.4",
+     "upper_kv": 500.0,
+     "dist_km": 16.1,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 131.2,
+     "downstream_mw": 0.0,
+     "n_bus": 4,
+     "cluster_names": [
+      "西区変電所",
+      "西区変電所_3",
+      "西区変電所_4",
+      "西区変電所_5"
+     ],
+     "to_upper": "南大阪変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 11.9,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 110.5,
+     "downstream_mw": 26.8,
+     "n_bus": 12,
+     "cluster_names": [
+      "伊野変電所",
+      "佐川変電所",
+      "大渡変電所",
+      "須崎変電所"
+     ],
+     "to_upper": "川内発電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 32.9,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 103.4,
+     "downstream_mw": 0.0,
+     "n_bus": 6,
+     "cluster_names": [
+      "4丁目変電所",
+      "4丁目変電所_2",
+      "広町変電所"
+     ],
+     "to_upper": "新広島変電所 500kV",
+     "upper_kv": 500.0,
+     "dist_km": 27.6,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 102.0,
+     "downstream_mw": 0.0,
+     "n_bus": 9,
+     "cluster_names": [
+      "tokyo_sub_1817",
+      "tokyo_sub_1818",
+      "倉平変電所",
+      "安茂里変電所"
+     ],
+     "to_upper": "長野市変電所 275kV",
+     "upper_kv": 275.0,
+     "dist_km": 13.7,
+     "sn_mva": 300.0
+    },
+    {
+     "kv": 66.0,
+     "load_mw": 101.2,
+     "downstream_mw": 0.0,
+     "n_bus": 9,
+     "cluster_names": [
+      "大波下変電所",
+      "市場変電所",
+      "森変電所",
+      "西屋変電所"
+     ],
+     "to_upper": "kansai junction 35.5",
+     "upper_kv": 500.0,
+     "dist_km": 8.2,
+     "sn_mva": 300.0
+    }
+   ],
+   "n_bus": 7946,
+   "n_trafo_nameplate": 4,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "chubu": {
+      "静岡県": {
+       "n_bus": 191,
+       "gwh": 19059.5,
+       "target_mw": 3108.4
+      },
+      "長野県": {
+       "n_bus": 195,
+       "gwh": 14388.0,
+       "target_mw": 2346.5
+      },
+      "愛知県": {
+       "n_bus": 349,
+       "gwh": 56933.7,
+       "target_mw": 9285.3
+      },
+      "岐阜県": {
+       "n_bus": 128,
+       "gwh": 14764.0,
+       "target_mw": 2407.9
+      },
+      "三重県": {
+       "n_bus": 96,
+       "gwh": 19651.9,
+       "target_mw": 3205.0
+      },
+      "新潟県": {
+       "n_bus": 3,
+       "gwh": 287.2,
+       "target_mw": 46.8
+      }
+     },
+     "chugoku": {
+      "広島県": {
+       "n_bus": 119,
+       "gwh": 19409.9,
+       "target_mw": 3202.2
+      },
+      "山口県": {
+       "n_bus": 115,
+       "gwh": 10713.9,
+       "target_mw": 1767.6
+      },
+      "岡山県": {
+       "n_bus": 138,
+       "gwh": 15562.6,
+       "target_mw": 2567.5
+      },
+      "島根県": {
+       "n_bus": 61,
+       "gwh": 4943.5,
+       "target_mw": 815.6
+      },
+      "鳥取県": {
+       "n_bus": 47,
+       "gwh": 3468.4,
+       "target_mw": 572.2
+      }
+     },
+     "hokuriku": {
+      "福井県": {
+       "n_bus": 84,
+       "gwh": 7236.0,
+       "target_mw": 1189.2
+      },
+      "富山県": {
+       "n_bus": 145,
+       "gwh": 10288.7,
+       "target_mw": 1690.9
+      },
+      "石川県": {
+       "n_bus": 95,
+       "gwh": 8891.4,
+       "target_mw": 1461.2
+      },
+      "新潟県": {
+       "n_bus": 4,
+       "gwh": 478.6,
+       "target_mw": 78.7
+      }
+     },
+     "kansai": {
+      "滋賀県": {
+       "n_bus": 110,
+       "gwh": 12683.7,
+       "target_mw": 2190.9
+      },
+      "奈良県": {
+       "n_bus": 93,
+       "gwh": 6744.6,
+       "target_mw": 1165.0
+      },
+      "大阪府": {
+       "n_bus": 356,
+       "gwh": 54267.9,
+       "target_mw": 9373.7
+      },
+      "兵庫県": {
+       "n_bus": 272,
+       "gwh": 37508.1,
+       "target_mw": 6478.8
+      },
+      "京都府": {
+       "n_bus": 131,
+       "gwh": 15736.3,
+       "target_mw": 2718.1
+      },
+      "和歌山県": {
+       "n_bus": 61,
+       "gwh": 5925.1,
+       "target_mw": 1023.4
+      }
+     },
+     "kyushu": {
+      "福岡県": {
+       "n_bus": 352,
+       "gwh": 31187.2,
+       "target_mw": 4910.9
+      },
+      "熊本県": {
+       "n_bus": 114,
+       "gwh": 12036.1,
+       "target_mw": 1895.3
+      },
+      "鹿児島県": {
+       "n_bus": 129,
+       "gwh": 10056.5,
+       "target_mw": 1583.6
+      },
+      "宮崎県": {
+       "n_bus": 67,
+       "gwh": 6842.0,
+       "target_mw": 1077.4
+      },
+      "佐賀県": {
+       "n_bus": 73,
+       "gwh": 6672.5,
+       "target_mw": 1050.7
+      },
+      "長崎県": {
+       "n_bus": 69,
+       "gwh": 8271.1,
+       "target_mw": 1302.4
+      },
+      "大分県": {
+       "n_bus": 88,
+       "gwh": 8603.2,
+       "target_mw": 1354.7
+      }
+     },
+     "shikoku": {
+      "徳島県": {
+       "n_bus": 54,
+       "gwh": 6073.4,
+       "target_mw": 960.6
+      },
+      "香川県": {
+       "n_bus": 59,
+       "gwh": 7169.4,
+       "target_mw": 1134.0
+      },
+      "愛媛県": {
+       "n_bus": 85,
+       "gwh": 8183.1,
+       "target_mw": 1294.3
+      },
+      "高知県": {
+       "n_bus": 41,
+       "gwh": 3831.3,
+       "target_mw": 606.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 3924,
+    "q_comp_mvar": 19422.6
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "intra_dc_injection": [
+    "ic_007",
+    "ic_005"
+   ],
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 127672700.68775481
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 69937.7,
+     "load_scale": {
+      "chubu": 0.8441,
+      "chugoku": 0.8758,
+      "hokuriku": 0.8323,
+      "kansai": 1.0056,
+      "kyushu": 1.0776,
+      "shikoku": 0.9875
+     },
+     "served_load_mw": 69937.7,
+     "served_frac": 1.0,
+     "slack_abs_mw": 9306.2,
+     "solve_s": 6.2,
+     "intra_dc_mw": {
+      "ic_007": -700.0,
+      "ic_005": 300.0
+     },
+     "injection_issues": {
+      "chubu": {
+       "unmatched": {
+        "battery": 74.4
+       }
+      },
+      "chugoku": {
+       "clipped": {
+        "biomass": 323.0
+       }
+      },
+      "kansai": {
+       "clipped": {
+        "coal": 397.9
+       },
+       "unmatched": {
+        "nuclear": 6578.0
+       }
+      },
+      "kyushu": {
+       "clipped": {
+        "battery": 881.5
+       }
+      },
+      "shikoku": {
+       "unmatched": {
+        "battery": 150.0
+       }
+      }
+     },
+     "vm_min": 0.667,
+     "vm_max": 1.0371,
+     "loss_mw": 3001.5,
+     "tie_mw": {
+      "chubu->hokuriku": 986.0,
+      "chubu->kansai": 6493.7,
+      "chugoku->kansai": 1898.9,
+      "chugoku->kyushu": -1154.6,
+      "chugoku->shikoku": -40.5,
+      "hokuriku->kansai": 832.2,
+      "kansai->shikoku": -206.5
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}

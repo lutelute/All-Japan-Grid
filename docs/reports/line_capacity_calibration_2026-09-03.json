@@ -1,0 +1,1317 @@
+{
+ "date": "2026-09-03",
+ "license": "All-Rights-Reserved。生値は再配布せず、公開するのは比・本数・制約要因の分布のみ",
+ "n_rows_parsed": 10456,
+ "model_ika_ka": {
+  "66": 0.6,
+  "77": 0.7,
+  "110": 0.9,
+  "132": 1.2,
+  "154": 1.0,
+  "187": 1.5,
+  "220": 1.8,
+  "275": 2.0,
+  "500": 4.0
+ },
+ "by_area_voltage": [
+  {
+   "area": "chubu",
+   "kv": 77,
+   "n_lines": 2438,
+   "n_with_operational": 2438,
+   "theoretical_mva_per_circuit": 93.4,
+   "model_over_equipment": 0.934,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.745,
+   "suggested_factor": 0.573,
+   "suggested_factor_p25_p75": [
+    0.37,
+    0.975
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 2389,
+    "-": 46,
+    "系統保護Ry": 3
+   },
+   "files": [
+    "chubu/capacity/KRSIH011__154kV以下系統送電線空容量_予想潮流一覧表（愛知県西部 尾張_知多半島方面）.csv",
+    "chubu/capacity/KRSIH012__154kV以下系統送電線空容量_予想潮流一覧表（静岡県）.csv",
+    "chubu/capacity/KRSIH013__154kV以下系統送電線空容量_予想潮流一覧表（三重県）.csv",
+    "chubu/capacity/KRSIH014__154kV以下系統送電線空容量_予想潮流一覧表（岐阜県）.csv",
+    "chubu/capacity/KRSIH015__154kV以下系統送電線空容量_予想潮流一覧表（長野県）.csv",
+    "chubu/capacity/KRSIH016__154kV以下系統送電線空容量_予想潮流一覧表（愛知県東部 三河方面）.csv"
+   ]
+  },
+  {
+   "area": "chubu",
+   "kv": 154,
+   "n_lines": 178,
+   "n_with_operational": 178,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.246,
+   "operational_over_equipment": 0.751,
+   "model_over_operational": 1.647,
+   "suggested_factor": 0.607,
+   "suggested_factor_p25_p75": [
+    0.423,
+    1.249
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 171,
+    "-": 6,
+    "系統保護Ry": 1
+   },
+   "files": [
+    "chubu/capacity/KRSIH011__154kV以下系統送電線空容量_予想潮流一覧表（愛知県西部 尾張_知多半島方面）.csv",
+    "chubu/capacity/KRSIH012__154kV以下系統送電線空容量_予想潮流一覧表（静岡県）.csv",
+    "chubu/capacity/KRSIH013__154kV以下系統送電線空容量_予想潮流一覧表（三重県）.csv",
+    "chubu/capacity/KRSIH014__154kV以下系統送電線空容量_予想潮流一覧表（岐阜県）.csv",
+    "chubu/capacity/KRSIH015__154kV以下系統送電線空容量_予想潮流一覧表（長野県）.csv",
+    "chubu/capacity/KRSIH016__154kV以下系統送電線空容量_予想潮流一覧表（愛知県東部 三河方面）.csv"
+   ]
+  },
+  {
+   "area": "chubu",
+   "kv": 275,
+   "n_lines": 75,
+   "n_with_operational": 74,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 0.655,
+   "operational_over_equipment": 0.682,
+   "model_over_operational": 1.097,
+   "suggested_factor": 0.911,
+   "suggested_factor_p25_p75": [
+    0.554,
+    1.425
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 72,
+    "系統保護Ry": 2,
+    "安定度": 1
+   },
+   "files": [
+    "chubu/capacity/KRSIH010__275kV以上送電線空容量_予想潮流一覧表.csv"
+   ]
+  },
+  {
+   "area": "chubu",
+   "kv": 500,
+   "n_lines": 16,
+   "n_with_operational": 8,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.627,
+   "model_over_operational": 1.831,
+   "suggested_factor": 0.546,
+   "suggested_factor_p25_p75": [
+    0.546,
+    0.712
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "-": 8,
+    "熱容量": 8
+   },
+   "files": [
+    "chubu/capacity/KRSIH010__275kV以上送電線空容量_予想潮流一覧表.csv"
+   ]
+  },
+  {
+   "area": "chugoku",
+   "kv": 66,
+   "n_lines": 208,
+   "n_with_operational": 184,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.595,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.69,
+   "suggested_factor": 0.372,
+   "suggested_factor_p25_p75": [
+    0.279,
+    0.576
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 208
+   },
+   "files": [
+    "chugoku/capacity/csv_hiro__sys_capa_local41_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local44_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local46_line_202608_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local31_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local32_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local33_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local34_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local35_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local36_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local21_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local22_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local23_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local24_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local25_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local11_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local12_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local13_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local51_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local53_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local54_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local55_line_202607_07.csv"
+   ]
+  },
+  {
+   "area": "chugoku",
+   "kv": 110,
+   "n_lines": 336,
+   "n_with_operational": 328,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 1.309,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.522,
+   "suggested_factor": 0.397,
+   "suggested_factor_p25_p75": [
+    0.27,
+    0.612
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 331,
+    "－": 5
+   },
+   "files": [
+    "chugoku/capacity/csv_hiro__sys_capa_local41_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local42_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local43_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local44_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local45_line_202608_07.csv",
+    "chugoku/capacity/csv_hiro__sys_capa_local46_line_202608_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local31_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local32_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local33_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local34_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local35_line_202607_07.csv",
+    "chugoku/capacity/csv_oka__sys_capa_local36_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local21_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local22_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local23_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local24_line_202607_07.csv",
+    "chugoku/capacity/csv_shima__sys_capa_local25_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local11_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local12_line_202607_07.csv",
+    "chugoku/capacity/csv_tori__sys_capa_local13_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local51_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local52_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local53_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local54_line_202607_07.csv",
+    "chugoku/capacity/csv_yama__sys_capa_local55_line_202607_07.csv"
+   ]
+  },
+  {
+   "area": "chugoku",
+   "kv": 220,
+   "n_lines": 27,
+   "n_with_operational": 24,
+   "theoretical_mva_per_circuit": 685.9,
+   "model_over_equipment": 0.949,
+   "operational_over_equipment": 0.591,
+   "model_over_operational": 1.654,
+   "suggested_factor": 0.605,
+   "suggested_factor_p25_p75": [
+    0.371,
+    0.948
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 27
+   },
+   "files": [
+    "chugoku/capacity/csv_220kv__sys_capa_kikan01_line_202608_07.csv"
+   ]
+  },
+  {
+   "area": "chugoku",
+   "kv": 500,
+   "n_lines": 15,
+   "n_with_operational": 3,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.106,
+   "suggested_factor": 0.475,
+   "suggested_factor_p25_p75": null,
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 11,
+    "同期安定性": 4
+   },
+   "files": [
+    "chugoku/capacity/csv_220kv__sys_capa_kikan01_line_202608_07.csv"
+   ]
+  },
+  {
+   "area": "hokkaido",
+   "kv": 66,
+   "n_lines": 777,
+   "n_with_operational": 582,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.247,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.177,
+   "suggested_factor": 0.459,
+   "suggested_factor_p25_p75": [
+    0.357,
+    0.627
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 777
+   },
+   "files": [
+    "hokkaido/capacity/sys_capa_local01__sys_capa_local01_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local02__sys_capa_local02_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local03__sys_capa_local03_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local04__sys_capa_local04_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local05__sys_capa_local05_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local06__sys_capa_local06_line_202505_01.csv",
+    "hokkaido/capacity/sys_capa_local07__sys_capa_local07_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local08__sys_capa_local08_line_202605_01.csv",
+    "hokkaido/capacity/sys_capa_local09__sys_capa_local09_line_202605_01.csv",
+    "hokkaido/capacity/sys_capa_local10__sys_capa_local10_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local11__sys_capa_local11_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local12__sys_capa_local12_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local13__sys_capa_local13_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local14__sys_capa_local14_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local15__sys_capa_local15_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local16__sys_capa_local16_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local17__sys_capa_local17_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local18__sys_capa_local18_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local19__sys_capa_local19_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local20__sys_capa_local20_line_202607_01.csv",
+    "hokkaido/capacity/sys_capa_local21__sys_capa_local21_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local22__sys_capa_local22_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local23__sys_capa_local23_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local24__sys_capa_local24_line_202608_01.csv"
+   ]
+  },
+  {
+   "area": "hokkaido",
+   "kv": 110,
+   "n_lines": 28,
+   "n_with_operational": 27,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 2.143,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 4.287,
+   "suggested_factor": 0.233,
+   "suggested_factor_p25_p75": [
+    0.099,
+    0.248
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 28
+   },
+   "files": [
+    "hokkaido/capacity/sys_capa_local01__sys_capa_local01_line_202608_01.csv",
+    "hokkaido/capacity/sys_capa_local03__sys_capa_local03_line_202607_01.csv"
+   ]
+  },
+  {
+   "area": "hokkaido",
+   "kv": 187,
+   "n_lines": 75,
+   "n_with_operational": 60,
+   "theoretical_mva_per_circuit": 485.8,
+   "model_over_equipment": 1.588,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.954,
+   "suggested_factor": 0.339,
+   "suggested_factor_p25_p75": [
+    0.251,
+    0.565
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 75
+   },
+   "files": [
+    "hokkaido/capacity/sys_capa_kikan__sys_capa_kikan01_line_202608_01.csv"
+   ]
+  },
+  {
+   "area": "hokkaido",
+   "kv": 275,
+   "n_lines": 14,
+   "n_with_operational": 13,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 0.732,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.464,
+   "suggested_factor": 0.683,
+   "suggested_factor_p25_p75": [
+    0.571,
+    0.925
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 14
+   },
+   "files": [
+    "hokkaido/capacity/sys_capa_kikan__sys_capa_kikan01_line_202608_01.csv"
+   ]
+  },
+  {
+   "area": "hokuriku",
+   "kv": 66,
+   "n_lines": 225,
+   "n_with_operational": 129,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.097,
+   "operational_over_equipment": 0.655,
+   "model_over_operational": 1.829,
+   "suggested_factor": 0.547,
+   "suggested_factor_p25_p75": [
+    0.357,
+    0.838
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 225
+   },
+   "files": [
+    "hokuriku/capacity/sys_capa_local01_line_202608_05.csv",
+    "hokuriku/capacity/sys_capa_local02_line_202608_05.csv"
+   ]
+  },
+  {
+   "area": "hokuriku",
+   "kv": 77,
+   "n_lines": 175,
+   "n_with_operational": 127,
+   "theoretical_mva_per_circuit": 93.4,
+   "model_over_equipment": 1.067,
+   "operational_over_equipment": 0.503,
+   "model_over_operational": 2.122,
+   "suggested_factor": 0.471,
+   "suggested_factor_p25_p75": [
+    0.386,
+    0.739
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 173
+   },
+   "files": [
+    "hokuriku/capacity/sys_capa_local02_line_202608_05.csv",
+    "hokuriku/capacity/sys_capa_local03_line_202608_05.csv"
+   ]
+  },
+  {
+   "area": "hokuriku",
+   "kv": 154,
+   "n_lines": 63,
+   "n_with_operational": 50,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 0.995,
+   "operational_over_equipment": 0.755,
+   "model_over_operational": 1.408,
+   "suggested_factor": 0.71,
+   "suggested_factor_p25_p75": [
+    0.387,
+    1.01
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 63
+   },
+   "files": [
+    "hokuriku/capacity/sys_capa_kikan01_line_202608_05.csv"
+   ]
+  },
+  {
+   "area": "hokuriku",
+   "kv": 275,
+   "n_lines": 10,
+   "n_with_operational": 7,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.403,
+   "operational_over_equipment": 0.785,
+   "model_over_operational": 1.841,
+   "suggested_factor": 0.543,
+   "suggested_factor_p25_p75": [
+    0.52,
+    0.759
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 8,
+    "系統安定度": 2
+   },
+   "files": [
+    "hokuriku/capacity/sys_capa_kikan01_line_202608_05.csv"
+   ]
+  },
+  {
+   "area": "hokuriku",
+   "kv": 500,
+   "n_lines": 5,
+   "n_with_operational": 4,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.8,
+   "model_over_operational": 1.316,
+   "suggested_factor": 0.76,
+   "suggested_factor_p25_p75": [
+    0.676,
+    0.76
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 5
+   },
+   "files": [
+    "hokuriku/capacity/sys_capa_kikan01_line_202608_05.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 66,
+   "n_lines": 3,
+   "n_with_operational": 2,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.829,
+   "operational_over_equipment": 1.0,
+   "model_over_operational": 1.869,
+   "suggested_factor": 0.535,
+   "suggested_factor_p25_p75": null,
+   "usable": false,
+   "constraint_reasons": {
+    "熱容量": 2,
+    "－": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 77,
+   "n_lines": 1087,
+   "n_with_operational": 1020,
+   "theoretical_mva_per_circuit": 93.4,
+   "model_over_equipment": 1.482,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 2.457,
+   "suggested_factor": 0.407,
+   "suggested_factor_p25_p75": [
+    0.257,
+    0.647
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 1020,
+    "－": 67
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv",
+    "kansai/capacity_less/154kv_less_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 154,
+   "n_lines": 113,
+   "n_with_operational": 94,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.218,
+   "operational_over_equipment": 0.75,
+   "model_over_operational": 1.474,
+   "suggested_factor": 0.679,
+   "suggested_factor_p25_p75": [
+    0.44,
+    0.926
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 88,
+    "－": 19,
+    "同期安定性": 6
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 187,
+   "n_lines": 1,
+   "n_with_operational": 1,
+   "theoretical_mva_per_circuit": 485.8,
+   "model_over_equipment": 1.35,
+   "operational_over_equipment": 0.55,
+   "model_over_operational": 2.454,
+   "suggested_factor": 0.408,
+   "suggested_factor_p25_p75": null,
+   "usable": false,
+   "constraint_reasons": {
+    "熱容量": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 275,
+   "n_lines": 73,
+   "n_with_operational": 63,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.444,
+   "operational_over_equipment": 0.751,
+   "model_over_operational": 1.862,
+   "suggested_factor": 0.537,
+   "suggested_factor_p25_p75": [
+    0.429,
+    1.102
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 57,
+    "－": 10,
+    "同期安定性": 6
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kansai",
+   "kv": 500,
+   "n_lines": 34,
+   "n_with_operational": 27,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 2.106,
+   "suggested_factor": 0.475,
+   "suggested_factor_p25_p75": [
+    0.442,
+    0.475
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 26,
+    "－": 7,
+    "電圧安定性": 1
+   },
+   "files": [
+    "kansai/capacity/154kv_more_line.csv"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 66,
+   "n_lines": 505,
+   "n_with_operational": 496,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.868,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 1.595,
+   "suggested_factor": 0.627,
+   "suggested_factor_p25_p75": [
+    0.437,
+    0.948
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 505
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 110,
+   "n_lines": 37,
+   "n_with_operational": 31,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 2.017,
+   "operational_over_equipment": 0.571,
+   "model_over_operational": 3.464,
+   "suggested_factor": 0.289,
+   "suggested_factor_p25_p75": [
+    0.283,
+    0.49
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 37
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 220,
+   "n_lines": 71,
+   "n_with_operational": 66,
+   "theoretical_mva_per_circuit": 685.9,
+   "model_over_equipment": 1.121,
+   "operational_over_equipment": 0.549,
+   "model_over_operational": 1.951,
+   "suggested_factor": 0.512,
+   "suggested_factor_p25_p75": [
+    0.393,
+    0.791
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 71
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "kyushu",
+   "kv": 500,
+   "n_lines": 15,
+   "n_with_operational": 14,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 0.814,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.404,
+   "suggested_factor": 0.712,
+   "suggested_factor_p25_p75": [
+    0.475,
+    0.804
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 15
+   },
+   "files": [
+    "kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 66,
+   "n_lines": 570,
+   "n_with_operational": 424,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.868,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 1.736,
+   "suggested_factor": 0.576,
+   "suggested_factor_p25_p75": [
+    0.423,
+    0.911
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 561,
+    "安定度限界": 8
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_local01_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local02_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local03_line_202608_08.csv",
+    "shikoku/capacity/sys_capa_local04_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 110,
+   "n_lines": 17,
+   "n_with_operational": 13,
+   "theoretical_mva_per_circuit": 171.5,
+   "model_over_equipment": 2.382,
+   "operational_over_equipment": 0.5,
+   "model_over_operational": 3.942,
+   "suggested_factor": 0.254,
+   "suggested_factor_p25_p75": [
+    0.207,
+    0.424
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 17
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_local04_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 187,
+   "n_lines": 39,
+   "n_with_operational": 30,
+   "theoretical_mva_per_circuit": 485.8,
+   "model_over_equipment": 1.004,
+   "operational_over_equipment": 0.571,
+   "model_over_operational": 1.544,
+   "suggested_factor": 0.648,
+   "suggested_factor_p25_p75": [
+    0.451,
+    0.914
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 39
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_kikan00_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "shikoku",
+   "kv": 500,
+   "n_lines": 6,
+   "n_with_operational": 5,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 1.053,
+   "operational_over_equipment": 0.384,
+   "model_over_operational": 2.738,
+   "suggested_factor": 0.365,
+   "suggested_factor_p25_p75": [
+    0.297,
+    0.413
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "安定度限界": 4,
+    "熱容量": 2
+   },
+   "files": [
+    "shikoku/capacity/sys_capa_kikan00_line_202608_08.csv"
+   ]
+  },
+  {
+   "area": "tohoku",
+   "kv": 66,
+   "n_lines": 1512,
+   "n_with_operational": 1512,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 1.4,
+   "operational_over_equipment": 0.667,
+   "model_over_operational": 1.759,
+   "suggested_factor": 0.569,
+   "suggested_factor_p25_p75": [
+    0.408,
+    0.714
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 1512
+   },
+   "files": [
+    "tohoku/capacity/sys_capa_local01_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local02_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local03_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local04_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local05_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local06_line_202607_02.csv",
+    "tohoku/capacity/sys_capa_local07_line_202608_02.csv"
+   ]
+  },
+  {
+   "area": "tohoku",
+   "kv": 154,
+   "n_lines": 244,
+   "n_with_operational": 244,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.52,
+   "operational_over_equipment": 0.667,
+   "model_over_operational": 1.976,
+   "suggested_factor": 0.506,
+   "suggested_factor_p25_p75": [
+    0.39,
+    0.637
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 244
+   },
+   "files": [
+    "tohoku/capacity/sys_capa_kikan01_line_202607_02.csv"
+   ]
+  },
+  {
+   "area": "tohoku",
+   "kv": 275,
+   "n_lines": 57,
+   "n_with_operational": 57,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.09,
+   "operational_over_equipment": 0.517,
+   "model_over_operational": 2.108,
+   "suggested_factor": 0.474,
+   "suggested_factor_p25_p75": [
+    0.352,
+    0.75
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 57
+   },
+   "files": [
+    "tohoku/capacity/sys_capa_kikan01_line_202607_02.csv"
+   ]
+  },
+  {
+   "area": "tohoku",
+   "kv": 500,
+   "n_lines": 10,
+   "n_with_operational": 10,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 0.702,
+   "operational_over_equipment": 0.538,
+   "model_over_operational": 1.404,
+   "suggested_factor": 0.712,
+   "suggested_factor_p25_p75": [
+    0.712,
+    0.854
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 10
+   },
+   "files": [
+    "tohoku/capacity/sys_capa_kikan01_line_202607_02.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 66,
+   "n_lines": 1017,
+   "n_with_operational": 988,
+   "theoretical_mva_per_circuit": 68.6,
+   "model_over_equipment": 0.746,
+   "operational_over_equipment": 0.565,
+   "model_over_operational": 1.319,
+   "suggested_factor": 0.758,
+   "suggested_factor_p25_p75": [
+    0.539,
+    1.254
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 847,
+    "0": 123,
+    "-": 29,
+    "100": 3,
+    "233": 3,
+    "41": 2,
+    "72": 2,
+    "181": 2,
+    "89": 1,
+    "50": 1,
+    "215": 1,
+    "31": 1,
+    "95": 1,
+    "30": 1
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 154,
+   "n_lines": 238,
+   "n_with_operational": 210,
+   "theoretical_mva_per_circuit": 266.7,
+   "model_over_equipment": 1.038,
+   "operational_over_equipment": 0.573,
+   "model_over_operational": 1.474,
+   "suggested_factor": 0.678,
+   "suggested_factor_p25_p75": [
+    0.443,
+    1.125
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 195,
+    "-": 28,
+    "0": 11,
+    "397": 3,
+    "電圧安定性": 1
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv",
+    "tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 275,
+   "n_lines": 95,
+   "n_with_operational": 81,
+   "theoretical_mva_per_circuit": 952.6,
+   "model_over_equipment": 1.441,
+   "operational_over_equipment": 0.566,
+   "model_over_operational": 2.226,
+   "suggested_factor": 0.449,
+   "suggested_factor_p25_p75": [
+    0.349,
+    0.907
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 81,
+    "-": 14
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv"
+   ]
+  },
+  {
+   "area": "tokyo",
+   "kv": 500,
+   "n_lines": 47,
+   "n_with_operational": 39,
+   "theoretical_mva_per_circuit": 3464.1,
+   "model_over_equipment": 0.583,
+   "operational_over_equipment": 0.554,
+   "model_over_operational": 1.053,
+   "suggested_factor": 0.95,
+   "suggested_factor_p25_p75": [
+    0.475,
+    0.95
+   ],
+   "usable": true,
+   "constraint_reasons": {
+    "熱容量": 36,
+    "-": 11
+   },
+   "files": [
+    "tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv"
+   ]
+  }
+ ],
+ "national_by_voltage": {
+  "66": {
+   "n_areas": 7,
+   "median_factor": 0.569,
+   "spread": 0.386,
+   "within_0.1": false,
+   "areas": {
+    "chugoku": 0.372,
+    "hokkaido": 0.459,
+    "hokuriku": 0.547,
+    "kyushu": 0.627,
+    "shikoku": 0.576,
+    "tohoku": 0.569,
+    "tokyo": 0.758
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 7,
+     "median": 1.097,
+     "spread": 0.849,
+     "n_within_0.1": 1,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 7,
+     "median": 0.549,
+     "spread": 0.167,
+     "n_within_0.1": 5,
+     "within_0.1": false
+    }
+   }
+  },
+  "77": {
+   "n_areas": 3,
+   "median_factor": 0.471,
+   "spread": 0.166,
+   "within_0.1": false,
+   "areas": {
+    "chubu": 0.573,
+    "hokuriku": 0.471,
+    "kansai": 0.407
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 3,
+     "median": 1.067,
+     "spread": 0.548,
+     "n_within_0.1": 1,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 3,
+     "median": 0.503,
+     "spread": 0.049,
+     "n_within_0.1": 3,
+     "within_0.1": true
+    }
+   }
+  },
+  "110": {
+   "n_areas": 4,
+   "median_factor": 0.271,
+   "spread": 0.164,
+   "within_0.1": false,
+   "areas": {
+    "chugoku": 0.397,
+    "hokkaido": 0.233,
+    "kyushu": 0.289,
+    "shikoku": 0.254
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 4,
+     "median": 2.08,
+     "spread": 1.073,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 4,
+     "median": 0.5,
+     "spread": 0.071,
+     "n_within_0.1": 4,
+     "within_0.1": true
+    }
+   }
+  },
+  "154": {
+   "n_areas": 5,
+   "median_factor": 0.678,
+   "spread": 0.204,
+   "within_0.1": false,
+   "areas": {
+    "chubu": 0.607,
+    "hokuriku": 0.71,
+    "kansai": 0.679,
+    "tohoku": 0.506,
+    "tokyo": 0.678
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 5,
+     "median": 1.218,
+     "spread": 0.525,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 5,
+     "median": 0.75,
+     "spread": 0.182,
+     "n_within_0.1": 4,
+     "within_0.1": false
+    }
+   }
+  },
+  "187": {
+   "n_areas": 2,
+   "median_factor": 0.494,
+   "spread": 0.309,
+   "within_0.1": false,
+   "areas": {
+    "hokkaido": 0.339,
+    "shikoku": 0.648
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 2,
+     "median": 1.296,
+     "spread": 0.584,
+     "n_within_0.1": 0,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 2,
+     "median": 0.535,
+     "spread": 0.071,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    }
+   }
+  },
+  "220": {
+   "n_areas": 2,
+   "median_factor": 0.558,
+   "spread": 0.093,
+   "within_0.1": false,
+   "areas": {
+    "chugoku": 0.605,
+    "kyushu": 0.512
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 2,
+     "median": 1.035,
+     "spread": 0.172,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 2,
+     "median": 0.57,
+     "spread": 0.042,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    }
+   }
+  },
+  "275": {
+   "n_areas": 6,
+   "median_factor": 0.54,
+   "spread": 0.462,
+   "within_0.1": false,
+   "areas": {
+    "chubu": 0.911,
+    "hokkaido": 0.683,
+    "hokuriku": 0.543,
+    "kansai": 0.537,
+    "tohoku": 0.474,
+    "tokyo": 0.449
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 6,
+     "median": 1.247,
+     "spread": 0.789,
+     "n_within_0.1": 0,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 6,
+     "median": 0.624,
+     "spread": 0.285,
+     "n_within_0.1": 2,
+     "within_0.1": false
+    }
+   }
+  },
+  "500": {
+   "n_areas": 8,
+   "median_factor": 0.629,
+   "spread": 0.585,
+   "within_0.1": false,
+   "areas": {
+    "chubu": 0.546,
+    "chugoku": 0.475,
+    "hokuriku": 0.76,
+    "kansai": 0.475,
+    "kyushu": 0.712,
+    "shikoku": 0.365,
+    "tohoku": 0.712,
+    "tokyo": 0.95
+   },
+   "components": {
+    "conductor_model_over_equipment": {
+     "n_areas": 8,
+     "median": 1.053,
+     "spread": 0.47,
+     "n_within_0.1": 5,
+     "within_0.1": false
+    },
+    "margin_operational_over_equipment": {
+     "n_areas": 8,
+     "median": 0.519,
+     "spread": 0.416,
+     "n_within_0.1": 5,
+     "within_0.1": false
+    }
+   }
+  }
+ },
+ "overall_median_factor": 0.546,
+ "sources": {
+  "kansai": {
+   "title": "関西電力送配電 空容量マッピング（154kV以上・154kV未満の線路一覧）",
+   "urls": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_line.csv",
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_line.csv"
+   ]
+  },
+  "shikoku": {
+   "title": "四国電力送配電 系統空容量（基幹・ローカル 送電線）",
+   "urls": [
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_line_202608_08.csv",
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_local0N_line_202608_08.csv"
+   ]
+  },
+  "kyushu": {
+   "title": "九州電力送配電 予想潮流・空容量一覧表（31地区・PDF 判読プール）",
+   "urls": [
+    "https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure"
+   ]
+  },
+  "tokyo": {
+   "title": "東京電力パワーグリッド 送電線 予想潮流・空容量（基幹＋13地域 CSV）",
+   "urls": [
+    "https://www.tepco.co.jp/pg/consignment/system/"
+   ]
+  },
+  "hokkaido": {
+   "title": "北海道電力ネットワーク 予想潮流等一覧表（187kV以上＋24ローカル系統・ZIP内CSV）",
+   "urls": [
+    "https://www.hepco.co.jp/network/con_service/public_document/bid_info.html"
+   ]
+  },
+  "tohoku": {
+   "title": "東北電力ネットワーク 送電線の予想潮流等一覧表（基幹＋7ローカル系統 CSV）",
+   "urls": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/"
+   ]
+  },
+  "chubu": {
+   "title": "中部電力パワーグリッド 空容量・予想潮流一覧表（本店＋6地域・gridmap 配信 ZIP）",
+   "urls": [
+    "https://gridmap.powergrid.chuden.co.jp/"
+   ]
+  },
+  "hokuriku": {
+   "title": "北陸電力送配電 予想潮流・空容量（154kV以上＋3県 CSV）",
+   "urls": [
+    "https://www.rikuden.co.jp/nw_notification/U_154seiyaku.html"
+   ]
+  },
+  "chugoku": {
+   "title": "中国電力ネットワーク 予想潮流・空容量（220kV以上＋5県・ZIP内CSV）",
+   "urls": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/"
+   ]
+  },
+  "okinawa": {
+   "title": "沖縄電力 地内基幹送電線（132kV）の設備容量および運用容量【PDFのみ・未判読】",
+   "urls": [
+    "https://www.okiden.co.jp/shared/pdf/business/free/rule02/operating_capacity.pdf"
+   ]
+  }
+ },
+ "note": "model_over_operational = √3·V·I_model·回線数 ÷ 公表運用容量 の中央値。suggested_factor はその逆数。usable=運用容量つき線路が MIN_SAMPLES 本以上"
+}

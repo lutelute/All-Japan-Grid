@@ -135,13 +135,17 @@ class TestInterconnectionFlow:
 class TestInterconnectionLoader:
     """Tests for the InterconnectionLoader class."""
 
-    def test_load_all_9_interconnections(self, project_root: Path) -> None:
-        """Loader reads all 9 interconnection records from YAML."""
+    def test_load_all_10_interconnections(self, project_root: Path) -> None:
+        """Loader reads all 10 interconnection records from YAML.
+
+        2026-08-19 正本化(介入#33)で北陸関西間連系線(越前嶺南線)が追加され
+        9→10本になった。
+        """
         yaml_path = str(project_root / "data" / "reference" / "interconnections.yaml")
         loader = InterconnectionLoader()
         interconnections = loader.load(yaml_path)
 
-        assert len(interconnections) == 9
+        assert len(interconnections) == 10
 
     def test_loaded_records_are_interconnection_instances(
         self, project_root: Path
@@ -1285,7 +1289,7 @@ class TestConfigToggle:
         loader = InterconnectionLoader()
         ics = loader.load(str(project_root / data_path))
 
-        assert len(ics) == 9
+        assert len(ics) == 10
         assert all(isinstance(ic, Interconnection) for ic in ics)
 
 

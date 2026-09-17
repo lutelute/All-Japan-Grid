@@ -37,11 +37,12 @@ os.chdir(ROOT)   # config/*.yaml は repo ルート相対で読まれる
 import networkx as nx
 import numpy as np
 import pandapower as pp
+from src.utils.pandapower_compat import select_subnet as pp_select_subnet
 import pandapower.topology as top
 from pandapower.pypower.idx_brch import F_BUS, PF, T_BUS
 
 from scripts.run_full_powerflow_from_db import (
-    GEN_ATTACH_DEFAULT, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
+    GEN_ATTACH_DEFAULT, attach_default_for, GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
     attach_generators,
     balance_by_zone, build_island_net, load_demand_config, solve_island,
 )
@@ -56,10 +57,14 @@ LOAD_PROFILE = np.array([
 ])
 
 
-def production_net(island: str, nodes, edges, cfg, pref_gwh):
-    """本番（run_full_powerflow_from_db）と同一手順で島ネットを組む。"""
-    net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
-    attach_generators(net, bus_of, nodes, island, attach_mode=GEN_ATTACH_DEFAULT)
+def production_net(island: str, nodes, edges, cfg, pref_gwh, cap_calib=None):
+    """本番（run_full_powerflow_from_db）と同一手順で島ネットを組む。
+
+    cap_calib: 介入#45 線路容量の運用容量較正(None=ビルダー既定/環境変数 AGJ_CAP_CALIB)。
+    """
+    net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {},
+                                      cap_calib=cap_calib)
+    attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     from src.powerflow.pipeline import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
@@ -72,7 +77,7 @@ def main_component_subnet(net):
     """最大連結成分を切り出し、PTDF の参照バスとして slack を 1 枚だけ残す。"""
     g = top.create_nxgraph(net, respect_switches=False)
     main = sorted(max(nx.connected_components(g), key=len))
-    sub = pp.select_subnet(net, main, keep_everything_else=True)
+    sub = pp_select_subnet(net, main, keep_everything_else=True)
     if len(sub.ext_grid) > 1:
         sub.ext_grid = sub.ext_grid.iloc[:1]
     elif len(sub.ext_grid) == 0:

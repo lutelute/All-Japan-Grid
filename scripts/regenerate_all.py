@@ -45,6 +45,57 @@ STEPS = [
     # 実証コードのOSM実線形吸着（断片=公表線そのもの の12本のみ・オーナー指示 2026-08-16
     # 「ちゃんと線があるものにおいては地形的に線を辿ってほしい」）。冪等・直線維持分は台帳に理由記録
     ("route_disclosure", [sys.executable, "scripts/route_disclosure_edges.py", "--write"], False),
+    # 介入#34: OSM実線ブリッジの抽出回収(fragment campaign 第一波 2026-08-20)。
+    # 実在OSM線が断片と本系統の両方に接触(≤80m・電圧整合ゲート)する場合のみ
+    # 実線形ごと回収。冪等(既存ペアはskip)。regenで消えないようSTEPSに組込
+    ("fragment_recovery", [sys.executable, "scripts/hunt_fragment_osm_bridges.py",
+                           "--write"], False),
+    ("fragment_recovery_chains", [sys.executable,
+                                  "scripts/hunt_fragment_osm_chains.py",
+                                  "--write"], False),
+    # 介入#34 追補3: 第三波(継ぎ目 60m→200m の OSM way 連鎖・2026-09-02)。
+    # **hokkaido/west のみ**適用する — 全 68 本(east 17 本込み)を入れると east ピーク AC が
+    # dc_fallback に退行することを実測済み(却下記録 uc_pf_built_east_sel_frag3_rejected_*.json)。
+    # 電圧整合・迂回係数 ≤1.5・跨島双子の3ゲート。跨ぎ枝が増える候補が混ざると自動中止。冪等
+    ("fragment_recovery_third_wave", [sys.executable,
+                                      "scripts/hunt_fragment_third_wave.py",
+                                      "--seam-m", "200",
+                                      "--islands", "hokkaido", "west",
+                                      "--write"], False),
+    # 介入#35: 偽断片のノード衛生(跨region二重登録の解消・オーナー承認 2026-08-26)。
+    # 衛星判読パイロットc1で発見した「断片=登録人工物」を機械判定して双子側へ寄せる
+    # (完全双子=削除/近傍双子≤150m・kv一致=リマップ/残余junction=再帰属)。
+    # 名前つき未解決が残る断片はスキップ(部分手術しない)。冪等(適用後は対象が消える)
+    # 介入#42: 混在県個別化(2026-09-02)も同経路(--mixed-pref)。境界資産+切断ガードで
+    # 長野/新潟/静岡の跨ぎ候補を再帰属(帳簿=fragments/mixed_pref_ledger.json)。冪等
+    ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
+                      "--mixed-pref", "--write"], False),
+    # 介入#44: 回線数(par)の出典補完(2026-09-02)。公表資料の回線数を台帳
+    # data/reference/circuit_counts.jsonl から引き当てて **増やす方向のみ** 適用。
+    # build_editor_data が基底から作り直すと par は OSM circuits タグ由来へ戻るため、
+    # 再適用が要る(#28/#29 と同じ「再構築後に必ず再適用」パターン)。冪等
+    ("apply_circuit_sources", [sys.executable, "scripts/apply_circuit_sources.py",
+                               "--write"], False),
+    # 介入#36: 衛星判読クラスの接続(オーナー承認制・スクリプト内CONNECTIONS表が
+    # 承認台帳)。approved のみ適用・冪等。第1号=小千谷66kV(衛星のみ証拠)
+    ("satellite_connections", [sys.executable,
+                               "scripts/apply_satellite_connections.py",
+                               "--write"], False),
+    # 変電所プロパティ層(オーナー指示 2026-08-26「導体数・回線数を変電所の
+    # プロパティに」): 構造DB terminal × OSM線タグ(circuits/wires/cables)を
+    # 変電所ごとに集約し、built の sub ノードへ sub_props を付与。冪等
+    ("substation_properties", [sys.executable,
+                               "scripts/build_substation_properties.py",
+                               "--attach"], False),
+    # SubSLD Pages機能(docs/subsld.html)のデータ書き出し(オーナー指示 2026-08-27)。
+    # 構造DB+方向推定→compact JSON(≈2.4MB)。ブラウザ側でSLDPaneをSVG描画
+    ("subsld_pages", [sys.executable,
+                      "scripts/export_subsld_pages.py"], False),
+    ("subsld_ways", [sys.executable,
+                     "scripts/export_subsld_ways.py"], False),
+    # ループ(閉路)構造(オーナー指示 2026-08-28「ループとかも見れるの?」)。
+    # circuit_rank=E-V+C と橋判定。開閉操作の意味(迂回できるか)を読むのに使う
+    ("loops", [sys.executable, "scripts/export_loops.py"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)

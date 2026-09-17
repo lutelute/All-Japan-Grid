@@ -224,72 +224,102 @@ class SwingModel:
         return cls(gens, Ybus_red, omega_s=omega_s, baseMVA=baseMVA)
 
     # ── Internal helpers ──────────────────────────────────────────────────────
-    def _Pe(self, delta: np.ndarray) -> np.ndarray:
-        """Electrical power output for each generator."""
-        Pe = np.zeros(self.n)
-        for i in range(self.n):
-            for j in range(self.n):
-                Yij = self.Ybus_red[i, j]
-                Gij = Yij.real
-                Bij = Yij.imag
-                diff = delta[i] - delta[j]
-                Pe[i] += self.generators[i].E * self.generators[j].E * (
-                    Gij * np.cos(diff) + Bij * np.sin(diff)
-                )
-        return Pe
+    # 2026-09-02(トラックC③): _Pe/_rhs/_linearise_A をベクトル化。式は従来の二重ループと
+    # 同一(tests/test_swing_ac_operating_point.py が 4 機系で一致をゲート)。
+    # west 実系統(数百機)の時間応答は Python ループでは実用にならないため。
+    def _arrays(self):
+        if getattr(self, "_arr_cache", None) is None:
+            g = self.generators
+            self._arr_cache = {
+                "E": np.array([x.E for x in g], float),
+                "H": np.array([x.H for x in g], float),
+                "D": np.array([x.D for x in g], float),
+                "Pm": np.array([x.Pm for x in g], float),
+                "Y": np.asarray(self.Ybus_red, dtype=complex),
+            }
+        return self._arr_cache
+
+    def _Pe(self, delta: np.ndarray, Y: Optional[np.ndarray] = None,
+            active: Optional[np.ndarray] = None) -> np.ndarray:
+        """Electrical power output for each generator.
+
+        Pe_i = Σ_j E_iE_j [G_ij cos(δ_i−δ_j) + B_ij sin(δ_i−δ_j)]
+             = Re( Ê_i · conj(Σ_j Y_ij Ê_j) ),  Ê = E·e^{jδ}
+        Y: 使う縮約行列(既定=self.Ybus_red)。active: False の機械は網から外れている
+        (解列後)として Ê=0・Pe=0。
+        """
+        a = self._arrays()
+        Y = a["Y"] if Y is None else Y
+        Eph = a["E"] * np.exp(1j * np.asarray(delta, float))
+        if active is not None:
+            Eph = np.where(active, Eph, 0.0)
+        return np.real(Eph * np.conj(Y @ Eph))
 
     def _rhs(self, t: float, y: np.ndarray, trip_idx: Optional[int] = None,
-             fault_on: bool = False) -> np.ndarray:
-        """Right-hand side of [dδ/dt, dω/dt]."""
-        delta = y[:self.n]
-        domega = y[self.n:]       # deviation from omega_s
+             fault_on: bool = False,
+             disconnect_idx: Optional[int] = None) -> np.ndarray:
+        """Right-hand side of [dδ/dt, dω/dt].
 
+        trip_idx: 従来どおり「Pm→0・機械は同期網に残る」(後方互換)。
+        disconnect_idx: 機械を解列(内部ノードを Kron 消去した網で Pe を計算・
+        当該機械の状態は凍結)。
+        """
+        a = self._arrays()
+        n = self.n
+        delta = y[:n]
+        domega = y[n:]
+        Pm = a["Pm"].copy()
+        M = 2.0 * a["H"] / self.omega_s
+        if disconnect_idx is not None:
+            active = np.ones(n, bool)
+            active[disconnect_idx] = False
+            Pe = self._Pe(delta, Y=self._post_trip_Y(disconnect_idx), active=active)
+            ddomega_dt = (Pm - Pe - a["D"] * domega) / M
+            ddelta_dt = domega.copy()
+            ddomega_dt[disconnect_idx] = 0.0
+            ddelta_dt[disconnect_idx] = 0.0
+            return np.concatenate([ddelta_dt, ddomega_dt])
         Pe = self._Pe(delta)
+        if trip_idx is not None:
+            Pm[trip_idx] = 0.0
+        ddomega_dt = (Pm - Pe - a["D"] * domega) / M
+        return np.concatenate([domega, ddomega_dt])
 
-        ddelta_dt = domega        # dδ/dt = Δω
+    def _post_trip_Y(self, idx: int) -> np.ndarray:
+        """機械 idx 解列後の縮約行列: 内部ノード idx を Kron 消去した Y_red。
 
-        ddomega_dt = np.zeros(self.n)
-        for i, g in enumerate(self.generators):
-            Pm_i = 0.0 if (trip_idx == i) else g.Pm
-            if fault_on:
-                Pm_i = g.Pm   # fault: mechanical power unchanged
-            M_i = 2.0 * g.H / self.omega_s
-            ddomega_dt[i] = (g.Pm - Pe[i] - g.D * domega[i]) / M_i
-            if trip_idx == i:
-                ddomega_dt[i] = (0.0 - Pe[i] - g.D * domega[i]) / M_i
-
-        return np.concatenate([ddelta_dt, ddomega_dt])
+        解列＝内部起電力の除去。内部ノード idx は注入ゼロの浮きノードになるので、
+        その Kron 消去が厳密に解列後の等価回路(xd″ 枝は無電流=開放)。
+        行列の次元は保つ(消去ノードの行列は 0)ため状態ベクトルの並びは不変。
+        """
+        cache = getattr(self, "_post_trip_cache", None)
+        if cache is None:
+            cache = self._post_trip_cache = {}
+        if idx not in cache:
+            Y = self._arrays()["Y"]
+            keep = np.array([i for i in range(self.n) if i != idx], dtype=int)
+            Yr = _kron_reduce(Y, keep, np.array([idx], dtype=int))
+            Yp = np.zeros_like(Y)
+            Yp[np.ix_(keep, keep)] = Yr
+            cache[idx] = Yp
+        return cache[idx]
 
     def _linearise_A(self) -> np.ndarray:
         """Build state matrix A for modal analysis (around initial angles)."""
         n = self.n
+        a = self._arrays()
         delta0 = np.array([g.delta0 for g in self.generators])
+        Y = a["Y"]
+        G, B = Y.real, Y.imag
+        dij = delta0[:, None] - delta0[None, :]
+        EE = a["E"][:, None] * a["E"][None, :]
+        # K_ij (i≠j) = E_iE_j (G_ij sin δ_ij − B_ij cos δ_ij);  K_ii = Σ_{k≠i} E_iE_k(−G_ik sin δ_ik + B_ik cos δ_ik)
+        K = EE * (G * np.sin(dij) - B * np.cos(dij))
+        np.fill_diagonal(K, 0.0)
+        np.fill_diagonal(K, -K.sum(axis=1))
 
-        # Synchronising torque matrix K  [K_ij = ∂Pe_i / ∂δ_j]
-        K = np.zeros((n, n))
-        for i in range(n):
-            for j in range(n):
-                Yij = self.Ybus_red[i, j]
-                Gij = Yij.real
-                Bij = Yij.imag
-                diff = delta0[i] - delta0[j]
-                if i == j:
-                    for k in range(n):
-                        if k != i:
-                            Yik = self.Ybus_red[i, k]
-                            Gik = Yik.real
-                            Bik = Yik.imag
-                            d = delta0[i] - delta0[k]
-                            K[i, i] += self.generators[i].E * self.generators[k].E * (
-                                -Gik * np.sin(d) + Bik * np.cos(d)
-                            )
-                else:
-                    K[i, j] = self.generators[i].E * self.generators[j].E * (
-                        Gij * np.sin(diff) - Bij * np.cos(diff)
-                    )
-
-        M_inv = np.diag([self.omega_s / (2 * g.H) for g in self.generators])
-        D_mat = np.diag([g.D for g in self.generators])
+        M_inv = np.diag(self.omega_s / (2 * a["H"]))
+        D_mat = np.diag(a["D"])
 
         # A = [0, I; -M⁻¹K, -M⁻¹D]
         A = np.block([
@@ -297,6 +327,30 @@ class SwingModel:
             [-M_inv @ K,        -M_inv @ D_mat],
         ])
         return A
+
+    # ── Factory from the operating-point classical model ─────────────────────
+    @classmethod
+    def from_classical(cls, cm: dict, D_override: Optional[np.ndarray] = None) -> "SwingModel":
+        """machine_agg.build_classical_model_ac の返り値から組む(2026-09-02)。
+
+        H は系統ベース換算 H_sys = H_mb·S/base(M = 2H_sys/ωs と整合)、
+        D も系統ベース(cm["D"])。E∠δ・Pm は運転点の値。
+        """
+        base = float(cm["base_mva"])
+        omega_s = float(cm["omega_s"])
+        Dv = cm["D"] if D_override is None else np.asarray(D_override, float)
+        gens = []
+        for k, s in enumerate(cm["sync"]):
+            gens.append(GenDyn(
+                bus=k,
+                H=float(s["H_mb"] * s["S_mva"] / base),
+                D=float(Dv[k]),
+                E=float(abs(cm["E"][k])),
+                delta0=float(np.angle(cm["E"][k])),
+                Pm=float(cm["Pm"][k]),
+                name=str(s.get("name") or f"m{k}"),
+            ))
+        return cls(gens, np.asarray(cm["Y_red"], complex), omega_s=omega_s, baseMVA=base)
 
 
 # ── Kron reduction ────────────────────────────────────────────────────────────
@@ -344,11 +398,17 @@ def run_transient(
     Parameters
     ----------
     fault : 'trip'
-        N-1 generator trip at t_fault.
+        N-1 generator trip at t_fault (legacy: Pm→0, machine stays synchronised).
+    fault : 'disconnect'
+        N-1 generator disconnection at t_fault (machine removed from the
+        network by Kron elimination of its internal node; its states are frozen
+        and excluded from the stability check). 2026-09-02.
     fault : 'fault_clear'
         Three-phase fault at fault_bus at t_fault, cleared at t_clear.
     """
     n = model.n
+    if n < 2 or (fault == "disconnect" and n < 3):
+        raise ValueError(f"run_transient: 機械が少なすぎる (n={n}, fault={fault})")
     y0 = np.concatenate([
         [g.delta0 for g in model.generators],
         np.zeros(n),   # initial Δω = 0
@@ -360,6 +420,13 @@ def run_transient(
         def rhs(t, y):
             trip = fault_bus if t >= t_fault else None
             return model._rhs(t, y, trip_idx=trip)
+
+    elif fault == "disconnect":
+        # 解列(2026-09-02): t_fault 以降は機械 fault_bus を網から外す(Kron 消去)。
+        # 従来の 'trip'(Pm→0・同期網に残る)は後方互換で残す。
+        def rhs(t, y):
+            dis = fault_bus if t >= t_fault else None
+            return model._rhs(t, y, disconnect_idx=dis)
 
     elif fault == "fault_clear":
         def rhs(t, y):
@@ -376,6 +443,13 @@ def run_transient(
         rtol=1e-6, atol=1e-8,
         dense_output=False,
     )
+    if sol.status != 0 or sol.y.shape[1] == 0:
+        # 失歩後の急峻な軌道で RK45 が刻み幅下限に当たることがある(2026-09-02 west 実測)。
+        # 剛性対応の LSODA へ退避し、それでも駄目なら黙って空を返さず明示的に失敗する
+        sol = solve_ivp(rhs, [0, t_end], y0, method="LSODA", t_eval=t_eval,
+                        rtol=1e-6, atol=1e-8)
+        if sol.status != 0 or sol.y.shape[1] == 0:
+            raise RuntimeError(f"run_transient: 積分失敗 ({fault} idx={fault_bus}): {sol.message}")
 
     delta = sol.y[:n, :]
     omega = sol.y[n:, :]
@@ -385,8 +459,13 @@ def run_transient(
     weights = np.array([g.H for g in model.generators]) / total_H
     coi_delta = weights @ delta
 
-    # Stability check: |δ_i - δ_j| < π
-    angle_sep = np.max(delta, axis=0) - np.min(delta, axis=0)
+    # Stability check: |δ_i - δ_j| < π  (解列機は除外・COI も残存機で取る)
+    keep = np.ones(n, bool)
+    if fault == "disconnect":
+        keep[fault_bus] = False
+        weights = np.array([g.H for g in model.generators], float) * keep
+        coi_delta = (weights / weights.sum()) @ delta
+    angle_sep = np.max(delta[keep], axis=0) - np.min(delta[keep], axis=0)
     max_sep = float(np.max(angle_sep))
     stable = max_sep < np.pi
 

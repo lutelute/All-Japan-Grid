@@ -1,0 +1,26 @@
+{
+ "note": "多機(AGC-N)共シミュレーション帳簿。AGC30機種定数×UCオンライン全機×実網Kron縮約。負荷=定Z・UFLS=負荷Y一様縮小(ラッチ)・S=定格/0.9・H,Xd',D=典型値。westはDC断面(V=1近似)初期化 — AC不成立が正典のため",
+ "island": "west",
+ "pf_mode": "dc",
+ "n_machines": 298,
+ "init_err_max_mw": 339.0186640432232,
+ "tripped": "川越火力発電所",
+ "trip_mw": 3989.8,
+ "out_of_step_tripped": [
+  "苓北火力発電所"
+ ],
+ "events": [
+  {
+   "t_s": 1.0,
+   "event": "トリップ: 川越火力発電所"
+  },
+  {
+   "t_s": 2.81,
+   "event": "脱調保護: 苓北火力発電所(1,015MW)"
+  }
+ ],
+ "trips": [
+  "川越火力発電所"
+ ],
+ "hour": null
+}

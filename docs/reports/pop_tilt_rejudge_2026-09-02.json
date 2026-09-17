@@ -1,0 +1,295 @@
+{
+ "date": "2026-09-02",
+ "purpose": "介入#40 再判定(全国メッシュ整備後)",
+ "mesh": {
+  "n_files": 150,
+  "n_cells": 176963,
+  "population_sum": 126146090,
+  "census_2020_total": 126146099,
+  "coverage_ratio": 1.0,
+  "note": "1kmメッシュ人口(T001140001)の合計。秘匿・按分セルの扱いで確定値と数%ずれ得る。0.97以上なら全国被覆とみなす"
+ },
+ "etajima": {
+  "build_s": 21.0,
+  "n_target_bus": 17,
+  "buses": {
+   "5168": {
+    "name": "shikoku junction 34.3153:132.4346:0",
+    "lat": 34.31534,
+    "lon": 132.43461,
+    "kv": 66.0
+   },
+   "5169": {
+    "name": "shikoku junction 34.3153:132.4339:0",
+    "lat": 34.31535,
+    "lon": 132.43389,
+    "kv": 66.0
+   },
+   "5170": {
+    "name": "shikoku junction 34.3162:132.4343:0",
+    "lat": 34.3162,
+    "lon": 132.43432,
+    "kv": 66.0
+   },
+   "5171": {
+    "name": "shikoku junction 34.3131:132.4347:0",
+    "lat": 34.31307,
+    "lon": 132.4347,
+    "kv": 66.0
+   },
+   "5239": {
+    "name": "shikoku junction 34.2825:132.5193:66",
+    "lat": 34.28246,
+    "lon": 132.51929,
+    "kv": 66.0
+   },
+   "5467": {
+    "name": "shikoku junction 34.2457:132.5337:66",
+    "lat": 34.24575,
+    "lon": 132.53371,
+    "kv": 66.0
+   },
+   "5468": {
+    "name": "shikoku junction 34.1649:132.4778:66",
+    "lat": 34.16495,
+    "lon": 132.47784,
+    "kv": 66.0
+   },
+   "5469": {
+    "name": "shikoku junction 34.2171:132.5443:110",
+    "lat": 34.21709,
+    "lon": 132.54434,
+    "kv": 110.0
+   },
+   "5785": {
+    "name": "宮原変電所 (untyped)",
+    "lat": 34.22054,
+    "lon": 132.55364,
+    "kv": 110.0
+   },
+   "5786": {
+    "name": "宮原変電所 66kV",
+    "lat": 34.22054,
+    "lon": 132.55364,
+    "kv": 66.0
+   },
+   "5787": {
+    "name": "倉橋変電所",
+    "lat": 34.15339,
+    "lon": 132.51525,
+    "kv": 66.0
+   },
+   "5789": {
+    "name": "大柿町大君変電所",
+    "lat": 34.16551,
+    "lon": 132.47802,
+    "kv": 66.0
+   },
+   "6143": {
+    "name": "公園通変電所",
+    "lat": 34.24638,
+    "lon": 132.5568,
+    "kv": 110.0
+   },
+   "6146": {
+    "name": "能美変電所",
+    "lat": 34.20718,
+    "lon": 132.44257,
+    "kv": 66.0
+   },
+   "6147": {
+    "name": "江田島変電所",
+    "lat": 34.24788,
+    "lon": 132.48536,
+    "kv": 66.0
+   },
+   "6148": {
+    "name": "大柿変電所",
+    "lat": 34.18734,
+    "lon": 132.47063,
+    "kv": 66.0
+   },
+   "6149": {
+    "name": "吉浦変電所",
+    "lat": 34.26487,
+    "lon": 132.53367,
+    "kv": 66.0
+   }
+  },
+  "off": {
+   "etajima_load_mw": 296.4,
+   "per_bus_mw": {
+    "5168": 0.0,
+    "5169": 0.0,
+    "5170": 0.0,
+    "5171": 0.0,
+    "5239": 0.0,
+    "5467": 0.0,
+    "5468": 0.0,
+    "5469": 0.0,
+    "5785": 27.58,
+    "5786": 34.47,
+    "5787": 34.47,
+    "5789": 34.47,
+    "6143": 27.58,
+    "6146": 34.47,
+    "6147": 34.47,
+    "6148": 34.47,
+    "6149": 34.47
+   },
+   "n_bus_tilted": null,
+   "total_load_mw": 73865.0
+  },
+  "on": {
+   "etajima_load_mw": 227.5,
+   "per_bus_mw": {
+    "5168": 0.0,
+    "5169": 0.0,
+    "5170": 0.0,
+    "5171": 0.0,
+    "5239": 0.0,
+    "5467": 0.0,
+    "5468": 0.0,
+    "5469": 0.0,
+    "5785": 25.23,
+    "5786": 20.15,
+    "5787": 26.72,
+    "5789": 22.04,
+    "6143": 29.74,
+    "6146": 24.9,
+    "6147": 24.95,
+    "6148": 23.31,
+    "6149": 30.5
+   },
+   "n_bus_tilted": 3924,
+   "total_load_mw": 73865.0
+  },
+  "ratio_on_off": 0.768
+ },
+ "matrix": {
+  "west_sel/off": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/west_sel_off_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 7946,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 1,
+   "n_dc_fallback": 0,
+   "slack_abs_mw": {
+    "17": 9280.3
+   },
+   "vm_min": {
+    "17": 0.667
+   },
+   "n_bus_tilted": null
+  },
+  "west_sel/on": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/west_sel_on_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 7946,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 0,
+   "n_dc_fallback": 1,
+   "slack_abs_mw": {
+    "17": 6304.8
+   },
+   "vm_min": {
+    "17": null
+   },
+   "n_bus_tilted": null
+  },
+  "east_sel/off": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/east_sel_off_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 6223,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 1,
+   "n_dc_fallback": 0,
+   "slack_abs_mw": {
+    "17": 5329.4
+   },
+   "vm_min": {
+    "17": 0.8139
+   },
+   "n_bus_tilted": null
+  },
+  "east_sel/on": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/east_sel_on_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 6223,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 0,
+   "n_dc_fallback": 1,
+   "slack_abs_mw": {
+    "17": 2648.1
+   },
+   "vm_min": {
+    "17": null
+   },
+   "n_bus_tilted": null
+  },
+  "west_backbone/off": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/west_backbone_off_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 2065,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 1,
+   "n_dc_fallback": 0,
+   "slack_abs_mw": {
+    "17": 5977.4
+   },
+   "vm_min": {
+    "17": 0.9415
+   },
+   "n_bus_tilted": null
+  },
+  "west_backbone/on": {
+   "ok": true,
+   "sec": null,
+   "out": "output/pop_tilt_rejudge/west_backbone_on_2026-09-02.json",
+   "mode": "ac",
+   "n_bus": 2065,
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true,
+   "n_ac": 1,
+   "n_dc_fallback": 0,
+   "slack_abs_mw": {
+    "17": 5777.1
+   },
+   "vm_min": {
+    "17": 0.9399
+   },
+   "n_bus_tilted": null
+  },
+  "west_allhours/off": {
+   "ok": false,
+   "sec": null,
+   "note": "未計測(分割実行で省略)"
+  },
+  "west_allhours/on": {
+   "ok": false,
+   "sec": null,
+   "note": "未計測(分割実行で省略)"
+  }
+ }
+}

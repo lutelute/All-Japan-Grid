@@ -1,0 +1,159 @@
+{
+ "date": "2026-09-03",
+ "purpose": "介入#44 の未照合端点の実態(F2)",
+ "n_records_unresolved_endpoints": 1725,
+ "n_distinct_endpoints": 1454,
+ "n_occurrences": 2296,
+ "by_cause": {
+  "anonymized": 1344,
+  "absent_in_model": 424,
+  "structural": 377,
+  "region_mismatch": 58,
+  "kv_class_mismatch": 49,
+  "alias_resolvable": 44
+ },
+ "by_region": {
+  "kansai": {
+   "anonymized": 1331,
+   "structural": 42,
+   "absent_in_model": 21,
+   "kv_class_mismatch": 1
+  },
+  "kyushu": {
+   "absent_in_model": 179,
+   "alias_resolvable": 44,
+   "structural": 40,
+   "region_mismatch": 39,
+   "kv_class_mismatch": 16,
+   "anonymized": 13
+  },
+  "tokyo": {
+   "structural": 203,
+   "absent_in_model": 98,
+   "kv_class_mismatch": 21,
+   "region_mismatch": 6
+  },
+  "chugoku": {
+   "structural": 75,
+   "absent_in_model": 39,
+   "region_mismatch": 8,
+   "kv_class_mismatch": 4
+  },
+  "shikoku": {
+   "absent_in_model": 54,
+   "structural": 6
+  },
+  "okinawa": {
+   "absent_in_model": 15,
+   "kv_class_mismatch": 4,
+   "region_mismatch": 3
+  },
+  "chubu": {
+   "absent_in_model": 7,
+   "structural": 3,
+   "kv_class_mismatch": 3
+  },
+  "hokuriku": {
+   "absent_in_model": 10,
+   "region_mismatch": 2
+  },
+  "hokkaido": {
+   "structural": 8,
+   "absent_in_model": 1
+  }
+ },
+ "cause_samples": {
+  "structural": [
+   "kyushu/-",
+   "kansai/開放点",
+   "tokyo/需要家",
+   "tokyo/需要家分岐",
+   "tokyo/発電所分岐",
+   "hokkaido/他社分岐",
+   "kansai/開放点",
+   "tokyo/横浜根岸線分岐",
+   "tokyo/西相模線分岐",
+   "tokyo/箱根線分岐",
+   "shikoku/讃岐鳴門線No69分岐点",
+   "shikoku/長山線No1分岐点"
+  ],
+  "anonymized": [
+   "kansai/奈AT",
+   "kansai/BF",
+   "kansai/姫CE",
+   "kansai/AY",
+   "kansai/北R",
+   "kansai/北AE",
+   "kansai/北ET",
+   "kansai/北CZ",
+   "kansai/南EV",
+   "kansai/奈D",
+   "kansai/BE",
+   "kansai/和BB"
+  ],
+  "absent_in_model": [
+   "shikoku/新改",
+   "kyushu/相浦",
+   "kyushu/東豊前",
+   "kyushu/唐津",
+   "tokyo/関内",
+   "tokyo/塩尻",
+   "kansai/AJ-1",
+   "tokyo/南横浜",
+   "tokyo/境川",
+   "shikoku/徳島変26",
+   "shikoku/分水第一",
+   "shikoku/坂出火力"
+  ],
+  "region_mismatch": [
+   "kyushu/吉井",
+   "kyushu/速見",
+   "okinawa/石川",
+   "kyushu/久留米",
+   "chugoku/松江",
+   "chugoku/湊",
+   "chugoku/福田",
+   "hokuriku/南福岡",
+   "kyushu/塚原",
+   "kyushu/野原",
+   "kyushu/神野",
+   "kyushu/大津"
+  ],
+  "kv_class_mismatch": [
+   "kyushu/八代",
+   "tokyo/新豊洲",
+   "tokyo/城南",
+   "kyushu/海崎",
+   "tokyo/東川崎",
+   "tokyo/塩浜",
+   "tokyo/下田",
+   "tokyo/北巨摩",
+   "chubu/南武平町",
+   "chugoku/箕島",
+   "okinawa/北那覇",
+   "okinawa/西那覇"
+  ],
+  "alias_resolvable": [
+   "kyushu/32武雄",
+   "kyushu/30木佐木",
+   "kyushu/40三池",
+   "kyushu/5西九州",
+   "kyushu/7中九州",
+   "kyushu/9南九州",
+   "kyushu/1北九州",
+   "kyushu/22東福岡",
+   "kyushu/33北佐賀",
+   "kyushu/11ひむか",
+   "kyushu/35東佐世保",
+   "kyushu/3脊振"
+  ]
+ },
+ "cause_meaning": {
+  "anonymized": "関西電力送配電の <154kV 一覧が端点を「北CZ」「奈AT」等の記号で匿名化している。原理的に解決不能",
+  "structural": "需要家・開放点・〇〇分岐・鉄塔番号。変電所ではないので端点として扱わない",
+  "absent_in_model": "その変電所が正典(OSM 由来)に存在しない。別名では解けず、供給ノード台帳(#29追補4 の様式)が要る",
+  "kv_class_mismatch": "名前は一致するが正典が持つ電圧ノードが 1 階級だけで、出典の階級と食い違う。resolve_sub の階級ガードで落ちる",
+  "region_mismatch": "同名の変電所が別地域にしか無い(吉井が tokyo など)。座標が要る",
+  "alias_resolvable": "別名表で解決できる(九州の設備番号プレフィックス)"
+ }
+}

@@ -1,0 +1,183 @@
+{
+ "date": "2026-09-03",
+ "purpose": "介入#44 追補: 端点別名表を入れたときの照合の変化(ドライラン・正典未変更)",
+ "baseline": "正典から par_src=='circuit_sources' の枝を par_prev へ戻した #44 適用前の状態",
+ "baseline_file": "/tmp 再構築(コミットしない)。再現は本レポート末尾の手順",
+ "alias_entries": {
+  "entries_used": 31,
+  "low_skipped": 0,
+  "use_low_confidence": false,
+  "n_alias_hits": 98,
+  "top_alias_hits": [
+   [
+    "7中九州",
+    7
+   ],
+   [
+    "9南九州",
+    6
+   ],
+   [
+    "1北九州",
+    5
+   ],
+   [
+    "2豊前",
+    5
+   ],
+   [
+    "5西九州",
+    5
+   ],
+   [
+    "6熊本",
+    5
+   ],
+   [
+    "4中央",
+    4
+   ],
+   [
+    "8東九州",
+    4
+   ],
+   [
+    "10宮崎",
+    4
+   ],
+   [
+    "11ひむか",
+    4
+   ],
+   [
+    "32武雄",
+    4
+   ],
+   [
+    "3脊振",
+    3
+   ]
+  ]
+ },
+ "before": {
+  "n_sources": 4913,
+  "n_matched_sources": 2079,
+  "n_edges_proposed": 3844,
+  "n_edges_to_update": 421,
+  "n_conflicts": 66,
+  "n_unmatched": 2834
+ },
+ "after": {
+  "n_sources": 4913,
+  "n_matched_sources": 2096,
+  "n_edges_proposed": 3844,
+  "n_edges_to_update": 417,
+  "n_conflicts": 68,
+  "n_unmatched": 2817
+ },
+ "match_methods_before": {
+  "name": 637,
+  "route": 840,
+  "name+endpoint": 602
+ },
+ "match_methods_after": {
+  "name": 605,
+  "route": 875,
+  "name+endpoint": 616
+ },
+ "unmatched_by_note_before": {
+  "no name": 926,
+  "unresolved endpoints": 1725,
+  "name found but kv/region mismatch": 84,
+  "name-match rejected: 4 edges none within": 9,
+  "name-match rejected: 2 edges none within": 24,
+  "name-match rejected: 5 edges none within": 13,
+  "name-match rejected: 3 edges none within": 11,
+  "name-match rejected: 1 edges none within": 31,
+  "name-match rejected: 10 edges none withi": 2,
+  "name-match rejected: 8 edges none within": 4,
+  "name-match rejected: 7 edges none within": 2,
+  "name-match rejected: 16 edges none withi": 1,
+  "name-match rejected: 6 edges none within": 2
+ },
+ "unmatched_by_note_after": {
+  "no name": 926,
+  "unresolved endpoints": 701,
+  "name found but kv/region mismatch": 84,
+  "no usable endpoint (from: anonymized end": 463,
+  "no usable endpoint (to: anonymized endpo": 439,
+  "no usable endpoint (to: non-endpoint mar": 18,
+  "no usable endpoint (from: non-endpoint m": 87,
+  "name-match rejected: 4 edges none within": 9,
+  "name-match rejected: 2 edges none within": 24,
+  "name-match rejected: 5 edges none within": 13,
+  "name-match rejected: 3 edges none within": 11,
+  "name-match rejected: 1 edges none within": 31,
+  "name-match rejected: 10 edges none withi": 2,
+  "name-match rejected: 8 edges none within": 4,
+  "name-match rejected: 7 edges none within": 2,
+  "name-match rejected: 16 edges none withi": 1,
+  "name-match rejected: 6 edges none within": 2
+ },
+ "updates_by_kv_before": {
+  "154.0": 52,
+  "275.0": 24,
+  "77.0": 41,
+  "66.0": 217,
+  "0.0": 15,
+  "0": 1,
+  "500.0": 22,
+  "187.0": 5,
+  "110.0": 18,
+  "220.0": 26
+ },
+ "updates_by_kv_after": {
+  "154.0": 52,
+  "275.0": 24,
+  "77.0": 41,
+  "66.0": 217,
+  "0.0": 15,
+  "0": 1,
+  "500.0": 22,
+  "187.0": 5,
+  "110.0": 18,
+  "220.0": 22
+ },
+ "net_effect": {
+  "matched_records": 17,
+  "edges_to_update": -4,
+  "unresolved_endpoints_note": -1024
+ },
+ "lost_edges": [
+  {
+   "edge": [
+    [
+     33.77598,
+     130.98487
+    ],
+    [
+     33.7766,
+     130.98653
+    ]
+   ],
+   "line": "苅田分岐線",
+   "kv": 220,
+   "why": "別名で端点が解けた結果 route 照合が成立し、枝特定的な route が広域の name 照合を上書きした。route の経路(10枝)にこのスタブ枝は含まれない"
+  },
+  {
+   "edge": [
+    [
+     33.7761,
+     130.97877
+    ],
+    [
+     33.7766,
+     130.98653
+    ]
+   ],
+   "line": "苅田分岐線",
+   "kv": 220,
+   "why": "同上"
+  }
+ ]
+}

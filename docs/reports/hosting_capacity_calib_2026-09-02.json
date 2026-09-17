@@ -1,0 +1,68 @@
+{
+ "date": "calib_2026-09-02",
+ "sens_floor": 0.001,
+ "islands": [
+  {
+   "island": "east",
+   "n_bus": 5799,
+   "n_branch": 6906,
+   "sec_build_ptdf": 6.25,
+   "sec_hosting_capacity_all_buses": 1.0204,
+   "n_branch_over_capacity": 288,
+   "n_branch_capacity_known": 6906,
+   "capacity_factor": 1.0,
+   "cap_calib": true,
+   "cap_calib_ledger": {
+    "national": 2162,
+    "area": 4306
+   },
+   "min_kv": 154.0,
+   "n_branch_in_scope": 2109,
+   "n_bus_computable": 0,
+   "equivalent_ac_solves": 5799,
+   "stress_stats": {
+    "median_pct_per_gw": 173.94628947873207,
+    "p10_pct_per_gw": 76.0342790793931,
+    "p90_pct_per_gw": 459.49125347265755
+   },
+   "stats": {
+    "median_mw": null,
+    "p10_mw": null,
+    "p90_mw": null,
+    "n_below_100mw": 0,
+    "n_above_1gw": 0
+   }
+  },
+  {
+   "island": "west",
+   "n_bus": 7456,
+   "n_branch": 8873,
+   "sec_build_ptdf": 7.33,
+   "sec_hosting_capacity_all_buses": 1.052,
+   "n_branch_over_capacity": 244,
+   "n_branch_capacity_known": 8873,
+   "capacity_factor": 1.0,
+   "cap_calib": true,
+   "cap_calib_ledger": {
+    "national": 4391,
+    "area": 3743
+   },
+   "min_kv": 154.0,
+   "n_branch_in_scope": 3206,
+   "n_bus_computable": 1,
+   "equivalent_ac_solves": 7456,
+   "stress_stats": {
+    "median_pct_per_gw": 206.0230750939816,
+    "p10_pct_per_gw": 87.49709914290823,
+    "p90_pct_per_gw": 552.1395761430537
+   },
+   "stats": {
+    "median_mw": 3757.1646117784085,
+    "p10_mw": 3757.1646117784085,
+    "p90_mw": 3757.1646117784085,
+    "n_below_100mw": 0,
+    "n_above_1gw": 1
+   }
+  }
+ ]
+}

@@ -11,8 +11,26 @@ OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**し�
 10 地域、送電線 40,000 本超、変電所 7,000 箇所超、発電所 19,000 箇所超。東京電力の公開する線路別潮流との回廊使用率の順位相関（容量・トポロジの代理指標）は **内部 Spearman ρ = 0.721**。合成負荷で解いた AC 潮流の相関は **ρ ≈ 0.46（内部）/ 0.60（基幹）** です。
 
 **Live Map / ライブマップ:** https://lutelute.github.io/All-Japan-Grid/
+**SubSLD Viewer / 変電所単線結線ビュー:** https://lutelute.github.io/All-Japan-Grid/subsld.html
 
 ---
+
+## SubSLD法 — Substation Single-Line Diagrams / 変電所単線結線ビュー *(v1.8.0)*
+
+Every substation now carries an **evidence-paired figure**: GeoPane (site outline,
+real OSM way geometry and terminal-binding markers over GSI aerial photography)
+× SLDPane (busbar sections, circuit-count strokes, direction arrows, transformers —
+rendered live in the browser). All 7,239 sites, all estimates explicitly marked.
+
+全変電所に**実証ペア図**が付きました。GeoPane（地理院写真上の敷地・実線形・端子束縛マーカー）×
+SLDPane（母線セクション・回線数ストローク・流向・変圧器）をブラウザ内で描画します。
+推定値（流向・推定母線）はすべて推定と明記されます。
+
+- **Viewer:** https://lutelute.github.io/All-Japan-Grid/subsld.html
+- **Method:** [`docs/SUBSLD_METHOD.md`](docs/SUBSLD_METHOD.md) — evidence-closure
+  formulation, lower-bound circuit estimation, three-valued direction inference
+- Coverage (measured): circuits evidence 68 % of lines, busbar ways 14.2 % of sites
+  (gap tracked in [issue #49](https://github.com/lutelute/All-Japan-Grid/issues/49))
 
 ## Disclaimer / 免責事項
 
@@ -73,6 +91,31 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 ---
 
 ## Highlights / ハイライト
+
+### v1.7.0 — 2026-08-20
+
+- 🔌 **Interconnector & converter layer corrected against primary sources /
+  連系線・変換所層の正本化** (interventions #31/#32/#33). Synthetic straight-line
+  ties de-energised (real geometries carry the flow; Anan–Kihoku DC got its actual
+  submarine+overhead route), the 南福光 BTB no longer passes AC through, and
+  `interconnections.yaml` is rebuilt from OCCTO published operating capacities with
+  **direction-aware limits** (関門 850/2,850 MW). A UC formulation bug (regional
+  balance as `>=` = free surplus disposal) was found and fixed with an explicit
+  spill ledger — all 10 links now stay within capacity in all 24 hours.
+  合成タイ非通電化・南福光BTB切断・OCCTO正本の方向別容量・UC収支等式化。
+- 📄 **Disclosure-driven completion / 公表資料による網の補完.** 全10社の様式5
+  (インピーダンス)正規化 1,009線/213変圧器 → 89 disclosed connections applied as
+  pipeline steps; EGGC snaps disclosed codes to real OSM geometry only under an
+  evidence gate; local grids (新潟154 kV・静岡77 kV・四日市77 kV) node-ified from
+  disclosed diagrams. Point demand (#30) pins observed substation loads.
+- 🏷️ **Sourced capacities / 出典付き容量の拡充.** GEM fill +194 records / 22.5 GW
+  (provenance DB 354 rows, all verified); OCCTO interconnector operating
+  capacities (14 links × 2 directions) as a sourced canon.
+- 📊 **Live observability / 公表実績で動く可視化** (Pages, not in the bundles):
+  24 h nodal flow map with date snapshots injected from area supply-demand
+  actuals of 9/10 TSOs — nuclear outages propagate automatically from official
+  actuals (zone net positions validated to 39–129 MW against the published
+  interchange column).
 
 ### v1.6.0 — 2026-07-10
 
@@ -612,6 +655,31 @@ open http://localhost:8000
 | `src/ac_powerflow/` | Advanced AC methods / 高度な AC 手法 | Requires electrical parameters / 電気パラメータが必要 |
 | `src/uc/` | Unit Commitment (MILP, PuLP + HiGHS) with inter-regional transmission constraints / 地域間連系線制約付き UC ソルバ | Verified: 646 generators × 24h × 9 interconnections → Optimal in ~38s / 実証済み |
 | `src/converter/` | pandapower / MATPOWER export / エクスポート | Works / 動作可 |
+
+### Screening CLIs / スクリーニング解析 CLI *(2026-09-02)*
+
+All run on the canonical built model (`docs/data/built/all.json`; every modelling assumption is registered in
+[`docs/MODEL_INTERVENTIONS.md`](docs/MODEL_INTERVENTIONS.md)). **Screening only** — not connection, operation or
+stability studies; synthetic impedances and typical machine constants throughout.
+正典 built モデル上のスクリーニングです（仮定はすべて介入台帳に登録）。接続可否・運用可否・安定度の判定ではありません。
+
+- **N-1 line-outage screening / N-1 全枝スクリーニング** —
+  `PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands east west --ac-verify 5`
+  LODF evaluates every single-circuit outage at once (west 6,681 branches in ~2 s); bridges are booked separately
+  with the islanded load; only real branches (OSM geometry, disclosed connections, nameplate transformers) rank in the
+  main table, outages whose worst branch carries a synthetic rating are disclosed apart; the top outages are re-solved
+  with the production AC solver. → `docs/reports/n1_screening_<date>.md`
+- **IBR hosting capacity by short-circuit ratio / 系統強度（SCR）による IBR 連系可能量** —
+  `PYTHONPATH=. python3 scripts/sensitivity/ibr_hosting_scr.py --islands west --scr-min 3`
+  Thevenin short-circuit MVA at every bus (sparse LU; machine xd″ from `src/dynamics/machine_agg`), SCR = S_sc/P_ibr,
+  P_max = S_sc/SCR_min − existing IBR, cross-checked against pandapower `calc_sc` (exact match); combined with the
+  thermal PTDF hosting capacity to show which limit binds. → `docs/reports/ibr_hosting_scr_<date>.md`
+- **Multi-machine swing at the AC operating point / 多機動揺モデルの AC 運転点化** —
+  `PYTHONPATH=. python3 scripts/gen_swing_modes.py --solve-west net.pkl` then `--ac-op west --net-pickle net.pkl`
+  Classical machines initialised from the converged AC solution (E∠δ, equilibrium Pe = Pm to machine precision),
+  electromechanical modes with participation factors, N-1 generator disconnection transients.
+  → `docs/reports/swing_modes_west_ac_<date>.md`
+- **Line-capacity calibration / 線路容量の運用容量較正** *(opt-in)* — `--cap-calib` on the power-flow driver, `scripts/sensitivity/n1_screening.py` and `hosting_capacity.py`: multiplies each line rating by the published operating-limit ratio for its area and voltage class (`config/line_capacity_calibration.yaml`; ratios only, no redistributed capacity values). Off by default — 154 kV agrees across utilities (0.679 / 0.678) but 500 kV spans 0.37–0.95. → `docs/reports/line_capacity_calibration_<date>.md`
 
 ## Future Work — Complementary Data Sources / 今後の展望 — 補完データソース
 

@@ -74,6 +74,8 @@ def test_terminal_provenance(okinawa):
 def test_regression_pin_okinawa(okinawa):
     """ゲート5: 回帰 pin(モデル改善で意図的に変える時のみ更新)。"""
     _s, conns, rep = okinawa
-    assert rep["n_sites"] == 59
-    assert rep["n_terminals"] == 164
-    assert len(conns) == 54
+    # 2026-08-27 更新: OSM再取得+名称エンリッチ反映後の再生成に追随
+    # (issue #49 のid照合スキュー解消のための意図的な再生成。旧pin: 59/164/54)
+    assert rep["n_sites"] == 60
+    assert rep["n_terminals"] == 167
+    assert len(conns) == 59

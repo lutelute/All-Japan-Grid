@@ -79,6 +79,47 @@ def legacy_key_latlon(rec):
     return (a, b) if abs(a) <= 90 else None  # lat,lon 順のみ許容
 
 
+# ── 燃料種の整合ゲート(2026-09-02) ──────────────────────────────────────
+# 名前照合は「同名の別設備」を区別できない。実例: 高崎市の太陽光「高浜発電所」(25MW×4
+# 地物)に関電 高浜発電所(原子力 3,392MW)の公式容量が塗られ、PF の出典付き容量経路
+# (sourced_capacity_index)で east に 13,569MW の幻の太陽光が立った。姫路第二(gas 4,119)
+# の隣接ソーラー、松浦火力の隣接ソーラーも同型。
+# 規則: 名前レコードは feature の fuel_type と整合するときだけ適用する。レコードに
+# fuel_type があれば完全一致、無ければ「IBR(太陽光/風力/蓄電)の feature には IBR を指す
+# 語を含むレコードだけ」。**不整合でも例外的に許すのは「レコードの
+# 値が OSM 値以下(=容量を増やさない)」場合のみ** — 大間・浪江小高の
+# ように OSM が計画原子力の敷地を solar と誤タグした feature を、公式の「運転容量 0」で
+# 是正する経路を残すため(容量を増やす方向の不整合適用=幻の電源は決して作らない)。
+# geo: レコード(feature 特定的に裁定済み)はゲートを通さない。
+IBR_FUELS = {"solar", "photovoltaic", "wind", "battery"}
+IBR_WORDS = ("太陽光", "ソーラー", "風力", "蓄電", "solar", "wind", "battery", "pv")
+
+
+def fuel_compatible(rec, ft) -> bool:
+    """名前レコードを feature に適用してよいか(燃料種の整合)。"""
+    p = ft.get("properties") or {}
+    fuel = str(p.get("fuel_type") or "").strip().lower()
+    rf = str(rec.get("fuel_type") or "").strip().lower()
+    if rf:
+        ok = rf == fuel
+    elif fuel in IBR_FUELS:
+        text = " ".join(str(rec.get(k) or "") for k in
+                        ("name", "note", "source_title", "quote")).lower()
+        ok = any(w in text for w in IBR_WORDS)
+    else:
+        ok = True
+    if ok:
+        return True
+    # 例外: 容量を増やさない(是正方向のみ)。OSM 値が既知(>=0)で レコード値 <= OSM 値。
+    # 幻の電源は決して作らない一方、公式の「運転容量 0」で誤タグ敷地を消す経路は残す。
+    osm = p.get("capacity_mw")
+    try:
+        return (isinstance(osm, (int, float)) and osm >= 0
+                and float(rec.get("value", 0)) <= float(osm))
+    except (TypeError, ValueError):
+        return False
+
+
 def choose_record(name_rec, geo_rec, ft):
     """名前照合とgeoキー照合が同一featureで競合したときの優先規則。"""
     if not geo_rec:
@@ -127,6 +168,7 @@ def main(data_dir=DATA, records=None):
             if k:
                 key_count[k] = key_count.get(k, 0) + 1
         ambiguous = 0
+        fuel_vetoed = []
         for ft in d.get("features", []):
             p = ft.get("properties") or {}
             name = (p.get("_display_name") or p.get("name") or "").strip()
@@ -138,6 +180,10 @@ def main(data_dir=DATA, records=None):
                     geo_rec = by_key[k]
                 else:
                     ambiguous += 1
+            if name_rec and not fuel_compatible(name_rec, ft):
+                fuel_vetoed.append((name, p.get("fuel_type"), name_rec["name"],
+                                    name_rec["value"]))
+                name_rec = None
             rec = choose_record(name_rec, geo_rec, ft)
             # 冪等性: 既存の sourced を一旦消してから(出典DB更新を反映)
             had = any(k in p for k in SOURCED_FIELDS)
@@ -166,7 +212,19 @@ def main(data_dir=DATA, records=None):
                 if den > 0 and abs(o - s) / den > 0.1:
                     difs.append((p.get("_display_name") or p.get("name"), o, s))
         note_amb = f" 座標キー曖昧skip={ambiguous}" if ambiguous else ""
-        print(f"  {tgt}: applied={applied} (cleared stale={cleared}){note_amb}")
+        note_fuel = f" 燃料種不整合veto={len(fuel_vetoed)}" if fuel_vetoed else ""
+        print(f"  {tgt}: applied={applied} (cleared stale={cleared}){note_amb}{note_fuel}")
+        for nm, fuel, rn, val in fuel_vetoed[:6]:
+            print(f"     veto {nm}({fuel}) ← レコード「{rn}」{val}MW")
+        if tgt == "plants_all.geojson":
+            led = os.path.join(ROOT, "docs", "reports", "capacity_source_fuel_veto.json")
+            with open(led, "w", encoding="utf-8") as f:
+                json.dump({"note": "名前照合の燃料種不整合で適用を拒否した(feature, fuel, record, MW)。"
+                                   "幻の電源を作らないためのゲート(2026-09-02)",
+                           "n": len(fuel_vetoed),
+                           "vetoed": [{"feature": a, "fuel": b, "record": c, "value_mw": d}
+                                      for a, b, c, d in fuel_vetoed]},
+                          f, ensure_ascii=False, indent=1)
         for nm, o, s in difs[:4]:
             print(f"     乖離 {nm}: OSM/P03={o} → 出典={s}")
     return 0

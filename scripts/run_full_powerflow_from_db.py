@@ -201,9 +201,40 @@ def _get_nameplates():
     return _NAMEPLATES_CACHE
 
 
+# 介入#31: 通電のまま残す合成タイ(実線形が未完で連結を代表している断面のみ)。
+# 東北東京=相馬双葉幹線の南いわき地点に340m切れ端未縫合(tie_duplication_audit)。
+# 縫合が完了したらこの集合から外して除外に揃える。
+KEEP_LIVE_TIES = {"東北東京間連系線"}
+
+# 介入#32(2026-08-19): 南福光BTBのAC素通し切断。中部北陸間は南福光連系所の
+# BTB(back-to-back DC・非同期)による連系で、交流の直通は実在しない。モデルは
+# 中部側(越美幹線)と北陸側(加賀福光線・能越幹線)が同一バスに合流し、実績断面
+# 575MW・UC断面1,210MWがAC素通しになっていた(運用容量の中央値300MWの2〜4倍)。
+# バスを中部側/北陸側に分割し、指定線名の枝を中部側バスへ付け替える。
+# 根拠=OCCTO連系設備定義(interconnections.yaml ic_005・正本jsonl)。
+# 帳簿=build統計 n_btb_split。無効化=--no-btb-split。
+BTB_SPLITS = [
+    {"bus_name": "南福光連系所",
+     "move_lines_containing": ["越美幹線"],
+     "new_zone": "chubu",
+     "source": "OCCTO 中部北陸間連系設備=南福光BTB(非同期・中央値300MW)"},
+]
+
+
+# ── 介入#45(2026-09-02): 線路容量の運用容量較正 ──────────────────────
+# 理論容量 √3·V·max_i_ka は各社公表の運用容量の 1.5〜2.5 倍(階級×エリアで係数 0.27〜0.95、
+# config/line_capacity_calibration.yaml・比だけ)。**既定 OFF**: 全国化の一致度判定
+# (3 エリア以上が同階級で中央値 ±0.1)をどの階級も満たさず(500kV は 0.37〜0.95・
+# 110kV は 0.27)、公表容量が無いエリアが 6/10 あるため、既定化は係数の出典が揃ってから。
+# 明示 ON = `--cap-calib` または環境変数 AGJ_CAP_CALIB=1(uc_to_pf_built 等の他経路用)。
+CAP_CALIB_DEFAULT = False
+
+
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
-                     deenergize_unbuilt=False):
+                     deenergize_unbuilt=False, synthetic_ties_live=False,
+                     btb_split=True, freq_fix=True, implicit_stepdown=None,
+                     cap_calib=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -229,10 +260,20 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     過電圧アーティファクトを除く。既定OFF。"""
     if nameplates == "auto":
         nameplates = _get_nameplates()
+    # 介入#45: None=環境変数 AGJ_CAP_CALIB(1/0) → 無ければモジュール既定
+    if cap_calib is None:
+        _env = os.environ.get("AGJ_CAP_CALIB", "")
+        cap_calib = (_env == "1") if _env in ("0", "1") else CAP_CALIB_DEFAULT
+    cap_ledger = {} if cap_calib else None
+    if cap_calib:
+        from src.powerflow.line_capacity import capacity_factor as _cap_factor
     rstats = None
     if territory:
         from src.powerflow.region_attribution import reattribute_node_regions
-        rstats = reattribute_node_regions(nodes)   # in-place・冪等
+        # freq_fix=介入#38(2026-08-30): 周波数一意県への抽出こぼれは跨ぎ是正
+        rstats = reattribute_node_regions(nodes, freq_fix=freq_fix)  # in-place・冪等
+        if rstats.get("freq_fixed"):
+            print(f"  介入#38 跨ぎ是正(一意周波数県): {rstats['freq_fixed']}")
     net = pp.create_empty_network(name=f"full_{island}", f_hz=freq)
 
     # candidate buses = nodes whose region maps to this island
@@ -271,6 +312,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     n_edge_skipped = 0
     n_edge_dup = 0
     n_deenergized = 0
+    n_tie_nis = 0
     nis_rules = _load_not_in_service() if deenergize_unbuilt else []
     seen_edges = {}         # (min bus, max bus, kv, path署名) -> line idx(B案 エッジ側)
     for e in edges:
@@ -322,12 +364,32 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         if length <= 0:
             length = max(_haversine_km(*e["a"], *e["b"]), 0.05)
         x = params["x_ohm_per_km"] or 0.001
+        # 介入#31(2026-08-17 オーナー承認): 合成連系タイ(tie)とDC連系枝(dc_tie/dc)は
+        # in_service=False で建てる。実連系線の実線形が既にあり二重計上(タイは直線・
+        # kv=0が500継承で低Z並列路)、DCは交流ループを形成してはならない。
+        # 例外=東北東京間連系線: 相馬双葉幹線の南いわき地点に340mの切れ端未縫合が
+        # あり実線形が未完のため、縫合完了まで通電のまま残す(台帳に記録)。
+        synthetic = bool(e.get("tie") or e.get("dc_tie") or e.get("dc"))
+        keep_live = str(e.get("name") or "") in KEEP_LIVE_TIES
+        # 介入#45: 運用容量較正(係数は (エリア, 階級) → 全国 → 全体 の順に引き帳簿へ)
+        ika = params["max_i_ka"]
+        if cap_calib:
+            ika = ika * _cap_factor(kv, nodes[ja].get("region"), cap_ledger)
         li = pp.create_line_from_parameters(
             net, from_bus=fa, to_bus=ta, length_km=length,
             r_ohm_per_km=params["r_ohm_per_km"], x_ohm_per_km=x,
-            c_nf_per_km=params["c_nf_per_km"], max_i_ka=params["max_i_ka"],
+            c_nf_per_km=params["c_nf_per_km"], max_i_ka=ika,
             name=str(e.get("name") or f"line_{n_line}"),
-            parallel=max(int(e.get("par") or 1), 1))
+            parallel=max(int(e.get("par") or 1), 1),
+            in_service=(not synthetic) or keep_live or synthetic_ties_live)
+        if cap_calib:
+            # 較正前の理論定格を残す。接続規則(#24 cap/capkv: bus_incident_mva・
+            # class_branch_mva)は**理論定格**で判定する — 較正を通すと繋ぎ先が変わり
+            # 潮流解そのものが動いてしまう(2026-09-02 実測: west AC→dc_fallback)。
+            # 較正は「制約側の数字(loading%)」だけに効かせる
+            net.line.at[li, "max_i_ka_theo"] = float(params["max_i_ka"])
+        if synthetic and not (keep_live or synthetic_ties_live):
+            n_tie_nis += 1
         if dedup_nodes:
             seen_edges[esig] = li
         if nis_rules:
@@ -495,6 +557,52 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     except (ValueError, TypeError):
                         pass
 
+    # ---- 介入#43a(2026-09-02): 異階級直結線の暗黙降圧。線 kv_L の端点座標に kv_L ノードが
+    #      無く別階級バスへ繋がった箇所(新淀線 66kV→新宿 275kV 等)に、同サイトの kv_L バスと
+    #      kv_H/kv_L 変圧器を挿入する(存在は電気的必然・容量は銘板 or 推定を明記)。
+    #      kv_class 列(元エッジの kv)は常に付ける。ロジック= src/powerflow/stepdown_gap.py ----
+    from src.powerflow.stepdown_gap import builder_hook as _stepdown_hook
+    if implicit_stepdown is None:
+        implicit_stepdown = IMPLICIT_STEPDOWN_DEFAULT
+    sd = _stepdown_hook(net, bus_of, nodes, edges, coord_nodes, nameplates, freq,
+                        implicit_stepdown)
+    n_stepdown = len(sd["implicit_stepdown"])
+    n_trafo += n_stepdown
+    n_trafo_nameplate += sum(1 for r in sd["implicit_stepdown"] if r["capacity"] == "nameplate")
+
+    # ---- 介入#32: BTB連系所のAC素通し切断(既定ON) — BTB_SPLITS参照。
+    #      同名バスを設備の両側に分割し、指定線名の枝のみ新バスへ付け替える。
+    #      変圧器・負荷・発電機は元バス(北陸側)に残る。 ----
+    n_btb_split = 0
+    if btb_split:
+        for spec in BTB_SPLITS:
+            hits = net.bus.index[net.bus.name.astype(str) == spec["bus_name"]]
+            for b in hits:
+                mask = ((net.line.from_bus == b) | (net.line.to_bus == b)) & \
+                    net.line.name.astype(str).str.contains(
+                        "|".join(spec["move_lines_containing"]), regex=True)
+                if not mask.any():
+                    continue
+                try:
+                    gd = net.bus_geodata.loc[b]
+                    geodata = (float(gd["x"]), float(gd["y"]))
+                except (AttributeError, KeyError):
+                    geodata = None
+                # type="n"(junction)が重要: allocate_loads は type!="n" のバスへ
+                # 需要を配るため、"b"で作ると(chubu,富山県)の県別需要がこの
+                # 1バスに集中する(診断で1,556MW集中を実測)。BTB端子は無負荷。
+                nb = pp.create_bus(
+                    net, vn_kv=float(net.bus.at[b, "vn_kv"]),
+                    name=f"{spec['bus_name']}(中部側)", type="n",
+                    geodata=geodata)
+                net.bus.at[nb, "zone"] = spec.get("new_zone")
+                for li in net.line.index[mask]:
+                    if int(net.line.at[li, "from_bus"]) == int(b):
+                        net.line.at[li, "from_bus"] = nb
+                    if int(net.line.at[li, "to_bus"]) == int(b):
+                        net.line.at[li, "to_bus"] = nb
+                    n_btb_split += 1
+
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "n_edge_skipped": n_edge_skipped,
@@ -502,13 +610,19 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_edge_dup_removed": n_edge_dup,
                          "n_site_trafo": n_site_trafo,
                          "n_deenergized": n_deenergized,
+                         "n_tie_nis": n_tie_nis,
+                         "cap_calib": bool(cap_calib), "cap_calib_ledger": cap_ledger,
+                         "n_btb_split": n_btb_split,
+                         "n_implicit_stepdown": n_stepdown,
+                         "implicit_stepdown_ledger": sd["implicit_stepdown"],
+                         "unknown_kv_reclass_ledger": sd.get("reclass", []),
                          "region_reattribution": rstats}
 
 
 # ──────────────────────────────────────────────────────────────────────────
 #  Generators from OSM plants (nearest substation bus)
 # ──────────────────────────────────────────────────────────────────────────
-ATTACH_MODES = ("nearest", "site", "cap", "kvfit")
+ATTACH_MODES = ("nearest", "site", "cap", "kvfit", "capkv")
 
 
 # 出典付き容量を潮流へ届ける（2026-08-10）。既定 ON・無効化は `--no-sourced-capacity`。
@@ -557,6 +671,34 @@ def _operator_region():
 # モデルを組む側だけがこの定数を明示的に渡す。
 GEN_ATTACH_DEFAULT = "cap"
 
+# ── 介入#41(2026-09-02): 接続規則の島別既定 ─────────────────────────
+# cap は「バスに集まる枝の合計容量」だけで選び電圧階級を見ないため、京極400MWが
+# 札幌66kVに載り北海道DCが318%化した(hokkaido_cap_attach_regression_2026-09-01.md)。
+# capkv(合計容量∧必要電圧階級)は hokkaido 318→86% / west 1103→694% と正すが、
+# east は降圧点(66↔275kV変圧器)の欠損を cap が偶然覆い隠しているため逆に悪化する
+# (725→1031%)。よって既定を島別に分ける — ISLAND_MODE(西のみAC)と同じ島別設計。
+# east は降圧点の出典つき補完が済むまで cap 据え置き(既知の欠陥として登録)。
+# 無効化: --gen-attach cap で全島旧既定に戻る。
+ISLAND_ATTACH_DEFAULT = {"hokkaido": "capkv", "west": "capkv",
+                         "east": "cap", "okinawa": "cap"}
+
+# ── 介入#43(2026-09-02): 降圧点欠損の是正 — 台帳 docs/MODEL_INTERVENTIONS.md #43a/#43b。
+# #43a 暗黙降圧(異階級直結線)= **既定ON**。66kV 線が 275kV 母線に直結することは電気的に
+# あり得ないので、同サイトに kv_L 母線と降圧変圧器が**存在することは必然**(#37 と同じ論法・
+# オーナー承認 2026-08-30「仮が事実でないかもしれないなら、それを明記しておけば正典として良い」)。
+# 存在のみ主張し、容量は銘板があれば銘板・無ければ推定と全件明記する。
+# ゲート(2026-09-02): east 静的AC vm_min 0.819→0.857・実在線過負荷 353→342・
+# N-1 新規過負荷を生む開放 222→166。hokkaido/okinawa は該当 0 で不変。無効化=--no-implicit-stepdown。
+# #43b 低圧網の帳簿付き縮約(R km・0=無効)= **既定OFF**(移設先=最近傍上位バスは経路の推定)。
+# 環境変数 AJG_IMPLICIT_STEPDOWN=1/0・AJG_LV_AGGREGATE_KM=<R> で上書き可(sensitivity/N-1 等、
+# フラグを持たない経路で A/B 比較するため)。build_island_net(implicit_stepdown=None) は既定を引く。
+IMPLICIT_STEPDOWN_DEFAULT = (os.environ.get("AJG_IMPLICIT_STEPDOWN", "1") == "1")
+LV_AGGREGATE_DEFAULT_KM = float(os.environ.get("AJG_LV_AGGREGATE_KM", "0") or 0.0)
+
+
+def attach_default_for(island: str) -> str:
+    return ISLAND_ATTACH_DEFAULT.get(island, GEN_ATTACH_DEFAULT)
+
 # ── 介入#26 の**モデル既定**（2026-08-10 オーナー承認で既定ON）─────────────
 # 発電機の計上エリアを OSM の operator タグで決める。座標 zone のままだと嶺南原発群
 # （大飯4,494MW/高浜3,392MW）と舞鶴火力1,800MW が hokuriku 計上になり出力が1/3になる
@@ -573,7 +715,10 @@ def bus_incident_mva(net):
         if not r["in_service"]:
             continue
         kv = float(net.bus.at[int(r["from_bus"]), "vn_kv"])
-        mva = float(r["max_i_ka"]) * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
+        # 介入#45 較正 ON でも接続規則は理論定格(max_i_ka_theo)で判定する
+        ika = r.get("max_i_ka_theo")
+        ika = float(r["max_i_ka"]) if ika is None or ika != ika else float(ika)
+        mva = ika * kv * math.sqrt(3.0) * max(1, int(r.get("parallel") or 1))
         cap[int(r["from_bus"])] += mva
         cap[int(r["to_bus"])] += mva
     for _ti, r in net.trafo.iterrows():
@@ -596,7 +741,9 @@ def class_branch_mva(net):
         if not r["in_service"]:
             continue
         kv = round(float(net.bus.at[int(r["from_bus"]), "vn_kv"]), 1)
-        per[kv].append(float(r["max_i_ka"]) * kv * math.sqrt(3.0))
+        ika = r.get("max_i_ka_theo")               # 介入#45: 梯子も理論定格で測る
+        ika = float(r["max_i_ka"]) if ika is None or ika != ika else float(ika)
+        per[kv].append(ika * kv * math.sqrt(3.0))
     out = {}
     for kv, v in per.items():
         v.sort()
@@ -630,6 +777,8 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
       cap     バスに集まる枝の合計容量がその発電所の出力以上になる最寄りのバスへ。
       kvfit   出力を1回線で運べる最下位の階級を必要階級とし、kvfit_km 以内で
               必要階級以上の最寄りバスへ。
+      capkv   cap ∧ kvfit。合計容量と必要階級の両方を満たす最寄りバスへ
+              (2026-09-01。cap 単独の「電圧を見ない」欠陥を塞ぐ)。
     いずれも**判定基準はモデル自身のデータだけ**から作る（外部の接続電圧表を
     持ち込むと捏造になる）。評価は `docs/reports/repair_search_2026-08-09.md`。
 
@@ -676,10 +825,11 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                   f"(領土地域優先)")
         feats = list(chosen.values()) + extra
 
-    incident = bus_incident_mva(net) if attach_mode == "cap" else {}
-    ladder = sorted(class_branch_mva(net).items()) if attach_mode == "kvfit" else []
+    incident = bus_incident_mva(net) if attach_mode in ("cap", "capkv") else {}
+    ladder = (sorted(class_branch_mva(net).items())
+              if attach_mode in ("kvfit", "capkv") else [])
     # kvfit だけは大型機の引込線に相当する分だけ探索半径を伸ばす（比較の基準は 20km のまま）
-    max_km = max(20.0, kvfit_km) if attach_mode == "kvfit" else 20.0
+    max_km = max(20.0, kvfit_km) if attach_mode in ("kvfit", "capkv") else 20.0
 
     n_gen = 0
     n_moved = 0
@@ -736,6 +886,19 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                        if float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
             pick = ok[1] if ok is not None else \
                 max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]), -t[0]))[1][1]
+        elif attach_mode == "capkv":
+            # cap ∧ kvfit。cap 単独は電圧階級を見ないので、枝が多ければ 66kV でも
+            # 選ばれてしまう（京極 400MW が札幌の 66kV に載り、68.6MVA の同一敷地
+            # タイに 218MW を流して 318% を作った）。kvfit 単独は逆に合計容量を
+            # 見ないので east で悪化する。両方を満たす最寄りバスを採る。
+            need = required_kv(cap, ladder)
+            ok = next((s for d, s in near
+                       if incident.get(s[1], 0.0) >= cap
+                       and float(net.bus.at[s[1], "vn_kv"]) >= need - 0.5), None)
+            # 両立するバスが無いときは階級を優先し、同級なら受けられる容量の大きい方
+            pick = ok[1] if ok is not None else \
+                max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]),
+                                         incident.get(t[1][1], 0.0), -t[0]))[1][1]
         if pick != base_pick:
             n_moved += 1
             moved_mw += cap
@@ -775,7 +938,8 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
 # ──────────────────────────────────────────────────────────────────────────
 #  Load allocation: substation buses only, per region, voltage-class weighted
 # ──────────────────────────────────────────────────────────────────────────
-def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
+def allocate_loads(net, cfg, pref_gwh=None, point_demand=None,
+                   pop_tilt=False):
     """zone別ピーク需要をバスへ空間配分する。
 
     pref_gwh: None(既定)=従来のzone一様×電圧階級重み(正典比較性維持)。
@@ -790,6 +954,15 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
       (src.powerflow.point_demand.match_buses の出力)。観測地点はその実測値で
       ピン留めし、zone残余(target−Σpinned)を非ピンバスへ従来重みで配る。
       zone合計アンカーは不変。None=従来(③無効化)。帳簿=net._point_demand_ledger。
+
+    pop_tilt: **介入#40(2026-08-30)**。True=県内(またはzone内)の電圧重み按分に
+      e-Stat 1km国勢調査メッシュ人口のVoronoi集計(load_estimator.
+      population_factors, bounded tilt 0.5+0.5·pop/mean)を乗じる。動機=
+      県別×電圧階級の一様按分が過疎地に過大配分する(江田島市4バスに137.9MW
+      vs 実勢≈30MW — reports/west_ac_wave7_2026-08-30.md §2)。bounded tilt
+      なのは生Voronoiシェアが需要を過集中させた実測(台帳43)による。
+      住民人口は代理変数(工業・業務需要は乖離) — 帳簿に開示。
+      False=従来(回帰比較用)。帳簿=net._pop_tilt_ledger。
     """
     peak = cfg["regional_peak_demand_mw"]
     lf = cfg.get("load_factor", 0.85)
@@ -814,6 +987,19 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
             "by_zone": {z: round(v, 1) for z, v in pinned_by_zone.items()},
         }
 
+    pop_f = None
+    if pop_tilt:
+        from src.powerflow.load_estimator import population_factors
+        pop_f = population_factors(net) or None
+        net._pop_tilt_ledger = {
+            "enabled": bool(pop_f),
+            "n_bus_tilted": len(pop_f) if pop_f else 0,
+            "note": "bounded tilt 0.5+0.5·pop/mean(1kmメッシュVoronoi)。"
+                    "住民人口は代理変数(工業・業務は乖離)。欠測バスは中立1.0"}
+        if pop_f:
+            print(f"  介入#40 人口傾斜: {len(pop_f)}バス"
+                  f"(1kmメッシュVoronoi・bounded tilt)")
+
     def _vweight(b):
         vn = float(net.bus.at[b, "vn_kv"])
         key = int(round(vn))
@@ -823,7 +1009,8 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None):
 
     def _spread(idxs, target):
         nonlocal total
-        weights = [_vweight(b) for b in idxs]
+        weights = [_vweight(b) * (pop_f.get(b, 1.0) if pop_f else 1.0)
+                   for b in idxs]
         tw = sum(weights) or len(idxs)
         for b, w in zip(idxs, weights):
             p = target * (w / tw)
@@ -904,7 +1091,9 @@ def add_per_component_slacks(net):
     Prefer the bus carrying the largest generator; else the highest-kv,
     highest-degree substation. Returns (n_components, n_slack, n_synth_slack)."""
     g = nx.Graph()
-    g.add_nodes_from(net.bus.index)
+    # 非通電バス(介入#43b の縮約で in_service=False にした低圧成分)は成分に数えない
+    # (数えると 1 バス 1 合成スラックが立ち、件数だけ膨らむ。解には影響しない)
+    g.add_nodes_from(net.bus.index[net.bus["in_service"]])
     for _, r in net.line.iterrows():
         if r["in_service"]:
             g.add_edge(int(r["from_bus"]), int(r["to_bus"]))
@@ -1110,7 +1299,7 @@ def main():
                          "(2026-07-04, v4銘板入り・vm 0.83-1.02pu)。west(10193)は"
                          "AC『収束』が fragmentation による見せかけと確定済みのため"
                          "(docs/WEST_AC_ANALYSIS.md)意図的に閾値の外=誠実にDC")
-    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default=GEN_ATTACH_DEFAULT,
+    ap.add_argument("--gen-attach", choices=ATTACH_MODES, default=None,
                     help="発電機の繋ぎ先の選び方(**介入#24**)。**既定 cap**"
                          "(2026-08-09 既定ON化)=バスに集まる枝の合計容量がその発電所の"
                          "出力以上になる最寄りのバスへ。旧既定 nearest は最寄りの変電所"
@@ -1164,6 +1353,27 @@ def main():
                          "既定ON(2026-07-10 介入#20既定化)。east full ACの"
                          "非収束(電圧崩壊)を解消 "
                          "(docs/reports/east_network_reactive_2026-07-09.md)")
+    ap.add_argument("--pop-tilt",
+                    action=argparse.BooleanOptionalAction, default=False,
+                    help="介入#40 県内按分の人口メッシュ傾斜・既定OFF"
+                         "(2026-08-30)。e-Stat 1km国勢調査メッシュのVoronoi"
+                         "集計で電圧重みを傾斜(bounded tilt)。"
+                         "--no-pop-tilt=従来一様(回帰比較用)")
+    ap.add_argument("--freq-fix-reattr",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
+                         "周波数が県内で一意な県(関東+山梨=50Hz純、愛知以西+"
+                         "北陸=60Hz純)への抽出こぼれは跨ぎ是正する。混在県"
+                         "(長野・新潟・静岡)は従来どおりガード。"
+                         "--no-freq-fix-reattr=旧挙動(回帰比較用)")
+    ap.add_argument("--provisional-infeed",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#37 都心給電の必然接続(仮)。上位変圧器を持たない"
+                         "負荷クラスタ(≥100MW)へ最近傍≥275kVから(仮)変圧器を"
+                         "張る。名前に(仮)・実経路未確認を明記・全件台帳。"
+                         "既定ON(オーナー承認 2026-08-30「仮が事実でないかも"
+                         "しれないなら、それを明記しておけば正典として良い」)。"
+                         "--no-provisional-infeed=従来(回帰比較用)")
     ap.add_argument("--no-reactive-comp", action="store_const", const=None,
                     dest="reactive_comp",
                     help="無効電力補償を無効化(従来挙動・回帰比較用)")
@@ -1184,6 +1394,27 @@ def main():
                          "カバレッジMW比68%%(30バス)・再A/Bで害なし+沖縄微改善"
                          "(point_demand_ab_round2_2026-08-17.json)。"
                          "無効化=--no-point-demand")
+    ap.add_argument("--synthetic-ties-live", action=argparse.BooleanOptionalAction,
+                    default=False,
+                    help="介入#31(2026-08-17 オーナー承認・既定=非通電): 合成連系タイ"
+                         "(OCCTO直線タイ7本)とDC連系枝(阿南紀北)を in_service=False で"
+                         "建てる。実連系線の実線形と二重計上(kv=0が500kV継承の低Z並列路)"
+                         "だったため。A/B=tie_duplication_ab_2026-08-17.json(観測整合は"
+                         "不変・潮流は実線へ転流)。東北東京のみ切れ端未縫合のため通電維持"
+                         "(KEEP_LIVE_TIES)。本引数=Trueで従来挙動(回帰比較用)")
+    ap.add_argument("--btb-split", action=argparse.BooleanOptionalAction,
+                    default=True,
+                    help="介入#32(2026-08-19・既定ON): 南福光BTBのAC素通し切断。"
+                         "中部北陸間はBTB(非同期)連系で交流直通は実在しないが、"
+                         "モデルは南福光連系所バスで越美幹線(中部)と加賀福光線・"
+                         "能越幹線(北陸)が合流しAC素通し(実績断面575MW・UC断面"
+                         "1,210MW vs 運用容量中央値300MW)だった。バスを両側に分割"
+                         "する。無効化=--no-btb-split(回帰比較用)")
+    ap.add_argument("--cap-calib", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#45 線路容量の運用容量較正: config/line_capacity_calibration.yaml"
+                         "(各社公表の運用容量÷理論容量の比・エリア×階級・生値なし)を線路の "
+                         "max_i_ka に乗じる。既定=CAP_CALIB_DEFAULT(False・2026-09-02 全国化で"
+                         "一致度判定を満たさず)。環境変数 AGJ_CAP_CALIB=1/0 でも指定可")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1196,6 +1427,16 @@ def main():
                          "(data/reference/not_in_service_lines.json・出典必須)を"
                          "in_service=Falseで建てる。初例=大間幹線(運転開始未定)。"
                          "既定OFF")
+    ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
+                    default=IMPLICIT_STEPDOWN_DEFAULT,
+                    help="介入#43a 異階級直結線の暗黙降圧(2026-09-02): 線 kv の端点に同階級"
+                         "ノードが無く別階級バスへ直結している箇所へ kv_L バス+変圧器を挿入"
+                         "(存在は電気的必然・容量は銘板 or @推定)。無効化=--no-implicit-stepdown")
+    ap.add_argument("--lv-aggregate", type=float, default=LV_AGGREGATE_DEFAULT_KM,
+                    metavar="R_KM",
+                    help="介入#43b 降圧点無し66/77kV網の帳簿付き縮約(2026-09-02): 変圧器も"
+                         "(仮)給電も電源も無い低圧成分の負荷を最近傍(≤R km)の≥110kVバスへ移し"
+                         "成分を非通電化。0=無効")
     args = ap.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
     for spec in (args.default_cap or []):
@@ -1214,7 +1455,8 @@ def main():
     pref_gwh = None
     if args.pref_demand:
         from src.powerflow.pref_demand import pref_zone_gwh
-        pref_gwh, pw_ledger = pref_zone_gwh(nodes)
+        pref_gwh, pw_ledger = pref_zone_gwh(nodes,
+                                            freq_fix=args.freq_fix_reattr)
         print(f"県別需要重み: {pw_ledger['title']} "
               f"({pw_ledger['n_pref_weighted']}県, split={list(pw_ledger['split_prefs'])})")
 
@@ -1232,12 +1474,33 @@ def main():
         net, bus_of, bstats = build_island_net(
             island, nodes, edges, freq, geom, dedup_nodes=args.dedup_nodes,
             site_trafos=args.site_trafos,
-            deenergize_unbuilt=args.deenergize_unbuilt)
+            deenergize_unbuilt=args.deenergize_unbuilt,
+            synthetic_ties_live=args.synthetic_ties_live,
+            btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
+            implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib)
+        if bstats.get("cap_calib"):
+            from src.powerflow.line_capacity import describe as _cap_describe
+            print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))
+        if bstats.get("n_implicit_stepdown"):
+            print(f"  介入#43a implicit-stepdown: {bstats['n_implicit_stepdown']}サイトに"
+                  f"暗黙降圧変圧器(銘板"
+                  f"{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']=='nameplate')}"
+                  f"/推定{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']!='nameplate')})")
+        if bstats.get("n_tie_nis"):
+            # 介入#31 の帳簿: 何本の合成タイ/DC枝を非通電化したかを必ず出す
+            print(f"  介入#31 synthetic-ties: {bstats['n_tie_nis']}本を非通電で建てた"
+                  f"(通電維持={sorted(KEEP_LIVE_TIES)})")
+        if bstats.get("n_btb_split"):
+            # 介入#32 の帳簿: BTB切断で付け替えた枝数を必ず出す
+            print(f"  介入#32 btb-split: 南福光BTBを分割"
+                  f"(中部側へ{bstats['n_btb_split']}本付け替え)")
         if args.site_trafos or args.deenergize_unbuilt:
             print(f"  介入#22/#23: site_trafo={bstats['n_site_trafo']} "
                   f"deenergized={bstats['n_deenergized']}")
         gstats = attach_generators(net, bus_of, nodes, island,
-                                   attach_mode=args.gen_attach, stats=True,
+                                   attach_mode=(args.gen_attach or
+                                                attach_default_for(island)),
+                                   stats=True,
                                    use_sourced=args.sourced_capacity)
         n_gen = gstats["n_gen"]
         if gstats.get("n_sourced_cap"):
@@ -1256,13 +1519,30 @@ def main():
             print(f"  介入#30 point-demand: ピン留め {pd_ledger['n_pinned_buses']}バス"
                   f"/{pd_ledger['pinned_mw']}MW (未突合{pd_ledger['n_unmatched']}地点)")
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh,
-                                    point_demand=pinned)
+                                    point_demand=pinned,
+                                    pop_tilt=args.pop_tilt)
         if args.reactive_comp is not None:
             from src.powerflow.pipeline import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)
                     if args.reactive_comp == -1.0 else args.reactive_comp)
             n_shunt = add_reactive_compensation(net, factor=rfac)
             print(f"  reactive-comp: factor={rfac} shunt={n_shunt}")
+        infeed_ledger = []          # 介入#37 台帳(JSONへ保存)
+        if args.provisional_infeed:
+            from src.powerflow.pipeline import add_provisional_infeed
+            infeed_ledger = add_provisional_infeed(net)
+            if infeed_ledger:
+                print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
+                      f"計{sum(l['load_mw'] for l in infeed_ledger):,.0f}MW"
+                      f"の孤立負荷クラスタへ(仮)変圧器(実経路未確認・全件台帳)")
+        lv_agg_ledger = None          # 介入#43b 台帳(JSONへ保存)
+        if args.lv_aggregate and args.lv_aggregate > 0:
+            from src.powerflow.stepdown_gap import aggregate_lv_islands
+            lv_agg_ledger = aggregate_lv_islands(net, r_max_km=args.lv_aggregate)
+            print(f"  介入#43b lv-aggregate(R≤{args.lv_aggregate}km): "
+                  f"{lv_agg_ledger['n_aggregated']}成分/{lv_agg_ledger['aggregated_mw']:,.0f}MW を"
+                  f"上位バスへ集約・未給電網 {lv_agg_ledger['n_unserved']}成分/"
+                  f"{lv_agg_ledger['unserved_mw']:,.0f}MW(帳簿)")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
         balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator)
         if args.gen_zone_by_operator and "zone_src" in net.gen.columns:
@@ -1291,6 +1571,9 @@ def main():
             }
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
+            "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
+            "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
+            "lv_aggregate": lv_agg_ledger,         # 介入#43b 台帳(None=無効)
             "total_load_mw": round(total_load, 1),
             "n_components": n_comp, "n_slack": n_slack, "n_synthetic_slack": n_synth,
             "ac_converged": bool(ac.get("converged")),

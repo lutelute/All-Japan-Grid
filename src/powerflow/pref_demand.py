@@ -33,7 +33,8 @@ def load_pref_demand() -> dict:
         return json.load(f)
 
 
-def pref_zone_gwh(nodes: List[dict]) -> Tuple[Dict[Tuple[str, str], float], dict]:
+def pref_zone_gwh(nodes: List[dict], freq_fix: bool = True,
+                  ) -> Tuple[Dict[Tuple[str, str], float], dict]:
     """built全ノードから {(zone, pref): 需要GWh} と帳簿を作る。
 
     zone は **A案再属性後の実ラベル**(reattribute_node_regions を先に適用・冪等)。
@@ -52,7 +53,8 @@ def pref_zone_gwh(nodes: List[dict]) -> Tuple[Dict[Tuple[str, str], float], dict
     data = load_pref_demand()
     demand = {p: rec["total_gwh"] for p, rec in data["prefectures"].items()}
 
-    reattribute_node_regions(nodes)   # in-place・冪等(buildと同一処理の先行適用)
+    # in-place・冪等(buildと同一処理の先行適用)。freq_fix=介入#38の貫通
+    reattribute_node_regions(nodes, freq_fix=freq_fix)
 
     # 県×zone(再属性後ラベル)の sub ノード数(全国)
     counts: Dict[str, Dict[str, int]] = {}

@@ -1,0 +1,1496 @@
+{
+ "note": "偽断片スクリーニング(候補列挙のみ・正典不変更)。suspect=断片ノードのtwin_main_frac(別islandの本系統に接続済みの同座標双子の比率)が閾値超。解消(双子への同定/region再帰属)は1件ずつオーナー承認の介入で行う。発端=衛星判読パイロットc1(甲府66kV背骨のchubu二重登録, 2026-08-20)",
+ "params": {
+  "min_frac": 0.2,
+  "min_nodes": 2
+ },
+ "n_suspect": 1,
+ "n_suspect_nodes": 6,
+ "fragments": [
+  {
+   "island": "east",
+   "comp": 4,
+   "n_nodes": 6,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "tokyo_sub_1859"
+   ],
+   "n_named": 1,
+   "twin_main": 3,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": true,
+   "worklist_priority": 0.06,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 34.8555:138.2248:154",
+     "kv": 154.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 34.85547,
+     "lon": 138.22483
+    },
+    {
+     "name": "chubu junction 34.8553:138.2337:154",
+     "kv": 154.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 34.85532,
+     "lon": 138.23366
+    },
+    {
+     "name": "chubu junction 34.8514:138.2218:154",
+     "kv": 154.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 34.85136,
+     "lon": 138.22185
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 39,
+   "n_nodes": 2,
+   "regions": [
+    "tohoku"
+   ],
+   "names": [
+    "福島変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.03,
+   "twin_samples_main": [
+    {
+     "name": "福島変電所",
+     "kv": 66.0,
+     "frag_region": "tohoku",
+     "twin_island": "hokkaido",
+     "twin_region": "hokkaido",
+     "lat": 41.49855,
+     "lon": 140.25102
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 71,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.11,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 34.954:138.348:0",
+     "kv": 275.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 34.95398,
+     "lon": 138.34796
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 72,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "tokyo_sub_1855"
+   ],
+   "n_named": 1,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 1.36,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 35.1709:138.1283:0",
+     "kv": 0.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 35.17092,
+     "lon": 138.12833
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 74,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 35.5463:138.0567:154",
+     "kv": 154.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 35.54632,
+     "lon": 138.05666
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 76,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 35.592:137.9319:154",
+     "kv": 154.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 35.59205,
+     "lon": 137.93195
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 77,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 35.5572:137.8975:77",
+     "kv": 77.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 35.55717,
+     "lon": 137.89753
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 82,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.35,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 36.5061:138.0752:77",
+     "kv": 77.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 36.50611,
+     "lon": 138.07521
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 83,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.03,
+   "twin_samples_main": [
+    {
+     "name": "hokuriku junction 35.7447:137.9353:0",
+     "kv": 0.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "hokuriku",
+     "lat": 35.74472,
+     "lon": 137.93525
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 47,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 35.7061:138.9357:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 35.70611,
+     "lon": 138.93569
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 56,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.13,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 35.7128:138.719:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 35.71283,
+     "lon": 138.71899
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 72,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 35.4941:138.775:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 35.49406,
+     "lon": 138.77503
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 84,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.5626:138.8154:0",
+     "kv": 0.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.56263,
+     "lon": 138.81539
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 90,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.04,
+   "twin_samples_main": [
+    {
+     "name": "tohoku junction 36.7168:138.9795:154",
+     "kv": 154.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tohoku",
+     "lat": 36.71679,
+     "lon": 138.97952
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 95,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "灰雨変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "灰雨変電所",
+     "kv": 0.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.99291,
+     "lon": 138.59129
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 100,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.8913:138.7491:275",
+     "kv": 275.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.89126,
+     "lon": 138.74913
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 113,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.03,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.6033:139.0495:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.60327,
+     "lon": 139.04948
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 114,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.04,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.6026:139.0463:154",
+     "kv": 154.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.60263,
+     "lon": 139.04633
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 123,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.03,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.3349:139.1929:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.33492,
+     "lon": 139.19292
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 126,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.2,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.4155:138.7877:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.4155,
+     "lon": 138.78769
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 130,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.14,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.2914:139.1399:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.29144,
+     "lon": 139.13993
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 135,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.03,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.225:139.1595:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.225,
+     "lon": 139.15953
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 136,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.12,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.2385:139.1474:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.23849,
+     "lon": 139.1474
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 141,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.12,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.1816:139.0571:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.18159,
+     "lon": 139.05708
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 143,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.31,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.2504:138.9108:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.25043,
+     "lon": 138.91076
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 145,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.45,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.3074:138.93:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.30738,
+     "lon": 138.93003
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 148,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.13,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.1046:139.1813:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.10465,
+     "lon": 139.1813
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 150,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.5,
+   "suspect": false,
+   "worklist_priority": 0.28,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.0306:139.0827:66",
+     "kv": 66.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.03062,
+     "lon": 139.08274
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 10,
+   "n_nodes": 4,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.25,
+   "suspect": false,
+   "worklist_priority": 0.5,
+   "twin_samples_main": [
+    {
+     "name": "chubu junction 34.9806:138.4147:110",
+     "kv": 110.0,
+     "frag_region": "tokyo",
+     "twin_island": "west",
+     "twin_region": "chubu",
+     "lat": 34.98058,
+     "lon": 138.4147
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 13,
+   "n_nodes": 4,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 1,
+   "twin_frag": 0,
+   "twin_main_frac": 0.25,
+   "suspect": false,
+   "worklist_priority": 0.04,
+   "twin_samples_main": [
+    {
+     "name": "tokyo junction 36.7952:138.7749:500",
+     "kv": 500.0,
+     "frag_region": "chubu",
+     "twin_island": "east",
+     "twin_region": "tokyo",
+     "lat": 36.79524,
+     "lon": 138.7749
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 1,
+   "n_nodes": 12,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "大町市変電所_6",
+    "大町市変電所_3",
+    "大町市変電所_7",
+    "池田変電所",
+    "東日本旅客鉄道 海ノ口変電所"
+   ],
+   "n_named": 6,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 6.32,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 3,
+   "n_nodes": 6,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "神立変電所_2",
+    "土樽変電所_2"
+   ],
+   "n_named": 2,
+   "twin_main": 0,
+   "twin_frag": 6,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 3.35,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 7,
+   "n_nodes": 6,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "神立変電所",
+    "土樽変電所_2"
+   ],
+   "n_named": 2,
+   "twin_main": 0,
+   "twin_frag": 6,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.06,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 12,
+   "n_nodes": 4,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 4,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 2.04,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 11,
+   "n_nodes": 4,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 4,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.04,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 12,
+   "n_nodes": 4,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 2.27,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 16,
+   "n_nodes": 3,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "土樽変電所",
+    "越後湯沢変電所 66kV",
+    "湯沢変電所"
+   ],
+   "n_named": 3,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 1.61,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 45,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 1.47,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 46,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.43,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 47,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.43,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 48,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.48,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 49,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.53,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 53,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.8,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 60,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.18,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 75,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 1.82,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 79,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 80,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.43,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 81,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.62,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 86,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.36,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 91,
+   "n_nodes": 2,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "えちごトキめき鉄道(株)二本木変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.24,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 54,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 1.47,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 55,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.17,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 61,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.19,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 62,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 1.82,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 63,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.14,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 64,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.42,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 68,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.94,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 71,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.74,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 86,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "湯沢変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 92,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.97,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 97,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [],
+   "n_named": 0,
+   "twin_main": 0,
+   "twin_frag": 2,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.15,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 154,
+   "n_nodes": 2,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "えちごトキめき鉄道(株)二本木変電所",
+    "中郷区坂本変電所"
+   ],
+   "n_named": 2,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.02,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 174,
+   "n_nodes": 1,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "奥裾花地下発電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.01,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 175,
+   "n_nodes": 1,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "tokyo_sub_1812"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.01,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 176,
+   "n_nodes": 1,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "tokyo_sub_1814"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.01,
+   "twin_samples_main": []
+  },
+  {
+   "island": "east",
+   "comp": 195,
+   "n_nodes": 1,
+   "regions": [
+    "tokyo"
+   ],
+   "names": [
+    "白馬村変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.01,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 300,
+   "n_nodes": 1,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "奥裾花地下発電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.23,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 303,
+   "n_nodes": 1,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "加美町変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.32,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 304,
+   "n_nodes": 1,
+   "regions": [
+    "chubu"
+   ],
+   "names": [
+    "安茂里小市一丁目変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.34,
+   "twin_samples_main": []
+  },
+  {
+   "island": "west",
+   "comp": 316,
+   "n_nodes": 1,
+   "regions": [
+    "hokuriku"
+   ],
+   "names": [
+    "白馬村変電所"
+   ],
+   "n_named": 1,
+   "twin_main": 0,
+   "twin_frag": 1,
+   "twin_main_frac": 0.0,
+   "suspect": false,
+   "worklist_priority": 0.1,
+   "twin_samples_main": []
+  }
+ ]
+}

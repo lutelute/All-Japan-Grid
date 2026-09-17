@@ -1,0 +1,716 @@
+{
+ "meta": {
+  "date": "2026-09-03",
+  "git_head": "b0cff30",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "east": {
+   "mode": "ac",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "model": "full",
+   "provisional_infeed": [],
+   "implicit_stepdown": [
+    {
+     "site": "tokyo junction 35.4888:138.3281:154",
+     "bus": 2049,
+     "new_bus": 6223,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.48878,
+     "lon": 138.32805
+    },
+    {
+     "site": "tokyo junction 35.1963:138.6402:0",
+     "bus": 2097,
+     "new_bus": 6224,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.19628,
+     "lon": 138.64022
+    },
+    {
+     "site": "tokyo junction 35.1963:138.6402:0",
+     "bus": 2097,
+     "new_bus": 6225,
+     "hv_kv": 154.0,
+     "lv_kv": 77.0,
+     "n_lines": 1,
+     "lines": [
+      "岩渕-沼津線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.19628,
+     "lon": 138.64022
+    },
+    {
+     "site": "tokyo junction 35.2032:139.0561:66",
+     "bus": 2252,
+     "new_bus": 6226,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "JR 西相模-沼津線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.20315,
+     "lon": 139.05607
+    },
+    {
+     "site": "tokyo junction 35.2583:139.0486:66",
+     "bus": 2279,
+     "new_bus": 6227,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "箱根町変電所~須雲川変電所線 / 東京電力パワーグリッド 66.0kV線 / 東京電力パワーグリッド 66.0kV線 /"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.25834,
+     "lon": 139.04862
+    },
+    {
+     "site": "tokyo junction 35.3489:139.0899:0",
+     "bus": 2284,
+     "new_bus": 6228,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 66.0kV線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.3489,
+     "lon": 139.0899
+    },
+    {
+     "site": "tokyo junction 36.3309:138.6205:66",
+     "bus": 3148,
+     "new_bus": 6229,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "leadin"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.33087,
+     "lon": 138.6205
+    },
+    {
+     "site": "tokyo junction 36.3294:138.4359:0",
+     "bus": 3149,
+     "new_bus": 6230,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "大屋変電所~小諸市変電所線 / 小諸市変電所~大字御代田変電所線 / 東京電力海瀬発電所~大字御代田変電所線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.32945,
+     "lon": 138.43587
+    },
+    {
+     "site": "tokyo junction 36.2986:137.984:0",
+     "bus": 3669,
+     "new_bus": 6231,
+     "hv_kv": 154.0,
+     "lv_kv": 77.0,
+     "n_lines": 2,
+     "lines": [
+      "北松本変電所~浅間温泉一丁目変電所線",
+      "浅間温泉一丁目変電所~安曇野市変電所線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.29858,
+     "lon": 137.98402
+    },
+    {
+     "site": "tokyo junction 36.4065:138.2675:0",
+     "bus": 3676,
+     "new_bus": 6232,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "国分変電所~真田変電所線 / 東信坂城連絡線 / 東信大屋線 / 中部電力パワーグリッド 77.0kV線 / 小諸市変電"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.40647,
+     "lon": 138.26751
+    },
+    {
+     "site": "中野台二丁目変電所",
+     "bus": 4195,
+     "new_bus": 6233,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 77.0kV線 / 東清水変電所~清水変電所線 / 東清水変電所~富士市変電所線 / 富士市変電"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.18526,
+     "lon": 138.59222
+    },
+    {
+     "site": "沼津変電所",
+     "bus": 4398,
+     "new_bus": 6234,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "中部送電線_129"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.12587,
+     "lon": 138.84965
+    },
+    {
+     "site": "墨東変電所",
+     "bus": 4529,
+     "new_bus": 6235,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "千石町線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69845,
+     "lon": 139.82026
+    },
+    {
+     "site": "天王洲変電所",
+     "bus": 4539,
+     "new_bus": 6236,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "東海町線",
+      "大井線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.62171,
+     "lon": 139.75706
+    },
+    {
+     "site": "田端変電所",
+     "bus": 4578,
+     "new_bus": 6237,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "上富士線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.74933,
+     "lon": 139.76594
+    },
+    {
+     "site": "永代橋変電所",
+     "bus": 4685,
+     "new_bus": 6238,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "茅場町線",
+      "福住線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.67561,
+     "lon": 139.78442
+    },
+    {
+     "site": "東川崎変電所",
+     "bus": 4721,
+     "new_bus": 6239,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "川崎高輪線・高輪線"
+     ],
+     "sn_mva": 1000.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.51531,
+     "lon": 139.7591
+    },
+    {
+     "site": "新宿変電所",
+     "bus": 4810,
+     "new_bus": 6240,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "新淀線",
+      "西新宿線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69106,
+     "lon": 139.68922
+    },
+    {
+     "site": "東新宿変電所",
+     "bus": 4812,
+     "new_bus": 6241,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "西新宿線",
+      "戸山線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.69192,
+     "lon": 139.71042
+    },
+    {
+     "site": "豊島変電所",
+     "bus": 4813,
+     "new_bus": 6242,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 4,
+     "lines": [
+      "西巣鴨線",
+      "東池袋線",
+      "南池袋線",
+      "上富士線"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.72879,
+     "lon": 139.72021
+    },
+    {
+     "site": "常盤台変電所",
+     "bus": 4982,
+     "new_bus": 6243,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 2,
+     "lines": [
+      "東池袋線",
+      "板橋線"
+     ],
+     "sn_mva": 200.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.75755,
+     "lon": 139.69128
+    },
+    {
+     "site": "南大田変電所",
+     "bus": 5001,
+     "new_bus": 6244,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東海町線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.54722,
+     "lon": 139.7335
+    },
+    {
+     "site": "新豊洲変電所",
+     "bus": 5038,
+     "new_bus": 6245,
+     "hv_kv": 500.0,
+     "lv_kv": 275.0,
+     "n_lines": 1,
+     "lines": [
+      "東内幸町線・豊洲内幸町線・高輪線"
+     ],
+     "sn_mva": 1000.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.64706,
+     "lon": 139.7904
+    },
+    {
+     "site": "水道橋変電所",
+     "bus": 5044,
+     "new_bus": 6246,
+     "hv_kv": 275.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "戸山線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.70051,
+     "lon": 139.75258
+    },
+    {
+     "site": "軽井沢東変電所",
+     "bus": 5248,
+     "new_bus": 6247,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "leadin"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.34303,
+     "lon": 138.64481
+    },
+    {
+     "site": "大正寺町変電所 154kV",
+     "bus": 5257,
+     "new_bus": 6248,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "東京電力パワーグリッド 66.0kV線"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.28871,
+     "lon": 139.20377
+    },
+    {
+     "site": "浅貝変電所 500kV",
+     "bus": 5468,
+     "new_bus": 6249,
+     "hv_kv": 500.0,
+     "lv_kv": 154.0,
+     "n_lines": 1,
+     "lines": [
+      "湯宿線"
+     ],
+     "sn_mva": 600.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 36.80173,
+     "lon": 138.78387
+    },
+    {
+     "site": "上越変電所",
+     "bus": 5906,
+     "new_bus": 6250,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "0709(東上越—上越)"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 37.15288,
+     "lon": 138.27468
+    },
+    {
+     "site": "chubu junction 35.1449:139.0341:77",
+     "bus": 5942,
+     "new_bus": 6251,
+     "hv_kv": 77.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "玉川変電所~三島変電所線 / 大仁線 / 三島変電所~函南町変電所線 / 函南町変電所~土肥六丁目変電所線 / 熱海線 "
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.14489,
+     "lon": 139.03412
+    },
+    {
+     "site": "浅間上町変電所",
+     "bus": 6156,
+     "new_bus": 6252,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "同一敷地タイ(同定)"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.1682,
+     "lon": 138.67854
+    },
+    {
+     "site": "北巨摩変電所",
+     "bus": 6213,
+     "new_bus": 6253,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "白州線(山梨66kV No.16)"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.78585,
+     "lon": 138.39794
+    },
+    {
+     "site": "大井ふ頭変電所",
+     "bus": 6216,
+     "new_bus": 6254,
+     "hv_kv": 275.0,
+     "lv_kv": 154.0,
+     "n_lines": 1,
+     "lines": [
+      "東京23区154kV No.32"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.60393,
+     "lon": 139.76375
+    },
+    {
+     "site": "横浜大黒変電所",
+     "bus": 6217,
+     "new_bus": 6255,
+     "hv_kv": 154.0,
+     "lv_kv": 66.0,
+     "n_lines": 1,
+     "lines": [
+      "(154kV・旭→横浜大黒)"
+     ],
+     "sn_mva": 300.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 35.48048,
+     "lon": 139.6759
+    }
+   ],
+   "lv_aggregate": null,
+   "n_bus": 6256,
+   "n_trafo_nameplate": 6,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "tohoku": {
+      "青森県": {
+       "n_bus": 203,
+       "gwh": 7555.1,
+       "target_mw": 1116.3
+      },
+      "福島県": {
+       "n_bus": 208,
+       "gwh": 14686.6,
+       "target_mw": 2170.0
+      },
+      "新潟県": {
+       "n_bus": 148,
+       "gwh": 15028.4,
+       "target_mw": 2220.5
+      },
+      "山形県": {
+       "n_bus": 116,
+       "gwh": 7703.1,
+       "target_mw": 1138.2
+      },
+      "秋田県": {
+       "n_bus": 111,
+       "gwh": 6832.1,
+       "target_mw": 1009.5
+      },
+      "宮城県": {
+       "n_bus": 200,
+       "gwh": 13846.9,
+       "target_mw": 2046.0
+      },
+      "岩手県": {
+       "n_bus": 142,
+       "gwh": 9133.1,
+       "target_mw": 1349.5
+      }
+     },
+     "tokyo": {
+      "栃木県": {
+       "n_bus": 222,
+       "gwh": 15319.3,
+       "target_mw": 2561.6
+      },
+      "群馬県": {
+       "n_bus": 233,
+       "gwh": 15067.6,
+       "target_mw": 2519.5
+      },
+      "茨城県": {
+       "n_bus": 222,
+       "gwh": 23149.3,
+       "target_mw": 3870.9
+      },
+      "神奈川県": {
+       "n_bus": 358,
+       "gwh": 46841.9,
+       "target_mw": 7832.7
+      },
+      "静岡県": {
+       "n_bus": 92,
+       "gwh": 9003.0,
+       "target_mw": 1505.4
+      },
+      "埼玉県": {
+       "n_bus": 385,
+       "gwh": 36671.9,
+       "target_mw": 6132.1
+      },
+      "東京都": {
+       "n_bus": 368,
+       "gwh": 76976.2,
+       "target_mw": 12871.7
+      },
+      "山梨県": {
+       "n_bus": 65,
+       "gwh": 5803.8,
+       "target_mw": 970.5
+      },
+      "千葉県": {
+       "n_bus": 314,
+       "gwh": 35246.5,
+       "target_mw": 5893.8
+      },
+      "長野県": {
+       "n_bus": 5,
+       "gwh": 249.1,
+       "target_mw": 41.7
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 3392,
+    "q_comp_mvar": 14527.8
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "intra_dc_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 262240634.59815595
+   },
+   "hours": {
+    "17": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 59353.0,
+     "load_scale": {
+      "tohoku": 0.9075,
+      "tokyo": 1.116
+     },
+     "served_load_mw": 59353.0,
+     "served_frac": 1.0,
+     "slack_abs_mw": 5447.9,
+     "solve_s": 8.9,
+     "injection_issues": {
+      "tohoku": {
+       "clipped": {
+        "battery": 108.8
+       }
+      },
+      "tokyo": {
+       "clipped": {
+        "coal": 968.0
+       }
+      }
+     },
+     "vm_min": 0.806,
+     "vm_max": 1.0229,
+     "loss_mw": 2799.7,
+     "tie_mw": {
+      "tohoku->tokyo": 5996.6
+     }
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}
