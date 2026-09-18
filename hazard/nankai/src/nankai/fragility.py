@@ -117,6 +117,9 @@ class FragilityModel:
         cause = np.where(out, 1, 0)
         self.last_site_shake = out.copy()          # 揺れでも止まったか(津波が原因に上書きされても、止まる時刻は揺れの方が早い)
         pf = _rank_table(sp["tsunami"]["pfail_by_rank"], ts_rank)
+        kvmin = sp["tsunami"].get("protected_kv_min")      # 感度: この電圧以上の変電所は浸水対策済みとして扱う(送配電網協議会 2026 の個別判定に合わせる)
+        if kvmin is not None:
+            pf = np.where(np.asarray(kv, float) >= float(kvmin), pf * float(sp["tsunami"].get("protected_factor", 0.0)), pf)
         ts_fail = rng.random(n) < pf
         ds = np.where(ts_fail, np.maximum(ds, sp["tsunami"]["ds_if_fail"]), ds)
         cause = np.where(ts_fail, 2, cause)

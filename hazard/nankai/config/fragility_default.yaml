@@ -21,7 +21,13 @@ substation:
   junction_like_line: true       # junction ノードは変電所ではなく線路(鉄塔)扱い
   tsunami:                       # 浸水深ランク → 機能停止確率(fragility.yaml tsunami_substations: <0.3m 5% / 0.3-1m 50% / 1-2m 85% / ≥2m 98%)
     pfail_by_rank: {0: 0.0, 1: 0.05, 2: 0.50, 3: 0.85, 4: 0.98, 5: 0.98, 6: 0.98, 7: 0.98}
-    ds_if_fail: 3                # 津波被災は extensive 相当の復旧時間
+    ds_if_fail: 3
+    # 感度: protected_kv_min 以上の変電所は浸水対策済みとして停止確率に protected_factor を掛ける(既定 null = 効かない)。
+    # 根拠: 送配電網協議会「南海トラフ巨大地震における電気設備の耐性評価」(2026-01) は 17 万 V 以上を機器の設置高で個別判定し、
+    # 最過酷ケースの津波被災変電所は 東京 0・中部 1・関西 3・四国 1(計 5 箇所)、「嵩上げ等により浸水対策が取られている場合は被害なしと評価」。
+    # 電事連 2012「170 kV 以上の主要基幹変電所は津波の影響がある海岸部に設置しないことが重要」。docs/flood_resistance_evidence_2026-09-18.md
+    protected_kv_min: null
+    protected_factor: 0.0                # 津波被災は extensive 相当の復旧時間
 line:
   im: pga_g
   # 鉄塔倒壊: 1基あたり P(collapse|PGA) 対数正規。地震動単独では稀(地すべり・液状化由来が主)

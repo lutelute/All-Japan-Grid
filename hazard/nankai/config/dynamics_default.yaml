@@ -116,6 +116,17 @@ grid_overrides:
     disable: "--set grid_overrides.tepco_transformer_capacity.enabled=false(台帳が無い環境では止まるので、HAZARD_SUPPORT_DB を指すか無効にする。run_v4_red 以前は無効)"
     note: "scale_impedance は元の枝を 1 バンクとみなしてリアクタンスを台数で割る。容量は MVA を MW と同じに扱う。東北・関西・北陸・中国・四国・九州は台帳(変電所別の台数と設備容量)が無く対象外。MODEL_INTERVENTIONS.md への登録は別アクターの未コミット編集があるため保留"
 
+branch_additions:
+  kind: assumption
+  value: []          # 感度用。例は docs/reports/nankai_hazard_2026-09-13/dynamics/README.md の「鹿島」参照
+  note: "OSM 由来の経路が別の変電所を経由して繋がっている場合に、系統図の経路を直結で足す(既存の経路は残す)。鹿島: 東京電力 基幹系統図(open-keitouzu routes)では 香取線 鹿島→新佐原・鹿島線 鹿島→筑波南 だが、OSM では両線が神栖・泉川・鰐川の各変電所を経由して接続され、鰐川(A40 1〜2 m)の津波停止で鹿島の火力群 8 GW が孤立する(2026-09-18)。--set 'branch_additions.value=[{f: \"鹿島変電所 275kV\", t: \"新佐原変電所 275kV\", like_f: \"鰐川変電所 275kV\", like_t: \"新佐原変電所 275kV\", name: 香取線(系統図)}, {f: \"鹿島変電所 275kV\", t: \"筑波南変電所 275kV\", like_f: \"鰐川変電所 275kV\", like_t: \"筑波南変電所 275kV\", name: 鹿島線(系統図)}]'"
+
+tsunami_site_rank:
+  kind: assumption
+  mode: max            # max = サイト内の母線(電圧ごとの点)で引いた A40 ランクの最大値(run_v8 までの既定)/ representative = 最高電圧の母線の地点の値(感度用)
+  note: "鰐川 275 kV は地点の A40 が 0.3 m 未満(停止確率 5%)だが、320 m 離れた第 2 母線(1〜2 m)と同じサイトなので max では 85% になり、鹿島の火力群 8 GW の唯一の出口が 200 サンプル中 168 で止まる(2026-09-18 に判明)"
+fragility_overrides: {}   # 感度用: fragility_default.yaml の値を部分的に上書き。例 --set 'fragility_overrides={"substation": {"tsunami": {"pfail_by_rank": {0: 0, 1: 0.025, 2: 0.25, 3: 0.425, 4: 0.49, 5: 0.49, 6: 0.49, 7: 0.49}}}}'
+
 tsunami_exclude_boxes:
   kind: assumption
   value: []          # 感度用。例 [[35.28, 35.80, 139.60, 140.20]] = 東京湾の湾奥(浦賀水道より北)

@@ -47,6 +47,24 @@ def init(island, seed, overrides=None):
             raise SystemExit(f"grid_overrides.tepco_transformer_capacity が有効なのに台帳が読めない: {db}\n"
                              "  補助 DB(pws-160core ~/agj-hazard-data/hazard_support.sqlite・nas03 db/)を HAZARD_SUPPORT_DB で指すか、"
                              "--set grid_overrides.tepco_transformer_capacity.enabled=false で前の版(run_v4_red)と同じにする")
+    adds = (cfg.get("branch_additions") or {}).get("value", []) or []   # 感度: 系統図にある経路を直結で足す(OSM の経路が別の変電所を経由している場合)
+    if adds:
+        names = case.bus.name.astype(str).to_numpy(); la, lo = case.bus.lat.to_numpy(float), case.bus.lon.to_numpy(float)
+        rows = []
+        for a in adds:
+            fi, ti, lf, lt = (int(np.where(names == a[k])[0][0]) for k in ("f", "t", "like_f", "like_t"))
+            bb = case.branch
+            tpl = bb[((bb.f == lf) & (bb.t == lt)) | ((bb.f == lt) & (bb.t == lf))].iloc[0].copy()
+            L = float(np.hypot((lo[fi] - lo[ti]) * 111.32 * np.cos(np.radians(la[fi])), (la[fi] - la[ti]) * 110.57))
+            par = int(a.get("parallel", tpl["parallel"]))          # 回線数(公表の線路名 1･2L 等)。x は並列数に反比例、容量は比例
+            tpl["x_pu"] = float(tpl["x_pu"]) * L / max(float(tpl["length_km"]), 1e-3) * int(tpl["parallel"]) / par
+            tpl["cap_mw"] = float(tpl["cap_mw"]) * par / int(tpl["parallel"]); tpl["parallel"] = par; tpl["length_km"] = L
+            tpl["f"], tpl["t"] = fi, ti; tpl["f_bus"], tpl["t_bus"] = case.bus.bus_id.iloc[fi], case.bus.bus_id.iloc[ti]
+            tpl["name"] = a.get("name", f"{a['f']}-{a['t']}"); tpl["branch_id"] = int(bb.branch_id.max()) + 1 + len(rows)
+            tpl["mid_lat"], tpl["mid_lon"] = (la[fi] + la[ti]) / 2, (lo[fi] + lo[ti]) / 2
+            rows.append(tpl)
+        case.branch = pd.concat([case.branch, pd.DataFrame(rows)], ignore_index=True)
+        G["branch_additions"] = [(a["f"], a["t"]) for a in adds]
     sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
     G["override_ledger"] = led
     boxes = cfg.get("tsunami_exclude_boxes", {}).get("value", []) or []     # 感度: 箱の中の母線は津波の被害を 0 にする(A40 の波源が南海トラフでない海岸)
@@ -59,6 +77,20 @@ def init(island, seed, overrides=None):
         sim.site_ts = np.zeros(len(sim.site_rows), int); np.maximum.at(sim.site_ts, sim.bus_site, sim.bus_ts)
         sim.br_ts = np.maximum(sim.bus_ts[sim.bf], sim.bus_ts[sim.bt]); sim.gen_ts = sim.bus_ts[sim.gb]
         G["tsunami_excluded_buses"] = int(m.sum())
+    if (cfg.get("tsunami_site_rank") or {}).get("mode", "max") == "representative":   # 感度: サイトの浸水深を最高電圧の母線の地点の値にする(既定はサイト内の最大)
+        kv = case.bus.kv.to_numpy(float); rep = sim.site_rows.copy()
+        for si in range(len(sim.site_rows)):
+            m = np.where(sim.bus_site == si)[0]; rep[si] = m[np.argmax(kv[m])]
+        sim.site_ts = sim.bus_ts[rep]
+    fo = cfg.get("fragility_overrides") or {}                             # 感度: 脆弱性の値を部分的に上書き
+    if fo:
+        def _merge(dst, src):
+            for k, v in src.items():
+                if isinstance(v, dict) and isinstance(dst.get(k), dict):
+                    _merge(dst[k], v)
+                else:
+                    dst[k] = v
+        _merge(sim.fm.p, fo)
     ts = ap.point_s_arrival_s(case.bus.lat.values, case.bus.lon.values)
     tt = ap.point_tsunami_arrival_s(case.bus.lat.values, case.bus.lon.values, inland_km_per_min=float(cfg["tsunami_timing"]["inland_km_per_min"]))
     G.update(sim=sim, dc=DynCascade(sim, cfg, ts, tt), cfg=cfg, seed=seed)
