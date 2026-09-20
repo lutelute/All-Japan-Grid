@@ -150,6 +150,15 @@ def run_island(island, n, workers, seed, out, overrides=None):
     led = G.get("override_ledger")
     if led is not None and len(led):                                # 帳簿は output/(git 管理外)にだけ置く。台帳の生値を含むため
         led.to_csv(os.path.join(od, "grid_override_ledger.csv"), index=False)
+    sp = G["sim"].fm.p["substation"]["tsunami"]                      # 帳簿: 17 万 V 以上の浸水対策(protected_kv_min)を受けたサイト
+    if sp.get("protected_kv_min") is not None:
+        sim0 = G["sim"]; kvm = float(sp["protected_kv_min"]); fac = float(sp.get("protected_factor", 0.0))
+        m = (sim0.site_kv >= kvm) & (sim0.site_ts >= 1)
+        if m.any():
+            pf0 = np.array([float(sp["pfail_by_rank"].get(int(r), 0.0)) for r in sim0.site_ts[m]])
+            pd.DataFrame({"site": sim0.case.bus.name.to_numpy()[sim0.site_rows[m]], "zone": sim0.site_zone[m],
+                          "kv": sim0.site_kv[m], "tsunami_rank": sim0.site_ts[m], "pfail_before": pf0,
+                          "pfail_after": pf0 * fac}).to_csv(os.path.join(od, "tsunami_site_ledger.csv"), index=False)
     for i, t in enumerate(TD):
         bus[f"dyn_energized_t{int(t)}s"] = acc_dyn[i] / N
     bus["p_collapse"] = acc_col / N; bus["p_isolated_dyn"] = acc_iso / N; bus["p_site_out_dyn"] = acc_site / N

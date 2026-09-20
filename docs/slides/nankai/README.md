@@ -11,6 +11,7 @@
 | v7 (09-17) | `nankai_visual_candidates_v7_2026-09-17.*` | run_v8(UFLS の段階的な再送電)で GIF と数値を更新・感度表に再送電なしを追加 |
 | v8 (09-17) | `nankai_visual_candidates_v8_2026-09-17.*` | シナリオ卓の再生をそのまま書き出した動画(GIF・mp4)を追加 |
 | v9 (09-17) | `nankai_visual_candidates_v9_2026-09-17.*` | 東京が一気に崩壊する例(#59)・90 分後に崩壊する例(#9)・復旧 90 日の書き出し動画 3 本(25 枚) |
+| v10 (09-21) | `nankai_visual_candidates_v10_2026-09-21.*` | 「2 m 以下で崩壊する理由」の 4 枚を追加(引き金は鹿島・公表値との較正・感度 5 本・鹿島の喪失自体は致命傷でない)。29 枚 |
 | 東 生きる/死ぬ v2 (09-16) | `nankai_east_survive_vs_collapse_v2_2026-09-16.*` | run_v8(UFLS の段階的な再送電あり)で GIF と数値を更新 |
 | 東 生きる/死ぬ v1 (09-16) | `nankai_east_survive_vs_collapse_v1_2026-09-16.*` | 貼り付け用 7 枚: GIF 3 本・比較表・経緯・整定値・限界 |
 | 復旧 v1 (09-14) | `nankai_restoration_workforce_2026-09-14.*` | 復旧人員モデル 4 枚 |
