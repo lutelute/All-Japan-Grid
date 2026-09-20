@@ -54,6 +54,8 @@
 </head>
 <body>
 <div id="top">
+  <div id="homeLink" style="margin-bottom:4px"><a href="./index.html" style="color:#6cb6ff;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap">&#8592; ダッシュボード</a></div>
+  <script>if(window.self!==window.top)document.getElementById('homeLink').hidden=true;</script>
   <h1>⚡ Before / After 比較 — 送電網トポロジ改修</h1>
   <p><b style="color:#ff8a80">左 = BEFORE</b>（旧：線端点を最近傍変電所にマッチ → 大半の線を破棄 → 系統が数百島に断片化、直線結線）
      <b style="color:#69f0ae">右 = AFTER</b>（新：OSMの実ルートで頂点をつなぎ、データ欠落だけを推定線で補完 → 全域を1つに連結）。

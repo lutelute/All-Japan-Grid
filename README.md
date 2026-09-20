@@ -4,33 +4,78 @@
 
 # All-Japan-Grid
 
-Open Japanese power grid **geographic topology** dataset, automatically constructed from OpenStreetMap — then **scored against utility ground truth**.
-10 regions, 40,000+ transmission lines, 7,000+ substations, 19,000+ power plants. Corridor-usage rank correlation against TEPCO's published per-line flows reaches **interior Spearman ρ = 0.721** — a capacity/topology proxy; the AC power flow solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**.
+OpenStreetMap から機械的に組み立て、事業者の**公表資料で突き合わせた**日本全国の送電網モデルです。
+地図で見るだけでなく、潮流計算が回り、どの仮定をどこに置いたかを台帳で追えます。
 
-OpenStreetMap から機械的に抽出し、**実測値と突合せ検証**した、日本全国の送電網 **地理トポロジ** データセットです。
-10 地域、送電線 40,000 本超、変電所 7,000 箇所超、発電所 19,000 箇所超。東京電力の公開する線路別潮流との回廊使用率の順位相関（容量・トポロジの代理指標）は **内部 Spearman ρ = 0.721**。合成負荷で解いた AC 潮流の相関は **ρ ≈ 0.46（内部）/ 0.60（基幹）** です。
+An open model of Japan's transmission grid, built automatically from OpenStreetMap and **checked against
+what the utilities publish**. It renders on a map, solves power flow, and every modelling assumption is
+listed in a registry you can read.
 
-**Live Map / ライブマップ:** https://lutelute.github.io/All-Japan-Grid/
-**SubSLD Viewer / 変電所単線結線ビュー:** https://lutelute.github.io/All-Japan-Grid/subsld.html
+| | |
+|---|---|
+| **ダッシュボード / Dashboard** | **https://lutelute.github.io/All-Japan-Grid/** — すべてのツールの入口 / every tool, one page |
+| 系統図マップ / Grid map | https://lutelute.github.io/All-Japan-Grid/map.html |
+| いまの潮流 / Live flow map | https://lutelute.github.io/All-Japan-Grid/flow_map.html |
+| 変電所の単線結線図 / SubSLD | https://lutelute.github.io/All-Japan-Grid/subsld.html |
+| ダウンロード / Download | https://lutelute.github.io/All-Japan-Grid/download.html |
+
+**規模 / Scale** — OSM 抽出: 送電線 40,077 本・変電所 6,962 箇所・発電所 19,138 箇所（10 地域）。
+計算に使う正典モデル（`docs/data/built/`）: 17,841 ノード・19,529 枝。実績需要に合わせた現在断面では 4 つの同期島すべてで
+AC 潮流が収束します。発電機の無効電力制約を課した東のピーク断面はまだ収束せず、原因を診断中です（[`docs/AC_DIAGNOSIS_TOOL.md`](docs/AC_DIAGNOSIS_TOOL.md)）。
+最新の数字はダッシュボードが毎回データから読み直します。
+/ Extracted from OSM: 40,077 lines, 6,962 substations, 19,138 plants across 10 regions. The canonical
+built model has 17,841 nodes and 19,529 branches. AC power flow converges on all four synchronous islands for the
+live snapshot scaled to published demand; the east peak case with generator Q-limits enforced does not converge yet
+and is under diagnosis.
 
 ---
 
-## SubSLD法 — Substation Single-Line Diagrams / 変電所単線結線ビュー *(v1.8.0)*
+## どこから始めるか / Where to start
 
-Every substation now carries an **evidence-paired figure**: GeoPane (site outline,
-real OSM way geometry and terminal-binding markers over GSI aerial photography)
-× SLDPane (busbar sections, circuit-count strokes, direction arrows, transformers —
-rendered live in the browser). All 7,239 sites, all estimates explicitly marked.
+| あなたは / You are | ここから / Start here |
+|---|---|
+| まず見てみたい / Just looking | [ダッシュボード](https://lutelute.github.io/All-Japan-Grid/) → 系統図マップ・潮流マップ。見どころは [`docs/WHAT_TO_CHECK.md`](docs/WHAT_TO_CHECK.md) |
+| 潮流計算に使いたい / Want to run power flow | [ダウンロードページ](https://lutelute.github.io/All-Japan-Grid/download.html) の自己完結バンドル（clone 不要）。手元のツールへは [`docs/INTEROP.md`](docs/INTEROP.md) |
+| モデルの信頼度を知りたい / Want to know how far to trust it | [本データの限界](#limitations--what-this-data-is-not--本データの限界)、[介入台帳](docs/MODEL_INTERVENTIONS.md)、[検証に使った出典](docs/VALIDATION_SOURCES.md)、[`docs/COVERAGE.md`](docs/COVERAGE.md) |
+| 接続の誤りを直したい / Want to fix a connection | ダッシュボードの「確かめる・直す」→ 接続編集・候補レビュー。手順は [CONTRIBUTING.md](CONTRIBUTING.md) |
+| 手法を知りたい / Want the methods | [WHITEPAPER.md](WHITEPAPER.md)、[`docs/SUBSLD_METHOD.md`](docs/SUBSLD_METHOD.md)、[EGGC 教材](https://lutelute.github.io/All-Japan-Grid/eggc_explainer.html)、[`papers/`](papers/) |
 
-全変電所に**実証ペア図**が付きました。GeoPane（地理院写真上の敷地・実線形・端子束縛マーカー）×
-SLDPane（母線セクション・回線数ストローク・流向・変圧器）をブラウザ内で描画します。
-推定値（流向・推定母線）はすべて推定と明記されます。
+## ツール / Tools
 
-- **Viewer:** https://lutelute.github.io/All-Japan-Grid/subsld.html
-- **Method:** [`docs/SUBSLD_METHOD.md`](docs/SUBSLD_METHOD.md) — evidence-closure
-  formulation, lower-bound circuit estimation, three-valued direction inference
-- Coverage (measured): circuits evidence 68 % of lines, busbar ways 14.2 % of sites
-  (gap tracked in [issue #49](https://github.com/lutelute/All-Japan-Grid/issues/49))
+ダッシュボードに同じ一覧があり、検索と絞り込みができます（一覧の正は [`docs/data/tools_catalog.json`](docs/data/tools_catalog.json)）。
+
+| 種類 | ツール | 動く場所 |
+|---|---|---|
+| 見る | 系統図マップ（8 タブ: 系統図・エリア・潮流・単線図・比較・Ybus/N-1・接続編集・候補レビュー）、潮流方向・発電稼働率マップ、SubSLD、UC before/after | ブラウザ |
+| 確かめる・直す | Before/After 比較、接続編集（下書き → issue 提案）、接続候補レビュー | ブラウザ |
+| 学ぶ | EGGC 教材、発表スライド（EGGC・動態解析・インピーダンス較正） | ブラウザ |
+| データを使う | 配布バンドル、MATPOWER / CIM・CGMES 書き出し、pandapower・PyPSA 取り込み | ブラウザ / コマンド |
+| 解析する | N-1 全枝スクリーニング、SCR による連系可能量、連続潮流、多機動揺・モード解析、全規模潮流 | コマンド |
+| 監査・診断する | AC/Ybus 可解性の診断、敷地・端子・母線を分けた接続監査、計算回路の品質監査、Ybus 健全性、データ品質 | コマンド |
+| ローカルで動かす | 接続エディタ完全版（検証・反映つき）、ツール実行ダッシュボード | `:8088` |
+
+ローカルの完全版はこれで立ち上がります。`/` がダッシュボード、`/editor` が接続エディタ、`/tools` がツール実行です。
+
+```bash
+pip install -e .
+PYTHONPATH=. uvicorn src.server.app:app --host 127.0.0.1 --port 8088
+open http://localhost:8088/
+```
+
+## 最近の変更 / What's new
+
+- **v1.8.0（2026-08-27）SubSLD 法** — 全変電所に、航空写真上の敷地・実線形と単線結線図を並べた実証ペア図。
+  推定した流向や母線は推定と明記。手法は [`docs/SUBSLD_METHOD.md`](docs/SUBSLD_METHOD.md)。
+  母線の被覆が低い問題は [#49](https://github.com/lutelute/All-Japan-Grid/issues/49) で追跡中。
+- **未リリース（main）**
+  - 降圧点の欠損を補う暗黙の降圧変圧器（介入 #43a）、公表資料に基づく回線数（#44・421 枝）、
+    島ごとの発電機接続の既定（#41）。西は 24 時間すべて AC で収束するようになりました。
+  - スクリーニング解析: N-1 全枝、SCR による連系可能量、AC 運転点での多機動揺モデル。
+  - 電圧不明の始点から 66→154 kV の線路連鎖を受け入れてしまう不具合の修正、計算回路の品質監査、
+    敷地・端子・母線を分ける接続監査、AC/Ybus 診断（Codex によるレビュー作業、[#53](https://github.com/lutelute/All-Japan-Grid/issues/53)）。
+  - Pages の入口をダッシュボードに刷新。数字はデータから読み、ページの載せ忘れとリンク切れをテストで検査。
+- 配布データセットの最新は **v1.7.0**（v1.8.0 は手法のリリースで、配布バンドルは v1.7.0 のままです）。
+- これまでのリリースの要点は [`docs/HIGHLIGHTS.md`](docs/HIGHLIGHTS.md)、全履歴は [CHANGELOG.md](CHANGELOG.md)。
 
 ## Disclaimer / 免責事項
 
@@ -90,208 +135,10 @@ OSM から抽出した全国送電網（電圧クラス別色分け）。衛星�
 
 ---
 
-## Highlights / ハイライト
-
-### v1.7.0 — 2026-08-20
-
-- 🔌 **Interconnector & converter layer corrected against primary sources /
-  連系線・変換所層の正本化** (interventions #31/#32/#33). Synthetic straight-line
-  ties de-energised (real geometries carry the flow; Anan–Kihoku DC got its actual
-  submarine+overhead route), the 南福光 BTB no longer passes AC through, and
-  `interconnections.yaml` is rebuilt from OCCTO published operating capacities with
-  **direction-aware limits** (関門 850/2,850 MW). A UC formulation bug (regional
-  balance as `>=` = free surplus disposal) was found and fixed with an explicit
-  spill ledger — all 10 links now stay within capacity in all 24 hours.
-  合成タイ非通電化・南福光BTB切断・OCCTO正本の方向別容量・UC収支等式化。
-- 📄 **Disclosure-driven completion / 公表資料による網の補完.** 全10社の様式5
-  (インピーダンス)正規化 1,009線/213変圧器 → 89 disclosed connections applied as
-  pipeline steps; EGGC snaps disclosed codes to real OSM geometry only under an
-  evidence gate; local grids (新潟154 kV・静岡77 kV・四日市77 kV) node-ified from
-  disclosed diagrams. Point demand (#30) pins observed substation loads.
-- 🏷️ **Sourced capacities / 出典付き容量の拡充.** GEM fill +194 records / 22.5 GW
-  (provenance DB 354 rows, all verified); OCCTO interconnector operating
-  capacities (14 links × 2 directions) as a sourced canon.
-- 📊 **Live observability / 公表実績で動く可視化** (Pages, not in the bundles):
-  24 h nodal flow map with date snapshots injected from area supply-demand
-  actuals of 9/10 TSOs — nuclear outages propagate automatically from official
-  actuals (zone net positions validated to 39–129 MW against the published
-  interchange column).
-
-### v1.6.0 — 2026-07-10
-
-- ✅ **Interventions #19/#20/#21 now default ON / 介入3件の既定ON化**
-  ([docs/reports/default_on_decision_2026-07-10.md](docs/reports/default_on_decision_2026-07-10.md)).
-  Per-prefecture demand (#19), reactive compensation (#20) and bbox-duplicate dedup (#21) are the
-  default model as of 2026-07-10 (owner-approved). Evidence: 4-island before/after probes (no
-  solution regression, fragmentation improves everywhere — west 2,531→544 components), 44 gates
-  PASS, numeric **Ybus canon v5.0.0** with fingerprint lineage. `--no-pref-demand
-  --no-reactive-comp --no-dedup-nodes` reproduce the legacy behaviour exactly. East losses rise
-  +31 % on the probe snapshot — that is the *correction* (double-counted boundary lines halved
-  impedances before). 東の損失増は二重計上是正の方向であり改悪ではない。
-- 📚 **Methodology consolidation & sourced compensation factor / 方法論統合と補償率の出典化.**
-  Four pitfall classes of OSM-derived grid models + 5 diagnostic methods + a 12-item checklist
-  ([osm_grid_pitfalls_methodology_2026-07-10.md](docs/reports/osm_grid_pitfalls_methodology_2026-07-10.md));
-  intervention #20's factor 0.6 anchored to primary sources — Shikoku EGC 2024 measurements
-  convert to ≈0.8 today / ≈0.05 in the 1990s, so 0.6 sits on the conservative side of the
-  observed range ([reactive_comp_provenance_2026-07-10.md](docs/reports/reactive_comp_provenance_2026-07-10.md)).
-- 🔌 **east full-scale AC solved — root cause was reactive power, not topology / east全規模ACの網側解明.**
-  ([docs/reports/east_network_reactive_2026-07-09.md](docs/reports/east_network_reactive_2026-07-09.md)).
-  Under honest demand geography the 6,222-bus east AC failed — but the DC angles are healthy
-  (the angle-based prune ladder removes ~0 lines) so the breaker is **reactive power / voltage
-  collapse**, not an angle bottleneck: ~19 GVar of load reactive demand had to flow through
-  high-X radial 66 kV lines with **no local support**. Modelling the shunt capacitor banks that
-  real distribution substations carry (`--reactive-comp`, intervention #20; default ON since
-  2026-07-10) restores an honest full-scale AC solution — **98.2 % served, 98.4 % of buses in
-  the 0.9–1.1 pu band** (vs the earlier fake 10.8 %). The remaining ~41 outlier buses (0.66 %)
-  are the localized 66 kV detail left to refine.
-- 🧾 **Model-intervention registry now at 20 entries** — #19 per-prefecture demand, #20 reactive
-  compensation, each with basis / ledger / off-switch.
-- 🗾 **All-island 24 h validation of `--pref-demand --reactive-comp`**
-  ([docs/reports/allisland_24h_reactive_2026-07-09.md](docs/reports/allisland_24h_reactive_2026-07-09.md)).
-  All four islands solve for all 24 hours: hokkaido & okinawa 24/24 AC with healthy voltages
-  (0.77–1.01 / 0.82–1.00 pu), east 22/24 AC (98 % served) with 2 hours honestly falling back to
-  DC, west DC by design (single-synchronous-island AC is known fake convergence — backbone
-  handles its AC). Reactive compensation holds across every island and hour with no BLAS abort.
-  Remaining gap: east's localized 66 kV voltage outliers (vm ceiling ≈1.70, one hour 2.78) — the
-  next mesh-refinement target. (Both flags became default ON on 2026-07-10 — see the decision
-  report above.)
-- 🔀 **east vs west, diagnosed apart**
-  ([docs/reports/east_vs_west_ac_2026-07-09.md](docs/reports/east_vs_west_ac_2026-07-09.md)).
-  The "east AC / west DC" split hid the real story: applying east's exact diagnosis to west shows
-  **both are reactive-limited, not different in kind** — west's DC angles are healthy too. The
-  difference is fragmentation: east has 533 components (89 % of load in the main one) and reaches
-  honest AC at 30 % compensation, robustly; west has **2,531 components (5×, only 69 % in the
-  main)**, needs 90 % compensation, and even then converges only marginally (the operational CLI
-  ordering fails). west's lower loss / cleaner voltages are a fragmentation by-product, not a
-  better model. Conclusion: **"west = DC" is the right default** — west's real problem is
-  topology (missing OSM ties / substation hubs), not reactive support; we won't force its AC.
-
-### v1.5.0 — 2026-07-09
-
-- 📦 **Ready-to-run dataset distribution / DLしてそのまま回るデータセット配布.**
-  Self-contained bundles (core ≈13 MB / full ≈25 MB, SHA256 MANIFEST) on the GitHub Release,
-  a [download page](https://lutelute.github.io/All-Japan-Grid/download.html), and `dataset/`
-  tutorials: MATPOWER power flow (pandapower `solve_pf.py` / MATLAB `solve_pf.m`) and
-  **Excel → 24 h unit commitment** (`make_template.py` → edit xlsx → `run_uc.py`).
-  E2E-verified: real download → SHA256 match → fresh venv → both tutorials complete
-  (MATLAB R2025a + MATPOWER 8.1 verified; `requirements.txt` matplotlib gap found by the
-  fresh-venv test and fixed before shipping).
-- 🧾 **Model-intervention registry / モデル介入台帳** ([docs/MODEL_INTERVENTIONS.md](docs/MODEL_INTERVENTIONS.md)).
-  Every mechanism that makes the model *look* connected, solvable, or complete — nearest-neighbour
-  generator attachment, synthetic load allocation, default capacities, per-component slacks,
-  prune ladders (18 in total) — is now catalogued with its **basis, ledger (where it is disclosed),
-  and off-switch**. Includes "how to read" rules: per-line flow values are composite estimates and
-  must not be cited individually. Motivated by the phantom-tie incident (next bullet):
-  *an internally consistent model can silently assert equipment that does not exist.*
-  「専門知識がないと、つながったと信じ込んでしまう」— 盲信リスクへの恒久対応として、
-  接続・値・配分を作る介入18件を根拠・帳簿・無効化の3点セットで台帳化。
-- 🕵️ **Failure case study: the phantom tie / 失敗事例「幻の連系線」**
-  ([docs/reports/case_study_phantom_tie_2026-07-07.md](docs/reports/case_study_phantom_tie_2026-07-07.md)).
-  For ~a month the model asserted a non-existent Kyushu–Shikoku interconnector (445 MW) — actually
-  two real Chugoku-EPCO lines in Yamaguchi mislabelled by overlapping extraction bboxes. Found only
-  by reconciliation against external ground truth (OCCTO's real tie list). Fixed by
-  **territory-based zone re-attribution** (coordinate → prefecture polygon → service area;
-  physical connectivity untouched, frequency-boundary moves forbidden): multi-zone duplicate
-  coordinates 1,623→10, the invisible Honshi tie restored, duplicate plant attachments removed.
-- ⚖️ **Slack decomposed to physics / slackの完全分解.** With sourced okinawa fleet calibration
-  (slack 47.3→3.7%), capacity bridging, and UC interconnection flows injected at the *actual*
-  converter substations (Shin-Shinano FC, Kita-Hon), the east-island 24 h slack identity now closes
-  at machine precision: **slack ≈ losses (residual +0.02 %)**
-  ([docs/reports/east_slack_decomposition_2026-07-07.md](docs/reports/east_slack_decomposition_2026-07-07.md),
-  [boundary_injection_2026-07-07.md](docs/reports/boundary_injection_2026-07-07.md)).
-- 🛡 **Served-load guard against fake AC solutions / 見せかけAC解ガード.** A "converged" AC solve
-  that silently disconnected 90 % of the network (6.2 of 57.4 GW served, 149 MW losses — physically
-  impossible) is now rejected: AC solutions must serve ≥95 % of pre-solve load, and
-  `served_frac` ships in every result JSON. *Convergence is not correctness.*
-- 🔬 **Root cause of the east full-scale AC regression / A案回帰の原因確定**
-  ([docs/reports/a_plan_east_ac_regression_2026-07-08.md](docs/reports/a_plan_east_ac_regression_2026-07-08.md)).
-  A 7-variant probe (scripts + raw JSON archived alongside) shows the territory re-attribution
-  itself is *correct* — the breaker is the coarse **demand allocation** (zone-uniform × voltage
-  weights): relabelling ~350 nodes in the Niigata/Fukushima–North-Kanto belt to their true
-  service areas shifts ~1 GW of demand (a 66 kV bus jumps 11.3⇄23.6 MW) and tips the marginal
-  6,205-bus AC solve into non-convergence. Seikan island composition and plant dedup were
-  cleared (identical topology still fails). **Consequently the earlier "east full-scale AC
-  (99.0 % served)" claim stood on the old bbox-mislabelled demand geography** — treat it as a
-  limit solution, not a validated operating point. Full-scale runs now honestly report
-  `dc_fallback` (guard above); AC demonstrations live on the backbone model.
-  **Follow-up (registry #19, `--pref-demand`, default ON since 2026-07-10)**: demand allocation refined to sourced
-  per-prefecture shares (電力調査統計 FY2024) — metro Tokyo now carries a realistic
-  ~50 MW/bus vs ~10 MW/bus rural. An early probe seemed to restore full-scale AC, but was
-  traced to an enclave-weighting bug that dumped ~2.3 GW of Nagano demand at the Shin-Shinano
-  FC corridor — the same accidental-ballast pattern this report exposes — and was rejected
-  before shipping. With honest weights the full-scale AC stays infeasible: *the model, not
-  the demand geography, is what needs fixing next* (metro 66 kV mesh representation).
-- 🎬 **24 h power-flow animation / 潮流アニメーション**
-  (`scripts/animate_powerflow_gif.py`): the UC dispatch flowing through the national grid,
-  hour by hour — line width/shade = |P|, generation bubbles, FC/Kita-Hon transfers, honest
-  DC labelling for west, and the intervention-registry caveat rendered on every frame.
-
-### v1.4.0
-
-- 📏 **Externally validated against utility ground truth — to our knowledge, a first for an OSM-extracted public grid.** The model is now scored
-  against TEPCO's published per-line flow measurements and Kansai-TD's line disclosure:
-  corridor-usage rank correlation (a capacity/topology proxy) **interior Spearman ρ = 0.721** (boundary-conditioned corridors excluded, p≈1e-09),
-  while the AC power flow solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**;
-  substation recall 86%, attachment recall 55%. Every score ships as a JSON scorecard in
-  [docs/reports/](docs/reports/) and the full source survey in
-  [docs/VALIDATION_SOURCES.md](docs/VALIDATION_SOURCES.md). `ajgrid validate --topology` gives the KPIs.
-  Line **voltage class** is independently cross-checked against Kansai-TD's official ≥154 kV
-  trunk-line disclosure: **97 % agreement** (37/38 named lines; aggregate only — the utility's
-  raw per-line values are not redistributed, see [scorecard](docs/reports/external_kansai_lines_voltage_2026-06-26.json)).
-- ⚡ **AC convergence without demand scaling — all 10 regions, both models.** The FULL
-  regional model (sub-grid included) now solves natively everywhere — kansai at its full
-  22,833 MW (previously ×0.3-0.4 demand-scaled only) — and the `--backbone` reduction
-  (region-aware cut: ≥154 kV mainland, 66 kV floor for hokkaido whose grid IS its 66 kV
-  layer) gives the cleaner planning view with generator Q-limits enforced
-  (`ajgrid solve <region> [--backbone]`). The interior corridor-usage rank correlation
-  (a capacity/topology proxy, boundary corridors excluded) is **ρ = 0.721**; the AC flow
-  solved on synthetic loads correlates at **ρ ≈ 0.46 (interior) / 0.60 (trunk)**.
-- 📦 [Release v1.4.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.4.0):
-  `all_japan_grid_cim_L2.zip` regenerated with this model — **kansai's CIM case improves
-  from ×0.3 to ×0.8 demand**, 6 regions native + 4 at ×0.8, all 10 verified by `cim2pp`
-  round-trip and strict CGMES validation (0 dangling references).
-- 🏗 **Multi-voltage substations + evidence-based connectivity.** One bus per voltage class with
-  intra-substation transformers (cross-voltage LINES are no longer swallowed — kansai recovers
-  +759 real lines); OSM `circuits`/`cables` tags drive parallel counts; corridor voltage
-  propagation types untagged segments (unknown-voltage branches: kansai 25→8%); every branch
-  carries connection provenance (`conn=`, `circuits=`, `kv=`).
-- 🔌 **Merit-order dispatch & boundary imports.** Fuel-specific capacity factors replace uniform
-  scaling, and OCCTO interconnection flows are injected at regional boundaries (a regional slice
-  is not an island) — both adopted because they measurably improved the TEPCO flow correlation.
-- 🗄 **`data/*.geojson` are now DB-derived artifacts.** The unified database
-  (`ajgrid db ingest` → `data/grid.db`) is the source of truth; the published GeoJSON is
-  regenerated from it with per-field provenance markers (`"_src:capacity_mw": "p03_db"`),
-  so authoritative values (国土数値情報 P03) ride in the public files WITHOUT breaking the
-  mechanical-update loop — re-ingest preserves their sources (regression-pinned).
-- 🧭 **OSM case studies** ([docs/reports/](docs/reports/2026-06-10_fable5_osm_case_studies.md)):
-  kansai (map density ≠ electrical usability), hokuriku (attribute gaps break connectivity),
-  tokyo (attachment correctness is the residual) — measured teaching examples for OSM-based
-  grid modelling, with per-model improvement ledger in
-  [docs/reports/IMPROVEMENT_LOG.md](docs/reports/IMPROVEMENT_LOG.md).
-
-### v1.3.0
-
-- ✅ **CIM / CGMES Level 2 — electrically faithful & more native solves.** Corrected parallel-circuit counting and unified voltage parsing make the cim2pp round-trip electrically identical to the solved network, and lift **chubu & kyushu to native convergence**: **8 of 10 regions now solve natively** (hokuriku x0.8, kansai x0.3 as balanced demand-scaled cases). All 10 verify OK.
-- 🔧 **Power-flow pipeline promoted into `src/powerflow/`** — the reconstruction → solve pipeline (`build_and_solve`, topology builders, net transforms, solver) moved out of `examples/`/`scripts/` so the dependency flows the right way and the model is testable in CI.
-- 📦 [Release v1.3.0](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.3.0): `all_japan_grid_cim_L1.zip` (31 MB) + `all_japan_grid_cim_L2.zip` (13 MB)
-
-### v1.2.0
-
-- 🆕 **CIM / CGMES standardization** — the whole dataset re-expressed as IEC 61970 CIM (CGMES 2.4.15 RDF/XML). **Level 1** catalogue (6,962 `Substation` / 40,077 `ACLineSegment` / 19,138 fuel-specific `GeneratingUnit`) + **Level 2** solvable power-flow case (EQ/TP/SSH/SV/GL), validated via pandapower `cim2pp`.
-- 📄 Full mapping spec: [docs/CIM_MAPPING.md](docs/CIM_MAPPING.md)
-
-### v1.1.0
-
-- 🆕 [N-1 contingency analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/scripts/run_n1_contingency.py) — 914 backbone lines tripped one-by-one across 9 regions, identifying pivotal lines whose loss breaks AC convergence in Tokyo / Kyushu.
-- 🔧 Voltage standardization (`_clean_voltage`) — non-standard 22/25/30/33/100 kV snap to JP standard classes. **Hokkaido `vm_min` 0.30 → 0.81 pu**.
-- ⚡ National-zonal power flow — east/Hokkaido/Okinawa AC + west DC, with **auto-DC mode** on the live map.
-- 🗺 New compare tab with Ybus visualization (national / per-region / spy plot).
-- 📄 [Release notes](https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.1.0) / [Root-cause analysis](https://github.com/lutelute/All-Japan-Grid/blob/main/docs/WEST_AC_ANALYSIS.md)
-
 ## Download & Quickstart / ダウンロードと使い方
 
 データセットを DL してすぐ回せる入口とチュートリアルを [`dataset/`](dataset/) に用意しています。
-オンラインの **[ダウンロードページ](https://lutelute.github.io/All-Japan-Grid/docs/download.html)**（DL＋回し方を1枚に）も公開しています。
+オンラインの **[ダウンロードページ](https://lutelute.github.io/All-Japan-Grid/download.html)**（DL＋回し方を1枚に）も公開しています。
 
 - **配布バンドル (zip)** — [GitHub Releases](https://github.com/lutelute/All-Japan-Grid/releases) から
   `all-japan-grid-dataset-v<VERSION>-core.zip`（約 13 MB）をダウンロード、または
@@ -513,15 +360,18 @@ See [WHITEPAPER.md](WHITEPAPER.md) Section 4 for detailed methodology.
 > python scripts/build_static_site.py            # 地図レイヤー用
 > ```
 
-## Interactive Map (GitHub Pages) / インタラクティブマップ
+## GitHub Pages サイト / The Pages site
 
-The static site at `docs/` renders all regions on a Leaflet.js dark map with voltage-based coloring.
-`docs/` 以下の静的サイトで、全地域を Leaflet.js ダークマップ上に電圧別の色分けで表示します。
+`docs/` がそのまま GitHub Pages のルートです。`index.html` が全ツールの入口（ダッシュボード）、`map.html` が系統図マップ。
+ダッシュボードの数字は `docs/data/dashboard.json`（deploy のたびに `scripts/build_dashboard_data.py` が再生成）から、
+ツール一覧は `docs/data/tools_catalog.json` から読みます。ページを足したらカタログに 1 件足してください —
+載せ忘れとリンク切れは `tests/test_pages_dashboard.py` が落とします。
 
-Voltage filter presets / 電圧フィルタ: 500 kV, 275 kV+, 154 kV+, 110 kV+, 66 kV+, All
+The `docs/` folder is the Pages root: `index.html` is the dashboard, `map.html` the grid map. Numbers on the dashboard are
+read from generated JSON rather than written into the HTML, and a test fails when a page is added without a catalog entry.
 
 ```bash
-# Local preview / ローカルプレビュー
+# Local preview (static) / ローカルプレビュー（静的）
 python -m http.server -d docs 8080
 open http://localhost:8080
 ```
@@ -629,21 +479,24 @@ Sub-transmission flows where demand WAS measured reach ρ≈0.19 (vs 0.11 withou
 - **Starting point for synthetic models / 合成モデルの出発点**: Geographic skeleton to be enriched with electrical parameters from other sources / 他ソースの電気パラメータで補完可能な地理的骨格
 - **Education / 教育**: Understanding the structure of Japan's 10 regional grids and the 50/60 Hz boundary / 日本の10地域系統と50/60Hz境界の構造理解
 
-## Analysis Tools (Experimental) / 解析ツール（実験的）
+## Analysis Tools / 解析ツール
 
-The `src/` directory contains power flow and UC solver code. These tools work correctly on **complete** electrical models (e.g. MATPOWER test cases) but produce unreliable results on raw OSM topology due to the missing data described above.
+`src/` の潮流・UC・動態のコードは、生の OSM トポロジではなく**正典 built モデル**（`docs/data/built/`）の上で動きます。
+線路定数・需要・発電機諸元の多くは合成値で、置いた仮定はすべて [介入台帳](docs/MODEL_INTERVENTIONS.md) に
+根拠・帳簿・無効化の方法つきで登録しています。結果は整合性の確認とスクリーニングのためのもので、
+接続可否・運用可否・安定度の判定には使えません。
 
-`src/` ディレクトリには潮流計算および UC ソルバのコードが含まれています。これらのツールは **完備された** 電力系統モデル（例: MATPOWER テストケース）では正しく動作しますが、上述の不足データにより、生の OSM トポロジに対しては信頼できない結果を出力します。
-
-They are included as reference implementations for future use when combined with complementary data sources.
-補完データソースとの組み合わせを想定した参照実装として収録しています。
+The solvers in `src/` run on the **canonical built model**, not on raw OSM topology. Most line constants, loads and
+machine data are synthetic; every assumption is registered in the [intervention registry](docs/MODEL_INTERVENTIONS.md)
+with its evidence, its ledger and a switch to turn it off. Results are for consistency checks and screening —
+not for connection, operation or stability studies.
 
 ### Local Server / ローカルサーバー
 
 ```bash
 pip install -r requirements.txt
-uvicorn src.server.app:app --reload
-open http://localhost:8000
+PYTHONPATH=. uvicorn src.server.app:app --host 127.0.0.1 --port 8088
+open http://localhost:8088          # / = ダッシュボード, /editor = 接続エディタ, /tools = ツール実行
 ```
 
 ### Included Tools / 収録ツール

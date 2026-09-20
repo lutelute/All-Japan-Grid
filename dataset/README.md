@@ -4,7 +4,7 @@
 配布物のダウンロード方法と、代表的な 2 つの回し方（MATPOWER 潮流計算 / Excel で発電機を
 設定して UC）を、そのまま動くスクリプト付きで用意しています。
 
-> 🌐 オンライン版のダウンロードページ: **https://lutelute.github.io/All-Japan-Grid/docs/download.html**
+> 🌐 オンライン版のダウンロードページ: **https://lutelute.github.io/All-Japan-Grid/download.html**
 
 ---
 

@@ -384,6 +384,15 @@ function initTabs() {
             }
         });
     });
+
+    // ダッシュボードからの直リンク: map.html#tab-editor / #tab-ybus … で該当タブを開く
+    function openTabFromHash() {
+        var id = location.hash.slice(1);
+        var btn = id && document.querySelector('.tab-btn[data-tab="' + id.replace(/[^\w-]/g, "") + '"]');
+        if (btn && !btn.classList.contains("active")) btn.click();
+    }
+    window.addEventListener("hashchange", openTabFromHash);
+    openTabFromHash();
 }
 
 // ── Filtering helpers ──
