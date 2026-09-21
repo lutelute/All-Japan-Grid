@@ -116,6 +116,11 @@ grid_overrides:
     disable: "--set grid_overrides.tepco_transformer_capacity.enabled=false(台帳が無い環境では止まるので、HAZARD_SUPPORT_DB を指すか無効にする。run_v4_red 以前は無効)"
     note: "scale_impedance は元の枝を 1 バンクとみなしてリアクタンスを台数で割る。容量は MVA を MW と同じに扱う。東北・関西・北陸・中国・四国・九州は台帳(変電所別の台数と設備容量)が無く対象外。MODEL_INTERVENTIONS.md への登録は別アクターの未コミット編集があるため保留"
 
+branch_removals:
+  kind: assumption
+  value: []          # 感度用。OSM 吸着で別の変電所に付け替わった経路を外す(同じ線路を branch_additions で正しい端点に張り直すのと対で使う)
+  note: "東京電力 系統情報公表の潮流実績では 香取線1・2L は 鹿島(変)↔新佐原(変)、鹿島線1・2L は 鹿島(変)↔筑波南/常総/新野田。モデルの 鰐川→新佐原(香取線/湖南線)・鰐川→筑波南(鹿島線)は同じ線路が鰐川に付け替わったもの。張り直しと同時に外さないと実在しないループができ、過負荷遮断が増える(2026-09-21)"
+
 branch_additions:
   kind: assumption
   value: []          # 感度用。例は docs/reports/nankai_hazard_2026-09-13/dynamics/README.md の「鹿島」参照

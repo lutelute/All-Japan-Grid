@@ -65,6 +65,15 @@ def init(island, seed, overrides=None):
             rows.append(tpl)
         case.branch = pd.concat([case.branch, pd.DataFrame(rows)], ignore_index=True)
         G["branch_additions"] = [(a["f"], a["t"]) for a in adds]
+    rms = (cfg.get("branch_removals") or {}).get("value", []) or []   # 感度: OSM で付け替わった経路を外す(branch_additions の後に実行=雛形が残っているうちに張り直す)
+    if rms:
+        names = case.bus.name.astype(str).to_numpy(); bb = case.branch
+        drop = np.zeros(len(bb), bool)
+        for r in rms:
+            fi = int(np.where(names == r["f"])[0][0]); ti = int(np.where(names == r["t"])[0][0])
+            drop |= ((bb.f == fi) & (bb.t == ti)) | ((bb.f == ti) & (bb.t == fi))
+        case.branch = bb[~drop].reset_index(drop=True)
+        G["branch_removals"] = [(r["f"], r["t"]) for r in rms]; G["branch_removed_n"] = int(drop.sum())
     sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
     G["override_ledger"] = led
     boxes = cfg.get("tsunami_exclude_boxes", {}).get("value", []) or []     # 感度: 箱の中の母線は津波の被害を 0 にする(A40 の波源が南海トラフでない海岸)
