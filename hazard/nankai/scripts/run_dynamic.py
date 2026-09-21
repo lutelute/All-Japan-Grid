@@ -74,6 +74,23 @@ def init(island, seed, overrides=None):
             drop |= ((bb.f == fi) & (bb.t == ti)) | ((bb.f == ti) & (bb.t == fi))
         case.branch = bb[~drop].reset_index(drop=True)
         G["branch_removals"] = [(r["f"], r["t"]) for r in rms]; G["branch_removed_n"] = int(drop.sum())
+    pars = (cfg.get("branch_parallel") or {}).get("value", []) or []   # 感度: 既存の枝の回線数を直す(混在電圧の数え過ぎの是正)
+    if pars:
+        names = case.bus.name.astype(str).to_numpy(); bb = case.branch.copy(); led2 = []
+        for a in pars:
+            fi = int(np.where(names == a["f"])[0][0]); ti = int(np.where(names == a["t"])[0][0])
+            m = ((bb.f == fi) & (bb.t == ti)) | ((bb.f == ti) & (bb.t == fi))
+            for k in np.where(m.to_numpy())[0]:
+                old = int(bb.parallel.iloc[k]); new_p = int(a["parallel"])
+                if old == new_p:
+                    continue
+                led2.append({"branch": str(bb.name.iloc[k]), "from": a["f"], "to": a["t"], "kv": float(bb.kv.iloc[k]),
+                             "parallel_before": old, "parallel_after": new_p,
+                             "cap_mw_before": float(bb.cap_mw.iloc[k]), "cap_mw_after": float(bb.cap_mw.iloc[k]) * new_p / old})
+                bb.iloc[k, bb.columns.get_loc("x_pu")] = float(bb.x_pu.iloc[k]) * old / new_p
+                bb.iloc[k, bb.columns.get_loc("cap_mw")] = float(bb.cap_mw.iloc[k]) * new_p / old
+                bb.iloc[k, bb.columns.get_loc("parallel")] = new_p
+        case.branch = bb; G["branch_parallel_ledger"] = led2
     sim = Simulator(case, network=cfg.get("network", {}).get("model", "mesh"))
     G["override_ledger"] = led
     boxes = cfg.get("tsunami_exclude_boxes", {}).get("value", []) or []     # 感度: 箱の中の母線は津波の被害を 0 にする(A40 の波源が南海トラフでない海岸)
@@ -159,6 +176,8 @@ def run_island(island, n, workers, seed, out, overrides=None):
     led = G.get("override_ledger")
     if led is not None and len(led):                                # 帳簿は output/(git 管理外)にだけ置く。台帳の生値を含むため
         led.to_csv(os.path.join(od, "grid_override_ledger.csv"), index=False)
+    if G.get("branch_parallel_ledger"):
+        pd.DataFrame(G["branch_parallel_ledger"]).to_csv(os.path.join(od, "branch_parallel_ledger.csv"), index=False)
     sp = G["sim"].fm.p["substation"]["tsunami"]                      # 帳簿: 17 万 V 以上の浸水対策(protected_kv_min)を受けたサイト
     if sp.get("protected_kv_min") is not None:
         sim0 = G["sim"]; kvm = float(sp["protected_kv_min"]); fac = float(sp.get("protected_factor", 0.0))

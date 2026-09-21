@@ -116,6 +116,11 @@ grid_overrides:
     disable: "--set grid_overrides.tepco_transformer_capacity.enabled=false(台帳が無い環境では止まるので、HAZARD_SUPPORT_DB を指すか無効にする。run_v4_red 以前は無効)"
     note: "scale_impedance は元の枝を 1 バンクとみなしてリアクタンスを台数で割る。容量は MVA を MW と同じに扱う。東北・関西・北陸・中国・四国・九州は台帳(変電所別の台数と設備容量)が無く対象外。MODEL_INTERVENTIONS.md への登録は別アクターの未コミット編集があるため保留"
 
+branch_parallel:
+  kind: assumption
+  value: []          # 感度用。既存の枝の回線数を直す(x は反比例・容量は比例で直す)
+  note: "OSM は同じ鉄塔に乗る別電圧の回線を 1 本の線路として voltage=275000;66000・circuits=6 のように併記し、モデルは circuits の合計を並列数にして最大電圧の熱容量を掛けている(香取線/湖南線 = 275 kV 2 回線 + 66 kV 4 回線 を 275 kV 6 回線として扱う)。OSM の単一名の way では 香取線・鹿島線・鹿島火力線・鹿島第二火力線・鹿島海浜線・鹿島パワー線 はいずれも 275000 の 2 回線、湖南線・船津線 は 66000。東京領域の OSM は 7,988 本中 322 本(4.0%)が電圧を複数併記し、モデルの枝は 6,467 本中 603 本が該当(並列数 4 以上が 388 本・347 GW)。2026-09-21"
+
 branch_removals:
   kind: assumption
   value: []          # 感度用。OSM 吸着で別の変電所に付け替わった経路を外す(同じ線路を branch_additions で正しい端点に張り直すのと対で使う)
