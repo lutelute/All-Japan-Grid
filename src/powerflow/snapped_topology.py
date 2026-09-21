@@ -295,6 +295,20 @@ def _line_name_list(name_raw):
     return [p.strip() for p in raw.split(sep) if p.strip()]
 
 
+def _is_synthetic_line_name(name):
+    """OSM に実名が無い線に付けた合成名かどうか。
+
+    ``東北電力ネットワーク 66.0kV線``(1,684 way)や ``A変電所~B変電所線`` は
+    実在の線路名ではなく、別々の線路が同じ名前を共有してしまう。回線数の
+    証拠としては使えない(最大値を取ると無関係な線の回線数が伝播する)。
+    """
+    n = str(name or "")
+    if not n:
+        return True
+    low = n.lower()
+    return ("kv線" in low) or ("~" in n) or ("～" in n)
+
+
 def _circuit_evidence(feat_props, min_support=2):
     """線路名 → その線路自身の回線数。単一電圧の way だけを証拠にする。
 
@@ -304,10 +318,14 @@ def _circuit_evidence(feat_props, min_support=2):
     (``name=香取線`` ``voltage=275000`` ``circuits=2``)がデータの中に
     あれば、それがその線路自身の回線数の直接証拠になる。
 
-    Returns: {(線路名, kv): 回線数}。同じ組で値が割れたら最頻値、
-    同数なら大きい方(過小評価を避ける)。``min_support`` 本以上の way が
-    支持する値だけを採る(1 本だけの way は、区間端の 1 回線だけの引込など
-    を全線に広げてしまうので証拠として弱い)。
+    Returns: {(線路名, kv): 回線数}。値が割れたら **最大値** を採る。
+    線路の回線数は区間の最大であって多数決ではない: 2 回線の線路でも
+    端部の引込や分岐が 1 回線の way として分かれて登録されることがあり、
+    way の本数で多数決すると短い端部が長い本線に勝ってしまう(富津火力線
+    500 kV は 1 回線 4 way・2 回線 3 way で、多数決だと 1 になる)。
+    逆に 1 回線の線路に 2 回線の区間が現れることはないので、最大値なら
+    過小評価(偽の過負荷)を作らない。``min_support`` 本以上の way が
+    その線路を支持していることを要求する。
     """
     from collections import Counter
     tally = {}
@@ -316,8 +334,8 @@ def _circuit_evidence(feat_props, min_support=2):
         if len(classes) != 1:
             continue                      # 併架の way は証拠にしない
         names = _line_name_list(props.get("name"))
-        if len(names) != 1:
-            continue                      # 名前が複数なら対応が取れない
+        if len(names) != 1 or _is_synthetic_line_name(names[0]):
+            continue                      # 名前が複数/合成名なら証拠にしない
         raw = props.get("circuits")
         if raw in (None, ""):
             continue                      # circuits タグのあるものだけ
@@ -327,10 +345,9 @@ def _circuit_evidence(feat_props, min_support=2):
         tally.setdefault((names[0], classes[0]), Counter())[n] += 1
     out = {}
     for key, cnt in tally.items():
-        best = max(cnt.items(), key=lambda kv: (kv[1], kv[0]))
         support = sum(cnt.values())
         if support >= min_support:
-            out[key] = best[0]
+            out[key] = max(cnt)
     return out
 
 

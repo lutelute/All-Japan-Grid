@@ -10,7 +10,8 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
 
 from powerflow.snapped_topology import (  # noqa: E402
-    _circuit_evidence, _line_name_list, _voltage_class_list,
+    _circuit_evidence, _is_synthetic_line_name, _line_name_list,
+    _voltage_class_list,
 )
 
 
@@ -55,14 +56,15 @@ def test_evidence_needs_circuits_tag():
     assert _circuit_evidence(props) == {}
 
 
-def test_evidence_majority_then_larger():
-    """同じ線路で値が割れたら最頻値、同数なら大きい方(過小評価を避ける)。"""
+def test_evidence_takes_max_not_majority():
+    """値が割れたら最大値。端部の 1 回線 way が本線に勝たないように。"""
     props = [
-        {"voltage": "154000", "name": "甲線", "circuits": "2"},
-        {"voltage": "154000", "name": "甲線", "circuits": "2"},
-        {"voltage": "154000", "name": "甲線", "circuits": "1"},
+        {"voltage": "500000", "name": "富津火力線", "circuits": "1"},
+        {"voltage": "500000", "name": "富津火力線", "circuits": "1"},
+        {"voltage": "500000", "name": "富津火力線", "circuits": "1"},
+        {"voltage": "500000", "name": "富津火力線", "circuits": "2"},
     ]
-    assert _circuit_evidence(props)[("甲線", 154.0)] == 2
+    assert _circuit_evidence(props)[("富津火力線", 500.0)] == 2
     tie = [
         {"voltage": "154000", "name": "乙線", "circuits": "1"},
         {"voltage": "154000", "name": "乙線", "circuits": "2"},
@@ -73,4 +75,14 @@ def test_evidence_majority_then_larger():
 def test_evidence_ignores_multi_name_ways():
     """名前が複数ある way は電圧との対応が取れないので証拠にしない。"""
     props = [{"voltage": "154000", "name": "甲線;乙線", "circuits": "4"}] * 3
+    assert _circuit_evidence(props) == {}
+
+
+def test_synthetic_names_are_not_evidence():
+    """実名の無い線に付けた合成名は、別々の線路が同名になるので証拠にしない。"""
+    assert _is_synthetic_line_name("東北電力ネットワーク 66.0kV線")
+    assert _is_synthetic_line_name("由利本荘市変電所~鳥海町下直根変電所線")
+    assert not _is_synthetic_line_name("香取線")
+    props = [{"voltage": "66000", "name": "東北電力ネットワーク 66.0kV線",
+              "circuits": "6"}] * 50
     assert _circuit_evidence(props) == {}
