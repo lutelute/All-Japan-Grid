@@ -318,7 +318,7 @@
     const grd = ctx.createLinearGradient(cx, 0, cx + 160, 0); RAMP.forEach(([p, c]) => grd.addColorStop(p, `rgb(${c.join(",")})`)); ctx.fillStyle = grd; ctx.fillRect(cx, ly + 8, 160, 8); ctx.fillStyle = pal.muted; ctx.font = `400 11px ${fn}`; ctx.fillText("0", cx, ly + 28); ctx.textAlign = "right"; ctx.fillText("1", cx + 160, ly + 28); ctx.textAlign = "left";
     ctx.fillStyle = "#6f7b85"; ctx.font = `400 11.5px ${fb}`;
     ctx.fillText(`前提: ${$("diffChip").textContent}・人員 ${state.spm} 人/百万口・応援 ${Math.round(state.aid * 100)}%・浸水域の着手 ${state.access} 日後`, cx, y0 + H - 34);
-    ctx.fillText("All-Japan-Grid 南海トラフ停電シナリオ卓・送電側は動的カスケード run_v8 の母線平均・配電は電柱の折損と復旧人員のモデル", cx, y0 + H - 16);
+    ctx.fillText("All-Japan-Grid 南海トラフ停電シナリオ卓・送電側は動的カスケード run_v10 の母線平均・配電は電柱の折損と復旧人員のモデル", cx, y0 + H - 16);
   }
   window.exportRestore = async function (opts) {
     const o = Object.assign({ width: 1920, height: 1080, post: "/frame/r", every: 1, hold: 1 }, opts || {});

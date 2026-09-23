@@ -23,10 +23,10 @@ TOOL = os.path.join(NANKAI, "tool")
 ZONES = ["tokyo", "tohoku", "chubu", "hokuriku", "kansai", "chugoku", "shikoku", "kyushu", "hokkaido", "okinawa"]
 TOKYO_BAY_BOX = [35.28, 35.80, 139.60, 140.20]
 
-# 系統の前提の組み合わせ → 計算済みの run(run_v8: UFLS の段階的な再送電を入れた版。scripts/run_v8_batch.sh で全通り)
-WEST_RUNS = {"ol1_tr1": "run_v8", "ol0_tr1": "run_v8_nool", "ol1_tr0": "grid8_ol1_tr0_tb1", "ol0_tr0": "grid8_ol0_tr0_tb1"}
-EAST_RUNS = {"ol1_tr1_tb1": "run_v8", "ol0_tr1_tb1": "run_v8_nool", "ol1_tr0_tb1": "grid8_ol1_tr0_tb1", "ol1_tr1_tb0": "grid8_ol1_tr1_tb0",
-             "ol0_tr0_tb1": "grid8_ol0_tr0_tb1", "ol0_tr1_tb0": "grid8_ol0_tr1_tb0", "ol1_tr0_tb0": "grid8_ol1_tr0_tb0", "ol0_tr0_tb0": "grid8_ol0_tr0_tb0"}
+# 系統の前提の組み合わせ → 計算済みの run(run_v10: 正典の併架線の回線数を是正した版・UFLS の段階的な再送電あり。scripts/run_v10_batch.sh で全通り)
+WEST_RUNS = {"ol1_tr1": "run_v10", "ol0_tr1": "run_v10_nool", "ol1_tr0": "grid10_ol1_tr0_tb1", "ol0_tr0": "grid10_ol0_tr0_tb1"}
+EAST_RUNS = {"ol1_tr1_tb1": "run_v10", "ol0_tr1_tb1": "run_v10_nool", "ol1_tr0_tb1": "grid10_ol1_tr0_tb1", "ol1_tr1_tb0": "grid10_ol1_tr1_tb0",
+             "ol0_tr0_tb1": "grid10_ol0_tr0_tb1", "ol0_tr1_tb0": "grid10_ol0_tr1_tb0", "ol1_tr0_tb0": "grid10_ol1_tr0_tb0", "ol0_tr0_tb0": "grid10_ol0_tr0_tb0"}
 
 
 def b64(a: np.ndarray) -> str:
@@ -203,7 +203,7 @@ def main():
     cfg = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_workforce.yaml"), encoding="utf-8"))
     ops = yaml.safe_load(open(os.path.join(NANKAI, "config", "restoration_ops_scenario.yaml"), encoding="utf-8"))
     sup = W.support_tables()
-    b0 = W.load_buses(os.path.join(NANKAI, "output", "run_v8"))
+    b0 = W.load_buses(os.path.join(NANKAI, "output", "run_v10"))
     b, O = W.build(cfg, ops, b0.copy(), np.random.default_rng(0), sup)
     S, ws = era_raw(b0.copy(), sup, cfg["distribution_damage"])
     zi = {z: i for i, z in enumerate(ZONES)}
