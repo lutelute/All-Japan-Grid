@@ -5,3 +5,5 @@ data/derived/*_simplified.geojson
 data/derived/jshis_*.parquet
 *.pyc
 __pycache__/
+# make_cinematic.py の津波ラスタ描画キャッシュ(A40 gpkg から再生成できる)
+data/derived/tsunami_A40_raster_*.npy
