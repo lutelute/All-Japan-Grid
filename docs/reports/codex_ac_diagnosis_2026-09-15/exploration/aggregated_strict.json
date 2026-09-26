@@ -1,0 +1,16 @@
+{
+  "label": "aggregated_strict",
+  "settings": {
+    "algorithm": "nr",
+    "init": "dc",
+    "max_iteration": 50,
+    "tolerance_mva": 0.0001,
+    "enforce_q_lims": true,
+    "numba": true,
+    "check_connectivity": true
+  },
+  "converged": false,
+  "error": "Power Flow nr did not converge after 50 iterations!",
+  "iterations": 50,
+  "seconds": 3.15
+}

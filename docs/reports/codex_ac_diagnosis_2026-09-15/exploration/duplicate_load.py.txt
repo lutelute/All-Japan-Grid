@@ -1,0 +1,33 @@
+from probe import *
+import re
+from collections import defaultdict
+with (OUT/'miyagi_repaired_input.pickle').open('rb') as f:net=pickle.load(f)
+source=json.loads((OUT/'source_bus_map.json').read_text());raw={};groups=defaultdict(set)
+for bs,ids in source.items():
+ b=int(bs)
+ for nid in ids:
+  m=re.fullmatch(r'([a-z]+)_sub_(\d+)(?:@.*)?',nid)
+  if not m:continue
+  zone,ix=m.group(1),int(m.group(2))
+  if zone not in raw: raw[zone]=json.loads((ROOT/f'data/{zone}_substations.geojson').read_text())['features']
+  if ix >= len(raw[zone]): continue
+  p=raw[zone][ix]['properties'];osm=(p.get('osm_type'),p.get('osm_id'))
+  if osm[0] and osm[1]: groups[(osm,net.bus.at[b,'zone'],float(net.bus.at[b,'vn_kv']))].add(b)
+ratios={};ledger=[]
+for (osm,zone,kv),bs in groups.items():
+ if len(bs)>1:
+  for b in bs:
+   assert b not in ratios;ratios[b]=1/len(bs)
+  ledger.append(dict(osm_type=osm[0],osm_id=osm[1],zone=zone,kv=kv,buses=sorted(bs),names=[net.bus.at[b,'name'] for b in sorted(bs)]))
+original=net.load.copy();lf=net.load.bus.map(lambda b:ratios.get(b,1.0));net.load['p_mw']*=lf;net.load['q_mvar']*=lf
+zone=net.load.bus.map(net.bus.zone);before=original.groupby(zone).p_mw.sum();after=net.load.groupby(zone).p_mw.sum();zf=zone.map(before/after)
+net.load['p_mw']*=zf;net.load['q_mvar']*=zf
+bf=(net.load.groupby('bus').p_mw.sum()/original.groupby('bus').p_mw.sum()).to_dict()
+for i,r in net.shunt.iterrows():
+ net.shunt.at[i,'q_mvar']*=bf.get(r.bus,1)
+print('shunt names',net.shunt.name.head().tolist())
+print('groups',len(ledger),'buses',len(ratios),'zone factors',(before/after).to_dict())
+save('duplicate_load_ledger',dict(groups=ledger,zone_factors=(before/after).to_dict(),before_mw=before.to_dict(),after_mw=net.load.groupby(zone).p_mw.sum().to_dict(),bus_factor=bf))
+with (OUT/'miyagi_dedup_input.pickle').open('wb') as f:pickle.dump(net,f)
+run(net,'miyagi_dedup_strict')
+run(copy.deepcopy(net),'miyagi_dedup_noq',enforce_q_lims=False)

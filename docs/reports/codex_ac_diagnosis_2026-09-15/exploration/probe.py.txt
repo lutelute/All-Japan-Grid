@@ -1,0 +1,62 @@
+from pathlib import Path
+import sys, json, copy, time, hashlib, pickle, warnings
+ROOT=Path('/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid')
+sys.path.insert(0,str(ROOT))
+import numpy as np
+import pandapower as pp
+import networkx as nx
+from scripts.solve_same_site_trial import safe
+OUT=Path('/tmp/ajg_ac_convergence_20260914')
+
+def save(name, data):
+    (OUT/(name+'.json')).write_text(json.dumps(safe(data),ensure_ascii=False,indent=2,allow_nan=False)+'\n')
+
+def prepare():
+    from scripts.run_full_powerflow_from_db import build_island_net,attach_generators,attach_default_for,allocate_loads,add_per_component_slacks,balance_by_zone,load_demand_config
+    from src.powerflow.pipeline import add_reactive_compensation
+    from scripts.audit_model_circuit_quality import assembly_signature
+    data=json.loads((ROOT/'docs/data/built/all.json').read_text())
+    flags=dict(territory=True,dedup_nodes=True,site_trafos=False,deenergize_unbuilt=False,synthetic_ties_live=False,btb_split=True,freq_fix=True,implicit_stepdown=True,cap_calib=False)
+    print('BUILD',flush=True)
+    nodes=copy.deepcopy(data['nodes'])
+    net,bus_of,stats=build_island_net('east',nodes,data['edges'],50,{},**flags)
+    cfg=load_demand_config()
+    attach_generators(net,bus_of,nodes,'east',attach_mode=attach_default_for('east'),stats=True)
+    allocate_loads(net,cfg,pop_tilt=False)
+    add_reactive_compensation(net,factor=cfg.get('reactive_compensation_factor',.8))
+    balance_by_zone(net,cfg,use_zone_src=True)
+    counts=add_per_component_slacks(net)
+    with (OUT/'baseline.pickle').open('wb') as f:pickle.dump(net,f)
+    source_map={str(b):[] for b in net.bus.index}
+    for i,b in bus_of.items():source_map[str(b)].append(data['nodes'][i]['id'])
+    save('source_bus_map',source_map)
+    sig,manifest=assembly_signature()
+    save('input',dict(source_sha256=hashlib.sha256((ROOT/'docs/data/built/all.json').read_bytes()).hexdigest(),assembly_signature=sig,assembly_manifest=manifest,flags=flags,config=cfg,slacks=counts,pandapower=pp.__version__,bus=len(net.bus),line=len(net.line),trafo=len(net.trafo),load_mw=net.load.p_mw.sum(),load_mvar=net.load.q_mvar.sum(),gen_mw=net.gen.p_mw.sum(),build_stats=stats))
+    print('READY',len(net.bus),counts,flush=True)
+
+def load():
+    with (OUT/'baseline.pickle').open('rb') as f:return pickle.load(f)
+
+def run(net,label,**options):
+    settings=dict(algorithm='nr',init='dc',max_iteration=50,tolerance_mva=1e-4,enforce_q_lims=True,numba=True,check_connectivity=True)
+    settings.update(options);start=time.time()
+    result=dict(label=label,settings=settings)
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore');pp.runpp(net,**settings)
+        vm=net.res_bus.vm_pu
+        result.update(converged=bool(net.converged),served_mw=net.res_load.p_mw.sum(),vm_min=vm.min(),vm_max=vm.max(),n_finite=int(vm.notna().sum()),loss_mw=net.res_line.pl_mw.sum()+net.res_trafo.pl_mw.sum(),max_line_loading_pct=net.res_line.loading_percent.max(),max_trafo_loading_pct=net.res_trafo.loading_percent.max(),slack_p_mw=net.res_ext_grid.p_mw.sum(),slack_q_mvar=net.res_ext_grid.q_mvar.sum(),generator_q_mvar=net.res_gen.q_mvar.sum())
+    except Exception as e: result.update(converged=False,error=str(e))
+    result['iterations']=net.get('_ppc',{}).get('iterations');result['seconds']=round(time.time()-start,2)
+    save(label,result);print(json.dumps(safe(result),ensure_ascii=False),flush=True)
+    if result['converged']:
+        with (OUT/(label+'.pickle')).open('wb') as f:pickle.dump(net,f)
+    return result
+
+if __name__=='__main__':
+    action=sys.argv[1]
+    if action=='prepare':prepare()
+    elif action=='quick':
+        name=sys.argv[2]
+        opts={'dc_q':{},'flat_q':dict(init='flat'),'dc_noq':dict(enforce_q_lims=False),'flat_noq':dict(init='flat',enforce_q_lims=False)}[name]
+        run(load(),name,**opts)

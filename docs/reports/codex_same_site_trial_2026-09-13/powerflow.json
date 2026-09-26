@@ -1,0 +1,1186 @@
+{
+  "source_sha256": "955d6e0b2baf5d18ae44762db4100e1b446f171e8ad16502856281caf2e33b6a",
+  "assembly_signature": "598cfc9c6053a75d2f15a7a4def05ba7aedb33f38051e797b4a471fa33adeb28",
+  "assembly_manifest": {
+    "sources": {
+      "config/data_schema.yaml": "10071cd9651364fbca4e970a64f15f57233662bb5eea6ff6c93eaae6f5690a25",
+      "config/dataspace.yaml": "ed733a0c46b597c40170f3d89708625ab378dcc2adb88e31271fed67b88365dc",
+      "config/disclosure_map_connections.yaml": "443eddf7d92ffe61ee87c01d19c8412c4838d90342cedf45c02621b77b0d8018",
+      "config/disclosure_supplement_nodes.yaml": "c30335995d92f3f7a7841fd1713a8f513aa976cd6216d78d1deca230c43d5797",
+      "config/isolated_verdict_overrides.yaml": "01c5184780dc263eabe2adc0f99fb657388e873be732ac6ed65911d5d7d83b92",
+      "config/line_capacity_calibration.yaml": "ab9a602851469abd9c14ad9c545c8febe73993d5d2376ef75bddbcafdb03061a",
+      "config/line_types.yaml": "2ce4b4ad5d1a8c9dfcf26ce69e0e85e72bc3a17cd74e4e4bf32923a809d8bf5e",
+      "config/reconstruction.yaml": "f46733753005d6fcf654614d6ce32df6ad8ed9103f73ec16e58c79b77315f377",
+      "config/regional_demand.yaml": "d5fd0a04de2acb31426d5d600023346b516777e43b6eb7704b8744417341eb52",
+      "config/regions.yaml": "7eda5d387a669f9fc1de419f73e0c4b85b6c2ad3e97ab69ff19b51c1901c01b3",
+      "config/system_disclosure.yaml": "288d11f0249c7a2a3c617b18d7fefc9d9f52c98f75b0d24740626d204c3a8540",
+      "config/uc_config.yaml": "922bc43869ea43576149575c0d2ebf0e50877dbb0b0b079ed77db5b660db14f0",
+      "config/uc_scenarios/fy2023.yaml": "e967f88031671bc7188ca30495141054a77a25e332d537c070444c7ef4c6f262",
+      "config/uc_scenarios/fy2023_nopv.yaml": "cef174f4b2105f55c09aecd16c4c7ec0b4a412c1abc178929299af71c6c1e2e0",
+      "config/uc_scenarios/fy2023r2.yaml": "1c80576a23edb070e761b46a8d1b5cd273062331bb729b2e2a0b3e62df45b620",
+      "config/uc_scenarios/fy2025r1.yaml": "cdbe3622413992cdb95ef7c0758cd34dce8841de3a75542fda51da0292802a71",
+      "config/utility_name_aliases.yaml": "0b677d797aadb0e56b40e05bc762c95f6adcb222b17851e0d815f073d4b55971",
+      "data/reference/anan_kihoku_route.json": "6c29622b8e65dc2e82f853a4053f85d9b0862078900e4ebf70359c25f42ba024",
+      "data/reference/capacity_patches.yaml": "63287eb2a29770d1d4528c319561b769e438c9ec73943f94dae07306fac6ace6",
+      "data/reference/circuit_counts.jsonl": "9889cfb39e252b43017e96641b59146eaed721e06a3be1debe6b9cf197fb06dc",
+      "data/reference/circuit_counts_manual.jsonl": "d0317f72d1f092900b1fc3fa5abbaadb0820641de89fbbbddb0946ee3ff375a8",
+      "data/reference/freq_boundary_mixed.geojson": "169f863e5124c7ff4a9999d0604a79ac5e43e99c856bb498f3ce88294b2bd8e5",
+      "data/reference/freq_corridor_whitelist.json": "53e68fd94d55ec818d2c314ce318a0001e6a9b30ec730fabe5860bb52120db55",
+      "data/reference/generator_defaults.yaml": "21efa1da6384e000cf251a62cce46934c295a6317b8b87ab46c750c9ba897578",
+      "data/reference/interconnections.yaml": "3a878accb44a2b8e37796814d5913d0515a77819f589f2d7a279b6f9763de9f6",
+      "data/reference/interconnections_legacy_2024.yaml": "6e6614e513428b402b2b9ecd9801d51834746ac77c65eb61ae58544b9df33ed6",
+      "data/reference/japan_prefectures_simplified.geojson": "1c7663c869bcf0366f88cea503e7a42b322b06d4bfd706aa4e858559e579d4e3",
+      "data/reference/load_profiles.yaml": "45060f67a11db828fd8f457bf6e5a0ca0cd3bc697603b88c7ca639b1e8f8f56c",
+      "data/reference/not_in_service_lines.json": "6c12a9bb8c75f8e8d8531976390d239b00cbdbc17db2244ab1f338a510f564dc",
+      "data/reference/nuclear_status.yaml": "952343c48cf9156e8497a233460fb513073317c68201aaf649522a11694de09a",
+      "data/reference/nuclear_status_fy2025.yaml": "a4882d855466c02ea0aa4fafceacd48c9d6c05192fa00f7abeeecafe3679c7fa",
+      "data/reference/pref_demand_fy2024.json": "9d88d06eef1ff0a64e820e91c8ba7583e4a98a6e64b6668f2fc8dfff56d1ca1c",
+      "data/reference/pumped_storage.yaml": "883c60e4829ee7183b30d51889f6fddad949b8761b25127a925e363ba6e1e4ba",
+      "data/reference/tepco_endpoint_aliases.json": "4f891e9e803014d6a6029e28a320891febb5721495d05f9e86cfdbc05b8531a9",
+      "data/reference/voltage_hierarchy.yaml": "b36fefab9989b4b052592fcafd5b2b56b35da9f436da5d93653972dc5907502b",
+      "data/structures/chubu.json": "196e455e6ab73f9caf33a5aa78ab508e97a1d921b5cc9106e3b098809235043a",
+      "data/structures/chubu_site_f07b955bacfd.json": "42afac000d71f65e98f481bf1cf5d4cfde0418ea511e8db760e97fb59d968fc4",
+      "data/structures/chugoku.json": "6f9117edcc52913e3ab0de06933a95787c5f8c0591293677e811be86eb654448",
+      "data/structures/chugoku_site_7f5085731b83.json": "28b90d84e75b166ad4d51dfca84ca88fce243300be1fe6e9a0f6f3a113ad3cd4",
+      "data/structures/hokkaido.json": "1a9c94984700989620fd7033d61c89df5c6e7ed4fe3366e7e7b708179339d286",
+      "data/structures/hokkaido_site_6e15b51e6f47.json": "662fbf5db7ae95259c555407a63e1de32699e2c69d28084ace808f9ded434490",
+      "data/structures/hokuriku.json": "bbd94810f9bb7b0b4d70a85a88775f7f15e7dec145405d60407004ecaeca6866",
+      "data/structures/hokuriku_site_ff3f634363c0.json": "40c37210e34c8863911b6462d8469aafddc11a4a77e23c62ed042b8a6c06a210",
+      "data/structures/kansai.json": "8bc1b3c74227f4d99bc5d5aa1b238451f9c25644af63530fa3429ba848d5bdee",
+      "data/structures/kansai_site_81537a63e186.json": "36e38976f76fee02e14845b374ec6dc0486986e59b753b13a4291c8d770ff468",
+      "data/structures/kyushu.json": "f7dbb687302f8ea5fd8134e1cf3102fc23ed42abd800ad6f2e0e44bdbb01c399",
+      "data/structures/kyushu_site_95be28fa0410.json": "4729c8295cf3e2f343c5d8f36855efb34f669afd0639ba86d48f000a8eb8a105",
+      "data/structures/okinawa.json": "b889dd4831f90f9b047056d8c5cc4abecc2c65d1db7bb567d9614e1cd802be01",
+      "data/structures/okinawa_site_ba436a18dace.json": "df7fbe10e08ce54d8ab4a571ac6cbff9ce00131f86d02727f07bb53e7332eaaa",
+      "data/structures/shikoku.json": "44940f729035098318ea4f8b91b2754a202867f78c8696c4850311b1e9238061",
+      "data/structures/shikoku_site_2c6e3dc9773b.json": "c03ae4d341f5c83fe5a2206589a72ee58a4d822e488e27fd5a0c677d2f9fcbf0",
+      "data/structures/summary.json": "ca2878d3418c3bbd28659507b68a43b9c28883ad00d211e708a7238fb8b44b72",
+      "data/structures/tohoku.json": "3a4edf39cd4073be0ec22bde3861ad2b3dcc02a31bfd7ec617db683a4906f16c",
+      "data/structures/tohoku_site_5cc42f186ca6.json": "2df35b2c8ede27af71dfb44499c56174095e36267485321963371f050d7fa143",
+      "data/structures/tokyo.json": "5a4454610416a20577a5b7f85700135f37297971653e20fd03f3577d5414a246",
+      "data/structures/tokyo_site_408dc0de0b9f.json": "bed37d24ac0e9aa657c8b3fdd6617c2b1f2c61b4461100a3bc003873f8352393",
+      "data/structures/tokyo_site_e450760a5879.json": "9ee209bc82ff9ee5e43a929c92a1dbe51084a97d7a8d463cf99d46dc64b18625",
+      "data/transformer_sources.jsonl": "365f229354506c7572c2783aebce1563d7c4f486cd57fdadc9541e41894b911b",
+      "scripts/run_full_powerflow_from_db.py": "0b6efd6a2418f684c8d624c2f472e75a67ddee01defe1efb4411b0c2ad858fc2",
+      "src/converter/__init__.py": "e61be858e4bb78c7395540b95ebdd5b3d800497ae278e4ea5d7a58484b2859e2",
+      "src/converter/line_parameters.py": "3638c80a7f21bd8c7299c8fa9494b0ed7d60ecec6bc077682548df69b49fe870",
+      "src/converter/matpower_exporter.py": "5dea98f99c5b95785702b064c1e6d612329a631c847877b9e2d70d79bd64ae02",
+      "src/converter/pandapower_builder.py": "869c90e4e3398667e3ac859a0f75b8324af39d6371d0fafd3cc7b4e0078fafb5",
+      "src/model/__init__.py": "325c6de41c0e74615b5099968cb14b35c17e13f9af166f5ac501b4e5be08a7ab",
+      "src/model/generator.py": "30b77d1c88cc90929b71bb47eb60a4bb34c81a21abf233e8ecfc32ade6c492b0",
+      "src/model/grid_network.py": "6469b9fcbbfedf0b16e474215e0a23fc77f14ae5cd63238af0685d1655749175",
+      "src/model/substation.py": "12d1b34664c6345d484d435f23a64ebf2fe03f9cf0e14a778935171bc19acc43",
+      "src/model/substation_structure.py": "12b9beb983715655c1ed7a7be422531163c5dd9ae995c6f9a8f68d68d9e25191",
+      "src/model/transmission_line.py": "b85064913ec5d3b3957c15ace5b56b13b41d8d5df58794227809acf0140b131e",
+      "src/powerflow/__init__.py": "f1df632e7708a8ccd6d9863945845d454dfc14c115a3fae5bb72273281f16f05",
+      "src/powerflow/batch_solve.py": "83441814f4c020ca4bbb4ee1d07e3fa45a1a7a3c7afc128663edad068bdec051",
+      "src/powerflow/boundary.py": "42ced0fa9991c55d6fc01c59388ee94186ec4ce9db0b926d3dd9b011542cacf0",
+      "src/powerflow/connectivity.py": "b13d753536922586e2b903612eb3d86ae8e3a31285be3b14d656b50aa27edca9",
+      "src/powerflow/contingency.py": "a48de87b5fd0c81195e6fa54cd0253b6f05595126f821036176b3f440dd78f4e",
+      "src/powerflow/flow_calibration.py": "07232e3d6c98df89cfdc9fe7954d75e23c4a0dd2e7e004b6c763aaa31e3ea6bf",
+      "src/powerflow/legacy_build.py": "3b17beef423fe4ef34bcd9ce237c7932d2ce0fcc65b5f9d3f97bc87e7a1353da",
+      "src/powerflow/line_capacity.py": "182d53b6d53f1184459e839fab260dbfd5490848e1f2448bf255bcdfaf7cc9c4",
+      "src/powerflow/line_impedance.py": "8d78bee62eb831ae33744be15a95725b1a06c39154cb90d59ed39effb37f5a93",
+      "src/powerflow/load_curve.py": "21708679ee31bc3b73e2111c3c35156f9f3540e8c810465a14300d164d512113",
+      "src/powerflow/load_estimator.py": "a45cbca012521bd6b9523941197c84ee90dad14a8ca951743a514936cb029722",
+      "src/powerflow/national.py": "649e1fd0d3f36c7d34f3df6f29d6d556036692547009e60985d85fac04e922d5",
+      "src/powerflow/pipeline.py": "f0efc625d46991e1e57f527fbd92fd92c5124a06c480476f350fa481fa63d117",
+      "src/powerflow/point_demand.py": "642ba6982b28db39eefe8a925768f7a556c69210548160757fe56f2daefb9822",
+      "src/powerflow/powerflow_runner.py": "27c9b50b28ebb7ff73478b1db8d8ecf0be2ce45824795703a321f296ec3b6106",
+      "src/powerflow/pref_demand.py": "3c46cfc32a28a26f9323da323c10507a4b24382af2b3a78f3e236469f99c1a76",
+      "src/powerflow/reduce_antenna.py": "3dd6bcfa9abb88b9dccd38925b9d041c35af98772c39840b2bc9e306b18d808b",
+      "src/powerflow/region_attribution.py": "7eaaf2b4cdd62078e59cfa65be7f415965f93d90c1a9e405005b3c7802fc0cbc",
+      "src/powerflow/results_exporter.py": "38967b10e688e2a7653ca92166d38073dac6352da13b788fd6096db7975ab589",
+      "src/powerflow/short_circuit.py": "f13c09898b0878250e90b95cdda992470dcc309da8c46e4e7d6c840acf7ace5b",
+      "src/powerflow/site_identity.py": "9d3a2cc21673c1290662d860d5b7cf6de1daf7b4ea54c6412a2f68a7cbfaf42d",
+      "src/powerflow/snapped_topology.py": "3746af4d7174d5425e82b73abce4c3abd9525024c2c64af3df0a5c954e318c64",
+      "src/powerflow/stepdown_gap.py": "d1e3fe32a87d3d6e10a4bc1ce7adea1db35551eac5ea0cb903e014143d3bdafd",
+      "src/powerflow/transforms.py": "f29d76d70ce8579b891f5120727ecaa0b18708932baa4e9d16fd9c8451361d0b",
+      "src/powerflow/ybus_gate.py": "c77ac61f692b760f51f49aff39b0a1ac2c7118a0db9152f778209cbef557b19c",
+      "src/utils/__init__.py": "7f496655f479424b1a3ce22046bac4b2c79636a0c125e1306784708aec005891",
+      "src/utils/geo_utils.py": "7af037c0be9615b02bd69725663a78c8cadac4496de2cdd19a2f407d29019fec",
+      "src/utils/logging_config.py": "f55728cdcc4ad644d9f8661cb555d387562404f9c3879de1a7e37163a1e470e5",
+      "src/utils/pandapower_compat.py": "e431b75202566fe2fc9256f510fddfab5d804dfcd324af3349527f9046d8256f",
+      "src/utils/voltage.py": "95ab0182fcfb4458bd88eab5d7691b178e032cff462b7d1b435c9894193497a9"
+    },
+    "pandapower_version": "3.4.0",
+    "environment": {
+      "AGJ_CALIBRATED_LINES": null,
+      "AJG_STEPDOWN_CAPACITY": null
+    }
+  },
+  "assembly_options": {
+    "territory": true,
+    "dedup_nodes": true,
+    "site_trafos": false,
+    "deenergize_unbuilt": false,
+    "synthetic_ties_live": false,
+    "btb_split": true,
+    "freq_fix": true,
+    "implicit_stepdown": true,
+    "cap_calib": false
+  },
+  "pandapower": "3.4.0",
+  "scope": "East full circuit; one synthetic regional-demand operating point at load_factor=0.85. Same P/Q injections and compensation in all variants. No pruning, no new provisional infeed, no low-voltage aggregation. Per-component slack remains a modelling assumption.",
+  "settings": {
+    "load_factor": 0.85,
+    "power_factor": 0.95,
+    "reactive_compensation_factor": 0.8,
+    "generator_attach": "cap",
+    "gen_zone_by_operator": true,
+    "solver": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    }
+  },
+  "allocated_load_mw": 55249.99999999745,
+  "gen_stats": {
+    "n_gen": 8233,
+    "n_moved": 76,
+    "moved_mw": 43881.5,
+    "attach_mode": "cap",
+    "n_sourced_cap": 58,
+    "sourced_cap_mw": 73492.0,
+    "ladder_note": null,
+    "kv_share": {
+      "66.0": 0.1095,
+      "77.0": 0.0018,
+      "154.0": 0.2191,
+      "275.0": 0.3772,
+      "500.0": 0.2925
+    },
+    "share_at_or_below_110kv": 0.1113
+  },
+  "moves": [
+    {
+      "case_id": "SS01",
+      "from_id": "chubu_sub_1147",
+      "to_id": "tokyo_sub_1362",
+      "osm_identity": "way/1131424808",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6208,
+      "to_bus": 5415
+    },
+    {
+      "case_id": "SS02",
+      "from_id": "chubu_sub_1146",
+      "to_id": "tokyo_sub_1361",
+      "osm_identity": "way/1131420216",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6207,
+      "to_bus": 5414
+    },
+    {
+      "case_id": "SS03",
+      "from_id": "chubu_sub_918",
+      "to_id": "tokyo_sub_1052@66",
+      "osm_identity": "way/73816638",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "source_tag",
+      "source_geometry_equal": true,
+      "from_bus": 6172,
+      "to_bus": 5055
+    },
+    {
+      "case_id": "SS04",
+      "from_id": "chubu_sub_1162",
+      "to_id": "tokyo_sub_1401",
+      "osm_identity": "way/1359264253",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6210,
+      "to_bus": 5459
+    },
+    {
+      "case_id": "SS05",
+      "from_id": "chubu_sub_1094",
+      "to_id": "tokyo_sub_1256",
+      "osm_identity": "way/849100103",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6194,
+      "to_bus": 5303
+    },
+    {
+      "case_id": "SS06",
+      "from_id": "chubu_sub_967",
+      "to_id": "tokyo_sub_1112",
+      "osm_identity": "way/307661144",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6177,
+      "to_bus": 5142
+    },
+    {
+      "case_id": "SS07",
+      "from_id": "chubu_sub_1134",
+      "to_id": "tokyo_sub_1348",
+      "osm_identity": "way/1086368221",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6203,
+      "to_bus": 5405
+    },
+    {
+      "case_id": "SS08",
+      "from_id": "chubu_sub_526",
+      "to_id": "tokyo_sub_271",
+      "osm_identity": "way/341224663",
+      "decision": "trial_alias",
+      "kv": 154.0,
+      "voltage_basis": "source_tag",
+      "source_geometry_equal": true,
+      "from_bus": 6135,
+      "to_bus": 4145
+    },
+    {
+      "case_id": "SS09",
+      "from_id": "chubu_sub_1154",
+      "to_id": "tokyo_sub_1383",
+      "osm_identity": "way/1227550931",
+      "decision": "trial_alias",
+      "kv": 275.0,
+      "voltage_basis": "source_tag",
+      "source_geometry_equal": true,
+      "from_bus": 6209,
+      "to_bus": 5439
+    },
+    {
+      "case_id": "SS10",
+      "from_id": "tokyo_sub_1806",
+      "to_id": "tohoku_sub_52",
+      "osm_identity": "way/290669795",
+      "decision": "trial_alias",
+      "kv": 275.0,
+      "voltage_basis": "source_tag",
+      "source_geometry_equal": true,
+      "from_bus": 5903,
+      "to_bus": 973
+    },
+    {
+      "case_id": "SS11",
+      "from_id": "chubu_sub_1110",
+      "to_id": "tokyo_sub_1295",
+      "osm_identity": "way/971873000",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6199,
+      "to_bus": 5349
+    },
+    {
+      "case_id": "SS12",
+      "from_id": "chubu_sub_957",
+      "to_id": "tokyo_sub_225",
+      "osm_identity": "way/236177753",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "source_tag",
+      "source_geometry_equal": true,
+      "from_bus": 6176,
+      "to_bus": 4093
+    },
+    {
+      "case_id": "SS13",
+      "from_id": "chubu_sub_1065",
+      "to_id": "tokyo_sub_1221",
+      "osm_identity": "way/708050155",
+      "decision": "trial_alias",
+      "kv": 66.0,
+      "voltage_basis": "same_model_class_only",
+      "source_geometry_equal": true,
+      "from_bus": 6190,
+      "to_bus": 5265
+    }
+  ],
+  "variants": {
+    "before": {
+      "bus_count": 6253,
+      "line_count": 6467,
+      "trafo_count": 677,
+      "components": 220,
+      "largest_component": 5831,
+      "slack_count": 220,
+      "synthetic_slack_count": 208,
+      "line_voltage_mismatch_count": 62,
+      "line_voltage_mismatch_indices": [
+        130,
+        385,
+        697,
+        738,
+        752,
+        753,
+        828,
+        881,
+        1232,
+        1364,
+        1624,
+        1625,
+        2194,
+        2382,
+        2647,
+        2682,
+        2736,
+        2795,
+        2834,
+        3132,
+        3186,
+        3313,
+        3563,
+        3840,
+        3850,
+        4283,
+        4284,
+        4853,
+        4869,
+        4991,
+        5335,
+        5793,
+        5794,
+        5949,
+        5950,
+        5951,
+        6012,
+        6077,
+        6078,
+        6089,
+        6090,
+        6100,
+        6101,
+        6103,
+        6106,
+        6111,
+        6133,
+        6198,
+        6209,
+        6211,
+        6226,
+        6238,
+        6251,
+        6253,
+        6254,
+        6257,
+        6263,
+        6272,
+        6427,
+        6428,
+        6438,
+        6442
+      ],
+      "preserved_load_mw": 55250.0,
+      "preserved_load_mvar": 18159.79681113219,
+      "preserved_gen_mw": 58012.4999999982,
+      "aliases": 0,
+      "dc": {
+        "converged": true,
+        "served_mw": 55250.0,
+        "slack_mw": -2762.500000005776,
+        "max_line_loading_pct": 878.0928148320262,
+        "max_abs_line_flow_change_mw": 0.0,
+        "largest_flow_changes": [
+          {
+            "line": 0,
+            "name": "下北変電所~東通変電所線",
+            "before_mw": -35.364091534443325,
+            "after_mw": -35.364091534443325,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4308,
+            "name": "多野線",
+            "before_mw": 250.0801603116538,
+            "after_mw": 250.0801603116538,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4318,
+            "name": "JR新大宮線",
+            "before_mw": 6.905171067014764,
+            "after_mw": 6.905171067014764,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4317,
+            "name": "東京中線",
+            "before_mw": -693.11330851839,
+            "after_mw": -693.11330851839,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4316,
+            "name": "東京中線",
+            "before_mw": 518.8214205099306,
+            "after_mw": 518.8214205099306,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4315,
+            "name": "上尾線 / 東埼玉線",
+            "before_mw": 174.2918880084578,
+            "after_mw": 174.2918880084578,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4314,
+            "name": "東埼玉線",
+            "before_mw": 94.57760755614234,
+            "after_mw": 94.57760755614234,
+            "absolute_change_mw": 0.0
+          },
+          {
+            "line": 4313,
+            "name": "北埼玉線",
+            "before_mw": 147.1641566596307,
+            "after_mw": 147.1641566596307,
+            "absolute_change_mw": 0.0
+          }
+        ],
+        "largest_loadings": [
+          {
+            "line": 1129,
+            "name": "大郷町変電所~城内一変電所線",
+            "loading_pct": 878.0928148320262,
+            "from_bus": "tohoku junction 38.3891:141.0647:66",
+            "to_bus": "大郷町変電所 66kV"
+          },
+          {
+            "line": 3383,
+            "name": "白石線",
+            "loading_pct": 789.9598765021435,
+            "from_bus": "渡田変電所",
+            "to_bus": "稲荷変電所 154kV"
+          },
+          {
+            "line": 3382,
+            "name": "白石線",
+            "loading_pct": 788.6654926143689,
+            "from_bus": "tokyo junction 35.5257:139.69:154",
+            "to_bus": "渡田変電所"
+          },
+          {
+            "line": 2279,
+            "name": "白石線",
+            "loading_pct": 787.371108726596,
+            "from_bus": "川崎変電所 154kV",
+            "to_bus": "tokyo junction 35.5257:139.69:154"
+          },
+          {
+            "line": 2391,
+            "name": "横浜火力北線 / 妙蓮寺線",
+            "loading_pct": 515.8884113713276,
+            "from_bus": "tokyo junction 35.494:139.6187:66",
+            "to_bus": "仲手原一丁目変電所 66kV"
+          }
+        ]
+      },
+      "ac": {
+        "converged": false,
+        "error": "Power Flow nr did not converge after 50 iterations!",
+        "iterations": 50
+      },
+      "seconds": 3.83,
+      "site_results": [
+        {
+          "case_id": "SS01",
+          "selected": false,
+          "bus": 6208,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS02",
+          "selected": false,
+          "bus": 6207,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS03",
+          "selected": false,
+          "bus": 6172,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS04",
+          "selected": false,
+          "bus": 6210,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS05",
+          "selected": false,
+          "bus": 6194,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS06",
+          "selected": false,
+          "bus": 6177,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS07",
+          "selected": false,
+          "bus": 6203,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS08",
+          "selected": false,
+          "bus": 6135,
+          "load_mw": 13.810342134041555,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS09",
+          "selected": false,
+          "bus": 6209,
+          "load_mw": 3.409090909090909,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS10",
+          "selected": false,
+          "bus": 5903,
+          "load_mw": 6.9051710670207775,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS11",
+          "selected": false,
+          "bus": 6199,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS12",
+          "selected": false,
+          "bus": 6176,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS13",
+          "selected": false,
+          "bus": 6190,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        }
+      ]
+    },
+    "source_voltage_confirmed": {
+      "bus_count": 6248,
+      "line_count": 6467,
+      "trafo_count": 677,
+      "components": 215,
+      "largest_component": 5842,
+      "slack_count": 215,
+      "synthetic_slack_count": 204,
+      "line_voltage_mismatch_count": 62,
+      "line_voltage_mismatch_indices": [
+        130,
+        385,
+        697,
+        738,
+        752,
+        753,
+        828,
+        881,
+        1232,
+        1364,
+        1624,
+        1625,
+        2194,
+        2382,
+        2647,
+        2682,
+        2736,
+        2795,
+        2834,
+        3132,
+        3186,
+        3313,
+        3563,
+        3840,
+        3850,
+        4283,
+        4284,
+        4853,
+        4869,
+        4991,
+        5335,
+        5793,
+        5794,
+        5949,
+        5950,
+        5951,
+        6012,
+        6077,
+        6078,
+        6089,
+        6090,
+        6100,
+        6101,
+        6103,
+        6106,
+        6111,
+        6133,
+        6198,
+        6209,
+        6211,
+        6226,
+        6238,
+        6251,
+        6253,
+        6254,
+        6257,
+        6263,
+        6272,
+        6427,
+        6428,
+        6438,
+        6442
+      ],
+      "preserved_load_mw": 55250.0,
+      "preserved_load_mvar": 18159.79681113219,
+      "preserved_gen_mw": 58012.4999999982,
+      "aliases": 5,
+      "dc": {
+        "converged": true,
+        "served_mw": 55250.0,
+        "slack_mw": -2762.5000000059526,
+        "max_line_loading_pct": 878.0928148320274,
+        "max_abs_line_flow_change_mw": 146.84163888660117,
+        "largest_flow_changes": [
+          {
+            "line": 3398,
+            "name": "新袖ヶ浦線",
+            "before_mw": -445.59323790814113,
+            "after_mw": -592.4348767947423,
+            "absolute_change_mw": 146.84163888660117
+          },
+          {
+            "line": 3397,
+            "name": "新袖ヶ浦線",
+            "before_mw": 2999.388719859119,
+            "after_mw": 3104.957727092215,
+            "absolute_change_mw": 105.56900723309582
+          },
+          {
+            "line": 6408,
+            "name": "宮平線 / 楢平線 / 三峰線 / 川又線 / 黒部幹線",
+            "before_mw": -68.73831445053847,
+            "after_mw": 34.1602341059605,
+            "absolute_change_mw": 102.89854855649897
+          },
+          {
+            "line": 6411,
+            "name": "滝沢線 / 滝沢線 / 川又線 / 三峰線 / 川又線 / 黒部幹線",
+            "before_mw": 93.22503652199944,
+            "after_mw": -9.673512034499497,
+            "absolute_change_mw": 102.89854855649894
+          },
+          {
+            "line": 6463,
+            "name": "日野田線１号線 / 三峰線 / 川又線 / 宮平線 / 楢平線",
+            "before_mw": -22.829199158270193,
+            "after_mw": 80.06934939822567,
+            "absolute_change_mw": 102.89854855649585
+          },
+          {
+            "line": 6198,
+            "name": "中部送電線_837",
+            "before_mw": -68.73831445053958,
+            "after_mw": 34.16023410595523,
+            "absolute_change_mw": 102.8985485564948
+          },
+          {
+            "line": 4625,
+            "name": "川又線",
+            "before_mw": -96.54780944592649,
+            "after_mw": -27.282047489284327,
+            "absolute_change_mw": 69.26576195664217
+          },
+          {
+            "line": 3399,
+            "name": "新佐原線",
+            "before_mw": 2451.4324938549453,
+            "after_mw": 2507.3642055841565,
+            "absolute_change_mw": 55.9317117292112
+          }
+        ],
+        "largest_loadings": [
+          {
+            "line": 1129,
+            "name": "大郷町変電所~城内一変電所線",
+            "loading_pct": 878.0928148320274,
+            "from_bus": "tohoku junction 38.3891:141.0647:66",
+            "to_bus": "大郷町変電所 66kV"
+          },
+          {
+            "line": 3383,
+            "name": "白石線",
+            "loading_pct": 789.9809589387471,
+            "from_bus": "渡田変電所",
+            "to_bus": "稲荷変電所 154kV"
+          },
+          {
+            "line": 3382,
+            "name": "白石線",
+            "loading_pct": 788.6865750509714,
+            "from_bus": "tokyo junction 35.5257:139.69:154",
+            "to_bus": "渡田変電所"
+          },
+          {
+            "line": 2279,
+            "name": "白石線",
+            "loading_pct": 787.3921911632013,
+            "from_bus": "川崎変電所 154kV",
+            "to_bus": "tokyo junction 35.5257:139.69:154"
+          },
+          {
+            "line": 2391,
+            "name": "横浜火力北線 / 妙蓮寺線",
+            "loading_pct": 516.1332716550683,
+            "from_bus": "tokyo junction 35.494:139.6187:66",
+            "to_bus": "仲手原一丁目変電所 66kV"
+          }
+        ]
+      },
+      "ac": {
+        "converged": false,
+        "error": "Power Flow nr did not converge after 50 iterations!",
+        "iterations": 50
+      },
+      "seconds": 2.72,
+      "site_results": [
+        {
+          "case_id": "SS01",
+          "selected": false,
+          "bus": 6208,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS02",
+          "selected": false,
+          "bus": 6207,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS03",
+          "selected": true,
+          "bus": 5055,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS04",
+          "selected": false,
+          "bus": 6210,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS05",
+          "selected": false,
+          "bus": 6194,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS06",
+          "selected": false,
+          "bus": 6177,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS07",
+          "selected": false,
+          "bus": 6203,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS08",
+          "selected": true,
+          "bus": 4145,
+          "load_mw": 27.62068426808311,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS09",
+          "selected": true,
+          "bus": 5439,
+          "load_mw": 6.818181818181818,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS10",
+          "selected": true,
+          "bus": 973,
+          "load_mw": 13.810342134041555,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS11",
+          "selected": false,
+          "bus": 6199,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS12",
+          "selected": true,
+          "bus": 4093,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS13",
+          "selected": false,
+          "bus": 6190,
+          "load_mw": 23.01723689006926,
+          "vm_pu": null
+        }
+      ]
+    },
+    "all_eligible_aliases": {
+      "bus_count": 6240,
+      "line_count": 6467,
+      "trafo_count": 677,
+      "components": 209,
+      "largest_component": 5848,
+      "slack_count": 209,
+      "synthetic_slack_count": 200,
+      "line_voltage_mismatch_count": 62,
+      "line_voltage_mismatch_indices": [
+        130,
+        385,
+        697,
+        738,
+        752,
+        753,
+        828,
+        881,
+        1232,
+        1364,
+        1624,
+        1625,
+        2194,
+        2382,
+        2647,
+        2682,
+        2736,
+        2795,
+        2834,
+        3132,
+        3186,
+        3313,
+        3563,
+        3840,
+        3850,
+        4283,
+        4284,
+        4853,
+        4869,
+        4991,
+        5335,
+        5793,
+        5794,
+        5949,
+        5950,
+        5951,
+        6012,
+        6077,
+        6078,
+        6089,
+        6090,
+        6100,
+        6101,
+        6103,
+        6106,
+        6111,
+        6133,
+        6198,
+        6209,
+        6211,
+        6226,
+        6238,
+        6251,
+        6253,
+        6254,
+        6257,
+        6263,
+        6272,
+        6427,
+        6428,
+        6438,
+        6442
+      ],
+      "preserved_load_mw": 55250.0,
+      "preserved_load_mvar": 18159.79681113219,
+      "preserved_gen_mw": 58012.4999999982,
+      "aliases": 13,
+      "dc": {
+        "converged": true,
+        "served_mw": 55250.0,
+        "slack_mw": -2762.50000000614,
+        "max_line_loading_pct": 878.0928148320284,
+        "max_abs_line_flow_change_mw": 277.3439717073083,
+        "largest_flow_changes": [
+          {
+            "line": 3398,
+            "name": "新袖ヶ浦線",
+            "before_mw": -445.59323790814113,
+            "after_mw": -722.9372096154494,
+            "absolute_change_mw": 277.3439717073083
+          },
+          {
+            "line": 3397,
+            "name": "新袖ヶ浦線",
+            "before_mw": 2999.388719859119,
+            "after_mw": 3198.865940668293,
+            "absolute_change_mw": 199.477220809174
+          },
+          {
+            "line": 3399,
+            "name": "新佐原線",
+            "before_mw": 2451.4324938549453,
+            "after_mw": 2557.4315604306526,
+            "absolute_change_mw": 105.99906657570727
+          },
+          {
+            "line": 3493,
+            "name": "新佐原線",
+            "before_mw": -2269.386367264737,
+            "after_mw": -2374.7024851065435,
+            "absolute_change_mw": 105.31611784180632
+          },
+          {
+            "line": 6411,
+            "name": "滝沢線 / 滝沢線 / 川又線 / 三峰線 / 川又線 / 黒部幹線",
+            "before_mw": 93.22503652199944,
+            "after_mw": -9.673512034499355,
+            "absolute_change_mw": 102.8985485564988
+          },
+          {
+            "line": 6198,
+            "name": "中部送電線_837",
+            "before_mw": -68.73831445053958,
+            "after_mw": 34.16023410595527,
+            "absolute_change_mw": 102.89854855649484
+          },
+          {
+            "line": 6408,
+            "name": "宮平線 / 楢平線 / 三峰線 / 川又線 / 黒部幹線",
+            "before_mw": -68.73831445053847,
+            "after_mw": 34.16023410595023,
+            "absolute_change_mw": 102.89854855648869
+          },
+          {
+            "line": 3612,
+            "name": "新京葉線",
+            "before_mw": 2247.2769715082536,
+            "after_mw": 2340.4563659975174,
+            "absolute_change_mw": 93.17939448926381
+          }
+        ],
+        "largest_loadings": [
+          {
+            "line": 1129,
+            "name": "大郷町変電所~城内一変電所線",
+            "loading_pct": 878.0928148320284,
+            "from_bus": "tohoku junction 38.3891:141.0647:66",
+            "to_bus": "大郷町変電所 66kV"
+          },
+          {
+            "line": 3383,
+            "name": "白石線",
+            "loading_pct": 789.9941219718582,
+            "from_bus": "渡田変電所",
+            "to_bus": "稲荷変電所 154kV"
+          },
+          {
+            "line": 3382,
+            "name": "白石線",
+            "loading_pct": 788.699738084083,
+            "from_bus": "tokyo junction 35.5257:139.69:154",
+            "to_bus": "渡田変電所"
+          },
+          {
+            "line": 2279,
+            "name": "白石線",
+            "loading_pct": 787.4053541963128,
+            "from_bus": "川崎変電所 154kV",
+            "to_bus": "tokyo junction 35.5257:139.69:154"
+          },
+          {
+            "line": 2391,
+            "name": "横浜火力北線 / 妙蓮寺線",
+            "loading_pct": 516.1760773397442,
+            "from_bus": "tokyo junction 35.494:139.6187:66",
+            "to_bus": "仲手原一丁目変電所 66kV"
+          }
+        ]
+      },
+      "ac": {
+        "converged": false,
+        "error": "Power Flow nr did not converge after 50 iterations!",
+        "iterations": 50
+      },
+      "seconds": 2.71,
+      "site_results": [
+        {
+          "case_id": "SS01",
+          "selected": true,
+          "bus": 5415,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS02",
+          "selected": true,
+          "bus": 5414,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS03",
+          "selected": true,
+          "bus": 5055,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS04",
+          "selected": true,
+          "bus": 5459,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS05",
+          "selected": true,
+          "bus": 5303,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS06",
+          "selected": true,
+          "bus": 5142,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS07",
+          "selected": true,
+          "bus": 5405,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS08",
+          "selected": true,
+          "bus": 4145,
+          "load_mw": 27.62068426808311,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS09",
+          "selected": true,
+          "bus": 5439,
+          "load_mw": 6.818181818181818,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS10",
+          "selected": true,
+          "bus": 973,
+          "load_mw": 13.810342134041555,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS11",
+          "selected": true,
+          "bus": 5349,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS12",
+          "selected": true,
+          "bus": 4093,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        },
+        {
+          "case_id": "SS13",
+          "selected": true,
+          "bus": 5265,
+          "load_mw": 46.03447378013852,
+          "vm_pu": null
+        }
+      ]
+    }
+  },
+  "complete": true,
+  "additional_source_sha256": {
+    "data/chubu_plants.geojson": "bbbc1e8019c89d4dc0f6de3823d9f584396969cd66401e999bc93429a20ec8a4",
+    "data/chugoku_plants.geojson": "83e399ed870f416bbaa0f1921827aa1e3d91c462c74f108b42fb8dcb6574ccb9",
+    "data/hokkaido_plants.geojson": "5565c0bce8b161ab1474b9ff8d9275b52a84b2a8c31cae4f485f82a43a15b637",
+    "data/hokuriku_plants.geojson": "04bad1359b65ca86f9ce16f2ce8e9e79e90d37fa84bc297c40044c714c559b94",
+    "data/kansai_plants.geojson": "5d5a9e0c66af1fc160686040d8e369a0fae0a655d3c117c190aad60e6c52b0d8",
+    "data/kyushu_plants.geojson": "f67ee38f7c66881e901e670a2fe6119c30e52a6953f21d848999a2bc8a82acf1",
+    "data/okinawa_plants.geojson": "cfffc677cc884d5b35a434d2f21e11d3a2bf7054679216f3b9a484943fdd9adc",
+    "data/shikoku_plants.geojson": "ef8c05082a490d71768b37190e618d1bae63233d4e3a00f6f868971cbc19d8d3",
+    "data/tohoku_plants.geojson": "b877f373d36e73856e2d2ebdcc44c5f997436cfb31c3e80c9b4ea36f0dc5229e",
+    "data/tokyo_plants.geojson": "e10381bc3fe4a9810312a83b1ea4c5a9ba566618d8bc71b553d201f7a686c630",
+    "data/tokyo_plants_supplement.geojson": "17f98de2ad1384633d6d44e1eccc704707fb6076865728ea4a9078fa67fe8140",
+    "scripts/solve_same_site_trial.py": "848cecda3a633fc2df33e7f59aa935270aa748ac9fac221b1620edf865aa0b79",
+    "docs/reports/codex_same_site_trial_2026-09-13/alias_plan.json": "97e4b2cd0f46384ccd094135809caddafa5bcce572b0a03eecfcb39b825cfa31"
+  },
+  "rebuild_crosscheck": {
+    "line_parameters_and_endpoints_equal": true,
+    "trafo_parameters_and_endpoints_equal": true,
+    "fused_counts": {
+      "bus": 6240,
+      "line": 6467,
+      "trafo": 677
+    },
+    "rebuilt_counts": {
+      "bus": 6240,
+      "line": 6467,
+      "trafo": 677
+    }
+  }
+}

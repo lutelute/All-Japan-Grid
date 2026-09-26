@@ -1,0 +1,17 @@
+{
+  "label": "miyagi_izu_homotopy_strict",
+  "settings": {
+    "algorithm": "nr",
+    "init": "dc",
+    "max_iteration": 50,
+    "tolerance_mva": 0.0001,
+    "enforce_q_lims": true,
+    "numba": true,
+    "check_connectivity": true,
+    "voltage_depend_loads": false
+  },
+  "converged": false,
+  "error": "Homotopy stopped at alpha=0.6398632812499999; no constraints applied to unconverged iterates",
+  "iterations": null,
+  "seconds": 9.51
+}

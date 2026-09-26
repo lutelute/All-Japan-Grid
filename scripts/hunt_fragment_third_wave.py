@@ -42,6 +42,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.hunt_fragment_osm_bridges import (  # noqa: E402
     ISLAND_OF, clip_path, dist_km, k5, min_dist_to_path, nearest_vertex_idx,
     norm_base)
+from scripts.connection_voltage import route_voltage_compatible, voltage_signature
 
 BUILT = ROOT / "docs/data/built/all.json"
 LINES = ROOT / "docs/data/lines_all.geojson"
@@ -238,17 +239,20 @@ def find_chains(island, keys, comps, lines, feat_paths, grid, way_adj, existing,
             q, visited = deque(), {}
             for pid, d in sorted(seeds, key=lambda x: x[1]):
                 q.append((pid, [pid], 0.0, 0))
-                visited[pid] = 0
+                visited[(pid, voltage_signature([fkv, way_kv(lines, feat_paths, pid)]))] = 0
             while q:
                 pid, route, stitch, max_seam = q.popleft()
                 if len(route) > max_ways:
                     continue
                 mk, dmain = main_contact(feat_paths[pid][1])
+                route_kv = [way_kv(lines, feat_paths, p) for p in route]
                 if mk is not None and frozenset((fk, mk)) not in existing \
                         and kv_ok(way_kv(lines, feat_paths, pid), keys[mk].get("kv")) \
-                        and kv_ok(fkv, keys[mk].get("kv")):
+                        and kv_ok(fkv, keys[mk].get("kv")) \
+                        and route_voltage_compatible([fkv, *route_kv, keys[mk].get("kv")]):
                     cand = {"n_ways": len(route), "stitch_m": round(stitch * 1000),
                             "max_seam_m": max_seam, "route": route, "fk": fk, "mk": mk,
+                            "way_voltage_kv": route_kv,
                             "d_frag_m": round(min_dist_to_path(
                                 fk, feat_paths[route[0]][1]) * 1000),
                             "d_main_m": round(dmain * 1000)}
@@ -257,11 +261,13 @@ def find_chains(island, keys, comps, lines, feat_paths, grid, way_adj, existing,
                         best = cand
                     break
                 for pid2, (a1, a2, gap) in way_adj.get(pid, {}).items():
-                    if gap > seam_m or pid2 in visited:
+                    next_kv = way_kv(lines, feat_paths, pid2)
+                    signature = voltage_signature([fkv, *route_kv, next_kv])
+                    if gap > seam_m or pid2 in route or (pid2, signature) in visited:
                         continue
-                    if not kv_ok(way_kv(lines, feat_paths, pid2), fkv):
+                    if not route_voltage_compatible(signature):
                         continue
-                    visited[pid2] = len(route)
+                    visited[(pid2, signature)] = len(route)
                     q.append((pid2, route + [pid2], stitch + gap / 1000.0,
                               max(max_seam, gap)))
         if best is None:

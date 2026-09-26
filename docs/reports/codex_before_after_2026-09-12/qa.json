@@ -1,0 +1,44 @@
+{
+  "assets": 92,
+  "before_pages": 41,
+  "after_pages": 30,
+  "files": 43,
+  "method_cases": 8,
+  "slide_guides": 30,
+  "record_counts": {
+    "line_voltage_mismatches": 457,
+    "transformers_without_site_witness": 102,
+    "unknown_line_components": 692,
+    "terminal_voltage_conflicts": 104,
+    "bay_voltage_conflicts": 53,
+    "union_false_main": 3,
+    "recovery": 24,
+    "near_candidates": 132,
+    "geometry_gaps": 256,
+    "main_disagreements": 194,
+    "disjoint_island_edges": 34,
+    "ambiguous_island_edges": 112,
+    "cross_island_coordinate_groups": 39,
+    "self_loops": 2181,
+    "missing_endpoints": 0
+  },
+  "console_errors": [],
+  "responsive_widths": [
+    390,
+    768,
+    1280
+  ],
+  "checked_at": "2026-09-13T00:51:24.225172+00:00",
+  "html_sha256": "36fbe8cb29755dd95a54c0cd20717615dabf6b0a31723d7e00dc338ea80a4605",
+  "command": "python3 scripts/check_before_after_review.py",
+  "browser": "Playwright Chromium headless shell 1208",
+  "visual_review": [
+    "desktop methods + route experiment",
+    "mobile 390px methods",
+    "slide comparison"
+  ],
+  "followup_link_check": {
+    "only_change": "Add link to aerial same-site comparison; all previously checked document content byte-identical after removing this link.",
+    "html_sha256": "36fbe8cb29755dd95a54c0cd20717615dabf6b0a31723d7e00dc338ea80a4605"
+  }
+}

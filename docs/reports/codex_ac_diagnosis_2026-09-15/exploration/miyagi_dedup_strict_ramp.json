@@ -1,0 +1,143 @@
+[
+  {
+    "label": "miyagi_dedup_ramp_0.05",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": true,
+    "served_mw": 2762.5,
+    "vm_min": 0.9995493276583983,
+    "vm_max": 1.0967933393298943,
+    "n_finite": 6254,
+    "loss_mw": 32.55144224264631,
+    "max_line_loading_pct": 65.92404674878144,
+    "max_trafo_loading_pct": 36.427946756359674,
+    "slack_p_mw": -105.57355869797946,
+    "slack_q_mvar": -9.307323642796703,
+    "generator_q_mvar": -13819.93393453087,
+    "iterations": 2,
+    "seconds": 1.27
+  },
+  {
+    "label": "miyagi_dedup_ramp_0.2",
+    "settings": {
+      "algorithm": "nr",
+      "init": "results",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": true,
+    "served_mw": 11050.0,
+    "vm_min": 0.9957055800865818,
+    "vm_max": 1.0945858855055632,
+    "n_finite": 6254,
+    "loss_mw": 89.21816649862706,
+    "max_line_loading_pct": 164.0504223944555,
+    "max_trafo_loading_pct": 53.0371529522134,
+    "slack_p_mw": -463.2818335023594,
+    "slack_q_mvar": 10.660583383767896,
+    "generator_q_mvar": -12584.05256522051,
+    "iterations": 2,
+    "seconds": 0.29
+  },
+  {
+    "label": "miyagi_dedup_ramp_0.4",
+    "settings": {
+      "algorithm": "nr",
+      "init": "results",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": true,
+    "served_mw": 22100.0,
+    "vm_min": 0.9598725917864225,
+    "vm_max": 1.0898348771010555,
+    "n_finite": 6254,
+    "loss_mw": 283.49612388716866,
+    "max_line_loading_pct": 316.34240547376595,
+    "max_trafo_loading_pct": 106.34371879159843,
+    "slack_p_mw": -821.5038890221853,
+    "slack_q_mvar": 37.45850428878821,
+    "generator_q_mvar": -9483.08434996396,
+    "iterations": 1,
+    "seconds": 0.32
+  },
+  {
+    "label": "miyagi_dedup_ramp_0.6",
+    "settings": {
+      "algorithm": "nr",
+      "init": "results",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": true,
+    "served_mw": 33150.0,
+    "vm_min": 0.8950863655551798,
+    "vm_max": 1.0829939426716524,
+    "n_finite": 6254,
+    "loss_mw": 634.8753019540197,
+    "max_line_loading_pct": 473.4275859690058,
+    "max_trafo_loading_pct": 162.07998645560227,
+    "slack_p_mw": -1022.6247171079033,
+    "slack_q_mvar": 64.63187440593069,
+    "generator_q_mvar": -4370.019239472673,
+    "iterations": 1,
+    "seconds": 0.28
+  },
+  {
+    "label": "miyagi_dedup_ramp_0.8",
+    "settings": {
+      "algorithm": "nr",
+      "init": "results",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": true,
+    "served_mw": 44200.0,
+    "vm_min": 0.701086441953727,
+    "vm_max": 1.074192857180702,
+    "n_finite": 6254,
+    "loss_mw": 1222.9852174473176,
+    "max_line_loading_pct": 641.6989401163314,
+    "max_trafo_loading_pct": 227.91932925031722,
+    "slack_p_mw": -987.0147825492545,
+    "slack_q_mvar": 88.23173100373361,
+    "generator_q_mvar": 3996.4416488043807,
+    "iterations": 3,
+    "seconds": 0.34
+  },
+  {
+    "label": "miyagi_dedup_ramp_0.9",
+    "settings": {
+      "algorithm": "nr",
+      "init": "results",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 1.94
+  }
+]

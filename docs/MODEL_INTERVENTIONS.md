@@ -127,6 +127,8 @@ east のACが発散し、#17 の prune が網の9割を切断した見せかけ�
 
 > **#34追補3(2026-09-02・第三波・継ぎ目緩和・部分適用)**: `hunt_fragment_third_wave.py` で way 連鎖の継ぎ目閾値を 60m→**200m** に緩め(120/200/300m 段で計測・300m 段は迂回棄却が増えるため個別採用に回す)、創作防止ゲート=電圧整合 ≤25%・迂回係数 ≤1.5・跨島双子(断片過半 or 端点座標)は回収せず再属性へ。ドライラン候補 68 本(hokkaido 3・east 17・west 48)のうち **hokkaido/west の 51 本を正典適用**(`--islands hokkaido west --write`)。効果=定義(i) 断片成分 hokkaido 24→21・west 403→355(計 601→**550**)・本系統 +97 ノード・周波数跨ぎ枝 99 不変・ゲート: hokkaido ピーク AC 不変(slack 820.8MW)・west ピーク AC 維持(slack 9,280→9,306MW・+26 ≤ +50 基準)(`uc_pf_built_{hokkaido,west}_sel_frag3_2026-09-02.json`)。**east の 17 本は適用保留**: 全 68 本を適用した試行で east ピーク AC が dc_fallback に退行した(`uc_pf_built_east_sel_frag3_rejected_2026-09-02.json`・復元して部分適用に切替)。kv 不明(0)の断片 46 本を含むため、east 側は連鎖ごとの個別判読(どの 1 本が NR を壊すか)が先。①根拠=OSM 実線形+接触/継ぎ目/迂回の帳簿(各枝 `disclosure` 文+`fragment_third_wave_2026-09-02.json`) ②帳簿=同 JSON(棄却理由別件数込み) ③無効化=`recovery="osm_chain3"` マーカー除去 / `all.json.pre_frag3.bak`(gitignore) / git revert。regen 耐性: STEPS/Snakefile **未組込**(再構築時は再適用が要る)。同一敷地同定 5 件は承認待ち提案(`same_site_proposals_2026-09-02.yaml`・approved:false)。
 
+> **#34追補4（2026-09-12・電圧不明の連鎖判定バグ修正・正典未再適用）**: storyの接続レビューで、第二・第三波が「始点電圧不明→66 kV way→154 kV way→154 kV本系統」を受理することを再現。`connection_voltage.py` の共通ガードで両端・全wayの既知電圧を保持し、既存25%許容幅を経路全体で照合するよう修正した。探索状態に電圧情報を含め、候補に `way_voltage_kv` を記録。①根拠=両回収器の異電圧拒否・同電圧維持の回帰テスト ②帳簿=[接続レビュー](reports/codex_connection_audit_2026-09-12/REVIEW.md)とSHA付き監査JSON ③無効化=コード差分のrevert。関連19テスト通過。既存回収枝の異電圧幾何共有24件は併架・重複wayを含み得る確認候補で、誤接続の確定件数ではない。今回 `--write` は実行せず、正典の設備・接続は変更していない。
+
 > **#44 追補(2026-09-03・端点別名と未照合の分類)**: > **#44 追補（2026-09-03・端点別名表）**: 公表資料の端点表記を正典の変電所名へ寄せる別名表
 > `data/reference/tepco_endpoint_aliases.json`（31 件・九州の設備番号プレフィックス「32武雄」型・
 > 全件 `evidence` 必須・`confidence: low` は既定で不使用）と、変電所でない表記
