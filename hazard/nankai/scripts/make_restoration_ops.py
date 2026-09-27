@@ -155,8 +155,9 @@ def mutual_aid(I, cfg, crews_base, jobs_by_zone):
     return dict(r=r, backlog=backlog, senders=senders, receivers=recv, targets=targets, convoys=convoys, hq=hq)
 
 
-def run_queues(I, bases, cfg, aid, crews_base, dt=1 / 24, horizon=400.0):
-    """エリアごとの待ち行列(非割込み・優先順 = 電圧↓→需要↓)。容量 = floor(地元の稼働可能班 + 到着済み応援)。"""
+def run_queues(I, bases, cfg, aid, crews_base, dt=1 / 24, horizon=400.0, key=None):
+    """エリアごとの待ち行列(非割込み・優先順 = 電圧↓→需要↓)。容量 = floor(地元の稼働可能班 + 到着済み応援)。
+    key: (島, job) → 並べ替えキー。None なら電圧↓→需要↓(build_queue_tool.py が別の優先順位を試すのに使う)。"""
     tg = np.arange(0.0, horizon + dt / 2, dt)
     eff, _, _ = availability(bases, I, cfg, tg)
     patrol = float(val(cfg["patrol_d"])); ret = float(val(cfg["mutual_aid"]["return_after_clear_d"]))
@@ -164,7 +165,7 @@ def run_queues(I, bases, cfg, aid, crews_base, dt=1 / 24, horizon=400.0):
     res = {}
     for z in zones:
         jobs = [(isl, j) for isl, D in I.items() for j in D["d"].jobs if j["zone"] == z]
-        jobs.sort(key=lambda x: (-float(x[1].get("kv", 0)), -float(x[1].get("load_mw", 0))))
+        jobs.sort(key=key or (lambda x: (-float(x[1].get("kv", 0)), -float(x[1].get("load_mw", 0)))))
         local = eff[[k for k, B in enumerate(bases) if B["zone"] == z]].sum(0)
         cz = [c for c in aid["convoys"] if c["zone"] == z]
         n = len(jobs); qi = 0; run = []; done = {}; t_clear = None
