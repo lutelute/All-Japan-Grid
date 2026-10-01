@@ -908,3 +908,8 @@ input[type="range"]{ accent-color:var(--p-acc); }
     /* Ybusタブ: 図+統計の2カラムを1カラム化 */
     #ybus-viewer { grid-template-columns: 1fr !important; }
 }
+
+/* 暗い背景地図: 地理院・淡色を反転(CARTO dark_all が API キー必須になったため・2026-10) */
+.agj-dark-tiles { filter: invert(1) hue-rotate(180deg) brightness(.78) contrast(.95) saturate(.35); }
+/* タイルが届く前の地色も暗く(既定の明るい灰色が一瞬光らないように) */
+.leaflet-container { background: #1c1f25; }

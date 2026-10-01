@@ -201,9 +201,11 @@ function initMap() {
         preferCanvas: true,
     });
 
-    var cartoLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 19,
+    // CARTO dark_all は 2026 年から API キー必須になり「API KEY REQUIRED」画像を返す。キー不要の地理院・淡色を CSS で反転して暗くする(css/style.css の .agj-dark-tiles)。
+    var darkLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+        maxZoom: 18,
+        className: "agj-dark-tiles",
     });
     var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
@@ -226,7 +228,7 @@ function initMap() {
         maxZoom: 17,
     });
     var BASE_LAYERS = {
-        "Dark (CartoDB)": cartoLayer,
+        "ダーク (地理院 淡色)": darkLayer,
         "OSM": osmLayer,
         "地形図 (OpenTopoMap)": topoLayer,
         "衛星 (Google)": satelliteLayer,
@@ -234,7 +236,7 @@ function initMap() {
         "航空写真 (国土地理院)": gsiPhotoLayer,
     };
     var BASE_KEY = "agj_basemap";
-    var DEFAULT_BASE = "Dark (CartoDB)";
+    var DEFAULT_BASE = "ダーク (地理院 淡色)";
     var savedBase = null;
     try { savedBase = localStorage.getItem(BASE_KEY); } catch (e) {}
     (BASE_LAYERS[savedBase] || BASE_LAYERS[DEFAULT_BASE]).addTo(map);
