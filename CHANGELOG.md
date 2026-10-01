@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Pages dashboard — one entry point for every tool** (`docs/index.html`, `docs/data/tools_catalog.json`,
+  `scripts/build_dashboard_data.py`, `tests/test_pages_dashboard.py`): the site root is now a lightweight dashboard
+  (no map library) with status tiles, a searchable tool catalogue (browser / local server / CLI), recent reports and
+  browsable review bundles; the map moved to `docs/map.html` and accepts `#tab-…` deep links. An inventory had found
+  eight pages with no way back, two pages reachable from nowhere, and hard-coded figures that had gone stale
+  (`v1.6.0`, "17,333 buses", "a reduced ~2,189-bus model" for a tab that has shown the full 17,745-bus model since
+  June). Numbers are now read from generated JSON at load time, every standalone page links back, and the test
+  fails when a page is added without a catalogue entry or a catalogue link goes dead.
 - **Intervention #43a — implicit step-down transformers at class-mismatched line endpoints**
   (`src/powerflow/stepdown_gap.py`, default ON): where a 66 kV line was attached straight to a 275 kV busbar
   (Shin-Yodo line into Shinjuku, Nishi-Shinjuku, Nishi-Sugamo …), a same-site low-voltage bus and a step-down
@@ -191,6 +199,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matching the paper's own table — was a Known Issue since v1.5.0).
 
 ### Fixed
+- **Live flow map had been frozen for nine days** (`scripts/realtime_publish.sh`, `scripts/realtime_cycle.sh`):
+  the hourly cycle committed to whatever branch the working tree had checked out and then pushed `main`, so while the
+  tree sat on a feature branch the snapshots piled up there and Pages kept serving 2026-09-12. It also ran
+  `git pull --rebase origin main` on that feature branch. Publishing now goes through a sparse worktree pinned to
+  `origin/main` (~22 MB), independent of the working tree's HEAD; the dashboard's realtime tile turns amber after
+  6 h and red after 30 h so a stall is visible.
 - **Sourced-capacity name matching painted thermal/nuclear capacities onto same-named solar features**
   (`scripts/apply_capacity_sources.py`): a fuel-type gate now rejects incompatible name matches unless the record
   only lowers the capacity. Removes 13.6 GW of phantom "solar" in east (Takasaki "高浜発電所" ← Takahama nuclear

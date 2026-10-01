@@ -89,7 +89,7 @@ jq '.islands.west' docs/data/powerflow_full/summary.json
 | # | 不整合 | 出典 |
 |---|---|---|
 | 1 | summary west=収束 vs WHITEPAPER/README/ieej/WEST_AC_ANALYSIS=非収束 | summary.json `.islands.west`; WHITEPAPER.md:961; README.md:127; papers/ieej.tex:740; docs/WEST_AC_ANALYSIS.md:120 |
-| 2 | ナラティブ内部分裂: PLAN_NEXT は west収束、他は非収束 | docs/PLAN_NEXT.md:20 vs WHITEPAPER/README/ieej |
+| 2 | ナラティブ内部分裂: PLAN_NEXT は west収束、他は非収束 | docs/archive/plans/PLAN_NEXT.md:20 vs WHITEPAPER/README/ieej |
 | 3 | コードとデータ矛盾: batch_solve.py「west AC非収束が確定→DC」 vs summary ac_converged=true | src/powerflow/batch_solve.py |
 | 4 | バス数 10193(full) vs 約8400(旧ゾーナル) | summary._meta vs WHITEPAPER.md:961, WEST_AC_ANALYSIS.md:4 |
 | 5 | 断片化の三重不整合: PFモデル2531 vs 同summary内 audit 544/main8782 vs WEST_AC_ANALYSIS 52成分/98%被覆 | summary `.connectivity_audit_db2.per_island.west`; WEST_AC_ANALYSIS.md:21 |
@@ -129,4 +129,4 @@ grep -rn 'powerflow_full|per-component|10193|2531' README.md WHITEPAPER.md paper
 - `scripts/run_full_powerflow_from_db.py`(L144-169 build skip, L312-342 add_per_component_slacks, L367-388 solve_island, L489 --max-ac-buses default=6000, L534-535 永続化)
 - `src/powerflow/batch_solve.py`(L34-46 ソルバ梯子, L53-55 q_lims記録, 「west島AC非収束が確定」コメント)
 - `src/powerflow/transforms.py`(L541-582 prune_dc_infeasible, L596-601 非物理スタブ線→1632%過負荷)
-- `WHITEPAPER.md`:961 / `README.md`:127 / `papers/ieej.tex`:740 / `docs/WEST_AC_ANALYSIS.md`:1,21,120 / `docs/PLAN_NEXT.md`:20 / `scripts/regenerate_all.py`:39
+- `WHITEPAPER.md`:961 / `README.md`:127 / `papers/ieej.tex`:740 / `docs/WEST_AC_ANALYSIS.md`:1,21,120 / `docs/archive/plans/PLAN_NEXT.md`:20 / `scripts/regenerate_all.py`:39

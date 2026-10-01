@@ -37,6 +37,10 @@ jobs:
       - name: Fast suite (regression pins)
         if: github.event_name != 'schedule'
         run: python -m pytest -q
+      # README の数字(規模・介入件数・版)はデータから cog で生成している。モデルを作り直して
+      # 数字が変わったのに README を書き直していなければ落ちる → `cog -I . -r README.md` で直す
+      - name: README numbers match the data
+        run: python -m cogapp -I . --check README.md
       - name: Full suite incl. 10-region solved sweep (weekly)
         if: github.event_name == 'schedule'
         env:

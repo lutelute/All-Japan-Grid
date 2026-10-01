@@ -1,0 +1,94 @@
+{
+ "generated_at": "2026-10-01T16:42:43Z",
+ "version": "1.8.0",
+ "dataset_version": "1.7.0",
+ "model": {
+  "n_nodes": 17841,
+  "n_edges": 19529,
+  "main_size": 11695,
+  "n_components": 962,
+  "n_island_nodes": 1985,
+  "n_stitch": 158,
+  "n_tie": 6,
+  "islands": {
+   "hokkaido": 38,
+   "east": 320,
+   "west": 597,
+   "okinawa": 7
+  },
+  "n_regions": 10,
+  "model_version": "cd20614",
+  "generated_at": "2026-09-02T16:32:52+00:00",
+  "osm_newest": "2026-06-15T14:25:30Z"
+ },
+ "interventions": 40,
+ "reports": {
+  "total": 139,
+  "dated": 137,
+  "recent": [
+   {
+    "date": "2026-09-21",
+    "title": "併架線の回線数を、線路名ごとの証拠で電圧クラスに配る(ビルダー修正)",
+    "path": "docs/reports/mixed_voltage_circuits_builder_2026-09-21.md"
+   },
+   {
+    "date": "2026-09-13",
+    "title": "南海トラフ巨大地震 電力ハザードマップ v0 — 解析ベース(A)とポテンシャル法(B)",
+    "path": "docs/reports/nankai_power_hazard_v0_2026-09-13.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）",
+    "path": "docs/reports/tepco_endpoint_unresolved_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "介入#43a 変圧器の銘板化ワークリスト — なぜ 0/71 だったのか（2026-09-03）",
+    "path": "docs/reports/stepdown_nameplate_worklist_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "線路容量の理論値を公表値で較正する — 全国版（2026-09-03）",
+    "path": "docs/reports/line_capacity_calibration_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "端点別名表を入れると照合はどう変わるか（ドライラン・2026-09-03）",
+    "path": "docs/reports/circuit_sources_alias_dryrun_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "west 多機動揺モデルの AC 運転点化 — フラット vs 運転点込み・最大機解列(2026-09-02)",
+    "path": "docs/reports/swing_modes_west_ac_2026-09-02.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "降圧点欠損の census と介入#43 のゲート（2026-09-02）",
+    "path": "docs/reports/stepdown_gap_census_2026-09-02.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "介入#40 再判定 — 全国メッシュ整備後の人口傾斜 ON/OFF (2026-09-02)",
+    "path": "docs/reports/pop_tilt_rejudge_2026-09-02.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "N-1 全枝スクリーニング — LODF で全枝開放を一括評価（2026-09-02）",
+    "path": "docs/reports/n1_screening_2026-09-02.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "介入#42 混在県個別化 — 採用ゲート(2026-09-02)",
+    "path": "docs/reports/mixed_pref_gate_2026-09-02.md"
+   },
+   {
+    "date": "2026-09-02",
+    "title": "線路容量の理論値を公表値で較正する — 全国版（2026-09-02）",
+    "path": "docs/reports/line_capacity_calibration_2026-09-02.md"
+   }
+  ]
+ },
+ "bundles": [],
+ "n_scripts": 233,
+ "n_test_files": 92
+}

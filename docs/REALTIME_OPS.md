@@ -11,7 +11,7 @@
 3. `export_flow_map_data.py --realtime` — **実績需要にスケールした NOW 断面 PF**
    → `flows_now_*.geojson` / `gens_now_*.geojson` / `now_meta.json`
 4. `export_day_flows.py` — 日別断面（時刻別の再生用アーカイブ）
-5. `slim_flow_map.py` → `git commit` + `push`（Pages へ反映）
+5. `slim_flow_map.py` → `realtime_publish.sh`（main 専用の疎な worktree から commit + push → Pages へ反映）
 
 ## 自動実行
 
@@ -49,6 +49,13 @@ plist の原本は `scripts/realtime_launchd.plist`（パスを埋めて `~/Libr
   2026-08-28 に介入#35/#36 後の再生成漏れで実際に発生した。
 - 停止に気づきにくい。`docs/data/realtime/latest.json` の `fetched_at` が
   数時間以上古ければ止まっている。
+  ダッシュボード（`docs/index.html`）の「リアルタイム断面」タイルが、6 時間超で黄、30 時間超で赤になる。
+- **作業ツリーのブランチに依存していた（2026-09-21 修正）**。旧版は「いまチェックアウト中のブランチ」に
+  commit して `git push origin main` していたため、作業ツリーが feature ブランチにある間は commit が
+  そのブランチに積もるだけで Pages に出ず、9/12〜9/21 の 9 日間 NOW 断面が止まっていた。
+  現在は `scripts/realtime_publish.sh` が `data/realtime/.publish`（main 専用・公開パスだけの疎な
+  worktree・約 22 MB）から公開するので、作業ツリーの HEAD に関係なく main へ出る。
+  動作確認は `AGJ_REALTIME_NO_PUSH=1 bash scripts/realtime_publish.sh`（commit まで・push しない）。
 
 ---
 
