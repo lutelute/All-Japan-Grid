@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """GitHub Pages 用エディタ(docs/editor.html)を **単一の正** から派生生成する。
 
-全面改修Phase5フル統合の確定設計(docs/OVERHAUL_PLAN.md「静的shim方式」):
+全面改修Phase5フル統合の確定設計(docs/archive/plans/OVERHAUL_PLAN.md「静的shim方式」):
   正は1つ = src/server/templates/editor.html(フル機能の :8088 エディタ)。:8088 は無改修。
   本スクリプトは同テンプレを読み、
     (a) 絶対アセットパス(/js/, /static/)を Pages 相対へ rewrite、

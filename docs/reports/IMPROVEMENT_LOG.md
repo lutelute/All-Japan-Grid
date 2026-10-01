@@ -1839,7 +1839,7 @@ worklist(既設500kV 206サイト)の充填を開始。詳細 = `docs/reports/tr
 
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修 Phase5 フル統合: Pagesエディタを:8088の正から派生(静的shim方式)（142）
 
-オーナー「Phase5のフル統合を一緒にやろう」。Pages編集タブが:8088から分岐したlossyコピー(見た目/データ/連結性ズレ)だった問題の**最終解決**。確定設計=`docs/OVERHAUL_PLAN.md`「静的shim方式」。
+オーナー「Phase5のフル統合を一緒にやろう」。Pages編集タブが:8088から分岐したlossyコピー(見た目/データ/連結性ズレ)だった問題の**最終解決**。確定設計=`docs/archive/plans/OVERHAUL_PLAN.md`「静的shim方式」。
 
 - **正は1つ = `src/server/templates/editor.html`(フル機能の:8088エディタ)。:8088は無改修**(git でテンプレ unchanged を証明=作り込み完全保存)。Pages版は**ビルドで派生**する構成に一本化 → 二度と分岐しない。
 - **`docs/js/editor_static_shim.js`(新規)**: backend無し(Pages)で `window.fetch` を上書きし `/api/*` を静的等価へ振替。**肝=レスポンス正規化**: 事前生成 `data/built/{region}.json` は counts を `stats` 内包だがフロントはトップレベルで読む(L274/L358)→ shim が `stats` を展開(これが「全国undefined/無茶苦茶接続」級バグの構造的解消)。per-region生OSMは公開済 `built/{region}.json` から**軽量合成**(変電所リング+回廊線=fit復活・snap点6万・基底extract非静的化)、全国概観は既存tier(`subs/lines_all.geojson`+min_kv)。下書きCRUD=localStorage、verify/adopt=backend専用ゆえDOM非表示、issue=GitHubプレフィルURL(捏造せず人間がGitHubで作成)。`__AGJ_STATIC__=true`。
@@ -1849,7 +1849,7 @@ worklist(既設500kV 206サイト)の充填を開始。詳細 = `docs/reports/tr
 
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修 一気通貫: Phase1(破壊封鎖)/Phase4(出力統一)/Phase5(共有エディタコア)（141）
 
-オーナー「あとは一気通貫で」(残Phase1/4/5)。`docs/OVERHAUL_PLAN.md`。
+オーナー「あとは一気通貫で」(残Phase1/4/5)。`docs/archive/plans/OVERHAUL_PLAN.md`。
 
 - **Phase1 破壊enrich封鎖**: `scripts/enrich_*.py`(in-place 6本)+`fix_plant_capacity`/`restore_missing_plants`/`slim_geojson` の**9本**に `__main__` fail-fast ガード(`data/*.geojson` 直書きを拒否し `ajgrid db enrich`=DB-native へ誘導・`AGJ_ALLOW_BASE_WRITE=1` で解除)。削除でなくガード(docs/tests が関数 import=不破壊・91 passed)。**基底extract不変を構造保証**(実行時ガード+`test_db_source_unified` の drift 検知の二重)。
 - **Phase4 出力の単一オーケストレーション**: `scripts/regenerate_all.py`(build_editor_data→powerflow→matpower→cim→build_static_site を1コマンド・重い段は `--skip-*`/`--light`)+ `docs/data/MODEL_VERSION.json`(git HEAD刻印=skew可視化)。`deploy-pages.yml` trigger に builder/connectivity/built_view/build_editor_data/regenerate_all を追加。OSM地図4/23 vs built6/16 の7週間skewを「一括再生成+版可視化」で解消。
@@ -1858,7 +1858,7 @@ worklist(既設500kV 206サイト)の充填を開始。詳細 = `docs/reports/tr
 
 ## 2026-06-17 — **Claude Opus 4.8** — 全面改修: 正を1つに(Phase2 DB正化=既達の固定 / Phase3 連結性一本化)（140）
 
-オーナー「全面改修(エディタ以外も含め全体見直し)」→「DB正化を核に先に」→「Phase3」。核心=正(source of truth)を1つに。`docs/OVERHAUL_PLAN.md`(3並列調査の実コード根拠)。
+オーナー「全面改修(エディタ以外も含め全体見直し)」→「DB正化を核に先に」→「Phase3」。核心=正(source of truth)を1つに。`docs/archive/plans/OVERHAUL_PLAN.md`(3並列調査の実コード根拠)。
 
 - **Phase 2(DB正化)— 着手して判明: ソースの正は既に統一済み**。永続 `data/grid.db` build ≡ files build が**全10地域で完全同値**(subs/lines/gens署名 ALL MATCH)、committed `data/*.geojson` は全10地域で DB(R⟕C)の忠実なD層export(roundtripクリーン)。→ 正はDBに一本化済み・files はその検証済 reproducible export。`tests/test_db_source_unified.py`(CI-safe全地域roundtrip+ローカルgrid.db build同値)で不変条件化。grid.dbはgitignore(CIはfiles=DB-exportでbuild)ゆえ build既定のDB切替は保留(driftリスクのみ)。**重要: 今回の不統一の真因はソースDBでなく下流(出力生成)**。
 - **Phase 3(連結性一本化)— 本丸**。`built_view_all`(表示)と `national.py`(潮流)で連結性計算が**2系統**(前者=全国一枚・任意階級stitch・タイ無し / 後者=4周波数島・同階級融合・OCCTO ACタイ)→ **Pages島色 ≠ 潮流の島**だった。`src/powerflow/connectivity.py`(共有・軽量・pandapower非依存)を新設: `compute_connectivity` = **4周波数同期島ごと**(東50/西60を別)・**越境同電圧階級stitch~110m**・**OCCTO ACタイ7本**(`national.load_interconnections`=定義の単一の正)。`built_view_all`/`build_editor_data.build_national` が同一権威を消費 → **Pages島色=潮流の島が構造的に一致**。被覆率 national.diagnose 一致(hok90/east88/west85/oki93%)。all.json: 島{hok37/east328/west725/oki6}・main 11423(旧10922)・タイ7・島2161(旧2644)。エディタでACタイを紫破線表示。`tests/test_connectivity.py` 6件。**pytest 1127 passed**(既知okinawa pin3=working-tree supplement由来)。
@@ -2045,7 +2045,7 @@ branch `model-source-unification`。オーナーが嶺南変電所・京北開�
 
 ## 2026-06-15 — **Claude Fable 5** — GridStitch P1a: 分割変電所の統合(group_substations) + 島真因の再診断（122）
 
-- 全面改修=GridStitch(計画 `docs/GRIDSTITCH_PLAN.md`)。P1(母線束縛A/B)の第一歩。
+- 全面改修=GridStitch(計画 `docs/archive/plans/GRIDSTITCH_PLAN.md`)。P1(母線束縛A/B)の第一歩。
 - **P1a `group_substations` opt-in**(snapped_topology・既定off): OSMが1変電所を電圧別/分割ポリゴンで表す
   (沼津=66kV+77kVの2ポリゴン)場合に、同名(接尾辞除去)かつ `group_km`(1km)内のポリゴンを1 canonical sid へ統合。
   A/B(tokyo): bus **4215→4194**(分割変電所21件統合)、線 4670→4642。**島は 263→263(Δ0)**。全地域smoke緑・pytest 1103緑。
@@ -3475,7 +3475,7 @@ branch `model-source-unification`。オーナーが嶺南変電所・京北開�
 
 - **現状確認**: papers/ieej.tex(パイプライン+646機UC+動特性、6/3版PDF済)に
   **外部実測検証の章が無い** — 査読の最大の弱点が今回成果でそのまま埋まる構図
-- **戦略(docs/PAPER_OUTLINE.md)**: ①既存原稿に新節「外部実測による検証」(recall56.3%・
+- **戦略(docs/archive/plans/PAPER_OUTLINE.md)**: ①既存原稿に新節「外部実測による検証」(recall56.3%・
   3層ρ・OCCTO完全一致・限界3因の明示、図3点) ②第2論文=検証方法論
   (計器設計・**訂正事例集㊼/58/㊱が独自性**・負の結果カタログ・閉ループ実証56)
 - 図版5点のTODOと P2〜P5 の割当を確定。台帳がそのまま素材になる構造
@@ -3876,7 +3876,7 @@ branch `model-source-unification`。オーナーが嶺南変電所・京北開�
 
 ## 2026-06-11 — **Fable 5** — 新目標「66kV級」始動: 3層ρベースライン確定（㉛）
 
-- **ユーザー新目標**: 66kVまでの潮流を意味ある形で+DB整備+自律ループ → **docs/PLAN_66KV.md**
+- **ユーザー新目標**: 66kVまでの潮流を意味ある形で+DB整備+自律ループ → **docs/archive/plans/PLAN_66KV.md**
   (KPIゲート: 154≥0.40/66≥0.30/全体≥0.50、運転規則つきチェックリスト)
 - **計器拡張**: 東電154kV(6file)+66kV県別(27file)を**クラス帯マッチング**で計測セット化
   (同名異クラスは衝突扱い)。クラス別ρ分離報告

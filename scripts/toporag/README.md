@@ -1,7 +1,7 @@
 # scripts/toporag — 構造ベクトルによる送電網の類似度
 
 回路のネットリスト類似度（素子種の 1/0・個数 → コサイン）を送電網に一般化した実験器。
-計画は [`docs/TOPORAG_PLAN.md`](../../docs/TOPORAG_PLAN.md)、結果は
+計画は [`docs/archive/plans/TOPORAG_PLAN.md`](../../docs/archive/plans/TOPORAG_PLAN.md)、結果は
 `docs/reports/toporag_phase0_*.md`。
 
 ## 使い方
