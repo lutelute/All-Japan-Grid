@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4", "pytest-cov>=4.1"]
+dev = ["pytest>=7.4", "pytest-cov>=4.1", "cogapp>=3.4"]  # cogapp: README の数字をデータから(cog --check)
 
 [project.urls]
 Homepage = "https://github.com/lutelute/All-Japan-Grid"
