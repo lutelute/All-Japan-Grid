@@ -327,53 +327,6 @@
       "source": "scripts/run_full_powerflow_from_db.py"
     },
     {
-      "id": "ac_diagnosis",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "AC / Ybus 可解性の診断",
-      "summary": "AC が解けない原因を、Ybus と Jacobian の条件数、Q 制約の遷移、注入量ホモトピーの電圧感度から切り分けます。保存済みの診断結果の要約と整合検査もここから。",
-      "command": "python3 scripts/review_ac_solvability.py summary",
-      "tags": [
-        "AC 非収束",
-        "Ybus"
-      ],
-      "doc": "docs/AC_DIAGNOSIS_TOOL.md",
-      "source": "scripts/review_ac_solvability.py",
-      "issue": 53
-    },
-    {
-      "id": "site_review",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "敷地・端子・母線を分けて調べる接続監査",
-      "summary": "同名設備の断片を、元の OSM 設備・航空写真・保存線形・電圧別母線から調べる。座標を一つに寄せると失われる根拠を残したまま、接続の仮説を比べます。",
-      "command": "python3 scripts/site_connection_review.py summary",
-      "tags": [
-        "変電所",
-        "航空写真"
-      ],
-      "doc": "docs/SITE_CONNECTION_REVIEW_TOOL.md",
-      "source": "scripts/site_connection_review.py",
-      "issue": 53
-    },
-    {
-      "id": "circuit_quality",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "計算回路の品質監査",
-      "summary": "異電圧の母線を直結している線路、変電所の裏付けがない生成変圧器、構造 DB の端子電圧の衝突を全国で数え上げます。設備への書き込みはしません。",
-      "command": "PYTHONPATH=. python3 scripts/audit_model_circuit_quality.py",
-      "tags": [
-        "電圧整合",
-        "変圧器"
-      ],
-      "source": "scripts/audit_model_circuit_quality.py",
-      "issue": 53
-    },
-    {
       "id": "ybus_diag",
       "category": "audit",
       "kind": "cli",
@@ -439,5 +392,57 @@
       ],
       "source": "src/server/tools_dashboard.py"
     }
-  ]
+  ],
+  "pending_tools": {
+    "_reason": "PR #58(Codex レビューの取り込み)がマージされるまで、doc/source が main に無い。マージ後に tools へ戻す",
+    "tools": [
+      {
+        "id": "ac_diagnosis",
+        "category": "audit",
+        "kind": "cli",
+        "is_new": true,
+        "title": "AC / Ybus 可解性の診断",
+        "summary": "AC が解けない原因を、Ybus と Jacobian の条件数、Q 制約の遷移、注入量ホモトピーの電圧感度から切り分けます。保存済みの診断結果の要約と整合検査もここから。",
+        "command": "python3 scripts/review_ac_solvability.py summary",
+        "tags": [
+          "AC 非収束",
+          "Ybus"
+        ],
+        "doc": "docs/AC_DIAGNOSIS_TOOL.md",
+        "source": "scripts/review_ac_solvability.py",
+        "issue": 53
+      },
+      {
+        "id": "site_review",
+        "category": "audit",
+        "kind": "cli",
+        "is_new": true,
+        "title": "敷地・端子・母線を分けて調べる接続監査",
+        "summary": "同名設備の断片を、元の OSM 設備・航空写真・保存線形・電圧別母線から調べる。座標を一つに寄せると失われる根拠を残したまま、接続の仮説を比べます。",
+        "command": "python3 scripts/site_connection_review.py summary",
+        "tags": [
+          "変電所",
+          "航空写真"
+        ],
+        "doc": "docs/SITE_CONNECTION_REVIEW_TOOL.md",
+        "source": "scripts/site_connection_review.py",
+        "issue": 53
+      },
+      {
+        "id": "circuit_quality",
+        "category": "audit",
+        "kind": "cli",
+        "is_new": true,
+        "title": "計算回路の品質監査",
+        "summary": "異電圧の母線を直結している線路、変電所の裏付けがない生成変圧器、構造 DB の端子電圧の衝突を全国で数え上げます。設備への書き込みはしません。",
+        "command": "PYTHONPATH=. python3 scripts/audit_model_circuit_quality.py",
+        "tags": [
+          "電圧整合",
+          "変圧器"
+        ],
+        "source": "scripts/audit_model_circuit_quality.py",
+        "issue": 53
+      }
+    ]
+  }
 }

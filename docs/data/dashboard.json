@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-20T17:35:59Z",
+ "generated_at": "2026-10-01T16:42:43Z",
  "version": "1.8.0",
  "dataset_version": "1.7.0",
  "model": {
@@ -21,11 +21,21 @@
   "generated_at": "2026-09-02T16:32:52+00:00",
   "osm_newest": "2026-06-15T14:25:30Z"
  },
- "interventions": 39,
+ "interventions": 40,
  "reports": {
-  "total": 137,
-  "dated": 135,
+  "total": 139,
+  "dated": 137,
   "recent": [
+   {
+    "date": "2026-09-21",
+    "title": "併架線の回線数を、線路名ごとの証拠で電圧クラスに配る(ビルダー修正)",
+    "path": "docs/reports/mixed_voltage_circuits_builder_2026-09-21.md"
+   },
+   {
+    "date": "2026-09-13",
+    "title": "南海トラフ巨大地震 電力ハザードマップ v0 — 解析ベース(A)とポテンシャル法(B)",
+    "path": "docs/reports/nankai_power_hazard_v0_2026-09-13.md"
+   },
    {
     "date": "2026-09-03",
     "title": "介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）",
@@ -75,20 +85,10 @@
     "date": "2026-09-02",
     "title": "線路容量の理論値を公表値で較正する — 全国版（2026-09-02）",
     "path": "docs/reports/line_capacity_calibration_2026-09-02.md"
-   },
-   {
-    "date": "2026-09-02",
-    "title": "IBR 連系可能量 — SCR（系統強度）と熱容量の 2 物差し（2026-09-02）",
-    "path": "docs/reports/ibr_hosting_scr_2026-09-02.md"
-   },
-   {
-    "date": "2026-09-02",
-    "title": "地点別の接続可能量 — 感度行列で一度に出す（calib_2026-09-02）",
-    "path": "docs/reports/hosting_capacity_calib_2026-09-02.md"
    }
   ]
  },
  "bundles": [],
- "n_scripts": 229,
- "n_test_files": 90
+ "n_scripts": 233,
+ "n_test_files": 92
 }
