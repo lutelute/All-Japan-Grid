@@ -56,6 +56,8 @@ jobs:
       # ダッシュボードが読む要約(版・モデル規模・介入件数・最新レポート)を現物から作り直す。
       # HTML へ数字を直書きしないための仕組みなので、deploy のたびに必ず走らせる。
       - run: python scripts/build_dashboard_data.py
+      # スライドの旧版は git にだけ残し、サイトには各デッキの最新版だけ載せる(Pages の上限 1GB 対策)
+      - run: python scripts/prune_pages_slides.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/
