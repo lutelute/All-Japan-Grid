@@ -1,0 +1,201 @@
+<title>南海トラフ電力解析 黒板ノート</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&family=Klee+One:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},svg:{fontCache:'global'},startup:{typeset:true}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+:root{--board:#1f3b34;--board2:#22423a;--frame:#5a3d23;--chalk:#f3efe4;--dim:#c9c3b3;--yel:#ffe08a;--pink:#ffb3c7;--blue:#a9d8ff;--green:#b8f0c8;--paper:#f6f1e3;--ink:#2a2622}
+*{box-sizing:border-box}
+body{margin:0;background:var(--frame);color:var(--chalk);font-family:"Klee One","Zen Kurenaido","Noto Sans JP",sans-serif;font-size:15.5px;line-height:1.75}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
+header{color:#f6e7cf;padding:12px 4px 18px}
+header h1{font-family:"Zen Kurenaido",sans-serif;font-size:30px;margin:0;letter-spacing:.02em}
+header p{margin:6px 0 0;color:#e2cfb3;font-size:14px;max-width:70ch}
+nav{display:flex;flex-wrap:wrap;gap:6px 10px;margin:8px 0 18px}
+nav a{color:#f6e7cf;text-decoration:none;font-size:12.5px;padding:3px 8px;border:1px solid rgba(246,231,207,.35);border-radius:14px}
+nav a:hover,nav a:focus-visible{background:rgba(246,231,207,.15);outline:none}
+.board{background:radial-gradient(ellipse at 20% 10%,var(--board2),var(--board) 70%);border:10px solid var(--frame);border-radius:8px;box-shadow:inset 0 0 60px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.35);padding:22px 26px 20px;margin:0 0 26px;position:relative}
+.board::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:6px;background:#3d2a18;border-radius:0 0 6px 6px}
+.board h2{font-family:"Zen Kurenaido",sans-serif;font-size:24px;margin:0 0 4px;color:var(--yel);font-weight:400}
+.board h2 small{font-size:13px;color:var(--dim);margin-left:10px;font-family:"IBM Plex Mono",monospace}
+.board h3{font-family:"Zen Kurenaido",sans-serif;font-size:18px;margin:14px 0 4px;color:var(--pink);font-weight:400}
+.board p{margin:6px 0}
+.eq{margin:10px 0 6px;padding:10px 12px;border-left:3px solid rgba(255,224,138,.5);font-size:17px;overflow-x:auto}
+mjx-container[display="true"]{margin:6px 0 !important}
+.sym{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;margin:6px 0 4px;font-size:14.5px}
+.sym span:nth-child(odd){color:var(--blue);font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+.ex{background:rgba(255,255,255,.06);border:1px dashed rgba(243,239,228,.35);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:14.5px}
+.ex b{color:var(--green);font-weight:600}
+.why{color:var(--chalk);margin:8px 0}
+.why b{color:var(--yel);font-weight:600}
+.step{font-size:12.5px;color:var(--dim);margin-top:8px;font-family:"IBM Plex Mono",monospace}
+.chalk-note{position:absolute;right:18px;top:16px;font-family:"Zen Kurenaido",sans-serif;color:var(--pink);font-size:13px;transform:rotate(-2deg)}
+.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+svg.sk{max-width:100%;height:auto;display:block;margin:8px 0}
+svg.sk text{font-family:"Klee One",sans-serif;font-size:12px;fill:#f3efe4}
+.footer{color:#e2cfb3;font-size:12.5px;padding:8px 4px}
+.footer a{color:#ffe08a}
+@media (max-width:600px){.board{padding:16px 14px}.board h2{font-size:21px}.eq{font-size:15px}.chalk-note{position:static;transform:none;margin-bottom:6px}}
+</style>
+<div class="wrap">
+<header>
+<h1>南海トラフ電力解析 黒板ノート</h1>
+<p>解析パイプライン 10 段と資源勘定の数式を、①式 ②記号 ③なぜその形か ④実際のトレース（west・seed 7）の数字での計算例 ⑤「1手ずつ」ビューアでの対応 の順に板書する。値はすべて実装（hazard/nankai）と同じ。</p>
+<nav>
+<a href="#b1">1 距離減衰式</a><a href="#b2">2 震度と PGA</a><a href="#b3">3 空間相関ノイズ</a><a href="#b4">4 脆弱性曲線</a><a href="#b5">5 鉄塔の直列系</a><a href="#b6">6 停止率曲線の逆変換</a><a href="#b7">7 連結成分</a><a href="#b8">8 需給と周波数</a><a href="#b9">9 比例遮断</a><a href="#b10">10 DC 潮流</a><a href="#b11">11 過負荷連鎖と LODF</a><a href="#b12">12 復旧のスケジューリング</a><a href="#b13">13 モンテカルロ</a><a href="#b14">14 ポテンシャル法</a><a href="#b15">15 資源勘定</a>
+</nav>
+</header>
+
+<section class="board" id="b1"><div class="chalk-note">板書 1 / 15</div>
+<h2>距離減衰式（GMPE）<small>hazard_field.GMPEField.median</small></h2>
+<p>断層から距離 $X$ の地点で、地震動（最大速度 PGV）がどれだけになるかを、過去の観測記録の回帰で表した式。J-SHIS の実データが無いときの感度ケースに使う。</p>
+<div class="eq">$$\log_{10}\mathrm{PGV}_{600} \;=\; 0.58\,M_w \;+\; 0.0038\,D \;-\; 1.29 \;-\; \log_{10}\!\big(X + 0.0028\cdot 10^{0.5M_w}\big) \;-\; 0.002\,X$$</div>
+<div class="sym"><span>PGV₆₀₀</span><span>Vs=600 m/s の硬い地盤での最大速度 [cm/s]。地表値は増幅率 $A$（既定 1.6）を掛ける</span><span>M_w</span><span>モーメントマグニチュード。式は Mw 8.3 程度までの回帰なので有効値 8.5 で飽和させる</span><span>D</span><span>断層の代表深さ [km]（20）</span><span>X</span><span>断層面までの最短距離 [km]。近似震源域の多角形からの水平距離と深さの合成</span><span>0.0028·10^{0.5Mw}</span><span>近距離での飽和項。Mw が大きいほど震源直上でも無限大にならない</span></div>
+<p class="why"><b>なぜ log10 か。</b>地震動は距離とともに幾何減衰（$1/X$ の項 = $-\log_{10}X$）と内部減衰（$-0.002X$、岩の摩擦で失われる）で小さくなる。掛け算の関係は対数を取ると足し算になり、回帰が一次式で書ける。</p>
+<div class="ex"><b>例: 静岡変電所 500 kV。</b>$X = 27.1$ km, $M_w = 8.5$, $D = 20$。飽和項 $0.0028\cdot10^{4.25} = 49.8$。<br>$\log_{10}\mathrm{PGV}_{600} = 4.93 + 0.076 - 1.29 - \log_{10}(76.9) - 0.054 = 1.776$ → PGV₆₀₀ = 59.7 cm/s → 地表 PGV = 59.7 × 1.6 = <span class="num">95.5 cm/s</span>。</div>
+<p class="step">1手ずつ: 手 1「地震動場をサンプル」。J-SHIS 場を使うときは、この式の代わりにメッシュ値を引く。</p>
+</section>
+
+<section class="board" id="b2"><div class="chalk-note">板書 2 / 15</div>
+<h2>計測震度と PGA への換算<small>pgv_to_intensity / pgv_to_pga_g</small></h2>
+<div class="eq">$$I \;=\; 2.002 \;+\; 2.603\,\log_{10}\mathrm{PGV} \;-\; 0.213\,(\log_{10}\mathrm{PGV})^2 \qquad\text{（藤本・翠川 2005）}$$
+$$\mathrm{PGA}\,[g] \;=\; \frac{\mathrm{PGV}\cdot r(\mathrm{PGV})}{980.665},\qquad r = \mathrm{clip}\big(14 - 3\log_{10}\mathrm{PGV},\;6,\;14\big)\ [1/\mathrm{s}]$$</div>
+<div class="sym"><span>I</span><span>計測震度（実数）。4.5〜5.0 が 5弱、5.0〜5.5 が 5強、5.5〜6.0 が 6弱、6.0〜6.5 が 6強、6.5 以上が 7</span><span>r</span><span>PGA/PGV 比。大地震の遠方記録は長周期が多く比が小さい（6〜14 1/s）。この換算は仮定で、脆弱性曲線の日本補正と切り離せない</span></div>
+<p class="why"><b>なぜ二次式か。</b>震度は PGV の対数にほぼ比例するが、大きい側で頭打ちになる。二次の項がその曲がりを表す。逆に $I$ から PGV を戻すときは二次方程式の小さい方の根を取る（J-SHIS の震度から PGV を復元するときに使う）。</p>
+<div class="ex"><b>例（続き）。</b>PGV = 95.5 → $\log_{10}$ = 1.980 → $I = 2.002 + 5.154 - 0.835 = $ <span class="num">6.32</span>（6強）。$r = 14 - 5.94 = 8.06$ → PGA = 95.5 × 8.06 / 980.665 = <span class="num">0.79 g</span>。</div>
+<p class="step">1手ずつ: 手 1 の中で全母線に一括適用。</p>
+</section>
+
+<section class="board" id="b3"><div class="chalk-note">板書 3 / 15</div>
+<h2>空間相関ノイズ<small>correlated_noise</small></h2>
+<p>同じ地震でも、地点ごとに地震動は式の値からばらつく。しかも隣り合う地点は同じ方向にばらつく（相関がある）。これを入れないと「隣の変電所が偶然両方壊れる」確率を過小に見積もる。</p>
+<div class="eq">$$\mathrm{PGV}_i^{(s)} \;=\; \overline{\mathrm{PGV}}_i \cdot 10^{\,\sigma\,\eta_i^{(s)}},\qquad \eta^{(s)} \sim \mathcal N(0,1),\quad \mathrm{Corr}(\eta_i,\eta_j)\ \text{が距離 } 25\,\mathrm{km}\ \text{程度で減衰}$$</div>
+<div class="sym"><span>σ</span><span>地震内ばらつき（log10）。J-SHIS 場 0.12、GMPE 場 0.20（＋地震間 0.12 を全点共通に）</span><span>η</span><span>粗い格子に白色雑音を置き、ガウス平滑化して補間、分散 1 に正規化した場</span></div>
+<p class="why"><b>なぜ対数正規か。</b>地震動の残差は観測上、対数を取ると正規分布に近い。正の値しか取らないこととも整合する。</p>
+<div class="ex"><b>例。</b>$\sigma = 0.12$ なら $10^{\pm0.12} = $ ×1.32 / ×0.76。震度に直すとおよそ ±0.3。トレースの手 1 で「6強 1128、7 204 母線」となったのは、期待値場（6強 1030、7 70）にこのノイズが乗った結果。</div>
+<p class="step">1手ずつ: 手 1。</p>
+</section>
+
+<section class="board" id="b4"><div class="chalk-note">板書 4 / 15</div>
+<h2>脆弱性曲線（対数正規）と停止判定<small>fragility.p_exceed / substation_pout</small></h2>
+<div class="eq">$$P(\mathrm{DS}\ge k \mid \mathrm{PGA}) \;=\; \Phi\!\left(\frac{\ln(\mathrm{PGA}/\theta_k)}{\beta_k}\right),\qquad \theta_k = \alpha\,\theta_k^{\mathrm{HAZUS}},\ \alpha = 5$$
+$$P_{\mathrm{out}} \;=\; \sum_{k=1}^{4}\Big[P(\mathrm{DS}\ge k) - P(\mathrm{DS}\ge k{+}1)\Big]\,q_k,\qquad q = (0,\ 0.3,\ 1,\ 1)$$
+$$\text{判定: } u \sim U(0,1),\quad u < P_{\mathrm{out}} \;\Rightarrow\; \text{停止}$$</div>
+<div class="sym"><span>Φ</span><span>標準正規分布の累積分布関数</span><span>θ_k</span><span>損傷状態 k に「半分の確率で達する」PGA（中央値）。HAZUS の変電所表（≥275 kV: 0.11/0.15/0.20/0.47 g）</span><span>β_k</span><span>対数標準偏差。曲線の緩さ（0.35〜0.7）</span><span>α</span><span>日本補正。JEAG 5003 の耐震設計と熊本・東北の機能停止率（数%）に合わせて 5</span><span>q_k</span><span>損傷状態 k で機能停止する確率。moderate は 3 割、extensive 以上は確実</span></div>
+<p class="why"><b>なぜ対数正規か。</b>「壊れる強さ」が多数の要因の積で決まると考えると、対数を取れば和になり中心極限定理で正規になる。$\Phi$ の中身は「PGA が中央値の何倍か」を $\beta$ で割った標準化変数。<b>なぜ差を取るか。</b>$P(\mathrm{DS}\ge k)$ は累積なので、ちょうど k である確率は隣との差。</p>
+<div class="ex"><b>例: 275 kV の変電所、PGA = 0.60 g。</b>$\theta\times5 = (0.55, 0.75, 1.00, 2.35)$。$P(\mathrm{DS}\ge k) = (0.569, 0.310, 0.072, 0.000)$ → $P(\mathrm{DS}=k) = (0.259, 0.238, 0.072, 0.000)$ → $P_{\mathrm{out}} = 0.238\times0.3 + 0.072 + 0 = $ <span class="num">0.144</span>。<br><b>トレースの手:</b> 海部開閉所（275 kV）は震度 6.4 → PGA 0.88 g → $P_{\mathrm{out}} = 0.445$、$u = 0.210 < 0.445$ で停止（DS3）。川口町五丁目変電所は PGA 1.14 g → 0.703、$u = 0.538$ で停止。</div>
+<p class="step">1手ずつ: 手 2〜163（変電所ごとに 1 手）。「継続」の手には $u \ge p$ だった例が並ぶ。</p>
+</section>
+
+<section class="board" id="b5"><div class="chalk-note">板書 5 / 15</div>
+<h2>鉄塔の直列系と津波<small>fragility.line_fail</small></h2>
+<div class="eq">$$p_{\mathrm{tower}} = \Phi\!\left(\frac{\ln(\mathrm{PGA}/12)}{0.9}\right),\qquad n = \max\!\left(\frac{\ell}{0.35\,\mathrm{km}},\,1\right),\qquad p_{\ell} = 1 - (1 - p_{\mathrm{tower}})^{n}$$</div>
+<div class="sym"><span>ℓ</span><span>線路長 [km]。0.35 km 間隔で鉄塔が並ぶとみなす</span><span>1−(1−p)^n</span><span>n 基すべてが生き残る確率の補集合 = どれか 1 基でも倒れる確率（直列系）</span><span>12 g</span><span>1 基の倒壊中央値。地震動単独の倒壊は 1995・2011・2016・2018 で観測ゼロなので大きく置いた仮定</span></div>
+<p class="why"><b>なぜ直列か。</b>1 基倒れれば回線は止まる。長い線路ほど基数が増え、同じ PGA でも止まりやすい。2 回線以上は片方が残る可能性を 0.5 倍で表す。津波は浸水域内の基数を 5 と仮定し、浸水深ランク別の 1 基あたり確率から同じ式で求める。</p>
+<div class="ex"><b>例。</b>PGA 0.6 g、$\ell = 20$ km → $p_{\mathrm{tower}} = 4.4\times10^{-4}$、$n = 57$ → $p_\ell = 1-(1-4.4\times10^{-4})^{57} = $ <span class="num">0.025</span>。<br><b>トレースの手:</b> 尾鷲賀田線（77 kV）は浸水深ランク 6 → 停止確率 0.92、$u = 0.29$ で停止。</div>
+<p class="step">1手ずつ: 手 164〜225。</p>
+</section>
+
+<section class="board" id="b6"><div class="chalk-note">板書 6 / 15</div>
+<h2>停止率曲線からの停止期間（逆変換サンプリング）<small>fragility.generator_state</small></h2>
+<p>内閣府 2025 と同じ「震度階級ごとに、発災後 t 日に止まっている火力の割合 $f_c(t)$」の表を使う。各発電機の停止期間を、この割合と矛盾しないように 1 回の乱数で決める。</p>
+<div class="eq">$$u \sim U(0,1),\qquad \tau \;=\; \sup\{\,t : u < f_c(t)\,\},\qquad \text{発電機は } t < \tau \text{ の間停止}$$</div>
+<div class="sym"><span>f_c(t)</span><span>非増加。6弱・6強なら 3 週間 0.90、1 か月 0.23、5 週 0.06、6 週 0</span><span>τ</span><span>停止期間 [日]。表の点の間は線形補間</span></div>
+<p class="why"><b>なぜこれで整合するか。</b>任意の $t$ で「$\tau > t$ である発電機の割合」$= P(u < f_c(t)) = f_c(t)$。つまり全機の停止期間を集めると、どの時刻でも表の停止率がそのまま再現される。累積分布関数の逆関数から乱数を作る「逆変換法」そのもの。</p>
+<div class="ex"><b>例: 6強の火力。</b>$u = 0.5$ なら $f_c(t) > 0.5$ なのは 3 週間まで（0.90）で、1 か月で 0.23 に落ちる → 補間で $\tau \approx 25$ 日。$u = 0.95$ なら初日から $f_c = 0.90 < u$ → $\tau = 0$（止まらない）。<br><b>トレースの手:</b> 川越火力 3,053 MW は震度 6.6（7）→ 7 の曲線は 11 か月まで 1.0 → $\tau = 351.7$ 日。</div>
+<p class="step">1手ずつ: 手 226〜266。</p>
+</section>
+
+<section class="board" id="b7"><div class="chalk-note">板書 7 / 15</div>
+<h2>連結成分と上流孤立<small>cascade._components</small></h2>
+<div class="eq">$$G_t = (\mathcal V_t, \mathcal E_t),\qquad \mathcal V_t = \{i : \text{母線が生存}\},\quad \mathcal E_t = \{(i,j): \text{枝が生存} \wedge i,j\in\mathcal V_t\}$$
+$$\text{成分 } c \text{ が供給源を持たない } (G_c = 0 \wedge \text{仮想電源なし}) \;\Rightarrow\; c \text{ の母線はすべて「上流孤立」}$$</div>
+<svg class="sk" viewBox="0 0 520 120" role="img" aria-label="上流孤立の図"><g stroke="#f3efe4" stroke-width="2" fill="none"><line x1="40" y1="60" x2="150" y2="60"/><line x1="150" y1="60" x2="260" y2="60" stroke-dasharray="6 5" stroke="#ffb3c7"/><line x1="260" y1="60" x2="370" y2="40"/><line x1="260" y1="60" x2="370" y2="85"/><line x1="370" y1="40" x2="470" y2="30"/></g><g fill="#f3efe4"><circle cx="40" cy="60" r="7" fill="#b8f0c8"/><circle cx="150" cy="60" r="6"/><circle cx="260" cy="60" r="7" fill="#ffb3c7"/><circle cx="370" cy="40" r="5" fill="#c9b6e8"/><circle cx="370" cy="85" r="5" fill="#c9b6e8"/><circle cx="470" cy="30" r="5" fill="#c9b6e8"/></g><text x="20" y="95">発電所</text><text x="120" y="95">500 kV</text><text x="215" y="30">154 kV 変電所が停止</text><text x="380" y="110">66 kV 側は健全でも孤立</text></svg>
+<p class="why"><b>なぜ震度だけでは見えないか。</b>66 kV 変電所が無傷でも、上流の 154 kV 変電所 1 か所が止まれば全部落ちる。この依存関係は網の形（グラフ）にしか無い。連結成分は疎行列の幅優先探索で 1 回に数ミリ秒。</p>
+<div class="ex"><b>トレースの手:</b> 「連結成分を計算: 621 成分、最大成分 7,036 母線、上流孤立 209 母線（需要 1,269 MW）」。</div>
+<p class="step">1手ずつ: 手 267。過負荷連鎖のあとにも再計算の手が入る。</p>
+</section>
+
+<section class="board" id="b8"><div class="chalk-note">板書 8 / 15</div>
+<h2>需給・周波数・系統崩壊<small>montecarlo._blackout</small></h2>
+<div class="eq">$$\frac{2H}{f_0}\,\frac{df}{dt} \;=\; P_{\mathrm{gen}} - P_{\mathrm{load}}\ [\mathrm{pu}]\qquad\text{（集約 swing 方程式）}$$
+$$\delta_z \;=\; 1 - \min\!\left(1,\ \frac{G_z + T_z}{L_z}\right),\qquad \delta_z > 0.25 \;\Rightarrow\; \text{エリア } z \text{ 全停}$$</div>
+<div class="sym"><span>H</span><span>慣性定数 [s]。回転機に蓄えた運動エネルギー ÷ 定格。系統全体で 4 s 程度</span><span>f₀</span><span>定格周波数 60 Hz（西日本）</span><span>G_z, T_z, L_z</span><span>エリアの生存供給力、連系線の受電上限、残存需要 [MW]</span><span>0.25</span><span>周波数低下リレー（UFLS）の段階遮断で吸収できる不足の上限として置いた仮定。較正スイープで 15/25/35% を比較</span></div>
+<p class="why"><b>なぜ周波数が落ちるか。</b>発電が需要に足りない分は、回転機の運動エネルギーを取り崩して賄われ、回転が遅くなる = 周波数が下がる。$H = 4$ s、不足 20% なら $df/dt = -0.2\times60/8 = $ <span class="num">−1.5 Hz/s</span>。1 秒で 58.5 Hz。UFLS は 1 秒以内に段階的に負荷を切って止めるが、間に合わないと発電機の低周波数保護が働き全停する（北海道 2018: 46.13 Hz）。本モデルは動的に解かず、この式の帰結を「不足率のしきい値」で代理する。</p>
+<div class="ex"><b>トレースの手:</b> 中部エリア: 残存需要 15.2 GW、生存供給力 5.7 GW、連系線 4.6 GW → $\delta = 1 - (5.7+4.6)/15.2 = $ <span class="num">0.32</span> > 0.25 → 系統崩壊。中国エリア: $1-(6.3+9.0)/7.9 < 0$ → 0 → 維持。復電はサイトごとに対数正規（中央値 24 時間）。</div>
+<p class="step">1手ずつ: 手 268〜273（エリアごとに 1 手）。</p>
+</section>
+
+<section class="board" id="b9"><div class="chalk-note">板書 9 / 15</div>
+<h2>比例遮断<small>cascade.evaluate</small></h2>
+<div class="eq">$$r_c \;=\; \min\!\left(1,\ \frac{G_c}{L_c}\right),\qquad S_i \;=\; r_{c(i)}\,L_i$$</div>
+<div class="sym"><span>G_c, L_c</span><span>成分 c の供給上限と負荷</span><span>S_i</span><span>母線 i の供給量。不足分を成分内で一律の割合で切る（計画停電の理想化）</span></div>
+<p class="why"><b>なぜ比例か。</b>どの負荷を切るかの優先順位（病院など）は配電レベルの話で本モデルの外。成分内で公平に切るのが最も仮定が少ない。「物理停電」と「供給力不足の遮断」を分けて記録するのは、内閣府の停電軒数が前者しか数えないため。</p>
+<div class="ex"><b>トレースの手:</b> 成分 0（7,036 母線）: $r = \min(1, 50.6/57.0) = $ <span class="num">0.89</span> → 11% を比例遮断。</div>
+<p class="step">1手ずつ: 手 274〜277。</p>
+</section>
+
+<section class="board" id="b10"><div class="chalk-note">板書 10 / 15</div>
+<h2>DC 潮流<small>cascade._dc_flows</small></h2>
+<p>交流の有効電力は $P_{ij} = \dfrac{V_iV_j}{X_{ij}}\sin(\theta_i-\theta_j)$。電圧を 1 pu、角度差を小さいとして $\sin\theta\approx\theta$、抵抗を無視すると一次式になる。</p>
+<div class="eq">$$P_{ij} \approx \frac{\theta_i - \theta_j}{x_{ij}},\qquad B\,\theta = P,\qquad B_{ii} = \sum_{j} \frac{1}{x_{ij}},\quad B_{ij} = -\frac{1}{x_{ij}}$$
+$$\text{基準母線 } \theta_{\mathrm{ref}} = 0 \text{ を除いて解く。注入 } P \text{ を MW で与えれば } f_{ij} = b_{ij}(\theta_i-\theta_j)\ [\mathrm{MW}]$$</div>
+<div class="sym"><span>x_ij</span><span>枝のリアクタンス [pu, 100 MVA 基準]。線路は x_ohm/km × 長さ ÷ 回線数 ÷ (kV²/100)</span><span>B</span><span>グラフのラプラシアンを 1/x で重み付けした行列。成分ごとに 1 つ特異なので基準母線を 1 つ落とす</span><span>P_i</span><span>母線の注入 = 発電 − 供給負荷。成分内で合計ゼロ</span></div>
+<p class="why"><b>なぜラプラシアンか。</b>キルヒホッフの電流則「各母線で流入 = 流出」を全母線で書くと $B\theta = P$ になる。抵抗網のオームの法則と同じ形で、$\theta$ が電位、$1/x$ がコンダクタンス。<b>単位の罠:</b> $P$ を MW で与えると $\theta$ も MW スケールになり、潮流は $b\,\Delta\theta$ そのもの。ここで ×100 を重ねると潮流が 100 倍になる（実際にやったバグ。1 手ずつ表示で発覚）。</p>
+<svg class="sk" viewBox="0 0 520 130" role="img" aria-label="3母線ループ"><g stroke="#f3efe4" stroke-width="2" fill="none"><line x1="60" y1="100" x2="260" y2="100"/><line x1="60" y1="100" x2="160" y2="30"/><line x1="160" y1="30" x2="260" y2="100"/></g><g><circle cx="60" cy="100" r="8" fill="#b8f0c8"/><circle cx="160" cy="30" r="7" fill="#f3efe4"/><circle cx="260" cy="100" r="8" fill="#ffb3c7"/></g><text x="30" y="125">1: +90 MW</text><text x="235" y="125">3: −90 MW</text><text x="150" y="20">2</text><text x="130" y="112" fill="#ffe08a">x = 0.1 → 60 MW</text><text x="75" y="60" fill="#ffe08a">x = 0.1</text><text x="215" y="60" fill="#ffe08a">x = 0.1 → 30 MW</text><text x="300" y="60">直通路 x=0.1、迂回路 x=0.2</text><text x="300" y="80">→ 潮流は 1/x に比例して 2:1 に分かれる</text><text x="300" y="100">直通が落ちると迂回路に 90 MW（LODF = 1）</text></svg>
+<div class="ex"><b>例（3 母線ループ）。</b>母線 1 に +90、3 に −90。直通 1–3 は $x=0.1$、迂回 1–2–3 は $x=0.2$。$B$ を解くと $\theta_1-\theta_3 = 6$ → 直通 $6/0.1 = 60$ MW、迂回 $6/0.2 = 30$ MW。<br><b>トレースの手:</b> 反復 1「過負荷 45 本、最大 409%」。77 kV 線に 382 MW（緊急定格 117 MW）。</div>
+<p class="step">1手ずつ: 手 278（「DC潮流を解く」）。</p>
+</section>
+
+<section class="board" id="b11"><div class="chalk-note">板書 11 / 15</div>
+<h2>過負荷連鎖と LODF<small>cascade.evaluate（反復）</small></h2>
+<div class="eq">$$|f_{ij}| > \gamma\,S_{ij},\quad \gamma = 1.25 \;\Rightarrow\; \text{枝を停止}\qquad f'_{l} \;=\; f_l + \mathrm{LODF}_{l,k}\,f_k \quad(\text{枝 } k \text{ 停止後の枝 } l)$$
+$$\mathrm{LODF}_{l,k} \;=\; \frac{\mathrm{PTDF}_{l,k}}{1 - \mathrm{PTDF}_{k,k}}\qquad(\text{橋では分母が 0 で定義できない})$$</div>
+<div class="sym"><span>S_ij</span><span>熱容量 [MVA]。理論値（√3·V·I）に較正係数。基底で既に超える枝は基底潮流 ×1.3 を緊急定格にする</span><span>γ</span><span>緊急定格倍率。短時間なら定格の 1.25 倍まで流せるとみなす</span><span>PTDF</span><span>ある枝で 1 MW 送ったときに各枝に現れる潮流（感度）。DC では行列 1 つで固定</span></div>
+<p class="why"><b>なぜ連鎖するか。</b>枝が落ちると同じ注入を残りの枝で運ぶので、迂回路の潮流が跳ね上がる（板書 10 の図で直通が落ちると迂回路が 30→90 MW）。それが定格を超えれば保護リレー（過電流・距離）が次の枝を切る。本モデルは上位 3 本ずつ切って解き直し、最大 8 回で打ち切る。実装は LODF を使わず毎回 $B\theta=P$ を解き直す（同値だが単純）。</p>
+<div class="ex"><b>トレースの手:</b> 反復 1 で 浅山一丁目〜原二丁目線（77 kV）409%、同 2 回線目 386%、154/77 kV 変圧器 316% を停止 → 反復 2 で過負荷 32 本、最大 305% … 8 反復で 24 本停止。供給率への影響は 3.5% 以内。</div>
+<p class="step">1手ずつ: 手 279〜310。</p>
+</section>
+
+<section class="board" id="b12"><div class="chalk-note">板書 12 / 15</div>
+<h2>修理時間と作業班のスケジューリング<small>restoration.RestorationModel</small></h2>
+<div class="eq">$$\tau_e \sim \mathrm{LN}(\ln \mu_k,\ \beta_k)\qquad \mu = (1, 3, 7, 30)\ \text{日（変電所 DS1〜4）},\ \text{津波 } 60,\ \text{鉄塔 } 14$$
+$$\text{ジョブを } (\text{kV 降順}, L \text{ 降順}) \text{ に並べ},\quad c_e \;=\; \max\big(\text{最も早く空く班の時刻},\ 0\big) + \tau_e$$</div>
+<div class="sym"><span>LN</span><span>対数正規。HAZUS の復旧関数（正規 mean/sd）をモーメント一致で変換</span><span>c_e</span><span>要素 e の復旧完了日。作業班は最小ヒープで管理し、3 日目から応援で班数 2 倍</span></div>
+<p class="why"><b>なぜ順序が効くか。</b>班の数は有限なので、上位電圧から直すと下流の多くの需要が早く戻る。逆に 66 kV から直すと局所は早いが全体は遅い。阪神では 275 kV の被害が大きく 77 kV の健全系から復旧した例もあり、順序自体が設計変数。</p>
+<div class="ex"><b>トレースの手:</b> 復旧ジョブ 383 件。中部 班 1 ← 500 kV 開閉所（修理 71.6 日）、班 2 ← 第二浜岡幹線（500 kV、135.3 日）… 需要の大きい 275 kV 変電所は班 3 以降に回る。</div>
+<p class="step">1手ずつ: 手 311〜532。</p>
+</section>
+
+<section class="board" id="b13"><div class="chalk-note">板書 13 / 15</div>
+<h2>モンテカルロと期待停電日数<small>montecarlo.Simulator.run</small></h2>
+<div class="eq">$$\bar S_i(t) = \frac1N\sum_{s=1}^N \frac{S_i^{(s)}(t)}{L_i},\qquad P_{\mathrm{out}}(i,t) = \frac1N\sum_s \mathbb 1\big[\text{受電不可}^{(s)}(i,t)\big],\qquad E[T_i] = \int_0^{90}\big(1-\bar\phi_i(t)\big)\,dt$$
+$$\text{標準誤差 } \sqrt{\frac{p(1-p)}{N}}\ \Rightarrow\ p=0.3,\ N=200 \text{ で } \pm 0.032$$</div>
+<div class="sym"><span>N</span><span>サンプル数 200。west 1 サンプル 1.2 秒</span><span>φ̄_i</span><span>受電可能（物理）の平均。積分は台形則、時刻列 0, 6h, 12h, 1, 2, 3, 4, 5, 7, 10, 14, 21, 30, 45, 60, 90 日</span></div>
+<p class="why"><b>なぜ乱数を回すか。</b>どの変電所が壊れるかの組合せは $2^{7000}$ 通りあり、上流孤立や連鎖は組合せで決まる。解析的には書けないので、確率どおりに組合せを引いて平均する。<b>期待停電日数</b>は「停電確率の時間積分」で、地図の 1 枚目に向く指標。</p>
+<div class="ex"><b>例。</b>west の五地域 直後の物理停電 1,003 万軒は N=200 の平均。母線 1 点の停電確率 0.3 なら ±0.03 のぶれ。</div>
+<p class="step">1手ずつ: 手 533〜556（t ごとの再評価）。ビューアは 1 サンプル、本番はこれを 200 回。</p>
+</section>
+
+<section class="board" id="b14"><div class="chalk-note">板書 14 / 15</div>
+<h2>ポテンシャル法<small>potential.potential_index</small></h2>
+<div class="eq">$$w_{ij} = -\ln(1-p_{ij}) + \tfrac12\big[-\ln(1-p_i) - \ln(1-p_j)\big],\qquad d_i = \min_{\text{電源} g}\ \mathrm{dist}_w(g \to i)$$
+$$S^{\mathrm{path}}_i = e^{-d_i}\sqrt{1-p_i},\qquad A^{\mathrm{sup}}_i = \min\!\left(1, \frac{\sum_{B(i,80\mathrm{km})} \bar P_g(1-p_g)}{\sum_{B(i,80\mathrm{km})} L_j}\right),\qquad P^{\mathrm{pot}}_{\mathrm{out}}(i) = 1 - S^{\mathrm{path}}_i\,A^{\mathrm{sup}}_i$$</div>
+<div class="sym"><span>−ln(1−p)</span><span>「生存確率の対数」の符号を変えたもの。経路上の要素がすべて生き残る確率は積なので、対数を取ると和になり最短路問題になる</span><span>d_i</span><span>Dijkstra で全母線一括。電源自身の停止確率も重みに入れる</span><span>A^sup</span><span>半径 80 km の生存供給ポテンシャル ÷ 負荷</span></div>
+<p class="why"><b>なぜ最短路か。</b>$\prod(1-p) = \exp(\sum \ln(1-p))$。最大の生存確率を持つ経路 = 重み $-\ln(1-p)$ の最短路。乱数も潮流も使わず 0.8 秒。<b>限界:</b> 経路が長いと積が 0 に飽和し、冗長経路（別ルート）の恩恵を見ない。A との需要加重相関は 0.56。</p>
+<div class="ex"><b>例。</b>経路上に $p = 0.1$ の変電所が 5 か所、$p = 0.02$ の線路が 4 本 → $d = 5\times0.105 + 4\times0.020 = 0.61$ → $S^{\mathrm{path}} = e^{-0.61} = 0.54$。$A^{\mathrm{sup}} = 0.8$ なら $P^{\mathrm{pot}} = 1 - 0.54\times0.8 = $ <span class="num">0.57</span>。</div>
+<p class="step">ビューアには無い（潮流を解かない別経路）。地図 Artifact の「ポテンシャル」図に対応。</p>
+</section>
+
+
+<section class="board" id="b15"><div class="chalk-note">板書 15 / 15</div>
+<h2>復旧の資源勘定<small>resources.ledger</small></h2>
+<div class="eq">$$\text{人・日} = \sum_{e} n_{\mathrm{crew}}\,\tau_e,\qquad \text{稼働人数}(t) = n_{\mathrm{crew}}\sum_e \mathbb 1[\,s_e \le t < c_e\,],\qquad \text{資材}_m = \sum_e q_{m}(\text{種別}_e)$$
+$$\text{電源車}(t) = \frac{\sum_{i \in \text{上流孤立}(t)} L_i}{0.5\ \mathrm{MW}}\quad\text{vs}\quad \text{保有}\times(\text{応援}\ 2\ \text{倍, 2 日目〜})$$</div>
+<div class="sym"><span>n_crew</span><span>1 班の人数(8 人・仮定)</span><span>s_e, c_e, τ_e</span><span>ジョブの開始・完了・修理日数(板書 12)</span><span>q_m</span><span>ジョブ種別ごとの資材原単位(主変圧器・遮断器・がいし・鉄塔・電線)。東北電力 2011 の被害数を桁の目安にした仮定</span></div>
+<p class="why"><b>なぜ積み上げるか。</b>復旧曲線は「班数・修理時間」の仮定の帰結であり、裏返せば「この曲線を実現するには何人・何台要るか」が出る。稼働人数が班数の上限に張り付いていれば人手が律速、主変圧器の需要が予備を超えていれば資材が律速、と読める。</p>
+<div class="ex"><b>例(west・N=20 平均)。</b>ジョブ 357 件、延べ <span class="num">121,725</span> 人・日。ピーク稼働 中部 640 人/日(=80 班 × 8 人で上限)。主変圧器 122 台 vs 予備 28 台。電源車はピークで関西 1354 台が要り、保有+応援を 1 桁超える。</div>
+<p class="step">レポート §4.7・`resource_ledger.png`。原単位は仮定なので各社公表値で差し替える。</p>
+</section>
+
+<p class="footer">出典: 司・翠川 (1999), 藤本・翠川 (2005), FEMA Hazus 4.2 §8.5, 内閣府 2025 手法概要 4.3, 電力広域的運営推進機関 北海道胆振東部地震 検証委員会 最終報告 (2018)。実装: All-Japan-Grid `hazard/nankai/`（技術ノート `docs/reports/nankai_hazard_2026-09-13/TECHNICAL_NOTE.pdf`）。数式は MathJax（SVG）で描画。</p>
+</div>

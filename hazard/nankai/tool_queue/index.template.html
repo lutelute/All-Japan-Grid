@@ -1,0 +1,219 @@
+<meta charset="utf-8">
+<title>南海トラフ 復旧の待ち行列卓</title>
+<meta name="description" content="南海トラフ巨大地震の送変電の修理を、班の配置・他社応援・修理の順番を変えて比べる">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+/*__STYLE__*/
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">All-Japan-Grid ・ 南海トラフ巨大地震(J-SHIS Mw9.1)・送変電の修理 ・ 代表 1 サンプル</p>
+      <h1>復旧の待ち行列卓</h1>
+      <p class="lede">壊れた変電所と送電線を、動ける班から順に直していきます。班の被災、他社応援の到着、修理の順番を変えると、待ち行列と停電の戻り方が計算し直されます。点線は既定の前提。</p>
+    </div>
+    <div class="top-actions">
+      <span class="diff-chip" id="diffChip">既定の前提</span>
+      <button type="button" class="btn" id="resetBtn">既定に戻す</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="rail" aria-label="前提">
+      <section class="group">
+        <h2><span class="step">順番</span>どれから直すか</h2>
+        <p class="group-note">エリアごとに 1 本の待ち行列。空いた班が先頭から取り、途中で割り込まない。</p>
+        <div class="ctl">
+          <div class="radios" role="radiogroup" aria-label="優先順位">
+            <label><input type="radio" name="policy" value="kv_load" checked><span>電圧の高い順 → 需要の大きい順<small>既定。主幹系統から戻す</small></span></label>
+            <label><input type="radio" name="policy" value="load"><span>需要の大きい順<small>変電所の需要(MW)。線路は後ろ</small></span></label>
+            <label><input type="radio" name="policy" value="cust_per_day"><span>直結の需要家 ÷ 修理日数<small>1 日の作業で戻せる軒数の多い順</small></span></label>
+            <label><input type="radio" name="policy" value="short"><span>短い修理から<small>片付く件数を先に稼ぐ</small></span></label>
+            <label><input type="radio" name="policy" value="long"><span>長い修理から<small>比較用。津波で壊れた変電所が先に班を抱える</small></span></label>
+          </div>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">手で動かした修理</span><output class="val" id="movedCount">0 件</output></div>
+          <button type="button" class="btn" id="clearMoves">手の入れ替えを消す</button>
+          <p class="why">待ち行列の表の「先に」「後回し」で、優先順位に関係なく順番を変えられる。</p>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2><span class="step">地元</span>地元の班が何班動けるか</h2>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="crewScale">送変電の班数(倍率)</label><output class="val" id="crewScaleOut" for="crewScale">×1.0</output><span class="badge">仮定</span></div>
+          <input type="range" id="crewScale" min="0.5" max="2" step="0.1" value="1">
+          <div class="ticks"><span>×0.5</span><span class="dflt">既定 ×1.0</span><span>×2.0</span></div>
+          <p class="why">既定はエリアごとに中部 40・関西 50・東京 60 班など(restoration_default.yaml の仮定値)。県ごとの拠点へ需要比で配る。</p>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="harm">要員の被災の重さ(倍率)</label><output class="val" id="harmOut" for="harm">×1.0</output><span class="badge">仮定</span></div>
+          <input type="range" id="harm" min="0" max="2" step="0.1" value="1">
+          <p class="why">既定は震度 6 弱 20%・6 強 35%・7 50%・浸水域 80% が出られず、揺れは 2.5 日・津波は 7 日で戻り、1 割は戻らない。</p>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="resupply">車両・資機材が戻るまで</label><output class="val" id="resupplyOut" for="resupply">7 日</output><span class="badge">仮定</span></div>
+          <input type="range" id="resupply" min="1" max="21" step="1" value="7">
+          <p class="why">浸水域の拠点は全損、震度 6 強 1 割・7 で 2 割を失い、ここまでに線形に戻る。</p>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="patrol">巡視・安全確認</label><output class="val" id="patrolOut" for="patrol">0.5 日</output><span class="badge">仮定</span></div>
+          <input type="range" id="patrol" min="0" max="2" step="0.25" value="0.5">
+        </div>
+      </section>
+
+      <section class="group">
+        <h2><span class="step">応援</span>他社の班がいつ、どこに着くか</h2>
+        <p class="group-note">自社の被害度 r が 1 未満の会社が送り手、0.5 を超えるエリアが受け手。3 陣に分けて出る。</p>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="aidPer">送り出す班(100 万口あたり)</label><output class="val" id="aidPerOut" for="aidPer">2.0</output><span class="badge">仮定</span></div>
+          <input type="range" id="aidPer" min="0" max="5" step="0.5" value="2">
+          <p class="why">無被害なら出せる送変電の班数。実際は × (1 − r) に減る。</p>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="decision">派遣を決めるまで</label><output class="val" id="decisionOut" for="decision">0.5 日</output><span class="badge">仮定</span></div>
+          <input type="range" id="decision" min="0" max="3" step="0.25" value="0.5">
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="mobil">招集・積込</label><output class="val" id="mobilOut" for="mobil">0.75 日</output><span class="badge">仮定</span></div>
+          <input type="range" id="mobil" min="0" max="2" step="0.25" value="0.75">
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><label class="ctl-name" for="speed">車列の平均速度</label><output class="val" id="speedOut" for="speed">50 km/h</output><span class="badge">仮定</span></div>
+          <input type="range" id="speed" min="20" max="80" step="5" value="50">
+          <p class="why">道のりは大円距離 × 1.3、1 日 18 時間の交代運転。北海道は苫小牧→敦賀の海路 1 日。</p>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><span class="ctl-name">送り先の配分</span></div>
+          <div class="seg" role="radiogroup" aria-label="送り先の配分">
+            <input type="radio" name="alloc" id="allocB" value="backlog" checked><label for="allocB">修理の量に比例</label>
+            <input type="radio" name="alloc" id="allocM" value="manual"><label for="allocM">手で配る</label>
+          </div>
+          <div class="weights" id="weights"></div>
+        </div>
+      </section>
+
+      <p class="rail-foot">対象は変電所と送電線の修理だけ(配電・電源車・資材調達は含めない)。実在の応援計画ではない。数値の出典は hazard/nankai/config の YAML。</p>
+    </aside>
+
+    <main class="results" id="results">
+      <section class="panel intro" aria-label="使い方">
+        <div class="intro-grid">
+          <div>
+            <h3>使い方</h3>
+            <ol class="steps">
+              <li>左の「どれから直すか」や班の数を変える。</li>
+              <li>下の 4 つの数字で、停電がどれだけ早く・遅く減るかを既定と比べる。</li>
+              <li>地図と表で、どの変電所・送電線がいつ直るかを見る。表の「先に」で順番を入れ替えられる。</li>
+            </ol>
+          </div>
+          <div>
+            <h3>例を試す</h3>
+            <p class="sub">既定の前提に戻してから 1 か所だけ変える。</p>
+            <div class="examples" id="examples">
+              <button type="button" class="ex" data-ex="short"><b>短い修理から直す</b><span>停電は早く減るが、長い修理が残る</span></button>
+              <button type="button" class="ex" data-ex="long"><b>長い修理から直す</b><span>悪い例。津波で壊れた変電所が班を抱え込む</span></button>
+              <button type="button" class="ex" data-ex="half"><b>地元の班が半分</b><span>待ち行列が長く残る</span></button>
+              <button type="button" class="ex" data-ex="aid"><b>他社の応援を 2.5 倍</b><span>既定の応援は地元の班の 1 割ほど</span></button>
+            </div>
+          </div>
+        </div>
+        <p class="summary" id="summary" aria-live="polite"></p>
+      </section>
+
+      <section class="kpis" aria-label="主な結果" id="kpis"></section>
+
+      <section class="panel" aria-label="時刻と地図">
+        <div class="panel-head row">
+          <div>
+            <h3>班が動き、修理が片付いていく</h3>
+            <p class="sub">点は壊れた変電所と送電線(大きさ = 電圧)。円は地元の班の拠点(塗り = 動ける班、輪 = 被災前)。四角は応援の送り手の本店、動く点は移動中の応援の班。</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="map-wrap">
+            <canvas id="map" aria-label="修理と班の地図"></canvas>
+            <ul class="map-legend">
+              <li><i style="background:var(--wait)"></i>待ち</li>
+              <li><i style="background:var(--work)"></i>修理中</li>
+              <li><i style="background:var(--accent)"></i>地元の班</li>
+              <li><i class="ring"></i>被災前の班</li>
+            </ul>
+          </div>
+          <div class="side">
+            <div class="clock" id="clock">0 時間<small>発災から</small></div>
+            <div>
+              <div class="scrub-row">
+                <button type="button" class="btn play" id="playBtn" aria-pressed="false">▶ 再生</button>
+                <input type="range" id="tScrub" min="0" max="1000" step="1" value="0" aria-label="発災からの時間">
+              </div>
+              <div class="scrub-ticks"><span>0</span><span>1日</span><span>3日</span><span>1週</span><span>2週</span><span>1月</span><span>3月</span></div>
+            </div>
+            <div class="phase" id="phase"></div>
+            <dl class="facts" id="facts"></dl>
+            <div>
+              <p class="sub" style="margin-bottom:4px">応援の送り手(第 1 陣の到着)</p>
+              <ul class="convoy-list" id="convoys"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="待ち行列">
+        <div class="panel-head">
+          <h3>待ち行列 — エリアごとの修理の順番</h3>
+          <p class="sub">上から順に着手する。状態は上の時刻のもの。「先に」で先頭側へ、「後回し」で最後尾へ回す。津波の印は浸水想定域(修理が長く、応援の着手も遅れる)。</p>
+        </div>
+        <div class="tabs" id="tabs" role="tablist"></div>
+        <div class="qbar" id="qbar"></div>
+        <div class="table-wrap"><table id="qtable"></table></div>
+      </section>
+
+      <section class="panel" aria-label="グラフ">
+        <div class="charts">
+          <div>
+            <div class="panel-head"><h3>修理に当たれる班</h3><p class="sub">地元(被災で減る)と応援(送り手ごと)。点線は既定の前提の合計。</p></div>
+            <div class="chart" id="chartCrews" role="img" aria-label="投入できる班の推移"></div>
+            <div class="legend" id="legendCrews"></div>
+          </div>
+          <div>
+            <div class="panel-head"><h3>まだ着手できない修理(件)</h3><p class="sub">エリアごとの待ち行列の長さ。</p></div>
+            <div class="chart" id="chartQueue" role="img" aria-label="待ち行列の長さの推移"></div>
+            <div class="legend" id="legendQueue"></div>
+          </div>
+        </div>
+        <div style="margin-top:20px">
+          <div class="panel-head"><h3>停電中の需要家(万軒・送変電の修理だけで戻る分)</h3><p class="sub">電源とつながっているかで数え、潮流の過負荷で切れる分を補正して足した値。点線は既定の前提。</p></div>
+          <div class="chart" id="chartOut" role="img" aria-label="停電中の需要家の推移"></div>
+          <div class="legend" id="legendOut"></div>
+        </div>
+      </section>
+
+      <section class="panel notes">
+        <h3>読み方と限界</h3>
+        <ul>
+          <li>損傷は 1 つの代表サンプル(西・東の島ごとに 21 サンプルのうち修理総量が中央値のもの)で固定。揺れと津波の当たり方を変えると別の結果になる。</li>
+          <li>停電の数え方: ブラウザは「電源とつながっているか」だけを数え、直流潮流の過負荷で切れる分は既定の優先順位で測った差を時刻ごとに足している。Python の潮流ありとの差は、優先順位 5 通りの多くの時刻で 5 万軒以内、「需要の大きい順」系の 56〜58 日だけ最大 34 万軒。</li>
+          <li>待ち行列は 1 時間刻み・割り込みなし。班数は小数を切り捨てた数だけ同時に着手する(動画 make_restoration_ops.py と同じ規則)。</li>
+          <li>応援は受け手エリアの修理が片付いた 1 日後に帰る。送り手・受け手は被害度のしきい値で決まり、班数を変えると入れ替わる。</li>
+          <li>配電(6.6 kV 以下)の被害と復旧は入っていない。停電の軒数はシナリオ卓の「送電側」に近いもので、配電を含む停電より少ない。</li>
+        </ul>
+        <p class="meta" id="metaLine"></p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__MODEL__*/
+</script>
+<script>
+/*__APP__*/
+</script>

@@ -1,0 +1,14 @@
+# 需要家数(供給地点数・千口)の概数。停電「軒数」換算用: 軒 = 需要MW × (千口×1000 / zone負荷MW)。
+# 一般送配電事業者の供給地点数(低圧+高圧+特高)の公表値の概数(2023〜2024年度、各社決算資料・電力取引報)。
+# 内閣府の「停電軒数」も需要家数ベース。confidence: low(±10%)。出典を確定したら差し替える。
+contracts_thousand:
+  hokkaido: 4100
+  tohoku: 8000
+  tokyo: 30600
+  chubu: 11300
+  hokuriku: 2200
+  kansai: 14300
+  chugoku: 5500
+  shikoku: 3000
+  kyushu: 9200
+  okinawa: 950
