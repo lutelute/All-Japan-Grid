@@ -25,6 +25,28 @@ launchctl load   ~/Library/LaunchAgents/jp.ac.u-fukui.alljapangrid.realtime.plis
 
 plist の原本は `scripts/realtime_launchd.plist`（パスを埋めて `~/Library/LaunchAgents/` へコピーする）。
 
+**回す場所は専用の作業場所**（2026-10-02 から）: ふだん作業するチェックアウトではなく、main を追う疎な
+worktree（`AGJ_RUNNER`、例 `~/dev/github/project_Hayashi/AGJ-realtime`）で回す。plist は毎回その作業場所を
+`origin/main` に合わせてから `realtime_cycle.sh` を実行する。ふだんのチェックアウトから回していたときは、
+feature ブランチの古いスクリプトで動いて commit がそのブランチに積もり（Pages が 9/12 から止まった）、
+`git pull --rebase --autostash` が rebase 途中の作業ツリーに毎時掛かっていた。
+
+作り方（初回だけ）:
+
+```bash
+R=~/dev/github/project_Hayashi/All-Japan-Grid      # ふだんのチェックアウト(蓄積と非公開データがある)
+RUN=~/dev/github/project_Hayashi/AGJ-realtime
+git -C $R worktree add --no-checkout --detach $RUN origin/main
+git -C $RUN sparse-checkout set --cone scripts src config docs/data data
+git -C $RUN checkout --detach origin/main
+ln -s $R/data/realtime $RUN/data/realtime                                    # 蓄積はこれまでの場所のまま
+ln -s $R/data/external/system_disclosure/normalized $RUN/data/external/system_disclosure/normalized  # 非公開の観測潮流
+AGJ_REALTIME_NO_PUSH=1 bash $RUN/scripts/realtime_cycle.sh                   # push せずに 1 回試す
+```
+
+公開用の疎な worktree（`data/realtime/.publish`）は蓄積フォルダの中にできるので、NAS への退避
+（`sync_realtime_to_nas.sh`）では除外している。
+
 **なぜ1時間か**: でんき予報の実績が毎時更新なので、30分間隔にしても新しい断面は
 増えず commit だけが倍になる。データ源の粒度に合わせている。
 
