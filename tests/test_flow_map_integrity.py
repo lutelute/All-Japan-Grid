@@ -121,3 +121,19 @@ def test_pages_inline_scripts_parse(page, tmp_path):
         f.write_text(js, encoding="utf-8")
         r = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True)
         assert r.returncode == 0, f"{page} の {i} 番目のスクリプト: {r.stderr[-400:]}"
+
+
+def test_prune_pages_days_keeps_latest_and_rewrites_manifest(tmp_path, monkeypatch):
+    """Pages には直近 N 日だけ載せ、目次(manifest)からも外した日を消す(リンク切れにしない)。"""
+    import scripts.prune_pages_days as P
+    days = tmp_path / "days"
+    days.mkdir()
+    dates = [f"202609{d:02d}" for d in range(1, 6)]
+    for d in dates:
+        (days / f"{d}.json").write_text("{}")
+    (days / "manifest.json").write_text(json.dumps({"dates": dates}))
+    monkeypatch.setattr(P, "DAYS", days)
+    monkeypatch.setattr("sys.argv", ["prune_pages_days.py", "--keep", "2"])
+    P.main()
+    assert sorted(p.stem for p in days.glob("2*.json")) == dates[-2:]
+    assert json.loads((days / "manifest.json").read_text())["dates"] == dates[-2:]
