@@ -66,6 +66,18 @@
     </select></label>
   <div class="muted" id="stat"></div>
 </div>
+<div class="panel" id="obsLegend" style="display:none;position:absolute;right:10px;top:140px;z-index:1000;max-width:280px">
+  <b>観測と比べる</b> <span class="muted">p95(絶対値)の比 = モデル ÷ 観測</span><br>
+  <span class="sw" style="background:#2b6fd6"></span>×0.5 未満
+  <span class="sw" style="background:#7fb2f0"></span>×0.67
+  <span class="sw" style="background:#2eea8f"></span>×1.5 以内
+  <span class="sw" style="background:#f08a5d"></span>×1.5
+  <span class="sw" style="background:#e3342f"></span>×2 超<br>
+  <span class="muted">太さ = 観測の p95 / 破線 = 年平均の向きが逆 / 灰 = 照合できない線</span><br>
+  <div id="obsBreakdown" style="margin:4px 0;font-size:11px"></div>
+  <span class="muted" style="font-size:10px">観測 = 各一般送配電事業者 系統情報公表(潮流実績・2024 年度・年統計)。
+  モデルは UC 代表日 または 実績需要で解いた日別断面の全時刻。同じ時刻どうしの比較ではない。</span>
+</div>
 <div class="panel" id="legend">
   <b>線=潮流</b> 太さ∝|P| / 色=loading<br>
   <span class="sw" style="background:#4f8fd9"></span>&lt;40%
@@ -81,11 +93,11 @@
 </div>
 <div class="panel" id="timebar" style="bottom:10px;left:56%;transform:translateX(-50%);width:min(520px,52vw)">
   <div style="display:flex;align-items:center;gap:8px">
-    <select id="selDate" title="日付(実績需要の断面)"><option value="uc">UC代表日</option></select>
+    <select id="selDate" title="日付(実績需要で解いた断面・モデルの計算値)"><option value="uc">UC代表日</option></select>
     <select id="selCmp" title="表示モード" disabled>
-      <option value="act" selected>実績</option>
+      <option value="act" selected>実績需要の計算</option>
       <option value="uc">UC</option>
-      <option value="diff">差分(実績−UC)</option>
+      <option value="diff">差分(実績需要の計算−UC)</option>
     </select>
     <select id="selTol" title="一致とみなす許容差" style="display:none">
       <option value="10">±10MW</option>
@@ -93,13 +105,15 @@
       <option value="100">±100MW</option>
       <option value="200">±200MW</option>
     </select>
+    <label title="公表された潮流実績(年統計)とモデルを線ごとに比べる" style="white-space:nowrap;color:#ffd166">
+      <input type="checkbox" id="cbObsCmp"> 観測と比べる</label>
     <button id="btnPlay" style="background:#3d7bd9;color:#fff;border:none;border-radius:6px;
       padding:3px 10px;cursor:pointer">▶ 再生</button>
     <input type="range" id="hourSlider" min="0" max="23" value="12" step="1" style="flex:1">
     <b id="hourLabel" style="min-width:64px;text-align:right">12:00</b>
   </div>
   <div class="muted" style="margin-top:2px">UC(fy2023)の時刻別ディスパッチによる全線潮流 — 流光=方向
-    <span id="diffstat" style="margin-left:10px"></span></div>
+    <span id="diffstat" style="margin-left:10px"></span><span id="dayinfo" style="margin-left:10px"></span></div>
 </div>
 <div class="panel min" id="ucpanel">
   <h4 id="uchead">📊 UC稼働率(fy2023・24h) <span class="muted" id="ucmin">▲ひらく</span></h4>
@@ -118,7 +132,7 @@ const FUELJA = {nuclear:"原子力", coal:"石炭", lng:"LNG", oil:"石油", hyd
   pumped_hydro:"揚水", solar:"太陽光", wind:"風力", geothermal:"地熱",
   biomass:"バイオマス", other:"その他", "?":"その他"};
 const map = L.map("map",{preferCanvas:true}).setView([36.5,137.5],6);
-const ATTR = "地理院タイル | AGJ — 潮流=モデル計算値・観測方向は公表実績との一致フラグのみ";
+const ATTR = "地理院タイル | AGJ — 潮流=モデル計算値・観測=各社の系統情報公表(潮流実績)の年統計(集計値)と向きの一致のみ";
 const BASES = {
   pale: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",{attribution:ATTR,opacity:0.55}),
   photo: L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",{attribution:ATTR,opacity:0.75}),
@@ -137,7 +151,10 @@ function cmpMode(){const s=document.getElementById("selCmp"); return s.disabled?
 const _pick=(f,key,fallback)=>{const m=cmpMode();
   const act=f.properties[key], uc=f.properties["_"+key+"uc"]||act;
   const a=(m==="uc")?uc:act;
-  return (a&&a[HOUR]!=null)?a[HOUR]:f.properties[fallback];};
+  if(a&&a[HOUR]!=null) return a[HOUR];
+  // 日付の断面を選んでいて値が無い線は空欄(null)。UC の値に黙って戻すと計算と UC が混ざる
+  if(curDate!=="uc"&&m!=="uc") return null;
+  return f.properties[fallback];};
 const fp=(f)=>_pick(f,"p24","p_mw");
 const fld=(f)=>_pick(f,"ld24","loading_pct");
 const fdiff=(f)=>{const a=f.properties.p24, u=f.properties._p24uc;
@@ -181,7 +198,7 @@ function midSegment(cs){
 
 function renderArrows(){
   arrowLayer.clearLayers();
-  if(!flows || !document.getElementById("cbArrow").checked || cmpMode()==="diff") return;
+  if(!flows || !document.getElementById("cbArrow").checked || cmpMode()==="diff" || obsOn()) return;
   const bb=map.getBounds(), z=map.getZoom();
   const obsOnly=document.getElementById("cbObs").checked;
   // 空間分散: グリッドセル毎に|P|上位K本(団子防止・全域カバー)
@@ -250,6 +267,8 @@ async function show(island){
       &&kvPass(f.properties.kv),
     style:f=>{
       const pr=f.properties, p=fp(f), ld=fld(f);
+      if(obsOn()) return obsStyle(f);
+      if(p==null&&cmpMode()!=="diff") return {color:"#3a4a5c",weight:0.5,opacity:0.2};  // 値なし
       if(cmpMode()==="diff"){
         const d=fdiff(f);
         if(d===null) return {color:"#3a4a5c",weight:0.5,opacity:0.2};
@@ -274,19 +293,22 @@ async function show(island){
         if(pr._p24uc&&pr.p24&&pr.p24!==pr._p24uc){
           const av=pr.p24[HOUR], uv=pr._p24uc[HOUR];
           if(av!=null&&uv!=null)
-            s+=`<br>実績断面 ${Math.abs(av).toLocaleString()} / UC ${Math.abs(uv).toLocaleString()}`+
+            s+=`<br>実績需要の計算 ${Math.abs(av).toLocaleString()} / UC ${Math.abs(uv).toLocaleString()}`+
                ` / 差 <b>${(Math.abs(av)-Math.abs(uv)>=0?"+":"")}${(Math.abs(av)-Math.abs(uv)).toFixed(0)} MW</b>`;
         }
         if(pr.p24) s+=`<br><canvas class="spark" width="180" height="34"></canvas>`;
         if(pr.obs_dir!==undefined)
           s+=`<br>観測方向: ${pr.obs_dir?"<b style=color:#1e9e63>一致</b>":"<b style=color:#c0392b>不一致</b>"}`;
-        if(obsLocal){
+        // 区間まで照合した観測(obs_compare)があればそちらを出す。線名だけで引いた値は
+        // 同名の別区間を拾うことがある(例 南信幹線)ので、照合が無い線にだけ「区間未確認」で出す
+        if(obsLocal&&!(OBSIDX&&OBSIDX[pr.k])){
           const o=obsLocal[normName((pr.name||"").split(" ")[0])];
-          if(o) s+=`<br><span style="color:#ffd166">観測実績(年統計)</span>: `+
+          if(o) s+=`<br><span style="color:#ffd166">観測実績(年統計・線名だけで引いた値=区間は未確認)</span>: `+
                    `平均${o.mean!=null?Math.abs(o.mean).toLocaleString():"—"} / `+
                    `p95 ${o.p95.toLocaleString()} / 最大${o.max!=null?o.max.toLocaleString():"—"} MW`+
                    `<br><span class="muted" style="font-size:10px">出典: ${o.util} 系統情報公表(年統計・集計値)</span>`;
         }
+        s+=obsPopup(f);   // 区間を照合した観測(モードに関係なく出す)
         ly.bindPopup(s).openPopup();
         setTimeout(()=>{
           const cv=document.querySelector(".spark:not([data-d])");
@@ -319,7 +341,7 @@ async function show(island){
 function buildGenLayer(){
   if(genLayer) map.removeLayer(genLayer);
   genLayer=L.layerGroup();
-  if(!gens || !document.getElementById("cbGen").checked){genLayer.addTo(map);return;}
+  if(!gens || !document.getElementById("cbGen").checked || obsOn()){genLayer.addTo(map);return;}
   const z=map.getZoom();
   const minP = z<7?300 : z<9?50 : 0;
   for(const f of gens.features){
@@ -348,7 +370,7 @@ function buildGenLayer(){
 function buildGlow(){
   if(glowLayer){map.removeLayer(glowLayer);}
   glowLayer=L.layerGroup(); glowPolys=[];
-  if(!flows){glowLayer.addTo(map);return;}
+  if(!flows||obsOn()){glowLayer.addTo(map);return;}   // 観測と比べるときは流光を出さない
   // 選定=|P|×線長(輸送モーメント)。|P|上位だけだと都市部の短い線分に集中し
   // 全国ズームでdash周期より短く視認不能(2026-08-18デバッグで判明)
   const lineLen=f=>{const cs=f.geometry.coordinates;let L2=0;
@@ -388,6 +410,73 @@ function animate(ts){
 }
 requestAnimationFrame(animate);
 
+// 基準データ(flows_<島>.geojson)の線構成の署名。export_flow_map_data.py が meta.json に書く
+let _bm=null, DAYINFO={};
+async function baseMeta(){
+  if(_bm===null) _bm=await fetch("data/flow_map/meta.json?v="+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({}));
+  return _bm;}
+// 観測と比べる(obs_compare.json = scripts/export_obs_compare.py)。線の鍵 → 照合した観測の線
+let OBSCMP=null, OBSIDX=null;
+async function loadObsCmp(){
+  if(OBSCMP) return OBSCMP;
+  OBSCMP=await fetch("data/flow_map/obs_compare.json?v="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null);
+  OBSIDX={};
+  const rank={A:0,B:1,C:2};
+  for(const r of (OBSCMP&&OBSCMP.lines)||[]){
+    for(const [k] of r.keys){
+      const cur=OBSIDX[k];
+      if(!cur||rank[r.conf]<rank[cur.conf]) OBSIDX[k]=r;
+    }
+  }
+  return OBSCMP;}
+const obsOn=()=>document.getElementById("cbObsCmp").checked;
+const obsTag=()=>curDate==="uc"?"uc":"act";
+const CONF_JA={A:"A: 線名と両端で経路照合",B:"B: 両端で経路照合(線名なし)",C:"C: 片端+線名(大きさのみ比較)"};
+function obsStyle(f){
+  const r=OBSIDX&&OBSIDX[f.properties.k];
+  const ratio=r&&r["ratio_p95_"+obsTag()];
+  if(!ratio) return {color:"#3a4a5c",weight:0.5,opacity:0.18};
+  const lg=Math.log2(ratio);
+  const col=Math.abs(lg)<=Math.log2(1.5)?"#2eea8f":lg>1?"#e3342f":lg>0?"#f08a5d":lg<-1?"#2b6fd6":"#7fb2f0";
+  const w=1.2+1.6*Math.log10(1+r.obs.p95/50);
+  const dir=r["dir_"+obsTag()];
+  return {color:col,weight:w,opacity:0.95,dashArray:dir===false?"6 5":null};
+}
+function obsPopup(f){
+  const r=OBSIDX&&OBSIDX[f.properties.k];
+  if(!r) return "";
+  const t=obsTag(), m=r[t], fmt=x=>x==null?"—":Math.abs(x).toLocaleString();
+  const lab=t==="uc"?"モデル(UC 代表日 24 時刻)":"モデル(実績需要の計算・全日付)";
+  let s=`<hr style="border-color:#333"><b style="color:#ffd166">観測と比べる</b>: ${r.name}`+
+    `<br><span class="muted">${r.from||"?"} → ${r.to||"(片端)"} / ${r.kv}kV / ${CONF_JA[r.conf]}</span>`+
+    `<br>観測(年統計) 平均 ${r.obs.mean} / p95 ${fmt(r.obs.p95)} / 最大 ${fmt(r.obs.max)} MW`;
+  if(m) s+=`<br>${lab} 平均 ${m.mean} / p95 ${fmt(m.p95)} / 最大 ${fmt(m.max)} MW`+
+    `<br>比(p95) <b>×${r["ratio_p95_"+t]}</b>`+
+    (r["dir_"+t]===undefined?" / 向きは判定せず":` / 年平均の向き <b style="color:${r["dir_"+t]?"#2eea8f":"#ff7b7b"}">${r["dir_"+t]?"一致":"逆"}</b>`);
+  else s+=`<br>${lab}: 値なし`;
+  if(r.circuit_scale) s+=`<br><span class="muted">観測は回線ごと → モデルを回線数で按分(×${r.circuit_scale})</span>`;
+  return s+`<br><span class="muted" style="font-size:10px">出典: ${r.util} 系統情報公表(潮流実績・2024 年度・年統計)</span>`;
+}
+function updateObsBreakdown(){
+  const el=document.getElementById("obsBreakdown");
+  const sc=OBSCMP&&OBSCMP.scorecard; if(!el||!sc){return;}
+  const t=obsTag(), rows=[["island:hokkaido","北海道"],["island:east","東"],["island:west","西"],
+    ["kv:500","500kV"],["kv:275","275kV"],["kv:154","154kV"],["kv:66","66kV"],["kv:77","77kV"]];
+  el.innerHTML=`<table style="border-collapse:collapse"><tr class="muted"><td></td><td>本数</td><td>×2以内</td><td>向き一致</td></tr>`+
+    rows.map(([k,l])=>{const g=sc.groups[k]&&sc.groups[k][t]; if(!g) return "";
+      return `<tr><td>${l}</td><td style="text-align:right">${g.n}</td>`+
+        `<td style="text-align:right">${(100*g.within_x2).toFixed(0)}%</td>`+
+        `<td style="text-align:right">${g.dir_agree==null?"—":(100*g.dir_agree).toFixed(0)+"%"}</td></tr>`;}).join("")+`</table>`;
+}
+function obsStatText(){
+  updateObsBreakdown();
+  const sc=OBSCMP&&OBSCMP.scorecard; if(!sc) return "obs_compare.json を読めませんでした";
+  const g=sc.groups.all[obsTag()]; if(!g) return "照合した線にモデルの値がありません";
+  return `観測と照合 <b>${sc.n_matched.toLocaleString()}</b> 本(統計のある ${sc.n_observed_with_stats.toLocaleString()} 本中)`+
+    ` / p95 が ×2 以内 <b style="color:#2eea8f">${(100*g.within_x2).toFixed(0)}%</b>`+
+    (g.dir_agree!=null?` / 向き一致 ${(100*g.dir_agree).toFixed(0)}%(${g.n_dir}本)`:"")+
+    ` / 比の中央値 ×${g.median_ratio}`;
+}
 // 日付別断面(days/<date>.json)の適用。UC代表日に戻すため元p24を退避
 let dayCache={}, curDate="uc";
 // 観測実績オーバーレイ(untrackedファイル: ローカルでのみ存在・Pagesでは404で自動無効)
@@ -401,7 +490,7 @@ async function loadDates(){
     const sel=document.getElementById("selDate");
     for(const d of (mf.dates||[]).slice().reverse()){
       const o=document.createElement("option");
-      o.value=d; o.textContent=`${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}(実績)`;
+      o.value=d; o.textContent=`${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}(実績需要)`;
       sel.appendChild(o);
     }
   }catch(e){}
@@ -410,6 +499,7 @@ async function applyDate(d){
   curDate=d;
   if(!flows) return;
   if(d==="uc"){
+    DAYINFO={};
     for(const f of flows.features){
       if(f.properties._p24uc){f.properties.p24=f.properties._p24uc; f.properties.ld24=f.properties._ld24uc;}
     }
@@ -424,16 +514,26 @@ async function applyDate(d){
       opt.textContent+=fa?` 発電=実績${fa}社`:" 発電=容量比例";}
     sel.title=fa?`需要+発電とも公表実績(エリア需給実績 ${fa}社・原発停止等を自動反映)。残りは容量比例`:
       "需要=実績スケール・発電=容量比例balance";
-    // 島別に線順一致でp24/ld24を差し替え(featuresは島連結順=ALLPARTS順で並ぶ)
-    let idx={};
-    for(const isl of ALLPARTS) idx[isl]=0;
+    // 島別に差し替え。日別断面は基準(flows_<島>.geojson)の線の並びに鍵で揃えて書かれている。
+    // 基準の線構成の署名(meta.json の sig)と断面の base_sig が違えば、古い線構成で計算した
+    // 断面なので当てはめない(旧版はここを並び順だけで当てはめ、ずれを検出できなかった)
+    const bm=await baseMeta();
+    let idx={}; DAYINFO={};
+    for(const isl of ALLPARTS){
+      idx[isl]=0;
+      const D=dd.islands[isl], sig=bm&&bm[isl]&&bm[isl].sig;
+      DAYINFO[isl]=!D?"なし":(sig&&D.base_sig!==sig)?"線構成が古い":
+        (D.coverage!=null&&D.coverage<1)?`${(100*D.coverage).toFixed(1)}%`:"ok";
+    }
     for(const f of flows.features){
       const isl=f.properties._isl;
       const D=dd.islands[isl];
-      if(!D){idx[isl]++; continue;}
       const i=idx[isl]++;
       if(!f.properties._p24uc){f.properties._p24uc=f.properties.p24; f.properties._ld24uc=f.properties.ld24;}
-      if(D.p[i]) {f.properties.p24=D.p[i]; f.properties.ld24=D.ld[i];}
+      const usable=D&&(DAYINFO[isl]!=="線構成が古い");
+      const row=usable?D.p[i]:null;
+      f.properties.p24=row||Array(24).fill(null);
+      f.properties.ld24=(usable&&D.ld[i])||Array(24).fill(null);
     }
   }
   setHour(HOUR);
@@ -446,8 +546,19 @@ function setHour(h){
   buildGlow(); renderArrows();
   updateDiffStat();
 }
+const ISL_JA={hokkaido:"北海道",east:"東",west:"西",okinawa:"沖縄"};
+function updateDayInfo(){
+  const el=document.getElementById("dayinfo");
+  if(!el) return;
+  if(curDate==="uc"||!Object.keys(DAYINFO).length){el.textContent="";return;}
+  el.innerHTML="断面: "+ALLPARTS.map(k=>{const v=DAYINFO[k];
+    const c=v==="ok"?"#2eea8f":v==="なし"||v==="線構成が古い"?"#ff7b7b":"#ffd166";
+    return `${ISL_JA[k]} <b style="color:${c}">${v}</b>`;}).join(" / ");
+}
 function updateDiffStat(){
+  updateDayInfo();
   const el=document.getElementById("diffstat");
+  if(obsOn()){el.innerHTML=obsStatText();return;}
   if(cmpMode()!=="diff"||!flows){el.textContent="";return;}
   const tol=+document.getElementById("selTol").value;
   let n=0, ok=0, big=0;
@@ -514,6 +625,12 @@ document.getElementById("cbGen").onchange=buildGenLayer;
 document.getElementById("cbSubs").onchange=buildSubs;
 document.getElementById("cbLines").onchange=()=>show(cur);
 document.getElementById("cbObs").onchange=()=>show(cur);
+document.getElementById("cbObsCmp").onchange=async e=>{
+  if(e.target.checked) await loadObsCmp();
+  document.getElementById("obsLegend").style.display=e.target.checked?"":"none";
+  buildGenLayer();
+  setHour(HOUR);
+};
 document.getElementById("selKv").onchange=()=>{show(cur);buildSubs();};
 document.getElementById("selDate").onchange=e=>{
   const d=e.target.value;
@@ -577,7 +694,7 @@ fetch("data/flow_map/uc_utilization.json").then(r=>r.json()).then(d=>{
   selEl.onchange=draw; draw();
 }).catch(()=>{document.getElementById("ucbody").textContent="uc_utilization.json 未生成";});
 
-loadDates(); show("all");
+loadDates(); loadObsCmp(); show("all");
 </script>
 </body>
 </html>
