@@ -376,6 +376,7 @@ def main() -> int:
         add_per_component_slacks, allocate_loads, attach_generators,
         balance_by_zone, build_island_net, load_demand_config, solve_island)
     from src.powerflow.pref_demand import pref_zone_gwh
+    from src.powerflow.line_keys import keys_signature, line_keys
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
     nodes, edges = built["nodes"], built["edges"]
     cfg = load_demand_config()
@@ -440,24 +441,30 @@ def main() -> int:
         bnd_series = day_boundary_series(fm, island) if fm else {}
         zl0 = net.load.groupby(net.load.bus.map(net.bus["zone"])).p_mw.sum()
         base = net
-        P, LD = None, None
-        names = None
+        # 線は鍵(両端座標・電圧・向き)で基準データ flows_<島>.geojson に結合する。並び順には頼らない
+        # (旧版は並びの一致を要求し、モデルの作り直しで島ごと出力されなくなっていた 2026-08-27〜10-03)
+        keys = line_keys(base)
+        gj = json.loads((ROOT / f"docs/data/flow_map/flows_{island}.geojson").read_text())
+        gk = [f["properties"].get("k", "") for f in gj["features"]]
+        if not any(gk):
+            print(f"! {island}: 基準 flows_{island}.geojson に線の鍵(k)が無い — "
+                  f"export_flow_map_data.py で作り直すこと。出力しない")
+            continue
+        sig = keys_signature(gk)
+        got: dict[str, tuple[list, list]] = {}
         n_ok = 0
         prev_isl = (prev or {}).get("islands", {}).get(island)
         prev_avail = set((prev or {}).get("available_hours") or [])
+        reuse = bool(prev_isl and prev_isl.get("base_sig") == sig)
         for h in range(24):
             if h not in avail:
                 continue
-            if prev_isl and h in prev_avail:
-                # 既計算時刻は再利用(増分更新)
-                if P is None:
-                    n = len(prev_isl["p"])
-                    P = [[None]*24 for _ in range(n)]
-                    LD = [[None]*24 for _ in range(n)]
-                    names = None
-                for i in range(len(prev_isl["p"])):
-                    P[i][h] = prev_isl["p"][i][h]
-                    LD[i][h] = prev_isl["ld"][i][h]
+            if reuse and h in prev_avail:
+                # 既計算時刻は再利用(増分更新)。同じ基準(base_sig)で計算した断面に限る
+                for k, pp, ll in zip(gk, prev_isl["p"], prev_isl["ld"]):
+                    if k and pp is not None:
+                        slot = got.setdefault(k, ([None] * 24, [None] * 24))
+                        slot[0][h], slot[1][h] = pp[h], ll[h]
                 n_ok += 1
                 continue
             nt = copy.deepcopy(base)
@@ -485,28 +492,26 @@ def main() -> int:
             nu = net_ac if conv else net_dc
             if not (conv or dc.get("converged")):
                 continue
-            live = nu.line[nu.line.in_service]
-            if P is None:
-                n = len(live)
-                P = [[None] * 24 for _ in range(n)]
-                LD = [[None] * 24 for _ in range(n)]
-                names = [str(x) for x in live.name]
-            for i, (pv, lv) in enumerate(zip(
-                    nu.res_line.loc[live.index, "p_from_mw"],
-                    nu.res_line.loc[live.index, "loading_percent"])):
-                P[i][h] = None if pv != pv else round(float(pv), 1)
-                LD[i][h] = None if lv != lv else round(float(lv), 1)
+            live = nu.line[nu.line.in_service].index
+            for li, pv, lv in zip(live, nu.res_line.loc[live, "p_from_mw"],
+                                  nu.res_line.loc[live, "loading_percent"]):
+                k = keys.get(li, "")
+                if not k:
+                    continue
+                slot = got.setdefault(k, ([None] * 24, [None] * 24))
+                slot[0][h] = None if pv != pv else round(float(pv), 1)
+                slot[1][h] = None if lv != lv else round(float(lv), 1)
             n_ok += 1
-        # 線順検証(flows geojsonと同一のはず)
-        gj = json.loads((ROOT / f"docs/data/flow_map/flows_{island}.geojson")
-                        .read_text())
-        gj_names = [f["properties"].get("name") for f in gj["features"]]
-        if names is None and P is not None and len(P) == len(gj_names):
-            names = gj_names   # 全時刻再利用時(線数一致で検証)
-        if names != gj_names:
-            print(f"! {island}: 線順不一致 — 出力しない(要調査)")
+        cover = sum(1 for k in gk if k in got) / max(len(gk), 1)
+        if cover < 0.9:
+            print(f"! {island}: 基準の線の {cover:.1%} しか対応しない(基準が古い?) — 出力しない")
             continue
-        result["islands"][island] = {"p": P, "ld": LD}
+        P = [got[k][0] if k in got else None for k in gk]
+        LD = [got[k][1] if k in got else None for k in gk]
+        result["islands"][island] = {"p": P, "ld": LD, "base_sig": sig,
+                                     "coverage": round(cover, 4)}
+        if cover < 1:
+            print(f"  {island}: 基準の線 {len(gk)} 本のうち {cover:.2%} に対応(残りは空欄)")
         print(f"[{island}] {n_ok}/{len(avail)}時刻(実績あり) {time.time()-t0:.0f}s", flush=True)
 
     # 燃料実績注入の帳簿(コンパクト): zone別に適用時刻数と合計clip。

@@ -96,6 +96,9 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
     net_u = net_ac if conv else net_dc
 
     # --- 線: 方向つき潮流 ---
+    # k = 線の鍵(両端座標・電圧・向き)。日別断面・UC 24h はこの鍵で結合する(並び順に頼らない)
+    from src.powerflow.line_keys import line_keys
+    keys = line_keys(net_u)
     feats = []
     n_obs_match = n_obs_mismatch = 0
     bus_name = {b: norm_name(net_u.bus.at[b, "name"]) for b in net_u.bus.index}
@@ -144,7 +147,7 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
             "geometry": {"type": "LineString",
                          "coordinates": [[round(x, 5), round(y, 5)]
                                          for x, y in coords]},
-            "properties": {"name": nm, "p_mw": round(p, 1),
+            "properties": {"name": nm, "k": keys.get(li, ""), "p_mw": round(p, 1),
                            "loading_pct": round(ld, 1),
                            **({"obs_dir": od} if od is not None else {})},
         })
@@ -192,8 +195,11 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
     print(f"[{island}] AC={'OK' if conv else 'DC'} lines={len(feats)} "
           f"(観測方向 一致{n_obs_match}/不一致{n_obs_mismatch}) genバス={len(gfeats)}",
           flush=True)
+    from src.powerflow.line_keys import keys_signature
     return {"ac": conv, "n_lines": len(feats), "n_genbus": len(gfeats),
-            "obs_dir_match": n_obs_match, "obs_dir_mismatch": n_obs_mismatch}
+            "obs_dir_match": n_obs_match, "obs_dir_mismatch": n_obs_mismatch,
+            # 線構成の署名。日別断面の base_sig と照合する(違えば古い線構成で計算した断面)
+            "sig": keys_signature([f["properties"]["k"] for f in feats])}
 
 
 def export_uc_utilization() -> None:
