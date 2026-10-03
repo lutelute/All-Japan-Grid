@@ -37,6 +37,11 @@ def norm_name(s: str) -> str:
     return re.sub(r"[\s・()（）]", "", s)
 
 
+def _kv(v) -> float | int:
+    v = round(float(v or 0), 1)
+    return int(v) if v == int(v) else v
+
+
 def load_obs_direction() -> dict:
     """{正規化線名: {'frm':正規化from局, 'to':正規化to局, 'forward':bool}}
     forward=True は観測の主方向が from→to(年平均が正)。生値は保持しない。"""
@@ -147,7 +152,10 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
             "geometry": {"type": "LineString",
                          "coordinates": [[round(x, 5), round(y, 5)]
                                          for x, y in coords]},
-            "properties": {"name": nm, "k": keys.get(li, ""), "p_mw": round(p, 1),
+            # kv は地図の電圧階級の絞り込みが使う。以前はその場限りの処理で足していたため、作り直す
+            # たびに消えていた(NOW 断面は 8/18・東の基準は 8/29 から絞り込みが効いていなかった)
+            "properties": {"name": nm, "k": keys.get(li, ""),
+                           "kv": _kv(net_u.bus.at[fb, "vn_kv"]), "p_mw": round(p, 1),
                            "loading_pct": round(ld, 1),
                            **({"obs_dir": od} if od is not None else {})},
         })

@@ -33,6 +33,15 @@ def test_base_lines_have_unique_keys(island):
     assert len(set(ks)) == len(ks), f"{island}: 鍵が重複している"
 
 
+@pytest.mark.parametrize("prefix", ["flows", "flows_now"])
+@pytest.mark.parametrize("island", ISLANDS)
+def test_lines_carry_voltage(island, prefix):
+    """電圧階級の絞り込みが使う kv が全線にあること(作り直しで消えていた 8/18〜10/04)。"""
+    fs = json.loads((FM / f"{prefix}_{island}.geojson").read_text(encoding="utf-8"))["features"]
+    missing = sum(1 for f in fs if not f["properties"].get("kv"))
+    assert missing == 0, f"{prefix}_{island}: kv の無い線 {missing}/{len(fs)}"
+
+
 @pytest.mark.parametrize("island", ISLANDS)
 def test_meta_signature_matches_base(island):
     from src.powerflow.line_keys import keys_signature
