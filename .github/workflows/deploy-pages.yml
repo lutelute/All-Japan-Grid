@@ -58,6 +58,8 @@ jobs:
       - run: python scripts/build_dashboard_data.py
       # スライドの旧版は git にだけ残し、サイトには各デッキの最新版だけ載せる(Pages の上限 1GB 対策)
       - run: python scripts/prune_pages_slides.py
+      # 潮流マップの日別断面は直近 30 日だけ載せる(1 日 約 2.2 MB・オーナー判断 2026-10-04)。git には全日を残す
+      - run: python scripts/prune_pages_days.py --keep 30
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/
