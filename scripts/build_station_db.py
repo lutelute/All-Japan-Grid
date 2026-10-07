@@ -47,9 +47,8 @@ from src.stations.views import analyse, coverage, gaps  # noqa: E402
 
 # 柵の外 25 m の節点を変電所に入れる条件(src/stations/core.BUFFER_PORTALS)。All-EU-Grid は欧州の公式データ(RTE)で
 # "station"(構内の導体か機器と共有する節点だけ)を採ったが、日本では構内の導体を line=bay でなく power=line で描くことが
-# 多く、"station" だと公表の線区間の端と一致する接続を 157 失う。"enters"(敷地に入る導体が会う節点)は、旧の "any" に
-# 比べ公表と一致する接続をほぼ保ち(160→157)、公表に無い接続を 177→142 に減らした(2026-10-08、
-# docs/STATION_NODE_BREAKER.md「移植元との差分」)。
+# 多い。"enters"(敷地に入る導体が会う節点)が "station" より余分につなぐ接続は、公表の線区間の端で判定できる
+# 164 件のうち 145 件が正しく(88%)、確かな誤りは 19 件(2026-10-08、reports/station_layers_2026-10-07/portal_check.py)。
 BUFFER_PORTALS = "enters"
 
 # 柵の外へはみ出して描かれたベイ・母線を敷地に含める上限(m)。2026-10-06 の日本の抽出で、
