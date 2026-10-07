@@ -56,7 +56,7 @@ All-EU-Grid が欧州で足した規則(どれも根拠のラベル付き):
 | **柵の外へはみ出して描かれたベイ・母線**を、100 m まで敷地に含める(`internal_extension`) | 日本の OSM では `line=bay` を柵の外の門型鉄構・鉄塔まで描くことが多い。移植元のままだと構内配線 987 本が敷地を決められず、そこから出る線路が変電所につながらなかった。1 つの敷地からはみ出す 901 本の中央値は 47 m で、89% が 100 m 以内 | `src/stations/core.py` `model(..., extension_m=)`。既定 0(移植元と同じ)、日本の生成では 100 |
 | 事業者名から鉄道系統を推す規則を外した | DB Energie などの欧州の事業者名の規則 | `src/stations/tags.py` |
 | 構造 DB との対応を OSM の (type, id) で取る | 移植元の比較は重心と名前で照合していた | `scripts/build_station_db.py` `structure_crosswalk` |
-| **柵外 25 m の節点を入れる条件を `enters`**(敷地に入る導体が会う節点)にする。移植元の既定は `station`(構内の導体か機器と共有する節点だけ) | 日本は構内の導体を `line=bay` でなく `power=line` で描くことが多い。公表の線区間の端で採点すると、`station` は公表と一致する接続を 157 失う。`enters` が `station` より余分につなぐ接続は、公表で判定できる 164 件のうち 145 件が正しく(88%)、確かな誤りは 19 件(2026-10-08、`reports/station_layers_2026-10-07/portal_check.py`・採用記録 §13) | `scripts/build_station_db.py` `BUFFER_PORTALS`(コアの既定は移植元のまま) |
+| **柵外 25 m の節点を入れる条件を `enters`**(敷地に入る導体が会う節点)にする。移植元の既定は `station`(構内の導体か機器と共有する節点だけ) | 日本は構内の導体を `line=bay` でなく `power=line` で描くことが多い。公表の線区間の端で採点すると、`station` は公表と一致する接続を 157 失う。`enters` が `station` より余分につなぐ接続は、公表で判定できる 164 件のうち 145 件が正しく(88%)、確かな誤りは 19 件。station のままの接続の正答率(83%)を上回るので、全体を薄めない(2026-10-08、`reports/station_layers_2026-10-07/portal_check.py`・採用記録 §13) | `scripts/build_station_db.py` `BUFFER_PORTALS`(コアの既定は移植元のまま) |
 
 `internal_extension` は All-EU-Grid 5d85ba9 で移植元にも入った(`model()` の既定 0、EU の DB は 100 m)。コード上の差分は 50/60 Hz だけで、
 柵外の節点の条件(`BUFFER_PORTALS`)は日本の生成で指定する。

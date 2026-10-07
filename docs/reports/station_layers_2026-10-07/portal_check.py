@@ -109,7 +109,25 @@ def shape_of(w, s, node):
     return "feeds_in" if "feeds_in" in kinds else ("passes_through" if kinds else "no_entering_way")
 
 
-report = {}
+def judge(w, s):
+    p = lines[w]["properties"] if w in lines else {}
+    ln = (region_of.get(s), lstem(p.get("name")))
+    site_stem = stem(sprops[s].get("name"))
+    if ln[0] is None:
+        return "no_region"
+    if not ln[1] or ln not in off_st:
+        return "no_official"
+    if site_stem and site_stem in off_st[ln]:
+        return "confirmed"
+    if not off_two[ln]:
+        return "single_ended"
+    if off_branch[ln]:
+        return "branch_undeterminable"
+    return "definite_error"
+
+
+# 基準: station のままの接続(規則を足す前)を同じ物差しで照らした正答率
+report = {"station_baseline": dict(Counter(judge(w, s) for (w, s) in base))}
 for mode in ("enters", "any"):
     extra = {k: v for k, v in attachments(mode).items() if k not in base}
     verdict, volt, shape, cross = Counter(), Counter(), Counter(), Counter()
