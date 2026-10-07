@@ -28,6 +28,7 @@ from dataclasses import asdict
 from scripts.build_substation_structure import (
     extract_structure,
     load,
+    owned_internal_ways,
     prepare_ways,
 )
 from src.regions import REGIONS
@@ -148,13 +149,14 @@ def build_region(region, data_dir="data"):
     t0 = time.time()
     subs, lines = load(region, data_dir)
     pways = prepare_ways(lines)
+    owned, membership = owned_internal_ways(subs["features"], pways)
     structures = []
     seen_ids = {}
     dup_features = 0
     errors = []
     for i, ft in enumerate(subs["features"]):
         try:
-            s, _ways, _poly = extract_structure(region, ft, pways)
+            s, _ways, _poly = extract_structure(region, ft, pways, owned=owned[i])
         except Exception as exc:   # noqa: BLE001 — 全数生成ゲートで報告
             nm = (ft.get("properties") or {}).get("name")
             errors.append({"index": i, "name": nm,
@@ -190,6 +192,7 @@ def build_region(region, data_dir="data"):
         "n_busbars_inferred": sum(1 for s in structures for b in s.busbars
                                   if b.kv_inferred),
         "n_bays": sum(len(s.bays) for s in structures),
+        "internal_way_membership": membership,
         "n_transformers": sum(len(s.transformers) for s in structures),
         "n_trafo_nameplate": n_nameplate,
         "sites_with_known_kv": vl_known,
