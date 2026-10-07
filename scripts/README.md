@@ -163,7 +163,7 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 248 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 249 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
 <details><summary><b>取得 / fetch</b>(16 本)</summary>
@@ -216,7 +216,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>監査・検証 / audit & validate</b>(12 本)</summary>
+<details><summary><b>監査・検証 / audit & validate</b>(13 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -231,6 +231,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `reconcile_isolated_multi.py` | 東京でやった「孤立変電所×TEPCO公表接続の突合」を **関西・北海道・東北** に横展開する。 |
 | `reconcile_isolated_tepco.py` | 監査の東京「孤立変電所(A=繋ぐべき)」を、TEPCOの公表接続で突合する。 |
 | `validate_cgmes.py` 🔒 | Strict, independent validation of the exported CGMES RDF/XML. |
+| `validate_intervention.py` 🔒 | モデルの介入の妥当性を、独立した公表資料と潮流の実績で採点する(介入 #48 を最初の対象に)。 |
 | `verify_crosswalk_by_linename.py` | 公表インピーダンスの対応付けを **線名** で検証・修正する（#47）。 |
 
 </details>

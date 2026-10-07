@@ -17,9 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   same, 32 where the ladder skips a real 275/77-kV-style direct transformer).
 - **Intervention #48 — link a substation's voltage levels by the transformer pairs observed in OSM**
   (`src/model/site_transformers.py`): observed pairs first, the ladder only for levels they leave unconnected.
-  Structure DB default ON (607 transformers; Higashi-Mō's sourced 275/66 kV nameplate now attaches). Power flow
-  default OFF (`--observed-trafos`): 21 substations relinked, east losses 1,495.1→1,493.0 MW, convergence unchanged,
-  but direct transformers are still sized from the lower-side line rating, so it waits for sourced ratings.
+  Default ON in both the structure DB (607 transformers; Higashi-Mō's sourced 275/66 kV nameplate now attaches) and
+  the power flow (`--no-observed-trafos` to disable): 21 substations relinked. Validated before switching
+  (`docs/INTERVENTION_VALIDATION.md`, `scripts/validate_intervention.py`): 20 of the 21 direct pairs appear in the
+  utilities' published transformer lists and none is contradicted; within 15 km of the relinked substations 31
+  observed lines moved closer to the published flows and 15 moved away (sign test p = 0.026); convergence unchanged,
+  overloaded lines east 336→334, west 278→270. Direct transformers are still sized by the lower-side rule.
+- **Intervention validation tool** (`scripts/validate_intervention.py`, `run_full_powerflow_from_db.py --dump-flows`):
+  scores an intervention on structure (published registries), flows (published annual flow statistics, nearby lines
+  separately, sign test) and physics.
 - **Reports index** (`docs/reports/INDEX.md`, `scripts/build_reports_index.py`) and a sister-projects section in `docs/README.md`.
 
 - **Pages dashboard — one entry point for every tool** (`docs/index.html`, `docs/data/tools_catalog.json`,

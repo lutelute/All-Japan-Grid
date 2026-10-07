@@ -24,6 +24,7 @@ the dashboard lists the tools.
 | [SUBSLD_METHOD.md](SUBSLD_METHOD.md) | SubSLD 法 — 変電所の構内図×単線結線図を全国で機械生成する(計算と図のための仮説の層) |
 | [STATION_NODE_BREAKER.md](STATION_NODE_BREAKER.md) | 変電所の構内結線の観測層 — OSM の node ID だけで母線・開閉器・変圧器の巻線を結んだ台帳。SubSLD の仮説を点検する |
 | [OBSERVED_VS_DERIVED.md](OBSERVED_VS_DERIVED.md) | 公表値(observed)と計算値(derived)を混ぜないための規約 |
+| [INTERVENTION_VALIDATION.md](INTERVENTION_VALIDATION.md) | 介入を既定にするかの判断 — 構造(公表資料)・潮流(公表実績)・物理の 3 つの物差しと道具 |
 | [GENERATOR_DB.md](GENERATOR_DB.md) | 発電所 DB の出典と層 |
 | [VALIDATION_SOURCES.md](VALIDATION_SOURCES.md) | 検証に使える外部の正解データ |
 | [COVERAGE.md](COVERAGE.md) | 来歴・検証カバレッジ(`ajgrid coverage` で作り直せるスナップショット) |

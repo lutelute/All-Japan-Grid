@@ -233,8 +233,12 @@ CAP_CALIB_DEFAULT = False
 # 従来は変電所(同一座標のバス群)の電圧階級を高い順に隣どうしで結ぶ「梯子」。OSM が巻線電圧つきの
 # 実機を描く変電所では、観測した組をすべて張り、残りの階級だけ梯子でつなぐ(src/model/site_transformers.py)。
 # 入力=data/stations/observed_transformer_pairs.json(node-breaker 観測層から。追跡)。
-# 明示 ON = `--observed-trafos` または環境変数 AGJ_OBSERVED_TRAFOS=1(他経路用)。
-OBSERVED_TRAFOS_DEFAULT = False
+# 2026-10-08 既定 ON(オーナー「良い判断すればいい」を受けた判断)。根拠は 3 つ
+# (docs/reports/station_node_breaker_adoption_2026-10-07.md §11): ①直結の組 21 変電所のうち 20 が各社の
+# 空容量・予想潮流一覧に実在し否定は 0 ②結び直した変電所 15 km 以内の観測線 88 本で実績に近づいた 31・離れた 15
+# (符号検定 p=0.026)③収束不変・過負荷の線 東 336→334・西 278→270。無効化 = `--no-observed-trafos` または
+# 環境変数 AGJ_OBSERVED_TRAFOS=0(他経路用)。
+OBSERVED_TRAFOS_DEFAULT = True
 OBSERVED_MATCH_KM = 1.0     # 観測の敷地(構造 DB の代表点)とバスの距離の上限
 
 
@@ -1344,6 +1348,44 @@ def region_vm(net, region):
     return {"vm_min": round(min(vm), 4), "vm_max": round(max(vm), 4), "n": len(vm)}
 
 
+def dump_flows(net, mode):
+    """解いた網の線と変圧器の潮流(検証用)。線は鍵(src/powerflow/line_keys)で引ける。
+
+    lines: 鍵 → [from 側の有効電力 MW, 負荷率 %, from の緯度, 経度, to の緯度, 経度, kV]
+    trafos: [名前, 高圧側の有効電力 MW, 負荷率 %, 高圧側の緯度, 経度]
+    """
+    from src.powerflow.line_keys import line_keys
+
+    def ll(b):
+        try:
+            lon, lat = json.loads(net.bus.at[int(b), "geo"])["coordinates"][:2]
+            return round(float(lat), 5), round(float(lon), 5)
+        except Exception:  # noqa: BLE001
+            return None, None
+
+    keys = line_keys(net)
+    lines = {}
+    for li, k in keys.items():
+        if not k or li not in net.res_line.index:
+            continue
+        p, ld = net.res_line.at[li, "p_from_mw"], net.res_line.at[li, "loading_percent"]
+        if p != p:      # NaN(非通電)
+            continue
+        fb, tb = int(net.line.at[li, "from_bus"]), int(net.line.at[li, "to_bus"])
+        lines[k] = [round(float(p), 2), round(float(ld), 1), *ll(fb), *ll(tb),
+                    float(net.bus.at[fb, "vn_kv"])]
+    trafos = []
+    for ti in net.trafo.index:
+        if ti not in net.res_trafo.index:
+            continue
+        p, ld = net.res_trafo.at[ti, "p_hv_mw"], net.res_trafo.at[ti, "loading_percent"]
+        if p != p:
+            continue
+        trafos.append([str(net.trafo.at[ti, "name"]), round(float(p), 2), round(float(ld), 1),
+                       *ll(net.trafo.at[ti, "hv_bus"])])
+    return {"mode": mode, "lines": lines, "trafos": trafos}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--islands", nargs="*", default=None)
@@ -1470,10 +1512,13 @@ def main():
                          "(各社公表の運用容量÷理論容量の比・エリア×階級・生値なし)を線路の "
                          "max_i_ka に乗じる。既定=CAP_CALIB_DEFAULT(False・2026-09-02 全国化で"
                          "一致度判定を満たさず)。環境変数 AGJ_CAP_CALIB=1/0 でも指定可")
+    ap.add_argument("--dump-flows", action="store_true",
+                    help="線(鍵つき)と変圧器ごとの潮流を <output-dir>/flows.json に書く。介入の前後を"
+                         "観測と比べる検証用(scripts/validate_intervention_flows.py)")
     ap.add_argument("--observed-trafos", action=argparse.BooleanOptionalAction, default=None,
                     help="介入#48 変電所内の変圧器を OSM で観測した電圧の組で結ぶ(残りの階級は梯子)。"
                          "入力=data/stations/observed_transformer_pairs.json。既定=OBSERVED_TRAFOS_DEFAULT"
-                         "(False)。環境変数 AGJ_OBSERVED_TRAFOS=1/0 でも指定可")
+                         "(True・2026-10-08)。無効化=--no-observed-trafos。環境変数 AGJ_OBSERVED_TRAFOS=1/0 でも指定可")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1526,6 +1571,7 @@ def main():
                          "scale": "full (no voltage-class reduction)"},
                "islands": {}, "regions": {}}
 
+    flow_dump = {}
     for island in targets:
         t0 = time.time()
         freq = ISLAND_FREQ[island]
@@ -1617,6 +1663,8 @@ def main():
         net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)
         net_used = net_ac if ac.get("converged") else net_dc
         mode = "ac" if ac.get("converged") else "dc"
+        if args.dump_flows:
+            flow_dump[island] = dump_flows(net_used, mode)
 
         regions = sorted({r for r, (isl, _f) in ISLAND_OF.items() if isl == island})
         for region in regions:
@@ -1662,6 +1710,9 @@ def main():
 
     with open(f"{args.output_dir}/summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
+    if args.dump_flows:
+        with open(f"{args.output_dir}/flows.json", "w", encoding="utf-8") as f:
+            json.dump(flow_dump, f, ensure_ascii=False, separators=(",", ":"))
     print(f"done -> {args.output_dir}")
 
 
