@@ -60,8 +60,9 @@
 ## 既知の限界
 
 - **変圧器は電圧階級の梯子(隣どうしを結ぶ仮説)**。OSM が実機を描く 518 敷地のうち 32 か所で、梯子が段を飛ばす実機
-  (275/77 の直結など)を見落としている。一覧は `scripts/compare_station_layers.py` →
-  `docs/reports/station_layers_<日付>/transformer_pair_review.csv`。置き換えはオーナー判断
+  (275/77 の直結など)を見落としていた。2026-10-07 から、観測した組がある変電所では観測を先に張り、残りを梯子でつなぐ
+  (介入 #48、`source=osm-observed`、607 台。`--no-observed-trafos` で従来の梯子)。一覧は `scripts/compare_station_layers.py` →
+  `docs/reports/station_layers_<日付>/transformer_pair_review.csv`
 - 開閉器(SwitchSpec)はベイから推した開閉点で、OSM の実物ではない。実物は観測層(`data/stations`)にある
 
 - **母線なし変電所が全国86%**（OSMマッピング粒度の地域差、issue #49）。

@@ -144,19 +144,28 @@ def apply_transformer_provenance(region, structures):
     return n_applied
 
 
-def build_region(region, data_dir="data"):
-    """1地域の全変電所を構造化。(structures, report) を返す。"""
+def build_region(region, data_dir="data", observed_trafos=True):
+    """1地域の全変電所を構造化。(structures, report) を返す。
+
+    observed_trafos: 介入 #48。True(既定)= data/stations/observed_transformer_pairs.json の
+    OSM で観測した変圧器の組を梯子より先に張る。False = 従来の梯子だけ(回帰比較用)。
+    """
     t0 = time.time()
     subs, lines = load(region, data_dir)
     pways = prepare_ways(lines)
     owned, membership = owned_internal_ways(subs["features"], pways)
+    observed = None
+    if observed_trafos:
+        from src.model.site_transformers import by_structure_site
+        observed = by_structure_site()
     structures = []
     seen_ids = {}
     dup_features = 0
     errors = []
     for i, ft in enumerate(subs["features"]):
         try:
-            s, _ways, _poly = extract_structure(region, ft, pways, owned=owned[i])
+            s, _ways, _poly = extract_structure(region, ft, pways, owned=owned[i],
+                                                observed_by_site=observed)
         except Exception as exc:   # noqa: BLE001 — 全数生成ゲートで報告
             nm = (ft.get("properties") or {}).get("name")
             errors.append({"index": i, "name": nm,
@@ -194,6 +203,8 @@ def build_region(region, data_dir="data"):
         "n_bays": sum(len(s.bays) for s in structures),
         "internal_way_membership": membership,
         "n_transformers": sum(len(s.transformers) for s in structures),
+        "n_trafo_osm_observed": sum(1 for s in structures for t in s.transformers
+                                    if t.source == "osm-observed"),
         "n_trafo_nameplate": n_nameplate,
         "sites_with_known_kv": vl_known,
         "n_connections": len(conns),
@@ -241,7 +252,7 @@ def cross_region_aliases(all_payloads):
 
 
 def generate(regions, out_dir=OUT_DIR, data_dir="data",
-             verify_determinism=False, log=print):
+             verify_determinism=False, log=print, observed_trafos=True):
     """地域群を生成して書き出す(CLI とダッシュボードの共通実体)。
 
     Returns:
@@ -252,7 +263,7 @@ def generate(regions, out_dir=OUT_DIR, data_dir="data",
     reports = {}
     gate_fail = False
     for region in regions:
-        structures, conns, rep = build_region(region, data_dir)
+        structures, conns, rep = build_region(region, data_dir, observed_trafos)
         reports[region] = rep
         all_payloads[region] = payload_dict(region, structures, conns)
         status = "OK " if rep["n_errors"] == 0 else "FAIL"
@@ -268,7 +279,7 @@ def generate(regions, out_dir=OUT_DIR, data_dir="data",
 
     if verify_determinism:
         for region in regions:
-            structures2, conns2, _ = build_region(region, data_dir)
+            structures2, conns2, _ = build_region(region, data_dir, observed_trafos)
             a = json.dumps(all_payloads[region], ensure_ascii=False,
                            sort_keys=True)
             b = json.dumps(payload_dict(region, structures2, conns2),
@@ -316,13 +327,17 @@ def main():
     ap.add_argument("--out", default=OUT_DIR)
     ap.add_argument("--verify-determinism", action="store_true",
                     help="2回生成して構造部のバイト一致を検証")
+    ap.add_argument("--observed-trafos", action=argparse.BooleanOptionalAction, default=True,
+                    help="介入#48: OSM で観測した変圧器の組を梯子より先に張る(既定 ON)。"
+                         "--no-observed-trafos で従来の梯子だけ")
     args = ap.parse_args()
 
     regions = REGIONS if args.all else [args.region]
     if not regions or regions == [None]:
         ap.error("--region か --all を指定")
     _reports, gate_fail = generate(regions, args.out, args.data_dir,
-                                   args.verify_determinism)
+                                   args.verify_determinism,
+                                   observed_trafos=args.observed_trafos)
     if gate_fail:
         raise SystemExit("QUALITY GATE FAILED (errors above)")
 

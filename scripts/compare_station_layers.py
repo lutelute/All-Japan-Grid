@@ -73,11 +73,43 @@ def verdict(obs: set, ladder: set, levels: set) -> str:
     return "level_not_in_db"
 
 
+def export_observed(rows: dict, structures: dict, path: Path) -> None:
+    """構造 DB に対応する敷地の、両側の巻線電圧が分かる OSM の変圧器の組(介入 #48 の入力)。
+
+    PBF が無くても構造 DB と潮流モデルを作り直せるよう、小さく書き出して追跡する。"""
+    units = defaultdict(lambda: defaultdict(set))
+    for p in rows["views"]["pairs"]:
+        units[p["site"]][(p["hv_kv"], p["lv_kv"])].add(p["equipment_id"])
+    sites = []
+    for key, sids in sorted(rows["crosswalk"].items()):
+        sids = [sid for sid in sids if sid in structures]
+        if not sids or key not in units:
+            continue
+        region, s = structures[sids[0]]
+        sites.append({
+            "osm": key, "name": s["site"]["name"],
+            "regions": sorted({structures[sid][0] for sid in sids}),
+            "structure_sites": sids, "lat": s["site"]["lat"], "lon": s["site"]["lon"],
+            "pairs": [[hv, lv, len(eqs)] for (hv, lv), eqs in sorted(units[key].items(), reverse=True)],
+            "transformers": sorted({e for eqs in units[key].values() for e in eqs}),
+        })
+    manifest = ROOT / "data/stations/MANIFEST.json"
+    m = json.loads(manifest.read_text()) if manifest.exists() else {}
+    path.write_text(json.dumps({
+        "note": "OSM が両側の巻線電圧つきで描いた変圧器の組(hv_kV, lv_kV, 台数)。構造 DB のサイトと OSM の "
+                "(type,id) で対応。介入 #48(src/model/site_transformers.py)の入力。生成: scripts/compare_station_layers.py",
+        "osm_timestamp": m.get("input", {}).get("osm_timestamp"),
+        "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+        "sites": sites}, ensure_ascii=False, indent=1) + "\n")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--rows", type=Path, default=ROOT / "data/stations/japan_rows.json.gz")
     ap.add_argument("--structures", type=Path, default=ROOT / "data/structures")
     ap.add_argument("--out", type=Path, default=ROOT / f"docs/reports/station_layers_{date.today().isoformat()}")
+    ap.add_argument("--observed", type=Path, default=ROOT / "data/stations/observed_transformer_pairs.json",
+                    help="潮流モデル・構造 DB が読む観測した組(介入 #48)の書き出し先")
     a = ap.parse_args(argv)
 
     rows = json.load(gzip.open(a.rows, "rt", encoding="utf-8"))
@@ -143,6 +175,7 @@ def main(argv=None):
     order = {"ladder_skips": 0, "level_not_in_db": 1, "osm_partial": 2}
     review.sort(key=lambda r: (order[r["verdict"]], not r["nameplate_site"], r["region"], r["name"]))
 
+    export_observed(rows, structures, a.observed)
     a.out.mkdir(parents=True, exist_ok=True)
     with open(a.out / "transformer_pair_review.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(review[0]) if review else ["verdict"])

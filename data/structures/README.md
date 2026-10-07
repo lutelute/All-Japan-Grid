@@ -45,6 +45,8 @@ Terminal の binding 語彙(強い順): `vertex-shared`(OSM頂点共有) > `poly
   接続レコード 10,334 / エラー 0 / 決定性 identical
 - 母線・ベイの帰属は敷地の多角形(`summary.json` の `internal_way_membership`)。2 つ以上の変電所に入る母線 0・ベイ 2
   (07-02〜10-06 は外接矩形 +約 1 km の全部で、母線 25%・ベイ 23% が二重。接続レコードのうち 1,252 件はそれが作った架空の接続)
+- 変圧器: OSM が巻線電圧つきの実機を描く変電所では、観測した組を先に張り残りを梯子でつなぐ(介入 #48、`source=osm-observed` 607 台、
+  `summary.json` の `n_trafo_osm_observed`)。`--no-observed-trafos` で従来の梯子だけ
 - 観測層(node-breaker、`data/stations`)との突き合わせ: [docs/STATION_NODE_BREAKER.md](../../docs/STATION_NODE_BREAKER.md)
 
 ## 品質(2026-07-02 生成・参考)

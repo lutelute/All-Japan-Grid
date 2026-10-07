@@ -100,7 +100,9 @@ All-EU-Grid が欧州で足した規則(どれも根拠のラベル付き):
 | **梯子が段を飛ばす実機**(275/77 の直結など) | 32 | 6% |
 
 梯子の仮定は構造 DB だけでなく潮流モデル(`run_full_powerflow_from_db.py` の変電所内の変圧器)にもある。
-段を飛ばす実機は、潮流の経路を変えうる。置き換えるかどうかはオーナー判断で、一覧は確認の順に並べてある。
+**介入 #48**(`src/model/site_transformers.py`)で、観測した組を先に張り、残る階級だけ梯子でつなぐ。構造 DB は既定 ON、
+潮流は既定 OFF(`--observed-trafos`)。前後の数字と既定 OFF の理由は [MODEL_INTERVENTIONS.md](MODEL_INTERVENTIONS.md) の #48 と
+採用記録の §10。
 
 ## 使い方
 

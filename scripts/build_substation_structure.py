@@ -227,7 +227,7 @@ def build_structure(region, name, data_dir="data"):
     return extract_structure(region, ft, pways, owned=owned[i])
 
 
-def extract_structure(region, ft, pways, owned=None):
+def extract_structure(region, ft, pways, owned=None, observed_by_site=None):
     """変電所 feature 1件から node-breaker 構造を抽出する(一括生成の実体)。
 
     Args:
@@ -236,6 +236,9 @@ def extract_structure(region, ft, pways, owned=None):
         pways: :func:`prepare_ways` の結果(地域全体で共有)。
         owned: この敷地に帰属する母線・ベイの way key(:func:`internal_way_owners`)。
             None のときは旧来の外接矩形 +0.01° の全部(比較用。一括生成では渡すこと)。
+        observed_by_site: 構造 DB の site_id → OSM で観測した変圧器の組(介入 #48、
+            ``src.model.site_transformers.by_structure_site``)。あればその組を張り、残りの階級を
+            梯子でつなぐ。None なら従来の梯子だけ。
     """
     from shapely.geometry import Point, shape
 
@@ -399,11 +402,20 @@ def extract_structure(region, ft, pways, owned=None):
                 par_source=par_src, binding=binding, confidence=conf))
 
     # --- TransformerSpec: 既知電圧クラスのラダー隣接対(structural) ---
+    # 介入 #48: OSM に巻線電圧つきの実機が描かれた変電所では、観測した組を先に張り、
+    # 観測が届かない階級だけ梯子でつなぐ(source="osm-observed" / "structural")。
     ladder = sorted((kv for kv in vls if kv > 0), reverse=True)
-    for i, (hv, lv) in enumerate(zip(ladder, ladder[1:]), 1):
+    observed = (observed_by_site or {}).get(site_id)
+    if observed:
+        from src.model.site_transformers import link_levels
+        links = [(int(h), int(l), src) for h, l, src in link_levels(ladder, observed)]
+    else:
+        links = [(hv, lv, "ladder") for hv, lv in zip(ladder, ladder[1:])]
+    for i, (hv, lv, src) in enumerate(links, 1):
         structure.transformers.append(TransformerSpec(
             trafo_id=f"{site_id}/tr{i}", site_id=site_id,
-            hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id))
+            hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id,
+            source="osm-observed" if src == "osm" else "structural"))
 
     # --- SwitchSpec: ベイから開閉点を導出(オーナー指示 2026-08-28
     # 「開閉器などで経路を選択できるようにしたい」) ---

@@ -1,0 +1,12784 @@
+{
+ "note": "OSM が両側の巻線電圧つきで描いた変圧器の組(hv_kV, lv_kV, 台数)。構造 DB のサイトと OSM の (type,id) で対応。介入 #48(src/model/site_transformers.py)の入力。生成: scripts/compare_station_layers.py",
+ "osm_timestamp": "2026-10-06T20:21:06Z",
+ "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+ "sites": [
+  {
+   "osm": "r11529219",
+   "name": "嶺南変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_bbc3e10052c5"
+   ],
+   "lat": 35.556579,
+   "lon": 135.972164,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     6
+    ]
+   ],
+   "transformers": [
+    "n7743264908",
+    "n9931938030",
+    "n9931938034",
+    "n9931938045",
+    "n9931938049",
+    "n9935890653"
+   ]
+  },
+  {
+   "osm": "r11529637",
+   "name": "新綾部変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_ed2813761dd9"
+   ],
+   "lat": 35.351241,
+   "lon": 135.266196,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n3312429472",
+    "n3312443268",
+    "n3312443669",
+    "n3312450266",
+    "n7834856664",
+    "n7834856666"
+   ]
+  },
+  {
+   "osm": "r12927262",
+   "name": "南札幌変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_d87a841b8635"
+   ],
+   "lat": 43.022335,
+   "lon": 141.418529,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13361335117",
+    "n13361335128",
+    "n13361335136"
+   ]
+  },
+  {
+   "osm": "r13768299",
+   "name": "新野田変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_767c6fb68251"
+   ],
+   "lat": 35.930961,
+   "lon": 139.910873,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n3475166419",
+    "n3475166433",
+    "n3475166435",
+    "n3475166449"
+   ]
+  },
+  {
+   "osm": "r17013811",
+   "name": "中能登変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_7280918b0c7b",
+    "hokuriku_site_7280918b0c7b"
+   ],
+   "lat": 36.996237,
+   "lon": 136.837897,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11508824111",
+    "n11508824112",
+    "n11508824113",
+    "n11508824122",
+    "n11508824123",
+    "n11508824124"
+   ]
+  },
+  {
+   "osm": "r18793974",
+   "name": "青梅変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_2e48df183b39"
+   ],
+   "lat": 35.794699,
+   "lon": 139.317,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12668903667",
+    "n12668903690",
+    "n12668932401"
+   ]
+  },
+  {
+   "osm": "r19170972",
+   "name": "北相模変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_8c7659a2606b"
+   ],
+   "lat": 35.534253,
+   "lon": 139.367357,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n12861770819",
+    "n12861770827"
+   ]
+  },
+  {
+   "osm": "r19925192",
+   "name": "女満別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_17ed74a5a5f9"
+   ],
+   "lat": 43.832103,
+   "lon": 144.216914,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13357240419",
+    "n13357240422"
+   ]
+  },
+  {
+   "osm": "r20107547",
+   "name": "旭川変電所 (Asahikawa Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_e2d30ef8c5ee"
+   ],
+   "lat": 43.753355,
+   "lon": 142.38782,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13463790404"
+   ]
+  },
+  {
+   "osm": "w1017148246",
+   "name": "四倉変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_1d9dcb67361c"
+   ],
+   "lat": 37.102264,
+   "lon": 140.982858,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9381900131",
+    "n9381900132"
+   ]
+  },
+  {
+   "osm": "w1017577728",
+   "name": "白石変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_638d3a4b7523"
+   ],
+   "lat": 38.008636,
+   "lon": 140.617294,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9540151644",
+    "n9540151645",
+    "n9540151647"
+   ]
+  },
+  {
+   "osm": "w1017577797",
+   "name": "北福島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5098ea5c2f15"
+   ],
+   "lat": 37.843817,
+   "lon": 140.499873,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9385806251",
+    "n9385806254"
+   ]
+  },
+  {
+   "osm": "w1026070082",
+   "name": "小関二丁目変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c081649c0483"
+   ],
+   "lat": 38.370157,
+   "lon": 140.361113,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9460172087",
+    "n9460172088",
+    "n9460172089"
+   ]
+  },
+  {
+   "osm": "w1026086959",
+   "name": "春日町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d100dad46d9c"
+   ],
+   "lat": 38.251993,
+   "lon": 140.320651,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9460336739",
+    "n9460336740",
+    "n9460336741"
+   ]
+  },
+  {
+   "osm": "w1026086967",
+   "name": "高堂二丁目変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9ae550cdcf74"
+   ],
+   "lat": 38.251458,
+   "lon": 140.308756,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9460336757",
+    "n9460336758"
+   ]
+  },
+  {
+   "osm": "w1026396845",
+   "name": "飯豊町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_12672e7b603d"
+   ],
+   "lat": 38.026285,
+   "lon": 140.004055,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9463138741",
+    "n9463138742"
+   ]
+  },
+  {
+   "osm": "w1026396862",
+   "name": "川西町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_632c314e9a37"
+   ],
+   "lat": 38.001468,
+   "lon": 140.053379,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9463138821",
+    "n9463138823",
+    "n9463138827"
+   ]
+  },
+  {
+   "osm": "w1027413625",
+   "name": "鎌田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_06591731bdc1"
+   ],
+   "lat": 37.797686,
+   "lon": 140.497244,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9471860318",
+    "n9471860319"
+   ]
+  },
+  {
+   "osm": "w1027413657",
+   "name": "大森変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_defd87fee589"
+   ],
+   "lat": 37.729022,
+   "lon": 140.444315,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9471860551",
+    "n9471860552",
+    "n9471860553"
+   ]
+  },
+  {
+   "osm": "w1027413750",
+   "name": "JR東日本 原ノ町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7e4a611febae"
+   ],
+   "lat": 37.649172,
+   "lon": 140.965487,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9471861056",
+    "n9471861057"
+   ]
+  },
+  {
+   "osm": "w1028270975",
+   "name": "田上変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_fc3c0b6b5880",
+    "hokuriku_site_fc3c0b6b5880"
+   ],
+   "lat": 36.530322,
+   "lon": 136.694844,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9480098312",
+    "n9480098316"
+   ]
+  },
+  {
+   "osm": "w1028585683",
+   "name": "名目所二丁目変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3332cfe2a302"
+   ],
+   "lat": 37.946884,
+   "lon": 139.165864,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9482833396",
+    "n9482833398",
+    "n9482833402"
+   ]
+  },
+  {
+   "osm": "w1035563657",
+   "name": "JR東日本 北白川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_95da826a9570"
+   ],
+   "lat": 38.03498,
+   "lon": 140.698078,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9540151447",
+    "n9540151450"
+   ]
+  },
+  {
+   "osm": "w1037299171",
+   "name": "広見変電所",
+   "regions": [
+    "shikoku"
+   ],
+   "structure_sites": [
+    "shikoku_site_1bb1788c6c67"
+   ],
+   "lat": 33.246612,
+   "lon": 132.686822,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9555676177",
+    "n9555676178"
+   ]
+  },
+  {
+   "osm": "w1037463543",
+   "name": "大殿変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_70f89839ee44",
+    "shikoku_site_70f89839ee44"
+   ],
+   "lat": 33.803723,
+   "lon": 134.296022,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n9557095272"
+   ]
+  },
+  {
+   "osm": "w103813490",
+   "name": "荒巻変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_abcb6280f345"
+   ],
+   "lat": 38.295141,
+   "lon": 140.853578,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8272640161",
+    "n8272640162"
+   ]
+  },
+  {
+   "osm": "w103818820",
+   "name": "仙台変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_aa1294ede4e7"
+   ],
+   "lat": 38.318953,
+   "lon": 140.907621,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3134913753",
+    "n7739106450",
+    "n7739106452",
+    "n7739106453",
+    "n7739106560",
+    "n7739106561",
+    "n7739106562"
+   ]
+  },
+  {
+   "osm": "w104024082",
+   "name": "西石巻変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e47a84c14c82"
+   ],
+   "lat": 38.473562,
+   "lon": 141.219722,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ],
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7471058270",
+    "n7471058274",
+    "n7471058277",
+    "n7471058280",
+    "n7471058285"
+   ]
+  },
+  {
+   "osm": "w104055891",
+   "name": "南仙台変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_1d39be5433d1"
+   ],
+   "lat": 38.215706,
+   "lon": 140.896745,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8285836846",
+    "n8285836849",
+    "n8285836852"
+   ]
+  },
+  {
+   "osm": "w104055902",
+   "name": "西多賀変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a3d1ba657aa9"
+   ],
+   "lat": 38.212931,
+   "lon": 140.845186,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9540150816",
+    "n9540150817"
+   ]
+  },
+  {
+   "osm": "w104107812",
+   "name": "三居沢発電所 併設配電用変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2fe15c4dd062"
+   ],
+   "lat": 38.267408,
+   "lon": 140.84021,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8272640418",
+    "n8272640424",
+    "n8272640425"
+   ]
+  },
+  {
+   "osm": "w104164016",
+   "name": "小高変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_195a26d47286"
+   ],
+   "lat": 37.559407,
+   "lon": 140.992307,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8377497598",
+    "n8377497600"
+   ]
+  },
+  {
+   "osm": "w104371389",
+   "name": "郡山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_f1ebdd9c6db0"
+   ],
+   "lat": 37.381746,
+   "lon": 140.411741,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7795851939",
+    "n7795851941",
+    "n7795851943",
+    "n7795851945"
+   ]
+  },
+  {
+   "osm": "w104375141",
+   "name": "須賀川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_800e13f8e2b6"
+   ],
+   "lat": 37.30555,
+   "lon": 140.426443,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n6343931800",
+    "n6343931801",
+    "n6343931802",
+    "n7787019886",
+    "n7787019889",
+    "n7787019892"
+   ]
+  },
+  {
+   "osm": "w104380334",
+   "name": "JR東日本 新福島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_f5a72d3c9d91"
+   ],
+   "lat": 37.794779,
+   "lon": 140.476782,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9471860411",
+    "n9471860413"
+   ]
+  },
+  {
+   "osm": "w104530060",
+   "name": "新栃木変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_31f92d199fd2"
+   ],
+   "lat": 36.655431,
+   "lon": 139.917631,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ],
+    [
+     500.0,
+     154.0,
+     3
+    ],
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2919089513",
+    "n2919089514",
+    "n6467393538",
+    "n6467393539",
+    "n7775059373",
+    "n7775059374"
+   ]
+  },
+  {
+   "osm": "w104736425",
+   "name": "西旭川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_4df2aca26e90"
+   ],
+   "lat": 43.806082,
+   "lon": 142.322868,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n5003910389",
+    "n5003910390",
+    "n5003910391"
+   ]
+  },
+  {
+   "osm": "w104978954",
+   "name": "駒ヶ嶺変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_05bd7c0d0fbb"
+   ],
+   "lat": 37.840327,
+   "lon": 140.913138,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8377534005",
+    "n8377534006",
+    "n8377534027",
+    "n8377534028"
+   ]
+  },
+  {
+   "osm": "w1050769194",
+   "name": "古月変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_5a66320f9aa0"
+   ],
+   "lat": 33.809705,
+   "lon": 130.679554,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13824691321",
+    "n13824691322",
+    "n13824691323"
+   ]
+  },
+  {
+   "osm": "w105291887",
+   "name": "那珂変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_097d46db5af5"
+   ],
+   "lat": 36.479277,
+   "lon": 140.445542,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n10724746939",
+    "n10724746940"
+   ]
+  },
+  {
+   "osm": "w106076988",
+   "name": "宮城変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5cc42f186ca6"
+   ],
+   "lat": 38.604937,
+   "lon": 140.848841,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ],
+    [
+     275.0,
+     154.0,
+     4
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3229594669",
+    "n7076266315",
+    "n7076266316",
+    "n7076266317",
+    "n7076266318",
+    "n7781314089",
+    "n7781314090",
+    "n7781314091"
+   ]
+  },
+  {
+   "osm": "w106309481",
+   "name": "新福島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_291f3e911771"
+   ],
+   "lat": 37.359379,
+   "lon": 140.96061,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9470338220",
+    "n9470338223",
+    "n9470338226"
+   ]
+  },
+  {
+   "osm": "w106569571",
+   "name": "植田変電所",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tohoku_site_5ae423cf602d",
+    "tokyo_site_5ae423cf602d"
+   ],
+   "lat": 36.933073,
+   "lon": 140.790376,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8353907644",
+    "n8353907645"
+   ]
+  },
+  {
+   "osm": "w108199478",
+   "name": "南大阪変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_b21532e3189f"
+   ],
+   "lat": 34.467906,
+   "lon": 135.471465,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7874312953",
+    "n7874312957",
+    "n7874312968",
+    "n7874312971"
+   ]
+  },
+  {
+   "osm": "w109508552",
+   "name": "金ケ崎変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ef35500eea7e"
+   ],
+   "lat": 39.216455,
+   "lon": 141.082459,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7875101099",
+    "n7875101106",
+    "n7875101107"
+   ]
+  },
+  {
+   "osm": "w109834508",
+   "name": "金剛変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_edd39f168842"
+   ],
+   "lat": 34.402669,
+   "lon": 135.586836,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9557368372",
+    "n9557368373"
+   ]
+  },
+  {
+   "osm": "w110297009",
+   "name": "橋本変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_787a80dba48d"
+   ],
+   "lat": 35.591317,
+   "lon": 139.342169,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ],
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12813992207",
+    "n12813992208",
+    "n12813992209",
+    "n12813992212",
+    "n12813992213",
+    "n12813992214",
+    "n12813992215"
+   ]
+  },
+  {
+   "osm": "w110340505",
+   "name": "新神戸変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_68de0aaab70f"
+   ],
+   "lat": 34.733424,
+   "lon": 135.24572,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7832720544",
+    "n7832720545",
+    "n7832720546",
+    "n7832720547"
+   ]
+  },
+  {
+   "osm": "w110682955",
+   "name": "伊丹変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_0be31d11012c"
+   ],
+   "lat": 34.785752,
+   "lon": 135.375017,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7820313499",
+    "n7832721292",
+    "n7832721293"
+   ]
+  },
+  {
+   "osm": "w110682956",
+   "name": "猪名川変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_dc12693f672b"
+   ],
+   "lat": 34.984378,
+   "lon": 135.345996,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     500.0,
+     154.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n2919990104",
+    "n2919990306",
+    "n2919990603",
+    "n2919992501"
+   ]
+  },
+  {
+   "osm": "w110847002",
+   "name": "北大阪変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_29741ec14455"
+   ],
+   "lat": 34.881188,
+   "lon": 135.575393,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ],
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8963185607",
+    "n8963185610",
+    "n8963185613",
+    "n8963185616",
+    "n8963199819",
+    "n8963199822"
+   ]
+  },
+  {
+   "osm": "w111363724",
+   "name": "小曽根電力所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_ff3251c9a1e0"
+   ],
+   "lat": 34.755099,
+   "lon": 135.481162,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2918972703",
+    "n2918973201"
+   ]
+  },
+  {
+   "osm": "w111673441",
+   "name": "綱島変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_13e575b71706"
+   ],
+   "lat": 35.536283,
+   "lon": 139.647043,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2918009041",
+    "n2918009218",
+    "n2918009219"
+   ]
+  },
+  {
+   "osm": "w113545940",
+   "name": "東港変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_13aa6a59e2e3"
+   ],
+   "lat": 37.962424,
+   "lon": 139.249446,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9482833459",
+    "n9482833461",
+    "n9482833462"
+   ]
+  },
+  {
+   "osm": "w114416315",
+   "name": "東橋本変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_2c88df1f47fc"
+   ],
+   "lat": 35.594916,
+   "lon": 139.356844,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12800539171",
+    "n12800539172",
+    "n12800539173"
+   ]
+  },
+  {
+   "osm": "w1148873451",
+   "name": "由木変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_54d189344056"
+   ],
+   "lat": 35.616427,
+   "lon": 139.375139,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12802203242",
+    "n12802203243",
+    "n12802203244"
+   ]
+  },
+  {
+   "osm": "w117200611",
+   "name": "浅間町変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_64b80e265852"
+   ],
+   "lat": 35.68317,
+   "lon": 139.495238,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n12810062472"
+   ]
+  },
+  {
+   "osm": "w1182267742",
+   "name": "堤町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ff7226069934"
+   ],
+   "lat": 40.507981,
+   "lon": 141.483676,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n10979025824",
+    "n10979025825",
+    "n10979025826"
+   ]
+  },
+  {
+   "osm": "w1212558459",
+   "name": "海老津変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_7e66cd24f11a"
+   ],
+   "lat": 33.843878,
+   "lon": 130.622575,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13824904951",
+    "n13824904952",
+    "n13824904953"
+   ]
+  },
+  {
+   "osm": "w1236757607",
+   "name": "北陸電力送配電　飯田変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_c3398bfccf50"
+   ],
+   "lat": 37.432643,
+   "lon": 137.255514,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510815984",
+    "n11510815986"
+   ]
+  },
+  {
+   "osm": "w1237094393",
+   "name": "河井町変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_41f29dd1029a"
+   ],
+   "lat": 37.38949,
+   "lon": 136.902946,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11508823944",
+    "n11508823945"
+   ]
+  },
+  {
+   "osm": "w1238881105",
+   "name": "東川原町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_4f80a483fca0",
+    "hokuriku_site_4f80a483fca0"
+   ],
+   "lat": 36.896299,
+   "lon": 136.786308,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11508808885",
+    "n11508808886",
+    "n11508808887"
+   ]
+  },
+  {
+   "osm": "w1238881150",
+   "name": "和倉変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_40a1eed6dbab"
+   ],
+   "lat": 37.073584,
+   "lon": 136.929713,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11508823878",
+    "n11508823879"
+   ]
+  },
+  {
+   "osm": "w1238881193",
+   "name": "門前町田村変電所_2",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_3acb42f4bc4e"
+   ],
+   "lat": 37.293058,
+   "lon": 136.789596,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11508823962",
+    "n11508823963"
+   ]
+  },
+  {
+   "osm": "w1239099818",
+   "name": "内浦変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_f70489385dd0"
+   ],
+   "lat": 37.342702,
+   "lon": 137.232228,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510802354",
+    "n11510802356"
+   ]
+  },
+  {
+   "osm": "w1239099830",
+   "name": "能登町変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_b30242c5dfdf"
+   ],
+   "lat": 37.266686,
+   "lon": 137.031305,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510815991",
+    "n11510815992"
+   ]
+  },
+  {
+   "osm": "w1239099837",
+   "name": "宇出津変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_aa2ccaed9c32"
+   ],
+   "lat": 37.308427,
+   "lon": 137.146013,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510816008",
+    "n11510816010"
+   ]
+  },
+  {
+   "osm": "w1239099845",
+   "name": "富来地頭町変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_0a86038b7c5a"
+   ],
+   "lat": 37.141979,
+   "lon": 136.735029,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510816033",
+    "n11510816035"
+   ]
+  },
+  {
+   "osm": "w1241362889",
+   "name": "宇野気変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_e5e5297fb992",
+    "hokuriku_site_e5e5297fb992"
+   ],
+   "lat": 36.719555,
+   "lon": 136.705058,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11681822472",
+    "n11681822474",
+    "n11681822476"
+   ]
+  },
+  {
+   "osm": "w1243188388",
+   "name": "麦生変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_5d88b0666e87",
+    "hokuriku_site_5d88b0666e87"
+   ],
+   "lat": 36.826796,
+   "lon": 136.768255,
+   "pairs": [
+    [
+     77.0,
+     66.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11681822517",
+    "n11681822521",
+    "n11681822522"
+   ]
+  },
+  {
+   "osm": "w1256591798",
+   "name": "石引一丁目変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_ee2464fa2766",
+    "hokuriku_site_ee2464fa2766"
+   ],
+   "lat": 36.555432,
+   "lon": 136.680786,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     4
+    ]
+   ],
+   "transformers": [
+    "n11681811300",
+    "n11681811301",
+    "n11681811302",
+    "n11681811303"
+   ]
+  },
+  {
+   "osm": "w1256591813",
+   "name": "東長江町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_f6a2136b3feb",
+    "hokuriku_site_f6a2136b3feb"
+   ],
+   "lat": 36.577077,
+   "lon": 136.684528,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11681811335",
+    "n11681811338"
+   ]
+  },
+  {
+   "osm": "w1256591915",
+   "name": "長柄町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_ac9b86890fe5",
+    "hokuriku_site_ac9b86890fe5"
+   ],
+   "lat": 36.771549,
+   "lon": 136.734854,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11681822493",
+    "n11681822495"
+   ]
+  },
+  {
+   "osm": "w1256747146",
+   "name": "菰原変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_09343f41e2a0",
+    "hokuriku_site_09343f41e2a0"
+   ],
+   "lat": 36.756013,
+   "lon": 137.333155,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11683126200",
+    "n11683126201",
+    "n11683126202"
+   ]
+  },
+  {
+   "osm": "w128364781",
+   "name": "京浜変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_911ce9e846f4"
+   ],
+   "lat": 35.431312,
+   "lon": 139.500467,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3463210603",
+    "n3463210613"
+   ]
+  },
+  {
+   "osm": "w1295422529",
+   "name": "若葉変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_aecb029f2da4"
+   ],
+   "lat": 35.952226,
+   "lon": 139.404389,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n12003688248"
+   ]
+  },
+  {
+   "osm": "w131202599",
+   "name": "東京電力 木曽変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_9753491d80ba"
+   ],
+   "lat": 35.55576,
+   "lon": 139.441387,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12828077938",
+    "n12828077941",
+    "n12828077943"
+   ]
+  },
+  {
+   "osm": "w132794813",
+   "name": "大熊変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e1f6592ce76a"
+   ],
+   "lat": 37.415256,
+   "lon": 141.006765,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9470316731",
+    "n9470316732"
+   ]
+  },
+  {
+   "osm": "w132913106",
+   "name": "新筑波変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_bc761a215f6f"
+   ],
+   "lat": 36.16713,
+   "lon": 139.903531,
+   "pairs": [
+    [
+     500.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n6015095928",
+    "n6015095936",
+    "n6015095947"
+   ]
+  },
+  {
+   "osm": "w133641619",
+   "name": "新所沢変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_5e063d6d2f77"
+   ],
+   "lat": 35.92889,
+   "lon": 139.370665,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     13
+    ]
+   ],
+   "transformers": [
+    "n13608417376",
+    "n13608417381",
+    "n13608436912",
+    "n13608436914",
+    "n13608436981",
+    "n13608436983",
+    "n13608437017",
+    "n13608437019",
+    "n8228534617",
+    "n8228534629",
+    "n8228534630",
+    "n8228534631",
+    "n8228534644"
+   ]
+  },
+  {
+   "osm": "w133644487",
+   "name": "新飯能変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_d5271113da67"
+   ],
+   "lat": 35.851949,
+   "lon": 139.239447,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8201187496"
+   ]
+  },
+  {
+   "osm": "w1351221827",
+   "name": "緑が丘変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_10ea74ede600"
+   ],
+   "lat": 35.544984,
+   "lon": 139.384222,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12861862258",
+    "n12861862262",
+    "n12861862265"
+   ]
+  },
+  {
+   "osm": "w1383255869",
+   "name": "是政二丁目変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_e450760a5879"
+   ],
+   "lat": 35.658748,
+   "lon": 139.496705,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n12806682948"
+   ]
+  },
+  {
+   "osm": "w1384056701",
+   "name": "川尻変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_e587775b083d"
+   ],
+   "lat": 35.590019,
+   "lon": 139.306967,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12814449736",
+    "n12814449740",
+    "n12814449741"
+   ]
+  },
+  {
+   "osm": "w1385586851",
+   "name": "田名変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_0aa0f5fd6f68"
+   ],
+   "lat": 35.55844,
+   "lon": 139.341469,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12828478425",
+    "n12828478427",
+    "n12828478429"
+   ]
+  },
+  {
+   "osm": "w1389288214",
+   "name": "相模大野変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_6d2b769fda89"
+   ],
+   "lat": 35.532976,
+   "lon": 139.432839,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n12860669880"
+   ]
+  },
+  {
+   "osm": "w1417209903",
+   "name": "浜頓別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_95a9b4633089"
+   ],
+   "lat": 45.121371,
+   "lon": 142.358779,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13956543858",
+    "n13956543861",
+    "n13956543864"
+   ]
+  },
+  {
+   "osm": "w1443091365",
+   "name": "三戸変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_5f8fa569f503"
+   ],
+   "lat": 35.176989,
+   "lon": 139.631989,
+   "pairs": [
+    [
+     66.0,
+     1.5,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13241509500",
+    "n13241547701"
+   ]
+  },
+  {
+   "osm": "w1443721146",
+   "name": "子ノ神山開閉所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_c3bf0370e301"
+   ],
+   "lat": 35.281142,
+   "lon": 139.659576,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13247935160",
+    "n13247935161"
+   ]
+  },
+  {
+   "osm": "w144671189",
+   "name": "八雲変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_7fc9a225b9e2"
+   ],
+   "lat": 42.260111,
+   "lon": 140.273188,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13511664486",
+    "n13511664489"
+   ]
+  },
+  {
+   "osm": "w145079972",
+   "name": "新多摩変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_bbe761849f02"
+   ],
+   "lat": 35.714864,
+   "lon": 139.223294,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8195387875",
+    "n8262568452"
+   ]
+  },
+  {
+   "osm": "w1457423290",
+   "name": "西中川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_f64bafdcebfd"
+   ],
+   "lat": 44.831261,
+   "lon": 142.034219,
+   "pairs": [
+    [
+     187.0,
+     100.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13366506925",
+    "n13366506937"
+   ]
+  },
+  {
+   "osm": "w1457423291",
+   "name": "北豊富変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_abedee9bedc8"
+   ],
+   "lat": 45.196159,
+   "lon": 141.795666,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ],
+    [
+     187.0,
+     12.9,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13366527000",
+    "n13366527001",
+    "n13366527002",
+    "n13366527003",
+    "n13366527004"
+   ]
+  },
+  {
+   "osm": "w1467909518",
+   "name": "曲渕変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_af6ac40674ae"
+   ],
+   "lat": 45.259949,
+   "lon": 141.902772,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13463301044"
+   ]
+  },
+  {
+   "osm": "w1469958204",
+   "name": "天塩変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_6303b33f380b"
+   ],
+   "lat": 44.883796,
+   "lon": 141.752788,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13481102165"
+   ]
+  },
+  {
+   "osm": "w1469958211",
+   "name": "遠別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_3cf26cb6e47f"
+   ],
+   "lat": 44.724805,
+   "lon": 141.803357,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13481102176",
+    "n13481102177"
+   ]
+  },
+  {
+   "osm": "w150065045",
+   "name": "新富士変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_52b569ac38aa",
+    "chubu_site_52b569ac38aa"
+   ],
+   "lat": 35.372399,
+   "lon": 138.963078,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n12843948469",
+    "n6028228416"
+   ]
+  },
+  {
+   "osm": "w1509655366",
+   "name": "錦町変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_e74a2f5e7800",
+    "kyushu_site_e74a2f5e7800"
+   ],
+   "lat": 33.94041,
+   "lon": 130.966971,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13813592059",
+    "n13813592061"
+   ]
+  },
+  {
+   "osm": "w1509657186",
+   "name": "大里変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_ea5a0af4bb06",
+    "kyushu_site_ea5a0af4bb06"
+   ],
+   "lat": 33.912609,
+   "lon": 130.942354,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13813592043",
+    "n13813592044",
+    "n13813592045"
+   ]
+  },
+  {
+   "osm": "w1510200986",
+   "name": "若久変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_99935e736b2f",
+    "kyushu_site_99935e736b2f"
+   ],
+   "lat": 33.795392,
+   "lon": 130.976927,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     1
+    ],
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13807344796",
+    "n13807344797",
+    "n13807344798"
+   ]
+  },
+  {
+   "osm": "w1511234043",
+   "name": "苅田変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_9e8258afc668",
+    "kyushu_site_9e8258afc668"
+   ],
+   "lat": 33.788558,
+   "lon": 130.996025,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13807491395",
+    "n8442376356"
+   ]
+  },
+  {
+   "osm": "w1511572316",
+   "name": "三郎丸変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_2328e2732352",
+    "kyushu_site_2328e2732352"
+   ],
+   "lat": 33.86346,
+   "lon": 130.887299,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13815467424",
+    "n13815467425"
+   ]
+  },
+  {
+   "osm": "w1511634350",
+   "name": "砂津変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_65c86d27befa",
+    "kyushu_site_65c86d27befa"
+   ],
+   "lat": 33.883429,
+   "lon": 130.89021,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13815467420",
+    "n13815467421",
+    "n13815467422"
+   ]
+  },
+  {
+   "osm": "w1511657829",
+   "name": "大門変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_6025ed5d950e",
+    "kyushu_site_6025ed5d950e"
+   ],
+   "lat": 33.887511,
+   "lon": 130.868407,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     3
+    ],
+    [
+     66.0,
+     6.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13815601658",
+    "n13815601659",
+    "n13815601660",
+    "n13815601661"
+   ]
+  },
+  {
+   "osm": "w1511706666",
+   "name": "めかり変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_74a4cdb73533",
+    "kyushu_site_74a4cdb73533"
+   ],
+   "lat": 33.957127,
+   "lon": 130.979819,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13815874511",
+    "n13815874512"
+   ]
+  },
+  {
+   "osm": "w151379730",
+   "name": "房総変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_7634bffc30df"
+   ],
+   "lat": 35.499213,
+   "lon": 140.166439,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     275.0,
+     154.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n5062911589",
+    "n5062911596",
+    "n5062911601",
+    "n5062911606"
+   ]
+  },
+  {
+   "osm": "w1521952321",
+   "name": "香焼変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_6ec1cb364b40"
+   ],
+   "lat": 32.68944,
+   "lon": 129.810852,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13879050668"
+   ]
+  },
+  {
+   "osm": "w152991099",
+   "name": "中東京変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_dd10ae22ad02"
+   ],
+   "lat": 35.915487,
+   "lon": 139.353604,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ],
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8241045182",
+    "n8241045205",
+    "n8241045207",
+    "n8241045209",
+    "n8241050052",
+    "n8241050054",
+    "n8241050056"
+   ]
+  },
+  {
+   "osm": "w1531258836",
+   "name": "小頓別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_8ffb49d5b380"
+   ],
+   "lat": 44.829139,
+   "lon": 142.298472,
+   "pairs": [
+    [
+     100.0,
+     66.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13956191544",
+    "n13956191548"
+   ]
+  },
+  {
+   "osm": "w1531298639",
+   "name": "歌登変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_db7c4f42324d"
+   ],
+   "lat": 44.840224,
+   "lon": 142.47014,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13956578347"
+   ]
+  },
+  {
+   "osm": "w1531299473",
+   "name": "中頓別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_5cda6d462847"
+   ],
+   "lat": 44.970261,
+   "lon": 142.299914,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13956616298",
+    "n13956616299",
+    "n13956616300"
+   ]
+  },
+  {
+   "osm": "w1531318986",
+   "name": "中川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_3bbdb0dc52dc"
+   ],
+   "lat": 44.842159,
+   "lon": 142.081844,
+   "pairs": [
+    [
+     100.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13956838290"
+   ]
+  },
+  {
+   "osm": "w1531328049",
+   "name": "咲来変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_b68a7c0f5f59"
+   ],
+   "lat": 44.695273,
+   "lon": 142.27716,
+   "pairs": [
+    [
+     100.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13956911956"
+   ]
+  },
+  {
+   "osm": "w1531581957",
+   "name": "幌延変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_8f61d4f514ec"
+   ],
+   "lat": 45.017422,
+   "lon": 141.853162,
+   "pairs": [
+    [
+     100.0,
+     33.0,
+     1
+    ],
+    [
+     100.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13959452967",
+    "n13959452983",
+    "n13959453008"
+   ]
+  },
+  {
+   "osm": "w1531803771",
+   "name": "西名寄変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_073343e0cfbd"
+   ],
+   "lat": 44.344952,
+   "lon": 142.418551,
+   "pairs": [
+    [
+     187.0,
+     100.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13961275505",
+    "n13961275508"
+   ]
+  },
+  {
+   "osm": "w1531830511",
+   "name": "名寄変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_5118153199e5"
+   ],
+   "lat": 44.339271,
+   "lon": 142.456247,
+   "pairs": [
+    [
+     100.0,
+     22.0,
+     5
+    ],
+    [
+     100.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13961429287",
+    "n13961429288",
+    "n13961429289",
+    "n13961429290",
+    "n13961438828",
+    "n13961438829",
+    "n13961438830",
+    "n13961438831"
+   ]
+  },
+  {
+   "osm": "w155371691",
+   "name": "木戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_bc58051a4e4a"
+   ],
+   "lat": 37.267861,
+   "lon": 140.992114,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9381900111",
+    "n9381900112"
+   ]
+  },
+  {
+   "osm": "w155411568",
+   "name": "岩槻変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_4bacc6878367"
+   ],
+   "lat": 35.923741,
+   "lon": 139.718867,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n5066244100",
+    "n5066244102",
+    "n5066244110",
+    "n5066244112"
+   ]
+  },
+  {
+   "osm": "w156208858",
+   "name": "南相馬変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_dbaa6ace50c6"
+   ],
+   "lat": 37.535501,
+   "lon": 140.949734,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3214987896",
+    "n3214996664",
+    "n8341821849",
+    "n8341821850",
+    "n8341821851"
+   ]
+  },
+  {
+   "osm": "w158522649",
+   "name": "東大阪変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_cf0cea62d5f7"
+   ],
+   "lat": 34.704724,
+   "lon": 135.641767,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ],
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11032237949",
+    "n11032237968",
+    "n11032237969",
+    "n11032237970",
+    "n2919743001"
+   ]
+  },
+  {
+   "osm": "w159139126",
+   "name": "原町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_4922e23d8388"
+   ],
+   "lat": 37.642173,
+   "lon": 140.955852,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8377533954",
+    "n8377533955",
+    "n8377533956"
+   ]
+  },
+  {
+   "osm": "w160374974",
+   "name": "北葛城変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_7e51bfcadff7"
+   ],
+   "lat": 34.498435,
+   "lon": 135.725386,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n2570785738",
+    "n2570785756",
+    "n8913022138",
+    "n8913022149"
+   ]
+  },
+  {
+   "osm": "w161639374",
+   "name": "新奈良変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_3c0fe6a96c0c"
+   ],
+   "lat": 34.622218,
+   "lon": 135.796302,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7874265707",
+    "n7874265710",
+    "n7874265715",
+    "n7874265719"
+   ]
+  },
+  {
+   "osm": "w161727149",
+   "name": "新生駒 変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_81537a63e186"
+   ],
+   "lat": 34.734825,
+   "lon": 135.714709,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9564933141",
+    "n9564933142"
+   ]
+  },
+  {
+   "osm": "w161870227",
+   "name": "南京都変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_84fe8a4d1070"
+   ],
+   "lat": 34.865643,
+   "lon": 135.897533,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     500.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9248302466",
+    "n9248302467",
+    "n9248302468",
+    "n9248302469",
+    "n9248302470",
+    "n9248302471"
+   ]
+  },
+  {
+   "osm": "w161946849",
+   "name": "北部変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_81a9613eb392"
+   ],
+   "lat": 35.527249,
+   "lon": 136.937382,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2917652531",
+    "n2917654707",
+    "n2917656203"
+   ]
+  },
+  {
+   "osm": "w161948515",
+   "name": "西濃変電所",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "structure_sites": [
+    "chubu_site_37255462c412",
+    "kansai_site_37255462c412"
+   ],
+   "lat": 35.42696,
+   "lon": 136.645241,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ],
+    [
+     275.0,
+     77.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n2218699610",
+    "n2218699611",
+    "n2218699612",
+    "n2228703317"
+   ]
+  },
+  {
+   "osm": "w168247133",
+   "name": "東清水変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_9b96777c2b33",
+    "chubu_site_9b96777c2b33"
+   ],
+   "lat": 35.057711,
+   "lon": 138.499998,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7086913996",
+    "n7086913999",
+    "n7086914000"
+   ]
+  },
+  {
+   "osm": "w168524732",
+   "name": "西野変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_57a9fbc8fdcc"
+   ],
+   "lat": 43.057202,
+   "lon": 141.222434,
+   "pairs": [
+    [
+     275.0,
+     187.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13953218571",
+    "n13953218572",
+    "n13953218573"
+   ]
+  },
+  {
+   "osm": "w168839127",
+   "name": "新茂木",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_3be17b78d4b8"
+   ],
+   "lat": 36.522674,
+   "lon": 140.152774,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8344960483",
+    "n8344960484"
+   ]
+  },
+  {
+   "osm": "w168903220",
+   "name": "北熊谷変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_9cbcbfed313f"
+   ],
+   "lat": 36.205371,
+   "lon": 139.344821,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n6039957356",
+    "n6039957360",
+    "n6039957364"
+   ]
+  },
+  {
+   "osm": "w169031921",
+   "name": "西京都変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_cb54df6bdfe6"
+   ],
+   "lat": 34.969806,
+   "lon": 135.619019,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     500.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2021252552",
+    "n2021252564",
+    "n2021252575",
+    "n2021252579",
+    "n2021252582"
+   ]
+  },
+  {
+   "osm": "w169122898",
+   "name": "東部変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_0da893c9ea39"
+   ],
+   "lat": 35.106124,
+   "lon": 137.262292,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7774753594",
+    "n7774753595",
+    "n7774753596",
+    "n7774753597"
+   ]
+  },
+  {
+   "osm": "w169332855",
+   "name": "JR小作変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_65fa0996398e"
+   ],
+   "lat": 35.776756,
+   "lon": 139.300925,
+   "pairs": [
+    [
+     66.0,
+     1.5,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11054306508",
+    "n11054306509"
+   ]
+  },
+  {
+   "osm": "w169359724",
+   "name": "信貴変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_127283c08388"
+   ],
+   "lat": 34.597312,
+   "lon": 135.647951,
+   "pairs": [
+    [
+     500.0,
+     154.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n7874265681",
+    "n7874265682",
+    "n7874265683",
+    "n7874265684"
+   ]
+  },
+  {
+   "osm": "w169963227",
+   "name": "新榛名",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_16aa66ef65d9",
+    "chubu_site_16aa66ef65d9"
+   ],
+   "lat": 36.547881,
+   "lon": 138.832739,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5061556376",
+    "n5061556379"
+   ]
+  },
+  {
+   "osm": "w169993955",
+   "name": "新潟変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_97b0a03300c7"
+   ],
+   "lat": 37.727637,
+   "lon": 139.245942,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3246110264",
+    "n3246126566",
+    "n3246134665"
+   ]
+  },
+  {
+   "osm": "w170016148",
+   "name": "北新潟変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c885c4e92af8"
+   ],
+   "lat": 37.980429,
+   "lon": 139.284633,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3215072879",
+    "n3215081294",
+    "n9482833082",
+    "n9482833083",
+    "n9482833084"
+   ]
+  },
+  {
+   "osm": "w170197083",
+   "name": "中新潟変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c75f511f9db1"
+   ],
+   "lat": 37.920205,
+   "lon": 139.092278,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3246119967",
+    "n3246135567"
+   ]
+  },
+  {
+   "osm": "w170366036",
+   "name": "東豊田変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_5bb258d7fa98"
+   ],
+   "lat": 35.040584,
+   "lon": 137.218635,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7777088778",
+    "n7777088779",
+    "n7777096588"
+   ]
+  },
+  {
+   "osm": "w170503689",
+   "name": "駿遠変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_f07b955bacfd"
+   ],
+   "lat": 34.811022,
+   "lon": 138.06396,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ],
+    [
+     275.0,
+     77.0,
+     5
+    ]
+   ],
+   "transformers": [
+    "n12306469039",
+    "n2594355049",
+    "n2594355056",
+    "n2594355059",
+    "n2594355066",
+    "n2594355069",
+    "n2594355074",
+    "n2594355077",
+    "n2594355082"
+   ]
+  },
+  {
+   "osm": "w170537514",
+   "name": "西部変電所",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "structure_sites": [
+    "chubu_site_b3cc2f3ce7cc",
+    "kansai_site_b3cc2f3ce7cc"
+   ],
+   "lat": 35.19316,
+   "lon": 136.514458,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n1817422287",
+    "n1817422293"
+   ]
+  },
+  {
+   "osm": "w170605907",
+   "name": "北摂変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_67f0b3ab8b08"
+   ],
+   "lat": 34.931797,
+   "lon": 135.110057,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7861604733",
+    "n7861604734",
+    "n7861604735",
+    "n7861604736",
+    "n7861604737"
+   ]
+  },
+  {
+   "osm": "w170693194",
+   "name": "淀川変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_64a1c3b05d7e"
+   ],
+   "lat": 34.860519,
+   "lon": 135.657255,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     5
+    ],
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8963185543",
+    "n8963185546",
+    "n8963185549",
+    "n8963185552",
+    "n8963185559",
+    "n8963185566",
+    "n8963185570",
+    "n8963185573"
+   ]
+  },
+  {
+   "osm": "w170767190",
+   "name": "西毛変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_ae1f28381c8f",
+    "chubu_site_ae1f28381c8f"
+   ],
+   "lat": 36.221612,
+   "lon": 139.041781,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5068593596",
+    "n5068593597"
+   ]
+  },
+  {
+   "osm": "w170850727",
+   "name": "愛知変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_208260821734"
+   ],
+   "lat": 35.210392,
+   "lon": 137.297997,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3482408918",
+    "n3482408924",
+    "n3482408949"
+   ]
+  },
+  {
+   "osm": "w170974371",
+   "name": "新広島変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_c533161af129"
+   ],
+   "lat": 34.48905,
+   "lon": 132.709282,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     6
+    ]
+   ],
+   "transformers": [
+    "n7856768603",
+    "n7856768604",
+    "n7856768605",
+    "n7856768606",
+    "n7856768607",
+    "n7856768608"
+   ]
+  },
+  {
+   "osm": "w170974372",
+   "name": "広島変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_26ab27e5fb57"
+   ],
+   "lat": 34.44001,
+   "lon": 132.538404,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3243391065",
+    "n3243391066",
+    "n7856760438"
+   ]
+  },
+  {
+   "osm": "w171066843",
+   "name": "東予変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_f66a7b5911d6",
+    "shikoku_site_f66a7b5911d6"
+   ],
+   "lat": 33.944279,
+   "lon": 133.395001,
+   "pairs": [
+    [
+     500.0,
+     187.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3132010332"
+   ]
+  },
+  {
+   "osm": "w171940156",
+   "name": "苫小牧変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_efc2b1694e82"
+   ],
+   "lat": 42.634937,
+   "lon": 141.556801,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9172055850",
+    "n9172055851",
+    "n9172055852"
+   ]
+  },
+  {
+   "osm": "w172143432",
+   "name": "山家変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_d053e49786af"
+   ],
+   "lat": 33.479226,
+   "lon": 130.583252,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3019241788"
+   ]
+  },
+  {
+   "osm": "w172144358",
+   "name": "九州電力中央変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_8d3d423c0704"
+   ],
+   "lat": 33.49185,
+   "lon": 130.623908,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13853841037",
+    "n13854287372",
+    "n13854287373"
+   ]
+  },
+  {
+   "osm": "w173327088",
+   "name": "西条変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_72f82d1be807",
+    "shikoku_site_72f82d1be807"
+   ],
+   "lat": 33.912667,
+   "lon": 133.223367,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7875641951",
+    "n7875641956"
+   ]
+  },
+  {
+   "osm": "w173327089",
+   "name": "新須賀変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_4c0150f3c35c",
+    "shikoku_site_4c0150f3c35c"
+   ],
+   "lat": 33.975354,
+   "lon": 133.284953,
+   "pairs": [
+    [
+     187.0,
+     110.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9450037832",
+    "n9450037833"
+   ]
+  },
+  {
+   "osm": "w173465917",
+   "name": "いわき変電所",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tohoku_site_2fd8913f0b3b",
+    "tokyo_site_2fd8913f0b3b"
+   ],
+   "lat": 36.988968,
+   "lon": 140.747892,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8353907836",
+    "n8353907837",
+    "n8353907838"
+   ]
+  },
+  {
+   "osm": "w173793392",
+   "name": "鳥栖変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_9554180bbc36"
+   ],
+   "lat": 33.381008,
+   "lon": 130.491195,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n4072436736",
+    "n4072436744",
+    "n4072436753"
+   ]
+  },
+  {
+   "osm": "w174636874",
+   "name": "岩手変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5330c1eb76a6"
+   ],
+   "lat": 39.905084,
+   "lon": 141.176154,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ],
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3226753902",
+    "n3226753903",
+    "n7473459215",
+    "n7473459216"
+   ]
+  },
+  {
+   "osm": "w174915836",
+   "name": "九州電力 木佐木変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_e0778899c636"
+   ],
+   "lat": 33.211323,
+   "lon": 130.448684,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n4077038238",
+    "n4077038242",
+    "n4077038250"
+   ]
+  },
+  {
+   "osm": "w175558574",
+   "name": "大和変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_f5ecff0bc2c4"
+   ],
+   "lat": 35.464384,
+   "lon": 139.468374,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13250495470",
+    "n13250495471",
+    "n13250495472"
+   ]
+  },
+  {
+   "osm": "w177717603",
+   "name": "西音更変電所 (Nishi-Otofuke Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_e2de5ad7af3e"
+   ],
+   "lat": 42.976073,
+   "lon": 143.151867,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2909811803",
+    "n2909817903",
+    "n2909819002"
+   ]
+  },
+  {
+   "osm": "w178064476",
+   "name": "留辺蘂変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_6c1187dc8717"
+   ],
+   "lat": 43.775408,
+   "lon": 143.600519,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n2618271916",
+    "n2618271917",
+    "n4741500906",
+    "n4741500907"
+   ]
+  },
+  {
+   "osm": "w178131358",
+   "name": "足寄変電所 (Ashoro Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_c259107ae94f"
+   ],
+   "lat": 43.226522,
+   "lon": 143.546595,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     1
+    ],
+    [
+     66.0,
+     33.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13357129466",
+    "n13357129467",
+    "n4779052664"
+   ]
+  },
+  {
+   "osm": "w179863075",
+   "name": "西札幌変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_fee5b4b8ab84"
+   ],
+   "lat": 43.121381,
+   "lon": 141.283417,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13358353462",
+    "n13358353463",
+    "n13358353471"
+   ]
+  },
+  {
+   "osm": "w179863079",
+   "name": "西当別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_1cf1f04968bc"
+   ],
+   "lat": 43.234266,
+   "lon": 141.451218,
+   "pairs": [
+    [
+     275.0,
+     187.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n6034634195",
+    "n6034634196",
+    "n6034634197"
+   ]
+  },
+  {
+   "osm": "w179882298",
+   "name": "恵庭変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_ce76854ae86a"
+   ],
+   "lat": 42.931477,
+   "lon": 141.601954,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13361185302",
+    "n13361185305"
+   ]
+  },
+  {
+   "osm": "w182188317",
+   "name": "日田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_227d994a67c6"
+   ],
+   "lat": 33.305068,
+   "lon": 130.874887,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     2
+    ],
+    [
+     220.0,
+     66.0,
+     2
+    ],
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4075866920",
+    "n4075866925"
+   ]
+  },
+  {
+   "osm": "w182401459",
+   "name": "稚内西変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_53cb631fee53"
+   ],
+   "lat": 45.384137,
+   "lon": 141.668076,
+   "pairs": [
+    [
+     100.0,
+     33.0,
+     1
+    ],
+    [
+     100.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13918051427",
+    "n13918051428"
+   ]
+  },
+  {
+   "osm": "w182551911",
+   "name": "苗穂変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_2eecbb852f26"
+   ],
+   "lat": 43.092604,
+   "lon": 141.403212,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13361335182",
+    "n13361335191",
+    "n13361335197"
+   ]
+  },
+  {
+   "osm": "w182562067",
+   "name": "JR北海道 銭函変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_04207f2d279b"
+   ],
+   "lat": 43.138511,
+   "lon": 141.169871,
+   "pairs": [
+    [
+     66.0,
+     25.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13515781231"
+   ]
+  },
+  {
+   "osm": "w183582761",
+   "name": "宇円別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_b11fa3259fe4"
+   ],
+   "lat": 43.077684,
+   "lon": 144.155062,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2909811705",
+    "n2909817404",
+    "n2909818905"
+   ]
+  },
+  {
+   "osm": "w184789841",
+   "name": "千徳変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d01cdf60b0de"
+   ],
+   "lat": 39.641655,
+   "lon": 141.92866,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898793",
+    "n7727898794"
+   ]
+  },
+  {
+   "osm": "w185029969",
+   "name": "九州電力西九州変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_1f5d4247bf89"
+   ],
+   "lat": 33.350398,
+   "lon": 129.928974,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4072202378",
+    "n4072202384"
+   ]
+  },
+  {
+   "osm": "w185032690",
+   "name": "西神戸変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_c287f2c2696f"
+   ],
+   "lat": 34.711221,
+   "lon": 135.086527,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n1956536484",
+    "n3325272468",
+    "n3325274368",
+    "n7832721305"
+   ]
+  },
+  {
+   "osm": "w185504478",
+   "name": "北佐賀変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_22babaddad35"
+   ],
+   "lat": 33.334896,
+   "lon": 130.25957,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n4072202349"
+   ]
+  },
+  {
+   "osm": "w186044120",
+   "name": "東釧路変電所 (Higashi-Kushiro Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_bd0a8f0b5d34"
+   ],
+   "lat": 43.010704,
+   "lon": 144.446594,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2616623957",
+    "n2616623958",
+    "n2616623959"
+   ]
+  },
+  {
+   "osm": "w186044162",
+   "name": "太平洋興発変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_6bfd0a580d1f"
+   ],
+   "lat": 42.961252,
+   "lon": 144.40883,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     6
+    ]
+   ],
+   "transformers": [
+    "n13580067363",
+    "n13580067364",
+    "n13580067365",
+    "n13580067366",
+    "n13580067367",
+    "n13580067368"
+   ]
+  },
+  {
+   "osm": "w187988970",
+   "name": "北九州変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_bfab47ca8ba2",
+    "kyushu_site_bfab47ca8ba2"
+   ],
+   "lat": 33.810147,
+   "lon": 130.804315,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3005942539"
+   ]
+  },
+  {
+   "osm": "w188498180",
+   "name": "松岡",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_2e255b921de7",
+    "hokuriku_site_2e255b921de7"
+   ],
+   "lat": 36.090372,
+   "lon": 136.284295,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11513486066",
+    "n11513486069"
+   ]
+  },
+  {
+   "osm": "w189776902",
+   "name": "門司変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_30cc1b57a9b6",
+    "kyushu_site_30cc1b57a9b6"
+   ],
+   "lat": 33.895797,
+   "lon": 130.971003,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3007776186",
+    "n3007776201"
+   ]
+  },
+  {
+   "osm": "w190025438",
+   "name": "西小樽変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_aac7e2a86854"
+   ],
+   "lat": 43.204858,
+   "lon": 140.956893,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13356733474",
+    "n13356733475",
+    "n13356733476"
+   ]
+  },
+  {
+   "osm": "w190748953",
+   "name": "北岐阜変電所 (Kita Gifu Hendensho)",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_0a175b9cc8b0"
+   ],
+   "lat": 35.491417,
+   "lon": 136.802125,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n2218952691"
+   ]
+  },
+  {
+   "osm": "w190984572",
+   "name": "湖南変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_dbde1c61fa8d"
+   ],
+   "lat": 34.937996,
+   "lon": 135.896253,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2918794108",
+    "n2918794109"
+   ]
+  },
+  {
+   "osm": "w191048989",
+   "name": "埼玉変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_cf113c6b287a"
+   ],
+   "lat": 36.080988,
+   "lon": 139.494763,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8223129009"
+   ]
+  },
+  {
+   "osm": "w191144549",
+   "name": "JR東日本 新古川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8fb952e1b746"
+   ],
+   "lat": 38.63688,
+   "lon": 141.007552,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8273036732",
+    "n8273036733"
+   ]
+  },
+  {
+   "osm": "w191412271",
+   "name": "古川橋変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_2402453fc2d1"
+   ],
+   "lat": 34.738695,
+   "lon": 135.596425,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n9497976249",
+    "n9497976250",
+    "n9497976251",
+    "n9497976252"
+   ]
+  },
+  {
+   "osm": "w191552653",
+   "name": "那須野変電所",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tohoku_site_f35abb828586",
+    "tokyo_site_f35abb828586"
+   ],
+   "lat": 36.93792,
+   "lon": 140.038422,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5068354677",
+    "n5068354680"
+   ]
+  },
+  {
+   "osm": "w192235940",
+   "name": "大野変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_79936fdccc7a"
+   ],
+   "lat": 35.571077,
+   "lon": 139.40477,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12824895326",
+    "n12824895327",
+    "n12824895328"
+   ]
+  },
+  {
+   "osm": "w192288085",
+   "name": "新八幡変電所",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "structure_sites": [
+    "chubu_site_8bac86ef9b9d",
+    "kansai_site_8bac86ef9b9d"
+   ],
+   "lat": 35.113024,
+   "lon": 136.105316,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8900183693",
+    "n8900183694"
+   ]
+  },
+  {
+   "osm": "w192440010",
+   "name": "芦屋変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_af16fdae8952"
+   ],
+   "lat": 33.87927,
+   "lon": 130.668201,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13824841755",
+    "n13824841756",
+    "n13824841757"
+   ]
+  },
+  {
+   "osm": "w193544791",
+   "name": "新西広島変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_0b0058e3f7ce"
+   ],
+   "lat": 34.412514,
+   "lon": 132.257533,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n2040577666"
+   ]
+  },
+  {
+   "osm": "w200143945",
+   "name": "鎌倉変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_5c39ad126f29"
+   ],
+   "lat": 35.324804,
+   "lon": 139.524653,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13250027180",
+    "n13250027181",
+    "n13250027182"
+   ]
+  },
+  {
+   "osm": "w201293312",
+   "name": "豊前変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_8252943db219"
+   ],
+   "lat": 33.608139,
+   "lon": 131.01552,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4072166705",
+    "n4072166706"
+   ]
+  },
+  {
+   "osm": "w202714092",
+   "name": "東毛変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_5fe571afcda0"
+   ],
+   "lat": 36.299122,
+   "lon": 139.32871,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     5
+    ]
+   ],
+   "transformers": [
+    "n5069181415",
+    "n5069181417",
+    "n9497695238",
+    "n9497695242",
+    "n9932932981"
+   ]
+  },
+  {
+   "osm": "w204258596",
+   "name": "新山口変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_c73093c93f3f",
+    "kyushu_site_c73093c93f3f"
+   ],
+   "lat": 34.163228,
+   "lon": 131.093124,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7858662222",
+    "n7858662226"
+   ]
+  },
+  {
+   "osm": "w205496779",
+   "name": "嘉穂変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_b824aae41e7e"
+   ],
+   "lat": 33.656421,
+   "lon": 130.694498,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7143755529"
+   ]
+  },
+  {
+   "osm": "w208275983",
+   "name": "浅野町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_5c2b523a18a5",
+    "hokuriku_site_5c2b523a18a5"
+   ],
+   "lat": 36.583774,
+   "lon": 136.65903,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11681822292",
+    "n11681822293",
+    "n11681822294"
+   ]
+  },
+  {
+   "osm": "w209324330",
+   "name": "北巨摩変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_59fe77d18692"
+   ],
+   "lat": 35.785843,
+   "lon": 138.397832,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6015358520",
+    "n6015358523"
+   ]
+  },
+  {
+   "osm": "w209429410",
+   "name": "南信変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_a9c7b61b0868"
+   ],
+   "lat": 35.710011,
+   "lon": 137.996991,
+   "pairs": [
+    [
+     500.0,
+     154.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n2196487751"
+   ]
+  },
+  {
+   "osm": "w209817378",
+   "name": "室蘭変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_dd247145bbe1"
+   ],
+   "lat": 42.372481,
+   "lon": 141.033059,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13356794508",
+    "n13356794509",
+    "n13356794512"
+   ]
+  },
+  {
+   "osm": "w210090094",
+   "name": "駿遠変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_1120a9d6beb0"
+   ],
+   "lat": 34.808364,
+   "lon": 138.063071,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n2594355039",
+    "n2594355042",
+    "n2917755504",
+    "n2917755902"
+   ]
+  },
+  {
+   "osm": "w216498433",
+   "name": "九州電力 南熊本変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_0020b7552eb7"
+   ],
+   "lat": 32.668001,
+   "lon": 130.764772,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n4072277285",
+    "n4077759544",
+    "n4077759546"
+   ]
+  },
+  {
+   "osm": "w216502300",
+   "name": "九州電力 中九州変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_90a74c1e27f4"
+   ],
+   "lat": 32.614344,
+   "lon": 130.799206,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n4078629649"
+   ]
+  },
+  {
+   "osm": "w216778426",
+   "name": "東九州変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_b837cb8f2bce"
+   ],
+   "lat": 33.134165,
+   "lon": 131.729324,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "w404980446",
+    "w404980447"
+   ]
+  },
+  {
+   "osm": "w216953915",
+   "name": "ひむか変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ff041eb83d71"
+   ],
+   "lat": 32.25094,
+   "lon": 131.385544,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n6951621725"
+   ]
+  },
+  {
+   "osm": "w219569064",
+   "name": "筑豊変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_cf31a8d1bd22"
+   ],
+   "lat": 33.602936,
+   "lon": 130.760364,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2965724346",
+    "n2965724347",
+    "n2965724348"
+   ]
+  },
+  {
+   "osm": "w222851764",
+   "name": "七飯発電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_db563ea9560f"
+   ],
+   "lat": 41.932119,
+   "lon": 140.654312,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13363384421",
+    "n13363384423",
+    "n13363384426"
+   ]
+  },
+  {
+   "osm": "w224939724",
+   "name": "昭和四丁目変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_7a4b793ae3f5"
+   ],
+   "lat": 41.814447,
+   "lon": 140.730385,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13363326680",
+    "n13363326681"
+   ]
+  },
+  {
+   "osm": "w231402784",
+   "name": "若松変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a6c1113649f6"
+   ],
+   "lat": 37.497038,
+   "lon": 139.894903,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9387068414",
+    "n9387137117",
+    "n9387137120"
+   ]
+  },
+  {
+   "osm": "w234041222",
+   "name": "本名変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_861646febe04"
+   ],
+   "lat": 37.440603,
+   "lon": 139.501257,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9542772101",
+    "n9542772102"
+   ]
+  },
+  {
+   "osm": "w237475191",
+   "name": "新鹿児島変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_a353b08a784d"
+   ],
+   "lat": 31.536354,
+   "lon": 130.464749,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5893046278",
+    "n5893046279"
+   ]
+  },
+  {
+   "osm": "w238096118",
+   "name": "九州電力 北熊本変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_184f9e727b7c"
+   ],
+   "lat": 32.864529,
+   "lon": 130.682966,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4072277345",
+    "n4072277347"
+   ]
+  },
+  {
+   "osm": "w238240460",
+   "name": "九州電力 宇土変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_bc3427d213a3"
+   ],
+   "lat": 32.689659,
+   "lon": 130.655452,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7990655397",
+    "n7990655399"
+   ]
+  },
+  {
+   "osm": "w239024541",
+   "name": "小倉変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_820f4e144314",
+    "kyushu_site_820f4e144314"
+   ],
+   "lat": 33.866672,
+   "lon": 130.86799,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13815076961",
+    "n13815076962"
+   ]
+  },
+  {
+   "osm": "w239024744",
+   "name": "西谷変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_a72b0f6d433d",
+    "kyushu_site_a72b0f6d433d"
+   ],
+   "lat": 33.82762,
+   "lon": 130.850176,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     1
+    ],
+    [
+     220.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3000173939",
+    "n3000173943"
+   ]
+  },
+  {
+   "osm": "w241822623",
+   "name": "東岡山変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_7f5085731b83"
+   ],
+   "lat": 34.888114,
+   "lon": 134.025121,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ],
+    [
+     500.0,
+     110.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2494122440",
+    "n3241346611",
+    "n3241373513"
+   ]
+  },
+  {
+   "osm": "w241822631",
+   "name": "西播変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_a87f54bf3ab6"
+   ],
+   "lat": 34.861623,
+   "lon": 134.425783,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ],
+    [
+     275.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5999651910",
+    "n8906593041",
+    "n8906593045",
+    "n8906593067",
+    "n8906593092"
+   ]
+  },
+  {
+   "osm": "w241828221",
+   "name": "新岡山変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_0314803b17e7"
+   ],
+   "lat": 34.803714,
+   "lon": 133.388353,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2496778696",
+    "n2496778697",
+    "n8918793803"
+   ]
+  },
+  {
+   "osm": "w241875111",
+   "name": "東佐世保変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_9cbfb5999102"
+   ],
+   "lat": 33.137784,
+   "lon": 129.841693,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n6959508879"
+   ]
+  },
+  {
+   "osm": "w242103481",
+   "name": "日野変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_7f2d10eb576b"
+   ],
+   "lat": 35.296125,
+   "lon": 133.405759,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ],
+    [
+     220.0,
+     110.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13122826970",
+    "n3236774873",
+    "n3236776074",
+    "n3237971667"
+   ]
+  },
+  {
+   "osm": "w242159098",
+   "name": "岡山変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_d2eb9257a809"
+   ],
+   "lat": 34.748724,
+   "lon": 133.863782,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n3238331886",
+    "n3238331980",
+    "n3238337867",
+    "n8918672370"
+   ]
+  },
+  {
+   "osm": "w242253497",
+   "name": "姫路変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_53b548fae860"
+   ],
+   "lat": 34.849165,
+   "lon": 134.667616,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6011952246",
+    "n8906396169"
+   ]
+  },
+  {
+   "osm": "w243507072",
+   "name": "飯舘変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c689f82c02ee"
+   ],
+   "lat": 37.681993,
+   "lon": 140.724525,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8377533758",
+    "n8377533759"
+   ]
+  },
+  {
+   "osm": "w243513839",
+   "name": "会津変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c55013438834"
+   ],
+   "lat": 37.577325,
+   "lon": 139.92311,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9387137163",
+    "n9387137164",
+    "n9387137165"
+   ]
+  },
+  {
+   "osm": "w250430935",
+   "name": "米沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e7aa51ca755f"
+   ],
+   "lat": 37.85837,
+   "lon": 140.116645,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3503392995",
+    "n8595711098",
+    "n8595711099"
+   ]
+  },
+  {
+   "osm": "w250540807",
+   "name": "東群馬変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_94f7450aa92a"
+   ],
+   "lat": 36.579264,
+   "lon": 139.223692,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3225298372"
+   ]
+  },
+  {
+   "osm": "w250626570",
+   "name": "佐波変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_a9a7df3e1b68"
+   ],
+   "lat": 36.292055,
+   "lon": 139.219843,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8314986061",
+    "n8314986070"
+   ]
+  },
+  {
+   "osm": "w254271516",
+   "name": "Ōno Substation",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_d02e84c740a6"
+   ],
+   "lat": 41.888281,
+   "lon": 140.607517,
+   "pairs": [
+    [
+     275.0,
+     187.0,
+     2
+    ],
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9549473957",
+    "n9549473960",
+    "n9549473999",
+    "n9549474002",
+    "n9549474011"
+   ]
+  },
+  {
+   "osm": "w255467846",
+   "name": "当別変電所 (Tobetsu Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_e4374b31edeb"
+   ],
+   "lat": 43.211951,
+   "lon": 141.520278,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13516006272"
+   ]
+  },
+  {
+   "osm": "w256262092",
+   "name": "旭町四丁目変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_b5474c08a321"
+   ],
+   "lat": 43.812805,
+   "lon": 141.951985,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13463368208"
+   ]
+  },
+  {
+   "osm": "w256363863",
+   "name": "北芽室変電所 (Kita-Memuro Hendensho)",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_808ff16cc353"
+   ],
+   "lat": 42.921317,
+   "lon": 143.033578,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n13569660480",
+    "n13569660481",
+    "n13569660489",
+    "n2620227206"
+   ]
+  },
+  {
+   "osm": "w256682313",
+   "name": "加賀変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_19a3892cb543",
+    "hokuriku_site_19a3892cb543"
+   ],
+   "lat": 36.500549,
+   "lon": 136.716898,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9480173912",
+    "n9480173915",
+    "n9480173918",
+    "n9480173931",
+    "n9480173934"
+   ]
+  },
+  {
+   "osm": "w256682330",
+   "name": "南金沢変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_d54d8df56237",
+    "hokuriku_site_d54d8df56237"
+   ],
+   "lat": 36.490468,
+   "lon": 136.607426,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n9480173818",
+    "n9480173821",
+    "n9480173824",
+    "n9480173825"
+   ]
+  },
+  {
+   "osm": "w256682332",
+   "name": "山王町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_20f65a459dc9",
+    "hokuriku_site_20f65a459dc9"
+   ],
+   "lat": 36.636848,
+   "lon": 136.955738,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11676951013",
+    "n11676951015",
+    "n11676951019"
+   ]
+  },
+  {
+   "osm": "w256765107",
+   "name": "新鈴鹿変電所",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "structure_sites": [
+    "chubu_site_14902c3aefe3",
+    "kansai_site_14902c3aefe3"
+   ],
+   "lat": 34.839747,
+   "lon": 136.437113,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n5060366283",
+    "n5060366284",
+    "n5060366304"
+   ]
+  },
+  {
+   "osm": "w256894928",
+   "name": "南早来変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_6e15b51e6f47"
+   ],
+   "lat": 42.714361,
+   "lon": 141.780974,
+   "pairs": [
+    [
+     275.0,
+     187.0,
+     2
+    ],
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13356967308",
+    "n6034588030",
+    "n6034588031",
+    "n6034588066"
+   ]
+  },
+  {
+   "osm": "w259056356",
+   "name": "速水変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_d78a9abed7ba"
+   ],
+   "lat": 33.412834,
+   "lon": 131.534583,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n4075866951"
+   ]
+  },
+  {
+   "osm": "w291411215",
+   "name": "西福島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_68d880e1e470"
+   ],
+   "lat": 37.749239,
+   "lon": 140.41931,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7795821249",
+    "n7795821250",
+    "n7795821251"
+   ]
+  },
+  {
+   "osm": "w291678103",
+   "name": "紀の川変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_cffc7d7d8147"
+   ],
+   "lat": 34.211469,
+   "lon": 135.336327,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9557368342",
+    "n9557368344",
+    "n9557368347"
+   ]
+  },
+  {
+   "osm": "w292112408",
+   "name": "新町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_cd343496fc0e"
+   ],
+   "lat": 38.852682,
+   "lon": 140.252483,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7750332028",
+    "n7750332035",
+    "n7750332036",
+    "n7750332037"
+   ]
+  },
+  {
+   "osm": "w293012917",
+   "name": "飯塚変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_9a6aa147fa20"
+   ],
+   "lat": 33.629127,
+   "lon": 130.708038,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13832267596",
+    "n13832267598"
+   ]
+  },
+  {
+   "osm": "w293116078",
+   "name": "川崎変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_bb12630a7d47"
+   ],
+   "lat": 33.59594,
+   "lon": 130.812995,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13850939116",
+    "n2995058713",
+    "n2995058714"
+   ]
+  },
+  {
+   "osm": "w293147738",
+   "name": "吉隈変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_5ccae4b9a75c"
+   ],
+   "lat": 33.580164,
+   "lon": 130.70548,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3000021383",
+    "n3000021385"
+   ]
+  },
+  {
+   "osm": "w293150088",
+   "name": "上穂波変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_3e92399ece2e"
+   ],
+   "lat": 33.576141,
+   "lon": 130.644506,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13848506934",
+    "n2967232445"
+   ]
+  },
+  {
+   "osm": "w293842614",
+   "name": "JR東日本 田沢湖変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ff74eab6c6b6"
+   ],
+   "lat": 39.637892,
+   "lon": 140.659832,
+   "pairs": [
+    [
+     154.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8273036692"
+   ]
+  },
+  {
+   "osm": "w294147789",
+   "name": "田川変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_bfffc60461f0"
+   ],
+   "lat": 33.638923,
+   "lon": 130.780883,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13830452416",
+    "n2977164350"
+   ]
+  },
+  {
+   "osm": "w294158131",
+   "name": "九州電力 上頓野変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_e73e7b227076"
+   ],
+   "lat": 33.760569,
+   "lon": 130.759563,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13826126920",
+    "n13826126921",
+    "n13826126922"
+   ]
+  },
+  {
+   "osm": "w294316515",
+   "name": "糸田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_3a58d3197664"
+   ],
+   "lat": 33.665345,
+   "lon": 130.768288,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2979038616",
+    "n2979038622"
+   ]
+  },
+  {
+   "osm": "w294319431",
+   "name": "二瀬変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ac9a88d58d9a"
+   ],
+   "lat": 33.644352,
+   "lon": 130.67296,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2979071522",
+    "n2979071523",
+    "n2979071524"
+   ]
+  },
+  {
+   "osm": "w295753717",
+   "name": "山田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_97bafdccba5e"
+   ],
+   "lat": 33.568388,
+   "lon": 130.766494,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13851724081",
+    "n13851724082",
+    "n2995088078"
+   ]
+  },
+  {
+   "osm": "w295762343",
+   "name": "添田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_3467fead016e"
+   ],
+   "lat": 33.573452,
+   "lon": 130.845355,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2995246508",
+    "n2995246509"
+   ]
+  },
+  {
+   "osm": "w295763945",
+   "name": "香春変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_b65ac11fad31"
+   ],
+   "lat": 33.655762,
+   "lon": 130.818581,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13832912015",
+    "n13832912017",
+    "n13832912019"
+   ]
+  },
+  {
+   "osm": "w296788490",
+   "name": "上津役変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_bcf042262f96"
+   ],
+   "lat": 33.834859,
+   "lon": 130.762556,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n3005991116",
+    "n3005991121",
+    "n3005991124",
+    "n3005991125"
+   ]
+  },
+  {
+   "osm": "w296958054",
+   "name": "新門司変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_9bf77b73f92b",
+    "kyushu_site_9bf77b73f92b"
+   ],
+   "lat": 33.910612,
+   "lon": 130.96923,
+   "pairs": [
+    [
+     220.0,
+     60.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13816070600",
+    "n3007828223"
+   ]
+  },
+  {
+   "osm": "w296962737",
+   "name": "松ヶ江変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_996a58d6a48f",
+    "kyushu_site_996a58d6a48f"
+   ],
+   "lat": 33.85906,
+   "lon": 130.970959,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3007870329",
+    "n3007871133"
+   ]
+  },
+  {
+   "osm": "w297941491",
+   "name": "徳力変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_b8f7c4c04511",
+    "kyushu_site_b8f7c4c04511"
+   ],
+   "lat": 33.827521,
+   "lon": 130.869879,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13810008919",
+    "n13810008920",
+    "n13810008921"
+   ]
+  },
+  {
+   "osm": "w302164677",
+   "name": "秋田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_eeaaddd27b11"
+   ],
+   "lat": 39.812663,
+   "lon": 140.08603,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9482598927",
+    "n9482598930",
+    "n9482598933",
+    "n9482598936",
+    "n9482598982",
+    "n9482598985",
+    "n9482598988"
+   ]
+  },
+  {
+   "osm": "w302164679",
+   "name": "能代変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9840db7242d2"
+   ],
+   "lat": 40.162188,
+   "lon": 140.071934,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8328960982",
+    "n9482598856"
+   ]
+  },
+  {
+   "osm": "w307942220",
+   "name": "阿波変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_56b00129e44f",
+    "shikoku_site_56b00129e44f"
+   ],
+   "lat": 34.000763,
+   "lon": 134.408613,
+   "pairs": [
+    [
+     500.0,
+     187.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7881022341",
+    "n7881022342"
+   ]
+  },
+  {
+   "osm": "w308278859",
+   "name": "柴田町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_140510a7e9e8"
+   ],
+   "lat": 38.112582,
+   "lon": 140.820667,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3230223870"
+   ]
+  },
+  {
+   "osm": "w308348224",
+   "name": "新庄変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_974f25bb3e1f"
+   ],
+   "lat": 38.701575,
+   "lon": 140.250377,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     1
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7749833496",
+    "n7749833498",
+    "n7749833500",
+    "n7749833520"
+   ]
+  },
+  {
+   "osm": "w308626715",
+   "name": "大野目変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7e7813f0caef"
+   ],
+   "lat": 38.287121,
+   "lon": 140.359911,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8273036672",
+    "n8273036674",
+    "n8273036676"
+   ]
+  },
+  {
+   "osm": "w312882964",
+   "name": "稚内変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_fe14374b2f75"
+   ],
+   "lat": 45.398283,
+   "lon": 141.680429,
+   "pairs": [
+    [
+     100.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13481074781",
+    "n13918051408"
+   ]
+  },
+  {
+   "osm": "w315434358",
+   "name": "新岡部変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_bcb18e98dccf"
+   ],
+   "lat": 36.220067,
+   "lon": 139.212909,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     500.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8213206743",
+    "n8213206744",
+    "n8213206749",
+    "n8213206750",
+    "n8213206751"
+   ]
+  },
+  {
+   "osm": "w315608216",
+   "name": "最勝講変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_17e2b2c67c26",
+    "hokuriku_site_17e2b2c67c26"
+   ],
+   "lat": 36.966258,
+   "lon": 136.904795,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n11508808953",
+    "n11508808955",
+    "n11508808957",
+    "n11508808959"
+   ]
+  },
+  {
+   "osm": "w315614776",
+   "name": "丸岡町舛田変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_ff9bf2d44e2e",
+    "hokuriku_site_ff9bf2d44e2e"
+   ],
+   "lat": 36.141544,
+   "lon": 136.293865,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11513463622",
+    "n11513463624",
+    "n11513463626"
+   ]
+  },
+  {
+   "osm": "w315614783",
+   "name": "上野変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_762884e60ef7",
+    "hokuriku_site_762884e60ef7"
+   ],
+   "lat": 36.206485,
+   "lon": 136.286912,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11513485870",
+    "n11513485872"
+   ]
+  },
+  {
+   "osm": "w315639820",
+   "name": "天菅生町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_850cedde0b17",
+    "hokuriku_site_850cedde0b17"
+   ],
+   "lat": 36.120785,
+   "lon": 136.175616,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11513485902",
+    "n11513485904",
+    "n11513485906"
+   ]
+  },
+  {
+   "osm": "w315662816",
+   "name": "中信変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_367c1f7d719d"
+   ],
+   "lat": 36.126696,
+   "lon": 137.932487,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     5
+    ]
+   ],
+   "transformers": [
+    "n7365454784",
+    "n7365465585",
+    "n7365465586",
+    "n7365465587",
+    "n7365465588"
+   ]
+  },
+  {
+   "osm": "w315662839",
+   "name": "新信濃変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_bd066b9b0c21",
+    "hokuriku_site_bd066b9b0c21"
+   ],
+   "lat": 36.137661,
+   "lon": 137.883872,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3217903184",
+    "n3217940671",
+    "n3217941283"
+   ]
+  },
+  {
+   "osm": "w315810770",
+   "name": "開発変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_dd58f7c4bbe9",
+    "hokuriku_site_dd58f7c4bbe9"
+   ],
+   "lat": 36.085824,
+   "lon": 136.239163,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11513485982",
+    "n11513485984",
+    "n11513485986"
+   ]
+  },
+  {
+   "osm": "w315810780",
+   "name": "春江町為国幸変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_1af9219faa6f",
+    "hokuriku_site_1af9219faa6f"
+   ],
+   "lat": 36.120524,
+   "lon": 136.228771,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11513485948",
+    "n11513485950",
+    "n11513485952"
+   ]
+  },
+  {
+   "osm": "w316207193",
+   "name": "金丸変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_027c2182b746",
+    "hokuriku_site_027c2182b746"
+   ],
+   "lat": 36.969684,
+   "lon": 136.879976,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11508823910",
+    "n11508823911",
+    "n11508823912"
+   ]
+  },
+  {
+   "osm": "w316207198",
+   "name": "鶴来変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_4a02e2b58add",
+    "hokuriku_site_4a02e2b58add"
+   ],
+   "lat": 36.445932,
+   "lon": 136.624599,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9480173744",
+    "n9480173745"
+   ]
+  },
+  {
+   "osm": "w316216918",
+   "name": "北金沢変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_cbc97f416084",
+    "hokuriku_site_cbc97f416084"
+   ],
+   "lat": 36.579408,
+   "lon": 136.628242,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     4
+    ],
+    [
+     77.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11681822381",
+    "n11681822382",
+    "n11681822389",
+    "n11681822402",
+    "n11681822405",
+    "n11681822408"
+   ]
+  },
+  {
+   "osm": "w316250981",
+   "name": "太田変電所_2",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_f66c3c399b2d",
+    "hokuriku_site_91c1c785e6d2"
+   ],
+   "lat": 36.650143,
+   "lon": 136.718035,
+   "pairs": [
+    [
+     77.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11681822447",
+    "n11681822449",
+    "n11681822451"
+   ]
+  },
+  {
+   "osm": "w316421005",
+   "name": "桜山変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_200e33a59b84"
+   ],
+   "lat": 35.296525,
+   "lon": 139.589252,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13247935187",
+    "n13247935188",
+    "n3106454653"
+   ]
+  },
+  {
+   "osm": "w316466739",
+   "name": "高木町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_6faedcc0c8c9",
+    "hokuriku_site_6faedcc0c8c9"
+   ],
+   "lat": 35.9296,
+   "lon": 136.192313,
+   "pairs": [
+    [
+     154.0,
+     77.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9164942404",
+    "n9164942405"
+   ]
+  },
+  {
+   "osm": "w316552309",
+   "name": "JR北海道吉岡変電所",
+   "regions": [
+    "hokkaido",
+    "tohoku"
+   ],
+   "structure_sites": [
+    "hokkaido_site_8f0767c4580a",
+    "tohoku_site_8f0767c4580a"
+   ],
+   "lat": 41.442895,
+   "lon": 140.23499,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13363298235",
+    "n13363298236"
+   ]
+  },
+  {
+   "osm": "w316566585",
+   "name": "JR東日本 新七戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d2e8072f84a3"
+   ],
+   "lat": 40.710592,
+   "lon": 141.178622,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7475707364",
+    "n7475707368"
+   ]
+  },
+  {
+   "osm": "w316566588",
+   "name": "水沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_17a6ffd1fcc3"
+   ],
+   "lat": 39.074932,
+   "lon": 141.197469,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9482834125",
+    "n9482834126"
+   ]
+  },
+  {
+   "osm": "w316581626",
+   "name": "気仙沼変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2f9574d90b01"
+   ],
+   "lat": 38.875416,
+   "lon": 141.540482,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898401",
+    "n7727898402"
+   ]
+  },
+  {
+   "osm": "w316581632",
+   "name": "JR東日本 新水沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_91fbfb4b017e"
+   ],
+   "lat": 39.084943,
+   "lon": 141.199091,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3227107470",
+    "n3227108373"
+   ]
+  },
+  {
+   "osm": "w316581635",
+   "name": "松岩変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_f72eba56198d"
+   ],
+   "lat": 38.888912,
+   "lon": 141.576219,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7727898424",
+    "n7727898426",
+    "n7727898429"
+   ]
+  },
+  {
+   "osm": "w316581636",
+   "name": "青森変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b69144df455e"
+   ],
+   "lat": 40.777525,
+   "lon": 140.71275,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3299417678",
+    "n3299418781"
+   ]
+  },
+  {
+   "osm": "w316581637",
+   "name": "青森変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a2d18597d70f"
+   ],
+   "lat": 40.774724,
+   "lon": 140.710602,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7447847169",
+    "n7447847173"
+   ]
+  },
+  {
+   "osm": "w316727625",
+   "name": "羽後変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7a52480d6fc1"
+   ],
+   "lat": 39.168631,
+   "lon": 140.427033,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9482834257",
+    "n9482834262",
+    "n9482834271"
+   ]
+  },
+  {
+   "osm": "w316796028",
+   "name": "石巻変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a29293202818"
+   ],
+   "lat": 38.481114,
+   "lon": 141.237765,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7471058482",
+    "n7471058486"
+   ]
+  },
+  {
+   "osm": "w317056307",
+   "name": "大船渡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8be37df67a79"
+   ],
+   "lat": 39.075674,
+   "lon": 141.713663,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898566",
+    "n7727898568"
+   ]
+  },
+  {
+   "osm": "w317112019",
+   "name": "五戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_93e8bd231bf1"
+   ],
+   "lat": 40.528285,
+   "lon": 141.357208,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7466907534",
+    "n7466907539"
+   ]
+  },
+  {
+   "osm": "w317112023",
+   "name": "南八戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_412a44be842e"
+   ],
+   "lat": 40.437923,
+   "lon": 141.452753,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7473459264",
+    "n7473459265",
+    "n7473459270"
+   ]
+  },
+  {
+   "osm": "w317376283",
+   "name": "大館変電所 (Ōdate Hendensho)",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_4c0c01def89a"
+   ],
+   "lat": 40.221339,
+   "lon": 140.594492,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7444251257"
+   ]
+  },
+  {
+   "osm": "w317389571",
+   "name": "西山形変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5ff0ad14629f"
+   ],
+   "lat": 38.276503,
+   "lon": 140.182396,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9406381041",
+    "n9406381042"
+   ]
+  },
+  {
+   "osm": "w317389572",
+   "name": "山形変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_1a531a67a712"
+   ],
+   "lat": 38.256091,
+   "lon": 140.282045,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7734162220",
+    "n7734162221",
+    "n7734162222"
+   ]
+  },
+  {
+   "osm": "w317416612",
+   "name": "西島根変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_4897497de7fe"
+   ],
+   "lat": 34.697635,
+   "lon": 131.979686,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n3273608063"
+   ]
+  },
+  {
+   "osm": "w317416619",
+   "name": "黒瀬変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_7de22e2941ea",
+    "shikoku_site_7de22e2941ea"
+   ],
+   "lat": 34.319727,
+   "lon": 132.627434,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12345628902",
+    "n12345628909",
+    "n12345628922"
+   ]
+  },
+  {
+   "osm": "w317511904",
+   "name": "北松江変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_9c11da07a376"
+   ],
+   "lat": 35.470392,
+   "lon": 133.115991,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6042756770",
+    "n6042756772"
+   ]
+  },
+  {
+   "osm": "w317525048",
+   "name": "米子変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_c608dbc9bd34"
+   ],
+   "lat": 35.417811,
+   "lon": 133.337231,
+   "pairs": [
+    [
+     115.0,
+     66.0,
+     1
+    ],
+    [
+     110.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13122827082",
+    "n13122827083"
+   ]
+  },
+  {
+   "osm": "w317951887",
+   "name": "八雲町変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_583bd20fc6a1"
+   ],
+   "lat": 35.409378,
+   "lon": 133.106323,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13122826832",
+    "n3249950993"
+   ]
+  },
+  {
+   "osm": "w318152350",
+   "name": "新町野変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9123c7d41530"
+   ],
+   "lat": 40.776711,
+   "lon": 140.752858,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7502568759",
+    "n7502568760"
+   ]
+  },
+  {
+   "osm": "w318152361",
+   "name": "沖館変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7c2aeb17ec2c"
+   ],
+   "lat": 40.815963,
+   "lon": 140.72912,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7502568772",
+    "n7502568774",
+    "n7502568776"
+   ]
+  },
+  {
+   "osm": "w318193036",
+   "name": "下北変電所",
+   "regions": [
+    "hokkaido",
+    "tohoku"
+   ],
+   "structure_sites": [
+    "hokkaido_site_2bc7d95472ef",
+    "tohoku_site_2bc7d95472ef"
+   ],
+   "lat": 41.305861,
+   "lon": 141.193761,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9454558066",
+    "n9454558067"
+   ]
+  },
+  {
+   "osm": "w318286888",
+   "name": "船岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e74a480dbba8"
+   ],
+   "lat": 38.059129,
+   "lon": 140.781543,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8285836776",
+    "n8285836777",
+    "n8285836778"
+   ]
+  },
+  {
+   "osm": "w318438125",
+   "name": "山口変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_794e85971d4d",
+    "kyushu_site_794e85971d4d"
+   ],
+   "lat": 34.06023,
+   "lon": 131.27038,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n3248383295",
+    "n3248425188",
+    "n3248425323"
+   ]
+  },
+  {
+   "osm": "w319300956",
+   "name": "中越変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_aca550dc658c"
+   ],
+   "lat": 37.483568,
+   "lon": 139.042067,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9547369716",
+    "n9547369718",
+    "n9547369721"
+   ]
+  },
+  {
+   "osm": "w319313779",
+   "name": "坂町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d32f7b7b6f8b"
+   ],
+   "lat": 38.093776,
+   "lon": 139.531199,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9406380329",
+    "n9406380330",
+    "n9406380331",
+    "n9406380332"
+   ]
+  },
+  {
+   "osm": "w320438391",
+   "name": "能勢変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_f37065c7aaf5"
+   ],
+   "lat": 34.990542,
+   "lon": 135.484594,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3269524876",
+    "n7834309180"
+   ]
+  },
+  {
+   "osm": "w320536909",
+   "name": "新愛本変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_6bcf1de0d0e4",
+    "hokuriku_site_6bcf1de0d0e4"
+   ],
+   "lat": 36.855571,
+   "lon": 137.554643,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n11513123422"
+   ]
+  },
+  {
+   "osm": "w320536918",
+   "name": "富山変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_1be0604da17e",
+    "hokuriku_site_1be0604da17e"
+   ],
+   "lat": 36.723626,
+   "lon": 137.181996,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11683207162",
+    "n11683207163",
+    "n11683207169",
+    "n11683207174"
+   ]
+  },
+  {
+   "osm": "w320536926",
+   "name": "中野変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_af8cb46e2e6a",
+    "hokuriku_site_af8cb46e2e6a"
+   ],
+   "lat": 36.863324,
+   "lon": 137.438204,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11513123350",
+    "n11513123352",
+    "n11513123354"
+   ]
+  },
+  {
+   "osm": "w321876513",
+   "name": "八戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3eb4e7b41745"
+   ],
+   "lat": 40.534674,
+   "lon": 141.497573,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7797618984",
+    "n7797642285",
+    "n7797642286",
+    "n7797642287"
+   ]
+  },
+  {
+   "osm": "w321876731",
+   "name": "六戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_24725824b381"
+   ],
+   "lat": 40.664935,
+   "lon": 141.313632,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7473455383",
+    "n7473459186",
+    "n7473459189"
+   ]
+  },
+  {
+   "osm": "w321876766",
+   "name": "久慈変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8fff95079786"
+   ],
+   "lat": 40.197215,
+   "lon": 141.773307,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7727898894",
+    "n7727898895",
+    "n7727898896"
+   ]
+  },
+  {
+   "osm": "w321876770",
+   "name": "種市変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_56bf229e2237"
+   ],
+   "lat": 40.411044,
+   "lon": 141.705668,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7474698003",
+    "n7474698004"
+   ]
+  },
+  {
+   "osm": "w321876772",
+   "name": "階上変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2482c5023235"
+   ],
+   "lat": 40.476193,
+   "lon": 141.582034,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7474698021",
+    "n7474698022"
+   ]
+  },
+  {
+   "osm": "w321894844",
+   "name": "北岩手変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_39e8469c754e"
+   ],
+   "lat": 40.202011,
+   "lon": 141.308947,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7473459234",
+    "n7473459238"
+   ]
+  },
+  {
+   "osm": "w323148584",
+   "name": "弘前変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_01b3d37088a4"
+   ],
+   "lat": 40.612257,
+   "lon": 140.440962,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8269210506",
+    "n8269210507",
+    "n8269210510"
+   ]
+  },
+  {
+   "osm": "w323148606",
+   "name": "東北電力北津軽変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_38c695a20cb3"
+   ],
+   "lat": 40.778934,
+   "lon": 140.439479,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7483587707",
+    "n7483587708"
+   ]
+  },
+  {
+   "osm": "w323148613",
+   "name": "北弘前変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_cdacbd0ad522"
+   ],
+   "lat": 40.621117,
+   "lon": 140.486454,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8269210065",
+    "n8269210066",
+    "n8269210067"
+   ]
+  },
+  {
+   "osm": "w323148620",
+   "name": "五所川原変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b282f7292942"
+   ],
+   "lat": 40.804232,
+   "lon": 140.45035,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9454654371",
+    "n9454654373",
+    "n9454654375"
+   ]
+  },
+  {
+   "osm": "w325033895",
+   "name": "由利変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_24543de12988"
+   ],
+   "lat": 39.216505,
+   "lon": 139.969995,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7736999590",
+    "n7736999592"
+   ]
+  },
+  {
+   "osm": "w325046381",
+   "name": "楯岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_6876f32dc25d"
+   ],
+   "lat": 38.48772,
+   "lon": 140.387931,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9460173335",
+    "n9460173337",
+    "n9460173341"
+   ]
+  },
+  {
+   "osm": "w325046384",
+   "name": "東根変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_64e856cdc238"
+   ],
+   "lat": 38.423777,
+   "lon": 140.392479,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9460172601",
+    "n9460172602"
+   ]
+  },
+  {
+   "osm": "w325054635",
+   "name": "谷地変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_17fd533e5f7e"
+   ],
+   "lat": 38.416782,
+   "lon": 140.305388,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7749833396",
+    "n7749833397"
+   ]
+  },
+  {
+   "osm": "w325054646",
+   "name": "西村山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d6e3f758a9f1"
+   ],
+   "lat": 38.460149,
+   "lon": 140.308084,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7749833423",
+    "n7749833424"
+   ]
+  },
+  {
+   "osm": "w325304504",
+   "name": "愛子変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2ae1e5212983"
+   ],
+   "lat": 38.2666,
+   "lon": 140.746851,
+   "pairs": [
+    [
+     154.0,
+     33.0,
+     1
+    ],
+    [
+     154.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8272808684",
+    "n8272808687"
+   ]
+  },
+  {
+   "osm": "w325791630",
+   "name": "築館変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8f96d122a1de"
+   ],
+   "lat": 38.737303,
+   "lon": 141.020512,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9382928756",
+    "n9382928758"
+   ]
+  },
+  {
+   "osm": "w325791897",
+   "name": "高清水変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_4865f468b595"
+   ],
+   "lat": 38.658461,
+   "lon": 140.998196,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9382928746",
+    "n9382928747"
+   ]
+  },
+  {
+   "osm": "w325803243",
+   "name": "金成変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5c638a2fe29d"
+   ],
+   "lat": 38.807482,
+   "lon": 141.084747,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9382925449",
+    "n9382925452"
+   ]
+  },
+  {
+   "osm": "w325868333",
+   "name": "新加古川変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_d304b0cc991d"
+   ],
+   "lat": 34.801999,
+   "lon": 134.856583,
+   "pairs": [
+    [
+     275.0,
+     77.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8898146852",
+    "n8898146853",
+    "n8898146854"
+   ]
+  },
+  {
+   "osm": "w325971006",
+   "name": "黒岩変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_1fc22b4b4ea0"
+   ],
+   "lat": 37.697289,
+   "lon": 139.381148,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9382958976",
+    "n9382958977"
+   ]
+  },
+  {
+   "osm": "w325971039",
+   "name": "三川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_49ff15a245c2"
+   ],
+   "lat": 37.695306,
+   "lon": 139.380129,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n9382958984"
+   ]
+  },
+  {
+   "osm": "w325971086",
+   "name": "津川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_760a9f621171"
+   ],
+   "lat": 37.682576,
+   "lon": 139.472012,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9542772042",
+    "n9542772043"
+   ]
+  },
+  {
+   "osm": "w326125842",
+   "name": "酒田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_17f8e14eb23c"
+   ],
+   "lat": 38.897518,
+   "lon": 139.852749,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7014853648",
+    "n7014853649",
+    "n7014853650"
+   ]
+  },
+  {
+   "osm": "w326125851",
+   "name": "寺田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b1116a815b4c"
+   ],
+   "lat": 38.722133,
+   "lon": 139.802124,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7750082156",
+    "n7750082157"
+   ]
+  },
+  {
+   "osm": "w326125856",
+   "name": "庄内変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_464227eef87b"
+   ],
+   "lat": 38.765758,
+   "lon": 139.887495,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7604376763",
+    "n7604376764"
+   ]
+  },
+  {
+   "osm": "w326125863",
+   "name": "鶴岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_0a18e830bd1a"
+   ],
+   "lat": 38.7134,
+   "lon": 139.827914,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7750082170",
+    "n7750082171",
+    "n7750082172"
+   ]
+  },
+  {
+   "osm": "w327974999",
+   "name": "岩戸変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_6c477f336da2"
+   ],
+   "lat": 35.239268,
+   "lon": 139.679703,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13243339651"
+   ]
+  },
+  {
+   "osm": "w328088177",
+   "name": "瀬戸変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_09ffdb5eba3e"
+   ],
+   "lat": 35.332758,
+   "lon": 139.619956,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13280158555"
+   ]
+  },
+  {
+   "osm": "w330517155",
+   "name": "鰔川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_70f467070dca"
+   ],
+   "lat": 41.933696,
+   "lon": 140.151201,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13483556012"
+   ]
+  },
+  {
+   "osm": "w330517156",
+   "name": "江差変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_42a2b6487814"
+   ],
+   "lat": 41.869717,
+   "lon": 140.143167,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13483439325"
+   ]
+  },
+  {
+   "osm": "w335149326",
+   "name": "女川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d5b5b0c8cfa6"
+   ],
+   "lat": 38.437474,
+   "lon": 141.441833,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7728002069",
+    "n7728002070"
+   ]
+  },
+  {
+   "osm": "w340365829",
+   "name": "常総変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_94f18ec6c64f"
+   ],
+   "lat": 36.017841,
+   "lon": 140.044926,
+   "pairs": [
+    [
+     275.0,
+     66.0,
+     5
+    ]
+   ],
+   "transformers": [
+    "n10732128016",
+    "n2209024904",
+    "n2209024936",
+    "n2209024948",
+    "n2209025028"
+   ]
+  },
+  {
+   "osm": "w343069949",
+   "name": "米沢市変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2cb75cfc62ac"
+   ],
+   "lat": 37.96539,
+   "lon": 140.123794,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9463138558",
+    "n9463138559"
+   ]
+  },
+  {
+   "osm": "w343069954",
+   "name": "花沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_f3205757eb7a"
+   ],
+   "lat": 37.921755,
+   "lon": 140.125474,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8595710931",
+    "n8595710933",
+    "n8595710935"
+   ]
+  },
+  {
+   "osm": "w343505356",
+   "name": "神町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_0eb555789b75"
+   ],
+   "lat": 38.399118,
+   "lon": 140.373821,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9460168941",
+    "n9460168945",
+    "n9460168946"
+   ]
+  },
+  {
+   "osm": "w343505370",
+   "name": "八幡原変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_0831f78fe975"
+   ],
+   "lat": 37.902899,
+   "lon": 140.169662,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8595710995",
+    "n8595710997",
+    "n8595710998"
+   ]
+  },
+  {
+   "osm": "w367489622",
+   "name": "筑豊変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_2f1239601a3e"
+   ],
+   "lat": 33.584878,
+   "lon": 130.65636,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7143761557",
+    "n7143761558"
+   ]
+  },
+  {
+   "osm": "w368942390",
+   "name": "土樋変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_1be6ac8bf60e"
+   ],
+   "lat": 38.243874,
+   "lon": 140.885883,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8272640574",
+    "n8272640575"
+   ]
+  },
+  {
+   "osm": "w373876262",
+   "name": "都城変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_8d641d554ea2"
+   ],
+   "lat": 31.757754,
+   "lon": 131.046964,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4078571589",
+    "n4078571591"
+   ]
+  },
+  {
+   "osm": "w373882198",
+   "name": "大隅変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_f8a4c238ccb7"
+   ],
+   "lat": 31.39223,
+   "lon": 130.938148,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ],
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5333282277",
+    "n7834258424",
+    "n7834258425",
+    "n7834258427"
+   ]
+  },
+  {
+   "osm": "w373883352",
+   "name": "霧島変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ae045528da59"
+   ],
+   "lat": 31.796078,
+   "lon": 130.795906,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7834258444",
+    "n7834258445"
+   ]
+  },
+  {
+   "osm": "w38073309",
+   "name": "千歳変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_c115a2c844e9"
+   ],
+   "lat": 35.673638,
+   "lon": 139.588944,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     1
+    ]
+   ],
+   "transformers": [
+    "n12810645761"
+   ]
+  },
+  {
+   "osm": "w392770529",
+   "name": "九州電力 高鍋変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_3a818959b556"
+   ],
+   "lat": 32.133717,
+   "lon": 131.499354,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3959619125",
+    "n3959619126",
+    "n7056084704",
+    "n7056084705"
+   ]
+  },
+  {
+   "osm": "w405626236",
+   "name": "熊本変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_8789951bf9ce"
+   ],
+   "lat": 32.909375,
+   "lon": 130.902588,
+   "pairs": [
+    [
+     500.0,
+     220.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7214724710"
+   ]
+  },
+  {
+   "osm": "w405705606",
+   "name": "南宮崎変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_10e61c71835f"
+   ],
+   "lat": 31.901724,
+   "lon": 131.39232,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7065914042",
+    "n7065914043"
+   ]
+  },
+  {
+   "osm": "w405806507",
+   "name": "泉変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_e62d8c03240a",
+    "kyushu_site_e62d8c03240a"
+   ],
+   "lat": 33.70925,
+   "lon": 130.975717,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13808199596",
+    "n13808199597",
+    "n13808199598"
+   ]
+  },
+  {
+   "osm": "w405806523",
+   "name": "行橋変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_afd35a9f3cdb",
+    "kyushu_site_afd35a9f3cdb"
+   ],
+   "lat": 33.73017,
+   "lon": 130.964442,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13808193267",
+    "n13808193268"
+   ]
+  },
+  {
+   "osm": "w405827725",
+   "name": "長崎変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ed3520d57fd7"
+   ],
+   "lat": 32.744826,
+   "lon": 129.911716,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n4079786457",
+    "n4079786468"
+   ]
+  },
+  {
+   "osm": "w406052986",
+   "name": "鹿児島変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_32e448c061b3"
+   ],
+   "lat": 31.631254,
+   "lon": 130.533195,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ],
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13907231134",
+    "n13907231135",
+    "n13907231145",
+    "n13907231146",
+    "n13907231147"
+   ]
+  },
+  {
+   "osm": "w415528522",
+   "name": "藤島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2d1849c8eeaf"
+   ],
+   "lat": 38.765719,
+   "lon": 139.903099,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7604376754",
+    "n7604376755"
+   ]
+  },
+  {
+   "osm": "w424481948",
+   "name": "北栄町変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_1af999fc8ae9"
+   ],
+   "lat": 44.926277,
+   "lon": 142.572205,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13956541356",
+    "n13956541359"
+   ]
+  },
+  {
+   "osm": "w429526604",
+   "name": "中国電力 鳥取電力センター",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_f819798608a3"
+   ],
+   "lat": 35.498301,
+   "lon": 134.188512,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8233986203"
+   ]
+  },
+  {
+   "osm": "w430660375",
+   "name": "油川変電所_2",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_feba632ed199"
+   ],
+   "lat": 40.841345,
+   "lon": 140.694347,
+   "pairs": [
+    [
+     66.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7502587668",
+    "n7502587669"
+   ]
+  },
+  {
+   "osm": "w459850703",
+   "name": "興部変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_c0e59e7cdfa3"
+   ],
+   "lat": 44.465908,
+   "lon": 143.111591,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13481229535"
+   ]
+  },
+  {
+   "osm": "w47110637",
+   "name": "西東京変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_1d18838708d5"
+   ],
+   "lat": 35.604946,
+   "lon": 139.457078,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n12813234030",
+    "n12813234046",
+    "n12813234053",
+    "n12825666909"
+   ]
+  },
+  {
+   "osm": "w49175357",
+   "name": "鶴川変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_6700a77d22e3"
+   ],
+   "lat": 35.588969,
+   "lon": 139.456022,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12823398595",
+    "n12823398599",
+    "n12823398600"
+   ]
+  },
+  {
+   "osm": "w513526405",
+   "name": "近文変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_9bedab729eb4"
+   ],
+   "lat": 43.798869,
+   "lon": 142.346791,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13581572584",
+    "n13581572585",
+    "n5019486929"
+   ]
+  },
+  {
+   "osm": "w516775966",
+   "name": "友寄変電所",
+   "regions": [
+    "okinawa"
+   ],
+   "structure_sites": [
+    "okinawa_site_46687020c3e9"
+   ],
+   "lat": 26.165663,
+   "lon": 127.719298,
+   "pairs": [
+    [
+     132.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n5044265628",
+    "n5044265629"
+   ]
+  },
+  {
+   "osm": "w522950310",
+   "name": "字東宿変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_abd17d874ba9"
+   ],
+   "lat": 37.406307,
+   "lon": 140.391704,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n3623008541",
+    "n7799559951"
+   ]
+  },
+  {
+   "osm": "w531136681",
+   "name": "西町変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_803215033209"
+   ],
+   "lat": 44.301517,
+   "lon": 142.624272,
+   "pairs": [
+    [
+     100.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n14156402175",
+    "n14156402180",
+    "n14156402191"
+   ]
+  },
+  {
+   "osm": "w537843404",
+   "name": "伏木変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_5283d0281e62",
+    "hokuriku_site_5283d0281e62"
+   ],
+   "lat": 36.774825,
+   "lon": 137.05308,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9529148041",
+    "n9529148049",
+    "n9529148051"
+   ]
+  },
+  {
+   "osm": "w538098960",
+   "name": "大野変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_72d585e143c4",
+    "hokuriku_site_72d585e143c4"
+   ],
+   "lat": 36.741251,
+   "lon": 137.024794,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11683207282",
+    "n11683207288",
+    "n11683207290"
+   ]
+  },
+  {
+   "osm": "w548888573",
+   "name": "仙台港変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ee260746fbd6"
+   ],
+   "lat": 38.276697,
+   "lon": 140.994086,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7739105531",
+    "n7739105532",
+    "n7739105533"
+   ]
+  },
+  {
+   "osm": "w555222062",
+   "name": "前山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ccaea794ed45"
+   ],
+   "lat": 40.558012,
+   "lon": 141.427189,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7474749488",
+    "n7474749490"
+   ]
+  },
+  {
+   "osm": "w557670598",
+   "name": "市川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_cff795add714"
+   ],
+   "lat": 40.576721,
+   "lon": 141.469531,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7474698067",
+    "n7474698069"
+   ]
+  },
+  {
+   "osm": "w558171407",
+   "name": "東下田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b8cc0c618f6f"
+   ],
+   "lat": 40.606947,
+   "lon": 141.423247,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7474749508"
+   ]
+  },
+  {
+   "osm": "w559673635",
+   "name": "塚原変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_b5b8fd7bdb8f",
+    "hokuriku_site_b5b8fd7bdb8f"
+   ],
+   "lat": 36.746105,
+   "lon": 137.075788,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11669275040",
+    "n11669275043",
+    "n11669275049"
+   ]
+  },
+  {
+   "osm": "w559974097",
+   "name": "相坂変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_aadc0f140bde"
+   ],
+   "lat": 40.594109,
+   "lon": 141.240489,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7474698050",
+    "n7474698051",
+    "n7474698052"
+   ]
+  },
+  {
+   "osm": "w566493698",
+   "name": "剣吉変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ad1f43877d1c"
+   ],
+   "lat": 40.459423,
+   "lon": 141.352141,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7747894113",
+    "n7747894115"
+   ]
+  },
+  {
+   "osm": "w566493699",
+   "name": "南部古館変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_efa4087e1402"
+   ],
+   "lat": 40.52885,
+   "lon": 141.307977,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8282341995",
+    "n8282341996"
+   ]
+  },
+  {
+   "osm": "w566866186",
+   "name": "稲生変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_4fb4f91087f6"
+   ],
+   "lat": 40.632679,
+   "lon": 141.214759,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7474698029",
+    "n7474698030"
+   ]
+  },
+  {
+   "osm": "w566866187",
+   "name": "七戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e1ecd4cd64ad"
+   ],
+   "lat": 40.705435,
+   "lon": 141.1563,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7502568831",
+    "n7502568832",
+    "n7502568834"
+   ]
+  },
+  {
+   "osm": "w569344056",
+   "name": "道下変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_b78a555f51ec",
+    "hokuriku_site_b78a555f51ec"
+   ],
+   "lat": 36.945088,
+   "lon": 137.561663,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11513123278",
+    "n11513123279"
+   ]
+  },
+  {
+   "osm": "w575469656",
+   "name": "上野変電所_2",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_c2bd12f1e730"
+   ],
+   "lat": 37.240495,
+   "lon": 136.893102,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11508823990",
+    "n11508823994"
+   ]
+  },
+  {
+   "osm": "w580129589",
+   "name": "芦川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_f699b3d88095"
+   ],
+   "lat": 45.202701,
+   "lon": 141.737321,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13919348970"
+   ]
+  },
+  {
+   "osm": "w582947817",
+   "name": "猿払変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_560b310e4088"
+   ],
+   "lat": 45.264065,
+   "lon": 142.197724,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13463232718"
+   ]
+  },
+  {
+   "osm": "w588138671",
+   "name": "南須賀川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ae461b58c11d"
+   ],
+   "lat": 37.276727,
+   "lon": 140.364639,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7794137170",
+    "n7794137171",
+    "n7794137172"
+   ]
+  },
+  {
+   "osm": "w591371509",
+   "name": "青戸変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_7c139bb59ea3"
+   ],
+   "lat": 31.302014,
+   "lon": 130.465803,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     2
+    ],
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13917106887",
+    "n13917106889",
+    "n13917106891",
+    "n13917106893",
+    "n13917151013"
+   ]
+  },
+  {
+   "osm": "w592698966",
+   "name": "北陸電力穴水変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_271d3b95594b"
+   ],
+   "lat": 37.231429,
+   "lon": 136.910571,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11508823925",
+    "n11508823926"
+   ]
+  },
+  {
+   "osm": "w595117651",
+   "name": "湯本第一変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_bde1e78503ae"
+   ],
+   "lat": 37.014428,
+   "lon": 140.845545,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8353907549",
+    "n8353907550"
+   ]
+  },
+  {
+   "osm": "w596948247",
+   "name": "大田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_2d9f07ca1329"
+   ],
+   "lat": 31.632611,
+   "lon": 130.367638,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13908962303",
+    "n13908962310"
+   ]
+  },
+  {
+   "osm": "w605974454",
+   "name": "伊集院変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_a113158fcd8f"
+   ],
+   "lat": 31.63826,
+   "lon": 130.389472,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13908991030",
+    "n13908991034",
+    "n13908991038"
+   ]
+  },
+  {
+   "osm": "w607919421",
+   "name": "山川変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_21a03f1eda94"
+   ],
+   "lat": 31.210413,
+   "lon": 130.625613,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13917086250",
+    "n13917086252"
+   ]
+  },
+  {
+   "osm": "w609313645",
+   "name": "上川内変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_671f7bf1ac7a"
+   ],
+   "lat": 31.846281,
+   "lon": 130.29543,
+   "pairs": [
+    [
+     110.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13908475530",
+    "n13908475532"
+   ]
+  },
+  {
+   "osm": "w609752479",
+   "name": "新盛岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a72d00f3c4eb"
+   ],
+   "lat": 39.575237,
+   "lon": 141.156606,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8329039077",
+    "n8329039078"
+   ]
+  },
+  {
+   "osm": "w610459502",
+   "name": "東弘前変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a4f2057a69c0"
+   ],
+   "lat": 40.596985,
+   "lon": 140.486933,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8269210040",
+    "n8269210045",
+    "n8269210047"
+   ]
+  },
+  {
+   "osm": "w610570201",
+   "name": "渡波変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d561d41dda99"
+   ],
+   "lat": 38.422895,
+   "lon": 141.368116,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7728002037",
+    "n7728002040"
+   ]
+  },
+  {
+   "osm": "w610570203",
+   "name": "石巻湊変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_6f2131c22a80"
+   ],
+   "lat": 38.425332,
+   "lon": 141.324353,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7728002021",
+    "n7728002022",
+    "n7728002023"
+   ]
+  },
+  {
+   "osm": "w617661624",
+   "name": "JR北海道 新函館変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_e0d1d178b501"
+   ],
+   "lat": 41.842094,
+   "lon": 140.644297,
+   "pairs": [
+    [
+     187.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9549473918",
+    "n9549473919"
+   ]
+  },
+  {
+   "osm": "w618344841",
+   "name": "奥野々変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_075e3c1237c5",
+    "hokuriku_site_075e3c1237c5"
+   ],
+   "lat": 35.809583,
+   "lon": 136.173124,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9164942388",
+    "n9164942389"
+   ]
+  },
+  {
+   "osm": "w618406695",
+   "name": "西春別変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_02b50ad27a3e"
+   ],
+   "lat": 43.39666,
+   "lon": 144.806794,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13357161926",
+    "n13357161928"
+   ]
+  },
+  {
+   "osm": "w618492952",
+   "name": "東十二号南変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_c2128e1b90da"
+   ],
+   "lat": 43.65222,
+   "lon": 142.58025,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13463640266"
+   ]
+  },
+  {
+   "osm": "w619757273",
+   "name": "豊富変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_8c17c2ca2a64"
+   ],
+   "lat": 45.114676,
+   "lon": 141.768709,
+   "pairs": [
+    [
+     33.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13927900497"
+   ]
+  },
+  {
+   "osm": "w620007466",
+   "name": "大洲変電所",
+   "regions": [
+    "shikoku"
+   ],
+   "structure_sites": [
+    "shikoku_site_9db6d2b12909"
+   ],
+   "lat": 33.556313,
+   "lon": 132.557056,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9555689244",
+    "n9555689245"
+   ]
+  },
+  {
+   "osm": "w620964349",
+   "name": "別子配電センター",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_6825d71b2900",
+    "shikoku_site_6825d71b2900"
+   ],
+   "lat": 33.950997,
+   "lon": 133.247247,
+   "pairs": [
+    [
+     187.0,
+     110.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9450038037",
+    "n9450038040"
+   ]
+  },
+  {
+   "osm": "w623913635",
+   "name": "富川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_e23c35d928ca"
+   ],
+   "lat": 42.523294,
+   "lon": 142.0339,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13567472739"
+   ]
+  },
+  {
+   "osm": "w625051880",
+   "name": "安足間変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_583dd5563017"
+   ],
+   "lat": 43.840682,
+   "lon": 142.708979,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13463790445",
+    "n13463790449"
+   ]
+  },
+  {
+   "osm": "w627575616",
+   "name": "遊佐町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_cce00cb3a810"
+   ],
+   "lat": 39.011105,
+   "lon": 139.905902,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7750125462",
+    "n7750125463"
+   ]
+  },
+  {
+   "osm": "w631769046",
+   "name": "北平変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a60a51bcb6df"
+   ],
+   "lat": 37.11422,
+   "lon": 140.874284,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6046392191",
+    "n6046392192"
+   ]
+  },
+  {
+   "osm": "w640591807",
+   "name": "北新得変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_31938cbeaf33"
+   ],
+   "lat": 43.164147,
+   "lon": 142.90436,
+   "pairs": [
+    [
+     275.0,
+     187.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n2611941639",
+    "n6034584963"
+   ]
+  },
+  {
+   "osm": "w641527416",
+   "name": "新鳥取変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_72589f5bee61"
+   ],
+   "lat": 35.451957,
+   "lon": 134.137758,
+   "pairs": [
+    [
+     220.0,
+     110.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n4311487925",
+    "n6041376593",
+    "n6041376599"
+   ]
+  },
+  {
+   "osm": "w642186663",
+   "name": "好間変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_10617736ff4d"
+   ],
+   "lat": 37.06649,
+   "lon": 140.870157,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9381900236",
+    "n9381900237",
+    "n9381900238",
+    "n9381900239"
+   ]
+  },
+  {
+   "osm": "w642335992",
+   "name": "福岡町小伊勢領変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_2b2687447bec",
+    "hokuriku_site_2b2687447bec"
+   ],
+   "lat": 36.698133,
+   "lon": 136.946902,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n11676951219",
+    "n11676951221",
+    "n11676951223",
+    "n11676951225"
+   ]
+  },
+  {
+   "osm": "w657634409",
+   "name": "松岬変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8ab2de9535d5"
+   ],
+   "lat": 37.9077,
+   "lon": 140.095944,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8595711047",
+    "n8595711048",
+    "n8595711049"
+   ]
+  },
+  {
+   "osm": "w658666069",
+   "name": "諏訪変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9a6535e803e3"
+   ],
+   "lat": 37.38852,
+   "lon": 140.396003,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8379914325",
+    "n8379914326",
+    "n8379914327"
+   ]
+  },
+  {
+   "osm": "w658988167",
+   "name": "平変電所",
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tohoku_site_5c8d497ed2ff",
+    "tokyo_site_5c8d497ed2ff"
+   ],
+   "lat": 36.985072,
+   "lon": 140.83862,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8353907701",
+    "n8353907703",
+    "n8353907784",
+    "n8353907785",
+    "n8353907786",
+    "n8353907787"
+   ]
+  },
+  {
+   "osm": "w659138214",
+   "name": "西仙台変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_4486ccb49fee"
+   ],
+   "lat": 38.254962,
+   "lon": 140.643942,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     154.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8341803173",
+    "n8341803196",
+    "n8341803199",
+    "n8341821828",
+    "n8341821831"
+   ]
+  },
+  {
+   "osm": "w668861168",
+   "name": "JR東日本 新八戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3c00341a7021"
+   ],
+   "lat": 40.464849,
+   "lon": 141.404069,
+   "pairs": [
+    [
+     154.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7487905195",
+    "n7487905200"
+   ]
+  },
+  {
+   "osm": "w670223453",
+   "name": "淋代平変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3c7dec300908"
+   ],
+   "lat": 40.732473,
+   "lon": 141.373779,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7473455351",
+    "n7473455352"
+   ]
+  },
+  {
+   "osm": "w675289794",
+   "name": "平取変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_1d50b8ceb188"
+   ],
+   "lat": 42.726091,
+   "lon": 142.291265,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13567472748"
+   ]
+  },
+  {
+   "osm": "w675557803",
+   "name": "泉町二丁目変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_622e7cf3121e"
+   ],
+   "lat": 43.575996,
+   "lon": 141.89068,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13463440483",
+    "n13463440486"
+   ]
+  },
+  {
+   "osm": "w676466496",
+   "name": "浅川変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_9c9294499026"
+   ],
+   "lat": 33.87171,
+   "lon": 130.700085,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13819733591",
+    "n13819733592"
+   ]
+  },
+  {
+   "osm": "w686394119",
+   "name": "新宇都宮変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_160126de1017"
+   ],
+   "lat": 36.655158,
+   "lon": 139.913585,
+   "pairs": [
+    [
+     154.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7775059324",
+    "n7775059327"
+   ]
+  },
+  {
+   "osm": "w686948221",
+   "name": "富岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_da59944dd4eb"
+   ],
+   "lat": 37.355809,
+   "lon": 140.99019,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9470316749",
+    "n9470316750"
+   ]
+  },
+  {
+   "osm": "w699724712",
+   "name": "天童変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8dcaef51bffd"
+   ],
+   "lat": 38.332921,
+   "lon": 140.364361,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8272990311",
+    "n8273036620",
+    "n8273036621"
+   ]
+  },
+  {
+   "osm": "w703836122",
+   "name": "荒尾変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_c512ca22d980"
+   ],
+   "lat": 32.956953,
+   "lon": 130.465517,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7167154088"
+   ]
+  },
+  {
+   "osm": "w704208233",
+   "name": "広江変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_7dc9fb1ffc51",
+    "shikoku_site_7dc9fb1ffc51"
+   ],
+   "lat": 33.931547,
+   "lon": 133.112565,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9554129549",
+    "n9554129550",
+    "n9554129551"
+   ]
+  },
+  {
+   "osm": "w714627759",
+   "name": "上北変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_769f57f13ea3"
+   ],
+   "lat": 40.783125,
+   "lon": 141.173098,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ],
+    [
+     275.0,
+     154.0,
+     3
+    ],
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n2565401372",
+    "n7462254881",
+    "n7462255586",
+    "n7462255591",
+    "n7462255606",
+    "n7462255610",
+    "n7462255614",
+    "n7462255650"
+   ]
+  },
+  {
+   "osm": "w714668449",
+   "name": "野辺地変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_41f51771481a"
+   ],
+   "lat": 40.848277,
+   "lon": 141.124865,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7502568847",
+    "n7502568849"
+   ]
+  },
+  {
+   "osm": "w714785179",
+   "name": "JR東日本 新青森変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7684ed162cef"
+   ],
+   "lat": 40.767974,
+   "lon": 140.750247,
+   "pairs": [
+    [
+     154.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6718655795",
+    "n6718655797"
+   ]
+  },
+  {
+   "osm": "w715375634",
+   "name": "二戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ee20608f71a6"
+   ],
+   "lat": 40.290176,
+   "lon": 141.302094,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7487905261",
+    "n7487905262"
+   ]
+  },
+  {
+   "osm": "w715398752",
+   "name": "泉野変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e4ff3c00193d"
+   ],
+   "lat": 40.838044,
+   "lon": 140.818659,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7502568812",
+    "n7502568813",
+    "n7502568814"
+   ]
+  },
+  {
+   "osm": "w715439766",
+   "name": "浪打変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_635053e3e6b7"
+   ],
+   "lat": 40.821812,
+   "lon": 140.766234,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7502555375",
+    "n7502555376",
+    "n7502555377"
+   ]
+  },
+  {
+   "osm": "w715439767",
+   "name": "浦町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_956786546926"
+   ],
+   "lat": 40.809693,
+   "lon": 140.75243,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7502568694",
+    "n7502568695",
+    "n7502568696"
+   ]
+  },
+  {
+   "osm": "w715439771",
+   "name": "岡町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_783ebaf2f70b"
+   ],
+   "lat": 40.843291,
+   "lon": 140.686425,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7502587650",
+    "n7502587651"
+   ]
+  },
+  {
+   "osm": "w715439773",
+   "name": "津軽線 青森西変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9de2086a08ad"
+   ],
+   "lat": 40.839958,
+   "lon": 140.702596,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7502596799"
+   ]
+  },
+  {
+   "osm": "w715451338",
+   "name": "小湊変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_f8cd34ca9cd3"
+   ],
+   "lat": 40.927175,
+   "lon": 140.966112,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7502568824",
+    "n7502568825"
+   ]
+  },
+  {
+   "osm": "w715451339",
+   "name": "青い森鉄道 野辺地変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_facd47ad5a84"
+   ],
+   "lat": 40.878029,
+   "lon": 141.08901,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7502568866"
+   ]
+  },
+  {
+   "osm": "w716660669",
+   "name": "南津軽変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_bc2c2ea61057"
+   ],
+   "lat": 40.584956,
+   "lon": 140.545976,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ],
+    [
+     154.0,
+     33.0,
+     3
+    ],
+    [
+     66.0,
+     33.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7483570516",
+    "n7483570532",
+    "n7483570536"
+   ]
+  },
+  {
+   "osm": "w716700137",
+   "name": "桔梗野変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_957646186494"
+   ],
+   "lat": 40.583186,
+   "lon": 140.461046,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8269209977",
+    "n8269209979"
+   ]
+  },
+  {
+   "osm": "w716712573",
+   "name": "弘前城東変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_736d0eea8a73"
+   ],
+   "lat": 40.600663,
+   "lon": 140.508965,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8269210057",
+    "n8269210060"
+   ]
+  },
+  {
+   "osm": "w716995984",
+   "name": "青い森鉄道 三沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9c8e4d351bc2"
+   ],
+   "lat": 40.678956,
+   "lon": 141.348133,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7502568883"
+   ]
+  },
+  {
+   "osm": "w717562870",
+   "name": "黒石変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_538fd3db374c"
+   ],
+   "lat": 40.654191,
+   "lon": 140.594111,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8269210675",
+    "n8269210676",
+    "n8269210677"
+   ]
+  },
+  {
+   "osm": "w717562874",
+   "name": "浪岡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ae8ddac50d31"
+   ],
+   "lat": 40.709804,
+   "lon": 140.576266,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8269210655",
+    "n8269210656"
+   ]
+  },
+  {
+   "osm": "w719310377",
+   "name": "今別変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c6a5af649fde"
+   ],
+   "lat": 41.178041,
+   "lon": 140.489161,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8269210683"
+   ]
+  },
+  {
+   "osm": "w720863331",
+   "name": "JR東日本 新沼宮内変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b0c8dcb138be"
+   ],
+   "lat": 39.987117,
+   "lon": 141.224392,
+   "pairs": [
+    [
+     154.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6763699807",
+    "n6763699810"
+   ]
+  },
+  {
+   "osm": "w721051611",
+   "name": "小又川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_0c973abf6f49"
+   ],
+   "lat": 40.037766,
+   "lon": 140.437431,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7605668334",
+    "n7605668335"
+   ]
+  },
+  {
+   "osm": "w721132863",
+   "name": "東通変電所",
+   "regions": [
+    "hokkaido",
+    "tohoku"
+   ],
+   "structure_sites": [
+    "hokkaido_site_efd1faad3bc6",
+    "tohoku_site_efd1faad3bc6"
+   ],
+   "lat": 41.354198,
+   "lon": 141.341358,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9454562239",
+    "n9454562240"
+   ]
+  },
+  {
+   "osm": "w721786411",
+   "name": "東花巻変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c2f244c89cd1"
+   ],
+   "lat": 39.349587,
+   "lon": 141.258699,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9482834003",
+    "n9482834004"
+   ]
+  },
+  {
+   "osm": "w722101726",
+   "name": "東宮古変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_046c0fccd421"
+   ],
+   "lat": 39.649952,
+   "lon": 141.956249,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898772",
+    "n7727898774"
+   ]
+  },
+  {
+   "osm": "w722101731",
+   "name": "山田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c836b9215e7a"
+   ],
+   "lat": 39.470145,
+   "lon": 141.948681,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7803611226",
+    "n7803611227"
+   ]
+  },
+  {
+   "osm": "w722498909",
+   "name": "鳴門変電所",
+   "regions": [
+    "kansai",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "kansai_site_8afbb61fb698",
+    "shikoku_site_8afbb61fb698"
+   ],
+   "lat": 34.164927,
+   "lon": 134.556062,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7881022311",
+    "n7881022312"
+   ]
+  },
+  {
+   "osm": "w724857326",
+   "name": "玉浦変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_843b08d92e33"
+   ],
+   "lat": 38.123949,
+   "lon": 140.900557,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8285836809",
+    "n8285836811",
+    "n8285836813"
+   ]
+  },
+  {
+   "osm": "w73851272",
+   "name": "奥秩父変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_0f670f9ba741",
+    "chubu_site_0f670f9ba741"
+   ],
+   "lat": 35.960909,
+   "lon": 139.045899,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     4
+    ]
+   ],
+   "transformers": [
+    "n8202488294",
+    "n8202488297",
+    "n8202488302",
+    "n8202488305"
+   ]
+  },
+  {
+   "osm": "w742385649",
+   "name": "宮変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ef49b3b6ad12"
+   ],
+   "lat": 38.04957,
+   "lon": 140.661069,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n9540150806"
+   ]
+  },
+  {
+   "osm": "w744453597",
+   "name": "伊都変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_e9594940b079"
+   ],
+   "lat": 33.554511,
+   "lon": 130.226673,
+   "pairs": [
+    [
+     220.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n6967428519",
+    "n6967428520"
+   ]
+  },
+  {
+   "osm": "w74893191",
+   "name": "府中変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_09c64930b6a8"
+   ],
+   "lat": 35.677972,
+   "lon": 139.47578,
+   "pairs": [
+    [
+     6.6,
+     0.17,
+     4
+    ]
+   ],
+   "transformers": [
+    "n12809376607",
+    "n12809376608",
+    "n12809376612",
+    "n12809376613"
+   ]
+  },
+  {
+   "osm": "w750201262",
+   "name": "南酒田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e90d62fc5e98"
+   ],
+   "lat": 38.897262,
+   "lon": 139.851589,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7014853651",
+    "n7014853652",
+    "n7014853653"
+   ]
+  },
+  {
+   "osm": "w753061912",
+   "name": "日向変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_e5834356e5dd"
+   ],
+   "lat": 32.441925,
+   "lon": 131.622858,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7078528427",
+    "n7078528428"
+   ]
+  },
+  {
+   "osm": "w761234942",
+   "name": "岩井崎変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_66a43c118bb9"
+   ],
+   "lat": 38.83315,
+   "lon": 141.571323,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7727963250"
+   ]
+  },
+  {
+   "osm": "w764455378",
+   "name": "二島変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_e97417c3c265"
+   ],
+   "lat": 33.903206,
+   "lon": 130.739315,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13819755110",
+    "n13819755111"
+   ]
+  },
+  {
+   "osm": "w764461037",
+   "name": "穴生変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_a69cf60a8387"
+   ],
+   "lat": 33.854479,
+   "lon": 130.743423,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7141740739",
+    "n7141740740"
+   ]
+  },
+  {
+   "osm": "w764464484",
+   "name": "安瀬変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_10ddf357233c",
+    "kyushu_site_10ddf357233c"
+   ],
+   "lat": 33.92183,
+   "lon": 130.800551,
+   "pairs": [
+    [
+     66.0,
+     22.0,
+     3
+    ],
+    [
+     66.0,
+     6.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n13822971951",
+    "n13822971952",
+    "n13822971953",
+    "n7141748238"
+   ]
+  },
+  {
+   "osm": "w764464487",
+   "name": "東畑変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_d5ebb0c1bff8"
+   ],
+   "lat": 33.9088,
+   "lon": 130.798013,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13823159928",
+    "n13823159929"
+   ]
+  },
+  {
+   "osm": "w764676210",
+   "name": "直方変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_27ea3cf0d2f1"
+   ],
+   "lat": 33.731186,
+   "lon": 130.71792,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13826154278",
+    "n13826154279",
+    "n13826154280"
+   ]
+  },
+  {
+   "osm": "w764676718",
+   "name": "宮田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_3eb95f33362e"
+   ],
+   "lat": 33.729042,
+   "lon": 130.656809,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13832162164",
+    "n13832162167"
+   ]
+  },
+  {
+   "osm": "w764680058",
+   "name": "有木変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ae99efc15965"
+   ],
+   "lat": 33.747693,
+   "lon": 130.638061,
+   "pairs": [
+    [
+     66.0,
+     6.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n13832178943",
+    "n13832178944"
+   ]
+  },
+  {
+   "osm": "w768764428",
+   "name": "三角変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_a0aa650c0dfb"
+   ],
+   "lat": 32.614344,
+   "lon": 130.474448,
+   "pairs": [
+    [
+     110.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7177088525",
+    "n7177088526"
+   ]
+  },
+  {
+   "osm": "w768796104",
+   "name": "上山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_adf762f38144"
+   ],
+   "lat": 38.163163,
+   "lon": 140.286365,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7738572809",
+    "n7738572811",
+    "n7738572813"
+   ]
+  },
+  {
+   "osm": "w768982065",
+   "name": "谷柏変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b5a2d7cb80dd"
+   ],
+   "lat": 38.211726,
+   "lon": 140.291446,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7738572785",
+    "n7738572786"
+   ]
+  },
+  {
+   "osm": "w782006159",
+   "name": "IGRいわて銀河鉄道 一戸変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_18a50768448a"
+   ],
+   "lat": 40.179331,
+   "lon": 141.30731,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8354062991"
+   ]
+  },
+  {
+   "osm": "w783593581",
+   "name": "鮎貝変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_6ea0a5091af7"
+   ],
+   "lat": 38.188304,
+   "lon": 140.083372,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7738572845",
+    "n7738572846"
+   ]
+  },
+  {
+   "osm": "w783593582",
+   "name": "置賜変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8d4112dbd046"
+   ],
+   "lat": 38.032198,
+   "lon": 140.111791,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7734156704",
+    "n7734156705"
+   ]
+  },
+  {
+   "osm": "w785319805",
+   "name": "宮城中央変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a8b38eb68023"
+   ],
+   "lat": 38.352465,
+   "lon": 140.751435,
+   "pairs": [
+    [
+     500.0,
+     275.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9470338451",
+    "n9470338458"
+   ]
+  },
+  {
+   "osm": "w795857984",
+   "name": "IGRいわて銀河鉄道 沼宮内変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_d0a1d4901781"
+   ],
+   "lat": 39.936042,
+   "lon": 141.205928,
+   "pairs": [
+    [
+     66.0,
+     20.0,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8354062947"
+   ]
+  },
+  {
+   "osm": "w827788662",
+   "name": "岩手高田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_770b996d168c"
+   ],
+   "lat": 39.030928,
+   "lon": 141.633109,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898476",
+    "n7727898477"
+   ]
+  },
+  {
+   "osm": "w827788677",
+   "name": "下船渡変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_66aed117a112"
+   ],
+   "lat": 39.034428,
+   "lon": 141.713684,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898537",
+    "n7727898539"
+   ]
+  },
+  {
+   "osm": "w827788712",
+   "name": "大槌変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a2393f8bbc2f"
+   ],
+   "lat": 39.368629,
+   "lon": 141.904968,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7727898680",
+    "n7727898681"
+   ]
+  },
+  {
+   "osm": "w828817629",
+   "name": "平沢変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3a22ba7a7628"
+   ],
+   "lat": 39.281925,
+   "lon": 139.95992,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7736999510",
+    "n7736999511"
+   ]
+  },
+  {
+   "osm": "w830289253",
+   "name": "酒田市変電所_2",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_174f3fc41ed3"
+   ],
+   "lat": 38.838391,
+   "lon": 139.813268,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7750125130",
+    "n7750125131"
+   ]
+  },
+  {
+   "osm": "w830289271",
+   "name": "石名坂変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_9a3ee9b7fd67"
+   ],
+   "lat": 38.888533,
+   "lon": 139.939723,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7750125396",
+    "n7750125397"
+   ]
+  },
+  {
+   "osm": "w830290119",
+   "name": "東北電力株式会社 岩沼変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_29169be3d70d"
+   ],
+   "lat": 38.102585,
+   "lon": 140.860598,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8285836806",
+    "n8285836807",
+    "n8285836808"
+   ]
+  },
+  {
+   "osm": "w830311541",
+   "name": "十日町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3f552536ac7b"
+   ],
+   "lat": 38.790599,
+   "lon": 140.303679,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7750332051",
+    "n7750332052"
+   ]
+  },
+  {
+   "osm": "w830311552",
+   "name": "上金沢町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e2e7cb991ee0"
+   ],
+   "lat": 38.747712,
+   "lon": 140.303682,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n9459428654",
+    "n9459428656",
+    "n9459428658"
+   ]
+  },
+  {
+   "osm": "w833554568",
+   "name": "三本木桑折変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5b72f421c6d5"
+   ],
+   "lat": 38.511986,
+   "lon": 140.94987,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7781313863",
+    "n7781313864",
+    "n7781313865"
+   ]
+  },
+  {
+   "osm": "w833554584",
+   "name": "字下野目雷北変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_051296591b17"
+   ],
+   "lat": 38.59069,
+   "lon": 140.78184,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n7781313985"
+   ]
+  },
+  {
+   "osm": "w834176146",
+   "name": "JR東日本 新郡山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_8d4a79260e92"
+   ],
+   "lat": 37.337078,
+   "lon": 140.36613,
+   "pairs": [
+    [
+     275.0,
+     25.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7787019997",
+    "n7787020017"
+   ]
+  },
+  {
+   "osm": "w834618059",
+   "name": "豊地変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_19c3a6d07686"
+   ],
+   "lat": 37.16912,
+   "lon": 140.220003,
+   "pairs": [
+    [
+     154.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7791039978",
+    "n7791039981"
+   ]
+  },
+  {
+   "osm": "w834987560",
+   "name": "屋敷ノ入変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_fe492cd50a78"
+   ],
+   "lat": 37.156349,
+   "lon": 140.461169,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n7794142440",
+    "n7794142441",
+    "n7794142442"
+   ]
+  },
+  {
+   "osm": "w835186162",
+   "name": "二本松市変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e4e9bbbbea1d"
+   ],
+   "lat": 37.604879,
+   "lon": 140.628106,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n7795851774",
+    "n7795851780"
+   ]
+  },
+  {
+   "osm": "w843464956",
+   "name": "大崎市変電所_3",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e707c339befc"
+   ],
+   "lat": 38.750263,
+   "lon": 140.718143,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9382929124",
+    "n9382929125"
+   ]
+  },
+  {
+   "osm": "w844182802",
+   "name": "北川村変電所",
+   "regions": [
+    "shikoku"
+   ],
+   "structure_sites": [
+    "shikoku_site_1946ba7e6dc5"
+   ],
+   "lat": 33.462318,
+   "lon": 134.050709,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9557095827",
+    "n9557095828"
+   ]
+  },
+  {
+   "osm": "w86874294",
+   "name": "大沼変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_929dcc37c95d"
+   ],
+   "lat": 35.53873,
+   "lon": 139.412217,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n12860569684",
+    "n12860569687",
+    "n12860569689"
+   ]
+  },
+  {
+   "osm": "w87491658",
+   "name": "高松変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_d8084721aac7",
+    "shikoku_site_d8084721aac7"
+   ],
+   "lat": 34.289976,
+   "lon": 133.986471,
+   "pairs": [
+    [
+     187.0,
+     66.0,
+     3
+    ]
+   ],
+   "transformers": [
+    "n10106427670",
+    "n10106427671",
+    "n10106427672"
+   ]
+  },
+  {
+   "osm": "w87538349",
+   "name": "讃岐変電所",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_af37dd5cfa3a",
+    "shikoku_site_af37dd5cfa3a"
+   ],
+   "lat": 34.164921,
+   "lon": 133.954011,
+   "pairs": [
+    [
+     500.0,
+     187.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n1820235671",
+    "n1820235827"
+   ]
+  },
+  {
+   "osm": "w87682157",
+   "name": "南川越変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_91960e8e83df"
+   ],
+   "lat": 35.891383,
+   "lon": 139.465947,
+   "pairs": [
+    [
+     275.0,
+     154.0,
+     5
+    ]
+   ],
+   "transformers": [
+    "n2917820103",
+    "n2917820303",
+    "n2917820904",
+    "n2917821201",
+    "n8228478090"
+   ]
+  },
+  {
+   "osm": "w889980645",
+   "name": "八木山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b21b87047a49"
+   ],
+   "lat": 38.238938,
+   "lon": 140.85623,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8272640552",
+    "n8272640553",
+    "n8272640554"
+   ]
+  },
+  {
+   "osm": "w889997789",
+   "name": "大堀変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3df1b28eef12"
+   ],
+   "lat": 38.279862,
+   "lon": 140.74818,
+   "pairs": [
+    [
+     66.0,
+     33.0,
+     1
+    ],
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8272808708",
+    "n8272808709",
+    "n8272808710"
+   ]
+  },
+  {
+   "osm": "w890021885",
+   "name": "JR東日本 院内変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_98051629c1ad"
+   ],
+   "lat": 39.052641,
+   "lon": 140.427726,
+   "pairs": [
+    [
+     275.0,
+     20.0,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8273036816",
+    "n8273036817"
+   ]
+  },
+  {
+   "osm": "w891443197",
+   "name": "角田変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e470a1ada09e"
+   ],
+   "lat": 37.956063,
+   "lon": 140.774756,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8285822705",
+    "n8285822706",
+    "n8285822707"
+   ]
+  },
+  {
+   "osm": "w891443272",
+   "name": "長町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_a27d569d01f7"
+   ],
+   "lat": 38.21886,
+   "lon": 140.892738,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8285836936",
+    "n8285836937"
+   ]
+  },
+  {
+   "osm": "w899080680",
+   "name": "東平変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_409d9a0cef8c"
+   ],
+   "lat": 37.046175,
+   "lon": 140.895841,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n9381900283",
+    "n9381900284"
+   ]
+  },
+  {
+   "osm": "w901872342",
+   "name": "原町南変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_297352d970f3"
+   ],
+   "lat": 37.61216,
+   "lon": 140.985033,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     1
+    ]
+   ],
+   "transformers": [
+    "n8377497572"
+   ]
+  },
+  {
+   "osm": "w901872362",
+   "name": "川俣変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_3a38634c3e05"
+   ],
+   "lat": 37.662708,
+   "lon": 140.605064,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8377497616",
+    "n8377533718"
+   ]
+  },
+  {
+   "osm": "w901872386",
+   "name": "中村変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_5c8b6e8a5e4c"
+   ],
+   "lat": 37.790455,
+   "lon": 140.909123,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n8377533810",
+    "n8377533812",
+    "n8377533814"
+   ]
+  },
+  {
+   "osm": "w901872393",
+   "name": "鹿島変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_aabeb286ab1b"
+   ],
+   "lat": 37.679117,
+   "lon": 140.981841,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8377533841",
+    "n8377533842"
+   ]
+  },
+  {
+   "osm": "w902179403",
+   "name": "小野新町変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_c0cc7f872ea9"
+   ],
+   "lat": 37.280255,
+   "lon": 140.633681,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n8379914227",
+    "n8379914228"
+   ]
+  },
+  {
+   "osm": "w928313842",
+   "name": "笠間町変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_d91b4e1aa7db"
+   ],
+   "lat": 35.362245,
+   "lon": 139.540547,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n13250064339",
+    "n13250064340",
+    "n13250064341"
+   ]
+  },
+  {
+   "osm": "w933991765",
+   "name": "七尾変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_5b747f229261"
+   ],
+   "lat": 37.034622,
+   "lon": 136.96754,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11510802335",
+    "n11510802337",
+    "n11510802340"
+   ]
+  },
+  {
+   "osm": "w938828393",
+   "name": "若葉台変電所",
+   "regions": [
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_bb25d154c537"
+   ],
+   "lat": 37.0711,
+   "lon": 136.758292,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510816078",
+    "n11510816080"
+   ]
+  },
+  {
+   "osm": "w938853643",
+   "name": "長沢変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_d8783f13df8d",
+    "hokuriku_site_d8783f13df8d"
+   ],
+   "lat": 36.994437,
+   "lon": 136.778571,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11510816151",
+    "n11510816152"
+   ]
+  },
+  {
+   "osm": "w973892227",
+   "name": "波岡変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_8db76f6decbf",
+    "hokuriku_site_8db76f6decbf"
+   ],
+   "lat": 36.752504,
+   "lon": 136.986128,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11683207256",
+    "n11683207261",
+    "n11683207263"
+   ]
+  },
+  {
+   "osm": "w976019671",
+   "name": "戸出変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_a0048cdbe460",
+    "hokuriku_site_a0048cdbe460"
+   ],
+   "lat": 36.686528,
+   "lon": 136.981464,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11676951044",
+    "n11676951045"
+   ]
+  },
+  {
+   "osm": "w976019672",
+   "name": "福岡町下蓑新変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_c0a37193b974",
+    "hokuriku_site_c0a37193b974"
+   ],
+   "lat": 36.708015,
+   "lon": 136.93835,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     3
+    ]
+   ],
+   "transformers": [
+    "n11676951158",
+    "n11676951160",
+    "n11676951161"
+   ]
+  },
+  {
+   "osm": "w976025533",
+   "name": "射水変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_72c926e85b79",
+    "hokuriku_site_72c926e85b79"
+   ],
+   "lat": 36.757302,
+   "lon": 137.090127,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11669274970",
+    "n11669274971"
+   ]
+  },
+  {
+   "osm": "w976028426",
+   "name": "平米町変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_a07f40ff718f",
+    "hokuriku_site_a07f40ff718f"
+   ],
+   "lat": 36.755211,
+   "lon": 137.006655,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11683207234",
+    "n11683207237"
+   ]
+  },
+  {
+   "osm": "w980531587",
+   "name": "清水町二丁目変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_a37152682534",
+    "hokuriku_site_a37152682534"
+   ],
+   "lat": 36.730147,
+   "lon": 137.008182,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11683207315",
+    "n11683207322"
+   ]
+  },
+  {
+   "osm": "w980539414",
+   "name": "広上変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "chubu_site_df4a94e5fe83",
+    "hokuriku_site_df4a94e5fe83"
+   ],
+   "lat": 36.705119,
+   "lon": 137.02027,
+   "pairs": [
+    [
+     66.0,
+     6.6,
+     2
+    ]
+   ],
+   "transformers": [
+    "n11669263324",
+    "n11669263326"
+   ]
+  }
+ ]
+}
