@@ -163,10 +163,10 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 249 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 251 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
-<details><summary><b>取得 / fetch</b>(16 本)</summary>
+<details><summary><b>取得 / fetch</b>(17 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -183,6 +183,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `fetch_rei_gridmap.py` | 自然エネルギー財団「洋上風力開発エリア&送電線マップ」のArcGIS層を取得する. |
 | `fetch_subdivided.py` | Subdivided OSM fetcher for large regions (Hokkaido, Tokyo, etc.). |
 | `fetch_system_disclosure.py` | 系統情報の公表（一般送配電事業者10社）を取得する。 |
+| `fetch_transformer_lists.py` | 全国の変電所変圧器台帳(非公開・私的検証用)を各社の「空容量・予想潮流一覧」から作る. |
 | `osm_fetch_progress.py` | OSM Fetch Progress Monitor — real-time progress bar for all regions. |
 | `osm_node_topology.py` | B路線プロトタイプ: 生OSM(ノード参照)から**正確な**接続トポロジを得る。 |
 | `osmnx_ab.py` | osmnx(標準ツール)で OSM node-sharing トポロジを取得し、我々の手法とA/B。 |
@@ -431,7 +432,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>その他 / other</b>(40 本)</summary>
+<details><summary><b>その他 / other</b>(41 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -467,6 +468,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `report_kv66_quality.py` | Per-region 66 kV-band quality ledger (M4-4 of docs/archive/plans/PLAN_66KV.md). |
 | `restore_missing_plants.py` | JRP の kyushu/okinawa_plants_lite → AGJ 形式の plants.geojson を生成 |
 | `score_road_reconnection.py` | Score fragment-reconnection candidates by road-path plausibility (M9). |
+| `score_transformer_topology.py` | 変電所内の変圧器の結び方(梯子 / 介入 #48)が正しいかを、各社の公表一覧(全国の変圧器台帳)で採点する。 |
 | `scripts_index.py` | scripts/ 直下の全スクリプト索引を作る(scripts/README.md の cog から呼ぶ)。 |
 | `stepdown_gap_census.py` | 介入#43(降圧点欠損)の census と静的ゲート — 島ごとに OFF / #43a / #43a+#43b を比べる. |
 | `substation_scope.py` 🔒 | SubScope — GridStitch 変電所構造ビューア. |
