@@ -1,8 +1,9 @@
 {
- "generated": "2026-10-07",
- "version": "agj-station-2",
+ "generated": "2026-10-08",
+ "version": "agj-station-3",
  "rules": {
   "buffer_m": 25.0,
+  "buffer_portals": "enters",
   "extension_m": 100.0
  },
  "sites": {
@@ -12,30 +13,30 @@
    "plant": 19858,
    "converter": 3
   },
-  "with_station_record": 5381
+  "with_station_record": 5291
  },
  "status": {
   "partial": 731,
   "mapped": 221,
   "layout_only": 153,
-  "conductors_only": 1343,
-  "lines_only": 2933
+  "conductors_only": 1341,
+  "lines_only": 2845
  },
  "rows": {
-  "levels": 6504,
-  "equipment": 32888,
-  "nodes": 12241,
-  "terminals": 23682,
+  "levels": 6403,
+  "equipment": 32613,
+  "nodes": 12087,
+  "terminals": 23316,
   "ends": 2951,
-  "circuits": 10976,
-  "members": 12491,
+  "circuits": 10777,
+  "members": 12292,
   "issues": 1456
  },
  "equipment": {
   "bay": 7500,
   "busbar": 2510,
-  "internal": 6337,
-  "line": 12374,
+  "internal": 6301,
+  "line": 12135,
   "switch": 1665,
   "transformer": 2502
  },
@@ -45,12 +46,12 @@
   "device_voltage_list": 8
  },
  "line_terminal_binding": {
-  "line_joint": 1485,
-  "footprint_only": 5137,
-  "wired": 5983,
-  "pass_through": 2794
+  "line_joint": 1188,
+  "footprint_only": 5120,
+  "wired": 5955,
+  "fence_cut": 2770
  },
- "line_terminals_reaching_busbar_all_closed": 2837,
+ "line_terminals_reaching_busbar_all_closed": 2833,
  "bays": {
   "line_transformer": 59,
   "line_bay": 339,
@@ -60,22 +61,22 @@
   "line_switching": 138,
   "transformer_switching": 23
  },
- "levels_split_with_all_switches_closed": 399,
+ "levels_split_with_all_switches_closed": 396,
  "split_level_gap_m": {
-  "levels": 369,
+  "levels": 367,
   "bins": {
+   "<50m": 186,
    "<10m": 148,
-   "<50m": 187,
-   ">=50m": 29,
-   "<0.1m": 3,
-   "<1m": 2
+   "<1m": 2,
+   ">=50m": 28,
+   "<0.1m": 3
   },
   "between": {
-   "internal-internal": 155,
+   "internal-internal": 154,
    "bay-bay": 134,
    "bay-busbar": 46,
    "busbar-busbar": 14,
-   "bay-internal": 11,
+   "bay-internal": 10,
    "busbar-internal": 9
   }
  },
@@ -124,14 +125,6 @@
   },
   {
    "site": "w211037499",
-   "kv": 154.0,
-   "frequencies": [
-    "50",
-    "60"
-   ]
-  },
-  {
-   "site": "w315662802",
    "kv": 154.0,
    "frequencies": [
     "50",
@@ -197,5 +190,5 @@
   "transformer_way_away": 14,
   "read_seconds": 4
  },
- "elapsed_s": 5
+ "elapsed_s": 4
 }

@@ -299,10 +299,13 @@ def test_busbar_disconnector_at_a_bay_crossing_joins_bay_to_busbar_not_busbar_to
     assert len(bay) == 1 and bay[0]["function"] == "line_bay" and len(bay[0]["busbar_nodes"]) == 2
 
 
-def test_a_way_cut_at_the_fence_is_a_pass_through_not_a_joint():
+def test_a_way_cut_at_the_fence_is_a_fence_cut_not_a_joint():
     from src.stations.views import analyse
     data = model([site()], [wire(11, [1, 2, 3, 4], [[-2, 5], [2, 5], [8, 5], [12, 5]], kind=None)], [])
-    assert {b["binding"] for b in analyse(data)["binding"].values()} == {"pass_through"}
+    v = analyse(data)
+    assert {b["binding"] for b in v["binding"].values()} == {"fence_cut"}
+    # the way crosses the yard without ending there or touching anything in it
+    assert v["line_relation"] == [{"way": "w11", "site": "w1", "relation": "crosses", "kv": [132.0]}]
 
 
 def test_selector_disconnectors_landing_on_one_node_are_not_a_coupler():
@@ -336,6 +339,25 @@ def test_a_line_passing_just_outside_the_fence_is_not_cut_there():
     along = [[8 - DX, 50 + DY + 10 / 111200], [8 + DX / 2, 50 + DY + 10 / 111200], [8 + 2 * DX, 50 + DY + 10 / 111200]]
     data = model([site(1, "110000", YARD)], [wire(23, [1, 2, 3], along, "110000", kind=None)], [])
     assert not data["equipment"] and not data["terminals"]
+
+
+def test_lines_meeting_each_other_just_outside_the_fence_do_not_join_the_site():
+    # RTE check (2026-10-08): an overhead-to-cable transition 14 m from a yard, and a tower shared
+    # with the station's own lead-in, pulled passing lines into the yard (22 of 94 changes wrong)
+    y = 50 + DY + 10 / 111200
+    tower = [8 + DX / 2, y]
+    inside = [8 + DX / 2, 50 + DY / 2]
+    data = model([site(1, "110000", YARD)], [
+        wire(23, [1, 2], [[8 - DX, y], tower], "110000", kind=None),                 # overhead, passing
+        {**wire(24, [2, 3], [tower, [8 + 2 * DX, y]], "110000", kind=None),
+         "properties": {**wire(24, [2, 3], [tower, [8 + 2 * DX, y]], "110000", kind=None)["properties"], "power": "cable"}},
+        wire(25, [2, 4], [tower, inside], "110000", kind=None),                      # the station's lead-in
+        wire(26, [4, 5], [inside, [8 + DX / 4, 50 + DY / 2]], "110000", kind="busbar")], [])
+    line_sites = {t["equipment_id"].split("@")[0] for t in data["terminals"]
+                  if t["equipment_id"].startswith(("w23", "w24"))}
+    assert not line_sites                     # neither the overhead nor the cable piece is in the yard
+    lead = [t for t in data["terminals"] if t["equipment_id"].startswith("w25")]
+    assert lead and all(t["detail"]["membership"] != "buffer" for t in lead)
 
 
 def test_a_switch_where_a_way_runs_through_and_another_ends_stays_unresolved():
@@ -444,6 +466,45 @@ def test_from_all_japan_grid_bay_drawn_past_the_fence_joins_only_with_internal_e
     assert line_t["node_id"] == terms(data, kinds(data, "busbar")[0]["equipment_id"])[0]["node_id"]
 
 
+def test_each_added_rule_switches_off_to_the_strict_reading():
+    from src.stations.core import RULES
+    # busbar disconnector at a bay crossing: resolved with the rule, unresolved without it
+    ws = [wire(1, [1, 31, 2], [[1, 6], [5, 6], [9, 6]], "110000", kind="busbar"),
+          wire(3, [40, 31, 41], [[5, 8], [5, 6], [5, 4]], "110000")]
+    sw = [device(31, "switch", lon=5, lat=6, switch="disconnector")]
+    on = model([site(voltage="110000")], ws, sw)
+    off = model([site(voltage="110000")], ws, sw, rules=RULES - {"busbar_junction"})
+    assert "switch_ports_unresolved" not in {i["code"] for i in on["issues"]}
+    assert "switch_ports_unresolved" in {i["code"] for i in off["issues"]}
+    # earthing switch: one terminal with the rule, a cut busbar without it
+    ws = [wire(11, [1, 9, 2], [[1, 5], [5, 5], [9, 5]], kind="busbar")]
+    assert len(kinds(model([site()], ws, [device(power="switch", switch="earthing")]), "busbar")) == 1
+    assert len(kinds(model([site()], ws, [device(power="switch", switch="earthing")], rules=()), "busbar")) == 2
+    # voltage list, rail
+    ws = [wire(11, [1, 9], [[1, 5], [5, 5]], "132000"), wire(12, [9, 2], [[5, 5], [9, 5]], "33000")]
+    assert {e["voltage_method"] for e in model([site()], ws, [device(voltage="132000;33000")], rules=())["ends"]} == {
+        "shared_node_conductor_voltage"}
+    rail = [wire(11, [1, 2], [[1, 5], [4, 5]], "110000", kind="busbar", frequency="16.7")]
+    assert {r["system"] for r in model([site(voltage="110000")], rail, [], rules=())["levels"]} == {"ac"}
+    import pytest
+    with pytest.raises(ValueError):
+        model([site()], [], [], rules={"tee_junction"})
+
+
+def test_internal_extension_never_depends_on_input_order():
+    # two yards side by side; a bay from each runs out to the same portal node between them
+    left = site(1, "110000", ((8, 50), (8 + DX, 50), (8 + DX, 50 + DY), (8, 50 + DY)))
+    right = site(2, "110000", ((8 + 2.5 * DX, 50), (8 + 3.5 * DX, 50), (8 + 3.5 * DX, 50 + DY), (8 + 2.5 * DX, 50 + DY)))
+    y = 50 + DY / 2
+    mid = [8 + 1.75 * DX, y]
+    ws = [wire(1, [1, 7], [[8 + DX / 2, y], mid], "110000"),
+          wire(2, [2, 7], [[8 + 3 * DX, y], mid], "110000")]
+    a = model([left, right], ws, [], extension_m=100)
+    b = model([left, right], ws[::-1], [], extension_m=100)
+    assert sorted(e["equipment_id"] for e in a["equipment"]) == sorted(e["equipment_id"] for e in b["equipment"])
+    assert {i["code"] for i in a["issues"]} == {"internal_way_without_unique_site"}
+
+
 # ------------------------------------------------------------- All-Japan-Grid's additions
 def test_japan_50_and_60_hz_share_one_level():
     # 西日本の線は frequency=60 が付き、同じ変電所の無タグの母線と同じ階級に入る
@@ -476,7 +537,7 @@ def test_bay_drawn_to_a_portal_past_the_fence_brings_the_line_in():
     assert [i["code"] for i in far["issues"]] == ["internal_way_without_unique_site"]
 
 
-def test_internal_extension_never_depends_on_input_order():
+def test_two_sites_claiming_one_gantry_leave_it_outside_in_any_order():
     # 隣り合う 2 つの敷地のベイが、柵外の同じ門型鉄構の節点(7)に届く。どちらの敷地にも入れず、順番で結果を変えない
     left = ((8, 50), (8 + DX, 50), (8 + DX, 50 + DY), (8, 50 + DY))
     right = tuple((x + 2 * DX + 60 / 71700, y) for x, y in left)

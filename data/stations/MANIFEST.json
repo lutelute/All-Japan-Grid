@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-07",
+ "generated": "2026-10-08",
  "input": {
   "path": "data/osm_pbf/japan-power.osm.pbf",
   "sha256": "2f8cbf3638acf2b9520fe45e5e2dfffb7a67b39e3c20e04126b404a34a181bac",
@@ -11,9 +11,10 @@
   "license": "ODbL 1.0 (© OpenStreetMap contributors)"
  },
  "code": {
-  "version": "agj-station-2",
+  "version": "agj-station-3",
   "rules": "docs/STATION_NODE_BREAKER.md",
   "buffer_m": 25.0,
+  "buffer_portals": "enters",
   "extension_m": 100.0
  },
  "output": {

@@ -35,11 +35,21 @@ from shapely.geometry import Point, shape
 
 from .tags import circuit_sets, parse_voltage_kv, split_list
 
-VERSION = "agj-station-2"  # eu-station-2 (All-EU-Grid 5d85ba9) + 日本の周波数
+VERSION = "agj-station-3"  # eu-station-3 (All-EU-Grid 90280d7) + 日本の周波数
 INTERNAL = {"busbar", "bay", "internal", "transformer"}   # line=* values of station conductors
+# Line vertices just outside the fence that join the site (the buffer): only where a station
+# conductor (line=bay|busbar|...) or a device stands — a portal a bay starts from. Two wider
+# readings were measured against RTE's line ends over France and dropped (docs/STATIONS.md §11):
+# "any" junction (eu-station-2: overhead-to-cable transitions and towers shared with another
+# circuit pulled passing lines into the yard; 22 of its 94 changes wrong, 2% before) and
+# "enters" (a way that reaches inside meets there: 10 of 72 wrong). Kept to rerun the comparison.
+BUFFER_PORTALS = "station"
 CONDUCTOR_POWER = {"line", "cable", "minor_line", "minor_cable", "minor_underground_cable",
                    "busbar", "bay"}
 ROLES = ("primary", "secondary", "tertiary")
+# The rules All-EU-Grid added to All-AU-Grid's method (docs/STATIONS.md §3); each can be switched
+# off to measure what it does. rules=() with buffer_m=0 is All-AU-Grid's strict reading.
+RULES = frozenset({"busbar_junction", "earthing", "voltage_list", "inside_footprint", "rail"})
 PREFIX = {"node": "n", "way": "w", "relation": "r"}
 
 
@@ -68,10 +78,11 @@ def mva(raw) -> float | None:
     return v if v > 0 else None
 
 
-def levels_of(tags: dict) -> list:
+def levels_of(tags: dict, rail: bool = True) -> list:
     """Conductor voltage systems ``[(kv, system)]``; ``[(None, None)]`` when any voltage
     token is unreadable (a partly readable list would misplace the aligned values).
-    DC sets are left out: they belong to the DC inventory, not to an AC station."""
+    DC sets are left out: they belong to the DC inventory, not to an AC station.
+    ``rail=False`` reads 16.7 Hz traction as ordinary AC (the rule switched off)."""
     raw = split_list(tags.get("voltage"))
     if not raw:
         return [(None, None)]
@@ -81,7 +92,7 @@ def levels_of(tags: dict) -> list:
     for s in circuit_sets(tags):
         if s.system == "dc" or s.kv is None:
             continue
-        lvl = (s.kv, s.system)
+        lvl = (s.kv, s.system if rail or s.system != "rail" else "ac")
         if lvl not in out:
             out.append(lvl)
     return sorted(out, key=lambda t: (-t[0], t[1]))
@@ -228,7 +239,7 @@ def device_feature(e: dict):
     return None
 
 
-def _interfaces(tags: dict, connected: list) -> list:
+def _interfaces(tags: dict, connected: list, voltage_list: bool = True) -> list:
     """Transformer voltage sides: (role, lvl or None, method)."""
     out = []
     for role in ROLES:
@@ -237,7 +248,7 @@ def _interfaces(tags: dict, connected: list) -> list:
             vs = [parse_voltage_kv(t) for t in split_list(raw)]
             kv = vs[0] if len(vs) == 1 and vs[0] is not None else None
             out.append((role, kv, "interface_voltage_tag"))
-    if not out:
+    if not out and voltage_list:
         vs = [parse_voltage_kv(t) for t in split_list(tags.get("voltage"))]
         if len(vs) >= 2 and all(v is not None for v in vs) and len(set(vs)) == len(vs):
             out = [(f"listed_{i}", kv, "device_voltage_list") for i, kv in enumerate(sorted(vs, reverse=True), 1)]
@@ -250,14 +261,19 @@ def _interfaces(tags: dict, connected: list) -> list:
 
 # ------------------------------------------------------------------ builder
 def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
-          extension_m: float = 0.0) -> dict:
+          extension_m: float = 0.0, rules=RULES) -> dict:
     """Station structure from footprints, conductors (with ordered OSM ``node_ids``) and
     the transformer / switch / circuit elements. Rows only; nothing is written.
 
     ``extension_m`` (All-Japan-Grid): a ``line=bay|busbar`` way whose in-site nodes all lie in
     one site and whose other nodes lie in none, within ``extension_m`` of that site's polygon,
     brings those outside nodes into the site as ``internal_extension``. 0 is the strict
-    reading of All-AU-Grid / All-EU-Grid."""
+    reading of All-AU-Grid / All-EU-Grid.
+
+    ``rules``: which of :data:`RULES` apply (all by default)."""
+    rules = frozenset(rules)
+    if rules - RULES:
+        raise ValueError(f"unknown rules: {sorted(rules - RULES)}")
 
     out = {k: [] for k in ("levels", "equipment", "nodes", "terminals", "ends",
                            "circuits", "members", "issues")}
@@ -321,7 +337,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     lvls, vmethod = {}, {}
     by_node = defaultdict(list)
     for key, p, ns, _ in prepared:
-        lvls[key] = levels_of(p)
+        lvls[key] = levels_of(p, "rail" in rules)
         vmethod[key] = "voltage_tag"
         for n in ns:
             if n not in specials:
@@ -358,10 +374,9 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     # the 2026-10-06 extract), where the line starts. Its outside nodes join the one site its
     # inside nodes stand in, so that line meets the station there; a way touching two sites, an
     # ambiguous node or a node farther than ``extension_m`` keeps the strict reading.
-    # Every way first claims its outside nodes; a node joins a site only when exactly one site claims it
-    # (two sites' bays reaching one gantry leave it outside). Deciding per way in input order made the
-    # result depend on that order (found by All-EU-Grid, 2026-10-08).
     if extension_m:
+        # every way claims its outside nodes; a node claimed from two sites stays outside
+        # (taking the first claim made the result depend on input order)
         claims = defaultdict(set)
         for key, p, ns, cs in prepared:
             if p.get("line") not in INTERNAL:
@@ -378,9 +393,9 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
                 continue
             for n, _ in outside:
                 claims[n].add(si)
-        for n, sis in claims.items():
-            if len(sis) == 1 and n not in node_site:
-                node_site[n] = (next(iter(sis)), "internal_extension", None)
+        for n, by in claims.items():
+            if len(by) == 1 and n not in node_site:
+                node_site[n] = (next(iter(by)), "internal_extension", None)
 
     def site_of(n):
         return node_site.get(n, (None, None, None))[0]
@@ -394,7 +409,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
 
     def series(special):
         # An earthing switch closes a conductor to ground; it is not in series with it.
-        return special and special["kind"] == "switch" and special["subtype"] != "earthing"
+        return special and special["kind"] == "switch" and (special["subtype"] != "earthing" or "earthing" not in rules)
 
     def port(si, lvl, node, neighbor, way=None, busbar=False):
         special = specials.get(node)
@@ -409,9 +424,24 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
                 arm_way[k].add((way, busbar))
         return k
 
-    earthing = {n for n, sp in specials.items() if sp["kind"] == "switch" and sp["subtype"] == "earthing"}
+    earthing = {n for n, sp in specials.items() if sp["kind"] == "switch" and sp["subtype"] == "earthing"} \
+        if "earthing" in rules else set()
 
     junctions = {n for n, ks in by_node.items() if len(set(ks)) > 1} | set(specials)
+    if BUFFER_PORTALS == "any":
+        portals = junctions
+    elif BUFFER_PORTALS == "station":
+        station_keys = {key for key, p, *_ in prepared if p.get("line") in INTERNAL}
+        portals = set(specials) | {n for n, ks in by_node.items() if station_keys & set(ks)}
+    else:
+        inside_of = defaultdict(set)
+        for key, _, ns, _ in prepared:
+            for n in ns:
+                st = node_site.get(n)
+                if st and st[0] is not None and st[1] in ("covered", "innermost_nested"):
+                    inside_of[key].add(st[0])
+        portals = set(specials) | {n for n in junctions if node_site.get(n, (None,))[0] is not None
+                                   and any(node_site[n][0] in inside_of[k] for k in by_node[n])}
     pending, internal_segments = [], {}
     circuit_seen = set()
     for key, p, ns, cs in prepared:
@@ -434,10 +464,10 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
             # Cut where the way enters/leaves a site or meets another way/device inside one;
             # whole ways passing through keep their in-site nodes. No node is invented.
             # A line vertex just outside the fence belongs to the site only where it meets a
-            # station conductor or device (the portal a bay starts from); a line merely passing
-            # within the buffer is not cut there.
+            # station conductor or device (BUFFER_PORTALS); a line merely passing within the
+            # buffer, or meeting another line there, is not cut there.
             ss = [site_of(n) if node_site.get(n, (None, None))[1] not in ("buffer", "internal_extension")
-                  or n in junctions else None for n in ns]
+                  or n in portals else None for n in ns]
             if not any(s is not None for s in ss):
                 continue
             cuts = [0]
@@ -452,7 +482,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
         # touches instead of counting as a line leaving the station. A way that enters or
         # crosses the site keeps its line terminals at the cuts.
         inner = {}
-        if not internal and len(set(ss)) == 1 and ss[0] is not None:
+        if "inside_footprint" in rules and not internal and len(set(ss)) == 1 and ss[0] is not None:
             ms = {node_site[n][1] for n in ns}
             m = "internal_extension" if "internal_extension" in ms else "buffer" if "buffer" in ms \
                 else "innermost_nested" if "innermost_nested" in ms else "covered"
@@ -520,7 +550,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     # says nothing physical; on All-AU-Grid's data it turned 5 of 9 line disconnectors and
     # 2 bus-section breakers the wrong way round.)
     junction = {}
-    for node, ks in switch_ports.items():
+    for node, ks in (switch_ports.items() if "busbar_junction" in rules else ()):
         if node in earthing or len(ks) == 2:
             continue
         if any(len(arm_way.get(k, ())) != 1 for k in ks):
@@ -627,7 +657,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
                       note="Another mapped conductor joins both arms; the switch itself was not collapsed.")
             continue
         connected = sorted(incident.get(node, ()), key=lambda t: (-(t[0] or 0), t[1] or ""))
-        ifaces = _interfaces(eq["tags"], connected)
+        ifaces = _interfaces(eq["tags"], connected, "voltage_list" in rules)
         site = skey[si] if si is not None else None
         if not ifaces:
             issue(eq["equipment_id"], "transformer_interfaces_unknown", site=site,
@@ -692,7 +722,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     used_sites |= {site_i[n["site"]] for n in out["nodes"]}
     for si in used_sites:
         p = sites[si]["properties"]
-        for lvl in levels_of({k: p.get(k) for k in ("voltage", "frequency", "operator") if p.get(k)}):
+        for lvl in levels_of({k: p.get(k) for k in ("voltage", "frequency", "operator") if p.get(k)}, "rail" in rules):
             level(si, lvl, "site_voltage_tag")
     out["levels"] = sorted(({"level_id": level_id(skey[si], lvl), "site": skey[si], "kv": lvl[0],
                              "system": lvl[1], "evidence": dict(sorted(ev.items()))}
