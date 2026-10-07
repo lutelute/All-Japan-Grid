@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-28",
+ "generated": "2026-10-07",
  "regions": {
   "hokkaido": {
    "region": "hokkaido",
@@ -8,20 +8,34 @@
    "dup_features": 1,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 4126,
+   "n_terminals": 4051,
    "terminal_binding": {
-    "leadin": 1943,
-    "polygon": 786,
-    "vertex-shared": 1397
+    "leadin": 2130,
+    "polygon": 797,
+    "vertex-shared": 1124
    },
-   "n_busbars": 627,
+   "n_busbars": 521,
    "n_busbars_inferred": 0,
-   "n_bays": 1911,
-   "n_transformers": 154,
+   "n_bays": 1498,
+   "internal_way_membership": {
+    "bay:ambiguous": 3,
+    "bay:buffer": 21,
+    "bay:covered": 1824,
+    "bay:crossing_sites": 1,
+    "bay:innermost_nested": 36,
+    "bay:outside": 128,
+    "bay:partly_covered": 11,
+    "busbar:covered": 441,
+    "busbar:innermost_nested": 10,
+    "busbar:outside": 27,
+    "busbar:partly_covered": 1
+   },
+   "n_transformers": 152,
+   "n_trafo_osm_observed": 67,
    "n_trafo_nameplate": 1,
    "sites_with_known_kv": 439,
-   "n_connections": 807,
-   "elapsed_s": 0.4
+   "n_connections": 722,
+   "elapsed_s": 1.1
   },
   "tohoku": {
    "region": "tohoku",
@@ -30,20 +44,30 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 7117,
+   "n_terminals": 6921,
    "terminal_binding": {
-    "leadin": 3942,
-    "polygon": 1309,
-    "vertex-shared": 1866
+    "leadin": 4164,
+    "polygon": 1311,
+    "vertex-shared": 1446
    },
-   "n_busbars": 756,
+   "n_busbars": 656,
    "n_busbars_inferred": 0,
-   "n_bays": 2012,
-   "n_transformers": 508,
+   "n_bays": 1562,
+   "internal_way_membership": {
+    "bay:ambiguous": 1,
+    "bay:buffer": 274,
+    "bay:covered": 1492,
+    "bay:crossing_sites": 7,
+    "bay:outside": 36,
+    "bay:partly_covered": 323,
+    "busbar:covered": 632
+   },
+   "n_transformers": 479,
+   "n_trafo_osm_observed": 187,
    "n_trafo_nameplate": 3,
-   "sites_with_known_kv": 831,
-   "n_connections": 1860,
-   "elapsed_s": 0.6
+   "sites_with_known_kv": 825,
+   "n_connections": 1491,
+   "elapsed_s": 1.1
   },
   "tokyo": {
    "region": "tokyo",
@@ -52,20 +76,31 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 12672,
+   "n_terminals": 12534,
    "terminal_binding": {
-    "leadin": 7395,
-    "polygon": 4459,
-    "vertex-shared": 818
+    "leadin": 7622,
+    "polygon": 4460,
+    "vertex-shared": 452
    },
-   "n_busbars": 1116,
-   "n_busbars_inferred": 5,
-   "n_bays": 718,
-   "n_transformers": 574,
-   "n_trafo_nameplate": 4,
+   "n_busbars": 999,
+   "n_busbars_inferred": 2,
+   "n_bays": 428,
+   "internal_way_membership": {
+    "bay:buffer": 67,
+    "bay:covered": 559,
+    "bay:outside": 34,
+    "bay:partly_covered": 53,
+    "busbar:buffer": 11,
+    "busbar:covered": 320,
+    "busbar:crossing_sites": 3,
+    "busbar:outside": 22
+   },
+   "n_transformers": 555,
+   "n_trafo_osm_observed": 50,
+   "n_trafo_nameplate": 5,
    "sites_with_known_kv": 1569,
-   "n_connections": 2974,
-   "elapsed_s": 1.1
+   "n_connections": 2747,
+   "elapsed_s": 1.8
   },
   "chubu": {
    "region": "chubu",
@@ -74,20 +109,34 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 7363,
+   "n_terminals": 7256,
    "terminal_binding": {
-    "leadin": 4108,
-    "polygon": 2271,
-    "vertex-shared": 984
+    "leadin": 4306,
+    "polygon": 2275,
+    "vertex-shared": 675
    },
-   "n_busbars": 696,
-   "n_busbars_inferred": 13,
-   "n_bays": 872,
-   "n_transformers": 320,
+   "n_busbars": 599,
+   "n_busbars_inferred": 4,
+   "n_bays": 603,
+   "internal_way_membership": {
+    "bay:buffer": 42,
+    "bay:covered": 699,
+    "bay:crossing_sites": 4,
+    "bay:innermost_nested": 4,
+    "bay:outside": 30,
+    "bay:partly_covered": 78,
+    "busbar:buffer": 13,
+    "busbar:covered": 277,
+    "busbar:crossing_sites": 1,
+    "busbar:outside": 10,
+    "busbar:partly_covered": 14
+   },
+   "n_transformers": 313,
+   "n_trafo_osm_observed": 65,
    "n_trafo_nameplate": 0,
-   "sites_with_known_kv": 752,
-   "n_connections": 1618,
-   "elapsed_s": 0.6
+   "sites_with_known_kv": 749,
+   "n_connections": 1472,
+   "elapsed_s": 1.4
   },
   "hokuriku": {
    "region": "hokuriku",
@@ -96,20 +145,30 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 2320,
+   "n_terminals": 2258,
    "terminal_binding": {
-    "leadin": 1171,
-    "vertex-shared": 542,
-    "polygon": 607
+    "leadin": 1239,
+    "polygon": 611,
+    "vertex-shared": 408
    },
-   "n_busbars": 259,
+   "n_busbars": 215,
    "n_busbars_inferred": 0,
-   "n_bays": 611,
-   "n_transformers": 117,
+   "n_bays": 452,
+   "internal_way_membership": {
+    "bay:buffer": 2,
+    "bay:covered": 538,
+    "bay:innermost_nested": 4,
+    "bay:outside": 28,
+    "bay:partly_covered": 23,
+    "busbar:covered": 147,
+    "busbar:outside": 6
+   },
+   "n_transformers": 112,
+   "n_trafo_osm_observed": 56,
    "n_trafo_nameplate": 0,
-   "sites_with_known_kv": 205,
-   "n_connections": 446,
-   "elapsed_s": 0.2
+   "sites_with_known_kv": 204,
+   "n_connections": 384,
+   "elapsed_s": 0.4
   },
   "kansai": {
    "region": "kansai",
@@ -118,20 +177,31 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 4464,
+   "n_terminals": 4398,
    "terminal_binding": {
-    "leadin": 2678,
-    "vertex-shared": 620,
-    "polygon": 1166
+    "leadin": 2796,
+    "polygon": 1166,
+    "vertex-shared": 436
    },
-   "n_busbars": 533,
-   "n_busbars_inferred": 11,
-   "n_bays": 785,
-   "n_transformers": 297,
+   "n_busbars": 400,
+   "n_busbars_inferred": 3,
+   "n_bays": 502,
+   "internal_way_membership": {
+    "bay:buffer": 38,
+    "bay:covered": 520,
+    "bay:crossing_sites": 3,
+    "bay:outside": 111,
+    "bay:partly_covered": 107,
+    "busbar:covered": 227,
+    "busbar:outside": 90,
+    "busbar:partly_covered": 6
+   },
+   "n_transformers": 287,
+   "n_trafo_osm_observed": 36,
    "n_trafo_nameplate": 4,
-   "sites_with_known_kv": 515,
-   "n_connections": 1072,
-   "elapsed_s": 0.4
+   "sites_with_known_kv": 509,
+   "n_connections": 958,
+   "elapsed_s": 0.9
   },
   "chugoku": {
    "region": "chugoku",
@@ -140,20 +210,32 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 3752,
+   "n_terminals": 3683,
    "terminal_binding": {
-    "leadin": 1881,
+    "leadin": 2015,
     "polygon": 1234,
-    "vertex-shared": 637
+    "vertex-shared": 434
    },
-   "n_busbars": 461,
+   "n_busbars": 375,
    "n_busbars_inferred": 7,
-   "n_bays": 683,
-   "n_transformers": 195,
+   "n_bays": 465,
+   "internal_way_membership": {
+    "bay:buffer": 12,
+    "bay:covered": 425,
+    "bay:outside": 12,
+    "bay:partly_covered": 175,
+    "busbar:ambiguous_buffer": 2,
+    "busbar:covered": 238,
+    "busbar:crossing_sites": 1,
+    "busbar:outside": 11,
+    "busbar:partly_covered": 3
+   },
+   "n_transformers": 191,
+   "n_trafo_osm_observed": 49,
    "n_trafo_nameplate": 0,
-   "sites_with_known_kv": 427,
-   "n_connections": 975,
-   "elapsed_s": 0.3
+   "sites_with_known_kv": 426,
+   "n_connections": 888,
+   "elapsed_s": 0.6
   },
   "shikoku": {
    "region": "shikoku",
@@ -162,20 +244,28 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 1944,
+   "n_terminals": 1902,
    "terminal_binding": {
-    "leadin": 1058,
+    "leadin": 1126,
     "polygon": 581,
-    "vertex-shared": 305
+    "vertex-shared": 195
    },
-   "n_busbars": 194,
+   "n_busbars": 164,
    "n_busbars_inferred": 0,
-   "n_bays": 349,
-   "n_transformers": 63,
+   "n_bays": 224,
+   "internal_way_membership": {
+    "bay:covered": 231,
+    "bay:outside": 3,
+    "bay:partly_covered": 21,
+    "busbar:covered": 71,
+    "busbar:outside": 1
+   },
+   "n_transformers": 59,
+   "n_trafo_osm_observed": 14,
    "n_trafo_nameplate": 1,
    "sites_with_known_kv": 179,
-   "n_connections": 489,
-   "elapsed_s": 0.1
+   "n_connections": 420,
+   "elapsed_s": 0.2
   },
   "kyushu": {
    "region": "kyushu",
@@ -184,20 +274,32 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 4054,
+   "n_terminals": 3958,
    "terminal_binding": {
-    "leadin": 2137,
+    "leadin": 2262,
     "polygon": 1171,
-    "vertex-shared": 746
+    "vertex-shared": 525
    },
-   "n_busbars": 569,
-   "n_busbars_inferred": 24,
-   "n_bays": 797,
-   "n_transformers": 336,
+   "n_busbars": 447,
+   "n_busbars_inferred": 12,
+   "n_bays": 541,
+   "internal_way_membership": {
+    "bay:buffer": 112,
+    "bay:covered": 524,
+    "bay:crossing_sites": 3,
+    "bay:outside": 25,
+    "bay:partly_covered": 174,
+    "busbar:ambiguous_buffer": 2,
+    "busbar:covered": 223,
+    "busbar:outside": 15,
+    "busbar:partly_covered": 3
+   },
+   "n_transformers": 327,
+   "n_trafo_osm_observed": 82,
    "n_trafo_nameplate": 0,
-   "sites_with_known_kv": 682,
-   "n_connections": 1286,
-   "elapsed_s": 0.3
+   "sites_with_known_kv": 680,
+   "n_connections": 1197,
+   "elapsed_s": 0.6
   },
   "okinawa": {
    "region": "okinawa",
@@ -206,29 +308,36 @@
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 167,
+   "n_terminals": 165,
    "terminal_binding": {
-    "leadin": 110,
+    "leadin": 112,
     "polygon": 42,
-    "vertex-shared": 15
+    "vertex-shared": 11
    },
-   "n_busbars": 17,
+   "n_busbars": 16,
    "n_busbars_inferred": 0,
-   "n_bays": 15,
-   "n_transformers": 22,
+   "n_bays": 8,
+   "internal_way_membership": {
+    "bay:buffer": 7,
+    "bay:partly_covered": 4,
+    "busbar:buffer": 2,
+    "busbar:covered": 4
+   },
+   "n_transformers": 21,
+   "n_trafo_osm_observed": 1,
    "n_trafo_nameplate": 0,
    "sites_with_known_kv": 50,
-   "n_connections": 59,
+   "n_connections": 55,
    "elapsed_s": 0.0
   }
  },
  "totals": {
   "sites": 7239,
-  "terminals": 47979,
-  "busbars": 5228,
-  "bays": 8753,
-  "transformers": 2586,
-  "connections": 11586,
+  "terminals": 47126,
+  "busbars": 4392,
+  "bays": 6283,
+  "transformers": 2496,
+  "connections": 10334,
   "cross_region_alias_pairs": 1093
  }
 }

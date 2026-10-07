@@ -40,6 +40,7 @@ from src.powerflow.snapped_topology import _parse_circuits
 _VPREC = 6            # 頂点キー精度(~0.1m) — 構内 snap≈0.1m(GRIDSTITCH_PLAN U2)
 _PAD_DEG = 0.01       # 線収集の bbox パディング
 _LEADIN_DEG = 0.006   # ポリゴン外の lead-in 許容(~0.6km ≒ fallback_endpoint_km)
+_SITE_BUFFER_M = 25.0  # 母線・ベイを柵外で帰属させる幅(node-breaker 層と同じ。門型鉄構が柵の外に立つ)
 
 
 def _vk(c):
@@ -108,6 +109,67 @@ def prepare_ways(lines):
     return out
 
 
+def internal_way_owners(features, pways, buffer_m=_SITE_BUFFER_M):
+    """構内の母線・ベイ way → 帰属する敷地(features の添字)。
+
+    帰属は敷地の多角形で決める(node-breaker 層 ``src.stations.core.SiteLocator`` と同じ規則):
+    way 全体が 1 つの敷地に収まれば ``covered``、厳密に入れ子の敷地では最内側
+    (``innermost_nested``)、どの敷地にも収まらないときは多角形 1 つの ``buffer_m`` 以内に
+    収まれば ``buffer``。それでも決まらない way は頂点ごとに見て、敷地(緩衝帯を含む)に入る
+    頂点がすべて同じ 1 つの敷地なら ``partly_covered``(柵の外 30 m 余りの門型鉄構まで描かれた
+    ベイ等。沖縄の西原変電所で 33 m)。2 つ以上の敷地にまたがるものと、点の変電所は帰属させない。
+
+    2026-10-07 まで ``extract_structure`` は敷地の外接矩形 +0.01°(約 1 km)に触れる母線・
+    ベイを全部その変電所のものにしていた。母線 2,530 本の 25%、ベイ 7,929 本の 23% が
+    別の変電所と二重に数えられていた(All-EU-Grid の比較で発覚し、こちらで再現。
+    docs/reports/station_node_breaker_adoption_2026-10-07.md)。
+
+    同じ形の feature(地域内の重複描画)は 1 つの敷地として扱う。
+
+    Returns:
+        (owner, rep, stats): owner = way key → 代表 feature 添字、rep[i] = feature i の代表添字、
+        stats = 帰属の根拠別の件数。
+    """
+    from shapely.geometry import LineString, Point, shape
+
+    from src.stations.core import SiteLocator
+
+    groups, reps, rep = {}, [], []
+    for i, ft in enumerate(features):
+        k = shape(ft["geometry"]).wkb
+        if k not in groups:
+            groups[k] = len(reps)
+            reps.append(i)
+        rep.append(reps[groups[k]])
+    loc = SiteLocator([{"properties": {"osm_type": "way", "osm_id": j},
+                        "geometry": shape(features[i]["geometry"])}
+                       for j, i in enumerate(reps)], buffer_m)
+    internal = [w for w in pways if w["kind"] in ("busbar", "bay")]
+    located = loc.locate([LineString(w["coords"]) for w in internal]) if internal else []
+    owner, stats = {}, defaultdict(int)
+    for w, (gi, method, _cands) in zip(internal, located):
+        if gi is None and method is None:
+            vs = {r[0] if r[0] is not None else ("?", r[1])
+                  for r in loc.locate([Point(c) for c in w["coords"]]) if r[1] is not None}
+            if len(vs) == 1 and not isinstance(next(iter(vs)), tuple):
+                gi, method = next(iter(vs)), "partly_covered"
+            elif vs:
+                method = "crossing_sites"
+        stats[f"{w['kind']}:{method or 'outside'}"] += 1
+        if gi is not None:
+            owner[w["key"]] = reps[gi]
+    return owner, rep, dict(sorted(stats.items()))
+
+
+def owned_internal_ways(features, pways):
+    """features の添字 → その敷地に帰属する母線・ベイの way key 集合と、根拠別の件数。"""
+    owner, rep, stats = internal_way_owners(features, pways)
+    by_rep = defaultdict(set)
+    for k, o in owner.items():
+        by_rep[o].add(k)
+    return [by_rep.get(rep[i], set()) for i in range(len(features))], stats
+
+
 def _collect_ways(pways, bbox):
     """前処理済み ways から bbox に触れるものを収集(way-bbox プレフィルタ)。"""
     x0, y0, x1, y1 = bbox
@@ -159,16 +221,24 @@ def build_structure(region, name, data_dir="data"):
     """1変電所の node-breaker 構造を OSM 実データから抽出する(単発用)。"""
     subs, lines = load(region, data_dir)
     ft = _pick_site(subs, name)
-    return extract_structure(region, ft, prepare_ways(lines))
+    pways = prepare_ways(lines)
+    owned, _ = owned_internal_ways(subs["features"], pways)
+    i = next(i for i, f in enumerate(subs["features"]) if f is ft)
+    return extract_structure(region, ft, pways, owned=owned[i])
 
 
-def extract_structure(region, ft, pways):
+def extract_structure(region, ft, pways, owned=None, observed_by_site=None):
     """変電所 feature 1件から node-breaker 構造を抽出する(一括生成の実体)。
 
     Args:
         region: 地域 id。
         ft: substations GeoJSON の feature。
         pways: :func:`prepare_ways` の結果(地域全体で共有)。
+        owned: この敷地に帰属する母線・ベイの way key(:func:`internal_way_owners`)。
+            None のときは旧来の外接矩形 +0.01° の全部(比較用。一括生成では渡すこと)。
+        observed_by_site: 構造 DB の site_id → OSM で観測した変圧器の組(介入 #48、
+            ``src.model.site_transformers.by_structure_site``)。あればその組を張り、残りの階級を
+            梯子でつなぐ。None なら従来の梯子だけ。
     """
     from shapely.geometry import Point, shape
 
@@ -188,8 +258,10 @@ def extract_structure(region, ft, pways):
     x0, y0, x1, y1 = poly.bounds
     ways = _collect_ways(pways, (x0 - _PAD_DEG, y0 - _PAD_DEG,
                                  x1 + _PAD_DEG, y1 + _PAD_DEG))
-    busbars_w = [w for w in ways if w["kind"] == "busbar"]
-    bays_w = [w for w in ways if w["kind"] == "bay"]
+    busbars_w = [w for w in ways if w["kind"] == "busbar"
+                 and (owned is None or w["key"] in owned)]
+    bays_w = [w for w in ways if w["kind"] == "bay"
+              and (owned is None or w["key"] in owned)]
     mains_w = [w for w in ways if w["kind"] == "main"]
 
     # --- VoltageLevel: ポリゴンタグ ∪ 構内線タグ ---
@@ -330,11 +402,20 @@ def extract_structure(region, ft, pways):
                 par_source=par_src, binding=binding, confidence=conf))
 
     # --- TransformerSpec: 既知電圧クラスのラダー隣接対(structural) ---
+    # 介入 #48: OSM に巻線電圧つきの実機が描かれた変電所では、観測した組を先に張り、
+    # 観測が届かない階級だけ梯子でつなぐ(source="osm-observed" / "structural")。
     ladder = sorted((kv for kv in vls if kv > 0), reverse=True)
-    for i, (hv, lv) in enumerate(zip(ladder, ladder[1:]), 1):
+    observed = (observed_by_site or {}).get(site_id)
+    if observed:
+        from src.model.site_transformers import link_levels
+        links = [(int(h), int(l), src) for h, l, src in link_levels(ladder, observed)]
+    else:
+        links = [(hv, lv, "ladder") for hv, lv in zip(ladder, ladder[1:])]
+    for i, (hv, lv, src) in enumerate(links, 1):
         structure.transformers.append(TransformerSpec(
             trafo_id=f"{site_id}/tr{i}", site_id=site_id,
-            hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id))
+            hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id,
+            source="osm-observed" if src == "osm" else "structural"))
 
     # --- SwitchSpec: ベイから開閉点を導出(オーナー指示 2026-08-28
     # 「開閉器などで経路を選択できるようにしたい」) ---

@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Substation node-breaker layer from OSM node ids** (`src/stations/`, `scripts/build_station_db.py`, `data/stations/`,
+  `docs/STATION_NODE_BREAKER.md`): busbar sections, bays, switches, transformer windings and line ends joined only by
+  shared OSM node ids, ported from All-EU-Grid (commit 5d85ba9, All-AU-Grid's method) with two Japan rules — bays drawn
+  out to the gantry past the fence (median 47 m, `internal_extension` up to 100 m: unattributed station conductors
+  987→177) and 50/60 Hz as one AC system. Built from the Geofabrik Japan extract in 15 s; 26,210 sites, 2,502 transformers.
+  `scripts/compare_station_layers.py` checks SubSLD's voltage ladder against the mapped transformers (518 sites: 365
+  same, 32 where the ladder skips a real 275/77-kV-style direct transformer).
+- **Intervention #48 — link a substation's voltage levels by the transformer pairs observed in OSM**
+  (`src/model/site_transformers.py`): observed pairs first, the ladder only for levels they leave unconnected.
+  Default ON in both the structure DB (607 transformers; Higashi-Mō's sourced 275/66 kV nameplate now attaches) and
+  the power flow (`--no-observed-trafos` to disable): 21 substations relinked. Validated before switching
+  (`docs/INTERVENTION_VALIDATION.md`, `scripts/validate_intervention.py`): 20 of the 21 direct pairs appear in the
+  utilities' published transformer lists and none is contradicted; within 15 km of the relinked substations 31
+  observed lines moved closer to the published flows and 15 moved away (sign test p = 0.026); convergence unchanged,
+  overloaded lines east 336→334, west 278→270. Direct transformers are still sized by the lower-side rule.
+- **Intervention validation tool** (`scripts/validate_intervention.py`, `run_full_powerflow_from_db.py --dump-flows`):
+  scores an intervention on structure (published registries), flows (published annual flow statistics, nearby lines
+  separately, sign test) and physics.
+- **Reports index** (`docs/reports/INDEX.md`, `scripts/build_reports_index.py`) and a sister-projects section in `docs/README.md`.
+
 - **Pages dashboard — one entry point for every tool** (`docs/index.html`, `docs/data/tools_catalog.json`,
   `scripts/build_dashboard_data.py`, `tests/test_pages_dashboard.py`): the site root is now a lightweight dashboard
   (no map library) with status tiles, a searchable tool catalogue (browser / local server / CLI), recent reports and
@@ -199,6 +219,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matching the paper's own table — was a Known Issue since v1.5.0).
 
 ### Fixed
+- **SubSLD structure DB counted a neighbour's busbars and bays** (`scripts/build_substation_structure.py`): ways within
+  the site's bounding box + 0.01° were all taken without a containment check — 25% of busbars and 23% of bays sat in two
+  or more substations, and 1,252 inter-site connection records were artefacts. Membership is now decided by the site
+  polygon (same rule as the node-breaker layer). Power-flow nameplates unchanged.
+- `_vclasses` read `66000.0` as 660 kV (digits concatenated); it now parses the number.
 - **Live flow map had been frozen for nine days** (`scripts/realtime_publish.sh`, `scripts/realtime_cycle.sh`):
   the hourly cycle committed to whatever branch the working tree had checked out and then pushed `main`, so while the
   tree sat on a feature branch the snapshots piled up there and Pages kept serving 2026-09-12. It also ran

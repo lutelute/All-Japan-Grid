@@ -1,0 +1,950 @@
+{
+ "n_crossing": 66,
+ "built": {
+  "passes": 43,
+  "joined_to_station": 22,
+  "split": 1
+ },
+ "joined_without_wiring": 20,
+ "rows": [
+  {
+   "osm_way": "w70711686",
+   "kv": 500.0,
+   "site": "w806310370",
+   "site_name": "浜岡原子力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w102286669",
+   "kv": 154.0,
+   "site": "w101926129",
+   "site_name": "碧南火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w104058147",
+   "kv": 275.0,
+   "site": "w1182488189",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w126746857",
+   "kv": 154.0,
+   "site": "w1004915358",
+   "site_name": "関西電力",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w144691595",
+   "kv": 66.0,
+   "site": "w1059194496",
+   "site_name": "阿須山中メガソーラー",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w150740952",
+   "kv": 66.0,
+   "site": "w1144576908",
+   "site_name": "西亀有変電所",
+   "binding": [
+    "line_joint",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "西亀有変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w159474115",
+   "kv": 154.0,
+   "site": "w159491797",
+   "site_name": "南狭山変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w161870228",
+   "kv": 275.0,
+   "site": "w949748588",
+   "site_name": "洛南変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "洛南変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w161870228",
+   "kv": 77.0,
+   "site": "w949748588",
+   "site_name": "洛南変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w170000622",
+   "kv": 66.0,
+   "site": "w319300944",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "白根水道町変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w178618575",
+   "kv": 66.0,
+   "site": "w1480777118",
+   "site_name": "秋月変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "秋月変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w183582766",
+   "kv": 66.0,
+   "site": "w425691910",
+   "site_name": "SGET釧路鶴野メガソーラー発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w191072911",
+   "kv": 66.0,
+   "site": "w202589926",
+   "site_name": "柏変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "柏変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w192168974",
+   "kv": 154.0,
+   "site": "w192168975",
+   "site_name": "三方原変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "三方原変電所",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w192225669",
+   "kv": 77.0,
+   "site": "w426749888",
+   "site_name": "山科変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "山科変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w192447473",
+   "kv": 66.0,
+   "site": "r10317462",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w192599342",
+   "kv": 154.0,
+   "site": "w211946839",
+   "site_name": "南大垣変電所 (Ogaki Hendensho)",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w199402900",
+   "kv": 66.0,
+   "site": "w1239126760",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w210729108",
+   "kv": 66.0,
+   "site": "w168852840",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w211037502",
+   "kv": 77.0,
+   "site": "r19739279",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "座光寺変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w213109821",
+   "kv": 66.0,
+   "site": "r12343855",
+   "site_name": "苅田火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w216497251",
+   "kv": 110.0,
+   "site": "w1384293853",
+   "site_name": "芦北町第二太陽光発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w239810622",
+   "kv": 66.0,
+   "site": "w1156635830",
+   "site_name": "九州電力送配電　面高変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "九州電力送配電　面高変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w243710579",
+   "kv": 110.0,
+   "site": "w577952100",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w253285337",
+   "kv": 500.0,
+   "site": "w426736603",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w253511913",
+   "kv": 77.0,
+   "site": "w169122898",
+   "site_name": "東部変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w256682327",
+   "kv": 154.0,
+   "site": "w1028287118",
+   "site_name": null,
+   "binding": [
+    "line_joint",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "下吉江変電所",
+     "sub": 1,
+     "deg": 3
+    },
+    {
+     "name": "下吉江変電所",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w256682327",
+   "kv": 154.0,
+   "site": "w1028287118",
+   "site_name": null,
+   "binding": [
+    "line_joint",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "下吉江変電所",
+     "sub": 1,
+     "deg": 3
+    },
+    {
+     "name": "下吉江変電所",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w315662803",
+   "kv": 275.0,
+   "site": "w727005862",
+   "site_name": "安曇水力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w317557172",
+   "kv": 110.0,
+   "site": "w605687579",
+   "site_name": "玉島火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w317557273",
+   "kv": 110.0,
+   "site": "w317852640",
+   "site_name": "南岡山変電所",
+   "binding": [
+    "pass_through",
+    "wired"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "南岡山変電所",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w317557311",
+   "kv": 110.0,
+   "site": "w1413230132",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "船穂町船穂変電所",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w317734478",
+   "kv": 110.0,
+   "site": "w605687579",
+   "site_name": "玉島火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w317829081",
+   "kv": 66.0,
+   "site": "w317829033",
+   "site_name": "土庄変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "土庄変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w320667037",
+   "kv": 66.0,
+   "site": "w320667015",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "東北電力ネットワーク(株)大潟町変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w325304492",
+   "kv": 66.0,
+   "site": "w1002163776",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w340648889",
+   "kv": 275.0,
+   "site": "w168852840",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w340659466",
+   "kv": 275.0,
+   "site": "w211356757",
+   "site_name": "筑波南変電所",
+   "binding": [
+    "pass_through",
+    "wired"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "筑波南変電所 275kV",
+     "sub": 1,
+     "deg": 3
+    }
+   ]
+  },
+  {
+   "osm_way": "w493787284",
+   "kv": 275.0,
+   "site": "r16642374",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w618344798",
+   "kv": 275.0,
+   "site": "w618344850",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w625559018",
+   "kv": 66.0,
+   "site": "w1214309634",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w625559018",
+   "kv": 66.0,
+   "site": "w1214309634",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w629129254",
+   "kv": 66.0,
+   "site": "w1459962557",
+   "site_name": "串間ソーラーヒルズ発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w638360280",
+   "kv": 77.0,
+   "site": "w203378850",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "茅野市変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w675557797",
+   "kv": 187.0,
+   "site": "w176450618",
+   "site_name": "北海道電力　総合研究所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "北海道電力　総合研究所 187kV",
+     "sub": 1,
+     "deg": 4
+    }
+   ]
+  },
+  {
+   "osm_way": "w677532714",
+   "kv": 500.0,
+   "site": "w806310370",
+   "site_name": "浜岡原子力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w686948222",
+   "kv": 66.0,
+   "site": "w686948223",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w704488092",
+   "kv": 66.0,
+   "site": "r16418035",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w708298815",
+   "kv": 154.0,
+   "site": "w605420891",
+   "site_name": "酒田火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w712617156",
+   "kv": 66.0,
+   "site": "w1420189467",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w715765323",
+   "kv": 66.0,
+   "site": "w371468679",
+   "site_name": "大間原子力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "大間町変電所_2",
+     "sub": 1,
+     "deg": 2
+    },
+    {
+     "name": "大間町変電所_2",
+     "sub": 1,
+     "deg": 1
+    }
+   ]
+  },
+  {
+   "osm_way": "w722451623",
+   "kv": 66.0,
+   "site": "w103783431",
+   "site_name": "旧福島第一原子力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w768672391",
+   "kv": 77.0,
+   "site": "w1062807422",
+   "site_name": "淀変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w777395425",
+   "kv": 66.0,
+   "site": "w1052431035",
+   "site_name": null,
+   "binding": [
+    "line_joint",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "一本木沢二丁目変電所",
+     "sub": 1,
+     "deg": 2
+    }
+   ]
+  },
+  {
+   "osm_way": "w819834132",
+   "kv": 77.0,
+   "site": "w317287903",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w827800318",
+   "kv": 66.0,
+   "site": "w1341021071",
+   "site_name": "女川原子力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "塚浜変電所",
+     "sub": 1,
+     "deg": 1
+    }
+   ]
+  },
+  {
+   "osm_way": "w831552334",
+   "kv": 77.0,
+   "site": "w831552335",
+   "site_name": "北島変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w925436323",
+   "kv": 77.0,
+   "site": "w1187919740",
+   "site_name": "島頭変電所",
+   "binding": [
+    "pass_through",
+    "wired"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1025438928",
+   "kv": 154.0,
+   "site": "w638460848",
+   "site_name": "東北電力 八戸火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "joined_to_station",
+   "built_nodes": [
+    {
+     "name": "豊洲変電所",
+     "sub": 1,
+     "deg": 1
+    }
+   ]
+  },
+  {
+   "osm_way": "w1065989096",
+   "kv": 66.0,
+   "site": "w195138490",
+   "site_name": "館林変電所 (Tatebayashi Hendensho)",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1133354922",
+   "kv": 66.0,
+   "site": "w1444382011",
+   "site_name": null,
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "split",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1204365703",
+   "kv": 154.0,
+   "site": "w191539362",
+   "site_name": "意岐部変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1477837532",
+   "kv": 187.0,
+   "site": "w1477837533",
+   "site_name": "勇払バイオマス発電",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1510219794",
+   "kv": 66.0,
+   "site": "r12343855",
+   "site_name": "苅田火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1510418947",
+   "kv": 220.0,
+   "site": "r12343855",
+   "site_name": "苅田火力発電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  },
+  {
+   "osm_way": "w1560570361",
+   "kv": 66.0,
+   "site": "w1560570362",
+   "site_name": "JR東日本 鎌取変電所",
+   "binding": [
+    "pass_through",
+    "pass_through"
+   ],
+   "built": "passes",
+   "built_nodes": []
+  }
+ ]
+}

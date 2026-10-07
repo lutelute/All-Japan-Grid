@@ -142,6 +142,15 @@ data/topology/*.jsonl
 data/structures/*.json
 !data/structures/summary.json
 
+# 変電所の構内結線(node-breaker 観測層): 電力だけに絞った PBF と行は D 層生成物
+# (scripts/build_station_db.py が約 1 分で再生成)。取得記録 MANIFEST.json と summary.json だけ追跡
+data/osm_pbf/
+data/stations/*
+!data/stations/MANIFEST.json
+!data/stations/summary.json
+!data/stations/README.md
+!data/stations/observed_transformer_pairs.json
+
 # 数値Ybus(D層生成物・全4島47秒で決定的に再生成)。品質記録 meta.json のみ追跡
 dist/ybus/*.mat
 dist/ybus/*.npz
