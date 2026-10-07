@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-07",
+ "generated": "2026-10-08",
  "inputs": {
   "rows": "data/stations/japan_rows.json.gz",
   "structures": "data/structures",
@@ -32,9 +32,9 @@
   "nameplate_sites_in_review": 5
  },
  "voltage_levels": {
-  "same": 3536,
-  "obs_subset": 369,
-  "obs_superset": 198,
+  "same": 3492,
+  "obs_subset": 370,
+  "obs_superset": 195,
   "differ": 10
  },
  "line_end_binding": {
@@ -44,10 +44,10 @@
    "vertex-shared": 4812
   },
   "node_breaker": {
-   "wired": 5507,
-   "footprint_only": 3574,
-   "pass_through": 1816,
-   "line_joint": 926
+   "wired": 5484,
+   "footprint_only": 3568,
+   "fence_cut": 1804,
+   "line_joint": 781
   }
  }
 }

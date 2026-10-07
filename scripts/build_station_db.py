@@ -45,6 +45,13 @@ from src.stations.tags import split_list  # noqa: E402
 from src.stations.views import analyse, coverage, gaps  # noqa: E402
 
 
+# 柵の外 25 m の節点を変電所に入れる条件(src/stations/core.BUFFER_PORTALS)。All-EU-Grid は欧州の公式データ(RTE)で
+# "station"(構内の導体か機器と共有する節点だけ)を採ったが、日本では構内の導体を line=bay でなく power=line で描くことが
+# 多く、"station" だと公表の線区間の端と一致する接続を 157 失う。"enters"(敷地に入る導体が会う節点)は、旧の "any" に
+# 比べ公表と一致する接続をほぼ保ち(160→157)、公表に無い接続を 177→142 に減らした(2026-10-08、
+# docs/STATION_NODE_BREAKER.md「移植元との差分」)。
+BUFFER_PORTALS = "enters"
+
 # 柵の外へはみ出して描かれたベイ・母線を敷地に含める上限(m)。2026-10-06 の日本の抽出で、
 # 1 つの敷地からはみ出す構内配線 901 本の 89% が 100 m 以内(中央値 47 m)だった。
 EXTENSION_M = 100.0
@@ -150,6 +157,8 @@ def main(argv=None):
     ap.add_argument("--source-md5", help="元の japan-latest.osm.pbf の md5(Geofabrik の .md5 と照合した値)")
     ap.add_argument("--out", type=Path, default=ROOT / "data/stations")
     ap.add_argument("--data-dir", type=Path, default=ROOT / "data")
+    ap.add_argument("--buffer-portals", choices=("station", "enters", "any"), default=BUFFER_PORTALS,
+                    help="柵外 25 m の節点を変電所に入れる条件(日本の既定 enters、移植元 station)")
     ap.add_argument("--extension-m", type=float, default=EXTENSION_M,
                     help="柵の外へはみ出して描かれたベイ・母線を敷地に含める上限 m(0 で AU/EU の厳密な読み方)")
     a = ap.parse_args(argv)
@@ -159,6 +168,8 @@ def main(argv=None):
 
     sites = read_sites(a.pbf)
     got = read_cached(a.pbf, sites, a.out / "read_cache.pkl")
+    import src.stations.core as _core
+    _core.BUFFER_PORTALS = a.buffer_portals
     data = model(sites, got["lines"], got["elements"], extension_m=a.extension_m)
     views = analyse(data)
     cov = coverage(data, views)
@@ -177,7 +188,7 @@ def main(argv=None):
     summary = {
         "generated": date.today().isoformat(),
         "version": VERSION,
-        "rules": {"buffer_m": 25.0, "extension_m": a.extension_m},
+        "rules": {"buffer_m": 25.0, "buffer_portals": a.buffer_portals, "extension_m": a.extension_m},
         "sites": {"total": len(sites), "by_power": dict(Counter(p.get("power") for p in site_props.values())),
                   "with_station_record": len(cov)},
         "status": dict(Counter(c["status"] for c in cov.values())),
@@ -214,7 +225,7 @@ def main(argv=None):
                   "filter": "osmium tags-filter japan-latest.osm.pbf nwr/power r/route=power",
                   "license": "ODbL 1.0 (© OpenStreetMap contributors)"},
         "code": {"version": VERSION, "rules": "docs/STATION_NODE_BREAKER.md",
-                 "buffer_m": 25.0, "extension_m": a.extension_m},
+                 "buffer_m": 25.0, "buffer_portals": a.buffer_portals, "extension_m": a.extension_m},
         "output": {"rows": "data/stations/japan_rows.json.gz (untracked, D layer)"},
     }
     (a.out / "MANIFEST.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n")

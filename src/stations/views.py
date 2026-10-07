@@ -8,8 +8,10 @@ from the node-breaker rows of :func:`src.stations.core.model`, where every switc
 winding is an observed OSM object. Nothing below changes those rows:
 
 * ``binding`` of a line terminal — ``wired`` (its connectivity node also holds a station
-  conductor, switch, busbar or winding), ``line_joint`` (only other line ends), or
-  ``footprint_only`` (the line just ends inside the fence). All-Japan-Grid's
+  conductor, switch, busbar or winding), ``fence_cut`` (the same way cut where it crosses
+  the fence), ``line_joint`` (only other line ends), or ``footprint_only`` (the line just
+  ends inside the fence); and per way and station, ``line_relation``: ``ends`` there,
+  ``wired_through`` (does not end but touches the yard) or ``crosses`` (neither). All-Japan-Grid's
   vertex-shared / polygon ladder, without the coordinate rounding.
 * ``bay`` — switches chained through non-busbar connectivity nodes, with the busbar
   sections, line ends and windings they reach, and a ``function`` from that:
@@ -105,10 +107,33 @@ def analyse(data: dict) -> dict:
             elif a["line"] > 1:
                 # only line ends: one way cut where it enters / leaves the site, or ways meeting
                 ways = {eq[x["equipment_id"]]["osm_id"] for x in term_on_line[t["node_id"]]}
-                b = "pass_through" if len(ways) == 1 else "line_joint"
+                b = "fence_cut" if len(ways) == 1 else "line_joint"
             else:
                 b = "footprint_only"
             binding[t["terminal_id"]] = {"binding": b, "reaches_busbar": tn_of[t["node_id"]] in tn_has_busbar}
+
+    # -- each way at each station: does it end there, touch the yard, or only cross it? --
+    # (a fence_cut is where the way crosses the fence; RTE's line codes showed most are lines
+    # that do end inside, so the cut alone says nothing about crossing)
+    rel = {}
+    for e in data["equipment"]:
+        if e["kind"] != "line":
+            continue
+        n = len(e["tags"].get("node_ids") or ())
+        a, b_ = e.get("segment") or [0, n - 1]
+        for t in by_eq[e["equipment_id"]]:
+            site = (t["level_id"] or "").split("@")[0] or None
+            if site is None or t["terminal_id"] not in binding:
+                continue
+            idx = a if t["sequence"] == 1 else b_
+            k = (e["osm_id"], site)
+            r = rel.setdefault(k, {"ends": False, "wired": False, "kv": set()})
+            r["ends"] |= idx in (0, n - 1)
+            r["wired"] |= binding[t["terminal_id"]]["binding"] == "wired"
+            if e.get("lvl") and e["lvl"][0]:
+                r["kv"].add(e["lvl"][0])
+    line_relation = [{"way": w, "site": s, "relation": "ends" if r["ends"] else "wired_through" if r["wired"] else "crosses",
+                      "kv": sorted(r["kv"], reverse=True)} for (w, s), r in sorted(rel.items())]
 
     # -- bays: switch chains between busbars and what they serve ------------------------
     bu = Union()
@@ -201,7 +226,7 @@ def analyse(data: dict) -> dict:
             for lv in kvs[i + 1:]:
                 pairs.append({"site": e["site"], "equipment_id": e["equipment_id"], "hv_kv": hv, "lv_kv": lv})
     return {"tn_of": tn_of, "binding": binding, "bays": bays, "bay_of": bay_of, "levels": levels,
-            "pairs": pairs, "attachments": att}
+            "pairs": pairs, "attachments": att, "line_relation": line_relation}
 
 
 def gaps(data: dict, views: dict, keep: int = 5) -> dict:
