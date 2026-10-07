@@ -8,6 +8,20 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-10-07 — **Claude Opus 5.5** — 【オーナー「AU の変電所の結線提案・EU の実装を、いい内容なら採用して自己改善し資産に」「全体の見通しを」】SubSLD の二重計上を直し、node-breaker 観測層を新設
+
+- レポート正本: `docs/reports/station_node_breaker_adoption_2026-10-07.md`・方法 `docs/STATION_NODE_BREAKER.md`
+- **EU の指摘を数え直して確認**: SubSLD は外接矩形 +約 1 km の母線・ベイを全部取り、母線 631/2,530・ベイ 1,848/7,929 が 2 つ以上の変電所に入っていた。`_vclasses` は `66000.0` を 660 kV と読む(潜在)
+- **SubSLD を直した**: 帰属を敷地の多角形で(node-breaker 層と同じ `SiteLocator`)+ 頂点がすべて 1 敷地に入る way は `partly_covered`。二重計上 0、架空の接続レコード 1,252 件が消えた(11,586→10,334)。**Ybus v4 の銘板 13 件は前後で同一**=潮流は不変。Pages の SubSLD は 433/6,165 所の表示が変わる。built の `sub_props` は正典を書き換えるので見送り(次の正典の作り直しで反映)
+- **観測層を新設**: `src/stations/`(EU commit 9b4be87 から移植、テスト 28 件)+ `scripts/build_station_db.py`(Geofabrik の日本 PBF、15 秒)。敷地 26,210・構内の記録 5,381・変圧器 2,502・開閉器 1,665
+- **日本で足した規則(EU にも無かった穴)**: ①柵の外へはみ出して描かれたベイ(中央値 47 m)を 100 m まで `internal_extension` — 帰属できない構内配線 987→177、線路の端が配線に載る 5,687→5,975 ②50/60 Hz を同じ系統に(欧州版はタグの有無で階級が割れる)③構造 DB との対応を OSM の (type, id) で(6,146 中 6,137)
+- **梯子と実機の突き合わせ**(`scripts/compare_station_layers.py`): 518 敷地で同じ 365・段飛ばし 32(275/77 の直結 6 など)。**東毛は出典付き 275/66 銘板が梯子に無いため捨てられていたが、OSM の実機 5 台が同じ組を示す**。置き換えはオーナー判断(介入候補)
+- **見通し**: `docs/reports/INDEX.md`(140 本の索引、`scripts/build_reports_index.py` で生成)・文書の地図に観測層・データ目録・姉妹プロジェクトの節
+- **姉妹へ返したもの**: `internal_extension` のパッチ(EU の commit と作業ツリーの両方に当たり、EU のテスト全件通過を確認)
+- テスト `tests/test_stations_core.py` 30 件・`tests/test_station_layers.py` 3 件・`tests/test_substation_structures.py`(沖縄の pin を理由つきで更新 60/167/59→60/165/55・二重計上しないことのテストを追加)
+
+---
+
 ## 2026-10-03 — **Claude Opus 5.5** — 【オーナー「実潮流を 2 段階上げて」「検証してから直せばいい」】日別断面の 1 か月欠落を修理・観測との突き合わせを 61→1,752 本に
 
 - レポート正本: `docs/reports/flow_map_observed_compare_2026-10-03.md`

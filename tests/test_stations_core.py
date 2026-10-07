@@ -336,3 +336,35 @@ def test_a_line_passing_just_outside_the_fence_is_not_cut_there():
     along = [[8 - DX, 50 + DY + 10 / 111200], [8 + DX / 2, 50 + DY + 10 / 111200], [8 + 2 * DX, 50 + DY + 10 / 111200]]
     data = model([site(1, "110000", YARD)], [wire(23, [1, 2, 3], along, "110000", kind=None)], [])
     assert not data["equipment"] and not data["terminals"]
+
+
+# ------------------------------------------------------------- All-Japan-Grid's additions
+def test_japan_50_and_60_hz_share_one_level():
+    # 西日本の線は frequency=60 が付き、同じ変電所の無タグの母線と同じ階級に入る
+    data = model([site(voltage="154000")], [
+        wire(11, [1, 2], [[1, 5], [4, 5]], "154000", kind="busbar"),
+        wire(12, [2, 3], [[4, 5], [4, 20]], "154000", kind=None, frequency="60")], [])
+    assert {r["level_id"] for r in data["levels"]} == {"w1@154"}
+    assert levels_of({"voltage": "275000;154000", "frequency": "50;60"}) == [(275, "ac"), (154, "ac")]
+
+
+def test_bay_drawn_to_a_portal_past_the_fence_brings_the_line_in():
+    # 柵の外 47 m の門型鉄構までベイが描かれ、線路はそこから出る(日本の OSM で中央値 47 m)
+    portal = [8 + DX + 47 / 71700, 50 + DY / 2]
+    bar = [[8 + DX / 4, 50 + DY / 2], [8 + 3 * DX / 4, 50 + DY / 2]]
+    ways = [wire(21, [5, 6], bar, "110000", kind="busbar"),
+            wire(22, [7, 6], [portal, bar[1]], "110000", kind="bay"),
+            wire(23, [8, 7], [[8.05, 50.05], portal], "110000", kind=None)]
+    strict = model([site(1, "110000", YARD)], ways, [])
+    assert [i["code"] for i in strict["issues"]] == ["internal_way_without_unique_site"]
+    assert not kinds(strict, "line")
+    data = model([site(1, "110000", YARD)], ways, [], extension_m=100)
+    assert not data["issues"]
+    bay = kinds(data, "bay")[0]
+    assert bay["site"] == "w1" and bay["membership"] == "internal_extension"
+    line_t = terms(data, kinds(data, "line")[0]["equipment_id"])
+    assert len(line_t) == 1 and line_t[0]["detail"]["membership"] == "internal_extension"
+    assert line_t[0]["node_id"] == terms(data, kinds(data, "busbar")[0]["equipment_id"])[0]["node_id"]
+    # 上限を超えるはみ出し・2 つの敷地にまたがるものは厳密な読み方のまま
+    far = model([site(1, "110000", YARD)], ways, [], extension_m=40)
+    assert [i["code"] for i in far["issues"]] == ["internal_way_without_unique_site"]

@@ -39,7 +39,15 @@ connections[]:     サイト間接続(線の両端が別サイトに束縛) from
 Terminal の binding 語彙(強い順): `vertex-shared`(OSM頂点共有) > `polygon`(敷地内包)
 > `leadin`(0.6km引込帯) > `name-evidence` > `manual`。
 
-## 品質(2026-07-02 生成)
+## 品質(2026-10-07 生成)
+
+- 全国 7,239 サイト(地域境界の重複 1,093 組を含む。OSM の敷地としては 6,146)/ 端子 47,126 /
+  接続レコード 10,334 / エラー 0 / 決定性 identical
+- 母線・ベイの帰属は敷地の多角形(`summary.json` の `internal_way_membership`)。2 つ以上の変電所に入る母線 0・ベイ 2
+  (07-02〜10-06 は外接矩形 +約 1 km の全部で、母線 25%・ベイ 23% が二重。接続レコードのうち 1,252 件はそれが作った架空の接続)
+- 観測層(node-breaker、`data/stations`)との突き合わせ: [docs/STATION_NODE_BREAKER.md](../../docs/STATION_NODE_BREAKER.md)
+
+## 品質(2026-07-02 生成・参考)
 
 - 全国 6,956 サイト / 端子 48,081 / 接続レコード 10,888 / エラー 0 / 決定性 identical
 - VL既知率 77.4%(line-tag 導出 2,058 VL を含む。改善前 59.1%)

@@ -1,0 +1,182 @@
+{
+ "generated": "2026-10-07",
+ "version": "agj-station-1",
+ "rules": {
+  "buffer_m": 25.0,
+  "extension_m": 100.0
+ },
+ "sites": {
+  "total": 26210,
+  "by_power": {
+   "substation": 6349,
+   "plant": 19858,
+   "converter": 3
+  },
+  "with_station_record": 5381
+ },
+ "status": {
+  "partial": 731,
+  "mapped": 221,
+  "layout_only": 153,
+  "conductors_only": 1343,
+  "lines_only": 2933
+ },
+ "rows": {
+  "levels": 6504,
+  "equipment": 32888,
+  "nodes": 12241,
+  "terminals": 23682,
+  "ends": 2951,
+  "circuits": 10976,
+  "members": 12491,
+  "issues": 1452
+ },
+ "equipment": {
+  "bay": 7500,
+  "busbar": 2510,
+  "internal": 6337,
+  "line": 12374,
+  "switch": 1665,
+  "transformer": 2502
+ },
+ "winding_voltage_method": {
+  "shared_node_conductor_voltage": 448,
+  "interface_voltage_tag": 2495,
+  "device_voltage_list": 8
+ },
+ "line_terminal_binding": {
+  "line_joint": 1485,
+  "footprint_only": 5145,
+  "wired": 5975,
+  "pass_through": 2794
+ },
+ "line_terminals_reaching_busbar_all_closed": 2837,
+ "bays": {
+  "line_transformer": 59,
+  "line_bay": 339,
+  "coupler": 117,
+  "transformer_bay": 105,
+  "open_end": 98,
+  "line_switching": 138,
+  "transformer_switching": 23
+ },
+ "levels_split_with_all_switches_closed": 411,
+ "issues": {
+  "transformer_interfaces_unknown": 975,
+  "switch_ports_unresolved": 254,
+  "internal_way_without_unique_site": 177,
+  "switch_bypass_or_mapping_loop": 16,
+  "ambiguous_site_containment": 13,
+  "equipment_without_site": 13,
+  "transformer_interface_voltage_conflict": 4
+ },
+ "internal_way_escape_distance": {
+  "bins": {
+   ">100m": 78,
+   "<=25m": 13
+  },
+  "median_m": 112.1,
+  "n": 91
+ },
+ "frequency_mixed_levels": [
+  {
+   "site": "w134376414",
+   "kv": 275.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w1478508743",
+   "kv": 66.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w168248707",
+   "kv": 275.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w211037499",
+   "kv": 154.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w315662802",
+   "kv": 154.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w315662839",
+   "kv": 275.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w555595447",
+   "kv": 66.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w618344827",
+   "kv": 275.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  },
+  {
+   "site": "w777698210",
+   "kv": 25.0,
+   "frequencies": [
+    "50",
+    "60"
+   ]
+  }
+ ],
+ "crosswalk": {
+  "structure_sites_total": 7240,
+  "osm_keys_total": 6146,
+  "osm_keys_found_in_pbf": 6137
+ },
+ "read": {
+  "circuit_relation": 590,
+  "conductor_away": 9649,
+  "conductor_bay": 7689,
+  "conductor_busbar": 2433,
+  "conductor_cable": 775,
+  "conductor_internal": 11,
+  "conductor_line": 16202,
+  "conductor_minor_line": 225,
+  "conductor_not_in_service": 6,
+  "hosted_switch": 10,
+  "hosted_transformer": 25,
+  "switch_node": 1665,
+  "switch_node_away": 148,
+  "switch_way_away": 1,
+  "transformer_node": 2465,
+  "transformer_node_away": 838,
+  "transformer_way": 37,
+  "transformer_way_away": 14,
+  "read_seconds": 4
+ },
+ "elapsed_s": 4
+}

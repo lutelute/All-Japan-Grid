@@ -1,0 +1,53 @@
+{
+ "generated": "2026-10-07",
+ "inputs": {
+  "rows": "data/stations/japan_rows.json.gz",
+  "structures": "data/structures",
+  "osm_timestamp_node_breaker": "2026-10-06T20:21:06Z",
+  "note": "構造 DB は data/*_substations.geojson(Overpass、2026-08 取得)由来。観測の時点が違う"
+ },
+ "structure_sites_compared": 7230,
+ "osm_sites_compared": 6137,
+ "transformer_pairs": {
+  "sites_with_observed_pairs": 518,
+  "verdict": {
+   "osm_partial": 55,
+   "same": 365,
+   "level_not_in_db": 66,
+   "ladder_skips": 32
+  },
+  "skipped_pairs_top": {
+   "275/77": 6,
+   "220/66": 6,
+   "66/6": 5,
+   "500/154": 5,
+   "100/6": 3,
+   "275/66": 2,
+   "500/110": 1,
+   "115/66": 1,
+   "66/22": 1,
+   "154/33": 1,
+   "154/6": 1
+  },
+  "nameplate_sites_in_review": 4
+ },
+ "voltage_levels": {
+  "same": 3536,
+  "obs_subset": 369,
+  "obs_superset": 198,
+  "differ": 10
+ },
+ "line_end_binding": {
+  "subsld": {
+   "leadin": 23310,
+   "polygon": 11500,
+   "vertex-shared": 4812
+  },
+  "node_breaker": {
+   "wired": 5499,
+   "footprint_only": 3582,
+   "pass_through": 1816,
+   "line_joint": 926
+  }
+ }
+}

@@ -163,7 +163,7 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 243 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 248 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
 <details><summary><b>取得 / fetch</b>(16 本)</summary>
@@ -216,7 +216,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>監査・検証 / audit & validate</b>(11 本)</summary>
+<details><summary><b>監査・検証 / audit & validate</b>(12 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -224,6 +224,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `audit_mixed_pref_flip.py` 🔒 | 混在県個別化(介入#42)のドライラン監査 — all.json は変更しない(2026-09-02). |
 | `audit_substation_plant_overlap.py` 🔒 | Audit substation/plant classification overlap in OSM-derived GeoJSON data. |
 | `compare_observed_derived_impedance.py` | 公表インピーダンス(observed)でAGJの線路パラメータ推定(derived)を答え合わせする。 |
+| `compare_station_layers.py` 🔒 | SubSLD(構造 DB)と node-breaker 観測層を、同じ変電所ごとに突き合わせる。 |
 | `cross_validate.py` | AGJ ↔ JRP データ整合性クロスバリデーション |
 | `match_impedance_to_model.py` | 公表インピーダンス（observed）をAGJ建造モデルの枝に対応付ける。 |
 | `reconcile.py` 🔒 | OCCTO-actuals reconciliation report (PLAN_66KV M10-3). |
@@ -234,7 +235,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>構築・解析 / build & solve</b>(93 本)</summary>
+<details><summary><b>構築・解析 / build & solve</b>(95 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -258,7 +259,9 @@ python scripts/diagnostics/test_west_reactive.py
 | `build_load_timeseries.py` | Generate time-series load multiplier data for MATPOWER power flow. |
 | `build_network_geojson.py` | 送電網・変電所・発電所を地図ビュー用に軽量化して書き出す。 |
 | `build_pages_editor.py` 🔒 | GitHub Pages 用エディタ(docs/editor.html)を **単一の正** から派生生成する。 |
+| `build_reports_index.py` | docs/reports/ の索引 INDEX.md を作り直す(月ごと・新しい順)。 |
 | `build_static_site.py` 🔒 | Build lightweight static GeoJSON files for GitHub Pages. |
+| `build_station_db.py` 🔒 | 変電所の構内結線(node-breaker)の観測層を、電力だけに絞った日本の PBF から作る。 |
 | `build_structures_batch.py` 🔒 | 変電所内部構造(node-breaker)の地域一括生成 — 構造DBの正典生成器. |
 | `build_subsld_batch.py` | SubSLD法の全所展開 — 実証ペア図PNGの地域一括生成(オーナー指示 2026-08-26). |
 | `build_substation_properties.py` 🔒 | 変電所プロパティ層 — 電圧階級・回線数・導体数の全国集約(オーナー指示 2026-08-26). |
@@ -350,20 +353,21 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>書き出し・公開 / export & publish</b>(23 本)</summary>
+<details><summary><b>書き出し・公開 / export & publish</b>(24 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
 | `export_cim.py` 🔒 | Export All-Japan-Grid GeoJSON to CIM/CGMES RDF/XML (EQ + GL profiles). |
 | `export_cim_level2.py` 🔒 | Export Level-2 CGMES (a solvable power-flow case) per region. |
-| `export_day_flows.py` | 指定日の実績需要(でんき予報)で24時刻の全ノーダル潮流を計算し日付別断面を出力. |
+| `export_day_flows.py` 🔒 | 指定日の実績需要(でんき予報)で24時刻の全ノーダル潮流を計算し日付別断面を出力. |
 | `export_eggc_trace.py` | EGGC(証拠ゲート付き系統コンフレーション)の適用過程を、教材用に**実データで**書き出す。 |
-| `export_flow_map_data.py` | 潮流方向・発電稼働率マップ(docs/flow_map.html)のデータをエクスポートする. |
+| `export_flow_map_data.py` 🔒 | 潮流方向・発電稼働率マップ(docs/flow_map.html)のデータをエクスポートする. |
 | `export_generators_geojson.py` | Export generator data from P03 GML to GeoJSON with enriched attributes. |
 | `export_loops.py` 🔒 | ループ(閉路)構造の抽出 — 運用ビュー用(オーナー指示 2026-08-28「ループとかも見れるの?」). |
 | `export_map_tiers_from_built.py` 🔒 | 系統図/エリアタブの地図タイルを **DB更新済み建造モデル** から再生成する (idempotent)。 |
 | `export_matpower_canonical.py` | 正典系譜のMATPOWERケース出力 — built正典+標準注入で4島(+west_reduced). |
 | `export_national_matpower.py` 🔒 | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
+| `export_obs_compare.py` 🔒 | 観測潮流(公表実績の年統計)とモデルの潮流を、線ごとに突き合わせる(潮流マップの「観測と比べる」)。 |
 | `export_obs_local.py` | 線クリック用の観測実績オーバーレイ(年統計=集計値)を生成する. |
 | `export_other_freq_layer.py` | Export the OTHER-frequency equipment of each region as a reference layer. |
 | `export_powerflow_pages.py` 🔒 | Export power flow results as GeoJSON for GitHub Pages visualization. |
@@ -375,7 +379,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `realtime_cycle.sh` 🔒 | でんき予報リアルタイムサイクル: 取得 → NOW断面PF → Pages更新(realtime_publish.sh が main へ公開) |
 | `realtime_publish.sh` | リアルタイム断面を、作業ツリーのブランチに関係なく origin/main へ公開する。 |
 | `regenerate_all.py` 🔒 | 全出力を単一モデルから一括再生成 + MODEL_VERSION 刻印(全面改修 Phase 4)。 |
-| `slim_flow_map.py` | flow_map配信データの軽量化(数値整数化+実線形パスのRDP簡略化20m許容). |
+| `slim_flow_map.py` 🔒 | flow_map配信データの軽量化(数値整数化+実線形パスのRDP簡略化20m許容). |
 | `slim_geojson.py` | GeoJSON 軽量化スクリプト |
 
 </details>
@@ -426,7 +430,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>その他 / other</b>(39 本)</summary>
+<details><summary><b>その他 / other</b>(40 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -454,6 +458,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `plant_switchyard_gaps.py` | 発電所の連系変電所(switchyard)がOSMに欠落しているケースを検出する。 |
 | `pool_kyushu_kuyoryo.py` | 九州31地区「予想潮流・空容量一覧表」の全面プール化。 |
 | `provenance.py` 🔒 | 出典必須(provenance-first)レコードの **汎用バリデータ** — 捏造防止規約の単一実装. |
+| `prune_pages_days.py` 🔒 | Pages に上げる前に、潮流マップの日別断面を直近 N 日だけにする(deploy-pages 用)。 |
 | `prune_pages_slides.py` 🔒 | Pages に上げる前に、docs/slides の pptx・pdf を各デッキの最新版だけにする(deploy-pages 用)。 |
 | `pv_dynamics_compare.py` | PV有無×UC → 動的比較: ①24h系統慣性カーブ ②正午の動揺モード ③正午のS_sc(66-77kV)。 |
 | `readme_numbers.py` | README に埋め込む数字を、データから作る(cog から呼ぶ)。 |

@@ -77,6 +77,7 @@ diagram drawn in the browser. Estimates are labelled as estimates; open a breake
 <p align="center"><img src="docs/assets/gif/subsld.gif" alt="SubSLD" width="100%"></p>
 
 → [SubSLD を開く / Open SubSLD](https://lutelute.github.io/All-Japan-Grid/subsld.html) ・ 手法: [docs/SUBSLD_METHOD.md](docs/SUBSLD_METHOD.md)
+・ 母線・開閉器・変圧器の巻線を OSM の node ID で結んだ観測の台帳: [docs/STATION_NODE_BREAKER.md](docs/STATION_NODE_BREAKER.md)
 
 ### 災害で試す — 南海トラフ / Stress-test it: the Nankai Trough earthquake
 

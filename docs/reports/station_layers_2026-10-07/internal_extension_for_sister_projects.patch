@@ -1,0 +1,109 @@
+diff --git a/src/all_eu_grid/stations.py b/src/all_eu_grid/stations.py
+index 56eae4d..3752614 100644
+--- a/src/all_eu_grid/stations.py
++++ b/src/all_eu_grid/stations.py
+@@ -209,6 +209,12 @@ def _buffer_deg(g, metres: float):
+     return shapely.transform(scaled.buffer(metres / 111320.0), lambda xy: xy / np.array([k, 1.0]))
+ 
+ 
++def _metres_from(g, xy) -> float:
++    """Distance in metres from a lon/lat point to a lon/lat geometry (local equirectangular)."""
++    k = np.array([max(cos(radians(g.representative_point().y)), 0.05), 1.0])
++    return shapely.transform(g, lambda a: a * k).distance(Point(*(np.asarray(xy, dtype=float) * k))) * 111320.0
++
++
+ # ------------------------------------------------------------------ helpers
+ def device_feature(e: dict):
+     """Geometry of an OSM element given as {type, id, tags, lon/lat | nodes+geometry}."""
+@@ -243,13 +249,23 @@ def _interfaces(tags: dict, connected: list) -> list:
+ 
+ 
+ # ------------------------------------------------------------------ builder
+-def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0) -> dict:
++def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
++          extension_m: float = 0.0) -> dict:
+     """Station structure from footprints, conductors (with ordered OSM ``node_ids``) and
+-    the transformer / switch / circuit elements. Rows only; nothing is written."""
++    the transformer / switch / circuit elements. Rows only; nothing is written.
++
++    ``extension_m`` (All-Japan-Grid): a ``line=bay|busbar`` way whose in-site nodes all lie in
++    one site and whose other nodes lie in none, within ``extension_m`` of that site's polygon,
++    brings those outside nodes into the site as ``internal_extension``. 0 is the strict
++    reading of All-AU-Grid / All-EU-Grid."""
++
+     out = {k: [] for k in ("levels", "equipment", "nodes", "terminals", "ends",
+                            "circuits", "members", "issues")}
+     loc = SiteLocator(sites, buffer_m)
+     skey = loc.keys
++
++    def self_polygon(si):
++        return bool(loc.polygon[si])
+     level_evidence = defaultdict(Counter)
+ 
+     def issue(entity, code, site=None, **detail):
+@@ -335,9 +351,32 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0) -> d
+         if r[1] in ("ambiguous", "ambiguous_buffer"):
+             node_site[n] = (None, r[1], r[2])
+ 
++    # A station conductor drawn past the fence (All-Japan-Grid): Japanese mappers often run a
++    # line=bay on to the first portal or tower 30-100 m outside the mapped fence (median 47 m in
++    # the 2026-10-06 extract), where the line starts. Its outside nodes join the one site its
++    # inside nodes stand in, so that line meets the station there; a way touching two sites, an
++    # ambiguous node or a node farther than ``extension_m`` keeps the strict reading.
++    if extension_m:
++        for key, p, ns, cs in prepared:
++            if p.get("line") not in INTERNAL:
++                continue
++            states = [node_site.get(n, (None, None, None)) for n in ns]
++            if any(st[1] in ("ambiguous", "ambiguous_buffer") for st in states):
++                continue
++            inside = {st[0] for st in states if st[0] is not None}
++            outside = [(n, c) for n, c, st in zip(ns, cs, states) if st[0] is None]
++            if len(inside) != 1 or not outside:
++                continue
++            si = next(iter(inside))
++            if not self_polygon(si) or max(_metres_from(loc.geoms[si], c) for _, c in outside) > extension_m:
++                continue
++            for n, _ in outside:
++                node_site.setdefault(n, (si, "internal_extension", None))
++
+     def site_of(n):
+         return node_site.get(n, (None, None, None))[0]
+ 
++
+     # -- ports and conductor paths -----------------------------------------------
+     uf = Union(_order)
+     switch_ports = defaultdict(set)
+@@ -378,8 +417,9 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0) -> d
+                           outside_nodes=sum(site_of(n) is None for n in ns))
+                 continue
+             si = next(iter(sites_here))
+-            membership = "buffer" if "buffer" in methods else (
+-                "innermost_nested" if "innermost_nested" in methods else "covered")
++            membership = "internal_extension" if "internal_extension" in methods else (
++                "buffer" if "buffer" in methods else (
++                    "innermost_nested" if "innermost_nested" in methods else "covered"))
+             segments = [(0, len(ns) - 1)]
+         else:
+             # Cut where the way enters/leaves a site or meets another way/device inside one;
+@@ -387,8 +427,8 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0) -> d
+             # A line vertex just outside the fence belongs to the site only where it meets a
+             # station conductor or device (the portal a bay starts from); a line merely passing
+             # within the buffer is not cut there.
+-            ss = [site_of(n) if node_site.get(n, (None, None))[1] != "buffer" or n in junctions else None
+-                  for n in ns]
++            ss = [site_of(n) if node_site.get(n, (None, None))[1] not in ("buffer", "internal_extension")
++                  or n in junctions else None for n in ns]
+             if not any(s is not None for s in ss):
+                 continue
+             cuts = [0]
+@@ -405,7 +445,8 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0) -> d
+         inner = {}
+         if not internal and len(set(ss)) == 1 and ss[0] is not None:
+             ms = {node_site[n][1] for n in ns}
+-            m = "buffer" if "buffer" in ms else "innermost_nested" if "innermost_nested" in ms else "covered"
++            m = "internal_extension" if "internal_extension" in ms else "buffer" if "buffer" in ms \
++                else "innermost_nested" if "innermost_nested" in ms else "covered"
+             inner = {seg: (ss[0], m) for seg in segments}
+         line_piece = False
+         for lvl in lvls[key]:
