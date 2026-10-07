@@ -252,7 +252,7 @@ def test_line_terminal_binding_and_all_closed_topological_nodes():
     line_eq = [e for e in data["equipment"] if e["kind"] == "line"][0]
     t = terms(data, line_eq["equipment_id"])[0]
     assert v["binding"][t["terminal_id"]] == {"binding": "wired", "reaches_busbar": True}
-    assert v["levels"]["w1@110"] == {"tn": 1, "tn_external": 1, "tn_mapped": 1}   # coupler closed: one bus
+    assert v["levels"]["w1@110"] == {"tn": 1, "tn_external": 1, "tn_mapped": 1, "busbars": 2}   # coupler closed: one bus
     assert v["levels"]["w1@20"]["tn"] == 1
     assert {(p["hv_kv"], p["lv_kv"]) for p in v["pairs"]} == {(110, 20)}
 
@@ -336,6 +336,77 @@ def test_a_line_passing_just_outside_the_fence_is_not_cut_there():
     along = [[8 - DX, 50 + DY + 10 / 111200], [8 + DX / 2, 50 + DY + 10 / 111200], [8 + 2 * DX, 50 + DY + 10 / 111200]]
     data = model([site(1, "110000", YARD)], [wire(23, [1, 2, 3], along, "110000", kind=None)], [])
     assert not data["equipment"] and not data["terminals"]
+
+
+def test_tee_switch_separates_the_branch_from_the_way_that_runs_on():
+    # a 110 kV line runs through node 9; a branch line ends there behind a disconnector
+    data = model([site(voltage="110000")], [
+        wire(11, [1, 9, 2], [[-5, 5], [5, 5], [15, 5]], "110000", kind=None),
+        wire(12, [9, 3], [[5, 5], [5, 15]], "110000", kind=None)], [device(power="switch", switch="disconnector")])
+    ts = terms(data, kinds(data, "switch")[0]["equipment_id"])
+    assert [t["method"] for t in ts] == ["tee_junction", "tee_junction"]
+    assert ts[0]["node_id"] != ts[1]["node_id"]
+    through = {t["node_id"] for e in kinds(data, "line") if e["osm_id"] == "w11" for t in terms(data, e["equipment_id"])
+               if t["sequence"] == 2 or t["sequence"] == 1}
+    assert ts[0]["node_id"] in through
+
+
+def test_closed_switches_join_all_arms_even_when_their_sides_are_unresolved():
+    # three bays meet at a switch node: sides unknown, but closed it joins them all
+    from src.stations.views import analyse
+    data = model([site(voltage="110000")], [
+        wire(1, [1, 2], [[1, 5], [4, 5]], "110000", kind="busbar"),
+        wire(2, [2, 9], [[4, 5], [5, 5]], "110000"),
+        wire(3, [9, 3], [[5, 5], [6, 5]], "110000"),
+        wire(4, [9, 4], [[5, 5], [5, 8]], "110000"),
+        wire(5, [3, 30], [[6, 5], [15, 5]], "110000", kind=None),
+        wire(6, [4, 40], [[5, 8], [5, 15]], "110000", kind=None)], [device(power="switch")])
+    assert "switch_ports_unresolved" in {i["code"] for i in data["issues"]}
+    v = analyse(data)
+    assert v["levels"]["w1@110"]["tn_mapped"] == 1
+    assert {b["reaches_busbar"] for b in v["binding"].values()} == {True}
+
+
+def test_parts_that_never_meet_report_how_far_apart_they_are():
+    from src.stations.views import analyse, gaps
+    # two 110 kV busbars at 50 N, 0.3 m apart end to end, each with a line; no shared node
+    y = 50 + DY / 2
+    data = model([site(1, "110000", YARD)], [
+        wire(1, [1, 2], [[8 + DX / 10, y], [8 + DX / 2, y]], "110000", kind="busbar"),
+        wire(2, [3, 4], [[8 + DX / 2 + 0.3 / 71700, y], [8 + 9 * DX / 10, y]], "110000", kind="busbar"),
+        wire(3, [1, 10], [[8 + DX / 10, y], [7.99, y]], "110000", kind=None),
+        wire(4, [4, 11], [[8 + 9 * DX / 10, y], [8.01, y]], "110000", kind=None)], [])
+    v = analyse(data)
+    g = gaps(data, v)["w1@110"]
+    assert g["parts"] == 2 and 0.25 < g["gap_m"] < 0.35 and g["between"] == "busbar-busbar"
+    assert {g["nearest"][0]["node"], g["nearest"][0]["to_node"]} == {2, 3}
+
+
+def test_gaps_handle_parts_made_of_several_conductors():
+    from src.stations.views import analyse, gaps
+    y = 50 + DY / 2
+    data = model([site(1, "110000", YARD)], [
+        wire(1, [1, 2, 5], [[8 + DX / 10, y], [8 + DX / 4, y], [8 + DX / 2, y]], "110000", kind="busbar"),
+        wire(5, [2, 6], [[8 + DX / 4, y], [8 + DX / 4, y + DY / 4]], "110000"),
+        wire(2, [3, 4], [[8 + DX / 2 + 2 / 71700, y], [8 + 9 * DX / 10, y]], "110000", kind="busbar"),
+        wire(3, [1, 10], [[8 + DX / 10, y], [7.99, y]], "110000", kind=None),
+        wire(4, [4, 11], [[8 + 9 * DX / 10, y], [8.01, y]], "110000", kind=None)], [])
+    g = gaps(data, analyse(data))["w1@110"]
+    assert 1.9 < g["gap_m"] < 2.1
+
+
+def test_from_all_au_grid_junction_bypass_and_unverified_voltage_list_are_review_issues():
+    # All-AU-Grid's additions on adopting these rules (2026-10-07)
+    data = model([site()], [
+        wire(11, [1, 9, 2], [[1, 5], [5, 5], [9, 5]], kind="busbar"),
+        wire(12, [9, 3, 1], [[5, 5], [5, 8], [1, 5]])], [device(power="switch", switch="disconnector")])
+    assert "switch_bypass_or_mapping_loop" in {i["code"] for i in data["issues"]}
+    data = model([site()], [wire(11, [1, 9], [[1, 5], [5, 5]], "132000"),
+                            wire(12, [9, 2], [[5, 5], [9, 5]], "33000")], [device(voltage="132000;33000")])
+    assert "transformer_voltage_list_unverified" in {i["code"] for i in data["issues"]}
+    import pytest
+    with pytest.raises(ValueError):
+        model([site()], [], [], buffer_m=-1)
 
 
 # ------------------------------------------------------------- All-Japan-Grid's additions

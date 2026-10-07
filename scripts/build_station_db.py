@@ -42,7 +42,7 @@ from scripts.build_substation_structure import _geom_key  # noqa: E402
 from src.regions import REGIONS  # noqa: E402
 from src.stations.core import VERSION, key_of, model  # noqa: E402
 from src.stations.tags import split_list  # noqa: E402
-from src.stations.views import analyse, coverage  # noqa: E402
+from src.stations.views import analyse, coverage, gaps  # noqa: E402
 
 
 # 柵の外へはみ出して描かれたベイ・母線を敷地に含める上限(m)。2026-10-06 の日本の抽出で、
@@ -129,6 +129,17 @@ def escape_distances(data: dict, sites: list, lines: list) -> dict:
             "n": len(metres)}
 
 
+def gap_bins(gap: dict) -> dict:
+    """全閉でもつながらない階級の、いちばん近い部分どうしの距離の分布。数 cm は描き手が結ぶつもりだった所
+    (SubSLD の座標丸め 0.1 m なら接続になる)、数十 m 以上は描き漏れか別の構内。"""
+    bins = Counter()
+    for g in gap.values():
+        m = g["gap_m"]
+        bins["<0.1m" if m < 0.1 else "<1m" if m < 1 else "<10m" if m < 10 else "<50m" if m < 50 else ">=50m"] += 1
+    return {"levels": len(gap), "bins": dict(bins),
+            "between": dict(Counter(g["between"] for g in gap.values()).most_common())}
+
+
 def _jsonable(o):
     return mapping(o) if hasattr(o, "geom_type") else str(o)
 
@@ -151,6 +162,7 @@ def main(argv=None):
     data = model(sites, got["lines"], got["elements"], extension_m=a.extension_m)
     views = analyse(data)
     cov = coverage(data, views)
+    gap = gaps(data, views)
     xwalk = structure_crosswalk(a.data_dir)
     elapsed = round(time.time() - t0)
 
@@ -176,6 +188,7 @@ def main(argv=None):
         "line_terminals_reaching_busbar_all_closed": reaches,
         "bays": dict(Counter(b["function"] for b in views["bays"])),
         "levels_split_with_all_switches_closed": split_levels,
+        "split_level_gap_m": gap_bins(gap),
         "issues": dict(Counter(i["code"] for i in data["issues"]).most_common()),
         "internal_way_escape_distance": escape_distances(data, sites, got["lines"]),
         "frequency_mixed_levels": mixed,
@@ -187,7 +200,7 @@ def main(argv=None):
     a.out.mkdir(parents=True, exist_ok=True)
     rows = {"summary": summary, "data": {k: v for k, v in data.items() if k != "sites"},
             "views": {k: v for k, v in views.items() if k not in ("attachments", "tn_of")},
-            "coverage": cov, "crosswalk": matched,
+            "coverage": cov, "gaps": gap, "crosswalk": matched,
             "site_names": {k: p.get("name") for k, p in site_props.items() if p.get("name")}}
     with gzip.open(a.out / "japan_rows.json.gz", "wt", encoding="utf-8") as f:
         json.dump(rows, f, ensure_ascii=False, default=_jsonable)

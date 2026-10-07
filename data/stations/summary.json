@@ -15,8 +15,8 @@
   "with_station_record": 5381
  },
  "status": {
-  "partial": 731,
-  "mapped": 221,
+  "partial": 730,
+  "mapped": 222,
   "layout_only": 153,
   "conductors_only": 1343,
   "lines_only": 2933
@@ -24,12 +24,12 @@
  "rows": {
   "levels": 6504,
   "equipment": 32888,
-  "nodes": 12241,
-  "terminals": 23682,
+  "nodes": 12214,
+  "terminals": 23736,
   "ends": 2951,
   "circuits": 10976,
   "members": 12491,
-  "issues": 1452
+  "issues": 1429
  },
  "equipment": {
   "bay": 7500,
@@ -46,29 +46,48 @@
  },
  "line_terminal_binding": {
   "line_joint": 1485,
-  "footprint_only": 5145,
-  "wired": 5975,
+  "footprint_only": 5070,
+  "wired": 6050,
   "pass_through": 2794
  },
- "line_terminals_reaching_busbar_all_closed": 2837,
+ "line_terminals_reaching_busbar_all_closed": 2840,
  "bays": {
-  "line_transformer": 59,
+  "line_transformer": 62,
   "line_bay": 339,
   "coupler": 117,
   "transformer_bay": 105,
   "open_end": 98,
-  "line_switching": 138,
-  "transformer_switching": 23
+  "line_switching": 137,
+  "transformer_switching": 27
  },
  "levels_split_with_all_switches_closed": 411,
+ "split_level_gap_m": {
+  "levels": 369,
+  "bins": {
+   "<50m": 187,
+   ">=50m": 29,
+   "<10m": 148,
+   "<0.1m": 3,
+   "<1m": 2
+  },
+  "between": {
+   "internal-internal": 155,
+   "bay-bay": 134,
+   "bay-busbar": 46,
+   "busbar-busbar": 14,
+   "bay-internal": 11,
+   "busbar-internal": 9
+  }
+ },
  "issues": {
   "transformer_interfaces_unknown": 975,
-  "switch_ports_unresolved": 254,
+  "switch_ports_unresolved": 227,
   "internal_way_without_unique_site": 177,
   "switch_bypass_or_mapping_loop": 16,
   "ambiguous_site_containment": 13,
   "equipment_without_site": 13,
-  "transformer_interface_voltage_conflict": 4
+  "transformer_interface_voltage_conflict": 4,
+  "transformer_voltage_list_unverified": 4
  },
  "internal_way_escape_distance": {
   "bins": {

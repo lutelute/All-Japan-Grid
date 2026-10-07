@@ -260,6 +260,8 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     reading of All-AU-Grid / All-EU-Grid."""
     out = {k: [] for k in ("levels", "equipment", "nodes", "terminals", "ends",
                            "circuits", "members", "issues")}
+    if not (buffer_m >= 0) or buffer_m == float("inf"):
+        raise ValueError("buffer_m must be finite and non-negative")
     loc = SiteLocator(sites, buffer_m)
     skey = loc.keys
 
@@ -501,10 +503,13 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
                                                    "scope": "one OSM way; not a whole-route count"}})
                 out["members"].append({"circuit_id": cid, "member": key, "sequence": 1, "role": "segment"})
 
-    # A switch drawn where a busbar meets exactly one other conductor (a bay or line ending
-    # there or crossing it) separates the two: the busbar runs on through the node and the
-    # switch sits between it and the branch (the usual mapping of a busbar disconnector).
-    # Two ways, one of them a busbar, one voltage; anything else stays unresolved.
+    # A switch drawn where exactly two conductors meet separates them, when the mapping says
+    # which one runs on:
+    # * busbar_junction — one is a busbar (it runs on through the node), the other a bay or
+    #   line ending there or crossing it: the usual mapping of a busbar disconnector;
+    # * tee_junction — neither or both are busbars, one passes through the node and the other
+    #   ends there: the switch sits on the branch (a disconnector at a tee-off).
+    # One voltage; anything else stays unresolved.
     junction = {}
     for node, ks in switch_ports.items():
         if node in earthing or len(ks) == 2:
@@ -514,14 +519,22 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
             ways[arm_way.get(k, (None, False))].append(k)
         if len(ways) != 2 or any(w[0] is None for w in ways) or len({k[1] for k in ks}) != 1:
             continue
-        (wa, a), (wb, b) = sorted(ways.items(), key=lambda kv: not kv[0][1])
-        if not wa[1] or wb[1]:
+        (wa, a), (wb, b) = ways.items()
+        if wa[1] != wb[1]:
+            rule = "busbar_junction"
+            if wb[1]:
+                a, b = b, a
+        elif sorted((len(a), len(b))) == [1, 2]:
+            rule = "tee_junction"
+            if len(b) == 2:
+                a, b = b, a
+        else:
             continue
         for g in (a, b):
             g.sort(key=_order)
             for k in g[1:]:
                 uf.join(g[0], k)
-        junction[node] = (a[0], b[0])
+        junction[node] = (a[0], b[0], rule)
 
     # -- connectivity nodes: conductor paths collapsed, ports kept as members ----
     roots = defaultdict(list)
@@ -581,9 +594,16 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
             terminal(eq, 1, cn_of[sides[0]], sides[0][1], sides[0][0])
             eq["lvl"] = sides[0][1]
             continue
+        if eq["kind"] == "switch":
+            # every arm's node: with every switch closed they are one (station_views)
+            eq["arm_nodes"] = sorted({cn_of[k] for k in switch_ports.get(node, ())})
         if eq["kind"] == "switch" and node in junction:
-            for seq, side in enumerate(junction[node], 1):
-                terminal(eq, seq, cn_of[side], side[1], side[0], "busbar_junction")
+            for seq, side in enumerate(junction[node][:2], 1):
+                terminal(eq, seq, cn_of[side], side[1], side[0], junction[node][2])
+            if cn_of[junction[node][0]] == cn_of[junction[node][1]]:
+                # All-AU-Grid's addition: an alternate path joins both sides here too
+                issue(eq["equipment_id"], "switch_bypass_or_mapping_loop", site=junction[node][0][0],
+                      node_id=cn_of[junction[node][0]], method=junction[node][2])
             eq["lvl"] = junction[node][0][1]
             continue
         if eq["kind"] == "switch":
@@ -606,6 +626,10 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
         if not ifaces:
             issue(eq["equipment_id"], "transformer_interfaces_unknown", site=site,
                   connected_kv=[lv[0] for lv in connected])
+        elif ifaces[0][2] == "device_voltage_list":
+            # All-AU-Grid's addition: candidate sides from a legacy list; roles and count unverified
+            issue(eq["equipment_id"], "transformer_voltage_list_unverified", site=site,
+                  raw_voltage=eq["tags"].get("voltage"))
         known = {kv for _, kv, _ in ifaces if kv is not None}
         wire_kv = {lv[0] for lv in connected if lv[0] is not None}
         conflict = bool(ifaces) and bool(wire_kv - known)

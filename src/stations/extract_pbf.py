@@ -1,4 +1,4 @@
-"""Read the station inputs of :func:`all_eu_grid.stations.model` from a power PBF.
+"""Read the station inputs of :func:`src.stations.core.model` from a power PBF.
 
 One pass over the same power-filtered PBF the R layer was ingested from
 (``osmium tags-filter nwr/power r/route=power``, referenced nodes included):
