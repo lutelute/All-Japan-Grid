@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Substation node-breaker layer from OSM node ids** (`src/stations/`, `scripts/build_station_db.py`, `data/stations/`,
   `docs/STATION_NODE_BREAKER.md`): busbar sections, bays, switches, transformer windings and line ends joined only by
-  shared OSM node ids, ported from All-EU-Grid (commit 3d253de, All-AU-Grid's method) with two Japan rules — bays drawn
+  shared OSM node ids, ported from All-EU-Grid (commit 5d85ba9, All-AU-Grid's method) with two Japan rules — bays drawn
   out to the gantry past the fence (median 47 m, `internal_extension` up to 100 m: unattributed station conductors
   987→177) and 50/60 Hz as one AC system. Built from the Geofabrik Japan extract in 15 s; 26,210 sites, 2,502 transformers.
   `scripts/compare_station_layers.py` checks SubSLD's voltage ladder against the mapped transformers (518 sites: 365

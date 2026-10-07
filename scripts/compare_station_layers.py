@@ -56,12 +56,12 @@ def load_structures(sdir: Path) -> dict:
 
 
 def ladder_pairs(s: dict) -> set:
-    out = set()
-    for t in s["transformers"]:
-        hv, lv = t["hv_vl_id"].rsplit("@", 1)[1], t["lv_vl_id"].rsplit("@", 1)[1]
-        if hv != "u" and lv != "u":
-            out.add((int(hv), int(lv)))
-    return out
+    """構造 DB の電圧階級を高い順に隣どうしで結んだ組(梯子)。
+
+    TransformerSpec からは読まない。構造 DB は介入 #48 で観測した組を先に張るので、そこから読むと
+    「梯子と観測」の比較が「観測と観測」になる(2026-10-07 に一度その誤りで段飛ばし 32→0 と出た)。"""
+    kvs = sorted({int(v["nominal_kv"]) for v in s["voltage_levels"] if v["nominal_kv"]}, reverse=True)
+    return set(zip(kvs, kvs[1:]))
 
 
 def verdict(obs: set, ladder: set, levels: set) -> str:

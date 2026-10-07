@@ -338,17 +338,35 @@ def test_a_line_passing_just_outside_the_fence_is_not_cut_there():
     assert not data["equipment"] and not data["terminals"]
 
 
-def test_tee_switch_separates_the_branch_from_the_way_that_runs_on():
-    # a 110 kV line runs through node 9; a branch line ends there behind a disconnector
+def test_a_switch_where_a_way_runs_through_and_another_ends_stays_unresolved():
+    # All-AU-Grid review (2026-10-07): a line running through its own disconnector to a bay a few
+    # metres on, with a dead-end bay ending at the switch node, is the commonest such drawing;
+    # "which way runs through" only says where the mapper split the way
     data = model([site(voltage="110000")], [
-        wire(11, [1, 9, 2], [[-5, 5], [5, 5], [15, 5]], "110000", kind=None),
-        wire(12, [9, 3], [[5, 5], [5, 15]], "110000", kind=None)], [device(power="switch", switch="disconnector")])
-    ts = terms(data, kinds(data, "switch")[0]["equipment_id"])
-    assert [t["method"] for t in ts] == ["tee_junction", "tee_junction"]
-    assert ts[0]["node_id"] != ts[1]["node_id"]
-    through = {t["node_id"] for e in kinds(data, "line") if e["osm_id"] == "w11" for t in terms(data, e["equipment_id"])
-               if t["sequence"] == 2 or t["sequence"] == 1}
-    assert ts[0]["node_id"] in through
+        wire(11, [1, 9, 2], [[-5, 5], [5, 5], [6, 5]], "110000", kind=None),
+        wire(12, [9, 3], [[5, 5], [5, 6]], "110000"),
+        wire(13, [2, 4], [[6, 5], [8, 5]], "110000")], [device(power="switch", switch="disconnector")])
+    assert "switch_ports_unresolved" in {i["code"] for i in data["issues"]}
+    assert not terms(data, kinds(data, "switch")[0]["equipment_id"])
+
+
+def test_all_closed_never_joins_two_voltages_and_overlapping_ways_keep_order_independence():
+    from src.stations.views import analyse
+    # a 66 kV way runs through a switch node where an 11 kV way ends
+    data = model([site(voltage="66000;11000")], [
+        wire(11, [1, 9, 2], [[1, 5], [5, 5], [9, 5]], "66000", kind="bay"),
+        wire(12, [9, 3], [[5, 5], [5, 8]], "11000", kind="bay")], [device(power="switch")])
+    v = analyse(data)
+    assert all(len({next(n["level_id"] for n in data["nodes"] if n["node_id"] == m) for m in ms}) == 1
+               for ms in [[n for n, t in v["tn_of"].items() if t == tn] for tn in set(v["tn_of"].values())])
+    # a bay and a line drawn over the same stretch into a busbar disconnector: input order must not matter
+    ws = [wire(1, [1, 9, 2], [[1, 5], [5, 5], [9, 5]], "110000", kind="busbar"),
+          wire(2, [9, 3], [[5, 5], [5, 8]], "110000"),
+          wire(3, [9, 3, 30], [[5, 5], [5, 8], [5, 20]], "110000", kind=None)]
+    a, b = model([site(voltage="110000")], ws, [device(power="switch")]), \
+        model([site(voltage="110000")], ws[::-1], [device(power="switch")])
+    assert {(t["terminal_id"], t["node_id"], t["method"]) for t in a["terminals"]} == \
+           {(t["terminal_id"], t["node_id"], t["method"]) for t in b["terminals"]}
 
 
 def test_closed_switches_join_all_arms_even_when_their_sides_are_unresolved():
@@ -407,6 +425,23 @@ def test_from_all_au_grid_junction_bypass_and_unverified_voltage_list_are_review
     import pytest
     with pytest.raises(ValueError):
         model([site()], [], [], buffer_m=-1)
+
+
+def test_from_all_japan_grid_bay_drawn_past_the_fence_joins_only_with_internal_extension():
+    # a bay runs 50 m past the fence to the portal where the line starts (All-Japan-Grid, 2026-10-07)
+    y = 50 + DY / 2
+    portal = [8 + DX + 50 / 71700, y]
+    ws = [wire(21, [5, 6], [[8 + DX / 4, y], [8 + 3 * DX / 4, y]], "110000", kind="busbar"),
+          wire(22, [6, 7], [[8 + 3 * DX / 4, y], portal], "110000", kind="bay"),
+          wire(23, [7, 8], [portal, [8.05, y]], "110000", kind=None)]
+    for ext in (0, 30):         # the strict reading, and an extension shorter than the overhang
+        assert "internal_way_without_unique_site" in {i["code"] for i in model([site(1, "110000", YARD)], ws, [],
+                                                                                 extension_m=ext)["issues"]}
+    data = model([site(1, "110000", YARD)], ws, [], extension_m=100)
+    bay = kinds(data, "bay")[0]
+    assert bay["site"] == "w1" and bay["membership"] == "internal_extension"
+    line_t = terms(data, kinds(data, "line")[0]["equipment_id"])[0]
+    assert line_t["node_id"] == terms(data, kinds(data, "busbar")[0]["equipment_id"])[0]["node_id"]
 
 
 # ------------------------------------------------------------- All-Japan-Grid's additions

@@ -58,14 +58,19 @@ def analyse(data: dict) -> dict:
 
     # -- topological nodes, every switch closed (a hypothesis, not a state) --------
     # every arm of a closed switch meets every other, so a switch whose sides are not
-    # resolved still joins its arms here (its terminals stay unresolved in the rows)
+    # resolved still joins its arms here (its terminals stay unresolved in the rows) — but
+    # only where all its arms are at one known level: a switch never joins two voltages, and
+    # an earthing switch joins nothing
+    node_level0 = {n["node_id"]: n["level_id"] for n in data["nodes"]}
     uf = Union()
     for n in att:
         uf.find(n)
     for e in data["equipment"]:
-        if e["kind"] != "switch":
+        if e["kind"] != "switch" or e.get("subtype") == "earthing":
             continue
         arms = e.get("arm_nodes") or [t["node_id"] for t in by_eq[e["equipment_id"]] if t["node_id"]]
+        if len(arms) < 2 or len({node_level0.get(n) for n in arms}) != 1 or node_level0.get(arms[0]) is None:
+            continue
         for n in arms:
             att[n]["switch_arm"] += 1
             uf.find(n)

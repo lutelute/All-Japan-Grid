@@ -13,13 +13,13 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 - レポート正本: `docs/reports/station_node_breaker_adoption_2026-10-07.md`・方法 `docs/STATION_NODE_BREAKER.md`
 - **EU の指摘を数え直して確認**: SubSLD は外接矩形 +約 1 km の母線・ベイを全部取り、母線 631/2,530・ベイ 1,848/7,929 が 2 つ以上の変電所に入っていた。`_vclasses` は `66000.0` を 660 kV と読む(潜在)
 - **SubSLD を直した**: 帰属を敷地の多角形で(node-breaker 層と同じ `SiteLocator`)+ 頂点がすべて 1 敷地に入る way は `partly_covered`。二重計上 0、架空の接続レコード 1,252 件が消えた(11,586→10,334)。**Ybus v4 の銘板 13 件は前後で同一**=潮流は不変。Pages の SubSLD は 433/6,165 所の表示が変わる。built の `sub_props` は正典を書き換えるので見送り(次の正典の作り直しで反映)
-- **観測層を新設**: `src/stations/`(EU commit 9b4be87 から移植し、同日 3d253de の差分を 3-way で取り込んだ。移植テスト 33 件)+ `scripts/build_station_db.py`(Geofabrik の日本 PBF、15 秒)。敷地 26,210・構内の記録 5,381・変圧器 2,502・開閉器 1,665
-- **日本で足した規則(EU にも無かった穴)**: ①柵の外へはみ出して描かれたベイ(中央値 47 m)を 100 m まで `internal_extension` — 帰属できない構内配線 987→177、線路の端が配線に載る 5,762→6,050 ②50/60 Hz を同じ系統に(欧州版はタグの有無で階級が割れる)③構造 DB との対応を OSM の (type, id) で(6,146 中 6,137)
+- **観測層を新設**: `src/stations/`(EU commit 9b4be87 から移植し、同日 3d253de・5d85ba9 の差分を 3-way で取り込んだ。移植テスト 35 件。5d85ba9 は EU が独立レビューで tee_junction を撤回したもの)+ `scripts/build_station_db.py`(Geofabrik の日本 PBF、15 秒)。敷地 26,210・構内の記録 5,381・変圧器 2,502・開閉器 1,665
+- **日本で足した規則(EU にも無かった穴)**: ①柵の外へはみ出して描かれたベイ(中央値 47 m)を 100 m まで `internal_extension` — 帰属できない構内配線 987→177、線路の端が配線に載る 5,695→5,983 ②50/60 Hz を同じ系統に(欧州版はタグの有無で階級が割れる)③構造 DB との対応を OSM の (type, id) で(6,146 中 6,137)
 - **梯子と実機の突き合わせ**(`scripts/compare_station_layers.py`): 518 敷地で同じ 365・段飛ばし 32(275/77 の直結 6 など)。**東毛は出典付き 275/66 銘板が梯子に無いため捨てられていたが、OSM の実機 5 台が同じ組を示す**。置き換えはオーナー判断(介入候補)
-- **【同日夜・オーナー「どんどん進めて」「良い判断すればいい」】介入 #48 を実装**: 観測した変圧器の組を先に張り、残る階級だけ梯子で(`src/model/site_transformers.py`)。構造 DB は既定 ON(607 台・東毛の 275/66 銘板が初めて当たる・銘板 13→14)。潮流は既定 OFF(`--observed-trafos`): 21 変電所を結び直し、東の損失 1,495.1→1,493.0 MW・最低電圧 0.8558→0.8562・収束不変。**OFF のときは介入前とビット単位で同一**を確認。既定 OFF の理由=直結変圧器の容量に出典が無く新しい過負荷が出る(南京都 500/154 161% 等)・OSM の rating は 1,369 台中 6 台・様式5の変圧器表は %Z の基準 MVA。A/B=`docs/reports/station_layers_2026-10-07/observed_trafos_ab.json`。EU の 3d253de も取り込み、EU は `internal_extension` を欧州で 100 m 採用(はみ出す構内配線 2,668→1,940)
+- **【同日夜・オーナー「どんどん進めて」「良い判断すればいい」】介入 #48 を実装**: 観測した変圧器の組を先に張り、残る階級だけ梯子で(`src/model/site_transformers.py`)。構造 DB は既定 ON(607 台・東毛の 275/66 銘板が初めて当たる・銘板 13→14)。潮流は既定 OFF(`--observed-trafos`): 21 変電所を結び直し、東の損失 1,495.1→1,493.0 MW・最低電圧 0.8558→0.8562・収束不変。**OFF のときは介入前とビット単位で同一**を確認。既定 OFF の理由=直結変圧器の容量に出典が無く新しい過負荷が出る(南京都 500/154 161% 等)・OSM の rating は 1,369 台中 6 台・様式5の変圧器表は %Z の基準 MVA。A/B=`docs/reports/station_layers_2026-10-07/observed_trafos_ab.json`。EU の 3d253de・5d85ba9 も取り込み、EU は `internal_extension` を欧州で 100 m 採用(はみ出す構内配線 2,668→1,940)
 - **見通し**: `docs/reports/INDEX.md`(140 本の索引、`scripts/build_reports_index.py` で生成)・文書の地図に観測層・データ目録・姉妹プロジェクトの節
 - **姉妹へ返したもの**: `internal_extension` のパッチ(EU の commit と作業ツリーの両方に当たり、EU のテスト全件通過を確認)
-- テスト `tests/test_stations_core.py` 35 件・`tests/test_station_layers.py` 3 件・`tests/test_substation_structures.py`(沖縄の pin を理由つきで更新 60/167/59→60/165/55・二重計上しないことのテストを追加)
+- テスト `tests/test_stations_core.py` 37 件・`tests/test_station_layers.py` 3 件・`tests/test_substation_structures.py`(沖縄の pin を理由つきで更新 60/167/59→60/165/55・二重計上しないことのテストを追加)
 
 ---
 

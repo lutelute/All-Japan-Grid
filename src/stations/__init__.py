@@ -10,13 +10,14 @@
     tags         電圧・回線数・周波数の読み方(tags.py。日本は 50/60 Hz を同じ ``ac``)
     extract_pbf  電力だけに絞った PBF から入力を読む(station_extract.py。pyosmium が要る)
 
-移植元: All-EU-Grid commit 3d253de(2026-10-07 23:01 JST。最初の移植は 9b4be87、同日に差分を取り込んだ)。
+移植元: All-EU-Grid commit 5d85ba9(2026-10-07 23:52 JST、eu-station-2)。最初の移植は 9b4be87、
+同日に 3d253de、続けて 5d85ba9(tee_junction の撤回と全閉仮定の不具合 2 件の修正)を取り込んだ。
 ファイルと SHA-256 の先頭:
-    src/all_eu_grid/stations.py        8e633439e0351bdc   → core.py
-    src/all_eu_grid/station_views.py   36aa8cf4878b3947   → views.py
+    src/all_eu_grid/stations.py        f41121ee7a8b6314   → core.py
+    src/all_eu_grid/station_views.py   40fc0276f50f61f1   → views.py
     src/all_eu_grid/station_extract.py 6ecafda48dfae03c   → extract_pbf.py
     src/all_eu_grid/tags.py            0d6af978c3df1a67   → tags.py(必要な部分だけ・日本の周波数)
-    tests/test_stations.py             643d48616d219d2b   → tests/test_stations_core.py
+    tests/test_stations.py             62288f825dc4021d   → tests/test_stations_core.py
 取り込み方: 移植元の前回のコミットから今回のコミットまでの差分を、"ac50"→"ac" と import 先を
 読み替えて当てる(3-way マージ)。日本の追加(internal_extension 等)と衝突したら両方を残す。
 

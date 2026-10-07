@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-07",
- "version": "agj-station-1",
+ "version": "agj-station-2",
  "rules": {
   "buffer_m": 25.0,
   "extension_m": 100.0
@@ -15,8 +15,8 @@
   "with_station_record": 5381
  },
  "status": {
-  "partial": 730,
-  "mapped": 222,
+  "partial": 731,
+  "mapped": 221,
   "layout_only": 153,
   "conductors_only": 1343,
   "lines_only": 2933
@@ -24,12 +24,12 @@
  "rows": {
   "levels": 6504,
   "equipment": 32888,
-  "nodes": 12214,
-  "terminals": 23736,
+  "nodes": 12241,
+  "terminals": 23682,
   "ends": 2951,
   "circuits": 10976,
   "members": 12491,
-  "issues": 1429
+  "issues": 1456
  },
  "equipment": {
   "bay": 7500,
@@ -46,27 +46,27 @@
  },
  "line_terminal_binding": {
   "line_joint": 1485,
-  "footprint_only": 5070,
-  "wired": 6050,
+  "footprint_only": 5137,
+  "wired": 5983,
   "pass_through": 2794
  },
- "line_terminals_reaching_busbar_all_closed": 2840,
+ "line_terminals_reaching_busbar_all_closed": 2837,
  "bays": {
-  "line_transformer": 62,
+  "line_transformer": 59,
   "line_bay": 339,
   "coupler": 117,
   "transformer_bay": 105,
   "open_end": 98,
-  "line_switching": 137,
-  "transformer_switching": 27
+  "line_switching": 138,
+  "transformer_switching": 23
  },
- "levels_split_with_all_switches_closed": 411,
+ "levels_split_with_all_switches_closed": 399,
  "split_level_gap_m": {
   "levels": 369,
   "bins": {
+   "<10m": 148,
    "<50m": 187,
    ">=50m": 29,
-   "<10m": 148,
    "<0.1m": 3,
    "<1m": 2
   },
@@ -81,7 +81,7 @@
  },
  "issues": {
   "transformer_interfaces_unknown": 975,
-  "switch_ports_unresolved": 227,
+  "switch_ports_unresolved": 254,
   "internal_way_without_unique_site": 177,
   "switch_bypass_or_mapping_loop": 16,
   "ambiguous_site_containment": 13,
@@ -197,5 +197,5 @@
   "transformer_way_away": 14,
   "read_seconds": 4
  },
- "elapsed_s": 4
+ "elapsed_s": 5
 }

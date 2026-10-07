@@ -35,7 +35,7 @@ from shapely.geometry import Point, shape
 
 from .tags import circuit_sets, parse_voltage_kv, split_list
 
-VERSION = "agj-station-1"  # eu-station-1 (All-EU-Grid) + 日本の周波数
+VERSION = "agj-station-2"  # eu-station-2 (All-EU-Grid 5d85ba9) + 日本の周波数
 INTERNAL = {"busbar", "bay", "internal", "transformer"}   # line=* values of station conductors
 CONDUCTOR_POWER = {"line", "cable", "minor_line", "minor_cable", "minor_underground_cable",
                    "busbar", "bay"}
@@ -258,6 +258,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     one site and whose other nodes lie in none, within ``extension_m`` of that site's polygon,
     brings those outside nodes into the site as ``internal_extension``. 0 is the strict
     reading of All-AU-Grid / All-EU-Grid."""
+
     out = {k: [] for k in ("levels", "equipment", "nodes", "terminals", "ends",
                            "circuits", "members", "issues")}
     if not (buffer_m >= 0) or buffer_m == float("inf"):
@@ -377,11 +378,12 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     def site_of(n):
         return node_site.get(n, (None, None, None))[0]
 
+
     # -- ports and conductor paths -----------------------------------------------
     uf = Union(_order)
     switch_ports = defaultdict(set)
     incident = defaultdict(set)
-    arm_way = {}                     # switch port -> (way, is busbar)
+    arm_way = defaultdict(set)       # switch port -> {(way, is busbar)}; two ways on one arm = unresolved
 
     def series(special):
         # An earthing switch closes a conductor to ground; it is not in series with it.
@@ -397,7 +399,7 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
             incident[node].add(lvl)
             if special["kind"] == "switch":
                 switch_ports[node].add(k)
-                arm_way[k] = (way, busbar)
+                arm_way[k].add((way, busbar))
         return k
 
     earthing = {n for n, sp in specials.items() if sp["kind"] == "switch" and sp["subtype"] == "earthing"}
@@ -503,33 +505,30 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
                                                    "scope": "one OSM way; not a whole-route count"}})
                 out["members"].append({"circuit_id": cid, "member": key, "sequence": 1, "role": "segment"})
 
-    # A switch drawn where exactly two conductors meet separates them, when the mapping says
-    # which one runs on:
-    # * busbar_junction — one is a busbar (it runs on through the node), the other a bay or
-    #   line ending there or crossing it: the usual mapping of a busbar disconnector;
-    # * tee_junction — neither or both are busbars, one passes through the node and the other
-    #   ends there: the switch sits on the branch (a disconnector at a tee-off).
-    # One voltage; anything else stays unresolved.
+    # A switch drawn where a busbar meets exactly one other conductor (a bay or line ending
+    # there or crossing it) separates the two: the busbar runs on through the node and the
+    # switch sits between it and the branch (the usual mapping of a busbar disconnector).
+    # One voltage, one way per arm; anything else stays unresolved. (A "tee" rule — the way
+    # that runs through vs. the one that ends — was tried and dropped: where a way is split
+    # says nothing physical; on All-AU-Grid's data it turned 5 of 9 line disconnectors and
+    # 2 bus-section breakers the wrong way round.)
     junction = {}
     for node, ks in switch_ports.items():
         if node in earthing or len(ks) == 2:
             continue
+        if any(len(arm_way.get(k, ())) != 1 for k in ks):
+            continue                     # overlapping ways on one arm: which is which is unknown
         ways = defaultdict(list)
         for k in ks:
-            ways[arm_way.get(k, (None, False))].append(k)
-        if len(ways) != 2 or any(w[0] is None for w in ways) or len({k[1] for k in ks}) != 1:
+            ways[next(iter(arm_way[k]))].append(k)
+        if len(ways) != 2 or len({k[1] for k in ks}) != 1:
             continue
         (wa, a), (wb, b) = ways.items()
-        if wa[1] != wb[1]:
-            rule = "busbar_junction"
-            if wb[1]:
-                a, b = b, a
-        elif sorted((len(a), len(b))) == [1, 2]:
-            rule = "tee_junction"
-            if len(b) == 2:
-                a, b = b, a
-        else:
+        if wa[1] == wb[1]:
             continue
+        rule = "busbar_junction"
+        if wb[1]:
+            a, b = b, a
         for g in (a, b):
             g.sort(key=_order)
             for k in g[1:]:
