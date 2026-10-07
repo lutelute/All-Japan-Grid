@@ -103,6 +103,8 @@ AU の実入力で 9 台中 1 台しか妥当でなく、way の切り方を物�
 | **梯子が段を飛ばす実機**(275/77 の直結など) | 32 | 6% |
 
 梯子の仮定は構造 DB だけでなく潮流モデル(`run_full_powerflow_from_db.py` の変電所内の変圧器)にもある。
+**介入 #49** で、各社の公表一覧の組がある変電所はそれを最優先にする(公表 > 観測 > 梯子。全国の台帳での採点は
+[reports/transformer_topology_2026-10-08.md](reports/transformer_topology_2026-10-08.md))。
 **介入 #48**(`src/model/site_transformers.py`)で、観測した組を先に張り、残る階級だけ梯子でつなぐ。構造 DB・潮流とも既定 ON
 (潮流は 10-08 に [INTERVENTION_VALIDATION.md](INTERVENTION_VALIDATION.md) の 3 つの物差しで検証してから。直結の組は 21 変電所中 20 が
 各社の公表一覧に実在)。数字は [MODEL_INTERVENTIONS.md](MODEL_INTERVENTIONS.md) の #48 と採用記録の §10・§11。

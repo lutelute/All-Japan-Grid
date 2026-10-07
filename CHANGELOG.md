@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   utilities' published transformer lists and none is contradicted; within 15 km of the relinked substations 31
   observed lines moved closer to the published flows and 15 moved away (sign test p = 0.026); convergence unchanged,
   overloaded lines east 336→334, west 278→270. Direct transformers are still sized by the lower-side rule.
+- **Intervention #49 — link a substation's voltage levels by the utilities' published transformer pairs**
+  (`data/reference/published_transformer_pairs.json`, voltage pairs only for the 97 substations where the model
+  disagreed): published pairs first, then OSM observations (#48), then the ladder. Scored against a national registry
+  built from all ten utilities' published transformer lists (kept private; `scripts/fetch_transformer_lists.py`,
+  `scripts/score_transformer_topology.py`): substations whose transformer pairs match the published list
+  82.2% → 89.7% (925 substations), 78.3% → 88.8% where OSM maps no transformer. Power flow: 22 substations relinked,
+  convergence unchanged, east overloaded lines 334→321. Default ON; `--no-published-trafos` to disable.
 - **Intervention validation tool** (`scripts/validate_intervention.py`, `run_full_powerflow_from_db.py --dump-flows`):
   scores an intervention on structure (published registries), flows (published annual flow statistics, nearby lines
   separately, sign test) and physics.

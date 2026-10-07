@@ -468,7 +468,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `report_kv66_quality.py` | Per-region 66 kV-band quality ledger (M4-4 of docs/archive/plans/PLAN_66KV.md). |
 | `restore_missing_plants.py` | JRP の kyushu/okinawa_plants_lite → AGJ 形式の plants.geojson を生成 |
 | `score_road_reconnection.py` | Score fragment-reconnection candidates by road-path plausibility (M9). |
-| `score_transformer_topology.py` | 変電所内の変圧器の結び方(梯子 / 介入 #48)が正しいかを、各社の公表一覧(全国の変圧器台帳)で採点する。 |
+| `score_transformer_topology.py` 🔒 | 変電所内の変圧器の結び方(梯子 / 介入 #48)が正しいかを、各社の公表一覧(全国の変圧器台帳)で採点する。 |
 | `scripts_index.py` | scripts/ 直下の全スクリプト索引を作る(scripts/README.md の cog から呼ぶ)。 |
 | `stepdown_gap_census.py` | 介入#43(降圧点欠損)の census と静的ゲート — 島ごとに OFF / #43a / #43a+#43b を比べる. |
 | `substation_scope.py` 🔒 | SubScope — GridStitch 変電所構造ビューア. |

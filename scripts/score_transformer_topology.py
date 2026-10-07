@@ -56,13 +56,17 @@ def kvc(v) -> int | None:
         return None
 
 
-def load_registry(path: Path) -> dict:
-    """(region, 正規化名) → 公表の組の集合(三巻線は 3 組に展開)。"""
+def load_registry(path: Path, meta: dict | None = None) -> dict:
+    """(region, 正規化名) → 公表の組の集合(三巻線は 3 組に展開)。meta を渡すと出典(事業者・URL)を集める。"""
     out = defaultdict(set)
     for r in csv.DictReader(open(path, encoding="utf-8")):
         vs = sorted({v for v in (kvc(r.get("hv_kv")), kvc(r.get("lv_kv")), kvc(r.get("tv_kv"))) if v},
                     reverse=True)
         key = (r["agj_region"], site_norm(r.get("substation_norm") or r["substation_raw"]))
+        if meta is not None and vs:
+            m = meta.setdefault(key, {"utility": set(), "source_url": set()})
+            m["utility"].add(r.get("utility") or "")
+            m["source_url"].add(r.get("source_url") or "")
         for i, a in enumerate(vs):
             for b in vs[i + 1:]:
                 out[key].add((a, b))
@@ -70,9 +74,21 @@ def load_registry(path: Path) -> dict:
 
 
 def score(registry: dict, structures_dir: Path) -> tuple[dict, list]:
-    from src.model.site_transformers import by_structure_site, link_levels
+    from src.model.site_transformers import PUBLISHED_PATH, by_structure_site, link_levels
     observed = by_structure_site()
+    published = by_structure_site(PUBLISHED_PATH)
     rows, seen = [], set()
+    # 同じ地域に同じ正規化名の別の変電所(座標が 1 km 以上離れる)があれば、公表の行をどちらにも当てない
+    spots = defaultdict(list)
+    for p in sorted(structures_dir.glob("*.json")):
+        if p.name == "summary.json" or "_site_" in p.name:
+            continue
+        for s in json.loads(p.read_text())["structures"]:
+            spots[(p.stem, site_norm(s["site"]["name"]))].append((s["site"]["lat"], s["site"]["lon"]))
+
+    def ambiguous(key):
+        pts = spots.get(key, [])
+        return any(abs(a[0] - b[0]) + abs(a[1] - b[1]) > 0.012 for a in pts for b in pts)
     for p in sorted(structures_dir.glob("*.json")):
         if p.name == "summary.json" or "_site_" in p.name:
             continue
@@ -88,7 +104,12 @@ def score(registry: dict, structures_dir: Path) -> tuple[dict, list]:
             ladder = set(zip(levels, levels[1:]))
             obs = observed.get(s["site"]["site_id"])
             linked = {(int(h), int(l)) for h, l, _ in link_levels(levels, obs)} if obs else ladder
+            pub = published.get(s["site"]["site_id"])
+            model = {(int(h), int(l)) for h, l, _ in link_levels(levels, pub, "published")} if pub else linked
             rows.append({"region": d["region"], "name": s["site"]["name"], "levels": levels,
+                         "site_id": s["site"]["site_id"], "aliases": s["site"].get("aliases", []),
+                         "lat": s["site"]["lat"], "lon": s["site"]["lon"], "ambiguous_name": ambiguous(key),
+                         "key": list(key), "model": sorted(model, reverse=True),
                          "truth": sorted(truth, reverse=True),
                          "truth_level_missing": sorted(truth_all - truth, reverse=True),
                          "ladder": sorted(ladder, reverse=True), "observed_first": sorted(linked, reverse=True),
@@ -99,7 +120,7 @@ def score(registry: dict, structures_dir: Path) -> tuple[dict, list]:
         if not rs:
             return None
         out = {"sites": len(rs), "truth_pairs": sum(len(r["truth"]) for r in rs)}
-        for tag in ("ladder", "observed_first"):
+        for tag in ("ladder", "observed_first", "model"):
             hit = sum(len(set(map(tuple, r["truth"])) & set(map(tuple, r[tag]))) for r in rs)
             pred = sum(len(r[tag]) for r in rs)
             out[tag] = {"recall": round(hit / out["truth_pairs"], 3),
@@ -117,6 +138,37 @@ def score(registry: dict, structures_dir: Path) -> tuple[dict, list]:
     return agg, rows
 
 
+def export_corrections(rows: list, meta: dict, path: Path) -> dict:
+    """公表の組で直す変電所(介入 #49 の入力)。今の結び方(観測優先)が公表と食い違う変電所だけを書く。
+
+    書くのは電圧の組だけ(台数・容量は書かない)。同じ地域に同名の別の変電所がある所は、取り違えを避けて書かない。"""
+    from src.model.site_transformers import link_levels
+    sites, skipped = [], 0
+    for r in rows:
+        truth = [tuple(t) for t in r["truth"]]
+        if not truth:
+            continue
+        fixed = {(int(h), int(l)) for h, l, _ in link_levels(r["levels"], truth, "published")}
+        if fixed == set(map(tuple, r["observed_first"])):
+            continue
+        if r["ambiguous_name"]:
+            skipped += 1
+            continue
+        regions = sorted({r["region"], *(a.split("_site_")[0] for a in r["aliases"])})
+        m = meta.get(tuple(r["key"]), {})
+        sites.append({"name": r["name"], "regions": regions, "structure_sites": [r["site_id"], *r["aliases"]],
+                      "lat": r["lat"], "lon": r["lon"], "pairs": [list(t) for t in sorted(truth, reverse=True)],
+                      "utility": sorted(x for x in m.get("utility", ()) if x),
+                      "source": sorted(x for x in m.get("source_url", ()) if x)})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "note": "各社の空容量・予想潮流一覧(一次資料)の変圧器の電圧の組。今のモデル(観測優先)と食い違う変電所だけ。"
+                "電圧の組だけで台数・容量は含まない。オーナー判断(2026-10-08「直す」)でモデルに使う。"
+                "生成: scripts/score_transformer_topology.py --export。使い方: src/model/site_transformers.py(介入 #49)",
+        "sites": sites}, ensure_ascii=False, indent=1) + "\n")
+    return {"exported_sites": len(sites), "skipped_ambiguous_name": skipped}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--registry", type=Path, default=REGISTRY)
@@ -124,11 +176,16 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, default=ROOT / f"docs/reports/transformer_topology_{date.today().isoformat()}.json")
     ap.add_argument("--detail", type=Path, default=REGISTRY.parent / "topology_score_detail.json",
                     help="変電所ごとの詳細(非追跡の場所に書く)")
+    ap.add_argument("--export", type=Path, default=None,
+                    help="公表の組で直す変電所を書き出す(介入 #49 の入力。data/reference/published_transformer_pairs.json)")
     a = ap.parse_args(argv)
     if not a.registry.exists():
         sys.exit(f"{a.registry} が無い(非公開。scripts/fetch_transformer_lists.py で作る)")
-    registry = load_registry(a.registry)
+    meta = {}
+    registry = load_registry(a.registry, meta)
     agg, rows = score(registry, a.structures)
+    if a.export:
+        agg["export"] = export_corrections(rows, meta, a.export)
     agg = {"generated": date.today().isoformat(), "registry_sites": len(registry),
            "note": "正解=各社の空容量・予想潮流一覧の変圧器の行。件数と割合だけ(値は非公開)", **agg}
     a.out.parent.mkdir(parents=True, exist_ok=True)

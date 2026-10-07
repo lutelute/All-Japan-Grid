@@ -53,7 +53,7 @@ import os
 import sys
 import time
 import warnings
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 warnings.filterwarnings("ignore")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -241,12 +241,18 @@ CAP_CALIB_DEFAULT = False
 OBSERVED_TRAFOS_DEFAULT = True
 OBSERVED_MATCH_KM = 1.0     # 観測の敷地(構造 DB の代表点)とバスの距離の上限
 
+# ── 介入#49(2026-10-08 オーナー「直す」): 各社の空容量・予想潮流一覧(一次資料)の変圧器の組がある変電所は、
+# 観測(#48)より先にその組を張る。入力=data/reference/published_transformer_pairs.json(今のモデルと公表が
+# 食い違う 97 変電所の電圧の組だけ。台数・容量は含まない)。根拠=全国の変圧器台帳との一致
+# (reports/transformer_topology_2026-10-08.md)。無効化=--no-published-trafos / AGJ_PUBLISHED_TRAFOS=0。
+PUBLISHED_TRAFOS_DEFAULT = True
+
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=False, synthetic_ties_live=False,
                      btb_split=True, freq_fix=True, implicit_stepdown=None,
-                     cap_calib=None, observed_trafos=None):
+                     cap_calib=None, observed_trafos=None, published_trafos=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -282,10 +288,14 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     if observed_trafos is None:
         _env = os.environ.get("AGJ_OBSERVED_TRAFOS", "")
         observed_trafos = (_env == "1") if _env in ("0", "1") else OBSERVED_TRAFOS_DEFAULT
+    if published_trafos is None:
+        _env = os.environ.get("AGJ_PUBLISHED_TRAFOS", "")
+        published_trafos = (_env == "1") if _env in ("0", "1") else PUBLISHED_TRAFOS_DEFAULT
     # 帳簿は介入を切っていても作る(結び直す候補の変電所と、その変圧器の潮流を前後で比べるため)
     obs_ledger = []
     import re as _re48
 
+    from src.model.site_transformers import PUBLISHED_PATH as _PUB_PATH
     from src.model.site_transformers import by_region_name as _obs_by_name
     from src.model.site_transformers import link_levels as _link_levels
 
@@ -293,12 +303,14 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         return _re48.sub(r"_\d+$", "", _site_name_of_node(name or ""))
 
     _obs_index = _obs_by_name(_obs_norm) or None
+    _pub_index = _obs_by_name(_obs_norm, _PUB_PATH) or None
 
-    def _observed_for(idxs):
-        """同じ変電所のバス群 → 観測した組(名前と地域が一致し、OBSERVED_MATCH_KM 以内)。"""
+    def _observed_for(idxs, index=None):
+        """同じ変電所のバス群 → 観測(または公表)の組(名前と地域が一致し、OBSERVED_MATCH_KM 以内)。"""
+        index = _obs_index if index is None else index
         for j in idxs:
             key = (nodes[j].get("region"), _obs_norm(nodes[j].get("name")))
-            for la, lo, pairs in _obs_index.get(key, ()):
+            for la, lo, pairs in index.get(key, ()):
                 if _haversine_km(nodes[j]["lat"], nodes[j]["lon"], la, lo) <= OBSERVED_MATCH_KM:
                     return pairs, nodes[j].get("name")
         return (), None
@@ -478,17 +490,27 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     plates.extend(nameplates.get(key, ()))
         links = [(h, l, "ladder") for h, l in zip(kvs, kvs[1:])]
         site_rec = None
-        if _obs_index is not None:
-            obs, obs_name = _observed_for(idxs)
-            if obs:
-                new = _link_levels(kvs, obs)
-                if {(h, l) for h, l, _ in new} != {(h, l) for h, l, _ in links}:
-                    site_rec = {"site": obs_name, "kv": kvs, "applied": bool(observed_trafos),
-                                "ladder": [[h, l] for h, l, _ in links],
-                                "linked": [[h, l, src] for h, l, src in new], "trafo_idx": []}
-                    obs_ledger.append(site_rec)
-                if observed_trafos:
-                    links = new
+        pub, pub_name = _observed_for(idxs, _pub_index) if _pub_index else ((), None)
+        obs, obs_name = _observed_for(idxs) if _obs_index else ((), None)
+        # 優先: 公表(#49) > 観測(#48) > 梯子。切っている介入は「候補」として帳簿にだけ残す
+        if pub and published_trafos:
+            chosen = ("published", pub, pub_name, True)
+        elif obs:
+            chosen = ("osm", obs, obs_name, bool(observed_trafos))
+        elif pub:
+            chosen = ("published", pub, pub_name, False)
+        else:
+            chosen = None
+        if chosen:
+            by, pairs_, nm_, on = chosen
+            new = _link_levels(kvs, pairs_, by)
+            if {(h, l) for h, l, _ in new} != {(h, l) for h, l, _ in links}:
+                site_rec = {"site": nm_, "kv": kvs, "by": by, "applied": on,
+                            "ladder": [[h, l] for h, l, _ in links],
+                            "linked": [[h, l, src] for h, l, src in new], "trafo_idx": []}
+                obs_ledger.append(site_rec)
+            if on:
+                links = new
         for hv_kv, lv_kv, link_src in links:
             hb, lb = by_kv[hv_kv], by_kv[lv_kv]
             if hv_kv <= lv_kv:
@@ -513,7 +535,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     vkr_percent=0.5, vk_percent=12.0,   # typical large power trafo
                     pfe_kw=0.0, i0_percent=0.0, parallel=par,
                     name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV{tag}"
-                         + ("@osm" if link_src == "osm" else ""))
+                         + {"osm": "@osm", "published": "@pub"}.get(link_src, ""))
                 if site_rec is not None:
                     site_rec["trafo_idx"].append(int(ti))
                 n_trafo += 1
@@ -657,10 +679,12 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                         net.line.at[li, "to_bus"] = nb
                     n_btb_split += 1
 
-    if observed_trafos:
+    if observed_trafos or published_trafos:
         n_osm = int(net.trafo["name"].str.endswith("@osm").sum())
-        print(f"  介入#48 observed-trafos: 観測した組で結び直した変電所 {len(obs_ledger)}・"
-              f"観測由来の変圧器 {n_osm} 台")
+        n_pub = int(net.trafo["name"].str.endswith("@pub").sum())
+        n_rel = Counter(r["by"] for r in obs_ledger if r["applied"])
+        print(f"  介入#48/#49 site-trafo-links: 結び直した変電所 公表 {n_rel.get('published', 0)}・"
+              f"観測 {n_rel.get('osm', 0)} / 公表由来の変圧器 {n_pub} 台・観測由来 {n_osm} 台")
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
                          "observed_trafos": obs_ledger,
@@ -1515,6 +1539,10 @@ def main():
     ap.add_argument("--dump-flows", action="store_true",
                     help="線(鍵つき)と変圧器ごとの潮流を <output-dir>/flows.json に書く。介入の前後を"
                          "観測と比べる検証用(scripts/validate_intervention_flows.py)")
+    ap.add_argument("--published-trafos", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#49 各社の空容量・予想潮流一覧の変圧器の組を観測より先に張る。入力="
+                         "data/reference/published_transformer_pairs.json。既定=PUBLISHED_TRAFOS_DEFAULT(True)。"
+                         "環境変数 AGJ_PUBLISHED_TRAFOS=1/0 でも指定可")
     ap.add_argument("--observed-trafos", action=argparse.BooleanOptionalAction, default=None,
                     help="介入#48 変電所内の変圧器を OSM で観測した電圧の組で結ぶ(残りの階級は梯子)。"
                          "入力=data/stations/observed_transformer_pairs.json。既定=OBSERVED_TRAFOS_DEFAULT"
@@ -1583,7 +1611,7 @@ def main():
             synthetic_ties_live=args.synthetic_ties_live,
             btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
             implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib,
-            observed_trafos=args.observed_trafos)
+            observed_trafos=args.observed_trafos, published_trafos=args.published_trafos)
         if bstats.get("cap_calib"):
             from src.powerflow.line_capacity import describe as _cap_describe
             print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))
