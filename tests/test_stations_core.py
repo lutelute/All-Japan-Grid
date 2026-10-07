@@ -474,3 +474,23 @@ def test_bay_drawn_to_a_portal_past_the_fence_brings_the_line_in():
     # 上限を超えるはみ出し・2 つの敷地にまたがるものは厳密な読み方のまま
     far = model([site(1, "110000", YARD)], ways, [], extension_m=40)
     assert [i["code"] for i in far["issues"]] == ["internal_way_without_unique_site"]
+
+
+def test_internal_extension_never_depends_on_input_order():
+    # 隣り合う 2 つの敷地のベイが、柵外の同じ門型鉄構の節点(7)に届く。どちらの敷地にも入れず、順番で結果を変えない
+    left = ((8, 50), (8 + DX, 50), (8 + DX, 50 + DY), (8, 50 + DY))
+    right = tuple((x + 2 * DX + 60 / 71700, y) for x, y in left)
+    gap = 8 + DX + (DX + 60 / 71700) / 2          # 2 つの柵のちょうど中間(それぞれの柵から約 50 m)
+    y = 50 + DY / 2
+    ways = [wire(21, [5, 6], [[8 + DX / 4, y], [8 + 3 * DX / 4, y]], "110000", kind="busbar"),
+            wire(22, [6, 7], [[8 + 3 * DX / 4, y], [gap, y]], "110000", kind="bay"),
+            wire(31, [8, 9], [[right[0][0] + DX / 4, y], [right[0][0] + 3 * DX / 4, y]], "110000", kind="busbar"),
+            wire(32, [9, 7], [[right[0][0] + DX / 4, y], [gap, y]], "110000", kind="bay")]
+    sites = [site(1, "110000", left), site(2, "110000", right)]
+    fwd = model(sites, ways, [], extension_m=100)
+    rev = model(list(reversed(sites)), list(reversed(ways)), [], extension_m=100)
+    sig = lambda d: (sorted((t["terminal_id"], t["node_id"]) for t in d["terminals"]),   # noqa: E731
+                     sorted(e["equipment_id"] for e in d["equipment"]), sorted(n["node_id"] for n in d["nodes"]))
+    assert sig(fwd) == sig(rev)
+    assert not [e for e in fwd["equipment"] if e.get("membership") == "internal_extension"]
+

@@ -358,7 +358,11 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
     # the 2026-10-06 extract), where the line starts. Its outside nodes join the one site its
     # inside nodes stand in, so that line meets the station there; a way touching two sites, an
     # ambiguous node or a node farther than ``extension_m`` keeps the strict reading.
+    # Every way first claims its outside nodes; a node joins a site only when exactly one site claims it
+    # (two sites' bays reaching one gantry leave it outside). Deciding per way in input order made the
+    # result depend on that order (found by All-EU-Grid, 2026-10-08).
     if extension_m:
+        claims = defaultdict(set)
         for key, p, ns, cs in prepared:
             if p.get("line") not in INTERNAL:
                 continue
@@ -373,7 +377,10 @@ def model(sites: list, lines: list, elements: list, buffer_m: float = 25.0,
             if not self_polygon(si) or max(_metres_from(loc.geoms[si], c) for _, c in outside) > extension_m:
                 continue
             for n, _ in outside:
-                node_site.setdefault(n, (si, "internal_extension", None))
+                claims[n].add(si)
+        for n, sis in claims.items():
+            if len(sis) == 1 and n not in node_site:
+                node_site[n] = (next(iter(sis)), "internal_extension", None)
 
     def site_of(n):
         return node_site.get(n, (None, None, None))[0]
