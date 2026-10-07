@@ -35,6 +35,8 @@
   予測にあって正解に無いものは「誤り」でなく「裏付け無し」と数える。
 - 介入あり・なしで予測が分かれる所だけを別に数える。そこ以外は両方同じなので差が出ない。
 - 手元の資料で決め手が無いときは、分かれる所を公表資料で 1 件ずつ裏取りする(#48 では各社の空容量・予想潮流一覧)。
+- **変電所内の変圧器の組は、全国の変圧器台帳で採点する**(`scripts/fetch_transformer_lists.py` で 10 社の公表一覧から作る・非公開、
+  `scripts/score_transformer_topology.py` で採点)。結果は [reports/transformer_topology_2026-10-08.md](reports/transformer_topology_2026-10-08.md)。
 
 ### 2. 潮流
 

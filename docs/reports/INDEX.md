@@ -2,14 +2,15 @@
 
 <!-- scripts/build_reports_index.py が生成する。手で編集しない -->
 
-`docs/reports/` の判断・検証レポート 140 本(新しい順)。
-台帳 [IMPROVEMENT_LOG.md](IMPROVEMENT_LOG.md) から参照されているものに ● を付けた(53 本)。
+`docs/reports/` の判断・検証レポート 141 本(新しい順)。
+台帳 [IMPROVEMENT_LOG.md](IMPROVEMENT_LOG.md) から参照されているものに ● を付けた(54 本)。
 書き方の約束は [README.md](README.md)。
 
 ## 2026-10
 
 | 日付 | レポート | 台帳 |
 |---|---|:---:|
+| 10-08 | [変電所内の変圧器の結び方は正しいか — 全国の公表一覧で採点(2026-10-08)](transformer_topology_2026-10-08.md) | ● |
 | 10-07 | [SubSLD と node-breaker 方式の比較 — 日本の 7,239 変電所で（2026-10-07）](station_node_breaker_comparison_2026-10-07.md) |  |
 | 10-07 | [変電所の構内結線: All-AU-Grid / All-EU-Grid の提案の採用と、日本での改良(2026-10-07)](station_node_breaker_adoption_2026-10-07.md) | ● |
 | 10-03 | [潮流マップの実潮流を 2 段階上げる — 日別断面の 1 か月欠落の修理と、観測との線ごとの突き合わせ(2026-10-03)](flow_map_observed_compare_2026-10-03.md) | ● |
