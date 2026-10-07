@@ -257,11 +257,22 @@ def main(argv=None) -> int:
     off = json.loads((a.off / "flows.json").read_text())
     on = json.loads((a.on / "flows.json").read_text())
     ledger = json.loads((a.on / "summary.json").read_text())["islands"]
-    obs_sites = {s["name"]: s for s in json.loads((ROOT / "data/stations/observed_transformer_pairs.json")
-                                                  .read_text())["sites"]}
+    ledger_off = json.loads((a.off / "summary.json").read_text())["islands"]
+    # 介入なしの側ですでに同じ結び方をしている変電所(別の介入で結び直し済み)は、この介入の変化ではない
+    same_in_off = {(isl, r["site"], json.dumps(r["linked"])) for isl, v in ledger_off.items()
+                   for r in v.get("observed_trafos") or [] if r.get("applied", True)}
+    obs_sites = {}
+    for src in (ROOT / "data/stations/observed_transformer_pairs.json",
+                ROOT / "data/reference/published_transformer_pairs.json"):
+        if src.exists():
+            obs_sites.update({s["name"]: s for s in json.loads(src.read_text())["sites"]})
     sites48 = []
     for isl, v in ledger.items():
         for r in v.get("observed_trafos") or []:
+            if not r.get("applied", True):       # 切っている介入の候補は数えない
+                continue
+            if (isl, r["site"], json.dumps(r["linked"])) in same_in_off:
+                continue
             nm = re.sub(r"\s*\d+(\.\d+)?kV$", "", r["site"])
             s = obs_sites.get(nm) or next((x for k, x in obs_sites.items() if nm.endswith(k) or k.endswith(nm)), None)
             if s:

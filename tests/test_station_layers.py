@@ -53,3 +53,21 @@ def test_levels_the_observation_does_not_reach_stay_on_the_ladder():
 def test_observed_pairs_outside_the_site_levels_are_ignored():
     # 6.6 kV の実機は、6 kV の階級に切り捨てで照合する。階級に無い 22 kV は無視
     assert link_levels([66, 6.6], [(66, 6.6), (66, 22)]) == [(66, 6.6, "osm")]
+
+
+# ------------------------------------------------------------- 介入 #49
+def test_published_pairs_take_precedence_and_keep_their_label():
+    # 三河: 公表は 275/154 と 275/77。梯子の 154/77 は張らない
+    assert link_levels([275, 154, 77], [(275, 154), (275, 77)], "published") == [
+        (275, 154, "published"), (275, 77, "published")]
+
+
+def test_published_pairs_file_holds_voltage_pairs_only():
+    """公表一覧の値は転載不可の社がある。リポジトリに入れるのは電圧の組だけ(台数・容量を入れない)。"""
+    import json
+    from src.model.site_transformers import PUBLISHED_PATH
+    d = json.load(open(PUBLISHED_PATH, encoding="utf-8"))
+    allowed = {"name", "regions", "structure_sites", "lat", "lon", "pairs", "utility", "source"}
+    for s in d["sites"]:
+        assert set(s) <= allowed, set(s) - allowed
+        assert all(len(p) == 2 and p[0] > p[1] for p in s["pairs"])

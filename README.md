@@ -5,7 +5,7 @@
 # All-Japan-Grid
 
 <!-- [[[cog import cog, scripts.readme_numbers as n; cog.out(n.badges()) ]]] -->
-[![release](https://img.shields.io/badge/release-v1.8.0-2f6fde)](CHANGELOG.md) [![dataset](https://img.shields.io/badge/dataset-v1.7.0-1f9d6b)](https://lutelute.github.io/All-Japan-Grid/download.html) [![interventions](https://img.shields.io/badge/%E4%BB%8B%E5%85%A5%E5%8F%B0%E5%B8%B3-41_%E4%BB%B6-b5561d)](docs/MODEL_INTERVENTIONS.md) [![data: ODbL](https://img.shields.io/badge/data-ODbL-555)](https://opendatacommons.org/licenses/odbl/) [![code: MIT](https://img.shields.io/badge/code-MIT-555)](LICENSE)
+[![release](https://img.shields.io/badge/release-v1.8.0-2f6fde)](CHANGELOG.md) [![dataset](https://img.shields.io/badge/dataset-v1.7.0-1f9d6b)](https://lutelute.github.io/All-Japan-Grid/download.html) [![interventions](https://img.shields.io/badge/%E4%BB%8B%E5%85%A5%E5%8F%B0%E5%B8%B3-42_%E4%BB%B6-b5561d)](docs/MODEL_INTERVENTIONS.md) [![data: ODbL](https://img.shields.io/badge/data-ODbL-555)](https://opendatacommons.org/licenses/odbl/) [![code: MIT](https://img.shields.io/badge/code-MIT-555)](LICENSE)
 <!-- [[[end]]] -->
 
 **日本全国の送電網を、出典つきで見る・確かめる・使う。**
@@ -31,8 +31,8 @@ assumption is listed in a registry you can read.
 | ダウンロード / Download | https://lutelute.github.io/All-Japan-Grid/download.html |
 
 <!-- [[[cog cog.out(n.scale()) ]]] -->
-**規模** — OSM から抽出: 送電線 40,087 本・変電所 6,962 か所・発電所 19,138 か所(10 地域)。潮流計算に使う正典モデル(`docs/data/built/`)は 17,841 ノード・19,529 枝。モデルに加えた仮定は介入台帳に 41 件。リリース v1.8.0・配布データセット v1.7.0。
-/ **Scale** — extracted from OSM: 40,087 lines, 6,962 substations, 19,138 plants across 10 regions. The canonical model used for power flow has 17,841 nodes and 19,529 branches; 41 modelling assumptions are listed in the intervention registry. Release v1.8.0, dataset v1.7.0.
+**規模** — OSM から抽出: 送電線 40,087 本・変電所 6,962 か所・発電所 19,138 か所(10 地域)。潮流計算に使う正典モデル(`docs/data/built/`)は 17,841 ノード・19,529 枝。モデルに加えた仮定は介入台帳に 42 件。リリース v1.8.0・配布データセット v1.7.0。
+/ **Scale** — extracted from OSM: 40,087 lines, 6,962 substations, 19,138 plants across 10 regions. The canonical model used for power flow has 17,841 nodes and 19,529 branches; 42 modelling assumptions are listed in the intervention registry. Release v1.8.0, dataset v1.7.0.
 <!-- [[[end]]] -->
 
 ---

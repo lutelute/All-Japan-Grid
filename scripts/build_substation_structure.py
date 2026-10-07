@@ -227,7 +227,7 @@ def build_structure(region, name, data_dir="data"):
     return extract_structure(region, ft, pways, owned=owned[i])
 
 
-def extract_structure(region, ft, pways, owned=None, observed_by_site=None):
+def extract_structure(region, ft, pways, owned=None, observed_by_site=None, published_by_site=None):
     """変電所 feature 1件から node-breaker 構造を抽出する(一括生成の実体)。
 
     Args:
@@ -239,6 +239,7 @@ def extract_structure(region, ft, pways, owned=None, observed_by_site=None):
         observed_by_site: 構造 DB の site_id → OSM で観測した変圧器の組(介入 #48、
             ``src.model.site_transformers.by_structure_site``)。あればその組を張り、残りの階級を
             梯子でつなぐ。None なら従来の梯子だけ。
+        published_by_site: 構造 DB の site_id → 各社の公表一覧の変圧器の組(介入 #49)。あれば観測より先に張る。
     """
     from shapely.geometry import Point, shape
 
@@ -404,18 +405,22 @@ def extract_structure(region, ft, pways, owned=None, observed_by_site=None):
     # --- TransformerSpec: 既知電圧クラスのラダー隣接対(structural) ---
     # 介入 #48: OSM に巻線電圧つきの実機が描かれた変電所では、観測した組を先に張り、
     # 観測が届かない階級だけ梯子でつなぐ(source="osm-observed" / "structural")。
+    # 介入 #49: 各社の公表一覧の組があれば、観測より先にそれを張る(source="published")。
     ladder = sorted((kv for kv in vls if kv > 0), reverse=True)
+    published = (published_by_site or {}).get(site_id)
     observed = (observed_by_site or {}).get(site_id)
-    if observed:
+    if published or observed:
         from src.model.site_transformers import link_levels
-        links = [(int(h), int(l), src) for h, l, src in link_levels(ladder, observed)]
+        links = [(int(h), int(l), src) for h, l, src in
+                 (link_levels(ladder, published, "published") if published else link_levels(ladder, observed))]
     else:
         links = [(hv, lv, "ladder") for hv, lv in zip(ladder, ladder[1:])]
+    spec_source = {"osm": "osm-observed", "published": "published", "ladder": "structural"}
     for i, (hv, lv, src) in enumerate(links, 1):
         structure.transformers.append(TransformerSpec(
             trafo_id=f"{site_id}/tr{i}", site_id=site_id,
             hv_vl_id=vls[hv].vl_id, lv_vl_id=vls[lv].vl_id,
-            source="osm-observed" if src == "osm" else "structural"))
+            source=spec_source[src]))
 
     # --- SwitchSpec: ベイから開閉点を導出(オーナー指示 2026-08-28
     # 「開閉器などで経路を選択できるようにしたい」) ---

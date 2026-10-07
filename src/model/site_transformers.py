@@ -15,6 +15,11 @@
 
 観測した組は ``data/stations/observed_transformer_pairs.json``(``scripts/compare_station_layers.py`` が
 node-breaker 観測層から書き出す。追跡しているので PBF が無くても再現できる)。
+
+介入 #49(2026-10-08、オーナー「直す」): 各社の空容量・予想潮流一覧(一次資料)の組がある変電所では、
+観測より先にその組を張る(``published``)。入力は ``data/reference/published_transformer_pairs.json``
+(``scripts/score_transformer_topology.py --export`` が、今のモデルと公表が食い違う変電所だけを書き出す。
+電圧の組だけで、台数・容量は含まない)。優先は 公表 > 観測 > 梯子。
 """
 
 from __future__ import annotations
@@ -23,8 +28,9 @@ import json
 import os
 from collections import defaultdict
 
-OBSERVED_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-                             "data", "stations", "observed_transformer_pairs.json")
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OBSERVED_PATH = os.path.join(_ROOT, "data", "stations", "observed_transformer_pairs.json")
+PUBLISHED_PATH = os.path.join(_ROOT, "data", "reference", "published_transformer_pairs.json")
 
 
 def kv_class(kv) -> int:
@@ -32,12 +38,13 @@ def kv_class(kv) -> int:
     return int(float(kv) + 1e-9)
 
 
-def link_levels(levels, observed=()) -> list:
-    """変電所の階級 ``levels`` を結ぶ組 ``[(hv, lv, source)]``(source = ``osm`` | ``ladder``)。
+def link_levels(levels, observed=(), label="osm") -> list:
+    """変電所の階級 ``levels`` を結ぶ組 ``[(hv, lv, source)]``(source = ``label`` | ``ladder``)。
 
     Args:
         levels: 変電所の電圧階級(kV。順不同・重複可)。返す hv/lv はこの値そのもの。
-        observed: 観測した組 ``(hv_kv, lv_kv)``(kV。切り捨て整数で ``levels`` と照合する)。
+        observed: 先に張る組 ``(hv_kv, lv_kv)``(kV。切り捨て整数で ``levels`` と照合する)。
+        label: 先に張った組の source(OSM の観測 ``osm``、公表一覧 ``published``)。
     """
     lv_sorted = sorted({float(v) for v in levels if v and float(v) > 0}, reverse=True)
     by_class = {}
@@ -57,7 +64,7 @@ def link_levels(levels, observed=()) -> list:
         if a is None or b is None or a <= b or (a, b) in seen:
             continue
         seen.add((a, b))
-        out.append((a, b, "osm"))
+        out.append((a, b, label))
         parent[find(a)] = find(b)
     for a, b in zip(lv_sorted, lv_sorted[1:]):
         if find(a) != find(b):
