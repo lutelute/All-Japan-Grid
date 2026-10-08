@@ -8,7 +8,7 @@
 
 ## 0. 総評
 
-この前提は新しい方針ではなく、**プロジェクト自身が 2026-06-14 に立てた GRIDSTITCH_PLAN（`docs/GRIDSTITCH_PLAN.md`）の3本柱そのもの**である（③「変電所の bus/bay/busbar + 1次2次を一級市民化」）。しかし実装は P1（busbar/bay の吸収）で止まり、**本丸の P2「変電所内部データモデルの永続化」以降が未実装**のまま、直近1ヶ月は CIM 検証・データ論文準備に注力していた。
+この前提は新しい方針ではなく、**プロジェクト自身が 2026-06-14 に立てた GRIDSTITCH_PLAN（`docs/archive/plans/GRIDSTITCH_PLAN.md`）の3本柱そのもの**である（③「変電所の bus/bay/busbar + 1次2次を一級市民化」）。しかし実装は P1（busbar/bay の吸収）で止まり、**本丸の P2「変電所内部データモデルの永続化」以降が未実装**のまま、直近1ヶ月は CIM 検証・データ論文準備に注力していた。
 
 現状を一言で言うと: **「変電所ハブ」の骨格（線→変電所束縛・電圧階級別バス・変圧器挿入・回線数）は build 時の計算として実装済みだが、それが構造（データ）として存在しない。** 接続は毎回のビルドで座標幾何から再推論され、「なぜ繋がるのか」はどこにも記録されない。タップ・導体・負荷分配・CIMの物理変電所は欠落している。
 
@@ -96,4 +96,4 @@ GRIDSTITCH_PLAN P2 を核に再起動し、オーナー前提の新規要素（�
 - `src/cim/level2.py:94-98,159-176`（Substation=地域1個）・`dist/cim_level2/okinawa_L2_EQ.xml` クラス頻度実測
 - `src/powerflow/load_estimator.py:332-345,499-536`（負荷直付け按分）
 - `data/*.geojson` 全国タグ充足実測（lines 40,077 / subs 6,962）・`data/grid.db`（substation_attributes 0行・enrichments 243,093行）
-- `docs/reports/island_classify_*_2026-06-24.json` 全国集計・`docs/GRIDSTITCH_PLAN.md`・`docs/VISION.md`・`docs/ROADMAP_ASSET.md`
+- `docs/reports/island_classify_*_2026-06-24.json` 全国集計・`docs/archive/plans/GRIDSTITCH_PLAN.md`・`docs/VISION.md`・`docs/ROADMAP_ASSET.md`

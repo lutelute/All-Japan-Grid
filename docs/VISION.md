@@ -2,7 +2,7 @@
 
 **この文書の目的 / Purpose.** All-Japan-Grid を「OSM から作った地図」から「日本の電力業界が
 継続的に使える資産（an open, living, standards-based reference model of Japan's grid）」へ
-育てるための戦略計画。技術フェーズ（P1–P7）は [ROADMAP.md](ROADMAP.md)、データ層の機械化は
+育てるための戦略計画。技術フェーズ（P1–P7）は [ROADMAP.md](archive/plans/ROADMAP.md)、データ層の機械化は
 [DB_ARCHITECTURE.md](DB_ARCHITECTURE.md)、CIM/CGMES 規格化は [CIM_MAPPING.md](CIM_MAPPING.md) を
 参照。本書はそれらを束ねる「なぜ・誰のために・どこへ」を定義する。
 

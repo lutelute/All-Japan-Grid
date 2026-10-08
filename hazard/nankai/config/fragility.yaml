@@ -1,0 +1,555 @@
+# =============================================================================
+# hazard/nankai/config/fragility.yaml
+# 南海トラフ巨大地震 電力系統ハザードモデル: フラジリティ(損傷確率)パラメータ
+#
+# 適用対象: AGJ 送電モデル (ノード=変電所 66–500 kV, 枝=架空送電線+変圧器,
+#           発電機=火力/原子力/水力/揚水/再エネ, lat/lon と容量あり)
+#
+# 関数形: lognormal   P(DS >= ds | IM) = Phi( ln(IM / median) / beta )
+#   IM は各ブロックの im で指定 (PGA [g], JMA計測震度, 津波浸水深 [m])
+#   Phi は標準正規分布の累積分布関数
+#
+# 各パラメータブロックは必ず source: と note: を持つ。
+# confidence: high   = 一次資料の表を本文から転記 (本ファイル作成時に原典PDFを取得・確認)
+#             medium = 一次資料の要約/二次資料/検索要約から転記 (原典本文は未読)
+#             low    = 仮定 (データが無い、または本ファイルで新たに置いた値)
+#
+# 原典で検証できなかった値は confidence: low とし、note に「仮定」と明記した。
+# 引用は実在を確認したもののみ。作成日 2026-09-13。
+# =============================================================================
+
+meta:
+  version: "0.1.0"
+  created: "2026-09-13"
+  functional_form: "lognormal; P(DS>=ds|IM)=Phi(ln(IM/median)/beta)"
+  damage_states: [slight, moderate, extensive, complete]
+  im_units:
+    pga: "g (1 g = 980.665 gal)"
+    jma_intensity: "気象庁計測震度 (実数)。震度階: 5弱=4.5–5.0, 5強=5.0–5.5, 6弱=5.5–6.0, 6強=6.0–6.5, 7=6.5以上"
+    inundation_depth: "m (地盤面からの津波浸水深)"
+  liquefaction:
+    status: out_of_scope
+    note: >
+      液状化(PGD)による損傷は本版では扱わない。HAZUS は変電所・発電所の PGD 損傷関数を
+      上水道施設(§8.1.6)と同じとしているが、日本側の較正データが無い。東日本大震災で
+      九州電力・東北電力とも「液状化による設備被害は発生していない」(熊本地震: 九州電力
+      2016 p.6, p.16)。電中研(湯山 2018)は火力29発電所中12発電所で液状化発生を報告
+      しており、将来版で発電所敷地の液状化を扱う余地がある。
+  intensity_pga_conversion:
+    formula: "I_JMA = 1.89 * log10(PGA_gal) + 0.59   (童・山崎 1996)"
+    inverse: "PGA_gal = 10 ** ((I_JMA - 0.59) / 1.89)"
+    reference_points:
+      - {jma_class: "5弱", I: 4.75, pga_gal: 159, pga_g: 0.16}
+      - {jma_class: "5強", I: 5.25, pga_gal: 293, pga_g: 0.30}
+      - {jma_class: "6弱", I: 5.75, pga_gal: 538, pga_g: 0.55}
+      - {jma_class: "6強", I: 6.25, pga_gal: 989, pga_g: 1.01}
+      - {jma_class: "7",   I: 6.5,  pga_gal: 1340, pga_g: 1.37}
+    source: >
+      童華南・山崎文雄 (1996) 地震動強さ指標と新しい気象庁震度との対応関係, 生産研究 48(11).
+      式は 丸山喜久 (千葉大学) 防災工学 講義ノート Lec5
+      http://ares.tu.chiba-u.jp/marulab/note/bosai/Lec5.pdf に「童・山崎(1996) I=1.89 log10PGA + 0.59」
+      と明記 (同資料に翠川ら I=1.90 log10PGA+0.55, 河角式 I=2 log10 Amax+0.7 も併記)。
+    confidence: medium
+    note: >
+      計測震度と PGA は一対一でなく (気象庁「震度と加速度」解説)、震度7 では PGA 0.8–2 g の幅がある。
+      本モデルでは PGA ベースの HAZUS 曲線と震度ベースの日本側表を突き合わせる際の目安に限る。
+      震度階の代表値 I は階級中央 (震度7は下限 6.5) を用いた。
+
+# -----------------------------------------------------------------------------
+# 1. 変電所 (substations)
+# -----------------------------------------------------------------------------
+substations:
+  im: pga
+
+  # 1a. HAZUS 原典値 (そのまま転記)
+  hazus:
+    source: >
+      FEMA, Hazus Earthquake Model Technical Manual, Hazus 4.2 SP3 (October 2020),
+      Section 8.5 Electric Power Systems, Table 8-29 "Peak Ground Acceleration Fragility
+      Functions for Substations", p. 8-58.
+      https://www.fema.gov/sites/default/files/2020-10/fema_hazus_earthquake_technical_manual_4-2.pdf
+    confidence: high
+    note: >
+      原典PDFを取得し pdftotext で本文の表を転記 (2026-09-13)。HAZUS の電圧区分は
+      low <=115 kV, medium 115–230 kV, high 230–500 kV (原典 §8.5.3 の分類)。
+      Hazus 6.1 (July 2024) は同じ Table 構成だが本作業では取得できず (FEMA サイトがボット
+      ブロック)。4.2 SP3 と 6.1 の値の一致は未確認。
+      HAZUS の損傷状態定義 (§8.5.6): Moderate = 断路器/遮断器/変圧器のいずれか 40% が故障
+      または建屋 Moderate; Extensive = 同 70% または建屋 Extensive; Complete = 同 100%
+      または建屋 Complete; Slight = 同 5% または建屋 Minor。
+    classes:
+      ESSL_anchored:      # Low voltage (<=115 kV), anchored/seismic components
+        slight:    {median_g: 0.15, beta: 0.70}
+        moderate:  {median_g: 0.29, beta: 0.55}
+        extensive: {median_g: 0.45, beta: 0.45}
+        complete:  {median_g: 0.90, beta: 0.45}
+      ESSL_unanchored:    # Low voltage, unanchored/standard components
+        slight:    {median_g: 0.13, beta: 0.65}
+        moderate:  {median_g: 0.26, beta: 0.50}
+        extensive: {median_g: 0.34, beta: 0.40}
+        complete:  {median_g: 0.74, beta: 0.40}
+      ESSM_anchored:      # Medium voltage (115–230 kV), anchored/seismic
+        slight:    {median_g: 0.15, beta: 0.60}
+        moderate:  {median_g: 0.25, beta: 0.50}
+        extensive: {median_g: 0.35, beta: 0.40}
+        complete:  {median_g: 0.70, beta: 0.40}
+      ESSM_unanchored:    # Medium voltage, unanchored/standard
+        slight:    {median_g: 0.10, beta: 0.60}
+        moderate:  {median_g: 0.20, beta: 0.50}
+        extensive: {median_g: 0.30, beta: 0.40}
+        complete:  {median_g: 0.50, beta: 0.40}
+      ESSH_anchored:      # High voltage (230–500 kV), anchored/seismic
+        slight:    {median_g: 0.11, beta: 0.50}
+        moderate:  {median_g: 0.15, beta: 0.45}
+        extensive: {median_g: 0.20, beta: 0.35}
+        complete:  {median_g: 0.47, beta: 0.40}
+      ESSH_unanchored:    # High voltage, unanchored/standard (ESS6)
+        slight:    {median_g: 0.09, beta: 0.50}
+        moderate:  {median_g: 0.13, beta: 0.40}
+        extensive: {median_g: 0.17, beta: 0.35}
+        complete:  {median_g: 0.38, beta: 0.35}
+
+  # 1b. AGJ 電圧階級 -> HAZUS クラスの対応
+  voltage_class_map:
+    source: "HAZUS 4.2 SP3 §8.5.3 の電圧区分 (<=115 / 115–230 / 230–500 kV) に AGJ の公称電圧を当てはめた"
+    confidence: high
+    note: >
+      日本の 154 kV は HAZUS の medium (115–230) に入る。187/220 kV も medium。
+      275 kV と 500 kV は high。66/77/110 kV は low。
+    map:
+      66:  ESSL
+      77:  ESSL
+      110: ESSL
+      154: ESSM
+      187: ESSM
+      220: ESSM
+      275: ESSH
+      500: ESSH
+    anchorage_default: anchored
+    anchorage_note: >
+      日本の変電機器は JEAG 5003 (変電所等における電気設備の耐震設計指針; 1980 制定,
+      1998/1999 改訂, 2019 改訂) に基づき、がいし類は架台下端 0.3G 共振正弦3波、変圧器
+      ブッシングはがい管取付部 0.5G 共振正弦3波で設計され、基礎固定が前提。よって
+      HAZUS の anchored/seismic を既定とする。JEAG 5003 の 0.3G/0.5G 規定は
+      電験王 R06 問2 解説 https://denken-ou.com/c1/denryokur6-2/ および
+      電気協同研究 第74巻第2号「変電機器の耐震設計最適化」(2018) の要旨
+      https://www.etra.or.jp/publication/view?id=336&type=recommend で確認 (medium)。
+      JEAG 5003-2019 書誌: https://store.denki.or.jp/products/... (日本電気協会 Webストア)。
+
+  # 1c. 日本向け補正 (HAZUS 中央値に乗じる倍率)
+  japan_adjustment:
+    median_multiplier: 3.0
+    beta_multiplier: 1.0
+    sensitivity_range: [2.0, 5.0]
+    applies_to: [slight, moderate, extensive, complete]
+    confidence: low
+    note: >
+      仮定。日本の観測被害率が HAZUS 曲線より大幅に低いことに基づく倍率。根拠は以下。
+      (1) 熊本地震 2016 (九州電力): 震度5弱以上の 107 変電所 (全488) のうち 19 変電所 (全体の約4%)
+          に軽微含む 81 台の設備被害。運転継続不可となる主要設備の被害率は最大 1.6%
+          (変圧器 5/317 = 1.6%, 断路器 19/1,804 = 1.1%, 遮断器 0%)。震度別の運転継続不可率:
+          変圧器 6弱 4.1%, 6強 2.9%, 7 7.1%; 断路器 6弱 5.9%, 6強 0.4%, 7 0%。
+          [九州電力「電気設備被害の状況分析と地震対応の評価について」2016-07-29, 産構審
+          電力安全小委 電気設備自然災害等対策WG 資料, pp.16–17]
+      (2) 東日本大震災 2011: 東北電力 変電所 615 箇所中 75 箇所 (うち津波 9) に被害、東京電力
+          1,592 箇所中 134 箇所に被害。「275kV/154kV 変圧器, 275kV 遮断器, 500/275/154kV 断路器
+          の被害率が相対的に高かった。ただし運転継続不可能となった被害は少なかった」
+          [土木学会エネルギー土木委員会 報告書「東日本大震災におけるエネルギー施設の被害状況と
+          今後の展開について」§2.4 (電気設備地震対策WG報告書 2012-03 からの抜粋), pp.28–29]
+      (3) 兵庫県南部地震 1995 (関西電力): 861 変電所のうち 50 箇所に被害 (主要工作物被害 17)、
+          275kV 変電所 4 箇所 (伊丹・西神戸・神戸・新神戸) と 77kV 13 箇所で機器被害、供給支障の
+          あった変電所 18。系統切替により 2 時間後に停電 260万→100万件。
+          [能島暢呂 (1997) 阪神・淡路大震災における電力・ガス施設の被害と復旧, 安全工学 35(1), pp.50–52]
+      HAZUS ESSM_anchored の extensive (median 0.35 g) は PGA 0.55 g (震度6弱相当) で
+      P(>=extensive)=0.87 となるが、日本の観測では機能喪失は数%以下。倍率 3.0 では同点で
+      P=0.09、倍率 4.0 で 0.03。倍率 2.0 は「何らかの機器被害」(HAZUS slight〜moderate) の
+      出現率に近く、倍率 4–5 は機能喪失率に近い。既定 3.0 は両者の中間 (安全側)。
+      感度解析で [2.0, 5.0] を走らせること。1995 年以前設計の機器が残る変電所には
+      倍率 1.5–2.0 を勧める (JEAG 5003-1998 改訂前)。
+
+  # 1d. 震度ベース代替 (機能喪失確率)。日本の観測値に直接アンカーした離散表。
+  jma_intensity_alternative:
+    im: jma_intensity
+    confidence: low
+    definition:
+      any_equipment_damage: "変電所内のいずれかの機器に補修を要する被害 (軽微含む)"
+      functional_outage_ge_1day: "設備損傷により 1 日以上、変電所の一部または全部の供給が途絶 (保護リレー動作のみの一時停止は除く)"
+    table:
+      - {jma_class: "5弱", any_equipment_damage: 0.05, functional_outage_ge_1day: 0.003}
+      - {jma_class: "5強", any_equipment_damage: 0.10, functional_outage_ge_1day: 0.01}
+      - {jma_class: "6弱", any_equipment_damage: 0.20, functional_outage_ge_1day: 0.03}
+      - {jma_class: "6強", any_equipment_damage: 0.30, functional_outage_ge_1day: 0.06}
+      - {jma_class: "7",   any_equipment_damage: 0.45, functional_outage_ge_1day: 0.15}
+    pre_1998_equipment_multiplier: 2.0
+    source: >
+      表の数値は仮定 (本ファイルで置いた値)。アンカーは japan_adjustment.note の (1)(2)(3):
+      熊本 19/107 (震度5弱以上で何らかの被害 17.8%)、3.11 東北 66/615 (揺れ起因 10.7%)・
+      東京 134/1,592 (8.4%)、阪神 50/861 (5.8%, 供給支障 18 箇所)。機能喪失は熊本で
+      主要機器 1.6% 以下、3.11 で「少なかった」、阪神で 275kV 4 箇所全停 (系統切替で当日復旧)。
+    note: >
+      公的機関による震度階別の変電所機能喪失率の公表表は見つからなかった (九州電力 2016 の
+      機器別被害率表が最も近い)。any_equipment_damage は HAZUS slight〜moderate、
+      functional_outage_ge_1day は HAZUS extensive〜complete に概ね対応させて使う。
+
+  # 1e. 較正用の観測機器被害率 (そのまま記録)
+  observed_component_damage_rates:
+    kumamoto_2016_kyushu_epco:
+      source: "九州電力 2016-07-29 資料 pp.16–17 (METI 011_05_00.pdf)"
+      confidence: high
+      denominator: "震度5弱以上の地域に所在する設備数; 被害数 = 運転継続不可となる被害"
+      transformer:
+        counts:  {"5弱": 137, "5強": 47, "6弱": 49, "6強": 70, "7": 14, total: 317}
+        rate_pct: {"5弱": 0.0, "5強": 0.0, "6弱": 4.1, "6強": 2.9, "7": 7.1, total: 1.6}
+      disconnect_switch:
+        rate_pct: {"5弱": 0.0, "5強": 0.0, "6弱": 5.9, "6強": 0.4, "7": 0.0, total: 1.1}
+        counts_total: 1804
+      circuit_breaker: {rate_pct_total: 0.0}
+      substations_with_any_damage: {n: 19, of_n_at_ge_5lower: 107, of_all: 488}
+    tohoku_2011:
+      source: "土木学会エネルギー土木委員会 報告書 §2.4 p.28 (電気設備地震対策WG報告書 2012 より)"
+      confidence: high
+      tohoku_epco: {substations_damaged: 75, substations_damaged_by_tsunami: 9, substations_total: 615, towers_damaged: 46, towers_total: 28205}
+      tepco:       {substations_damaged: 134, substations_total: 1592, towers_damaged: 15, towers_total: 30555}
+      tohoku_epco_equipment_2011_07_05:
+        source: "経済産業省提供資料 参考資料2 (内閣府 東北地方太平洋沖地震専門調査会 第9回) p.7"
+        note: "括弧内は津波による被害の再掲"
+        main_transformers: {damaged: 90, by_tsunami: 23}
+        circuit_breakers:  {damaged: 177, by_tsunami: 171}
+        disconnect_switches: {damaged: 403, by_tsunami: 331}
+        other_equipment:   {damaged: 917, by_tsunami: 848}
+    hanshin_1995_kepco:
+      source: "能島 (1997) 安全工学 35(1) 表1, p.51"
+      confidence: high
+      substations: {major_damage: 17, other_damage: 33, total_damaged: 50, total_owned: 861}
+      transformers: {major: 23, other: 29, total: 52}
+      circuit_breakers: {major: 9, other: 1, total: 10}
+      note: "275kV 4 変電所 (伊丹・西神戸・神戸・新神戸) と 77kV 13 変電所で機器被害; 275kV 系では淀川・北大阪も保護継電器動作で全停"
+
+# -----------------------------------------------------------------------------
+# 2. 送電鉄塔・架空送電線 (transmission towers / overhead lines)
+# -----------------------------------------------------------------------------
+transmission:
+  overview_note: >
+    地震動そのものによる鉄塔倒壊は日本の主要地震で観測されていない。
+    - 1995 兵庫県南部: 架空送電線 1,065 線路中 23 線路に被害、鉄塔損傷 11 基 (倒壊記述なし) [能島 1997 p.51]
+    - 2011 東北地方太平洋沖: 「地震動により倒壊・折損等の送電機能を喪失する鉄塔被害はなかった。
+      鉄塔近傍の盛土の崩壊により 1 基 (東京電力 夜の森線 No.27, 66kV) が倒壊」[土木学会 報告書 §2.4 p.29–30]。
+      東北電力の鉄塔被害 (倒壊・折損) 37 基は全て津波起因 [経産省提供資料 参考資料2 p.8]
+    - 2016 熊本: 「地震動により倒壊に至った事例はない」。大規模土砂崩れによる傾斜 1 基、
+      地盤変状による部材損傷 15 基 (震度6弱 1, 6強 12, 7 2)、震度5弱以上の 6,499 基に対し 0.25% [九州電力 2016 p.8]
+    - 2018 北海道胆振東部: 岩知志線 (66kV) 鉄塔 2 基 (No.71, No.107) が斜面崩壊で倒壊、狩勝幹線 (275kV)
+      は鉄塔 18 基周辺で地崩れがあったが倒壊なし [土木学会 2018年北海道胆振東部地震被害調査報告書 第10章 (能島) p.7]
+    従って主因は (a) 斜面崩壊・地盤変状, (b) 津波 (漂流物), (c) 基礎。(a) は斜面ハザード層が無い本版では
+    フラグのみ。
+
+  shaking_collapse:
+    im: pga
+    damage_state: complete   # 倒壊 (機能喪失)。1 基あたりの確率
+    per_tower: true
+    median_g: 12.0
+    beta: 0.9
+    confidence: low
+    source: >
+      仮定。日本の観測に合わせた 1 基あたりの倒壊確率: 熊本 2016 は震度5弱以上の 6,499 基 (震度7 149 基,
+      6強 1,137 基) で地震動による倒壊 0 [九州電力 2016 p.8]; 3.11 は東北電力 28,205 基 + 東京電力 30,555 基
+      で地震動による倒壊 0 (盛土崩壊 1 基のみ) [土木学会 報告書 §2.4 p.29]。
+      median 12 g, beta 0.9 は PGA 0.5 g で 2e-4, 1.0 g で 3e-3, 1.5 g で 1e-2 (rule-of-three の上限
+      熊本 震度7 149 基: <2% と整合)。
+      文献 (Buildings 2025, 15(22), 4206 "Seismic Performance and Collapse Fragility of a 765 kV Transmission
+      Tower–Line System" https://doi.org/10.3390/buildings15224206) は IDA で倒壊 PGA 平均 1.07 g を報告するが
+      (検索要約; 本文未読)、単一鉄塔の解析上の耐力であり日本の現場観測 (数万基で倒壊 0) と矛盾するため採用しない。
+      HAZUS には鉄塔の損傷関数は無い。
+    note: >
+      線路レベルの停止確率 = 1 − (1 − p_tower)^n_towers (n = 経路長 / 0.35 km)。鉄塔 100 基の線路で
+      PGA 1.0 g 一様なら約 0.4。感度: median 6–20 g。架空送電線の機能喪失は「鉄塔倒壊」または
+      「両端変電所の機能喪失」で判定し、がいし折損・電線損傷は短時間停止として扱う
+      (下記 insulator_and_conductor_damage 参照)。
+
+  landslide_slope_failure:
+    status: flag_only
+    confidence: low
+    source: "上記 overview_note の熊本・胆振・3.11 事例"
+    note: >
+      斜面崩壊による倒壊/傾斜は本版では確率化しない。将来版で J-SHIS 斜面ハザードや
+      国交省 土砂災害警戒区域と鉄塔位置の重ね合わせで「危険鉄塔」をフラグし、
+      P(collapse | landslide_at_tower) を扱う。観測頻度は 熊本 1 傾斜+15 部材損傷 / 6,499 基 (震度5弱以上),
+      胆振 2 倒壊 / (被災線路の鉄塔数 不明)、3.11 東京電力 1 倒壊 / 30,555 基。
+
+  insulator_and_conductor_damage:
+    im: jma_intensity
+    confidence: medium
+    source: "九州電力 2016 p.7 (震度別被害率); 経産省提供資料 参考資料2 p.8 (3.11 東北電力)"
+    rates_kumamoto_2016:
+      note: "被害率 = 早急復旧を要する被害数 / 震度5弱以上所在設備数"
+      support_structure_pct: {"5弱": 0.0, "5強": 0.0, "6弱": 0.11, "6強": 1.14, "7": 1.34}
+      insulator_pct:         {"5弱": 0.07, "5強": 0.0, "6弱": 0.0, "6強": 0.09, "7": 0.0}
+      conductor_pct:         {"5弱": 0.0, "5強": 0.0, "6弱": 0.0, "6強": 0.09, "7": 0.0}
+    tohoku_epco_2011_06:
+      towers_collapsed_or_broken: {n: 37, by_tsunami: 37}
+      insulator_damage_towers: 23
+      conductor_or_gw_damage_spans: 9
+    model_use: >
+      がいし折損は数時間〜数日の回線停止で、東北電力は 2011-04 までに暫定対策済み。
+      本モデルでは回線レベルの短期停止確率として 6強 1%, 7 1.5% (支持物被害率に準拠) を用い、
+      復旧 1–3 日 (restoration.yaml 参照)。
+
+  tsunami_rule:
+    im: inundation_depth
+    confidence: low
+    source: >
+      東北電力 鉄塔 37 基 (倒壊・折損) は全て津波起因で、「津波による周辺構造物の瓦礫や車両等の流入」が原因
+      [経産省提供資料 参考資料2 p.8]; 土木学会 報告書 §2.4 p.32「鉄塔下部への流入物による影響と推測される
+      鉄塔の倒壊」。浸水域内の鉄塔総数 (分母) は未公表。
+    table:
+      - {depth_m_min: 0.0, depth_m_max: 1.0, p_collapse_per_tower: 0.02}
+      - {depth_m_min: 1.0, depth_m_max: 2.0, p_collapse_per_tower: 0.05}
+      - {depth_m_min: 2.0, depth_m_max: 5.0, p_collapse_per_tower: 0.15}
+      - {depth_m_min: 5.0, depth_m_max: 99.0, p_collapse_per_tower: 0.40}
+    note: >
+      仮定。分母不明のため確率は置いた値。浸水深 2 m 超で RC/S 造建物も損壊率が上がる
+      (国交省 建物被害調査、土木学会 報告書 p.24 に引用) ことと整合させた。
+      線路の機能喪失 = 経路上の鉄塔のいずれかが倒壊。鉄塔位置が無い枝は、経路の浸水域通過長
+      L [km] と鉄塔間隔 0.35 km から鉄塔数 n = L/0.35 を仮定して 1-(1-p)^n を用いる。
+
+# -----------------------------------------------------------------------------
+# 3. 発電所 (generation)
+# -----------------------------------------------------------------------------
+generation:
+
+  thermal:
+    im: pga
+    hazus:
+      source: >
+        HAZUS 4.2 SP3, Table 8-31 (Small Generation Facilities, <100 MW) p.8-63 と
+        Table 8-32 (Medium/Large Generation Facilities, >100 MW) p.8-63–8-64。
+      confidence: high
+      classes:
+        EPPS_anchored:     # small (<100 MW), anchored
+          slight:    {median_g: 0.10, beta: 0.55}
+          moderate:  {median_g: 0.21, beta: 0.55}
+          extensive: {median_g: 0.48, beta: 0.50}
+          complete:  {median_g: 0.78, beta: 0.50}
+        EPPS_unanchored:
+          slight:    {median_g: 0.10, beta: 0.50}
+          moderate:  {median_g: 0.17, beta: 0.50}
+          extensive: {median_g: 0.42, beta: 0.50}
+          complete:  {median_g: 0.58, beta: 0.55}
+        EPPML_anchored:    # medium/large (>100 MW), anchored (EPP3)
+          slight:    {median_g: 0.10, beta: 0.60}
+          moderate:  {median_g: 0.25, beta: 0.60}
+          extensive: {median_g: 0.52, beta: 0.55}
+          complete:  {median_g: 0.92, beta: 0.55}
+        EPPML_unanchored:  # medium/large, unanchored (EPP4)
+          slight:    {median_g: 0.10, beta: 0.60}
+          moderate:  {median_g: 0.22, beta: 0.55}
+          extensive: {median_g: 0.49, beta: 0.50}
+          complete:  {median_g: 0.79, beta: 0.50}
+      size_map: {lt_100MW: EPPS, ge_100MW: EPPML}
+      anchorage_default: anchored
+      note: "日本の火力は HAZUS の anchored を既定。HAZUS の Complete は大型水平容器・大型電動弁の修理不能損傷または建屋 Complete。"
+
+    # 日本向け一次: 内閣府 2025 想定が採用した 震度別・経過時間別の火力停止率 (経産省 2014 委託調査のテーブル)
+    japan_stop_rate_by_jma_intensity:
+      im: jma_intensity
+      confidence: high
+      source: >
+        内閣府 中央防災会議「令和7年3月 南海トラフ巨大地震の被害想定項目及び手法の概要」
+        https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/pdf/sanko_gaiyo.pdf, 4.3 電力 (続き) p.42
+        「揺れによる火力発電所の停止率 (震度別)」。注記: 「上記の停止率は経済産業省『平成26年度
+        災害に強い電気設備検討調査 (災害時の電力需給等シミュレーションに関する調査)』が設定したテーブルを使用」。
+      time_axis_days: [0, 1, 3, 7, 14, 21, 30, 35, 42, 49, 60, 90, 120, 240, 270, 330, 365]
+      time_axis_labels: ["直後", "1日後", "3日後", "1週間後", "2週間後", "3週間後", "1ヶ月後", "5週間後", "6週間後", "7週間後", "2ヶ月後", "3ヶ月後", "4ヶ月後", "8か月後", "9か月後", "11か月後", "12か月後"]
+      stop_fraction:
+        "4未満": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "4":    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "5弱":  [0.08, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "5強":  [0.20, 0.07, 0.02, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "6弱":  [0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.23, 0.06, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "6強":  [0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.23, 0.06, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "7":    [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0]
+      note: >
+        「停止率」= その震度を受けた火力発電所 (ユニット) のうち停止中の割合。停止と復旧を一体で
+        与える表なので、restoration.yaml の火力ブロックも本表を参照する。内閣府は「旧一般電気事業者
+        (自社+関連会社) の火力発電所について発電所ごとに評価して集計。その他の火力発電所は同等の被害率」
+        「原子力は全て停止と保守的に仮定」「水力は停止しない」「新エネは火力全体の被害率と同等」と記載 (同 p.42)。
+
+    # 日本向け二次: 経産省 電気設備自然災害等対策WG (2014) の被害レベル A/B/C (電中研 湯山 2018 が転載)
+    japan_damage_levels_meti_2014:
+      confidence: medium
+      source: >
+        電力中央研究所 湯山安由美「大規模地震災害時における火力発電所の供給リスク評価」
+        土木学会地震工学委員会 平成30年度第3回研究会 (2018-12-20) p.2 (経産省 電力安全小委員会
+        電気設備自然災害等対策WG (2014) の表を転載)。
+        https://committees.jsce.or.jp/eec2/system/files/181220_%E5%9C%9F%E6%9C%A8%E5%AD%A6%E4%BC%9A%E5%9C%B0%E9%9C%87%E5%B7%A5%E5%AD%A6%E5%A7%94%E5%93%A1%E4%BC%9A%20%E7%AC%AC3%E5%9B%9E%E7%A0%94%E7%A9%B6%E4%BC%9A(%E6%B9%AF%E5%B1%B1).pdf
+      shaking:
+        - {level: A, jma_class: "7",       damage: "ボイラ鉄骨やタービン建屋鉄骨に塑性変形等大規模な被害の可能性", restoration_guide: "1ヶ月程度以上"}
+        - {level: B, jma_class: "6強/6弱", damage: "ボイラ過熱管等に中規模な被害。鉄骨に軽微な塑性変形の可能性", restoration_guide: "1ヶ月程度以内"}
+        - {level: C, jma_class: "5強以下", damage: "ボイラ過熱管等を含め小規模な被害、もしくは被害なし", restoration_guide: "1週間程度以内もしくは運転継続"}
+      tsunami:
+        - {level: A, depth: "1m程度〜数十m",  damage: "ユニット稼動に不可欠な機器および電動機器等が浸水", restoration_guide: "4ヶ月程度以上"}
+        - {level: B, depth: "数十cm〜1m程度", damage: "ユニット稼動に不可欠な機器の現地制御盤・操作盤および電源等が浸水", restoration_guide: "4ヶ月程度以内"}
+        - {level: C, depth: "数十cm未満",     damage: "構内が一部浸水するが、機器は浸水しない", restoration_guide: "運転継続可能"}
+      criepi_findings_2011:
+        note: >
+          同資料 p.7–10: 関東・東北の 29 発電所 125 ユニット (5,758万kW) をデータベース化。
+          太平洋岸で PGA 300 gal 以上 (最大 735 gal)、浸水は太平洋岸 9 発電所 (0.5–5 m, 原町 13 m)、
+          液状化は 12 発電所 (80 gal 程度でも発生)。停止・被災ユニット (N=40) の半数は 2 ヶ月以内に復旧。
+          浸水なし: ほとんど 2 週間以内、一部 1 ヶ月以上 (鹿島共同)。浸水あり: 2 週間以内〜2 年以上、
+          浸水深が大きいほど長期化。復旧関数 G(t|X)=Phi((ln t - Σβ_k X_k)/σ) の推定係数:
+          β 給排水(C) 1.12, 受電(C) 1.22, ボイラ(B) 1.41, 排煙(C) 1.30, 事務建屋・倉庫(A) 1.74, σ 0.54 (p.14)。
+
+    tsunami_stop_rate_by_depth:
+      im: inundation_depth
+      confidence: high
+      source: "内閣府 2025 手法概要 p.42「津波による火力発電所の停止率 (浸水深別)」(経産省 2014 委託調査テーブル)"
+      time_axis_days: [0, 1, 3, 7, 14, 21, 30, 35, 42, 49, 60, 90, 120, 240, 270, 330, 365]
+      stop_fraction:
+        "浸水なし":          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        "0.3m以上1m未満":    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+        "1m以上":            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+      note: >
+        浸水深 0.3 m 以上で 100% 停止、0.3–1 m は 4 ヶ月後に復旧、1 m 以上は 9 ヶ月後に復旧 (内閣府表)。
+        実績 (下記 observed_2011) では 1 m 超の浸水で 65 日〜777 日と幅が大きく、内閣府表は「9 ヶ月で全復旧」
+        なので原町 (13 m, 2 年超) を過小評価する。本モデルでは 5 m 超を別区分 (restoration.yaml) とする。
+
+    observed_2011_tsunami_plants:
+      confidence: high
+      source: >
+        土木学会エネルギー土木委員会 報告書 pp.13, 22–24 (浸水深: 仙台 4.7 m, 新仙台 3.0 m, 原町 13 m;
+        八戸・鹿島 約1 m 以下; 仙台・新仙台・原町・広野・常陸那珂・新地・勿来 約1 m 超);
+        運転再開日: Wikipedia「東日本大震災による電力危機」「原町火力発電所」(相馬共同火力・東北電力
+        プレスリリースに基づく; medium)。
+      plants:
+        - {name: "鹿島 4号", owner: TEPCO, mw: 600, depth_m: "<=1 (放水路遡上)", restart: "2011-04-01", days: 21, note: "Toshiba/TEPCO FP 復旧記録"}
+        - {name: "鹿島 2,3,5,6号", owner: TEPCO, mw: "600–1000 各", depth_m: "<=1", restart: "2011-04-06〜04-20", days: "26–40"}
+        - {name: "常陸那珂 1号", owner: TEPCO, mw: 1000, depth_m: ">1 (ほぼ全域浸水, 燃料設備大被害)", restart: "2011-05-15", days: 65}
+        - {name: "広野 2,4号", owner: TEPCO, mw: "600, 1000", depth_m: ">1 (ほぼ全域浸水)", restart: "2011-07 中旬", days: 125}
+        - {name: "仙台 4号", owner: "東北電力", mw: 446, depth_m: 4.7, restart: "試運転 2011-12-20 / 営業 2012-02-08", days: "284 / 334"}
+        - {name: "新地 2号", owner: "相馬共同火力", mw: 1000, depth_m: ">1 (石炭船座礁)", restart: "2011-12-19", days: 283}
+        - {name: "新地 1号", owner: "相馬共同火力", mw: 1000, depth_m: ">1", restart: "2011-12-27", days: 291}
+        - {name: "原町 2号", owner: "東北電力", mw: 1000, depth_m: 13.0, restart: "2013-03-29", days: 749}
+        - {name: "原町 1号", owner: "東北電力", mw: 1000, depth_m: 13.0, restart: "2013-04-26", days: 777}
+        - {name: "八戸", owner: "東北電力", depth_m: "<=1", restart: "運転中 (2011-08 時点)", days: "短期"}
+      note: "days = 営業運転再開日 − 2011-03-11。新仙台 (3.0 m) と勿来 7号は再開日を本作業で確認できず未記載。"
+
+    recommended_use: >
+      一次 = japan_stop_rate_by_jma_intensity と tsunami_stop_rate_by_depth (内閣府 2025 と同じ手法で
+      較正可能)。二次 = HAZUS EPPML_anchored に japan_adjustment (下記) を乗じた lognormal。
+    japan_adjustment:
+      median_multiplier: 1.0
+      confidence: low
+      note: >
+        火力については HAZUS 曲線と内閣府表の整合を確認していないため補正倍率は 1.0 (無補正) とし、
+        一次の震度表を使うことを推奨。HAZUS EPPML_anchored moderate (0.25 g) は震度5強相当 (0.30 g) で
+        P=0.62 だが内閣府表の 5強 停止率は 0.20。extensive (0.52 g) は 6弱相当 (0.55 g) で 0.53 に対し
+        内閣府 0.90。形は異なるが桁は合う。
+
+  nuclear:
+    im: pga
+    scram_rule:
+      confidence: medium
+      description: "地震加速度大 信号で原子炉自動停止 (スクラム)。設定値は建屋最下階 (基礎版上) の加速度。"
+      setpoints_gal:
+        - {plant: "浜岡 (中部電力)", horizontal: 120, vertical: null, location: "原子炉建屋地下2階", source: "中部電力 浜岡 地震対策ページ https://www.chuden.co.jp/energy/nuclear/hamaoka/anzen/setsubitaisaku/taishin/ ; 静岡県資料 (2011-01-07) 駿河湾の地震 浜岡5号機 自動停止設定値 120 ガル"}
+        - {plant: "川内 1,2号 (九州電力)", horizontal: 160, vertical: 80, location: "補助建屋最下階", source: "九州電力 環境行動レポート 2005 資料 20.pdf https://www.kyuden.co.jp/library/pdf/environment/action-report05/cdrom/20.pdf ; Wikipedia 川内原子力発電所 (地上 補助建屋1階 260 ガル)"}
+        - {plant: "玄海 1,2号 (九州電力)", horizontal: 140, vertical: 70, location: "補助建屋最下階", source: "同上 九州電力 20.pdf"}
+        - {plant: "玄海 3,4号 (九州電力)", horizontal: 170, vertical: 80, location: "補助建屋最下階", source: "同上 九州電力 20.pdf"}
+        - {plant: "泊 1,2号 (北海道電力)", horizontal: 280, vertical: 140, location: "原子炉建屋", source: "北海道電力 地震から発電所を守る https://www.hepco.co.jp/energy/atomic/safety_improve/protect_earthquake.html"}
+        - {plant: "泊 3号 (北海道電力)", horizontal: 200, vertical: 100, location: "原子炉建屋", source: "同上"}
+        - {plant: "志賀 (北陸電力)", horizontal: null, vertical: null, location: null, source: "北陸電力 自動停止機能ページ: 『震度5程度を超える揺れを感知』とのみ記載 https://www.rikuden.co.jp/atmjishin/jidouteishi.html"}
+        - {plant: "伊方 (四国電力)", horizontal: null, vertical: null, location: null, source: "四国電力ページでは設定値未掲載 (基準地震動 650 gal, 1,000 gal 相当まで機能確認のみ)。本作業で未検証"}
+      model_default:
+        basemat_pga_threshold_g: 0.12
+        freefield_to_basemat_ratio: 0.6
+        freefield_pga_threshold_g: 0.20
+        p_scram_at_or_above: 1.0
+        confidence: low
+        note: >
+          仮定。南海トラフ沿いの浜岡 120 gal が最も低い設定値。自由地盤 PGA から建屋基礎版への低減 0.6 は仮定。
+          実装上は「震度5弱以上を受けた原子力ユニットは停止」で十分 (内閣府 2025 は被害の有無に関わらず全原子力停止を仮定)。
+    restart:
+      policy: not_modeled_within_horizon
+      confidence: high
+      source: "内閣府 2025 手法概要 p.42 「原子力: 被害を受けなかった発電所も含めて全ての発電所が停止するものと保守的に仮定」"
+      note: >
+        再起動は設備損傷でなく規制・点検 (中越沖 2007 の柏崎刈羽は年単位、2011 は全基停止) に律速されるため
+        本モデルの時間軸 (1 年以内) では復旧しない扱い。感度ケースとして restoration.yaml に 12 ヶ月を置く。
+
+  hydro:
+    im: jma_intensity
+    default_policy:
+      stop: false
+      confidence: high
+      source: "内閣府 2025 手法概要 p.42 「水力: 内陸部に位置しており被災可能性が小さく…揺れ・津波に対して停止しないものと想定」; 経産省 2015 需給シミュレーションも同じ前提 (p.3)"
+    observed_damage_rates:
+      kumamoto_2016_kyushu_epco:
+        source: "九州電力 2016 資料 p.19–20: 震度5弱以上の 68 発電所 (全143) のうち 9 発電所に被害 (13.2%)"
+        confidence: high
+        rate_by_intensity_pct: {"5弱": 0.0, "5強": 16.7, "6弱": 14.3, "6強": 66.7, "7": 0.0}
+        note: "母数が小さい (6強は 3 発電所中 2)。黒川第一 (導水路埋没・水槽破損) は長期停止"
+      tohoku_2011:
+        source: "経産省提供資料 参考資料2 p.6: 東北電力 水力は水路 19 箇所, 発電所 4 箇所, 変圧器 1 台 (軽微); 土木学会 報告書 §2.3: 東京電力 八汐・沼原 (揚水) の表面遮水壁に亀裂 (八汐の設計地震 266 gal 未満で損傷)"
+        confidence: high
+    optional_outage_curve:
+      enabled: false
+      table:
+        - {jma_class: "5強", p_outage: 0.05}
+        - {jma_class: "6弱", p_outage: 0.10}
+        - {jma_class: "6強", p_outage: 0.25}
+        - {jma_class: "7",   p_outage: 0.30}
+      confidence: low
+      note: "仮定 (熊本の粗い率を丸めた)。感度ケース用。既定は内閣府に合わせ停止しない。"
+
+  pumped_storage:
+    same_as: hydro
+    note: >
+      内閣府/経産省は揚水を停止しない前提 (夜間需要が供給力を下回った時点で揚水供給力 100% を加算, 経産省 2015 p.3)。
+      3.11 で東京電力 八汐・沼原ダムの遮水壁亀裂 (土木学会 報告書 §2.3) があり、大規模揚水のダム損傷は将来版で検討。
+
+  solar_wind_geothermal:
+    im: jma_intensity
+    default_policy:
+      rule: "火力の japan_stop_rate_by_jma_intensity と同じ停止率を適用"
+      confidence: medium
+      source: "内閣府 2025 手法概要 p.42 「新エネルギー (風力、太陽光、地熱): 過去災害における被害状況から定量評価手法を確立することは難しいが…火力発電全体の被害率と同等の被害を生じるものと仮定」"
+    observations:
+      - "熊本 2016: 住宅用 PV のパネル脱落・変形の報告あり (日経xTECH 等)、事業用の被害率は未公表 (low)"
+      - "能登 2024: 石川県内 2 箇所の風力でブレード破損・落下 (名古屋大 丸山研 Q&A; low)"
+      - "HAZUS に太陽光/風力の損傷関数は無い"
+    optional_lognormal:
+      enabled: false
+      im: pga
+      functional_outage: {median_g: 0.6, beta: 0.6}
+      confidence: low
+      note: "仮定。感度ケース用のみ。"
+
+# -----------------------------------------------------------------------------
+# 4. 津波: 変電所の浸水深別 機能喪失確率
+# -----------------------------------------------------------------------------
+tsunami_substations:
+  im: inundation_depth
+  confidence: low
+  table:
+    - {depth_m_min: 0.0, depth_m_max: 0.3, p_functional_failure: 0.05, expected_state: slight}
+    - {depth_m_min: 0.3, depth_m_max: 1.0, p_functional_failure: 0.50, expected_state: extensive}
+    - {depth_m_min: 1.0, depth_m_max: 2.0, p_functional_failure: 0.85, expected_state: complete}
+    - {depth_m_min: 2.0, depth_m_max: 99.0, p_functional_failure: 0.98, expected_state: complete}
+  source: >
+    仮定。アンカー: (1) 東北電力 変電所被害 75 箇所のうち津波 9 箇所 (主要変圧器 23/90, 遮断器 171/177,
+    断路器 331/403 が津波起因) [経産省提供資料 参考資料2 p.7]; 南三陸町の変電所は「屋外機器壊滅・流失、
+    建屋流失 (基礎残置)」(同 p.27)。(2) 土木学会 報告書 §2.4 p.32「沿岸部の変電所では構内への浸水により
+    設備が使用不可能となる被害、周辺構造物のがれきや車両の流入等による機器の損壊、設備の流出」。
+    (3) 火力の内閣府表は浸水深 0.3 m 以上で 100% 停止 (制御盤・電源の浸水)。変電所も制御・保護盤と所内電源が
+    地上階にあり同様と考えた。(4) 国交省の津波建物被害調査: 浸水深 2 m 超で RC/S 造でも損壊率が高い。
+  note: >
+    「津波被災変電所 14 箇所」等の公表値は本作業で確認できなかった (東北電力 9 箇所のみ確認)。
+    浸水域内の変電所総数 (分母) が無いので確率は置いた値。GIS 変電所 (屋内) は屋外変電所より
+    浸水に強い可能性があるが区別しない。地震動と津波の複合は max(P_shaking_complete, P_tsunami) ではなく
+    1-(1-P_s)(1-P_t) で合成する。
+
+# -----------------------------------------------------------------------------
+# 5. 液状化
+# -----------------------------------------------------------------------------
+liquefaction:
+  status: out_of_scope
+  note: "meta.liquefaction 参照。"

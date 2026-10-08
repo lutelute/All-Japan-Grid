@@ -1,0 +1,989 @@
+# 電力設備の耐水性(津波対策)の公表根拠 — 機械可読版 (2026-09-18)
+# 対応する説明版: flood_resistance_evidence_2026-09-18.md
+# confidence: high = 一次資料本文/表から転記, medium = 二次資料または要旨のみ, low = 名称・所在のみ
+# quote は 40 字以内の原文。value が null のものは値が公表されていない。
+meta:
+  retrieved: "2026-09-18"
+  purpose: "南海トラフ電力ハザードモデルの変電所・火力の水没判定に耐水高を導入するための根拠収集"
+  sources:
+    FEPC2021: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    TDGC2026: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    FEPC2026: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    METI2014_p1_22: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    METI2014_p23_32: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_04.pdf"
+    CAO2011: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    JSCE_E: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    JSCE_P: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    TEPCO_W4: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/4/pdf/shiryou_2.pdf"
+    CAO_W3: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/3/pdf/shiryou_7.pdf"
+    CAO2025: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/pdf/sanko_gaiyo.pdf"
+    PA_NS: "https://www.power-academy.jp/electronics/report/rep02000.html"
+    IEIEJ_HARAMACHI: "https://www.jstage.jst.go.jp/article/ieiej/33/11/33_863/_pdf"
+    KAIGAN_HARAMACHI: "https://www.jstage.jst.go.jp/article/kaigan/70/1/70_50/_article/-char/ja/"
+    CRIEPI2018: "https://committees.jsce.or.jp/eec2/system/files/181220_%E5%9C%9F%E6%9C%A8%E5%AD%A6%E4%BC%9A%E5%9C%B0%E9%9C%87%E5%B7%A5%E5%AD%A6%E5%A7%94%E5%93%A1%E4%BC%9A%20%E7%AC%AC3%E5%9B%9E%E7%A0%94%E7%A9%B6%E4%BC%9A(%E6%B9%AF%E5%B1%B1).pdf"
+    CAO_SHUTO2013: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/shutochokkajishinsenmon/15/pdf/shiryou3.pdf"
+    TOKYO2022_CH6: "https://www.bousai.metro.tokyo.lg.jp/_res/projects/default_project/_page_/001/021/571/20220525/n/06n.pdf"
+    HYOGO: "https://web.pref.hyogo.lg.jp/kk37/documents/syuhou.pdf"
+    OKAYAMA: "https://www.pref.okayama.jp/uploaded/life/826156_7804116_misc.pdf"
+    CAO_NANKAI2012_WG6: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/6/pdf/2-1.pdf"
+    MLIT_GL2020: "https://www.mlit.go.jp/jutakukentiku/build/content/001349327.pdf"
+    MLIT_YOSO2018: "https://www.mlit.go.jp/common/001229457.pdf"
+    FDMA_KESENNUMA: "https://www.fdma.go.jp/singi_kento/kento/items/kento004_25_shiryo_04.pdf"
+    TOKIO_DR371: "https://www.tokio-dr.jp/publication/report/riskmanagement/riskmanagement-371.html"
+    JEPOC_HARAMACHI: "https://www.jepoc.or.jp/magazine/magazine.php?_w=magazine&_x=kikan_detail&kikan_m_id=31&kikan_n_id=818"
+
+records:
+  # ---------------- A. 変電所: 対策 ----------------
+  - id: A01
+    facility: "中部電力PG 変電所(愛知県)"
+    attribute: "GIS基礎嵩上げ(南海トラフ2014愛知県浸水想定対応)"
+    value: "実施"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "設備更新に合わせて基礎を嵩上げ"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "嵩上げ高さは非公表"
+  - id: A02
+    facility: "中部電力PG 変電所(三重県)"
+    attribute: "防水壁(南海トラフ2014三重県浸水想定対応)"
+    value: "実施"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "三重県での浸水想定策定（2014年）を踏まえ、防水壁を設置"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A03
+    facility: "中部電力PG 変電所(愛知県)"
+    attribute: "変電所入口止水板(庄内川氾濫想定2016)"
+    value: "実施"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "変電所入口止水板設置（中部電力PG）"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A04
+    facility: "東北電力NW 変電所"
+    attribute: "防水壁(2019台風19号後)"
+    value: "実施"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "2019年台風19号における浸水被害を踏まえ、防水壁を設置"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A05
+    facility: "中国電力NW 変電所"
+    attribute: "変圧器制御機器嵩上げ(2018西日本豪雨後)"
+    value: "実施"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "制御機器を嵩上げ"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A06
+    facility: "東京電力(全社)"
+    attribute: "水害対策設計基準 制定・改訂"
+    value: "昭和52年制定, 平成4年7月1日改訂"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/4/pdf/shiryou_2.pdf"
+    quote: "水害対策設計基準：平成４年７月１日 改訂"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A07
+    facility: "東京電力(全社)"
+    attribute: "敷地地盤高の原則(高潮・津波・波浪)"
+    value: "計画高潮位以上"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/4/pdf/shiryou_2.pdf"
+    quote: "敷地の地盤高は、原則として計画高潮位以上とする"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A08
+    facility: "東京電力(拠点施設)"
+    attribute: "機器設置高の原則"
+    value: "近傍河川の計画高水位・計画高潮位以上"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/3/pdf/shiryou_7.pdf"
+    quote: "計画高水位および計画高潮位以上を確保"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A09
+    facility: "東京電力 地下変電所"
+    attribute: "水害対策設備"
+    value: "防水扉・防潮扉・給排気口防水壁・排水ポンプ・浸水警報装置"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/4/pdf/shiryou_2.pdf"
+    quote: "出入口、開口部の防水扉等"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A10
+    facility: "一般送配電7社 17万V以上変電所"
+    attribute: "津波耐性評価の方法"
+    value: "機器操作箱の水没有無で個別判定"
+    unit: null
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "機器の高さに応じて、個別に耐性を評価"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A11
+    facility: "一般送配電7社 17万V以上変電所"
+    attribute: "対策済み設備の扱い"
+    value: "嵩上げ済みは被害なし"
+    unit: null
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "機器の嵩上げ等により浸水対策が取られている場合は被害なしと評価する"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A12
+    facility: "電力業界方針 170kV以上主要基幹変電所・送電線"
+    attribute: "立地方針(最大クラス津波)"
+    value: "津波影響のある海岸部に設置しない"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "津波の影響がある海岸部に設置しないことが重要"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A13
+    facility: "移動用変電設備"
+    attribute: "適用範囲"
+    value: "17万V未満"
+    unit: null
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "17万V未満の系統においては移動用変電設備"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A14
+    facility: "東京電力PG 17万V以上(南海トラフ最過酷ケース)"
+    attribute: "津波被災変電所数"
+    value: 0
+    unit: "箇所"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "東京 ― ― ―"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A15
+    facility: "中部電力PG 17万V以上(同)"
+    attribute: "津波被災変電所数 / 被災鉄塔数"
+    value: "1 / 10"
+    unit: "箇所 / 基"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "中部 10基 ― 1箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A16
+    facility: "関西電力送配電 17万V以上(同)"
+    attribute: "津波被災変電所数 / 被災鉄塔数"
+    value: "3 / 2"
+    unit: "箇所 / 基"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "関西 2基 ― 3箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A17
+    facility: "四国電力送配電 17万V以上(同)"
+    attribute: "津波被災変電所数 / 被災鉄塔数"
+    value: "1 / 9"
+    unit: "箇所 / 基"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "四国 9基 ― 1箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A18
+    facility: "一般送配電7社 計(南海トラフ最過酷ケース)"
+    attribute: "津波被災 鉄塔 / 変電所"
+    value: "38 / 5"
+    unit: "基 / 箇所"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "計 38基 ― 5箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "九州12基・電発5基の鉄塔を含む"
+  - id: A19
+    facility: "一般送配電7社 計(地震+津波)"
+    attribute: "仮設備復旧が必要なエリア / 供給支障量 / 想定復旧期間"
+    value: "10箇所 / 約147万kW / 1週間程度"
+    unit: null
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "仮設備等による復旧にて１週間程度"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A20
+    facility: "東京電力 送変電(2014年評価, 南海トラフ内閣府全11ケース)"
+    attribute: "津波による設備被害"
+    value: "なし"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "内閣府全11ケース ※設備被害なし"
+    retrieved: "2026-09-18"
+    confidence: high
+
+  # ---------------- A. 変電所: 2011 実績 ----------------
+  - id: A21
+    facility: "東北電力 変電所(2011)"
+    attribute: "被害数(うち津波)"
+    value: "75 (9)"
+    unit: "箇所"
+    source_url: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    quote: "変電所 箇所 75 (9)"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A22
+    facility: "東北電力 主要変圧器(2011)"
+    attribute: "被害数(うち津波)"
+    value: "90 (23)"
+    unit: "台"
+    source_url: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    quote: "主要変圧器 台 90 (23)"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A23
+    facility: "東北電力 遮断器(2011)"
+    attribute: "被害数(うち津波)"
+    value: "177 (171)"
+    unit: "台"
+    source_url: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    quote: "遮断器 台 177 (171)"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A24
+    facility: "東北電力 断路器(2011)"
+    attribute: "被害数(うち津波)"
+    value: "403 (331)"
+    unit: "台"
+    source_url: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    quote: "断路器 台 403 (331)"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A25
+    facility: "東北電力 変電所(2011)"
+    attribute: "被害率"
+    value: "75 / 615"
+    unit: "箇所"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "変電所 615 箇所のうち 75 箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A26
+    facility: "東京電力 変電所(2011)"
+    attribute: "被害数(津波内訳なし)"
+    value: "134 / 1,592"
+    unit: "箇所"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "変電所 1,592 箇所のうち 134 箇所"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A27
+    facility: "変電所(宮城県南三陸町, 名称非公表, 2011)"
+    attribute: "津波被害状況"
+    value: "屋外機器壊滅・流失, 建屋流失(基礎残置), 屋内機器壊滅・流失"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chousakai/tohokukyokun/9/pdf/sub2.pdf"
+    quote: "屋外機器壊滅・流失"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "浸水深の記載なし"
+  - id: A28
+    facility: "変電所(GIS, 事業者・名称非公表, 2011)"
+    attribute: "全機器使用不可となった浸水深"
+    value: 4
+    unit: "m"
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "構内全面浸水（推定４ｍ）"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "TDGC2026 p.25 にも同一事例。推定値"
+  - id: A29
+    facility: "沿岸部変電所(東北, 2011)"
+    attribute: "被害モード"
+    value: "構内浸水で使用不能・がれき/車両流入・設備流出"
+    unit: null
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "構内への浸水により設備が使用不可能となる被害"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A30
+    facility: "甚大被害の変電所(東北, 2011)"
+    attribute: "復旧方法"
+    value: "移動用機器"
+    unit: null
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "移動用機器による復旧を行った"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: A31
+    facility: "鹿折変電所(気仙沼市, 東北電力)"
+    attribute: "2011 津波火災域内に所在"
+    value: null
+    unit: null
+    source_url: "https://www.fdma.go.jp/singi_kento/kento/items/kento004_25_shiryo_04.pdf"
+    quote: "東側鹿折変電所付近…防火線帯"
+    retrieved: "2026-09-18"
+    confidence: low
+    note: "浸水深・設備被害の記述なし。名称のみ"
+
+  # ---------------- B. 火力: 対策 ----------------
+  - id: B01
+    facility: "新仙台火力 3号系列(東北電力)"
+    attribute: "海側盛土の高さ(防潮堤と併設)"
+    value: 5
+    unit: "m"
+    source_url: "https://www.power-academy.jp/electronics/report/rep02000.html"
+    quote: "発電所海側の盛土（高さ約5m）と防潮堤"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "二次資料(東北電力説明の転記)。約5m"
+  - id: B02
+    facility: "新仙台火力 3号系列"
+    attribute: "重要設備(電気設備・非常用発電)の設置階"
+    value: "原則2階以上"
+    unit: null
+    source_url: "https://www.power-academy.jp/electronics/report/rep02000.html"
+    quote: "重要設備は、原則2階以上に設置"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B03
+    facility: "新仙台火力 3号系列"
+    attribute: "開閉所・遮断器の据付面高さ"
+    value: 3
+    unit: "m (GL+)"
+    source_url: "https://www.power-academy.jp/electronics/report/rep02000.html"
+    quote: "据付面を地盤面より3mにかさ上げして設置"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B04
+    facility: "新仙台火力(2011)"
+    attribute: "津波浸水(地面から / 海抜)"
+    value: "3 / 6.5"
+    unit: "m"
+    source_url: "https://www.power-academy.jp/electronics/report/rep02000.html"
+    quote: "地面から3メートル（海抜6.5メートル）に達して"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B05
+    facility: "原町火力(東北電力)"
+    attribute: "軽油タンク・事務室の移設"
+    value: "軽油タンク高台移設, 事務室3階→5階"
+    unit: null
+    source_url: "https://www.jstage.jst.go.jp/article/ieiej/33/11/33_863/_pdf"
+    quote: "軽油タンクを高台に移設"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B06
+    facility: "原町火力"
+    attribute: "南側防潮堤(盛土+コンクリートブロック)の高さ"
+    value: null
+    unit: "m"
+    source_url: "https://www.jstage.jst.go.jp/article/kaigan/70/1/70_50/_article/-char/ja/"
+    quote: "南側敷地への防潮堤の設置が有効"
+    retrieved: "2026-09-18"
+    confidence: medium
+    note: "電力土木「原町火力発電所防潮堤の設計と施工」(要旨のみ、数値なし) https://www.jepoc.or.jp/magazine/magazine.php?_w=magazine&_x=kikan_detail&kikan_m_id=31&kikan_n_id=818"
+  - id: B07
+    facility: "南海トラフ対象火力(JERA・関西・中国・四国・九州・電発)"
+    attribute: "津波対策メニュー(ハード)"
+    value: "防潮堤・土堰堤・防潮扉, 屋外重要機器の基礎嵩上げ・移設, 発電設備地盤高嵩上げ, 重要機器の建屋2階面以上移設, 排水ポンプ・ケーブルダクト止水"
+    unit: null
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "屋外重要機器の基礎嵩上げ、移設"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "高さの記載なし"
+  - id: B08
+    facility: "南海トラフ対象火力"
+    attribute: "対策の実施状況(総括)"
+    value: "必要に応じ実施"
+    unit: null
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "防潮堤や土堰堤、嵩上げ等津波対策を講じており"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B09
+    facility: "火力一般(2014)"
+    attribute: "津波対策事例"
+    value: "防潮ゲート, 建屋防水扉, 屋上避難階段, 燃料受入設備緊急離脱装置"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_04.pdf"
+    quote: "防潮ゲート"
+    retrieved: "2026-09-18"
+    confidence: high
+
+  # ---------------- B. 火力: 南海トラフ耐性評価 2026 ----------------
+  - id: B10
+    facility: "火力 津波被害レベル定義(電事連/経産省WG)"
+    attribute: "浸水深の目安 A / B / C"
+    value: "1m程度〜数十m / 数十cm〜1m程度 / 数十cm未満"
+    unit: "m"
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "浸水深の目安 1m程度～数十m 数十cm～1m程度 数十cm未満"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B11
+    facility: "火力 津波被害レベル定義"
+    attribute: "復旧期間の目安 A / B / C"
+    value: "4か月程度以上 / 4か月程度以内 / 運転継続可能"
+    unit: null
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "４か月程度以上"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B12
+    facility: "南海トラフ対象火力 52箇所 9,070万kW(2026)"
+    attribute: "レベルA / B / C / 浸水しない"
+    value: "4(445万kW) / 2(436) / 5(548) / 41(7,641)"
+    unit: "箇所(万kW)"
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "発電所数 4 2 5"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B13
+    facility: "JERA(東京) 南海トラフ対象火力"
+    attribute: "レベルA / B / C"
+    value: "0 / 0 / 1(130万kW)"
+    unit: "箇所(万kW)"
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "東京 0 0 0 0 1 130"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "発電所名は非公表"
+  - id: B14
+    facility: "関西電力 / 四国電力 / 電源開発(同)"
+    attribute: "レベルA / B / C"
+    value: "関西 1(120)/2(436)/2(204); 四国 2(115)/0/2(214); 電発 1(210)/0/0"
+    unit: "箇所(万kW)"
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "関西電力 1 120 2 436 2 204"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B15
+    facility: "燃料油タンク(22地点)"
+    attribute: "浸水想定地点(レベルB)"
+    value: "5(関西1, 四国3, 電発1; JERA 0)"
+    unit: "箇所"
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "5か所の浸水が想定されるが"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B16
+    facility: "LNGタンク(9地点)"
+    attribute: "浸水"
+    value: "なし"
+    unit: null
+    source_url: "https://www.fepc.or.jp/pr/news/sonota/__icsFiles/afieldfile/2026/01/21/oshirase_20260121.pdf"
+    quote: "全個所（9地点）浸水はなく"
+    retrieved: "2026-09-18"
+    confidence: high
+
+  # ---------------- B. 火力: 2011 実績 ----------------
+  - id: B17
+    facility: "鹿島火力(東京電力, 2011)"
+    attribute: "浸水深 / 停止日数(1基目, 全基)"
+    value: "1 / 21 (66)"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "鹿島発電所は放水設備付近が浸水"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "浸水範囲の引用は JSCE_E p.23。地盤沈下約0.2m"
+  - id: B18
+    facility: "常陸那珂火力(東京電力, 2011)"
+    attribute: "浸水深 / 停止日数"
+    value: "1.5 / 65"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "常陸那珂 100 石炭 321 1.5"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B19
+    facility: "広野火力(東京電力, 2011)"
+    attribute: "浸水深 / 停止日数(1基目, 全基)"
+    value: "4 / 96 (127)"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "広野 380 石油・石炭 391 4"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B20
+    facility: "八戸火力(東北電力, 2011)"
+    attribute: "浸水深 / 停止日数"
+    value: "0.5 / 9"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "八戸 25 石油 143 0.5"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B21
+    facility: "仙台火力(東北電力, 2011)"
+    attribute: "地盤高 / 浸水深 / 停止日数"
+    value: "TP+2.5 / 4.7 / 334"
+    unit: "m / m / 日"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "地盤高さは TP+2.5m…浸水深は約 4.7m"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "停止日数は JSCE_P 表-1"
+  - id: B22
+    facility: "新仙台火力(東北電力, 2011)"
+    attribute: "地盤高 / 浸水深 / 停止日数"
+    value: "TP+3.7 / 3.0 / 291"
+    unit: "m / m / 日"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "地盤高さ TP+3.7m、浸水深約 3.0m"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B23
+    facility: "原町火力(東北電力, 2011)"
+    attribute: "地盤高 / 浸水深 / 停止日数(1基目, 全基)"
+    value: "TP+4.1 / 13 / 749 (777)"
+    unit: "m / m / 日"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "TP+4.1m、浸水深約 13m"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B24
+    facility: "原町火力(2011, 事業者説明)"
+    attribute: "津波高"
+    value: 18
+    unit: "m(海抜)"
+    source_url: "https://www.jstage.jst.go.jp/article/ieiej/33/11/33_863/_pdf"
+    quote: "高さ 18 mの巨大津波により，事務所 3 階天井付近まで浸水"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B25
+    facility: "原町火力(2011, 数値解析)"
+    attribute: "浸水高 / 浸水深"
+    value: "約20 / 約15"
+    unit: "m"
+    source_url: "https://www.jstage.jst.go.jp/article/kaigan/70/1/70_50/_article/-char/ja/"
+    quote: "浸水高約20m（浸水深約15m）の津波が押し寄せ"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B26
+    facility: "原町火力 電気設備(2011)"
+    attribute: "変圧器の冠水"
+    value: "主変・起動変・所内変 全冠水"
+    unit: null
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "主変圧器、起動変圧器、所内変圧器ともに全冠水"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B27
+    facility: "新地火力(相馬共同火力, 2011)"
+    attribute: "浸水深 / 停止日数(1基目, 全基)"
+    value: "3 / 283 (291)"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "新地 200 石炭 585 3"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B28
+    facility: "勿来火力(常磐共同火力, 2011)"
+    attribute: "浸水深 / 停止日数(1基目, 全基)"
+    value: "1.8 / 111 (407)"
+    unit: "m(GL+) / 日"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "勿来 162.5 石油・石炭 471 1.8"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B29
+    facility: "火力 匿名5事例(電事連 2014)"
+    attribute: "浸水深 → 運転再開までの期間"
+    value: "13m→約22か月, 5m→約11か月, 3.0m→約9か月, 4.0m→約4か月, 0.8m→10日"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "○浸水深 ０．８ｍ ■１０日で運転再開"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B30
+    facility: "火力 9発電所(2011, 総括)"
+    attribute: "浸水と停止期間の関係"
+    value: "浸水あり: 2週間〜2年以上; 浸水なし: ほとんど2週間以内"
+    unit: null
+    source_url: "https://committees.jsce.or.jp/eec2/system/files/181220_%E5%9C%9F%E6%9C%A8%E5%AD%A6%E4%BC%9A%E5%9C%B0%E9%9C%87%E5%B7%A5%E5%AD%A6%E5%A7%94%E5%93%A1%E4%BC%9A%20%E7%AC%AC3%E5%9B%9E%E7%A0%94%E7%A9%B6%E4%BC%9A(%E6%B9%AF%E5%B1%B1).pdf"
+    quote: "浸水深が大きくなるほど長期化"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B31
+    facility: "火力 港湾・荷役/燃料/給排水設備"
+    attribute: "被害が出始める浸水深"
+    value: 2
+    unit: "m"
+    source_url: "https://www.jstage.jst.go.jp/article/jscejseee/70/4/70_I_664/_pdf"
+    quote: "浸水深が2m程度から被害が発生している"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B32
+    facility: "燃料油タンク(消防庁 2011-12 調査)"
+    attribute: "本体・配管損傷の浸水深"
+    value: "3m以上で高まる, 7m超で顕著"
+    unit: "m"
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "3m以上の浸水がある場合、タンク本体や配管が損傷する可能性が高くなる"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B33
+    facility: "太平洋岸火力(2011)"
+    attribute: "地盤沈下量"
+    value: "広野・勿来 約0.5, 原町 約0.4, 仙台・新仙台・新地・常陸那珂 約0.3, 鹿島共同・鹿島 約0.2"
+    unit: "m"
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "広野・勿来で約 0.5m の沈下"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: B34
+    facility: "電気設備の津波対応 基本的考え方(区分I/II, L1/L2)"
+    attribute: "最大クラス津波への方針"
+    value: "被害防止設備は費用面で非現実的、減災・復旧容易化"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "被害を防ぐような設備とすることは、費用の観点から現実的ではない"
+    retrieved: "2026-09-18"
+    confidence: high
+
+  # ---------------- C. 被害想定 ----------------
+  - id: C01
+    facility: "内閣府 首都直下地震 被害想定手法(2013)"
+    attribute: "変電所の扱い"
+    value: "過酷側評価で一部変電所が全停止、系統切替で1日以内回復。浸水深別停止率なし"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/shutochokkajishinsenmon/15/pdf/shiryou3.pdf"
+    quote: "一旦、全ての設備が停止するものとした"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C02
+    facility: "内閣府 首都直下地震 被害想定手法(2013)"
+    attribute: "変電所被害の復旧"
+    value: "1日以内"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/shutochokkajishinsenmon/15/pdf/shiryou3.pdf"
+    quote: "１日以内に回復するとする"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C03
+    facility: "東京都 被害想定手法(2022-05) 6.6.1 電力"
+    attribute: "発電所・変電所・基幹送電網の扱い"
+    value: "被災評価を行わない"
+    unit: null
+    source_url: "https://www.bousai.metro.tokyo.lg.jp/_res/projects/default_project/_page_/001/021/571/20220525/n/06n.pdf"
+    quote: "拠点的な施設・機能（発電所、変電所、及び基幹送電網等）の被災評価は行っていない"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C04
+    facility: "東京都 被害想定手法(2022-05) 6.6.1 電力"
+    attribute: "津波浸水エリアの扱い"
+    value: "全面停電"
+    unit: null
+    source_url: "https://www.bousai.metro.tokyo.lg.jp/_res/projects/default_project/_page_/001/021/571/20220525/n/06n.pdf"
+    quote: "津波浸水エリアは全面的に停電が生じると想定"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C05
+    facility: "東京都 被害想定(2022) 都心南部直下"
+    attribute: "停電率"
+    value: "11.9%(前回17.6%)"
+    unit: "%"
+    source_url: "https://www.tokio-dr.jp/publication/report/riskmanagement/riskmanagement-371.html"
+    quote: "電力被害率は11.9%（前回想定：17.6%）"
+    retrieved: "2026-09-18"
+    confidence: medium
+  - id: C06
+    facility: "兵庫県 被害想定手法(南海トラフ, 電力会社手法)"
+    attribute: "津波浸水深による停電判定"
+    value: "2m以上は全域停電, 2m未満は地域別に想定"
+    unit: "m"
+    source_url: "https://web.pref.hyogo.lg.jp/kk37/documents/syuhou.pdf"
+    quote: "２ｍ以上の津波浸水深の地域は…全域停電するものとする"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C07
+    facility: "内閣府 南海トラフ 被害想定手法概要(2025-03) 4.3 電力"
+    attribute: "変電所の浸水深別停止率"
+    value: null
+    unit: null
+    source_url: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/pdf/sanko_gaiyo.pdf"
+    quote: "供給側設備の被災に起因した停電軒数"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "本文テキスト検索で「変電」該当ゼロ。変電所の浸水停止率は本文書には無い"
+  - id: C08
+    facility: "内閣府 南海トラフ 被害想定手法概要(2025-03) 4.3 電力"
+    attribute: "津波による火力停止率(浸水深0.3m以上1m未満)"
+    value: "100%(直後〜3ヶ月後), 4ヶ月後以降0%"
+    unit: "%"
+    source_url: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/pdf/sanko_gaiyo.pdf"
+    quote: "浸⽔深0.3m以上1m未満 100%"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "出典は経産省 平成26年度災害に強い電気設備検討調査"
+  - id: C09
+    facility: "内閣府 南海トラフ 被害想定手法概要(2025-03) 4.3 電力"
+    attribute: "津波による火力停止率(浸水深1m以上)"
+    value: "100%(直後〜8か月後), 9か月後以降0%"
+    unit: "%"
+    source_url: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/pdf/sanko_gaiyo.pdf"
+    quote: "浸⽔深1m以上 100%"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C10
+    facility: "内閣府 南海トラフ 第二次報告(2012, 2023WG再掲)"
+    attribute: "火力停止条件"
+    value: "震度6弱以上 または 浸水深数十cm以上"
+    unit: null
+    source_url: "https://www.bousai.go.jp/jishin/nankai/taisaku_wg_02/6/pdf/2-1.pdf"
+    quote: "津波による浸水深数十cm以上となる火力発電所がおおむね運転を停止"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: C11
+    facility: "送配電網協議会(2026) 供給対象需要"
+    attribute: "需要喪失の浸水深"
+    value: 2
+    unit: "m"
+    source_url: "https://www.tdgc.jp/information/docs/%E5%8D%97%E6%B5%B7%E3%83%88%E3%83%A9%E3%83%95%E5%B7%A8%E5%A4%A7%E5%9C%B0%E9%9C%87%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E9%9B%BB%E6%B0%97%E8%A8%AD%E5%82%99%E3%81%AE%E8%80%90%E6%80%A7%E8%A9%95%E4%BE%A1.pdf"
+    quote: "2ｍ以上の浸水深のエリアは需要が喪失すると仮定"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "根拠: 浸水深2m以上で木造家屋の全壊+大規模半壊が約90%"
+  - id: C12
+    facility: "岡山県 被害想定 手法編"
+    attribute: "直後の停電率"
+    value: "震度ベース(能島ら)。変電所浸水率なし"
+    unit: null
+    source_url: "https://www.pref.okayama.jp/uploaded/life/826156_7804116_misc.pdf"
+    quote: "発電所の一時停止や変電所の一部施設の被害等により、広域で停電"
+    retrieved: "2026-09-18"
+    confidence: medium
+
+  # ---------------- D. 機器と浸水 ----------------
+  - id: D01
+    facility: "屋外変電機器の制御回路"
+    attribute: "浸水時の影響"
+    value: "制御不能"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "屋外機器を制御する回路が浸水すると、機器が制御不能に陥る"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D02
+    facility: "ケーブル接続部等の充電部"
+    attribute: "浸水時の影響"
+    value: "地絡事故→供給停止のおそれ"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "充電部が浸水すると、地絡事故が発生"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D03
+    facility: "発変電所建屋内の制御・保護機器"
+    attribute: "水没時の影響"
+    value: "発変電所機能喪失"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "機器が水没し使用不能となれば、発変電所機能が喪失する"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D04
+    facility: "既設制御室建屋"
+    attribute: "対策の制約"
+    value: "嵩上げ困難→扉水密化・ケーブル引出口止水"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/013_03_02.pdf"
+    quote: "既設の制御室建物の嵩上げは困難"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D05
+    facility: "変電機器(東京電力)"
+    attribute: "支障の2段階"
+    value: "露出充電部到達→絶縁破壊; 機器内制御装置到達→制御機能喪失"
+    unit: null
+    source_url: "https://www.bousai.go.jp/kaigirep/chuobou/senmon/daikibosuigai/4/pdf/shiryou_2.pdf"
+    quote: "機器内の制御装置まで水位が上がった場合"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D06
+    facility: "変電所 GIS等(2011実績)"
+    attribute: "使用不可の部位"
+    value: "操作箱・端子台・電装品"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "操作箱・端子台・電装品の浸水等により屋内、屋外機器使用不可"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D07
+    facility: "変電所個別評価の判定基準"
+    attribute: "使用不可の判定"
+    value: "電気回路が水没レベルにあれば使用不可"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "電気回路が、水没レベルにあるため、使用不可と判断"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D08
+    facility: "火力 レベルA機器"
+    attribute: "1m程度以上の浸水で被害"
+    value: "高圧電動機・潤滑油タンク・非常用電源・電気制御設備"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "高圧電動機、潤滑油タンク、非常用電源、電気・制御設備 他"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D09
+    facility: "火力 レベルB機器"
+    attribute: "数十cm〜1m程度の浸水で被害"
+    value: "現場制御盤・端子台・低圧電動機"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "現場制御盤および端子台、低圧電動機 他"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D10
+    facility: "火力 レベルC"
+    attribute: "機器浸水なしの条件"
+    value: "設置基礎の高さ以下の浸水"
+    unit: null
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "設備浸水なし（設置基礎の高さ以下）"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D11
+    facility: "送電鉄塔"
+    attribute: "津波倒壊条件(2011実績)"
+    value: "離岸0.5km以内かつ浸水深2m以上; 0.5km超かつ3m以上"
+    unit: "m"
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "離岸距離：0.5km以内 かつ 浸水深：2ｍ以上"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "TDGC2026 p.23 でも同条件を採用"
+  - id: D12
+    facility: "送電鉄塔(2011)"
+    attribute: "浸水鉄塔の倒壊率"
+    value: "38 / 389"
+    unit: "基"
+    source_url: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/report01_03.pdf"
+    quote: "浸水基数389基に対し38基"
+    retrieved: "2026-09-18"
+    confidence: high
+  - id: D13
+    facility: "建築物の電気設備(国交省・経産省ガイドライン 2020)"
+    attribute: "設置原則"
+    value: "設定浸水深以上、室内のできる限り高い位置"
+    unit: null
+    source_url: "https://www.mlit.go.jp/jutakukentiku/build/content/001349327.pdf"
+    quote: "電気設備を設置室内のできる限り高い位置に設置"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "建築物向け。変電所向けではない"
+  - id: D14
+    facility: "建築物の電気設備(同 事例)"
+    attribute: "ポンプ・動力盤の設置高"
+    value: 2.0
+    unit: "m(床面から)"
+    source_url: "https://www.mlit.go.jp/jutakukentiku/build/content/001349327.pdf"
+    quote: "ポンプ類や動力盤は、床面から 2.0m の高さ"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "建築物向け事例"
+  - id: D15
+    facility: "受変電・発電設備(国交省 要素技術 2018)"
+    attribute: "設置階"
+    value: "津波浸水深以上の階"
+    unit: null
+    source_url: "https://www.mlit.go.jp/common/001229457.pdf"
+    quote: "津波による浸水深以上の階に設置する"
+    retrieved: "2026-09-18"
+    confidence: high
+    note: "建築物向け"
+  - id: D16
+    facility: "変電設備(2011, 揺れ, 参考)"
+    attribute: "運転継続不可の被害"
+    value: "少数"
+    unit: null
+    source_url: "https://committees.jsce.or.jp/enedobo/system/files/%E5%A0%B1%E5%91%8A%E6%9B%B8%EF%BC%88%E6%9C%80%E7%B5%82%E5%A0%B1%E5%91%8A%EF%BC%89%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%A4%A7%E9%9C%87%E7%81%BD%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC%E6%96%BD%E8%A8%AD%E3%81%AE%E8%A2%AB%E5%AE%B3%E7%8A%B6%E6%B3%81%E3%81%A8%E4%BB%8A%E5%BE%8C%E3%81%AE%E5%B1%95%E9%96%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf"
+    quote: "運転継続不可能となった被害は少なかった"
+    retrieved: "2026-09-18"
+    confidence: high
+
+not_found:
+  - query: "東京電力パワーグリッド 変電所 津波対策 嵩上げ 防水扉 重要設備 / 浸水想定区域 対策 箇所 レジリエンス"
+    item: "東京電力PG 変電所の津波対策の高さ・対象変電所名"
+    tried_sources:
+      - "TEPCO PG 供給網の整備 https://www.tepco.co.jp/pg/electricity-supply/disaster/ (WebFetch 403。検索要約に水密化・充電部嵩上げの一般記述のみ)"
+      - "内閣府 大規模水害専門調査会 資料2/資料7(設計基準の原則のみ、数値なし)"
+  - query: "東北電力ネットワーク 変電所 津波対策 高台移転 嵩上げ 気仙沼 石巻 相馬"
+    item: "東北電力NW 変電所の津波対策の高さ・対象名"
+    tried_sources:
+      - "東北電力NW 系統図・事業所一覧"
+      - "FEPC2021(防水壁は台風19号対応のみ)"
+  - query: "東北電力 津波 被災 変電所 気仙沼変電所 OR 志津川変電所 OR 石巻港変電所 OR 仙台港変電所 OR 名取変電所 OR 相馬変電所 / 「東日本大震災の記録」変電所"
+    item: "東北電力 2011 津波被災変電所9箇所の名称・浸水深"
+    tried_sources:
+      - "内閣府 参考資料2(宮城県南三陸町の写真のみ)"
+      - "土木学会エネルギー委員会 最終報告(総数のみ)"
+      - "消防庁 検討会資料(鹿折変電所の名称のみ)"
+      - "土木学会 ライフライン復旧年表 110603-ver3.pdf(変電所名なし)"
+  - query: "中部電力パワーグリッド 変電所 津波対策 GIS 嵩上げ 防水壁 三重 愛知 南海トラフ 浸水想定 対策完了 箇所"
+    item: "中部電力PG 変電所対策の高さ・箇所数"
+    tried_sources:
+      - "浜岡原発の防波壁記事"
+      - "FEPC2021 写真事例(高さ非公表)"
+      - "TDGC2026(社別集計のみ)"
+  - query: "\"鰐川変電所\" / \"神之池変電所\" OR \"北浜変電所\" OR \"泉川変電所\" 東京電力 神栖"
+    item: "神栖市 275kV 4変電所の屋内式/GIS/津波対策"
+    tried_sources:
+      - "該当なし(紀の川変電所・鹿島変電所の地図情報のみ)"
+  - query: "\"千鳥町変電所\" OR \"南川崎変電所\" OR \"稲荷変電所\" 川崎 154kV GIS 屋内 竣工"
+    item: "川崎市 154kV 3変電所の屋内式/GIS/津波対策"
+    tried_sources:
+      - "NAVITIME 南川崎変電所 所在地(川崎区白石町)のみ"
+      - "TEPCO 設備計画PDF(線路表)"
+  - query: "JERA 火力発電所 津波対策 防潮壁 高さ / 川崎火力 OR 横浜火力 OR 東扇島 OR 千葉 OR 富津 津波 高潮 対策 防潮壁 護岸 高さ T.P. 環境影響評価"
+    item: "JERA 鹿島・川崎・横浜・南横浜・東扇島・千葉・姉崎・袖ケ浦・富津・五井の防潮堤高さ(T.P.)"
+    tried_sources:
+      - "JERA 発電所パンフレット PDF(chiba.pdf, kashima.pdf は画像のみでテキスト抽出不可)"
+      - "JERA 安全への取り組みページ(一般記述)"
+      - "FEPC2026(社別集計、所名なし)"
+  - query: "鹿島共同火力 OR 鹿島パワー OR 扇島パワー OR 川崎天然ガス発電 津波対策 防潮 高さ"
+    item: "鹿島共同火力・鹿島パワー・扇島パワー・川崎天然ガス発電・Genex水江の津波対策"
+    tried_sources:
+      - "各社会社概要ページのみ"
+  - query: "原町火力発電所 防潮堤 高さ 盛土 コンクリートブロック 津波対策 / 「海抜」OR「T.P.」高さ 延長"
+    item: "原町火力 防潮堤の高さ(T.P.)・延長"
+    tried_sources:
+      - "電力土木「原町火力発電所防潮堤の設計と施工」要旨(数値なし)"
+      - "五洋建設 プロジェクトページ(本文取得不可)"
+      - "東北電力 原町 PR ページ(文字化け)、原町の\"今\"記事(WebFetch要約が誤読のため不採用)"
+      - "吉井ほか 2014 抄録(南側防潮堤が有効、高さなし)"
+  - query: "広野火力 OR 常陸那珂火力 OR 鹿島火力 津波対策 防潮堤 防潮壁 高さ T.P. 東京電力 完成"
+    item: "常陸那珂・広野・鹿島の震災後の防潮壁高さ"
+    tried_sources:
+      - "原子力発電所の防潮堤記事のみ"
+  - query: "電力安全小委員会 火力発電所 津波対策 指針 経済産業省 2011 2012"
+    item: "経産省 電力安全小委員会「火力発電所の津波対策」指針(2011〜13)"
+    tried_sources:
+      - "電気設備自然災害等対策WG 中間報告書 参考資料集(2014-06, 取得済)"
+      - "電気設備地震対策WG 報告書(2012-03, NDL所蔵 https://ndlsearch.ndl.go.jp/books/R100000002-I025309708, 原典未取得)"
+  - query: "https://www.meti.go.jp/shingikai/sankoshin/hoan_shohi/denryoku_anzen/denki_setsubi/pdf/003_02_02.pdf"
+    item: "電事連 2014 津波耐性評価 原資料(WG第3回 資料2-2)"
+    tried_sources:
+      - "METI サイトの WAF(AWS)により curl/WebFetch とも取得不可(HTTP 202/403)"
+  - query: "神奈川県 OR 愛知県 OR 静岡県 地震被害想定調査 電力 手法 変電所 津波浸水 停電 算定 浸水深"
+    item: "神奈川県・愛知県・静岡県の被害想定手法における変電所浸水停止率"
+    tried_sources:
+      - "津波浸水想定の説明資料(国交省 河川分科会)"
+      - "愛知県地域防災計画"
+  - query: "変電所 浸水対策 技報 三菱電機 OR 東芝 OR 日立 GIS 制御盤 設置高さ 水没 機能喪失"
+    item: "メーカー技報の変電機器 耐水高・制御盤高さ"
+    tried_sources:
+      - "GIS 製品紹介ページ、三菱電機技報 2018(縮小形GIS、浸水無関係)"
+  - query: "電気設備学会誌 東日本大震災 変電設備 津波 被害 浸水 変電所名"
+    item: "日本電設工業協会「東日本大震災電気設備被害調査報告書」本文"
+    tried_sources:
+      - "https://www.jeca.or.jp/files/libs/753/201801111514137500.pdf (29頁, 画像のみでテキスト抽出不可)"
+
+findings_for_model:
+  - "電力業界の津波評価は浸水深閾値の確率モデルではなく、変電所ごとの機器操作箱・端子台の設置高と想定浸水深の比較による決定論的判定(A10, A11, D06, D07)。耐水高の公表既定値は存在しない"
+  - "上限側アンカー: 構内全面浸水 推定4m で屋内外機器使用不可(A28)、南三陸町の変電所は建屋流失(A27)"
+  - "対策済み設備の耐水高で唯一公表された数値は新仙台3号系列の GL+3m(開閉所・遮断器)・重要設備2階以上・海側盛土約5m(B01–B03)"
+  - "17万V以上の変電所は南海トラフ最過酷ケースで東京PG 0・中部PG 1・関西 3・四国 1 箇所の被災(A14–A18)、仮設備復旧10箇所・約147万kW・1週間程度(A19)"
+  - "火力は内閣府2025の停止率表(0.3m/1m 境界, C08–C09)が電事連レベル区分(B10–B11)と同じ区切り。2011実績は 0.5〜1m で 9〜21日、1.5m で 65日、3〜5m で約9〜11か月、13m で約22か月(B17–B29)"
+  - "需要側は浸水深2m以上で需要喪失(兵庫県 C06, TDGC C11)"
+  - "現行モデルの変電所 1〜2m→85% は本調査でも直接根拠が得られず、既存 FRAGILITY_SOURCES.md 2.5節の『仮定(low)』のまま"

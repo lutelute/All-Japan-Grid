@@ -74,8 +74,25 @@ def test_terminal_provenance(okinawa):
 def test_regression_pin_okinawa(okinawa):
     """ゲート5: 回帰 pin(モデル改善で意図的に変える時のみ更新)。"""
     _s, conns, rep = okinawa
-    # 2026-08-27 更新: OSM再取得+名称エンリッチ反映後の再生成に追随
-    # (issue #49 のid照合スキュー解消のための意図的な再生成。旧pin: 59/164/54)
+    # 2026-10-07 更新: 母線・ベイの帰属を敷地の多角形で決めるよう直した(旧: 外接矩形+約1km)。
+    # 津花波変電所が 0.6 km 離れた西原変電所のベイ 7 本を自分のものにし、そこに刺さる線で
+    # 西原~津花波 などの架空の接続を 4 件作っていた。旧pin: 60/167/59
+    # (2026-08-27 の OSM 再取得時の旧pin: 59/164/54)
     assert rep["n_sites"] == 60
-    assert rep["n_terminals"] == 167
-    assert len(conns) == 59
+    assert rep["n_terminals"] == 165
+    assert len(conns) == 55
+
+
+def test_internal_ways_belong_to_one_site(okinawa):
+    """母線・ベイは 1 つの敷地にだけ帰属する(隣の変電所と二重に数えない)。"""
+    structures, _c, rep = okinawa
+    owner = {}
+    for s in structures:
+        for x in s.busbars + s.bays:
+            for k in x.osm_way_keys:
+                assert owner.setdefault(k, s.site.site_id) == s.site.site_id, k
+    by_name = {s.site.name: s for s in structures}
+    assert not by_name["津花波変電所"].bays           # 0.6 km 先の西原のベイを取らない
+    assert len(by_name["西原変電所"].bays) == 7       # 柵の外 33 m まで描かれたベイは残す
+    m = rep["internal_way_membership"]
+    assert m.get("bay:partly_covered", 0) > 0

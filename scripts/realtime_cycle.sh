@@ -1,5 +1,5 @@
 #!/bin/bash
-# でんき予報リアルタイムサイクル: 取得 → NOW断面PF → Pages更新(commit+push)
+# でんき予報リアルタイムサイクル: 取得 → NOW断面PF → Pages更新(realtime_publish.sh が main へ公開)
 # 手動実行 or launchd/cron から30-60分間隔で呼ぶ。
 # 蓄積はローカル data/realtime/(nas03再起動期間のため)。復帰後は
 # scripts/sync_realtime_to_nas.sh で退避。
@@ -21,19 +21,9 @@ mkdir -p data/realtime
   # 当日断面の増分更新(新しい実績時刻だけPF・既計算分は再利用)
   PYTHONPATH=. python3 scripts/export_day_flows.py --date "$(date +%Y%m%d)" || true
   python3 scripts/slim_flow_map.py || true
-  # 並行アクター配慮: pull --rebase してから該当ファイルのみ commit
-  git pull --rebase --autostash origin main >/dev/null 2>&1 || true
-  git add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
-          docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json \
-          docs/data/flow_map/days/ 2>/dev/null
-  if ! git diff --cached --quiet; then
-    git commit -q -m "data(realtime): でんき予報スナップショット+NOW断面 $(date '+%F %H:%M')
-
-Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-    git push -q origin main
-    echo "push済"
-  else
-    echo "変更なし"
-  fi
+  # 公開は main 専用の疎な worktree 経由(scripts/realtime_publish.sh)。作業ツリーがどのブランチに
+  # あっても origin/main へ出る。ここで commit/pull --rebase をすると、feature ブランチに commit が
+  # 積もるだけで Pages には出ない(2026-09-12〜21 に実際に9日間止まった)。
+  bash scripts/realtime_publish.sh
 } >> "$LOG" 2>&1
 tail -3 "$LOG"

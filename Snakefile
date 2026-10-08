@@ -114,8 +114,15 @@ rule satellite_connections:
     shell: f"{PY} scripts/apply_satellite_connections.py --write"
 
 
-rule substation_properties:
+# 介入#51: 一次資料(各社の空容量・予想潮流一覧)で誤りと分かった OSM の電圧タグを直す(台帳=スクリプト内 CORRECTIONS)
+rule voltage_corrections:
     input: f"{STAMP}/08_satellite.done"
+    output: touch(f"{STAMP}/08b_voltage_corrections.done")
+    shell: f"{PY} scripts/apply_voltage_corrections.py --write"
+
+
+rule substation_properties:
+    input: f"{STAMP}/08b_voltage_corrections.done"
     output: touch(f"{STAMP}/09_sub_props.done")
     shell: f"{PY} scripts/build_substation_properties.py --attach"
 

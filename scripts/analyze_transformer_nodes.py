@@ -15,7 +15,7 @@ EVIDENCE (``devices`` = bank count, ``voltage:primary/secondary``,
 The verdict is coverage-driven: a few percent of trafo substations
 with evidence cannot replace the class-typical ladder — that is a
 negative result to record honestly (the nodes stay useful as spot
-checks), per the D3 acceptance rule in docs/PLAN_NEXT.md.
+checks), per the D3 acceptance rule in docs/archive/plans/PLAN_NEXT.md.
 """
 
 import argparse

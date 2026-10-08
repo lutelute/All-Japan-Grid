@@ -262,6 +262,95 @@ def _parse_wires(props):
     return min(best, 8)
 
 
+def _voltage_class_list(voltage_raw):
+    """混在電圧タグを、タグの順番どおりの kV クラスの列で返す(重複も残す)。
+
+    ``_parse_voltage_classes`` は集合なので名前との対応が取れない。
+    ``voltage=275000;66000`` と ``name=香取線 / 湖南線`` のように、OSM は
+    電圧と線路名を同じ順で並べる慣習があり、その対応を使って
+    「どの線路が何 kV か」を読むために順序つきの列が要る。
+    """
+    out = []
+    for part in str(voltage_raw or "").replace(",", ";").split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            v = float(part)
+        except (ValueError, TypeError):
+            continue
+        kv = v / 1000.0 if v > 1000 else v
+        out.append(_clean_voltage(kv))
+    return out
+
+
+def _line_name_list(name_raw):
+    """``香取線 / 湖南線`` や ``秦浜線;湘南線`` を線路名の列にする。"""
+    raw = str(name_raw or "")
+    if not raw:
+        return []
+    sep = ";" if ";" in raw else ("/" if "/" in raw else None)
+    if sep is None:
+        return [raw.strip()]
+    return [p.strip() for p in raw.split(sep) if p.strip()]
+
+
+def _is_synthetic_line_name(name):
+    """OSM に実名が無い線に付けた合成名かどうか。
+
+    ``東北電力ネットワーク 66.0kV線``(1,684 way)や ``A変電所~B変電所線`` は
+    実在の線路名ではなく、別々の線路が同じ名前を共有してしまう。回線数の
+    証拠としては使えない(最大値を取ると無関係な線の回線数が伝播する)。
+    """
+    n = str(name or "")
+    if not n:
+        return True
+    low = n.lower()
+    return ("kv線" in low) or ("~" in n) or ("～" in n)
+
+
+def _circuit_evidence(feat_props, min_support=2):
+    """線路名 → その線路自身の回線数。単一電圧の way だけを証拠にする。
+
+    OSM は併架(``voltage=275000;66000`` ``circuits=6``)のとき回線数を
+    合計で書くので、そのままでは「上位電圧が 6 回線」になってしまう
+    (実際は 275 kV 2 回線 + 66 kV 4 回線)。同じ線路の単一電圧区間
+    (``name=香取線`` ``voltage=275000`` ``circuits=2``)がデータの中に
+    あれば、それがその線路自身の回線数の直接証拠になる。
+
+    Returns: {(線路名, kv): 回線数}。値が割れたら **最大値** を採る。
+    線路の回線数は区間の最大であって多数決ではない: 2 回線の線路でも
+    端部の引込や分岐が 1 回線の way として分かれて登録されることがあり、
+    way の本数で多数決すると短い端部が長い本線に勝ってしまう(富津火力線
+    500 kV は 1 回線 4 way・2 回線 3 way で、多数決だと 1 になる)。
+    逆に 1 回線の線路に 2 回線の区間が現れることはないので、最大値なら
+    過小評価(偽の過負荷)を作らない。``min_support`` 本以上の way が
+    その線路を支持していることを要求する。
+    """
+    from collections import Counter
+    tally = {}
+    for props in feat_props:
+        classes = _voltage_class_list(props.get("voltage"))
+        if len(classes) != 1:
+            continue                      # 併架の way は証拠にしない
+        names = _line_name_list(props.get("name"))
+        if len(names) != 1 or _is_synthetic_line_name(names[0]):
+            continue                      # 名前が複数/合成名なら証拠にしない
+        raw = props.get("circuits")
+        if raw in (None, ""):
+            continue                      # circuits タグのあるものだけ
+        n, src = _parse_circuits(props)
+        if src != "tag":
+            continue
+        tally.setdefault((names[0], classes[0]), Counter())[n] += 1
+    out = {}
+    for key, cnt in tally.items():
+        support = sum(cnt.values())
+        if support >= min_support:
+            out[key] = max(cnt)
+    return out
+
+
 def _parse_circuits(props):
     """Parallel-circuit count from OSM evidence: circuits tag, else cables/3.
 
@@ -346,6 +435,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                           multi_voltage=True, endpoint_snap_km=2.5,
                           propagate_voltage=True, db=None, tap_snap_km=0.12,
                           expand_mixed_voltage=True, drop_busbar_bay=False,
+                          mixed_voltage_circuits_by_name=True,
                           group_substations=False, group_km=1.0,
                           join_untagged_tips=False, cuts=None):
     """Build a GridNetwork via vertex-graph + tolerance snapping.
@@ -730,6 +820,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     lines_data = _layer("lines")
     sub_classes = defaultdict(set)   # sub_id -> incident line voltage classes
     bind_pts: dict = {}              # sid -> bound vertex coords (D10)
+    ev_props = []   # 回線数の証拠表(単一電圧 way)を作るための素材
     feat_cache = []                  # (coords, cls) parsed once
     coord_cls = defaultdict(set)     # rounded coord -> known classes present
     if lines_data:
@@ -765,7 +856,11 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                       or props.get("location") == "underground")
             feat_cache.append([coords, kv, circ, circ_src, osm_name,
                                "tag" if kv > 0 else "unk", is_cab,
-                               _parse_wires(props), vclasses])
+                               _parse_wires(props), vclasses,
+                               _voltage_class_list(props.get("voltage")),
+                               _line_name_list(osm_name)])
+            ev_props.append({"voltage": props.get("voltage"),
+                             "name": osm_name, "circuits": props.get("circuits")})
             if multi_voltage:
                 # 展開する併架線は各クラスを、それ以外は単一kvを座標クラスに播種
                 seed = (sorted(vclasses) if len(vclasses) > 1
@@ -774,6 +869,12 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
                     for (lat, lon) in coords:
                         coord_cls[(round(lat, vertex_prec),
                                    round(lon, vertex_prec))].add(c)
+
+        # 併架線の回線数を線路名ごとに読み直すための証拠表(単一電圧 way のみ)
+        circ_ev = (_circuit_evidence(ev_props)
+                   if (expand_mixed_voltage and mixed_voltage_circuits_by_name)
+                   else {})
+        mixed_circ_fixes = []
 
         # Pass A.5: corridor voltage propagation. An untagged feature whose
         # vertices only ever meet ONE known class is that corridor's
@@ -824,17 +925,52 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
 
         # Pass B: map vertices to class-aware nodes and build edges.
         tap_segs = []   # (node_a, node_b, latlon_a, latlon_b, kv) for tap snapping
-        for coords, kv, circ, circ_src, osm_name, kv_src, is_cab, wires, vclasses in feat_cache:
+        for (coords, kv, circ, circ_src, osm_name, kv_src, is_cab, wires,
+             vclasses, vlist, nlist) in feat_cache:
             # 併架線(expand時)は各電圧クラスを独立回線として展開する。それ以外は
             # 従来どおり単一クラス [kv]。展開時の回線数は各クラス1(証拠なき配分は
             # しない=D2のインピーダンス二重計上回避と同じ慎重さ)。
             build_classes = sorted(vclasses) if len(vclasses) > 1 else [kv]
+            # 併架線の回線数を電圧クラスへ配る。タグの合計(circ)は保存し、
+            # 証拠(同じ線路の単一電圧区間の circuits)のあるクラスはその値、
+            # 残りを証拠の無いクラスで等分する(最低 1)。証拠が合計を超える
+            # ときは配分せず従来どおりに落とす=推測はしない。
+            circ_by_class = {}
+            if (circ_ev and len(build_classes) > 1
+                    and len(vlist) == len(nlist) and len(vlist) > 1):
+                ev_for = {}
+                for vi_, v_ in enumerate(vlist):
+                    n_ = circ_ev.get((nlist[vi_], v_))
+                    if n_ and v_ in build_classes and v_ not in ev_for:
+                        ev_for[v_] = n_
+                known = sum(ev_for.values())
+                rest = [c for c in build_classes if c not in ev_for]
+                if ev_for and known <= circ:
+                    share = max(1, (circ - known) // len(rest)) if rest else 0
+                    for c in build_classes:
+                        circ_by_class[c] = ev_for.get(c, share)
             for bkv in build_classes:
                 # 主クラス(=max電圧=従来の単一kv)は元のcircuitsを維持し、追加で
                 # 展開する低電圧クラスのみ1回線とする。混在線のcircuitsが各クラス
                 # 1に減ると主送電容量が激減し過負荷になる(関西「国府支線;岩中国府線」
                 # 77;33 circuits=3 が77kV側3→1回線で184%過負荷した=I6-2の切り分け結果)
                 circ_eff = circ if (len(build_classes) == 1 or bkv == kv) else 1
+                # 併架線: タグの合計回線数を上位電圧に全部付けると容量が過大に
+                # なる(voltage=275000;66000 circuits=6 は 275kV 2 + 66kV 4 で、
+                # 275kV を 6 回線にすると約 3 倍)。同じ線路の単一電圧区間に
+                # circuits タグがあれば、それを直接証拠として使う。証拠が無ければ
+                # 従来どおり(主クラスが合計を持つ)に落とす=推測はしない。
+                new_n = circ_by_class.get(bkv)
+                if new_n and new_n != circ_eff:
+                    try:
+                        line_nm = nlist[vlist.index(bkv)]
+                    except ValueError:
+                        line_nm = osm_name
+                    mixed_circ_fixes.append(
+                        {"name": osm_name, "line": line_nm, "kv": bkv,
+                         "circuits_tag": circ, "circuits_before": circ_eff,
+                         "circuits_after": new_n})
+                    circ_eff = new_n
                 node_ids = []
                 last = len(coords) - 1
                 for vi, (lat, lon) in enumerate(coords):
@@ -1482,6 +1618,14 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         net.metadata["cut_lines"] = str(n_cut)
         net.metadata["cut_segments"] = str(n_seg_cut[0])
 
+    # 併架線の回線数を線路名ごとに読み直した件数(帳簿は net.mixed_voltage_circuit_fixes)
+    try:
+        fixes = mixed_circ_fixes
+    except NameError:
+        fixes = []
+    net.mixed_voltage_circuit_fixes = fixes
+    if fixes:
+        net.metadata["mixed_voltage_circuit_fixes"] = str(len(fixes))
     if return_geom:
         return net, geom
     return net

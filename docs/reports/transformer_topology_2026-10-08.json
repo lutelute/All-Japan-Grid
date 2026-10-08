@@ -1,0 +1,64 @@
+{
+ "generated": "2026-10-08",
+ "registry_sites": 5389,
+ "note": "正解=各社の空容量・予想潮流一覧の変圧器の行。件数と割合だけ(値は非公開)",
+ "matched_sites": 2008,
+ "sites_with_truth_inside_levels": 925,
+ "sites_with_truth_level_missing_in_db": 1243,
+ "all": {
+  "sites": 925,
+  "truth_pairs": 1099,
+  "ladder": {
+   "recall": 0.875,
+   "precision": 0.81,
+   "exact_sites": 0.799
+  },
+  "observed_first": {
+   "recall": 0.901,
+   "precision": 0.831,
+   "exact_sites": 0.822
+  }
+ },
+ "with_osm_observation": {
+  "sites": 344,
+  "truth_pairs": 423,
+  "ladder": {
+   "recall": 0.901,
+   "precision": 0.843,
+   "exact_sites": 0.826
+  },
+  "observed_first": {
+   "recall": 0.967,
+   "precision": 0.899,
+   "exact_sites": 0.887
+  }
+ },
+ "without_osm_observation": {
+  "sites": 581,
+  "truth_pairs": 676,
+  "ladder": {
+   "recall": 0.859,
+   "precision": 0.789,
+   "exact_sites": 0.783
+  },
+  "observed_first": {
+   "recall": 0.859,
+   "precision": 0.789,
+   "exact_sites": 0.783
+  }
+ },
+ "where_ladder_and_observed_differ": {
+  "sites": 30,
+  "truth_pairs": 59,
+  "ladder": {
+   "recall": 0.508,
+   "precision": 0.469,
+   "exact_sites": 0.0
+  },
+  "observed_first": {
+   "recall": 0.983,
+   "precision": 0.866,
+   "exact_sites": 0.7
+  }
+ }
+}

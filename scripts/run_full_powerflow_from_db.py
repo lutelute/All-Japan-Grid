@@ -53,7 +53,7 @@ import os
 import sys
 import time
 import warnings
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 warnings.filterwarnings("ignore")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -229,12 +229,38 @@ BTB_SPLITS = [
 # 明示 ON = `--cap-calib` または環境変数 AGJ_CAP_CALIB=1(uc_to_pf_built 等の他経路用)。
 CAP_CALIB_DEFAULT = False
 
+# ── 介入#48(2026-10-07): 変電所内の変圧器を OSM で観測した電圧の組で結ぶ ──────────
+# 従来は変電所(同一座標のバス群)の電圧階級を高い順に隣どうしで結ぶ「梯子」。OSM が巻線電圧つきの
+# 実機を描く変電所では、観測した組をすべて張り、残りの階級だけ梯子でつなぐ(src/model/site_transformers.py)。
+# 入力=data/stations/observed_transformer_pairs.json(node-breaker 観測層から。追跡)。
+# 2026-10-08 既定 ON(オーナー「良い判断すればいい」を受けた判断)。根拠は 3 つ
+# (docs/reports/station_node_breaker_adoption_2026-10-07.md §11): ①直結の組 21 変電所のうち 20 が各社の
+# 空容量・予想潮流一覧に実在し否定は 0 ②結び直した変電所 15 km 以内の観測線 88 本で実績に近づいた 31・離れた 15
+# (符号検定 p=0.026)③収束不変・過負荷の線 東 336→334・西 278→270。無効化 = `--no-observed-trafos` または
+# 環境変数 AGJ_OBSERVED_TRAFOS=0(他経路用)。
+OBSERVED_TRAFOS_DEFAULT = True
+OBSERVED_MATCH_KM = 1.0     # 観測の敷地(構造 DB の代表点)とバスの距離の上限
+
+# ── 介入#49(2026-10-08 オーナー「直す」): 各社の空容量・予想潮流一覧(一次資料)の変圧器の組がある変電所は、
+# 観測(#48)より先にその組を張る。入力=data/reference/published_transformer_pairs.json(今のモデルと公表が
+# 食い違う 97 変電所の電圧の組だけ。台数・容量は含まない)。根拠=全国の変圧器台帳との一致
+# (reports/transformer_topology_2026-10-08.md)。無効化=--no-published-trafos / AGJ_PUBLISHED_TRAFOS=0。
+PUBLISHED_TRAFOS_DEFAULT = True
+
+# ── 介入#50(2026-10-08 オーナー「進めて」): 公表の組・観測の組で張った変電所内の変圧器(#48/#49)の容量を、
+# 電圧の組ごとの公表容量の中央値で決める。従来は下位側の線路容量からの推定で、直結の組(500/154・275/77 等)は
+# 実際より 1 桁小さく、新しい過負荷を作っていた。入力=config/transformer_capacity_by_pair.json(10 社の
+# 空容量・予想潮流一覧から集計した、組ごとの中央値と件数だけ。変電所ごとの値は含まない)。銘板(出典付き)が
+# あればそちらを優先。無効化=--no-pair-capacity / AGJ_PAIR_CAPACITY=0。
+PAIR_CAPACITY_DEFAULT = True
+PAIR_CAPACITY_PATH = os.path.join(ROOT, "config", "transformer_capacity_by_pair.json")
+
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=False, synthetic_ties_live=False,
                      btb_split=True, freq_fix=True, implicit_stepdown=None,
-                     cap_calib=None):
+                     cap_calib=None, observed_trafos=None, published_trafos=None, pair_capacity=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -254,6 +280,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     2巻線変圧器で連結する。従来は同一座標(_k5≈1m)のみで、同一サイトでも数十m離れた
     電圧階級ヤードが未連結だった(west T-gap 57%・東京城南チェーン低電圧の主因)。
     既定OFF(正典比較性)。
+    observed_trafos: 介入#48。True=OSM で観測した変圧器の電圧の組で変電所内を結ぶ(残りは梯子)。
+    None=環境変数 AGJ_OBSERVED_TRAFOS(1/0) → 無ければ OBSERVED_TRAFOS_DEFAULT。
     deenergize_unbuilt: True=介入#23 未供用線の正直化。建設済みだが供用前の送電線
     (data/reference/not_in_service_lines.json・出典必須)を in_service=False で建てる。
     初例=大間幹線(大間原発 運転開始未定・J-POWER一次)。無負荷EHV線のフェランチ
@@ -265,6 +293,45 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         _env = os.environ.get("AGJ_CAP_CALIB", "")
         cap_calib = (_env == "1") if _env in ("0", "1") else CAP_CALIB_DEFAULT
     cap_ledger = {} if cap_calib else None
+    if observed_trafos is None:
+        _env = os.environ.get("AGJ_OBSERVED_TRAFOS", "")
+        observed_trafos = (_env == "1") if _env in ("0", "1") else OBSERVED_TRAFOS_DEFAULT
+    if published_trafos is None:
+        _env = os.environ.get("AGJ_PUBLISHED_TRAFOS", "")
+        published_trafos = (_env == "1") if _env in ("0", "1") else PUBLISHED_TRAFOS_DEFAULT
+    if pair_capacity is None:
+        _env = os.environ.get("AGJ_PAIR_CAPACITY", "")
+        pair_capacity = (_env == "1") if _env in ("0", "1") else PAIR_CAPACITY_DEFAULT
+    _pair_cap = {}
+    if pair_capacity and os.path.exists(PAIR_CAPACITY_PATH):
+        with open(PAIR_CAPACITY_PATH, encoding="utf-8") as _f:
+            _pair_cap = {tuple(int(x) for x in k.split("/")): v["median_mva"]
+                         for k, v in json.load(_f)["pairs"].items()}
+    n_pair_cap = 0
+    # 帳簿は介入を切っていても作る(結び直す候補の変電所と、その変圧器の潮流を前後で比べるため)
+    obs_ledger = []
+    import re as _re48
+
+    from src.model.site_transformers import PUBLISHED_PATH as _PUB_PATH
+    from src.model.site_transformers import by_region_name as _obs_by_name
+    from src.model.site_transformers import link_levels as _link_levels
+
+    def _obs_norm(name):
+        return _re48.sub(r"_\d+$", "", _site_name_of_node(name or ""))
+
+    _obs_index = _obs_by_name(_obs_norm) or None
+    _pub_index = _obs_by_name(_obs_norm, _PUB_PATH) or None
+
+    def _observed_for(idxs, index=None):
+        """同じ変電所のバス群 → 観測(または公表)の組(名前と地域が一致し、OBSERVED_MATCH_KM 以内)。"""
+        index = _obs_index if index is None else index
+        for j in idxs:
+            key = (nodes[j].get("region"), _obs_norm(nodes[j].get("name")))
+            for la, lo, pairs in index.get(key, ()):
+                if _haversine_km(nodes[j]["lat"], nodes[j]["lon"], la, lo) <= OBSERVED_MATCH_KM:
+                    return pairs, nodes[j].get("name")
+        return (), None
+
     if cap_calib:
         from src.powerflow.line_capacity import capacity_factor as _cap_factor
     rstats = None
@@ -442,7 +509,30 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                 if key not in seen_site:
                     seen_site.add(key)
                     plates.extend(nameplates.get(key, ()))
-        for hv_kv, lv_kv in zip(kvs, kvs[1:]):
+        links = [(h, l, "ladder") for h, l in zip(kvs, kvs[1:])]
+        site_rec = None
+        pub, pub_name = _observed_for(idxs, _pub_index) if _pub_index else ((), None)
+        obs, obs_name = _observed_for(idxs) if _obs_index else ((), None)
+        # 優先: 公表(#49) > 観測(#48) > 梯子。切っている介入は「候補」として帳簿にだけ残す
+        if pub and published_trafos:
+            chosen = ("published", pub, pub_name, True)
+        elif obs:
+            chosen = ("osm", obs, obs_name, bool(observed_trafos))
+        elif pub:
+            chosen = ("published", pub, pub_name, False)
+        else:
+            chosen = None
+        if chosen:
+            by, pairs_, nm_, on = chosen
+            new = _link_levels(kvs, pairs_, by)
+            if {(h, l) for h, l, _ in new} != {(h, l) for h, l, _ in links}:
+                site_rec = {"site": nm_, "kv": kvs, "by": by, "applied": on,
+                            "ladder": [[h, l] for h, l, _ in links],
+                            "linked": [[h, l, src] for h, l, src in new], "trafo_idx": []}
+                obs_ledger.append(site_rec)
+            if on:
+                links = new
+        for hv_kv, lv_kv, link_src in links:
             hb, lb = by_kv[hv_kv], by_kv[lv_kv]
             if hv_kv <= lv_kv:
                 continue
@@ -459,13 +549,22 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     continue
                 sn, par, tag = p["sn_mva"], p["n_parallel"], "@nameplate"
                 break
+            # 介入#50: 公表・観測の組で張った変圧器で銘板が無ければ、組ごとの公表容量の中央値
+            if not tag and link_src in ("osm", "published"):
+                med = _pair_cap.get((int(hv_kv + 1e-9), int(lv_kv + 1e-9)))
+                if med:
+                    sn, tag = float(med), "@pairmed"
+                    n_pair_cap += 1
             try:
-                pp.create_transformer_from_parameters(
+                ti = pp.create_transformer_from_parameters(
                     net, hv_bus=hb, lv_bus=lb, sn_mva=sn,
                     vn_hv_kv=hv_kv, vn_lv_kv=lv_kv,
                     vkr_percent=0.5, vk_percent=12.0,   # typical large power trafo
                     pfe_kw=0.0, i0_percent=0.0, parallel=par,
-                    name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV{tag}")
+                    name=f"trafo_{hv_kv:.0f}/{lv_kv:.0f}kV{tag}"
+                         + {"osm": "@osm", "published": "@pub"}.get(link_src, ""))
+                if site_rec is not None:
+                    site_rec["trafo_idx"].append(int(ti))
                 n_trafo += 1
                 if tag:
                     n_trafo_nameplate += 1
@@ -607,8 +706,17 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                         net.line.at[li, "to_bus"] = nb
                     n_btb_split += 1
 
+    if n_pair_cap:
+        print(f"  介入#50 pair-capacity: 組ごとの公表容量の中央値で容量を決めた変圧器 {n_pair_cap} 台")
+    if observed_trafos or published_trafos:
+        n_osm = int(net.trafo["name"].str.contains("@osm").sum())
+        n_pub = int(net.trafo["name"].str.contains("@pub").sum())
+        n_rel = Counter(r["by"] for r in obs_ledger if r["applied"])
+        print(f"  介入#48/#49 site-trafo-links: 結び直した変電所 公表 {n_rel.get('published', 0)}・"
+              f"観測 {n_rel.get('osm', 0)} / 公表由来の変圧器 {n_pub} 台・観測由来 {n_osm} 台")
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
+                         "observed_trafos": obs_ledger, "n_pair_capacity": n_pair_cap,
                          "n_edge_skipped": n_edge_skipped,
                          "n_dedup_merged": n_dedup_merged,
                          "n_edge_dup_removed": n_edge_dup,
@@ -1293,6 +1401,44 @@ def region_vm(net, region):
     return {"vm_min": round(min(vm), 4), "vm_max": round(max(vm), 4), "n": len(vm)}
 
 
+def dump_flows(net, mode):
+    """解いた網の線と変圧器の潮流(検証用)。線は鍵(src/powerflow/line_keys)で引ける。
+
+    lines: 鍵 → [from 側の有効電力 MW, 負荷率 %, from の緯度, 経度, to の緯度, 経度, kV]
+    trafos: [名前, 高圧側の有効電力 MW, 負荷率 %, 高圧側の緯度, 経度]
+    """
+    from src.powerflow.line_keys import line_keys
+
+    def ll(b):
+        try:
+            lon, lat = json.loads(net.bus.at[int(b), "geo"])["coordinates"][:2]
+            return round(float(lat), 5), round(float(lon), 5)
+        except Exception:  # noqa: BLE001
+            return None, None
+
+    keys = line_keys(net)
+    lines = {}
+    for li, k in keys.items():
+        if not k or li not in net.res_line.index:
+            continue
+        p, ld = net.res_line.at[li, "p_from_mw"], net.res_line.at[li, "loading_percent"]
+        if p != p:      # NaN(非通電)
+            continue
+        fb, tb = int(net.line.at[li, "from_bus"]), int(net.line.at[li, "to_bus"])
+        lines[k] = [round(float(p), 2), round(float(ld), 1), *ll(fb), *ll(tb),
+                    float(net.bus.at[fb, "vn_kv"])]
+    trafos = []
+    for ti in net.trafo.index:
+        if ti not in net.res_trafo.index:
+            continue
+        p, ld = net.res_trafo.at[ti, "p_hv_mw"], net.res_trafo.at[ti, "loading_percent"]
+        if p != p:
+            continue
+        trafos.append([str(net.trafo.at[ti, "name"]), round(float(p), 2), round(float(ld), 1),
+                       *ll(net.trafo.at[ti, "hv_bus"])])
+    return {"mode": mode, "lines": lines, "trafos": trafos}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--islands", nargs="*", default=None)
@@ -1419,6 +1565,21 @@ def main():
                          "(各社公表の運用容量÷理論容量の比・エリア×階級・生値なし)を線路の "
                          "max_i_ka に乗じる。既定=CAP_CALIB_DEFAULT(False・2026-09-02 全国化で"
                          "一致度判定を満たさず)。環境変数 AGJ_CAP_CALIB=1/0 でも指定可")
+    ap.add_argument("--dump-flows", action="store_true",
+                    help="線(鍵つき)と変圧器ごとの潮流を <output-dir>/flows.json に書く。介入の前後を"
+                         "観測と比べる検証用(scripts/validate_intervention_flows.py)")
+    ap.add_argument("--pair-capacity", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#50 公表・観測の組で張った変圧器の容量を、組ごとの公表容量の中央値で決める"
+                         "(config/transformer_capacity_by_pair.json)。既定=PAIR_CAPACITY_DEFAULT(True)。"
+                         "環境変数 AGJ_PAIR_CAPACITY=1/0 でも指定可")
+    ap.add_argument("--published-trafos", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#49 各社の空容量・予想潮流一覧の変圧器の組を観測より先に張る。入力="
+                         "data/reference/published_transformer_pairs.json。既定=PUBLISHED_TRAFOS_DEFAULT(True)。"
+                         "環境変数 AGJ_PUBLISHED_TRAFOS=1/0 でも指定可")
+    ap.add_argument("--observed-trafos", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#48 変電所内の変圧器を OSM で観測した電圧の組で結ぶ(残りの階級は梯子)。"
+                         "入力=data/stations/observed_transformer_pairs.json。既定=OBSERVED_TRAFOS_DEFAULT"
+                         "(True・2026-10-08)。無効化=--no-observed-trafos。環境変数 AGJ_OBSERVED_TRAFOS=1/0 でも指定可")
     ap.add_argument("--site-trafos", action=argparse.BooleanOptionalAction,
                     default=False,
                     help="介入#22 サイト内変圧器リンク: 同名変電所(正規化名一致+"
@@ -1471,6 +1632,7 @@ def main():
                          "scale": "full (no voltage-class reduction)"},
                "islands": {}, "regions": {}}
 
+    flow_dump = {}
     for island in targets:
         t0 = time.time()
         freq = ISLAND_FREQ[island]
@@ -1481,7 +1643,9 @@ def main():
             deenergize_unbuilt=args.deenergize_unbuilt,
             synthetic_ties_live=args.synthetic_ties_live,
             btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
-            implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib)
+            implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib,
+            observed_trafos=args.observed_trafos, published_trafos=args.published_trafos,
+            pair_capacity=args.pair_capacity)
         if bstats.get("cap_calib"):
             from src.powerflow.line_capacity import describe as _cap_describe
             print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))
@@ -1561,6 +1725,8 @@ def main():
         net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)
         net_used = net_ac if ac.get("converged") else net_dc
         mode = "ac" if ac.get("converged") else "dc"
+        if args.dump_flows:
+            flow_dump[island] = dump_flows(net_used, mode)
 
         regions = sorted({r for r, (isl, _f) in ISLAND_OF.items() if isl == island})
         for region in regions:
@@ -1573,6 +1739,15 @@ def main():
                 "vm_min": vm.get("vm_min"), "vm_max": vm.get("vm_max"),
                 "n_buses": vm.get("n"), "n_buses_exported": nb, "n_lines_exported": nl,
             }
+        # 介入#48 の帳簿: 結び直す(した)変電所の変圧器の潮流(介入 OFF でも候補として記録)
+        res_t = getattr(net_used, "res_trafo", None)
+        for r in bstats.get("observed_trafos") or []:
+            r["result"] = [{"name": str(net_used.trafo.at[t, "name"]),
+                            "p_hv_mw": round(float(res_t.at[t, "p_hv_mw"]), 1),
+                            "loading_pct": round(float(res_t.at[t, "loading_percent"]), 1)}
+                           for t in r.pop("trafo_idx", [])
+                           if res_t is not None and t in res_t.index
+                           and res_t.at[t, "p_hv_mw"] == res_t.at[t, "p_hv_mw"]]
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
             "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
@@ -1597,6 +1772,9 @@ def main():
 
     with open(f"{args.output_dir}/summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
+    if args.dump_flows:
+        with open(f"{args.output_dir}/flows.json", "w", encoding="utf-8") as f:
+            json.dump(flow_dump, f, ensure_ascii=False, separators=(",", ":"))
     print(f"done -> {args.output_dir}")
 
 

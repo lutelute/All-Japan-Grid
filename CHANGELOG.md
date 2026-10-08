@@ -8,6 +8,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Substation node-breaker layer from OSM node ids** (`src/stations/`, `scripts/build_station_db.py`, `data/stations/`,
+  `docs/STATION_NODE_BREAKER.md`): busbar sections, bays, switches, transformer windings and line ends joined only by
+  shared OSM node ids, ported from All-EU-Grid (commit 5d85ba9, All-AU-Grid's method) with two Japan rules — bays drawn
+  out to the gantry past the fence (median 47 m, `internal_extension` up to 100 m: unattributed station conductors
+  987→177) and 50/60 Hz as one AC system. Built from the Geofabrik Japan extract in 15 s; 26,210 sites, 2,502 transformers.
+  `scripts/compare_station_layers.py` checks SubSLD's voltage ladder against the mapped transformers (518 sites: 365
+  same, 32 where the ladder skips a real 275/77-kV-style direct transformer).
+- **Intervention #48 — link a substation's voltage levels by the transformer pairs observed in OSM**
+  (`src/model/site_transformers.py`): observed pairs first, the ladder only for levels they leave unconnected.
+  Default ON in both the structure DB (607 transformers; Higashi-Mō's sourced 275/66 kV nameplate now attaches) and
+  the power flow (`--no-observed-trafos` to disable): 21 substations relinked. Validated before switching
+  (`docs/INTERVENTION_VALIDATION.md`, `scripts/validate_intervention.py`): 20 of the 21 direct pairs appear in the
+  utilities' published transformer lists and none is contradicted; within 15 km of the relinked substations 31
+  observed lines moved closer to the published flows and 15 moved away (sign test p = 0.026); convergence unchanged,
+  overloaded lines east 336→334, west 278→270. Direct transformers are still sized by the lower-side rule.
+- **Intervention #49 — link a substation's voltage levels by the utilities' published transformer pairs**
+  (`data/reference/published_transformer_pairs.json`, voltage pairs only for the 97 substations where the model
+  disagreed): published pairs first, then OSM observations (#48), then the ladder. Scored against a national registry
+  built from all ten utilities' published transformer lists (kept private; `scripts/fetch_transformer_lists.py`,
+  `scripts/score_transformer_topology.py`): substations whose transformer pairs match the published list
+  82.2% → 89.7% (925 substations), 78.3% → 88.8% where OSM maps no transformer. Power flow: 22 substations relinked,
+  convergence unchanged, east overloaded lines 334→321. Default ON; `--no-published-trafos` to disable.
+- **Intervention #50 — size the transformers linked by #48/#49 from the published capacity of their voltage pair**
+  (`config/transformer_capacity_by_pair.json`: medians and counts per pair only). Against each substation's published
+  capacity, estimates within a factor of 2 rise from 17.6% (lower-side line rating) to 80.9%. Power flow: overloaded
+  transformers east 146→79, west 133→60; overloaded lines east 321→304, west 271→244; convergence unchanged.
+- **Intervention #51 — correct OSM voltage tags shown wrong by primary sources** (`scripts/apply_voltage_corrections.py`,
+  ledger in the script, `--revert`): Nishi-Shimane's 275 kV becomes 220 kV (Chugoku's published lists have no
+  275 kV class; the substation's transformers are 500/220 and 220/110 kV).
+- **Distribution voltage levels from the published lists in the structure DB** (2,142 levels at 1,190 substations,
+  mostly 6.6/22 kV; `data/reference/published_missing_levels.json`). The power-flow model does not read them.
+- **Intervention validation tool** (`scripts/validate_intervention.py`, `run_full_powerflow_from_db.py --dump-flows`):
+  scores an intervention on structure (published registries), flows (published annual flow statistics, nearby lines
+  separately, sign test) and physics.
+- **Reports index** (`docs/reports/INDEX.md`, `scripts/build_reports_index.py`) and a sister-projects section in `docs/README.md`.
+
+- **Pages dashboard — one entry point for every tool** (`docs/index.html`, `docs/data/tools_catalog.json`,
+  `scripts/build_dashboard_data.py`, `tests/test_pages_dashboard.py`): the site root is now a lightweight dashboard
+  (no map library) with status tiles, a searchable tool catalogue (browser / local server / CLI), recent reports and
+  browsable review bundles; the map moved to `docs/map.html` and accepts `#tab-…` deep links. An inventory had found
+  eight pages with no way back, two pages reachable from nowhere, and hard-coded figures that had gone stale
+  (`v1.6.0`, "17,333 buses", "a reduced ~2,189-bus model" for a tab that has shown the full 17,745-bus model since
+  June). Numbers are now read from generated JSON at load time, every standalone page links back, and the test
+  fails when a page is added without a catalogue entry or a catalogue link goes dead.
 - **Intervention #43a — implicit step-down transformers at class-mismatched line endpoints**
   (`src/powerflow/stepdown_gap.py`, default ON): where a 66 kV line was attached straight to a 275 kV busbar
   (Shin-Yodo line into Shinjuku, Nishi-Shinjuku, Nishi-Sugamo …), a same-site low-voltage bus and a step-down
@@ -191,6 +235,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matching the paper's own table — was a Known Issue since v1.5.0).
 
 ### Fixed
+- **SubSLD structure DB counted a neighbour's busbars and bays** (`scripts/build_substation_structure.py`): ways within
+  the site's bounding box + 0.01° were all taken without a containment check — 25% of busbars and 23% of bays sat in two
+  or more substations, and 1,252 inter-site connection records were artefacts. Membership is now decided by the site
+  polygon (same rule as the node-breaker layer). Power-flow nameplates unchanged.
+- `_vclasses` read `66000.0` as 660 kV (digits concatenated); it now parses the number.
+- **Live flow map had been frozen for nine days** (`scripts/realtime_publish.sh`, `scripts/realtime_cycle.sh`):
+  the hourly cycle committed to whatever branch the working tree had checked out and then pushed `main`, so while the
+  tree sat on a feature branch the snapshots piled up there and Pages kept serving 2026-09-12. It also ran
+  `git pull --rebase origin main` on that feature branch. Publishing now goes through a sparse worktree pinned to
+  `origin/main` (~22 MB), independent of the working tree's HEAD; the dashboard's realtime tile turns amber after
+  6 h and red after 30 h so a stall is visible.
 - **Sourced-capacity name matching painted thermal/nuclear capacities onto same-named solar features**
   (`scripts/apply_capacity_sources.py`): a fuel-type gate now rejects incompatible name matches unless the record
   only lowers the capacity. Removes 13.6 GW of phantom "solar" in east (Takasaki "高浜発電所" ← Takahama nuclear

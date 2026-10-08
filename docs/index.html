@@ -1,842 +1,368 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All-Japan-Grid</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="./css/style.css?v=38"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All-Japan-Grid — ダッシュボード</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1320'/%3E%3Cpath d='M18 3 7 18h7l-2 11 13-17h-8z' fill='%23e94560'/%3E%3C/svg%3E">
+<meta name="description" content="OpenStreetMap 由来・公表資料で検証した日本全国送電網モデル。地図・潮流・単線結線図・編集・レビュー・ダウンロードの全ツールへの入口。">
+<!--
+  ツールの入口ページ。表示する数字はすべて data/*.json から読む(直書きしない)。
+    data/tools_catalog.json … ツール一覧の正(手で保守・tests/test_pages_dashboard.py がリンク切れを検査)
+    data/dashboard.json     … 版・モデル規模・介入件数・最新レポート(scripts/build_dashboard_data.py が deploy 時に生成)
+  重い地図は map.html に分離してあるので、このページは地図ライブラリを読まない。
+-->
+<style>
+:root{
+  --bg:#0e1320;--panel:#151c2e;--panel2:#1b2439;--line:#27324a;--line2:#34415e;
+  --tx:#e8ecf4;--mut:#93a0b8;--dim:#6b7893;
+  --acc:#e94560;--link:#6cb6ff;--ok:#3fb950;--warn:#d8a02a;--bad:#f0616d;
+  --v500:#ff5d5d;--v275:#ff9d3c;--v154:#ffd84a;--v66:#5ac8fa;
+  --r:12px;
+}
+@media (prefers-color-scheme: light){
+  :root{--bg:#f5f6f9;--panel:#fff;--panel2:#f0f2f7;--line:#dde1ea;--line2:#c6ccda;
+    --tx:#1a2030;--mut:#566079;--dim:#7d869b;--link:#0b62c4;--ok:#1a7f37;--warn:#9a6700;--bad:#c9303f}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",Roboto,sans-serif}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ── top bar ── */
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:10px max(16px,calc((100vw - 1200px)/2));background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--tx)}
+.brand .bolt{color:var(--acc)}
+.pill{font-size:11.5px;padding:2px 9px;border:1px solid var(--line2);border-radius:99px;color:var(--mut);white-space:nowrap}
+.pill.local{border-color:var(--ok);color:var(--ok)}
+.top nav{margin-left:auto;display:flex;gap:14px;font-size:13px;flex-wrap:wrap}
+
+main{max-width:1200px;margin:0 auto;padding:0 16px 80px}
+
+/* ── hero ── */
+.hero{padding:34px 0 8px}
+.hero h1{word-break:keep-all;overflow-wrap:anywhere;margin:0 0 8px;font-size:clamp(22px,3.4vw,32px);line-height:1.25;letter-spacing:-.01em}
+.hero p{margin:0;max-width:760px;color:var(--mut);font-size:14.5px}
+.volt{display:flex;height:3px;border-radius:2px;overflow:hidden;margin:18px 0 0;max-width:220px}
+.volt i{flex:1}.volt i:nth-child(1){background:var(--v500)}.volt i:nth-child(2){background:var(--v275)}
+.volt i:nth-child(3){background:var(--v154)}.volt i:nth-child(4){background:var(--v66)}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-weight:600;font-size:13.5px;
+  border:1px solid var(--line2);color:var(--tx);background:var(--panel)}
+.btn:hover{text-decoration:none;border-color:var(--link)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+
+/* ── status tiles ── */
+h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:40px 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-height:96px}
+.tile .k{font-size:11.5px;color:var(--mut)}
+.tile .v{font-size:24px;font-weight:700;letter-spacing:-.01em;margin:2px 0;font-variant-numeric:tabular-nums}
+.tile .v small{font-size:13px;font-weight:500;color:var(--mut);margin-left:4px}
+.tile .s{font-size:12px;color:var(--mut)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--dim);vertical-align:1px}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+.isl{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.isl span{font-size:11px;padding:1px 7px;border-radius:6px;border:1px solid var(--line2);color:var(--mut)}
+.isl span.ok{border-color:var(--ok);color:var(--ok)}.isl span.dc{border-color:var(--warn);color:var(--warn)}
+
+/* ── finder ── */
+.finder{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:40px 0 4px}
+.finder input{flex:1 1 260px;min-width:0;padding:10px 14px;border-radius:10px;border:1px solid var(--line2);
+  background:var(--panel);color:var(--tx);font-size:14px}
+.finder input:focus{outline:2px solid var(--link);outline-offset:1px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line2);background:transparent;color:var(--mut);
+  font-size:12.5px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.count{font-size:12px;color:var(--dim)}
+
+/* ── cards ── */
+.cat{margin-top:26px}
+.cat h3{margin:0 0 2px;font-size:16px}
+.cat .hint{margin:0 0 12px;color:var(--mut);font-size:12.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:8px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 16px;position:relative;transition:border-color .12s,transform .12s}
+.card:hover{border-color:var(--line2);transform:translateY(-1px)}
+.card.featured{border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
+.card h4{margin:0;font-size:15px;line-height:1.35}
+.card h4 a{color:var(--tx)}
+.card h4 a::after{content:"";position:absolute;inset:0}          /* カード全体をクリック可能に */
+.card p{margin:0;color:var(--mut);font-size:12.8px;flex:1}
+.badges{display:flex;gap:5px;flex-wrap:wrap}
+.b{font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--mut)}
+.b.pages{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
+.b.local{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent)}
+.b.cli{color:var(--link);border-color:color-mix(in srgb,var(--link) 50%,transparent)}
+.b.report{color:var(--mut)}
+.b.new{background:var(--acc);border-color:var(--acc);color:#fff}
+.more{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;position:relative;z-index:1}
+.cmd{position:relative;z-index:1;display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;
+  background:var(--panel2);overflow:hidden}
+.cmd code{flex:1;padding:7px 10px;font-size:11.5px;overflow-x:auto;white-space:nowrap;color:var(--tx)}
+.cmd button{border:0;border-left:1px solid var(--line);background:transparent;color:var(--mut);cursor:pointer;
+  padding:0 10px;font-size:11.5px}
+.cmd button:hover{color:var(--tx)}
+.need{position:relative;z-index:1;font-size:11.5px;color:var(--warn)}
+.empty{padding:30px;text-align:center;color:var(--mut);border:1px dashed var(--line2);border-radius:var(--r)}
+
+/* ── reports ── */
+.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+h3.sub{margin:0 0 8px;font-size:13px;color:var(--mut);font-weight:600}
+.list{list-style:none;margin:0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.list li{display:flex;gap:12px;padding:9px 14px;border-top:1px solid var(--line);font-size:13px}
+.list li:first-child{border-top:0}
+.list time{flex:0 0 auto;color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12.5px}
+footer p{margin:0 0 8px;max-width:900px}
+</style>
 </head>
 <body>
 
-<div id="sidebar">
-    <h1><span class="icon">&#9889;</span> Japan Power Grid</h1>
-    <a href="./compare.html" style="display:inline-block;margin:0 0 8px;font-size:12px;color:#5dade2;text-decoration:none">&#128279; Before / After 比較（トポロジ改修）</a>
-    <a href="./flow_map.html" style="display:inline-block;margin:0 0 8px 12px;font-size:12px;color:#5dade2;text-decoration:none">&#9889; 潮流方向・発電稼働率マップ（UC/観測検証つき）</a>
-    <a href="./subsld.html" style="display:inline-block;margin:0 0 8px 12px;font-size:12px;color:#ffd54f;text-decoration:none">&#9889; SubSLD 変電所単線結線ビュー（全所・実証ペア図）</a>
-    <a href="./eggc_explainer.html" style="display:inline-block;margin:0 0 8px 12px;font-size:12px;color:#5dade2;text-decoration:none">&#128269; EGGCを観る（教材）</a>
-
-    <!-- Tabs -->
-    <div class="tab-bar">
-        <button class="tab-btn active" data-tab="tab-map">系統図</button>
-        <button class="tab-btn" data-tab="tab-area">エリア</button>
-        <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
-        <button class="tab-btn" data-tab="tab-sld">単線図</button>
-        <button class="tab-btn" data-tab="tab-compare">比較</button>
-        <button class="tab-btn" data-tab="tab-ybus">Ybus / N-1</button>
-        <button class="tab-btn" data-tab="tab-editor">接続編集</button>
-        <button class="tab-btn" data-tab="tab-review">候補レビュー</button>
-    </div>
-
-    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ、iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-compare">
-        <iframe id="compare-frame" data-src="./compare.html"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="トポロジ比較（旧法 vs 新法）"></iframe>
-    </div>
-
-    <!-- ━━ Tab: 接続編集 (モデルビューア+下書き編集、iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-editor">
-        <iframe id="editor-frame" data-src="./editor.html?v=9"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="接続編集（モデルビューア）"></iframe>
-    </div>
-
-    <!-- ━━ Tab: 候補レビュー (A島接続候補を1件ずつ承認・閲覧専用・editとreviewを分離・iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-review">
-        <iframe id="review-frame" data-src="./review.html?v=1"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="候補レビュー（A島接続・閲覧専用）"></iframe>
-    </div>
-
-    <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
-    <div class="tab-panel" id="tab-ybus">
-        <div id="ybus-panel" style="padding:14px 18px;background:#0f1419;color:#e6e6e6">
-            <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) — シミュレーションツール</h3>
-            <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
-                $\mathbf{Y}_{\mathrm{bus}}$ は系統の電気的接続を表す疎行列（バス×バス）。
-                ここでは <b>DB更新済み建造モデル</b>（<code>docs/data/built</code>）から
-                <b>ブラウザ上で実時間に Ybus 隣接を構成</b>し、操作・再計算できます。
-                地域を選ぶ→スパイ図を描画（<span style="color:#f5b041">対角=自己</span>／<span style="color:#5dade2">送電線結合</span>／<span style="color:#69f0ae">変圧器</span>）→
-                ホバーでバス情報・クリックで行と列（接続先）をハイライト・<b>枝の on/off</b> で
-                非零パターンと統計（非零数・密度・次数・<b>連結成分数</b>）が即時更新されます。
-            </p>
-
-            <!-- ▼ インタラクティブ・シミュレーション（主役・ybus_sim.js がマウント） -->
-            <div id="ybus-sim-root" style="margin:0 0 16px"></div>
-
-            <!-- ▽ 静止アセット（地域別/大元/Spy/組立アニメ）は副次的に格納 -->
-            <details style="margin:0 0 14px;background:#0c1014;border:1px solid #2c3e50;border-radius:4px;padding:8px 14px">
-            <summary style="cursor:pointer;font-size:13px;color:#9fb3c8;font-weight:600">▸ 静止プロット（地域別 PNG・大元・Spy・組立アニメ）を見る</summary>
-            <p style="margin:8px 0 10px;font-size:11px;color:#7d8aa0;line-height:1.5">
-                事前生成した静止スパイ図のギャラリー（参考用）。最新の操作・解析は上のシミュレーションツールで行います。
-            </p>
-
-            <!-- 表示モード切替 -->
-            <div id="ybus-mode-bar" style="display:flex;gap:4px;margin:0 0 10px;flex-wrap:wrap">
-                <button class="ybus-mode-btn active" data-mode="region" style="background:#1f4068;color:#fff;border:1px solid #5dade2;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">地域別 Ybus</button>
-                <button class="ybus-mode-btn" data-mode="national" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">大元 (全国統合)</button>
-                <button class="ybus-mode-btn" data-mode="all" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">全地域ギャラリー</button>
-                <button class="ybus-mode-btn" data-mode="spy" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">Spy plot</button>
-                <button class="ybus-mode-btn" data-mode="anim" style="background:#16213e;color:#9fb3c8;border:1px solid #34495e;border-radius:4px;padding:6px 14px;font-size:12px;cursor:pointer">▶ 組立アニメ</button>
-            </div>
-
-            <!-- 地域セレクタ (region modeのみ) -->
-            <div id="ybus-region-selector" style="display:flex;gap:6px;margin:0 0 14px;flex-wrap:wrap;align-items:center">
-                <label style="font-size:12px;color:#9fb3c8">地域:</label>
-                <select id="ybus-region" style="background:#1b2631;color:#fff;border:1px solid #34495e;border-radius:4px;padding:5px 8px;font-size:13px">
-                    <option value="hokkaido">北海道</option>
-                    <option value="tohoku">東北</option>
-                    <option value="tokyo" selected>東京</option>
-                    <option value="chubu">中部</option>
-                    <option value="hokuriku">北陸</option>
-                    <option value="kansai">関西</option>
-                    <option value="chugoku">中国</option>
-                    <option value="shikoku">四国</option>
-                    <option value="kyushu">九州</option>
-                    <option value="okinawa">沖縄</option>
-                </select>
-                <span id="ybus-stats-mini" style="font-size:12px;color:#5dade2;margin-left:8px"></span>
-            </div>
-
-            <!-- メインビューア -->
-            <div id="ybus-viewer" style="display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:14px;margin:0 0 16px">
-                <figure id="ybus-figure" style="margin:0">
-                    <img id="ybus-img" alt="Ybus" loading="lazy"
-                         style="width:100%;height:auto;max-height:80vh;object-fit:contain;border:1px solid #2c3e50;border-radius:4px;background:#0f1419">
-                    <figcaption id="ybus-caption" style="margin-top:6px;font-size:12px;color:#9fb3c8">読み込み中...</figcaption>
-                </figure>
-                <div id="ybus-stats-panel" style="background:#0c1014;border:1px solid #2c3e50;border-radius:4px;padding:14px;font-size:12px;color:#cfd8e3">
-                    <div style="font-size:13px;color:#9fb3c8;font-weight:600;margin:0 0 10px">統計情報</div>
-                    <div id="ybus-stats-rows"></div>
-                </div>
-            </div>
-
-            <!-- 全地域比較表 -->
-            <details style="margin:0 0 14px;background:#0c1014;border:1px solid #2c3e50;border-radius:4px;padding:8px 14px">
-                <summary style="cursor:pointer;font-size:13px;color:#9fb3c8;font-weight:600">▸ 全地域 Ybus 統計を表で比較</summary>
-                <div id="ybus-compare-table" style="overflow-x:auto;margin-top:10px;font-size:12px"></div>
-            </details>
-
-            <script>
-            (function(){
-                const RJA = {hokkaido:"北海道", tohoku:"東北", tokyo:"東京",
-                             chubu:"中部", hokuriku:"北陸", kansai:"関西",
-                             chugoku:"中国", shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
-                let stats = null;
-                let mode = "region";
-
-                async function loadStats(){
-                    if (stats) return stats;
-                    try {
-                        const r = await fetch("./assets/analysis/ybus/stats.json?cb=" + Date.now());
-                        if (r.ok) stats = await r.json();
-                    } catch(e) { console.warn("stats load failed", e); }
-                    return stats;
-                }
-
-                function renderRegion(region){
-                    const img = document.getElementById("ybus-img");
-                    const cap = document.getElementById("ybus-caption");
-                    img.src = "./assets/analysis/ybus/" + region + ".png";
-                    img.alt = RJA[region] + " Ybus";
-                    cap.innerHTML = `<b>${RJA[region]}</b> 地域 Ybus（DB更新モデル）— 各点は実際に送電線で接続されたノード対。対角＝自己アドミタンス、非対角＝バス間の結合。ノード＝変電所＋接続点。`;
-                    if (!stats || !stats[region]) {
-                        document.getElementById("ybus-stats-rows").innerHTML = "";
-                        document.getElementById("ybus-stats-mini").textContent = "";
-                        return;
-                    }
-                    const s = stats[region];
-                    const rows = [
-                        ["地域名 (日本語)", s.name_ja],
-                        ["ノード数 N", s.n_buses.toLocaleString()],
-                        ["うち変電所", (s.n_sub != null ? s.n_sub.toLocaleString() : "—")],
-                        ["結線数 (送電線)", s.nnz.toLocaleString()],
-                        ["疎度 density", s.density_pct + " %"],
-                        ["平均次数 (1ノードあたり接続数)", s.degree_avg],
-                        ["最大次数", s.degree_max],
-                        ["行列形状", `${s.n_buses} × ${s.n_buses}`],
-                    ];
-                    document.getElementById("ybus-stats-rows").innerHTML = rows.map(([k,v]) =>
-                        `<div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0">
-                            <span style="color:#9fb3c8">${k}</span>
-                            <span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${v}</span>
-                        </div>`).join("");
-                    document.getElementById("ybus-stats-mini").innerHTML =
-                        `<b>${s.n_buses.toLocaleString()}</b> ノード · 変電所<b>${s.n_sub != null ? s.n_sub.toLocaleString() : "—"}</b> · 結線=<b>${s.nnz.toLocaleString()}</b>`;
-                }
-
-                function renderTable(){
-                    if (!stats) return;
-                    const order = ["hokkaido","tohoku","tokyo","chubu","hokuriku","kansai","chugoku","shikoku","kyushu","okinawa"];
-                    let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
-                    html += '<thead><tr>' +
-                        ['地域','ノード数 N','変電所','結線数','疎度 (%)','平均次数','最大次数']
-                            .map(h=>`<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${h}</th>`).join("") +
-                        '</tr></thead><tbody>';
-                    for (const r of order) {
-                        if (!stats[r]) continue;
-                        const s = stats[r];
-                        html += `<tr>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937"><b style="color:#69f0ae">${RJA[r]}</b></td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.n_buses.toLocaleString()}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.n_sub != null ? s.n_sub.toLocaleString() : "—"}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.nnz.toLocaleString()}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.density_pct}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.degree_avg}</td>
-                            <td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${s.degree_max}</td>
-                        </tr>`;
-                    }
-                    html += '</tbody></table>';
-                    document.getElementById("ybus-compare-table").innerHTML = html;
-                }
-
-                function renderNational(){
-                    const img = document.getElementById("ybus-img");
-                    img.src = "./assets/analysis/ybus_national.png";
-                    img.alt = "大元 Ybus (全国統合・DB更新モデル+連系線)";
-                    const nat = (stats && stats._national) || {};
-                    document.getElementById("ybus-caption").innerHTML =
-                        '<b>大元 Ybus（DB更新モデル）</b> — DB更新済みの建造モデルから直接生成。地域ごとの色で帯対角ブロックが並び（橙=自己アドミタンス、各色=地域内のバス間結合）、<b style="color:#ff3b6b">赤の非対角点＝エリア間連系線</b>。右は地域別の充填率。';
-                    const nNodes = (nat.n_nodes||0), nSub=(nat.n_sub||0), nInter=(nat.n_inter||0), nIntra=(nat.n_intra||0);
-                    document.getElementById("ybus-stats-rows").innerHTML = `
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">構成</span><span style="color:#fff">10 地域 + 連系線</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">合計ノード数</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nNodes.toLocaleString()}</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">うち変電所</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nSub.toLocaleString()}</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">地域内 結線</span><span style="font-family:ui-monospace,monospace;color:#fff;font-weight:600">${nIntra.toLocaleString()}</span></div>
-                        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #1f3a4a;padding:5px 0"><span style="color:#9fb3c8">エリア間 連系線</span><span style="font-family:ui-monospace,monospace;color:#ff3b6b;font-weight:600">${nInter.toLocaleString()}</span></div>
-                        <div style="font-size:11px;color:#7d8aa0;margin-top:8px;line-height:1.5">※ DB更新済み建造モデル(docs/data/built)から生成。全エッジが実ノードに接続。赤点が10地域をまたぐ連系線。</div>`;
-                    document.getElementById("ybus-stats-mini").innerHTML = `合計 <b>${nNodes.toLocaleString()}</b> ノード · 連系線<b style="color:#ff3b6b">${nInter.toLocaleString()}</b>`;
-                }
-
-                function renderAll(){
-                    const img = document.getElementById("ybus-img");
-                    img.src = "./assets/analysis/ybus_per_region.png";
-                    img.alt = "全地域 Ybus ギャラリー";
-                    document.getElementById("ybus-caption").innerHTML =
-                        '<b>地域別 Ybus ギャラリー（DB更新モデル）</b> — 10 地域の $\\mathbf{Y}_{\\mathrm{bus}}$ を一覧。各地域の規模（ノード数）と疎度が大きく異なることが分かる。個別表示は「地域別 Ybus」モードへ。';
-                    document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの10地域を並べた一覧。' +
-                        '個別の統計は「地域別 Ybus」モードで地域を選ぶと表示されます。下の表でも全地域を比較できます。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "10 地域一覧（DBモデル）";
-                }
-
-                function renderSpy(){
-                    const img = document.getElementById("ybus-img");
-                    img.src = "./assets/analysis/ybus_spy.png";
-                    img.alt = "Ybus spy plot";
-                    document.getElementById("ybus-caption").innerHTML =
-                        '<b>Spy plot（DB更新モデル）</b> — 全国 Ybus の非零パターン。地域ごとの帯対角ブロックと、<b style="color:#ff3b6b">赤＝エリア間連系線</b>（地域をまたぐ非対角点）が見て取れる。電力系統 Ybus に典型的な疎構造。';
-                    document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの全国 Ybus 非零パターン。' +
-                        '地域内の帯対角（=隣接ノード）と、<b style="color:#ff3b6b">赤のエリア間連系線</b>（北海道-東北、中部-東京、中国-四国 等）が分布する。' +
-                        '全エッジが実ノード(変電所/接続点)に接続している。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = "全国 Ybus spy（DBモデル）";
-                }
-
-                function renderAnim(){
-                    const img = document.getElementById("ybus-img");
-                    img.src = "./assets/gif/ybus_build.gif";
-                    img.alt = "全国 Ybus(地域ごとに組み上がる・DBモデル)";
-                    const na = (stats && stats._national) || {};
-                    document.getElementById("ybus-caption").innerHTML =
-                        '<b>全国 Ybus（組立アニメ・DB更新モデル）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の $\\mathbf{Y}_{\\mathrm{bus}}$（橙=自己アドミタンス／各色=地域内の結合）が積み上がり、<b style="color:#ff3b6b">赤＝エリア間連系線</b>が地域を繋いで入る。';
-                    document.getElementById("ybus-stats-rows").innerHTML =
-                        '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの全国 Ybus が地域ごとに構築される過程。' +
-                        '各地域のブロックが対角に順に出現し、地域がまたぐと<b style="color:#ff3b6b">赤の連系線</b>が入る。最終的に10地域+連系線で全国が組み上がる。' +
-                        '完成形は「大元」「Spy plot」、地域別詳細は「地域別 Ybus」へ。</div>';
-                    document.getElementById("ybus-stats-mini").innerHTML = `全国 <b>${(na.n_nodes||0).toLocaleString()}</b> ノード · 連系線<b style="color:#ff3b6b">${(na.n_inter||0).toLocaleString()}</b> · 組立`;
-                }
-
-                function applyMode(){
-                    const sel = document.getElementById("ybus-region-selector");
-                    sel.style.display = (mode === "region") ? "flex" : "none";
-                    if (mode === "anim") renderAnim();
-                    else if (mode === "region") renderRegion(document.getElementById("ybus-region").value);
-                    else if (mode === "national") renderNational();
-                    else if (mode === "all") renderAll();
-                    else if (mode === "spy") renderSpy();
-                    if (window.MathJax) try { MathJax.typeset(); } catch(e){}
-                }
-
-                document.querySelectorAll(".ybus-mode-btn").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        document.querySelectorAll(".ybus-mode-btn").forEach(b => {
-                            b.classList.remove("active");
-                            b.style.background = "#16213e";
-                            b.style.color = "#9fb3c8";
-                            b.style.borderColor = "#34495e";
-                        });
-                        btn.classList.add("active");
-                        btn.style.background = "#1f4068";
-                        btn.style.color = "#fff";
-                        btn.style.borderColor = "#5dade2";
-                        mode = btn.dataset.mode;
-                        applyMode();
-                    });
-                });
-                document.getElementById("ybus-region").addEventListener("change", (e) => {
-                    renderRegion(e.target.value);
-                });
-
-                // 初期化（静止アセットは details を開いた時のみ実質ロード。
-                // 既定 region モードは画像srcのみ差し替え、gif は明示選択時だけ）
-                loadStats().then(() => { renderTable(); applyMode(); });
-            })();
-            </script>
-            </details>
-            <!-- ▲ 静止アセット details ここまで -->
-
-            <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（インタラクティブ）</h3>
-            <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
-                各地域 220 kV 以上の幹線を1本ずつ脱落（N-1）させ AC 再潮流を行い、最悪事故を抽出した。
-                <b>地域を選ぶと、その地域の Worst Top-30 ランキングが表示</b>されます。
-                関西は基底 AC 非収束のためスキップ（<code>docs/WEST_AC_ANALYSIS.md</code>）。
-            </p>
-
-            <!-- 地域セレクタ + 表示切替 -->
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 12px">
-                <label style="font-size:12px;color:#9fb3c8">地域:</label>
-                <select id="n1-region" style="background:#1b2631;color:#fff;border:1px solid #34495e;border-radius:4px;padding:5px 8px;font-size:13px">
-                    <option value="__overview__" selected>▸ 全地域サマリ (棒グラフ + 表)</option>
-                    <option value="hokkaido">北海道 (16幹線)</option>
-                    <option value="tohoku">東北 (30幹線)</option>
-                    <option value="tokyo">東京 (30幹線, AC FAIL あり)</option>
-                    <option value="chubu">中部 (30幹線)</option>
-                    <option value="hokuriku">北陸 (30幹線)</option>
-                    <option value="chugoku">中国 (30幹線)</option>
-                    <option value="shikoku">四国 (22幹線)</option>
-                    <option value="kyushu">九州 (30幹線, AC FAIL あり)</option>
-                </select>
-                <span id="n1-region-summary" style="font-size:12px;color:#5dade2"></span>
-            </div>
-
-            <!-- 全地域オーバービュー (棒グラフ + summary表) -->
-            <div id="n1-overview">
-                <figure style="margin:0 0 12px">
-                    <img src="./assets/analysis/n1_worst_top.png" alt="N-1 worst top per region"
-                         loading="lazy"
-                         style="width:100%;max-width:880px;height:auto;border:1px solid #2c3e50;border-radius:4px;background:#fff">
-                </figure>
-                <div id="n1-summary-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
-            </div>
-
-            <!-- 個別地域 Worst Top-30 (動的にロード) -->
-            <div id="n1-detail" style="display:none">
-                <div id="n1-detail-meta" style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 12px;padding:10px 14px;background:#0c1014;border:1px solid #2c3e50;border-radius:4px;font-size:12px"></div>
-                <div id="n1-detail-table" style="overflow-x:auto;margin:0 0 10px;font-size:12px"></div>
-                <p style="margin:0;font-size:11px;color:#7d8aa0">
-                    各行 = ある幹線を outage させた時の最悪結果。AC FAIL は脱落で AC が解けなくなる枢要線（系統の急所）。
-                </p>
-            </div>
-
-            <script>
-            (function(){
-                const RJA = {hokkaido:"北海道", tohoku:"東北", tokyo:"東京",
-                             chubu:"中部", hokuriku:"北陸", chugoku:"中国",
-                             shikoku:"四国", kyushu:"九州", okinawa:"沖縄"};
-
-                let summary = null;
-
-                function parseCsv(text){
-                    const rows = text.trim().split(/\r?\n/).map(l => l.split(","));
-                    const head = rows.shift();
-                    return {head, rows};
-                }
-
-                async function loadSummary(){
-                    if (summary) return summary;
-                    try {
-                        const r = await fetch("./data/n1/n1_summary.csv?cb=" + Date.now());
-                        if (r.ok) summary = parseCsv(await r.text());
-                    } catch(e){}
-                    return summary;
-                }
-
-                async function renderOverview(){
-                    document.getElementById("n1-overview").style.display = "";
-                    document.getElementById("n1-detail").style.display = "none";
-                    document.getElementById("n1-region-summary").textContent = "全 9 地域 / 914 候補幹線をスイープ";
-                    const s = await loadSummary();
-                    if (!s) return;
-                    const HJA = {region:"地域", base_max_load:"基底 max load (%)",
-                                 worst_max_load:"最悪 max load (%)", worst_delta:"Δ (%)",
-                                 worst_ac_fail:"AC FAIL", worst_line:"枢要線"};
-                    let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
-                    html += '<thead><tr>';
-                    for (const h of s.head) html += `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${HJA[h]||h}</th>`;
-                    html += '</tr></thead><tbody>';
-                    for (const cols of s.rows) {
-                        if (!cols[0]) continue;
-                        const fail = cols[4] === "yes";
-                        const trBg = fail ? 'background:rgba(231,76,60,.08)' : '';
-                        html += `<tr style="${trBg}">`;
-                        cols.forEach((c, i) => {
-                            let val = c;
-                            if (i === 0) val = `<b style="color:#69f0ae">${RJA[c]||c}</b>`;
-                            else if (i === 4) val = fail ? '<span style="color:#ff8a80;font-weight:700">YES</span>' : '<span style="color:#7d8aa0">no</span>';
-                            else if (c === "AC_FAIL") val = '<span style="color:#ff8a80;font-weight:700">AC_FAIL</span>';
-                            else if (i === 5) val = `<code style="color:#5dade2">${c}</code>`;
-                            html += `<td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${val}</td>`;
-                        });
-                        html += '</tr>';
-                    }
-                    html += '</tbody></table>';
-                    document.getElementById("n1-summary-table").innerHTML = html;
-                }
-
-                async function renderRegion(region){
-                    document.getElementById("n1-overview").style.display = "none";
-                    document.getElementById("n1-detail").style.display = "";
-                    let r;
-                    try {
-                        const resp = await fetch(`./data/n1/${region}_n1.csv?cb=${Date.now()}`);
-                        if (!resp.ok) return;
-                        r = parseCsv(await resp.text());
-                    } catch(e) { return; }
-
-                    // メタ情報 (summaryから)
-                    const s = await loadSummary();
-                    let metaHtml = `<div><b style="color:#69f0ae">${RJA[region]}</b></div>`;
-                    if (s) {
-                        const row = s.rows.find(rr => rr[0] === region);
-                        if (row) {
-                            const fail = row[4] === "yes";
-                            metaHtml += `<div>候補幹線: <b>${r.rows.filter(rr=>rr[0]).length}</b></div>`;
-                            metaHtml += `<div>基底 max load: <b>${row[1]}%</b></div>`;
-                            metaHtml += `<div>最悪 max load: <b style="${fail?'color:#ff8a80':''}">${row[2]}${fail?'':'%'}</b></div>`;
-                            if (!fail) metaHtml += `<div>Δ最大悪化: <b>+${row[3]}%</b></div>`;
-                            metaHtml += `<div>枢要線: <code style="color:#5dade2">${row[5]}</code></div>`;
-                            if (fail) metaHtml += `<div style="color:#ff8a80;font-weight:700">★ AC FAIL する事故あり</div>`;
-                        }
-                    }
-                    document.getElementById("n1-detail-meta").innerHTML = metaHtml;
-                    document.getElementById("n1-region-summary").textContent =
-                        `${RJA[region]} の Worst Top-${r.rows.filter(rr=>rr[0]).length} ランキング`;
-
-                    // 詳細表
-                    const HJA = {line_idx:"#", name:"幹線名", voltage_kv:"電圧 (kV)",
-                                 ac_converged:"AC", vmin:"vmin", vmax:"vmax",
-                                 max_loading_pct:"max load (%)", n_overload:"過負荷数",
-                                 delta_max_load:"Δ max load"};
-                    let html = '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">';
-                    html += '<thead><tr>' +
-                        r.head.map(h => `<th style="padding:6px 10px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px">${HJA[h]||h}</th>`).join("") +
-                        '</tr></thead><tbody>';
-                    for (const cols of r.rows) {
-                        if (!cols[0]) continue;
-                        const ac = cols[3];
-                        const fail = (ac === "False" || ac === "false");
-                        const trBg = fail ? 'background:rgba(231,76,60,.12)' : '';
-                        html += `<tr style="${trBg}">`;
-                        cols.forEach((c, i) => {
-                            let val = c;
-                            if (r.head[i] === "name") val = `<code style="color:#5dade2">${c}</code>`;
-                            else if (r.head[i] === "ac_converged") val = fail
-                                ? '<span style="color:#ff8a80;font-weight:700">FAIL</span>'
-                                : '<span style="color:#69f0ae">OK</span>';
-                            else if (c === "") val = '<span style="color:#7d8aa0">―</span>';
-                            else if (r.head[i] === "delta_max_load" && c !== "") {
-                                const num = parseFloat(c);
-                                if (!isNaN(num) && num > 100) val = `<span style="color:#ff8a80;font-weight:600">+${c}</span>`;
-                                else val = `+${c}`;
-                            }
-                            html += `<td style="padding:6px 10px;border-bottom:1px solid #1f2937;font-family:ui-monospace,monospace">${val}</td>`;
-                        });
-                        html += '</tr>';
-                    }
-                    html += '</tbody></table>';
-                    document.getElementById("n1-detail-table").innerHTML = html;
-                }
-
-                document.getElementById("n1-region").addEventListener("change", (e) => {
-                    if (e.target.value === "__overview__") renderOverview();
-                    else renderRegion(e.target.value);
-                });
-
-                // 初期: overview
-                renderOverview();
-            })();
-            </script>
-            <p style="margin:14px 0 0;font-size:11px;color:#7d8aa0">
-                詳細CSVは <code>docs/data/n1/</code>。生成元: <code>scripts/run_n1_contingency.py</code>。
-            </p>
-        </div>
-    </div>
-
-    <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
-    <div class="tab-panel active" id="tab-map">
-        <div id="whats-new" class="section" style="padding:10px 16px;background:linear-gradient(90deg,rgba(46,204,113,.10),rgba(52,152,219,.10));border-bottom:1px solid #1f3a4a">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-                <div style="font-size:12px;line-height:1.55">
-                    <b style="color:#69f0ae">🎉 v1.6.0 release</b>
-                    &nbsp;
-                    <b style="color:#5dade2">介入 #19/#20/#21 既定ON</b> (県別需要 / 無効電力補償 / bbox重複dedup) /
-                    <b>数値 Ybus 正典 v5.0.0</b> /
-                    <b>補償率の一次資料アンカー</b> —
-                    <a href="./download.html" style="color:#69f0ae;font-weight:bold">📦 データセットDL</a> ·
-                    <a href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.6.0" target="_blank" style="color:#5dade2">リリースノート</a>
-                </div>
-                <button onclick="document.getElementById('whats-new').style.display='none'"
-                        style="background:transparent;color:#9fb3c8;border:1px solid #34495e;border-radius:3px;padding:2px 8px;font-size:12px;cursor:pointer">✕</button>
-            </div>
-        </div>
-        <!-- ① 電圧階級(最上位フィルタ・できるだけ上) -->
-        <div class="section">
-            <h2>電圧階級 Voltage</h2>
-            <div class="filter-row">
-                <label for="min-kv">最低:</label>
-                <select id="min-kv">
-                    <option value="0">全電圧</option>
-                    <option value="66">66 kV +</option>
-                    <option value="110">110 kV +</option>
-                    <option value="154">154 kV +</option>
-                    <option value="275" selected>275 kV +</option>
-                    <option value="500">500 kV のみ</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- ② 表示レイヤ(送電線/変電所/発電所・横並びコンパクト=縦を取らない) -->
-        <div class="section">
-            <h2>表示レイヤ</h2>
-            <div class="layer-toggles compact">
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="lines" checked/><span class="toggle-label">送電線</span></label>
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="subs" checked/><span class="toggle-label">変電所</span></label>
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="plants" checked/><span class="toggle-label">発電所</span></label>
-            </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="plant-filter" style="font-size:11px">発電所種:</label>
-                <select id="plant-filter" class="inline-select">
-                    <option value="utility" selected>Utility</option>
-                    <option value="ipp">+ IPP</option>
-                    <option value="all">All</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- ③ 発電所種別フィルター(電力系) -->
-        <div class="section" id="fuel-filter-section">
-            <h2>発電所種別
-                <span class="fuel-filter-actions">
-                    <button class="btn-fuel-all" onclick="setAllFuelTypes(true)">全選択</button>
-                    <button class="btn-fuel-all" onclick="setAllFuelTypes(false)">全解除</button>
-                </span>
-            </h2>
-            <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
-        </div>
-
-        <!-- ④ 地域(電力系) -->
-        <div class="section">
-            <h2>地域 Regions</h2>
-            <div class="region-list" id="region-list"></div>
-        </div>
-
-        <!-- ⑤ オーバーレイ(背景・最下部・折りたたみ) -->
-        <details class="ov-details">
-            <summary>地形オーバーレイ <span class="ov-hint">(背景・任意)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/><span class="toggle-label">陰影</span></label>
-                <label class="layer-toggle"><input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/><span class="toggle-label">標高色</span></label>
-                <label class="layer-toggle"><input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/><span class="toggle-label">傾斜</span></label>
-            </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="terrain-opacity" min="0" max="100" value="65" oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
-            </div>
-        </details>
-
-        <!-- ⑥ オーバーレイ: RE適地スコア(最下部・折りたたみ) -->
-        <details class="ov-details">
-            <summary>RE適地スコア <span class="ov-hint">(試験)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-score" onchange="toggleScore(this.checked)"/><span class="toggle-label">スコア表示</span></label>
-            </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="score-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="score-opacity" min="0" max="100" value="50" oninput="setScoreOpacity(this.value)" style="flex:1;margin-left:6px">
-            </div>
-        </details>
-
-        <!-- ⑦ オーバーレイ: 系統図突合(open-keitouzu 食い違い候補・未採用) -->
-        <details class="ov-details">
-            <summary>系統図突合 <span class="ov-hint" id="keitouzu-ov-hint">(未採用・裁定待ち)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-keitouzu" onchange="toggleKeitouzu(this.checked)"/><span class="toggle-label"><span style="color:#e91e63">━ ━</span> 系統図のみの接続</span></label>
-            </div>
-            <p style="font-size:10.5px;color:#888;margin:6px 0 0">
-                公式系統図(<a href="https://github.com/ibarapascal/open-keitouzu" target="_blank" rel="noopener">open-keitouzu</a>, CC BY 4.0)は接続を主張するが本モデルで未再現の裁定待ち候補。直線描画=実経路ではない。
-            </p>
-        </details>
-    </div>
-
-    <!-- ━━ Tab 2: エリア (region coloring) ━━ -->
-    <div class="tab-panel" id="tab-area">
-        <div class="section">
-            <h2>Area Color Mode</h2>
-            <p class="area-desc">送電線・変電所を地理的エリア（電力会社管轄の目安）ごとに色分けします。境界は概略で、連系線付近は厳密な管轄と一致しない場合があります。</p>
-        </div>
-        <div class="section">
-            <h2>Layers</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="lines" checked/>
-                    <span class="toggle-label">送電線 Lines</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="subs" checked/>
-                    <span class="toggle-label">変電所 Substations</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="plants" checked/>
-                    <span class="toggle-label">発電所 Plants</span>
-                </label>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Voltage</h2>
-            <div class="filter-row">
-                <label for="area-min-kv">Min:</label>
-                <select id="area-min-kv">
-                    <option value="0" selected>All voltages</option>
-                    <option value="66">66 kV+</option>
-                    <option value="110">110 kV+</option>
-                    <option value="154">154 kV+</option>
-                    <option value="275">275 kV+</option>
-                    <option value="500">500 kV only</option>
-                </select>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Regions</h2>
-            <div class="region-list" id="area-region-list"></div>
-        </div>
-    </div>
-
-    <!-- ━━ Tab 4: 単線結線図 (IEEE SLD) ━━ -->
-    <div class="tab-panel" id="tab-sld">
-        <div class="section">
-            <h2>系統トポロジー <span style="font-size:10px;font-weight:normal;color:#aaa">Force Graph</span></h2>
-            <p class="area-desc">ノード=バス、枝=送電線・変圧器。<br>ノードをドラッグ可。ホイールでズーム。</p>
-            <p class="area-desc" style="color:#9fb3c8;font-size:11px">※ これは潮流計算用の<b>縮約モデル</b>（約2,189バス・主要6電圧階級）の構造図です。全系統の接続グラフ（17,333ノード）とは別物で、系統図/接続編集タブが正典です。</p>
-        </div>
-        <div class="section">
-            <h2>電圧レイヤー</h2>
-            <div class="layer-toggles" id="sld-kv-list">
-                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(500,this.checked)"/><span class="toggle-label" style="color:#ff4444">● 500 kV</span></label>
-                <label class="layer-toggle"><input type="checkbox" checked onchange="sldToggleKv(275,this.checked)"/><span class="toggle-label" style="color:#4488ff">● 275 kV</span></label>
-                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(154,this.checked)"/><span class="toggle-label" style="color:#22cc55">● 154 kV</span></label>
-                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(110,this.checked)"/><span class="toggle-label" style="color:#ff9900">● 110 kV</span></label>
-                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(77,this.checked)"/><span class="toggle-label" style="color:#cc44cc">● 77 kV</span></label>
-                <label class="layer-toggle"><input type="checkbox" onchange="sldToggleKv(66,this.checked)"/><span class="toggle-label" style="color:#66aacc">● 66 kV</span></label>
-            </div>
-        </div>
-        <div class="section">
-            <h2>凡例</h2>
-            <div style="font-size:11px;line-height:1.9;color:#ccc">
-                <div>━━ 送電線 (色=潮流率)</div>
-                <div>╌╌ 変圧器 (灰)</div>
-                <div>G &nbsp; 発電機バス (黄ラベル)</div>
-                <div style="margin-top:4px;color:#888">電圧別にソフトバンドで整列。<br>重い枝ほど太く表示。</div>
-            </div>
-        </div>
-        <div class="section">
-            <h2>シミュレーション <button class="sim-reset-btn" onclick="sldResetParams()" title="デフォルトに戻す">↺</button></h2>
-            <div class="sim-params">
-                <div class="sim-row">
-                    <span class="sim-label">反発力</span>
-                    <input type="range" class="sim-slider" min="0" max="1200" step="10" value="300"
-                           oninput="sldSetParam('repulsion',+this.value,this)">
-                    <span class="sim-val" id="sld-p-repulsion">300</span>
-                </div>
-                <div class="sim-row">
-                    <span class="sim-label">リンク長</span>
-                    <input type="range" class="sim-slider" min="5" max="300" step="5" value="60"
-                           oninput="sldSetParam('linkLen',+this.value,this)">
-                    <span class="sim-val" id="sld-p-linkLen">60</span>
-                </div>
-                <div class="sim-row">
-                    <span class="sim-label">バネ強度</span>
-                    <input type="range" class="sim-slider" min="0" max="1" step="0.01" value="0.18"
-                           oninput="sldSetParam('linkStr',+this.value,this)">
-                    <span class="sim-val" id="sld-p-linkStr">0.18</span>
-                </div>
-                <div class="sim-row">
-                    <span class="sim-label">重力</span>
-                    <input type="range" class="sim-slider" min="0" max="0.2" step="0.005" value="0.03"
-                           oninput="sldSetParam('gravity',+this.value,this)">
-                    <span class="sim-val" id="sld-p-gravity">0.03</span>
-                </div>
-                <div class="sim-row">
-                    <span class="sim-label">層引力</span>
-                    <input type="range" class="sim-slider" min="0" max="0.5" step="0.01" value="0.12"
-                           oninput="sldSetParam('tierForce',+this.value,this)">
-                    <span class="sim-val" id="sld-p-tierForce">0.12</span>
-                </div>
-                <div class="sim-row">
-                    <span class="sim-label">減衰</span>
-                    <input type="range" class="sim-slider" min="0.1" max="0.99" step="0.01" value="0.75"
-                           oninput="sldSetParam('damping',+this.value,this)">
-                    <span class="sim-val" id="sld-p-damping">0.75</span>
-                </div>
-            </div>
-            <button class="btn-primary" onclick="sldReheat()" style="width:48%;margin-top:6px">再加熱</button>
-            <button class="btn-primary" onclick="sldFitAll()" style="width:48%;margin-top:6px;margin-left:4%">全体表示</button>
-        </div>
-    </div>
-
-    <!-- ━━ Tab 3: 潮流解析 ━━ -->
-    <div class="tab-panel" id="tab-pf">
-        <div class="section">
-            <h2>Region</h2>
-            <div class="pf-controls">
-                <select id="pf-region" disabled></select>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Layers</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-grid" checked/>
-                    <span class="toggle-label">全系統 Base Grid (all voltages)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-lines" checked/>
-                    <span class="toggle-label">潮流線 PF Lines</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-buses" checked/>
-                    <span class="toggle-label">変電所 Substations</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-otherfreq"/>
-                    <span class="toggle-label">他周波数系統 Other-freq (参考・非解析)</span>
-                </label>
-            </div>
-        </div>
-        <div class="section">
-            <h2>実ルート電圧レイヤー</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-ring-toggle" checked onchange="pfToggleRing(this.checked)"/>
-                    <span class="toggle-label" style="color:#ff4444">⬡ リング枝ハイライト</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#cc0000">━ 500 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#0044cc">━ 275 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#007733">━ 154 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-110" onchange="pfToggleTier(110,this.checked)"/>
-                    <span class="toggle-label" style="color:#885500">━ 110 kV <span style="color:#888;font-size:9px">664KB</span></span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-77" onchange="pfToggleTier(77,this.checked)"/>
-                    <span class="toggle-label" style="color:#660077">━ 77 kV <span style="color:#888;font-size:9px">1.1MB</span></span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-66" onchange="pfToggleTier(66,this.checked)"/>
-                    <span class="toggle-label" style="color:#334455">━ 66 kV <span style="color:#e67e22;font-size:9px">5.9MB ⚠</span></span>
-                </label>
-            </div>
-            <div style="font-size:9px;color:#666;margin-top:3px">Visualize実行後に切替可</div>
-        </div>
-        <div class="section">
-            <h2>Power Flow</h2>
-            <div class="pf-controls">
-                <div>
-                    <label for="pf-mode">Mode</label>
-                    <select id="pf-mode" disabled>
-                        <option value="ac" selected>AC Power Flow (Newton-Raphson)</option>
-                        <option value="dc">DC Power Flow (Linear)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="pf-viz">Visualization</label>
-                    <select id="pf-viz" disabled>
-                        <option value="loading" selected>負荷率 Loading Heatmap</option>
-                        <option value="flow">潮流方向 Flow Direction</option>
-                        <option value="thermal">熱容量 Thermal Heatmap</option>
-                        <option value="voltage">電圧 Voltage / Angle</option>
-                    </select>
-                </div>
-                <button class="btn-primary" id="btn-run-pf" disabled>Visualize</button>
-            </div>
-            <div class="pf-info" style="margin-top:6px">
-                <b>地域別・全国 = DB正典(built)由来の全規模AC潮流</b>（全17,333バス・縮約なし、pandapower、4周波数島すべてAC収束）。<br>
-                全国基幹/全国ゾーンは別モデル（500/275kV概観・同期島）として併設。<br>
-                ※過負荷(loading&gt;100%)や低電圧は合成定格の錯視・放射端の電圧沈下＝正直な物理（各地域の警告参照）。<br>
-                線色=潮流率(loading %)、バス色=電圧 (Vm)。
-            </div>
-        </div>
-        <div class="section" id="pf-results-section" style="display:none">
-            <h2>Results</h2>
-            <div id="pf-results-content"></div>
-        </div>
-    </div>
-
-    <!-- ━━ Download section (always visible at bottom of sidebar) ━━ -->
-    <div class="section download-section">
-        <h2>Download</h2>
-        <div class="download-btns">
-            <a class="btn-download" href="./assets/WHITEPAPER.md" download style="text-align:center;text-decoration:none;">Whitepaper (方法論)</a>
-            <button class="btn-download" id="dl-generators">Generators (発電所)</button>
-            <button class="btn-download" id="dl-substations">Substations (変電所)</button>
-            <button class="btn-download" id="dl-lines">Lines (送電線)</button>
-        </div>
-    </div>
-
-    <div id="status-bar"><span id="status-text">Ready</span></div>
+<div class="top">
+  <a class="brand" href="./"><span class="bolt">&#9889;</span> All-Japan-Grid</a>
+  <span class="pill" id="ver">v&hellip;</span>
+  <span class="pill local" id="localPill" hidden>&#9679; ローカルサーバー接続中</span>
+  <nav>
+    <a href="#tools">ツール</a>
+    <a href="#reports">レポート</a>
+    <a href="download.html">ダウンロード</a>
+    <a href="https://github.com/lutelute/All-Japan-Grid">GitHub</a>
+  </nav>
 </div>
 
-<div id="map">
-    <!-- IEEE SLD canvas (overlaid on map, shown only in tab-sld) -->
-    <canvas id="sld-canvas"></canvas>
-    <!-- Tooltip for SLD hover -->
-    <div id="sld-tooltip"></div>
-
-    <div id="ui-toggles">
-        <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="サイドバー">&#9776;</button>
-        <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例">&#9670;</button>
-        <button class="ui-toggle-btn active" id="btn-toggle-list" onclick="toggleListPanel(!listPanelVisible)" title="リスト">&#9783;</button>
+<main>
+  <section class="hero">
+    <h1>日本全国の送電網を、<br>出典つきで<wbr>見る・<wbr>確かめる・<wbr>使う。</h1>
+    <p>OpenStreetMap から機械的に組み立て、事業者の公表資料で突き合わせた全国送電網モデルです。
+       地図・潮流・変電所の単線結線図から、接続の編集・レビュー、MATPOWER / CIM での持ち出しまで、
+       すべてのツールにここから入れます。</p>
+    <div class="volt" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="cta">
+      <a class="btn primary" href="map.html">系統図マップを開く</a>
+      <a class="btn" href="flow_map.html">いまの潮流を見る</a>
+      <a class="btn" href="download.html">データを使う</a>
     </div>
-</div>
+  </section>
 
-<!-- ── リストパネル（フローティング・デフォルト表示） ── -->
-<div id="sublist" class="visible">
-    <div id="sublist-header">
-        <div class="list-tabs">
-            <button class="list-tab-btn active" onclick="showListTab('subs',this)">変電所</button>
-            <button class="list-tab-btn" onclick="showListTab('lines',this)">送電線</button>
-            <button class="list-tab-btn" onclick="showListTab('plants',this)">発電所</button>
-        </div>
-        <button class="list-close-btn" onclick="toggleListPanel(false)">✕</button>
+  <h2>現在の状態</h2>
+  <div class="tiles" id="tiles" aria-live="polite">
+    <div class="tile"><div class="k">モデル規模</div><div class="v" id="tNodes">&mdash;</div><div class="s" id="tNodesS">読み込み中…</div></div>
+    <div class="tile"><div class="k">最大連結成分</div><div class="v" id="tMain">&mdash;</div><div class="s" id="tMainS">&nbsp;</div></div>
+    <div class="tile"><div class="k">リアルタイム断面</div><div class="v" id="tRt">&mdash;</div><div class="s" id="tRtS">&nbsp;</div></div>
+    <div class="tile"><div class="k">NOW 断面の潮流計算</div><div class="v" id="tPf">&mdash;</div><div class="isl" id="tPfS"></div></div>
+    <div class="tile"><div class="k">介入台帳</div><div class="v" id="tInt">&mdash;</div><div class="s"><a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">モデルに加えた仮定の一覧</a></div></div>
+  </div>
+
+  <div class="finder" id="tools">
+    <input id="q" type="search" placeholder="ツールを探す（例: 潮流、変電所、MATPOWER、N-1）  —  / で移動" aria-label="ツールを探す" autocomplete="off">
+    <div class="chips" id="chips" role="group" aria-label="種類で絞り込む"></div>
+    <span class="count" id="count"></span>
+  </div>
+  <div id="cats"></div>
+
+  <h2 id="reports">レポート</h2>
+  <div class="cols">
+    <div>
+      <h3 class="sub">新しい順</h3>
+      <ul class="list" id="recent"><li>読み込み中…</li></ul>
+      <p class="count" id="repNote" style="margin:8px 2px"></p>
     </div>
-    <input class="list-search" type="text" placeholder="検索..." oninput="filterListPanel(this.value)">
-    <div class="list-sort-bar">
-        <button class="list-sort-btn active" id="listSortNameBtn" onclick="sortListPanel('name')">名前順</button>
-        <button class="list-sort-btn" id="listSortAreaBtn" onclick="sortListPanel('area')">エリア順</button>
-        <button class="list-sort-btn" id="listSortVoltageBtn" onclick="sortListPanel('voltage')">電圧順</button>
+    <div>
+      <h3 class="sub">ブラウザで開ける検証のまとめ</h3>
+      <ul class="list" id="bundles"></ul>
+      <p class="count" style="margin:8px 2px">Before / After の地図・航空写真・試して駄目だった案まで、レビューの過程をそのまま収めたページです。</p>
     </div>
-    <div id="list-tab-subs" class="list-content"></div>
-    <div id="list-tab-lines" class="list-content" style="display:none"></div>
-    <div id="list-tab-plants" class="list-content" style="display:none"></div>
-</div>
+  </div>
 
-<button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
+  <footer>
+    <p><strong>免責:</strong> 本データは公開されている OpenStreetMap を機械処理して生成したもので、電力会社・送配電事業者・政府機関の公式情報ではありません。
+       線路定数や需要の多くは合成値です。接続可否・運用可否・安定度の判定には使えません。詳しくは
+       <a href="https://github.com/lutelute/All-Japan-Grid#disclaimer--免責事項">README の免責事項</a> と
+       <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">介入台帳</a> を参照してください。</p>
+    <p>データ: <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a> &copy; OpenStreetMap contributors ／ コード: MIT ／
+       <span id="gen"></span></p>
+  </footer>
+</main>
 
-<script src="./js/grid_map.js?v=35"></script>
-<script src="./js/grid_search.js?v=1"></script>
-<script src="./js/powerflow.js?v=36"></script>
-<script src="./js/sld.js?v=32"></script>
-<script src="./js/ybus_sim.js?v=2"></script>
+<script>
+(() => {
+  'use strict';
+  const GH = 'https://github.com/lutelute/All-Japan-Grid/blob/main/';
+  const LOCAL_CMD = 'PYTHONPATH=. uvicorn src.server.app:app --port 8088';
+  const KIND_LABEL = {pages: 'ブラウザで動く', local: 'ローカル起動', cli: 'コマンド', report: '成果物'};
+  const $ = id => document.getElementById(id);
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') n.className = v; else if (k === 'text') n.textContent = v; else n.setAttribute(k, v);
+    }
+    for (const c of kids) if (c != null) n.append(c);
+    return n;
+  };
+  const getJSON = url => fetch(url, {cache: 'no-cache'}).then(r => r.ok ? r.json() : null).catch(() => null);
+  const fmt = n => (n == null ? '—' : Number(n).toLocaleString('ja-JP'));
+
+  let catalog = null, isLocal = false, activeKind = 'all';
+
+  // ── 状態タイル ────────────────────────────────────────────
+  function ageText(iso) {
+    const t = Date.parse(iso);
+    if (Number.isNaN(t)) return null;
+    const h = (Date.now() - t) / 36e5;
+    const txt = h < 1 ? `${Math.max(1, Math.round(h * 60))}分前` : h < 48 ? `${Math.round(h)}時間前` : `${Math.round(h / 24)}日前`;
+    return {h, txt};
+  }
+
+  function renderStatus(dash, now, rt) {
+    if (dash) {
+      $('ver').textContent = 'v' + dash.version;
+      const m = dash.model || {};
+      $('tNodes').innerHTML = `${fmt(m.n_nodes)}<small>ノード</small>`;
+      $('tNodesS').textContent = `枝 ${fmt(m.n_edges)} 本 ・ ${m.n_regions ?? 10} 地域` + (m.model_version ? ` ・ 版 ${m.model_version}` : '');
+      if (m.n_nodes) {
+        $('tMain').innerHTML = `${(100 * m.main_size / m.n_nodes).toFixed(1)}<small>%</small>`;
+        $('tMainS').textContent = `${fmt(m.main_size)} ノードが本系統 ・ 連結成分 ${fmt(m.n_components)}`;
+      }
+      $('tInt').innerHTML = `${fmt(dash.interventions)}<small>件</small>`;
+      const g = ageText(dash.generated_at);
+      $('gen').textContent = `この要約の生成: ${dash.generated_at.replace('T', ' ').replace('Z', ' UTC')}` + (g ? `（${g.txt}）` : '');
+    } else {
+      $('tNodesS').textContent = 'data/dashboard.json を読めませんでした';
+    }
+    const fetched = (rt && rt.fetched_at) || (now && now.fetched_at);
+    if (fetched) {
+      const a = ageText(fetched);
+      // でんき予報は毎時更新。6時間を超えたら更新ジョブが止まっている疑い(docs/REALTIME_OPS.md)
+      const cls = !a ? '' : a.h <= 6 ? 'ok' : a.h <= 30 ? 'warn' : 'bad';
+      $('tRt').innerHTML = `<span class="dot ${cls}"></span>${a ? a.txt : '—'}`;
+      const nz = rt && rt.zones ? Object.keys(rt.zones).length : null;
+      $('tRtS').textContent = `${fetched.replace('T', ' ').slice(0, 16)} 取得` + (nz ? ` ・ ${nz} エリアの実績需要` : '')
+        + (cls === 'bad' ? ' ・ 更新が止まっています' : '');
+    } else {
+      $('tRtS').textContent = 'スナップショットなし';
+    }
+    if (now && now.islands) {
+      const isl = Object.entries(now.islands);
+      const ac = isl.filter(([, v]) => v.ac).length;
+      $('tPf').innerHTML = `${ac}/${isl.length}<small>島が AC 収束</small>`;
+      $('tPfS').replaceChildren(...isl.map(([k, v]) =>
+        el('span', {class: v.ac ? 'ok' : 'dc', title: `${fmt(v.n_lines)} 線`, text: `${k} ${v.ac ? 'AC' : 'DC'}`})));
+    }
+  }
+
+  // ── ツールカード ──────────────────────────────────────────
+  function card(t) {
+    const kind = t.kind || 'pages';
+    const needsLocal = kind === 'local' && !isLocal;
+    // ローカル専用ツールは、:8088 で開いているときだけ実リンクにする
+    const href = kind === 'local' ? (isLocal ? t.local_href : null)
+               : kind === 'cli' ? (t.doc ? GH + t.doc : null)
+               : (isLocal && t.local_href) ? t.local_href : t.href;
+    const title = href ? el('a', {href, text: t.title}) : el('span', {text: t.title});
+    const c = el('article', {class: 'card' + (t.featured ? ' featured' : ''), 'data-kind': kind},
+      el('div', {class: 'badges'},
+        el('span', {class: 'b ' + kind, text: KIND_LABEL[kind] || kind}),
+        t.is_new ? el('span', {class: 'b new', text: 'NEW'}) : null,
+        ...(t.tags || []).slice(0, 2).map(x => el('span', {class: 'b', text: x}))),
+      el('h4', {}, title),
+      el('p', {text: t.summary}));
+    const cmd = kind === 'cli' ? t.command : needsLocal ? LOCAL_CMD : null;
+    if (needsLocal) c.append(el('div', {class: 'need', text: 'リポジトリを clone してローカルサーバーを起動すると使えます'}));
+    if (cmd) {
+      const btn = el('button', {type: 'button', text: 'コピー', 'aria-label': 'コマンドをコピー'});
+      btn.addEventListener('click', () => navigator.clipboard.writeText(cmd).then(() => {
+        btn.textContent = '✓'; setTimeout(() => (btn.textContent = 'コピー'), 1200);
+      }));
+      c.append(el('div', {class: 'cmd'}, el('code', {text: cmd}), btn));
+    }
+    const more = [];
+    if (t.doc && kind !== 'cli') more.push(el('a', {href: GH + t.doc, text: '説明'}));
+    if (t.source) more.push(el('a', {href: GH + t.source, text: 'ソース'}));
+    if (t.issue) more.push(el('a', {href: `https://github.com/lutelute/All-Japan-Grid/issues/${t.issue}`, text: `#${t.issue}`}));
+    if (more.length) c.append(el('div', {class: 'more'}, ...more));
+    return c;
+  }
+
+  function renderTools() {
+    if (!catalog) return;
+    const q = $('q').value.trim().toLowerCase();
+    const hit = t => (activeKind === 'all' || t.kind === activeKind) &&
+      (!q || [t.title, t.summary, t.id, ...(t.tags || []), t.command || ''].join(' ').toLowerCase().includes(q));
+    const tools = catalog.tools.filter(hit);
+    const frag = document.createDocumentFragment();
+    for (const cat of catalog.categories) {
+      const ts = tools.filter(t => t.category === cat.id);
+      if (!ts.length) continue;
+      frag.append(el('section', {class: 'cat'},
+        el('h3', {text: cat.label}), el('p', {class: 'hint', text: cat.hint || ''}),
+        el('div', {class: 'grid'}, ...ts.map(card))));
+    }
+    if (!tools.length) frag.append(el('div', {class: 'empty', text: '該当するツールがありません。語を変えるか、絞り込みを「すべて」に戻してください。'}));
+    $('cats').replaceChildren(frag);
+    $('count').textContent = `${tools.length} / ${catalog.tools.length} 件`;
+  }
+
+  function renderChips() {
+    const kinds = [['all', 'すべて'], ...Object.entries(KIND_LABEL).filter(([k]) => catalog.tools.some(t => t.kind === k))];
+    $('chips').replaceChildren(...kinds.map(([k, label]) => {
+      const b = el('button', {type: 'button', class: 'chip', 'aria-pressed': String(k === activeKind), text: label});
+      b.addEventListener('click', () => { activeKind = k; renderChips(); renderTools(); });
+      return b;
+    }));
+  }
+
+  // ── レポート ──────────────────────────────────────────────
+  function renderReports(dash) {
+    if (!dash) { $('recent').replaceChildren(el('li', {text: 'レポート一覧を読めませんでした'})); return; }
+    $('recent').replaceChildren(...dash.reports.recent.map(r =>
+      el('li', {}, el('time', {text: r.date}), el('a', {href: GH + r.path, text: r.title}))));
+    $('repNote').replaceChildren(
+      document.createTextNode(`判断の根拠と負の結果を含むレポート ${fmt(dash.reports.total)} 本。 `),
+      el('a', {href: GH + 'docs/reports/README.md', text: 'すべて見る →'}));
+    const bs = dash.bundles || [];
+    $('bundles').replaceChildren(...(bs.length ? bs.map(b =>
+      el('li', {}, el('time', {text: b.date || ''}), el('a', {href: b.href, text: b.title}))) :
+      [el('li', {text: 'ブラウザで開ける検証成果物はまだありません'})]));
+  }
+
+  // ── 起動 ──────────────────────────────────────────────────
+  $('q').addEventListener('input', renderTools);
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== $('q')) { e.preventDefault(); $('q').focus(); }
+    if (e.key === 'Escape' && document.activeElement === $('q')) { $('q').value = ''; renderTools(); $('q').blur(); }
+  });
+
+  Promise.all([
+    getJSON('data/tools_catalog.json'), getJSON('data/dashboard.json'),
+    getJSON('data/flow_map/now_meta.json'), getJSON('data/realtime/latest.json'),
+  ]).then(([cat, dash, now, rt]) => {
+    catalog = cat;
+    renderStatus(dash, now, rt);
+    renderReports(dash);
+    if (cat) { renderChips(); renderTools(); }
+    else $('cats').replaceChildren(el('div', {class: 'empty', text: 'data/tools_catalog.json を読めませんでした。'}));
+  });
+
+  // :8088 のローカルサーバー(src/server/app.py)から開かれていれば、バックエンドつきのツールを有効にする。
+  // Pages では /api/regions が存在しないので false のまま。
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    fetch('/api/regions').then(r => {
+      if (!r.ok) return;
+      isLocal = true; $('localPill').hidden = false; renderTools();
+    }).catch(() => {});
+  }
+})();
+</script>
 </body>
 </html>

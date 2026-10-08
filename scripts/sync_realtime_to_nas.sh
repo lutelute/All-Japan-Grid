@@ -12,5 +12,5 @@ if [ ! -d "$(dirname "$DEST")" ]; then
   exit 1
 fi
 mkdir -p "$DEST"
-rsync -av --ignore-existing data/realtime/ "$DEST/"
+rsync -av --ignore-existing --exclude .publish data/realtime/ "$DEST/"  # .publish = 公開用の疎な main 作業場所(realtime_publish.sh)は送らない
 echo "同期完了: data/realtime/ → $DEST (ローカルは残置=一次コピー)"

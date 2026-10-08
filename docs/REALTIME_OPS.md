@@ -11,7 +11,7 @@
 3. `export_flow_map_data.py --realtime` — **実績需要にスケールした NOW 断面 PF**
    → `flows_now_*.geojson` / `gens_now_*.geojson` / `now_meta.json`
 4. `export_day_flows.py` — 日別断面（時刻別の再生用アーカイブ）
-5. `slim_flow_map.py` → `git commit` + `push`（Pages へ反映）
+5. `slim_flow_map.py` → `realtime_publish.sh`（main 専用の疎な worktree から commit + push → Pages へ反映）
 
 ## 自動実行
 
@@ -24,6 +24,28 @@ launchctl load   ~/Library/LaunchAgents/jp.ac.u-fukui.alljapangrid.realtime.plis
 ```
 
 plist の原本は `scripts/realtime_launchd.plist`（パスを埋めて `~/Library/LaunchAgents/` へコピーする）。
+
+**回す場所は専用の作業場所**（2026-10-02 から）: ふだん作業するチェックアウトではなく、main を追う疎な
+worktree（`AGJ_RUNNER`、例 `~/dev/github/project_Hayashi/AGJ-realtime`）で回す。plist は毎回その作業場所を
+`origin/main` に合わせてから `realtime_cycle.sh` を実行する。ふだんのチェックアウトから回していたときは、
+feature ブランチの古いスクリプトで動いて commit がそのブランチに積もり（Pages が 9/12 から止まった）、
+`git pull --rebase --autostash` が rebase 途中の作業ツリーに毎時掛かっていた。
+
+作り方（初回だけ）:
+
+```bash
+R=~/dev/github/project_Hayashi/All-Japan-Grid      # ふだんのチェックアウト(蓄積と非公開データがある)
+RUN=~/dev/github/project_Hayashi/AGJ-realtime
+git -C $R worktree add --no-checkout --detach $RUN origin/main
+git -C $RUN sparse-checkout set --cone scripts src config docs/data data
+git -C $RUN checkout --detach origin/main
+ln -s $R/data/realtime $RUN/data/realtime                                    # 蓄積はこれまでの場所のまま
+ln -s $R/data/external/system_disclosure/normalized $RUN/data/external/system_disclosure/normalized  # 非公開の観測潮流
+AGJ_REALTIME_NO_PUSH=1 bash $RUN/scripts/realtime_cycle.sh                   # push せずに 1 回試す
+```
+
+公開用の疎な worktree（`data/realtime/.publish`）は蓄積フォルダの中にできるので、NAS への退避
+（`sync_realtime_to_nas.sh`）では除外している。
 
 **なぜ1時間か**: でんき予報の実績が毎時更新なので、30分間隔にしても新しい断面は
 増えず commit だけが倍になる。データ源の粒度に合わせている。
@@ -49,6 +71,13 @@ plist の原本は `scripts/realtime_launchd.plist`（パスを埋めて `~/Libr
   2026-08-28 に介入#35/#36 後の再生成漏れで実際に発生した。
 - 停止に気づきにくい。`docs/data/realtime/latest.json` の `fetched_at` が
   数時間以上古ければ止まっている。
+  ダッシュボード（`docs/index.html`）の「リアルタイム断面」タイルが、6 時間超で黄、30 時間超で赤になる。
+- **作業ツリーのブランチに依存していた（2026-09-21 修正）**。旧版は「いまチェックアウト中のブランチ」に
+  commit して `git push origin main` していたため、作業ツリーが feature ブランチにある間は commit が
+  そのブランチに積もるだけで Pages に出ず、9/12〜9/21 の 9 日間 NOW 断面が止まっていた。
+  現在は `scripts/realtime_publish.sh` が `data/realtime/.publish`（main 専用・公開パスだけの疎な
+  worktree・約 22 MB）から公開するので、作業ツリーの HEAD に関係なく main へ出る。
+  動作確認は `AGJ_REALTIME_NO_PUSH=1 bash scripts/realtime_publish.sh`（commit まで・push しない）。
 
 ---
 

@@ -1,0 +1,111 @@
+{
+ "station_baseline": {
+  "single_ended": 361,
+  "no_official": 12025,
+  "confirmed": 1252,
+  "no_region": 1489,
+  "definite_error": 254,
+  "branch_undeterminable": 26
+ },
+ "enters": {
+  "extra_attachments": 1429,
+  "official": {
+   "no_official": 1076,
+   "single_ended": 88,
+   "no_region": 99,
+   "confirmed": 145,
+   "branch_undeterminable": 2,
+   "definite_error": 19
+  },
+  "voltage": {
+   "voltage_match": 1053,
+   "voltage_unknown": 297,
+   "voltage_mismatch": 79
+  },
+  "shape": {
+   "feeds_in": 1371,
+   "passes_through": 22,
+   "no_node": 36
+  },
+  "by_shape": {
+   "feeds_in|branch_undeterminable": 2,
+   "feeds_in|confirmed": 138,
+   "feeds_in|definite_error": 18,
+   "feeds_in|no_official": 1043,
+   "feeds_in|no_region": 91,
+   "feeds_in|single_ended": 79,
+   "feeds_in|voltage_match": 1020,
+   "feeds_in|voltage_mismatch": 69,
+   "feeds_in|voltage_unknown": 282,
+   "no_node|confirmed": 7,
+   "no_node|definite_error": 1,
+   "no_node|no_official": 24,
+   "no_node|no_region": 1,
+   "no_node|single_ended": 3,
+   "no_node|voltage_match": 26,
+   "no_node|voltage_mismatch": 7,
+   "no_node|voltage_unknown": 3,
+   "passes_through|no_official": 9,
+   "passes_through|no_region": 7,
+   "passes_through|single_ended": 6,
+   "passes_through|voltage_match": 7,
+   "passes_through|voltage_mismatch": 3,
+   "passes_through|voltage_unknown": 12
+  }
+ },
+ "any": {
+  "extra_attachments": 1736,
+  "official": {
+   "single_ended": 102,
+   "no_official": 1265,
+   "no_region": 200,
+   "confirmed": 148,
+   "branch_undeterminable": 2,
+   "definite_error": 19
+  },
+  "voltage": {
+   "voltage_unknown": 503,
+   "voltage_match": 1144,
+   "voltage_mismatch": 89
+  },
+  "shape": {
+   "no_entering_way": 309,
+   "feeds_in": 1342,
+   "passes_through": 22,
+   "no_node": 63
+  },
+  "by_shape": {
+   "feeds_in|branch_undeterminable": 2,
+   "feeds_in|confirmed": 134,
+   "feeds_in|definite_error": 17,
+   "feeds_in|no_official": 1025,
+   "feeds_in|no_region": 87,
+   "feeds_in|single_ended": 77,
+   "feeds_in|voltage_match": 999,
+   "feeds_in|voltage_mismatch": 69,
+   "feeds_in|voltage_unknown": 274,
+   "no_entering_way|confirmed": 3,
+   "no_entering_way|definite_error": 1,
+   "no_entering_way|no_official": 189,
+   "no_entering_way|no_region": 103,
+   "no_entering_way|single_ended": 13,
+   "no_entering_way|voltage_match": 94,
+   "no_entering_way|voltage_mismatch": 10,
+   "no_entering_way|voltage_unknown": 205,
+   "no_node|confirmed": 11,
+   "no_node|definite_error": 1,
+   "no_node|no_official": 42,
+   "no_node|no_region": 3,
+   "no_node|single_ended": 6,
+   "no_node|voltage_match": 44,
+   "no_node|voltage_mismatch": 7,
+   "no_node|voltage_unknown": 12,
+   "passes_through|no_official": 9,
+   "passes_through|no_region": 7,
+   "passes_through|single_ended": 6,
+   "passes_through|voltage_match": 7,
+   "passes_through|voltage_mismatch": 3,
+   "passes_through|voltage_unknown": 12
+  }
+ }
+}
