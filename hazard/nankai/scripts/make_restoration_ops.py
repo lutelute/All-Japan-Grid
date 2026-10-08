@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """復旧オペレーション・シナリオ(v0 試作): 班の配置 → 班と資機材の被災 → 他社応援の到着 → 待ち行列で修理 → 停電の回復。
 
-    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_ops.py docs/reports/nankai_hazard_2026-09-13/restoration_ops
+    PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_ops.py hazard/nankai/reports/nankai_hazard_2026-09-13/restoration_ops
 
 出力: <out>.mp4 (1920×1080, 12 fps) / <out>.gif (960×540) / <out>_still.png / <out>_summary.json
 パラメータは config/restoration_ops_scenario.yaml(各値に sourced / reused / assumption の区別)。

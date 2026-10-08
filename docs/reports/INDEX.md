@@ -2,8 +2,8 @@
 
 <!-- scripts/build_reports_index.py が生成する。手で編集しない -->
 
-`docs/reports/` の判断・検証レポート 141 本(新しい順)。
-台帳 [IMPROVEMENT_LOG.md](IMPROVEMENT_LOG.md) から参照されているものに ● を付けた(54 本)。
+`docs/reports/` の判断・検証レポート 140 本(新しい順)。
+台帳 [IMPROVEMENT_LOG.md](IMPROVEMENT_LOG.md) から参照されているものに ● を付けた(53 本)。
 書き方の約束は [README.md](README.md)。
 
 ## 2026-10
@@ -20,7 +20,6 @@
 | 日付 | レポート | 台帳 |
 |---|---|:---:|
 | 09-21 | [併架線の回線数を、線路名ごとの証拠で電圧クラスに配る(ビルダー修正)](mixed_voltage_circuits_builder_2026-09-21.md) | ● |
-| 09-13 | [南海トラフ巨大地震 電力ハザードマップ v0 — 解析ベース(A)とポテンシャル法(B)](nankai_power_hazard_v0_2026-09-13.md) | ● |
 | 09-03 | [介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）](tepco_endpoint_unresolved_2026-09-03.md) | ● |
 | 09-03 | [介入#43a 変圧器の銘板化ワークリスト — なぜ 0/71 だったのか（2026-09-03）](stepdown_nameplate_worklist_2026-09-03.md) | ● |
 | 09-03 | [線路容量の理論値を公表値で較正する — 全国版（2026-09-03）](line_capacity_calibration_2026-09-03.md) | ● |

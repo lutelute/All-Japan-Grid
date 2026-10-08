@@ -2,7 +2,7 @@
 """復旧の人員を実規模で見る: 配電の電柱被害 → 営業所の人員(被災で欠ける)→ 社内の融通 → 他社応援の到着 → 電柱の修理 → 停電軒数。
 
     PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_restoration_workforce.py --run hazard/nankai/output/run_v8 \
-        --out docs/reports/nankai_hazard_2026-09-13/workforce/restoration_workforce
+        --out hazard/nankai/reports/nankai_hazard_2026-09-13/workforce/restoration_workforce
 
 前の試作(make_restoration_ops.py)は送変電の修理班だけで、営業所の人(配電)・協力会社・被災会社の社内融通が入っておらず、
 東京向けの応援が 5.4 班(約 43 人)と桁が小さかった(オーナー指摘)。本スクリプトは配電の層を足し、人数を実績から当てる。

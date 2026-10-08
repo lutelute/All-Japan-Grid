@@ -2,7 +2,7 @@
 """動的カスケード 1 サンプルの可視化(MP4 + GIF + 静止画): 揺れの到達 → 発電機停止 → 周波数 → リレー → 系統分離 → 停電。
 
     PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/make_dynamic_cascade_viz.py --run hazard/nankai/output/run_v2_dyn --island west \
-        --out docs/reports/nankai_hazard_2026-09-13/dynamics/cascade_west
+        --out hazard/nankai/reports/nankai_hazard_2026-09-13/dynamics/cascade_west
 
 代表サンプルは dyn_samples.csv から「180 秒後の受電 MW が中央値に最も近いサンプル」を選び、同じ乱数で再計算して時系列を記録する。
 左: 母線の地図(受電中は島ごとに色、赤 = 周波数崩壊、灰 = 電源から切り離された孤立、橙の × = 設備損傷)と S 波の波面

@@ -2,7 +2,7 @@
 """動的カスケード(run_v2_dyn)の集計: 受電率と原因の時間推移、独立系統の数の分布、静的 run_v1 との比較。
 
     PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/summarize_dynamic.py hazard/nankai/output/run_v2_dyn hazard/nankai/output/run_v1_jshis \
-        docs/reports/nankai_hazard_2026-09-13/dynamics
+        hazard/nankai/reports/nankai_hazard_2026-09-13/dynamics
 """
 from __future__ import annotations
 import json, os, sys

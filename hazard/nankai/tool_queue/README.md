@@ -9,7 +9,7 @@
 
 ```bash
 PYTHONPATH=hazard/nankai/src:hazard/nankai/scripts python3 hazard/nankai/scripts/build_queue_tool.py \
-  --out docs/reports/nankai_hazard_2026-09-13/tool/nankai_restoration_queue.html      # 約 45 秒
+  --out hazard/nankai/reports/nankai_hazard_2026-09-13/tool/nankai_restoration_queue.html      # 約 45 秒
 node hazard/nankai/tool_queue/test_model.mjs                                             # JS と Python の照合
 ```
 

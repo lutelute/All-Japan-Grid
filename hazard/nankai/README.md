@@ -12,6 +12,10 @@ All-Japan-Grid の正典モデル(docs/data/built + 正典系譜の潮流ケー�
 「倒壊」は鉄塔倒壊(線路単位・1基あたり脆弱性×基数)と変電所の extensive/complete 損傷として扱う。
 発電所は損傷(HAZUS EPP)に加え、揺れによる自動停止(火力 5弱以上・原子力 scram)と津波浸水(沿岸火力の長期停止)を分ける。
 
+南海トラフは 1 つの地震のプロジェクトとして、コード・設定・レポート・スライド・成果物をすべてこのディレクトリに置く
+(2026-10-08 に `docs/reports/`・`docs/slides/`・`verification/` から移した)。All-Japan-Grid 本体からは正典モデルを読むだけ。
+置き場所は末尾の「構成」。
+
 ## 実行
 
 ```bash
@@ -45,7 +49,7 @@ cd hazard/nankai && python3 -m pytest tests -q
 - **地震動の既定は合成場**である。司・翠川式は Mw8.3 程度までの回帰なので `gmpe_effective_mw: 8.5` で飽和させ、
   内閣府の震度分布に目視で寄せた(静岡・高知・徳島 6強〜7、名古屋 6弱〜6強、大阪 6弱〜6強、北陸 4〜5弱)。実データが入れば自動で置き換わる。
 - **脆弱性は HAZUS-MH 系 + 日本補正係数(仮定)**。日本の変電機器の耐震性は米国標準より高いとして中央値を 1.8 倍している。
-  この係数と「moderate 損傷で停電する確率 0.3」が結果の絶対値を大きく左右する。内閣府の停電軒数(直後 約2,710万軒)への較正は `docs/reports/` に記録。
+  この係数と「moderate 損傷で停電する確率 0.3」が結果の絶対値を大きく左右する。内閣府の停電軒数(直後 約2,710万軒)への較正は `reports/` に記録。
 - **系統モデルの限界を引き継ぐ**: 正典モデルは島ごとに数百の成分に分かれ(フラグメント)、フラグメントは仮想電源(slack)で供給されている。
   本解析ではフラグメントの仮想電源を「基底の残差容量」とし、slack 母線が損傷すれば失われる扱いにした。線路容量は理論値(介入#45較正込み)、
   基底で既に過負荷の枝は基底潮流×1.3 を緊急定格とみなす。配電系統(6.6kV 以下)の被害は含まない=**変電所が生きていれば供給されるとみなす**ので、実際の停電はこれより多い。
@@ -56,11 +60,22 @@ cd hazard/nankai && python3 -m pytest tests -q
 
 ```
 hazard/nankai/
-  config/      scenario_nankai.yaml  fragility_default.yaml  restoration_default.yaml  customers.yaml  (+ 文献版 fragility.yaml 等)
-  src/nankai/  grid.py  hazard_field.py  fragility.py  cascade.py  restoration.py  montecarlo.py  potential.py  maps.py  aggregate.py
-  scripts/     extract_grid_case.py  run_pipeline.py
-  tests/       test_hazard_field.py  test_cascade.py  test_restoration.py
-  data/        external/(git管理外)  derived/(grid_*.parquet はコミット・大物は管理外)
-  output/      run_*/(git管理外)
-  docs/        DATA_MANIFEST.md  HAZARD_DATA_SOURCES.md  FRAGILITY_SOURCES.md
+  README.md     この文書(入口)
+  config/       シナリオ・脆弱性・復旧・動的カスケード・人員の YAML(既定版と文献版)
+  src/nankai/   ハザード場・損傷・カスケード(静的/動的)・復旧・モンテカルロ・ポテンシャル法・地図
+  scripts/      実行(run_pipeline / run_dynamic)・後処理(postrun.sh)・図と動画・ヒンドキャスト(北海道 2018・福島 2022)
+  tests/        pytest
+  tool/         停電シナリオ卓(1 枚の HTML。Artifact 版の元)
+  tool_queue/   復旧の待ち行列卓
+  data/         derived/(grid_*.parquet はコミット・大物は管理外)・external/(管理外)・取得スクリプト(ksj_pipeline/・support_pipeline/)
+  docs/         外部データの出典と利用条件(DATA_MANIFEST・HAZARD_DATA_SOURCES・FRAGILITY_SOURCES)・耐水性の証拠
+  reports/      判断レポート nankai_power_hazard_v0_2026-09-13.md と、その図・表・動画・個別レポート
+                nankai_hazard_2026-09-13/(dynamics/・workforce/・tool/ を含む)
+  slides/       デッキ(版ごとに別名。版の一覧は slides/README.md)
+  verification/ 09-13 時点の検証一式(人が読む成果物を 1 か所に集めた写し。REPORT_v0・技術ノート・viewers/)
+  output/       run_*/(計算結果・git 管理外)
 ```
+
+All-Japan-Grid 側に残しているのは、トップ README の動画 `docs/assets/gif/nankai_cinematic.gif`(作り直しは
+`scripts/make_readme_gifs.py nankai`)と、改善台帳 `docs/reports/IMPROVEMENT_LOG.md` の記録だけ。
+`docs/` の外に出したので、レポートとスライドは GitHub Pages には載らない。

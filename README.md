@@ -176,7 +176,7 @@ PYTHONPATH=. uvicorn src.server.app:app --host 127.0.0.1 --port 8088   # → htt
 docs/          GitHub Pages(ダッシュボード・各ツール・docs/data)と文書(docs/README.md が地図)
 src/           モデル・潮流・UC・動態・CIM・DB・サーバー
 scripts/       パイプライン・解析・書き出し・図(scripts/README.md)
-hazard/        南海トラフ電力ハザード(hazard/nankai)
+hazard/        地震ハザード。1 つの地震を 1 ディレクトリに(南海トラフ = hazard/nankai。コード・レポート・スライドもここ)
 dataset/       配布バンドルの入口とチュートリアル
 data/ config/  地域別 GeoJSON・DB キュレーション・設定
 tests/         pytest
