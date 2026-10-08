@@ -2,7 +2,7 @@
 # 全島24h検証: --pref-demand --reactive-comp
 # 島ごとにプロセス隔離(ハマり⑨ BLAS abort対策)。各島 --all-hours を独立プロセスで。
 set -u
-cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid
+cd /Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid
 OUT=/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/78bb2546-5e61-4e06-97de-a53fe1953ee0/scratchpad/allisland24h
 mkdir -p "$OUT"
 

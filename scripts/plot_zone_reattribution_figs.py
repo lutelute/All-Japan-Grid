@@ -11,7 +11,7 @@ import sys
 import warnings
 
 warnings.filterwarnings("ignore")
-ROOT = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+ROOT = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 OUT = os.path.join(ROOT, "docs", "reports", "figs")

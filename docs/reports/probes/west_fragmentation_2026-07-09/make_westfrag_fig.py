@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """west断片化の主因図: サイズ分布 / 根本原因分類 / 介入効果."""
 import json, os
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 os.chdir(REPO)
 import matplotlib
 matplotlib.use("Agg")

@@ -9,7 +9,7 @@
   "4.0.0": "①変圧器の実容量化: 出典必須DB(data/transformer_sources.jsonl, existing銘板のみ)→構造DB(TransformerSpec source=nameplate)→build_island_net の trafo sn_mva/parallel へ接続(電圧ペア厳密一致のみ・枝名に@nameplate刻印) ②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) ③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 ④meta.trafo_nameplate に適用数と伝播経路を記録",
   "5.0.0": "介入#21(bbox二重抽出のdedup)を既定ON化: ①重複ノード(同一座標6桁+kv)を1バスへ ②重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存・本物の複線par>1は不変)。除去であって接続追加でない。west断片化2531→544成分・線二重計上の是正(境界線インピーダンス半減の解消)。--no-dedup-nodes で v4 相当(dedup無し)を再現可 (docs/reports/default_on_decision_2026-07-10.md)"
  },
- "source": "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
+ "source": "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
  "note": "4 frequency islands are asynchronous; the national Ybus is the block-diagonal direct sum of these.",
  "islands": {
   "hokkaido": {

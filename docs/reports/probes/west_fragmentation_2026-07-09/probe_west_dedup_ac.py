@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """west + dedup + 無効補償で full AC が実用化するか(順序頑健性も)."""
 import copy, json, os, sys, time
-REPO="/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO="/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 sys.path.insert(0,REPO); os.chdir(REPO)
 import pandapower as pp
 from scripts.run_full_powerflow_from_db import (BUILT, ISLAND_OF,

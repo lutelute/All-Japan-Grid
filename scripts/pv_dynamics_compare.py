@@ -3,14 +3,14 @@
 橋=UCの(region,fuel)起動率をAGJ機械集約へ適用(容量比例・介入#10と同族の近似・開示)。"""
 import json, sys, warnings
 warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid')
+sys.path.insert(0, '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid')
 import numpy as np, scipy.sparse as sp
 from scipy.sparse.linalg import splu
 from scripts.run_full_powerflow_from_db import build_island_net, attach_generators
 from scripts.gen_ybus_numeric import load_ybus_npz
 from src.dynamics.machine_agg import aggregate_machines, build_classical_model, classify
 
-ROOT = '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid'
+ROOT = '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid'
 S = '/private/tmp/claude-501/-Users-shigenoburyuto-Documents-GitHub-project-Hayashi-All-Japan-Grid/69ca6350-e35f-4ce1-b335-621694b92146/scratchpad'
 uc = json.load(open(f'{S}/uc_pv_compare.json'))
 

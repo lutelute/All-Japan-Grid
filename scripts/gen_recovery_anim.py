@@ -14,7 +14,7 @@ COI制御層(src/dynamics/agc.py・AGC30 LFC/EDC)による回復の実シミュ�
 """
 import os
 import numpy as np
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

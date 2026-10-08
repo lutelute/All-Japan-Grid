@@ -7,7 +7,7 @@
 """
 import copy, json, os, sys
 import numpy as np
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, os.getcwd())
 from scripts.run_full_powerflow_from_db import (BUILT, ISLAND_OF,
     add_per_component_slacks, allocate_loads, attach_generators,
