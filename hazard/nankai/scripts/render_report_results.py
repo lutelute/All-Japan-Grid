@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""レポート(docs/reports/nankai_power_hazard_v0_2026-09-13.md)の §4 結果と §0 の数値を run ディレクトリから再生成する。
+"""レポート(hazard/nankai/reports/nankai_power_hazard_v0_2026-09-13.md)の §4 結果と §0 の数値を run ディレクトリから再生成する。
 
     PYTHONPATH=hazard/nankai/src python3 hazard/nankai/scripts/render_report_results.py <run_jshis> <run_gmpe> <report.md> <fig_dir_rel>
 """

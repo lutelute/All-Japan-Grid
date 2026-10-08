@@ -2,7 +2,7 @@
 """南海トラフ停電シナリオ卓(1 枚の HTML)を組み立てる。
 
     PYTHONPATH=hazard/nankai/src:hazard/nankai/scripts python3 hazard/nankai/scripts/build_scenario_tool.py \
-        --out docs/reports/nankai_hazard_2026-09-13/tool/nankai_scenario_tool.html
+        --out hazard/nankai/reports/nankai_hazard_2026-09-13/tool/nankai_scenario_tool.html
 
 - 系統の前提(過負荷リレー・変圧器台帳・東京湾の津波)は動的カスケードを事前に全組み合わせで計算し、結果を埋め込む。
 - 被害と復旧の前提(全壊率曲線・人員・応援・社内融通・着手日)はブラウザで計算し直す。計算は hazard/nankai/tool/model.js

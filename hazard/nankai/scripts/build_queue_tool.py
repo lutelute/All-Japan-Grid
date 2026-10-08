@@ -2,7 +2,7 @@
 """南海トラフ 復旧の待ち行列卓(1 枚の HTML)を組み立てる。
 
     PYTHONPATH=hazard/nankai/src:hazard/nankai/scripts python3 hazard/nankai/scripts/build_queue_tool.py \
-        --out docs/reports/nankai_hazard_2026-09-13/tool/nankai_restoration_queue.html
+        --out hazard/nankai/reports/nankai_hazard_2026-09-13/tool/nankai_restoration_queue.html
 
 - 代表サンプル・作業班の拠点・他社応援・待ち行列は make_restoration_ops.py の関数をそのまま使う(動画と同じ前提)。
 - ブラウザ(hazard/nankai/tool_queue/model.js)は、要員と資機材の被災・応援の到着・エリアごとの待ち行列・
