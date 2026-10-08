@@ -30,6 +30,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `scripts/score_transformer_topology.py`): substations whose transformer pairs match the published list
   82.2% → 89.7% (925 substations), 78.3% → 88.8% where OSM maps no transformer. Power flow: 22 substations relinked,
   convergence unchanged, east overloaded lines 334→321. Default ON; `--no-published-trafos` to disable.
+- **Intervention #50 — size the transformers linked by #48/#49 from the published capacity of their voltage pair**
+  (`config/transformer_capacity_by_pair.json`: medians and counts per pair only). Against each substation's published
+  capacity, estimates within a factor of 2 rise from 17.6% (lower-side line rating) to 80.9%. Power flow: overloaded
+  transformers east 146→79, west 133→60; overloaded lines east 321→304, west 271→244; convergence unchanged.
+- **Intervention #51 — correct OSM voltage tags shown wrong by primary sources** (`scripts/apply_voltage_corrections.py`,
+  ledger in the script, `--revert`): Nishi-Shimane's 275 kV becomes 220 kV (Chugoku's published lists have no
+  275 kV class; the substation's transformers are 500/220 and 220/110 kV).
+- **Distribution voltage levels from the published lists in the structure DB** (2,142 levels at 1,190 substations,
+  mostly 6.6/22 kV; `data/reference/published_missing_levels.json`). The power-flow model does not read them.
 - **Intervention validation tool** (`scripts/validate_intervention.py`, `run_full_powerflow_from_db.py --dump-flows`):
   scores an intervention on structure (published registries), flows (published annual flow statistics, nearby lines
   separately, sign test) and physics.

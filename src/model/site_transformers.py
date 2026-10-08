@@ -31,6 +31,8 @@ from collections import defaultdict
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OBSERVED_PATH = os.path.join(_ROOT, "data", "stations", "observed_transformer_pairs.json")
 PUBLISHED_PATH = os.path.join(_ROOT, "data", "reference", "published_transformer_pairs.json")
+# 公表一覧にあって構造 DB に無い電圧階級の組(構造 DB だけが読む。潮流モデルは読まない)
+MISSING_LEVELS_PATH = os.path.join(_ROOT, "data", "reference", "published_missing_levels.json")
 
 
 def kv_class(kv) -> int:
@@ -38,13 +40,14 @@ def kv_class(kv) -> int:
     return int(float(kv) + 1e-9)
 
 
-def link_levels(levels, observed=(), label="osm") -> list:
+def link_levels(levels, observed=(), label="osm", groups=None) -> list:
     """変電所の階級 ``levels`` を結ぶ組 ``[(hv, lv, source)]``(source = ``label`` | ``ladder``)。
 
     Args:
         levels: 変電所の電圧階級(kV。順不同・重複可)。返す hv/lv はこの値そのもの。
         observed: 先に張る組 ``(hv_kv, lv_kv)``(kV。切り捨て整数で ``levels`` と照合する)。
         label: 先に張った組の source(OSM の観測 ``osm``、公表一覧 ``published``)。
+        groups: ``[(組, source), ...]`` を優先の高い順に渡すと、``observed``/``label`` の代わりに使う。
     """
     lv_sorted = sorted({float(v) for v in levels if v and float(v) > 0}, reverse=True)
     by_class = {}
@@ -59,13 +62,14 @@ def link_levels(levels, observed=(), label="osm") -> list:
         return x
 
     out, seen = [], set()
-    for hv, lv in sorted({(kv_class(h), kv_class(l)) for h, l in observed}, reverse=True):
-        a, b = by_class.get(hv), by_class.get(lv)
-        if a is None or b is None or a <= b or (a, b) in seen:
-            continue
-        seen.add((a, b))
-        out.append((a, b, label))
-        parent[find(a)] = find(b)
+    for pairs, src in (groups if groups is not None else [(observed, label)]):
+        for hv, lv in sorted({(kv_class(h), kv_class(l)) for h, l in pairs}, reverse=True):
+            a, b = by_class.get(hv), by_class.get(lv)
+            if a is None or b is None or a <= b or (a, b) in seen:
+                continue
+            seen.add((a, b))
+            out.append((a, b, src))
+            parent[find(a)] = find(b)
     for a, b in zip(lv_sorted, lv_sorted[1:]):
         if find(a) != find(b):
             out.append((a, b, "ladder"))

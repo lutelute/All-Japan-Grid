@@ -98,7 +98,9 @@ def score(registry: dict, structures_dir: Path) -> tuple[dict, list]:
             if key not in registry or key in seen:
                 continue
             seen.add(key)
-            levels = sorted({int(v["nominal_kv"]) for v in s["voltage_levels"] if v["nominal_kv"]}, reverse=True)
+            # 公表一覧から足した階級(kv_source="published")は数えない(OSM と構造 DB の判断の採点なので)
+            levels = sorted({int(v["nominal_kv"]) for v in s["voltage_levels"]
+                             if v["nominal_kv"] and v.get("kv_source") != "published"}, reverse=True)
             truth_all = registry[key]
             truth = {pr for pr in truth_all if pr[0] in levels and pr[1] in levels}
             ladder = set(zip(levels, levels[1:]))
@@ -169,6 +171,56 @@ def export_corrections(rows: list, meta: dict, path: Path) -> dict:
     return {"exported_sites": len(sites), "skipped_ambiguous_name": skipped}
 
 
+def export_pair_capacity(path_csv: Path, out: Path, min_sites: int = 5) -> dict:
+    """電圧の組ごとの「1 変電所あたりの変圧器容量」の中央値(介入 #50 の入力)。
+
+    公表一覧の値は転載不可の社があるので、変電所ごとの値は書かず、組ごとの中央値と件数だけを書く
+    (#45 が線路容量で比だけを書くのと同じ作法)。容量は公表の単位(MW、単位の書かれない表は MW 相当)を
+    MVA として扱う(力率 1 の近似)。"""
+    import statistics
+    site_cap = defaultdict(float)
+    for r in csv.DictReader(open(path_csv, encoding="utf-8")):
+        hv, lv = kvc(r.get("hv_kv")), kvc(r.get("lv_kv"))
+        try:
+            cap = float(str(r.get("capacity_value") or "").replace(",", ""))
+        except ValueError:
+            continue
+        if hv and lv and hv > lv and cap > 0:     # 6.6/6 kV のように切り捨てで同じ階級になる組は除く
+            site_cap[(r["utility"], r.get("substation_norm") or r["substation_raw"], hv, lv)] += cap
+    by = defaultdict(list)
+    for (_u, _s, hv, lv), c in site_cap.items():
+        by[(hv, lv)].append(c)
+    pairs = {f"{hv}/{lv}": {"median_mva": round(statistics.median(v)), "n_sites": len(v)}
+             for (hv, lv), v in sorted(by.items(), reverse=True) if len(v) >= min_sites}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({
+        "note": "電圧の組ごとの、1 変電所あたりの変圧器容量(全台の合計)の中央値。一般送配電 10 社の空容量・予想潮流一覧"
+                "(非公開の台帳)から集計した統計だけで、変電所ごとの値は含まない。単位は公表の MW を MVA として扱う。"
+                f"{min_sites} 変電所未満の組は書かない。生成: scripts/score_transformer_topology.py --export-capacity。"
+                "使い方: run_full_powerflow_from_db.py(介入 #50)",
+        "pairs": pairs}, ensure_ascii=False, indent=1) + "\n")
+    return {"pairs": len(pairs)}
+
+
+def export_missing_levels(rows: list, path: Path) -> dict:
+    """公表一覧にあって構造 DB に無い電圧階級(配電用の 6/22 kV など)と、その変圧器の組(構造 DB 用)。
+
+    電圧の組だけを書く(台数・容量は書かない)。同名の別の変電所がある所は書かない。"""
+    sites = []
+    for r in rows:
+        if not r["truth_level_missing"] or r["ambiguous_name"]:
+            continue
+        sites.append({"name": r["name"], "structure_sites": [r["site_id"], *r["aliases"]],
+                      "pairs": [list(t) for t in r["truth_level_missing"]]})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "note": "各社の空容量・予想潮流一覧にあって、構造 DB の電圧階級に無い階級を含む変圧器の電圧の組。"
+                "構造 DB に階級と変圧器(source=published)を足すためだけに使う(潮流モデルは読まない)。"
+                "電圧の組だけで台数・容量は含まない。生成: scripts/score_transformer_topology.py --export-levels",
+        "sites": sites}, ensure_ascii=False, indent=1) + "\n")
+    return {"sites": len(sites), "pairs": sum(len(s["pairs"]) for s in sites)}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--registry", type=Path, default=REGISTRY)
@@ -176,6 +228,10 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, default=ROOT / f"docs/reports/transformer_topology_{date.today().isoformat()}.json")
     ap.add_argument("--detail", type=Path, default=REGISTRY.parent / "topology_score_detail.json",
                     help="変電所ごとの詳細(非追跡の場所に書く)")
+    ap.add_argument("--export-capacity", type=Path, default=None,
+                    help="電圧の組ごとの容量の中央値を書き出す(介入 #50 の入力。config/transformer_capacity_by_pair.json)")
+    ap.add_argument("--export-levels", type=Path, default=None,
+                    help="構造 DB に無い電圧階級の組を書き出す(data/reference/published_missing_levels.json)")
     ap.add_argument("--export", type=Path, default=None,
                     help="公表の組で直す変電所を書き出す(介入 #49 の入力。data/reference/published_transformer_pairs.json)")
     a = ap.parse_args(argv)
@@ -186,6 +242,10 @@ def main(argv=None) -> int:
     agg, rows = score(registry, a.structures)
     if a.export:
         agg["export"] = export_corrections(rows, meta, a.export)
+    if a.export_capacity:
+        agg["export_capacity"] = export_pair_capacity(a.registry, a.export_capacity)
+    if a.export_levels:
+        agg["export_levels"] = export_missing_levels(rows, a.export_levels)
     agg = {"generated": date.today().isoformat(), "registry_sites": len(registry),
            "note": "正解=各社の空容量・予想潮流一覧の変圧器の行。件数と割合だけ(値は非公開)", **agg}
     a.out.parent.mkdir(parents=True, exist_ok=True)

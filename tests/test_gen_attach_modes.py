@@ -265,11 +265,14 @@ def test_hokkaido_dc_pins_the_island_default_and_the_cap_defect():
     #     電圧階級を見ないため京極400MW が札幌66kV に載り 318% 化(真因確定)
     #   2026-09-02: 介入#41 島別既定 hokkaido=capkv → 86.3%(過負荷0本)。cap の 318% は
     #     **既知の欠陥として据え置き記録**(--gen-attach cap で再現可能)
-    assert got["nearest"] == pytest.approx(133.3, abs=0.15), \
+    #   2026-10-08: nearest 136.5% / cap 318.0%(不変) / capkv 79.1% ← 介入#50(#48 で OSM の観測から
+    #     張った北海道の変圧器 28 台の容量を、組ごとの公表容量の中央値に)。最大の線は nearest が寒別支線のまま、
+    #     capkv は大麻線 86.4% → 望来線 79.1%。過負荷の本数は nearest 2 本・capkv 0 本で変わらない
+    assert got["nearest"] == pytest.approx(136.5, abs=0.15), \
         f"旧接続規則での最大負荷率が動いた: {got['nearest']}%"
     assert got["cap"] == pytest.approx(318.0, abs=0.15), \
         f"cap(電圧階級を見ない・既知の欠陥)の最大負荷率が動いた: {got['cap']}%"
-    assert got["capkv"] == pytest.approx(86.3, abs=0.15), \
+    assert got["capkv"] == pytest.approx(79.1, abs=0.15), \
         f"島別既定(capkv)での最大負荷率が動いた: {got['capkv']}%"
     assert got["capkv"] < got["nearest"] and got["capkv"] < got["cap"], \
         "島別既定が改善になっていない"

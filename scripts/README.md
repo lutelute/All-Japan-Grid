@@ -163,7 +163,7 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 251 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 252 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
 <details><summary><b>取得 / fetch</b>(17 本)</summary>
@@ -190,7 +190,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>エンリッチ・適用 / enrich & apply</b>(20 本)</summary>
+<details><summary><b>エンリッチ・適用 / enrich & apply</b>(21 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -202,6 +202,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `apply_node_hygiene.py` 🔒 | 介入#35 — 偽断片のノード衛生(跨region二重登録の解消). オーナー承認 2026-08-26. |
 | `apply_satellite_connections.py` 🔒 | 介入#36 — 衛星判読クラスの接続適用(1件ずつオーナー承認制). |
 | `apply_tepco_connections.py` 🔒 | TEPCO公表で解決した孤立変電所の接続を、正典を壊さず検証・worklist化する。 |
+| `apply_voltage_corrections.py` 🔒 | 介入#51 — 一次資料で誤りと分かった OSM の電圧タグを、正典モデルで直す(1 件ずつ台帳で承認). |
 | `complement_plants.py` | AGJ ↔ JRP 発電所データ相互補完スクリプト |
 | `enrich_all.py` | Unified enrichment pipeline for all GeoJSON layers. |
 | `enrich_lines_endpoints.py` 🔒 | Enrich unnamed transmission lines with endpoint-based names. |

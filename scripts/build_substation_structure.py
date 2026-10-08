@@ -227,7 +227,8 @@ def build_structure(region, name, data_dir="data"):
     return extract_structure(region, ft, pways, owned=owned[i])
 
 
-def extract_structure(region, ft, pways, owned=None, observed_by_site=None, published_by_site=None):
+def extract_structure(region, ft, pways, owned=None, observed_by_site=None, published_by_site=None,
+                      missing_levels_by_site=None):
     """変電所 feature 1件から node-breaker 構造を抽出する(一括生成の実体)。
 
     Args:
@@ -240,6 +241,8 @@ def extract_structure(region, ft, pways, owned=None, observed_by_site=None, publ
             ``src.model.site_transformers.by_structure_site``)。あればその組を張り、残りの階級を
             梯子でつなぐ。None なら従来の梯子だけ。
         published_by_site: 構造 DB の site_id → 各社の公表一覧の変圧器の組(介入 #49)。あれば観測より先に張る。
+        missing_levels_by_site: site_id → 公表一覧にあって、この変電所の階級に無い電圧を含む組。無い階級を
+            VoltageLevel(kv_source="published")として足し、その組の変圧器も張る(配電用の 6/22 kV など)。
     """
     from shapely.geometry import Point, shape
 
@@ -406,13 +409,21 @@ def extract_structure(region, ft, pways, owned=None, observed_by_site=None, publ
     # 介入 #48: OSM に巻線電圧つきの実機が描かれた変電所では、観測した組を先に張り、
     # 観測が届かない階級だけ梯子でつなぐ(source="osm-observed" / "structural")。
     # 介入 #49: 各社の公表一覧の組があれば、観測より先にそれを張る(source="published")。
+    # 公表一覧にあって構造 DB に無い階級(配電用の 6/22 kV など)は、階級ごと足して同じく公表の組で張る。
+    missing = (missing_levels_by_site or {}).get(site_id) or []
+    for pr in missing:
+        for kv in pr:
+            kv = int(kv)
+            if kv > 0 and kv not in vls:
+                vls[kv] = VoltageLevel(vl_id=f"{site_id}@{kv}", site_id=site_id,
+                                       nominal_kv=float(kv), kv_source="published")
     ladder = sorted((kv for kv in vls if kv > 0), reverse=True)
-    published = (published_by_site or {}).get(site_id)
+    published = list((published_by_site or {}).get(site_id) or []) + list(missing)
     observed = (observed_by_site or {}).get(site_id)
     if published or observed:
         from src.model.site_transformers import link_levels
-        links = [(int(h), int(l), src) for h, l, src in
-                 (link_levels(ladder, published, "published") if published else link_levels(ladder, observed))]
+        groups = [(g, src) for g, src in ((published, "published"), (observed or [], "osm")) if g]
+        links = [(int(h), int(l), src) for h, l, src in link_levels(ladder, groups=groups)]
     else:
         links = [(hv, lv, "ladder") for hv, lv in zip(ladder, ladder[1:])]
     spec_source = {"osm": "osm-observed", "published": "published", "ladder": "structural"}

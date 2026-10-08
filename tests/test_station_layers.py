@@ -71,3 +71,41 @@ def test_published_pairs_file_holds_voltage_pairs_only():
     for s in d["sites"]:
         assert set(s) <= allowed, set(s) - allowed
         assert all(len(p) == 2 and p[0] > p[1] for p in s["pairs"])
+
+
+# ------------------------------------------------------------- 介入 #50・#51
+def test_pair_capacity_file_holds_aggregates_only():
+    """変電所ごとの容量は転載不可の社がある。組ごとの中央値と件数だけを入れる。"""
+    import json
+    from pathlib import Path
+    d = json.load(open(Path(__file__).resolve().parents[1] / "config/transformer_capacity_by_pair.json"))
+    for k, v in d["pairs"].items():
+        hv, lv = (int(x) for x in k.split("/"))
+        assert hv > lv and set(v) == {"median_mva", "n_sites"} and v["n_sites"] >= 5
+
+
+def test_missing_levels_file_holds_voltage_pairs_only():
+    import json
+    from src.model.site_transformers import MISSING_LEVELS_PATH
+    d = json.load(open(MISSING_LEVELS_PATH, encoding="utf-8"))
+    for s in d["sites"]:
+        assert set(s) <= {"name", "structure_sites", "pairs"}
+        assert all(len(p) == 2 and p[0] > p[1] for p in s["pairs"])
+
+
+def test_voltage_correction_follows_the_wrong_voltage_and_reverts():
+    from scripts.apply_voltage_corrections import CORRECTIONS, apply, revert
+    built = {"nodes": [
+        {"id": "x_sub_1@500", "name": "西島根変電所 500kV", "kv": 500.0, "lat": 34.7, "lon": 131.98, "region": "chugoku"},
+        {"id": "x_sub_1@275", "name": "西島根変電所 275kV", "kv": 275.0, "lat": 34.7, "lon": 131.98, "region": "chugoku"},
+        {"id": "x_sub_2", "name": "三隅町岡見変電所", "kv": 275.0, "lat": 34.78, "lon": 131.92, "region": "chugoku"}],
+        "edges": [{"a": [34.7, 131.98], "b": [34.78, 131.92], "kv": 275.0, "name": "西島根~三隅線"},
+                  {"a": [34.7, 131.98], "b": [34.9, 132.1], "kv": 500.0, "name": "500kV の線"}]}
+    import copy
+    before = copy.deepcopy(built)
+    assert CORRECTIONS[0]["to_kv"] == 220.0
+    apply(built, write_log=lambda *_: None)
+    assert [n["kv"] for n in built["nodes"]] == [500.0, 220.0, 220.0]
+    assert built["nodes"][1]["id"] == "x_sub_1@220" and built["edges"][1]["kv"] == 500.0
+    revert(built, write_log=lambda *_: None)
+    assert built == before
