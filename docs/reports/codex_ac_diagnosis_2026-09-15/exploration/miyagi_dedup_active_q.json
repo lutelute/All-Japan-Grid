@@ -1,0 +1,174 @@
+{
+  "trace": [
+    {
+      "iteration": 0,
+      "residual_mva": 699.0089446509526,
+      "pv": 226,
+      "min_vm": 0.9353329869047796,
+      "max_vm": 1.0229069426775539,
+      "step": 1.0
+    },
+    {
+      "iteration": 1,
+      "residual_mva": 997.3550895158298,
+      "pv": 178,
+      "min_vm": 0.8148541840709248,
+      "max_vm": 1.0384112907911638,
+      "step": 1.0
+    },
+    {
+      "iteration": 2,
+      "residual_mva": 611.017855062519,
+      "pv": 135,
+      "min_vm": 0.5671601929844445,
+      "max_vm": 1.0229069426775597,
+      "step": 0.125
+    },
+    {
+      "iteration": 3,
+      "residual_mva": 535.598730237457,
+      "pv": 107,
+      "min_vm": 0.35036371648474657,
+      "max_vm": 1.0247566585755408,
+      "step": 1.0
+    },
+    {
+      "iteration": 4,
+      "residual_mva": 722.3722725489021,
+      "pv": 129,
+      "min_vm": 0.7550334398032114,
+      "max_vm": 1.2872148856752166,
+      "step": 0.25
+    },
+    {
+      "iteration": 5,
+      "residual_mva": 541.692031947281,
+      "pv": 102,
+      "min_vm": 0.7921545312560152,
+      "max_vm": 1.4387037870723414,
+      "step": 0.5
+    },
+    {
+      "iteration": 6,
+      "residual_mva": 705.5702718930153,
+      "pv": 97,
+      "min_vm": 0.7883404992861691,
+      "max_vm": 1.2418382811264008,
+      "step": 0.5
+    },
+    {
+      "iteration": 7,
+      "residual_mva": 355.2692041733059,
+      "pv": 99,
+      "min_vm": 0.6607767704159511,
+      "max_vm": 1.0537462555727635,
+      "step": 0.5
+    },
+    {
+      "iteration": 8,
+      "residual_mva": 364.46078485177367,
+      "pv": 97,
+      "min_vm": 0.7273743664401024,
+      "max_vm": 1.0503195910469159,
+      "step": 0.25
+    },
+    {
+      "iteration": 9,
+      "residual_mva": 277.60131638742854,
+      "pv": 93,
+      "min_vm": 0.570726794365315,
+      "max_vm": 1.0535604173355964,
+      "step": 0.5
+    },
+    {
+      "iteration": 10,
+      "residual_mva": 99.25151907254394,
+      "pv": 105,
+      "min_vm": 0.8046597841607698,
+      "max_vm": 1.0588414631199714,
+      "step": 0.125
+    },
+    {
+      "iteration": 11,
+      "residual_mva": 86.84976893481439,
+      "pv": 95,
+      "min_vm": 0.8033308286063392,
+      "max_vm": 1.0594305564687982,
+      "step": 0.25
+    },
+    {
+      "iteration": 12,
+      "residual_mva": 101.18960075018913,
+      "pv": 92,
+      "min_vm": 0.7550001024895929,
+      "max_vm": 1.0604180515984107,
+      "step": 0.5
+    },
+    {
+      "iteration": 13,
+      "residual_mva": 62.407141360027765,
+      "pv": 87,
+      "min_vm": 0.4861469723934946,
+      "max_vm": 1.06167243689795,
+      "step": 0.25
+    },
+    {
+      "iteration": 14,
+      "residual_mva": 44.861191889949254,
+      "pv": 91,
+      "min_vm": 0.7878523272306661,
+      "max_vm": 1.0940948156519108,
+      "step": 0.015625
+    },
+    {
+      "iteration": 15,
+      "residual_mva": 44.161077582838516,
+      "pv": 87,
+      "min_vm": 0.7834531354067525,
+      "max_vm": 1.0926809124256682,
+      "step": 0.5
+    },
+    {
+      "iteration": 16,
+      "residual_mva": 35.048415640758904,
+      "pv": 85,
+      "min_vm": 0.47999777630454316,
+      "max_vm": 1.0626022292577872,
+      "step": 0.25
+    },
+    {
+      "iteration": 17,
+      "residual_mva": 33.478334430987715,
+      "pv": 87,
+      "min_vm": 0.6494355527492228,
+      "max_vm": 1.063095847733952,
+      "step": 0.03125
+    },
+    {
+      "iteration": 18,
+      "residual_mva": 32.43527487152176,
+      "pv": 83,
+      "min_vm": 0.6448168840837392,
+      "max_vm": 1.0631010027742185,
+      "step": 0.03125
+    },
+    {
+      "iteration": 19,
+      "residual_mva": 32.34722034321022,
+      "pv": 83,
+      "min_vm": 0.5737104022476884,
+      "max_vm": 1.0630102325374937,
+      "step": 0.0078125
+    },
+    {
+      "iteration": 20,
+      "residual_mva": 32.2353663439347,
+      "pv": 83,
+      "min_vm": 0.6023226757245124,
+      "max_vm": 1.0630558704967812,
+      "stalled": true
+    }
+  ],
+  "converged": false,
+  "method": "Projection complementarity with release; full original aggregate generator Q bounds and fixed P, all network branches kept. Experimental internal solver."
+}

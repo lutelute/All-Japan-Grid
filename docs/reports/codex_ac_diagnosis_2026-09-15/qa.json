@@ -1,0 +1,31 @@
+{
+  "local_links_missing": [],
+  "figures_verified": 12,
+  "image_visual_inspection": "宮城中央と安良里の背景・重ね合わせ、大郷の既存重ね合わせを確認。",
+  "html_browser_visual_inspection": "Unavailable: CUA returned no enabled browsers. HTML links, embedded JS and control logic checked separately.",
+  "main_input_sha256": "955d6e0b2baf5d18ae44762db4100e1b446f171e8ad16502856281caf2e33b6a",
+  "numerical_replay": "Four variants + strict operating-point ramp + Ybus/Jacobian and Q-transition trace completed.",
+  "unit_tests": "4 passed",
+  "exploration_scope": "68-group exploratory load correction is distinct from validated 70-group final replay.",
+  "pptx": {
+    "slides": 6,
+    "native_tables": 4,
+    "sha256": "9c2e1bffaf219c88ee033f49f70fa03e7935199bc6c7d4688707435b41b8b1cd",
+    "package_and_layout": "pass",
+    "visual_review": "All six rendered slides individually inspected; no clipping or unexpected overlaps.",
+    "native_powerpoint_review": false,
+    "final_file_render": "Reimported final PPTX and rendered all six slides; pixel-identical to individually inspected previews."
+  },
+  "html_controls": "All seven operating-point selections and embedded Ybus detail passed JavaScript logic check.",
+  "tool_sha256": {
+    "src/powerflow/ac_validation.py": "1121da6b19dba435e726aae963bd97675bb4039842423ef583b2ccbfa534e4e0",
+    "scripts/review_ac_solvability.py": "496155eb937ece48b4d05ac240c64a0e269a53ce28f1d825c0faa15c169dcfe1",
+    "scripts/build_ac_review.py": "186303f79bc5f9db52e93ae5cd67e5cc83ac7ce208532d0657a35086173fcb9f",
+    "docs/slides/ajg/build_ac_diagnosis.mjs": "1e9bde942793916a3d903c40bc9f40e6c754337a4f307392b5ab6252847dcc83",
+    "tests/test_ac_validation.py": "400fd356b8910a6f55fbeb2b20eedcace0ef8bcd2cdedaeb7d87823a8e233539"
+  },
+  "negative_input_checks": [
+    "changed branch plan rejected before applying it",
+    "changed compressed network rejected before decoding it"
+  ]
+}

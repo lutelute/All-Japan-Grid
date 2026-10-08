@@ -1,0 +1,1001 @@
+{
+  "reviewed_at": "2026-09-13T12:06:49.387099+00:00",
+  "reviewer": "Codex; actual raster inspection of 27 overlaid views and 8 enlarged photo-only views",
+  "input_source_sha256": "955d6e0b2baf5d18ae44762db4100e1b446f171e8ad16502856281caf2e33b6a",
+  "image_source": "国土地理院 全国最新写真（シームレス）",
+  "source_url": "https://maps.gsi.go.jp/development/ichiran.html",
+  "initial_trial_aliases": 13,
+  "retrace_initial_aliases": [
+    "SS04",
+    "SS07",
+    "SS11",
+    "SS12",
+    "SS13"
+  ],
+  "method": "OSM-derived candidate selection, followed by inspection of independent GSI aerial imagery. Observations, interpretation and unresolved electrical facts are separate. No terminal is electrically confirmed from imagery alone.",
+  "cases": {
+    "SS01": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "鉄道の西側に、OSM敷地と重なる機器群が見える。Aは線路側、Bは線路東側の敷地外にある。",
+      "interpretation": "AをBへ寄せるだけでは実設備の位置を失う。敷地を保持し、鉄道を横切る引込経路と端子の所属を調べる。",
+      "unresolved": "受電側とき電側の電圧、線路横断区間の導通。",
+      "reviewed_image_sha256": "16767487f93e66644c0e49242d155504c6ef145ba481b83385c8242dd33374f5",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.00061,
+            139.08681
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.00088,
+            139.0872
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS02": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "道路と鉄道に近い機器群がOSM敷地に重なり、Aはその中、Bは南側の敷地外にある。",
+      "interpretation": "設備の同定候補を保持し、敷地内で終わる保存線形を端子として区別する。南北の通過線まで一括で同じ母線にしない。",
+      "unresolved": "個々の引込線の電圧と開閉状態。",
+      "reviewed_image_sha256": "658837abf16a284eea36b96ef0c457d1cab135ffb7de21cf6c1747af97cb0b36",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.9748,
+            139.11105
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.97423,
+            139.11053
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS03": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "Aの敷地に建物と機器が見え、Bは南西の道路・太陽光パネル付近にある。周囲には複数方向の線形が重なる。",
+      "interpretation": "66kV側の同定は調査候補。地図上の交差、154/500kV側、敷地への引込を別々に扱う。",
+      "unresolved": "交差する線路間の接続と、各線の電圧・端子。",
+      "reviewed_image_sha256": "1a4fdc5d03a89abfa9ba4bc116e7fe8e5185d54d779f2e17e62b5a648b80255f",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.96239,
+            139.04466
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.96201,
+            139.0434
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS04": {
+      "disposition": "retrace_connection",
+      "disposition_label": "単純統合を保留し、引込先を再追跡",
+      "observed": "Aは河岸の敷地内、Bは鉄道を挟んだ南東の耕地側にあり、敷地は約400m離れたBには存在しない。",
+      "interpretation": "単純統合の適用候補から、引込先の再追跡へ戻す。Aに届く線端とB周辺の枝を同じ母線へ集めてよいか、元wayを追う。",
+      "unresolved": "離れたB側の枝がAへ実際に入るか。写真上の近さだけでは決まらない。",
+      "reviewed_image_sha256": "cc663fc100c9a4de25c09c78e527e026f765faf4d2de05e8674a90e0c85d1fe8",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.49912,
+            139.01867
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/800.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2020年5月～8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.49616,
+            139.02118
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/800.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2020年5月～8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS05": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "鉄道沿いの機器群と敷地がAに重なる。Bは西側の畑・建物側で敷地外にある。",
+      "interpretation": "敷地に達する端子を残し、離れた保存線端との所属を別途照合する。代表点を全枝の平均へ動かさない。",
+      "unresolved": "鉄道設備の受電・き電回路の区別。",
+      "reviewed_image_sha256": "896d25af3180b66f8f08ba42cf375b4947ef282e4b2ee3bd411c2908956121e7",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.28415,
+            139.0731
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/802.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.28393,
+            139.07146
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/802.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS06": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "Aは鉄道脇の機器群を囲む敷地内。Bは鉄道の反対側にある住宅・耕地付近で敷地外。",
+      "interpretation": "実在するき電区分所を残し、線端の所属とモデル電圧を個別に見直す。",
+      "unresolved": "き電側の実電圧と、66kVというモデル化の根拠。",
+      "reviewed_image_sha256": "06eb6ce5b773d6138fa15c24acf8122aa41e10bb7c4d6665c3174976cfed9fb7",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.29434,
+            139.02672
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/802.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.29549,
+            139.02824
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/802.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS07": {
+      "disposition": "retrace_connection",
+      "disposition_label": "単純統合を保留し、引込先を再追跡",
+      "observed": "小さなOSM敷地はAの南側にあり、Bはさらに北の住宅・耕地側にある。A/Bとも敷地内ではない。",
+      "interpretation": "同じ設備IDだけで北側の複数枝をまとめず、敷地から引込経路を再追跡する。",
+      "unresolved": "複数の枝が同じ設備に属するか、配線の連続性。",
+      "reviewed_image_sha256": "d159aa87f86d72346e4f01ad8cc874e8bf8d77dd2bb5318968d4f6aa86bf75ab",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.25671,
+            138.9309
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/802.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.25763,
+            138.93041
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/802.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        }
+      }
+    },
+    "SS08": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "大きな機器ヤードと建物がOSM敷地に重なる。Aは敷地内、Bは南西の樹林側。写真には撮影時期の異なるモザイク境界が見える。",
+      "interpretation": "敷地と線端を別に持つ案を優先する。Bを設備そのものの位置として表示せず、敷地へ至る引込を確認する。",
+      "unresolved": "屋内・地下区間の配線、撮影時期による設備の変化。",
+      "reviewed_image_sha256": "7e32a4607de8d146a7077b82daaddcfd789e66f58d5488abbd0f49ad6090f253",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.58114,
+            138.92901
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/807.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2004年～"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.58005,
+            138.92824
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/807.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2022年9月～11月"
+            }
+          ]
+        }
+      }
+    },
+    "SS09": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "Aの敷地には2棟の細長い建物が見える。Bは北西の斜面・開けた帯状部分にあり、敷地とは分かれている。",
+      "interpretation": "275kVの同定候補は保持し、敷地外の線端から建物側へどう接続するかを端子の課題として残す。",
+      "unresolved": "建物内部の機器、斜面からの引込経路。",
+      "reviewed_image_sha256": "1ff9322a3f2956c8ed2543e8994140e7eede54edc74d4c483a4f6d28b5b11eaf",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.92247,
+            138.82087
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/797.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2019年10月～12月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.92354,
+            138.81998
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/797.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2019年10月～12月"
+            }
+          ]
+        }
+      }
+    },
+    "SS10": {
+      "disposition": "site_terminals_first",
+      "disposition_label": "敷地・端子を分けて調査を進める",
+      "observed": "敷地内の機器列が明瞭。北西側には鉄塔が見え、Bは敷地の北西外側、Aは敷地内にある。",
+      "interpretation": "実在敷地と外側の送電設備を別オブジェクトとして残す。保存線端と敷地の間約48mを、端子接続の検証対象にする。",
+      "unresolved": "鉄塔からどの275kV母線へ入るか、遮断器状態。",
+      "reviewed_image_sha256": "3dec59c486cf11bc59bc6e587dd1a8433d6559a6deaf2d2470af2391b29a562b",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            37.02894,
+            140.10502
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1821/796.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2012年10月～2013年1月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            37.02957,
+            140.10356
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1821/796.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2012年10月～2013年1月"
+            }
+          ]
+        }
+      }
+    },
+    "SS11": {
+      "disposition": "retrace_connection",
+      "disposition_label": "単純統合を保留し、引込先を再追跡",
+      "observed": "A/Bは大きな工場・鉄道沿いに離れて配置され、単一の敷地に収まらない。",
+      "interpretation": "工場名・地域名からの同名扱いが枝の所属を保証するか再確認する。設備位置を一つの平均点へ寄せない。",
+      "unresolved": "敷地の元要素との正確な対応、工場内受電設備の区別。",
+      "reviewed_image_sha256": "2ff781da15409bbd04e3b86d9fd06df2fcb4ca083ea39f52bfe5da117d4c33ba",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.38757,
+            138.98873
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/801.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.38565,
+            138.99018
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/801.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS12": {
+      "disposition": "retrace_connection",
+      "disposition_label": "単純統合を保留し、引込先を再追跡",
+      "observed": "Aは集落・鉄道側、Bは河川を隔てた森林側。両者の間に河川と道路があり、モデル上の距離は約364m。",
+      "interpretation": "同定だけで渡河・引込経路の問題を隠さない。線形が敷地へ届く経路を元wayと写真で再追跡する。",
+      "unresolved": "渡河区間の実線、鉄道側の受電端子。",
+      "reviewed_image_sha256": "8a91657b574ff1c4c10f95dc68cf58a36a86474e50df00619de6e30dda117751",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.81609,
+            139.15324
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/805.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年10月～11月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.81392,
+            139.15627
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/805.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年10月～11月"
+            }
+          ]
+        }
+      }
+    },
+    "SS13": {
+      "disposition": "retrace_connection",
+      "disposition_label": "単純統合を保留し、引込先を再追跡",
+      "observed": "Aは大きな工場側、Bは南西の住宅側。元OSM敷地はBよりさらに南西にあり、A/Bどちらとも重ならない。",
+      "interpretation": "A→Bの統合を適用候補から外して再同定する。元敷地から約545m離れたAが同じ設備として生成された経緯を検査する。",
+      "unresolved": "工場内の別受電所の混同、過去の座標変更履歴。",
+      "reviewed_image_sha256": "bc07d347fb4c3e585510037276ef89e161393443b8e41e362f206f48864fd7ca",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.48901,
+            139.01222
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/800.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2020年5月～8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.48588,
+            139.01042
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/800.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2020年5月～8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS14": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "河川沿いの小さな敷地にA/Bが共に収まり、近傍を複数のモデル線が通る。",
+      "interpretation": "場所が同じでも154/500kVは別の母線として残す。元線路の電圧と変圧器の有無を確認する。",
+      "unresolved": "写真から154kV・500kVを確定できない。",
+      "reviewed_image_sha256": "c32ba38d2ccc39c0ab963996f1e3a2370c90d09ad52bc2c8eaf1f138955f1291",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.07827,
+            138.79374
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/803.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.07844,
+            138.79371
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/803.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        }
+      }
+    },
+    "SS15": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "武州中川の実在敷地はA側で、Bは敷地外の交差点側。SS03と同じ写真範囲。",
+      "interpretation": "66kVの設備同定と154kV側のバスを分けて調べる。同じ場所を理由に電圧を潰さない。",
+      "unresolved": "154kV側の実在性と変圧器構成。",
+      "reviewed_image_sha256": "1a4fdc5d03a89abfa9ba4bc116e7fe8e5185d54d779f2e17e62b5a648b80255f",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.96239,
+            139.04466
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.96201,
+            139.0434
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS16": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "武州中川の実在敷地はA側で、Bは敷地外。SS03と同じ場所に500kVの候補も重なる。",
+      "interpretation": "元66kVタグと500kVモデルの矛盾を別問題として残す。500kV側への同定は採らない。",
+      "unresolved": "周辺の高電圧通過線と受電線の区別。",
+      "reviewed_image_sha256": "1a4fdc5d03a89abfa9ba4bc116e7fe8e5185d54d779f2e17e62b5a648b80255f",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.96239,
+            139.04466
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.96201,
+            139.0434
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS17": {
+      "disposition": "generator_terminal",
+      "disposition_label": "発電端・系統側端子を分けて調査",
+      "observed": "ダム関連施設と道路の中で、Aは小さな設備敷地、Bは北側の建物付近にある。",
+      "interpretation": "電圧0を理由に設備を削除せず、発電端・昇圧器・系統側端子を調査する。",
+      "unresolved": "発電機端電圧と昇圧器の定格。",
+      "reviewed_image_sha256": "214cd2bc3e82fe288e3c17b01745af3cc98fb87237a36486149dc35b6d211289",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.95895,
+            139.05341
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.95997,
+            139.05398
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/804.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2024年4月"
+            }
+          ]
+        }
+      }
+    },
+    "SS18": {
+      "disposition": "generator_terminal",
+      "disposition_label": "発電端・系統側端子を分けて調査",
+      "observed": "Aはダム下流の道路・建物側、Bは南東の樹林側にある。",
+      "interpretation": "発電設備の位置を残し、山側の線路末端との接続と変圧器を調べる。",
+      "unresolved": "樹林下の引込、発電端の電圧。",
+      "reviewed_image_sha256": "a767a547a47a04479ab3e892162074ab247c8379de0d67ca99e4d00a3a89eaec",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.95727,
+            138.9049
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/804.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年10月～11月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.9563,
+            138.90593
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/804.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年10月～11月"
+            }
+          ]
+        }
+      }
+    },
+    "SS19": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "鉄道沿いの広い敷地にAがあり、Bは南東の工場・線路側に離れている。",
+      "interpretation": "154/66kVを同一バスへまとめず、敷地内の受電・変圧・き電の対応を表現する。",
+      "unresolved": "写真は2010年のため、現状設備と過去設備の違い。",
+      "reviewed_image_sha256": "79a3401372636e309f05066e251348749c4a3d484f1197069aa73bc72b472723",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.25018,
+            139.15804
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/802.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2010年5月～7月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.24872,
+            139.15979
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/802.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2010年5月～7月"
+            }
+          ]
+        }
+      }
+    },
+    "SS20": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "A/Bはほぼ重なり、機器群を囲む敷地の南東端近く、鉄道沿いにある。",
+      "interpretation": "近接していてもdc1500と66kVは同じ階級ではない。鉄道の直流側と受電側を分ける候補として調べる。",
+      "unresolved": "変換器・変圧器と直流回路の実構成。",
+      "reviewed_image_sha256": "61db5b991da4de2fb0f29c56917b9b8063313cc13f315ce0fa23ae405d616176",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.3067,
+            138.80225
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/802.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.30669,
+            138.80227
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1813/802.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2022年12月～2023年2月"
+            }
+          ]
+        }
+      }
+    },
+    "SS21": {
+      "disposition": "distinct_sites",
+      "disposition_label": "別設備の記録を保持して調査",
+      "observed": "A/Bそれぞれに小さな別の敷地があり、道路を挟んで建物・機器が分かれて見える。",
+      "interpretation": "同名の二設備を保持する。Aの6.6kV/750Vタグと500kVモデルの不一致は、Bへの接続で解消させない。",
+      "unresolved": "敷地間の配線有無は写真だけでは確定しない。",
+      "reviewed_image_sha256": "380fc1ee83013bb90c11b6e460fec82ae0567e23e0a82f87a1f970345258cd5d",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.55289,
+            139.75357
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1819/807.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2019年6月～8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.55309,
+            139.75415
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1819/807.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2019年6月～8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS22": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "Aは鉄道駅付近の小敷地、Bは南西の住宅側にある。",
+      "interpretation": "電圧不明の設備を残し、鉄道側端子と送電側のつながりを再構成する。",
+      "unresolved": "受電電圧、屋内設備、B側との実接続。",
+      "reviewed_image_sha256": "eb43d3f5036700ced899fddaa2a17b6a7faf2e129948fefc884919593605f92f",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.34476,
+            139.14028
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/808.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2022年9月～11月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.34376,
+            139.13848
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/808.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2022年9月～11月"
+            }
+          ]
+        }
+      }
+    },
+    "SS23": {
+      "disposition": "generator_terminal",
+      "disposition_label": "発電端・系統側端子を分けて調査",
+      "observed": "Aは河川際の施設付近、Bは南側の農地側に離れている。元データは敷地ポリゴンを持たない点要素。",
+      "interpretation": "発電所の元要素を残し、敷地範囲と発電端・系統側端子を先に確定する。",
+      "unresolved": "敷地境界、発電機と変圧器の位置。",
+      "reviewed_image_sha256": "c67c3996c22aef5bc844dcf16655c378f8a2e6951b0c86b39929d284ee7acddd",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.65841,
+            139.11329
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/799.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2019年1月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.65512,
+            139.11498
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/799.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2019年1月"
+            }
+          ]
+        }
+      }
+    },
+    "SS24": {
+      "disposition": "generator_terminal",
+      "disposition_label": "発電端・系統側端子を分けて調査",
+      "observed": "SS23と同じ範囲で、Aは河川際、154kV側のBは農地側にある。",
+      "interpretation": "同一発電所の複数電圧側かを調べ、電圧不明点との直結を避ける。",
+      "unresolved": "154kV系統側への昇圧構成。",
+      "reviewed_image_sha256": "c67c3996c22aef5bc844dcf16655c378f8a2e6951b0c86b39929d284ee7acddd",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.65841,
+            139.11329
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/799.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2019年1月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.65512,
+            139.11498
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1815/799.geojson",
+          "observations": [
+            {
+              "データソース": "森林（民有林）の空中写真",
+              "撮影年月": "2019年1月"
+            }
+          ]
+        }
+      }
+    },
+    "SS25": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "Aは鉄道・集落側の敷地、Bは南側の山林内で、高低差を含む地形を隔てている。",
+      "interpretation": "元1.5kVとモデル154kVの関係を、鉄道受電・直流き電という階層で調べる。設備の存在は残す。",
+      "unresolved": "山側線路からの受電経路と変換機器。",
+      "reviewed_image_sha256": "c178625997895a53b78570c516d0e512142d19ef9b4b519e98a4b5294a34a2ca",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.18988,
+            137.82235
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1808/802.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2023年9月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.18632,
+            137.82283
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1808/802.geojson",
+          "observations": [
+            {
+              "データソース": "電子国土基本図（オルソ画像）",
+              "撮影年月": "2023年9月"
+            }
+          ]
+        }
+      }
+    },
+    "SS26": {
+      "disposition": "voltage_layers",
+      "disposition_label": "電圧別の母線・変換機器を調査",
+      "observed": "Aは鉄道の脇、Bは北側の市街地・緑地付近に約449m離れている。",
+      "interpretation": "元25kVタグを保持し、66kV推定と別の回路階層として検査する。距離を埋める線を追加しない。",
+      "unresolved": "き電区分所の回路形式と供給元。",
+      "reviewed_image_sha256": "c9c5ad7164520811b6c0472af10ca1a8bb59316851ee41fb4b949eafb90b5c74",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            36.35837,
+            138.99705
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/801.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            36.36239,
+            138.99663
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1814/801.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2020年8月"
+            }
+          ]
+        }
+      }
+    },
+    "SS27": {
+      "disposition": "distinct_sites",
+      "disposition_label": "別設備の記録を保持して調査",
+      "observed": "川を挟んだ施設の左右に別々のOSM敷地があり、モデル線が複数交差している。",
+      "interpretation": "匿名のtokyo_subという共通文字列を設備名とみなさない。敷地ごとの元要素と端子を別々に同定する。",
+      "unresolved": "各敷地の正式名称、電圧、渡河線との接続。",
+      "reviewed_image_sha256": "f4dba780d88182fe12dd4ed85bc256a7ecd813e45d720a2e551db0c1e346886c",
+      "photography_dates": {
+        "A": {
+          "coordinate": [
+            35.09139,
+            138.10972
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1809/810.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2021年7月～12月"
+            }
+          ]
+        },
+        "B": {
+          "coordinate": [
+            35.09237,
+            138.11469
+          ],
+          "source_url": "https://maps.gsi.go.jp/xyz/seamlessphoto_spec/11/1809/810.geojson",
+          "observations": [
+            {
+              "データソース": "簡易空中写真",
+              "撮影年月": "2021年7月～12月"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "contact_sheets": {
+    "visual_contact_1.jpg": "af62ad893e43e8689f37120f67270f698069df6bc1502d5d05527f34a244f193",
+    "visual_contact_2.jpg": "d7d6f731a2c25ab6ac18c089c480def0436c8f46b21a505c50f91eb1475c7607",
+    "visual_contact_3.jpg": "23e1931bbbde87bff88ce9e8137d5f3f252e46311baa59eda9bb99c268b9fcee",
+    "visual_contact_4.jpg": "055dba688cc5a5dea1625188ef22048e66ca600471d339d0ace9242acf33c449",
+    "visual_contact_5.jpg": "4bfe85ac73619ea6c36d8a1f2b91d1d2ce786a61ca236d748bee89f405140e3a",
+    "visual_contact_6.jpg": "8c0f315ff7155f5a6ff53675457ab8cb58953439062d0a70890e29f083c24db0",
+    "visual_contact_7.jpg": "18a4ed6c5b6b542c661463c8c2389ecf249cf6f08594d67b65be004470216173",
+    "visual_detail_1.jpg": "a54cf32eb68b45c8c4f9480a016a675a1a0d887f39ee988f2c24752be03e52f1",
+    "visual_detail_2.jpg": "18dd49ebfdbd3f967787fe0ad1889f198dabf64248698286cc973b5f327d4ea8"
+  }
+}

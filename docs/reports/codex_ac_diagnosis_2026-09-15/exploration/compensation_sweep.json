@@ -1,0 +1,87 @@
+[
+  {
+    "compensation": 0.0,
+    "label": "comp_0.0",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 3.26
+  },
+  {
+    "compensation": 0.4,
+    "label": "comp_0.4",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 2.3
+  },
+  {
+    "compensation": 0.6,
+    "label": "comp_0.6",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 2.32
+  },
+  {
+    "compensation": 1.0,
+    "label": "comp_1.0",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 2.29
+  },
+  {
+    "compensation": 1.2,
+    "label": "comp_1.2",
+    "settings": {
+      "algorithm": "nr",
+      "init": "dc",
+      "max_iteration": 50,
+      "tolerance_mva": 0.0001,
+      "enforce_q_lims": true,
+      "numba": true,
+      "check_connectivity": true
+    },
+    "converged": false,
+    "error": "Power Flow nr did not converge after 50 iterations!",
+    "iterations": 50,
+    "seconds": 2.28
+  }
+]

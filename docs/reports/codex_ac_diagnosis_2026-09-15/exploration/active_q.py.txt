@@ -1,0 +1,37 @@
+from probe import *
+from scipy.sparse import bmat,diags
+from scipy.sparse.linalg import spsolve
+from pandapower.pypower.dSbus_dV import dSbus_dV
+from pandapower.pypower.makeSbus import makeSbus
+from pandapower.pypower.idx_gen import GEN_BUS,QG,QMAX,QMIN,GEN_STATUS,VG
+prefix=sys.argv[1]
+with (OUT/(prefix+'_noq.pickle')).open('rb') as f:net=pickle.load(f)
+pc=net._ppc;d=pc['internal'];Y=d['Ybus'];V=d['V'].copy();ref=d['ref'];idx=np.setdiff1d(np.arange(len(V)),ref);N=len(idx)
+g=pc['gen'].copy();g[:,QG]=0;S=makeSbus(pc['baseMVA'],pc['bus'],g)
+controlled=np.zeros(len(V),bool);qlo=np.zeros(len(V));qhi=qlo.copy();vset=np.ones(len(V))
+for r in g:
+ if r[GEN_STATUS]>0:
+  b=int(r[GEN_BUS]);controlled[b]=True;qlo[b]+=r[QMIN]/pc['baseMVA'];qhi[b]+=r[QMAX]/pc['baseMVA'];vset[b]=r[VG]
+k=10.
+def system(V,derivative=False):
+ req=V*np.conj(Y@V)-S;proj=req.imag+k*(vset-abs(V));inside=controlled&(proj>qlo)&(proj<qhi)
+ qres=req.imag.copy();qres[controlled]-=np.clip(proj[controlled],qlo[controlled],qhi[controlled]);F=np.r_[req[idx].real,qres[idx]]
+ if not derivative:return F
+ dv,da=dSbus_dV(Y,V);mask=diags((~inside[idx]).astype(float))
+ J=bmat([[da[idx,:][:,idx].real,dv[idx,:][:,idx].real],[mask@da[idx,:][:,idx].imag,mask@dv[idx,:][:,idx].imag+diags(inside[idx]*k)]],format='csc')
+ return F,J,int(inside[idx].sum())
+trace=[]
+for it in range(100):
+ F,J,npv=system(V,True);norm=float(abs(F).max());row=dict(iteration=it,residual_mva=norm*pc['baseMVA'],pv=npv,min_vm=float(abs(V).min()),max_vm=float(abs(V).max()));trace.append(row)
+ if norm*pc['baseMVA']<1e-4:break
+ dx=spsolve(J,-F);old=float(np.linalg.norm(F));ok=False
+ for step in [.5**j for j in range(16)]:
+  va=np.angle(V).copy();vm=abs(V).copy();va[idx]+=step*dx[:N];vm[idx]+=step*dx[N:]
+  if vm.min()<.2 or vm.max()>1.5:continue
+  v=vm*np.exp(1j*va)
+  if np.linalg.norm(system(v))<old:
+   V=v;ok=True;row['step']=step;break
+ if not ok:row['stalled']=True;break
+save(prefix+'_active_q',dict(trace=trace,converged=norm*pc['baseMVA']<1e-4,method='Projection complementarity with release; full original aggregate generator Q bounds and fixed P, all network branches kept. Experimental internal solver.'))
+with (OUT/(prefix+'_active_q.pickle')).open('wb') as f:pickle.dump(dict(V=V,net=net,idx=idx,S=S,Y=Y),f)
+print(json.dumps(trace[-1]),flush=True)

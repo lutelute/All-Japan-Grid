@@ -1,0 +1,1546 @@
+{
+  "source_sha256": "955d6e0b2baf5d18ae44762db4100e1b446f171e8ad16502856281caf2e33b6a",
+  "lines_sha256": "059c2405eb65d406bff8c2ac7e30359d766d7ef2df8d33284df4fdfa35dbf912",
+  "note": "Candidate only: literal shared segments (>=2 per source way). Coincident/multivoltage ways require review; original selected route is not reconstructed.",
+  "candidates": [
+    {
+      "edge_index": 19718,
+      "name": "道南幹線 (Dōnan-kansen) / 函館幹線 (Hakodate-kansen)",
+      "kv": 187.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 48,
+          "name": "函館幹線 (Hakodate-kansen)",
+          "kv": 187.0,
+          "shared_segments": 483,
+          "osm_id": null
+        },
+        {
+          "feature_index": 49,
+          "name": "道南幹線 (Dōnan-kansen)",
+          "kv": 275.0,
+          "shared_segments": 46,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19726,
+      "name": "浅間温泉一丁目変電所~出川二丁目変電所線 / 中部電力パワーグリッド 77.0kV線 / 中信出川線 / 中部電力パワー",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11616,
+          "name": "小海町変電所~韮崎市変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21638,
+          "name": "塩尻送電所~北巨摩変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24810,
+          "name": "浅間温泉一丁目変電所~出川二丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 47,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24831,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25019,
+          "name": "中信出川線",
+          "kv": 77.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25407,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19738,
+      "name": "葵区変電所~清水変電所線 / 清水変電所~富士市変電所線 / 富士市変電所~蒲原一丁目変電所線 / 富士市変電所~蒲原一",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11799,
+          "name": "佐野川変電所~清水変電所線",
+          "kv": 154.0,
+          "shared_segments": 32,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11968,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12257,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12272,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12351,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21716,
+          "name": "葵区変電所~清水変電所線",
+          "kv": 154.0,
+          "shared_segments": 32,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21879,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22171,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22197,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22276,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19741,
+      "name": "浅間温泉一丁目変電所~出川二丁目変電所線 / 中部電力パワーグリッド 77.0kV線 / 中信出川線 / 中部電力パワー",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11616,
+          "name": "小海町変電所~韮崎市変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21638,
+          "name": "塩尻送電所~北巨摩変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24810,
+          "name": "浅間温泉一丁目変電所~出川二丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 16,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24831,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25019,
+          "name": "中信出川線",
+          "kv": 77.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25407,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19742,
+      "name": "安曇野市変電所~新橋変電所線 / 中部送電線_212 / 安曇野市変電所~中信変電所線 / 中信変電所~塩尻送電所線 /",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 24830,
+          "name": "安曇野市変電所~新橋変電所線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24835,
+          "name": "安曇野市変電所~中信変電所線",
+          "kv": 154.0,
+          "shared_segments": 95,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24854,
+          "name": "中部送電線_212",
+          "kv": null,
+          "shared_segments": 6,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25023,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25025,
+          "name": "中信変電所~塩尻送電所線",
+          "kv": 154.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 26006,
+          "name": "安曇野市変電所_2~松本市変電所線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        },
+        {
+          "feature_index": 26019,
+          "name": "安曇野市変電所_2~新信濃変電所線",
+          "kv": 154.0,
+          "shared_segments": 95,
+          "osm_id": null
+        },
+        {
+          "feature_index": 26076,
+          "name": "北陸送電線_22",
+          "kv": null,
+          "shared_segments": 6,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19746,
+      "name": "葵区変電所~清水変電所線 / 清水変電所~富士市変電所線 / 富士市変電所~蒲原一丁目変電所線 / 富士市変電所~蒲原一",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11799,
+          "name": "佐野川変電所~清水変電所線",
+          "kv": 154.0,
+          "shared_segments": 65,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11968,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12257,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12272,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12351,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21716,
+          "name": "葵区変電所~清水変電所線",
+          "kv": 154.0,
+          "shared_segments": 65,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21879,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22171,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22197,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22276,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19756,
+      "name": "中部送電線_271 / 富士市変電所~蒲原一丁目変電所線 / 中部電力パワーグリッド 77.0kV線 / 富士市変電所~",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11966,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11968,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12264,
+          "name": "東京送電線_45",
+          "kv": null,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12272,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12273,
+          "name": "東京電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21875,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21879,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22187,
+          "name": "中部送電線_271",
+          "kv": null,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22197,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22198,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19758,
+      "name": "中部電力パワーグリッド 77.0kV線 / 中信出川線 / 中部電力パワーグリッド 77.0kV線 / 小海町変電所~韮",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11616,
+          "name": "小海町変電所~韮崎市変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21638,
+          "name": "塩尻送電所~北巨摩変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24831,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25019,
+          "name": "中信出川線",
+          "kv": 77.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25407,
+          "name": "中部電力パワーグリッド 77.0kV線",
+          "kv": 77.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19766,
+      "name": "南箕輪村変電所~大芝変電所線 / 田畑変電所~松島変電所線 / 松島変電所~田畑変電所線 / 日野春線 / 天竜東幹線;",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 22203,
+          "name": "日野春線",
+          "kv": 154.0,
+          "shared_segments": 140,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22558,
+          "name": "天竜東幹線;小武川線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24728,
+          "name": "松島変電所~田畑変電所線",
+          "kv": 77.0,
+          "shared_segments": 35,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24782,
+          "name": "田畑変電所~松島変電所線",
+          "kv": 154.0,
+          "shared_segments": 15,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25234,
+          "name": "南箕輪村変電所~大芝変電所線",
+          "kv": null,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19767,
+      "name": "青部変電所~川根本町変電所線 / 東京電力パワーグリッド 154.0kV線 / 清水変電所~富士市変電所線 / 富士市変",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11798,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 76,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11968,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12257,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12272,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12351,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21715,
+          "name": "清水変電所~青部変電所線",
+          "kv": 154.0,
+          "shared_segments": 76,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21879,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 77.0,
+          "shared_segments": 7,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22157,
+          "name": "青部変電所~川根本町変電所線",
+          "kv": 154.0,
+          "shared_segments": 11,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22171,
+          "name": "清水変電所~富士市変電所線",
+          "kv": 77.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22197,
+          "name": "富士市変電所~富士川第一変電所線",
+          "kv": null,
+          "shared_segments": 63,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22276,
+          "name": "富士市変電所~蒲原一丁目変電所線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19778,
+      "name": "毛受変電所(Menjo-Hendensho)~起変電所線 / 中部電力パワーグリッド 30.0kV線 / 大和起線",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 19579,
+          "name": "中部電力パワーグリッド 30.0kV線",
+          "kv": 30.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 19585,
+          "name": "毛受変電所(Menjo-Hendensho)~起変電所線",
+          "kv": 30.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 19617,
+          "name": "大和起線",
+          "kv": 77.0,
+          "shared_segments": 18,
+          "osm_id": null
+        },
+        {
+          "feature_index": 28010,
+          "name": "中部電力パワーグリッド 30.0kV線",
+          "kv": 30.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 28014,
+          "name": "毛受変電所(Menjo-Hendensho)~起変電所線",
+          "kv": 30.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 28023,
+          "name": "大和起線",
+          "kv": 77.0,
+          "shared_segments": 18,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19785,
+      "name": "松田線 / 足柄線 / 足柄線",
+      "kv": 66.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11861,
+          "name": "足柄線",
+          "kv": 66.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11864,
+          "name": "足柄線",
+          "kv": null,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11865,
+          "name": "松田線",
+          "kv": 22.0,
+          "shared_segments": 34,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21755,
+          "name": "足柄線",
+          "kv": 66.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21758,
+          "name": "足柄線",
+          "kv": null,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21759,
+          "name": "松田線",
+          "kv": 22.0,
+          "shared_segments": 34,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19786,
+      "name": "松田線 / 足柄線 / 足柄線",
+      "kv": 66.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11861,
+          "name": "足柄線",
+          "kv": 66.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11864,
+          "name": "足柄線",
+          "kv": null,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11865,
+          "name": "松田線",
+          "kv": 22.0,
+          "shared_segments": 33,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21755,
+          "name": "足柄線",
+          "kv": 66.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21758,
+          "name": "足柄線",
+          "kv": null,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21759,
+          "name": "松田線",
+          "kv": 22.0,
+          "shared_segments": 33,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19787,
+      "name": "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線",
+      "kv": 66.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11484,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 83,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11599,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 31,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11782,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11785,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 72,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11847,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12256,
+          "name": "富士川線",
+          "kv": 154.0,
+          "shared_segments": 25,
+          "osm_id": null
+        },
+        {
+          "feature_index": 13490,
+          "name": "岩渕-沼津線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21593,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 83,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21628,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 31,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21670,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21673,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 72,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21742,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22170,
+          "name": "富士川線",
+          "kv": 154.0,
+          "shared_segments": 25,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22788,
+          "name": "岩渕-沼津線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19788,
+      "name": "田代幹線 / 東京電力パワーグリッド 66.0kV線 / 東京電力パワーグリッド 66.0kV線 / 東京電力パワーグリ",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11859,
+          "name": "大雄線",
+          "kv": 66.0,
+          "shared_segments": 27,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12174,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 13,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12690,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 21,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12699,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12700,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21754,
+          "name": "大雄線",
+          "kv": 66.0,
+          "shared_segments": 27,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22080,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 13,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22447,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 21,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22457,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22458,
+          "name": "東京電力パワーグリッド 66.0kV線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19789,
+      "name": "釜無白根変電所~市川大門線 / 東京電力パワーグリッド 66.0kV線 / 天竜南線 / 天竜東幹線 / 日野春線 / ",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11875,
+          "name": "天竜東幹線",
+          "kv": 154.0,
+          "shared_segments": 69,
+          "osm_id": null
+        },
+        {
+          "feature_index": 11880,
+          "name": "釜無白根変電所~市川大門線",
+          "kv": 66.0,
+          "shared_segments": 16,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21768,
+          "name": "天竜東幹線",
+          "kv": 154.0,
+          "shared_segments": 69,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21773,
+          "name": "釜無白根変電所~市川大門線",
+          "kv": 66.0,
+          "shared_segments": 16,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22203,
+          "name": "日野春線",
+          "kv": 154.0,
+          "shared_segments": 140,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19790,
+      "name": "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東京電力パワーグリッド 154.0kV線 / 田代幹線 / 富",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11782,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12256,
+          "name": "富士川線",
+          "kv": 154.0,
+          "shared_segments": 25,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12320,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12324,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 13488,
+          "name": "岳南線",
+          "kv": 154.0,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 13490,
+          "name": "岩渕-沼津線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21670,
+          "name": "田代幹線",
+          "kv": 154.0,
+          "shared_segments": 10,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22170,
+          "name": "富士川線",
+          "kv": 154.0,
+          "shared_segments": 25,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22258,
+          "name": "中部電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22262,
+          "name": "中部電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22779,
+          "name": "岳南線",
+          "kv": 154.0,
+          "shared_segments": 8,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22788,
+          "name": "岩渕-沼津線",
+          "kv": 77.0,
+          "shared_segments": 19,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19796,
+      "name": "宮平線 / 楢平線 / 三峰線 / 川又線 / 黒部幹線",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 15227,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 15385,
+          "name": "三峰線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 16821,
+          "name": "宮平線 / 楢平線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24730,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24907,
+          "name": "三峰線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 46,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25696,
+          "name": "宮平線 / 楢平線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19797,
+      "name": "鳩川線 / 韮崎市変電所~若宮一丁目変電所線 / 東京電力パワーグリッド 154.0kV線 / 小海町変電所~韮崎市変電",
+      "kv": 275.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11616,
+          "name": "小海町変電所~韮崎市変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12203,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12275,
+          "name": "韮崎市変電所~若宮一丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21638,
+          "name": "塩尻送電所~北巨摩変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22108,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22202,
+          "name": "北巨摩変電所~若宮一丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22205,
+          "name": "鳩川線",
+          "kv": 66.0,
+          "shared_segments": 24,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19803,
+      "name": "天野変電所~立花二丁目変電所線 / 大仁線 / 田方線 / 田方線 / 函南町変電所~須雲川変電所線",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11857,
+          "name": "大仁線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12172,
+          "name": "函南町変電所~須雲川変電所線",
+          "kv": 66.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12311,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12396,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 36,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12985,
+          "name": "天野変電所~立花二丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 6,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21752,
+          "name": "大仁線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22024,
+          "name": "函南町変電所~須雲川変電所線",
+          "kv": 66.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22247,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22331,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 36,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22655,
+          "name": "天野変電所~立花二丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 6,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19804,
+      "name": "天野変電所~立花二丁目変電所線 / 大仁線 / 田方線 / 田方線 / 函南町変電所~須雲川変電所線",
+      "kv": 77.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11857,
+          "name": "大仁線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12172,
+          "name": "函南町変電所~須雲川変電所線",
+          "kv": 66.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12311,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12396,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 36,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12985,
+          "name": "天野変電所~立花二丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21752,
+          "name": "大仁線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22024,
+          "name": "函南町変電所~須雲川変電所線",
+          "kv": 66.0,
+          "shared_segments": 44,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22247,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22331,
+          "name": "田方線",
+          "kv": 154.0,
+          "shared_segments": 36,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22655,
+          "name": "天野変電所~立花二丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19805,
+      "name": "小淵沢線 / 鳩川線 / 韮崎市変電所~若宮一丁目変電所線 / 東京電力パワーグリッド 154.0kV線 / 小海町変電",
+      "kv": 275.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 11616,
+          "name": "小海町変電所~韮崎市変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12203,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 12275,
+          "name": "韮崎市変電所~若宮一丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 21638,
+          "name": "塩尻送電所~北巨摩変電所線",
+          "kv": 154.0,
+          "shared_segments": 271,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22108,
+          "name": "東京電力パワーグリッド 154.0kV線",
+          "kv": 154.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22202,
+          "name": "北巨摩変電所~若宮一丁目変電所線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 22205,
+          "name": "鳩川線",
+          "kv": 66.0,
+          "shared_segments": 26,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25742,
+          "name": "小淵沢線",
+          "kv": 66.0,
+          "shared_segments": 2,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19809,
+      "name": "滝沢線 / 滝沢線 / 川又線 / 三峰線 / 川又線 / 黒部幹線",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 15227,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 15385,
+          "name": "三峰線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 50,
+          "osm_id": null
+        },
+        {
+          "feature_index": 16818,
+          "name": "滝沢線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 16824,
+          "name": "滝沢線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 5,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24730,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24907,
+          "name": "三峰線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 50,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25693,
+          "name": "滝沢線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25699,
+          "name": "滝沢線 / 川又線",
+          "kv": 66.0,
+          "shared_segments": 5,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    },
+    {
+      "edge_index": 19810,
+      "name": "浦山線 / 秩父線 / 川又線 / 黒部幹線",
+      "kv": 154.0,
+      "recovery": "osm_chain",
+      "source_ways": [
+        {
+          "feature_index": 15227,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 15497,
+          "name": "秩父線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 15691,
+          "name": "川又線",
+          "kv": 33.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 16826,
+          "name": "浦山線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        },
+        {
+          "feature_index": 24730,
+          "name": "黒部幹線",
+          "kv": 154.0,
+          "shared_segments": 42,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25001,
+          "name": "秩父線",
+          "kv": 66.0,
+          "shared_segments": 4,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25272,
+          "name": "川又線",
+          "kv": 33.0,
+          "shared_segments": 2,
+          "osm_id": null
+        },
+        {
+          "feature_index": 25701,
+          "name": "浦山線",
+          "kv": 66.0,
+          "shared_segments": 3,
+          "osm_id": null
+        }
+      ],
+      "status": "candidate_only_literal_shared_geometry"
+    }
+  ]
+}

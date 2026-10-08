@@ -1,0 +1,36 @@
+from probe import *
+import pandapower.pf.run_newton_raphson_pf as nr
+original=nr.newtonpf
+trace=[]
+prefix=(sys.argv[2]+"_") if len(sys.argv)>2 else ""
+def robust(Y,S,V0,ref,pv,pq,pc,options,makeYbus=None):
+    result=original(Y,S,V0,ref,pv,pq,pc,options,makeYbus)
+    call=dict(call=len(trace),pv=len(pv),pq=len(pq),direct_converged=bool(result[1]),steps=[])
+    trace.append(call);save(prefix+'homotopy_trace',trace)
+    if result[1]:return result
+    settings=dict(options,voltage_depend_loads=False)
+    V=V0.copy();S0=V*np.conj(Y@V);lam=0.;step=.1;iterations=0
+    for attempt in range(80):
+        target=min(1.,lam+step);Starget=(1-target)*S0+target*S
+        trial=original(Y,Starget,V,ref,pv,pq,pc,settings,makeYbus)
+        iterations+=trial[2]
+        record=dict(alpha=target,step=step,converged=bool(trial[1]),iterations=int(trial[2]),vm_min=float(abs(trial[0]).min()),vm_max=float(abs(trial[0]).max()))
+        call['steps'].append(record);save(prefix+'homotopy_trace',trace)
+        if trial[1]:
+            V=trial[0].copy();lam=target
+            with (OUT/f'{prefix}homotopy_call_{call["call"]}_last.pickle').open('wb') as f:pickle.dump(dict(V=V,Y=Y,S=S,S0=S0,alpha=lam,ref=ref,pv=pv,pq=pq,J=trial[3],pc=pc),f)
+            if lam>=1:
+                call['recovered']=True;save(prefix+'homotopy_trace',trace)
+                return (trial[0],trial[1],iterations,*trial[3:])
+            step=min(.2,step*1.4)
+        else:
+            step*=.5
+            if step<1e-5:break
+    call['recovered']=False;call['last_alpha']=lam;save(prefix+'homotopy_trace',trace)
+    raise pp.LoadflowNotConverged(f'Homotopy stopped at alpha={lam}; no constraints applied to unconverged iterates')
+nr.newtonpf=robust
+net=load()
+if len(sys.argv)>1:
+    with Path(sys.argv[1]).open('rb') as f:net=pickle.load(f)
+assert not net.load.filter(regex='const_[zi]').to_numpy().any()
+run(net,prefix+'homotopy_strict',enforce_q_lims=True,voltage_depend_loads=False)

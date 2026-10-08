@@ -105,6 +105,25 @@ def test_voltage_gate_rejects_mismatched_way():
     assert s["chains"] == 0
 
 
+def test_unknown_fragment_does_not_bridge_different_way_voltages():
+    """Unknown start voltage previously admitted a 66 -> 154 kV route."""
+    m = _mod()
+    built, lines = _built(seam_km=0.03, frag_kv=0, way_kv=66)
+    for node in built['nodes'][:3]:
+        node['kv'] = 154
+    lines[1]['properties']['_voltage_kv'] = 154
+    s, _ = _chains_at(m, built, lines, 60)
+    assert s['chains'] == 0
+
+
+def test_unknown_fragment_preserves_same_voltage_route_and_records_evidence():
+    m = _mod()
+    built, lines = _built(seam_km=0.03, frag_kv=0, way_kv=66)
+    s, report = _chains_at(m, built, lines, 60)
+    assert s['chains'] == 1
+    assert report['chains'][0]['way_voltage_kv'] == [66.0,66.0]
+
+
 def test_detour_gate_rejects_roundabout_chain():
     """(c) 実線長が直線の 1.5 倍を超える連鎖は棄却、閾値を緩めれば通る。"""
     m = _mod()

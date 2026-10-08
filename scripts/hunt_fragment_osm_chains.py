@@ -26,7 +26,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from collections import defaultdict
+from collections import defaultdict, deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +34,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.hunt_fragment_osm_bridges import (  # noqa: E402
     ISLAND_OF, clip_path, dist_km, k5, min_dist_to_path, nearest_vertex_idx)
+from scripts.connection_voltage import route_voltage_compatible, voltage_signature  # noqa: E402
 
 TH_NODE = 0.08    # ノード⇔way接触 km
 TH_JOIN = 0.06    # way⇔way継ぎ目 km
@@ -165,21 +166,23 @@ def main() -> int:
                 if not seeds:
                     continue
                 # BFS(way数最小)
-                from collections import deque
                 q = deque()
                 visited = {}
                 for pid, d in sorted(seeds, key=lambda x: x[1]):
                     q.append((pid, [pid], 0.0))
-                    visited[pid] = 0
+                    visited[(pid, voltage_signature([fkv, way_kv(pid)]))] = 0
                 while q:
                     pid, route, stitch = q.popleft()
                     if len(route) > MAX_WAYS:
                         continue
                     mk, dmain = main_contact(feat_paths[pid][1])
+                    route_kv = [way_kv(p) for p in route]
                     if mk is not None and frozenset((fk, mk)) not in existing \
-                            and kv_ok(pid, keys[mk].get("kv")):
+                            and kv_ok(pid, keys[mk].get("kv")) \
+                            and route_voltage_compatible([fkv, *route_kv, keys[mk].get("kv")]):
                         cand = {"n_ways": len(route), "stitch_m": round(stitch * 1000),
                                 "route": route, "fk": fk, "mk": mk,
+                                "way_voltage_kv": route_kv,
                                 "d_frag_m": round(min_dist_to_path(
                                     fk, feat_paths[route[0]][1]) * 1000),
                                 "d_main_m": round(dmain * 1000)}
@@ -188,9 +191,11 @@ def main() -> int:
                             best = cand
                         break   # このseedの最短で十分(BFS=way数最小)
                     for pid2, (a1, a2, gap) in way_adj[pid].items():
-                        if pid2 in visited or not kv_ok(pid2, fkv):
+                        signature = voltage_signature([fkv, *route_kv, way_kv(pid2)])
+                        if pid2 in route or (pid2, signature) in visited \
+                                or not route_voltage_compatible(signature):
                             continue
-                        visited[pid2] = len(route)
+                        visited[(pid2, signature)] = len(route)
                         q.append((pid2, route + [pid2], stitch + gap / 1000.0))
             if best and best["n_ways"] >= 2:      # 1way=第一波の領分
                 fi0 = feat_paths[best["route"][0]][0]

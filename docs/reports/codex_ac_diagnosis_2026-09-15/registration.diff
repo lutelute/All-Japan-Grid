@@ -1,0 +1,22 @@
+diff --git a/.gitattributes b/.gitattributes
+index 00cc076..cc90078 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -23,0 +24,4 @@ docs/reports/codex_same_site_trial_2026-09-13/basemap/spec_*.geojson -text white
++
++# AC/Ybus review evidence and byte-preserved provider metadata.
++docs/reports/codex_ac_diagnosis_2026-09-15/index.html linguist-generated
++docs/reports/codex_ac_diagnosis_2026-09-15/sources/spec_*.geojson -text whitespace=cr-at-eol
+diff --git a/docs/reports/README.md b/docs/reports/README.md
+index 73f94f2..23cbf9b 100644
+--- a/docs/reports/README.md
++++ b/docs/reports/README.md
+@@ -20,0 +21 @@
++| [2026-09-15 AC・Ybus診断のBefore/After](codex_ac_diagnosis_2026-09-15/index.html) | 目標Q制約付きACは未収束。支線復元・需要重み・再実行・写真・PPT |
+diff --git a/scripts/README.md b/scripts/README.md
+index 71ba56f..46581f4 100644
+--- a/scripts/README.md
++++ b/scripts/README.md
+@@ -54,0 +55,2 @@ python scripts/enrich_all.py --dry-run   # 実行計画のみ
++- `review_ac_solvability.py`：東日本AC・Ybus診断の保存回路を再実行。`summary` / `verify` / `replay`。[説明](../docs/AC_DIAGNOSIS_TOOL.md)。
++
