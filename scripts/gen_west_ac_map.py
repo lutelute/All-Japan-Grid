@@ -8,7 +8,7 @@
 """
 import copy, json, os, sys
 import numpy as np
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, os.getcwd())
 import matplotlib
 matplotlib.use("Agg")

@@ -7,7 +7,7 @@
 出力: docs/slides/ajg/assets/subsld_flipbook.gif (subsldデッキと共用)
 """
 import json, os
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 

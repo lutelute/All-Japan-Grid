@@ -19,7 +19,7 @@ import datetime
 from pathlib import Path
 
 AGJ_DATA = Path(__file__).parent.parent / "data"
-JRP_DATA = Path("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/japan-re-potential/docs/grid")
+JRP_DATA = Path("/Users/shigenoburyuto/dev/github/project_Hayashi/japan-re-potential/docs/grid")
 REPORT_PATH = Path(__file__).parent / "complement_report.md"
 
 DRY_RUN = "--dry-run" in sys.argv

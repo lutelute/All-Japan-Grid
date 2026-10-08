@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PV有無×UC: 両シナリオの24h UCを解き、(region,fuel,hour)の起動容量とdispatchを保存。"""
 import json, sys, time
-sys.path.insert(0, '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid')
+sys.path.insert(0, '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid')
 from src.uc.scenario import build_national_scenario
 from src.uc.solver import solve_uc
 from collections import defaultdict

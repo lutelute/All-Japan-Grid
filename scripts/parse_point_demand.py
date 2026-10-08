@@ -22,7 +22,7 @@ from collections import Counter, defaultdict
 
 import numpy as np
 
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 BASE = os.path.join(REPO, "data/external/system_disclosure")
 OUT = os.path.join(BASE, "normalized/point_demand.csv")
 

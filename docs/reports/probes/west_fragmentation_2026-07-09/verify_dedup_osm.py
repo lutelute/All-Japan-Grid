@@ -9,7 +9,7 @@ substations.geojson を引き、同一 osm_id に対応するか確認する。
 from __future__ import annotations
 import json, os, statistics, sys
 from collections import defaultdict
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 os.chdir(REPO)
 WEST = ["chubu", "hokuriku", "kansai", "chugoku", "shikoku", "kyushu"]
 

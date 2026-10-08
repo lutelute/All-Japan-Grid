@@ -7,7 +7,7 @@ import warnings
 from pathlib import Path
 
 warnings.filterwarnings("ignore")
-ROOT = Path("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+ROOT = Path("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, str(ROOT))
 
 import pandapower as pp  # noqa: E402
