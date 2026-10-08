@@ -81,6 +81,11 @@ STEPS = [
     ("satellite_connections", [sys.executable,
                                "scripts/apply_satellite_connections.py",
                                "--write"], False),
+    # 介入#51: 一次資料(各社の空容量・予想潮流一覧)で誤りと分かった OSM の電圧タグを直す
+    # (スクリプト内 CORRECTIONS 表が承認台帳)。approved のみ適用・冪等。第1号=西島根 275→220 kV
+    ("voltage_corrections", [sys.executable,
+                             "scripts/apply_voltage_corrections.py",
+                             "--write"], False),
     # 変電所プロパティ層(オーナー指示 2026-08-26「導体数・回線数を変電所の
     # プロパティに」): 構造DB terminal × OSM線タグ(circuits/wires/cables)を
     # 変電所ごとに集約し、built の sub ノードへ sub_props を付与。冪等

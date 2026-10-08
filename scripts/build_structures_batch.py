@@ -156,11 +156,12 @@ def build_region(region, data_dir="data", observed_trafos=True, published_trafos
     subs, lines = load(region, data_dir)
     pways = prepare_ways(lines)
     owned, membership = owned_internal_ways(subs["features"], pways)
-    observed = published = None
+    observed = published = missing_levels = None
     if observed_trafos or published_trafos:
-        from src.model.site_transformers import PUBLISHED_PATH, by_structure_site
+        from src.model.site_transformers import MISSING_LEVELS_PATH, PUBLISHED_PATH, by_structure_site
         observed = by_structure_site() if observed_trafos else None
         published = by_structure_site(PUBLISHED_PATH) if published_trafos else None
+        missing_levels = by_structure_site(MISSING_LEVELS_PATH) if published_trafos else None
     structures = []
     seen_ids = {}
     dup_features = 0
@@ -169,7 +170,8 @@ def build_region(region, data_dir="data", observed_trafos=True, published_trafos
         try:
             s, _ways, _poly = extract_structure(region, ft, pways, owned=owned[i],
                                                 observed_by_site=observed,
-                                                published_by_site=published)
+                                                published_by_site=published,
+                                                missing_levels_by_site=missing_levels)
         except Exception as exc:   # noqa: BLE001 — 全数生成ゲートで報告
             nm = (ft.get("properties") or {}).get("name")
             errors.append({"index": i, "name": nm,
@@ -211,6 +213,8 @@ def build_region(region, data_dir="data", observed_trafos=True, published_trafos
                                     if t.source == "osm-observed"),
         "n_trafo_published": sum(1 for s in structures for t in s.transformers
                                  if t.source == "published"),
+        "n_vl_published": sum(1 for s in structures for v in s.voltage_levels
+                              if v.kv_source == "published"),
         "n_trafo_nameplate": n_nameplate,
         "sites_with_known_kv": vl_known,
         "n_connections": len(conns),

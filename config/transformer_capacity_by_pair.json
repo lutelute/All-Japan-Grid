@@ -1,0 +1,137 @@
+{
+ "note": "電圧の組ごとの、1 変電所あたりの変圧器容量(全台の合計)の中央値。一般送配電 10 社の空容量・予想潮流一覧(非公開の台帳)から集計した統計だけで、変電所ごとの値は含まない。単位は公表の MW を MVA として扱う。5 変電所未満の組は書かない。生成: scripts/score_transformer_topology.py --export-capacity。使い方: run_full_powerflow_from_db.py(介入 #50)",
+ "pairs": {
+  "500/275": {
+   "median_mva": 2850,
+   "n_sites": 50
+  },
+  "500/220": {
+   "median_mva": 1900,
+   "n_sites": 21
+  },
+  "500/154": {
+   "median_mva": 2250,
+   "n_sites": 13
+  },
+  "275/187": {
+   "median_mva": 1200,
+   "n_sites": 5
+  },
+  "275/154": {
+   "median_mva": 900,
+   "n_sites": 77
+  },
+  "275/77": {
+   "median_mva": 570,
+   "n_sites": 73
+  },
+  "275/66": {
+   "median_mva": 900,
+   "n_sites": 52
+  },
+  "220/110": {
+   "median_mva": 475,
+   "n_sites": 37
+  },
+  "220/66": {
+   "median_mva": 475,
+   "n_sites": 53
+  },
+  "187/66": {
+   "median_mva": 341,
+   "n_sites": 48
+  },
+  "154/77": {
+   "median_mva": 475,
+   "n_sites": 93
+  },
+  "154/66": {
+   "median_mva": 381,
+   "n_sites": 173
+  },
+  "154/33": {
+   "median_mva": 53,
+   "n_sites": 18
+  },
+  "154/22": {
+   "median_mva": 95,
+   "n_sites": 9
+  },
+  "154/11": {
+   "median_mva": 44,
+   "n_sites": 24
+  },
+  "154/6": {
+   "median_mva": 28,
+   "n_sites": 41
+  },
+  "110/66": {
+   "median_mva": 114,
+   "n_sites": 69
+  },
+  "110/22": {
+   "median_mva": 19,
+   "n_sites": 181
+  },
+  "110/11": {
+   "median_mva": 13,
+   "n_sites": 6
+  },
+  "110/6": {
+   "median_mva": 38,
+   "n_sites": 274
+  },
+  "100/6": {
+   "median_mva": 10,
+   "n_sites": 10
+  },
+  "77/33": {
+   "median_mva": 28,
+   "n_sites": 127
+  },
+  "77/22": {
+   "median_mva": 57,
+   "n_sites": 213
+  },
+  "77/11": {
+   "median_mva": 8,
+   "n_sites": 6
+  },
+  "77/6": {
+   "median_mva": 38,
+   "n_sites": 1684
+  },
+  "66/33": {
+   "median_mva": 10,
+   "n_sites": 87
+  },
+  "66/22": {
+   "median_mva": 19,
+   "n_sites": 229
+  },
+  "66/6": {
+   "median_mva": 38,
+   "n_sites": 1851
+  },
+  "66/3": {
+   "median_mva": 5,
+   "n_sites": 5
+  },
+  "33/6": {
+   "median_mva": 5,
+   "n_sites": 370
+  },
+  "22/6": {
+   "median_mva": 5,
+   "n_sites": 624
+  },
+  "13/6": {
+   "median_mva": 1,
+   "n_sites": 9
+  },
+  "11/6": {
+   "median_mva": 4,
+   "n_sites": 45
+  }
+ }
+}

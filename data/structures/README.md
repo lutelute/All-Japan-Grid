@@ -48,6 +48,7 @@ Terminal の binding 語彙(強い順): `vertex-shared`(OSM頂点共有) > `poly
 - 変圧器: 優先は 公表 > 観測 > 梯子。各社の公表一覧の組で直す変電所(介入 #49、`source=published` 216 台、
   `n_trafo_published`、`--no-published-trafos` で外す)、OSM が巻線電圧つきの実機を描く変電所(介入 #48、`source=osm-observed`、
   `summary.json` の `n_trafo_osm_observed`)。`--no-observed-trafos` で従来の梯子だけ
+- 電圧階級: 公表一覧にあって OSM に無い階級(配電用の 6/22 kV など)を `kv_source=published` で足す(2,142、`n_vl_published`)
 - 観測層(node-breaker、`data/stations`)との突き合わせ: [docs/STATION_NODE_BREAKER.md](../../docs/STATION_NODE_BREAKER.md)
 
 ## 品質(2026-07-02 生成・参考)

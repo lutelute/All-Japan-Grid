@@ -247,12 +247,20 @@ OBSERVED_MATCH_KM = 1.0     # 観測の敷地(構造 DB の代表点)とバス�
 # (reports/transformer_topology_2026-10-08.md)。無効化=--no-published-trafos / AGJ_PUBLISHED_TRAFOS=0。
 PUBLISHED_TRAFOS_DEFAULT = True
 
+# ── 介入#50(2026-10-08 オーナー「進めて」): 公表の組・観測の組で張った変電所内の変圧器(#48/#49)の容量を、
+# 電圧の組ごとの公表容量の中央値で決める。従来は下位側の線路容量からの推定で、直結の組(500/154・275/77 等)は
+# 実際より 1 桁小さく、新しい過負荷を作っていた。入力=config/transformer_capacity_by_pair.json(10 社の
+# 空容量・予想潮流一覧から集計した、組ごとの中央値と件数だけ。変電所ごとの値は含まない)。銘板(出典付き)が
+# あればそちらを優先。無効化=--no-pair-capacity / AGJ_PAIR_CAPACITY=0。
+PAIR_CAPACITY_DEFAULT = True
+PAIR_CAPACITY_PATH = os.path.join(ROOT, "config", "transformer_capacity_by_pair.json")
+
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=False, synthetic_ties_live=False,
                      btb_split=True, freq_fix=True, implicit_stepdown=None,
-                     cap_calib=None, observed_trafos=None, published_trafos=None):
+                     cap_calib=None, observed_trafos=None, published_trafos=None, pair_capacity=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -291,6 +299,15 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     if published_trafos is None:
         _env = os.environ.get("AGJ_PUBLISHED_TRAFOS", "")
         published_trafos = (_env == "1") if _env in ("0", "1") else PUBLISHED_TRAFOS_DEFAULT
+    if pair_capacity is None:
+        _env = os.environ.get("AGJ_PAIR_CAPACITY", "")
+        pair_capacity = (_env == "1") if _env in ("0", "1") else PAIR_CAPACITY_DEFAULT
+    _pair_cap = {}
+    if pair_capacity and os.path.exists(PAIR_CAPACITY_PATH):
+        with open(PAIR_CAPACITY_PATH, encoding="utf-8") as _f:
+            _pair_cap = {tuple(int(x) for x in k.split("/")): v["median_mva"]
+                         for k, v in json.load(_f)["pairs"].items()}
+    n_pair_cap = 0
     # 帳簿は介入を切っていても作る(結び直す候補の変電所と、その変圧器の潮流を前後で比べるため)
     obs_ledger = []
     import re as _re48
@@ -528,6 +545,12 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                     continue
                 sn, par, tag = p["sn_mva"], p["n_parallel"], "@nameplate"
                 break
+            # 介入#50: 公表・観測の組で張った変圧器で銘板が無ければ、組ごとの公表容量の中央値
+            if not tag and link_src in ("osm", "published"):
+                med = _pair_cap.get((int(hv_kv + 1e-9), int(lv_kv + 1e-9)))
+                if med:
+                    sn, tag = float(med), "@pairmed"
+                    n_pair_cap += 1
             try:
                 ti = pp.create_transformer_from_parameters(
                     net, hv_bus=hb, lv_bus=lb, sn_mva=sn,
@@ -679,15 +702,17 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                         net.line.at[li, "to_bus"] = nb
                     n_btb_split += 1
 
+    if n_pair_cap:
+        print(f"  介入#50 pair-capacity: 組ごとの公表容量の中央値で容量を決めた変圧器 {n_pair_cap} 台")
     if observed_trafos or published_trafos:
-        n_osm = int(net.trafo["name"].str.endswith("@osm").sum())
-        n_pub = int(net.trafo["name"].str.endswith("@pub").sum())
+        n_osm = int(net.trafo["name"].str.contains("@osm").sum())
+        n_pub = int(net.trafo["name"].str.contains("@pub").sum())
         n_rel = Counter(r["by"] for r in obs_ledger if r["applied"])
         print(f"  介入#48/#49 site-trafo-links: 結び直した変電所 公表 {n_rel.get('published', 0)}・"
               f"観測 {n_rel.get('osm', 0)} / 公表由来の変圧器 {n_pub} 台・観測由来 {n_osm} 台")
     return net, bus_of, {"n_bus": len(net.bus), "n_line": n_line,
                          "n_trafo": n_trafo, "n_trafo_nameplate": n_trafo_nameplate,
-                         "observed_trafos": obs_ledger,
+                         "observed_trafos": obs_ledger, "n_pair_capacity": n_pair_cap,
                          "n_edge_skipped": n_edge_skipped,
                          "n_dedup_merged": n_dedup_merged,
                          "n_edge_dup_removed": n_edge_dup,
@@ -1539,6 +1564,10 @@ def main():
     ap.add_argument("--dump-flows", action="store_true",
                     help="線(鍵つき)と変圧器ごとの潮流を <output-dir>/flows.json に書く。介入の前後を"
                          "観測と比べる検証用(scripts/validate_intervention_flows.py)")
+    ap.add_argument("--pair-capacity", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#50 公表・観測の組で張った変圧器の容量を、組ごとの公表容量の中央値で決める"
+                         "(config/transformer_capacity_by_pair.json)。既定=PAIR_CAPACITY_DEFAULT(True)。"
+                         "環境変数 AGJ_PAIR_CAPACITY=1/0 でも指定可")
     ap.add_argument("--published-trafos", action=argparse.BooleanOptionalAction, default=None,
                     help="介入#49 各社の空容量・予想潮流一覧の変圧器の組を観測より先に張る。入力="
                          "data/reference/published_transformer_pairs.json。既定=PUBLISHED_TRAFOS_DEFAULT(True)。"
@@ -1611,7 +1640,8 @@ def main():
             synthetic_ties_live=args.synthetic_ties_live,
             btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
             implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib,
-            observed_trafos=args.observed_trafos, published_trafos=args.published_trafos)
+            observed_trafos=args.observed_trafos, published_trafos=args.published_trafos,
+            pair_capacity=args.pair_capacity)
         if bstats.get("cap_calib"):
             from src.powerflow.line_capacity import describe as _cap_describe
             print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))
