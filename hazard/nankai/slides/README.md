@@ -17,4 +17,4 @@
 | 東 生きる/死ぬ v2 (09-16) | `nankai_east_survive_vs_collapse_v2_2026-09-16.*` | run_v8(UFLS の段階的な再送電あり)で GIF と数値を更新 |
 | 東 生きる/死ぬ v1 (09-16) | `nankai_east_survive_vs_collapse_v1_2026-09-16.*` | 貼り付け用 7 枚: GIF 3 本・比較表・経緯・整定値・限界 |
 | 復旧 v1 (09-14) | `nankai_restoration_workforce_2026-09-14.*` | 復旧人員モデル 4 枚 |
-| 本編 (09-13) | `nankai_hazard_v0_2026-09-13.*`・`nankai_4slides_2026-09-13.*` | 解説 29 枚・4 枚 |
+| 本編 (09-13) | `nankai_hazard_v0_2026-09-13.*`・`nankai_4slides_2026-09-13.*` | 解説 32 枚・4 枚 |
