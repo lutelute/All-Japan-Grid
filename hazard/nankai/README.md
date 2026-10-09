@@ -16,6 +16,17 @@ All-Japan-Grid の正典モデル(docs/data/built + 正典系譜の潮流ケー�
 (2026-10-08 に `docs/reports/`・`docs/slides/`・`verification/` から移した)。All-Japan-Grid 本体からは正典モデルを読むだけ。
 置き場所は末尾の「構成」。
 
+## すぐ開く
+
+| 開きたいもの | 場所 |
+|---|---|
+| 判断レポート(まずこれ) | [reports/nankai_power_hazard_v0_2026-09-13.md](reports/nankai_power_hazard_v0_2026-09-13.md) |
+| レポート・動画・HTML の索引 | [reports/README.md](reports/README.md) |
+| 最新のデッキ | 候補デッキ v10・29 枚 [nankai_visual_candidates_v10_2026-09-21.pptx](slides/nankai_visual_candidates_v10_2026-09-21.pptx)・本編 [nankai_hazard_v0_2026-09-13.pptx](slides/nankai_hazard_v0_2026-09-13.pptx)・版の一覧 [slides/README.md](slides/README.md) |
+| 09-13 時点の検証一式 | [verification/README.md](verification/README.md) |
+| 触って試す(Claude Artifact。共有していなければ本人だけが開ける) | [停電シナリオ卓](https://claude.ai/artifact/MGr5RRXNQJ4QSYxQbnp152)・[復旧の待ち行列卓](https://claude.ai/artifact/Ri8H6EdNjayzF8PZcihCRt)・[電力ハザードマップ](https://claude.ai/artifact/GBxpWHnmZZvfLZEBmins1K)・[1 手ずつ](https://claude.ai/artifact/Y5A9GbprorEH6wTjoYNBd9)・[黒板ノート](https://claude.ai/artifact/FB1zKFniBXf2v1L2EzMogw)・[数式の動き](https://claude.ai/artifact/7jF4ascyjnzJrepa3vh9op) |
+| 計算結果(git 管理外) | Mac のチェックアウトの `hazard/nankai/output/`(正典は `run_v10`、全体で約 714 MB)。補助 DB は pws-160core の `~/agj-hazard-data/` と nas03 の `hazard_raw/`・`db/` |
+
 ## 実行
 
 ```bash
