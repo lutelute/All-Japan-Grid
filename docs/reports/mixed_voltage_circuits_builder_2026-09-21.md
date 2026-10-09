@@ -2,8 +2,8 @@
 
 2026-09-21 ・ **Claude Opus 5** ・ オーナー指示「源泉で電圧ごとに回線数を分けるのをやって」
 
-発端は南海トラフの鹿島の過負荷追跡 → [`hazard/nankai/reports/nankai_hazard_2026-09-13/dynamics/mixed_voltage_circuits_2026-09-21.md`](../../hazard/nankai/reports/nankai_hazard_2026-09-13/dynamics/mixed_voltage_circuits_2026-09-21.md)。
-そこでは `hazard/nankai` 側の局所的な是正(`branch_parallel`)だったが、本件は**源泉(`src/powerflow/snapped_topology.py`)での恒久修正**。
+発端は南海トラフの鹿島の過負荷追跡(ハザード解析側のレポート `mixed_voltage_circuits_2026-09-21.md`。ハザード解析は 2026-10-09 に非公開のリポジトリへ移した)。
+そこではハザード解析側の局所的な是正(`branch_parallel`)だったが、本件は**源泉(`src/powerflow/snapped_topology.py`)での恒久修正**。
 
 ## 何が起きていたか
 

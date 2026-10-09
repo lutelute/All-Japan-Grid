@@ -404,8 +404,9 @@ async def scene_dashboard(page: Page, base: str, rec: Recorder) -> None:
 
 # ---------------------------------------------------------------- 撮影しない素材(既存の成果物から作る)
 
-# 南海トラフの計算結果(git 管理外)。別の作業ツリーで撮るときは AGJ_NANKAI_ROOT で結果のあるチェックアウトを指す
-NANKAI_ROOT = Path(os.environ.get("AGJ_NANKAI_ROOT", ROOT))
+# 南海トラフのコードと計算結果は別のリポジトリ(非公開の agj-hazard)にある。既定はこのリポジトリの隣の agj-hazard、
+# 別の場所なら AGJ_NANKAI_ROOT でそのチェックアウトを指す
+NANKAI_ROOT = Path(os.environ.get("AGJ_NANKAI_ROOT", ROOT.parent / "agj-hazard"))
 NANKAI_RUN = NANKAI_ROOT / "hazard" / "nankai" / "output" / "run_v10"  # 正典(併架線の回線数を是正後)
 
 
@@ -417,7 +418,7 @@ def shrink(src: Path, out: Path, width: int, lossy: int = 70) -> None:
 def make_nankai() -> Path:
     """南海トラフ: 夜の灯りが消えて戻る映像を run_v10 で作り直して縮める(hazard/nankai/scripts/make_cinematic.py)。"""
     if not NANKAI_RUN.exists():
-        raise FileNotFoundError(f"{NANKAI_RUN} が無い(hazard の計算結果はリポジトリに入っていない)")
+        raise FileNotFoundError(f"{NANKAI_RUN} が無い(南海の計算結果は agj-hazard のチェックアウトにある。場所は AGJ_NANKAI_ROOT で渡す)")
     out = OUT / "nankai_cinematic.gif"
     with tempfile.TemporaryDirectory() as td:
         env = {**os.environ, "PYTHONPATH": str(NANKAI_ROOT / "hazard" / "nankai" / "src")}

@@ -29,7 +29,6 @@ the dashboard lists the tools.
 | [VALIDATION_SOURCES.md](VALIDATION_SOURCES.md) | 検証に使える外部の正解データ |
 | [COVERAGE.md](COVERAGE.md) | 来歴・検証カバレッジ(`ajgrid coverage` で作り直せるスナップショット) |
 | [YBUS_SOLVABILITY.md](YBUS_SOLVABILITY.md)・[WEST_AC_ANALYSIS.md](WEST_AC_ANALYSIS.md)・[PV_CURVES.md](PV_CURVES.md) | Ybus の条件数と可解性、西の AC 収束の原因分析(06-11 時点。西はその後 AC で収束し、今は 4 島とも AC)、連続潮流 |
-| [../hazard/nankai/README.md](../hazard/nankai/README.md) | 南海トラフ地震の電力ハザード(損傷 → カスケード → 復旧) |
 
 ## データを使う / Using the data
 
@@ -72,7 +71,6 @@ the dashboard lists the tools.
 
 - [reports/](reports/) — 判断と検証のレポート(日付つき)。**索引は [reports/INDEX.md](reports/INDEX.md)**(`python3 scripts/build_reports_index.py` で作り直す)、
   時系列の台帳は [reports/IMPROVEMENT_LOG.md](reports/IMPROVEMENT_LOG.md)、書き方の約束は [reports/README.md](reports/README.md)
-- [../verification/](../verification/) — 外部ツールでの再計算・照合の記録
 - [../papers/](../papers/) — 論文の草稿(SubSLD など)
 - [archive/plans/](archive/plans/) — 完了・停止した計画(66kV プログラム、全面改修、GridStitch、topoRAG など)
 - [slides/](slides/) — 発表スライド(版と日付つき)
