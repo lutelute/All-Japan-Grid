@@ -11,7 +11,7 @@
 3. `export_flow_map_data.py --realtime` — **実績需要にスケールした NOW 断面 PF**
    → `flows_now_*.geojson` / `gens_now_*.geojson` / `now_meta.json`
 4. `export_day_flows.py` — 日別断面（時刻別の再生用アーカイブ）
-5. `slim_flow_map.py` → `realtime_publish.sh`（main 専用の疎な worktree から commit + push → Pages へ反映）
+5. `slim_flow_map.py` → `export_pulse.py`（`pulse.json` / `pulse.png`：`docs/pulse.html` と埋め込み部品 `docs/js/pulse.js` が読む軽い断面。失敗しても続行）→ `realtime_publish.sh`（main 専用の疎な worktree から commit + push → Pages へ反映）
 
 ## 自動実行
 
