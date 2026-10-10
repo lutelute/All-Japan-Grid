@@ -75,6 +75,22 @@
       "doc": "docs/REALTIME_OPS.md"
     },
     {
+      "id": "pulse",
+      "category": "explore",
+      "kind": "pages",
+      "featured": false,
+      "title": "日本の送電網、いま（軽量版・埋め込み用）",
+      "summary": "毎時の推定潮流を、線の明るさと光の粒の流れで 1 枚に。約 140KB で開き、<script> 1 行でほかのサイトにも貼れます。",
+      "href": "pulse.html",
+      "tags": [
+        "リアルタイム",
+        "軽量",
+        "埋め込み"
+      ],
+      "doc": "docs/REALTIME_OPS.md",
+      "source": "scripts/export_pulse.py"
+    },
+    {
       "id": "subsld",
       "category": "explore",
       "kind": "pages",
