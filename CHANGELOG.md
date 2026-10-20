@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-20
+
 ### Added
 - **Substation node-breaker layer from OSM node ids** (`src/stations/`, `scripts/build_station_db.py`, `data/stations/`,
   `docs/STATION_NODE_BREAKER.md`): busbar sections, bays, switches, transformer windings and line ends joined only by

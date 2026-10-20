@@ -7,8 +7,8 @@
 ## 1. バンドルを生成する
 
 ```bash
-python scripts/make_dataset_bundle.py                 # core（約 13 MB）
-python scripts/make_dataset_bundle.py --profile full  # + Ybus 一式（約 24 MB）
+python scripts/make_dataset_bundle.py                 # core（約 16 MB）
+python scripts/make_dataset_bundle.py --profile full  # + Ybus 一式（約 27 MB）
 ```
 
 出力（`dist/bundle/`, これは Git 追跡外）:
