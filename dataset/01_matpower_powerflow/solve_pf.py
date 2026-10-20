@@ -60,11 +60,13 @@ def solve(island: str, force_dc: bool, csv_dir: str | None, mat_dir: Path | None
     print(f"case: {mat}")
 
     net = from_mpc(str(mat))
+    # from_mpc は枝を line / trafo / impedance(タップ付きで変圧器にならない枝)に、
+    # 発電機を ext_grid(REF バス)/ gen / sgen(同じバスの 2 台目以降)に分けて作る
     n_bus = len(net.bus)
-    n_branch = len(net.line) + len(net.trafo)
-    n_gen = len(net.gen) + len(net.ext_grid)
+    n_branch = len(net.line) + len(net.trafo) + len(net.impedance)
+    n_gen = len(net.ext_grid) + len(net.gen) + len(net.sgen)
     print(f"loaded: {n_bus} bus, {n_branch} branch, {n_gen} gen "
-          f"(slack bus(es): {list(net.ext_grid.bus.values)})")
+          f"({len(net.ext_grid)} slack bus(es) — one per connected component)")
 
     mode = "DC"
     if not force_dc:
@@ -81,32 +83,23 @@ def solve(island: str, force_dc: bool, csv_dir: str | None, mat_dir: Path | None
         print("RESULT: NOT CONVERGED")
         return 1
 
-    total_gen = float(net.res_gen.p_mw.sum() + net.res_ext_grid.p_mw.sum())
+    # sgen を落とすと発電が少なく出て損失が負に見える(v1.7.0 までの例題の誤り)
+    total_gen = float(net.res_ext_grid.p_mw.sum() + net.res_gen.p_mw.sum()
+                      + net.res_sgen.p_mw.sum())
     total_load = float(net.res_load.p_mw.sum()) if len(net.load) else 0.0
     print(f"RESULT: {mode} CONVERGED")
     print(f"  total generation: {total_gen:>10.0f} MW")
     print(f"  total load:       {total_load:>10.0f} MW")
     if mode == "AC":
-        loss = total_gen - total_load
+        loss = float(net.res_line.pl_mw.sum() + net.res_trafo.pl_mw.sum()
+                     + net.res_impedance.pl_mw.sum())
         vm = net.res_bus.vm_pu
         print(f"  transmission loss:{loss:>10.0f} MW  ({loss / max(total_load, 1) * 100:.2f} % of load)")
         print(f"  voltage Vm:        {vm.min():.3f} - {vm.max():.3f} pu")
-        # --- 健全性チェック (pandapower の from_mpc 変換の制約) ------------------
-        # 多成分の島 (例: hokkaido は 9 成分・各成分 1 slack) では、pandapower の
-        # from_mpc が複数 slack を正しく扱えず、損失が負になる等の需給不整合が
-        # 出ます。配布 .mat 自体は健全で、MATLAB 版 (solve_pf.m, MATPOWER runpf)
-        # では同じケースを正しく解けます (実機確認: hokkaido AC 収束・損失 +3.5%)。
-        # 単一成分の okinawa は Python でも綺麗に閉じます。
-        loss_frac = loss / max(total_load, 1)
-        if loss_frac < 0 or loss_frac > 0.20:
-            n_slack = len(net.ext_grid)
-            print(
-                "  ⚠ pandapower 変換で需給内訳が不整合です (損失が負 or 過大)。原因は\n"
-                f"    from_mpc が多成分島の複数 slack ({n_slack} 個) を正しく扱えないためで、\n"
-                "    配布 .mat 自体は健全です。MATLAB 版 (solve_pf.m, MATPOWER runpf) なら\n"
-                "    同じケースを正しく解けます (例: hokkaido は損失 +3.5%)。Python で\n"
-                "    大規模島を解くなら UC→潮流 連成 (dataset/02_uc_from_excel) を使ってください。"
-            )
+        # 発電 − 負荷 − 損失 は 0 になるはず(シャントの有効電力は 0)。ずれたら集計漏れ
+        resid = total_gen - total_load - loss - float(net.res_shunt.p_mw.sum())
+        if abs(resid) > 1.0:
+            print(f"  ⚠ 需給が {resid:.0f} MW 合いません。集計していない要素がないか確認してください。")
 
     if csv_dir:
         out = Path(csv_dir)

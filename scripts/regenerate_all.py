@@ -6,7 +6,7 @@
 それらを**1コマンドで順に再生成**し、`docs/data/MODEL_VERSION.json` に git HEAD と各段の生成時刻を
 刻んで**skewを可視化**する。重い段は --skip-* で選べる。
 
-順序(下流依存): build_editor_data → run_national_powerflow → export_national_matpower
+順序(下流依存): build_editor_data → run_national_powerflow → export_matpower_canonical
 → export_cim → build_static_site。
 
 不変条件: 物理接続=真・計算は検証器・捏造禁止・基底extract不変・committedスコアカード不可触。
@@ -105,7 +105,8 @@ STEPS = [
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
-    ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
+    # 配布する MATPOWER ケース(dist/matpower_national)。2026-10-20 から正典系譜で書く
+    ("export_matpower_canonical", [sys.executable, "scripts/export_matpower_canonical.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
     # ④ 出典容量反映 — build_static_site が plants_utility/ipp/all を作り直すため、必ずその後に再適用。

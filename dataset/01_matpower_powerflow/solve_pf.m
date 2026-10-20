@@ -79,9 +79,10 @@ function solve_pf(island, mode)
             loss, loss / max(total_load, 1) * 100);
         fprintf('  voltage Vm:        %.3f - %.3f pu\n', min(vm), max(vm));
         % 健全性メモ: MATPOWER は多成分島の複数 slack も正しく扱い、各成分で需給を
-        % 閉じます (実機確認: okinawa 損失 2.2% / hokkaido +3.5%)。ただし配布ケースは
-        % 建造断面のスナップショットで需給が厳密調整されたものではないため、損失が
-        % 負や過大な場合は内訳の不整合を疑ってください (「収束」==「正しく」ではない)。
+        % 閉じます (実機確認 2026-10-20: 損失 okinawa 1.93% / hokkaido 2.63% /
+        % east 2.95% / west 2.17%、pandapower 版と一致)。ただし配布ケースは建造断面の
+        % スナップショットで需給が厳密調整されたものではないため、損失が負や過大な
+        % 場合は内訳の不整合を疑ってください (「収束」==「正しく」ではない)。
         if loss < 0 || loss / max(total_load, 1) > 0.20
             fprintf('  [注意] 損失が負 or 過大です。需給内訳の不整合を確認してください。\n');
         end

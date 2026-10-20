@@ -169,13 +169,13 @@ pip install -r requirements.txt   <span class="c"># pandapower, pulp, openpyxl, 
         <h3>MATPOWER 潮流（pandapower）</h3>
         <p>配布ケースを読み、AC 潮流（Newton–Raphson）を解きます。MATLAB 不要。</p>
         <pre><span class="k">python</span> dataset/01_matpower_powerflow/solve_pf.py okinawa
-<span class="c"># → AC 収束・損失 1.4%・Vm 0.985–1.010</span></pre>
+<span class="c"># → AC 収束・損失 1.93%・Vm 0.972–1.003（4 島とも AC で解けます）</span></pre>
       </div>
 
       <div class="qs pfm">
         <span class="tag">潮流 · MATLAB</span>
         <h3>MATPOWER 潮流（本体 runpf）</h3>
-        <p>MATLAB＋MATPOWER で同じケースを解きます。多成分島も正しく求解。</p>
+        <p>MATLAB＋MATPOWER で同じケースを解きます。Python 版と同じ数字になります。</p>
         <pre><span class="c">% 先に addpath で MATPOWER を通す</span>
 addpath(genpath(<span class="k">'/path/to/matpower8.1'</span>));
 solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / 'east' / 'west'</span></pre>
@@ -194,8 +194,8 @@ solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / '
 
     <figure>
       <img src="./assets/dataset/uc_dispatch.png" alt="ユニットコミットメントの発電ディスパッチ結果（沖縄フリート・24時間）" loading="lazy">
-      <figcaption>Excel→UC の出力例：沖縄フリート22機の24時間ディスパッチ（Optimal・総コスト1.52億円）。
-        merit order 通り石炭が主力・ピーク時に石油、再エネは下部帯。</figcaption>
+      <figcaption>Excel→UC の出力例：沖縄フリート28機の24時間ディスパッチ（Optimal・総コスト1.98億円）。
+        merit order 通り石炭がベース・LNG が中間・ピーク時に石油、再エネは下部帯。</figcaption>
     </figure>
   </div>
 </section>
@@ -228,10 +228,11 @@ solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / '
       発電機出力は時間断面として厳密に需給調整されたものではありません。
     </div>
     <div class="note">
-      <b>多成分島は MATLAB版と Python版で挙動が異なります。</b> 沖縄以外は複数の弱連結成分に分かれ各成分に slack を持ちます。
-      <b>MATLAB（MATPOWER）は正しく解けます</b>（実機確認：北海道 AC 収束・損失 +3.5%）が、
-      <b>Python（pandapower <code>from_mpc</code>）は複数 slack を正しく変換できず</b>損失が負になる等の不整合が出ます
-      （配布 <code>.mat</code> 自体は健全）。Python で大規模島を扱うなら MATLAB 版か UC→潮流連成を使ってください。
+      <b>4 島とも AC で解けますが、west は江田島の 66kV の木 1 本（6 バス）を親バスへ畳んであります。</b>
+      需要を変電所へ均等に割った配分のせいで、この木には 66kV 1 回線の容量を大きく超える負荷が載り、
+      送れる解が存在しないためです（負荷は保存。帳簿は <code>meta.json</code> の <code>reduction</code>）。
+      本系統から切れた断片の需要は合成の slack が賄い、線路定数は電圧階級の代表値です。
+      線ごとの潮流・電圧は個別に引用しないでください。
     </div>
     <div class="note">
       <b>UC のコスト・起動費・最小出力は例題用の一般既定値</b>で、特定発電所の実測値ではありません。
