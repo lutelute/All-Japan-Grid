@@ -127,9 +127,14 @@ def test_one_vector_canvas(browser, site):
 @pytest.mark.parametrize("kind,label", [("line", "送電線"), ("sub", "変電所"), ("plant", "発電所")])
 def test_hover_shows_tooltip(browser, site, kind, label):
     page, _ = _open_map(browser, f"{site}/map.html")
-    page.evaluate("() => { map.setView([35.6, 139.6], 9); }")
-    page.wait_for_timeout(500)
-    xy = page.evaluate(_PICK, [kind])
+    xy = None
+    # 点が密な所では周りに空きが無いので、見つかるまで拡大して探す
+    for zoom in (9, 11, 13):
+        page.evaluate(f"() => {{ map.setView([35.6, 139.6], {zoom}); }}")
+        page.wait_for_timeout(500)
+        xy = page.evaluate(_PICK, [kind])
+        if xy:
+            break
     assert xy, f"{label}の確かめに使える位置が画面内に無い"
     tips = _tooltip_at(page, xy)
     assert any(t.startswith(label) for t in tips), f"{label}の上で説明が出ない: {tips}"

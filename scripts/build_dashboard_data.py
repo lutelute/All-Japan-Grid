@@ -90,8 +90,38 @@ def count_interventions() -> int:
     return len(ids)
 
 
+def _count_built(path: Path) -> dict:
+    """正典 all.json の中身から規模を数える。
+
+    all.json の stats と index.json の値は、正典にその場で当てた介入(#47・#51 など)が更新しない
+    ため古くなる(2026-10-21: stats は 17,841 ノード・19,529 枝・成分 625、中身は 17,738・19,944)。
+    連結成分は、枝の両端の座標(5 桁)でノードを結んで数える。"""
+    b = json.loads(path.read_text(encoding="utf-8"))
+    nodes, edges = b.get("nodes", []), b.get("edges", [])
+    key = lambda lat, lon: (round(float(lat), 5), round(float(lon), 5))
+    parent: dict = {}
+
+    def find(x):
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for n in nodes:
+        find(key(n["lat"], n["lon"]))
+    for e in edges:
+        ra, rb = find(key(*e["a"])), find(key(*e["b"]))
+        if ra != rb:
+            parent[ra] = rb
+    roots = {find(key(n["lat"], n["lon"])) for n in nodes}
+    return {"n_nodes": len(nodes), "n_edges": len(edges),
+            "main_size": sum(1 for n in nodes if n.get("main")),
+            "n_components": len(roots)}
+
+
 def collect_model() -> dict:
-    """正典 built の規模(index.json の all)と、生成時のモデル版・OSM 断面。"""
+    """正典 built の規模(all.json の中身から数える)と、生成時のモデル版・OSM 断面。"""
     model: dict = {}
     idx = DOCS / "data" / "built" / "index.json"
     if idx.exists():
@@ -100,6 +130,9 @@ def collect_model() -> dict:
         if allr:
             model.update(allr.get("stats", {}))
         model["n_regions"] = sum(1 for r in regions if r.get("id") != "all")
+    built = DOCS / "data" / "built" / "all.json"
+    if built.exists():
+        model.update(_count_built(built))
     mv = DOCS / "data" / "MODEL_VERSION.json"
     if mv.exists():
         v = json.loads(mv.read_text(encoding="utf-8"))

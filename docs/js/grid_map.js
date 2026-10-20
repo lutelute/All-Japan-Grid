@@ -221,7 +221,7 @@ function updateLegend() {
         var body = "";
 
         if (colorMode === "region") {
-            body += "<h4>Region</h4><div class='legend-grid'>";
+            body += "<h4>エリア</h4><div class='legend-grid'>";
             for (var i = 0; i < REGION_ORDER.length; i++) {
                 var rid = REGION_ORDER[i];
                 body +=
@@ -231,7 +231,7 @@ function updateLegend() {
             }
             body += "</div>";
         } else {
-            body += "<h4>Voltage Class</h4><div class='legend-grid'>";
+            body += "<h4>電圧</h4><div class='legend-grid'>";
             var voltages = [500, 275, 220, 187, 154, 132, 110, 77, 66];
             for (var j = 0; j < voltages.length; j++) {
                 var kv = voltages[j];
@@ -244,11 +244,11 @@ function updateLegend() {
         }
 
         // Plants legend (always shown)
-        body += "<h4 style='margin-top:8px'>Power Plants</h4><div class='legend-grid'>";
+        body += "<h4 style='margin-top:8px'>発電所</h4><div class='legend-grid'>";
         var fuelEntries = [
-            ["nuclear","Nuclear"],["coal","Coal"],["gas","Gas"],["oil","Oil"],
-            ["hydro","Hydro"],["wind","Wind"],["solar","Solar"],
-            ["geothermal","Geothermal"],["biomass","Biomass"]
+            ["nuclear","原子力"],["coal","石炭"],["gas","ガス"],["oil","石油"],
+            ["hydro","水力"],["wind","風力"],["solar","太陽光"],
+            ["geothermal","地熱"],["biomass","バイオマス"]
         ];
         for (var k = 0; k < fuelEntries.length; k++) {
             var fkey = fuelEntries[k][0], flabel = fuelEntries[k][1];
@@ -266,7 +266,7 @@ function updateLegend() {
         var collapsed = window.innerWidth <= 768;
         div.innerHTML =
             '<button type="button" class="legend-toggle" aria-expanded="' + (!collapsed) + '">' +
-            '<span>凡例 / Legend</span>' +
+            '<span>凡例</span>' +
             '<span class="legend-chevron">' + (collapsed ? "▸" : "▾") + '</span>' +
             '</button>' +
             '<div class="legend-body">' + body + '</div>';
@@ -367,6 +367,10 @@ function plantMarker(latlng, fuel, mw) {
 var FUEL_JA = {};
 FUEL_ENTRIES.forEach(function (e) { FUEL_JA[e[0]] = e[1]; });
 
+function cleanName(n) {
+    return String(n || "").replace(/\s*\d+(?:\.\d+)?\s*kV$/i, "");
+}
+
 function osmLink(latlng) {
     return "https://www.openstreetmap.org/#map=16/" + latlng.lat.toFixed(5) + "/" + latlng.lng.toFixed(5);
 }
@@ -382,7 +386,9 @@ function lineCard(p, layer) {
         title: p._display_name || "名称なし",
         sub: AGJMap.esc([fmtKv(p._voltage_kv), p._region_ja].filter(Boolean).join(" ・ ")),
         rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))], ["地域", AGJMap.esc(p._region_ja || "—")],
-               ["線形", "OpenStreetMap の送電線"]],
+               ["回線数", p._par ? AGJMap.esc(String(p._par)) : "—"],
+               ["つながり", p._main === false ? "本系統から切れている" : "本系統"],
+               ["線形", "正典（built）の枝・形は OpenStreetMap"]],
         actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
                   { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
         note: "線路定数は電圧階級ごとの代表値です（実測ではありません）。",
@@ -390,12 +396,13 @@ function lineCard(p, layer) {
 }
 
 function subCard(p, layer) {
-    var ll = layer.getLatLng(), name = p.name || p._display_name || "";
+    var ll = layer.getLatLng(), name = cleanName(p.name || p._display_name);
     var rows = [["電圧", AGJMap.esc(fmtKv(p._voltage_kv != null ? p._voltage_kv : p.voltage_kv))],
                 ["地域", AGJMap.esc(p._region_ja || p.region_ja || "—")]];
     if (p.category_ja) rows.push(["種別", AGJMap.esc(p.category_ja)]);
     if (p.operator) rows.push(["運営", AGJMap.esc(p.operator)]);
     if (p.frequency_hz) rows.push(["周波数", AGJMap.esc(p.frequency_hz + " Hz")]);
+    if (p._main != null) rows.push(["つながり", p._main ? "本系統" : "本系統から切れている"]);
     return {
         kind: "変電所", color: subColor({ properties: p }),
         title: name || "名称なし",
@@ -496,7 +503,7 @@ function renderLayers() {
                         AGJMap.bindCard(layer, function () { return subCard(p, layer); });
                         var skv = fmtKv(p._voltage_kv);
                         layer.bindTooltip(
-                            "変電所 " + (p._display_name || "名称なし") + " | " + skv +
+                            "変電所 " + (cleanName(p._display_name) || "名称なし") + " | " + skv +
                             (p._region_ja ? " | " + p._region_ja : ""),
                             { sticky: true });
                     } catch (e) { console.warn("Sub popup error:", e); }
@@ -577,8 +584,10 @@ async function loadData(minKv) {
 
     var tier = voltageTier(minKv);
     var cacheBust = "?v=" + Date.now();
-    var linesFile = "./data/lines_" + tier.suffix + ".geojson" + cacheBust;
-    var subsFile  = "./data/subs_"  + tier.suffix + ".geojson" + cacheBust;
+    // 地図は正典(built)から書いた層を読む(scripts/export_map_tiers_from_built.py → data/map/)。
+    // data/ 直下の同名ファイルは基底 OSM 由来(build_static_site.py)で、介入前の線を出していた(2026-10-21)
+    var linesFile = "./data/map/lines_" + tier.suffix + ".geojson" + cacheBust;
+    var subsFile  = "./data/map/subs_"  + tier.suffix + ".geojson" + cacheBust;
 
     try {
         var responses = await Promise.all([
@@ -872,7 +881,7 @@ function buildRegionList(containerId) {
 
 async function initRegionList() {
     try {
-        var res = await fetch("./data/regions.json?v=" + Date.now());
+        var res = await fetch("./data/map/regions.json?v=" + Date.now());
         if (!res.ok) return;
         regionsData = await res.json();
         buildRegionList("region-list");
@@ -1007,7 +1016,7 @@ async function downloadLinesCSV() {
     var data = rawLineData;
     if (!data) {
         try {
-            var res = await fetch("./data/lines_all.geojson");
+            var res = await fetch("./data/map/lines_all.geojson");
             if (res.ok) data = await res.json();
         } catch (e) {}
     }
@@ -1031,7 +1040,7 @@ function buildLists() {
             var f = rawSubData.features[i];
             if (!f.geometry || f.geometry.type !== "Point") continue;
             var p = f.properties;
-            var name = (p._display_name || p.name || "").trim();
+            var name = cleanName(p._display_name || p.name).trim();
             if (!name) continue;
             listSubsData.push({
                 name: name,
