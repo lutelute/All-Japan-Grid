@@ -1,5 +1,5 @@
 {
-  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。 image はカードの上に出す 16:10 の静止画(docs/ からの相対・scripts/make_dashboard_thumbs.py が作る)。 lineage はカードが読むデータの系譜: built=正典(docs/data/built)/ stations=変電所の 2 層(OSM の観測と構造の仮説)/ snapped=旧系譜(スナップ済みトポロジ)/ base_osm=介入前の基底 OSM / frozen=ある日の版を固定した記録 / mixed=系譜が混在 / text=説明・教材(データを計算しない)。built・stations・text 以外は lineage_note で何が正典と違うかを書く(tests/test_pages_dashboard.py が検査。docs/reports/project_structure_2026-10-21.md の D1・B1 の再発防止)。",
+  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。 image はカードの上に出す 16:10 の静止画(docs/ からの相対・scripts/make_dashboard_thumbs.py が作る)。 lineage はカードが読むデータの系譜: built=正典(docs/data/built)/ stations=変電所の 2 層(OSM の観測と構造の仮説)/ snapped=旧系譜(スナップ済みトポロジ)/ base_osm=介入前の基底 OSM / frozen=ある日の版を固定した記録 / mixed=系譜が混在 / text=説明・教材(データを計算しない)。built・stations・text 以外は lineage_note で何が正典と違うかを書く(tests/test_pages_dashboard.py が検査。docs/reports/project_structure_2026-10-21.md の D1・B1 の再発防止)。 分類(categories)はプロジェクトの柱に合わせる(2026-10-21・docs/reports/project_structure_2026-10-21.md): 見る / 変電所の中 / 計算する / つくり方と根拠 / 持ち帰る / 学ぶ / 記録。",
   "legacy_pages": {
     "connection_editor.html": "旧・接続候補承認ツール(tokyo のみ)。候補レビュー review.html が後継。過去レポートから参照されるため残置。"
   },
@@ -7,13 +7,28 @@
   "categories": [
     {
       "id": "explore",
-      "label": "見る",
-      "hint": "地図の上で系統を眺める。インストール不要、ブラウザだけで動きます。"
+      "label": "見る（いまの系統）",
+      "hint": "正典の系統図と、いまの潮流。インストール不要、ブラウザだけで動きます。"
     },
     {
-      "id": "verify",
-      "label": "確かめる・直す",
-      "hint": "モデルが何を繋いだかを根拠つきで点検し、接続の修正案を下書きする。"
+      "id": "stations",
+      "label": "変電所の中",
+      "hint": "変電所ごとの構内図と単線結線図。OSM で観測したものと、構造の推定を分けて描きます。"
+    },
+    {
+      "id": "compute",
+      "label": "計算する",
+      "hint": "正典の網で潮流・Ybus・N-1・系統強度・電圧安定度・動揺を解く。ブラウザで動く Ybus 以外はリポジトリを clone して走らせます。結果は判定ではなく目安です。"
+    },
+    {
+      "id": "provenance",
+      "label": "つくり方と根拠",
+      "hint": "モデルが何をどうつないだかを根拠つきで点検する。接続の修正は下書きから介入台帳へ。点検は正典データを書き換えません。"
+    },
+    {
+      "id": "use",
+      "label": "持ち帰る",
+      "hint": "手元の解析ツールに持ち出す。MATPOWER / pandapower / CIM。"
     },
     {
       "id": "learn",
@@ -21,29 +36,9 @@
       "hint": "手法を図と動きで追う教材と発表資料。"
     },
     {
-      "id": "use",
-      "label": "データを使う",
-      "hint": "手元の解析ツールに持ち出す。MATPOWER / pandapower / CIM。"
-    },
-    {
-      "id": "analyze",
-      "label": "解析する（コマンド）",
-      "hint": "リポジトリを clone して走らせるスクリーニング解析。結果は判定ではなく目安です。"
-    },
-    {
-      "id": "audit",
-      "label": "監査・診断する（コマンド）",
-      "hint": "モデルの弱点を機械的に洗い出す。正典データは書き換えません。"
-    },
-    {
       "id": "archive",
-      "label": "アーカイブ",
+      "label": "記録（アーカイブ）",
       "hint": "更新を止めたページと、検証のまとめ。作った時点のモデルのまま、消さずに残しています（docs/PAGES_INVENTORY.md）。"
-    },
-    {
-      "id": "local",
-      "label": "ローカルで動かす",
-      "hint": "バックエンドつきの完全版。編集の検証・反映やツール実行はここから。"
     }
   ],
   "tools": [
@@ -101,7 +96,7 @@
     },
     {
       "id": "subsld",
-      "category": "explore",
+      "category": "stations",
       "kind": "pages",
       "featured": true,
       "title": "SubSLD 変電所単線結線ビュー",
@@ -117,22 +112,23 @@
       "lineage": "stations"
     },
     {
-      "id": "uc_map",
-      "category": "archive",
-      "kind": "pages",
-      "title": "UC before / after 潮流マップ",
-      "summary": "メリットオーダー配分と UC の起動停止計画で、潮流がどう変わるかを島ごとに見比べます。2026-06 時点の断面のままです。",
-      "href": "uc_map.html",
+      "id": "station_changes",
+      "category": "stations",
+      "kind": "report",
+      "title": "変電所の結線の変更箇所（PR #65〜#71）",
+      "summary": "All-AU-Grid と All-EU-Grid の変電所の結線の方法を取り入れ、各社の公表一覧で正しさを確かめながら直した一連の変更を、変電所ごとに前後で見比べます。",
+      "href": "reports/station_changes_2026-10-08.html",
       "tags": [
-        "UC",
-        "比較"
+        "変電所",
+        "介入"
       ],
+      "doc": "docs/MODEL_INTERVENTIONS.md",
       "lineage": "frozen",
-      "lineage_note": "UC の試算を固定した記録。今の正典では作り直していません。"
+      "lineage_note": "PR #65〜#71 の時点の変更箇所を固定した記録です。"
     },
     {
       "id": "ybus_sim",
-      "category": "explore",
+      "category": "compute",
       "kind": "pages",
       "title": "Ybus シミュレータと N-1",
       "summary": "正典モデルからブラウザ内でバスアドミタンス行列を組み立て、枝の入り切りで非零パターンと連結成分がどう変わるかを試せます。N-1 の結果表も同じタブに。",
@@ -147,23 +143,97 @@
       "lineage": "built"
     },
     {
-      "id": "compare",
-      "category": "archive",
-      "kind": "pages",
-      "title": "Before / After 比較",
-      "summary": "最近傍マッチの旧法と、OSM の実ルートで頂点をつなぐ新法を、同期する 2 枚の地図で見比べます。断片化がどれだけ解けたかが一目で分かります。2026-06 の再構築前後のモデルのままです。",
-      "href": "compare.html",
+      "id": "full_pf",
+      "category": "compute",
+      "kind": "cli",
+      "title": "全規模の潮流計算",
+      "summary": "正典モデルから 4 つの同期島を縮約なしで組み立てて AC 潮流を解く本体。介入の ON/OFF はすべてオプションで切り替えられます。",
+      "command": "PYTHONPATH=. python3 scripts/run_full_powerflow_from_db.py --help",
       "tags": [
-        "トポロジ",
-        "比較"
+        "AC 潮流",
+        "pandapower"
       ],
-      "image": "assets/thumbs/compare.jpg",
-      "lineage": "frozen",
-      "lineage_note": "接続の修理の前後を固定した記録。今の正典の地図は「系統図マップ」です。"
+      "doc": "docs/MODEL_INTERVENTIONS.md",
+      "source": "scripts/run_full_powerflow_from_db.py",
+      "lineage": "built"
+    },
+    {
+      "id": "n1",
+      "category": "compute",
+      "kind": "cli",
+      "title": "N-1 全枝スクリーニング",
+      "summary": "LODF で全枝の単一停止を一度に評価（西 6,681 枝を約 2 秒）。橋は孤立負荷つきで別に帳簿化し、上位は本番の AC ソルバで解き直します。",
+      "command": "PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands east west --ac-verify 5",
+      "tags": [
+        "N-1",
+        "LODF"
+      ],
+      "doc": "dataset/03_sensitivity_screening/README.md",
+      "source": "scripts/sensitivity/n1_screening.py",
+      "lineage": "built"
+    },
+    {
+      "id": "scr",
+      "category": "compute",
+      "kind": "cli",
+      "title": "系統強度（SCR）による連系可能量",
+      "summary": "全母線の短絡容量から、インバータ電源の連系可能量を見積もる。熱容量側の制約と比べて、どちらが先に効くかを示します。",
+      "command": "PYTHONPATH=. python3 scripts/sensitivity/ibr_hosting_scr.py --islands west --scr-min 3",
+      "tags": [
+        "短絡容量",
+        "再エネ"
+      ],
+      "source": "scripts/sensitivity/ibr_hosting_scr.py",
+      "lineage": "built"
+    },
+    {
+      "id": "cpf",
+      "category": "compute",
+      "kind": "cli",
+      "title": "連続潮流（P-V カーブ）",
+      "summary": "負荷を増やしていったときの電圧のノーズ点と負荷余裕を地域ごとに求めます。",
+      "command": "PYTHONPATH=. python3 scripts/run_cpf.py --region kansai",
+      "tags": [
+        "電圧安定度"
+      ],
+      "doc": "docs/PV_CURVES.md",
+      "source": "scripts/run_cpf.py",
+      "lineage": "snapped",
+      "lineage_note": "地域ごとのスナップ済みの網で解く旧系譜です。正典（全規模の 4 島）での連続潮流はまだありません。"
+    },
+    {
+      "id": "swing",
+      "category": "compute",
+      "kind": "cli",
+      "title": "多機動揺モデルとモード解析",
+      "summary": "収束した AC 解から古典モデルの発電機を初期化し、電気機械モード・参加率・最大機解列の過渡応答を出します。",
+      "command": "PYTHONPATH=. python3 scripts/gen_swing_modes.py --solve-west net.pkl",
+      "tags": [
+        "動態",
+        "固有値"
+      ],
+      "source": "scripts/gen_swing_modes.py",
+      "image": "assets/thumbs/dynamics.jpg",
+      "lineage": "built"
+    },
+    {
+      "id": "local_tools",
+      "category": "compute",
+      "kind": "local",
+      "title": "ツール実行ダッシュボード",
+      "summary": "変電所の構造図・内部構造の抽出・島の分類・構造 DB と数値 Ybus の再生成をボタンで実行し、成果物を Finder や MATLAB で開けます。",
+      "local_href": "/tools",
+      "tags": [
+        "実行",
+        "MATLAB"
+      ],
+      "source": "src/server/tools_dashboard.py",
+      "lineage": "mixed",
+      "lineage_note": ":8088 の潮流 API には旧系譜を解くものが残っています（全体構造の台帳 A1・B2）。"
     },
     {
       "id": "editor",
-      "category": "verify",
+      "category": "provenance",
       "kind": "pages",
       "title": "接続編集（下書き版）",
       "summary": "モデルが実際に繋いだ結果を本系統と島で色分けし、接続・切断の下書きを作って GitHub issue として提案できます。検証と反映はローカル版で。",
@@ -178,20 +248,177 @@
       "lineage": "built"
     },
     {
-      "id": "review",
-      "category": "archive",
-      "kind": "pages",
-      "title": "接続候補レビュー",
-      "summary": "孤立した島を最寄りの本系統に繋ぐ候補を 1 件ずつ地図で確認して承認・却下。承認は下書きに入るだけで、モデルは変わりません。島判定の作業は 2026-08 で一段落したので、2026-06 の候補のまま止めています。",
-      "href": "review.html",
+      "id": "local_editor",
+      "category": "provenance",
+      "kind": "local",
+      "title": "接続エディタ（完全版）",
+      "summary": "下書きした接続・切断を一時適用して島の数と潮流で検証し、採用したものだけを補完データとして残します。変電所の詳細な単線結線図もここで生成。",
+      "local_href": "/editor?region=tokyo",
       "tags": [
-        "レビュー",
-        "島"
+        "編集",
+        "検証"
       ],
-      "source": "scripts/build_island_candidates.py",
-      "image": "assets/thumbs/review.jpg",
+      "doc": "docs/CONNECTION_EDITOR_DESIGN.md",
+      "source": "src/server/app.py",
+      "lineage": "built"
+    },
+    {
+      "id": "regenerate",
+      "category": "provenance",
+      "kind": "cli",
+      "title": "全出力を単一モデルから再生成",
+      "summary": "地図・潮流・単線図・Ybus などの公開物を、正典モデルから順番に作り直して版を刻印します。ページとモデルの版ずれを無くすための司令塔。",
+      "command": "PYTHONPATH=. python3 scripts/regenerate_all.py --light",
+      "tags": [
+        "再現性"
+      ],
+      "doc": "docs/REPRODUCIBILITY.md",
+      "source": "scripts/regenerate_all.py",
+      "lineage": "built",
+      "lineage_note": "正典に当てた介入のうち #47（混在電圧の回線）は再生成の手順に入っていません。回すと正典が変わりうるので、全体構造の台帳 B7 を先に読んでください。"
+    },
+    {
+      "id": "circuit_quality",
+      "category": "provenance",
+      "kind": "cli",
+      "is_new": true,
+      "title": "計算回路の品質監査",
+      "summary": "異電圧の母線を直結している線路、変電所の裏付けがない生成変圧器、構造 DB の端子電圧の衝突を全国で数え上げます。設備への書き込みはしません。",
+      "command": "PYTHONPATH=. python3 scripts/audit_model_circuit_quality.py",
+      "tags": [
+        "電圧整合",
+        "変圧器"
+      ],
+      "source": "scripts/audit_model_circuit_quality.py",
+      "issue": 53,
+      "lineage": "built"
+    },
+    {
+      "id": "site_review",
+      "category": "provenance",
+      "kind": "cli",
+      "is_new": true,
+      "title": "敷地・端子・母線を分けて調べる接続監査",
+      "summary": "同名設備の断片を、元の OSM 設備・航空写真・保存線形・電圧別母線から調べる。座標を一つに寄せると失われる根拠を残したまま、接続の仮説を比べます。",
+      "command": "python3 scripts/site_connection_review.py summary",
+      "tags": [
+        "変電所",
+        "航空写真"
+      ],
+      "doc": "docs/SITE_CONNECTION_REVIEW_TOOL.md",
+      "source": "scripts/site_connection_review.py",
+      "issue": 53,
+      "lineage": "built"
+    },
+    {
+      "id": "data_quality",
+      "category": "provenance",
+      "kind": "cli",
+      "title": "データ品質の監査",
+      "summary": "名称・事業者・電圧・燃料種別の欠落と仮置き値を層ごとに集計します。エンリッチ前後の比較に使います。",
+      "command": "python3 scripts/audit_data_quality.py",
+      "tags": [
+        "OSM",
+        "欠損"
+      ],
+      "source": "scripts/audit_data_quality.py",
+      "lineage": "base_osm",
+      "lineage_note": "介入前の OSM の GeoJSON（docs/data の地域別の層）の欠落を数えます。正典の監査は「計算回路の品質監査」です。"
+    },
+    {
+      "id": "ybus_diag",
+      "category": "provenance",
+      "kind": "cli",
+      "title": "Ybus の健全性診断",
+      "summary": "孤立母線・対角ゼロ・極端なインピーダンス比など、潮流が解けなくなる行列側の原因を洗い出します。",
+      "command": "PYTHONPATH=. python3 scripts/diagnose_ybus.py",
+      "tags": [
+        "Ybus"
+      ],
+      "doc": "docs/YBUS_SOLVABILITY.md",
+      "source": "scripts/diagnose_ybus.py",
+      "lineage": "snapped",
+      "lineage_note": "地域ごとのスナップ済みの網で診断する旧系譜です。正典の Ybus は「Ybus シミュレータと N-1」で見られます。"
+    },
+    {
+      "id": "ac_diagnosis",
+      "category": "provenance",
+      "kind": "cli",
+      "is_new": true,
+      "title": "AC / Ybus 可解性の診断",
+      "summary": "AC が解けない原因を、Ybus と Jacobian の条件数、Q 制約の遷移、注入量ホモトピーの電圧感度から切り分けます。保存済みの診断結果の要約と整合検査もここから。",
+      "command": "python3 scripts/review_ac_solvability.py summary",
+      "tags": [
+        "AC 非収束",
+        "Ybus"
+      ],
+      "doc": "docs/AC_DIAGNOSIS_TOOL.md",
+      "source": "scripts/review_ac_solvability.py",
+      "issue": 53,
       "lineage": "frozen",
-      "lineage_note": "接続候補のレビューを固定した記録。今の接続の修理は「接続編集」と介入台帳で行います。"
+      "lineage_note": "2026-09-15 に固定した east の網を再生して診断します。今の正典の網ではありません。"
+    },
+    {
+      "id": "download",
+      "category": "use",
+      "kind": "pages",
+      "featured": true,
+      "title": "データセットをダウンロード",
+      "summary": "clone しなくても回る自己完結バンドル。MATPOWER の潮流計算と、Excel で発電機を設定して解く UC がそのまま動きます。",
+      "href": "download.html",
+      "tags": [
+        "MATPOWER",
+        "UC",
+        "zip"
+      ],
+      "doc": "dataset/README.md",
+      "lineage": "built"
+    },
+    {
+      "id": "matpower",
+      "category": "use",
+      "kind": "cli",
+      "title": "MATPOWER ケースを書き出す",
+      "summary": "非同期 4 島の全国ケース（.mat）を正典（built）から生成。4 島とも MATPOWER の既定の許容誤差で AC が解けます（解けない島は 66kV の木を畳み、畳んだ木は meta.json に残す）。発電コスト gencost は含まないので runpf 向けです。",
+      "command": "PYTHONPATH=. python3 scripts/export_matpower_canonical.py",
+      "tags": [
+        "MATPOWER"
+      ],
+      "doc": "dataset/01_matpower_powerflow/README.md",
+      "source": "scripts/export_matpower_canonical.py",
+      "lineage": "built"
+    },
+    {
+      "id": "interop",
+      "category": "use",
+      "kind": "cli",
+      "title": "手元のツールに 1 行で取り込む",
+      "summary": "pandapower（CGMES / MATPOWER）、PyPSA、MATLAB、PSS/E への取り込み手順と、動くデモスクリプト。",
+      "command": "python examples/import_quickstart.py",
+      "tags": [
+        "pandapower",
+        "PyPSA"
+      ],
+      "doc": "docs/INTEROP.md",
+      "source": "examples/import_quickstart.py",
+      "lineage": "snapped",
+      "lineage_note": "読むのは CIM Level 2 と地域別の .mat で、どちらも旧系譜（スナップ済みトポロジ）から書いたものです。正典の全国ケースは「データセットをダウンロード」と「MATPOWER ケースを書き出す」から。"
+    },
+    {
+      "id": "cim",
+      "category": "use",
+      "kind": "cli",
+      "title": "CIM / CGMES で書き出す",
+      "summary": "IEC 61970 CGMES 2.4.15 の EQ/TP/SSH/SV/GL。pandapower cim2pp との往復で電気的に同一であることを回帰テストで確認しています。",
+      "command": "ajgrid cim --regions okinawa --verify",
+      "tags": [
+        "CIM",
+        "CGMES"
+      ],
+      "doc": "docs/CIM_MAPPING.md",
+      "source": "scripts/export_cim_level2.py",
+      "lineage": "snapped",
+      "lineage_note": "CIM は旧系譜（スナップ済みトポロジ）から書き出します。正典から書く CIM はまだありません。"
     },
     {
       "id": "eggc",
@@ -246,230 +473,49 @@
       "lineage": "text"
     },
     {
-      "id": "download",
-      "category": "use",
+      "id": "uc_map",
+      "category": "archive",
       "kind": "pages",
-      "featured": true,
-      "title": "データセットをダウンロード",
-      "summary": "clone しなくても回る自己完結バンドル。MATPOWER の潮流計算と、Excel で発電機を設定して解く UC がそのまま動きます。",
-      "href": "download.html",
+      "title": "UC before / after 潮流マップ",
+      "summary": "メリットオーダー配分と UC の起動停止計画で、潮流がどう変わるかを島ごとに見比べます。2026-06 時点の断面のままです。",
+      "href": "uc_map.html",
       "tags": [
-        "MATPOWER",
         "UC",
-        "zip"
+        "比較"
       ],
-      "doc": "dataset/README.md",
-      "lineage": "built"
-    },
-    {
-      "id": "interop",
-      "category": "use",
-      "kind": "cli",
-      "title": "手元のツールに 1 行で取り込む",
-      "summary": "pandapower（CGMES / MATPOWER）、PyPSA、MATLAB、PSS/E への取り込み手順と、動くデモスクリプト。",
-      "command": "python examples/import_quickstart.py",
-      "tags": [
-        "pandapower",
-        "PyPSA"
-      ],
-      "doc": "docs/INTEROP.md",
-      "source": "examples/import_quickstart.py",
-      "lineage": "snapped",
-      "lineage_note": "読むのは CIM Level 2 と地域別の .mat で、どちらも旧系譜（スナップ済みトポロジ）から書いたものです。正典の全国ケースは「データセットをダウンロード」と「MATPOWER ケースを書き出す」から。"
-    },
-    {
-      "id": "matpower",
-      "category": "use",
-      "kind": "cli",
-      "title": "MATPOWER ケースを書き出す",
-      "summary": "非同期 4 島の全国ケース（.mat）を正典（built）から生成。4 島とも MATPOWER の既定の許容誤差で AC が解けます（解けない島は 66kV の木を畳み、畳んだ木は meta.json に残す）。発電コスト gencost は含まないので runpf 向けです。",
-      "command": "PYTHONPATH=. python3 scripts/export_matpower_canonical.py",
-      "tags": [
-        "MATPOWER"
-      ],
-      "doc": "dataset/01_matpower_powerflow/README.md",
-      "source": "scripts/export_matpower_canonical.py",
-      "lineage": "built"
-    },
-    {
-      "id": "cim",
-      "category": "use",
-      "kind": "cli",
-      "title": "CIM / CGMES で書き出す",
-      "summary": "IEC 61970 CGMES 2.4.15 の EQ/TP/SSH/SV/GL。pandapower cim2pp との往復で電気的に同一であることを回帰テストで確認しています。",
-      "command": "ajgrid cim --regions okinawa --verify",
-      "tags": [
-        "CIM",
-        "CGMES"
-      ],
-      "doc": "docs/CIM_MAPPING.md",
-      "source": "scripts/export_cim_level2.py",
-      "lineage": "snapped",
-      "lineage_note": "CIM は旧系譜（スナップ済みトポロジ）から書き出します。正典から書く CIM はまだありません。"
-    },
-    {
-      "id": "n1",
-      "category": "analyze",
-      "kind": "cli",
-      "title": "N-1 全枝スクリーニング",
-      "summary": "LODF で全枝の単一停止を一度に評価（西 6,681 枝を約 2 秒）。橋は孤立負荷つきで別に帳簿化し、上位は本番の AC ソルバで解き直します。",
-      "command": "PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands east west --ac-verify 5",
-      "tags": [
-        "N-1",
-        "LODF"
-      ],
-      "doc": "dataset/03_sensitivity_screening/README.md",
-      "source": "scripts/sensitivity/n1_screening.py",
-      "lineage": "built"
-    },
-    {
-      "id": "scr",
-      "category": "analyze",
-      "kind": "cli",
-      "title": "系統強度（SCR）による連系可能量",
-      "summary": "全母線の短絡容量から、インバータ電源の連系可能量を見積もる。熱容量側の制約と比べて、どちらが先に効くかを示します。",
-      "command": "PYTHONPATH=. python3 scripts/sensitivity/ibr_hosting_scr.py --islands west --scr-min 3",
-      "tags": [
-        "短絡容量",
-        "再エネ"
-      ],
-      "source": "scripts/sensitivity/ibr_hosting_scr.py",
-      "lineage": "built"
-    },
-    {
-      "id": "cpf",
-      "category": "analyze",
-      "kind": "cli",
-      "title": "連続潮流（P-V カーブ）",
-      "summary": "負荷を増やしていったときの電圧のノーズ点と負荷余裕を地域ごとに求めます。",
-      "command": "PYTHONPATH=. python3 scripts/run_cpf.py --region kansai",
-      "tags": [
-        "電圧安定度"
-      ],
-      "doc": "docs/PV_CURVES.md",
-      "source": "scripts/run_cpf.py",
-      "lineage": "snapped",
-      "lineage_note": "地域ごとのスナップ済みの網で解く旧系譜です。正典（全規模の 4 島）での連続潮流はまだありません。"
-    },
-    {
-      "id": "swing",
-      "category": "analyze",
-      "kind": "cli",
-      "title": "多機動揺モデルとモード解析",
-      "summary": "収束した AC 解から古典モデルの発電機を初期化し、電気機械モード・参加率・最大機解列の過渡応答を出します。",
-      "command": "PYTHONPATH=. python3 scripts/gen_swing_modes.py --solve-west net.pkl",
-      "tags": [
-        "動態",
-        "固有値"
-      ],
-      "source": "scripts/gen_swing_modes.py",
-      "image": "assets/thumbs/dynamics.jpg",
-      "lineage": "built"
-    },
-    {
-      "id": "full_pf",
-      "category": "analyze",
-      "kind": "cli",
-      "title": "全規模の潮流計算",
-      "summary": "正典モデルから 4 つの同期島を縮約なしで組み立てて AC 潮流を解く本体。介入の ON/OFF はすべてオプションで切り替えられます。",
-      "command": "PYTHONPATH=. python3 scripts/run_full_powerflow_from_db.py --help",
-      "tags": [
-        "AC 潮流",
-        "pandapower"
-      ],
-      "doc": "docs/MODEL_INTERVENTIONS.md",
-      "source": "scripts/run_full_powerflow_from_db.py",
-      "lineage": "built"
-    },
-    {
-      "id": "ybus_diag",
-      "category": "audit",
-      "kind": "cli",
-      "title": "Ybus の健全性診断",
-      "summary": "孤立母線・対角ゼロ・極端なインピーダンス比など、潮流が解けなくなる行列側の原因を洗い出します。",
-      "command": "PYTHONPATH=. python3 scripts/diagnose_ybus.py",
-      "tags": [
-        "Ybus"
-      ],
-      "doc": "docs/YBUS_SOLVABILITY.md",
-      "source": "scripts/diagnose_ybus.py",
-      "lineage": "snapped",
-      "lineage_note": "地域ごとのスナップ済みの網で診断する旧系譜です。正典の Ybus は「Ybus シミュレータと N-1」で見られます。"
-    },
-    {
-      "id": "data_quality",
-      "category": "audit",
-      "kind": "cli",
-      "title": "データ品質の監査",
-      "summary": "名称・事業者・電圧・燃料種別の欠落と仮置き値を層ごとに集計します。エンリッチ前後の比較に使います。",
-      "command": "python3 scripts/audit_data_quality.py",
-      "tags": [
-        "OSM",
-        "欠損"
-      ],
-      "source": "scripts/audit_data_quality.py",
-      "lineage": "base_osm",
-      "lineage_note": "介入前の OSM の GeoJSON（docs/data の地域別の層）の欠落を数えます。正典の監査は「計算回路の品質監査」です。"
-    },
-    {
-      "id": "regenerate",
-      "category": "audit",
-      "kind": "cli",
-      "title": "全出力を単一モデルから再生成",
-      "summary": "地図・潮流・単線図・Ybus などの公開物を、正典モデルから順番に作り直して版を刻印します。ページとモデルの版ずれを無くすための司令塔。",
-      "command": "PYTHONPATH=. python3 scripts/regenerate_all.py --light",
-      "tags": [
-        "再現性"
-      ],
-      "doc": "docs/REPRODUCIBILITY.md",
-      "source": "scripts/regenerate_all.py",
-      "lineage": "built",
-      "lineage_note": "正典に当てた介入のうち #47（混在電圧の回線）は再生成の手順に入っていません。回すと正典が変わりうるので、全体構造の台帳 B7 を先に読んでください。"
-    },
-    {
-      "id": "local_editor",
-      "category": "local",
-      "kind": "local",
-      "title": "接続エディタ（完全版）",
-      "summary": "下書きした接続・切断を一時適用して島の数と潮流で検証し、採用したものだけを補完データとして残します。変電所の詳細な単線結線図もここで生成。",
-      "local_href": "/editor?region=tokyo",
-      "tags": [
-        "編集",
-        "検証"
-      ],
-      "doc": "docs/CONNECTION_EDITOR_DESIGN.md",
-      "source": "src/server/app.py",
-      "lineage": "built"
-    },
-    {
-      "id": "local_tools",
-      "category": "local",
-      "kind": "local",
-      "title": "ツール実行ダッシュボード",
-      "summary": "変電所の構造図・内部構造の抽出・島の分類・構造 DB と数値 Ybus の再生成をボタンで実行し、成果物を Finder や MATLAB で開けます。",
-      "local_href": "/tools",
-      "tags": [
-        "実行",
-        "MATLAB"
-      ],
-      "source": "src/server/tools_dashboard.py",
-      "lineage": "mixed",
-      "lineage_note": ":8088 の潮流 API には旧系譜を解くものが残っています（全体構造の台帳 A1・B2）。"
-    },
-    {
-      "id": "station_changes",
-      "category": "verify",
-      "kind": "report",
-      "title": "変電所の結線の変更箇所（PR #65〜#71）",
-      "summary": "All-AU-Grid と All-EU-Grid の変電所の結線の方法を取り入れ、各社の公表一覧で正しさを確かめながら直した一連の変更を、変電所ごとに前後で見比べます。",
-      "href": "reports/station_changes_2026-10-08.html",
-      "tags": [
-        "変電所",
-        "介入"
-      ],
-      "doc": "docs/MODEL_INTERVENTIONS.md",
       "lineage": "frozen",
-      "lineage_note": "PR #65〜#71 の時点の変更箇所を固定した記録です。"
+      "lineage_note": "UC の試算を固定した記録。今の正典では作り直していません。"
+    },
+    {
+      "id": "compare",
+      "category": "archive",
+      "kind": "pages",
+      "title": "Before / After 比較",
+      "summary": "最近傍マッチの旧法と、OSM の実ルートで頂点をつなぐ新法を、同期する 2 枚の地図で見比べます。断片化がどれだけ解けたかが一目で分かります。2026-06 の再構築前後のモデルのままです。",
+      "href": "compare.html",
+      "tags": [
+        "トポロジ",
+        "比較"
+      ],
+      "image": "assets/thumbs/compare.jpg",
+      "lineage": "frozen",
+      "lineage_note": "接続の修理の前後を固定した記録。今の正典の地図は「系統図マップ」です。"
+    },
+    {
+      "id": "review",
+      "category": "archive",
+      "kind": "pages",
+      "title": "接続候補レビュー",
+      "summary": "孤立した島を最寄りの本系統に繋ぐ候補を 1 件ずつ地図で確認して承認・却下。承認は下書きに入るだけで、モデルは変わりません。島判定の作業は 2026-08 で一段落したので、2026-06 の候補のまま止めています。",
+      "href": "review.html",
+      "tags": [
+        "レビュー",
+        "島"
+      ],
+      "source": "scripts/build_island_candidates.py",
+      "image": "assets/thumbs/review.jpg",
+      "lineage": "frozen",
+      "lineage_note": "接続候補のレビューを固定した記録。今の接続の修理は「接続編集」と介入台帳で行います。"
     },
     {
       "id": "codex_before_after",
@@ -512,57 +558,6 @@
       ],
       "lineage": "frozen",
       "lineage_note": "2026-09-15 の版を固定した記録です。"
-    },
-    {
-      "id": "ac_diagnosis",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "AC / Ybus 可解性の診断",
-      "summary": "AC が解けない原因を、Ybus と Jacobian の条件数、Q 制約の遷移、注入量ホモトピーの電圧感度から切り分けます。保存済みの診断結果の要約と整合検査もここから。",
-      "command": "python3 scripts/review_ac_solvability.py summary",
-      "tags": [
-        "AC 非収束",
-        "Ybus"
-      ],
-      "doc": "docs/AC_DIAGNOSIS_TOOL.md",
-      "source": "scripts/review_ac_solvability.py",
-      "issue": 53,
-      "lineage": "frozen",
-      "lineage_note": "2026-09-15 に固定した east の網を再生して診断します。今の正典の網ではありません。"
-    },
-    {
-      "id": "site_review",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "敷地・端子・母線を分けて調べる接続監査",
-      "summary": "同名設備の断片を、元の OSM 設備・航空写真・保存線形・電圧別母線から調べる。座標を一つに寄せると失われる根拠を残したまま、接続の仮説を比べます。",
-      "command": "python3 scripts/site_connection_review.py summary",
-      "tags": [
-        "変電所",
-        "航空写真"
-      ],
-      "doc": "docs/SITE_CONNECTION_REVIEW_TOOL.md",
-      "source": "scripts/site_connection_review.py",
-      "issue": 53,
-      "lineage": "built"
-    },
-    {
-      "id": "circuit_quality",
-      "category": "audit",
-      "kind": "cli",
-      "is_new": true,
-      "title": "計算回路の品質監査",
-      "summary": "異電圧の母線を直結している線路、変電所の裏付けがない生成変圧器、構造 DB の端子電圧の衝突を全国で数え上げます。設備への書き込みはしません。",
-      "command": "PYTHONPATH=. python3 scripts/audit_model_circuit_quality.py",
-      "tags": [
-        "電圧整合",
-        "変圧器"
-      ],
-      "source": "scripts/audit_model_circuit_quality.py",
-      "issue": 53,
-      "lineage": "built"
     }
   ]
 }

@@ -47,3 +47,16 @@ def test_uc_passthrough_and_validation():
     # 未知サブコマンドは usage (rc=2)
     assert cli.cmd_uc(None, ["bogus"]) == 2
     assert cli.cmd_uc(None, []) == 2
+
+
+def test_canonical_entry_points():
+    """入口は正典(built)を読むスクリプトへ。旧系譜は比較用として残す(2026-10-21・A1)。"""
+    p = cli.build_parser()
+    args, rest = p.parse_known_args(["pf", "--islands", "okinawa"])
+    assert args.func is cli.cmd_pf and rest == ["--islands", "okinawa"]
+    args, rest = p.parse_known_args(["matpower", "--islands", "okinawa"])
+    assert args.func is cli.cmd_matpower and rest == ["--islands", "okinawa"]
+    import inspect
+    assert "run_full_powerflow_from_db.py" in inspect.getsource(cli.cmd_pf)
+    assert "export_matpower_canonical.py" in inspect.getsource(cli.cmd_matpower)
+    assert '"to-pf": "scripts/uc_to_pf_built.py"' in inspect.getsource(cli.cmd_uc)

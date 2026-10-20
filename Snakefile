@@ -44,6 +44,7 @@ rule all:
         "docs/data/MODEL_VERSION.json",
         f"{STAMP}/matpower.done",
         f"{STAMP}/cim.done",
+        f"{STAMP}/n1_screening.done",
 
 
 rule light:
@@ -172,6 +173,13 @@ rule national_overview:
     input: f"{STAMP}/full_powerflow.done"
     output: touch(f"{STAMP}/national_overview.done")
     shell: f"{PY} scripts/gen_national_overview_from_full.py"
+
+
+# N-1 全枝スクリーニング(正典の 4 島)と、地図の Ybus / N-1 タブが読む要約(2026-10-21)
+rule n1_screening:
+    input: f"{STAMP}/built_ready.done"
+    output: touch(f"{STAMP}/n1_screening.done")
+    shell: f"{PY} scripts/sensitivity/n1_screening.py --islands hokkaido okinawa east west --ac-verify 5 && {PY} scripts/export_n1_pages.py"
 
 
 rule matpower:

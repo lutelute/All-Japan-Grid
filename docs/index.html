@@ -303,7 +303,8 @@ footer p{margin:0 0 8px;max-width:960px}
   const LOCAL_CMD = 'PYTHONPATH=. uvicorn src.server.app:app --port 8088';
   const KIND_LABEL = {pages: 'ブラウザで動く', local: 'ローカル起動', cli: 'コマンド', report: '成果物'};
   // 画像つきの大きなタイルで見せる分類(ほかは文字だけの小さなタイル)
-  const BIG = new Set(['explore']);
+  // 2 列の大きいカードにする分類(2026-10-21 から無し。絵のあるカードはどの分類でも絵を出す)
+  const BIG = new Set();
   const $ = id => document.getElementById(id);
   const el = (tag, attrs = {}, ...kids) => {
     const n = document.createElement(tag);
@@ -410,7 +411,7 @@ footer p{margin:0 0 8px;max-width:960px}
       el('p', {text: t.summary}),
       t.lineage_note ? el('p', {class: 'lin-note', text: t.lineage_note}) : null);
     const c = el('article', {class: 'tile', 'data-kind': kind},
-      big && t.image ? el('div', {class: 'pic'}, el('img', {src: t.image, alt: '', loading: 'lazy', decoding: 'async'})) : null,
+      t.image ? el('div', {class: 'pic'}, el('img', {src: t.image, alt: '', loading: 'lazy', decoding: 'async'})) : null,
       body);
     const cmd = kind === 'cli' ? t.command : needsLocal ? LOCAL_CMD : null;
     if (needsLocal) body.append(el('div', {class: 'need', text: 'リポジトリを clone してローカルサーバーを起動すると使えます'}));

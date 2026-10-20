@@ -112,6 +112,11 @@ STEPS = [
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
+    # N-1 全枝スクリーニング(正典の 4 島・上位 5 件は AC で解き直す・約 4 分)と、地図の Ybus / N-1 タブが
+    # 読む要約(2026-10-21 から。それまでタブは旧系譜の地域別 N-1 を出していた)
+    ("n1_screening", [sys.executable, "scripts/sensitivity/n1_screening.py",
+                      "--islands", "hokkaido", "okinawa", "east", "west", "--ac-verify", "5"], True),
+    ("export_n1_pages", [sys.executable, "scripts/export_n1_pages.py"], False),
     # 配布する MATPOWER ケース(dist/matpower_national)。2026-10-20 から正典系譜で書く
     ("export_matpower_canonical", [sys.executable, "scripts/export_matpower_canonical.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
