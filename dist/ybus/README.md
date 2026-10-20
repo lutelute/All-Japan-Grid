@@ -52,7 +52,7 @@ B = S.Bbus;                    % DC 行列(makeBdc 出力)
 If = S.Yf * V;                 % 各枝の from 側電流 (枝順 = branch_*.csv)
 % 枝→名前:  S.branch_name{k},  from/to は 0-based の ybus_index
 % バックボーンだけで解析:
-R = load('west_backbone.mat'); % 2779バス。full_index が元行列の行番号
+R = load('west_backbone.mat'); % 2,104 バス(2026-10-20)。full_index が元行列の行番号
 ```
 
 ## 検証(全島・pytest で回帰保証)
