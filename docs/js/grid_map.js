@@ -1150,12 +1150,26 @@ function renderListPanel() {
     });
 }
 
+// 名前順: かな・漢字で始まる名前 → 英字 → 数字・記号で始まる名前(「3/4号 開閉所」「1丁目変電所」
+// のように OSM の名前が欠けた行)。欠けた行が一覧の先頭を占めていた(io 一新 2026-10-21)
+function nameRank(n) {
+    if (/^[\u3040-\u30ff\u3400-\u9fff]/.test(n)) return 0;
+    if (/^[A-Za-z]/.test(n)) return 1;
+    return 2;
+}
+
+function byName(a, b) {
+    return (nameRank(a.name) - nameRank(b.name)) || a.name.localeCompare(b.name, "ja");
+}
+
 function sortListData(arr, mode) {
-    if (mode === "name")    return arr.sort(function (a, b) { return a.name.localeCompare(b.name, "ja"); });
-    if (mode === "voltage") return arr.sort(function (a, b) { return (b.kv || b.mw || 0) - (a.kv || a.mw || 0); });
+    if (mode === "name")    return arr.sort(byName);
+    if (mode === "voltage") return arr.sort(function (a, b) { return ((b.kv || b.mw || 0) - (a.kv || a.mw || 0)) || byName(a, b); });
     if (mode === "area")    return arr.sort(function (a, b) {
-        var d = (a.region || "").localeCompare(b.region || "");
-        return d !== 0 ? d : a.name.localeCompare(b.name, "ja");
+        // 北海道 → 沖縄 の順(地域 ID のアルファベット順ではなく)
+        var ia = REGION_ORDER.indexOf(a.region), ib = REGION_ORDER.indexOf(b.region);
+        var d = (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+        return d !== 0 ? d : byName(a, b);
     });
     return arr;
 }
