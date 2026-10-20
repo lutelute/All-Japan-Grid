@@ -37,8 +37,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ISLANDS = ("hokkaido", "east", "west", "okinawa")
 
 
-def build_canonical_net(island, nodes, edges, freq):
-    """試験(trial_*)と同一の標準セットアップで島ネットを組む。"""
+def build_canonical_net(island, nodes, edges, freq, point_demand=True):
+    """試験(trial_*)と同一の標準セットアップで島ネットを組む。
+
+    point_demand=False は地点需要(data/external の CSV・git の外)を使わない。CI はこれで組む
+    (2026-10-21 実測: 配布値との差は損失 0.05pt・vm 0.003pu 以内、バス数と畳む数は同じ)。
+    """
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
         add_per_component_slacks, allocate_loads, attach_generators,
@@ -48,10 +52,9 @@ def build_canonical_net(island, nodes, edges, freq):
 
     cfg = load_demand_config()
     pref_gwh, _ = pref_zone_gwh(nodes)
-    demand_pd = pdm.load_point_demand()
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
     attach_generators(net, bus_of, nodes, island, attach_mode="cap", stats=True)
-    pinned, _ = pdm.match_buses(net, demand_pd)
+    pinned = pdm.match_buses(net, pdm.load_point_demand())[0] if point_demand else None
     allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
     add_reactive_compensation(net, factor=cfg.get(
         "reactive_compensation_factor", 0.6))
