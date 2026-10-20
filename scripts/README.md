@@ -171,7 +171,7 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 271 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 274 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
 <details><summary><b>取得 / fetch</b>(18 本)</summary>
@@ -205,9 +205,9 @@ python scripts/diagnostics/test_west_reactive.py
 |---|---|
 | `apply_capacity_sources.py` 🔒 | 出典必須DB(generator_capacity_sources.jsonl)の容量を発電所geojsonに反映(出典付き)。 |
 | `apply_circuit_sources.py` 🔒 | 回線数(並列回線 `par`)の出典補完 — 介入#44 候補(2026-09-02). |
-| `apply_connections.py` | E3: 人間が承認した接続を supplement に統合し、島削減をA/B検証する — 2026-06-14。 |
+| `apply_connections.py` 🔒 | E3: 人間が承認した接続を supplement に統合し、島削減をA/B検証する — 2026-06-14。 |
 | `apply_disclosure_v2.py` 🔒 | 孤立変電所の実証接続 v2 — 公表線路・分岐タップ・変圧器実証・同一敷地同定。 |
-| `apply_mixed_voltage_circuits.py` | 併架線の回線数を電圧クラスごとに正す — 介入#45 候補(2026-09-21). |
+| `apply_mixed_voltage_circuits.py` 🔒 | 併架線の回線数を電圧クラスごとに正す — 介入#45 候補(2026-09-21). |
 | `apply_node_hygiene.py` 🔒 | 介入#35 — 偽断片のノード衛生(跨region二重登録の解消). オーナー承認 2026-08-26. |
 | `apply_satellite_connections.py` 🔒 | 介入#36 — 衛星判読クラスの接続適用(1件ずつオーナー承認制). |
 | `apply_tepco_connections.py` 🔒 | TEPCO公表で解決した孤立変電所の接続を、正典を壊さず検証・worklist化する。 |
@@ -347,7 +347,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `run_agc_from_uc.py` | UC → 潮流 → AGC の運用チェーンを1コマンドで通す（論文実証・2026-08-29）. |
 | `run_cpf.py` 🔒 | Continuation Power Flow (CPF) — voltage-stability / PV-curve analysis. |
 | `run_dynamics_alljapan.py` | All-Japan-Grid 電力系統動態解析スイート |
-| `run_full_powerflow_from_db.py` 🔒 | Full-scale national power flow from the canonical built DB (docs/data/built). |
+| `run_full_powerflow_from_db.py` 🔒 | 全規模の潮流計算(正典の 4 つの同期島)の入口 — 実体は src/powerflow/full_from_built.py. |
 | `run_multimachine_national.py` | 全島・全機動揺つき共シミュレーション — AGC30 → AGC-N を系統全体へ(2026-08-29). |
 | `run_n1_contingency.py` | N-1 single-line outage contingency screening per region. |
 | `run_national_powerflow.py` 🔒 | National zonal power flow: solve each synchronous AC island as ONE network |
@@ -376,7 +376,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>書き出し・公開 / export & publish</b>(24 本)</summary>
+<details><summary><b>書き出し・公開 / export & publish</b>(27 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -389,14 +389,17 @@ python scripts/diagnostics/test_west_reactive.py
 | `export_loops.py` 🔒 | ループ(閉路)構造の抽出 — 運用ビュー用(オーナー指示 2026-08-28「ループとかも見れるの?」). |
 | `export_map_tiers_from_built.py` 🔒 | 系統図/エリアタブの地図タイルを **DB更新済み建造モデル** から再生成する (idempotent)。 |
 | `export_matpower_canonical.py` 🔒 | 配布する MATPOWER ケースの出力 — built 正典+標準注入で 4 島. |
+| `export_n1_pages.py` 🔒 | 地図の Ybus / N-1 タブが読む N-1 の要約を、正典の N-1 スクリーニングの報告から書く. |
 | `export_national_matpower.py` | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
 | `export_obs_compare.py` 🔒 | 観測潮流(公表実績の年統計)とモデルの潮流を、線ごとに突き合わせる(潮流マップの「観測と比べる」)。 |
 | `export_obs_local.py` | 線クリック用の観測実績オーバーレイ(年統計=集計値)を生成する. |
 | `export_other_freq_layer.py` | Export the OTHER-frequency equipment of each region as a reference layer. |
 | `export_powerflow_pages.py` 🔒 | Export power flow results as GeoJSON for GitHub Pages visualization. |
+| `export_pulse.py` | 「日本の送電網、いま」用の軽い断面 pulse.json / pulse.png を書き出す. |
 | `export_subsld_pages.py` 🔒 | SubSLD の Pages 機能化 — 全所コンパクトJSONの書き出し(オーナー指示 2026-08-27). |
 | `export_subsld_ways.py` 🔒 | SubSLD Pages ビューア用の実線形エクスポート(オーナーFB 2026-08-27). |
 | `export_substations_geojson.py` | Export enriched substation data from OSM GeoJSON with voltage inference. |
+| `make_dashboard_thumbs.py` 🔒 | ダッシュボードのツールカードに載せる静止画を作る. |
 | `make_dataset_bundle.py` | All-Japan-Grid — 配布用データセットバンドル (.zip) を生成する。 |
 | `make_readme_gifs.py` | README のデモ GIF を、Pages のページをブラウザで操作して撮り直す。 |
 | `realtime_cycle.sh` 🔒 | でんき予報リアルタイムサイクル: 取得 → NOW断面PF → Pages更新(realtime_publish.sh が main へ公開) |

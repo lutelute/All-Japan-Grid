@@ -83,7 +83,7 @@ def load_modules():
     修復オペレータは **what-if スクリプトの関数をそのまま呼ぶ**。ここで書き直すと
     「診断と本番の実装が食い違って二度誤った」を三度目にする。
     """
-    pf = _load(ROOT / "scripts" / "run_full_powerflow_from_db.py", "pf_full")
+    pf = _load(ROOT / "src" / "powerflow" / "full_from_built.py", "pf_full")
     wgv = _load(ROOT / "scripts" / "capacity" / "whatif_gen_voltage.py", "wgv")
     wsd = _load(ROOT / "scripts" / "capacity" / "whatif_stepdown.py", "wsd")
     return pf, wgv, wsd
