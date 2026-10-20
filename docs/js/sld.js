@@ -467,13 +467,8 @@ function _fitAll() {
 }
 
 /* ── Tab hook ────────────────────────────────────────────────────────────*/
-function sldInitTabHook() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (btn.dataset.tab === 'tab-sld') sldShow();
-            else sldHide();
-        });
-    });
-}
-
-document.addEventListener('DOMContentLoaded', sldInitTabHook);
+// タブの切り替えは js/agj_tabs.js。直リンク(map.html#tab-sld)でも起動する(io 一新 2026-10-20)
+AGJTabs.onChange(id => {
+    if (id === 'tab-sld') sldShow();
+    else sldHide();
+});

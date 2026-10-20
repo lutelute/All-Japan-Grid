@@ -3,9 +3,7 @@
   "legacy_pages": {
     "connection_editor.html": "旧・接続候補承認ツール(tokyo のみ)。候補レビュー review.html が後継。過去レポートから参照されるため残置。"
   },
-  "embedded_pages": {
-    "editor.html": "map.html の「接続編集」タブに iframe で入る。src/server/templates/editor.html からの生成物。"
-  },
+  "embedded_pages": {},
   "categories": [
     {
       "id": "explore",
@@ -133,7 +131,7 @@
       "kind": "pages",
       "title": "接続編集（下書き版）",
       "summary": "モデルが実際に繋いだ結果を本系統と島で色分けし、接続・切断の下書きを作って GitHub issue として提案できます。検証と反映はローカル版で。",
-      "href": "map.html#tab-editor",
+      "href": "editor.html",
       "local_href": "/editor?region=tokyo",
       "tags": [
         "編集",

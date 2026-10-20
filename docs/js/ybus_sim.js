@@ -826,23 +826,14 @@
         loadRegion(state.region);
     }
 
-    function setupTabHook() {
-        document.querySelectorAll('.tab-btn[data-tab="tab-ybus"]').forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                // defer so the panel is visible & sized before canvas math
-                setTimeout(function () {
-                    init();
-                    if (state.inited && state.model) { fitView(); draw(); }
-                }, 30);
-            });
-        });
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", setupTabHook);
-    } else {
-        setupTabHook();
-    }
+    // タブの切り替えは js/agj_tabs.js。直リンク(map.html#tab-ybus)でも起動する(io 一新 2026-10-20)
+    AGJTabs.on("tab-ybus", function () {
+        // defer so the panel is visible & sized before canvas math
+        setTimeout(function () {
+            init();
+            if (state.inited && state.model) { fitView(); draw(); }
+        }, 30);
+    });
 
     // expose for debugging / verification
     window.YbusSim = {
