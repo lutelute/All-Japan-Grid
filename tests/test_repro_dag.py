@@ -30,9 +30,10 @@ WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
 # 2026-09-03 追加: fragment_recovery_third_wave（#34追補3）と apply_circuit_sources（#44）。
 # どちらも build_editor_data が基底から作り直すと消えるので、再適用が要る。
 # 2026-10-08 追加: voltage_corrections（#51、OSM の電圧タグの誤りを直す。同じく再適用が要る）。
+# 2026-10-21 追加: mixed_voltage_circuits（#47。正典に当てたのに手順に無かった。#44 より前）。
 CHAIN = ["build_editor_data", "apply_disclosure_v1", "apply_disclosure_v2",
          "route_disclosure", "fragment_recovery", "fragment_recovery_chains",
-         "fragment_recovery_third_wave", "node_hygiene", "apply_circuit_sources",
+         "fragment_recovery_third_wave", "node_hygiene", "mixed_voltage_circuits", "apply_circuit_sources",
          "satellite_connections", "voltage_corrections", "substation_properties", "built_ready"]
 EXPORTS = ["subsld_pages", "map_tiers", "gen_sld", "full_powerflow",
            "national_overview", "matpower", "cim", "static_site",
@@ -153,3 +154,39 @@ def test_verify_workflow_is_light_and_gated():
     assert "--islands east" not in runs and "--islands west" not in runs, \
         "east/west フルは重いので verify.yml に載せない"
     assert d["jobs"]["full-ac-light"]["timeout-minutes"] <= 40
+
+
+# ── 手順の抜けを防ぐ(2026-10-21) ───────────────────────────────────────────
+# #47(apply_mixed_voltage_circuits)は 2026-09-22 に正典へ当てたのに STEPS に無く、regen すると
+# 消える状態だった(docs/reports/regenerate_reproducibility_2026-10-21.md)。正典を書き換える
+# scripts/apply_*.py は全部 STEPS に入れる。入れないものは理由をここに書く。
+NOT_IN_STEPS = {
+    # 旧系譜の data/{region}_lines_supplement.geojson に書く(正典 all.json ではない)。人の承認つきで手で回す
+    "apply_connections.py",
+}
+
+
+def _step_names_and_scripts():
+    src = (ROOT / "scripts" / "regenerate_all.py").read_text(encoding="utf-8")
+    block = src[src.index("STEPS = ["):src.index("\n]\n", src.index("STEPS = ["))]
+    names = re.findall(r'^\s*\("(\w+)",', block, re.M)
+    scripts = set(re.findall(r'"scripts/([\w/]+\.py)"', block))
+    return names, scripts
+
+
+def test_every_apply_script_is_in_steps():
+    _, scripts = _step_names_and_scripts()
+    for p in sorted((ROOT / "scripts").glob("apply_*.py")):
+        if p.name in NOT_IN_STEPS:
+            continue
+        assert p.name in scripts, f"{p.name} が regenerate_all の STEPS に無い(regen で介入が消える)"
+
+
+def test_steps_follow_the_chain_order():
+    """STEPS の介入の段は CHAIN と同じ順(Snakefile と regenerate_all がずれない)。"""
+    names, _ = _step_names_and_scripts()
+    chain = [c for c in CHAIN if c != "built_ready"]   # built_ready は Snakefile だけの合流点
+    missing = [c for c in chain if c not in names]
+    assert not missing, f"STEPS に無い段: {missing}"
+    pos = [names.index(c) for c in chain]
+    assert pos == sorted(pos), chain
