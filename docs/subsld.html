@@ -98,8 +98,11 @@ fetch("data/subsld_pages.json?v=5").then(r=>r.json()).then(j=>{
   el.onclick=()=>{ROLE=el.dataset.role;
    document.querySelectorAll("#roles .role").forEach(x=>x.classList.toggle("on",x===el));
    if(ROLE==="dispatch") showDispatch(); else if(SEL) select(SEL);};});
+ // subsld.html?q=名前 で、その変電所を開く(系統図マップの詳細カードから来る・2026-10-21)
+ const q0=(new URLSearchParams(location.search).get("q")||"").trim();
+ if(q0){$("q").value=q0;FILTER.q=q0}
  render();
- const first=DATA[0];if(first)select(first);
+ const first=DATA[0];if(first&&!(q0&&SEL))select(first);
 });
 
 function filtered(){return DATA.filter(s=>(!FILTER.r||s.r===FILTER.r)&&

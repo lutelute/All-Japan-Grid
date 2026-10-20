@@ -136,14 +136,35 @@ def test_hover_shows_tooltip(browser, site, kind, label):
     page.close()
 
 
-def test_click_line_opens_popup(browser, site):
+def _card(page):
+    page.wait_for_selector(".agj-card:not([hidden])", timeout=3_000)
+    return page.inner_text(".agj-card")
+
+
+def test_click_line_opens_card(browser, site):
     page, _ = _open_map(browser, f"{site}/map.html")
     page.evaluate("() => { map.setView([35.6, 139.6], 9); }")
     page.wait_for_timeout(500)
     xy = page.evaluate(_PICK, ["line"])
     page.mouse.click(xy["x"], xy["y"])
-    page.wait_for_selector(".leaflet-popup-content", timeout=3_000)
-    assert "Voltage" in page.inner_text(".leaflet-popup-content")
+    text = _card(page)
+    assert "送電線" in text and "電圧" in text, text
+    # Esc で閉じる
+    page.keyboard.press("Escape")
+    assert page.evaluate("() => document.querySelector('.agj-card').hidden")
+    page.close()
+
+
+def test_click_substation_card_links_to_subsld(browser, site):
+    page, _ = _open_map(browser, f"{site}/map.html")
+    page.evaluate("() => { map.setView([35.6, 139.6], 9); }")
+    page.wait_for_timeout(500)
+    xy = page.evaluate(_PICK, ["sub"])
+    page.mouse.click(xy["x"], xy["y"])
+    text = _card(page)
+    assert "変電所" in text, text
+    href = page.get_attribute(".agj-card a[href*='subsld.html?q=']", "href")
+    assert href, "SubSLD への入口が無い"
     page.close()
 
 

@@ -3,203 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All-Japan-Grid — ダッシュボード</title>
+<title>All-Japan-Grid — 日本の送電網</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1320'/%3E%3Cpath d='M18 3 7 18h7l-2 11 13-17h-8z' fill='%23e94560'/%3E%3C/svg%3E">
-<meta name="description" content="OpenStreetMap 由来・公表資料で検証した日本全国送電網モデル。地図・潮流・単線結線図・編集・レビュー・ダウンロードの全ツールへの入口。">
+<meta name="description" content="OpenStreetMap 由来・公表資料で検証した日本全国送電網モデル。いまの潮流・地図・単線結線図・編集・レビュー・ダウンロードの全ツールへの入口。">
+<meta property="og:image" content="data/flow_map/pulse.png">
 <!--
-  ツールの入口ページ。表示する数字はすべて data/*.json から読む(直書きしない)。
-    data/tools_catalog.json … ツール一覧の正(手で保守・tests/test_pages_dashboard.py がリンク切れを検査)
-    data/dashboard.json     … 版・モデル規模・介入件数・最新レポート(scripts/build_dashboard_data.py が deploy 時に生成)
-  重い地図は map.html に分離してあるので、このページは地図ライブラリを読まない。
+  ツールの入口ページ(2026-10-21 io 一新: 系統が主役の表紙)。表示する数字はすべて data/*.json から読む(直書きしない)。
+    data/flow_map/pulse.json … 表紙の地図(js/pulse.js)と「いま」の帯(scripts/export_pulse.py が毎時作る)
+    data/tools_catalog.json  … ツール一覧の正(手で保守・tests/test_pages_dashboard.py がリンク切れを検査)
+    data/dashboard.json      … 版・モデル規模・介入件数・最新レポート(scripts/build_dashboard_data.py が deploy 時に生成)
+  カードの画像は assets/thumbs/(scripts/make_dashboard_thumbs.py)。重い地図は map.html に分離してある。
 -->
 <style>
 :root{
-  --bg:#0e1320;--panel:#151c2e;--panel2:#1b2439;--line:#27324a;--line2:#34415e;
-  --tx:#e8ecf4;--mut:#93a0b8;--dim:#6b7893;
-  --acc:#e94560;--link:#6cb6ff;--ok:#3fb950;--warn:#d8a02a;--bad:#f0616d;
-  --v500:#ff5d5d;--v275:#ff9d3c;--v154:#ffd84a;--v66:#5ac8fa;
-  --r:12px;
+  --bg:#f5f5f7;--surface:#fff;--band:#fff;--tile:#f5f5f7;--line:#d2d2d7;
+  --tx:#1d1d1f;--mut:#6e6e73;--dim:#86868b;
+  --accent:#0071e3;--accent-tx:#fff;--bolt:#e94560;
+  --ok:#1a7f37;--warn:#9a6700;--bad:#c9303f;
+  --plate:#0a141b;--wrap:1240px;--gut:48px;
 }
-@media (prefers-color-scheme: light){
-  :root{--bg:#f5f6f9;--panel:#fff;--panel2:#f0f2f7;--line:#dde1ea;--line2:#c6ccda;
-    --tx:#1a2030;--mut:#566079;--dim:#7d869b;--link:#0b62c4;--ok:#1a7f37;--warn:#9a6700;--bad:#c9303f}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#000;--surface:#1d1d1f;--band:#000;--tile:#161617;--line:#38383d;
+    --tx:#f5f5f7;--mut:#a1a1a6;--dim:#86868b;--accent:#2997ff;--ok:#3fb950;--warn:#d8a02a;--bad:#f0616d}
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",Roboto,sans-serif}
-a{color:var(--link);text-decoration:none}
+body{margin:0;background:var(--bg);color:var(--tx);font-size:15px;line-height:1.65;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-code,kbd,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+@media(max-width:1000px){:root{--gut:24px}}
+@media(max-width:600px){:root{--gut:16px}}
 
-/* ── top bar ── */
-.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  padding:10px max(16px,calc((100vw - 1200px)/2));background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--tx)}
-.brand .bolt{color:var(--acc)}
-.pill{font-size:11.5px;padding:2px 9px;border:1px solid var(--line2);border-radius:99px;color:var(--mut);white-space:nowrap}
+/* ── header ── */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 80%,transparent);
+  backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;color:var(--tx);white-space:nowrap}
+.brand:hover{text-decoration:none}
+.brand .bolt{color:var(--bolt)}
+.pill{font-size:12px;padding:2px 10px;border:1px solid var(--line);border-radius:99px;color:var(--mut);white-space:nowrap}
 .pill.local{border-color:var(--ok);color:var(--ok)}
-.top nav{margin-left:auto;display:flex;gap:14px;font-size:13px;flex-wrap:wrap}
+.top nav{margin-left:auto;display:flex;gap:22px;font-size:13.5px}
+.top nav a{color:var(--tx);opacity:.82;white-space:nowrap}
+.top nav a:hover{opacity:1;text-decoration:none}
+@media(max-width:760px){.top nav a.opt{display:none}.top nav{gap:14px}}
+@media(max-width:600px){#ver{display:none}.top nav{gap:12px;font-size:13px}}
 
-main{max-width:1200px;margin:0 auto;padding:0 16px 80px}
+/* ── hero(最初の 1 画面) ── */
+.hero{background:var(--band)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,13fr);gap:48px;align-items:center;
+  min-height:calc(100svh - 56px - 96px);padding-top:28px;padding-bottom:20px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;font-size:13px;font-weight:600;color:var(--mut)}
+.live{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent);animation:ping 2.4s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}80%,100%{box-shadow:0 0 0 9px transparent}}
+.hero h1{margin:0;font-size:clamp(32px,4.1vw,60px);line-height:1.12;letter-spacing:-.025em;font-weight:800;word-break:keep-all;overflow-wrap:anywhere}
+.hero h1 .nw{white-space:nowrap}
+.lead{margin:22px 0 0;max-width:34em;color:var(--mut);font-size:16.5px;line-height:1.8}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:999px;font-weight:600;font-size:14.5px;
+  border:1px solid var(--accent);color:var(--accent);background:transparent;white-space:nowrap;transition:background .15s,color .15s}
+.btn:hover{text-decoration:none;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.btn.primary{background:var(--accent);color:var(--accent-tx)}
+.btn.primary:hover{background:color-mix(in srgb,var(--accent) 88%,#000)}
+.btn:focus-visible,.chip:focus-visible,.tile:focus-within{outline:3px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:2px}
+.hero-map{min-width:0}
+.hero-map .ajg-pulse{width:min(100%,640px,calc(100svh - 56px - 96px - 150px));margin-left:auto}
+/* 表紙の地図: 明るい配色では暗い角丸の板、暗い配色では黒い舞台に溶ける */
+.hero-map .ajgp-stage{border-radius:28px;box-shadow:0 30px 60px -28px rgba(10,20,30,.55)}
+@media (prefers-color-scheme: dark){.hero-map .ajgp-stage{box-shadow:none;border-color:rgba(255,255,255,.04)}}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:28px;min-height:0;padding-top:20px}
+  .hero-map{order:-1}.hero-map .ajg-pulse{width:min(100%,560px);margin:0 auto}
+}
 
-/* ── hero ── */
-.hero{padding:34px 0 8px}
-.hero h1{word-break:keep-all;overflow-wrap:anywhere;margin:0 0 8px;font-size:clamp(22px,3.4vw,32px);line-height:1.25;letter-spacing:-.01em}
-.hero p{margin:0;max-width:760px;color:var(--mut);font-size:14.5px}
-.volt{display:flex;height:3px;border-radius:2px;overflow:hidden;margin:18px 0 0;max-width:220px}
-.volt i{flex:1}.volt i:nth-child(1){background:var(--v500)}.volt i:nth-child(2){background:var(--v275)}
-.volt i:nth-child(3){background:var(--v154)}.volt i:nth-child(4){background:var(--v66)}
-.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-weight:600;font-size:13.5px;
-  border:1px solid var(--line2);color:var(--tx);background:var(--panel)}
-.btn:hover{text-decoration:none;border-color:var(--link)}
-.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn.primary:hover{filter:brightness(1.08)}
+/* ── いまの帯 ── */
+.ticker{border-top:1px solid var(--line)}
+.ticker .wrap{display:flex;gap:10px 34px;flex-wrap:wrap;align-items:center;padding-top:20px;padding-bottom:22px}
+.tk{display:flex;flex-direction:column;min-width:0}
+.tk b{font-size:20px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tk span{font-size:12px;color:var(--mut)}
+.tk.head{flex-direction:row;align-items:center;gap:10px}
+.tk.head b{font-size:14px}
 
-/* ── status tiles ── */
-h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:40px 0 12px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-height:96px}
-.tile .k{font-size:11.5px;color:var(--mut)}
-.tile .v{font-size:24px;font-weight:700;letter-spacing:-.01em;margin:2px 0;font-variant-numeric:tabular-nums}
-.tile .v small{font-size:13px;font-weight:500;color:var(--mut);margin-left:4px}
-.tile .s{font-size:12px;color:var(--mut)}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--dim);vertical-align:1px}
+/* ── 帯の見出し ── */
+.section{padding:88px 0}
+.section.alt{background:var(--band)}
+.sh{text-align:center;margin:0 auto 40px;max-width:44em}
+.sh h2{margin:0;font-size:clamp(28px,3.4vw,44px);line-height:1.2;letter-spacing:-.02em;font-weight:800;word-break:keep-all}
+.sh p{margin:12px 0 0;color:var(--mut);font-size:16px}
+
+/* ── モデルの状態 ── */
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--surface);border-radius:24px;padding:22px 22px 20px;min-height:150px}
+.section.alt .stat{background:var(--tile)}
+.stat .k{font-size:13px;color:var(--mut);font-weight:600}
+.stat .v{font-size:clamp(26px,2.5vw,38px);font-weight:800;letter-spacing:-.02em;margin:6px 0 4px;font-variant-numeric:tabular-nums;line-height:1.1;white-space:nowrap}
+.stat .v small{font-size:14px;font-weight:600;color:var(--mut);margin-left:5px;letter-spacing:0}
+.stat .s{font-size:12.5px;color:var(--mut);line-height:1.55}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--dim);vertical-align:3px}
 .dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
-.isl{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.isl span{font-size:11px;padding:1px 7px;border-radius:6px;border:1px solid var(--line2);color:var(--mut)}
-.isl span.ok{border-color:var(--ok);color:var(--ok)}.isl span.dc{border-color:var(--warn);color:var(--warn)}
+.isl{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.isl span{font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+.isl span.dc{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
 
-/* ── finder ── */
-.finder{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:40px 0 4px}
-.finder input{flex:1 1 260px;min-width:0;padding:10px 14px;border-radius:10px;border:1px solid var(--line2);
-  background:var(--panel);color:var(--tx);font-size:14px}
-.finder input:focus{outline:2px solid var(--link);outline-offset:1px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line2);background:transparent;color:var(--mut);
-  font-size:12.5px;cursor:pointer}
+/* ── ツール ── */
+.finder{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;margin:0 auto 12px;max-width:900px}
+.finder input{flex:1 1 320px;min-width:0;padding:13px 20px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);color:var(--tx);font-size:15px}
+.finder input:focus{outline:3px solid color-mix(in srgb,var(--accent) 40%,transparent);outline-offset:1px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{padding:7px 15px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--tx);font-size:13px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--tx);color:var(--bg);border-color:var(--tx)}
-.count{font-size:12px;color:var(--dim)}
+.count{display:block;text-align:center;font-size:12.5px;color:var(--dim);margin-top:6px}
+.cat{margin-top:56px}
+.cat h3{margin:0;font-size:24px;letter-spacing:-.01em}
+.cat .hint{margin:4px 0 18px;color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.grid.big{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.grid,.grid.big{grid-template-columns:1fr}}
+.tile{position:relative;display:flex;flex-direction:column;background:var(--surface);border-radius:26px;overflow:hidden;
+  transition:transform .25s ease,box-shadow .25s ease}
+.tile:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px rgba(0,0,0,.35)}
+.section.alt .tile{background:var(--tile)}
+.tile .pic{aspect-ratio:16/10;background:var(--plate);overflow:hidden}
+.tile .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tile:hover .pic img{transform:scale(1.03)}
+.tile .body{display:flex;flex-direction:column;gap:8px;padding:20px 22px 22px;flex:1}
+.tile h4{margin:0;font-size:19px;line-height:1.35;letter-spacing:-.01em}
+.grid:not(.big) .tile h4{font-size:16.5px}
+.tile h4 a{color:var(--tx)}
+.tile h4 a::after{content:"";position:absolute;inset:0}          /* タイル全体をクリック可能に */
+.tile h4 a:hover{text-decoration:none}
+.tile p{margin:0;color:var(--mut);font-size:14px;line-height:1.7;flex:1}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.b{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--tile);color:var(--mut)}
+.section.alt .b{background:color-mix(in srgb,var(--tx) 6%,transparent)}
+.b.pages{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.b.local{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.b.cli{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.b.new{background:var(--bolt);color:#fff}
+.more{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;position:relative;z-index:1}
+.cmd{position:relative;z-index:1;display:flex;align-items:stretch;border-radius:12px;background:var(--tile);overflow:hidden}
+.section.alt .cmd{background:color-mix(in srgb,var(--tx) 6%,transparent)}
+.cmd code{flex:1;padding:8px 12px;font-size:12px;overflow-x:auto;white-space:nowrap;color:var(--tx)}
+.cmd button{border:0;background:transparent;color:var(--accent);cursor:pointer;padding:0 12px;font-size:12.5px;font-weight:600}
+.need{position:relative;z-index:1;font-size:12.5px;color:var(--warn)}
+.empty{padding:40px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:24px;margin-top:40px}
 
-/* ── cards ── */
-.cat{margin-top:26px}
-.cat h3{margin:0 0 2px;font-size:16px}
-.cat .hint{margin:0 0 12px;color:var(--mut);font-size:12.5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.card{display:flex;flex-direction:column;gap:8px;background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--r);padding:15px 16px;position:relative;transition:border-color .12s,transform .12s}
-.card:hover{border-color:var(--line2);transform:translateY(-1px)}
-.card.featured{border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
-.card h4{margin:0;font-size:15px;line-height:1.35}
-.card h4 a{color:var(--tx)}
-.card h4 a::after{content:"";position:absolute;inset:0}          /* カード全体をクリック可能に */
-.card p{margin:0;color:var(--mut);font-size:12.8px;flex:1}
-.badges{display:flex;gap:5px;flex-wrap:wrap}
-.b{font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--mut)}
-.b.pages{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
-.b.local{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent)}
-.b.cli{color:var(--link);border-color:color-mix(in srgb,var(--link) 50%,transparent)}
-.b.report{color:var(--mut)}
-.b.new{background:var(--acc);border-color:var(--acc);color:#fff}
-.more{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;position:relative;z-index:1}
-.cmd{position:relative;z-index:1;display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;
-  background:var(--panel2);overflow:hidden}
-.cmd code{flex:1;padding:7px 10px;font-size:11.5px;overflow-x:auto;white-space:nowrap;color:var(--tx)}
-.cmd button{border:0;border-left:1px solid var(--line);background:transparent;color:var(--mut);cursor:pointer;
-  padding:0 10px;font-size:11.5px}
-.cmd button:hover{color:var(--tx)}
-.need{position:relative;z-index:1;font-size:11.5px;color:var(--warn)}
-.empty{padding:30px;text-align:center;color:var(--mut);border:1px dashed var(--line2);border-radius:var(--r)}
-
-/* ── reports ── */
-.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+/* ── レポート ── */
+.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}
 @media(max-width:860px){.cols{grid-template-columns:1fr}}
-h3.sub{margin:0 0 8px;font-size:13px;color:var(--mut);font-weight:600}
-.list{list-style:none;margin:0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
-.list li{display:flex;gap:12px;padding:9px 14px;border-top:1px solid var(--line);font-size:13px}
+h3.sub{margin:0 0 12px;font-size:15px;color:var(--mut);font-weight:700}
+.list{list-style:none;margin:0;padding:6px 0;background:var(--surface);border-radius:24px}
+.section.alt .list{background:var(--tile)}
+.list li{display:flex;gap:14px;padding:11px 22px;font-size:14px;border-top:1px solid color-mix(in srgb,var(--line) 55%,transparent)}
 .list li:first-child{border-top:0}
-.list time{flex:0 0 auto;color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
+.list time{flex:0 0 auto;color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums;padding-top:2px}
+.note{font-size:13px;color:var(--mut);margin:10px 4px 0}
 
-footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12.5px}
-footer p{margin:0 0 8px;max-width:900px}
+footer{padding:40px 0 70px;color:var(--mut);font-size:13px;border-top:1px solid var(--line)}
+footer p{margin:0 0 8px;max-width:960px}
+
+/* 読み込み時にふわっと出す(動きを減らす設定では出さない) */
+@media (prefers-reduced-motion: no-preference){
+  .hero-copy>*,.hero-map{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+  .hero-copy>*:nth-child(2){animation-delay:.06s}.hero-copy>*:nth-child(3){animation-delay:.12s}
+  .hero-copy>*:nth-child(4){animation-delay:.18s}.hero-map{animation-delay:.1s}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion: reduce){.live{animation:none}.tile,.tile .pic img{transition:none}}
 </style>
 </head>
 <body>
 
-<div class="top">
-  <a class="brand" href="./"><span class="bolt">&#9889;</span> All-Japan-Grid</a>
-  <span class="pill" id="ver">v&hellip;</span>
-  <span class="pill local" id="localPill" hidden>&#9679; ローカルサーバー接続中</span>
-  <nav>
-    <a href="#tools">ツール</a>
-    <a href="#reports">レポート</a>
-    <a href="download.html">ダウンロード</a>
-    <a href="https://github.com/lutelute/All-Japan-Grid">GitHub</a>
-  </nav>
-</div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="bolt">&#9889;</span> All-Japan-Grid</a>
+    <span class="pill" id="ver">v&hellip;</span>
+    <span class="pill local" id="localPill" hidden>&#9679; ローカルサーバー接続中</span>
+    <nav aria-label="サイト">
+      <a href="map.html">地図</a>
+      <a href="flow_map.html" class="opt">潮流</a>
+      <a href="#tools">ツール</a>
+      <a href="#reports" class="opt">レポート</a>
+      <a href="download.html">ダウンロード</a>
+      <a href="https://github.com/lutelute/All-Japan-Grid" class="opt">GitHub</a>
+    </nav>
+  </div>
+</header>
 
 <main>
-  <section class="hero">
-    <h1>日本全国の送電網を、<br>出典つきで<wbr>見る・<wbr>確かめる・<wbr>使う。</h1>
-    <p>OpenStreetMap から機械的に組み立て、事業者の公表資料で突き合わせた全国送電網モデルです。
-       地図・潮流・変電所の単線結線図から、接続の編集・レビュー、MATPOWER / CIM での持ち出しまで、
-       すべてのツールにここから入れます。</p>
-    <div class="volt" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="cta">
-      <a class="btn primary" href="map.html">系統図マップを開く</a>
-      <a class="btn" href="flow_map.html">いまの潮流を見る</a>
-      <a class="btn" href="download.html">データを使う</a>
+  <section class="hero" aria-label="日本の送電網、いま">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live" aria-hidden="true"></span><span id="eyebrow">日本の送電網、いま — 毎時更新</span></p>
+        <h1><span class="nw">日本の送電網を、</span><br><span class="nw">出典つきで見る。</span></h1>
+        <p class="lead">OpenStreetMap から機械的に組み立て、事業者の公表資料で突き合わせた全国送電網モデルです。
+          各社が公表した実績需要に合わせて全国の潮流を毎時計算し直し、地図・単線結線図・MATPOWER / CIM で
+          確かめて使えます。</p>
+        <div class="cta">
+          <a class="btn primary" href="map.html">系統図マップを開く</a>
+          <a class="btn" href="flow_map.html">いまの潮流を見る</a>
+          <a class="btn" href="download.html">データを使う</a>
+        </div>
+      </div>
+      <div class="hero-map">
+        <div class="ajg-pulse" data-lang="ja"></div>
+      </div>
+    </div>
+    <div class="ticker" aria-live="polite">
+      <div class="wrap" id="ticker">
+        <div class="tk head"><span class="live" aria-hidden="true"></span><div class="tk"><b>日本の送電網、いま</b><span id="kAge">&nbsp;</span></div></div>
+        <div class="tk"><b id="kTime">&mdash;</b><span>推定した時刻</span></div>
+        <div class="tk"><b id="kDemand">&mdash;</b><span id="kDemandS">需要</span></div>
+        <div class="tk"><b id="kFc">&mdash;</b><span>50 Hz ⇄ 60 Hz（周波数変換所）</span></div>
+        <div class="tk"><b id="kHk">&mdash;</b><span>北海道 ⇄ 本州</span></div>
+      </div>
     </div>
   </section>
 
-  <h2>現在の状態</h2>
-  <div class="tiles" id="tiles" aria-live="polite">
-    <div class="tile"><div class="k">モデル規模</div><div class="v" id="tNodes">&mdash;</div><div class="s" id="tNodesS">読み込み中…</div></div>
-    <div class="tile"><div class="k">最大連結成分</div><div class="v" id="tMain">&mdash;</div><div class="s" id="tMainS">&nbsp;</div></div>
-    <div class="tile"><div class="k">リアルタイム断面</div><div class="v" id="tRt">&mdash;</div><div class="s" id="tRtS">&nbsp;</div></div>
-    <div class="tile"><div class="k">NOW 断面の潮流計算</div><div class="v" id="tPf">&mdash;</div><div class="isl" id="tPfS"></div></div>
-    <div class="tile"><div class="k">介入台帳</div><div class="v" id="tInt">&mdash;</div><div class="s"><a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">モデルに加えた仮定の一覧</a></div></div>
-  </div>
-
-  <div class="finder" id="tools">
-    <input id="q" type="search" placeholder="ツールを探す（例: 潮流、変電所、MATPOWER、N-1）  —  / で移動" aria-label="ツールを探す" autocomplete="off">
-    <div class="chips" id="chips" role="group" aria-label="種類で絞り込む"></div>
-    <span class="count" id="count"></span>
-  </div>
-  <div id="cats"></div>
-
-  <h2 id="reports">レポート</h2>
-  <div class="cols">
-    <div>
-      <h3 class="sub">新しい順</h3>
-      <ul class="list" id="recent"><li>読み込み中…</li></ul>
-      <p class="count" id="repNote" style="margin:8px 2px"></p>
+  <section class="section" aria-labelledby="hStatus">
+    <div class="wrap">
+      <div class="sh">
+        <h2 id="hStatus">モデルの、いまの状態。</h2>
+        <p>数字はすべてデータから読んでいます。潮流と線路定数は推定値で、運用値ではありません。</p>
+      </div>
+      <div class="stats" id="tiles">
+        <div class="stat"><div class="k">モデル規模</div><div class="v" id="tNodes">&mdash;</div><div class="s" id="tNodesS">読み込み中…</div></div>
+        <div class="stat"><div class="k">最大連結成分</div><div class="v" id="tMain">&mdash;</div><div class="s" id="tMainS">&nbsp;</div></div>
+        <div class="stat"><div class="k">リアルタイム断面</div><div class="v" id="tRt">&mdash;</div><div class="s" id="tRtS">&nbsp;</div></div>
+        <div class="stat"><div class="k">いまの断面の潮流計算</div><div class="v" id="tPf">&mdash;</div><div class="isl" id="tPfS"></div></div>
+        <div class="stat"><div class="k">介入台帳</div><div class="v" id="tInt">&mdash;</div><div class="s"><a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">モデルに加えた仮定の一覧 →</a></div></div>
+      </div>
     </div>
-    <div>
-      <h3 class="sub">ブラウザで開ける検証のまとめ</h3>
-      <ul class="list" id="bundles"></ul>
-      <p class="count" style="margin:8px 2px">Before / After の地図・航空写真・試して駄目だった案まで、レビューの過程をそのまま収めたページです。</p>
+  </section>
+
+  <section class="section alt" id="tools" aria-labelledby="hTools">
+    <div class="wrap">
+      <div class="sh">
+        <h2 id="hTools">見る・確かめる・使う。</h2>
+        <p>ブラウザだけで動く地図から、手元の解析ツールへの持ち出しまで。</p>
+      </div>
+      <div class="finder">
+        <input id="q" type="search" placeholder="ツールを探す（例: 潮流、変電所、MATPOWER、N-1）  —  / で移動" aria-label="ツールを探す" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="種類で絞り込む"></div>
+      </div>
+      <span class="count" id="count"></span>
+      <div id="cats"></div>
     </div>
-  </div>
+  </section>
+
+  <section class="section" id="reports" aria-labelledby="hReports">
+    <div class="wrap">
+      <div class="sh">
+        <h2 id="hReports">判断の根拠を、残しています。</h2>
+        <p>うまくいった変更も、試して駄目だった案も、レポートとして記録しています。</p>
+      </div>
+      <div class="cols">
+        <div>
+          <h3 class="sub">新しい順</h3>
+          <ul class="list" id="recent"><li>読み込み中…</li></ul>
+          <p class="note" id="repNote"></p>
+        </div>
+        <div>
+          <h3 class="sub">ブラウザで開ける検証のまとめ</h3>
+          <ul class="list" id="bundles"></ul>
+          <p class="note">Before / After の地図・航空写真・試して駄目だった案まで、レビューの過程をそのまま収めたページです。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer>
-    <p><strong>免責:</strong> 本データは公開されている OpenStreetMap を機械処理して生成したもので、電力会社・送配電事業者・政府機関の公式情報ではありません。
-       線路定数や需要の多くは合成値です。接続可否・運用可否・安定度の判定には使えません。詳しくは
-       <a href="https://github.com/lutelute/All-Japan-Grid#disclaimer--免責事項">README の免責事項</a> と
-       <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">介入台帳</a> を参照してください。</p>
-    <p>データ: <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a> &copy; OpenStreetMap contributors ／ コード: MIT ／
-       <span id="gen"></span></p>
+    <div class="wrap">
+      <p><strong>免責:</strong> 本データは公開されている OpenStreetMap を機械処理して生成したもので、電力会社・送配電事業者・政府機関の公式情報ではありません。
+         線路定数や需要の多くは合成値です。接続可否・運用可否・安定度の判定には使えません。詳しくは
+         <a href="https://github.com/lutelute/All-Japan-Grid#disclaimer--免責事項">README の免責事項</a> と
+         <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/MODEL_INTERVENTIONS.md">介入台帳</a> を参照してください。</p>
+      <p>データ: <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a> &copy; OpenStreetMap contributors ／ コード: MIT ／
+         <span id="gen"></span></p>
+    </div>
   </footer>
 </main>
 
+<script src="js/pulse.js" defer></script>
 <script>
 (() => {
   'use strict';
   const GH = 'https://github.com/lutelute/All-Japan-Grid/blob/main/';
   const LOCAL_CMD = 'PYTHONPATH=. uvicorn src.server.app:app --port 8088';
   const KIND_LABEL = {pages: 'ブラウザで動く', local: 'ローカル起動', cli: 'コマンド', report: '成果物'};
+  // 画像つきの大きなタイルで見せる分類(ほかは文字だけの小さなタイル)
+  const BIG = new Set(['explore']);
   const $ = id => document.getElementById(id);
   const el = (tag, attrs = {}, ...kids) => {
     const n = document.createElement(tag);
@@ -210,12 +311,11 @@ footer p{margin:0 0 8px;max-width:900px}
     for (const c of kids) if (c != null) n.append(c);
     return n;
   };
-  const getJSON = url => fetch(url, {cache: 'no-cache'}).then(r => r.ok ? r.json() : null).catch(() => null);
+  const getJSON = (url, opt = {cache: 'no-cache'}) => fetch(url, opt).then(r => r.ok ? r.json() : null).catch(() => null);
   const fmt = n => (n == null ? '—' : Number(n).toLocaleString('ja-JP'));
 
   let catalog = null, isLocal = false, activeKind = 'all';
 
-  // ── 状態タイル ────────────────────────────────────────────
   function ageText(iso) {
     const t = Date.parse(iso);
     if (Number.isNaN(t)) return null;
@@ -224,6 +324,31 @@ footer p{margin:0 0 8px;max-width:900px}
     return {h, txt};
   }
 
+  // ── いまの帯(pulse.json は表紙の地図と同じファイル。ブラウザのキャッシュを共有する) ──
+  function renderTicker(pulse, now) {
+    if (!pulse) return;
+    const d = pulse.date || '', h = pulse.now_hour;
+    const i = (pulse.hours || []).indexOf(h);
+    if (d.length === 8 && h != null) $('kTime').textContent = `${+d.slice(4, 6)}月${+d.slice(6, 8)}日 ${h}:00`;
+    const z = Object.values(pulse.zones_now || {});
+    if (z.length) {
+      $('kDemand').textContent = `${(z.reduce((a, b) => a + b, 0) / 1000).toFixed(1)} GW`;
+      $('kDemandS').textContent = `需要（公表のある ${z.length} エリア）`;
+    }
+    const cross = (key, pos, neg) => {
+      const v = i >= 0 && pulse.cross && pulse.cross[key] ? pulse.cross[key][i] : null;
+      return v == null ? '—' : `${fmt(Math.abs(v))} MW・${v >= 0 ? pos : neg}`;
+    };
+    // cross.fc>0 = 東京→中部(50→60 Hz)、cross.hokuhon>0 = 北海道→東北(scripts/export_day_flows.py)
+    $('kFc').textContent = cross('fc', '東から西へ', '西から東へ');
+    $('kHk').textContent = cross('hokuhon', '北海道から本州へ', '本州から北海道へ');
+    const fetched = pulse.fetched_at || (now && now.fetched_at);
+    const a = fetched && ageText(fetched);
+    // でんき予報の取得から 6 時間を超えたら、毎時の更新が止まっている疑い(docs/REALTIME_OPS.md)
+    if (a) $('kAge').textContent = `${a.txt}に取得` + (a.h > 6 ? '・更新が止まっています' : '');
+  }
+
+  // ── モデルの状態 ──────────────────────────────────────────
   function renderStatus(dash, now, rt) {
     if (dash) {
       $('ver').textContent = 'v' + dash.version;
@@ -261,8 +386,8 @@ footer p{margin:0 0 8px;max-width:900px}
     }
   }
 
-  // ── ツールカード ──────────────────────────────────────────
-  function card(t) {
+  // ── ツールのタイル ────────────────────────────────────────
+  function card(t, big) {
     const kind = t.kind || 'pages';
     const needsLocal = kind === 'local' && !isLocal;
     // ローカル専用ツールは、:8088 で開いているときだけ実リンクにする
@@ -270,27 +395,30 @@ footer p{margin:0 0 8px;max-width:900px}
                : kind === 'cli' ? (t.doc ? GH + t.doc : null)
                : (isLocal && t.local_href) ? t.local_href : t.href;
     const title = href ? el('a', {href, text: t.title}) : el('span', {text: t.title});
-    const c = el('article', {class: 'card' + (t.featured ? ' featured' : ''), 'data-kind': kind},
+    const body = el('div', {class: 'body'},
       el('div', {class: 'badges'},
         el('span', {class: 'b ' + kind, text: KIND_LABEL[kind] || kind}),
         t.is_new ? el('span', {class: 'b new', text: 'NEW'}) : null,
         ...(t.tags || []).slice(0, 2).map(x => el('span', {class: 'b', text: x}))),
       el('h4', {}, title),
       el('p', {text: t.summary}));
+    const c = el('article', {class: 'tile', 'data-kind': kind},
+      big && t.image ? el('div', {class: 'pic'}, el('img', {src: t.image, alt: '', loading: 'lazy', decoding: 'async'})) : null,
+      body);
     const cmd = kind === 'cli' ? t.command : needsLocal ? LOCAL_CMD : null;
-    if (needsLocal) c.append(el('div', {class: 'need', text: 'リポジトリを clone してローカルサーバーを起動すると使えます'}));
+    if (needsLocal) body.append(el('div', {class: 'need', text: 'リポジトリを clone してローカルサーバーを起動すると使えます'}));
     if (cmd) {
       const btn = el('button', {type: 'button', text: 'コピー', 'aria-label': 'コマンドをコピー'});
       btn.addEventListener('click', () => navigator.clipboard.writeText(cmd).then(() => {
         btn.textContent = '✓'; setTimeout(() => (btn.textContent = 'コピー'), 1200);
       }));
-      c.append(el('div', {class: 'cmd'}, el('code', {text: cmd}), btn));
+      body.append(el('div', {class: 'cmd'}, el('code', {text: cmd}), btn));
     }
     const more = [];
     if (t.doc && kind !== 'cli') more.push(el('a', {href: GH + t.doc, text: '説明'}));
     if (t.source) more.push(el('a', {href: GH + t.source, text: 'ソース'}));
     if (t.issue) more.push(el('a', {href: `https://github.com/lutelute/All-Japan-Grid/issues/${t.issue}`, text: `#${t.issue}`}));
-    if (more.length) c.append(el('div', {class: 'more'}, ...more));
+    if (more.length) body.append(el('div', {class: 'more'}, ...more));
     return c;
   }
 
@@ -304,9 +432,10 @@ footer p{margin:0 0 8px;max-width:900px}
     for (const cat of catalog.categories) {
       const ts = tools.filter(t => t.category === cat.id);
       if (!ts.length) continue;
+      const big = BIG.has(cat.id);
       frag.append(el('section', {class: 'cat'},
         el('h3', {text: cat.label}), el('p', {class: 'hint', text: cat.hint || ''}),
-        el('div', {class: 'grid'}, ...ts.map(card))));
+        el('div', {class: 'grid' + (big ? ' big' : '')}, ...ts.map(t => card(t, big)))));
     }
     if (!tools.length) frag.append(el('div', {class: 'empty', text: '該当するツールがありません。語を変えるか、絞り込みを「すべて」に戻してください。'}));
     $('cats').replaceChildren(frag);
@@ -346,8 +475,10 @@ footer p{margin:0 0 8px;max-width:900px}
   Promise.all([
     getJSON('data/tools_catalog.json'), getJSON('data/dashboard.json'),
     getJSON('data/flow_map/now_meta.json'), getJSON('data/realtime/latest.json'),
-  ]).then(([cat, dash, now, rt]) => {
+    getJSON('data/flow_map/pulse.json', {}),
+  ]).then(([cat, dash, now, rt, pulse]) => {
     catalog = cat;
+    renderTicker(pulse, now);
     renderStatus(dash, now, rt);
     renderReports(dash);
     if (cat) { renderChips(); renderTools(); }

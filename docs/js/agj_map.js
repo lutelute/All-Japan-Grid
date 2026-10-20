@@ -83,11 +83,113 @@
         return layer;
     }
 
+    // ── クリックで右に出す詳細カード(2026-10-21 オーナー「クリックしてカード的に表示される機能も」) ──
+    // spec = { kind: "送電線", color: "#ff9d3c", title, sub, rows: [[見出し, 値の HTML]], html, more: 折りたたむ HTML,
+    //          actions: [{ text, href } | { text, onClick }], note }
+    // 文字列は esc() を通してから渡す(OSM の名前に < > が入りうる)。
+
+    function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+    }
+
+    function cardEl(map) {
+        if (map._agjCard) return map._agjCard;
+        var el = L.DomUtil.create("aside", "agj-card", map.getContainer());
+        el.hidden = true;
+        el.setAttribute("role", "dialog");
+        el.setAttribute("aria-label", "選んだ設備の詳細");
+        L.DomEvent.disableClickPropagation(el);
+        L.DomEvent.disableScrollPropagation(el);
+        map.on("click", function () { hideCard(map); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideCard(map); });
+        map._agjCard = el;
+        return el;
+    }
+
+    function showCard(map, spec, selected) {
+        var el = cardEl(map);
+        unselect(map);
+        var h = '<button type="button" class="agj-card-x" aria-label="閉じる">&times;</button>' +
+            '<div class="agj-card-kind"><i style="background:' + esc(spec.color || "#888") + '"></i>' + esc(spec.kind) + "</div>" +
+            '<h3 class="agj-card-title">' + esc(spec.title || "名称なし") + "</h3>" +
+            (spec.sub ? '<div class="agj-card-sub">' + spec.sub + "</div>" : "");
+        if (spec.rows && spec.rows.length) {
+            h += '<dl class="agj-card-rows">' + spec.rows.map(function (r) {
+                return "<dt>" + esc(r[0]) + "</dt><dd>" + r[1] + "</dd>";
+            }).join("") + "</dl>";
+        }
+        if (spec.html) h += '<div class="agj-card-html">' + spec.html + "</div>";
+        if (spec.more) h += '<details class="agj-card-more"><summary>' + esc(spec.moreTitle || "詳しく") + "</summary>" + spec.more + "</details>";
+        if (spec.actions && spec.actions.length) {
+            h += '<div class="agj-card-actions">' + spec.actions.map(function (a, i) {
+                return a.href
+                    ? '<a class="agj-card-btn' + (i === 0 ? " primary" : "") + '" href="' + esc(a.href) + '"' + (a.blank ? ' target="_blank" rel="noopener"' : "") + ">" + esc(a.text) + "</a>"
+                    : '<button type="button" class="agj-card-btn' + (i === 0 ? " primary" : "") + '" data-i="' + i + '">' + esc(a.text) + "</button>";
+            }).join("") + "</div>";
+        }
+        if (spec.note) h += '<p class="agj-card-note">' + spec.note + "</p>";
+        el.innerHTML = h;
+        el.querySelector(".agj-card-x").addEventListener("click", function () { hideCard(map); });
+        el.querySelectorAll("button[data-i]").forEach(function (b) {
+            b.addEventListener("click", function () { spec.actions[+b.dataset.i].onClick(); });
+        });
+        el.hidden = false;
+        el.scrollTop = 0;
+        if (selected) select(map, selected);
+        map.fire("agjcardopen");
+    }
+
+    function hideCard(map) {
+        if (!map._agjCard || map._agjCard.hidden) return;
+        map._agjCard.hidden = true;
+        unselect(map);
+        map.fire("agjcardclose");
+    }
+
+    // 選んだ線・点を目立たせ、カードを閉じたら元に戻す
+    function select(map, layer) {
+        if (!layer.setStyle || !layer.options) return;
+        var o = layer.options;
+        map._agjSel = { layer: layer, style: { weight: o.weight, color: o.color, opacity: o.opacity, radius: o.radius } };
+        if (layer.setRadius) {
+            layer.setRadius((o.radius || 4) + 3);
+            layer.setStyle({ color: "#ffffff", weight: 2.5 });
+        } else {
+            layer.setStyle({ weight: (o.weight || 2) + 4, opacity: 1 });
+        }
+        // 最前面に出すのは点だけ(線を上げると、閉じたあとも点の上に残ってホバーを塞ぐ)
+        if (layer.setRadius && layer.bringToFront) layer.bringToFront();
+    }
+
+    function unselect(map) {
+        var s = map._agjSel;
+        if (!s) return;
+        if (s.layer.setRadius && s.style.radius != null) s.layer.setRadius(s.style.radius);
+        s.layer.setStyle({ weight: s.style.weight, color: s.style.color, opacity: s.style.opacity });
+        map._agjSel = null;
+    }
+
+    /* クリックで詳細カードを出す。specFn(layer) が spec を返す。 */
+    function bindCard(layer, specFn) {
+        layer.on("click", function (e) {
+            L.DomEvent.stopPropagation(e);
+            var map = layer._map || (e.target && e.target._map);
+            if (map) showCard(map, specFn(layer), layer);
+        });
+        return layer;
+    }
+
     global.AGJMap = {
         TOLERANCE: TOLERANCE,
         createMap: createMap,
         renderer: renderer,
         raise: raise,
         bindInfo: bindInfo,
+        esc: esc,
+        bindCard: bindCard,
+        showCard: showCard,
+        hideCard: hideCard,
     };
 })(window);

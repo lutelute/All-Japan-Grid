@@ -114,3 +114,9 @@ def test_dashboard_data_generator():
         assert (ROOT / r["path"]).is_file()
     for b in data["bundles"]:
         assert (DOCS / b["href"]).is_file()
+
+
+@pytest.mark.parametrize("tool", [t for t in TOOLS if t.get("image")], ids=_id)
+def test_card_image_exists(tool):
+    """カードの画像(docs/ 相対・scripts/make_dashboard_thumbs.py が作る)が実在する。"""
+    assert (DOCS / tool["image"]).is_file(), tool["image"]

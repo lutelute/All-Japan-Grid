@@ -1,5 +1,5 @@
 {
-  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。",
+  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。 image はカードの上に出す 16:10 の静止画(docs/ からの相対・scripts/make_dashboard_thumbs.py が作る)。",
   "legacy_pages": {
     "connection_editor.html": "旧・接続候補承認ツール(tokyo のみ)。候補レビュー review.html が後継。過去レポートから参照されるため残置。"
   },
@@ -60,7 +60,8 @@
         "潮流",
         "Ybus"
       ],
-      "doc": "docs/WHAT_TO_CHECK.md"
+      "doc": "docs/WHAT_TO_CHECK.md",
+      "image": "assets/thumbs/map.jpg"
     },
     {
       "id": "flow_map",
@@ -75,7 +76,8 @@
         "UC",
         "観測照合"
       ],
-      "doc": "docs/REALTIME_OPS.md"
+      "doc": "docs/REALTIME_OPS.md",
+      "image": "assets/thumbs/flow_map.jpg"
     },
     {
       "id": "pulse",
@@ -91,7 +93,8 @@
         "埋め込み"
       ],
       "doc": "docs/REALTIME_OPS.md",
-      "source": "scripts/export_pulse.py"
+      "source": "scripts/export_pulse.py",
+      "image": "assets/thumbs/pulse.jpg"
     },
     {
       "id": "subsld",
@@ -106,7 +109,8 @@
         "単線結線図"
       ],
       "doc": "docs/SUBSLD_METHOD.md",
-      "issue": 49
+      "issue": 49,
+      "image": "assets/thumbs/subsld.jpg"
     },
     {
       "id": "uc_map",
@@ -132,7 +136,8 @@
         "N-1"
       ],
       "doc": "docs/YBUS_SOLVABILITY.md",
-      "source": "docs/js/ybus_sim.js"
+      "source": "docs/js/ybus_sim.js",
+      "image": "assets/thumbs/ybus_sim.jpg"
     },
     {
       "id": "compare",
@@ -144,7 +149,8 @@
       "tags": [
         "トポロジ",
         "比較"
-      ]
+      ],
+      "image": "assets/thumbs/compare.jpg"
     },
     {
       "id": "editor",
@@ -172,7 +178,8 @@
         "レビュー",
         "島"
       ],
-      "source": "scripts/build_island_candidates.py"
+      "source": "scripts/build_island_candidates.py",
+      "image": "assets/thumbs/review.jpg"
     },
     {
       "id": "eggc",
@@ -329,7 +336,8 @@
         "動態",
         "固有値"
       ],
-      "source": "scripts/gen_swing_modes.py"
+      "source": "scripts/gen_swing_modes.py",
+      "image": "assets/thumbs/dynamics.jpg"
     },
     {
       "id": "full_pf",

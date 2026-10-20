@@ -7,17 +7,19 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=40"/>
+    <link rel="stylesheet" href="./css/map_ui.css?v=1"/>
 </head>
 <body>
 
 <div id="sidebar">
-    <h1><span class="icon">&#9889;</span> Japan Power Grid</h1>
+    <h1><a href="./index.html" class="brand-home" title="ダッシュボードへ"><span class="icon">&#9889;</span> All-Japan-Grid</a><span class="h1-sub">系統図</span></h1>
     <!-- 他ツールへの入口はダッシュボード(index.html)に集約。ここには戻り口と常用3本だけ置く -->
     <div class="site-links">
         <a href="./index.html" class="home">&#8592; ダッシュボード</a>
-        <a href="./flow_map.html">潮流マップ</a>
+        <a href="./flow_map.html">潮流</a>
         <a href="./subsld.html">SubSLD</a>
         <a href="./editor.html">接続編集</a>
+        <a href="./download.html">ダウンロード</a>
     </div>
 
     <!-- Tabs -->
@@ -448,144 +450,111 @@
 
     <!-- ━━ Tab 1: 系統図 (voltage coloring) ━━ -->
     <div class="tab-panel active" id="tab-map">
-        <div id="whats-new" class="section" style="padding:10px 16px;background:linear-gradient(90deg,rgba(46,204,113,.10),rgba(52,152,219,.10));border-bottom:1px solid #1f3a4a">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-                <div style="font-size:12px;line-height:1.55">
-                    <a href="./download.html" style="color:#69f0ae;font-weight:bold">📦 データセットDL</a> ·
-                    <a href="https://github.com/lutelute/All-Japan-Grid/releases/latest" target="_blank" rel="noopener" style="color:#5dade2">最新のリリースノート</a>
-                </div>
-                <button onclick="document.getElementById('whats-new').style.display='none'"
-                        style="background:transparent;color:#9fb3c8;border:1px solid #34495e;border-radius:3px;padding:2px 8px;font-size:12px;cursor:pointer">✕</button>
+        <!-- よく使う操作だけを出す(2026-10-21 オーナー「左バーが散らかっている。もっと見やすく」)。
+             select と checkbox は JS(grid_map.js)が読むので残し、押しやすいチップを重ねる -->
+        <div class="ui-sec">
+            <div class="ui-label">電圧</div>
+            <div class="seg" data-for="min-kv" role="group" aria-label="表示する電圧の下限">
+                <button type="button" data-v="500">500</button><button type="button" data-v="275">275+</button><button type="button" data-v="154">154+</button><button type="button" data-v="66">66+</button><button type="button" data-v="0">すべて</button>
             </div>
+            <select id="min-kv" class="seg-select" aria-hidden="true" tabindex="-1">
+                <option value="0">全電圧</option>
+                <option value="66">66 kV +</option>
+                <option value="110">110 kV +</option>
+                <option value="154">154 kV +</option>
+                <option value="275" selected>275 kV +</option>
+                <option value="500">500 kV のみ</option>
+            </select>
         </div>
-        <!-- ① 電圧階級(最上位フィルタ・できるだけ上) -->
-        <div class="section">
-            <h2>電圧階級 Voltage</h2>
-            <div class="filter-row">
-                <label for="min-kv">最低:</label>
-                <select id="min-kv">
-                    <option value="0">全電圧</option>
-                    <option value="66">66 kV +</option>
-                    <option value="110">110 kV +</option>
-                    <option value="154">154 kV +</option>
-                    <option value="275" selected>275 kV +</option>
-                    <option value="500">500 kV のみ</option>
-                </select>
+
+        <div class="ui-sec">
+            <div class="ui-label">表示</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="lines" checked/><span>送電線</span></label>
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="subs" checked/><span>変電所</span></label>
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="plants" checked/><span>発電所</span></label>
             </div>
         </div>
 
-        <!-- ② 表示レイヤ(送電線/変電所/発電所・横並びコンパクト=縦を取らない) -->
-        <div class="section">
-            <h2>表示レイヤ</h2>
-            <div class="layer-toggles compact">
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="lines" checked/><span class="toggle-label">送電線</span></label>
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="subs" checked/><span class="toggle-label">変電所</span></label>
-                <label class="layer-toggle"><input type="checkbox" class="layer-cb" data-layer="plants" checked/><span class="toggle-label">発電所</span></label>
-            </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="plant-filter" style="font-size:11px">発電所種:</label>
-                <select id="plant-filter" class="inline-select">
-                    <option value="utility" selected>Utility</option>
-                    <option value="ipp">+ IPP</option>
-                    <option value="all">All</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- ③ 発電所種別フィルター(電力系) -->
-        <div class="section" id="fuel-filter-section">
-            <h2>発電所種別
-                <span class="fuel-filter-actions">
-                    <button class="btn-fuel-all" onclick="setAllFuelTypes(true)">全選択</button>
-                    <button class="btn-fuel-all" onclick="setAllFuelTypes(false)">全解除</button>
-                </span>
-            </h2>
-            <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
-        </div>
-
-        <!-- ④ 地域(電力系) -->
-        <div class="section">
-            <h2>地域 Regions</h2>
+        <div class="ui-sec">
+            <div class="ui-label">地域</div>
             <div class="region-list" id="region-list"></div>
         </div>
 
-        <!-- ⑤ オーバーレイ(背景・最下部・折りたたみ) -->
-        <details class="ov-details">
-            <summary>地形オーバーレイ <span class="ov-hint">(背景・任意)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/><span class="toggle-label">陰影</span></label>
-                <label class="layer-toggle"><input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/><span class="toggle-label">標高色</span></label>
-                <label class="layer-toggle"><input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/><span class="toggle-label">傾斜</span></label>
+        <details class="ui-more">
+            <summary>発電所の種類</summary>
+            <div class="filter-row">
+                <label for="plant-filter">事業者</label>
+                <select id="plant-filter" class="inline-select">
+                    <option value="utility" selected>電力会社</option>
+                    <option value="ipp">＋ IPP</option>
+                    <option value="all">すべて</option>
+                </select>
             </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="terrain-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="terrain-opacity" min="0" max="100" value="65" oninput="setTerrainOpacity(this.value)" style="flex:1;margin-left:6px">
+            <div class="fuel-filter-actions">
+                <button class="btn-fuel-all" onclick="setAllFuelTypes(true)">すべて選ぶ</button>
+                <button class="btn-fuel-all" onclick="setAllFuelTypes(false)">すべて外す</button>
             </div>
+            <div id="fuel-checkboxes-container" class="fuel-checkboxes"></div>
         </details>
 
-        <!-- ⑥ オーバーレイ: RE適地スコア(最下部・折りたたみ) -->
-        <details class="ov-details">
-            <summary>RE適地スコア <span class="ov-hint">(試験)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-score" onchange="toggleScore(this.checked)"/><span class="toggle-label">スコア表示</span></label>
+        <details class="ui-more">
+            <summary>重ねて見る <span class="ov-hint">地形・適地スコア・系統図との食い違い</span></summary>
+            <div class="ui-sub">地形（背景）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/><span>陰影</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-relief" onchange="toggleTerrain('relief',this.checked)"/><span>標高色</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-slope" onchange="toggleTerrain('slope',this.checked)"/><span>傾斜</span></label>
             </div>
-            <div class="filter-row" style="margin-top:7px">
-                <label for="score-opacity" style="font-size:11px">透過度:</label>
-                <input type="range" id="score-opacity" min="0" max="100" value="50" oninput="setScoreOpacity(this.value)" style="flex:1;margin-left:6px">
+            <div class="filter-row">
+                <label for="terrain-opacity">透過度</label>
+                <input type="range" id="terrain-opacity" min="0" max="100" value="65" oninput="setTerrainOpacity(this.value)">
             </div>
-        </details>
-
-        <!-- ⑦ オーバーレイ: 系統図突合(open-keitouzu 食い違い候補・未採用) -->
-        <details class="ov-details">
-            <summary>系統図突合 <span class="ov-hint" id="keitouzu-ov-hint">(未採用・裁定待ち)</span></summary>
-            <div class="layer-toggles compact" style="margin-top:8px">
-                <label class="layer-toggle"><input type="checkbox" id="chk-keitouzu" onchange="toggleKeitouzu(this.checked)"/><span class="toggle-label"><span style="color:#e91e63">━ ━</span> 系統図のみの接続</span></label>
+            <div class="ui-sub">再エネ適地スコア <span class="ov-hint">試験</span></div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-score" onchange="toggleScore(this.checked)"/><span>スコアを表示</span></label>
             </div>
-            <p style="font-size:10.5px;color:#888;margin:6px 0 0">
-                公式系統図(<a href="https://github.com/ibarapascal/open-keitouzu" target="_blank" rel="noopener">open-keitouzu</a>, CC BY 4.0)は接続を主張するが本モデルで未再現の裁定待ち候補。直線描画=実経路ではない。
+            <div class="filter-row">
+                <label for="score-opacity">透過度</label>
+                <input type="range" id="score-opacity" min="0" max="100" value="50" oninput="setScoreOpacity(this.value)">
+            </div>
+            <div class="ui-sub">系統図との突き合わせ <span class="ov-hint" id="keitouzu-ov-hint">未採用・裁定待ち</span></div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-keitouzu" onchange="toggleKeitouzu(this.checked)"/><span><span style="color:#e91e63">━ ━</span> 系統図のみの接続</span></label>
+            </div>
+            <p class="ui-note">
+                公式系統図（<a href="https://github.com/ibarapascal/open-keitouzu" target="_blank" rel="noopener">open-keitouzu</a>, CC BY 4.0）は接続を主張するが、本モデルで未再現の裁定待ち候補。直線で描いており、実際の経路ではない。
             </p>
         </details>
     </div>
 
     <!-- ━━ Tab 2: エリア (region coloring) ━━ -->
     <div class="tab-panel" id="tab-area">
-        <div class="section">
-            <h2>Area Color Mode</h2>
-            <p class="area-desc">送電線・変電所を地理的エリア（電力会社管轄の目安）ごとに色分けします。境界は概略で、連系線付近は厳密な管轄と一致しない場合があります。</p>
+        <p class="ui-lead">送電線・変電所を、エリア（電力会社の管轄の目安）ごとに色分けします。境界は概略で、連系線の近くは実際の管轄と合わないことがあります。</p>
+        <div class="ui-sec">
+            <div class="ui-label">電圧</div>
+            <div class="seg" data-for="area-min-kv" role="group" aria-label="表示する電圧の下限">
+                <button type="button" data-v="500">500</button><button type="button" data-v="275">275+</button><button type="button" data-v="154">154+</button><button type="button" data-v="66">66+</button><button type="button" data-v="0">すべて</button>
+            </div>
+            <select id="area-min-kv" class="seg-select" aria-hidden="true" tabindex="-1">
+                <option value="0" selected>All voltages</option>
+                <option value="66">66 kV+</option>
+                <option value="110">110 kV+</option>
+                <option value="154">154 kV+</option>
+                <option value="275">275 kV+</option>
+                <option value="500">500 kV only</option>
+            </select>
         </div>
-        <div class="section">
-            <h2>Layers</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="lines" checked/>
-                    <span class="toggle-label">送電線 Lines</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="subs" checked/>
-                    <span class="toggle-label">変電所 Substations</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" class="layer-cb" data-layer="plants" checked/>
-                    <span class="toggle-label">発電所 Plants</span>
-                </label>
+        <div class="ui-sec">
+            <div class="ui-label">表示</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="lines" checked/><span>送電線</span></label>
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="subs" checked/><span>変電所</span></label>
+                <label class="chip-cb"><input type="checkbox" class="layer-cb" data-layer="plants" checked/><span>発電所</span></label>
             </div>
         </div>
-        <div class="section">
-            <h2>Voltage</h2>
-            <div class="filter-row">
-                <label for="area-min-kv">Min:</label>
-                <select id="area-min-kv">
-                    <option value="0" selected>All voltages</option>
-                    <option value="66">66 kV+</option>
-                    <option value="110">110 kV+</option>
-                    <option value="154">154 kV+</option>
-                    <option value="275">275 kV+</option>
-                    <option value="500">500 kV only</option>
-                </select>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Regions</h2>
+        <div class="ui-sec">
+            <div class="ui-label">地域</div>
             <div class="region-list" id="area-region-list"></div>
         </div>
     </div>
@@ -663,15 +632,16 @@
     </div>
 
     <!-- ━━ Download section (always visible at bottom of sidebar) ━━ -->
-    <div class="section download-section">
-        <h2>Download</h2>
+    <details class="ui-more download-section">
+        <summary>書き出す <span class="ov-hint">CSV・方法論</span></summary>
         <div class="download-btns">
-            <a class="btn-download" href="./assets/WHITEPAPER.md" download style="text-align:center;text-decoration:none;">Whitepaper (方法論)</a>
-            <button class="btn-download" id="dl-generators">Generators (発電所)</button>
-            <button class="btn-download" id="dl-substations">Substations (変電所)</button>
-            <button class="btn-download" id="dl-lines">Lines (送電線)</button>
+            <button class="btn-download" id="dl-lines">送電線（CSV）</button>
+            <button class="btn-download" id="dl-substations">変電所（CSV）</button>
+            <button class="btn-download" id="dl-generators">発電所（CSV）</button>
+            <a class="btn-download" href="./assets/WHITEPAPER.md" download>方法論（Whitepaper）</a>
         </div>
-    </div>
+        <p class="ui-note">データセット一式（MATPOWER・CIM など）は <a href="./download.html">ダウンロード</a> から。</p>
+    </details>
 
     <div id="status-bar"><span id="status-text">Ready</span></div>
 </div>
@@ -712,9 +682,9 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/agj_map.js?v=1"></script>
+<script src="./js/agj_map.js?v=2"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=38"></script>
+<script src="./js/grid_map.js?v=39"></script>
 <script src="./js/grid_search.js?v=1"></script>
 <script src="./js/sld.js?v=33"></script>
 <script src="./js/ybus_sim.js?v=3"></script>
