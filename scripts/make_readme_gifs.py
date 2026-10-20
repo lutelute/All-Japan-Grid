@@ -207,24 +207,58 @@ TILES_DONE = "document.querySelectorAll('img.leaflet-tile:not(.leaflet-tile-load
 # 各シーンは (page, base_url, rec) を受け取り、準備 → rec.start() → 操作 → rec.stop() の順に進める。
 
 
-MAP_READY = "document.getElementById('status-text').textContent.includes(' lines')"
+# 状態の行は「全国 ・ 275 kV 以上：変電所 … ・ 送電線 … ・ 発電所 …」(2026-10-21 に日本語へ)
+MAP_READY = "document.getElementById('status-text').textContent.includes('送電線 ')"
 
 
 async def set_kv(page: Page, kv: str) -> None:
     """電圧の絞り込みを変え、描き直しが終わるまで待つ(状態表示を目印に書き換えてから新しい表記を待つ)。"""
     await page.evaluate("document.getElementById('status-text').textContent = '__wait__'")
-    await page.select_option("#min-kv", kv)
-    await wait_js(page, f"document.getElementById('status-text').textContent.includes('[{kv} kV+]') && {MAP_READY}")
+    # 電圧の select は区切りボタンの裏に隠してある(css/map_ui.css)ので、値を入れて change を送る
+    await page.evaluate(f"(() => {{ const s = document.getElementById('min-kv'); s.value = '{kv}';"
+                        " s.dispatchEvent(new Event('change', {bubbles: true})); })()")
+    await wait_js(page, f"document.getElementById('status-text').textContent.includes('{kv} kV') && {MAP_READY}")
     await wait_stable(page, "document.getElementById('status-text').textContent")
 
 
+async def set_layer(page: Page, layer: str, on: bool) -> None:
+    """表示の切り替え(チェックボックスはチップの裏に隠してあるので、値を入れて change を送る)。"""
+    await page.evaluate(f"""(() => {{ const c = document.querySelector('.layer-cb[data-layer="{layer}"]');
+        if (c.checked !== {str(on).lower()}) {{ c.checked = {str(on).lower()};
+        c.dispatchEvent(new Event('change', {{bubbles: true}})); }} }})()""")
+
+
+# 画面の中ほどで、まわりに他の点が無い変電所の画面座標(tests/test_pages_map_ui.py の _PICK と同じ考え方)
+PICK_SUB = """() => {
+  const rect = map.getContainer().getBoundingClientRect(), size = map.getSize();
+  const pts = []; substationLayer.eachLayer(m => pts.push(map.latLngToContainerPoint(m.getLatLng())));
+  const ok = p => p.x > size.x * 0.3 && p.x < size.x * 0.6 && p.y > size.y * 0.3 && p.y < size.y * 0.75;
+  for (const p of pts) {
+    if (ok(p) && pts.every(q => q.distanceTo(p) < 0.5 || q.distanceTo(p) > 18)) return {x: rect.left + p.x, y: rect.top + p.y};
+  }
+  return null;
+}"""
+
+
+class _Subs:
+    """scene_map の中で変電所の層を出し入れする(元の locator.check/uncheck と同じ書き方で使う)。"""
+    def __init__(self, page: Page):
+        self.page = page
+
+    async def check(self):
+        await set_layer(self.page, "subs", True)
+
+    async def uncheck(self):
+        await set_layer(self.page, "subs", False)
+
+
 async def scene_map(page: Page, base: str, rec: Recorder) -> None:
-    """全国系統マップ: 電圧を下げて線が増えていく → 首都圏へ寄って変電所を出す → 関西へ。"""
+    """全国系統マップ: 電圧を下げて線が増えていく → 首都圏へ寄って変電所を出す → クリックで詳細カード → 関西へ。"""
     await page.goto(f"{base}/map.html?readme", wait_until="domcontentloaded")
     await wait_js(page, MAP_READY)
     await page.evaluate("toggleListPanel(false)")
-    await page.locator('.layer-cb[data-layer="plants"]').first.uncheck()
-    subs = page.locator('.layer-cb[data-layer="subs"]').first
+    await set_layer(page, "plants", False)
+    subs = _Subs(page)
     await set_kv(page, "66")
     await prewarm(page, [(35.62, 139.75, 9), (34.75, 135.55, 9)])
     await page.evaluate("map.setView([36.4,137.4],6,{animate:false})")
@@ -243,7 +277,7 @@ async def scene_map(page: Page, base: str, rec: Recorder) -> None:
     await page.wait_for_timeout(1800)
     await rec.pause()
     await set_kv(page, "66")
-    await caption(page, "66 kV 以上", f"送電線 {numbers()['lines']:,} 本")
+    await caption(page, "66 kV 以上", f"送電線 {numbers()['map_lines']:,} 本(潮流計算に使う正典の枝)")
     await rec.resume()
     await page.wait_for_timeout(2000)
     await caption(page, "首都圏へ", "")
@@ -251,9 +285,19 @@ async def scene_map(page: Page, base: str, rec: Recorder) -> None:
     await rec.pause()
     await subs.check()
     await page.wait_for_timeout(1500)
-    await caption(page, "変電所も", f"{numbers()['substations']:,} か所。クリックで構内図・単線結線図へ")
+    await caption(page, "変電所も", f"{numbers()['map_subs']:,} か所")
     await rec.resume()
-    await page.wait_for_timeout(2200)
+    await page.wait_for_timeout(2000)
+    xy = await page.evaluate(PICK_SUB)
+    if xy:
+        await caption(page, "クリックで詳細カード", "電圧・つながり・出典。そこから構内図と単線結線図へ")
+        await page.mouse.move(xy["x"] - 30, xy["y"] - 30)
+        await page.mouse.move(xy["x"], xy["y"], steps=6)
+        await page.wait_for_timeout(400)
+        await page.mouse.click(xy["x"], xy["y"])
+        await page.wait_for_timeout(3200)
+        await page.keyboard.press("Escape")
+        await page.wait_for_timeout(500)
     # 首都圏→関西へ直接動かすと描画が追いつかないので、全国表示に戻して(カット)から寄る
     await rec.pause()
     await subs.uncheck()
@@ -275,6 +319,9 @@ async def scene_flow(page: Page, base: str, rec: Recorder) -> None:
     """潮流: UC の発電計画で解いた全国の流れ → 首都圏へ寄る → 1 日を再生 → ⚡NOW(実績需要の断面)。"""
     await page.goto(f"{base}/flow_map.html?readme", wait_until="domcontentloaded")
     await page.wait_for_timeout(14000)
+    # 2026-10-21 からページは「いま」で開く。台本は UC の 1 日から始めるので全国の UC 断面へ
+    await page.click('#tabs .tab[data-k="all"]')
+    await page.wait_for_timeout(6000)
     await prewarm(page, [(36.2, 138.6, 7), (35.75, 139.6, 8)])
     await page.evaluate("map.setView([36.6,137.8],6,{animate:false})")
     await page.wait_for_timeout(3500)
@@ -291,11 +338,14 @@ async def scene_flow(page: Page, base: str, rec: Recorder) -> None:
     await page.wait_for_timeout(5500)
     await page.click("#btnPlay")
     await rec.pause()
+    await page.wait_for_timeout(400)
     await page.click('#tabs .tab[data-k="now"]')
+    # 字幕は切り替えた直後に替える。潮流マップは描画が重く、区間の頭で新しいコマがなかなか届かないため、
+    # 待ったあとに替えると「いま」の画面に「1 日の変化を再生」の字幕が残ったコマが 1 秒ほど入った
+    await caption(page, "⚡NOW — いまの断面", "各社でんき予報の実績需要(毎時取得)に合わせて解き直した潮流", pos="top")
     await page.wait_for_timeout(5000)
     await page.evaluate("map.setView([35.75,139.6],8,{animate:false})")  # NOW は全国表示に戻るので寄り直す
     await page.wait_for_timeout(2500)
-    await caption(page, "⚡NOW — いまの断面", "各社でんき予報の実績需要(毎時取得)に合わせて解き直した潮流", pos="top")
     await rec.resume()
     await page.wait_for_timeout(3200)
     await rec.stop()
@@ -386,7 +436,7 @@ async def scene_dashboard(page: Page, base: str, rec: Recorder) -> None:
     await page.goto(f"{base}/index.html?readme", wait_until="domcontentloaded")
     await page.wait_for_timeout(4000)
 
-    await caption(page, "入口はダッシュボード", "モデルの規模・リアルタイムの鮮度・介入の件数をデータから読む")
+    await caption(page, "入口はダッシュボード", "開いた瞬間に、いまの全国の潮流が光る。数字はすべてデータから読む")
     await page.wait_for_timeout(600)
     await rec.start()
     await page.wait_for_timeout(3000)
@@ -449,11 +499,13 @@ def gif_frames(path: Path, fps: float) -> list[Image.Image]:
 
 
 # 予告編: 各 GIF のどこを何秒使うか(秒)。GIF を撮り直したら見直す
-HERO_CUTS = [("map.gif", 4.6, 8.6), ("flow.gif", 5.2, 8.6), ("subsld.gif", 5.4, 8.6), ("nankai_cinematic.gif", 10.6, 14.6)]
+# 2026-10-21: 最後の場面を南海トラフ(非公開のリポジトリに移した)から、このリポジトリで回せる全系統の動揺へ。
+# 地図はクリックで詳細カードが出る区間を使う。README と io が同じものを見せるため
+HERO_CUTS = [("map.gif", 11.6, 15.4), ("flow.gif", 5.2, 8.6), ("subsld.gif", 5.4, 8.6), ("dynamics_swing.gif", 0.0, 4.4)]
 
 
 def make_hero(fps: float = 10, size: tuple[int, int] = (800, 475)) -> Path:
-    """README の冒頭: 地図 → 潮流 → 変電所の中 → 南海トラフ を数秒ずつつなぐ。"""
+    """README の冒頭: 地図 → 潮流 → 変電所の中 → 動揺 を数秒ずつつなぐ。"""
     out = OUT / "hero.gif"
     with tempfile.TemporaryDirectory() as td:
         n = 0

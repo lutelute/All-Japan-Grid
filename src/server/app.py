@@ -328,6 +328,10 @@ async def run_powerflow_api(req: PowerFlowRequest):
     """Run power flow on a region.
 
     Returns summary with convergence status, losses, and loading.
+
+    旧系譜(2026-10-21 確認): 介入前の地域別 OSM(geojson_loader)から旧い組み立て方で網を作る。
+    どの画面からも呼ばれていない。正典(docs/data/built)の潮流は `ajgrid pf` か
+    ツール実行ダッシュボード(/tools)から(docs/reports/project_structure_2026-10-21.md の B3)。
     """
     from src.server import powerflow_service
 
@@ -387,7 +391,11 @@ class MatpowerExportRequest(BaseModel):
 
 @app.post("/api/matpower/export")
 async def export_matpower(req: MatpowerExportRequest):
-    """Export a region to MATPOWER .mat file."""
+    """Export a region to MATPOWER .mat file.
+
+    旧系譜(上の /api/powerflow/run と同じ網)。配布する MATPOWER ケースは正典から
+    `ajgrid matpower`(scripts/export_matpower_canonical.py)で作る。
+    """
     from src.server import powerflow_service
 
     sub_fc = geojson_loader.get_geojson(req.region, "substations")
