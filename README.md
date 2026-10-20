@@ -19,7 +19,7 @@ map, solves power flow, draws every substation, and lets you stress-test it — 
 assumption is listed in a registry you can read.
 
 <p align="center">
-  <img src="docs/assets/gif/hero.gif" alt="地図 → 潮流 → 変電所の中 → 南海トラフ" width="100%">
+  <img src="docs/assets/gif/hero.gif" alt="地図 → 潮流 → 変電所の中 → 動揺" width="100%">
 </p>
 
 | | |
