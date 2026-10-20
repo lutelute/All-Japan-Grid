@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PF = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+PF = ROOT / "src" / "powerflow" / "full_from_built.py"
 CFG = ROOT / "config" / "line_capacity_calibration.yaml"
 
 

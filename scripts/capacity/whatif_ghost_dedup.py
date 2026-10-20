@@ -171,7 +171,7 @@ def main() -> None:
     date = args.date or subprocess.run(["date", "+%Y-%m-%d"], capture_output=True,
                                        text=True).stdout.strip()
 
-    pf = _load(ROOT / "scripts" / "run_full_powerflow_from_db.py", "pf_full")
+    pf = _load(ROOT / "src" / "powerflow" / "full_from_built.py", "pf_full")
     rs = _load(ROOT / "scripts" / "capacity" / "repair_search.py", "rs_ghost")
     with open(pf.BUILT, encoding="utf-8") as f:
         db = json.load(f)
