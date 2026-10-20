@@ -49,7 +49,8 @@ python 01_matpower_powerflow/solve_pf.py okinawa
 matlab -batch "addpath(genpath('/path/to/matpower8.1')); solve_pf('okinawa')"
 ```
 
-沖縄（最小・単一成分）は綺麗に収束します（損失 ≈ 1.4 %）。詳細と注意は
+**4 島とも AC で収束します**（MATPOWER・pandapower とも。損失は 1.9〜3.0 %）。west は江田島の
+66kV の木 1 本（6 バス）を親バスへ畳んであります。詳細と注意は
 [`01_matpower_powerflow/README.md`](01_matpower_powerflow/README.md)。
 
 ---
@@ -106,11 +107,11 @@ python 03_sensitivity_screening/screen.py west       # 主成分 7,087 バス
 
 このデータセットは**モデル**であり、実系統そのものではありません。使う前に押さえてください。
 
-- **多成分島は MATLAB 版と Python 版で挙動が異なります。** 沖縄以外の島は複数の弱連結成分に
-  分かれ各成分に 1 slack を持ちます。**MATLAB（MATPOWER）は正しく解けます**（実機確認: 北海道は
-  AC 収束・損失 +3.5%）が、**Python（pandapower `from_mpc`）は複数 slack を正しく変換できず**
-  損失が負になる等の不整合が出ます（配布 `.mat` 自体は健全）。Python で大規模島を扱うなら
-  MATLAB 版か、**UC → 潮流連成**を使ってください。「収束＝正しく解けた」ではない点も引き続き留意。
+- **AC 潮流が収束する＝正しく解けた、ではありません。** 配布ケースは fy2023 既定断面の
+  スナップショットで、需要はエリア計を変電所へ合成配賦したもの、線路定数は電圧階級の代表値です。
+  本系統から切れた断片の需要は合成の slack が賄っています。west は解ける形にするため江田島の
+  66kV の木 1 本を畳んであります（`dist/matpower_national/meta.json` の `reduction`）。
+  線ごとの潮流・電圧は個別に引用せず、地域ごとの集計や傾向に使ってください。
 - **UC テンプレートのコスト・起動費・最小出力（Pmin）は例題用の一般既定値**（`config/uc_config.yaml`
   の typical estimates）で、特定発電所の実測値ではありません。実データがあれば Excel 上で
   上書きしてください。発電所名・燃料・定格（Pmax）は OSM 由来の実在フリートです。

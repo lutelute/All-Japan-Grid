@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""正典系譜のMATPOWERケース出力 — built正典+標準注入で4島(+west_reduced).
+"""配布する MATPOWER ケースの出力 — built 正典+標準注入で 4 島.
 
 未解決課題#2(2026-08-20): 従来の配布ケース(export_national_matpower)は
 snapped系譜で、eastが素朴ACで解けなかった。正典系譜(build_island_net+標準
-注入)なら east は素朴NRで収束することを試験で確認済み。west は全部入りだと
-tol10MVA緩解のみのため、**west_reduced**(アンテナ集約・需要保存・帳簿つき)を
-併せて出力する — これは素朴runpfで解ける。
+注入)なら east は素朴NRで収束する。
+
+2026-10-20 からこれを配布物(dist/matpower_national)の正本にした。素朴 NR
+(既定の許容誤差)で解けない島は、電圧降下の見積もりが大きいアンテナの木から
+順に畳み(reduce_antenna.fold_until)、解けた最小の縮約を出す。west は
+線路容量を超える負荷が配られた 66kV の放射状の木 2 本(17 バス)を畳めば
+解ける。畳んだ木は meta.json の reduction に全部残す。緩い許容誤差の解は
+焼き込まない。
 
     PYTHONPATH=. python3 scripts/export_matpower_canonical.py \
-        [--out dist/matpower_canonical] [--islands east west ...]
+        [--out dist/matpower_national] [--islands east west ...]
         [--line-impedance]   # 様式5実測R/X(直結線のみ)を適用(既定OFF)
+        [--no-fold]          # 解けない島も畳まずに DC で出す(介入#52 の無効化)
 
 出力: <out>/<island>.mat + CSV + 名前サイドカー + meta.json
 (書き出し部は export_national_matpower.export_net を共用)。
@@ -73,13 +79,15 @@ def try_ac(net):
 def main() -> int:
     from scripts.export_national_matpower import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
-    from src.powerflow.reduce_antenna import aggregate_antennas
+    from src.powerflow.reduce_antenna import fold_until
 
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--out", default="dist/matpower_canonical")
+    ap.add_argument("--out", default="dist/matpower_national")
     ap.add_argument("--islands", nargs="*", default=list(ISLANDS))
     ap.add_argument("--line-impedance", action="store_true",
                     help="様式5実測R/X(crosswalk直結線)を適用")
+    ap.add_argument("--no-fold", action="store_true",
+                    help="解けない島もアンテナを畳まずに DC で出す(介入#52 の無効化)")
     ap.add_argument("--no-validate", action="store_true")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
@@ -94,10 +102,12 @@ def main() -> int:
                                    check=False).stdout.strip(),
             "lineage": "canonical (built + build_island_net + 標準注入)",
             "demand": "fy2023既定断面",
-            "note": ("素朴NR(既定許容誤差)で解けた島のみ ac_converged=true。"
-                     "west(全部入り)は真解が無いため dc-only で出力し、"
-                     "west_reduced(アンテナ集約・需要保存)を素朴AC可の"
-                     "ケースとして併載する。緩い許容誤差の解は焼き込まない。"),
+            "note": ("素朴NR(既定許容誤差・dc→flat 始動)で解けた島のみ "
+                     "ac_converged=true。解けない島は電圧降下の見積もりが大きい"
+                     "アンテナの木(<100kV の行き止まり)から順に親バスへ畳み"
+                     "(負荷は保存)、解けた最小の縮約を出す。畳んだ木は "
+                     "reduction.trees に根・バス名・負荷・降下つきで全部残す。"
+                     "緩い許容誤差の解は焼き込まない。"),
             "islands": []}
     for island in args.islands:
         freq = ISLAND_FREQ[island]
@@ -110,26 +120,28 @@ def main() -> int:
             li_ledger = apply_disclosed_line_impedance(net0, freq_hz=freq)
             print(f"    line-impedance: {li_ledger['n_applied']}本適用",
                   file=sys.stderr)
-        variants = [(island, net0, None)]
-        if island == "west":
-            netr = copy.deepcopy(net0)
-            red = aggregate_antennas(netr)
-            variants.append((f"{island}_reduced", netr, red))
-        for name, net, red in variants:
-            n, ac_ok, how = try_ac(net)
-            rec = export_net(name, n, ac_ok, args.out,
-                             validate=not args.no_validate,
-                             regions=[island], frequency=freq)
-            rec["solve"] = how
-            rec["build_s"] = round(time.monotonic() - t0, 1)
-            if red:
-                rec["reduction"] = red
-            if args.line_impedance:
-                rec["line_impedance"] = li_ledger["n_applied"]
-            meta["islands"].append(rec)
-            print(f"    {name}: ac={ac_ok}({how}) bus={rec['n_bus']} "
-                  f"rt={rec.get('validation', {}).get('roundtrip')}",
+        n, ac_ok, how = try_ac(net0)
+        red = None
+        if not ac_ok and not args.no_fold:
+            print("    素朴NRで解けない → 降下の大きいアンテナの木から畳む",
                   file=sys.stderr, flush=True)
+            folded, red = fold_until(net0, lambda nt: try_ac(nt)[1])
+            if folded is not None:
+                n, ac_ok, how = try_ac(folded)
+        rec = export_net(island, n, ac_ok, args.out,
+                         validate=not args.no_validate,
+                         regions=[island], frequency=freq)
+        rec["solve"] = how
+        rec["build_s"] = round(time.monotonic() - t0, 1)
+        if red:
+            rec["reduction"] = red
+        if args.line_impedance:
+            rec["line_impedance"] = li_ledger["n_applied"]
+        meta["islands"].append(rec)
+        print(f"    {island}: ac={ac_ok}({how}) bus={rec['n_bus']} "
+              f"folded={red['n_removed'] if red and 'n_removed' in red else 0} "
+              f"rt={rec.get('validation', {}).get('roundtrip')}",
+              file=sys.stderr, flush=True)
     with open(os.path.join(args.out, "meta.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=1, ensure_ascii=False)
     print(f"-> {args.out}/ (meta.json)")

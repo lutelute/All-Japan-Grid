@@ -34,8 +34,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 # バンドルから常に除外するパターン
+# *.bak は介入を当てる前の正典の手元バックアップ(git 非追跡)。v1.7.0 では 3 個・v1.9.0 の
+# 試作では 11 個(31 MB)が紛れていた
 EXCLUDE = ("*.DS_Store", "__pycache__", "*.pyc", "uc_result.xlsx", "uc_result.png",
-           "*_res_bus.csv")
+           "*_res_bus.csv", "*.bak")
 
 # 明示的に含めるパス (ファイル or ディレクトリ)。datapackage.json のリソースは別途自動追加。
 CORE_PATHS = [

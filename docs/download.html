@@ -105,7 +105,7 @@
     <div class="links">
       <a class="chip" href="#download">&#11015; ダウンロードへ</a>
       <a class="chip" href="https://github.com/lutelute/All-Japan-Grid" target="_blank" rel="noopener">&#128187; GitHub リポジトリ</a>
-      <a class="chip" href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.7.0" target="_blank" rel="noopener">&#127991; Release v1.7.0</a>
+      <a class="chip" href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.9.0" target="_blank" rel="noopener">&#127991; Release v1.9.0</a>
       <a class="chip" href="./index.html">&#8592; ダッシュボード</a>
       <a class="chip" href="./map.html">&#128506; インタラクティブ系統図</a>
     </div>
@@ -120,7 +120,7 @@
 
       <div class="card featured">
         <h3>core バンドル</h3>
-        <div class="size">約 23 MB / zip</div>
+        <div class="size">約 16 MB / zip</div>
         <ul>
           <li>MATPOWER 潮流ケース（非同期4島 <code>.mat</code>＋CSV）</li>
           <li>正典 built モデル・GeoJSON・出典DB</li>
@@ -128,14 +128,14 @@
           <li>これだけで潮流計算と UC が回ります</li>
         </ul>
         <div class="spacer"></div>
-        <a class="btn" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.7.0/all-japan-grid-dataset-v1.7.0-core.zip">&#11015; core.zip をダウンロード</a>
-        <div class="hash"><b>SHA256:</b> c6aa606c2a92388825b2e3f0cd94cdbecf398e06cadaeab8587f49527dc3f82f
-          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.7.0/all-japan-grid-dataset-v1.7.0-core.MANIFEST.sha256">MANIFEST</a></div>
+        <a class="btn" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.9.0/all-japan-grid-dataset-v1.9.0-core.zip">&#11015; core.zip をダウンロード</a>
+        <div class="hash"><b>SHA256:</b> 37f62bc9e40f16dadd40bf328f001da7a6c3d5ef2132d6a0e22cb4f778d87f86
+          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.9.0/all-japan-grid-dataset-v1.9.0-core.MANIFEST.sha256">MANIFEST</a></div>
       </div>
 
       <div class="card">
         <h3>full バンドル</h3>
-        <div class="size">約 34 MB / zip</div>
+        <div class="size">約 27 MB / zip</div>
         <ul>
           <li>core の内容すべて</li>
           <li>＋ 数値 Ybus 一式（<code>.mat</code>/<code>.npz</code>/CSV）</li>
@@ -143,16 +143,16 @@
           <li>解析・可視化まで一通り揃えたい人向け</li>
         </ul>
         <div class="spacer"></div>
-        <a class="btn ghost" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.7.0/all-japan-grid-dataset-v1.7.0-full.zip">&#11015; full.zip をダウンロード</a>
-        <div class="hash"><b>SHA256:</b> cc442bb4a40334a876069f255bcc0bb05ac61375f74bb7645ec6f96d60f7b9b4
-          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.7.0/all-japan-grid-dataset-v1.7.0-full.MANIFEST.sha256">MANIFEST</a></div>
+        <a class="btn ghost" href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.9.0/all-japan-grid-dataset-v1.9.0-full.zip">&#11015; full.zip をダウンロード</a>
+        <div class="hash"><b>SHA256:</b> 4847f0ec6a799081db059774ce5523376196667d4c25b8e0b7a3addd95f30a2f
+          &nbsp;·&nbsp; <a href="https://github.com/lutelute/All-Japan-Grid/releases/download/v1.9.0/all-japan-grid-dataset-v1.9.0-full.MANIFEST.sha256">MANIFEST</a></div>
       </div>
 
     </div>
     <div class="note blue">
       <b>展開して依存を入れるだけ。</b>
       <pre style="margin-top:10px"><span class="c"># zip を展開してディレクトリに入る</span>
-unzip all-japan-grid-dataset-v1.7.0-core.zip &amp;&amp; cd all-japan-grid-dataset-v1.7.0-core
+unzip all-japan-grid-dataset-v1.9.0-core.zip &amp;&amp; cd all-japan-grid-dataset-v1.9.0-core
 pip install -r requirements.txt   <span class="c"># pandapower, pulp, openpyxl, scipy, matplotlib ほか</span></pre>
     </div>
   </div>
@@ -169,13 +169,13 @@ pip install -r requirements.txt   <span class="c"># pandapower, pulp, openpyxl, 
         <h3>MATPOWER 潮流（pandapower）</h3>
         <p>配布ケースを読み、AC 潮流（Newton–Raphson）を解きます。MATLAB 不要。</p>
         <pre><span class="k">python</span> dataset/01_matpower_powerflow/solve_pf.py okinawa
-<span class="c"># → AC 収束・損失 1.4%・Vm 0.985–1.010</span></pre>
+<span class="c"># → AC 収束・損失 1.93%・Vm 0.972–1.003（4 島とも AC で解けます）</span></pre>
       </div>
 
       <div class="qs pfm">
         <span class="tag">潮流 · MATLAB</span>
         <h3>MATPOWER 潮流（本体 runpf）</h3>
-        <p>MATLAB＋MATPOWER で同じケースを解きます。多成分島も正しく求解。</p>
+        <p>MATLAB＋MATPOWER で同じケースを解きます。Python 版と同じ数字になります。</p>
         <pre><span class="c">% 先に addpath で MATPOWER を通す</span>
 addpath(genpath(<span class="k">'/path/to/matpower8.1'</span>));
 solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / 'east' / 'west'</span></pre>
@@ -194,8 +194,8 @@ solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / '
 
     <figure>
       <img src="./assets/dataset/uc_dispatch.png" alt="ユニットコミットメントの発電ディスパッチ結果（沖縄フリート・24時間）" loading="lazy">
-      <figcaption>Excel→UC の出力例：沖縄フリート22機の24時間ディスパッチ（Optimal・総コスト1.52億円）。
-        merit order 通り石炭が主力・ピーク時に石油、再エネは下部帯。</figcaption>
+      <figcaption>Excel→UC の出力例：沖縄フリート28機の24時間ディスパッチ（Optimal・総コスト1.98億円）。
+        merit order 通り石炭がベース・LNG が中間・ピーク時に石油、再エネは下部帯。</figcaption>
     </figure>
   </div>
 </section>
@@ -228,10 +228,11 @@ solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / '
       発電機出力は時間断面として厳密に需給調整されたものではありません。
     </div>
     <div class="note">
-      <b>多成分島は MATLAB版と Python版で挙動が異なります。</b> 沖縄以外は複数の弱連結成分に分かれ各成分に slack を持ちます。
-      <b>MATLAB（MATPOWER）は正しく解けます</b>（実機確認：北海道 AC 収束・損失 +3.5%）が、
-      <b>Python（pandapower <code>from_mpc</code>）は複数 slack を正しく変換できず</b>損失が負になる等の不整合が出ます
-      （配布 <code>.mat</code> 自体は健全）。Python で大規模島を扱うなら MATLAB 版か UC→潮流連成を使ってください。
+      <b>4 島とも AC で解けますが、west は江田島の 66kV の木 1 本（6 バス）を親バスへ畳んであります。</b>
+      需要を変電所へ均等に割った配分のせいで、この木には 66kV 1 回線の容量を大きく超える負荷が載り、
+      送れる解が存在しないためです（負荷は保存。帳簿は <code>meta.json</code> の <code>reduction</code>）。
+      本系統から切れた断片の需要は合成の slack が賄い、線路定数は電圧階級の代表値です。
+      線ごとの潮流・電圧は個別に引用しないでください。
     </div>
     <div class="note">
       <b>UC のコスト・起動費・最小出力は例題用の一般既定値</b>で、特定発電所の実測値ではありません。
@@ -245,7 +246,7 @@ solve_pf(<span class="k">'okinawa'</span>)   <span class="c">% or 'hokkaido' / '
     All-Japan-Grid · データセット配布ページ ·
     <a href="https://github.com/lutelute/All-Japan-Grid">GitHub</a> ·
     <a href="https://github.com/lutelute/All-Japan-Grid/tree/main/dataset">dataset/ チュートリアル</a> ·
-    <a href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.7.0">Release v1.7.0</a>
+    <a href="https://github.com/lutelute/All-Japan-Grid/releases/tag/v1.9.0">Release v1.9.0</a>
     <div style="margin-top:8px">© OpenStreetMap contributors（ODbL-1.0）ほか。詳細は各ライセンス表記に従ってください。</div>
   </div>
 </footer>

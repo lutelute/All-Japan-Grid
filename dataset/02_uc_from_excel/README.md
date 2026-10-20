@@ -48,8 +48,8 @@ python run_uc.py                        # → uc_result.xlsx / uc_result.png
   - **summary** シート：ステータス・総コスト・発電機別のエネルギー/起動回数/費用内訳
 - `uc_result.png`：燃料別の積み上げ発電量 + 需要曲線
 
-沖縄フリート（火力 2800 MW）＋ 2000 MW ピーク需要の既定設定では、`status=Optimal` で
-merit order 通り（安い石炭が主力・ピーク時に石油）に解けます。
+沖縄フリート（28 機・火力 2,252 MW）＋ 2000 MW ピーク需要の既定設定では、`status=Optimal`
+（総コスト約 1.98 億円）で merit order 通り（安い石炭がベース・LNG が中間・ピーク時に石油）に解けます。
 
 ## 値の出所（誠実性）
 
