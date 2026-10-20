@@ -171,10 +171,10 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 252 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 271 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
 
-<details><summary><b>取得 / fetch</b>(17 本)</summary>
+<details><summary><b>取得 / fetch</b>(18 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -189,6 +189,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `fetch_osm_refresh.py` | OSM再抽出(2026-08 大工事): lines+substations を osm_id+全タグ付きで再取得する。 |
 | `fetch_plants.py` 🔒 | Fetch power plant (power=plant) data from OpenStreetMap via Overpass API. |
 | `fetch_rei_gridmap.py` | 自然エネルギー財団「洋上風力開発エリア&送電線マップ」のArcGIS層を取得する. |
+| `fetch_same_site_basemaps.py` | Cache public GSI photo tiles for the bounded same-site visual review. |
 | `fetch_subdivided.py` | Subdivided OSM fetcher for large regions (Hokkaido, Tokyo, etc.). |
 | `fetch_system_disclosure.py` | 系統情報の公表（一般送配電事業者10社）を取得する。 |
 | `fetch_transformer_lists.py` | 全国の変電所変圧器台帳(非公開・私的検証用)を各社の「空容量・予想潮流一覧」から作る. |
@@ -226,13 +227,18 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>監査・検証 / audit & validate</b>(13 本)</summary>
+<details><summary><b>監査・検証 / audit & validate</b>(18 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
 | `audit_data_quality.py` 🔒 | Audit data quality across all GeoJSON files. |
 | `audit_mixed_pref_flip.py` 🔒 | 混在県個別化(介入#42)のドライラン監査 — all.json は変更しない(2026-09-02). |
+| `audit_model_circuit_quality.py` | Rebuild and inspect calculation circuits without changing canonical data. |
+| `audit_site_path_overlaps.py` | Find shared saved path segments around reviewed terminals; never delete lines. |
+| `audit_story_connections.py` 🔒 | Read-only, reproducible audit of the built graph and its connection evidence. |
 | `audit_substation_plant_overlap.py` 🔒 | Audit substation/plant classification overlap in OSM-derived GeoJSON data. |
+| `check_before_after_review.py` | Check the offline review UI with Playwright, including every slide and record. |
+| `check_same_site_review.py` | Verify all 27 before/after map views and report controls using Playwright. |
 | `compare_observed_derived_impedance.py` | 公表インピーダンス(observed)でAGJの線路パラメータ推定(derived)を答え合わせする。 |
 | `compare_station_layers.py` 🔒 | SubSLD(構造 DB)と node-breaker 観測層を、同じ変電所ごとに突き合わせる。 |
 | `cross_validate.py` | AGJ ↔ JRP データ整合性クロスバリデーション |
@@ -246,12 +252,14 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>構築・解析 / build & solve</b>(95 本)</summary>
+<details><summary><b>構築・解析 / build & solve</b>(101 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
 | `analyze_transformer_nodes.py` | D3: OSM power=transformer node evidence vs the standard trafo ladder. |
+| `build_ac_review.py` | Render the AC evidence as offline, inspectable Before/After HTML. |
 | `build_alljapan_full.py` | Build FULL-SCALE MATPOWER cases for ALL 10 regions + All-Japan. |
+| `build_before_after_review.py` | Package the complete story/circuit review as an offline HTML report. |
 | `build_connectivity_audit.py` | 建造モデルの連結性を「目で見える」形に落とす監査。 |
 | `build_dashboard_data.py` 🔒 | Pages ダッシュボード(docs/index.html)が読む要約 docs/data/dashboard.json を生成する. |
 | `build_editor_data.py` 🔒 | Pre-render the built (snapped) model view to static JSON for the Pages editor. |
@@ -271,6 +279,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `build_network_geojson.py` | 送電網・変電所・発電所を地図ビュー用に軽量化して書き出す。 |
 | `build_pages_editor.py` 🔒 | GitHub Pages 用エディタ(docs/editor.html)を **単一の正** から派生生成する。 |
 | `build_reports_index.py` | docs/reports/ の索引 INDEX.md を作り直す(月ごと・新しい順)。 |
+| `build_same_site_review.py` | Render the same-site experiment as an offline HTML evidence report. |
 | `build_static_site.py` 🔒 | Build lightweight static GeoJSON files for GitHub Pages. |
 | `build_station_db.py` 🔒 | 変電所の構内結線(node-breaker)の観測層を、電力だけに絞った日本の PBF から作る。 |
 | `build_structures_batch.py` 🔒 | 変電所内部構造(node-breaker)の地域一括生成 — 構造DBの正典生成器. |
@@ -295,6 +304,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `gen_layer_figs.py` | 3-layer visualization for IEEJ paper: |
 | `gen_layer_figs_white.py` | Layer figures with WHITE background for IEEJ paper. |
 | `gen_loading_map.py` | ピーク断面ローディングマップPNG — 東西フル網のAC潮流で線路負荷率を地図に(2026-08-30). |
+| `gen_model_quality_figures.py` | Pair the observed geography with the circuit assumption it produces. |
 | `gen_national_map.py` | 全国送電網トポロジ図 (fig_national_all.png) |
 | `gen_national_overview_from_full.py` 🔒 | 全国基幹概観(電圧帯別)を **正典 powerflow_full** から再生成する (idempotent)。 |
 | `gen_national_swing_anim.py` | 全系統動揺GIF — 4島541機、各島の最大機N-1を同時刻表示(2026-08-30). |
@@ -311,6 +321,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `gen_satellite_v3.py` | Satellite validation figure v3 – proper contextily with Web Mercator. |
 | `gen_scr_map.py` | 系統の強さの地図 — 全バス短絡容量(SCC)マップ(2026-08-30). |
 | `gen_sld_from_built.py` 🔒 | SLD(単線結線図 force-graph)データを **正典 built + powerflow_full** から生成 (idempotent)。 |
+| `gen_story_review_figures.py` | Scientific figures/animations for the story revision, from pinned model data. |
 | `gen_subsld_flipbook.py` | SubSLDフリップブックGIF — 読み方ガイド+全国機械生成の流し(2026-08-30). |
 | `gen_swing_map.py` | 運転点込みモーダル: 収束ACのV∠δから機械内部電圧E∠δを構成し、 |
 | `gen_swing_modes.py` | 電気機械モード帯の全島推定(G_DB第一歩の検証器・2026-08-17). |
@@ -345,6 +356,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `run_pf_8760h.m` | % run_pf_8760h.m — 年間8760時間潮流計算 |
 | `run_psdat_powerflow.py` | All-Japan-Grid × psdat-python 統合: MATPOWER形式電力フロー + 古典スウィングモデル. |
 | `run_uc_full_3state.py` | 全国783機UC（cold/warm/hot 3状態起動コスト）を実行して |
+| `solve_same_site_trial.py` | Measure alias effects with identical injections on the actual east circuit. |
 
 </details>
 
@@ -376,8 +388,8 @@ python scripts/diagnostics/test_west_reactive.py
 | `export_generators_geojson.py` | Export generator data from P03 GML to GeoJSON with enriched attributes. |
 | `export_loops.py` 🔒 | ループ(閉路)構造の抽出 — 運用ビュー用(オーナー指示 2026-08-28「ループとかも見れるの?」). |
 | `export_map_tiers_from_built.py` 🔒 | 系統図/エリアタブの地図タイルを **DB更新済み建造モデル** から再生成する (idempotent)。 |
-| `export_matpower_canonical.py` | 正典系譜のMATPOWERケース出力 — built正典+標準注入で4島(+west_reduced). |
-| `export_national_matpower.py` 🔒 | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
+| `export_matpower_canonical.py` 🔒 | 配布する MATPOWER ケースの出力 — built 正典+標準注入で 4 島. |
+| `export_national_matpower.py` | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
 | `export_obs_compare.py` 🔒 | 観測潮流(公表実績の年統計)とモデルの潮流を、線ごとに突き合わせる(潮流マップの「観測と比べる」)。 |
 | `export_obs_local.py` | 線クリック用の観測実績オーバーレイ(年統計=集計値)を生成する. |
 | `export_other_freq_layer.py` | Export the OTHER-frequency equipment of each region as a reference layer. |
@@ -395,7 +407,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>診断・調査 / diagnostics</b>(11 本)</summary>
+<details><summary><b>診断・調査 / diagnostics</b>(13 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -410,6 +422,8 @@ python scripts/diagnostics/test_west_reactive.py
 | `probe_west_ac_infeed.py` | 西AC第5波 — 「都心給電の必然接続(仮)」プローブ(2026-08-30・正典不変更). |
 | `screen_capacity_gaps.py` | 発電量・容量が「上手く入っていない」発電所をスクリーニングし収集worklistを出す。 |
 | `screen_false_fragments.py` | 偽断片スクリーニング — 跨island同座標双子による「断片=登録人工物」候補の機械列挙. |
+| `trial_same_site_connections.py` | Trace fragmented same-name sites to source OSM identity and try explicit aliases. |
+| `trial_site_terminal_projection.py` | Verify site/terminal separation on the full east circuit at fixed injections. |
 
 </details>
 
@@ -441,7 +455,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>その他 / other</b>(41 本)</summary>
+<details><summary><b>その他 / other</b>(46 本)</summary>
 
 | スクリプト | 説明 |
 |---|---|
@@ -452,6 +466,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `capacity_provenance.py` 🔒 | 発電所の発電量・容量を **出典必須(provenance-first)** で記録する DB。 |
 | `classify_isolated_subs.py` | 連結性監査で出た「孤立変電所」を A/繋ぐべき・B/除外・?/不明 に振り分ける。 |
 | `connection_candidates.py` | 接続候補ジェネレータ (接続編集ツールのバックエンド) — I6-5新方向 2026-06-14。 |
+| `connection_voltage.py` 🔒 | Voltage evidence shared by OSM way-chain recovery diagnostics. |
 | `convert_chubu_flow.py` | 中部PGの潮流実績Excel(xlsm/xlsx)を標準4行ヘッダCSV(cp932)へ変換する。 |
 | `coverage_report.py` 🔒 | Provenance & validation coverage report for the unified grid DB. |
 | `d4_island_audit.py` | D4 island audit — 小規模islandを物理接続の観点で判定する(計測のみ・本番不変)。 |
@@ -474,11 +489,15 @@ python scripts/diagnostics/test_west_reactive.py
 | `pv_dynamics_compare.py` | PV有無×UC → 動的比較: ①24h系統慣性カーブ ②正午の動揺モード ③正午のS_sc(66-77kV)。 |
 | `readme_numbers.py` | README に埋め込む数字を、データから作る(cog から呼ぶ)。 |
 | `regen_powerflow_snapped.sh` | --------------------------------------------------------------------------- |
+| `replay_review_experiments.py` | Replay small, controlled review experiments from pinned Git source. |
 | `report_kv66_quality.py` | Per-region 66 kV-band quality ledger (M4-4 of docs/archive/plans/PLAN_66KV.md). |
+| `repro_subsld_energization.mjs` | Characterize the current GUI classifier using its actual source, without a DOM. |
 | `restore_missing_plants.py` | JRP の kyushu/okinawa_plants_lite → AGJ 形式の plants.geojson を生成 |
+| `review_ac_solvability.py` | Replay the frozen east AC/Ybus review without altering the production model. |
 | `score_road_reconnection.py` | Score fragment-reconnection candidates by road-path plausibility (M9). |
 | `score_transformer_topology.py` 🔒 | 変電所内の変圧器の結び方(梯子 / 介入 #48)が正しいかを、各社の公表一覧(全国の変圧器台帳)で採点する。 |
 | `scripts_index.py` | scripts/ 直下の全スクリプト索引を作る(scripts/README.md の cog から呼ぶ)。 |
+| `site_connection_review.py` | Read and verify saved site/terminal connection evidence; never change a model. |
 | `stepdown_gap_census.py` | 介入#43(降圧点欠損)の census と静的ゲート — 島ごとに OFF / #43a / #43a+#43b を比べる. |
 | `substation_scope.py` 🔒 | SubScope — GridStitch 変電所構造ビューア. |
 | `sync_realtime_to_nas.sh` | ローカル蓄積(data/realtime/)を pws-nas03 のAGJ領域へ退避する。 |

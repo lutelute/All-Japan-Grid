@@ -1,7 +1,11 @@
 """Export the national model as MATPOWER cases — .mat + CSV tables (N4).
 
     PYTHONPATH=. python scripts/export_national_matpower.py
-        [--out dist/matpower_national] [--islands east west] [--no-validate]
+        [--out dist/matpower_snapped] [--islands east west] [--no-validate]
+
+2026-10-20 から配布ケース(dist/matpower_national)は正典系譜の
+scripts/export_matpower_canonical.py が書く。このスクリプトは旧 snapped 系譜の
+比較用で、書き出し部 export_net は両方から使う。
 
 Builds the four synchronous islands (hokkaido / east / west / okinawa)
 with the canonical national solver (``solve_island`` — the AC-convergent
@@ -238,7 +242,7 @@ def main(argv=None) -> int:
     from src.powerflow.national import build_island_networks
 
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--out", default="dist/matpower_national")
+    ap.add_argument("--out", default="dist/matpower_snapped")
     ap.add_argument("--islands", nargs="*",
                     help="subset of islands (default: all four)")
     ap.add_argument("--no-validate", action="store_true",

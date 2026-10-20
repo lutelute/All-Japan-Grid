@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-20
+
 ### Added
 - **Substation node-breaker layer from OSM node ids** (`src/stations/`, `scripts/build_station_db.py`, `data/stations/`,
   `docs/STATION_NODE_BREAKER.md`): busbar sections, bays, switches, transformer windings and line ends joined only by
@@ -234,7 +236,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the long-standing substation-count typo fixed (prose 8,164 → measured 6,962,
   matching the paper's own table — was a Known Issue since v1.5.0).
 
+### Changed
+- **Distributed MATPOWER cases now solve in AC on all four islands** (`dist/matpower_national`,
+  `scripts/export_matpower_canonical.py`): the cases are written from the canonical built model (the same lineage as
+  the flow map) instead of the old snapped lineage. MATPOWER 8.1 `runpf` converges at its default tolerance on
+  hokkaido / east / west / okinawa, from the embedded state and from a flat start (4–6 iterations); pandapower gives
+  the same losses (1.93 / 2.63 / 2.95 / 2.17 %). East needed no reduction — its earlier failure came from the old
+  lineage. West has no AC solution with everything in, because the synthetic demand allocation puts 172 MW on the
+  Etajima 66 kV radial tree (one 69 MVA circuit); **intervention #52** folds only the antenna trees that block Newton
+  (largest estimated voltage drop first, stop when it solves) — one tree, 6 buses — instead of the former
+  `west_reduced` that folded 2,084 buses (26%). Every folded tree is listed in `meta.json` `reduction.trees`;
+  `--no-fold` exports the island in DC instead. Report: `docs/reports/matpower_dist_ac_2026-10-20.md`.
+- The UC tutorial reads the new fleet (okinawa 28 units, Optimal, ≈¥198M; figure on the download page refreshed).
+
 ### Fixed
+- **Python power-flow tutorial showed negative losses** (`dataset/01_matpower_powerflow/solve_pf.py`): it did not count
+  the generators that `from_mpc` turns into `sgen` (second and later units on a bus) or the losses on `impedance`
+  branches. pandapower was solving the cases correctly; the earlier explanation that "`from_mpc` cannot handle multiple
+  slacks" was wrong and is withdrawn from the READMEs and the download page. `tests/test_solve_pf_example.py`.
+- `aggregate_antennas` counted a load once per round it was carried down a chain, overstating `moved_load_mw`
+  (west: 21,570 → 16,110 MW when everything is folded).
 - **SubSLD structure DB counted a neighbour's busbars and bays** (`scripts/build_substation_structure.py`): ways within
   the site's bounding box + 0.01° were all taken without a containment check — 25% of busbars and 23% of bays sat in two
   or more substations, and 1,252 inter-site connection records were artefacts. Membership is now decided by the site

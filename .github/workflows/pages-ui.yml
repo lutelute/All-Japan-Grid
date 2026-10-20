@@ -1,0 +1,41 @@
+# pages-ui: Pages の地図を実際のブラウザで開き、ホバー/クリック/直リンクが効くかを確かめる。
+# 2026-04-02 から半年、map.html の送電線と変電所はホバーもクリックも効かなかった(canvas の重なり)。
+# 構文検査(tests/test_flow_map_integrity.py)では見つからないので、Chromium で操作して確かめる
+# (tests/test_pages_map_ui.py・docs/PAGES_INVENTORY.md §3)。重いので docs の HTML/JS を変えたときだけ。
+name: pages-ui
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/*.html"
+      - "docs/js/**"
+      - "docs/css/**"
+      - "tests/test_pages_map_ui.py"
+      - ".github/workflows/pages-ui.yml"
+  pull_request:
+    paths:
+      - "docs/*.html"
+      - "docs/js/**"
+      - "docs/css/**"
+      - "tests/test_pages_map_ui.py"
+      - ".github/workflows/pages-ui.yml"
+  workflow_dispatch:
+
+jobs:
+  map-interaction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest playwright
+          python -m playwright install --with-deps chromium
+      - name: Map hover / click / deep links
+        # tests/conftest.py は pandapower などを読む。この検査は使わないので読まない
+        run: python -m pytest -q --noconftest tests/test_pages_map_ui.py -p no:cacheprovider

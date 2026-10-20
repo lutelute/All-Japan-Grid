@@ -168,9 +168,9 @@ rule national_overview:
 
 
 rule matpower:
-    input: f"{STAMP}/full_powerflow.done"
+    input: f"{STAMP}/built_ready.done"
     output: touch(f"{STAMP}/matpower.done")
-    shell: f"{PY} scripts/export_national_matpower.py"
+    shell: f"{PY} scripts/export_matpower_canonical.py"
 
 
 rule cim:

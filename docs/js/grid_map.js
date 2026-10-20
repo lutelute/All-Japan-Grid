@@ -194,66 +194,18 @@ var listCurrentSort = "name";
 var listPanelVisible = true;
 
 function initMap() {
-    map = L.map("map", {
-        center: [36.5, 137.0],
-        zoom: 6,
-        zoomControl: true,
-        preferCanvas: true,
-    });
+    // 地図・背景地図・共有 canvas は js/agj_map.js(io 一新 2026-10-20)。変電所・発電所の専用 pane は
+    // canvas を 3 枚重ねて線と変電所のホバー/クリックを塞いでいた(3e014ab7 から)ので作らない。
+    // 上下は追加の順(線 → 変電所 → 発電所)で決まる
+    map = AGJMap.createMap("map", { center: [36.5, 137.0], zoom: 6 });
 
-    // CARTO dark_all は 2026 年から API キー必須になり「API KEY REQUIRED」画像を返す。キー不要の地理院・淡色を CSS で反転して暗くする(css/style.css の .agj-dark-tiles)。
-    var darkLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
-        maxZoom: 18,
-        className: "agj-dark-tiles",
-    });
-    var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-        maxZoom: 19,
-    });
-    var satelliteLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
-        attribution: "Google",
-        maxZoom: 20,
-    });
-    var gsiLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
-        maxZoom: 18,
-    });
-    var gsiPhotoLayer = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg", {
-        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
-        maxZoom: 18,
-    });
-    var topoLayer = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/">OSM</a> contributors, SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-        maxZoom: 17,
-    });
-    var BASE_LAYERS = {
-        "ダーク (地理院 淡色)": darkLayer,
-        "OSM": osmLayer,
-        "地形図 (OpenTopoMap)": topoLayer,
-        "衛星 (Google)": satelliteLayer,
-        "地図 (国土地理院)": gsiLayer,
-        "航空写真 (国土地理院)": gsiPhotoLayer,
-    };
-    var BASE_KEY = "agj_basemap";
-    var DEFAULT_BASE = "ダーク (地理院 淡色)";
-    var savedBase = null;
-    try { savedBase = localStorage.getItem(BASE_KEY); } catch (e) {}
-    (BASE_LAYERS[savedBase] || BASE_LAYERS[DEFAULT_BASE]).addTo(map);
-    L.control.layers(BASE_LAYERS, null, { position: "topright", collapsed: true }).addTo(map);
-    map.on("baselayerchange", function(e){
-        try { localStorage.setItem(BASE_KEY, e.name); } catch (err) {}
-    });
-
-    // Custom panes for z-ordering
+    // タイルの重ね表示(地形・適地スコア)は画像なのでイベントを取らない
     var terrainPane = map.createPane("terrainPane");
     terrainPane.style.zIndex = 280;
     terrainPane.style.pointerEvents = "none";
     var scorePane = map.createPane("scorePane");
     scorePane.style.zIndex = 300;
     scorePane.style.pointerEvents = "none";
-    map.createPane("substationPane").style.zIndex = 450;
-    map.createPane("plantPane").style.zIndex = 460;
 
     updateLegend();
 }
@@ -337,64 +289,26 @@ function updateLegend() {
 // ── Tab switching ──
 
 function initTabs() {
-    document.querySelectorAll(".tab-btn").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            var tabId = this.dataset.tab;
-            document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
-            document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
-            this.classList.add("active");
-            var panel = document.getElementById(tabId);
-            if (panel) panel.classList.add("active");
+    // タブの切り替えと URL の #tab-… は js/agj_tabs.js(io 一新 2026-10-20)。ここは
+    // 系統図 ⇔ エリアの色分けの切り替えと、全画面表示にするタブだけを受け持つ
+    AGJTabs.onChange(function (tabId, prevId) {
+        document.body.classList.toggle("fullscreen-tab", tabId === "tab-ybus");
+        if (tabId !== "tab-map" && tabId !== "tab-area") return;
 
-            // 比較タブ / Ybus タブはサイドバー幅制約を抜けて全画面表示する。
-            // body.fullscreen-tab でタブバーを上端固定にしてタブ操作を維持。
-            var isFullscreen = (tabId === "tab-compare" || tabId === "tab-ybus" || tabId === "tab-editor" || tabId === "tab-review");
-            document.body.classList.toggle("fullscreen-tab", isFullscreen);
+        // 切り替える前のタブの状態を保存
+        if (prevId === "tab-map" || prevId === "tab-area") tabState[colorMode].region = selectedRegion;
 
-            if (tabId === "tab-compare") {
-                var cf = document.getElementById("compare-frame");
-                if (cf && !cf.src) cf.src = cf.dataset.src;
-                return;
-            }
-            if (tabId === "tab-editor") {
-                var ef = document.getElementById("editor-frame");
-                if (ef && !ef.src) ef.src = ef.dataset.src;
-                return;
-            }
-            if (tabId === "tab-review") {
-                var rf = document.getElementById("review-frame");
-                if (rf && !rf.src) rf.src = rf.dataset.src;
-                return;
-            }
-            if (tabId === "tab-ybus") {
-                return;
-            }
-
-            // Save current tab state before switching
-            tabState[colorMode].region = selectedRegion;
-
-            // Switch color mode based on tab
-            var newMode = (tabId === "tab-area") ? "region" : "voltage";
-            if (newMode !== colorMode) {
-                colorMode = newMode;
-                // Restore saved state for the new tab
-                selectedRegion = tabState[newMode].region;
-                setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#region-list");
-                setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#area-region-list");
-                updateLegend();
-                loadData(tabState[newMode].minKv);
-            }
-        });
+        var newMode = (tabId === "tab-area") ? "region" : "voltage";
+        if (newMode !== colorMode) {
+            colorMode = newMode;
+            // 切り替え先のタブの状態を戻す
+            selectedRegion = tabState[newMode].region;
+            setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#region-list");
+            setActiveRegionBtn(selectedRegion === "all" ? null : selectedRegion, "#area-region-list");
+            updateLegend();
+            loadData(tabState[newMode].minKv);
+        }
     });
-
-    // ダッシュボードからの直リンク: map.html#tab-editor / #tab-ybus … で該当タブを開く
-    function openTabFromHash() {
-        var id = location.hash.slice(1);
-        var btn = id && document.querySelector('.tab-btn[data-tab="' + id.replace(/[^\w-]/g, "") + '"]');
-        if (btn && !btn.classList.contains("active")) btn.click();
-    }
-    window.addEventListener("hashchange", openTabFromHash);
-    openTabFromHash();
 }
 
 // ── Filtering helpers ──
@@ -438,7 +352,6 @@ function plantMarker(latlng, fuel, mw) {
     var color = FUEL_COLORS[fuel] || FUEL_COLORS.unknown;
     var radius = mw >= 1000 ? 7 : mw >= 100 ? 5 : mw > 0 ? 3.5 : 2.5;
     return L.circleMarker(latlng, {
-        pane: "plantPane",
         radius: radius,
         fillColor: color,
         color: "#000",
@@ -498,13 +411,11 @@ function renderLayers() {
                 }),
             };
             substationLayer = L.geoJSON(subPoints, {
-                pane: "substationPane",
                 pointToLayer: function (feature, latlng) {
                     var kv = feature.properties._voltage_kv || 0;
                     var bracket = voltageKvToBracket(kv);
                     var radius = bracket >= 500 ? 5 : bracket >= 275 ? 4 : 3;
                     return L.circleMarker(latlng, {
-                        pane: "substationPane",
                         radius: radius,
                         fillColor: subColor(feature),
                         color: "#fff",
@@ -1360,7 +1271,7 @@ function toggleKeitouzu(on) {
         if (keitouzuLayer) map.removeLayer(keitouzuLayer);
         return;
     }
-    if (keitouzuLayer) { keitouzuLayer.addTo(map); return; }
+    if (keitouzuLayer) { keitouzuLayer.addTo(map); AGJMap.raise(substationLayer, plantLayer); return; }
     fetch("./data/keitouzu_divergent.geojson")
         .then(function (r) { return r.json(); })
         .then(function (data) {
@@ -1397,6 +1308,7 @@ function toggleKeitouzu(on) {
                         { sticky: true });
                 },
             }).addTo(map);
+            AGJMap.raise(substationLayer, plantLayer);
         })
         .catch(function (e) { console.error("keitouzu overlay load error:", e); });
 }

@@ -12,7 +12,20 @@ MATLAB（MATPOWER）版と Python（pandapower）版を用意しています。
   `runpf`（通常潮流）向けで、`runopf`（最適潮流）はできません。
 - 表は CSV でも同梱：`<island>_bus.csv` / `_branch.csv` / `_gen.csv` と、人間可読な
   `_busname.csv` / `_branchname.csv` / `_genname.csv`（発電機の実名・燃料付き）。
-- 検証結果は `dist/matpower_national/meta.json`（島ごとのバス/枝/発電機数・AC 収束・往復検証）。
+- 検証結果は `dist/matpower_national/meta.json`（島ごとのバス/枝/発電機数・AC 収束・往復検証・縮約の帳簿）。
+- **4 島とも AC 潮流が MATPOWER の既定の許容誤差で収束します**（v1.9.0 から。需要は fy2023 既定断面）。
+
+| 島 | バス | 損失 | 電圧 Vm | 備考 |
+|---|---:|---:|---|---|
+| `okinawa` | 100 | 1.93 % | 0.972–1.003 | 最小・数秒 |
+| `hokkaido` | 831 | 2.63 % | 0.860–1.022 | |
+| `east` | 6,253 | 2.95 % | 0.858–1.023 | 練馬・板橋周辺の 66kV が低め |
+| `west` | 7,979 | 2.17 % | 0.775–1.037 | 江田島の 66kV の木 1 本（6 バス）を親バスへ畳んである。大阪・三国周辺の 77kV が低い |
+
+west の縮約: 全部入りだと、需要を変電所へ均等に割った配分のせいで江田島の 66kV 1 回線（69 MVA）に
+172 MW が載り、送れる解が存在しません。この木だけを親（宮原変電所）へ畳み、負荷は保存しています。
+畳んだ木は `meta.json` の `islands[].reduction.trees` に、根・バス名・負荷つきで残しています
+（介入台帳 #52・`docs/reports/matpower_dist_ac_2026-10-20.md`）。
 
 ## Python 版（MATLAB 不要）
 
@@ -21,7 +34,7 @@ pip install pandapower scipy numpy
 python solve_pf.py                 # okinawa（最小・数秒）
 python solve_pf.py hokkaido
 python solve_pf.py east --dc       # DC 潮流
-python solve_pf.py west --csv out  # 結果バス表を out/ に CSV 出力
+python solve_pf.py west --csv out  # 西（約 8,000 バス）。結果バス表を out/ に CSV 出力
 ```
 
 `pandapower.converter.matpower.from_mpc` で `.mat` を読み込み、`runpp`（AC）で解きます。
@@ -43,31 +56,27 @@ solve_pf('east', 'dc');    % DC 潮流
 
 ```
 RESULT: AC CONVERGED
-  total generation:       1320 MW
-  total load:             1301 MW
-  transmission loss:        18 MW  (1.39 % of load)
-  voltage Vm:        0.985 - 1.010 pu
+  total generation:       1386 MW
+  total load:             1360 MW
+  transmission loss:        26 MW  (1.93 % of load)
+  voltage Vm:        0.972 - 1.003 pu
 ```
 
-## MATLAB版と Python版で多成分島の扱いが違う（重要）
+MATLAB 版（MATPOWER 8.1 の `runpf`）と Python 版（pandapower）は同じ数字になります。
+ケースには解いた状態（VM/VA）が入っていますが、VM=1・VA=0 のフラット始動からでも
+4〜6 回の反復で収束します。
 
-沖縄以外の島は複数の弱連結成分に分かれ、各成分に 1 つ slack（REF バス）を持ちます。この
-**多成分ケースの扱いが 2 つの実装で異なります**（実機確認済み）:
+## 複数の slack（REF バス）について
 
-| 島 | MATLAB (MATPOWER `runpf`) | Python (pandapower `from_mpc`) |
-|---|---|---|
-| okinawa（単一成分） | AC 収束・損失 2.2 % ✅ | AC 収束・損失 1.4 % ✅ |
-| hokkaido（9 成分） | **AC 収束・損失 +3.5 %** ✅ | 損失 −68 %（不整合）⚠ |
+各島は、本系統から切れた小さな断片を含み、連結成分ごとに 1 つ slack（REF バス）を持ちます
+（east は 220 個）。断片の需要は、実在しない合成の電源（slack）が賄っています。MATPOWER も
+pandapower もこれを正しく解きます。
 
-- **配布 `.mat` 自体は健全**です。MATPOWER は複数 slack を正しく扱い、各成分で需給を閉じます。
-- **pandapower の `from_mpc` は複数 slack を正しく変換できず**、多成分島で損失が負になる等の
-  不整合が出ます。`solve_pf.py` はこれを検出して注意を表示します（`.mat` の欠陥ではありません）。
-
-そのため:
-- Python で潮流の**挙動**を確認したい → 単一成分の **`okinawa`**（綺麗に閉じます）。
-- Python で**大規模島**を扱いたい → MATLAB 版（MATPOWER）を使うか、UC で 24 時間の発電計画を
-  作ってから潮流に渡す（UC→潮流連成）。入口は [`../02_uc_from_excel/`](../02_uc_from_excel/)。
+> v1.7.0 までの Python 版は、同じバスの 2 台目以降の発電機（`from_mpc` が `sgen` にする）を
+> 発電に数えておらず、損失が負に見えていました。原因を「pandapower は複数 slack を扱えない」と
+> 説明していましたが、それは誤りでした（v1.9.0 で修正）。
 
 > なお「潮流が収束した」＝「正しく解けた」ではない一般則は変わりません。配布ケースは建造断面の
-> スナップショット（発電機出力は時間断面として厳密に需給調整されたものではない）である点は
-> 引き続き留意してください。
+> スナップショット（発電機出力は時間断面として厳密に需給調整されたものではない）で、線路定数は
+> 電圧階級ごとの代表値です。線ごとの潮流や電圧の値は個別に引用せず、地域ごとの集計や傾向を
+> 見る用途に使ってください。
