@@ -58,9 +58,9 @@
 | B7 | 正典 all.json と再生成の手順（Snakefile・regenerate_all）がずれている。正典に当てた apply_mixed_voltage_circuits（#47）が STEPS に入っておらず、今 regenerate_all を回すと正典が変わる（推測・未実行） | 手順に入れるか、「その場で当てた介入の台帳」として手順の外に明記するか |
 | A7 | 週次の遅いテストが 4 週続けて落ちている（09-27・10-04・10-12・10-18）。測っているのは旧系譜の地域別 build_and_solve | 正典の KPI に付け替えるか、旧系譜の記録用 KPI と明記して閾値を見直すか |
 | E1 | 正典の網づくり build_island_net が scripts/run_full_powerflow_from_db.py（1,782 行）にあり、50 ファイルが import している。src から scripts への逆向きの import が 3 か所ある | src/powerflow へ昇格する（scripts 側は再 export）か、今のままにするか |
-| A1・B2・B3 | CLI（`ajgrid solve`・`uc to-pf`・`cim`）・README の Quickstart・:8088 の潮流 API が旧系譜を向いている。潮流を解くファイルは 84 本ある | 入口を正典 1 本に寄せ、ほかは「比較用・退役」と明記するか |
+| A1・B2・B3 | CLI（`ajgrid solve`・`uc to-pf`・`cim`）・README の Quickstart・:8088 の潮流 API が旧系譜を向いている。潮流を解くファイルは 84 本ある | **済（10-21・オーナー委任）** `ajgrid pf`・`ajgrid matpower` を足し、`uc to-pf` を正典版へ（旧版は `to-pf-snapped`）。`solve`・`cim`・:8088 の /api/powerflow・/api/matpower は旧系譜と明記（:8088 の 2 つはどこからも呼ばれていなかった）。README の Quickstart・地図の説明（8 タブ→4 タブ）・GIF を今の io に |
 | D3・D4 | powerflow_full（08-28）・N-1（06-03）・CIM（Level1 は基底、Level2 は snapped）の出力が古い | どこで作り直すか（サーバー）。それまではページに「計算した版」を出す |
-| D5 | README の南海トラフの節と hero.gif が残っている（ハザードは 10-09 に非公開へ移管済み） | 見せ続けるか、「別リポジトリ・非公開」と明記するか |
+| D5 | README の南海トラフの節と hero.gif が残っている（ハザードは 10-09 に非公開へ移管済み） | **済（10-21）** 節は残して見出しに「別リポジトリ・非公開」。hero.gif の最後の場面は動揺に差し替え（このリポジトリで回せるもの） |
 
 ## Pages の柱の見せ方（提案）
 
