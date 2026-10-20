@@ -12,9 +12,9 @@ realtime_cycle.sh の slim_flow_map.py のあとに実行(失敗しても毎時�
         docs/data/flow_map/pulse.png (いまの時刻の静止画・OGP 用。Pillow が無ければ作らない)
 
 pulse.json の形:
-  {date, hours, now_hour, fetched_at, zones_now:{zone:MW}, cross:{fc:[24], hokuhon:[24]},
+  {date, hours(0 時から now_hour まで), now_hour, fetched_at, zones_now:{zone:MW}, cross:{fc:[…], hokuhon:[…]},
    q:1000, okinawa_shift:[dlon,dlat], stale_islands:[...],
-   lines:[[kv, [x0,y0,x1,y1,...], [p0..p23]]], silhouette:[[kv, [x0,y0,...]]]}
+   lines:[[kv, [x0,y0,x1,y1,...], [p(hours ごと)]]], silhouette:[[kv, [x0,y0,...]]]}
   座標は 経度・緯度 × q の整数。p>0 は座標の並び順の向き(flow_map.html と同じ)。
   cross.fc>0 は東京→中部(50Hz→60Hz)、cross.hokuhon>0 は北海道→東北(export_day_flows.py と同じ)。
   沖縄は日本海の左上に差し込み図として移してある(okinawa_shift)。
@@ -83,10 +83,30 @@ def latest_day():
     return days[-1].stem if days else None
 
 
+def now_hour_of(date, hours, now_meta):
+    """実績のある最新の時刻。日別断面は予報の需要で 24 時刻ぶん計算してあるので、その最後を
+    「いま」にすると先の時刻(予報)を見せてしまう(2026-10-21 01:14 の取得で 23 時を出していた)。
+    エリア需要の実績(now_meta.zone_hour)のうち、この日付の時刻の最大を使う。無ければ取得時刻。"""
+    zh = [int(v["hour"]) for v in (now_meta.get("zone_hour") or {}).values()
+          if str(v.get("date", "")).replace("/", "") == date and v.get("hour") is not None]
+    if zh:
+        h = max(zh)
+    else:
+        fetched = str(now_meta.get("fetched_at") or "")
+        h = int(fetched[11:13]) if fetched[:10].replace("-", "") == date else (hours[-1] if hours else None)
+    past = [x for x in hours if h is not None and x <= h]
+    return past[-1] if past else (hours[0] if hours else None)
+
+
 def build(date):
     meta = load(FM / "meta.json")
     now_meta = load(FM / "now_meta.json") if (FM / "now_meta.json").exists() else {}
     day = load(FM / "days" / f"{date}.json")
+    # 「いま」より先の時刻(予報の需要で計算した分)は出さない。「今日を再生」は 0 時からいままで
+    all_hours = day.get("available_hours") or []
+    now_hour = now_hour_of(date, all_hours, now_meta)
+    keep = [i for i, h in enumerate(all_hours) if now_hour is not None and h <= now_hour]
+    hours = [all_hours[i] for i in keep]
 
     lines, silhouette, stale = [], [], []
     for isl in ISLANDS:
@@ -107,22 +127,21 @@ def build(date):
                 continue
             row = dayisl["p"][i] if ok else None
             if kv >= flow_kv and row:
-                p = [None if v is None else int(round(v)) for v in row]
+                p = [None if row[j] is None else int(round(row[j])) for j in keep]
                 if any(p):
                     lines.append([kv, xy, p])
                     continue
             silhouette.append([kv, xy])
 
-    hours = day.get("available_hours") or []
     zones_now = {z: v["mw"] for z, v in (now_meta.get("zone_hour") or {}).items()
                  if str(v.get("date", "")).replace("/", "") == date}
-    cross = {k: [None if v is None else round(v) for v in vals]
+    cross = {k: [None if vals[j] is None else round(vals[j]) for j in keep]
              for k, vals in (day.get("cross_island_mw") or {}).items()}
     return {
         "source": "All-Japan-Grid flow_map (estimated, not operational values)",
         "date": date,
         "hours": hours,
-        "now_hour": hours[-1] if hours else None,
+        "now_hour": now_hour,
         "fetched_at": now_meta.get("fetched_at"),
         "zones_now": zones_now,
         "cross": cross,
