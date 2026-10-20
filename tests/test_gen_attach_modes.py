@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PF = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+PF = ROOT / "src" / "powerflow" / "full_from_built.py"
 WGV = ROOT / "scripts" / "capacity" / "whatif_gen_voltage.py"
 
 pytestmark = pytest.mark.skipif(not PF.exists(), reason="潮流本体が無い")

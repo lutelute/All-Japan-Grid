@@ -50,7 +50,7 @@ LADDER = [10.0, 1.0, 0.10]
 
 def load_pf():
     """潮流本体をモジュールとして読み込む（scripts/ は package ではないので spec 経由）。"""
-    path = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+    path = ROOT / "src" / "powerflow" / "full_from_built.py"
     spec = importlib.util.spec_from_file_location("pf_full", path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules["pf_full"] = mod

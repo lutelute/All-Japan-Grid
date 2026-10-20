@@ -46,7 +46,7 @@ REPORTS = ROOT / "docs" / "reports"
 
 
 def load_pf():
-    path = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+    path = ROOT / "src" / "powerflow" / "full_from_built.py"
     spec = importlib.util.spec_from_file_location("pf_full", path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules["pf_full"] = mod

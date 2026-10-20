@@ -271,6 +271,81 @@
             </details>
             <!-- ▲ 静止アセット details ここまで -->
 
+            <!-- N-1(正典・4 つの同期島)— 2026-10-21。それまでの表は旧系譜(地域別のスナップ済みの網・06-03)だったので、
+                 下の「記録」に折りたたんで残す(docs/reports/project_structure_2026-10-21.md の D3)。
+                 データ: data/n1_canon/summary.json(scripts/export_n1_pages.py が docs/reports/n1_screening_<date>.json から書く) -->
+            <section id="n1-canon" style="margin:24px 0 0">
+                <h3 style="margin:0 0 8px;font-size:15px">N-1 全枝スクリーニング（正典・4 つの同期島）</h3>
+                <p id="n1c-lead" style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.6">読み込み中…</p>
+                <div id="n1c-islands" style="overflow-x:auto;margin:0 0 12px"></div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 8px">
+                    <label for="n1c-island" style="font-size:12px;color:#9fb3c8">島:</label>
+                    <select id="n1c-island" style="background:#1b2631;color:#fff;border:1px solid #34495e;border-radius:4px;padding:5px 8px;font-size:13px"></select>
+                    <span id="n1c-meta" style="font-size:12px;color:#5dade2"></span>
+                </div>
+                <div id="n1c-top" style="overflow-x:auto;margin:0 0 12px"></div>
+                <div id="n1c-ac" style="overflow-x:auto;margin:0 0 8px"></div>
+                <p id="n1c-foot" style="margin:8px 0 0;font-size:11px;color:#7d8aa0;line-height:1.6"></p>
+            </section>
+            <script>
+            (function () {
+                const NAME = {hokkaido: "北海道", east: "東（東北・東京）", west: "西（中部以西）", okinawa: "沖縄"};
+                const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+                const n = x => x == null ? "–" : Number(x).toLocaleString("ja-JP");
+                const pct = x => x == null ? "–" : Number(x).toFixed(1) + "%";
+                const TH = 'style="padding:6px 9px;text-align:left;border-bottom:1px solid #2c3e50;color:#9fb3c8;font-size:11px;white-space:nowrap"';
+                const TD = 'style="padding:6px 9px;border-bottom:1px solid #1f2937;font-size:12px;vertical-align:top"';
+                const table = (head, rows) => '<table style="width:100%;border-collapse:collapse;background:#0c1014;border:1px solid #2c3e50">' +
+                    "<thead><tr>" + head.map(h => `<th ${TH}>${h}</th>`).join("") + "</tr></thead><tbody>" +
+                    rows.map(r => "<tr>" + r.map(c => `<td ${TD}>${c}</td>`).join("") + "</tr>").join("") + "</tbody></table>";
+                const hot = x => x == null ? "–" : `<b style="color:${x >= 120 ? "#ff8a80" : x >= 100 ? "#ffb74d" : "#e6edf3"}">${pct(x)}</b>`;
+                let data = null;
+
+                function renderIsland(key) {
+                    const d = data.islands.find(i => i.island === key);
+                    if (!d) return;
+                    document.getElementById("n1c-meta").textContent =
+                        `${n(d.n_outage_evaluated)} 本を外して評価・新たな過負荷を生む停止 ${n(d.n_outage_causing_new_over_physical)} 本`;
+                    document.getElementById("n1c-top").innerHTML = d.top.length ? table(
+                        ["外す枝", "電圧・種別", "外す前の負荷率", "外したあと最も重くなる枝", "その負荷率", "新たに過負荷"],
+                        d.top.map(t => [esc(t.label || t.name), `${t.kv} kV・${esc(t.class_label)}${t.parallel > 1 ? `・${t.parallel} 回線` : ""}`,
+                            pct(t.base_loading_pct), esc((t.worst || {}).name), hot(t.post_max_new_loading_pct), n(t.post_n_new_over) + " 本"]))
+                        : '<p style="font-size:12px;color:#7d8aa0">新たな過負荷を生む停止はありません。</p>';
+                    document.getElementById("n1c-ac").innerHTML = d.ac_verify.length ? '<div style="font-size:12px;color:#9fb3c8;margin:4px 0 6px">上位を AC で解き直した結果（直流近似との違いを確かめる）</div>' + table(
+                        ["外す枝", "直流近似の負荷率", "AC の負荷率", "AC で最も重い枝", "AC 収束", "供給できた割合"],
+                        d.ac_verify.map(a => [esc(a.label || a.name), pct(a.dc_post_max_new_loading_pct), hot(a.ac_post_max_new_loading_pct), esc(a.ac_worst),
+                            a.ac_converged ? '<span style="color:#69f0ae">収束</span>' : '<span style="color:#ff8a80">不収束</span>',
+                            a.ac_served_frac == null ? "–" : (a.ac_served_frac * 100).toFixed(0) + "%"])) : "";
+                }
+
+                fetch("./data/n1_canon/summary.json?cb=" + Date.now()).then(r => r.ok ? r.json() : null).then(j => {
+                    if (!j) { document.getElementById("n1c-lead").textContent = "N-1 の要約を読み込めませんでした。"; return; }
+                    data = j;
+                    const sum = k => j.islands.reduce((a, i) => a + (i[k] || 0), 0);
+                    document.getElementById("n1c-lead").innerHTML =
+                        `${esc(j.date)} の正典（<code>docs/data/built</code>）で、${j.args.min_kv || 154} kV 以上の枝 <b>${n(sum("n_outage_evaluated"))}</b> 本を 1 本ずつ外し、` +
+                        `残りの枝の過負荷を直流近似（LODF）で一度に評価しました。外すと系統が分かれる枝（橋）${n(sum("n_islanding"))} 本は別に数えます。` +
+                        `監視するのは実在の線と銘板つきの変圧器で、容量を推定で置いた要素は報告の別表に分けています。結果は判定ではなく目安です。`;
+                    document.getElementById("n1c-islands").innerHTML = table(
+                        ["島", "バス", "外して評価した枝", "橋（系統分離）", "外す前から過負荷", "新たな過負荷を生む停止", "うち 120% 超", "停止後の最大負荷率"],
+                        j.islands.map(i => [`<b style="color:#69f0ae">${NAME[i.island] || esc(i.island)}</b>`, n(i.n_bus), n(i.n_outage_evaluated),
+                            n(i.n_islanding), n(i.base_n_over_physical) + " 本", n(i.n_outage_causing_new_over_physical) + " 本",
+                            n(i.n_outage_new_over_120_physical) + " 本", hot(i.max_new_loading_physical_pct)]));
+                    const sel = document.getElementById("n1c-island");
+                    sel.innerHTML = j.islands.map(i => `<option value="${esc(i.island)}">${NAME[i.island] || esc(i.island)}</option>`).join("");
+                    sel.value = j.islands.some(i => i.island === "east") ? "east" : j.islands[0].island;
+                    sel.addEventListener("change", e => renderIsland(e.target.value));
+                    renderIsland(sel.value);
+                    const md = String(j.source || "").replace(/\.json$/, ".md");
+                    document.getElementById("n1c-foot").innerHTML =
+                        `生成元: <code>scripts/sensitivity/n1_screening.py</code>（git ${esc(j.git_head)}）→ <code>scripts/export_n1_pages.py</code>。` +
+                        `全表・合成定格の要素・橋の一覧: <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/${esc(md)}" target="_blank" rel="noopener" style="color:#5dade2">${esc(md)}</a>`;
+                }).catch(() => { document.getElementById("n1c-lead").textContent = "N-1 の要約を読み込めませんでした。"; });
+            })();
+            </script>
+
+            <details id="n1-legacy" style="margin:22px 0 0;border:1px solid #2c3e50;border-radius:8px;padding:0 14px">
+            <summary style="cursor:pointer;padding:10px 0;font-size:13px;color:#9fb3c8">記録: 旧系譜の地域別 N-1（2026-06-03・地域ごとのスナップ済みの網・関西は対象外）</summary>
             <h3 style="margin:24px 0 10px;font-size:15px">N-1 コンティンジェンシー解析（インタラクティブ）</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
                 各地域 220 kV 以上の幹線を1本ずつ脱落（N-1）させ AC 再潮流を行い、最悪事故を抽出した。
@@ -445,6 +520,7 @@
             <p style="margin:14px 0 0;font-size:11px;color:#7d8aa0">
                 詳細CSVは <code>docs/data/n1/</code>。生成元: <code>scripts/run_n1_contingency.py</code>。
             </p>
+            </details>
         </div>
     </div>
 

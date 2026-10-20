@@ -20,7 +20,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 PLANTS = sorted(glob.glob(str(ROOT / "data" / "*_plants.geojson")))
 
-# 潮流本体（scripts/run_full_powerflow_from_db.py）と揃えること
+# 潮流本体（src/powerflow/full_from_built.py）と揃えること
 DEFAULT_CAP = {"nuclear": 1000.0, "coal": 600.0, "gas": 400.0, "oil": 300.0,
                "hydro": 50.0, "solar": 0.10, "wind": 10.0, "biomass": 20.0}
 
@@ -42,7 +42,7 @@ def _iter_plants():
 
 def test_default_cap_matches_powerflow():
     """既定値が潮流本体とずれていないか。ずれると監査の数字が嘘になる。"""
-    src = (ROOT / "scripts" / "run_full_powerflow_from_db.py").read_text(encoding="utf-8")
+    src = (ROOT / "src" / "powerflow" / "full_from_built.py").read_text(encoding="utf-8")
     for fuel, v in DEFAULT_CAP.items():
         assert f'"{fuel}": {v}' in src, f"{fuel} の既定値が潮流本体と不一致"
 
@@ -57,7 +57,7 @@ def test_negative_capacity_is_a_sentinel_not_a_value():
 
 def test_powerflow_does_not_ingest_negative_capacity():
     """潮流本体が非正の容量を既定値に置換していること（ここが緩むとモデルが壊れる）。"""
-    src = (ROOT / "scripts" / "run_full_powerflow_from_db.py").read_text(encoding="utf-8")
+    src = (ROOT / "src" / "powerflow" / "full_from_built.py").read_text(encoding="utf-8")
     assert "cap is None or cap <= 0" in src, \
         "非正容量のガードが消えた。負の発電出力がモデルに入る"
 
@@ -113,7 +113,7 @@ def test_sourced_capacity_reaches_the_powerflow():
     """
     import importlib.util
     import sys
-    src = ROOT / "scripts" / "run_full_powerflow_from_db.py"
+    src = ROOT / "src" / "powerflow" / "full_from_built.py"
     spec = importlib.util.spec_from_file_location("pf_sourced_test", src)
     pf = importlib.util.module_from_spec(spec)
     sys.modules["pf_sourced_test"] = pf
@@ -131,7 +131,7 @@ def test_sourced_capacity_reaches_the_powerflow():
 
 def test_sourced_capacity_is_on_by_default():
     """既定で出典値を使うこと。切るなら --no-sourced-capacity。"""
-    src = (ROOT / "scripts" / "run_full_powerflow_from_db.py").read_text(encoding="utf-8")
+    src = (ROOT / "src" / "powerflow" / "full_from_built.py").read_text(encoding="utf-8")
     assert "USE_SOURCED_CAPACITY = True" in src, "出典付き容量が既定OFFになっている"
     assert "--sourced-capacity" in src, "無効化スイッチが無い"
 

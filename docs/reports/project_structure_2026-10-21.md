@@ -55,11 +55,11 @@
 
 | id | 何か | 選択肢 |
 |---|---|---|
-| B7 | 正典 all.json と再生成の手順（Snakefile・regenerate_all）がずれている。正典に当てた apply_mixed_voltage_circuits（#47）が STEPS に入っておらず、今 regenerate_all を回すと正典が変わる（推測・未実行） | 手順に入れるか、「その場で当てた介入の台帳」として手順の外に明記するか |
+| B7 | 正典 all.json と再生成の手順（Snakefile・regenerate_all）がずれている。正典に当てた apply_mixed_voltage_circuits（#47）が STEPS に入っておらず、今 regenerate_all を回すと正典が変わる（推測・未実行） | **済（10-21・実測）** #47 を STEPS・Snakefile に入れ、抜けを落とす検査を足した。ただし今の再生成は #47 を足しても正典を一発では再現しない（ノード +9・枝 −37・par 107 枝）。原因は正典に当て直していないバグ修正と順序の経路依存で、差の向きはまちまち → 正典は置き換えず、差を `docs/reports/regenerate_reproducibility_2026-10-21.md` に記録 |
 | A7 | 週次の遅いテストが落ち続けている。**訂正（10-21 実測）**: 「4 週連続」ではなく 06-14 の初回から 19 回すべて赤。09-27 は pulp 4.0 で conftest の import が落ちたもの（10-02 に修正済み）で、ほかは sweep の東京 99 > 25。閾値 25 は導入時（06-10）の基準値でも四国 35 で成り立っていなかった。測っているのは地域別のスナップ済みの網（builder=snapped と build_and_solve）| **済（10-21・オーナー委任）** sweep は地域ごとの実測を記録として固定（帯 ±20%）。正典の 4 島を全規模の AC で解く週次ジョブ canonical-islands を足した（それまで正典を解く pytest は 0 本） |
-| E1 | 正典の網づくり build_island_net が scripts/run_full_powerflow_from_db.py（1,782 行）にあり、50 ファイルが import している。src から scripts への逆向きの import が 3 か所ある | src/powerflow へ昇格する（scripts 側は再 export）か、今のままにするか |
+| E1 | 正典の網づくり build_island_net が scripts/run_full_powerflow_from_db.py（1,782 行）にあり、50 ファイルが import している。src から scripts への逆向きの import が 3 か所ある | **済（10-21・オーナー委任）** 実体を `src/powerflow/full_from_built.py` へ移し、`scripts/run_full_powerflow_from_db.py` は入口として残した（import すると同じモジュールが返るので 50 本の import と monkeypatch はそのまま）。パスで読み込む 11 か所とソースを読むテストは新しい置き場所へ。src から scripts への逆向きの import は tools_dashboard の 1 か所を直した |
 | A1・B2・B3 | CLI（`ajgrid solve`・`uc to-pf`・`cim`）・README の Quickstart・:8088 の潮流 API が旧系譜を向いている。潮流を解くファイルは 84 本ある | **済（10-21・オーナー委任）** `ajgrid pf`・`ajgrid matpower` を足し、`uc to-pf` を正典版へ（旧版は `to-pf-snapped`）。`solve`・`cim`・:8088 の /api/powerflow・/api/matpower は旧系譜と明記（:8088 の 2 つはどこからも呼ばれていなかった）。README の Quickstart・地図の説明（8 タブ→4 タブ）・GIF を今の io に |
-| D3・D4 | powerflow_full（08-28）・N-1（06-03）・CIM（Level1 は基底、Level2 は snapped）の出力が古い | どこで作り直すか（サーバー）。それまではページに「計算した版」を出す |
+| D3・D4 | powerflow_full（08-28）・N-1（06-03）・CIM（Level1 は基底、Level2 は snapped）の出力が古い | **一部済（10-21）** powerflow_full（全規模の潮流・4 島とも AC 収束、西は 08-28 版で不収束だった）と N-1（正典の 4 島）を手元で作り直した（それぞれ 3 分弱・4 分弱でサーバー不要）。地図の Ybus タブの N-1 は正典の結果に替え、旧系譜の表は記録として折りたたんだ。正典と出力の規模がずれたら落ちる検査を付けた。CIM（旧系譜）は残り |
 | D5 | README の南海トラフの節と hero.gif が残っている（ハザードは 10-09 に非公開へ移管済み） | **済（10-21）** 節は残して見出しに「別リポジトリ・非公開」。hero.gif の最後の場面は動揺に差し替え（このリポジトリで回せるもの） |
 
 ## Pages の柱の見せ方（提案）

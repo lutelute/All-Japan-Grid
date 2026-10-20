@@ -207,7 +207,7 @@ TOOLS = {
 def _run_ybus_numeric(params: dict) -> dict:
     import json as _json
     from scripts.gen_ybus_numeric import ISLANDS, export_island
-    from scripts.run_full_powerflow_from_db import BUILT
+    from src.powerflow.full_from_built import BUILT
     out_dir = os.path.join(_PROJECT_ROOT, "dist", "ybus")
     os.makedirs(out_dir, exist_ok=True)
     built = _json.load(open(BUILT))
