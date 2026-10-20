@@ -1,6 +1,6 @@
 /* AGJ 接続編集プラットフォーム — GitHub Pages 静的shim(全面改修Phase5フル統合)
  *
- * 設計(docs/OVERHAUL_PLAN.md「Phase 5 フル統合の確定設計 — 静的shim方式」):
+ * 設計(docs/archive/plans/OVERHAUL_PLAN.md「Phase 5 フル統合の確定設計 — 静的shim方式」):
  *   正は1つ = src/server/templates/editor.html(フル機能の:8088エディタ)。:8088は無改修。
  *   Pages版は scripts/build_pages_editor.py が同テンプレを copy + 本shimを inject して派生する。
  *   本shimは backend(:8088)が無いPages上で window.fetch を上書きし、/api/* を

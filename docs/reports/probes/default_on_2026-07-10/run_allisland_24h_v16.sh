@@ -2,7 +2,7 @@
 # 全島24h検証(新既定=#19/#20/#21 ON・フラグ無し)。v1.6.0出荷前の96断面確認。
 # 島ごとにプロセス隔離(BLAS abort対策)。07-09の検証は#21エッジdedup前だったため再検証する。
 set -u
-cd /Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid
+cd /Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid
 OUT=docs/reports/probes/default_on_2026-07-10/allisland24h
 mkdir -p "$OUT"
 

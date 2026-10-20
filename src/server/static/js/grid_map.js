@@ -76,9 +76,11 @@ function initMap() {
         zoomControl: true,
     });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 19,
+    // CARTO dark_all は 2026 年から API キー必須。キー不要の地理院・淡色を反転して暗くする(.agj-dark-tiles)
+    L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+        maxZoom: 18,
+        className: "agj-dark-tiles",
     }).addTo(map);
 
     addVoltageLegend();

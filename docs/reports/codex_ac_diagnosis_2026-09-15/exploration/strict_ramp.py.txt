@@ -1,0 +1,9 @@
+from probe import *
+with (OUT/'miyagi_dedup_input.pickle').open('rb') as f:base=pickle.load(f)
+net=copy.deepcopy(base);rows=[]
+for alpha in [.05,.2,.4,.6,.8,.9,1.]:
+ for table,cols in [('load',['p_mw','q_mvar']),('gen',['p_mw']),('shunt',['q_mvar'])]:
+  net[table][cols]=base[table][cols]*alpha
+ r=run(net,f'miyagi_dedup_ramp_{alpha}',init='dc' if len(rows)==0 or not rows[-1]['converged'] else 'results',enforce_q_lims=True)
+ rows.append(r);save('miyagi_dedup_strict_ramp',rows)
+ if not r['converged']:break

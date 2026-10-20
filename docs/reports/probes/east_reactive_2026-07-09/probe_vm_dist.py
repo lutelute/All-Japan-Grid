@@ -11,7 +11,7 @@ import json
 import os
 import sys
 
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 sys.path.insert(0, REPO)
 os.chdir(REPO)
 

@@ -53,7 +53,7 @@ def _load(path: Path, name: str):
 
 def load_modules():
     """測る器は本番の関数をそのまま通す（診断と本番の食い違いを作らない）。"""
-    pf = _load(ROOT / "scripts" / "run_full_powerflow_from_db.py", "pf_full")
+    pf = _load(ROOT / "src" / "powerflow" / "full_from_built.py", "pf_full")
     rs = _load(ROOT / "scripts" / "capacity" / "repair_search.py", "rs_disp")
     return pf, rs
 

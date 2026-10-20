@@ -20,7 +20,7 @@ from collections import defaultdict
 AGJ_ROOT  = Path(__file__).parent.parent
 AGJ_DATA  = AGJ_ROOT / "data"
 DOCS_DATA = AGJ_ROOT / "docs" / "data"
-JRP_DATA  = Path("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/japan-re-potential/docs/grid")
+JRP_DATA  = Path("/Users/shigenoburyuto/dev/github/project_Hayashi/japan-re-potential/docs/grid")
 
 DRY_RUN = "--dry-run" in sys.argv
 

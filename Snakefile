@@ -44,6 +44,7 @@ rule all:
         "docs/data/MODEL_VERSION.json",
         f"{STAMP}/matpower.done",
         f"{STAMP}/cim.done",
+        f"{STAMP}/n1_screening.done",
 
 
 rule light:
@@ -101,9 +102,16 @@ rule node_hygiene:
     shell: f"{PY} scripts/apply_node_hygiene.py --mixed-pref --write"   # #35 + #42
 
 
+# 介入#47: 併架線の回線数を電圧クラスへ配分(2026-10-21 に手順へ。#44 より前に置く)
+rule mixed_voltage_circuits:
+    input: f"{STAMP}/07_node_hygiene.done"
+    output: touch(f"{STAMP}/07a_mixed_voltage_circuits.done")
+    shell: f"{PY} scripts/apply_mixed_voltage_circuits.py --write"
+
+
 # 介入#44: 回線数(par)の出典補完。基底から作り直すと OSM タグ由来へ戻るため再適用が要る
 rule apply_circuit_sources:
-    input: f"{STAMP}/07_node_hygiene.done"
+    input: f"{STAMP}/07a_mixed_voltage_circuits.done"
     output: touch(f"{STAMP}/07b_circuit_sources.done")
     shell: f"{PY} scripts/apply_circuit_sources.py --write"
 
@@ -114,8 +122,15 @@ rule satellite_connections:
     shell: f"{PY} scripts/apply_satellite_connections.py --write"
 
 
-rule substation_properties:
+# 介入#51: 一次資料(各社の空容量・予想潮流一覧)で誤りと分かった OSM の電圧タグを直す(台帳=スクリプト内 CORRECTIONS)
+rule voltage_corrections:
     input: f"{STAMP}/08_satellite.done"
+    output: touch(f"{STAMP}/08b_voltage_corrections.done")
+    shell: f"{PY} scripts/apply_voltage_corrections.py --write"
+
+
+rule substation_properties:
+    input: f"{STAMP}/08b_voltage_corrections.done"
     output: touch(f"{STAMP}/09_sub_props.done")
     shell: f"{PY} scripts/build_substation_properties.py --attach"
 
@@ -160,10 +175,17 @@ rule national_overview:
     shell: f"{PY} scripts/gen_national_overview_from_full.py"
 
 
+# N-1 全枝スクリーニング(正典の 4 島)と、地図の Ybus / N-1 タブが読む要約(2026-10-21)
+rule n1_screening:
+    input: f"{STAMP}/built_ready.done"
+    output: touch(f"{STAMP}/n1_screening.done")
+    shell: f"{PY} scripts/sensitivity/n1_screening.py --islands hokkaido okinawa east west --ac-verify 5 && {PY} scripts/export_n1_pages.py"
+
+
 rule matpower:
-    input: f"{STAMP}/full_powerflow.done"
+    input: f"{STAMP}/built_ready.done"
     output: touch(f"{STAMP}/matpower.done")
-    shell: f"{PY} scripts/export_national_matpower.py"
+    shell: f"{PY} scripts/export_matpower_canonical.py"
 
 
 rule cim:

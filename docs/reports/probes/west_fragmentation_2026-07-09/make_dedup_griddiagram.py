@@ -8,7 +8,7 @@ west 全体 + chubu-hokuriku境界の拡大。
 """
 import json, os
 from collections import defaultdict
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 import sys; sys.path.insert(0, REPO); os.chdir(REPO)
 import matplotlib
 matplotlib.use("Agg")

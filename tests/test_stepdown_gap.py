@@ -138,7 +138,7 @@ def test_flags_off_leave_the_production_builder_unchanged():
     import importlib.util
     import sys
     root = Path(__file__).resolve().parents[1]
-    spec = importlib.util.spec_from_file_location("pf_sd", root / "scripts" / "run_full_powerflow_from_db.py")
+    spec = importlib.util.spec_from_file_location("pf_sd", root / "src" / "powerflow" / "full_from_built.py")
     pf = importlib.util.module_from_spec(spec)
     sys.modules["pf_sd"] = pf
     spec.loader.exec_module(pf)

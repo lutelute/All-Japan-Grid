@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """GitHub Pages 用エディタ(docs/editor.html)を **単一の正** から派生生成する。
 
-全面改修Phase5フル統合の確定設計(docs/OVERHAUL_PLAN.md「静的shim方式」):
+全面改修Phase5フル統合の確定設計(docs/archive/plans/OVERHAUL_PLAN.md「静的shim方式」):
   正は1つ = src/server/templates/editor.html(フル機能の :8088 エディタ)。:8088 は無改修。
   本スクリプトは同テンプレを読み、
     (a) 絶対アセットパス(/js/, /static/)を Pages 相対へ rewrite、
@@ -56,11 +56,14 @@ def build_html(out_path: str, template: str = SRC) -> None:
     html = html.replace("<title>AGJ 接続編集プラットフォーム</title>",
                         "<title>AGJ 接続編集プラットフォーム(Pages 下書き)</title>")
 
-    # (c) :8088 専用のツールダッシュボード導線を剥がす(Pages に /tools は無い=死にリンク)。
+    # (c) :8088 専用のツールダッシュボード導線(Pages に /tools は無い=死にリンク)を、Pages の
+    #     ダッシュボードへの戻り口に差し替える。2026-10-20 の io 一新で map.html の iframe タブを
+    #     やめ、editor.html は単独で開くページになった。
     tools_link = ' <a href="/tools"'
     if tools_link in html:
         import re
-        html = re.sub(r' <a href="/tools".*?</a>', '', html, count=1)
+        html = re.sub(r' <a href="/tools"(.*?)>.*?</a>',
+                      r' <a href="./index.html"\1>&#8592; ダッシュボード</a>', html, count=1)
 
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(html)

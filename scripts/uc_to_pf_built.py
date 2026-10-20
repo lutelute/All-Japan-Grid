@@ -818,6 +818,9 @@ def main():
                     ts_dump["loading"] = [[None]*len(hours) for _ in range(n)]
                     ts_dump["names"] = [str(x) for x in net_s.line.name]
                     ts_dump["in_service"] = [bool(x) for x in net_s.line.in_service]
+                    # 線の鍵(両端座標・電圧・向き)。flow_map への結合は並び順でなくこれで行う
+                    from src.powerflow.line_keys import line_keys
+                    ts_dump["keys"] = [str(x) for x in line_keys(net_s)]
                 hi = list(hours).index(t)
                 for li, (pv, lv) in enumerate(zip(pf, ld)):
                     ts_dump["p_mw"][li][hi] = None if pv != pv else float(pv)

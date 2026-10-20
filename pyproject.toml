@@ -32,7 +32,7 @@ dependencies = [
   "requests>=2.31",
   "pyyaml>=6.0",
   "openpyxl>=3.1",
-  "pulp>=3.3.0",
+  "pulp>=3.3.0,<4",  # 4.0 で pulp.constants.LpStatus* が消えた(src/uc/solver.py)
   "highspy>=1.7.0",
   "psutil>=6.0.0",
   "tqdm>=4.65",
@@ -43,7 +43,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4", "pytest-cov>=4.1"]
+dev = ["pytest>=7.4", "pytest-cov>=4.1", "cogapp>=3.4"]  # cogapp: README の数字をデータから(cog --check)
+stations = ["osmium>=4.0"]  # 変電所の構内結線(node-breaker): 電力の PBF を読む(scripts/build_station_db.py)
 
 [project.urls]
 Homepage = "https://github.com/lutelute/All-Japan-Grid"

@@ -34,6 +34,7 @@ os.chdir(ROOT)   # render系は相対パス(data/...)前提
 from scripts.build_substation_structure import (   # noqa: E402
     extract_structure,
     load,
+    owned_internal_ways,
     prepare_ways,
     render_figure,
 )
@@ -74,6 +75,7 @@ def run_region(region, limit=None, force=False):
     conns, kvmax, nkvmax, trafos = load_indexes()
     subs, lines = load(region)
     pways = prepare_ways(lines)
+    owned, _ = owned_internal_ways(subs["features"], pways)
     out_dir = os.path.join(OUT_DIR, region)
     os.makedirs(out_dir, exist_ok=True)
     idx_path = os.path.join(out_dir, "index.json")
@@ -86,7 +88,7 @@ def run_region(region, limit=None, force=False):
         if limit and (done + skipped) >= limit:
             break
         try:
-            res = extract_structure(region, ft, pways)
+            res = extract_structure(region, ft, pways, owned=owned[fi])
             structure, ways, poly = res
             sid = structure.site.site_id
             if sid in seen:            # 同名同座標の重複feature(OSM品質)

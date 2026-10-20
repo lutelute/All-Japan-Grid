@@ -39,7 +39,9 @@ def main():
         elif 'islands' in d:
             for isl in d['islands'].values():
                 for key in ('p','ld'):
-                    isl[key] = [[None if x is None else int(round(x)) for x in r]
+                    # r=None は基準の線に対応しなかった行(export_day_flows が空欄にする)
+                    isl[key] = [None if r is None else
+                                [None if x is None else int(round(x)) for x in r]
                                 for r in isl[key]]
         json.dump(d, open(fp,'w'), ensure_ascii=False, separators=(',',':'))
         t0 += s0; t1 += os.path.getsize(fp)

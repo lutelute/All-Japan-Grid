@@ -1,0 +1,139 @@
+/* 系統図マップ(map.html)の左バーと詳細カード — io 一新(2026-10-21).
+ * オーナー「左バーが散らかっている。もっと見やすく」「クリックしてカード的に表示される機能も」。
+ * style.css(2026-06 の刷新層まで)の上に重ねる。見せるのはよく使う操作(電圧・表示・地域)だけ、
+ * ほかは折りたたみ(.ui-more)。チップは本体の select / checkbox を操作する(id と JS は不変)。
+ */
+:root{
+  --u-bg:#0d1117; --u-card:#161b22; --u-card2:#1c2230; --u-bd:#262d38; --u-bd2:#30363d;
+  --u-tx:#e6edf3; --u-mut:#8b949e; --u-acc:#4493f8; --u-chip:#1f2630; --u-chip-on:#e6edf3;
+}
+
+/* ── 見出し(ブランド)と入口 ── */
+#sidebar h1{display:flex;align-items:baseline;gap:10px}
+#sidebar h1 .brand-home{color:var(--u-tx);text-decoration:none;font-weight:700}
+#sidebar h1 .brand-home:hover{color:#fff}
+#sidebar h1 .h1-sub{font-size:12px;font-weight:600;color:var(--u-mut);letter-spacing:.04em}
+#sidebar .site-links{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px!important;border-bottom:1px solid var(--u-bd)}
+#sidebar .site-links a{font-size:12px!important;padding:4px 10px;border-radius:999px;background:var(--u-chip);
+  color:var(--u-tx)!important;text-decoration:none;border:1px solid transparent;white-space:nowrap}
+#sidebar .site-links a:hover{border-color:var(--u-bd2)}
+#sidebar .site-links a.home{background:transparent;border-color:var(--u-bd2);color:var(--u-mut)!important}
+
+/* ── 操作のまとまり ── */
+.ui-sec{padding:14px 16px 4px}
+.ui-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--u-mut);margin:0 0 8px}
+.ui-lead{margin:0;padding:14px 16px 2px;font-size:12px;line-height:1.7;color:var(--u-mut)}
+.ui-note{font-size:11px;line-height:1.6;color:var(--u-mut);margin:8px 0 0}
+.ui-sub{font-size:11.5px;font-weight:700;color:var(--u-tx);margin:12px 0 7px}
+.ov-hint{font-size:11px;font-weight:500;color:var(--u-mut);margin-left:4px}
+
+/* 電圧: 1 本につながった区切りボタン */
+.seg{display:flex;background:var(--u-chip);border-radius:10px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:transparent;color:var(--u-mut);font:600 12.5px/1 inherit;font-family:inherit;
+  padding:8px 0;border-radius:8px;cursor:pointer;font-variant-numeric:tabular-nums}
+.seg button:hover{color:var(--u-tx)}
+.seg button.active{background:var(--u-chip-on);color:#0d1117}
+.seg-select{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* 表示の切り替え: チェックボックスをチップに */
+.chip-toggles{display:flex;flex-wrap:wrap;gap:6px}
+.chip-cb{position:relative;display:inline-flex;cursor:pointer;margin:0}
+.chip-cb input{position:absolute;opacity:0;pointer-events:none}
+.chip-cb span{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:var(--u-chip);color:var(--u-mut);border:1px solid transparent;transition:background .12s,color .12s}
+.chip-cb span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--u-bd2)}
+.chip-cb input:checked + span{background:color-mix(in srgb,var(--u-acc) 22%,var(--u-chip));color:var(--u-tx)}
+.chip-cb input:checked + span::before{background:var(--u-acc)}
+.chip-cb input:focus-visible + span{outline:2px solid var(--u-acc);outline-offset:2px}
+
+/* 地域: 2 列のチップ */
+#sidebar .region-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px!important;max-height:none!important}
+#sidebar .region-btn{display:flex!important;justify-content:flex-start!important;align-items:center;padding:7px 9px!important;
+  border-radius:9px!important;background:var(--u-chip)!important;border:1px solid transparent!important;color:var(--u-tx)!important;
+  font-size:12px!important;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:0!important}
+#sidebar .region-btn:first-child{grid-column:1 / -1;justify-content:center!important}
+#sidebar .region-btn:hover{border-color:var(--u-bd2)!important}
+#sidebar .region-btn.active{background:var(--u-chip-on)!important;color:#0d1117!important}
+#sidebar .region-btn .count{display:none}
+
+/* 折りたたみ(発電所の種類・重ねて見る・書き出す) */
+.ui-more{margin:12px 16px 0;border:1px solid var(--u-bd);border-radius:12px;background:var(--u-card);padding:0 12px}
+.ui-more > summary{cursor:pointer;list-style:none;padding:11px 0;font-size:12.5px;font-weight:700;color:var(--u-tx);
+  display:flex;align-items:center;gap:6px}
+.ui-more > summary::-webkit-details-marker{display:none}
+.ui-more > summary::after{content:"";margin-left:auto;width:7px;height:7px;border-right:2px solid var(--u-mut);
+  border-bottom:2px solid var(--u-mut);transform:rotate(45deg);transition:transform .15s}
+.ui-more[open] > summary::after{transform:rotate(-135deg)}
+.ui-more[open]{padding-bottom:12px}
+.ui-more .filter-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--u-mut)}
+.ui-more .filter-row input[type=range]{flex:1}
+.ui-more .fuel-filter-actions{display:flex;gap:6px;margin:10px 0 8px}
+.download-section.ui-more{margin:14px 16px 12px}
+.download-section .download-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.download-section .btn-download{text-align:center;text-decoration:none}
+
+/* ── 詳細カード(クリックで右に出る) ── */
+.agj-card{position:absolute;top:12px;right:12px;z-index:1200;width:min(360px,calc(100% - 24px));max-height:calc(100% - 24px);
+  overflow-y:auto;background:rgba(22,27,34,.97);color:var(--u-tx);border:1px solid var(--u-bd2);border-radius:18px;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.7);padding:20px 20px 18px;backdrop-filter:blur(10px);
+  font:13px/1.6 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;cursor:auto}
+.agj-card[hidden]{display:none}
+@media (prefers-reduced-motion: no-preference){.agj-card:not([hidden]){animation:agjcard .22s ease-out}}
+@keyframes agjcard{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.agj-card-x{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--u-chip);color:var(--u-mut);font-size:18px;line-height:1}
+.agj-card-x:hover{color:var(--u-tx)}
+.agj-card-kind{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--u-mut);
+  letter-spacing:.04em;margin-right:36px}
+.agj-card-kind i{width:10px;height:10px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.agj-card-title{margin:8px 36px 4px 0;font-size:21px;line-height:1.3;font-weight:800;letter-spacing:-.01em;word-break:break-word}
+.agj-card-sub{color:var(--u-mut);font-size:12.5px;font-variant-numeric:tabular-nums}
+.agj-card-rows{display:grid;grid-template-columns:max-content 1fr;gap:8px 14px;margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--u-bd)}
+.agj-card-rows dt{color:var(--u-mut);font-size:12px}
+.agj-card-rows dd{margin:0;font-weight:600;word-break:break-word}
+.agj-card-rows a,.agj-card-html a,.agj-card-note a{color:var(--u-acc)}
+.agj-card-html{margin-top:12px;font-size:12.5px}
+.agj-card-src{margin:0;padding:10px 12px;border-radius:10px;background:var(--u-chip);color:var(--u-mut);font-size:11.5px;line-height:1.6}
+.agj-card-more{margin-top:14px;border-top:1px solid var(--u-bd);padding-top:10px}
+.agj-card-more summary{cursor:pointer;color:var(--u-mut);font-size:12px;font-weight:600}
+.agj-card-more .detail-popup h3,.agj-card-more .detail-popup .popup-meta{display:none}
+.agj-card-more table{width:100%;font-size:11.5px;border-collapse:collapse}
+.agj-card-more td{padding:2px 0;color:var(--u-mut)}
+.agj-card-more td + td{color:var(--u-tx);text-align:right}
+.agj-card-more .popup-section-title{margin:10px 0 4px;font-size:11px;font-weight:700;color:var(--u-tx)}
+.agj-card-actions{display:flex;flex-direction:column;gap:7px;margin-top:18px}
+.agj-card-btn{display:block;text-align:center;padding:10px 14px;border-radius:999px;border:1px solid var(--u-bd2);
+  background:transparent;color:var(--u-tx);font:600 13px/1.2 inherit;font-family:inherit;text-decoration:none;cursor:pointer}
+.agj-card-btn:hover{border-color:var(--u-mut);text-decoration:none}
+.agj-card-btn.primary{background:var(--u-acc);border-color:var(--u-acc);color:#fff}
+.agj-card-note{margin:14px 0 0;color:var(--u-mut);font-size:11.5px;line-height:1.6}
+/* カードを出しているあいだは、右下の一覧パネルを隠す(重なるため) */
+body.agj-card-open #sublist.visible{visibility:hidden}
+
+/* ホバーの吹き出し */
+.leaflet-tooltip.agj-tip,.leaflet-tooltip{background:rgba(13,17,23,.94);color:#e6edf3;border:1px solid #30363d;border-radius:8px;
+  box-shadow:0 8px 20px -8px rgba(0,0,0,.6);font-size:12px;padding:5px 9px}
+.leaflet-tooltip::before{display:none}
+
+/* ── 地図の左上の切り替え(操作・凡例・一覧): アイコンだけだと意味が分からないので文字を添える ── */
+#ui-toggles{gap:6px!important}
+#ui-toggles .ui-toggle-btn{width:auto!important;height:32px!important;padding:0 11px!important;border-radius:999px!important;
+  display:inline-flex!important;align-items:center;gap:6px;font-size:12px!important;font-weight:600;
+  background:rgba(22,27,34,.92)!important;color:var(--u-tx)!important;border:1px solid var(--u-bd2)!important}
+#ui-toggles .ui-toggle-btn span{font-size:12px}
+#ui-toggles .ui-toggle-btn.inactive{color:var(--u-mut)!important;opacity:.8}
+
+/* ── 右下の一覧パネル ── */
+#sublist{border-radius:16px!important;padding:10px!important;width:312px!important;background:rgba(22,27,34,.95)!important;
+  border:1px solid var(--u-bd2)!important;box-shadow:0 18px 40px -18px rgba(0,0,0,.7)!important;backdrop-filter:blur(10px)}
+#sublist .list-tabs{gap:4px!important}
+#sublist .list-tab-btn{border-radius:999px!important;padding:5px 8px!important;font-size:11px!important;font-weight:600;white-space:nowrap;overflow:visible!important;text-overflow:clip!important;flex:1 1 auto!important;min-width:0}
+#sublist .list-search{border-radius:999px!important;padding:7px 12px!important;background:var(--u-chip)!important;border:1px solid var(--u-bd2)!important;color:var(--u-tx)!important}
+#sublist .list-sort-btn{border-radius:999px!important}
+
+/* 構造図を開いている間は、地図用の拡大ボタン・背景の切り替え・一覧パネルを隠す(図の上に被るため) */
+body.sld-on #sublist,body.sld-on #list-toggle-btn,body.sld-on .leaflet-control-container{visibility:hidden}
+
+/* Ybus / N-1 のように全画面で開くタブの間は、地図と一覧パネルを隠す。パネルは左バー(z-index 1000)の
+   中にあるため、地図側の部品(一覧パネル 1100・拡大ボタン・切り替え)が上に被っていた */
+body.fullscreen-tab #map,body.fullscreen-tab #sublist,body.fullscreen-tab #list-toggle-btn{visibility:hidden}

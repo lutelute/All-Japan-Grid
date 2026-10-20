@@ -4,7 +4,7 @@
 動的検討ロードマップ: Phase0=本マップ → Phase1=ZIP負荷+実R/XでZ(jω) → Phase2=GFL/GFMナイキスト → Phase3=RMS動的。 — 数値Ybus+機械典型値(xd''=0.2pu)でZthを全バス計算。
 本番のbuild_island_net(罠3)で発電機バスを取得し、Ybusはgen_ybus_numericの出荷npzを使う。"""
 import json, sys, time
-sys.path.insert(0, '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid')
+sys.path.insert(0, '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid')
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import splu
@@ -12,7 +12,7 @@ from scipy.sparse.linalg import splu
 from scripts.run_full_powerflow_from_db import build_island_net, attach_generators
 from scripts.gen_ybus_numeric import ISLANDS, load_ybus_npz
 
-ROOT = '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid'
+ROOT = '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid'
 S = 'docs/reports/figs'
 XD2 = 0.2      # 機械次過渡リアクタンス典型値(pu, 機械ベース)
 

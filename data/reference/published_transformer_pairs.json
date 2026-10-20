@@ -1,0 +1,2658 @@
+{
+ "note": "各社の空容量・予想潮流一覧(一次資料)の変圧器の電圧の組。今のモデル(観測優先)と食い違う変電所だけ。電圧の組だけで台数・容量は含まない。オーナー判断(2026-10-08「直す」)でモデルに使う。生成: scripts/score_transformer_topology.py --export。使い方: src/model/site_transformers.py(介入 #49)",
+ "sites": [
+  {
+   "name": "三河変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_d849a8a1f508"
+   ],
+   "lat": 34.844231,
+   "lon": 137.470462,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     77
+    ]
+   ],
+   "utility": [
+    "chubu"
+   ],
+   "source": [
+    "https://gridmap.powergrid.chuden.co.jp/geo_data/KRSIH016"
+   ]
+  },
+  {
+   "name": "中信変電所",
+   "regions": [
+    "chubu"
+   ],
+   "structure_sites": [
+    "chubu_site_f44c12c8f663"
+   ],
+   "lat": 36.126136,
+   "lon": 137.933939,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     77
+    ]
+   ],
+   "utility": [
+    "chubu"
+   ],
+   "source": [
+    "https://gridmap.powergrid.chuden.co.jp/geo_data/KRSIH015"
+   ]
+  },
+  {
+   "name": "米子変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_c608dbc9bd34"
+   ],
+   "lat": 35.417811,
+   "lon": 133.337231,
+   "pairs": [
+    [
+     110,
+     66
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_tori.zip"
+   ]
+  },
+  {
+   "name": "田頭変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_d3403999d8ea"
+   ],
+   "lat": 34.514513,
+   "lon": 133.509432,
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_oka.zip"
+   ]
+  },
+  {
+   "name": "安来変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_ccbb8a11cad6"
+   ],
+   "lat": 35.427247,
+   "lon": 133.263977,
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_shima.zip"
+   ]
+  },
+  {
+   "name": "山口変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_794e85971d4d",
+    "kyushu_site_794e85971d4d"
+   ],
+   "lat": 34.06023,
+   "lon": 131.27038,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     110,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_220kv.zip",
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_yama.zip"
+   ]
+  },
+  {
+   "name": "富岡変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_1a26ab4db4cd"
+   ],
+   "lat": 34.495133,
+   "lon": 133.525829,
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_oka.zip"
+   ]
+  },
+  {
+   "name": "高千帆変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_bea1db6b216c",
+    "kyushu_site_bea1db6b216c"
+   ],
+   "lat": 34.012366,
+   "lon": 131.204365,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_yama.zip"
+   ]
+  },
+  {
+   "name": "厚狭変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_b84416400e27",
+    "kyushu_site_b84416400e27"
+   ],
+   "lat": 34.04552,
+   "lon": 131.162258,
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_yama.zip"
+   ]
+  },
+  {
+   "name": "才川変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_b9be1014ba7b",
+    "kyushu_site_b9be1014ba7b"
+   ],
+   "lat": 34.02625,
+   "lon": 131.009825,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_yama.zip"
+   ]
+  },
+  {
+   "name": "長府変電所",
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "structure_sites": [
+    "chugoku_site_55f9e4daf338",
+    "kyushu_site_55f9e4daf338"
+   ],
+   "lat": 34.003854,
+   "lon": 130.985697,
+   "pairs": [
+    [
+     110,
+     6
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_yama.zip"
+   ]
+  },
+  {
+   "name": "里庄変電所",
+   "regions": [
+    "chugoku"
+   ],
+   "structure_sites": [
+    "chugoku_site_5d4efe307928"
+   ],
+   "lat": 34.516888,
+   "lon": 133.563455,
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "chugoku"
+   ],
+   "source": [
+    "https://www.energia.co.jp/nw/service/retailer/keitou/access/zip/csv_oka.zip"
+   ]
+  },
+  {
+   "name": "上磯変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_635c97dc7640"
+   ],
+   "lat": 41.818581,
+   "lon": 140.613798,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "hokkaido"
+   ],
+   "source": [
+    "https://www.hepco.co.jp/network/con_service/public_document/zip/sys_capa_local24.zip"
+   ]
+  },
+  {
+   "name": "軍川変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_441843bf18b9"
+   ],
+   "lat": 41.972378,
+   "lon": 140.707082,
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ],
+   "utility": [
+    "hokkaido"
+   ],
+   "source": [
+    "https://www.hepco.co.jp/network/con_service/public_document/zip/sys_capa_local24.zip"
+   ]
+  },
+  {
+   "name": "安足間変電所",
+   "regions": [
+    "hokkaido"
+   ],
+   "structure_sites": [
+    "hokkaido_site_583dd5563017"
+   ],
+   "lat": 43.840682,
+   "lon": 142.708979,
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ],
+   "utility": [
+    "hokkaido"
+   ],
+   "source": [
+    "https://www.hepco.co.jp/network/con_service/public_document/zip/sys_capa_local03.zip"
+   ]
+  },
+  {
+   "name": "南福井変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_d83a77582b97",
+    "chubu_site_d83a77582b97"
+   ],
+   "lat": 36.046949,
+   "lon": 136.185349,
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "hokuriku"
+   ],
+   "source": [
+    "https://www.rikuden.co.jp/nw_notification/attach/sys_capa_local03_tr_202609_05.csv"
+   ]
+  },
+  {
+   "name": "松任変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_86e6ac0d92f3",
+    "chubu_site_86e6ac0d92f3"
+   ],
+   "lat": 36.519347,
+   "lon": 136.555332,
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "hokuriku"
+   ],
+   "source": [
+    "https://www.rikuden.co.jp/nw_notification/attach/sys_capa_local02_tr_202609_05.csv"
+   ]
+  },
+  {
+   "name": "安宅変電所",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "structure_sites": [
+    "hokuriku_site_dc226916e02d",
+    "chubu_site_dc226916e02d"
+   ],
+   "lat": 36.420406,
+   "lon": 136.441635,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "hokuriku"
+   ],
+   "source": [
+    "https://www.rikuden.co.jp/nw_notification/attach/sys_capa_local02_tr_202609_05.csv"
+   ]
+  },
+  {
+   "name": "伊丹変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_0be31d11012c"
+   ],
+   "lat": 34.785752,
+   "lon": 135.375017,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     77
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_trans.csv"
+   ]
+  },
+  {
+   "name": "新奈良変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_3c0fe6a96c0c"
+   ],
+   "lat": 34.622218,
+   "lon": 135.796302,
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv",
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_trans.csv"
+   ]
+  },
+  {
+   "name": "新生駒 変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_81537a63e186"
+   ],
+   "lat": 34.734825,
+   "lon": 135.714709,
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     500,
+     154
+    ],
+    [
+     275,
+     77
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_trans.csv"
+   ]
+  },
+  {
+   "name": "湖東変電所",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_72c49a82abbb",
+    "chubu_site_72c49a82abbb"
+   ],
+   "lat": 35.312716,
+   "lon": 136.305976,
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_more_trans.csv"
+   ]
+  },
+  {
+   "name": "意岐部変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_4b65a4668a79"
+   ],
+   "lat": 34.672739,
+   "lon": 135.591556,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "佐野変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_1d7d51d4f127"
+   ],
+   "lat": 34.412541,
+   "lon": 135.324144,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "鵤変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_561e8e36eb4b"
+   ],
+   "lat": 34.832502,
+   "lon": 134.579998,
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "千里丘変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_23d9aa06bbc2"
+   ],
+   "lat": 34.807101,
+   "lon": 135.515716,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "三津屋変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_01baf94acb25"
+   ],
+   "lat": 34.725929,
+   "lon": 135.465264,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "西院変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_528d2573555e"
+   ],
+   "lat": 35.001601,
+   "lon": 135.72312,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "浜田変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_85165fa56f72"
+   ],
+   "lat": 34.782229,
+   "lon": 134.576366,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "高田変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_36bcbeef5f2c"
+   ],
+   "lat": 34.521162,
+   "lon": 135.744672,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "櫟本変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_35ec90fc359d"
+   ],
+   "lat": 34.628993,
+   "lon": 135.833692,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "岬変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_e9397040613b"
+   ],
+   "lat": 34.316334,
+   "lon": 135.129924,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "上狛変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_559413e49f9d"
+   ],
+   "lat": 34.745796,
+   "lon": 135.822541,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "北田原変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_e32bdc2b6392"
+   ],
+   "lat": 34.732167,
+   "lon": 135.714546,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "茨田浜変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_fa33ea864751"
+   ],
+   "lat": 34.704621,
+   "lon": 135.584456,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "北島変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_a82ce06b0467"
+   ],
+   "lat": 34.247401,
+   "lon": 135.159429,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "溝口変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_c405d8be097c"
+   ],
+   "lat": 34.9309,
+   "lon": 134.745341,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "津田変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_b6c0ca0d86de"
+   ],
+   "lat": 34.810911,
+   "lon": 135.689824,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "城東変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_17f7782f2de2"
+   ],
+   "lat": 34.82587,
+   "lon": 134.724512,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "淀変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_30ec79c1f20f"
+   ],
+   "lat": 34.921957,
+   "lon": 135.734991,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "松ヶ崎変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_fd2226ba4803"
+   ],
+   "lat": 35.064433,
+   "lon": 135.79173,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "塩屋変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_2a89d8799f2c"
+   ],
+   "lat": 34.199392,
+   "lon": 135.178205,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "温泉変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_9b6cdea436f2"
+   ],
+   "lat": 35.542358,
+   "lon": 134.506818,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "国府変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_94288958569e"
+   ],
+   "lat": 35.481715,
+   "lon": 134.781188,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "新田辺変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_74f4973646de"
+   ],
+   "lat": 33.72824,
+   "lon": 135.403034,
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "信達変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_9e79c87f332d"
+   ],
+   "lat": 34.378842,
+   "lon": 135.282695,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "南生駒変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_c180cdc2ee2b"
+   ],
+   "lat": 34.663559,
+   "lon": 135.718481,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "木津変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_b4bd42906fc5"
+   ],
+   "lat": 34.73281,
+   "lon": 135.792908,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "湊町変電所",
+   "regions": [
+    "kansai"
+   ],
+   "structure_sites": [
+    "kansai_site_99641d5d2a2c"
+   ],
+   "lat": 34.665267,
+   "lon": 135.492671,
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ],
+   "utility": [
+    "kansai"
+   ],
+   "source": [
+    "https://www.kansai-td.co.jp/interchange/takusou/pdf/154kv_less_trans.csv"
+   ]
+  },
+  {
+   "name": "人吉変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_95be28fa0410"
+   ],
+   "lat": 32.223131,
+   "lon": 130.772845,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "大隅変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_f8a4c238ccb7"
+   ],
+   "lat": 31.39223,
+   "lon": 130.938148,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ],
+    [
+     110,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "清水変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_b9998e497bfa"
+   ],
+   "lat": 31.918722,
+   "lon": 131.418228,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "住吉変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_31756a65d211"
+   ],
+   "lat": 33.588852,
+   "lon": 130.411739,
+   "pairs": [
+    [
+     220,
+     66
+    ],
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "三池変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_7fc1d85d2164"
+   ],
+   "lat": 33.060641,
+   "lon": 130.470449,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "鯰田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_4dbd8489158d"
+   ],
+   "lat": 33.661675,
+   "lon": 130.694098,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "九州電力 南熊本変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_0020b7552eb7"
+   ],
+   "lat": 32.668001,
+   "lon": 130.764772,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "弓削変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_ac0c057e10c0"
+   ],
+   "lat": 32.848143,
+   "lon": 130.785358,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "武雄変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_083a31804d46"
+   ],
+   "lat": 33.180813,
+   "lon": 130.011283,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ],
+    [
+     110,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "賑橋変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_a067e5301cb3"
+   ],
+   "lat": 32.747439,
+   "lon": 129.878015,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "若松変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_1152ade20735"
+   ],
+   "lat": 33.925712,
+   "lon": 130.740186,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "花畑変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_dd63827fd190"
+   ],
+   "lat": 32.802629,
+   "lon": 130.707426,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "慶徳変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_8de1a7ba9ff1"
+   ],
+   "lat": 32.796053,
+   "lon": 130.702502,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "京泊変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_cc01f406d0fb"
+   ],
+   "lat": 32.827529,
+   "lon": 129.777065,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "日田変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_227d994a67c6"
+   ],
+   "lat": 33.305068,
+   "lon": 130.874887,
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "海崎変電所",
+   "regions": [
+    "kyushu"
+   ],
+   "structure_sites": [
+    "kyushu_site_b390b96dc33a"
+   ],
+   "lat": 32.996134,
+   "lon": 131.881219,
+   "pairs": [
+    [
+     220,
+     66
+    ]
+   ],
+   "utility": [
+    "kyushu"
+   ],
+   "source": [
+    "https://www.kyuden.co.jp/var/rev0/0925/6795/td_oLsu7j3Y.zip"
+   ]
+  },
+  {
+   "name": "高知変電所",
+   "regions": [
+    "shikoku"
+   ],
+   "structure_sites": [
+    "shikoku_site_2c6e3dc9773b"
+   ],
+   "lat": 33.566788,
+   "lon": 133.476443,
+   "pairs": [
+    [
+     187,
+     66
+    ]
+   ],
+   "utility": [
+    "shikoku"
+   ],
+   "source": [
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_kikan00_tr_202610_08.csv"
+   ]
+  },
+  {
+   "name": "仁井田変電所",
+   "regions": [
+    "shikoku"
+   ],
+   "structure_sites": [
+    "shikoku_site_0d816301d937"
+   ],
+   "lat": 33.527628,
+   "lon": 133.569924,
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "shikoku"
+   ],
+   "source": [
+    "https://www.yonden.co.jp/nw/assets/line_access/data/sys_capa_local04_tr_202610_08.csv"
+   ]
+  },
+  {
+   "name": "新庄変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_974f25bb3e1f"
+   ],
+   "lat": 38.701575,
+   "lon": 140.250377,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_kikan01_tr_202607_02.csv",
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local05_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "横堀変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ca0f7f08a1fe"
+   ],
+   "lat": 39.067862,
+   "lon": 140.462135,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "木越変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_dda59dfa267f"
+   ],
+   "lat": 37.719083,
+   "lon": 139.180266,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ],
+    [
+     11,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local07_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "西石巻変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e47a84c14c82"
+   ],
+   "lat": 38.473562,
+   "lon": 141.219722,
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local04_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "一関変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_50113ae68910"
+   ],
+   "lat": 38.941209,
+   "lon": 141.097188,
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "東山変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_2bf9016b5ee5"
+   ],
+   "lat": 38.994677,
+   "lon": 141.266551,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "十三湖変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e2d975906f88"
+   ],
+   "lat": 41.009702,
+   "lon": 140.421534,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local01_tr_202609_02.csv"
+   ]
+  },
+  {
+   "name": "南津軽変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_bc2c2ea61057"
+   ],
+   "lat": 40.584956,
+   "lon": 140.545976,
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local01_tr_202609_02.csv"
+   ]
+  },
+  {
+   "name": "金木変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_31fd405b0248"
+   ],
+   "lat": 40.88168,
+   "lon": 140.451536,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local01_tr_202609_02.csv"
+   ]
+  },
+  {
+   "name": "本荘変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7b941eb71118"
+   ],
+   "lat": 39.383638,
+   "lon": 140.058481,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "川添変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e447325cab6e"
+   ],
+   "lat": 39.619768,
+   "lon": 140.158195,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "土崎変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_957910fb6967"
+   ],
+   "lat": 39.748936,
+   "lon": 140.081373,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "船川変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_ea46d7670942"
+   ],
+   "lat": 39.905064,
+   "lon": 139.866338,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "好摩変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_6b19045d0c3c"
+   ],
+   "lat": 39.898256,
+   "lon": 141.161204,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "青森変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_b69144df455e"
+   ],
+   "lat": 40.777525,
+   "lon": 140.71275,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_kikan01_tr_202607_02.csv",
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local01_tr_202609_02.csv"
+   ]
+  },
+  {
+   "name": "岩泉発電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_7c1332c0732b"
+   ],
+   "lat": 39.842682,
+   "lon": 141.78987,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "毛馬内変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_23801484f8b3"
+   ],
+   "lat": 40.264849,
+   "lon": 140.768038,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "日詰変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_e3c048648bee"
+   ],
+   "lat": 39.55329,
+   "lon": 141.160955,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "柳原変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_575e4de40b2d"
+   ],
+   "lat": 39.29922,
+   "lon": 141.112957,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local02_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "花輪変電所",
+   "regions": [
+    "tohoku"
+   ],
+   "structure_sites": [
+    "tohoku_site_496cceb570d5"
+   ],
+   "lat": 40.205689,
+   "lon": 140.801354,
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ],
+   "utility": [
+    "tohoku"
+   ],
+   "source": [
+    "https://nw.tohoku-epco.co.jp/consignment/system/announcement/data/sys_capa_local03_tr_202607_02.csv"
+   ]
+  },
+  {
+   "name": "新秦野変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_b7f89ad93245"
+   ],
+   "lat": 35.400606,
+   "lon": 139.225573,
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     500,
+     154
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kikan.zip"
+   ]
+  },
+  {
+   "name": "新富士変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_52b569ac38aa",
+    "chubu_site_52b569ac38aa"
+   ],
+   "lat": 35.372399,
+   "lon": 138.963078,
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     500,
+     154
+    ],
+    [
+     275,
+     154
+    ],
+    [
+     154,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kikan.zip",
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_shizuoka.zip"
+   ]
+  },
+  {
+   "name": "南狭山変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_b60bffab56f4"
+   ],
+   "lat": 35.838655,
+   "lon": 139.444628,
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_saitama.zip"
+   ]
+  },
+  {
+   "name": "西相模変電所",
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_bea85363f0a0",
+    "chubu_site_bea85363f0a0",
+    "chubu_site_df3bc517c67b"
+   ],
+   "lat": 35.292444,
+   "lon": 139.117774,
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kanagawa.zip"
+   ]
+  },
+  {
+   "name": "新京葉変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_408dc0de0b9f"
+   ],
+   "lat": 35.781472,
+   "lon": 140.069487,
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_chiba.zip",
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kikan.zip"
+   ]
+  },
+  {
+   "name": "江東変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_7141d6d3f563"
+   ],
+   "lat": 35.663203,
+   "lon": 139.840159,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_tokyo.zip"
+   ]
+  },
+  {
+   "name": "京北変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_befe65bdc586"
+   ],
+   "lat": 35.82827,
+   "lon": 139.785864,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ],
+    [
+     154,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_saitama.zip"
+   ]
+  },
+  {
+   "name": "新坂戸変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_958bf28f3a31"
+   ],
+   "lat": 35.962199,
+   "lon": 139.436352,
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kikan.zip",
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_saitama.zip"
+   ]
+  },
+  {
+   "name": "上尾変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_3088cff847b6"
+   ],
+   "lat": 35.968986,
+   "lon": 139.611792,
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_saitama.zip"
+   ]
+  },
+  {
+   "name": "北東京変電所",
+   "regions": [
+    "tokyo"
+   ],
+   "structure_sites": [
+    "tokyo_site_7a1516a00a0e"
+   ],
+   "lat": 36.026365,
+   "lon": 139.690757,
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ]
+   ],
+   "utility": [
+    "tokyo"
+   ],
+   "source": [
+    "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_saitama.zip"
+   ]
+  }
+ ]
+}

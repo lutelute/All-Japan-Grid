@@ -10,7 +10,7 @@
 """
 import json, os, sys
 from collections import Counter, defaultdict
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 sys.path.insert(0, REPO); os.chdir(REPO)
 from scripts.run_full_powerflow_from_db import BUILT, build_island_net
 from scripts.uc_to_pf_built import ISLAND_FREQ

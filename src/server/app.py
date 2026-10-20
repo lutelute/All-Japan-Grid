@@ -57,7 +57,7 @@ async def startup_load():
 # ─── Pages ────────────────────────────────────────────────────────────
 
 # 統合(2026-06-17): 主ページ `/` は末尾の docs 静的マウントが配信する(Pages と同一の正本
-# アプリ = docs/index.html・主地図+全タブ)。:8088 は /editor=実バックエンド編集 + /api/* を担う。
+# アプリ = docs/index.html ダッシュボード → docs/map.html 主地図+全タブ)。:8088 は /editor=実バックエンド編集 + /api/* を担う。
 # 旧 templates/index.html(2タブの古い地図)は撤去。
 
 
@@ -328,6 +328,10 @@ async def run_powerflow_api(req: PowerFlowRequest):
     """Run power flow on a region.
 
     Returns summary with convergence status, losses, and loading.
+
+    旧系譜(2026-10-21 確認): 介入前の地域別 OSM(geojson_loader)から旧い組み立て方で網を作る。
+    どの画面からも呼ばれていない。正典(docs/data/built)の潮流は `ajgrid pf` か
+    ツール実行ダッシュボード(/tools)から(docs/reports/project_structure_2026-10-21.md の B3)。
     """
     from src.server import powerflow_service
 
@@ -387,7 +391,11 @@ class MatpowerExportRequest(BaseModel):
 
 @app.post("/api/matpower/export")
 async def export_matpower(req: MatpowerExportRequest):
-    """Export a region to MATPOWER .mat file."""
+    """Export a region to MATPOWER .mat file.
+
+    旧系譜(上の /api/powerflow/run と同じ網)。配布する MATPOWER ケースは正典から
+    `ajgrid matpower`(scripts/export_matpower_canonical.py)で作る。
+    """
     from src.server import powerflow_service
 
     sub_fc = geojson_loader.get_geojson(req.region, "substations")
@@ -439,7 +447,7 @@ app.include_router(_tools_router)
 
 
 # ─── 統合: Pages の正本アプリ(docs/)を :8088 でも配信 ─────────────────────
-# `:8088 /` = docs/index.html(主地図+全タブ)。css/js/data/assets/editor.html 等の相対参照も
+# `:8088 /` = docs/index.html(ダッシュボード)、`/map.html` = 主地図+全タブ。css/js/data/assets 等の相対参照も
 # このマウントが解決する(Pages と完全同一の正本アプリ)。明示ルート(/api/*, /editor)を先に
 # 登録済みなのでそれらが優先一致し、残り(/, /css, /editor.html …)をこの静的マウントが受ける。
 _DOCS_DIR = os.path.join(_BASE_DIR, "..", "..", "docs")

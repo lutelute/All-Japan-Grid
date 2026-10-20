@@ -1,0 +1,1219 @@
+{
+ "islands": {
+  "hokkaido": {
+   "ac_converged": [
+    true,
+    true
+   ],
+   "dc_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8570230191830116,
+    0.8594432004735285
+   ],
+   "ac_vm_max": [
+    1.0217364065874834,
+    1.0217364046652362
+   ],
+   "ac_max_loading_pct": [
+    93.24757243159904,
+    93.21618819252997
+   ],
+   "dc_max_loading_pct": [
+    86.15924085673981,
+    86.142106019684
+   ],
+   "ac_total_loss_mw": [
+    101.75433990098367,
+    101.64079408179997
+   ],
+   "n_trafo": [
+    69,
+    69
+   ],
+   "n_trafo_nameplate": [
+    1,
+    1
+   ],
+   "ac_error": [
+    null,
+    null
+   ]
+  },
+  "east": {
+   "ac_converged": [
+    true,
+    true
+   ],
+   "dc_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8558010022120516,
+    0.856218468585538
+   ],
+   "ac_vm_max": [
+    1.022906942677554,
+    1.0229069426775532
+   ],
+   "ac_max_loading_pct": [
+    1003.5316145699248,
+    1003.5314286142681
+   ],
+   "dc_max_loading_pct": [
+    875.7721416537831,
+    875.7721416537831
+   ],
+   "ac_total_loss_mw": [
+    1495.1269551285932,
+    1493.0360786248593
+   ],
+   "n_trafo": [
+    677,
+    678
+   ],
+   "n_trafo_nameplate": [
+    6,
+    7
+   ],
+   "ac_error": [
+    null,
+    null
+   ]
+  },
+  "west": {
+   "ac_converged": [
+    false,
+    false
+   ],
+   "dc_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    null,
+    null
+   ],
+   "ac_vm_max": [
+    null,
+    null
+   ],
+   "ac_max_loading_pct": [
+    null,
+    null
+   ],
+   "dc_max_loading_pct": [
+    541.7713581704999,
+    541.228015839657
+   ],
+   "ac_total_loss_mw": [
+    null,
+    null
+   ],
+   "n_trafo": [
+    997,
+    998
+   ],
+   "n_trafo_nameplate": [
+    4,
+    4
+   ],
+   "ac_error": [
+    "island too large for AC (7985 > 7000); DC only",
+    "island too large for AC (7985 > 7000); DC only"
+   ]
+  },
+  "okinawa": {
+   "ac_converged": [
+    true,
+    true
+   ],
+   "dc_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.7582349750786612,
+    0.7582349750786612
+   ],
+   "ac_vm_max": [
+    1.000000332126833,
+    1.000000332126833
+   ],
+   "ac_max_loading_pct": [
+    230.695212605895,
+    230.695212605895
+   ],
+   "dc_max_loading_pct": [
+    182.39249435421868,
+    182.39249435421868
+   ],
+   "ac_total_loss_mw": [
+    28.25915287132245,
+    28.25915287132245
+   ],
+   "n_trafo": [
+    19,
+    19
+   ],
+   "n_trafo_nameplate": [
+    0,
+    0
+   ],
+   "ac_error": [
+    null,
+    null
+   ]
+  }
+ },
+ "sites": [
+  {
+   "island": "hokkaido",
+   "site": "北豊富変電所 187kV",
+   "kv": [
+    187.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_187/110kV",
+     "p_hv_mw": 122.1,
+     "loading_pct": 73.2
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 17.5,
+     "loading_pct": 18.1
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_187/66kV@osm",
+     "p_hv_mw": 40.8,
+     "loading_pct": 41.8
+    },
+    {
+     "name": "trafo_187/110kV",
+     "p_hv_mw": 94.0,
+     "loading_pct": 56.2
+    }
+   ],
+   "linked": [
+    [
+     187.0,
+     66.0,
+     "osm"
+    ],
+    [
+     187.0,
+     110.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "east",
+   "site": "東清水変電所 275kV",
+   "kv": [
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 293.7,
+     "loading_pct": 110.2
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 16.3,
+     "loading_pct": 16.4
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 16.3,
+     "loading_pct": 16.3
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 284.8,
+     "loading_pct": 106.8
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     77.0,
+     "osm"
+    ],
+    [
+     275.0,
+     154.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "east",
+   "site": "中東京変電所 275kV",
+   "kv": [
+    275.0,
+    154.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 30.5,
+     "loading_pct": 11.4
+    },
+    {
+     "name": "trafo_154/66kV",
+     "p_hv_mw": 70.9,
+     "loading_pct": 70.9
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 24.4,
+     "loading_pct": 9.2
+    },
+    {
+     "name": "trafo_275/66kV@osm",
+     "p_hv_mw": 79.9,
+     "loading_pct": 79.9
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     66.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "east",
+   "site": "東毛変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 185.4,
+     "loading_pct": 19.5
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 192.3,
+     "loading_pct": 72.2
+    },
+    {
+     "name": "trafo_154/66kV",
+     "p_hv_mw": 69.3,
+     "loading_pct": 69.3
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/66kV@nameplate@osm",
+     "p_hv_mw": 175.8,
+     "loading_pct": 117.4
+    },
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 232.8,
+     "loading_pct": 24.4
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 146.7,
+     "loading_pct": 55.1
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     66.0,
+     "osm"
+    ],
+    [
+     500.0,
+     275.0,
+     "ladder"
+    ],
+    [
+     275.0,
+     154.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "east",
+   "site": "新岡部変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 282.8,
+     "loading_pct": 29.7
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 244.0,
+     "loading_pct": 91.6
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/275kV@osm",
+     "p_hv_mw": 186.2,
+     "loading_pct": 19.6
+    },
+    {
+     "name": "trafo_500/154kV@osm",
+     "p_hv_mw": 298.4,
+     "loading_pct": 111.9
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     275.0,
+     "osm"
+    ],
+    [
+     500.0,
+     154.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "east",
+   "site": "新栃木変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": -486.3,
+     "loading_pct": 51.6
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 374.8,
+     "loading_pct": 141.2
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/275kV@osm",
+     "p_hv_mw": -521.0,
+     "loading_pct": 55.3
+    },
+    {
+     "name": "trafo_500/154kV@osm",
+     "p_hv_mw": 199.8,
+     "loading_pct": 74.9
+    },
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 344.7,
+     "loading_pct": 129.8
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     275.0,
+     "osm"
+    ],
+    [
+     500.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     154.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "西濃変電所 275kV",
+   "kv": [
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 99.6,
+     "loading_pct": 37.4
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 51.2,
+     "loading_pct": 51.2
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 92.0,
+     "loading_pct": 34.5
+    },
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 51.2,
+     "loading_pct": 51.2
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     77.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "駿遠変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 300.7,
+     "loading_pct": 31.6
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 14.5,
+     "loading_pct": 5.4
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 15.4,
+     "loading_pct": 15.4
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 8.3,
+     "loading_pct": 3.1
+    },
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 19.9,
+     "loading_pct": 19.9
+    },
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 301.7,
+     "loading_pct": 31.7
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     77.0,
+     "osm"
+    ],
+    [
+     500.0,
+     275.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "猪名川変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 271.6,
+     "loading_pct": 28.5
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 298.5,
+     "loading_pct": 111.9
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/275kV@osm",
+     "p_hv_mw": 138.3,
+     "loading_pct": 14.5
+    },
+    {
+     "name": "trafo_500/154kV@osm",
+     "p_hv_mw": 342.2,
+     "loading_pct": 128.3
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     275.0,
+     "osm"
+    ],
+    [
+     500.0,
+     154.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "北大阪変電所 275kV",
+   "kv": [
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 531.1,
+     "loading_pct": 199.1
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": -84.2,
+     "loading_pct": 84.2
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 564.1,
+     "loading_pct": 211.5
+    },
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 95.9,
+     "loading_pct": 95.9
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     77.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "東大阪変電所 275kV",
+   "kv": [
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_275/154kV@nameplate",
+     "p_hv_mw": 89.1,
+     "loading_pct": 29.7
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 38.5,
+     "loading_pct": 38.5
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@nameplate@osm",
+     "p_hv_mw": 86.7,
+     "loading_pct": 28.9
+    },
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 59.2,
+     "loading_pct": 59.2
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     77.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "南京都変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 891.9,
+     "loading_pct": 93.6
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 229.0,
+     "loading_pct": 85.8
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/275kV@osm",
+     "p_hv_mw": 801.9,
+     "loading_pct": 84.2
+    },
+    {
+     "name": "trafo_500/154kV@osm",
+     "p_hv_mw": 430.6,
+     "loading_pct": 161.4
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     275.0,
+     "osm"
+    ],
+    [
+     500.0,
+     154.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "西京都変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 291.4,
+     "loading_pct": 30.6
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 65.6,
+     "loading_pct": 24.6
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 10.6,
+     "loading_pct": 10.6
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/275kV@osm",
+     "p_hv_mw": 272.4,
+     "loading_pct": 28.6
+    },
+    {
+     "name": "trafo_500/154kV@osm",
+     "p_hv_mw": 79.7,
+     "loading_pct": 29.9
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 17.5,
+     "loading_pct": 17.5
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     275.0,
+     "osm"
+    ],
+    [
+     500.0,
+     154.0,
+     "osm"
+    ],
+    [
+     154.0,
+     77.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "淀川変電所 500kV",
+   "kv": [
+    500.0,
+    275.0,
+    154.0,
+    77.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 84.3,
+     "loading_pct": 8.8
+    },
+    {
+     "name": "trafo_275/154kV",
+     "p_hv_mw": 225.4,
+     "loading_pct": 84.5
+    },
+    {
+     "name": "trafo_154/77kV",
+     "p_hv_mw": 92.4,
+     "loading_pct": 92.4
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_275/154kV@osm",
+     "p_hv_mw": 183.3,
+     "loading_pct": 68.7
+    },
+    {
+     "name": "trafo_275/77kV@osm",
+     "p_hv_mw": 158.5,
+     "loading_pct": 158.5
+    },
+    {
+     "name": "trafo_500/275kV",
+     "p_hv_mw": 85.1,
+     "loading_pct": 8.9
+    }
+   ],
+   "linked": [
+    [
+     275.0,
+     154.0,
+     "osm"
+    ],
+    [
+     275.0,
+     77.0,
+     "osm"
+    ],
+    [
+     500.0,
+     275.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "西谷変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 122.4,
+     "loading_pct": 71.4
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": -40.3,
+     "loading_pct": 40.3
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/110kV@osm",
+     "p_hv_mw": 152.5,
+     "loading_pct": 88.9
+    },
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 27.5,
+     "loading_pct": 27.5
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     110.0,
+     "osm"
+    ],
+    [
+     220.0,
+     66.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "東岡山変電所 500kV",
+   "kv": [
+    500.0,
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_500/220kV",
+     "p_hv_mw": 582.2,
+     "loading_pct": 84.9
+    },
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 359.8,
+     "loading_pct": 209.8
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 35.6,
+     "loading_pct": 35.6
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_500/220kV@osm",
+     "p_hv_mw": 351.6,
+     "loading_pct": 51.3
+    },
+    {
+     "name": "trafo_500/110kV@osm",
+     "p_hv_mw": 424.9,
+     "loading_pct": 247.8
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 37.5,
+     "loading_pct": 37.5
+    }
+   ],
+   "linked": [
+    [
+     500.0,
+     220.0,
+     "osm"
+    ],
+    [
+     500.0,
+     110.0,
+     "osm"
+    ],
+    [
+     110.0,
+     66.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "都城変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 163.8,
+     "loading_pct": 95.5
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 124.5,
+     "loading_pct": 124.5
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 123.9,
+     "loading_pct": 123.9
+    },
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 85.1,
+     "loading_pct": 49.6
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     66.0,
+     "osm"
+    ],
+    [
+     220.0,
+     110.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "大隅変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 123.7,
+     "loading_pct": 72.1
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 97.5,
+     "loading_pct": 97.5
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 78.4,
+     "loading_pct": 78.4
+    },
+    {
+     "name": "trafo_110/66kV@osm",
+     "p_hv_mw": 19.6,
+     "loading_pct": 19.6
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     66.0,
+     "osm"
+    ],
+    [
+     110.0,
+     66.0,
+     "osm"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "鳥栖変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": -3.1,
+     "loading_pct": 1.8
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 59.3,
+     "loading_pct": 59.3
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 53.0,
+     "loading_pct": 53.0
+    },
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": -37.0,
+     "loading_pct": 21.6
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     66.0,
+     "osm"
+    ],
+    [
+     220.0,
+     110.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "九州電力 木佐木変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 128.7,
+     "loading_pct": 75.1
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 18.5,
+     "loading_pct": 18.5
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 77.4,
+     "loading_pct": 77.4
+    },
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 114.3,
+     "loading_pct": 66.6
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     66.0,
+     "osm"
+    ],
+    [
+     220.0,
+     110.0,
+     "ladder"
+    ]
+   ]
+  },
+  {
+   "island": "west",
+   "site": "日田変電所 220kV",
+   "kv": [
+    220.0,
+    110.0,
+    66.0
+   ],
+   "ladder": [
+    {
+     "name": "trafo_220/110kV",
+     "p_hv_mw": 47.4,
+     "loading_pct": 27.7
+    },
+    {
+     "name": "trafo_110/66kV",
+     "p_hv_mw": 46.9,
+     "loading_pct": 46.9
+    }
+   ],
+   "observed": [
+    {
+     "name": "trafo_220/110kV@osm",
+     "p_hv_mw": 23.7,
+     "loading_pct": 13.8
+    },
+    {
+     "name": "trafo_220/66kV@osm",
+     "p_hv_mw": 44.4,
+     "loading_pct": 44.4
+    },
+    {
+     "name": "trafo_110/66kV@osm",
+     "p_hv_mw": 30.6,
+     "loading_pct": 30.6
+    }
+   ],
+   "linked": [
+    [
+     220.0,
+     110.0,
+     "osm"
+    ],
+    [
+     220.0,
+     66.0,
+     "osm"
+    ],
+    [
+     110.0,
+     66.0,
+     "osm"
+    ]
+   ]
+  }
+ ]
+}

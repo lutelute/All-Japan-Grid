@@ -18,7 +18,7 @@ from pathlib import Path
 from collections import Counter
 
 AGJ_DATA = Path(__file__).parent.parent / "data"
-JRP_DATA = Path("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/japan-re-potential/docs/grid")
+JRP_DATA = Path("/Users/shigenoburyuto/dev/github/project_Hayashi/japan-re-potential/docs/grid")
 REPORT_PATH = Path(__file__).parent / "cross_validate_report.md"
 
 REGIONS = [

@@ -61,7 +61,7 @@ def _load(path: Path, name: str):
 
 
 def load_modules():
-    pf = _load(ROOT / "scripts" / "run_full_powerflow_from_db.py", "pf_full")
+    pf = _load(ROOT / "src" / "powerflow" / "full_from_built.py", "pf_full")
     rs = _load(ROOT / "scripts" / "capacity" / "repair_search.py", "rs_lv")
     return pf, rs
 

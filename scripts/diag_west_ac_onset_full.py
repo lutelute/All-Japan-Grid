@@ -14,7 +14,7 @@ _ap = argparse.ArgumentParser()
 _ap.add_argument("--hour", type=int, default=None,
                  help="診断する時刻(既定=ピーク)。昼間帯調査は例: 12")
 _args = _ap.parse_args()
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, os.getcwd())
 from scripts.run_full_powerflow_from_db import (BUILT, ISLAND_OF,
     add_per_component_slacks, allocate_loads, attach_generators,

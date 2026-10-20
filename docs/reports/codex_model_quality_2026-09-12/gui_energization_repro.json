@@ -1,0 +1,11 @@
+{
+  "fixture": "one busbar, one closed feeder, no source supplied to classifier",
+  "marked_live": [
+    0
+  ],
+  "hasFeeder": true,
+  "source": "docs/subsld.html energized()",
+  "source_sha256": "a63f0b9d637640f5616108a7709e1242c6a5f57043f75c9065022df04a43634b",
+  "extracted_functions_sha256": "98d95d892d5f2538cf0e36c04df2f37927844312c405c0d55258d8dd55485f06",
+  "interpretation": "Local closed-feeder classification; upstream source reachability is not supplied to this function."
+}

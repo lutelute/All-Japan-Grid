@@ -16,7 +16,7 @@ import subprocess
 import sys
 
 S = os.path.dirname(os.path.abspath(__file__))
-REPO = "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid"
+REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
 
 
 def load_jsonl(p):

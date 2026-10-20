@@ -47,16 +47,25 @@ def _vclasses(v):
     数字だけ抜き出して連結すると 15400066 のような架空の電圧が生まれ、下流の
     最大電圧集計が壊れる(2026-08-28 に中央給電指令所ビューで 15400066kV と
     表示されて発覚)。桁あふれした値は誤記として捨てる。
+
+    小数点つきの値は数として読む(2026-10-07)。数字だけを抜き出すと ``66000.0`` が
+    660 kV、``22000.5`` が 220 kV になっていた(現在の日本の OSM に該当タグは無い潜在不具合)。
+    kV は切り捨て整数のまま(6.6 kV は ``6``)。階級 ID ``{site}@{kv}`` が下流で使われているため。
     """
     out = []
     src = str(v or "")
     for ch in ("／", "/", ",", "、", " ", "\t", "|"):
         src = src.replace(ch, ";")
     for tok in src.split(";"):
-        tok = "".join(c for c in tok if c.isdigit())
-        if not tok:
-            continue
-        kv = int(tok) // 1000
+        tok = tok.strip()
+        try:
+            volts = float(tok)            # "66000.0" は 66 kV(数字だけ連結すると 660 kV)
+        except ValueError:
+            digits = "".join(c for c in tok if c.isdigit())
+            if not digits:
+                continue
+            volts = float(digits)         # "66000V" 等の単位付きは従来どおり数字だけ
+        kv = int(volts // 1000)
         if 0 < kv <= _MAX_KV:
             out.append(str(kv))
     return sorted(set(out), key=lambda s: -int(s))

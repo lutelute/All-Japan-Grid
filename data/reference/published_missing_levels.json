@@ -1,0 +1,15842 @@
+{
+ "note": "各社の空容量・予想潮流一覧にあって、構造 DB の電圧階級に無い階級を含む変圧器の電圧の組。構造 DB に階級と変圧器(source=published)を足すためだけに使う(潮流モデルは読まない)。電圧の組だけで台数・容量は含まない。生成: scripts/score_transformer_topology.py --export-levels",
+ "sites": [
+  {
+   "name": "田口変電所",
+   "structure_sites": [
+    "chubu_site_403c44580177"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下青野変電所",
+   "structure_sites": [
+    "chubu_site_ae15baf120f1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "二ツ橋変電所",
+   "structure_sites": [
+    "chubu_site_2b36ad296c69"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "春日井変電所",
+   "structure_sites": [
+    "chubu_site_d81fe2fc3cd8"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南武平町変電所",
+   "structure_sites": [
+    "chubu_site_ce269e3e6e3e"
+   ],
+   "pairs": [
+    [
+     275,
+     33
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浄心変電所",
+   "structure_sites": [
+    "chubu_site_3c310a9bf1b0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "毛受変電所(Menjo-Hendensho)",
+   "structure_sites": [
+    "chubu_site_ff9138430488",
+    "kansai_site_ff9138430488"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "城東変電所",
+   "structure_sites": [
+    "chubu_site_0cad5b5ae5ab"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "起変電所",
+   "structure_sites": [
+    "chubu_site_07ca1c3bf612",
+    "kansai_site_07ca1c3bf612"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "前渡変電所",
+   "structure_sites": [
+    "chubu_site_9290817d0b46"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩倉変電所",
+   "structure_sites": [
+    "chubu_site_c42c1641a731"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "堀田変電所",
+   "structure_sites": [
+    "chubu_site_222dcf8bf985"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加納変電所 (Kanō Hendensho)",
+   "structure_sites": [
+    "chubu_site_46e6918cbbe7",
+    "kansai_site_46e6918cbbe7"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     154,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関開閉所",
+   "structure_sites": [
+    "chubu_site_5ee715e2e686"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "穂積変電所",
+   "structure_sites": [
+    "chubu_site_6b8feb22d6e1",
+    "kansai_site_6b8feb22d6e1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大垣変電所 (Ogaki Hendensho)",
+   "structure_sites": [
+    "chubu_site_fa6acac519af",
+    "kansai_site_fa6acac519af"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     33
+    ]
+   ]
+  },
+  {
+   "name": "御望変電所",
+   "structure_sites": [
+    "chubu_site_f56191b87834",
+    "kansai_site_f56191b87834"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "電源名古屋",
+   "structure_sites": [
+    "chubu_site_9920b0dbca8a"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "名南変電所",
+   "structure_sites": [
+    "chubu_site_983fd580fb5e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田原",
+   "structure_sites": [
+    "chubu_site_dd1fa8ef8d81"
+   ],
+   "pairs": [
+    [
+     275,
+     154
+    ]
+   ]
+  },
+  {
+   "name": "築港変電所",
+   "structure_sites": [
+    "chubu_site_7bc2c865507d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木場変電所",
+   "structure_sites": [
+    "chubu_site_e6e500302c7b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大高変電所",
+   "structure_sites": [
+    "chubu_site_39878ecd0af3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "枇杷島変電所",
+   "structure_sites": [
+    "chubu_site_3e8ed7e3be8d"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南豊田変電所",
+   "structure_sites": [
+    "chubu_site_ddfef4d0a23b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大口町変電所_2",
+   "structure_sites": [
+    "chubu_site_1d758aa1f0d4"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牛山変電所",
+   "structure_sites": [
+    "chubu_site_827f23984c27"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "水主町変電所",
+   "structure_sites": [
+    "chubu_site_fc4e51cdb696"
+   ],
+   "pairs": [
+    [
+     154,
+     33
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北岐阜変電所 (Kita Gifu Hendensho)",
+   "structure_sites": [
+    "chubu_site_0a175b9cc8b0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "稲沢変電所",
+   "structure_sites": [
+    "chubu_site_e28d49342714",
+    "kansai_site_e28d49342714"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "羽黒変電所",
+   "structure_sites": [
+    "chubu_site_84cf482a57ae"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "丹陽変電所",
+   "structure_sites": [
+    "chubu_site_73e03fb7a76a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中川変電所",
+   "structure_sites": [
+    "chubu_site_953fc2897007"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "瑞浪変電所 (Mizunami Hendensho)",
+   "structure_sites": [
+    "chubu_site_44c07bcdf87e"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "北勢変電所 (Hokusei Hendensho)",
+   "structure_sites": [
+    "chubu_site_506417ced253",
+    "kansai_site_506417ced253"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岡崎変電所 (Okazaki Hendensho)",
+   "structure_sites": [
+    "chubu_site_c3551c771754"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北刈谷変電所 (Kita Kariya Hendensho)",
+   "structure_sites": [
+    "chubu_site_429e2386a586"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "依佐美変電所",
+   "structure_sites": [
+    "chubu_site_194ca0370c5d"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "楠町変電所",
+   "structure_sites": [
+    "chubu_site_13218c5d61d7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南大垣変電所 (Ogaki Hendensho)",
+   "structure_sites": [
+    "chubu_site_8240e41c9265",
+    "kansai_site_8240e41c9265"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小牧変電所",
+   "structure_sites": [
+    "chubu_site_5b16f397394d"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "河田",
+   "structure_sites": [
+    "chubu_site_1d3e180ff8ab",
+    "kansai_site_1d3e180ff8ab"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上末変電所 (Kamizue Hendensho)",
+   "structure_sites": [
+    "chubu_site_3da3f2b24a30"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久屋変電所",
+   "structure_sites": [
+    "chubu_site_17a60dabc424"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力八草変電所",
+   "structure_sites": [
+    "chubu_site_b9c6f82922cf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三好変電所",
+   "structure_sites": [
+    "chubu_site_4c681f2c709c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富田変電所",
+   "structure_sites": [
+    "chubu_site_06a2fed9ea8c",
+    "kansai_site_06a2fed9ea8c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国府変電所",
+   "structure_sites": [
+    "chubu_site_2e11a3456051"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大府変電所",
+   "structure_sites": [
+    "chubu_site_a411f6fad151"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力(株) 赤坂変電所",
+   "structure_sites": [
+    "chubu_site_a47e92a7c1e2"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊橋変電所",
+   "structure_sites": [
+    "chubu_site_72c4fdc6eb6a"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力新居変電所",
+   "structure_sites": [
+    "chubu_site_618c0cdc6c6c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力鷲津変電所",
+   "structure_sites": [
+    "chubu_site_f7d7ceb29cf0"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力坊瀬変電所",
+   "structure_sites": [
+    "chubu_site_d6261fa95009"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "植田変電所",
+   "structure_sites": [
+    "chubu_site_282818d46831"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力 三ケ日変電所",
+   "structure_sites": [
+    "chubu_site_18edef0fddb1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力 都筑変電所",
+   "structure_sites": [
+    "chubu_site_33f3f61d3d16"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福江変電所",
+   "structure_sites": [
+    "chubu_site_26361f420e1b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力豊島変電所",
+   "structure_sites": [
+    "chubu_site_e9e8ca4924d5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "老津変電所",
+   "structure_sites": [
+    "chubu_site_69505e71d1dc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "明海変電所",
+   "structure_sites": [
+    "chubu_site_71eec487c0c6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "向山変電所",
+   "structure_sites": [
+    "chubu_site_2c553e6fce7c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "飯村変電所",
+   "structure_sites": [
+    "chubu_site_6e51b298626c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新所原変電所",
+   "structure_sites": [
+    "chubu_site_1d57f5ede31f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鳳来変電所",
+   "structure_sites": [
+    "chubu_site_569c2822e145"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "馬場変電所",
+   "structure_sites": [
+    "chubu_site_b932bf51a532"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力麻生田変電所",
+   "structure_sites": [
+    "chubu_site_4e4ac16c3319"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新城変電所",
+   "structure_sites": [
+    "chubu_site_dbcc43413e6d"
+   ],
+   "pairs": [
+    [
+     77,
+     11
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "王ケ崎変電所",
+   "structure_sites": [
+    "chubu_site_8a02c00766ec"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神野変電所",
+   "structure_sites": [
+    "chubu_site_ff970d7d6a47"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牟呂変電所",
+   "structure_sites": [
+    "chubu_site_25d5e9148252"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "野田変電所",
+   "structure_sites": [
+    "chubu_site_1cbf115f720e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "夏秋変電所",
+   "structure_sites": [
+    "chubu_site_15eaedc97146",
+    "kansai_site_15eaedc97146"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "瀬古口変電所",
+   "structure_sites": [
+    "chubu_site_203d67b0bacd",
+    "kansai_site_203d67b0bacd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上小波田変電所",
+   "structure_sites": [
+    "chubu_site_eba4ee9b60e5",
+    "kansai_site_eba4ee9b60e5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "名張変電所",
+   "structure_sites": [
+    "chubu_site_fa58e838ad43",
+    "kansai_site_fa58e838ad43"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力八帖変電所",
+   "structure_sites": [
+    "chubu_site_1c9d8d640dd9"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "予野変電所",
+   "structure_sites": [
+    "chubu_site_befc30ca2602",
+    "kansai_site_befc30ca2602"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白樫変電所",
+   "structure_sites": [
+    "chubu_site_98cc7455216e",
+    "kansai_site_98cc7455216e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊明変電所",
+   "structure_sites": [
+    "chubu_site_113fbc2dc8bc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大脇変電所",
+   "structure_sites": [
+    "chubu_site_f14f07e29021"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力東境変電所",
+   "structure_sites": [
+    "chubu_site_687c5faeb51e"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "横落変電所",
+   "structure_sites": [
+    "chubu_site_b7c5ec970491"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "瑞穂変電所",
+   "structure_sites": [
+    "chubu_site_254f6dcdf815"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     154,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北町変電所",
+   "structure_sites": [
+    "chubu_site_1bef9f9dc1ea",
+    "kansai_site_1bef9f9dc1ea"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小島変電所",
+   "structure_sites": [
+    "chubu_site_3bf7fd617fc6",
+    "kansai_site_3bf7fd617fc6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "武芸川変電所",
+   "structure_sites": [
+    "chubu_site_8c2e79d4ba4c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "野間変電所",
+   "structure_sites": [
+    "chubu_site_456bcd86991d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "花沢変電所",
+   "structure_sites": [
+    "chubu_site_0b674258a4e2"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白子変電所",
+   "structure_sites": [
+    "chubu_site_f06ff3ea6d22",
+    "kansai_site_f06ff3ea6d22"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西尾変電所",
+   "structure_sites": [
+    "chubu_site_50fa939bc138"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中原変電所",
+   "structure_sites": [
+    "chubu_site_24e8d07c971c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "地蔵山変電所",
+   "structure_sites": [
+    "chubu_site_070bbd41c92d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小泉変電所",
+   "structure_sites": [
+    "chubu_site_cb09ab98b707"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栄変電所",
+   "structure_sites": [
+    "chubu_site_c34fcd93ecfc",
+    "kansai_site_c34fcd93ecfc"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "有松変電所",
+   "structure_sites": [
+    "chubu_site_9aac1b2c4147"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "打越変電所",
+   "structure_sites": [
+    "chubu_site_9de282cb219b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力南山変電所",
+   "structure_sites": [
+    "chubu_site_46dd8414a31f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "菊川変電所",
+   "structure_sites": [
+    "chubu_site_b6a70334ae04"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "貴布祢変電所",
+   "structure_sites": [
+    "chubu_site_99ff2217c827"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "遠江変電所",
+   "structure_sites": [
+    "chubu_site_702f31dd42e4"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "浜松変電所",
+   "structure_sites": [
+    "chubu_site_ed1b52869358"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三方原変電所",
+   "structure_sites": [
+    "chubu_site_522372fe02ed"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "半田町変電所",
+   "structure_sites": [
+    "chubu_site_94fa39cf3e90"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鷺の宮変電所",
+   "structure_sites": [
+    "chubu_site_91f26115d615"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力芳川変電所",
+   "structure_sites": [
+    "chubu_site_c70959fd9202"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "庄内変電所",
+   "structure_sites": [
+    "chubu_site_1835dd585c37"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浅田変電所",
+   "structure_sites": [
+    "chubu_site_9993602c9d3c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力引佐変電所",
+   "structure_sites": [
+    "chubu_site_fd0f7f043f53"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "都田変電所",
+   "structure_sites": [
+    "chubu_site_3c81e74eb367"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "清水変電所",
+   "structure_sites": [
+    "chubu_site_4de2faf98125",
+    "tokyo_site_4de2faf98125"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "磐田変電所 (Iwata Hendensho)",
+   "structure_sites": [
+    "chubu_site_5f25859ba62f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮田変電所",
+   "structure_sites": [
+    "chubu_site_d17099f30dc0"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白昭変電所",
+   "structure_sites": [
+    "chubu_site_6b6fc98adf74"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "玉川変電所",
+   "structure_sites": [
+    "chubu_site_40812415fe9c",
+    "tokyo_site_40812415fe9c"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "気賀変電所",
+   "structure_sites": [
+    "chubu_site_f33222c4babd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西掛川変電所",
+   "structure_sites": [
+    "chubu_site_f714889aa105"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新平山変電所",
+   "structure_sites": [
+    "chubu_site_6555bf5cfb31"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中瀬変電所",
+   "structure_sites": [
+    "chubu_site_9d5f643eeed0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山科変電所",
+   "structure_sites": [
+    "chubu_site_03bac2480927"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "見付変電所",
+   "structure_sites": [
+    "chubu_site_3ce02e9f7fc9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西貝塚変電所",
+   "structure_sites": [
+    "chubu_site_96fc469a784a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南磐田変電所",
+   "structure_sites": [
+    "chubu_site_f9c00c43827e"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "岩水寺変電所",
+   "structure_sites": [
+    "chubu_site_a89f4abfc805"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大東町変電所",
+   "structure_sites": [
+    "chubu_site_29da9c287ccf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下津具変電所",
+   "structure_sites": [
+    "chubu_site_1ba9aa09c79f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松江変電所",
+   "structure_sites": [
+    "chubu_site_ba6746d54688"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松尾変電所",
+   "structure_sites": [
+    "chubu_site_081f8b3758cb"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上郷変電所",
+   "structure_sites": [
+    "chubu_site_d510dc4325ef"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力 高森変電所",
+   "structure_sites": [
+    "chubu_site_bdd2740cd38e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "駒場変電所",
+   "structure_sites": [
+    "chubu_site_ef696e856abd"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "袋井変電所",
+   "structure_sites": [
+    "chubu_site_0913bd5e20f5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上野変電所",
+   "structure_sites": [
+    "chubu_site_762884e60ef7",
+    "hokuriku_site_762884e60ef7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中野変電所",
+   "structure_sites": [
+    "chubu_site_af8cb46e2e6a",
+    "hokuriku_site_af8cb46e2e6a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大野変電所",
+   "structure_sites": [
+    "chubu_site_72d585e143c4",
+    "hokuriku_site_72d585e143c4"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "塚原変電所",
+   "structure_sites": [
+    "chubu_site_b5b8fd7bdb8f",
+    "hokuriku_site_b5b8fd7bdb8f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神田町変電所",
+   "structure_sites": [
+    "chubu_site_3223eb40cb00",
+    "hokuriku_site_3223eb40cb00"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西島変電所",
+   "structure_sites": [
+    "chubu_site_e566c2909884",
+    "hokuriku_site_e566c2909884"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "森変電所",
+   "structure_sites": [
+    "chubu_site_9ba20bcc50da",
+    "hokuriku_site_9ba20bcc50da"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "寺津変電所",
+   "structure_sites": [
+    "chubu_site_6737faddd43a",
+    "hokuriku_site_6737faddd43a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大門変電所",
+   "structure_sites": [
+    "chubu_site_63967ae3fb0f",
+    "hokuriku_site_63967ae3fb0f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田中変電所",
+   "structure_sites": [
+    "chubu_site_fc7eafaae45c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東長野変電所 (Higashi-Nagano Hendensho)",
+   "structure_sites": [
+    "chubu_site_994a71f23fd5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下諏訪変電所",
+   "structure_sites": [
+    "chubu_site_f15e3ed538d3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松島変電所",
+   "structure_sites": [
+    "chubu_site_2a74904fab8e"
+   ],
+   "pairs": [
+    [
+     154,
+     22
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "古里変電所",
+   "structure_sites": [
+    "chubu_site_4c2be1d4b56e",
+    "tokyo_site_4c2be1d4b56e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岡谷変電所",
+   "structure_sites": [
+    "chubu_site_bcd7bdebf94c"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "穂高変電所",
+   "structure_sites": [
+    "chubu_site_9a676657852b",
+    "hokuriku_site_9a676657852b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "池田変電所",
+   "structure_sites": [
+    "chubu_site_149666d476ac",
+    "hokuriku_site_149666d476ac"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山田変電所",
+   "structure_sites": [
+    "chubu_site_95a6fa0ac558",
+    "tokyo_site_95a6fa0ac558"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "磯部変電所",
+   "structure_sites": [
+    "chubu_site_eef943be02af",
+    "tokyo_site_eef943be02af"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高浜変電所",
+   "structure_sites": [
+    "chubu_site_30316ace5ec0",
+    "tokyo_site_30316ace5ec0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大屋変電所",
+   "structure_sites": [
+    "chubu_site_36bf5792d871"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国分変電所",
+   "structure_sites": [
+    "chubu_site_0376855d7303"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "坂城変電所",
+   "structure_sites": [
+    "chubu_site_9fabc9bafc1f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "今井変電所",
+   "structure_sites": [
+    "chubu_site_d08aa31f8a72",
+    "tokyo_site_d08aa31f8a72"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "更埴八幡変電所",
+   "structure_sites": [
+    "chubu_site_2f55548a3cd7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南条変電所",
+   "structure_sites": [
+    "chubu_site_6b0976a927cc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "軽井沢変電所",
+   "structure_sites": [
+    "chubu_site_805d6dc0e6c0",
+    "tokyo_site_805d6dc0e6c0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中部電力(株) 戸倉変電所",
+   "structure_sites": [
+    "chubu_site_7041ff3663c7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松代変電所",
+   "structure_sites": [
+    "chubu_site_f2142b5127b7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上山田変電所",
+   "structure_sites": [
+    "chubu_site_4cf26a21285f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "真田変電所",
+   "structure_sites": [
+    "chubu_site_e0f5105663a2"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東塩田変電所",
+   "structure_sites": [
+    "chubu_site_8a1463368328"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "因島変電所",
+   "structure_sites": [
+    "chugoku_site_74fbc05eea94",
+    "shikoku_site_74fbc05eea94",
+    "shikoku_site_807ac4b76672"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "権現変電所",
+   "structure_sites": [
+    "chugoku_site_48e2b3f052fd",
+    "kyushu_site_48e2b3f052fd"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "今変電所",
+   "structure_sites": [
+    "chugoku_site_5f941b7ead57"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広瀬変電所",
+   "structure_sites": [
+    "chugoku_site_cd08112c15e5"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高松変電所",
+   "structure_sites": [
+    "chugoku_site_d8084721aac7",
+    "shikoku_site_d8084721aac7"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西広島変電所",
+   "structure_sites": [
+    "chugoku_site_f6ba7f9cedfa",
+    "shikoku_site_f6ba7f9cedfa",
+    "shikoku_site_678afd76695d"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大野変電所",
+   "structure_sites": [
+    "chugoku_site_f139ac485cca",
+    "shikoku_site_f139ac485cca"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "廿日市変電所",
+   "structure_sites": [
+    "chugoku_site_cf1d90d00200",
+    "shikoku_site_cf1d90d00200"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広島中央変電所",
+   "structure_sites": [
+    "chugoku_site_77ac848d9db4",
+    "shikoku_site_77ac848d9db4"
+   ],
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     110,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "友和変電所",
+   "structure_sites": [
+    "chugoku_site_6ff6e2a7e8ae",
+    "shikoku_site_6ff6e2a7e8ae"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "府中変電所",
+   "structure_sites": [
+    "chugoku_site_1896cb1c6f0f",
+    "shikoku_site_1896cb1c6f0f"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北広島変電所",
+   "structure_sites": [
+    "chugoku_site_8880f9f6c5c9"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川内発電所",
+   "structure_sites": [
+    "chugoku_site_e3b4b62f1b60",
+    "shikoku_site_e3b4b62f1b60"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西条変電所",
+   "structure_sites": [
+    "chugoku_site_72f82d1be807",
+    "shikoku_site_72f82d1be807"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東広島変電所",
+   "structure_sites": [
+    "chugoku_site_07cd1f100b45"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南西条変電所",
+   "structure_sites": [
+    "chugoku_site_a0cadd3c7cd4",
+    "shikoku_site_a0cadd3c7cd4"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "津田変電所",
+   "structure_sites": [
+    "chugoku_site_6deb9ecefe97",
+    "shikoku_site_6deb9ecefe97"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下関変電所",
+   "structure_sites": [
+    "chugoku_site_e85c6f94ff64",
+    "kyushu_site_e85c6f94ff64"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "西大寺変電所 (Saidaiji Hendensho)",
+   "structure_sites": [
+    "chugoku_site_4ef610931129"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岡山変電所",
+   "structure_sites": [
+    "chugoku_site_d2eb9257a809"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "倉敷変電所",
+   "structure_sites": [
+    "chugoku_site_f36471d9b462"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "総社変電所",
+   "structure_sites": [
+    "chugoku_site_eb2f5114b4b3"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新徳山変電所",
+   "structure_sites": [
+    "chugoku_site_035e186a7ed0",
+    "kyushu_site_035e186a7ed0"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中国電力（株）本庄変電所",
+   "structure_sites": [
+    "chugoku_site_22c8a8ff77f7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "建部変電所",
+   "structure_sites": [
+    "chugoku_site_c4b2b3043f0d"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上平原変電所",
+   "structure_sites": [
+    "chugoku_site_a3ce2188e51f",
+    "shikoku_site_a3ce2188e51f"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西島根変電所",
+   "structure_sites": [
+    "chugoku_site_4897497de7fe"
+   ],
+   "pairs": [
+    [
+     500,
+     220
+    ],
+    [
+     220,
+     110
+    ]
+   ]
+  },
+  {
+   "name": "呉変電所",
+   "structure_sites": [
+    "chugoku_site_5008235cd5b5",
+    "shikoku_site_5008235cd5b5"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "黒瀬変電所",
+   "structure_sites": [
+    "chugoku_site_7de22e2941ea",
+    "shikoku_site_7de22e2941ea"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北松江変電所",
+   "structure_sites": [
+    "chugoku_site_9c11da07a376"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宍道変電所 (Shinji)",
+   "structure_sites": [
+    "chugoku_site_68666bca1306"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "玉造変電所 (Tamatsukuri Hendensho)",
+   "structure_sites": [
+    "chugoku_site_b2737b92ec58"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "吉谷変電所",
+   "structure_sites": [
+    "chugoku_site_fb88db913597"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "米子変電所",
+   "structure_sites": [
+    "chugoku_site_c608dbc9bd34"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富吉変電所",
+   "structure_sites": [
+    "chugoku_site_53c143410231"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "水島変電所",
+   "structure_sites": [
+    "chugoku_site_18bd877967c6"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北尾道変電所",
+   "structure_sites": [
+    "chugoku_site_8806c9551836"
+   ],
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     110,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "尾道変電所",
+   "structure_sites": [
+    "chugoku_site_01ac11cf20ca"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松永変電所",
+   "structure_sites": [
+    "chugoku_site_bba2d10e10d6"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金山変電所",
+   "structure_sites": [
+    "chugoku_site_3e248cce7c62"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金光変電所 (Konkō Hendensho)",
+   "structure_sites": [
+    "chugoku_site_14b80c31ed1d"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "打吹発電所",
+   "structure_sites": [
+    "chugoku_site_61ff3c4890be"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "蒜山変電所 (Hiruzen Hendensho)",
+   "structure_sites": [
+    "chugoku_site_2c35f75c81b0"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山陽変電所",
+   "structure_sites": [
+    "chugoku_site_f310c99a19a7"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "備前変電所",
+   "structure_sites": [
+    "chugoku_site_2f35f179bc21"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "土庄変電所",
+   "structure_sites": [
+    "chugoku_site_8e08cb7ef914"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南津山変電所",
+   "structure_sites": [
+    "chugoku_site_961d3e1e7af8"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福河変電所",
+   "structure_sites": [
+    "chugoku_site_593273a07150"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下阿知変電所",
+   "structure_sites": [
+    "chugoku_site_25750bfcada1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊里変電所",
+   "structure_sites": [
+    "chugoku_site_f65a795d7356"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三石変電所",
+   "structure_sites": [
+    "chugoku_site_343c3db48c10"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南岡山変電所",
+   "structure_sites": [
+    "chugoku_site_68fa83e3d93a"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国府市場変電所",
+   "structure_sites": [
+    "chugoku_site_1767d147cae4"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "平井変電所",
+   "structure_sites": [
+    "chugoku_site_c913dee03c23"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "草壁変電所",
+   "structure_sites": [
+    "chugoku_site_2702da1366d4"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三次変電所 (Miyoshi Hendensho)",
+   "structure_sites": [
+    "chugoku_site_6650724c7a57"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮原変電所",
+   "structure_sites": [
+    "chugoku_site_f3bab2195e9f",
+    "shikoku_site_f3bab2195e9f"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "倉橋変電所",
+   "structure_sites": [
+    "chugoku_site_490ff46c358c",
+    "shikoku_site_490ff46c358c"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小郡変電所",
+   "structure_sites": [
+    "chugoku_site_795dfe0db400",
+    "kyushu_site_795dfe0db400"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小野田変電所",
+   "structure_sites": [
+    "chugoku_site_74cec49be7ca",
+    "kyushu_site_74cec49be7ca"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仙崎変電所",
+   "structure_sites": [
+    "chugoku_site_f4cc46fce0e3"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宇部変電所",
+   "structure_sites": [
+    "chugoku_site_3a86519a0a92",
+    "kyushu_site_3a86519a0a92"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川崎変電所",
+   "structure_sites": [
+    "chugoku_site_4019eda50ac3",
+    "kyushu_site_4019eda50ac3"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "徳山変電所",
+   "structure_sites": [
+    "chugoku_site_055c927f663d",
+    "kyushu_site_055c927f663d"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "佐野変電所",
+   "structure_sites": [
+    "chugoku_site_2607f79cc91d",
+    "kyushu_site_2607f79cc91d"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "光変電所",
+   "structure_sites": [
+    "chugoku_site_1b16228c5e64",
+    "kyushu_site_1b16228c5e64"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮野変電所",
+   "structure_sites": [
+    "chugoku_site_46b414969056",
+    "kyushu_site_46b414969056"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金城変電所",
+   "structure_sites": [
+    "chugoku_site_fb4bc6c8c96b"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東益田変電所",
+   "structure_sites": [
+    "chugoku_site_03e7ae6cc3b0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三隅変電所 (Misumi Hendensho)",
+   "structure_sites": [
+    "chugoku_site_9110cd92bb09"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "六日市変電所",
+   "structure_sites": [
+    "chugoku_site_3d9999b84378"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "吉和変電所",
+   "structure_sites": [
+    "chugoku_site_1d7ab6773fb6"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南陽変電所",
+   "structure_sites": [
+    "chugoku_site_c12f81fbe5ae",
+    "kyushu_site_c12f81fbe5ae"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "片原変電所",
+   "structure_sites": [
+    "chugoku_site_751d1a334f2c"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中国電力彦島変電所",
+   "structure_sites": [
+    "chugoku_site_b6738cd98a11",
+    "kyushu_site_b6738cd98a11"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中国電力和気変電所",
+   "structure_sites": [
+    "chugoku_site_28618bdf1af8"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "立川変電所",
+   "structure_sites": [
+    "chugoku_site_701f28a1172d"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八東発電所",
+   "structure_sites": [
+    "chugoku_site_de5031feba6f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "河原変電所",
+   "structure_sites": [
+    "chugoku_site_6ea2884afe08"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神島変電所",
+   "structure_sites": [
+    "chugoku_site_2996a2014053"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西倉吉変電所",
+   "structure_sites": [
+    "chugoku_site_5fc54421c4c9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牟礼変電所",
+   "structure_sites": [
+    "chugoku_site_a787f830e1b4",
+    "kyushu_site_a787f830e1b4"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三成変電所",
+   "structure_sites": [
+    "chugoku_site_aadaa6fd0b64"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "菅田変電所",
+   "structure_sites": [
+    "chugoku_site_fc60425535fc"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "綾部変電所",
+   "structure_sites": [
+    "chugoku_site_1163c8723e8f"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浦富変電所",
+   "structure_sites": [
+    "chugoku_site_228b8ab1f201"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "余子変電所",
+   "structure_sites": [
+    "chugoku_site_3f39c872e796"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     110,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "御来屋変電所",
+   "structure_sites": [
+    "chugoku_site_1a424a5a2131"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚狭変電所",
+   "structure_sites": [
+    "chugoku_site_b84416400e27",
+    "kyushu_site_b84416400e27"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "浜村変電所",
+   "structure_sites": [
+    "chugoku_site_69549088b3b3"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中国電力船倉変電所",
+   "structure_sites": [
+    "chugoku_site_ce8f15542d3f"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高森",
+   "structure_sites": [
+    "chugoku_site_4131a34a0e8a",
+    "shikoku_site_4131a34a0e8a",
+    "kyushu_site_4131a34a0e8a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山野井変電所_2",
+   "structure_sites": [
+    "chugoku_site_58510d32fe72",
+    "kyushu_site_58510d32fe72"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "矢原変電所",
+   "structure_sites": [
+    "chugoku_site_becbbf134650",
+    "kyushu_site_becbbf134650"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伯方変電所",
+   "structure_sites": [
+    "chugoku_site_c87d496e49db",
+    "shikoku_site_c87d496e49db"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "生名変電所",
+   "structure_sites": [
+    "chugoku_site_b02d49219313",
+    "shikoku_site_b02d49219313"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "平田変電所",
+   "structure_sites": [
+    "chugoku_site_53a17fddc5b6"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "古川変電所",
+   "structure_sites": [
+    "chugoku_site_52dec2da2214"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白島変電所",
+   "structure_sites": [
+    "chugoku_site_41a200be0795"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川本変電所",
+   "structure_sites": [
+    "chugoku_site_ca5d90299dea"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三蟠変電所",
+   "structure_sites": [
+    "chugoku_site_7e526b77a4c1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長船変電所",
+   "structure_sites": [
+    "chugoku_site_840c2668242b"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "琴浦変電所",
+   "structure_sites": [
+    "chugoku_site_f5cf0a8f9c60"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "公園通変電所",
+   "structure_sites": [
+    "chugoku_site_d66760a24020",
+    "shikoku_site_d66760a24020"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "坂変電所",
+   "structure_sites": [
+    "chugoku_site_ea26344c8a78",
+    "shikoku_site_ea26344c8a78"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "能美変電所",
+   "structure_sites": [
+    "chugoku_site_41c355b49920",
+    "shikoku_site_41c355b49920"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "江田島変電所",
+   "structure_sites": [
+    "chugoku_site_02267f755de8",
+    "shikoku_site_02267f755de8"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大柿変電所",
+   "structure_sites": [
+    "chugoku_site_776e0a38cb4b",
+    "shikoku_site_776e0a38cb4b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "吉浦変電所",
+   "structure_sites": [
+    "chugoku_site_812826ac1025",
+    "shikoku_site_812826ac1025"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "向島変電所",
+   "structure_sites": [
+    "chugoku_site_e8395435a8dc",
+    "shikoku_site_e8395435a8dc"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三津変電所",
+   "structure_sites": [
+    "chugoku_site_752378c37158",
+    "shikoku_site_752378c37158"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "阿月変電所",
+   "structure_sites": [
+    "chugoku_site_812d2797e692",
+    "shikoku_site_812d2797e692"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "段原変電所",
+   "structure_sites": [
+    "chugoku_site_044e33847341",
+    "shikoku_site_044e33847341"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久賀変電所",
+   "structure_sites": [
+    "chugoku_site_446fcd64fad1",
+    "shikoku_site_446fcd64fad1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "錦町変電所",
+   "structure_sites": [
+    "chugoku_site_e74a2f5e7800",
+    "kyushu_site_e74a2f5e7800"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大門変電所",
+   "structure_sites": [
+    "chugoku_site_6025ed5d950e",
+    "kyushu_site_6025ed5d950e"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八雲変電所",
+   "structure_sites": [
+    "hokkaido_site_7fc9a225b9e2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "円山変電所",
+   "structure_sites": [
+    "hokkaido_site_2a386c8372e8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "手稲変電所",
+   "structure_sites": [
+    "hokkaido_site_5541a0c6e4a0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "苫小牧変電所",
+   "structure_sites": [
+    "hokkaido_site_efc2b1694e82"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "勇払変電所",
+   "structure_sites": [
+    "hokkaido_site_1f4e00cca9f2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "茨戸変電所",
+   "structure_sites": [
+    "hokkaido_site_c39b51bac996"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西札幌変電所",
+   "structure_sites": [
+    "hokkaido_site_fee5b4b8ab84"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "篠路変電所",
+   "structure_sites": [
+    "hokkaido_site_f56508233c8d"
+   ],
+   "pairs": [
+    [
+     187,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "幌向変電所",
+   "structure_sites": [
+    "hokkaido_site_1e5956845937"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "湯川変電所",
+   "structure_sites": [
+    "hokkaido_site_f22e5beabcac"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "月寒変電所",
+   "structure_sites": [
+    "hokkaido_site_911eaaefa8c0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "島松変電所",
+   "structure_sites": [
+    "hokkaido_site_0ef0ae3fd4a8"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大麻変電所",
+   "structure_sites": [
+    "hokkaido_site_fe8476ede88c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "苗穂変電所",
+   "structure_sites": [
+    "hokkaido_site_2eecbb852f26"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白石変電所",
+   "structure_sites": [
+    "hokkaido_site_847f082c0162"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東岩見沢変電所",
+   "structure_sites": [
+    "hokkaido_site_fb5c931d3bc0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "余市 (Yoichi Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_a345d2906076"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長橋変電所",
+   "structure_sites": [
+    "hokkaido_site_2849ef7968e2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "銭函変電所",
+   "structure_sites": [
+    "hokkaido_site_3e4175a4af9c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩見沢変電所 (Iwamizawa Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_96f8ccb01e5c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "石狩変電所",
+   "structure_sites": [
+    "hokkaido_site_36fea510b901"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "室蘭変電所",
+   "structure_sites": [
+    "hokkaido_site_dd247145bbe1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "御崎変電所",
+   "structure_sites": [
+    "hokkaido_site_8dbb93c39bdc"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "七飯発電所",
+   "structure_sites": [
+    "hokkaido_site_db563ea9560f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "恵南変電所",
+   "structure_sites": [
+    "hokkaido_site_0c75c6ee0b8b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "銭亀沢変電所",
+   "structure_sites": [
+    "hokkaido_site_a96603220e1a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚沢部変電所",
+   "structure_sites": [
+    "hokkaido_site_d417609d8e94"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "泉沢変電所",
+   "structure_sites": [
+    "hokkaido_site_a26fdb549c76"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "当別変電所 (Tobetsu Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_e4374b31edeb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長沼変電所 (Naganuma Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_f8ed3110c072"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上江別変電所",
+   "structure_sites": [
+    "hokkaido_site_834baaaea467"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北広島変電所",
+   "structure_sites": [
+    "hokkaido_site_d68dce472db1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "千歳変電所",
+   "structure_sites": [
+    "hokkaido_site_eaab8b4047f6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "幌別変電所 (Horobetsu Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_129ffe0c2178"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "早来変電所",
+   "structure_sites": [
+    "hokkaido_site_ef68ebcf36a3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊達変電所",
+   "structure_sites": [
+    "hokkaido_site_9e5fdc91ff3a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "恵山変電所",
+   "structure_sites": [
+    "hokkaido_site_86c78999e0eb"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大岸変電所 (Ōkishi Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_8956d39f00ca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福島変電所",
+   "structure_sites": [
+    "hokkaido_site_227b8b296a21",
+    "tohoku_site_227b8b296a21"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "ニセコ変電所",
+   "structure_sites": [
+    "hokkaido_site_55b7c8af8d4d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "寒別変電所",
+   "structure_sites": [
+    "hokkaido_site_f0603839b40a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "昆布変電所",
+   "structure_sites": [
+    "hokkaido_site_104a8a714dbc"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "留産変電所",
+   "structure_sites": [
+    "hokkaido_site_6ee3635e78c2"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鰔川変電所",
+   "structure_sites": [
+    "hokkaido_site_70f467070dca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "江差変電所",
+   "structure_sites": [
+    "hokkaido_site_42a2b6487814"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東町変電所",
+   "structure_sites": [
+    "hokkaido_site_168a312ec536"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "相沼内変電所",
+   "structure_sites": [
+    "hokkaido_site_3173569d77c8"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "熊石変電所",
+   "structure_sites": [
+    "hokkaido_site_251e74b9f7ae"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北の峰変電所",
+   "structure_sites": [
+    "hokkaido_site_866b079c1874"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富良野変電所",
+   "structure_sites": [
+    "hokkaido_site_2ad589074910"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山部変電所",
+   "structure_sites": [
+    "hokkaido_site_a53eea9c4482"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栗山変電所",
+   "structure_sites": [
+    "hokkaido_site_40728ace4748"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "色内変電所",
+   "structure_sites": [
+    "hokkaido_site_c089cda1cbfe"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "右左府変電所",
+   "structure_sites": [
+    "hokkaido_site_f7f43d256cfc"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "占冠変電所",
+   "structure_sites": [
+    "hokkaido_site_74bfde7d5342"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "戸井変電所",
+   "structure_sites": [
+    "hokkaido_site_d549d3fcd727"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富岡変電所",
+   "structure_sites": [
+    "hokkaido_site_19c3bb211b3b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鵡川変電所",
+   "structure_sites": [
+    "hokkaido_site_4e5f9247a404"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚真変電所",
+   "structure_sites": [
+    "hokkaido_site_6ce5bc67450f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富川変電所",
+   "structure_sites": [
+    "hokkaido_site_e23c35d928ca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "静内変電所",
+   "structure_sites": [
+    "hokkaido_site_c969ec010332"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国富変電所",
+   "structure_sites": [
+    "hokkaido_site_11c37dc4ac6e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩内変電所",
+   "structure_sites": [
+    "hokkaido_site_d425a34e4b21"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "茅沼変電所",
+   "structure_sites": [
+    "hokkaido_site_60ae5ab1027a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鹿越変電所",
+   "structure_sites": [
+    "hokkaido_site_e1dc54387e14"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩知志変電所",
+   "structure_sites": [
+    "hokkaido_site_9efba4049db1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "今金変電所",
+   "structure_sites": [
+    "hokkaido_site_cc17f2e96af0"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北桧山変電所",
+   "structure_sites": [
+    "hokkaido_site_b8f8b3e32944"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三川変電所",
+   "structure_sites": [
+    "hokkaido_site_1cc04654129d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鹿部変電所",
+   "structure_sites": [
+    "hokkaido_site_925714ab13be"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長万部変電所",
+   "structure_sites": [
+    "hokkaido_site_ca9f88e7a02b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "ピリカ発電所",
+   "structure_sites": [
+    "hokkaido_site_9aed9a3d6921"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "作開変電所",
+   "structure_sites": [
+    "hokkaido_site_7d5cdc506c70"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東静内変電所",
+   "structure_sites": [
+    "hokkaido_site_cf8d65e7c6e6"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小樽変電所",
+   "structure_sites": [
+    "hokkaido_site_d13d113d2cc6"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "清水川変電所",
+   "structure_sites": [
+    "hokkaido_site_d1b226c1b31a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "倶知安変電所",
+   "structure_sites": [
+    "hokkaido_site_d50bf34ffe58"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚賀変電所",
+   "structure_sites": [
+    "hokkaido_site_d1aba0436d43"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "壮瞥変電所",
+   "structure_sites": [
+    "hokkaido_site_d21a5dd01cfa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北海道電力　湯の里変電所",
+   "structure_sites": [
+    "hokkaido_site_c4d499ad1f79"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桑園変電所",
+   "structure_sites": [
+    "hokkaido_site_2b97368641aa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松前変電所",
+   "structure_sites": [
+    "hokkaido_site_b8f49703052d",
+    "tohoku_site_b8f49703052d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚田変電所",
+   "structure_sites": [
+    "hokkaido_site_4720fa889ae1"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "夕張変電所",
+   "structure_sites": [
+    "hokkaido_site_bce5ccdca9dc"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白老変電所",
+   "structure_sites": [
+    "hokkaido_site_b9cc84c7fdfb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竹浦変電所",
+   "structure_sites": [
+    "hokkaido_site_0ae74e6b6fad"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "萩原変電所",
+   "structure_sites": [
+    "hokkaido_site_24deb1b2bc41"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "登別変電所",
+   "structure_sites": [
+    "hokkaido_site_822b862c3c95"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "登別青葉変電所",
+   "structure_sites": [
+    "hokkaido_site_c0eddac0fcea"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新光変電所",
+   "structure_sites": [
+    "hokkaido_site_a1fa9e5efaa8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "荷負変電所",
+   "structure_sites": [
+    "hokkaido_site_0602f83d4108"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "港南変電所",
+   "structure_sites": [
+    "hokkaido_site_2ccffebbf899"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "沼ノ端変電所",
+   "structure_sites": [
+    "hokkaido_site_a3fd82e37a5f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "明野変電所",
+   "structure_sites": [
+    "hokkaido_site_a42321eeffa9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "洞爺変電所",
+   "structure_sites": [
+    "hokkaido_site_432c9ce76176"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "虻田変電所",
+   "structure_sites": [
+    "hokkaido_site_f7fa661a8212"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本町変電所",
+   "structure_sites": [
+    "hokkaido_site_3c3b65ca7478"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上ノ国変電所",
+   "structure_sites": [
+    "hokkaido_site_92c8ee0b5109"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "森変電所",
+   "structure_sites": [
+    "hokkaido_site_ec4c1ea24eea"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "軍川変電所",
+   "structure_sites": [
+    "hokkaido_site_441843bf18b9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "蘭越変電所",
+   "structure_sites": [
+    "hokkaido_site_e08a70f82d94"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山田変電所",
+   "structure_sites": [
+    "hokkaido_site_872f9249dfad"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "江別変電所",
+   "structure_sites": [
+    "hokkaido_site_f46a4191c53d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "望来変電所",
+   "structure_sites": [
+    "hokkaido_site_9f5ccd0b4d31"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久保内変電所",
+   "structure_sites": [
+    "hokkaido_site_ccc1808f34d8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "晩翠変電所",
+   "structure_sites": [
+    "hokkaido_site_2c8e4fdb6d7d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "美流渡変電所",
+   "structure_sites": [
+    "hokkaido_site_d1f1e3d7119d"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "由仁変電所",
+   "structure_sites": [
+    "hokkaido_site_908c2db31d8f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南札幌変電所",
+   "structure_sites": [
+    "hokkaido_site_d87a841b8635"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木野変電所",
+   "structure_sites": [
+    "hokkaido_site_49027a7b2087"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "足寄変電所 (Ashoro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_c259107ae94f"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大樹変電所 (Taiki Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_59becc0d88c6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中札内変電所 (Nakasatsunai Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_263acb74b5e3"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川西変電所",
+   "structure_sites": [
+    "hokkaido_site_ff9f253b5cda"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南郷変電所",
+   "structure_sites": [
+    "hokkaido_site_da0c39ec59aa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白糠変電所 (Shiranuka Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_779feb959eaa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "庶路変電所 (Shoro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_4cc56d614684"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "釧白変電所",
+   "structure_sites": [
+    "hokkaido_site_907466ab6b3e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚岸変電所 (Akkeshi Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_fbe8fc9331f7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鹿追変電所",
+   "structure_sites": [
+    "hokkaido_site_9a5ec537a9a2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "士幌変電所",
+   "structure_sites": [
+    "hokkaido_site_02d90b538e51"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北芽室変電所 (Kita-Memuro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_808ff16cc353"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "芽室変電所 (Memuro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_0c10ba7967a9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西帯広変電所 (Nishi-Obihiro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_79efb6c60d99"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新岩松変電所",
+   "structure_sites": [
+    "hokkaido_site_852b3f22fe35"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ]
+   ]
+  },
+  {
+   "name": "えりも変電所",
+   "structure_sites": [
+    "hokkaido_site_aa9ca5070387"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "様似変電所",
+   "structure_sites": [
+    "hokkaido_site_68549559bce3"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鳥取変電所",
+   "structure_sites": [
+    "hokkaido_site_4133a3392e6a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "星が浦変電所",
+   "structure_sites": [
+    "hokkaido_site_56876a4c8beb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "音更変電所",
+   "structure_sites": [
+    "hokkaido_site_692c78b70636"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中士幌変電所",
+   "structure_sites": [
+    "hokkaido_site_bdf78b7bbd4c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新得変電所",
+   "structure_sites": [
+    "hokkaido_site_06fdfc3d4f6d"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "清水変電所",
+   "structure_sites": [
+    "hokkaido_site_cefd8d528c6d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "札内変電所",
+   "structure_sites": [
+    "hokkaido_site_20ef7ddfedb9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "幕別変電所",
+   "structure_sites": [
+    "hokkaido_site_e3545d35c63b"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "池田変電所",
+   "structure_sites": [
+    "hokkaido_site_66325bdbdcd9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊頃変電所",
+   "structure_sites": [
+    "hokkaido_site_251f0cddb9bb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西春別変電所",
+   "structure_sites": [
+    "hokkaido_site_02b50ad27a3e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "厚床変電所",
+   "structure_sites": [
+    "hokkaido_site_48709bc9328a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浦河変電所",
+   "structure_sites": [
+    "hokkaido_site_ee20ba21d3b4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三石変電所",
+   "structure_sites": [
+    "hokkaido_site_765423177fba"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本桐変電所",
+   "structure_sites": [
+    "hokkaido_site_bfee77e64be0"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "緑町変電所",
+   "structure_sites": [
+    "hokkaido_site_7c32b0e79be4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浜中変電所",
+   "structure_sites": [
+    "hokkaido_site_f99bd3244af9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "幌満変電所",
+   "structure_sites": [
+    "hokkaido_site_afd058817610"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広尾変電所",
+   "structure_sites": [
+    "hokkaido_site_4a8af6e32807"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浦幌変電所",
+   "structure_sites": [
+    "hokkaido_site_f52a8d3b12ed"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桜ヶ岡変電所",
+   "structure_sites": [
+    "hokkaido_site_cf4cab72cded"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新旭川変電所",
+   "structure_sites": [
+    "hokkaido_site_a346ef3f226e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "永山変電所 (Nagayama Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_dd9ebfa29135"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "羽幌変電所",
+   "structure_sites": [
+    "hokkaido_site_d0d0f677abc9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小平変電所 (Obira Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_5c7c5aed799c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東川変電所",
+   "structure_sites": [
+    "hokkaido_site_d22625316811"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "美深変電所",
+   "structure_sites": [
+    "hokkaido_site_5e68faafe375"
+   ],
+   "pairs": [
+    [
+     100,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "茂尻変電所",
+   "structure_sites": [
+    "hokkaido_site_e5d9ec54d977"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "妹背牛変電所",
+   "structure_sites": [
+    "hokkaido_site_fd5f288d796b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "濃昼変電塔",
+   "structure_sites": [
+    "hokkaido_site_00185495b313"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浜益変電所",
+   "structure_sites": [
+    "hokkaido_site_6476a6304589"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "送毛変電塔",
+   "structure_sites": [
+    "hokkaido_site_5c050e3b6807"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "尻苗変電所",
+   "structure_sites": [
+    "hokkaido_site_0505adefa382"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "秋月変電所",
+   "structure_sites": [
+    "hokkaido_site_050013dfdedb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "苫前変電所 (Tomamae Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_5c9412f11472"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "旭川変電所 (Asahikawa Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_e2d30ef8c5ee"
+   ],
+   "pairs": [
+    [
+     187,
+     66
+    ],
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "津別変電所",
+   "structure_sites": [
+    "hokkaido_site_869aa63f72f4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "留辺蘂変電所",
+   "structure_sites": [
+    "hokkaido_site_6c1187dc8717"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "常呂変電所 (Tokoro Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_017515f23e93"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "弟子屈変電所",
+   "structure_sites": [
+    "hokkaido_site_a7d289e964f0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "佐呂間変電所 (Saroma Hendensho)",
+   "structure_sites": [
+    "hokkaido_site_7fcda1742eba"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "稲美変電所",
+   "structure_sites": [
+    "hokkaido_site_604ed7d260d0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "美幌変電所",
+   "structure_sites": [
+    "hokkaido_site_625a31407fc2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "遠軽変電所",
+   "structure_sites": [
+    "hokkaido_site_e97adcc04d41"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "沢木変電所",
+   "structure_sites": [
+    "hokkaido_site_95e18250c467"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "興部変電所",
+   "structure_sites": [
+    "hokkaido_site_c0e59e7cdfa3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "紋別変電所",
+   "structure_sites": [
+    "hokkaido_site_f34e8b7b8ef4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上渚滑変電所",
+   "structure_sites": [
+    "hokkaido_site_6dee91d3f507"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "生田原変電所",
+   "structure_sites": [
+    "hokkaido_site_3bc32357b0ca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中湧別変電所",
+   "structure_sites": [
+    "hokkaido_site_401057351b74"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白滝変電所",
+   "structure_sites": [
+    "hokkaido_site_08b5f1315bad"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "清里変電所",
+   "structure_sites": [
+    "hokkaido_site_4ea2f73a6ff6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北見変電所",
+   "structure_sites": [
+    "hokkaido_site_eae8e94179a4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小清水変電所",
+   "structure_sites": [
+    "hokkaido_site_3f5d9035247a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "学田変電所",
+   "structure_sites": [
+    "hokkaido_site_b8a17a6a9bad"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上興部変電所",
+   "structure_sites": [
+    "hokkaido_site_ca59d8986ddd"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "滝の上変電所",
+   "structure_sites": [
+    "hokkaido_site_b6e036337755"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "雄武変電所",
+   "structure_sites": [
+    "hokkaido_site_790f1034c8ed"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宇登呂変電所",
+   "structure_sites": [
+    "hokkaido_site_321fde20f0a1"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鯖江変電所",
+   "structure_sites": [
+    "hokuriku_site_f13bd4c97bbf",
+    "chubu_site_f13bd4c97bbf",
+    "chubu_site_803a34d6635e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "花堂変電所",
+   "structure_sites": [
+    "hokuriku_site_679c889ceb51",
+    "chubu_site_679c889ceb51"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加賀変電所",
+   "structure_sites": [
+    "hokuriku_site_d26b1ad7311c",
+    "chubu_site_d26b1ad7311c"
+   ],
+   "pairs": [
+    [
+     275,
+     154
+    ]
+   ]
+  },
+  {
+   "name": "松岡",
+   "structure_sites": [
+    "hokuriku_site_2e255b921de7",
+    "chubu_site_2e255b921de7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "越前変電所",
+   "structure_sites": [
+    "hokuriku_site_2b0d3ad905dc",
+    "chubu_site_2b0d3ad905dc"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "川北変電所",
+   "structure_sites": [
+    "hokuriku_site_b55e8d068825",
+    "chubu_site_b55e8d068825"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金津変電所",
+   "structure_sites": [
+    "hokuriku_site_579e6efa93c3",
+    "chubu_site_579e6efa93c3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "箱宮変電所",
+   "structure_sites": [
+    "hokuriku_site_0520c6a3653c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大聖寺変電所",
+   "structure_sites": [
+    "hokuriku_site_c01956d4cb94"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "片山津変電所",
+   "structure_sites": [
+    "hokuriku_site_36f6f6af2828"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富山変電所",
+   "structure_sites": [
+    "hokuriku_site_1be0604da17e",
+    "chubu_site_1be0604da17e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大浦変電所",
+   "structure_sites": [
+    "hokuriku_site_64d90e410bee",
+    "chubu_site_64d90e410bee"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "婦中変電所",
+   "structure_sites": [
+    "hokuriku_site_e2683d628524",
+    "chubu_site_e2683d628524"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "伏木変電所",
+   "structure_sites": [
+    "hokuriku_site_5283d0281e62",
+    "chubu_site_5283d0281e62"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "大野変電所",
+   "structure_sites": [
+    "hokuriku_site_72d585e143c4",
+    "chubu_site_72d585e143c4"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山中変電所",
+   "structure_sites": [
+    "hokuriku_site_887671f72079"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福岡変電所",
+   "structure_sites": [
+    "hokuriku_site_1726727ccdf7",
+    "chubu_site_1726727ccdf7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "友江変電所",
+   "structure_sites": [
+    "hokuriku_site_4e59ac592e71",
+    "chubu_site_4e59ac592e71"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東射水変電所",
+   "structure_sites": [
+    "hokuriku_site_a6e4fa4711df",
+    "chubu_site_a6e4fa4711df"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宇出津変電所",
+   "structure_sites": [
+    "hokuriku_site_aa2ccaed9c32"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "中島変電所",
+   "structure_sites": [
+    "hokuriku_site_2e015d54af03"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大門変電所",
+   "structure_sites": [
+    "hokuriku_site_63967ae3fb0f",
+    "chubu_site_63967ae3fb0f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大宇陀変電所",
+   "structure_sites": [
+    "kansai_site_d355c877a3c3"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栂変電所",
+   "structure_sites": [
+    "kansai_site_e5a3277e7083"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "七条変電所",
+   "structure_sites": [
+    "kansai_site_26d0cfd286a9"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "室津変電所",
+   "structure_sites": [
+    "kansai_site_b373f4c79922"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力中町変電所",
+   "structure_sites": [
+    "kansai_site_ea42d45e7170"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下京変電所",
+   "structure_sites": [
+    "kansai_site_1ad732ed367f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西脇変電所",
+   "structure_sites": [
+    "kansai_site_e3757a14a8e4"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長浜変電所",
+   "structure_sites": [
+    "kansai_site_1919ba285401",
+    "chubu_site_1919ba285401"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小沢変電所",
+   "structure_sites": [
+    "kansai_site_8878f964d9d9",
+    "chubu_site_8878f964d9d9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "滝谷変電所",
+   "structure_sites": [
+    "kansai_site_45e9e16c7249"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南馬場変電所",
+   "structure_sites": [
+    "kansai_site_07b6b58384b0"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 一庫変電所",
+   "structure_sites": [
+    "kansai_site_5ee531d8976d"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九条変電所",
+   "structure_sites": [
+    "kansai_site_05e1690e14e8"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "石切変電所",
+   "structure_sites": [
+    "kansai_site_6148db7c88ba"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八尾変電所",
+   "structure_sites": [
+    "kansai_site_cdc54246a40c"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "道明寺変電所",
+   "structure_sites": [
+    "kansai_site_9fd496447f4c"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加納変電所 (Kanō Hendensho)",
+   "structure_sites": [
+    "kansai_site_46e6918cbbe7",
+    "chubu_site_46e6918cbbe7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西京都変電所",
+   "structure_sites": [
+    "kansai_site_cb54df6bdfe6"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "木幡変電所",
+   "structure_sites": [
+    "kansai_site_ed5eb1291331"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "曽根崎 変電所",
+   "structure_sites": [
+    "kansai_site_c3e594eef4bf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久我変電所",
+   "structure_sites": [
+    "kansai_site_0e2c8f308066"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "正法寺変電所",
+   "structure_sites": [
+    "kansai_site_bc24b0aff3b6",
+    "chubu_site_bc24b0aff3b6"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "勝堂変電所",
+   "structure_sites": [
+    "kansai_site_90d458227ffa",
+    "chubu_site_90d458227ffa"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "膳所変電所",
+   "structure_sites": [
+    "kansai_site_388bb209e04b"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "湖南変電所",
+   "structure_sites": [
+    "kansai_site_dbde1c61fa8d"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "栗東変電所",
+   "structure_sites": [
+    "kansai_site_c7b47eac2f36"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "浅香山変電所",
+   "structure_sites": [
+    "kansai_site_41c15acafe98"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "長曽根変電所",
+   "structure_sites": [
+    "kansai_site_6dd3bc1bdeca"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "味生変電所",
+   "structure_sites": [
+    "kansai_site_8c9ecb405bda"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金田変電所",
+   "structure_sites": [
+    "kansai_site_f591ee3159be"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南河内変電所",
+   "structure_sites": [
+    "kansai_site_6ac3ff21d9b0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "敷津変電所",
+   "structure_sites": [
+    "kansai_site_876d754bf153"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "泉ヶ丘変電所",
+   "structure_sites": [
+    "kansai_site_e82cf6eb34b3"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浦田変電所",
+   "structure_sites": [
+    "kansai_site_cdad12d0a327"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "忠岡変電所",
+   "structure_sites": [
+    "kansai_site_bef8c9d7f06f"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田治米変電所",
+   "structure_sites": [
+    "kansai_site_e211c57e9eb5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "泉北変電所",
+   "structure_sites": [
+    "kansai_site_3f97aa93d93a"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "深井変電所",
+   "structure_sites": [
+    "kansai_site_d78e1fb8eeec"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東港変電所",
+   "structure_sites": [
+    "kansai_site_eda1b6ac3e60"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "熊取変電所",
+   "structure_sites": [
+    "kansai_site_2c79ccb5de60"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "貝塚変電所",
+   "structure_sites": [
+    "kansai_site_99afffb3ae6e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鶴原変電所 (Tsuruhara Hendensho)",
+   "structure_sites": [
+    "kansai_site_b86785ae4f9e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "土生変電所",
+   "structure_sites": [
+    "kansai_site_692e457cef2d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松屋変電所",
+   "structure_sites": [
+    "kansai_site_f56c137b45fd"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新八幡変電所",
+   "structure_sites": [
+    "kansai_site_8bac86ef9b9d",
+    "chubu_site_8bac86ef9b9d"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長野変電所",
+   "structure_sites": [
+    "kansai_site_5c6009c22f62"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ],
+    [
+     33,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神崎変電所",
+   "structure_sites": [
+    "kansai_site_2baa40e74681"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "由良開閉所",
+   "structure_sites": [
+    "kansai_site_162c20ca11b2"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北浜変電所",
+   "structure_sites": [
+    "kansai_site_8843f29da8ca"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊崎変電所",
+   "structure_sites": [
+    "kansai_site_c4c86ce81e28"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 総社変電所",
+   "structure_sites": [
+    "kansai_site_df2c79edd3f2"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久宝寺変電所",
+   "structure_sites": [
+    "kansai_site_2c6454db7fe3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "柏木変電所",
+   "structure_sites": [
+    "kansai_site_cf621825c2f1",
+    "chubu_site_cf621825c2f1"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "土山町変電所",
+   "structure_sites": [
+    "kansai_site_95578b3506c2",
+    "chubu_site_95578b3506c2"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山崎開閉所",
+   "structure_sites": [
+    "kansai_site_3aaa1e0d675c"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊勢開閉所",
+   "structure_sites": [
+    "kansai_site_52b25172d443"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "紀寺変電所",
+   "structure_sites": [
+    "kansai_site_d69c6bec7de3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "都島変電所",
+   "structure_sites": [
+    "kansai_site_becd03144ced"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富田変電所",
+   "structure_sites": [
+    "kansai_site_06a2fed9ea8c",
+    "chubu_site_06a2fed9ea8c"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "安堵変電所",
+   "structure_sites": [
+    "kansai_site_dec2835bfd7d"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力桃谷変電所",
+   "structure_sites": [
+    "kansai_site_93b564c8c9a1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大久保変電所",
+   "structure_sites": [
+    "kansai_site_65dac9f4e19b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "海部開閉所",
+   "structure_sites": [
+    "kansai_site_31507bbfca2a",
+    "chubu_site_31507bbfca2a"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西三国変電所",
+   "structure_sites": [
+    "kansai_site_46add155f5dc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力御幣島変電所",
+   "structure_sites": [
+    "kansai_site_2adf62b4d6a3"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本田変電所 (Honden Substation)",
+   "structure_sites": [
+    "kansai_site_43095a630a4b"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "猪飼野変電所",
+   "structure_sites": [
+    "kansai_site_2e5ba805a607"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福泉変電所",
+   "structure_sites": [
+    "kansai_site_c425af6055ee"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "園田変電所",
+   "structure_sites": [
+    "kansai_site_f0cbb95ee62f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "米原変電所",
+   "structure_sites": [
+    "kansai_site_a458fb5cab50",
+    "chubu_site_a458fb5cab50"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "祇園変電所",
+   "structure_sites": [
+    "kansai_site_117a7e4178a9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 南枚方変電所",
+   "structure_sites": [
+    "kansai_site_31f5e6ca4b43"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "須磨変電所",
+   "structure_sites": [
+    "kansai_site_84db04f37bb5"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田口変電所",
+   "structure_sites": [
+    "kansai_site_9f5857667435"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田島変電所",
+   "structure_sites": [
+    "kansai_site_ce3581866272"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "城西変電所",
+   "structure_sites": [
+    "kansai_site_a9773c11d12b"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "布施変電所",
+   "structure_sites": [
+    "kansai_site_3c518fed9c8a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "足代変電所",
+   "structure_sites": [
+    "kansai_site_12ab32c361dd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "別府変電所",
+   "structure_sites": [
+    "kansai_site_5c04e0b2059d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中川町変電所",
+   "structure_sites": [
+    "kansai_site_319bc4f58a27"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 佐井寺変電所",
+   "structure_sites": [
+    "kansai_site_3a78855b41ef"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力瀬田変電所",
+   "structure_sites": [
+    "kansai_site_eb80ca9cff8b"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高月町変電所",
+   "structure_sites": [
+    "kansai_site_67e53dfbb86a",
+    "chubu_site_67e53dfbb86a"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 島変電所",
+   "structure_sites": [
+    "kansai_site_23e27fb241be"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広変電所",
+   "structure_sites": [
+    "kansai_site_27e6ef2f4e3d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "湯浅変電所",
+   "structure_sites": [
+    "kansai_site_ff3c1642211c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "有田変電所",
+   "structure_sites": [
+    "kansai_site_d224bc288a0f"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "箕島変電所",
+   "structure_sites": [
+    "kansai_site_c32c17d8fb9a"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下津変電所",
+   "structure_sites": [
+    "kansai_site_805dd3a4d65e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "海南変電所",
+   "structure_sites": [
+    "kansai_site_a3bab9c077f1"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "野上変電所",
+   "structure_sites": [
+    "kansai_site_fbfc213598b6"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力(株)砂川変電所",
+   "structure_sites": [
+    "kansai_site_258caca85652"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金屋変電所",
+   "structure_sites": [
+    "kansai_site_523a8e6e3f83"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "阪井変電所",
+   "structure_sites": [
+    "kansai_site_3e3002a051aa"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力昭和変電所",
+   "structure_sites": [
+    "kansai_site_e16a05d7fd9a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鹿の子台変電所",
+   "structure_sites": [
+    "kansai_site_b37c76a0a7bd"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "吹田変電所",
+   "structure_sites": [
+    "kansai_site_56d360440365"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力（株）橿原変電所",
+   "structure_sites": [
+    "kansai_site_e367f2c38181"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西橿原変電所",
+   "structure_sites": [
+    "kansai_site_8abc746f240d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "越智岡変電所",
+   "structure_sites": [
+    "kansai_site_4d4b471b3745"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新庄変電所",
+   "structure_sites": [
+    "kansai_site_dfa52d3ac6ae"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "阿田峯変電所",
+   "structure_sites": [
+    "kansai_site_c724e165c7cc"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岡崎変電所",
+   "structure_sites": [
+    "kansai_site_073f0c73649d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田原本変電所",
+   "structure_sites": [
+    "kansai_site_26fb21039bcf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "郡山変電所",
+   "structure_sites": [
+    "kansai_site_ef9eedb1e549"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "榛原変電所",
+   "structure_sites": [
+    "kansai_site_c92778cf4fe8"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "都祁変電所",
+   "structure_sites": [
+    "kansai_site_243fe00b0d60"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "網干変電所",
+   "structure_sites": [
+    "kansai_site_7caac3e08a94"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力英賀変電所",
+   "structure_sites": [
+    "kansai_site_0defb39e2348"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大山崎変電所",
+   "structure_sites": [
+    "kansai_site_85a35f211478"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "甲西変電所",
+   "structure_sites": [
+    "kansai_site_3b241021008e",
+    "chubu_site_3b241021008e"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下穂積変電所",
+   "structure_sites": [
+    "kansai_site_a684704e1b6d"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ],
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西宿変電所",
+   "structure_sites": [
+    "kansai_site_ca088199babf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "塚口変電所",
+   "structure_sites": [
+    "kansai_site_3a2674e0b08d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "勧進橋変電所",
+   "structure_sites": [
+    "kansai_site_ed8a94ffd483"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "新山科変電所",
+   "structure_sites": [
+    "kansai_site_90d32c8dd1e4"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力(株) 神岡変電所",
+   "structure_sites": [
+    "kansai_site_5e043c45d857"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竹間変電所",
+   "structure_sites": [
+    "kansai_site_d9988ed6bbf3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久世変電所",
+   "structure_sites": [
+    "kansai_site_02b83e4f5c74"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力野原変電所",
+   "structure_sites": [
+    "kansai_site_4797cc915aee"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "郡津東変電所",
+   "structure_sites": [
+    "kansai_site_828f083803bf"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力北野台変電所",
+   "structure_sites": [
+    "kansai_site_e33227874fae"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新宮変電所",
+   "structure_sites": [
+    "kansai_site_d8fb002e0b49"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木本変電所",
+   "structure_sites": [
+    "kansai_site_4d71a11aae33"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "沢谷変電所",
+   "structure_sites": [
+    "kansai_site_10a6968e4f47"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北野変電所",
+   "structure_sites": [
+    "kansai_site_7930af28608f",
+    "chubu_site_7930af28608f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田中変電所",
+   "structure_sites": [
+    "kansai_site_c29108091e22"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "石原変電所",
+   "structure_sites": [
+    "kansai_site_62a93cb8a52b",
+    "chubu_site_62a93cb8a52b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "尼崎変電所",
+   "structure_sites": [
+    "kansai_site_bff9c9421a48"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東八日市変電所",
+   "structure_sites": [
+    "kansai_site_f6ff0ec3ba70",
+    "chubu_site_f6ff0ec3ba70"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "河原町変電所",
+   "structure_sites": [
+    "kansai_site_0f027c7cd776"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "香芝変電所",
+   "structure_sites": [
+    "kansai_site_b0d09796e3a1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東吉野変電所",
+   "structure_sites": [
+    "kansai_site_3e6411011f45"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大池変電所",
+   "structure_sites": [
+    "kansai_site_73243f75de02"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下田変電所",
+   "structure_sites": [
+    "kansai_site_fcbbab5ca43a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "阿田和変電所",
+   "structure_sites": [
+    "kansai_site_fe8fb56ebd0c"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "勝浦変電所",
+   "structure_sites": [
+    "kansai_site_7c5c25b23415"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "畝傍変電所",
+   "structure_sites": [
+    "kansai_site_800b0be86a28"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "昆陽変電所",
+   "structure_sites": [
+    "kansai_site_b4f45f996903"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高宮変電所",
+   "structure_sites": [
+    "kansai_site_3e979596f09f",
+    "chubu_site_3e979596f09f"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力(株) 揖保変電所",
+   "structure_sites": [
+    "kansai_site_fd0a2adcfd66"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長瀬変電所",
+   "structure_sites": [
+    "kansai_site_4eb06e07a792"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広野変電所",
+   "structure_sites": [
+    "kansai_site_8cfa0169f098"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "築港変電所",
+   "structure_sites": [
+    "kansai_site_5e6ccb5e1f19"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大浜変電所",
+   "structure_sites": [
+    "kansai_site_718a8f6cde3d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西千里変電所",
+   "structure_sites": [
+    "kansai_site_db5683316ad7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大和田 変電所",
+   "structure_sites": [
+    "kansai_site_1bbb196df6ad"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "前浜変電所",
+   "structure_sites": [
+    "kansai_site_a56f403367cc"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久御山変電所",
+   "structure_sites": [
+    "kansai_site_4770e911b03b"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "枇杷庄変電所",
+   "structure_sites": [
+    "kansai_site_addde301197c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "城陽変電所",
+   "structure_sites": [
+    "kansai_site_ccb40008e640"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "甲東園変電所",
+   "structure_sites": [
+    "kansai_site_fa2c4487094d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "柳本変電所",
+   "structure_sites": [
+    "kansai_site_ab8000b40016"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広田変電所",
+   "structure_sites": [
+    "kansai_site_1e25f9240d68"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "匠台変電所",
+   "structure_sites": [
+    "kansai_site_7aa10d59b4ad"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "市岡変電所",
+   "structure_sites": [
+    "kansai_site_5d810625da29"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力（株）小浜変電所",
+   "structure_sites": [
+    "kansai_site_dea77e0dd032"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "稲荷変電所",
+   "structure_sites": [
+    "kansai_site_01b42a8e9d13"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "安曇変電所",
+   "structure_sites": [
+    "kansai_site_e8c794da751b",
+    "chubu_site_e8c794da751b"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "今津変電所",
+   "structure_sites": [
+    "kansai_site_2a17faf18dc2",
+    "chubu_site_2a17faf18dc2"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加悦変電所",
+   "structure_sites": [
+    "kansai_site_71b9f4b2f8ac"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西宮変電所",
+   "structure_sites": [
+    "kansai_site_9fb92df8bb3c"
+   ],
+   "pairs": [
+    [
+     154,
+     77
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田辺変電所",
+   "structure_sites": [
+    "kansai_site_0790c0013298"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "深川変電所",
+   "structure_sites": [
+    "kansai_site_dfcf611bc98b",
+    "chubu_site_dfcf611bc98b"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "我孫子変電所",
+   "structure_sites": [
+    "kansai_site_6d17cde65a07"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "夙川変電所",
+   "structure_sites": [
+    "kansai_site_82995cee2edd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "武庫変電所",
+   "structure_sites": [
+    "kansai_site_301fc2db77a3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神戸変電所",
+   "structure_sites": [
+    "kansai_site_176790c208da"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "書写変電所",
+   "structure_sites": [
+    "kansai_site_5e2c0ce1cf3a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "香里変電所",
+   "structure_sites": [
+    "kansai_site_460c5d4d5900"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "平池変電所",
+   "structure_sites": [
+    "kansai_site_cfbb9dc37c20"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福知山変電所",
+   "structure_sites": [
+    "kansai_site_1fa35288294b"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "千僧変電所",
+   "structure_sites": [
+    "kansai_site_0807c12264fd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "丹南変電所",
+   "structure_sites": [
+    "kansai_site_f3ef81a8ddb4"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "紀見変電所",
+   "structure_sites": [
+    "kansai_site_a8ee05f927ab"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大野芝変電所",
+   "structure_sites": [
+    "kansai_site_8e6d4c5a18da"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八木変電所",
+   "structure_sites": [
+    "kansai_site_fda4b24ef6e1"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "亀岡変電所",
+   "structure_sites": [
+    "kansai_site_6bc6da1c5e03"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "馬堀変電所",
+   "structure_sites": [
+    "kansai_site_4e60d45cc4f3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "日野変電所",
+   "structure_sites": [
+    "kansai_site_ad8dd830c6ca",
+    "chubu_site_ad8dd830c6ca"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八鹿変電所",
+   "structure_sites": [
+    "kansai_site_0dd9d994a88a"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "橋本変電所",
+   "structure_sites": [
+    "kansai_site_70d12cc8da1a"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北鳴尾変電所",
+   "structure_sites": [
+    "kansai_site_79c6b38a61a6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "立花変電所",
+   "structure_sites": [
+    "kansai_site_b89859bbce72"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "折居変電所",
+   "structure_sites": [
+    "kansai_site_63585e84467c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "丹波橋変電所",
+   "structure_sites": [
+    "kansai_site_ac9d49430420"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "洛南変電所",
+   "structure_sites": [
+    "kansai_site_96096a3b4b4b"
+   ],
+   "pairs": [
+    [
+     275,
+     77
+    ]
+   ]
+  },
+  {
+   "name": "近江河西変電所",
+   "structure_sites": [
+    "kansai_site_dafa919f3bc7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "祇王変電所",
+   "structure_sites": [
+    "kansai_site_cb6e2d763e46",
+    "chubu_site_cb6e2d763e46"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "旭ヶ丘変電所",
+   "structure_sites": [
+    "kansai_site_6db56c1f4a6a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "篠山変電所",
+   "structure_sites": [
+    "kansai_site_87249e2a4ddb"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大野変電所",
+   "structure_sites": [
+    "kansai_site_b7782a04b0c6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "志筑変電所",
+   "structure_sites": [
+    "kansai_site_16818f945a55"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "梅町変電所",
+   "structure_sites": [
+    "kansai_site_b5a4902e2109"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "園部変電所",
+   "structure_sites": [
+    "kansai_site_53ddd7cebbd9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "天美変電所",
+   "structure_sites": [
+    "kansai_site_5ad695ebd8fd"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "堅田変電所",
+   "structure_sites": [
+    "kansai_site_7ef418b8cc39"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "市辺変電所",
+   "structure_sites": [
+    "kansai_site_b8d1235b87e6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新旭変電所",
+   "structure_sites": [
+    "kansai_site_bc61635acf3a",
+    "chubu_site_bc61635acf3a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "潮江変電所",
+   "structure_sites": [
+    "kansai_site_9f8f3c22b345"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中村変電所",
+   "structure_sites": [
+    "kansai_site_2dbd0a483932"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新島変電所_2",
+   "structure_sites": [
+    "kansai_site_f7d845b07f22"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加古川変電所",
+   "structure_sites": [
+    "kansai_site_b038e71228d7"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力鷹取変電所",
+   "structure_sites": [
+    "kansai_site_49e2cf3004de"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "信楽変電所",
+   "structure_sites": [
+    "kansai_site_266ba5a9f47b",
+    "chubu_site_266ba5a9f47b"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高槻変電所",
+   "structure_sites": [
+    "kansai_site_e9d61563ec84"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "水口変電所",
+   "structure_sites": [
+    "kansai_site_f303672fb558",
+    "chubu_site_f303672fb558"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "和田変電所",
+   "structure_sites": [
+    "kansai_site_8686c7c4171d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福崎変電所",
+   "structure_sites": [
+    "kansai_site_cb5fa4b57034"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "茄子作変電所",
+   "structure_sites": [
+    "kansai_site_c637e9a76c5e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小松変電所",
+   "structure_sites": [
+    "kansai_site_5ed145a6bf8e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 生江町変電所",
+   "structure_sites": [
+    "kansai_site_09e25121db21"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "梅原変電所",
+   "structure_sites": [
+    "kansai_site_85b92680f8eb"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 旭東変電所",
+   "structure_sites": [
+    "kansai_site_154e37ae2ce9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "旭変電所",
+   "structure_sites": [
+    "kansai_site_784d40ad3b1b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "市場変電所",
+   "structure_sites": [
+    "kansai_site_dd7cdbcccb2c"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "淡路町変電所",
+   "structure_sites": [
+    "kansai_site_522172dc550d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松原変電所",
+   "structure_sites": [
+    "kansai_site_31c8cc5df93a"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八田変電所",
+   "structure_sites": [
+    "kansai_site_8356fb1918a4"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "荒木変電所",
+   "structure_sites": [
+    "kansai_site_fea850831595"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "蛸地蔵変電所",
+   "structure_sites": [
+    "kansai_site_44ac4bd3d391"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊里町変電所",
+   "structure_sites": [
+    "kansai_site_03727f7d920d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大東変電所",
+   "structure_sites": [
+    "kansai_site_da0383279c3e"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "島頭変電所",
+   "structure_sites": [
+    "kansai_site_adbe9a808058"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "堅下変電所",
+   "structure_sites": [
+    "kansai_site_8da2fc81872a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大津変電所",
+   "structure_sites": [
+    "kansai_site_e580d476cae1",
+    "shikoku_site_e580d476cae1"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "深草変電所",
+   "structure_sites": [
+    "kansai_site_e70b9d13fa80"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東伊丹変電所",
+   "structure_sites": [
+    "kansai_site_5070845ede03"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "丹波市変電所",
+   "structure_sites": [
+    "kansai_site_44b64fd90c09"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "梅谷変電所",
+   "structure_sites": [
+    "kansai_site_45b6a120f350"
+   ],
+   "pairs": [
+    [
+     77,
+     33
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竹野変電所",
+   "structure_sites": [
+    "kansai_site_9739851b3249"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川西変電所",
+   "structure_sites": [
+    "kansai_site_58aee27a13ac",
+    "chubu_site_58aee27a13ac"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "尾崎変電所",
+   "structure_sites": [
+    "kansai_site_f46a1d2a73b9"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "青山変電所",
+   "structure_sites": [
+    "kansai_site_f2cadde4eda2"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中山寺変電所",
+   "structure_sites": [
+    "kansai_site_4faef60bbeb1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中須佐変電所",
+   "structure_sites": [
+    "kansai_site_629b3572cff0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "奈良変電所",
+   "structure_sites": [
+    "kansai_site_3166030ff80c"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 荒本変電所",
+   "structure_sites": [
+    "kansai_site_3c0753784b46"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竜王変電所",
+   "structure_sites": [
+    "kansai_site_c22d8a552e91",
+    "chubu_site_c22d8a552e91"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "椎堂変電所",
+   "structure_sites": [
+    "kansai_site_db0b7862e639"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "酉島変電所",
+   "structure_sites": [
+    "kansai_site_e16a80a6e3d8"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "北立花変電所",
+   "structure_sites": [
+    "kansai_site_8d863ce5a8d6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "喜志変電所",
+   "structure_sites": [
+    "kansai_site_f1862cebd6f4"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "名神町変電所",
+   "structure_sites": [
+    "kansai_site_360bf8518d69"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "外川変電所",
+   "structure_sites": [
+    "kansai_site_83e9d4936b27"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富田林変電所",
+   "structure_sites": [
+    "kansai_site_85fdcbb52240"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "浜の宮変電所",
+   "structure_sites": [
+    "kansai_site_00f805efe418"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木村橋変電所",
+   "structure_sites": [
+    "kansai_site_c08de72d13e3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "唐崎変電所",
+   "structure_sites": [
+    "kansai_site_90dc3adbd692"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "末広変電所",
+   "structure_sites": [
+    "kansai_site_f83a2353dc74"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "茨木変電所",
+   "structure_sites": [
+    "kansai_site_c25d62a7c56e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三田変電所",
+   "structure_sites": [
+    "kansai_site_5b1ff6270622"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "楠橋変電所",
+   "structure_sites": [
+    "kansai_site_06edb71b32d6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 橋波変電所",
+   "structure_sites": [
+    "kansai_site_f65602884af4"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "寝屋川変電所",
+   "structure_sites": [
+    "kansai_site_7fc4736ce0f4"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鳳変電所",
+   "structure_sites": [
+    "kansai_site_6438cd4c3e56"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "天王寺変電所",
+   "structure_sites": [
+    "kansai_site_70c3441c2233"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "唐国変電所",
+   "structure_sites": [
+    "kansai_site_836eef08ee8f"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "府中変電所",
+   "structure_sites": [
+    "kansai_site_074c20facf35"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "黒鳥変電所",
+   "structure_sites": [
+    "kansai_site_205480934c0a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神田変電所",
+   "structure_sites": [
+    "kansai_site_4e2775ec2215"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "下池田変電所",
+   "structure_sites": [
+    "kansai_site_9d3cf84829af"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 光善寺変電所",
+   "structure_sites": [
+    "kansai_site_09d20e0f241d"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中宮変電所",
+   "structure_sites": [
+    "kansai_site_86cd0dfb916b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牧野変電所",
+   "structure_sites": [
+    "kansai_site_b2c91ed64292"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桂変電所",
+   "structure_sites": [
+    "kansai_site_cc8428af41cc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木代変電所",
+   "structure_sites": [
+    "kansai_site_0e8f7968eff3"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "招提変電所",
+   "structure_sites": [
+    "kansai_site_af861f7104c1"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栄変電所",
+   "structure_sites": [
+    "kansai_site_c34fcd93ecfc",
+    "chubu_site_c34fcd93ecfc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "夢洲変電所",
+   "structure_sites": [
+    "kansai_site_9919f01bcec6"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "豊津変電所",
+   "structure_sites": [
+    "kansai_site_2dc83ebf807d"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "信濃橋変電所",
+   "structure_sites": [
+    "kansai_site_f951231d6e27"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "箕面変電所",
+   "structure_sites": [
+    "kansai_site_f494fe2c8acc"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桜ヶ丘変電所",
+   "structure_sites": [
+    "kansai_site_9643f97d1c4b"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 稲変電所",
+   "structure_sites": [
+    "kansai_site_1e9d80ad1cd3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 熊野変電所",
+   "structure_sites": [
+    "kansai_site_b2df9c14c907"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 庄内変電所",
+   "structure_sites": [
+    "kansai_site_5ebb6e881ac0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 浜変電所",
+   "structure_sites": [
+    "kansai_site_ab105b01e7ba"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 岡町変電所",
+   "structure_sites": [
+    "kansai_site_bca960aa012a"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 真砂変電所",
+   "structure_sites": [
+    "kansai_site_a6dcbb61c1ad"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "芦屋変電所",
+   "structure_sites": [
+    "kansai_site_dbf7ae79a771"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西大久保変電所",
+   "structure_sites": [
+    "kansai_site_854e20a59b42"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "御着変電所",
+   "structure_sites": [
+    "kansai_site_01238a1b5839"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 東郷変電所",
+   "structure_sites": [
+    "kansai_site_48add08c43db"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三宝変電所",
+   "structure_sites": [
+    "kansai_site_b8e0efcb39af"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 金岡変電所",
+   "structure_sites": [
+    "kansai_site_7297bf1b89e0"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竜神変電所",
+   "structure_sites": [
+    "kansai_site_892ab819733e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ],
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神足変電所",
+   "structure_sites": [
+    "kansai_site_0fa9ac81a3f1"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 浜寺変電所",
+   "structure_sites": [
+    "kansai_site_08ce5a01322e"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "谷変電所",
+   "structure_sites": [
+    "kansai_site_6ca196c33f38"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関西電力 光明池変電所",
+   "structure_sites": [
+    "kansai_site_a7f994cdb586"
+   ],
+   "pairs": [
+    [
+     77,
+     22
+    ],
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新長浜変電所",
+   "structure_sites": [
+    "kansai_site_5445b1230035",
+    "chubu_site_5445b1230035"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仁川変電所",
+   "structure_sites": [
+    "kansai_site_5fab25ae96f3"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "交野変電所",
+   "structure_sites": [
+    "kansai_site_53dd476b0d32"
+   ],
+   "pairs": [
+    [
+     77,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "人吉変電所",
+   "structure_sites": [
+    "kyushu_site_95be28fa0410"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "霧島変電所",
+   "structure_sites": [
+    "kyushu_site_ae045528da59"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "水俣変電所",
+   "structure_sites": [
+    "kyushu_site_c29a880e4ea3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "隼人変電所",
+   "structure_sites": [
+    "kyushu_site_ceb944a2fe01"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "加世田変電所",
+   "structure_sites": [
+    "kyushu_site_c39c0de0b744"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "枕崎変電所",
+   "structure_sites": [
+    "kyushu_site_1acdc35e90db"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "青戸変電所",
+   "structure_sites": [
+    "kyushu_site_7c139bb59ea3"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "宮川変電所",
+   "structure_sites": [
+    "kyushu_site_73e7a370bb56"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊集院変電所",
+   "structure_sites": [
+    "kyushu_site_a113158fcd8f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "帖佐変電所",
+   "structure_sites": [
+    "kyushu_site_b080694b9f8d"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "国分変電所",
+   "structure_sites": [
+    "kyushu_site_d4c360b46ea8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "横川変電所",
+   "structure_sites": [
+    "kyushu_site_813001c4e21f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "えびの変電所",
+   "structure_sites": [
+    "kyushu_site_1f07a48213f8"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本城川変電所",
+   "structure_sites": [
+    "kyushu_site_e596674f9ae6"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "万之瀬変電所",
+   "structure_sites": [
+    "kyushu_site_47674a609710"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高尾野変電所",
+   "structure_sites": [
+    "kyushu_site_b586cf9ae5ca"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "向江変電所",
+   "structure_sites": [
+    "kyushu_site_ec5adc4486f4"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八代変電所",
+   "structure_sites": [
+    "kyushu_site_050d6cffa3fe"
+   ],
+   "pairs": [
+    [
+     220,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新水俣変電所",
+   "structure_sites": [
+    "kyushu_site_fa0bda35e88c"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川内変電所",
+   "structure_sites": [
+    "kyushu_site_4b263147b511"
+   ],
+   "pairs": [
+    [
+     220,
+     110
+    ],
+    [
+     220,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "三角変電所",
+   "structure_sites": [
+    "kyushu_site_a0aa650c0dfb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大矢野変電所",
+   "structure_sites": [
+    "kyushu_site_00e527df7217"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 一町田変電所",
+   "structure_sites": [
+    "kyushu_site_e7eb17f1b1b8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 志岐変電所",
+   "structure_sites": [
+    "kyushu_site_f82b18a81eb7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 一の勢変電所",
+   "structure_sites": [
+    "kyushu_site_43a0e6e15050"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 内野河内変電所",
+   "structure_sites": [
+    "kyushu_site_3fd0d4231ac4"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 姫浦変電所",
+   "structure_sites": [
+    "kyushu_site_2bf6d22c6711"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮崎変電所",
+   "structure_sites": [
+    "kyushu_site_fc9ba2efc0cc"
+   ],
+   "pairs": [
+    [
+     500,
+     220
+    ]
+   ]
+  },
+  {
+   "name": "新日向変電所",
+   "structure_sites": [
+    "kyushu_site_53c945d7930e"
+   ],
+   "pairs": [
+    [
+     220,
+     110
+    ]
+   ]
+  },
+  {
+   "name": "大隅変電所",
+   "structure_sites": [
+    "kyushu_site_f8a4c238ccb7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 高鍋変電所",
+   "structure_sites": [
+    "kyushu_site_3a818959b556"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "串良変電所",
+   "structure_sites": [
+    "kyushu_site_4e024b98db48"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鷹尾変電所",
+   "structure_sites": [
+    "kyushu_site_51f81c5ee316"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "川東変電所",
+   "structure_sites": [
+    "kyushu_site_64612a440c74"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "都北変電所",
+   "structure_sites": [
+    "kyushu_site_36d3b84e7fa9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "日南変電所",
+   "structure_sites": [
+    "kyushu_site_a5fb8454849a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "野方変電所",
+   "structure_sites": [
+    "kyushu_site_54eab3e2baa7"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "志和池変電所",
+   "structure_sites": [
+    "kyushu_site_e5a58585edf1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牧園変電所",
+   "structure_sites": [
+    "kyushu_site_57a76309d8fa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "飫肥変電所",
+   "structure_sites": [
+    "kyushu_site_c3bb1271c478"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "福島変電所",
+   "structure_sites": [
+    "kyushu_site_e6577b0f3d31"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "志布志変電所",
+   "structure_sites": [
+    "kyushu_site_94d077e46745"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高山川変電所",
+   "structure_sites": [
+    "kyushu_site_aa96e6a685d0"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "雄川変電所",
+   "structure_sites": [
+    "kyushu_site_b091e2937f49"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "青島変電所",
+   "structure_sites": [
+    "kyushu_site_c0feaccc2bb4"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大塚変電所",
+   "structure_sites": [
+    "kyushu_site_4776414ca1af"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田野変電所",
+   "structure_sites": [
+    "kyushu_site_8889185dc2c2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "平原変電所",
+   "structure_sites": [
+    "kyushu_site_baf992aa9816"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木上変電所",
+   "structure_sites": [
+    "kyushu_site_35ebbb863e2b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広瀬変電所",
+   "structure_sites": [
+    "kyushu_site_1275ff77be2f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "日向変電所",
+   "structure_sites": [
+    "kyushu_site_e5834356e5dd"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "財光寺変電所",
+   "structure_sites": [
+    "kyushu_site_861af0ee03fc"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "延岡変電所",
+   "structure_sites": [
+    "kyushu_site_d8a383040f84"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "恒富変電所",
+   "structure_sites": [
+    "kyushu_site_8c1a48608698"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "都農変電所",
+   "structure_sites": [
+    "kyushu_site_17bc17ba7305"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "佐土原変電所",
+   "structure_sites": [
+    "kyushu_site_2804688071bc"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西都変電所",
+   "structure_sites": [
+    "kyushu_site_b1766c582fba"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本庄変電所",
+   "structure_sites": [
+    "kyushu_site_c3aeab680bcb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富高変電所",
+   "structure_sites": [
+    "kyushu_site_c2cfe9bf3749"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "多良木変電所",
+   "structure_sites": [
+    "kyushu_site_e3e936e77624"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "細野変電所",
+   "structure_sites": [
+    "kyushu_site_b1e537368890"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高原変電所",
+   "structure_sites": [
+    "kyushu_site_9134c3ac4684"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東町変電所",
+   "structure_sites": [
+    "kyushu_site_13069fbaf6c0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "太宰府変電所",
+   "structure_sites": [
+    "kyushu_site_1c10f079f10e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力　千本杉変電所",
+   "structure_sites": [
+    "kyushu_site_fe77c0a610c7"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "旗崎変電所",
+   "structure_sites": [
+    "kyushu_site_4d81b04c2291"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西福岡変電所",
+   "structure_sites": [
+    "kyushu_site_0923fd5bf41b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 原田変電所",
+   "structure_sites": [
+    "kyushu_site_7ec99400a834"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 二日市変電所",
+   "structure_sites": [
+    "kyushu_site_f3cd62c1873b"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 北野変電所",
+   "structure_sites": [
+    "kyushu_site_267f0d7ea2cc"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 京町変電所 (Kyomachi Substation)",
+   "structure_sites": [
+    "kyushu_site_f80cfd4455cf"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 木佐木変電所",
+   "structure_sites": [
+    "kyushu_site_e0778899c636"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 古賀変電所",
+   "structure_sites": [
+    "kyushu_site_9117d36a4ed6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "轟木変電所",
+   "structure_sites": [
+    "kyushu_site_61286ee6ccd4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 基山変電所",
+   "structure_sites": [
+    "kyushu_site_c87157429862"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 曽根崎変電所",
+   "structure_sites": [
+    "kyushu_site_cf4bb845aeaa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東福岡変電所",
+   "structure_sites": [
+    "kyushu_site_256084ac3501"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北佐賀変電所",
+   "structure_sites": [
+    "kyushu_site_22babaddad35"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白木原変電所",
+   "structure_sites": [
+    "kyushu_site_b40502c919e1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 長者原変電所",
+   "structure_sites": [
+    "kyushu_site_131bb4470ba5"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力久保変電所",
+   "structure_sites": [
+    "kyushu_site_ff9e6d0d8ea7"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 堅粕変電所",
+   "structure_sites": [
+    "kyushu_site_bd3a4d4d0e09"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "多の津変電所",
+   "structure_sites": [
+    "kyushu_site_1427f71731d2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 和白変電所",
+   "structure_sites": [
+    "kyushu_site_125572b66686"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 篠栗変電所",
+   "structure_sites": [
+    "kyushu_site_8a86126ae9b2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 唐津変電所",
+   "structure_sites": [
+    "kyushu_site_543486d508ed"
+   ],
+   "pairs": [
+    [
+     220,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三池変電所",
+   "structure_sites": [
+    "kyushu_site_7fc1d85d2164"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "野間変電所",
+   "structure_sites": [
+    "kyushu_site_1a528b8f1833"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西春変電所",
+   "structure_sites": [
+    "kyushu_site_eb67f1693fca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "井尻変電所",
+   "structure_sites": [
+    "kyushu_site_2160805d029a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 南熊本変電所",
+   "structure_sites": [
+    "kyushu_site_0020b7552eb7"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "弓削変電所",
+   "structure_sites": [
+    "kyushu_site_ac0c057e10c0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "御船変電所",
+   "structure_sites": [
+    "kyushu_site_4c431c9755aa"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 浮羽変電所",
+   "structure_sites": [
+    "kyushu_site_399455153df9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "武雄変電所",
+   "structure_sites": [
+    "kyushu_site_083a31804d46"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松島変電所",
+   "structure_sites": [
+    "kyushu_site_b02696909789"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "忠見変電所",
+   "structure_sites": [
+    "kyushu_site_8da365e2f517"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "前松原変電所",
+   "structure_sites": [
+    "kyushu_site_1c34692f1076"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南関変電所",
+   "structure_sites": [
+    "kyushu_site_0064b077c722"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 香椎変電所",
+   "structure_sites": [
+    "kyushu_site_c9fd3af58d96"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 羽犬塚変電所",
+   "structure_sites": [
+    "kyushu_site_40d9969a9f20"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 宇土変電所",
+   "structure_sites": [
+    "kyushu_site_bc3427d213a3"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力福間変電所",
+   "structure_sites": [
+    "kyushu_site_ac4e1d6a5388"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "玉名変電所",
+   "structure_sites": [
+    "kyushu_site_12bbb8513bc0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 上峰変電所",
+   "structure_sites": [
+    "kyushu_site_ac1812ed7295"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 神埼変電所",
+   "structure_sites": [
+    "kyushu_site_7e06ed21b50e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 三潴変電所",
+   "structure_sites": [
+    "kyushu_site_cfba70d5caba"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 大川変電所",
+   "structure_sites": [
+    "kyushu_site_16a451296011"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ],
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 諸富変電所",
+   "structure_sites": [
+    "kyushu_site_13b978fefefe"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 甘木変電所",
+   "structure_sites": [
+    "kyushu_site_2e6aa69b2383"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 三輪変電所",
+   "structure_sites": [
+    "kyushu_site_def1f1e64efa"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 千代変電所",
+   "structure_sites": [
+    "kyushu_site_e11f5758edd9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 田主丸変電所",
+   "structure_sites": [
+    "kyushu_site_c77b97416aef"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 万田変電所",
+   "structure_sites": [
+    "kyushu_site_e8abcd2a2dc2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 大和変電所",
+   "structure_sites": [
+    "kyushu_site_2bc1ed2b2592"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 南佐賀変電所",
+   "structure_sites": [
+    "kyushu_site_8c541a7dafad"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白石変電所",
+   "structure_sites": [
+    "kyushu_site_8c9a34648001"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田川変電所",
+   "structure_sites": [
+    "kyushu_site_bfffc60461f0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 上頓野変電所",
+   "structure_sites": [
+    "kyushu_site_e73e7b227076"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山田変電所",
+   "structure_sites": [
+    "kyushu_site_97bafdccba5e"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力川尻変電所",
+   "structure_sites": [
+    "kyushu_site_d3163d16700b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力松橋変電所",
+   "structure_sites": [
+    "kyushu_site_589ca7694cdd"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "箱崎変電所",
+   "structure_sites": [
+    "kyushu_site_85d041a22bf9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "菰屋変電所",
+   "structure_sites": [
+    "kyushu_site_95b79addc571"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "広崎変電所",
+   "structure_sites": [
+    "kyushu_site_1c5ced61714f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "日吉変電所",
+   "structure_sites": [
+    "kyushu_site_8b89f0c92a5b"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神水変電所",
+   "structure_sites": [
+    "kyushu_site_7e1721dd4be2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西合志変電所",
+   "structure_sites": [
+    "kyushu_site_03ce4b1d937f"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "諫早変電所",
+   "structure_sites": [
+    "kyushu_site_4e08c2e08d52"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力飛田変電所",
+   "structure_sites": [
+    "kyushu_site_68dc03dcfea9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 上津変電所",
+   "structure_sites": [
+    "kyushu_site_c12fbfd1a81e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力(株)志佐変電所",
+   "structure_sites": [
+    "kyushu_site_4523e34f1f42"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力箱崎浜変電所",
+   "structure_sites": [
+    "kyushu_site_d4fd35c1ee1d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竹下変電所",
+   "structure_sites": [
+    "kyushu_site_535d9cb1010b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "重留変電所",
+   "structure_sites": [
+    "kyushu_site_9804e4085e24"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "若松変電所",
+   "structure_sites": [
+    "kyushu_site_1152ade20735"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "瀬戸変電所",
+   "structure_sites": [
+    "kyushu_site_13d08cb48d67"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "赤間変電所",
+   "structure_sites": [
+    "kyushu_site_6015ff071ee3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宗像変電所",
+   "structure_sites": [
+    "kyushu_site_a89f4d1b63a7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "植木変電所",
+   "structure_sites": [
+    "kyushu_site_80cf6763c9ab"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "須屋変電所",
+   "structure_sites": [
+    "kyushu_site_149f88902728"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山鹿変電所",
+   "structure_sites": [
+    "kyushu_site_6f176537612f"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東多久変電所",
+   "structure_sites": [
+    "kyushu_site_27419589f2e9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牛津変電所",
+   "structure_sites": [
+    "kyushu_site_ecff44c2cdf2"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大鶴変電所",
+   "structure_sites": [
+    "kyushu_site_4436e3e7a73a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊万里変電所",
+   "structure_sites": [
+    "kyushu_site_4a72e2919a0f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "土谷変電所",
+   "structure_sites": [
+    "kyushu_site_eaaf53b3ee0b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大町変電所",
+   "structure_sites": [
+    "kyushu_site_d5b19f9fd3b1"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大村変電所",
+   "structure_sites": [
+    "kyushu_site_25a415e3743e"
+   ],
+   "pairs": [
+    [
+     110,
+     66
+    ],
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "姪浜変電所",
+   "structure_sites": [
+    "kyushu_site_9656058c27fe"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "百道変電所",
+   "structure_sites": [
+    "kyushu_site_dc39197e3595"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "西新変電所",
+   "structure_sites": [
+    "kyushu_site_2da9343dbcb1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "荒戸変電所",
+   "structure_sites": [
+    "kyushu_site_301f937c1a7b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "須崎変電所",
+   "structure_sites": [
+    "kyushu_site_6c3a35943bba"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "那の川変電所",
+   "structure_sites": [
+    "kyushu_site_009830596ce9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中尾変電所",
+   "structure_sites": [
+    "kyushu_site_f665c9727358"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "亀山変電所",
+   "structure_sites": [
+    "kyushu_site_a8ee7aa044c7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "古門戸変電所",
+   "structure_sites": [
+    "kyushu_site_d0778acbcc62"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東浜変電所",
+   "structure_sites": [
+    "kyushu_site_bd1f43c7fbe3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "志免変電所",
+   "structure_sites": [
+    "kyushu_site_8a5060b426a3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "板付変電所",
+   "structure_sites": [
+    "kyushu_site_9b8722704179"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "江川変電所",
+   "structure_sites": [
+    "kyushu_site_36a0fe7ea862"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "有家変電所",
+   "structure_sites": [
+    "kyushu_site_31c62867f18a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 橘変電所",
+   "structure_sites": [
+    "kyushu_site_d188dace6420"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 愛野変電所",
+   "structure_sites": [
+    "kyushu_site_50912e85996a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力送配電　面高変電所",
+   "structure_sites": [
+    "kyushu_site_09e9988ef7bd"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力　日宇変電所",
+   "structure_sites": [
+    "kyushu_site_9f65aa965ea7"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山代変電所",
+   "structure_sites": [
+    "kyushu_site_210d5a7c0549"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久原変電所",
+   "structure_sites": [
+    "kyushu_site_f81cb5ba5e2f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "壱岐変電所",
+   "structure_sites": [
+    "kyushu_site_74054a699d86"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "七隈変電所",
+   "structure_sites": [
+    "kyushu_site_7467b81b5ba6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "黒崎変電所",
+   "structure_sites": [
+    "kyushu_site_61455694405e"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "天神変電所",
+   "structure_sites": [
+    "kyushu_site_dcdb2e416b74"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "川辺変電所",
+   "structure_sites": [
+    "kyushu_site_306656524947"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小倉変電所",
+   "structure_sites": [
+    "kyushu_site_820f4e144314",
+    "chugoku_site_820f4e144314"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中津変電所",
+   "structure_sites": [
+    "kyushu_site_948269abf816"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "徳力変電所",
+   "structure_sites": [
+    "kyushu_site_b8f7c4c04511",
+    "chugoku_site_b8f7c4c04511"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 曽根変電所",
+   "structure_sites": [
+    "kyushu_site_44b2f4815ce9",
+    "chugoku_site_44b2f4815ce9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 湯布院変電所",
+   "structure_sites": [
+    "kyushu_site_bce7b0119aca"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "日出変電所",
+   "structure_sites": [
+    "kyushu_site_ee8eac9c9179"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力一の宮変電所",
+   "structure_sites": [
+    "kyushu_site_75132810159d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "篠原変電所",
+   "structure_sites": [
+    "kyushu_site_c6ad8653f0c1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "犬飼変電所",
+   "structure_sites": [
+    "kyushu_site_e7b172854d90"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "海崎変電所",
+   "structure_sites": [
+    "kyushu_site_b390b96dc33a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上野変電所",
+   "structure_sites": [
+    "kyushu_site_69a9475425f4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高千穂変電所",
+   "structure_sites": [
+    "kyushu_site_732e4c1895ed"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三重変電所",
+   "structure_sites": [
+    "kyushu_site_93f344b367a5"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "竹田変電所",
+   "structure_sites": [
+    "kyushu_site_2ed5922803f1"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "森変電所",
+   "structure_sites": [
+    "kyushu_site_4f7534139802"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "溝部変電所",
+   "structure_sites": [
+    "kyushu_site_139adfd5e5d4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "玉川変電所",
+   "structure_sites": [
+    "kyushu_site_c7de320ff85d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "城町変電所",
+   "structure_sites": [
+    "kyushu_site_473180a98d24"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "矢部変電所",
+   "structure_sites": [
+    "kyushu_site_34d5100da3fc"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東大津変電所",
+   "structure_sites": [
+    "kyushu_site_c6cdb1a7e3e6"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "菊池変電所",
+   "structure_sites": [
+    "kyushu_site_306218985de7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金の手変電所",
+   "structure_sites": [
+    "kyushu_site_2e47d69d64ec"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "九州電力 かなえ台変電所",
+   "structure_sites": [
+    "kyushu_site_5336bddce98a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "原町変電所",
+   "structure_sites": [
+    "kyushu_site_9664fc12d23f",
+    "chugoku_site_9664fc12d23f"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "若久変電所",
+   "structure_sites": [
+    "kyushu_site_99935e736b2f",
+    "chugoku_site_99935e736b2f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "大門変電所",
+   "structure_sites": [
+    "kyushu_site_6025ed5d950e",
+    "chugoku_site_6025ed5d950e"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "小禄変電所",
+   "structure_sites": [
+    "okinawa_site_01c78e5e34e8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上間変電所",
+   "structure_sites": [
+    "okinawa_site_f5ed5cd09b29"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南風原変電所",
+   "structure_sites": [
+    "okinawa_site_12e0c2352999"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "奥間変電所",
+   "structure_sites": [
+    "okinawa_site_7be77bb27487"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     13
+    ],
+    [
+     66,
+     6
+    ],
+    [
+     22,
+     13
+    ]
+   ]
+  },
+  {
+   "name": "泊変電所",
+   "structure_sites": [
+    "okinawa_site_bde85f54d7d5"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久茂地変電所",
+   "structure_sites": [
+    "okinawa_site_eaea84a1af64"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西那覇変電所",
+   "structure_sites": [
+    "okinawa_site_d4a1d451b4a1"
+   ],
+   "pairs": [
+    [
+     132,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "与根変電所",
+   "structure_sites": [
+    "okinawa_site_bcde5412563e"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "松田変電所",
+   "structure_sites": [
+    "okinawa_site_fe9a1c8d8813"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "海洋博変電所",
+   "structure_sites": [
+    "okinawa_site_2ad8245c5389"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "渡口変電所",
+   "structure_sites": [
+    "okinawa_site_249e6d7c673b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "与那原変電所",
+   "structure_sites": [
+    "okinawa_site_0a34b9123c88"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "那覇変電所",
+   "structure_sites": [
+    "okinawa_site_833b258ce23f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "瑞慶覧変電所",
+   "structure_sites": [
+    "okinawa_site_ba436a18dace"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小那覇変電所",
+   "structure_sites": [
+    "okinawa_site_b1ec421d75e1"
+   ],
+   "pairs": [
+    [
+     66,
+     13
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "友寄変電所",
+   "structure_sites": [
+    "okinawa_site_46687020c3e9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "佐敷変電所",
+   "structure_sites": [
+    "okinawa_site_68ac9491879e"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "喜瀬変電所",
+   "structure_sites": [
+    "okinawa_site_1b5fc7294049"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北那覇変電所",
+   "structure_sites": [
+    "okinawa_site_97d4788f2775"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "曙変電所",
+   "structure_sites": [
+    "okinawa_site_765afe7fd55e"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "壷川変電所",
+   "structure_sites": [
+    "okinawa_site_5e6d61416a84"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栗林変電所",
+   "structure_sites": [
+    "shikoku_site_a1a6572ee5b8",
+    "chugoku_site_a1a6572ee5b8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "端岡変電所",
+   "structure_sites": [
+    "shikoku_site_0ec3796ab5e6",
+    "chugoku_site_0ec3796ab5e6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "由佐変電所",
+   "structure_sites": [
+    "shikoku_site_b3014177259f",
+    "chugoku_site_b3014177259f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "富士見変電所",
+   "structure_sites": [
+    "shikoku_site_df95f988509e",
+    "chugoku_site_df95f988509e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宇多津変電所",
+   "structure_sites": [
+    "shikoku_site_d57647ac936d",
+    "chugoku_site_d57647ac936d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "笠山変電所",
+   "structure_sites": [
+    "shikoku_site_653470ff9a1b",
+    "chugoku_site_653470ff9a1b"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小高坂変電所",
+   "structure_sites": [
+    "shikoku_site_b379f72d66ce"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "府中変電所",
+   "structure_sites": [
+    "shikoku_site_1896cb1c6f0f",
+    "chugoku_site_1896cb1c6f0f"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "幸町変電所",
+   "structure_sites": [
+    "shikoku_site_478ad8638757",
+    "kansai_site_478ad8638757"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "春野変電所",
+   "structure_sites": [
+    "shikoku_site_c29e38411815"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "観音寺変電所",
+   "structure_sites": [
+    "shikoku_site_52472b668f12",
+    "chugoku_site_52472b668f12"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国府変電所",
+   "structure_sites": [
+    "shikoku_site_26fd15db1992",
+    "chugoku_site_26fd15db1992"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "応神変電所",
+   "structure_sites": [
+    "shikoku_site_681cdaab259c",
+    "kansai_site_681cdaab259c"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "立田変電所",
+   "structure_sites": [
+    "shikoku_site_f5b833b7066f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "佐川変電所",
+   "structure_sites": [
+    "shikoku_site_6908302f3812"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桑野変電所",
+   "structure_sites": [
+    "shikoku_site_ffb5a472fdcf",
+    "kansai_site_ffb5a472fdcf"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新居浜変電所",
+   "structure_sites": [
+    "shikoku_site_085859b6af51",
+    "chugoku_site_085859b6af51"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "喜多川変電所",
+   "structure_sites": [
+    "shikoku_site_5da6c4fe8c38",
+    "chugoku_site_5da6c4fe8c38"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鳴門変電所",
+   "structure_sites": [
+    "shikoku_site_8afbb61fb698",
+    "kansai_site_8afbb61fb698"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "多度津変電所",
+   "structure_sites": [
+    "shikoku_site_620306e438e1",
+    "chugoku_site_620306e438e1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "切越変電所",
+   "structure_sites": [
+    "shikoku_site_ec356ede060f",
+    "chugoku_site_ec356ede060f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "本川変電所",
+   "structure_sites": [
+    "shikoku_site_e8411d2bd7c3",
+    "chugoku_site_e8411d2bd7c3"
+   ],
+   "pairs": [
+    [
+     187,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "塩屋変電所",
+   "structure_sites": [
+    "shikoku_site_dbc1de2f2c28",
+    "chugoku_site_dbc1de2f2c28"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "昭和変電所",
+   "structure_sites": [
+    "shikoku_site_80c8fd3921e5",
+    "chugoku_site_80c8fd3921e5"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大津変電所",
+   "structure_sites": [
+    "shikoku_site_e580d476cae1",
+    "kansai_site_e580d476cae1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田宮変電所",
+   "structure_sites": [
+    "shikoku_site_6fdd2ed3b641",
+    "kansai_site_6fdd2ed3b641"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "志度変電所",
+   "structure_sites": [
+    "shikoku_site_99aeef370a6b",
+    "chugoku_site_99aeef370a6b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "牟岐変電所",
+   "structure_sites": [
+    "shikoku_site_174f18cfc6f4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小田変電所",
+   "structure_sites": [
+    "shikoku_site_62071fc6eacf"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宇和島変電所",
+   "structure_sites": [
+    "shikoku_site_1d7542adbc9b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "出目変電所",
+   "structure_sites": [
+    "shikoku_site_b89e3f56aa36"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "吉田浜変電所",
+   "structure_sites": [
+    "shikoku_site_330a1625839a",
+    "chugoku_site_330a1625839a"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三津変電所",
+   "structure_sites": [
+    "shikoku_site_752378c37158",
+    "chugoku_site_752378c37158"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大渡変電所",
+   "structure_sites": [
+    "shikoku_site_04f434575753"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "卯之町変電所",
+   "structure_sites": [
+    "shikoku_site_e2e9043e8efc"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長沢変電所",
+   "structure_sites": [
+    "shikoku_site_934de705cbdf",
+    "chugoku_site_934de705cbdf"
+   ],
+   "pairs": [
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "須崎変電所",
+   "structure_sites": [
+    "shikoku_site_b3f603ca141f"
+   ],
+   "pairs": [
+    [
+     110,
+     22
+    ],
+    [
+     110,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東北電力ネットワーク(株)幸町変電所",
+   "structure_sites": [
+    "tohoku_site_7436dbf6728c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東北電力ネットワーク(株)中新潟変電所",
+   "structure_sites": [
+    "tohoku_site_657490048320"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東北電力ネットワーク(株)大野変電所",
+   "structure_sites": [
+    "tohoku_site_ea9bed44bc3d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "郡山変電所",
+   "structure_sites": [
+    "tohoku_site_f1ebdd9c6db0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東港変電所",
+   "structure_sites": [
+    "tohoku_site_13aa6a59e2e3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東新津変電所",
+   "structure_sites": [
+    "tohoku_site_2c8af96d75a2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新潟変電所",
+   "structure_sites": [
+    "tohoku_site_97b0a03300c7"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "葛塚変電所",
+   "structure_sites": [
+    "tohoku_site_abe6134d8870"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小須戸変電所",
+   "structure_sites": [
+    "tohoku_site_cd06b1ffc0af"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大形変電所",
+   "structure_sites": [
+    "tohoku_site_6fca1db65063"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "若松変電所",
+   "structure_sites": [
+    "tohoku_site_a6c1113649f6"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ]
+   ]
+  },
+  {
+   "name": "神指変電所",
+   "structure_sites": [
+    "tohoku_site_8c2ebc042741"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "西福島変電所",
+   "structure_sites": [
+    "tohoku_site_68d880e1e470"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新庄変電所",
+   "structure_sites": [
+    "tohoku_site_974f25bb3e1f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大野目変電所",
+   "structure_sites": [
+    "tohoku_site_7e7813f0caef"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "太郎代変電所",
+   "structure_sites": [
+    "tohoku_site_b9c07b1b76c4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "紫竹変電所",
+   "structure_sites": [
+    "tohoku_site_87f612098d23"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "坂町変電所",
+   "structure_sites": [
+    "tohoku_site_d32f7b7b6f8b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中条変電所",
+   "structure_sites": [
+    "tohoku_site_39ec5585b005"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新発田変電所",
+   "structure_sites": [
+    "tohoku_site_267249ca4712"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "楯岡変電所",
+   "structure_sites": [
+    "tohoku_site_6876f32dc25d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東根変電所",
+   "structure_sites": [
+    "tohoku_site_64e856cdc238"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "北鶴岡変電所",
+   "structure_sites": [
+    "tohoku_site_7b3444461cd3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鶴岡変電所",
+   "structure_sites": [
+    "tohoku_site_0a18e830bd1a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "寄居浜変電所",
+   "structure_sites": [
+    "tohoku_site_66510d9d0091"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "花沢変電所",
+   "structure_sites": [
+    "tohoku_site_f3205757eb7a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "神町変電所",
+   "structure_sites": [
+    "tohoku_site_0eb555789b75"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大石田変電所",
+   "structure_sites": [
+    "tohoku_site_c473cdffe785"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八幡原変電所",
+   "structure_sites": [
+    "tohoku_site_0831f78fe975"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮内変電所",
+   "structure_sites": [
+    "tohoku_site_720482390c4f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "泉変電所",
+   "structure_sites": [
+    "tohoku_site_9d9d08dc3c80"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "藤島変電所",
+   "structure_sites": [
+    "tohoku_site_2d1849c8eeaf"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "喜久田変電所",
+   "structure_sites": [
+    "tohoku_site_14ad18eeb935"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "笹口変電所",
+   "structure_sites": [
+    "tohoku_site_97776a370c62"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "温海変電所",
+   "structure_sites": [
+    "tohoku_site_a8d7d97e8f66"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南須賀川変電所",
+   "structure_sites": [
+    "tohoku_site_ae461b58c11d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "長沼変電所",
+   "structure_sites": [
+    "tohoku_site_046eee815813"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "久留米変電所",
+   "structure_sites": [
+    "tohoku_site_9b88e9511964"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "酒田北港変電所",
+   "structure_sites": [
+    "tohoku_site_ea64024b6d1e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "蔵王変電所",
+   "structure_sites": [
+    "tohoku_site_ca35115da94b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "十日町変電所",
+   "structure_sites": [
+    "tohoku_site_3f552536ac7b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "笹川変電所",
+   "structure_sites": [
+    "tohoku_site_d2aa9f13e3c5"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "矢祭変電所",
+   "structure_sites": [
+    "tohoku_site_24f50a3ac1ab",
+    "tokyo_site_24f50a3ac1ab"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "国見変電所",
+   "structure_sites": [
+    "tohoku_site_bba4a5276cf1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "栄町変電所",
+   "structure_sites": [
+    "tohoku_site_5d92a9491f35"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "安田変電所",
+   "structure_sites": [
+    "tohoku_site_b8b01fd54b07"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "伊達変電所",
+   "structure_sites": [
+    "tohoku_site_d3254fa40ae0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "飯坂変電所",
+   "structure_sites": [
+    "tohoku_site_82e81f7d5095"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "飯豊町変電所",
+   "structure_sites": [
+    "tohoku_site_12672e7b603d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "関森変電所",
+   "structure_sites": [
+    "tohoku_site_8b7aba073d46"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小牛田変電所",
+   "structure_sites": [
+    "tohoku_site_afae6a635bd7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中仙台変電所",
+   "structure_sites": [
+    "tohoku_site_088da9a0ecb7"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ]
+   ]
+  },
+  {
+   "name": "東若林変電所",
+   "structure_sites": [
+    "tohoku_site_3aeb21725037"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仙台変電所",
+   "structure_sites": [
+    "tohoku_site_aa1294ede4e7"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "いわき変電所",
+   "structure_sites": [
+    "tohoku_site_2fd8913f0b3b",
+    "tokyo_site_2fd8913f0b3b"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "明通変電所",
+   "structure_sites": [
+    "tohoku_site_c4e2f6448885"
+   ],
+   "pairs": [
+    [
+     154,
+     33
+    ],
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大船渡変電所",
+   "structure_sites": [
+    "tohoku_site_8be37df67a79"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "丸森変電所",
+   "structure_sites": [
+    "tohoku_site_1e60f80ed4da"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "中山変電所",
+   "structure_sites": [
+    "tohoku_site_3332d4d5007b"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高清水変電所",
+   "structure_sites": [
+    "tohoku_site_4865f468b595"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "金成変電所",
+   "structure_sites": [
+    "tohoku_site_5c638a2fe29d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仙台港変電所",
+   "structure_sites": [
+    "tohoku_site_ee260746fbd6"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小野変電所",
+   "structure_sites": [
+    "tohoku_site_3235f2ddfd61"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "好間変電所",
+   "structure_sites": [
+    "tohoku_site_10617736ff4d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮変電所",
+   "structure_sites": [
+    "tohoku_site_ef49b3b6ad12"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "鍋田変電所",
+   "structure_sites": [
+    "tohoku_site_77c89f37b585"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "川崎変電所",
+   "structure_sites": [
+    "tohoku_site_aa4f214151e1"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "米谷変電所",
+   "structure_sites": [
+    "tohoku_site_295f89b6faf2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "高森変電所",
+   "structure_sites": [
+    "tohoku_site_edb946509f74"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "根白石変電所",
+   "structure_sites": [
+    "tohoku_site_439f8b89fc8e"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "小野新町変電所",
+   "structure_sites": [
+    "tohoku_site_c0cc7f872ea9"
+   ],
+   "pairs": [
+    [
+     66,
+     22
+    ]
+   ]
+  },
+  {
+   "name": "東北電力ネットワーク 南小泉変電所",
+   "structure_sites": [
+    "tohoku_site_4bb9b8634f01"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東北電力ネットワーク 苦竹変電所",
+   "structure_sites": [
+    "tohoku_site_b80da0952616"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "白石変電所",
+   "structure_sites": [
+    "tohoku_site_638d3a4b7523"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "沖野変電所",
+   "structure_sites": [
+    "tohoku_site_5604863f69bf"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "村田変電所",
+   "structure_sites": [
+    "tohoku_site_9f373288f681"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "沼辺変電所",
+   "structure_sites": [
+    "tohoku_site_741fca9ac3c3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "堤通変電所",
+   "structure_sites": [
+    "tohoku_site_3c128c71da22"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "五ツ橋変電所",
+   "structure_sites": [
+    "tohoku_site_63b378799be3"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ],
+    [
+     154,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "上遠野変電所",
+   "structure_sites": [
+    "tohoku_site_fbf9d12c1895"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "あすと長町変電所",
+   "structure_sites": [
+    "tohoku_site_766186a40161"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "御所野変電所",
+   "structure_sites": [
+    "tohoku_site_a186fc370f4e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "能代東変電所",
+   "structure_sites": [
+    "tohoku_site_700adda7ddc0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "船越変電所 (Funakoshi)",
+   "structure_sites": [
+    "tohoku_site_017b588072e2"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "弘前変電所",
+   "structure_sites": [
+    "tohoku_site_01b3d37088a4"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "湯沢変電所",
+   "structure_sites": [
+    "tohoku_site_9712d0922d2a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大曲変電所",
+   "structure_sites": [
+    "tohoku_site_a944b3044388"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "由利変電所",
+   "structure_sites": [
+    "tohoku_site_24543de12988"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "東弘前変電所",
+   "structure_sites": [
+    "tohoku_site_a4f2057a69c0"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南津軽変電所",
+   "structure_sites": [
+    "tohoku_site_bc2c2ea61057"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩木川変電所",
+   "structure_sites": [
+    "tohoku_site_74be9ad90721"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "板柳変電所",
+   "structure_sites": [
+    "tohoku_site_f04a6f19b4f9"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "木造変電所",
+   "structure_sites": [
+    "tohoku_site_9310d7fefafb"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "菰槌変電所",
+   "structure_sites": [
+    "tohoku_site_4ca5ead6426c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "向能代変電所",
+   "structure_sites": [
+    "tohoku_site_ad0f9507bda8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "羽川変電所",
+   "structure_sites": [
+    "tohoku_site_2445feab7400"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "手形変電所",
+   "structure_sites": [
+    "tohoku_site_828bd4dcfb0c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "刈和野変電所",
+   "structure_sites": [
+    "tohoku_site_0968f9c5a615"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "新山変電所",
+   "structure_sites": [
+    "tohoku_site_effdf09794eb"
+   ],
+   "pairs": [
+    [
+     154,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "羽後増田変電所",
+   "structure_sites": [
+    "tohoku_site_0dafa1ab80cd"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八郎潟変電所",
+   "structure_sites": [
+    "tohoku_site_b1adf58af538"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "山王変電所",
+   "structure_sites": [
+    "tohoku_site_64d05749b55b"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "平沢変電所",
+   "structure_sites": [
+    "tohoku_site_3a22ba7a7628"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "雫石開閉所",
+   "structure_sites": [
+    "tohoku_site_eed376af9399"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "南八戸変電所",
+   "structure_sites": [
+    "tohoku_site_412a44be842e"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大館変電所 (Ōdate Hendensho)",
+   "structure_sites": [
+    "tohoku_site_4c0c01def89a"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "八戸変電所",
+   "structure_sites": [
+    "tohoku_site_3eb4e7b41745"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "桂変電所",
+   "structure_sites": [
+    "tohoku_site_90905c416d43"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "遠野変電所",
+   "structure_sites": [
+    "tohoku_site_cdcab3445c16"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "田代変電所",
+   "structure_sites": [
+    "tohoku_site_02d67f9e7531"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三戸変電所",
+   "structure_sites": [
+    "tohoku_site_a18d75b64980"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ],
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "宮野目変電所",
+   "structure_sites": [
+    "tohoku_site_07640aa11b73"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "渋民変電所",
+   "structure_sites": [
+    "tohoku_site_9373d48d56bd"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "淋代平変電所",
+   "structure_sites": [
+    "tohoku_site_3c7dec300908"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "軽米変電所",
+   "structure_sites": [
+    "tohoku_site_10fe9bfc3f40"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "三本松変電所",
+   "structure_sites": [
+    "tohoku_site_4fea5db56966"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "近川変電所",
+   "structure_sites": [
+    "tohoku_site_0da17ea5b40c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大湊変電所",
+   "structure_sites": [
+    "tohoku_site_f8b8031f1a2f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仲崎変電所",
+   "structure_sites": [
+    "tohoku_site_98ce72c147ee"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大畑変電所",
+   "structure_sites": [
+    "tohoku_site_c728e96a31d3",
+    "hokkaido_site_c728e96a31d3"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "大鰐変電所",
+   "structure_sites": [
+    "tohoku_site_cb0782a4a33d"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩手滝沢変電所",
+   "structure_sites": [
+    "tohoku_site_6d253f497f82"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "岩手中里変電所",
+   "structure_sites": [
+    "tohoku_site_0cabd135b50b"
+   ],
+   "pairs": [
+    [
+     33,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "柏台変電所",
+   "structure_sites": [
+    "tohoku_site_65aba0f50c32"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "後藤野変電所",
+   "structure_sites": [
+    "tohoku_site_99361e9fee86"
+   ],
+   "pairs": [
+    [
+     66,
+     33
+    ]
+   ]
+  },
+  {
+   "name": "荒川変電所",
+   "structure_sites": [
+    "tohoku_site_1f695ac98a2c"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "野沢変電所",
+   "structure_sites": [
+    "tohoku_site_ba65c0301611"
+   ],
+   "pairs": [
+    [
+     22,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "花巻変電所",
+   "structure_sites": [
+    "tohoku_site_d7930e1549b8"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "仙人変電所",
+   "structure_sites": [
+    "tohoku_site_c2ff0b6422e3"
+   ],
+   "pairs": [
+    [
+     33,
+     11
+    ]
+   ]
+  },
+  {
+   "name": "飯豊変電所",
+   "structure_sites": [
+    "tohoku_site_af8382088a34"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "石江変電所",
+   "structure_sites": [
+    "tohoku_site_07fcce82701f"
+   ],
+   "pairs": [
+    [
+     66,
+     6
+    ]
+   ]
+  },
+  {
+   "name": "昭島変電所",
+   "structure_sites": [
+    "tokyo_site_696faa278553"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "北与野変電所",
+   "structure_sites": [
+    "tokyo_site_eb003bdddc90"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "世田谷変電所",
+   "structure_sites": [
+    "tokyo_site_1a3288cfffda"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "墨東変電所",
+   "structure_sites": [
+    "tokyo_site_ecf011d94f09"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "天王洲変電所",
+   "structure_sites": [
+    "tokyo_site_b17bba025f31"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "田端変電所",
+   "structure_sites": [
+    "tokyo_site_28b2ba699ea6"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "塩浜変電所",
+   "structure_sites": [
+    "tokyo_site_09486b9c622b"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "上野変電所",
+   "structure_sites": [
+    "tokyo_site_f3876dcb1cff"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "永代橋変電所",
+   "structure_sites": [
+    "tokyo_site_ac492d950b9a"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "東川崎変電所",
+   "structure_sites": [
+    "tokyo_site_7abc0ac81492"
+   ],
+   "pairs": [
+    [
+     154,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "新宿変電所",
+   "structure_sites": [
+    "tokyo_site_f6fd30586017"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "東新宿変電所",
+   "structure_sites": [
+    "tokyo_site_c9b3b4d10142"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "豊島変電所",
+   "structure_sites": [
+    "tokyo_site_b4b78ca731a6"
+   ],
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "城南変電所",
+   "structure_sites": [
+    "tokyo_site_cba9c865ca75"
+   ],
+   "pairs": [
+    [
+     275,
+     154
+    ],
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "高輪変電所",
+   "structure_sites": [
+    "tokyo_site_7f36519d70ce"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "東内幸町変電所",
+   "structure_sites": [
+    "tokyo_site_67160a83159a"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "大井ふ頭変電所",
+   "structure_sites": [
+    "tokyo_site_28315f08d56b"
+   ],
+   "pairs": [
+    [
+     275,
+     154
+    ]
+   ]
+  },
+  {
+   "name": "新豊洲変電所",
+   "structure_sites": [
+    "tokyo_site_d942c25802a0"
+   ],
+   "pairs": [
+    [
+     500,
+     275
+    ],
+    [
+     275,
+     66
+    ]
+   ]
+  },
+  {
+   "name": "水道橋変電所",
+   "structure_sites": [
+    "tokyo_site_91d505b435cb"
+   ],
+   "pairs": [
+    [
+     275,
+     66
+    ]
+   ]
+  }
+ ]
+}

@@ -4,6 +4,11 @@
 #
 # The slow 10-region solved sweep stays opt-in (AJGRID_SLOW_TESTS=1,
 # several minutes) and is exercised by the weekly scheduled run.
+#
+# 2026-10-21: 週次の sweep は旧系譜(地域別のスナップ済みの網)の記録に直し、正典の 4 島を全規模の
+# AC で解くジョブ canonical-islands を足した。それまで週次は 06-14 の初回から 19 回すべて赤で、
+# 正典を解く週次テストは無かった(docs/reports/project_structure_2026-10-21.md の A7)。
+# 記録を更新したあと手で回せるように workflow_dispatch を付けた。
 name: tests
 
 on:
@@ -19,6 +24,7 @@ on:
   pull_request:
   schedule:
     - cron: "0 21 * * 0"   # weekly (Mon 06:00 JST): includes the slow sweep
+  workflow_dispatch:
 
 jobs:
   pytest:
@@ -35,10 +41,35 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
       - name: Fast suite (regression pins)
-        if: github.event_name != 'schedule'
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
         run: python -m pytest -q
-      - name: Full suite incl. 10-region solved sweep (weekly)
-        if: github.event_name == 'schedule'
+      # README の数字(規模・介入件数・版)はデータから cog で生成している。モデルを作り直して
+      # 数字が変わったのに README を書き直していなければ落ちる → `cog -I . -r README.md` で直す
+      - name: README numbers match the data
+        run: python -m cogapp -I . --check README.md
+      - name: Full suite incl. 旧系譜の記録 sweep (weekly)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
           AJGRID_SLOW_TESTS: "1"
-        run: python -m pytest -q
+        # 正典の 4 島は別ジョブ(canonical-islands)で並べて回す
+        run: python -m pytest -q -m "not canonical" -rf
+
+  # 正典の 4 つの同期島を全規模で AC 潮流に解く(配布ケースと同じ網・同じ素朴な NR)
+  canonical-islands:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: 正典 4 島の全規模 AC
+        env:
+          AJGRID_SLOW_TESTS: "1"
+        run: python -m pytest -q -m canonical -rA --durations=0

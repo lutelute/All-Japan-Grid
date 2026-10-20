@@ -50,6 +50,7 @@ a{color:var(--navy)}
 </head>
 <body>
 <header>
+ <a href="./index.html" style="color:#6cb6ff;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap">&#8592; ダッシュボード</a>
  <h1>SubSLD 変電所単線結線ビュー<small>実証ペア図・全国 <span id="cnt">…</span> 所（OSM=正・捏造ゼロ）</small></h1>
  <input id="q" placeholder="変電所名で検索（例: 新京葉）">
  <span id="roles">
@@ -81,24 +82,33 @@ let BASE="photo"; // GeoPane基図: photo=航空写真 / map=地理院地図
 let ROLE="control";
 let SWSTATE={};    // {site_id: {"<vl>/<i>": true(開) | false(閉)}} 平常時からの差分
 const $=id=>document.getElementById(id);
+const REGION_JA={hokkaido:"北海道",tohoku:"東北",tokyo:"東京",chubu:"中部",hokuriku:"北陸",
+ kansai:"関西",chugoku:"中国",shikoku:"四国",kyushu:"九州",okinawa:"沖縄"};
 
 fetch("data/subsld_pages.json?v=5").then(r=>r.json()).then(j=>{
  DATA=j.sites;
  DATA.forEach(s=>{s._nl=(s.n||s.i);s._pr=(Math.max(...(s.kv.length?s.kv:[0])))*100+s.vl.reduce((a,v)=>a+v.g.length,0)});
- DATA.sort((a,b)=>b._pr-a._pr);
+ // 重要度順(最高電圧×100+回線数)。ただし「500 kV switching station」「3/4号 開閉所」のように名前の
+ // 欠けた行(かな・漢字で始まらない名前)は後ろへ。最初に開くのが欠けた行だった(io 一新 2026-10-21)
+ const named=s=>/^[\u3040-\u30ff\u3400-\u9fff]/.test(s._nl)?0:1;
+ DATA.sort((a,b)=>(named(a)-named(b))||(b._pr-a._pr));
  $("cnt").textContent=DATA.length.toLocaleString();
  const ch=$("chips");
  REGIONS.forEach(r=>{const c=document.createElement("span");c.className="chip";
-  c.textContent=r;c.onclick=()=>{FILTER.r=FILTER.r===r?null:r;
-   [...ch.children].forEach(x=>x.classList.toggle("on",x.textContent===FILTER.r));
+  c.textContent=REGION_JA[r]||r;c.dataset.r=r;c.onclick=()=>{FILTER.r=FILTER.r===r?null:r;
+   [...ch.children].forEach(x=>x.classList.toggle("on",x.dataset.r===FILTER.r));
    render()};ch.appendChild(c)});
  $("q").addEventListener("input",e=>{FILTER.q=e.target.value.trim();render()});
  document.querySelectorAll("#roles .role").forEach(el=>{
   el.onclick=()=>{ROLE=el.dataset.role;
    document.querySelectorAll("#roles .role").forEach(x=>x.classList.toggle("on",x===el));
    if(ROLE==="dispatch") showDispatch(); else if(SEL) select(SEL);};});
+ // subsld.html?q=名前 で、その変電所を開く(系統図マップの詳細カードから来る・2026-10-21)
+ const q0=(new URLSearchParams(location.search).get("q")||"").trim();
+ if(q0){$("q").value=q0;FILTER.q=q0}
  render();
- const first=DATA[0];if(first)select(first);
+ // 最初に開くのは、検索欄の例と同じ新京葉変電所(500/275/154/66 kV がそろった典型的な変電所)
+ const first=DATA.find(s=>s._nl==="新京葉変電所")||DATA[0];if(first&&!(q0&&SEL))select(first);
 });
 
 function filtered(){return DATA.filter(s=>(!FILTER.r||s.r===FILTER.r)&&
@@ -112,7 +122,7 @@ function addRows(f,L){
  const seg=f.slice(shown,shown+250);
  seg.forEach(s=>{
   const d=document.createElement("div");d.className="row"+(SEL===s?" sel":"");
-  d.innerHTML=`<div>${s._nl}</div><div class="kv">${s.r} ・ ${s.kv.join("/")||"?"}kV ・ ${s.vl.reduce((a,v)=>a+v.g.length,0)}線</div>`;
+  d.innerHTML=`<div>${s._nl}</div><div class="kv">${REGION_JA[s.r]||s.r} ・ ${s.kv.join("/")||"?"}kV ・ ${s.vl.reduce((a,v)=>a+v.g.length,0)}線</div>`;
   d.onclick=()=>select(s);L.appendChild(d)});
  shown+=seg.length;
  const rest=f.length-shown;
@@ -127,7 +137,7 @@ function select(s){
  $("detail").innerHTML=`
   <div id="dhead"><span id="dname">${s._nl}</span>
    <span>${s.kv.map(k=>`<span class="kvchip" style="background:${vcol(k)}">${k}kV</span>`).join("")}</span>
-   <span id="dmeta">${s.r}${s.ty?" ・ "+s.ty:""} ・ ${s.la.toFixed(4)}, ${s.lo.toFixed(4)}
+   <span id="dmeta">${REGION_JA[s.r]||s.r}${s.ty?" ・ "+s.ty:""} ・ ${s.la.toFixed(4)}, ${s.lo.toFixed(4)}
     ・ <a href="https://www.openstreetmap.org/#map=17/${s.la}/${s.lo}" target="_blank">OSM</a></span></div>
   <div id="panes">
    <div class="pane"><h3>GeoPane — 構内幾何（●vertex ■polygon ▲leadin）

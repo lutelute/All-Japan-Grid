@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-20",
+ "generated": "2026-10-20",
  "ybus_version": "5.0.1",
  "changelog": {
   "5.0.1": "base_mva表記バグ修正: 行列はnet.sn_mva(=1MVA)基準puなのにnpz/matがbase_mva=100と誤表記(×100見え・SCRマップ検算で発覚2026-08-17)。base_mvaを実基準(net.sn_mva)で書く。行列値は不変",
@@ -9,21 +9,21 @@
   "4.0.0": "①変圧器の実容量化: 出典必須DB(data/transformer_sources.jsonl, existing銘板のみ)→構造DB(TransformerSpec source=nameplate)→build_island_net の trafo sn_mva/parallel へ接続(電圧ペア厳密一致のみ・枝名に@nameplate刻印) ②applyの階級フォールバック廃止(誤ペアへの銘板付与を防止) ③built名の電圧サフィックス('… 500kV')を吸収する正規化照合 ④meta.trafo_nameplate に適用数と伝播経路を記録",
   "5.0.0": "介入#21(bbox二重抽出のdedup)を既定ON化: ①重複ノード(同一座標6桁+kv)を1バスへ ②重複エッジ(同一バス対+同一経路)を1本へ(parはmax保存・本物の複線par>1は不変)。除去であって接続追加でない。west断片化2531→544成分・線二重計上の是正(境界線インピーダンス半減の解消)。--no-dedup-nodes で v4 相当(dedup無し)を再現可 (docs/reports/default_on_decision_2026-07-10.md)"
  },
- "source": "/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
+ "source": "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid/docs/data/built/all.json",
  "note": "4 frequency islands are asynchronous; the national Ybus is the block-diagonal direct sum of these.",
  "islands": {
   "hokkaido": {
    "island": "hokkaido",
    "f_hz": 50.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "2785e1d4919a2f72",
+   "fingerprint": "aa53f72aebe30ee5",
    "n_bus": 831,
-   "nnz": 2651,
-   "density": 0.0038389077865677327,
-   "n_line": 850,
+   "nnz": 2671,
+   "density": 0.0038678697464814837,
+   "n_line": 858,
    "n_trafo": 69,
    "trafo_nameplate": {
-    "n_applied": 1,
+    "n_applied": 28,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
@@ -42,61 +42,61 @@
     "n_lines": 0,
     "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
    },
-   "n_components_refs": 30,
+   "n_components_refs": 22,
    "dc": {
     "included": true,
-    "nnz": 2651,
+    "nnz": 2671,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 919,
+    "n_branch": 927,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 117,
-    "nnz": 1073,
-    "fill_density": 0.0784,
-    "n_dropped_buses": 44,
-    "fingerprint": "dfff9e5a3bb3c721"
+    "n_bus": 118,
+    "nnz": 1076,
+    "fill_density": 0.0773,
+    "n_dropped_buses": 32,
+    "fingerprint": "9e481677a7147ee5"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 918,
+    "offdiag_checked": 926,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.5216396751903868e-16,
+    "offdiag_rel_err_p99": 1.494612405617859e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 1.1368683772161603e-13
+    "backbone_symmetry_max_abs_err": 2.278173318171838e-13
    },
    "gate": {
     "pass": true,
-    "cond_max": 1368252.6830803275,
-    "n_islands": 14
+    "cond_max": 1539076.2736974547,
+    "n_islands": 10
    },
-   "elapsed_s": 3.0
+   "elapsed_s": 4.2
   },
   "east": {
    "island": "east",
    "f_hz": 50.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "656f5e0606b1feb0",
-   "n_bus": 6145,
-   "nnz": 19835,
-   "density": 0.0005252770548468957,
-   "n_line": 6302,
-   "n_trafo": 635,
+   "fingerprint": "88d701c336f3a6ca",
+   "n_bus": 6253,
+   "nnz": 20441,
+   "density": 0.0005227876034504238,
+   "n_line": 6467,
+   "n_trafo": 680,
    "trafo_nameplate": {
-    "n_applied": 6,
+    "n_applied": 134,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
     "enabled": true,
-    "n_node_merged": 222,
-    "n_edge_dup_removed": 211,
+    "n_node_merged": 291,
+    "n_edge_dup_removed": 175,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
    "site_trafos": {
@@ -109,61 +109,61 @@
     "n_lines": 0,
     "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
    },
-   "n_components_refs": 305,
+   "n_components_refs": 220,
    "dc": {
     "included": true,
-    "nnz": 19835,
+    "nnz": 20441,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 6937,
+    "n_branch": 7147,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 1313,
-    "nnz": 141090,
-    "fill_density": 0.0818,
-    "n_dropped_buses": 543,
-    "fingerprint": "a9d3086cd02a14a4"
+    "n_bus": 1363,
+    "nnz": 145718,
+    "fill_density": 0.0784,
+    "n_dropped_buses": 375,
+    "fingerprint": "552e83cfbd685521"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 6911,
+    "offdiag_checked": 7139,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.7324024498997125e-16,
+    "offdiag_rel_err_p99": 1.6810863377792785e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 2.873967505387993e-13
+    "backbone_symmetry_max_abs_err": 2.9103830456733704e-11
    },
    "gate": {
     "pass": true,
-    "cond_max": 49007674.83959803,
-    "n_islands": 173
+    "cond_max": 48803952.63258211,
+    "n_islands": 130
    },
-   "elapsed_s": 16.2
+   "elapsed_s": 24.6
   },
   "west": {
    "island": "west",
    "f_hz": 60.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "8be7a94c2d5ffe49",
-   "n_bus": 8242,
-   "nnz": 26211,
-   "density": 0.00038584988047500975,
-   "n_line": 8155,
-   "n_trafo": 944,
+   "fingerprint": "e0c1a88d16aff71d",
+   "n_bus": 7985,
+   "nnz": 26087,
+   "density": 0.00040914221993413604,
+   "n_line": 8127,
+   "n_trafo": 999,
    "trafo_nameplate": {
-    "n_applied": 4,
+    "n_applied": 158,
     "source": "transformer_sources.jsonl(existing) → structures/*.json(source=nameplate) → sn_mva/parallel (v4)"
    },
    "dedup_nodes": {
     "enabled": true,
-    "n_node_merged": 2318,
-    "n_edge_dup_removed": 2100,
+    "n_node_merged": 2335,
+    "n_edge_dup_removed": 2031,
     "note": "介入#21(v5既定ON): bbox二重抽出の除去。--no-dedup-nodes=v4相当"
    },
    "site_trafos": {
@@ -176,48 +176,48 @@
     "n_lines": 0,
     "note": "介入#23(既定OFF): 未供用線をin_service=Falseで建てる(out-of-service枝はpandapowerがYbusから自動除外)"
    },
-   "n_components_refs": 563,
+   "n_components_refs": 279,
    "dc": {
     "included": true,
-    "nnz": 26211,
+    "nnz": 26087,
     "aligned": true
    },
    "branch_matrices": {
     "included": true,
-    "n_branch": 9099,
+    "n_branch": 9126,
     "order": "lines then trafos (lookup-verified)"
    },
    "backbone": {
     "keep_kv_min": 154.0,
-    "n_bus": 2103,
-    "nnz": 18385,
+    "n_bus": 2104,
+    "nnz": 18479,
     "fill_density": 0.0042,
-    "n_dropped_buses": 1056,
-    "fingerprint": "e37a25e8b9926a12"
+    "n_dropped_buses": 480,
+    "fingerprint": "fb4579110957b7a0"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
-    "offdiag_checked": 9081,
+    "offdiag_checked": 9116,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 8.638085483049194e-17,
+    "offdiag_rel_err_p99": 7.240311739076587e-17,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
-    "backbone_symmetry_max_abs_err": 2.2737367544323206e-12
+    "backbone_symmetry_max_abs_err": 3.637978807091713e-12
    },
    "gate": {
     "pass": true,
-    "cond_max": 251188265.76872456,
-    "n_islands": 370
+    "cond_max": 242730410.89613152,
+    "n_islands": 149
    },
-   "elapsed_s": 23.5
+   "elapsed_s": 33.4
   },
   "okinawa": {
    "island": "okinawa",
    "f_hz": 60.0,
    "ybus_version": "5.0.1",
-   "fingerprint": "e06d6f156408cf67",
+   "fingerprint": "25a68e8cd000e1dc",
    "n_bus": 100,
    "nnz": 324,
    "density": 0.0324,
@@ -260,14 +260,14 @@
     "nnz": 239,
     "fill_density": 0.4518,
     "n_dropped_buses": 6,
-    "fingerprint": "52c26d1e6c24d387"
+    "fingerprint": "01674cdd7d37ba01"
    },
    "checks": {
     "symmetry_max_abs_err": 0.0,
     "symmetry_rel_err": 0.0,
     "offdiag_checked": 115,
     "offdiag_rel_err_median": 0.0,
-    "offdiag_rel_err_p99": 1.9590875042103485e-16,
+    "offdiag_rel_err_p99": 1.8077086135024536e-16,
     "branch_order_mismatches": 0,
     "reconstruction_rel_err": 0.0,
     "dc_bus_order_aligned": true,
@@ -275,10 +275,10 @@
    },
    "gate": {
     "pass": true,
-    "cond_max": 31259.279452265895,
+    "cond_max": 18387.54585476654,
     "n_islands": 1
    },
-   "elapsed_s": 1.1
+   "elapsed_s": 1.6
   }
  }
 }

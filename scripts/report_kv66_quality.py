@@ -1,4 +1,4 @@
-"""Per-region 66 kV-band quality ledger (M4-4 of docs/PLAN_66KV.md).
+"""Per-region 66 kV-band quality ledger (M4-4 of docs/archive/plans/PLAN_66KV.md).
 
     PYTHONPATH=. python scripts/report_kv66_quality.py \
         [--json docs/reports/kv66_quality_<date>.json] [--regions tokyo ...]

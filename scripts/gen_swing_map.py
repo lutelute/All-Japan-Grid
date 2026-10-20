@@ -3,7 +3,7 @@
 K_ij=E_iE_j(B_ij cosδij − G_ij sinδij) で最低inter-areaモードの形を地図化。"""
 import json, sys, warnings
 warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid')
+sys.path.insert(0, '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid')
 import numpy as np, scipy.sparse as sp
 from scipy.sparse.linalg import splu
 
@@ -15,7 +15,7 @@ from src.powerflow.pref_demand import pref_zone_gwh
 from scripts.gen_ybus_numeric import load_ybus_npz  # noqa: E402
 from src.dynamics.machine_agg import aggregate_machines
 
-ROOT = '/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid'
+ROOT = '/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid'
 S = 'docs/reports/figs'
 
 built = json.load(open(f'{ROOT}/docs/data/built/all.json'))

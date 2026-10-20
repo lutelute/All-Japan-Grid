@@ -1,0 +1,113 @@
+{
+ "generated_at": "2026-10-20T18:17:50Z",
+ "version": "1.9.0",
+ "dataset_version": "1.9.0",
+ "model": {
+  "n_nodes": 17738,
+  "n_edges": 19944,
+  "main_size": 16446,
+  "n_components": 512,
+  "n_island_nodes": 1985,
+  "n_stitch": 158,
+  "n_tie": 6,
+  "islands": {
+   "hokkaido": 38,
+   "east": 320,
+   "west": 597,
+   "okinawa": 7
+  },
+  "n_regions": 10,
+  "model_version": "cd20614",
+  "generated_at": "2026-09-02T16:32:52+00:00",
+  "osm_newest": "2026-06-15T14:25:30Z"
+ },
+ "interventions": 45,
+ "reports": {
+  "total": 148,
+  "dated": 145,
+  "recent": [
+   {
+    "date": "2026-10-21",
+    "title": "プロジェクトの全体構造と「クソ機能」の候補 2026-10-21",
+    "path": "docs/reports/project_structure_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-20",
+    "title": "配布 MATPOWER ケースを 4 島とも AC で解ける形にする 2026-10-20",
+    "path": "docs/reports/matpower_dist_ac_2026-10-20.md"
+   },
+   {
+    "date": "2026-10-08",
+    "title": "変電所内の変圧器の結び方は正しいか — 全国の公表一覧で採点(2026-10-08)",
+    "path": "docs/reports/transformer_topology_2026-10-08.md"
+   },
+   {
+    "date": "2026-10-07",
+    "title": "SubSLD と node-breaker 方式の比較 — 日本の 7,239 変電所で（2026-10-07）",
+    "path": "docs/reports/station_node_breaker_comparison_2026-10-07.md"
+   },
+   {
+    "date": "2026-10-07",
+    "title": "変電所の構内結線: All-AU-Grid / All-EU-Grid の提案の採用と、日本での改良(2026-10-07)",
+    "path": "docs/reports/station_node_breaker_adoption_2026-10-07.md"
+   },
+   {
+    "date": "2026-10-03",
+    "title": "潮流マップの実潮流を 2 段階上げる — 日別断面の 1 か月欠落の修理と、観測との線ごとの突き合わせ(2026-10-03)",
+    "path": "docs/reports/flow_map_observed_compare_2026-10-03.md"
+   },
+   {
+    "date": "2026-09-21",
+    "title": "併架線の回線数を、線路名ごとの証拠で電圧クラスに配る(ビルダー修正)",
+    "path": "docs/reports/mixed_voltage_circuits_builder_2026-09-21.md"
+   },
+   {
+    "date": "2026-09-17",
+    "title": "収録率とタグ補完率の実測監査（2026-09-17）",
+    "path": "docs/reports/coverage_and_enrichment_audit_2026-09-17.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）",
+    "path": "docs/reports/tepco_endpoint_unresolved_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "介入#43a 変圧器の銘板化ワークリスト — なぜ 0/71 だったのか（2026-09-03）",
+    "path": "docs/reports/stepdown_nameplate_worklist_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "線路容量の理論値を公表値で較正する — 全国版（2026-09-03）",
+    "path": "docs/reports/line_capacity_calibration_2026-09-03.md"
+   },
+   {
+    "date": "2026-09-03",
+    "title": "断片解消キャンペーン第三波 — ドライラン(2026-09-03)",
+    "path": "docs/reports/fragment_third_wave_2026-09-03.md"
+   }
+  ]
+ },
+ "bundles": [
+  {
+   "dir": "codex_ac_diagnosis_2026-09-15",
+   "date": "2026-09-15",
+   "title": "AC・Ybus診断 — 接続と需要の Before / After",
+   "href": "reports/codex_ac_diagnosis_2026-09-15/index.html"
+  },
+  {
+   "dir": "codex_same_site_trial_2026-09-13",
+   "date": "2026-09-13",
+   "title": "同名設備の接続実験 / All-Japan-Grid",
+   "href": "reports/codex_same_site_trial_2026-09-13/index.html"
+  },
+  {
+   "dir": "codex_before_after_2026-09-12",
+   "date": "2026-09-12",
+   "title": "All-Japan-Grid — Before / After 全比較",
+   "href": "reports/codex_before_after_2026-09-12/index.html"
+  }
+ ],
+ "n_scripts": 263,
+ "n_test_files": 107
+}

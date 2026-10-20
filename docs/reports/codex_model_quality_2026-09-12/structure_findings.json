@@ -1,0 +1,3818 @@
+{
+  "counts": {
+    "sites": 7239,
+    "voltage_levels": 9998,
+    "busbars": 5228,
+    "bays": 8753,
+    "terminals": 47979,
+    "transformers": 2586,
+    "switches": 8386,
+    "sites_multisection": 505,
+    "terminal_voltage_conflicts": 104,
+    "bay_voltage_conflicts": 53,
+    "unknown_terminal_voltage": 6031,
+    "missing_source_way": 0,
+    "switch_feeder": 3615,
+    "switch_source_inferred-bay": 8386,
+    "switch_trafo": 1178,
+    "switch_coupler": 3593
+  },
+  "findings": [
+    {
+      "site": {
+        "site_id": "hokkaido_site_fee5b4b8ab84",
+        "name": "西札幌変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:d738dd82c186"
+        ],
+        "aliases": [],
+        "lat": 43.121381,
+        "lon": 141.283417,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_fee5b4b8ab84/t3",
+          "line_key": "g:2ad149bd60d5",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_fee5b4b8ab84@187/bay3"
+        },
+        {
+          "terminal": "hokkaido_site_fee5b4b8ab84/t11",
+          "line_key": "g:523d2913635c",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_fee5b4b8ab84@187/bay1"
+        },
+        {
+          "terminal": "hokkaido_site_fee5b4b8ab84/t31",
+          "line_key": "g:f5585e9ac97c",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_fee5b4b8ab84@187/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_1cf1f04968bc",
+        "name": "西当別変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:835c3722594f"
+        ],
+        "aliases": [],
+        "lat": 43.234266,
+        "lon": 141.451218,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_1cf1f04968bc/t3",
+          "line_key": "g:0a21e25e46e8",
+          "line_name": "道北幹線 (Dōhoku-kansen)",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "hokkaido_site_1cf1f04968bc@275/bb2"
+        },
+        {
+          "terminal": "hokkaido_site_1cf1f04968bc/t8",
+          "line_key": "g:37508bbb64d0",
+          "line_name": "道北幹線 (Dōhoku-kansen)",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "hokkaido_site_1cf1f04968bc@275/bb2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_04207f2d279b",
+        "name": "JR北海道 銭函変電所",
+        "region": "hokkaido",
+        "operator": "JR北海道",
+        "substation_type": "traction",
+        "osm_keys": [
+          "g:9197af869168"
+        ],
+        "aliases": [],
+        "lat": 43.138511,
+        "lon": 141.169871,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "hokkaido_site_04207f2d279b@25/bay4",
+          "busbar": "hokkaido_site_04207f2d279b@66/bb1",
+          "bay_kv": 25.0,
+          "busbar_kv": 66.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_a345d2906076",
+        "name": "余市 (Yoichi Hendensho)",
+        "region": "hokkaido",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:93f7fd80eb8c"
+        ],
+        "aliases": [],
+        "lat": 43.190904,
+        "lon": 140.800914,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_a345d2906076/t4",
+          "line_key": "g:9ae09c541c22",
+          "line_name": "古平線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_a345d2906076@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_dd247145bbe1",
+        "name": "室蘭変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:da5040f148c6"
+        ],
+        "aliases": [],
+        "lat": 42.372481,
+        "lon": 141.033059,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_dd247145bbe1/t5",
+          "line_key": "g:0cb66c1b0378",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_dd247145bbe1@66/bay8"
+        },
+        {
+          "terminal": "hokkaido_site_dd247145bbe1/t28",
+          "line_key": "g:b80ab1cc9554",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_dd247145bbe1@66/bay6"
+        },
+        {
+          "terminal": "hokkaido_site_dd247145bbe1/t31",
+          "line_key": "g:c0cb0e0fdff0",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_dd247145bbe1@66/bay10"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_db563ea9560f",
+        "name": "七飯発電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:b5dc3d005489"
+        ],
+        "aliases": [],
+        "lat": 41.932119,
+        "lon": 140.654312,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_db563ea9560f/t1",
+          "line_key": "g:0591f0cdde6d",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_db563ea9560f@187/bay15"
+        },
+        {
+          "terminal": "hokkaido_site_db563ea9560f/t27",
+          "line_key": "g:60b361bc7e27",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_db563ea9560f@187/bay9"
+        },
+        {
+          "terminal": "hokkaido_site_db563ea9560f/t31",
+          "line_key": "g:829e38c550eb",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_db563ea9560f@187/bay18"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_8f6204cc08e0",
+        "name": "北七飯変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:8e459293b13d"
+        ],
+        "aliases": [],
+        "lat": 41.93227,
+        "lon": 140.657071,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_8f6204cc08e0/t1",
+          "line_key": "g:0591f0cdde6d",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_8f6204cc08e0@187/bay15"
+        },
+        {
+          "terminal": "hokkaido_site_8f6204cc08e0/t27",
+          "line_key": "g:60b361bc7e27",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_8f6204cc08e0@187/bay9"
+        },
+        {
+          "terminal": "hokkaido_site_8f6204cc08e0/t31",
+          "line_key": "g:829e38c550eb",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_8f6204cc08e0@187/bay18"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_be4b4d011f4c",
+        "name": "電源開発株式会社北地域制御所",
+        "region": "hokkaido",
+        "operator": null,
+        "substation_type": "converter",
+        "osm_keys": [
+          "g:3a49d0b1dea7"
+        ],
+        "aliases": [],
+        "lat": 41.931969,
+        "lon": 140.663838,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_be4b4d011f4c/t1",
+          "line_key": "g:0591f0cdde6d",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_be4b4d011f4c@187/bay15"
+        },
+        {
+          "terminal": "hokkaido_site_be4b4d011f4c/t15",
+          "line_key": "g:60b361bc7e27",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_be4b4d011f4c@187/bay9"
+        },
+        {
+          "terminal": "hokkaido_site_be4b4d011f4c/t16",
+          "line_key": "g:829e38c550eb",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_be4b4d011f4c@187/bay18"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_70f467070dca",
+        "name": "鰔川変電所",
+        "region": "hokkaido",
+        "operator": null,
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:29a639c3374c"
+        ],
+        "aliases": [],
+        "lat": 41.933696,
+        "lon": 140.151201,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "hokkaido_site_70f467070dca@33/bay1",
+          "busbar": "hokkaido_site_70f467070dca@66/bb1",
+          "bay_kv": 33.0,
+          "busbar_kv": 66.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_f7f43d256cfc",
+        "name": "右左府変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:ca5b8e81ecf1"
+        ],
+        "aliases": [],
+        "lat": 42.892801,
+        "lon": 142.467125,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_f7f43d256cfc/t1",
+          "line_key": "g:2769da06cc56",
+          "line_name": "占冠線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_f7f43d256cfc@66/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_df6f54a7090b",
+        "name": "美園町六丁目変電所",
+        "region": "hokkaido",
+        "operator": null,
+        "substation_type": "transition",
+        "osm_keys": [
+          "g:857115461bf3"
+        ],
+        "aliases": [],
+        "lat": 42.37332,
+        "lon": 141.038959,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_df6f54a7090b/t5",
+          "line_key": "g:0cb66c1b0378",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_df6f54a7090b@66/bay8"
+        },
+        {
+          "terminal": "hokkaido_site_df6f54a7090b/t24",
+          "line_key": "g:b80ab1cc9554",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_df6f54a7090b@66/bay6"
+        },
+        {
+          "terminal": "hokkaido_site_df6f54a7090b/t27",
+          "line_key": "g:c0cb0e0fdff0",
+          "line_name": "北海道電力ネットワーク 187.0kV線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_df6f54a7090b@66/bay10"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_c259107ae94f",
+        "name": "足寄変電所 (Ashoro Hendensho)",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:9a6de6f045f9"
+        ],
+        "aliases": [],
+        "lat": 43.226522,
+        "lon": 143.546595,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_c259107ae94f/t15",
+          "line_key": "g:ad592728d256",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_c259107ae94f@187/bay7"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_ba16a6a74c22",
+        "name": "本別町変電所",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:dabb9e6c149c"
+        ],
+        "aliases": [],
+        "lat": 43.119899,
+        "lon": 143.543985,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_ba16a6a74c22/t4",
+          "line_key": "g:d4a00e6b2ee7",
+          "line_name": "本別町変電所~足寄変電所 (Ashoro Hendensho)線",
+          "source_kv": [
+            187.0
+          ],
+          "attached_kv": 33.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_ba16a6a74c22@33/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_622e7cf3121e",
+        "name": "泉町二丁目変電所",
+        "region": "hokkaido",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:5426a4a856ed"
+        ],
+        "aliases": [],
+        "lat": 43.575996,
+        "lon": 141.89068,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_622e7cf3121e/t4",
+          "line_key": "g:0d1cfe1976ee",
+          "line_name": "北海道電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 187.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_622e7cf3121e@187/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokkaido_site_e2d30ef8c5ee",
+        "name": "旭川変電所 (Asahikawa Hendensho)",
+        "region": "hokkaido",
+        "operator": "北海道電力ネットワーク",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:e2d30ef8c5ee"
+        ],
+        "aliases": [],
+        "lat": 43.753355,
+        "lon": 142.38782,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokkaido_site_e2d30ef8c5ee/t14",
+          "line_key": "g:838576f00229",
+          "line_name": "北海道電力ネットワーク 110.0kV線",
+          "source_kv": [
+            110.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokkaido_site_e2d30ef8c5ee@66/bay3"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 2,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_800e13f8e2b6",
+        "name": "須賀川変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:2a980190b91e"
+        ],
+        "aliases": [],
+        "lat": 37.30555,
+        "lon": 140.426443,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_800e13f8e2b6/t33",
+          "line_key": "g:bce775bcdb89",
+          "line_name": "東北電力ネットワーク 275.0kV線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_800e13f8e2b6@154/bay4"
+        },
+        {
+          "terminal": "tohoku_site_800e13f8e2b6/t43",
+          "line_key": "g:d18f1f1a87ed",
+          "line_name": "東北電力ネットワーク 275.0kV線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_800e13f8e2b6@154/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_800e13f8e2b6@154/bay2",
+          "busbar": "tohoku_site_800e13f8e2b6@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_800e13f8e2b6@154/bay4",
+          "busbar": "tohoku_site_800e13f8e2b6@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_800e13f8e2b6@154/bay7",
+          "busbar": "tohoku_site_800e13f8e2b6@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_800e13f8e2b6@154/bay13",
+          "busbar": "tohoku_site_800e13f8e2b6@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_800e13f8e2b6@154/bay14",
+          "busbar": "tohoku_site_800e13f8e2b6@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_97b0a03300c7",
+        "name": "新潟変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:3b2654d53440"
+        ],
+        "aliases": [],
+        "lat": 37.727637,
+        "lon": 139.245942,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_97b0a03300c7@154/bay5",
+          "busbar": "tohoku_site_97b0a03300c7@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_97b0a03300c7@154/bay6",
+          "busbar": "tohoku_site_97b0a03300c7@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "tohoku_site_97b0a03300c7@154/bay7",
+          "busbar": "tohoku_site_97b0a03300c7@275/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_c30b716572d2",
+        "name": "越後開閉所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:7c1b375a07a7"
+        ],
+        "aliases": [],
+        "lat": 37.889491,
+        "lon": 139.411925,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_c30b716572d2/t4",
+          "line_key": "g:4c571f5b0769",
+          "line_name": "東北電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_c30b716572d2@275/bay7"
+        },
+        {
+          "terminal": "tohoku_site_c30b716572d2/t14",
+          "line_key": "g:bc9f19f663e7",
+          "line_name": "東北電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_c30b716572d2@275/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_e2e7cb991ee0",
+        "name": "上金沢町変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:100c4f4a340d"
+        ],
+        "aliases": [],
+        "lat": 38.747712,
+        "lon": 140.303682,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_e2e7cb991ee0/t12",
+          "line_key": "g:de48319701a1",
+          "line_name": "東北電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 33.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "tohoku_site_e2e7cb991ee0@33/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_5cc42f186ca6",
+        "name": "宮城変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:996102a83bb3"
+        ],
+        "aliases": [],
+        "lat": 38.604937,
+        "lon": 140.848841,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_5cc42f186ca6@500/bay1",
+          "busbar": "tohoku_site_5cc42f186ca6@275/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_140510a7e9e8",
+        "name": "柴田町変電所",
+        "region": "tohoku",
+        "operator": "東北電力ネットワーク",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:6ae8eea107ea"
+        ],
+        "aliases": [],
+        "lat": 38.112582,
+        "lon": 140.820667,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_140510a7e9e8@154/bay1",
+          "busbar": "tohoku_site_140510a7e9e8@66/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 66.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_8be37df67a79",
+        "name": "大船渡変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:ef050d09a9ce"
+        ],
+        "aliases": [],
+        "lat": 39.075674,
+        "lon": 141.713663,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_8be37df67a79@154/bay1",
+          "busbar": "tohoku_site_8be37df67a79@66/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 66.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_2ae1e5212983",
+        "name": "愛子変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:5cd649c41f30"
+        ],
+        "aliases": [],
+        "lat": 38.2666,
+        "lon": 140.746851,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_2ae1e5212983/t6",
+          "line_key": "g:c5f05b2ce271",
+          "line_name": "東北電力ネットワーク 33.0kV線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_2ae1e5212983@154/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_38c695a20cb3",
+        "name": "東北電力北津軽変電所",
+        "region": "tohoku",
+        "operator": "東北電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:17713f2a1689"
+        ],
+        "aliases": [],
+        "lat": 40.778934,
+        "lon": 140.439479,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_38c695a20cb3/t13",
+          "line_key": "g:5195df35d174",
+          "line_name": "東北電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_38c695a20cb3@154/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_5330c1eb76a6",
+        "name": "岩手変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:0fc909d8e332"
+        ],
+        "aliases": [],
+        "lat": 39.905084,
+        "lon": 141.176154,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_5330c1eb76a6@500/bay1",
+          "busbar": "tohoku_site_5330c1eb76a6@275/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_1fa0328b2086",
+        "name": "盛岡変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:5c8e5694a6e9"
+        ],
+        "aliases": [],
+        "lat": 39.680643,
+        "lon": 141.111806,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_1fa0328b2086/t13",
+          "line_key": "g:e341afbe3fdd",
+          "line_name": "葛根田地熱線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_1fa0328b2086@154/bay5"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_c36a3a6a4ae8",
+        "name": "尻内変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:42a3b89bc816"
+        ],
+        "aliases": [],
+        "lat": 40.49687,
+        "lon": 141.438597,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_c36a3a6a4ae8/t1",
+          "line_key": "g:0c29b2926875",
+          "line_name": "東北電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 6.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_c36a3a6a4ae8@6/bay1"
+        },
+        {
+          "terminal": "tohoku_site_c36a3a6a4ae8/t4",
+          "line_key": "g:d5eb48ba07e5",
+          "line_name": "東北電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 6.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_c36a3a6a4ae8@6/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_a72d00f3c4eb",
+        "name": "新盛岡変電所",
+        "region": "tohoku",
+        "operator": "JR東日本",
+        "substation_type": "traction",
+        "osm_keys": [
+          "g:6f2405114262"
+        ],
+        "aliases": [],
+        "lat": 39.575237,
+        "lon": 141.156606,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_a72d00f3c4eb/t7",
+          "line_key": "g:ba96b4b8f64f",
+          "line_name": "東北電力ネットワーク 275.0kV線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 25.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_a72d00f3c4eb@25/bay1"
+        },
+        {
+          "terminal": "tohoku_site_a72d00f3c4eb/t8",
+          "line_key": "g:be1e7ac71795",
+          "line_name": "東北電力ネットワーク 275.0kV線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 25.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_a72d00f3c4eb@25/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_769f57f13ea3",
+        "name": "上北変電所",
+        "region": "tohoku",
+        "operator": "東北電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:e3d505e49e3f"
+        ],
+        "aliases": [],
+        "lat": 40.783125,
+        "lon": 141.173098,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_769f57f13ea3@275/bay2",
+          "busbar": "tohoku_site_769f57f13ea3@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "tohoku_site_769f57f13ea3@275/bay5",
+          "busbar": "tohoku_site_769f57f13ea3@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "tohoku_site_769f57f13ea3@275/bay6",
+          "busbar": "tohoku_site_769f57f13ea3@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_b9c361df64cb",
+        "name": "小坂町変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": "industrial",
+        "osm_keys": [
+          "g:c38d1886040e"
+        ],
+        "aliases": [],
+        "lat": 40.336579,
+        "lon": 140.750994,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_b9c361df64cb/t1",
+          "line_key": "g:4142d8dd271e",
+          "line_name": "小坂町変電所~鹿角市変電所線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_b9c361df64cb@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_4e8158e81d79",
+        "name": "三戸町変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:9d41413ad2ba"
+        ],
+        "aliases": [],
+        "lat": 40.349707,
+        "lon": 141.290399,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_4e8158e81d79/t1",
+          "line_key": "g:b5cad25df560",
+          "line_name": "舌崎線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 3.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_4e8158e81d79@3/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_1b93a8c3e2c2",
+        "name": "JR東日本 盛岡変電所",
+        "region": "tohoku",
+        "operator": "東日本旅客鉄道株式会社",
+        "substation_type": "traction",
+        "osm_keys": [
+          "g:eeef1cb41caa"
+        ],
+        "aliases": [],
+        "lat": 39.698703,
+        "lon": 141.135333,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_1b93a8c3e2c2/t1",
+          "line_key": "g:19fd70c51214",
+          "line_name": "東日本旅客鉄道株式会社 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_1b93a8c3e2c2@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_6876e1cc18aa",
+        "name": "岩泉町変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": "converter",
+        "osm_keys": [
+          "g:6d88f060e7e7"
+        ],
+        "aliases": [],
+        "lat": 39.827766,
+        "lon": 141.725905,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tohoku_site_6876e1cc18aa/t1",
+          "line_key": "g:32cb64bb932b",
+          "line_name": "浅内線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 33.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tohoku_site_6876e1cc18aa@33/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tohoku_site_cbefa5b94abd",
+        "name": "卒古沢変電所",
+        "region": "tohoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:7998aa45338e"
+        ],
+        "aliases": [],
+        "lat": 40.780206,
+        "lon": 141.171918,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "tohoku_site_cbefa5b94abd@275/bay2",
+          "busbar": "tohoku_site_cbefa5b94abd@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "tohoku_site_cbefa5b94abd@275/bay5",
+          "busbar": "tohoku_site_cbefa5b94abd@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "tohoku_site_cbefa5b94abd@275/bay6",
+          "busbar": "tohoku_site_cbefa5b94abd@154/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 154.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_b3f1581a2e4d",
+        "name": "武州中川変電所",
+        "region": "tokyo",
+        "operator": "秩父鉄道",
+        "substation_type": "traction",
+        "osm_keys": [
+          "g:bac7d80cec9b"
+        ],
+        "aliases": [
+          "chubu_site_b3f1581a2e4d"
+        ],
+        "lat": 35.962338,
+        "lon": 139.044618,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_b3f1581a2e4d/t27",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_b3f1581a2e4d@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_0f670f9ba741",
+        "name": "奥秩父変電所",
+        "region": "tokyo",
+        "operator": "東京電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:a412798b992f"
+        ],
+        "aliases": [
+          "chubu_site_0f670f9ba741"
+        ],
+        "lat": 35.960909,
+        "lon": 139.045899,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_0f670f9ba741/t27",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_0f670f9ba741@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_ae1f28381c8f",
+        "name": "西毛変電所",
+        "region": "tokyo",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:9a374d9bcbcd"
+        ],
+        "aliases": [
+          "chubu_site_ae1f28381c8f"
+        ],
+        "lat": 36.221612,
+        "lon": 139.041781,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_ae1f28381c8f/t1",
+          "line_key": "g:1d60e7f7149a",
+          "line_name": "東日本旅客鉄道新箕郷変電所~西毛変電所線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_ae1f28381c8f@275/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_b148541ba011",
+        "name": "鮎川変電所",
+        "region": "tokyo",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:38201b58c2b8"
+        ],
+        "aliases": [
+          "chubu_site_b148541ba011"
+        ],
+        "lat": 36.229386,
+        "lon": 139.038136,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_b148541ba011/t1",
+          "line_key": "g:1d60e7f7149a",
+          "line_name": "東日本旅客鉄道新箕郷変電所~西毛変電所線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_b148541ba011@275/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_003fdec3e643",
+        "name": "浦山発電所変電設備",
+        "region": "tokyo",
+        "operator": "東京発電株式会社",
+        "substation_type": null,
+        "osm_keys": [
+          "g:0947fb07993b"
+        ],
+        "aliases": [
+          "chubu_site_003fdec3e643"
+        ],
+        "lat": 35.95895,
+        "lon": 139.053434,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_003fdec3e643/t10",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_003fdec3e643@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_77a78c8fe3dd",
+        "name": "茨城変電所",
+        "region": "tokyo",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:02e79e035a6e"
+        ],
+        "aliases": [],
+        "lat": 36.463251,
+        "lon": 140.518209,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_77a78c8fe3dd/t1",
+          "line_key": "g:0d0f3ec45442",
+          "line_name": "常陸那珂火力線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_77a78c8fe3dd@154/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_4bacc6878367",
+        "name": "岩槻変電所",
+        "region": "tokyo",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:462097a447a1"
+        ],
+        "aliases": [],
+        "lat": 35.923741,
+        "lon": 139.718867,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "tokyo_site_4bacc6878367/t7",
+          "line_key": "g:116e6bfef3d9",
+          "line_name": "西越谷線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_4bacc6878367@154/bay2"
+        },
+        {
+          "terminal": "tokyo_site_4bacc6878367/t26",
+          "line_key": "g:d68c8ac5925b",
+          "line_name": "東埼玉線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "tokyo_site_4bacc6878367@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_37255462c412",
+        "name": "西濃変電所",
+        "region": "chubu",
+        "operator": "中部電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:6234119966f4"
+        ],
+        "aliases": [
+          "kansai_site_37255462c412"
+        ],
+        "lat": 35.42696,
+        "lon": 136.645241,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_37255462c412/t2",
+          "line_key": "g:28326a22436c",
+          "line_name": "中部電力パワーグリッド 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chubu_site_37255462c412@77/bb1"
+        },
+        {
+          "terminal": "chubu_site_37255462c412/t5",
+          "line_key": "g:a22e01af4cdc",
+          "line_name": "中部電力パワーグリッド 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chubu_site_37255462c412@77/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_14902c3aefe3",
+        "name": "新鈴鹿変電所",
+        "region": "chubu",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:da12674d9ddc"
+        ],
+        "aliases": [
+          "kansai_site_14902c3aefe3"
+        ],
+        "lat": 34.839747,
+        "lon": 136.437113,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_14902c3aefe3/t4",
+          "line_key": "g:97ba18883673",
+          "line_name": "中部電力パワーグリッド 77.0kV線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chubu_site_14902c3aefe3@275/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_f07b955bacfd",
+        "name": "駿遠変電所",
+        "region": "chubu",
+        "operator": "中部電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:8e74376a84b0"
+        ],
+        "aliases": [],
+        "lat": 34.811022,
+        "lon": 138.06396,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chubu_site_f07b955bacfd@500/bay2",
+          "busbar": "chubu_site_f07b955bacfd@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_f07b955bacfd@500/bay3",
+          "busbar": "chubu_site_f07b955bacfd@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_f07b955bacfd@500/bay4",
+          "busbar": "chubu_site_f07b955bacfd@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_f07b955bacfd@500/bay5",
+          "busbar": "chubu_site_f07b955bacfd@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 2,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_59fe77d18692",
+        "name": "北巨摩変電所",
+        "region": "chubu",
+        "operator": "東京電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:55a34dd8a6f5"
+        ],
+        "aliases": [],
+        "lat": 35.785843,
+        "lon": 138.397832,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_59fe77d18692/t15",
+          "line_key": "g:e34d4e987134",
+          "line_name": "東京電力パワーグリッド 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_59fe77d18692@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 6,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_1120a9d6beb0",
+        "name": "駿遠変電所",
+        "region": "chubu",
+        "operator": "中部電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:ea493fe8b268"
+        ],
+        "aliases": [],
+        "lat": 34.808364,
+        "lon": 138.063071,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chubu_site_1120a9d6beb0@500/bay2",
+          "busbar": "chubu_site_1120a9d6beb0@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_1120a9d6beb0@500/bay3",
+          "busbar": "chubu_site_1120a9d6beb0@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_1120a9d6beb0@500/bay4",
+          "busbar": "chubu_site_1120a9d6beb0@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chubu_site_1120a9d6beb0@500/bay5",
+          "busbar": "chubu_site_1120a9d6beb0@275/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 2,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_2e255b921de7",
+        "name": "松岡",
+        "region": "chubu",
+        "operator": "北陸電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:58687f394760"
+        ],
+        "aliases": [
+          "hokuriku_site_2e255b921de7"
+        ],
+        "lat": 36.090372,
+        "lon": 136.284295,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_2e255b921de7/t6",
+          "line_key": "g:16f1ee9f5e38",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_2e255b921de7@77/bay1"
+        },
+        {
+          "terminal": "chubu_site_2e255b921de7/t10",
+          "line_key": "g:35a924e158eb",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_2e255b921de7@77/bay7"
+        },
+        {
+          "terminal": "chubu_site_2e255b921de7/t15",
+          "line_key": "g:6986b10cab03",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_2e255b921de7@77/bay11"
+        },
+        {
+          "terminal": "chubu_site_2e255b921de7/t24",
+          "line_key": "g:904c00ddadfb",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_2e255b921de7@77/bay8"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_5d54bde35f02",
+        "name": "片山津町変電所",
+        "region": "chubu",
+        "operator": null,
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:419676846e5e"
+        ],
+        "aliases": [],
+        "lat": 36.330453,
+        "lon": 136.366732,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_5d54bde35f02/t1",
+          "line_key": "g:07991ad9602a",
+          "line_name": "片山津線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_5d54bde35f02@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_5283d0281e62",
+        "name": "伏木変電所",
+        "region": "chubu",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:631daf1b4671"
+        ],
+        "aliases": [
+          "hokuriku_site_5283d0281e62"
+        ],
+        "lat": 36.774825,
+        "lon": 137.05308,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chubu_site_5283d0281e62@66/bay2",
+          "busbar": "chubu_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "chubu_site_5283d0281e62@66/bay7",
+          "busbar": "chubu_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "chubu_site_5283d0281e62@66/bay8",
+          "busbar": "chubu_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        }
+      ],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_b3f1581a2e4d",
+        "name": "武州中川変電所",
+        "region": "chubu",
+        "operator": "秩父鉄道",
+        "substation_type": "traction",
+        "osm_keys": [
+          "g:bac7d80cec9b"
+        ],
+        "aliases": [
+          "tokyo_site_b3f1581a2e4d"
+        ],
+        "lat": 35.962338,
+        "lon": 139.044618,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_b3f1581a2e4d/t27",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_b3f1581a2e4d@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_0f670f9ba741",
+        "name": "奥秩父変電所",
+        "region": "chubu",
+        "operator": "東京電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:a412798b992f"
+        ],
+        "aliases": [
+          "tokyo_site_0f670f9ba741"
+        ],
+        "lat": 35.960909,
+        "lon": 139.045899,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_0f670f9ba741/t27",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_0f670f9ba741@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_ae1f28381c8f",
+        "name": "西毛変電所",
+        "region": "chubu",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:9a374d9bcbcd"
+        ],
+        "aliases": [
+          "tokyo_site_ae1f28381c8f"
+        ],
+        "lat": 36.221612,
+        "lon": 139.041781,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_ae1f28381c8f/t1",
+          "line_key": "g:1d60e7f7149a",
+          "line_name": "東日本旅客鉄道新箕郷変電所~西毛変電所線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_ae1f28381c8f@275/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_bd066b9b0c21",
+        "name": "新信濃変電所",
+        "region": "chubu",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "converter",
+        "osm_keys": [
+          "g:5882bf65177b"
+        ],
+        "aliases": [
+          "hokuriku_site_bd066b9b0c21"
+        ],
+        "lat": 36.137661,
+        "lon": 137.883872,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_bd066b9b0c21/t1",
+          "line_key": "g:009381e9ed96",
+          "line_name": "竜島変電所~新信濃変電所線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 500.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chubu_site_bd066b9b0c21@500/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chubu_site_bd066b9b0c21@275/bay1",
+          "busbar": "chubu_site_bd066b9b0c21@500/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 500.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_b148541ba011",
+        "name": "鮎川変電所",
+        "region": "chubu",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:38201b58c2b8"
+        ],
+        "aliases": [
+          "tokyo_site_b148541ba011"
+        ],
+        "lat": 36.229386,
+        "lon": 139.038136,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_b148541ba011/t1",
+          "line_key": "g:1d60e7f7149a",
+          "line_name": "東日本旅客鉄道新箕郷変電所~西毛変電所線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_b148541ba011@275/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chubu_site_003fdec3e643",
+        "name": "浦山発電所変電設備",
+        "region": "chubu",
+        "operator": "東京発電株式会社",
+        "substation_type": null,
+        "osm_keys": [
+          "g:0947fb07993b"
+        ],
+        "aliases": [
+          "tokyo_site_003fdec3e643"
+        ],
+        "lat": 35.95895,
+        "lon": 139.053434,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chubu_site_003fdec3e643/t10",
+          "line_key": "g:d52f5060e475",
+          "line_name": "川又線",
+          "source_kv": [
+            33.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chubu_site_003fdec3e643@66/bay4"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokuriku_site_2e255b921de7",
+        "name": "松岡",
+        "region": "hokuriku",
+        "operator": "北陸電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:58687f394760"
+        ],
+        "aliases": [
+          "chubu_site_2e255b921de7"
+        ],
+        "lat": 36.090372,
+        "lon": 136.284295,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokuriku_site_2e255b921de7/t6",
+          "line_key": "g:16f1ee9f5e38",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokuriku_site_2e255b921de7@77/bay1"
+        },
+        {
+          "terminal": "hokuriku_site_2e255b921de7/t10",
+          "line_key": "g:35a924e158eb",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokuriku_site_2e255b921de7@77/bay7"
+        },
+        {
+          "terminal": "hokuriku_site_2e255b921de7/t15",
+          "line_key": "g:6986b10cab03",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokuriku_site_2e255b921de7@77/bay11"
+        },
+        {
+          "terminal": "hokuriku_site_2e255b921de7/t24",
+          "line_key": "g:904c00ddadfb",
+          "line_name": "北陸電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokuriku_site_2e255b921de7@77/bay8"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokuriku_site_bd066b9b0c21",
+        "name": "新信濃変電所",
+        "region": "hokuriku",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "converter",
+        "osm_keys": [
+          "g:5882bf65177b"
+        ],
+        "aliases": [
+          "chubu_site_bd066b9b0c21"
+        ],
+        "lat": 36.137661,
+        "lon": 137.883872,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokuriku_site_bd066b9b0c21/t1",
+          "line_key": "g:009381e9ed96",
+          "line_name": "竜島変電所~新信濃変電所線",
+          "source_kv": [
+            275.0
+          ],
+          "attached_kv": 500.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "hokuriku_site_bd066b9b0c21@500/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "hokuriku_site_bd066b9b0c21@275/bay1",
+          "busbar": "hokuriku_site_bd066b9b0c21@500/bb1",
+          "bay_kv": 275.0,
+          "busbar_kv": 500.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokuriku_site_36f6f6af2828",
+        "name": "片山津変電所",
+        "region": "hokuriku",
+        "operator": null,
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:460b1ffa4c82"
+        ],
+        "aliases": [],
+        "lat": 36.330453,
+        "lon": 136.366732,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "hokuriku_site_36f6f6af2828/t1",
+          "line_key": "g:07991ad9602a",
+          "line_name": "片山津線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "hokuriku_site_36f6f6af2828@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "hokuriku_site_5283d0281e62",
+        "name": "伏木変電所",
+        "region": "hokuriku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:631daf1b4671"
+        ],
+        "aliases": [
+          "chubu_site_5283d0281e62"
+        ],
+        "lat": 36.774825,
+        "lon": 137.05308,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "hokuriku_site_5283d0281e62@66/bay4",
+          "busbar": "hokuriku_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "hokuriku_site_5283d0281e62@66/bay6",
+          "busbar": "hokuriku_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "hokuriku_site_5283d0281e62@66/bay7",
+          "busbar": "hokuriku_site_5283d0281e62@154/bb1",
+          "bay_kv": 66.0,
+          "busbar_kv": 154.0
+        }
+      ],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_5db1f6fdb41c",
+        "name": "北葛城変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:5db1f6fdb41c"
+        ],
+        "aliases": [],
+        "lat": 34.498243,
+        "lon": 135.725466,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_5db1f6fdb41c/t10",
+          "line_key": "g:7848ce580b4e",
+          "line_name": "関西電力送配電 77.0kV線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_5db1f6fdb41c@275/bay6"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_0be31d11012c",
+        "name": "伊丹変電所",
+        "region": "kansai",
+        "operator": "関西電力",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:18c2e7f383c0"
+        ],
+        "aliases": [],
+        "lat": 34.785752,
+        "lon": 135.375017,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_0be31d11012c/t6",
+          "line_key": "g:2a9ce5657b77",
+          "line_name": "伊丹多田線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_0be31d11012c@154/bay3"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_dc12693f672b",
+        "name": "猪名川変電所",
+        "region": "kansai",
+        "operator": "関西電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:011f62868f30"
+        ],
+        "aliases": [],
+        "lat": 34.984378,
+        "lon": 135.345996,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kansai_site_dc12693f672b@500/bay2",
+          "busbar": "kansai_site_dc12693f672b@154/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 154.0
+        },
+        {
+          "bay": "kansai_site_dc12693f672b@500/bay3",
+          "busbar": "kansai_site_dc12693f672b@154/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 154.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_ff3251c9a1e0",
+        "name": "小曽根電力所",
+        "region": "kansai",
+        "operator": "関西電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:8a6713086b30"
+        ],
+        "aliases": [],
+        "lat": 34.755099,
+        "lon": 135.481162,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kansai_site_ff3251c9a1e0@154/bay1",
+          "busbar": "kansai_site_ff3251c9a1e0@77/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 77.0
+        }
+      ],
+      "unknown_terminal_voltage": 2,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_7e51bfcadff7",
+        "name": "北葛城変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:64bdda1f96ac"
+        ],
+        "aliases": [],
+        "lat": 34.498435,
+        "lon": 135.725386,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_7e51bfcadff7/t10",
+          "line_key": "g:7848ce580b4e",
+          "line_name": "関西電力送配電 77.0kV線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_7e51bfcadff7@275/bay6"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_37255462c412",
+        "name": "西濃変電所",
+        "region": "kansai",
+        "operator": "中部電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:6234119966f4"
+        ],
+        "aliases": [
+          "chubu_site_37255462c412"
+        ],
+        "lat": 35.42696,
+        "lon": 136.645241,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_37255462c412/t2",
+          "line_key": "g:28326a22436c",
+          "line_name": "中部電力パワーグリッド 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "kansai_site_37255462c412@77/bb1"
+        },
+        {
+          "terminal": "kansai_site_37255462c412/t5",
+          "line_key": "g:a22e01af4cdc",
+          "line_name": "中部電力パワーグリッド 154.0kV線",
+          "source_kv": [
+            154.0
+          ],
+          "attached_kv": 77.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "kansai_site_37255462c412@77/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_2402453fc2d1",
+        "name": "古川橋変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:7986a3b9df4c"
+        ],
+        "aliases": [],
+        "lat": 34.738695,
+        "lon": 135.596425,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_2402453fc2d1/t6",
+          "line_key": "g:2a46b5bdc859",
+          "line_name": "古川橋味生線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_2402453fc2d1@154/bay9"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 13,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_14902c3aefe3",
+        "name": "新鈴鹿変電所",
+        "region": "kansai",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:da12674d9ddc"
+        ],
+        "aliases": [
+          "chubu_site_14902c3aefe3"
+        ],
+        "lat": 34.839747,
+        "lon": 136.437113,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_14902c3aefe3/t4",
+          "line_key": "g:a24bac5e0dab",
+          "line_name": "関西電力送配電 77.0kV線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "kansai_site_14902c3aefe3@275/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_dfa52d3ac6ae",
+        "name": "新庄変電所",
+        "region": "kansai",
+        "operator": "関西電力",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:5b73b439f712"
+        ],
+        "aliases": [],
+        "lat": 34.4888,
+        "lon": 135.724102,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_dfa52d3ac6ae/t5",
+          "line_key": "g:7848ce580b4e",
+          "line_name": "関西電力送配電 77.0kV線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 275.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_dfa52d3ac6ae@275/bay6"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 1,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_1bbb196df6ad",
+        "name": "大和田 変電所",
+        "region": "kansai",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:84291cbee9d7"
+        ],
+        "aliases": [],
+        "lat": 34.743593,
+        "lon": 135.605184,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_1bbb196df6ad/t1",
+          "line_key": "g:2a46b5bdc859",
+          "line_name": "古川橋味生線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_1bbb196df6ad@154/bay9"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_ffb1d4d5bb09",
+        "name": "関西電力送配電 速見変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": null,
+        "osm_keys": [
+          "g:6043f054db95"
+        ],
+        "aliases": [],
+        "lat": 34.734443,
+        "lon": 135.591551,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_ffb1d4d5bb09/t4",
+          "line_key": "g:2a46b5bdc859",
+          "line_name": "古川橋味生線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_ffb1d4d5bb09@154/bay9"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 9,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_e9f0087b1430",
+        "name": "関西電力送配電 浜町変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": null,
+        "osm_keys": [
+          "g:20a3cea9b364"
+        ],
+        "aliases": [],
+        "lat": 34.746069,
+        "lon": 135.586861,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_e9f0087b1430/t1",
+          "line_key": "g:2a46b5bdc859",
+          "line_name": "古川橋味生線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_e9f0087b1430@154/bay9"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_105b3b7eecb3",
+        "name": "関西電力送配電 藤田変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": null,
+        "osm_keys": [
+          "g:67b032875356"
+        ],
+        "aliases": [],
+        "lat": 34.748481,
+        "lon": 135.59654,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kansai_site_105b3b7eecb3/t1",
+          "line_key": "g:2a46b5bdc859",
+          "line_name": "古川橋味生線",
+          "source_kv": [
+            77.0
+          ],
+          "attached_kv": 154.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kansai_site_105b3b7eecb3@154/bay9"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_ab105b01e7ba",
+        "name": "関西電力 浜変電所",
+        "region": "kansai",
+        "operator": "関西電力送配電",
+        "substation_type": null,
+        "osm_keys": [
+          "g:e85e2bbbc1b7"
+        ],
+        "aliases": [],
+        "lat": 34.762252,
+        "lon": 135.484173,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kansai_site_ab105b01e7ba@154/bay1",
+          "busbar": "kansai_site_ab105b01e7ba@77/bb1",
+          "bay_kv": 154.0,
+          "busbar_kv": 77.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_bbc3e10052c5",
+        "name": "嶺南変電所",
+        "region": "kansai",
+        "operator": "関西電力（株）",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:bbc3e10052c5"
+        ],
+        "aliases": [],
+        "lat": 35.556579,
+        "lon": 135.972164,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kansai_site_bbc3e10052c5@500/bay7",
+          "busbar": "kansai_site_bbc3e10052c5@275/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "kansai_site_bbc3e10052c5@500/bay7",
+          "busbar": "kansai_site_bbc3e10052c5@275/bb2",
+          "bay_kv": 500.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_bfab47ca8ba2",
+        "name": "北九州変電所",
+        "region": "chugoku",
+        "operator": "九州電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:51a1d4031f45"
+        ],
+        "aliases": [
+          "kyushu_site_bfab47ca8ba2"
+        ],
+        "lat": 33.810147,
+        "lon": 130.804315,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chugoku_site_bfab47ca8ba2@500/bay4",
+          "busbar": "chugoku_site_bfab47ca8ba2@220/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_0b0058e3f7ce",
+        "name": "新西広島変電所",
+        "region": "chugoku",
+        "operator": "中国電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:befd17d2d4d8"
+        ],
+        "aliases": [],
+        "lat": 34.412514,
+        "lon": 132.257533,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_0b0058e3f7ce/t3",
+          "line_key": "g:26571393de62",
+          "line_name": "新西広島岩国線 (Shin Nishi Hiroshima Iwakuni Sen)",
+          "source_kv": [
+            110.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_0b0058e3f7ce@220/bay3"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_7f5085731b83",
+        "name": "東岡山変電所",
+        "region": "chugoku",
+        "operator": "中国電力株式会社",
+        "substation_type": "distribution",
+        "osm_keys": [
+          "g:39aeec93d731"
+        ],
+        "aliases": [],
+        "lat": 34.888114,
+        "lon": 134.025121,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chugoku_site_7f5085731b83@110/bay2",
+          "busbar": "chugoku_site_7f5085731b83@500/bb2",
+          "bay_kv": 110.0,
+          "busbar_kv": 500.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_a87f54bf3ab6",
+        "name": "西播変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:b6fcb8009cff"
+        ],
+        "aliases": [],
+        "lat": 34.861623,
+        "lon": 134.425783,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chugoku_site_a87f54bf3ab6@77/bay2",
+          "busbar": "chugoku_site_a87f54bf3ab6@275/bb3",
+          "bay_kv": 77.0,
+          "busbar_kv": 275.0
+        },
+        {
+          "bay": "chugoku_site_a87f54bf3ab6@77/bay4",
+          "busbar": "chugoku_site_a87f54bf3ab6@275/bb3",
+          "bay_kv": 77.0,
+          "busbar_kv": 275.0
+        }
+      ],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_7f2d10eb576b",
+        "name": "日野変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:f26f60031604"
+        ],
+        "aliases": [],
+        "lat": 35.296125,
+        "lon": 133.405759,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_7f2d10eb576b/t3",
+          "line_key": "g:20051fbc08a8",
+          "line_name": "中国電力ネットワーク 110.0kV線",
+          "source_kv": [
+            110.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chugoku_site_7f2d10eb576b@220/bb1"
+        },
+        {
+          "terminal": "chugoku_site_7f2d10eb576b/t7",
+          "line_key": "g:55bbe1e9a6e4",
+          "line_name": "中国電力ネットワーク 110.0kV線",
+          "source_kv": [
+            110.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "chugoku_site_7f2d10eb576b@220/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_c19c61ad0239",
+        "name": "西新町三丁目変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:62ac871cee3e"
+        ],
+        "aliases": [],
+        "lat": 35.328149,
+        "lon": 132.719427,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_c19c61ad0239/t9",
+          "line_key": "g:9e6a42a18ff1",
+          "line_name": "中国電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 110.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_c19c61ad0239@110/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_9c11da07a376",
+        "name": "北松江変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:4a9b55a20eb5"
+        ],
+        "aliases": [],
+        "lat": 35.470392,
+        "lon": 133.115991,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_9c11da07a376/t16",
+          "line_key": "g:52e896068467",
+          "line_name": "中国電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_9c11da07a376@220/bay2"
+        },
+        {
+          "terminal": "chugoku_site_9c11da07a376/t20",
+          "line_key": "g:63c503fe7328",
+          "line_name": "中国電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_9c11da07a376@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_583bd20fc6a1",
+        "name": "八雲町変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:5400118b96be"
+        ],
+        "aliases": [],
+        "lat": 35.409378,
+        "lon": 133.106323,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chugoku_site_583bd20fc6a1@110/bay1",
+          "busbar": "chugoku_site_583bd20fc6a1@220/bb1",
+          "bay_kv": 110.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_27b226ee4d82",
+        "name": "錦見三丁目変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:cee9ab3e82ca"
+        ],
+        "aliases": [
+          "shikoku_site_27b226ee4d82"
+        ],
+        "lat": 34.16881,
+        "lon": 132.197337,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "chugoku_site_27b226ee4d82@110/bay1",
+          "busbar": "chugoku_site_27b226ee4d82@220/bb1",
+          "bay_kv": 110.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_b3000fc3ca06",
+        "name": "西新町三丁目変電所_2",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:c9f085064d9c"
+        ],
+        "aliases": [],
+        "lat": 35.331438,
+        "lon": 132.716263,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_b3000fc3ca06/t7",
+          "line_key": "g:9e6a42a18ff1",
+          "line_name": "中国電力ネットワーク 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 110.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_b3000fc3ca06@110/bay2"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "chugoku_site_02e26cd6794f",
+        "name": "大井町変電所",
+        "region": "chugoku",
+        "operator": null,
+        "substation_type": null,
+        "osm_keys": [
+          "g:297ba91b27b9"
+        ],
+        "aliases": [],
+        "lat": 35.468122,
+        "lon": 133.119623,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "chugoku_site_02e26cd6794f/t16",
+          "line_key": "g:52e896068467",
+          "line_name": "中国電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_02e26cd6794f@220/bay2"
+        },
+        {
+          "terminal": "chugoku_site_02e26cd6794f/t20",
+          "line_key": "g:63c503fe7328",
+          "line_name": "中国電力ネットワーク 500.0kV線",
+          "source_kv": [
+            500.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "chugoku_site_02e26cd6794f@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "shikoku_site_27b226ee4d82",
+        "name": "錦見三丁目変電所",
+        "region": "shikoku",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:cee9ab3e82ca"
+        ],
+        "aliases": [
+          "chugoku_site_27b226ee4d82"
+        ],
+        "lat": 34.16881,
+        "lon": 132.197337,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "shikoku_site_27b226ee4d82@110/bay1",
+          "busbar": "shikoku_site_27b226ee4d82@220/bb1",
+          "bay_kv": 110.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_90a74c1e27f4",
+        "name": "九州電力 中九州変電所",
+        "region": "kyushu",
+        "operator": "九州電力株式会社",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:55cb25e47a77"
+        ],
+        "aliases": [],
+        "lat": 32.614344,
+        "lon": 130.799206,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_90a74c1e27f4/t1",
+          "line_key": "g:48c6d0e1798a",
+          "line_name": "中九州南熊本線;中九州大平線",
+          "source_kv": [
+            220.0
+          ],
+          "attached_kv": 500.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "kyushu_site_90a74c1e27f4@500/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_f8a4c238ccb7",
+        "name": "大隅変電所",
+        "region": "kyushu",
+        "operator": "九州電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:b71fadae9584"
+        ],
+        "aliases": [],
+        "lat": 31.39223,
+        "lon": 130.938148,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_f8a4c238ccb7/t1",
+          "line_key": "g:05b9ac135b10",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_f8a4c238ccb7@220/bay3"
+        },
+        {
+          "terminal": "kyushu_site_f8a4c238ccb7/t13",
+          "line_key": "g:a69c5dce8b7e",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_f8a4c238ccb7@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_1f5d4247bf89",
+        "name": "九州電力西九州変電所",
+        "region": "kyushu",
+        "operator": "九州電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:b4309629f8d8"
+        ],
+        "aliases": [],
+        "lat": 33.350398,
+        "lon": 129.928974,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kyushu_site_1f5d4247bf89@500/bay2",
+          "busbar": "kyushu_site_1f5d4247bf89@220/bb1",
+          "bay_kv": 500.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_48ff9e73b3eb",
+        "name": "光町変電所",
+        "region": "kyushu",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:27ea52603189"
+        ],
+        "aliases": [],
+        "lat": 33.196577,
+        "lon": 129.646386,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_48ff9e73b3eb/t4",
+          "line_key": "g:a1969034525b",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_48ff9e73b3eb@220/bay2"
+        },
+        {
+          "terminal": "kyushu_site_48ff9e73b3eb/t5",
+          "line_key": "g:a1969034525b",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_48ff9e73b3eb@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_083a31804d46",
+        "name": "武雄変電所",
+        "region": "kyushu",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:d39fee209c3b"
+        ],
+        "aliases": [],
+        "lat": 33.180813,
+        "lon": 130.011283,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_083a31804d46/t4",
+          "line_key": "g:32f5ac3ebea3",
+          "line_name": "九州電力送配電 110.0kV線",
+          "source_kv": [
+            110.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_083a31804d46@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 12,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_184f9e727b7c",
+        "name": "九州電力 北熊本変電所",
+        "region": "kyushu",
+        "operator": "九州電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:3025943fdd8a"
+        ],
+        "aliases": [],
+        "lat": 32.864529,
+        "lon": 130.682966,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_184f9e727b7c/t4",
+          "line_key": "g:4d43751d5df5",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_184f9e727b7c@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_0e1c35aa7522",
+        "name": "光町変電所_2",
+        "region": "kyushu",
+        "operator": null,
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:1f711f49bca9"
+        ],
+        "aliases": [],
+        "lat": 33.203727,
+        "lon": 129.648594,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_0e1c35aa7522/t4",
+          "line_key": "g:a1969034525b",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_0e1c35aa7522@220/bay2"
+        },
+        {
+          "terminal": "kyushu_site_0e1c35aa7522/t5",
+          "line_key": "g:a1969034525b",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_0e1c35aa7522@220/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_ecff44c2cdf2",
+        "name": "牛津変電所",
+        "region": "kyushu",
+        "operator": "九州電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:f43e453c381a"
+        ],
+        "aliases": [],
+        "lat": 33.247684,
+        "lon": 130.212236,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_ecff44c2cdf2/t1",
+          "line_key": "g:3789f45dae24",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 110.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "kyushu_site_ecff44c2cdf2@110/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_bfab47ca8ba2",
+        "name": "北九州変電所",
+        "region": "kyushu",
+        "operator": "九州電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:51a1d4031f45"
+        ],
+        "aliases": [
+          "chugoku_site_bfab47ca8ba2"
+        ],
+        "lat": 33.810147,
+        "lon": 130.804315,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kyushu_site_bfab47ca8ba2@500/bay4",
+          "busbar": "kyushu_site_bfab47ca8ba2@220/bb3",
+          "bay_kv": 500.0,
+          "busbar_kv": 220.0
+        }
+      ],
+      "unknown_terminal_voltage": 4,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_e3af89bc7234",
+        "name": "大分変電所",
+        "region": "kyushu",
+        "operator": "九州電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:84134812247a"
+        ],
+        "aliases": [],
+        "lat": 33.229272,
+        "lon": 131.638983,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "kyushu_site_e3af89bc7234/t4",
+          "line_key": "g:1db583701fd5",
+          "line_name": "九州電力送配電 66.0kV線",
+          "source_kv": [
+            66.0
+          ],
+          "attached_kv": 220.0,
+          "binding": "vertex-shared",
+          "attach_kind": "busbar",
+          "attach_id": "kyushu_site_e3af89bc7234@220/bb1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 2,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_d78a9abed7ba",
+        "name": "速水変電所",
+        "region": "kyushu",
+        "operator": "九州電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:ebfee248470d"
+        ],
+        "aliases": [],
+        "lat": 33.412834,
+        "lon": 131.534583,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kyushu_site_d78a9abed7ba@220/bay1",
+          "busbar": "kyushu_site_d78a9abed7ba@66/bb1",
+          "bay_kv": 220.0,
+          "busbar_kv": 66.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "kyushu_site_8789951bf9ce",
+        "name": "熊本変電所",
+        "region": "kyushu",
+        "operator": "九州電力送配電",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:18943bf61de5"
+        ],
+        "aliases": [],
+        "lat": 32.909375,
+        "lon": 130.902588,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [],
+      "bay_voltage_conflicts": [
+        {
+          "bay": "kyushu_site_8789951bf9ce@220/bay3",
+          "busbar": "kyushu_site_8789951bf9ce@500/bb1",
+          "bay_kv": 220.0,
+          "busbar_kv": 500.0
+        }
+      ],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    },
+    {
+      "site": {
+        "site_id": "okinawa_site_46687020c3e9",
+        "name": "友寄変電所",
+        "region": "okinawa",
+        "operator": "沖縄電力",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:aa10cc196374"
+        ],
+        "aliases": [],
+        "lat": 26.165663,
+        "lon": 127.719298,
+        "source": "osm"
+      },
+      "terminal_voltage_conflicts": [
+        {
+          "terminal": "okinawa_site_46687020c3e9/t2",
+          "line_key": "g:097783065db4",
+          "line_name": "沖縄電力 132.0kV線",
+          "source_kv": [
+            132.0
+          ],
+          "attached_kv": 66.0,
+          "binding": "vertex-shared",
+          "attach_kind": "bay",
+          "attach_id": "okinawa_site_46687020c3e9@66/bay1"
+        }
+      ],
+      "bay_voltage_conflicts": [],
+      "unknown_terminal_voltage": 0,
+      "missing_source_way": 0
+    }
+  ],
+  "examples": [
+    {
+      "site": {
+        "site_id": "tokyo_site_bbe761849f02",
+        "name": "新多摩変電所",
+        "region": "tokyo",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:ab4ab3b768fc"
+        ],
+        "aliases": [],
+        "lat": 35.714864,
+        "lon": 139.223294,
+        "source": "osm"
+      },
+      "busbars_by_vl": {
+        "tokyo_site_bbe761849f02@500": 2,
+        "tokyo_site_bbe761849f02@275": 5,
+        "tokyo_site_bbe761849f02@u": 6
+      },
+      "switches_by_kind": {
+        "feeder": 8,
+        "trafo": 8,
+        "coupler": 8
+      }
+    },
+    {
+      "site": {
+        "site_id": "tokyo_site_408dc0de0b9f",
+        "name": "新京葉変電所",
+        "region": "tokyo",
+        "operator": "東京電力パワーグリッド",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:6d11e2cec270"
+        ],
+        "aliases": [],
+        "lat": 35.781472,
+        "lon": 140.069487,
+        "source": "osm"
+      },
+      "busbars_by_vl": {
+        "tokyo_site_408dc0de0b9f@500": 1,
+        "tokyo_site_408dc0de0b9f@154": 1,
+        "tokyo_site_408dc0de0b9f@275": 1,
+        "tokyo_site_408dc0de0b9f@66": 1
+      },
+      "switches_by_kind": {
+        "feeder": 3
+      }
+    },
+    {
+      "site": {
+        "site_id": "kansai_site_bbc3e10052c5",
+        "name": "嶺南変電所",
+        "region": "kansai",
+        "operator": "関西電力（株）",
+        "substation_type": "transmission",
+        "osm_keys": [
+          "g:bbc3e10052c5"
+        ],
+        "aliases": [],
+        "lat": 35.556579,
+        "lon": 135.972164,
+        "source": "osm"
+      },
+      "busbars_by_vl": {
+        "kansai_site_bbc3e10052c5@500": 43,
+        "kansai_site_bbc3e10052c5@275": 2,
+        "kansai_site_bbc3e10052c5@77": 1
+      },
+      "switches_by_kind": {
+        "coupler": 24,
+        "feeder": 1
+      }
+    }
+  ],
+  "source_sha256": {
+    "data/structures/hokkaido.json": "1a9c94984700989620fd7033d61c89df5c6e7ed4fe3366e7e7b708179339d286",
+    "data/hokkaido_lines.geojson": "85369118e8cb9be828f496dba879884777d6961eb2af703aadb802f623ec8ae8",
+    "data/structures/tohoku.json": "3a4edf39cd4073be0ec22bde3861ad2b3dcc02a31bfd7ec617db683a4906f16c",
+    "data/tohoku_lines.geojson": "b1d5a429ca58dbb837793451f83e4f5b27488c24f4a892fd5612dbb0dde033a3",
+    "data/structures/tokyo.json": "5a4454610416a20577a5b7f85700135f37297971653e20fd03f3577d5414a246",
+    "data/tokyo_lines.geojson": "2f55e0dc1d3325445df451ea5843623226093d5bbf2de7ab4382aeece90582a5",
+    "data/structures/chubu.json": "196e455e6ab73f9caf33a5aa78ab508e97a1d921b5cc9106e3b098809235043a",
+    "data/chubu_lines.geojson": "d0f0e2e5c778f937a5c326d263e45b84618cc338b9d23b333fb1c2266de85eea",
+    "data/structures/hokuriku.json": "bbd94810f9bb7b0b4d70a85a88775f7f15e7dec145405d60407004ecaeca6866",
+    "data/hokuriku_lines.geojson": "6d5e1eae056b98c72309e2f58dbfb8449f3a13f43090c4f236aab3f8ab0f8e3d",
+    "data/structures/kansai.json": "8bc1b3c74227f4d99bc5d5aa1b238451f9c25644af63530fa3429ba848d5bdee",
+    "data/kansai_lines.geojson": "874f253e1e33bbe4ce505040cba4b22c349589420b2e978fcbc27f453ebc340f",
+    "data/structures/chugoku.json": "6f9117edcc52913e3ab0de06933a95787c5f8c0591293677e811be86eb654448",
+    "data/chugoku_lines.geojson": "9af2367e143ed10c0d0f4920c3cf7798540b7c708198ade997fcbac36ccb1f88",
+    "data/structures/shikoku.json": "44940f729035098318ea4f8b91b2754a202867f78c8696c4850311b1e9238061",
+    "data/shikoku_lines.geojson": "5a9baf6ecaac17581d6a0f9b1b9d670029bdf968838414664ce11ccc69930fbd",
+    "data/structures/kyushu.json": "f7dbb687302f8ea5fd8134e1cf3102fc23ed42abd800ad6f2e0e44bdbb01c399",
+    "data/kyushu_lines.geojson": "33bd3708d095a419ecf8c27777dcf435b89fdcd8e6ad3f6c1c5f68ea8359ffbb",
+    "data/structures/okinawa.json": "b889dd4831f90f9b047056d8c5cc4abecc2c65d1db7bb567d9614e1cd802be01",
+    "data/okinawa_lines.geojson": "b0d23642ee3c9255817ce10ee746efa4ba20418932f00996ddc20d358ea3bca3"
+  }
+}

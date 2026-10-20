@@ -1,0 +1,64 @@
+{
+  "source_sha256": "955d6e0b2baf5d18ae44762db4100e1b446f171e8ad16502856281caf2e33b6a",
+  "electrical_tables_equal": {
+    "line": true,
+    "trafo": true,
+    "load": true,
+    "gen": true,
+    "sgen": true,
+    "shunt": true,
+    "switch": true,
+    "bus_electrical_attributes": true
+  },
+  "dc_converged": true,
+  "max_line_flow_difference_mw": 0.0,
+  "load_mw": 55250.0,
+  "bus_count": 6240,
+  "line_count": 6467,
+  "trafo_count": 677,
+  "terminal_count": 70,
+  "site_count": 24,
+  "changes": {
+    "display_buses_anchored": 34,
+    "site_ids": [
+      "node/4868935278",
+      "way/1086368221",
+      "way/1131080677",
+      "way/1131091371",
+      "way/1131420216",
+      "way/1131424808",
+      "way/1227550931",
+      "way/1359264253",
+      "way/1475104356",
+      "way/155288114",
+      "way/236177753",
+      "way/290669795",
+      "way/307661144",
+      "way/341224663",
+      "way/395985728",
+      "way/519907765",
+      "way/646863233",
+      "way/708050155",
+      "way/738020212",
+      "way/73816638",
+      "way/820176482",
+      "way/849100103",
+      "way/971873000"
+    ]
+  },
+  "source_observations": {
+    "source_nodes": 17738,
+    "source_edges": 19944,
+    "source_nodes_removed": 0,
+    "source_edges_removed": 0,
+    "paths_modified": 0,
+    "new_physical_wires": 0
+  },
+  "ac": "The same electrical tables and injections as the 13-alias trial; AC was not rerun for display-only geometry.",
+  "scope": "Demonstrates coordinate-independent electrical projection, not physical confirmation of the 13 aliases.",
+  "source_files": {
+    "src/powerflow/site_terminals.py": "cd3b463746148580ca2e1499839c80bc3b5e7e00dc0dd68a8bc52d73bf3310fe",
+    "scripts/trial_site_terminal_projection.py": "260d55096c6395feb6d39aed75aac286686c45abd31a5900c41eb6b4555039d3",
+    "docs/reports/codex_same_site_trial_2026-09-13/site_terminals.json": "1ef3882644ed8a823fdd6e73a7572fa7f853804debd22d28029bff094fa4a7ea"
+  }
+}

@@ -6,7 +6,7 @@
 それらを**1コマンドで順に再生成**し、`docs/data/MODEL_VERSION.json` に git HEAD と各段の生成時刻を
 刻んで**skewを可視化**する。重い段は --skip-* で選べる。
 
-順序(下流依存): build_editor_data → run_national_powerflow → export_national_matpower
+順序(下流依存): build_editor_data → run_national_powerflow → export_matpower_canonical
 → export_cim → build_static_site。
 
 不変条件: 物理接続=真・計算は検証器・捏造禁止・基底extract不変・committedスコアカード不可触。
@@ -70,6 +70,13 @@ STEPS = [
     # 長野/新潟/静岡の跨ぎ候補を再帰属(帳簿=fragments/mixed_pref_ledger.json)。冪等
     ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
                       "--mixed-pref", "--write"], False),
+    # 介入#47: 併架線の回線数を電圧クラスへ配分(2026-09-22 正典適用・929f640)。2026-10-21 まで
+    # STEPS に無く、regen すると #47 が消えた(B7・docs/reports/regenerate_reproducibility_2026-10-21.md)。
+    # ビルダー(mixed_voltage_circuits_by_name)で拾えない併架名の枝を、同じ線路名の単一電圧 way の
+    # circuits で正す。必ず #44 の前に置く(#44 の後に回すと #44 が上げた 4 枝を下げ直す=実測)。
+    # #44 は増やす方向のみなので公表値が勝つ。冪等
+    ("mixed_voltage_circuits", [sys.executable, "scripts/apply_mixed_voltage_circuits.py",
+                                "--write"], False),
     # 介入#44: 回線数(par)の出典補完(2026-09-02)。公表資料の回線数を台帳
     # data/reference/circuit_counts.jsonl から引き当てて **増やす方向のみ** 適用。
     # build_editor_data が基底から作り直すと par は OSM circuits タグ由来へ戻るため、
@@ -81,6 +88,11 @@ STEPS = [
     ("satellite_connections", [sys.executable,
                                "scripts/apply_satellite_connections.py",
                                "--write"], False),
+    # 介入#51: 一次資料(各社の空容量・予想潮流一覧)で誤りと分かった OSM の電圧タグを直す
+    # (スクリプト内 CORRECTIONS 表が承認台帳)。approved のみ適用・冪等。第1号=西島根 275→220 kV
+    ("voltage_corrections", [sys.executable,
+                             "scripts/apply_voltage_corrections.py",
+                             "--write"], False),
     # 変電所プロパティ層(オーナー指示 2026-08-26「導体数・回線数を変電所の
     # プロパティに」): 構造DB terminal × OSM線タグ(circuits/wires/cables)を
     # 変電所ごとに集約し、built の sub ノードへ sub_props を付与。冪等
@@ -100,7 +112,13 @@ STEPS = [
     ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
-    ("export_national_matpower", [sys.executable, "scripts/export_national_matpower.py"], True),
+    # N-1 全枝スクリーニング(正典の 4 島・上位 5 件は AC で解き直す・約 4 分)と、地図の Ybus / N-1 タブが
+    # 読む要約(2026-10-21 から。それまでタブは旧系譜の地域別 N-1 を出していた)
+    ("n1_screening", [sys.executable, "scripts/sensitivity/n1_screening.py",
+                      "--islands", "hokkaido", "okinawa", "east", "west", "--ac-verify", "5"], True),
+    ("export_n1_pages", [sys.executable, "scripts/export_n1_pages.py"], False),
+    # 配布する MATPOWER ケース(dist/matpower_national)。2026-10-20 から正典系譜で書く
+    ("export_matpower_canonical", [sys.executable, "scripts/export_matpower_canonical.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
     # ④ 出典容量反映 — build_static_site が plants_utility/ipp/all を作り直すため、必ずその後に再適用。

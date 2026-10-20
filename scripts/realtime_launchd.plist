@@ -4,23 +4,31 @@
 <plist version="1.0">
 <dict>
   <key>Label</key><string>jp.ac.u-fukui.alljapangrid.realtime</string>
+  <!-- 専用の作業場所(AGJ_RUNNER = main を追う疎な worktree)を毎回 origin/main に合わせてから回す。
+       ふだん作業するチェックアウトから回すと、そのブランチの古いスクリプトで動き、pull rebase が
+       作業中の変更に掛かる(2026-09-02〜10-02 に rebase 途中で止まったまま毎時走っていた)。
+       AGJ_RUNNER の data/realtime と data/external/system_disclosure/normalized は、
+       ふだんのチェックアウトの同じ場所へのシンボリックリンク(蓄積と非公開データはそこにある) -->
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/scripts/realtime_cycle.sh</string>
+    <string>-c</string>
+    <string>cd "$AGJ_RUNNER" &amp;&amp; git fetch -q origin main &amp;&amp; git checkout -q -f --detach origin/main &amp;&amp; exec bash scripts/realtime_cycle.sh</string>
   </array>
   <!-- 1時間ごと。でんき予報の実績が毎時更新なので30分間隔にしても新しい断面は増えず、
        commit だけが倍になる。Macがスリープしていた場合は復帰後に1回だけ走る -->
   <key>StartInterval</key><integer>3600</integer>
   <key>RunAtLoad</key><false/>
-  <key>StandardOutPath</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/data/realtime/launchd.log</string>
-  <key>StandardErrorPath</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid/data/realtime/launchd.log</string>
-  <key>WorkingDirectory</key><string>/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid</string>
+  <key>StandardOutPath</key><string>/Users/shigenoburyuto/dev/github/project_Hayashi/AGJ-realtime/data/realtime/launchd.log</string>
+  <key>StandardErrorPath</key><string>/Users/shigenoburyuto/dev/github/project_Hayashi/AGJ-realtime/data/realtime/launchd.log</string>
+  <key>WorkingDirectory</key><string>/Users/shigenoburyuto/dev/github/project_Hayashi/AGJ-realtime</string>
   <!-- PATH: python3/git を launchd の最小環境でも見つけられるように -->
   <key>EnvironmentVariables</key>
   <dict>
     <key>PATH</key>
     <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>AGJ_RUNNER</key>
+    <string>/Users/shigenoburyuto/dev/github/project_Hayashi/AGJ-realtime</string>
   </dict>
 </dict>
 </plist>

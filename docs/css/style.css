@@ -32,6 +32,21 @@ body {
 }
 #sidebar h1 span.icon { font-size: 1.3rem; }
 
+/* ── Site links (ダッシュボードへの戻り口) ── */
+.site-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 8px 16px;
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.site-links a { color: #5dade2; text-decoration: none; }
+.site-links a:hover { text-decoration: underline; }
+.site-links a.home { color: #fff; font-weight: 600; margin-right: auto; }
+
 /* ── Tabs ── */
 .tab-bar {
     display: flex;
@@ -893,3 +908,8 @@ input[type="range"]{ accent-color:var(--p-acc); }
     /* Ybusタブ: 図+統計の2カラムを1カラム化 */
     #ybus-viewer { grid-template-columns: 1fr !important; }
 }
+
+/* 暗い背景地図: 地理院・淡色を反転(CARTO dark_all が API キー必須になったため・2026-10) */
+.agj-dark-tiles { filter: invert(1) hue-rotate(180deg) brightness(.78) contrast(.95) saturate(.35); }
+/* タイルが届く前の地色も暗く(既定の明るい灰色が一瞬光らないように) */
+.leaflet-container { background: #1c1f25; }

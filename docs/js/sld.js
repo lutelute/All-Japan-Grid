@@ -55,6 +55,7 @@ async function sldShow() {
     // Make canvas visible BEFORE _initCanvas() so offsetWidth/Height are non-zero
     const el = document.getElementById('sld-canvas');
     if (el) el.style.display = 'block';
+    document.body.classList.add('sld-on');   // 地図用の拡大ボタン・一覧を隠す(css/map_ui.css)
     if (!_canvas) _initCanvas();
     if (!_data) await _load();
     _rebuildSim();
@@ -62,6 +63,7 @@ async function sldShow() {
 }
 
 function sldHide() {
+    document.body.classList.remove('sld-on');
     if (_canvas) _canvas.style.display = 'none';
     if (_tooltip) _tooltip.style.display = 'none';
     _stopSim();
@@ -363,9 +365,23 @@ function _draw() {
         ctx.globalAlpha = 1;
     });
 
+    // ラベルは重ならない分だけ描く(画面座標で置いた箱と重なるものは飛ばす)。座標入りの分岐点の名前
+    // (「chubu junction 35.12:136.9:500」)は描かない。マウスを置いたノードは必ず描く(io 一新 2026-10-21)
+    const placed = [];
+    const labelFits = (n, text, r) => {
+        const w = ctx.measureText(text).width * _cam.scale, h = 11;
+        const x = (n.x + r + 1) * _cam.scale + _cam.tx, y = n.y * _cam.scale + _cam.ty - h / 2;
+        if (placed.some(b => x < b.x + b.w && x + w > b.x && y < b.y + b.h && y + h > b.y)) return false;
+        placed.push({ x, y, w, h });
+        return true;
+    };
+    const isJunction = name => /junction|\d+\.\d+:\d/.test(name);
+
     // Draw nodes
     _simNodes.forEach(n => {
-        const r = (KV_RADIUS[n.tier] || 4) / _cam.scale * Math.max(1, _cam.scale * 0.7);
+        // 引いて見たときに点が重なって塊にならないよう小さめに(io 一新 2026-10-21: 0.6 倍)
+        const r = 0.6 * (KV_RADIUS[n.tier] || 4) / _cam.scale * Math.max(1, _cam.scale * 0.7);
+        n._r = r;
         const col = KV_COLOR[n.tier] || '#888';
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, 2 * Math.PI);
@@ -382,13 +398,23 @@ function _draw() {
             ctx.font = (8 / _cam.scale) + 'px sans-serif';
             ctx.fillText('G', n.x + r * 0.6, n.y - r * 0.6);
         }
-        // Label for high-voltage or hovered
-        if (n === _hovNode || (n.tier >= 500 && _cam.scale > 0.3)) {
-            ctx.fillStyle = '#fff';
-            ctx.font = (9 / _cam.scale) + 'px sans-serif';
-            ctx.fillText(n.name.replace(/_\d+$/, '').replace(/_\d+kV$/, ''), n.x + r + 1, n.y + 3 / _cam.scale);
-        }
         ctx.globalAlpha = 1;
+    });
+
+    // ラベルはノードを全部描いた後に(後から描いたノードの下に隠れないように)。マウスを置いたものを先に
+    ctx.font = '600 ' + (9.5 / _cam.scale) + 'px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = 'rgba(10,14,20,.92)';            // 密集した点の上でも読めるよう暗い縁取り
+    ctx.lineWidth = 3.2 / _cam.scale;
+    ctx.lineJoin = 'round';
+    const labelled = _simNodes.filter(n => n === _hovNode || (n.tier >= 500 && _cam.scale > 0.3 && !isJunction(n.name)));
+    labelled.sort((a, b) => (b === _hovNode) - (a === _hovNode));
+    labelled.forEach(n => {
+        const text = n.name.replace(/_\d+$/, '').replace(/_\d+kV$/, '');
+        if (n === _hovNode ? (labelFits(n, text, n._r), true) : labelFits(n, text, n._r)) {
+            ctx.strokeText(text, n.x + n._r + 1, n.y + 3 / _cam.scale);
+            ctx.fillText(text, n.x + n._r + 1, n.y + 3 / _cam.scale);
+        }
     });
 
     ctx.restore();
@@ -467,13 +493,8 @@ function _fitAll() {
 }
 
 /* ── Tab hook ────────────────────────────────────────────────────────────*/
-function sldInitTabHook() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (btn.dataset.tab === 'tab-sld') sldShow();
-            else sldHide();
-        });
-    });
-}
-
-document.addEventListener('DOMContentLoaded', sldInitTabHook);
+// タブの切り替えは js/agj_tabs.js。直リンク(map.html#tab-sld)でも起動する(io 一新 2026-10-20)
+AGJTabs.onChange(id => {
+    if (id === 'tab-sld') sldShow();
+    else sldHide();
+});

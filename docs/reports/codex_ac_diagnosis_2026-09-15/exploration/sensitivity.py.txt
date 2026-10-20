@@ -1,0 +1,13 @@
+from probe import *
+with (OUT/'miyagi_dedup_input.pickle').open('rb') as f:base=pickle.load(f)
+for factor in [1.,1.2]:
+ n=copy.deepcopy(base);n.shunt.q_mvar*=factor/.8;run(n,f'miyagi_dedup_comp_{factor}')
+buses=[]
+for i,b in base.bus.iterrows():
+ lo,la=json.loads(b.geo)['coordinates']
+ if 138.7<lo<139.2 and 34.6<la<35.1 and abs(b.vn_kv-66)<.1:buses.append(i)
+lines=base.line.index[base.line.from_bus.isin(buses)&base.line.to_bus.isin(buses)&(base.line.parallel==1)&(base.line.length_km>1)]
+n=copy.deepcopy(base);n.line.loc[lines,'parallel']=2
+save('izu_two_circuit_sensitivity',dict(lines=lines.tolist(),assumption='Unverified sensitivity only: double circuit count on Izu 66kV lines currently defaulted to one. Not source-confirmed and not accepted.'))
+with (OUT/'miyagi_izu_input.pickle').open('wb') as f:pickle.dump(n,f)
+run(n,'miyagi_izu_strict');run(n,'miyagi_izu_noq',enforce_q_lims=False)

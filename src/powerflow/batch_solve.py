@@ -18,6 +18,11 @@ from __future__ import annotations
 
 import pandapower as pp
 
+from src.powerflow import nr_guard
+
+# 発散した NR で macOS の BLAS がプロセスごと落ちるのを例外に変える(src/powerflow/nr_guard.py)
+nr_guard.install()
+
 
 def run_powerflow(net, mode: str = "dc") -> dict:
     """Run DC or AC power flow; return a summary dict (``converged`` etc.)."""

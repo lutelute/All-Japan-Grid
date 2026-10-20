@@ -13,7 +13,7 @@ FC/連系線経由の純輸出入と解釈できる(その旨キャプション�
 """
 import os, sys
 import numpy as np
-os.chdir("/Users/shigenoburyuto/Documents/GitHub/project_Hayashi/All-Japan-Grid")
+os.chdir("/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid")
 sys.path.insert(0, os.getcwd())
 import matplotlib
 matplotlib.use("Agg")
