@@ -10,12 +10,14 @@
 を確かめる(docs/PAGES_INVENTORY.md §3)。
 
 Playwright と Chromium が無い環境では飛ばす(CI では .github/workflows/pages-ui.yml が入れて回す)。
+公開サイトに向けるときは AGJ_SITE_URL を渡す(既定は手元の docs/ を配信して確かめる)。
 Leaflet は unpkg から読むので、ネットワークも要る。
 """
 from __future__ import annotations
 
 import functools
 import http.server
+import os
 import threading
 from pathlib import Path
 
@@ -28,6 +30,11 @@ sync_api = pytest.importorskip("playwright.sync_api")
 
 @pytest.fixture(scope="module")
 def site():
+    # 公開サイトで確かめるとき: AGJ_SITE_URL=https://lutelute.github.io/All-Japan-Grid
+    remote = os.environ.get("AGJ_SITE_URL")
+    if remote:
+        yield remote.rstrip("/")
+        return
     class Quiet(http.server.SimpleHTTPRequestHandler):
         def log_message(self, *args):
             pass
