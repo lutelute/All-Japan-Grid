@@ -17,48 +17,26 @@
         <a href="./index.html" class="home">&#8592; ダッシュボード</a>
         <a href="./flow_map.html">潮流マップ</a>
         <a href="./subsld.html">SubSLD</a>
-        <a href="./compare.html">Before/After</a>
+        <a href="./editor.html">接続編集</a>
     </div>
 
     <!-- Tabs -->
     <div class="tab-bar">
         <button class="tab-btn active" data-tab="tab-map">系統図</button>
         <button class="tab-btn" data-tab="tab-area">エリア</button>
-        <button class="tab-btn" data-tab="tab-pf">潮流解析</button>
-        <button class="tab-btn" data-tab="tab-sld">単線図</button>
-        <button class="tab-btn" data-tab="tab-compare">比較</button>
+        <button class="tab-btn" data-tab="tab-sld">構造図</button>
         <button class="tab-btn" data-tab="tab-ybus">Ybus / N-1</button>
-        <button class="tab-btn" data-tab="tab-editor">接続編集</button>
-        <button class="tab-btn" data-tab="tab-review">候補レビュー</button>
     </div>
-
-    <!-- ━━ Tab: 比較 (旧法 vs 新法トポロジ、iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-compare">
-        <iframe id="compare-frame" data-src="./compare.html"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="トポロジ比較（旧法 vs 新法）"></iframe>
-    </div>
-
-    <!-- ━━ Tab: 接続編集 (モデルビューア+下書き編集、iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-editor">
-        <iframe id="editor-frame" data-src="./editor.html?v=9"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="接続編集（モデルビューア）"></iframe>
-    </div>
-
-    <!-- ━━ Tab: 候補レビュー (A島接続候補を1件ずつ承認・閲覧専用・editとreviewを分離・iframe遅延ロード) ━━ -->
-    <div class="tab-panel" id="tab-review">
-        <iframe id="review-frame" data-src="./review.html?v=1"
-                style="width:100%;height:calc(100vh - 56px);min-height:540px;border:0;display:block"
-                title="候補レビュー（A島接続・閲覧専用）"></iframe>
-    </div>
+    <!-- 2026-10-20 io 一新: 潮流解析タブ(flow_map と重複・08-28 のデータ)と、比較・接続編集・候補レビューの
+         iframe タブを導線から外した。各ページとデータ(compare.html・editor.html・review.html・js/powerflow.js・
+         data/powerflow_full ほか)は消さずに残している(docs/PAGES_INVENTORY.md)。 -->
 
     <!-- ━━ Tab: Ybus / N-1 (大元Ybus・地域別・スパイプロット・N-1) ━━ -->
     <div class="tab-panel" id="tab-ybus">
         <div id="ybus-panel" style="padding:14px 18px;background:#0f1419;color:#e6e6e6">
             <h3 style="margin:0 0 10px;font-size:15px">バスアドミタンス行列 (Ybus) — シミュレーションツール</h3>
             <p style="margin:0 0 12px;font-size:12px;color:#9fb3c8;line-height:1.55">
-                $\mathbf{Y}_{\mathrm{bus}}$ は系統の電気的接続を表す疎行列（バス×バス）。
+                Y<sub>bus</sub> は系統の電気的接続を表す疎行列（バス×バス）。
                 ここでは <b>DB更新済み建造モデル</b>（<code>docs/data/built</code>）から
                 <b>ブラウザ上で実時間に Ybus 隣接を構成</b>し、操作・再計算できます。
                 地域を選ぶ→スパイ図を描画（<span style="color:#f5b041">対角=自己</span>／<span style="color:#5dade2">送電線結合</span>／<span style="color:#69f0ae">変圧器</span>）→
@@ -218,7 +196,7 @@
                     img.src = "./assets/analysis/ybus_per_region.png";
                     img.alt = "全地域 Ybus ギャラリー";
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>地域別 Ybus ギャラリー（DB更新モデル）</b> — 10 地域の $\\mathbf{Y}_{\\mathrm{bus}}$ を一覧。各地域の規模（ノード数）と疎度が大きく異なることが分かる。個別表示は「地域別 Ybus」モードへ。';
+                        '<b>地域別 Ybus ギャラリー（DB更新モデル）</b> — 10 地域の Y<sub>bus</sub> を一覧。各地域の規模（ノード数）と疎度が大きく異なることが分かる。個別表示は「地域別 Ybus」モードへ。';
                     document.getElementById("ybus-stats-rows").innerHTML =
                         '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの10地域を並べた一覧。' +
                         '個別の統計は「地域別 Ybus」モードで地域を選ぶと表示されます。下の表でも全地域を比較できます。</div>';
@@ -244,7 +222,7 @@
                     img.alt = "全国 Ybus(地域ごとに組み上がる・DBモデル)";
                     const na = (stats && stats._national) || {};
                     document.getElementById("ybus-caption").innerHTML =
-                        '<b>全国 Ybus（組立アニメ・DB更新モデル）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の $\\mathbf{Y}_{\\mathrm{bus}}$（橙=自己アドミタンス／各色=地域内の結合）が積み上がり、<b style="color:#ff3b6b">赤＝エリア間連系線</b>が地域を繋いで入る。';
+                        '<b>全国 Ybus（組立アニメ・DB更新モデル）</b> — 10地域のブロックが対角に1つずつ「並んでいく」様子。北海道→沖縄の順に各地域の Y<sub>bus</sub>（橙=自己アドミタンス／各色=地域内の結合）が積み上がり、<b style="color:#ff3b6b">赤＝エリア間連系線</b>が地域を繋いで入る。';
                     document.getElementById("ybus-stats-rows").innerHTML =
                         '<div style="color:#9fb3c8;font-size:11px;line-height:1.55">DB更新済み建造モデルの全国 Ybus が地域ごとに構築される過程。' +
                         '各地域のブロックが対角に順に出現し、地域がまたぐと<b style="color:#ff3b6b">赤の連系線</b>が入る。最終的に10地域+連系線で全国が組み上がる。' +
@@ -612,7 +590,7 @@
         </div>
     </div>
 
-    <!-- ━━ Tab 4: 単線結線図 (IEEE SLD) ━━ -->
+    <!-- ━━ Tab: 構造図(全国のバスと枝の力学レイアウト。変電所ごとの単線結線図は subsld.html) ━━ -->
     <div class="tab-panel" id="tab-sld">
         <div class="section">
             <h2>系統トポロジー <span style="font-size:10px;font-weight:normal;color:#aaa">Force Graph</span></h2>
@@ -684,103 +662,6 @@
         </div>
     </div>
 
-    <!-- ━━ Tab 3: 潮流解析 ━━ -->
-    <div class="tab-panel" id="tab-pf">
-        <div class="section">
-            <h2>Region</h2>
-            <div class="pf-controls">
-                <select id="pf-region" disabled></select>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Layers</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-grid" checked/>
-                    <span class="toggle-label">全系統 Base Grid (all voltages)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-lines" checked/>
-                    <span class="toggle-label">潮流線 PF Lines</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-buses" checked/>
-                    <span class="toggle-label">変電所 Substations</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-layer-otherfreq"/>
-                    <span class="toggle-label">他周波数系統 Other-freq (参考・非解析)</span>
-                </label>
-            </div>
-        </div>
-        <div class="section">
-            <h2>実ルート電圧レイヤー</h2>
-            <div class="layer-toggles">
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-ring-toggle" checked onchange="pfToggleRing(this.checked)"/>
-                    <span class="toggle-label" style="color:#ff4444">⬡ リング枝ハイライト</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#cc0000">━ 500 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#0044cc">━ 275 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" checked disabled/>
-                    <span class="toggle-label" style="color:#007733">━ 154 kV (常時)</span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-110" onchange="pfToggleTier(110,this.checked)"/>
-                    <span class="toggle-label" style="color:#885500">━ 110 kV <span style="color:#888;font-size:9px">664KB</span></span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-77" onchange="pfToggleTier(77,this.checked)"/>
-                    <span class="toggle-label" style="color:#660077">━ 77 kV <span style="color:#888;font-size:9px">1.1MB</span></span>
-                </label>
-                <label class="layer-toggle">
-                    <input type="checkbox" id="pf-tier-66" onchange="pfToggleTier(66,this.checked)"/>
-                    <span class="toggle-label" style="color:#334455">━ 66 kV <span style="color:#e67e22;font-size:9px">5.9MB ⚠</span></span>
-                </label>
-            </div>
-            <div style="font-size:9px;color:#666;margin-top:3px">Visualize実行後に切替可</div>
-        </div>
-        <div class="section">
-            <h2>Power Flow</h2>
-            <div class="pf-controls">
-                <div>
-                    <label for="pf-mode">Mode</label>
-                    <select id="pf-mode" disabled>
-                        <option value="ac" selected>AC Power Flow (Newton-Raphson)</option>
-                        <option value="dc">DC Power Flow (Linear)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="pf-viz">Visualization</label>
-                    <select id="pf-viz" disabled>
-                        <option value="loading" selected>負荷率 Loading Heatmap</option>
-                        <option value="flow">潮流方向 Flow Direction</option>
-                        <option value="thermal">熱容量 Thermal Heatmap</option>
-                        <option value="voltage">電圧 Voltage / Angle</option>
-                    </select>
-                </div>
-                <button class="btn-primary" id="btn-run-pf" disabled>Visualize</button>
-            </div>
-            <div class="pf-info" style="margin-top:6px">
-                <b>地域別・全国 = DB正典(built)由来の全規模AC潮流</b>（全 <span data-pf-meta="n_nodes">…</span> バス・縮約なし、pandapower、4周波数島すべてAC収束・<span data-pf-meta="generated">…</span> 生成）。<br>
-                全国基幹/全国ゾーンは別モデル（500/275kV概観・同期島）として併設。<br>
-                ※過負荷(loading&gt;100%)や低電圧は合成定格の錯視・放射端の電圧沈下＝正直な物理（各地域の警告参照）。<br>
-                線色=潮流率(loading %)、バス色=電圧 (Vm)。
-            </div>
-        </div>
-        <div class="section" id="pf-results-section" style="display:none">
-            <h2>Results</h2>
-            <div id="pf-results-content"></div>
-        </div>
-    </div>
-
     <!-- ━━ Download section (always visible at bottom of sidebar) ━━ -->
     <div class="section download-section">
         <h2>Download</h2>
@@ -831,11 +712,12 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/grid_map.js?v=37"></script>
+<script src="./js/agj_map.js?v=1"></script>
+<script src="./js/agj_tabs.js?v=1"></script>
+<script src="./js/grid_map.js?v=38"></script>
 <script src="./js/grid_search.js?v=1"></script>
-<script src="./js/powerflow.js?v=36"></script>
-<script src="./js/sld.js?v=32"></script>
-<script src="./js/ybus_sim.js?v=2"></script>
+<script src="./js/sld.js?v=33"></script>
+<script src="./js/ybus_sim.js?v=3"></script>
 <script>
 /* バス数などの表示は powerflow_full/summary.json の _meta から読む(HTMLへ直書きしない) */
 fetch('./data/powerflow_full/summary.json').then(r => r.ok ? r.json() : null).then(d => {
