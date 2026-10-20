@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-10-08T08:09:33Z",
- "version": "1.8.0",
- "dataset_version": "1.7.0",
+ "generated_at": "2026-10-20T18:17:50Z",
+ "version": "1.9.0",
+ "dataset_version": "1.9.0",
  "model": {
-  "n_nodes": 17841,
-  "n_edges": 19529,
-  "main_size": 11695,
-  "n_components": 962,
+  "n_nodes": 17738,
+  "n_edges": 19944,
+  "main_size": 16446,
+  "n_components": 512,
   "n_island_nodes": 1985,
   "n_stitch": 158,
   "n_tie": 6,
@@ -21,11 +21,21 @@
   "generated_at": "2026-09-02T16:32:52+00:00",
   "osm_newest": "2026-06-15T14:25:30Z"
  },
- "interventions": 44,
+ "interventions": 45,
  "reports": {
-  "total": 143,
-  "dated": 140,
+  "total": 148,
+  "dated": 145,
   "recent": [
+   {
+    "date": "2026-10-21",
+    "title": "プロジェクトの全体構造と「クソ機能」の候補 2026-10-21",
+    "path": "docs/reports/project_structure_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-20",
+    "title": "配布 MATPOWER ケースを 4 島とも AC で解ける形にする 2026-10-20",
+    "path": "docs/reports/matpower_dist_ac_2026-10-20.md"
+   },
    {
     "date": "2026-10-08",
     "title": "変電所内の変圧器の結び方は正しいか — 全国の公表一覧で採点(2026-10-08)",
@@ -52,6 +62,11 @@
     "path": "docs/reports/mixed_voltage_circuits_builder_2026-09-21.md"
    },
    {
+    "date": "2026-09-17",
+    "title": "収録率とタグ補完率の実測監査（2026-09-17）",
+    "path": "docs/reports/coverage_and_enrichment_audit_2026-09-17.md"
+   },
+   {
     "date": "2026-09-03",
     "title": "介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）",
     "path": "docs/reports/tepco_endpoint_unresolved_2026-09-03.md"
@@ -68,27 +83,31 @@
    },
    {
     "date": "2026-09-03",
-    "title": "端点別名表を入れると照合はどう変わるか（ドライラン・2026-09-03）",
-    "path": "docs/reports/circuit_sources_alias_dryrun_2026-09-03.md"
-   },
-   {
-    "date": "2026-09-02",
-    "title": "west 多機動揺モデルの AC 運転点化 — フラット vs 運転点込み・最大機解列(2026-09-02)",
-    "path": "docs/reports/swing_modes_west_ac_2026-09-02.md"
-   },
-   {
-    "date": "2026-09-02",
-    "title": "降圧点欠損の census と介入#43 のゲート（2026-09-02）",
-    "path": "docs/reports/stepdown_gap_census_2026-09-02.md"
-   },
-   {
-    "date": "2026-09-02",
-    "title": "介入#40 再判定 — 全国メッシュ整備後の人口傾斜 ON/OFF (2026-09-02)",
-    "path": "docs/reports/pop_tilt_rejudge_2026-09-02.md"
+    "title": "断片解消キャンペーン第三波 — ドライラン(2026-09-03)",
+    "path": "docs/reports/fragment_third_wave_2026-09-03.md"
    }
   ]
  },
- "bundles": [],
- "n_scripts": 243,
- "n_test_files": 97
+ "bundles": [
+  {
+   "dir": "codex_ac_diagnosis_2026-09-15",
+   "date": "2026-09-15",
+   "title": "AC・Ybus診断 — 接続と需要の Before / After",
+   "href": "reports/codex_ac_diagnosis_2026-09-15/index.html"
+  },
+  {
+   "dir": "codex_same_site_trial_2026-09-13",
+   "date": "2026-09-13",
+   "title": "同名設備の接続実験 / All-Japan-Grid",
+   "href": "reports/codex_same_site_trial_2026-09-13/index.html"
+  },
+  {
+   "dir": "codex_before_after_2026-09-12",
+   "date": "2026-09-12",
+   "title": "All-Japan-Grid — Before / After 全比較",
+   "href": "reports/codex_before_after_2026-09-12/index.html"
+  }
+ ],
+ "n_scripts": 263,
+ "n_test_files": 107
 }

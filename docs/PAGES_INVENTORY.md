@@ -41,7 +41,7 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 | `uc_powerflow/` | 22 MB | 06-12 | uc_map | そのまま残す（uc_map のアーカイブとして） | **決定** 10-20 |
 | `powerflow_before/` | 17 MB | 05-29 | compare | そのまま残す（compare のアーカイブとして） | **決定** 10-20 |
 | `built/` | 26 MB | 10-08 | eggc_explainer・editor・subsld・codex レポート | 残す（正典） | 案 |
-| `lines_*`・`subs_*`・`plants_*`・`generators.geojson` | 計 約 35 MB | 08-16〜09-02（CI が作り直す） | map・editor | 地図の系統は **built から新しく書き出す**（新しいファイルとして足す）。今のファイルはそのまま残す | **決定** 10-20 |
+| `lines_*`・`subs_*`・`plants_*`・`generators.geojson` | 計 約 35 MB | 08-16〜09-02（CI が作り直す） | map・editor | 地図の系統は **built から新しく書き出す**（新しいファイルとして足す）。今のファイルはそのまま残す。**済（2026-10-21）**: `docs/data/map/`（scripts/export_map_tiers_from_built.py、deploy でも書く）。地図はこれを読む | **決定** 10-20 |
 | `substations.geojson` | 4.7 MB | **03-06** | map の CSV 書き出しだけ | そのまま残す（CSV の書き出しは正典からに切り替える） | 案 |
 | `subsld_pages.json`・`subsld_ways/`・`loops.json`・`substation_properties.json` | 計 約 15 MB | 08-27〜10-08 | subsld・station_changes | 残す | 案 |
 | `n1/` | 0.1 MB | 06-03 | Ybus/N-1 タブ | 「解析」ページを作るときに作り直す | 案 |
@@ -100,9 +100,13 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 3. flow_map を同じ部品に載せ、地図ページとして統合する。
 4. 解析ページを作る。データは今の正典で作り直す。
 
+3. **一部済（2026-10-21）** 地図の系統を正典から書き出した。それまで地図は基底 OSM を出していた（正典の層は deploy で毎回上書きされていた。`docs/reports/project_structure_2026-10-21.md` の D1）。flow_map は共通の詳細カードに載せた（地図の部品への統合は残り）。
+
 ## 7. 洗練の候補（作業中に見つけたもの）
 
-- 構造図：ノードのラベルが重なって読めない。右下の一覧パネル（変電所・送電線・発電所）と地図の拡大ボタンが図に被る。
-- 一覧パネルの並び：「名前順」で `3/4号 開閉所`・`500 kV switching station`・`Abe` など、名前の不完全な行が先頭に来る。
+- ~~構造図：ノードのラベルが重なって読めない。右下の一覧パネルと地図の拡大ボタンが図に被る。~~ 済（10-21）
+- ~~一覧パネルの並び：名前の不完全な行が先頭に来る。~~ 済（10-21）
 - ダッシュボードの「NOW 断面の潮流計算 4/4 島が AC 収束」は、許容誤差を 10 MVA まで緩める段や枝の刈り込みを含む（配布ケースの基準とは違う）。カードにそう書く。
-- 地図の説明は英語と日本語が混ざる（クリックの説明は `Voltage:`・`Region:`、ホバーは日本語）。共通部品の説明の書式にそろえる。
+- ~~地図の説明は英語と日本語が混ざる。~~ 済（10-21・カード・凡例・状態の行を日本語に）
+
+全体構造（12 の柱・クソ機能の候補 28 件・オーナーの判断が要るもの）は `docs/reports/project_structure_2026-10-21.md`。

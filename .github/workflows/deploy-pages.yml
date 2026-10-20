@@ -49,6 +49,10 @@ jobs:
       # ライブサイトで capacity_mw_sourced/出典リンクが消える(generators.geojsonのみ生き残る)。
       - run: python scripts/apply_capacity_sources.py
         env: {PYTHONPATH: "."}
+      # 系統図マップの線と変電所は正典(docs/data/built/all.json)から書く(data/map/)。上の
+      # build_static_site が書く data/lines_*・subs_* は基底 OSM 由来で、介入前の線を出していた
+      # (2026-10-21)。そちらは編集・CSV などのためにそのまま残す
+      - run: python scripts/export_map_tiers_from_built.py
       # 全面改修Phase5フル統合: Pagesエディタを単一の正(src/server/templates/editor.html)から
       # 再生成(静的shim方式)。:8088テンプレが正・Pagesは派生 → 二度と分岐しない。
       - run: python scripts/build_pages_editor.py --out docs/editor.html

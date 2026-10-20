@@ -24,13 +24,14 @@ docs/data/substations.geojson : 変電所の **キュレーション属性**(ope
                              voltage_source 等)の供給元(旧基底OSM由来の C層相当)。built は
                              幾何+表示名4フィールドのみなので、ここから属性を結合して焼き込む。
 
-出力 (上書き)
+出力 (上書き・2026-10-21 から docs/data/map/ に。docs/data/ 直下の同名ファイルは
+build_static_site.py が基底 OSM から書くもので、そのまま残す)
 -------------
-docs/data/subs_275kv.geojson   docs/data/lines_275kv.geojson
-docs/data/subs_154kv.geojson   docs/data/lines_154kv.geojson
-docs/data/subs_all.geojson     docs/data/lines_all.geojson
-docs/data/regions.json         (substations/lines 件数 + bbox を built から再計算、
-                                frequency_hz/name_* は既存値を保持)
+docs/data/map/subs_275kv.geojson   docs/data/map/lines_275kv.geojson
+docs/data/map/subs_154kv.geojson   docs/data/map/lines_154kv.geojson
+docs/data/map/subs_all.geojson     docs/data/map/lines_all.geojson
+docs/data/map/regions.json     (substations/lines 件数 + bbox を built から再計算、
+                                frequency_hz/name_* は docs/data/regions.json の値を保持)
 
 フィールド契約 (grid_map.js を精読して確定)
 -------------------------------------------
@@ -65,7 +66,11 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILT_ALL = os.path.join(ROOT, "docs", "data", "built", "all.json")
 DATA_DIR = os.path.join(ROOT, "docs", "data")
-REGIONS_JSON = os.path.join(DATA_DIR, "regions.json")
+REGIONS_JSON = os.path.join(DATA_DIR, "regions.json")      # 読む(frequency_hz・名前の正)
+# 書き出し先。docs/data/lines_*・subs_* は build_static_site.py が基底 OSM から同じ名前で書き、
+# deploy でも regenerate_all でもこのスクリプトの後に走るので、正典の地図が一度も表示されて
+# いなかった(2026-10-21 に確認: 地図の線 40,087 本 = 基底 OSM、正典は枝 19,944)。別の場所に書く
+OUT_DIR = os.path.join(DATA_DIR, "map")
 
 # 座標精度: 既存タイル / slim_geojson.py に合わせ 4 桁 (≈11m、可視化に十分)。
 COORD_PRECISION = 4
@@ -217,6 +222,7 @@ def build_sub_features(nodes, by_coord=None, by_name=None):
             "_region_ja": REGION_JA.get(region, ""),
             "_display_name": n.get("name") or "",
             "_voltage_kv": clean_kv(n.get("kv")),
+            "_main": bool(n.get("main")),
         }
         if by_coord is not None:
             attrs, src = match_attr(n, by_coord, by_name)
@@ -291,6 +297,8 @@ def build_line_features(edges, nodes_by_coord):
                 "_region_ja": REGION_JA.get(region, ""),
                 "_display_name": e.get("name") or "",
                 "_voltage_kv": clean_kv(e.get("kv")),
+                "_main": bool(e.get("main")),
+                "_par": e.get("par") or 1,
             },
             "geometry": {
                 "type": "LineString",
@@ -350,7 +358,7 @@ def recompute_regions(sub_feats, line_feats):
                 "lon_min": round(b[2], 3), "lon_max": round(b[3], 3),
             }
 
-    with open(REGIONS_JSON, "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_DIR, "regions.json"), "w", encoding="utf-8") as f:
         json.dump(regions, f, ensure_ascii=False, indent=2)
     return regions
 
@@ -370,6 +378,7 @@ def main():
         print(f"ERROR: built model not found: {BUILT_ALL}", file=sys.stderr)
         return 1
 
+    os.makedirs(OUT_DIR, exist_ok=True)
     with open(BUILT_ALL, encoding="utf-8") as f:
         built = json.load(f)
     nodes = built.get("nodes", [])
@@ -406,8 +415,8 @@ def main():
         subs_t = [f for f in all_subs if kv_in_tier(f["properties"]["_voltage_kv"], suffix)]
         lines_t = [f for f in all_lines if kv_in_tier(f["properties"]["_voltage_kv"], suffix)]
 
-        subs_path = os.path.join(DATA_DIR, f"subs_{suffix}.geojson")
-        lines_path = os.path.join(DATA_DIR, f"lines_{suffix}.geojson")
+        subs_path = os.path.join(OUT_DIR, f"subs_{suffix}.geojson")
+        lines_path = os.path.join(OUT_DIR, f"lines_{suffix}.geojson")
         old_subs = count_old(subs_path)
         old_lines = count_old(lines_path)
 
@@ -433,7 +442,7 @@ def main():
     ok = True
     for suffix in TIER_SUFFIXES:
         for kind in ("subs", "lines"):
-            p = os.path.join(DATA_DIR, f"{kind}_{suffix}.geojson")
+            p = os.path.join(OUT_DIR, f"{kind}_{suffix}.geojson")
             try:
                 with open(p, encoding="utf-8") as f:
                     d = json.load(f)
@@ -442,7 +451,7 @@ def main():
             except Exception as exc:  # noqa: BLE001
                 ok = False
                 print(f"  INVALID {p}: {exc}")
-    p = REGIONS_JSON
+    p = os.path.join(OUT_DIR, "regions.json")
     try:
         with open(p, encoding="utf-8") as f:
             json.load(f)
@@ -458,10 +467,10 @@ def main():
         return d["features"][:n]
 
     print("\n  sample subs_275kv.geojson feature:")
-    for fe in sample(os.path.join(DATA_DIR, "subs_275kv.geojson")):
+    for fe in sample(os.path.join(OUT_DIR, "subs_275kv.geojson")):
         print("   ", json.dumps(fe, ensure_ascii=False))
     print("  sample lines_275kv.geojson feature (coords truncated):")
-    for fe in sample(os.path.join(DATA_DIR, "lines_275kv.geojson")):
+    for fe in sample(os.path.join(OUT_DIR, "lines_275kv.geojson")):
         c = fe["geometry"]["coordinates"]
         fe2 = {**fe, "geometry": {"type": "LineString",
                                   "coordinates": c[:3] + (["..."] if len(c) > 3 else [])}}
