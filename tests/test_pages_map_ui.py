@@ -177,6 +177,8 @@ def test_deep_link_starts_ybus(browser, site):
     page, errors = _open_map(browser, f"{site}/map.html#tab-ybus")
     page.wait_for_function("() => window.YbusSim && window.YbusSim.stats()", timeout=30_000)
     assert page.evaluate("() => document.getElementById('tab-ybus').classList.contains('active')")
+    # 全画面のタブの上に、地図の部品(一覧パネル・拡大ボタン)が被らない
+    assert page.evaluate("() => getComputedStyle(document.getElementById('sublist')).visibility") == "hidden"
     assert not errors, errors
     page.close()
 
