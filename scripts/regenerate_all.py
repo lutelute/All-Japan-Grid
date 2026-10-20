@@ -70,6 +70,13 @@ STEPS = [
     # 長野/新潟/静岡の跨ぎ候補を再帰属(帳簿=fragments/mixed_pref_ledger.json)。冪等
     ("node_hygiene", [sys.executable, "scripts/apply_node_hygiene.py",
                       "--mixed-pref", "--write"], False),
+    # 介入#47: 併架線の回線数を電圧クラスへ配分(2026-09-22 正典適用・929f640)。2026-10-21 まで
+    # STEPS に無く、regen すると #47 が消えた(B7・docs/reports/regenerate_reproducibility_2026-10-21.md)。
+    # ビルダー(mixed_voltage_circuits_by_name)で拾えない併架名の枝を、同じ線路名の単一電圧 way の
+    # circuits で正す。必ず #44 の前に置く(#44 の後に回すと #44 が上げた 4 枝を下げ直す=実測)。
+    # #44 は増やす方向のみなので公表値が勝つ。冪等
+    ("mixed_voltage_circuits", [sys.executable, "scripts/apply_mixed_voltage_circuits.py",
+                                "--write"], False),
     # 介入#44: 回線数(par)の出典補完(2026-09-02)。公表資料の回線数を台帳
     # data/reference/circuit_counts.jsonl から引き当てて **増やす方向のみ** 適用。
     # build_editor_data が基底から作り直すと par は OSM circuits タグ由来へ戻るため、

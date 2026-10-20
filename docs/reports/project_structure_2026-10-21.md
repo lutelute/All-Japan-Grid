@@ -55,7 +55,7 @@
 
 | id | 何か | 選択肢 |
 |---|---|---|
-| B7 | 正典 all.json と再生成の手順（Snakefile・regenerate_all）がずれている。正典に当てた apply_mixed_voltage_circuits（#47）が STEPS に入っておらず、今 regenerate_all を回すと正典が変わる（推測・未実行） | 手順に入れるか、「その場で当てた介入の台帳」として手順の外に明記するか |
+| B7 | 正典 all.json と再生成の手順（Snakefile・regenerate_all）がずれている。正典に当てた apply_mixed_voltage_circuits（#47）が STEPS に入っておらず、今 regenerate_all を回すと正典が変わる（推測・未実行） | **済（10-21・実測）** #47 を STEPS・Snakefile に入れ、抜けを落とす検査を足した。ただし今の再生成は #47 を足しても正典を一発では再現しない（ノード +9・枝 −37・par 107 枝）。原因は正典に当て直していないバグ修正と順序の経路依存で、差の向きはまちまち → 正典は置き換えず、差を `docs/reports/regenerate_reproducibility_2026-10-21.md` に記録 |
 | A7 | 週次の遅いテストが 4 週続けて落ちている（09-27・10-04・10-12・10-18）。測っているのは旧系譜の地域別 build_and_solve | 正典の KPI に付け替えるか、旧系譜の記録用 KPI と明記して閾値を見直すか |
 | E1 | 正典の網づくり build_island_net が scripts/run_full_powerflow_from_db.py（1,782 行）にあり、50 ファイルが import している。src から scripts への逆向きの import が 3 か所ある | src/powerflow へ昇格する（scripts 側は再 export）か、今のままにするか |
 | A1・B2・B3 | CLI（`ajgrid solve`・`uc to-pf`・`cim`）・README の Quickstart・:8088 の潮流 API が旧系譜を向いている。潮流を解くファイルは 84 本ある | 入口を正典 1 本に寄せ、ほかは「比較用・退役」と明記するか |
