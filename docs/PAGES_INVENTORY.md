@@ -96,7 +96,7 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 ## 6. 進め方
 
 1. **済（2026-10-20・PR `feat/pages-map-core`）** 共通の地図部品（`js/agj_map.js`）とタブ部品（`js/agj_tabs.js`）を作り、map.html の系統図・エリア・構造図・Ybus を載せ替えた。§3 の 1〜3 を直し、Playwright の検査（`tests/test_pages_map_ui.py`・CI は `.github/workflows/pages-ui.yml`）を足した。潮流解析・比較・接続編集・候補レビューのタブを外し、単線図を「構造図」に改名した。
-2. この台帳の判定が「決定」になったものから、導線から外す・アーカイブ一覧に載せる・統合する（ファイルは消さない）。
+2. **済（2026-10-20・PR `feat/pages-archive`）** ダッシュボードに「アーカイブ」の分類を作り、compare・uc_map・review と codex のまとめ 3 本を移した。どこからも開けなかった station_changes を「確かめる・直す」に載せた。PR #58 のマージ待ちで外していた 3 件（AC / Ybus 可解性の診断・敷地と端子の接続監査・計算回路の品質監査）を戻した。connection_editor は過去のレポートから参照されるので、カタログの legacy_pages のまま残す（ファイルはそのまま）。
 3. flow_map を同じ部品に載せ、地図ページとして統合する。
 4. 解析ページを作る。データは今の正典で作り直す。
 
@@ -104,4 +104,5 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 
 - 構造図：ノードのラベルが重なって読めない。右下の一覧パネル（変電所・送電線・発電所）と地図の拡大ボタンが図に被る。
 - 一覧パネルの並び：「名前順」で `3/4号 開閉所`・`500 kV switching station`・`Abe` など、名前の不完全な行が先頭に来る。
+- ダッシュボードの「NOW 断面の潮流計算 4/4 島が AC 収束」は、許容誤差を 10 MVA まで緩める段や枝の刈り込みを含む（配布ケースの基準とは違う）。カードにそう書く。
 - 地図の説明は英語と日本語が混ざる（クリックの説明は `Voltage:`・`Region:`、ホバーは日本語）。共通部品の説明の書式にそろえる。
