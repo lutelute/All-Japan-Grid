@@ -114,3 +114,19 @@ body.agj-card-open #sublist.visible{visibility:hidden}
 .leaflet-tooltip.agj-tip,.leaflet-tooltip{background:rgba(13,17,23,.94);color:#e6edf3;border:1px solid #30363d;border-radius:8px;
   box-shadow:0 8px 20px -8px rgba(0,0,0,.6);font-size:12px;padding:5px 9px}
 .leaflet-tooltip::before{display:none}
+
+/* ── 地図の左上の切り替え(操作・凡例・一覧): アイコンだけだと意味が分からないので文字を添える ── */
+#ui-toggles{gap:6px!important}
+#ui-toggles .ui-toggle-btn{width:auto!important;height:32px!important;padding:0 11px!important;border-radius:999px!important;
+  display:inline-flex!important;align-items:center;gap:6px;font-size:12px!important;font-weight:600;
+  background:rgba(22,27,34,.92)!important;color:var(--u-tx)!important;border:1px solid var(--u-bd2)!important}
+#ui-toggles .ui-toggle-btn span{font-size:12px}
+#ui-toggles .ui-toggle-btn.inactive{color:var(--u-mut)!important;opacity:.8}
+
+/* ── 右下の一覧パネル ── */
+#sublist{border-radius:16px!important;padding:10px!important;width:312px!important;background:rgba(22,27,34,.95)!important;
+  border:1px solid var(--u-bd2)!important;box-shadow:0 18px 40px -18px rgba(0,0,0,.7)!important;backdrop-filter:blur(10px)}
+#sublist .list-tabs{gap:4px!important}
+#sublist .list-tab-btn{border-radius:999px!important;padding:5px 8px!important;font-size:11px!important;font-weight:600;white-space:nowrap;overflow:visible!important;text-overflow:clip!important;flex:1 1 auto!important;min-width:0}
+#sublist .list-search{border-radius:999px!important;padding:7px 12px!important;background:var(--u-chip)!important;border:1px solid var(--u-bd2)!important;color:var(--u-tx)!important}
+#sublist .list-sort-btn{border-radius:999px!important}

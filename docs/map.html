@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=40"/>
-    <link rel="stylesheet" href="./css/map_ui.css?v=1"/>
+    <link rel="stylesheet" href="./css/map_ui.css?v=2"/>
 </head>
 <body>
 
@@ -653,9 +653,9 @@
     <div id="sld-tooltip"></div>
 
     <div id="ui-toggles">
-        <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="サイドバー">&#9776;</button>
-        <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例">&#9670;</button>
-        <button class="ui-toggle-btn active" id="btn-toggle-list" onclick="toggleListPanel(!listPanelVisible)" title="リスト">&#9783;</button>
+        <button class="ui-toggle-btn active" id="btn-toggle-sidebar" onclick="toggleSidebar()" title="左の操作パネルを開く・閉じる">&#9776;<span>操作</span></button>
+        <button class="ui-toggle-btn active" id="btn-toggle-legend" onclick="toggleLegend()" title="凡例を出す・隠す">&#9670;<span>凡例</span></button>
+        <button class="ui-toggle-btn active" id="btn-toggle-list" onclick="toggleListPanel(!listPanelVisible)" title="一覧を出す・隠す">&#9783;<span>一覧</span></button>
     </div>
 </div>
 
@@ -684,7 +684,7 @@
 
 <script src="./js/agj_map.js?v=2"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=39"></script>
+<script src="./js/grid_map.js?v=40"></script>
 <script src="./js/grid_search.js?v=1"></script>
 <script src="./js/sld.js?v=33"></script>
 <script src="./js/ybus_sim.js?v=3"></script>
