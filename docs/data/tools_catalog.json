@@ -131,7 +131,7 @@
       "category": "compute",
       "kind": "pages",
       "title": "Ybus シミュレータと N-1",
-      "summary": "正典モデルからブラウザ内でバスアドミタンス行列を組み立て、枝の入り切りで非零パターンと連結成分がどう変わるかを試せます。N-1 の結果表も同じタブに。",
+      "summary": "正典モデルからブラウザ内でバスアドミタンス行列を組み立て、枝の入り切りで非零パターンと連結成分がどう変わるかを試せます。正典の 4 島の N-1 全枝スクリーニングの結果表も同じタブにあります。",
       "href": "map.html#tab-ybus",
       "tags": [
         "Ybus",
@@ -148,7 +148,7 @@
       "kind": "cli",
       "title": "全規模の潮流計算",
       "summary": "正典モデルから 4 つの同期島を縮約なしで組み立てて AC 潮流を解く本体。介入の ON/OFF はすべてオプションで切り替えられます。",
-      "command": "PYTHONPATH=. python3 scripts/run_full_powerflow_from_db.py --help",
+      "command": "ajgrid pf --islands okinawa hokkaido   # = scripts/run_full_powerflow_from_db.py",
       "tags": [
         "AC 潮流",
         "pandapower"
@@ -162,8 +162,8 @@
       "category": "compute",
       "kind": "cli",
       "title": "N-1 全枝スクリーニング",
-      "summary": "LODF で全枝の単一停止を一度に評価（西 6,681 枝を約 2 秒）。橋は孤立負荷つきで別に帳簿化し、上位は本番の AC ソルバで解き直します。",
-      "command": "PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands east west --ac-verify 5",
+      "summary": "LODF で全枝の単一停止を一度に評価（正典の 4 島・西だけで 6,000 本超を数秒）。系統が分かれる橋は孤立負荷つきで別に帳簿化し、上位は本番の AC ソルバで解き直します。最新の結果は系統図マップの Ybus / N-1 タブで見られます。",
+      "command": "PYTHONPATH=. python3 scripts/sensitivity/n1_screening.py --islands hokkaido okinawa east west --ac-verify 5",
       "tags": [
         "N-1",
         "LODF"
