@@ -120,3 +120,43 @@ def test_dashboard_data_generator():
 def test_card_image_exists(tool):
     """カードの画像(docs/ 相対・scripts/make_dashboard_thumbs.py が作る)が実在する。"""
     assert (DOCS / tool["image"]).is_file(), tool["image"]
+
+
+# ── カードが読むデータの系譜(2026-10-21) ─────────────────────────────
+# 全体構造の分析(docs/reports/project_structure_2026-10-21.md)で、地図が基底 OSM を出していた(D1)、
+# 「MATPOWER ケースを書き出す」が比較用の旧系譜を指していた(B1)ことが分かった。どちらも
+# 「正典を読んでいるはず」と思われていたのが原因なので、系譜をカタログに書かせて検査する。
+LINEAGES = {"built", "stations", "snapped", "base_osm", "frozen", "mixed", "text"}
+NEEDS_NOTE = LINEAGES - {"built", "stations", "text"}
+LEGACY_IMPORT = re.compile(
+    r"^\s*(?:from\s+\S+\s+)?import\s+.*\b(build_network_snapped|build_and_solve|ReconstructionConfig)\b", re.M)
+
+
+@pytest.mark.parametrize("tool", TOOLS, ids=_id)
+def test_lineage_is_declared(tool):
+    assert tool.get("lineage") in LINEAGES, f"{tool['id']}: lineage を {sorted(LINEAGES)} から書く"
+    if tool["lineage"] in NEEDS_NOTE:
+        assert tool.get("lineage_note"), f"{tool['id']}: 正典と何が違うかを lineage_note に書く"
+
+
+@pytest.mark.parametrize("tool", [t for t in TOOLS if (t.get("source") or "").endswith(".py")], ids=_id)
+def test_lineage_matches_source_imports(tool):
+    """旧系譜の網を組む関数を import するソースは、built と名乗れない(逆も)。"""
+    legacy = LEGACY_IMPORT.findall((ROOT / tool["source"]).read_text(encoding="utf-8"))
+    if tool["lineage"] == "built":
+        assert not legacy, f"{tool['id']}: built なのに {legacy} を import している"
+    if legacy:
+        assert tool["lineage"] in {"snapped", "mixed", "frozen"}, f"{tool['id']}: {legacy} → lineage={tool['lineage']}"
+
+
+def test_matpower_card_points_at_the_distributed_case():
+    """配布物(dist/matpower_national)を作る正本を指す。配布物に gencost は無い(dataset/01 の README)。"""
+    t = next(t for t in TOOLS if t["id"] == "matpower")
+    assert t["source"] == "scripts/export_matpower_canonical.py"
+    assert "export_matpower_canonical.py" in t["command"]
+    assert "runopf にそのまま" not in t["summary"] and "GENCOST つき" not in t["summary"]
+
+
+def test_lineage_badge_is_rendered():
+    html = (DOCS / "index.html").read_text(encoding="utf-8")
+    assert "LINEAGE_LABEL[t.lineage]" in html and "t.lineage_note" in html
