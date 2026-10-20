@@ -28,6 +28,9 @@ def numbers() -> dict:
     v = read_versions()
     return {
         "lines": _features("lines_all.geojson"),
+        # 系統図マップが描く層(正典 built から書く docs/data/map/。2026-10-21 から)
+        "map_lines": _features("map/lines_all.geojson"),
+        "map_subs": _features("map/subs_all.geojson"),
         "substations": _features("substations.geojson"),
         "subsld_sites": json.loads((DATA / "subsld_pages.json").read_text(encoding="utf-8"))["n_sites"],
         "plants": _features("plants_all.geojson"),

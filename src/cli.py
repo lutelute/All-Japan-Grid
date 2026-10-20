@@ -9,8 +9,11 @@ not a rewrite.
 After ``pip install -e .`` this is the ``ajgrid`` console command:
 
     ajgrid regions                                   # list the 10 regions
-    ajgrid solve okinawa --topology snapped --reconnect
-    ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2
+    ajgrid pf --islands okinawa hokkaido             # canonical full-scale AC (4 islands)
+    ajgrid matpower                                  # the distributed MATPOWER cases
+    ajgrid uc to-pf --islands hokkaido okinawa       # UC dispatch on the canonical grid
+    ajgrid solve okinawa --topology snapped --reconnect   # legacy lineage (comparison)
+    ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2 (legacy lineage)
     ajgrid validate --all --dir dist/cim_level2      # strict CGMES check
     ajgrid db ingest                                 # raw + restore curation
     ajgrid db enrich --p03 <GML>                     # authoritative P03
@@ -22,6 +25,11 @@ After ``pip install -e .`` this is the ``ajgrid`` console command:
     ajgrid map                                       # serve docs/ at :8080
 
 (``./ajgrid <args>`` and ``python -m src.cli <args>`` work without install.)
+
+Lineage (2026-10-21): the canonical model is ``docs/data/built/all.json``.
+``pf`` / ``matpower`` / ``uc to-pf`` read it. ``solve`` and ``cim`` build the
+older region-wise snapped network and are kept for comparison
+(docs/reports/project_structure_2026-10-21.md, A1).
 """
 
 from __future__ import annotations
@@ -49,13 +57,27 @@ def cmd_regions(_args, _rest):
     return 0
 
 
+def cmd_pf(_args, rest):
+    """Canonical full-scale power flow: the 4 synchronous islands from built."""
+    return _run("scripts/run_full_powerflow_from_db.py", rest)
+
+
+def cmd_matpower(_args, rest):
+    """The distributed MATPOWER cases (dist/matpower_national) from built."""
+    return _run("scripts/export_matpower_canonical.py", rest)
+
+
 def cmd_solve(args, rest):
     """Build a region's snapped/legacy network and solve DC+AC.
+
+    Legacy lineage, kept for comparison — the canonical solver is ``ajgrid pf``.
 
     ``ajgrid solve national`` dispatches the national zonal solver
     (synchronous islands + inter-regional ties; heavy — west is ~12k
     buses), passing any extra args through to the script.
     """
+    print("note: solve は旧系譜(地域別のスナップ済みの網・比較用)。正典は `ajgrid pf`",
+          file=sys.stderr)
     if args.region == "national":
         return _run("scripts/run_national_powerflow.py", rest)
     from src.powerflow.load_estimator import load_demand_config
@@ -123,18 +145,20 @@ def cmd_uc(_args, rest):
                        ``--start-day``/``--warmup-days`` for chunked runs)
     ``merge``          merge chunk JSONs into one annual report
     ``ingest-scenarios``  sync config/uc_scenarios + references to grid.db
-    ``to-pf``          inject a UC dispatch snapshot into the power flow
-                       (ybus_gate -> capacity-proportional injection -> AC)
+    ``to-pf``          inject a UC dispatch snapshot into the canonical
+                       (built) power flow, island by island
+    ``to-pf-snapped``  the same on the legacy region-wise snapped network
     """
     mapping = {
         "benchmark": "scripts/uc_benchmark.py",
         "annual": "scripts/uc_annual.py",
         "merge": "scripts/uc_annual_merge.py",
         "ingest-scenarios": "scripts/db/ingest_uc_scenarios.py",
-        "to-pf": "scripts/uc_to_pf.py",
+        "to-pf": "scripts/uc_to_pf_built.py",
+        "to-pf-snapped": "scripts/uc_to_pf.py",
     }
     if not rest or rest[0] not in mapping:
-        print("usage: ajgrid uc {benchmark|annual|merge|ingest-scenarios|to-pf} [args...]")
+        print("usage: ajgrid uc {benchmark|annual|merge|ingest-scenarios|to-pf|to-pf-snapped} [args...]")
         return 2
     return _run(mapping[rest[0]], rest[1:])
 
@@ -167,9 +191,19 @@ def build_parser():
     sub.add_parser("regions", help="list the 10 regions").set_defaults(
         func=cmd_regions)
 
+    sub.add_parser(
+        "pf", help="canonical full-scale power flow of the 4 islands from built "
+                   "(passes args to scripts/run_full_powerflow_from_db.py)",
+        add_help=False).set_defaults(func=cmd_pf)
+
+    sub.add_parser(
+        "matpower", help="write the distributed MATPOWER cases from built "
+                         "(passes args to scripts/export_matpower_canonical.py)",
+        add_help=False).set_defaults(func=cmd_matpower)
+
     s = sub.add_parser(
-        "solve", help="build & solve a region's power flow "
-                      "(or `solve national` for the zonal island solver)")
+        "solve", help="legacy lineage: build & solve a region's snapped network "
+                      "(comparison; the canonical solver is `pf`)")
     s.add_argument("region")
     s.add_argument("--topology", choices=["legacy", "snapped"], default="snapped")
     s.add_argument("--reconnect", action="store_true")
@@ -185,7 +219,8 @@ def build_parser():
     s.set_defaults(func=cmd_solve)
 
     sub.add_parser(
-        "cim", help="export CIM/CGMES Level 2 (passes args to the script)",
+        "cim", help="export CIM/CGMES Level 2 from the legacy snapped network "
+                    "(passes args to the script)",
         add_help=False).set_defaults(func=cmd_cim)
 
     sub.add_parser(
@@ -204,7 +239,7 @@ def build_parser():
 
     sub.add_parser(
         "uc",
-        help="unit commitment: benchmark|annual|merge|ingest-scenarios "
+        help="unit commitment: benchmark|annual|merge|ingest-scenarios|to-pf "
              "(pass-through)",
         add_help=False).set_defaults(func=cmd_uc)
 
