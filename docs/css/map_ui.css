@@ -133,3 +133,7 @@ body.agj-card-open #sublist.visible{visibility:hidden}
 
 /* 構造図を開いている間は、地図用の拡大ボタン・背景の切り替え・一覧パネルを隠す(図の上に被るため) */
 body.sld-on #sublist,body.sld-on #list-toggle-btn,body.sld-on .leaflet-control-container{visibility:hidden}
+
+/* Ybus / N-1 のように全画面で開くタブの間は、地図と一覧パネルを隠す。パネルは左バー(z-index 1000)の
+   中にあるため、地図側の部品(一覧パネル 1100・拡大ボタン・切り替え)が上に被っていた */
+body.fullscreen-tab #map,body.fullscreen-tab #sublist,body.fullscreen-tab #list-toggle-btn{visibility:hidden}
