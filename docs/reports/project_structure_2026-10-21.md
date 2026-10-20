@@ -45,11 +45,11 @@
 
 | id | 何か | 直し方 |
 |---|---|---|
-| D2 | ダッシュボードの規模の数字（17,841 ノード・成分 962）は built/index.json の古い値。all.json 本体は 17,738 ノード・19,944 枝 | 数字を all.json から数え直す |
-| B1・A1 | 「MATPOWER ケースを書き出す」カードが、比較用になった export_national_matpower と psdat の説明文書を指している | カードを正本の export_matpower_canonical へ |
-| B5・A1 | 「Ybus の健全性診断」「連続潮流」のカードが snapped 系譜 | カードに系譜を書く。正典の診断があればそちらへ |
+| D2 | ダッシュボードの規模の数字（17,841 ノード・成分 962）は built/index.json の古い値。all.json 本体は 17,738 ノード・19,944 枝 | **済（PR #83）** 数字を all.json から数え直す |
+| B1・A1 | 「MATPOWER ケースを書き出す」カードが、比較用になった export_national_matpower と psdat の説明文書を指している。説明の「GENCOST つきで runopf にそのまま」も誤り（配布物に gencost は無い） | **済** カードを正本の export_matpower_canonical と dataset/01 の README へ。説明を直した |
+| B5・A1 | 「Ybus の健全性診断」「連続潮流」のカードが snapped 系譜 | **済** カードに「旧系譜」の札と注記。CIM・取り込みデモ（snapped）、データ品質の監査（介入前の OSM）、再生成（B7）にも注記 |
 | C6 | docs/js/powerflow.js はどのページも読んでいない | アーカイブとして残す（済み） |
-| — | カタログに `lineage`（built / snapped / legacy / base_osm）・`data_as_of`・`pillar` を足す | 「見る・計算する・持ち帰る」のカードが built 以外を指すときに注記が無ければ落ちる検査を付け、D1・B1 の再発を防ぐ |
+| — | カタログに `lineage`（built / snapped / legacy / base_osm）・`data_as_of`・`pillar` を足す | **lineage は済**（built / stations / snapped / base_osm / frozen / mixed / text）。built 以外は注記が無いと落ち、ソースが旧系譜の網を組む関数を import していたら built と名乗れない検査（tests/test_pages_dashboard.py）。`data_as_of`・`pillar` は残り |
 
 ## オーナーの判断が要るもの
 

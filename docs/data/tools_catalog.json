@@ -1,5 +1,5 @@
 {
-  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。 image はカードの上に出す 16:10 の静止画(docs/ からの相対・scripts/make_dashboard_thumbs.py が作る)。",
+  "_about": "ダッシュボード(docs/index.html)のツール一覧の正。ここに足せばカードが増える。kind: pages=Pagesで動く / local=:8088のローカルサーバーが必要 / cli=コマンド / report=ブラウザで開ける検証成果物。href は docs/ からの相対、doc・source はリポジトリ直下からの相対。tests/test_pages_dashboard.py がパスの実在と、docs/*.html の載せ忘れを検査する。 image はカードの上に出す 16:10 の静止画(docs/ からの相対・scripts/make_dashboard_thumbs.py が作る)。 lineage はカードが読むデータの系譜: built=正典(docs/data/built)/ stations=変電所の 2 層(OSM の観測と構造の仮説)/ snapped=旧系譜(スナップ済みトポロジ)/ base_osm=介入前の基底 OSM / frozen=ある日の版を固定した記録 / mixed=系譜が混在 / text=説明・教材(データを計算しない)。built・stations・text 以外は lineage_note で何が正典と違うかを書く(tests/test_pages_dashboard.py が検査。docs/reports/project_structure_2026-10-21.md の D1・B1 の再発防止)。",
   "legacy_pages": {
     "connection_editor.html": "旧・接続候補承認ツール(tokyo のみ)。候補レビュー review.html が後継。過去レポートから参照されるため残置。"
   },
@@ -61,7 +61,8 @@
         "Ybus"
       ],
       "doc": "docs/WHAT_TO_CHECK.md",
-      "image": "assets/thumbs/map.jpg"
+      "image": "assets/thumbs/map.jpg",
+      "lineage": "built"
     },
     {
       "id": "flow_map",
@@ -77,7 +78,8 @@
         "観測照合"
       ],
       "doc": "docs/REALTIME_OPS.md",
-      "image": "assets/thumbs/flow_map.jpg"
+      "image": "assets/thumbs/flow_map.jpg",
+      "lineage": "built"
     },
     {
       "id": "pulse",
@@ -94,7 +96,8 @@
       ],
       "doc": "docs/REALTIME_OPS.md",
       "source": "scripts/export_pulse.py",
-      "image": "assets/thumbs/pulse.jpg"
+      "image": "assets/thumbs/pulse.jpg",
+      "lineage": "built"
     },
     {
       "id": "subsld",
@@ -110,7 +113,8 @@
       ],
       "doc": "docs/SUBSLD_METHOD.md",
       "issue": 49,
-      "image": "assets/thumbs/subsld.jpg"
+      "image": "assets/thumbs/subsld.jpg",
+      "lineage": "stations"
     },
     {
       "id": "uc_map",
@@ -122,7 +126,9 @@
       "tags": [
         "UC",
         "比較"
-      ]
+      ],
+      "lineage": "frozen",
+      "lineage_note": "UC の試算を固定した記録。今の正典では作り直していません。"
     },
     {
       "id": "ybus_sim",
@@ -137,7 +143,8 @@
       ],
       "doc": "docs/YBUS_SOLVABILITY.md",
       "source": "docs/js/ybus_sim.js",
-      "image": "assets/thumbs/ybus_sim.jpg"
+      "image": "assets/thumbs/ybus_sim.jpg",
+      "lineage": "built"
     },
     {
       "id": "compare",
@@ -150,7 +157,9 @@
         "トポロジ",
         "比較"
       ],
-      "image": "assets/thumbs/compare.jpg"
+      "image": "assets/thumbs/compare.jpg",
+      "lineage": "frozen",
+      "lineage_note": "接続の修理の前後を固定した記録。今の正典の地図は「系統図マップ」です。"
     },
     {
       "id": "editor",
@@ -165,7 +174,8 @@
         "島"
       ],
       "doc": "docs/CONNECTION_EDITOR_DESIGN.md",
-      "source": "src/server/templates/editor.html"
+      "source": "src/server/templates/editor.html",
+      "lineage": "built"
     },
     {
       "id": "review",
@@ -179,7 +189,9 @@
         "島"
       ],
       "source": "scripts/build_island_candidates.py",
-      "image": "assets/thumbs/review.jpg"
+      "image": "assets/thumbs/review.jpg",
+      "lineage": "frozen",
+      "lineage_note": "接続候補のレビューを固定した記録。今の接続の修理は「接続編集」と介入台帳で行います。"
     },
     {
       "id": "eggc",
@@ -192,7 +204,8 @@
         "教材",
         "手法"
       ],
-      "source": "scripts/build_eggc_explainer.py"
+      "source": "scripts/build_eggc_explainer.py",
+      "lineage": "text"
     },
     {
       "id": "slides_eggc",
@@ -203,7 +216,8 @@
       "href": "slides/eggc_2026-08-17.html",
       "tags": [
         "スライド"
-      ]
+      ],
+      "lineage": "text"
     },
     {
       "id": "slides_dynamics",
@@ -215,7 +229,8 @@
       "tags": [
         "スライド",
         "動態"
-      ]
+      ],
+      "lineage": "text"
     },
     {
       "id": "slides_impedance",
@@ -227,7 +242,8 @@
       "tags": [
         "スライド",
         "較正"
-      ]
+      ],
+      "lineage": "text"
     },
     {
       "id": "download",
@@ -242,7 +258,8 @@
         "UC",
         "zip"
       ],
-      "doc": "dataset/README.md"
+      "doc": "dataset/README.md",
+      "lineage": "built"
     },
     {
       "id": "interop",
@@ -256,20 +273,23 @@
         "PyPSA"
       ],
       "doc": "docs/INTEROP.md",
-      "source": "examples/import_quickstart.py"
+      "source": "examples/import_quickstart.py",
+      "lineage": "snapped",
+      "lineage_note": "読むのは CIM Level 2 と地域別の .mat で、どちらも旧系譜（スナップ済みトポロジ）から書いたものです。正典の全国ケースは「データセットをダウンロード」と「MATPOWER ケースを書き出す」から。"
     },
     {
       "id": "matpower",
       "category": "use",
       "kind": "cli",
       "title": "MATPOWER ケースを書き出す",
-      "summary": "同期島ごとの全国ケース（.mat）を正典モデルから生成。GENCOST つきで runpf / runopf にそのまま渡せます。",
-      "command": "PYTHONPATH=. python3 scripts/export_national_matpower.py",
+      "summary": "非同期 4 島の全国ケース（.mat）を正典（built）から生成。4 島とも MATPOWER の既定の許容誤差で AC が解けます（解けない島は 66kV の木を畳み、畳んだ木は meta.json に残す）。発電コスト gencost は含まないので runpf 向けです。",
+      "command": "PYTHONPATH=. python3 scripts/export_matpower_canonical.py",
       "tags": [
         "MATPOWER"
       ],
-      "doc": "docs/MATPOWER_EXPORT_GUIDE.md",
-      "source": "scripts/export_national_matpower.py"
+      "doc": "dataset/01_matpower_powerflow/README.md",
+      "source": "scripts/export_matpower_canonical.py",
+      "lineage": "built"
     },
     {
       "id": "cim",
@@ -283,7 +303,9 @@
         "CGMES"
       ],
       "doc": "docs/CIM_MAPPING.md",
-      "source": "scripts/export_cim_level2.py"
+      "source": "scripts/export_cim_level2.py",
+      "lineage": "snapped",
+      "lineage_note": "CIM は旧系譜（スナップ済みトポロジ）から書き出します。正典から書く CIM はまだありません。"
     },
     {
       "id": "n1",
@@ -297,7 +319,8 @@
         "LODF"
       ],
       "doc": "dataset/03_sensitivity_screening/README.md",
-      "source": "scripts/sensitivity/n1_screening.py"
+      "source": "scripts/sensitivity/n1_screening.py",
+      "lineage": "built"
     },
     {
       "id": "scr",
@@ -310,7 +333,8 @@
         "短絡容量",
         "再エネ"
       ],
-      "source": "scripts/sensitivity/ibr_hosting_scr.py"
+      "source": "scripts/sensitivity/ibr_hosting_scr.py",
+      "lineage": "built"
     },
     {
       "id": "cpf",
@@ -323,7 +347,9 @@
         "電圧安定度"
       ],
       "doc": "docs/PV_CURVES.md",
-      "source": "scripts/run_cpf.py"
+      "source": "scripts/run_cpf.py",
+      "lineage": "snapped",
+      "lineage_note": "地域ごとのスナップ済みの網で解く旧系譜です。正典（全規模の 4 島）での連続潮流はまだありません。"
     },
     {
       "id": "swing",
@@ -337,7 +363,8 @@
         "固有値"
       ],
       "source": "scripts/gen_swing_modes.py",
-      "image": "assets/thumbs/dynamics.jpg"
+      "image": "assets/thumbs/dynamics.jpg",
+      "lineage": "built"
     },
     {
       "id": "full_pf",
@@ -351,7 +378,8 @@
         "pandapower"
       ],
       "doc": "docs/MODEL_INTERVENTIONS.md",
-      "source": "scripts/run_full_powerflow_from_db.py"
+      "source": "scripts/run_full_powerflow_from_db.py",
+      "lineage": "built"
     },
     {
       "id": "ybus_diag",
@@ -364,7 +392,9 @@
         "Ybus"
       ],
       "doc": "docs/YBUS_SOLVABILITY.md",
-      "source": "scripts/diagnose_ybus.py"
+      "source": "scripts/diagnose_ybus.py",
+      "lineage": "snapped",
+      "lineage_note": "地域ごとのスナップ済みの網で診断する旧系譜です。正典の Ybus は「Ybus シミュレータと N-1」で見られます。"
     },
     {
       "id": "data_quality",
@@ -377,7 +407,9 @@
         "OSM",
         "欠損"
       ],
-      "source": "scripts/audit_data_quality.py"
+      "source": "scripts/audit_data_quality.py",
+      "lineage": "base_osm",
+      "lineage_note": "介入前の OSM の GeoJSON（docs/data の地域別の層）の欠落を数えます。正典の監査は「計算回路の品質監査」です。"
     },
     {
       "id": "regenerate",
@@ -390,7 +422,9 @@
         "再現性"
       ],
       "doc": "docs/REPRODUCIBILITY.md",
-      "source": "scripts/regenerate_all.py"
+      "source": "scripts/regenerate_all.py",
+      "lineage": "built",
+      "lineage_note": "正典に当てた介入のうち #47（混在電圧の回線）は再生成の手順に入っていません。回すと正典が変わりうるので、全体構造の台帳 B7 を先に読んでください。"
     },
     {
       "id": "local_editor",
@@ -404,7 +438,8 @@
         "検証"
       ],
       "doc": "docs/CONNECTION_EDITOR_DESIGN.md",
-      "source": "src/server/app.py"
+      "source": "src/server/app.py",
+      "lineage": "built"
     },
     {
       "id": "local_tools",
@@ -417,7 +452,9 @@
         "実行",
         "MATLAB"
       ],
-      "source": "src/server/tools_dashboard.py"
+      "source": "src/server/tools_dashboard.py",
+      "lineage": "mixed",
+      "lineage_note": ":8088 の潮流 API には旧系譜を解くものが残っています（全体構造の台帳 A1・B2）。"
     },
     {
       "id": "station_changes",
@@ -430,7 +467,9 @@
         "変電所",
         "介入"
       ],
-      "doc": "docs/MODEL_INTERVENTIONS.md"
+      "doc": "docs/MODEL_INTERVENTIONS.md",
+      "lineage": "frozen",
+      "lineage_note": "PR #65〜#71 の時点の変更箇所を固定した記録です。"
     },
     {
       "id": "codex_before_after",
@@ -442,7 +481,9 @@
       "tags": [
         "比較",
         "監査"
-      ]
+      ],
+      "lineage": "frozen",
+      "lineage_note": "2026-09-12 の版を固定した記録です。"
     },
     {
       "id": "codex_same_site",
@@ -454,7 +495,9 @@
       "tags": [
         "接続",
         "実験"
-      ]
+      ],
+      "lineage": "frozen",
+      "lineage_note": "2026-09-13 の版を固定した記録です。"
     },
     {
       "id": "codex_ac_diagnosis",
@@ -466,7 +509,9 @@
       "tags": [
         "AC",
         "Ybus"
-      ]
+      ],
+      "lineage": "frozen",
+      "lineage_note": "2026-09-15 の版を固定した記録です。"
     },
     {
       "id": "ac_diagnosis",
@@ -482,7 +527,9 @@
       ],
       "doc": "docs/AC_DIAGNOSIS_TOOL.md",
       "source": "scripts/review_ac_solvability.py",
-      "issue": 53
+      "issue": 53,
+      "lineage": "frozen",
+      "lineage_note": "2026-09-15 に固定した east の網を再生して診断します。今の正典の網ではありません。"
     },
     {
       "id": "site_review",
@@ -498,7 +545,8 @@
       ],
       "doc": "docs/SITE_CONNECTION_REVIEW_TOOL.md",
       "source": "scripts/site_connection_review.py",
-      "issue": 53
+      "issue": 53,
+      "lineage": "built"
     },
     {
       "id": "circuit_quality",
@@ -513,7 +561,8 @@
         "変圧器"
       ],
       "source": "scripts/audit_model_circuit_quality.py",
-      "issue": 53
+      "issue": 53,
+      "lineage": "built"
     }
   ]
 }
