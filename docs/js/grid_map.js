@@ -361,6 +361,75 @@ function plantMarker(latlng, fuel, mw) {
     });
 }
 
+// ── 詳細カード(クリック)の中身 ──
+// クリックで右に出るカード(js/agj_map.js の AGJMap.showCard)。名前は OSM 由来なので AGJMap.esc を通す。
+
+var FUEL_JA = {};
+FUEL_ENTRIES.forEach(function (e) { FUEL_JA[e[0]] = e[1]; });
+
+function osmLink(latlng) {
+    return "https://www.openstreetmap.org/#map=16/" + latlng.lat.toFixed(5) + "/" + latlng.lng.toFixed(5);
+}
+
+function zoomAction(latlng, z) {
+    return { text: "この場所に寄る", onClick: function () { map.flyTo(latlng, Math.max(map.getZoom(), z || 12)); } };
+}
+
+function lineCard(p, layer) {
+    var mid = layer.getBounds().getCenter();
+    return {
+        kind: "送電線", color: voltageColor(p._voltage_kv || 0),
+        title: p._display_name || "名称なし",
+        sub: AGJMap.esc([fmtKv(p._voltage_kv), p._region_ja].filter(Boolean).join(" ・ ")),
+        rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))], ["地域", AGJMap.esc(p._region_ja || "—")],
+               ["線形", "OpenStreetMap の送電線"]],
+        actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
+                  { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
+        note: "線路定数は電圧階級ごとの代表値です（実測ではありません）。",
+    };
+}
+
+function subCard(p, layer) {
+    var ll = layer.getLatLng(), name = p.name || p._display_name || "";
+    var rows = [["電圧", AGJMap.esc(fmtKv(p._voltage_kv != null ? p._voltage_kv : p.voltage_kv))],
+                ["地域", AGJMap.esc(p._region_ja || p.region_ja || "—")]];
+    if (p.category_ja) rows.push(["種別", AGJMap.esc(p.category_ja)]);
+    if (p.operator) rows.push(["運営", AGJMap.esc(p.operator)]);
+    if (p.frequency_hz) rows.push(["周波数", AGJMap.esc(p.frequency_hz + " Hz")]);
+    return {
+        kind: "変電所", color: subColor({ properties: p }),
+        title: name || "名称なし",
+        sub: AGJMap.esc(ll.lat.toFixed(4) + ", " + ll.lng.toFixed(4)),
+        rows: rows,
+        actions: [name ? { text: "SubSLD で変電所の中を見る", href: "./subsld.html?q=" + encodeURIComponent(name.replace(/変電所$/, "")) } : null,
+                  zoomAction(ll, 14),
+                  { text: "OpenStreetMap で見る", href: osmLink(ll), blank: true }].filter(Boolean),
+    };
+}
+
+function plantCard(p, layer) {
+    var ll = layer.getLatLng(), fuel = p.fuel_type || "unknown";
+    var rows = [["燃料", AGJMap.esc(FUEL_JA[fuel] || fuel)],
+                ["容量（OSM）", p.capacity_mw ? AGJMap.esc(fmtNum(p.capacity_mw) + " MW") : "—"]];
+    if (p.capacity_mw_sourced != null) {
+        rows.push(["公式の容量", "<b>" + AGJMap.esc(fmtNum(p.capacity_mw_sourced) + " MW") + "</b>" +
+            (p.capacity_source_url ? ' <a href="' + AGJMap.esc(p.capacity_source_url) + '" target="_blank" rel="noopener">出典</a>' : "")]);
+    }
+    rows.push(["地域", AGJMap.esc(p._region_ja || "—")]);
+    var coords = layer.feature && layer.feature.geometry ? layer.feature.geometry.coordinates : null;
+    var enriched = coords && coords.length >= 2 ? lookupEnrichedGen(coords[0], coords[1]) : null;
+    return {
+        kind: "発電所", color: FUEL_COLORS[fuel] || FUEL_COLORS.unknown,
+        title: p._display_name || "名称なし",
+        sub: AGJMap.esc([FUEL_JA[fuel] || fuel, p.capacity_mw ? fmtNum(p.capacity_mw) + " MW" : ""].filter(Boolean).join(" ・ ")),
+        rows: rows,
+        html: p.capacity_source_note ? '<p class="agj-card-src">' + AGJMap.esc(p.capacity_source_note) + "</p>" : "",
+        moreTitle: "UC 用の仮定値（例題用の一般既定値・実測ではありません）",
+        more: enriched ? buildGenPopup(enriched) : "",
+        actions: [zoomAction(ll, 13), { text: "OpenStreetMap で見る", href: osmLink(ll), blank: true }],
+    };
+}
+
 // ── Layer rendering ──
 
 function renderLayers() {
@@ -387,13 +456,9 @@ function renderLayers() {
                 onEachFeature: function (feature, layer) {
                     var p = feature.properties;
                     var kv = fmtKv(p._voltage_kv);
-                    layer.bindPopup(
-                        "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
-                        "Voltage: " + kv + "<br>" +
-                        "Region: " + (p._region_ja || "")
-                    );
+                    AGJMap.bindCard(layer, function () { return lineCard(p, layer); });
                     layer.bindTooltip(
-                        "送電線 " + (p._display_name || "Unnamed") + " | " + kv +
+                        "送電線 " + (p._display_name || "名称なし") + " | " + kv +
                         (p._region_ja ? " | " + p._region_ja : ""),
                         { sticky: true });
                 },
@@ -428,20 +493,10 @@ function renderLayers() {
                         var p = feature.properties;
                         // 変電所属性は subs_*.geojson に焼き込み済み(_attr_source 付き = export_map_tiers
                         // の名前優先+座標結合≈56%)。旧 substations.geojson の別fetch+4桁座標突合(≈8%)を廃止。
-                        var enriched = p._attr_source ? p : null;
-                        if (enriched) {
-                            layer.bindPopup(buildSubPopup(enriched), { maxWidth: 350 });
-                        } else {
-                            var kv = fmtKv(p._voltage_kv);
-                            layer.bindPopup(
-                                "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
-                                "Voltage: " + kv + "<br>" +
-                                "Region: " + (p._region_ja || "")
-                            );
-                        }
+                        AGJMap.bindCard(layer, function () { return subCard(p, layer); });
                         var skv = fmtKv(p._voltage_kv);
                         layer.bindTooltip(
-                            "変電所 " + (p._display_name || "Unnamed") + " | " + skv +
+                            "変電所 " + (p._display_name || "名称なし") + " | " + skv +
                             (p._region_ja ? " | " + p._region_ja : ""),
                             { sticky: true });
                     } catch (e) { console.warn("Sub popup error:", e); }
@@ -474,28 +529,11 @@ function renderLayers() {
                 onEachFeature: function (feature, layer) {
                     try {
                         var p = feature.properties;
-                        var coords = feature.geometry ? feature.geometry.coordinates : null;
-                        var enriched = (coords && coords.length >= 2) ? lookupEnrichedGen(coords[0], coords[1]) : null;
-                        if (enriched) {
-                            layer.bindPopup(buildGenPopup(enriched), { maxWidth: 350 });
-                        } else {
-                            var cap = p.capacity_mw ? p.capacity_mw + " MW" : "N/A";
-                            if (p.capacity_mw_sourced != null) {
-                                cap += " ／ 公式 <b>" + p.capacity_mw_sourced + " MW</b>";
-                                if (p.capacity_source_url)
-                                    cap += ' <a href="' + p.capacity_source_url + '" target="_blank" style="color:#3498db">[出典]</a>';
-                            }
-                            layer.bindPopup(
-                                "<b>" + (p._display_name || "Unnamed") + "</b><br>" +
-                                "Fuel: " + (p.fuel_type || "unknown") + "<br>" +
-                                "Capacity: " + cap + "<br>" +
-                                "Region: " + (p._region_ja || "")
-                            );
-                        }
+                        AGJMap.bindCard(layer, function () { return plantCard(p, layer); });
                         layer.bindTooltip(
-                            "発電所 " + (p._display_name || "Unnamed") + " | " +
-                            (p.fuel_type || "unknown") +
-                            (p.capacity_mw ? " | " + p.capacity_mw + "MW" : ""),
+                            "発電所 " + (p._display_name || "名称なし") + " | " +
+                            (FUEL_JA[p.fuel_type || "unknown"] || p.fuel_type) +
+                            (p.capacity_mw ? " | " + fmtNum(p.capacity_mw) + " MW" : ""),
                             { sticky: true });
                     } catch (e) { console.warn("Plant popup error:", e); }
                 },
@@ -512,17 +550,18 @@ function updateStatus() {
     var lineCount = lineLayer ? lineLayer.getLayers().length : 0;
     var plantCount = plantLayer ? plantLayer.getLayers().length : 0;
 
-    var regionLabel = "All regions";
+    var regionLabel = "全国";
     if (selectedRegion !== "all") {
         var r = regionsData.find(function (rd) { return rd.id === selectedRegion; });
-        if (r) regionLabel = r.name_en + " (" + r.name_ja + ")";
+        if (r) regionLabel = r.name_ja;
     }
 
-    var minKv = parseFloat((document.getElementById("min-kv") || {}).value || 275);
-    var kvLabel = minKv > 0 ? " [" + minKv + " kV+]" : "";
-    var modeLabel = colorMode === "region" ? " [Area]" : "";
+    var kvSel = document.getElementById(colorMode === "region" ? "area-min-kv" : "min-kv") || {};
+    var minKv = parseFloat(kvSel.value || 0);
+    var kvLabel = minKv >= 500 ? "500 kV" : minKv > 0 ? minKv + " kV 以上" : "すべての電圧";
+    var n = function (x) { return x.toLocaleString("ja-JP"); };
 
-    setStatus(regionLabel + kvLabel + modeLabel + ": " + subCount + " subs, " + lineCount + " lines, " + plantCount + " plants");
+    setStatus(regionLabel + " ・ " + kvLabel + "：変電所 " + n(subCount) + " ・ 送電線 " + n(lineCount) + " ・ 発電所 " + n(plantCount));
 }
 
 // ── Data loading ──
@@ -810,7 +849,7 @@ function buildRegionList(containerId) {
     // "All Regions" button
     var allBtn = document.createElement("button");
     allBtn.className = "region-btn active";
-    allBtn.innerHTML = '<span>All Regions (\u5168\u56fd)</span><span class="count"></span>';
+    allBtn.innerHTML = '<span>\u5168\u56fd</span>';
     allBtn.onclick = function () { selectRegion(null); };
     list.appendChild(allBtn);
 
@@ -822,9 +861,9 @@ function buildRegionList(containerId) {
             btn.dataset.region = r.id;
             var colorDot = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' +
                 (REGION_COLORS[r.id] || "#999") + ';margin-right:5px;vertical-align:middle"></span>';
-            btn.innerHTML =
-                "<span>" + colorDot + r.name_en + " (" + r.name_ja + ")</span>" +
-                '<span class="count">' + (r.substations + r.lines) + "</span>";
+            // 左バーを短く: 地域名だけをチップに。英語名と件数はマウスを置くと出す(io 一新 2026-10-21)
+            btn.innerHTML = "<span>" + colorDot + r.name_ja + "</span>";
+            btn.title = r.name_en + " ・ 変電所と送電線 " + (r.substations + r.lines).toLocaleString("ja-JP");
             btn.onclick = function () { selectRegion(r.id); };
             list.appendChild(btn);
         })(regionsData[i]);
@@ -1293,7 +1332,7 @@ function toggleKeitouzu(on) {
                     var toN = p.to_alias || p.to_name;
                     var sev = (p._built_hops === null || p._built_hops === undefined)
                         ? "断絶(builtでは別成分)" : "builtでは " + p._built_hops + " ホップ先";
-                    layer.bindPopup(
+                    var kHtml = (
                         "<b style='color:" + KEITOUZU_COLOR + "'>系統図のみの接続(未採用)</b><br>" +
                         "<b>" + (p.line || "無名") + "</b> " + p.voltage_kv + "kV<br>" +
                         fromN + " — " + toN + "<br>" +
@@ -1303,6 +1342,10 @@ function toggleKeitouzu(on) {
                         "<span style='font-size:11px;color:#666'>出典: " + p.source_ref + " (open-keitouzu)</span><br>" +
                         "<span style='font-size:11px'>⚠ built正典で未再現の裁定待ち候補。直線描画=実経路ではない</span>"
                     );
+                    AGJMap.bindCard(layer, function () {
+                        return { kind: "系統図のみの接続（未採用）", color: KEITOUZU_COLOR,
+                                 title: p.line || (fromN + " — " + toN), html: kHtml };
+                    });
                     layer.bindTooltip(
                         "系統図のみ(未採用) " + (p.line || fromN + "—" + toN) + " | " + p.voltage_kv + "kV",
                         { sticky: true });
@@ -1348,11 +1391,42 @@ function _syncUiToggles() {
     if (p) p.classList.toggle("inactive", !listPanelVisible);
 }
 
+// ── 電圧のチップ(左バー) ──
+// <div class="seg" data-for="min-kv"> のボタンを押すと、隠した select に値を入れて change を送る
+// (既存の change の処理 = loadData をそのまま使う)。
+function initSegments() {
+    document.querySelectorAll(".seg[data-for]").forEach(function (seg) {
+        var sel = document.getElementById(seg.dataset.for);
+        if (!sel) return;
+        function sync() {
+            seg.querySelectorAll("button").forEach(function (b) {
+                var on = b.dataset.v === sel.value;
+                b.classList.toggle("active", on);
+                b.setAttribute("aria-pressed", String(on));
+            });
+        }
+        seg.querySelectorAll("button").forEach(function (b) {
+            b.addEventListener("click", function () {
+                if (sel.value === b.dataset.v) return;
+                sel.value = b.dataset.v;
+                sel.dispatchEvent(new Event("change"));
+                sync();
+            });
+        });
+        sel.addEventListener("change", sync);
+        sync();
+    });
+}
+
 // ── Init ──
 
 document.addEventListener("DOMContentLoaded", function () {
     initMap();
     initTabs();
+    initSegments();
+    // 詳細カードを出しているあいだは、右下の一覧パネルを隠す(css/map_ui.css)
+    map.on("agjcardopen", function () { document.body.classList.add("agj-card-open"); });
+    map.on("agjcardclose", function () { document.body.classList.remove("agj-card-open"); });
     initRegionList();
     buildFuelCheckboxes();
 
