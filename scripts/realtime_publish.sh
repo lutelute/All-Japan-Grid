@@ -33,7 +33,8 @@ git -C "$PUB" checkout -q -f --detach origin/main
 
 cp "$SRC/docs/data/realtime/latest.json" "$PUB/docs/data/realtime/latest.json"
 for f in "$SRC"/docs/data/flow_map/flows_now_*.geojson "$SRC"/docs/data/flow_map/gens_now_*.geojson \
-         "$SRC/docs/data/flow_map/now_meta.json"; do
+         "$SRC/docs/data/flow_map/now_meta.json" \
+         "$SRC/docs/data/flow_map/pulse.json" "$SRC/docs/data/flow_map/pulse.png"; do
   [ -f "$f" ] && cp "$f" "$PUB/docs/data/flow_map/$(basename "$f")"
 done
 mkdir -p "$PUB/docs/data/flow_map/days"
@@ -41,6 +42,10 @@ cp "$SRC"/docs/data/flow_map/days/*.json "$PUB/docs/data/flow_map/days/"
 
 git -C "$PUB" add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
     docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json docs/data/flow_map/days/
+# pulse は export_pulse.py が失敗した回には無いことがある(無ければ足さない)
+for f in pulse.json pulse.png; do
+  if [ -f "$PUB/docs/data/flow_map/$f" ]; then git -C "$PUB" add "docs/data/flow_map/$f"; fi
+done
 if git -C "$PUB" diff --cached --quiet; then
   echo "変更なし"
   exit 0

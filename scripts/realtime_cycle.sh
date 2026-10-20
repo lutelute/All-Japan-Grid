@@ -21,6 +21,8 @@ mkdir -p data/realtime
   # 当日断面の増分更新(新しい実績時刻だけPF・既計算分は再利用)
   PYTHONPATH=. python3 scripts/export_day_flows.py --date "$(date +%Y%m%d)" || true
   python3 scripts/slim_flow_map.py || true
+  # 表紙・埋め込み用の軽い断面(docs/pulse.html・docs/js/pulse.js が読む)。失敗しても公開は続ける
+  python3 scripts/export_pulse.py || true
   # 公開は main 専用の疎な worktree 経由(scripts/realtime_publish.sh)。作業ツリーがどのブランチに
   # あっても origin/main へ出る。ここで commit/pull --rebase をすると、feature ブランチに commit が
   # 積もるだけで Pages には出ない(2026-09-12〜21 に実際に9日間止まった)。
