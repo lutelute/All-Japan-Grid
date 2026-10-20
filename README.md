@@ -41,11 +41,13 @@ assumption is listed in a registry you can read.
 
 ### 全国の送電網を地図で見る / Explore the national grid
 
-電圧を下げるほど細かい網が現れます。首都圏や関西に寄ると変電所が出て、クリックすれば構内図と
-単線結線図へ。系統図・エリア・潮流・単線図・比較・Ybus/N-1・接続編集・候補レビューの 8 タブ。
+電圧を下げるほど細かい網が現れます。線と変電所は潮流計算に使う正典(`docs/data/built/`)から描き、
+クリックすると回線数・本系統かどうか・出典を詳細カードで出します。変電所からは構内図と単線結線図へ。
+系統図・エリア・構造図(変電所の単線結線)・Ybus/N-1 の 4 タブ。
 
-Lower the voltage threshold and the finer network fills in; zoom in for substations, click through to
-their diagrams. Eight tabs: grid, areas, power flow, single-line, compare, Ybus/N-1, editing, review.
+Lower the voltage threshold and the finer network fills in. Lines and substations are drawn from the
+canonical model used for power flow; click one for a detail card, then through to the substation's
+diagrams. Four tabs: grid, areas, structure (single-line), Ybus/N-1.
 
 <p align="center"><img src="docs/assets/gif/map.gif" alt="全国系統マップ" width="100%"></p>
 
@@ -79,11 +81,11 @@ diagram drawn in the browser. Estimates are labelled as estimates; open a breake
 → [SubSLD を開く / Open SubSLD](https://lutelute.github.io/All-Japan-Grid/subsld.html) ・ 手法: [docs/SUBSLD_METHOD.md](docs/SUBSLD_METHOD.md)
 ・ 母線・開閉器・変圧器の巻線を OSM の node ID で結んだ観測の台帳: [docs/STATION_NODE_BREAKER.md](docs/STATION_NODE_BREAKER.md)
 
-### 災害で試す — 南海トラフ / Stress-test it: the Nankai Trough earthquake
+### 災害で試す — 南海トラフ(別リポジトリ・非公開) / Stress-test it: the Nankai Trough earthquake (separate, private)
 
 J-SHIS の地震動(Mw9.1)と A40 の津波浸水想定から設備の損傷を確率的に引き、周波数・リレー・系統分離の
 動的カスケードを経て、復旧の時間推移までをモンテカルロで解きます。夜の灯りが消えて、日ごとに戻っていく映像は
-正典(run_v10)の計算結果です。発災直後〜1 日は内閣府の想定と同じ桁ですが、**4 日目以降は内閣府の想定より
+非公開のリポジトリの計算結果(run_v10)です。発災直後〜1 日は内閣府の想定と同じ桁ですが、**4 日目以降は内閣府の想定より
 約 1 桁多く**、復旧モデルの課題として調べています。
 
 Ground motion (J-SHIS, Mw 9.1) and tsunami inundation (A40) drive sampled equipment damage, a dynamic
@@ -109,15 +111,16 @@ four islands (542 machines). N-1 screening, SCR hosting capacity and continuatio
 
 ### 確かめる・直す / Check it, fix it
 
-旧モデル(端点を最寄りの変電所に吸着して網がばらばら)と今のモデル(OSM の実線形でつなぐ)を地域ごとに
-見比べられます。機械が出した接続候補は、地図の上で人が 1 件ずつ承認・却下します(下書き → issue で提案)。
+接続の修理は、地図の上の接続編集(下書き版)で確かめ、採用したものは介入台帳に根拠・帳簿・無効化の
+方法つきで載せます。旧モデル(端点を最寄りの変電所に吸着して網がばらばら)との見比べと、機械が出した
+接続候補のレビュー(下の 2 つ)は、当時の版を固定した記録としてダッシュボードのアーカイブに残しています。
 
-Compare the old fragmented model with the current one region by region, and review machine-proposed
-connections one by one on the map (drafts become issues).
+Connection fixes are checked in the connection editor and every adopted one goes into the intervention
+registry. The old-vs-new comparison and the candidate review below are kept as dated records in the archive.
 
 <table><tr>
-<td width="50%"><img src="docs/assets/gif/compare.gif" alt="Before / After 比較"></td>
-<td width="50%"><img src="docs/assets/gif/review.gif" alt="接続候補のレビュー"></td>
+<td width="50%"><img src="docs/assets/gif/compare.gif" alt="Before / After 比較"><br><sub>記録: 旧モデルとの見比べ / archived</sub></td>
+<td width="50%"><img src="docs/assets/gif/review.gif" alt="接続候補のレビュー"><br><sub>記録: 接続候補のレビュー / archived</sub></td>
 </tr></table>
 
 → 手順: [CONTRIBUTING.md](CONTRIBUTING.md) ・ 仮定の台帳: [docs/MODEL_INTERVENTIONS.md](docs/MODEL_INTERVENTIONS.md)
@@ -140,10 +143,13 @@ pandapower・PyPSA への取り込みは [docs/INTEROP.md](docs/INTEROP.md)、�
 ```bash
 pip install -e .
 ajgrid regions                                        # 10 地域
-ajgrid solve okinawa --topology snapped --reconnect   # 組み立て + AC/DC 潮流
-ajgrid cim --regions okinawa --verify                 # CIM/CGMES Level 2 を書き出す
+ajgrid pf --islands okinawa hokkaido                  # 正典から同期島を全規模で組み立てて AC/DC 潮流
+ajgrid matpower                                       # 配布する MATPOWER ケース(4 島)を正典から書き出す
+ajgrid uc to-pf --islands hokkaido okinawa            # UC の時刻断面を正典の網に流す
+ajgrid cim --regions okinawa --verify                 # CIM/CGMES Level 2 を書き出す(旧系譜の網から)
 ajgrid db ingest                                      # 生の OSM + キュレーションから DB を作り直す
 ajgrid coverage                                       # 検証済みと合成の内訳
+# 旧系譜(地域別のスナップ済みの網・比較用): ajgrid solve okinawa --topology snapped --reconnect
 
 # ローカルの完全版(接続エディタの検証・反映、ツール実行ダッシュボード)
 PYTHONPATH=. uvicorn src.server.app:app --host 127.0.0.1 --port 8088   # → http://localhost:8088/
