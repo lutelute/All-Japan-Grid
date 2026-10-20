@@ -147,7 +147,9 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .b.pages{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
 .b.local{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
 .b.cli{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
-.b.new{background:var(--bolt);color:#fff}
+.b.new,.section.alt .b.new{background:var(--bolt);color:#fff}
+.b.lin{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.tile p.lin-note{flex:0;margin-top:8px;font-size:12.5px;line-height:1.6;padding:8px 10px;border-radius:10px;border-left:3px solid var(--warn);background:color-mix(in srgb,var(--warn) 7%,transparent)}
 .more{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;position:relative;z-index:1}
 .cmd{position:relative;z-index:1;display:flex;align-items:stretch;border-radius:12px;background:var(--tile);overflow:hidden}
 .section.alt .cmd{background:color-mix(in srgb,var(--tx) 6%,transparent)}
@@ -388,6 +390,8 @@ footer p{margin:0 0 8px;max-width:960px}
   }
 
   // ── ツールのタイル ────────────────────────────────────────
+  // 正典(built)以外を読むカードには札を付ける(docs/data/tools_catalog.json の lineage。D1・B1 の再発防止)
+  const LINEAGE_LABEL = {snapped: '旧系譜', base_osm: '介入前の OSM', frozen: '固定した記録', mixed: '系譜が混在'};
   function card(t, big) {
     const kind = t.kind || 'pages';
     const needsLocal = kind === 'local' && !isLocal;
@@ -400,9 +404,11 @@ footer p{margin:0 0 8px;max-width:960px}
       el('div', {class: 'badges'},
         el('span', {class: 'b ' + kind, text: KIND_LABEL[kind] || kind}),
         t.is_new ? el('span', {class: 'b new', text: 'NEW'}) : null,
+        LINEAGE_LABEL[t.lineage] ? el('span', {class: 'b lin', title: '読むデータの系譜', text: LINEAGE_LABEL[t.lineage]}) : null,
         ...(t.tags || []).slice(0, 2).map(x => el('span', {class: 'b', text: x}))),
       el('h4', {}, title),
-      el('p', {text: t.summary}));
+      el('p', {text: t.summary}),
+      t.lineage_note ? el('p', {class: 'lin-note', text: t.lineage_note}) : null);
     const c = el('article', {class: 'tile', 'data-kind': kind},
       big && t.image ? el('div', {class: 'pic'}, el('img', {src: t.image, alt: '', loading: 'lazy', decoding: 'async'})) : null,
       body);
