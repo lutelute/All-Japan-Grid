@@ -42,3 +42,33 @@ def test_canon_corrections_show_on_the_map(lines_all):
            if "西島根" in (f["properties"].get("_display_name") or "")
            and f["properties"].get("_voltage_kv") == 275.0]
     assert not bad, bad
+
+
+# ── Ybus / N-1 タブと潮流の出力も正典から(2026-10-21・D3) ─────────────────────
+# N-1 の表は旧系譜(地域別のスナップ済みの網・06-03)、潮流の出力 powerflow_full は 08-28 の正典
+# (17,745 ノード・19,895 枝)のままだった。正典が進んだら作り直す。
+
+ISLANDS = {"hokkaido", "east", "west", "okinawa"}
+
+
+def test_powerflow_full_is_from_the_current_canon(built):
+    meta = json.loads((DOCS / "data" / "powerflow_full" / "summary.json").read_text(encoding="utf-8"))["_meta"]
+    assert (meta["n_nodes"], meta["n_edges"]) == (len(built["nodes"]), len(built["edges"])), \
+        f"powerflow_full は {meta['generated']} の正典から計算したまま(scripts/run_full_powerflow_from_db.py で作り直す)"
+
+
+def test_n1_tab_reads_the_canonical_screening():
+    html = (DOCS / "map.html").read_text(encoding="utf-8")
+    assert "./data/n1_canon/summary.json" in html
+    legacy = html.index('<details id="n1-legacy"')
+    assert legacy < html.index("./data/n1/n1_summary.csv"), "旧系譜の N-1 の表は「記録」の折りたたみの中に置く"
+
+
+def test_n1_summary_is_from_the_latest_report():
+    reports = sorted((DOCS / "reports").glob("n1_screening_????-??-??.json"))
+    s = json.loads((DOCS / "data" / "n1_canon" / "summary.json").read_text(encoding="utf-8"))
+    assert s["source"] == f"docs/reports/{reports[-1].name}", "scripts/export_n1_pages.py で書き直す"
+    assert {i["island"] for i in s["islands"]} == ISLANDS
+    for i in s["islands"]:
+        for row in i["top"] + i["ac_verify"]:
+            assert not row["label"].startswith("trafo_") and row["label"] != "namebind", row["label"]
