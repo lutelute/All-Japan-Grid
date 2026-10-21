@@ -124,6 +124,20 @@ NOT_IN_SERVICE_PATH = os.path.join(ROOT, "data", "reference",
                                    "not_in_service_lines.json")
 
 
+def nis_rule_matches(rule, name, kv) -> bool:
+    """介入#23 の 1 行が枝(線名・電圧)に当たるか。
+
+    name_equals は線名の完全一致(2026-10-21)。部分一致(name_contains)だと「青梅線（廃線）」が、
+    同じ鉄塔で使われている「東京西線;青梅線（廃線）」(約 1,000 MW)まで止めてしまう。
+    kv を省いた行はどの電圧にも当たる。
+    """
+    m = rule.get("match", {})
+    name = str(name or "")
+    hit = ((m.get("name_contains") and m["name_contains"] in name)
+           or (m.get("name_equals") and name == m["name_equals"]))
+    return bool(hit) and abs(float(m.get("kv", kv)) - float(kv)) < 0.5
+
+
 def _load_not_in_service():
     """介入#23: 未供用線リスト(出典URL+quote必須)。無ければ空。"""
     try:
@@ -232,6 +246,10 @@ BTB_SPLITS = [
 # 110kV は 0.27)、公表容量が無いエリアが 6/10 あるため、既定化は係数の出典が揃ってから。
 # 明示 ON = `--cap-calib` または環境変数 AGJ_CAP_CALIB=1(uc_to_pf_built 等の他経路用)。
 CAP_CALIB_DEFAULT = False
+# 介入#23 未供用線(data/reference/not_in_service_lines.json)を潮流で止める既定。2026-10-21 に ON
+# (台帳に廃止・運転開始前の線を一次資料つきで足し、4 島とも AC が解けることを確かめた。
+# docs/reports/unbuilt_retired_lines_2026-10-21.md)。--no-deenergize-unbuilt で旧挙動
+DEENERGIZE_UNBUILT_DEFAULT = True
 
 # ── 介入#48(2026-10-07): 変電所内の変圧器を OSM で観測した電圧の組で結ぶ ──────────
 # 従来は変電所(同一座標のバス群)の電圧階級を高い順に隣どうしで結ぶ「梯子」。OSM が巻線電圧つきの
@@ -262,7 +280,7 @@ PAIR_CAPACITY_PATH = os.path.join(ROOT, "config", "transformer_capacity_by_pair.
 
 def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
-                     deenergize_unbuilt=False, synthetic_ties_live=False,
+                     deenergize_unbuilt=DEENERGIZE_UNBUILT_DEFAULT, synthetic_ties_live=False,
                      btb_split=True, freq_fix=True, implicit_stepdown=None,
                      cap_calib=None, observed_trafos=None, published_trafos=None, pair_capacity=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
@@ -470,9 +488,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         if nis_rules:
             enm = str(e.get("name") or "")
             for rule in nis_rules:
-                m = rule.get("match", {})
-                if m.get("name_contains") and m["name_contains"] in enm \
-                        and abs(float(m.get("kv", kv)) - kv) < 0.5:
+                if nis_rule_matches(rule, enm, kv):
                     net.line.at[li, "in_service"] = False
                     n_deenergized += 1
                     break
@@ -1591,11 +1607,11 @@ def main():
                          "のみで同一サイトの階級ヤードが未連結だった(東京城南チェーン"
                          "低電圧・west T-gapの主因)。既定OFF(正典比較性)")
     ap.add_argument("--deenergize-unbuilt", action=argparse.BooleanOptionalAction,
-                    default=False,
-                    help="介入#23 未供用線の正直化: 建設済み・供用開始前の線"
+                    default=DEENERGIZE_UNBUILT_DEFAULT,
+                    help="介入#23 供用していない線の正直化: 建設中・計画・廃止の線"
                          "(data/reference/not_in_service_lines.json・出典必須)を"
                          "in_service=Falseで建てる。初例=大間幹線(運転開始未定)。"
-                         "既定OFF")
+                         "2026-10-21 から既定ON(--no-deenergize-unbuilt で旧挙動)")
     ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
                     default=IMPLICIT_STEPDOWN_DEFAULT,
                     help="介入#43a 異階級直結線の暗黙降圧(2026-09-02): 線 kv の端点に同階級"
