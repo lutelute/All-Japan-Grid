@@ -13,7 +13,7 @@ After ``pip install -e .`` this is the ``ajgrid`` console command:
     ajgrid matpower                                  # the distributed MATPOWER cases
     ajgrid uc to-pf --islands hokkaido okinawa       # UC dispatch on the canonical grid
     ajgrid solve okinawa --topology snapped --reconnect   # legacy lineage (comparison)
-    ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2 (legacy lineage)
+    ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2 from the canonical islands
     ajgrid validate --all --dir dist/cim_level2      # strict CGMES check
     ajgrid db ingest                                 # raw + restore curation
     ajgrid db enrich --p03 <GML>                     # authoritative P03
@@ -27,8 +27,8 @@ After ``pip install -e .`` this is the ``ajgrid`` console command:
 (``./ajgrid <args>`` and ``python -m src.cli <args>`` work without install.)
 
 Lineage (2026-10-21): the canonical model is ``docs/data/built/all.json``.
-``pf`` / ``matpower`` / ``uc to-pf`` read it. ``solve`` and ``cim`` build the
-older region-wise snapped network and are kept for comparison
+``pf`` / ``matpower`` / ``uc to-pf`` / ``cim`` read it. ``solve`` (and ``cim --topology
+snapped``) build the older region-wise snapped network and are kept for comparison
 (docs/reports/project_structure_2026-10-21.md, A1).
 """
 
@@ -219,8 +219,8 @@ def build_parser():
     s.set_defaults(func=cmd_solve)
 
     sub.add_parser(
-        "cim", help="export CIM/CGMES Level 2 from the legacy snapped network "
-                    "(passes args to the script)",
+        "cim", help="export CIM/CGMES Level 2 from the canonical 4 islands "
+                    "(--topology snapped for the legacy network; passes args to the script)",
         add_help=False).set_defaults(func=cmd_cim)
 
     sub.add_parser(

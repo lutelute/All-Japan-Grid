@@ -409,16 +409,16 @@
       "category": "use",
       "kind": "cli",
       "title": "CIM / CGMES で書き出す",
-      "summary": "IEC 61970 CGMES 2.4.15 の EQ/TP/SSH/SV/GL。pandapower cim2pp との往復で電気的に同一であることを回帰テストで確認しています。",
-      "command": "ajgrid cim --regions okinawa --verify",
+      "summary": "IEC 61970 CGMES 2.4.15 の EQ/TP/SSH/SV/GL を、配布ケースと同じ正典の網から 4 つの同期島ごとに書き出します。pandapower cim2pp で読み戻して潮流が解けることを確かめます。",
+      "command": "ajgrid cim --verify",
       "tags": [
         "CIM",
         "CGMES"
       ],
       "doc": "docs/CIM_MAPPING.md",
       "source": "scripts/export_cim_level2.py",
-      "lineage": "snapped",
-      "lineage_note": "CIM は旧系譜（スナップ済みトポロジ）から書き出します。正典から書く CIM はまだありません。"
+      "lineage": "mixed",
+      "lineage_note": "既定（--topology canonical）は正典の 4 島から書き出します。同じスクリプトで旧系譜（地域別のスナップ済みの網・--topology snapped）も比較用に書けます。"
     },
     {
       "id": "eggc",
