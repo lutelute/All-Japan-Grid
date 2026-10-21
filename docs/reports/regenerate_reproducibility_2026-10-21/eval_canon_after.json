@@ -1,0 +1,62 @@
+{
+ "n_nodes": 17743,
+ "n_edges": 19906,
+ "islands": {
+  "okinawa": {
+   "n_bus": 100,
+   "n_line": 96,
+   "n_trafo": 19,
+   "ac": true,
+   "how": "dc",
+   "folded": 0,
+   "sec": 2.9,
+   "vm_min": 0.9719,
+   "vm_max": 1.0032,
+   "loss_pct": 1.93,
+   "max_line_loading": 192.0,
+   "n_line_over100": 12
+  },
+  "hokkaido": {
+   "n_bus": 831,
+   "n_line": 858,
+   "n_trafo": 69,
+   "ac": true,
+   "how": "dc",
+   "folded": 0,
+   "sec": 4.7,
+   "vm_min": 0.8604,
+   "vm_max": 1.0036,
+   "loss_pct": 2.63,
+   "max_line_loading": 305.1,
+   "n_line_over100": 3
+  },
+  "east": {
+   "n_bus": 6245,
+   "n_line": 6443,
+   "n_trafo": 676,
+   "ac": true,
+   "how": "dc",
+   "folded": 0,
+   "sec": 49.2,
+   "vm_min": 0.8578,
+   "vm_max": 1.0229,
+   "loss_pct": 2.96,
+   "max_line_loading": 998.5,
+   "n_line_over100": 312
+  },
+  "west": {
+   "n_bus": 7976,
+   "n_line": 8110,
+   "n_trafo": 996,
+   "ac": true,
+   "how": "dc",
+   "folded": 6,
+   "sec": 69.3,
+   "vm_min": 0.7755,
+   "vm_max": 1.0365,
+   "loss_pct": 2.17,
+   "max_line_loading": 818.7,
+   "n_line_over100": 308
+  }
+ }
+}

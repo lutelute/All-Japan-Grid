@@ -492,6 +492,19 @@ def _apply_hygiene(built, nodes, edges, plans, isl_grid) -> None:
     (ROOT / "docs/data/built/all.json").write_text(
         json.dumps(built, ensure_ascii=False))
     dst = ROOT / "docs/data/fragments/node_hygiene_ledger.json"
+    # 前の適用の記録に足す(2026-10-21)。regen は node_hygiene と node_hygiene_final の 2 回当てるので、
+    # 上書きだと 1 回目の断片の記録(逆再生の材料)が消えていた。基底から作り直すときは regenerate_all が
+    # 最初に空にする
+    if dst.exists():
+        try:
+            prev = json.loads(dst.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            prev = {}
+        for k, v in prev.items():
+            if isinstance(v, list) and isinstance(ledger.get(k), list):
+                ledger[k] = v + ledger[k]
+            elif isinstance(v, int) and isinstance(ledger.get(k), int):
+                ledger[k] = v + ledger[k]
     dst.write_text(json.dumps(ledger, ensure_ascii=False, indent=1))
     print(f"★正典適用: 断片{len(plans)}件解消 — ノード削除{n_d + n_r} "
           f"(うちリマップ{n_r}) 再帰属{n_a} / 余剰エッジ削除{len(removed)}本 "

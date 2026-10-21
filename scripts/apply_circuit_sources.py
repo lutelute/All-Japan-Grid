@@ -789,6 +789,20 @@ def main(argv=None) -> int:
         })
     args.ledger = str(Path(args.ledger).resolve())
     Path(args.ledger).parent.mkdir(parents=True, exist_ok=True)
+    # 中身が前回と同じ行は前回の日付を保つ(2026-10-21)。regen のたびに日付だけ書き換わり、
+    # 帳簿の差分が全行になって本当の変化(新しい公表データの行)が埋もれていた
+    prev_date = {}
+    if Path(args.ledger).exists():
+        for line in Path(args.ledger).read_text(encoding="utf-8").splitlines():
+            try:
+                old = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            prev_date[json.dumps({k: v for k, v in old.items() if k != "date"}, ensure_ascii=False,
+                                 sort_keys=True)] = old.get("date")
+    for row in ledger_rows:
+        key = json.dumps({k: v for k, v in row.items() if k != "date"}, ensure_ascii=False, sort_keys=True)
+        row["date"] = prev_date.get(key) or row["date"]
     with open(args.ledger, "w", encoding="utf-8") as f:
         for row in ledger_rows:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")

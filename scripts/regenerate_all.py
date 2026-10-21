@@ -93,6 +93,12 @@ STEPS = [
     ("voltage_corrections", [sys.executable,
                              "scripts/apply_voltage_corrections.py",
                              "--write"], False),
+    # 地域とノード衛生の仕上げ(2026-10-21)。#35・#42・#38 は node_hygiene で一度当てるが、後の段
+    # (回線数・衛星接続・電圧の訂正)でつながりが変わると、二重登録の断片が新しくでき、#42 の付け替え
+    # 条件もそろう(静岡の富士川以東の 2 変電所が chubu のまま残った=手順の経路依存)。正典は増分で
+    # 当てていたので偶然そろっていた。ここで同じスクリプトをもう一度流す。冪等なので 2 回目は何もしない
+    ("node_hygiene_final", [sys.executable, "scripts/apply_node_hygiene.py",
+                            "--mixed-pref", "--write"], False),
     # 変電所プロパティ層(オーナー指示 2026-08-26「導体数・回線数を変電所の
     # プロパティに」): 構造DB terminal × OSM線タグ(circuits/wires/cables)を
     # 変電所ごとに集約し、built の sub ノードへ sub_props を付与。冪等
@@ -131,6 +137,16 @@ STEPS = [
 ]
 
 
+# 正典に増分で当てるときは追記でまとめる帳簿(apply_node_hygiene の _merge_ledger)。基底から作り直すときは
+# 前の版の行が古くなる(消えたノードの付け替えが残り、帳簿とマーカーの数が合わなくなった・2026-10-21)ので、
+# build_editor_data から流すときは最初に空にする。中身はこの回の作り直しで当てた分だけになる(git に前の版は残る)
+LEDGERS_RESET_ON_REBUILD = [
+    os.path.join(ROOT, "docs", "data", "fragments", "node_hygiene_ledger.json"),
+    os.path.join(ROOT, "docs", "data", "fragments", "mixed_pref_ledger.json"),
+    os.path.join(ROOT, "docs", "data", "fragments", "uniform_freq_ledger.json"),
+]
+
+
 def _git(*args):
     try:
         return subprocess.check_output(["git", *args], cwd=ROOT,
@@ -153,6 +169,10 @@ def main():
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     results = {}
+    if not args.stamp_only and not getattr(args, "skip_build_editor_data", False):
+        for p in LEDGERS_RESET_ON_REBUILD:
+            if os.path.exists(p):
+                os.remove(p)
     if not args.stamp_only:
         for name, argv, heavy in STEPS:
             if getattr(args, f"skip_{name}", False) or (args.light and heavy):
@@ -177,6 +197,16 @@ def main():
                 "git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
     }
     os.makedirs(os.path.dirname(MODEL_VERSION_PATH), exist_ok=True)
+    # 自分の欄だけを更新する(2026-10-21)。上書きすると、別のスクリプトが刻んだ欄
+    # (record_osm_snapshot.py の osm_snapshot など)が消えていた
+    prev = {}
+    if os.path.exists(MODEL_VERSION_PATH):
+        try:
+            with open(MODEL_VERSION_PATH, encoding="utf-8") as f:
+                prev = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            prev = {}
+    stamp = {**prev, **stamp}
     with open(MODEL_VERSION_PATH, "w", encoding="utf-8") as f:
         json.dump(stamp, f, ensure_ascii=False, indent=2)
     print(f"\nMODEL_VERSION: {head}{' (dirty)' if dirty else ''} → {MODEL_VERSION_PATH}")

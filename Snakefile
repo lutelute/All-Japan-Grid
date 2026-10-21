@@ -129,8 +129,15 @@ rule voltage_corrections:
     shell: f"{PY} scripts/apply_voltage_corrections.py --write"
 
 
-rule substation_properties:
+# 地域とノード衛生の仕上げ(2026-10-21)。後の段でできた二重登録の断片と #42 の付け替え待ちを片付ける(冪等)
+rule node_hygiene_final:
     input: f"{STAMP}/08b_voltage_corrections.done"
+    output: touch(f"{STAMP}/08c_node_hygiene_final.done")
+    shell: f"{PY} scripts/apply_node_hygiene.py --mixed-pref --write"
+
+
+rule substation_properties:
+    input: f"{STAMP}/08c_node_hygiene_final.done"
     output: touch(f"{STAMP}/09_sub_props.done")
     shell: f"{PY} scripts/build_substation_properties.py --attach"
 
