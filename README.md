@@ -146,7 +146,7 @@ ajgrid regions                                        # 10 地域
 ajgrid pf --islands okinawa hokkaido                  # 正典から同期島を全規模で組み立てて AC/DC 潮流
 ajgrid matpower                                       # 配布する MATPOWER ケース(4 島)を正典から書き出す
 ajgrid uc to-pf --islands hokkaido okinawa            # UC の時刻断面を正典の網に流す
-ajgrid cim --regions okinawa --verify                 # CIM/CGMES Level 2 を書き出す(旧系譜の網から)
+ajgrid cim --regions okinawa --verify                 # 正典の網から CIM/CGMES Level 2 を書き出し、読み戻して確かめる
 ajgrid db ingest                                      # 生の OSM + キュレーションから DB を作り直す
 ajgrid coverage                                       # 検証済みと合成の内訳
 # 旧系譜(地域別のスナップ済みの網・比較用): ajgrid solve okinawa --topology snapped --reconnect

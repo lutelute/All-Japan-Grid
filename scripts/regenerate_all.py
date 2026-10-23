@@ -126,6 +126,10 @@ STEPS = [
     # 配布する MATPOWER ケース(dist/matpower_national)。2026-10-20 から正典系譜で書く
     ("export_matpower_canonical", [sys.executable, "scripts/export_matpower_canonical.py"], True),
     ("export_cim", [sys.executable, "scripts/export_cim.py"], True),
+    # 正典の 4 島から CIM/CGMES Level 2(dist/cim_canonical・2026-10-21)。cim2pp で読み戻して解けるかも確かめる。
+    # 上の export_cim は介入前の OSM から地理情報だけを書く Level 1(比較用)
+    ("export_cim_canonical", [sys.executable, "scripts/export_cim_level2.py",
+                              "--topology", "canonical", "--verify"], True),
     ("build_static_site", [sys.executable, "scripts/build_static_site.py"], False),
     # ④ 出典容量反映 — build_static_site が plants_utility/ipp/all を作り直すため、必ずその後に再適用。
     # 順序を誤ると live/regen で capacity_mw_sourced・出典リンクが消える(2026-06-26 修正)。

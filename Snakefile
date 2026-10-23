@@ -44,6 +44,7 @@ rule all:
         "docs/data/MODEL_VERSION.json",
         f"{STAMP}/matpower.done",
         f"{STAMP}/cim.done",
+        f"{STAMP}/cim_canonical.done",
         f"{STAMP}/n1_screening.done",
 
 
@@ -202,6 +203,13 @@ rule cim:
 
 
 # ── ③ サイトと出典再適用(順序が正典: capacity は static の後) ──────
+
+# 正典の 4 島から CIM/CGMES Level 2(dist/cim_canonical・2026-10-21)。cim2pp で読み戻して確かめる
+rule cim_canonical:
+    input: f"{STAMP}/built_ready.done"
+    output: touch(f"{STAMP}/cim_canonical.done")
+    shell: f"{PY} scripts/export_cim_level2.py --topology canonical --verify"
+
 rule static_site:
     input:
         f"{STAMP}/map_tiers.done",

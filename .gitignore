@@ -120,6 +120,11 @@ dist/cim_level2/*.xml
 !dist/cim_level2/AllJapan_TP_BD.xml
 dist/cim_level2/*.zip
 
+# 正典から書く Level-2 CGMES(4 島・2026-10-21・export_cim_level2.py --topology canonical)。見本は沖縄だけ追跡
+dist/cim_canonical/*.xml
+!dist/cim_canonical/okinawa_L2_*.xml
+!dist/cim_canonical/AllJapan_*_BD.xml
+
 # Intentionally-untracked working/scratch files (do NOT commit to this repo):
 #  - REVIEW_FINDINGS.md : internal review worklist (self-declared untracked; still has open items)
 #  - papers/main.md     : a DIFFERENT project (nationwide traffic simulation), not All-Japan-Grid

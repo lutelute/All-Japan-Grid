@@ -9,6 +9,13 @@ confirm the exported model still solves.
 Requires pandapower, so run this on the compute server (not a laptop):
     python scripts/export_cim_level2.py --verify
     python scripts/export_cim_level2.py --regions okinawa hokkaido --verify
+
+正典から書く(2026-10-21・既定): ``--topology canonical`` は地域別のスナップ済みの網(旧系譜)ではなく、
+配布ケース(dist/matpower_national・scripts/export_matpower_canonical.py)と同じ正典の網を 4 つの
+同期島ごとに組み、同じ素朴な NR で解いて(解けない島は同じく 66 kV の木を畳む)書き出す。
+既定の出力先は dist/cim_canonical。旧系譜は --topology snapped で dist/cim_level2 へ(比較用に残す)。
+    python scripts/export_cim_level2.py --topology canonical --verify
+    python scripts/export_cim_level2.py --topology canonical --regions okinawa --verify
 """
 
 from __future__ import annotations
@@ -28,6 +35,34 @@ from src.cim.boundary import BOUNDARY_VOLTAGES, generate_boundary  # noqa: E402
 from src.cim.level2 import net_to_cgmes  # noqa: E402
 from src.powerflow.load_estimator import load_demand_config  # noqa: E402
 from src.regions import REGION_FREQUENCY_HZ  # noqa: E402
+
+
+CANONICAL_ISLANDS = ("okinawa", "hokkaido", "east", "west")
+
+
+def _canonical_net(island):
+    """配布ケースと同じ正典の網を組んで解く。返り値は (解いた網, 解き方)。"""
+    from scripts.export_matpower_canonical import build_canonical_net, try_ac
+    from scripts.run_full_powerflow_from_db import ISLAND_FREQ
+    from src.powerflow.reduce_antenna import fold_until
+
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
+                           "docs", "data", "built", "all.json"), encoding="utf-8") as f:
+        built = json.load(f)
+    # 地点需要の CSV(data/external・git の外)があれば配布ケースと同じく使う。無い所(CI)では使わずに組む
+    # (10-21 実測: 配布値との差は損失 0.05pt・vm 0.003pu 以内)
+    from src.powerflow import point_demand as pdm
+    use_pd = os.path.exists(pdm.CSV)
+    net0 = build_canonical_net(island, built["nodes"], built["edges"], ISLAND_FREQ[island],
+                               point_demand=use_pd)
+    net, ok, how = try_ac(net0)
+    mode = f"canonical-{how}" + ("" if use_pd else "-no-point-demand")
+    if not ok:
+        folded, red = fold_until(net0, lambda n: try_ac(n)[1])
+        if folded is not None:
+            net, ok, how = try_ac(folded)
+            mode = f"canonical-{how}+fold{red.get('n_removed', '?')}"
+    return net, (mode if ok else mode + "+not-converged")
 
 
 def _extract_net(result):
@@ -158,15 +193,23 @@ def _verify(region: str, out_dir: str) -> str:
 def main() -> int:
     """Export Level-2 CGMES for the requested regions; print a summary table."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--regions", nargs="*", default=list(REGION_FREQUENCY_HZ))
-    parser.add_argument("--out-dir", default="dist/cim_level2")
-    parser.add_argument("--topology", default="snapped")
+    parser.add_argument("--regions", nargs="*", default=None,
+                        help="既定: 10 地域(旧系譜) / 4 島(--topology canonical)")
+    parser.add_argument("--out-dir", default=None,
+                        help="既定: dist/cim_level2(旧系譜) / dist/cim_canonical(--topology canonical)")
+    parser.add_argument("--topology", default="canonical",
+                        help="canonical(既定・正典の 4 島) / snapped・legacy(地域別・旧系譜・比較用)")
     parser.add_argument("--no-reconnect", action="store_true",
                         help="disable 5 km island reconnection")
     parser.add_argument("--verify", action="store_true",
                         help="round-trip each region through cim2pp + runpp")
     args = parser.parse_args()
 
+    canonical = args.topology == "canonical"
+    if args.regions is None:
+        args.regions = list(CANONICAL_ISLANDS) if canonical else list(REGION_FREQUENCY_HZ)
+    if args.out_dir is None:
+        args.out_dir = "dist/cim_canonical" if canonical else "dist/cim_level2"
     cfg = load_demand_config()
     reconnect = not args.no_reconnect
     rows = []
@@ -174,6 +217,16 @@ def main() -> int:
     print(header)
     print("-" * len(header))
     for region in args.regions:
+        if canonical:
+            from scripts.run_full_powerflow_from_db import ISLAND_FREQ
+            net, solve_mode = _canonical_net(region)
+            summary = net_to_cgmes(net, region, args.out_dir, f_hz=ISLAND_FREQ[region])
+            summary["solve_mode"] = solve_mode
+            summary["lineage"] = "canonical (docs/data/built/all.json)"
+            rows.append(summary)
+            print(f"{region:10s} {summary['buses']:5d} {summary['lines']:5d} "
+                  f"{summary['trafos']:5d} {summary['loads']:5d} {summary['gens']:5d}  {solve_mode}")
+            continue
         try:
             result = build_and_solve(region, cfg, topology=args.topology, reconnect=reconnect)
             # inside the try: build_and_solve returns bare None for a
@@ -231,7 +284,7 @@ def main() -> int:
     merged = {r["region"]: r for r in existing.get("regions", [])}
     for r in rows:
         merged[r["region"]] = r
-    order = list(REGION_FREQUENCY_HZ)
+    order = list(CANONICAL_ISLANDS) if canonical else list(REGION_FREQUENCY_HZ)
     merged_rows = sorted(
         merged.values(),
         key=lambda r: order.index(r["region"]) if r["region"] in order else 99)
