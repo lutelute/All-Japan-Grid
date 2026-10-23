@@ -56,3 +56,26 @@ def test_zone_without_slack_gets_one(net):
 def test_unknown_zone_raises(net):
     with pytest.raises(ValueError):
         extract_zone(net, "C")
+
+
+def test_trafo_boundary_inner_lv():
+    """境界が変圧器で、内側が lv 側: p_out は p_lv_mw、容量は sn_mva × parallel。"""
+    n = pp.create_empty_network()
+    hv = pp.create_bus(n, 275.0, zone="H")
+    lv = pp.create_bus(n, 154.0, zone="L")
+    lv2 = pp.create_bus(n, 154.0, zone="L")
+    pp.create_ext_grid(n, hv)
+    t = pp.create_transformer_from_parameters(
+        n, hv, lv, sn_mva=300.0, vn_hv_kv=275.0, vn_lv_kv=154.0, vkr_percent=0.3,
+        vk_percent=12.0, pfe_kw=0.0, i0_percent=0.0, parallel=2)
+    pp.create_line_from_parameters(n, lv, lv2, length_km=10.0, r_ohm_per_km=0.05,
+                                   x_ohm_per_km=0.4, c_nf_per_km=9.0, max_i_ka=1.0)
+    pp.create_gen(n, lv2, p_mw=20.0, vm_pu=1.0)
+    pp.create_load(n, lv2, p_mw=120.0, q_mvar=20.0)
+    pp.runpp(n, calculate_voltage_angles=True)
+    sub, bd, _ = extract_zone(n, "L")
+    x = bd.iloc[0]
+    assert len(bd) == 1 and x.kind == "trafo" and x.inner_bus == lv
+    assert x.p_out_mw == pytest.approx(n.res_trafo.at[t, "p_lv_mw"]) and x.p_out_mw < 0
+    assert x.rate_mva == pytest.approx(600.0)
+    _reproduces(sub, n)

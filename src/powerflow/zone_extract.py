@@ -69,7 +69,7 @@ def extract_zone(net, zone: str):
         real = sub.gen[sub.gen["in_service"] & (sub.gen["type"] != "boundary")]
         if real.empty:
             raise ValueError(f"zone={zone!r} の主成分に発電機もスラックも無い")
-        added_slack = int(real.at[real["max_p_mw"].idxmax(), "bus"])
+        added_slack = int(real.at[real["max_p_mw"].fillna(real["p_mw"]).idxmax(), "bus"])
         pp.create_ext_grid(sub, added_slack, vm_pu=float(vm[added_slack]),
                            va_degree=float(va[added_slack]), name=f"zone_slack_{added_slack}")
     info = {"zone": zone, "n_zone_bus": len(zb), "n_bus": len(main),
