@@ -35,7 +35,7 @@ def main(argv=None) -> int:
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
     from src.powerflow.reduce_antenna import fold_until
     from src.model.site_transformers import OBSERVED_PATH
-    from src.powerflow.zone_extract import extract_zone
+    from src.powerflow.zone_extract import branch_rate_mva, extract_zone
 
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -71,6 +71,18 @@ def main(argv=None) -> int:
     b = sub_solved.res_bus.index
     rec = export_net(args.zone, sub_solved, zone_ok, args.out, validate=not args.no_validate,
                      regions=[args.zone], frequency=freq)
+
+    # .mat の RATE_A は to_mpc の仮置き(100)なので、枝の容量を名前サイドカーに足す(行は export_net と同じ並び)
+    bn_path = os.path.join(args.out, f"{args.zone}_branchname.csv")
+    bn = pd.read_csv(bn_path)
+    rate = [0.0] * len(bn)
+    for kind in ("line", "trafo"):
+        lo, _hi = sub_solved._pd2ppc_lookups["branch"].get(kind, (0, 0))
+        live = sub_solved[kind].index[sub_solved[kind]["in_service"]]
+        for k, i in enumerate(live):
+            rate[lo + k] = branch_rate_mva(sub_solved, kind, i)
+    bn["rate_mva"] = rate
+    bn.to_csv(bn_path, index=False)
 
     gn = pd.read_csv(os.path.join(args.out, f"{args.zone}_genname.csv"))
     gn = gn[gn["fuel"] == "boundary"][["name", "row", "GEN_BUS"]].rename(

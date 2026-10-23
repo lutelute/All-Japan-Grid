@@ -155,7 +155,7 @@ ajgrid zone chubu --island west --out dist/zone_cases
 
 | ファイル | 中身 |
 |---|---|
-| `<zone>.mat` + `<zone>_{bus,branch,gen}.csv` + 名前サイドカー | 配布ケースと同じ形式(`export_net` を共用) |
+| `<zone>.mat` + `<zone>_{bus,branch,gen}.csv` + 名前サイドカー | 配布ケースと同じ形式(`export_net` を共用)。`.mat` の RATE_A は全枝 100 の仮置きなので、枝の容量は `<zone>_branchname.csv` の `rate_mva` 列を使う(境界と同じ式の理論値) |
 | `<zone>_boundary.csv` | 切断した枝 1 本 1 行: 種別・枝名・内側/外側のバス・隣接エリア・電圧・容量 `rate_mva`(√3·V·I の理論値で、運用容量ではない)・潮流 `p_out_mw`/`q_out_mvar`(エリアから出る向きが正)・対応する gen 行 `gen_row` |
 | `<zone>_meta.json` | 元の島、島の AC(収束・畳んだバス数)、孤立片の数、境界潮流の合計、隣接エリア別の合計、切り出したケース単体の AC と島の解との差 |
 

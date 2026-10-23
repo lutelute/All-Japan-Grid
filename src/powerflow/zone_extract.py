@@ -22,6 +22,15 @@ BOUNDARY_COLS = ["name", "kind", "index", "branch_name", "inner_bus", "outer_bus
                  "neighbor_zone", "vn_kv", "rate_mva", "p_out_mw", "q_out_mvar"]
 
 
+def branch_rate_mva(net, kind: str, i) -> float:
+    """枝の容量 [MVA]。線路 = √3·V·I·並列数(理論値。運用容量ではない)、変圧器 = sn_mva·並列数。"""
+    t = net[kind]
+    par = int(t.at[i, "parallel"])
+    if kind == "line":
+        return float(math.sqrt(3) * net.bus.at[t.at[i, "from_bus"], "vn_kv"] * t.at[i, "max_i_ka"] * par)
+    return float(t.at[i, "sn_mva"] * par)
+
+
 def extract_zone(net, zone: str):
     """AC で解いた pandapower ネット → (切り出したネット, 境界 DataFrame, 情報 dict).
 
@@ -49,9 +58,7 @@ def extract_zone(net, zone: str):
             if not net.bus.at[outer, "in_service"]:
                 continue
             p, q = (r.at[i, pf], r.at[i, qf]) if a in main else (r.at[i, pt], r.at[i, qt])
-            par = int(t.at[i, "parallel"])
-            rate = (math.sqrt(3) * net.bus.at[inner, "vn_kv"] * t.at[i, "max_i_ka"] * par
-                    if kind == "line" else t.at[i, "sn_mva"] * par)
+            rate = branch_rate_mva(net, kind, i)
             rows.append((f"boundary:{kind}{i}", kind, i, str(t.at[i, "name"]), inner, outer,
                          net.bus.at[outer, "zone"], float(net.bus.at[inner, "vn_kv"]),
                          float(rate), float(p), float(q)))
