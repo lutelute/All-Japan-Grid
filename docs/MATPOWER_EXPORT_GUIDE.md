@@ -137,3 +137,43 @@ pp.runopf(net)          # GENCOST があるので OPF 可能
   snapped 経路 (`network=...`) を推奨。
 - `examples/export_and_solve_matpower.py` は地域ごとに `OK / INCOMPLETE` を判定:
   `.mat` ラウンドトリップ一致 かつ gencost 行数==発電機数 かつ 潮流収束 で OK。
+
+---
+
+## 電力会社エリア単位のケース (`ajgrid zone`)
+
+正典の同期島を配布ケースと同じ手順で組んで AC で解き(`scripts/export_matpower_canonical.py` の
+`build_canonical_net` / `try_ac` / `fold_until`)、1 つのエリア(`bus.zone`)の最大連結成分を
+MATPOWER ケースとして書き出します。
+
+```bash
+ajgrid zone chubu --island west --out dist/zone_cases
+#  ↑ = PYTHONPATH=. python3 scripts/export_zone_case.py chubu --island west
+```
+
+出力(`<out>/`、生成物はコミットしない):
+
+| ファイル | 中身 |
+|---|---|
+| `<zone>.mat` + `<zone>_{bus,branch,gen}.csv` + 名前サイドカー | 配布ケースと同じ形式(`export_net` を共用)。`.mat` の RATE_A は全枝 100 の仮置きなので、枝の容量は `<zone>_branchname.csv` の `rate_mva` 列を使う(境界と同じ式の理論値) |
+| `<zone>_boundary.csv` | 切断した枝 1 本 1 行: 種別・枝名・内側/外側のバス・隣接エリア・電圧・容量 `rate_mva`(√3·V·I の理論値で、運用容量ではない)・潮流 `p_out_mw`/`q_out_mvar`(エリアから出る向きが正)・対応する gen 行 `gen_row` |
+| `<zone>_meta.json` | 元の島、島の AC(収束・畳んだバス数)、孤立片の数、境界潮流の合計、隣接エリア別の合計、切り出したケース単体の AC と島の解との差 |
+
+**境界の表し方**: 切断した枝は 1 本ずつ、内側のバスの発電機(`<zone>_genname.csv` の
+`fuel=boundary`)になります。出力は島の AC で枝が運んでいた潮流に固定(PG = PMIN = PMAX)、
+電圧は島の解です。このため切り出したケース単体で AC を解くと、島の解をそのまま再現します
+(中部で vm 差 < 1e-9 pu)。エリアに島のスラックが無い場合は、最大の発電機のバスにスラックを
+立てます(`added_slack_bus`)。境界の発電機の Q 上下限は無制限です。OPF で使うときは
+PMIN/PMAX と一緒に QMIN/QMAX も差し替えてください(そのままだと境界のバスが無限の無効電力源になる)。
+
+**注意**:
+
+- 境界の潮流は**正典モデルが示す値であって実測ではありません**。例えば中部〜関西 500 kV
+  (三重〜東近江)は、モデルでは関西→中部 約 2,540 MW ですが、`data/reference/interconnections.yaml`
+  (ic_004 の notes)では OCCTO 実測の中央値が中部→関西 2,000 MW で、向きが逆です。境界を固定のまま
+  使うか、PMIN/PMAX を連系線の容量に差し替えて変数にするかは、使う側が決めてください。
+- エリアの境界は「領土」基準で、設備の所有者とは一致しないことがあります。主成分から外れた
+  小さな孤立片(中部で 100 個・202 バス)は出力に含まれません。
+- 中部エリアは 50 Hz 側(east 島)と 60 Hz 側(west 島)にまたがります。`--island` で選んだ
+  島の側だけが出ます。
+- 島の構築には時間がかかります(west で約 5 分・メモリ 400 MB)。切り出しと書き出しは数秒です。
