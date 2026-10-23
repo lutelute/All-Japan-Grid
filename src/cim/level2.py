@@ -8,7 +8,7 @@ five CGMES profiles needed for a power-flow exchange:
                                   ConnectivityNode, ACLineSegment, PowerTransformer
                                   (+End), EnergyConsumer, SynchronousMachine
                                   (+GeneratingUnit), ExternalNetworkInjection,
-                                  Terminal, BaseVoltage
+                                  LinearShuntCompensator, Terminal, BaseVoltage
   * TP  (Topology)              — TopologicalNode, ConnectivityNode->TN binding
   * SSH (SteadyStateHypothesis) — EnergyConsumer.p/q, RotatingMachine.p/q,
                                   Terminal.connected
@@ -144,6 +144,7 @@ class Level2Exporter:
         self._lines()
         self._transformers()
         self._loads()
+        self._shunts()
         self._generators()
         self._sgens()
         self._ext_grids()
@@ -337,6 +338,38 @@ class Level2Exporter:
             self.ssh.obj("EnergyConsumer", m,
                          attrs={"EnergyConsumer.p": round(_num(row.p_mw), 4),
                                 "EnergyConsumer.q": round(_num(row.q_mvar), 4)})
+
+    def _shunts(self) -> None:
+        """分路コンデンサ・リアクトル(net.shunt)を LinearShuntCompensator として書く(2026-10-21)。
+
+        正典の網は無効電力の補償を shunt で持つ(北海道 540 個・-1,162 Mvar)。これを落としていたので、
+        読み戻した網は電圧が下がり、西は解けなかった。cim2pp は p = nomU^2 g、q = -nomU^2 b を
+        sections 倍して読むので、1 段あたりの g = p_mw / vn^2、b = -q_mvar / vn^2 で書く。
+        """
+        net = self.net
+        if not hasattr(net, "shunt") or not len(net.shunt):
+            return
+        for idx in net.shunt.index:
+            row = net.shunt.loc[idx]
+            bus = int(row.bus)
+            vn = _num(row.get("vn_kv"), _num(net.bus.at[bus, "vn_kv"], 1.0)) or 1.0
+            step = int(_num(row.get("step"), 1) or 1)
+            max_step = max(int(_num(row.get("max_step"), step) or step), step)
+            m = mrid("l2shunt", self.region, idx)
+            self.eq.obj("LinearShuntCompensator", m,
+                        attrs={"IdentifiedObject.name": str(row.get("name", f"shunt{idx}")),
+                               "IdentifiedObject.mRID": m,
+                               "ShuntCompensator.nomU": round(vn, 4),
+                               "LinearShuntCompensator.gPerSection": _num(row.get("p_mw")) / vn ** 2,
+                               "LinearShuntCompensator.bPerSection": -_num(row.q_mvar) / vn ** 2,
+                               "ShuntCompensator.maximumSections": max_step,
+                               "ShuntCompensator.normalSections": step},
+                        refs={"Equipment.EquipmentContainer": mrid("l2vl", self.region, bus),
+                              "ConductingEquipment.BaseVoltage": self._base_voltage(vn)})
+            self._terminal(m, "shunt", idx, 1, bus, connected=_in_service(row))
+            self.ssh.obj("LinearShuntCompensator", m,
+                         attrs={"ShuntCompensator.sections": step,
+                                "RegulatingCondEq.controlEnabled": "false"})
 
     def _machine(self, kind: str, idx: int, bus: int, name: str,
                  p_mw: float, q_mvar: float, rateds: float,
