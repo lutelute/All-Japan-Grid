@@ -34,6 +34,7 @@ def main(argv=None) -> int:
     from scripts.export_national_matpower import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
     from src.powerflow.reduce_antenna import fold_until
+    from src.model.site_transformers import OBSERVED_PATH
     from src.powerflow.zone_extract import extract_zone
 
     ap = argparse.ArgumentParser(description=__doc__,
@@ -82,6 +83,8 @@ def main(argv=None) -> int:
         "head": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
                                text=True, check=False).stdout.strip(),
         "island": args.island, "point_demand": point_demand,
+        # 無いと変圧器の容量が変わり境界潮流もずれる(#97)
+        "observed_pairs": os.path.exists(OBSERVED_PATH),
         "island_ac": {"converged": ok, "solve": how,
                       "folded_buses": (red or {}).get("n_removed", 0)},
         **info,
@@ -102,7 +105,7 @@ def main(argv=None) -> int:
     print(f"{args.zone}: bus={info['n_bus']} boundary={info['n_boundary']} "
           f"net_out={info['boundary_net_out_mw']}MW zone_ac={zone_ok}({zone_how}) "
           f"-> {args.out}/{args.zone}.*")
-    return 0
+    return 0 if zone_ok else 1
 
 
 if __name__ == "__main__":
