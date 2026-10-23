@@ -156,14 +156,15 @@ ajgrid zone chubu --island west --out dist/zone_cases
 | ファイル | 中身 |
 |---|---|
 | `<zone>.mat` + `<zone>_{bus,branch,gen}.csv` + 名前サイドカー | 配布ケースと同じ形式(`export_net` を共用) |
-| `<zone>_boundary.csv` | 切断した枝 1 本 1 行: 種別・枝名・内側/外側のバス・隣接エリア・電圧・容量・潮流 `p_out_mw`/`q_out_mvar`(エリアから出る向きが正)・対応する gen 行 `gen_row` |
+| `<zone>_boundary.csv` | 切断した枝 1 本 1 行: 種別・枝名・内側/外側のバス・隣接エリア・電圧・容量 `rate_mva`(√3·V·I の理論値で、運用容量ではない)・潮流 `p_out_mw`/`q_out_mvar`(エリアから出る向きが正)・対応する gen 行 `gen_row` |
 | `<zone>_meta.json` | 元の島、島の AC(収束・畳んだバス数)、孤立片の数、境界潮流の合計、隣接エリア別の合計、切り出したケース単体の AC と島の解との差 |
 
 **境界の表し方**: 切断した枝は 1 本ずつ、内側のバスの発電機(`<zone>_genname.csv` の
 `fuel=boundary`)になります。出力は島の AC で枝が運んでいた潮流に固定(PG = PMIN = PMAX)、
 電圧は島の解です。このため切り出したケース単体で AC を解くと、島の解をそのまま再現します
 (中部で vm 差 < 1e-9 pu)。エリアに島のスラックが無い場合は、最大の発電機のバスにスラックを
-立てます(`added_slack_bus`)。
+立てます(`added_slack_bus`)。境界の発電機の Q 上下限は無制限です。OPF で使うときは
+PMIN/PMAX と一緒に QMIN/QMAX も差し替えてください(そのままだと境界のバスが無限の無効電力源になる)。
 
 **注意**:
 
