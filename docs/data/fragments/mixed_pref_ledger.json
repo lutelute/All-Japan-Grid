@@ -7,11 +7,196 @@
  "vetoed": {
   "whitelist": 10,
   "crossing_guard": 26,
+  "pf_gate": 2,
   "river_side_mismatch": 17,
-  "protected_zone": 77
+  "protected_zone": 73
  },
- "pre_cross_edges": 60,
+ "pre_cross_edges": 53,
  "new_cross_edges": 0,
+ "vetoed_whitelist": [
+  {
+   "id": "tokyo_jct_35.1889:138.5609:66",
+   "name": "tokyo junction 35.1889:138.5609:66",
+   "why": "越境幹線: 中野台二丁目変電所~富士川第一変電所線"
+  },
+  {
+   "id": "tokyo_jct_35.0751:137.8101:0",
+   "name": "tokyo junction 35.0751:137.8101:0",
+   "why": "越境幹線: （新）佐久間東幹線【建設中】"
+  },
+  {
+   "id": "tokyo_jct_35.1886:138.4123:0",
+   "name": "tokyo junction 35.1886:138.4123:0",
+   "why": "越境幹線: （新）佐久間東幹線【建設中】"
+  },
+  {
+   "id": "tokyo_jct_35.085:137.839:0",
+   "name": "tokyo junction 35.085:137.839:0",
+   "why": "越境幹線: 天竜区変電所~鳳来変電所線 / （新）佐久間東幹線【"
+  },
+  {
+   "id": "tokyo_sub_167@275",
+   "name": "東清水変電所 275kV",
+   "why": "FC固定: 東清水変電所 275kV"
+  },
+  {
+   "id": "tokyo_sub_167@154",
+   "name": "東清水変電所 154kV",
+   "why": "FC固定: 東清水変電所 154kV"
+  },
+  {
+   "id": "tokyo_sub_167@77",
+   "name": "東清水変電所 77kV",
+   "why": "FC固定: 東清水変電所 77kV"
+  },
+  {
+   "id": "tokyo_sub_1788",
+   "name": "新信濃変電所",
+   "why": "FC固定: 新信濃変電所"
+  },
+  {
+   "id": "chubu_jct_35.1963:138.6402:0",
+   "name": "chubu junction 35.1963:138.6402:0",
+   "why": "越境幹線: 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 "
+  },
+  {
+   "id": "chubu_jct_35.2611:138.6437:0",
+   "name": "chubu junction 35.2611:138.6437:0",
+   "why": "越境幹線: 佐久間東幹線（山線） / 佐久間東幹線（山線） / "
+  }
+ ],
+ "vetoed_crossing": [
+  {
+   "id": "tokyo_jct_35.1944:138.5642:66",
+   "name": "tokyo junction 35.1944:138.5642:66",
+   "cut_edge": "東京電力パワーグリッド 66.0kV線"
+  },
+  {
+   "id": "tokyo_jct_35.1885:138.5659:66",
+   "name": "tokyo junction 35.1885:138.5659:66",
+   "cut_edge": "東京電力パワーグリッド 66.0kV線"
+  },
+  {
+   "id": "tokyo_jct_36.1268:137.9356:154",
+   "name": "tokyo junction 36.1268:137.9356:154",
+   "cut_edge": "小海町変電所~韮崎市変電所線"
+  },
+  {
+   "id": "tokyo_jct_35.028:138.4654:77",
+   "name": "tokyo junction 35.028:138.4654:77",
+   "cut_edge": "東京電力パワーグリッド 77.0kV線 / 東清水変電所~清"
+  },
+  {
+   "id": "tokyo_jct_36.433:137.8443:0",
+   "name": "tokyo junction 36.433:137.8443:0",
+   "cut_edge": "大町市変電所~安曇野市変電所線 / 安曇野市変電所~中信変電"
+  },
+  {
+   "id": "tokyo_jct_36.1316:137.9297:154",
+   "name": "tokyo junction 36.1316:137.9297:154",
+   "cut_edge": "tokyo_line_4140"
+  },
+  {
+   "id": "tokyo_sub_319",
+   "name": "中野台二丁目変電所",
+   "cut_edge": "leadin"
+  },
+  {
+   "id": "tokyo_sub_1786",
+   "name": "下諏訪変電所",
+   "cut_edge": "小海町変電所~韮崎市変電所線"
+  },
+  {
+   "id": "tokyo_sub_1796",
+   "name": "tokyo_sub_1796",
+   "cut_edge": "南箕輪村変電所~大芝変電所線 / 田畑変電所~松島変電所線 "
+  },
+  {
+   "id": "chubu_jct_35.1896:138.6426:0",
+   "name": "chubu junction 35.1896:138.6426:0",
+   "cut_edge": "中野台二丁目変電所~浅間上町変電所線"
+  },
+  {
+   "id": "chubu_jct_35.249:138.6474:0",
+   "name": "chubu junction 35.249:138.6474:0",
+   "cut_edge": "東京送電線_22"
+  },
+  {
+   "id": "chubu_jct_35.1609:138.8457:77",
+   "name": "chubu junction 35.1609:138.8457:77",
+   "cut_edge": "岩渕-沼津線"
+  },
+  {
+   "id": "chubu_jct_35.21:138.6282:0",
+   "name": "chubu junction 35.21:138.6282:0",
+   "cut_edge": "中野台二丁目変電所~中島町変電所線"
+  },
+  {
+   "id": "chubu_jct_35.2111:138.6275:0",
+   "name": "chubu junction 35.2111:138.6275:0",
+   "cut_edge": "東京送電線_29"
+  },
+  {
+   "id": "chubu_jct_35.2002:138.6302:0",
+   "name": "chubu junction 35.2002:138.6302:0",
+   "cut_edge": "浅間上町変電所~中島町変電所線"
+  },
+  {
+   "id": "chubu_jct_35.2082:138.6246:0",
+   "name": "chubu junction 35.2082:138.6246:0",
+   "cut_edge": "浅間上町変電所~中島町変電所線 / 東京電力パワーグリッド "
+  },
+  {
+   "id": "chubu_jct_35.1493:138.6834:154",
+   "name": "chubu junction 35.1493:138.6834:154",
+   "cut_edge": "岳南線"
+  },
+  {
+   "id": "chubu_jct_35.1723:138.6901:154",
+   "name": "chubu junction 35.1723:138.6901:154",
+   "cut_edge": "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東"
+  },
+  {
+   "id": "chubu_jct_35.1679:138.7607:77",
+   "name": "chubu junction 35.1679:138.7607:77",
+   "cut_edge": "岩渕-沼津線"
+  },
+  {
+   "id": "chubu_jct_37.2037:138.2808:275",
+   "name": "chubu junction 37.2037:138.2808:275",
+   "cut_edge": "新北信変電所~中郷区坂本変電所線"
+  },
+  {
+   "id": "chubu_jct_36.8822:138.6378:0",
+   "name": "chubu junction 36.8822:138.6378:0",
+   "cut_edge": "神立変電所~灰雨変電所線"
+  },
+  {
+   "id": "chubu_sub_531",
+   "name": "沼津変電所",
+   "cut_edge": "JR 西相模-沼津線"
+  },
+  {
+   "id": "chubu_sub_640",
+   "name": "中沢田変電所",
+   "cut_edge": "東京送電線_26"
+  },
+  {
+   "id": "chubu_sub_692",
+   "name": "神谷新町変電所",
+   "cut_edge": "leadin"
+  },
+  {
+   "id": "chubu_sub_694",
+   "name": "沼津変電所",
+   "cut_edge": "leadin"
+  },
+  {
+   "id": "chubu_sub_695",
+   "name": "沼津変電所",
+   "cut_edge": "JR 西相模-沼津線"
+  }
+ ],
  "flips": [
   {
    "id": "tokyo_jct_34.9528:138.3991:0",
@@ -42,6 +227,26 @@
    "to": "chubu",
    "lat": 34.98058,
    "lon": 138.4147
+  },
+  {
+   "id": "tokyo_jct_35.0153:138.3854:0",
+   "name": "tokyo junction 35.0153:138.3854:0",
+   "sub": 0,
+   "pref": "静岡県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.01532,
+   "lon": 138.3854
+  },
+  {
+   "id": "tokyo_jct_35.0221:138.4125:0",
+   "name": "tokyo junction 35.0221:138.4125:0",
+   "sub": 0,
+   "pref": "静岡県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.02212,
+   "lon": 138.41245
   },
   {
    "id": "tokyo_jct_34.9689:138.4179:0",
@@ -142,26 +347,6 @@
    "to": "chubu",
    "lat": 34.9652,
    "lon": 138.31689
-  },
-  {
-   "id": "tokyo_jct_35.121:138.3531:0",
-   "name": "tokyo junction 35.121:138.3531:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.12095,
-   "lon": 138.35308
-  },
-  {
-   "id": "tokyo_jct_35.1135:138.3519:0",
-   "name": "tokyo junction 35.1135:138.3519:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.11345,
-   "lon": 138.35188
   },
   {
    "id": "tokyo_jct_35.1709:138.1283:0",
@@ -274,6 +459,16 @@
    "lon": 138.18396
   },
   {
+   "id": "tokyo_jct_34.855:138.1288:0",
+   "name": "tokyo junction 34.855:138.1288:0",
+   "sub": 0,
+   "pref": "静岡県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 34.85503,
+   "lon": 138.12876
+  },
+  {
    "id": "tokyo_jct_34.8293:138.1642:0",
    "name": "tokyo junction 34.8293:138.1642:0",
    "sub": 0,
@@ -324,6 +519,16 @@
    "lon": 137.88629
   },
   {
+   "id": "tokyo_jct_35.863:137.9651:77",
+   "name": "tokyo junction 35.863:137.9651:77",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.86295,
+   "lon": 137.96513
+  },
+  {
    "id": "tokyo_jct_36.5061:138.0752:0",
    "name": "tokyo junction 36.5061:138.0752:0",
    "sub": 0,
@@ -362,16 +567,6 @@
    "to": "chubu",
    "lat": 35.74472,
    "lon": 137.93525
-  },
-  {
-   "id": "tokyo_jct_36.3759:138.0049:0",
-   "name": "tokyo junction 36.3759:138.0049:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 36.37588,
-   "lon": 138.00494
   },
   {
    "id": "tokyo_jct_36.4598:138.1905:77",
@@ -434,6 +629,16 @@
    "lon": 138.05519
   },
   {
+   "id": "tokyo_jct_35.8211:138.0869:0",
+   "name": "tokyo junction 35.8211:138.0869:0",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.82106,
+   "lon": 138.0869
+  },
+  {
    "id": "tokyo_jct_35.854:138.0936:77",
    "name": "tokyo junction 35.854:138.0936:77",
    "sub": 0,
@@ -482,6 +687,36 @@
    "to": "chubu",
    "lat": 36.60432,
    "lon": 138.24959
+  },
+  {
+   "id": "tokyo_jct_36.4988:138.1438:0",
+   "name": "tokyo junction 36.4988:138.1438:0",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 36.49879,
+   "lon": 138.14382
+  },
+  {
+   "id": "tokyo_jct_36.4931:138.1896:0",
+   "name": "tokyo junction 36.4931:138.1896:0",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 36.49307,
+   "lon": 138.18957
+  },
+  {
+   "id": "tokyo_jct_36.6835:138.1956:0",
+   "name": "tokyo junction 36.6835:138.1956:0",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 36.68347,
+   "lon": 138.19564
   },
   {
    "id": "tokyo_jct_35.057:138.079:0",
@@ -562,6 +797,16 @@
    "to": "chubu",
    "lat": 35.96888,
    "lon": 138.17391
+  },
+  {
+   "id": "tokyo_sub_1795",
+   "name": "tokyo_sub_1795",
+   "sub": 1,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.70658,
+   "lon": 137.92654
   },
   {
    "id": "tokyo_sub_1811",
@@ -934,6 +1179,26 @@
    "lon": 138.74913
   },
   {
+   "id": "chubu_jct_37.0139:138.8758:154",
+   "name": "chubu junction 37.0139:138.8758:154",
+   "sub": 0,
+   "pref": "新潟県",
+   "from": "chubu",
+   "to": "tohoku",
+   "lat": 37.01388,
+   "lon": 138.87576
+  },
+  {
+   "id": "chubu_jct_36.9727:138.8022:0",
+   "name": "chubu junction 36.9727:138.8022:0",
+   "sub": 0,
+   "pref": "新潟県",
+   "from": "chubu",
+   "to": "tohoku",
+   "lat": 36.97275,
+   "lon": 138.8022
+  },
+  {
    "id": "chubu_jct_36.8009:138.7855:0",
    "name": "chubu junction 36.8009:138.7855:0",
    "sub": 0,
@@ -1004,26 +1269,6 @@
    "lon": 138.88513
   },
   {
-   "id": "chubu_sub_679",
-   "name": "天野変電所",
-   "sub": 1,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.03074,
-   "lon": 138.94284
-  },
-  {
-   "id": "chubu_sub_680",
-   "name": "立花二丁目変電所",
-   "sub": 1,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.02995,
-   "lon": 138.9495
-  },
-  {
    "id": "chubu_sub_992",
    "name": "湯沢変電所",
    "sub": 1,
@@ -1092,198 +1337,38 @@
    "to": "tohoku",
    "lat": 36.98364,
    "lon": 138.22599
-  }
- ],
- "vetoed_whitelist": [
-  {
-   "id": "tokyo_jct_35.1889:138.5609:66",
-   "name": "tokyo junction 35.1889:138.5609:66",
-   "why": "越境幹線: 中野台二丁目変電所~富士川第一変電所線"
   },
   {
-   "id": "tokyo_jct_35.0751:137.8101:0",
-   "name": "tokyo junction 35.0751:137.8101:0",
-   "why": "越境幹線: （新）佐久間東幹線【建設中】"
+   "id": "chubu_sub_679",
+   "name": "天野変電所",
+   "sub": 1,
+   "pref": "静岡県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.03074,
+   "lon": 138.94284
   },
   {
-   "id": "tokyo_jct_35.1886:138.4123:0",
-   "name": "tokyo junction 35.1886:138.4123:0",
-   "why": "越境幹線: （新）佐久間東幹線【建設中】"
-  },
-  {
-   "id": "tokyo_jct_35.085:137.839:0",
-   "name": "tokyo junction 35.085:137.839:0",
-   "why": "越境幹線: 天竜区変電所~鳳来変電所線 / （新）佐久間東幹線【"
-  },
-  {
-   "id": "tokyo_sub_167@275",
-   "name": "東清水変電所 275kV",
-   "why": "FC固定: 東清水変電所 275kV"
-  },
-  {
-   "id": "tokyo_sub_167@154",
-   "name": "東清水変電所 154kV",
-   "why": "FC固定: 東清水変電所 154kV"
-  },
-  {
-   "id": "tokyo_sub_167@77",
-   "name": "東清水変電所 77kV",
-   "why": "FC固定: 東清水変電所 77kV"
-  },
-  {
-   "id": "tokyo_sub_1788",
-   "name": "新信濃変電所",
-   "why": "FC固定: 新信濃変電所"
-  },
-  {
-   "id": "chubu_jct_35.1963:138.6402:0",
-   "name": "chubu junction 35.1963:138.6402:0",
-   "why": "越境幹線: 富士川線"
-  },
-  {
-   "id": "chubu_jct_35.2611:138.6437:0",
-   "name": "chubu junction 35.2611:138.6437:0",
-   "why": "越境幹線: 佐久間東幹線（山線） / 佐久間東幹線（山線） / "
-  }
- ],
- "vetoed_crossing": [
-  {
-   "id": "tokyo_jct_35.1944:138.5642:66",
-   "name": "tokyo junction 35.1944:138.5642:66",
-   "cut_edge": "東京電力パワーグリッド 66.0kV線"
-  },
-  {
-   "id": "tokyo_jct_35.1885:138.5659:66",
-   "name": "tokyo junction 35.1885:138.5659:66",
-   "cut_edge": "東京電力パワーグリッド 66.0kV線"
-  },
-  {
-   "id": "tokyo_jct_36.1268:137.9356:154",
-   "name": "tokyo junction 36.1268:137.9356:154",
-   "cut_edge": "小海町変電所~韮崎市変電所線"
-  },
-  {
-   "id": "tokyo_jct_35.028:138.4654:77",
-   "name": "tokyo junction 35.028:138.4654:77",
-   "cut_edge": "東京電力パワーグリッド 77.0kV線 / 東清水変電所~清"
-  },
-  {
-   "id": "tokyo_jct_36.433:137.8443:0",
-   "name": "tokyo junction 36.433:137.8443:0",
-   "cut_edge": "大町市変電所~安曇野市変電所線 / 安曇野市変電所~中信変電"
-  },
-  {
-   "id": "tokyo_jct_36.1316:137.9297:154",
-   "name": "tokyo junction 36.1316:137.9297:154",
-   "cut_edge": "tokyo_line_4140"
-  },
-  {
-   "id": "tokyo_sub_319",
-   "name": "中野台二丁目変電所",
-   "cut_edge": "leadin"
-  },
-  {
-   "id": "tokyo_sub_1786",
-   "name": "下諏訪変電所",
-   "cut_edge": "小海町変電所~韮崎市変電所線"
-  },
-  {
-   "id": "tokyo_sub_1796",
-   "name": "tokyo_sub_1796",
-   "cut_edge": "南箕輪村変電所~大芝変電所線 / 田畑変電所~松島変電所線 "
-  },
-  {
-   "id": "chubu_jct_35.1896:138.6426:0",
-   "name": "chubu junction 35.1896:138.6426:0",
-   "cut_edge": "中野台二丁目変電所~浅間上町変電所線"
-  },
-  {
-   "id": "chubu_jct_35.249:138.6474:0",
-   "name": "chubu junction 35.249:138.6474:0",
-   "cut_edge": "東京送電線_22"
-  },
-  {
-   "id": "chubu_jct_35.1609:138.8457:77",
-   "name": "chubu junction 35.1609:138.8457:77",
-   "cut_edge": "岩渕-沼津線"
-  },
-  {
-   "id": "chubu_jct_35.21:138.6282:0",
-   "name": "chubu junction 35.21:138.6282:0",
-   "cut_edge": "中野台二丁目変電所~中島町変電所線"
-  },
-  {
-   "id": "chubu_jct_35.2111:138.6275:0",
-   "name": "chubu junction 35.2111:138.6275:0",
-   "cut_edge": "東京送電線_29"
-  },
-  {
-   "id": "chubu_jct_35.2002:138.6302:0",
-   "name": "chubu junction 35.2002:138.6302:0",
-   "cut_edge": "浅間上町変電所~中島町変電所線"
-  },
-  {
-   "id": "chubu_jct_35.2082:138.6246:0",
-   "name": "chubu junction 35.2082:138.6246:0",
-   "cut_edge": "浅間上町変電所~中島町変電所線 / 東京電力パワーグリッド "
-  },
-  {
-   "id": "chubu_jct_35.1493:138.6834:154",
-   "name": "chubu junction 35.1493:138.6834:154",
-   "cut_edge": "岳南線"
-  },
-  {
-   "id": "chubu_jct_35.1723:138.6901:154",
-   "name": "chubu junction 35.1723:138.6901:154",
-   "cut_edge": "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東"
-  },
-  {
-   "id": "chubu_jct_35.1679:138.7607:77",
-   "name": "chubu junction 35.1679:138.7607:77",
-   "cut_edge": "岩渕-沼津線"
-  },
-  {
-   "id": "chubu_jct_37.2037:138.2808:275",
-   "name": "chubu junction 37.2037:138.2808:275",
-   "cut_edge": "新北信変電所~中郷区坂本変電所線"
-  },
-  {
-   "id": "chubu_jct_36.8822:138.6378:0",
-   "name": "chubu junction 36.8822:138.6378:0",
-   "cut_edge": "神立変電所~灰雨変電所線"
-  },
-  {
-   "id": "chubu_sub_531",
-   "name": "沼津変電所",
-   "cut_edge": "JR 西相模-沼津線"
-  },
-  {
-   "id": "chubu_sub_640",
-   "name": "中沢田変電所",
-   "cut_edge": "東京送電線_26"
-  },
-  {
-   "id": "chubu_sub_692",
-   "name": "神谷新町変電所",
-   "cut_edge": "leadin"
-  },
-  {
-   "id": "chubu_sub_694",
-   "name": "沼津変電所",
-   "cut_edge": "leadin"
-  },
-  {
-   "id": "chubu_sub_695",
-   "name": "沼津変電所",
-   "cut_edge": "JR 西相模-沼津線"
+   "id": "chubu_sub_680",
+   "name": "立花二丁目変電所",
+   "sub": 1,
+   "pref": "静岡県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.02995,
+   "lon": 138.9495
   }
  ],
  "runs": [
   {
-   "at": "2026-09-02T16:18:36+00:00",
+   "at": "2026-10-21T05:31:17+00:00",
+   "added": 114,
+   "total": 114
+  },
+  {
+   "at": "2026-10-21T05:31:29+00:00",
    "added": 2,
-   "total": 110
+   "total": 116
   }
- ],
- "pf_gate_note": "2026-09-03: #38 の正典化で新たに計画された 2 件(chubu_jct_35.1449:139.0341:77 / chubu_jct_35.1097:138.9237:66)は west ピーク AC の slack/損失が +384MW 悪化したため適用せず、region_attribution.MIXED_PREF_PF_VETO で恒久拒否した"
+ ]
 }

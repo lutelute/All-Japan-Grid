@@ -30,11 +30,13 @@ WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
 # 2026-09-03 追加: fragment_recovery_third_wave（#34追補3）と apply_circuit_sources（#44）。
 # どちらも build_editor_data が基底から作り直すと消えるので、再適用が要る。
 # 2026-10-08 追加: voltage_corrections（#51、OSM の電圧タグの誤りを直す。同じく再適用が要る）。
-# 2026-10-21 追加: mixed_voltage_circuits（#47。正典に当てたのに手順に無かった。#44 より前）。
+# 2026-10-21 追加: mixed_voltage_circuits（#47。正典に当てたのに手順に無かった。#44 より前）と
+# node_hygiene_final（後の段でできた二重登録の断片と #42 の付け替え待ちを片付ける・冪等）。
 CHAIN = ["build_editor_data", "apply_disclosure_v1", "apply_disclosure_v2",
          "route_disclosure", "fragment_recovery", "fragment_recovery_chains",
          "fragment_recovery_third_wave", "node_hygiene", "mixed_voltage_circuits", "apply_circuit_sources",
-         "satellite_connections", "voltage_corrections", "substation_properties", "built_ready"]
+         "satellite_connections", "voltage_corrections", "node_hygiene_final",
+         "substation_properties", "built_ready"]
 EXPORTS = ["subsld_pages", "map_tiers", "gen_sld", "full_powerflow",
            "national_overview", "matpower", "cim", "static_site",
            "capacity_sources", "pages_editor", "version_stamp", "all", "light"]

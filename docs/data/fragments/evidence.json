@@ -7,12 +7,12 @@
    "same_site": 0
   },
   "east": {
-   "fragments": 308,
-   "osm_bridges": 32,
-   "same_site": 7
+   "fragments": 281,
+   "osm_bridges": 29,
+   "same_site": 6
   },
   "west": {
-   "fragments": 561,
+   "fragments": 557,
    "osm_bridges": 74,
    "same_site": 0
   },
@@ -199,7 +199,7 @@
    "n_frag_nodes": 2
   },
   {
-   "score": 0.018,
+   "score": 0.0176,
    "island": "east",
    "frag": {
     "k": [
@@ -211,16 +211,16 @@
    },
    "main": {
     "k": [
-     35.20065,
-     138.7072
+     35.16094,
+     138.84574
     ],
-    "name": "tokyo junction 35.2007:138.7072:154",
-    "kv": 154.0
+    "name": "tokyo junction 35.1609:138.8457:77",
+    "kv": 77.0
    },
-   "line_name": "富士川線",
-   "line_kv": 154.0,
+   "line_name": "岩渕-沼津線",
+   "line_kv": 77.0,
    "d_frag_m": 17,
-   "d_main_m": 1,
+   "d_main_m": 0,
    "n_frag_nodes": 2
   },
   {
@@ -674,32 +674,7 @@
    "n_frag_nodes": 1
   },
   {
-   "score": 0.0249,
-   "island": "east",
-   "frag": {
-    "k": [
-     35.16094,
-     138.84574
-    ],
-    "name": "tokyo junction 35.1609:138.8457:77",
-    "kv": 77.0
-   },
-   "main": {
-    "k": [
-     35.20315,
-     139.05607
-    ],
-    "name": "tokyo junction 35.2032:139.0561:66",
-    "kv": 66.0
-   },
-   "line_name": "JR 西相模-沼津線",
-   "line_kv": 77.0,
-   "d_frag_m": 0,
-   "d_main_m": 25,
-   "n_frag_nodes": 1
-  },
-  {
-   "score": 0.0489,
+   "score": 0.0132,
    "island": "east",
    "frag": {
     "k": [
@@ -711,16 +686,16 @@
    },
    "main": {
     "k": [
-     35.12587,
-     138.84965
+     35.16094,
+     138.84574
     ],
-    "name": "沼津変電所",
-    "kv": 66.0
+    "name": "tokyo junction 35.1609:138.8457:77",
+    "kv": 77.0
    },
-   "line_name": "中部送電線_129",
-   "line_kv": null,
-   "d_frag_m": 1,
-   "d_main_m": 48,
+   "line_name": "JR 西相模-沼津線",
+   "line_kv": 77.0,
+   "d_frag_m": 13,
+   "d_main_m": 0,
    "n_frag_nodes": 1
   },
   {
@@ -749,78 +724,28 @@
    "n_frag_nodes": 1
   },
   {
-   "score": 0.0328,
+   "score": 0.002,
    "island": "east",
    "frag": {
     "k": [
-     36.23598,
-     140.36501
+     36.38757,
+     138.98873
     ],
-    "name": "美野里変電所",
+    "name": "保渡田町変電所",
     "kv": 66.0
    },
    "main": {
     "k": [
-     36.22516,
-     140.27462
+     36.38757,
+     138.98875
     ],
-    "name": "tokyo junction 36.2252:140.2746:66",
+    "name": "保渡田変電所",
     "kv": 66.0
    },
-   "line_name": "美野里線",
+   "line_name": "東京電力パワーグリッド 66.0kV線",
    "line_kv": 66.0,
-   "d_frag_m": 32,
-   "d_main_m": 0,
-   "n_frag_nodes": 1
-  },
-  {
-   "score": 0.0074,
-   "island": "east",
-   "frag": {
-    "k": [
-     36.65037,
-     139.02999
-    ],
-    "name": "沼田変電所",
-    "kv": 66.0
-   },
-   "main": {
-    "k": [
-     36.6638,
-     139.04706
-    ],
-    "name": "tokyo junction 36.6638:139.0471:66",
-    "kv": 66.0
-   },
-   "line_name": "JR沼田線",
-   "line_kv": 66.0,
-   "d_frag_m": 7,
-   "d_main_m": 0,
-   "n_frag_nodes": 1
-  },
-  {
-   "score": 0.0293,
-   "island": "east",
-   "frag": {
-    "k": [
-     36.11674,
-     139.16895
-    ],
-    "name": "玉淀発電所 変電設備",
-    "kv": 0.0
-   },
-   "main": {
-    "k": [
-     36.11094,
-     139.16535
-    ],
-    "name": "tokyo junction 36.1109:139.1653:66",
-    "kv": 66.0
-   },
-   "line_name": "玉淀線",
-   "line_kv": 66.0,
-   "d_frag_m": 29,
-   "d_main_m": 0,
+   "d_frag_m": 1,
+   "d_main_m": 1,
    "n_frag_nodes": 1
   },
   {
@@ -847,6 +772,31 @@
    "d_frag_m": 0,
    "d_main_m": 61,
    "n_frag_nodes": 12
+  },
+  {
+   "score": 0.0009,
+   "island": "west",
+   "frag": {
+    "k": [
+     35.21012,
+     139.05492
+    ],
+    "name": "chubu junction 35.2101:139.0549:77",
+    "kv": 77.0
+   },
+   "main": {
+    "k": [
+     35.16094,
+     138.84574
+    ],
+    "name": "chubu junction 35.1609:138.8457:77",
+    "kv": 77.0
+   },
+   "line_name": "JR 西相模-沼津線",
+   "line_kv": 77.0,
+   "d_frag_m": 1,
+   "d_main_m": 0,
+   "n_frag_nodes": 9
   },
   {
    "score": 0.0298,
@@ -2599,31 +2549,6 @@
    "n_frag_nodes": 2
   },
   {
-   "score": 0.0143,
-   "island": "west",
-   "frag": {
-    "k": [
-     35.70658,
-     137.92654
-    ],
-    "name": "tokyo_sub_1795",
-    "kv": 0.0
-   },
-   "main": {
-    "k": [
-     35.64558,
-     137.90246
-    ],
-    "name": "chubu junction 35.6456:137.9025:154",
-    "kv": 154.0
-   },
-   "line_name": "駒ヶ根変電所~中部電力 高森変電所線",
-   "line_kv": 154.0,
-   "d_frag_m": 14,
-   "d_main_m": 0,
-   "n_frag_nodes": 1
-  },
-  {
    "score": 0.0042,
    "island": "west",
    "frag": {
@@ -2752,31 +2677,16 @@
   },
   {
    "island": "east",
-   "frag_name": "沼田変電所",
-   "main_name": "沼田変電所",
-   "dist_m": 44,
+   "frag_name": "保渡田町変電所",
+   "main_name": "保渡田町変電所",
+   "dist_m": 249,
    "frag_k": [
-    36.65037,
-    139.02999
+    36.38757,
+    138.98873
    ],
    "main_k": [
-    36.65056,
-    139.03043
-   ],
-   "n_frag_nodes": 1
-  },
-  {
-   "island": "east",
-   "frag_name": "玉淀発電所 変電設備",
-   "main_name": "玉淀発電所 変電設備",
-   "dist_m": 53,
-   "frag_k": [
-    36.11674,
-    139.16895
-   ],
-   "main_k": [
-    36.11628,
-    139.1688
+    36.38565,
+    138.99018
    ],
    "n_frag_nodes": 1
   }

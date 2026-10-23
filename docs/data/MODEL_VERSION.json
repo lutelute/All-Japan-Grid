@@ -1,8 +1,119 @@
 {
-  "model_version": "cd20614",
+  "model_version": "4cef23bf",
   "git_dirty": true,
-  "generated_at": "2026-09-02T16:32:52+00:00",
-  "steps": {},
+  "generated_at": "2026-10-21T05:11:48+00:00",
+  "steps": {
+    "build_editor_data": {
+      "status": "ok",
+      "elapsed_s": 11.5
+    },
+    "apply_disclosure_v1": {
+      "status": "ok",
+      "elapsed_s": 0.7
+    },
+    "apply_disclosure_v2": {
+      "status": "ok",
+      "elapsed_s": 1.1
+    },
+    "route_disclosure": {
+      "status": "ok",
+      "elapsed_s": 0.8
+    },
+    "fragment_recovery": {
+      "status": "ok",
+      "elapsed_s": 2.2
+    },
+    "fragment_recovery_chains": {
+      "status": "ok",
+      "elapsed_s": 19.6
+    },
+    "fragment_recovery_third_wave": {
+      "status": "ok",
+      "elapsed_s": 21.0
+    },
+    "node_hygiene": {
+      "status": "ok",
+      "elapsed_s": 5.9
+    },
+    "mixed_voltage_circuits": {
+      "status": "ok",
+      "elapsed_s": 0.7
+    },
+    "apply_circuit_sources": {
+      "status": "ok",
+      "elapsed_s": 5.9
+    },
+    "satellite_connections": {
+      "status": "ok",
+      "elapsed_s": 0.4
+    },
+    "voltage_corrections": {
+      "status": "ok",
+      "elapsed_s": 0.4
+    },
+    "node_hygiene_final": {
+      "status": "ok",
+      "elapsed_s": 3.8
+    },
+    "substation_properties": {
+      "status": "ok",
+      "elapsed_s": 1.6
+    },
+    "subsld_pages": {
+      "status": "ok",
+      "elapsed_s": 1.9
+    },
+    "subsld_ways": {
+      "status": "ok",
+      "elapsed_s": 1.2
+    },
+    "loops": {
+      "status": "ok",
+      "elapsed_s": 0.4
+    },
+    "export_map_tiers": {
+      "status": "ok",
+      "elapsed_s": 2.0
+    },
+    "gen_sld": {
+      "status": "ok",
+      "elapsed_s": 0.5
+    },
+    "run_full_powerflow": {
+      "status": "ok",
+      "elapsed_s": 131.4
+    },
+    "gen_national_overview": {
+      "status": "ok",
+      "elapsed_s": 0.9
+    },
+    "n1_screening": {
+      "status": "ok",
+      "elapsed_s": 168.7
+    },
+    "export_n1_pages": {
+      "status": "ok",
+      "elapsed_s": 0.0
+    },
+    "export_matpower_canonical": {
+      "status": "skipped"
+    },
+    "export_cim": {
+      "status": "skipped"
+    },
+    "build_static_site": {
+      "status": "ok",
+      "elapsed_s": 1.5
+    },
+    "apply_capacity_sources": {
+      "status": "ok",
+      "elapsed_s": 0.3
+    },
+    "build_pages_editor": {
+      "status": "ok",
+      "elapsed_s": 0.1
+    }
+  },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
   "osm_snapshot": {
     "oldest": "2026-06-15T13:35:44Z",

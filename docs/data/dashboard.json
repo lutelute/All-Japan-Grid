@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-10-20T18:17:50Z",
+ "generated_at": "2026-10-21T05:23:16Z",
  "version": "1.9.0",
  "dataset_version": "1.9.0",
  "model": {
-  "n_nodes": 17738,
-  "n_edges": 19944,
-  "main_size": 16446,
-  "n_components": 512,
+  "n_nodes": 17743,
+  "n_edges": 19906,
+  "main_size": 16009,
+  "n_components": 542,
   "n_island_nodes": 1985,
   "n_stitch": 158,
   "n_tie": 6,
@@ -17,19 +17,44 @@
    "okinawa": 7
   },
   "n_regions": 10,
-  "model_version": "cd20614",
-  "generated_at": "2026-09-02T16:32:52+00:00",
+  "model_version": "4cef23bf",
+  "generated_at": "2026-10-21T05:11:48+00:00",
   "osm_newest": "2026-06-15T14:25:30Z"
  },
  "interventions": 45,
  "reports": {
-  "total": 148,
-  "dated": 145,
+  "total": 154,
+  "dated": 151,
   "recent": [
+   {
+    "date": "2026-10-21",
+    "title": "正典で通電している「廃線」「建設中」「計画」の枝 2026-10-21",
+    "path": "docs/reports/unbuilt_retired_lines_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-21",
+    "title": "再生成の手順は正典を再現するか（B7） 2026-10-21",
+    "path": "docs/reports/regenerate_reproducibility_2026-10-21.md"
+   },
    {
     "date": "2026-10-21",
     "title": "プロジェクトの全体構造と「クソ機能」の候補 2026-10-21",
     "path": "docs/reports/project_structure_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-21",
+    "title": "N-1 全枝スクリーニング — LODF で全枝開放を一括評価（2026-10-21）",
+    "path": "docs/reports/n1_screening_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-21",
+    "title": "断片解消キャンペーン第三波 — ドライラン(2026-10-21)",
+    "path": "docs/reports/fragment_third_wave_2026-10-21.md"
+   },
+   {
+    "date": "2026-10-21",
+    "title": "回線数(par)の出典補完 — 介入#44 候補(2026-10-21)",
+    "path": "docs/reports/circuit_sources_2026-10-21.md"
    },
    {
     "date": "2026-10-20",
@@ -60,31 +85,6 @@
     "date": "2026-09-21",
     "title": "併架線の回線数を、線路名ごとの証拠で電圧クラスに配る(ビルダー修正)",
     "path": "docs/reports/mixed_voltage_circuits_builder_2026-09-21.md"
-   },
-   {
-    "date": "2026-09-17",
-    "title": "収録率とタグ補完率の実測監査（2026-09-17）",
-    "path": "docs/reports/coverage_and_enrichment_audit_2026-09-17.md"
-   },
-   {
-    "date": "2026-09-03",
-    "title": "介入#44 の未照合端点はなぜ解けないのか（2026-09-03・F2）",
-    "path": "docs/reports/tepco_endpoint_unresolved_2026-09-03.md"
-   },
-   {
-    "date": "2026-09-03",
-    "title": "介入#43a 変圧器の銘板化ワークリスト — なぜ 0/71 だったのか（2026-09-03）",
-    "path": "docs/reports/stepdown_nameplate_worklist_2026-09-03.md"
-   },
-   {
-    "date": "2026-09-03",
-    "title": "線路容量の理論値を公表値で較正する — 全国版（2026-09-03）",
-    "path": "docs/reports/line_capacity_calibration_2026-09-03.md"
-   },
-   {
-    "date": "2026-09-03",
-    "title": "断片解消キャンペーン第三波 — ドライラン(2026-09-03)",
-    "path": "docs/reports/fragment_third_wave_2026-09-03.md"
    }
   ]
  },
@@ -108,6 +108,6 @@
    "href": "reports/codex_before_after_2026-09-12/index.html"
   }
  ],
- "n_scripts": 263,
- "n_test_files": 107
+ "n_scripts": 264,
+ "n_test_files": 108
 }
