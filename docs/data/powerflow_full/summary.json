@@ -3,7 +3,7 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 17743,
     "n_edges": 19906,
-    "generated": "2026-10-21 14:13:13",
+    "generated": "2026-10-21 14:39:41",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -115,7 +115,7 @@
       "ac_max_loading_pct": 85.24518392178231,
       "dc_max_loading_pct": 79.10182604951186,
       "ac_total_loss_mw": 97.25661439217188,
-      "solve_seconds": 5.6
+      "solve_seconds": 5.2
     },
     "east": {
       "frequency_hz": 50,
@@ -158,13 +158,13 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 49.4,
-              "loading_pct": 2.0
+              "p_hv_mw": 56.8,
+              "loading_pct": 2.2
             },
             {
               "name": "trafo_500/154kV@pairmed@pub",
-              "p_hv_mw": 867.5,
-              "loading_pct": 38.5
+              "p_hv_mw": 871.4,
+              "loading_pct": 38.7
             }
           ]
         },
@@ -217,17 +217,17 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 452.4,
-              "loading_pct": 15.9
+              "p_hv_mw": 454.7,
+              "loading_pct": 16.0
             },
             {
               "name": "trafo_500/154kV@pairmed@pub",
-              "p_hv_mw": 1079.1,
-              "loading_pct": 47.9
+              "p_hv_mw": 1081.7,
+              "loading_pct": 48.0
             },
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 289.1,
+              "p_hv_mw": 289.4,
               "loading_pct": 32.1
             },
             {
@@ -271,13 +271,13 @@
           "result": [
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 391.0,
-              "loading_pct": 43.5
+              "p_hv_mw": 404.8,
+              "loading_pct": 45.1
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 17.4,
-              "loading_pct": 6.7
+              "p_hv_mw": 22.4,
+              "loading_pct": 8.5
             }
           ]
         },
@@ -320,7 +320,7 @@
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 109.8,
+              "p_hv_mw": 109.9,
               "loading_pct": 41.2
             }
           ]
@@ -369,18 +369,18 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 796.0,
-              "loading_pct": 27.9
+              "p_hv_mw": 799.5,
+              "loading_pct": 28.1
             },
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 433.3,
-              "loading_pct": 48.2
+              "p_hv_mw": 434.3,
+              "loading_pct": 48.3
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
               "p_hv_mw": 455.8,
-              "loading_pct": 50.7
+              "loading_pct": 50.8
             }
           ]
         },
@@ -423,8 +423,8 @@
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 458.3,
-              "loading_pct": 51.5
+              "p_hv_mw": 458.9,
+              "loading_pct": 51.6
             }
           ]
         },
@@ -467,18 +467,18 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 101.3,
-              "loading_pct": 11.3
+              "p_hv_mw": 102.4,
+              "loading_pct": 11.5
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 425.4,
+              "p_hv_mw": 425.8,
               "loading_pct": 47.5
             },
             {
               "name": "trafo_154/66kV@pairmed@pub",
-              "p_hv_mw": 137.5,
-              "loading_pct": 36.3
+              "p_hv_mw": 137.2,
+              "loading_pct": 36.2
             }
           ]
         },
@@ -526,18 +526,18 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 944.1,
-              "loading_pct": 33.1
+              "p_hv_mw": 977.2,
+              "loading_pct": 34.3
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 338.3,
-              "loading_pct": 37.6
+              "p_hv_mw": 341.6,
+              "loading_pct": 38.0
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 61.9,
-              "loading_pct": 23.2
+              "p_hv_mw": 63.5,
+              "loading_pct": 23.8
             }
           ]
         },
@@ -575,13 +575,13 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 61.9,
-              "loading_pct": 6.9
+              "p_hv_mw": 67.0,
+              "loading_pct": 7.4
             },
             {
               "name": "trafo_275/66kV@pairmed@osm",
-              "p_hv_mw": 244.7,
-              "loading_pct": 27.2
+              "p_hv_mw": 289.7,
+              "loading_pct": 32.2
             }
           ]
         },
@@ -619,13 +619,13 @@
           "result": [
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 358.8,
+              "p_hv_mw": 359.0,
               "loading_pct": 39.9
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 33.7,
-              "loading_pct": 12.6
+              "p_hv_mw": 33.3,
+              "loading_pct": 12.5
             }
           ]
         },
@@ -673,17 +673,17 @@
           "result": [
             {
               "name": "trafo_275/66kV@pairmed@osm",
-              "p_hv_mw": 340.2,
-              "loading_pct": 37.9
+              "p_hv_mw": 341.5,
+              "loading_pct": 38.0
             },
             {
               "name": "trafo_500/275kV",
-              "p_hv_mw": 233.2,
-              "loading_pct": 24.5
+              "p_hv_mw": 234.0,
+              "loading_pct": 24.6
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 64.7,
+              "p_hv_mw": 64.9,
               "loading_pct": 24.3
             }
           ]
@@ -722,13 +722,13 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": 328.5,
-              "loading_pct": 11.5
+              "p_hv_mw": 330.8,
+              "loading_pct": 11.6
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 715.0,
-              "loading_pct": 31.8
+              "p_hv_mw": 728.7,
+              "loading_pct": 32.4
             }
           ]
         },
@@ -771,17 +771,17 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": -567.5,
+              "p_hv_mw": -567.0,
               "loading_pct": 20.1
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 428.0,
-              "loading_pct": 19.0
+              "p_hv_mw": 429.7,
+              "loading_pct": 19.1
             },
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 350.4,
+              "p_hv_mw": 350.9,
               "loading_pct": 39.1
             }
           ]
@@ -820,12 +820,12 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 188.0,
+              "p_hv_mw": 188.4,
               "loading_pct": 20.9
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 333.5,
+              "p_hv_mw": 333.4,
               "loading_pct": 37.1
             }
           ]
@@ -836,7 +836,7 @@
       "n_dedup_merged": 291,
       "n_edge_dup_removed": 179,
       "n_site_trafo": 0,
-      "n_deenergized": 0,
+      "n_deenergized": 7,
       "n_tie_nis": 0,
       "cap_calib": false,
       "cap_calib_ledger": null,
@@ -2071,19 +2071,19 @@
       ],
       "lv_aggregate": null,
       "total_load_mw": 55250.0,
-      "n_components": 234,
-      "n_slack": 234,
-      "n_synthetic_slack": 222,
+      "n_components": 237,
+      "n_slack": 237,
+      "n_synthetic_slack": 225,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.857798565218052,
+      "ac_vm_min": 0.8577304577058374,
       "ac_vm_max": 1.0229069426775537,
-      "ac_max_loading_pct": 998.5134603756862,
-      "dc_max_loading_pct": 875.7721416540539,
-      "ac_total_loss_mw": 1380.8150464646183,
-      "solve_seconds": 50.5
+      "ac_max_loading_pct": 998.513454016236,
+      "dc_max_loading_pct": 875.7721416540527,
+      "ac_total_loss_mw": 1396.749881117337,
+      "solve_seconds": 50.1
     },
     "west": {
       "frequency_hz": 60,
@@ -2572,7 +2572,7 @@
             },
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 353.5,
+              "p_hv_mw": 353.6,
               "loading_pct": 62.1
             }
           ]
@@ -2616,7 +2616,7 @@
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 1126.1,
+              "p_hv_mw": 1126.2,
               "loading_pct": 50.0
             }
           ]
@@ -2729,7 +2729,7 @@
             },
             {
               "name": "trafo_275/77kV@pairmed@osm",
-              "p_hv_mw": 423.9,
+              "p_hv_mw": 424.0,
               "loading_pct": 74.6
             },
             {
@@ -2773,13 +2773,13 @@
           "result": [
             {
               "name": "trafo_220/110kV@pairmed@osm",
-              "p_hv_mw": 108.9,
-              "loading_pct": 22.9
+              "p_hv_mw": 110.3,
+              "loading_pct": 23.2
             },
             {
               "name": "trafo_220/66kV@pairmed@osm",
-              "p_hv_mw": 78.2,
-              "loading_pct": 16.6
+              "p_hv_mw": 181.9,
+              "loading_pct": 38.3
             }
           ]
         },
@@ -2827,7 +2827,7 @@
           "result": [
             {
               "name": "trafo_500/220kV@pairmed@osm",
-              "p_hv_mw": 567.9,
+              "p_hv_mw": 567.8,
               "loading_pct": 29.9
             },
             {
@@ -3297,7 +3297,7 @@
             },
             {
               "name": "trafo_220/66kV@pairmed@pub",
-              "p_hv_mw": 235.3,
+              "p_hv_mw": 235.4,
               "loading_pct": 49.6
             }
           ]
@@ -3352,7 +3352,7 @@
       "n_dedup_merged": 2347,
       "n_edge_dup_removed": 2030,
       "n_site_trafo": 0,
-      "n_deenergized": 0,
+      "n_deenergized": 3,
       "n_tie_nis": 7,
       "cap_calib": false,
       "cap_calib_ledger": null,
@@ -5510,12 +5510,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7276415100557847,
-      "ac_vm_max": 1.038164892138256,
-      "ac_max_loading_pct": 420.43127573892826,
-      "dc_max_loading_pct": 421.5344697866958,
-      "ac_total_loss_mw": 1138.6892896742631,
-      "solve_seconds": 70.4
+      "ac_vm_min": 0.7276414368415391,
+      "ac_vm_max": 1.038164428632403,
+      "ac_max_loading_pct": 420.4380360899371,
+      "dc_max_loading_pct": 421.5344697866751,
+      "ac_total_loss_mw": 1136.4831487189037,
+      "solve_seconds": 70.0
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -5589,22 +5589,22 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8611,
-      "vm_max": 1.0181,
+      "vm_min": 0.861,
+      "vm_max": 1.0085,
       "n_buses": 2062,
       "n_buses_exported": 2062,
-      "n_lines_exported": 2134
+      "n_lines_exported": 2131
     },
     "tokyo": {
       "island": "east",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8578,
+      "vm_min": 0.8577,
       "vm_max": 1.0229,
       "n_buses": 4183,
       "n_buses_exported": 4183,
-      "n_lines_exported": 4336
+      "n_lines_exported": 4332
     },
     "chubu": {
       "island": "west",
@@ -5659,7 +5659,7 @@
       "vm_max": 1.0063,
       "n_buses": 1638,
       "n_buses_exported": 1638,
-      "n_lines_exported": 1720
+      "n_lines_exported": 1717
     },
     "shikoku": {
       "island": "west",

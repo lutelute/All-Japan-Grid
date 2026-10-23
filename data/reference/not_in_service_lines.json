@@ -1,7 +1,7 @@
 {
-  "title": "未供用送電線の正直化 (介入#23) — 建設済み・供用開始前の線を in_service=False で建てる",
-  "policy": "出典URL+逐語引用の無い行は追加禁止 (scripts/provenance.py 系の捏造防止規約と同旨)。物理資産としては保持し(可視化・将来供用に備える)、潮流だけを止める。供用開始が確認されたら行を削除し正典を再生成する。",
-  "generated": "2026-07-10",
+  "title": "供用していない送電線の正直化 (介入#23) — 建設中・計画・廃止の線を in_service=False で建てる",
+  "policy": "出典URL+逐語引用の無い行は追加禁止 (scripts/provenance.py 系の捏造防止規約と同旨)。物理資産としては保持し(可視化・将来供用に備える)、潮流だけを止める。供用開始が確認されたら行を削除し正典を再生成する。 2026-10-21: 範囲を「建設済み・供用開始前」から、廃止された線と運転開始前の新設ルートへ広げた(docs/reports/unbuilt_retired_lines_2026-10-21.md・オーナー委任)。照合は name_equals(完全一致)を優先する。部分一致は使用中の併記の線(例: 東京西線;青梅線（廃線）)にも当たるため。",
+  "generated": "2026-07-10 / 2026-10-21",
   "lines": [
     {
       "match": {"name_contains": "大間町変電所~東通", "kv": 500},
@@ -13,6 +13,44 @@
       "retrieved_at": "2026-07-10",
       "collected_by": "Claude Fable 5",
       "note": "OSM上のエッジ名は端点由来 (大間町変電所~東通変電所線 / 大間町変電所~東通村変電所線)。kv=500のみ照合し、大間町の66kV配電網は通電のまま維持する。"
+    },
+    {
+      "match": {"name_equals": "青梅線（廃線）", "kv": 275},
+      "real_name": "旧 青梅線 新飯能〜新多摩ルート（275kV設計・2回線。OSM way 1037333926 ほか）",
+      "reason": "東京電力PGの現行公表で青梅線は新飯能→青梅線・豊岡線分岐→青梅のみ、新多摩に付く275kV線は東京西線だけ。2024年度潮流実績でも新多摩(変)の線路は新所沢線・新多摩線・新秩父線・東京西線の4つで青梅線の引出口が無い。OSMはvoltage無し・note『稼働時電圧275,000V』。モデルでは実在しない増戸・武蔵増戸の275kV母線を経て375〜524MWが流れていた。",
+      "source_url": "https://www.tepco.co.jp/pg/consignment/system/pdf/csv_yosochoryu_kikan.zip",
+      "source_file": "data/external/system_disclosure/transformer_lists/raw/tokyo/csv_yosochoryu_kikan/x/csv_yosochoryu_kikan_soudensen.csv",
+      "source_title": "東京電力パワーグリッド 送電線 予想潮流・空容量（基幹系統）2026年09月02日更新",
+      "quote": "基幹 275kV 88,青梅線,275,2,\"5,430\",\"2,715\",熱容量,新飯能,→,青梅線・豊岡線分岐 / 基幹 275kV 89,青梅線,275,2,\"1,922\",\"1,087\",熱容量,青梅線・豊岡線分岐,→,青梅 / 基幹 275kV 91,東京西線,275,2,\"5,470\",\"3,068\",熱容量,新多摩,→,西東京",
+      "source2_file": "data/external/system_disclosure/tokyo/flow_actual/tyouryu_kikan/潮流実績_基幹系統/jisseki_kikan.csv",
+      "source2_url": "https://www.tepco.co.jp/pg/consignment/system/pdf/tyouryu_kikan.zip?251028",
+      "source2_quote": "新多摩(変) - 新所沢線1･2L,新多摩(変) - 新多摩線1･2L,新多摩(変) - 新秩父線1･2L,新多摩(変) - 東京西線1･2L",
+      "retrieved_at": "2026-10-07（予想潮流）/ 2026-08-12（潮流実績）",
+      "collected_by": "Claude Opus 5.5",
+      "note": "完全一致で照合する。『東京西線;青梅線（廃線）』（同じ鉄塔の東京西線2回線は使用中）は止めない。廃止の時期は一次資料で未確認。"
+    },
+    {
+      "match": {"name_contains": "西谷八幡線"},
+      "real_name": "西谷八幡線（九州電力送配電・OSMでは66kV・2回線・地中。西谷変電所〜八幡東区。OSM way 1511280721）",
+      "reason": "九州電力送配電の空容量一覧（2026-07-30）で西谷に付く線は小倉地区7本・門司地区3本で、西谷八幡線はどの地区の一覧にも無い（一覧は専用線も◇付きで載せる）。OSMはpower=cable・voltage=0・（廃線）、履歴ではdisused:power=line。モデルではkV=0の枝が端点の220/66kVを継いで59〜210MWを流していた。",
+      "source_url": "https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure_index.html",
+      "source_file": "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/td_kokura_260730.pdf",
+      "source_title": "九州電力送配電 空容量 〔2 小倉地区〕（2026-07-30）",
+      "quote": "6 西谷線 220 3 918 703 熱容量 北九州 → 西谷 / 19 西谷小倉線 66 2 184 105 熱容量 西谷 → 小倉 / 22 西谷前田線 66 2 92 50 熱容量 西谷 → 前田",
+      "retrieved_at": "2026-07-30（手元のファイル名）",
+      "collected_by": "Claude Opus 5.5",
+      "note": "無いことを根拠にしているので、引用は『ある線』の行。kv を省いて 220/66 の両方に当てる。6本は中国・九州での同一wayの二重抽出。"
+    },
+    {
+      "match": {"name_equals": "（新）佐久間東幹線【建設中】"},
+      "real_name": "佐久間東幹線（山線）増強の新ルート（電源開発送変電NW・275kV予定・2回線・4導体。OSM way 1387658166）",
+      "reason": "OCCTOは2026年3月末の進捗で『東清水線分岐箇所以東の送電線新設工事完了』『送電線全線新設工事 完了時期検討中』とし、最終的な運転開始は2030年3月以降。この枝は東清水線の分岐より西の、工事が終わっていない側（座標からの推定）。",
+      "source_url": "https://www.occto.or.jp/assets/iinkai/kouikikeitouseibi/101/seibi_101_01_01.pdf",
+      "source_title": "OCCTO 第101回広域系統整備委員会 資料1（2026年5月22日）",
+      "quote": "段階的に運開を進め、最終的な運開期は2030年3月以降になる見込みとのこと。",
+      "retrieved_at": "2026-10-21",
+      "collected_by": "Claude Opus 5.5",
+      "note": "本系統の外(main=false)で今の潮流には入っていない。完全一致で照合する(合成名 19737 の 66kV 区間は止めない)。OSMのnote『1L：2026年度運用開始予定』はOCCTOと合わない。"
     }
   ]
 }
