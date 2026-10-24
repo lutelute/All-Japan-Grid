@@ -1,5 +1,52 @@
 # 再現手順 — Reproducibility Recipe
 
+## いまの正典を clone から作り直す（2026-10-24〜）
+
+正典 `docs/data/built/all.json` は、**clone しただけ（git の外のデータなし）で作り直せて、コミットしてあるものとバイト一致します。** CI のジョブ `reproduce-canon` が、push と PR のたびに同じことを確かめます。
+
+```bash
+git clone https://github.com/lutelute/All-Japan-Grid && cd All-Japan-Grid
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+PYTHONPATH=. python scripts/regenerate_all.py --light    # 正典と地図の出力(約 2 分・pandapower 不要)
+git diff --stat -- docs/data/built/all.json              # 何も出なければ一致
+```
+
+### 何から作っているか
+
+再生成を 1 回流して、開いたファイルを全部記録して確かめました（2026-10-24、Python の audit hook）。
+
+- **git で追跡しているもの**: 基底の OSM（`data/*_{lines,substations}.geojson`）、出典の台帳（`data/reference/`）、設定（`config/`）など 83 本。
+- **手順の中で作るもの**: 変電所の構造 DB（`data/structures/`）。基底の OSM から作り、決定的です（最初の段 `build_structures`）。
+- **台帳で置き換えるもの**: 介入 #44（回線数の出典補完）は、各社の公表の原本（再配布不可）を読みます。原本が手元に無ければ、追跡している台帳 `data/reference/circuit_counts.jsonl` だけから同じ枝に同じ回線数を当てます。原本から作ったときとバイト一致することを確かめてあります。
+- **正典は実行日に依りません**。注記の日付は介入の採用日（固定）です。台帳に実行時刻は書きません。
+
+### 潮流・N-1・MATPOWER・CIM まで作り直す
+
+```bash
+PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
+```
+
+- 公開値と同じにするには、**地点需要（介入 #30）の表**が要ります。各社の系統情報公表の潮流実績から作る表で、再配布できないので、各自で取ります。
+
+  ```bash
+  python -m scripts.fetch_system_disclosure --kind flow_actual   # 各社の公表ページから取得
+  python scripts/parse_point_demand.py                          # → data/external/system_disclosure/normalized/point_demand.csv
+  ```
+
+- 表が無ければ、落とさずに**ピン留めなし**（#30 を切ったのと同じ）で組みます。そのことは実行のログに出ます。地域の合計需要は同じですが、観測のある約 70 局の周りの配り方が公開値と違います。
+- 公表のファイルは各社が差し替えることがあります。取った日は `data/realtime/system_disclosure_provenance.jsonl`（毎時の処理）か `data/external/system_disclosure/provenance.jsonl` に、sha256 と一緒に残ります。
+
+### 残っていること
+
+- 地点需要の表の sha256 を正典の版（`MODEL_VERSION.json`）に記録し、作り直した人が同じ表かどうかを確かめられるようにする。
+- 基底の OSM（08-16 に取得）の取り直しの手順は `docs/reports/osm_refresh_survey_2026-10-24.md`。
+
+---
+
+以下は 2026-06 の旧系譜（地域別のスナップ済みの網・`ajgrid solve`）の手順です。記録として残しています。
+
+
 fresh clone から本プロジェクトの全ヘッドライン数値を再現する完全レシピ。
 **正本はDB**（`ajgrid db ingest` が raw + キュレーション資産を完全復元）であり、
 潮流パイプラインはファイルを介さず DB から直接再現できる。

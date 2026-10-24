@@ -130,6 +130,7 @@ def test_dry_run_does_not_touch_canon(tmp_path, monkeypatch):
     p = tmp_path / "all.json"
     p.write_text(json.dumps(built, ensure_ascii=False), encoding="utf-8")
     before = hashlib.sha256(p.read_bytes()).hexdigest()
+    monkeypatch.setattr(m, "raw_sources_present", lambda: True)   # 原本がある手元として(無いと台帳の道になる)
     monkeypatch.setattr(m, "load_all_sources", lambda: [
         _rec(m, rid=0, region="kansai", name="甲乙幹線", kv=500.0, n=2, from_sub="甲変電所", to_sub="乙変電所")])
     m.main(["--built", str(p), "--out-dir", str(tmp_path / "rep"), "--ledger", str(tmp_path / "led.jsonl")])
@@ -146,6 +147,7 @@ def test_write_updates_par_with_provenance_and_backup(tmp_path, monkeypatch):
     built = _built()
     p = tmp_path / "all.json"
     p.write_text(json.dumps(built, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(m, "raw_sources_present", lambda: True)
     monkeypatch.setattr(m, "load_all_sources", lambda: [
         _rec(m, rid=0, region="kansai", name="甲乙幹線", kv=500.0, n=2, from_sub="甲変電所", to_sub="乙変電所")])
     m.main(["--built", str(p), "--out-dir", str(tmp_path / "rep"), "--ledger", str(tmp_path / "led.jsonl"), "--write"])
@@ -179,3 +181,22 @@ def test_real_canon_has_no_decrease_and_provenance_is_consistent():
     tagged = [e for e in d["edges"] if e.get("par_src") == "circuit_sources"]
     assert all(int(e["par"]) > int(e["par_prev"]) for e in tagged)
     assert all(int(e["par"]) <= 8 for e in tagged)
+
+
+def test_ledger_only_gives_the_same_canon_as_raw_sources(tmp_path, monkeypatch):
+    """原本から作った台帳だけで当てても、正典はバイト一致する(clone した人の再現の道・2026-10-24)。"""
+    m = _mod()
+    recs = [_rec(m, rid=0, region="kansai", name="甲乙幹線", kv=500.0, n=2, from_sub="甲変電所", to_sub="乙変電所",
+                 kind="capacity_csv")]
+    raw, led, ledger = tmp_path / "raw.json", tmp_path / "led.json", tmp_path / "ledger.jsonl"
+    for q in (raw, led):
+        q.write_text(json.dumps(_built(), ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(m, "raw_sources_present", lambda: True)
+    monkeypatch.setattr(m, "load_all_sources", lambda: [dict(r) for r in recs])
+    m.main(["--built", str(raw), "--out-dir", str(tmp_path / "r1"), "--ledger", str(ledger), "--write"])
+    assert all(json.loads(l)["kind"] == "capacity_csv" for l in ledger.read_text(encoding="utf-8").splitlines())
+    monkeypatch.setattr(m, "raw_sources_present", lambda: False)   # 原本の無い手元 → 自動で台帳の道
+    before_ledger = ledger.read_bytes()
+    m.main(["--built", str(led), "--out-dir", str(tmp_path / "r2"), "--ledger", str(ledger), "--write"])
+    assert raw.read_bytes() == led.read_bytes()
+    assert ledger.read_bytes() == before_ledger   # 台帳の道では台帳を書き直さない

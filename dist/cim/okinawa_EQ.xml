@@ -3659,8 +3659,86 @@
     <cim:IdentifiedObject.name>石垣市発電所</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>2921e8b1-1130-5556-b648-7dc5c8c7a73f</cim:IdentifiedObject.mRID>
   </cim:SolarGeneratingUnit>
+  <cim:PowerTransformer rdf:ID="_1e34baae-c2bc-5ead-a38c-ddf8b87ad825">
+    <cim:IdentifiedObject.name>小禄変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1e34baae-c2bc-5ead-a38c-ddf8b87ad825</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7f1046b4-9f41-5857-b1f0-f507ed8df9e0"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_71add33f-7fa8-5757-ad62-5e5e8b4ef9a6">
+    <cim:IdentifiedObject.mRID>71add33f-7fa8-5757-ad62-5e5e8b4ef9a6</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_770f93e1-b206-52a1-a08a-049adab02ead">
+    <cim:IdentifiedObject.mRID>770f93e1-b206-52a1-a08a-049adab02ead</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1e34baae-c2bc-5ead-a38c-ddf8b87ad825"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_71add33f-7fa8-5757-ad62-5e5e8b4ef9a6"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_4ff19eb3-8d7e-5530-9329-526448a966d0">
+    <cim:IdentifiedObject.mRID>4ff19eb3-8d7e-5530-9329-526448a966d0</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1e34baae-c2bc-5ead-a38c-ddf8b87ad825"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_770f93e1-b206-52a1-a08a-049adab02ead"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_3bf19ed9-eaa0-54ba-920f-61db84d08f54">
+    <cim:IdentifiedObject.mRID>3bf19ed9-eaa0-54ba-920f-61db84d08f54</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_d3724657-d5f9-58d1-97ca-122aa256f8d6">
+    <cim:IdentifiedObject.mRID>d3724657-d5f9-58d1-97ca-122aa256f8d6</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1e34baae-c2bc-5ead-a38c-ddf8b87ad825"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_3bf19ed9-eaa0-54ba-920f-61db84d08f54"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_d0934139-5ec6-5a9e-8adb-fefb9ccaddc9">
+    <cim:IdentifiedObject.mRID>d0934139-5ec6-5a9e-8adb-fefb9ccaddc9</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1e34baae-c2bc-5ead-a38c-ddf8b87ad825"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_d3724657-d5f9-58d1-97ca-122aa256f8d6"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_a45bc5ee-5baf-5988-b096-0dc60a3dc0ac">
+    <cim:IdentifiedObject.name>上間変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a45bc5ee-5baf-5988-b096-0dc60a3dc0ac</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_ee428416-3751-5f60-acbb-bceade26173e">
+    <cim:IdentifiedObject.mRID>ee428416-3751-5f60-acbb-bceade26173e</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_165d21f9-5a36-504a-84bf-49b1fa9307a5">
+    <cim:IdentifiedObject.mRID>165d21f9-5a36-504a-84bf-49b1fa9307a5</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a45bc5ee-5baf-5988-b096-0dc60a3dc0ac"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_ee428416-3751-5f60-acbb-bceade26173e"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_4663c3c9-54c3-53a4-aa88-a2397b6765d2">
+    <cim:IdentifiedObject.mRID>4663c3c9-54c3-53a4-aa88-a2397b6765d2</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a45bc5ee-5baf-5988-b096-0dc60a3dc0ac"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_165d21f9-5a36-504a-84bf-49b1fa9307a5"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_26038def-3615-5483-bcd1-96ee92c9fb68">
+    <cim:IdentifiedObject.mRID>26038def-3615-5483-bcd1-96ee92c9fb68</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_a36c74f1-ac61-5ef4-9200-ca98c62264c2">
+    <cim:IdentifiedObject.mRID>a36c74f1-ac61-5ef4-9200-ca98c62264c2</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a45bc5ee-5baf-5988-b096-0dc60a3dc0ac"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_26038def-3615-5483-bcd1-96ee92c9fb68"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_8ed78606-e6b4-559c-b201-e1eeb443fae5">
+    <cim:IdentifiedObject.mRID>8ed78606-e6b4-559c-b201-e1eeb443fae5</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a45bc5ee-5baf-5988-b096-0dc60a3dc0ac"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_a36c74f1-ac61-5ef4-9200-ca98c62264c2"/>
+  </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_9dd35c0c-9c07-57b9-86e2-070b664d978a">
-    <cim:IdentifiedObject.name>南風原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>南風原変電所 66/6kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>9dd35c0c-9c07-57b9-86e2-070b664d978a</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
   </cim:PowerTransformer>
@@ -3676,9 +3754,9 @@
   <cim:PowerTransformerEnd rdf:ID="_f55f99cc-7032-5c52-8cea-f618dd4af9f2">
     <cim:IdentifiedObject.mRID>f55f99cc-7032-5c52-8cea-f618dd4af9f2</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_99fa7590-43a2-5c96-955b-49d041bf32db"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_6bba0855-9a5b-526e-a167-2313aaff7809">
@@ -3693,10 +3771,49 @@
   <cim:PowerTransformerEnd rdf:ID="_c14d9ce7-2dd3-52d6-91ed-f450dffb0a21">
     <cim:IdentifiedObject.mRID>c14d9ce7-2dd3-52d6-91ed-f450dffb0a21</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_9dd35c0c-9c07-57b9-86e2-070b664d978a"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_4af186fd-db35-54ae-aede-bf9f53f34874"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_39190712-02d1-5f62-b007-86182b02c695">
+    <cim:IdentifiedObject.name>南風原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>39190712-02d1-5f62-b007-86182b02c695</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_d2d62791-80aa-592e-b762-8be8108122a2">
+    <cim:IdentifiedObject.mRID>d2d62791-80aa-592e-b762-8be8108122a2</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_de464210-ccaf-5a29-95ea-004e3f8c6299">
+    <cim:IdentifiedObject.mRID>de464210-ccaf-5a29-95ea-004e3f8c6299</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_39190712-02d1-5f62-b007-86182b02c695"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_d2d62791-80aa-592e-b762-8be8108122a2"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_1608cdd1-778c-5b2f-8062-26a42fd80394">
+    <cim:IdentifiedObject.mRID>1608cdd1-778c-5b2f-8062-26a42fd80394</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_39190712-02d1-5f62-b007-86182b02c695"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_de464210-ccaf-5a29-95ea-004e3f8c6299"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_eaaa9147-aec3-5648-94b7-cae5bb84f181">
+    <cim:IdentifiedObject.mRID>eaaa9147-aec3-5648-94b7-cae5bb84f181</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_89c3a048-34c1-527c-9eac-a12e012a6a51">
+    <cim:IdentifiedObject.mRID>89c3a048-34c1-527c-9eac-a12e012a6a51</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_39190712-02d1-5f62-b007-86182b02c695"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_eaaa9147-aec3-5648-94b7-cae5bb84f181"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_4c7de278-e6d2-5e04-98c2-97c212f86030">
+    <cim:IdentifiedObject.mRID>4c7de278-e6d2-5e04-98c2-97c212f86030</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_39190712-02d1-5f62-b007-86182b02c695"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_89c3a048-34c1-527c-9eac-a12e012a6a51"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_48cbe179-34a8-5761-abff-db1c5b573961">
     <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -3776,6 +3893,162 @@
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_836e8cae-094a-5cd7-a945-35fa23f0a91a"/>
   </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_addaddb7-bfb1-5742-b906-e361bf42957a">
+    <cim:IdentifiedObject.name>奥間変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>addaddb7-bfb1-5742-b906-e361bf42957a</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_565a3cd3-5f14-5492-947f-dee9378f3bc7">
+    <cim:IdentifiedObject.mRID>565a3cd3-5f14-5492-947f-dee9378f3bc7</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_cc6b5304-ccbd-5c56-a991-04711109a977">
+    <cim:IdentifiedObject.mRID>cc6b5304-ccbd-5c56-a991-04711109a977</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_565a3cd3-5f14-5492-947f-dee9378f3bc7"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_6f3e7533-f3dd-5b83-aead-0e24dfc739a7">
+    <cim:IdentifiedObject.mRID>6f3e7533-f3dd-5b83-aead-0e24dfc739a7</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_cc6b5304-ccbd-5c56-a991-04711109a977"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_27c09eda-7ca9-5743-b0ae-7a2947b2b4cd">
+    <cim:IdentifiedObject.mRID>27c09eda-7ca9-5743-b0ae-7a2947b2b4cd</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_ae2d1cfb-5480-5ef5-9713-da6c694be636">
+    <cim:IdentifiedObject.mRID>ae2d1cfb-5480-5ef5-9713-da6c694be636</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_27c09eda-7ca9-5743-b0ae-7a2947b2b4cd"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_6deff08b-5628-556b-a879-ff4773b65011">
+    <cim:IdentifiedObject.mRID>6deff08b-5628-556b-a879-ff4773b65011</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_addaddb7-bfb1-5742-b906-e361bf42957a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_ae2d1cfb-5480-5ef5-9713-da6c694be636"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_c3bb698a-1649-5c06-ae62-58672d993db3">
+    <cim:IdentifiedObject.name>奥間変電所 66/13kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c3bb698a-1649-5c06-ae62-58672d993db3</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_cdc90fdb-857e-5c4d-82e5-f7aee92dae69">
+    <cim:IdentifiedObject.mRID>cdc90fdb-857e-5c4d-82e5-f7aee92dae69</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_8c102c15-e929-50b4-8ce0-34f0bfcde7eb">
+    <cim:IdentifiedObject.mRID>8c102c15-e929-50b4-8ce0-34f0bfcde7eb</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c3bb698a-1649-5c06-ae62-58672d993db3"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_cdc90fdb-857e-5c4d-82e5-f7aee92dae69"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_915d68ed-6e3d-5341-ba6c-91d5c9ab399c">
+    <cim:IdentifiedObject.mRID>915d68ed-6e3d-5341-ba6c-91d5c9ab399c</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_c3bb698a-1649-5c06-ae62-58672d993db3"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_8c102c15-e929-50b4-8ce0-34f0bfcde7eb"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_c4553c2d-6382-5b1f-a1f7-06f3a63f992d">
+    <cim:IdentifiedObject.mRID>c4553c2d-6382-5b1f-a1f7-06f3a63f992d</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_6ef9cb11-2e4c-554a-add2-19ada7785550">
+    <cim:IdentifiedObject.mRID>6ef9cb11-2e4c-554a-add2-19ada7785550</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c3bb698a-1649-5c06-ae62-58672d993db3"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_c4553c2d-6382-5b1f-a1f7-06f3a63f992d"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_d90cf46c-5dee-50ca-a443-710605267d2e">
+    <cim:IdentifiedObject.mRID>d90cf46c-5dee-50ca-a443-710605267d2e</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>13.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_c3bb698a-1649-5c06-ae62-58672d993db3"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_6ef9cb11-2e4c-554a-add2-19ada7785550"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254">
+    <cim:IdentifiedObject.name>奥間変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_15a32898-7afc-56dd-8db4-6e607d908b36">
+    <cim:IdentifiedObject.mRID>15a32898-7afc-56dd-8db4-6e607d908b36</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_5f177f71-9f54-593d-af65-1179e71064d3">
+    <cim:IdentifiedObject.mRID>5f177f71-9f54-593d-af65-1179e71064d3</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_15a32898-7afc-56dd-8db4-6e607d908b36"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_deee93f1-6bb8-51e9-8e35-c9afac2ee0aa">
+    <cim:IdentifiedObject.mRID>deee93f1-6bb8-51e9-8e35-c9afac2ee0aa</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_5f177f71-9f54-593d-af65-1179e71064d3"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_3de20e67-0f88-53cd-ada5-cea0b6b402cc">
+    <cim:IdentifiedObject.mRID>3de20e67-0f88-53cd-ada5-cea0b6b402cc</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_a861d007-0e41-5360-9e70-c7507370aa02">
+    <cim:IdentifiedObject.mRID>a861d007-0e41-5360-9e70-c7507370aa02</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_3de20e67-0f88-53cd-ada5-cea0b6b402cc"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_b22a7b98-16bb-5595-af4d-da3775946ee6">
+    <cim:IdentifiedObject.mRID>b22a7b98-16bb-5595-af4d-da3775946ee6</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2ef8aa83-8cb5-5f2a-b5ae-f2db71c5d254"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_a861d007-0e41-5360-9e70-c7507370aa02"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_af8bedc5-d8da-5e16-848e-4f86f0571f6a">
+    <cim:IdentifiedObject.name>奥間変電所 22/13kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>af8bedc5-d8da-5e16-848e-4f86f0571f6a</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_bc4c9a48-698f-5bd9-8751-e3830045c6a8">
+    <cim:IdentifiedObject.mRID>bc4c9a48-698f-5bd9-8751-e3830045c6a8</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_40cb4a7d-3389-5ad2-803e-2fd2492f20d1">
+    <cim:IdentifiedObject.mRID>40cb4a7d-3389-5ad2-803e-2fd2492f20d1</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_af8bedc5-d8da-5e16-848e-4f86f0571f6a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_bc4c9a48-698f-5bd9-8751-e3830045c6a8"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_1a2cb788-de5f-5590-b5ed-55ab58b10f3c">
+    <cim:IdentifiedObject.mRID>1a2cb788-de5f-5590-b5ed-55ab58b10f3c</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_af8bedc5-d8da-5e16-848e-4f86f0571f6a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_40cb4a7d-3389-5ad2-803e-2fd2492f20d1"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_4e3b23c3-c38e-59e1-8722-68f974285529">
+    <cim:IdentifiedObject.mRID>4e3b23c3-c38e-59e1-8722-68f974285529</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_b3b3fa2c-37ff-51ff-90a8-bc28b5150cee">
+    <cim:IdentifiedObject.mRID>b3b3fa2c-37ff-51ff-90a8-bc28b5150cee</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_af8bedc5-d8da-5e16-848e-4f86f0571f6a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_4e3b23c3-c38e-59e1-8722-68f974285529"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_5cc46426-f5b5-50d2-9afd-d50c82c33721">
+    <cim:IdentifiedObject.mRID>5cc46426-f5b5-50d2-9afd-d50c82c33721</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>13.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_af8bedc5-d8da-5e16-848e-4f86f0571f6a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_b3b3fa2c-37ff-51ff-90a8-bc28b5150cee"/>
+  </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_1c79e1d9-b491-5a48-9896-b36c32b0e96b">
     <cim:IdentifiedObject.name>伊佐一丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>1c79e1d9-b491-5a48-9896-b36c32b0e96b</cim:IdentifiedObject.mRID>
@@ -3814,6 +4087,357 @@
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1c79e1d9-b491-5a48-9896-b36c32b0e96b"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_ab448bc7-8fb0-5e0f-a6fa-0ff7384dbd7b"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_8fb85c3a-c91d-5138-979d-b9cf9b363737">
+    <cim:IdentifiedObject.name>泊変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>8fb85c3a-c91d-5138-979d-b9cf9b363737</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_07b8921a-6b65-5286-9de4-d7f2000a1d7d"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_fb2ff0f7-a334-5e54-8505-da11c6555ef0">
+    <cim:IdentifiedObject.mRID>fb2ff0f7-a334-5e54-8505-da11c6555ef0</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_273dfdf9-0083-56cd-a2d3-ff9db33cf5e8">
+    <cim:IdentifiedObject.mRID>273dfdf9-0083-56cd-a2d3-ff9db33cf5e8</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_fb2ff0f7-a334-5e54-8505-da11c6555ef0"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_ed4241e8-5d4d-5f6c-a558-182b89ad3175">
+    <cim:IdentifiedObject.mRID>ed4241e8-5d4d-5f6c-a558-182b89ad3175</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_273dfdf9-0083-56cd-a2d3-ff9db33cf5e8"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d">
+    <cim:IdentifiedObject.mRID>4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_378f6cae-8ef8-54d7-9020-b1a4b17505a8">
+    <cim:IdentifiedObject.mRID>378f6cae-8ef8-54d7-9020-b1a4b17505a8</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_4b1a3db1-a7dc-56ac-8d81-9d197fc8cf4d"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_cbeec504-e15f-523c-8990-20d81f0b51d3">
+    <cim:IdentifiedObject.mRID>cbeec504-e15f-523c-8990-20d81f0b51d3</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8fb85c3a-c91d-5138-979d-b9cf9b363737"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_378f6cae-8ef8-54d7-9020-b1a4b17505a8"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_98adfafc-aba8-5b61-9bcf-5b4dc33a351b">
+    <cim:IdentifiedObject.name>久茂地変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>98adfafc-aba8-5b61-9bcf-5b4dc33a351b</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_5f5655cd-d5a9-5cde-bdac-3548550dbc73">
+    <cim:IdentifiedObject.mRID>5f5655cd-d5a9-5cde-bdac-3548550dbc73</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_859cdab9-dcb9-5673-adce-4e33ddc70c59">
+    <cim:IdentifiedObject.mRID>859cdab9-dcb9-5673-adce-4e33ddc70c59</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_98adfafc-aba8-5b61-9bcf-5b4dc33a351b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_5f5655cd-d5a9-5cde-bdac-3548550dbc73"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_f3ba4e41-2d99-5e3e-aeea-a5d568eeb663">
+    <cim:IdentifiedObject.mRID>f3ba4e41-2d99-5e3e-aeea-a5d568eeb663</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_98adfafc-aba8-5b61-9bcf-5b4dc33a351b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_859cdab9-dcb9-5673-adce-4e33ddc70c59"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_367a4cae-49f5-56e9-9c9b-c3d1d812c251">
+    <cim:IdentifiedObject.mRID>367a4cae-49f5-56e9-9c9b-c3d1d812c251</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_f56def81-599e-5b7d-8211-e98aea34f5c0">
+    <cim:IdentifiedObject.mRID>f56def81-599e-5b7d-8211-e98aea34f5c0</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_98adfafc-aba8-5b61-9bcf-5b4dc33a351b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_367a4cae-49f5-56e9-9c9b-c3d1d812c251"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_defc97d4-a99d-559a-be29-ef56e3758212">
+    <cim:IdentifiedObject.mRID>defc97d4-a99d-559a-be29-ef56e3758212</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_98adfafc-aba8-5b61-9bcf-5b4dc33a351b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_f56def81-599e-5b7d-8211-e98aea34f5c0"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_2a5002bf-d23e-5059-ab9c-f3499c300226">
+    <cim:IdentifiedObject.name>西那覇変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>2a5002bf-d23e-5059-ab9c-f3499c300226</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_ec0c9f35-5f5f-588f-b2e0-1ffdd1f9d963">
+    <cim:IdentifiedObject.mRID>ec0c9f35-5f5f-588f-b2e0-1ffdd1f9d963</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_2cb6c8ec-81fd-5954-adf9-df75db48b7bf">
+    <cim:IdentifiedObject.mRID>2cb6c8ec-81fd-5954-adf9-df75db48b7bf</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2a5002bf-d23e-5059-ab9c-f3499c300226"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_ec0c9f35-5f5f-588f-b2e0-1ffdd1f9d963"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_49749dba-fbeb-5dfd-bffc-47d8edcff325">
+    <cim:IdentifiedObject.mRID>49749dba-fbeb-5dfd-bffc-47d8edcff325</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2a5002bf-d23e-5059-ab9c-f3499c300226"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_2cb6c8ec-81fd-5954-adf9-df75db48b7bf"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_6973f463-dc20-50eb-9a6c-447d4505c5ca">
+    <cim:IdentifiedObject.mRID>6973f463-dc20-50eb-9a6c-447d4505c5ca</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_758e5760-4709-56f6-a5c0-dfc209a04bc9">
+    <cim:IdentifiedObject.mRID>758e5760-4709-56f6-a5c0-dfc209a04bc9</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2a5002bf-d23e-5059-ab9c-f3499c300226"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_6973f463-dc20-50eb-9a6c-447d4505c5ca"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_e747cf8b-685f-5840-8a7d-5b5ff5abca18">
+    <cim:IdentifiedObject.mRID>e747cf8b-685f-5840-8a7d-5b5ff5abca18</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2a5002bf-d23e-5059-ab9c-f3499c300226"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_758e5760-4709-56f6-a5c0-dfc209a04bc9"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_698aebb7-b7d3-562c-bd6a-f90ade8748a1">
+    <cim:IdentifiedObject.name>西那覇変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>698aebb7-b7d3-562c-bd6a-f90ade8748a1</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_e2e38784-f002-577f-b68e-6c8cf0a3ce0b">
+    <cim:IdentifiedObject.mRID>e2e38784-f002-577f-b68e-6c8cf0a3ce0b</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_5ca3fb7b-9cfd-56c9-bdc9-49aaa17a7d68">
+    <cim:IdentifiedObject.mRID>5ca3fb7b-9cfd-56c9-bdc9-49aaa17a7d68</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_698aebb7-b7d3-562c-bd6a-f90ade8748a1"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e2e38784-f002-577f-b68e-6c8cf0a3ce0b"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_0daa7be1-c90f-5a0e-aed8-6f73d87a29e8">
+    <cim:IdentifiedObject.mRID>0daa7be1-c90f-5a0e-aed8-6f73d87a29e8</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_698aebb7-b7d3-562c-bd6a-f90ade8748a1"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_5ca3fb7b-9cfd-56c9-bdc9-49aaa17a7d68"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_cf75b203-2be4-5b23-95ba-f414d80b1832">
+    <cim:IdentifiedObject.mRID>cf75b203-2be4-5b23-95ba-f414d80b1832</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_24013cd6-dff8-51a7-8cca-027550175832">
+    <cim:IdentifiedObject.mRID>24013cd6-dff8-51a7-8cca-027550175832</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_698aebb7-b7d3-562c-bd6a-f90ade8748a1"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_cf75b203-2be4-5b23-95ba-f414d80b1832"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_aebde0bc-f728-5b08-8996-8fb294f8b37d">
+    <cim:IdentifiedObject.mRID>aebde0bc-f728-5b08-8996-8fb294f8b37d</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_698aebb7-b7d3-562c-bd6a-f90ade8748a1"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_24013cd6-dff8-51a7-8cca-027550175832"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_edca75f6-3f2d-519b-ba3c-64170fafc14c">
+    <cim:IdentifiedObject.name>与根変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>edca75f6-3f2d-519b-ba3c-64170fafc14c</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_f5448bd5-04e6-5335-989d-23292ac12f42">
+    <cim:IdentifiedObject.mRID>f5448bd5-04e6-5335-989d-23292ac12f42</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_f6324e55-588a-5975-b92a-ad23d5a35e00">
+    <cim:IdentifiedObject.mRID>f6324e55-588a-5975-b92a-ad23d5a35e00</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_edca75f6-3f2d-519b-ba3c-64170fafc14c"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_f5448bd5-04e6-5335-989d-23292ac12f42"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_1bf1a133-5876-50f2-a2c3-8488eea0db6e">
+    <cim:IdentifiedObject.mRID>1bf1a133-5876-50f2-a2c3-8488eea0db6e</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_edca75f6-3f2d-519b-ba3c-64170fafc14c"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_f6324e55-588a-5975-b92a-ad23d5a35e00"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_44466e11-4254-5688-a6b1-3fa5c803abc6">
+    <cim:IdentifiedObject.mRID>44466e11-4254-5688-a6b1-3fa5c803abc6</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_05c7469c-0ebb-5315-b953-e9fb4ffe5358">
+    <cim:IdentifiedObject.mRID>05c7469c-0ebb-5315-b953-e9fb4ffe5358</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_edca75f6-3f2d-519b-ba3c-64170fafc14c"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_44466e11-4254-5688-a6b1-3fa5c803abc6"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_e750d76e-80c4-5bfa-8ff5-eb2a750a6174">
+    <cim:IdentifiedObject.mRID>e750d76e-80c4-5bfa-8ff5-eb2a750a6174</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_edca75f6-3f2d-519b-ba3c-64170fafc14c"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_05c7469c-0ebb-5315-b953-e9fb4ffe5358"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_a13ab754-2f9f-5dea-971b-509fa5220dc3">
+    <cim:IdentifiedObject.name>与根変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a13ab754-2f9f-5dea-971b-509fa5220dc3</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_a6aa1f9c-e7f9-51a8-b5a0-aaacde6d02d1">
+    <cim:IdentifiedObject.mRID>a6aa1f9c-e7f9-51a8-b5a0-aaacde6d02d1</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_2059c47b-f478-5da6-9457-06824dab288a">
+    <cim:IdentifiedObject.mRID>2059c47b-f478-5da6-9457-06824dab288a</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a13ab754-2f9f-5dea-971b-509fa5220dc3"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_a6aa1f9c-e7f9-51a8-b5a0-aaacde6d02d1"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_94004927-1829-53a2-ae91-2f135662f64c">
+    <cim:IdentifiedObject.mRID>94004927-1829-53a2-ae91-2f135662f64c</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a13ab754-2f9f-5dea-971b-509fa5220dc3"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_2059c47b-f478-5da6-9457-06824dab288a"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_f53d8723-d709-588f-bdbe-c785818d95ab">
+    <cim:IdentifiedObject.mRID>f53d8723-d709-588f-bdbe-c785818d95ab</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_2a872897-c7ab-56f4-a4af-948b16c5a55c">
+    <cim:IdentifiedObject.mRID>2a872897-c7ab-56f4-a4af-948b16c5a55c</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a13ab754-2f9f-5dea-971b-509fa5220dc3"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_f53d8723-d709-588f-bdbe-c785818d95ab"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_4bb28e8b-3b5f-5a01-8350-81a3a10aa319">
+    <cim:IdentifiedObject.mRID>4bb28e8b-3b5f-5a01-8350-81a3a10aa319</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a13ab754-2f9f-5dea-971b-509fa5220dc3"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_2a872897-c7ab-56f4-a4af-948b16c5a55c"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87">
+    <cim:IdentifiedObject.name>松田変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_9f878f55-0016-58a1-aff5-ab2353bb9058"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_a53b6794-32ed-5ac3-b747-6262b53f1386">
+    <cim:IdentifiedObject.mRID>a53b6794-32ed-5ac3-b747-6262b53f1386</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_3470804d-20aa-5f9f-af63-f6483817fcd9">
+    <cim:IdentifiedObject.mRID>3470804d-20aa-5f9f-af63-f6483817fcd9</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_a53b6794-32ed-5ac3-b747-6262b53f1386"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_9277e789-258e-5926-b1bd-b940f224bd54">
+    <cim:IdentifiedObject.mRID>9277e789-258e-5926-b1bd-b940f224bd54</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_3470804d-20aa-5f9f-af63-f6483817fcd9"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_fe54f8b0-2af7-59d7-93d6-b4c25c4e986f">
+    <cim:IdentifiedObject.mRID>fe54f8b0-2af7-59d7-93d6-b4c25c4e986f</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_477db3ca-c190-5e33-b93e-3967c2eb1722">
+    <cim:IdentifiedObject.mRID>477db3ca-c190-5e33-b93e-3967c2eb1722</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_fe54f8b0-2af7-59d7-93d6-b4c25c4e986f"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_8fa51a91-60c4-5fc2-9a58-3910cf49329d">
+    <cim:IdentifiedObject.mRID>8fa51a91-60c4-5fc2-9a58-3910cf49329d</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_f9d45a66-e11b-5dc9-ba0b-e16a7eed6d87"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_477db3ca-c190-5e33-b93e-3967c2eb1722"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_8a81497f-3ee0-5a3d-b8aa-e46d98758b77">
+    <cim:IdentifiedObject.name>海洋博変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>8a81497f-3ee0-5a3d-b8aa-e46d98758b77</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_b377c089-cda0-56e2-badb-8c0f59ff963a">
+    <cim:IdentifiedObject.mRID>b377c089-cda0-56e2-badb-8c0f59ff963a</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_aeb99f6a-f205-5fcc-ad8e-f3d2a235ff15">
+    <cim:IdentifiedObject.mRID>aeb99f6a-f205-5fcc-ad8e-f3d2a235ff15</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_8a81497f-3ee0-5a3d-b8aa-e46d98758b77"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b377c089-cda0-56e2-badb-8c0f59ff963a"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_0462becc-ca3a-523f-9808-e0384add7cdb">
+    <cim:IdentifiedObject.mRID>0462becc-ca3a-523f-9808-e0384add7cdb</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8a81497f-3ee0-5a3d-b8aa-e46d98758b77"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_aeb99f6a-f205-5fcc-ad8e-f3d2a235ff15"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_776776f1-1061-5afb-abfa-aaab219a00bc">
+    <cim:IdentifiedObject.mRID>776776f1-1061-5afb-abfa-aaab219a00bc</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_fc6ee1dc-bdbc-5178-aed4-d1c468c476ac">
+    <cim:IdentifiedObject.mRID>fc6ee1dc-bdbc-5178-aed4-d1c468c476ac</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_8a81497f-3ee0-5a3d-b8aa-e46d98758b77"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_776776f1-1061-5afb-abfa-aaab219a00bc"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_df3624c3-2471-5a27-bff2-2b402d7db49d">
+    <cim:IdentifiedObject.mRID>df3624c3-2471-5a27-bff2-2b402d7db49d</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8a81497f-3ee0-5a3d-b8aa-e46d98758b77"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_fc6ee1dc-bdbc-5178-aed4-d1c468c476ac"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_eb962292-61a8-50c3-bcd1-31345c353c3b">
+    <cim:IdentifiedObject.name>海洋博変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>eb962292-61a8-50c3-bcd1-31345c353c3b</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_bafbfa58-8ccd-51b4-81be-68d459a7d77a">
+    <cim:IdentifiedObject.mRID>bafbfa58-8ccd-51b4-81be-68d459a7d77a</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_fcded70d-e653-5f9a-b8fe-9c44deb37696">
+    <cim:IdentifiedObject.mRID>fcded70d-e653-5f9a-b8fe-9c44deb37696</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_eb962292-61a8-50c3-bcd1-31345c353c3b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_bafbfa58-8ccd-51b4-81be-68d459a7d77a"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_a9d7faa4-6485-5cd7-9ff2-f2221a6adb26">
+    <cim:IdentifiedObject.mRID>a9d7faa4-6485-5cd7-9ff2-f2221a6adb26</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_eb962292-61a8-50c3-bcd1-31345c353c3b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_fcded70d-e653-5f9a-b8fe-9c44deb37696"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_3f67d488-8da5-5720-a5c5-d9332c432c37">
+    <cim:IdentifiedObject.mRID>3f67d488-8da5-5720-a5c5-d9332c432c37</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_771ed211-b80d-5021-b4d6-a738fcc03b9f">
+    <cim:IdentifiedObject.mRID>771ed211-b80d-5021-b4d6-a738fcc03b9f</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_eb962292-61a8-50c3-bcd1-31345c353c3b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_3f67d488-8da5-5720-a5c5-d9332c432c37"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_94255ce8-1139-52af-9d89-62fd69d2ad27">
+    <cim:IdentifiedObject.mRID>94255ce8-1139-52af-9d89-62fd69d2ad27</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_eb962292-61a8-50c3-bcd1-31345c353c3b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_771ed211-b80d-5021-b4d6-a738fcc03b9f"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_bf97a156-e3b5-58b7-8cbd-3a7ac8532ddc">
     <cim:IdentifiedObject.name>うるま市変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -3855,7 +4479,7 @@
     <cim:TransformerEnd.Terminal rdf:resource="#_3c36bc30-be65-5883-b301-2628a3a313a5"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_8eee7648-0d5d-5980-be4b-21b78166cadb">
-    <cim:IdentifiedObject.name>渡口変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>渡口変電所 66/6kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8eee7648-0d5d-5980-be4b-21b78166cadb</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
   </cim:PowerTransformer>
@@ -3871,9 +4495,9 @@
   <cim:PowerTransformerEnd rdf:ID="_21e51876-e9ff-5868-bf9e-7cea9102c503">
     <cim:IdentifiedObject.mRID>21e51876-e9ff-5868-bf9e-7cea9102c503</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8eee7648-0d5d-5980-be4b-21b78166cadb"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_7d726cf2-7254-5661-88fe-9e954a2048ff"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_0e79e5e5-b7c1-58ea-989e-5bea54d4cf1f">
@@ -3888,13 +4512,52 @@
   <cim:PowerTransformerEnd rdf:ID="_ffac1777-ae8d-5ebf-8707-18d62c05b48a">
     <cim:IdentifiedObject.mRID>ffac1777-ae8d-5ebf-8707-18d62c05b48a</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8eee7648-0d5d-5980-be4b-21b78166cadb"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_550b7f02-3260-5477-afc9-4a4a2eb4d9ca"/>
   </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_5a2999ef-d011-52a2-9546-d8b62469bc64">
+    <cim:IdentifiedObject.name>渡口変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5a2999ef-d011-52a2-9546-d8b62469bc64</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_b0a067e4-d3f3-547d-a9fd-4b87d4c413eb">
+    <cim:IdentifiedObject.mRID>b0a067e4-d3f3-547d-a9fd-4b87d4c413eb</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_e7db06b4-2da8-52ad-9cf7-51e0cbb0cc21">
+    <cim:IdentifiedObject.mRID>e7db06b4-2da8-52ad-9cf7-51e0cbb0cc21</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_5a2999ef-d011-52a2-9546-d8b62469bc64"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b0a067e4-d3f3-547d-a9fd-4b87d4c413eb"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_d8b29554-cee2-564e-bb6a-7577f66e18ce">
+    <cim:IdentifiedObject.mRID>d8b29554-cee2-564e-bb6a-7577f66e18ce</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_5a2999ef-d011-52a2-9546-d8b62469bc64"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_e7db06b4-2da8-52ad-9cf7-51e0cbb0cc21"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_5d2f43d1-b257-5ea7-b774-f4a448578649">
+    <cim:IdentifiedObject.mRID>5d2f43d1-b257-5ea7-b774-f4a448578649</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_e16b3790-efd5-56b2-8604-a324573273c9">
+    <cim:IdentifiedObject.mRID>e16b3790-efd5-56b2-8604-a324573273c9</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_5a2999ef-d011-52a2-9546-d8b62469bc64"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_5d2f43d1-b257-5ea7-b774-f4a448578649"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_318a142d-b064-58d1-82c5-b36109704987">
+    <cim:IdentifiedObject.mRID>318a142d-b064-58d1-82c5-b36109704987</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_5a2999ef-d011-52a2-9546-d8b62469bc64"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_e16b3790-efd5-56b2-8604-a324573273c9"/>
+  </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_f7310735-2307-5d33-8dc6-4e5df22b16e1">
-    <cim:IdentifiedObject.name>与那原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>与那原変電所 66/22kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>f7310735-2307-5d33-8dc6-4e5df22b16e1</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
   </cim:PowerTransformer>
@@ -3910,9 +4573,9 @@
   <cim:PowerTransformerEnd rdf:ID="_e9bfdac7-2416-54ce-9bb0-0d8140fd3d60">
     <cim:IdentifiedObject.mRID>e9bfdac7-2416-54ce-9bb0-0d8140fd3d60</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_f7310735-2307-5d33-8dc6-4e5df22b16e1"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_8766db5b-ab74-5529-840b-3de7df1e5e6a"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_f8daae5c-a369-5675-b024-485bcc24db7b">
@@ -3927,10 +4590,166 @@
   <cim:PowerTransformerEnd rdf:ID="_fcaf931d-d733-5177-8369-6be8da9ec4a4">
     <cim:IdentifiedObject.mRID>fcaf931d-d733-5177-8369-6be8da9ec4a4</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_f7310735-2307-5d33-8dc6-4e5df22b16e1"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_cd5be9b7-950e-553a-9b21-01be42de29f1"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4">
+    <cim:IdentifiedObject.name>与那原変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_1cac2908-291c-5a77-8219-e87543c35495">
+    <cim:IdentifiedObject.mRID>1cac2908-291c-5a77-8219-e87543c35495</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_9bd08584-1708-5ea6-9005-a8be3ac2ef47">
+    <cim:IdentifiedObject.mRID>9bd08584-1708-5ea6-9005-a8be3ac2ef47</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_1cac2908-291c-5a77-8219-e87543c35495"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_2351b29d-bf03-5431-9d3f-38fa3cb18be4">
+    <cim:IdentifiedObject.mRID>2351b29d-bf03-5431-9d3f-38fa3cb18be4</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_9bd08584-1708-5ea6-9005-a8be3ac2ef47"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_ded80d2f-cfcc-5165-abac-fafdacebb095">
+    <cim:IdentifiedObject.mRID>ded80d2f-cfcc-5165-abac-fafdacebb095</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_29bba711-5e33-5f4c-8fb4-7fd804c1c798">
+    <cim:IdentifiedObject.mRID>29bba711-5e33-5f4c-8fb4-7fd804c1c798</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_ded80d2f-cfcc-5165-abac-fafdacebb095"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_00391a9f-c9f1-56cf-8db4-723a9dcd9f4e">
+    <cim:IdentifiedObject.mRID>00391a9f-c9f1-56cf-8db4-723a9dcd9f4e</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_43f7fbe2-f2b7-50fa-87cc-ff525ca9cfe4"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_29bba711-5e33-5f4c-8fb4-7fd804c1c798"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_a2f174ee-4927-580c-851f-5a3bd321e861">
+    <cim:IdentifiedObject.name>与那原変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a2f174ee-4927-580c-851f-5a3bd321e861</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_69de1dee-ed1e-5b29-b06e-faf60deb5e4e">
+    <cim:IdentifiedObject.mRID>69de1dee-ed1e-5b29-b06e-faf60deb5e4e</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_e200e922-8f34-5bbb-b9d6-332ebecff0d4">
+    <cim:IdentifiedObject.mRID>e200e922-8f34-5bbb-b9d6-332ebecff0d4</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a2f174ee-4927-580c-851f-5a3bd321e861"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_69de1dee-ed1e-5b29-b06e-faf60deb5e4e"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_07f79f47-f420-5b20-9394-4084be5bd1a9">
+    <cim:IdentifiedObject.mRID>07f79f47-f420-5b20-9394-4084be5bd1a9</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a2f174ee-4927-580c-851f-5a3bd321e861"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_e200e922-8f34-5bbb-b9d6-332ebecff0d4"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_64e81047-7886-54df-b886-0079a50524d6">
+    <cim:IdentifiedObject.mRID>64e81047-7886-54df-b886-0079a50524d6</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_1688a28c-32b2-5540-a43a-914b7da7c17a">
+    <cim:IdentifiedObject.mRID>1688a28c-32b2-5540-a43a-914b7da7c17a</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_a2f174ee-4927-580c-851f-5a3bd321e861"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_64e81047-7886-54df-b886-0079a50524d6"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_93e14fe0-320a-5e40-8979-50bd8ee524aa">
+    <cim:IdentifiedObject.mRID>93e14fe0-320a-5e40-8979-50bd8ee524aa</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a2f174ee-4927-580c-851f-5a3bd321e861"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_1688a28c-32b2-5540-a43a-914b7da7c17a"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_ddf1dba9-ed40-513e-a6b6-1963ce7be3b7">
+    <cim:IdentifiedObject.name>那覇変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ddf1dba9-ed40-513e-a6b6-1963ce7be3b7</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_31c6faa4-f596-50f1-87a0-0ce74f439b43">
+    <cim:IdentifiedObject.mRID>31c6faa4-f596-50f1-87a0-0ce74f439b43</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_0d434ded-c02e-5338-aeb4-9ffd40cea6d5">
+    <cim:IdentifiedObject.mRID>0d434ded-c02e-5338-aeb4-9ffd40cea6d5</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_ddf1dba9-ed40-513e-a6b6-1963ce7be3b7"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_31c6faa4-f596-50f1-87a0-0ce74f439b43"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_9993eeaa-1931-5d2a-817f-d34162fe20ce">
+    <cim:IdentifiedObject.mRID>9993eeaa-1931-5d2a-817f-d34162fe20ce</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_ddf1dba9-ed40-513e-a6b6-1963ce7be3b7"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_0d434ded-c02e-5338-aeb4-9ffd40cea6d5"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_85d1647e-4497-52c5-b00d-382705392390">
+    <cim:IdentifiedObject.mRID>85d1647e-4497-52c5-b00d-382705392390</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_41c08ae6-a6a5-556e-af0c-e6e7f0325cb7">
+    <cim:IdentifiedObject.mRID>41c08ae6-a6a5-556e-af0c-e6e7f0325cb7</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_ddf1dba9-ed40-513e-a6b6-1963ce7be3b7"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_85d1647e-4497-52c5-b00d-382705392390"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_33b463c6-5df5-53f2-bcf1-ba8eec39682f">
+    <cim:IdentifiedObject.mRID>33b463c6-5df5-53f2-bcf1-ba8eec39682f</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_ddf1dba9-ed40-513e-a6b6-1963ce7be3b7"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_41c08ae6-a6a5-556e-af0c-e6e7f0325cb7"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_1db5ad65-533a-53bd-8e3e-a0dd60c9f14b">
+    <cim:IdentifiedObject.name>那覇変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1db5ad65-533a-53bd-8e3e-a0dd60c9f14b</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_e6147879-521b-5cf7-93f7-c5244b835162">
+    <cim:IdentifiedObject.mRID>e6147879-521b-5cf7-93f7-c5244b835162</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_a8041049-dd4f-57e8-9ff1-52385e50c228">
+    <cim:IdentifiedObject.mRID>a8041049-dd4f-57e8-9ff1-52385e50c228</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1db5ad65-533a-53bd-8e3e-a0dd60c9f14b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e6147879-521b-5cf7-93f7-c5244b835162"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_358a1136-6cec-5ea1-b4d8-4278da52825c">
+    <cim:IdentifiedObject.mRID>358a1136-6cec-5ea1-b4d8-4278da52825c</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1db5ad65-533a-53bd-8e3e-a0dd60c9f14b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_a8041049-dd4f-57e8-9ff1-52385e50c228"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_96b0fda4-fd5a-5497-99a8-cdfe712db83b">
+    <cim:IdentifiedObject.mRID>96b0fda4-fd5a-5497-99a8-cdfe712db83b</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_7154718a-710b-5f0c-806e-1407afb06b2c">
+    <cim:IdentifiedObject.mRID>7154718a-710b-5f0c-806e-1407afb06b2c</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_1db5ad65-533a-53bd-8e3e-a0dd60c9f14b"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_96b0fda4-fd5a-5497-99a8-cdfe712db83b"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_7042af3c-92ca-5b95-98e9-f15e294226bf">
+    <cim:IdentifiedObject.mRID>7042af3c-92ca-5b95-98e9-f15e294226bf</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_1db5ad65-533a-53bd-8e3e-a0dd60c9f14b"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_7154718a-710b-5f0c-806e-1407afb06b2c"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_9215e416-c211-528e-95e8-2d12c28ff553">
     <cim:IdentifiedObject.name>牧港五丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -3972,7 +4791,7 @@
     <cim:TransformerEnd.Terminal rdf:resource="#_7eb057fc-a7d0-5f42-93df-083e1d9adfe8"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_17c04ff8-0cad-5c44-b99e-a6c332a510bc">
-    <cim:IdentifiedObject.name>瑞慶覧変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>瑞慶覧変電所 66/6kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>17c04ff8-0cad-5c44-b99e-a6c332a510bc</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
   </cim:PowerTransformer>
@@ -3988,9 +4807,9 @@
   <cim:PowerTransformerEnd rdf:ID="_b09f417b-5bc2-58a9-af5c-dbd1774534f1">
     <cim:IdentifiedObject.mRID>b09f417b-5bc2-58a9-af5c-dbd1774534f1</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_17c04ff8-0cad-5c44-b99e-a6c332a510bc"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_ca56f62b-f1b4-5e3e-b731-cc899b2451c0"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_aeb375c5-64e8-5a87-b913-ecdf0800e3d3">
@@ -4005,10 +4824,49 @@
   <cim:PowerTransformerEnd rdf:ID="_f7addf15-875c-5805-a177-d16b2736e23c">
     <cim:IdentifiedObject.mRID>f7addf15-875c-5805-a177-d16b2736e23c</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_17c04ff8-0cad-5c44-b99e-a6c332a510bc"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_e69b7af7-5479-53f8-9d07-e203ee712968"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_bfcf87c6-1162-52fb-a03b-d2d7eabee3c7">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>bfcf87c6-1162-52fb-a03b-d2d7eabee3c7</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_81e037a9-5ea1-5071-91e2-ad6492960ce7">
+    <cim:IdentifiedObject.mRID>81e037a9-5ea1-5071-91e2-ad6492960ce7</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_9fbd975d-e867-5ab8-9b68-5c744226017b">
+    <cim:IdentifiedObject.mRID>9fbd975d-e867-5ab8-9b68-5c744226017b</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_bfcf87c6-1162-52fb-a03b-d2d7eabee3c7"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_81e037a9-5ea1-5071-91e2-ad6492960ce7"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_c879894a-b1c6-5c43-abea-8b0b8bde9993">
+    <cim:IdentifiedObject.mRID>c879894a-b1c6-5c43-abea-8b0b8bde9993</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_bfcf87c6-1162-52fb-a03b-d2d7eabee3c7"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_9fbd975d-e867-5ab8-9b68-5c744226017b"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_11a52ef4-2b5c-5502-b2b6-d259c1364a63">
+    <cim:IdentifiedObject.mRID>11a52ef4-2b5c-5502-b2b6-d259c1364a63</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_ac44f76e-312e-564c-aef9-cb1688f3218b">
+    <cim:IdentifiedObject.mRID>ac44f76e-312e-564c-aef9-cb1688f3218b</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_bfcf87c6-1162-52fb-a03b-d2d7eabee3c7"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_11a52ef4-2b5c-5502-b2b6-d259c1364a63"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_b596c48c-a278-5fb1-958c-4f9ac9dba7e2">
+    <cim:IdentifiedObject.mRID>b596c48c-a278-5fb1-958c-4f9ac9dba7e2</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_bfcf87c6-1162-52fb-a03b-d2d7eabee3c7"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_ac44f76e-312e-564c-aef9-cb1688f3218b"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_cd78d59e-9bd7-51b9-bbf0-d06a28ac0a5b">
     <cim:IdentifiedObject.name>美里六丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -4205,8 +5063,86 @@
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_bdd66a00-ce9d-5ccb-a2e6-11b3011da89a"/>
   </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba">
+    <cim:IdentifiedObject.name>小那覇変電所 66/13kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_0772f249-7c77-5e4f-9219-81082b6bbc99">
+    <cim:IdentifiedObject.mRID>0772f249-7c77-5e4f-9219-81082b6bbc99</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_dd3aeb4f-c0e3-5e26-aeb7-4d54d4a08e48">
+    <cim:IdentifiedObject.mRID>dd3aeb4f-c0e3-5e26-aeb7-4d54d4a08e48</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_0772f249-7c77-5e4f-9219-81082b6bbc99"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_7a51b7ca-5062-571c-93ef-3ac7f12120a3">
+    <cim:IdentifiedObject.mRID>7a51b7ca-5062-571c-93ef-3ac7f12120a3</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_dd3aeb4f-c0e3-5e26-aeb7-4d54d4a08e48"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_fd8e18fd-a56f-5670-9331-13b5a3893852">
+    <cim:IdentifiedObject.mRID>fd8e18fd-a56f-5670-9331-13b5a3893852</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_2a826ef4-8c56-5866-ab0f-541ba82acdf7">
+    <cim:IdentifiedObject.mRID>2a826ef4-8c56-5866-ab0f-541ba82acdf7</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_fd8e18fd-a56f-5670-9331-13b5a3893852"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_81d166dc-b285-55ef-959a-48f96c09c5e9">
+    <cim:IdentifiedObject.mRID>81d166dc-b285-55ef-959a-48f96c09c5e9</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>13.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_b04d0d25-7d17-5ffb-bd41-eb97c4bf04ba"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_2a826ef4-8c56-5866-ab0f-541ba82acdf7"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047">
+    <cim:IdentifiedObject.name>小那覇変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_95712533-184e-5514-9bc7-8fa9b5f5737b">
+    <cim:IdentifiedObject.mRID>95712533-184e-5514-9bc7-8fa9b5f5737b</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_42a46c61-e6f6-501e-8a78-00685c4eaeeb">
+    <cim:IdentifiedObject.mRID>42a46c61-e6f6-501e-8a78-00685c4eaeeb</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_95712533-184e-5514-9bc7-8fa9b5f5737b"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_0af4b718-4770-532f-a0ab-c47125957778">
+    <cim:IdentifiedObject.mRID>0af4b718-4770-532f-a0ab-c47125957778</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_42a46c61-e6f6-501e-8a78-00685c4eaeeb"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_76f84933-1e2c-5422-b3f1-9d681973f1f4">
+    <cim:IdentifiedObject.mRID>76f84933-1e2c-5422-b3f1-9d681973f1f4</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_40423a68-ce12-5f5f-a75f-cc7887a87ffd">
+    <cim:IdentifiedObject.mRID>40423a68-ce12-5f5f-a75f-cc7887a87ffd</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_76f84933-1e2c-5422-b3f1-9d681973f1f4"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_5d0db8cf-2b66-5d24-8124-c1a56f0d3f3d">
+    <cim:IdentifiedObject.mRID>5d0db8cf-2b66-5d24-8124-c1a56f0d3f3d</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_0ff2f5dd-59b1-5a31-bc8f-ea257a4fa047"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_40423a68-ce12-5f5f-a75f-cc7887a87ffd"/>
+  </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_51e99a40-3aee-5211-a367-03c9b6a04814">
-    <cim:IdentifiedObject.name>友寄変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>友寄変電所 66/6kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>51e99a40-3aee-5211-a367-03c9b6a04814</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
   </cim:PowerTransformer>
@@ -4222,9 +5158,9 @@
   <cim:PowerTransformerEnd rdf:ID="_8d2d8967-cae4-5dd8-a73d-fd8e92d80ee1">
     <cim:IdentifiedObject.mRID>8d2d8967-cae4-5dd8-a73d-fd8e92d80ee1</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_51e99a40-3aee-5211-a367-03c9b6a04814"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_684770e5-0645-5f4c-9936-64e3bd345c33"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_aa9844b4-d61b-542f-a7a1-6b8ac399f74c">
@@ -4239,10 +5175,127 @@
   <cim:PowerTransformerEnd rdf:ID="_3a057b85-79c4-5be8-9493-7e0867608085">
     <cim:IdentifiedObject.mRID>3a057b85-79c4-5be8-9493-7e0867608085</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_51e99a40-3aee-5211-a367-03c9b6a04814"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_f245126d-3020-5309-be01-fdd6c04fae5c"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_dc16e460-ff26-50db-a208-167f11e97f38">
+    <cim:IdentifiedObject.name>友寄変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>dc16e460-ff26-50db-a208-167f11e97f38</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_1f26212b-2f76-520e-a07a-017de0e27f05">
+    <cim:IdentifiedObject.mRID>1f26212b-2f76-520e-a07a-017de0e27f05</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_09001142-5bdb-5dfd-b121-7f197d3383b9">
+    <cim:IdentifiedObject.mRID>09001142-5bdb-5dfd-b121-7f197d3383b9</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_dc16e460-ff26-50db-a208-167f11e97f38"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_1f26212b-2f76-520e-a07a-017de0e27f05"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_b5999e8d-fc03-58cc-a972-9779d435848e">
+    <cim:IdentifiedObject.mRID>b5999e8d-fc03-58cc-a972-9779d435848e</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_dc16e460-ff26-50db-a208-167f11e97f38"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_09001142-5bdb-5dfd-b121-7f197d3383b9"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_574cc66a-f0e7-59f9-b30f-c294e28dd4fa">
+    <cim:IdentifiedObject.mRID>574cc66a-f0e7-59f9-b30f-c294e28dd4fa</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_6969c398-33ab-5465-9434-61016497d6fd">
+    <cim:IdentifiedObject.mRID>6969c398-33ab-5465-9434-61016497d6fd</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_dc16e460-ff26-50db-a208-167f11e97f38"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_574cc66a-f0e7-59f9-b30f-c294e28dd4fa"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_01911c3a-836c-553b-9299-a48e048a8259">
+    <cim:IdentifiedObject.mRID>01911c3a-836c-553b-9299-a48e048a8259</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_dc16e460-ff26-50db-a208-167f11e97f38"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_6969c398-33ab-5465-9434-61016497d6fd"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_0da1b5eb-105d-57d0-b15f-38a4a0adcd65">
+    <cim:IdentifiedObject.name>佐敷変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>0da1b5eb-105d-57d0-b15f-38a4a0adcd65</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_b5a8a115-c0bd-543e-8b86-10845373fa36">
+    <cim:IdentifiedObject.mRID>b5a8a115-c0bd-543e-8b86-10845373fa36</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_fd6c6e38-b536-59cc-9960-f7f795c73933">
+    <cim:IdentifiedObject.mRID>fd6c6e38-b536-59cc-9960-f7f795c73933</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_0da1b5eb-105d-57d0-b15f-38a4a0adcd65"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_b5a8a115-c0bd-543e-8b86-10845373fa36"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_62da251f-0c9f-56e4-9872-ca65e2879925">
+    <cim:IdentifiedObject.mRID>62da251f-0c9f-56e4-9872-ca65e2879925</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_0da1b5eb-105d-57d0-b15f-38a4a0adcd65"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_fd6c6e38-b536-59cc-9960-f7f795c73933"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_5805c6d4-eb34-5384-a581-8eb32402151d">
+    <cim:IdentifiedObject.mRID>5805c6d4-eb34-5384-a581-8eb32402151d</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_bd726aa7-135e-5a0b-b317-c1466cb0236e">
+    <cim:IdentifiedObject.mRID>bd726aa7-135e-5a0b-b317-c1466cb0236e</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_0da1b5eb-105d-57d0-b15f-38a4a0adcd65"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_5805c6d4-eb34-5384-a581-8eb32402151d"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_388c8e31-f732-5887-8dde-9daf1acf41dd">
+    <cim:IdentifiedObject.mRID>388c8e31-f732-5887-8dde-9daf1acf41dd</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_0da1b5eb-105d-57d0-b15f-38a4a0adcd65"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_bd726aa7-135e-5a0b-b317-c1466cb0236e"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_6b9e2e22-6e00-58a5-94b5-6b17e2082785">
+    <cim:IdentifiedObject.name>佐敷変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6b9e2e22-6e00-58a5-94b5-6b17e2082785</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_5709d4f2-f949-5fa9-a762-746cedb75b16">
+    <cim:IdentifiedObject.mRID>5709d4f2-f949-5fa9-a762-746cedb75b16</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_1baa4393-6a8a-53fc-af9a-b18a69a416ad">
+    <cim:IdentifiedObject.mRID>1baa4393-6a8a-53fc-af9a-b18a69a416ad</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_6b9e2e22-6e00-58a5-94b5-6b17e2082785"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_5709d4f2-f949-5fa9-a762-746cedb75b16"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_7cafeabf-a2df-5d08-8afb-94842709520b">
+    <cim:IdentifiedObject.mRID>7cafeabf-a2df-5d08-8afb-94842709520b</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6b9e2e22-6e00-58a5-94b5-6b17e2082785"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_1baa4393-6a8a-53fc-af9a-b18a69a416ad"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_4e29e5ae-f7bc-58fe-ab9f-c86c39343258">
+    <cim:IdentifiedObject.mRID>4e29e5ae-f7bc-58fe-ab9f-c86c39343258</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_3435e5fd-32ed-5c97-905c-c811352712fe">
+    <cim:IdentifiedObject.mRID>3435e5fd-32ed-5c97-905c-c811352712fe</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_6b9e2e22-6e00-58a5-94b5-6b17e2082785"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_4e29e5ae-f7bc-58fe-ab9f-c86c39343258"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_580c602b-c0f9-5bf0-ab05-1906a2fb0d74">
+    <cim:IdentifiedObject.mRID>580c602b-c0f9-5bf0-ab05-1906a2fb0d74</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6b9e2e22-6e00-58a5-94b5-6b17e2082785"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_3435e5fd-32ed-5c97-905c-c811352712fe"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_cecb3933-c13f-5c4b-bae4-e45a622727a0">
     <cim:IdentifiedObject.name>田港変電所 66/13kV変圧器</cim:IdentifiedObject.name>
@@ -4321,6 +5374,45 @@
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_8bf0e1b9-e96b-5232-a6f9-dbf2d27dc85a"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_e3c8ef0f-aa90-5e74-b3c5-9acfa24951ee"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_bf5c68e3-4e4a-52c0-bd85-081e71746323">
+    <cim:IdentifiedObject.name>喜瀬変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>bf5c68e3-4e4a-52c0-bd85-081e71746323</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_1079a00f-3623-5d50-8500-6858f8ee5125"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_55dc18be-6666-5d62-a9af-92cc6f5b5af8">
+    <cim:IdentifiedObject.mRID>55dc18be-6666-5d62-a9af-92cc6f5b5af8</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_20473f0a-1ff9-5276-819e-3496bef583f8">
+    <cim:IdentifiedObject.mRID>20473f0a-1ff9-5276-819e-3496bef583f8</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_bf5c68e3-4e4a-52c0-bd85-081e71746323"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_55dc18be-6666-5d62-a9af-92cc6f5b5af8"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_787defcf-02f6-541c-b90b-c565c77fcaac">
+    <cim:IdentifiedObject.mRID>787defcf-02f6-541c-b90b-c565c77fcaac</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_bf5c68e3-4e4a-52c0-bd85-081e71746323"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_20473f0a-1ff9-5276-819e-3496bef583f8"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_0a8c6e75-8a70-5116-ac5b-bbd4aca7d07b">
+    <cim:IdentifiedObject.mRID>0a8c6e75-8a70-5116-ac5b-bbd4aca7d07b</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_9a31172b-41ec-57b9-ab9e-ea7f74eacfd4">
+    <cim:IdentifiedObject.mRID>9a31172b-41ec-57b9-ab9e-ea7f74eacfd4</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_bf5c68e3-4e4a-52c0-bd85-081e71746323"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_0a8c6e75-8a70-5116-ac5b-bbd4aca7d07b"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_843337e3-f824-5017-8d47-27ba2b6018f5">
+    <cim:IdentifiedObject.mRID>843337e3-f824-5017-8d47-27ba2b6018f5</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_bf5c68e3-4e4a-52c0-bd85-081e71746323"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_9a31172b-41ec-57b9-ab9e-ea7f74eacfd4"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_ad9b0f75-9dcd-51d6-96e1-1e55dda8ee9a">
     <cim:IdentifiedObject.name>石川曙三丁目変電所 132/66kV変圧器</cim:IdentifiedObject.name>
@@ -4440,7 +5532,7 @@
     <cim:TransformerEnd.Terminal rdf:resource="#_3de79c3f-b697-5b83-ad60-1c0d576ccd39"/>
   </cim:PowerTransformerEnd>
   <cim:PowerTransformer rdf:ID="_ee55b569-0f72-502c-92cd-a9833802b0a4">
-    <cim:IdentifiedObject.name>北那覇変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>北那覇変電所 66/22kV変圧器</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ee55b569-0f72-502c-92cd-a9833802b0a4</cim:IdentifiedObject.mRID>
     <cim:Equipment.EquipmentContainer rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
   </cim:PowerTransformer>
@@ -4456,9 +5548,9 @@
   <cim:PowerTransformerEnd rdf:ID="_23def317-b247-5632-8e37-bb984ff1dfd3">
     <cim:IdentifiedObject.mRID>23def317-b247-5632-8e37-bb984ff1dfd3</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_ee55b569-0f72-502c-92cd-a9833802b0a4"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_1bba39a4-e523-5432-97b6-547d7a8c0023"/>
   </cim:PowerTransformerEnd>
   <cim:ConnectivityNode rdf:ID="_2a10dcbe-eb5b-5604-819a-b79b195e1eba">
@@ -4473,49 +5565,205 @@
   <cim:PowerTransformerEnd rdf:ID="_57021d7d-2d2c-53b3-8a6d-ed1411c01127">
     <cim:IdentifiedObject.mRID>57021d7d-2d2c-53b3-8a6d-ed1411c01127</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
-    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
     <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_ee55b569-0f72-502c-92cd-a9833802b0a4"/>
-    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
     <cim:TransformerEnd.Terminal rdf:resource="#_2a9d91f7-36bb-533f-8767-87aee05a801d"/>
   </cim:PowerTransformerEnd>
-  <cim:PowerTransformer rdf:ID="_a0ddd020-e62b-5f24-8384-6c80ec575d2a">
-    <cim:IdentifiedObject.name>津花波変電所 132/66kV変圧器</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>a0ddd020-e62b-5f24-8384-6c80ec575d2a</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
+  <cim:PowerTransformer rdf:ID="_63c63b3a-76e1-59f0-8340-91d9b08d6541">
+    <cim:IdentifiedObject.name>北那覇変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>63c63b3a-76e1-59f0-8340-91d9b08d6541</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
   </cim:PowerTransformer>
-  <cim:ConnectivityNode rdf:ID="_95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6">
-    <cim:IdentifiedObject.mRID>95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_6b9ba7c1-ef84-5432-a503-c6299ae7aedc">
+    <cim:IdentifiedObject.mRID>6b9ba7c1-ef84-5432-a503-c6299ae7aedc</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_af826d9c-674f-5f3e-9450-4fcf91e768f9">
-    <cim:IdentifiedObject.mRID>af826d9c-674f-5f3e-9450-4fcf91e768f9</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_53d9efc3-ad7a-5a14-95dc-ca98f7bbd0fa">
+    <cim:IdentifiedObject.mRID>53d9efc3-ad7a-5a14-95dc-ca98f7bbd0fa</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_95fbe71d-99b3-55c5-a28e-7c43c9e0e5f6"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_63c63b3a-76e1-59f0-8340-91d9b08d6541"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_6b9ba7c1-ef84-5432-a503-c6299ae7aedc"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_4c8e2c5e-d220-5264-9741-31d7d9b6f00f">
-    <cim:IdentifiedObject.mRID>4c8e2c5e-d220-5264-9741-31d7d9b6f00f</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_58c7f253-226f-5a72-b106-eee996b90616">
+    <cim:IdentifiedObject.mRID>58c7f253-226f-5a72-b106-eee996b90616</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_63c63b3a-76e1-59f0-8340-91d9b08d6541"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_53d9efc3-ad7a-5a14-95dc-ca98f7bbd0fa"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_be12a011-cb97-596f-8f52-b30e4c754496">
+    <cim:IdentifiedObject.mRID>be12a011-cb97-596f-8f52-b30e4c754496</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_d5ffa2e4-cebe-5cc0-b4da-3eaa85ccd53a">
+    <cim:IdentifiedObject.mRID>d5ffa2e4-cebe-5cc0-b4da-3eaa85ccd53a</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_63c63b3a-76e1-59f0-8340-91d9b08d6541"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_be12a011-cb97-596f-8f52-b30e4c754496"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_3ab9f9f5-fe95-58bc-b5b6-4f9a9984909c">
+    <cim:IdentifiedObject.mRID>3ab9f9f5-fe95-58bc-b5b6-4f9a9984909c</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_63c63b3a-76e1-59f0-8340-91d9b08d6541"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_d5ffa2e4-cebe-5cc0-b4da-3eaa85ccd53a"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_c52bd3d7-155e-578e-8a8e-f8315fb3e2ff">
+    <cim:IdentifiedObject.name>北那覇変電所 132/66kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c52bd3d7-155e-578e-8a8e-f8315fb3e2ff</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_041d6059-1e34-590f-9be0-77dbed101f45">
+    <cim:IdentifiedObject.mRID>041d6059-1e34-590f-9be0-77dbed101f45</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_9952ce88-190e-57e1-aae9-3db32f7a8f6d">
+    <cim:IdentifiedObject.mRID>9952ce88-190e-57e1-aae9-3db32f7a8f6d</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c52bd3d7-155e-578e-8a8e-f8315fb3e2ff"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_041d6059-1e34-590f-9be0-77dbed101f45"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_38272ed8-b30f-5c61-9907-a7f3d1d5e4da">
+    <cim:IdentifiedObject.mRID>38272ed8-b30f-5c61-9907-a7f3d1d5e4da</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>132.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_c52bd3d7-155e-578e-8a8e-f8315fb3e2ff"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_af826d9c-674f-5f3e-9450-4fcf91e768f9"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_9952ce88-190e-57e1-aae9-3db32f7a8f6d"/>
   </cim:PowerTransformerEnd>
-  <cim:ConnectivityNode rdf:ID="_ed563171-cdb6-5aa7-8c64-6e37c25b9a8b">
-    <cim:IdentifiedObject.mRID>ed563171-cdb6-5aa7-8c64-6e37c25b9a8b</cim:IdentifiedObject.mRID>
+  <cim:ConnectivityNode rdf:ID="_d9144efc-0213-54de-bffa-4455c2146201">
+    <cim:IdentifiedObject.mRID>d9144efc-0213-54de-bffa-4455c2146201</cim:IdentifiedObject.mRID>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_61e35449-ecfa-5177-b865-950cc751b31f">
-    <cim:IdentifiedObject.mRID>61e35449-ecfa-5177-b865-950cc751b31f</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_bfd8b353-326c-53eb-9270-652cf54e8e3a">
+    <cim:IdentifiedObject.mRID>bfd8b353-326c-53eb-9270-652cf54e8e3a</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_ed563171-cdb6-5aa7-8c64-6e37c25b9a8b"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c52bd3d7-155e-578e-8a8e-f8315fb3e2ff"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_d9144efc-0213-54de-bffa-4455c2146201"/>
   </cim:Terminal>
-  <cim:PowerTransformerEnd rdf:ID="_e35f7a61-1b85-563c-b24c-68d8577536d7">
-    <cim:IdentifiedObject.mRID>e35f7a61-1b85-563c-b24c-68d8577536d7</cim:IdentifiedObject.mRID>
+  <cim:PowerTransformerEnd rdf:ID="_3784e6de-52ab-5086-867e-94a8c29c10ed">
+    <cim:IdentifiedObject.mRID>3784e6de-52ab-5086-867e-94a8c29c10ed</cim:IdentifiedObject.mRID>
     <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
     <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
-    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_a0ddd020-e62b-5f24-8384-6c80ec575d2a"/>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_c52bd3d7-155e-578e-8a8e-f8315fb3e2ff"/>
     <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:TransformerEnd.Terminal rdf:resource="#_61e35449-ecfa-5177-b865-950cc751b31f"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_bfd8b353-326c-53eb-9270-652cf54e8e3a"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_6c0b9fa5-7df6-5cf6-b56b-442902f43c3e">
+    <cim:IdentifiedObject.name>曙変電所 66/22kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>6c0b9fa5-7df6-5cf6-b56b-442902f43c3e</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_81694291-5c43-57b6-ae96-258455faffb4">
+    <cim:IdentifiedObject.mRID>81694291-5c43-57b6-ae96-258455faffb4</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_cf56a6e1-ee8f-5616-a81f-6a64ba0c6203">
+    <cim:IdentifiedObject.mRID>cf56a6e1-ee8f-5616-a81f-6a64ba0c6203</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_6c0b9fa5-7df6-5cf6-b56b-442902f43c3e"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_81694291-5c43-57b6-ae96-258455faffb4"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_5769bc1e-9d6b-5cd3-8089-0fc49322dfac">
+    <cim:IdentifiedObject.mRID>5769bc1e-9d6b-5cd3-8089-0fc49322dfac</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6c0b9fa5-7df6-5cf6-b56b-442902f43c3e"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_cf56a6e1-ee8f-5616-a81f-6a64ba0c6203"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_07438159-b6aa-5129-a5f2-c947e44274e5">
+    <cim:IdentifiedObject.mRID>07438159-b6aa-5129-a5f2-c947e44274e5</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_e0c393b9-7287-540b-bb80-c46572881956">
+    <cim:IdentifiedObject.mRID>e0c393b9-7287-540b-bb80-c46572881956</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_6c0b9fa5-7df6-5cf6-b56b-442902f43c3e"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_07438159-b6aa-5129-a5f2-c947e44274e5"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_99cc128f-0747-5840-9de2-898efb7a3b01">
+    <cim:IdentifiedObject.mRID>99cc128f-0747-5840-9de2-898efb7a3b01</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>22.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_6c0b9fa5-7df6-5cf6-b56b-442902f43c3e"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_e0c393b9-7287-540b-bb80-c46572881956"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_05f3c98f-3ec9-5a81-9d72-75427485588a">
+    <cim:IdentifiedObject.name>曙変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>05f3c98f-3ec9-5a81-9d72-75427485588a</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_4c7d1d33-2de2-5be7-b6f5-d6e442638c4d">
+    <cim:IdentifiedObject.mRID>4c7d1d33-2de2-5be7-b6f5-d6e442638c4d</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_4bb6f394-03e5-5fb9-ac86-e1dc0cc98315">
+    <cim:IdentifiedObject.mRID>4bb6f394-03e5-5fb9-ac86-e1dc0cc98315</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_05f3c98f-3ec9-5a81-9d72-75427485588a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_4c7d1d33-2de2-5be7-b6f5-d6e442638c4d"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_cb150e90-0b31-5231-abf5-3cd2aadc0e62">
+    <cim:IdentifiedObject.mRID>cb150e90-0b31-5231-abf5-3cd2aadc0e62</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_05f3c98f-3ec9-5a81-9d72-75427485588a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_4bb6f394-03e5-5fb9-ac86-e1dc0cc98315"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_f664fde2-7da1-5c21-a086-8e104edc640d">
+    <cim:IdentifiedObject.mRID>f664fde2-7da1-5c21-a086-8e104edc640d</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_809cd92f-b9a1-5f8b-8d32-3eca86572adb">
+    <cim:IdentifiedObject.mRID>809cd92f-b9a1-5f8b-8d32-3eca86572adb</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_05f3c98f-3ec9-5a81-9d72-75427485588a"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_f664fde2-7da1-5c21-a086-8e104edc640d"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_9affe4c3-d761-53ac-98e9-f69bf40801c6">
+    <cim:IdentifiedObject.mRID>9affe4c3-d761-53ac-98e9-f69bf40801c6</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_05f3c98f-3ec9-5a81-9d72-75427485588a"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_809cd92f-b9a1-5f8b-8d32-3eca86572adb"/>
+  </cim:PowerTransformerEnd>
+  <cim:PowerTransformer rdf:ID="_2b440ebf-19f1-51a2-aad1-48a78f3a42ed">
+    <cim:IdentifiedObject.name>壷川変電所 66/6kV変圧器</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>2b440ebf-19f1-51a2-aad1-48a78f3a42ed</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_7e638064-cc77-58fd-8933-bf847de3010c"/>
+  </cim:PowerTransformer>
+  <cim:ConnectivityNode rdf:ID="_332961d7-2fb4-5d06-8846-82bb929f677e">
+    <cim:IdentifiedObject.mRID>332961d7-2fb4-5d06-8846-82bb929f677e</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_a731a813-f0a7-5eed-9464-6e8b95416612">
+    <cim:IdentifiedObject.mRID>a731a813-f0a7-5eed-9464-6e8b95416612</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2b440ebf-19f1-51a2-aad1-48a78f3a42ed"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_332961d7-2fb4-5d06-8846-82bb929f677e"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_9b84be76-4299-52a8-bf34-e1fcdbf6e77a">
+    <cim:IdentifiedObject.mRID>9b84be76-4299-52a8-bf34-e1fcdbf6e77a</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>1</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>66.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2b440ebf-19f1-51a2-aad1-48a78f3a42ed"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_a731a813-f0a7-5eed-9464-6e8b95416612"/>
+  </cim:PowerTransformerEnd>
+  <cim:ConnectivityNode rdf:ID="_801752fd-21cb-5151-9593-e0d9768c6245">
+    <cim:IdentifiedObject.mRID>801752fd-21cb-5151-9593-e0d9768c6245</cim:IdentifiedObject.mRID>
+  </cim:ConnectivityNode>
+  <cim:Terminal rdf:ID="_bfcd8f8d-b907-556f-9eb1-2007010457bd">
+    <cim:IdentifiedObject.mRID>bfcd8f8d-b907-556f-9eb1-2007010457bd</cim:IdentifiedObject.mRID>
+    <cim:ACDCTerminal.sequenceNumber>2</cim:ACDCTerminal.sequenceNumber>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_2b440ebf-19f1-51a2-aad1-48a78f3a42ed"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_801752fd-21cb-5151-9593-e0d9768c6245"/>
+  </cim:Terminal>
+  <cim:PowerTransformerEnd rdf:ID="_42fee0b9-7d9c-508a-ae6c-5f9341ce7bce">
+    <cim:IdentifiedObject.mRID>42fee0b9-7d9c-508a-ae6c-5f9341ce7bce</cim:IdentifiedObject.mRID>
+    <cim:TransformerEnd.endNumber>2</cim:TransformerEnd.endNumber>
+    <cim:PowerTransformerEnd.ratedU>6.0</cim:PowerTransformerEnd.ratedU>
+    <cim:PowerTransformerEnd.PowerTransformer rdf:resource="#_2b440ebf-19f1-51a2-aad1-48a78f3a42ed"/>
+    <cim:TransformerEnd.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:TransformerEnd.Terminal rdf:resource="#_bfcd8f8d-b907-556f-9eb1-2007010457bd"/>
   </cim:PowerTransformerEnd>
   <cim:VoltageLevel rdf:ID="_18d79fac-4abd-5aa9-9733-0d1c1015e3fd">
     <cim:IdentifiedObject.name>久茂地二丁目変電所 66kV</cim:IdentifiedObject.name>
@@ -4530,32 +5778,44 @@
     <cim:VoltageLevel.Substation rdf:resource="#_ae393e57-0681-5e2a-88e5-4e99664c4586"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_21ff0983-4158-58c6-8270-7a1574189058">
-    <cim:IdentifiedObject.name>小禄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>小禄変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>21ff0983-4158-58c6-8270-7a1574189058</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7f1046b4-9f41-5857-b1f0-f507ed8df9e0"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_d00b05dd-fa4e-5a84-81ba-a3c48e9f4a04">
+    <cim:IdentifiedObject.name>小禄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d00b05dd-fa4e-5a84-81ba-a3c48e9f4a04</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_7f1046b4-9f41-5857-b1f0-f507ed8df9e0"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_e639f954-4e2d-5033-a698-f260a7c1424b">
-    <cim:IdentifiedObject.name>上間変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>上間変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>e639f954-4e2d-5033-a698-f260a7c1424b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_d8d21b65-ea69-50cb-ad53-680eb01e6643">
+    <cim:IdentifiedObject.name>上間変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>d8d21b65-ea69-50cb-ad53-680eb01e6643</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_1ebb7559-cf6a-5bec-b74d-82c8d0d48fcd"/>
   </cim:VoltageLevel>
-  <cim:BusbarSection rdf:ID="_027ed7a3-a2e8-5525-b79e-cecacc9fb9cb">
+  <cim:BusbarSection rdf:ID="_8dd8f87b-5bdd-504f-91a3-cda534d7201f">
     <cim:IdentifiedObject.name>上間変電所 66kV 母線1 (推定)</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>027ed7a3-a2e8-5525-b79e-cecacc9fb9cb</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>8dd8f87b-5bdd-504f-91a3-cda534d7201f</cim:IdentifiedObject.mRID>
     <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_e639f954-4e2d-5033-a698-f260a7c1424b"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_d8d21b65-ea69-50cb-ad53-680eb01e6643"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_43399eb1-a560-5a36-81e0-7afac9465f12">
-    <cim:IdentifiedObject.mRID>43399eb1-a560-5a36-81e0-7afac9465f12</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_e639f954-4e2d-5033-a698-f260a7c1424b"/>
+  <cim:ConnectivityNode rdf:ID="_82e27a73-2dbd-567c-bd8b-20db3d9605ea">
+    <cim:IdentifiedObject.mRID>82e27a73-2dbd-567c-bd8b-20db3d9605ea</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_d8d21b65-ea69-50cb-ad53-680eb01e6643"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_27eafc00-2d84-5b90-9db0-7ef192b279c9">
-    <cim:IdentifiedObject.mRID>27eafc00-2d84-5b90-9db0-7ef192b279c9</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_04d20dc4-45d3-51d4-9e4f-3078d1768249">
+    <cim:IdentifiedObject.mRID>04d20dc4-45d3-51d4-9e4f-3078d1768249</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_027ed7a3-a2e8-5525-b79e-cecacc9fb9cb"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_43399eb1-a560-5a36-81e0-7afac9465f12"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_8dd8f87b-5bdd-504f-91a3-cda534d7201f"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_82e27a73-2dbd-567c-bd8b-20db3d9605ea"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_d76c0e06-1794-5502-97b4-cd8c98d5c3c1">
     <cim:IdentifiedObject.name>南風原変電所 132kV</cim:IdentifiedObject.name>
@@ -4564,8 +5824,14 @@
     <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_b872c23c-2dfd-523e-9878-3041a9d19594">
-    <cim:IdentifiedObject.name>南風原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>南風原変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b872c23c-2dfd-523e-9878-3041a9d19594</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_edf5b4d9-42bc-506b-9dff-c3587f15d77c">
+    <cim:IdentifiedObject.name>南風原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>edf5b4d9-42bc-506b-9dff-c3587f15d77c</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_c0cc387d-c3e4-55f9-949d-48cd2e3b3540"/>
   </cim:VoltageLevel>
@@ -4605,6 +5871,24 @@
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
     <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
   </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_09ab4d74-d603-59eb-b02b-0d14eccc4498">
+    <cim:IdentifiedObject.name>奥間変電所 22kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>09ab4d74-d603-59eb-b02b-0d14eccc4498</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_267c36ac-15c7-5d56-822a-263d5f076394">
+    <cim:IdentifiedObject.name>奥間変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>267c36ac-15c7-5d56-822a-263d5f076394</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_772c1808-b19d-52c0-9a8f-a2ad6de5a04f">
+    <cim:IdentifiedObject.name>奥間変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>772c1808-b19d-52c0-9a8f-a2ad6de5a04f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_0fe8cb29-9c8b-58ad-b341-3eed4318502c"/>
+  </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_6ba31080-a984-5e1a-86f0-3aba9915a0ad">
     <cim:IdentifiedObject.name>伊佐一丁目変電所 132kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>6ba31080-a984-5e1a-86f0-3aba9915a0ad</cim:IdentifiedObject.mRID>
@@ -4633,9 +5917,27 @@
     <cim:Terminal.ConductingEquipment rdf:resource="#_62d84170-1176-546d-ba8e-9c9773f0101a"/>
     <cim:Terminal.ConnectivityNode rdf:resource="#_b1c84161-ab9c-5d4b-a927-cb2efbe44738"/>
   </cim:Terminal>
+  <cim:VoltageLevel rdf:ID="_32b1b75b-1d96-555e-b9aa-5e4feb39ee58">
+    <cim:IdentifiedObject.name>泊変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>32b1b75b-1d96-555e-b9aa-5e4feb39ee58</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_07b8921a-6b65-5286-9de4-d7f2000a1d7d"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_15c23d28-8006-502b-b9b2-8b824ffad4e8">
+    <cim:IdentifiedObject.name>泊変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>15c23d28-8006-502b-b9b2-8b824ffad4e8</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_07b8921a-6b65-5286-9de4-d7f2000a1d7d"/>
+  </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_b22ca367-f51c-5724-8756-5553f96eff19">
-    <cim:IdentifiedObject.name>久茂地変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>久茂地変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>b22ca367-f51c-5724-8756-5553f96eff19</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_a0b7f16c-219a-586c-9325-c6adf1fa79de">
+    <cim:IdentifiedObject.name>久茂地変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>a0b7f16c-219a-586c-9325-c6adf1fa79de</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_3639e9b9-16c7-51ca-b7ab-05f0abbc41e1"/>
   </cim:VoltageLevel>
@@ -4646,10 +5948,40 @@
     <cim:VoltageLevel.Substation rdf:resource="#_b9d17c3c-295a-537b-bdf0-80b30e79f695"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_55476554-1ffc-5b71-ad69-fb742151c814">
-    <cim:IdentifiedObject.name>西那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>西那覇変電所 132kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>55476554-1ffc-5b71-ad69-fb742151c814</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e85ae119-1db2-5b3b-8363-e0d806b90f29">
+    <cim:IdentifiedObject.name>西那覇変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e85ae119-1db2-5b3b-8363-e0d806b90f29</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ec41f64e-a3fe-5010-bf31-c95dcc395e54">
+    <cim:IdentifiedObject.name>西那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ec41f64e-a3fe-5010-bf31-c95dcc395e54</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_a0654589-49dc-54b7-befa-8358447a3e91"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ae0468e0-fb5c-55c1-a759-a9cce5cb9aab">
+    <cim:IdentifiedObject.name>与根変電所 22kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ae0468e0-fb5c-55c1-a759-a9cce5cb9aab</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_dc1e89fd-2049-5aa7-a2db-010efe048292">
+    <cim:IdentifiedObject.name>与根変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>dc1e89fd-2049-5aa7-a2db-010efe048292</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_9916e8d8-15b8-5e90-88fc-ed30a41a9525">
+    <cim:IdentifiedObject.name>与根変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>9916e8d8-15b8-5e90-88fc-ed30a41a9525</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_8f343696-dbfb-5865-8102-93cbb22b82fd"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_e4207faf-d3f7-5b15-97c8-3ad34f64dfe3">
     <cim:IdentifiedObject.name>Kushi Water Purification Plant Substation 66kV</cim:IdentifiedObject.name>
@@ -4658,8 +5990,14 @@
     <cim:VoltageLevel.Substation rdf:resource="#_b1677e1f-afd3-5bab-a5b6-60f64851a006"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_ccff7670-ddb7-528a-a2b9-5ea6a52a81e7">
-    <cim:IdentifiedObject.name>松田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>松田変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>ccff7670-ddb7-528a-a2b9-5ea6a52a81e7</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_9f878f55-0016-58a1-aff5-ab2353bb9058"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_40b72cf4-7b95-5e9a-ae03-6f61852b15f1">
+    <cim:IdentifiedObject.name>松田変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>40b72cf4-7b95-5e9a-ae03-6f61852b15f1</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_9f878f55-0016-58a1-aff5-ab2353bb9058"/>
   </cim:VoltageLevel>
@@ -4685,8 +6023,20 @@
     <cim:Terminal.ConnectivityNode rdf:resource="#_dd1c291d-3099-5fd8-bd1f-6276df762870"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_dc588be4-b1f7-5c5d-8e99-94eb21bef2b1">
-    <cim:IdentifiedObject.name>海洋博変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>海洋博変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>dc588be4-b1f7-5c5d-8e99-94eb21bef2b1</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ab000607-5700-5317-bf61-9c339960ee09">
+    <cim:IdentifiedObject.name>海洋博変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ab000607-5700-5317-bf61-9c339960ee09</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_2f7a2eb9-55ed-549e-9c1d-07f1ce4005ad">
+    <cim:IdentifiedObject.name>海洋博変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>2f7a2eb9-55ed-549e-9c1d-07f1ce4005ad</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_7328152f-801e-5c3b-92c0-d273c58b0f54"/>
   </cim:VoltageLevel>
@@ -4725,25 +6075,31 @@
     <cim:VoltageLevel.Substation rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5">
-    <cim:IdentifiedObject.name>渡口変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>渡口変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>5f22ff07-17e9-5046-bdcf-67b19f8aeeb5</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_3570658d-18b1-5568-92f1-cdda376e237b">
+    <cim:IdentifiedObject.name>渡口変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>3570658d-18b1-5568-92f1-cdda376e237b</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_7acea5bb-3510-5c3d-a6cc-0d082d6082f5"/>
   </cim:VoltageLevel>
-  <cim:BusbarSection rdf:ID="_cbdf51dc-449c-5dcd-8ffe-560d9bb43666">
+  <cim:BusbarSection rdf:ID="_5a4a4781-6a16-557d-bd55-a085b01aa579">
     <cim:IdentifiedObject.name>渡口変電所 66kV 母線1</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>cbdf51dc-449c-5dcd-8ffe-560d9bb43666</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5"/>
+    <cim:IdentifiedObject.mRID>5a4a4781-6a16-557d-bd55-a085b01aa579</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_3570658d-18b1-5568-92f1-cdda376e237b"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_db5275ae-44c3-5938-bfbd-d7b6cfbc9aea">
-    <cim:IdentifiedObject.mRID>db5275ae-44c3-5938-bfbd-d7b6cfbc9aea</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_5f22ff07-17e9-5046-bdcf-67b19f8aeeb5"/>
+  <cim:ConnectivityNode rdf:ID="_51c41588-3eb5-5147-b84e-e15650f2198e">
+    <cim:IdentifiedObject.mRID>51c41588-3eb5-5147-b84e-e15650f2198e</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_3570658d-18b1-5568-92f1-cdda376e237b"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_4794ec12-bfc3-53f7-b192-2f89f50fce5a">
-    <cim:IdentifiedObject.mRID>4794ec12-bfc3-53f7-b192-2f89f50fce5a</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_451b9409-a6e9-5833-97a5-3727835374ad">
+    <cim:IdentifiedObject.mRID>451b9409-a6e9-5833-97a5-3727835374ad</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_cbdf51dc-449c-5dcd-8ffe-560d9bb43666"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_db5275ae-44c3-5938-bfbd-d7b6cfbc9aea"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_5a4a4781-6a16-557d-bd55-a085b01aa579"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_51c41588-3eb5-5147-b84e-e15650f2198e"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_6828ff53-54f7-597d-be48-905002cc7f78">
     <cim:IdentifiedObject.name>与那原変電所 132kV</cim:IdentifiedObject.name>
@@ -4752,8 +6108,20 @@
     <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_c980231f-45d4-5fa9-9957-b7b123e37d7a">
-    <cim:IdentifiedObject.name>与那原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>与那原変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>c980231f-45d4-5fa9-9957-b7b123e37d7a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_04cda3b7-b057-5f5d-baae-013cf504ebda">
+    <cim:IdentifiedObject.name>与那原変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>04cda3b7-b057-5f5d-baae-013cf504ebda</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_e37c4177-f287-529d-8939-f9578cfd4572">
+    <cim:IdentifiedObject.name>与那原変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>e37c4177-f287-529d-8939-f9578cfd4572</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_76069ab7-169f-539a-a94e-13206600dcf5"/>
   </cim:VoltageLevel>
@@ -4774,26 +6142,38 @@
     <cim:Terminal.ConnectivityNode rdf:resource="#_64f5bbc8-78bd-5f12-bffb-a2aa589e759e"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_67f2ba77-9986-58f3-847f-d53dc655bdbe">
-    <cim:IdentifiedObject.name>那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>那覇変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>67f2ba77-9986-58f3-847f-d53dc655bdbe</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_4181c53d-f623-5c97-a8f0-8e8329142a56">
+    <cim:IdentifiedObject.name>那覇変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>4181c53d-f623-5c97-a8f0-8e8329142a56</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_1a02d789-414f-53c3-8b59-8cd939716cd7">
+    <cim:IdentifiedObject.name>那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>1a02d789-414f-53c3-8b59-8cd939716cd7</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_979c61bc-fbd6-5135-a863-40a3e760344d"/>
   </cim:VoltageLevel>
-  <cim:BusbarSection rdf:ID="_5aff9b48-32e7-51db-8e67-3ba470327cfc">
+  <cim:BusbarSection rdf:ID="_c87bc544-c910-556e-b774-435248611dcc">
     <cim:IdentifiedObject.name>那覇変電所 66kV 母線1 (推定)</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>5aff9b48-32e7-51db-8e67-3ba470327cfc</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>c87bc544-c910-556e-b774-435248611dcc</cim:IdentifiedObject.mRID>
     <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_67f2ba77-9986-58f3-847f-d53dc655bdbe"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_1a02d789-414f-53c3-8b59-8cd939716cd7"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_0df88120-d1cd-5413-abe3-bf4c3521ac76">
-    <cim:IdentifiedObject.mRID>0df88120-d1cd-5413-abe3-bf4c3521ac76</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_67f2ba77-9986-58f3-847f-d53dc655bdbe"/>
+  <cim:ConnectivityNode rdf:ID="_e756b465-f451-5cbb-9071-601f19985dc4">
+    <cim:IdentifiedObject.mRID>e756b465-f451-5cbb-9071-601f19985dc4</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_1a02d789-414f-53c3-8b59-8cd939716cd7"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_2e67bcd8-349c-5376-bb2d-3ad0ddf10cd5">
-    <cim:IdentifiedObject.mRID>2e67bcd8-349c-5376-bb2d-3ad0ddf10cd5</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_33d7ba48-4c96-5136-9434-8e57ff526913">
+    <cim:IdentifiedObject.mRID>33d7ba48-4c96-5136-9434-8e57ff526913</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_5aff9b48-32e7-51db-8e67-3ba470327cfc"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_0df88120-d1cd-5413-abe3-bf4c3521ac76"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_c87bc544-c910-556e-b774-435248611dcc"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_e756b465-f451-5cbb-9071-601f19985dc4"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_37c79b0c-de33-50a0-8245-7405a116c1e7">
     <cim:IdentifiedObject.name>港川変電所 66kV</cim:IdentifiedObject.name>
@@ -4820,8 +6200,14 @@
     <cim:VoltageLevel.Substation rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_87e6e0bd-7bc1-5492-bfc3-80452246345a">
-    <cim:IdentifiedObject.name>瑞慶覧変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>瑞慶覧変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>87e6e0bd-7bc1-5492-bfc3-80452246345a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ba0ac5d8-b950-5283-886b-3e892b369390">
+    <cim:IdentifiedObject.name>瑞慶覧変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ba0ac5d8-b950-5283-886b-3e892b369390</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_3d99fd13-fa47-5d79-9988-cff4316a3477"/>
   </cim:VoltageLevel>
@@ -4841,21 +6227,21 @@
     <cim:Terminal.ConductingEquipment rdf:resource="#_d4749fc2-e7a4-53af-bfd9-57c6184254f4"/>
     <cim:Terminal.ConnectivityNode rdf:resource="#_b9a7eb65-fd03-5b45-97e5-40795b27782f"/>
   </cim:Terminal>
-  <cim:BusbarSection rdf:ID="_f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3">
+  <cim:BusbarSection rdf:ID="_939f0ffa-6453-59f2-835e-9b47bd64a3ea">
     <cim:IdentifiedObject.name>瑞慶覧変電所 66kV 母線2 (推定)</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>939f0ffa-6453-59f2-835e-9b47bd64a3ea</cim:IdentifiedObject.mRID>
     <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x2]</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_87e6e0bd-7bc1-5492-bfc3-80452246345a"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_ba0ac5d8-b950-5283-886b-3e892b369390"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_feb49795-831f-54fb-a671-756725cf78e1">
-    <cim:IdentifiedObject.mRID>feb49795-831f-54fb-a671-756725cf78e1</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_87e6e0bd-7bc1-5492-bfc3-80452246345a"/>
+  <cim:ConnectivityNode rdf:ID="_058526a3-7437-5c9e-971f-3e170726ff96">
+    <cim:IdentifiedObject.mRID>058526a3-7437-5c9e-971f-3e170726ff96</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_ba0ac5d8-b950-5283-886b-3e892b369390"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_92b05990-155f-5f0b-9433-cc320166298a">
-    <cim:IdentifiedObject.mRID>92b05990-155f-5f0b-9433-cc320166298a</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_6e4e02d5-289d-528f-bfe8-523d0687977a">
+    <cim:IdentifiedObject.mRID>6e4e02d5-289d-528f-bfe8-523d0687977a</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_f74c5409-bb35-5a96-b0bd-6ea3b17ceaa3"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_feb49795-831f-54fb-a671-756725cf78e1"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_939f0ffa-6453-59f2-835e-9b47bd64a3ea"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_058526a3-7437-5c9e-971f-3e170726ff96"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_5f843642-32f8-55f1-bb06-3224b6e0540c">
     <cim:IdentifiedObject.name>美里六丁目変電所 132kV</cim:IdentifiedObject.name>
@@ -4944,8 +6330,20 @@
     <cim:Terminal.ConnectivityNode rdf:resource="#_f3b47ca9-1297-52fb-8bfe-82cccc327611"/>
   </cim:Terminal>
   <cim:VoltageLevel rdf:ID="_faf615b0-9c51-5610-834c-db21f83eabb8">
-    <cim:IdentifiedObject.name>小那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>小那覇変電所 13kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>faf615b0-9c51-5610-834c-db21f83eabb8</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_c8db4480-81a7-5d8c-8a10-1a8d89100ebc"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_06442c65-f655-5287-97f0-afc6073c7fdf">
+    <cim:IdentifiedObject.name>小那覇変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>06442c65-f655-5287-97f0-afc6073c7fdf</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_c88a2742-510d-5392-8ca3-2b4536358b86">
+    <cim:IdentifiedObject.name>小那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>c88a2742-510d-5392-8ca3-2b4536358b86</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_de145a36-a00e-589a-a862-eac810694bc5"/>
   </cim:VoltageLevel>
@@ -4956,8 +6354,14 @@
     <cim:VoltageLevel.Substation rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_cde4d887-ddba-5a93-b683-4fd649755ea9">
-    <cim:IdentifiedObject.name>友寄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>友寄変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>cde4d887-ddba-5a93-b683-4fd649755ea9</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_5bfff397-6b9e-5059-aba8-7aecd2faa1bb">
+    <cim:IdentifiedObject.name>友寄変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>5bfff397-6b9e-5059-aba8-7aecd2faa1bb</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_d789d1de-d2e0-58b5-a862-b4895adbf90c"/>
   </cim:VoltageLevel>
@@ -4976,51 +6380,63 @@
     <cim:Terminal.ConductingEquipment rdf:resource="#_db063718-9a82-53e0-85df-aa32dd8aea88"/>
     <cim:Terminal.ConnectivityNode rdf:resource="#_a7edf327-7a14-5e82-bf05-bdb402a0640a"/>
   </cim:Terminal>
-  <cim:BusbarSection rdf:ID="_30617de7-7e82-58b2-b5de-d4401d8ca508">
+  <cim:BusbarSection rdf:ID="_5f5a9481-2147-5abd-ba22-0a1e35f8fa71">
     <cim:IdentifiedObject.name>友寄変電所 66kV 母線2</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>30617de7-7e82-58b2-b5de-d4401d8ca508</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+    <cim:IdentifiedObject.mRID>5f5a9481-2147-5abd-ba22-0a1e35f8fa71</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_5bfff397-6b9e-5059-aba8-7aecd2faa1bb"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_e16d1ad2-2801-5639-9682-40e4271c1272">
-    <cim:IdentifiedObject.mRID>e16d1ad2-2801-5639-9682-40e4271c1272</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  <cim:ConnectivityNode rdf:ID="_5b24c361-2c9b-5d90-878a-2f5e1ebb21da">
+    <cim:IdentifiedObject.mRID>5b24c361-2c9b-5d90-878a-2f5e1ebb21da</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_5bfff397-6b9e-5059-aba8-7aecd2faa1bb"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_7fab6cc2-25c2-5ee4-a459-24130079968f">
-    <cim:IdentifiedObject.mRID>7fab6cc2-25c2-5ee4-a459-24130079968f</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_21a0939c-bd40-5023-bd82-532657920e6a">
+    <cim:IdentifiedObject.mRID>21a0939c-bd40-5023-bd82-532657920e6a</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_30617de7-7e82-58b2-b5de-d4401d8ca508"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_e16d1ad2-2801-5639-9682-40e4271c1272"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_5f5a9481-2147-5abd-ba22-0a1e35f8fa71"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_5b24c361-2c9b-5d90-878a-2f5e1ebb21da"/>
   </cim:Terminal>
-  <cim:BusbarSection rdf:ID="_0ac98d20-2d04-5846-be61-bad1c7a72e31">
+  <cim:BusbarSection rdf:ID="_64df0c81-155d-5c92-8695-4765b47e084e">
     <cim:IdentifiedObject.name>友寄変電所 66kV 母線3</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>0ac98d20-2d04-5846-be61-bad1c7a72e31</cim:IdentifiedObject.mRID>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+    <cim:IdentifiedObject.mRID>64df0c81-155d-5c92-8695-4765b47e084e</cim:IdentifiedObject.mRID>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_5bfff397-6b9e-5059-aba8-7aecd2faa1bb"/>
   </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_47c75771-fa9a-51b6-b051-01d952775701">
-    <cim:IdentifiedObject.mRID>47c75771-fa9a-51b6-b051-01d952775701</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+  <cim:ConnectivityNode rdf:ID="_579acff1-08c8-579d-bdd3-7b651722c9c8">
+    <cim:IdentifiedObject.mRID>579acff1-08c8-579d-bdd3-7b651722c9c8</cim:IdentifiedObject.mRID>
+    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_5bfff397-6b9e-5059-aba8-7aecd2faa1bb"/>
   </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_63535641-d662-5fb1-82f6-de550e4778db">
-    <cim:IdentifiedObject.mRID>63535641-d662-5fb1-82f6-de550e4778db</cim:IdentifiedObject.mRID>
+  <cim:Terminal rdf:ID="_975c7d1d-031c-5d1d-b012-21094bc1d680">
+    <cim:IdentifiedObject.mRID>975c7d1d-031c-5d1d-b012-21094bc1d680</cim:IdentifiedObject.mRID>
     <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_0ac98d20-2d04-5846-be61-bad1c7a72e31"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_47c75771-fa9a-51b6-b051-01d952775701"/>
+    <cim:Terminal.ConductingEquipment rdf:resource="#_64df0c81-155d-5c92-8695-4765b47e084e"/>
+    <cim:Terminal.ConnectivityNode rdf:resource="#_579acff1-08c8-579d-bdd3-7b651722c9c8"/>
   </cim:Terminal>
-  <cim:Bay rdf:ID="_94e8bf9b-2334-5440-bc95-a07f7fe050f8">
+  <cim:Bay rdf:ID="_01f92600-e412-51db-a1b5-5bade27faa99">
     <cim:IdentifiedObject.name>友寄変電所 ベイ1</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>94e8bf9b-2334-5440-bc95-a07f7fe050f8</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_cde4d887-ddba-5a93-b683-4fd649755ea9"/>
+    <cim:IdentifiedObject.mRID>01f92600-e412-51db-a1b5-5bade27faa99</cim:IdentifiedObject.mRID>
+    <cim:Bay.VoltageLevel rdf:resource="#_5bfff397-6b9e-5059-aba8-7aecd2faa1bb"/>
   </cim:Bay>
-  <cim:Breaker rdf:ID="_75181d0e-e9b2-53ad-ba80-700c2070a21b">
+  <cim:Breaker rdf:ID="_043371f7-2ec5-5045-adec-c7be3ec80746">
     <cim:IdentifiedObject.name>友寄変電所 回線引出1</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>75181d0e-e9b2-53ad-ba80-700c2070a21b</cim:IdentifiedObject.mRID>
+    <cim:IdentifiedObject.mRID>043371f7-2ec5-5045-adec-c7be3ec80746</cim:IdentifiedObject.mRID>
     <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
     <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_94e8bf9b-2334-5440-bc95-a07f7fe050f8"/>
+    <cim:Equipment.EquipmentContainer rdf:resource="#_01f92600-e412-51db-a1b5-5bade27faa99"/>
   </cim:Breaker>
   <cim:VoltageLevel rdf:ID="_8f179e63-2be6-5369-a9a0-d0356d186570">
-    <cim:IdentifiedObject.name>佐敷変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>佐敷変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>8f179e63-2be6-5369-a9a0-d0356d186570</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_fd540245-c956-57f9-8997-b2c556a9577a">
+    <cim:IdentifiedObject.name>佐敷変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>fd540245-c956-57f9-8997-b2c556a9577a</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ec86fc6f-c10d-57e8-89dc-22484f4b0b5f">
+    <cim:IdentifiedObject.name>佐敷変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ec86fc6f-c10d-57e8-89dc-22484f4b0b5f</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_f856edc2-ae38-5796-98da-2219ab92da80"/>
   </cim:VoltageLevel>
@@ -5107,8 +6523,14 @@
     <cim:VoltageLevel.Substation rdf:resource="#_6fbe84ec-2c22-59d0-b6c7-0cc7a37a6b14"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_f6255ff1-cc36-58ed-95d4-a3d75a5721b1">
-    <cim:IdentifiedObject.name>喜瀬変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>喜瀬変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>f6255ff1-cc36-58ed-95d4-a3d75a5721b1</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_1079a00f-3623-5d50-8500-6858f8ee5125"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_77560e61-325d-530d-b871-206138d8568b">
+    <cim:IdentifiedObject.name>喜瀬変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>77560e61-325d-530d-b871-206138d8568b</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_1079a00f-3623-5d50-8500-6858f8ee5125"/>
   </cim:VoltageLevel>
@@ -5261,14 +6683,38 @@
     <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_785f0298-ab74-56c0-8cc1-17060781508f">
-    <cim:IdentifiedObject.name>北那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>北那覇変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>785f0298-ab74-56c0-8cc1-17060781508f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_270a75c3-9de8-5428-9a87-a3e81bbfe424">
+    <cim:IdentifiedObject.name>北那覇変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>270a75c3-9de8-5428-9a87-a3e81bbfe424</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_f5ec436d-690e-5f5d-85c1-f2bf16d4454e">
+    <cim:IdentifiedObject.name>北那覇変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f5ec436d-690e-5f5d-85c1-f2bf16d4454e</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_3d609bf4-95f6-545a-bcf9-e4d7448cf2db"/>
   </cim:VoltageLevel>
   <cim:VoltageLevel rdf:ID="_d3e770e6-4036-595a-9dda-3977ad3dcf2f">
-    <cim:IdentifiedObject.name>曙変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>曙変電所 22kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>d3e770e6-4036-595a-9dda-3977ad3dcf2f</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_95b441d6-2ad4-57a2-94c4-f1a286a1e177"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_8e56a20f-f898-592f-ae7c-9abe18013015">
+    <cim:IdentifiedObject.name>曙変電所 6kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>8e56a20f-f898-592f-ae7c-9abe18013015</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_f3db6503-13e9-5a0d-a1ce-dc0031a77357">
+    <cim:IdentifiedObject.name>曙変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>f3db6503-13e9-5a0d-a1ce-dc0031a77357</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_68e40856-d788-5f8c-9f60-ddaa0c6b6efe"/>
   </cim:VoltageLevel>
@@ -5278,115 +6724,15 @@
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_eafa7594-9866-5769-9a3d-614bfcd5ca4f"/>
     <cim:VoltageLevel.Substation rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
   </cim:VoltageLevel>
-  <cim:VoltageLevel rdf:ID="_9fcb083f-148d-57eb-b59c-b6f1d02fa29a">
-    <cim:IdentifiedObject.name>津花波変電所 66kV</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>9fcb083f-148d-57eb-b59c-b6f1d02fa29a</cim:IdentifiedObject.mRID>
-    <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
-    <cim:VoltageLevel.Substation rdf:resource="#_42cbeb33-365b-5e66-87d9-24dc7c3f6f18"/>
-  </cim:VoltageLevel>
-  <cim:BusbarSection rdf:ID="_eade60a4-45f1-50b8-ab23-34737ea73998">
-    <cim:IdentifiedObject.name>津花波変電所 132kV 母線1 (推定)</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>eade60a4-45f1-50b8-ab23-34737ea73998</cim:IdentifiedObject.mRID>
-    <cim:IdentifiedObject.description>inferred-topology (SubSLD): no busbar way in OSM; existence derived from strongly-bound terminals [inferred-topology: strong-bound terminals x3]</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
-  </cim:BusbarSection>
-  <cim:ConnectivityNode rdf:ID="_1145177f-d98e-5ef4-976c-bd5538075656">
-    <cim:IdentifiedObject.mRID>1145177f-d98e-5ef4-976c-bd5538075656</cim:IdentifiedObject.mRID>
-    <cim:ConnectivityNode.ConnectivityNodeContainer rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
-  </cim:ConnectivityNode>
-  <cim:Terminal rdf:ID="_a43373da-3e37-5326-93ce-abaa87f6cc9f">
-    <cim:IdentifiedObject.mRID>a43373da-3e37-5326-93ce-abaa87f6cc9f</cim:IdentifiedObject.mRID>
-    <cim:ACDCTerminal.sequenceNumber>1</cim:ACDCTerminal.sequenceNumber>
-    <cim:Terminal.ConductingEquipment rdf:resource="#_eade60a4-45f1-50b8-ab23-34737ea73998"/>
-    <cim:Terminal.ConnectivityNode rdf:resource="#_1145177f-d98e-5ef4-976c-bd5538075656"/>
-  </cim:Terminal>
-  <cim:Bay rdf:ID="_968f5a1f-0b01-5d5b-8bf6-bb44a9402b24">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ1</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>968f5a1f-0b01-5d5b-8bf6-bb44a9402b24</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_3ede67bb-9ea9-5c05-9474-6787344c0282">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ2</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>3ede67bb-9ea9-5c05-9474-6787344c0282</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_81fd1b78-0e58-56df-93ad-3141ad4a80a3">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ3</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>81fd1b78-0e58-56df-93ad-3141ad4a80a3</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_44b20f0b-81af-5b11-974e-c20bc7c0fe25"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_e91bb18f-d31a-55da-9e59-96f487d531dc">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ4</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>e91bb18f-d31a-55da-9e59-96f487d531dc</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ5</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_bebc25f8-bf8f-5d42-8c14-3094b19d4eaf">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ6</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>bebc25f8-bf8f-5d42-8c14-3094b19d4eaf</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
-  </cim:Bay>
-  <cim:Bay rdf:ID="_4b6fbfbf-d1de-589c-b9d0-b150e95280f5">
-    <cim:IdentifiedObject.name>津花波変電所 ベイ7</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>4b6fbfbf-d1de-589c-b9d0-b150e95280f5</cim:IdentifiedObject.mRID>
-    <cim:Bay.VoltageLevel rdf:resource="#_9fcb083f-148d-57eb-b59c-b6f1d02fa29a"/>
-  </cim:Bay>
-  <cim:Breaker rdf:ID="_5e48c682-94c3-5d09-8e6d-1255f0c23555">
-    <cim:IdentifiedObject.name>津花波変電所 回線引出1</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>5e48c682-94c3-5d09-8e6d-1255f0c23555</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_968f5a1f-0b01-5d5b-8bf6-bb44a9402b24"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_ed10d7a9-5d42-521a-890a-cd731a2d2b14">
-    <cim:IdentifiedObject.name>津花波変電所 回線引出2</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>ed10d7a9-5d42-521a-890a-cd731a2d2b14</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_3ede67bb-9ea9-5c05-9474-6787344c0282"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_00929e27-8ab6-5ed2-821a-45741f004a66">
-    <cim:IdentifiedObject.name>津花波変電所 回線引出3</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>00929e27-8ab6-5ed2-821a-45741f004a66</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_81fd1b78-0e58-56df-93ad-3141ad4a80a3"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_fa8fc801-2a15-58a9-8cde-55b5b06703a2">
-    <cim:IdentifiedObject.name>津花波変電所 回線引出4</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>fa8fc801-2a15-58a9-8cde-55b5b06703a2</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (feeder); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_e91bb18f-d31a-55da-9e59-96f487d531dc"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_d3279006-8f89-50a0-a93d-4d0b9e417e48">
-    <cim:IdentifiedObject.name>津花波変電所 変圧器引出5</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>d3279006-8f89-50a0-a93d-4d0b9e417e48</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_9fba6e05-ecfb-5aaf-ae66-41abd8cf4b94"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_7f27cfdd-890f-50d3-8a5d-5fd110c26529">
-    <cim:IdentifiedObject.name>津花波変電所 変圧器引出6</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>7f27cfdd-890f-50d3-8a5d-5fd110c26529</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_bebc25f8-bf8f-5d42-8c14-3094b19d4eaf"/>
-  </cim:Breaker>
-  <cim:Breaker rdf:ID="_0f468dfb-5eb2-5d8b-9603-5f02f4cf3c1b">
-    <cim:IdentifiedObject.name>津花波変電所 変圧器引出7</cim:IdentifiedObject.name>
-    <cim:IdentifiedObject.mRID>0f468dfb-5eb2-5d8b-9603-5f02f4cf3c1b</cim:IdentifiedObject.mRID>
-    <cim:Switch.normalOpen>False</cim:Switch.normalOpen>
-    <cim:IdentifiedObject.description>inferred-bay (SubSLD): derived from bay position (trafo); not an observed breaker. normalOpen is an operating default.</cim:IdentifiedObject.description>
-    <cim:Equipment.EquipmentContainer rdf:resource="#_4b6fbfbf-d1de-589c-b9d0-b150e95280f5"/>
-  </cim:Breaker>
   <cim:VoltageLevel rdf:ID="_fd387c24-c445-5251-93f5-8b7ac9c5dc2b">
-    <cim:IdentifiedObject.name>壷川変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.name>壷川変電所 6kV</cim:IdentifiedObject.name>
     <cim:IdentifiedObject.mRID>fd387c24-c445-5251-93f5-8b7ac9c5dc2b</cim:IdentifiedObject.mRID>
+    <cim:VoltageLevel.BaseVoltage rdf:resource="#_fff0a633-3932-512b-812d-7d63aac0282a"/>
+    <cim:VoltageLevel.Substation rdf:resource="#_7e638064-cc77-58fd-8933-bf847de3010c"/>
+  </cim:VoltageLevel>
+  <cim:VoltageLevel rdf:ID="_ad70fea1-824d-52cc-abae-a9a4a211856f">
+    <cim:IdentifiedObject.name>壷川変電所 66kV</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.mRID>ad70fea1-824d-52cc-abae-a9a4a211856f</cim:IdentifiedObject.mRID>
     <cim:VoltageLevel.BaseVoltage rdf:resource="#_de973b5b-b560-5ee4-b6b9-89f66272eb97"/>
     <cim:VoltageLevel.Substation rdf:resource="#_7e638064-cc77-58fd-8933-bf847de3010c"/>
   </cim:VoltageLevel>

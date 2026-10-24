@@ -34,3 +34,11 @@ def test_latest_year_only_and_banks_summed(tmp_path, monkeypatch):
     assert d == {("tohoku", "泉"): 18.0, ("chubu", "松島"): 27.0}
     # 旧来(年度をまたいで足す)も再現できる
     assert pdm.load_point_demand(all_years=True)[("tohoku", "泉")] == 57.0
+
+
+def test_missing_csv_means_no_pinning(tmp_path, monkeypatch, capsys):
+    # clone しただけの手元(git の外の CSV が無い)では落とさず、ピン留めなしで組む(2026-10-24)
+    monkeypatch.setattr(pdm, "CSV", tmp_path / "data" / "point_demand.csv")
+    monkeypatch.setattr(pdm, "ROOT", tmp_path)
+    assert pdm.load_point_demand() == {}
+    assert "ピン留めなし" in capsys.readouterr().err

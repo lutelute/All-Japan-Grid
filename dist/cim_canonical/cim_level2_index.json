@@ -104,7 +104,7 @@
       "files": {
         "EQ": [
           "east_L2_EQ.xml",
-          82410
+          82407
         ],
         "TP": [
           "east_L2_TP.xml",
@@ -112,7 +112,7 @@
         ],
         "SSH": [
           "east_L2_SSH.xml",
-          53212
+          53210
         ],
         "SV": [
           "east_L2_SV.xml",
@@ -124,7 +124,7 @@
         ]
       },
       "buses": 6245,
-      "lines": 6443,
+      "lines": 6442,
       "trafos": 676,
       "loads": 3391,
       "gens": 8233,
@@ -137,7 +137,7 @@
       ],
       "solve_mode": "canonical-dc",
       "lineage": "canonical (docs/data/built/all.json)",
-      "verify": "OK gen=8233 ext=237 vmin=0.858"
+      "verify": "OK gen=8233 ext=237 vmin=0.857"
     },
     {
       "region": "west",

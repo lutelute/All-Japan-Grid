@@ -55,6 +55,13 @@ def load_point_demand(all_years: bool = False) -> dict[tuple[str, str], float]:
     except Exception:  # noqa: BLE001
         pass
     by_year: dict[tuple[str, str], dict[str, float]] = {}
+    if not CSV.exists():
+        # 各社の公表から作る表で git の外にある(再配布できない)。clone しただけの手元には無い。
+        # 落とさずにピン留めなし(介入#30 を切ったのと同じ)で組み、そのことをはっきり出す(2026-10-24)
+        import sys
+        print(f"  介入#30 point-demand: {CSV.relative_to(ROOT)} が無い → ピン留めなしで組む"
+              "(公開値と同じにするには docs/REPRODUCIBILITY.md の地点需要の手順で作る)", file=sys.stderr)
+        return {}
     with open(CSV, encoding="utf-8") as f:
         for r in csv.DictReader(f):
             try:
