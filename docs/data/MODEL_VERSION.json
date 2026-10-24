@@ -1,15 +1,15 @@
 {
-  "model_version": "82e1f1e2",
+  "model_version": "16c1440e",
   "git_dirty": true,
-  "generated_at": "2026-10-24T14:27:49+00:00",
+  "generated_at": "2026-10-24T15:47:20+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 4.9
+      "elapsed_s": 5.2
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 11.4
+      "elapsed_s": 11.8
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -17,7 +17,7 @@
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.1
+      "elapsed_s": 1.2
     },
     "route_disclosure": {
       "status": "ok",
@@ -29,11 +29,11 @@
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.8
+      "elapsed_s": 19.9
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 21.6
+      "elapsed_s": 21.0
     },
     "node_hygiene": {
       "status": "ok",
@@ -45,7 +45,7 @@
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 5.9
+      "elapsed_s": 5.8
     },
     "satellite_connections": {
       "status": "ok",
@@ -57,7 +57,7 @@
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 3.7
+      "elapsed_s": 3.8
     },
     "substation_properties": {
       "status": "ok",
@@ -79,13 +79,13 @@
       "status": "ok",
       "elapsed_s": 2.0
     },
+    "run_full_powerflow": {
+      "status": "ok",
+      "elapsed_s": 134.7
+    },
     "gen_sld": {
       "status": "ok",
       "elapsed_s": 0.5
-    },
-    "run_full_powerflow": {
-      "status": "ok",
-      "elapsed_s": 132.4
     },
     "gen_national_overview": {
       "status": "ok",
@@ -93,7 +93,7 @@
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 192.8
+      "elapsed_s": 164.1
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,15 +101,15 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 132.8
+      "elapsed_s": 131.7
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.0
+      "elapsed_s": 4.2
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 139.9
+      "elapsed_s": 136.3
     },
     "build_static_site": {
       "status": "ok",

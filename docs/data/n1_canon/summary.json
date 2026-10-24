@@ -1,7 +1,7 @@
 {
- "date": "2026-10-24",
- "git_head": "82e1f1e2",
- "source": "docs/reports/n1_screening_2026-10-24.json",
+ "date": "2026-10-25",
+ "git_head": "16c1440e",
+ "source": "docs/reports/n1_screening_2026-10-25.json",
  "args": {
   "min_kv": 154.0,
   "cap_factor": 1.0,
@@ -291,17 +291,17 @@
    "island": "east",
    "n_bus": 5809,
    "n_bus_full": 6245,
-   "n_branch": 6913,
-   "n_outage_evaluated": 5953,
-   "n_islanding": 956,
+   "n_branch": 6912,
+   "n_outage_evaluated": 5950,
+   "n_islanding": 958,
    "min_kv": 154.0,
-   "n_monitor_physical": 1406,
-   "base_n_over_physical": 68,
+   "n_monitor_physical": 1405,
+   "base_n_over_physical": 69,
    "base_max_loading_physical_pct": 770.8,
-   "n_outage_causing_new_over_physical": 128,
-   "n_outage_new_over_120_physical": 35,
+   "n_outage_causing_new_over_physical": 122,
+   "n_outage_new_over_120_physical": 36,
    "max_new_loading_physical_pct": 228.1,
-   "islanding_total_load_mw": 11838.0,
+   "islanding_total_load_mw": 11882.9,
    "islanding_n_over_100mw": 3,
    "top": [
     {
@@ -375,7 +375,7 @@
      "parallel": 2,
      "cap_mw": 1905.3,
      "base_loading_pct": 94.8,
-     "post_max_new_loading_pct": 159.8,
+     "post_max_new_loading_pct": 159.9,
      "post_n_new_over": 2,
      "label": "北千葉線",
      "worst": {
@@ -423,7 +423,7 @@
      "parallel": 1,
      "cap_mw": 900.0,
      "base_loading_pct": 45.2,
-     "post_max_new_loading_pct": 112.7,
+     "post_max_new_loading_pct": 112.6,
      "post_n_new_over": 2,
      "label": "新京葉変電所の変圧器 275/154 kV",
      "worst": {
@@ -455,7 +455,7 @@
      "parallel": 2,
      "cap_mw": 6928.2,
      "base_loading_pct": 34.1,
-     "post_max_new_loading_pct": 106.9,
+     "post_max_new_loading_pct": 106.8,
      "post_n_new_over": 2,
      "label": "新袖ヶ浦線",
      "worst": {
@@ -471,9 +471,9 @@
      "ac_converged": true,
      "ac_served_frac": 1.0,
      "dc_post_max_new_loading_pct": 123.4,
-     "ac_post_max_new_loading_pct": 136.1,
+     "ac_post_max_new_loading_pct": 136.0,
      "ac_worst": "長沼線",
-     "ac_n_new_over": 7,
+     "ac_n_new_over": 6,
      "label": "房総変電所の変圧器 500/275 kV"
     },
     {
@@ -481,7 +481,7 @@
      "ac_converged": true,
      "ac_served_frac": 1.0,
      "dc_post_max_new_loading_pct": 198.2,
-     "ac_post_max_new_loading_pct": 189.1,
+     "ac_post_max_new_loading_pct": 189.0,
      "ac_worst": "石岡線;岩間線",
      "ac_n_new_over": 6,
      "label": "新茂木の変圧器 500/275 kV"
@@ -493,7 +493,7 @@
      "dc_post_max_new_loading_pct": 106.9,
      "ac_post_max_new_loading_pct": 112.2,
      "ac_worst": "新富士変電所~小田急電鉄 松田変電所線",
-     "ac_n_new_over": 6,
+     "ac_n_new_over": 5,
      "label": "新富士変電所の変圧器 500/154 kV"
     },
     {
@@ -501,19 +501,19 @@
      "ac_converged": true,
      "ac_served_frac": 0.9986,
      "dc_post_max_new_loading_pct": 228.1,
-     "ac_post_max_new_loading_pct": 113.9,
+     "ac_post_max_new_loading_pct": 113.8,
      "ac_worst": "長沼線",
-     "ac_n_new_over": 6,
+     "ac_n_new_over": 5,
      "label": "浅貝線"
     },
     {
      "name": "北千葉線",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 159.8,
+     "dc_post_max_new_loading_pct": 159.9,
      "ac_post_max_new_loading_pct": 172.3,
      "ac_worst": "北千葉線",
-     "ac_n_new_over": 7,
+     "ac_n_new_over": 6,
      "label": "北千葉線"
     }
    ],
@@ -573,13 +573,13 @@
    "n_outage_evaluated": 6755,
    "n_islanding": 2119,
    "min_kv": 154.0,
-   "n_monitor_physical": 2466,
+   "n_monitor_physical": 2467,
    "base_n_over_physical": 22,
    "base_max_loading_physical_pct": 255.7,
    "n_outage_causing_new_over_physical": 147,
    "n_outage_new_over_120_physical": 40,
    "max_new_loading_physical_pct": 219.5,
-   "islanding_total_load_mw": 32486.2,
+   "islanding_total_load_mw": 32494.3,
    "islanding_n_over_100mw": 41,
    "top": [
     {

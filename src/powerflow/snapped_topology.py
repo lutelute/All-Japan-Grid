@@ -662,6 +662,31 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     _DEG_KM = 102.0   # rough deg->km at Japanese latitudes (edge distances)
     _bind_cache = {}
 
+    def _poly_pick(lat, lon, reach):
+        """reach(km)以内の変電所の多角形を 1 つ選ぶ。(sid, 距離 km) か (None, reach)。
+
+        STRtree.query は候補を木の中の順で返し、その順は OS や shapely/GEOS の版で変わる
+        (2026-10-24: 東京の同じ形の多角形 2 つ(基底と補足の重複)のどちらを選ぶかが macOS と
+        Linux で違い、CI で正典が一致しなかった)。順に依らない決め方にする:
+        距離(覆っていれば 0)→ 面積の大きいほう → 多角形の番号の小さいほう。
+        覆う多角形が重なるとき(全国で約 200 点。例: 南福光連系所の中の南福光変電所)、木の順では
+        ほとんど外側の大きい敷地が先に出ていた。正典の振る舞いを変えないよう外側を選ぶ
+        (内側を選ぶと #32 の BTB の分割が前提とするバスなどが変わる。どちらが正しいかは別の問題として
+        docs/reports/canon_reproducibility_2026-10-24.md に記録)
+        """
+        eps = reach / _DEG_KM
+        pt = _Pt(lon, lat)
+        best = None
+        for pi in sorted(int(i) for i in poly_tree.query(
+                _box(lon - eps, lat - eps, lon + eps, lat + eps))):
+            g = poly_geoms[pi]
+            d = 0.0 if g.covers(pt) else g.distance(pt) * _DEG_KM
+            if d < reach:
+                key = (d, -g.area, pi)
+                if best is None or key < best:
+                    best = key
+        return (poly_sids[best[2]], best[0]) if best else (None, reach)
+
     # Name-evidence binding (ledger 91): OSM line names of the form
     # 「X変電所~Y変電所線」 ASSERT the connection. In sparse-mapped terrain
     # (Izu measured: ways stop 1.1-2.3 km short of the named yards) the
@@ -728,18 +753,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         # away can be >0.8 km from the centroid — the gap that re-broke
         # the 438 substations in the first polygon-only A/B).
         reach = fallback_endpoint_km if terminal else poly_edge_km
-        eps = reach / _DEG_KM
-        pt = _Pt(lon, lat)
-        best_sid, best_d = None, reach
-        for pi in poly_tree.query(_box(lon - eps, lat - eps,
-                                       lon + eps, lat + eps)):
-            g = poly_geoms[int(pi)]
-            if g.covers(pt):
-                best_sid, best_d = poly_sids[int(pi)], 0.0
-                break
-            d = g.distance(pt) * _DEG_KM
-            if d < best_d:
-                best_sid, best_d = poly_sids[int(pi)], d
+        best_sid, best_d = _poly_pick(lat, lon, reach)
         if best_sid is None:
             radius = fallback_endpoint_km if terminal else fallback_snap_km
             best_sid, _ = index.nearest(lat, lon, radius)
@@ -1217,7 +1231,6 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     # the line name for audit/exclusion.
     n_leadins = 0
     if leadin_km and poly_tree is not None:
-        eps_l = leadin_km / _DEG_KM
         for nid in [n for n in list(adj) if is_jct(n) and len(adj[n]) == 1]:
             if nid not in jct_coord:
                 continue
@@ -1225,14 +1238,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             if own <= 0:
                 continue   # class unknown — no evidence for a feed claim
             la, lo = jct_coord[nid]
-            pt = _Pt(lo, la)
-            best_sid, bd = None, leadin_km
-            for pi in poly_tree.query(_box(lo - eps_l, la - eps_l,
-                                           lo + eps_l, la + eps_l)):
-                g = poly_geoms[int(pi)]
-                d = 0.0 if g.covers(pt) else g.distance(pt) * _DEG_KM
-                if d < bd:
-                    best_sid, bd = poly_sids[int(pi)], d
+            best_sid, bd = _poly_pick(la, lo, leadin_km)
             if best_sid is None:
                 best_sid, bd = index.nearest(la, lo, leadin_km)
             if best_sid is None:
