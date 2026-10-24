@@ -1,0 +1,32 @@
+# scripts/ 直下のスクリプトの状態のうち、機械では決められないもの(2026-10-24)。
+# scripts/scripts_index.py が scripts/README.md の索引の「状態」の欄に出す。
+# 機械で決めるもの: 現役(正典の手順・毎時の処理・Snakefile・CI・CLI・ダッシュボードのカードが呼ぶ)/
+#   旧系譜(旧系譜の網を組む関数を import)/ 起動不可(import 先のファイルが無い)。
+# ここに書くものは、その判定より優先する。理由の頭の記号は docs/reports/project_structure_2026-10-21.md の id。
+# どれも消さない・動かさない(オーナー方針「資産は崩さず残す」)。
+
+退役:   # 比較用に残す旧系譜・旧方式の入口。正典の入口は ajgrid pf / matpower / uc to-pf / cim
+  build_alljapan_full.py: "B1 旧 MATPOWER 書き出し (1)。正本は export_matpower_canonical.py"
+  build_load_timeseries.py: "B1 (1) の需要時系列"
+  run_national_powerflow.py: "B2 snapped 全国の潮流。正典は ajgrid pf"
+  uc_to_pf.py: "B3 snapped 地域の UC→潮流(ajgrid uc to-pf-snapped)。正典は uc_to_pf_built.py"
+  uc_to_pf_national.py: "B3 snapped 全国の UC→潮流"
+  run_n1_contingency.py: "B4 地域別 N-1(06-03)。正典は sensitivity/n1_screening.py"
+  export_powerflow_pages.py: "A2 旧系譜の潮流ページの書き出し(build_and_solve)"
+  run_psdat_powerflow.py: "C3 psdat 系"
+  gen_pf_geojson.py: "C3 psdat 系"
+
+比較用:  # 旧系譜だが、正典の側が一部を共用しているもの
+  export_national_matpower.py: "B1 旧 MATPOWER 書き出し (3)。書き出し部 export_net は正本 export_matpower_canonical.py が共用"
+
+記録:   # 一回きり・論文図など。動かす前提ではない
+  today_loop.sh: "C5 08-18 のプレゼン限定"
+  b_overnight.py: "C5 06-15 の一晩の実験"
+  b_phase2_analyze.py: "C5 06-15"
+  osm_fetch_progress.py: "C5 03-04"
+  osmnx_ab.py: "C5 A/B 比較の記録"
+  rebuild_ab.py: "C5 A/B 比較の記録"
+  island_substations.py: "C5"
+  gen_ybus_national.py: "B5 論文図(最近傍近似)。正典の Ybus は gen_ybus_from_db.py"
+  gen_ybus_white.py: "B5 論文図(最近傍近似)"
+  plot_ybus.py: "B5 参照 0"
