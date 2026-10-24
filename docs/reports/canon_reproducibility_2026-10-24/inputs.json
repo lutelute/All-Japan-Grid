@@ -1,0 +1,636 @@
+{
+ "worktree_head": "4dae91bbcd78b9c2811d9914464fc9d5fa4732d1",
+ "counts": {
+  "tracked": 83,
+  "ignored": 49,
+  "missing": 0
+ },
+ "ignored_groups": {
+  "data/external/keitouzu": {
+   "n": 3,
+   "bytes": 1067618,
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "files": [
+    "data/external/keitouzu/routes.csv",
+    "data/external/keitouzu/sources.csv",
+    "data/external/keitouzu/substations.csv"
+   ]
+  },
+  "data/external/system_disclosure/kansai": {
+   "n": 2,
+   "bytes": 199332,
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "files": [
+    "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv",
+    "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv"
+   ]
+  },
+  "data/external/system_disclosure/kyushu": {
+   "n": 1,
+   "bytes": 168009,
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "files": [
+    "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/pool_full.json"
+   ]
+  },
+  "data/external/system_disclosure/normalized": {
+   "n": 3,
+   "bytes": 2522917,
+   "readers": [
+    "scripts/apply_circuit_sources.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py"
+   ],
+   "files": [
+    "data/external/system_disclosure/normalized/impedance_lines.csv",
+    "data/external/system_disclosure/normalized/line_observations.csv",
+    "data/external/system_disclosure/normalized/point_demand.csv"
+   ]
+  },
+  "data/external/system_disclosure/shikoku": {
+   "n": 5,
+   "bytes": 54957,
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "files": [
+    "data/external/system_disclosure/shikoku/capacity/sys_capa_kikan00_line_202608_08.csv",
+    "data/external/system_disclosure/shikoku/capacity/sys_capa_local01_line_202608_08.csv",
+    "data/external/system_disclosure/shikoku/capacity/sys_capa_local02_line_202608_08.csv",
+    "data/external/system_disclosure/shikoku/capacity/sys_capa_local03_line_202608_08.csv",
+    "data/external/system_disclosure/shikoku/capacity/sys_capa_local04_line_202608_08.csv"
+   ]
+  },
+  "data/external/system_disclosure/tokyo": {
+   "n": 14,
+   "bytes": 197763,
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "files": [
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv",
+    "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv"
+   ]
+  },
+  "data/structures": {
+   "n": 21,
+   "bytes": 30848166,
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "files": [
+    "data/structures/chubu.json",
+    "data/structures/chubu_site_f07b955bacfd.json",
+    "data/structures/chugoku.json",
+    "data/structures/chugoku_site_7f5085731b83.json",
+    "data/structures/hokkaido.json",
+    "data/structures/hokkaido_site_6e15b51e6f47.json",
+    "data/structures/hokuriku.json",
+    "data/structures/hokuriku_site_ff3f634363c0.json",
+    "data/structures/kansai.json",
+    "data/structures/kansai_site_81537a63e186.json",
+    "data/structures/kyushu.json",
+    "data/structures/kyushu_site_95be28fa0410.json",
+    "data/structures/okinawa.json",
+    "data/structures/okinawa_site_ba436a18dace.json",
+    "data/structures/shikoku.json",
+    "data/structures/shikoku_site_2c6e3dc9773b.json",
+    "data/structures/tohoku.json",
+    "data/structures/tohoku_site_5cc42f186ca6.json",
+    "data/structures/tokyo.json",
+    "data/structures/tokyo_site_408dc0de0b9f.json",
+    "data/structures/tokyo_site_e450760a5879.json"
+   ]
+  }
+ },
+ "missing": {},
+ "outside_reads": {
+  "~/.matplotlib/fontlist-v390.json": [
+   "scripts/export_cim_level2.py",
+   "scripts/export_matpower_canonical.py",
+   "scripts/run_full_powerflow_from_db.py",
+   "scripts/sensitivity/n1_screening.py"
+  ],
+  "~/.matplotlib/stylelib": [
+   "scripts/export_cim_level2.py",
+   "scripts/export_matpower_canonical.py",
+   "scripts/run_full_powerflow_from_db.py",
+   "scripts/sensitivity/n1_screening.py"
+  ]
+ },
+ "ignored_files": {
+  "data/external/keitouzu/routes.csv": {
+   "bytes": 730225,
+   "sha256": "bf6b31972f43ec96ab9be1f7eab431a6e0c6e983321c522402ffd54385bdfbc3",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/keitouzu/sources.csv": {
+   "bytes": 3455,
+   "sha256": "912926caa0ad36f994a91c1367ef037b083100ae060d2d84d569ceed7697f0ea",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/keitouzu/substations.csv": {
+   "bytes": 333938,
+   "sha256": "15be47d18a95d1e8ac056b2ff62fb8fa0e938a46a108be5de0b376debbe62284",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/kansai/capacity/154kv_more_line.csv": {
+   "bytes": 26690,
+   "sha256": "8aa4b3ea9b3fc9bcd08e7ae5c1e5cddf3ae11963fb8e0f82ba1a69cbe069db66",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/kansai/capacity_less/154kv_less_line.csv": {
+   "bytes": 172642,
+   "sha256": "16e92dcc49f2f01e662b576a70b3702bf075f79d8939035432bd2d317d011265",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/kyushu/keitouzu/kuyoryo/pool_full.json": {
+   "bytes": 168009,
+   "sha256": "55953773cad41b0cfc8678311b965430e28ea90691142a7bfe7ea559d61a7187",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/normalized/impedance_lines.csv": {
+   "bytes": 209334,
+   "sha256": "bd53c4ad25eb642ca324f465de9e1d18e5dee6c1e136587d641f767526edad6d",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/normalized/line_observations.csv": {
+   "bytes": 2130798,
+   "sha256": "2198c6824002488b2ad0224486dc88f44896fb0959b35e7440880733a4b9667e",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/normalized/point_demand.csv": {
+   "bytes": 182785,
+   "sha256": "663df59d1c91637eaf93c7f96728eed55e45b170b6b6bb4daea50de3c078b5b8",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/shikoku/capacity/sys_capa_kikan00_line_202608_08.csv": {
+   "bytes": 4401,
+   "sha256": "5e63aa38fa9f8441cb5b4760856f87437594e7f5cfe3bd7255385e20b9f74739",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/shikoku/capacity/sys_capa_local01_line_202608_08.csv": {
+   "bytes": 11267,
+   "sha256": "0edf0266b818a80931b096734659ba9bdfbc3b00eb46d0606e40720b06dc50b3",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/shikoku/capacity/sys_capa_local02_line_202608_08.csv": {
+   "bytes": 19258,
+   "sha256": "8878b54b7afc624f5967cda51584a3b9972bd7bc4ee93ca64e3864633ea0e768",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/shikoku/capacity/sys_capa_local03_line_202608_08.csv": {
+   "bytes": 10193,
+   "sha256": "7be97ba3154fa334e21d1b9abb4a8aff39e49ee2368bebc66f12578ca6cf57c0",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/shikoku/capacity/sys_capa_local04_line_202608_08.csv": {
+   "bytes": 9838,
+   "sha256": "1fb0cd8b16fa9e7ebdc68eb42793697b1fca2662d615776efee22e55042dfa3a",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_chiba/csv_yosochoryu_chiba_soudensen.csv": {
+   "bytes": 29399,
+   "sha256": "f9c4b2e3d0d78b810211c54d996f6f6094bd6d6084d47e2c1d882618eb896a34",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_fukushima/csv_yosochoryu_fukushima_soudensen.csv": {
+   "bytes": 2901,
+   "sha256": "4c07cf8399f5558d1ade82518565f0a6f1dfac85e2ff0db238586df37eede693",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_gunma/csv_yosochoryu_gunma_soudensen.csv": {
+   "bytes": 14666,
+   "sha256": "79a51e3f710ea8f9a321d68f4904468d1f9f4ae6b4cbeac9c909a16a96949fe4",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_ibaraki/csv_yosochoryu_ibaraki_soudensen.csv": {
+   "bytes": 29641,
+   "sha256": "a298674a1c26fd339e3a51b25162dc2089de810777a5dbbe5cdcb671af5f8772",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_kanagawa/csv_yosochoryu_kanagawa_soudensen.csv": {
+   "bytes": 25041,
+   "sha256": "91a8ec79dfde4c35951348a9dd345b296365039d7cbcd315813657614588077d",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_kikan/csv_yosochoryu_kikan_soudensen.csv": {
+   "bytes": 19121,
+   "sha256": "6f55e7c2da1660aa301093412237a346f04902b2330368a16bcbf0c6ce863a50",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_nagano/csv_yosochoryu_nagano_soudensen.csv": {
+   "bytes": 3508,
+   "sha256": "d8497883e4866d48fc3328f69c4a6b70734f01ac2f52ec140269890f84a5e668",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_niigata/csv_yosochoryu_niigata_soudensen.csv": {
+   "bytes": 1401,
+   "sha256": "1565a3bb08f6bcaaec0053b4c973e0383c1e31d49e4176be6d4cf25652d1e348",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_saitama/csv_yosochoryu_saitama_soudensen.csv": {
+   "bytes": 15322,
+   "sha256": "d8d897126209ea28e65c8d9c81a11fc538e60d509d701a463a7fd5d69d9af791",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_shizuoka/csv_yosochoryu_shizuoka_soudensen.csv": {
+   "bytes": 8582,
+   "sha256": "c54bac16b2c4793040192e9fc1a6080510b2fb96f1476949768e8c4a57bf0e12",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tama/csv_yosochoryu_tama_soudensen.csv": {
+   "bytes": 6574,
+   "sha256": "68cbd0bb0b8a49e87980434ebfd44acce613c61f5081f0b8c7fd528debec7d06",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tochigi/csv_yosochoryu_tochigi_soudensen.csv": {
+   "bytes": 27803,
+   "sha256": "80cf06d74e97b4ffae735dac23ab0436340cbe3c332df756fd61f7d6023f6072",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_tokyo/csv_yosochoryu_tokyo_soudensen.csv": {
+   "bytes": 8843,
+   "sha256": "4ad151cf9fa9f6327b0491b3292a7fb09152ad3fac2c0367f74524e4cc30b385",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/external/system_disclosure/tokyo/capacity/csv_yosochoryu_yamanashi/csv_yosochoryu_yamanashi_soudensen.csv": {
+   "bytes": 4961,
+   "sha256": "f1dba32ff6ee82f25577a2e70d57aca222644a4da0f88ba6effe24e49a28e1f7",
+   "readers": [
+    "scripts/apply_circuit_sources.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/chubu.json": {
+   "bytes": 4398703,
+   "sha256": "196e455e6ab73f9caf33a5aa78ab508e97a1d921b5cc9106e3b098809235043a",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/chubu_site_f07b955bacfd.json": {
+   "bytes": 49863,
+   "sha256": "42afac000d71f65e98f481bf1cf5d4cfde0418ea511e8db760e97fb59d968fc4",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/chugoku.json": {
+   "bytes": 2462145,
+   "sha256": "6f9117edcc52913e3ab0de06933a95787c5f8c0591293677e811be86eb654448",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/chugoku_site_7f5085731b83.json": {
+   "bytes": 10290,
+   "sha256": "28b90d84e75b166ad4d51dfca84ca88fce243300be1fe6e9a0f6f3a113ad3cd4",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/hokkaido.json": {
+   "bytes": 3129719,
+   "sha256": "1a9c94984700989620fd7033d61c89df5c6e7ed4fe3366e7e7b708179339d286",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/hokkaido_site_6e15b51e6f47.json": {
+   "bytes": 47732,
+   "sha256": "662fbf5db7ae95259c555407a63e1de32699e2c69d28084ace808f9ded434490",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/hokuriku.json": {
+   "bytes": 1547507,
+   "sha256": "bbd94810f9bb7b0b4d70a85a88775f7f15e7dec145405d60407004ecaeca6866",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/hokuriku_site_ff3f634363c0.json": {
+   "bytes": 9794,
+   "sha256": "40c37210e34c8863911b6462d8469aafddc11a4a77e23c62ed042b8a6c06a210",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/kansai.json": {
+   "bytes": 2965715,
+   "sha256": "8bc1b3c74227f4d99bc5d5aa1b238451f9c25644af63530fa3429ba848d5bdee",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/kansai_site_81537a63e186.json": {
+   "bytes": 41258,
+   "sha256": "36e38976f76fee02e14845b374ec6dc0486986e59b753b13a4291c8d770ff468",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/kyushu.json": {
+   "bytes": 2802621,
+   "sha256": "f7dbb687302f8ea5fd8134e1cf3102fc23ed42abd800ad6f2e0e44bdbb01c399",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/kyushu_site_95be28fa0410.json": {
+   "bytes": 20448,
+   "sha256": "4729c8295cf3e2f343c5d8f36855efb34f669afd0639ba86d48f000a8eb8a105",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/okinawa.json": {
+   "bytes": 126556,
+   "sha256": "b889dd4831f90f9b047056d8c5cc4abecc2c65d1db7bb567d9614e1cd802be01",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/okinawa_site_ba436a18dace.json": {
+   "bytes": 5053,
+   "sha256": "df7fbe10e08ce54d8ab4a571ac6cbff9ce00131f86d02727f07bb53e7332eaaa",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/shikoku.json": {
+   "bytes": 1236329,
+   "sha256": "44940f729035098318ea4f8b91b2754a202867f78c8696c4850311b1e9238061",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/shikoku_site_2c6e3dc9773b.json": {
+   "bytes": 24725,
+   "sha256": "c03ae4d341f5c83fe5a2206589a72ee58a4d822e488e27fd5a0c677d2f9fcbf0",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/tohoku.json": {
+   "bytes": 4854473,
+   "sha256": "3a4edf39cd4073be0ec22bde3861ad2b3dcc02a31bfd7ec617db683a4906f16c",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/tohoku_site_5cc42f186ca6.json": {
+   "bytes": 43140,
+   "sha256": "2df35b2c8ede27af71dfb44499c56174095e36267485321963371f050d7fa143",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/tokyo.json": {
+   "bytes": 7031598,
+   "sha256": "5a4454610416a20577a5b7f85700135f37297971653e20fd03f3577d5414a246",
+   "readers": [
+    "scripts/build_substation_properties.py",
+    "scripts/export_cim.py",
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/export_subsld_pages.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/tokyo_site_408dc0de0b9f.json": {
+   "bytes": 36665,
+   "sha256": "bed37d24ac0e9aa657c8b3fdd6617c2b1f2c61b4461100a3bc003873f8352393",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  },
+  "data/structures/tokyo_site_e450760a5879.json": {
+   "bytes": 3832,
+   "sha256": "9ee209bc82ff9ee5e43a929c92a1dbe51084a97d7a8d463cf99d46dc64b18625",
+   "readers": [
+    "scripts/export_cim_level2.py",
+    "scripts/export_matpower_canonical.py",
+    "scripts/run_full_powerflow_from_db.py",
+    "scripts/sensitivity/n1_screening.py"
+   ],
+   "also_written": false
+  }
+ },
+ "note": "2026-10-24 に regenerate_all を全段流し、Python の audit hook で開いたファイルを記録して分類した。tracked=git で追跡 / ignored=git の外。ignored の sha256 は当日の手元のファイル(中身は載せない)。この PR のあと、data/structures は手順の中で作り、#44 は原本が無ければ circuit_counts.jsonl から当てる"
+}

@@ -33,6 +33,10 @@ MODEL_VERSION_PATH = os.path.join(ROOT, "docs", "data", "MODEL_VERSION.json")
 
 # (name, argv, heavy?) — heavy 段は pandapower 等が要る・遅い
 STEPS = [
+    # 変電所の構造 DB(data/structures・git の外)を、追跡している基底の OSM から作る(約 5 秒・決定的)。
+    # 2026-10-24 まで手順に無く、本体の構造 DB は 08-28 に作ったままだった。10-07〜08 の直し(敷地の多角形で
+    # 母線・ベイを帰属させる・#48〜#50)が、変電所の属性・SubSLD・潮流に入っていなかった。clone した人も同じものを作る
+    ("build_structures", [sys.executable, "scripts/build_structures_batch.py", "--all"], False),
     ("build_editor_data", [sys.executable, "scripts/build_editor_data.py"], False),
     # 実証接続の再適用（介入#28/#29） — build_editor_data が all.json を基底から
     # 再構築するため、in-place 適用した公表接続worklistは build のたびに消える
@@ -115,8 +119,10 @@ STEPS = [
     # circuit_rank=E-V+C と橋判定。開閉操作の意味(迂回できるか)を読むのに使う
     ("loops", [sys.executable, "scripts/export_loops.py"], False),
     ("export_map_tiers", [sys.executable, "scripts/export_map_tiers_from_built.py"], False),          # ① 系統図tier+属性
-    ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),                            # ③ SLD
     ("run_full_powerflow", [sys.executable, "scripts/run_full_powerflow_from_db.py", "--max-ac-buses", "20000"], True),  # 全規模AC(②前提・サーバ)。既定6000ではwest10193/east6205がDC-only=summary再現不能のため明示(2026-06-27, west_ac_convergence #7)
+    # ③ SLD。枝の負荷率に潮流の結果(powerflow_full)を使うので、潮流の後に置く(2026-10-24。それまで前にあり、
+    # いつも 1 回前の潮流で書いていた。--light では潮流を飛ばし、コミットしてある潮流の結果から書く)
+    ("gen_sld", [sys.executable, "scripts/gen_sld_from_built.py"], False),
     ("gen_national_overview", [sys.executable, "scripts/gen_national_overview_from_full.py"], False),  # ② 全国概観
     # N-1 全枝スクリーニング(正典の 4 島・上位 5 件は AC で解き直す・約 4 分)と、地図の Ybus / N-1 タブが
     # 読む要約(2026-10-21 から。それまでタブは旧系譜の地域別 N-1 を出していた)

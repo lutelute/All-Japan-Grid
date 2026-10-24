@@ -308,9 +308,10 @@ def generate(regions, out_dir=OUT_DIR, data_dir="data",
         with open(path, "w") as f:
             json.dump(pl, f, ensure_ascii=False, separators=(",", ":"))
     if set(regions) == set(REGIONS):
+        # 追跡している集計なので、作った日と所要時間は書かない(流した日で変わらないように。2026-10-24)。
+        # 地域ごとのファイル(git の外)には generated を残す
         summary = {
-            "generated": date.today().isoformat(),
-            "regions": reports,
+            "regions": {r: {k: v for k, v in rep.items() if k != "elapsed_s"} for r, rep in reports.items()},
             "totals": {
                 "sites": sum(r["n_sites"] for r in reports.values()),
                 "terminals": sum(r["n_terminals"] for r in reports.values()),

@@ -54,6 +54,35 @@ jobs:
         # 正典の 4 島は別ジョブ(canonical-islands)で並べて回す
         run: python -m pytest -q -m "not canonical" -rf
 
+  # clone しただけ(git の外のデータなし)で正典を作り直し、コミットしてある正典とバイト一致するか(2026-10-24)。
+  # 構造 DB は手順の中で基底の OSM から作り、#44 の回線数は追跡している台帳から当てる。
+  # 正典を変えるコードを直したのに正典を作り直していなければ、ここで落ちる
+  # → `PYTHONPATH=. python scripts/regenerate_all.py` で作り直してコミットする(docs/REPRODUCIBILITY.md)
+  reproduce-canon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: clone だけから正典を作り直す
+        env:
+          PYTHONPATH: .
+        run: python scripts/regenerate_all.py --light
+      # 正典だけでなく、--light で作る追跡ファイルの全部(地図・SubSLD・単線結線図・変電所の属性・台帳)。
+      # 違ってよいのは、実行の記録(MODEL_VERSION)と、#44 の報告(台帳から作ったと書く)だけ
+      - name: 作り直した正典と出力がコミットと一致する
+        run: |
+          git status --short
+          git diff --stat --exit-code -- . ':!docs/data/MODEL_VERSION.json' ':!docs/reports/circuit_sources_*'
+          git diff --quiet -- docs/data/built/all.json && echo "正典 docs/data/built/all.json はコミットとバイト一致"
+
   # 正典の 4 つの同期島を全規模で AC 潮流に解く(配布ケースと同じ網・同じ素朴な NR)
   canonical-islands:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

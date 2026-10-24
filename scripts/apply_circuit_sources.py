@@ -49,6 +49,7 @@ from pathlib import Path
 import networkx as nx
 
 ROOT = Path(__file__).resolve().parents[1]
+ADOPTED = "2026-09-02"  # 介入#44 の採用日(docs/MODEL_INTERVENTIONS.md)
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
@@ -482,12 +483,42 @@ def load_all_sources() -> list[dict]:
     covered = {(r["region"], norm_line(r["name"]), r["kv"], nfkc(r["from_sub"]), nfkc(r["to_sub"]))
                for r in recs if r["kind"] == "impedance_tokens"}
     recs += load_line_observations(prov, covered)
+    return _finish(recs)
+
+
+def _finish(recs: list[dict]) -> list[dict]:
     for i, r in enumerate(recs):
         r["rid"] = i
         r["name_norm"] = norm_line(r["name"]) if r["name"] else ""
         r["from_norm"] = norm_sub(r["from_sub"]) if r["from_sub"] else ""
         r["to_norm"] = norm_sub(r["to_sub"]) if r["to_sub"] else ""
     return recs
+
+
+def raw_sources_present() -> bool:
+    """出典の原本(git の外の data/external)が手元にあるか。"""
+    return (ROOT / "data/external/keitouzu/routes.csv").exists() and (ROOT / "data/external/system_disclosure").is_dir()
+
+
+def load_ledger_sources(path: Path) -> list[dict]:
+    """追跡している台帳 circuit_counts.jsonl だけから出典レコードを組み直す(2026-10-24)。
+
+    台帳には、モデルの枝に当たった出典レコードが原本の順で全部載っている(当たらなかったレコードは
+    適用に効かない)。各社の公表の原本は再配布できないので、clone した人はこの道で同じ正典を作る。
+    原本から作ったときとバイト一致することは tests/test_circuit_sources_ledger.py で確かめる。
+    """
+    recs = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        if not row.get("kind"):
+            raise SystemExit(f"台帳の行に kind が無い({row.get('line')})。原本から一度作り直すこと")
+        recs.append(_rec(region=row["region"], name=row["line"], kv=row["kv"], n=row["n_circuits"],
+                         from_sub=row["from_sub"], to_sub=row["to_sub"], source_type=row["source_type"],
+                         source_file=row["source_file"], source_url=row["source_url"], quote=row["quote"],
+                         retrieved=row["retrieved"], confidence=row["confidence"], kind=row["kind"]))
+    return _finish(recs)
 
 
 # ── モデル索引 ───────────────────────────────────────────────────────────
@@ -737,11 +768,20 @@ def main(argv=None) -> int:
     ap.add_argument("--use-low-confidence", action="store_true",
                     help="別名表(data/reference/tepco_endpoint_aliases.json)の confidence=low の行も使う。"
                          "low は線名からの推定など根拠が弱いので既定では使わない")
+    ap.add_argument("--from-ledger", action="store_true",
+                    help="出典の原本を読まず、追跡している台帳(--ledger)だけから適用する。"
+                         "原本が手元に無いときは自動でこの道になる(clone した人の再現用)")
     args = ap.parse_args(argv)
 
     built = json.loads(Path(args.built).read_text(encoding="utf-8"))
     model = Model(built)
-    recs = load_all_sources()
+    from_ledger = args.from_ledger or not raw_sources_present()
+    if from_ledger:
+        print(f"出典: 台帳だけから({Path(args.ledger).name})"
+              + ("" if args.from_ledger else " — 原本(data/external)が無いので自動で切り替えた"))
+        recs = load_ledger_sources(Path(args.ledger))
+    else:
+        recs = load_all_sources()
     print(f"出典レコード {len(recs)}: " + ", ".join(f"{k}={v}" for k, v in Counter(r['kind'] for r in recs).items()))
     aliases = EndpointAliases(use_low=args.use_low_confidence)
     if aliases.n_entries or aliases.n_skipped_low:
@@ -782,7 +822,8 @@ def main(argv=None) -> int:
             "date": args.date, "region": r["region"], "line": r["name"], "kv": r["kv"], "n_circuits": r["n"],
             "from_sub": r["from_sub"], "to_sub": r["to_sub"], "source_type": r["source_type"],
             "source_file": r["source_file"], "source_url": r["source_url"], "quote": r["quote"],
-            "retrieved": r["retrieved"], "confidence": r["confidence"], "match_method": m["method"],
+            "retrieved": r["retrieved"], "confidence": r["confidence"], "kind": r["kind"],
+            "match_method": m["method"],
             "match_note": m["note"], "n_model_edges": len(m["edges"]),
             "model_edge_names": sorted({model.edges[i].get("name") for i in m["edges"]})[:6],
             "n_edges_updated": len(applied), "edges_updated": applied,
@@ -798,14 +839,15 @@ def main(argv=None) -> int:
                 old = json.loads(line)
             except json.JSONDecodeError:
                 continue
-            prev_date[json.dumps({k: v for k, v in old.items() if k != "date"}, ensure_ascii=False,
+            prev_date[json.dumps({k: v for k, v in old.items() if k not in ("date", "kind")}, ensure_ascii=False,
                                  sort_keys=True)] = old.get("date")
     for row in ledger_rows:
-        key = json.dumps({k: v for k, v in row.items() if k != "date"}, ensure_ascii=False, sort_keys=True)
+        key = json.dumps({k: v for k, v in row.items() if k not in ("date", "kind")}, ensure_ascii=False, sort_keys=True)
         row["date"] = prev_date.get(key) or row["date"]
-    with open(args.ledger, "w", encoding="utf-8") as f:
-        for row in ledger_rows:
-            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    if not from_ledger:
+        with open(args.ledger, "w", encoding="utf-8") as f:
+            for row in ledger_rows:
+                f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
     unmatched = [{"region": r["region"], "line": r["name"], "kv": r["kv"], "n": r["n"],
                   "from": r["from_sub"], "to": r["to_sub"], "kind": r["kind"], "note": m["note"]}
@@ -847,7 +889,8 @@ def main(argv=None) -> int:
             e["par_prev"] = par
             e["par"] = n
             e["par_src"] = "circuit_sources"
-            e["par_note"] = f"介入#44 {args.date} {method}: " + "; ".join(
+            # 注記の日付は介入の採用日(固定)。実行日を書くと、別の日に流した正典がバイト一致しない(2026-10-24)
+            e["par_note"] = f"介入#44 {ADOPTED} {method}: " + "; ".join(
                 f"{recs[rid]['region']}:{recs[rid]['name'] or recs[rid]['from_sub']+'→'+recs[rid]['to_sub']}({recs[rid]['kind']})"
                 for rid in rids[:3])
         assert len(built["nodes"]) == n_nodes and len(built["edges"]) == n_edges

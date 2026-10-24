@@ -55,8 +55,16 @@ rule light:
 
 
 # ── ① built(all.json)の構築と介入チェーン ────────────────────────
-rule build_editor_data:
+rule build_structures:
+    # 変電所の構造 DB(data/structures)を基底の OSM から作る(2026-10-24・決定的)。
+    # 変電所の属性・SubSLD・潮流・N-1・MATPOWER・CIM が読む。build_editor_data より前に置く
     input: BASE_GEOJSON
+    output: touch(f"{STAMP}/00_build_structures.done")
+    shell: f"{PY} scripts/build_structures_batch.py --all"
+
+
+rule build_editor_data:
+    input: f"{STAMP}/00_build_structures.done", BASE_GEOJSON
     output: touch(f"{STAMP}/01_build_editor_data.done")
     shell: f"{PY} scripts/build_editor_data.py"
 
@@ -166,7 +174,8 @@ rule map_tiers:
 
 
 rule gen_sld:
-    input: f"{STAMP}/built_ready.done"
+    # 枝の負荷率に潮流の結果を使うので、潮流の後(2026-10-24)
+    input: f"{STAMP}/built_ready.done", f"{STAMP}/full_powerflow.done"
     output: touch(f"{STAMP}/gen_sld.done")
     shell: f"{PY} scripts/gen_sld_from_built.py"
 

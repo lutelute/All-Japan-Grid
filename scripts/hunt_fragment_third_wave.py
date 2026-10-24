@@ -37,6 +37,7 @@ from collections import Counter, defaultdict, deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+ADOPTED = "2026-09-02"  # 介入#34 追補3(第三波)の採用日
 sys.path.insert(0, str(ROOT))
 
 from scripts.hunt_fragment_osm_bridges import (  # noqa: E402
@@ -655,7 +656,8 @@ def main(argv=None) -> int:
             built["edges"].append({
                 "a": [fk[0], fk[1]], "b": [mk[0], mk[1]], "main": True, "par": 1,
                 "kv": float(kv), "name": nm or "OSM連鎖回収線(第三波)", "path": path,
-                "disclosure": (f"OSM実線連鎖回収(第三波 {args.date}): {c['n_ways']}way・"
+                # 日付は第三波の採用日(固定)。実行日を書くと、別の日に流した正典がバイト一致しない(2026-10-24)
+                "disclosure": (f"OSM実線連鎖回収(第三波 {ADOPTED}): {c['n_ways']}way・"
                                f"継ぎ目最大{c['max_seam_m']}m/計{c['stitch_m']}m・"
                                f"接触{c['d_frag_m']}m/{c['d_main_m']}m・迂回{c['detour']}"),
                 "recovery": "osm_chain3"})

@@ -293,9 +293,8 @@ def _merge_ledger(dst, new_ledger: dict) -> None:
     従来は毎回上書きしていたので、インクリメンタルに適用すると過去のフリップが
     帳簿から消え、**逆再生できなくなる**(regen は基底から作り直すので上書きでも
     成立するが、正典に対する追加適用では履歴が失われる)。id で重複排除しつつ
-    既存の flips を保ち、適用の回数と日付を runs に残す。
+    既存の flips を保ち、適用の回数を runs に残す(実行時刻は書かない。2026-10-24)。
     """
-    import datetime as _dt
     prev = {}
     if dst.exists():
         try:
@@ -313,8 +312,8 @@ def _merge_ledger(dst, new_ledger: dict) -> None:
         flips.append(f)
     merged["flips"] = flips
     runs = list(prev.get("runs", []))
-    runs.append({"at": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
-                 "added": len(new_ledger.get("flips", [])), "total": len(flips)})
+    # 実行時刻は書かない(追跡している台帳が、流した日によって変わらないように。2026-10-24)
+    runs.append({"added": len(new_ledger.get("flips", [])), "total": len(flips)})
     merged["runs"] = runs
     dst.write_text(json.dumps(merged, ensure_ascii=False, indent=1))
 

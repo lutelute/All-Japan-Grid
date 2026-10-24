@@ -1,11 +1,15 @@
 {
-  "model_version": "4cef23bf",
+  "model_version": "82e1f1e2",
   "git_dirty": true,
-  "generated_at": "2026-10-21T05:11:48+00:00",
+  "generated_at": "2026-10-24T14:27:49+00:00",
   "steps": {
+    "build_structures": {
+      "status": "ok",
+      "elapsed_s": 4.9
+    },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 11.5
+      "elapsed_s": 11.4
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -21,15 +25,15 @@
     },
     "fragment_recovery": {
       "status": "ok",
-      "elapsed_s": 2.2
+      "elapsed_s": 2.3
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.6
+      "elapsed_s": 19.8
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 21.0
+      "elapsed_s": 21.6
     },
     "node_hygiene": {
       "status": "ok",
@@ -53,7 +57,7 @@
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 3.8
+      "elapsed_s": 3.7
     },
     "substation_properties": {
       "status": "ok",
@@ -81,7 +85,7 @@
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 131.4
+      "elapsed_s": 132.4
     },
     "gen_national_overview": {
       "status": "ok",
@@ -89,17 +93,23 @@
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 168.7
+      "elapsed_s": 192.8
     },
     "export_n1_pages": {
       "status": "ok",
       "elapsed_s": 0.0
     },
     "export_matpower_canonical": {
-      "status": "skipped"
+      "status": "ok",
+      "elapsed_s": 132.8
     },
     "export_cim": {
-      "status": "skipped"
+      "status": "ok",
+      "elapsed_s": 4.0
+    },
+    "export_cim_canonical": {
+      "status": "ok",
+      "elapsed_s": 139.9
     },
     "build_static_site": {
       "status": "ok",
@@ -111,7 +121,7 @@
     },
     "build_pages_editor": {
       "status": "ok",
-      "elapsed_s": 0.1
+      "elapsed_s": 0.0
     }
   },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",

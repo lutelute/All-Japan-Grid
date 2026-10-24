@@ -1,5 +1,24 @@
 {
  "note": "名前照合の燃料種不整合で適用を拒否した(feature, fuel, record, MW)。幻の電源を作らないためのゲート(2026-09-02)",
- "n": 0,
- "vetoed": []
+ "n": 3,
+ "vetoed": [
+  {
+   "feature": "姫路第二発電所",
+   "fuel": "solar",
+   "record": "姫路第二発電所",
+   "value_mw": 4119.0
+  },
+  {
+   "feature": "相浦火力発電所",
+   "fuel": "solar",
+   "record": "相浦火力発電所",
+   "value_mw": 0
+  },
+  {
+   "feature": "松浦火力発電所",
+   "fuel": "solar",
+   "record": "松浦火力発電所",
+   "value_mw": 2000
+  }
+ ]
 }
