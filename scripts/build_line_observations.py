@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import unicodedata
 from pathlib import Path
@@ -28,8 +29,17 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "data" / "external" / "system_disclosure"
+# 置き場は環境変数で変えられる(scripts/fetch_system_disclosure.py と同じ。毎時の処理の worktree から使う)
+SRC = Path(os.environ.get("AGJ_SYSTEM_DISCLOSURE") or ROOT / "data" / "external" / "system_disclosure")
 NORM = SRC / "normalized"
+
+
+def _rel(path: Path) -> str:
+    """記録に書くパス。置き場が本体の外にあっても、いつも data/external/system_disclosure/… で書く。"""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return f"data/external/system_disclosure/{path.relative_to(SRC)}"
 
 ARROW_RX = re.compile(r"[→⇒]")
 
@@ -339,7 +349,7 @@ def main() -> int:
                 "voltage_kv": m.voltage_kv,
                 "from_node": m.flow_positive_from, "to_node": m.flow_positive_to,
                 "layer": "observed",
-                "source_flow": str(flow_path.relative_to(ROOT)),
+                "source_flow": _rel(flow_path),
             }
             rec.update(summarize_flow(ts, m.col))
 
@@ -394,6 +404,18 @@ def main() -> int:
             rows.append(rec)
 
     out = pd.DataFrame(rows)
+    # 同じ線(事業者・系統区分・送電線No.)の観測は、公表の年ごとに行がある(関西は 2018〜2025 年の公表)。
+    # 表には全部残し、各線の最新の公表に is_latest を付ける。使う側(潮流マップの照合など)はこれだけを読む
+    # (2026-10-21: 古い年の行も別の線として数えていた)。公表の年月はファイル名の _YYYY_MM、無ければ年度
+    if len(out):
+        pub = out["source_flow"].astype(str).str.extract(r"_(\d{4})_(\d{2})\.csv$")
+        ym = (pub[0].astype(float) * 100 + pub[1].astype(float)).fillna(
+            pd.to_numeric(out["year"], errors="coerce") * 100)
+        out["_pub"] = ym.fillna(0)
+        key = ["utility", "scope", "equipment_no"]
+        latest = out.groupby(key, dropna=False)["_pub"].transform("max")
+        out["is_latest"] = out["_pub"] == latest
+        out = out.drop(columns=["_pub"])
     if out.empty:
         print("結合できるデータが無い")
         return 1
@@ -425,7 +447,7 @@ def main() -> int:
     print(f"  インピーダンス {summary['with_impedance']}")
     print(f"  3様式すべて    {summary['with_all_three']}")
     print(f"  向き(from→to)  {summary['with_direction']}")
-    print(f"\n→ {dest.relative_to(ROOT)}")
+    print(f"\n→ {_rel(dest)}")
     return 0
 
 

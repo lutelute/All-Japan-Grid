@@ -94,7 +94,7 @@
   <span class="sw" style="background:#e3342f"></span>×2 超<br>
   <span class="muted">太さ = 観測の p95 / 破線 = 年平均の向きが逆 / 灰 = 照合できない線</span><br>
   <div id="obsBreakdown" style="margin:4px 0;font-size:11px"></div>
-  <span class="muted" style="font-size:10px">観測 = 各一般送配電事業者 系統情報公表(潮流実績・2024 年度・年統計)。
+  <span class="muted" style="font-size:10px">観測 = 各一般送配電事業者 系統情報公表(潮流実績・年統計)。各社の最新の公表を週 1 回確かめて取り込む。
   モデルは UC 代表日 または 実績需要で解いた日別断面の全時刻。同じ時刻どうしの比較ではない。</span>
 </div>
 <div class="panel" id="legend">
@@ -483,7 +483,7 @@ function obsPopup(f){
     (r["dir_"+t]===undefined?" / 向きは判定せず":` / 年平均の向き <b style="color:${r["dir_"+t]?"#2eea8f":"#ff7b7b"}">${r["dir_"+t]?"一致":"逆"}</b>`);
   else s+=`<br>${lab}: 値なし`;
   if(r.circuit_scale) s+=`<br><span class="muted">観測は回線ごと → モデルを回線数で按分(×${r.circuit_scale})</span>`;
-  return s+`<br><span class="muted" style="font-size:10px">出典: ${r.util} 系統情報公表(潮流実績・2024 年度・年統計)</span>`;
+  return s+`<br><span class="muted" style="font-size:10px">出典: ${r.util} 系統情報公表(潮流実績・年統計)${r.src?" "+r.src:""}</span>`;
 }
 function updateObsBreakdown(){
   const el=document.getElementById("obsBreakdown");

@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import json
 import math
 import sys
@@ -120,6 +121,8 @@ def load_obs() -> list[dict]:
     rows = []
     with OBS.open(encoding="utf-8") as f:
         for r in csv.DictReader(f):
+            if r.get("is_latest", "True") == "False":   # 古い年の公表は使わない(build_line_observations)
+                continue
             try:
                 mean = float(r["flow_mean_mw"])
                 p95 = float(r["flow_p95_abs_mw"])
@@ -129,7 +132,9 @@ def load_obs() -> list[dict]:
             if mean != mean or p95 != p95:
                 continue
             mx = float(r["flow_max_abs_mw"]) if r.get("flow_max_abs_mw") not in ("", None) else None
+            # src = 元にした公表ファイルの名前(公表した年月が入る)。画面はこれで「いつの公表か」を出す(2026-10-21)
             rows.append({"util": r["utility"], "name": r["name"], "kv": kv,
+                         "src": os.path.basename(r.get("source_flow") or ""),
                          "from": r["from_node"], "to": r["to_node"], "n": int(float(r["n_obs"] or 0)),
                          "obs": {"mean": round(mean, 1), "p95": round(p95, 1),
                                  "max": None if mx is None or mx != mx else round(mx, 1)}})
@@ -348,7 +353,7 @@ def compare(matched: list[dict]) -> list[dict]:
                 vals.append(round(v * scale, 1) if ok else None)
             return vals
         n_act = max((len(act.get(k, [])) for k, _, _ in seg0), default=0)
-        rec = {k: m[k] for k in ("util", "name", "kv", "from", "to", "island", "conf")}
+        rec = {k: m[k] for k in ("util", "name", "kv", "src", "from", "to", "island", "conf") if k in m}
         rec.update({k: m[k] for k in ("path_km", "straight_km", "single_ended") if k in m})
         rec["keys"] = [[k, sg] for seg in m["segs"] for k, sg, _ in seg]
         if scale != 1.0:
