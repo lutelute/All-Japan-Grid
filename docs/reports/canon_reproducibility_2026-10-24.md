@@ -78,7 +78,7 @@
 - 正典（注記の日付が採用日になる・変電所の属性）、台帳 2 つ（時刻なし）、`circuit_counts.jsonl`（`kind` を足す）
 - 潮流（`powerflow_full`）・N-1 の要約・単線結線図・CIM の索引: #104（地点需要の年度の二重計上）と構造 DB の作り直しの両方が入ります
 - SubSLD のページのデータ・変電所の属性: 構造 DB の作り直しが入ります
-- 10-24 の再生成の報告（`circuit_sources_2026-10-24`・`fragment_third_wave_2026-10-24`・`n1_screening_2026-10-24` と図）
+- 10-24 の再生成の報告（`circuit_sources_2026-10-25`・`fragment_third_wave_2026-10-25`・`n1_screening_2026-10-25` と図）
 
 ## 残っていること
 
