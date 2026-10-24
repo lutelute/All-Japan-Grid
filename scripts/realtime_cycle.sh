@@ -34,17 +34,30 @@ mkdir -p data/realtime
     # 出所の記録は追跡しているファイルなので、本体の作業ツリーを汚さないよう git の外へ書く
     export AGJ_SD_PROVENANCE="$STORE/realtime/system_disclosure_provenance.jsonl"
     CH="data/realtime/.flow_actual_changed"
+    # 終了コード 2 = 通信の失敗あり(取れた分の記録と --changed-file は書かれる)
     if python3 -m scripts.fetch_system_disclosure --kind flow_actual --changed-file "$CH" > data/realtime/flow_actual_fetch.log 2>&1; then
-      if [ -s "$CH" ]; then
-        echo "潮流実績: 新しい公表 $(wc -l < "$CH" | tr -d ' ') ファイル → 観測の表を作り直す"
-        python3 scripts/build_line_observations.py || echo "観測の表の作り直しに失敗"
-        # 観測から作って公開している 2 つ(潮流マップの「観測と比べる」と地方系統の観測)も作り直す
-        PYTHONPATH=. python3 scripts/export_obs_compare.py || echo "obs_compare の作り直しに失敗"
-        PYTHONPATH=. python3 scripts/export_obs_local.py || echo "obs_local の作り直しに失敗"
-      fi
+      FA_OK=1
+    else
+      FA_OK=0
+    fi
+    if [ -s "$CH" ]; then
+      echo "潮流実績: 新しい公表 $(wc -l < "$CH" | tr -d ' ') ファイル → 観測の表を作り直す"
+      python3 scripts/build_line_observations.py || echo "観測の表の作り直しに失敗"
+      # 観測から作って公開している 2 つ(潮流マップの「観測と比べる」と地方系統の観測)も作り直す
+      PYTHONPATH=. python3 scripts/export_obs_compare.py || echo "obs_compare の作り直しに失敗"
+      PYTHONPATH=. python3 scripts/export_obs_local.py || echo "obs_local の作り直しに失敗"
+    fi
+    if [ "$FA_OK" = 1 ]; then
       touch "data/realtime/.flow_actual_$WEEK"
     else
-      echo "潮流実績の確認に失敗(次の回に再試行)"
+      # 取り直しは毎回全部を落とす(約 12 分)ので、同じ週は 3 回まで
+      echo x >> "data/realtime/.try_flow_actual_$WEEK"
+      if [ "$(wc -l < "data/realtime/.try_flow_actual_$WEEK")" -ge 3 ]; then
+        touch "data/realtime/.flow_actual_$WEEK"
+        echo "潮流実績: 通信の失敗が 3 回 → この週は見送る(data/realtime/flow_actual_fetch.log)"
+      else
+        echo "潮流実績: 通信の失敗あり(次の回に再試行・data/realtime/flow_actual_fetch.log)"
+      fi
     fi
   fi
   python3 scripts/export_flow_map_data.py --realtime

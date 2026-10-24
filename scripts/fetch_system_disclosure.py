@@ -112,7 +112,7 @@ def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
         blob = get(url)
     except Exception as exc:  # noqa: BLE001 — 取得失敗は握らず記録して続行
         print(f"  ! FAIL {utility}/{kind}/{name}: {exc}")
-        return None
+        return {"status": "failed", "file": name}
     sha = hashlib.sha256(blob).hexdigest()
     status = "new"
     if dest.exists():
@@ -152,7 +152,13 @@ def main() -> int:
     args = ap.parse_args()
     changed: list[str] = []
 
+    net_fail = 0  # 通信の失敗(ファイル・一覧)。「該当リンクなし」(いつもの未発見)は数えない
+
     def done(entry) -> bool:
+        nonlocal net_fail
+        if entry and entry.get("status") == "failed":
+            net_fail += 1
+            return False
         if entry and entry.get("status") in ("new", "updated"):
             changed.append(entry["file"])
         return bool(entry)
@@ -190,6 +196,7 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001
                 print(f"  ! 一覧取得失敗 {index_url}: {exc}")
                 fail += 1
+                net_fail += 1
                 continue
             if not links:
                 # verified: false の社はここに来る。嘘をつかず「未発見」と出す。
@@ -207,6 +214,12 @@ def main() -> int:
         print(f"出所記録: {PROVENANCE}")
     if args.changed_file:
         Path(args.changed_file).write_text("".join(f"{c}\n" for c in changed), encoding="utf-8")
+    # 通信に失敗したものがあれば 2 を返す(2026-10-24)。それまで常に 0 で、毎時の処理が
+    # 通信の落ちた週にも「確かめた」の印を付けて、その週を飛ばしていた。
+    # 取れたものの記録(出所・--changed-file)は失敗があっても書く
+    if net_fail:
+        print(f"通信の失敗 {net_fail} 件 → 終了コード 2")
+        return 2
     return 0
 
 
