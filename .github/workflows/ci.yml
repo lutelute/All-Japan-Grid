@@ -82,6 +82,20 @@ jobs:
           git status --short
           git diff --stat --exit-code -- . ':!docs/data/MODEL_VERSION.json' ':!docs/reports/circuit_sources_*'
           git diff --quiet -- docs/data/built/all.json && echo "正典 docs/data/built/all.json はコミットとバイト一致"
+      # 落ちたときは、作り直した側のファイルとライブラリの版を残す(手元で比べる)
+      - name: 違いを残す(落ちたとき)
+        if: failure()
+        run: |
+          mkdir -p _repro_diff
+          git diff --name-only | xargs -I{} cp --parents {} _repro_diff/
+          pip freeze > _repro_diff/pip_freeze.txt
+          python -VV > _repro_diff/python_version.txt
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: reproduce-canon-diff
+          path: _repro_diff
+          retention-days: 7
 
   # 正典の 4 つの同期島を全規模で AC 潮流に解く(配布ケースと同じ網・同じ素朴な NR)
   canonical-islands:
