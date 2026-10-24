@@ -60,6 +60,10 @@ mkdir -p data/realtime
       fi
     fi
   fi
+  # 変電所の構造 DB(data/structures・git の外)を基底の OSM から作る(約 5 秒・決定的)。潮流は変圧器の銘板の
+  # 容量をここから読む。この worktree には無く、NOW 断面は銘板なし(推定の容量)で組まれていた(2026-10-25)
+  PYTHONPATH=. python3 scripts/build_structures_batch.py --all > data/realtime/structures_build.log 2>&1 \
+    || echo "構造 DB の作成に失敗(data/realtime/structures_build.log)"
   python3 scripts/export_flow_map_data.py --realtime
   # 日付別断面: 前日分が未生成なら生成(1日1回だけ走る)
   YD=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)

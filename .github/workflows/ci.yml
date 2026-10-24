@@ -112,6 +112,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+      # 変圧器の銘板の容量は構造 DB(git の外)から読む。配布ケースと同じ網にするため先に作る(約 5 秒・2026-10-25)
+      - name: 構造 DB を作る
+        env:
+          PYTHONPATH: .
+        run: python scripts/build_structures_batch.py --all
       - name: 正典 4 島の全規模 AC
         env:
           AJGRID_SLOW_TESTS: "1"
