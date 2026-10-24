@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT))
 import numpy as np  # noqa: E402
 import pandapower as pp  # noqa: E402
 from scripts.export_matpower_canonical import build_canonical_net  # noqa: E402
-from scripts.export_national_matpower import export_net  # noqa: E402
+from src.converter.matpower_case import export_net  # noqa: E402
 
 STEP, TMIN, TMAX = 1.5, -12, 12
 

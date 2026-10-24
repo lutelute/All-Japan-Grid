@@ -1,5 +1,11 @@
 # MATPOWER Export Guide
 
+> **2026-10-24 追記: この文書は旧系統(スナップ済みトポロジ・`src/matpower/exporter.py`・2026-05-31)の説明です。**
+> 配布ケース(`dist/matpower_national/<island>.mat`・同期 4 島)の正本は、正典 `docs/data/built` から書く
+> `scripts/export_matpower_canonical.py` です(書き出し部は `src/converter/matpower_case.py`)。
+> 使い方は [`dataset/README.md`](../dataset/README.md) と [`dataset/01_matpower_powerflow/`](../dataset/01_matpower_powerflow/)。
+> 系統の整理は `docs/reports/project_structure_2026-10-21/candidates.csv` の B1。以下の本文は記録として残します。
+
 All-Japan-Grid のスナップ済みトポロジを **MATPOWER 形式** (`.mat`) に書き出し、
 MATPOWER / pandapower で検証する手順です。実装は `src/matpower/exporter.py`、
 実行例は `examples/export_and_solve_matpower.py` を参照。

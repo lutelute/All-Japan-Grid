@@ -65,7 +65,7 @@ def branch_capacity_mw(sub, n_branch: int) -> np.ndarray:
 def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
         cap_factor: float = 1.0, cap_calib=None) -> dict:
     # 座標が要るので bus_of（built ノード索引 → バス）を自前で受け取る
-    from src.powerflow.pipeline import add_reactive_compensation
+    from src.powerflow.compensation import add_reactive_compensation
     from scripts.run_full_powerflow_from_db import (
         GEN_ATTACH_DEFAULT, attach_default_for, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
         attach_generators, balance_by_zone,

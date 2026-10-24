@@ -591,7 +591,7 @@ def main():
         pref_ledger = getattr(base, "_pref_demand_ledger", None) if pref_gwh else None
         reactive_rep = None
         if args.reactive_comp is not None:
-            from src.powerflow.pipeline import add_reactive_compensation
+            from src.powerflow.compensation import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)
                     if args.reactive_comp == -1.0 else args.reactive_comp)
             n_shunt = add_reactive_compensation(base, factor=rfac)
@@ -612,7 +612,7 @@ def main():
                   f"銘板残{ledger['n_trafo_nameplate_kept']}")
         infeed_ledger = []
         if args.provisional_infeed:
-            from src.powerflow.pipeline import add_provisional_infeed
+            from src.powerflow.compensation import add_provisional_infeed
             infeed_ledger = add_provisional_infeed(base)
             if infeed_ledger:
                 print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "

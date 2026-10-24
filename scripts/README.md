@@ -392,7 +392,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `export_map_tiers_from_built.py` 🔒 | 現役 | 系統図/エリアタブの地図タイルを **DB更新済み建造モデル** から再生成する (idempotent)。 |
 | `export_matpower_canonical.py` 🔒 | 現役 | 配布する MATPOWER ケースの出力 — built 正典+標準注入で 4 島. |
 | `export_n1_pages.py` 🔒 | 現役 | 地図の Ybus / N-1 タブが読む N-1 の要約を、正典の N-1 スクリーニングの報告から書く. |
-| `export_national_matpower.py` | 比較用<br><sub>B1 旧 MATPOWER 書き出し (3)。書き出し部 export_net は正本 export_matpower_canonical.py が共用</sub> | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
+| `export_national_matpower.py` 🔒 | 比較用<br><sub>B1 旧 MATPOWER 書き出し (3)。書き出し部 export_net は 10-24 に src/converter/matpower_case.py へ移し、正本 export_matpower_canonical.py と共用</sub> | Export the national model as MATPOWER cases — .mat + CSV tables (N4). |
 | `export_obs_compare.py` 🔒 | 現役 | 観測潮流(公表実績の年統計)とモデルの潮流を、線ごとに突き合わせる(潮流マップの「観測と比べる」)。 |
 | `export_obs_local.py` 🔒 | 現役 | 線クリック用の観測実績オーバーレイ(年統計=集計値)を生成する. |
 | `export_other_freq_layer.py` |  | Export the OTHER-frequency equipment of each region as a reference layer. |

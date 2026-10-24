@@ -1710,14 +1710,14 @@ def main():
                                     point_demand=pinned,
                                     pop_tilt=args.pop_tilt)
         if args.reactive_comp is not None:
-            from src.powerflow.pipeline import add_reactive_compensation
+            from src.powerflow.compensation import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)
                     if args.reactive_comp == -1.0 else args.reactive_comp)
             n_shunt = add_reactive_compensation(net, factor=rfac)
             print(f"  reactive-comp: factor={rfac} shunt={n_shunt}")
         infeed_ledger = []          # 介入#37 台帳(JSONへ保存)
         if args.provisional_infeed:
-            from src.powerflow.pipeline import add_provisional_infeed
+            from src.powerflow.compensation import add_provisional_infeed
             infeed_ledger = add_provisional_infeed(net)
             if infeed_ledger:
                 print(f"  介入#37 (仮)都心給電: {len(infeed_ledger)}件 "
