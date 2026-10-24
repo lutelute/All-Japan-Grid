@@ -4,6 +4,9 @@ point_demand.csv(変圧器バンク潮流実績の統計)から「需要」と�
   - 二次kV ≤ 22(配電用バンク)のみ。kikan層(500/275)は階級間融通なので除外
   - peak_mw ≤ 0(年間逆潮=発電系)を除外
   - 変電所単位に複数バンクを合算(mean_mwの和=年平均受電)
+  - 年度は変電所ごとに最新の 1 年だけ使う(2026-10-24 訂正。それまでは公表の年度をまたいで
+    足しており、東北は 3 年度分・中部/四国/北陸は 2 年度分で、ピン留めが 615 MW=最新年の
+    285 MW の約 2.2 倍だった。all_years=True で旧来の合算を再現する)
 
 バス対応付けの防御(罠14: 同名別所):
   - 事業者→zoneの制約付き(東北の観測は tohoku zone のバスにのみ当てる)
@@ -36,8 +39,12 @@ def _norm(s: str) -> str:
     return s
 
 
-def load_point_demand() -> dict[tuple[str, str], float]:
-    """{(zone, 正規化変電所名): 年平均需要MW} を返す(需要ビュー)。"""
+def load_point_demand(all_years: bool = False) -> dict[tuple[str, str], float]:
+    """{(zone, 正規化変電所名): 年平均需要MW} を返す(需要ビュー)。
+
+    同じ年度の複数バンクは足し、年度は変電所ごとに最新の 1 年だけ使う。
+    all_years=True は 2026-10-24 より前の挙動(年度をまたいで足す。回帰比較用)。
+    """
     # (zone, 事業者名)→モデル名。zoneキー必須: 沖縄の大山(宜野湾)に九州用
     # 「大山→日田市」が誤適用された事故(2026-08-17)の再発防止
     alias: dict[tuple[str, str], str] = {}
@@ -47,7 +54,7 @@ def load_point_demand() -> dict[tuple[str, str], float]:
             alias[(a["region"], _norm(a["utility_name"]))] = _norm(a["model_name"])
     except Exception:  # noqa: BLE001
         pass
-    out: dict[tuple[str, str], float] = {}
+    by_year: dict[tuple[str, str], dict[str, float]] = {}
     with open(CSV, encoding="utf-8") as f:
         for r in csv.DictReader(f):
             try:
@@ -65,8 +72,12 @@ def load_point_demand() -> dict[tuple[str, str], float]:
             k = alias.get((zone, k), k)
             if not k:
                 continue
-            out[(zone, k)] = out.get((zone, k), 0.0) + mean
-    return out
+            yr = by_year.setdefault((zone, k), {})
+            y = str(r.get("year") or "")
+            yr[y] = yr.get(y, 0.0) + mean
+    if all_years:
+        return {key: sum(yr.values()) for key, yr in by_year.items()}
+    return {key: yr[max(yr)] for key, yr in by_year.items()}
 
 
 def match_buses(net, demand: dict[tuple[str, str], float]):
