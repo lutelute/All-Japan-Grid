@@ -63,3 +63,9 @@ def test_fetcher_exits_nonzero_on_network_failure(tmp_path, monkeypatch):
 def test_cycle_retries_flow_actual_three_times():
     sh = (ROOT / "scripts" / "realtime_cycle.sh").read_text(encoding="utf-8")
     assert ".try_flow_actual_$WEEK" in sh and "-ge 3" in sh
+
+
+def test_cycle_builds_structures_before_the_now_snapshot():
+    # NOW 断面の潮流は変圧器の銘板を構造 DB から読む。毎時の worktree には無いので先に作る(2026-10-25)
+    sh = (ROOT / "scripts" / "realtime_cycle.sh").read_text(encoding="utf-8")
+    assert sh.index("build_structures_batch.py --all") < sh.index("export_flow_map_data.py --realtime")
