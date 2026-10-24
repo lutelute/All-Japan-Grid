@@ -167,18 +167,24 @@ attributed overlay lives in the DB.
 against **[open-keitouzu](https://github.com/ibarapascal/open-keitouzu)** — a logical
 topology of the trunk + 154 kV grid extracted from the ten utilities' official system
 diagram PDFs (CC BY 4.0). Its crosswalk maps 657 stations directly onto this dataset's
-node IDs (641 kept after our geographic adjudication of same-name mismatches);
-88.1 % of mappable diagram edges are reproduced by our built model, and the divergent
-remainder (92 edges, 30 in a disconnected component) is kept as a human-review
-adjudication queue with links to the original diagrams — see `scripts/keitouzu/` and
+node IDs (641 kept after our geographic adjudication of same-name mismatches).
+Those IDs are AGJ v1.6.0 IDs; since OSM re-fetches renumber substation IDs, we resolve
+each one through its v1.6.0 coordinates and name to the current node
+(`src/topology/keitouzu_ids.py`). As of 2026-10-24, 90.4 % of mappable diagram edges are
+reproduced by our built model (88.1 % on 2026-08-08), and the divergent remainder
+(74 edges, 3 in a disconnected component; 92 and 30 on 2026-08-08) is kept as a
+human-review adjudication queue with links to the original diagrams — see `scripts/keitouzu/` and
 `docs/reports/keitouzu_*.md`. Many thanks to the open-keitouzu author for publishing
 this dataset **with an AGJ crosswalk included**.
 
 **独立トポロジ突合:** 接続関係は **[open-keitouzu](https://github.com/ibarapascal/open-keitouzu)**
 （十社の公式系統図PDFから抽出された基幹＋154kV の論理トポロジ、CC BY 4.0）と突合しています。
 先方の crosswalk は本データセットのノードIDへの対応657件を同梱しており（同名異地の
-誤マッチを地理裁定で除外し641件を採用）、突合可能な系統図辺の 88.1% が本モデルで再現、
-残る食い違い92本（うち断絶30本）は原図リンク付きの人間裁定キューとして保持しています
+誤マッチを地理裁定で除外し641件を採用）。この ID は AGJ v1.6.0 のもので、OSM を取り直すと
+変電所の ID は振り直されるため、v1.6.0 の座標と名前から今のノードへ引き直しています
+（`src/topology/keitouzu_ids.py`）。2026-10-24 時点で、突合可能な系統図辺の 90.4% が本モデルで再現
+（08-08 は 88.1%）、残る食い違い74本（うち断絶3本。08-08 は 92 本・30 本）は原図リンク付きの
+人間裁定キューとして保持しています
 （`scripts/keitouzu/`・`docs/reports/keitouzu_*.md`）。**AGJ への crosswalk を
 同梱した形で公開してくださった** open-keitouzu 作者に感謝します。
 

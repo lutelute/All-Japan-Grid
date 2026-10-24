@@ -27,6 +27,9 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+import sys  # noqa: E402
+sys.path.insert(0, str(ROOT))
+from src.topology.keitouzu_ids import IdRebaser  # noqa: E402
 KZ = ROOT / "data" / "external" / "keitouzu"
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 BBOX = ROOT / "docs" / "data" / "built" / "regions_bbox.json"
@@ -58,12 +61,15 @@ def main() -> None:
     subs = {r["uuid"]: r for r in csv.DictReader(open(KZ / "substations.csv"))}
     xw = [r for r in csv.DictReader(open(KZ / "crosswalk.csv")) if r["target_system"] == "ajg"]
 
+    # 対応表の id は版の決まった id。今の正典の id へ座標・名前で引き直す(src/topology/keitouzu_ids.py)
+    rebaser = IdRebaser(built["nodes"])
     rows = []
     for c in xw:
         s = subs.get(c["uuid"])
         if not s:
             continue
-        node = base2node.get(c["target_id"].split("@")[0])
+        cur = rebaser.resolve(c["target_id"], c["target_version"])
+        node = base2node.get(cur.split("@")[0]) if cur else None
         if node is None:
             continue
         home = bboxes.get(s["region"])
@@ -83,6 +89,7 @@ def main() -> None:
             "keitouzu_name": s["name_official"],
             "keitouzu_region": s["region"],
             "ajg_target": c["target_id"],
+            "ajg_current": cur,
             "ajg_name": node.get("name", ""),
             "ajg_lat": node["lat"],
             "ajg_lon": node["lon"],
