@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 import sys
 sys.path.insert(0, str(ROOT))
 from src.topology.coords import CoordIndex
+from src.topology.keitouzu_ids import IdRebaser
 KZ = ROOT / "data" / "external" / "keitouzu"
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
 REPORTS = ROOT / "docs" / "reports"
@@ -135,17 +136,25 @@ def main() -> None:
         adj = json.load(open(adj_reports[-1]))
         excluded = {tuple(p) for p in adj.get("excluded_mappings", [])}
 
+    # 対応表の id は版(target_version)の決まった id。OSM の取り直しで振り直されるので、
+    # その版の座標・名前から今の正典の id へ引き直す(src/topology/keitouzu_ids.py・2026-10-24)。
+    # 裁定済みの除外は対応表の元の id で照合する。
+    rebaser = IdRebaser(built["nodes"])
     ajg_map: dict[str, list[str]] = defaultdict(list)
     n_excluded_maps = 0
+    raw_exact = 0
     for r in xw:
         if r["target_system"] == "ajg":
             if (r["uuid"], r["target_id"]) in excluded:
                 n_excluded_maps += 1
                 continue
-            ajg_map[r["uuid"]].append(r["target_id"])
+            raw_exact += r["target_id"] in node_ids
+            cur = rebaser.resolve(r["target_id"], r["target_version"])
+            if cur is not None:
+                ajg_map[r["uuid"]].append(cur)
 
-    # 1) ID 解決
-    total = sum(len(v) for v in ajg_map.values())
+    # 1) ID 解決(引き直したあと)
+    total = sum(1 for r in xw if r["target_system"] == "ajg") - n_excluded_maps
     exact = sum(1 for v in ajg_map.values() for t in v if t in node_ids)
 
     # 2) 辺の分類
@@ -206,7 +215,8 @@ def main() -> None:
             "upstream": "https://github.com/ibarapascal/open-keitouzu",
             "pinned_commit": "db1c6c6597e7210195b692a15fff4ad7de32a6db",
             "built_nodes": len(built["nodes"]),
-            "crosswalk_ajg": {"total": total, "resolved_exact": exact},
+            "crosswalk_ajg": {"total": total, "resolved_exact": exact,
+                          "raw_id_present": raw_exact, "rebase": dict(rebaser.stats)},
             "edges": {"active": len(active), **counts},
             "by_region": {k: dict(v) for k, v in sorted(by_region.items())},
             "divergent_candidates": candidates,
