@@ -121,24 +121,8 @@ from src.powerflow.pipeline import (  # noqa: E402,F401
 )
 
 
-def _parse_bus_coords(net, idx):
-    """Extract (lon, lat) from pandapower bus geo column."""
-    if "geo" in net.bus.columns:
-        geo_raw = net.bus.at[idx, "geo"]
-        if isinstance(geo_raw, str):
-            try:
-                geo_obj = json.loads(geo_raw)
-                coords = geo_obj.get("coordinates", [])
-                if len(coords) >= 2:
-                    return float(coords[0]), float(coords[1])
-            except (json.JSONDecodeError, TypeError):
-                pass
-        elif hasattr(geo_raw, '__len__') and len(geo_raw) >= 2:
-            return float(geo_raw[0]), float(geo_raw[1])
-    if hasattr(net, "bus_geodata") and not net.bus_geodata.empty and idx in net.bus_geodata.index:
-        row = net.bus_geodata.loc[idx]
-        return float(row["x"]), float(row["y"])
-    return None, None
+# 座標を読む関数は src/converter/matpower_case.py に移した(2026-10-24・B1)。旧来の名前で使える。
+from src.converter.matpower_case import parse_bus_coords as _parse_bus_coords  # noqa: E402
 
 
 def _build_bus_name_to_sub_id(net, region):

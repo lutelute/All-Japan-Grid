@@ -18,7 +18,7 @@ snapped系譜で、eastが素朴ACで解けなかった。正典系譜(build_isl
         [--no-fold]          # 解けない島も畳まずに DC で出す(介入#52 の無効化)
 
 出力: <out>/<island>.mat + CSV + 名前サイドカー + meta.json
-(書き出し部は export_national_matpower.export_net を共用)。
+(書き出し部は src/converter/matpower_case.py の export_net)。
 生成物はコミットしない(スクリプトが再現レシピ)。
 """
 from __future__ import annotations
@@ -48,7 +48,7 @@ def build_canonical_net(island, nodes, edges, freq, point_demand=True):
         add_per_component_slacks, allocate_loads, attach_generators,
         balance_by_zone, build_island_net, load_demand_config)
     from src.powerflow.pref_demand import pref_zone_gwh
-    from src.powerflow.pipeline import add_reactive_compensation
+    from src.powerflow.compensation import add_reactive_compensation
 
     cfg = load_demand_config()
     pref_gwh, _ = pref_zone_gwh(nodes)
@@ -80,7 +80,7 @@ def try_ac(net):
 
 
 def main() -> int:
-    from scripts.export_national_matpower import export_net
+    from src.converter.matpower_case import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
     from src.powerflow.reduce_antenna import fold_until
 

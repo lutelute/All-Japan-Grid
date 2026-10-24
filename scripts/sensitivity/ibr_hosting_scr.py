@@ -46,7 +46,7 @@ def build_production_net(island, nodes, edges, cfg, pref_gwh):
     from scripts.run_full_powerflow_from_db import (
         GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
         attach_default_for, attach_generators, balance_by_zone, build_island_net)
-    from src.powerflow.pipeline import add_reactive_compensation
+    from src.powerflow.compensation import add_reactive_compensation
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
     attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)

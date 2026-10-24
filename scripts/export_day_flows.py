@@ -433,7 +433,7 @@ def main() -> int:
                           stats=True)
         pinned, _ = pdm.match_buses(net, demand_pd)
         allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
-        from src.powerflow.pipeline import add_reactive_compensation
+        from src.powerflow.compensation import add_reactive_compensation
         add_reactive_compensation(net, factor=cfg.get(
             "reactive_compensation_factor", 0.6))
         add_per_component_slacks(net)

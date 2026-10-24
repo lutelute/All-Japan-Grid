@@ -66,7 +66,7 @@ def production_net(island: str, nodes, edges, cfg, pref_gwh, cap_calib=None):
                                       cap_calib=cap_calib)
     attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
-    from src.powerflow.pipeline import add_reactive_compensation
+    from src.powerflow.compensation import add_reactive_compensation
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)
     balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR)

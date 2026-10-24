@@ -17,7 +17,7 @@
   gen_pf_geojson.py: "C3 psdat 系"
 
 比較用:  # 旧系譜だが、正典の側が一部を共用しているもの
-  export_national_matpower.py: "B1 旧 MATPOWER 書き出し (3)。書き出し部 export_net は正本 export_matpower_canonical.py が共用"
+  export_national_matpower.py: "B1 旧 MATPOWER 書き出し (3)。書き出し部 export_net は 10-24 に src/converter/matpower_case.py へ移し、正本 export_matpower_canonical.py と共用"
 
 記録:   # 一回きり・論文図など。動かす前提ではない
   today_loop.sh: "C5 08-18 のプレゼン限定"
