@@ -12,6 +12,41 @@ mkdir -p data/realtime
   python3 scripts/fetch_denkiyoho.py || { echo "fetch失敗(過半未達)"; exit 1; }
   # 燃料別実績(エリア需給実績・手法(a)): 前日+当日を取得(関西は当日配信の蓄積)
   python3 scripts/fetch_area_fuelmix.py || true
+  # 外部の公表データを最新に保つ(2026-10-21)。この毎時の処理の中で、日に 1 回・週に 1 回だけ走らせる。
+  # 置き場は本体のチェックアウト(data/realtime は本体の data/realtime へのリンクなので、その親)
+  STORE="$(cd -P data/realtime/.. && pwd -P)"   # -P: リンクを先に解決してから .. をたどる
+  TODAY=$(date +%Y%m%d)
+  # OCCTO 系統情報公表(エリア需要 02・連系線 04 の 30 分値)。API は約 14 か月しか残らないので、
+  # 取り損ねた月は二度と取れない(2026-06 で止まっていた)。毎日、当月を取り直す。月初の 3 日は前月も
+  if [ ! -f "data/realtime/.occto_kohyo_$TODAY" ]; then
+    D0=$(date +%Y-%m-01); D1=$(date +%Y-%m-%d)
+    if [ "$(date +%d)" -le 3 ]; then
+      D0=$(date -v-1m +%Y-%m-01 2>/dev/null || date -d "$(date +%Y-%m-01) -1 month" +%Y-%m-%d)
+    fi
+    python3 scripts/fetch_occto_kohyo.py --from "$D0" --to "$D1" --out-dir "$STORE/external/occto" \
+      && touch "data/realtime/.occto_kohyo_$TODAY" || echo "OCCTO 系統情報公表の取得に失敗(次の回に再試行)"
+  fi
+  # 各社の系統情報公表(潮流実績)。年 1 回の公表なので週 1 回確かめ、新しい公表があれば観測の表を作り直す。
+  # 新しい観測の表は、この後の export_flow_map_data(観測との向きの照合)にそのまま入る
+  WEEK=$(date +%G%V)
+  if [ ! -f "data/realtime/.flow_actual_$WEEK" ]; then
+    export AGJ_SYSTEM_DISCLOSURE="$STORE/external/system_disclosure"
+    # 出所の記録は追跡しているファイルなので、本体の作業ツリーを汚さないよう git の外へ書く
+    export AGJ_SD_PROVENANCE="$STORE/realtime/system_disclosure_provenance.jsonl"
+    CH="data/realtime/.flow_actual_changed"
+    if python3 -m scripts.fetch_system_disclosure --kind flow_actual --changed-file "$CH" > data/realtime/flow_actual_fetch.log 2>&1; then
+      if [ -s "$CH" ]; then
+        echo "潮流実績: 新しい公表 $(wc -l < "$CH" | tr -d ' ') ファイル → 観測の表を作り直す"
+        python3 scripts/build_line_observations.py || echo "観測の表の作り直しに失敗"
+        # 観測から作って公開している 2 つ(潮流マップの「観測と比べる」と地方系統の観測)も作り直す
+        PYTHONPATH=. python3 scripts/export_obs_compare.py || echo "obs_compare の作り直しに失敗"
+        PYTHONPATH=. python3 scripts/export_obs_local.py || echo "obs_local の作り直しに失敗"
+      fi
+      touch "data/realtime/.flow_actual_$WEEK"
+    else
+      echo "潮流実績の確認に失敗(次の回に再試行)"
+    fi
+  fi
   python3 scripts/export_flow_map_data.py --realtime
   # 日付別断面: 前日分が未生成なら生成(1日1回だけ走る)
   YD=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)

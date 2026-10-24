@@ -10,6 +10,10 @@
 取得物は observed（事業者公表値）層であり、AGJの解析出力（derived）とは別に置く。
 生ファイルは data/external/system_disclosure/ （gitignore・再配布しない）。
 
+2026-10-21: 中身が前回と同じファイルは書き直さず記録もしない(新規・更新だけを数える)。置き場は
+環境変数 AGJ_SYSTEM_DISCLOSURE で変えられる(毎時の処理の worktree から本体の置き場へ書くため)。
+--changed-file に変わったファイルの一覧を書く(scripts/realtime_cycle.sh が観測の表の作り直しに使う)。
+
 使い方:
     python -m scripts.fetch_system_disclosure --dry-run          # 何が取れるか一覧
     python -m scripts.fetch_system_disclosure --kind impedance   # 全社のインピーダンス
@@ -20,6 +24,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -32,8 +37,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "config" / "system_disclosure.yaml"
-OUTDIR = ROOT / "data" / "external" / "system_disclosure"
-PROVENANCE = OUTDIR / "provenance.jsonl"
+OUTDIR = Path(os.environ.get("AGJ_SYSTEM_DISCLOSURE") or ROOT / "data" / "external" / "system_disclosure")
+# 出所の記録は追跡しているファイル。毎時の処理は本体の作業ツリーを汚さないよう AGJ_SD_PROVENANCE で
+# git の外(data/realtime/)へ書く(scripts/realtime_cycle.sh)
+PROVENANCE = Path(os.environ.get("AGJ_SD_PROVENANCE") or OUTDIR / "provenance.jsonl")
 
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -106,6 +113,13 @@ def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
     except Exception as exc:  # noqa: BLE001 — 取得失敗は握らず記録して続行
         print(f"  ! FAIL {utility}/{kind}/{name}: {exc}")
         return None
+    sha = hashlib.sha256(blob).hexdigest()
+    status = "new"
+    if dest.exists():
+        if hashlib.sha256(dest.read_bytes()).hexdigest() == sha:
+            print(f"  = 同じ {utility}/{kind}/{name}")
+            return {"status": "unchanged", "file": name}
+        status = "updated"
     dest.write_bytes(blob)
     if dest.suffix.lower() == ".zip":
         try:
@@ -116,15 +130,16 @@ def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
     entry = {
         "utility": utility,
         "kind": kind,
-        "file": str(dest.relative_to(ROOT)),
+        "file": f"data/external/system_disclosure/{utility}/{kind}/{name}",
         "source_url": url,
         "bytes": len(blob),
-        "sha256": hashlib.sha256(blob).hexdigest(),
+        "sha256": sha,
+        "status": status,
         "retrieved": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "layer": "observed",
     }
     record(entry)
-    print(f"  OK {utility}/{kind}/{name}  {len(blob):,}B")
+    print(f"  OK({status}) {utility}/{kind}/{name}  {len(blob):,}B")
     return entry
 
 
@@ -133,7 +148,14 @@ def main() -> int:
     ap.add_argument("--utility", help="事業者キー（hokkaido/tohoku/.../okinawa）")
     ap.add_argument("--kind", help="種別（impedance/capacity/flow_actual/outage_plan）")
     ap.add_argument("--dry-run", action="store_true", help="取得せず対象URLだけ表示")
+    ap.add_argument("--changed-file", help="新規・更新のファイルを 1 行ずつ書く(無ければ空ファイル)")
     args = ap.parse_args()
+    changed: list[str] = []
+
+    def done(entry) -> bool:
+        if entry and entry.get("status") in ("new", "updated"):
+            changed.append(entry["file"])
+        return bool(entry)
 
     cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
     utilities = cfg["utilities"]
@@ -147,12 +169,15 @@ def main() -> int:
                 continue
             print(f"[{ukey}/{kkey}] {u['name']}")
 
-            direct = k.get("direct_url")
-            if direct:
-                if fetch_one(ukey, kkey, direct, args.dry_run) or args.dry_run:
-                    ok += 1
-                else:
-                    fail += 1
+            # direct_url(1 本)と direct_urls(一覧)の両方を読む。中部は一覧で書いてあり、
+            # 単数形しか読まなかったので一度も自動では取られていなかった(2026-10-21)
+            directs = list(k.get("direct_urls") or []) + ([k["direct_url"]] if k.get("direct_url") else [])
+            if directs:
+                for url in directs:
+                    if done(fetch_one(ukey, kkey, url, args.dry_run)) or args.dry_run:
+                        ok += 1
+                    else:
+                        fail += 1
                 continue
 
             pattern = k.get("link_pattern")
@@ -172,14 +197,16 @@ def main() -> int:
                 fail += 1
                 continue
             for url in links:
-                if fetch_one(ukey, kkey, url, args.dry_run) or args.dry_run:
+                if done(fetch_one(ukey, kkey, url, args.dry_run)) or args.dry_run:
                     ok += 1
                 else:
                     fail += 1
 
-    print(f"\n完了: 成功 {ok} / 失敗・未発見 {fail}")
+    print(f"\n完了: 成功 {ok} / 失敗・未発見 {fail} / 新規・更新 {len(changed)}")
     if not args.dry_run:
-        print(f"出所記録: {PROVENANCE.relative_to(ROOT)}")
+        print(f"出所記録: {PROVENANCE}")
+    if args.changed_file:
+        Path(args.changed_file).write_text("".join(f"{c}\n" for c in changed), encoding="utf-8")
     return 0
 
 

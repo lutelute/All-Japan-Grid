@@ -15,6 +15,8 @@ def norm(s):
 out = {}
 with OBS.open(encoding="utf-8") as f:
     for r in csv.DictReader(f):
+        if r.get("is_latest", "True") == "False":   # 古い年の公表は使わない(build_line_observations)
+            continue
         k = norm(r.get("name"))
         if not k: continue
         try:
