@@ -17,6 +17,13 @@ python3 scripts/keitouzu/export_divergent_geojson.py   # ④ 食い違い候補�
 python3 scripts/keitouzu/gen_adjudication_queue.py     # ⑤ 原図リンク付き人間裁定キュー → keitouzu_adjudication_queue_<date>.{md,json}
 ```
 
+**対応表の id は版の決まった id（`target_version = ajg-v1.6.0`）です。** 変電所の id
+`{region}_sub_{i}` はファイル内の順番なので、OSM を取り直すと振り直されます（2026-08-16 の
+取り直しのあと、v1.6.0 の id で今も同じ変電所を指すのは 657 件中 9 件だけでした）。②③は
+`src/topology/keitouzu_ids.py` で、その版の座標と名前から今の正典の id へ引き直してから使います。
+版の座標の表 `data/reference/keitouzu_ajg_anchor_<版>.csv` は `build_ajg_anchor.py` が git の
+タグから作ります（対応表の版が上がったときだけ作り直す）。
+
 ②の裁定則: AGJノード座標 vs 発行regionのbbox（+バッファ）とエッジ文脈（隣接局対応座標の
 中央値からの乖離）。接頭辞regionの不一致だけでは誤マッチと断定しない（OSM抽出bboxの
 越境スピルオーバー・他社エリア内自社設備があるため）。
