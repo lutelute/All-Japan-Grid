@@ -151,6 +151,8 @@ section.step, #next { scroll-margin-top: 48px; }
 #sph-canvas { width: 100%; max-width: 560px; aspect-ratio: 1; height: auto; display: block; cursor: grab; touch-action: none; background: var(--paper); border-radius: 12px; }
 #sph-canvas:active { cursor: grabbing; }
 .log-index { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.newly ul { margin: 6px 0 8px; padding-left: 20px; display: grid; gap: 6px; }
+.newly li { line-height: 1.7; }
 </style>
 
 <div class="wrap">
@@ -161,6 +163,15 @@ section.step, #next { scroll-margin-top: 48px; }
     <div class="answer">
       <strong>48 時間の最適値は 740.996〜741.150 億の間（幅 0.021%）。93 秒で証明</strong>
       <p class="muted">汎用ソルバー（HiGHS）は同じ問題に 900 秒かけて幅 0.57%。第 1 部の問題は合成した 800 台＋蓄電池 4 台・4 地域で、実在の発電機ではありません。第 2 部・第 3 部は 2025 年度の実データと実在の送電網です。</p>
+    </div>
+    <div class="panel newly">
+      <h3>これまでできなかったこと</h3>
+      <ul>
+        <li><b>一般に難しかったこと</b>：発電所を 1 台ずつ起動・停止させる 800 台の計画を、公開のソフトだけで、最適値からの距離の証明つき（0.021%）で 1.5 分で解く。汎用ソルバー（HiGHS）は同じ問題に 900 秒かけて 0.57%、800 台×48 時間を 300 秒では解すら出せませんでした。これまでの目安は「100 台程度まで」でした。</li>
+        <li><b>All-Japan-Grid がないとできなかったこと</b>：全国の起動停止計画を、154kV 以上の実在の送電線 4,023 本（インピーダンスつき）に 365 日流し、線の上限を守る計画まで解く。OCCTO が公表するのは 10 エリアの単位までで、線ごとの全国の網は公開されていません。AGJ は OSM と各社の公表から出典つきで組んだ、全国の母線と枝の網（正典）を持っています。</li>
+        <li><b>解くことが、網の検査になる</b>：どう出力を動かしても消えないあふれから、発電所の接続電圧・廃線・欠けた背骨など、網のデータを疑う線 708 本を理由つきで洗い出しました。</li>
+      </ul>
+      <p class="muted">計算は AGJ の正典（<code>docs/data/built</code>）を読んでいます。AGJ は同じ正典を CIM（CGMES）に書き出す仕組みを持っていて（2026 年 6 月に 10 地域とも検証済み）、同じ網を CIM を読む他のツールにも渡せます。CIM のファイルから直接この計算を回して確かめるのは、次の一手です。</p>
     </div>
     <nav class="parts" aria-label="3 つの部">
       <a class="part-card" href="#part1"><span class="eyebrow">第 1 部　解く</span><b class="num">0.021%</b><span>UC 専用ソルバー。800 台×48 時間の最適値を 93 秒で 0.021% の幅に挟んだ（汎用は 900 秒で 0.57%）</span></a>
