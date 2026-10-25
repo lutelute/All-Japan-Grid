@@ -165,14 +165,50 @@ def _git(*args):
         return ""
 
 
+# git が追跡している入力の置き場。ここに無いファイルがあれば、作り直す前に止める
+INPUT_ROOTS = ("data", "config")
+
+
+def missing_tracked_inputs(root: str = ROOT, roots=INPUT_ROOTS):
+    """追跡している入力のうち手元に無いもの(消えた・sparse checkout で外した)。git が無ければ None。
+
+    読む側の多くは「無ければ空」で黙って進む(issue #97: 変圧器の組が無いと 131 台の容量が変わった)。
+    1 本ずつ直すより、入口で 1 回確かめる(2026-10-26)。
+    """
+    try:
+        out = subprocess.run(["git", "ls-files", "-z", "-v", "--", *roots], cwd=root,
+                             capture_output=True, check=True).stdout.decode("utf-8")
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    missing = []
+    for item in filter(None, out.split("\0")):
+        tag, path = item[0], item[2:]
+        if tag in "Ss" or not os.path.exists(os.path.join(root, path)):
+            missing.append(path)
+    return missing
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--light", action="store_true",
                     help="pandapower不要の段のみ(editor+static)")
     ap.add_argument("--stamp-only", action="store_true", help="MODEL_VERSION のみ更新")
+    ap.add_argument("--allow-missing-inputs", action="store_true",
+                    help="追跡している入力(data/・config/)が欠けていても作り直す(結果は正典と一致しない)")
     for name, _argv, _heavy in STEPS:
         ap.add_argument(f"--skip-{name.replace('_', '-')}", action="store_true")
     args = ap.parse_args()
+
+    if not args.stamp_only:
+        missing = missing_tracked_inputs()
+        if missing is None:
+            print("  (git が無いので、追跡している入力が揃っているかは確かめられない)")
+        elif missing and not args.allow_missing_inputs:
+            print(f"追跡している入力が {len(missing)} 本無い(取得の不備。`git checkout -- <path>` で戻す):",
+                  file=sys.stderr)
+            for path in missing[:20]:
+                print(f"  {path}", file=sys.stderr)
+            raise SystemExit(2)
 
     head = _git("rev-parse", "--short", "HEAD")
     dirty = bool(_git("status", "--porcelain"))
