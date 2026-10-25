@@ -178,6 +178,9 @@ def post_contingency_flows(ptdf: np.ndarray, branch: np.ndarray, f0: np.ndarray,
 
 
 # ── 一括スクリーニング ───────────────────────────────────────────────────
+TIE_PCT = 1e-3   # 順位で同点とみなす負荷率の差 [%](表は 0.1 % 単位で出す)
+
+
 @dataclasses.dataclass
 class ScreenResult:
     """全枝開放の一括評価結果（配列は ppc 枝順・長さ nl）。"""
@@ -212,8 +215,20 @@ class ScreenResult:
         idx = np.where(ok)[0]
         if new_only:
             idx = idx[self.post_n_new_over[idx] > 0]
-        key = np.lexsort((-self.post_max_new[idx], -self.post_n_new_over[idx]))
-        return idx[key][:top]
+        v, n = self.post_max_new, self.post_n_new_over
+        order = idx[np.lexsort((idx, -v[idx], -n[idx]))]
+        # 負荷率が TIE_PCT 以内に並ぶ同点のまとまりは、枝の番号順にする。同点(沖縄の 89.9 % 前後、
+        # 西の平行回線など)が数値の揺れ(OS で 1e-6 % 程度)で入れ替わり、上位の顔ぶれと順が
+        # Linux と macOS で違っていた(2026-10-26)。丸めの格子だと境目をまたぐので、まとまりで見る
+        out, i = [], 0
+        while i < len(order) and len(out) < top:
+            j = i + 1
+            while (j < len(order) and n[order[j]] == n[order[i]]
+                   and abs(v[order[j]] - v[order[i]]) <= TIE_PCT):
+                j += 1
+            out.extend(sorted(int(k) for k in order[i:j]))
+            i = j
+        return np.array(out[:top], dtype=int)
 
 
 def screen(ptdf: np.ndarray, branch: np.ndarray, f0: np.ndarray, cap: np.ndarray,

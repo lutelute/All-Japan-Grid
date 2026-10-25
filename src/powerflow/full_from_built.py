@@ -1338,6 +1338,23 @@ def solve_island(net, max_ac_buses):
 # ──────────────────────────────────────────────────────────────────────────
 #  Export per-region GeoJSON slices + summary
 # ──────────────────────────────────────────────────────────────────────────
+def _r(x: float, nd: int) -> float:
+    """丸めて -0.0 を 0.0 にそろえる。ほぼ 0 の潮流(±1e-14)は OS で符号が変わり、丸めると
+    -0.0 と 0.0 に分かれて出力のバイトが変わっていた(2026-10-26、Linux と macOS の比較)。"""
+    return round(x, nd) + 0.0
+
+
+def _sig(obj, digits: int = 10):
+    """要約の浮動小数点を有効数字 10 桁に(OS の差 1e-11 程度を消す。2026-10-26)。"""
+    if isinstance(obj, float):
+        return float(f"{obj:.{digits}g}") + 0.0 if math.isfinite(obj) else obj
+    if isinstance(obj, dict):
+        return {k: _sig(v, digits) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sig(v, digits) for v in obj]
+    return obj
+
+
 def _bus_lonlat(net, b):
     """(lon, lat) from pandapower 3.x GeoJSON 'geo' column; (None, None) if absent."""
     g = net.bus.at[b, "geo"] if "geo" in net.bus.columns else None
@@ -1368,7 +1385,7 @@ def export_region(net, region, geom, mode, out_dir):
                       "geometry": {"type": "Point", "coordinates": [x, y]},
                       "properties": {"name": str(net.bus.at[b, "name"]),
                                      "vn_kv": round(float(net.bus.at[b, "vn_kv"]), 1),
-                                     "vm_pu": round(vm, 4), "va_deg": round(va, 2)}})
+                                     "vm_pu": _r(vm, 4), "va_deg": _r(va, 2)}})
     lines = []
     for li in net.line.index:
         if not net.line.at[li, "in_service"]:
@@ -1389,8 +1406,8 @@ def export_region(net, region, geom, mode, out_dir):
         lines.append({"type": "Feature",
                       "geometry": {"type": "LineString", "coordinates": coords},
                       "properties": {"name": str(net.line.at[li, "name"]),
-                                     "loading_pct": round(min(load, 200), 1),
-                                     "p_mw": round(p, 1),
+                                     "loading_pct": _r(min(load, 200), 1),
+                                     "p_mw": _r(p, 1),
                                      "tie": zf != zt}})
     # transformers as short links (so stepped sites don't look 'floating')
     for ti in net.trafo.index:
@@ -1407,7 +1424,7 @@ def export_region(net, region, geom, mode, out_dir):
         lines.append({"type": "Feature",
                       "geometry": {"type": "LineString", "coordinates": [[hx, hy], [lx, ly]]},
                       "properties": {"name": str(net.trafo.at[ti, "name"]),
-                                     "loading_pct": round(min(ld, 200), 1),
+                                     "loading_pct": _r(min(ld, 200), 1),
                                      "p_mw": 0.0, "tie": False, "trafo": True}})
     tag = mode
     json.dump({"type": "FeatureCollection", "features": buses},
@@ -1799,7 +1816,7 @@ def main():
               f"maxload={ac.get('max_loading_pct')} {time.time()-t0:.0f}s", flush=True)
 
     with open(f"{args.output_dir}/summary.json", "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2, ensure_ascii=False)
+        json.dump(_sig(summary), f, indent=2, ensure_ascii=False)
     if args.dump_flows:
         with open(f"{args.output_dir}/flows.json", "w", encoding="utf-8") as f:
             json.dump(flow_dump, f, ensure_ascii=False, separators=(",", ":"))

@@ -45,11 +45,11 @@ PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
   PYTHONPATH=. python -m scripts.check_point_demand_stamp   # 同じなら rc=0。違えば、違う事業者と行数を出す
   ```
 
-- **同じ表なら、潮流と N-1 の出力はバイト一致で再現します**（2026-10-26、手元で確認）。違うのは `docs/data/powerflow_full/summary.json`・`docs/data/n1_canon/summary.json` の実行の記録（日付・git の版・生成時刻・解いた秒数）だけです。
+- **同じ表なら、潮流と N-1 の出力は OS によらず再現します**（2026-10-26、macOS と Linux の clone で確認。`docs/reports/point_demand_refresh_2026-10-26.md`）。潮流の線・バス・地図の層はバイト一致です。違うのは実行の記録（日付・git の版・生成時刻・所要時間）だけです。
+- Linux の clone で上の 4 行を流すと、地点需要の表は公開値と同じになりました（2026-10-26 時点。各社が公表を差し替えると変わります）。
 
 ### 残っていること
 
-- 別の機械（Linux）で clone から原本を取り、同じ表と同じ潮流になるかを確かめる（`docs/reports/point_demand_refresh_2026-10-26.md`）。
 - 基底の OSM（08-16 に取得）の取り直しの手順は `docs/reports/osm_refresh_survey_2026-10-24.md`。
 
 ---

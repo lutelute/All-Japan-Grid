@@ -3,7 +3,7 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 17744,
     "n_edges": 19909,
-    "generated": "2026-10-26 01:46:04",
+    "generated": "2026-10-26 02:47:14",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -110,11 +110,11 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8604142088826113,
-      "ac_vm_max": 1.0034451904129935,
-      "ac_max_loading_pct": 85.2451839217817,
-      "dc_max_loading_pct": 79.10182604951157,
-      "ac_total_loss_mw": 97.24503426968093,
+      "ac_vm_min": 0.8604142089,
+      "ac_vm_max": 1.00344519,
+      "ac_max_loading_pct": 85.24518392,
+      "dc_max_loading_pct": 79.10182605,
+      "ac_total_loss_mw": 97.24503427,
       "solve_seconds": 5.4
     },
     "east": {
@@ -2078,12 +2078,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8563697193664347,
-      "ac_vm_max": 1.0229069426775537,
-      "ac_max_loading_pct": 997.7981536598289,
-      "dc_max_loading_pct": 875.2845398464883,
-      "ac_total_loss_mw": 1398.7703941842465,
-      "solve_seconds": 52.8
+      "ac_vm_min": 0.8563697194,
+      "ac_vm_max": 1.022906943,
+      "ac_max_loading_pct": 997.7981537,
+      "dc_max_loading_pct": 875.2845398,
+      "ac_total_loss_mw": 1398.770394,
+      "solve_seconds": 50.9
     },
     "west": {
       "frequency_hz": 60,
@@ -5510,12 +5510,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7276424056649825,
-      "ac_vm_max": 1.0381762936805154,
-      "ac_max_loading_pct": 638.6233119822908,
-      "dc_max_loading_pct": 747.623796947503,
-      "ac_total_loss_mw": 1182.537527925811,
-      "solve_seconds": 72.7
+      "ac_vm_min": 0.7276424057,
+      "ac_vm_max": 1.038176294,
+      "ac_max_loading_pct": 638.623312,
+      "dc_max_loading_pct": 747.6237969,
+      "ac_total_loss_mw": 1182.537528,
+      "solve_seconds": 75.1
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -5564,11 +5564,11 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7582347026377313,
-      "ac_vm_max": 1.0000003321268325,
-      "ac_max_loading_pct": 230.69529230110058,
-      "dc_max_loading_pct": 182.39249435421868,
-      "ac_total_loss_mw": 28.280209471498225,
+      "ac_vm_min": 0.7582347026,
+      "ac_vm_max": 1.000000332,
+      "ac_max_loading_pct": 230.6952923,
+      "dc_max_loading_pct": 182.3924944,
+      "ac_total_loss_mw": 28.28020947,
       "solve_seconds": 1.3
     }
   },

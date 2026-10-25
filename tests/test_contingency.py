@@ -212,3 +212,17 @@ def test_cli_writes_json_and_md(tmp_path):
     for row in isl["top_physical"]:
         assert row["post_max_loading_pct"] >= 0 and row["elem_class"]
     assert (tmp_path / "n1_screening_test.md").exists()
+
+
+def test_ranking_ignores_float_noise_and_breaks_ties_by_index():
+    """負荷率の差が 1e-12 程度の同点は、OS によらず枝の番号順に並ぶ(2026-10-26)。"""
+    n = 6
+    z = np.zeros(n)
+    post_new = np.array([89.9, 89.9 + 1e-12, 89.9 - 1e-12, 95.0, 89.9, np.nan])
+    r = cg.ScreenResult(n_branch=n, single_circuit=True, f0=z, cap=z, parallel=np.ones(n), h_self=z,
+                        status=np.ones(n), outage_ok=np.array([True] * 5 + [False]), islanding=z.astype(bool),
+                        base_loading=z, base_over=z.astype(bool), post_max_loading=np.where(np.isnan(post_new), np.nan, 99.0),
+                        post_worst=z.astype(int), post_n_over=z.astype(int),
+                        post_n_new_over=np.array([1, 1, 1, 1, 2, 0]), post_max_new=post_new,
+                        post_worst_new=z.astype(int), post_max_delta=z, monitor=np.ones(n, bool))
+    assert r.ranking(top=10).tolist() == [4, 3, 0, 1, 2]
