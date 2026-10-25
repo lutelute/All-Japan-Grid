@@ -16,6 +16,7 @@ point_demand.csv(変圧器バンク潮流実績の統計)から「需要」と�
 from __future__ import annotations
 
 import csv
+import hashlib
 import re
 import unicodedata
 from pathlib import Path
@@ -37,6 +38,31 @@ def _norm(s: str) -> str:
     s = re.sub(r"(変電所|開閉所|電力所|配電変電所).*$", "", s)
     s = re.sub(r"[0-9]+kV$", "", s)
     return s
+
+
+def fingerprint() -> dict:
+    """地点需要の表の指紋: sha256・バイト数・行数と、事業者ごとの行数・sha256(2026-10-26)。
+
+    表は各社の公表から作るので再配布できない。作り直した人が「同じ表から組んだか」を、
+    正典の版(MODEL_VERSION.json の external_inputs)や配布ケースの meta.json と突き合わせて
+    確かめるのに使う。事業者ごとの sha256 は、食い違ったときにどの社の公表が差し替わったかを示す。
+    地点ごとの値は含まない(ライセンス: 生値は出さない)。
+    """
+    rel = str(CSV.relative_to(ROOT)) if CSV.is_relative_to(ROOT) else str(CSV)
+    if not CSV.exists():
+        return {"path": rel, "present": False}
+    raw = CSV.read_bytes()
+    lines = raw.split(b"\n")
+    head = lines[0].decode("utf-8").split(",")
+    col = head.index("utility")
+    by_util: dict[str, list[bytes]] = {}
+    for ln in lines[1:]:
+        if ln.strip():
+            by_util.setdefault(next(csv.reader([ln.decode("utf-8")]))[col], []).append(ln)
+    return {"path": rel, "present": True, "sha256": hashlib.sha256(raw).hexdigest(),
+            "bytes": len(raw), "rows": sum(len(v) for v in by_util.values()),
+            "by_utility": {u: {"rows": len(v), "sha256": hashlib.sha256(b"\n".join(v)).hexdigest()}
+                           for u, v in sorted(by_util.items())}}
 
 
 def load_point_demand(all_years: bool = False) -> dict[tuple[str, str], float]:

@@ -42,3 +42,41 @@ def test_missing_csv_means_no_pinning(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(pdm, "ROOT", tmp_path)
     assert pdm.load_point_demand() == {}
     assert "ピン留めなし" in capsys.readouterr().err
+
+
+def test_fingerprint_has_hashes_and_counts_but_no_values(tmp_path, monkeypatch):
+    import hashlib
+    import json
+
+    monkeypatch.setattr(pdm, "ROOT", tmp_path)
+    monkeypatch.setattr(pdm, "CSV", tmp_path / "point_demand.csv")
+    assert pdm.fingerprint() == {"path": "point_demand.csv", "present": False}
+    rows = ["utility,substation,secondary_kv,peak_mw,mean_mw,fiscal_year",
+            "tohoku,甲,6.6,12.5,7.25,2024", "chubu,乙,6.6,3.0,1.5,2023", "tohoku,丙,22,9.0,4.0,2024"]
+    raw = ("\n".join(rows) + "\n").encode("utf-8")
+    pdm.CSV.write_bytes(raw)
+    f = pdm.fingerprint()
+    assert f["sha256"] == hashlib.sha256(raw).hexdigest() and f["bytes"] == len(raw) and f["rows"] == 3
+    assert {u: v["rows"] for u, v in f["by_utility"].items()} == {"chubu": 1, "tohoku": 2}
+    # 事業者ごとの sha256 は、その社の行だけで決まる(ほかの社の差し替えに動かない)
+    pdm.CSV.write_bytes(raw.replace(b"3.0,1.5", b"3.5,1.5"))
+    g = pdm.fingerprint()
+    assert g["by_utility"]["tohoku"] == f["by_utility"]["tohoku"]
+    assert g["by_utility"]["chubu"] != f["by_utility"]["chubu"]
+    # 地点の名前や値は載らない
+    s = json.dumps(g, ensure_ascii=False)
+    assert "甲" not in s and "12.5" not in s
+
+
+def test_stamp_compare_names_the_utility_that_differs():
+    from scripts.check_point_demand_stamp import compare
+
+    rec = {"present": True, "sha256": "a" * 64, "rows": 3,
+           "by_utility": {"chubu": {"rows": 1, "sha256": "c"}, "tohoku": {"rows": 2, "sha256": "t"}}}
+    assert compare(dict(rec), rec) == []
+    assert "記録が無い" in compare(rec, None)[0]
+    assert "無い" in compare({"present": False}, rec)[0]
+    now = {**rec, "sha256": "b" * 64, "rows": 5,
+           "by_utility": {"chubu": {"rows": 1, "sha256": "c"}, "tohoku": {"rows": 4, "sha256": "T"}}}
+    d = compare(now, rec)
+    assert len(d) == 2 and "tohoku" in d[1] and "4 行" in d[1]

@@ -1,0 +1,150 @@
+{
+ "note": "地点需要の表(git の外・再配布不可)の前後。行数・sha256・ゾーン別の合計だけ(地点ごとの値は載せない)",
+ "tables": {
+  "2026-08-17": {
+   "fingerprint": {
+    "present": true,
+    "sha256": "663df59d1c91637eaf93c7f96728eed55e45b170b6b6bb4daea50de3c078b5b8",
+    "bytes": 182785,
+    "rows": 1135,
+    "by_utility": {
+     "chubu": {
+      "rows": 324,
+      "sha256": "61ce3cc7fe55556439027a98931450907d58a260b36584cd8031f206f545b246"
+     },
+     "chugoku": {
+      "rows": 33,
+      "sha256": "da488c73691e0862443826199d84369e054f1af8af9eef23cb8fae06136e3a45"
+     },
+     "hokuriku": {
+      "rows": 22,
+      "sha256": "a2a12d0ad4eb7b099807b7c7c3436d6f3396e1d23fe8eab090c3c9f685901fcc"
+     },
+     "kyushu": {
+      "rows": 92,
+      "sha256": "eab68c4fb941fc3dc252ba747cde4cc39e4106989b6aa9ea3d881dedef97c04d"
+     },
+     "okinawa": {
+      "rows": 32,
+      "sha256": "096f4e252a6fb8abb77f31e2e78eeacc074a17cc3d68abf05e456e7974b1d78f"
+     },
+     "shikoku": {
+      "rows": 88,
+      "sha256": "d598d52aad4924d7aa56f5759943d4495365f52307118b2a511c581dfd659fe6"
+     },
+     "tohoku": {
+      "rows": 544,
+      "sha256": "14d783a5b2f33aabf0715095ac90ac6e82b30916942af95f3cf85929244f16a1"
+     }
+    }
+   },
+   "pinned_total_mw": 285.9,
+   "pinned_by_zone": {
+    "chubu": {
+     "stations": 9,
+     "mw": 90.3
+    },
+    "okinawa": {
+     "stations": 24,
+     "mw": 57.3
+    },
+    "shikoku": {
+     "stations": 18,
+     "mw": 48.6
+    },
+    "tohoku": {
+     "stations": 16,
+     "mw": 89.6
+    }
+   }
+  },
+  "2026-10-26": {
+   "fingerprint": {
+    "present": true,
+    "sha256": "f112870646af377f0257210434ad551bb0091b18039da374fabd131aafe489b1",
+    "bytes": 212201,
+    "rows": 1319,
+    "by_utility": {
+     "chubu": {
+      "rows": 324,
+      "sha256": "61ce3cc7fe55556439027a98931450907d58a260b36584cd8031f206f545b246"
+     },
+     "chugoku": {
+      "rows": 33,
+      "sha256": "da488c73691e0862443826199d84369e054f1af8af9eef23cb8fae06136e3a45"
+     },
+     "hokuriku": {
+      "rows": 22,
+      "sha256": "a2a12d0ad4eb7b099807b7c7c3436d6f3396e1d23fe8eab090c3c9f685901fcc"
+     },
+     "kyushu": {
+      "rows": 92,
+      "sha256": "eab68c4fb941fc3dc252ba747cde4cc39e4106989b6aa9ea3d881dedef97c04d"
+     },
+     "okinawa": {
+      "rows": 32,
+      "sha256": "096f4e252a6fb8abb77f31e2e78eeacc074a17cc3d68abf05e456e7974b1d78f"
+     },
+     "shikoku": {
+      "rows": 88,
+      "sha256": "d598d52aad4924d7aa56f5759943d4495365f52307118b2a511c581dfd659fe6"
+     },
+     "tohoku": {
+      "rows": 728,
+      "sha256": "39f3835a4ec83d48528842ae83c6d7ccd61ead60262a453030e2f4a7b030e00f"
+     }
+    }
+   },
+   "pinned_total_mw": 276.2,
+   "pinned_by_zone": {
+    "chubu": {
+     "stations": 9,
+     "mw": 90.3
+    },
+    "okinawa": {
+     "stations": 24,
+     "mw": 57.3
+    },
+    "shikoku": {
+     "stations": 18,
+     "mw": 48.6
+    },
+    "tohoku": {
+     "stations": 16,
+     "mw": 79.9
+    }
+   }
+  }
+ },
+ "powerflow": {
+  "east_ac_vm_min": [
+   0.856735,
+   0.85637
+  ],
+  "east_ac_total_loss_mw": [
+   1398.62,
+   1398.77
+  ],
+  "east_ac_max_loading_pct": [
+   997.85,
+   997.8
+  ],
+  "lines_abs_dp": {
+   "tohoku": {
+    "n": 2132,
+    "gt_0p1_mw": 349,
+    "gt_1_mw": 20,
+    "max_mw": 6.9,
+    "p99_mw": 0.9
+   },
+   "tokyo": {
+    "n": 4331,
+    "gt_0p1_mw": 69,
+    "gt_1_mw": 0,
+    "max_mw": 0.6,
+    "p99_mw": 0.1
+   }
+  },
+  "unchanged": "hokkaido・west・okinawa の潮流、N-1(4 島)の結果"
+ }
+}

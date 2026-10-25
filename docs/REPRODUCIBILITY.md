@@ -37,10 +37,17 @@ PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
 
 - 表が無ければ、落とさずに**ピン留めなし**（#30 を切ったのと同じ）で組みます。そのことは実行のログに出ます。地域の合計需要は同じですが、観測のある約 70 局の周りの配り方が公開値と違います。
 - 公表のファイルは各社が差し替えることがあります。取った日は `data/realtime/system_disclosure_provenance.jsonl`（毎時の処理）か `data/external/system_disclosure/provenance.jsonl` に、sha256 と一緒に残ります。
+- **公開値がどの表から作られたか**は、`docs/data/MODEL_VERSION.json` の `external_inputs.point_demand` と `dist/matpower_national/meta.json` の `point_demand` に、表の sha256・行数と事業者ごとの行数・sha256 で残ります（地点ごとの値は載せません）。手元の表が同じかは次で確かめられます（2026-10-26）。
+
+  ```bash
+  PYTHONPATH=. python -m scripts.check_point_demand_stamp   # 同じなら rc=0。違えば、違う事業者と行数を出す
+  ```
+
+- **同じ表なら、潮流と N-1 の出力はバイト一致で再現します**（2026-10-26、手元で確認）。違うのは `docs/data/powerflow_full/summary.json`・`docs/data/n1_canon/summary.json` の実行の記録（日付・git の版・生成時刻・解いた秒数）だけです。
 
 ### 残っていること
 
-- 地点需要の表の sha256 を正典の版（`MODEL_VERSION.json`）に記録し、作り直した人が同じ表かどうかを確かめられるようにする。
+- 別の機械（Linux）で clone から原本を取り、同じ表と同じ潮流になるかを確かめる（`docs/reports/point_demand_refresh_2026-10-26.md`）。
 - 基底の OSM（08-16 に取得）の取り直しの手順は `docs/reports/osm_refresh_survey_2026-10-24.md`。
 
 ---

@@ -242,6 +242,12 @@ def main():
         "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。"
                 "git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
     }
+    if any(heavy and results.get(name, {}).get("status") == "ok" for name, _argv, heavy in STEPS):
+        # 潮流・N-1・MATPOWER・CIM は git の外の地点需要の表を読む。どの表から組んだかを残す
+        # (2026-10-26)。--light では重い段を回さないので、前回の記録をそのまま残す
+        sys.path.insert(0, ROOT)
+        from src.powerflow.point_demand import fingerprint
+        stamp["external_inputs"] = {"point_demand": fingerprint()}
     os.makedirs(os.path.dirname(MODEL_VERSION_PATH), exist_ok=True)
     # 自分の欄だけを更新する(2026-10-21)。上書きすると、別のスクリプトが刻んだ欄
     # (record_osm_snapshot.py の osm_snapshot など)が消えていた
