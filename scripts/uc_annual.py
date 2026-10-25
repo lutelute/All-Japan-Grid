@@ -174,6 +174,12 @@ def main() -> int:
         },
         "result": {
             "status": res.status,
+            "feasibility_verified": res.feasibility_verified,
+            "bound_scope": res.bound_scope,
+            "primal_bound": res.primal_bound,
+            "dual_bound": res.dual_bound,
+            "gap": res.gap,
+            "validation": res.validation,
             "hours": res.hours,
             "n_windows": res.n_windows,
             "n_retried": res.n_retried,
@@ -203,7 +209,7 @@ def main() -> int:
     print("\n── 年間燃料シェア ──")
     for fuel, pct in share.items():
         print(f"  {fuel:12s} {pct:6.2f}%")
-    return 0 if res.is_optimal else 1
+    return 0 if res.is_complete else 1
 
 
 if __name__ == "__main__":

@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "provenance": "synthetic_not_observed",
+  "started_at_utc": "2026-10-25T03:26:32.267732+00:00",
+  "stages": [
+    {
+      "stage": "input",
+      "elapsed_s": 1.864274963736534e-05
+    },
+    {
+      "stage": "build",
+      "elapsed_s": 0.00415428401902318
+    },
+    {
+      "stage": "native_solve",
+      "elapsed_s": 0.9480025167576969,
+      "variables": 35520,
+      "constraints": 83372,
+      "build_time_s": 0.9438418038189411
+    },
+    {
+      "stage": "validation",
+      "elapsed_s": 302.40147088700905
+    },
+    {
+      "stage": "complete",
+      "elapsed_s": 302.51917773485184,
+      "termination_reason": "Time limit reached",
+      "feasibility_verified": true
+    }
+  ],
+  "case_id": "synthetic-uc-v1-n100-t48-seed17",
+  "input_sha256": "036310745182f2d87d805832e11296269e8849ef018ebf6759041df8ef368223",
+  "commitment_units": 100,
+  "storage_units": 4,
+  "ybus_gate": "not_applicable_synthetic_transport_model_no_grid_data_consumed",
+  "model_semantics": "hourly_zonal_transport_capacity_reserve_truncated_terminal_min_times",
+  "settings": {
+    "solver": "HiGHS",
+    "time_limit_s": 300.0,
+    "requested_gap": 0.001,
+    "threads": 1,
+    "seed": 17,
+    "warm_start": "none",
+    "strengthen": [
+      "startup_type"
+    ],
+    "highs_options": [
+      "mip_allow_restart=false"
+    ],
+    "scip_params": []
+  },
+  "environment": {
+    "host": "pws-gpu3060",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "logical_cpus": 24,
+    "versions": {
+      "pulp": "3.3.1",
+      "highspy": "1.14.0",
+      "pyscipopt": "6.3.0",
+      "scip": "10.0.2"
+    }
+  },
+  "result": {
+    "status": "Feasible",
+    "total_cost": 9421754970.03,
+    "num_generators": 104,
+    "solve_time_s": 301.41,
+    "gap": 0.003554,
+    "warnings": 0,
+    "effective_solver": "HiGHS",
+    "termination_reason": "Time limit reached",
+    "has_incumbent": true,
+    "primal_bound": 9421754970.031775,
+    "dual_bound": 9388265652.244692,
+    "solver_objective": 9421754970.031721,
+    "solver_native_gap": 0.003554467070477182,
+    "gap_abs": 33489317.787082672,
+    "bound_scope": "single_horizon_milp",
+    "feasibility_verified": true,
+    "build_time_s": 0.9438418038189411,
+    "node_count": 2
+  },
+  "validation": {
+    "passed": true,
+    "violation_count": 0,
+    "errors": [],
+    "max_residuals": {
+      "hourly_resolution": 0.0,
+      "schedule_ids": 0.0,
+      "schedule_length": 0.0,
+      "finite_values": 0.0,
+      "binary": 0.0,
+      "minimum_time": 0.0,
+      "capacity_min": 3.338591093551042e-13,
+      "capacity_max": 0.0,
+      "ramp_up": 1.4210854715202004e-13,
+      "ramp_down": 8.526512829121202e-14,
+      "charge_nonnegative": 0.0,
+      "discharge_nonnegative": 0.0,
+      "charge_limit": 0.0,
+      "discharge_limit": 0.0,
+      "charge_discharge_exclusion": 0.0,
+      "net_storage_power": 0.0,
+      "soc_balance": 5.684341886080802e-14,
+      "soc_min": 0.0,
+      "soc_max": 0.0,
+      "terminal_soc": 0.0,
+      "capacity_reserve": 0.0,
+      "flow_ids": 0.0,
+      "flow_length": 0.0,
+      "flow_forward": 0.0,
+      "flow_reverse": 1.5916157281026244e-12,
+      "spill_length": 0.0,
+      "spill_nonnegative": 0.0,
+      "regional_balance": 1.8189894035458565e-12,
+      "objective": 5.14984130859375e-05
+    },
+    "economic_cost": 9421754970.031773,
+    "objective": 9421754970.031773,
+    "scope": "existing_hourly_uc",
+    "copperplate_balance": ">=",
+    "terminal_minimum_time": "residual_obligations_not_enforced_beyond_horizon",
+    "absolute_tolerance": 0.0001,
+    "relative_tolerance": 1e-08,
+    "raw_model_valid": true
+  },
+  "wall_time_s": 302.5467107258737,
+  "cpu_time_s": 302.933873,
+  "peak_rss_bytes": 804311040,
+  "warnings": [],
+  "solution_file": "n100-t48-no-restart.solution.json.gz"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "provenance": "synthetic_not_observed",
+  "started_at_utc": "2026-10-25T02:07:07.247899+00:00",
+  "stages": [
+    {
+      "stage": "input",
+      "elapsed_s": 1.7690937966108322e-05
+    },
+    {
+      "stage": "build",
+      "elapsed_s": 0.01727659720927477
+    },
+    {
+      "stage": "native_solve",
+      "elapsed_s": 6.863288656342775,
+      "variables": 270720,
+      "constraints": 576372,
+      "build_time_s": 6.846008482854813
+    },
+    {
+      "stage": "complete",
+      "elapsed_s": 329.4885434731841,
+      "termination_reason": "Time limit reached",
+      "feasibility_verified": false
+    }
+  ],
+  "case_id": "synthetic-uc-v1-n800-t48-seed17",
+  "input_sha256": "5290a6841945bb6fc7feedee579cc22fe4377b6a9387711ad163cd77a2e30478",
+  "commitment_units": 800,
+  "storage_units": 4,
+  "ybus_gate": "not_applicable_synthetic_transport_model_no_grid_data_consumed",
+  "model_semantics": "hourly_zonal_transport_capacity_reserve_truncated_terminal_min_times",
+  "settings": {
+    "solver": "HiGHS",
+    "time_limit_s": 300.0,
+    "requested_gap": 0.001,
+    "threads": 1,
+    "seed": 17,
+    "warm_start": "none",
+    "strengthen": []
+  },
+  "environment": {
+    "host": "pws-gpu3060",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "logical_cpus": 24,
+    "versions": {
+      "pulp": "3.3.1",
+      "highspy": "1.14.0",
+      "pyscipopt": "6.3.0",
+      "scip": "10.0.2"
+    }
+  },
+  "result": {
+    "status": "Not Solved",
+    "total_cost": 0.0,
+    "num_generators": 0,
+    "solve_time_s": 322.25,
+    "gap": null,
+    "warnings": 0,
+    "effective_solver": "HiGHS",
+    "termination_reason": "Time limit reached",
+    "has_incumbent": false,
+    "primal_bound": null,
+    "dual_bound": 0.0,
+    "solver_objective": null,
+    "solver_native_gap": null,
+    "gap_abs": null,
+    "bound_scope": "single_horizon_milp",
+    "feasibility_verified": false,
+    "build_time_s": 6.846008482854813,
+    "node_count": 0
+  },
+  "validation": {},
+  "wall_time_s": 329.69397574616596,
+  "cpu_time_s": 330.038711,
+  "peak_rss_bytes": 2537533440,
+  "warnings": [],
+  "solution_file": "n800-t48-base.solution.json.gz"
+}

@@ -59,7 +59,7 @@ LARGE_PROBLEM_GENERATOR_THRESHOLD: int = 50
 
 #: Solver preference order (highest priority first).  Mirrors the
 #: preference chain used by ``_select_solver`` in ``src/uc/solver.py``.
-_SOLVER_PREFERENCE = ["HiGHS_CMD", "PULP_CBC_CMD"]
+_SOLVER_PREFERENCE = ["HiGHS", "HiGHS_CMD", "SCIP_PY", "PULP_CBC_CMD"]
 
 
 # ---------------------------------------------------------------------------

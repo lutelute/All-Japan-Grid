@@ -1,0 +1,40 @@
+{
+  "note": "10-24夜: HiGHSの初期解が全部拒否されていた不具合を直し、pws-gpu3060で計画の予算(48h 900秒・168h 1800秒)を測定。48hは初期解なしでも両solverで検証済みの解(HiGHS gap 1.11%、rootのまま)。ローリング初期解でSCIPは12.96%→1.43%。168hは1スレッドではroot LPが30分で解けず、解はローリング由来だけ・下界は0。律速は下界。 10-25未明: LP緩和を共同研究先の GB10(GPU内点法)で解くと48hは18秒(CPU単体法107秒)、168hは94秒(CPUは30分で未了)。168hのローリング解は最適値から約1.45%以内(近似の下界)。",
+  "resources": [
+    {
+      "name": "MacBook Pro / M4 Max",
+      "status": "重いベンチ停止・閲覧用",
+      "tone": "neutral",
+      "spec": "14論理CPU / 36 GiB RAM / arm64",
+      "role": "24h×2 solverと48h HiGHSの結果を保存。以後は編集・軽量検証・HTML閲覧。"
+    },
+    {
+      "name": "pws-gpu3060",
+      "status": "48h・168hの比較を完了",
+      "tone": "good",
+      "spec": "i9-12900 / 24論理CPU / 約62.6 GiB RAM / x86_64",
+      "role": "1件1スレッド・物理Pコアに1本ずつ固定。CPU MILP。GPUはドライバ更新後の再起動待ち(NVMLのversion mismatch)で未使用。"
+    },
+    {
+      "name": "研究室 PGX / pws-pgx1",
+      "status": "接続可・管理者の動画処理で混雑",
+      "tone": "warn",
+      "spec": "GB10 / 20論理CPU / 128 GB統合メモリ",
+      "role": "10-24夜にTailscale認証済み。CPUは管理者の動画処理(kamishibai等)で約15コア使用中のため、MILPは回さない。"
+    },
+    {
+      "name": "共同研究先の GPU / GB10",
+      "status": "GPUでLP緩和を測定",
+      "tone": "good",
+      "spec": "約119 GiB、使用約10 GiB",
+      "role": "cuOpt 26.10でLP緩和(48h・168h)。CPU1スレッド・GPU1ジョブ・空きメモリ30GiBの見張り。"
+    },
+    {
+      "name": "pws-160core",
+      "status": "本セッション接続不可",
+      "tone": "warn",
+      "spec": "前回SSH確認: 160論理CPU / 約252 GiB RAM",
+      "role": "FiberSCIPと多数の独立部分問題の候補。physical core数・NUMA・利用枠を別途確認。"
+    }
+  ]
+}

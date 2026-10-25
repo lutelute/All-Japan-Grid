@@ -1,0 +1,64 @@
+Running HiGHS 1.14.0 (git hash: 7df0786): Copyright (c) 2026 under MIT licence terms
+MIP has 83372 rows; 35520 cols; 419838 nonzeros; 29568 integer variables (29568 binary)
+Coefficient ranges:
+  Matrix  [9e-01, 8e+02]
+  Cost    [6e+03, 1e+07]
+  Bound   [1e+00, 1e+03]
+  RHS     [1e+00, 3e+04]
+WARNING: Problem has some excessively large costs
+WARNING:    Consider scaling the objective by 1e-2, or setting the user_objective_scale option to -4
+Presolving model
+82384 rows, 35320 cols, 417950 nonzeros 0s
+69838 rows, 30137 cols, 382837 nonzeros 1s
+65938 rows, 28772 cols, 381868 nonzeros 3s
+Presolve reductions: rows 65938(-17434); columns 28772(-6748); nonzeros 381868(-37970) 
+
+Solving MIP model with:
+   65938 rows
+   28772 cols (23016 binary, 0 integer, 0 implied int., 5756 continuous, 0 domain fixed)
+   381868 nonzeros
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   0               inf                  inf        0      0      0         0     5.7s
+ R       0       0         0   0.00%   9361632045.937  9511566840.002     1.58%        0      0      0     14409     8.7s
+ C       0       0         0   0.00%   9375792777.89   9449854476.544     0.78%     3905    249      0     18341    19.7s
+         0       0         0   0.00%   9379412893.072  9449854476.544     0.75%     5364    388      0     20590    25.4s
+         0       0         0   0.00%   9383398648.195  9449854476.544     0.70%     6245    478      0     23385    32.2s
+         0       0         0   0.00%   9385015763.598  9449854476.544     0.69%     7000    576      0     25528    39.8s
+         0       0         0   0.00%   9385867093.96   9449854476.544     0.68%     7672    597      0     27191    44.9s
+         0       0         0   0.00%   9387037541.537  9449854476.544     0.66%     8365    569      0     28645    52.3s
+         0       0         0   0.00%   9387290297.818  9449854476.544     0.66%     8831    603      0     29636    58.2s
+         0       0         0   0.00%   9387778828.885  9449854476.544     0.66%     8428    585      0     31073    64.3s
+         0       0         0   0.00%   9388202004.268  9449854476.544     0.65%     7238    619      0     32029    69.9s
+ L       0       0         0   0.00%   9388265652.245  9421754970.032     0.36%     6719    612      0     32412    99.1s
+ L       0       0         0   0.00%   9388265652.245  9402109548.452     0.15%     6719    612      0     45797   128.0s
+ L       0       0         0   0.00%   9388265652.245  9402014403.978     0.15%     5911    431      0     60255   161.2s
+         2       2         1   0.00%   9388294573.336  9402014403.978     0.15%     5918    431      0    153422   300.1s
+         2       2         1   0.00%   9388294573.336  9402014403.978     0.15%     5918    431      0    153422   300.1s
+
+Solving report
+  Status            Time limit reached
+  Primal bound      9402014403.98
+  Dual bound        9388294573.34
+  Gap               0.146% (tolerance: 0.1%)
+  P-D integral      1.05203672891
+  Solution status   feasible
+                    9402014403.98 (objective)
+                    0 (bound viol.)
+                    3.128845944e-14 (int. viol.)
+                    0 (row viol.)
+  Timing            300.06
+  Max sub-MIP depth 6
+  Nodes             2
+  Repair LPs        0
+  LP iterations     153422
+                    74552 (strong br.)
+                    18003 (separation)
+                    46316 (heuristics)

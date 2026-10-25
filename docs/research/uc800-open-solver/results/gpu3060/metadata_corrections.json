@@ -1,0 +1,9 @@
+{
+  "deployment.json": {
+    "remote_mps_retained": {
+      "original": true,
+      "correct": false,
+      "reason": "frontier mode exports canonical input hashes, not MPS; old metadata flag was pair-mode-specific"
+    }
+  }
+}

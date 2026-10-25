@@ -32,7 +32,7 @@ Usage::
 """
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import List, Optional
 
 from src.uc.decomposition import create_decomposer
@@ -202,9 +202,11 @@ def solve_adaptive(
         last_config = config
 
         # Check if solve succeeded
-        if uc_result.status == "Optimal":
+        if uc_result.status == "Optimal" or (
+            uc_result.has_feasible_solution and uc_result.feasibility_verified
+        ):
             adaptive_result.degradation_history.append(
-                f"{tier.value.upper()} tier: Optimal (cost={uc_result.total_cost:.2f})"
+                f"{tier.value.upper()} tier: {uc_result.status} (cost={uc_result.total_cost:.2f})"
             )
             if verbose:
                 logger.info(
@@ -338,16 +340,12 @@ def _apply_config(
     if config.use_lp_relaxation:
         solver_options["mip"] = False
 
-    return UCParameters(
-        generators=params.generators,
-        demand=params.demand,
-        time_horizon=params.time_horizon,
-        reserve_margin=params.reserve_margin,
+    return replace(
+        params,
         solver_name=config.solver_name,
         solver_time_limit_s=config.time_limit_s,
         mip_gap=config.mip_gap,
         solver_options=solver_options,
-        interconnections=params.interconnections,
     )
 
 
@@ -412,6 +410,10 @@ def _postprocess_lp_relaxation(result: UCResult) -> None:
         schedule.commitment = rounded_commitment
 
     if rounded_count > 0:
+        result.status = "Unverified"
+        result.feasibility_verified = False
+        result.primal_bound = result.gap = result.gap_abs = None
+        result.validation = {"passed": False, "reason": "commitment_rounded_after_solve"}
         msg = (
             f"LP relaxation: rounded {rounded_count}/{total_values} "
             f"fractional commitment values. Solution is approximate "

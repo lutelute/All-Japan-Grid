@@ -1,0 +1,40 @@
+{
+  "stages": [
+    {
+      "stage": "input",
+      "elapsed_s": 2.1052081137895584e-05
+    },
+    {
+      "stage": "warm_start",
+      "elapsed_s": 0.022722113877534866
+    },
+    {
+      "stage": "warm_start_done",
+      "elapsed_s": 128.89897607825696,
+      "status": "Feasible",
+      "primal_bound": 37919361507.8127,
+      "wall_s": 128.87574421381578
+    },
+    {
+      "stage": "build",
+      "elapsed_s": 128.89948851196095
+    },
+    {
+      "stage": "native_solve",
+      "elapsed_s": 134.26711818901822,
+      "variables": 135360,
+      "constraints": 325788,
+      "build_time_s": 5.367617437150329
+    },
+    {
+      "stage": "validation",
+      "elapsed_s": 444.4374271389097
+    },
+    {
+      "stage": "complete",
+      "elapsed_s": 444.7875076709315,
+      "termination_reason": "Time limit reached",
+      "feasibility_verified": true
+    }
+  ]
+}

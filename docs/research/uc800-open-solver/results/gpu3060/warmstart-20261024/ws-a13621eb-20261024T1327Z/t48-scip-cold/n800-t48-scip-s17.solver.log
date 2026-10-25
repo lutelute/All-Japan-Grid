@@ -1,0 +1,47 @@
+presolving:
+(round 1, fast)       1984 del vars, 3780 del conss, 0 add conss, 41156 chg bounds, 86400 chg sides, 106400 chg coeffs, 0 upgd conss, 192 impls, 230404 clqs, 0 implints
+(round 2, fast)       2792 del vars, 6984 del conss, 0 add conss, 41170 chg bounds, 86400 chg sides, 106400 chg coeffs, 0 upgd conss, 192 impls, 229604 clqs, 0 implints
+(round 3, medium)     3608 del vars, 6984 del conss, 0 add conss, 41174 chg bounds, 86400 chg sides, 106400 chg coeffs, 0 upgd conss, 192 impls, 227172 clqs, 0 implints
+(round 4, fast)       4408 del vars, 9400 del conss, 0 add conss, 41174 chg bounds, 86400 chg sides, 106400 chg coeffs, 0 upgd conss, 192 impls, 227172 clqs, 0 implints
+(round 5, exhaustive) 4408 del vars, 9584 del conss, 0 add conss, 41174 chg bounds, 86552 chg sides, 106400 chg coeffs, 453132 upgd conss, 192 impls, 227172 clqs, 0 implints
+(round 6, medium)     4416 del vars, 10988 del conss, 3400 add conss, 41174 chg bounds, 89952 chg sides, 113200 chg coeffs, 453132 upgd conss, 77568 impls, 229168 clqs, 0 implints
+(round 7, fast)       4416 del vars, 12188 del conss, 4600 add conss, 41174 chg bounds, 92152 chg sides, 116800 chg coeffs, 453132 upgd conss, 77568 impls, 229168 clqs, 0 implints
+(round 8, exhaustive) 4416 del vars, 14585 del conss, 5399 add conss, 41174 chg bounds, 92152 chg sides, 116800 chg coeffs, 453132 upgd conss, 77568 impls, 229168 clqs, 0 implints
+(round 9, exhaustive) 5215 del vars, 15694 del conss, 6198 add conss, 41174 chg bounds, 92152 chg sides, 160587 chg coeffs, 453132 upgd conss, 77568 impls, 227554 clqs, 0 implints
+(round 10, fast)       5231 del vars, 16526 del conss, 6998 add conss, 41174 chg bounds, 92152 chg sides, 161370 chg coeffs, 453132 upgd conss, 77568 impls, 229136 clqs, 0 implints
+(round 11, exhaustive) 5335 del vars, 18875 del conss, 7781 add conss, 41174 chg bounds, 92256 chg sides, 161474 chg coeffs, 453132 upgd conss, 77568 impls, 229030 clqs, 0 implints
+(round 12, exhaustive) 6118 del vars, 19658 del conss, 8564 add conss, 41174 chg bounds, 92256 chg sides, 222302 chg coeffs, 453132 upgd conss, 77568 impls, 226683 clqs, 0 implints
+(round 13, fast)       6899 del vars, 21542 del conss, 8564 add conss, 41174 chg bounds, 92256 chg sides, 222302 chg coeffs, 453132 upgd conss, 77568 impls, 225903 clqs, 0 implints
+(round 14, fast)       6899 del vars, 22003 del conss, 8564 add conss, 41174 chg bounds, 92256 chg sides, 222302 chg coeffs, 453132 upgd conss, 77568 impls, 225903 clqs, 0 implints
+(round 15, exhaustive) 6899 del vars, 22745 del conss, 8564 add conss, 41174 chg bounds, 92256 chg sides, 302194 chg coeffs, 453372 upgd conss, 77568 impls, 231483 clqs, 0 implints
+(round 16, exhaustive) 7553 del vars, 22830 del conss, 8564 add conss, 41174 chg bounds, 92309 chg sides, 374931 chg coeffs, 453372 upgd conss, 77568 impls, 231470 clqs, 0 implints
+(round 17, fast)       8154 del vars, 23428 del conss, 8564 add conss, 41174 chg bounds, 92309 chg sides, 374931 chg coeffs, 453372 upgd conss, 77568 impls, 231669 clqs, 0 implints
+(round 18, exhaustive) 8184 del vars, 25231 del conss, 9165 add conss, 41174 chg bounds, 92339 chg sides, 374961 chg coeffs, 453372 upgd conss, 77568 impls, 232269 clqs, 0 implints
+   (53.4s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (54.3s) no symmetry present (symcode time: 0.18)
+presolving (19 rounds: 19 fast, 11 medium, 9 exhaustive):
+ 8210 deleted vars, 25257 deleted constraints, 9166 added constraints, 41174 tightened bounds, 0 added holes, 92339 changed sides, 448974 changed coefficients
+ 79910 implications, 247092 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 263111 variables (223951 bin, 0 int, 39160 cont) and 560256 constraints
+  77568 constraints of type <varbound>
+ 108397 constraints of type <knapsack>
+ 223503 constraints of type <setppc>
+    600 constraints of type <and>
+ 113416 constraints of type <linear>
+  36772 constraints of type <logicor>
+Presolving Time: 54.03
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+p 147s|     1 |     0 | 42768 |     - | vbounds|   0 | 263k| 560k| 560k|   0 |  0 | 331 |   0 |-8.651002e+11 | 8.933877e+10 |    Inf | unknown
+p 250s|     1 |     0 | 59806 |     - | vbounds|   0 | 263k| 560k| 560k|   0 |  0 | 356 |   0 |-8.651002e+11 | 8.439310e+10 |    Inf | unknown
+  789s|     1 |     0 |261057 |     - |  2906M |   0 | 263k| 560k| 560k|   0 |  0 | 390 |   0 | 7.344803e+10 | 8.439310e+10 |  14.90%| unknown
+  846s|     1 |     0 |262754 |     - |  3109M |   0 | 263k| 560k| 560k| 153 |  1 | 391 |   0 | 7.345207e+10 | 8.439310e+10 |  14.90%| unknown
+  900s|     1 |     0 |264260 |     - |  3173M |   0 | 263k| 560k| 561k| 325 |  2 | 393 |   0 | 7.345207e+10 | 8.439310e+10 |  14.90%| unknown
+(node 1) LP solver hit time limit in LP 7 -- using pseudo solution instead
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 900.01
+Solving Nodes      : 1
+Primal Bound       : +8.43931048808103e+10 (2 solutions)
+Dual Bound         : +7.34520693891600e+10
+Gap                : 14.90 %

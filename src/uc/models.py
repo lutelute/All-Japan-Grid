@@ -16,7 +16,7 @@ Usage::
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from src.model.generator import Generator
 
@@ -173,6 +173,10 @@ class InterconnectionFlow:
     flow_mw: List[float] = field(default_factory=list)
 
 
+# Valid inequalities that UCParameters.strengthen may add (src/uc/constraints.py).
+STRENGTHEN_OPTIONS = frozenset({"startup_type", "ramp"})
+
+
 @dataclass
 class UCParameters:
     """Input parameters for a unit commitment optimisation problem.
@@ -208,8 +212,8 @@ class UCParameters:
             rolling-horizon window) injected as a user MIP start.
             Schedules are matched by ``generator_id`` and period index;
             extra periods are ignored, missing values are left free.
-            Supported by the HiGHS (highspy API) backend; other backends
-            ignore the hint.  An imperfect start is repaired by the
+            Supported by native HiGHS and SCIP (partial solution) backends.
+            An imperfect start may be repaired or rejected by the
             solver, so time-shifted solutions are acceptable.
         initial_commitment: Commitment state (``generator_id -> 0/1``)
             immediately before the first period.  Used by the
@@ -221,6 +225,23 @@ class UCParameters:
             Enforces remaining minimum up/down time at the window head.
             Both fields are the state-carrying interface for
             rolling-horizon solves (src/uc/rolling.py).
+        initial_power_mw: Output immediately before the first period, used
+            for the boundary ramp. Missing entries omit that boundary ramp.
+        model_export_path: Optional MPS export before solving.
+        reserve_requirement_mw: Committed capacity required per period (MW).
+            When set, it replaces ``demand * (1 + reserve_margin)``.
+        strengthen: Valid inequalities to add on top of the base model,
+            from ``STRENGTHEN_OPTIONS`` ("startup_type", "ramp"). They keep
+            the integer feasible schedules and tighten the LP relaxation.
+        model_hook: Called with ``(model, variables)`` after every constraint
+            is in place and before the solve. ``variables`` holds the PuLP
+            variable dicts (u, p, v, w, f, spill, y_hot, y_warm, y_cold,
+            p_ch, p_dis, soc), ``generators``, ``timesteps`` and ``cost``
+            (the cost objective). A hook may add constraints and may replace
+            the objective; ``total_cost`` and ``solver_objective`` then still
+            report ``cost``, the replaced objective goes to
+            ``UCResult.secondary_objective``, and the primal/dual bounds and
+            gap refer to the replaced objective.
     """
 
     generators: List[Generator] = field(default_factory=list)
@@ -237,9 +258,18 @@ class UCParameters:
     warm_start_schedules: Optional[List["GeneratorSchedule"]] = None
     initial_commitment: Optional[Dict[str, int]] = None
     initial_history_h: Optional[Dict[str, int]] = None
+    initial_power_mw: Optional[Dict[str, float]] = None
+    # Optional, reproducible MILP export, written before the native solve.
+    model_export_path: Optional[str] = None
+    strengthen: Tuple[str, ...] = ()
+    reserve_requirement_mw: Optional[List[float]] = None
+    model_hook: Optional[Any] = None
 
     def __post_init__(self) -> None:
         """Validate UC parameters."""
+        unknown = set(self.strengthen) - STRENGTHEN_OPTIONS
+        if unknown:
+            raise ValueError(f"Unknown strengthen options: {sorted(unknown)}")
         if self.reserve_margin < 0:
             raise ValueError(
                 f"reserve_margin must be non-negative, got {self.reserve_margin}"
@@ -369,10 +399,39 @@ class UCResult:
     # 明示変数でペナルティ課金)。>0 は「その地域で需要+輸出可能量を超えて
     # 発電せざるを得なかった量」= 実運用なら出力制御に相当する帳簿。
     regional_spill_mw: Dict[str, List[float]] = field(default_factory=dict)
+    effective_solver: str = ""
+    termination_reason: str = "not_started"
+    has_incumbent: bool = False
+    primal_bound: Optional[float] = None
+    dual_bound: Optional[float] = None
+    solver_objective: Optional[float] = None
+    # Value of an objective a model_hook put in place of cost (bounds refer to it)
+    secondary_objective: Optional[float] = None
+    solver_native_gap: Optional[float] = None
+    gap_abs: Optional[float] = None
+    bound_scope: str = "single_horizon_milp"
+    feasibility_verified: bool = False
+    validation: Dict[str, Any] = field(default_factory=dict)
+    build_time_s: float = 0.0
+    node_count: Optional[int] = None
+
+    @property
+    def has_feasible_solution(self) -> bool:
+        return bool(self.schedules) and self.status in ("Optimal", "Feasible")
 
     @property
     def is_optimal(self) -> bool:
-        """Check if the solver found a proven optimal solution."""
+        """Optimal within the solver's tolerance (its MIP gap), as the solver reports it.
+
+        A run that stops at the requested gap is "Feasible" with termination_reason "gap_limit"
+        (src/uc/solve_metrics.py); for callers it is solved, as it was before that distinction.
+        Use is_proven_optimal when the gap must be closed.
+        """
+        return self.status == "Optimal" or (self.status == "Feasible" and self.termination_reason == "gap_limit")
+
+    @property
+    def is_proven_optimal(self) -> bool:
+        """The solver closed the gap (no gap_limit)."""
         return self.status == "Optimal"
 
     @property
@@ -390,4 +449,16 @@ class UCResult:
             "solve_time_s": round(self.solve_time_s, 2),
             "gap": round(self.gap, 6) if self.gap is not None else None,
             "warnings": len(self.warnings),
+            "effective_solver": self.effective_solver,
+            "termination_reason": self.termination_reason,
+            "has_incumbent": self.has_incumbent,
+            "primal_bound": self.primal_bound,
+            "dual_bound": self.dual_bound,
+            "solver_objective": self.solver_objective,
+            "solver_native_gap": self.solver_native_gap,
+            "gap_abs": self.gap_abs,
+            "bound_scope": self.bound_scope,
+            "feasibility_verified": self.feasibility_verified,
+            "build_time_s": self.build_time_s,
+            "node_count": self.node_count,
         }

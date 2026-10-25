@@ -51,6 +51,7 @@ the dashboard lists the tools.
 | [DATA_SPACE.md](DATA_SPACE.md) | 外部データを源泉に置いたまま必要な断面だけ取る設計 |
 | [CONNECTION_EDITOR_DESIGN.md](CONNECTION_EDITOR_DESIGN.md) | 接続編集プラットフォーム |
 | [UC_HANDOFF.md](UC_HANDOFF.md)・[UC_VALIDATION_PLAN.md](UC_VALIDATION_PLAN.md) | UC(起動停止計画)への引き渡し条件と検証ループ |
+| [800台UC・公開ソルバー研究](research/uc800-open-solver/README.md) | 800 台の起動停止計画を解く研究（解く・広げる・守る）。UC 専用ソルバー（台ごとの DP を価格でつなぐ列生成）、実在の送電網での 1 年、線の上限を守る計画（SCUC） |
 
 ## 方針・連携 / Strategy
 
