@@ -7,7 +7,7 @@ MATPOWER ケースとして書く(src/powerflow/zone_extract.py)。
 
     PYTHONPATH=. python3 scripts/export_zone_case.py chubu --island west [--out dist/zone_cases]
 
-出力: <out>/<zone>.mat + CSV + 名前サイドカー(export_national_matpower.export_net を共用)
+出力: <out>/<zone>.mat + CSV + 名前サイドカー(src/converter/matpower_case.export_net を共用)
       + <zone>_boundary.csv + <zone>_meta.json
 境界の枝は 1 本ずつ gen 行(<zone>_genname.csv の fuel=boundary)になっている。出力は島の AC の
 潮流に固定してあるので、境界の与え方(固定・容量内の変数など)は使う側が PMIN/PMAX を差し替えて決める。
@@ -31,7 +31,7 @@ def main(argv=None) -> int:
 
     import src.powerflow.point_demand as pdm
     from scripts.export_matpower_canonical import build_canonical_net, try_ac
-    from scripts.export_national_matpower import export_net
+    from src.converter.matpower_case import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
     from src.powerflow.reduce_antenna import fold_until
     from src.model.site_transformers import OBSERVED_PATH
