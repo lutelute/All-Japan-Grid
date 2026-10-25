@@ -18,6 +18,8 @@ import pandas as pd
 import pandapower as pp
 import pandapower.topology as top
 
+from src.utils.pandapower_compat import select_subnet
+
 BOUNDARY_COLS = ["name", "kind", "index", "branch_name", "inner_bus", "outer_bus",
                  "neighbor_zone", "vn_kv", "rate_mva", "p_out_mw", "q_out_mvar"]
 
@@ -41,7 +43,7 @@ def extract_zone(net, zone: str):
     zb = net.bus.index[(net.bus["zone"] == zone) & net.bus["in_service"]]
     if len(zb) == 0:
         raise ValueError(f"zone={zone!r} のバスが無い")
-    g = top.create_nxgraph(pp.select_subnet(net, set(zb)))
+    g = top.create_nxgraph(select_subnet(net, set(zb)))
     comps = sorted(nx.connected_components(g), key=len, reverse=True)
     main = comps[0]
 
@@ -62,9 +64,12 @@ def extract_zone(net, zone: str):
             rows.append((f"boundary:{kind}{i}", kind, i, str(t.at[i, "name"]), inner, outer,
                          net.bus.at[outer, "zone"], float(net.bus.at[inner, "vn_kv"]),
                          float(rate), float(p), float(q)))
-    bd = pd.DataFrame(rows, columns=BOUNDARY_COLS)
+    # 境界が 0 本(エリア = 島全体。北海道・沖縄)でも数の列は数にしておく(空だと object になり集計で落ちる)
+    bd = pd.DataFrame(rows, columns=BOUNDARY_COLS).astype(
+        {"index": int, "inner_bus": int, "outer_bus": int, "vn_kv": float, "rate_mva": float,
+         "p_out_mw": float, "q_out_mvar": float})
 
-    sub = pp.select_subnet(net, main, include_results=True)
+    sub = select_subnet(net, main, include_results=True)
     vm, va = net.res_bus["vm_pu"], net.res_bus["va_degree"]
     for x in bd.itertuples():
         pp.create_gen(sub, x.inner_bus, p_mw=-x.p_out_mw, vm_pu=float(vm[x.inner_bus]),

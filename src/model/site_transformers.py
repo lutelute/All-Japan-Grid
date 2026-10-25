@@ -78,9 +78,16 @@ def link_levels(levels, observed=(), label="osm", groups=None) -> list:
 
 
 def load_observed(path: str = OBSERVED_PATH) -> list:
-    """観測した組の一覧(ファイルが無ければ空)。"""
+    """観測した組の一覧(公表の組・構造 DB に無い階級の組も同じ形で読む)。
+
+    3 つの入力(OBSERVED_PATH・PUBLISHED_PATH・MISSING_LEVELS_PATH)はどれも git が追跡している。
+    無いのは取得の不備なので止める(issue #97)。以前は黙って空を返し、変圧器 131 台の容量と
+    境界の潮流が変わった網を、気づかないまま組んでいた。
+    """
     if not os.path.exists(path):
-        return []
+        raise FileNotFoundError(
+            f"{os.path.relpath(path, _ROOT)} が無い。git が追跡しているファイルなので、"
+            "取得が欠けている(sparse checkout など)。`git checkout -- <path>` で戻すこと")
     with open(path, encoding="utf-8") as f:
         return json.load(f)["sites"]
 
