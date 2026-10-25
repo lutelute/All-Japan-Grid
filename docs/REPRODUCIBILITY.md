@@ -31,8 +31,10 @@ PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
 - 公開値と同じにするには、**地点需要（介入 #30）の表**が要ります。各社の系統情報公表の潮流実績から作る表で、再配布できないので、各自で取ります。
 
   ```bash
-  python -m scripts.fetch_system_disclosure --kind flow_actual   # 各社の公表ページから取得
+  python -m scripts.fetch_system_disclosure --kind flow_actual   # 各社の公表ページから取得(約 2〜12 分)
+  python scripts/convert_chubu_flow.py                          # 中部は Excel 公表なので CSV に直す(約 1 分)
   python scripts/parse_point_demand.py                          # → data/external/system_disclosure/normalized/point_demand.csv
+  PYTHONPATH=. python -m scripts.check_point_demand_stamp       # 公開値と同じ表か(違えば事業者ごとに示す)
   ```
 
 - 表が無ければ、落とさずに**ピン留めなし**（#30 を切ったのと同じ）で組みます。そのことは実行のログに出ます。地域の合計需要は同じですが、観測のある約 70 局の周りの配り方が公開値と違います。

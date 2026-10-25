@@ -7,6 +7,8 @@ cp932 CSV」を前提とするため、①先頭の空行を落とし ②シー�
 既存パイプラインの命名規約(jisseki_<scope>_line_<年度>_04.csv)で書き出す。
 
 入力: data/external/system_disclosure/chubu/flow_actual/jisseki_{kikan|local}_{line|tr}_<FY>.{xlsm,xlsx}
+      または取得したままの rule_NN.{xlsm,xlsx}(config/system_disclosure.yaml の chubu.flow_actual.names で
+      上の名前に読み替える。2026-10-26)。置き場は AGJ_SYSTEM_DISCLOSURE で変えられる
 出力: 同ディレクトリに jisseki_{kikan01|local01|local02}_{line|tr}_<FY>_04.csv
       (local01=154kV・local02=77kV以下。kikanは単一シート=kikan01)
 
@@ -14,13 +16,23 @@ cp932 CSV」を前提とするため、①先頭の空行を落とし ②シー�
 """
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "data/external/system_disclosure/chubu/flow_actual"
+SRC = Path(os.environ.get("AGJ_SYSTEM_DISCLOSURE") or ROOT / "data/external/system_disclosure") / "chubu/flow_actual"
+CONFIG = ROOT / "config/system_disclosure.yaml"
+PATTERN = re.compile(r"jisseki_(kikan|local)_(line|tr)_(\d{4})\.(xlsx|xlsm)")
+
+
+def rule_names() -> dict[str, str]:
+    """取得したままの名前(rule_NN.xlsm)→ 変換が読む名前(jisseki_kikan_line_2025.xlsm)。"""
+    cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
+    return dict(cfg["utilities"]["chubu"]["kinds"]["flow_actual"].get("names") or {})
 
 
 def sheet_scope(base_scope: str, idx: int, n_sheets: int) -> str:
@@ -29,8 +41,8 @@ def sheet_scope(base_scope: str, idx: int, n_sheets: int) -> str:
     return f"local{idx + 1:02d}"
 
 
-def convert(path: Path) -> None:
-    m = re.match(r"jisseki_(kikan|local)_(line|tr)_(\d{4})\.(xlsx|xlsm)", path.name)
+def convert(path: Path, name: str | None = None) -> None:
+    m = PATTERN.fullmatch(name or path.name)
     if not m:
         return
     base_scope, kind, fy = m.group(1), m.group(2), m.group(3)
@@ -49,8 +61,14 @@ def convert(path: Path) -> None:
 
 
 def main() -> None:
-    for path in sorted(SRC.glob("jisseki_*.xls[mx]")):
-        convert(path)
+    names = rule_names()
+    done = set()
+    for path in sorted(SRC.glob("*.xls[mx]")):
+        name = path.name if PATTERN.fullmatch(path.name) else names.get(path.name)
+        if name is None or name in done:     # 付け替えた複製と rule_NN の両方があれば 1 回だけ
+            continue
+        done.add(name)
+        convert(path, name)
 
 
 if __name__ == "__main__":
