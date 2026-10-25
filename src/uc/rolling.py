@@ -27,11 +27,13 @@ from src.uc.models import (
     DemandProfile,
     GeneratorSchedule,
     Interconnection,
+    InterconnectionFlow,
     TimeHorizon,
     UCParameters,
     UCResult,
 )
 from src.uc.solver import solve_uc
+from src.uc.validation import schedule_cost, validate_uc_solution
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -47,29 +49,49 @@ class RollingUCConfig:
     mip_gap: float = 0.01
     solver_name: str = "highs"
     warm_start: bool = True
-    # 非Optimal時のリトライ: mip_gapを順に緩めて再試行
+    # 検証済み実行可能解が得られないときのリトライ
     retry_gaps: tuple = (0.03, 0.1)
+    solver_time_limit_s: Optional[float] = None
+    solver_options: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if not 0 < self.step_h <= self.window_h:
+            raise ValueError("rolling requires 0 < step_h <= window_h")
 
 
 @dataclass
 class RollingUCResult:
     """rolling horizon の年間結果（確定部分の連結）。"""
 
-    status: str = "Not Solved"          # "Optimal" = 全窓Optimal
+    status: str = "Not Solved"          # Feasible = completed and independently checked
     hours: int = 0
     n_windows: int = 0
     n_retried: int = 0
     failed_window: Optional[int] = None  # 最初に失敗した窓index（Noneなら完走）
     schedules: Dict[str, GeneratorSchedule] = field(default_factory=dict)
-    total_cost: float = 0.0             # 確定部分の再計算コスト（fuel+no_load+startup）
+    total_cost: float = 0.0             # 確定部分の全運転費用（spillペナルティを除く）
     solve_time_s: float = 0.0
     window_times_s: List[float] = field(default_factory=list)
     window_statuses: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+    feasibility_verified: bool = False
+    validation: dict = field(default_factory=dict)
+    window_summaries: List[dict] = field(default_factory=list)
+    interconnection_flows: Dict[str, List[float]] = field(default_factory=dict)
+    regional_spill_mw: Dict[str, List[float]] = field(default_factory=dict)
+    primal_bound: Optional[float] = None
+    dual_bound: Optional[float] = None
+    gap: Optional[float] = None
+    bound_scope: str = "full_horizon_rolling"
 
     @property
     def is_optimal(self) -> bool:
-        return self.status == "Optimal"
+        # Window optima cannot prove optimality of the full horizon.
+        return False
+
+    @property
+    def is_complete(self) -> bool:
+        return self.status == "Feasible" and self.feasibility_verified
 
 
 def _commit_segment(
@@ -160,39 +182,15 @@ def _recompute_cost(
     acc: Dict[str, GeneratorSchedule],
     generators: List[Generator],
     skip_h: int = 0,
+    initial_commitment: Optional[Dict[str, int]] = None,
+    initial_history_h: Optional[Dict[str, int]] = None,
 ) -> float:
-    """確定スケジュールからコストを再計算する。
-
-    窓のobjective合計はlookahead重複を含むため使えない。fuel + no_load/labor
-    + 起動費（0→1遷移×hot_start相当）で再構成する。3-state起動の厳密な
-    warm/cold判定は行わない（hotで近似の概算）。
-
-    Args:
-        skip_h: 先頭から除外する期間数（チャンク並列のwarmup）。起動判定の
-            直前状態には ``commitment[skip_h-1]`` を使い、warmup境界での
-            幻の起動費を発生させない。
-    """
+    """Recompute hourly costs once, with exact startup categories and history."""
     gen_map = {g.id: g for g in generators}
-    total = 0.0
-    for gid, sched in acc.items():
-        g = gen_map.get(gid)
-        if g is None:
-            continue
-        power = np.asarray(sched.power_output_mw[skip_h:])
-        commit = np.asarray(sched.commitment[skip_h:], dtype=int)
-        total += float(power.clip(min=0).sum()) * g.fuel_cost_per_mwh
-        total += float(commit.sum()) * (g.no_load_cost + g.labor_cost_per_h)
-        if len(commit):
-            prev = (
-                int(sched.commitment[skip_h - 1]) if skip_h > 0
-                and len(sched.commitment) >= skip_h else 0
-            )
-            starts = int(np.maximum(np.diff(commit, prepend=prev), 0).sum())
-            startup_cost = g.hot_start_cost or g.startup_cost
-            total += starts * startup_cost
-            stops = int(np.maximum(-np.diff(commit, prepend=prev), 0).sum())
-            total += stops * g.shutdown_cost
-    return total
+    return sum(schedule_cost(gen_map[gid], sched,
+               initial_commitment=(initial_commitment or {}).get(gid, 0),
+               initial_history_h=(initial_history_h or {}).get(gid), skip_periods=skip_h)
+               for gid, sched in acc.items() if gid in gen_map)
 
 
 def solve_rolling_uc(
@@ -222,8 +220,10 @@ def solve_rolling_uc(
 
     # 初期状態: 全機「min_downを満たすだけOFFしていた」= 自由スタート
     history: Dict[str, int] = {
-        g.id: -int(g.min_down_time_h) for g in generators
+        g.id: -max(int(g.min_down_time_h), int(g.cold_start_h), 1) for g in generators
     }
+    initial_history = dict(history)
+    power_state: Dict[str, float] = {}
     soc_state: Dict[str, float] = {
         g.id: g.initial_soc_fraction for g in generators if g.is_storage
     }
@@ -253,6 +253,8 @@ def solve_rolling_uc(
             reserve_margin=cfg.reserve_margin,
             solver_name=cfg.solver_name,
             mip_gap=cfg.mip_gap,
+            solver_time_limit_s=cfg.solver_time_limit_s,
+            solver_options=dict(cfg.solver_options),
             interconnections=interconnections,
             regional_demands=(
                 {r: [float(x) for x in d[w0:w1]]
@@ -263,6 +265,7 @@ def solve_rolling_uc(
                 gid: 1 if h > 0 else 0 for gid, h in history.items()
             },
             initial_history_h=history,
+            initial_power_mw=power_state or None,
             warm_start_schedules=(
                 prev_solution if cfg.warm_start else None
             ),
@@ -270,9 +273,9 @@ def solve_rolling_uc(
 
         t0 = time.monotonic()
         result = solve_uc(params)
-        # 非Optimalならgapを緩めてリトライ
+        # 検証済み実行可能解がなければgapを緩めてリトライ
         for retry_gap in cfg.retry_gaps:
-            if result.status == "Optimal":
+            if result.has_feasible_solution and result.feasibility_verified:
                 break
             res.n_retried += 1
             params.mip_gap = retry_gap
@@ -280,19 +283,25 @@ def solve_rolling_uc(
         dt = time.monotonic() - t0
         res.window_times_s.append(round(dt, 2))
         res.window_statuses.append(result.status)
+        res.window_summaries.append(result.summary)
 
         if progress:
             day = w0 // 24
             print(f"  [window {wi + 1}/{len(window_starts)} day{day:3d}] "
                   f"{result.status} {dt:.1f}s", flush=True)
 
-        if result.status != "Optimal":
+        if not (result.has_feasible_solution and result.feasibility_verified):
             res.failed_window = wi
             res.warnings.extend(result.warnings)
             res.status = result.status
             break
 
         _commit_segment(res.schedules, result, n_commit)
+        for flow in result.interconnection_flows:
+            res.interconnection_flows.setdefault(flow.interconnection_id, []).extend(flow.flow_mw[:n_commit])
+        for region, values in result.regional_spill_mw.items():
+            res.regional_spill_mw.setdefault(region, []).extend(values[:n_commit])
+        power_state = {s.generator_id: s.power_output_mw[n_commit - 1] for s in result.schedules}
         history = _update_history(history, result, n_commit)
         # SOC引き継ぎ: 確定末尾のSOC（fraction化）
         for sched in result.schedules:
@@ -304,8 +313,23 @@ def solve_rolling_uc(
                 )
         prev_solution = _shift_schedules(result.schedules, cfg.step_h)
     else:
-        res.status = "Optimal"
+        res.status = "Feasible"
 
-    res.total_cost = _recompute_cost(res.schedules, generators)
+    res.total_cost = _recompute_cost(res.schedules, generators, initial_history_h=initial_history)
+    if res.status == "Feasible":
+        full_params = UCParameters(generators=generators,
+            demand=DemandProfile(demands=list(demand)), time_horizon=TimeHorizon(num_periods=T),
+            regional_demands=regional_demands, interconnections=interconnections,
+            reserve_margin=cfg.reserve_margin, initial_history_h=initial_history)
+        full_result = UCResult(schedules=list(res.schedules.values()),
+            interconnection_flows=[InterconnectionFlow(k, v) for k, v in res.interconnection_flows.items()],
+            regional_spill_mw=res.regional_spill_mw)
+        res.validation = validate_uc_solution(full_params, full_result, check_objective=False)
+        res.feasibility_verified = res.validation["passed"]
+        if res.feasibility_verified:
+            res.primal_bound = res.validation["objective"]
+        else:
+            res.status = "Invalid Solution"
+            res.warnings.append("Full-horizon validation failed")
     res.solve_time_s = round(time.monotonic() - t_start, 1)
     return res

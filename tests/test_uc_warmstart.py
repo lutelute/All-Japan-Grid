@@ -133,3 +133,44 @@ class TestFloatBoundaryClamp:
         )
         result = solve_uc(params)  # ValueErrorで落ちないこと
         assert result.is_optimal
+
+
+class TestHiGHSStartIsAccepted:
+    """10-24: a dense start pinned unset startup binaries to 0 and HiGHS rejected it."""
+
+    def test_only_set_columns_are_passed(self):
+        from types import SimpleNamespace
+        from src.uc.solver import _HiGHSWarmStart
+
+        calls = []
+        native = SimpleNamespace(setSolution=lambda *a: calls.append(a),
+                                 getNumCol=lambda: 5, run=lambda: None)
+        variables = [SimpleNamespace(varValue=1.0, index=0),
+                     SimpleNamespace(varValue=None, index=1),
+                     SimpleNamespace(varValue=42.5, index=3)]
+        lp = SimpleNamespace(solverModel=native, variables=lambda: variables)
+        _HiGHSWarmStart.callSolver(_HiGHSWarmStart(msg=False), lp)
+        (num, index, value), = calls
+        assert num == 2
+        assert list(index) == [0, 3]
+        assert list(value) == [1.0, 42.5]
+
+    def test_synthetic_start_is_not_rejected(self, tmp_path):
+        from src.uc.benchmark_cases import synthetic_case
+
+        cold = synthetic_case(units=8, hours=24)
+        r1 = solve_uc(cold)
+        assert r1.feasibility_verified
+        warm = synthetic_case(units=8, hours=24)
+        log = tmp_path / "highs.log"
+        warm.solver_options = {"log_file": str(log), "log_to_console": False, "msg": True}
+        warm.warm_start_schedules = r1.schedules
+        r2 = solve_uc(warm)
+        text = log.read_text()
+        if "user-supplied" not in text:
+            pytest.skip("this HiGHS build does not log MIP start handling")
+        assert "Infeasible" not in text
+        assert r2.feasibility_verified
+        # The start sets u and p only; HiGHS completes the rest (v, w, startup types) with a sub-MIP
+        # that stops at its default relative gap 1e-4, so the accepted start can cost a little more.
+        assert r2.primal_bound <= r1.primal_bound * (1 + 1e-4)

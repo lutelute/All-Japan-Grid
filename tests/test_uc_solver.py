@@ -1290,7 +1290,7 @@ class TestPumpedHydroSOC:
         )
 
         result = solve_uc(params)
-        assert result.status == "Optimal"
+        assert result.has_feasible_solution and result.feasibility_verified
 
         sched = _find_schedule(result, "g_storage_maint")
         for t in range(4, 8):
@@ -1396,7 +1396,7 @@ class TestBatterySOC:
         params = UCParameters(generators=gens, demand=dp, time_horizon=th)
 
         result = solve_uc(params)
-        assert result.status == "Optimal"
+        assert result.has_feasible_solution and result.feasibility_verified
 
         sched = _find_schedule(result, "g_battery")
         eta_ch = 0.95
@@ -1447,7 +1447,7 @@ class TestBatterySOC:
         params = UCParameters(generators=gens, demand=dp, time_horizon=th)
 
         result = solve_uc(params)
-        assert result.status == "Optimal"
+        assert result.has_feasible_solution and result.feasibility_verified
 
         sched = _find_schedule(result, "g_battery")
         charge_rate = 50.0
@@ -1566,7 +1566,7 @@ class TestStorageIntegration:
         )
 
         result = solve_uc(params)
-        assert result.status == "Optimal"
+        assert result.has_feasible_solution and result.feasibility_verified
 
         # Demand met at all periods
         for t in range(24):

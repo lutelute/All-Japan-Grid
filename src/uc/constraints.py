@@ -368,6 +368,8 @@ def add_ramp_constraints(
     u: Dict[Tuple[str, int], pulp.LpVariable],
     generators: List[Generator],
     timesteps: List[int],
+    initial_power_mw: Optional[Dict[str, float]] = None,
+    initial_commitment: Optional[Dict[str, int]] = None,
 ) -> int:
     """Add ramp-rate limit constraints.
 
@@ -397,6 +399,23 @@ def add_ramp_constraints(
         Number of constraints added.
     """
     count = 0
+    initial_power_mw = initial_power_mw or {}
+    initial_commitment = initial_commitment or {}
+    if timesteps:
+        for g in generators:
+            if g.id not in initial_power_mw:
+                continue
+            p0 = initial_power_mw[g.id]
+            u0 = initial_commitment.get(g.id, 0)
+            t0 = timesteps[0]
+            if g.ramp_up_mw_per_h is not None:
+                model += (p[(g.id, t0)] - p0 <= g.ramp_up_mw_per_h
+                          + g.capacity_mw * (1 - u0), f"initial_ramp_up_{g.id}")
+                count += 1
+            if g.ramp_down_mw_per_h is not None:
+                model += (p0 - p[(g.id, t0)] <= g.ramp_down_mw_per_h
+                          + g.capacity_mw * (1 - u[(g.id, t0)]), f"initial_ramp_down_{g.id}")
+                count += 1
     for g in generators:
         has_ramp_up = g.ramp_up_mw_per_h is not None
         has_ramp_down = g.ramp_down_mw_per_h is not None
@@ -494,6 +513,7 @@ def add_reserve_margin_constraints(
     timesteps: List[int],
     demand: List[float],
     reserve_margin: float,
+    requirement: Optional[List[float]] = None,
 ) -> int:
     """Add spinning-reserve margin constraints.
 
@@ -521,13 +541,15 @@ def add_reserve_margin_constraints(
     Returns:
         Number of constraints added.
     """
-    if reserve_margin <= 0:
+    if requirement is None and reserve_margin <= 0:
         logger.info("Reserve margin is %.2f; skipping reserve constraints", reserve_margin)
         return 0
 
     count = 0
     for idx, t in enumerate(timesteps):
-        required = demand[idx] * (1.0 + reserve_margin)
+        # A per-period requirement (MW of committed capacity) replaces demand*(1+margin),
+        # e.g. a region's share of the system reserve in a staged solve.
+        required = requirement[idx] if requirement is not None else demand[idx] * (1.0 + reserve_margin)
         model += (
             pulp.lpSum(g.capacity_mw * u[(g.id, t)] for g in generators)
             >= required,
@@ -771,6 +793,8 @@ def add_startup_type_constraints(
     y_cold: Dict[Tuple[str, int], pulp.LpVariable],
     generators: List[Generator],
     timesteps: List[int],
+    initial_history_h: Optional[Dict[str, int]] = None,
+    initial_commitment: Optional[Dict[str, int]] = None,
 ) -> int:
     """Add cold/warm/hot startup-type partitioning constraints.
 
@@ -796,6 +820,8 @@ def add_startup_type_constraints(
         Number of constraints added.
     """
     count = 0
+    initial_history_h = initial_history_h or {}
+    initial_commitment = initial_commitment or {}
     n_thermal = 0
     n_skipped = 0
     for g in generators:
@@ -827,25 +853,24 @@ def add_startup_type_constraints(
             warm_window = [timesteps[j] for j in range(max(0, i - Tw), i)]
             cold_window = [timesteps[j] for j in range(max(0, i - Tc), i)]
 
-            # 3. Cold detection: y_cold >= v - Σ_{τ∈Tc} u[g,τ]
-            if cold_window:
-                model += (
-                    y_cold[(g.id, t)]
-                    >= v[(g.id, t)]
-                    - pulp.lpSum(u[(g.id, tau)] for tau in cold_window),
-                    f"su_cold_{g.id}_t{t}",
-                )
-                count += 1
-
-            # 4. Warm detection: y_warm + y_cold >= v - Σ_{τ∈Tw} u[g,τ]
-            if warm_window:
-                model += (
-                    y_warm[(g.id, t)] + y_cold[(g.id, t)]
-                    >= v[(g.id, t)]
-                    - pulp.lpSum(u[(g.id, tau)] for tau in warm_window),
-                    f"su_warm_{g.id}_t{t}",
-                )
-                count += 1
+            # An ON in the previous L periods means downtime < L.
+            # Include the last known pre-horizon ON, even when the look-back
+            # reaches before this window. Missing OFF history means fully cold.
+            hist = initial_history_h.get(
+                g.id, 1 if initial_commitment.get(g.id, 0) else -max(Tc, 1),
+            )
+            for label, length, window, active in (
+                ("hot", Tw, warm_window, y_hot[(g.id, t)]),
+                ("not_cold", Tc, cold_window,
+                 y_hot[(g.id, t)] + y_warm[(g.id, t)]),
+            ):
+                pre_on = int(i < length and (hist > 0 or length - i > -hist))
+                recent = pulp.lpSum(u[(g.id, tau)] for tau in window) + pre_on
+                model += (active <= recent, f"su_{label}_ub_{g.id}_t{t}")
+                model += (max(1, length) * active >= recent
+                          - max(1, length) * (1 - v[(g.id, t)]),
+                          f"su_{label}_lb_{g.id}_t{t}")
+                count += 2
 
     logger.info(
         "Added %d startup-type constraints (%d thermal generators, %d skipped)",
@@ -853,6 +878,103 @@ def add_startup_type_constraints(
         n_thermal,
         n_skipped,
     )
+    return count
+
+
+def add_startup_type_shutdown_cuts(
+    model: pulp.LpProblem,
+    w: Dict[Tuple[str, int], pulp.LpVariable],
+    y_hot: Dict[Tuple[str, int], pulp.LpVariable],
+    y_warm: Dict[Tuple[str, int], pulp.LpVariable],
+    generators: List[Generator],
+    timesteps: List[int],
+    initial_history_h: Optional[Dict[str, int]] = None,
+    initial_commitment: Optional[Dict[str, int]] = None,
+) -> int:
+    """Strengthen startup-type detection with shutdown windows (valid inequalities).
+
+    ``add_startup_type_constraints`` allows a hot start when Σu over the
+    look-back window is positive.  In the LP relaxation a fractional u
+    (e.g. 0.5 for hours) satisfies this without any shutdown, so the bound
+    prices cold starts as hot.  A start at t is hot (warm) only if the unit
+    shut down within the last ``warm_start_h`` (``cold_start_h``) periods:
+
+        ``y_hot[g,t]            <= Σ_{τ=t-Tw+1}^{t-1} w[g,τ] + pre``
+        ``y_hot[g,t] + y_warm[g,t] <= Σ_{τ=t-Tc+1}^{t-1} w[g,τ] + pre``
+
+    ``pre`` is 1 when the pre-horizon shutdown falls inside the window.
+    Every integer solution of the existing model satisfies these cuts when
+    v and w cannot both be 1 in one period, which the min up/down
+    constraints imply for MUT >= 2 and MDT >= 2; other units are skipped.
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    initial_history_h = initial_history_h or {}
+    initial_commitment = initial_commitment or {}
+    for g in generators:
+        if not g.has_thermal_startup or g.min_up_time_h <= 1 or g.min_down_time_h <= 1:
+            continue
+        u0 = int(initial_commitment.get(g.id, 0))
+        hist = initial_history_h.get(g.id, 1 if u0 else -max(g.cold_start_h, 1))
+        for i, t in enumerate(timesteps):
+            for label, length, active in (
+                ("hot", g.warm_start_h, y_hot[(g.id, t)]),
+                ("not_cold", g.cold_start_h, y_hot[(g.id, t)] + y_warm[(g.id, t)]),
+            ):
+                window = [timesteps[j] for j in range(max(0, i - length + 1), i)]
+                # A shutdown before t0 is not a w in the model: an OFF streak of
+                # -hist periods, or an ON history whose t0 logic starts from u0 = 0.
+                pre = int((hist <= 0 and i - hist < length) or (hist > 0 and not u0 and i < length))
+                model += (active <= pulp.lpSum(w[(g.id, tau)] for tau in window) + pre,
+                          f"su_{label}_sd_window_{g.id}_t{t}")
+                count += 1
+    logger.info("Added %d startup-type shutdown-window cuts", count)
+    return count
+
+
+def add_tight_ramp_cuts(
+    model: pulp.LpProblem,
+    p: Dict[Tuple[str, int], pulp.LpVariable],
+    u: Dict[Tuple[str, int], pulp.LpVariable],
+    v: Dict[Tuple[str, int], pulp.LpVariable],
+    w: Dict[Tuple[str, int], pulp.LpVariable],
+    generators: List[Generator],
+    timesteps: List[int],
+) -> int:
+    """Strengthen ramp limits with startup/shutdown indicators (valid inequalities).
+
+    The big-M ramp in ``add_ramp_constraints`` relaxes by ``Pmax(1-u)``,
+    which a fractional u opens wide in the LP.  With the start-up and
+    shut-down capability equal to Pmax (the current model's semantics):
+
+        ``p[g,t] - p[g,t-1] <= RU·u[g,t-1] + Pmax·v[g,t]``
+        ``p[g,t-1] - p[g,t] <= RD·u[g,t]   + Pmax·w[g,t]``
+
+    Each integer case (on→on, off→on, on→off, off→off) satisfies both,
+    so the integer feasible set is unchanged.
+
+    Returns:
+        Number of constraints added.
+    """
+    count = 0
+    for g in generators:
+        if g.is_storage:
+            continue
+        for i in range(1, len(timesteps)):
+            t, t_prev = timesteps[i], timesteps[i - 1]
+            if g.ramp_up_mw_per_h is not None:
+                model += (p[(g.id, t)] - p[(g.id, t_prev)]
+                          <= g.ramp_up_mw_per_h * u[(g.id, t_prev)] + g.capacity_mw * v[(g.id, t)],
+                          f"ramp_up_tight_{g.id}_t{t}")
+                count += 1
+            if g.ramp_down_mw_per_h is not None:
+                model += (p[(g.id, t_prev)] - p[(g.id, t)]
+                          <= g.ramp_down_mw_per_h * u[(g.id, t)] + g.capacity_mw * w[(g.id, t)],
+                          f"ramp_down_tight_{g.id}_t{t}")
+                count += 1
+    logger.info("Added %d tight ramp cuts", count)
     return count
 
 

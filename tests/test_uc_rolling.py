@@ -145,7 +145,7 @@ class TestSolveRollingUC:
         cfg = RollingUCConfig(window_h=48, step_h=24, reserve_margin=0.0,
                               warm_start=True)
         res = solve_rolling_uc([g], demand, None, [], cfg, progress=False)
-        assert res.is_optimal
+        assert res.is_complete and res.feasibility_verified
         assert res.n_windows == 4
         sched = res.schedules["base"]
         assert len(sched.commitment) == 96
@@ -167,7 +167,7 @@ class TestSolveRollingUC:
                               warm_start=False)
         res = solve_rolling_uc([g, peaker, batt], demand, None, [], cfg,
                                progress=False)
-        assert res.is_optimal
+        assert res.is_complete and res.feasibility_verified
         soc = np.array(res.schedules["batt"].soc_mwh)
         assert len(soc) == 96
         # SOCの時間差分は物理上限（充放電レート×効率の範囲）を超えない
@@ -182,7 +182,7 @@ class TestSolveRollingUC:
         demand = np.full(30, 50.0)  # 30h: 窓 [0:30), [24:30)
         cfg = RollingUCConfig(window_h=24, step_h=24, reserve_margin=0.0)
         res = solve_rolling_uc([g], demand, None, [], cfg, progress=False)
-        assert res.is_optimal
+        assert res.is_complete and res.feasibility_verified
         assert len(res.schedules["base"].commitment) == 30
 
 

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "provenance": "synthetic_not_observed",
+  "kind": "bound_leak",
+  "case_id": "synthetic-uc-v1-n800-t48-seed17",
+  "input_sha256": "8049bcc48725c0a523b45559a31d319a94a9585fa2e606f7d7c30c85942ca9a5",
+  "solution_file": "n800-t48-highs-s17.solution.json.gz",
+  "solution_total_cost": 74444147296.99542,
+  "solver": "HiGHS 1.14.0",
+  "lp_relaxation": {
+    "status": "Optimal",
+    "seconds": 82.58909852989018,
+    "objective": 73449631701.38239,
+    "offset": 0.0,
+    "cost_by_term": {
+      "other:f": 0.0,
+      "fuel": 68742818147.84167,
+      "other:p_ch": 0.0,
+      "other:p_dis": 0.0,
+      "other:soc": 0.0,
+      "other:spill": 0.0,
+      "no_load": 1760218184.9213393,
+      "startup_single": 0.0,
+      "shutdown": 44876266.903746895,
+      "startup_cold": 2266470345.709712,
+      "startup_hot": 635248756.0038188,
+      "startup_warm": 0.0,
+      "other:z_ch": 0.0
+    },
+    "unit_hours_on_by_fuel": {
+      "coal": 9600.0,
+      "lng": 10954.689416605746,
+      "oil": 30.18994213960221
+    },
+    "fractional_u_by_fuel": {
+      "lng": 3178,
+      "oil": 39
+    }
+  },
+  "commitment_fixed_lp": {
+    "status": "Optimal",
+    "seconds": 1.0365596781484783,
+    "objective": 74443434285.42618,
+    "offset": 0.0,
+    "cost_by_term": {
+      "other:f": 0.0,
+      "fuel": 68744854238.81528,
+      "other:p_ch": 0.0,
+      "other:p_dis": 0.0,
+      "other:soc": 0.0,
+      "other:spill": 0.0,
+      "no_load": 1757650204.2065508,
+      "startup_single": 0.0,
+      "shutdown": 49031883.72993201,
+      "startup_cold": 3793333150.8911066,
+      "startup_hot": 18775367.195663303,
+      "startup_warm": 79789440.58490321,
+      "other:z_ch": 0.0
+    },
+    "unit_hours_on_by_fuel": {
+      "coal": 9600.0,
+      "lng": 10912.0,
+      "oil": 37.0
+    },
+    "fractional_u_by_fuel": {}
+  }
+}

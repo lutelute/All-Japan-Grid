@@ -1,0 +1,55 @@
+Running HiGHS 1.14.0 (git hash: 7df0786): Copyright (c) 2026 under MIT licence terms
+MIP has 325788 rows; 135360 cols; 1554892 nonzeros; 115584 integer variables (115584 binary)
+Coefficient ranges:
+  Matrix  [9e-01, 2e+03]
+  Cost    [6e+03, 1e+07]
+  Bound   [1e+00, 8e+03]
+  RHS     [1e+00, 2e+05]
+WARNING: Problem has some excessively large costs
+WARNING:    Consider scaling the objective by 1e-2, or setting the user_objective_scale option to -4
+Presolving model
+320792 rows, 133760 cols, 1542696 nonzeros 0s
+262664 rows, 112352 cols, 1362404 nonzeros 10s
+246990 rows, 105371 cols, 1297142 nonzeros 28s
+Presolve reductions: rows 246990(-78798); columns 105371(-29989); nonzeros 1297142(-257750) 
+
+Solving MIP model with:
+   246990 rows
+   105371 cols (85695 binary, 0 integer, 0 implied int., 19676 continuous, 0 domain fixed)
+   1297142 nonzeros
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   0               inf                  inf        0      0      0         0    43.5s
+         0       0         0   0.00%   37563758466.91  inf                  inf        0      0      2         0   206.4s
+         0       0         0   0.00%   37586371572.8   inf                  inf     1072    168      4      2417   229.5s
+         0       0         0   0.00%   37599039327.69  inf                  inf     1764    296      6      4162   243.8s
+         0       0         0   0.00%   37604005758.62  inf                  inf     2263    369      8      4974   257.7s
+ R       0       0         0   0.00%   37605840218.13  38036669736.74     1.13%     2548    408      8      5411   273.0s
+         0       0         0   0.00%   37606734233.75  38036669736.74     1.13%     2732    441     60      5755   331.3s
+
+Solving report
+  Status            Time limit reached
+  Primal bound      38036669736.7
+  Dual bound        37606734233.8
+  Gap               1.13% (tolerance: 0.1%)
+  P-D integral      0.658410862821
+  Solution status   feasible
+                    38036669736.7 (objective)
+                    0 (bound viol.)
+                    0 (int. viol.)
+                    0 (row viol.)
+  Timing            331.25
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     5755
+                    0 (strong br.)
+                    5755 (separation)
+                    0 (heuristics)

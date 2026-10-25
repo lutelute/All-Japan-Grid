@@ -21,6 +21,7 @@ Usage::
 """
 
 import time
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import pulp
@@ -38,7 +39,9 @@ from src.uc.constraints import (
     add_reserve_margin_constraints,
     add_startup_shutdown_logic,
     add_startup_type_constraints,
+    add_startup_type_shutdown_cuts,
     add_storage_soc_constraints,
+    add_tight_ramp_cuts,
     add_transmission_capacity_constraints,
 )
 from src.uc.models import (
@@ -48,6 +51,8 @@ from src.uc.models import (
     UCParameters,
     UCResult,
 )
+from src.uc.solve_metrics import capture_solve_metrics, finalize_bounds
+from src.uc.validation import validate_uc_solution
 from src.utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -68,7 +73,7 @@ _STATUS_MAP = {
 }
 
 
-def solve_uc(params: UCParameters) -> UCResult:
+def solve_uc(params: UCParameters, *, progress_callback=None) -> UCResult:
     """Solve a unit commitment optimisation problem.
 
     Formulates a MILP using PuLP with binary commitment, startup, and
@@ -87,6 +92,12 @@ def solve_uc(params: UCParameters) -> UCResult:
         warnings identify which timesteps have insufficient capacity.
     """
     result = UCResult()
+    build_start = time.monotonic()
+    def progress(stage, **metrics):
+        if progress_callback is not None:
+            progress_callback(stage, **metrics)
+
+    progress("build")
 
     # --- Validate inputs ---------------------------------------------------
     if not params.generators:
@@ -102,6 +113,10 @@ def solve_uc(params: UCParameters) -> UCResult:
         return result
 
     generators = params.generators
+    if params.time_horizon.period_duration_h != 1.0:
+        raise ValueError("UC currently supports 1-hour periods only; costs and minimum times are hourly")
+    if len({g.id for g in generators}) != len(generators):
+        raise ValueError("Generator IDs must be unique")
     timesteps = params.time_horizon.period_indices
     demand = params.demand.demands
 
@@ -224,7 +239,26 @@ def solve_uc(params: UCParameters) -> UCResult:
         regional_demands=params.regional_demands,
         initial_commitment=params.initial_commitment,
         initial_history_h=params.initial_history_h,
+        initial_power_mw=params.initial_power_mw,
+        strengthen=params.strengthen,
+        reserve_requirement=params.reserve_requirement_mw,
     )
+    cost_expression = model.objective
+    if params.model_hook is not None:
+        params.model_hook(model, {
+            "u": u, "p": p, "v": v, "w": w, "f": f, "spill": spill,
+            "y_hot": y_hot, "y_warm": y_warm, "y_cold": y_cold,
+            "p_ch": p_ch, "p_dis": p_dis, "soc": soc,
+            "generators": generators, "timesteps": timesteps, "cost": cost_expression,
+        })
+
+    if params.model_export_path:
+        export_path = Path(params.model_export_path)
+        export_path.parent.mkdir(parents=True, exist_ok=True)
+        model.writeMPS(str(export_path))
+    result.build_time_s = time.monotonic() - build_start
+    progress("native_solve", variables=model.numVariables(), constraints=model.numConstraints(),
+             build_time_s=result.build_time_s)
 
     # --- Select and run solver ---------------------------------------------
     solver = _select_solver(params)
@@ -245,6 +279,7 @@ def solve_uc(params: UCParameters) -> UCResult:
 
     result.solve_time_s = elapsed
     result.status = _STATUS_MAP.get(status_code, "Unknown")
+    capture_solve_metrics(model, solver, result)
 
     logger.info(
         "Solver finished: status=%s, time=%.2fs",
@@ -253,18 +288,32 @@ def solve_uc(params: UCParameters) -> UCResult:
     )
 
     # --- Extract results ---------------------------------------------------
-    if result.status == "Optimal":
+    if result.has_incumbent:
+        progress("validation")
         _extract_solution(
             result, model, u, p, v, w, generators, timesteps,
             p_ch=p_ch, p_dis=p_dis, soc=soc, storage_ids=storage_ids,
             interconnections=interconnections, f=f, spill=spill,
+            y_hot=y_hot, y_warm=y_warm, y_cold=y_cold, cost_expression=cost_expression,
         )
+        if model.objective is not cost_expression:
+            result.secondary_objective = pulp.value(model.objective)
+        result.validation = validate_uc_solution(params, result, spill_penalty=SPILL_PENALTY)
+        raw_valid = model.valid(1e-4)
+        result.validation["raw_model_valid"] = raw_valid
+        result.feasibility_verified = result.validation["passed"] and raw_valid
+        if not result.feasibility_verified:
+            result.status = "Invalid Solution"
+            result.warnings.append("Independent solution validation failed")
+        finalize_bounds(result)
         if params.extract_duals:
             _extract_duals(result, model, solver, timesteps)
     elif result.status == "Infeasible":
         _diagnose_infeasibility(result, generators, timesteps, demand)
 
     logger.info("UC result summary: %s", result.summary)
+    progress("complete", termination_reason=result.termination_reason,
+             feasibility_verified=result.feasibility_verified)
     return result
 
 
@@ -370,6 +419,9 @@ def _add_all_constraints(
     regional_demands: Optional[Dict[str, List[float]]] = None,
     initial_commitment: Optional[Dict[str, int]] = None,
     initial_history_h: Optional[Dict[str, int]] = None,
+    initial_power_mw: Optional[Dict[str, float]] = None,
+    strengthen: Tuple[str, ...] = (),
+    reserve_requirement: Optional[List[float]] = None,
 ) -> Optional[Dict[Tuple[str, int], pulp.LpVariable]]:
     """Add all constraint classes to the model.
 
@@ -423,10 +475,12 @@ def _add_all_constraints(
         )
     add_min_uptime_constraints(model, u, v, generators, timesteps)
     add_min_downtime_constraints(model, u, w, generators, timesteps)
-    add_ramp_constraints(model, p, u, generators, timesteps)
+    add_ramp_constraints(model, p, u, generators, timesteps,
+                         initial_power_mw=initial_power_mw,
+                         initial_commitment=initial_commitment)
     add_maintenance_constraints(model, u, generators, timesteps)
     add_reserve_margin_constraints(
-        model, u, generators, timesteps, demand, reserve_margin
+        model, u, generators, timesteps, demand, reserve_margin, requirement=reserve_requirement
     )
     add_storage_soc_constraints(
         model, p, p_ch or {}, p_dis or {}, z_ch or {}, soc or {},
@@ -435,7 +489,17 @@ def _add_all_constraints(
     if y_hot is not None and y_warm is not None and y_cold is not None:
         add_startup_type_constraints(
             model, u, v, y_hot, y_warm, y_cold, generators, timesteps,
+            initial_history_h=initial_history_h,
+            initial_commitment=initial_commitment,
         )
+        if "startup_type" in strengthen:
+            add_startup_type_shutdown_cuts(
+                model, w, y_hot, y_warm, generators, timesteps,
+                initial_history_h=initial_history_h,
+                initial_commitment=initial_commitment,
+            )
+    if "ramp" in strengthen:
+        add_tight_ramp_cuts(model, p, u, v, w, generators, timesteps)
     return spill
 
 
@@ -484,28 +548,35 @@ class _HiGHSWarmStart(pulp.HiGHS):
     ``pulp.HiGHS`` ignores ``LpVariable.setInitialValue()``.  This subclass
     collects initial values right before ``run()`` — ``var.index`` is
     assigned by ``buildSolverModel`` — and hands them to HiGHS via
-    ``setSolution`` as a user MIP start.  Unset variables default to 0.0;
-    HiGHS repairs imperfect starts, so partial or time-shifted solutions
-    (rolling horizon) are acceptable.  With no initial values set, the
-    behaviour is identical to ``pulp.HiGHS``.
+    ``setSolution`` as a user MIP start.  Only the columns that carry an
+    initial value are passed (sparse form): HiGHS fixes the given discrete
+    values and solves a sub-MIP for the rest (``mip_max_start_nodes``).
+    A dense vector would pin the unset startup/shutdown binaries to 0,
+    which contradicts any start-up in ``u`` and makes HiGHS reject the
+    whole start.  With no initial values set, the behaviour is identical
+    to ``pulp.HiGHS``.
+
+    HiGHS keeps one thread pool per process.  A solve that asks for a
+    different ``threads`` value than an earlier solve in the same process
+    stops with model status "Not Set", so the pool is rebuilt before each
+    run.  Solves in one process must therefore not run concurrently.
     """
 
     def callSolver(self, lp):  # noqa: N802 (PuLP API name)
         import highspy
+        import numpy as np
 
-        n_set = 0
-        values = [0.0] * lp.solverModel.getNumCol()
+        index, value = [], []
         for var in lp.variables():
             if var.varValue is not None and hasattr(var, "index"):
-                values[var.index] = float(var.varValue)
-                n_set += 1
-        if n_set:
-            sol = highspy.HighsSolution()
-            sol.col_value = values
-            sol.value_valid = True
-            lp.solverModel.setSolution(sol)
+                index.append(var.index)
+                value.append(float(var.varValue))
+        if index:
+            lp.solverModel.setSolution(len(index), np.asarray(index, dtype=np.int32),
+                                       np.asarray(value, dtype=np.float64))
             logger.info("HiGHS MIP start injected (%d of %d columns set)",
-                        n_set, len(values))
+                        len(index), lp.solverModel.getNumCol())
+        highspy.Highs.resetGlobalScheduler(True)
         lp.solverModel.run()
 
 
@@ -573,8 +644,7 @@ def _apply_warm_start(
 def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     """Select and configure the MIP solver backend.
 
-    Prefers HiGHS via the highspy Python API, then the HiGHS CLI binary
-    (HiGHS_CMD), falling back to PULP_CBC_CMD.
+    The requested backend must be available; there is no silent fallback.
     Applies time limit and MIP gap settings from UCParameters.
 
     Args:
@@ -594,36 +664,18 @@ def _select_solver(params: UCParameters) -> pulp.apis.LpSolver:
     if params.solver_options:
         solver_kwargs.update(params.solver_options)
 
-    # Try HiGHS first if requested: highspy API (with MIP-start support),
-    # then CLI binary
-    if params.solver_name.upper() in ("HIGHS", "HIGHS_CMD"):
-        try:
-            solver = _HiGHSWarmStart(**solver_kwargs)
-            if solver.available():
-                logger.info("Using HiGHS solver (highspy API)")
-                return solver
-        except Exception:
-            pass
-        try:
-            solver = pulp.HiGHS_CMD(**solver_kwargs)
-            if solver.available():
-                logger.info("Using HiGHS solver (CLI)")
-                return solver
-        except Exception:
-            logger.info("HiGHS solver not available, trying CBC fallback")
-
-    # Fallback to CBC (bundled with PuLP)
-    try:
-        solver = pulp.PULP_CBC_CMD(**solver_kwargs)
-        if solver.available():
-            logger.info("Using CBC solver (PuLP bundled)")
-            return solver
-    except Exception:
-        pass
-
-    # Last resort: default solver
-    logger.warning("No preferred solver available; using PuLP default")
-    return pulp.PULP_CBC_CMD(msg=0)
+    name = params.solver_name.upper()
+    classes = {"HIGHS": _HiGHSWarmStart, "HIGHS_CMD": pulp.HiGHS_CMD,
+               "CBC": pulp.PULP_CBC_CMD, "PULP_CBC_CMD": pulp.PULP_CBC_CMD,
+               "SCIP": pulp.SCIP_PY, "SCIP_PY": pulp.SCIP_PY}
+    if name not in classes:
+        raise ValueError(f"Unsupported UC solver: {params.solver_name}")
+    if name in ("SCIP", "SCIP_PY"):
+        solver_kwargs["warmStart"] = bool(params.warm_start_schedules)
+    solver = classes[name](**solver_kwargs)
+    if not solver.available():
+        raise RuntimeError(f"Requested UC solver {params.solver_name} is unavailable")
+    return solver
 
 
 def _extract_duals(
@@ -657,7 +709,9 @@ def _extract_duals(
             var.upBound = val
             var.cat = pulp.LpContinuous
 
-    status_code = model.solve(solver)
+    # The SCIP PuLP adapter does not populate LP row duals.
+    lp_solver = pulp.HiGHS(msg=False) if solver.name == "SCIP_PY" else solver
+    status_code = model.solve(lp_solver)
     status = _STATUS_MAP.get(status_code, "Unknown")
     if status != "Optimal":
         result.warnings.append(
@@ -718,6 +772,10 @@ def _extract_solution(
     interconnections: Optional[List[Interconnection]] = None,
     f: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
     spill: Optional[Dict[Tuple[str, int], pulp.LpVariable]] = None,
+    y_hot=None,
+    y_warm=None,
+    y_cold=None,
+    cost_expression=None,
 ) -> None:
     """Extract solution values into GeneratorSchedule objects.
 
@@ -727,7 +785,8 @@ def _extract_solution(
     interconnections, extracts per-interconnection flow values and
     logs saturation summary.
     """
-    result.total_cost = pulp.value(model.objective)
+    result.total_cost = pulp.value(model.objective if cost_expression is None else cost_expression)
+    result.solver_objective = result.total_cost
 
     # 地域余剰(spill)の帳簿化。総コストからはペナルティ分を除外して
     # 実コストのみ報告する(ペナルティは挙動誘導のための人工項)。
@@ -759,13 +818,6 @@ def _extract_solution(
     if storage_ids is None:
         storage_ids = set()
 
-    # Try to extract MIP gap from the solver
-    try:
-        if hasattr(model, "sol_status") and model.sol_status == 1:
-            result.gap = 0.0
-    except Exception:
-        pass
-
     for g in generators:
         commitment = []
         power_output = []
@@ -787,17 +839,24 @@ def _extract_solution(
             w_val = int(round(pulp.value(w[(g.id, t)])))
 
             commitment.append(u_val)
-            power_output.append(round(p_val, 6))
+            power_output.append(p_val)
 
             gen_fuel_cost += g.fuel_cost_per_mwh * p_val
             gen_noload_cost += (g.no_load_cost + g.labor_cost_per_h) * u_val
-            gen_startup_cost += g.startup_cost * v_val
+            if g.has_thermal_startup and y_hot:
+                gen_startup_cost += (
+                    g.hot_start_cost * pulp.value(y_hot[(g.id, t)])
+                    + g.warm_start_cost * pulp.value(y_warm[(g.id, t)])
+                    + g.cold_start_cost * pulp.value(y_cold[(g.id, t)])
+                )
+            else:
+                gen_startup_cost += g.startup_cost * v_val
             gen_shutdown_cost += g.shutdown_cost * w_val
 
             if is_storage:
-                soc_mwh.append(round(float(pulp.value(soc[(g.id, t)])), 6))
-                charge_mw.append(round(float(pulp.value(p_ch[(g.id, t)])), 6))
-                discharge_mw.append(round(float(pulp.value(p_dis[(g.id, t)])), 6))
+                soc_mwh.append(float(pulp.value(soc[(g.id, t)])))
+                charge_mw.append(float(pulp.value(p_ch[(g.id, t)])))
+                discharge_mw.append(float(pulp.value(p_dis[(g.id, t)])))
 
         schedule = GeneratorSchedule(
             generator_id=g.id,
@@ -828,7 +887,7 @@ def _extract_solution(
             flow_values = []
             for t in timesteps:
                 flow_val = float(pulp.value(f[(ic.id, t)]))
-                flow_values.append(round(flow_val, 6))
+                flow_values.append(flow_val)
 
             ic_flow = InterconnectionFlow(
                 interconnection_id=ic.id,

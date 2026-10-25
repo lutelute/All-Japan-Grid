@@ -684,7 +684,7 @@ class TestUCResult:
         """Default result has clean summary with zero values."""
         result = UCResult()
         summary = result.summary
-        assert summary == {
+        legacy = {
             "status": "Not Solved",
             "total_cost": 0.0,
             "num_generators": 0,
@@ -692,3 +692,8 @@ class TestUCResult:
             "gap": None,
             "warnings": 0,
         }
+        assert {key: summary[key] for key in legacy} == legacy
+        assert summary["primal_bound"] is None
+        assert summary["dual_bound"] is None
+        assert summary["has_incumbent"] is False
+        assert summary["feasibility_verified"] is False

@@ -1,0 +1,30 @@
+{
+  "stages": [
+    {
+      "stage": "input",
+      "elapsed_s": 1.3607088476419449e-05
+    },
+    {
+      "stage": "warm_start",
+      "elapsed_s": 0.016618523746728897
+    },
+    {
+      "stage": "warm_start_done",
+      "elapsed_s": 202.76760277384892,
+      "status": "Not Solved",
+      "primal_bound": null,
+      "wall_s": 202.7501382501796
+    },
+    {
+      "stage": "build",
+      "elapsed_s": 202.76815465604886
+    },
+    {
+      "stage": "native_solve",
+      "elapsed_s": 211.21523504098877,
+      "variables": 270720,
+      "constraints": 576372,
+      "build_time_s": 8.447074655909091
+    }
+  ]
+}

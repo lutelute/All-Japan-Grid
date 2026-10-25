@@ -78,8 +78,14 @@ def main() -> int:
             "step_h": chunks[0][1]["meta"]["step_h"],
         },
         "result": {
-            "status": "Optimal" if statuses == {"Optimal"} and not gaps
+            "status": "Unverified" if statuses <= {"Optimal", "Feasible"} and not gaps
                       else f"PARTIAL({sorted(statuses)}, gaps={len(gaps)})",
+            "feasibility_verified": False,
+            "validation_note": "Aggregate JSON has no boundary schedules; coverage alone cannot certify feasibility",
+            "bound_scope": "merged_unverified_chunks",
+            "primal_bound": None,
+            "dual_bound": None,
+            "gap": None,
             "n_chunks": len(chunks),
             "n_windows": n_windows,
             "n_retried": n_retried,
@@ -113,7 +119,7 @@ def main() -> int:
         solve_time_s=report["result"]["cpu_time_s_sum"],
         summary_json=json.dumps(share, ensure_ascii=False),
     )
-    return 0 if report["result"]["status"] == "Optimal" else 1
+    return 0 if report["result"]["status"] == "Unverified" else 1
 
 
 if __name__ == "__main__":

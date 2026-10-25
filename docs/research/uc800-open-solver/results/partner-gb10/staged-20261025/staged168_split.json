@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "provenance": "synthetic_not_observed",
+  "kind": "staged_regions",
+  "case_id": "synthetic-uc-v1-n800-t168-seed17",
+  "input_sha256": "16286358f6592106fc2f8953e7529843f9b8f5a927b3778bae0f2639591fc8f2",
+  "strengthen": [
+    "startup_type"
+  ],
+  "warm_start_regions": true,
+  "reserve_split": "stage1",
+  "stage1": {
+    "source": "rolling",
+    "objective": null,
+    "rolling_upper_bound": 244876066955.97464,
+    "status": "Feasible",
+    "seconds": 336.79402134614065
+  },
+  "stage2": [
+    {
+      "region": "tohoku",
+      "seconds": 923.4801527028903,
+      "status": "Feasible",
+      "termination": "Time limit reached",
+      "primal_bound": 60998465881.22285,
+      "dual_bound": 60611403876.81135,
+      "gap": 0.006345,
+      "verified": true,
+      "units": 200
+    },
+    {
+      "region": "tokyo",
+      "seconds": 916.7898133313283,
+      "status": "Feasible",
+      "termination": "Time limit reached",
+      "primal_bound": 61568616750.64926,
+      "dual_bound": 61148211646.82818,
+      "gap": 0.006828,
+      "verified": true,
+      "units": 200
+    },
+    {
+      "region": "kansai",
+      "seconds": 917.1595435659401,
+      "status": "Feasible",
+      "termination": "Time limit reached",
+      "primal_bound": 60278547542.64954,
+      "dual_bound": 59939649675.66057,
+      "gap": 0.005622,
+      "verified": true,
+      "units": 200
+    },
+    {
+      "region": "kyushu",
+      "seconds": 917.1172390291467,
+      "status": "Feasible",
+      "termination": "Time limit reached",
+      "primal_bound": 61995351261.25003,
+      "dual_bound": 61595745884.437195,
+      "gap": 0.006446,
+      "verified": true,
+      "units": 200
+    }
+  ],
+  "stage2_wall_seconds": 923.7232456342317,
+  "joined": {
+    "passed": true,
+    "violations": 0,
+    "errors": [],
+    "objective": 244840981435.77164
+  },
+  "wall_seconds": 1260.8493568678387
+}

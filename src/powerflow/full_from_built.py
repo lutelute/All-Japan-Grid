@@ -926,14 +926,18 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
         return 0
     regions = [r for r, (isl, _f) in ISLAND_OF.items() if isl == island]
     feats = []          # (region, feat) 収集
+    # どのファイルの何番目の地物か（UC の発電機 id `{地域}_g{番号}` と同じ番号）。
+    # 網の発電機と UC の発電機を 1 対 1 で結ぶため net.gen["src_feature"] に残す。
+    src_of = {}
     for region in regions:
         path = os.path.join(ROOT, "data", f"{region}_plants.geojson")
         if not os.path.exists(path):
             continue
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
-        for feat in data.get("features", []):
+        for idx, feat in enumerate(data.get("features", [])):
             feats.append((region, feat))
+            src_of[id(feat)] = f"{region}_g{idx}"
     if territory:
         from src.powerflow.region_attribution import area_of_coord
         chosen, extra = {}, []
@@ -968,6 +972,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     moved_mw = 0.0
     kv_hist = defaultdict(float)
     zone_src: dict[int, str] = {}
+    src_feature: dict[int, str] = {}
     sourced = sourced_capacity_index() if use_sourced else {}
     n_sourced = 0
     sourced_mw = 0.0
@@ -1041,6 +1046,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                                type=fuel, max_p_mw=cap, min_p_mw=0.0,
                                max_q_mvar=0.5 * cap, min_q_mvar=-0.3 * cap)
             n_gen += 1
+            src_feature[gi] = src_of.get(id(feat))
             # 介入#26 の材料: operator タグから管内を引いて持たせる（使うかは別判断）。
             # 嶺南原発群(大飯/高浜)は立地=福井(hokuriku)だが関西電力の電源。
             # 表は src/uc/scenario.OPERATOR_REGION（既存の単一出典）。
@@ -1054,6 +1060,8 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
             pass
     if zone_src:
         net.gen["zone_src"] = net.gen.index.map(lambda i: zone_src.get(int(i)))
+    if src_feature:
+        net.gen["src_feature"] = net.gen.index.map(lambda i: src_feature.get(int(i)))
     if not stats:
         return n_gen
     tot = sum(kv_hist.values()) or 1.0

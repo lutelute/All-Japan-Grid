@@ -1,0 +1,29 @@
+{
+  "stages": [
+    {
+      "stage": "input",
+      "elapsed_s": 2.8419308364391327e-05
+    },
+    {
+      "stage": "build",
+      "elapsed_s": 0.022620403207838535
+    },
+    {
+      "stage": "native_solve",
+      "elapsed_s": 4.958690118044615,
+      "variables": 135360,
+      "constraints": 325788,
+      "build_time_s": 4.936063305940479
+    },
+    {
+      "stage": "validation",
+      "elapsed_s": 314.5196456629783
+    },
+    {
+      "stage": "complete",
+      "elapsed_s": 314.87216145033017,
+      "termination_reason": "Time limit reached",
+      "feasibility_verified": true
+    }
+  ]
+}
