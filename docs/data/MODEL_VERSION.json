@@ -1,7 +1,7 @@
 {
-  "model_version": "3ded4c4a",
+  "model_version": "4c561c8c",
   "git_dirty": true,
-  "generated_at": "2026-10-25T10:13:42+00:00",
+  "generated_at": "2026-10-25T17:45:44+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
@@ -9,15 +9,15 @@
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 11.6
+      "elapsed_s": 11.5
     },
     "apply_disclosure_v1": {
       "status": "ok",
-      "elapsed_s": 0.8
+      "elapsed_s": 0.7
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.2
+      "elapsed_s": 1.1
     },
     "route_disclosure": {
       "status": "ok",
@@ -25,19 +25,19 @@
     },
     "fragment_recovery": {
       "status": "ok",
-      "elapsed_s": 2.3
+      "elapsed_s": 2.2
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.6
+      "elapsed_s": 19.7
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 21.0
+      "elapsed_s": 21.4
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 6.2
+      "elapsed_s": 5.9
     },
     "mixed_voltage_circuits": {
       "status": "ok",
@@ -45,11 +45,11 @@
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 6.0
+      "elapsed_s": 5.8
     },
     "satellite_connections": {
       "status": "ok",
-      "elapsed_s": 0.5
+      "elapsed_s": 0.4
     },
     "voltage_corrections": {
       "status": "ok",
@@ -57,7 +57,7 @@
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 3.7
+      "elapsed_s": 3.8
     },
     "substation_properties": {
       "status": "ok",
@@ -65,7 +65,7 @@
     },
     "subsld_pages": {
       "status": "ok",
-      "elapsed_s": 1.9
+      "elapsed_s": 2.0
     },
     "subsld_ways": {
       "status": "ok",
@@ -81,7 +81,7 @@
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 130.4
+      "elapsed_s": 136.4
     },
     "gen_sld": {
       "status": "ok",
@@ -89,11 +89,11 @@
     },
     "gen_national_overview": {
       "status": "ok",
-      "elapsed_s": 0.9
+      "elapsed_s": 1.0
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 156.7
+      "elapsed_s": 163.2
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,15 +101,15 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 130.1
+      "elapsed_s": 133.0
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.3
+      "elapsed_s": 3.9
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 136.7
+      "elapsed_s": 139.2
     },
     "build_static_site": {
       "status": "ok",
@@ -192,5 +192,44 @@
       "data/osm_raw/b_summary 2.json",
       "data/osm_raw/b_summary.json"
     ]
+  },
+  "external_inputs": {
+    "point_demand": {
+      "path": "data/external/system_disclosure/normalized/point_demand.csv",
+      "present": true,
+      "sha256": "f112870646af377f0257210434ad551bb0091b18039da374fabd131aafe489b1",
+      "bytes": 212201,
+      "rows": 1319,
+      "by_utility": {
+        "chubu": {
+          "rows": 324,
+          "sha256": "61ce3cc7fe55556439027a98931450907d58a260b36584cd8031f206f545b246"
+        },
+        "chugoku": {
+          "rows": 33,
+          "sha256": "da488c73691e0862443826199d84369e054f1af8af9eef23cb8fae06136e3a45"
+        },
+        "hokuriku": {
+          "rows": 22,
+          "sha256": "a2a12d0ad4eb7b099807b7c7c3436d6f3396e1d23fe8eab090c3c9f685901fcc"
+        },
+        "kyushu": {
+          "rows": 92,
+          "sha256": "eab68c4fb941fc3dc252ba747cde4cc39e4106989b6aa9ea3d881dedef97c04d"
+        },
+        "okinawa": {
+          "rows": 32,
+          "sha256": "096f4e252a6fb8abb77f31e2e78eeacc074a17cc3d68abf05e456e7974b1d78f"
+        },
+        "shikoku": {
+          "rows": 88,
+          "sha256": "d598d52aad4924d7aa56f5759943d4495365f52307118b2a511c581dfd659fe6"
+        },
+        "tohoku": {
+          "rows": 728,
+          "sha256": "39f3835a4ec83d48528842ae83c6d7ccd61ead60262a453030e2f4a7b030e00f"
+        }
+      }
+    }
   }
 }

@@ -22,8 +22,10 @@ from collections import Counter, defaultdict
 
 import numpy as np
 
-REPO = "/Users/shigenoburyuto/dev/github/project_Hayashi/All-Japan-Grid"
-BASE = os.path.join(REPO, "data/external/system_disclosure")
+# clone した場所から読む(2026-10-26。所有者の絶対パスだと、手順書どおりに作れなかった)
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 毎時の処理は worktree から本体の置き場を読む(fetch_system_disclosure・build_line_observations と同じ変数)
+BASE = os.environ.get("AGJ_SYSTEM_DISCLOSURE") or os.path.join(REPO, "data/external/system_disclosure")
 OUT = os.path.join(BASE, "normalized/point_demand.csv")
 
 ENCODINGS = ("cp932", "utf-8-sig")
@@ -128,7 +130,8 @@ def main():
     enc_used = Counter()
 
     for path in files:
-        rel = os.path.relpath(path, REPO)
+        # 置き場がどこでも同じ表になるよう、記録する名前は置き場からの相対にそろえる
+        rel = "data/external/system_disclosure/" + os.path.relpath(path, BASE).replace(os.sep, "/")
         utility = os.path.relpath(path, BASE).split(os.sep)[0]
         fname = os.path.basename(path)
         st = per_util[utility]

@@ -156,6 +156,18 @@ utilities:
           Excel公表・シート分割・先頭空行パディングのため scripts/convert_chubu_flow.py で
           標準4行ヘッダCSV(jisseki_kikan01/local01/local02_line_<FY>_04.csv)へ変換してから
           build_line_observations に読ませる。rule_NN は年度ごとに番号が増える(2018=28〜, 2025=87〜)
+        # 取得は URL の名前(rule_NN)のまま保存する。変換はこの対応で年度・基幹/ローカル・線/変圧器を知る
+        # (2026-10-26。それまでは手で名前を付け替えた複製から変換していて、clone した人は中部の表を作れなかった。
+        # 対応は 08-16 に付け替えた複製と sha256 が一致することで確かめた)
+        names:
+          rule_79.xlsm: jisseki_kikan_line_2024.xlsm
+          rule_80.xlsm: jisseki_kikan_tr_2024.xlsm
+          rule_82.xlsx: jisseki_local_line_2024.xlsx
+          rule_83.xlsx: jisseki_local_tr_2024.xlsx
+          rule_88.xlsm: jisseki_kikan_line_2025.xlsm
+          rule_89.xlsm: jisseki_kikan_tr_2025.xlsm
+          rule_91.xlsx: jisseki_local_line_2025.xlsx
+          rule_92.xlsx: jisseki_local_tr_2025.xlsx
 
   hokuriku:
     name: 北陸電力送配電

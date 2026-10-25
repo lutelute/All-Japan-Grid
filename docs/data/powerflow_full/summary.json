@@ -3,7 +3,7 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 17744,
     "n_edges": 19909,
-    "generated": "2026-10-25 19:15:12",
+    "generated": "2026-10-26 02:47:14",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -110,12 +110,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8604142088826113,
-      "ac_vm_max": 1.0034451904129935,
-      "ac_max_loading_pct": 85.2451839217817,
-      "dc_max_loading_pct": 79.10182604951157,
-      "ac_total_loss_mw": 97.24503426968093,
-      "solve_seconds": 5.2
+      "ac_vm_min": 0.8604142089,
+      "ac_vm_max": 1.00344519,
+      "ac_max_loading_pct": 85.24518392,
+      "dc_max_loading_pct": 79.10182605,
+      "ac_total_loss_mw": 97.24503427,
+      "solve_seconds": 5.4
     },
     "east": {
       "frequency_hz": 50,
@@ -526,7 +526,7 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 987.4,
+              "p_hv_mw": 987.5,
               "loading_pct": 34.7
             },
             {
@@ -683,7 +683,7 @@
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 96.1,
+              "p_hv_mw": 96.2,
               "loading_pct": 36.1
             }
           ]
@@ -727,7 +727,7 @@
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 769.7,
+              "p_hv_mw": 769.8,
               "loading_pct": 34.2
             }
           ]
@@ -2078,12 +2078,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.856735398464428,
-      "ac_vm_max": 1.0229069426775532,
-      "ac_max_loading_pct": 997.8502670474692,
-      "dc_max_loading_pct": 875.3197193916634,
-      "ac_total_loss_mw": 1398.618649046185,
-      "solve_seconds": 49.6
+      "ac_vm_min": 0.8563697194,
+      "ac_vm_max": 1.022906943,
+      "ac_max_loading_pct": 997.7981537,
+      "dc_max_loading_pct": 875.2845398,
+      "ac_total_loss_mw": 1398.770394,
+      "solve_seconds": 50.9
     },
     "west": {
       "frequency_hz": 60,
@@ -5510,12 +5510,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7276424056649825,
-      "ac_vm_max": 1.0381762936805154,
-      "ac_max_loading_pct": 638.6233119822908,
-      "dc_max_loading_pct": 747.623796947503,
-      "ac_total_loss_mw": 1182.537527925811,
-      "solve_seconds": 70.2
+      "ac_vm_min": 0.7276424057,
+      "ac_vm_max": 1.038176294,
+      "ac_max_loading_pct": 638.623312,
+      "dc_max_loading_pct": 747.6237969,
+      "ac_total_loss_mw": 1182.537528,
+      "solve_seconds": 75.1
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -5564,12 +5564,12 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7582347026377313,
-      "ac_vm_max": 1.0000003321268325,
-      "ac_max_loading_pct": 230.69529230110058,
-      "dc_max_loading_pct": 182.39249435421868,
-      "ac_total_loss_mw": 28.280209471498225,
-      "solve_seconds": 1.2
+      "ac_vm_min": 0.7582347026,
+      "ac_vm_max": 1.000000332,
+      "ac_max_loading_pct": 230.6952923,
+      "dc_max_loading_pct": 182.3924944,
+      "ac_total_loss_mw": 28.28020947,
+      "solve_seconds": 1.3
     }
   },
   "regions": {
@@ -5589,7 +5589,7 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8567,
+      "vm_min": 0.8564,
       "vm_max": 1.0085,
       "n_buses": 2063,
       "n_buses_exported": 2063,

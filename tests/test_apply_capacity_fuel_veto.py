@@ -121,3 +121,12 @@ def test_real_d_layer_has_no_large_sourced_ibr():
            if ft["properties"].get("fuel_type") in ("solar", "wind", "battery")
            and (ft["properties"].get("capacity_mw_sourced") or 0) >= 300]
     assert big == [], f"IBR に桁外れの出典容量: {big}"
+
+
+def test_running_on_a_temp_dir_does_not_rewrite_the_repo_ledger(tmp_path):
+    """一時フォルダで動かしても、リポジトリの台帳 capacity_source_fuel_veto.json は変わらない(2026-10-26)。"""
+    led = ROOT / "docs" / "reports" / "capacity_source_fuel_veto.json"
+    before = led.read_bytes()
+    _run(tmp_path, [_feat("姫路第二発電所", "solar", 250.0, 134.6954, 34.7787, "kansai")],
+         [_rec("姫路第二発電所", 4119.0, fuel_type="gas")])
+    assert led.read_bytes() == before

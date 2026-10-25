@@ -105,6 +105,9 @@ def main() -> int:
                                    check=False).stdout.strip(),
             "lineage": "canonical (built + build_island_net + 標準注入)",
             "demand": "fy2023既定断面",
+            # 地点需要の表(git の外・再配布不可)の指紋。作り直した人が同じ表か確かめる(2026-10-26)
+            "point_demand": __import__("src.powerflow.point_demand",
+                                       fromlist=["fingerprint"]).fingerprint(),
             "note": ("素朴NR(既定許容誤差・dc→flat 始動)で解けた島のみ "
                      "ac_converged=true。解けない島は電圧降下の見積もりが大きい"
                      "アンテナの木(<100kV の行き止まり)から順に親バスへ畳み"

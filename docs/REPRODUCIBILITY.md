@@ -31,16 +31,25 @@ PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
 - 公開値と同じにするには、**地点需要（介入 #30）の表**が要ります。各社の系統情報公表の潮流実績から作る表で、再配布できないので、各自で取ります。
 
   ```bash
-  python -m scripts.fetch_system_disclosure --kind flow_actual   # 各社の公表ページから取得
+  python -m scripts.fetch_system_disclosure --kind flow_actual   # 各社の公表ページから取得(約 2〜12 分)
+  python scripts/convert_chubu_flow.py                          # 中部は Excel 公表なので CSV に直す(約 1 分)
   python scripts/parse_point_demand.py                          # → data/external/system_disclosure/normalized/point_demand.csv
+  PYTHONPATH=. python -m scripts.check_point_demand_stamp       # 公開値と同じ表か(違えば事業者ごとに示す)
   ```
 
 - 表が無ければ、落とさずに**ピン留めなし**（#30 を切ったのと同じ）で組みます。そのことは実行のログに出ます。地域の合計需要は同じですが、観測のある約 70 局の周りの配り方が公開値と違います。
 - 公表のファイルは各社が差し替えることがあります。取った日は `data/realtime/system_disclosure_provenance.jsonl`（毎時の処理）か `data/external/system_disclosure/provenance.jsonl` に、sha256 と一緒に残ります。
+- **公開値がどの表から作られたか**は、`docs/data/MODEL_VERSION.json` の `external_inputs.point_demand` と `dist/matpower_national/meta.json` の `point_demand` に、表の sha256・行数と事業者ごとの行数・sha256 で残ります（地点ごとの値は載せません）。手元の表が同じかは次で確かめられます（2026-10-26）。
+
+  ```bash
+  PYTHONPATH=. python -m scripts.check_point_demand_stamp   # 同じなら rc=0。違えば、違う事業者と行数を出す
+  ```
+
+- **同じ表なら、潮流と N-1 の出力は OS によらず再現します**（2026-10-26、macOS と Linux の clone で確認。`docs/reports/point_demand_refresh_2026-10-26.md`）。潮流の線・バス・地図の層はバイト一致です。違うのは実行の記録（日付・git の版・生成時刻・所要時間）だけです。
+- Linux の clone で上の 4 行を流すと、地点需要の表は公開値と同じになりました（2026-10-26 時点。各社が公表を差し替えると変わります）。
 
 ### 残っていること
 
-- 地点需要の表の sha256 を正典の版（`MODEL_VERSION.json`）に記録し、作り直した人が同じ表かどうかを確かめられるようにする。
 - 基底の OSM（08-16 に取得）の取り直しの手順は `docs/reports/osm_refresh_survey_2026-10-24.md`。
 
 ---

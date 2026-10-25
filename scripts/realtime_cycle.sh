@@ -42,10 +42,17 @@ mkdir -p data/realtime
     fi
     if [ -s "$CH" ]; then
       echo "潮流実績: 新しい公表 $(wc -l < "$CH" | tr -d ' ') ファイル → 観測の表を作り直す"
+      # 中部は Excel 公表(rule_NN.xlsm)なので、観測の表・地点需要の表より先に CSV に直す(2026-10-26)
+      python3 scripts/convert_chubu_flow.py > data/realtime/chubu_convert.log 2>&1 || echo "中部の変換に失敗"
       python3 scripts/build_line_observations.py || echo "観測の表の作り直しに失敗"
       # 観測から作って公開している 2 つ(潮流マップの「観測と比べる」と地方系統の観測)も作り直す
       PYTHONPATH=. python3 scripts/export_obs_compare.py || echo "obs_compare の作り直しに失敗"
       PYTHONPATH=. python3 scripts/export_obs_local.py || echo "obs_local の作り直しに失敗"
+      # 地点需要の表(介入#30・潮流のピン留め)も作り直す(2026-10-26)。それまでは 08-17 のままで、
+      # その後に取った東北 FY2025 が入っていなかった。潮流の出力は重いのでここでは作り直さない。
+      # 正典の版に記録した表と違えば、そのことを出す(作り直すのは regenerate_all)
+      python3 scripts/parse_point_demand.py > data/realtime/point_demand_parse.log 2>&1 || echo "地点需要の表の作り直しに失敗"
+      PYTHONPATH=. python3 -m scripts.check_point_demand_stamp || true
     fi
     if [ "$FA_OK" = 1 ]; then
       touch "data/realtime/.flow_actual_$WEEK"
