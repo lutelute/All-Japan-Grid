@@ -216,7 +216,9 @@ def main(data_dir=DATA, records=None):
         print(f"  {tgt}: applied={applied} (cleared stale={cleared}){note_amb}{note_fuel}")
         for nm, fuel, rn, val in fuel_vetoed[:6]:
             print(f"     veto {nm}({fuel}) ← レコード「{rn}」{val}MW")
-        if tgt == "plants_all.geojson":
+        # 台帳は正典の置き場(DATA)を処理したときだけ書く。テストが一時フォルダで動かすたびに、
+        # リポジトリの台帳を 0 件で上書きしていた(09-02 のコミットの台帳が 0 件だった原因。2026-10-26)
+        if tgt == "plants_all.geojson" and os.path.realpath(data_dir) == os.path.realpath(DATA):
             led = os.path.join(ROOT, "docs", "reports", "capacity_source_fuel_veto.json")
             with open(led, "w", encoding="utf-8") as f:
                 json.dump({"note": "名前照合の燃料種不整合で適用を拒否した(feature, fuel, record, MW)。"
