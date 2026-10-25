@@ -30,6 +30,18 @@ def test_drop_buses_resolves():
     assert len(net.bus) == n0 - 1
 
 
+def test_src_does_not_call_removed_toplevel_helpers():
+    """src/ の全部で直呼びを禁じる(2026-10-26)。外部の貢献の zone_extract.py が pp.select_subnet を
+    直に呼び、手元(3.4)では通って CI(3.5)でだけ落ちた。ファイルを名指しする下の検査では拾えなかった。"""
+    import re
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    call = re.compile(r"(?<!`)\bpp\.(select_subnet|drop_buses)\(")   # ``pp.drop_buses()`` の説明は数えない
+    bad = [str(f.relative_to(root)) for f in (root / "src").rglob("*.py")
+           if f.name != "pandapower_compat.py" and call.search(f.read_text(encoding="utf-8"))]
+    assert bad == []
+
+
 def test_sensitivity_scripts_do_not_call_pp_select_subnet_directly():
     """直呼びが戻ると CI(3.5)でだけ落ちる — ソース文字列で禁止する。"""
     from pathlib import Path
