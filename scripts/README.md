@@ -173,7 +173,7 @@ python scripts/diagnostics/test_west_reactive.py
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
 直下 274 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
-状態: 現役 63・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 176。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
+状態: 現役 64・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 175。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
 
 
 <details><summary><b>取得 / fetch</b>(18 本)</summary>
@@ -284,7 +284,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `build_same_site_review.py` |  | Render the same-site experiment as an offline HTML evidence report. |
 | `build_static_site.py` 🔒 | 現役 | Build lightweight static GeoJSON files for GitHub Pages. |
 | `build_station_db.py` 🔒 |  | 変電所の構内結線(node-breaker)の観測層を、電力だけに絞った日本の PBF から作る。 |
-| `build_structures_batch.py` 🔒 |  | 変電所内部構造(node-breaker)の地域一括生成 — 構造DBの正典生成器. |
+| `build_structures_batch.py` 🔒 | 現役 | 変電所内部構造(node-breaker)の地域一括生成 — 構造DBの正典生成器. |
 | `build_subsld_batch.py` |  | SubSLD法の全所展開 — 実証ペア図PNGの地域一括生成(オーナー指示 2026-08-26). |
 | `build_substation_properties.py` 🔒 | 現役 | 変電所プロパティ層 — 電圧階級・回線数・導体数の全国集約(オーナー指示 2026-08-26). |
 | `build_substation_structure.py` 🔒 |  | 変電所内部構造(node-breaker)の実証ビルダー — GridStitch P2 プロトタイプ. |
