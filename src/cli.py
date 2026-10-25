@@ -11,6 +11,7 @@ After ``pip install -e .`` this is the ``ajgrid`` console command:
     ajgrid regions                                   # list the 10 regions
     ajgrid pf --islands okinawa hokkaido             # canonical full-scale AC (4 islands)
     ajgrid matpower                                  # the distributed MATPOWER cases
+    ajgrid zone chubu --island west                  # one utility zone as a MATPOWER case
     ajgrid uc to-pf --islands hokkaido okinawa       # UC dispatch on the canonical grid
     ajgrid solve okinawa --topology snapped --reconnect   # legacy lineage (comparison)
     ajgrid cim --regions okinawa --verify            # export CIM/CGMES L2 from the canonical islands
@@ -65,6 +66,11 @@ def cmd_pf(_args, rest):
 def cmd_matpower(_args, rest):
     """The distributed MATPOWER cases (dist/matpower_national) from built."""
     return _run("scripts/export_matpower_canonical.py", rest)
+
+
+def cmd_zone(_args, rest):
+    """One utility zone cut from a canonical island, with its boundary branches."""
+    return _run("scripts/export_zone_case.py", rest)
 
 
 def cmd_solve(args, rest):
@@ -200,6 +206,12 @@ def build_parser():
         "matpower", help="write the distributed MATPOWER cases from built "
                          "(passes args to scripts/export_matpower_canonical.py)",
         add_help=False).set_defaults(func=cmd_matpower)
+
+    sub.add_parser(
+        "zone", help="write one utility zone (largest component) of a canonical island "
+                     "as a MATPOWER case + boundary.csv (passes args to "
+                     "scripts/export_zone_case.py)",
+        add_help=False).set_defaults(func=cmd_zone)
 
     s = sub.add_parser(
         "solve", help="legacy lineage: build & solve a region's snapped network "

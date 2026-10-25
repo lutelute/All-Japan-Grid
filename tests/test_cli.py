@@ -56,6 +56,8 @@ def test_canonical_entry_points():
     assert args.func is cli.cmd_pf and rest == ["--islands", "okinawa"]
     args, rest = p.parse_known_args(["matpower", "--islands", "okinawa"])
     assert args.func is cli.cmd_matpower and rest == ["--islands", "okinawa"]
+    args, rest = p.parse_known_args(["zone", "chubu", "--island", "west"])
+    assert args.func is cli.cmd_zone and rest == ["chubu", "--island", "west"]
     import inspect
     assert "run_full_powerflow_from_db.py" in inspect.getsource(cli.cmd_pf)
     assert "export_matpower_canonical.py" in inspect.getsource(cli.cmd_matpower)
