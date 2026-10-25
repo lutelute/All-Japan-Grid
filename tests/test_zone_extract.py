@@ -79,3 +79,13 @@ def test_trafo_boundary_inner_lv():
     assert x.p_out_mw == pytest.approx(n.res_trafo.at[t, "p_lv_mw"]) and x.p_out_mw < 0
     assert x.rate_mva == pytest.approx(600.0)
     _reproduces(sub, n)
+
+
+def test_zone_that_is_the_whole_island_has_no_boundary(net):
+    """エリア = 島全体(北海道・沖縄)なら境界は 0 本。数の列は数のままで、隣接エリア別の集計も落ちない。"""
+    net.bus["zone"] = "A"
+    sub, bd, info = extract_zone(net, "A")
+    assert len(bd) == 0 and info["n_boundary"] == 0 and info["boundary_net_out_mw"] == 0.0
+    assert bd["p_out_mw"].dtype == float and bd["inner_bus"].dtype == int
+    assert bd.groupby("neighbor_zone")["p_out_mw"].sum().round(1).to_dict() == {}
+    _reproduces(sub, net)

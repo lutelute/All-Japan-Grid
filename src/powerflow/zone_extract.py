@@ -62,7 +62,10 @@ def extract_zone(net, zone: str):
             rows.append((f"boundary:{kind}{i}", kind, i, str(t.at[i, "name"]), inner, outer,
                          net.bus.at[outer, "zone"], float(net.bus.at[inner, "vn_kv"]),
                          float(rate), float(p), float(q)))
-    bd = pd.DataFrame(rows, columns=BOUNDARY_COLS)
+    # 境界が 0 本(エリア = 島全体。北海道・沖縄)でも数の列は数にしておく(空だと object になり集計で落ちる)
+    bd = pd.DataFrame(rows, columns=BOUNDARY_COLS).astype(
+        {"index": int, "inner_bus": int, "outer_bus": int, "vn_kv": float, "rate_mva": float,
+         "p_out_mw": float, "q_out_mvar": float})
 
     sub = pp.select_subnet(net, main, include_results=True)
     vm, va = net.res_bus["vm_pu"], net.res_bus["va_degree"]
