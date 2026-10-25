@@ -629,6 +629,13 @@ class TestUCResult:
         assert UCResult(status="Not Solved").is_optimal is False
         assert UCResult(status="Unbounded").is_optimal is False
 
+    def test_gap_limit_counts_as_optimal_but_not_proven(self) -> None:
+        """A run stopped at the requested gap is solved for callers, not proven optimal."""
+        r = UCResult(status="Feasible", termination_reason="gap_limit")
+        assert r.is_optimal is True and r.is_proven_optimal is False
+        assert UCResult(status="Feasible", termination_reason="Time limit reached").is_optimal is False
+        assert UCResult(status="Optimal").is_proven_optimal is True
+
     def test_num_generators(self) -> None:
         """num_generators counts schedules correctly."""
         scheds = [

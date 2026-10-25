@@ -421,7 +421,17 @@ class UCResult:
 
     @property
     def is_optimal(self) -> bool:
-        """Check if the solver found a proven optimal solution."""
+        """Optimal within the solver's tolerance (its MIP gap), as the solver reports it.
+
+        A run that stops at the requested gap is "Feasible" with termination_reason "gap_limit"
+        (src/uc/solve_metrics.py); for callers it is solved, as it was before that distinction.
+        Use is_proven_optimal when the gap must be closed.
+        """
+        return self.status == "Optimal" or (self.status == "Feasible" and self.termination_reason == "gap_limit")
+
+    @property
+    def is_proven_optimal(self) -> bool:
+        """The solver closed the gap (no gap_limit)."""
         return self.status == "Optimal"
 
     @property
