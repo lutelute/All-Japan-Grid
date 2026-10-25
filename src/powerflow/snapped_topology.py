@@ -76,6 +76,37 @@ def _haversine_km(lat1, lon1, lat2, lon2):
     return R * 2 * math.asin(math.sqrt(a))
 
 
+_SITE_SUFFIX = ("変電所", "開閉所", "変換所", "連系所", "発電所", "変電区分所", "き電区分所", "区分所",
+                "Substation", "Switching Station", "Converter Station")
+# 電気の結節点でない施設(研究所・保守の拠点・事務所・制御所)。「配電センター」「工場」は自家用・配電の
+# 設備のことがあるので入れない(別子配電センターは住友共同電力の配電設備)
+_FACILITY_SUFFIX = ("研究所", "電力所", "事業所", "支社", "営業所", "制御所", "給電所")
+
+
+def _nested_site_rank(props) -> tuple:
+    """介入#53: 線の点を変電所の多角形に結ぶときの優先(小さいほど先)。
+
+    (施設か, OSM の実名が無いか)。施設 = 名前が研究所・電力所・制御所などで終わり、変電所の類で終わらない。
+    **点を覆う多角形どうし(距離 0 で並ぶとき)にだけ効かせる**。距離より先に見ると、名前だけでは施設と言えない
+    ものを外す: 「電源開発株式会社北地域制御所」は OSM で substation=converter・187 kV(北本連系の函館変換所)で、
+    距離より先に見た試行ではその 187 kV の線が 600 m 離れた北七飯変電所へ引っ張られた(2026-10-25 に却下)。
+    OSM の実名が無い = 名前が無いか、住所から作った名前(_name_source=geocoded)。
+    根拠(2026-10-25): 北海道電力 総合研究所の敷地の中の北江別変電所・江別変電所に線が結ばれず、研究所に結ばれていた
+    (公表のインピーダンス一覧は北江別線を 西当別変電所→北江別変電所 と書き、open-keitouzu も「北江別」をこのノードに
+    対応づけている)。掛川電力所の中の西掛川変電所、住所名(東尾久五丁目)の中の田端変電所も同じ。
+    どちらも変電所の実名なら優先は同じで、外側(面積の大きいほう)を選ぶ(南福光連系所 ⊃ 南福光変電所。#32 の前提)。
+    無効化: 環境変数 AGJ_NESTED_SITE_RULE=largest(外側だけで選ぶ・2026-10-24 の挙動)
+    """
+    if os.environ.get("AGJ_NESTED_SITE_RULE") == "largest":
+        return (0, 0)
+    import re as _re
+    name = str(props.get("name") or "").strip()
+    stem = _re.sub(r"(_\d+|\s*\d+(\.\d+)?kV)$", "", name)
+    facility = bool(stem) and stem.endswith(_FACILITY_SUFFIX) and not stem.endswith(_SITE_SUFFIX)
+    no_osm_name = (not name) or props.get("_name_source") == "geocoded"
+    return (int(facility), int(no_osm_name))
+
+
 def _get_centroid(feature):
     geom = feature.get("geometry")
     if not geom:
@@ -581,6 +612,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
     sub_coords = []   # (lat, lon, sub_id)
     sub_info = {}     # sub_id -> dict(name, lat, lon, own_cls)
     sub_polys = []    # (geometry dict, sub_id) for polygon-first binding
+    sub_poly_rank = []  # 介入#53: 敷地が重なるときの優先(sub_polys と同じ並び)
 
     # group_substations (P1, owner 2026-06-14「沼津型」): OSMが1変電所を電圧別/
     # 分割ポリゴンで表す(沼津=66kV+77kVの2ポリゴン)と、線が別sidへ分散束縛され
@@ -641,6 +673,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         if polygon_bind and feat.get("geometry", {}).get("type") in (
                 "Polygon", "MultiPolygon"):
             sub_polys.append((feat["geometry"], sid))   # 各ポリゴン→同一sidで束縛
+            sub_poly_rank.append(_nested_site_rank(props))
 
     index = _SubIndex(sub_coords)
 
@@ -654,6 +687,7 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             from shapely.geometry import shape as _shape
             from shapely.strtree import STRtree as _STR
             poly_geoms = [_shape(g) for g, _ in sub_polys]
+            poly_rank = sub_poly_rank
             poly_sids = [sid for _, sid in sub_polys]
             poly_tree = _STR(poly_geoms)
         except Exception:   # noqa: BLE001 — fail soft to the legacy radii
@@ -668,7 +702,8 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
         STRtree.query は候補を木の中の順で返し、その順は OS や shapely/GEOS の版で変わる
         (2026-10-24: 東京の同じ形の多角形 2 つ(基底と補足の重複)のどちらを選ぶかが macOS と
         Linux で違い、CI で正典が一致しなかった)。順に依らない決め方にする:
-        距離(覆っていれば 0)→ 面積の大きいほう → 多角形の番号の小さいほう。
+        距離(覆っていれば 0)→ 介入#53 の優先(覆う多角形どうしで、研究所・電力所などの施設と住所から作った
+        名前を後回し)→ 面積の大きいほう → 多角形の番号の小さいほう。
         覆う多角形が重なるとき(全国で約 200 点。例: 南福光連系所の中の南福光変電所)、木の順では
         ほとんど外側の大きい敷地が先に出ていた。正典の振る舞いを変えないよう外側を選ぶ
         (内側を選ぶと #32 の BTB の分割が前提とするバスなどが変わる。どちらが正しいかは別の問題として
@@ -682,10 +717,10 @@ def build_network_snapped(region, snap_km=1.5, vertex_prec=4, keep_stubs=True,
             g = poly_geoms[pi]
             d = 0.0 if g.covers(pt) else g.distance(pt) * _DEG_KM
             if d < reach:
-                key = (d, -g.area, pi)
+                key = (d, *poly_rank[pi], -g.area, pi)
                 if best is None or key < best:
                     best = key
-        return (poly_sids[best[2]], best[0]) if best else (None, reach)
+        return (poly_sids[best[-1]], best[0]) if best else (None, reach)
 
     # Name-evidence binding (ledger 91): OSM line names of the form
     # 「X変電所~Y変電所線」 ASSERT the connection. In sparse-mapped terrain
