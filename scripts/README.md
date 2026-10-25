@@ -26,6 +26,10 @@
 
 ## 2. エンリッチ・監査 (enrich / audit)
 
+> **2026-06-17 に封鎖済み（2026-10-26 追記）。** 下の `enrich_*` は `data/*.geojson` をその場で書き換える経路で、今は起動すると止まります（fail-fast）。
+> 正は DB（`data/grid.db`）に一本化してあり、エンリッチは `ajgrid db enrich`（`src/db/enrich.py`）です。正典 `docs/data/built/all.json` は `scripts/regenerate_all.py` で作ります（`docs/REPRODUCIBILITY.md`）。
+> 以下の本文は、当時の手順の記録として残します（`docs/reports/project_structure_2026-10-21.md` の C4）。
+
 GeoJSON の欠落属性（名称・事業者・燃料種別）を外部ソースで自動補完する。
 **実行順序が重要** — `enrich_all.py` が正しい順序で一括実行するオーケストレーター。
 
