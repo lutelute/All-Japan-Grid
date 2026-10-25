@@ -1,4 +1,5 @@
 """SubSLD の構造 DB と node-breaker 観測層の突き合わせ(scripts/compare_station_layers.py)。"""
+import os
 from pathlib import Path
 
 from scripts.build_station_db import structure_crosswalk
@@ -91,6 +92,25 @@ def test_missing_levels_file_holds_voltage_pairs_only():
     for s in d["sites"]:
         assert set(s) <= {"name", "structure_sites", "pairs"}
         assert all(len(p) == 2 and p[0] > p[1] for p in s["pairs"])
+
+
+def test_tracked_pair_files_exist_and_missing_one_stops(tmp_path):
+    """3 つの組のファイルは追跡している。無いときは黙って空を返さず止める(issue #97)。"""
+    import subprocess
+
+    import pytest
+
+    from src.model.site_transformers import (MISSING_LEVELS_PATH, OBSERVED_PATH, PUBLISHED_PATH, _ROOT,
+                                             by_region_name, by_structure_site, load_observed)
+    tracked = set(subprocess.run(["git", "ls-files", "data"], cwd=_ROOT, capture_output=True,
+                                 text=True, check=True).stdout.split("\n"))
+    for path in (OBSERVED_PATH, PUBLISHED_PATH, MISSING_LEVELS_PATH):
+        assert os.path.relpath(path, _ROOT) in tracked
+        assert load_observed(path)
+    gone = str(tmp_path / "observed_transformer_pairs.json")
+    for fn in (load_observed, by_structure_site, lambda p: by_region_name(str, p)):
+        with pytest.raises(FileNotFoundError, match="git checkout"):
+            fn(gone)
 
 
 def test_voltage_correction_follows_the_wrong_voltage_and_reverts():
