@@ -839,6 +839,14 @@ def attach_default_for(island: str) -> str:
 # 旧挙動を比較のベースラインにしている（#24 と同じ理由）。モデルを組む側だけが渡す。
 GEN_ZONE_BY_OPERATOR = True
 
+# ── 介入#54 の**モデル既定**（2026-10-26・issue #99）──────────────────────
+# 出力の目標を「同じ成分・同じエリアの負荷」にし予備率を乗せない(`balance_by_zone(connected=True)`)、
+# 解いたあと最大の成分のスラックに残った損失を発電機へ配る(`solve_island(spread=True)`)。
+# 旧挙動では西の主成分のスラック(中部の 1 バス)が 6.2 GW を吸い、三重東近江線の向きが OCCTO と逆だった
+# (`docs/reports/west_slack_surplus_2026-10-26.md`)。無効化は `--no-connected-dispatch`。
+# #24・#26 と同じく、関数の引数既定は旧挙動のまま(what-if 群の比較の基準を黙って変えない)。
+CONNECTED_DISPATCH = True
+
 
 def bus_incident_mva(net):
     """各バスに集まる枝の合計容量(MVA)。そのバスが受けられる出力の上限を決める。"""
@@ -1261,7 +1269,21 @@ def add_per_component_slacks(net):
     return len(comps), n_slack, n_synth
 
 
-def balance_by_zone(net, cfg, use_zone_src=False):
+def bus_component_index(net):
+    """通電している線・変圧器でつながる成分の番号(0 = バスの数が最大の成分)をバスごとに返す。"""
+    g = nx.Graph()
+    g.add_nodes_from(net.bus.index[net.bus["in_service"]])
+    for fb, tb, on in zip(net.line.from_bus, net.line.to_bus, net.line.in_service):
+        if on:
+            g.add_edge(int(fb), int(tb))
+    for hb, lb, on in zip(net.trafo.hv_bus, net.trafo.lv_bus, net.trafo.in_service):
+        if on:
+            g.add_edge(int(hb), int(lb))
+    comps = sorted(nx.connected_components(g), key=lambda c: (-len(c), min(c)))
+    return {int(b): i for i, c in enumerate(comps) for b in c}
+
+
+def balance_by_zone(net, cfg, use_zone_src=False, connected=False):
     """Scale each zone's generation toward its load so the slacks don't carry
     the whole region (keeps the AC solution physical). ext_grid absorbs residual.
 
@@ -1273,11 +1295,26 @@ def balance_by_zone(net, cfg, use_zone_src=False):
     `capacity_bridge` が UC 経路向けに同じ上書きを既に行っており(その docstring に
     嶺南の事情が明記されている)、こちらは銘板経路をそれに揃えるもの。
     **需要側の bus.zone は動かさない**（capacity_bridge の設計意図どおり）。
+
+    connected: **介入#54**(2026-10-26・issue #99)。出力の目標を「その発電機と同じ連結成分にある、
+    同じエリアの(通電している)負荷」にし、予備率を出力に乗せない。False(旧挙動)は目標を
+    「エリアの負荷全体 × (1 + reserve_margin)」にしていたので、予備率 5% 分と、主成分から届かない
+    孤立片の負荷(孤立片ごとの合成スラックが別に賄う)が二重に出力へ乗り、西では主成分の 1 個の
+    スラック(中部)が 6.2 GW を吸っていた(`docs/reports/west_slack_surplus_2026-10-26.md`)。
+    予備率は OCCTO の公表(エリア需要・供給力・予備力)と同じく供給力(Pmax)の余裕であって出力ではない。
+    残る損失は `spread_slack` が発電機へ配る。
     """
+    comp = bus_component_index(net) if connected else None
+
+    def key(bus, z):
+        return (comp.get(bus, -1), z) if connected else z
+
     load_by_zone = defaultdict(float)
     for _, r in net.load.iterrows():
-        z = net.bus.at[int(r["bus"]), "zone"]
-        load_by_zone[z] += float(r["p_mw"])
+        if connected and not r["in_service"]:
+            continue
+        b = int(r["bus"])
+        load_by_zone[key(b, net.bus.at[b, "zone"])] += float(r["p_mw"])
     has_src = use_zone_src and "zone_src" in net.gen.columns
     gens_by_zone = defaultdict(list)
     for gi, r in net.gen.iterrows():
@@ -1286,8 +1323,8 @@ def balance_by_zone(net, cfg, use_zone_src=False):
             src = r.get("zone_src")
             if isinstance(src, str) and src:
                 z = src
-        gens_by_zone[z].append(gi)
-    reserve = 1.0 + cfg.get("reserve_margin", 0.05)
+        gens_by_zone[key(int(r["bus"]), z)].append(gi)
+    reserve = 1.0 if connected else 1.0 + cfg.get("reserve_margin", 0.05)
     for z, gis in gens_by_zone.items():
         cap = sum(float(net.gen.at[gi, "max_p_mw"]) for gi in gis)
         if cap <= 0:
@@ -1298,16 +1335,74 @@ def balance_by_zone(net, cfg, use_zone_src=False):
             net.gen.at[gi, "p_mw"] = float(net.gen.at[gi, "max_p_mw"]) * scale
 
 
-def solve_island(net, max_ac_buses):
+def spread_slack(net, solved, resolve, iters=4, tol_mw=5.0):
+    """**介入#54②**(2026-10-26・issue #99): 最大の連結成分のスラックに残った有効電力
+    (`balance_by_zone(connected=True)` のあとは、ほぼ損失)を、同じ成分の発電機へ出力比で配り直して
+    解き直す(上限 Pmax)。参加係数を出力比にした分散スラックと同じ形。スラックのバスは位相の基準として
+    1 個のまま(スラックを複数置くと、スラックどうしの間に架空の潮流が生じる)。
+
+    net は solved を解く前のネット(solved はその写しを解いたもの)。resolve(net) は
+    (解いたネット, 収束したか) を返す。途中で解けなくなったら、配る前の solved を返す。
+    返り値は (解いたネット, 帳簿)。
+    """
+    comp = bus_component_index(net)
+    main = [i for i in net.ext_grid.index if comp.get(int(net.ext_grid.at[i, "bus"])) == 0]
+    if not main:
+        return solved, {"applied": False, "reason": "最大の成分にスラックが無い"}
+    e = main[0]
+    gis = [g for g in net.gen.index
+           if net.gen.at[g, "in_service"] and comp.get(int(net.gen.at[g, "bus"])) == 0]
+    p0 = float(solved.res_ext_grid.at[e, "p_mw"])
+    work, cur = copy.deepcopy(net), solved
+    for it in range(iters):
+        p = float(cur.res_ext_grid.at[e, "p_mw"])
+        tot = float(work.gen.loc[gis, "p_mw"].sum())
+        if abs(p) < tol_mw or tot <= 0:
+            break
+        work.gen.loc[gis, "p_mw"] = (work.gen.loc[gis, "p_mw"] * (1.0 + p / tot)).clip(
+            upper=work.gen.loc[gis, "max_p_mw"])
+        nxt, ok = resolve(work)
+        if not ok:
+            return solved, {"applied": False, "reason": f"配り直しの {it + 1} 回目で解けない",
+                            "slack_before_mw": round(p0, 1)}
+        cur = nxt
+    p1 = float(cur.res_ext_grid.at[e, "p_mw"])
+    return cur, {"applied": True, "slack": str(net.ext_grid.at[e, "name"]), "n_gen": len(gis),
+                 "slack_before_mw": round(p0, 1), "slack_after_mw": round(p1, 1),
+                 "spread_mw": round(p0 - p1, 1)}
+
+
+def _spread(net_solved, mode, res):
+    """`spread_slack` を run_powerflow で回し、配り終えた解の統計(損失・vm・負荷率)で res を上書きする。"""
+    last = {}
+
+    def resolve(nt):
+        r = run_powerflow(nt, mode)
+        last.clear()
+        last.update(r)
+        return nt, bool(r.get("converged"))
+    out, sp = spread_slack(net_solved, net_solved, resolve)
+    if sp.get("applied") and last:
+        res.update({k: v for k, v in last.items() if k != "mode"})
+    res["spread"] = sp
+    return out
+
+
+def solve_island(net, max_ac_buses, spread=False):
     """DC always; AC with a prune ladder unless the island exceeds max_ac_buses.
 
     給電率ガード(ハマり⑩ 2026-07-07): pruneが網の大半を切断した残片の収束を
     「AC成功」と報告する見せかけAC解(east+territoryで served 10.8% を実測)を
-    却下する。served < 95% のAC解は採用せず次の段へ。served_frac を ac に記録。"""
+    却下する。served < 95% のAC解は採用せず次の段へ。served_frac を ac に記録。
+
+    spread: 介入#54②。解けたあと、最大の成分のスラックに残った分を発電機へ配って解き直す
+    (`spread_slack`)。帳簿は dc["spread"] / ac["spread"]。"""
     net.bus["vm_pu"] = 1.0
     pre_load = float(net.load.loc[net.load.in_service, "p_mw"].sum())
     net_dc = copy.deepcopy(net)
     dc = run_powerflow(net_dc, "dc")
+    if spread and dc.get("converged"):
+        net_dc = _spread(net_dc, "dc", dc)
     ac = {"mode": "ac", "converged": False}
     net_ac = None
     if len(net.bus) <= max_ac_buses:
@@ -1330,6 +1425,8 @@ def solve_island(net, max_ac_buses):
                     break
                 ac = {"mode": "ac", "converged": False,
                       "rejected": f"fake_ac served_frac={frac:.3f} thr={thr}"}
+        if spread and ac.get("converged"):
+            net_ac = _spread(net_ac, "ac", ac)
     else:
         ac["error"] = f"island too large for AC ({len(net.bus)} > {max_ac_buses}); DC only"
     return net_dc, dc, net_ac, ac
@@ -1524,6 +1621,13 @@ def main():
                          "需要側の bus.zone は動かさない。"
                          "評価=docs/reports/zone_attribution_dispatch_2026-08-10.md。"
                          "**無効化=--no-gen-zone-by-operator**")
+    ap.add_argument("--connected-dispatch", action=argparse.BooleanOptionalAction,
+                    default=CONNECTED_DISPATCH,
+                    help="**介入#54**(2026-10-26・issue #99・既定ON): 出力の目標を同じ成分・同じ"
+                         "エリアの負荷にし予備率を乗せない+解いたあと最大の成分のスラックに残った"
+                         "損失を発電機へ出力比で配る。旧挙動は西の主成分のスラックが 6.2 GW を吸っていた。"
+                         "評価=docs/reports/west_slack_surplus_2026-10-26.md。"
+                         "**無効化=--no-connected-dispatch**")
     ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
                     help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
                          "発電所はこの値で埋まる=**出典のない合成容量**。既定は "
@@ -1757,7 +1861,8 @@ def main():
                   f"上位バスへ集約・未給電網 {lv_agg_ledger['n_unserved']}成分/"
                   f"{lv_agg_ledger['unserved_mw']:,.0f}MW(帳簿)")
         n_comp, n_slack, n_synth = add_per_component_slacks(net)
-        balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator)
+        balance_by_zone(net, cfg, use_zone_src=args.gen_zone_by_operator,
+                        connected=args.connected_dispatch)
         if args.gen_zone_by_operator and "zone_src" in net.gen.columns:
             n_ov = int((net.gen["zone_src"].notna()
                         & (net.gen["zone_src"] != net.gen["bus"].map(net.bus["zone"]))).sum())
@@ -1767,7 +1872,14 @@ def main():
                 "max_p_mw"].sum())
             print(f"  介入#26 gen-zone-by-operator: 計上エリアを変えた "
                   f"{n_ov:,}機 / {mw_ov:,.0f}MW")
-        net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses)
+        net_dc, dc, net_ac, ac = solve_island(net, args.max_ac_buses,
+                                              spread=args.connected_dispatch)
+        for tag, r in (("dc", dc), ("ac", ac)):
+            sp = r.get("spread")
+            if sp:
+                print(f"  介入#54 spread-slack({tag}): {sp.get('slack')} "
+                      f"{sp.get('slack_before_mw')}→{sp.get('slack_after_mw')} MW"
+                      + ("" if sp.get("applied") else f" 適用せず({sp.get('reason')})"))
         net_used = net_ac if ac.get("converged") else net_dc
         mode = "ac" if ac.get("converged") else "dc"
         if args.dump_flows:
@@ -1807,6 +1919,7 @@ def main():
             "ac_max_loading_pct": ac.get("max_loading_pct"),
             "dc_max_loading_pct": dc.get("max_loading_pct"),
             "ac_total_loss_mw": ac.get("total_loss_mw"),
+            "slack_spread": {"dc": dc.get("spread"), "ac": ac.get("spread")},   # 介入#54②
             "solve_seconds": round(time.time() - t0, 1),
         }
         print(f"[{island:9s}] f={freq} buses={bstats['n_bus']} lines={bstats['n_line']} "

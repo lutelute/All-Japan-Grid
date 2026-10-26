@@ -36,7 +36,7 @@ import pandapower as pp
 from pandapower.pypower.makePTDF import makePTDF
 
 from benchmark_sensitivity import main_component_subnet, production_net
-from scripts.run_full_powerflow_from_db import (ISLAND_FREQ, _bus_lonlat, _k5,
+from scripts.run_full_powerflow_from_db import (CONNECTED_DISPATCH, ISLAND_FREQ, _bus_lonlat, _k5,
                                                 load_demand_config, solve_island)
 from src.powerflow import contingency as cg
 
@@ -229,7 +229,7 @@ def run(island, nodes, edges, cfg, pref_gwh, args) -> dict:
     # ── AC 検証（上位 K 件・本番の solve_island で開放して解き直す） ─────────
     ac_rows = []
     if args.ac_verify > 0 and top_phys:
-        _, _, net_ac0, ac0 = solve_island(net, max_ac_buses=10**9)
+        _, _, net_ac0, ac0 = solve_island(net, max_ac_buses=10**9, spread=CONNECTED_DISPATCH)
         base_ac = None
         if ac0.get("converged") and net_ac0 is not None:
             base_ac = _ac_loading_map(net_ac0, elems, cap, mon_phys)
@@ -247,7 +247,7 @@ def run(island, nodes, edges, cfg, pref_gwh, args) -> dict:
                 tab.at[eid, "in_service"] = False
             t0 = time.perf_counter()
             try:
-                _, _, net_ac, ac = solve_island(net, max_ac_buses=10**9)
+                _, _, net_ac, ac = solve_island(net, max_ac_buses=10**9, spread=CONNECTED_DISPATCH)
             finally:
                 if single:
                     tab.at[eid, "parallel"] = int(par[k])

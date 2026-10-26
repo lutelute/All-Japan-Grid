@@ -30,10 +30,9 @@ def main(argv=None) -> int:
     import pandas as pd
 
     import src.powerflow.point_demand as pdm
-    from scripts.export_matpower_canonical import build_canonical_net, try_ac
+    from scripts.export_matpower_canonical import build_canonical_net, solve_canonical, try_ac
     from src.converter.matpower_case import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
-    from src.powerflow.reduce_antenna import fold_until
     from src.model.site_transformers import OBSERVED_PATH
     from src.powerflow.zone_extract import branch_rate_mva, extract_zone
 
@@ -55,13 +54,9 @@ def main(argv=None) -> int:
     print(f"... build {args.island} (point_demand={point_demand})", file=sys.stderr, flush=True)
     net0 = build_canonical_net(args.island, built["nodes"], built["edges"], freq,
                                point_demand=point_demand)
-    net, ok, how = try_ac(net0)
-    red = None
-    if not ok:
-        print("    素朴NRで解けない → 降下の大きいアンテナの木から畳む", file=sys.stderr, flush=True)
-        folded, red = fold_until(net0, lambda nt: try_ac(nt)[1])
-        if folded is not None:
-            net, ok, how = try_ac(folded)
+    net, ok, how, red, _spread = solve_canonical(net0)
+    if red:
+        print("    素朴NRで解けない → 降下の大きいアンテナの木から畳んだ", file=sys.stderr, flush=True)
     if not ok:
         print(f"{args.island}: AC が解けない — 境界潮流が定まらないので書き出さない", file=sys.stderr)
         return 1

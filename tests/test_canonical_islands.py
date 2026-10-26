@@ -13,6 +13,10 @@
 - 2026-10-21 更新: 正典を再生成の手順の出力に置き換えた(docs/reports/regenerate_reproducibility_2026-10-21.md)。
   東 6,253→6,245 バス・西 7,979→7,976 バス、北海道の vm 上限 1.0218→1.0036。損失はほぼ同じ
 - 2026-10-21 更新: 介入#23(供用していない線を止める)を既定 ON。東 7 本・西 10 本を止め、東の損失 2.96→2.99%
+- 2026-10-26 更新: 介入#54(issue #99・出力の目標を届く負荷に・予備率なし・損失を発電機へ配る)を既定 ON。
+  主成分のスラックが余りを吸わなくなり(西 −6,251→±1 MW)、損失は 西 2.16→1.95%・東 2.99→3.06%・
+  北海道 2.63→2.67%・沖縄 1.88→1.95%。西のバス 7,976→7,977・変圧器 996→997 はこの変更の前からの差
+  (10-25 の #53 で敷地の結び先が変わった。網の規模は配分では変わらない)
 """
 import json
 import os
@@ -33,10 +37,10 @@ pytestmark = [
 
 # 島: (バス, 線, 変圧器, 畳んだバス, vm の最小, vm の最大, 損失 %)
 RECORD = {
-    "okinawa": (100, 96, 19, 0, 0.9746, 1.0038, 1.88),
-    "hokkaido": (831, 858, 69, 0, 0.8604, 1.0036, 2.63),
-    "east": (6245, 6443, 676, 0, 0.8577, 1.0229, 2.99),
-    "west": (7976, 8110, 996, 6, 0.7755, 1.0365, 2.16),
+    "okinawa": (100, 96, 19, 0, 0.9746, 1.0038, 1.95),
+    "hokkaido": (831, 858, 69, 0, 0.8604, 1.0035, 2.67),
+    "east": (6245, 6443, 676, 0, 0.8569, 1.0229, 3.06),
+    "west": (7977, 8110, 997, 6, 0.7761, 1.0376, 1.95),
 }
 
 
@@ -47,19 +51,13 @@ def built():
 
 @pytest.mark.parametrize("island", list(RECORD))
 def test_canonical_island_solves_full_ac(island, built):
-    from scripts.export_matpower_canonical import build_canonical_net, try_ac
+    from scripts.export_matpower_canonical import build_canonical_net, solve_canonical
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
-    from src.powerflow.reduce_antenna import fold_until
 
     net0 = build_canonical_net(island, built["nodes"], built["edges"], ISLAND_FREQ[island],
                                point_demand=False)
-    net, ok, how = try_ac(net0)
-    folded = 0
-    if not ok:
-        fnet, red = fold_until(net0, lambda n: try_ac(n)[1])
-        if fnet is not None:
-            net, ok, how = try_ac(fnet)
-            folded = red["n_removed"]
+    net, ok, how, red, spread = solve_canonical(net0)
+    folded = red["n_removed"] if red else 0
     n_bus, n_line, n_trafo, n_fold, vm_lo, vm_hi, loss_pct = RECORD[island]
     assert ok and how in ("dc", "flat"), f"{island}: 素朴な NR で解けない({how})"
     got = (len(net.bus), len(net.line), len(net.trafo), folded)
@@ -68,3 +66,5 @@ def test_canonical_island_solves_full_ac(island, built):
     assert vm.min() >= vm_lo - 0.02 and vm.max() <= vm_hi + 0.02, (island, vm.min(), vm.max())
     loss = net.res_line.pl_mw.sum() + net.res_trafo.pl_mw.sum()
     assert abs(100 * loss / net.res_load.p_mw.sum() - loss_pct) <= 0.3, (island, 100 * loss / net.res_load.p_mw.sum())
+    # 介入#54(issue #99): 最大の成分のスラックに余り(架空の負荷)を残さない
+    assert spread and spread["applied"] and abs(spread["slack_after_mw"]) < 50, (island, spread)

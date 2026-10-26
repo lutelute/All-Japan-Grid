@@ -42,9 +42,8 @@ CANONICAL_ISLANDS = ("okinawa", "hokkaido", "east", "west")
 
 def _canonical_net(island):
     """配布ケースと同じ正典の網を組んで解く。返り値は (解いた網, 解き方)。"""
-    from scripts.export_matpower_canonical import build_canonical_net, try_ac
+    from scripts.export_matpower_canonical import build_canonical_net, solve_canonical
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
-    from src.powerflow.reduce_antenna import fold_until
 
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
                            "docs", "data", "built", "all.json"), encoding="utf-8") as f:
@@ -55,13 +54,10 @@ def _canonical_net(island):
     use_pd = os.path.exists(pdm.CSV)
     net0 = build_canonical_net(island, built["nodes"], built["edges"], ISLAND_FREQ[island],
                                point_demand=use_pd)
-    net, ok, how = try_ac(net0)
+    net, ok, how, red, _spread = solve_canonical(net0)
     mode = f"canonical-{how}" + ("" if use_pd else "-no-point-demand")
-    if not ok:
-        folded, red = fold_until(net0, lambda n: try_ac(n)[1])
-        if folded is not None:
-            net, ok, how = try_ac(folded)
-            mode = f"canonical-{how}+fold{red.get('n_removed', '?')}"
+    if red:
+        mode = f"canonical-{how}+fold{red.get('n_removed', '?')}"
     return net, (mode if ok else mode + "+not-converged")
 
 
