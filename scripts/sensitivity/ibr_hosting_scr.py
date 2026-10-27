@@ -45,10 +45,12 @@ def build_production_net(island, nodes, edges, cfg, pref_gwh):
     """本番(run_full_powerflow_from_db)と同一手順。bus_of(built ノード→バス)も返す。"""
     from scripts.run_full_powerflow_from_db import (
         GEN_ZONE_BY_OPERATOR, ISLAND_FREQ, add_per_component_slacks, allocate_loads,
-        attach_default_for, attach_generators, balance_by_zone, build_island_net)
+        attach_default_for, attach_generators, balance_by_zone, build_island_net,
+        model_plant_ledger)
     from src.powerflow.compensation import add_reactive_compensation
     net, bus_of, _ = build_island_net(island, nodes, edges, ISLAND_FREQ[island], {})
-    attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island))
+    attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island),
+                      plant_ledger=model_plant_ledger())
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)

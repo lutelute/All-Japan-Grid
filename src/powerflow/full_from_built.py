@@ -847,6 +847,29 @@ GEN_ZONE_BY_OPERATOR = True
 # #24・#26 と同じく、関数の引数既定は旧挙動のまま(what-if 群の比較の基準を黙って変えない)。
 CONNECTED_DISPATCH = True
 
+# ── 介入#55(2026-10-28): 公表の接続で繋ぎ先の電圧が分かる大型機の台帳 ─────────────
+# `config/plant_connections.yaml`。#24・#41 の規則は外部の接続電圧表を持ち込まずに推定していたが、各社の
+# 空容量一覧に発電所の名前のついた線・構内の変電所が載っている機は、その電圧(と網で引ければ相手)へ繋ぐ。
+# 台帳の 21 機のうち、島の規則のままで公表の電圧に載っていたのは 13 機(西 8/16・北海道 5/5。
+# capkv が 1 GW 級を 500 kV へ回していた)。`docs/reports/plant_connections_2026-10-28.md`。無効化は `--no-plant-connections`。
+# #24・#26・#54 と同じく、関数の引数既定は台帳なし(what-if 群の比較の基準を黙って変えない)。
+PLANT_CONNECTIONS = True
+PLANT_CONNECTIONS_PATH = os.path.join(ROOT, "config", "plant_connections.yaml")
+
+
+def load_plant_connections(path=PLANT_CONNECTIONS_PATH):
+    """台帳 → {発電所名: {"kv": 電圧, "to": [公表の相手のバス名]}}。"""
+    import yaml
+    with open(path, encoding="utf-8") as f:
+        rows = (yaml.safe_load(f) or {}).get("plants", [])
+    return {str(r["name"]): {"kv": float(r["kv"]), "to": [str(t) for t in (r.get("to") or [])]}
+            for r in rows}
+
+
+def model_plant_ledger():
+    """モデルを組む経路が `attach_generators(plant_ledger=)` に渡すもの(既定 ON なら台帳)。"""
+    return load_plant_connections() if PLANT_CONNECTIONS else None
+
 
 def bus_incident_mva(net):
     """各バスに集まる枝の合計容量(MVA)。そのバスが受けられる出力の上限を決める。"""
@@ -901,7 +924,7 @@ def required_kv(p_mw, ladder):
 
 def attach_generators(net, bus_of, nodes, island, territory=True,
                       attach_mode="nearest", site_km=1.5, kvfit_km=25.0,
-                      stats=False, use_sourced=USE_SOURCED_CAPACITY):
+                      stats=False, use_sourced=USE_SOURCED_CAPACITY, plant_ledger=None):
     """Attach OSM plants to an in-island substation bus (<=20 km).
 
     territory: True(既定)=同一 osm_id が複数地域ファイルに存在する場合
@@ -923,6 +946,10 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     持ち込むと捏造になる）。評価は `docs/reports/repair_search_2026-08-09.md`。
 
     stats=True で件数だけでなく繋ぎ替え内訳を dict で返す（既定は従来どおり n_gen）。
+
+    plant_ledger: **介入#55**。`load_plant_connections()` の dict。名前が載っている機は、規則の選んだ
+    バスの代わりに、25 km 以内で電圧が公表の値のバスのうち、公表の相手(`to`)→ 最寄り を選ぶ。
+    該当するバスが無ければ規則のまま(未解決として数える)。None(既定)は台帳なし。
     """
     import glob
     if attach_mode not in ATTACH_MODES:
@@ -984,6 +1011,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
     sourced = sourced_capacity_index() if use_sourced else {}
     n_sourced = 0
     sourced_mw = 0.0
+    ledger_hit, ledger_changed, ledger_unresolved = [], [], []
     for k, (region, feat) in enumerate(feats):
         g = feat.get("geometry") or {}
         if g.get("type") != "Point":
@@ -1044,6 +1072,26 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
             pick = ok[1] if ok is not None else \
                 max(near, key=lambda t: (float(net.bus.at[t[1][1], "vn_kv"]),
                                          incident.get(t[1][1], 0.0), -t[0]))[1][1]
+        led = plant_ledger.get(str(props.get("name") or "")) if plant_ledger else None
+        if led is not None:
+            # 介入#55: 公表の接続の電圧(と相手)。電圧が合うバスの、相手 → 最寄り
+            fit = [(d, s) for d, s in cands if d <= 25.0
+                   and abs(float(net.bus.at[s[1], "vn_kv"]) - led["kv"]) < 0.5]
+            to = [(d, s) for d, s in fit if str(net.bus.at[s[1], "name"]) in led["to"]]
+            hit = to or fit
+            nm = str(props.get("name"))
+            if hit:
+                d_led, s_led = hit[0]
+                ledger_hit.append(nm)
+                if s_led[1] != pick:
+                    ledger_changed.append({
+                        "name": nm, "mw": round(cap, 1),
+                        "rule": f"{net.bus.at[pick, 'name']} {float(net.bus.at[pick, 'vn_kv']):.0f}kV",
+                        "ledger": f"{net.bus.at[s_led[1], 'name']} {led['kv']:.0f}kV",
+                        "km": round(d_led, 1), "by": "to" if to else "kv"})
+                pick = s_led[1]
+            else:
+                ledger_unresolved.append(nm)
         if pick != base_pick:
             n_moved += 1
             moved_mw += cap
@@ -1066,6 +1114,9 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                         break
         except (ValueError, TypeError):
             pass
+    if plant_ledger:
+        print(f"  介入#55 plant-connections: 公表の電圧へ {len(ledger_hit)} 機"
+              f"(規則から動いた {len(ledger_changed)} 機・未解決 {len(ledger_unresolved)})")
     if zone_src:
         net.gen["zone_src"] = net.gen.index.map(lambda i: zone_src.get(int(i)))
     if src_feature:
@@ -1080,7 +1131,9 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                             if ladder else None),
             "kv_share": {str(k): round(v / tot, 4) for k, v in sorted(kv_hist.items())},
             "share_at_or_below_110kv": round(
-                sum(v for k, v in kv_hist.items() if k <= 110.0) / tot, 4)}
+                sum(v for k, v in kv_hist.items() if k <= 110.0) / tot, 4),
+            "plant_ledger": ({"applied": len(ledger_hit), "changed": ledger_changed,
+                              "unresolved": ledger_unresolved} if plant_ledger else None)}
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -1628,6 +1681,12 @@ def main():
                          "損失を発電機へ出力比で配る。旧挙動は西の主成分のスラックが 6.2 GW を吸っていた。"
                          "評価=docs/reports/west_slack_surplus_2026-10-26.md。"
                          "**無効化=--no-connected-dispatch**")
+    ap.add_argument("--plant-connections", action=argparse.BooleanOptionalAction,
+                    default=PLANT_CONNECTIONS,
+                    help="**介入#55**(2026-10-28・既定ON): 公表の接続で電圧が分かる大型機"
+                         "(config/plant_connections.yaml)は、その電圧のバス(公表の相手→最寄り)へ繋ぐ。"
+                         "評価=docs/reports/plant_connections_2026-10-28.md。"
+                         "**無効化=--no-plant-connections**")
     ap.add_argument("--default-cap", nargs="*", metavar="FUEL=MW", default=None,
                     help="燃料別の既定容量を上書き(**介入#25**)。`capacity_mw` が無い"
                          "発電所はこの値で埋まる=**出典のない合成容量**。既定は "
@@ -1818,7 +1877,9 @@ def main():
                                    attach_mode=(args.gen_attach or
                                                 attach_default_for(island)),
                                    stats=True,
-                                   use_sourced=args.sourced_capacity)
+                                   use_sourced=args.sourced_capacity,
+                                   plant_ledger=(load_plant_connections()
+                                                 if args.plant_connections else None))
         n_gen = gstats["n_gen"]
         if gstats.get("n_sourced_cap"):
             print(f"  出典付き容量: {gstats['n_sourced_cap']:,}件 / "
@@ -1907,6 +1968,7 @@ def main():
                            and res_t.at[t, "p_hv_mw"] == res_t.at[t, "p_hv_mw"]]
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
+            "plant_connections": gstats.get("plant_ledger"),   # 介入#55 台帳
             "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
             "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
             "lv_aggregate": lv_agg_ledger,         # 介入#43b 台帳(None=無効)
