@@ -192,6 +192,8 @@ data/realtime/
 ~$*
 docs/data/agc/mm_traces_*.npz
 docs/slides/ajg/.deck_backups/
+# デッキを組むときの中間物（candidate.pptx・各ページの png・検査の ndjson）。09-15 に ac_diagnosis で残っていた
+docs/slides/**/.build/
 docs/slides/ajg/AllJapanGrid_story_core.pptx
 docs/slides/ajg/AllJapanGrid_story_std.pptx
 
