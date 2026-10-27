@@ -205,6 +205,12 @@ def test_model_building_pipelines_use_the_shared_default():
             f"{rel} が島別既定(#41)を使っていない"
         assert "attach_mode=GEN_ATTACH_DEFAULT" not in src, \
             f"{rel} に定数直渡しが残っている(#41 以前の経路)"
+    # 配布ケース・CIM Level 2・ゾーンのケース・正典の島の試験が通る経路。2026-10-28 まで "cap" を
+    # 書き込んでいて、西で知多・東海の 6 発電所 6,985 MW が 1 個の 154 kV バスに載っていた
+    src = (ROOT / "scripts/export_matpower_canonical.py").read_text(encoding="utf-8")
+    assert "attach_mode=attach_mode or attach_default_for(island)" in src, \
+        "配布ケースの経路が島別既定(#41)を使っていない"
+    assert 'attach_mode="cap"' not in src, "配布ケースの経路に cap の書き込みが残っている"
 
 
 def test_whatif_baselines_still_call_without_a_mode():

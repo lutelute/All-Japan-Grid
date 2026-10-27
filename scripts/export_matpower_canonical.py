@@ -37,24 +37,29 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ISLANDS = ("hokkaido", "east", "west", "okinawa")
 
 
-def build_canonical_net(island, nodes, edges, freq, point_demand=True, connected=None):
+def build_canonical_net(island, nodes, edges, freq, point_demand=True, connected=None,
+                        attach_mode=None):
     """試験(trial_*)と同一の標準セットアップで島ネットを組む。
 
     point_demand=False は地点需要(data/external の CSV・git の外)を使わない。CI はこれで組む
     (2026-10-21 実測: 配布値との差は損失 0.05pt・vm 0.003pu 以内、バス数と畳む数は同じ)。
     connected: 介入#54(出力の目標 = 同じ成分・同じエリアの負荷・予備率なし)。None はモデル既定。
+    attach_mode: 発電機の繋ぎ先の規則(介入#24・#41)。None はモデル既定 = 島別の `attach_default_for`。
+      2026-10-28 まではここだけ `"cap"` を書き込んでいて、#41(西・北海道は `capkv`)に追随して
+      いなかった(西で知多・東海の 6 発電所 6,985 MW が 1 個の 154 kV バスに載っていた)。
     """
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
-        CONNECTED_DISPATCH, add_per_component_slacks, allocate_loads, attach_generators,
-        balance_by_zone, build_island_net, load_demand_config)
+        CONNECTED_DISPATCH, add_per_component_slacks, allocate_loads, attach_default_for,
+        attach_generators, balance_by_zone, build_island_net, load_demand_config)
     from src.powerflow.pref_demand import pref_zone_gwh
     from src.powerflow.compensation import add_reactive_compensation
 
     cfg = load_demand_config()
     pref_gwh, _ = pref_zone_gwh(nodes)
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
-    attach_generators(net, bus_of, nodes, island, attach_mode="cap", stats=True)
+    attach_generators(net, bus_of, nodes, island, stats=True,
+                      attach_mode=attach_mode or attach_default_for(island))
     pinned = pdm.match_buses(net, pdm.load_point_demand())[0] if point_demand else None
     allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
     add_reactive_compensation(net, factor=cfg.get(
