@@ -1,7 +1,7 @@
 {
- "date": "2026-10-26",
- "git_head": "999ea5c3",
- "source": "docs/reports/n1_screening_2026-10-26.json",
+ "date": "2026-10-28",
+ "git_head": "69c799e5",
+ "source": "docs/reports/n1_screening_2026-10-28.json",
  "args": {
   "min_kv": 154.0,
   "cap_factor": 1.0,
@@ -574,11 +574,11 @@
    "n_islanding": 2120,
    "min_kv": 154.0,
    "n_monitor_physical": 2467,
-   "base_n_over_physical": 37,
-   "base_max_loading_physical_pct": 278.1,
-   "n_outage_causing_new_over_physical": 263,
-   "n_outage_new_over_120_physical": 52,
-   "max_new_loading_physical_pct": 219.6,
+   "base_n_over_physical": 33,
+   "base_max_loading_physical_pct": 284.7,
+   "n_outage_causing_new_over_physical": 240,
+   "n_outage_new_over_120_physical": 53,
+   "max_new_loading_physical_pct": 206.4,
    "islanding_total_load_mw": 32506.3,
    "islanding_n_over_100mw": 41,
    "top": [
@@ -588,124 +588,12 @@
      "class_label": "変圧器(推定容量)",
      "parallel": 1,
      "cap_mw": 952.6,
-     "base_loading_pct": 63.1,
-     "post_max_new_loading_pct": 161.8,
+     "base_loading_pct": 63.0,
+     "post_max_new_loading_pct": 161.5,
      "post_n_new_over": 6,
      "label": "信濃変電所の変圧器 500/275 kV",
      "worst": {
       "name": "駒ヶ根変電所~田畑変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "南柴田町変電所~昭和町変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 278.1,
-     "post_max_new_loading_pct": 143.5,
-     "post_n_new_over": 6,
-     "label": "南柴田町変電所~昭和町変電所線",
-     "worst": {
-      "name": "春日井変電所~中電猪高変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 197.7,
-     "post_max_new_loading_pct": 219.6,
-     "post_n_new_over": 5,
-     "label": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
-     "worst": {
-      "name": "新居町五丁目変電所~南起変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "一本木町一丁目変電所~住吉町五丁目変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 168.6,
-     "post_max_new_loading_pct": 200.2,
-     "post_n_new_over": 5,
-     "label": "一本木町一丁目変電所~住吉町五丁目変電所線",
-     "worst": {
-      "name": "新居町五丁目変電所~南起変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "一本木町一丁目変電所~住吉町五丁目変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 160.6,
-     "post_max_new_loading_pct": 194.9,
-     "post_n_new_over": 5,
-     "label": "一本木町一丁目変電所~住吉町五丁目変電所線",
-     "worst": {
-      "name": "新居町五丁目変電所~南起変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "新居町五丁目変電所~一本木町一丁目変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 152.8,
-     "post_max_new_loading_pct": 189.7,
-     "post_n_new_over": 5,
-     "label": "新居町五丁目変電所~一本木町一丁目変電所線",
-     "worst": {
-      "name": "新居町五丁目変電所~南起変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "新居町五丁目変電所~一本木町一丁目変電所線",
-     "kv": 154.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 266.7,
-     "base_loading_pct": 144.9,
-     "post_max_new_loading_pct": 184.4,
-     "post_n_new_over": 5,
-     "label": "新居町五丁目変電所~一本木町一丁目変電所線",
-     "worst": {
-      "name": "新居町五丁目変電所~南起変電所線",
-      "kv": 154.0,
-      "class_label": "OSM実線"
-     }
-    },
-    {
-     "name": "中勢亀山線",
-     "kv": 275.0,
-     "class_label": "OSM実線",
-     "parallel": 1,
-     "cap_mw": 952.6,
-     "base_loading_pct": 93.1,
-     "post_max_new_loading_pct": 146.9,
-     "post_n_new_over": 5,
-     "label": "中勢亀山線",
-     "worst": {
-      "name": "南勢北勢線",
       "kv": 154.0,
       "class_label": "OSM実線"
      }
@@ -716,9 +604,9 @@
      "class_label": "OSM実線",
      "parallel": 1,
      "cap_mw": 952.6,
-     "base_loading_pct": 35.2,
-     "post_max_new_loading_pct": 146.5,
-     "post_n_new_over": 5,
+     "base_loading_pct": 35.0,
+     "post_max_new_loading_pct": 145.7,
+     "post_n_new_over": 6,
      "label": "西日本電線新城線",
      "worst": {
       "name": "豊川玉川線",
@@ -732,12 +620,124 @@
      "class_label": "OSM実線",
      "parallel": 1,
      "cap_mw": 68.6,
-     "base_loading_pct": 489.1,
-     "post_max_new_loading_pct": 146.5,
-     "post_n_new_over": 5,
+     "base_loading_pct": 486.2,
+     "post_max_new_loading_pct": 145.7,
+     "post_n_new_over": 6,
      "label": "西日本電線新城線",
      "worst": {
       "name": "豊川玉川線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "麻生田分岐線",
+     "kv": 66.0,
+     "class_label": "OSM実線",
+     "parallel": 1,
+     "cap_mw": 68.6,
+     "base_loading_pct": 434.8,
+     "post_max_new_loading_pct": 136.0,
+     "post_n_new_over": 6,
+     "label": "麻生田分岐線",
+     "worst": {
+      "name": "豊川玉川線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "新鈴鹿分岐線",
+     "kv": 275.0,
+     "class_label": "OSM実線",
+     "parallel": 1,
+     "cap_mw": 952.6,
+     "base_loading_pct": 65.5,
+     "post_max_new_loading_pct": 129.6,
+     "post_n_new_over": 6,
+     "label": "新鈴鹿分岐線",
+     "worst": {
+      "name": "namebind",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "trafo_275/154kV",
+     "kv": 275.0,
+     "class_label": "変圧器(推定容量)",
+     "parallel": 1,
+     "cap_mw": 266.7,
+     "base_loading_pct": 263.0,
+     "post_max_new_loading_pct": 120.0,
+     "post_n_new_over": 6,
+     "label": "南柴田町変電所の変圧器 275/154 kV",
+     "worst": {
+      "name": "中部電力パワーグリッド 154.0kV線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "中部電力パワーグリッド 275.0kV線",
+     "kv": 275.0,
+     "class_label": "OSM実線",
+     "parallel": 1,
+     "cap_mw": 952.6,
+     "base_loading_pct": 134.3,
+     "post_max_new_loading_pct": 196.7,
+     "post_n_new_over": 5,
+     "label": "中部電力パワーグリッド 275.0kV線",
+     "worst": {
+      "name": "垂坂町変電所~北勢変電所 (Hokusei Hendensho)線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "中勢亀山線",
+     "kv": 275.0,
+     "class_label": "OSM実線",
+     "parallel": 1,
+     "cap_mw": 952.6,
+     "base_loading_pct": 92.5,
+     "post_max_new_loading_pct": 153.4,
+     "post_n_new_over": 5,
+     "label": "中勢亀山線",
+     "worst": {
+      "name": "まきの木台二丁目変電所~赤水町変電所線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "中勢亀山線",
+     "kv": 275.0,
+     "class_label": "OSM実線",
+     "parallel": 1,
+     "cap_mw": 952.6,
+     "base_loading_pct": 79.9,
+     "post_max_new_loading_pct": 135.8,
+     "post_n_new_over": 5,
+     "label": "中勢亀山線",
+     "worst": {
+      "name": "まきの木台二丁目変電所~赤水町変電所線",
+      "kv": 154.0,
+      "class_label": "OSM実線"
+     }
+    },
+    {
+     "name": "trafo_275/77kV@pairmed@osm",
+     "kv": 275.0,
+     "class_label": "変圧器(推定容量)",
+     "parallel": 1,
+     "cap_mw": 570.0,
+     "base_loading_pct": 107.1,
+     "post_max_new_loading_pct": 128.5,
+     "post_n_new_over": 5,
+     "label": "新鈴鹿変電所の変圧器 275/77 kV",
+     "worst": {
+      "name": "namebind",
       "kv": 154.0,
       "class_label": "OSM実線"
      }
@@ -748,51 +748,51 @@
      "name": "trafo_500/275kV",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 161.8,
-     "ac_post_max_new_loading_pct": 162.2,
+     "dc_post_max_new_loading_pct": 161.5,
+     "ac_post_max_new_loading_pct": 161.8,
      "ac_worst": "駒ヶ根変電所~田畑変電所線",
-     "ac_n_new_over": 8,
+     "ac_n_new_over": 7,
      "label": "信濃変電所の変圧器 500/275 kV"
     },
     {
-     "name": "南柴田町変電所~昭和町変電所線",
+     "name": "西日本電線新城線",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 143.5,
-     "ac_post_max_new_loading_pct": 142.5,
-     "ac_worst": "春日井変電所~中電猪高変電所線",
+     "dc_post_max_new_loading_pct": 145.7,
+     "ac_post_max_new_loading_pct": 148.1,
+     "ac_worst": "豊川玉川線",
      "ac_n_new_over": 7,
-     "label": "南柴田町変電所~昭和町変電所線"
+     "label": "西日本電線新城線"
     },
     {
-     "name": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
+     "name": "西日本電線新城線",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 219.6,
-     "ac_post_max_new_loading_pct": 221.1,
-     "ac_worst": "新居町五丁目変電所~南起変電所線",
+     "dc_post_max_new_loading_pct": 145.7,
+     "ac_post_max_new_loading_pct": 148.1,
+     "ac_worst": "豊川玉川線",
      "ac_n_new_over": 7,
-     "label": "住吉町五丁目変電所~岩滑西町三丁目変電所線"
+     "label": "西日本電線新城線"
     },
     {
-     "name": "一本木町一丁目変電所~住吉町五丁目変電所線",
+     "name": "麻生田分岐線",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 200.2,
-     "ac_post_max_new_loading_pct": 201.8,
-     "ac_worst": "新居町五丁目変電所~南起変電所線",
+     "dc_post_max_new_loading_pct": 136.0,
+     "ac_post_max_new_loading_pct": 138.2,
+     "ac_worst": "豊川玉川線",
      "ac_n_new_over": 7,
-     "label": "一本木町一丁目変電所~住吉町五丁目変電所線"
+     "label": "麻生田分岐線"
     },
     {
-     "name": "一本木町一丁目変電所~住吉町五丁目変電所線",
+     "name": "新鈴鹿分岐線",
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "dc_post_max_new_loading_pct": 194.9,
-     "ac_post_max_new_loading_pct": 196.6,
-     "ac_worst": "新居町五丁目変電所~南起変電所線",
-     "ac_n_new_over": 7,
-     "label": "一本木町一丁目変電所~住吉町五丁目変電所線"
+     "dc_post_max_new_loading_pct": 129.6,
+     "ac_post_max_new_loading_pct": 139.9,
+     "ac_worst": "namebind",
+     "ac_n_new_over": 9,
+     "label": "新鈴鹿分岐線"
     }
    ],
    "islanding_top": [

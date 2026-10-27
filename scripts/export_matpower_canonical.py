@@ -38,7 +38,7 @@ ISLANDS = ("hokkaido", "east", "west", "okinawa")
 
 
 def build_canonical_net(island, nodes, edges, freq, point_demand=True, connected=None,
-                        attach_mode=None):
+                        attach_mode=None, plant_connections=None):
     """試験(trial_*)と同一の標準セットアップで島ネットを組む。
 
     point_demand=False は地点需要(data/external の CSV・git の外)を使わない。CI はこれで組む
@@ -47,19 +47,24 @@ def build_canonical_net(island, nodes, edges, freq, point_demand=True, connected
     attach_mode: 発電機の繋ぎ先の規則(介入#24・#41)。None はモデル既定 = 島別の `attach_default_for`。
       2026-10-28 まではここだけ `"cap"` を書き込んでいて、#41(西・北海道は `capkv`)に追随して
       いなかった(西で知多・東海の 6 発電所 6,985 MW が 1 個の 154 kV バスに載っていた)。
+    plant_connections: 介入#55(公表の接続で電圧が分かる大型機の台帳)。None はモデル既定。
     """
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
         CONNECTED_DISPATCH, add_per_component_slacks, allocate_loads, attach_default_for,
-        attach_generators, balance_by_zone, build_island_net, load_demand_config)
+        PLANT_CONNECTIONS, attach_generators, balance_by_zone, build_island_net,
+        load_demand_config, load_plant_connections)
     from src.powerflow.pref_demand import pref_zone_gwh
     from src.powerflow.compensation import add_reactive_compensation
 
     cfg = load_demand_config()
     pref_gwh, _ = pref_zone_gwh(nodes)
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
-    attach_generators(net, bus_of, nodes, island, stats=True,
-                      attach_mode=attach_mode or attach_default_for(island))
+    use_ledger = PLANT_CONNECTIONS if plant_connections is None else plant_connections
+    gst = attach_generators(net, bus_of, nodes, island, stats=True,
+                            attach_mode=attach_mode or attach_default_for(island),
+                            plant_ledger=load_plant_connections() if use_ledger else None)
+    net["plant_connections"] = gst.get("plant_ledger")      # 介入#55 の帳簿(meta へ)
     pinned = pdm.match_buses(net, pdm.load_point_demand())[0] if point_demand else None
     allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
     add_reactive_compensation(net, factor=cfg.get(
@@ -129,6 +134,8 @@ def main() -> int:
                     help="解けない島もアンテナを畳まずに DC で出す(介入#52 の無効化)")
     ap.add_argument("--no-connected-dispatch", action="store_true",
                     help="出力の目標をエリアの負荷全体×(1+予備率)に戻し、損失も配らない(介入#54 の無効化)")
+    ap.add_argument("--no-plant-connections", action="store_true",
+                    help="公表の接続で電圧が分かる大型機の台帳を使わない(介入#55 の無効化)")
     ap.add_argument("--no-validate", action="store_true")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
@@ -158,7 +165,8 @@ def main() -> int:
         t0 = time.monotonic()
         print(f"... build {island}", file=sys.stderr, flush=True)
         net0 = build_canonical_net(island, nodes, edges, freq,
-                                   connected=False if args.no_connected_dispatch else None)
+                                   connected=False if args.no_connected_dispatch else None,
+                                   plant_connections=False if args.no_plant_connections else None)
         if args.line_impedance:
             from src.powerflow.line_impedance import (
                 apply_disclosed_line_impedance)
@@ -179,6 +187,8 @@ def main() -> int:
             rec["reduction"] = red
         if spread:
             rec["slack_spread"] = spread
+        if net0.get("plant_connections") is not None:
+            rec["plant_connections"] = net0["plant_connections"]
         if args.line_impedance:
             rec["line_impedance"] = li_ledger["n_applied"]
         meta["islands"].append(rec)
