@@ -1,0 +1,664 @@
+{
+ "plants": {
+  "苫東厚真火力発電所": {
+   "island": "hokkaido",
+   "mw": 1650,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "苫小牧市変電所_3",
+    "kv": 275.0
+   },
+   "cap": {
+    "bus": "苫小牧市変電所_3",
+    "kv": 275.0
+   },
+   "kvfit": {
+    "bus": "苫小牧市変電所_3",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "苫小牧市変電所_3",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "苫小牧市変電所_3",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "知内発電所": {
+   "island": "hokkaido",
+   "mw": 700,
+   "pub_kv": 187.0,
+   "nearest": {
+    "bus": "元町変電所",
+    "kv": 187.0
+   },
+   "cap": {
+    "bus": "元町変電所",
+    "kv": 187.0
+   },
+   "kvfit": {
+    "bus": "元町変電所",
+    "kv": 187.0
+   },
+   "capkv": {
+    "bus": "JR北海道吉岡変電所 187kV",
+    "kv": 187.0
+   },
+   "ledger": {
+    "bus": "元町変電所",
+    "kv": 187.0
+   },
+   "default": "capkv"
+  },
+  "石狩湾新港発電所": {
+   "island": "hokkaido",
+   "mw": 569,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "石狩湾新港発電所",
+    "kv": 275.0
+   },
+   "cap": {
+    "bus": "石狩湾新港発電所",
+    "kv": 275.0
+   },
+   "kvfit": {
+    "bus": "石狩湾新港発電所",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "石狩湾新港発電所",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "石狩湾新港発電所",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "京極発電所": {
+   "island": "hokkaido",
+   "mw": 400,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "寒別変電所",
+    "kv": 66.0
+   },
+   "cap": {
+    "bus": "南区変電所_2",
+    "kv": 66.0
+   },
+   "kvfit": {
+    "bus": "西双葉開閉所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "西双葉開閉所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "西双葉開閉所 275kV",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "苫小牧発電所": {
+   "island": "hokkaido",
+   "mw": 250,
+   "pub_kv": 187.0,
+   "nearest": {
+    "bus": "苫小牧市変電所",
+    "kv": 187.0
+   },
+   "cap": {
+    "bus": "苫小牧市変電所",
+    "kv": 187.0
+   },
+   "kvfit": {
+    "bus": "苫小牧市変電所",
+    "kv": 187.0
+   },
+   "capkv": {
+    "bus": "苫小牧市変電所",
+    "kv": 187.0
+   },
+   "ledger": {
+    "bus": "苫小牧市変電所",
+    "kv": 187.0
+   },
+   "default": "capkv"
+  },
+  "川越火力発電所": {
+   "island": "west",
+   "mw": 4802,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "富田変電所 275kV",
+    "kv": 275.0
+   },
+   "cap": {
+    "bus": "大字縄生変電所 275kV",
+    "kv": 275.0
+   },
+   "kvfit": {
+    "bus": "富田変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "西名古屋変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "西名古屋変電所 275kV",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "橘湾火力発電所": {
+   "island": "west",
+   "mw": 2100,
+   "pub_kv": 500.0,
+   "nearest": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "cap": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "kvfit": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "default": "capkv"
+  },
+  "知多第二火力発電所": {
+   "island": "west",
+   "mw": 1708,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "東浜三丁目変電所",
+    "kv": 154.0
+   },
+   "cap": {
+    "bus": "東浜三丁目変電所",
+    "kv": 154.0
+   },
+   "kvfit": {
+    "bus": "浅山一丁目変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "南柴田町変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "浅山一丁目変電所 275kV",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "知多火力発電所": {
+   "island": "west",
+   "mw": 1700,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "東浜三丁目変電所",
+    "kv": 154.0
+   },
+   "cap": {
+    "bus": "東浜三丁目変電所",
+    "kv": 154.0
+   },
+   "kvfit": {
+    "bus": "浅山一丁目変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "大字石浜変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "大字石浜変電所 275kV",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "柳井火力発電所": {
+   "island": "west",
+   "mw": 1539,
+   "pub_kv": 220.0,
+   "nearest": {
+    "bus": "柳井市変電所",
+    "kv": 110.0
+   },
+   "cap": {
+    "bus": "古開作変電所 220kV",
+    "kv": 220.0
+   },
+   "kvfit": {
+    "bus": "古開作変電所 220kV",
+    "kv": 220.0
+   },
+   "capkv": {
+    "bus": "古開作変電所 220kV",
+    "kv": 220.0
+   },
+   "ledger": {
+    "bus": "古開作変電所 220kV",
+    "kv": 220.0
+   },
+   "default": "capkv"
+  },
+  "富山新港火力発電所": {
+   "island": "west",
+   "mw": 1425,
+   "pub_kv": 154.0,
+   "nearest": {
+    "bus": "射水市変電所 275kV",
+    "kv": 275.0
+   },
+   "cap": {
+    "bus": "射水市変電所 275kV",
+    "kv": 275.0
+   },
+   "kvfit": {
+    "bus": "射水市変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "新富山変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "射水市変電所 154kV",
+    "kv": 154.0
+   },
+   "default": "capkv"
+  },
+  "坂出火力発電所": {
+   "island": "west",
+   "mw": 1385,
+   "pub_kv": 187.0,
+   "nearest": {
+    "bus": "受電所",
+    "kv": 187.0
+   },
+   "cap": {
+    "bus": "受電所",
+    "kv": 187.0
+   },
+   "kvfit": {
+    "bus": "昭和町二丁目変電所_2 500kV",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "昭和町二丁目変電所_2 500kV",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "受電所",
+    "kv": 187.0
+   },
+   "default": "capkv"
+  },
+  "竹原火力発電所": {
+   "island": "west",
+   "mw": 1300,
+   "pub_kv": 220.0,
+   "nearest": {
+    "bus": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0
+   },
+   "cap": {
+    "bus": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0
+   },
+   "kvfit": {
+    "bus": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0
+   },
+   "capkv": {
+    "bus": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0
+   },
+   "ledger": {
+    "bus": "忠海長浜一丁目変電所 220kV",
+    "kv": 220.0
+   },
+   "default": "capkv"
+  },
+  "敦賀火力発電所": {
+   "island": "west",
+   "mw": 1200,
+   "pub_kv": 275.0,
+   "nearest": {
+    "bus": "敦賀変電所 154kV",
+    "kv": 154.0
+   },
+   "cap": {
+    "bus": "敦賀変電所 154kV",
+    "kv": 154.0
+   },
+   "kvfit": {
+    "bus": "色浜変電所",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "色浜変電所",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "樋ノ水町変電所 275kV",
+    "kv": 275.0
+   },
+   "default": "capkv"
+  },
+  "玉島火力発電所": {
+   "island": "west",
+   "mw": 1200,
+   "pub_kv": 110.0,
+   "nearest": {
+    "bus": "倉敷市変電所_2 110kV",
+    "kv": 110.0
+   },
+   "cap": {
+    "bus": "倉敷市変電所_2 110kV",
+    "kv": 110.0
+   },
+   "kvfit": {
+    "bus": "菰池二丁目変電所 500kV",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "菰池二丁目変電所 500kV",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "倉敷市変電所_2 110kV",
+    "kv": 110.0
+   },
+   "default": "capkv"
+  },
+  "武豊火力発電所": {
+   "island": "west",
+   "mw": 1070,
+   "pub_kv": 154.0,
+   "nearest": {
+    "bus": "南起変電所 77kV",
+    "kv": 77.0
+   },
+   "cap": {
+    "bus": "川口町五丁目変電所 275kV",
+    "kv": 275.0
+   },
+   "kvfit": {
+    "bus": "川口町五丁目変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "大字石浜変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "川口町五丁目変電所 154kV",
+    "kv": 154.0
+   },
+   "default": "capkv"
+  },
+  "水島火力発電所": {
+   "island": "west",
+   "mw": 625,
+   "pub_kv": 110.0,
+   "nearest": {
+    "bus": "福田町南畝変電所 66kV",
+    "kv": 66.0
+   },
+   "cap": {
+    "bus": "潮通三丁目変電所 110kV",
+    "kv": 110.0
+   },
+   "kvfit": {
+    "bus": "菰池二丁目変電所 500kV",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "菰池二丁目変電所 500kV",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "潮通一丁目変電所 110kV",
+    "kv": 110.0
+   },
+   "default": "capkv"
+  },
+  "四日市火力発電所": {
+   "island": "west",
+   "mw": 585,
+   "pub_kv": 154.0,
+   "nearest": {
+    "bus": "大協町二丁目変電所_2",
+    "kv": 154.0
+   },
+   "cap": {
+    "bus": "大協町二丁目変電所_2",
+    "kv": 154.0
+   },
+   "kvfit": {
+    "bus": "富田変電所 275kV",
+    "kv": 275.0
+   },
+   "capkv": {
+    "bus": "富田変電所 275kV",
+    "kv": 275.0
+   },
+   "ledger": {
+    "bus": "大協町二丁目変電所_2",
+    "kv": 154.0
+   },
+   "default": "capkv"
+  },
+  "西条発電所": {
+   "island": "west",
+   "mw": 406,
+   "pub_kv": 187.0,
+   "nearest": {
+    "bus": "喜多川変電所_2 187kV",
+    "kv": 187.0
+   },
+   "cap": {
+    "bus": "喜多川変電所_2 187kV",
+    "kv": 187.0
+   },
+   "kvfit": {
+    "bus": "喜多川変電所_2 187kV",
+    "kv": 187.0
+   },
+   "capkv": {
+    "bus": "喜多川変電所_2 187kV",
+    "kv": 187.0
+   },
+   "ledger": {
+    "bus": "喜多川変電所_2 187kV",
+    "kv": 187.0
+   },
+   "default": "capkv"
+  },
+  "富山火力発電所": {
+   "island": "west",
+   "mw": 250,
+   "pub_kv": 154.0,
+   "nearest": {
+    "bus": "草島変電所",
+    "kv": 154.0
+   },
+   "cap": {
+    "bus": "草島変電所",
+    "kv": 154.0
+   },
+   "kvfit": {
+    "bus": "草島変電所",
+    "kv": 154.0
+   },
+   "capkv": {
+    "bus": "草島変電所",
+    "kv": 154.0
+   },
+   "ledger": {
+    "bus": "草島変電所",
+    "kv": 154.0
+   },
+   "default": "capkv"
+  },
+  "阿南火力発電所": {
+   "island": "west",
+   "mw": 0,
+   "pub_kv": 187.0,
+   "nearest": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "cap": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "kvfit": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "capkv": {
+    "bus": "阿南発電所 (Anan Power Station) 500kV",
+    "kv": 500.0
+   },
+   "ledger": {
+    "bus": "阿南発電所 (Anan Power Station) 187kV",
+    "kv": 187.0
+   },
+   "default": "capkv"
+  }
+ },
+ "score": {
+  "nearest": {
+   "n": 12,
+   "of": 21,
+   "mw": 15197,
+   "of_mw": 24864
+  },
+  "cap": {
+   "n": 14,
+   "of": 21,
+   "mw": 17361,
+   "of_mw": 24864
+  },
+  "kvfit": {
+   "n": 13,
+   "of": 21,
+   "mw": 17374,
+   "of_mw": 24864
+  },
+  "capkv": {
+   "n": 13,
+   "of": 21,
+   "mw": 17374,
+   "of_mw": 24864
+  },
+  "ledger": {
+   "n": 21,
+   "of": 21,
+   "mw": 24864,
+   "of_mw": 24864
+  }
+ },
+ "case": {
+  "west/before": {
+   "ac": true,
+   "how": "dc",
+   "size": [
+    7977,
+    8110,
+    997,
+    6
+   ],
+   "vm": [
+    0.7757,
+    1.0378
+   ],
+   "loss_pct": 2.05,
+   "line154_max": 280.2,
+   "line154_over": 47,
+   "trafo_max": 302.6,
+   "trafo_over": 68,
+   "slack_after_mw": 2.8
+  },
+  "west/after": {
+   "ac": true,
+   "how": "dc",
+   "size": [
+    7977,
+    8110,
+    997,
+    6
+   ],
+   "vm": [
+    0.7757,
+    1.0378
+   ],
+   "loss_pct": 1.98,
+   "line154_max": 287.2,
+   "line154_over": 43,
+   "trafo_max": 301.5,
+   "trafo_over": 66,
+   "slack_after_mw": 0.0
+  },
+  "hokkaido/before": {
+   "ac": true,
+   "how": "dc",
+   "size": [
+    831,
+    858,
+    69,
+    0
+   ],
+   "vm": [
+    0.8604,
+    1.0035
+   ],
+   "loss_pct": 2.5,
+   "line154_max": 45.4,
+   "line154_over": 0,
+   "trafo_max": 112.1,
+   "trafo_over": 2,
+   "slack_after_mw": -2.0
+  },
+  "hokkaido/after": {
+   "ac": true,
+   "how": "dc",
+   "size": [
+    831,
+    858,
+    69,
+    0
+   ],
+   "vm": [
+    0.8604,
+    1.0035
+   ],
+   "loss_pct": 2.48,
+   "line154_max": 45.4,
+   "line154_over": 0,
+   "trafo_max": 112.1,
+   "trafo_over": 2,
+   "slack_after_mw": -2.0
+  }
+ }
+}
