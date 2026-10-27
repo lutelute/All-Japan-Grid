@@ -37,15 +37,16 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ISLANDS = ("hokkaido", "east", "west", "okinawa")
 
 
-def build_canonical_net(island, nodes, edges, freq, point_demand=True):
+def build_canonical_net(island, nodes, edges, freq, point_demand=True, connected=None):
     """試験(trial_*)と同一の標準セットアップで島ネットを組む。
 
     point_demand=False は地点需要(data/external の CSV・git の外)を使わない。CI はこれで組む
     (2026-10-21 実測: 配布値との差は損失 0.05pt・vm 0.003pu 以内、バス数と畳む数は同じ)。
+    connected: 介入#54(出力の目標 = 同じ成分・同じエリアの負荷・予備率なし)。None はモデル既定。
     """
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
-        add_per_component_slacks, allocate_loads, attach_generators,
+        CONNECTED_DISPATCH, add_per_component_slacks, allocate_loads, attach_generators,
         balance_by_zone, build_island_net, load_demand_config)
     from src.powerflow.pref_demand import pref_zone_gwh
     from src.powerflow.compensation import add_reactive_compensation
@@ -59,7 +60,8 @@ def build_canonical_net(island, nodes, edges, freq, point_demand=True):
     add_reactive_compensation(net, factor=cfg.get(
         "reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)
-    balance_by_zone(net, cfg, use_zone_src=True)
+    balance_by_zone(net, cfg, use_zone_src=True,
+                    connected=CONNECTED_DISPATCH if connected is None else connected)
     return net
 
 
@@ -79,10 +81,39 @@ def try_ac(net):
     return n, False, "dc-only"
 
 
+def solve_canonical(net0, fold=True, spread=None):
+    """正典の解き方: 素朴 NR → 解けなければ降下の大きいアンテナの木から畳む(介入#52) →
+    最大の成分のスラックに残った損失を発電機へ配って解き直す(介入#54②)。
+
+    配布ケース・CIM・ゾーンの書き出し・正典の島の試験が同じ手順で解くように、ここに 1 つだけ置く。
+    返り値 (解いたネット, 収束したか, 始動, 畳みの帳簿 or None, 配りの帳簿 or None)。
+    """
+    from scripts.run_full_powerflow_from_db import CONNECTED_DISPATCH, spread_slack
+    from src.powerflow.reduce_antenna import fold_until
+
+    base, red = net0, None
+    n, ok, how = try_ac(net0)
+    if not ok and fold:
+        folded, red = fold_until(net0, lambda nt: try_ac(nt)[1])
+        if folded is not None:
+            base = folded
+            n, ok, how = try_ac(folded)
+    sp = None
+    if ok and (CONNECTED_DISPATCH if spread is None else spread):
+        last = {}
+
+        def resolve(nt):
+            s, good, h = try_ac(nt)
+            last["how"] = h
+            return s, good
+        n, sp = spread_slack(base, n, resolve)
+        how = last.get("how", how) if sp.get("applied") else how
+    return n, ok, how, red, sp
+
+
 def main() -> int:
     from src.converter.matpower_case import export_net
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
-    from src.powerflow.reduce_antenna import fold_until
 
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default="dist/matpower_national")
@@ -91,6 +122,8 @@ def main() -> int:
                     help="様式5実測R/X(crosswalk直結線)を適用")
     ap.add_argument("--no-fold", action="store_true",
                     help="解けない島もアンテナを畳まずに DC で出す(介入#52 の無効化)")
+    ap.add_argument("--no-connected-dispatch", action="store_true",
+                    help="出力の目標をエリアの負荷全体×(1+予備率)に戻し、損失も配らない(介入#54 の無効化)")
     ap.add_argument("--no-validate", action="store_true")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
@@ -119,21 +152,19 @@ def main() -> int:
         freq = ISLAND_FREQ[island]
         t0 = time.monotonic()
         print(f"... build {island}", file=sys.stderr, flush=True)
-        net0 = build_canonical_net(island, nodes, edges, freq)
+        net0 = build_canonical_net(island, nodes, edges, freq,
+                                   connected=False if args.no_connected_dispatch else None)
         if args.line_impedance:
             from src.powerflow.line_impedance import (
                 apply_disclosed_line_impedance)
             li_ledger = apply_disclosed_line_impedance(net0, freq_hz=freq)
             print(f"    line-impedance: {li_ledger['n_applied']}本適用",
                   file=sys.stderr)
-        n, ac_ok, how = try_ac(net0)
-        red = None
-        if not ac_ok and not args.no_fold:
-            print("    素朴NRで解けない → 降下の大きいアンテナの木から畳む",
+        n, ac_ok, how, red, spread = solve_canonical(
+            net0, fold=not args.no_fold, spread=False if args.no_connected_dispatch else None)
+        if red:
+            print("    素朴NRで解けない → 降下の大きいアンテナの木から畳んだ",
                   file=sys.stderr, flush=True)
-            folded, red = fold_until(net0, lambda nt: try_ac(nt)[1])
-            if folded is not None:
-                n, ac_ok, how = try_ac(folded)
         rec = export_net(island, n, ac_ok, args.out,
                          validate=not args.no_validate,
                          regions=[island], frequency=freq)
@@ -141,6 +172,8 @@ def main() -> int:
         rec["build_s"] = round(time.monotonic() - t0, 1)
         if red:
             rec["reduction"] = red
+        if spread:
+            rec["slack_spread"] = spread
         if args.line_impedance:
             rec["line_impedance"] = li_ledger["n_applied"]
         meta["islands"].append(rec)

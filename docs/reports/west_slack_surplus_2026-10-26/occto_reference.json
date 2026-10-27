@@ -1,0 +1,98 @@
+{
+ "source": "OCCTO 広域機関 公表 kohyo_02(エリア需要)・kohyo_04(連系線の計画潮流)",
+ "band": 0.03,
+ "islands": {
+  "west": {
+   "model_load_mw": 73865.0,
+   "period": [
+    "2025/04/01",
+    "2026/10/26"
+   ],
+   "n_slots": 26160,
+   "n_selected": 708,
+   "n_selected_all_lines": 525,
+   "missing_lines_in_selected": {
+    "chubu->hokuriku": 183,
+    "chubu->kansai": 183,
+    "hokuriku->kansai": 183
+   },
+   "pairs": {
+    "chubu->hokuriku": {
+     "median": 0.0,
+     "p10": -300.0,
+     "p90": 0.0,
+     "share_positive": 0.015
+    },
+    "chubu->kansai": {
+     "median": 1658.8,
+     "p10": -107.9,
+     "p90": 2386.7,
+     "share_positive": 0.884
+    },
+    "chugoku->kansai": {
+     "median": 7376.4,
+     "p10": 4566.8,
+     "p90": 8663.6,
+     "share_positive": 1.0
+    },
+    "chugoku->kyushu": {
+     "median": -1812.3,
+     "p10": -2592.9,
+     "p90": -911.4,
+     "share_positive": 0.0
+    },
+    "chugoku->shikoku": {
+     "median": -1156.4,
+     "p10": -1415.0,
+     "p90": -609.1,
+     "share_positive": 0.004
+    },
+    "hokuriku->kansai": {
+     "median": 91.2,
+     "p10": -1076.1,
+     "p90": 635.7,
+     "share_positive": 0.57
+    },
+    "kansai->shikoku": {
+     "median": -594.0,
+     "p10": -930.0,
+     "p90": 0.0,
+     "share_positive": 0.0
+    }
+   }
+  },
+  "east": {
+   "model_load_mw": 55250.0,
+   "period": [
+    "2025/04/01",
+    "2026/10/26"
+   ],
+   "n_slots": 26160,
+   "n_selected": 1000,
+   "n_selected_all_lines": 1000,
+   "missing_lines_in_selected": {},
+   "pairs": {
+    "tohoku->tokyo": {
+     "median": 4929.1,
+     "p10": 3904.7,
+     "p90": 5290.0,
+     "share_positive": 1.0
+    }
+   }
+  }
+ },
+ "area_export": {
+  "west": {
+   "chubu": 1602.1,
+   "chugoku": 4523.1,
+   "hokuriku": 115.6,
+   "kansai": -8875.5,
+   "kyushu": 1799.5,
+   "shikoku": 1420.0
+  },
+  "east": {
+   "tohoku": 4929.1,
+   "tokyo": -4929.1
+  }
+ }
+}

@@ -1,0 +1,501 @@
+{
+ "point_demand": true,
+ "line_observations": true,
+ "islands": {
+  "okinawa": {
+   "before": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 100,
+    "n_line": 96,
+    "n_trafo": 19,
+    "main_slack": "slack_62",
+    "main_slack_lonlat": [
+     127.83814,
+     26.44228
+    ],
+    "main_slack_zone": "okinawa",
+    "main_slack_mw": -150.8,
+    "other_slacks_mw": 109.1,
+    "gen_mw": 1428.0,
+    "load_mw": 1360.0,
+    "loss_mw": 26.2,
+    "loss_pct": 1.93,
+    "vm_min": 0.9719,
+    "vm_max": 1.0032,
+    "spread": null,
+    "zone_pairs": {},
+    "chubu_kansai_500kv": {},
+    "obs_direction": null
+   },
+   "after": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 100,
+    "n_line": 96,
+    "n_trafo": 19,
+    "main_slack": "slack_62",
+    "main_slack_lonlat": [
+     127.83814,
+     26.44228
+    ],
+    "main_slack_zone": "okinawa",
+    "main_slack_mw": -0.2,
+    "other_slacks_mw": 109.0,
+    "gen_mw": 1278.2,
+    "load_mw": 1360.0,
+    "loss_mw": 27.0,
+    "loss_pct": 1.99,
+    "vm_min": 0.9719,
+    "vm_max": 1.0032,
+    "spread": {
+     "applied": true,
+     "slack": "slack_62",
+     "n_gen": 26,
+     "slack_before_mw": 27.2,
+     "slack_after_mw": -0.2,
+     "spread_mw": 27.4
+    },
+    "zone_pairs": {},
+    "chubu_kansai_500kv": {},
+    "obs_direction": null
+   },
+   "line_delta": {
+    "n_lines": 96,
+    "gt50_mw": 3,
+    "gt200_mw": 0,
+    "max_mw": 76.5
+   }
+  },
+  "hokkaido": {
+   "before": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 831,
+    "n_line": 858,
+    "n_trafo": 69,
+    "main_slack": "slack_480",
+    "main_slack_lonlat": [
+     140.51623,
+     43.03964
+    ],
+    "main_slack_zone": "hokkaido",
+    "main_slack_mw": -267.0,
+    "other_slacks_mw": 162.4,
+    "gen_mw": 4641.0,
+    "load_mw": 4420.0,
+    "loss_mw": 116.3,
+    "loss_pct": 2.63,
+    "vm_min": 0.8604,
+    "vm_max": 1.0036,
+    "spread": null,
+    "zone_pairs": {},
+    "chubu_kansai_500kv": {},
+    "obs_direction": {
+     "hokkaido": [
+      18,
+      25
+     ],
+     "all": [
+      18,
+      25
+     ]
+    }
+   },
+   "after": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 831,
+    "n_line": 858,
+    "n_trafo": 69,
+    "main_slack": "slack_480",
+    "main_slack_lonlat": [
+     140.51623,
+     43.03964
+    ],
+    "main_slack_zone": "hokkaido",
+    "main_slack_mw": -1.3,
+    "other_slacks_mw": 161.8,
+    "gen_mw": 4377.6,
+    "load_mw": 4420.0,
+    "loss_mw": 118.1,
+    "loss_pct": 2.67,
+    "vm_min": 0.8604,
+    "vm_max": 1.0035,
+    "spread": {
+     "applied": true,
+     "slack": "slack_480",
+     "n_gen": 407,
+     "slack_before_mw": 119.4,
+     "slack_after_mw": -1.3,
+     "spread_mw": 120.7
+    },
+    "zone_pairs": {},
+    "chubu_kansai_500kv": {},
+    "obs_direction": {
+     "hokkaido": [
+      18,
+      25
+     ],
+     "all": [
+      18,
+      25
+     ]
+    }
+   },
+   "line_delta": {
+    "n_lines": 858,
+    "gt50_mw": 8,
+    "gt200_mw": 0,
+    "max_mw": 104.8
+   }
+  },
+  "east": {
+   "before": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 6245,
+    "n_line": 6443,
+    "n_trafo": 676,
+    "main_slack": "slack_4619",
+    "main_slack_lonlat": [
+     139.98153,
+     35.46341
+    ],
+    "main_slack_zone": "tokyo",
+    "main_slack_mw": -4009.3,
+    "other_slacks_mw": 2902.6,
+    "gen_mw": 58012.5,
+    "load_mw": 55250.0,
+    "loss_mw": 1655.8,
+    "loss_pct": 3.0,
+    "vm_min": 0.8564,
+    "vm_max": 1.0229,
+    "spread": null,
+    "zone_pairs": {
+     "tohoku->tokyo": 4154.3
+    },
+    "chubu_kansai_500kv": {},
+    "obs_direction": {
+     "tohoku": [
+      128,
+      165
+     ],
+     "all": [
+      128,
+      165
+     ]
+    }
+   },
+   "after": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 0,
+    "n_bus": 6245,
+    "n_line": 6443,
+    "n_trafo": 676,
+    "main_slack": "slack_4619",
+    "main_slack_lonlat": [
+     139.98153,
+     35.46341
+    ],
+    "main_slack_zone": "tokyo",
+    "main_slack_mw": 0.9,
+    "other_slacks_mw": 2885.3,
+    "gen_mw": 54052.8,
+    "load_mw": 55250.0,
+    "loss_mw": 1689.0,
+    "loss_pct": 3.06,
+    "vm_min": 0.8569,
+    "vm_max": 1.0229,
+    "spread": {
+     "applied": true,
+     "slack": "slack_4619",
+     "n_gen": 8190,
+     "slack_before_mw": 1732.7,
+     "slack_after_mw": 0.9,
+     "spread_mw": 1731.8
+    },
+    "zone_pairs": {
+     "tohoku->tokyo": 3195.6
+    },
+    "chubu_kansai_500kv": {},
+    "obs_direction": {
+     "tohoku": [
+      128,
+      164
+     ],
+     "all": [
+      128,
+      164
+     ]
+    }
+   },
+   "line_delta": {
+    "n_lines": 6443,
+    "gt50_mw": 369,
+    "gt200_mw": 74,
+    "max_mw": 3534.5
+   },
+   "trial_exchange": {
+    "ac": false,
+    "solve": "dc-only",
+    "folded_buses": 0,
+    "n_bus": 6245,
+    "n_line": 6443,
+    "n_trafo": 676,
+    "main_slack": "slack_4619",
+    "main_slack_lonlat": [
+     139.98153,
+     35.46341
+    ],
+    "main_slack_zone": "tokyo",
+    "main_slack_mw": -0.0,
+    "other_slacks_mw": 2884.7,
+    "gen_mw": 52365.3,
+    "load_mw": 55250.0,
+    "loss_mw": 0.0,
+    "loss_pct": 0.0,
+    "vm_min": 1.0,
+    "vm_max": 1.0,
+    "spread": null,
+    "zone_pairs": {
+     "tohoku->tokyo": 7601.3
+    },
+    "chubu_kansai_500kv": {},
+    "obs_direction": {
+     "tohoku": [
+      123,
+      168
+     ],
+     "all": [
+      123,
+      168
+     ]
+    },
+    "export_target_mw": {
+     "tohoku": 4929.1,
+     "tokyo": -4929.1
+    }
+   }
+  },
+  "west": {
+   "before": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 6,
+    "n_bus": 7977,
+    "n_line": 8110,
+    "n_trafo": 997,
+    "main_slack": "slack_1889",
+    "main_slack_lonlat": [
+     136.82878,
+     35.03515
+    ],
+    "main_slack_zone": "chubu",
+    "main_slack_mw": -6250.7,
+    "other_slacks_mw": 4157.5,
+    "gen_mw": 77558.3,
+    "load_mw": 73865.0,
+    "loss_mw": 1600.1,
+    "loss_pct": 2.17,
+    "vm_min": 0.7755,
+    "vm_max": 1.0365,
+    "spread": null,
+    "zone_pairs": {
+     "chubu->hokuriku": -351.1,
+     "chubu->kansai": -3730.3,
+     "chugoku->kansai": 1004.5,
+     "chugoku->kyushu": -623.1,
+     "chugoku->shikoku": -3.4,
+     "hokuriku->kansai": 7546.0,
+     "kansai->shikoku": -195.6
+    },
+    "chubu_kansai_500kv": {
+     "東近江開閉所~三重開閉所線": -2546.6
+    },
+    "obs_direction": {
+     "chubu": [
+      85,
+      147
+     ],
+     "chugoku": [
+      8,
+      8
+     ],
+     "hokuriku": [
+      1,
+      1
+     ],
+     "kyushu": [
+      3,
+      5
+     ],
+     "shikoku": [
+      43,
+      49
+     ],
+     "all": [
+      140,
+      210
+     ]
+    }
+   },
+   "after": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 6,
+    "n_bus": 7977,
+    "n_line": 8110,
+    "n_trafo": 997,
+    "main_slack": "slack_1889",
+    "main_slack_lonlat": [
+     136.82878,
+     35.03515
+    ],
+    "main_slack_zone": "chubu",
+    "main_slack_mw": 0.7,
+    "other_slacks_mw": 4189.9,
+    "gen_mw": 71115.9,
+    "load_mw": 73865.0,
+    "loss_mw": 1441.5,
+    "loss_pct": 1.95,
+    "vm_min": 0.7761,
+    "vm_max": 1.0376,
+    "spread": {
+     "applied": true,
+     "slack": "slack_1889",
+     "n_gen": 8016,
+     "slack_before_mw": 1482.6,
+     "slack_after_mw": 0.7,
+     "spread_mw": 1481.9
+    },
+    "zone_pairs": {
+     "chubu->hokuriku": 72.7,
+     "chubu->kansai": 294.9,
+     "chugoku->kansai": -254.1,
+     "chugoku->kyushu": 18.0,
+     "chugoku->shikoku": 190.8,
+     "hokuriku->kansai": 6741.4,
+     "kansai->shikoku": -196.6
+    },
+    "chubu_kansai_500kv": {
+     "東近江開閉所~三重開閉所線": -137.6
+    },
+    "obs_direction": {
+     "chubu": [
+      91,
+      147
+     ],
+     "chugoku": [
+      8,
+      8
+     ],
+     "hokuriku": [
+      1,
+      1
+     ],
+     "kyushu": [
+      2,
+      5
+     ],
+     "shikoku": [
+      43,
+      49
+     ],
+     "all": [
+      145,
+      210
+     ]
+    }
+   },
+   "line_delta": {
+    "n_lines": 8109,
+    "gt50_mw": 636,
+    "gt200_mw": 208,
+    "max_mw": 3757.7
+   },
+   "trial_exchange": {
+    "ac": true,
+    "solve": "dc",
+    "folded_buses": 6,
+    "n_bus": 7977,
+    "n_line": 8110,
+    "n_trafo": 997,
+    "main_slack": "slack_1889",
+    "main_slack_lonlat": [
+     136.82878,
+     35.03515
+    ],
+    "main_slack_zone": "chubu",
+    "main_slack_mw": 4.5,
+    "other_slacks_mw": 4189.9,
+    "gen_mw": 71709.7,
+    "load_mw": 73865.0,
+    "loss_mw": 2039.1,
+    "loss_pct": 2.76,
+    "vm_min": 0.7762,
+    "vm_max": 1.0373,
+    "spread": {
+     "applied": true,
+     "slack": "slack_1889",
+     "n_gen": 8016,
+     "slack_before_mw": 1449.3,
+     "slack_after_mw": 4.5,
+     "spread_mw": 1444.8
+    },
+    "zone_pairs": {
+     "chubu->hokuriku": 183.3,
+     "chubu->kansai": 1614.0,
+     "chugoku->kansai": 7201.5,
+     "chugoku->kyushu": -1757.6,
+     "chugoku->shikoku": -1243.4,
+     "hokuriku->kansai": 4107.8,
+     "kansai->shikoku": -199.7
+    },
+    "chubu_kansai_500kv": {
+     "東近江開閉所~三重開閉所線": 600.8
+    },
+    "obs_direction": {
+     "chubu": [
+      88,
+      146
+     ],
+     "chugoku": [
+      8,
+      8
+     ],
+     "hokuriku": [
+      1,
+      1
+     ],
+     "kyushu": [
+      3,
+      5
+     ],
+     "shikoku": [
+      42,
+      49
+     ],
+     "all": [
+      142,
+      209
+     ]
+    },
+    "export_target_mw": {
+     "chubu": 1602.1,
+     "chugoku": 4523.1,
+     "hokuriku": 115.6,
+     "kansai": -8875.5,
+     "kyushu": 1799.5,
+     "shikoku": 1420.0
+    }
+   }
+  }
+ }
+}
