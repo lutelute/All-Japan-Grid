@@ -852,17 +852,20 @@ CONNECTED_DISPATCH = True
 # 空容量一覧に発電所の名前のついた線・構内の変電所が載っている機は、その電圧(と網で引ければ相手)へ繋ぐ。
 # 台帳の 21 機のうち、島の規則のままで公表の電圧に載っていたのは 13 機(西 8/16・北海道 5/5。
 # capkv が 1 GW 級を 500 kV へ回していた)。`docs/reports/plant_connections_2026-10-28.md`。無効化は `--no-plant-connections`。
+# 2026-10-29 追補: 構内の点 `at`(網では変電所でない分岐点)と碧南を足して 22 機
+# (`docs/reports/nagoya_port_sites_2026-10-29.md`)。
 # #24・#26・#54 と同じく、関数の引数既定は台帳なし(what-if 群の比較の基準を黙って変えない)。
 PLANT_CONNECTIONS = True
 PLANT_CONNECTIONS_PATH = os.path.join(ROOT, "config", "plant_connections.yaml")
 
 
 def load_plant_connections(path=PLANT_CONNECTIONS_PATH):
-    """台帳 → {発電所名: {"kv": 電圧, "to": [公表の相手のバス名]}}。"""
+    """台帳 → {発電所名: {"kv": 電圧, "to": [公表の相手のバス名], "at": (緯度, 経度) か None}}。"""
     import yaml
     with open(path, encoding="utf-8") as f:
         rows = (yaml.safe_load(f) or {}).get("plants", [])
-    return {str(r["name"]): {"kv": float(r["kv"]), "to": [str(t) for t in (r.get("to") or [])]}
+    return {str(r["name"]): {"kv": float(r["kv"]), "to": [str(t) for t in (r.get("to") or [])],
+                             "at": tuple(float(v) for v in r["at"]) if r.get("at") else None}
             for r in rows}
 
 
@@ -1074,11 +1077,21 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                                          incident.get(t[1][1], 0.0), -t[0]))[1][1]
         led = plant_ledger.get(str(props.get("name") or "")) if plant_ledger else None
         if led is not None:
-            # 介入#55: 公表の接続の電圧(と相手)。電圧が合うバスの、相手 → 最寄り
+            # 介入#55: 公表の接続の電圧(と相手)。構内の点 → 電圧が合うバスの、相手 → 最寄り
             fit = [(d, s) for d, s in cands if d <= 25.0
                    and abs(float(net.bus.at[s[1], "vn_kv"]) - led["kv"]) < 0.5]
             to = [(d, s) for d, s in fit if str(net.bus.at[s[1], "name"]) in led["to"]]
-            hit = to or fit
+            # 構内の点(地図・空中写真で見た、構内の変電所から線が出る鉄塔)。分岐点は変電所の
+            # バスではないので cands に入らない。全バスから 0.5 km 以内・同じ電圧を探す
+            at = []
+            if led.get("at"):
+                at = sorted((_haversine_km(lat, lon, nodes[i]["lat"], nodes[i]["lon"]),
+                             (i, bus_of[i], nodes[i]["lat"], nodes[i]["lon"]))
+                            for i in bus_of
+                            if _haversine_km(led["at"][0], led["at"][1],
+                                             nodes[i]["lat"], nodes[i]["lon"]) <= 0.5
+                            and abs(float(net.bus.at[bus_of[i], "vn_kv"]) - led["kv"]) < 0.5)
+            hit = at or to or fit
             nm = str(props.get("name"))
             if hit:
                 d_led, s_led = hit[0]
@@ -1088,7 +1101,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
                         "name": nm, "mw": round(cap, 1),
                         "rule": f"{net.bus.at[pick, 'name']} {float(net.bus.at[pick, 'vn_kv']):.0f}kV",
                         "ledger": f"{net.bus.at[s_led[1], 'name']} {led['kv']:.0f}kV",
-                        "km": round(d_led, 1), "by": "to" if to else "kv"})
+                        "km": round(d_led, 1), "by": "at" if at else ("to" if to else "kv")})
                 pick = s_led[1]
             else:
                 ledger_unresolved.append(nm)
