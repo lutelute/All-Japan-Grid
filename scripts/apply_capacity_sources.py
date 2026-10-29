@@ -169,10 +169,36 @@ def main(data_dir=DATA, records=None):
                 key_count[k] = key_count.get(k, 0) + 1
         ambiguous = 0
         fuel_vetoed = []
+        # 名前照合の 1 地物限り(2026-10-29): 出典の値は発電所全体の値なので、同じ地域・同じ名前の
+        # feature が 2 つ以上あるときは、OSM 容量が出典の値に最も近い 1 つだけに当てる。従来は全部に
+        # 塗っていて、川崎火力(JERA 3,420MW が JR東日本の地物にも)・敦賀原子力(1,160MW が 0.04MW の
+        # 地物にも)・葛根田地熱(30MW が 10 地物に)で同じ発電所を重ねて数えていた。
+        name_recs_of = []
         for ft in d.get("features", []):
             p = ft.get("properties") or {}
             name = (p.get("_display_name") or p.get("name") or "").strip()
             name_rec = by_name.get(name) or (by_norm.get(norm(name)) if name else None)
+            if name_rec and not fuel_compatible(name_rec, ft):
+                fuel_vetoed.append((name, p.get("fuel_type"), name_rec["name"],
+                                    name_rec["value"]))
+                name_rec = None
+            name_recs_of.append(name_rec)
+        name_owner = {}
+        for i, (ft, rec) in enumerate(zip(d.get("features", []), name_recs_of)):
+            if not rec:
+                continue
+            grp = ((ft.get("properties") or {}).get("_region"), id(rec))
+            osm = (ft.get("properties") or {}).get("capacity_mw")
+            dist = abs(float(osm) - float(rec["value"])) if isinstance(osm, (int, float)) and osm >= 0 else float("inf")
+            if grp not in name_owner or dist < name_owner[grp][1]:
+                name_owner[grp] = (i, dist)
+        name_dup_skipped = 0
+        for i, ft in enumerate(d.get("features", [])):
+            p = ft.get("properties") or {}
+            name_rec = name_recs_of[i]
+            if name_rec and name_owner.get((p.get("_region"), id(name_rec)), (i,))[0] != i:
+                name_rec = None
+                name_dup_skipped += 1
             geo_rec = None
             k = feature_geo_key(ft)
             if k and k in by_key:
@@ -180,10 +206,6 @@ def main(data_dir=DATA, records=None):
                     geo_rec = by_key[k]
                 else:
                     ambiguous += 1
-            if name_rec and not fuel_compatible(name_rec, ft):
-                fuel_vetoed.append((name, p.get("fuel_type"), name_rec["name"],
-                                    name_rec["value"]))
-                name_rec = None
             rec = choose_record(name_rec, geo_rec, ft)
             # 冪等性: 既存の sourced を一旦消してから(出典DB更新を反映)
             had = any(k in p for k in SOURCED_FIELDS)
@@ -212,6 +234,7 @@ def main(data_dir=DATA, records=None):
                 if den > 0 and abs(o - s) / den > 0.1:
                     difs.append((p.get("_display_name") or p.get("name"), o, s))
         note_amb = f" 座標キー曖昧skip={ambiguous}" if ambiguous else ""
+        note_amb += f" 同名の2つ目以降skip={name_dup_skipped}" if name_dup_skipped else ""
         note_fuel = f" 燃料種不整合veto={len(fuel_vetoed)}" if fuel_vetoed else ""
         print(f"  {tgt}: applied={applied} (cleared stale={cleared}){note_amb}{note_fuel}")
         for nm, fuel, rn, val in fuel_vetoed[:6]:

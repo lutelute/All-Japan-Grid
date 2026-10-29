@@ -327,16 +327,17 @@ def test_capkv_keeps_large_units_off_66kv():
 def test_capkv_is_a_registered_mode_and_island_defaults_are_pinned():
     """capkv が選択肢として提供され、既定は**島別**(介入#41)であること。
 
-    09-02 は east を cap に据え置いた(降圧点の欠損を cap が偶然覆い隠し、capkv で 725→1031% と悪化)。
-    2026-10-29 に east も capkv へ(#43a・#48〜#50 で降圧点が入り悪化は再現しない。
-    `docs/reports/attach_split_2026-10-29.md`)。okinawa は cap のまま。
+    east は降圧点(66↔275kV 変圧器)の欠損を cap が偶然覆い隠しているため、capkv に
+    すると 725→1031% と悪化する。出典つき補完が済むまで east/okinawa は cap 据え置き。
+    2026-10-29 再検討: 悪化は今の正典で再現しないが、公表で照らせる東の 4 機で cap 0・capkv 1 と
+    規則の根拠が無いので east は cap のまま(公表で電圧の分かる機は #55 の台帳で直す)。
     全島一律の定数 `GEN_ATTACH_DEFAULT` は cap のまま(what-if の base と旧経路の互換)。
     """
     pf = _pf()
     assert "capkv" in pf.ATTACH_MODES, "capkv が ATTACH_MODES に無い"
     assert pf.GEN_ATTACH_DEFAULT == "cap", "一律定数が動いた(旧経路の互換が崩れる)"
     assert pf.ISLAND_ATTACH_DEFAULT == {"hokkaido": "capkv", "west": "capkv",
-                                        "east": "capkv", "okinawa": "cap"}, \
+                                        "east": "cap", "okinawa": "cap"}, \
         "島別既定が動いた — 台帳(#41)と IMPROVEMENT_LOG を先に更新すること"
     for island, mode in pf.ISLAND_ATTACH_DEFAULT.items():
         assert pf.attach_default_for(island) == mode

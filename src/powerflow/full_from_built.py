@@ -810,12 +810,13 @@ GEN_ATTACH_DEFAULT = "cap"
 # east は降圧点(66↔275kV変圧器)の欠損を cap が偶然覆い隠しているため逆に悪化する
 # (725→1031%)。よって既定を島別に分ける — ISLAND_MODE(西のみAC)と同じ島別設計。
 # east は降圧点の出典つき補完が済むまで cap 据え置き(既知の欠陥として登録)。
-# 2026-10-29 改訂: east も capkv。#43a(暗黙降圧)・#48〜#50(変電所内の変圧器と容量)で降圧点が入った
-# 今の正典では 09-02 の悪化(725→1031%)は再現せず、cap は東の 300 MW 以上の火力を 154 kV 以下に
-# 多く載せていた(`docs/reports/attach_split_2026-10-29.md`)。okinawa は cap のまま。
+# 2026-10-29 再検討: east を capkv にする案は、09-02 の悪化(725→1031%)が今の正典で再現しない
+# (`docs/reports/attach_split_2026-10-29.md`)が、公表で接続電圧が分かる東の大型機 4 機で照らすと
+# cap 0・capkv 1 で、規則として正しいと言える根拠が無い(もっともらしい止まり)。既定は確実なものだけにする
+# 方針で east は cap のまま。公表で電圧の分かる機は #55 の台帳で直す。capkv は `--gen-attach capkv` で選ぶ。
 # 無効化: --gen-attach cap で全島旧既定に戻る。
 ISLAND_ATTACH_DEFAULT = {"hokkaido": "capkv", "west": "capkv",
-                         "east": "capkv", "okinawa": "cap"}
+                         "east": "cap", "okinawa": "cap"}
 
 # ── 介入#43(2026-09-02): 降圧点欠損の是正 — 台帳 docs/MODEL_INTERVENTIONS.md #43a/#43b。
 # #43a 暗黙降圧(異階級直結線)= **既定ON**。66kV 線が 275kV 母線に直結することは電気的に
