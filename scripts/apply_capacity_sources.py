@@ -136,6 +136,46 @@ def choose_record(name_rec, geo_rec, ft):
     return geo_rec  # feature特定的に裁定済みのgeoが勝つ
 
 
+def feature_ident(ft):
+    """feature の同一性(地域・名前・4 桁丸めの座標)。ファイルをまたいで同じ feature を同じとみなす。"""
+    p = ft.get("properties") or {}
+    g = ft.get("geometry") or {}
+    c = g.get("coordinates") if g.get("type") == "Point" else None
+    return (p.get("_region"), (p.get("_display_name") or p.get("name") or "").strip(),
+            (round(c[0], 4), round(c[1], 4)) if c else None)
+
+
+def name_owners(data_dir, by_name, by_norm):
+    """名前照合の出典の値を当てる 1 地物を、全ファイル(TARGETS)を通して決める(2026-10-29)。
+
+    出典の値は発電所全体の値。同じ地域・同じ名前の feature が 2 つ以上あるときは、OSM 容量が出典の値に
+    最も近い 1 つだけに当てる。ファイルごとに決めると、発電事業者だけのファイル(plants_ipp)では同名の
+    電力会社の feature が見えず、そこに当ててしまう(川崎火力: JERA と JR東日本)。
+    戻り値: {(地域, 出典の名前): (当てる feature の同一性, 同一性の数)}。
+    """
+    best, idents = {}, {}
+    for tgt in TARGETS:
+        path = os.path.join(data_dir, tgt)
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        for ft in d.get("features", []):
+            p = ft.get("properties") or {}
+            name = (p.get("_display_name") or p.get("name") or "").strip()
+            rec = by_name.get(name) or (by_norm.get(norm(name)) if name else None)
+            if not rec or not fuel_compatible(rec, ft):
+                continue
+            key = (p.get("_region"), rec["name"])
+            ident = feature_ident(ft)
+            idents.setdefault(key, set()).add(ident)
+            osm = p.get("capacity_mw")
+            dist = abs(float(osm) - float(rec["value"])) if isinstance(osm, (int, float)) and osm >= 0 else float("inf")
+            if key not in best or dist < best[key][1]:
+                best[key] = (ident, dist)
+    return {k: (v[0], len(idents[k])) for k, v in best.items()}
+
+
 def main(data_dir=DATA, records=None):
     src = load_records() if records is None else records
     geo_recs = [r for r in src if str(r.get("plant_key", "")).startswith("geo:")]
@@ -153,6 +193,7 @@ def main(data_dir=DATA, records=None):
             by_key[k] = r
     print(f"出典DB: {len(src)} 行 / 名前照合 {len(by_name)} + 座標キー {len(by_key)} 発電所")
 
+    owners = name_owners(data_dir, by_name, by_norm)
     for tgt in TARGETS:
         path = os.path.join(data_dir, tgt)
         if not os.path.exists(path):
@@ -169,10 +210,9 @@ def main(data_dir=DATA, records=None):
                 key_count[k] = key_count.get(k, 0) + 1
         ambiguous = 0
         fuel_vetoed = []
-        # 名前照合の 1 地物限り(2026-10-29): 出典の値は発電所全体の値なので、同じ地域・同じ名前の
-        # feature が 2 つ以上あるときは、OSM 容量が出典の値に最も近い 1 つだけに当てる。従来は全部に
-        # 塗っていて、川崎火力(JERA 3,420MW が JR東日本の地物にも)・敦賀原子力(1,160MW が 0.04MW の
-        # 地物にも)・葛根田地熱(30MW が 10 地物に)で同じ発電所を重ねて数えていた。
+        # 名前照合の 1 地物限り(2026-10-29、name_owners): 従来は同じ名前の feature 全部に塗っていて、
+        # 川崎火力(JERA 3,420MW が JR東日本の地物にも)・敦賀原子力(1,160MW が 0.04MW の地物にも)・
+        # 葛根田地熱(30MW が 10 地物に)で同じ発電所を重ねて数えていた。
         name_recs_of = []
         for ft in d.get("features", []):
             p = ft.get("properties") or {}
@@ -183,20 +223,12 @@ def main(data_dir=DATA, records=None):
                                     name_rec["value"]))
                 name_rec = None
             name_recs_of.append(name_rec)
-        name_owner = {}
-        for i, (ft, rec) in enumerate(zip(d.get("features", []), name_recs_of)):
-            if not rec:
-                continue
-            grp = ((ft.get("properties") or {}).get("_region"), id(rec))
-            osm = (ft.get("properties") or {}).get("capacity_mw")
-            dist = abs(float(osm) - float(rec["value"])) if isinstance(osm, (int, float)) and osm >= 0 else float("inf")
-            if grp not in name_owner or dist < name_owner[grp][1]:
-                name_owner[grp] = (i, dist)
         name_dup_skipped = 0
         for i, ft in enumerate(d.get("features", [])):
             p = ft.get("properties") or {}
             name_rec = name_recs_of[i]
-            if name_rec and name_owner.get((p.get("_region"), id(name_rec)), (i,))[0] != i:
+            own = owners.get((p.get("_region"), name_rec["name"])) if name_rec else None
+            if own and own[1] > 1 and feature_ident(ft) != own[0]:
                 name_rec = None
                 name_dup_skipped += 1
             geo_rec = None

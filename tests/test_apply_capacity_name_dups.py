@@ -62,3 +62,20 @@ def test_same_name_in_other_region_is_separate(tmp_path):
              _feat("敦賀原子力発電所", "hokuriku", 136.05, 35.75, cap=1160.0, fuel="nuclear")]
     out = _run(tmp_path, feats, [_rec("敦賀原子力発電所", 1160)])
     assert all(f["properties"].get("capacity_mw_sourced") == 1160 for f in out)
+
+
+def test_owner_is_chosen_across_files(tmp_path):
+    # plants_ipp には JR東日本の地物しか無い。全体(plants_all)で選んだ JERA の地物にだけ当てる
+    jera = _feat("川崎火力発電所", "tokyo", 139.74, 35.50, cap=3420.0)
+    jr = _feat("川崎火力発電所", "tokyo", 139.75, 35.51, cap=807.0)
+    for name, feats in (("plants_all.geojson", [jr, jera]), ("plants_ipp.geojson", [jr]),
+                        ("plants_utility.geojson", [jera])):
+        with open(tmp_path / name, "w", encoding="utf-8") as f:
+            json.dump({"type": "FeatureCollection", "features": feats}, f, ensure_ascii=False)
+    main(data_dir=str(tmp_path), records=[_rec("川崎火力発電所", 3420)])
+    def load(n):
+        with open(tmp_path / n, encoding="utf-8") as f:
+            return json.load(f)["features"]
+    assert "capacity_mw_sourced" not in load("plants_ipp.geojson")[0]["properties"]
+    assert load("plants_utility.geojson")[0]["properties"]["capacity_mw_sourced"] == 3420
+    assert [f["properties"].get("capacity_mw_sourced") for f in load("plants_all.geojson")] == [None, 3420]
