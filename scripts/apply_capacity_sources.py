@@ -38,6 +38,9 @@ from capacity_provenance import load_records  # noqa: E402
 
 DATA = os.path.join(ROOT, "docs", "data")
 TARGETS = ["generators.geojson", "plants_all.geojson", "plants_utility.geojson", "plants_ipp.geojson"]
+# 1 地物限りにするのは発電所の地物のファイルだけ。generators.geojson は号機の地物で、出典の値(発電所全体)を
+# 号機それぞれに持たせる約束(足し合わせない。audit_capacity_provenance_reach の多重計上の注意)のまま
+PLANT_TARGETS = ["plants_all.geojson", "plants_utility.geojson", "plants_ipp.geojson"]
 CONF_RANK = {"high": 2, "medium": 1, "low": 0}
 
 SOURCED_FIELDS = [
@@ -148,13 +151,13 @@ def feature_ident(ft):
 def name_owners(data_dir, by_name, by_norm):
     """名前照合の出典の値を当てる 1 地物を、全ファイル(TARGETS)を通して決める(2026-10-29)。
 
-    出典の値は発電所全体の値。同じ地域・同じ名前の feature が 2 つ以上あるときは、OSM 容量が出典の値に
+    出典の値は発電所全体の値。発電所の地物のファイル(PLANT_TARGETS)で、同じ地域・同じ名前の feature が 2 つ以上あるときは、OSM 容量が出典の値に
     最も近い 1 つだけに当てる。ファイルごとに決めると、発電事業者だけのファイル(plants_ipp)では同名の
     電力会社の feature が見えず、そこに当ててしまう(川崎火力: JERA と JR東日本)。
     戻り値: {(地域, 出典の名前): (当てる feature の同一性, 同一性の数)}。
     """
     best, idents = {}, {}
-    for tgt in TARGETS:
+    for tgt in PLANT_TARGETS:
         path = os.path.join(data_dir, tgt)
         if not os.path.exists(path):
             continue
@@ -227,7 +230,7 @@ def main(data_dir=DATA, records=None):
         for i, ft in enumerate(d.get("features", [])):
             p = ft.get("properties") or {}
             name_rec = name_recs_of[i]
-            own = owners.get((p.get("_region"), name_rec["name"])) if name_rec else None
+            own = owners.get((p.get("_region"), name_rec["name"])) if (name_rec and tgt in PLANT_TARGETS) else None
             if own and own[1] > 1 and feature_ident(ft) != own[0]:
                 name_rec = None
                 name_dup_skipped += 1

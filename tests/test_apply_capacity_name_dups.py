@@ -79,3 +79,14 @@ def test_owner_is_chosen_across_files(tmp_path):
     assert "capacity_mw_sourced" not in load("plants_ipp.geojson")[0]["properties"]
     assert load("plants_utility.geojson")[0]["properties"]["capacity_mw_sourced"] == 3420
     assert [f["properties"].get("capacity_mw_sourced") for f in load("plants_all.geojson")] == [None, 3420]
+
+
+def test_generator_units_keep_the_plant_value(tmp_path):
+    # generators.geojson は号機の地物。発電所全体の出典の値を号機それぞれに持たせる約束のまま(足し合わせない)
+    units = [_feat("川崎火力発電所", None, 139.740, 35.500, cap=1500.0), _feat("川崎火力発電所", None, 139.741, 35.501, cap=1920.0)]
+    with open(tmp_path / "generators.geojson", "w", encoding="utf-8") as f:
+        json.dump({"type": "FeatureCollection", "features": units}, f, ensure_ascii=False)
+    main(data_dir=str(tmp_path), records=[_rec("川崎火力発電所", 3420)])
+    with open(tmp_path / "generators.geojson", encoding="utf-8") as f:
+        out = json.load(f)["features"]
+    assert all(u["properties"]["capacity_mw_sourced"] == 3420 for u in out)
