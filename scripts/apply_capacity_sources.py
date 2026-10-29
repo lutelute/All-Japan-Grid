@@ -148,11 +148,24 @@ def feature_ident(ft):
             (round(c[0], 4), round(c[1], 4)) if c else None)
 
 
+def raises_capacity(rec, ft) -> bool:
+    """出典の値をこの feature に当てると、OSM の既知の容量より増えるか。
+
+    同名の 2 つ目以降で外すのは、増える向き(幻の電源)だけ。減らす向き(大間・浪江小高の誤タグ敷地を
+    公式の 0 で消す、葛根田の分割片)は従来どおり当てる(fuel_compatible の例外と同じ考え方)。
+    OSM が不明(<0)なら従来どおり当てる。"""
+    osm = (ft.get("properties") or {}).get("capacity_mw")
+    try:
+        return isinstance(osm, (int, float)) and osm >= 0 and float(rec.get("value", 0)) > float(osm)
+    except (TypeError, ValueError):
+        return False
+
+
 def name_owners(data_dir, by_name, by_norm):
     """名前照合の出典の値を当てる 1 地物を、全ファイル(TARGETS)を通して決める(2026-10-29)。
 
     出典の値は発電所全体の値。発電所の地物のファイル(PLANT_TARGETS)で、同じ地域・同じ名前の feature が 2 つ以上あるときは、OSM 容量が出典の値に
-    最も近い 1 つだけに当てる。ファイルごとに決めると、発電事業者だけのファイル(plants_ipp)では同名の
+    最も近い 1 つに当て、残りには容量を増やす向き(raises_capacity)なら当てない。ファイルごとに決めると、発電事業者だけのファイル(plants_ipp)では同名の
     電力会社の feature が見えず、そこに当ててしまう(川崎火力: JERA と JR東日本)。
     戻り値: {(地域, 出典の名前): (当てる feature の同一性, 同一性の数)}。
     """
@@ -231,7 +244,7 @@ def main(data_dir=DATA, records=None):
             p = ft.get("properties") or {}
             name_rec = name_recs_of[i]
             own = owners.get((p.get("_region"), name_rec["name"])) if (name_rec and tgt in PLANT_TARGETS) else None
-            if own and own[1] > 1 and feature_ident(ft) != own[0]:
+            if own and own[1] > 1 and feature_ident(ft) != own[0] and raises_capacity(name_rec, ft):
                 name_rec = None
                 name_dup_skipped += 1
             geo_rec = None

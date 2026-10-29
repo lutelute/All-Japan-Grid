@@ -1,4 +1,4 @@
-"""apply_capacity_sources の名前照合は、同じ地域・同じ名前の feature のうち 1 つだけに当てる(2026-10-29).
+"""apply_capacity_sources の名前照合は、同じ地域・同じ名前の feature のうち、容量を増やす向きには 1 つだけに当てる(2026-10-29).
 
 出典の値は発電所全体の値。同名の feature が 2 つ以上あると、従来は全部に同じ値を塗り、同じ発電所を
 重ねて数えていた(正典で 5 件: 川崎火力 3,420MW が JR東日本の地物にも、敦賀原子力 1,160MW が 0.04MW の地物にも、
@@ -90,3 +90,19 @@ def test_generator_units_keep_the_plant_value(tmp_path):
     with open(tmp_path / "generators.geojson", encoding="utf-8") as f:
         out = json.load(f)["features"]
     assert all(u["properties"]["capacity_mw_sourced"] == 3420 for u in out)
+
+
+def test_official_zero_still_clears_all_mistagged_pieces(tmp_path):
+    # 大間原子力の型: 計画中の原子力の敷地を OSM が太陽光 138 MW で 2 つ描いた。公式の運転容量 0 は全部に当てる(減らす向き)
+    feats = [_feat("大間原子力発電所", "hokkaido", 140.90, 41.51, cap=138.3, fuel="solar"),
+             _feat("大間原子力発電所", "hokkaido", 140.91, 41.52, cap=138.3, fuel="solar")]
+    out = _run(tmp_path, feats, [_rec("大間原子力発電所", 0)])
+    assert [f["properties"].get("capacity_mw_sourced") for f in out] == [0, 0]
+
+
+def test_lower_official_value_applies_to_split_pieces(tmp_path):
+    # 葛根田地熱の型: 分割片の OSM 50 MW より公式の値が小さい → 全部に当てる(増やさない)
+    feats = [_feat("葛根田地熱発電所", "tohoku", 140.85, 39.79, cap=50.0, fuel="geothermal"),
+             _feat("葛根田地熱発電所", "tohoku", 140.86, 39.80, cap=80.0, fuel="geothermal")]
+    out = _run(tmp_path, feats, [_rec("葛根田地熱発電所", 30)])
+    assert [f["properties"].get("capacity_mw_sourced") for f in out] == [30, 30]
