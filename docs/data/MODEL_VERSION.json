@@ -1,23 +1,23 @@
 {
-  "model_version": "69c799e5",
-  "git_dirty": false,
-  "generated_at": "2026-10-27T17:24:32+00:00",
+  "model_version": "6ede44e6",
+  "git_dirty": true,
+  "generated_at": "2026-10-28T17:32:34+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 7.7
+      "elapsed_s": 4.3
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 12.4
+      "elapsed_s": 10.6
     },
     "apply_disclosure_v1": {
       "status": "ok",
-      "elapsed_s": 0.7
+      "elapsed_s": 0.6
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.0
+      "elapsed_s": 0.9
     },
     "route_disclosure": {
       "status": "ok",
@@ -29,15 +29,15 @@
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.4
+      "elapsed_s": 19.3
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 20.7
+      "elapsed_s": 20.5
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 5.1
+      "elapsed_s": 4.9
     },
     "mixed_voltage_circuits": {
       "status": "ok",
@@ -45,7 +45,7 @@
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 5.2
+      "elapsed_s": 4.4
     },
     "satellite_connections": {
       "status": "ok",
@@ -57,7 +57,7 @@
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 3.2
+      "elapsed_s": 3.0
     },
     "substation_properties": {
       "status": "ok",
@@ -81,19 +81,19 @@
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 138.6
+      "elapsed_s": 141.1
     },
     "gen_sld": {
       "status": "ok",
-      "elapsed_s": 0.5
+      "elapsed_s": 0.7
     },
     "gen_national_overview": {
       "status": "ok",
-      "elapsed_s": 0.8
+      "elapsed_s": 0.9
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 278.7
+      "elapsed_s": 242.4
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,19 +101,19 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 124.3
+      "elapsed_s": 128.5
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.3
+      "elapsed_s": 3.9
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 122.9
+      "elapsed_s": 131.6
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 1.2
+      "elapsed_s": 1.4
     },
     "apply_capacity_sources": {
       "status": "ok",
