@@ -493,8 +493,7 @@ PuLP\cite{pulp}＋HiGHS\cite{highs}によるMILPで
 
 646機（熱電源636機・地域別蓄電池10機）・24時間のMILPは二値変数$u_{g,t}$が
 $636 \times 24 = 15{,}264$個，連続変数（$p,v,w,f$および蓄電池SOC変数）を含め
-総変数約65{,}000個に達し，一般的な商用ソルバで
-100機以下が実用限界とされる規模\cite{padhy2004,carrion2006,knueven2020}を大幅に超える．
+総変数約65{,}000個に達し，学術研究で定番の10〜100機の試験系\cite{carrion2006}を大きく上回る．
 10秒以内の求解を実現できた主な要因は，
 （i）経済合理的な起動パターンによりLP緩和ギャップが$<0.5$\%に収まりB\&B探索木が浅い，
 （ii）HiGHSプリソルブで起動バイナリが40\%以上確定・縮約される，
@@ -695,8 +694,6 @@ N-1（全100バス）およびN-2〜N-10（上位15機の$\binom{15}{k}$全組�
 
 \subsection{大規模UCの意義}
 
-既存のMILP UCに関する文献\cite{padhy2004}では
-100機以下を対象とした研究が大半を占める．
 本研究で達成した646機（OCCTO参照再エネ・蓄電池込み）・9連系線・24時間のUCは，
 著者らの知る限り日本の送電系統を対象とした公開研究中で最大規模であり，
 HiGHSソルバによる38秒での求解は実用的な日次計画への応用可能性を示す．
@@ -797,10 +794,6 @@ W.~Medjroubi \textit{et al.}：``Open data in power grid modelling,''
 L.~Thurner \textit{et al.}：``pandapower,''
 \textit{IEEE Trans. Power Syst.}, Vol.33, No.6, pp.6510--6521 (2018)
 
-\bibitem{padhy2004}
-N.~P.~Padhy：``Unit commitment---A bibliographical survey,''
-\textit{IEEE Trans. Power Syst.}, Vol.19, No.2, pp.1196--1205 (2004)
-
 \bibitem{carrion2006}
 M.~Carri\'{o}n and J.~M.~Arroyo：``A computationally efficient mixed-integer linear
 formulation for the thermal unit commitment problem,''
@@ -815,11 +808,6 @@ formulation for the thermal unit commitment problem,''
 G.~Morales-Espa\~{n}a, J.~M.~Latorre, and A.~Ramos：``Tight and compact MILP
 formulation of start-up and shut-down ramping in unit commitment,''
 \textit{IEEE Trans. Power Syst.}, Vol.28, No.2, pp.1288--1296 (2013)
-
-\bibitem{knueven2020}
-B.~Knueven, J.~Ostrowski, and J.~P.~Watson：``On mixed-integer programming
-formulations for the unit commitment problem,''
-\textit{INFORMS J. Comput.}, Vol.32, No.4, pp.857--876 (2020)
 
 \bibitem{tinney1967}
 W.~F.~Tinney and C.~E.~Hart：``Power flow solution by Newton's method,''
