@@ -44,20 +44,20 @@
     st.id = "ajgp-css";
     st.textContent = `
 .ajgp{font:13px/1.5 system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;color:inherit}
-.ajgp-stage{position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:18px;color:#e8eef1;
+.ajgp-stage{position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:0;color:#e8eef1;
  background:radial-gradient(120% 90% at 70% 35%,#10212b 0%,#0a141b 45%,#060b10 80%);border:1px solid rgba(255,255,255,.06)}
 .ajgp-stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .ajgp-lab{position:absolute;inset:0;pointer-events:none}
 .ajgp-z{position:absolute;transform:translate(-50%,-50%);display:inline-flex;gap:5px;align-items:baseline;white-space:nowrap;
  font-weight:600;font-size:11.5px;line-height:1;color:rgba(255,255,255,.88);background:rgba(8,16,22,.6);
- border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 8px}
+ border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:3px 7px}
 .ajgp-z b{font:600 11px/1 ui-monospace,Menlo,monospace;color:#f2b34e}
 .ajgp-tie{position:absolute;width:12px;height:12px;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #f2b34e;box-shadow:0 0 10px #f2b34e}
 .ajgp-tip{position:absolute;transform:translate(12px,-50%);pointer-events:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;
- color:#fff;background:rgba(6,12,16,.9);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:5px 7px;white-space:nowrap}
+ color:#fff;background:rgba(6,12,16,.9);border:1px solid rgba(255,255,255,.15);border-radius:2px;padding:5px 7px;white-space:nowrap}
 .ajgp-bar{display:flex;align-items:center;gap:8px;margin-top:8px}
 .ajgp-bar button{font-family:inherit;font-weight:600;font-size:12px;line-height:1;color:inherit;background:transparent;cursor:pointer;
- border:1px solid rgba(128,128,128,.4);border-radius:999px;padding:7px 11px;white-space:nowrap}
+ border:1px solid rgba(128,128,128,.4);border-radius:2px;padding:6px 11px;white-space:nowrap}
 .ajgp-bar button:disabled{opacity:.45;cursor:default}
 .ajgp-bar input{flex:1;min-width:0;accent-color:#e0a03a}
 .ajgp-read{margin:6px 0 0;font:600 12px/1.6 ui-monospace,Menlo,monospace;opacity:.85}
