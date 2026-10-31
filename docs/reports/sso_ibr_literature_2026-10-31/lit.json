@@ -1,0 +1,1167 @@
+[
+ {
+  "lane": "M",
+  "key": "HAMI2017",
+  "doi": "10.1109/tpwrs.2017.2682197",
+  "role": "前回",
+  "note": "新疆の直結型 PMSG 風力と弱い交流系統の低調波の相互作用",
+  "title": "Subsynchronous Interaction Between Direct-Drive PMSG Based Wind Farms and Weak AC Networks",
+  "year": 2017,
+  "cites": 628,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Huakun Liu",
+   "Xiaorong Xie",
+   "Jingbo He",
+   "Tao Xu",
+   "Zhao Kai Yu",
+   "Chao Wang"
+  ],
+  "oa": "W2595551762",
+  "cites_in_set": [
+   "DQIMP2015",
+   "RYGG2016"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "WEAK2019",
+  "doi": "10.1109/tpwrs.2019.2924412",
+  "role": "前回",
+  "note": "弱い系統の風力: 低周波の振動・SSO・火力の軸ねじれ",
+  "title": "Wind in Weak Grids: Low-Frequency Oscillations, Subsynchronous Oscillations, and Torsional Interactions",
+  "year": 2019,
+  "cites": 236,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Yin Li",
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W2952577944",
+  "cites_in_set": [
+   "HAMI2017",
+   "WEAK4HZ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "WEAK4HZ2018",
+  "doi": "10.1109/tpwrs.2018.2852947",
+  "role": "機構",
+  "note": "テキサスの 4 Hz と中国西部の 30 Hz の違いを、動的モデルと固有値で説明。原因の 1 つは PLL の定数。直流電圧制御のある Type 4 では、低い周波数のモードと sub のモードが同時にある",
+  "title": "Wind in Weak Grids: 4 Hz or 30 Hz Oscillations?",
+  "year": 2018,
+  "cites": 130,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W2848275550",
+  "cites_in_set": [
+   "HAMI2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "GSCR2018",
+  "doi": "10.1109/tpwrs.2018.2875305",
+  "role": "指標",
+  "note": "小信号安定と SCR・臨界 SCR の関係を 1 台で解析し、多連系に広げて一般化 SCR(gSCR)と臨界 gSCR を定義",
+  "title": "Small Signal Stability Analysis of Multi-Infeed Power Electronic Systems Based on Grid Strength Assessment",
+  "year": 2018,
+  "cites": 225,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Wei Dong",
+   "Huanhai Xin",
+   "Di Wu",
+   "Linbin Huang"
+  ],
+  "oa": "W2897139880",
+  "cites_in_set": [
+   "DQIMP2015",
+   "HAMI2017",
+   "RYGG2016",
+   "STATCOM2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "PLLLOOP2019",
+  "doi": "10.1109/tsg.2019.2924295",
+  "role": "機構",
+  "note": "弱い系統で PLL が同期を失う(周波数が発散し、出力が振動する)。無効電力制御・電圧のフィードフォワード・PLL の設計の組み合わせで安定余裕が変わる",
+  "title": "Grid-Synchronization Stability Analysis and Loop Shaping for PLL-Based Power Converters With Different Reactive Power Control",
+  "year": 2019,
+  "cites": 256,
+  "venue": "IEEE Transactions on Smart Grid",
+  "authors": [
+   "Linbin Huang",
+   "Huanhai Xin",
+   "Zhiyi Li",
+   "Ping Ju",
+   "Hui Yuan",
+   "Lan Zhou"
+  ],
+  "oa": "W2950016236",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DQIMP2015",
+   "GSCR2018",
+   "RYGG2016",
+   "SHAIR2018",
+   "SUN2011",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "PV2018",
+  "doi": "10.1049/iet-rpg.2018.5659",
+  "role": "機構",
+  "note": "太陽光の正相・逆相インピーダンスで解析。条件によっては sub の帯で容量性になり、弱い誘導性の網と共振する。要旨では、電流制御の比例ゲインが小さいと危険が増し、PLL のゲインが大きいと和らぐ。PSCAD で確認",
+  "title": "Subsynchronous oscillation of PV plants integrated to weak AC networks",
+  "year": 2018,
+  "cites": 33,
+  "venue": "IET Renewable Power Generation",
+  "authors": [
+   "Shuqiang Zhao",
+   "Ren Li",
+   "Benfeng Gao",
+   "Nan Wang",
+   "Xi Zhang"
+  ],
+  "oa": "W2901560714",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "HAMI2017",
+   "SUN2011",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "M",
+  "key": "PMSGIMP2021",
+  "doi": "10.1109/tec.2021.3074798",
+  "role": "モデル",
+  "note": "PMSG 風力のインピーダンスモデルに、ふつうは定電力源と置く機側の動特性まで入れる",
+  "title": "A Complete Impedance Model of a PMSG-Based Wind Energy Conversion System and Its Effect On the Stability Analysis of MMC-HVDC Connected Offshore Wind Farms",
+  "year": 2021,
+  "cites": 120,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Tao Xue",
+   "Jing Lyu",
+   "Han Wang",
+   "Xu Cai"
+  ],
+  "oa": "W3157554851",
+  "cites_in_set": [
+   "HAMI2017",
+   "RYGG2016",
+   "WEAK2019",
+   "WEAK4HZ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "SUN2011",
+  "doi": "10.1109/tpel.2011.2136439",
+  "role": "前回",
+  "note": "インピーダンスに基づく系統連系インバータの安定判定",
+  "title": "Impedance-Based Stability Criterion for Grid-Connected Inverters",
+  "year": 2011,
+  "cites": 2590,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Jian Sun"
+  ],
+  "oa": "W2139361710",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "CESPEDES2014",
+  "doi": "10.1109/tpel.2013.2262473",
+  "role": "前回",
+  "note": "電圧形変換器のインピーダンスのモデル化",
+  "title": "Impedance Modeling and Analysis of Grid-Connected Voltage-Source Converters",
+  "year": 2013,
+  "cites": 1172,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Mauricio Cespedes",
+   "Jian Dong Sun"
+  ],
+  "oa": "W2073017797",
+  "cites_in_set": [
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "DQIMP2015",
+  "doi": "10.1109/tpel.2015.2398192",
+  "role": "前回",
+  "note": "dq 小信号インピーダンス",
+  "title": "Analysis of D-Q Small-Signal Impedance of Grid-Tied Inverters",
+  "year": 2015,
+  "cites": 1339,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Bo Wen",
+   "Dushan Boroyevich",
+   "Rolando P. Burgos",
+   "Paolo Mattavelli",
+   "Zhiyu Shen"
+  ],
+  "oa": "W1974967408",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "BAKHSH2016",
+  "doi": "10.1109/tpel.2016.2542244",
+  "role": "前回",
+  "note": "相領域インピーダンスの周波数の結合",
+  "title": "Couplings in Phase Domain Impedance Modelling of Grid-Connected Converters",
+  "year": 2016,
+  "cites": 303,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Mohammad Kazem Bakhshizadeh",
+   "Xiongfei Wang",
+   "Frede Blaabjerg",
+   "Jesper Hjerrild",
+   "Łukasz Kocewiak",
+   "Claus Leth Bak"
+  ],
+  "oa": "W2319578877",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "DQIMP2015",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "RYGG2016",
+  "doi": "10.1109/jestpe.2016.2588733",
+  "role": "手法",
+  "note": "正相・逆相のインピーダンスの定義を修正し、dq の定義と等価であることを示す。鏡像周波数で分離できる系(MFD)を定義",
+  "title": "A Modified Sequence-Domain Impedance Definition and Its Equivalence to the dq-Domain Impedance Definition for the Stability Analysis of AC Power Electronic Systems",
+  "year": 2016,
+  "cites": 539,
+  "venue": "IEEE Journal of Emerging and Selected Topics in Power Electronics",
+  "authors": [
+   "Atle Rygg",
+   "Marta Molinas",
+   "Chen Zhang",
+   "Xu Cai"
+  ],
+  "oa": "W2962861585",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DQIMP2015",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "UNIFIED2017",
+  "doi": "10.1109/tpel.2017.2684906",
+  "role": "手法",
+  "note": "PLL と電流制御の影響を見るための、系統連系の電圧形変換器の統一したインピーダンスモデル。領域ごとのモデルの関係を複素伝達関数で明示。αβ のモデルで PLL の周波数の結合も示す",
+  "title": "Unified Impedance Model of Grid-Connected Voltage-Source Converters",
+  "year": 2017,
+  "cites": 890,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Xiongfei Wang",
+   "Lennart Harnefors",
+   "Frede Blaabjerg"
+  ],
+  "oa": "W2610075340",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DQIMP2015",
+   "RYGG2016"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "DQSEQ2017",
+  "doi": "10.1109/tec.2017.2698202",
+  "role": "手法",
+  "note": "dq・正逆相・フェーザの 3 領域で、電圧形変換器のインピーダンスを 3×3 の伝達行列として部品ごとに組む",
+  "title": "Impedance Modeling of Three-Phase Voltage Source Converters in DQ, Sequence, and Phasor Domains",
+  "year": 2017,
+  "cites": 269,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Shahil Shah",
+   "Leila Parsa"
+  ],
+  "oa": "W2607717640",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "RYGG2016",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "UNIDQ2018",
+  "doi": "10.1109/tpwrs.2018.2794067",
+  "role": "手法",
+  "note": "交直の網と変換器の相互作用を、統一した dq のインピーダンスの網で判定する",
+  "title": "An Oscillatory Stability Criterion Based on the Unified $dq$ -Frame Impedance Network Model for Power Systems With High-Penetration Renewables",
+  "year": 2018,
+  "cites": 235,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Huakun Liu",
+   "Xiaorong Xie",
+   "Wei Liu"
+  ],
+  "oa": "W2782770186",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DQIMP2015",
+   "HAMI2017",
+   "RYGG2016",
+   "SUN2011",
+   "UNIFIED2017",
+   "WFHVDC2016"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "FDMODAL2019",
+  "doi": "10.1109/tste.2019.2900348",
+  "role": "手法",
+  "note": "周波数領域のモード解析。関係する振動モードを洗い出し、機器ごとの参加の度合いを評価",
+  "title": "Frequency-Domain Modal Analysis of the Oscillatory Stability of Power Systems With High-Penetration Renewables",
+  "year": 2019,
+  "cites": 133,
+  "venue": "IEEE Transactions on Sustainable Energy",
+  "authors": [
+   "Ying Zhan",
+   "Xiaorong Xie",
+   "Huakun Liu",
+   "Hui Liu",
+   "Yunhong Li"
+  ],
+  "oa": "W2915223652",
+  "cites_in_set": [
+   "HAMI2017",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "ADMIT2020",
+  "doi": "10.1109/tpwrs.2020.2996014",
+  "role": "手法",
+  "note": "全体のアドミタンスから求めた固有値は安定を正しく予測し、Bode 線図・Nyquist 線図には限界がある。弱い系統の電圧形変換器で示す",
+  "title": "Admittance-Based Stability Analysis: Bode Plots, Nyquist Diagrams or Eigenvalue Analysis?",
+  "year": 2020,
+  "cites": 140,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W3027734312",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "SUN2011",
+   "UNIFIED2017",
+   "WEAK2019",
+   "WEAK4HZ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "WIDEBAND2023",
+  "doi": "10.1109/tpwrs.2023.3341432",
+  "role": "手法",
+  "note": "s 領域と周波数領域を結び、インピーダンス法の結果の読み方の限界を説明",
+  "title": "Impedance-Based Stability Analysis of Power System Wideband Oscillations: A Bridge between s Domain and Frequency Domain",
+  "year": 2023,
+  "cites": 33,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Qifan Chen",
+   "Siqi Bu"
+  ],
+  "oa": "W4389722613",
+  "cites_in_set": [
+   "ADMIT2020",
+   "CHENG2022",
+   "FDMODAL2019",
+   "HAMI2017",
+   "HATZI2021",
+   "SSIREV2023",
+   "SUN2011",
+   "UNIDQ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "I",
+  "key": "JP2019",
+  "doi": "10.1541/ieejjia.8.488",
+  "role": "モデル",
+  "note": "系統連系インバータの小信号の正確なインピーダンスモデル。網のインピーダンスとの相互作用で高調波・次数間高調波が出る(電気学会の英文誌、筆者は海外)",
+  "title": "Accurate Impedance Model of a Grid-Connected Inverter for Small-Signal Stability Assessment in High-Impedance Grids",
+  "year": 2019,
+  "cites": 14,
+  "venue": "IEEJ Journal of Industry Applications",
+  "authors": [
+   "Tuomas Messo",
+   "Roni Luhtala",
+   "Aapo Aapro",
+   "Tomi Roinila"
+  ],
+  "oa": "W2943558351",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "DQIMP2015",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "G",
+  "key": "VSG2018",
+  "doi": "10.1109/tpel.2018.2841371",
+  "role": "比較",
+  "note": "VSG と従来の系統連系インバータの正逆相インピーダンスを比べる。従来型は中域で容量性になり不安定になりやすい。VSG は誘導性で、超弱系統や多数並列でも安定",
+  "title": "Sequence-Impedance-Based Stability Comparison Between VSGs and Traditional Grid-Connected Inverters",
+  "year": 2018,
+  "cites": 251,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Wenhua Wu",
+   "Leming Zhou",
+   "Yandong Chen",
+   "An Luo",
+   "Yanting Dong",
+   "Xiaoping Zhou"
+  ],
+  "oa": "W2807530475",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "G",
+  "key": "GFMSSR2023",
+  "doi": "10.1109/tste.2023.3300219",
+  "role": "比較",
+  "note": "Type III 風車を GFM で運転すると直列補償との SSR の危険が低い仕組みを、正逆相インピーダンスで説明。PSCAD と 2.5 MW 機の実測で確認",
+  "title": "On the Low Risk of SSR in Type III Wind Turbines Operating With Grid-Forming Control",
+  "year": 2023,
+  "cites": 28,
+  "venue": "IEEE Transactions on Sustainable Energy",
+  "authors": [
+   "Weihang Yan",
+   "Shahil Shah",
+   "Vahan Gevorgian",
+   "Przemyslaw Koralewicz",
+   "Robb Wallen",
+   "Wenzhong Gao"
+  ],
+  "oa": "W4385413489",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "CHENG2022",
+   "DQSEQ2017",
+   "GUYUAN2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "G",
+  "key": "GU2022",
+  "doi": "10.1109/jproc.2022.3179826",
+  "role": "総説",
+  "note": "IBR で角度・周波数・電圧の動きの帯が広がって互いに結合し、電磁的なモードとも結合する。GFM と GFL の同期を双対で統一",
+  "title": "Power System Stability With a High Penetration of Inverter-Based Resources",
+  "year": 2022,
+  "cites": 402,
+  "venue": "Proceedings of the IEEE",
+  "authors": [
+   "Yunjie Gu",
+   "T.C. Green"
+  ],
+  "oa": "W4285248540",
+  "cites_in_set": [
+   "FDMODAL2019",
+   "HATZI2021",
+   "SUN2011",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "H",
+  "key": "STATCOM2017",
+  "doi": "10.1109/tpel.2017.2769702",
+  "role": "前回",
+  "note": "STATCOM と弱い交直系統の sub・super の相互作用",
+  "title": "Sub- and Super-Synchronous Interactions Between STATCOMs and Weak AC/DC Transmissions With Series Compensations",
+  "year": 2017,
+  "cites": 121,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Dewu Shu",
+   "Xiaorong Xie",
+   "Hong Rao",
+   "Xiaodan Gao",
+   "Qirong Jiang",
+   "Ying Huang"
+  ],
+  "oa": "W2766827251",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DQSEQ2017",
+   "HAMI2017",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "H",
+  "key": "WFHVDC2016",
+  "doi": "10.1109/jestpe.2016.2620378",
+  "role": "事例",
+  "note": "風力と VSC 直流の間で現地で観測された sub の振動と高調波共振の原因を、洋上の集電点から見た両側のインピーダンスで探る",
+  "title": "Understanding the Origin of Oscillatory Phenomena Observed Between Wind Farms and HVdc Systems",
+  "year": 2016,
+  "cites": 187,
+  "venue": "IEEE Journal of Emerging and Selected Topics in Power Electronics",
+  "authors": [
+   "Mohammad Amin",
+   "Marta Molinas"
+  ],
+  "oa": "W2532661086",
+  "cites_in_set": [
+   "DQIMP2015",
+   "RYGG2016",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "H",
+  "key": "MMCSEQ2017",
+  "doi": "10.1109/jestpe.2017.2762408",
+  "role": "モデル",
+  "note": "MMC の正相・逆相インピーダンス。直流送電や STATCOM の安定と共振の解析に使う",
+  "title": "Sequence Impedance Modeling of Modular Multilevel Converters",
+  "year": 2017,
+  "cites": 287,
+  "venue": "IEEE Journal of Emerging and Selected Topics in Power Electronics",
+  "authors": [
+   "Jian Sun",
+   "Hanchao Liu"
+  ],
+  "oa": "W2761829770",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "H",
+  "key": "DDWF2020",
+  "doi": "10.1109/tste.2020.3035203",
+  "role": "事例",
+  "note": "現地で起きた、直結型風力と VSC 直流の SSO を固有値で解析。主に効くのは、風車の系統側変換器の制御と直流の整流器の制御",
+  "title": "Sub-Synchronous Oscillation Characteristics and Analysis of Direct-Drive Wind Farms With VSC-HVDC Systems",
+  "year": 2020,
+  "cites": 108,
+  "venue": "IEEE Transactions on Sustainable Energy",
+  "authors": [
+   "Bingbing Shao",
+   "Shuqiang Zhao",
+   "Yongheng Yang",
+   "Benfeng Gao",
+   "Frede Blaabjerg"
+  ],
+  "oa": "W3097161431",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "HAMI2017",
+   "WEAK2019",
+   "WFHVDC2016"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "CHENG2022",
+  "doi": "10.1109/tpwrs.2022.3161418",
+  "role": "前回",
+  "note": "IBR の多い系統の実際の SSO の事故(IEEE PES の作業会)",
+  "title": "Real-World Subsynchronous Oscillation Events in Power Grids With High Penetrations of Inverter-Based Resources",
+  "year": 2022,
+  "cites": 502,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Yunzhi Cheng",
+   "Lingling Fan",
+   "Jonathan Rose",
+   "Shun-Hsien Fred Huang",
+   "John Schmall",
+   "Xiaoyu Wang"
+  ],
+  "oa": "W4224237392",
+  "cites_in_set": [
+   "DQIMP2015",
+   "GUYUAN2017",
+   "HAMI2017",
+   "HATZI2021",
+   "REAL20HZ2022",
+   "WEAK2019",
+   "WEAK4HZ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "ERCOT2012",
+  "doi": "10.1109/tdc.2012.6281678",
+  "role": "前回",
+  "note": "ERCOT の SSCI の経験と対策(2009 年の事故)",
+  "title": "ERCOT experience with Sub-synchronous Control Interaction and proposed remediation",
+  "year": 2012,
+  "cites": 289,
+  "venue": null,
+  "authors": [
+   "John Adams",
+   "Cathey Carter",
+   "Shun-Hsien Fred Huang"
+  ],
+  "oa": "W1990151667",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "GUYUAN2017",
+  "doi": "10.1109/tec.2017.2676024",
+  "role": "前回",
+  "note": "実際の風力と直列補償の SSR(現地で記録した 58 事象の解析)",
+  "title": "Characteristic Analysis of Subsynchronous Resonance in Practical Wind Farms Connected to Series-Compensated Transmissions",
+  "year": 2017,
+  "cites": 382,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Xiaorong Xie",
+   "Xu Zhang",
+   "Huakun Liu",
+   "Hui Liu",
+   "Yunhong Li",
+   "Chuanyu Zhang"
+  ],
+  "oa": "W2594603570",
+  "cites_in_set": [
+   "ERCOT2012",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "SHAIR2018",
+  "doi": "10.1016/j.rser.2018.09.047",
+  "role": "前回",
+  "note": "実際の風力の SSO の総説",
+  "title": "Overview of emerging subsynchronous oscillations in practical wind power systems",
+  "year": 2018,
+  "cites": 200,
+  "venue": "Renewable and Sustainable Energy Reviews",
+  "authors": [
+   "Jan Shair",
+   "Xiaorong Xie",
+   "Luping Wang",
+   "Wei Liu",
+   "Jingbo He",
+   "Hui Liu"
+  ],
+  "oa": "W2897945531",
+  "cites_in_set": [
+   "ERCOT2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "STATCOM2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "KAUAI2023",
+  "doi": "10.48550/arxiv.2301.05781",
+  "role": "前回",
+  "note": "カウアイ島 2021-11-21 の 18〜20 Hz の振動の解析",
+  "title": "Analysis of November 21, 2021, Kaua`i Island Power System 18-20 Hz Oscillations",
+  "year": 2023,
+  "cites": 7,
+  "venue": "arXiv (Cornell University)",
+  "authors": [
+   "Shuan Dong",
+   "Bin Wang",
+   "Tan, Jin",
+   "Cameron J. Kruse",
+   "Brad W. Rockwell",
+   "Andy Hoke"
+  ],
+  "oa": "W4317437619",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "REAL20HZ2022",
+  "doi": "10.1109/tec.2022.3206795",
+  "role": "再現",
+  "note": "実系統で観測された太陽光の約 20 Hz の SSO を、簡単な線形モデルと感度解析で機構に結び付ける。MATLAB/Simscape の EMT で確認",
+  "title": "Real-World 20-Hz IBR Subsynchronous Oscillations: Signatures and Mechanism Analysis",
+  "year": 2022,
+  "cites": 99,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Lingling Fan",
+   "Zhixin Miao",
+   "Shahil Shah",
+   "Yunzhi Cheng",
+   "Jonathan Rose",
+   "Shun-Hsien Fred Huang"
+  ],
+  "oa": "W4295934979",
+  "cites_in_set": [
+   "CHENG2022",
+   "HATZI2021",
+   "STATCOM2017",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "HORNSEA2021",
+  "doi": "10.3390/en14227685",
+  "role": "再現",
+  "note": "2019-08-09 の英国の大停電(負荷の約 3.2%、約 100 万需要家)での Hornsea の風力の sub の振動を、事故調査報告から分析し、MATLAB のモデルで再現",
+  "title": "Recurrence of Sub-Synchronous Oscillation Accident of Hornsea Wind Farm in UK and Its Suppression Strategy",
+  "year": 2021,
+  "cites": 24,
+  "venue": "Energies",
+  "authors": [
+   "Xiangwu Yan",
+   "Wenfei Chang",
+   "Sen Cui",
+   "Aazim Rasool",
+   "Jiaoxin Jia",
+   "Ying Fu Sun"
+  ],
+  "oa": "W3211447716",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "R",
+  "key": "SSIREV2023",
+  "doi": "10.1186/s41601-023-00291-0",
+  "role": "総説",
+  "note": "風力の系統の低調波の相互作用(SSI)の分類・解析・対策の総説",
+  "title": "Review of sub-synchronous interaction in wind integrated power systems: classification, challenges, and mitigation techniques",
+  "year": 2023,
+  "cites": 84,
+  "venue": "Protection and Control of Modern Power Systems",
+  "authors": [
+   "Neevatika Verma",
+   "Narendra Kumar",
+   "Saket Kumar Gupta",
+   "Hasmat Malik",
+   "Fausto Pedro Garcı́a Márquez"
+  ],
+  "oa": "W4366392235",
+  "cites_in_set": [
+   "CHENG2022",
+   "ERCOT2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "SHAIR2018",
+   "UNIDQ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "T",
+  "key": "HATZI2021",
+  "doi": "10.1109/tpwrs.2020.3041774",
+  "role": "前回",
+  "note": "安定度の定義と分類の改訂(共振の安定度・インバータの安定度)",
+  "title": "Definition and Classification of Power System Stability – Revisited & Extended",
+  "year": 2020,
+  "cites": 1244,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Nikos D. Hatziargyriou",
+   "Jovica V. Milanović",
+   "Claudia Rahmann",
+   "Venkataramana Ajjarapu",
+   "Claudio A. Cañizares",
+   "I. Erlich"
+  ],
+  "oa": "W3110874572",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "ERCOT2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "SHAIR2018",
+   "STATCOM2017",
+   "WEAK4HZ2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "T",
+  "key": "FANBOOK2023",
+  "doi": "10.1201/9781003323655",
+  "role": "教科書",
+  "note": "IBR のモデル化と安定解析の教科書(Fan・Miao)",
+  "title": "Modeling and Stability Analysis of Inverter-Based Resources",
+  "year": 2023,
+  "cites": 28,
+  "venue": "CRC Press eBooks",
+  "authors": [
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W4388048569",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "T",
+  "key": "PSID2023",
+  "doi": "10.48550/arxiv.2308.02921",
+  "role": "道具",
+  "note": "Julia で書かれた公開の動的シミュレーションの道具。同期機・インバータ・負荷のモデル、準静的なフェーザと、動的な網の dq の電磁モデル。他の道具と結果が合う",
+  "title": "PowerSimulationsDynamics.jl -- An Open Source Modeling Package for Modern Power Systems with Inverter-Based Resources",
+  "year": 2023,
+  "cites": 4,
+  "venue": "arXiv (Cornell University)",
+  "authors": [
+   "José Daniel Lara",
+   "Rodrigo Henríquez-Auba",
+   "Matthew Bossart",
+   "Duncan S. Callaway",
+   "Clayton Barrows"
+  ],
+  "oa": "W4385681343",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "T",
+  "key": "PARAEMT2024",
+  "doi": "10.1016/j.epsr.2024.110734",
+  "role": "道具",
+  "note": "公開の並列 EMT シミュレーションの枠組み(題名で確かめた。要旨は OpenAlex に無い)",
+  "title": "An open-source parallel EMT simulation framework",
+  "year": 2024,
+  "cites": 13,
+  "venue": "Electric Power Systems Research",
+  "authors": [
+   "Min Xiong",
+   "Bin Wang",
+   "Deepthi Vaidhynathan",
+   "Jonathan Maack",
+   "Matthew J. Reynolds",
+   "Andy Hoke"
+  ],
+  "oa": "W4400216363",
+  "cites_in_set": [
+   "CHENG2022",
+   "KAUAI2023",
+   "REAL20HZ2022"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "T",
+  "key": "DYNAWO2021",
+  "doi": "10.1016/j.epsr.2021.107340",
+  "role": "道具",
+  "note": "Dynaωo で電磁過渡を Modelica で解く試みの現状(題名で確かめた)",
+  "title": "Modelica-based simulation of electromagnetic transients using Dynaωo: Current status and perspectives",
+  "year": 2021,
+  "cites": 14,
+  "venue": "Electric Power Systems Research",
+  "authors": [
+   "Alireza Masoom",
+   "Adrien Guironnet",
+   "Aymen-Alaeddine Zeghaida",
+   "Tarek Ould Bachir",
+   "Jean Mahseredjian"
+  ],
+  "oa": "W3162256179",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2004",
+  "doi": "10.1541/ieejpes.124.69",
+  "role": "国内",
+  "note": "自励式変換器をケーブルのある系統につなぐと、変換器のわずかな高次高調波が直列・並列の共振で拡大する。EMTP で原因を解析し、実際に起こりうることを確認",
+  "title": "A Study for High-Order Harmonic Resonance Phenomena of Voltage Sourced Converter in Cable System",
+  "year": 2004,
+  "cites": 4,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Tatsuhito Nakajima",
+   "Hirokazu Suzuki",
+   "Koji Temma",
+   "Isao Iyoda"
+  ],
+  "oa": "W1998087947",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2006",
+  "doi": "10.1541/ieejpes.126.619",
+  "role": "国内",
+  "note": "遠方の大型ウィンドファームを弱い交流系統へつなぐ、自励式の直流送電の新しい制御",
+  "title": "New Control for HVDC System Connected to Large Windfarm",
+  "year": 2006,
+  "cites": 10,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Kenichi Tanomura",
+   "Junichi Arai",
+   "Yasuhiro Noro",
+   "Kikuo Takagi",
+   "Masakazu Kato"
+  ],
+  "oa": "W2176483132",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2014",
+  "doi": "10.1541/ieejpes.134.900",
+  "role": "国内",
+  "note": "産業系統で、自励式変換器の次数間高調波がタービン発電機の軸ねじれの固有振動数と共振して大きな振動になる。現地の測定と瞬時値の系統シミュレーションで評価",
+  "title": "Analysis of Turbine Generator Shaft Torsional Vibration Caused by Self-commutated Converters",
+  "year": 2014,
+  "cites": 2,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Masayuki Watanabe",
+   "Hiroyuki Iki",
+   "Kazuma Sakamoto",
+   "Yasunori Mitani",
+   "Yoshihisa Uriu",
+   "Yoshihide Kado"
+  ],
+  "oa": "W2313182511",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2021H",
+  "doi": "10.5416/jipe.47.91",
+  "role": "国内",
+  "note": "MMC 方式の直流送電の極に、従来の電力制御と VSG 制御を当て、いろいろな SCR で交直の事故への強さを比べる",
+  "title": "Comparison of short-circuit ratios of converter control for high-voltage DC power transmission systems",
+  "year": 2021,
+  "cites": 0,
+  "venue": "Journal of the Japan Institute of Power Electronics",
+  "authors": [
+   "Ohuchi Kazuki",
+   "Tomoya Takeda",
+   "Yuko Hirase"
+  ],
+  "oa": "W4296168279",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2021K",
+  "doi": "10.1541/ieejias.141.nl6_6",
+  "role": "国内",
+  "note": "新北海道本州間連系設備に適用した大容量自励式直流送電システムの開発・実用化(技術開発レポート。J-STAGE の題名で確かめた)",
+  "title": "Technical Development Report",
+  "year": 2021,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Industry Applications",
+  "authors": [
+   "貴徳 内海"
+  ],
+  "oa": "W4285456504",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2022",
+  "doi": "10.1541/ieejpes.142.243",
+  "role": "国内",
+  "note": "系統連系のための制御機能が、短絡比が低いなどの条件で不安定になり振動する原理を、簡単な RMS モデルで明らかにし、GFL 向けの制動制御を作る",
+  "title": "Mechanism of Control Instability of Control Function Installed to Grid-following Inverter and Development of Damping Controller for Stable Operation",
+  "year": 2022,
+  "cites": 7,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Keisuke Shirasaki",
+   "Hiroyuki Amano"
+  ],
+  "oa": "W4225246106",
+  "cites_in_set": [
+   "HATZI2021"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2023",
+  "doi": "10.1541/ieejpes.143.1",
+  "role": "国内",
+  "note": "再エネが増えたときの系統の課題と、スマートインバータ・VSG・GFM の技術動向(解説)",
+  "title": "Technology Trends in Inverter-connected Power Supplies Contributing to Expanding the Introduction of Renewable Energy",
+  "year": 2022,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Yasuhiro Noro"
+  ],
+  "oa": "W4313395790",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2024",
+  "doi": "10.1541/ieejeiss.144.1044",
+  "role": "国内",
+  "note": "GFL インバータ(αβ の複素ベクトル制御と dq の PLL)の安定をインピーダンス法で解析。PLL の周波数の結合で受動性が崩れ、弱い系統で不安定になりうる。解析・シミュレーション・実験で確認",
+  "title": "Stability Analysis Considering PLL Effects for Grid-Following Inverter by Complex Vector Control",
+  "year": 2024,
+  "cites": 4,
+  "venue": "IEEJ Transactions on Electronics Information and Systems",
+  "authors": [
+   "Yoshio Tamari",
+   "Toshiji Kato",
+   "Kaoru Inoue"
+  ],
+  "oa": "W4403933449",
+  "cites_in_set": [
+   "DQIMP2015",
+   "SUN2011",
+   "UNIFIED2017"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2025S",
+  "doi": "10.1541/ieejpes.145.46",
+  "role": "国内",
+  "note": "洋上風力の SCR を、海底ケーブルの静電容量も入れて四端子回路から導く。陸上側の SCR が低いと洋上側の SCR の方が大きく出るのに、電圧安定は悪くなる。SCR は誤った判断を招きうる",
+  "title": "A Study on Short Circuit Ratio as a Metric for the Voltage Stability of Offshore Wind Farms Connecting with High Voltage AC Transmission Cables",
+  "year": 2024,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Yasuaki Yamada",
+   "Akihiro Tsusaka",
+   "Toshiya Nanahara",
+   "Kazuto Yukita"
+  ],
+  "oa": "W4405929709",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2025C",
+  "doi": "10.1541/ieejpes.145.nl11_6",
+  "role": "国内",
+  "note": "電気学会「自励交直変換器と電力系統の相互作用調査専門委員会」の報告(題名で確かめた。中身は委員会の技術報告で確かめる)",
+  "title": "調査研究委員会レポート：自励交直変換器と電力系統の相互作用調査専門委員会",
+  "year": 2025,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "達人 中島",
+   "俊明 菊間",
+   "龍太郎 羽尻",
+   "将悟 福井"
+  ],
+  "oa": "W4415752875",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "JP2026",
+  "doi": "10.1541/ieejpes.146.533",
+  "role": "国内",
+  "note": "日本で IBR が増える中での、インバータによる系統安定化対策の効果と留意点(GFL と GFM の特性を中心に)",
+  "title": "Effectiveness and Considerations of Inverter-Based Power System Stabilization",
+  "year": 2026,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Keisuke Shirasaki",
+   "Ryotaro Hirakawa"
+  ],
+  "oa": "W7204826282",
+  "cites_in_set": [],
+  "bib": true
+ }
+]
