@@ -8,15 +8,14 @@
 [![release](https://img.shields.io/badge/release-v1.9.0-2f6fde)](CHANGELOG.md) [![dataset](https://img.shields.io/badge/dataset-v1.9.0-1f9d6b)](https://lutelute.github.io/All-Japan-Grid/download.html) [![interventions](https://img.shields.io/badge/%E4%BB%8B%E5%85%A5%E5%8F%B0%E5%B8%B3-49_%E4%BB%B6-b5561d)](docs/MODEL_INTERVENTIONS.md) [![data: ODbL](https://img.shields.io/badge/data-ODbL-555)](https://opendatacommons.org/licenses/odbl/) [![code: MIT](https://img.shields.io/badge/code-MIT-555)](LICENSE)
 <!-- [[[end]]] -->
 
-**日本全国の送電網を、出典つきで見る・確かめる・使う。**
-OpenStreetMap から機械的に組み立て、事業者の公表資料で突き合わせた全国の送電網モデルです。
-地図で眺めるだけでなく、潮流が解け、変電所の中まで描け、災害で何が起きるかを試せます。
-どの仮定をどこに置いたかは、すべて台帳で追えます。
+**誰も持たない電気の地図。**
+OpenStreetMap の送電線と変電所を機械的に組み立て、各社の公表資料と突き合わせた全国の送電網モデルです。
+潮流が解け、変電所の中まで描け、災害で何が起きるかを試せます。
+どの仮定をどこに置いたかは、介入台帳で追えます。
 
-**See, check and use Japan's transmission grid — with sources.** An open model of the national grid,
-built automatically from OpenStreetMap and checked against what the utilities publish. It renders on a
-map, solves power flow, draws every substation, and lets you stress-test it — and every modelling
-assumption is listed in a registry you can read.
+An open model of Japan's national transmission grid, built automatically from OpenStreetMap and checked
+against what the utilities publish. It solves power flow, draws every substation and lets you test
+disaster scenarios. Every modelling assumption is listed in the intervention registry.
 
 <p align="center">
   <img src="docs/assets/gif/hero.gif" alt="地図 → 潮流 → 変電所の中 → 動揺" width="100%">
