@@ -810,6 +810,10 @@ GEN_ATTACH_DEFAULT = "cap"
 # east は降圧点(66↔275kV変圧器)の欠損を cap が偶然覆い隠しているため逆に悪化する
 # (725→1031%)。よって既定を島別に分ける — ISLAND_MODE(西のみAC)と同じ島別設計。
 # east は降圧点の出典つき補完が済むまで cap 据え置き(既知の欠陥として登録)。
+# 2026-10-29 再検討: east を capkv にする案は、09-02 の悪化(725→1031%)が今の正典で再現しない
+# (`docs/reports/attach_split_2026-10-29.md`)が、公表で接続電圧が分かる東の大型機 4 機で照らすと
+# cap 0・capkv 1 で、規則として正しいと言える根拠が無い(もっともらしい止まり)。既定は確実なものだけにする
+# 方針で east は cap のまま。公表で電圧の分かる機は #55 の台帳で直す。capkv は `--gen-attach capkv` で選ぶ。
 # 無効化: --gen-attach cap で全島旧既定に戻る。
 ISLAND_ATTACH_DEFAULT = {"hokkaido": "capkv", "west": "capkv",
                          "east": "cap", "okinawa": "cap"}
@@ -872,6 +876,27 @@ def load_plant_connections(path=PLANT_CONNECTIONS_PATH):
 def model_plant_ledger():
     """モデルを組む経路が `attach_generators(plant_ledger=)` に渡すもの(既定 ON なら台帳)。"""
     return load_plant_connections() if PLANT_CONNECTIONS else None
+
+
+# ── 介入#56(2026-10-29): 154 kV 網の分割運用の推定 ─────────────────────────
+# `src/powerflow/subtransmission_split.py`。154 kV 級の各母線を電気的に最も近い降圧点(275 kV 以上→154 kV 級の
+# 変圧器の二次側)へ割り当て、違う降圧点の受け持ちどうしをつなぐ線を常時開放とみなす。開閉器の実データではなく推定。
+# 全部つないだままだと 154 kV 級の短絡電流が東で 63 kA 超 214 母線・最大 139 kA(`docs/reports/attach_split_2026-10-29.md`)。
+# **既定 OFF**: 潮流・N-1・短絡電流を広く変えるので、既定にするかはオーナー判断。
+# 有効化: `--split-154`(全規模の潮流)/ 環境変数 AJG_SPLIT_154=1(感度・N-1 などフラグの無い経路の A/B 用)。
+SPLIT_154_DEFAULT = (os.environ.get("AJG_SPLIT_154", "0") == "1")
+
+
+def model_split_154(net, enabled=None):
+    """モデルを組む経路が発電機を繋いだあとに呼ぶ。有効なら網を分けて帳簿を返す、無効なら None。"""
+    if enabled is None:
+        enabled = SPLIT_154_DEFAULT
+    if not enabled:
+        return None
+    from src.powerflow.subtransmission_split import describe, split_subtransmission
+    led = split_subtransmission(net)
+    print("  " + describe(led))
+    return led
 
 
 def bus_incident_mva(net):
@@ -1694,6 +1719,11 @@ def main():
                          "損失を発電機へ出力比で配る。旧挙動は西の主成分のスラックが 6.2 GW を吸っていた。"
                          "評価=docs/reports/west_slack_surplus_2026-10-26.md。"
                          "**無効化=--no-connected-dispatch**")
+    ap.add_argument("--split-154", action=argparse.BooleanOptionalAction,
+                    default=SPLIT_154_DEFAULT,
+                    help="**介入#56**(2026-10-29・既定OFF): 154 kV 級の網を降圧点(275 kV 以上→154 kV 級の"
+                         "変圧器)ごとに分け、境の線を常時開放とみなす(開閉器の実データではなく推定)。"
+                         "評価=docs/reports/attach_split_2026-10-29.md。環境変数 AJG_SPLIT_154=1 でも有効")
     ap.add_argument("--plant-connections", action=argparse.BooleanOptionalAction,
                     default=PLANT_CONNECTIONS,
                     help="**介入#55**(2026-10-28・既定ON): 公表の接続で電圧が分かる大型機"
@@ -1894,6 +1924,7 @@ def main():
                                    plant_ledger=(load_plant_connections()
                                                  if args.plant_connections else None))
         n_gen = gstats["n_gen"]
+        split_ledger = model_split_154(net, enabled=args.split_154)   # 介入#56(既定 OFF)
         if gstats.get("n_sourced_cap"):
             print(f"  出典付き容量: {gstats['n_sourced_cap']:,}件 / "
                   f"{gstats['sourced_cap_mw']:,.0f}MW を出典値で置換")
@@ -1982,6 +2013,7 @@ def main():
         summary["islands"][island] = {
             "frequency_hz": freq, **bstats, "n_gen": n_gen,
             "plant_connections": gstats.get("plant_ledger"),   # 介入#55 台帳
+            "split_154": split_ledger,             # 介入#56 台帳(None=無効)
             "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
             "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
             "lv_aggregate": lv_agg_ledger,         # 介入#43b 台帳(None=無効)

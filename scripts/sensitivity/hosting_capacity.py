@@ -67,7 +67,7 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
     # 座標が要るので bus_of（built ノード索引 → バス）を自前で受け取る
     from src.powerflow.compensation import add_reactive_compensation
     from scripts.run_full_powerflow_from_db import (
-        GEN_ATTACH_DEFAULT, attach_default_for, model_plant_ledger, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
+        GEN_ATTACH_DEFAULT, attach_default_for, model_plant_ledger, model_split_154, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
         attach_generators, balance_by_zone,
         build_island_net)
     # cap_calib: 介入#45 線路容量の運用容量較正(エリア×階級の係数を max_i_ka に乗じてから
@@ -76,6 +76,7 @@ def run(island: str, nodes, edges, cfg, pref_gwh, min_kv: float = 154.0,
                                            cap_calib=cap_calib)
     attach_generators(net, bus_of, nodes, island, attach_mode=attach_default_for(island),
                       plant_ledger=model_plant_ledger())
+    model_split_154(net)          # 介入#56(既定 OFF・AJG_SPLIT_154=1 で有効)
     allocate_loads(net, cfg, pref_gwh=pref_gwh)
     add_reactive_compensation(net, factor=cfg.get("reactive_compensation_factor", 0.6))
     add_per_component_slacks(net)

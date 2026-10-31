@@ -38,6 +38,9 @@ from capacity_provenance import load_records  # noqa: E402
 
 DATA = os.path.join(ROOT, "docs", "data")
 TARGETS = ["generators.geojson", "plants_all.geojson", "plants_utility.geojson", "plants_ipp.geojson"]
+# 1 地物限りにするのは発電所の地物のファイルだけ。generators.geojson は号機の地物で、出典の値(発電所全体)を
+# 号機それぞれに持たせる約束(足し合わせない。audit_capacity_provenance_reach の多重計上の注意)のまま
+PLANT_TARGETS = ["plants_all.geojson", "plants_utility.geojson", "plants_ipp.geojson"]
 CONF_RANK = {"high": 2, "medium": 1, "low": 0}
 
 SOURCED_FIELDS = [
@@ -136,6 +139,59 @@ def choose_record(name_rec, geo_rec, ft):
     return geo_rec  # feature特定的に裁定済みのgeoが勝つ
 
 
+def feature_ident(ft):
+    """feature の同一性(地域・名前・4 桁丸めの座標)。ファイルをまたいで同じ feature を同じとみなす。"""
+    p = ft.get("properties") or {}
+    g = ft.get("geometry") or {}
+    c = g.get("coordinates") if g.get("type") == "Point" else None
+    return (p.get("_region"), (p.get("_display_name") or p.get("name") or "").strip(),
+            (round(c[0], 4), round(c[1], 4)) if c else None)
+
+
+def raises_capacity(rec, ft) -> bool:
+    """出典の値をこの feature に当てると、OSM の既知の容量より増えるか。
+
+    同名の 2 つ目以降で外すのは、増える向き(幻の電源)だけ。減らす向き(大間・浪江小高の誤タグ敷地を
+    公式の 0 で消す、葛根田の分割片)は従来どおり当てる(fuel_compatible の例外と同じ考え方)。
+    OSM が不明(<0)なら従来どおり当てる。"""
+    osm = (ft.get("properties") or {}).get("capacity_mw")
+    try:
+        return isinstance(osm, (int, float)) and osm >= 0 and float(rec.get("value", 0)) > float(osm)
+    except (TypeError, ValueError):
+        return False
+
+
+def name_owners(data_dir, by_name, by_norm):
+    """名前照合の出典の値を当てる 1 地物を、全ファイル(TARGETS)を通して決める(2026-10-29)。
+
+    出典の値は発電所全体の値。発電所の地物のファイル(PLANT_TARGETS)で、同じ地域・同じ名前の feature が 2 つ以上あるときは、OSM 容量が出典の値に
+    最も近い 1 つに当て、残りには容量を増やす向き(raises_capacity)なら当てない。ファイルごとに決めると、発電事業者だけのファイル(plants_ipp)では同名の
+    電力会社の feature が見えず、そこに当ててしまう(川崎火力: JERA と JR東日本)。
+    戻り値: {(地域, 出典の名前): (当てる feature の同一性, 同一性の数)}。
+    """
+    best, idents = {}, {}
+    for tgt in PLANT_TARGETS:
+        path = os.path.join(data_dir, tgt)
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        for ft in d.get("features", []):
+            p = ft.get("properties") or {}
+            name = (p.get("_display_name") or p.get("name") or "").strip()
+            rec = by_name.get(name) or (by_norm.get(norm(name)) if name else None)
+            if not rec or not fuel_compatible(rec, ft):
+                continue
+            key = (p.get("_region"), rec["name"])
+            ident = feature_ident(ft)
+            idents.setdefault(key, set()).add(ident)
+            osm = p.get("capacity_mw")
+            dist = abs(float(osm) - float(rec["value"])) if isinstance(osm, (int, float)) and osm >= 0 else float("inf")
+            if key not in best or dist < best[key][1]:
+                best[key] = (ident, dist)
+    return {k: (v[0], len(idents[k])) for k, v in best.items()}
+
+
 def main(data_dir=DATA, records=None):
     src = load_records() if records is None else records
     geo_recs = [r for r in src if str(r.get("plant_key", "")).startswith("geo:")]
@@ -153,6 +209,7 @@ def main(data_dir=DATA, records=None):
             by_key[k] = r
     print(f"出典DB: {len(src)} 行 / 名前照合 {len(by_name)} + 座標キー {len(by_key)} 発電所")
 
+    owners = name_owners(data_dir, by_name, by_norm)
     for tgt in TARGETS:
         path = os.path.join(data_dir, tgt)
         if not os.path.exists(path):
@@ -169,10 +226,27 @@ def main(data_dir=DATA, records=None):
                 key_count[k] = key_count.get(k, 0) + 1
         ambiguous = 0
         fuel_vetoed = []
+        # 名前照合の 1 地物限り(2026-10-29、name_owners): 従来は同じ名前の feature 全部に塗っていて、
+        # 川崎火力(JERA 3,420MW が JR東日本の地物にも)・敦賀原子力(1,160MW が 0.04MW の地物にも)・
+        # 葛根田地熱(30MW が 10 地物に)で同じ発電所を重ねて数えていた。
+        name_recs_of = []
         for ft in d.get("features", []):
             p = ft.get("properties") or {}
             name = (p.get("_display_name") or p.get("name") or "").strip()
             name_rec = by_name.get(name) or (by_norm.get(norm(name)) if name else None)
+            if name_rec and not fuel_compatible(name_rec, ft):
+                fuel_vetoed.append((name, p.get("fuel_type"), name_rec["name"],
+                                    name_rec["value"]))
+                name_rec = None
+            name_recs_of.append(name_rec)
+        name_dup_skipped = 0
+        for i, ft in enumerate(d.get("features", [])):
+            p = ft.get("properties") or {}
+            name_rec = name_recs_of[i]
+            own = owners.get((p.get("_region"), name_rec["name"])) if (name_rec and tgt in PLANT_TARGETS) else None
+            if own and own[1] > 1 and feature_ident(ft) != own[0] and raises_capacity(name_rec, ft):
+                name_rec = None
+                name_dup_skipped += 1
             geo_rec = None
             k = feature_geo_key(ft)
             if k and k in by_key:
@@ -180,10 +254,6 @@ def main(data_dir=DATA, records=None):
                     geo_rec = by_key[k]
                 else:
                     ambiguous += 1
-            if name_rec and not fuel_compatible(name_rec, ft):
-                fuel_vetoed.append((name, p.get("fuel_type"), name_rec["name"],
-                                    name_rec["value"]))
-                name_rec = None
             rec = choose_record(name_rec, geo_rec, ft)
             # 冪等性: 既存の sourced を一旦消してから(出典DB更新を反映)
             had = any(k in p for k in SOURCED_FIELDS)
@@ -212,6 +282,7 @@ def main(data_dir=DATA, records=None):
                 if den > 0 and abs(o - s) / den > 0.1:
                     difs.append((p.get("_display_name") or p.get("name"), o, s))
         note_amb = f" 座標キー曖昧skip={ambiguous}" if ambiguous else ""
+        note_amb += f" 同名の2つ目以降skip={name_dup_skipped}" if name_dup_skipped else ""
         note_fuel = f" 燃料種不整合veto={len(fuel_vetoed)}" if fuel_vetoed else ""
         print(f"  {tgt}: applied={applied} (cleared stale={cleared}){note_amb}{note_fuel}")
         for nm, fuel, rn, val in fuel_vetoed[:6]:

@@ -329,6 +329,8 @@ def test_capkv_is_a_registered_mode_and_island_defaults_are_pinned():
 
     east は降圧点(66↔275kV 変圧器)の欠損を cap が偶然覆い隠しているため、capkv に
     すると 725→1031% と悪化する。出典つき補完が済むまで east/okinawa は cap 据え置き。
+    2026-10-29 再検討: 悪化は今の正典で再現しないが、公表で照らせる東の 4 機で cap 0・capkv 1 と
+    規則の根拠が無いので east は cap のまま(公表で電圧の分かる機は #55 の台帳で直す)。
     全島一律の定数 `GEN_ATTACH_DEFAULT` は cap のまま(what-if の base と旧経路の互換)。
     """
     pf = _pf()

@@ -1,0 +1,844 @@
+{
+ "note": "docs/reports/attach_split_2026-10-29/measure.py の出力をまとめたもの(2026-10-29・pws-gpu3060・AGJ main 55d3fad2 + この枝)。感度の経路と同じ組み方・地点需要なし。canonical_* は正典の島の試験と同じ組み方・解き方(配布ケース)",
+ "cases": {
+  "east_base": {
+   "island": "east",
+   "case": "base",
+   "attach_mode": "cap",
+   "plant_ledger": {
+    "applied": 0,
+    "changed": [],
+    "unresolved": []
+   },
+   "split": null,
+   "big_thermal_le154": {
+    "n": 19,
+    "mw": 20873,
+    "top": [
+     "川崎火力発電所",
+     "横浜火力発電所",
+     "東扇島火力発電所",
+     "勿来発電所",
+     "真岡発電所",
+     "扇島パワーステーション",
+     "磯子火力発電所",
+     "南横浜火力発電所",
+     "Kawasaki Natural Gas Power Generation (KNGPG) Plant",
+     "酒田火力発電所",
+     "石巻雲雀野発電所",
+     "Orix Soma Energy Power Plant"
+    ]
+   },
+   "new_rows": {
+    "勿来発電所": [
+     {
+      "mw": 1975,
+      "kv": 154.0,
+      "bus": "平変電所 154kV"
+     }
+    ],
+    "川崎火力発電所": [
+     {
+      "mw": 3420,
+      "kv": 154.0,
+      "bus": "稲荷変電所 154kV"
+     },
+     {
+      "mw": 3420,
+      "kv": 154.0,
+      "bus": "稲荷変電所 154kV"
+     }
+    ],
+    "横浜火力発電所": [
+     {
+      "mw": 3016,
+      "kv": 154.0,
+      "bus": "白石変電所 154kV"
+     }
+    ],
+    "姉崎火力発電所": [
+     {
+      "mw": 3150,
+      "kv": 500.0,
+      "bus": "中袖変電所 500kV"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 853,
+     "median": 37.8,
+     "p90": 89.0,
+     "max": 234.6,
+     "n_gt63": 227
+    },
+    "450-600kV": {
+     "n": 142,
+     "median": 42.0,
+     "p90": 61.8,
+     "max": 71.6,
+     "n_gt63": 10
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.8569,
+   "max_loading_154plus": 713.2,
+   "n_over_154plus": 75,
+   "n_over_all": 326,
+   "loss_mw": 1435.4
+  },
+  "east_rule": {
+   "island": "east",
+   "case": "rule",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 0,
+    "changed": [],
+    "unresolved": []
+   },
+   "split": null,
+   "big_thermal_le154": {
+    "n": 1,
+    "mw": 700,
+    "top": [
+     "酒田火力発電所"
+    ]
+   },
+   "new_rows": {
+    "勿来発電所": [
+     {
+      "mw": 1975,
+      "kv": 275.0,
+      "bus": "いわき変電所 275kV"
+     }
+    ],
+    "川崎火力発電所": [
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     },
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     }
+    ],
+    "横浜火力発電所": [
+     {
+      "mw": 3016,
+      "kv": 500.0,
+      "bus": "新富変電所_2"
+     }
+    ],
+    "姉崎火力発電所": [
+     {
+      "mw": 3150,
+      "kv": 500.0,
+      "bus": "中袖変電所 500kV"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 853,
+     "median": 35.2,
+     "p90": 78.5,
+     "max": 131.2,
+     "n_gt63": 197
+    },
+    "450-600kV": {
+     "n": 142,
+     "median": 50.6,
+     "p90": 83.8,
+     "max": 95.8,
+     "n_gt63": 48
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.85,
+   "max_loading_154plus": 359.4,
+   "n_over_154plus": 126,
+   "n_over_all": 389,
+   "loss_mw": 1912.6
+  },
+  "east_ledger": {
+   "island": "east",
+   "case": "ledger",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 3,
+    "changed": [
+     {
+      "name": "横浜火力発電所",
+      "mw": 3016.0,
+      "rule": "新富変電所_2 500kV",
+      "ledger": "港北変電所 275kV 275kV",
+      "km": 9.6,
+      "by": "to"
+     },
+     {
+      "name": "姉崎火力発電所",
+      "mw": 3150.0,
+      "rule": "中袖変電所 500kV 500kV",
+      "ledger": "房総変電所 275kV 275kV",
+      "km": 13.5,
+      "by": "to"
+     }
+    ],
+    "unresolved": []
+   },
+   "split": null,
+   "big_thermal_le154": {
+    "n": 1,
+    "mw": 700,
+    "top": [
+     "酒田火力発電所"
+    ]
+   },
+   "new_rows": {
+    "勿来発電所": [
+     {
+      "mw": 1975,
+      "kv": 275.0,
+      "bus": "いわき変電所 275kV"
+     }
+    ],
+    "川崎火力発電所": [
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     },
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     }
+    ],
+    "横浜火力発電所": [
+     {
+      "mw": 3016,
+      "kv": 275.0,
+      "bus": "港北変電所 275kV"
+     }
+    ],
+    "姉崎火力発電所": [
+     {
+      "mw": 3150,
+      "kv": 275.0,
+      "bus": "房総変電所 275kV"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 853,
+     "median": 35.4,
+     "p90": 80.3,
+     "max": 138.5,
+     "n_gt63": 214
+    },
+    "450-600kV": {
+     "n": 142,
+     "median": 52.3,
+     "p90": 85.9,
+     "max": 99.2,
+     "n_gt63": 50
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.8513,
+   "max_loading_154plus": 366.8,
+   "n_over_154plus": 109,
+   "n_over_all": 349,
+   "loss_mw": 1612.2
+  },
+  "east_split": {
+   "island": "east",
+   "case": "split",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 3,
+    "changed": [
+     {
+      "name": "横浜火力発電所",
+      "mw": 3016.0,
+      "rule": "新富変電所_2 500kV",
+      "ledger": "港北変電所 275kV 275kV",
+      "km": 9.6,
+      "by": "to"
+     },
+     {
+      "name": "姉崎火力発電所",
+      "mw": 3150.0,
+      "rule": "中袖変電所 500kV 500kV",
+      "ledger": "房総変電所 275kV 275kV",
+      "km": 13.5,
+      "by": "to"
+     }
+    ],
+    "unresolved": []
+   },
+   "split": {
+    "kv_band": [
+     100.0,
+     160.0
+    ],
+    "src_hv_min": 250.0,
+    "n_opened": 145,
+    "n_sources": 111,
+    "n_buses": 872,
+    "n_unowned": 25
+   },
+   "big_thermal_le154": {
+    "n": 1,
+    "mw": 700,
+    "top": [
+     "酒田火力発電所"
+    ]
+   },
+   "new_rows": {
+    "勿来発電所": [
+     {
+      "mw": 1975,
+      "kv": 275.0,
+      "bus": "いわき変電所 275kV"
+     }
+    ],
+    "川崎火力発電所": [
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     },
+     {
+      "mw": 3420,
+      "kv": 500.0,
+      "bus": "有明二丁目変電所"
+     }
+    ],
+    "横浜火力発電所": [
+     {
+      "mw": 3016,
+      "kv": 275.0,
+      "bus": "港北変電所 275kV"
+     }
+    ],
+    "姉崎火力発電所": [
+     {
+      "mw": 3150,
+      "kv": 275.0,
+      "bus": "房総変電所 275kV"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 853,
+     "median": 15.5,
+     "p90": 32.3,
+     "max": 110.5,
+     "n_gt63": 15
+    },
+    "450-600kV": {
+     "n": 142,
+     "median": 50.9,
+     "p90": 83.7,
+     "max": 97.2,
+     "n_gt63": 48
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.8181,
+   "max_loading_154plus": 529.4,
+   "n_over_154plus": 53,
+   "n_over_all": 433,
+   "loss_mw": 2117.7
+  },
+  "west_base": {
+   "island": "west",
+   "case": "base",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 16,
+    "changed": [
+     {
+      "name": "知多第二火力発電所",
+      "mw": 1708.0,
+      "rule": "南柴田町変電所 275kV 275kV",
+      "ledger": "浅山一丁目変電所 275kV 275kV",
+      "km": 6.0,
+      "by": "kv"
+     },
+     {
+      "name": "富山新港火力発電所",
+      "mw": 1424.7,
+      "rule": "新富山変電所 275kV 275kV",
+      "ledger": "射水市変電所 154kV 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "武豊火力発電所",
+      "mw": 1070.0,
+      "rule": "大字石浜変電所 275kV 275kV",
+      "ledger": "川口町五丁目変電所 154kV 154kV",
+      "km": 4.2,
+      "by": "kv"
+     },
+     {
+      "name": "敦賀火力発電所",
+      "mw": 1200.0,
+      "rule": "色浜変電所 500kV",
+      "ledger": "樋ノ水町変電所 275kV 275kV",
+      "km": 4.3,
+      "by": "kv"
+     },
+     {
+      "name": "四日市火力発電所",
+      "mw": 585.0,
+      "rule": "富田変電所 275kV 275kV",
+      "ledger": "大協町二丁目変電所_2 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "阿南火力発電所",
+      "mw": 0.0,
+      "rule": "阿南発電所 (Anan Power Station) 500kV 500kV",
+      "ledger": "阿南発電所 (Anan Power Station) 187kV 187kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "玉島火力発電所",
+      "mw": 1200.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "倉敷市変電所_2 110kV 110kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "水島火力発電所",
+      "mw": 625.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "潮通一丁目変電所 110kV 110kV",
+      "km": 0.3,
+      "by": "kv"
+     },
+     {
+      "name": "坂出火力発電所",
+      "mw": 1385.0,
+      "rule": "昭和町二丁目変電所_2 500kV 500kV",
+      "ledger": "受電所 187kV",
+      "km": 1.8,
+      "by": "kv"
+     }
+    ],
+    "unresolved": []
+   },
+   "split": null,
+   "big_thermal_le154": {
+    "n": 7,
+    "mw": 6905,
+    "top": [
+     "富山新港火力発電所",
+     "苓北火力発電所",
+     "玉島火力発電所",
+     "武豊火力発電所",
+     "水島火力発電所",
+     "糸魚川発電所",
+     "四日市火力発電所"
+    ]
+   },
+   "new_rows": {
+    "苓北火力発電所": [
+     {
+      "mw": 1400,
+      "kv": 66.0,
+      "bus": "九州電力 一町田変電所"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 1680,
+     "median": 25.3,
+     "p90": 66.4,
+     "max": 162.5,
+     "n_gt63": 195
+    },
+    "450-600kV": {
+     "n": 217,
+     "median": 37.0,
+     "p90": 61.8,
+     "max": 95.9,
+     "n_gt63": 22
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.7261,
+   "max_loading_154plus": 286.9,
+   "n_over_154plus": 42,
+   "n_over_all": 281,
+   "loss_mw": 1214.2
+  },
+  "west_ledger": {
+   "island": "west",
+   "case": "ledger",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 16,
+    "changed": [
+     {
+      "name": "知多第二火力発電所",
+      "mw": 1708.0,
+      "rule": "南柴田町変電所 275kV 275kV",
+      "ledger": "浅山一丁目変電所 275kV 275kV",
+      "km": 6.0,
+      "by": "kv"
+     },
+     {
+      "name": "富山新港火力発電所",
+      "mw": 1424.7,
+      "rule": "新富山変電所 275kV 275kV",
+      "ledger": "射水市変電所 154kV 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "武豊火力発電所",
+      "mw": 1070.0,
+      "rule": "大字石浜変電所 275kV 275kV",
+      "ledger": "川口町五丁目変電所 154kV 154kV",
+      "km": 4.2,
+      "by": "kv"
+     },
+     {
+      "name": "敦賀火力発電所",
+      "mw": 1200.0,
+      "rule": "色浜変電所 500kV",
+      "ledger": "樋ノ水町変電所 275kV 275kV",
+      "km": 4.3,
+      "by": "kv"
+     },
+     {
+      "name": "四日市火力発電所",
+      "mw": 585.0,
+      "rule": "富田変電所 275kV 275kV",
+      "ledger": "大協町二丁目変電所_2 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "阿南火力発電所",
+      "mw": 0.0,
+      "rule": "阿南発電所 (Anan Power Station) 500kV 500kV",
+      "ledger": "阿南発電所 (Anan Power Station) 187kV 187kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "玉島火力発電所",
+      "mw": 1200.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "倉敷市変電所_2 110kV 110kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "水島火力発電所",
+      "mw": 625.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "潮通一丁目変電所 110kV 110kV",
+      "km": 0.3,
+      "by": "kv"
+     },
+     {
+      "name": "坂出火力発電所",
+      "mw": 1385.0,
+      "rule": "昭和町二丁目変電所_2 500kV 500kV",
+      "ledger": "受電所 187kV",
+      "km": 1.8,
+      "by": "kv"
+     }
+    ],
+    "unresolved": [
+     "苓北火力発電所"
+    ]
+   },
+   "split": null,
+   "big_thermal_le154": {
+    "n": 7,
+    "mw": 6905,
+    "top": [
+     "富山新港火力発電所",
+     "苓北火力発電所",
+     "玉島火力発電所",
+     "武豊火力発電所",
+     "水島火力発電所",
+     "糸魚川発電所",
+     "四日市火力発電所"
+    ]
+   },
+   "new_rows": {
+    "苓北火力発電所": [
+     {
+      "mw": 1400,
+      "kv": 66.0,
+      "bus": "九州電力 一町田変電所"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 1680,
+     "median": 25.3,
+     "p90": 66.4,
+     "max": 162.5,
+     "n_gt63": 195
+    },
+    "450-600kV": {
+     "n": 217,
+     "median": 37.0,
+     "p90": 61.8,
+     "max": 95.9,
+     "n_gt63": 22
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.7261,
+   "max_loading_154plus": 286.9,
+   "n_over_154plus": 42,
+   "n_over_all": 281,
+   "loss_mw": 1214.2
+  },
+  "west_split": {
+   "island": "west",
+   "case": "split",
+   "attach_mode": "capkv",
+   "plant_ledger": {
+    "applied": 16,
+    "changed": [
+     {
+      "name": "知多第二火力発電所",
+      "mw": 1708.0,
+      "rule": "南柴田町変電所 275kV 275kV",
+      "ledger": "浅山一丁目変電所 275kV 275kV",
+      "km": 6.0,
+      "by": "kv"
+     },
+     {
+      "name": "富山新港火力発電所",
+      "mw": 1424.7,
+      "rule": "新富山変電所 275kV 275kV",
+      "ledger": "射水市変電所 154kV 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "武豊火力発電所",
+      "mw": 1070.0,
+      "rule": "大字石浜変電所 275kV 275kV",
+      "ledger": "川口町五丁目変電所 154kV 154kV",
+      "km": 4.2,
+      "by": "kv"
+     },
+     {
+      "name": "敦賀火力発電所",
+      "mw": 1200.0,
+      "rule": "色浜変電所 500kV",
+      "ledger": "樋ノ水町変電所 275kV 275kV",
+      "km": 4.3,
+      "by": "kv"
+     },
+     {
+      "name": "四日市火力発電所",
+      "mw": 585.0,
+      "rule": "富田変電所 275kV 275kV",
+      "ledger": "大協町二丁目変電所_2 154kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "阿南火力発電所",
+      "mw": 0.0,
+      "rule": "阿南発電所 (Anan Power Station) 500kV 500kV",
+      "ledger": "阿南発電所 (Anan Power Station) 187kV 187kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "玉島火力発電所",
+      "mw": 1200.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "倉敷市変電所_2 110kV 110kV",
+      "km": 0.2,
+      "by": "kv"
+     },
+     {
+      "name": "水島火力発電所",
+      "mw": 625.0,
+      "rule": "菰池二丁目変電所 500kV 500kV",
+      "ledger": "潮通一丁目変電所 110kV 110kV",
+      "km": 0.3,
+      "by": "kv"
+     },
+     {
+      "name": "坂出火力発電所",
+      "mw": 1385.0,
+      "rule": "昭和町二丁目変電所_2 500kV 500kV",
+      "ledger": "受電所 187kV",
+      "km": 1.8,
+      "by": "kv"
+     }
+    ],
+    "unresolved": [
+     "苓北火力発電所"
+    ]
+   },
+   "split": {
+    "kv_band": [
+     100.0,
+     160.0
+    ],
+    "src_hv_min": 250.0,
+    "n_opened": 116,
+    "n_sources": 86,
+    "n_buses": 1693,
+    "n_unowned": 167
+   },
+   "big_thermal_le154": {
+    "n": 7,
+    "mw": 6905,
+    "top": [
+     "富山新港火力発電所",
+     "苓北火力発電所",
+     "玉島火力発電所",
+     "武豊火力発電所",
+     "水島火力発電所",
+     "糸魚川発電所",
+     "四日市火力発電所"
+    ]
+   },
+   "new_rows": {
+    "苓北火力発電所": [
+     {
+      "mw": 1400,
+      "kv": 66.0,
+      "bus": "九州電力 一町田変電所"
+     }
+    ]
+   },
+   "fault": {
+    "100-160kV": {
+     "n": 1680,
+     "median": 17.0,
+     "p90": 38.2,
+     "max": 156.3,
+     "n_gt63": 22
+    },
+    "450-600kV": {
+     "n": 217,
+     "median": 36.6,
+     "p90": 61.4,
+     "max": 93.9,
+     "n_gt63": 22
+    }
+   },
+   "ac_converged": true,
+   "vm_min": 0.6747,
+   "max_loading_154plus": 461.9,
+   "n_over_154plus": 31,
+   "n_over_all": 301,
+   "loss_mw": 1326.0
+  }
+ },
+ "canonical": {
+  "main_cap_21rows": {
+   "island": "east",
+   "attach": "cap",
+   "rows": "old",
+   "ok": true,
+   "how": "dc",
+   "reduction": {},
+   "record": [
+    6245,
+    6443,
+    676,
+    0,
+    0.8569,
+    1.0229,
+    3.05
+   ],
+   "spread": {
+    "applied": true,
+    "slack": "slack_4619",
+    "n_gen": 8190,
+    "slack_before_mw": 1730.4,
+    "slack_after_mw": 0.9,
+    "spread_mw": 1729.5
+   }
+  },
+  "capkv_21rows": {
+   "island": "east",
+   "attach": "capkv",
+   "rows": "old",
+   "ok": true,
+   "how": "dc",
+   "reduction": {},
+   "record": [
+    6245,
+    6443,
+    676,
+    0,
+    0.85,
+    1.0229,
+    4.16
+   ],
+   "spread": {
+    "applied": true,
+    "slack": "slack_4651",
+    "n_gen": 8190,
+    "slack_before_mw": 2477.2,
+    "slack_after_mw": -1.0,
+    "spread_mw": 2478.2
+   }
+  },
+  "branch_capkv_25rows": {
+   "island": "east",
+   "attach": "capkv",
+   "rows": "new",
+   "ok": true,
+   "how": "dc",
+   "reduction": {},
+   "record": [
+    6245,
+    6443,
+    676,
+    0,
+    0.8513,
+    1.0229,
+    3.53
+   ],
+   "spread": {
+    "applied": true,
+    "slack": "slack_4783",
+    "n_gen": 8190,
+    "slack_before_mw": 1977.6,
+    "slack_after_mw": 0.3,
+    "spread_mw": 1977.3
+   }
+  }
+ },
+ "canonical_with_kawasaki_row": {
+  "note": "台帳に川崎火力(275 kV・公表の相手 大井ふ頭/高輪)を入れた試し。東の配布ケースが素朴 NR で解けず、アンテナの木 1,191 本を畳んでも DC のまま。1 行ずつ外すと、川崎を外したときだけ解ける(姉崎・横浜・勿来を外しても解けない)",
+  "capkv_26rows": "dc-only",
+  "cap_26rows": "dc-only",
+  "drop_kawasaki": "ac(dc 初期化)・vm 0.8513〜1.0229・損失 3.53%",
+  "drop_anegasaki": "dc-only",
+  "drop_yokohama": "dc-only",
+  "drop_nakoso": "dc-only"
+ }
+}
