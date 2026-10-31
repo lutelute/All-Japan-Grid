@@ -1,0 +1,1300 @@
+[
+ {
+  "lane": "A",
+  "key": "KILGORE1971",
+  "doi": "10.1109/tpas.1971.292933",
+  "role": "起点",
+  "note": "直列コンデンサによる自己励磁の予測と抑制",
+  "title": "The Prediction and Control of Self-Excited Oscillations Due to Series Capacitors in Power Systems",
+  "year": 1971,
+  "cites": 51,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "L. A. Kilgore",
+   "L. Elliott",
+   "E. R. Taylor"
+  ],
+  "oa": "W2034554310",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "BALLANCE1973",
+  "doi": "10.1109/tpas.1973.293713",
+  "role": "起点",
+  "note": "直列補償線路の SSR",
+  "title": "Subsynchronous Resonance in Series Compensated Transmission Lines",
+  "year": 1973,
+  "cites": 118,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "John Ballance",
+   "Saul Goldberg"
+  ],
+  "oa": "W2029007369",
+  "cites_in_set": [
+   "KILGORE1971",
+   "SELFEXC1973"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "SELFEXC1973",
+  "doi": "10.1109/tpas.1973.293717",
+  "role": "起点",
+  "note": "直列コンデンサによる軸ねじれ周波数の自己励磁",
+  "title": "Self Excited Torsional Frequency Oscillations with Series Capacitors",
+  "year": 1973,
+  "cites": 101,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "C.E.J. Bowler",
+   "D.N. Ewart",
+   "Charles Concordia"
+  ],
+  "oa": "W2050557611",
+  "cites_in_set": [
+   "BALLANCE1973",
+   "KILGORE1971"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "MOHAVE1975",
+  "doi": "10.1109/t-pas.1975.32034",
+  "role": "試験",
+  "note": "Mohave 2 号機の SSR 試験(ねじれの固有振動数・減衰の実測)",
+  "title": "Results of subsynchronous resonance test at Mohave",
+  "year": 1975,
+  "cites": 238,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "D.N. Walker",
+   "C.E.J. Bowler",
+   "Robert L. Jackson",
+   "D.A. Hodges"
+  ],
+  "oa": "W1965685577",
+  "cites_in_set": [
+   "BALLANCE1973",
+   "KILGORE1971",
+   "SELFEXC1973"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "FBM1977",
+  "doi": "10.1109/t-pas.1977.32485",
+  "role": "ベンチマーク",
+  "note": "IEEE 第 1 ベンチマーク",
+  "title": "First benchmark model for computer simulation of subsynchronous resonance",
+  "year": 1977,
+  "cites": 602,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [],
+  "oa": "W4246532250",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "NAVAJO1977",
+  "doi": "10.1109/t-pas.1977.32445",
+  "role": "事例",
+  "note": "Navajo の SSR 解析と対策",
+  "title": "Navajo project report on subsynchronous resonance analysis and solutions",
+  "year": 1977,
+  "cites": 145,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "Richard G. Farmer",
+   "A.L. Schwalb",
+   "E. Katz"
+  ],
+  "oa": "W2029151344",
+  "cites_in_set": [
+   "BALLANCE1973",
+   "SELFEXC1973"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "FSCAN1979",
+  "doi": "10.1109/tpas.1979.319312",
+  "role": "手法",
+  "note": "周波数走査による SSR 解析",
+  "title": "Use of Frequency Scanning Techniques for Subsynchronous Resonance Analysis",
+  "year": 1979,
+  "cites": 100,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "B.L. Agrawal",
+   "Richard G. Farmer"
+  ],
+  "oa": "W2007753794",
+  "cites_in_set": [
+   "FBM1977"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "COUNTER1980",
+  "doi": "10.1109/tpas.1980.319771",
+  "role": "対策",
+  "note": "SSR の対策",
+  "title": "Countermeasures to Subsynchronous Resonance Problems",
+  "year": 1980,
+  "cites": 113,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [],
+  "oa": "W4254459151",
+  "cites_in_set": [
+   "NAVAJO1977",
+   "TERMS1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "NGH1981",
+  "doi": "10.1109/mper.1981.5511408",
+  "role": "対策",
+  "note": "NGH の SSR 抑制方式",
+  "title": "A New Scheme for Subsynchronous Resonance Damping of Torsional Oscillations and Transient Torque - Part I",
+  "year": 1981,
+  "cites": 45,
+  "venue": "IEEE Power Engineering Review",
+  "authors": [
+   "N.G. Hingorani"
+  ],
+  "oa": "W3152146731",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "SBM1985",
+  "doi": "10.1109/tpas.1985.323456",
+  "role": "ベンチマーク",
+  "note": "IEEE 第 2 ベンチマーク",
+  "title": "Second Benchmark Model for Computer Simulation of Subsynchronous Resonance",
+  "year": 1985,
+  "cites": 218,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [],
+  "oa": "W4238909314",
+  "cites_in_set": [
+   "FBM1977"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "READERS1992",
+  "doi": "10.1109/59.141698",
+  "role": "総説",
+  "note": "SSR の読書案内",
+  "title": "Reader's guide to subsynchronous resonance",
+  "year": 1992,
+  "cites": 283,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [],
+  "oa": "W4248164258",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "BALLANCE1973",
+   "COALCREEK1981",
+   "COUNTER1980",
+   "FSCAN1979",
+   "TERMS1985"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "ANDERSON1999",
+  "doi": "10.1109/9780470546505",
+  "role": "教科書",
+  "note": "Anderson・Agrawal・Van Ness『Subsynchronous Resonance in Power Systems』",
+  "title": "Subsynchronous Resonance in Power Systems",
+  "year": 1999,
+  "cites": 426,
+  "venue": "Institute of Electrical and Electronics Engineers eBooks",
+  "authors": [
+   "Paul Maurice Anderson",
+   "B. L. Agrawal",
+   "James E. Van Ness"
+  ],
+  "oa": "W1552191589",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "A",
+  "key": "PADIYAR1999",
+  "doi": "10.1007/978-1-4615-5633-6",
+  "role": "教科書",
+  "note": "Padiyar『Analysis of Subsynchronous Resonance in Power Systems』",
+  "title": "Analysis of Subsynchronous Resonance in Power Systems",
+  "year": 1999,
+  "cites": 355,
+  "venue": "Springer eBooks",
+  "authors": [
+   "К.R. Padiyar"
+  ],
+  "oa": "W1560769131",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "B",
+  "key": "SQBUTTE1980",
+  "doi": "10.1109/tpas.1980.319726",
+  "role": "事故",
+  "note": "Square Butte の直流と軸ねじれの相互作用",
+  "title": "Experience with HVDC - Turbine-Generator Torsional Interaction at Square Butte",
+  "year": 1980,
+  "cites": 215,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "M. Bahrman",
+   "E.V. Larsen",
+   "Richard J. Piwko",
+   "H.S. Patel"
+  ],
+  "oa": "W2012441589",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "B",
+  "key": "COALCREEK1981",
+  "doi": "10.1109/tpas.1981.316861",
+  "role": "試験",
+  "note": "Coal Creek の直流と軸ねじれの現地試験",
+  "title": "Field Tests and Analysis of Torsional Interaction Between the Coal Creek Turbine-Generators and the CU HVdc System",
+  "year": 1981,
+  "cites": 56,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [
+   "K.N. Mortensen",
+   "E.V. Larsen",
+   "Richard J. Piwko"
+  ],
+  "oa": "W2056058908",
+  "cites_in_set": [
+   "SQBUTTE1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "B",
+  "key": "PEINT2007",
+  "doi": "10.1109/tpwrs.2006.889038",
+  "role": "手法",
+  "note": "パワエレ変換器との軸ねじれ相互作用の解析",
+  "title": "Analysis of Subsynchronous Torsional Interaction With Power Electronic Converters",
+  "year": 2007,
+  "cites": 140,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Lennart Harnefors"
+  ],
+  "oa": "W2099796545",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "SQBUTTE1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "B",
+  "key": "DDSO2015",
+  "doi": "10.1109/tpwrs.2015.2442653",
+  "role": "手法",
+  "note": "機器起因の SSO の周波数走査によるふるい分け",
+  "title": "Frequency Scan-Based Screening Method for Device Dependent Sub-Synchronous Oscillations",
+  "year": 2015,
+  "cites": 18,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Annakkage Malsha",
+   "Chandana Karawita",
+   "Udaya  Deepa Annakkage"
+  ],
+  "oa": "W2339267136",
+  "cites_in_set": [
+   "COALCREEK1981",
+   "FBM1977",
+   "SQBUTTE1980",
+   "TERMS1985"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "DFIGSSR2010",
+  "doi": "10.1109/tpwrd.2010.2050912",
+  "role": "手法",
+  "note": "DFIG 風力の SSR 解析のモデル",
+  "title": "Modeling of DFIG-Based Wind Farms for SSR Analysis",
+  "year": 2010,
+  "cites": 473,
+  "venue": "IEEE Transactions on Power Delivery",
+  "authors": [
+   "Lingling Fan",
+   "Rajesh Kavasseri",
+   "Zhixin Miao",
+   "Chanxia Zhu"
+  ],
+  "oa": "W2116579540",
+  "cites_in_set": [
+   "FBM1977"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "IRWIN2011",
+  "doi": "10.1109/pes.2011.6039426",
+  "role": "事故",
+  "note": "Type 3 風車と直列補償の SSCI",
+  "title": "Sub-synchronous control interactions between type 3 wind turbines and series compensated AC transmission systems",
+  "year": 2011,
+  "cites": 230,
+  "venue": "IEEE Power Engineering Society General Meeting",
+  "authors": [
+   "Garth D. Irwin",
+   "Amit Kumar Jindal",
+   "Andrew Isaacs"
+  ],
+  "oa": "W2129244731",
+  "cites_in_set": [
+   "READERS1992"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "ERCOT2012",
+  "doi": "10.1109/tdc.2012.6281678",
+  "role": "事故",
+  "note": "ERCOT の SSCI の経験と対策(2009 年の事故)",
+  "title": "ERCOT experience with Sub-synchronous Control Interaction and proposed remediation",
+  "year": 2012,
+  "cites": 289,
+  "venue": null,
+  "authors": [
+   "John Adams",
+   "Cathey Carter",
+   "Shun-Hsien Fred Huang"
+  ],
+  "oa": "W1990151667",
+  "cites_in_set": [
+   "PADIYAR1999"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "FANMIAO2012",
+  "doi": "10.1109/tec.2012.2193491",
+  "role": "手法",
+  "note": "ナイキストの判定による Type 3 の SSR の説明",
+  "title": "Nyquist-Stability-Criterion-Based SSR Explanation for Type-3 Wind Generators",
+  "year": 2012,
+  "cites": 137,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W2033780305",
+  "cites_in_set": [
+   "DFIGSSR2010",
+   "IRWIN2011",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "IMPSSR2012",
+  "doi": "10.1109/tec.2012.2211019",
+  "role": "手法",
+  "note": "インピーダンスによる Type 3 の SSR 解析",
+  "title": "Impedance-Model-Based SSR Analysis for Type 3 Wind Generator and Series-Compensated Network",
+  "year": 2012,
+  "cites": 331,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Zhixin Miao"
+  ],
+  "oa": "W2035903488",
+  "cites_in_set": [
+   "DFIGSSR2010",
+   "FANMIAO2012",
+   "IRWIN2011",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "PRACT2014",
+  "doi": "10.1109/tpwrs.2014.2365197",
+  "role": "事故",
+  "note": "実際の DFIG 風力と直列補償の SSR の調査",
+  "title": "Investigation of SSR in Practical DFIG-Based Wind Farms Connected to a Series-Compensated Power System",
+  "year": 2014,
+  "cites": 504,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Liang Wang",
+   "Xiaorong Xie",
+   "Qirong Jiang",
+   "Hui Liu",
+   "Yu Li",
+   "Huakun Liu"
+  ],
+  "oa": "W2019691666",
+  "cites_in_set": [
+   "DFIGSSR2010",
+   "ERCOT2012",
+   "IMPSSR2012",
+   "IRWIN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "C",
+  "key": "GUYUAN2017",
+  "doi": "10.1109/tec.2017.2676024",
+  "role": "事故",
+  "note": "実際の風力と直列補償の SSR(現地で記録した 58 事象の解析)",
+  "title": "Characteristic Analysis of Subsynchronous Resonance in Practical Wind Farms Connected to Series-Compensated Transmissions",
+  "year": 2017,
+  "cites": 382,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Xiaorong Xie",
+   "Xu Zhang",
+   "Huakun Liu",
+   "Hui Liu",
+   "Yunhong Li",
+   "Chuanyu Zhang"
+  ],
+  "oa": "W2594603570",
+  "cites_in_set": [
+   "COUNTER1980",
+   "DFIGSSR2010",
+   "ERCOT2012",
+   "IMPSSR2012",
+   "IRWIN2011",
+   "PASSIV2015",
+   "PRACT2014",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "SUN2011",
+  "doi": "10.1109/tpel.2011.2136439",
+  "role": "手法",
+  "note": "インピーダンスに基づく系統連系インバータの安定判定",
+  "title": "Impedance-Based Stability Criterion for Grid-Connected Inverters",
+  "year": 2011,
+  "cites": 2590,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Jian Sun"
+  ],
+  "oa": "W2139361710",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "CESPEDES2014",
+  "doi": "10.1109/tpel.2013.2262473",
+  "role": "手法",
+  "note": "電圧形変換器のインピーダンスのモデル化",
+  "title": "Impedance Modeling and Analysis of Grid-Connected Voltage-Source Converters",
+  "year": 2013,
+  "cites": 1172,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Mauricio Cespedes",
+   "Jian Dong Sun"
+  ],
+  "oa": "W2073017797",
+  "cites_in_set": [
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "DQIMP2015",
+  "doi": "10.1109/tpel.2015.2398192",
+  "role": "手法",
+  "note": "dq 小信号インピーダンス",
+  "title": "Analysis of D-Q Small-Signal Impedance of Grid-Tied Inverters",
+  "year": 2015,
+  "cites": 1339,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Bo Wen",
+   "Dushan Boroyevich",
+   "Rolando P. Burgos",
+   "Paolo Mattavelli",
+   "Zhiyu Shen"
+  ],
+  "oa": "W1974967408",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "PASSIV2015",
+  "doi": "10.1109/jestpe.2015.2490549",
+  "role": "手法",
+  "note": "受動性に基づく安定判定の総説",
+  "title": "Passivity-Based Stability Assessment of Grid-Connected VSCs—An Overview",
+  "year": 2015,
+  "cites": 679,
+  "venue": "IEEE Journal of Emerging and Selected Topics in Power Electronics",
+  "authors": [
+   "Lennart Harnefors",
+   "Xiongfei Wang",
+   "Alejandro G. Yepes",
+   "Frede Blaabjerg"
+  ],
+  "oa": "W2280707463",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "CESPEDES2014",
+   "DQIMP2015",
+   "HARMSTAB2014",
+   "PEINT2007",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "BAKHSH2016",
+  "doi": "10.1109/tpel.2016.2542244",
+  "role": "手法",
+  "note": "相領域インピーダンスの周波数の結合",
+  "title": "Couplings in Phase Domain Impedance Modelling of Grid-Connected Converters",
+  "year": 2016,
+  "cites": 303,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Mohammad Kazem Bakhshizadeh",
+   "Xiongfei Wang",
+   "Frede Blaabjerg",
+   "Jesper Hjerrild",
+   "Łukasz Kocewiak",
+   "Claus Leth Bak"
+  ],
+  "oa": "W2319578877",
+  "cites_in_set": [
+   "CESPEDES2014",
+   "DQIMP2015",
+   "HARMSTAB2014",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "HAMI2017",
+  "doi": "10.1109/tpwrs.2017.2682197",
+  "role": "事故",
+  "note": "新疆の PMSG 風力と弱い交流系統の持続的な低調波の振動",
+  "title": "Subsynchronous Interaction Between Direct-Drive PMSG Based Wind Farms and Weak AC Networks",
+  "year": 2017,
+  "cites": 628,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Huakun Liu",
+   "Xiaorong Xie",
+   "Jingbo He",
+   "Tao Xu",
+   "Zhao Kai Yu",
+   "Chao Wang"
+  ],
+  "oa": "W2595551762",
+  "cites_in_set": [
+   "DQIMP2015",
+   "PRACT2014",
+   "READERS1992"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "SEQ3WT2017",
+  "doi": "10.1109/tec.2017.2763585",
+  "role": "手法",
+  "note": "Type III 風車の正相・逆相インピーダンス",
+  "title": "Sequence Impedance Modeling and Analysis of Type-III Wind Turbines",
+  "year": 2017,
+  "cites": 151,
+  "venue": "IEEE Transactions on Energy Conversion",
+  "authors": [
+   "Ignacio Vieto",
+   "Jian Sun"
+  ],
+  "oa": "W2766585428",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "ERCOT2012",
+   "FANMIAO2012",
+   "IMPSSR2012",
+   "IRWIN2011",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "SHAIR2018",
+  "doi": "10.1016/j.rser.2018.09.047",
+  "role": "総説",
+  "note": "実際の風力の SSO の総説",
+  "title": "Overview of emerging subsynchronous oscillations in practical wind power systems",
+  "year": 2018,
+  "cites": 200,
+  "venue": "Renewable and Sustainable Energy Reviews",
+  "authors": [
+   "Jan Shair",
+   "Xiaorong Xie",
+   "Luping Wang",
+   "Wei Liu",
+   "Jingbo He",
+   "Hui Liu"
+  ],
+  "oa": "W2897945531",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "BALLANCE1973",
+   "DFIGSSR2010",
+   "ERCOT2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "IRWIN2011",
+   "MOHAVE1975",
+   "NAVAJO1977",
+   "PADIYAR1999",
+   "PRACT2014",
+   "READERS1992",
+   "SELFEXC1973",
+   "SQBUTTE1980",
+   "STATCOM2017",
+   "TERMS1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "WEAK2019",
+  "doi": "10.1109/tpwrs.2019.2924412",
+  "role": "手法",
+  "note": "弱い系統の風力: 4 Hz か 30 Hz か",
+  "title": "Wind in Weak Grids: Low-Frequency Oscillations, Subsynchronous Oscillations, and Torsional Interactions",
+  "year": 2019,
+  "cites": 236,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Yin Li",
+   "Lingling Fan",
+   "Zhixin Miao"
+  ],
+  "oa": "W2952577944",
+  "cites_in_set": [
+   "HAMI2017",
+   "SBM1985"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "D",
+  "key": "CHENG2022",
+  "doi": "10.1109/tpwrs.2022.3161418",
+  "role": "総説",
+  "note": "IBR の多い系統の実際の SSO の事故(IEEE PES の作業会)",
+  "title": "Real-World Subsynchronous Oscillation Events in Power Grids With High Penetrations of Inverter-Based Resources",
+  "year": 2022,
+  "cites": 502,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Yunzhi Cheng",
+   "Lingling Fan",
+   "Jonathan Rose",
+   "Shun-Hsien Fred Huang",
+   "John Schmall",
+   "Xiaoyu Wang"
+  ],
+  "oa": "W4224237392",
+  "cites_in_set": [
+   "DQIMP2015",
+   "FANMIAO2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "HATZI2021",
+   "IMPSSR2012",
+   "IRWIN2011",
+   "PASSIV2015",
+   "READERS1992",
+   "WEAK2019"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "HARMSTAB2014",
+  "doi": "10.1109/tpel.2014.2306432",
+  "role": "手法",
+  "note": "パワエレが主の交流系統の高調波の安定度",
+  "title": "Modeling and Analysis of Harmonic Stability in an AC Power-Electronics-Based Power System",
+  "year": 2014,
+  "cites": 785,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Xiongfei Wang",
+   "Frede Blaabjerg",
+   "Weimin Wu"
+  ],
+  "oa": "W2124074876",
+  "cites_in_set": [
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "DUTCH2016",
+  "doi": "10.1109/pesgm.2016.7741332",
+  "role": "事例",
+  "note": "超高圧の地中ケーブルとオランダの系統の共振",
+  "title": "Influence of long EHV AC underground cables on the resonance behavior of the Dutch transmission system",
+  "year": 2016,
+  "cites": 8,
+  "venue": "IEEE Power Engineering Society General Meeting",
+  "authors": [
+   "Hossein Khalilnezhad",
+   "Marjan Popov",
+   "L. van der Sluis",
+   "Jorrit A. Bos",
+   "Jan P. W. de Jong"
+  ],
+  "oa": "W2556307517",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "STATCOM2017",
+  "doi": "10.1109/tpel.2017.2769702",
+  "role": "手法",
+  "note": "STATCOM と弱い交直系統の sub・super の相互作用",
+  "title": "Sub- and Super-Synchronous Interactions Between STATCOMs and Weak AC/DC Transmissions With Series Compensations",
+  "year": 2017,
+  "cites": 121,
+  "venue": "IEEE Transactions on Power Electronics",
+  "authors": [
+   "Dewu Shu",
+   "Xiaorong Xie",
+   "Hong Rao",
+   "Xiaodan Gao",
+   "Qirong Jiang",
+   "Ying Huang"
+  ],
+  "oa": "W2766827251",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "DFIGSSR2010",
+   "HAMI2017",
+   "PRACT2014"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "IMPNET2018",
+  "doi": "10.1109/access.2018.2849830",
+  "role": "手法",
+  "note": "インピーダンスの網による sub/super の定量解析",
+  "title": "Impedance Network Modeling and Quantitative Stability Analysis of Sub-/Super-Synchronous Oscillations for Large-Scale Wind Power Systems",
+  "year": 2018,
+  "cites": 72,
+  "venue": "IEEE Access",
+  "authors": [
+   "Huakun Liu",
+   "Xiaorong Xie"
+  ],
+  "oa": "W2809592724",
+  "cites_in_set": [
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "HAMI2017",
+   "IMPSSR2012",
+   "IRWIN2011",
+   "PASSIV2015",
+   "PRACT2014"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "WANGBLAA2018",
+  "doi": "10.1109/tsg.2018.2812712",
+  "role": "総説",
+  "note": "パワエレ系統の高調波の安定度",
+  "title": "Harmonic Stability in Power Electronic-Based Power Systems: Concept, Modeling, and Analysis",
+  "year": 2018,
+  "cites": 1291,
+  "venue": "IEEE Transactions on Smart Grid",
+  "authors": [
+   "Xiongfei Wang",
+   "Frede Blaabjerg"
+  ],
+  "oa": "W2791193733",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "BAKHSH2016",
+   "CESPEDES2014",
+   "HARMSTAB2014",
+   "PASSIV2015",
+   "PEINT2007",
+   "SUN2011"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "WAMS2019",
+  "doi": "10.1109/tpwrd.2019.2963336",
+  "role": "手法",
+  "note": "sub/super の電力の流れで SSCI の源を広域監視で特定",
+  "title": "Identifying the Source of Subsynchronous Control Interaction via Wide-Area Monitoring of Sub/Super-Synchronous Power Flows",
+  "year": 2019,
+  "cites": 80,
+  "venue": "IEEE Transactions on Power Delivery",
+  "authors": [
+   "Xiaorong Xie",
+   "Ying Zhan",
+   "Jan Shair",
+   "Zhitong Ka",
+   "Xiqiang Chang"
+  ],
+  "oa": "W2997154313",
+  "cites_in_set": [
+   "HAMI2017",
+   "PRACT2014",
+   "SHAIR2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "E",
+  "key": "SC2020",
+  "doi": "10.1109/tpwrd.2020.3019481",
+  "role": "手法",
+  "note": "同期調相機が sub/super の振動に与える影響",
+  "title": "Impact of Synchronous Condenser on Sub/Super-Synchronous Oscillations in Wind Farms",
+  "year": 2020,
+  "cites": 59,
+  "venue": "IEEE Transactions on Power Delivery",
+  "authors": [
+   "Yuzhi Wang",
+   "Liang Wang",
+   "Qirong Jiang"
+  ],
+  "oa": "W3080279762",
+  "cites_in_set": [
+   "ERCOT2012",
+   "HAMI2017",
+   "IMPNET2018",
+   "PRACT2014",
+   "READERS1992"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "F",
+  "key": "TERMS1980",
+  "doi": "10.1109/tpas.1980.319686",
+  "role": "分類",
+  "note": "SSO の用語と定義の案",
+  "title": "Proposed Terms and Definitions for Subsynchronous Oscillations",
+  "year": 1980,
+  "cites": 70,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [],
+  "oa": "W4239458808",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "F",
+  "key": "TERMS1985",
+  "doi": "10.1109/tpas.1985.319152",
+  "role": "分類",
+  "note": "SSO の用語・定義・記号",
+  "title": "Terms, Definitions and Symbols for Subsynchronous Oscillations",
+  "year": 1985,
+  "cites": 204,
+  "venue": "IEEE Transactions on Power Apparatus and Systems",
+  "authors": [],
+  "oa": "W4243438467",
+  "cites_in_set": [
+   "TERMS1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "F",
+  "key": "KUNDUR1994",
+  "doi": "",
+  "role": "教科書",
+  "note": "Kundur『Power System Stability and Control』(McGraw-Hill・DOI なし)",
+  "title": null,
+  "year": null,
+  "cites": null,
+  "venue": null,
+  "authors": [],
+  "oa": null,
+  "cites_in_set": []
+ },
+ {
+  "lane": "F",
+  "key": "HATZI2021",
+  "doi": "10.1109/tpwrs.2020.3041774",
+  "role": "分類",
+  "note": "安定度の定義と分類の改訂(共振の安定度・インバータの安定度)",
+  "title": "Definition and Classification of Power System Stability – Revisited & Extended",
+  "year": 2020,
+  "cites": 1244,
+  "venue": "IEEE Transactions on Power Systems",
+  "authors": [
+   "Nikos D. Hatziargyriou",
+   "Jovica V. Milanović",
+   "Claudia Rahmann",
+   "Venkataramana Ajjarapu",
+   "Claudio A. Cañizares",
+   "I. Erlich"
+  ],
+  "oa": "W3110874572",
+  "cites_in_set": [
+   "ANDERSON1999",
+   "CESPEDES2014",
+   "DFIGSSR2010",
+   "ERCOT2012",
+   "FANMIAO2012",
+   "GUYUAN2017",
+   "HAMI2017",
+   "HARMSTAB2014",
+   "IMPSSR2012",
+   "READERS1992",
+   "SHAIR2018",
+   "STATCOM2017",
+   "TERMS1985",
+   "WANGBLAA2018"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "F",
+  "key": "TB909",
+  "doi": "",
+  "role": "指針",
+  "note": "CIGRE TB 909 パワエレが主の系統の SSO の検討の指針(JWG C4/B4.52, 2023)",
+  "title": null,
+  "year": null,
+  "cites": null,
+  "venue": null,
+  "authors": [],
+  "oa": null,
+  "cites_in_set": []
+ },
+ {
+  "lane": "F",
+  "key": "KAUAI2023",
+  "doi": "10.48550/arxiv.2301.05781",
+  "role": "事故",
+  "note": "カウアイ島 2021-11-21 の 18〜20 Hz の振動の解析",
+  "title": "Analysis of November 21, 2021, Kaua`i Island Power System 18-20 Hz Oscillations",
+  "year": 2023,
+  "cites": 7,
+  "venue": "arXiv (Cornell University)",
+  "authors": [
+   "Shuan Dong",
+   "Bin Wang",
+   "Tan, Jin",
+   "Cameron J. Kruse",
+   "Brad W. Rockwell",
+   "Andy Hoke"
+  ],
+  "oa": "W4317437619",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1976",
+  "doi": "10.1541/ieejpes1972.96.607",
+  "role": "国内",
+  "note": "直列コンデンサ補償系統における同期機の軸ねじれ共振現象とその抑制",
+  "title": "Subsynchronous Resonance Oscillations in Series-Compensated Transmission Systems, and their Suppression",
+  "year": 1976,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Kaneyoshi Murotani",
+   "Masakuni Asano"
+  ],
+  "oa": "W2397150722",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1980",
+  "doi": "10.1541/ieejpes1972.100.17",
+  "role": "国内",
+  "note": "直流系統の並列キャパシタンスによる同期機の自己励磁現象",
+  "title": null,
+  "year": 1980,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Hiromichi Kinoshita",
+   "Isao Iyoda",
+   "Masayoshi Kumano"
+  ],
+  "oa": "W4243839487",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1981",
+  "doi": "10.1541/ieejpes1972.101.213",
+  "role": "国内",
+  "note": "タービン発電機の軸ねじれ振動抑制装置による SSR の抑制",
+  "title": null,
+  "year": 1981,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Yoshiaki Ichihara",
+   "Toshio Kotake",
+   "Katsuaki Watanabe",
+   "Shoichi Takeda",
+   "Kanji Katsuki",
+   "Hiroshi Suzuki"
+  ],
+  "oa": "W2517464069",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1985",
+  "doi": "10.1541/ieejpes1972.105.323",
+  "role": "国内",
+  "note": "直流送電系統における低周波不安定現象の解析",
+  "title": "Subsynchronous instability of HVDC transmission system.",
+  "year": 1985,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Masahiro Takasaki",
+   "Toshiyuki Hayashi",
+   "Yasuji Sekine"
+  ],
+  "oa": "W2402455177",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1988A",
+  "doi": "10.1541/ieejpes1972.108.97",
+  "role": "国内",
+  "note": "発電機と直流送電系統の干渉による低周波軸ねじれ振動現象の解明と抑制方式の開発",
+  "title": "Analysis and suppression method of torsional interaction between turbine-generators and HVDC power transmission systems.",
+  "year": 1988,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Susumu Horiuchi",
+   "Tukushi Hara",
+   "Hiroo Konishi",
+   "Hisao Amano"
+  ],
+  "oa": "W3107430824",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1988B",
+  "doi": "10.1541/ieejpes1972.108.347",
+  "role": "国内",
+  "note": "発電機と直流送電系統の相互作用による軸ねじれ振動発生メカニズムの検証",
+  "title": "Verification of torsional oscillation mechanism caused by interactions between turbine-generators and HVDC power transmission systems.",
+  "year": 1988,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Atsushi Kurita",
+   "Hiroo Konishi",
+   "Hisao Amano"
+  ],
+  "oa": "W2404553586",
+  "cites_in_set": [
+   "SQBUTTE1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1997A",
+  "doi": "10.1541/ieejpes1990.117.7_975",
+  "role": "国内",
+  "note": "大容量火力発電所に連接する交直連系系統の相互作用と対策(紀伊水道 1,400 MW・火力直結の単独送電)",
+  "title": "Interactions and Countermeasures of AC-DC Interconnected System with Large Capacity Thermal Power Plants in the Vicinity",
+  "year": 1997,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Kouji YAMAJI",
+   "Makoto Tanaka",
+   "Masahiro Sekita",
+   "Iwao Matori"
+  ],
+  "oa": "W2516024051",
+  "cites_in_set": [
+   "SQBUTTE1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1997B",
+  "doi": "10.1541/ieejpes1990.117.7_905",
+  "role": "国内",
+  "note": "自励式変換器を用いた交直連系系統における軸ねじれ振動の定態安定度解析",
+  "title": "Steady-State Stability Analysis of Shaft Torsional Oscillation in AC-DC Interconnected System with Self-Commutated Converters",
+  "year": 1997,
+  "cites": 2,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Kohachiro Nishi",
+   "Tatsuhito Nakajima",
+   "Akihiko Yokoyama"
+  ],
+  "oa": "W2509871057",
+  "cites_in_set": [
+   "SQBUTTE1980"
+  ],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J1997C",
+  "doi": "10.1541/ieejpes1990.117.7_921",
+  "role": "国内",
+  "note": "軸ねじれ振動対策を考慮した直列コンデンサのオンオフ離散制御",
+  "title": "On-Off Discrete Control of Series Capacitors for Power System Stability with Torsional Oscillation Countermeasure",
+  "year": 1997,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "Naoki Kobayashi",
+   "Kenichi Tanomura",
+   "Akihisa Takei",
+   "Tsukushi Hara",
+   "Kaoru Koyanagi"
+  ],
+  "oa": "W2512555548",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J2000",
+  "doi": "10.1541/ieejfms1990.120.11_959",
+  "role": "国内",
+  "note": "紀伊水道直流 500 kV 連系プロジェクトの変換所の技術",
+  "title": "Recent Technology in the Kii Channel DC 500 kV Link Project",
+  "year": 2000,
+  "cites": 1,
+  "venue": "IEEJ Transactions on Fundamentals and Materials",
+  "authors": [
+   "Yukao Tanaka",
+   "Akihito Kawahara",
+   "Masatoshi Sanpei"
+  ],
+  "oa": "W2511239232",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J2012",
+  "doi": "10.1541/ieejpes.132.NL4_5",
+  "role": "国内",
+  "note": "電力系統と交直変換器の相互作用調査専門委員会(電気学会の委員会報告)",
+  "title": "調査研究委員会レポート：電力系統と交直変換器の相互作用調査専門委員会",
+  "year": 2012,
+  "cites": 0,
+  "venue": "IEEJ Transactions on Power and Energy",
+  "authors": [
+   "功 伊与田",
+   "宜保直樹",
+   "太田 文彦"
+  ],
+  "oa": "W4255382717",
+  "cites_in_set": [],
+  "bib": true
+ },
+ {
+  "lane": "J",
+  "key": "J2018",
+  "doi": "10.5416/jipe.44.66",
+  "role": "国内",
+  "note": "周波数スイープによる系統インピーダンス推定法を用いた補償器の最適設計",
+  "title": "Optimization of Compensator using Grid-impedance Estimation Method by Frequency Sweeｐ",
+  "year": 2018,
+  "cites": 0,
+  "venue": "Journal of the Japan Institute of Power Electronics",
+  "authors": [
+   "Yuhki Kamatani",
+   "Takeo Nishikawa",
+   "Hironori Tauchi",
+   "Takeshi Uematsu",
+   "Toshiyuki Zaitsu"
+  ],
+  "oa": "W2979950747",
+  "cites_in_set": [],
+  "bib": true
+ }
+]
