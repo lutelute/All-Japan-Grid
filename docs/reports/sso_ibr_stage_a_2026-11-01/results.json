@@ -1,0 +1,868 @@
+{
+ "params": {
+  "f0": 50.0,
+  "v_g": 1.0,
+  "x_f": 0.15,
+  "r_f": 0.005,
+  "scr": 3.0,
+  "xr_g": 10.0,
+  "i_d_ref": 1.0,
+  "i_q_ref": 0.0,
+  "f_cc": 300.0,
+  "f_pll": 40.0,
+  "zeta_pll": 0.707,
+  "t_ff": 0.001,
+  "k_ff": 0.0
+ },
+ "cases": {
+  "FF なし": {
+   "k_ff": 0.0
+  },
+  "FF あり": {
+   "k_ff": 1.0,
+   "t_ff": 0.001
+  }
+ },
+ "tolerance": {
+  "adm_rel": 1e-06,
+  "f_hz": 0.01,
+  "sigma": 0.05,
+  "pair_hz": 0.01
+ },
+ "static_limit_scr": 0.995037,
+ "points": [
+  {
+   "case": "FF なし",
+   "scr": 1.6,
+   "stable": true,
+   "eig": {
+    "sigma": -27.5,
+    "f_dq": 23.8212,
+    "n_rhp": 0
+   },
+   "adm": {
+    "sigma": -27.5,
+    "f_dq": 23.8212,
+    "rel_err": 3.1e-10,
+    "n_rhp_nyquist": 0
+   },
+   "time": {
+    "f_sub": 26.1788,
+    "sigma_sub": -27.5001,
+    "f_sup": 73.8212,
+    "sigma_sup": -27.5,
+    "fit_window_s": [
+     0.08,
+     0.99975
+    ]
+   },
+   "passed": {
+    "route12": true,
+    "route13": true,
+    "abc_pair": true,
+    "rhp_count": true
+   }
+  },
+  {
+   "case": "FF なし",
+   "scr": 1.3,
+   "stable": false,
+   "eig": {
+    "sigma": 31.4525,
+    "f_dq": 10.5256,
+    "n_rhp": 2
+   },
+   "adm": {
+    "sigma": 31.4525,
+    "f_dq": 10.5256,
+    "rel_err": 3.5e-10,
+    "n_rhp_nyquist": 2
+   },
+   "time": {
+    "f_sub": 39.4744,
+    "sigma_sub": 31.4524,
+    "f_sup": 60.5256,
+    "sigma_sup": 31.4522,
+    "fit_window_s": [
+     0.08,
+     0.2315
+    ]
+   },
+   "passed": {
+    "route12": true,
+    "route13": true,
+    "abc_pair": true,
+    "rhp_count": true
+   }
+  },
+  {
+   "case": "FF あり",
+   "scr": 2.5,
+   "stable": true,
+   "eig": {
+    "sigma": -79.7179,
+    "f_dq": 78.7592,
+    "n_rhp": 0
+   },
+   "adm": {
+    "sigma": -79.7179,
+    "f_dq": 78.7592,
+    "rel_err": 9.1e-11,
+    "n_rhp_nyquist": 0
+   },
+   "time": {
+    "f_sub": 28.7587,
+    "sigma_sub": -79.7141,
+    "f_sup": 128.759,
+    "sigma_sup": -79.7155,
+    "fit_window_s": [
+     0.08,
+     0.99975
+    ]
+   },
+   "passed": {
+    "route12": true,
+    "route13": true,
+    "abc_pair": true,
+    "rhp_count": true
+   }
+  },
+  {
+   "case": "FF あり",
+   "scr": 1.8,
+   "stable": false,
+   "eig": {
+    "sigma": 39.8818,
+    "f_dq": 65.1454,
+    "n_rhp": 2
+   },
+   "adm": {
+    "sigma": 39.8818,
+    "f_dq": 65.1454,
+    "rel_err": 1.2e-11,
+    "n_rhp_nyquist": 2
+   },
+   "time": {
+    "f_sub": 15.1454,
+    "sigma_sub": 39.8818,
+    "f_sup": 115.145,
+    "sigma_sup": 39.8818,
+    "fit_window_s": [
+     0.08,
+     0.16275
+    ]
+   },
+   "passed": {
+    "route12": true,
+    "route13": true,
+    "abc_pair": true,
+    "rhp_count": true
+   }
+  }
+ ],
+ "sweep": [
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 10,
+   "scr_eig": 1.99495,
+   "scr_adm": null,
+   "f_dq": 4.84797,
+   "participation_top3": {
+    "δ": 0.37,
+    "x_pll": 0.31,
+    "x_cc,d": 0.19
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 15,
+   "scr_eig": 1.89388,
+   "scr_adm": null,
+   "f_dq": 6.02113,
+   "participation_top3": {
+    "δ": 0.36,
+    "x_pll": 0.31,
+    "x_cc,d": 0.2
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 20,
+   "scr_eig": 1.82017,
+   "scr_adm": null,
+   "f_dq": 6.86084,
+   "participation_top3": {
+    "δ": 0.33,
+    "x_pll": 0.3,
+    "x_cc,d": 0.21
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 30,
+   "scr_eig": 1.72354,
+   "scr_adm": null,
+   "f_dq": 7.83776,
+   "participation_top3": {
+    "δ": 0.28,
+    "x_pll": 0.26,
+    "x_cc,d": 0.24
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 40,
+   "scr_eig": 1.6686,
+   "scr_adm": null,
+   "f_dq": 8.25175,
+   "participation_top3": {
+    "x_cc,d": 0.28,
+    "δ": 0.22,
+    "x_pll": 0.22
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 50,
+   "scr_eig": 1.63707,
+   "scr_adm": null,
+   "f_dq": 8.40803,
+   "participation_top3": {
+    "x_cc,d": 0.32,
+    "δ": 0.18,
+    "x_pll": 0.17
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 60,
+   "scr_eig": 1.61834,
+   "scr_adm": null,
+   "f_dq": 8.46034,
+   "participation_top3": {
+    "x_cc,d": 0.35,
+    "i_Q": 0.19,
+    "i_D": 0.15
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 80,
+   "scr_eig": 1.59894,
+   "scr_adm": null,
+   "f_dq": 8.47074,
+   "participation_top3": {
+    "x_cc,d": 0.39,
+    "i_Q": 0.23,
+    "i_D": 0.16
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 150,
+   "f_pll": 100,
+   "scr_eig": 2.7833,
+   "scr_adm": null,
+   "f_dq": 81.3327,
+   "participation_top3": {
+    "δ": 0.37,
+    "i_Q": 0.27,
+    "x_pll": 0.24
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 10,
+   "scr_eig": 1.50533,
+   "scr_adm": 1.50533,
+   "f_dq": 5.39419,
+   "participation_top3": {
+    "δ": 0.4,
+    "x_pll": 0.32,
+    "x_cc,d": 0.18
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 15,
+   "scr_eig": 1.48123,
+   "scr_adm": 1.48123,
+   "f_dq": 7.29379,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.34,
+    "x_cc,d": 0.16
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 20,
+   "scr_eig": 1.46358,
+   "scr_adm": 1.46358,
+   "f_dq": 9.13089,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.35,
+    "x_cc,d": 0.14
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 30,
+   "scr_eig": 1.44084,
+   "scr_adm": 1.44084,
+   "f_dq": 12.908,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.35,
+    "x_cc,d": 0.11
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 40,
+   "scr_eig": 1.42946,
+   "scr_adm": 1.42946,
+   "f_dq": 17.346,
+   "participation_top3": {
+    "δ": 0.39,
+    "x_pll": 0.34,
+    "i_D": 0.12
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 50,
+   "scr_eig": 1.43567,
+   "scr_adm": 1.43567,
+   "f_dq": 24.095,
+   "participation_top3": {
+    "δ": 0.37,
+    "x_pll": 0.31,
+    "i_D": 0.17
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 60,
+   "scr_eig": 1.78607,
+   "scr_adm": 1.78607,
+   "f_dq": 51.6327,
+   "participation_top3": {
+    "δ": 0.37,
+    "x_pll": 0.24,
+    "i_Q": 0.23
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 80,
+   "scr_eig": 2.76734,
+   "scr_adm": 2.76734,
+   "f_dq": 85.5206,
+   "participation_top3": {
+    "δ": 0.4,
+    "i_Q": 0.31,
+    "x_pll": 0.22
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 300,
+   "f_pll": 100,
+   "scr_eig": 3.47398,
+   "scr_adm": 3.47398,
+   "f_dq": 108.292,
+   "participation_top3": {
+    "δ": 0.41,
+    "i_Q": 0.32,
+    "x_pll": 0.22
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 10,
+   "scr_eig": 1.23256,
+   "scr_adm": null,
+   "f_dq": 5.72367,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.32,
+    "x_cc,d": 0.14
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 15,
+   "scr_eig": 1.24228,
+   "scr_adm": null,
+   "f_dq": 8.54111,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.32,
+    "i_D": 0.12
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 20,
+   "scr_eig": 1.25872,
+   "scr_adm": null,
+   "f_dq": 11.9609,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.31,
+    "i_D": 0.15
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 30,
+   "scr_eig": 1.32389,
+   "scr_adm": null,
+   "f_dq": 21.8901,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.29,
+    "i_D": 0.18
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 40,
+   "scr_eig": 1.47463,
+   "scr_adm": null,
+   "f_dq": 38.3501,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.24,
+    "i_Q": 0.17
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 50,
+   "scr_eig": 1.7664,
+   "scr_adm": null,
+   "f_dq": 59.5575,
+   "participation_top3": {
+    "δ": 0.41,
+    "i_Q": 0.24,
+    "x_pll": 0.21
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 60,
+   "scr_eig": 2.12284,
+   "scr_adm": null,
+   "f_dq": 78.9135,
+   "participation_top3": {
+    "δ": 0.42,
+    "i_Q": 0.29,
+    "x_pll": 0.2
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 80,
+   "scr_eig": 2.83485,
+   "scr_adm": null,
+   "f_dq": 111.364,
+   "participation_top3": {
+    "δ": 0.42,
+    "i_Q": 0.33,
+    "x_pll": 0.19
+   }
+  },
+  {
+   "case": "FF なし",
+   "f_cc": 600,
+   "f_pll": 100,
+   "scr_eig": 3.50962,
+   "scr_adm": null,
+   "f_dq": 139.509,
+   "participation_top3": {
+    "δ": 0.42,
+    "i_Q": 0.35,
+    "x_pll": 0.19
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 10,
+   "scr_eig": 1.02126,
+   "scr_adm": null,
+   "f_dq": 6.59142,
+   "participation_top3": {
+    "δ": 0.39,
+    "x_pll": 0.29,
+    "i_D": 0.17
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 15,
+   "scr_eig": 1.10146,
+   "scr_adm": null,
+   "f_dq": 16.9002,
+   "participation_top3": {
+    "δ": 0.36,
+    "i_D": 0.19,
+    "x_pll": 0.19
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 20,
+   "scr_eig": 1.3791,
+   "scr_adm": null,
+   "f_dq": 30.559,
+   "participation_top3": {
+    "δ": 0.32,
+    "v_ff,d": 0.17,
+    "i_D": 0.16
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 30,
+   "scr_eig": 1.87599,
+   "scr_adm": null,
+   "f_dq": 45.0738,
+   "participation_top3": {
+    "δ": 0.31,
+    "v_ff,d": 0.15,
+    "v_ff,q": 0.14
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 40,
+   "scr_eig": 2.2669,
+   "scr_adm": null,
+   "f_dq": 56.2459,
+   "participation_top3": {
+    "δ": 0.32,
+    "i_Q": 0.17,
+    "v_ff,q": 0.15
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 50,
+   "scr_eig": 2.58975,
+   "scr_adm": null,
+   "f_dq": 66.4523,
+   "participation_top3": {
+    "δ": 0.33,
+    "i_Q": 0.19,
+    "v_ff,q": 0.16
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 60,
+   "scr_eig": 2.87279,
+   "scr_adm": null,
+   "f_dq": 76.3448,
+   "participation_top3": {
+    "δ": 0.34,
+    "i_Q": 0.21,
+    "x_pll": 0.16
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 80,
+   "scr_eig": 3.40354,
+   "scr_adm": null,
+   "f_dq": 95.7405,
+   "participation_top3": {
+    "δ": 0.35,
+    "i_Q": 0.24,
+    "x_pll": 0.18
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 150,
+   "f_pll": 100,
+   "scr_eig": 3.90093,
+   "scr_adm": null,
+   "f_dq": 113.716,
+   "participation_top3": {
+    "δ": 0.35,
+    "i_Q": 0.25,
+    "x_pll": 0.19
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 10,
+   "scr_eig": 1.01111,
+   "scr_adm": 1.01111,
+   "f_dq": 5.39815,
+   "participation_top3": {
+    "δ": 0.4,
+    "x_pll": 0.32,
+    "i_D": 0.19
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 15,
+   "scr_eig": 1.03792,
+   "scr_adm": 1.03792,
+   "f_dq": 11.8848,
+   "participation_top3": {
+    "δ": 0.4,
+    "x_pll": 0.27,
+    "i_D": 0.22
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 20,
+   "scr_eig": 1.10581,
+   "scr_adm": 1.10581,
+   "f_dq": 24.3145,
+   "participation_top3": {
+    "δ": 0.38,
+    "i_D": 0.24,
+    "x_pll": 0.19
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 30,
+   "scr_eig": 1.5777,
+   "scr_adm": 1.5777,
+   "f_dq": 53.9212,
+   "participation_top3": {
+    "δ": 0.33,
+    "i_Q": 0.17,
+    "i_D": 0.16
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 40,
+   "scr_eig": 2.02338,
+   "scr_adm": 2.02338,
+   "f_dq": 70.5197,
+   "participation_top3": {
+    "δ": 0.33,
+    "i_Q": 0.23,
+    "v_ff,q": 0.13
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 50,
+   "scr_eig": 2.43487,
+   "scr_adm": 2.43487,
+   "f_dq": 84.6054,
+   "participation_top3": {
+    "δ": 0.33,
+    "i_Q": 0.27,
+    "v_ff,q": 0.14
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 60,
+   "scr_eig": 2.82646,
+   "scr_adm": 2.82646,
+   "f_dq": 97.5222,
+   "participation_top3": {
+    "δ": 0.34,
+    "i_Q": 0.29,
+    "x_pll": 0.14
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 80,
+   "scr_eig": 3.56415,
+   "scr_adm": 3.56415,
+   "f_dq": 120.956,
+   "participation_top3": {
+    "δ": 0.35,
+    "i_Q": 0.32,
+    "x_pll": 0.15
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 300,
+   "f_pll": 100,
+   "scr_eig": 4.23592,
+   "scr_adm": 4.23592,
+   "f_dq": 141.894,
+   "participation_top3": {
+    "δ": 0.36,
+    "i_Q": 0.32,
+    "x_pll": 0.16
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 10,
+   "scr_eig": 1.00766,
+   "scr_adm": null,
+   "f_dq": 4.88389,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.34,
+    "i_D": 0.2
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 15,
+   "scr_eig": 1.02556,
+   "scr_adm": null,
+   "f_dq": 10.2709,
+   "participation_top3": {
+    "δ": 0.41,
+    "x_pll": 0.29,
+    "i_D": 0.24
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 20,
+   "scr_eig": 1.05485,
+   "scr_adm": null,
+   "f_dq": 18.8378,
+   "participation_top3": {
+    "δ": 0.41,
+    "i_D": 0.26,
+    "x_pll": 0.24
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 30,
+   "scr_eig": 1.31568,
+   "scr_adm": null,
+   "f_dq": 58.6244,
+   "participation_top3": {
+    "δ": 0.37,
+    "i_D": 0.22,
+    "i_Q": 0.14
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 40,
+   "scr_eig": 1.75319,
+   "scr_adm": null,
+   "f_dq": 85.1464,
+   "participation_top3": {
+    "δ": 0.35,
+    "i_Q": 0.25,
+    "i_D": 0.14
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 50,
+   "scr_eig": 2.16399,
+   "scr_adm": null,
+   "f_dq": 104.224,
+   "participation_top3": {
+    "δ": 0.35,
+    "i_Q": 0.3,
+    "x_pll": 0.11
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 60,
+   "scr_eig": 2.56053,
+   "scr_adm": null,
+   "f_dq": 120.776,
+   "participation_top3": {
+    "δ": 0.36,
+    "i_Q": 0.33,
+    "x_pll": 0.12
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 80,
+   "scr_eig": 3.31984,
+   "scr_adm": null,
+   "f_dq": 149.888,
+   "participation_top3": {
+    "δ": 0.36,
+    "i_Q": 0.35,
+    "x_pll": 0.13
+   }
+  },
+  {
+   "case": "FF あり",
+   "f_cc": 600,
+   "f_pll": 100,
+   "scr_eig": 4.03579,
+   "scr_adm": null,
+   "f_dq": 175.78,
+   "participation_top3": {
+    "δ": 0.37,
+    "i_Q": 0.36,
+    "x_pll": 0.14
+   }
+  }
+ ],
+ "all_passed": true
+}
