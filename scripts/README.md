@@ -175,9 +175,9 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 278 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 279 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
-状態: 現役 68・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 175。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
+状態: 現役 68・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 176。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
 
 
 <details><summary><b>取得 / fetch</b>(18 本)</summary>
@@ -466,7 +466,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>その他 / other</b>(48 本)</summary>
+<details><summary><b>その他 / other</b>(49 本)</summary>
 
 | スクリプト | 状態 | 説明 |
 |---|---|---|
@@ -511,6 +511,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `site_connection_review.py` | 現役<br><sub>ダッシュボードのカード</sub> | Read and verify saved site/terminal connection evidence; never change a model. |
 | `sso_stage_a.py` |  | SSO 第 2 段 段 A: GFL インバータ 1 台 + テブナン等価で、3 つの道の答えがそろうかを確かめる(2026-11-01). |
 | `sso_stage_b.py` |  | SSO 第 2 段 段 B: 公表例 REAL20HZ2022 を本文の定数で解き、本文の数字と突き合わせる(2026-11-01). |
+| `sso_stage_b2.py` |  | SSO 第 2 段 段 B の続き: REAL20HZ2022 の Case 3 の EMT(27 Hz)を、外側の制御を足して解く(2026-11-01). |
 | `stepdown_gap_census.py` |  | 介入#43(降圧点欠損)の census と静的ゲート — 島ごとに OFF / #43a / #43a+#43b を比べる. |
 | `substation_scope.py` 🔒 |  | SubScope — GridStitch 変電所構造ビューア. |
 | `sync_realtime_to_nas.sh` | 現役 | ローカル蓄積(data/realtime/)を pws-nas03 のAGJ領域へ退避する。 |
