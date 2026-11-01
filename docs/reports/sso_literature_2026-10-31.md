@@ -29,6 +29,8 @@ SSO 解析の計画(`sso_plan_2026-10-31.md`)の第 0 段。
 
 図: 横は年、段は筋。点の大きさは被引用数(OpenAlex)、灰色の線はこの 59 本の中の引用。日本の文献の参考文献は、OpenAlex では一部しか結べていない(1997 年の論文は J-STAGE では 17 本、ここで結べたのは 1 本)。
 
+動画(79 秒・音なし・字幕つき、2026-11-02 追加): [sso_lineage_2026-10-31.mp4](sso_literature_2026-10-31/sso_lineage_2026-10-31.mp4)。いまの動揺の道具が見ている帯と SSO の帯、上の系譜を年の順に、段の組み方(TB 909)の順に見せる。作り方は「再現」の節。
+
 ## 分類(何を sub/super と呼ぶか)
 
 | 分け方 | 中身 | 出典 |
@@ -207,6 +209,8 @@ python3 -I docs/reports/sso_literature_2026-10-31/discover/jstage.py raw/jstage.
 python3 -I docs/reports/sso_literature_2026-10-31/curate.py docs/reports/sso_literature_2026-10-31
 # 図
 python docs/reports/sso_literature_2026-10-31/fig.py
+# 動画(約 2 分半。ffmpeg と Hiragino の字体が要る。lit.json だけを読む。macOS で作り直すとバイトまで一致した)
+python docs/reports/sso_literature_2026-10-31/video.py docs/reports/sso_literature_2026-10-31 docs/reports/sso_literature_2026-10-31/sso_lineage_2026-10-31.mp4
 ```
 
 OpenAlex と J-STAGE の API は鍵なしで使える。被引用数は日によって変わる。
