@@ -175,9 +175,9 @@ python scripts/diagnostics/test_west_reactive.py
 `cog -I . -r scripts/README.md` で作り直す（`scripts/scripts_index.py`）。説明は各ファイルの冒頭の 1 行。
 
 <!-- [[[cog import cog, scripts.scripts_index as si; cog.out(si.table()) ]]] -->
-直下 274 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
+直下 277 本(サブフォルダは上の各節)。🔒 = Snakefile・CI・tests・src・launchd が名前で参照(動かすなら参照元も直す)。
 
-状態: 現役 64・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 175。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
+状態: 現役 68・旧系譜 14・比較用 1・退役 9・記録 10・起動不可 1・未分類 174。現役 = 正典の手順・毎時の処理・Snakefile・CI・CLI、または(旧系譜でない)ダッシュボードのカードが呼ぶ / 旧系譜 = 旧系譜の網を組む関数を import / 退役・比較用・記録 = `scripts/script_status.yaml` / 起動不可 = import 先が無い / 未分類 = 手で使う道具。どれも消さない。
 
 
 <details><summary><b>取得 / fetch</b>(18 本)</summary>
@@ -233,7 +233,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>監査・検証 / audit & validate</b>(18 本)</summary>
+<details><summary><b>監査・検証 / audit & validate</b>(19 本)</summary>
 
 | スクリプト | 状態 | 説明 |
 |---|---|---|
@@ -244,6 +244,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `audit_story_connections.py` 🔒 |  | Read-only, reproducible audit of the built graph and its connection evidence. |
 | `audit_substation_plant_overlap.py` 🔒 |  | Audit substation/plant classification overlap in OSM-derived GeoJSON data. |
 | `check_before_after_review.py` |  | Check the offline review UI with Playwright, including every slide and record. |
+| `check_point_demand_stamp.py` 🔒 | 現役 | 手元の地点需要の表が、正典の版(MODEL_VERSION.json)に記録した表と同じかを確かめる(2026-10-26). |
 | `check_same_site_review.py` |  | Verify all 27 before/after map views and report controls using Playwright. |
 | `compare_observed_derived_impedance.py` |  | 公表インピーダンス(observed)でAGJの線路パラメータ推定(derived)を答え合わせする。 |
 | `compare_station_layers.py` 🔒 |  | SubSLD(構造 DB)と node-breaker 観測層を、同じ変電所ごとに突き合わせる。 |
@@ -382,7 +383,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>書き出し・公開 / export & publish</b>(27 本)</summary>
+<details><summary><b>書き出し・公開 / export & publish</b>(28 本)</summary>
 
 | スクリプト | 状態 | 説明 |
 |---|---|---|
@@ -405,6 +406,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `export_subsld_pages.py` 🔒 | 現役 | SubSLD の Pages 機能化 — 全所コンパクトJSONの書き出し(オーナー指示 2026-08-27). |
 | `export_subsld_ways.py` 🔒 | 現役 | SubSLD Pages ビューア用の実線形エクスポート(オーナーFB 2026-08-27). |
 | `export_substations_geojson.py` |  | Export enriched substation data from OSM GeoJSON with voltage inference. |
+| `export_zone_case.py` 🔒 | 現役 | 電力会社エリア単位のケース書き出し(``ajgrid zone``). |
 | `make_dashboard_thumbs.py` 🔒 | 現役<br><sub>ダッシュボードのカード</sub> | ダッシュボードのツールカードに載せる静止画を作る. |
 | `make_dataset_bundle.py` |  | All-Japan-Grid — 配布用データセットバンドル (.zip) を生成する。 |
 | `make_readme_gifs.py` |  | README のデモ GIF を、Pages のページをブラウザで操作して撮り直す。 |
@@ -464,7 +466,7 @@ python scripts/diagnostics/test_west_reactive.py
 
 </details>
 
-<details><summary><b>その他 / other</b>(46 本)</summary>
+<details><summary><b>その他 / other</b>(47 本)</summary>
 
 | スクリプト | 状態 | 説明 |
 |---|---|---|
@@ -476,7 +478,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `classify_isolated_subs.py` |  | 連結性監査で出た「孤立変電所」を A/繋ぐべき・B/除外・?/不明 に振り分ける。 |
 | `connection_candidates.py` | 旧系譜<br><sub>旧系譜の網を組む関数を import</sub> | 接続候補ジェネレータ (接続編集ツールのバックエンド) — I6-5新方向 2026-06-14。 |
 | `connection_voltage.py` 🔒 |  | Voltage evidence shared by OSM way-chain recovery diagnostics. |
-| `convert_chubu_flow.py` |  | 中部PGの潮流実績Excel(xlsm/xlsx)を標準4行ヘッダCSV(cp932)へ変換する。 |
+| `convert_chubu_flow.py` 🔒 | 現役 | 中部PGの潮流実績Excel(xlsm/xlsx)を標準4行ヘッダCSV(cp932)へ変換する。 |
 | `coverage_report.py` 🔒 | 現役 | Provenance & validation coverage report for the unified grid DB. |
 | `d4_island_audit.py` | 旧系譜<br><sub>旧系譜の網を組む関数を import</sub> | D4 island audit — 小規模islandを物理接続の観点で判定する(計測のみ・本番不変)。 |
 | `d4_island_classify.py` | 旧系譜<br><sub>旧系譜の網を組む関数を import</sub> | I6-5 island classifier — build後の実態(degree・近傍build後ノード)で島を分類する。 |
@@ -488,7 +490,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `n1_screening.py` 🔒 | 現役 | National N-1 screening — top-corridor outages on the island models (S1). |
 | `optimize_sld_layout.py` |  | SLD 配置最適化 — Barycenter反復法による交差最小化. |
 | `parse_impedance.py` |  | 事業者公表の「様式5 インピーダンス」xlsx を正規化CSVに変換する。 |
-| `parse_point_demand.py` |  | L_DB第一歩: 変圧器(バンク)潮流実績→地点需要の正規化テーブル(2026-08-17 オーナー「両方並列で」). |
+| `parse_point_demand.py` 🔒 | 現役 | L_DB第一歩: 変圧器(バンク)潮流実績→地点需要の正規化テーブル(2026-08-17 オーナー「両方並列で」). |
 | `parse_tepco_plans.py` |  | TEPCO 流通設備建設計画表(設備計画表)から地中/架空フラグ付き線路レコードを抽出する. |
 | `plant_switchyard_gaps.py` |  | 発電所の連系変電所(switchyard)がOSMに欠落しているケースを検出する。 |
 | `pool_kyushu_kuyoryo.py` |  | 九州31地区「予想潮流・空容量一覧表」の全面プール化。 |
@@ -507,6 +509,7 @@ python scripts/diagnostics/test_west_reactive.py
 | `score_transformer_topology.py` 🔒 |  | 変電所内の変圧器の結び方(梯子 / 介入 #48)が正しいかを、各社の公表一覧(全国の変圧器台帳)で採点する。 |
 | `scripts_index.py` 🔒 |  | scripts/ 直下の全スクリプト索引を作る(scripts/README.md の cog から呼ぶ)。 |
 | `site_connection_review.py` | 現役<br><sub>ダッシュボードのカード</sub> | Read and verify saved site/terminal connection evidence; never change a model. |
+| `sso_stage_a.py` |  | SSO 第 2 段 段 A: GFL インバータ 1 台 + テブナン等価で、3 つの道の答えがそろうかを確かめる(2026-11-01). |
 | `stepdown_gap_census.py` |  | 介入#43(降圧点欠損)の census と静的ゲート — 島ごとに OFF / #43a / #43a+#43b を比べる. |
 | `substation_scope.py` 🔒 |  | SubScope — GridStitch 変電所構造ビューア. |
 | `sync_realtime_to_nas.sh` | 現役 | ローカル蓄積(data/realtime/)を pws-nas03 のAGJ領域へ退避する。 |
