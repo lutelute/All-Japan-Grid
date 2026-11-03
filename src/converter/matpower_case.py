@@ -64,23 +64,28 @@ def _roundtrip_check(mat_path, inner, f_hz, ac_ok):
     return out
 
 
-def live_branch_rows(net, inner):
+def live_branch_rows(net, branch):
     """書き出した branch の行と、pandapower の線・変圧器の対応 [(kind, index, row)]。
 
     書き出しの branch は、動いている線、動いている変圧器の順に詰めて並ぶ(停止中は行が無い)。
     `_pd2ppc_lookups["branch"]` の範囲は停止中の線も数えるので、停止中の線があると変圧器の行が
     その数だけずれる(介入#56 で 154 kV の境の線を開いたときに表に出た)。行ごとに両端のバスを照合する。
+    branch: 書き出した branch の表(先頭 2 列が F_BUS・T_BUS、1 始まり)。
+    照合が合わない網(止まったバスにつながる動いている線、trafo3w・impedance・開いた線路スイッチを含む網)は
+    ずれたまま書き出さず ValueError で止める。
     """
     lk = net._pd2ppc_lookups["bus"]
-    br = inner["branch"]
+    br = branch
     out, row = [], 0
     for kind, f, t in (("line", "from_bus", "to_bus"), ("trafo", "hv_bus", "lv_bus")):
         for i in net[kind].index[net[kind]["in_service"].to_numpy(dtype=bool)]:
             ends = {int(lk[net[kind].at[i, f]]) + 1, int(lk[net[kind].at[i, t]]) + 1}
-            assert ends == {int(br[row, 0]), int(br[row, 1])}, (kind, i, row, ends, br[row, :2])
+            if row >= br.shape[0] or ends != {int(br[row, 0]), int(br[row, 1])}:
+                raise ValueError(f"branch の {row} 行目が {kind} {i}(両端 {sorted(ends)})と合わない")
             out.append((kind, i, row))
             row += 1
-    assert row == br.shape[0], (row, br.shape[0])
+    if row != br.shape[0]:
+        raise ValueError(f"branch {br.shape[0]} 行のうち、動いている線・変圧器と対応したのは {row} 行")
     return out
 
 
@@ -144,7 +149,7 @@ def export_net(island_id, net, ac_ok, out_dir, validate=True,
     br_name = [""] * n_br
     br_kind = [""] * n_br
     br_par = [1] * n_br
-    for kind, i, row in live_branch_rows(net, inner):
+    for kind, i, row in live_branch_rows(net, inner["branch"]):
         br_name[row] = str(net[kind].at[i, "name"])[:80]
         br_kind[row] = kind
         if kind == "line" and "parallel" in net.line.columns:
