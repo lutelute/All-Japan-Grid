@@ -31,7 +31,7 @@ def main(argv=None) -> int:
 
     import src.powerflow.point_demand as pdm
     from scripts.export_matpower_canonical import build_canonical_net, solve_canonical, try_ac
-    from src.converter.matpower_case import export_net
+    from src.converter.matpower_case import export_net, live_branch_rows
     from scripts.run_full_powerflow_from_db import ISLAND_FREQ
     from src.model.site_transformers import OBSERVED_PATH
     from src.powerflow.zone_extract import branch_rate_mva, extract_zone
@@ -71,11 +71,8 @@ def main(argv=None) -> int:
     bn_path = os.path.join(args.out, f"{args.zone}_branchname.csv")
     bn = pd.read_csv(bn_path)
     rate = [0.0] * len(bn)
-    for kind in ("line", "trafo"):
-        lo, _hi = sub_solved._pd2ppc_lookups["branch"].get(kind, (0, 0))
-        live = sub_solved[kind].index[sub_solved[kind]["in_service"]]
-        for k, i in enumerate(live):
-            rate[lo + k] = branch_rate_mva(sub_solved, kind, i)
+    for kind, i, row in live_branch_rows(sub_solved, {"branch": bn[["F_BUS", "T_BUS"]].to_numpy()}):
+        rate[row] = branch_rate_mva(sub_solved, kind, i)
     bn["rate_mva"] = rate
     bn.to_csv(bn_path, index=False)
 
