@@ -140,9 +140,8 @@ def ext_grid_sources(net, base_mva: float, c: float = 1.1) -> Dict[int, complex]
 
 
 # ── 3. Z_th 対角(疎 LU 列ソルブ) ────────────────────────────────────────
-def thevenin_diag(Y: sp.spmatrix, sources_by_row: Dict[int, complex],
-                  block: int = 512) -> np.ndarray:
-    """diag((Y + diag(y_src))⁻¹) を返す。電源に繋がらない成分は NaN。"""
+def _factor(Y: sp.spmatrix, sources_by_row: Dict[int, complex]):
+    """Y + diag(y_src) を LU 分解する。電源に繋がらない行は微小シャントで正則化し、その印も返す。"""
     from scipy.sparse.csgraph import connected_components
     n = Y.shape[0]
     add = np.zeros(n, dtype=complex)
@@ -158,7 +157,14 @@ def thevenin_diag(Y: sp.spmatrix, sources_by_row: Dict[int, complex],
     fix = ~powered[comp]
     fix |= np.abs((Y + sp.diags(add)).diagonal()) < 1e-9   # 完全孤立行
     Yp = (Y + sp.diags(add) + sp.diags(np.where(fix, 1e-6j, 0.0))).tocsc()
-    lu = splu(Yp)
+    return splu(Yp), fix
+
+
+def thevenin_diag(Y: sp.spmatrix, sources_by_row: Dict[int, complex],
+                  block: int = 512) -> np.ndarray:
+    """diag((Y + diag(y_src))⁻¹) を返す。電源に繋がらない成分は NaN。"""
+    n = Y.shape[0]
+    lu, fix = _factor(Y, sources_by_row)
     diag = np.empty(n, dtype=complex)
     for s0 in range(0, n, block):
         e0 = min(s0 + block, n)
@@ -172,18 +178,26 @@ def thevenin_diag(Y: sp.spmatrix, sources_by_row: Dict[int, complex],
     return diag
 
 
-# ── 4. まとめ ─────────────────────────────────────────────────────────
-def short_circuit_mva(net, sources: Optional[Dict[int, complex]] = None,
-                      v_pu=None, include_shunts: bool = False,
-                      include_ext_grid: bool = False, c: float = 1.1,
-                      agg: Optional[dict] = None) -> SCResult:
-    """全バスの S_sc[MVA] を返す。
+def thevenin_block(Y: sp.spmatrix, sources_by_row: Dict[int, complex], rows) -> np.ndarray:
+    """(Y + diag(y_src))⁻¹ の rows × rows の部分(複数の点の間のテブナンの行列)。
 
-    sources: {バスラベル: y_pu}。None なら machine_sources(net)。
-    include_ext_grid: True なら ext_grid(s_sc_max_mva 必須)も電流源に足す(検証用)。
-    v_pu: None=1.0pu 一律 / 'ac'=net.res_bus.vm_pu(AC 解済みのとき) / 配列(ラベル順)。
+    対角は thevenin_diag と同じ値。電源に繋がらない行を含む行・列は NaN。
     """
-    Y, row_of, label_of_row, base = build_sc_ybus(net, include_shunts=include_shunts)
+    rows = np.asarray(rows, dtype=int)
+    n = Y.shape[0]
+    lu, fix = _factor(Y, sources_by_row)
+    rhs = np.zeros((n, len(rows)), dtype=complex)
+    rhs[rows, np.arange(len(rows))] = 1.0
+    z = lu.solve(rhs)[rows, :].astype(complex)
+    bad = fix[rows] | (np.abs(np.diag(z)) > _Z_NAN_ABS)   # thevenin_diag と同じ扱い
+    z[bad, :] = np.nan
+    z[:, bad] = np.nan
+    return z
+
+
+# ── 4. まとめ ─────────────────────────────────────────────────────────
+def _sources_by_row(net, Y, row_of, base, sources, include_ext_grid, c, agg):
+    """{行: y_pu}・電源の数・同期機の MVA。sources=None なら machine_sources(net)。"""
     src_mva = 0.0
     if sources is None:
         if agg is None:
@@ -201,6 +215,33 @@ def short_circuit_mva(net, sources: Optional[Dict[int, complex]] = None,
         if int(lbl) in row_of:
             by_row[row_of[int(lbl)]] = by_row.get(row_of[int(lbl)], 0j) + y
             n_src += 1
+    return by_row, n_src, src_mva
+
+
+def thevenin_matrix(net, labels, agg: Optional[dict] = None,
+                    include_shunts: bool = False) -> tuple[np.ndarray, float]:
+    """バスラベル labels の間のテブナンの行列 Z[pu・系統ベース] と baseMVA。
+
+    short_circuit_mva の既定(同期機 xd''・ext_grid なし)と同じ網と電源。対角は z_th_pu と一致する。
+    一般化 SCR(多連系)を出すのに使う。
+    """
+    Y, row_of, _label_of_row, base = build_sc_ybus(net, include_shunts=include_shunts)
+    by_row, _n, _mva = _sources_by_row(net, Y, row_of, base, None, False, 1.1, agg)
+    return thevenin_block(Y, by_row, [row_of[int(b)] for b in labels]), base
+
+
+def short_circuit_mva(net, sources: Optional[Dict[int, complex]] = None,
+                      v_pu=None, include_shunts: bool = False,
+                      include_ext_grid: bool = False, c: float = 1.1,
+                      agg: Optional[dict] = None) -> SCResult:
+    """全バスの S_sc[MVA] を返す。
+
+    sources: {バスラベル: y_pu}。None なら machine_sources(net)。
+    include_ext_grid: True なら ext_grid(s_sc_max_mva 必須)も電流源に足す(検証用)。
+    v_pu: None=1.0pu 一律 / 'ac'=net.res_bus.vm_pu(AC 解済みのとき) / 配列(ラベル順)。
+    """
+    Y, row_of, label_of_row, base = build_sc_ybus(net, include_shunts=include_shunts)
+    by_row, n_src, src_mva = _sources_by_row(net, Y, row_of, base, sources, include_ext_grid, c, agg)
     z = thevenin_diag(Y, by_row)
     n = Y.shape[0]
     if v_pu is None:
