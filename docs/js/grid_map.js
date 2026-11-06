@@ -419,6 +419,18 @@ function osmVal(v, dict, unit) {
     return AGJMap.esc(parts[0]) + (String(v).indexOf(";") >= 0 ? '<span class="val-note">（回線ごと）</span>' : "");
 }
 
+// OSM に回線数が無い線は、導体数から推定する(交流は ÷3、直流は ÷2)。推定と分かる形で出す
+// (src/topology/osm_routes.py の circuits_estimate と同じ考え方。route=power の数からの推定は路線のカードで出す)
+function circuitsEstimate(p) {
+    var cab = String(p._cab || "").trim();
+    if (/^\d+$/.test(cab)) {
+        var c = +cab, dc = String(p._freq || "").trim() === "0";
+        if (dc && c >= 2) return AGJMap.esc(Math.floor(c / 2) + " 回線") + '<span class="val-est">（推定：直流・導体数 ÷ 2）</span>';
+        if (!dc && c >= 3 && c % 3 === 0) return AGJMap.esc(c / 3 + " 回線") + '<span class="val-est">（推定：導体数 ÷ 3）</span>';
+    }
+    return UNKNOWN;
+}
+
 function lineCard(p, layer) {
     var mid = layer.getBounds().getCenter();
     var osmIds = p._osm || [];
@@ -432,7 +444,7 @@ function lineCard(p, layer) {
         // 回線数・導体数・素導体数・導体の種類・事業者は OSM のタグ(scripts/export_map_tiers_from_built.py が
         // 枝の形と OSM の線を座標で突き合わせて移した)。無いものは「不明」と出し、値を作らない
         rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))],
-               ["回線数", osmVal(p._cir, null, " 回線")],
+               ["回線数", p._cir ? osmVal(p._cir, null, " 回線") : circuitsEstimate(p)],
                ["導体数", osmVal(p._cab, null, " 本")],
                ["素導体数", osmVal(p._wir, WIRES_JA) + (p._wir ? '<span class="val-note">（1 相あたり）</span>' : "")],
                ["導体の種類", p._mat ? osmVal(p._mat) : UNKNOWN + '<span class="val-note">（OSM に記載なし）</span>'],
@@ -451,6 +463,7 @@ function lineCard(p, layer) {
         actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
                   { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
         note: "回線数・導体数・素導体数・導体の種類・事業者は OpenStreetMap のタグ（© OpenStreetMap contributors, ODbL）。" +
+              "「推定」は OSM の値から計算したもので、OSM に書かれた値ではありません。" +
               "線の形は OSM、枝とつながりは正典（built）。線路定数は電圧階級ごとの代表値です（実測ではありません）。",
         _after: function () { if (window.OSMRoutes) OSMRoutes.afterCanonCard(layer.feature); },
     };

@@ -139,3 +139,32 @@ def test_published_edge_routes_still_match_the_map():
     shaped = [f for f in feats if len(f["geometry"]["coordinates"]) > 2]
     hit = sum(1 for f in shaped if R.edge_key(f["geometry"]["coordinates"]) in keys)
     assert hit / len(shaped) >= 0.6, f"地図の線のうち路線に引けるのが {hit}/{len(shaped)} しかない"
+
+
+def test_ref_number_parses_only_plain_numbers():
+    assert R.ref_number("55") == 55 and R.ref_number("No. 71") == 71 and R.ref_number("12号") == 12
+    assert R.ref_number("376 / 320") is None and R.ref_number("12A") is None and R.ref_number(None) is None
+
+
+def test_numbers_are_filled_only_when_the_count_matches():
+    seq = [1, 2, 3, 4, 5, 6]
+    num = {1: 10, 4: 13, 6: 20}.get
+    out = R.infer_numbers(seq, lambda n: True, num)
+    assert out == {2: 11, 3: 12}           # 10 と 13 の間に 2 基 → 11・12。13 と 20 の間は 1 基で数が合わない
+
+
+def test_chain_order_follows_shared_endpoints():
+    ws = _ways(_way(5, [3, 4]), _way(2, [1, 2, 3]))
+    seqs, linear = R.chains([5, 2], ws)
+    assert linear and seqs == [[1, 2, 3, 4]]
+    ws = _ways(_way(1, [1, 2]), _way(2, [2, 3]), _way(3, [2, 4]))
+    _, linear = R.chains([1, 2, 3], ws)
+    assert not linear
+
+
+def test_circuits_estimate_marks_its_basis():
+    assert R.circuits_estimate({"cables": "6"}) == (2, "cables")
+    assert R.circuits_estimate({"cables": "4"}) is None
+    assert R.circuits_estimate({"cables": "2", "frequency": "0"}) == (1, "cables_dc")
+    assert R.circuits_estimate({}, 2) == (2, "relations")
+    assert R.circuits_estimate({"circuits": "2", "cables": "6"}) is None

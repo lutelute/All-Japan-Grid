@@ -284,6 +284,7 @@ OSM_LINE_TAGS = {           # OSM のタグ → 地図の線のプロパティ
     "operator": "_op",      # 事業者
     "location": "_loc",     # underground など
     "line": "_ltype",       # busbar など
+    "frequency": "_freq",   # 周波数(0 は直流。回線数を導体数から推定するときに使う)
     "material": "_mat",     # 導体の種類(送電線に付いていることはほとんど無い)
     "conductor": "_mat",
     "cable": "_mat",

@@ -6,7 +6,7 @@
 data/osm_raw_towers(2026-06-15 取得)は、関東の区域で今の OSM より鉄塔が約 19% 少なかった(オーナー側の確認)。
 取り直す。区切りは scripts/tower_connectivity.py と同じ(地域の外接矩形を 3x3 に割る)。タグは全部取る。
 取った結果は tw_{地域}_t{番号}.json(Overpass の JSON のまま)。すでにあるファイルは取り直さない(途中から再開できる)。
-同時に投げるのはサーバーごとに 1 本だけ(Overpass の利用の作法)。
+同時に投げるのはサーバーごとに 2 本まで(overpass-api.de は 1 つの IP から 2 本まで。--per-server で変える)。
 """
 from __future__ import annotations
 
@@ -21,9 +21,8 @@ import requests
 import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENDPOINTS = [
+ENDPOINTS = [   # 2026-11-07 に応答を確かめたもの(private.coffee・kumi は応答しなかった)
     "https://overpass-api.de/api/interpreter",
-    "https://overpass.private.coffee/api/interpreter",
     "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ]
 UA = "AllJapanGrid/1.0 (+https://github.com/lutelute/All-Japan-Grid)"
@@ -82,11 +81,12 @@ def fetch_one(key, bbox, out_dir, ep):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    ap.add_argument("--workers", type=int, default=3)
+    ap.add_argument("--workers", type=int, default=2, help="使うサーバーの数")
+    ap.add_argument("--per-server", type=int, default=2, help="1 つのサーバーに同時に投げる本数(2 まで)")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
     todo = tiles()
-    eps = ENDPOINTS[: max(1, min(args.workers, len(ENDPOINTS)))]
+    eps = ENDPOINTS[: max(1, min(args.workers, len(ENDPOINTS)))] * max(1, min(args.per_server, 2))
     lanes = [todo[i::len(eps)] for i in range(len(eps))]
 
     def run(lane, ep):

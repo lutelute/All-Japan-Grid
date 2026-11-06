@@ -21,7 +21,10 @@
         canvas: null, ctx: null, pane: null, mode: "auto",
         drawnX: new Float32Array(0), drawnY: new Float32Array(0), drawnSet: new Uint8Array(0), drawnIdx: new Uint32Array(0), nDrawn: 0,
         perRegion: {}, tip: null, lastHover: -1, t0: 0, tLoad: null,
+        // 線の折れ点(鉄塔のタグの無い架空線の途中の点 = 推定の鉄塔)。寄ったときだけ、中の空いた印で描く
+        bendsOn: true, bX: new Float32Array(0), bY: new Float32Array(0), bSet: new Uint8Array(0), bIdx: new Uint32Array(0), nB: 0, bendTotal: 0,
     };
+    var BEND_ZOOM = 11;
 
     function merc(lat, lon) {
         var s = Math.sin(lat * Math.PI / 180);
@@ -51,9 +54,20 @@
                                 var p = merc(T.la[i] / 1e5, T.lo[i] / 1e5);
                                 mx[i] = p[0]; my[i] = p[1];
                             }
-                            st.sets.push({ reg: reg, T: T, mx: mx, my: my });
+                            var B = T.bends || { n: 0, lat: [], lon: [], r: [], rl: [] }, bn = B.n || 0;
+                            var bx = new Float64Array(bn), by = new Float64Array(bn), bla = new Int32Array(bn), blo = new Int32Array(bn);
+                            for (var j = 0, a = 0, c = 0; j < bn; j++) {
+                                a += B.lat[j]; c += B.lon[j]; bla[j] = a; blo[j] = c;
+                                var q = merc(a / 1e5, c / 1e5); bx[j] = q[0]; by[j] = q[1];
+                            }
+                            st.sets.push({ reg: reg, T: T, mx: mx, my: my, bx: bx, by: by, bla: bla, blo: blo, bn: bn, B: B });
+                            st.bendTotal += bn;
                             st.nLoaded++;
                             grow(st.sets.reduce(function (a, s) { return a + s.T.n; }, 0));
+                            if (st.bX.length < st.bendTotal) {
+                                st.bX = new Float32Array(st.bendTotal); st.bY = new Float32Array(st.bendTotal);
+                                st.bSet = new Uint8Array(st.bendTotal); st.bIdx = new Uint32Array(st.bendTotal);
+                            }
                             st.loaded = true;
                             draw();
                             res();
@@ -117,9 +131,33 @@
                 st.drawnX[k] = x; st.drawnY[k] = y; st.drawnSet[k] = s; st.drawnIdx[k] = i;
                 cnt++;
             }
-            st.perRegion[S.reg] = { data: n, drawn: cnt };
+            st.perRegion[S.reg] = { data: n, drawn: cnt, bends: S.bn };
+        }
+        st.nB = 0;
+        if (st.bendsOn && z >= BEND_ZOOM) {
+            var br = Math.max(4, r + 1), bh = br / 2;
+            ctx.strokeStyle = "#d2a8ff"; ctx.lineWidth = 1.5;
+            for (var s2 = 0; s2 < st.sets.length; s2++) {
+                var S2 = st.sets[s2];
+                for (var j = 0; j < S2.bn; j++) {
+                    var bx = S2.bx[j] * scale - ox, by = S2.by[j] * scale - oy;
+                    if (bx < -br || by < -br || bx > w + br || by > hh + br) continue;
+                    ctx.strokeRect(bx - bh, by - bh, br, br);
+                    var kb = st.nB++;
+                    st.bX[kb] = bx; st.bY[kb] = by; st.bSet[kb] = s2; st.bIdx[kb] = j;
+                }
+            }
         }
         report();
+    }
+
+    function pickBend(cp, px) {
+        var best = -1, bd = (px || PICK_PX) * (px || PICK_PX);
+        for (var k = 0; k < st.nB; k++) {
+            var dx = st.bX[k] - cp.x, dy = st.bY[k] - cp.y, d = dx * dx + dy * dy;
+            if (d <= bd) { bd = d; best = k; }
+        }
+        return best;
     }
 
     var REGION_JA = { hokkaido: "北海道", tohoku: "東北", tokyo: "東京", chubu: "中部", hokuriku: "北陸",
@@ -143,7 +181,9 @@
             drawn.toLocaleString("ja-JP") + "</td></tr></tfoot></table>" +
             '<p class="ui-note">' + (map.getZoom() >= PICK_ZOOM ? "点をクリックすると鉄塔の番号・載っている線・回線数・導体数が出ます。"
                 : "もう少し寄ると（ズーム " + PICK_ZOOM + " 以上）、点をクリックして鉄塔を選べます。") +
-            (st.tLoad != null ? " 読み込み " + (st.tLoad / 1000).toFixed(1) + " 秒。" : "") + "</p>";
+            (st.tLoad != null ? " 読み込み " + (st.tLoad / 1000).toFixed(1) + " 秒。" : "") + "</p>" +
+            '<p class="ui-note"><span class="bend-key"></span>線の折れ点（推定の鉄塔。OSM で鉄塔のタグが無い架空線の点）' +
+            st.bendTotal.toLocaleString("ja-JP") + " 点" + (map.getZoom() >= BEND_ZOOM ? "（いま見えている " + st.nB.toLocaleString("ja-JP") + "）" : "（ズーム " + BEND_ZOOM + " 以上で出る）") + "</p>";
     }
 
     // 画面の点(地図の入れ物の座標)に一番近い鉄塔
@@ -193,7 +233,20 @@
         if (e.target.closest && e.target.closest(".leaflet-control, .agj-card, .leaflet-popup, .leaflet-tooltip")) return;
         var cp = map.mouseEventToContainerPoint(e);
         var k = pick(cp);
-        if (k < 0) return;
+        if (k < 0) {
+            // 鉄塔が無ければ線の折れ点(推定の鉄塔)
+            var kb = map.getZoom() >= BEND_ZOOM ? pickBend(cp, 6) : -1;
+            if (kb < 0) return;
+            var nb = linesNear(cp, LINE_PX);
+            if (st.mode === "auto" && nb.length) {
+                var ddx = st.bX[kb] - cp.x, ddy = st.bY[kb] - cp.y;
+                if (!(map.getZoom() >= 14 && ddx * ddx + ddy * ddy <= 9)) return;
+            }
+            e.stopPropagation(); e.preventDefault(); hideTip();
+            var SB = st.sets[st.bSet[kb]], jb = st.bIdx[kb];
+            OSMRoutes.openBendCard(SB.reg, SB.B.rl[SB.B.r[jb]], SB.bla[jb] / 1e5, SB.blo[jb] / 1e5);
+            return;
+        }
         var near = linesNear(cp, LINE_PX);
         if (st.mode === "auto" && near.length) {
             // 線の上: よく寄っていて点の真上を押したときだけ鉄塔、それ以外は線(地図がそのまま線のカードを開く)
@@ -252,6 +305,8 @@
         box.addEventListener("click", onClickCapture, true);
         box.addEventListener("mousemove", onMove);
         box.addEventListener("mouseleave", hideTip);
+        var cbb = document.getElementById("chk-bends");
+        if (cbb) { st.bendsOn = cbb.checked; cbb.addEventListener("change", function () { st.bendsOn = cbb.checked; draw(); }); }
         var cb = document.getElementById("chk-towers");
         if (cb) { st.on = cb.checked; cb.addEventListener("change", function () { setOn(cb.checked); }); }
         document.querySelectorAll("#click-mode button").forEach(function (b) {
@@ -270,7 +325,8 @@
             var tot = 0, drawn = 0;
             Object.keys(st.perRegion).forEach(function (r) { tot += st.perRegion[r].data; drawn += st.perRegion[r].drawn; });
             return { on: st.on, loaded: st.loaded && st.nLoaded === st.nRegions, regionsLoaded: st.nLoaded, total: tot, drawn: drawn,
-                     perRegion: st.perRegion, zoom: map.getZoom(), mode: st.mode, loadMs: st.tLoad };
+                     perRegion: st.perRegion, zoom: map.getZoom(), mode: st.mode, loadMs: st.tLoad,
+                     bendTotal: st.bendTotal, bendsDrawn: st.nB };
         },
         // 確かめ用: 画面の点(地図の入れ物の座標)にある鉄塔
         pickAt: function (x, y) {

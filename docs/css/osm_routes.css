@@ -41,3 +41,7 @@ table.tower-count tfoot td{font-weight:700;border-bottom:0}
 /* 凡例: 経路未取得(直線は仮)の破線 */
 .legend .legend-dash{margin-top:4px}
 .legend .legend-dashline{display:inline-block;width:22px;height:0;border-top:2px dashed #c9d1d9;vertical-align:middle;margin-right:6px}
+
+/* 推定の値(本物の値に見せない) */
+.val-est{color:#d2a8ff;font-weight:400;font-size:11.5px;margin-left:2px}
+.bend-key{display:inline-block;width:8px;height:8px;border:1.5px solid #d2a8ff;margin-right:5px;vertical-align:-1px}

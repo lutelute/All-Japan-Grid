@@ -113,7 +113,8 @@
                 a += d.id[i]; b += d.lat[i]; c += d.lon[i];
                 id[i] = a; la[i] = b; lo[i] = c;
             }
-            var T = { reg: reg, n: n, id: id, la: la, lo: lo, rl: d.rl, r: d.r, ref: d.ref, name: d.name, tags: d.tags, _ix: null };
+            var T = { reg: reg, n: n, id: id, la: la, lo: lo, rl: d.rl, r: d.r, ref: d.ref, name: d.name, tags: d.tags,
+                      est: d.est || {}, bends: d.bends || { n: 0, lat: [], lon: [], r: [], rl: [] }, _ix: null };
             towers[reg] = T;
             return T;
         });
@@ -353,11 +354,54 @@
         return h + (v.length > 1 ? '<span class="val-note">（区間によって違う）</span>' : "");
     }
 
+    var EST_JA = { cables: "推定：導体数 ÷ 3", cables_dc: "推定：直流・導体数 ÷ 2", relations: "推定：route=power の数" };
+    // 回線数: OSM にあればそのまま、無ければ推定を「推定」と分かる形で
+    function circuitsText(rec) {
+        var tags = rec[C.TAGS] || null;
+        if (tags && tags.circuits) return tagText(tags, "circuits", null, " 回線");
+        var e = rec[12];
+        if (e && e[0]) return esc(e[0] + " 回線") + '<span class="val-est">（' + esc(EST_JA[e[1]] || "推定") + "）</span>";
+        return '<span class="val-unknown">不明</span>';
+    }
+
+    // 一筆書きの路線の上で、この点(lat5,lon5 の鍵)が北の端から何基目か。鉄塔の印のある点だけ数える
+    function ordinalInRoute(rec, key) {
+        if (!rec[13]) return Promise.resolve(null);
+        var ws = rec[C.W].map(function (w) { return wayLL(w).map(function (p) { return Math.round(p[0] * 1e5) + "," + Math.round(p[1] * 1e5); }); });
+        var ends = {};
+        ws.forEach(function (c, i) { [c[0], c[c.length - 1]].forEach(function (k) { (ends[k] = ends[k] || []).push(i); }); });
+        var deg1 = Object.keys(ends).filter(function (k) { return ends[k].length === 1; });
+        if (Object.keys(ends).some(function (k) { return ends[k].length > 2; })) return Promise.resolve(null);
+        deg1.sort(function (a, b) { var A = a.split(",").map(Number), B = b.split(",").map(Number); return (B[0] - A[0]) || (A[1] - B[1]); });
+        var cur = deg1.length ? deg1[0] : ws[0][0], used = {}, seq = [];
+        for (var guard = 0; guard < ws.length; guard++) {
+            var nx = (ends[cur] || []).filter(function (i) { return !used[i]; });
+            if (!nx.length) break;
+            var i = nx[0], c = ws[i];
+            used[i] = 1;
+            if (c[0] !== cur) c = c.slice().reverse();
+            seq = seq.length ? seq.concat(c.slice(1)) : c.slice();
+            cur = c[c.length - 1];
+        }
+        return Promise.all(regionsFor(rec[C.BBOX]).map(loadTowers)).then(function (Ts) {
+            var n = 0, at = 0, prev = null;
+            seq.forEach(function (k) {
+                if (k === prev) return;
+                prev = k;
+                if (Ts.some(function (T) { return ix(T).byCoord.has(k); })) {
+                    n++;
+                    if (k === key) at = n;
+                }
+            });
+            return at ? { n: at, total: n } : null;
+        });
+    }
+
     function routeCard(rec, reg) {
         var tags = rec[C.TAGS] || null, j = rec[C.JOIN];
         var rows = [
             ["電圧", esc(kvText(rec))],
-            ["回線数", tagText(tags, "circuits", null, " 回線")],
+            ["回線数", circuitsText(rec)],
             ["導体数", tagText(tags, "cables", null, " 本")],
             ["素導体数", tagText(tags, "wires", WIRES_JA) + (tags && tags.wires ? '<span class="val-note">（1 相あたり）</span>' : "")],
             ["導体の種類", (tags && (tags.material || tags.conductor)) ? tagText(tags, tags.material ? "material" : "conductor")
@@ -488,8 +532,12 @@
         var near = (extra && extra.lines) || [];
         Promise.all(t.rids.map(function (rid) { return findRoute(rid, T.reg); })).then(function (hits) {
             hits = hits.filter(Boolean);
+            var est = T.est[i] || null, estRoute = est && est[1] >= 0 ? T.rl[est[1]] : null;
+            var estHit = est ? hits.filter(function (h) { return h.rec[C.ID] === estRoute; })[0] : null;
             var rows = [
-                ["番号", t.ref ? esc(t.ref) : "OSM に番号なし"],
+                ["番号", t.ref ? esc(t.ref) + '<span class="val-note">（OSM）</span>'
+                    : est ? esc(String(est[0])) + '<span class="val-est">（推定：前後の番号から' + (estHit ? "・" + esc(title(estHit.rec)) : "") + "）</span>"
+                    : '<span class="osm-slot-ordinal">OSM に番号なし</span>'],
             ];
             if (t.name) rows.push(["名前", esc(t.name)]);
             rows.push(["載っている線", hits.length ? hits.map(function (h, k) {
@@ -500,7 +548,7 @@
             var WJ = WIRES_JA;
             var pre = function (h) { return hits.length > 1 ? esc(title(h.rec)) + "：" : ""; };
             if (hits.length) {
-                rows.push(["回線数", hits.map(function (h) { return pre(h) + tagOf(h, "circuits", null, " 回線"); }).join("<br>")]);
+                rows.push(["回線数", hits.map(function (h) { return pre(h) + circuitsText(h.rec); }).join("<br>")]);
                 rows.push(["導体数", hits.map(function (h) { return pre(h) + tagOf(h, "cables", null, " 本"); }).join("<br>")]);
                 rows.push(["素導体数", hits.map(function (h) { return pre(h) + tagOf(h, "wires", WJ); }).join("<br>")]);
                 rows.push(["電圧", hits.map(function (h) { return pre(h) + esc(kvText(h.rec)); }).join("<br>")]);
@@ -514,7 +562,7 @@
             var first = hits[0];
             var spec = {
                 kind: "鉄塔（OSM）", color: first ? color(kvMax(first.rec)) : "#aab4c0",
-                title: t.ref ? "No." + t.ref : (t.name || "番号なし"),
+                title: t.ref ? "No." + t.ref : est ? "No." + est[0] + "（推定）" : (t.name || "番号なし"),
                 sub: first ? esc(title(first.rec)) : "線に載っていない",
                 rows: rows,
                 actions: [
@@ -537,12 +585,54 @@
             if (el) el.querySelectorAll("button.osm-inline-btn[data-k]").forEach(function (b) {
                 b.addEventListener("click", function (ev) { ev.stopPropagation(); var h = hits[+b.dataset.k]; selectRoute(h.rec[C.ID], h.reg, { card: true }); });
             });
+            // 番号も推定の番号も無い鉄塔は、一筆書きの路線なら「〇〇線の n 基目」を出す(本物の番号に見せない)
+            if (!t.ref && !est && first) {
+                ordinalInRoute(first.rec, T.la[i] + "," + T.lo[i]).then(function (o) {
+                    var el2 = cardEl() && cardEl().querySelector(".osm-slot-ordinal");
+                    if (!el2) return;
+                    if (o) {
+                        el2.innerHTML = esc(title(first.rec)) + " の " + o.n + " 基目" +
+                            '<span class="val-est">（全 ' + o.total + " 基・北の端から数えた順。OSM に番号なし）</span>";
+                        var tt = cardEl().querySelector(".agj-card-title");
+                        if (tt && !t.name) tt.textContent = "番号なし（" + title(first.rec) + " " + o.n + " 基目）";
+                    } else {
+                        el2.innerHTML = 'OSM に番号なし<span class="val-note">（路線が分かれているので順番は数えない）</span>';
+                    }
+                });
+            }
             st.selTower = { reg: T.reg, id: t.id };
             setURL("tower", regIndex(T.reg) + "." + t.id);
             if (first && (!st.sel || st.sel.rid !== first.rec[C.ID])) {
                 st.sel = { rid: first.rec[C.ID], reg: first.reg, rec: first.rec };
                 drawSelected(first.rec, first.reg);
                 drawRouteTowers(first.rec[C.ID], first.rec);
+            }
+        });
+    }
+
+    // 線の折れ点(鉄塔のタグが無い架空線の途中の点)のカード。推定と分かる形で出す
+    function openBendCard(reg, rid, lat, lon) {
+        findRoute(rid, reg).then(function (h) {
+            var rows = [["載っている線", h ? esc(title(h.rec)) + " " + esc(kvText(h.rec)) : "—"]];
+            if (h) {
+                rows.push(["回線数", circuitsText(h.rec)]);
+                rows.push(["導体数", tagText(h.rec[C.TAGS], "cables", null, " 本")]);
+                rows.push(["素導体数", tagText(h.rec[C.TAGS], "wires", WIRES_JA)]);
+            }
+            rows.push(["位置", lat.toFixed(5) + ", " + lon.toFixed(5)]);
+            withOwnCard(function () {
+                AGJMap.showCard(map, {
+                    kind: "鉄塔（推定：線の折れ点）", color: h ? color(kvMax(h.rec)) : "#aab4c0",
+                    title: "線の折れ点", sub: "OSM で鉄塔のタグが付いていない線の点",
+                    rows: rows,
+                    actions: [h ? { text: "この線を選ぶ", onClick: function () { selectRoute(h.rec[C.ID], h.reg, { card: true }); } } : null,
+                              { text: "OpenStreetMap で見る", href: "https://www.openstreetmap.org/#map=19/" + lat.toFixed(5) + "/" + lon.toFixed(5), blank: true }].filter(Boolean),
+                    note: "架空線の折れ点は鉄塔の位置であることが多いので、鉄塔の候補として出しています（推定）。OSM では鉄塔として描かれていません。",
+                }, null);
+            });
+            if (h && (!st.sel || st.sel.rid !== h.rec[C.ID])) {
+                st.sel = { rid: h.rec[C.ID], reg: h.reg, rec: h.rec };
+                drawSelected(h.rec, h.reg);
             }
         });
     }
@@ -791,6 +881,7 @@
         loadMeta: loadMeta,
         loadTowers: loadTowers,
         openTowerCard: function (T, i, extra) { openTowerCard(T, i, null, extra); },
+        openBendCard: openBendCard,
         selectRoute: selectRoute,
         selectTowerById: selectTowerById,
         setOsmLayer: setOsmLayer,

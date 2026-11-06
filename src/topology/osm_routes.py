@@ -47,6 +47,7 @@ def load_raw(raw_dir: str):
     """
     nodes: Dict[int, dict] = {}
     ways: Dict[int, dict] = {}
+    rels: Dict[int, dict] = {}
     h = hashlib.sha256()
     stamps = []
     files = raw_files(raw_dir)
@@ -64,11 +65,14 @@ def load_raw(raw_dir: str):
                 nodes.setdefault(e["id"], e)
             elif e["type"] == "way" and (e.get("tags") or {}).get("power") in LINE_POWER:
                 ways.setdefault(e["id"], e)
+            elif e["type"] == "relation" and (e.get("tags") or {}).get("route") == "power":
+                rels.setdefault(e["id"], e)
     info = {
         "files": len(files),
         "sha256": h.hexdigest(),
         "osm_base_min": min(stamps) if stamps else None,
         "osm_base_max": max(stamps) if stamps else None,
+        "relations": rels,
     }
     return nodes, ways, info
 
@@ -303,3 +307,95 @@ def edge_key(coords_lonlat: List[List[float]]) -> str:
     a, b = coords_lonlat[0], coords_lonlat[-1]
     q = lambda x: str(int(round(x * 1e4)))
     return ",".join([q(a[0]), q(a[1]), q(b[0]), q(b[1]), str(len(coords_lonlat))])
+
+
+# ── 補完(2026-11-07 オーナー「鉄塔名などをちゃんと補完してほしい」「回線も省略されている可能性がある」) ──
+# 推定で埋めたものは、必ず推定と分かる印を付けて出す(本物の番号・回線数に見せない)。
+
+_REF_NUM = re.compile(r"^\s*(?:No\.?\s*|NO\.?\s*|no\.?\s*|#|＃)?\s*(\d{1,4})\s*(?:号|番)?\s*$")
+
+
+def ref_number(ref) -> Optional[int]:
+    """鉄塔の番号(ref)を整数にする。「55」「No. 71」「12号」は数、「376 / 320」「12A」などは None。"""
+    m = _REF_NUM.match(str(ref or ""))
+    return int(m.group(1)) if m else None
+
+
+def chains(way_ids: Iterable[int], ways: Dict[int, dict]):
+    """路線の way を、端点でつないで一筆書きの点の並びにする。
+
+    返り値: (並びのリスト, 一筆書きか)。分かれ道・つながらない所がある路線は、way ごとの並びを返す(False)。
+    """
+    wids = sorted(way_ids)
+    ends = collections.defaultdict(list)
+    for w in wids:
+        ns = ways[w]["nodes"]
+        ends[ns[0]].append(w)
+        ends[ns[-1]].append(w)
+    per_way = [list(ways[w]["nodes"]) for w in wids]
+    if not wids or any(len(v) > 2 for v in ends.values()):
+        return per_way, False
+    starts = sorted(n for n, v in ends.items() if len(v) == 1)
+    cur = starts[0] if starts else ways[wids[0]]["nodes"][0]
+    seq, used = [], set()
+    while True:
+        nxt = [w for w in ends[cur] if w not in used]
+        if not nxt:
+            break
+        w = nxt[0]
+        used.add(w)
+        ns = ways[w]["nodes"]
+        if ns[0] != cur:
+            ns = ns[::-1]
+        seq.extend(ns if not seq else ns[1:])
+        cur = ns[-1]
+    if len(used) != len(wids):
+        return per_way, False
+    return [seq], True
+
+
+def infer_numbers(seq: List[int], is_tower, num_of) -> Dict[int, int]:
+    """並び seq の上の鉄塔のうち番号の無いものに、前後の番号から番号を埋める。
+
+    埋めるのは、前後の番号のある鉄塔の間の基数が、番号の差と合うときだけ(例: 12 と 15 の間に 2 基 → 13・14)。
+    合わない所(番号が飛ぶ・建て替えで数が違う)は埋めない。
+    """
+    tw = []
+    for n in seq:
+        if is_tower(n) and (not tw or tw[-1] != n):
+            tw.append(n)
+    known = [(i, num_of(n)) for i, n in enumerate(tw) if num_of(n) is not None]
+    out: Dict[int, int] = {}
+    for (i1, n1), (i2, n2) in zip(known, known[1:]):
+        gap = i2 - i1 - 1
+        if gap <= 0 or abs(n2 - n1) - 1 != gap:
+            continue
+        step = 1 if n2 > n1 else -1
+        for k in range(1, gap + 1):
+            out[tw[i1 + k]] = n1 + step * k
+    return out
+
+
+def is_dc(tags: dict) -> bool:
+    return str(tags.get("frequency") or "").strip() == "0" or "dc" in str(tags.get("current") or "").lower()
+
+
+def circuits_estimate(tags: dict, n_relations: int = 0):
+    """OSM に回線数(circuits)の無い線の回線数を推定する。返り値: (回線数, 根拠) か None。
+
+    根拠: "cables" 交流で導体数が 3 の倍数 → 導体数 ÷ 3 / "cables_dc" 直流 → 導体数 ÷ 2 /
+          "relations" この線を通る route=power の relation の数(1 つの relation が 1 回線)
+    """
+    if tags.get("circuits"):
+        return None
+    cab = str(tags.get("cables") or "").strip()
+    if cab.isdigit():
+        c = int(cab)
+        if is_dc(tags):
+            if c >= 2:
+                return (c // 2, "cables_dc")
+        elif c >= 3 and c % 3 == 0:
+            return (c // 3, "cables")
+    if n_relations >= 1:
+        return (n_relations, "relations")
+    return None

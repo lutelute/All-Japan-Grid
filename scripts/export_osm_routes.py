@@ -46,7 +46,9 @@ ROUTE_COLS = ["id(最小の way id)", "名前(0=無し)", "名前の無い way �
               "鉄塔の数", "番号のある鉄塔の数", "つなぎ方[同じ名前,名前なしの続き,片方だけ名前]",
               "端[[種類,名前]](sub=変電所 plant=発電所 line=ほかの路線へ portal/terminal/transition none=何もない)",
               "OSM タグ(name・voltage 以外、多い順に 4 つまで)",
-              "way[[way id, kV, 描き分け(''=架空 c=ケーブル u=地中 s=海底), polyline(小数5桁)]]"]
+              "way[[way id, kV, 描き分け(''=架空 c=ケーブル u=地中 s=海底), polyline(小数5桁)]]",
+              "回線数の推定 [回線数, 根拠(cables=導体数÷3 / cables_dc=直流の導体数÷2 / relations=route=power の数)] か 0(OSM に回線数がある・推定できない)",
+              "一筆書きの路線か(1 なら way を端から順にたどれる。鉄塔の「n 基目」はこのときだけ数える)"]
 ROUTE_TAG_KEYS = ("name", "ref", "voltage", "circuits", "cables", "wires", "frequency", "operator",
                   "operator:wikidata", "wikidata", "wikipedia", "location", "line", "start_date", "name:en")
 
@@ -142,6 +144,40 @@ def main():
             if nid in towers:
                 tower_routes[nid].add(route_of[wid])
 
+    # ── 補完(番号の推定・線の折れ点・回線数の推定)。推定は必ず推定と分かる形で書く ──
+    rel_count = collections.Counter()
+    for rel in (info.get("relations") or {}).values():
+        for m in rel.get("members", []):
+            if m.get("type") == "way" and m.get("ref") in ways:
+                rel_count[m["ref"]] += 1
+    num_of = lambda n: R.ref_number((towers[n].get("tags") or {}).get("ref")) if n in towers else None
+    est_num, est_rid, est_conflict = {}, {}, set()
+    route_linear = {}
+    for rid in sorted(mem):
+        seqs, linear = R.chains(mem[rid], ways)
+        route_linear[rid] = linear
+        for seq in seqs:
+            for node, num in R.infer_numbers(seq, lambda n: n in towers, num_of).items():
+                if (towers[node].get("tags") or {}).get("ref"):
+                    continue
+                if node in est_num and est_num[node] != num:
+                    est_conflict.add(node)
+                est_num.setdefault(node, num)
+                est_rid.setdefault(node, rid)
+    for node in est_conflict:          # 路線によって違う番号になる鉄塔(併架など)は埋めない
+        est_num.pop(node, None)
+        est_rid.pop(node, None)
+    # 線の折れ点: 架空線(power=line)の途中の点で、鉄塔などのタグが無いもの(鉄塔が描かれていないが、折れ点は鉄塔の位置であることが多い)
+    bends = {}
+    for wid in sorted(ways):
+        w = ways[wid]
+        if (w.get("tags") or {}).get("power") != "line":
+            continue
+        for nid in w["nodes"][1:-1]:
+            n = nodes.get(nid)
+            if n and not (n.get("tags") or {}).get("power") and nid not in bends:
+                bends[nid] = route_of[wid]
+
     # ── 路線の属性 ──
     rids = sorted(mem)
     mids = []
@@ -204,10 +240,21 @@ def main():
         # 列の並びは ROUTE_COLS(meta.json にも書く)。null の代わりに 0 を使って短くする
         tg = {k: [v for v, _ in sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))[:4]]
               for k, c in sorted(tagvals.items()) if k not in ("name", "voltage")}
+        # 回線数の推定: OSM に回線数のある way が 1 本も無い路線だけ。way ごとの推定の多い方
+        cir_est = 0
+        if not tagvals.get("circuits"):
+            ests = collections.Counter()
+            for w in wids:
+                e_ = R.circuits_estimate(ways[w].get("tags") or {}, rel_count.get(w, 0))
+                if e_:
+                    ests[e_] += 1
+            if ests:
+                (v_, src_), _ = sorted(ests.items(), key=lambda kv: (-kv[1], kv[0]))[0]
+                cir_est = [v_, src_]
         rec = [rid, name or 0, unnamed, sorted(kvs), round(length, 2),
                [round(min(lons), 5), round(min(lats), 5), round(max(lons), 5), round(max(lats), 5)] if lats else 0,
                len(tw), n_ref, [jn.get("same_name", 0), jn.get("continuation", 0), jn.get("half_named", 0)],
-               [[e[0], e[1] or 0] for e in ends], tg or 0, geom]
+               [[e[0], e[1] or 0] for e in ends], tg or 0, geom, cir_est, 1 if route_linear.get(rid) else 0]
         routes_by_region[rregion[rid]].append(rec)
         route_meta[rid] = (rregion[rid], name, max(kvs, default=0), mid)
 
@@ -227,12 +274,64 @@ def main():
     treg = region_of([[towers[i]["lon"], towers[i]["lat"]] for i in tids])
     for tid, reg in zip(tids, treg):
         towers_by_region[reg].append(tid)
+    bends_by_region = {}
+    bids = sorted(bends)
+    breg = region_of([[nodes[b]["lon"], nodes[b]["lat"]] for b in bids]) if bids else []
+    _bb = collections.defaultdict(list)
+    for b, reg in zip(bids, breg):
+        _bb[reg].append(b)
+    for reg, lst in _bb.items():
+        lst.sort(key=lambda b: (bends[b], b))
+        brl = sorted({bends[b] for b in lst})
+        bri = {r: i for i, r in enumerate(brl)}
+        pla = plo = 0
+        dla_, dlo_, rr_ = [], [], []
+        for b in lst:
+            la, lo = lat5(nodes[b]["lat"]), lat5(nodes[b]["lon"])
+            dla_.append(la - pla); dlo_.append(lo - plo); pla, plo = la, lo
+            rr_.append(bri[bends[b]])
+        bends_by_region[reg] = {"n": len(lst), "lat": dla_, "lon": dlo_, "r": rr_, "rl": brl}
+    # 地域ごとの補完の数(前後の比べに使う)
+    comp = {reg: collections.Counter() for reg in REGIONS}
+    for tid, reg in zip(tids, treg):
+        t = towers[tid].get("tags") or {}
+        c = comp[reg]
+        c["towers"] += 1
+        c["ref_osm"] += bool(t.get("ref"))
+        c["name_osm"] += bool(t.get("name"))
+        c["ref_or_name_osm"] += bool(t.get("ref") or t.get("name"))
+        if not (t.get("ref") or t.get("name")):
+            if tid in est_num:
+                c["ref_est"] += 1
+            elif any(route_linear.get(r) for r in tower_routes.get(tid, ())):
+                c["ordinal_only"] += 1
+            else:
+                c["nothing"] += 1
+    for reg, lst in _bb.items():
+        comp[reg]["bends"] = len(lst)
+    wmid = []
+    wsorted = sorted(ways)
+    for wid in wsorted:
+        c_ = R.way_coords(ways[wid], nodes)
+        wmid.append([c_[len(c_) // 2][1], c_[len(c_) // 2][0]] if c_ else [137.0, 36.0])
+    for wid, reg in zip(wsorted, region_of(wmid)):
+        t = ways[wid].get("tags") or {}
+        if t.get("power") not in ("line", "cable"):
+            continue
+        c = comp[reg]
+        c["lines"] += 1
+        if t.get("circuits"):
+            c["cir_osm"] += 1
+        else:
+            e_ = R.circuits_estimate(t, rel_count.get(wid, 0))
+            c["cir_est_" + e_[1] if e_ else "cir_none"] += 1
+
     for reg in REGIONS:
         ids = towers_by_region.get(reg, [])
         rl = sorted({r for t in ids for r in tower_routes.get(t, ())})
         ri_of = {r: i for i, r in enumerate(rl)}
         did, dla, dlo, rr = [], [], [], []
-        refs, names, extra = {}, {}, {}
+        refs, names, extra, ests = {}, {}, {}, {}
         pid = pla = plo = 0
         for k, tid in enumerate(ids):
             n = towers[tid]
@@ -246,13 +345,18 @@ def main():
                 refs[str(k)] = t["ref"]
             if t.get("name"):
                 names[str(k)] = t["name"]
+            if tid in est_num:
+                ests[str(k)] = [est_num[tid], ri_of.get(est_rid[tid], -1)]
             ex = {kk: t[kk] for kk in TOWER_TAGS if t.get(kk) and kk != "operator"}
             if ex:
                 extra[str(k)] = ex
         dump(os.path.join(args.out, f"towers_{reg}.json"), {
             "region": reg, "n": len(ids),
             "how": "id・lat・lon は 1 つ前との差(lat・lon は ×1e5 の整数)。r は rl の番号(-1 は線に載っていない、配列は併架)",
-            "rl": rl, "id": did, "lat": dla, "lon": dlo, "r": rr, "ref": refs, "name": names, "tags": extra})
+            "rl": rl, "id": did, "lat": dla, "lon": dlo, "r": rr, "ref": refs, "name": names, "tags": extra,
+            "est": ests, "est_how": "番号の推定 {位置: [番号, rl の番号(その番号を埋めた路線)]}。前後の番号のある鉄塔の間の基数が番号の差と合うときだけ",
+            "bends": bends_by_region.get(reg, {"n": 0, "lat": [], "lon": [], "r": [], "rl": []}),
+            "bends_how": "線の折れ点(鉄塔のタグの無い架空線の途中の点)。lat・lon は 1 つ前との差、r は bends.rl の番号"})
         towers_by_region[reg] = [(tid, lat5(towers[tid]["lat"]), lat5(towers[tid]["lon"]),
                                   (towers[tid].get("tags") or {}).get("ref"), (towers[tid].get("tags") or {}).get("name"),
                                   sorted(tower_routes.get(tid, ()))) for tid in ids]
@@ -378,6 +482,8 @@ def main():
                    "towers_name": sum(1 for t in towers.values() if (t.get("tags") or {}).get("name")),
                    "map_edges": len(feats), "map_edges_with_path": sum(1 for e in built["edges"] if e.get("path")),
                    "map_edges_mapped": n_mapped, "edge_keys": len(edge_routes)},
+        "completion": {reg: dict(sorted(c.items())) for reg, c in comp.items()},
+        "relations": len(info.get("relations") or {}),
         "script": "scripts/export_osm_routes.py",
     }
     dump(os.path.join(args.out, "meta.json"), meta)
