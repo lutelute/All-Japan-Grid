@@ -139,6 +139,8 @@
         el.scrollTop = 0;
         if (selected) select(map, selected);
         map.fire("agjcardopen");
+        // カードを開いたあとに中身を書き足す処理(js/osm_routes.js の路線の欄など)
+        if (typeof spec._after === "function") spec._after(el);
     }
 
     function hideCard(map) {

@@ -183,6 +183,14 @@ var tabState = {
 var selectedRegion = "all";
 var plantFilter = "utility";
 var colorMode = "voltage"; // "voltage" or "region"
+// エリアのタブの色分け: "area"(エリアごと)か "freq"(50/60 Hz)。2026-11-07 追加(色分けの切替)
+var areaColorBy = "area";
+var FREQ_COLORS = { 50: "#4493f8", 60: "#f0883e" };
+function regionFreq(region) {
+    var r = (regionsData || []).find(function (x) { return x.id === region; });
+    if (r && r.frequency_hz) return +r.frequency_hz;
+    return { hokkaido: 50, tohoku: 50, tokyo: 50 }[region] ? 50 : 60;   // regions.json が読めないときの控え(config/regions.yaml と同じ)
+}
 var layerVisible = { lines: true, subs: true, plants: true };
 
 // List panel state
@@ -220,7 +228,13 @@ function updateLegend() {
         var div = L.DomUtil.create("div", "legend");
         var body = "";
 
-        if (colorMode === "region") {
+        if (colorMode === "region" && areaColorBy === "freq") {
+            body += "<h4>周波数</h4><div class='legend-grid'>";
+            [50, 60].forEach(function (f) {
+                body += '<div class="legend-item"><span class="legend-color" style="background:' + FREQ_COLORS[f] + '"></span>' + f + " Hz</div>";
+            });
+            body += "</div><p class='legend-note'>エリアの周波数で塗っています（東の 3 エリアが 50 Hz）。</p>";
+        } else if (colorMode === "region") {
             body += "<h4>エリア</h4><div class='legend-grid'>";
             for (var i = 0; i < REGION_ORDER.length; i++) {
                 var rid = REGION_ORDER[i];
@@ -334,6 +348,7 @@ function filterByRegion(geojson, region) {
 
 function lineColor(feature) {
     if (colorMode === "region") {
+        if (areaColorBy === "freq") return FREQ_COLORS[regionFreq(feature.properties._region)] || "#cccccc";
         return REGION_COLORS[feature.properties._region] || "#cccccc";
     }
     return voltageColor(feature.properties._voltage_kv || 0);
@@ -341,6 +356,7 @@ function lineColor(feature) {
 
 function subColor(feature) {
     if (colorMode === "region") {
+        if (areaColorBy === "freq") return FREQ_COLORS[regionFreq(feature.properties._region)] || "#cccccc";
         return REGION_COLORS[feature.properties._region] || "#cccccc";
     }
     return voltageColor(feature.properties._voltage_kv || 0);
@@ -389,9 +405,12 @@ function lineCard(p, layer) {
                ["回線数", p._par ? AGJMap.esc(String(p._par)) : "—"],
                ["つながり", p._main === false ? "本系統から切れている" : "本系統"],
                ["線形", "正典（built）の枝・形は OpenStreetMap"]],
+        // 路線(OSM の way をまとめたもの)は js/osm_routes.js がカードを開いたあとに書き足し、路線の全体を光らせる
+        html: window.OSMRoutes ? '<div class="osm-slot-line"><span class="osm-dim">OSM の路線を調べています…</span></div>' : "",
         actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
                   { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
         note: "線路定数は電圧階級ごとの代表値です（実測ではありません）。",
+        _after: function () { if (window.OSMRoutes) OSMRoutes.afterCanonCard(layer.feature); },
     };
 }
 
@@ -403,6 +422,8 @@ function subCard(p, layer) {
     if (p.operator) rows.push(["運営", AGJMap.esc(p.operator)]);
     if (p.frequency_hz) rows.push(["周波数", AGJMap.esc(p.frequency_hz + " Hz")]);
     if (p._main != null) rows.push(["つながり", p._main ? "本系統" : "本系統から切れている"]);
+    // 同じ敷地の電圧ごとの母線(js/osm_routes.js が正典の変電所一覧から書き足す。1 つだけなら行ごと消す)
+    if (window.OSMRoutes && name) rows.push(["母線の電圧", '<span class="osm-slot-site osm-dim">調べています…</span>']);
     return {
         kind: "変電所", color: subColor({ properties: p }),
         title: name || "名称なし",
@@ -411,6 +432,7 @@ function subCard(p, layer) {
         actions: [name ? { text: "SubSLD で変電所の中を見る", href: "./subsld.html?q=" + encodeURIComponent(name.replace(/変電所$/, "")) } : null,
                   zoomAction(ll, 14),
                   { text: "OpenStreetMap で見る", href: osmLink(ll), blank: true }].filter(Boolean),
+        _after: function () { if (window.OSMRoutes && name) OSMRoutes.afterSubCard(name, ll.lat, ll.lng); },
     };
 }
 
@@ -1439,6 +1461,13 @@ function initSegments() {
         sel.addEventListener("change", sync);
         sync();
     });
+}
+
+function setAreaColorBy(v) {
+    areaColorBy = v === "freq" ? "freq" : "area";
+    document.querySelectorAll("#area-color-by button").forEach(function (b) { b.classList.toggle("active", b.dataset.v === areaColorBy); });
+    updateLegend();
+    renderLayers();
 }
 
 // ── Init ──
