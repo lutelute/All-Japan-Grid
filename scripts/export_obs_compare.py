@@ -199,6 +199,18 @@ def snap(pt, pos, vn, kv, gi) -> list[int]:
     return [b for _, b in sorted(out)][:3]
 
 
+def near_kv(pt, pos, vn, gi) -> list[float]:
+    """点から SNAP_KM 以内にあるモデルの母線の電圧(重複なし・高い順)。照合できない理由の手がかり。"""
+    ci, cj = int(pt[0] // CELL), int(pt[1] // CELL)
+    kvs = set()
+    for di in (-1, 0, 1):
+        for dj in (-1, 0, 1):
+            for b in gi.get((ci + di, cj + dj), ()):
+                if hav_km(pt, pos[b]) <= SNAP_KM:
+                    kvs.add(round(float(vn.get(b, 0)), 1))
+    return sorted(kvs, reverse=True)
+
+
 def norm(s: str) -> str:
     import re
     import unicodedata
@@ -248,6 +260,7 @@ def match_all(obs: list[dict], built: dict) -> tuple[list[dict], dict]:
             ca = snap(pa, pos, vn, o["kv"], gi) if pa else []
             cb = snap(pb, pos, vn, o["kv"], gi) if pb else []
             rec = None
+            why_path = None   # 経路を採らなかった理由(照合できなかったときだけ o に残す)
             # --- A/B: 両端が解決したら同じ電圧の最短経路 ---
             if ca and cb:
                 best = None
@@ -277,11 +290,13 @@ def match_all(obs: list[dict], built: dict) -> tuple[list[dict], dict]:
                         if conf == "B" and (len(segs) > B_MAX_HOPS
                                             or L > B_DETOUR * straight + B_SLACK_KM):
                             t["b_rejected_long"] += 1
+                            why_path = "b_rejected_long"
                         else:
                             rec = {"conf": conf, "path_km": round(L, 1),
                                    "straight_km": round(straight, 1), "segs": segs}
                     else:
                         t["detour_rejected"] += 1
+                        why_path = "detour_rejected"
             # --- C: 片端+線名(東京の片端公表・相手が「発電所」・鉄塔番号の分岐点) ---
             if rec is None and base and (ca or cb):
                 st = ca or cb
@@ -299,13 +314,25 @@ def match_all(obs: list[dict], built: dict) -> tuple[list[dict], dict]:
                            "single_ended": True}
                 elif len(hits) > 1:
                     t["ambiguous_name"] += 1
+                    why_path = why_path or "ambiguous_name"
             if rec is None:
                 if not (na or nb):
                     t["unresolved_station"] += 1
+                    o["_why"] = "unresolved_station"
                 elif not (ca or cb):
                     t["no_bus_at_voltage"] += 1
+                    o["_why"] = "no_bus_at_voltage"
                 else:
                     t["no_path_or_name"] += 1
+                    o["_why"] = "no_path_or_name"
+                if why_path:
+                    o["_why_path"] = why_path
+                # 照合できなかった線の手がかり(呼び出し側が読む。build_occto_line_crosswalk.py の理由の一覧)
+                o["_diag"] = {"from_res": lv_a, "to_res": lv_b,
+                              "from_model": (na or {}).get("name"), "to_model": (nb or {}).get("name"),
+                              "from_bus": len(ca), "to_bus": len(cb),
+                              "from_kv_near": near_kv(pa, pos, vn, gi) if pa else [],
+                              "to_kv_near": near_kv(pb, pos, vn, gi) if pb else []}
                 continue
             t[f"matched_{rec['conf']}"] += 1
             out.append({**o, "island": island, "line_base": base, "n_circ_obs": n_circ, **rec})
