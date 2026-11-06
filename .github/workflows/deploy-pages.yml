@@ -20,6 +20,8 @@ on:
       - 'scripts/build_pages_editor.py'
       # ダッシュボード(docs/index.html)の要約: 版・介入件数・最新レポートが変わったら作り直す
       - 'scripts/build_dashboard_data.py'
+      # 公開する GeoJSON の出典表示と透かし
+      - 'scripts/publish_stamp.py'
       - 'VERSION'
       - 'CITATION.cff'
   workflow_dispatch:
@@ -66,6 +68,11 @@ jobs:
       - run: python scripts/prune_pages_slides.py
       # 潮流マップの日別断面は直近 30 日だけ載せる(1 日 約 2.2 MB・オーナー判断 2026-10-04)。git には全日を残す
       - run: python scripts/prune_pages_days.py --keep 30
+      # 公開する GeoJSON に出典(ODbL: OSM と All-Japan-Grid)と透かしを入れる。git の docs/ と正典 data/ は
+      # 変えず、ここで上げる写しだけを変える。透かしは座標の小数 7 桁目(ずれ 10 cm 未満、toFixed(5) 以下の
+      # 丸めは元と同じ)。鍵の secret が無いとき(fork など)は出典だけ入れる。照合は publish_stamp.py verify
+      - run: python scripts/publish_stamp.py stamp docs/
+        env: {AJG_WATERMARK_KEY: "${{ secrets.AJG_WATERMARK_KEY }}"}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/

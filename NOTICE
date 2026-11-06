@@ -58,6 +58,12 @@ or validated against, several third-party sources. Attributions and licenses:
 ---
 
 Code in src/, scripts/, and tooling: MIT License (see LICENSE).
+
+Reuse of the published data (GitHub Pages GeoJSON): each file carries an
+"attribution" block. Under ODbL, keep it, credit "OpenStreetMap contributors"
+and "All-Japan-Grid", and share derived databases alike. Published files also
+carry a fingerprint that identifies them as All-Japan-Grid output
+(scripts/publish_stamp.py).
 Derived network data in data/ and docs/data/: ODbL v1.0 (see LICENSE).
 
 When citing or reusing this dataset, please retain the OpenStreetMap and WRI
