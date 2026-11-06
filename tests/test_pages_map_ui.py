@@ -342,3 +342,24 @@ def test_select_line_from_tower_card_keeps_the_route_card(browser, site):
     assert page.evaluate("() => OSMRoutes._state().sel !== null"), "路線が光っていない"
     assert not errors, errors
     page.close()
+
+
+def test_route_audit_markers_open_evidence_card(browser, site):
+    """つながりの点検の印(js/route_audit.js)を出し、印をマウスでクリックすると根拠のカードが開く。鉄塔の点より印を先にする。"""
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.evaluate("() => { const c = document.getElementById('chk-audit'); c.checked = true; c.dispatchEvent(new Event('change')); }")
+    page.wait_for_function("() => window.RouteAudit && RouteAudit._st.layer && RouteAudit._st.layer.getLayers().length > 0", timeout=30_000)
+    n = page.evaluate("() => RouteAudit._st.layer.getLayers().length")
+    assert n > 10, n
+    page.evaluate("""() => { const m = RouteAudit._st.layer.getLayers().find(x => true); map.setView(m.getLatLng(), 14, {animate: false}); }""")
+    page.wait_for_timeout(1500)
+    xy = page.evaluate("""() => { const c = map.getCenter(); let best = null, bd = 1e9;
+        RouteAudit._st.layer.eachLayer(m => { const p = map.latLngToContainerPoint(m.getLatLng()), q = map.latLngToContainerPoint(c);
+            const d = Math.hypot(p.x - q.x, p.y - q.y); if (d < bd) { bd = d; best = p; } });
+        const r = map.getContainer().getBoundingClientRect(); return {x: r.left + best.x, y: r.top + best.y}; }""")
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /つながりの点検/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=10_000)
+    text = page.inner_text(".agj-card")
+    assert "候補であって誤りの判定ではありません" in text, text
+    assert not errors, errors
+    page.close()
