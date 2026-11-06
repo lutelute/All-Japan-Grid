@@ -12,6 +12,7 @@ Mac の毎時の処理（`scripts/realtime_cycle.sh`、スリープ中は止ま�
 | `occto_raw/kohyo/` | 広域予備率Web公表システムのエリア需給（02）・連系線（04） | `scripts/fetch_occto_kohyo.py` |
 | `system_disclosure_raw/{社}/{種別}/` | 10 社の系統情報公表（潮流実績・インピーダンス・空容量・系統図） | `scripts/fetch_system_disclosure.py`（`AGJ_SD_KEEP_VERSIONS=1` で前の版を `_versions/` に残す） |
 | `db/parquet/occto_*`（統合 DB `pws.duckdb` の表） | 地内基幹の潮流 `occto_line_flow_30min`・連系線 `occto_interconnector_5min`・運用容量の実績 `occto_line_capacity_daily`、線路の一覧のビュー `occto_lines` | DB整理 `etl/db_sources.py`（nas03-agent の日次ビルド、JST 08:00） |
+| `db/parquet/occto_line_model_keys.parquet` | OCCTO の線路 → AGJ のモデルの線の鍵（潮流ビューアーの下ごしらえ、[FLOW_VIEWER_PREP.md](FLOW_VIEWER_PREP.md)） | `scripts/build_occto_line_crosswalk.py`（正典を作り直したら手で回す） |
 
 各フォルダの README.md と NAS の目録（`_catalog/datasets.toml` → `README.md`・`index.html`）に同じ説明がある。
 
