@@ -118,10 +118,16 @@ def _tooltip_at(page, xy):
     return page.evaluate("() => [...document.querySelectorAll('.leaflet-tooltip')].map(e => e.textContent)")
 
 
+# マウスを取る描画面(canvas)。鉄塔の点(js/tower_dots.js)の canvas はマウスを取らない(pointer-events: none)ので数えない
+_MOUSE_CANVASES = """() => [...map.getContainer().querySelectorAll('.leaflet-pane canvas')]
+    .filter(c => getComputedStyle(c).pointerEvents !== 'none'
+              && getComputedStyle(c.closest('.leaflet-pane')).pointerEvents !== 'none').length"""
+
+
 def test_one_vector_canvas(browser, site):
     page, errors = _open_map(browser, f"{site}/map.html")
-    n = page.evaluate("() => map.getContainer().querySelectorAll('.leaflet-pane canvas').length")
-    assert n == 1, f"地図の描画面が {n} 枚ある(重なると下の層にイベントが届かない)"
+    n = page.evaluate(_MOUSE_CANVASES)
+    assert n == 1, f"マウスを取る描画面が {n} 枚ある(重なると下の層にイベントが届かない)"
     assert not errors, errors
     page.close()
 
@@ -207,11 +213,15 @@ def test_click_line_lights_up_osm_route(browser, site):
                            " return e && !/調べています/.test(e.textContent); }", timeout=20_000)
     text = page.inner_text(".agj-card .osm-slot-line")
     assert "OSM の路線" in text or "対応づけられない" in text, text
+    # 回線数・導体数・素導体数・導体の種類・事業者の行がある(値が無ければ「不明」)
+    full = page.inner_text(".agj-card")
+    for label in ("回線数", "導体数", "素導体数", "導体の種類", "事業者", "OSM"):
+        assert label in full, f"線のカードに「{label}」が無い: {full}"
     if "OSM の路線" in text:
         assert page.evaluate("() => OSMRoutes._state().sel !== null")
         assert page.evaluate("() => OSMRoutes._st.selGroup.getLayers().length > 0"), "路線が光っていない"
-    n = page.evaluate("() => map.getContainer().querySelectorAll('.leaflet-pane canvas').length")
-    assert n == 1, f"路線を描いたあとに描画面が {n} 枚になった"
+    n = page.evaluate(_MOUSE_CANVASES)
+    assert n == 1, f"路線を描いたあとにマウスを取る描画面が {n} 枚になった"
     assert not errors, errors
     page.close()
 
@@ -275,5 +285,34 @@ def test_search_finds_route_and_tower(browser, site):
     page.wait_for_function("() => document.querySelector('.agj-card') && !document.querySelector('.agj-card').hidden"
                            " && /鉄塔/.test(document.querySelector('.agj-card').innerText)", timeout=20_000)
     assert ("No." + hit["ref"]) in page.inner_text(".agj-card .agj-card-title")
+    assert not errors, errors
+    page.close()
+
+
+def test_all_towers_are_drawn_and_clickable(browser, site):
+    """OSM の鉄塔を全部(番号の無いものも)点で描く。全国を見て、地域ごとにデータの数と描いた数が一致する。
+    寄って点をマウスでクリックすると、鉄塔のカード(番号・載っている線・回線数)が開く。"""
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate("() => { map.fitBounds([[24.0, 122.9], [45.6, 146.0]], {animate: false}); }")
+    page.wait_for_timeout(1500)
+    s = page.evaluate("() => TowerDots.state()")
+    meta_total = page.evaluate("async () => (await OSMRoutes.loadMeta()).counts.towers")
+    assert s["total"] == meta_total, (s["total"], meta_total)
+    for reg, v in s["perRegion"].items():
+        assert v["drawn"] == v["data"], f"{reg}: データ {v['data']} 基のうち {v['drawn']} 基しか描いていない"
+    # 寄って、画面の真ん中に近い鉄塔をクリック
+    page.evaluate("() => { map.setView([35.42667, 136.66566], 16, {animate: false}); }")
+    page.wait_for_timeout(1200)
+    xy = page.evaluate("""() => { const p = map.latLngToContainerPoint(map.getCenter()); let k = TowerDots.pickAt(p.x, p.y);
+        if (!k) { const s = map.getSize(); for (let dx = -200; dx <= 200 && !k; dx += 4) for (let dy = -150; dy <= 150 && !k; dy += 4) k = TowerDots.pickAt(s.x/2 + dx, s.y/2 + dy); }
+        const r = map.getContainer().getBoundingClientRect(); return k ? {x: r.left + k.x, y: r.top + k.y} : null; }""")
+    assert xy, "画面の中に鉄塔が無い"
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=15_000)
+    text = page.inner_text(".agj-card")
+    assert "番号" in text and "載っている線" in text, text
+    if "線に載っていない" not in text:
+        assert "回線数" in text and "導体数" in text, text
     assert not errors, errors
     page.close()

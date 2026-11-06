@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=40"/>
     <link rel="stylesheet" href="./css/map_ui.css?v=4"/>
-    <link rel="stylesheet" href="./css/osm_routes.css?v=1"/>
+    <link rel="stylesheet" href="./css/osm_routes.css?v=2"/>
 </head>
 <body>
 
@@ -555,12 +555,21 @@
 
         <!-- 2026-11-07: OSM の送電線を路線にまとめた層と鉄塔(js/osm_routes.js)。正典とは別の観測の層なので既定は出さない。
              線をクリックすると、その路線と鉄塔だけを出す -->
+        <!-- 2026-11-07 オーナー「全ての鉄塔もプロットして」: OSM の鉄塔を全部、点で描く(js/tower_dots.js)。既定で出す -->
         <div class="ui-sec">
-            <div class="ui-label">OSM の線と鉄塔（観測）</div>
+            <div class="ui-label">鉄塔（OSM・全部）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-towers" checked/><span>鉄塔を出す</span></label>
+            </div>
+            <div id="tower-count"></div>
+        </div>
+
+        <div class="ui-sec">
+            <div class="ui-label">OSM の線（観測）</div>
             <div class="chip-toggles">
                 <label class="chip-cb"><input type="checkbox" id="chk-osm"/><span>すべて出す</span></label>
             </div>
-            <p class="ui-note">ふだんは、線をクリックしたときにその路線と鉄塔だけを出します。寄ると鉄塔を選べます。</p>
+            <p class="ui-note">ふだんは、線をクリックしたときにその路線だけを光らせます。</p>
             <span id="osm-layer-hint"></span>
         </div>
 
@@ -778,8 +787,9 @@
 
 <script src="./js/agj_map.js?v=3"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=42"></script>
-<script src="./js/osm_routes.js?v=1"></script>
+<script src="./js/grid_map.js?v=43"></script>
+<script src="./js/osm_routes.js?v=2"></script>
+<script src="./js/tower_dots.js?v=1"></script>
 <script src="./js/grid_search.js?v=2"></script>
 <script src="./js/sld.js?v=34"></script>
 <script src="./js/ybus_sim.js?v=3"></script>

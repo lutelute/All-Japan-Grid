@@ -133,6 +133,7 @@ var fuelTypeFilter = new Set(FUEL_TYPES_ALL);
 var map;
 var substationLayer = null;
 var lineLayer = null;
+var unroutedLayer = null;   // 線のうち、OSM の経路が見つからず直線のまま残った区間(破線)
 var plantLayer = null;
 var legendControl = null;
 var legendVisible = true;
@@ -256,6 +257,8 @@ function updateLegend() {
             }
             body += "</div>";
         }
+
+        body += "<div class='legend-item legend-dash'><span class='legend-dashline'></span>経路未取得（直線は仮）</div>";
 
         // Plants legend (always shown)
         body += "<h4 style='margin-top:8px'>発電所</h4><div class='legend-grid'>";
@@ -395,21 +398,59 @@ function zoomAction(latlng, z) {
     return { text: "この場所に寄る", onClick: function () { map.flyTo(latlng, Math.max(map.getZoom(), z || 12)); } };
 }
 
+// OSM の素導体数(wires)の値を日本語に。single/double/triple/quad は 1 相あたりの電線の本数
+var WIRES_JA = { single: "1 本（単導体）", double: "2 本", triple: "3 本", quad: "4 本", quintuple: "5 本", sextuple: "6 本",
+                 octuple: "8 本" };
+var LOC_JA = { underground: "地中", underwater: "海底", overground: "架空", overhead: "架空", indoor: "屋内" };
+var UNKNOWN = '<span class="val-unknown">不明</span>';
+
+// OSM のタグの値("2/1" は区間で違う・"double;single" は回線ごとに違う)を読みやすくする
+function osmVal(v, dict, unit) {
+    if (v == null || v === "") return UNKNOWN;
+    var parts = String(v).split("/").map(function (seg) {
+        return seg.split(";").map(function (x) {
+            x = x.trim();
+            if (dict && dict[x]) return dict[x];
+            return x + (unit && /^\d+(\.\d+)?$/.test(x) ? unit : "");
+        }).join("・");
+    });
+    if (parts.length > 1) return AGJMap.esc(parts.join(" / ")) + '<span class="val-note">（区間によって違う）</span>';
+    return AGJMap.esc(parts[0]) + (String(v).indexOf(";") >= 0 ? '<span class="val-note">（回線ごと）</span>' : "");
+}
+
 function lineCard(p, layer) {
     var mid = layer.getBounds().getCenter();
+    var osmIds = p._osm || [];
+    var osmLinks = osmIds.length ? osmIds.slice(0, 4).map(function (id) {
+        return '<a href="https://www.openstreetmap.org/way/' + id + '" target="_blank" rel="noopener">way ' + id + "</a>";
+    }).join("・") + (osmIds.length > 4 ? " ほか" : "") : "対応する OSM の線なし（形の無い枝・引込み・同じ敷地のつなぎなど）";
     return {
         kind: "送電線", color: voltageColor(p._voltage_kv || 0),
         title: p._display_name || "名称なし",
         sub: AGJMap.esc([fmtKv(p._voltage_kv), p._region_ja].filter(Boolean).join(" ・ ")),
-        rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))], ["地域", AGJMap.esc(p._region_ja || "—")],
-               ["回線数", p._par ? AGJMap.esc(String(p._par)) : "—"],
-               ["つながり", p._main === false ? "本系統から切れている" : "本系統"],
-               ["線形", "正典（built）の枝・形は OpenStreetMap"]],
+        // 回線数・導体数・素導体数・導体の種類・事業者は OSM のタグ(scripts/export_map_tiers_from_built.py が
+        // 枝の形と OSM の線を座標で突き合わせて移した)。無いものは「不明」と出し、値を作らない
+        rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))],
+               ["回線数", osmVal(p._cir, null, " 回線")],
+               ["導体数", osmVal(p._cab, null, " 本")],
+               ["素導体数", osmVal(p._wir, WIRES_JA) + (p._wir ? '<span class="val-note">（1 相あたり）</span>' : "")],
+               ["導体の種類", p._mat ? osmVal(p._mat) : UNKNOWN + '<span class="val-note">（OSM に記載なし）</span>'],
+               ["事業者", osmVal(p._op)],
+               ["地中・海底", p._loc ? osmVal(p._loc, LOC_JA) : "架空（記載なし）"],
+               ["OSM", osmLinks],
+               ["線の形", p._geom === "straight" ? '<span class="val-unknown">経路未取得（直線は仮・破線）</span>'
+                        : p._geom === "partial" ? 'OSM の経路。<span class="val-unknown">一部の区間は経路未取得（直線は仮・破線）</span>'
+                        : p._geom === "found" ? "OSM の線をたどる経路を探して当てた（正典の枝には形が無い）"
+                        : "OSM の経路（鉄塔をたどる形）"],
+               ["モデルの回線数", p._par ? AGJMap.esc(String(p._par)) + '<span class="val-note">（正典が計算に使う値）</span>' : "—"],
+               ["地域", AGJMap.esc(p._region_ja || "—")],
+               ["つながり", p._main === false ? "本系統から切れている" : "本系統"]],
         // 路線(OSM の way をまとめたもの)は js/osm_routes.js がカードを開いたあとに書き足し、路線の全体を光らせる
         html: window.OSMRoutes ? '<div class="osm-slot-line"><span class="osm-dim">OSM の路線を調べています…</span></div>' : "",
         actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
                   { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
-        note: "線路定数は電圧階級ごとの代表値です（実測ではありません）。",
+        note: "回線数・導体数・素導体数・導体の種類・事業者は OpenStreetMap のタグ（© OpenStreetMap contributors, ODbL）。" +
+              "線の形は OSM、枝とつながりは正典（built）。線路定数は電圧階級ごとの代表値です（実測ではありません）。",
         _after: function () { if (window.OSMRoutes) OSMRoutes.afterCanonCard(layer.feature); },
     };
 }
@@ -486,6 +527,7 @@ function renderLayers() {
                     var p = feature.properties;
                     var kv = fmtKv(p._voltage_kv);
                     AGJMap.bindCard(layer, function () { return lineCard(p, layer); });
+                    if (p._unr && p._unr.length) splitUnrouted(feature, layer);
                     layer.bindTooltip(
                         "送電線 " + (p._display_name || "名称なし") + " | " + kv +
                         (p._region_ja ? " | " + p._region_ja : ""),
@@ -572,6 +614,33 @@ function renderLayers() {
 
     updateStatus();
     buildLists();
+}
+
+// 線の形のうち、OSM の経路が見つからず直線のまま残った区間(_unr = 区間の始点の番号。
+// scripts/export_map_tiers_from_built.py・src/topology/line_geometry.py)を、実線から外して破線で描く
+function splitUnrouted(feature, layer) {
+    var c = feature.geometry.coordinates, unr = {}, p = feature.properties;
+    p._unr.forEach(function (j) { unr[j] = true; });
+    var ll = function (x) { return L.latLng(x[1], x[0]); };
+    var solid = [], dash = [], cur = [ll(c[0])];
+    for (var j = 0; j < c.length - 1; j++) {
+        if (unr[j]) {
+            if (cur.length > 1) solid.push(cur);
+            dash.push([ll(c[j]), ll(c[j + 1])]);
+            cur = [ll(c[j + 1])];
+        } else {
+            cur.push(ll(c[j + 1]));
+        }
+    }
+    if (cur.length > 1) solid.push(cur);
+    layer.setLatLngs(solid.length ? solid : [[ll(c[0]), ll(c[0])]]);
+    if (!unroutedLayer) unroutedLayer = L.layerGroup().addTo(map);
+    var kv = p._voltage_kv || 0;
+    var d = L.polyline(dash, { color: lineColor(feature), weight: voltageLineWeight(kv), opacity: 0.9, dashArray: "5 7",
+                               renderer: AGJMap.renderer(map) });
+    AGJMap.bindCard(d, function () { return lineCard(p, layer); });
+    d.bindTooltip("送電線 " + (p._display_name || "名称なし") + " | 経路未取得（直線は仮）", { sticky: true });
+    d.addTo(unroutedLayer);
 }
 
 function updateStatus() {
@@ -708,6 +777,7 @@ function selectRegion(region) {
 function clearLayers() {
     if (substationLayer) { map.removeLayer(substationLayer); substationLayer = null; }
     if (lineLayer) { map.removeLayer(lineLayer); lineLayer = null; }
+    if (unroutedLayer) { map.removeLayer(unroutedLayer); unroutedLayer = null; }
     if (plantLayer) { map.removeLayer(plantLayer); plantLayer = null; }
 }
 

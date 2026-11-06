@@ -470,6 +470,22 @@
             rows.push(["載っている線", hits.length ? hits.map(function (h, k) {
                 return '<button type="button" class="osm-inline-btn" data-k="' + k + '">' + esc(title(h.rec)) + " " + esc(kvText(h.rec)) + "</button>";
             }).join("<br>") + (hits.length > 1 ? '<br><span class="osm-dim">併架（1 列の鉄塔に別の線）</span>' : "") : "線に載っていない（OSM の線とつながっていない鉄塔）"]);
+            // 線の回線数・導体数・素導体数(載っている線の OSM のタグ。無いものは不明)
+            function tagOf(h, k, dict, unit) {
+                var v = h.rec[C.TAGS] && h.rec[C.TAGS][k];
+                if (!v || !v.length) return '<span class="val-unknown">不明</span>';
+                return esc(v.map(function (x) {
+                    return String(x).split(";").map(function (y) { return dict && dict[y] ? dict[y] : y + (unit && /^\d+$/.test(y) ? unit : ""); }).join("・");
+                }).join(" / "));
+            }
+            var WJ = { single: "1 本（単導体）", double: "2 本", triple: "3 本", quad: "4 本" };
+            var pre = function (h) { return hits.length > 1 ? esc(title(h.rec)) + "：" : ""; };
+            if (hits.length) {
+                rows.push(["回線数", hits.map(function (h) { return pre(h) + tagOf(h, "circuits", null, " 回線"); }).join("<br>")]);
+                rows.push(["導体数", hits.map(function (h) { return pre(h) + tagOf(h, "cables", null, " 本"); }).join("<br>")]);
+                rows.push(["素導体数", hits.map(function (h) { return pre(h) + tagOf(h, "wires", WJ); }).join("<br>")]);
+                rows.push(["電圧", hits.map(function (h) { return pre(h) + esc(kvText(h.rec)); }).join("<br>")]);
+            }
             if (t.tags) Object.keys(t.tags).forEach(function (k) { rows.push([TOWER_TAG_JA[k] || k, esc(tagValueJa(k, t.tags[k]))]); });
             rows.push(["位置", t.lat.toFixed(5) + ", " + t.lon.toFixed(5)]);
             var first = hits[0];
@@ -608,6 +624,8 @@
                 if (!map.hasLayer(g)) g.addTo(map);
             });
             if (st.selGroup) { st.selGroup.eachLayer(function (l) { if (l.bringToFront) l.bringToFront(); }); }
+            setHint("OSM の線を出しています（鉄塔は下の「鉄塔」の層）");
+            if (global.TowerDots) return;
             if (map.getZoom() < MIN_ZOOM_TOWERS) { setHint("鉄塔はもっと寄ると出ます"); return; }
             return Promise.all(regs.map(loadTowers)).then(function (Ts) {
                 if (!st.osmOn) return;
@@ -740,6 +758,9 @@
 
     global.OSMRoutes = {
         init: init,
+        loadMeta: loadMeta,
+        loadTowers: loadTowers,
+        openTowerCard: function (T, i) { openTowerCard(T, i, null); },
         selectRoute: selectRoute,
         selectTowerById: selectTowerById,
         setOsmLayer: setOsmLayer,
