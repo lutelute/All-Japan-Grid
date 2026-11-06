@@ -94,6 +94,20 @@ def _contains_ok(base: str, model_name: str) -> bool:
     return False
 
 
+_ALIASES: dict | None = None
+
+
+def name_aliases() -> dict:
+    """事業者名 ⇔ モデル名の台帳(config/utility_name_aliases.yaml)。{(地域, 事業者名の語幹): モデル名}。
+    同定は台帳の決まり(独立の証拠 2 つ以上)で入れたものだけ。モデルのノード名は変えない"""
+    global _ALIASES
+    if _ALIASES is None:
+        import yaml
+        d = yaml.safe_load((ROOT / "config" / "utility_name_aliases.yaml").read_text(encoding="utf-8")) or {}
+        _ALIASES = {(a["region"], _stem(a["utility_name"])): a["model_name"] for a in d.get("aliases") or []}
+    return _ALIASES
+
+
 def resolvable(util: str, name: str, cache: dict) -> str:
     """解決器が正しく引ける名前にする。引けないとき(T 分岐・別の所しか当たらない)は空にする(片端の扱いになる)。
 
@@ -110,6 +124,10 @@ def resolvable(util: str, name: str, cache: dict) -> str:
         return ""
     idx = cache.get(("_idx", util)) or cache.setdefault(("_idx", util), load_model(util)[0])
     base = _stem(name)
+    alias = name_aliases().get((util, base))
+    if alias and resolve(alias, idx)[0] in LEVEL_RANK:
+        cache[key] = alias      # 名前の対応の台帳(config/utility_name_aliases.yaml)に同定がある
+        return alias
     cands = [name] + [base + suf for suf in KIND_SUFFIXES if base + suf != name]
     best = None
     for c in cands:
