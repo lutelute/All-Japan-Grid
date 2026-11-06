@@ -54,11 +54,33 @@ def month_chunks(d0: dt.date, d1: dt.date):
 
 
 def fetch(t: str, f: dt.date, to: dt.date, out_dir: str) -> str:
+    """1 か月を取って保存する。取り溜めを減らさないため(2026-11-06):
+
+    - 応答を全部読んでから一時ファイル経由で置き換える(途中で切れても前のファイルが残る)
+    - 中身が同じなら書かない
+    - 今あるファイルより行が減る応答(API の保持期間が過ぎた月など)では上書きせず、
+      {名前}.shorter.csv に置く
+    """
     url = BASE.format(t=t, f=f.strftime("%Y/%m/%d"), to=to.strftime("%Y/%m/%d"))
     path = os.path.join(out_dir, f"kohyo_{t}_{f:%Y%m}.csv")
     req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=60) as r, open(path, "wb") as fh:
-        fh.write(r.read())
+    with urllib.request.urlopen(req, timeout=60) as r:
+        body = r.read()
+    if not body.strip():
+        raise RuntimeError("空の応答")
+    if os.path.exists(path):
+        with open(path, "rb") as fh:
+            old = fh.read()
+        if old == body:
+            return path
+        if body.count(b"\n") < old.count(b"\n"):
+            with open(path[:-4] + ".shorter.csv", "wb") as fh:
+                fh.write(body)
+            raise RuntimeError(f"行が減った応答なので上書きしない({path})")
+    tmp = path + ".part"
+    with open(tmp, "wb") as fh:
+        fh.write(body)
+    os.replace(tmp, path)
     return path
 
 
