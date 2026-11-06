@@ -10,6 +10,7 @@
 
 1. `fetch_denkiyoho.py` — 各社「でんき予報」のエリア実績需要（9社）
 2. `fetch_area_fuelmix.py` — エリア需給実績の燃料別内訳（任意・失敗しても続行）
+   - `export_occto_today.py today` — OCCTO の地内基幹送電線・連系線の**潮流実績**(前日 0 時から今まで、30 分値)と運用容量の実績 → `docs/data/flow_map/occto_today.json`(ページ `docs/occto_flow.html`)。1 回に 10 リクエストほど(5 秒間隔)。取れなかった回は前のファイルのまま(2026-11-07、#143)。線の形 `occto_lines.json` は照合を作り直したときだけ手で作る(FLOW_VIEWER_PREP.md)
 3. `export_flow_map_data.py --realtime` — **実績需要にスケールした NOW 断面 PF**
    → `flows_now_*.geojson` / `gens_now_*.geojson` / `now_meta.json`
 4. `export_day_flows.py` — 日別断面（時刻別の再生用アーカイブ）
@@ -71,6 +72,7 @@ AGJ_REALTIME_NO_PUSH=1 bash $RUN/scripts/realtime_cycle.sh                   # p
   介入（ノード衛生・接続追加など）を行ったら、`export_flow_map_data.py`（`--realtime`
   なし）で基準を再生成すること。**再生成を忘れると east/west が黙って出力されない**。
   2026-08-28 に介入#35/#36 後の再生成漏れで実際に発生した。
+- **OCCTO の当日の潮流実績**は、ページ(`occto_flow.html`)の「最後の取得」が 2.5 時間より古いと赤字で「更新が止まっています」と出る。原因はまず `cycle.log` の「OCCTO 当日の潮流実績」の行。OCCTO は「過度なアクセスは制限」と告知しているので、毎時より詰めて回さない
 - 停止に気づきにくい。`docs/data/realtime/latest.json` の `fetched_at` が
   数時間以上古ければ止まっている。
   ダッシュボード（`docs/index.html`）の「リアルタイム断面」タイルが、6 時間超で黄、30 時間超で赤になる。
