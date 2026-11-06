@@ -60,6 +60,21 @@
       "lineage": "built"
     },
     {
+      "id": "map_gl",
+      "category": "explore",
+      "kind": "pages",
+      "title": "系統図マップ（MapLibre 試作）",
+      "summary": "系統図マップと同じ正典の線・変電所・発電所を、WebGL（MapLibre）とベクタータイル（PMTiles）で描く試作です。全部の電圧を出しても重くならないか、日本語と英語の切り替えを試せます。",
+      "href": "map_gl.html",
+      "tags": [
+        "地図",
+        "試作",
+        "English"
+      ],
+      "source": "scripts/build_map_gl_tiles.py",
+      "lineage": "built"
+    },
+    {
       "id": "flow_map",
       "category": "explore",
       "kind": "pages",

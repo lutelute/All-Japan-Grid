@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系統図マップ（MapLibre 試作） — All-Japan-Grid</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e1320'/%3E%3Cpath d='M18 3 7 18h7l-2 11 13-17h-8z' fill='%23e94560'/%3E%3C/svg%3E">
+<!-- 試作(2026-11-07)。map.html(Leaflet)と同じ正典の層を MapLibre GL で描き、日英を切り替える。
+     ライブラリは版を固定する。maplibre-gl 6 系は dist/maplibre-gl.js(script で読む版)が無いので 5 系の最後の版 -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@4.4.1/dist/pmtiles.js"></script>
+<style>
+/* 色の名前は css/map_ui.css と同じ。丸角・色の帯・影は使わず、罫線で区切る */
+:root{
+  --u-bg:#0d1117; --u-card:#161b22; --u-bd:#262d38; --u-bd2:#30363d;
+  --u-tx:#e6edf3; --u-mut:#8b949e; --u-acc:#4493f8; --map-bg:#1c1f25;
+  --panel-w:300px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--u-bg);color:var(--u-tx);
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Segoe UI",sans-serif}
+body{display:flex;overflow:hidden}
+a{color:var(--u-acc)}
+button{font:inherit;color:inherit}
+
+#panel{width:var(--panel-w);flex:0 0 var(--panel-w);height:100%;overflow-y:auto;border-right:1px solid var(--u-bd);background:var(--u-bg)}
+#panel header{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:14px 16px 12px;border-bottom:1px solid var(--u-bd)}
+#panel .brand{color:var(--u-tx);font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}
+#panel .sub{color:var(--u-mut);font-size:12px;white-space:nowrap}
+#panel-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--u-bd2);padding:3px 10px;cursor:pointer;font-size:12px}
+#panel nav{display:flex;gap:14px;padding:8px 16px;border-bottom:1px solid var(--u-bd);font-size:12px}
+#panel nav a{color:var(--u-mut);text-decoration:none}
+#panel nav a:hover{color:var(--u-tx);text-decoration:underline}
+#panel section{padding:12px 16px 14px;border-bottom:1px solid var(--u-bd)}
+#panel h2{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--u-mut)}
+
+/* 区切りボタン: 1 本の罫線の箱。選んだものは文字を明るく・下線 */
+.seg{display:flex;border:1px solid var(--u-bd2)}
+.seg button{flex:1;background:none;border:0;border-left:1px solid var(--u-bd2);padding:6px 0;cursor:pointer;color:var(--u-mut);
+  font-size:12px;font-variant-numeric:tabular-nums}
+.seg button:first-child{border-left:0}
+.seg button:hover{color:var(--u-tx)}
+.seg button.on{color:var(--u-tx);font-weight:700;box-shadow:inset 0 -2px 0 var(--u-tx)}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.checks label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.checks input{accent-color:var(--u-tx);margin:0}
+#regions{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--u-bd2);border-left:1px solid var(--u-bd2)}
+#regions button{background:none;border:0;border-right:1px solid var(--u-bd2);border-bottom:1px solid var(--u-bd2);padding:6px 4px;cursor:pointer;
+  color:var(--u-mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#regions button:first-child{grid-column:1 / -1}
+#regions button:hover{color:var(--u-tx)}
+#regions button.on{color:var(--u-tx);font-weight:700;box-shadow:inset 0 -2px 0 var(--u-tx)}
+.lg-h{font-size:11px;color:var(--u-mut);margin:2px 0 4px}
+.lg-h + .lg-grid + .lg-h{margin-top:10px}
+.lg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px 8px;font-size:11.5px}
+.lg-grid span{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sw-line{display:inline-block;width:16px;height:3px}
+.sw-dot{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid #000}
+.note{margin:8px 0 0;font-size:11.5px;color:var(--u-mut)}
+#status{padding:10px 16px 16px;font-size:11.5px;color:var(--u-tx);font-variant-numeric:tabular-nums}
+#status .mut{color:var(--u-mut)}
+
+#wrap{position:relative;flex:1;min-width:0;height:100%}
+#map{position:absolute;inset:0;background:var(--map-bg)}
+.no-gl{margin:40px auto;max-width:420px;padding:16px;border:1px solid var(--u-bd2);color:var(--u-tx);background:var(--u-bg)}
+
+/* ホバーの吹き出し */
+#tip{position:absolute;left:0;top:0;z-index:3;pointer-events:none;max-width:360px;padding:4px 8px;
+  background:rgba(13,17,23,.95);border:1px solid var(--u-bd2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* クリックで右に出る詳細カード */
+#card{position:absolute;top:10px;right:56px;z-index:4;width:min(340px,calc(100% - 72px));max-height:calc(100% - 20px);overflow-y:auto;
+  background:rgba(13,17,23,.97);border:1px solid var(--u-bd2);padding:14px 16px 14px}
+#card[hidden]{display:none}
+.card-x{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--u-mut);font-size:20px;line-height:1;cursor:pointer;padding:4px}
+.card-x:hover{color:var(--u-tx)}
+.card-kind{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--u-mut);margin-right:28px}
+.card-kind i{display:inline-block;width:14px;height:3px}
+.card-title{margin:6px 28px 2px 0;font-size:17px;line-height:1.35;font-weight:700;word-break:break-word}
+.card-sub{color:var(--u-mut);font-size:12px;font-variant-numeric:tabular-nums}
+.card-rows{display:grid;grid-template-columns:max-content 1fr;gap:5px 14px;margin:12px 0 0;padding:10px 0 0;border-top:1px solid var(--u-bd)}
+.card-rows dt{color:var(--u-mut);font-size:12px}
+.card-rows dd{margin:0;word-break:break-word}
+.card-src{margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--u-bd);color:var(--u-mut);font-size:11.5px}
+.card-actions{display:flex;flex-direction:column;margin-top:12px;border-top:1px solid var(--u-bd)}
+.card-btn{display:block;text-align:left;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--u-bd);color:var(--u-acc);
+  font-size:12.5px;text-decoration:none;cursor:pointer}
+.card-btn:hover{text-decoration:underline}
+.card-note{margin:10px 0 0;color:var(--u-mut);font-size:11.5px}
+
+/* MapLibre の部品を同じ見た目に(丸角と影を消し、暗い地に合わせる) */
+.maplibregl-ctrl-group{border-radius:0!important;box-shadow:none!important;border:1px solid var(--u-bd2);background:var(--u-bg)!important}
+.maplibregl-ctrl-group button{border-color:var(--u-bd2)!important}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon{filter:invert(1) brightness(.9)}
+.maplibregl-ctrl-attrib,.maplibregl-ctrl-attrib-inner{background:rgba(13,17,23,.85)!important;color:var(--u-mut)!important}
+.maplibregl-ctrl-attrib a{color:var(--u-mut)!important}
+.maplibregl-ctrl-attrib.maplibregl-compact{border-radius:0!important;min-height:24px}
+.maplibregl-ctrl-attrib-button{filter:invert(1);border-radius:0!important}
+.maplibregl-ctrl-scale{background:rgba(13,17,23,.7);color:var(--u-mut);border-color:var(--u-mut)}
+
+/* 狭い画面: 操作は上に畳み、地図を下に */
+@media (max-width:720px){
+  body{flex-direction:column}
+  #panel{width:100%;flex:0 0 auto;height:auto;max-height:46vh;border-right:0;border-bottom:1px solid var(--u-bd)}
+  #panel-toggle{display:inline-block}
+  #panel > :not(header){display:none}
+  body.panel-open #panel > :not(header){display:block}
+  body.panel-open #panel > nav{display:flex}
+  #wrap{flex:1 1 auto;height:auto;min-height:0}
+  #card{right:10px;width:calc(100% - 20px);max-height:60%}
+}
+</style>
+</head>
+<body>
+
+<aside id="panel">
+  <header>
+    <a href="./index.html" class="brand" title="ダッシュボード">All-Japan-Grid</a>
+    <span class="sub" data-t="subtitle">系統図・MapLibre 試作</span>
+    <button type="button" id="panel-toggle" aria-expanded="false" aria-controls="panel" data-t="panel">操作</button>
+  </header>
+  <nav>
+    <a href="./index.html" data-t="link_home">← ダッシュボード</a>
+    <a href="./map.html" data-t="link_leaflet">Leaflet 版</a>
+  </nav>
+
+  <section>
+    <h2 data-t="h_lang">言語</h2>
+    <div class="seg" id="seg-lang" role="group">
+      <button type="button" data-v="ja" lang="ja">日本語</button><button type="button" data-v="en" lang="en">English</button>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-t="h_kv">電圧</h2>
+    <div class="seg" id="seg-kv" role="group">
+      <button type="button" data-v="500">500</button><button type="button" data-v="275">275+</button><button type="button" data-v="154">154+</button><button type="button" data-v="66">66+</button><button type="button" data-v="0">すべて</button>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-t="h_layers">表示</h2>
+    <div class="checks">
+      <label><input type="checkbox" data-layer="lines" checked><span data-t="lines">送電線</span></label>
+      <label><input type="checkbox" data-layer="subs" checked><span data-t="subs">変電所</span></label>
+      <label><input type="checkbox" data-layer="plants" checked><span data-t="plants">発電所</span></label>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-t="h_region">地域</h2>
+    <div id="regions" role="group"></div>
+  </section>
+
+  <section>
+    <h2 data-t="h_legend">凡例</h2>
+    <div id="legend"></div>
+  </section>
+
+  <section>
+    <h2 data-t="h_source">読み方</h2>
+    <div class="seg" id="seg-src" role="group">
+      <button type="button" data-v="pmtiles" data-t="src_pmtiles">タイル</button><button type="button" data-v="geojson" data-t="src_geojson">GeoJSON</button>
+    </div>
+    <p class="note" id="src-note"></p>
+  </section>
+
+  <div id="status" aria-live="polite"></div>
+</aside>
+
+<div id="wrap">
+  <div id="map"></div>
+  <div id="tip" hidden></div>
+  <aside id="card" role="dialog" hidden></aside>
+</div>
+
+<script src="./js/map_gl.js?v=1"></script>
+</body>
+</html>
