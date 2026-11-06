@@ -95,6 +95,24 @@
       "lineage": "built"
     },
     {
+      "id": "site_plan",
+      "category": "explore",
+      "kind": "pages",
+      "featured": false,
+      "is_new": true,
+      "title": "接続の計画とサイト分析",
+      "summary": "地図で候補地を選ぶと、電圧ごとに最寄りの変電所と送電線（直線距離）、接続先までの標高の断面、前年の日射・風速（ERA5 再解析）を出し、印刷用のレポート（PDF）にまとめます。空き容量は各社の公表ページへ案内します。",
+      "href": "site_plan.html",
+      "tags": [
+        "接続検討",
+        "標高",
+        "気象"
+      ],
+      "source": "docs/js/site_plan.js",
+      "image": "assets/thumbs/site_plan.jpg",
+      "lineage": "built"
+    },
+    {
       "id": "subsld",
       "category": "stations",
       "kind": "pages",
