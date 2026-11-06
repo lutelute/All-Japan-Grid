@@ -206,7 +206,8 @@ function initMap() {
     // 地図・背景地図・共有 canvas は js/agj_map.js(io 一新 2026-10-20)。変電所・発電所の専用 pane は
     // canvas を 3 枚重ねて線と変電所のホバー/クリックを塞いでいた(3e014ab7 から)ので作らない。
     // 上下は追加の順(線 → 変電所 → 発電所)で決まる
-    map = AGJMap.createMap("map", { center: [36.5, 137.0], zoom: 6 });
+    // 線の当たり判定を広くする(既定 6 px → 10 px。全国〜中くらいの縮尺で線が選べなかった、2026-11-07)
+    map = AGJMap.createMap("map", { center: [36.5, 137.0], zoom: 6, tolerance: 10 });
 
     // タイルの重ね表示(地形・適地スコア)は画像なのでイベントを取らない
     var terrainPane = map.createPane("terrainPane");
@@ -638,6 +639,7 @@ function splitUnrouted(feature, layer) {
     var kv = p._voltage_kv || 0;
     var d = L.polyline(dash, { color: lineColor(feature), weight: voltageLineWeight(kv), opacity: 0.9, dashArray: "5 7",
                                renderer: AGJMap.renderer(map) });
+    d._agjProps = p;     // 鉄塔のカードの「地図の線」から名前と電圧を引くため(js/tower_dots.js)
     AGJMap.bindCard(d, function () { return lineCard(p, layer); });
     d.bindTooltip("送電線 " + (p._display_name || "名称なし") + " | 経路未取得（直線は仮）", { sticky: true });
     d.addTo(unroutedLayer);

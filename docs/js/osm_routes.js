@@ -101,31 +101,40 @@
         });
     }
 
-    // 鉄塔は列ごと・差で書いてある(export_osm_routes.py)。足し戻して配列にする
+    // 鉄塔は列ごと・差で書いてある(export_osm_routes.py)。足し戻して配列にする。
+    // 座標・id・路線の索引は、使うときに初めて作る(開いた直後に 24.6 万基ぶん作ると重い、2026-11-07)
     function loadTowers(reg) {
         if (towers[reg]) return Promise.resolve(towers[reg]);
         return getJSON("towers_" + reg + ".json").then(function (d) {
             if (towers[reg]) return towers[reg];
             var n = d.n, id = new Float64Array(n), la = new Int32Array(n), lo = new Int32Array(n);
-            var a = 0, b = 0, c = 0, byCoord = new Map(), byRoute = new Map(), byId = new Map();
+            var a = 0, b = 0, c = 0;
             for (var i = 0; i < n; i++) {
                 a += d.id[i]; b += d.lat[i]; c += d.lon[i];
                 id[i] = a; la[i] = b; lo[i] = c;
-                byCoord.set(b + "," + c, i);
-                byId.set(a, i);
-                var r = d.r[i];
-                var rs = r === -1 ? [] : (typeof r === "number" ? [d.rl[r]] : r.map(function (x) { return d.rl[x]; }));
-                for (var k = 0; k < rs.length; k++) {
-                    var l = byRoute.get(rs[k]);
-                    if (!l) byRoute.set(rs[k], l = []);
-                    l.push(i);
-                }
             }
-            var T = { reg: reg, n: n, id: id, la: la, lo: lo, rl: d.rl, r: d.r, ref: d.ref, name: d.name, tags: d.tags,
-                      byCoord: byCoord, byRoute: byRoute, byId: byId };
+            var T = { reg: reg, n: n, id: id, la: la, lo: lo, rl: d.rl, r: d.r, ref: d.ref, name: d.name, tags: d.tags, _ix: null };
             towers[reg] = T;
             return T;
         });
+    }
+
+    function ix(T) {
+        if (T._ix) return T._ix;
+        var byCoord = new Map(), byRoute = new Map(), byId = new Map();
+        for (var i = 0; i < T.n; i++) {
+            byCoord.set(T.la[i] + "," + T.lo[i], i);
+            byId.set(T.id[i], i);
+            var r = T.r[i];
+            var rs = r === -1 ? [] : (typeof r === "number" ? [T.rl[r]] : r.map(function (x) { return T.rl[x]; }));
+            for (var k = 0; k < rs.length; k++) {
+                var l = byRoute.get(rs[k]);
+                if (!l) byRoute.set(rs[k], l = []);
+                l.push(i);
+            }
+        }
+        T._ix = { byCoord: byCoord, byRoute: byRoute, byId: byId };
+        return T._ix;
     }
 
     function towerRoutes(T, i) {
@@ -260,7 +269,7 @@
             if (!st.sel || st.sel.rid !== rid) return 0;
             var n = 0;
             Ts.forEach(function (T) {
-                (T.byRoute.get(rid) || []).forEach(function (i) { towerMarker(T, i, true).addTo(st.towerSelGroup); n++; });
+                (ix(T).byRoute.get(rid) || []).forEach(function (i) { towerMarker(T, i, true).addTo(st.towerSelGroup); n++; });
             });
             return n;
         });
@@ -333,15 +342,30 @@
         return out;
     }
 
+    var WIRES_JA = { single: "1 本（単導体）", double: "2 本", triple: "3 本", quad: "4 本", quintuple: "5 本", sextuple: "6 本", octuple: "8 本" };
+    // 路線の OSM のタグの値(多い順・違う値は「/」)。無ければ「不明」
+    function tagText(tags, k, dict, unit) {
+        var v = tags && tags[k];
+        if (!v || !v.length) return '<span class="val-unknown">不明</span>';
+        var h = esc(v.map(function (x) {
+            return String(x).split(";").map(function (y) { y = y.trim(); return dict && dict[y] ? dict[y] : y + (unit && /^\d+$/.test(y) ? unit : ""); }).join("・");
+        }).join(" / "));
+        return h + (v.length > 1 ? '<span class="val-note">（区間によって違う）</span>' : "");
+    }
+
     function routeCard(rec, reg) {
         var tags = rec[C.TAGS] || null, j = rec[C.JOIN];
         var rows = [
             ["電圧", esc(kvText(rec))],
+            ["回線数", tagText(tags, "circuits", null, " 回線")],
+            ["導体数", tagText(tags, "cables", null, " 本")],
+            ["素導体数", tagText(tags, "wires", WIRES_JA) + (tags && tags.wires ? '<span class="val-note">（1 相あたり）</span>' : "")],
+            ["導体の種類", (tags && (tags.material || tags.conductor)) ? tagText(tags, tags.material ? "material" : "conductor")
+                           : '<span class="val-unknown">不明</span><span class="val-note">（OSM に記載なし）</span>'],
             ["区間", rec[C.W].length + " 本（" + esc(styleText(rec)) + "）・ " + rec[C.LEN].toFixed(1) + " km"],
             ["両端", endsText(rec)],
             ["鉄塔", nfmt(rec[C.TW]) + " 基" + (rec[C.TW] ? "（番号のあるもの " + nfmt(rec[C.TWREF]) + "）" : "")],
         ];
-        if (tags && tags.circuits) rows.splice(1, 0, ["回線数", esc(tags.circuits.join(" / "))]);
         if (tags && tags.operator) rows.push(["事業者", esc(tags.operator.join(" / "))]);
         if (rec[C.NAME] && rec[C.UNNAMED]) rows.push(["名前", "名前の無い区間 " + rec[C.UNNAMED] + " 本は、隣の区間の名前を当てています（推定）"]);
         rows.push(["つなぎ方", "同じ名前 " + j[0] + "・名前なしの続き " + j[1] + "・片方だけ名前 " + j[2]]);
@@ -459,8 +483,9 @@
         return m;
     }
 
-    function openTowerCard(T, i, marker) {
+    function openTowerCard(T, i, marker, extra) {
         var t = tower(T, i);
+        var near = (extra && extra.lines) || [];
         Promise.all(t.rids.map(function (rid) { return findRoute(rid, T.reg); })).then(function (hits) {
             hits = hits.filter(Boolean);
             var rows = [
@@ -471,14 +496,8 @@
                 return '<button type="button" class="osm-inline-btn" data-k="' + k + '">' + esc(title(h.rec)) + " " + esc(kvText(h.rec)) + "</button>";
             }).join("<br>") + (hits.length > 1 ? '<br><span class="osm-dim">併架（1 列の鉄塔に別の線）</span>' : "") : "線に載っていない（OSM の線とつながっていない鉄塔）"]);
             // 線の回線数・導体数・素導体数(載っている線の OSM のタグ。無いものは不明)
-            function tagOf(h, k, dict, unit) {
-                var v = h.rec[C.TAGS] && h.rec[C.TAGS][k];
-                if (!v || !v.length) return '<span class="val-unknown">不明</span>';
-                return esc(v.map(function (x) {
-                    return String(x).split(";").map(function (y) { return dict && dict[y] ? dict[y] : y + (unit && /^\d+$/.test(y) ? unit : ""); }).join("・");
-                }).join(" / "));
-            }
-            var WJ = { single: "1 本（単導体）", double: "2 本", triple: "3 本", quad: "4 本" };
+            function tagOf(h, k, dict, unit) { return tagText(h.rec[C.TAGS], k, dict, unit); }
+            var WJ = WIRES_JA;
             var pre = function (h) { return hits.length > 1 ? esc(title(h.rec)) + "：" : ""; };
             if (hits.length) {
                 rows.push(["回線数", hits.map(function (h) { return pre(h) + tagOf(h, "circuits", null, " 回線"); }).join("<br>")]);
@@ -486,6 +505,10 @@
                 rows.push(["素導体数", hits.map(function (h) { return pre(h) + tagOf(h, "wires", WJ); }).join("<br>")]);
                 rows.push(["電圧", hits.map(function (h) { return pre(h) + esc(kvText(h.rec)); }).join("<br>")]);
             }
+            if (near.length) rows.push(["地図の線", near.map(function (x, k) {
+                return '<button type="button" class="osm-inline-btn" data-line="' + k + '">' + esc(x.name || "名称なし") + " " +
+                       esc(x.kv ? x.kv + " kV" : "") + "</button>";
+            }).join("<br>") + '<br><span class="osm-dim">押すと線のカード（回線数・導体数・線の形）を開きます</span>']);
             if (t.tags) Object.keys(t.tags).forEach(function (k) { rows.push([TOWER_TAG_JA[k] || k, esc(tagValueJa(k, t.tags[k]))]); });
             rows.push(["位置", t.lat.toFixed(5) + ", " + t.lon.toFixed(5)]);
             var first = hits[0];
@@ -504,8 +527,15 @@
             };
             withOwnCard(function () { AGJMap.showCard(map, spec, marker || null); });
             var el = cardEl();
+            if (el) el.querySelectorAll("button.osm-inline-btn[data-line]").forEach(function (b) {
+                b.addEventListener("click", function (ev) {
+                    ev.stopPropagation();
+                    var x = near[+b.dataset.line];
+                    if (x && x.layer) x.layer.fire("click", { latlng: L.latLng(t.lat, t.lon), originalEvent: null });
+                });
+            });
             if (el) el.querySelectorAll("button.osm-inline-btn[data-k]").forEach(function (b) {
-                b.addEventListener("click", function () { var h = hits[+b.dataset.k]; selectRoute(h.rec[C.ID], h.reg, { card: true }); });
+                b.addEventListener("click", function (ev) { ev.stopPropagation(); var h = hits[+b.dataset.k]; selectRoute(h.rec[C.ID], h.reg, { card: true }); });
             });
             st.selTower = { reg: T.reg, id: t.id };
             setURL("tower", regIndex(T.reg) + "." + t.id);
@@ -535,7 +565,7 @@
             for (var j = k + dir; j >= 0 && j < ll.length; j += dir) {
                 var key = Math.round(ll[j][0] * 1e5) + "," + Math.round(ll[j][1] * 1e5);
                 for (var q = 0; q < Ts.length; q++) {
-                    var i = Ts[q].byCoord.get(key);
+                    var i = ix(Ts[q]).byCoord.get(key);
                     if (i != null) {
                         map.panTo([Ts[q].la[i] / 1e5, Ts[q].lo[i] / 1e5]);
                         openTowerCard(Ts[q], i, null);
@@ -555,7 +585,7 @@
             function next(k) {
                 if (k >= order.length) return null;
                 return loadTowers(order[k]).then(function (T) {
-                    var i = T.byId.get(id);
+                    var i = ix(T).byId.get(id);
                     if (i == null) return next(k + 1);
                     if (opts.fly) map.setView([T.la[i] / 1e5, T.lo[i] / 1e5], Math.max(map.getZoom(), 16));
                     openTowerCard(T, i, null);
@@ -669,7 +699,7 @@
                         '<span class="osm-dim">' + esc(kvText(h.rec)) + " ・ " + h.rec[C.W].length + " 区間 ・ " + h.rec[C.LEN].toFixed(1) + " km</span></div>";
                 }).join("") + (hits.length > 1 ? '<div class="osm-dim">同じ鉄塔を通る線が複数あります（併架）。上が電圧の合う線です。</div>' : "");
                 el.querySelectorAll("button[data-k]").forEach(function (b) {
-                    b.addEventListener("click", function () { var h = hits[+b.dataset.k]; selectRoute(h.rec[C.ID], h.reg, { card: true, fit: true }); });
+                    b.addEventListener("click", function (ev) { ev.stopPropagation(); var h = hits[+b.dataset.k]; selectRoute(h.rec[C.ID], h.reg, { card: true, fit: true }); });
                 });
                 // カードはそのまま、路線を光らせる
                 st.sel = { rid: h0.rec[C.ID], reg: h0.reg, rec: h0.rec };
@@ -760,7 +790,7 @@
         init: init,
         loadMeta: loadMeta,
         loadTowers: loadTowers,
-        openTowerCard: function (T, i) { openTowerCard(T, i, null); },
+        openTowerCard: function (T, i, extra) { openTowerCard(T, i, null, extra); },
         selectRoute: selectRoute,
         selectTowerById: selectTowerById,
         setOsmLayer: setOsmLayer,

@@ -561,6 +561,11 @@
             <div class="chip-toggles">
                 <label class="chip-cb"><input type="checkbox" id="chk-towers" checked/><span>鉄塔を出す</span></label>
             </div>
+            <div class="ui-sub">クリックで開くもの</div>
+            <div class="seg" id="click-mode" role="group" aria-label="地図をクリックしたときに開くもの">
+                <button type="button" data-v="auto" class="active">自動</button><button type="button" data-v="line">線</button><button type="button" data-v="tower">鉄塔</button>
+            </div>
+            <p class="ui-note">自動: 線の上なら線のカード、線の無い所の点と、よく寄って点の真上を押したときは鉄塔のカード。鉄塔のカードからも線のカードを開けます。</p>
             <div id="tower-count"></div>
         </div>
 
@@ -785,11 +790,11 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/agj_map.js?v=3"></script>
+<script src="./js/agj_map.js?v=4"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=43"></script>
-<script src="./js/osm_routes.js?v=2"></script>
-<script src="./js/tower_dots.js?v=1"></script>
+<script src="./js/grid_map.js?v=44"></script>
+<script src="./js/osm_routes.js?v=3"></script>
+<script src="./js/tower_dots.js?v=2"></script>
 <script src="./js/grid_search.js?v=2"></script>
 <script src="./js/sld.js?v=34"></script>
 <script src="./js/ybus_sim.js?v=3"></script>

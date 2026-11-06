@@ -316,3 +316,29 @@ def test_all_towers_are_drawn_and_clickable(browser, site):
         assert "回線数" in text and "導体数" in text, text
     assert not errors, errors
     page.close()
+
+
+def test_select_line_from_tower_card_keeps_the_route_card(browser, site):
+    """鉄塔のカードの「この線を選ぶ」で、路線のカードが開いたまま残り、路線が光る(2026-11-07 の不具合:
+    押したボタンが中身の差し替えで DOM から外れ、地図が「何も無い所のクリック」と取ってカードを閉じていた)。
+    路線のカードには回線数・導体数・素導体数・導体の種類の行がある。"""
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate("() => { TowerDots.setMode('tower'); map.setView([35.42667, 136.66566], 16, {animate: false}); }")
+    page.wait_for_timeout(1200)
+    xy = page.evaluate("""() => { const s = map.getSize(); let k = null;
+        for (let dx = 0; dx <= 200 && !k; dx += 4) for (let dy = -150; dy <= 150 && !k; dy += 4) k = TowerDots.pickAt(s.x/2 + dx, s.y/2 + dy);
+        const r = map.getContainer().getBoundingClientRect(); return k ? {x: r.left + k.x, y: r.top + k.y} : null; }""")
+    assert xy
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /この線を選ぶ/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=15_000)
+    page.click(".agj-card button.agj-card-btn >> text=この線を選ぶ")
+    page.wait_for_timeout(1500)
+    assert not page.evaluate("() => document.querySelector('.agj-card').hidden"), "カードが閉じた"
+    text = page.inner_text(".agj-card")
+    assert "OSM の路線" in text, text
+    for label in ("回線数", "導体数", "素導体数", "導体の種類"):
+        assert label in text, f"路線のカードに「{label}」が無い"
+    assert page.evaluate("() => OSMRoutes._state().sel !== null"), "路線が光っていない"
+    assert not errors, errors
+    page.close()
