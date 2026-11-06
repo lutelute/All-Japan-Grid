@@ -1,0 +1,68 @@
+{
+ "_meta": {
+  "made_by": "scripts/build_viewer_overlays.py",
+  "made_at": "2026-11-07",
+  "layer": "observed の集計(公表の 30 分値の年度平均・中央値。生の 30 分値は入れない)",
+  "source": "JEPX スポット市場 取引結果(https://www.jepx.jp/electricpower/market-data/spot/)",
+  "terms": "JEPX: 出所を明示した上で利用(https://www.jepx.jp/disclaimer/)。年度で集計したのは AGJ(加工)",
+  "unit": "円/kWh",
+  "jepx": {
+   "file": "spot_summary_2025.csv",
+   "sha256": "6103f1ec7fe43c95f21c20110c32a77f3b2792ca4fb0eb27af0242719c962d54",
+   "fiscal_year": 2025,
+   "from": "2025-04-01",
+   "to": "2026-03-31",
+   "n_days": 365,
+   "n_slots": 17520
+  },
+  "system_price_mean_yen": 11.06,
+  "system_price_median_yen": 10.78
+ },
+ "areas": [
+  {
+   "area": "北海道",
+   "mean_yen": 11.7,
+   "median_yen": 11.0
+  },
+  {
+   "area": "東北",
+   "mean_yen": 11.39,
+   "median_yen": 11.18
+  },
+  {
+   "area": "東京",
+   "mean_yen": 12.45,
+   "median_yen": 11.53
+  },
+  {
+   "area": "中部",
+   "mean_yen": 11.36,
+   "median_yen": 10.98
+  },
+  {
+   "area": "北陸",
+   "mean_yen": 10.81,
+   "median_yen": 10.32
+  },
+  {
+   "area": "関西",
+   "mean_yen": 10.65,
+   "median_yen": 10.04
+  },
+  {
+   "area": "中国",
+   "mean_yen": 10.21,
+   "median_yen": 9.7
+  },
+  {
+   "area": "四国",
+   "mean_yen": 8.85,
+   "median_yen": 8.5
+  },
+  {
+   "area": "九州",
+   "mean_yen": 9.81,
+   "median_yen": 9.34
+  }
+ ]
+}

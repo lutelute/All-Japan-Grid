@@ -1,0 +1,636 @@
+{
+ "_meta": {
+  "made_by": "scripts/build_viewer_overlays.py",
+  "made_at": "2026-11-07",
+  "layer": "observed(公表値とその集計)",
+  "capacity_source": "OCCTO 系統情報公表 連系線関連情報(種別04・30 分値)。期間最大・中央値は AGJ が集計(加工)",
+  "capacity_terms": "OCCTO: 出典を記載すれば自由に利用可。編集・加工したときはその旨を記載(https://www.occto.or.jp/chosakuken.html)",
+  "capacity_jsonl_sha256": "2b9ee86c7d7971a3a41fd72c9ab6591811b0b688a535fc1a28e77708b98fec71",
+  "market_source": "JEPX スポット市場 取引結果(エリアプライス)。値差の割合は AGJ が年度で集計(加工)",
+  "market_terms": "JEPX: 出所を明示した上で利用(https://www.jepx.jp/disclaimer/)",
+  "jepx": {
+   "file": "spot_summary_2025.csv",
+   "sha256": "6103f1ec7fe43c95f21c20110c32a77f3b2792ca4fb0eb27af0242719c962d54",
+   "fiscal_year": 2025,
+   "from": "2025-04-01",
+   "to": "2026-03-31",
+   "n_days": 365,
+   "n_slots": 17520
+  },
+  "positions": "印の位置は目印で経路ではない。built の変電所座標と interconnections.yaml の変換所の位置の平均",
+  "built_sha256": "c6c6a9108212073deb5ce0e52c6dadb5e86bb1ac11eda353916163307b582f09",
+  "not_drawn": "中部フェンス・北陸フェンス・関西フェンス(複数の連系線を合わせた断面)は 1 か所に置けないので描かない"
+ },
+ "links": [
+  {
+   "id": "hokkaido-tohoku",
+   "name": "北海道本州間連系設備",
+   "kind": "直流",
+   "fwd": [
+    "北海道",
+    "東北"
+   ],
+   "rev": [
+    "東北",
+    "北海道"
+   ],
+   "lat": 41.52515,
+   "lon": 140.54995,
+   "sites": [
+    {
+     "name": "北斗変換所",
+     "lat": 41.9166,
+     "lon": 140.5859
+    },
+    {
+     "name": "今別変換所",
+     "lat": 41.1337,
+     "lon": 140.514
+    }
+   ],
+   "site_note": "印は新北本(北斗変換所—今別変換所)の中ほど。旧北本(函館—上北)は函館変換所の位置が台帳に無い",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 900.0,
+      "median_mw": 700.0,
+      "min_mw": 250.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 900.0,
+      "median_mw": 900.0,
+      "min_mw": 300.0,
+      "observations": 20880
+     },
+     "name": "北海道・本州間電力連系設備",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "北海道",
+     "東北"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.2885,
+    "share_a_higher": 0.1501,
+    "share_b_higher": 0.1384,
+    "mean_abs_diff_when_split_yen": 4.16
+   }
+  },
+  {
+   "id": "tohoku-tokyo",
+   "name": "東北東京間連系線",
+   "kind": "交流",
+   "fwd": [
+    "東北",
+    "東京"
+   ],
+   "rev": [
+    "東京",
+    "東北"
+   ],
+   "lat": 37.33895,
+   "lon": 140.83677,
+   "sites": [
+    {
+     "name": "南相馬変電所 500kV",
+     "lat": 37.5357,
+     "lon": 140.95126
+    },
+    {
+     "name": "新いわき開閉所",
+     "lat": 37.14221,
+     "lon": 140.72229
+    }
+   ],
+   "site_note": "印は南相馬変電所と新いわき開閉所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 6400.0,
+      "median_mw": 4810.0,
+      "min_mw": 2450.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 2360.0,
+      "median_mw": 2360.0,
+      "min_mw": 210.0,
+      "observations": 20880
+     },
+     "name": "相馬双葉幹線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "東北",
+     "東京"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.2884,
+    "share_a_higher": 0.0,
+    "share_b_higher": 0.2884,
+    "mean_abs_diff_when_split_yen": 3.69
+   }
+  },
+  {
+   "id": "tokyo-chubu",
+   "name": "東京中部間連系設備(周波数変換)",
+   "kind": "周波数変換",
+   "fwd": [
+    "東京",
+    "中部"
+   ],
+   "rev": [
+    "中部",
+    "東京"
+   ],
+   "lat": 35.58315,
+   "lon": 137.80472,
+   "sites": [
+    {
+     "name": "新信濃変換所",
+     "lat": 36.1622,
+     "lon": 137.8411
+    },
+    {
+     "name": "佐久間周波数変換所",
+     "lat": 35.0867,
+     "lon": 137.8233
+    },
+    {
+     "name": "東清水変換所",
+     "lat": 35.0153,
+     "lon": 138.4956
+    },
+    {
+     "name": "飛騨変換所",
+     "lat": 36.0684,
+     "lon": 137.0589
+    }
+   ],
+   "site_note": "印は変換所 4 か所(新信濃・佐久間・東清水・飛騨)の位置の平均",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 2100.0,
+      "median_mw": 1800.0,
+      "min_mw": 900.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 2100.0,
+      "median_mw": 1800.0,
+      "min_mw": 900.0,
+      "observations": 20880
+     },
+     "name": "周波数変換設備",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "東京",
+     "中部"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.4591,
+    "share_a_higher": 0.4337,
+    "share_b_higher": 0.0255,
+    "mean_abs_diff_when_split_yen": 2.69
+   }
+  },
+  {
+   "id": "chubu-kansai",
+   "name": "中部関西間連系線",
+   "kind": "交流",
+   "fwd": [
+    "関西",
+    "中部"
+   ],
+   "rev": [
+    "中部",
+    "関西"
+   ],
+   "lat": 35.14917,
+   "lon": 136.3722,
+   "sites": [
+    {
+     "name": "三重開閉所",
+     "lat": 35.20351,
+     "lon": 136.45096
+    },
+    {
+     "name": "東近江開閉所",
+     "lat": 35.09484,
+     "lon": 136.29343
+    }
+   ],
+   "site_note": "印は三重開閉所と東近江開閉所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 1700.0,
+      "median_mw": 1030.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "rev": {
+      "max_mw": 2500.0,
+      "median_mw": 2500.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "name": "三重東近江線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "関西",
+     "中部"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.3639,
+    "share_a_higher": 0.0058,
+    "share_b_higher": 0.3582,
+    "mean_abs_diff_when_split_yen": 2.11
+   }
+  },
+  {
+   "id": "chubu-hokuriku",
+   "name": "中部北陸間連系設備",
+   "kind": "直流(BTB)",
+   "fwd": [
+    "中部",
+    "北陸"
+   ],
+   "rev": [
+    "北陸",
+    "中部"
+   ],
+   "lat": 36.4991,
+   "lon": 136.8249,
+   "sites": [
+    {
+     "name": "南福光連系所",
+     "lat": 36.4991,
+     "lon": 136.8249
+    }
+   ],
+   "site_note": "印は南福光連系所",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 1310.0,
+      "median_mw": 300.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "rev": {
+      "max_mw": 1980.0,
+      "median_mw": 300.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "name": "南福光連系所・南福光変電所の連系設備",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "cap_note": "期間の最大(順 1,310・逆 1,980 MW)は例外の状態の値。ふだんは中央値の 300 MW(BTB の定格)として扱う(data/reference/interconnections.yaml の ic_005)",
+   "jepx_split": {
+    "areas": [
+     "中部",
+     "北陸"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.2934,
+    "share_a_higher": 0.2872,
+    "share_b_higher": 0.0062,
+    "mean_abs_diff_when_split_yen": 2.08
+   }
+  },
+  {
+   "id": "hokuriku-kansai",
+   "name": "北陸関西間連系線",
+   "kind": "交流",
+   "fwd": [
+    "北陸",
+    "関西"
+   ],
+   "rev": [
+    "関西",
+    "北陸"
+   ],
+   "lat": 35.7758,
+   "lon": 136.19357,
+   "sites": [
+    {
+     "name": "越前変電所 500kV",
+     "lat": 35.99496,
+     "lon": 136.41467
+    },
+    {
+     "name": "嶺南変電所 500kV",
+     "lat": 35.55663,
+     "lon": 135.97246
+    }
+   ],
+   "site_note": "印は越前変電所と嶺南変電所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 1900.0,
+      "median_mw": 1900.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "rev": {
+      "max_mw": 1600.0,
+      "median_mw": 900.0,
+      "min_mw": 0.0,
+      "observations": 16656
+     },
+     "name": "越前嶺南線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "北陸",
+     "関西"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.0759,
+    "share_a_higher": 0.0757,
+    "share_b_higher": 0.0002,
+    "mean_abs_diff_when_split_yen": 2.15
+   }
+  },
+  {
+   "id": "kansai-chugoku",
+   "name": "関西中国間連系線",
+   "kind": "交流",
+   "fwd": [
+    "関西",
+    "中国"
+   ],
+   "rev": [
+    "中国",
+    "関西"
+   ],
+   "lat": 34.87467,
+   "lon": 134.22511,
+   "sites": [
+    {
+     "name": "西播変電所 500kV",
+     "lat": 34.8614,
+     "lon": 134.4253
+    },
+    {
+     "name": "東岡山変電所 500kV",
+     "lat": 34.88794,
+     "lon": 134.02492
+    }
+   ],
+   "site_note": "OCCTO は(東)(西)の 2 つに分けて公表する(期間最大は同じ値)。印は西播変電所と東岡山変電所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 4600.0,
+      "median_mw": 3260.0,
+      "min_mw": 2780.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 4850.0,
+      "median_mw": 4600.0,
+      "min_mw": 2780.0,
+      "observations": 20880
+     },
+     "name": "関西-中国（東）",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    },
+    {
+     "fwd": {
+      "max_mw": 4600.0,
+      "median_mw": 3260.0,
+      "min_mw": 2780.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 4850.0,
+      "median_mw": 4600.0,
+      "min_mw": 3290.0,
+      "observations": 20880
+     },
+     "name": "関西-中国（西）",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "関西",
+     "中国"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.0995,
+    "share_a_higher": 0.0995,
+    "share_b_higher": 0.0,
+    "mean_abs_diff_when_split_yen": 4.42
+   }
+  },
+  {
+   "id": "kansai-shikoku",
+   "name": "関西四国間連系設備",
+   "kind": "直流",
+   "fwd": [
+    "関西",
+    "四国"
+   ],
+   "rev": [
+    "四国",
+    "関西"
+   ],
+   "lat": 34.0207,
+   "lon": 135.0691,
+   "sites": [
+    {
+     "name": "紀北変換所",
+     "lat": 34.2132,
+     "lon": 135.5035
+    },
+    {
+     "name": "阿南周波数変換所",
+     "lat": 33.8282,
+     "lon": 134.6347
+    }
+   ],
+   "site_note": "印は紀北変換所と阿南変換所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 109.0,
+      "median_mw": 0.0,
+      "min_mw": 0.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 700.0,
+      "median_mw": 70.0,
+      "min_mw": 0.0,
+      "observations": 20880
+     },
+     "name": "阿南紀北直流幹線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "cap_note": "設備の設計は 1,400 MW(700 MW×2 極)だが、公表の運用容量はそれより小さい(data/reference/interconnections.yaml の ic_007)",
+   "jepx_split": {
+    "areas": [
+     "関西",
+     "四国"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.3902,
+    "share_a_higher": 0.3902,
+    "share_b_higher": 0.0,
+    "mean_abs_diff_when_split_yen": 4.62
+   }
+  },
+  {
+   "id": "chugoku-shikoku",
+   "name": "中国四国間連系線",
+   "kind": "交流",
+   "fwd": [
+    "中国",
+    "四国"
+   ],
+   "rev": [
+    "四国",
+    "中国"
+   ],
+   "lat": 34.165,
+   "lon": 133.95325,
+   "sites": [
+    {
+     "name": "讃岐変電所 500kV",
+     "lat": 34.165,
+     "lon": 133.95325
+    }
+   ],
+   "site_note": "印は四国側の端の讃岐変電所(台帳の中国側の端「東山口変電所」は位置が合わないので使っていない)",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 1200.0,
+      "median_mw": 1200.0,
+      "min_mw": 140.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 1450.0,
+      "median_mw": 1200.0,
+      "min_mw": 763.0,
+      "observations": 20880
+     },
+     "name": "本四連系線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "中国",
+     "四国"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.3438,
+    "share_a_higher": 0.3438,
+    "share_b_higher": 0.0,
+    "mean_abs_diff_when_split_yen": 3.97
+   }
+  },
+  {
+   "id": "chugoku-kyushu",
+   "name": "関門連系線",
+   "kind": "交流",
+   "fwd": [
+    "中国",
+    "九州"
+   ],
+   "rev": [
+    "九州",
+    "中国"
+   ],
+   "lat": 33.98712,
+   "lon": 130.94853,
+   "sites": [
+    {
+     "name": "新山口変電所 500kV",
+     "lat": 34.16382,
+     "lon": 131.09275
+    },
+    {
+     "name": "北九州変電所 500kV",
+     "lat": 33.81042,
+     "lon": 130.80431
+    }
+   ],
+   "site_note": "印は新山口変電所と北九州変電所の中ほど",
+   "occto": [
+    {
+     "fwd": {
+      "max_mw": 850.0,
+      "median_mw": 370.0,
+      "min_mw": 0.0,
+      "observations": 20880
+     },
+     "rev": {
+      "max_mw": 2850.0,
+      "median_mw": 2010.0,
+      "min_mw": 1210.0,
+      "observations": 20880
+     },
+     "name": "関門連系線",
+     "source_url": "https://web-kohyo.occto.or.jp/kks-web-public/",
+     "source_title": "OCCTO 系統情報公表システム 連系線関連情報（種別04・30分値CSV。登録不要でダウンロード可）",
+     "retrieved_at": "2026-08-09"
+    }
+   ],
+   "jepx_split": {
+    "areas": [
+     "中国",
+     "九州"
+    ],
+    "n_slots": 17520,
+    "split_share": 0.1442,
+    "share_a_higher": 0.1425,
+    "share_b_higher": 0.0017,
+    "mean_abs_diff_when_split_yen": 2.79
+   }
+  }
+ ]
+}
