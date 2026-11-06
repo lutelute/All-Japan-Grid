@@ -3,8 +3,9 @@
 
     python scripts/fetch_osm_power.py --out data/osm_raw_towers/2026-11-07 [--workers 3]
 
-data/osm_raw_towers(2026-06-15 取得)は、関東の区域で今の OSM より鉄塔が約 19% 少なかった(オーナー側の確認)。
-取り直す。区切りは scripts/tower_connectivity.py と同じ(地域の外接矩形を 3x3 に割る)。タグは全部取る。
+OSM を新しい時点にそろえ直すためのもの(2026-11-07 のきっかけだった「関東の区域で鉄塔が約 19% 少ない」は数え間違いで、
+6 月の取得分に抜けは無かった。docs/reports/osm_completion_2026-11-07.md)。実際の取り直しは、速い Geofabrik の抽出
+(scripts/osm_pbf_to_power_json.py)を使った。区切りは scripts/tower_connectivity.py と同じ(地域の外接矩形を 3x3 に割る)。タグは全部取る。
 取った結果は tw_{地域}_t{番号}.json(Overpass の JSON のまま)。すでにあるファイルは取り直さない(途中から再開できる)。
 同時に投げるのはサーバーごとに 2 本まで(overpass-api.de は 1 つの IP から 2 本まで。--per-server で変える)。
 """
