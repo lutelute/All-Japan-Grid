@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--before", required=True)
     ap.add_argument("--after", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--note", help="報告の先頭に足す確かめの記録(Markdown のファイル)")
     args = ap.parse_args()
     b = json.load(open(args.before, encoding="utf-8"))
     a = json.load(open(args.after, encoding="utf-8"))
@@ -60,6 +61,8 @@ def main():
              f"送電線・鉄塔と route=power の relation {a.get('relations', 0):,} 本を、タグを全部付けて取り直した）。"
              "数えたのは `scripts/export_osm_routes.py`（docs/OSM_ROUTES.md）。\n")
     L.append("推定で埋めたものは、地図のカードで必ず「推定」と書き、本物の番号・回線数に見せない。\n")
+    if args.note:
+        L.append(open(args.note, encoding="utf-8").read().rstrip() + "\n")
     L.append("- 番号の推定: 同じ線の上で前後に番号のある鉄塔があり、間の基数が番号の差と合うときだけ埋める。"
              "路線によって違う番号になる鉄塔（併架など）は埋めない")
     L.append("- 「〇〇線の n 基目」: 番号も推定も無い鉄塔で、路線が一筆書きにたどれるときだけ、北の端から数えた順を出す（OSM に番号なしと明記）")
@@ -129,8 +132,13 @@ def main():
     L.append(f"地図の線 {n(len(feats))} 本のうち、回線数が OSM にある {n(cnt['osm'])} 本・導体数からの推定 {n(cnt['est'])} 本・不明 {n(cnt['none'])} 本。\n")
     L.append(f"### 正典の回線数（計算に使う値）と OSM の回線数が食い違う線: {n(len(mism))} 本\n")
     L.append("OSM の回線数が 1 つの値の線だけを比べた。正典の回線数は台帳・公表値・推定から決めていて（docs/MODEL_INTERVENTIONS.md）、"
-             "どちらが正しいかはこの表だけでは決めない。2 回線の線を正典で 1 回線にしている所は、潮流の重さに効く。\n")
+             "どちらが正しいかはこの表だけでは決めない。正典の回線数は、同じ 2 点を結ぶ並行の線をまとめた数（par）のことがあるので、"
+             "「OSM 2 → 正典 4」のように正典の方が多いものは誤りとは限らない。気にすべきは、OSM で 2 回線以上なのに正典で 1 回線の線"
+             "（潮流を 1 回線ぶんの重さで計算している）。\n")
     by = collections.Counter((m[3], m[4]) for m in mism)
+    fewer = [m for m in mism if m[4] < m[3]]
+    L.append(f"正典の方が少ない線（OSM で多い）: {n(len(fewer))} 本。うち OSM 2 回線以上で正典 1 回線: "
+             f"{n(sum(1 for m in fewer if m[4] == 1 and m[3] >= 2))} 本。\n")
     L.append("組み合わせ（OSM → 正典）: " + "・".join(f"{o} → {q} 回線 {c} 本" for (o, q), c in by.most_common(8)) + "\n")
     L.append("| 地域 | 電圧 | 線 | OSM の回線数 | 正典の回線数 | OSM |")
     L.append("|---|---:|---|---:|---:|---|")

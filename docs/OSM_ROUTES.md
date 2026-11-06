@@ -85,6 +85,6 @@ OSM に無い値は、根拠のある推定だけで埋め、地図のカード�
 | 鉄塔の描かれていない所 | 架空線（power=line）の途中の点で鉄塔のタグが無いものを「線の折れ点」として、鉄塔とは別の印（中の空いた紫の四角）で出す。ズーム 11 以上 | 「鉄塔（推定：線の折れ点）」 |
 | 回線数 | OSM の `circuits`。無い線は、交流は導体数 ÷ 3（3 の倍数のとき）、直流は導体数 ÷ 2、それも無ければその線を通る `route=power` の relation の数 | 「2 回線（推定：導体数 ÷ 3）」など |
 
-- 取り直し: `scripts/fetch_osm_power.py` が今の OSM から送電線・鉄塔・`route=power` を、地域ごとの 3×3 の区切りで、タグを全部付けて取る（`data/osm_raw_towers/<取得日>/`）
+- 取り直し（2026-11-07）: Geofabrik の日本の抽出（`japan-261105.osm.pbf`、OSM 2026-11-05）を pws-160core から nas03 の `PWS_DB/osm_jp_power/20261105_agj_transmission/` に取り、osmium で送電線・鉄塔・`route=power` に絞った（タグは全部）。`scripts/osm_pbf_to_power_json.py` が Overpass の JSON と同じ形に直す。Overpass で取る `scripts/fetch_osm_power.py`（地域ごとの 3×3）も残したが、1 区画に 1〜2 分かかり全国で 2 時間を超えるので使っていない
 - 前と後の地域ごとの数、正典の回線数と OSM の回線数が食い違う線の一覧、公表値との一致率（集計だけ）は `scripts/report_osm_completion.py` が書く（`docs/reports/osm_completion_<日付>.md`）
 - 公表の回線数（`data/reference/circuit_counts.jsonl`）は検証にだけ使い、出すのは一致率などの集計だけ
