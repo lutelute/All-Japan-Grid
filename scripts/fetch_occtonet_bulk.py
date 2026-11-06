@@ -10,6 +10,10 @@
 画面で「検索」を挟まないので、1 回の CSV に 2 リクエストで済む。期間を指定できる種類は 1 か月を
 1 回で取り、日次の実行では当月(月初の数日は前月も)を取り直して上書きする(冪等)。
 
+取り溜めを減らさない決まり(2026-11-06): 中身が同じなら書かない・行が減る応答では上書きしない・
+過去の値が替わったら前の版を _versions/ に残す(save())。どこまで覆ったかを {種類}/_manifest.json に
+記録し、途中で止まった月や公開範囲が後から延びた月は --backfill が取り直す(run())。
+
 保存先: {out}/{種類のフォルダ}/{YYYY}/{種類}_{期間}.csv(サーバーが返したバイト列のまま。cp932)
 
 アクセスの間隔: OCCTO は 2026-10-23 に「過度なアクセスはアクセス制限することがある」と告知して
@@ -251,11 +255,82 @@ def path_for(out: Path, spec: Spec, tag: str) -> Path:
     return out / spec.key / tag[:4] / f"{spec.key}_{tag}.csv"
 
 
-def save(path: Path, body: bytes):
+def unit_end(spec: Spec, tag: str) -> dt.date:
+    """単位(ファイル)が覆う期間の最後の日(公開範囲で切る前)。"""
+    y = int(tag[:4])
+    if len(tag) == 8:
+        return dt.date(y, int(tag[4:6]), int(tag[6:]))
+    if len(tag) == 6:
+        m = int(tag[4:])
+        return dt.date(y, m, calendar.monthrange(y, m)[1])
+    return dt.date(y, 12, 31)
+
+
+# 取得の台帳 {種類}/_manifest.json: {期間: {"to": 覆い終えた日, "at": 取った時刻, ...}}
+# 「to」は、公開範囲の終わりと「取った日の前日」の早い方。当日分は途中までしか出ていないので
+# 覆い終えたとはみなさない。to が単位の終わり(公開範囲で切ったもの)に届いていない単位は、
+# 次の実行で取り直す。月末に 160core が止まって前月が途中のまま残る、公開範囲が後から延びる
+# (故障情報は公開の終わりが今日より前)、といった場合にも欠けを残さないため。
+MANIFEST = "_manifest.json"
+
+
+def load_manifest(out: Path, spec: Spec) -> dict:
+    p = out / spec.key / MANIFEST
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    except (OSError, json.JSONDecodeError) as e:
+        log.warning("  台帳が読めない(作り直す): %s %s", p, e)
+        return {}
+
+
+def write_manifest(out: Path, spec: Spec, man: dict):
+    p = out / spec.key / MANIFEST
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_name(p.name + ".part")
+    tmp.write_text(json.dumps(man, ensure_ascii=False, sort_keys=True, indent=0), encoding="utf-8")
+    os.replace(tmp, p)
+
+
+def _rows(b: bytes) -> int:
+    return b.count(b"\n")
+
+
+def save(path: Path, body: bytes) -> str:
+    """保存して、何をしたかを返す(取り溜めを減らさないための決まり)。
+
+    new      新しいファイル
+    same     中身が同じ。書かない(更新時刻も変えないので、統合 DB の作り直しも起きない)
+    grown    行が増えた(当月の日が増えたなど)。上書きする
+    revised  行の数は同じで中身が違う(過去の値の改訂)。前の版を {種類}/_versions/ に残して上書きする
+    kept     行が減った応答。いまのファイルは残し、応答は _versions/{名前}.shorter.csv に置く
+             (通信の途中切れや公開の取り下げで、取り溜めた行を失わないため)
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
+    status = "new"
+    if path.exists():
+        old = path.read_bytes()
+        if old == body:
+            return "same"
+        vdir = path.parent.parent / "_versions"
+        if _rows(body) < _rows(old):
+            vdir.mkdir(exist_ok=True)
+            (vdir / f"{path.stem}.shorter{path.suffix}").write_bytes(body)
+            return "kept"
+        if _rows(body) == _rows(old):
+            vdir.mkdir(exist_ok=True)
+            stamp = dt.date.fromtimestamp(path.stat().st_mtime)
+            v = vdir / f"{path.stem}.{stamp:%Y%m%d}{path.suffix}"
+            if not v.exists():
+                v.write_bytes(old)
+            status = "revised"
+        else:
+            status = "grown"
     tmp = path.with_name(path.name + ".part")
     tmp.write_bytes(body)
     os.replace(tmp, path)
+    return status
 
 
 def parse_window(spec: Spec, cli: Client) -> tuple[dt.date, dt.date] | None:
@@ -274,32 +349,63 @@ def parse_window(spec: Spec, cli: Client) -> tuple[dt.date, dt.date] | None:
     return lo, min(hi, dt.date.today())
 
 
-def run(cli: Client, out: Path, spec: Spec, lo: dt.date, hi: dt.date, force_tags: set[str], max_units: int) -> tuple[int, int, int]:
+def run(cli: Client, out: Path, spec: Spec, lo: dt.date, hi: dt.date, force_tags: set[str], max_units: int,
+        refetch_open: bool = True) -> tuple[int, int, int]:
     got = skip = miss = 0
-    for tag, values in units(spec, lo, hi):
-        p = path_for(out, spec, tag)
-        if p.exists() and tag not in force_tags:
-            skip += 1
-            continue
-        if max_units and got + miss >= max_units:
-            break
-        for attempt in range(3):
-            try:
-                body = cli.download(spec, values)
+    today = dt.date.today()
+    man = load_manifest(out, spec)
+    dirty = False
+    try:
+        for tag, values in units(spec, lo, hi):
+            p = path_for(out, spec, tag)
+            want = min(unit_end(spec, tag), hi)      # この単位で覆いたい最後の日
+            if p.exists():
+                ent = man.get(tag)
+                if ent is None:
+                    # 台帳ができる前(2026-11-05〜06)に取ったファイル。取った日の前日まで、
+                    # かつ今の公開範囲の終わりまでを覆っているとみなす
+                    got_on = dt.date.fromtimestamp(p.stat().st_mtime)
+                    ent = man[tag] = {"to": str(min(want, got_on - dt.timedelta(days=1))),
+                                      "at": dt.datetime.fromtimestamp(p.stat().st_mtime).isoformat(timespec="seconds"),
+                                      "note": "台帳より前"}
+                    dirty = True
+                done = dt.date.fromisoformat(ent["to"]) >= want
+                still_open = unit_end(spec, tag) >= today   # 当月・当日(日次の受け持ち)
+                if tag not in force_tags and (done or (still_open and not refetch_open)):
+                    skip += 1
+                    continue
+            if max_units and got + miss >= max_units:
                 break
-            except Exception as e:  # noqa: BLE001  通信・応答の崩れは 3 回まで取り直す
-                log.warning("    %s %s 失敗(%d回目): %s", spec.key, tag, attempt + 1, e)
-                cli.defaults = None
-                time.sleep(cli.sleep * 6)
-        else:
-            miss += 1
-            continue
-        if not body:
-            miss += 1
-            continue
-        save(p, body)
-        got += 1
-        log.info("    %s %s: %d bytes", spec.key, tag, len(body))
+            for attempt in range(3):
+                try:
+                    body = cli.download(spec, values)
+                    break
+                except Exception as e:  # noqa: BLE001  通信・応答の崩れは 3 回まで取り直す
+                    log.warning("    %s %s 失敗(%d回目): %s", spec.key, tag, attempt + 1, e)
+                    cli.defaults = None
+                    time.sleep(cli.sleep * 6)
+            else:
+                miss += 1
+                continue
+            if not body:
+                miss += 1
+                continue
+            status = save(p, body)
+            got += 1
+            if status == "kept":
+                # 減った応答では「覆い終えた日」を進めない(次の実行でまた確かめる)
+                log.warning("    %s %s: 行が減った応答(%d bytes)。いまのファイルを残した", spec.key, tag, len(body))
+            else:
+                man[tag] = {"to": str(min(want, today - dt.timedelta(days=1))),
+                            "at": dt.datetime.now().isoformat(timespec="seconds"),
+                            "bytes": len(body), "status": status}
+                log.info("    %s %s: %d bytes (%s)", spec.key, tag, len(body), status)
+            dirty = True
+            if got % 25 == 0:
+                write_manifest(out, spec, man)
+    finally:
+        if dirty:
+            write_manifest(out, spec, man)
     return got, skip, miss
 
 
@@ -308,7 +414,10 @@ def main() -> int:
     ap.add_argument("--out", type=Path)
     ap.add_argument("--dataset", action="append", help="種類(複数可。既定は --daily/--backfill の既定の組)")
     ap.add_argument("--daily", action="store_true", help="当月(月初 5 日は前月も)を取り直す。day 型は直近 3 日")
-    ap.add_argument("--backfill", action="store_true", help="公開範囲のうち欠けている単位を古い順に取る")
+    ap.add_argument("--backfill", action="store_true",
+                    help="公開範囲のうち、無い単位と覆い終えていない単位(台帳 _manifest.json で判断)を古い順に取る")
+    ap.add_argument("--revisit-months", type=int, default=0,
+                    help="締まった直近 N か月を取り直す(過去の値の改訂を拾う。中身が替われば前の版を _versions/ に残す。日ごとの種類は対象外)")
     ap.add_argument("--month", help="この月だけ取り直す(YYYY-MM)")
     ap.add_argument("--max-units", type=int, default=0, help="1 種類あたり 1 回に取る最大の単位数(0=制限なし)")
     ap.add_argument("--sleep", type=float, default=5.0)
@@ -341,6 +450,17 @@ def main() -> int:
             m1 = m0.replace(day=calendar.monthrange(m0.year, m0.month)[1])
             lo, hi = max(lo, m0), min(hi, m1)
             force = {u[0] for u in units(spec, lo, hi)}
+        elif args.revisit_months:
+            if spec.mode == "day":
+                continue
+            m_end = today.replace(day=1) - dt.timedelta(days=1)          # 前月末
+            m_start = m_end.replace(day=1)
+            for _ in range(args.revisit_months - 1):
+                m_start = (m_start - dt.timedelta(days=1)).replace(day=1)
+            lo, hi = max(lo, m_start), min(hi, m_end)
+            if lo > hi:
+                continue
+            force = {u[0] for u in units(spec, lo, hi)}
         elif args.daily:
             start = today - dt.timedelta(days=3) if spec.mode == "day" else (
                 (today.replace(day=1) - dt.timedelta(days=1)).replace(day=1) if today.day <= 5 else today.replace(day=1))
@@ -349,7 +469,8 @@ def main() -> int:
         else:  # backfill
             force = set()
         log.info("%s(%s): %s〜%s", k, spec.label, lo, hi)
-        g, s_, m = run(cli, args.out, spec, lo, hi, force, args.max_units)
+        g, s_, m = run(cli, args.out, spec, lo, hi, force, args.max_units,
+                       refetch_open=not (args.backfill and not args.daily and not args.month))
         log.info("  → 取得 %d / 既存 %d / 取れず %d", g, s_, m)
         total = [total[0] + g, total[1] + s_, total[2] + m]
     log.info("完了: 取得 %d / 既存 %d / 取れず %d", *total)
