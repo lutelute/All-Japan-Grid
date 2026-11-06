@@ -79,3 +79,8 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        # 2026-11-06 21:08 JST から、Pages 側のファイルの同期(syncing_files)が 10 分(既定の待ち)を超えて
+        # 6 回続けて時間切れになり、io が 21:30 の版で止まった。それまでは 15 秒ほどで終わっていた
+        # (成果物は同じ約 460 MB・GitHub の障害情報は平常)。待ちを 30 分に延ばす(毎時の公開より短い)
+        with:
+          timeout: 1800000
