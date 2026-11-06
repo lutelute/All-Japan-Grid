@@ -41,6 +41,9 @@ OUTDIR = Path(os.environ.get("AGJ_SYSTEM_DISCLOSURE") or ROOT / "data" / "extern
 # 出所の記録は追跡しているファイル。毎時の処理は本体の作業ツリーを汚さないよう AGJ_SD_PROVENANCE で
 # git の外(data/realtime/)へ書く(scripts/realtime_cycle.sh)
 PROVENANCE = Path(os.environ.get("AGJ_SD_PROVENANCE") or OUTDIR / "provenance.jsonl")
+# 1 にすると、中身が替わったファイルの前の版を {種別}/_versions/{名前}.{前の版の日付}{拡張子} に残す
+# (nas03 の保管庫用。scripts/nas_archive_cycle.sh)
+KEEP_VERSIONS = os.environ.get("AGJ_SD_KEEP_VERSIONS") == "1"
 
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -120,6 +123,13 @@ def fetch_one(utility: str, kind: str, url: str, dry_run: bool) -> dict | None:
             print(f"  = 同じ {utility}/{kind}/{name}")
             return {"status": "unchanged", "file": name}
         status = "updated"
+        if KEEP_VERSIONS:
+            # 保管庫(nas03)では同じ名前で中身が替わるファイル(関西の空容量 CSV など)の前の版も残す
+            old = dest.parent / "_versions" / (
+                f"{dest.stem}.{datetime.fromtimestamp(dest.stat().st_mtime):%Y%m%d}{dest.suffix}")
+            old.parent.mkdir(parents=True, exist_ok=True)
+            if not old.exists():
+                dest.replace(old)
     dest.write_bytes(blob)
     if dest.suffix.lower() == ".zip":
         try:

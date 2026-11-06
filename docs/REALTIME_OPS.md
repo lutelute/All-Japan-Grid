@@ -1,5 +1,7 @@
 # リアルタイム潮流サイクル 運用メモ
 
+> 公表データの保管(nas03 へ OCCTO の潮流実績・各社の公表を定期取得)は Mac の毎時の処理とは別に、pws-160core の cron で回している(2026-11-05〜)。[NAS_ARCHIVE.md](NAS_ARCHIVE.md)
+
 `docs/flow_map.html`（潮流方向・発電稼働率マップ）の NOW 断面を定期更新する仕組み。
 
 ## 何をするか
