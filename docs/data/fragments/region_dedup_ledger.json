@@ -1,0 +1,1037 @@
+{
+ "what": "地域をまたぐ写し(頂点まで同じ形の枝が 2 つ以上の地域から出る)を 1 つにまとめた帳簿(介入#58 案)",
+ "n_groups": 2449,
+ "kinds": {
+  "same_kv": 2404,
+  "kv_differs": 38,
+  "kv0_filled": 7
+ },
+ "n_edges_dropped": 2549,
+ "n_nodes_dropped": 2150,
+ "n_kv_filled": 7,
+ "pairs": {
+  "chubu|hokuriku": 700,
+  "chubu|kansai": 609,
+  "chugoku|shikoku": 472,
+  "chugoku|kyushu": 362,
+  "tohoku|tokyo": 133,
+  "chubu|tokyo": 91,
+  "kansai|shikoku": 41,
+  "hokkaido|tohoku": 21,
+  "chugoku|kyushu|shikoku": 14,
+  "chubu|hokuriku|kansai": 3,
+  "chubu|hokuriku|tokyo": 1,
+  "hokuriku|tokyo": 1,
+  "kyushu|shikoku": 1
+ },
+ "kv_rows": [
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     154.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_55",
+   "mid": [
+    35.62167,
+    138.5524
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_128",
+   "mid": [
+    35.61603,
+    138.46535
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "河口湖線",
+   "mid": [
+    35.44193,
+    138.836
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中野台二丁目変電所~中島町変電所線",
+   "mid": [
+    35.20962,
+    138.62959
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中野台二丁目変電所~中島町変電所線",
+   "mid": [
+    35.20956,
+    138.6275
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_29",
+   "mid": [
+    35.2105,
+    138.62761
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_32",
+   "mid": [
+    35.24927,
+    139.05998
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_31",
+   "mid": [
+    35.25718,
+    139.04772
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     154.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_56",
+   "mid": [
+    35.6222,
+    138.55013
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     110.0
+    ]
+   },
+   "name": "中部送電線_756",
+   "mid": [
+    35.00439,
+    138.42241
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中部送電線_845",
+   "mid": [
+    35.27524,
+    138.58018
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中部送電線_845",
+   "mid": [
+    35.25009,
+    138.58258
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中部送電線_846",
+   "mid": [
+    35.2625,
+    138.56963
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "中部送電線_847",
+   "mid": [
+    35.24344,
+    138.60121
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     154.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_5",
+   "mid": [
+    36.30958,
+    139.08603
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "東京送電線_269",
+   "mid": [
+    36.52332,
+    138.61718
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "tokyo",
+   "owner": "tokyo",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     154.0
+    ],
+    "chubu": [
+     0.0
+    ]
+   },
+   "name": "東京送電線_238",
+   "mid": [
+    36.30157,
+    139.09901
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     66.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "leadin",
+   "mid": [
+    36.34303,
+    138.64481
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "中部送電線_919",
+   "mid": [
+    36.32872,
+    138.43476
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     154.0
+    ]
+   },
+   "name": "中部送電線_750",
+   "mid": [
+    34.85568,
+    138.22895
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "中部送電線_950",
+   "mid": [
+    36.54697,
+    138.15284
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     154.0
+    ]
+   },
+   "name": "中部送電線_131",
+   "mid": [
+    35.11737,
+    138.3524
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     110.0
+    ]
+   },
+   "name": "中部送電線_307",
+   "mid": [
+    34.89071,
+    138.32892
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "静岡変電所~島田電力所線",
+   "mid": [
+    34.89177,
+    138.12289
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     154.0
+    ]
+   },
+   "name": "中部送電線_738",
+   "mid": [
+    35.37042,
+    138.20067
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     110.0
+    ]
+   },
+   "name": "中部送電線_753",
+   "mid": [
+    34.9079,
+    138.29833
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     500.0
+    ]
+   },
+   "name": "中部送電線_1117",
+   "mid": [
+    35.53272,
+    137.93271
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu",
+    "hokuriku"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ],
+    "hokuriku": [
+     77.0
+    ]
+   },
+   "name": "中部送電線_350",
+   "mid": [
+    36.36809,
+    137.89574
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "浅間温泉一丁目変電所~安曇野市変電所線",
+   "mid": [
+    36.29907,
+    137.95882
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "中部送電線_370",
+   "mid": [
+    36.40647,
+    138.26751
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "中部送電線_390",
+   "mid": [
+    36.15996,
+    138.21329
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "新屋代補助き電区分所~坂城変電所線",
+   "mid": [
+    36.5246,
+    138.16671
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     77.0
+    ]
+   },
+   "name": "新屋代補助き電区分所~松代変電所線",
+   "mid": [
+    36.54627,
+    138.18105
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "tokyo",
+    "chubu"
+   ],
+   "kv": {
+    "tokyo": [
+     0.0
+    ],
+    "chubu": [
+     110.0
+    ]
+   },
+   "name": "中部送電線_757",
+   "mid": [
+    35.00873,
+    138.37839
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     77.0
+    ],
+    "kansai": [
+     0.0
+    ]
+   },
+   "name": "北岐阜北町線",
+   "mid": [
+    35.46866,
+    136.77674
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "hokuriku": [
+     154.0
+    ]
+   },
+   "name": "中部送電線_357",
+   "mid": [
+    36.13511,
+    137.72152
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "hokuriku": [
+     154.0
+    ]
+   },
+   "name": "中部送電線_358",
+   "mid": [
+    36.13612,
+    137.71077
+   ]
+  },
+  {
+   "kind": "kv0_filled",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "hokuriku": [
+     154.0
+    ]
+   },
+   "name": "竜島変電所~松本市変電所線",
+   "mid": [
+    36.13625,
+    137.72229
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     154.0
+    ],
+    "kansai": [
+     154.0,
+     275.0
+    ]
+   },
+   "name": "七宝変電所 intra-substation 154kV stub",
+   "mid": [
+    35.16075,
+    136.78375
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     77.0
+    ],
+    "kansai": [
+     77.0,
+     154.0
+    ]
+   },
+   "name": "安曇変電所 intra-substation 154kV stub",
+   "mid": [
+    35.34212,
+    136.01448
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "kansai",
+    "shikoku"
+   ],
+   "kv": {
+    "kansai": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "四国送電線_124",
+   "mid": [
+    33.74315,
+    134.50872
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "鉢変電所~多良変電所線",
+   "mid": [
+    33.77799,
+    134.48938
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "古開作変電所~藤生町三丁目変電所線",
+   "mid": [
+    33.97545,
+    132.09358
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "古開作変電所~藤生町三丁目変電所線",
+   "mid": [
+    34.03552,
+    132.10738
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "中国送電線_331",
+   "mid": [
+    34.09251,
+    132.10875
+   ]
+  }
+ ]
+}

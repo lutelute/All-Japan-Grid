@@ -52,8 +52,12 @@ def test_review_forms_match_canon():
         here = at.get((round(it["lat"], 5), round(it["lon"], 5)), [])
         assert it["canon"] == ("one" if len(here) == 1 else "split"), it["no"]
         assert it["powerflow"] in ("colocated", "43a", "none")
-    c = collections.Counter((it["judgement"], it["powerflow"]) for it in rv["items"])
-    # 誤接続 17 か所: 同じ座標の変圧器 12・#43a 4・変圧器なし 1(#24、2 つの点が別の同期系統)
+    # 写真で確かめた時点(介入#57・#58 の前)の記録: 誤接続 17 か所 = 同じ座標の変圧器 12・#43a 4・変圧器なし 1(#24)
+    c = collections.Counter((it["judgement"], it["powerflow_at_review"]) for it in rv["items"])
     assert c[("misconnect", "colocated")] == 12
     assert c[("misconnect", "43a")] == 4
     assert c[("misconnect", "none")] == 1
+    # 今: #57 で 13 か所の変圧器を外した。残る #43a は推し量りの見かけの #3・13・23(#57 で当てない)
+    now = collections.Counter((it["judgement"], it["powerflow"]) for it in rv["items"])
+    assert now[("misconnect", "colocated")] == 0
+    assert now[("misconnect", "43a")] == 3
