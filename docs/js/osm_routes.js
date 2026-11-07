@@ -515,8 +515,13 @@
     function towerMarker(T, i, onRoute) {
         var rids = towerRoutes(T, i);
         var z = map.getZoom();
-        var m = L.circleMarker([T.la[i] / 1e5, T.lo[i] / 1e5], {
-            radius: z >= 15 ? 4.5 : z >= 13 ? 3.5 : 2.5,
+        // ズーム 13 以上では鉄塔の形(tower_dots.js)を描くので、選んだ線の鉄塔はその形を囲む輪で目立たせる
+        var m = L.circleMarker([T.la[i] / 1e5, T.lo[i] / 1e5], z >= 13 ? {
+            radius: z >= 16 ? 17 : z >= 15 ? 14 : z >= 14 ? 11 : 9,
+            color: onRoute ? "#ffd33d" : "#d0d7de", weight: 2, fillColor: onRoute ? "#ffd33d" : "#d0d7de", fillOpacity: 0.12,
+            renderer: AGJMap.renderer(map),
+        } : {
+            radius: 2.5,
             color: "#0d1117", weight: 1.2, fillColor: onRoute ? "#ffffff" : "#d0d7de", fillOpacity: 1,
             renderer: AGJMap.renderer(map),
         });
