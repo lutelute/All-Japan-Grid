@@ -409,3 +409,31 @@ def test_route_audit_markers_open_evidence_card(browser, site):
     assert "候補であって誤りの判定ではありません" in text, text
     assert not errors, errors
     page.close()
+
+
+def test_towers_are_drawn_as_tower_glyphs_and_the_body_is_clickable(browser, site):
+    """寄ると(ズーム 13 以上)鉄塔を点でなく鉄塔の形で描き、絵の脚のあたりを押しても鉄塔のカードが開く(2026-11-07)。"""
+    import json as _json
+    meta = _json.loads((DOCS / "data" / "osm_routes" / "meta.json").read_text(encoding="utf-8"))
+    reg = "tohoku"
+    d = _json.loads((DOCS / "data" / "osm_routes" / f"towers_{reg}.json").read_text(encoding="utf-8"))
+    i = d["n"] // 3
+    la = sum(d["lat"][: i + 1]) / 1e5
+    lo = sum(d["lon"][: i + 1]) / 1e5
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate(f"() => {{ map.setView([{la}, {lo}], 12, {{animate:false}}); }}")
+    page.wait_for_timeout(800)
+    assert page.evaluate("() => TowerDots.state().glyph") is False      # ズーム 12 は点のまま
+    page.evaluate(f"() => {{ map.setView([{la}, {lo}], 15, {{animate:false}}); }}")
+    page.wait_for_timeout(1500)
+    assert page.evaluate("() => TowerDots.state().glyph") is True
+    xy = page.evaluate(f"""() => {{
+        const r = map.getContainer().getBoundingClientRect(), p = map.latLngToContainerPoint([{la}, {lo}]);
+        return {{x: r.left + p.x, y: r.top + p.y + 9}};   // 鉄塔の位置(上の腕木)より 9 px 下 = 胴・脚
+    }}""")
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=10_000)
+    assert "載っている線" in page.inner_text(".agj-card")
+    assert not errors, errors
+    page.close()
