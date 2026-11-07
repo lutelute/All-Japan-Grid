@@ -27,6 +27,7 @@
 from __future__ import annotations
 
 import collections
+import json
 import math
 import os
 from typing import Dict, List, Tuple
@@ -167,7 +168,7 @@ def _ends_by_side(e, shape) -> Tuple[tuple, tuple]:
     return b, a
 
 
-def align_copy_ends(collected: Dict[str, dict], owner_of=None) -> Tuple[Dict[str, dict], dict]:
+def align_copy_ends(collected: Dict[str, dict], owner_of=None, island_of=None) -> Tuple[Dict[str, dict], dict]:
     """介入#59(案): 形が同じで端を結ぶ点だけが違う地域の写しの、端の点を 1 つに寄せる(#58 の前に呼ぶ)。
 
     根拠: 頂点の並びが同じ枝は同じ OSM の way。その同じ端を、地域ごとの取り出しが別の点に結んでいた
@@ -177,10 +178,15 @@ def align_copy_ends(collected: Dict[str, dict], owner_of=None) -> Tuple[Dict[str
     点: 寄せた先に同じ電圧の点があれば消し、無ければ寄せ先の座標へ動かす(変電所の点は、寄せ先に同じ電圧の
       変電所の点が無ければ残して動かす)。写しだけが付く行き止まりの点は動かさずに消す(寄せ先に変電所の点が
       無いときの変電所の点だけは動かして残す)。寄せて両端が同じ点になった枝は消す(帳簿に書く)。
+    周波数の境: 消すのは、寄せ先に「潮流計算で同じ島(同期系統)に入る」点があるときだけ。島の違う点しか無ければ
+      動かして残す(富士市変電所: 東京の点を中部の点にまとめると、東京の線の先が東の島から消えた。2026-11-07 の試算)。
+    island_of: (lat, lon, 地域) → 島。既定は潮流計算と同じ領土の再属性(#5・#38)のあとの島。検査で差し替える。
     Returns: (書き換えた collected, 帳簿)
     """
     if owner_of is None:
         from src.powerflow.region_attribution import area_of_coord as owner_of
+    if island_of is None:
+        island_of = _island_of
     order = {r: k for k, r in enumerate(REGIONS)}
     groups: Dict[tuple, Dict[str, List[int]]] = collections.defaultdict(lambda: collections.defaultdict(list))
     ends_at = collections.Counter()
@@ -280,12 +286,14 @@ def align_copy_ends(collected: Dict[str, dict], owner_of=None) -> Tuple[Dict[str
     out = {}
     n_repoint = n_collapsed = n_moved = n_merged = 0
     collapsed = []
-    at_target = collections.defaultdict(list)          # 寄せ先 → [(kv, sub)](今ある点)
+    targets = set(alias.values())
+    at_target = collections.defaultdict(list)          # 寄せ先 → [(島, kv, sub)](今ある点)
     for reg, v in collected.items():
         for n in v["nodes"]:
             c = _k5(n["lat"], n["lon"])
-            if c not in alias:
-                at_target[c].append((float(n.get("kv") or 0), bool(n.get("sub"))))
+            if c in targets:
+                at_target[c].append((island_of(c[0], c[1], reg), float(n.get("kv") or 0), bool(n.get("sub"))))
+    n_kept_island = 0
     for reg in collected:
         v = collected[reg]
         edges = []
@@ -306,26 +314,66 @@ def align_copy_ends(collected: Dict[str, dict], owner_of=None) -> Tuple[Dict[str
             if c in alias:
                 t = alias[c]
                 kv, sub = float(n.get("kv") or 0), bool(n.get("sub"))
-                here = at_target[t]
+                isl = island_of(t[0], t[1], reg)
+                here = [(k, s) for i2, k, s in at_target[t] if i2 == isl]   # 寄せ先の点のうち、同じ島に入るもの
                 if any(k == kv and (s or not sub) for k, s in here):
                     n_merged += 1                        # 寄せ先に同じ電圧の点(変電所なら変電所の点)がある
                     continue
-                if ends_at[c] - gown[c] == 0 and not (sub and not any(s for _, s in here)):
+                if here and ends_at[c] - gown[c] == 0 and not (sub and not any(s for _, s in here)):
                     n_merged += 1                        # 写しだけが付く行き止まりの点: 寄せ先が表す(変電所の点は寄せ先に変電所が無ければ残す)
                     continue
+                if not here and at_target[t]:
+                    n_kept_island += 1                   # 寄せ先には島の違う点しか無い → 動かして残す
                 n = dict(n, lat=t[0], lon=t[1])
-                here.append((kv, sub))
+                at_target[t].append((isl, kv, sub))
                 n_moved += 1
             nodes.append(n)
         out[reg] = dict(v, nodes=nodes, edges=edges)
     ledger = {
         "what": "形が同じで端を結ぶ点だけが違う地域の写しの、端の点を 1 つに寄せた帳簿(介入#59 案、#58 の前)",
         "n_points_aliased": len(alias), "n_edge_ends_repointed": n_repoint, "n_edges_collapsed": n_collapsed,
-        "n_nodes_moved": n_moved, "n_nodes_merged": n_merged, "gap_max_m": END_GAP_MAX_M,
+        "n_nodes_moved": n_moved, "n_nodes_merged": n_merged, "n_nodes_kept_other_island": n_kept_island,
+        "gap_max_m": END_GAP_MAX_M,
         "kinds": dict(collections.Counter(r["kind"] for r in rows)),
         "rows": rows, "collapsed": collapsed, "too_far": far,
     }
     return out, ledger
+
+
+LEDGER_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                           "docs", "data", "fragments", "region_dedup_ledger.json")
+
+
+def load_point_aliases(node_keys, path: str = LEDGER_PATH) -> Dict[tuple, tuple]:
+    """#59 の帳簿から「寄せた点 → 寄せ先」を読む。帳簿の座標を最寄りの点に吸着する後段(apply_disclosure_v2)が使う。
+
+    寄せた点は正典から消えているので、吸着すると近くの別の変電所に付くことがあった(扇町五丁目変電所の同一敷地タイが
+    約 250 m 離れた多古変電所に付いた。2026-11-07 の試算)。帳簿が古くても誤らないよう、寄せた点が今の正典に無く、
+    寄せ先が今の正典にあるものだけを返す。node_keys: 今の正典の点の座標(小数 5 桁)の集まり。"""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            rows = (json.load(fh).get("ends") or {}).get("rows") or []
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for r in rows:
+        a, b = _k5(*r["from"]), _k5(*r["to"])
+        if a not in node_keys and b in node_keys:
+            out[a] = b
+    return out
+
+
+ISLANDS = {"hokkaido": "hokkaido", "tohoku": "east", "tokyo": "east", "chubu": "west", "hokuriku": "west",
+           "kansai": "west", "chugoku": "west", "shikoku": "west", "kyushu": "west", "okinawa": "okinawa"}
+
+
+def _island_of(lat: float, lon: float, region: str) -> str:
+    """点が潮流計算で入る島(src.powerflow.full_from_built.ISLAND_OF と同じ分け方)。潮流計算の網と同じく、領土で
+    地域を再属性してから(#5。周波数を跨ぐ移動は、県の周波数が一意のときだけ = #38)島を決める。"""
+    from src.powerflow.region_attribution import reattribute_node_regions
+    n = {"lat": lat, "lon": lon, "region": region}
+    reattribute_node_regions([n], freq_fix=True)
+    return ISLANDS.get(n["region"], n["region"])
 
 
 def _site(name: str) -> str:

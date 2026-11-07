@@ -132,3 +132,23 @@ def test_edge_between_twin_points_collapses():
 def test_identical_ends_are_untouched():
     out, led = align_copy_ends(_col(), owner_of=lambda la, lo: "tokyo")
     assert led["n_points_aliased"] == 0 and out["chubu"]["edges"] == _col()["chubu"]["edges"]
+
+
+def test_points_of_different_islands_are_moved_not_merged():
+    """寄せ先に島(同期系統)の違う点しか無ければ、消さずに動かして残す(富士市変電所で踏んだ)。"""
+    isl = lambda la, lo, reg: "east" if reg == "tokyo" else "west"
+    out, led = align_copy_ends(_twins(), owner_of=lambda la, lo: "tokyo", island_of=isl)
+    ids = {n["id"]: n for n in out["chubu"]["nodes"]}
+    assert (ids["SC"]["lat"], ids["SC"]["lon"]) == S_T          # 同じ電圧の点が寄せ先にあっても、島が違うので残す
+    assert led["n_nodes_kept_other_island"] >= 1
+
+
+def test_load_point_aliases_checks_the_current_canon(tmp_path):
+    import json
+    from src.topology.region_dedup import load_point_aliases
+    p = tmp_path / "ledger.json"
+    p.write_text(json.dumps({"ends": {"rows": [{"from": [35.0, 137.1], "to": [35.0002, 137.1002]}]}}))
+    assert load_point_aliases({(35.0002, 137.1002)}, str(p)) == {(35.0, 137.1): (35.0002, 137.1002)}
+    # 寄せた点がまだ正典にある(帳簿が古い・#59 を切った)ときは使わない
+    assert load_point_aliases({(35.0, 137.1), (35.0002, 137.1002)}, str(p)) == {}
+    assert load_point_aliases(set(), str(tmp_path / "none.json")) == {}
