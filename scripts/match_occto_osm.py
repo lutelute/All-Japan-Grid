@@ -7,6 +7,9 @@ name)は近いとみなして優先する。OSM の way の切れ目(JUMP_KM 以
 遠いとみなして通る 2 回目を探し、道の半分以上が電圧の合う線か名前の合う線のときだけ採る。両端の点の近さ(半径)は
 直線の長さの 0.35 倍(0.15〜1.2 km)。
 
+対象(targets.json の 1 件)は id・kind・n(線路名)・kv・s(両端)。連系線の区間は kvs(通ってよい電圧の並び。直流は
+OSM の電圧の値)と names(OSM の線の名前の手がかり)も持つ。無ければ kvs = [kv]、names = [線路名の語幹]。
+
 使い方(OSM の取得データ tw_japan_t0.json を置いた計算機で。環境変数 AJG_OSM_RAW_TOWERS の指すフォルダにある):
     python3 scripts/match_occto_osm.py $AJG_OSM_RAW_TOWERS/tw_japan_t0.json targets.json out_osm.json
 対象(targets.json)と結果のまとめは scripts/build_occto_line_shapes.py。地図データ © OpenStreetMap contributors(ODbL 1.0)
@@ -103,7 +106,7 @@ def main(raw_p, tgt_p, out_p):
         return [n for dx in range(-k, k + 1) for dy in range(-k, k + 1) for n in grid[(gx + dx, gy + dy)]
                 if km(node[n], p) < r]
 
-    def search(a, b, kv, st, r, relax):
+    def search(a, b, kvs, hints, r, relax):
         src, dst = set(near(a, r)), set(near(b, r))
         if not src or not dst:
             return None, (len(src), len(dst))
@@ -124,8 +127,8 @@ def main(raw_p, tgt_p, out_p):
                 if w < 0:
                     c = l * 3
                 else:
-                    vs, hit = wv[w], st and any(st in nm for nm in wname[w])
-                    if vs and kv not in vs:
+                    vs, hit = wv[w], any(h in nm for h in hints for nm in wname[w])
+                    if vs and not (vs & kvs):
                         if not relax:
                             continue
                         c = l * (0.8 if hit else 2.5)
@@ -148,7 +151,9 @@ def main(raw_p, tgt_p, out_p):
     out = []
     for t in json.load(open(tgt_p)):
         a, b = t["s"]
-        kv, st = t["kv"], stem(t["n"])
+        kvs = set(t.get("kvs") or [t["kv"]])
+        hints = [nf(h) for h in t["names"]] if "names" in t else [stem(t["n"])]
+        hints = [h for h in hints if h]
         straight = km(a, b)
         res = {k: t[k] for k in ("id", "kind", "gap", "kv", "n") if k in t}
         res["straight_km"] = round(straight, 2)
@@ -158,11 +163,11 @@ def main(raw_p, tgt_p, out_p):
             out.append(res)
             continue
         plen = lambda g: sum(l for _, l in g[1])
-        got, why = search(a, b, kv, st, r, False)
+        got, why = search(a, b, kvs, hints, r, False)
         res["pass"] = 1
         # 電圧の合う線だけでは、つながらないか遠回りすぎるとき(500 kV で造って 275 kV で使う線など)は 2 回目
         if not (isinstance(why, tuple) and 0 in why) and (got is None or plen(got) > DETOUR * straight + 3.0):
-            got2, _ = search(a, b, kv, st, r, True)
+            got2, _ = search(a, b, kvs, hints, r, True)
             if got2 is not None and (got is None or plen(got2) < plen(got)):
                 got, res["pass"] = got2, 2
         if got is None:
@@ -173,8 +178,8 @@ def main(raw_p, tgt_p, out_p):
             continue
         path, used = got
         length = sum(l for _, l in used)
-        named = sum(l for w, l in used if w > 0 and st and any(st in nm for nm in wname[w]))
-        kvok = sum(l for w, l in used if w > 0 and (not wv[w] or kv in wv[w]))
+        named = sum(l for w, l in used if w > 0 and any(h in nm for h in hints for nm in wname[w]))
+        kvok = sum(l for w, l in used if w > 0 and (not wv[w] or wv[w] & kvs))
         jumped = sum(l for w, l in used if w < 0)
         coords = [list(node[n]) for n in path]
         res.update({

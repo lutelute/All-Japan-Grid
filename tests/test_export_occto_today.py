@@ -152,6 +152,10 @@ def test_chain_orders_pieces_from_station_and_bridges_gaps():
     # 両端が分からなければ、在る切れ端だけを並べる
     solid, dash = ex.chain([near], None, None)
     assert solid == [near] and dash == []
+    # b に着いたら、b の先へ延びる枝(モデルの経路が隣の発電所まで行くもの)は描かず、b へ戻る点線も引かない
+    spur = [[135.2, 35.001], [135.25, 35.06]]
+    solid, dash = ex.chain([[a, b], spur], a, b)
+    assert solid == [[a, b]] and dash == []
 
 
 def test_branch_trunk_names():
@@ -225,8 +229,9 @@ def test_interconnections_ledger():
     import yaml
     conf = yaml.safe_load((ROOT / "config" / "occto_interconnections.yaml").read_text(encoding="utf-8"))["links"]
     d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
-    ics = ex.interconnections(d["lines"])
-    assert ics == d["ics"], "台帳を変えたら occto_lines.json も作り直す"
+    ics, conv = ex.interconnections(d["lines"])
+    ex.apply_ic_shapes(ics)
+    assert ics == d["ics"] and conv == d["converters"], "台帳を変えたら occto_lines.json も作り直す"
     for r, x in zip(conf, ics):
         assert r["src"].strip() and r["kind"].strip()
         assert x["a"][0] != x["a"][1], r["name"]
@@ -243,6 +248,28 @@ def test_interconnections_ledger():
     assert {e["name"] for e in honshi["ends"]} == {"東岡山変電所", "讃岐変電所"}
 
 
+def test_interconnections_follow_osm_through_converters():
+    """連系線は、端 → 変換所 → 端 の区間ごとに OSM の線の形で描く(2026-11-08 オーナー「地形に合っていないから変に見える」)。
+    どの区間にも形があり、形は区間の両端(変電所・変換所)の近くから始まって終わる。直流の連系線は両側に変換所がある。
+    変換所は OSM の要素の位置で、線路の端の点と同じ所(函館変換所は函館市内の函館変電所、阿南変換所は阿南発電所に取り違えていた)。"""
+    d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
+    for x in d["ics"]:
+        assert len(x["p"]) == len(x["w"]) - 1 and x["g"] == "osm", f"{x['n']}: 形の無い区間がある"
+        for (a, b), path in zip(zip(x["w"], x["w"][1:]), x["p"]):
+            ends = [path[0], path[-1]] + [q for seg in x["j"] for q in seg]
+            assert all(min(ex._km(s, e) for e in ends) <= ex.GAP_KM for s in (a, b)), x["n"]
+            length = sum(ex._km(u, v) for u, v in zip(path, path[1:]))
+            assert length <= 1.6 * ex._km(a, b) + 3.0, x["n"]
+        assert all(ex._km(*seg) < 2.0 for seg in x["j"]), f"{x['n']}: 形の端と変電所が離れすぎ"
+        if x["kind"] == "直流":
+            assert sum(x["n"] in c["links"] for c in d["converters"]) >= 2, x["n"]
+    conv = {c["n"]: c for c in d["converters"]}
+    assert len(conv) >= 11 and all(re.fullmatch(r"osm:(node|way|relation)/\d+", c["ref"]) for c in conv.values())
+    pts = {(x["a"], e): s for x in d["lines"] for e, s in zip(ex.ends(x["d"]) or (), x["s"]) if s}
+    assert ex._km(pts[("hokkaido", ex.stem("函館変換所"))], conv["函館変換所"]["s"]) < 0.05
+    assert ex._km(pts[("shikoku", ex.stem("阿南変換所"))], conv["阿南変換所"]["s"]) < 0.05
+
+
 def test_bridges_join_every_piece_to_the_main_network():
     """OCCTO の一覧だけでは離れる線路・変電所の点は、どれもモデルの線のつなぎで本線の変電所まで届く。
     描いた線(地内基幹・連系線・つなぎ)を塊に分けると、本土と沖縄の 2 つだけになる。"""
@@ -251,7 +278,8 @@ def test_bridges_join_every_piece_to_the_main_network():
     for b in d["bridges"]:
         assert b["for"] and b["p"] and 0 < b["km"] < 120 and all(k >= 66 for k in b["kv"]), b["for"]
         assert not any(re.fullmatch(r"namebind|leadin|\w+_line_\d+", n) for n in b["via"])
-    items = [x["p"] + x["j"] for x in d["lines"] if x["p"] or x["j"]] + [[ic["s"]] for ic in d["ics"]] + [b["p"] for b in d["bridges"]]
+    items = ([x["p"] + x["j"] for x in d["lines"] if x["p"] or x["j"]] + [(ic["p"] + ic["j"]) or [ic["s"]] for ic in d["ics"]]
+             + [b["p"] for b in d["bridges"]])
     pts = [s for x in d["lines"] for s in x["s"] if s] + [s for ic in d["ics"] for s in ic["s"]]
     par = list(range(len(items)))
 
@@ -277,7 +305,7 @@ def test_shapes_fill_dashed_lines_from_osm_and_gsi():
     sh = json.loads((ROOT / "data" / "reference" / "occto_line_shapes.json").read_text(encoding="utf-8"))
     assert "OpenStreetMap" in sh["source"] and "国土地理院" in sh["source"]
     for it in sh["items"]:
-        assert it["src"] in ("osm", "gsi") and it["kind"] in ("line", "gap") and len(it["coords"]) >= 2
+        assert it["src"] in ("osm", "gsi") and it["kind"] in ("line", "gap", "ic") and len(it["coords"]) >= 2
         assert it["length_km"] <= 1.6 * it["straight_km"] + 3.0, it["id"]
         if it["src"] == "osm":
             assert max(it["kv_frac"], it["named_frac"]) >= 0.5, it["id"]

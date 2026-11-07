@@ -54,7 +54,9 @@ canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .ramp i{display:block;width:26px;height:6px;border-radius:2px}
 .ramp i.dash{height:0;border-top:2px dashed var(--nocap);border-radius:0}
 .ramp i.brg{height:0;border-top:3px dotted var(--brg);border-radius:0}
-.ramp i.icl{height:0;border-top:4px dashed var(--ink);border-radius:0}
+.ramp i.icl{height:4px;background:var(--l1);box-shadow:0 0 0 1.5px var(--ink);border-radius:0}
+.ramp i.icl.dc{background:linear-gradient(var(--l1) 0 1.5px,var(--panel) 1.5px 2.5px,var(--l1) 2.5px)}
+.ramp i.cvk{width:8px;height:8px;border-radius:1px;background:var(--panel);box-shadow:inset 0 0 0 2px var(--ink);margin:0 9px}
 .ramp i.dot{width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.55;margin:0 10px}
 .ramp span{font-family:var(--f-num);font-size:11px;color:var(--muted);margin-left:4px}
 .tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;font-size:12.5px;max-width:280px;box-shadow:0 4px 14px rgb(0 0 0 / .18)}
@@ -113,7 +115,8 @@ footer p{margin:0 0 4px}
       <div class="ramp" id="ramp"></div>
       <div class="ramp"><i style="background:var(--nocap)"></i><span>容量なし・値なし</span></div>
       <div class="ramp"><i class="dash"></i><span>点線 = モデル・OSM・地理院の地図に線の形が見つからないところ(両端を結んだ模式)</span></div>
-      <div class="ramp"><i class="icl"></i><span>連系線(エリアの間。両端を結んだ模式)</span></div>
+      <div class="ramp"><i class="icl"></i><i class="icl dc"></i><span>連系線(エリアの間、黒い縁。白い中線 = 直流。形は OSM の送電線・海底ケーブル)</span></div>
+      <div class="ramp"><i class="cvk"></i><span>変換所(直流・周波数変換・BTB)</span></div>
       <div class="ramp"><i class="brg"></i><span>つなぎ = OCCTO の一覧に無いモデルの線(離れた線路が本線とどこでつながるか)</span></div>
       <div class="ramp"><i class="dot"></i><span>変電所・発電所(線路の端)</span></div>
       <div style="color:var(--muted)">太さ = 潮流の大きさ。ドラッグで移動、ホイールかピンチで拡大</div>
@@ -154,7 +157,7 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const STOPS = [0, .3, .6, .85, 1];
-let LN = null, TD = null, T = [], L = [], ST = [], ti = 0, sel = -1, hover = -1, playing = null, lastLoad = 0;
+let LN = null, TD = null, T = [], L = [], ST = [], CV = [], ti = 0, sel = -1, hover = -1, hoverCv = -1, playing = null, lastLoad = 0;
 
 // 投影: 経度を cos(36°) で縮めた正距円筒
 const KX = Math.cos(36 * Math.PI / 180);
@@ -192,12 +195,16 @@ function build() {
   const seen = new Set(); ST = [];
   LN.lines.forEach(x => (x.s || []).forEach((q, i) => { if (!q || (x.t && x.t[i])) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));   // t = T 分岐の端(幹線の上に置いた点。変電所ではないので点を打たない)
   L.forEach(l => byId.set(l.id, l));
-  // 連系線(エリアの間): 両端を結ぶ直線(模式)。値は連系線の 5 分値(同じ名前の線は同じ値 = その名前の合計)
+  // 連系線(エリアの間): OSM の送電線・ケーブルの形(端 → 変換所 → 端 の区間ごと)。形の無い区間は両端を結ぶ点線(模式)。
+  // 値は連系線の 5 分値(同じ名前の線は同じ値 = その名前の合計)
   (LN.ics || []).forEach(x => {
-    const arr = x.k ? (TD.ic || {})[x.k] : null;
-    L.push({ ...x, id: 'ic|' + x.n, ic: true, pp: [], jj: [x.s.map(P)], v: arr ? arr.map(e => e ? e[0] : null) : [] });
+    const arr = x.k ? (TD.ic || {})[x.k] : null, p = x.p || [];
+    L.push({ ...x, id: 'ic|' + x.n, ic: true, pp: p.map(path => path.map(P)), jj: (p.length ? x.j || [] : [x.s]).map(seg => seg.map(P)),
+             v: arr ? arr.map(e => e ? e[0] : null) : [] });
     x.s.forEach(q => { const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } });
   });
+  // 変換所(直流と交流・50 Hz と 60 Hz を変換する所)の点
+  CV = (LN.converters || []).map(c => ({ ...c, xy: P(c.s) }));
   // つなぎ: OCCTO の一覧だけでは離れる線路から本線の変電所まで、モデルの線をたどった道筋(値なし)
   (LN.bridges || []).forEach((b, k) => L.push({ ...b, id: 'br|' + k, br: true, n: 'つなぎ(' + b.for.join('・') + ')', pp: b.p.map(path => path.map(P)), jj: [], v: [] }));
   for (const [id, e] of Object.entries(TD.lines)) {
@@ -257,13 +264,39 @@ function draw() {
   const rr = Math.max(1.2, Math.min(3, sc / sc0 * 0.9));
   ST.forEach(([x, y]) => { ctx.beginPath(); ctx.arc(sx(x), sy(y), rr, 0, 2 * Math.PI); ctx.fill(); });
   ctx.globalAlpha = 1;
+  // 変換所: 白い四角に黒い縁。拡大したら名前も
+  const z = sc / sc0, q = Math.max(7, Math.min(11, 5 + z * 1.2));
+  CV.forEach((c, k) => {
+    const x = sx(c.xy[0]), y = sy(c.xy[1]), hi = k === hoverCv;
+    ctx.fillStyle = css('--panel'); ctx.strokeStyle = hi ? css('--sel') : css('--ink'); ctx.lineWidth = hi ? 3 : 2;
+    ctx.fillRect(x - q / 2, y - q / 2, q, q); ctx.strokeRect(x - q / 2, y - q / 2, q, q);
+  });
+  if (z >= 2.5) {   // 名前: 右・左・上・下の順に、ほかの名前と重ならない所へ(どこも重なるなら出さない)
+    ctx.font = '600 11.5px ' + (css('--f-ui') || 'sans-serif'); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const boxes = [], h = 14;
+    CV.forEach(c => {
+      const cx = sx(c.xy[0]), cy = sy(c.xy[1]), w = ctx.measureText(c.n).width, d = q / 2 + 4;
+      const at = [[cx + d, cy], [cx - d - w, cy], [cx - w / 2, cy - d - h / 2], [cx - w / 2, cy + d + h / 2]]
+        .find(([x, y]) => !boxes.some(b => x < b[2] && x + w > b[0] && y - h / 2 < b[3] && y + h / 2 > b[1]));
+      if (!at) return;
+      boxes.push([at[0], at[1] - h / 2, at[0] + w, at[1] + h / 2]);
+      ctx.strokeStyle = css('--panel'); ctx.lineWidth = 3; ctx.strokeText(c.n, at[0], at[1]);
+      ctx.fillStyle = css('--ink'); ctx.fillText(c.n, at[0], at[1]);
+    });
+  }
 }
 function strokeIC(l, hi) {
   const one = path => { ctx.beginPath(); path.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.stroke(); };
-  if (hi) { ctx.strokeStyle = css('--sel'); ctx.lineWidth = 9; l.jj.forEach(one); }
-  ctx.setLineDash([10, 5]);
-  ctx.strokeStyle = css('--ink'); ctx.lineWidth = 5.5; l.jj.forEach(one);
-  ctx.strokeStyle = col(load(l, ti)); ctx.lineWidth = 3; l.jj.forEach(one);
+  const c = col(load(l, ti));
+  if (hi) { ctx.strokeStyle = css('--sel'); ctx.lineWidth = 9; l.pp.forEach(one); l.jj.forEach(one); }
+  // 形のある所は実線(黒い縁 + 値の色。直流は白い中線)
+  ctx.strokeStyle = css('--ink'); ctx.lineWidth = 5.5; l.pp.forEach(one);
+  ctx.strokeStyle = c; ctx.lineWidth = 3; l.pp.forEach(one);
+  if (/直流/.test(l.kind || '')) { ctx.strokeStyle = css('--panel'); ctx.lineWidth = 1; l.pp.forEach(one); }
+  // 形の無い区間・変電所までの短いつなぎは破線(模式)
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = css('--ink'); ctx.lineWidth = 4.5; l.jj.forEach(one);
+  ctx.strokeStyle = c; ctx.lineWidth = 2.2; l.jj.forEach(one);
   ctx.setLineDash([]);
 }
 function strokePaths(l) {
@@ -299,8 +332,23 @@ function icText(l) {
   const val = !l.k ? 'この線だけの値は OCCTO の 5 分値に無い(中部・北陸・関西の「フェンス」= 複数の連系線の合成の値だけ)<br>'
     : x ? `潮流 <b style="font-family:var(--f-num)">${fmt(x[0])} MW</b>(正: ${esc(ar[0])} → ${esc(ar[1])})<br>`
       + `運用容量 順 ${fmt(x[1])}・逆 ${fmt(-x[2])} MW → ${pct(load(l, ti))}<br>` : 'この時刻の値なし<br>';
-  return head + val + `<span style="color:var(--muted)">${l.k ? `値は OCCTO の連系線「${esc(l.k)}」${n > 1 ? `(${n} 本の合計。同じ名前の線は同じ値)` : ''}。` : ''}`
-    + `線は両端を結んだ模式。端の出典: ${esc(l.src)}</span>`;
+  const cvs = CV.filter(c => (c.links || []).includes(l.n)).map(c => c.n);
+  const shape = (l.p || []).length ? `線の形は OSM の送電線・ケーブル(端 → 変換所 → 端 の区間ごとにたどった)${l.jj.length ? '。破線は形の無い所(模式)' : ''}`
+    : '線は両端を結んだ模式';
+  return head + val + (cvs.length ? `変換所: ${esc(cvs.join('・'))}<br>` : '')
+    + `<span style="color:var(--muted)">${l.k ? `値は OCCTO の連系線「${esc(l.k)}」${n > 1 ? `(${n} 本の合計。同じ名前の線は同じ値)` : ''}。` : ''}`
+    + `${shape}。端の出典: ${esc(l.src)}</span>`;
+}
+function cvText(c) {
+  const kind = { 直流: '直流と交流を変換する変換所', 周波数変換: '50 Hz と 60 Hz を変換する周波数変換所', BTB: '交流を直流にして、また交流に戻して結ぶ連系所(BTB)' }[c.kind] || c.kind;
+  return `<b>${esc(c.n)}</b> <span style="color:var(--muted)">${esc(kind)}</span><br>${esc(c.note)}<br>`
+    + ((c.links || []).length ? `連系線: ${esc(c.links.join('・'))}<br>` : '')
+    + `<span style="color:var(--muted)">位置は OSM(${esc(c.ref)})</span>`;
+}
+function nearestCv(mx, my) {
+  let best = -1, bd = 9 * 9;
+  CV.forEach((c, k) => { const dx = sx(c.xy[0]) - mx, dy = sy(c.xy[1]) - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = k; } });
+  return best;
 }
 function lineText(l) {
   if (l.ic) return icText(l);
@@ -387,8 +435,10 @@ function foot() {
     + `線は両端の変電所から描き始めて終え、モデルの線が切れているところは点線でつないだ(点線の位置は模式)。`
     + `点は線路の端の変電所・発電所。理由と直し方は <a href="https://github.com/lutelute/All-Japan-Grid/issues/141">#141</a>。`
     + `運用容量は同じ日の実績を線路名で突き合わせ、潮流の向きに合う値があればそれ、無ければ公表されている値を使った。</p>`
-    + `<p>エリアの間の連系線(黒い縁の破線、${(LN.ics || []).length} 本)は、両端の変電所・変換所を結ぶ直線(模式)。端と出典は `
-    + `<a href="https://github.com/lutelute/All-Japan-Grid/blob/main/config/occto_interconnections.yaml">config/occto_interconnections.yaml</a>。`
+    + `<p>エリアの間の連系線(黒い縁の線、${(LN.ics || []).length} 本)は、端の変電所から変換所を通って反対の端までの区間ごとに、`
+    + `OSM の送電線・ケーブル(直流の線、津軽海峡・紀伊水道の海底ケーブル、青函トンネルの中のケーブルを含む)をたどった形`
+    + `(${(LN.shapes || {}).ic_legs || 0} 区間)。白い中線は直流。四角は変換所(${CV.length} か所。南福光連系所は中部と北陸の線路の端が同じ所なので点だけ)。`
+    + `端・変換所と出典は <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/config/occto_interconnections.yaml">config/occto_interconnections.yaml</a>。`
     + `色は連系線の 5 分値の、潮流の向きの運用容量に対する割合。1 つの値が 2 本以上の合計のもの(北海道本州・東北東京・FC・関西中国)は同じ色。`
     + `三重東近江線・越前嶺南線は 5 分値にその線だけの値が無い(中部・北陸・関西のフェンス = 合成の値だけ)ので「値なし」の色。</p>`
     + `<p>紫の点々(つなぎ、${(LN.bridges || []).length} 本)は、OCCTO の地内基幹の一覧にほかとつなぐ線路が無い所(東上越幹線・北与野線など)から、`
@@ -457,19 +507,23 @@ cv.addEventListener('pointermove', e => {
   if (pinch && touches.size === 2) { const [a, b] = [...touches.values()]; zoomTo(pinch.sc * gap(a, b) / pinch.d, pinch.cx, pinch.cy, pinch); return; }
   const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
   if (drag) { const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true; ox = drag.ox + dx; oy = drag.oy + dy; draw(); return; }
-  const i = nearest(mx, my), tip = $('tip');
-  if (i !== hover) { hover = i; draw(); }
-  if (i < 0) { tip.hidden = true; return; }
-  tip.innerHTML = lineText(L[i]); tip.hidden = false;
+  const k = nearestCv(mx, my), i = k >= 0 ? -1 : nearest(mx, my), tip = $('tip');
+  if (i !== hover || k !== hoverCv) { hover = i; hoverCv = k; draw(); }
+  if (i < 0 && k < 0) { tip.hidden = true; return; }
+  tip.innerHTML = k >= 0 ? cvText(CV[k]) : lineText(L[i]); tip.hidden = false;
   tip.style.left = Math.max(4, Math.min(mx + 14, W - 290)) + 'px'; tip.style.top = Math.max(4, Math.min(my + 14, H - 110)) + 'px';
 });
 cv.addEventListener('pointerup', e => {
   const wasPinch = touches.size === 2; lift(e);
   cv.style.cursor = 'grab';
-  if (TD && drag && !drag.moved && !wasPinch) { const r = cv.getBoundingClientRect(); sel = nearest(e.clientX - r.left, e.clientY - r.top); side(); showDetail(); draw(); }
+  if (TD && drag && !drag.moved && !wasPinch) {
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, k = nearestCv(mx, my);
+    const link = k >= 0 ? (CV[k].links || [])[0] : null;   // 変換所を押したら、その連系線を選ぶ
+    sel = k >= 0 ? (link ? L.findIndex(l => l.ic && l.n === link) : -1) : nearest(mx, my); side(); showDetail(); draw();
+  }
   drag = null;
 });
-cv.addEventListener('pointerleave', () => { $('tip').hidden = true; if (hover >= 0) { hover = -1; draw(); } });
+cv.addEventListener('pointerleave', () => { $('tip').hidden = true; if (hover >= 0 || hoverCv >= 0) { hover = -1; hoverCv = -1; draw(); } });
 cv.addEventListener('wheel', e => {
   e.preventDefault(); const r = cv.getBoundingClientRect();
   zoomTo(sc * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top, { sc, ox, oy });

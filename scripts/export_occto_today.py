@@ -367,11 +367,15 @@ def chain(parts: list, a: list | None, b: list | None) -> tuple[list, list]:
 
     切れ端は経路の区間ごとの線の形で、順番も向きもばらばら。いまの端にいちばん近い切れ端を、近い側から
     つないでいく。a・b が分からなければ、在る切れ端の端から始める。切れ目が GAP_KM より大きければ点線で結ぶ。
+    b に着いたら、残りの切れ端(b の先へ延びる枝。南阿波幹線の阿南変換所の先の阿南発電所への 7 km)は描かない。
     """
     rest = [list(p) for p in parts if len(p) >= 2]
     solid, dash = [], []
     cur = a or (rest[0][0] if rest else None)
+    far = a is not None and b is not None and _km(a, b) > GAP_KM
     while rest:
+        if far and solid and _km(cur, b) <= GAP_KM:
+            break
         d, i, rev = min((min((_km(cur, p[0]), j, False), (_km(cur, p[-1]), j, True)) for j, p in enumerate(rest)))
         p = rest.pop(i)
         if rev:
@@ -544,24 +548,67 @@ def apply_shapes(lines: list, path: Path = SHAPES) -> tuple[int, int]:
 IC_CONF = ROOT / "config" / "occto_interconnections.yaml"
 
 
-def interconnections(lines: list, path: Path = IC_CONF) -> list:
-    """連系線(エリアの間)の両端の位置。端は地内基幹の線路の端の点(エリアと名前の語幹で引く。T 分岐の点は使わない)か、
-    台帳に書いた lon・lat。線は両端を結ぶ直線(模式)。"""
+CONV_KM = 0.5    # 連系線の端・経由点からこれより近い変換所は、その連系線の変換所とみなす
+
+
+def interconnections(lines: list, path: Path = IC_CONF) -> tuple[list, list]:
+    """連系線(エリアの間)と変換所。連系線の端は地内基幹の線路の端の点(エリアと名前の語幹で引く。T 分岐の点は使わない)か、
+    台帳に書いた lon・lat。w = 端 → 経由する変換所 → 端 の点(線の形は区間ごとに apply_ic_shapes で当てる)。
+    形を当てるまでは、各区間を結ぶ点線(模式)。"""
     import yaml
+    conf = yaml.safe_load(path.read_text(encoding="utf-8"))
     pts: dict[tuple, list] = {}
     for x in lines:
         e = ends(x["d"])
         for i, nm in enumerate(e or ()):
             if x["s"][i] and not (x.get("t") or [False, False])[i]:
                 pts.setdefault((x["a"], nm), x["s"][i])
+    conv = [{"n": c["name"], "kind": c["kind"], "s": [c["lon"], c["lat"]], "ref": c["ref"], "note": c["note"], "links": []}
+            for c in conf.get("converters") or []]
+    cxy = {c["n"]: c["s"] for c in conv}
     out = []
-    for r in yaml.safe_load(path.read_text(encoding="utf-8"))["links"]:
+    for r in conf["links"]:
         xy = [[e["lon"], e["lat"]] if "lon" in e else pts.get((e["area"], stem(e["name"]))) for e in r["ends"]]
         if None in xy:
             raise SystemExit(f"{path.name}: {r['name']} の端の位置が線路の一覧に無い: {r['ends']}")
+        missing = [v for v in r.get("via") or [] if v not in cxy]
+        if missing:
+            raise SystemExit(f"{path.name}: {r['name']} の経由する変換所が converters に無い: {missing}")
+        w = [xy[0]] + [cxy[v] for v in r.get("via") or []] + [xy[1]]
+        osm = r.get("osm") or {}
         out.append({"k": r["ic"], "n": r["name"], "kind": r["kind"], "a": [e.get("area") for e in r["ends"]],
-                    "s": xy, "src": r["src"]})
-    return out
+                    "s": xy, "w": w, "osm": {"kv": osm.get("kv") or [], "names": osm.get("names") or []},
+                    "p": [], "j": [[a, b] for a, b in zip(w, w[1:])], "src": r["src"]})
+        for c in conv:
+            if any(_km(c["s"], q) < CONV_KM for q in w):
+                c["links"].append(r["name"])
+    return out, conv
+
+
+def apply_ic_shapes(ics: list, path: Path = SHAPES) -> int:
+    """連系線の区間(端 → 変換所 → 端)ごとに、OSM の送電線・ケーブルの形を当てる(scripts/build_occto_line_shapes.py)。
+    形の無い区間は両端を結ぶ点線のまま。形の端が区間の端から GAP_KM より離れていれば、そこだけ点線でつなぐ。"""
+    if not path.exists():
+        return 0
+    k3 = lambda q: (round(q[0], 3), round(q[1], 3))
+    by = {(it["id"], k3(it["ends"][0]), k3(it["ends"][1])): it
+          for it in json.loads(path.read_text(encoding="utf-8"))["items"] if it["kind"] == "ic"}
+    n = 0
+    for ic in ics:
+        p, j = [], []
+        for a, b in zip(ic["w"], ic["w"][1:]):
+            it = by.get(("ic|" + ic["n"], k3(a), k3(b)))
+            if not it:
+                j.append([a, b])
+                continue
+            c = it["coords"]
+            p.append(c)
+            j += [s for s in ([a, c[0]], [c[-1], b]) if _km(*s) > GAP_KM]
+            n += 1
+        ic["p"], ic["j"] = p, j
+        if p:
+            ic["g"] = "osm"
+    return n
 
 
 BUILT = ROOT / "docs" / "data" / "built" / "all.json"
@@ -589,7 +636,7 @@ def bridges(lines: list, ics: list, built_path: Path = BUILT, tol: float = 0.002
     (線の描けない線路の端・連系線の端)。モデルの正典(built)の線を、電圧の低い線ほど遠いとみなして最短でたどる。
     地図ではつながりを見せるだけで、潮流の値は無い。"""
     import heapq
-    items = [x["p"] + x["j"] for x in lines if x["p"] or x["j"]] + [[ic["s"]] for ic in ics]
+    items = [x["p"] + x["j"] for x in lines if x["p"] or x["j"]] + [(ic["p"] + ic["j"]) or [ic["s"]] for ic in ics]
     names = [x["n"] for x in lines if x["p"] or x["j"]] + [ic["n"] for ic in ics]
     ends = [[q[0] for q in it] + [q[-1] for q in it] for it in items]
     box = [(min(v[0] for q in it for v in q) - .01, max(v[0] for q in it for v in q) + .01,
@@ -729,19 +776,20 @@ def cmd_lines(a) -> int:
     for x in lines:
         x.pop("d_ends")
     n_shape = (0, 0) if a.no_shapes else apply_shapes(lines)
-    ics = interconnections(lines)
+    ics, conv = interconnections(lines)
+    n_ic = 0 if a.no_shapes else apply_ic_shapes(ics)
     brs = bridges(lines, ics)
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
             "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines,
-            "ics": ics, "bridges": brs,
-            "shapes": {"lines": n_shape[0], "gaps": n_shape[1],
-                       "source": json.loads(SHAPES.read_text(encoding="utf-8"))["source"] if any(n_shape) else None}}
+            "ics": ics, "converters": conv, "bridges": brs,
+            "shapes": {"lines": n_shape[0], "gaps": n_shape[1], "ic_legs": n_ic,
+                       "source": json.loads(SHAPES.read_text(encoding="utf-8"))["source"] if any(n_shape) or n_ic else None}}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・OSM と地理院の形 線路 %d・切れ目 %d・連系線 %d・つなぎのモデルの線 %d・輪郭 %d 枚・%d KB",
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・OSM と地理院の形 線路 %d・切れ目 %d・連系線 %d(OSM の形の区間 %d・変換所 %d)・つなぎのモデルの線 %d・輪郭 %d 枚・%d KB",
              a.out, len(lines),
              sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
              sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
-             n_branch, *n_shape, len(ics), len(brs), len(data["outline"]), a.out.stat().st_size // 1024)
+             n_branch, *n_shape, len(ics), n_ic, len(conv), len(brs), len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
 

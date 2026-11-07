@@ -10,7 +10,11 @@
 # - ends: 両端。順は OCCTO の順方向(5 分値が正のときの向き。北海道→東北・東北→東京・東京→中部・関西→中国・
 #   関西→四国・中国→四国・中国→九州。data/reference/interconnections.yaml の注記と同じ)。area と name は OCCTO の地内基幹の線路の端の名前(向きの欄をそろえたもの)で、位置は線路の一覧の点。
 #   線路の端に無い所だけ lon・lat と ref(OSM の要素の番号)を書く。
-# - 線は両端を結ぶ直線(模式)。経路の形はモデルに無い。
+# - via: 両端の間に通る変換所(下の converters の名前)。線の形は、端 → via → 端 の区間ごとに OSM の送電線・ケーブルを
+#   たどって当てる(scripts/build_occto_line_shapes.py・match_occto_osm.py、台帳 data/reference/occto_line_shapes.json)。
+# - osm: 形を探すときの手がかり。kv = 通ってよい電圧(直流は OSM の電圧の値。北本・新北本 250 kV、飛騨信濃 200 kV、
+#   阿南紀北は OSM で 500 kV)、names = OSM の線の名前(この名前の線を近いとみなす)。
+#   形が見つからない区間は、その区間の両端を結ぶ点線(模式)。
 # - src: 両端の出典。
 #   [1] OCCTO 運用容量検討会 2026 年度 第 2 回 資料 3(運用容量の算出の諸元)
 #       https://www.occto.or.jp/assets/iinkai/unyouyouryou/26002/2026_2_3.pdf
@@ -19,7 +23,7 @@
 #   [3] OCCTO「中国九州間連系設備に係る広域系統整備計画 基本要件及び受益者の範囲」(2024-04)
 #       https://www.occto.or.jp/assets/kouikikeitou/seibikeikaku/nakanishi-erea/files/240403_kihounyouken.pdf
 #
-# 中部北陸間(南福光連系所の BTB)は、中部と北陸の線路の端が同じ南福光の点なので描かない。
+# 中部北陸間(南福光連系所の BTB)は、中部と北陸の線路の端が同じ南福光の点なので線は描かず、変換所の点だけを置く。
 # data/reference/interconnections.yaml(モデルの連系線の台帳)の本四連系線の中国側の端は「東山口変電所」だが、
 # [2] では東岡山変電所。ここでは [2] に従う(モデルの台帳の直しは別に扱う)。
 
@@ -28,88 +32,144 @@ links:
     name: 北海道本州間連系設備(函館変換所〜上北変換所)
     kind: 直流
     ends: [{area: hokkaido, name: 函館変換所}, {area: tohoku, name: 上北}]
-    src: "[1] p.4 北海道本州間連系設備周辺の電力系統(上北変換所は上北変電所の隣)"
+    src: "[1] p.4 北海道本州間連系設備周辺の電力系統(上北変換所は上北変電所の北東 3 km)"
+    via: [上北変換所]
+    osm: {kv: [250, 275], names: [北本直流幹線]}
 
   - ic: 北海道・本州間電力連系設備
     name: 新北海道本州間連系設備(北斗変換所〜今別変換所)
     kind: 直流
     ends: [{area: hokkaido, name: 北斗変換所}, {area: tohoku, name: 今別変換所, lon: 140.5139, lat: 41.1344, ref: osm:way/719310375}]
     src: "[1] p.4。今別変換所の位置は OSM(北海道電力の変換所)"
+    via: []
+    osm: {kv: [250], names: [北斗今別直流幹線]}
 
   - ic: 相馬双葉幹線
     name: 相馬双葉(福島山)幹線(南相馬変電所〜新いわき開閉所)
     kind: 交流 500 kV
     ends: [{area: tohoku, name: 南相馬}, {area: tokyo, name: 新いわき}]
     src: "[1] p.13 相馬双葉幹線接続変更後の系統図(2026-06 の変更の前は南いわき開閉所につながっていた、p.12)"
+    via: []
+    osm: {kv: [500], names: [相馬双葉]}
 
   - ic: 相馬双葉幹線
     name: いわき幹線(南相馬変電所〜新福島変電所)
     kind: 交流 275 kV
     ends: [{area: tohoku, name: 南相馬}, {area: tokyo, name: 新福島}]
     src: "[1] p.13(いわき幹線も【連系線】。東北側は南相馬の 275 kV)"
+    via: []
+    osm: {kv: [275], names: [いわき幹線]}
 
   - ic: 周波数変換設備
     name: 飛騨信濃周波数変換設備(新信濃変電所〜飛騨変換所)
     kind: 直流
     ends: [{area: tokyo, name: 新信濃}, {area: chubu, name: 飛騨}]
     src: "[1] p.40 FC 周辺の電力系統"
+    via: []
+    osm: {kv: [200], names: [飛騨信濃直流幹線]}
 
   - ic: 周波数変換設備
     name: 新信濃 FC(新信濃〜中信)
     kind: 周波数変換
     ends: [{area: tokyo, name: 新信濃}, {area: chubu, name: 中信}]
     src: "[1] p.40(60 Hz 側は中信の方へ)"
+    via: []
+    osm: {kv: [275], names: []}
 
   - ic: 周波数変換設備
     name: 佐久間 FC(新富士〜佐久間)
     kind: 周波数変換
     ends: [{area: tokyo, name: 新富士}, {area: chubu, name: 佐久間}]
     src: "[1] p.40(50 Hz 側は新富士へ)"
+    via: [佐久間周波数変換所]
+    osm: {kv: [275], names: [佐久間東幹線, 佐久間周波数変換所連絡線]}
 
   - ic: 周波数変換設備
     name: 東清水 FC(新富士〜東清水)
     kind: 周波数変換
     ends: [{area: tokyo, name: 新富士}, {area: chubu, name: 東清水}]
     src: "[1] p.40(50 Hz 側は駿河を通って新富士へ)"
+    via: []
+    osm: {kv: [275], names: [東清水線, 佐久間東幹線]}
 
   - ic: null
     name: 三重東近江線(三重開閉所〜東近江開閉所)
     kind: 交流 500 kV
     ends: [{area: chubu, name: 三重}, {area: kansai, name: 東近江開閉所}]
     src: "線路の名前(中部関西間連系線)。5 分値は中部フェンス・関西フェンスの合成だけ"
+    via: []
+    osm: {kv: [500], names: [三重東近江]}
 
   - ic: null
     name: 越前嶺南線(越前変電所〜嶺南変電所)
     kind: 交流 500 kV
     ends: [{area: hokuriku, name: 越前変電所}, {area: kansai, name: 嶺南変電所}]
     src: "線路の名前(北陸関西間連系線)。5 分値は北陸フェンス・関西フェンスの合成だけ"
+    via: []
+    osm: {kv: [500], names: [越前嶺南]}
 
   - ic: 西播東岡山線・山崎智頭線
     name: 西播東岡山線(西播変電所〜東岡山変電所)
     kind: 交流 500 kV
     ends: [{area: kansai, name: 西播変電所}, {area: chugoku, name: 東岡山変電所}]
     src: "[1] p.112 関西中国間連系線の系統図"
+    via: []
+    osm: {kv: [500], names: [西播東岡山]}
 
   - ic: 西播東岡山線・山崎智頭線
     name: 山崎智頭線(山崎開閉所〜智頭変電所)
     kind: 交流 500 kV
     ends: [{area: kansai, name: 山崎開閉所}, {area: chugoku, name: 智頭変電所}]
     src: "[1] p.112"
+    via: []
+    osm: {kv: [500], names: [山崎智頭]}
 
   - ic: 阿南紀北直流幹線
     name: 阿南紀北直流幹線(紀北変換所〜阿南変換所)
     kind: 直流
     ends: [{area: kansai, name: 紀北変換所}, {area: shikoku, name: 阿南変換所}]
     src: "[2] 参考: 阿南紀北直流幹線(概要)・[1] p.128"
+    via: []
+    osm: {kv: [500, 250], names: [阿南紀北直流幹線]}
 
   - ic: 本四連系線
     name: 本四連系線(東岡山変電所〜讃岐変電所)
     kind: 交流 500 kV
     ends: [{area: chugoku, name: 東岡山変電所}, {area: shikoku, name: 讃岐変電所}]
     src: "[2](東岡山変電所(中国電力ネットワーク)・讃岐変電所(四国電力送配電))"
+    via: []
+    osm: {kv: [500], names: [本四]}
 
   - ic: 関門連系線
     name: 関門連系線(新山口変電所〜北九州変電所)
     kind: 交流 500 kV
     ends: [{area: chugoku, name: 新山口変電所}, {area: kyushu, name: 北九州変電所}]
     src: "[3] 図「北九州 既設関門連系線 新山口」"
+    via: []
+    osm: {kv: [500], names: [関門連系線]}
+
+# 変換所(直流と交流の変換・周波数の変換)。地図に点を打つ。位置は OSM の要素の中心(ref)。
+# links = この変換所を通る上の連系線の名前(線の形の区間の切れ目にもなる)。
+converters:
+  - {name: 函館変換所, kind: 直流, lon: 140.6639, lat: 41.9319, ref: "osm:way/262597730",
+     note: "北海道本州間連系設備の北海道側(電源開発、七飯町)。OSM では名前なしの power=converter"}
+  - {name: 上北変換所, kind: 直流, lon: 141.1972, lat: 40.8017, ref: "osm:way/714627766",
+     note: "北海道本州間連系設備の本州側(電源開発、東北町)"}
+  - {name: 北斗変換所, kind: 直流, lon: 140.5850, lat: 41.9163, ref: "osm:way/801582512",
+     note: "新北海道本州間連系設備の北海道側(北海道電力ネットワーク、北斗市)"}
+  - {name: 今別変換所, kind: 直流, lon: 140.5140, lat: 41.1337, ref: "osm:way/719310375",
+     note: "新北海道本州間連系設備の本州側(北海道電力、今別町)"}
+  - {name: 新信濃変電所, kind: 周波数変換, lon: 137.8847, lat: 36.1348, ref: "osm:node/3217941571",
+     note: "新信濃 FC と飛騨信濃の直流の変換器(東京電力パワーグリッド、朝日村)。点は線路の一覧の新信濃の端(OSM の構内の開閉器が 60 m 以内)"}
+  - {name: 飛騨変換所, kind: 直流, lon: 137.0596, lat: 36.0705, ref: "osm:way/975217734",
+     note: "飛騨信濃周波数変換設備の 60 Hz 側(中部電力パワーグリッド、高山市)"}
+  - {name: 佐久間周波数変換所, kind: 周波数変換, lon: 137.7989, lat: 35.0830, ref: "osm:way/168248707",
+     note: "佐久間 FC(電源開発、浜松市天竜区)。佐久間発電所の南西 1 km"}
+  - {name: 東清水変電所, kind: 周波数変換, lon: 138.5000, lat: 35.0582, ref: "osm:way/388978529",
+     note: "東清水 FC(中部電力パワーグリッド、静岡市清水区)。OSM の名前は「周波数変換設備」"}
+  - {name: 南福光連系所, kind: BTB, lon: 136.8253, lat: 36.4994, ref: "osm:way/169249243",
+     note: "中部北陸間連系設備の BTB(交流→直流→交流で結ぶ、南砺市)。線路の端は中部・北陸とも南福光なので線は描かない"}
+  - {name: 紀北変換所, kind: 直流, lon: 135.5022, lat: 34.2143, ref: "osm:way/109850439",
+     note: "阿南紀北直流幹線の関西側(関西電力送配電、かつらぎ町)"}
+  - {name: 阿南変換所, kind: 直流, lon: 134.6367, lat: 33.8277, ref: "osm:way/722673849",
+     note: "阿南紀北直流幹線の四国側(電源開発、阿南市)。OSM の名前は「阿南周波数変換所」"}

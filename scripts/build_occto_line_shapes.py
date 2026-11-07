@@ -2,6 +2,8 @@
 
 点線は 2 種類ある。両端の変電所を結んだだけの線路(点線だけの線路)と、モデルの線の切れ目をつないだ点線。
 どちらも「モデルの線と照合できなかった」だけで、送電線が無いという意味ではない(2026-11-07 オーナー指摘)。
+連系線(config/occto_interconnections.yaml)も、端 → 変換所 → 端 の区間ごとに OSM の線(直流の線・海底ケーブルを含む)の
+形を当てる(2026-11-08 オーナー「直流や変換所や連系線は線と点が無いのか」「地形に合っていないから変に見える」)。
 
 手順:
 1. 形を当てる前の線路の一覧から対象を出す:
@@ -40,8 +42,13 @@ def targets(lines_p: str, out_p: str):
             out.append({"id": x["id"], "kind": "line", "n": x["n"], "kv": x["kv"], "s": [x["j"][0][0], x["j"][-1][-1]]})
         elif x["p"]:
             out += [{"id": x["id"], "kind": "gap", "gap": k, "n": x["n"], "kv": x["kv"], "s": seg} for k, seg in enumerate(x["j"])]
+    for ic in d.get("ics") or []:      # 連系線の区間(電圧と OSM の線の名前は台帳の osm)
+        kvs = ic["osm"]["kv"] or [0]
+        out += [{"id": "ic|" + ic["n"], "kind": "ic", "gap": k, "n": ic["n"], "kv": kvs[0], "kvs": kvs,
+                 "names": ic["osm"]["names"], "s": [a, b]} for k, (a, b) in enumerate(zip(ic["w"], ic["w"][1:]))]
     Path(out_p).write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
-    print(f"対象 {len(out)}(点線だけの線路 {sum(t['kind'] == 'line' for t in out)}・切れ目 {sum(t['kind'] == 'gap' for t in out)})")
+    n = lambda k: sum(t["kind"] == k for t in out)
+    print(f"対象 {len(out)}(点線だけの線路 {n('line')}・切れ目 {n('gap')}・連系線の区間 {n('ic')})")
 
 
 def remaining(targets_p: str, osm_p: str, out_p: str):
@@ -79,7 +86,8 @@ def merge(targets_p: str, osm_p: str, gsi_p: str, out_p: str = str(OUT)):
            "items": items}
     Path(out_p).write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     n = lambda s, k: sum(1 for i in items if i["src"] == s and i["kind"] == k)
-    print(f"{out_p}: 点線だけの線路 OSM {n('osm', 'line')}・地理院 {n('gsi', 'line')}、切れ目 OSM {n('osm', 'gap')}・地理院 {n('gsi', 'gap')}")
+    print(f"{out_p}: 点線だけの線路 OSM {n('osm', 'line')}・地理院 {n('gsi', 'line')}、切れ目 OSM {n('osm', 'gap')}・地理院 {n('gsi', 'gap')}、"
+          f"連系線の区間 OSM {n('osm', 'ic')}")
 
 
 if __name__ == "__main__":
