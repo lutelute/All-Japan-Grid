@@ -1,0 +1,319 @@
+{
+ "hokkaido": {
+  "before": {
+   "buses": 831,
+   "lines": 858,
+   "trafos": 69,
+   "junction_trafos": 0,
+   "implicit_stepdown": 0,
+   "junction_cuts": 0,
+   "components": 22,
+   "largest": 799,
+   "outside_largest": 32,
+   "singletons": 12
+  },
+  "after": {
+   "buses": 831,
+   "lines": 858,
+   "trafos": 69,
+   "junction_trafos": 0,
+   "implicit_stepdown": 0,
+   "junction_cuts": 0,
+   "components": 22,
+   "largest": 799,
+   "outside_largest": 32,
+   "singletons": 12
+  },
+  "ledger": []
+ },
+ "east": {
+  "before": {
+   "buses": 6245,
+   "lines": 6443,
+   "trafos": 676,
+   "junction_trafos": 24,
+   "implicit_stepdown": 28,
+   "junction_cuts": 0,
+   "components": 237,
+   "largest": 5809,
+   "outside_largest": 436,
+   "singletons": 100
+  },
+  "after": {
+   "buses": 6245,
+   "lines": 6443,
+   "trafos": 670,
+   "junction_trafos": 18,
+   "implicit_stepdown": 28,
+   "junction_cuts": 6,
+   "components": 239,
+   "largest": 5804,
+   "outside_largest": 441,
+   "singletons": 100
+  },
+  "ledger": [
+   {
+    "no": 6,
+    "lat": 35.80016,
+    "lon": 139.31584,
+    "kvs": [
+     66.0,
+     275.0
+    ],
+    "n_line_ends": 6,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 14,
+    "lat": 35.80426,
+    "lon": 139.62271,
+    "kvs": [
+     66.0,
+     154.0
+    ],
+    "n_line_ends": 7,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 16,
+    "lat": 36.2743,
+    "lon": 139.6037,
+    "kvs": [
+     66.0,
+     154.0
+    ],
+    "n_line_ends": 6,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 25,
+    "lat": 36.52294,
+    "lon": 138.6203,
+    "kvs": [
+     66.0,
+     77.0
+    ],
+    "n_line_ends": 2,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 26,
+    "lat": 36.52332,
+    "lon": 138.61718,
+    "kvs": [
+     66.0,
+     77.0
+    ],
+    "n_line_ends": 5,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 19,
+    "lat": 37.33051,
+    "lon": 140.34098,
+    "kvs": [
+     66.0,
+     154.0
+    ],
+    "n_line_ends": 4,
+    "moved": [],
+    "created": []
+   }
+  ]
+ },
+ "west": {
+  "before": {
+   "buses": 7983,
+   "lines": 8116,
+   "trafos": 997,
+   "junction_trafos": 71,
+   "implicit_stepdown": 39,
+   "junction_cuts": 0,
+   "components": 295,
+   "largest": 7467,
+   "outside_largest": 516,
+   "singletons": 139
+  },
+  "after": {
+   "buses": 7983,
+   "lines": 8116,
+   "trafos": 990,
+   "junction_trafos": 64,
+   "implicit_stepdown": 38,
+   "junction_cuts": 7,
+   "components": 295,
+   "largest": 7467,
+   "outside_largest": 516,
+   "singletons": 139
+  },
+  "ledger": [
+   {
+    "no": 7,
+    "lat": 32.45961,
+    "lon": 130.70809,
+    "kvs": [
+     66.0,
+     220.0
+    ],
+    "n_line_ends": 4,
+    "moved": [
+     {
+      "line": 6396,
+      "name": "八代変電所~頭地開閉所線",
+      "kv": 0.0,
+      "from_kv": 220.0,
+      "to_kv": 66.0
+     },
+     {
+      "line": 6397,
+      "name": "八代変電所~頭地開閉所線",
+      "kv": 66.0,
+      "from_kv": 220.0,
+      "to_kv": 66.0
+     }
+    ],
+    "created": [
+     {
+      "bus": 7943,
+      "kv": 66.0
+     }
+    ]
+   },
+   {
+    "no": 21,
+    "lat": 34.67038,
+    "lon": 135.08278,
+    "kvs": [
+     66.0,
+     77.0
+    ],
+    "n_line_ends": 4,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 1,
+    "lat": 34.67553,
+    "lon": 138.15922,
+    "kvs": [
+     77.0,
+     500.0
+    ],
+    "n_line_ends": 4,
+    "moved": [
+     {
+      "line": 1637,
+      "name": "中部送電線_711",
+      "kv": 0.0,
+      "from_kv": 500.0,
+      "to_kv": 77.0
+     }
+    ],
+    "created": []
+   },
+   {
+    "no": 2,
+    "lat": 34.87901,
+    "lon": 137.46841,
+    "kvs": [
+     77.0,
+     275.0
+    ],
+    "n_line_ends": 5,
+    "moved": [
+     {
+      "line": 268,
+      "name": "西日本電線新城線",
+      "kv": 0.0,
+      "from_kv": 275.0,
+      "to_kv": 77.0
+     },
+     {
+      "line": 270,
+      "name": "西日本電線新城線",
+      "kv": 0.0,
+      "from_kv": 275.0,
+      "to_kv": 77.0
+     }
+    ],
+    "created": []
+   },
+   {
+    "no": 11,
+    "lat": 35.14915,
+    "lon": 137.34435,
+    "kvs": [
+     77.0,
+     154.0
+    ],
+    "n_line_ends": 4,
+    "moved": [
+     {
+      "line": 479,
+      "name": "豊田市変電所~愛知変電所線",
+      "kv": 0.0,
+      "from_kv": 154.0,
+      "to_kv": 77.0
+     }
+    ],
+    "created": []
+   },
+   {
+    "no": 5,
+    "lat": 35.67311,
+    "lon": 136.0892,
+    "kvs": [
+     154.0,
+     275.0
+    ],
+    "n_line_ends": 2,
+    "moved": [],
+    "created": []
+   },
+   {
+    "no": 18,
+    "lat": 36.48971,
+    "lon": 136.54366,
+    "kvs": [
+     66.0,
+     154.0
+    ],
+    "n_line_ends": 4,
+    "moved": [],
+    "created": []
+   }
+  ]
+ },
+ "okinawa": {
+  "before": {
+   "buses": 100,
+   "lines": 96,
+   "trafos": 19,
+   "junction_trafos": 1,
+   "implicit_stepdown": 0,
+   "junction_cuts": 0,
+   "components": 7,
+   "largest": 94,
+   "outside_largest": 6,
+   "singletons": 6
+  },
+  "after": {
+   "buses": 100,
+   "lines": 96,
+   "trafos": 19,
+   "junction_trafos": 1,
+   "implicit_stepdown": 0,
+   "junction_cuts": 0,
+   "components": 7,
+   "largest": 94,
+   "outside_largest": 6,
+   "singletons": 6
+  },
+  "ledger": []
+ }
+}
