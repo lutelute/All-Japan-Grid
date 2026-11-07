@@ -110,6 +110,14 @@ _PICK = """
 """
 
 
+def _n_features(kind: str, tier: str) -> str:
+    """地図のデータ(docs/data/map/<kind>_<tier>.geojson)の件数を、画面と同じ桁区切りで返す。
+    正典が変わるたびに数を書き直さなくてよいように、固定の数ではなくデータと比べる(#58 で 19,909 → 17,391)。"""
+    import json
+    with open(DOCS / "data" / "map" / f"{kind}_{tier}.geojson", encoding="utf-8") as fh:
+        return f"{len(json.load(fh)['features']):,}"
+
+
 def _hover(page, xy):
     page.mouse.move(xy["x"] - 40, xy["y"] - 40)
     page.mouse.move(xy["x"], xy["y"], steps=4)
@@ -124,7 +132,8 @@ def test_draws_and_counts(browser, site, src):
     status = page.inner_text("#status")
     page.close()
     assert n > 100, n
-    assert "変電所 830" in status and "送電線 1,983" in status, status   # 275 kV 以上(Leaflet 版と同じ件数)
+    # 275 kV 以上(Leaflet 版と同じ件数 = 地図のデータの件数)
+    assert f"変電所 {_n_features('subs', '275kv')}" in status and f"送電線 {_n_features('lines', '275kv')}" in status, status
     assert not errors, errors
 
 
@@ -149,6 +158,6 @@ def test_hover_click_and_language(browser, site):
 
     page.click('#seg-kv button[data-v="0"]')
     page.wait_for_timeout(300)
-    assert "19,909 lines" in page.inner_text("#status")
+    assert f"{_n_features('lines', 'all')} lines" in page.inner_text("#status")
     page.close()
     assert not errors, errors
