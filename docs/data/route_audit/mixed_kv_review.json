@@ -1,5 +1,5 @@
 {
- "what": "正典で変電所でない接続点に電圧の違う枝がつながる所(作った枝の関わらない 26 か所)を、国土地理院の航空写真(全国最新写真、ズーム 17)で確かめた判定",
+ "what": "正典で変電所でない点の座標に電圧の違う枝が集まる所(作った枝の関わらない 26 か所)を、国土地理院の航空写真(全国最新写真、ズーム 17)で確かめた判定",
  "judgement": {
   "misconnect": "誤接続(切る候補)",
   "substation_missing": "変電所が OSM に無いだけの可能性",
@@ -23,7 +23,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。第二浜岡幹線 500 kV に 77 kV の線をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.67553_138.15922.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.67553_138.15922.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.6755:138.1592:500",
+     500.0,
+     3
+    ],
+    [
+     "chubu_jct_34.6755:138.1592:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 2,
@@ -41,7 +55,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.87901_137.46841.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.87901_137.46841.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.879:137.4684:275",
+     275.0,
+     4
+    ],
+    [
+     "chubu_jct_34.879:137.4684:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 3,
@@ -59,7 +87,16 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.05844_134.74602.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.05844_134.74602.png",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_35.0584:134.746:66",
+     275.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 4,
@@ -75,7 +112,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.06841_137.06690.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.06841_137.06690.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.0684:137.0669:77",
+     77.0,
+     1
+    ],
+    [
+     "chubu_jct_35.0684:137.0669:275",
+     275.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 5,
@@ -92,7 +143,26 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.67311_136.08920.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.67311_136.08920.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.6731:136.0892:154",
+     154.0,
+     1
+    ],
+    [
+     "hokuriku_jct_35.6731:136.0892:275",
+     275.0,
+     1
+    ],
+    [
+     "kansai_jct_35.6731:136.0892:154",
+     154.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 6,
@@ -111,7 +181,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80016_139.31584.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80016_139.31584.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.8002:139.3158:275",
+     275.0,
+     3
+    ],
+    [
+     "tokyo_jct_35.8002:139.3158:66",
+     66.0,
+     3
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 7,
@@ -128,7 +212,16 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kyushu_32.45961_130.70809.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kyushu_32.45961_130.70809.png",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kyushu_jct_32.4596:130.7081:220",
+     220.0,
+     4
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 8,
@@ -146,7 +239,21 @@
    ],
    "judgement": "substation_missing",
    "why": "すぐ近くに変電所か開閉所らしい施設がある。OSM に変電所が無いだけの可能性",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.15846_136.27198.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.15846_136.27198.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.1585:136.272:154",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_34.1585:136.272:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 9,
@@ -166,7 +273,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.83695_136.51826.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.83695_136.51826.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.8369:136.5183:77",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_34.8369:136.5183:77",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 10,
@@ -182,7 +303,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.10387_136.86075.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.10387_136.86075.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1039:136.8607:77",
+     77.0,
+     1
+    ],
+    [
+     "chubu_jct_35.1039:136.8607:154",
+     154.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 11,
@@ -201,7 +336,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.14915_137.34435.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.14915_137.34435.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1492:137.3444:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_35.1492:137.3444:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 12,
@@ -220,7 +369,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.23307_136.75530.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.23307_136.75530.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.2331:136.7553:66",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_35.2331:136.7553:66",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 13,
@@ -238,7 +401,16 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.46406_137.01427.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.46406_137.01427.png",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.4641:137.0143:77",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 14,
@@ -258,7 +430,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80426_139.62271.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80426_139.62271.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.8043:139.6227:66",
+     66.0,
+     4
+    ],
+    [
+     "tokyo_jct_35.8043:139.6227:154",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 15,
@@ -274,7 +460,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.82604_139.78193.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.82604_139.78193.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.826:139.7819:66",
+     66.0,
+     1
+    ],
+    [
+     "tokyo_jct_35.826:139.7819:154",
+     154.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 16,
@@ -292,7 +492,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.27430_139.60370.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.27430_139.60370.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.2743:139.6037:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_36.2743:139.6037:154",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 17,
@@ -310,7 +524,21 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.31568_139.33113.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.31568_139.33113.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3157:139.3311:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_36.3157:139.3311:154",
+     154.0,
+     3
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 18,
@@ -329,7 +557,31 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/hokuriku_36.48971_136.54366.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/hokuriku_36.48971_136.54366.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.4897:136.5437:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_36.4897:136.5437:66",
+     66.0,
+     1
+    ],
+    [
+     "hokuriku_jct_36.4897:136.5437:154",
+     154.0,
+     3
+    ],
+    [
+     "hokuriku_jct_36.4897:136.5437:66",
+     66.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 19,
@@ -347,7 +599,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tohoku_37.33051_140.34098.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tohoku_37.33051_140.34098.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tohoku_jct_37.3305:140.341:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_37.3305:140.341:154",
+     154.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 20,
@@ -366,7 +632,21 @@
    ],
    "judgement": "substation_missing",
    "why": "すぐ近くに変電所か開閉所らしい施設がある。OSM に変電所が無いだけの可能性",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chugoku_34.50338_133.53940.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chugoku_34.50338_133.53940.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.5034:133.5394:110",
+     110.0,
+     3
+    ],
+    [
+     "chugoku_jct_34.5034:133.5394:66",
+     66.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 21,
@@ -384,7 +664,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.67038_135.08278.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.67038_135.08278.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.6704:135.0828:77",
+     77.0,
+     3
+    ],
+    [
+     "kansai_jct_34.6704:135.0828:66",
+     66.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 22,
@@ -401,7 +695,16 @@
    ],
    "judgement": "unclear",
    "why": "市街地や分岐で、写真だけでは決められない",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.85880_135.64134.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.85880_135.64134.png",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.8588:135.6413:77",
+     77.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 23,
@@ -419,7 +722,16 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.93884_137.15852.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.93884_137.15852.png",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.9388:137.1585:77",
+     77.0,
+     3
+    ]
+   ],
+   "powerflow": "43a"
   },
   {
    "no": 24,
@@ -436,7 +748,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を富士川のそばでつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.20005_138.56187.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.20005_138.56187.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.2:138.5619:66",
+     66.0,
+     1
+    ],
+    [
+     "chubu_jct_35.2:138.5619:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "none"
   },
   {
    "no": 25,
@@ -453,7 +779,21 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を軽井沢でつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52294_138.62030.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52294_138.62030.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.5229:138.6203:66",
+     66.0,
+     1
+    ],
+    [
+     "chubu_jct_36.5229:138.6203:77",
+     77.0,
+     1
+    ]
+   ],
+   "powerflow": "colocated"
   },
   {
    "no": 26,
@@ -471,7 +811,25 @@
    ],
    "judgement": "misconnect",
    "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を軽井沢でつないでいる",
-   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52332_138.61718.png"
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52332_138.61718.png",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.5233:138.6172:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_36.5233:138.6172:77",
+     77.0,
+     3
+    ]
+   ],
+   "powerflow": "colocated"
   }
- ]
+ ],
+ "fields": {
+  "canon": "正典での形(split=電圧ごとに別の点で、正典の中ではつながっていない / one=1 つの点に電圧の違う枝)",
+  "powerflow": "潮流計算の網でのつながり(colocated=同じ座標の変圧器 / 43a=介入#43a の変圧器 / none=変圧器なし)"
+ }
 }
