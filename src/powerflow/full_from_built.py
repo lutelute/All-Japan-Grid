@@ -282,7 +282,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                      territory=True, dedup_nodes=True, site_trafos=False,
                      deenergize_unbuilt=DEENERGIZE_UNBUILT_DEFAULT, synthetic_ties_live=False,
                      btb_split=True, freq_fix=True, implicit_stepdown=None,
-                     cap_calib=None, observed_trafos=None, published_trafos=None, pair_capacity=None):
+                     cap_calib=None, observed_trafos=None, published_trafos=None, pair_capacity=None,
+                     junction_cuts=None):
     """Return (net, bus_of_nodeidx, stats). One bus per node, one line per edge,
     transformers between co-located voltage levels. No reduction.
 
@@ -404,6 +405,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     n_tie_nis = 0
     nis_rules = _load_not_in_service() if deenergize_unbuilt else []
     seen_edges = {}         # (min bus, max bus, kv, path署名) -> line idx(B案 エッジ側)
+    line_ends = {}          # 線 -> (from 側の座標, to 側の座標, 枝の kV, 名前)。介入#57 が使う
     for e in edges:
         ka, kb = _k5(*e["a"]), _k5(*e["b"])
         ca, cb = coord_nodes.get(ka), coord_nodes.get(kb)
@@ -485,6 +487,7 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
             n_tie_nis += 1
         if dedup_nodes:
             seen_edges[esig] = li
+        line_ends[int(li)] = (ka, kb, ekv, str(e.get("name") or ""))
         if nis_rules:
             enm = str(e.get("name") or "")
             for rule in nis_rules:
@@ -501,6 +504,23 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         geom_out[(a5, b5)] = coords
         geom_out[(b5, a5)] = list(reversed(coords))
 
+    # ---- 介入#57(2026-11-07): 航空写真で誤接続と分かった分岐点(data/reference/junction_misconnects.json)
+    #      では、線の端を自分の電圧のバスへ付け替え、下の「同じ座標の変圧器」を張らない(線とバスの電圧が
+    #      そろうので #43a も足さない)。ロジック= src/powerflow/junction_cuts.py ----
+    from src.powerflow.junction_cuts import (JUNCTION_CUTS_DEFAULT as _JC_DEFAULT,
+                                             apply_junction_cuts as _apply_jc, load_cut_points as _load_jc)
+    if junction_cuts is None:
+        junction_cuts = _JC_DEFAULT
+    jc_ledger, jc_applied = [], set()
+    if junction_cuts:
+        _cps = _load_jc()
+        _cb = {c: [bus_of[j] for j in idxs] for c, idxs in coord_nodes.items() if c in _cps}
+        jc_ledger, jc_applied = _apply_jc(net, _cps, _cb, line_ends)
+        if jc_ledger:
+            n_mv = sum(len(r["moved"]) for r in jc_ledger)
+            print(f"  介入#57 junction-cuts: 分岐点 {len(jc_ledger)} か所で変圧器を張らない"
+                  f"(線の端の付け替え {n_mv})")
+
     # ---- transformers between co-located voltage levels (a real substation
     #      that steps voltage). For each site, chain adjacent distinct-kv buses
     #      (high->low) with a 2-winding transformer sized to the lower side. ----
@@ -509,6 +529,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
     for coord, idxs in coord_nodes.items():
         if len(idxs) < 2:
             continue
+        if coord in jc_applied:
+            continue        # 介入#57: 写真で誤接続と分かった分岐点
         # distinct voltage levels at this site -> representative bus each
         by_kv = {}
         for j in idxs:
@@ -748,6 +770,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
                          "n_implicit_stepdown": n_stepdown,
                          "implicit_stepdown_ledger": sd["implicit_stepdown"],
                          "unknown_kv_reclass_ledger": sd.get("reclass", []),
+                         "n_junction_cuts": len(jc_ledger),
+                         "junction_cuts_ledger": jc_ledger,
                          "region_reattribution": rstats}
 
 
@@ -1843,6 +1867,10 @@ def main():
                          "(data/reference/not_in_service_lines.json・出典必須)を"
                          "in_service=Falseで建てる。初例=大間幹線(運転開始未定)。"
                          "2026-10-21 から既定ON(--no-deenergize-unbuilt で旧挙動)")
+    ap.add_argument("--junction-cuts", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#57 航空写真で誤接続と分かった分岐点(data/reference/junction_misconnects.json の "
+                         "adopt=true)に変圧器を張らない(2026-11-07)。既定=JUNCTION_CUTS_DEFAULT(True)。"
+                         "環境変数 AJG_JUNCTION_CUTS=1/0 でも指定可")
     ap.add_argument("--implicit-stepdown", action=argparse.BooleanOptionalAction,
                     default=IMPLICIT_STEPDOWN_DEFAULT,
                     help="介入#43a 異階級直結線の暗黙降圧(2026-09-02): 線 kv の端点に同階級"
@@ -1896,7 +1924,7 @@ def main():
             btb_split=args.btb_split, freq_fix=args.freq_fix_reattr,
             implicit_stepdown=args.implicit_stepdown, cap_calib=args.cap_calib,
             observed_trafos=args.observed_trafos, published_trafos=args.published_trafos,
-            pair_capacity=args.pair_capacity)
+            pair_capacity=args.pair_capacity, junction_cuts=args.junction_cuts)
         if bstats.get("cap_calib"):
             from src.powerflow.line_capacity import describe as _cap_describe
             print("  " + _cap_describe(bstats.get("cap_calib_ledger") or {}))

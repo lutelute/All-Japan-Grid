@@ -483,6 +483,9 @@ def main():
                     default=None,
                     help="介入#43a 異階級直結線の暗黙降圧(2026-09-02)。省略時=ビルダー既定"
                          "(run_full_powerflow_from_db.IMPLICIT_STEPDOWN_DEFAULT)")
+    ap.add_argument("--junction-cuts", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#57 航空写真で誤接続と分かった分岐点に変圧器を張らない(2026-11-07)。"
+                         "省略時=ビルダー既定(junction_cuts.JUNCTION_CUTS_DEFAULT)")
     ap.add_argument("--lv-aggregate", type=float, default=None, metavar="R_KM",
                     help="介入#43b 降圧点無し66/77kV網の帳簿付き縮約(≤R km)。0=無効。"
                          "省略時=ビルダー既定(LV_AGGREGATE_DEFAULT_KM)")
@@ -563,7 +566,7 @@ def main():
             dedup_nodes=args.dedup_nodes, site_trafos=args.site_trafos,
             deenergize_unbuilt=args.deenergize_unbuilt,
             freq_fix=args.freq_fix_reattr,
-            implicit_stepdown=args.implicit_stepdown)
+            implicit_stepdown=args.implicit_stepdown, junction_cuts=args.junction_cuts)
         if bstats.get("n_implicit_stepdown"):
             print(f"  介入#43a implicit-stepdown: {bstats['n_implicit_stepdown']}サイト"
                   f"(銘板{sum(1 for r in bstats['implicit_stepdown_ledger'] if r['capacity']=='nameplate')})")
