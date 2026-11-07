@@ -35,7 +35,8 @@ cp "$SRC/docs/data/realtime/latest.json" "$PUB/docs/data/realtime/latest.json"
 for f in "$SRC"/docs/data/flow_map/flows_now_*.geojson "$SRC"/docs/data/flow_map/gens_now_*.geojson \
          "$SRC/docs/data/flow_map/now_meta.json" \
          "$SRC/docs/data/flow_map/obs_compare.json" "$SRC/docs/data/flow_map/obs_local.json" \
-         "$SRC/docs/data/flow_map/pulse.json" "$SRC/docs/data/flow_map/pulse.png"; do
+         "$SRC/docs/data/flow_map/pulse.json" "$SRC/docs/data/flow_map/pulse.png" \
+         "$SRC/docs/data/flow_map/occto_today.json"; do
   [ -f "$f" ] && cp "$f" "$PUB/docs/data/flow_map/$(basename "$f")"
 done
 mkdir -p "$PUB/docs/data/flow_map/days"
@@ -44,8 +45,9 @@ cp "$SRC"/docs/data/flow_map/days/*.json "$PUB/docs/data/flow_map/days/"
 git -C "$PUB" add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
     docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json docs/data/flow_map/days/
 # pulse は export_pulse.py が失敗した回には無いことがある(無ければ足さない)。観測の 2 つは新しい
-# 潮流実績が公表された週だけ変わる(変わらない回は差分が出ない)
-for f in pulse.json pulse.png obs_compare.json obs_local.json; do
+# 潮流実績が公表された週だけ変わる(変わらない回は差分が出ない)。occto_today.json は OCCTO の当日の
+# 潮流実績(export_occto_today.py、取れなかった回は前のまま)
+for f in pulse.json pulse.png obs_compare.json obs_local.json occto_today.json; do
   if [ -f "$PUB/docs/data/flow_map/$f" ]; then git -C "$PUB" add "docs/data/flow_map/$f"; fi
 done
 if git -C "$PUB" diff --cached --quiet; then

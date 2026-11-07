@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=40"/>
     <link rel="stylesheet" href="./css/map_ui.css?v=4"/>
+    <link rel="stylesheet" href="./css/osm_routes.css?v=3"/>
 </head>
 <body>
 
@@ -19,6 +20,7 @@
         <a href="./flow_map.html">潮流</a>
         <a href="./subsld.html">SubSLD</a>
         <a href="./editor.html">接続編集</a>
+        <a href="./site_plan.html">接続の計画</a>
         <a href="./download.html">ダウンロード</a>
         <a href="./map_gl.html">MapLibre 試作</a>
     </div>
@@ -553,6 +555,32 @@
             </div>
         </div>
 
+        <!-- 2026-11-07: OSM の送電線を路線にまとめた層と鉄塔(js/osm_routes.js)。正典とは別の観測の層なので既定は出さない。
+             線をクリックすると、その路線と鉄塔だけを出す -->
+        <!-- 2026-11-07 オーナー「全ての鉄塔もプロットして」: OSM の鉄塔を全部、点で描く(js/tower_dots.js)。既定で出す -->
+        <div class="ui-sec">
+            <div class="ui-label">鉄塔（OSM・全部）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-towers" checked/><span>鉄塔を出す</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-bends" checked/><span>線の折れ点（推定）</span></label>
+            </div>
+            <div class="ui-sub">クリックで開くもの</div>
+            <div class="seg" id="click-mode" role="group" aria-label="地図をクリックしたときに開くもの">
+                <button type="button" data-v="auto" class="active">自動</button><button type="button" data-v="line">線</button><button type="button" data-v="tower">鉄塔</button>
+            </div>
+            <p class="ui-note">自動: 線の上なら線のカード、線の無い所の点と、よく寄って点の真上を押したときは鉄塔のカード。鉄塔のカードからも線のカードを開けます。</p>
+            <div id="tower-count"></div>
+        </div>
+
+        <div class="ui-sec">
+            <div class="ui-label">OSM の線（観測）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-osm"/><span>すべて出す</span></label>
+            </div>
+            <p class="ui-note">ふだんは、線をクリックしたときにその路線だけを光らせます。</p>
+            <span id="osm-layer-hint"></span>
+        </div>
+
         <div class="ui-sec">
             <div class="ui-label">地域</div>
             <div class="region-list" id="region-list"></div>
@@ -576,7 +604,7 @@
         </details>
 
         <details class="ui-more">
-            <summary>重ねて見る <span class="ov-hint">地形・適地スコア・系統図との食い違い</span></summary>
+            <summary>重ねて見る <span class="ov-hint">地形・容量と潮流・災害・適地スコアなど</span></summary>
             <div class="ui-sub">地形（背景）</div>
             <div class="chip-toggles">
                 <label class="chip-cb"><input type="checkbox" id="chk-hillshade" onchange="toggleTerrain('hillshade',this.checked)"/><span>陰影</span></label>
@@ -602,12 +630,56 @@
             <p class="ui-note">
                 公式系統図（<a href="https://github.com/ibarapascal/open-keitouzu" target="_blank" rel="noopener">open-keitouzu</a>, CC BY 4.0）は接続を主張するが、本モデルで未再現の裁定待ち候補。直線で描いており、実際の経路ではない。
             </p>
+            <!-- ↓ 容量・潮流と災害・土地(2026-11-07)。動きは js/overlay_layers.js。凡例と出典は地図の左下に出る -->
+            <div class="ui-sub">系統の容量・潮流 <span class="ov-hint">公表は実線・計算は破線</span></div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" data-ov="ic"/><span>連系線の容量</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="obs"/><span>潮流の実績</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="load"/><span>混み具合（計算）</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="price"/><span>エリアの価格</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="demand"/><span>エリアの需要</span></label>
+            </div>
+            <p class="ui-note">
+                <span data-ov-status="ic"></span><span data-ov-status="obs"></span><span data-ov-status="load"></span><span data-ov-status="price"></span><span data-ov-status="demand"></span>
+                連系線は OCCTO の運用容量と JEPX の値差、潮流の実績は各社の公表の年統計、価格は JEPX の年度平均、需要はでんき予報。
+                混み具合だけは AGJ の計算です。線ごとの空き容量・出力制御の見通しは各社の公表ページで見てください（利用条件のため、ここには載せていません）:
+                <a href="https://www.occto.or.jp/institution/access/link/mapping.html" target="_blank" rel="noopener">広域機関のリンク集</a>。
+            </p>
+            <div class="ui-sub">災害・土地 <span class="ov-hint">ハザードマップポータル・地理院</span></div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" data-ov="tsunami"/><span>津波</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="flood"/><span>洪水</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="hightide"/><span>高潮</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="sediment"/><span>土砂災害</span></label>
+            </div>
+            <div class="filter-row">
+                <label for="ov-hazard-opacity">透過度</label>
+                <input type="range" id="ov-hazard-opacity" data-ov-opacity="hazard" min="0" max="100" value="70">
+            </div>
+            <div class="chip-toggles" style="margin-top:8px">
+                <label class="chip-cb"><input type="checkbox" data-ov="relief"/><span>赤色立体地図</span></label>
+                <label class="chip-cb"><input type="checkbox" data-ov="landuse"/><span>土地利用（1982〜83）</span></label>
+            </div>
+            <div class="filter-row">
+                <label for="ov-land-opacity">透過度</label>
+                <input type="range" id="ov-land-opacity" data-ov-opacity="land" min="0" max="100" value="60">
+            </div>
+            <p class="ui-note">
+                浸水は最大規模の想定。最新・詳しい情報は各市町村のハザードマップで確かめてください。土地利用はズーム 11 以上で出ます。
+            </p>
+            <script src="./js/overlay_layers.js?v=1" defer></script>
         </details>
     </div>
 
     <!-- ━━ Tab 2: エリア (region coloring) ━━ -->
     <div class="tab-panel" id="tab-area">
-        <p class="ui-lead">送電線・変電所を、エリア（電力会社の管轄の目安）ごとに色分けします。境界は概略で、連系線の近くは実際の管轄と合わないことがあります。</p>
+        <p class="ui-lead">送電線・変電所を、エリア（電力会社の管轄の目安）か周波数で色分けします。境界は概略で、連系線の近くは実際の管轄と合わないことがあります。</p>
+        <div class="ui-sec">
+            <div class="ui-label">色分け</div>
+            <div class="seg" id="area-color-by" role="group" aria-label="色分けの仕方">
+                <button type="button" data-v="area" class="active" onclick="setAreaColorBy('area')">エリア</button><button type="button" data-v="freq" onclick="setAreaColorBy('freq')">周波数</button>
+            </div>
+        </div>
         <div class="ui-sec">
             <div class="ui-label">電圧</div>
             <div class="seg" data-for="area-min-kv" role="group" aria-label="表示する電圧の下限">
@@ -759,10 +831,12 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/agj_map.js?v=2"></script>
+<script src="./js/agj_map.js?v=4"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=41"></script>
-<script src="./js/grid_search.js?v=1"></script>
+<script src="./js/grid_map.js?v=45"></script>
+<script src="./js/osm_routes.js?v=4"></script>
+<script src="./js/tower_dots.js?v=3"></script>
+<script src="./js/grid_search.js?v=2"></script>
 <script src="./js/sld.js?v=34"></script>
 <script src="./js/ybus_sim.js?v=3"></script>
 <script>

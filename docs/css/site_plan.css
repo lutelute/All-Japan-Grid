@@ -1,0 +1,214 @@
+/* 接続の計画とサイト分析(site_plan.html, 2026-11-07).
+ * style.css・map_ui.css の上に重ねる。罫線だけの控えめな見た目(丸角・色の帯を使わない)。
+ * このページの部品はすべて .sp / sp- の名前で、ほかのページには効かない。 */
+
+/* map.html の上部タブバーは無いので、その分の余白を消す */
+:root { --tabbar-h: 0px; }
+body.sp { background: #0d1117; }
+body.sp #sidebar { width: 410px !important; min-width: 410px !important; }
+body.sp .sp-body { flex: 1 1 auto; overflow-y: auto; min-height: 0; }
+body.sp #status-bar { border-top: 1px solid var(--u-bd); color: var(--u-mut); }
+
+/* 入口のリンク: 丸いチップをやめて罫線だけに */
+body.sp #sidebar .site-links a { border-radius: 0; background: transparent; border: 1px solid var(--u-bd2); }
+body.sp #sidebar .site-links a.home { border-color: var(--u-bd2); }
+
+/* ── まとまり ── */
+.sp-sec { padding: 14px 16px 12px; border-bottom: 1px solid var(--u-bd); }
+.sp-lead { margin: 0 0 9px; font-size: 12px; line-height: 1.6; color: var(--u-mut); }
+.sp-note { margin: 8px 0 0; font-size: 11px; line-height: 1.6; color: var(--u-mut); }
+.sp-note b { color: var(--u-tx); font-weight: 650; }
+.sp-muted { color: var(--u-mut); font-size: 12px; margin: 0; }
+.sp-sub { font-size: 11.5px; font-weight: 700; color: var(--u-tx); margin: 14px 0 6px; }
+.sp-note a, .sp-src a, .sp-links a, .sp-cap-main a, .sp-list a { color: var(--u-acc); }
+
+/* 入力とボタン: 角は立てたまま、1px の罫線 */
+.sp-search { display: flex; gap: 6px; }
+.sp-input { flex: 1 1 auto; min-width: 0; background: transparent; color: var(--u-tx); border: 1px solid var(--u-bd2);
+  border-radius: 0; padding: 7px 8px; font: 12.5px/1.3 inherit; font-family: inherit; outline: none; }
+.sp-input:focus { border-color: var(--u-mut); }
+.sp-input::placeholder { color: var(--u-mut); opacity: .8; }
+.sp-btn { flex: none; background: transparent; color: var(--u-tx); border: 1px solid var(--u-bd2); border-radius: 0;
+  padding: 7px 12px; font: 600 12px/1.2 inherit; font-family: inherit; cursor: pointer; }
+.sp-btn:hover:not(:disabled) { border-color: var(--u-mut); }
+.sp-btn:disabled { color: var(--u-mut); opacity: .55; cursor: default; }
+.sp-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.sp-linkbtn { background: none; border: 0; padding: 0; color: var(--u-acc); font: inherit; cursor: pointer; }
+
+/* 地名の候補 */
+.sp-geo { margin-top: 8px; border-top: 1px solid var(--u-bd); }
+.sp-geo-h { font-size: 10.5px; color: var(--u-mut); padding: 6px 0 2px; }
+.sp-geo-r { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--u-bd);
+  color: var(--u-tx); padding: 6px 2px; font: 12px/1.4 inherit; font-family: inherit; cursor: pointer; }
+.sp-geo-r:hover { background: rgba(255,255,255,.04); }
+.sp-geo-r.on { font-weight: 700; }
+
+/* 項目の並び */
+.sp-site { margin-top: 10px; }
+.sp-dl { display: grid; grid-template-columns: max-content 1fr; gap: 5px 12px; margin: 0; font-size: 12.5px; }
+.sp-dl dt { color: var(--u-mut); font-size: 12px; }
+.sp-dl dd { margin: 0; font-variant-numeric: tabular-nums; word-break: break-word; }
+.sp-dl small { font-size: 10.5px; }
+.sp-links { margin: 8px 0 0; font-size: 11.5px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+/* 近い系統の表 */
+.sp-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+.sp-table th, .sp-table td { border-bottom: 1px solid var(--u-bd); padding: 3px 2px; text-align: left; vertical-align: top; }
+.sp-table thead th { font-size: 10.5px; font-weight: 600; color: var(--u-mut); padding-bottom: 5px; }
+.sp-table thead th:first-child, .sp-table tbody th { width: 76px; }
+.sp-table tbody th { font-weight: 600; white-space: nowrap; padding-top: 7px; font-variant-numeric: tabular-nums; }
+.sp-kvg { font-weight: 900; letter-spacing: -1px; }
+.sp-cell { display: block; width: 100%; text-align: left; background: none; border: 1px solid transparent; border-radius: 0;
+  color: var(--u-tx); padding: 3px 5px; font: 12px/1.35 inherit; font-family: inherit; cursor: pointer; }
+.sp-cell:hover { border-color: var(--u-bd2); }
+.sp-cell.on { border-color: var(--u-tx); }
+.sp-cname { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-cdist { display: block; color: var(--u-mut); font-size: 11px; font-variant-numeric: tabular-nums; }
+.sp-cost { display: block; color: var(--u-mut); font-size: 10.5px; }
+.sp-none { color: var(--u-mut); padding-left: 7px !important; padding-top: 7px !important; }
+.sp-flag { display: inline-block; margin-left: 4px; padding: 0 3px; border: 1px solid var(--u-mut); font-size: 9.5px; line-height: 1.4; color: var(--u-tx); }
+
+/* 選んだ接続先 */
+.sp-sel-h { margin: 0 0 8px; font-size: 13px; line-height: 1.5; }
+.sp-obs { margin: 8px 0 0; padding: 6px 0 0; border-top: 1px solid var(--u-bd); font-size: 11px; line-height: 1.6; color: var(--u-mut); }
+
+/* 仮定 */
+.sp-details > summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--u-tx); }
+.sp-details[open] > summary { margin-bottom: 8px; }
+.sp-assume { margin: 0; padding: 4px 0; border-top: 1px solid var(--u-tx); border-bottom: 1px solid var(--u-tx);
+  font-size: 16px; font-weight: 800; letter-spacing: .08em; text-align: center; color: var(--u-tx); }
+.sp-assume-inline { margin: 8px 0 0; font-size: 11.5px; font-weight: 700; color: var(--u-tx); }
+.sp-form-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--u-mut); }
+.sp-form-row label { width: 36px; color: var(--u-tx); }
+.sp-num { flex: 0 0 96px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* 空き容量 */
+#sp-cap p { margin: 0 0 8px; font-size: 12px; line-height: 1.6; }
+.sp-cap-main { padding: 6px 0; border-top: 1px solid var(--u-bd); border-bottom: 1px solid var(--u-bd); }
+.sp-list { margin: 6px 0 0; padding-left: 16px; font-size: 11.5px; line-height: 1.7; color: var(--u-mut); }
+
+/* 気象の表 */
+.sp-kvt { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sp-kvt th, .sp-kvt td { border-bottom: 1px solid var(--u-bd); padding: 5px 2px; text-align: left; vertical-align: top; }
+.sp-kvt th { color: var(--u-mut); font-weight: 500; width: 128px; }
+.sp-kvt td { font-variant-numeric: tabular-nums; }
+.sp-kvt small { color: var(--u-mut); }
+
+/* ── グラフ(画面) ── */
+.sp-chart { width: 100%; }
+.sp-svg { display: block; max-width: 100%; height: auto; font: 10.5px -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.sp-svg .grid { stroke: var(--u-bd); stroke-width: 1; }
+.sp-svg .axis { stroke: var(--u-bd2); stroke-width: 1; }
+.sp-svg .tick, .sp-svg .unit { fill: var(--u-mut); font-variant-numeric: tabular-nums; }
+.sp-svg .end { fill: var(--u-mut); font-size: 10px; }
+.sp-svg .lab { fill: var(--u-tx); font-size: 10.5px; font-weight: 600; }
+.sp-prof .area { fill: #4493f8; fill-opacity: .16; }
+.sp-prof .line { fill: none; stroke: #4493f8; stroke-width: 2; stroke-linejoin: round; }
+.sp-prof .hi { fill: #e6edf3; }
+.sp-prof .xh { stroke: var(--u-mut); stroke-width: 1; }
+.sp-prof .xd { fill: #0d1117; stroke: #e6edf3; stroke-width: 2; }
+.sp-prof .hit, .sp-bars .bhit { fill: transparent; cursor: crosshair; }
+.sp-bars .bar { fill: #4493f8; fill-opacity: .8; pointer-events: none; }
+.sp-bars .bar.on { fill-opacity: 1; }
+.sp-tip { position: fixed; z-index: 5000; pointer-events: none; background: #0d1117; color: #e6edf3; border: 1px solid var(--u-bd2);
+  padding: 4px 8px; font-size: 11.5px; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.sp-tip[hidden] { display: none; }
+
+/* ── 地図の上 ── */
+.sp-site-pin { background: transparent; border: 0; }
+.sp-site-pin i { display: block; width: 18px; height: 18px; border-radius: 50%; background: #0d1117; border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #0d1117; cursor: grab; }
+.leaflet-tooltip.sp-dist-tip { background: rgba(13,17,23,.92); border: 1px solid var(--u-bd2); border-radius: 0; box-shadow: none;
+  padding: 2px 6px; font-size: 11.5px; font-weight: 700; color: #e6edf3; }
+.sp-legend { background: rgba(13,17,23,.9); color: var(--u-tx); border: 1px solid var(--u-bd2); padding: 7px 9px; font-size: 11px; line-height: 1.5; max-width: 250px; }
+.sp-legend-h { color: var(--u-mut); font-size: 10.5px; margin-bottom: 2px; }
+.sp-legend-g { display: grid; grid-template-columns: repeat(5, auto); gap: 0 8px; font-variant-numeric: tabular-nums; }
+.sp-legend-m { display: flex; flex-direction: column; margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--u-bd); }
+.sp-legend-m i { display: inline-block; vertical-align: middle; margin-right: 6px; }
+.sp-lg-sub { width: 9px; height: 9px; border-radius: 50%; background: #9aa4ae; border: 1px solid #fff; }
+.sp-lg-foot { width: 9px; height: 9px; border-radius: 50%; background: #0d1117; border: 2px solid #9aa4ae; }
+.sp-lg-dash { width: 16px; height: 0; border-top: 2px dashed #9aa4ae; }
+
+/* 詳細カード(AGJMap.showCard)も、このページでは角を立てて影を抑える */
+body.sp .agj-card { border-radius: 0; box-shadow: none; backdrop-filter: none; background: rgba(13,17,23,.97); }
+body.sp .agj-card-x, body.sp .agj-card-btn, body.sp .agj-card-src { border-radius: 0; }
+body.sp .agj-card-btn.primary { background: transparent; border-color: var(--u-tx); color: var(--u-tx); }
+body.sp .agj-card-kind i { box-shadow: none; }
+body.sp .leaflet-control-layers, body.sp .leaflet-bar, body.sp .leaflet-bar a { border-radius: 0 !important; }
+
+/* ── レポート(画面では上に重ねる) ── */
+#sp-report { position: fixed; inset: 0; z-index: 4000; overflow: auto; background: #e9e9e6; color: #111; }
+#sp-report[hidden] { display: none; }
+.sp-rep-bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 16px;
+  background: #fff; border-bottom: 1px solid #bbb; font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.sp-rbtn { background: #fff; color: #111; border: 1px solid #888; border-radius: 0; padding: 6px 12px; font: 600 12px/1.2 inherit; font-family: inherit; cursor: pointer; }
+.sp-rbtn.primary { border-color: #111; }
+.sp-rep-hint { color: #555; font-size: 11.5px; }
+.sp-rep-page { box-sizing: border-box; width: 210mm; min-height: 297mm; margin: 18px auto; padding: 14mm 14mm; background: #fff; color: #111;
+  font: 11.5px/1.6 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.sp-rep-page .sp-muted { color: #555; }
+.sp-rep-head { border-bottom: 2px solid #111; padding-bottom: 6px; margin-bottom: 8px; }
+.sp-rep-head h1 { margin: 0; font-size: 19px; letter-spacing: .02em; }
+.sp-rep-head p { margin: 2px 0 0; color: #444; font-size: 11px; }
+.sp-rep-url { word-break: break-all; font-size: 10px !important; color: #666 !important; }
+.sp-rep-warn { margin: 0 0 10px; padding: 6px 0; border-bottom: 1px solid #111; font-weight: 700; font-size: 11.5px; }
+.sp-rep-sec { margin: 0 0 12px; break-inside: avoid; page-break-inside: avoid; }
+.sp-rep-sec.sp-rep-split { break-inside: auto; page-break-inside: auto; }   /* 長い節は図・表の間で改ページしてよい */
+.sp-rep-sec h2 { break-after: avoid; page-break-after: avoid; }
+.sp-rep-fig, .sp-rep-two, .sp-rep-t tr, .sp-rep-assume { break-inside: avoid; page-break-inside: avoid; }
+.sp-rep-fig { margin: 0; }
+.sp-rep-sec h2 { margin: 10px 0 6px; font-size: 13.5px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+.sp-rep-kv { border-collapse: collapse; font-size: 11.5px; }
+.sp-rep-kv th { text-align: left; font-weight: 500; color: #444; padding: 2px 16px 2px 0; }
+.sp-rep-kv td { padding: 2px 0; }
+.sp-rep-map { position: relative; overflow: hidden; border: 1px solid #999; background: #f2f2ef; }
+.sp-rep-map img { position: absolute; width: 256px; height: 256px; max-width: none; }
+.sp-rep-svg { position: absolute; left: 0; top: 0; font: 11px -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.sp-rep-svg .num { font-weight: 800; fill: #111; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+.sp-rep-svg .site { font-weight: 800; fill: #111; paint-order: stroke; stroke: #fff; stroke-width: 3.5px; }
+.sp-rep-svg .scale text { fill: #111; font-size: 10px; }
+.sp-rep-cap { margin: 4px 0 6px; color: #444; font-size: 10.5px; line-height: 1.55; }
+.sp-rep-t { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+.sp-rep-t th, .sp-rep-t td { border-bottom: 1px solid #bbb; padding: 3px 4px; text-align: left; vertical-align: top; }
+.sp-rep-t thead th { border-bottom: 1px solid #111; font-weight: 700; }
+.sp-rep-t .r { text-align: right; font-variant-numeric: tabular-nums; }
+.sp-rep-t tr.on td { font-weight: 700; }
+.sp-rep-t small { color: #555; font-weight: 400; }
+.sp-rep-month th, .sp-rep-month td { padding: 2px 3px; font-size: 10px; }
+.sp-rep-month thead th + th { text-align: right; }
+.sp-rep-assume { margin: 6px 0; padding: 4px 0; border-top: 2px solid #111; border-bottom: 2px solid #111; font-weight: 700; }
+.sp-rep-assume::before { content: "仮定"; display: block; font-size: 15px; letter-spacing: .1em; }
+.sp-rep-two { display: flex; gap: 16px; margin-top: 6px; }
+.sp-rep-sub { font-size: 10.5px; font-weight: 700; margin-bottom: 2px; }
+.sp-rep-src { margin: 0; padding-left: 16px; font-size: 10.5px; line-height: 1.6; }
+/* レポートの中のグラフは明るい紙の色 */
+.sp-rep-page .sp-kvt th, .sp-rep-page .sp-kvt td { border-bottom-color: #bbb; }
+.sp-rep-page .sp-kvt th, .sp-rep-page .sp-kvt small { color: #444; }
+.sp-rep-page .sp-svg .grid { stroke: #ddd; }
+.sp-rep-page .sp-svg .axis { stroke: #888; }
+.sp-rep-page .sp-svg .tick, .sp-rep-page .sp-svg .unit, .sp-rep-page .sp-svg .end { fill: #555; }
+.sp-rep-page .sp-svg .lab { fill: #111; }
+.sp-rep-page .sp-prof .area { fill: #1f5fbf; fill-opacity: .14; }
+.sp-rep-page .sp-prof .line { stroke: #1f5fbf; }
+.sp-rep-page .sp-prof .hi { fill: #111; }
+.sp-rep-page .sp-bars .bar { fill: #1f5fbf; fill-opacity: .85; }
+
+/* ── スマホ: style.css が地図を上・左バーを下に並べる。幅は画面いっぱいに ── */
+@media (max-width: 768px) {
+  body.sp #sidebar { width: 100% !important; min-width: 0 !important; flex: 0 0 48%; }
+  .sp-legend { display: none; }
+  .sp-rep-page { width: auto; min-height: 0; margin: 0; padding: 16px; }
+  .sp-rep-map { transform-origin: 0 0; }
+}
+
+/* ── 印刷: レポートだけを A4 縦で ── */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  html, body, body.sp { height: auto !important; overflow: visible !important; display: block !important; background: #fff !important; }
+  body > * { display: none !important; }
+  body > #sp-report { display: block !important; position: static !important; overflow: visible !important; background: #fff !important; }
+  .sp-rep-bar { display: none !important; }
+  .sp-rep-page { width: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; }
+  .sp-rep-page, .sp-rep-map, .sp-rep-svg { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: #111; text-decoration: none; }
+}

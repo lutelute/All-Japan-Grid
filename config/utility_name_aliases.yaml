@@ -44,3 +44,7 @@ aliases:
     model_name: 東春近変電所
     region: chubu
     evidence: "実在の中部春近変電所は伊那市東春近所在・モデル東春近154kVと電圧一致(観測一次154kV)・geocode候補の石原変電所は123km彼方の岐阜で棄却(2026-08-17)"
+  - utility_name: 岐阜変電所
+    model_name: Gifu Substation 500kV
+    region: chubu
+    evidence: "OSM の名前が英語の Gifu Substation(=岐阜変電所、500/154/77kV、北緯35.636 東経136.962)・OCCTO の地内基幹送電線で岐阜を端に持つ 5 本(三岐幹線・岐阜連絡・愛岐幹線・越美幹線・飛騨分岐線)の相手の端のうち 4 か所(三重・北部・愛知・南福光)から 500kV の線だけで着く・たどった OSM の線に三岐幹線の名前(2026-11-07、scripts/build_occto_line_crosswalk.py の照合で確認)"

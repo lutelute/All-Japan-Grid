@@ -9,6 +9,7 @@ docs/assets/thumbs/ の新しいファイルだけ)。
 
     python3 scripts/make_dashboard_thumbs.py            # 全部
     python3 scripts/make_dashboard_thumbs.py --no-shots # GIF のコマだけ(Playwright 無しで動く)
+    python3 scripts/make_dashboard_thumbs.py --only occto_flow   # 1 枚だけ(ほかは変えない)
 
 どのカードにどの画像を出すかは docs/data/tools_catalog.json の各ツールの "image"。
 """
@@ -50,6 +51,14 @@ SHOTS = {
             " map.setView([35.4, 136.6], 7);", 3500),
     "subsld": ("subsld.html", "", 4000),
     "ybus_sim": ("map.html#tab-ybus", "", 6000),
+    # OCCTO の潮流実績(2026-11-07)。暗い配色で地図だけを見せ、本州の中央を寄せる(#v=経度,緯度,倍率)
+    "occto_flow": ("occto_flow.html#v=137.3,35.45,3.6",
+                   "document.documentElement.dataset.theme = 'dark';"
+                   " document.querySelectorAll('.back, header, .side, footer, .legend').forEach(e => e.style.display = 'none');"
+                   " const w = document.querySelector('.wrap'); w.style.padding = '0';"
+                   " const m = document.querySelector('.main'); m.style.gridTemplateColumns = '1fr'; m.style.minHeight = '100vh';"
+                   " const b = document.getElementById('mapbox'); b.style.height = '100vh'; b.style.border = '0'; b.style.borderRadius = '0';",
+                   2500),
 }
 
 
@@ -74,7 +83,7 @@ def save(im: Image.Image, name: str) -> None:
     print(f"{out.relative_to(ROOT)}  {out.stat().st_size / 1024:.0f} KB")
 
 
-def shots() -> None:
+def shots(only: set[str] | None = None) -> None:
     from playwright.sync_api import sync_playwright
 
     class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -89,6 +98,8 @@ def shots() -> None:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             for name, (page_path, js, wait) in SHOTS.items():
+                if only and name not in only:
+                    continue
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
                 page.goto(base + page_path, wait_until="networkidle", timeout=90_000)
                 page.wait_for_timeout(1500)
@@ -105,15 +116,20 @@ def shots() -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-shots", action="store_true", help="今のページは撮らない(GIF のコマだけ)")
+    ap.add_argument("--only", nargs="+", metavar="NAME", help="この名前の画像だけ作る(ほかのカードの画像は変えない)")
     args = ap.parse_args()
+    only = set(args.only) if args.only else None
     OUT.mkdir(parents=True, exist_ok=True)
     for name, (gif, at) in FRAMES.items():
-        save(frame(SRC / gif, at), name)
+        if not only or name in only:
+            save(frame(SRC / gif, at), name)
     for name, (rel, (l, t, r, b)) in STILLS.items():
+        if only and name not in only:
+            continue
         im = Image.open(ROOT / "docs" / rel).convert("RGB")
         save(im.crop((round(l * im.width), round(t * im.height), round(r * im.width), round(b * im.height))), name)
-    if not args.no_shots:
-        shots()
+    if not args.no_shots and (not only or only & set(SHOTS)):
+        shots(only)
 
 
 if __name__ == "__main__":

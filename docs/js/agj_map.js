@@ -102,6 +102,10 @@
         el.setAttribute("aria-label", "選んだ設備の詳細");
         L.DomEvent.disableClickPropagation(el);
         L.DomEvent.disableScrollPropagation(el);
+        // カードの中のボタンが中身を書き換えると、押したボタンが DOM から外れる。Leaflet は外れた要素から
+        // 親をたどれず「地図の何も無い所のクリック」と取ってカードを閉じていた(2026-11-07「この線を選ぶ」)。
+        // カードのクリックはここで止め、地図まで届かせない
+        el.addEventListener("click", function (e) { e.stopPropagation(); });
         map.on("click", function () { hideCard(map); });
         document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideCard(map); });
         map._agjCard = el;
@@ -139,6 +143,8 @@
         el.scrollTop = 0;
         if (selected) select(map, selected);
         map.fire("agjcardopen");
+        // カードを開いたあとに中身を書き足す処理(js/osm_routes.js の路線の欄など)
+        if (typeof spec._after === "function") spec._after(el);
     }
 
     function hideCard(map) {
