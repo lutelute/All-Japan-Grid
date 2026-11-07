@@ -133,6 +133,7 @@ var fuelTypeFilter = new Set(FUEL_TYPES_ALL);
 var map;
 var substationLayer = null;
 var lineLayer = null;
+var unroutedLayer = null;   // 線のうち、OSM の経路が見つからず直線のまま残った区間(破線)
 var plantLayer = null;
 var legendControl = null;
 var legendVisible = true;
@@ -183,6 +184,14 @@ var tabState = {
 var selectedRegion = "all";
 var plantFilter = "utility";
 var colorMode = "voltage"; // "voltage" or "region"
+// エリアのタブの色分け: "area"(エリアごと)か "freq"(50/60 Hz)。2026-11-07 追加(色分けの切替)
+var areaColorBy = "area";
+var FREQ_COLORS = { 50: "#4493f8", 60: "#f0883e" };
+function regionFreq(region) {
+    var r = (regionsData || []).find(function (x) { return x.id === region; });
+    if (r && r.frequency_hz) return +r.frequency_hz;
+    return { hokkaido: 50, tohoku: 50, tokyo: 50 }[region] ? 50 : 60;   // regions.json が読めないときの控え(config/regions.yaml と同じ)
+}
 var layerVisible = { lines: true, subs: true, plants: true };
 
 // List panel state
@@ -197,7 +206,8 @@ function initMap() {
     // 地図・背景地図・共有 canvas は js/agj_map.js(io 一新 2026-10-20)。変電所・発電所の専用 pane は
     // canvas を 3 枚重ねて線と変電所のホバー/クリックを塞いでいた(3e014ab7 から)ので作らない。
     // 上下は追加の順(線 → 変電所 → 発電所)で決まる
-    map = AGJMap.createMap("map", { center: [36.5, 137.0], zoom: 6 });
+    // 線の当たり判定を広くする(既定 6 px → 10 px。全国〜中くらいの縮尺で線が選べなかった、2026-11-07)
+    map = AGJMap.createMap("map", { center: [36.5, 137.0], zoom: 6, tolerance: 10 });
 
     // タイルの重ね表示(地形・適地スコア)は画像なのでイベントを取らない
     var terrainPane = map.createPane("terrainPane");
@@ -220,7 +230,13 @@ function updateLegend() {
         var div = L.DomUtil.create("div", "legend");
         var body = "";
 
-        if (colorMode === "region") {
+        if (colorMode === "region" && areaColorBy === "freq") {
+            body += "<h4>周波数</h4><div class='legend-grid'>";
+            [50, 60].forEach(function (f) {
+                body += '<div class="legend-item"><span class="legend-color" style="background:' + FREQ_COLORS[f] + '"></span>' + f + " Hz</div>";
+            });
+            body += "</div><p class='legend-note'>エリアの周波数で塗っています（東の 3 エリアが 50 Hz）。</p>";
+        } else if (colorMode === "region") {
             body += "<h4>エリア</h4><div class='legend-grid'>";
             for (var i = 0; i < REGION_ORDER.length; i++) {
                 var rid = REGION_ORDER[i];
@@ -242,6 +258,8 @@ function updateLegend() {
             }
             body += "</div>";
         }
+
+        body += "<div class='legend-item legend-dash'><span class='legend-dashline'></span>経路未取得（直線は仮）</div>";
 
         // Plants legend (always shown)
         body += "<h4 style='margin-top:8px'>発電所</h4><div class='legend-grid'>";
@@ -334,6 +352,7 @@ function filterByRegion(geojson, region) {
 
 function lineColor(feature) {
     if (colorMode === "region") {
+        if (areaColorBy === "freq") return FREQ_COLORS[regionFreq(feature.properties._region)] || "#cccccc";
         return REGION_COLORS[feature.properties._region] || "#cccccc";
     }
     return voltageColor(feature.properties._voltage_kv || 0);
@@ -341,6 +360,7 @@ function lineColor(feature) {
 
 function subColor(feature) {
     if (colorMode === "region") {
+        if (areaColorBy === "freq") return FREQ_COLORS[regionFreq(feature.properties._region)] || "#cccccc";
         return REGION_COLORS[feature.properties._region] || "#cccccc";
     }
     return voltageColor(feature.properties._voltage_kv || 0);
@@ -379,19 +399,73 @@ function zoomAction(latlng, z) {
     return { text: "この場所に寄る", onClick: function () { map.flyTo(latlng, Math.max(map.getZoom(), z || 12)); } };
 }
 
+// OSM の素導体数(wires)の値を日本語に。single/double/triple/quad は 1 相あたりの電線の本数
+var WIRES_JA = { single: "1 本（単導体）", double: "2 本", triple: "3 本", quad: "4 本", quintuple: "5 本", sextuple: "6 本",
+                 octuple: "8 本" };
+var LOC_JA = { underground: "地中", underwater: "海底", overground: "架空", overhead: "架空", indoor: "屋内" };
+var UNKNOWN = '<span class="val-unknown">不明</span>';
+
+// OSM のタグの値("2/1" は区間で違う・"double;single" は回線ごとに違う)を読みやすくする
+function osmVal(v, dict, unit) {
+    if (v == null || v === "") return UNKNOWN;
+    var parts = String(v).split("/").map(function (seg) {
+        return seg.split(";").map(function (x) {
+            x = x.trim();
+            if (dict && dict[x]) return dict[x];
+            return x + (unit && /^\d+(\.\d+)?$/.test(x) ? unit : "");
+        }).join("・");
+    });
+    if (parts.length > 1) return AGJMap.esc(parts.join(" / ")) + '<span class="val-note">（区間によって違う）</span>';
+    return AGJMap.esc(parts[0]) + (String(v).indexOf(";") >= 0 ? '<span class="val-note">（回線ごと）</span>' : "");
+}
+
+// OSM に回線数が無い線は、導体数から推定する(交流は ÷3、直流は ÷2)。推定と分かる形で出す
+// (src/topology/osm_routes.py の circuits_estimate と同じ考え方。route=power の数からの推定は路線のカードで出す)
+function circuitsEstimate(p) {
+    var cab = String(p._cab || "").trim();
+    if (/^\d+$/.test(cab)) {
+        var c = +cab, dc = String(p._freq || "").trim() === "0";
+        if (dc && c >= 2) return AGJMap.esc(Math.floor(c / 2) + " 回線") + '<span class="val-est">（推定：直流・導体数 ÷ 2）</span>';
+        if (!dc && c >= 3 && c % 3 === 0) return AGJMap.esc(c / 3 + " 回線") + '<span class="val-est">（推定：導体数 ÷ 3）</span>';
+    }
+    return UNKNOWN;
+}
+
 function lineCard(p, layer) {
     var mid = layer.getBounds().getCenter();
+    var osmIds = p._osm || [];
+    var osmLinks = osmIds.length ? osmIds.slice(0, 4).map(function (id) {
+        return '<a href="https://www.openstreetmap.org/way/' + id + '" target="_blank" rel="noopener">way ' + id + "</a>";
+    }).join("・") + (osmIds.length > 4 ? " ほか" : "") : "対応する OSM の線なし（形の無い枝・引込み・同じ敷地のつなぎなど）";
     return {
         kind: "送電線", color: voltageColor(p._voltage_kv || 0),
         title: p._display_name || "名称なし",
         sub: AGJMap.esc([fmtKv(p._voltage_kv), p._region_ja].filter(Boolean).join(" ・ ")),
-        rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))], ["地域", AGJMap.esc(p._region_ja || "—")],
-               ["回線数", p._par ? AGJMap.esc(String(p._par)) : "—"],
-               ["つながり", p._main === false ? "本系統から切れている" : "本系統"],
-               ["線形", "正典（built）の枝・形は OpenStreetMap"]],
+        // 回線数・導体数・素導体数・導体の種類・事業者は OSM のタグ(scripts/export_map_tiers_from_built.py が
+        // 枝の形と OSM の線を座標で突き合わせて移した)。無いものは「不明」と出し、値を作らない
+        rows: [["電圧", AGJMap.esc(fmtKv(p._voltage_kv))],
+               ["回線数", p._cir ? osmVal(p._cir, null, " 回線") : circuitsEstimate(p)],
+               ["導体数", osmVal(p._cab, null, " 本")],
+               ["素導体数", osmVal(p._wir, WIRES_JA) + (p._wir ? '<span class="val-note">（1 相あたり）</span>' : "")],
+               ["導体の種類", p._mat ? osmVal(p._mat) : UNKNOWN + '<span class="val-note">（OSM に記載なし）</span>'],
+               ["事業者", osmVal(p._op)],
+               ["地中・海底", p._loc ? osmVal(p._loc, LOC_JA) : "架空（記載なし）"],
+               ["OSM", osmLinks],
+               ["線の形", p._geom === "straight" ? '<span class="val-unknown">経路未取得（直線は仮・破線）</span>'
+                        : p._geom === "partial" ? 'OSM の経路。<span class="val-unknown">一部の区間は経路未取得（直線は仮・破線）</span>'
+                        : p._geom === "found" ? "OSM の線をたどる経路を探して当てた（正典の枝には形が無い）"
+                        : "OSM の経路（鉄塔をたどる形）"],
+               ["モデルの回線数", p._par ? AGJMap.esc(String(p._par)) + '<span class="val-note">（正典が計算に使う値）</span>' : "—"],
+               ["地域", AGJMap.esc(p._region_ja || "—")],
+               ["つながり", p._main === false ? "本系統から切れている" : "本系統"]],
+        // 路線(OSM の way をまとめたもの)は js/osm_routes.js がカードを開いたあとに書き足し、路線の全体を光らせる
+        html: window.OSMRoutes ? '<div class="osm-slot-line"><span class="osm-dim">OSM の路線を調べています…</span></div>' : "",
         actions: [{ text: "線の全体を見る", onClick: function () { map.flyToBounds(layer.getBounds(), { padding: [60, 60] }); } },
                   { text: "OpenStreetMap で見る", href: osmLink(mid), blank: true }],
-        note: "線路定数は電圧階級ごとの代表値です（実測ではありません）。",
+        note: "回線数・導体数・素導体数・導体の種類・事業者は OpenStreetMap のタグ（© OpenStreetMap contributors, ODbL）。" +
+              "「推定」は OSM の値から計算したもので、OSM に書かれた値ではありません。" +
+              "線の形は OSM、枝とつながりは正典（built）。線路定数は電圧階級ごとの代表値です（実測ではありません）。",
+        _after: function () { if (window.OSMRoutes) OSMRoutes.afterCanonCard(layer.feature); },
     };
 }
 
@@ -403,6 +477,8 @@ function subCard(p, layer) {
     if (p.operator) rows.push(["運営", AGJMap.esc(p.operator)]);
     if (p.frequency_hz) rows.push(["周波数", AGJMap.esc(p.frequency_hz + " Hz")]);
     if (p._main != null) rows.push(["つながり", p._main ? "本系統" : "本系統から切れている"]);
+    // 同じ敷地の電圧ごとの母線(js/osm_routes.js が正典の変電所一覧から書き足す。1 つだけなら行ごと消す)
+    if (window.OSMRoutes && name) rows.push(["母線の電圧", '<span class="osm-slot-site osm-dim">調べています…</span>']);
     return {
         kind: "変電所", color: subColor({ properties: p }),
         title: name || "名称なし",
@@ -411,6 +487,7 @@ function subCard(p, layer) {
         actions: [name ? { text: "SubSLD で変電所の中を見る", href: "./subsld.html?q=" + encodeURIComponent(name.replace(/変電所$/, "")) } : null,
                   zoomAction(ll, 14),
                   { text: "OpenStreetMap で見る", href: osmLink(ll), blank: true }].filter(Boolean),
+        _after: function () { if (window.OSMRoutes && name) OSMRoutes.afterSubCard(name, ll.lat, ll.lng); },
     };
 }
 
@@ -464,6 +541,7 @@ function renderLayers() {
                     var p = feature.properties;
                     var kv = fmtKv(p._voltage_kv);
                     AGJMap.bindCard(layer, function () { return lineCard(p, layer); });
+                    if (p._unr && p._unr.length) splitUnrouted(feature, layer);
                     layer.bindTooltip(
                         "送電線 " + (p._display_name || "名称なし") + " | " + kv +
                         (p._region_ja ? " | " + p._region_ja : ""),
@@ -550,6 +628,34 @@ function renderLayers() {
 
     updateStatus();
     buildLists();
+}
+
+// 線の形のうち、OSM の経路が見つからず直線のまま残った区間(_unr = 区間の始点の番号。
+// scripts/export_map_tiers_from_built.py・src/topology/line_geometry.py)を、実線から外して破線で描く
+function splitUnrouted(feature, layer) {
+    var c = feature.geometry.coordinates, unr = {}, p = feature.properties;
+    p._unr.forEach(function (j) { unr[j] = true; });
+    var ll = function (x) { return L.latLng(x[1], x[0]); };
+    var solid = [], dash = [], cur = [ll(c[0])];
+    for (var j = 0; j < c.length - 1; j++) {
+        if (unr[j]) {
+            if (cur.length > 1) solid.push(cur);
+            dash.push([ll(c[j]), ll(c[j + 1])]);
+            cur = [ll(c[j + 1])];
+        } else {
+            cur.push(ll(c[j + 1]));
+        }
+    }
+    if (cur.length > 1) solid.push(cur);
+    layer.setLatLngs(solid.length ? solid : [[ll(c[0]), ll(c[0])]]);
+    if (!unroutedLayer) unroutedLayer = L.layerGroup().addTo(map);
+    var kv = p._voltage_kv || 0;
+    var d = L.polyline(dash, { color: lineColor(feature), weight: voltageLineWeight(kv), opacity: 0.9, dashArray: "5 7",
+                               renderer: AGJMap.renderer(map) });
+    d._agjProps = p;     // 鉄塔のカードの「地図の線」から名前と電圧を引くため(js/tower_dots.js)
+    AGJMap.bindCard(d, function () { return lineCard(p, layer); });
+    d.bindTooltip("送電線 " + (p._display_name || "名称なし") + " | 経路未取得（直線は仮）", { sticky: true });
+    d.addTo(unroutedLayer);
 }
 
 function updateStatus() {
@@ -686,6 +792,7 @@ function selectRegion(region) {
 function clearLayers() {
     if (substationLayer) { map.removeLayer(substationLayer); substationLayer = null; }
     if (lineLayer) { map.removeLayer(lineLayer); lineLayer = null; }
+    if (unroutedLayer) { map.removeLayer(unroutedLayer); unroutedLayer = null; }
     if (plantLayer) { map.removeLayer(plantLayer); plantLayer = null; }
 }
 
@@ -1439,6 +1546,13 @@ function initSegments() {
         sel.addEventListener("change", sync);
         sync();
     });
+}
+
+function setAreaColorBy(v) {
+    areaColorBy = v === "freq" ? "freq" : "area";
+    document.querySelectorAll("#area-color-by button").forEach(function (b) { b.classList.toggle("active", b.dataset.v === areaColorBy); });
+    updateLegend();
+    renderLayers();
 }
 
 // ── Init ──

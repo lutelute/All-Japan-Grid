@@ -63,6 +63,9 @@ import math
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.topology import line_geometry as LG  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILT_ALL = os.path.join(ROOT, "docs", "data", "built", "all.json")
 DATA_DIR = os.path.join(ROOT, "docs", "data")
@@ -270,7 +273,104 @@ def _edge_region(edge, nodes_by_coord):
     return ""
 
 
-def build_line_features(edges, nodes_by_coord):
+# ── 線の OSM のタグ(回線数・導体数・素導体数・事業者など)を正典の枝に移す(2026-11-07) ──
+# 正典の枝は形(path)を持つが OSM のタグを持たないので、地図のカードに回線数・導体数が出なかった。
+# 基底 OSM の線(data/{region}_lines.geojson。タグは OSM のまま。名前だけ補っている)の頂点と、枝の形の
+# 頂点を座標(小数 5 桁)で突き合わせ、電圧の合う線のタグを移す。推測はしない(座標が一致しない枝には付けない)。
+OSM_LINE_TAGS = {           # OSM のタグ → 地図の線のプロパティ
+    "circuits": "_cir",     # 回線数
+    "cables": "_cab",       # 導体数(電線の本数。3 相なら 回線数×3)
+    "wires": "_wir",        # 素導体数(1 相あたり。single/double/triple/quad)
+    "operator": "_op",      # 事業者
+    "location": "_loc",     # underground など
+    "line": "_ltype",       # busbar など
+    "frequency": "_freq",   # 周波数(0 は直流。回線数を導体数から推定するときに使う)
+    "material": "_mat",     # 導体の種類(送電線に付いていることはほとんど無い)
+    "conductor": "_mat",
+    "cable": "_mat",
+}
+LINE_SOURCES = os.path.join(ROOT, "data")
+
+
+def _kvset(v):
+    import re as _re
+    return {round(float(x) / 1000.0, 1) for x in _re.findall(r"\d+(?:\.\d+)?", str(v or "")) if float(x) >= 1000}
+
+
+def load_osm_line_tags():
+    """基底 OSM の線を読み、頂点の座標(小数 5 桁)→ 線の番号 の索引を作る。"""
+    feats, idx = [], {}
+    for reg in REGION_JA:
+        p = os.path.join(LINE_SOURCES, f"{reg}_lines.geojson")
+        if not os.path.exists(p):
+            continue
+        with open(p, encoding="utf-8") as fh:
+            d = json.load(fh)
+        for ft in d.get("features", []):
+            pr = ft.get("properties") or {}
+            oid = pr.get("osm_id") if pr.get("osm_type", "way") == "way" else None
+            if not oid:
+                continue                      # 手で足した線(supplement)は OSM のタグを持たない
+            g = ft.get("geometry") or {}
+            parts = [g.get("coordinates") or []] if g.get("type") == "LineString" else (g.get("coordinates") or [])
+            tags = {}
+            for k, short in OSM_LINE_TAGS.items():
+                v = pr.get(k)
+                if v not in (None, "") and short not in tags:
+                    tags[short] = str(v)
+            k = len(feats)
+            feats.append((int(oid), _kvset(pr.get("voltage")), tags))
+            for part in parts:
+                for c in part:
+                    idx.setdefault((round(c[1], 5), round(c[0], 5)), []).append(k)
+    return feats, idx
+
+
+def osm_tags_for_edge(e, osm_feats, osm_idx):
+    """枝の形の頂点が一致する OSM の線のうち、電圧の合うものから、タグを集める。
+
+    1 本の枝が OSM の線いくつかにまたがるので、値は頂点の一致が多い順に並べ、違う値は「/」でつなぐ
+    (例: 回線数 "2/1" は区間によって 2 回線と 1 回線)。
+    """
+    path = e.get("path")
+    if not path or len(path) < 2:
+        return {}
+    hits = {}
+    for lat, lon in path:
+        for k in osm_idx.get((round(lat, 5), round(lon, 5)), ()):
+            hits[k] = hits.get(k, 0) + 1
+    if not hits:
+        return {}
+    ekv = clean_kv(e.get("kv"))
+    need = 2 if len(path) >= 3 else 1
+    cand = []
+    for k, h in hits.items():
+        oid, kvs, tags = osm_feats[k]
+        if h < need:
+            continue
+        ok = (ekv is None) or (not kvs) or any(abs(x - ekv) < 0.6 for x in kvs)
+        if ok:
+            cand.append((-h, oid, tags))
+    if not cand:
+        return {}
+    cand.sort(key=lambda c: (c[0], c[1]))
+    out = {"_osm": [oid for _, oid, _ in cand[:6]]}
+    for short in sorted(set(OSM_LINE_TAGS.values())):
+        vals = []
+        for _, _, tags in cand:
+            v = tags.get(short)
+            if v and v not in vals:
+                vals.append(v)
+        if vals:
+            out[short] = "/".join(vals[:3])
+    return out
+
+
+# 線の座標は丸めない(小数 6 桁 ≈ 0.1 m)。4 桁(≈11 m)に丸めていたので、線が鉄塔からずれていた(2026-11-07)
+LINE_PRECISION = 6
+
+
+def build_line_features(edges, nodes_by_coord, osm_feats=None, osm_idx=None, net=None):
     """edge を LineString feature 化。
 
     geometry は path(実ルート、[lat,lon])を [lon,lat] へ反転して採用。
@@ -286,7 +386,20 @@ def build_line_features(edges, nodes_by_coord):
             if not a or not b:
                 continue
             path = [a, b]
-        coords = [[r(lon), r(lat)] for (lat, lon) in path]
+        geom_props = {}
+        if net is not None:
+            # 枝の形を OSM の実際の経路(鉄塔をたどる形)に描き直す(src/topology/line_geometry.py)。
+            # 見つからない区間は直線のまま残し、_unr(その区間の始点の番号)で地図に破線で出す
+            has_path = bool(e.get("path")) and len(e.get("path")) >= 2
+            out, straight, _st = LG.refine([(float(a_), float(b_)) for a_, b_ in path], clean_kv(e.get("kv")), net, has_path)
+            if len(out) >= 2:
+                path = out
+            if straight:
+                geom_props["_unr"] = straight
+                geom_props["_geom"] = "straight" if len(path) == 2 else "partial"
+            elif not has_path:
+                geom_props["_geom"] = "found"      # 形の無い枝に、OSM の線をたどる経路を探して当てた
+        coords = [[round(float(lon), LINE_PRECISION), round(float(lat), LINE_PRECISION)] for (lat, lon) in path]
         if len(coords) < 2:
             continue
         region = _edge_region(e, nodes_by_coord)
@@ -299,6 +412,8 @@ def build_line_features(edges, nodes_by_coord):
                 "_voltage_kv": clean_kv(e.get("kv")),
                 "_main": bool(e.get("main")),
                 "_par": e.get("par") or 1,
+                **(osm_tags_for_edge(e, osm_feats, osm_idx) if osm_feats else {}),
+                **geom_props,
             },
             "geometry": {
                 "type": "LineString",
@@ -398,7 +513,18 @@ def main():
     print("\n=== attribute join from substations.geojson (C層属性を D層へ焼き込み) ===")
     by_coord, by_name = load_attr_sources()
     all_subs = build_sub_features(nodes, by_coord, by_name)
-    all_lines = build_line_features(edges, nodes_by_coord)
+    osm_feats, osm_idx = load_osm_line_tags()
+    net = LG.load_net(LINE_SOURCES, list(REGION_JA))
+    print(f"OSM の線の網: 点 {len(net.pos):,}・端どうしの橋 {getattr(net, 'n_bridges', 0):,}")
+    all_lines = build_line_features(edges, nodes_by_coord, osm_feats, osm_idx, net)
+    n_unr = sum(1 for f in all_lines if f["properties"].get("_unr"))
+    n_found = sum(1 for f in all_lines if f["properties"].get("_geom") == "found")
+    print(f"線の形: 経路を探して当てた形の無い枝 {n_found}・直線の区間が残った線 {n_unr}")
+    n_osm = sum(1 for f in all_lines if f["properties"].get("_osm"))
+    n_cir = sum(1 for f in all_lines if f["properties"].get("_cir"))
+    n_cab = sum(1 for f in all_lines if f["properties"].get("_cab"))
+    print(f"OSM の線のタグ: {len(osm_feats)} 本から、地図の線 {len(all_lines)} 本のうち {n_osm} 本に対応 "
+          f"(回線数あり {n_cir}・導体数あり {n_cab})")
     print(f"derived: {len(all_subs)} substation Points, {len(all_lines)} line LineStrings")
 
     # null/不明電圧の件数(捏造せず all タイルにのみ載るもの)

@@ -7,6 +7,8 @@
   - 送電線・変電所・発電所の上にマウスを置くと、それぞれの説明が出ること
   - 送電線をクリックすると詳しい説明が出ること
   - 直リンク map.html#tab-ybus / #tab-sld で中身が起動すること
+  - 送電線をクリックすると OSM の路線が引かれて光ること、路線を選ぶと鉄塔が出て選べること、
+    ?route= の共有の URL で路線が開くこと、検索で路線と鉄塔が見つかること(2026-11-07、js/osm_routes.js)
 を確かめる(docs/PAGES_INVENTORY.md §3)。
 
 Playwright と Chromium が無い環境では飛ばす(CI では .github/workflows/pages-ui.yml が入れて回す)。
@@ -116,10 +118,16 @@ def _tooltip_at(page, xy):
     return page.evaluate("() => [...document.querySelectorAll('.leaflet-tooltip')].map(e => e.textContent)")
 
 
+# マウスを取る描画面(canvas)。鉄塔の点(js/tower_dots.js)の canvas はマウスを取らない(pointer-events: none)ので数えない
+_MOUSE_CANVASES = """() => [...map.getContainer().querySelectorAll('.leaflet-pane canvas')]
+    .filter(c => getComputedStyle(c).pointerEvents !== 'none'
+              && getComputedStyle(c.closest('.leaflet-pane')).pointerEvents !== 'none').length"""
+
+
 def test_one_vector_canvas(browser, site):
     page, errors = _open_map(browser, f"{site}/map.html")
-    n = page.evaluate("() => map.getContainer().querySelectorAll('.leaflet-pane canvas').length")
-    assert n == 1, f"地図の描画面が {n} 枚ある(重なると下の層にイベントが届かない)"
+    n = page.evaluate(_MOUSE_CANVASES)
+    assert n == 1, f"マウスを取る描画面が {n} 枚ある(重なると下の層にイベントが届かない)"
     assert not errors, errors
     page.close()
 
@@ -187,5 +195,150 @@ def test_deep_link_starts_structure_view(browser, site):
     page, errors = _open_map(browser, f"{site}/map.html#tab-sld")
     page.wait_for_function(
         "() => getComputedStyle(document.getElementById('sld-canvas')).display !== 'none'", timeout=30_000)
+    assert not errors, errors
+    page.close()
+
+
+# ── 路線・鉄塔・検索(js/osm_routes.js・grid_search.js、2026-11-07) ──
+
+def test_click_line_lights_up_osm_route(browser, site):
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.evaluate("() => { map.setView([35.6, 139.6], 9); }")
+    page.wait_for_timeout(500)
+    xy = page.evaluate(_PICK, ["line"])
+    page.mouse.click(xy["x"], xy["y"])
+    _card(page)
+    # カードの「OSM の路線」の欄が埋まる(対応する路線が無い枝ならそう書く)
+    page.wait_for_function("() => { const e = document.querySelector('.agj-card .osm-slot-line');"
+                           " return e && !/調べています/.test(e.textContent); }", timeout=20_000)
+    text = page.inner_text(".agj-card .osm-slot-line")
+    assert "OSM の路線" in text or "対応づけられない" in text, text
+    # 回線数・導体数・素導体数・導体の種類・事業者の行がある(値が無ければ「不明」)
+    full = page.inner_text(".agj-card")
+    for label in ("回線数", "導体数", "素導体数", "導体の種類", "事業者", "OSM"):
+        assert label in full, f"線のカードに「{label}」が無い: {full}"
+    if "OSM の路線" in text:
+        assert page.evaluate("() => OSMRoutes._state().sel !== null")
+        assert page.evaluate("() => OSMRoutes._st.selGroup.getLayers().length > 0"), "路線が光っていない"
+    n = page.evaluate(_MOUSE_CANVASES)
+    assert n == 1, f"路線を描いたあとにマウスを取る描画面が {n} 枚になった"
+    assert not errors, errors
+    page.close()
+
+
+def _first_route_with_towers(page):
+    return page.evaluate("""async () => {
+        const S = await OSMRoutes.loadSearch();
+        const T = await OSMRoutes.loadSearchTowers();
+        const named = new Map(S.routes.map(r => [r[0], r]));
+        for (const t of T.towers) {
+            if (!t[2]) continue;
+            for (const rid of t[6]) { const r = named.get(rid); if (r) return {rid: rid, ri: r[1], name: r[2], ref: String(t[2])}; }
+        }
+        return null;
+    }""")
+
+
+def test_share_link_opens_route_and_towers_are_clickable(browser, site):
+    page, errors = _open_map(browser, f"{site}/map.html")
+    hit = _first_route_with_towers(page)
+    assert hit, "番号のある鉄塔を持つ名前付きの路線が一覧に無い"
+    page.close()
+    page, errors = _open_map(browser, f"{site}/map.html?route={hit['ri']}.{hit['rid']}")
+    page.wait_for_function("() => OSMRoutes._state().sel !== null", timeout=30_000)
+    text = _card(page)
+    assert "OSM の路線" in text and hit["name"].split(" ")[0] in text, text
+    # 寄ると、その路線の鉄塔が出て、クリックで鉄塔のカードが開く
+    page.evaluate("""() => { const b = OSMRoutes._st.sel.rec[5]; map.setView([(b[1]+b[3])/2, (b[0]+b[2])/2], 15, {animate:false}); }""")
+    page.wait_for_function("() => OSMRoutes._st.towerSelGroup.getLayers().length > 0", timeout=30_000)
+    xy = page.evaluate("""() => {
+        const rect = map.getContainer().getBoundingClientRect(), size = map.getSize();
+        for (const m of OSMRoutes._st.towerSelGroup.getLayers()) {
+            const p = map.latLngToContainerPoint(m.getLatLng());
+            if (p.x > 420 && p.x < size.x - 420 && p.y > 80 && p.y < size.y - 80) return {x: rect.left + p.x, y: rect.top + p.y};
+        }
+        return null;
+    }""")
+    if xy is None:   # 画面の端にしか無いときは 1 基を真ん中に寄せる
+        page.evaluate("() => { map.setView(OSMRoutes._st.towerSelGroup.getLayers()[0].getLatLng(), 16, {animate:false}); }")
+        page.wait_for_timeout(800)
+        xy = page.evaluate("() => { const r = map.getContainer().getBoundingClientRect(), s = map.getSize(); return {x: r.left + s.x/2, y: r.top + s.y/2}; }")
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /鉄塔/.test(document.querySelector('.agj-card').innerText)", timeout=10_000)
+    assert "載っている線" in page.inner_text(".agj-card")
+    assert "tower=" in page.url
+    assert not errors, errors
+    page.close()
+
+
+def test_search_finds_route_and_tower(browser, site):
+    page, errors = _open_map(browser, f"{site}/map.html")
+    hit = _first_route_with_towers(page)
+    name = hit["name"]
+    page.fill("#gs-input", name)
+    page.wait_for_function("() => [...document.querySelectorAll('#gs-results .gs-result')]"
+                           ".some(e => /OSM の路線/.test(e.innerText))", timeout=20_000)
+    page.fill("#gs-input", f"{name} {hit['ref']}")
+    page.wait_for_function("() => [...document.querySelectorAll('#gs-results .gs-result')]"
+                           ".some(e => /鉄塔/.test(e.innerText))", timeout=20_000)
+    page.click("#gs-results .gs-result >> text=鉄塔")
+    page.wait_for_function("() => document.querySelector('.agj-card') && !document.querySelector('.agj-card').hidden"
+                           " && /鉄塔/.test(document.querySelector('.agj-card').innerText)", timeout=20_000)
+    assert ("No." + hit["ref"]) in page.inner_text(".agj-card .agj-card-title")
+    assert not errors, errors
+    page.close()
+
+
+def test_all_towers_are_drawn_and_clickable(browser, site):
+    """OSM の鉄塔を全部(番号の無いものも)点で描く。全国を見て、地域ごとにデータの数と描いた数が一致する。
+    寄って点をマウスでクリックすると、鉄塔のカード(番号・載っている線・回線数)が開く。"""
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate("() => { map.fitBounds([[24.0, 122.9], [45.6, 146.0]], {animate: false}); }")
+    page.wait_for_timeout(1500)
+    s = page.evaluate("() => TowerDots.state()")
+    meta_total = page.evaluate("async () => (await OSMRoutes.loadMeta()).counts.towers")
+    assert s["total"] == meta_total, (s["total"], meta_total)
+    for reg, v in s["perRegion"].items():
+        assert v["drawn"] == v["data"], f"{reg}: データ {v['data']} 基のうち {v['drawn']} 基しか描いていない"
+    # 寄って、画面の真ん中に近い鉄塔をクリック
+    page.evaluate("() => { map.setView([35.42667, 136.66566], 16, {animate: false}); }")
+    page.wait_for_timeout(1200)
+    xy = page.evaluate("""() => { const p = map.latLngToContainerPoint(map.getCenter()); let k = TowerDots.pickAt(p.x, p.y);
+        if (!k) { const s = map.getSize(); for (let dx = -200; dx <= 200 && !k; dx += 4) for (let dy = -150; dy <= 150 && !k; dy += 4) k = TowerDots.pickAt(s.x/2 + dx, s.y/2 + dy); }
+        const r = map.getContainer().getBoundingClientRect(); return k ? {x: r.left + k.x, y: r.top + k.y} : null; }""")
+    assert xy, "画面の中に鉄塔が無い"
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=15_000)
+    text = page.inner_text(".agj-card")
+    assert "番号" in text and "載っている線" in text, text
+    if "線に載っていない" not in text:
+        assert "回線数" in text and "導体数" in text, text
+    assert not errors, errors
+    page.close()
+
+
+def test_select_line_from_tower_card_keeps_the_route_card(browser, site):
+    """鉄塔のカードの「この線を選ぶ」で、路線のカードが開いたまま残り、路線が光る(2026-11-07 の不具合:
+    押したボタンが中身の差し替えで DOM から外れ、地図が「何も無い所のクリック」と取ってカードを閉じていた)。
+    路線のカードには回線数・導体数・素導体数・導体の種類の行がある。"""
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate("() => { TowerDots.setMode('tower'); map.setView([35.42667, 136.66566], 16, {animate: false}); }")
+    page.wait_for_timeout(1200)
+    xy = page.evaluate("""() => { const s = map.getSize(); let k = null;
+        for (let dx = 0; dx <= 200 && !k; dx += 4) for (let dy = -150; dy <= 150 && !k; dy += 4) k = TowerDots.pickAt(s.x/2 + dx, s.y/2 + dy);
+        const r = map.getContainer().getBoundingClientRect(); return k ? {x: r.left + k.x, y: r.top + k.y} : null; }""")
+    assert xy
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /この線を選ぶ/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=15_000)
+    page.click(".agj-card button.agj-card-btn >> text=この線を選ぶ")
+    page.wait_for_timeout(1500)
+    assert not page.evaluate("() => document.querySelector('.agj-card').hidden"), "カードが閉じた"
+    text = page.inner_text(".agj-card")
+    assert "OSM の路線" in text, text
+    for label in ("回線数", "導体数", "素導体数", "導体の種類"):
+        assert label in text, f"路線のカードに「{label}」が無い"
+    assert page.evaluate("() => OSMRoutes._state().sel !== null"), "路線が光っていない"
     assert not errors, errors
     page.close()

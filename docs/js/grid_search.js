@@ -8,6 +8,10 @@
  *       地名→座標。利用規約配慮でデバウンス(>=350ms)・最小2文字・タイプ毎には叩かない。
  *       失敗/ヒット無しは静かにフォールバック(捏造しない=「該当なし」表示)。
  *
+ * 2026-11-07: (A) に OSM の路線・鉄塔と、電圧帯に依らない変電所・発電所の一覧を足した
+ *   (docs/data/osm_routes/search.json・search_towers.json、js/osm_routes.js 経由)。候補を選ぶと
+ *   そこへ飛ぶだけでなく、選択状態にして詳細カードを開く。「○○線 115」のように打つと鉄塔を探す。
+ *
  * grid_map.js のグローバル(rawSubData / rawLineData / rawPlantData / map /
  * voltageColor / fmtKv / FUEL_COLORS / REGION_NAMES_JA)を参照する。
  * 既存の一覧/zoom は壊さない(独立した DOM とハンドラ)。
@@ -15,7 +19,7 @@
 (function () {
     "use strict";
 
-    var DB_MAX_RESULTS = 10;        // DB候補の最大表示件数
+    var DB_MAX_RESULTS = 12;        // DB候補の最大表示件数
     var GEO_LIMIT = 5;              // Nominatim limit
     var MIN_CHARS = 2;              // ジオコーディング最小文字数
     var GEO_DEBOUNCE_MS = 400;      // ジオコーディング・デバウンス(>=350ms)
@@ -123,20 +127,101 @@
         }
     }
 
+    // 横断検索の一覧(js/osm_routes.js が読む)。最初に入力欄を触ったときに読む
+    var index = null, towerIndex = null, routeName = null;
+    function loadIndex() {
+        if (index || !window.OSMRoutes) return;
+        OSMRoutes.loadSearch().then(function (S) {
+            index = S;
+            routeName = new Map();
+            S.routes.forEach(function (r) { routeName.set(r[0], r); });
+            if (els.input && (els.input.value || "").trim()) onInput();
+        }).catch(function (e) { console.warn("[grid_search] index", e); });
+    }
+    function loadTowerIndex() {
+        if (towerIndex || !window.OSMRoutes) return;
+        OSMRoutes.loadSearchTowers().then(function (S) {
+            towerIndex = S;
+            if (els.input && (els.input.value || "").trim()) onInput();
+        }).catch(function (e) { console.warn("[grid_search] towers", e); });
+    }
+
+    // 「○○線 115」「○○線No.115」「○○線115号」を 線の名前 と 番号 に分ける
+    var TOWER_Q = /^(.*?[^\d\s])[\s\u3000]*(?:No\.?|NO\.?|no\.?|#|＃)?[\s\u3000]*([0-9０-９]+[A-Za-z\-]*)[\s\u3000]*(?:号|番)?$/;
+    function toHalf(x) { return x.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); }); }
+
+    function rank(name, ql) {
+        var n = name.toLowerCase();
+        return n === ql ? 0 : n.indexOf(ql) === 0 ? 1 : 2;
+    }
+
+    function searchIndex(q, ql, out) {
+        if (!index) return;
+        var R = index.regions;
+        index.subs.forEach(function (x) {
+            if (x[0].toLowerCase().indexOf(ql) === -1) return;
+            out.push({ kind: "sub", name: x[0], kv: x[1], region: R[x[4]] || "", lat: x[2] / 1e5, lon: x[3] / 1e5, r: rank(x[0], ql) });
+        });
+        index.routes.forEach(function (x) {
+            if (x[2].toLowerCase().indexOf(ql) === -1) return;
+            out.push({ kind: "route", name: x[2], kv: x[3], region: R[x[1]] || "", lat: x[4] / 1e5, lon: x[5] / 1e5,
+                       rid: x[0], r: rank(x[2], ql) });
+        });
+        index.plants.forEach(function (x) {
+            if (x[0].toLowerCase().indexOf(ql) === -1) return;
+            out.push({ kind: "gen", name: x[0], fuel: x[1], mw: x[2] || 0, region: R[x[5]] || "", lat: x[3] / 1e5, lon: x[4] / 1e5,
+                       r: rank(x[0], ql) });
+        });
+        var m = TOWER_Q.exec(q.trim());
+        if (m || /\d/.test(q)) loadTowerIndex();
+        if (!towerIndex) return;
+        var namePart = m ? m[1].toLowerCase() : null, ref = m ? toHalf(m[2]) : null;
+        towerIndex.towers.forEach(function (t) {
+            // t = [node id, 地域, 番号, 名前, lat×1e5, lon×1e5, 路線]
+            var hit = false, label = null;
+            if (t[3] && String(t[3]).toLowerCase().indexOf(ql) >= 0) { hit = true; label = t[3]; }
+            if (!hit && ref && t[2] && String(t[2]) === ref && namePart) {
+                for (var k = 0; k < t[6].length; k++) {
+                    var rr = routeName && routeName.get(t[6][k]);
+                    if (rr && rr[2].toLowerCase().indexOf(namePart) >= 0) { hit = true; label = rr[2] + " No." + t[2]; break; }
+                }
+            }
+            if (!hit) return;
+            out.push({ kind: "tower", name: label, ref: t[2] || "", region: R[t[1]] || "", lat: t[4] / 1e5, lon: t[5] / 1e5,
+                       id: t[0], r: ref ? 0 : rank(label, ql) });
+        });
+    }
+
     function searchDb(q) {
         var ql = q.trim().toLowerCase();
         if (!ql) return [];
+        loadIndex();
         var seen = {};
         var out = [];
-        // 変電所優先 → 発電所 → 送電線 の順(同名衝突時に拠点を上位に)
-        collectFromFeatures(typeof rawSubData !== "undefined" ? rawSubData : null, "sub", ql, seen, out);
-        collectFromFeatures(typeof rawPlantData !== "undefined" ? rawPlantData : null, "gen", ql, seen, out);
+        if (index) {
+            searchIndex(q, ql, out);
+        } else {
+            // 一覧を読むまでは、読み込み済みの層から探す(従来どおり)
+            collectFromFeatures(typeof rawSubData !== "undefined" ? rawSubData : null, "sub", ql, seen, out);
+            collectFromFeatures(typeof rawPlantData !== "undefined" ? rawPlantData : null, "gen", ql, seen, out);
+        }
+        var before = out.length;
         collectFromFeatures(typeof rawLineData !== "undefined" ? rawLineData : null, "line", ql, seen, out);
-        return out.slice(0, DB_MAX_RESULTS);
+        for (var i = before; i < out.length; i++) out[i].r = rank(out[i].name, ql) + 0.5;   // 正典の枝は OSM の路線の後ろ
+        var KORD = { sub: 0, route: 1, tower: 2, gen: 3, line: 4 };
+        // 同じ名前・種類・地域は 1 つに(路線は区間ごとに分かれるので、同じ名前の区間をまとめて 1 件)
+        var dd = {}, res = [];
+        out.sort(function (a, b) { return (a.r - b.r) || (KORD[a.kind] - KORD[b.kind]) || ((b.kv || 0) - (a.kv || 0)) || a.name.localeCompare(b.name, "ja"); });
+        out.forEach(function (x) {
+            var k = x.kind + "\x00" + x.name + "\x00" + x.region + (x.kind === "tower" ? "\x00" + x.id : "");
+            if (dd[k]) { dd[k].n = (dd[k].n || 1) + 1; return; }
+            dd[k] = x; res.push(x);
+        });
+        return res.slice(0, DB_MAX_RESULTS);
     }
 
-    var KIND_ICON = { sub: "■", line: "─", gen: "▲", geo: "📍" };
-    var KIND_LABEL = { sub: "変電所", line: "送電線", gen: "発電所", geo: "地名" };
+    var KIND_ICON = { sub: "■", line: "─", route: "═", tower: "┼", gen: "▲", geo: "📍" };
+    var KIND_LABEL = { sub: "変電所", line: "送電線（正典の枝）", route: "送電線（OSM の路線）", tower: "鉄塔", gen: "発電所", geo: "地名" };
 
     // ── ズーム + 一時強調マーカー ────────────────────────────────
 
@@ -188,8 +273,11 @@
         var meta;
         if (r.kind === "gen") {
             meta = (r.fuel || "") + (r.mw > 0 ? " " + r.mw + "MW" : "");
+        } else if (r.kind === "tower") {
+            meta = r.ref ? "No." + r.ref : "";
         } else {
             meta = kvLabel(r.kv);
+            if (r.kind === "route" && r.n > 1) meta += "（区間 " + r.n + "）";
         }
         var rj = regionJa(r.region);
         if (rj) meta = (meta ? meta + " " : "") + rj;
@@ -355,12 +443,40 @@
         } else {
             var r = currentDb[idx];
             if (!r) return;
+            renderResults("", false);
+            if (r.kind === "route" && window.OSMRoutes) { OSMRoutes.selectRoute(r.rid, r.region, { card: true, fit: true }); return; }
+            if (r.kind === "tower" && window.OSMRoutes) { OSMRoutes.selectTowerById(r.region, r.id, { fly: true }); return; }
+            if (selectOnMap(r)) return;
             var z = r.kind === "line" ? FLY_ZOOM_LINE : FLY_ZOOM;
             var accent = r.kind === "gen"
                 ? ((typeof FUEL_COLORS !== "undefined" && FUEL_COLORS[r.fuel]) || "#e94560")
                 : colorForKv(r.kv);
             flyAndMark(r.lat, r.lon, z, r.name, accent);
         }
+    }
+
+    // 地図に出ている変電所・発電所・正典の線から同じものを探し、飛んでカードを開く(選択状態にする)
+    function selectOnMap(r) {
+        if (typeof map === "undefined" || !map) return false;
+        var layer = r.kind === "sub" ? (typeof substationLayer !== "undefined" ? substationLayer : null)
+            : r.kind === "gen" ? (typeof plantLayer !== "undefined" ? plantLayer : null)
+            : r.kind === "line" ? (typeof lineLayer !== "undefined" ? lineLayer : null) : null;
+        if (!layer) return false;
+        var best = null, bd = Infinity;
+        layer.eachLayer(function (l) {
+            var p = (l.feature && l.feature.properties) || {};
+            var nm = String(p._display_name || p.name || "").trim();
+            if (nm !== r.name) return;
+            var ll = l.getLatLng ? l.getLatLng() : l.getBounds().getCenter();
+            var d = Math.abs(ll.lat - r.lat) + Math.abs(ll.lng - r.lon);
+            if (d < bd) { bd = d; best = l; }
+        });
+        if (!best || bd > 0.05) return false;
+        var target = best.getLatLng ? best.getLatLng() : best.getBounds().getCenter();
+        map.once("moveend", function () { best.fire("click", { latlng: target, originalEvent: null }); });
+        if (best.getBounds && !best.getLatLng) map.flyToBounds(best.getBounds(), { padding: [60, 60], maxZoom: 14, duration: 0.8 });
+        else map.flyTo(target, Math.max(map.getZoom(), r.kind === "gen" ? 13 : 14), { duration: 0.8 });
+        return true;
     }
 
     function clearSearch() {
@@ -384,11 +500,11 @@
         wrap.id = "grid-search-box";
         wrap.className = "section gs-section";
         wrap.innerHTML =
-            '<h2>検索 Search <span class="gs-hint">地名・変電所・送電線</span></h2>' +
+            '<h2>検索 Search <span class="gs-hint">送電線・鉄塔・変電所・発電所・地名</span></h2>' +
             '<div class="gs-input-row">' +
             '  <span class="gs-search-ico">🔍</span>' +
             '  <input id="gs-input" class="gs-input" type="text" autocomplete="off" ' +
-            '         spellcheck="false" placeholder="嶺南 / 福井市 / 送電線名…">' +
+            '         spellcheck="false" placeholder="東海幹線 / 越前 / 新長浜線 115 / 福井市">' +
             '  <button id="gs-clear" class="gs-clear" type="button" title="クリア" ' +
             '          style="display:none">✕</button>' +
             '</div>' +
@@ -413,6 +529,7 @@
             if (!wrap.contains(ev.target)) renderResults("", false);
         });
         els.input.addEventListener("focus", function () {
+            loadIndex();
             if ((els.input.value || "").trim()) onInput();
         });
         return true;

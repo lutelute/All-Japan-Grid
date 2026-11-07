@@ -50,6 +50,7 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 | `eggc_trace.json` | 0.3 MB | 08-17 | eggc_explainer・スライド | 残す | 案 |
 | `eggc_trace_current.json` | 0.28 MB | 08-17 | **なし** | そのまま残す（どこからも読まれていない） | 案 |
 | `keitouzu_divergent.geojson` | 0.09 MB | 08-08 | map（open-keitouzu との食い違い） | 残す（地図の層の 1 つ） | 案 |
+| `osm_routes/` | 17 MB | 11-07（OSM は 06-15 取得） | map（路線の選択・鉄塔・横断検索。js/osm_routes.js・grid_search.js） | 残す。OSM の way を路線にまとめた derived の層で、正典とは別。作り方は docs/OSM_ROUTES.md | 案 |
 | `fragments/`・`agc/` | 計 0.6 MB | 08-30〜09-03 | codex レポートの中の言及だけ | アーカイブ | 案 |
 | `MODEL_VERSION.json`・`dashboard.json`・`tools_catalog.json`・`regions.json`・`realtime/` | 小 | — | index・map | 残す | 案 |
 

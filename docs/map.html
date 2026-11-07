@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=40"/>
     <link rel="stylesheet" href="./css/map_ui.css?v=4"/>
+    <link rel="stylesheet" href="./css/osm_routes.css?v=3"/>
 </head>
 <body>
 
@@ -552,6 +553,32 @@
             </div>
         </div>
 
+        <!-- 2026-11-07: OSM の送電線を路線にまとめた層と鉄塔(js/osm_routes.js)。正典とは別の観測の層なので既定は出さない。
+             線をクリックすると、その路線と鉄塔だけを出す -->
+        <!-- 2026-11-07 オーナー「全ての鉄塔もプロットして」: OSM の鉄塔を全部、点で描く(js/tower_dots.js)。既定で出す -->
+        <div class="ui-sec">
+            <div class="ui-label">鉄塔（OSM・全部）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-towers" checked/><span>鉄塔を出す</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-bends" checked/><span>線の折れ点（推定）</span></label>
+            </div>
+            <div class="ui-sub">クリックで開くもの</div>
+            <div class="seg" id="click-mode" role="group" aria-label="地図をクリックしたときに開くもの">
+                <button type="button" data-v="auto" class="active">自動</button><button type="button" data-v="line">線</button><button type="button" data-v="tower">鉄塔</button>
+            </div>
+            <p class="ui-note">自動: 線の上なら線のカード、線の無い所の点と、よく寄って点の真上を押したときは鉄塔のカード。鉄塔のカードからも線のカードを開けます。</p>
+            <div id="tower-count"></div>
+        </div>
+
+        <div class="ui-sec">
+            <div class="ui-label">OSM の線（観測）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-osm"/><span>すべて出す</span></label>
+            </div>
+            <p class="ui-note">ふだんは、線をクリックしたときにその路線だけを光らせます。</p>
+            <span id="osm-layer-hint"></span>
+        </div>
+
         <div class="ui-sec">
             <div class="ui-label">地域</div>
             <div class="region-list" id="region-list"></div>
@@ -606,7 +633,13 @@
 
     <!-- ━━ Tab 2: エリア (region coloring) ━━ -->
     <div class="tab-panel" id="tab-area">
-        <p class="ui-lead">送電線・変電所を、エリア（電力会社の管轄の目安）ごとに色分けします。境界は概略で、連系線の近くは実際の管轄と合わないことがあります。</p>
+        <p class="ui-lead">送電線・変電所を、エリア（電力会社の管轄の目安）か周波数で色分けします。境界は概略で、連系線の近くは実際の管轄と合わないことがあります。</p>
+        <div class="ui-sec">
+            <div class="ui-label">色分け</div>
+            <div class="seg" id="area-color-by" role="group" aria-label="色分けの仕方">
+                <button type="button" data-v="area" class="active" onclick="setAreaColorBy('area')">エリア</button><button type="button" data-v="freq" onclick="setAreaColorBy('freq')">周波数</button>
+            </div>
+        </div>
         <div class="ui-sec">
             <div class="ui-label">電圧</div>
             <div class="seg" data-for="area-min-kv" role="group" aria-label="表示する電圧の下限">
@@ -758,10 +791,12 @@
 
 <button id="list-toggle-btn" onclick="toggleListPanel(true)" style="display:none">&#9776; リスト</button>
 
-<script src="./js/agj_map.js?v=2"></script>
+<script src="./js/agj_map.js?v=4"></script>
 <script src="./js/agj_tabs.js?v=1"></script>
-<script src="./js/grid_map.js?v=41"></script>
-<script src="./js/grid_search.js?v=1"></script>
+<script src="./js/grid_map.js?v=45"></script>
+<script src="./js/osm_routes.js?v=4"></script>
+<script src="./js/tower_dots.js?v=3"></script>
+<script src="./js/grid_search.js?v=2"></script>
 <script src="./js/sld.js?v=34"></script>
 <script src="./js/ybus_sim.js?v=3"></script>
 <script>
