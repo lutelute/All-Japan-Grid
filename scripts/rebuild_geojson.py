@@ -14,15 +14,20 @@ import json
 import os
 
 
-def load_raw(region):
-    """data/osm_raw_towers/tw_{region}_t*.json をマージ → ways(line系), nodes。"""
+def load_raw(region, raw_dir=None):
+    """<raw_dir>/tw_{region}_t*.json をマージ → ways(line系), nodes。
+
+    raw_dir の既定は 6 月の Overpass の取得分(nas03 の 20260615_overpass_towers、src.topology.osm_routes.legacy_raw_dir)。
+    2026-11-07 に Mac の data/osm_raw_towers から NAS へ移した(取得データは Mac に置かない)。"""
+    from src.topology.osm_routes import legacy_raw_dir
+    raw_dir = raw_dir or legacy_raw_dir()
     seen = set()
     nodes = {}
     ways = []
-    files = sorted(glob.glob(f"data/osm_raw_towers/tw_{region}_t*.json"))
+    files = sorted(glob.glob(os.path.join(raw_dir, f"tw_{region}_t*.json")))
     if not files:
-        files = sorted(glob.glob(f"data/osm_raw_towers/tw_{region}.json")) \
-            or sorted(glob.glob(f"data/osm_raw_towers/tw_*{region}*.json"))
+        files = sorted(glob.glob(os.path.join(raw_dir, f"tw_{region}.json"))) \
+            or sorted(glob.glob(os.path.join(raw_dir, f"tw_*{region}*.json")))
     for f in files:
         for e in json.load(open(f, encoding="utf-8")).get("elements", []):
             k = (e["type"], e["id"])
@@ -104,8 +109,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--region", required=True)
     ap.add_argument("--out", default="data/rebuild")
+    ap.add_argument("--raw", default=None,
+                    help="tw_<地域>_t*.json のあるフォルダ(既定: 環境変数 AJG_OSM_RAW_TOWERS か nas03 の 20260615_overpass_towers)")
     args = ap.parse_args()
-    ways, nodes = load_raw(args.region)
+    ways, nodes = load_raw(args.region, args.raw)
     if not ways:
         raise SystemExit(f"{args.region}: node-ref tower データ無し(tower_connectivity/build_topology を先に)")
     notag0 = sum(1 for w in ways if _vclass((w.get('tags') or {}).get('voltage')) == 0)

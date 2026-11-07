@@ -17,8 +17,10 @@ OSM の送電線は細切れの way で描かれていて、1 本の路線(例: 
   - 名前の違う 2 つのまとまりを、名前の無い区間で橋渡しすること(まとまりの名前が食い違うなら止める)
 
 これは観測(OSM)から作った derived の層で、正典(docs/data/built)は変えない
-(docs/OBSERVED_VS_DERIVED.md)。入力は Overpass で取った ``data/osm_raw_towers/tw_*_t*.json``
-(scripts/tower_connectivity.py が書く。git の外)。
+(docs/OBSERVED_VS_DERIVED.md)。入力は Overpass の JSON と同じ形の ``tw_*_t*.json``。
+2026-11-07 から nas03 の ``osm_jp_power/20261105_agj_transmission/json/tw_japan_t0.json``
+(Geofabrik の日本の抽出 2026-11-05 を scripts/osm_pbf_to_power_json.py で変換)を読む。取得データは Mac に
+置かない決まりなので、Mac の ``data/osm_raw_towers/`` は読まない(場所は ``default_raw_dir``)。
 """
 from __future__ import annotations
 
@@ -37,6 +39,57 @@ LINE_POWER = ("line", "cable", "minor_line")
 
 def raw_files(raw_dir: str) -> List[str]:
     return sorted(glob.glob(os.path.join(raw_dir, "tw_*_t*.json")))
+
+
+# 鉄塔の生データ(Overpass の JSON と同じ形)の置き場所。取得データは Mac に置かず NAS に置く(オーナー 2026-11-07)
+NAS_RAW_DIRS = (
+    "/mnt/nas03/osm_jp_power/20261105_agj_transmission/json",       # pws-160core(nas03 の PWS_DB)
+    "/Volumes/PWS_DB/osm_jp_power/20261105_agj_transmission/json",   # Mac で smb://pws-nas03.local/PWS_DB をつないだとき
+)
+
+
+def default_raw_dir() -> str:
+    """環境変数 AJG_OSM_RAW_TOWERS(旧名 AGJ_OSM_RAW_TOWERS も読む)→ nas03 の 20261105 の抽出、の順。
+
+    どれにも無ければ最初の NAS の場所を返す(読む側が「見つからない」と言って止まる)。
+    Mac の data/osm_raw_towers/ には戻らない(6 月の Overpass の取得分で、NAS へ移す)。
+    """
+    for key in ("AJG_OSM_RAW_TOWERS", "AGJ_OSM_RAW_TOWERS"):
+        v = os.environ.get(key)
+        if v:
+            return v
+    for d in NAS_RAW_DIRS:
+        if raw_files(d):
+            return d
+    return NAS_RAW_DIRS[0]
+
+
+# 2026-06-15 の Overpass の取得分(地域ごと・区画ごとの tw_<地域>_t<番号>.json、91 ファイル)。古い手順のスクリプト
+# (rebuild_geojson.py・osmnx_ab.py・tower_connectivity.py)が読む。2026-11-07 に Mac の data/osm_raw_towers から移した
+JUNE_RAW_DIRS = (
+    "/mnt/nas03/osm_jp_power/20260615_overpass_towers",       # pws-160core
+    "/Volumes/PWS_DB/osm_jp_power/20260615_overpass_towers",   # Mac で nas03 の PWS_DB をつないだとき
+)
+
+
+def legacy_raw_dir() -> str:
+    """古い手順(6 月の版)の生データの場所。環境変数 AJG_OSM_RAW_TOWERS(旧名 AGJ_)→ nas03 の 20260615_overpass_towers。
+
+    どれにも無ければ最初の NAS の場所を返す(読む側が「見つからない」と言って止まる)。"""
+    for key in ("AJG_OSM_RAW_TOWERS", "AGJ_OSM_RAW_TOWERS"):
+        v = os.environ.get(key)
+        if v:
+            return v
+    for d in JUNE_RAW_DIRS:
+        if os.path.isdir(d):
+            return d
+    return JUNE_RAW_DIRS[0]
+
+
+def missing_raw_message(raw_dir: str) -> str:
+    return (f"鉄塔の生データ(tw_*_t*.json)が見つからない: {raw_dir}\n"
+            "  nas03 の osm_jp_power/20261105_agj_transmission/json を読む。pws-160core なら /mnt/nas03 にある。"
+            "Mac なら smb://pws-nas03.local/PWS_DB をつなぐか、--raw / 環境変数 AJG_OSM_RAW_TOWERS で場所を渡す")
 
 
 def load_raw(raw_dir: str):

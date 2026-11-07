@@ -161,6 +161,82 @@ def load_lines(args) -> list[dict]:
     return [dict(zip(cols, r)) for r in cur.fetchall()]
 
 
+# 変電所の位置は、そのエリアの県の中にあるものだけを使う。同じ名前の別の変電所を引くことがある
+# (2026-11-07: 東北の「福島変電所」が北海道の福島町、中部の「高根」が千葉、北陸の「南条」が長野に当たっていた)。
+# 供給区域の外にある設備(東京の福島・新潟の発電所、関西の黒部・木曽の水力・嶺南の原子力など)は、ここで足す。
+AREA_EXTRA_PREFS = {
+    "tokyo": {"静岡県", "長野県", "福島県", "新潟県"},
+    "chubu": {"静岡県", "富山県"},   # 富山 = 越美幹線の南福光(中部と北陸の連系の点)
+    "hokuriku": {"岐阜県"},
+    "kansai": {"福井県", "富山県", "岐阜県", "長野県", "三重県"},
+}
+
+
+def _pref_polys() -> list:
+    path = ROOT / "data" / "reference" / "japan_prefectures_simplified.geojson"
+    out = []
+    for ft in json.loads(path.read_text(encoding="utf-8"))["features"]:
+        g = ft["geometry"]
+        for poly in ([g["coordinates"]] if g["type"] == "Polygon" else g["coordinates"]):
+            out.append((ft["properties"]["pref_ja"], poly[0]))
+    return out
+
+
+def _inside(pt, ring) -> bool:
+    x, y, hit = pt[0], pt[1], False
+    for (x1, y1), (x2, y2) in zip(ring, ring[1:] + ring[:1]):
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+            hit = not hit
+    return hit
+
+
+def pref_of(pt, polys) -> str | None:
+    """点の県(海の上の発電所などで、どの県にも入らなければ 5 km 以内でいちばん近い県)。"""
+    for name, ring in polys:
+        if _inside(pt, ring):
+            return name
+    best = None
+    for name, ring in polys:
+        d = min(abs(pt[0] - x) + abs(pt[1] - y) for x, y in ring)
+        if d < 0.05 and (best is None or d < best[0]):
+            best = (d, name)
+    return best[1] if best else None
+
+
+def station_points(obs: list[dict]) -> dict:
+    """両端の変電所の位置 [経度, 緯度](照合と同じ名前の解決。経路が見つからない線路でも、変電所が引ければ位置は出る)。
+
+    潮流マップで、線路を両端の変電所から描き始め・描き終え、モデルの線が切れているところを点線でつなぐのに使う。
+    """
+    from scripts.export_obs_compare import clean_station
+    from scripts.match_impedance_to_model import load_model, resolve
+    from src.powerflow.region_attribution import PREF_AREA
+    polys = _pref_polys()
+
+    def allowed(util: str) -> set:
+        return {p for p, ar in PREF_AREA.items() if ar == util} | AREA_EXTRA_PREFS.get(util, set())
+
+    idx: dict = {}
+    out: dict = {}
+    for o in obs:
+        for nm in (o["from"], o["to"]):
+            key = (o["util"], nm)
+            if key in out or not nm:
+                continue
+            if o["util"] not in idx:
+                idx[o["util"]] = load_model(o["util"])[0]
+            c = clean_station(nm)
+            _lv, node = resolve(c, idx[o["util"]]) if c else ("empty", None)
+            pt = [round(float(node["lon"]), 4), round(float(node["lat"]), 4)] if node else None
+            if pt:
+                pref = pref_of(pt, polys)
+                if pref not in allowed(o["util"]):
+                    print(f"  位置を使わない: {o['util']} {nm} → {node.get('name')} {pt}({pref or '県の外'}、エリアの外)")
+                    pt = None
+            out[key] = pt
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", type=Path, default=Path("/mnt/nas03/db/pws.duckdb"))
@@ -187,12 +263,14 @@ def main() -> int:
     matched, tally = match_all(obs, built)
 
     by_key = {(m["util"], m["name"], m["direction"]): m for m in matched}
+    xy = station_points(obs)
     recs = []
     for o in obs:
         m = by_key.get((o["util"], o["name"], o["direction"]))
         rec = {"area": o["util"], "line": o["name"], "kv": o["kv"], "direction": o["direction"],
                "from": o["from_occto"], "to": o["to_occto"],
                "from_model_name": o["from"] or None, "to_model_name": o["to"] or None,
+               "from_xy": xy.get((o["util"], o["from"])), "to_xy": xy.get((o["util"], o["to"])),
                "conf": m["conf"] if m else None}
         if m:
             rec.update({k: m[k] for k in ("island", "segs", "path_km", "straight_km", "single_ended",
@@ -222,7 +300,8 @@ def main() -> int:
     out = {
         "note": ("OCCTO 地内基幹送電線の潮流実績の線路 → AGJ のモデルの線の鍵。値(潮流)は含まない。"
                  "segs = 経路の区間ごとの [線の鍵, 向き(+1 はその線の from→to が OCCTO の正方向と同じ), 回線数]。"
-                 "conf: A=名前と両端 B=両端のみ(短い経路) C=片端と線名(向きは判定しない) null=未照合"),
+                 "conf: A=名前と両端 B=両端のみ(短い経路) C=片端と線名(向きは判定しない) null=未照合。"
+                 "from_xy/to_xy = 両端の変電所の位置 [経度, 緯度](引けなければ null)"),
         "method": "scripts/build_occto_line_crosswalk.py(照合は scripts/export_obs_compare.py の match_all)",
         "built_sha256": hashlib.sha256(raw).hexdigest()[:12],
         "made_at": dt.datetime.now().isoformat(timespec="seconds"),

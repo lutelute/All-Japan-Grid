@@ -581,6 +581,22 @@
             <span id="osm-layer-hint"></span>
         </div>
 
+        <!-- 2026-11-07: つながりの点検の候補(js/route_audit.js・scripts/audit_route_connectivity.py)。誤りの判定ではない -->
+        <div class="ui-sec">
+            <div class="ui-label">つながりの点検（候補）</div>
+            <div class="chip-toggles">
+                <label class="chip-cb"><input type="checkbox" id="chk-audit"/><span>印を出す</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-audit-obs" checked/><span>観測（OSM）</span></label>
+                <label class="chip-cb"><input type="checkbox" id="chk-audit-canon" checked/><span>正典</span></label>
+            </div>
+            <div class="seg" id="audit-kv" role="group" aria-label="点検の印の電圧">
+                <button type="button" data-v="154" class="active">154 kV+</button><button type="button" data-v="66">66+</button><button type="button" data-v="0">すべて</button>
+            </div>
+            <div id="audit-legend" class="audit-legend"></div>
+            <span id="audit-hint"></span>
+            <p class="ui-note">候補であって誤りの判定ではありません。印を押すと、航空写真・OSM・近くの線と変電所・正典での扱いを出します。地域ごとの一覧は docs/reports/route_connectivity_audit_*.md。</p>
+        </div>
+
         <div class="ui-sec">
             <div class="ui-label">地域</div>
             <div class="region-list" id="region-list"></div>
@@ -835,7 +851,8 @@
 <script src="./js/agj_tabs.js?v=1"></script>
 <script src="./js/grid_map.js?v=45"></script>
 <script src="./js/osm_routes.js?v=4"></script>
-<script src="./js/tower_dots.js?v=3"></script>
+<script src="./js/tower_dots.js?v=4"></script>
+<script src="./js/route_audit.js?v=1"></script>
 <script src="./js/grid_search.js?v=2"></script>
 <script src="./js/sld.js?v=34"></script>
 <script src="./js/ybus_sim.js?v=3"></script>

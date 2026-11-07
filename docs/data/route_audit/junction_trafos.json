@@ -1,0 +1,4705 @@
+{
+ "what": "潮流計算の網(build_island_net の既定)で、両側のバスが変電所でない(分岐点・鉄塔)変圧器の一覧",
+ "how": {
+  "colocated": "同じ座標にある電圧の違う点を変圧器でつないだ(full_from_built の『同じ座標の変圧器』)",
+  "43a": "線の電圧と違う電圧の点に線がつながっていて、介入#43a が変圧器を足した"
+ },
+ "canon": {
+  "split": "正典では電圧ごとに別の点(同じ座標)",
+  "one": "正典で 1 つの点に電圧の違う枝がつながる"
+ },
+ "class": {
+  "photo": "航空写真で確かめた 26 か所(mixed_kv_review.json)",
+  "unknown_kv": "同じ座標に電圧不明の点がある(隣の地域の取り出しの写しが多い)。潮流計算は仮に 66 kV と置いて変圧器でつなぐ",
+  "made_edge": "作った枝(公表・回収・引込み・名前での結び付け)が関わる",
+  "near_sub": "変電所から 300 m 以内",
+  "other": "そのほか"
+ },
+ "source": "docs/data/built/all.json",
+ "totals": {
+  "hokkaido": {
+   "trafos": 69,
+   "junction_trafos": 0
+  },
+  "east": {
+   "trafos": 676,
+   "junction_trafos": 24
+  },
+  "west": {
+   "trafos": 997,
+   "junction_trafos": 71
+  },
+  "okinawa": {
+   "trafos": 19,
+   "junction_trafos": 1
+  }
+ },
+ "by_how": {
+  "43a": 31,
+  "colocated": 65
+ },
+ "by_class": {
+  "unknown_kv": 51,
+  "made_edge": 16,
+  "photo": 25,
+  "near_sub": 4
+ },
+ "items": [
+  {
+   "island": "east",
+   "lat": 35.19628,
+   "lon": 138.64022,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.1963:138.6402:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.1963:138.6402:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中野台二丁目変電所~浅間上町変電所線"
+    ],
+    [
+     0.0,
+     "中野台二丁目変電所~浅間上町変電所線"
+    ],
+    [
+     66.0,
+     "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+    ],
+    [
+     77.0,
+     "岩渕-沼津線"
+    ],
+    [
+     77.0,
+     "岩渕-沼津線"
+    ],
+    [
+     154.0,
+     "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東京電力パワーグリッド 154.0kV線 / 田代幹線 / 富"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 4531,
+   "nearest_sub": "中野台二丁目変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.23335,
+   "lon": 139.11402,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.2333:139.114:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_187"
+    ],
+    [
+     66.0,
+     "箱根町変電所~須雲川変電所線 / 東京電力パワーグリッド 66.0kV線"
+    ],
+    [
+     77.0,
+     "東京電力パワーグリッド 66.0kV線 / 箱根町変電所~須雲川変電所線 / 函南町変電所~須雲川変電所線 / 元箱根線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 115,
+   "nearest_sub": "箱根町変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.28234,
+   "lon": 139.14285,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.2823:139.1428:77",
+     77.0,
+     1
+    ],
+    [
+     "chubu_jct_35.2823:139.1428:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     77.0,
+     "leadin"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 1278,
+   "nearest_sub": "多古変電所 77kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "east",
+   "lat": 35.3489,
+   "lon": 139.0899,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.3489:139.0899:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.3489:139.0899:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_189"
+    ],
+    [
+     0.0,
+     "東京送電線_35"
+    ],
+    [
+     66.0,
+     "東京電力パワーグリッド 66.0kV線"
+    ],
+    [
+     77.0,
+     "東京電力パワーグリッド 66.0kV線 / 大雄線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 4443,
+   "nearest_sub": "小田急電鉄 松田変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.48878,
+   "lon": 138.32805,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.4888:138.3281:154",
+     154.0,
+     1
+    ],
+    [
+     "chubu_jct_35.4888:138.3281:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "韮崎市変電所~市川大門線"
+    ],
+    [
+     66.0,
+     "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+    ],
+    [
+     154.0,
+     "田代幹線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 16333,
+   "nearest_sub": "身延変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.48878,
+   "lon": 138.32805,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.4888:138.3281:154",
+     154.0,
+     1
+    ],
+    [
+     "chubu_jct_35.4888:138.3281:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "韮崎市変電所~市川大門線"
+    ],
+    [
+     66.0,
+     "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+    ],
+    [
+     154.0,
+     "田代幹線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 16333,
+   "nearest_sub": "身延変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.62192,
+   "lon": 138.55078,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.6219:138.5508:154",
+     154.0,
+     1
+    ],
+    [
+     "chubu_jct_35.6219:138.5508:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_344"
+    ],
+    [
+     154.0,
+     "東京送電線_56"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 852,
+   "nearest_sub": "昭和町変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.6222,
+   "lon": 138.55013,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.6222:138.5501:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_35.6222:138.5501:0",
+     0.0,
+     4
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_342"
+    ],
+    [
+     0.0,
+     "中部送電線_343"
+    ],
+    [
+     0.0,
+     "中部送電線_344"
+    ],
+    [
+     0.0,
+     "昭和町変電所~堀之内町変電所線"
+    ],
+    [
+     154.0,
+     "namebind"
+    ],
+    [
+     154.0,
+     "東京送電線_55"
+    ],
+    [
+     154.0,
+     "東京送電線_56"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 805,
+   "nearest_sub": "昭和町変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.62276,
+   "lon": 138.55365,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.6228:138.5536:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_35.6228:138.5536:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_343"
+    ],
+    [
+     154.0,
+     "天竜南線"
+    ],
+    [
+     154.0,
+     "天竜南線"
+    ],
+    [
+     154.0,
+     "天竜南線 / 天竜東幹線 / 日野春線 / 中部電力パワーグリッド 154.0kV線 / 中信変電所~松島変電所線"
+    ],
+    [
+     154.0,
+     "東京送電線_55"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 888,
+   "nearest_sub": "昭和町変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 35.80016,
+   "lon": 139.31584,
+   "hv_kv": 275.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.8002:139.3158:275",
+     275.0,
+     3
+    ],
+    [
+     "tokyo_jct_35.8002:139.3158:66",
+     66.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "豊岡線;上ノ原線"
+    ],
+    [
+     66.0,
+     "青梅線;上ノ原線"
+    ],
+    [
+     66.0,
+     "飯能線"
+    ],
+    [
+     275.0,
+     "豊岡線;上ノ原線"
+    ],
+    [
+     275.0,
+     "青梅線"
+    ],
+    [
+     275.0,
+     "青梅線;上ノ原線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 623,
+   "nearest_sub": "青梅変電所 275kV",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 35.80426,
+   "lon": 139.62271,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.8043:139.6227:66",
+     66.0,
+     4
+    ],
+    [
+     "tokyo_jct_35.8043:139.6227:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "京北線;新倉線"
+    ],
+    [
+     66.0,
+     "戸田線 / 荒川右岸線"
+    ],
+    [
+     66.0,
+     "笹目線 / 新倉線"
+    ],
+    [
+     66.0,
+     "笹目線;朝霞線"
+    ],
+    [
+     154.0,
+     "戸田線"
+    ],
+    [
+     154.0,
+     "笹目線 / 新倉線"
+    ],
+    [
+     154.0,
+     "笹目線;朝霞線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1798,
+   "nearest_sub": "朝霞変電所 154kV",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 35.82604,
+   "lon": 139.78193,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.826:139.7819:66",
+     66.0,
+     1
+    ],
+    [
+     "tokyo_jct_35.826:139.7819:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "南葛線;東尾久線"
+    ],
+    [
+     154.0,
+     "南葛線;東尾久線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 377,
+   "nearest_sub": "京北変電所 275kV",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 35.89294,
+   "lon": 139.481,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.8929:139.481:66",
+     66.0,
+     1
+    ],
+    [
+     "tokyo_jct_35.8929:139.481:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "京北線;脇田線"
+    ],
+    [
+     154.0,
+     "京北線;脇田線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 283,
+   "nearest_sub": "福原変電所 154kV",
+   "class": "near_sub"
+  },
+  {
+   "island": "east",
+   "lat": 36.2743,
+   "lon": 139.6037,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.2743:139.6037:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_36.2743:139.6037:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "楠線"
+    ],
+    [
+     66.0,
+     "佐野線 / 板倉線"
+    ],
+    [
+     66.0,
+     "佐野線 / 板倉線"
+    ],
+    [
+     66.0,
+     "楠線"
+    ],
+    [
+     154.0,
+     "佐野線 / 板倉線"
+    ],
+    [
+     154.0,
+     "佐野線 / 赤麻線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2425,
+   "nearest_sub": "南佐野変電所",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 36.31568,
+   "lon": 139.33113,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3157:139.3311:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_36.3157:139.3311:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "東太田線/毛里田線"
+    ],
+    [
+     66.0,
+     "東太田線/藪塚線"
+    ],
+    [
+     66.0,
+     "毛里田線/藪塚線/金山線"
+    ],
+    [
+     154.0,
+     "東太田線/毛里田線"
+    ],
+    [
+     154.0,
+     "東太田線/藪塚線"
+    ],
+    [
+     154.0,
+     "毛里田線/藪塚線/金山線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1864,
+   "nearest_sub": "東毛変電所 500kV",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 36.32945,
+   "lon": 138.43587,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3294:138.4359:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.3294:138.4359:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "東京送電線_263"
+    ],
+    [
+     66.0,
+     "大屋変電所~小諸市変電所線 / 小諸市変電所~大字御代田変電所線 / 東京電力海瀬発電所~大字御代田変電所線"
+    ],
+    [
+     77.0,
+     "中部送電線_919"
+    ],
+    [
+     77.0,
+     "大屋変電所~小諸市変電所線"
+    ],
+    [
+     77.0,
+     "大屋変電所~小諸市変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 2278,
+   "nearest_sub": "小諸市変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 36.33087,
+   "lon": 138.6205,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3309:138.6205:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_36.3309:138.6205:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     66.0,
+     "東京送電線_261"
+    ],
+    [
+     66.0,
+     "軽磯線"
+    ],
+    [
+     77.0,
+     "leadin"
+    ],
+    [
+     77.0,
+     "中部送電線_841"
+    ],
+    [
+     77.0,
+     "中部送電線_841"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 1456,
+   "nearest_sub": "軽井沢変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "east",
+   "lat": 36.40647,
+   "lon": 138.26751,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.4065:138.2675:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.4065:138.2675:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4151"
+    ],
+    [
+     66.0,
+     "国分変電所~真田変電所線 / 東信坂城連絡線 / 東信大屋線 / 中部電力パワーグリッド 77.0kV線 / 小諸市変電"
+    ],
+    [
+     77.0,
+     "中部送電線_370"
+    ],
+    [
+     77.0,
+     "国分変電所~真田変電所線"
+    ],
+    [
+     77.0,
+     "大屋変電所~国分変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 2272,
+   "nearest_sub": "国分変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 36.52294,
+   "lon": 138.6203,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.5229:138.6203:66",
+     66.0,
+     1
+    ],
+    [
+     "chubu_jct_36.5229:138.6203:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "東京送電線_269"
+    ],
+    [
+     77.0,
+     "中部送電線_1053"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3097,
+   "nearest_sub": "大津変電所",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 36.52332,
+   "lon": 138.61718,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.5233:138.6172:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_36.5233:138.6172:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "東京送電線_269"
+    ],
+    [
+     66.0,
+     "軽井沢変電所~大津変電所線"
+    ],
+    [
+     66.0,
+     "軽井沢変電所~大津変電所線"
+    ],
+    [
+     77.0,
+     "中部送電線_1053"
+    ],
+    [
+     77.0,
+     "軽井沢変電所~大津変電所線"
+    ],
+    [
+     77.0,
+     "軽井沢変電所~大津変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3119,
+   "nearest_sub": "大津変電所",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 36.79524,
+   "lon": 138.7749,
+   "hv_kv": 500.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.7952:138.7749:500",
+     500.0,
+     3
+    ],
+    [
+     "chubu_jct_36.7952:138.7749:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "浅貝線"
+    ],
+    [
+     500.0,
+     "新新潟幹線"
+    ],
+    [
+     500.0,
+     "新新潟幹線"
+    ],
+    [
+     500.0,
+     "浅貝線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1076,
+   "nearest_sub": "浅貝変電所 500kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 36.89126,
+   "lon": 138.74913,
+   "hv_kv": 275.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.8913:138.7491:275",
+     275.0,
+     3
+    ],
+    [
+     "chubu_jct_36.8913:138.7491:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_368"
+    ],
+    [
+     275.0,
+     "新湯沢変電所~神立変電所線"
+    ],
+    [
+     275.0,
+     "神立変電所~土樽変電所線"
+    ],
+    [
+     275.0,
+     "神立変電所~灰雨変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 5802,
+   "nearest_sub": "神立変電所_2",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "east",
+   "lat": 37.33051,
+   "lon": 140.34098,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tohoku_jct_37.3305:140.341:66",
+     66.0,
+     3
+    ],
+    [
+     "tokyo_jct_37.3305:140.341:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "tohoku",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "東北電力ネットワーク 154.0kV線"
+    ],
+    [
+     66.0,
+     "西山寺町変電所~笹川変電所線"
+    ],
+    [
+     66.0,
+     "西山寺町変電所~笹川変電所線"
+    ],
+    [
+     154.0,
+     "tokyo_line_4260"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2343,
+   "nearest_sub": "JR東日本 新郡山変電所 275kV",
+   "class": "photo"
+  },
+  {
+   "island": "east",
+   "lat": 38.2422,
+   "lon": 140.96369,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tohoku_jct_38.2422:140.9637:154",
+     154.0,
+     3
+    ],
+    [
+     "tohoku_jct_38.2422:140.9637:66",
+     66.0,
+     3
+    ]
+   ],
+   "regions": [
+    "tohoku"
+   ],
+   "edges": [
+    [
+     66.0,
+     "仙台港変電所~東若林変電所線"
+    ],
+    [
+     66.0,
+     "東北電力ネットワーク 154.0kV線"
+    ],
+    [
+     66.0,
+     "東若林変電所~鶴巻二丁目変電所線"
+    ],
+    [
+     154.0,
+     "leadin"
+    ],
+    [
+     154.0,
+     "東北電力ネットワーク 154.0kV線"
+    ],
+    [
+     154.0,
+     "東若林変電所~仙台港変電所線"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 1256,
+   "nearest_sub": "東若林変電所 154kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "okinawa",
+   "lat": 26.43108,
+   "lon": 127.84008,
+   "hv_kv": 132.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "okinawa_jct_26.4311:127.8401:66",
+     66.0,
+     1
+    ],
+    [
+     "okinawa_jct_26.4311:127.8401:132",
+     132.0,
+     1
+    ]
+   ],
+   "regions": [
+    "okinawa"
+   ],
+   "edges": [
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     132.0,
+     "leadin"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 1260,
+   "nearest_sub": "石川東山二丁目変電所 132kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 32.45961,
+   "lon": 130.70809,
+   "hv_kv": 220.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kyushu_jct_32.4596:130.7081:220",
+     220.0,
+     4
+    ]
+   ],
+   "regions": [
+    "kyushu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "八代変電所~頭地開閉所線"
+    ],
+    [
+     66.0,
+     "八代変電所~頭地開閉所線"
+    ],
+    [
+     220.0,
+     "中九州大平線"
+    ],
+    [
+     220.0,
+     "中九州大平線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 9035,
+   "nearest_sub": "新坂本変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 33.98228,
+   "lon": 132.09506,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_33.9823:132.0951:110",
+     110.0,
+     3
+    ],
+    [
+     "shikoku_jct_33.9823:132.0951:110",
+     110.0,
+     3
+    ],
+    [
+     "kyushu_jct_33.9823:132.0951:0",
+     0.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kyushu",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "九州送電線_381"
+    ],
+    [
+     0.0,
+     "古開作変電所~高森線"
+    ],
+    [
+     0.0,
+     "古開作変電所~高森線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "柳井市変電所~古開作変電所線"
+    ],
+    [
+     110.0,
+     "柳井市変電所~古開作変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1879,
+   "nearest_sub": "古開作変電所 220kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.00815,
+   "lon": 130.98401,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.0081:130.984:66",
+     66.0,
+     1
+    ],
+    [
+     "chugoku_jct_34.0081:130.984:110",
+     110.0,
+     1
+    ],
+    [
+     "kyushu_jct_34.0081:130.984:66",
+     66.0,
+     1
+    ],
+    [
+     "kyushu_jct_34.0081:130.984:110",
+     110.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kyushu"
+   ],
+   "edges": [
+    [
+     66.0,
+     "長府支線;長府線"
+    ],
+    [
+     66.0,
+     "長府支線;長府線"
+    ],
+    [
+     110.0,
+     "長府支線;長府線"
+    ],
+    [
+     110.0,
+     "長府支線;長府線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 119,
+   "nearest_sub": "長府変電所 110kV",
+   "class": "near_sub"
+  },
+  {
+   "island": "west",
+   "lat": 34.09006,
+   "lon": 132.0919,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.0901:132.0919:110",
+     110.0,
+     1
+    ],
+    [
+     "shikoku_jct_34.0901:132.0919:110",
+     110.0,
+     1
+    ],
+    [
+     "kyushu_jct_34.0901:132.0919:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kyushu",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "九州送電線_378"
+    ],
+    [
+     110.0,
+     "中国送電線_331"
+    ],
+    [
+     110.0,
+     "四国送電線_127"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3732,
+   "nearest_sub": "高森",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.09183,
+   "lon": 132.12504,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.0918:132.125:110",
+     110.0,
+     3
+    ],
+    [
+     "shikoku_jct_34.0918:132.125:110",
+     110.0,
+     3
+    ],
+    [
+     "kyushu_jct_34.0918:132.125:0",
+     0.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kyushu",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "九州送電線_378"
+    ],
+    [
+     0.0,
+     "古開作変電所~高森線"
+    ],
+    [
+     0.0,
+     "古開作変電所~高森線"
+    ],
+    [
+     110.0,
+     "中国送電線_331"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "古開作変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "四国送電線_127"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 6735,
+   "nearest_sub": "高森",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.14777,
+   "lon": 132.18032,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.1478:132.1803:110",
+     110.0,
+     3
+    ],
+    [
+     "shikoku_jct_34.1478:132.1803:110",
+     110.0,
+     3
+    ],
+    [
+     "kyushu_jct_34.1478:132.1803:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kyushu",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "九州送電線_536"
+    ],
+    [
+     0.0,
+     "錦見三丁目変電所~美和町西畑変電所線"
+    ],
+    [
+     0.0,
+     "錦見三丁目変電所~美和町西畑変電所線"
+    ],
+    [
+     110.0,
+     "中国電力ネットワーク 110.0kV線"
+    ],
+    [
+     110.0,
+     "四国電力送配電 110.0kV線"
+    ],
+    [
+     110.0,
+     "錦見三丁目変電所~藤生町三丁目変電所線"
+    ],
+    [
+     110.0,
+     "錦見三丁目変電所~藤生町三丁目変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2842,
+   "nearest_sub": "錦見三丁目変電所 220kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.15846,
+   "lon": 136.27198,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.1585:136.272:154",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_34.1585:136.272:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "関西送電線_81"
+    ],
+    [
+     77.0,
+     "相賀分岐線"
+    ],
+    [
+     154.0,
+     "電源尾鷲南勢線"
+    ],
+    [
+     154.0,
+     "電源尾鷲南勢線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 11328,
+   "nearest_sub": "宮ノ上変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.36004,
+   "lon": 135.25065,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.36:135.2506:66",
+     66.0,
+     1
+    ],
+    [
+     "kansai_jct_34.36:135.2506:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "尾崎支線;尾崎信達線"
+    ],
+    [
+     77.0,
+     "尾崎支線;尾崎信達線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 151,
+   "nearest_sub": "尾崎変電所 77kV",
+   "class": "near_sub"
+  },
+  {
+   "island": "west",
+   "lat": 34.38648,
+   "lon": 132.55636,
+   "hv_kv": 220.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.3865:132.5564:220",
+     220.0,
+     1
+    ],
+    [
+     "shikoku_jct_34.3865:132.5564:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "大州四丁目変電所~南西条変電所線"
+    ],
+    [
+     220.0,
+     "中国送電線_279"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2717,
+   "nearest_sub": "中野五丁目変電所 220kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.396,
+   "lon": 133.15431,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.396:133.1543:0",
+     110.0,
+     3
+    ],
+    [
+     "shikoku_jct_34.396:133.1543:0",
+     0.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "向島変電所~沼田一丁目変電所線"
+    ],
+    [
+     0.0,
+     "向島変電所~沼隈町大字草深変電所線"
+    ],
+    [
+     0.0,
+     "向島変電所~沼隈町大字草深変電所線"
+    ],
+    [
+     0.0,
+     "栗原西一丁目変電所~中国電力（株）本庄変電所線"
+    ],
+    [
+     0.0,
+     "栗原西一丁目変電所~沼田一丁目変電所線"
+    ],
+    [
+     110.0,
+     "namebind"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 3227,
+   "nearest_sub": "栗原西一丁目変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.40253,
+   "lon": 135.82159,
+   "hv_kv": 500.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.4025:135.8216:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "東吉野変電所~関西電力北野台変電所線"
+    ],
+    [
+     66.0,
+     "関西送電線_90 / 東吉野変電所~関西電力北野台変電所線"
+    ],
+    [
+     500.0,
+     "紀北変換所~東大和開閉所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 814,
+   "nearest_sub": "関西電力北野台変電所 500kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.41135,
+   "lon": 132.26044,
+   "hv_kv": 220.0,
+   "lv_kv": 110.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "shikoku_jct_34.4114:132.2604:110",
+     110.0,
+     1
+    ],
+    [
+     "shikoku_jct_34.4114:132.2604:220",
+     220.0,
+     1
+    ]
+   ],
+   "regions": [
+    "shikoku"
+   ],
+   "edges": [
+    [
+     110.0,
+     "西広島変電所~廿日市変電所線"
+    ],
+    [
+     220.0,
+     "段原変電所~廿日市変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 296,
+   "nearest_sub": "新西広島変電所 500kV",
+   "class": "near_sub"
+  },
+  {
+   "island": "west",
+   "lat": 34.42615,
+   "lon": 132.61868,
+   "hv_kv": 220.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.4262:132.6187:220",
+     220.0,
+     3
+    ],
+    [
+     "shikoku_jct_34.4262:132.6187:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "大州四丁目変電所~南西条変電所線"
+    ],
+    [
+     220.0,
+     "中国送電線_279"
+    ],
+    [
+     220.0,
+     "中国送電線_281"
+    ],
+    [
+     220.0,
+     "中国送電線_282"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 4548,
+   "nearest_sub": "中野五丁目変電所 220kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.47013,
+   "lon": 134.89038,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.4701:134.8904:77",
+     77.0,
+     3
+    ],
+    [
+     "shikoku_jct_34.4701:134.8904:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai",
+    "shikoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "四国送電線_84"
+    ],
+    [
+     77.0,
+     "志筑変電所~松帆西路変電所線"
+    ],
+    [
+     77.0,
+     "浦変電所~志筑変電所線"
+    ],
+    [
+     77.0,
+     "関西送電線_51"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3589,
+   "nearest_sub": "志筑変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.50338,
+   "lon": 133.5394,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chugoku_jct_34.5034:133.5394:110",
+     110.0,
+     3
+    ],
+    [
+     "chugoku_jct_34.5034:133.5394:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "鴨方変電所~富岡変電所線"
+    ],
+    [
+     66.0,
+     "田頭変電所~富岡変電所線"
+    ],
+    [
+     110.0,
+     "富岡変電所~倉敷市変電所線"
+    ],
+    [
+     110.0,
+     "笠岡変電所~富岡変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1474,
+   "nearest_sub": "富岡変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.58627,
+   "lon": 135.5191,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.5863:135.5191:77",
+     77.0,
+     1
+    ],
+    [
+     "kansai_jct_34.5863:135.5191:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "金田線"
+    ],
+    [
+     77.0,
+     "namebind"
+    ],
+    [
+     154.0,
+     "八尾変電所~天美変電所線"
+    ],
+    [
+     154.0,
+     "長曽根支線"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 849,
+   "nearest_sub": "天美変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 34.67038,
+   "lon": 135.08278,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.6704:135.0828:77",
+     77.0,
+     3
+    ],
+    [
+     "kansai_jct_34.6704:135.0828:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "大蔵谷線;有瀬舞子線"
+    ],
+    [
+     77.0,
+     "大蔵谷線;有瀬舞子線"
+    ],
+    [
+     77.0,
+     "関西電力送配電 77.0kV線"
+    ],
+    [
+     77.0,
+     "須磨変電所~西神戸変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3389,
+   "nearest_sub": "須磨変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.67553,
+   "lon": 138.15922,
+   "hv_kv": 500.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.6755:138.1592:500",
+     500.0,
+     3
+    ],
+    [
+     "chubu_jct_34.6755:138.1592:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_711"
+    ],
+    [
+     77.0,
+     "中部電力パワーグリッド（株）大須賀変電所~上ノ原変電所線"
+    ],
+    [
+     500.0,
+     "第二浜岡幹線"
+    ],
+    [
+     500.0,
+     "第二浜岡幹線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 5225,
+   "nearest_sub": "上ノ原変電所_2 500kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.69878,
+   "lon": 135.65088,
+   "hv_kv": 275.0,
+   "lv_kv": 154.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.6988:135.6509:154",
+     275.0,
+     3
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     154.0,
+     "新奈良線"
+    ],
+    [
+     154.0,
+     "新奈良線"
+    ],
+    [
+     275.0,
+     "namebind"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 1024,
+   "nearest_sub": "東大阪変電所 275kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 34.70373,
+   "lon": 135.40864,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.7037:135.4086:77",
+     77.0,
+     1
+    ],
+    [
+     "kansai_jct_34.7037:135.4086:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     77.0,
+     "関西電力送配電 77.0kV線"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 649,
+   "nearest_sub": "道意町七丁目変電所 77kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 34.72498,
+   "lon": 136.50117,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.725:136.5012:66",
+     66.0,
+     1
+    ],
+    [
+     "kansai_jct_34.725:136.5012:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "近鉄部田線"
+    ],
+    [
+     66.0,
+     "近鉄部田線"
+    ],
+    [
+     77.0,
+     "津東丸之内線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 1804,
+   "nearest_sub": "桜田町変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 34.77042,
+   "lon": 135.44284,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.7704:135.4428:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "関西電力送配電 22.0kV線"
+    ],
+    [
+     77.0,
+     "関西電力送配電 77.0kV線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 918,
+   "nearest_sub": "椎堂変電所 77kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 34.8291,
+   "lon": 134.50323,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.8291:134.5032:77",
+     77.0,
+     3
+    ],
+    [
+     "chugoku_jct_34.8291:134.5032:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chugoku",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中国送電線_28"
+    ],
+    [
+     77.0,
+     "関西送電線_132"
+    ],
+    [
+     77.0,
+     "関西送電線_222"
+    ],
+    [
+     77.0,
+     "鵤変電所~揖保川町変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 908,
+   "nearest_sub": "揖保川町変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.83695,
+   "lon": 136.51826,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.8369:136.5183:77",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_34.8369:136.5183:77",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     77.0,
+     "中部送電線_885"
+    ],
+    [
+     77.0,
+     "庄野新鈴鹿線"
+    ],
+    [
+     77.0,
+     "庄野新鈴鹿線"
+    ],
+    [
+     77.0,
+     "関西送電線_828"
+    ],
+    [
+     154.0,
+     "中部送電線_451"
+    ],
+    [
+     154.0,
+     "関西送電線_549"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1928,
+   "nearest_sub": "住吉五丁目変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.85136,
+   "lon": 138.22185,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_34.8514:138.2218:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_34.8514:138.2218:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4097"
+    ],
+    [
+     154.0,
+     "中部送電線_204"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 4411,
+   "nearest_sub": "善左衛門三丁目変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.85532,
+   "lon": 138.23366,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_34.8553:138.2337:0",
+     0.0,
+     3
+    ],
+    [
+     "chubu_jct_34.8553:138.2337:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4096"
+    ],
+    [
+     0.0,
+     "tokyo_line_4097"
+    ],
+    [
+     0.0,
+     "tokyo_line_4098"
+    ],
+    [
+     154.0,
+     "中部送電線_750"
+    ],
+    [
+     154.0,
+     "善左衛門三丁目変電所~大村一丁目変電所線"
+    ],
+    [
+     154.0,
+     "善左衛門三丁目変電所~大村一丁目変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 4368,
+   "nearest_sub": "善左衛門三丁目変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.85547,
+   "lon": 138.22483,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_34.8555:138.2248:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_34.8555:138.2248:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4098"
+    ],
+    [
+     154.0,
+     "中部送電線_750"
+    ],
+    [
+     154.0,
+     "島田電力所~善左衛門三丁目変電所線"
+    ],
+    [
+     154.0,
+     "駿遠変電所~島田電力所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 4679,
+   "nearest_sub": "善左衛門三丁目変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.8588,
+   "lon": 135.64134,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_34.8588:135.6413:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "高槻上牧線"
+    ],
+    [
+     77.0,
+     "関西送電線_246"
+    ],
+    [
+     77.0,
+     "関西送電線_246"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 867,
+   "nearest_sub": "梶原六丁目変電所_2",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.87901,
+   "lon": 137.46841,
+   "hv_kv": 275.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.879:137.4684:275",
+     275.0,
+     4
+    ],
+    [
+     "chubu_jct_34.879:137.4684:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "西日本電線新城線"
+    ],
+    [
+     0.0,
+     "西日本電線新城線"
+    ],
+    [
+     77.0,
+     "新城分岐線"
+    ],
+    [
+     275.0,
+     "三河線"
+    ],
+    [
+     275.0,
+     "三河線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1963,
+   "nearest_sub": "新三河変電所 500kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.93884,
+   "lon": 137.15852,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_34.9388:137.1585:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "美合町変電所~中部電力八帖変電所線"
+    ],
+    [
+     66.0,
+     "中部送電線_66"
+    ],
+    [
+     77.0,
+     "戸崎六ッ美線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1806,
+   "nearest_sub": "六ッ美変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 34.95398,
+   "lon": 138.34796,
+   "hv_kv": 275.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_34.954:138.348:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_34.954:138.348:0",
+     275.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4116"
+    ],
+    [
+     275.0,
+     "namebind"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 1666,
+   "nearest_sub": "駿河区変電所_2",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 34.98058,
+   "lon": 138.4147,
+   "hv_kv": 110.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_34.9806:138.4147:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_34.9806:138.4147:110",
+     110.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "東京送電線_28"
+    ],
+    [
+     110.0,
+     "中部送電線_138"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1188,
+   "nearest_sub": "豊田変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.00981,
+   "lon": 135.98412,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.0098:135.9841:0",
+     0.0,
+     1
+    ],
+    [
+     "kansai_jct_35.0098:135.9841:154",
+     154.0,
+     4
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_4"
+    ],
+    [
+     154.0,
+     "東草津三丁目変電所~手原一丁目変電所線"
+    ],
+    [
+     154.0,
+     "東草津三丁目変電所~追分南八丁目変電所線"
+    ],
+    [
+     154.0,
+     "蜂屋変電所~東草津三丁目変電所線"
+    ],
+    [
+     154.0,
+     "関西送電線_554"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1164,
+   "nearest_sub": "東草津三丁目変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.04456,
+   "lon": 136.00738,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.0446:136.0074:0",
+     0.0,
+     3
+    ],
+    [
+     "kansai_jct_35.0446:136.0074:0",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "伊勢町変電所~近江河西変電所線"
+    ],
+    [
+     0.0,
+     "手原一丁目変電所~久野部変電所線"
+    ],
+    [
+     0.0,
+     "甲賀変電所~手原一丁目変電所線"
+    ],
+    [
+     0.0,
+     "甲賀変電所~手原一丁目変電所線"
+    ],
+    [
+     0.0,
+     "甲賀変電所~蜂屋変電所線"
+    ],
+    [
+     154.0,
+     "甲賀変電所~蜂屋変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1569,
+   "nearest_sub": "蜂屋変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.05844,
+   "lon": 134.74602,
+   "hv_kv": 275.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "kansai_jct_35.0584:134.746:66",
+     275.0,
+     3
+    ]
+   ],
+   "regions": [
+    "kansai"
+   ],
+   "edges": [
+    [
+     66.0,
+     "溝口支線"
+    ],
+    [
+     66.0,
+     "関西送電線_259"
+    ],
+    [
+     275.0,
+     "溝口変電所~福崎変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 8191,
+   "nearest_sub": "開閉所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.06841,
+   "lon": 137.0669,
+   "hv_kv": 275.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.0684:137.0669:77",
+     77.0,
+     1
+    ],
+    [
+     "chubu_jct_35.0684:137.0669:275",
+     275.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     77.0,
+     "612"
+    ],
+    [
+     275.0,
+     "612"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 405,
+   "nearest_sub": "三好変電所 275kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.10387,
+   "lon": 136.86075,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1039:136.8607:77",
+     77.0,
+     1
+    ],
+    [
+     "chubu_jct_35.1039:136.8607:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     77.0,
+     "昭和町寛政-1;寛政築港連絡-1"
+    ],
+    [
+     154.0,
+     "昭和町寛政-1;寛政築港連絡-1"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 323,
+   "nearest_sub": "寛政変電所 154kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.14489,
+   "lon": 139.03412,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1449:139.0341:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     66.0,
+     "玉川変電所~三島変電所線 / 大仁線 / 三島変電所~函南町変電所線 / 函南町変電所~土肥六丁目変電所線 / 熱海線 "
+    ],
+    [
+     77.0,
+     "JR 西相模-沼津線"
+    ],
+    [
+     77.0,
+     "JR 西相模-沼津線"
+    ],
+    [
+     77.0,
+     "JR熱海分岐線"
+    ],
+    [
+     77.0,
+     "天野変電所~立花二丁目変電所線 / 大仁線 / 三島変電所~函南町変電所線 / 函南町変電所~土肥六丁目変電所線 / 熱"
+    ],
+    [
+     77.0,
+     "天野変電所~立花二丁目変電所線 / 大仁線 / 三島変電所~函南町変電所線 / 函南町変電所~土肥六丁目変電所線 / 熱"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 5289,
+   "nearest_sub": "土肥六丁目変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 35.14915,
+   "lon": 137.34435,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1492:137.3444:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_35.1492:137.3444:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "豊田市変電所~愛知変電所線"
+    ],
+    [
+     77.0,
+     "前田町三丁目変電所~愛知変電所線"
+    ],
+    [
+     154.0,
+     "平戸橋町変電所~北豊田変電所 (Kita Toyota Hendensho)線"
+    ],
+    [
+     154.0,
+     "平戸橋町変電所~豊田市変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 8011,
+   "nearest_sub": "愛知変電所 500kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.15873,
+   "lon": 137.43278,
+   "hv_kv": 275.0,
+   "lv_kv": 154.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.1587:137.4328:154",
+     275.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "豊田市変電所~愛知変電所線"
+    ],
+    [
+     154.0,
+     "中部送電線_692"
+    ],
+    [
+     275.0,
+     "namebind"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 5015,
+   "nearest_sub": "豊田市変電所 275kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 35.19628,
+   "lon": 138.64022,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.1963:138.6402:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.1963:138.6402:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中野台二丁目変電所~浅間上町変電所線"
+    ],
+    [
+     0.0,
+     "中野台二丁目変電所~浅間上町変電所線"
+    ],
+    [
+     66.0,
+     "田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 / 富士川線"
+    ],
+    [
+     77.0,
+     "岩渕-沼津線"
+    ],
+    [
+     77.0,
+     "岩渕-沼津線"
+    ],
+    [
+     154.0,
+     "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東京電力パワーグリッド 154.0kV線 / 田代幹線 / 富"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 4531,
+   "nearest_sub": "中野台二丁目変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.2064,
+   "lon": 138.23452,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.2064:138.2345:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.2064:138.2345:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4282"
+    ],
+    [
+     154.0,
+     "中部送電線_734"
+    ],
+    [
+     154.0,
+     "葵区変電所~川根本町変電所線"
+    ],
+    [
+     154.0,
+     "葵区変電所~川根本町変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1277,
+   "nearest_sub": "tokyo_sub_1856",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.20822,
+   "lon": 138.62457,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.2082:138.6246:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_35.2082:138.6246:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中野台二丁目変電所~中島町変電所線"
+    ],
+    [
+     66.0,
+     "中野台二丁目変電所~中島町変電所線"
+    ],
+    [
+     66.0,
+     "東京電力パワーグリッド 66.0kV線"
+    ],
+    [
+     66.0,
+     "浅間上町変電所~中島町変電所線"
+    ],
+    [
+     77.0,
+     "浅間上町変電所~中島町変電所線 / 東京電力パワーグリッド 66.0kV線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 3660,
+   "nearest_sub": "中島町変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.21582,
+   "lon": 136.25348,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.2158:136.2535:77",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_35.2158:136.2535:77",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     77.0,
+     "namebind"
+    ],
+    [
+     77.0,
+     "namebind"
+    ],
+    [
+     77.0,
+     "高宮変電所~雨降野変電所線"
+    ],
+    [
+     77.0,
+     "高宮変電所~雨降野変電所線"
+    ],
+    [
+     154.0,
+     "蓮台寺町変電所~高宮変電所線"
+    ],
+    [
+     154.0,
+     "蓮台寺町変電所~高宮変電所線"
+    ]
+   ],
+   "made_edge": [
+    "namebind"
+   ],
+   "nearest_sub_m": 2298,
+   "nearest_sub": "高宮変電所 154kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 35.23307,
+   "lon": 136.7553,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.2331:136.7553:66",
+     154.0,
+     3
+    ],
+    [
+     "kansai_jct_35.2331:136.7553:66",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_75"
+    ],
+    [
+     0.0,
+     "関西送電線_444"
+    ],
+    [
+     66.0,
+     "平和町上三宅変電所~祖父江町大牧変電所線"
+    ],
+    [
+     66.0,
+     "平和町上三宅変電所~祖父江町大牧変電所線"
+    ],
+    [
+     154.0,
+     "平和町上三宅変電所~平野町四丁目変電所線"
+    ],
+    [
+     154.0,
+     "平和町上三宅変電所~平野町四丁目変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 1094,
+   "nearest_sub": "平和町上三宅変電所 154kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.23909,
+   "lon": 138.58939,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.2391:138.5894:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_35.2391:138.5894:0",
+     0.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_845"
+    ],
+    [
+     0.0,
+     "中部送電線_845"
+    ],
+    [
+     0.0,
+     "中部送電線_847"
+    ],
+    [
+     66.0,
+     "東京送電線_113"
+    ],
+    [
+     66.0,
+     "東京送電線_113"
+    ],
+    [
+     66.0,
+     "東京送電線_115"
+    ],
+    [
+     77.0,
+     "東京送電線_113 / 東京電力パワーグリッド 66.0kV線 / 浅間上町変電所~中島町変電所線 / 東京電力パワーグ"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 1135,
+   "nearest_sub": "中島町変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.33406,
+   "lon": 136.79918,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.3341:136.7992:154",
+     154.0,
+     1
+    ],
+    [
+     "kansai_jct_35.3341:136.7992:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "関西送電線_443"
+    ],
+    [
+     154.0,
+     "中部送電線_70"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2111,
+   "nearest_sub": "北一宮変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.39062,
+   "lon": 136.28554,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.3906:136.2855:77",
+     77.0,
+     3
+    ],
+    [
+     "chubu_jct_35.3906:136.2855:66",
+     66.0,
+     1
+    ],
+    [
+     "kansai_jct_35.3906:136.2855:77",
+     77.0,
+     3
+    ],
+    [
+     "kansai_jct_35.3906:136.2855:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "新長浜変電所~長浜変電所線"
+    ],
+    [
+     0.0,
+     "新長浜変電所~長浜変電所線"
+    ],
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     77.0,
+     "新長浜支線"
+    ],
+    [
+     77.0,
+     "新長浜支線"
+    ],
+    [
+     77.0,
+     "新長浜支線"
+    ],
+    [
+     77.0,
+     "新長浜支線"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 934,
+   "nearest_sub": "新長浜変電所 77kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 35.46406,
+   "lon": 137.01427,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.4641:137.0143:77",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "加茂野町鷹之巣変電所~西栃井変電所線"
+    ],
+    [
+     77.0,
+     "太田分岐線-1"
+    ],
+    [
+     154.0,
+     "中部電力パワーグリッド 154.0kV線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2149,
+   "nearest_sub": "加茂野町鷹之巣変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.46615,
+   "lon": 136.80622,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.4662:136.8062:77",
+     77.0,
+     3
+    ],
+    [
+     "kansai_jct_35.4662:136.8062:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "edges": [
+    [
+     0.0,
+     "北岐阜北町線"
+    ],
+    [
+     77.0,
+     "北岐阜北町線"
+    ],
+    [
+     77.0,
+     "北岐阜変電所 (Kita Gifu Hendensho)~鵜沼川崎町変電所線"
+    ],
+    [
+     77.0,
+     "北岐阜変電所 (Kita Gifu Hendensho)~鵜沼川崎町変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2832,
+   "nearest_sub": "北岐阜変電所 (Kita Gifu Hendensho) 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.54632,
+   "lon": 138.05666,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.5463:138.0567:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.5463:138.0567:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "大鹿送電線"
+    ],
+    [
+     154.0,
+     "大鹿送電線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 15124,
+   "nearest_sub": "中部電力 高森変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.55717,
+   "lon": 137.89753,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.5572:137.8975:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.5572:137.8975:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4126"
+    ],
+    [
+     77.0,
+     "中部送電線_601"
+    ],
+    [
+     77.0,
+     "駒ヶ根変電所~松尾寺所変電所線"
+    ],
+    [
+     77.0,
+     "駒ヶ根変電所~松尾寺所変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 775,
+   "nearest_sub": "中部電力 高森変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.59205,
+   "lon": 137.93195,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.592:137.9319:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_35.592:137.9319:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "大鹿送電泉"
+    ],
+    [
+     154.0,
+     "中部送電線_425"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 5089,
+   "nearest_sub": "中部電力 高森変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.67311,
+   "lon": 136.0892,
+   "hv_kv": 275.0,
+   "lv_kv": 154.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.6731:136.0892:154",
+     154.0,
+     1
+    ],
+    [
+     "hokuriku_jct_35.6731:136.0892:275",
+     275.0,
+     1
+    ],
+    [
+     "kansai_jct_35.6731:136.0892:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku",
+    "kansai"
+   ],
+   "edges": [
+    [
+     154.0,
+     "北陸電力送配電 154.0kV線"
+    ],
+    [
+     154.0,
+     "北陸電力送配電 154.0kV線"
+    ],
+    [
+     275.0,
+     "奥野々変電所~色浜変電所_2線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 3037,
+   "nearest_sub": "敦賀変電所 154kV",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 35.74472,
+   "lon": 137.93525,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_35.7447:137.9353:77",
+     77.0,
+     1
+    ],
+    [
+     "hokuriku_jct_35.7447:137.9353:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "旭町変電所~大桑村変電所線"
+    ],
+    [
+     77.0,
+     "tokyo_line_4143"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 793,
+   "nearest_sub": "飯坂一丁目変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 35.75954,
+   "lon": 137.8578,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_35.7595:137.8578:77",
+     77.0,
+     1
+    ],
+    [
+     "hokuriku_jct_35.7595:137.8578:0",
+     0.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "旭町変電所~大桑村変電所線"
+    ],
+    [
+     77.0,
+     "中部送電線_599"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 7883,
+   "nearest_sub": "飯坂一丁目変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.13429,
+   "lon": 137.72223,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.1343:137.7222:0",
+     0.0,
+     1
+    ],
+    [
+     "hokuriku_jct_36.1343:137.7222:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_357"
+    ],
+    [
+     154.0,
+     "北陸送電線_47"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 7992,
+   "nearest_sub": "松本市変電所_3 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.13511,
+   "lon": 137.72152,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.1351:137.7215:0",
+     0.0,
+     3
+    ],
+    [
+     "hokuriku_jct_36.1351:137.7215:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_357"
+    ],
+    [
+     0.0,
+     "中部送電線_358"
+    ],
+    [
+     0.0,
+     "竜島変電所~松本市変電所線"
+    ],
+    [
+     154.0,
+     "北陸送電線_47"
+    ],
+    [
+     154.0,
+     "北陸送電線_48"
+    ],
+    [
+     154.0,
+     "竜島変電所~松本市変電所_4線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 7891,
+   "nearest_sub": "松本市変電所_3 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.13652,
+   "lon": 137.72654,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.1365:137.7265:0",
+     0.0,
+     1
+    ],
+    [
+     "hokuriku_jct_36.1365:137.7265:154",
+     154.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "竜島変電所~松本市変電所線"
+    ],
+    [
+     154.0,
+     "竜島変電所~松本市変電所_4線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 7716,
+   "nearest_sub": "竜島変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.13904,
+   "lon": 137.70115,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.139:137.7012:0",
+     0.0,
+     1
+    ],
+    [
+     "hokuriku_jct_36.139:137.7012:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "中部送電線_358"
+    ],
+    [
+     154.0,
+     "北陸送電線_48"
+    ],
+    [
+     154.0,
+     "松本市変電所_3~竜島変電所線"
+    ],
+    [
+     154.0,
+     "松本市変電所_3~竜島変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 6118,
+   "nearest_sub": "松本市変電所_3 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.14065,
+   "lon": 138.23408,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.1406:138.2341:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.1406:138.2341:77",
+     77.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4153"
+    ],
+    [
+     77.0,
+     "中部送電線_390"
+    ],
+    [
+     500.0,
+     "東京電力パワーグリッド 500.0kV線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 12719,
+   "nearest_sub": "諏訪変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.16566,
+   "lon": 138.17455,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.1657:138.1745:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.1657:138.1745:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4153"
+    ],
+    [
+     66.0,
+     "大屋変電所~八重原変電所線 / 中部電力パワーグリッド 77.0kV線 / 八重原変電所~大屋変電所線 / 八重原変電所"
+    ],
+    [
+     77.0,
+     "中部送電線_390"
+    ],
+    [
+     77.0,
+     "中部電力パワーグリッド 77.0kV線 / 島川原変電所~小諸市変電所線 / 諏訪変電所~島川原変電所線"
+    ],
+    [
+     77.0,
+     "八重原変電所~島川原変電所線 / 諏訪変電所~島川原変電所線"
+    ],
+    [
+     77.0,
+     "勝間変電所~佐久平駅東変電所線 / 小諸市変電所~勝間変電所線 / 中部電力パワーグリッド 77.0kV線 / 島川原変"
+    ],
+    [
+     77.0,
+     "勝間変電所~小海町変電所線 / 東京電力パワーグリッド 77.0kV線 / 小諸市変電所~勝間変電所線 / 中部電力パワ"
+    ],
+    [
+     77.0,
+     "諏訪変電所~ちの変電所線 / 諏訪変電所~島川原変電所線"
+    ],
+    [
+     77.0,
+     "諏訪変電所~島川原変電所線"
+    ],
+    [
+     77.0,
+     "諏訪変電所~島川原変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 9405,
+   "nearest_sub": "諏訪変電所 154kV",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.29061,
+   "lon": 138.4977,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.2906:138.4977:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.2906:138.4977:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "小諸市変電所~佐久平駅東変電所線"
+    ],
+    [
+     66.0,
+     "国分変電所~真田変電所線 / 東信坂城連絡線 / 東信大屋線 / 中部電力パワーグリッド 77.0kV線 / 小諸市変電"
+    ],
+    [
+     66.0,
+     "大屋変電所~小諸市変電所線 / 小諸市変電所~大字御代田変電所線 / 東京電力海瀬発電所~大字御代田変電所線"
+    ],
+    [
+     77.0,
+     "島川原変電所~佐久平駅東変電所線"
+    ],
+    [
+     77.0,
+     "東京電力海瀬発電所~大字御代田変電所線"
+    ],
+    [
+     77.0,
+     "東京電力海瀬発電所~大字御代田変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 3067,
+   "nearest_sub": "佐久平駅東変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.30449,
+   "lon": 138.4506,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "one",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.3045:138.4506:77",
+     77.0,
+     4
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     66.0,
+     "小諸市変電所~佐久平駅東変電所線"
+    ],
+    [
+     77.0,
+     "佐久平駅東変電所~小諸市変電所線"
+    ],
+    [
+     77.0,
+     "佐久平駅東変電所~小諸市変電所線"
+    ],
+    [
+     77.0,
+     "島川原変電所~佐久平駅東変電所線"
+    ],
+    [
+     77.0,
+     "島川原変電所~佐久平駅東変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 874,
+   "nearest_sub": "小諸市変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 36.32587,
+   "lon": 138.3021,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3259:138.3021:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.3259:138.3021:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4149"
+    ],
+    [
+     66.0,
+     "大屋変電所~八重原変電所線 / 中部電力パワーグリッド 77.0kV線 / 八重原変電所~大屋変電所線 / 八重原変電所"
+    ],
+    [
+     77.0,
+     "中丸子変電所~八重原変電所線"
+    ],
+    [
+     77.0,
+     "八重原変電所~諏訪変電所線"
+    ],
+    [
+     77.0,
+     "大屋変電所~八重原変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 2662,
+   "nearest_sub": "中丸子変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.32945,
+   "lon": 138.43587,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3294:138.4359:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.3294:138.4359:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "東京送電線_263"
+    ],
+    [
+     66.0,
+     "大屋変電所~小諸市変電所線 / 小諸市変電所~大字御代田変電所線 / 東京電力海瀬発電所~大字御代田変電所線"
+    ],
+    [
+     77.0,
+     "中部送電線_919"
+    ],
+    [
+     77.0,
+     "大屋変電所~小諸市変電所線"
+    ],
+    [
+     77.0,
+     "大屋変電所~小諸市変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 2278,
+   "nearest_sub": "小諸市変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.33087,
+   "lon": 138.6205,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.3309:138.6205:66",
+     66.0,
+     3
+    ],
+    [
+     "chubu_jct_36.3309:138.6205:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     66.0,
+     "leadin"
+    ],
+    [
+     66.0,
+     "東京送電線_261"
+    ],
+    [
+     66.0,
+     "軽磯線"
+    ],
+    [
+     77.0,
+     "leadin"
+    ],
+    [
+     77.0,
+     "中部送電線_841"
+    ],
+    [
+     77.0,
+     "中部送電線_841"
+    ]
+   ],
+   "made_edge": [
+    "leadin"
+   ],
+   "nearest_sub_m": 1456,
+   "nearest_sub": "軽井沢変電所",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 36.37541,
+   "lon": 136.48184,
+   "hv_kv": 154.0,
+   "lv_kv": 77.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.3754:136.4818:154",
+     154.0,
+     3
+    ],
+    [
+     "hokuriku_jct_36.3754:136.4818:154",
+     154.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     0.0,
+     "第２福井火力線/粟津線"
+    ],
+    [
+     0.0,
+     "第２福井火力線/粟津線"
+    ],
+    [
+     77.0,
+     "第２福井火力線/粟津線"
+    ],
+    [
+     154.0,
+     "三国町新保変電所~上野変電所線"
+    ],
+    [
+     154.0,
+     "三国町新保変電所~上野変電所線"
+    ],
+    [
+     154.0,
+     "第２福井火力線"
+    ],
+    [
+     154.0,
+     "第２福井火力線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 656,
+   "nearest_sub": "新小松変電所 154kV",
+   "class": "made_edge"
+  },
+  {
+   "island": "west",
+   "lat": 36.40647,
+   "lon": 138.26751,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "43a",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.4065:138.2675:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.4065:138.2675:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "tokyo"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4151"
+    ],
+    [
+     66.0,
+     "国分変電所~真田変電所線 / 東信坂城連絡線 / 東信大屋線 / 中部電力パワーグリッド 77.0kV線 / 小諸市変電"
+    ],
+    [
+     77.0,
+     "中部送電線_370"
+    ],
+    [
+     77.0,
+     "国分変電所~真田変電所線"
+    ],
+    [
+     77.0,
+     "大屋変電所~国分変電所線"
+    ]
+   ],
+   "made_edge": [
+    "disclosure",
+    "recovery"
+   ],
+   "nearest_sub_m": 2272,
+   "nearest_sub": "国分変電所",
+   "class": "unknown_kv"
+  },
+  {
+   "island": "west",
+   "lat": 36.48971,
+   "lon": 136.54366,
+   "hv_kv": 154.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "chubu_jct_36.4897:136.5437:154",
+     154.0,
+     3
+    ],
+    [
+     "chubu_jct_36.4897:136.5437:66",
+     66.0,
+     1
+    ],
+    [
+     "hokuriku_jct_36.4897:136.5437:154",
+     154.0,
+     3
+    ],
+    [
+     "hokuriku_jct_36.4897:136.5437:66",
+     66.0,
+     1
+    ]
+   ],
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "edges": [
+    [
+     66.0,
+     "北陸電力送配電 66.0kV線"
+    ],
+    [
+     66.0,
+     "北陸電力送配電 66.0kV線"
+    ],
+    [
+     154.0,
+     "南金沢変電所~川北変電所線"
+    ],
+    [
+     154.0,
+     "南金沢変電所~川北変電所線"
+    ],
+    [
+     154.0,
+     "川北変電所~北金沢変電所線"
+    ],
+    [
+     154.0,
+     "川北変電所~北金沢変電所線"
+    ],
+    [
+     154.0,
+     "新小松線"
+    ],
+    [
+     154.0,
+     "新小松線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 2483,
+   "nearest_sub": "川北変電所",
+   "class": "photo"
+  },
+  {
+   "island": "west",
+   "lat": 36.50611,
+   "lon": 138.07521,
+   "hv_kv": 77.0,
+   "lv_kv": 66.0,
+   "how": "colocated",
+   "canon": "split",
+   "canon_nodes": [
+    [
+     "tokyo_jct_36.5061:138.0752:0",
+     0.0,
+     1
+    ],
+    [
+     "chubu_jct_36.5061:138.0752:77",
+     77.0,
+     3
+    ]
+   ],
+   "regions": [
+    "chubu"
+   ],
+   "edges": [
+    [
+     0.0,
+     "tokyo_line_4142"
+    ],
+    [
+     77.0,
+     "中部送電線_312"
+    ],
+    [
+     77.0,
+     "更埴八幡変電所~日陰変電所線"
+    ],
+    [
+     77.0,
+     "更埴八幡変電所~長野市変電所線"
+    ]
+   ],
+   "made_edge": [],
+   "nearest_sub_m": 917,
+   "nearest_sub": "更埴八幡変電所",
+   "class": "unknown_kv"
+  }
+ ]
+}

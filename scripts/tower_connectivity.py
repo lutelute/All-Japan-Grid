@@ -25,7 +25,11 @@ ENDPOINTS = [
     "https://overpass.kumi.systems/api/interpreter",
 ]
 UA = "AllJapanGrid/GridStitch tower-connectivity (lutebass@gmail.com)"
-RAW = "data/osm_raw_towers"
+# 取った区画の置き場所(読み・書き)。既定は 6 月の Overpass の取得分(nas03 の 20260615_overpass_towers)。
+# 取得データは Mac に置かない(2026-11-07 に Mac の data/osm_raw_towers から NAS へ移した)。--raw か環境変数
+# AJG_OSM_RAW_TOWERS で変えられる。6 月の版に無い区画を新しく取るときは、6 月の保管庫に混ぜないよう別のフォルダを指す
+from src.topology.osm_routes import JUNE_RAW_DIRS, legacy_raw_dir  # noqa: E402
+RAW = legacy_raw_dir()
 _CONFIG = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                        "config", "regions.yaml")
 
@@ -35,6 +39,9 @@ def _fetch(bbox, key, timeout=120):
     cp = os.path.join(RAW, f"tw_{key}.json")
     if os.path.exists(cp):
         return json.load(open(cp, encoding="utf-8"))
+    if os.path.abspath(RAW) in {os.path.abspath(d) for d in JUNE_RAW_DIRS}:
+        raise SystemExit(f"6 月の版({RAW})に区画 tw_{key}.json が無い。新しく取るなら、6 月の保管庫に混ぜないよう "
+                         "--raw で別のフォルダ(NAS の新しい日付のフォルダ)を指す")
     s, w, n, e = bbox
     q = (f"[out:json][timeout:{timeout-20}];("
          f'way["power"~"^(line|cable|minor_line)$"]({s},{w},{n},{e});'
@@ -134,7 +141,12 @@ def main():
     ap.add_argument("--bbox", help="s,w,n,e")
     ap.add_argument("--key")
     ap.add_argument("--out", default="/tmp")
+    ap.add_argument("--raw", default=None,
+                    help="区画の置き場所(既定: 環境変数 AJG_OSM_RAW_TOWERS か nas03 の 20260615_overpass_towers)")
     args = ap.parse_args()
+    if args.raw:
+        global RAW
+        RAW = args.raw
     bbox = tuple(float(x) for x in args.bbox.split(",")) if args.bbox else None
     nodes, ways = gather(region=args.region, bbox=bbox, key=args.key)
     res, nlines, ncomp, nmain = classify(nodes, ways)

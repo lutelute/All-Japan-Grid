@@ -14,6 +14,7 @@ Usage:
 """
 import collections
 import glob
+import os
 import json
 
 import networkx as nx
@@ -40,7 +41,9 @@ def osmnx_graph(bbox):
 def cached_node_sharing_graph():
     """フォールバック: キャッシュ済 node-ref生データ から node-sharing グラフ。"""
     seen, nodes, ways = set(), {}, []
-    for f in sorted(glob.glob("data/osm_raw_towers/tw_kansai_t*.json")):
+    # 6 月の Overpass の取得分(nas03 の 20260615_overpass_towers。環境変数 AJG_OSM_RAW_TOWERS で変えられる)
+    from src.topology.osm_routes import legacy_raw_dir
+    for f in sorted(glob.glob(os.path.join(legacy_raw_dir(), "tw_kansai_t*.json"))):
         for e in json.load(open(f, encoding="utf-8")).get("elements", []):
             k = (e["type"], e["id"])
             if k in seen:

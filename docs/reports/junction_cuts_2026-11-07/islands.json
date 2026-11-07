@@ -1,0 +1,32 @@
+{
+ "east": [
+  {
+   "n_bus": 3,
+   "buses": [
+    "chubu junction 36.5233:138.6172:77",
+    "chubu junction 36.5247:138.6203:77",
+    "chubu junction 36.5229:138.6203:77"
+   ],
+   "kv": [
+    77.0
+   ],
+   "load_mw": 0.0,
+   "gen_mw": 0.0,
+   "slack": 1
+  },
+  {
+   "n_bus": 2,
+   "buses": [
+    "tokyo junction 37.1693:140.2192:154",
+    "tokyo junction 37.3305:140.341:154"
+   ],
+   "kv": [
+    154.0
+   ],
+   "load_mw": 0.0,
+   "gen_mw": 0.0,
+   "slack": 1
+  }
+ ],
+ "west": []
+}

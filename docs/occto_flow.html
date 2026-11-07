@@ -51,6 +51,8 @@ canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .legend{position:absolute;left:12px;bottom:12px;background:color-mix(in srgb,var(--panel) 88%,transparent);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;font-size:12px;display:grid;gap:4px;max-width:calc(100% - 48px)}
 .ramp{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
 .ramp i{display:block;width:26px;height:6px;border-radius:2px}
+.ramp i.dash{height:0;border-top:2px dashed var(--nocap);border-radius:0}
+.ramp i.dot{width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.55;margin:0 10px}
 .ramp span{font-family:var(--f-num);font-size:11px;color:var(--muted);margin-left:4px}
 .tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;font-size:12.5px;max-width:280px;box-shadow:0 4px 14px rgb(0 0 0 / .18)}
 .msg{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:16px;pointer-events:none}
@@ -106,6 +108,8 @@ footer p{margin:0 0 4px}
       <div>運用容量に対する潮流</div>
       <div class="ramp" id="ramp"></div>
       <div class="ramp"><i style="background:var(--nocap)"></i><span>容量なし・値なし</span></div>
+      <div class="ramp"><i class="dash"></i><span>点線 = モデルに線の形が無いところ(両端の変電所を結んだ模式)</span></div>
+      <div class="ramp"><i class="dot"></i><span>変電所・発電所(線路の端)</span></div>
       <div style="color:var(--muted)">太さ = 潮流の大きさ。ドラッグで移動、ホイールかピンチで拡大</div>
     </div>
     <div class="tip" id="tip" hidden></div>
@@ -144,7 +148,7 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const STOPS = [0, .3, .6, .85, 1];
-let LN = null, TD = null, T = [], L = [], ti = 0, sel = -1, hover = -1, playing = null, lastLoad = 0;
+let LN = null, TD = null, T = [], L = [], ST = [], ti = 0, sel = -1, hover = -1, playing = null, lastLoad = 0;
 
 // 投影: 経度を cos(36°) で縮めた正距円筒
 const KX = Math.cos(36 * Math.PI / 180);
@@ -177,11 +181,14 @@ async function getJSON(name) {
 // 線路の一覧(形)に当日の値をのせる。当日の表にだけある線路は形なしで足す(一覧には出る)
 function build() {
   const byId = new Map();
-  L = LN.lines.map(x => ({ ...x, pp: x.p.map(path => path.map(P)), v: [] }));
+  L = LN.lines.map(x => ({ ...x, pp: x.p.map(path => path.map(P)), jj: (x.j || []).map(seg => seg.map(P)), v: [] }));
+  // 変電所の点(両端の位置。重なりは 1 つに)
+  const seen = new Set(); ST = [];
+  LN.lines.forEach(x => (x.s || []).forEach(q => { if (!q) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));
   L.forEach(l => byId.set(l.id, l));
   for (const [id, e] of Object.entries(TD.lines)) {
     let l = byId.get(id);
-    if (!l) { const [a, n, d] = id.split('|'); l = { id, a, n, d, kv: e.kv, c: null, p: [], pp: [] }; L.push(l); byId.set(id, l); }
+    if (!l) { const [a, n, d] = id.split('|'); l = { id, a, n, d, kv: e.kv, c: null, p: [], pp: [], jj: [] }; L.push(l); byId.set(id, l); }
     l.v = e.v;
   }
   T = TD.times;
@@ -216,19 +223,31 @@ function draw() {
   ctx.fillStyle = css('--panel'); ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = css('--land'); ctx.strokeStyle = css('--coast'); ctx.lineWidth = 0.6;
   land.forEach(r => { ctx.beginPath(); r.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.closePath(); ctx.fill(); ctx.stroke(); });
-  const order = L.map((l, i) => i).filter(i => L[i].pp.length).sort((a, b) => (load(L[a], ti) ?? -1) - (load(L[b], ti) ?? -1));
+  const order = L.map((l, i) => i).filter(i => L[i].pp.length || L[i].jj.length).sort((a, b) => (load(L[a], ti) ?? -1) - (load(L[b], ti) ?? -1));
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const i of order) {
     const l = L[i];
     if (i === sel || i === hover) { ctx.strokeStyle = css('--sel'); ctx.lineWidth = width(l.v[ti]) + 4; strokePaths(l); }
     ctx.strokeStyle = col(load(l, ti)); ctx.lineWidth = width(l.v[ti]); strokePaths(l);
   }
+  // 変電所の点(線の上に小さく)
+  ctx.fillStyle = css('--ink'); ctx.globalAlpha = 0.55;
+  const rr = Math.max(1.2, Math.min(3, sc / sc0 * 0.9));
+  ST.forEach(([x, y]) => { ctx.beginPath(); ctx.arc(sx(x), sy(y), rr, 0, 2 * Math.PI); ctx.fill(); });
+  ctx.globalAlpha = 1;
 }
-function strokePaths(l) { l.pp.forEach(path => { ctx.beginPath(); path.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.stroke(); }); }
+function strokePaths(l) {
+  const one = path => { ctx.beginPath(); path.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.stroke(); };
+  l.pp.forEach(one);
+  if (l.jj.length) {   // モデルに線の形が無いところ: 両端の変電所や切れ端を結ぶ点線(位置は模式)
+    const w = ctx.lineWidth; ctx.lineWidth = Math.max(1, w * 0.7); ctx.setLineDash([4, 3]);
+    l.jj.forEach(one); ctx.setLineDash([]); ctx.lineWidth = w;
+  }
+}
 
 function nearest(mx, my) {
   let best = -1, bd = 9 * 9;
-  L.forEach((l, i) => l.pp.forEach(path => { for (let j = 1; j < path.length; j++) {
+  L.forEach((l, i) => [...l.pp, ...l.jj].forEach(path => { for (let j = 1; j < path.length; j++) {
     const ax = sx(path[j - 1][0]), ay = sy(path[j - 1][1]), bx = sx(path[j][0]), by = sy(path[j][1]);
     const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1;
     let t = ((mx - ax) * dx + (my - ay) * dy) / L2; t = Math.max(0, Math.min(1, t));
@@ -246,7 +265,7 @@ function lineText(l) {
   return `<b>${esc(l.n)}</b> <span style="color:var(--muted)">${esc(area(l.a))}・${l.kv} kV</span><br>`
     + `潮流 <b style="font-family:var(--f-num)">${fmt(l.v[ti])} MW</b>(正: ${esc(l.d)})<br>`
     + `運用容量 ${c ? fmt(c.cap) + ' MW' : '—'} → ${pct(r)}${c && c.f ? `(${esc(c.f)}${c.note ? '・' + c.note : ''})` : ''}<br>`
-    + `<span style="color:var(--muted)">${l.pp.length ? (CONF[l.c] || '') : '地図に描けない線路(#141)'}</span>`;
+    + `<span style="color:var(--muted)">${l.pp.length ? (CONF[l.c] || '') + (l.jj.length ? '・点線はモデルに線の形が無いところ(模式)' : '') : l.jj.length ? '線の形がモデルに無いので、両端の変電所を点線で結んだ(位置は模式・#141)' : '地図に描けない線路(#141)'}</span>`;
 }
 function showDetail() {
   const box = $('detail');
@@ -305,11 +324,13 @@ function status() {
     + (age > STALE_MS ? ` <span class="stale">更新が止まっています(${Math.floor(age / 3600000)} 時間前の取得)</span>` : '');
 }
 function foot() {
-  const nDraw = LN.lines.filter(l => l.p.length).length;
+  const nDraw = LN.lines.filter(l => l.p.length).length, nSch = LN.lines.filter(l => !l.p.length && (l.j || []).length).length;
   $('foot').innerHTML = `<p>出典: ${esc(TD.source)}(${esc(TD.days[0])}〜${esc(TD.days[TD.days.length - 1])})を加工して作成。`
     + `原典は <a href="https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login">OCCTO 系統情報サービス</a>。毎時取り直して載せている。時刻は公表の表記のまま。</p>`
-    + `<p>線の形は All-Japan-Grid のモデルの線で、OCCTO の線路の両端の変電所から照合した(${LN.lines.length} 線路のうち ${nDraw} を描ける。`
-    + `描けない線路は一覧にだけ出る。理由と直し方は <a href="https://github.com/lutelute/All-Japan-Grid/issues/141">#141</a>)。`
+    + `<p>線の形は All-Japan-Grid のモデルの線で、OCCTO の線路の両端の変電所から照合した(${LN.lines.length} 線路のうち ${nDraw} は形あり、`
+    + `${nSch} は両端の変電所を結ぶ点線だけ、残り ${LN.lines.length - nDraw - nSch} は変電所の位置が分からず一覧にだけ出る)。`
+    + `線は両端の変電所から描き始めて終え、モデルの線が切れているところは点線でつないだ(点線の位置は模式)。`
+    + `点は線路の端の変電所・発電所。理由と直し方は <a href="https://github.com/lutelute/All-Japan-Grid/issues/141">#141</a>。`
     + `運用容量は同じ日の実績を線路名で突き合わせ、潮流の向きに合う値があればそれ、無ければ公表されている値を使った。</p>`
     + `<p>研究のための表示で、運用の判断には使わないでください。</p>`;
 }

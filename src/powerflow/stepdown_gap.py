@@ -91,7 +91,10 @@ def assign_line_classes(net, bus_of, nodes, edges, coord_nodes) -> Dict:
     if "kv_class" not in net.line.columns:
         net.line["kv_class"] = 0.0
     by_pair: Dict[tuple, List[int]] = defaultdict(list)
+    fixed = getattr(net, "_kv_class_fixed", set())   # 介入#57 が端を付け替えて kv_class を付けた線は引き直さない
     for li in net.line.index:
+        if int(li) in fixed:
+            continue
         a, b = int(net.line.at[li, "from_bus"]), int(net.line.at[li, "to_bus"])
         by_pair[(min(a, b), max(a, b))].append(int(li))
     used = set()
