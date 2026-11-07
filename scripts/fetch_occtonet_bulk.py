@@ -52,6 +52,15 @@ AREA_CODES = {b: f"{i + 1:02d}" for i, b in enumerate(AREA_BOXES)}
 
 log = logging.getLogger("occtonet_bulk")
 
+# OCCTO の日付は日本の暦。160core は Etc/UTC なので、06:10 JST の取得で dt.date.today() を使うと UTC の前日になり、
+# _manifest.json の to(覆い終えた日)が JST の 2 日前に書かれていた(2026-11-07 に ajg-desk のセッションが見つけた)
+JST = dt.timezone(dt.timedelta(hours=9), "JST")
+
+
+def jst_today() -> dt.date:
+    """日本の今日(取得する所の時計の時間帯によらない)。"""
+    return dt.datetime.now(JST).date()
+
 
 @dataclass(frozen=True)
 class Spec:
@@ -346,13 +355,13 @@ def parse_window(spec: Spec, cli: Client) -> tuple[dt.date, dt.date] | None:
             return dt.date(y, m, calendar.monthrange(y, m)[1] if end else 1)
         return dt.date(parts[0], 12 if end else 1, 31 if end else 1)
     lo, hi = to_date(a, False), to_date(b, True)
-    return lo, min(hi, dt.date.today())
+    return lo, min(hi, jst_today())
 
 
 def run(cli: Client, out: Path, spec: Spec, lo: dt.date, hi: dt.date, force_tags: set[str], max_units: int,
         refetch_open: bool = True) -> tuple[int, int, int]:
     got = skip = miss = 0
-    today = dt.date.today()
+    today = jst_today()
     man = load_manifest(out, spec)
     dirty = False
     try:
@@ -436,7 +445,7 @@ def main() -> int:
         ap.error("--out が要る")
 
     keys = args.dataset or list(SPECS)
-    today = dt.date.today()
+    today = jst_today()
     total = [0, 0, 0]
     for k in keys:
         spec = SPECS[k]
