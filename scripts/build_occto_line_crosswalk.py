@@ -12,6 +12,9 @@ OCCTO 系統情報サービスの潮流実績(統合 DB の occto_line_flow_30mi
 OCCTO の向きの書き方は社ごとに違うので、変電所名にそろえてから解決する:
   「北新得SS」→ 北新得変電所、「西双葉SWS」→ 西双葉開閉所、「北斗CS」→ 北斗変換所、「新三河」→ 新三河(そのまま)
 
+両端の変電所の位置(地図の点と模式の点線に使う)は、位置の台帳 config/occto_station_points.yaml を先に読み、
+無ければ名前の解決で出す。台帳は表示だけに使い、照合は変えない。
+
 入力は線路の一覧だけ(潮流の値は読まない): 統合 DB のビュー occto_lines、または同じ列の CSV。
 出力: 線路ごとの照合(conf・経路の線の鍵と向き・回線数)と、エリア×照合の内訳。モデルの鍵は正典
 (docs/data/built/all.json)を作り直すと替わるので、出力に正典の版(all.json の sha256 の頭)を書く。
@@ -203,18 +206,42 @@ def pref_of(pt, polys) -> str | None:
     return best[1] if best else None
 
 
+STATION_POINTS = ROOT / "config" / "occto_station_points.yaml"
+
+
+def ledger_points(path: Path = STATION_POINTS) -> dict:
+    """位置の台帳(config/occto_station_points.yaml)。{(エリア, OCCTO の端の名前): [経度, 緯度]}。
+
+    名前で引けない端(モデルにも OSM にも名前が無い・2 文字で索引に入らない・同じ名前の別の所を引く)を、
+    OSM の要素や地理院の注記で確かめて入れたもの。表示だけに使う(照合とモデルは変えない)。
+    """
+    import yaml
+    if not path.exists():
+        return {}
+    d = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return {(p["area"], p["name"]): [round(float(p["lon"]), 4), round(float(p["lat"]), 4)]
+            for p in d.get("points") or []}
+
+
+def allowed_prefs(util: str) -> set:
+    from src.powerflow.region_attribution import PREF_AREA
+    return {p for p, ar in PREF_AREA.items() if ar == util} | AREA_EXTRA_PREFS.get(util, set())
+
+
 def station_points(obs: list[dict]) -> dict:
     """両端の変電所の位置 [経度, 緯度](照合と同じ名前の解決。経路が見つからない線路でも、変電所が引ければ位置は出る)。
 
     潮流マップで、線路を両端の変電所から描き始め・描き終え、モデルの線が切れているところを点線でつなぐのに使う。
+    解決器が引いた所がエリアの外なら、同じ名前のほかの候補からエリアの中のものを探す(東北の「福島」は
+    北海道の福島変電所が先に当たる)。
     """
     from scripts.export_obs_compare import clean_station
-    from scripts.match_impedance_to_model import load_model, resolve
-    from src.powerflow.region_attribution import PREF_AREA
+    from scripts.match_impedance_to_model import load_model, resolve, variants
     polys = _pref_polys()
 
-    def allowed(util: str) -> set:
-        return {p for p, ar in PREF_AREA.items() if ar == util} | AREA_EXTRA_PREFS.get(util, set())
+    def inside(util, node):
+        pt = [round(float(node["lon"]), 4), round(float(node["lat"]), 4)]
+        return pt, pref_of(pt, polys) in allowed_prefs(util)
 
     idx: dict = {}
     out: dict = {}
@@ -227,13 +254,30 @@ def station_points(obs: list[dict]) -> dict:
                 idx[o["util"]] = load_model(o["util"])[0]
             c = clean_station(nm)
             _lv, node = resolve(c, idx[o["util"]]) if c else ("empty", None)
-            pt = [round(float(node["lon"]), 4), round(float(node["lat"]), 4)] if node else None
-            if pt:
-                pref = pref_of(pt, polys)
-                if pref not in allowed(o["util"]):
-                    print(f"  位置を使わない: {o['util']} {nm} → {node.get('name')} {pt}({pref or '県の外'}、エリアの外)")
-                    pt = None
+            pt = None
+            if node:
+                pt, ok = inside(o["util"], node)
+                if not ok:
+                    alt = [n for v in variants(c) for n in idx[o["util"]].get(v, []) if inside(o["util"], n)[1]]
+                    if alt:
+                        pt = inside(o["util"], alt[0])[0]
+                    else:
+                        print(f"  位置を使わない: {o['util']} {nm} → {node.get('name')} {pt}"
+                              f"({pref_of(pt, polys) or '県の外'}、エリアの外)")
+                        pt = None
             out[key] = pt
+    return out
+
+
+def end_points(obs: list[dict], xy: dict, ledger: dict) -> dict:
+    """線路の両端の位置。台帳(人が確かめた位置)を先に、無ければ名前の解決で出した位置。
+    {(エリア, 線路名, 向き): (from の位置, to の位置)}"""
+    out = {}
+    for o in obs:
+        ends = []
+        for occ, model in ((o["from_occto"], o["from"]), (o["to_occto"], o["to"])):
+            ends.append(ledger.get((o["util"], occ)) or xy.get((o["util"], model)))
+        out[(o["util"], o["name"], o["direction"])] = tuple(ends)
     return out
 
 
@@ -263,14 +307,16 @@ def main() -> int:
     matched, tally = match_all(obs, built)
 
     by_key = {(m["util"], m["name"], m["direction"]): m for m in matched}
-    xy = station_points(obs)
+    ledger = ledger_points()
+    ends = end_points(obs, station_points(obs), ledger)
     recs = []
     for o in obs:
         m = by_key.get((o["util"], o["name"], o["direction"]))
+        fxy, txy = ends[(o["util"], o["name"], o["direction"])]
         rec = {"area": o["util"], "line": o["name"], "kv": o["kv"], "direction": o["direction"],
                "from": o["from_occto"], "to": o["to_occto"],
                "from_model_name": o["from"] or None, "to_model_name": o["to"] or None,
-               "from_xy": xy.get((o["util"], o["from"])), "to_xy": xy.get((o["util"], o["to"])),
+               "from_xy": fxy, "to_xy": txy,
                "conf": m["conf"] if m else None}
         if m:
             rec.update({k: m[k] for k in ("island", "segs", "path_km", "straight_km", "single_ended",
@@ -301,7 +347,8 @@ def main() -> int:
         "note": ("OCCTO 地内基幹送電線の潮流実績の線路 → AGJ のモデルの線の鍵。値(潮流)は含まない。"
                  "segs = 経路の区間ごとの [線の鍵, 向き(+1 はその線の from→to が OCCTO の正方向と同じ), 回線数]。"
                  "conf: A=名前と両端 B=両端のみ(短い経路) C=片端と線名(向きは判定しない) null=未照合。"
-                 "from_xy/to_xy = 両端の変電所の位置 [経度, 緯度](引けなければ null)"),
+                 "from_xy/to_xy = 両端の変電所の位置 [経度, 緯度](位置の台帳 config/occto_station_points.yaml を先に、"
+                 "無ければ名前の解決で。引けなければ null)"),
         "method": "scripts/build_occto_line_crosswalk.py(照合は scripts/export_obs_compare.py の match_all)",
         "built_sha256": hashlib.sha256(raw).hexdigest()[:12],
         "made_at": dt.datetime.now().isoformat(timespec="seconds"),

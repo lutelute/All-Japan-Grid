@@ -154,6 +154,29 @@ def test_chain_orders_pieces_from_station_and_bridges_gaps():
     assert solid == [near] and dash == []
 
 
+def test_branch_trunk_names():
+    assert ex.branch_trunk("571T(西南多摩線)") == "西南多摩線"
+    assert ex.branch_trunk("１０９T（泉南東大阪線）") == "泉南東大阪線"
+    assert ex.branch_trunk("山口幹線") == "山口幹線"
+    assert ex.branch_trunk("42T") is None          # 幹線の名前が無い
+    assert ex.branch_trunk("南山口変電所") is None
+    assert ex.branch_trunk("新三河") is None
+
+
+def test_place_branches_puts_t_end_on_the_trunk():
+    """T 分岐の端は、分岐する先の幹線の描いた形の上で、もう一方の端にいちばん近い点に置く。点は打たない(t)。"""
+    trunk = {"a": "chugoku", "n": "山口幹線", "p": [[[131.0, 34.0], [132.0, 34.0]]], "j": [], "s": [None, None],
+             "d_ends": ["X", "Y"]}
+    br = {"a": "chugoku", "n": "南山口支線", "p": [], "j": [], "s": [None, [131.5, 34.1]],
+          "d_ends": ["山口幹線", "南山口変電所"]}
+    other = {"a": "kansai", "n": "山口幹線の別エリア", "p": [[[135.0, 34.1], [136.0, 34.1]]], "j": [],
+             "s": [None, None], "d_ends": ["", ""]}
+    assert ex.place_branches([trunk, br, other]) == 1
+    assert br["s"][0] == [131.5, 34.0] and br["t"] == [True, False]
+    assert br["j"] == [[[131.5, 34.0], [131.5, 34.1]]]      # 形が無いので、置いた点から変電所への点線
+    assert "t" not in trunk
+
+
 def test_lines_join_at_stations_and_stay_in_area():
     """線路の端は変電所の点(s)から始まり、点線のつなぎも含めて端どうしがつながる。位置はエリアの県の中。"""
     d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))

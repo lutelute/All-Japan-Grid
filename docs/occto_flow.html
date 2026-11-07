@@ -184,7 +184,7 @@ function build() {
   L = LN.lines.map(x => ({ ...x, pp: x.p.map(path => path.map(P)), jj: (x.j || []).map(seg => seg.map(P)), v: [] }));
   // 変電所の点(両端の位置。重なりは 1 つに)
   const seen = new Set(); ST = [];
-  LN.lines.forEach(x => (x.s || []).forEach(q => { if (!q) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));
+  LN.lines.forEach(x => (x.s || []).forEach((q, i) => { if (!q || (x.t && x.t[i])) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));   // t = T 分岐の端(幹線の上に置いた点。変電所ではないので点を打たない)
   L.forEach(l => byId.set(l.id, l));
   for (const [id, e] of Object.entries(TD.lines)) {
     let l = byId.get(id);
@@ -265,7 +265,7 @@ function lineText(l) {
   return `<b>${esc(l.n)}</b> <span style="color:var(--muted)">${esc(area(l.a))}・${l.kv} kV</span><br>`
     + `潮流 <b style="font-family:var(--f-num)">${fmt(l.v[ti])} MW</b>(正: ${esc(l.d)})<br>`
     + `運用容量 ${c ? fmt(c.cap) + ' MW' : '—'} → ${pct(r)}${c && c.f ? `(${esc(c.f)}${c.note ? '・' + c.note : ''})` : ''}<br>`
-    + `<span style="color:var(--muted)">${l.pp.length ? (CONF[l.c] || '') + (l.jj.length ? '・点線はモデルに線の形が無いところ(模式)' : '') : l.jj.length ? '線の形がモデルに無いので、両端の変電所を点線で結んだ(位置は模式・#141)' : '地図に描けない線路(#141)'}</span>`;
+    + `<span style="color:var(--muted)">${l.pp.length ? (CONF[l.c] || '') + (l.jj.length ? '・点線はモデルに線の形が無いところ(模式)' : '') : l.jj.length ? '線の形がモデルに無いので、両端の変電所を点線で結んだ(位置は模式・#141)' + (l.t ? '。T 分岐の端は分岐する先の幹線の上に置いた' : '') : '地図に描けない線路(#141)'}</span>`;
 }
 function showDetail() {
   const box = $('detail');
