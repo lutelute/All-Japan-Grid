@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接続の計画とサイト分析 — All-Japan-Grid</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="./css/style.css?v=40"/>
+    <link rel="stylesheet" href="./css/map_ui.css?v=4"/>
+    <link rel="stylesheet" href="./css/site_plan.css?v=1"/>
+</head>
+<body class="sp">
+
+<!-- 接続の計画とサイト分析(2026-11-07)。地図で候補地を選ぶと、電圧ごとに近い変電所・送電線(直線距離)、
+     接続先までの標高の断面、前年の日射・風速を出し、印刷用のレポートにまとめる。
+     読むのは正典から書いた地図データ(data/map/*_all.geojson)と、公表の潮流実績の年統計(data/flow_map/obs_local.json)。
+     外部に問い合わせるのは 地理院の標高タイル・Open-Meteo・Nominatim(地名を入れて Enter のときだけ)。 -->
+<div id="sidebar">
+    <h1><a href="./index.html" class="brand-home" title="ダッシュボードへ"><span class="icon">&#9889;</span> All-Japan-Grid</a><span class="h1-sub">接続の計画</span></h1>
+    <div class="site-links">
+        <a href="./index.html" class="home">&#8592; ダッシュボード</a>
+        <a href="./map.html">系統図</a>
+        <a href="./flow_map.html">潮流</a>
+        <a href="./download.html">ダウンロード</a>
+    </div>
+
+    <div class="sp-body">
+        <section class="sp-sec">
+            <div class="ui-label">候補地</div>
+            <p class="sp-lead">地図をクリックするか、緯度・経度か地名を入れて Enter。印は引っぱって動かせます。</p>
+            <form class="sp-search" id="sp-form" autocomplete="off">
+                <input id="sp-q" class="sp-input" type="text" spellcheck="false"
+                       placeholder="36.0641, 136.2196 ／ 福井市" aria-label="緯度・経度または地名">
+                <button type="submit" class="sp-btn">探す</button>
+            </form>
+            <div id="sp-geo" class="sp-geo" hidden></div>
+            <div id="sp-site" class="sp-site"><p class="sp-muted">まだ選んでいません。</p></div>
+        </section>
+
+        <section class="sp-sec" id="sp-cand-sec">
+            <div class="ui-label">近い系統 <span class="ov-hint">直線距離</span></div>
+            <div id="sp-cands"><p class="sp-muted">候補地を選ぶと、電圧ごとに最寄りの変電所と送電線を出します。</p></div>
+            <p class="sp-note"><b>距離は直線です。実際の経路ではありません。</b>送電線は線への垂線の足（線上でいちばん近い点）までの距離です。つなげるか・空きがあるかはここでは分かりません。</p>
+        </section>
+
+        <section class="sp-sec" id="sp-sel-sec" hidden>
+            <div class="ui-label">選んだ接続先</div>
+            <div id="sp-sel"></div>
+            <div class="sp-sub">標高の断面 <span class="ov-hint">候補地 → 接続先の直線上</span></div>
+            <div id="sp-profile" class="sp-chart"></div>
+            <p class="sp-note" id="sp-profile-note"></p>
+        </section>
+
+        <section class="sp-sec" id="sp-wx-sec" hidden>
+            <div class="ui-label">気象 <span class="ov-hint" id="sp-wx-year"></span></div>
+            <div id="sp-wx"></div>
+        </section>
+
+        <section class="sp-sec" id="sp-cap-sec" hidden>
+            <div class="ui-label">空き容量</div>
+            <div id="sp-cap"></div>
+        </section>
+
+        <section class="sp-sec">
+            <details class="sp-details" id="sp-cost-box">
+                <summary>費用の目安を自分の仮定で計算する</summary>
+                <p class="sp-assume">仮定（あなたが入れる値）</p>
+                <p class="sp-note">AGJ は工事費の単価を持っていません。単価を入れたときだけ「直線距離 × 倍率 × 単価」を掛け算して表に足します。結果は入れた仮定の計算で、見積もりではありません。</p>
+                <div class="sp-form-row">
+                    <label for="sp-unit">単価</label>
+                    <input id="sp-unit" class="sp-input sp-num" type="number" min="0" step="0.1" inputmode="decimal" placeholder="未入力">
+                    <span>億円 / km</span>
+                </div>
+                <div class="sp-form-row">
+                    <label for="sp-detour">倍率</label>
+                    <input id="sp-detour" class="sp-input sp-num" type="number" min="1" step="0.01" value="1.12" inputmode="decimal">
+                    <span>経路の長さ ÷ 直線</span>
+                </div>
+                <p class="sp-note">倍率の既定 1.12 は、AGJ の正典の線のうち公表インピーダンスと照合できた 246 本で、線形の長さを端点間の直線距離で割った値の中央値です（<a href="https://github.com/lutelute/All-Japan-Grid/blob/main/docs/reports/impedance_validation_2026-08-19.md" target="_blank" rel="noopener">docs/reports/impedance_validation_2026-08-19.md</a> §10）。新しく引く線がこの倍率になるとは限りません。</p>
+            </details>
+        </section>
+
+        <section class="sp-sec">
+            <div class="sp-actions">
+                <button type="button" class="sp-btn" id="sp-open-report" disabled>レポートを開く</button>
+                <button type="button" class="sp-btn" id="sp-copy-link" disabled>この地点のリンクをコピー</button>
+            </div>
+            <p class="sp-note">レポートはブラウザの印刷から PDF に保存できます（A4 縦）。</p>
+        </section>
+
+        <section class="sp-sec sp-src">
+            <div class="ui-label">出典と注意</div>
+            <ul class="sp-list">
+                <li>系統: All-Japan-Grid の正典（docs/data/built）から書いた地図データ。元は OpenStreetMap（<a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener">ODbL</a>, &copy; OpenStreetMap contributors）。電力会社の公式情報ではありません。</li>
+                <li>標高: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>（国土地理院）の標高タイル DEM5A・DEM5B・DEM10B。地図を見るときと同じくタイルを読むだけで、点ごとに標高 API を叩きません。</li>
+                <li>気象: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data by Open-Meteo.com</a>（<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>）の Historical Weather API、ERA5 再解析。年と月の集計はこのページで行っています。Contains modified Copernicus Climate Change Service information. 欧州委員会と ECMWF はこの情報の利用に責任を負いません。</li>
+                <li>地名: <a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noopener">Nominatim</a>（&copy; OpenStreetMap contributors）。入力のたびには問い合わせず、Enter を押したときだけ、1 秒以上あけて送ります。</li>
+                <li>潮流実績: 各一般送配電事業者の系統情報の公表（2024 年度）の年統計を AGJ が集計した値（data/flow_map/obs_local.json）。線名だけで引くので、同名の別の区間のことがあります。</li>
+            </ul>
+            <p class="sp-note">接続の可否・空き容量・工事費・工期の判定には使えません。検討は各社の系統情報の公表と事前相談・接続検討で行ってください。</p>
+        </section>
+    </div>
+
+    <div id="status-bar"><span id="status-text">読み込み中…</span></div>
+</div>
+
+<div id="map"></div>
+
+<!-- レポート(画面では上に重ねて見せ、印刷ではこれだけを出す) -->
+<div id="sp-report" hidden>
+    <div class="sp-rep-bar">
+        <button type="button" class="sp-rbtn primary" id="sp-print">印刷 / PDF に保存</button>
+        <button type="button" class="sp-rbtn" id="sp-close-report">閉じる</button>
+        <span class="sp-rep-hint">印刷の画面で「PDF に保存」を選ぶと PDF になります。A4 縦・背景のグラフィックを有効にすると色が出ます。</span>
+    </div>
+    <div class="sp-rep-page" id="sp-rep-page"></div>
+</div>
+
+<div id="sp-tip" class="sp-tip" hidden></div>
+
+<script src="./js/agj_map.js?v=2"></script>
+<script src="./js/site_plan.js?v=1"></script>
+</body>
+</html>
