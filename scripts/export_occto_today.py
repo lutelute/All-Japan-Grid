@@ -385,6 +385,68 @@ def chain(parts: list, a: list | None, b: list | None) -> tuple[list, list]:
     return solid, dash
 
 
+def branch_trunk(name: str) -> str | None:
+    """端の名前が T 分岐(線の途中の点)なら、分岐する先の幹線の名前。「571T(西南多摩線)」→「西南多摩線」、
+    「山口幹線」→「山口幹線」、「42T」→ None(幹線の名前が無い)。変電所の名前なら None。"""
+    import unicodedata
+    n = unicodedata.normalize("NFKC", str(name or "")).replace(" ", "")
+    m = re.fullmatch(r"\d+T[(](.+?)[)]", n)
+    if m:
+        return m.group(1)
+    if re.search(r"(線|幹線|連絡線|支線)$", n) and not re.search(r"(変電所|開閉所|発電所|変換所)", n):
+        return n
+    return None
+
+
+def _nearest_on(paths: list, q: list) -> list | None:
+    """線の形(折れ線の並び)の上で、点 q にいちばん近い点。"""
+    best = None
+    for path in paths:
+        for (ax, ay), (bx, by) in zip(path, path[1:]):
+            dx, dy = bx - ax, by - ay
+            l2 = dx * dx + dy * dy
+            t = 0.0 if l2 == 0 else max(0.0, min(1.0, ((q[0] - ax) * dx + (q[1] - ay) * dy) / l2))
+            pt = [ax + t * dx, ay + t * dy]
+            d = _km(pt, q)
+            if best is None or d < best[0]:
+                best = (d, pt)
+    return best[1] if best else None
+
+
+def place_branches(lines: list) -> int:
+    """T 分岐の端を、分岐する先の幹線(同じエリアの、名前がその幹線で始まる線路)の描いた形の上で、
+    もう一方の端にいちばん近い点に置く(位置は模式)。置いた端は t で印を付ける(駅の点は打たない)。"""
+    import unicodedata
+    by_area: dict[str, list] = {}
+    for x in lines:
+        by_area.setdefault(x["a"], []).append(x)
+    placed = 0
+    for x in lines:
+        ends = list(x["s"])
+        for i in (0, 1):
+            other = ends[1 - i]
+            name = x["d_ends"][i]
+            trunk = branch_trunk(name) if ends[i] is None else None
+            if not trunk or not other:
+                continue
+            paths = [p for y in by_area[x["a"]] if y is not x
+                     and unicodedata.normalize("NFKC", y["n"]).replace(" ", "").startswith(trunk) for p in y["p"]]
+            pt = _nearest_on(paths, other)
+            if pt:
+                ends[i] = [round(pt[0], 4), round(pt[1], 4)]
+                x.setdefault("t", [False, False])[i] = True
+                placed += 1
+        if ends != x["s"]:
+            x["s"] = ends
+            fa, fb = ends
+            if x["p"]:
+                x["p"], dash = chain(x["p"], fa, fb)
+            else:
+                dash = [[fa, fb]] if fa and fb else []
+            x["j"] = [[[round(u, 3), round(v, 3)] for u, v in seg] for seg in dash]
+    return placed
+
+
 def cmd_lines(a) -> int:
     cw = json.loads(a.crosswalk.read_text(encoding="utf-8"))
     geom: dict[str, list] = {}
@@ -411,15 +473,20 @@ def cmd_lines(a) -> int:
             dash = [[fa, fb]] if fa and fb else []
         rec = {"id": line_id(r["area"], r["line"], r["direction"]), "a": r["area"], "n": r["line"],
                "d": r["direction"], "kv": int(r["kv"]), "c": conf if conf in ("A", "B", "C") else None,
-               "p": paths, "j": [[[round(x, 3), round(y, 3)] for x, y in seg] for seg in dash], "s": [fa, fb]}
+               "p": paths, "j": [[[round(x, 3), round(y, 3)] for x, y in seg] for seg in dash], "s": [fa, fb],
+               "d_ends": [r.get("from"), r.get("to")]}
         lines.append(rec)
+    n_branch = place_branches(lines)
+    for x in lines:
+        x.pop("d_ends")
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
             "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・輪郭 %d 枚・%d KB", a.out, len(lines),
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐を幹線に置いた端 %d・輪郭 %d 枚・%d KB",
+             a.out, len(lines),
              sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
              sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
-             len(data["outline"]), a.out.stat().st_size // 1024)
+             n_branch, len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
 
