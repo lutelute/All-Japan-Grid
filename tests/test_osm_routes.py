@@ -199,3 +199,30 @@ def test_legacy_scripts_read_june_archive_on_nas(monkeypatch, tmp_path):
     from scripts.rebuild_geojson import load_raw
     ways, nodes = load_raw("okinawa")
     assert len(ways) == 1 and len(nodes) >= 2
+
+
+def test_extend_numbers_only_on_consistent_runs():
+    """番号のある鉄塔が 2 基以上で、1 基ごとに番号が 1 ずつ増える(減る)並びだけ、両端へ延ばす。1 より小さくはしない。"""
+    from src.topology.osm_routes import extend_numbers as X
+    yes = lambda n: True
+    # 10, 11, _, 13 → 前の端 9、後ろの端 14・15(元の鉄塔と何基先かも返す)
+    assert X([1, 2, 3, 4, 5, 6, 7], yes, {2: 10, 3: 11, 5: 13}.get) == {1: (9, 2, 1), 6: (14, 5, 1), 7: (15, 5, 2)}
+    # 減る並び: 2, 1 → 前は 3、後ろは 0 になるので延ばさない
+    assert X([1, 2, 3, 4], yes, {2: 2, 3: 1}.get) == {1: (3, 2, 1)}
+    # 間隔がそろわない(2 基で 4 増える)・番号が 1 つだけ → 延ばさない
+    assert X([1, 2, 3, 4], yes, {1: 5, 3: 9}.get) == {}
+    assert X([1, 2, 3, 4], yes, {2: 5}.get) == {}
+    # 途中で向きが変わる(建て替えで番号が戻る)→ 延ばさない
+    assert X([1, 2, 3, 4, 5], yes, {1: 5, 2: 6, 3: 5}.get) == {}
+
+
+def test_region_lookup_breaks_ties_by_territory():
+    """同じ座標に地域の違う正典の点(地域をまたぐ写し)があるとき、座標の領土の地域を選ぶ(OS に依らない)。"""
+    import scripts.export_osm_routes as E
+    nodes = [{"lat": 35.68, "lon": 139.76, "region": "tohoku"},   # 東京都の座標に東北の写し
+             {"lat": 35.68, "lon": 139.76, "region": "tokyo"},
+             {"lat": 38.26, "lon": 140.87, "region": "tohoku"}]
+    f = E.region_lookup(nodes)
+    assert f([[139.7601, 35.6801], [140.87, 38.26]]) == ["tokyo", "tohoku"]
+    f2 = E.region_lookup(list(reversed(nodes)))                    # 点の並びを変えても同じ
+    assert f2([[139.7601, 35.6801]]) == ["tokyo"]
