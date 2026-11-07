@@ -348,7 +348,7 @@
 ## 作り直し方
 
 ```bash
-PYTHONPATH=. python scripts/audit_route_connectivity.py --raw <data/osm_raw_towers のある場所>
+PYTHONPATH=. python scripts/audit_route_connectivity.py   # 既定は nas03 の 20261105 の抽出
 ```
 
 閾値: 別の線まで 60 m・変電所まで 300 m・同じ名前の隙間 2,000 m。入力の SHA256 は docs/data/route_audit/audit.json に書いている。

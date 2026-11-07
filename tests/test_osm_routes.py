@@ -168,3 +168,16 @@ def test_circuits_estimate_marks_its_basis():
     assert R.circuits_estimate({"cables": "2", "frequency": "0"}) == (1, "cables_dc")
     assert R.circuits_estimate({}, 2) == (2, "relations")
     assert R.circuits_estimate({"circuits": "2", "cables": "6"}) is None
+
+
+def test_default_raw_dir_reads_nas_not_mac(monkeypatch, tmp_path):
+    """鉄塔の生データの既定の場所は NAS(nas03 の 20261105 の抽出)か環境変数で、Mac の data/osm_raw_towers ではない。"""
+    from src.topology import osm_routes as R
+    monkeypatch.delenv("AJG_OSM_RAW_TOWERS", raising=False)
+    monkeypatch.delenv("AGJ_OSM_RAW_TOWERS", raising=False)
+    d = R.default_raw_dir()
+    assert "osm_raw_towers" not in d and "20261105_agj_transmission" in d
+    monkeypatch.setenv("AGJ_OSM_RAW_TOWERS", str(tmp_path))          # 旧名もしばらく読む
+    assert R.default_raw_dir() == str(tmp_path)
+    monkeypatch.setenv("AJG_OSM_RAW_TOWERS", str(tmp_path / "new"))  # 新名が先
+    assert R.default_raw_dir() == str(tmp_path / "new")

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """系統図ビューアーの「路線」「鉄塔」「横断検索」の層を書き出す(2026-11-07)。
 
-    PYTHONPATH=. python scripts/export_osm_routes.py --raw <data/osm_raw_towers のある場所>
+    PYTHONPATH=. python scripts/export_osm_routes.py [--raw <tw_*_t*.json のある場所>]
 
 入力(読むだけ)
-  - data/osm_raw_towers/tw_*_t*.json  OSM の送電線 way と鉄塔(Overpass の生、git の外・107 MB。
-                                      scripts/tower_connectivity.py が取る。nas03 にも置いてある)
+  - tw_*_t*.json                      OSM の送電線 way・鉄塔・route=power(Overpass の JSON と同じ形、git の外)。
+                                      既定は nas03 の osm_jp_power/20261105_agj_transmission/json(osm_routes.default_raw_dir)
   - docs/data/built/all.json          正典(地域の割り当て・変電所の名前・枝と路線の対応)
   - docs/data/map/lines_all.geojson   地図に出している正典の線(枝と同じ順。枝を引く鍵を作る)
   - data/{region}_substations.geojson・data/{region}_plants.geojson  路線の端の敷地の名前(基底 OSM)
@@ -118,12 +118,13 @@ def region_lookup(built_nodes):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--raw", default=os.environ.get("AGJ_OSM_RAW_TOWERS", os.path.join(ROOT, "data", "osm_raw_towers")),
-                    help="tw_*_t*.json のあるフォルダ(既定: data/osm_raw_towers か環境変数 AGJ_OSM_RAW_TOWERS)")
+    ap.add_argument("--raw", default=None,
+                    help="tw_*_t*.json のあるフォルダ(既定: 環境変数 AJG_OSM_RAW_TOWERS か nas03 の 20261105 の抽出)")
     ap.add_argument("--out", default=OUT)
     args = ap.parse_args()
+    args.raw = args.raw or R.default_raw_dir()
     if not R.raw_files(args.raw):
-        sys.exit(f"鉄塔の生データが見つからない: {args.raw}(--raw で場所を渡す)")
+        sys.exit(R.missing_raw_message(args.raw))
     os.makedirs(args.out, exist_ok=True)
 
     nodes, ways, info = R.load_raw(args.raw)

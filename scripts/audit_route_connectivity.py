@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """送電線のつながりの点検(2026-11-07)。観測(OSM)と正典(built)の候補を分けて書き出す。
 
-    PYTHONPATH=. python scripts/audit_route_connectivity.py --raw <data/osm_raw_towers のある場所>
+    PYTHONPATH=. python scripts/audit_route_connectivity.py [--raw <tw_*_t*.json のある場所>]   # 既定は nas03 の 20261105 の抽出
 
 何を見るか
   観測(OSM の線を路線にまとめたもの、src/topology/osm_routes.py)
@@ -75,10 +75,11 @@ def dist_m(a_lat, a_lon, b_lat, b_lon):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--raw", default=os.environ.get("AGJ_OSM_RAW_TOWERS", os.path.join(ROOT, "data", "osm_raw_towers")))
+    ap.add_argument("--raw", default=None, help="tw_*_t*.json のあるフォルダ(既定: 環境変数 AJG_OSM_RAW_TOWERS か nas03 の 20261105 の抽出)")
     args = ap.parse_args()
+    args.raw = args.raw or R.default_raw_dir()
     if not R.raw_files(args.raw):
-        sys.exit(f"鉄塔の生データが見つからない: {args.raw}")
+        sys.exit(R.missing_raw_message(args.raw))
 
     nodes, ways, info = R.load_raw(args.raw)
     route_of, _ = R.assemble(ways)
@@ -355,7 +356,7 @@ def main():
                      f"{'はい' if c['main'] else 'いいえ'} | {c['sub_name'] or '—'}（{c['sub_m']:,} m） |")
     lines.append("")
     lines.append("## 作り直し方\n")
-    lines.append("```bash\nPYTHONPATH=. python scripts/audit_route_connectivity.py --raw <data/osm_raw_towers のある場所>\n```\n")
+    lines.append("```bash\nPYTHONPATH=. python scripts/audit_route_connectivity.py   # 既定は nas03 の 20261105 の抽出\n```\n")
     lines.append(f"閾値: 別の線まで {NEAR_LINE_M} m・変電所まで {NEAR_SUB_M} m・同じ名前の隙間 {SPLIT_GAP_M:,} m。"
                  f"入力の SHA256 は docs/data/route_audit/audit.json に書いている。\n")
     rep = os.path.join(ROOT, "docs", "reports", f"route_connectivity_audit_{stamp}.md")
