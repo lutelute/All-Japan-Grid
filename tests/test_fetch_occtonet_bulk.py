@@ -55,7 +55,7 @@ def test_unit_end():
 
 def test_run_refetches_unfinished_month(tmp_path):
     """前月が途中のまま(台帳の to が月末に届かない)なら、backfill で取り直す。"""
-    today = dt.date.today()
+    today = fb.jst_today()
     prev_end = today.replace(day=1) - dt.timedelta(days=1)
     prev = prev_end.replace(day=1)
     tag = f"{prev:%Y%m}"
@@ -77,7 +77,7 @@ def test_run_refetches_unfinished_month(tmp_path):
 
 def test_run_bootstrap_and_open_month(tmp_path):
     """台帳の無い既存ファイルは取った日の前日まで覆ったとみなす。当月は backfill では取り直さない。"""
-    today = dt.date.today()
+    today = fb.jst_today()
     first = today.replace(day=1)
     old = (first - dt.timedelta(days=40)).replace(day=1)
     old_end = fb.unit_end(SPEC, f"{old:%Y%m}")
@@ -94,7 +94,7 @@ def test_run_bootstrap_and_open_month(tmp_path):
 
 
 def test_kept_does_not_advance_manifest(tmp_path):
-    today = dt.date.today()
+    today = fb.jst_today()
     prev_end = today.replace(day=1) - dt.timedelta(days=1)
     prev = prev_end.replace(day=1)
     tag = f"{prev:%Y%m}"
@@ -106,3 +106,14 @@ def test_kept_does_not_advance_manifest(tmp_path):
     assert p.read_bytes() == _csv(9)
     man = json.loads((tmp_path / "chinai_flow" / fb.MANIFEST).read_text())
     assert man[tag]["to"] == str(prev_end - dt.timedelta(days=2))
+
+
+def test_today_is_japan_date(monkeypatch):
+    """取得する所が UTC でも、日本の日付で数える(06:10 JST は UTC では前日の 21:10)。"""
+    class FakeDT(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            t = dt.datetime(2026, 11, 6, 21, 10, tzinfo=dt.timezone.utc)
+            return t.astimezone(tz) if tz else t.replace(tzinfo=None)
+    monkeypatch.setattr(fb.dt, "datetime", FakeDT)
+    assert fb.jst_today() == dt.date(2026, 11, 7)
