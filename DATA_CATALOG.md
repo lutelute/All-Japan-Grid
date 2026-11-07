@@ -176,9 +176,9 @@ OSM 由来の地域別 GeoJSON。これがパイプライン全体の**一次ソ
 | `data/wri_global_power_plants.csv` | WRI Global Power Plant Database（全世界。`capacity_mw`/`primary_fuel`/`commissioning_year`/`generation_gwh_*` 等）。発電所の容量・燃料の外部照合用 | 追跡 |
 | `data/cache/*.pkl` | GridNetwork のピクルキャッシュ（高速化用、ハッシュ名）| **非追跡**（`*.pkl` / `data/cache/`）|
 | `data/external/` | 外部ダウンロード置き場 | **非追跡**（`data/external/`）|
-| **nas03** `PWS_DB/osm_jp_power/20261105_agj_transmission/`（`//10.0.70.189/PWS_DB`、pws-160core では `/mnt/nas03/...`） | OSM の日本の抽出（Geofabrik `japan-261105.osm.pbf`、2,569,315,374 バイト、OSM 2026-11-05T21:23Z、md5 照合済み）と、送電線・鉄塔・route=power に絞った `power_lines_towers.osm.pbf`（3.7 MB）。SHA256 は同じ場所の `MANIFEST.sha256`（抽出 `1645a9ee…6ede8e`・絞った pbf `e7f71193…dfe9`）。路線・鉄塔の層（`docs/data/osm_routes/`）の入力。2026-11-07 に pws-160core から直接取得（取得データは Mac に置かず NAS に置く、オーナーの決まり） | NAS（git の外） |
+| **nas03** `PWS_DB/osm_jp_power/20261105_agj_transmission/`（`//10.0.70.189/PWS_DB`、pws-160core では `/mnt/nas03/...`） | OSM の日本の抽出（Geofabrik `japan-261105.osm.pbf`、2,569,315,374 バイト、OSM 2026-11-05T21:23Z、md5 照合済み）と、送電線・鉄塔・route=power に絞った `power_lines_towers.osm.pbf`（3.7 MB）。SHA256 は同じ場所の `MANIFEST.sha256`（抽出 `1645a9ee…6ede8e`・絞った pbf `e7f71193…dfe9`）。路線・鉄塔の層（`docs/data/osm_routes/`）の入力。2026-11-07 に pws-160core から直接取得（取得データは Mac に置かず NAS に置く、オーナーの決まり）。`json/tw_japan_t0.json`（51 MB、SHA256 `843986bc…a4c42c`）は絞った pbf を `scripts/osm_pbf_to_power_json.py` で Overpass の JSON と同じ形にしたもので、`export_osm_routes.py`・`audit_route_connectivity.py` が既定で読む（`osm_routes.default_raw_dir`） | NAS（git の外） |
 | **nas03** `PWS_DB/osm_jp_power/20261107_audit_photos/` | つながりの点検の確かめに使った国土地理院の航空写真（ズーム 17、26 か所ぶん）と、正典の枝・OSM の線・鉄塔を重ねた図。判定は `docs/data/route_audit/mixed_kv_review.json` | NAS（git の外） |
-| `data/osm_raw_towers/` | OSM の送電線・鉄塔（Overpass、2026-06-15 取得、107 MB）。`scripts/tower_connectivity.py`。2026-11-07 の取り直しの前の入力（比べるときに使う） | **非追跡**（Mac。NAS へ移すかは確認待ち） |
+| `data/osm_raw_towers/` | OSM の送電線・鉄塔（Overpass、2026-06-15 取得、107 MB）と、2026-11-07 の Overpass の途中の 16 区画・Geofabrik の途中の抽出。2026-11-07 の取り直しの前の入力（比べるときに使う） | **非追跡**。先生の指示で NAS へ移す（2026-11-07、別のセッションが担当）。**AJG のコードはもう読まない**（読む先は上の nas03 の `json/`） |
 | `docs/data/osm_routes/` | 路線・鉄塔・横断検索の層と補完（推定の番号・線の折れ点・回線数の推定）。derived、正典とは別（`docs/OSM_ROUTES.md`）。作り直しは `scripts/osm_pbf_to_power_json.py` → `scripts/export_osm_routes.py` | 追跡 |
 
 ---
