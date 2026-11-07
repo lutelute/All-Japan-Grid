@@ -523,6 +523,138 @@ def interconnections(lines: list, path: Path = IC_CONF) -> list:
     return out
 
 
+BUILT = ROOT / "docs" / "data" / "built" / "all.json"
+TOUCH_KM = 0.3    # 線の端がほかの線のこれより近くにあれば、つながっているとみなす
+SNAP_KM = 1.0     # 変電所の点とモデルの節点を同じ所とみなす距離
+MAIN_MIN = 20     # これより多くの線路を含む塊を本線とみなす(本土・沖縄)
+
+
+def _seg_km(p, a, b) -> float:
+    ax, ay = a
+    dx, dy = b[0] - ax, b[1] - ay
+    l2 = dx * dx + dy * dy
+    t = 0.0 if l2 == 0 else max(0.0, min(1.0, ((p[0] - ax) * dx + (p[1] - ay) * dy) / l2))
+    return _km(p, [ax + t * dx, ay + t * dy])
+
+
+def _near_paths(p, paths, tol=TOUCH_KM) -> bool:
+    return any(_seg_km(p, q[k], q[k + 1]) < tol for q in paths for k in range(len(q) - 1))
+
+
+def bridges(lines: list, ics: list, built_path: Path = BUILT, tol: float = 0.002) -> list:
+    """OCCTO の地内基幹の一覧だけではほかとつながらない所から、本線(大きな塊)の変電所までの、モデルの線の道筋。
+
+    離れた所 = 線路が少ない塊(東上越幹線など、一覧につなぐ線路が無い)と、ほかの線に触れない変電所の点
+    (線の描けない線路の端・連系線の端)。モデルの正典(built)の線を、電圧の低い線ほど遠いとみなして最短でたどる。
+    地図ではつながりを見せるだけで、潮流の値は無い。"""
+    import heapq
+    items = [x["p"] + x["j"] for x in lines if x["p"] or x["j"]] + [[ic["s"]] for ic in ics]
+    names = [x["n"] for x in lines if x["p"] or x["j"]] + [ic["n"] for ic in ics]
+    ends = [[q[0] for q in it] + [q[-1] for q in it] for it in items]
+    box = [(min(v[0] for q in it for v in q) - .01, max(v[0] for q in it for v in q) + .01,
+            min(v[1] for q in it for v in q) - .01, max(v[1] for q in it for v in q) + .01) for it in items]
+    par = list(range(len(items)))
+
+    def find(i):
+        while par[i] != i:
+            par[i] = par[par[i]]
+            i = par[i]
+        return i
+    for i, es in enumerate(ends):
+        for j, it in enumerate(items):
+            if i == j or find(i) == find(j):
+                continue
+            x0, x1, y0, y1 = box[j]
+            if any(x0 <= e[0] <= x1 and y0 <= e[1] <= y1 and _near_paths(e, it) for e in es):
+                par[find(i)] = find(j)
+    comp: dict[int, list] = {}
+    for i in range(len(items)):
+        comp.setdefault(find(i), []).append(i)
+    stations = [s for x in lines for i, s in enumerate(x["s"]) if s and not (x.get("t") or [False, False])[i]]
+    main_pts, pieces = [], []
+    for members in comp.values():
+        pts = [e for i in members for e in ends[i]]
+        own = [s for s in stations if any(_km(s, e) < TOUCH_KM for e in pts)]
+        if len(members) >= MAIN_MIN:
+            main_pts += own
+        else:
+            pieces.append(([names[i] for i in members], own + pts))
+    drawn = [q for it in items for q in it]
+    for x in lines:   # 線の描けない線路の端で、どの線にも触れない変電所
+        if not (x["p"] or x["j"]):
+            for s in x["s"]:
+                if s and not _near_paths(s, drawn):
+                    pieces.append(([x["n"]], [s]))
+    for ic in ics:    # 連系線の端で、地内基幹の線に触れないもの(今別変換所)
+        for s in ic["s"]:
+            if not _near_paths(s, [q for x in lines for q in x["p"] + x["j"]]):
+                pieces.append(([ic["n"]], [s]))
+    if not pieces:
+        return []
+    # モデルの線の網(節点 = 座標。同じ変電所の電圧の違う母線は同じ座標)
+    b = json.loads(built_path.read_text(encoding="utf-8"))
+    key = lambda la, lo: (round(lo, 5), round(la, 5))
+    adj: dict[tuple, list] = {}
+    for k, e in enumerate(b["edges"]):
+        u, v = key(*e["a"]), key(*e["b"])
+        path = [[lo, la] for la, lo in (e.get("path") or [e["a"], e["b"]])]
+        km = sum(_km(path[i], path[i + 1]) for i in range(len(path) - 1))
+        kv = e.get("kv") or 0
+        w = km * (1.0 if kv >= 187 else 1.3 if kv >= 154 else 2.5 if kv >= 66 else 5.0)
+        adj.setdefault(u, []).append((v, w, k))
+        adj.setdefault(v, []).append((u, w, k))
+    nodes = list(adj)
+
+    def near(p):
+        return [n for n in nodes if abs(n[0] - p[0]) < .02 and abs(n[1] - p[1]) < .02 and _km(n, p) < SNAP_KM]
+    targets = {n for p in main_pts for n in near(p)}
+    out = []
+    for for_names, pts in pieces:
+        src = {n for p in pts for n in near(p)}
+        if not src or src & targets:
+            continue
+        dist, prev, heap = {n: 0.0 for n in src}, {}, [(0.0, n) for n in src]
+        heapq.heapify(heap)
+        hit = None
+        while heap:
+            d, u = heapq.heappop(heap)
+            if d > dist.get(u, 1e18):
+                continue
+            if u in targets:
+                hit = u
+                break
+            if d > 150:
+                break
+            for v, w, k in adj.get(u, ()):
+                if d + w < dist.get(v, 1e18):
+                    dist[v], prev[v] = d + w, (u, k)
+                    heapq.heappush(heap, (d + w, v))
+        if not hit:
+            log.warning("つなぐモデルの線が見つからない: %s", for_names)
+            continue
+        ks, u = [], hit
+        while u in prev:
+            u, k = prev[u]
+            ks.append(k)
+        es = [b["edges"][k] for k in reversed(ks)]
+        paths = [[[round(x, 3), round(y, 3)] for x, y in simplify([(lo, la) for la, lo in (e.get("path") or [e["a"], e["b"]])], tol)]
+                 for e in es if e["a"] != e["b"]]
+        # 道筋の始まり(モデルの節点)が変電所の点から離れていれば、点から短い線でつなぐ
+        p0 = min(pts, key=lambda q: _km(q, u))
+        if _km(p0, u) > 0.05:
+            paths.insert(0, [[round(p0[0], 4), round(p0[1], 4)], [round(u[0], 4), round(u[1], 4)]])
+        # 見せる名前は OSM の線路名だけ(モデルの中の名前「namebind」「leadin」「tokyo_line_123」「会社名 220.0kV線」は除く)
+        via = list(dict.fromkeys(n for e in es if e["a"] != e["b"] for n in [e.get("name") or ""]
+                                 if n and not re.fullmatch(r"namebind|leadin|\w+_line_\d+|.*(ネットワーク|送配電|パワーグリッド|電力).*\d+(\.\d+)?kV線", n)))
+        same = next((o for o in out if o["p"] == paths), None)
+        if same:      # 同じ道筋(同じ変電所から出る線路の 2 本目)は 1 本にまとめる
+            same["for"] += [n for n in for_names if n not in same["for"]]
+            continue
+        out.append({"for": for_names, "via": via, "kv": sorted({int(e.get("kv") or 0) for e in es if e["a"] != e["b"]} - {0}),
+                    "km": round(sum(_km(q[i], q[i + 1]) for q in paths for i in range(len(q) - 1)), 1), "p": paths})
+    return out
+
+
 def cmd_lines(a) -> int:
     cw = json.loads(a.crosswalk.read_text(encoding="utf-8"))
     geom: dict[str, list] = {}
@@ -556,15 +688,16 @@ def cmd_lines(a) -> int:
     for x in lines:
         x.pop("d_ends")
     ics = interconnections(lines)
+    brs = bridges(lines, ics)
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
             "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines,
-            "ics": ics}
+            "ics": ics, "bridges": brs}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・連系線 %d・輪郭 %d 枚・%d KB",
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・連系線 %d・つなぎのモデルの線 %d・輪郭 %d 枚・%d KB",
              a.out, len(lines),
              sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
              sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
-             n_branch, len(ics), len(data["outline"]), a.out.stat().st_size // 1024)
+             n_branch, len(ics), len(brs), len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
 

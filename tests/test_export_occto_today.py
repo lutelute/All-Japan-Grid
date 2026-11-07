@@ -243,6 +243,33 @@ def test_interconnections_ledger():
     assert {e["name"] for e in honshi["ends"]} == {"東岡山変電所", "讃岐変電所"}
 
 
+def test_bridges_join_every_piece_to_the_main_network():
+    """OCCTO の一覧だけでは離れる線路・変電所の点は、どれもモデルの線のつなぎで本線の変電所まで届く。
+    描いた線(地内基幹・連系線・つなぎ)を塊に分けると、本土と沖縄の 2 つだけになる。"""
+    d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
+    assert d["bridges"] == ex.bridges(d["lines"], d["ics"]), "正典や台帳を変えたら occto_lines.json も作り直す"
+    for b in d["bridges"]:
+        assert b["for"] and b["p"] and 0 < b["km"] < 120 and all(k >= 66 for k in b["kv"]), b["for"]
+        assert not any(re.fullmatch(r"namebind|leadin|\w+_line_\d+", n) for n in b["via"])
+    items = [x["p"] + x["j"] for x in d["lines"] if x["p"] or x["j"]] + [[ic["s"]] for ic in d["ics"]] + [b["p"] for b in d["bridges"]]
+    pts = [s for x in d["lines"] for s in x["s"] if s] + [s for ic in d["ics"] for s in ic["s"]]
+    par = list(range(len(items)))
+
+    def f(i):
+        while par[i] != i:
+            par[i] = par[par[i]]
+            i = par[i]
+        return i
+    for i, it in enumerate(items):
+        for e in [q[0] for q in it] + [q[-1] for q in it]:
+            for j, jt in enumerate(items):
+                if f(i) != f(j) and ex._near_paths(e, jt, 1.0):
+                    par[f(i)] = f(j)
+    assert len({f(i) for i in range(len(items))}) == 2          # 本土と沖縄
+    # 線の描けない線路の端の変電所も、どれかの線に触れている
+    assert all(any(ex._near_paths(s, it, 1.0) for it in items) for s in pts)
+
+
 def test_lines_join_at_stations_and_stay_in_area():
     """線路の端は変電所の点(s)から始まり、点線のつなぎも含めて端どうしがつながる。位置はエリアの県の中。"""
     d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
