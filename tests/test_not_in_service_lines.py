@@ -38,5 +38,5 @@ def test_rules_hit_the_canon_as_intended():
             if nis_rule_matches(r, e.get("name"), float(e.get("kv") or 0) or float(r["match"].get("kv", 0))):
                 hits[r["real_name"][:6]] += 1
     assert hits["旧 青梅線 "] == 3          # 単独名の 3 本だけ(併記の 2 本は当たらない)
-    assert hits["西谷八幡線（"] == 6        # 中国・九州の二重抽出 3 組
+    assert hits["西谷八幡線（"] == 3        # 中国・九州の二重抽出 3 組は介入#58 で 1 つにまとめた(前は 6)
     assert hits["佐久間東幹線"] == 1        # 新ルートの 1 本(合成名の 66 kV 区間は当たらない)

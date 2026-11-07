@@ -141,6 +141,9 @@ def main():
         rv = json.load(open(REVIEW, encoding="utf-8"))
         idx = {(r["lat"], r["lon"]): r for r in rows}
         for it in rv["items"]:
+            # 写真で確かめた時点の値は _at_review に残す(初回だけ写す。今の値は下で書き直す)
+            it.setdefault("canon_at_review", it.get("canon"))
+            it.setdefault("powerflow_at_review", it.get("powerflow"))
             c = k5(it["lat"], it["lon"])
             here = at.get(c, [])
             it["canon"] = canon_form(here) if here else "none"
