@@ -1,0 +1,477 @@
+{
+ "what": "正典で変電所でない接続点に電圧の違う枝がつながる所(作った枝の関わらない 26 か所)を、国土地理院の航空写真(全国最新写真、ズーム 17)で確かめた判定",
+ "judgement": {
+  "misconnect": "誤接続(切る候補)",
+  "substation_missing": "変電所が OSM に無いだけの可能性",
+  "unclear": "決められない"
+ },
+ "date": "2026-11-07",
+ "items": [
+  {
+   "no": 1,
+   "region": "chubu",
+   "lat": 34.67553,
+   "lon": 138.15922,
+   "kvs": [
+    77.0,
+    500.0
+   ],
+   "names": [
+    "中部送電線_711",
+    "中部電力パワーグリッド（株）大須賀変電所~上ノ原変電所線",
+    "第二浜岡幹線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。第二浜岡幹線 500 kV に 77 kV の線をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.67553_138.15922.png"
+  },
+  {
+   "no": 2,
+   "region": "chubu",
+   "lat": 34.87901,
+   "lon": 137.46841,
+   "kvs": [
+    77.0,
+    275.0
+   ],
+   "names": [
+    "三河線",
+    "新城分岐線",
+    "西日本電線新城線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.87901_137.46841.png"
+  },
+  {
+   "no": 3,
+   "region": "kansai",
+   "lat": 35.05844,
+   "lon": 134.74602,
+   "kvs": [
+    66.0,
+    275.0
+   ],
+   "names": [
+    "溝口変電所~福崎変電所線",
+    "溝口支線",
+    "関西送電線_259"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.05844_134.74602.png"
+  },
+  {
+   "no": 4,
+   "region": "chubu",
+   "lat": 35.06841,
+   "lon": 137.0669,
+   "kvs": [
+    77.0,
+    275.0
+   ],
+   "names": [
+    "612"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.06841_137.06690.png"
+  },
+  {
+   "no": 5,
+   "region": "chubu",
+   "lat": 35.67311,
+   "lon": 136.0892,
+   "kvs": [
+    154.0,
+    275.0
+   ],
+   "names": [
+    "北陸電力送配電 154.0kV線",
+    "奥野々変電所~色浜変電所_2線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.67311_136.08920.png"
+  },
+  {
+   "no": 6,
+   "region": "tokyo",
+   "lat": 35.80016,
+   "lon": 139.31584,
+   "kvs": [
+    66.0,
+    275.0
+   ],
+   "names": [
+    "豊岡線;上ノ原線",
+    "青梅線",
+    "青梅線;上ノ原線",
+    "飯能線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80016_139.31584.png"
+  },
+  {
+   "no": 7,
+   "region": "kyushu",
+   "lat": 32.45961,
+   "lon": 130.70809,
+   "kvs": [
+    66.0,
+    220.0
+   ],
+   "names": [
+    "中九州大平線",
+    "八代変電所~頭地開閉所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kyushu_32.45961_130.70809.png"
+  },
+  {
+   "no": 8,
+   "region": "kansai",
+   "lat": 34.15846,
+   "lon": 136.27198,
+   "kvs": [
+    77.0,
+    154.0
+   ],
+   "names": [
+    "相賀分岐線",
+    "関西送電線_81",
+    "電源尾鷲南勢線"
+   ],
+   "judgement": "substation_missing",
+   "why": "すぐ近くに変電所か開閉所らしい施設がある。OSM に変電所が無いだけの可能性",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.15846_136.27198.png"
+  },
+  {
+   "no": 9,
+   "region": "kansai",
+   "lat": 34.83695,
+   "lon": 136.51826,
+   "kvs": [
+    77.0,
+    154.0
+   ],
+   "names": [
+    "中部送電線_451",
+    "中部送電線_885",
+    "庄野新鈴鹿線",
+    "関西送電線_549",
+    "関西送電線_828"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.83695_136.51826.png"
+  },
+  {
+   "no": 10,
+   "region": "chubu",
+   "lat": 35.10387,
+   "lon": 136.86075,
+   "kvs": [
+    77.0,
+    154.0
+   ],
+   "names": [
+    "昭和町寛政-1;寛政築港連絡-1"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.10387_136.86075.png"
+  },
+  {
+   "no": 11,
+   "region": "chubu",
+   "lat": 35.14915,
+   "lon": 137.34435,
+   "kvs": [
+    77.0,
+    154.0
+   ],
+   "names": [
+    "前田町三丁目変電所~愛知変電所線",
+    "平戸橋町変電所~北豊田変電所 (Kita Toyota Hendensho)線",
+    "平戸橋町変電所~豊田市変電所線",
+    "豊田市変電所~愛知変電所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.14915_137.34435.png"
+  },
+  {
+   "no": 12,
+   "region": "kansai",
+   "lat": 35.23307,
+   "lon": 136.7553,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "中部送電線_75",
+    "平和町上三宅変電所~平野町四丁目変電所線",
+    "平和町上三宅変電所~祖父江町大牧変電所線",
+    "関西送電線_444"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_35.23307_136.75530.png"
+  },
+  {
+   "no": 13,
+   "region": "chubu",
+   "lat": 35.46406,
+   "lon": 137.01427,
+   "kvs": [
+    77.0,
+    154.0
+   ],
+   "names": [
+    "中部電力パワーグリッド 154.0kV線",
+    "加茂野町鷹之巣変電所~西栃井変電所線",
+    "太田分岐線-1"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.46406_137.01427.png"
+  },
+  {
+   "no": 14,
+   "region": "tokyo",
+   "lat": 35.80426,
+   "lon": 139.62271,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "京北線;新倉線",
+    "戸田線",
+    "戸田線 / 荒川右岸線",
+    "笹目線 / 新倉線",
+    "笹目線;朝霞線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.80426_139.62271.png"
+  },
+  {
+   "no": 15,
+   "region": "tokyo",
+   "lat": 35.82604,
+   "lon": 139.78193,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "南葛線;東尾久線"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_35.82604_139.78193.png"
+  },
+  {
+   "no": 16,
+   "region": "tokyo",
+   "lat": 36.2743,
+   "lon": 139.6037,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "佐野線 / 板倉線",
+    "佐野線 / 赤麻線",
+    "楠線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.27430_139.60370.png"
+  },
+  {
+   "no": 17,
+   "region": "tokyo",
+   "lat": 36.31568,
+   "lon": 139.33113,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "東太田線/毛里田線",
+    "東太田線/藪塚線",
+    "毛里田線/藪塚線/金山線"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.31568_139.33113.png"
+  },
+  {
+   "no": 18,
+   "region": "hokuriku",
+   "lat": 36.48971,
+   "lon": 136.54366,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "北陸電力送配電 66.0kV線",
+    "南金沢変電所~川北変電所線",
+    "川北変電所~北金沢変電所線",
+    "新小松線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/hokuriku_36.48971_136.54366.png"
+  },
+  {
+   "no": 19,
+   "region": "tohoku",
+   "lat": 37.33051,
+   "lon": 140.34098,
+   "kvs": [
+    66.0,
+    154.0
+   ],
+   "names": [
+    "tokyo_line_4260",
+    "東北電力ネットワーク 154.0kV線",
+    "西山寺町変電所~笹川変電所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tohoku_37.33051_140.34098.png"
+  },
+  {
+   "no": 20,
+   "region": "chugoku",
+   "lat": 34.50338,
+   "lon": 133.5394,
+   "kvs": [
+    66.0,
+    110.0
+   ],
+   "names": [
+    "富岡変電所~倉敷市変電所線",
+    "田頭変電所~富岡変電所線",
+    "笠岡変電所~富岡変電所線",
+    "鴨方変電所~富岡変電所線"
+   ],
+   "judgement": "substation_missing",
+   "why": "すぐ近くに変電所か開閉所らしい施設がある。OSM に変電所が無いだけの可能性",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chugoku_34.50338_133.53940.png"
+  },
+  {
+   "no": 21,
+   "region": "kansai",
+   "lat": 34.67038,
+   "lon": 135.08278,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "大蔵谷線;有瀬舞子線",
+    "関西電力送配電 77.0kV線",
+    "須磨変電所~西神戸変電所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.67038_135.08278.png"
+  },
+  {
+   "no": 22,
+   "region": "kansai",
+   "lat": 34.8588,
+   "lon": 135.64134,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "関西送電線_246",
+    "高槻上牧線"
+   ],
+   "judgement": "unclear",
+   "why": "市街地や分岐で、写真だけでは決められない",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/kansai_34.85880_135.64134.png"
+  },
+  {
+   "no": 23,
+   "region": "chubu",
+   "lat": 34.93884,
+   "lon": 137.15852,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "中部送電線_66",
+    "戸崎六ッ美線",
+    "美合町変電所~中部電力八帖変電所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_34.93884_137.15852.png"
+  },
+  {
+   "no": 24,
+   "region": "chubu",
+   "lat": 35.20005,
+   "lon": 138.56187,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "中部送電線_27",
+    "東京送電線_13"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を富士川のそばでつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/chubu_35.20005_138.56187.png"
+  },
+  {
+   "no": 25,
+   "region": "tokyo",
+   "lat": 36.52294,
+   "lon": 138.6203,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "中部送電線_1053",
+    "東京送電線_269"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を軽井沢でつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52294_138.62030.png"
+  },
+  {
+   "no": 26,
+   "region": "tokyo",
+   "lat": 36.52332,
+   "lon": 138.61718,
+   "kvs": [
+    66.0,
+    77.0
+   ],
+   "names": [
+    "中部送電線_1053",
+    "東京送電線_269",
+    "軽井沢変電所~大津変電所線"
+   ],
+   "judgement": "misconnect",
+   "why": "変電所の無い所で電圧の違う線が交差するか同じ鉄塔に載り、正典がそこで枝をつないでいる。東京(50 Hz)と中部(60 Hz)の線を軽井沢でつないでいる",
+   "photo": "nas03 PWS_DB/osm_jp_power/20261107_audit_photos/tokyo_36.52332_138.61718.png"
+  }
+ ]
+}
