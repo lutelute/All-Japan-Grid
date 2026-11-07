@@ -90,8 +90,12 @@ def test_vector_overlays_one_canvas_and_legend(browser, site):
         _set(page, k, True)
     _wait_loaded(page)
     page.wait_for_timeout(500)
-    canv = page.evaluate("() => map.getContainer().querySelectorAll('.leaflet-pane canvas').length")
-    assert canv == 1, f"地図の描画面が {canv} 枚ある"
+    # マウスを取る描画面だけを数える(鉄塔の点 tower_dots.js は pointer-events:none の別の canvas。
+    # test_pages_map_ui.py の _MOUSE_CANVASES と同じ数え方)
+    canv = page.evaluate("() => [...map.getContainer().querySelectorAll('.leaflet-pane canvas')]"
+                         ".filter(c => getComputedStyle(c).pointerEvents !== 'none'"
+                         " && getComputedStyle(c.closest('.leaflet-pane')).pointerEvents !== 'none').length")
+    assert canv == 1, f"マウスを取る地図の描画面が {canv} 枚ある"
     legend = page.inner_text(".agj-ov-legend")
     for title in VECTOR.values():
         assert title in legend, f"凡例に {title} が無い"
