@@ -679,6 +679,9 @@ function updateStatus() {
 
 // ── Data loading ──
 
+// 共有の URL(?route= / ?tower=)で開いたか。最初の loadData で表示を全国へ戻さないために使う
+var keepSharedView = /[?&](route|tower)=/.test(location.search);
+
 async function loadData(minKv) {
     if (minKv === undefined) {
         var sel = document.getElementById("min-kv");
@@ -720,8 +723,12 @@ async function loadData(minKv) {
 
         renderLayers();
 
-        // Zoom
-        if (selectedRegion === "all") {
+        // Zoom。共有の URL(?route= / ?tower=、js/osm_routes.js)で開いたときの最初の読み込みでは表示を動かさない。
+        // 地図は作るときに全国の表示になっていて、路線・鉄塔へ寄せるのは OSMRoutes がする。ここで全国へ戻すと、
+        // 送電線のデータの読み込みが鉄塔より遅いとき(公開サイト)に、寄せた表示を後から引き戻していた(2026-11-07)
+        if (keepSharedView) {
+            keepSharedView = false;
+        } else if (selectedRegion === "all") {
             map.setView([36.5, 137.0], 6);
         } else {
             zoomToRegion(selectedRegion);

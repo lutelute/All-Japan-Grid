@@ -21,6 +21,7 @@ import functools
 import http.server
 import os
 import threading
+import time
 from pathlib import Path
 
 import pytest
@@ -342,6 +343,51 @@ def test_select_line_from_tower_card_keeps_the_route_card(browser, site):
     assert page.evaluate("() => OSMRoutes._state().sel !== null"), "路線が光っていない"
     assert not errors, errors
     page.close()
+
+
+def _a_tower(region="tohoku"):
+    """docs/data/osm_routes/towers_<地域>.json の鉄塔を 1 基(地域の番号・node id・緯度経度)。"""
+    import json as _json
+    meta = _json.loads((DOCS / "data" / "osm_routes" / "meta.json").read_text(encoding="utf-8"))
+    d = _json.loads((DOCS / "data" / "osm_routes" / f"towers_{region}.json").read_text(encoding="utf-8"))
+    i = d["n"] // 2
+
+    def at(key):
+        acc = 0
+        for k, x in enumerate(d[key]):
+            acc += x
+            if k == i:
+                return acc
+
+    return meta["regions"].index(region), at("id"), at("lat") / 1e5, at("lon") / 1e5
+
+
+def test_tower_share_link_keeps_the_view_when_lines_load_late(browser, site):
+    """?tower= で開くと、送電線のデータが鉄塔より遅く着いても、地図はその鉄塔に寄ったまま(全国へ戻らない)。
+    公開サイトでは送電線のデータの方が遅く、最初の読み込みの終わりで全国の表示に引き戻していた(2026-11-07)。"""
+    ri, tid, lat, lon = _a_tower()
+    page = browser.new_page(viewport={"width": 1400, "height": 900})
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+
+    def slow(route):
+        time.sleep(3)
+        route.continue_()
+
+    page.route("**/data/map/lines_*", slow)
+    page.goto(f"{site}/map.html?tower={ri}.{tid}")
+    try:
+        page.wait_for_function("() => window.map && window.lineLayer && window.lineLayer.getLayers().length > 0",
+                               timeout=90_000)
+    except sync_api.Error:
+        page.close()
+        pytest.skip("地図のデータか Leaflet(unpkg)を読み込めない")
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')",
+                           timeout=30_000)
+    page.wait_for_timeout(1500)
+    z, c = page.evaluate("() => [map.getZoom(), map.getCenter()]")
+    assert z >= 15, z
+    assert abs(c["lat"] - lat) < 0.01 and abs(c["lng"] - lon) < 0.01, (c, lat, lon)
 
 
 def test_route_audit_markers_open_evidence_card(browser, site):
