@@ -287,8 +287,10 @@ def cmd_today(a) -> int:
             return 1
         cap = ic = None
         for key in ("chinai_capacity_result", "interconnector_flow"):
+            # 連系線の 5 分値は「前日の 24:00」が当日の 0:00 にあたる。範囲の最初のコマ(前日 0:00)を埋めるため 1 日前から頼む
+            d0 = days[0] - dt.timedelta(days=1) if key == "interconnector_flow" else days[0]
             try:
-                b = _download_range(cli, ob.SPECS[key], days[0], days[1])
+                b = _download_range(cli, ob.SPECS[key], d0, days[1])
             except Exception as e:  # noqa: BLE001
                 log.warning("%s が取れなかった(この回は空にする): %s", key, e)
                 b = None
