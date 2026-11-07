@@ -232,6 +232,7 @@
         if (!st.on || !st.loaded || map.getZoom() < PICK_ZOOM || st.mode === "line") return;
         if (e.target.closest && e.target.closest(".leaflet-control, .agj-card, .leaflet-popup, .leaflet-tooltip")) return;
         var cp = map.mouseEventToContainerPoint(e);
+        if (global.RouteAudit && RouteAudit.hitAt(cp)) return;   // つながりの点検の印を先に
         var k = pick(cp);
         if (k < 0) {
             // 鉄塔が無ければ線の折れ点(推定の鉄塔)

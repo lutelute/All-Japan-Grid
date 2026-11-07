@@ -53,10 +53,10 @@ OSM の送電線は細切れの way で描かれている（全国 35,605 本）
 ## 作り直し方
 
 ```bash
-PYTHONPATH=. python scripts/export_osm_routes.py --raw <data/osm_raw_towers のある場所>
+PYTHONPATH=. python scripts/export_osm_routes.py            # 既定で nas03 の 20261105 の抽出を読む
 ```
 
-- 入力の鉄塔データ（`data/osm_raw_towers/tw_*_t*.json`、107 MB）は **git の外**。`scripts/tower_connectivity.py` が Overpass から取り、nas03 にも置いている（`scripts/archive_to_nas.sh`）。CI では作り直せないので、出力（17 MB）を git に入れている
+- 入力の鉄塔データは **git の外で、NAS に置く**（取得データは Mac に置かない決まり・2026-11-07）。nas03 の `PWS_DB/osm_jp_power/20261105_agj_transmission/json/tw_japan_t0.json`（Geofabrik の日本の抽出 2026-11-05 を `scripts/osm_pbf_to_power_json.py` で Overpass の JSON と同じ形にしたもの、51 MB、SHA256 は同じ場所の `MANIFEST.sha256`）。読む場所は `osm_routes.default_raw_dir()`: 環境変数 `AJG_OSM_RAW_TOWERS`（旧名 `AGJ_OSM_RAW_TOWERS`）→ `/mnt/nas03/…/json`（pws-160core）→ `/Volumes/PWS_DB/…/json`（Mac で nas03 をつないだとき）。Mac の `data/osm_raw_towers/`（6 月の Overpass の取得分）は読まない。CI では作り直せないので、出力（17 MB）を git に入れている
 - 出力は、入力が同じなら毎回同じバイトになる（実行日は書かない）。`meta.json` に入力の SHA256・OSM の取得時刻・正典（`built/all.json`）の SHA256 を書く
 - 正典を作り直したあとも、枝と路線の対応（`edge_routes.json`）は枝の始点・終点・頂点数を鍵にしているので、形の変わらない枝はそのまま引ける。形が変わった枝は「対応づけられない」と出るだけで、間違った路線は出さない。正典が大きく変わったら作り直す
 - 規則の検査は `tests/test_osm_routes.py`、画面の検査は `tests/test_pages_map_ui.py`（路線・鉄塔・共有の URL・検索）

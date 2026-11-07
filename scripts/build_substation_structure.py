@@ -493,24 +493,29 @@ _TOWER_CACHE = {}
 
 
 def _load_towers(region):
-    """data/osm_raw_towers/tw_{region}_t*.json (Overpass power=tower) を
-    粗グリッド索引で返す(地域単位キャッシュ)。無ければ空。"""
-    if region in _TOWER_CACHE:
-        return _TOWER_CACHE[region]
+    """鉄塔(power=tower)を粗グリッド索引で返す。構内図に鉄塔の印を描くときだけ使う(構造 DB の中身には効かない)。
+
+    2026-11-07 から nas03 の 20261105 の抽出(src.topology.osm_routes.default_raw_dir、全国 1 ファイル)を読む。
+    取得データは Mac に置かない決まりなので Mac の data/osm_raw_towers/ は読まない。全国を 1 回読んで地域で
+    使い回す(region は互換のための引数)。無ければ空(印を描かないだけ)。"""
+    if "all" in _TOWER_CACHE:
+        return _TOWER_CACHE["all"]
     import glob
     from collections import defaultdict as _dd
+    from src.topology.osm_routes import default_raw_dir
     grid = _dd(list)
-    for fp in glob.glob(os.path.join("data", "osm_raw_towers",
-                                     f"tw_{region}_t*.json")):
+    for fp in glob.glob(os.path.join(default_raw_dir(), "tw_*_t*.json")):
         try:
             for el in json.load(open(fp)).get("elements", []):
+                if el.get("type", "node") != "node" or (el.get("tags") or {}).get("power") != "tower":
+                    continue
                 la, lo = el.get("lat"), el.get("lon")
                 if la is None:
                     continue
                 grid[(round(la, 2), round(lo, 2))].append((lo, la))
         except Exception:   # noqa: BLE001
             continue
-    _TOWER_CACHE[region] = grid
+    _TOWER_CACHE["all"] = grid
     return grid
 
 
