@@ -177,6 +177,72 @@ def test_place_branches_puts_t_end_on_the_trunk():
     assert "t" not in trunk
 
 
+def test_t_key_names():
+    assert ex.t_key("tokyo", "京浜線1/2L", "571T(西南多摩線)") == ("tokyo", "西南多摩線", "571")
+    assert ex.t_key("kansai", "北神線（北摂～４２Ｔ）", "４２T") == ("kansai", "北神線", "42")   # 番号だけ → 線路の名前の括弧の前
+    assert ex.t_key("kansai", "西神支線", "４２T（北神線）") == ("kansai", "北神線", "42")
+    assert ex.t_key("chugoku", "南山口支線", "山口幹線") == ("chugoku", "山口幹線", None)
+    assert ex.t_key("chugoku", "南山口支線", "南山口変電所") is None
+
+
+def _ln(area, name, ends, s, p=(), j=()):
+    return {"a": area, "n": name, "d_ends": list(ends), "s": list(s), "p": [list(x) for x in p], "j": [list(x) for x in j]}
+
+
+def test_place_branches_joins_a_numbered_t_at_one_point():
+    """同じ T 分岐(北神線の 42T)の端は 1 つの点にまとめる。幹線の形が無ければ、幹線の両端の変電所を結ぶ直線の上で、
+    分岐する側(西神支線)のもう一方の端にいちばん近い点。"""
+    a = _ln("kansai", "北神線（北摂～４２Ｔ）", ["北摂変電所", "４２T"], [[135.0, 35.0], None])
+    b = _ln("kansai", "北神線（４２Ｔ～神戸）", ["４２T（北神線）", "神戸変電所"], [None, [135.0, 34.0]])
+    c = _ln("kansai", "西神支線", ["４２T（北神線）", "西神戸変電所"], [None, [134.8, 34.5]])
+    assert ex.place_branches([a, b, c]) == 3
+    assert a["s"][1] == b["s"][0] == c["s"][0] == [135.0, 34.5]
+    assert a["t"] == [False, True] and b["t"] == [True, False] and c["t"] == [True, False]
+    assert c["j"] == [[[135.0, 34.5], [134.8, 34.5]]]
+
+
+def test_place_branches_uses_a_dashed_trunk():
+    """幹線が点線(模式)だけでも、その上に置く(京浜線の 571T は西南多摩線の点線の上)。"""
+    trunk = _ln("tokyo", "西南多摩線", ["西東京", "多摩"], [[139.0, 35.6], [139.4, 35.6]], j=[[[139.0, 35.6], [139.4, 35.6]]])
+    br = _ln("tokyo", "京浜線1/2L", ["571T(西南多摩線)", "京浜"], [None, [139.3, 35.4]])
+    assert ex.place_branches([trunk, br]) == 1
+    assert br["s"][0] == [139.3, 35.6] and br["t"] == [True, False]
+
+
+def test_place_branches_between_two_sections_of_a_trunk():
+    """分岐する側が無く、幹線が T 分岐で 2 区間に分かれているだけ(泉南東大阪線の 109T)なら、形のある区間の上で、
+    もう一方の区間の端にいちばん近い点に置き、両方の区間の端をそこにそろえる。"""
+    a = _ln("kansai", "泉南東大阪線（東大阪～１０９T）", ["東大阪変電所", "１０９T（泉南東大阪線）"], [[135.6, 34.7], None],
+            p=[[[135.6, 34.7], [135.6, 34.5]]])
+    b = _ln("kansai", "泉南東大阪線（１０９T～泉南変電所）", ["１０９T（泉南東大阪線）", "泉南変電所"], [None, [135.3, 34.55]])
+    assert ex.place_branches([a, b]) == 2
+    assert a["s"][1] == b["s"][0] == [135.6, 34.55]
+
+
+def test_interconnections_ledger():
+    """連系線の台帳(config/occto_interconnections.yaml): 端が線路の一覧の点か出典つきの位置で引け、両端は別のエリア。
+    5 分値の名前は当日の表にあり、フェンス(合成)以外の連系線はどれも地図に描く。"""
+    import yaml
+    conf = yaml.safe_load((ROOT / "config" / "occto_interconnections.yaml").read_text(encoding="utf-8"))["links"]
+    d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
+    ics = ex.interconnections(d["lines"])
+    assert ics == d["ics"], "台帳を変えたら occto_lines.json も作り直す"
+    for r, x in zip(conf, ics):
+        assert r["src"].strip() and r["kind"].strip()
+        assert x["a"][0] != x["a"][1], r["name"]
+        for e in r["ends"]:
+            if "lon" in e:
+                assert re.fullmatch(r"osm:(node|way|relation)/\d+", e["ref"]), e
+        assert all(122 < q[0] < 146 and 24 < q[1] < 46 for q in x["s"])
+    today = json.loads((FM / "occto_today.json").read_text(encoding="utf-8"))["ic"]
+    keys = {r["ic"] for r in conf if r["ic"]}
+    assert keys <= set(today), keys - set(today)
+    assert {k for k in today if "フェンス" not in k} <= keys
+    # 本四連系線の中国側は東岡山(モデルの台帳 data/reference/interconnections.yaml の「東山口」は誤り。OCCTO 第 104 回 広域系統整備委員会 資料 2)
+    honshi = next(r for r in conf if r["ic"] == "本四連系線")
+    assert {e["name"] for e in honshi["ends"]} == {"東岡山変電所", "讃岐変電所"}
+
+
 def test_lines_join_at_stations_and_stay_in_area():
     """線路の端は変電所の点(s)から始まり、点線のつなぎも含めて端どうしがつながる。位置はエリアの県の中。"""
     d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))

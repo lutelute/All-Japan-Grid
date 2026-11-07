@@ -413,38 +413,114 @@ def _nearest_on(paths: list, q: list) -> list | None:
     return best[1] if best else None
 
 
+def _nf(s: str) -> str:
+    return unicodedata.normalize("NFKC", str(s or "")).replace(" ", "")
+
+
+def t_key(area: str, line: str, name: str) -> tuple | None:
+    """端の名前が T 分岐なら (エリア, 幹線, 番号)。変電所なら None。
+    「571T(西南多摩線)」→ (…, 西南多摩線, 571)。番号だけの「42T」は、線路の名前「北神線（北摂～４２Ｔ）」の括弧の前を
+    幹線とする → (…, 北神線, 42)。幹線の名前だけの「山口幹線」は番号 None。"""
+    n = _nf(name)
+    m = re.fullmatch(r"(\d+)T[(](.+?)[)]", n)
+    if m:
+        return (area, m.group(2), m.group(1))
+    m = re.fullmatch(r"(\d+)T", n)
+    if m:
+        return (area, re.split(r"[(]", _nf(line))[0], m.group(1))
+    t = branch_trunk(name)
+    return (area, t, None) if t else None
+
+
 def place_branches(lines: list) -> int:
-    """T 分岐の端を、分岐する先の幹線(同じエリアの、名前がその幹線で始まる線路)の描いた形の上で、
-    もう一方の端にいちばん近い点に置く(位置は模式)。置いた端は t で印を付ける(駅の点は打たない)。"""
-    import unicodedata
+    """T 分岐の端の位置を決める(位置は模式)。同じ T 分岐(幹線と番号が同じ)の端は 1 つの点にまとめる。
+
+    1. 同じ T 分岐のどれかの端に位置が分かっていれば、それに合わせる。
+    2. 分かっていなければ、分岐する先の幹線(同じエリアの、名前がその幹線で始まる線路)の描いた形の上で、
+       分岐する側の線路のもう一方の端にいちばん近い点に置き、t で印を付ける(変電所の点は打たない)。
+       幹線の形は実線(モデルの線)を使い、無ければ点線(模式)、それも無ければ幹線の両端の変電所を結ぶ直線。
+    """
     by_area: dict[str, list] = {}
     for x in lines:
         by_area.setdefault(x["a"], []).append(x)
-    placed = 0
+    groups: dict[tuple, list] = {}
     for x in lines:
-        ends = list(x["s"])
         for i in (0, 1):
-            other = ends[1 - i]
-            name = x["d_ends"][i]
-            trunk = branch_trunk(name) if ends[i] is None else None
-            if not trunk or not other:
-                continue
-            paths = [p for y in by_area[x["a"]] if y is not x
-                     and unicodedata.normalize("NFKC", y["n"]).replace(" ", "").startswith(trunk) for p in y["p"]]
-            pt = _nearest_on(paths, other)
+            k = t_key(x["a"], x["n"], x["d_ends"][i])
+            if k:
+                groups.setdefault(k, []).append((x, i))
+    placed, changed = 0, []
+    for (area, trunk, _no), members in groups.items():
+        if all(x["s"][i] for x, i in members):
+            continue
+        known = [x["s"][i] for x, i in members if x["s"][i]]
+        mark = not known
+        if known:
+            pt = known[0]
+        else:
+            fam = [y for y in by_area[area] if _nf(y["n"]).startswith(trunk)]
+
+            def trunk_paths(skip=None):
+                f = [y for y in fam if y is not skip]
+                paths = [p for y in f for p in y["p"]] or [p for y in f for p in y["j"]]
+                if not paths:
+                    outer = []
+                    for y in f:
+                        for j in (0, 1):
+                            q = y["s"][j]
+                            if q and not t_key(area, y["n"], y["d_ends"][j]) and q not in outer:
+                                outer.append(q)
+                    paths = [outer[:2]] if len(outer) >= 2 else []
+                return paths
+            # 基準の点: 分岐する側(幹線の外)の線路のもう一方の端。分岐する側が無ければ(幹線が T 分岐で区間に
+            # 分かれているだけ)、区間ごとに、その区間を除いた幹線の形の上で、その区間のもう一方の端にいちばん近い点
+            tries = [(trunk_paths(), x["s"][1 - i]) for x, i in members
+                     if not _nf(x["n"]).startswith(trunk) and x["s"][1 - i]]
+            if not tries:
+                tries = [(trunk_paths(x), x["s"][1 - i]) for x, i in members if x["s"][1 - i]]
+            pt = next((q for q in (_nearest_on(p, r) for p, r in tries if p) if q), None)
             if pt:
-                ends[i] = [round(pt[0], 4), round(pt[1], 4)]
-                x.setdefault("t", [False, False])[i] = True
+                pt = [round(pt[0], 4), round(pt[1], 4)]
+        if not pt:
+            continue
+        for x, i in members:
+            if x["s"][i] is None:
+                x["s"] = [pt if j == i else x["s"][j] for j in (0, 1)]
+                if mark:
+                    x.setdefault("t", [False, False])[i] = True
                 placed += 1
-        if ends != x["s"]:
-            x["s"] = ends
-            fa, fb = ends
-            if x["p"]:
-                x["p"], dash = chain(x["p"], fa, fb)
-            else:
-                dash = [[fa, fb]] if fa and fb else []
-            x["j"] = [[[round(u, 3), round(v, 3)] for u, v in seg] for seg in dash]
+                changed.append(x)
+    for x in {id(x): x for x in changed}.values():
+        fa, fb = x["s"]
+        if x["p"]:
+            x["p"], dash = chain(x["p"], fa, fb)
+        else:
+            dash = [[fa, fb]] if fa and fb else []
+        x["j"] = [[[round(u, 3), round(v, 3)] for u, v in seg] for seg in dash]
     return placed
+
+
+IC_CONF = ROOT / "config" / "occto_interconnections.yaml"
+
+
+def interconnections(lines: list, path: Path = IC_CONF) -> list:
+    """連系線(エリアの間)の両端の位置。端は地内基幹の線路の端の点(エリアと名前の語幹で引く。T 分岐の点は使わない)か、
+    台帳に書いた lon・lat。線は両端を結ぶ直線(模式)。"""
+    import yaml
+    pts: dict[tuple, list] = {}
+    for x in lines:
+        e = ends(x["d"])
+        for i, nm in enumerate(e or ()):
+            if x["s"][i] and not (x.get("t") or [False, False])[i]:
+                pts.setdefault((x["a"], nm), x["s"][i])
+    out = []
+    for r in yaml.safe_load(path.read_text(encoding="utf-8"))["links"]:
+        xy = [[e["lon"], e["lat"]] if "lon" in e else pts.get((e["area"], stem(e["name"]))) for e in r["ends"]]
+        if None in xy:
+            raise SystemExit(f"{path.name}: {r['name']} の端の位置が線路の一覧に無い: {r['ends']}")
+        out.append({"k": r["ic"], "n": r["name"], "kind": r["kind"], "a": [e.get("area") for e in r["ends"]],
+                    "s": xy, "src": r["src"]})
+    return out
 
 
 def cmd_lines(a) -> int:
@@ -479,14 +555,16 @@ def cmd_lines(a) -> int:
     n_branch = place_branches(lines)
     for x in lines:
         x.pop("d_ends")
+    ics = interconnections(lines)
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
-            "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines}
+            "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines,
+            "ics": ics}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐を幹線に置いた端 %d・輪郭 %d 枚・%d KB",
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・連系線 %d・輪郭 %d 枚・%d KB",
              a.out, len(lines),
              sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
              sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
-             n_branch, len(data["outline"]), a.out.stat().st_size // 1024)
+             n_branch, len(ics), len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
 

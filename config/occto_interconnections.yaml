@@ -1,0 +1,115 @@
+# OCCTO の潮流マップ(io の occto_flow.html)に描く連系線(エリアの間の線)の両端。
+#
+# 地内基幹の線路(occto_lines.json の lines)はエリアの中だけなので、これが無いとエリアどうしが地図の上で
+# つながらない(2026-11-07 オーナー「繋がっていないところがいくつかある」)。
+#
+# - ic: OCCTO 系統情報サービスの連系線の 5 分値の名前(occto_today.json の ic のキー)。値はこの名前の値を見せる。
+#   1 つの名前が 2 本以上の線の合計のこともある(北海道本州・東北東京・FC・関西中国)。
+#   null は 5 分値にこの線だけの値が無いもの(三重東近江線・越前嶺南線。OCCTO は中部・北陸・関西の
+#   「フェンス」= 複数の連系線の合成の値だけを出している)。地図では「値なし」の色。
+# - ends: 両端。順は OCCTO の順方向(5 分値が正のときの向き。北海道→東北・東北→東京・東京→中部・関西→中国・
+#   関西→四国・中国→四国・中国→九州。data/reference/interconnections.yaml の注記と同じ)。area と name は OCCTO の地内基幹の線路の端の名前(向きの欄をそろえたもの)で、位置は線路の一覧の点。
+#   線路の端に無い所だけ lon・lat と ref(OSM の要素の番号)を書く。
+# - 線は両端を結ぶ直線(模式)。経路の形はモデルに無い。
+# - src: 両端の出典。
+#   [1] OCCTO 運用容量検討会 2026 年度 第 2 回 資料 3(運用容量の算出の諸元)
+#       https://www.occto.or.jp/assets/iinkai/unyouyouryou/26002/2026_2_3.pdf
+#   [2] OCCTO 第 104 回 広域系統整備委員会 資料 2「本四連系線及び阿南紀北直流幹線の更新について」(2026-09-28)
+#       https://www.occto.or.jp/assets/iinkai/kouikikeitouseibi/104/seibi_104_02_01.pdf
+#   [3] OCCTO「中国九州間連系設備に係る広域系統整備計画 基本要件及び受益者の範囲」(2024-04)
+#       https://www.occto.or.jp/assets/kouikikeitou/seibikeikaku/nakanishi-erea/files/240403_kihounyouken.pdf
+#
+# 中部北陸間(南福光連系所の BTB)は、中部と北陸の線路の端が同じ南福光の点なので描かない。
+# data/reference/interconnections.yaml(モデルの連系線の台帳)の本四連系線の中国側の端は「東山口変電所」だが、
+# [2] では東岡山変電所。ここでは [2] に従う(モデルの台帳の直しは別に扱う)。
+
+links:
+  - ic: 北海道・本州間電力連系設備
+    name: 北海道本州間連系設備(函館変換所〜上北変換所)
+    kind: 直流
+    ends: [{area: hokkaido, name: 函館変換所}, {area: tohoku, name: 上北}]
+    src: "[1] p.4 北海道本州間連系設備周辺の電力系統(上北変換所は上北変電所の隣)"
+
+  - ic: 北海道・本州間電力連系設備
+    name: 新北海道本州間連系設備(北斗変換所〜今別変換所)
+    kind: 直流
+    ends: [{area: hokkaido, name: 北斗変換所}, {area: tohoku, name: 今別変換所, lon: 140.5139, lat: 41.1344, ref: osm:way/719310375}]
+    src: "[1] p.4。今別変換所の位置は OSM(北海道電力の変換所)"
+
+  - ic: 相馬双葉幹線
+    name: 相馬双葉(福島山)幹線(南相馬変電所〜新いわき開閉所)
+    kind: 交流 500 kV
+    ends: [{area: tohoku, name: 南相馬}, {area: tokyo, name: 新いわき}]
+    src: "[1] p.13 相馬双葉幹線接続変更後の系統図(2026-06 の変更の前は南いわき開閉所につながっていた、p.12)"
+
+  - ic: 相馬双葉幹線
+    name: いわき幹線(南相馬変電所〜新福島変電所)
+    kind: 交流 275 kV
+    ends: [{area: tohoku, name: 南相馬}, {area: tokyo, name: 新福島}]
+    src: "[1] p.13(いわき幹線も【連系線】。東北側は南相馬の 275 kV)"
+
+  - ic: 周波数変換設備
+    name: 飛騨信濃周波数変換設備(新信濃変電所〜飛騨変換所)
+    kind: 直流
+    ends: [{area: tokyo, name: 新信濃}, {area: chubu, name: 飛騨}]
+    src: "[1] p.40 FC 周辺の電力系統"
+
+  - ic: 周波数変換設備
+    name: 新信濃 FC(新信濃〜中信)
+    kind: 周波数変換
+    ends: [{area: tokyo, name: 新信濃}, {area: chubu, name: 中信}]
+    src: "[1] p.40(60 Hz 側は中信の方へ)"
+
+  - ic: 周波数変換設備
+    name: 佐久間 FC(新富士〜佐久間)
+    kind: 周波数変換
+    ends: [{area: tokyo, name: 新富士}, {area: chubu, name: 佐久間}]
+    src: "[1] p.40(50 Hz 側は新富士へ)"
+
+  - ic: 周波数変換設備
+    name: 東清水 FC(新富士〜東清水)
+    kind: 周波数変換
+    ends: [{area: tokyo, name: 新富士}, {area: chubu, name: 東清水}]
+    src: "[1] p.40(50 Hz 側は駿河を通って新富士へ)"
+
+  - ic: null
+    name: 三重東近江線(三重開閉所〜東近江開閉所)
+    kind: 交流 500 kV
+    ends: [{area: chubu, name: 三重}, {area: kansai, name: 東近江開閉所}]
+    src: "線路の名前(中部関西間連系線)。5 分値は中部フェンス・関西フェンスの合成だけ"
+
+  - ic: null
+    name: 越前嶺南線(越前変電所〜嶺南変電所)
+    kind: 交流 500 kV
+    ends: [{area: hokuriku, name: 越前変電所}, {area: kansai, name: 嶺南変電所}]
+    src: "線路の名前(北陸関西間連系線)。5 分値は北陸フェンス・関西フェンスの合成だけ"
+
+  - ic: 西播東岡山線・山崎智頭線
+    name: 西播東岡山線(西播変電所〜東岡山変電所)
+    kind: 交流 500 kV
+    ends: [{area: kansai, name: 西播変電所}, {area: chugoku, name: 東岡山変電所}]
+    src: "[1] p.112 関西中国間連系線の系統図"
+
+  - ic: 西播東岡山線・山崎智頭線
+    name: 山崎智頭線(山崎開閉所〜智頭変電所)
+    kind: 交流 500 kV
+    ends: [{area: kansai, name: 山崎開閉所}, {area: chugoku, name: 智頭変電所}]
+    src: "[1] p.112"
+
+  - ic: 阿南紀北直流幹線
+    name: 阿南紀北直流幹線(紀北変換所〜阿南変換所)
+    kind: 直流
+    ends: [{area: kansai, name: 紀北変換所}, {area: shikoku, name: 阿南変換所}]
+    src: "[2] 参考: 阿南紀北直流幹線(概要)・[1] p.128"
+
+  - ic: 本四連系線
+    name: 本四連系線(東岡山変電所〜讃岐変電所)
+    kind: 交流 500 kV
+    ends: [{area: chugoku, name: 東岡山変電所}, {area: shikoku, name: 讃岐変電所}]
+    src: "[2](東岡山変電所(中国電力ネットワーク)・讃岐変電所(四国電力送配電))"
+
+  - ic: 関門連系線
+    name: 関門連系線(新山口変電所〜北九州変電所)
+    kind: 交流 500 kV
+    ends: [{area: chugoku, name: 新山口変電所}, {area: kyushu, name: 北九州変電所}]
+    src: "[3] 図「北九州 既設関門連系線 新山口」"
