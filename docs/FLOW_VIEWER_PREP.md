@@ -62,6 +62,19 @@ PYTHONPATH=. python3 scripts/build_occto_line_crosswalk.py --db /mnt/nas03/db/pw
 
 （`/mnt/nas03` の見えないところでは、`occto_lines` を CSV にして `--lines` で渡し、Parquet を 160core で置く）
 
+## io のページ(2026-11-07、#143)
+
+オーナー「当日は自動で更新される方式がいい」。`docs/occto_flow.html`(io の「OCCTO 潮流実績」)が、前日 0 時から今までの 30 分値を運用容量に対する割合で色づけして描く。10 分ごとに当日分を読み直し、最新のコマを見ていればそのまま進む。
+
+- 当日分 `docs/data/flow_map/occto_today.json`: 毎時の処理(`realtime_cycle.sh`)が `scripts/export_occto_today.py today` で OCCTO から取って書き、`realtime_publish.sh` が io へ出す。地内基幹の 30 分値は 15 分ほど遅れで出る(02:14 に 02:00 まで)
+- 線の形 `docs/data/flow_map/occto_lines.json`: 照合を作り直したら手で作り直す
+  ```bash
+  python3 scripts/export_occto_today.py lines --crosswalk data/external/occto/occto_line_crosswalk.json
+  ```
+- 運用容量: 同じ日の実績を線路名で突き合わせる。容量の表は書き方が違う(注記「（フェンス２）」「（他社）」・区間名だけ「恵庭南札線」・同じ名前を向きで分ける「名寄幹線」・「～」の字・矢印「⇒」)ので、(1) 同じ名前(注記を落としても) (2) 括弧の中の区間名 (3) 括弧の前の名前で向きの合う行だけ、の順に合わせる。中国の基幹線の 99999(決定要因「電圧」)はフェンスで管理する印なので容量に使わない。11-06 で 464 線路中 383 に容量が付く(残りは表に行が無い: 沖縄 31・九州の分岐線など)
+- 向き: 潮流の向きに合う容量があればそれ、無ければ反対向きの値(ページに「反対向きの値」と出す)、どちらも合わなければ最大
+- 描けない線路(#141)も「負荷の高い線路」の一覧には出る(「地図に無い」)
+
 ## ビューアーで決めること
 
 - どこで動かすか（研究室の中だけ。OptiPlex の nginx の裏か、160core か。DuckDB は CIFS 越しに読める）

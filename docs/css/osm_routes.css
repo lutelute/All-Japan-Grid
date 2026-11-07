@@ -1,0 +1,47 @@
+/* 路線・鉄塔(js/osm_routes.js)。飾りは控えめに: 罫線だけ、丸角・色の帯は使わない */
+
+/* 選んだ路線の名前と電圧(線の上に出すラベル) */
+.leaflet-tooltip.osm-route-label{background:rgba(13,17,23,.88);color:#f5f7fa;border:1px solid #8b949e;border-radius:0;
+  box-shadow:none;font-size:12px;font-weight:600;padding:2px 7px;white-space:nowrap}
+.leaflet-tooltip.osm-route-label::before{display:none}
+
+/* カードの中の小さな部品 */
+.osm-inline-btn{background:none;border:0;border-bottom:1px solid var(--u-acc,#4493f8);border-radius:0;padding:0;margin:0;
+  color:var(--u-acc,#4493f8);font:inherit;font-weight:600;cursor:pointer;text-align:left}
+.osm-inline-btn:hover{color:#fff;border-bottom-color:#fff}
+.osm-dim{color:var(--u-mut,#8b949e);font-weight:400;font-size:12px}
+.osm-warn{color:#ffb74d;font-weight:600}
+.osm-slot-line{margin-top:4px;padding-top:10px;border-top:1px solid var(--u-bd,#262d38)}
+.osm-slot-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--u-mut,#8b949e);margin:0 0 6px}
+.osm-slot-row{margin:0 0 5px;line-height:1.5}
+table.osm-tags{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 8px}
+table.osm-tags td{padding:3px 0;border-bottom:1px solid var(--u-bd,#262d38);vertical-align:top}
+table.osm-tags td:first-child{color:var(--u-mut,#8b949e);width:38%;padding-right:8px}
+.osm-ways{font-size:11px;line-height:1.7;color:var(--u-mut,#8b949e);word-break:break-all;margin:6px 0 0}
+.osm-ways a{color:var(--u-acc,#4493f8)}
+
+/* 左の操作パネル: OSM の層の説明 */
+#osm-layer-hint{display:block;margin:6px 0 0;font-size:11px;color:var(--u-mut,#8b949e);min-height:1em}
+
+/* 凡例の短い注記(周波数の色分け) */
+.legend .legend-note{margin:6px 0 0;font-size:10.5px;line-height:1.5;color:#8b949e;max-width:180px}
+
+/* カードの値: 不明と注記 */
+.val-unknown{color:#ffb74d;font-weight:600}
+.val-note{color:var(--u-mut,#8b949e);font-weight:400;font-size:11.5px;margin-left:2px}
+
+/* 鉄塔の数(地域ごと: データ / いま見えている) */
+#tower-count{margin-top:8px}
+table.tower-count{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
+table.tower-count th,table.tower-count td{padding:2px 0;border-bottom:1px solid var(--u-bd,#262d38);text-align:left}
+table.tower-count th{color:var(--u-mut,#8b949e);font-weight:600}
+table.tower-count .n{text-align:right}
+table.tower-count tfoot td{font-weight:700;border-bottom:0}
+
+/* 凡例: 経路未取得(直線は仮)の破線 */
+.legend .legend-dash{margin-top:4px}
+.legend .legend-dashline{display:inline-block;width:22px;height:0;border-top:2px dashed #c9d1d9;vertical-align:middle;margin-right:6px}
+
+/* 推定の値(本物の値に見せない) */
+.val-est{color:#d2a8ff;font-weight:400;font-size:11.5px;margin-left:2px}
+.bend-key{display:inline-block;width:8px;height:8px;border:1.5px solid #d2a8ff;margin-right:5px;vertical-align:-1px}

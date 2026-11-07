@@ -12,6 +12,10 @@ mkdir -p data/realtime
   python3 scripts/fetch_denkiyoho.py || { echo "fetch失敗(過半未達)"; exit 1; }
   # 燃料別実績(エリア需給実績・手法(a)): 前日+当日を取得(関西は当日配信の蓄積)
   python3 scripts/fetch_area_fuelmix.py || true
+  # OCCTO の地内基幹送電線・連系線の潮流実績(前日 0 時から今まで、30 分値)→ io の「OCCTO 潮流実績」
+  # (docs/occto_flow.html・docs/data/flow_map/occto_today.json、#143)。1 回に 10 リクエストほど(5 秒間隔)。
+  # OCCTO は「過度なアクセスは制限」と告知しているので、この毎時の処理より詰めて回さない。失敗したら前のファイルのまま
+  python3 scripts/export_occto_today.py today || echo "OCCTO 当日の潮流実績: 取れなかった(前のファイルのまま・次の回に再試行)"
   # 外部の公表データを最新に保つ(2026-10-21)。この毎時の処理の中で、日に 1 回・週に 1 回だけ走らせる。
   # 置き場は本体のチェックアウト(data/realtime は本体の data/realtime へのリンクなので、その親)
   STORE="$(cd -P data/realtime/.. && pwd -P)"   # -P: リンクを先に解決してから .. をたどる
