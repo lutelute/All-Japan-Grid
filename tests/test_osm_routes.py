@@ -181,3 +181,21 @@ def test_default_raw_dir_reads_nas_not_mac(monkeypatch, tmp_path):
     assert R.default_raw_dir() == str(tmp_path)
     monkeypatch.setenv("AJG_OSM_RAW_TOWERS", str(tmp_path / "new"))  # 新名が先
     assert R.default_raw_dir() == str(tmp_path / "new")
+
+
+def test_legacy_scripts_read_june_archive_on_nas(monkeypatch, tmp_path):
+    """古い手順(6 月の版)の既定の場所は nas03 の 20260615_overpass_towers。環境変数で変えられ、rebuild_geojson がそこを読む。"""
+    import json as _json
+    from src.topology import osm_routes as R
+    monkeypatch.delenv("AJG_OSM_RAW_TOWERS", raising=False)
+    monkeypatch.delenv("AGJ_OSM_RAW_TOWERS", raising=False)
+    assert "20260615_overpass_towers" in R.legacy_raw_dir() and "osm_raw_towers" not in R.legacy_raw_dir()
+    (tmp_path / "tw_okinawa_t0.json").write_text(_json.dumps({"elements": [
+        {"type": "node", "id": 1, "lat": 26.3, "lon": 127.8},
+        {"type": "node", "id": 2, "lat": 26.31, "lon": 127.81},
+        {"type": "way", "id": 10, "nodes": [1, 2], "tags": {"power": "line", "voltage": "132000"}}]}), encoding="utf-8")
+    monkeypatch.setenv("AJG_OSM_RAW_TOWERS", str(tmp_path))
+    assert R.legacy_raw_dir() == str(tmp_path)
+    from scripts.rebuild_geojson import load_raw
+    ways, nodes = load_raw("okinawa")
+    assert len(ways) == 1 and len(nodes) >= 2

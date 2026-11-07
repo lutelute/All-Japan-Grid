@@ -64,6 +64,28 @@ def default_raw_dir() -> str:
     return NAS_RAW_DIRS[0]
 
 
+# 2026-06-15 の Overpass の取得分(地域ごと・区画ごとの tw_<地域>_t<番号>.json、91 ファイル)。古い手順のスクリプト
+# (rebuild_geojson.py・osmnx_ab.py・tower_connectivity.py)が読む。2026-11-07 に Mac の data/osm_raw_towers から移した
+JUNE_RAW_DIRS = (
+    "/mnt/nas03/osm_jp_power/20260615_overpass_towers",       # pws-160core
+    "/Volumes/PWS_DB/osm_jp_power/20260615_overpass_towers",   # Mac で nas03 の PWS_DB をつないだとき
+)
+
+
+def legacy_raw_dir() -> str:
+    """古い手順(6 月の版)の生データの場所。環境変数 AJG_OSM_RAW_TOWERS(旧名 AGJ_)→ nas03 の 20260615_overpass_towers。
+
+    どれにも無ければ最初の NAS の場所を返す(読む側が「見つからない」と言って止まる)。"""
+    for key in ("AJG_OSM_RAW_TOWERS", "AGJ_OSM_RAW_TOWERS"):
+        v = os.environ.get(key)
+        if v:
+            return v
+    for d in JUNE_RAW_DIRS:
+        if os.path.isdir(d):
+            return d
+    return JUNE_RAW_DIRS[0]
+
+
 def missing_raw_message(raw_dir: str) -> str:
     return (f"鉄塔の生データ(tw_*_t*.json)が見つからない: {raw_dir}\n"
             "  nas03 の osm_jp_power/20261105_agj_transmission/json を読む。pws-160core なら /mnt/nas03 にある。"
