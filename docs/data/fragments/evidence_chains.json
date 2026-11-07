@@ -2,7 +2,7 @@
  "note": "第二波: 複数OSM wayの実線形連鎖(継ぎ目各≤60m・最大6way・電圧整合ゲート)で断片→本系統。直線ジャンプなし",
  "summary": {
   "hokkaido": 5,
-  "east": 34,
+  "east": 33,
   "west": 36,
   "okinawa": 0
  },
@@ -655,34 +655,6 @@
    "frag_kv": 0.0,
    "main_name": "tokyo junction 36.2906:138.4977:0",
    "main_kv": 0.0,
-   "n_frag_nodes": 2
-  },
-  {
-   "n_ways": 2,
-   "stitch_m": 0,
-   "fk": [
-    37.35661,
-    140.9608
-   ],
-   "mk": [
-    37.35927,
-    140.96077
-   ],
-   "way_voltage_kv": [
-    500.0,
-    500.0
-   ],
-   "d_frag_m": 76,
-   "d_main_m": 59,
-   "island": "east",
-   "names": [
-    "東京電力パワーグリッド 500.0kV線",
-    "東京電力パワーグリッド 500.0kV線"
-   ],
-   "frag_name": "tokyo junction 37.3566:140.9608:500",
-   "frag_kv": 500.0,
-   "main_name": "新福島変電所 500kV",
-   "main_kv": 500.0,
    "n_frag_nodes": 2
   },
   {

@@ -438,10 +438,19 @@ def main() -> int:
         for k in node_keys:
             _grid[(int(k[0] * 200), int(k[1] * 200))].append(k)
 
+        # 介入#59(案): 地域の写しの端の点を寄せて消した点も吸着の候補に入れ、それが最寄りなら寄せ先へ付ける
+        # (消えた点の代わりに近くの別の変電所へ付くのを防ぐ。扇町五丁目変電所 → 多古変電所で実測 2026-11-07)
+        from src.topology.region_dedup import load_point_aliases
+        _alias = load_point_aliases(set(node_keys))
+        for k in _alias:
+            _grid[(int(k[0] * 200), int(k[1] * 200))].append(k)
+
         def _snap(p):
             k = _k5(*p)
             if k in node_keys:
                 return p, 0.0
+            if k in _alias:
+                return list(node_keys[_alias[k]]), hav_m(tuple(p), _alias[k])
             best = None
             cx, cy = int(p[0] * 200), int(p[1] * 200)
             for dx in (-1, 0, 1):
@@ -451,6 +460,8 @@ def main() -> int:
                         if best is None or dm < best[1]:
                             best = (kk, dm)
             if best and best[1] <= 500:
+                if best[0] in _alias:
+                    return list(node_keys[_alias[best[0]]]), best[1]
                 return list(best[0]), best[1]
             return p, None
 
@@ -463,6 +474,12 @@ def main() -> int:
                     n_snap += 1
         if n_snap:
             print(f"帳簿端点スナップ: {n_snap}箇所を現ノードへ吸着（way編集による重心移動の追従）")
+        # 両端が同じ点に付いた枝は張らない(#59 で同じ変電所の 2 つの点を 1 つにまとめると、2 つを結んでいた
+        # 同一敷地タイの両端が同じ点になる)
+        n_same = sum(1 for e in edges if _k5(*e["from_pt"]) == _k5(*e["to_pt"]))
+        if n_same:
+            edges = [e for e in edges if _k5(*e["from_pt"]) != _k5(*e["to_pt"])]
+            print(f"両端が同じ点になった帳簿の枝: {n_same}本を張らない")
 
     # 青森箱のregion是正（大間の一般化）: 下北半島(lat<41.6, lon>140.6)にある
     # hokkaidoラベルは region bbox 重複の混入（下北・佐井・大畑・東通・東通村・
