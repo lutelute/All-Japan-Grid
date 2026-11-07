@@ -18,7 +18,7 @@
 形が同じでない写し(地域で区切りの点が違い、枝の分け方が違う)は見つけない(控えめな側)。
 無効化: 環境変数 AJG_REGION_DEDUP=0 か build_editor_data.py --no-region-dedup。
 
-介入#59(案、2026-11-07): 形は同じで端を結ぶ点だけが違う写し(64 組)は、#58 の前に align_copy_ends で端の点を
+介入#59(案、2026-11-07): 形は同じで端を結ぶ点だけが違う写し(67 組)は、#58 の前に align_copy_ends で端の点を
 1 つにまとめる(点を寄せる)。同じ way の同じ端が、地域 X の取り出しでは点 p、地域 Y では点 q に結ばれていた
 (数 m〜500 m)。p と q は同じ場所の 2 つの表し方なので、p を q に寄せると、写しの両端の点がそろい、#58 が
 ふつうの写しとしてまとめる。寄せ先は、ほかの線が付く点 > 変電所の点 > その座標の領土の地域の点。
@@ -35,7 +35,7 @@ from typing import Dict, List, Tuple
 REGIONS = ["hokkaido", "tohoku", "tokyo", "chubu", "hokuriku", "kansai", "chugoku", "shikoku", "kyushu", "okinawa"]
 REGION_DEDUP_DEFAULT = (os.environ.get("AJG_REGION_DEDUP", "1") == "1")
 END_ALIGN_DEFAULT = (os.environ.get("AJG_REGION_DEDUP_ENDS", "1") == "1")
-# 寄せる 2 点の間の上限。64 組の実測の最大は 507 m(線の端を変電所の点に結ぶ距離)。これを超える組は寄せない
+# 寄せる 2 点の間の上限。67 組の実測の最大は 507 m(線の端を変電所の点に結ぶ距離)。これを超える組は寄せない
 END_GAP_MAX_M = 600.0
 
 

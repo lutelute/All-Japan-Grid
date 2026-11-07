@@ -1,15 +1,15 @@
 {
-  "model_version": "98f3e410",
+  "model_version": "930c1df7",
   "git_dirty": false,
-  "generated_at": "2026-11-07T08:31:11+00:00",
+  "generated_at": "2026-11-07T13:30:19+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 4.9
+      "elapsed_s": 4.8
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 11.9
+      "elapsed_s": 12.2
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -33,11 +33,11 @@
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 20.8
+      "elapsed_s": 20.6
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 4.7
+      "elapsed_s": 4.6
     },
     "mixed_voltage_circuits": {
       "status": "ok",
@@ -81,7 +81,7 @@
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 130.6
+      "elapsed_s": 131.6
     },
     "gen_sld": {
       "status": "ok",
@@ -89,31 +89,31 @@
     },
     "gen_national_overview": {
       "status": "ok",
-      "elapsed_s": 0.9
+      "elapsed_s": 1.0
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 183.4
+      "elapsed_s": 179.9
     },
     "export_n1_pages": {
       "status": "ok",
-      "elapsed_s": 0.0
+      "elapsed_s": 0.1
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 124.3
+      "elapsed_s": 128.3
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.0
+      "elapsed_s": 4.6
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 128.8
+      "elapsed_s": 133.6
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 1.5
+      "elapsed_s": 1.6
     },
     "apply_capacity_sources": {
       "status": "ok",
@@ -121,7 +121,7 @@
     },
     "build_pages_editor": {
       "status": "ok",
-      "elapsed_s": 0.0
+      "elapsed_s": 0.1
     }
   },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",

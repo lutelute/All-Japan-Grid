@@ -8,10 +8,10 @@
   "whitelist": 8,
   "crossing_guard": 20,
   "pf_gate": 2,
-  "river_side_mismatch": 14,
-  "protected_zone": 62
+  "river_side_mismatch": 11,
+  "protected_zone": 61
  },
- "pre_cross_edges": 48,
+ "pre_cross_edges": 49,
  "new_cross_edges": 0,
  "vetoed_whitelist": [
   {
@@ -187,6 +187,16 @@
    "to": "chubu",
    "lat": 34.98058,
    "lon": 138.4147
+  },
+  {
+   "id": "tokyo_jct_35.116:138.6178:0",
+   "name": "tokyo junction 35.116:138.6178:0",
+   "sub": 0,
+   "pref": "静岡県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.11595,
+   "lon": 138.61777
   },
   {
    "id": "tokyo_jct_35.011:138.4086:0",
@@ -479,16 +489,6 @@
    "lon": 137.88629
   },
   {
-   "id": "tokyo_jct_35.863:137.9651:77",
-   "name": "tokyo junction 35.863:137.9651:77",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.86295,
-   "lon": 137.96513
-  },
-  {
    "id": "tokyo_jct_36.5061:138.0752:0",
    "name": "tokyo junction 36.5061:138.0752:0",
    "sub": 0,
@@ -719,16 +719,6 @@
    "lon": 138.06711
   },
   {
-   "id": "tokyo_jct_35.2064:138.2345:0",
-   "name": "tokyo junction 35.2064:138.2345:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.2064,
-   "lon": 138.23452
-  },
-  {
    "id": "tokyo_sub_324@154",
    "name": "蒲原一丁目変電所 154kV",
    "sub": 1,
@@ -889,16 +879,6 @@
    "lon": 138.11469
   },
   {
-   "id": "tokyo_sub_1856",
-   "name": "tokyo_sub_1856",
-   "sub": 1,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.2085,
-   "lon": 138.2207
-  },
-  {
    "id": "tokyo_sub_1857",
    "name": "tokyo_sub_1857",
    "sub": 1,
@@ -1037,16 +1017,6 @@
    "to": "tokyo",
    "lat": 35.17226,
    "lon": 138.69007
-  },
-  {
-   "id": "chubu_jct_36.9382:138.8078:0",
-   "name": "chubu junction 36.9382:138.8078:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.9382,
-   "lon": 138.80778
   },
   {
    "id": "chubu_jct_36.9563:138.9222:154",
@@ -1189,16 +1159,6 @@
    "lon": 138.88513
   },
   {
-   "id": "chubu_sub_992",
-   "name": "湯沢変電所",
-   "sub": 1,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.94919,
-   "lon": 138.8022
-  },
-  {
    "id": "chubu_sub_1048",
    "name": "中郷区坂本変電所",
    "sub": 1,
@@ -1261,12 +1221,12 @@
  ],
  "runs": [
   {
-   "added": 108,
-   "total": 108
+   "added": 104,
+   "total": 104
   },
   {
    "added": 2,
-   "total": 110
+   "total": 106
   }
  ]
 }
