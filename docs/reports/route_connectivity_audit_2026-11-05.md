@@ -1,4 +1,4 @@
-# 送電線のつながりの点検（OSM 2026-06-15 取得・正典 c6c6a9108212）
+# 送電線のつながりの点検（OSM 2026-11-05 取得・正典 c6c6a9108212）
 
 `scripts/audit_route_connectivity.py` が書いた。**候補の一覧で、誤りの判定ではない。**観測（OSM の線を路線にまとめたもの、docs/OSM_ROUTES.md）と正典（docs/data/built）を分けて数える。直すのは航空写真・OSM・公表値の根拠があるものだけで、直しは介入台帳（docs/MODEL_INTERVENTIONS.md）で行う。地図では map.html の「つながりの点検」で印を出せる。
 
@@ -8,17 +8,17 @@
 
 | 種類 | 北海道 | 東北 | 東京 | 中部 | 北陸 | 関西 | 中国 | 四国 | 九州 | 沖縄 | 計 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 線の端の 60 m 以内に別の線(つなぎ忘れの候補) | 36（7） | 59（7） | 817（41） | 831（15） | 321（13） | 281（34） | 251（19） | 28 | 129（13） | 24 | **2,777**（149） |
-| 線の端の 300 m 以内に変電所(引込みの描き残し) | 5（1） | 25 | 55（5） | 36（2） | 10（1） | 33（1） | 28 | 4 | 32（7） | 1 | **229**（17） |
-| 線の端が何もない所で終わる | 60 | 226（9） | 452（18） | 687（24） | 186（3） | 408（17） | 371（5） | 137 | 243（9） | 17 | **2,787**（85） |
+| 線の端の 60 m 以内に別の線(つなぎ忘れの候補) | 36（7） | 57（7） | 832（43） | 956（18） | 341（15） | 292（34） | 251（19） | 28 | 147（13） | 77 | **3,017**（156） |
+| 線の端の 300 m 以内に変電所(引込みの描き残し) | 5（1） | 25 | 56（5） | 40（2） | 12（1） | 33（1） | 29 | 4 | 29（4） | 1 | **234**（14） |
+| 線の端が何もない所で終わる | 57（1） | 224（5） | 460（19） | 745（26） | 192（3） | 401（16） | 376（5） | 142 | 256（9） | 18 | **2,871**（84） |
 | 線の端が取得範囲の外 | 0 | 12（4） | 8（5） | 3（1） | 0 | 7 | 0 | 0 | 1 | 16 | **47**（10） |
-| 同じ名前・電圧の路線が 2 km 以内の隙間で途切れる(両側とも線の端がどこにも続かない) | 0 | 0 | 7（1） | 0 | 0 | 1 | 0 | 0 | 1 | 0 | **9**（1） |
+| 同じ名前・電圧の路線が 2 km 以内の隙間で途切れる(両側とも線の端がどこにも続かない) | 0 | 0 | 8（1） | 0 | 0 | 1 | 0 | 0 | 3 | 0 | **12**（1） |
 | 正典: 変電所でない接続点で電圧の違う枝がつながる | 0 | 2（2） | 16（8） | 22（10） | 1（1） | 13（8） | 1 | 1（1） | 2（1） | 1 | **59**（31） |
 | 正典: 変電所でない接続点で枝が 1 本(行き止まり) | 85（10） | 283（45） | 739（91） | 354（103） | 27（19） | 271（40） | 198（33） | 57（7） | 249（18） | 5 | **2,268**（366） |
 
 ## 観測の候補（154 kV 以上）は正典でどうなっているか
 
-154 kV 以上の観測の候補 251 か所のうち、正典の枝の形が 60 m 以内を通るのは 148 か所（正典では線がその先へ続いている＝OSM の描き方の問題で、正典は直さなくてよい候補）。残り 103 か所は正典でも線がその場所を通っていない。
+154 kV 以上の観測の候補 254 か所のうち、正典の枝の形が 60 m 以内を通るのは 150 か所（正典では線がその先へ続いている＝OSM の描き方の問題で、正典は直さなくてよい候補）。残り 104 か所は正典でも線がその場所を通っていない。
 
 ## 154 kV 以上の観測の候補
 
@@ -39,6 +39,9 @@
 | 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 814581997](https://www.openstreetmap.org/way/814581997)） | 154 | [36.29455, 137.37025](https://www.openstreetmap.org/#map=18/36.29455/137.37025) | 10 m 先に 名前なしの線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 1028287106](https://www.openstreetmap.org/way/1028287106)） | 154 | [36.46696, 136.96776](https://www.openstreetmap.org/#map=18/36.46696/136.96776) | 34 m 先に 名前なしの線 | 34 m |
 | 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 1028287107](https://www.openstreetmap.org/way/1028287107)） | 154 | [36.46704, 136.96739](https://www.openstreetmap.org/#map=18/36.46704/136.96739) | 34 m 先に 名前なしの線 | 0 m |
+| 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 1553357116](https://www.openstreetmap.org/way/1553357116)） | 154 | [36.75065, 137.64005](https://www.openstreetmap.org/#map=18/36.75065/137.64005) | 32 m 先に 名前なしの線 | 56 m |
+| 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 1553357115](https://www.openstreetmap.org/way/1553357115)） | 154 | [36.75098, 137.63991](https://www.openstreetmap.org/#map=18/36.75098/137.63991) | 38 m 先に 名前なしの線 | 71 m |
+| 線の端の 60 m 以内に別の線 | 中部 | 名前なし（[way 1088664726](https://www.openstreetmap.org/way/1088664726)） | 154 | [37.01262, 137.79676](https://www.openstreetmap.org/#map=18/37.01262/137.79676) | 41 m 先に 名前なしの線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 中国 | 名前なし（[way 1427454340](https://www.openstreetmap.org/way/1427454340)） | 500 | [35.53928, 132.99132](https://www.openstreetmap.org/#map=18/35.53928/132.99132) | 33 m 先に 島根原子力幹線 | 33 m |
 | 線の端の 60 m 以内に別の線 | 中国 | 島根原子力幹線（[way 1427454341](https://www.openstreetmap.org/way/1427454341)） | 500 | [35.53938, 132.99167](https://www.openstreetmap.org/#map=18/35.53938/132.99167) | 33 m 先に 名前なしの線 | 1 m |
 | 線の端の 60 m 以内に別の線 | 中国 | 新小倉火力線（[way 1517852073](https://www.openstreetmap.org/way/1517852073)） | 220 | [33.90617, 130.86232](https://www.openstreetmap.org/#map=18/33.90617/130.86232) | 14 m 先に 名前なしの線 | 1 m |
@@ -72,6 +75,8 @@
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1238881244](https://www.openstreetmap.org/way/1238881244)） | 275 | [36.99643, 136.83646](https://www.openstreetmap.org/#map=18/36.99643/136.83646) | 41 m 先に 名前なしの線 | 164 m |
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1238881255](https://www.openstreetmap.org/way/1238881255)） | 275 | [36.99722, 136.83691](https://www.openstreetmap.org/#map=18/36.99722/136.83691) | 9 m 先に 名前なしの線 | 108 m |
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1238881256](https://www.openstreetmap.org/way/1238881256)） | 275 | [36.99738, 136.83700](https://www.openstreetmap.org/#map=18/36.99738/136.83700) | 9 m 先に 名前なしの線 | 96 m |
+| 線の端の 60 m 以内に別の線 | 北陸 | 第２福井火力線（[way 316250970](https://www.openstreetmap.org/way/316250970)） | 154 | [36.34701, 136.46313](https://www.openstreetmap.org/#map=18/36.34701/136.46313) | 0 m 先に 第２福井火力線/粟津線 | 0 m |
+| 線の端の 60 m 以内に別の線 | 北陸 | 第２福井火力線/粟津線（[way 1222018235](https://www.openstreetmap.org/way/1222018235)） | 154 | [36.34701, 136.46313](https://www.openstreetmap.org/#map=18/36.34701/136.46313) | 0 m 先に 第２福井火力線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1239633327](https://www.openstreetmap.org/way/1239633327)） | 154 | [36.56364, 136.99617](https://www.openstreetmap.org/#map=18/36.56364/136.99617) | 13 m 先に 名前なしの線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1239633332](https://www.openstreetmap.org/way/1239633332)） | 154 | [36.56376, 136.99615](https://www.openstreetmap.org/#map=18/36.56376/136.99615) | 13 m 先に 名前なしの線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 北陸 | 名前なし（[way 1238881231](https://www.openstreetmap.org/way/1238881231)） | 154 | [36.99496, 136.83987](https://www.openstreetmap.org/#map=18/36.99496/136.83987) | 6 m 先に 名前なしの線 | 65 m |
@@ -110,7 +115,7 @@
 | 線の端の 60 m 以内に別の線 | 関西 | 名前なし（[way 829610443](https://www.openstreetmap.org/way/829610443)） | 275 | [35.70364, 135.96415](https://www.openstreetmap.org/#map=18/35.70364/135.96415) | 31 m 先に 名前なしの線 | 39 m |
 | 線の端の 60 m 以内に別の線 | 関西 | 名前なし（[way 829610444](https://www.openstreetmap.org/way/829610444)） | 275 | [35.70377, 135.96385](https://www.openstreetmap.org/#map=18/35.70377/135.96385) | 31 m 先に 名前なしの線 | 45 m |
 | 線の端の 60 m 以内に別の線 | 関西 | 滝原分岐線R（[way 464058881](https://www.openstreetmap.org/way/464058881)） | 154 | [34.37950, 136.41838](https://www.openstreetmap.org/#map=18/34.37950/136.41838) | 38 m 先に 三瀬谷分岐線 | 0 m |
-| 線の端の 60 m 以内に別の線 | 関西 | 名前なし（[way 1201727821](https://www.openstreetmap.org/way/1201727821)） | 154 | [34.73943, 135.58949](https://www.openstreetmap.org/#map=18/34.73943/135.58949) | 33 m 先に 本町北線;古川橋豊里町線 | 26 m |
+| 線の端の 60 m 以内に別の線 | 関西 | 名前なし（[way 1201727821](https://www.openstreetmap.org/way/1201727821)） | 154 | [34.73943, 135.58949](https://www.openstreetmap.org/#map=18/34.73943/135.58949) | 33 m 先に 名前なしの線 | 26 m |
 | 線の端の 60 m 以内に別の線 | 関西 | 名前なし（[way 1201727820](https://www.openstreetmap.org/way/1201727820)） | 154 | [34.73968, 135.58914](https://www.openstreetmap.org/#map=18/34.73968/135.58914) | 42 m 先に 名前なしの線 | 36 m |
 | 線の端の 60 m 以内に別の線 | 九州 | 新鹿児島線（[way 700628504](https://www.openstreetmap.org/way/700628504)） | 220 | [31.85623, 130.19986](https://www.openstreetmap.org/#map=18/31.85623/130.19986) | 35 m 先に 川内火力線 | 1 m |
 | 線の端の 60 m 以内に別の線 | 九州 | 新鹿児島線（[way 405699053](https://www.openstreetmap.org/way/405699053)） | 220 | [31.85636, 130.19993](https://www.openstreetmap.org/#map=18/31.85636/130.19993) | 19 m 先に 川内火力線 | 0 m |
@@ -150,6 +155,8 @@
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 340300421](https://www.openstreetmap.org/way/340300421)） | 275 | [35.93355, 139.90954](https://www.openstreetmap.org/#map=18/35.93355/139.90954) | 10 m 先に 名前なしの線 | 151 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1082612597](https://www.openstreetmap.org/way/1082612597)） | 275 | [35.94004, 140.66198](https://www.openstreetmap.org/#map=18/35.94004/140.66198) | 25 m 先に 住友金属線 | 97 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 340700779](https://www.openstreetmap.org/way/340700779)） | 275 | [36.10485, 139.83375](https://www.openstreetmap.org/#map=18/36.10485/139.83375) | 38 m 先に 名前なしの線 | 180 m |
+| 線の端の 60 m 以内に別の線 | 東京 | 阿武隈線（[way 105884502](https://www.openstreetmap.org/way/105884502)） | 275 | [36.91716, 140.81433](https://www.openstreetmap.org/#map=18/36.91716/140.81433) | 59 m 先に 勿来幹線 | 1 m |
+| 線の端の 60 m 以内に別の線 | 東京 | 勿来幹線（[way 1556490127](https://www.openstreetmap.org/way/1556490127)） | 275 | [36.91718, 140.81367](https://www.openstreetmap.org/#map=18/36.91718/140.81367) | 59 m 先に 阿武隈線 | 2 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 新川線（[way 81838531](https://www.openstreetmap.org/way/81838531)） | 154 | [35.52960, 139.68592](https://www.openstreetmap.org/#map=18/35.52960/139.68592) | 45 m 先に 島崎線 | 101 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 横浜火力東線7・8L（[way 134772644](https://www.openstreetmap.org/way/134772644)） | 154 | [35.53511, 139.65040](https://www.openstreetmap.org/#map=18/35.53511/139.65040) | 20 m 先に 横浜火力東線5・6L | 69 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 横浜火力東線5・6L（[way 134772645](https://www.openstreetmap.org/way/134772645)） | 154 | [35.53527, 139.65049](https://www.openstreetmap.org/#map=18/35.53527/139.65049) | 20 m 先に 横浜火力東線7・8L | 51 m |
@@ -161,7 +168,7 @@
 | 線の端の 60 m 以内に別の線 | 東京 | 北船橋線（[way 1137194992](https://www.openstreetmap.org/way/1137194992)） | 154 | [35.72377, 139.98350](https://www.openstreetmap.org/#map=18/35.72377/139.98350) | 18 m 先に 下総線 | 38 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1139095719](https://www.openstreetmap.org/way/1139095719)） | 154 | [35.76431, 139.87389](https://www.openstreetmap.org/#map=18/35.76431/139.87389) | 11 m 先に 名前なしの線 | 15 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1139095718](https://www.openstreetmap.org/way/1139095718)） | 154 | [35.76439, 139.87383](https://www.openstreetmap.org/#map=18/35.76439/139.87383) | 10 m 先に 亀戸線 | 9 m |
-| 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1138582148](https://www.openstreetmap.org/way/1138582148)） | 154 | [35.86841, 139.90421](https://www.openstreetmap.org/#map=18/35.86841/139.90421) | 21 m 先に 名前なしの線 | 0 m |
+| 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1138582148](https://www.openstreetmap.org/way/1138582148)） | 154 | [35.86841, 139.90421](https://www.openstreetmap.org/#map=18/35.86841/139.90421) | 21 m 先に 北千葉浄水線 | 0 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 1138582147](https://www.openstreetmap.org/way/1138582147)） | 154 | [35.86854, 139.90382](https://www.openstreetmap.org/#map=18/35.86854/139.90382) | 22 m 先に 名前なしの線 | 22 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 340300422](https://www.openstreetmap.org/way/340300422)） | 154 | [35.93221, 139.90894](https://www.openstreetmap.org/#map=18/35.93221/139.90894) | 15 m 先に 名前なしの線 | 45 m |
 | 線の端の 60 m 以内に別の線 | 東京 | 名前なし（[way 340300424](https://www.openstreetmap.org/way/340300424)） | 154 | [35.93233, 139.90901](https://www.openstreetmap.org/#map=18/35.93233/139.90901) | 15 m 先に 名前なしの線 | 50 m |
@@ -178,17 +185,14 @@
 | 線の端の 300 m 以内に変電所 | 北海道 | 名前なし（[way 640518256](https://www.openstreetmap.org/way/640518256)） | 275 | [42.61332, 141.80561](https://www.openstreetmap.org/#map=18/42.61332/141.80561) | 198 m 先に 苫小牧市変電所_3 | 339 m |
 | 線の端の 300 m 以内に変電所 | 北陸 | 名前なし（[way 212039849](https://www.openstreetmap.org/way/212039849)） | 275 | [35.50466, 136.87157](https://www.openstreetmap.org/#map=18/35.50466/136.87157) | 99 m 先に 関開閉所 | 0 m |
 | 線の端の 300 m 以内に変電所 | 関西 | 名前なし（[way 177615692](https://www.openstreetmap.org/way/177615692)） | 275 | [35.08196, 136.61782](https://www.openstreetmap.org/#map=18/35.08196/136.61782) | 121 m 先に 西名古屋変電所 | 126 m |
-| 線の端の 300 m 以内に変電所 | 九州 | 佐賀幹線（[way 173169278](https://www.openstreetmap.org/way/173169278)） | 500 | [33.49132, 130.62604](https://www.openstreetmap.org/#map=18/33.49132/130.62604) | 113 m 先に 九州電力中央変電所 | 164 m |
-| 線の端の 300 m 以内に変電所 | 九州 | 熊本幹線（[way 219568497](https://www.openstreetmap.org/way/219568497)） | 500 | [33.49214, 130.62573](https://www.openstreetmap.org/#map=18/33.49214/130.62573) | 123 m 先に 九州電力中央変電所 | 116 m |
-| 線の端の 300 m 以内に変電所 | 九州 | 背振幹線（[way 768753217](https://www.openstreetmap.org/way/768753217)） | 500 | [33.49257, 130.62219](https://www.openstreetmap.org/#map=18/33.49257/130.62219) | 64 m 先に 九州電力中央変電所 | 176 m |
-| 線の端の 300 m 以内に変電所 | 九州 | 豊前西幹線（[way 219568498](https://www.openstreetmap.org/way/219568498)） | 500 | [33.49334, 130.62526](https://www.openstreetmap.org/#map=18/33.49334/130.62526) | 137 m 先に 九州電力中央変電所 | 101 m |
+| 線の端の 300 m 以内に変電所 | 九州 | 名前なし（[way 704876994](https://www.openstreetmap.org/way/704876994)） | 500 | [33.13411, 131.72736](https://www.openstreetmap.org/#map=18/33.13411/131.72736) | 75 m 先に 東九州変電所 | 134 m |
+| 線の端の 300 m 以内に変電所 | 九州 | 東九州幹線（[way 180914523](https://www.openstreetmap.org/way/180914523)） | 500 | [33.13531, 131.72754](https://www.openstreetmap.org/#map=18/33.13531/131.72754) | 95 m 先に 東九州変電所 | 1 m |
 | 線の端の 300 m 以内に変電所 | 九州 | 新鹿児島線（[way 237473951](https://www.openstreetmap.org/way/237473951)） | 220 | [31.53681, 130.46348](https://www.openstreetmap.org/#map=18/31.53681/130.46348) | 61 m 先に 新鹿児島変電所 | 0 m |
 | 線の端の 300 m 以内に変電所 | 九州 | 名前なし（[way 239770590](https://www.openstreetmap.org/way/239770590)） | 220 | [32.74501, 129.91324](https://www.openstreetmap.org/#map=18/32.74501/129.91324) | 91 m 先に 長崎変電所 | 162 m |
-| 線の端の 300 m 以内に変電所 | 九州 | 新大分連絡線（[way 1517880581](https://www.openstreetmap.org/way/1517880581)） | 220 | [33.26523, 131.70413](https://www.openstreetmap.org/#map=18/33.26523/131.70413) | 94 m 先に 新大分変電所 | 0 m |
 | 線の端の 300 m 以内に変電所 | 東京 | 千葉火力線1・2L（[way 156332175](https://www.openstreetmap.org/way/156332175)） | 275 | [35.56433, 140.11276](https://www.openstreetmap.org/#map=18/35.56433/140.11276) | 44 m 先に 新浜町変電所 | 187 m |
+| 線の端の 300 m 以内に変電所 | 東京 | 東内幸町線（[way 1556157684](https://www.openstreetmap.org/way/1556157684)） | 275 | [35.66931, 139.75743](https://www.openstreetmap.org/#map=18/35.66931/139.75743) | 98 m 先に 東内幸町変電所 | 135 m |
 | 線の端の 300 m 以内に変電所 | 東京 | 東富士線（[way 726559377](https://www.openstreetmap.org/way/726559377)） | 154 | [35.13872, 138.87821](https://www.openstreetmap.org/#map=18/35.13872/138.87821) | 77 m 先に 駿東変電所 | 113 m |
 | 線の端の 300 m 以内に変電所 | 東京 | ちば野菊の里浄水場線（[way 1035805907](https://www.openstreetmap.org/way/1035805907)） | 154 | [35.75619, 139.89115](https://www.openstreetmap.org/#map=18/35.75619/139.89115) | 200 m 先に 矢切変電所 | 98 m |
-| 線の端の 300 m 以内に変電所 | 東京 | 角田鉄工線（[way 1036833504](https://www.openstreetmap.org/way/1036833504)） | 154 | [35.83053, 139.52189](https://www.openstreetmap.org/#map=18/35.83053/139.52189) | 158 m 先に 北新埜変電所 | 1 m |
 | 線の端の 300 m 以内に変電所 | 東京 | 名前なし（[way 519031689](https://www.openstreetmap.org/way/519031689)） | 154 | [36.69290, 138.90662](https://www.openstreetmap.org/#map=18/36.69290/138.90662) | 111 m 先に 須川変電所 | 0 m |
 | 線の端が何もない所で終わる | 中部 | 名前なし（[way 179417726](https://www.openstreetmap.org/way/179417726)） | 275 | [34.98681, 136.84771](https://www.openstreetmap.org/#map=18/34.98681/136.84771) | — | 125 m |
 | 線の端が何もない所で終わる | 中部 | 名前なし（[way 179417721](https://www.openstreetmap.org/way/179417721)） | 275 | [34.98729, 136.84680](https://www.openstreetmap.org/#map=18/34.98729/136.84680) | — | 91 m |
@@ -213,12 +217,15 @@
 | 線の端が何もない所で終わる | 中部 | 名前なし（[way 547580179](https://www.openstreetmap.org/way/547580179)） | 154 | [36.53719, 137.43834](https://www.openstreetmap.org/#map=18/36.53719/137.43834) | — | 0 m |
 | 線の端が何もない所で終わる | 中部 | 名前なし（[way 1256591815](https://www.openstreetmap.org/way/1256591815)） | 154 | [36.59514, 136.68648](https://www.openstreetmap.org/#map=18/36.59514/136.68648) | — | 0 m |
 | 線の端が何もない所で終わる | 中部 | 名前なし（[way 976024184](https://www.openstreetmap.org/way/976024184)） | 154 | [36.78578, 137.06422](https://www.openstreetmap.org/#map=18/36.78578/137.06422) | — | 0 m |
-| 線の端が何もない所で終わる | 中部 | 名前なし（[way 618344829](https://www.openstreetmap.org/way/618344829)） | 154 | [36.88944, 137.49284](https://www.openstreetmap.org/#map=18/36.88944/137.49284) | — | 1 m |
+| 線の端が何もない所で終わる | 中部 | 朝日小川線（[way 592161705](https://www.openstreetmap.org/way/592161705)） | 154 | [36.88753, 137.62869](https://www.openstreetmap.org/#map=18/36.88753/137.62869) | — | 0 m |
+| 線の端が何もない所で終わる | 中部 | 新愛本黒部線/黒部江口線（[way 1553336174](https://www.openstreetmap.org/way/1553336174)） | 154 | [36.89057, 137.47849](https://www.openstreetmap.org/#map=18/36.89057/137.47849) | — | 144 m |
+| 線の端が何もない所で終わる | 中部 | 青海線（[way 618356286](https://www.openstreetmap.org/way/618356286)） | 154 | [37.01336, 137.79650](https://www.openstreetmap.org/#map=18/37.01336/137.79650) | — | 85 m |
 | 線の端が何もない所で終わる | 中国 | 名前なし（[way 243471277](https://www.openstreetmap.org/way/243471277)） | 220 | [33.95483, 132.12312](https://www.openstreetmap.org/#map=18/33.95483/132.12312) | — | 1 m |
 | 線の端が何もない所で終わる | 中国 | 名前なし（[way 185941787](https://www.openstreetmap.org/way/185941787)） | 220 | [34.44514, 132.87067](https://www.openstreetmap.org/#map=18/34.44514/132.87067) | — | 67 m |
 | 線の端が何もない所で終わる | 中国 | 名前なし（[way 151462889](https://www.openstreetmap.org/way/151462889)） | 220 | [34.44520, 132.76022](https://www.openstreetmap.org/#map=18/34.44520/132.76022) | — | 0 m |
 | 線の端が何もない所で終わる | 中国 | 名前なし（[way 661745203](https://www.openstreetmap.org/way/661745203)） | 187 | [34.12649, 133.66559](https://www.openstreetmap.org/#map=18/34.12649/133.66559) | — | 0 m |
 | 線の端が何もない所で終わる | 中国 | 名前なし（[way 1191968009](https://www.openstreetmap.org/way/1191968009)） | 187 | [34.34905, 133.85256](https://www.openstreetmap.org/#map=18/34.34905/133.85256) | — | 737 m |
+| 線の端が何もない所で終わる | 北海道 | 京極幹線（[way 624389505](https://www.openstreetmap.org/way/624389505)） | 275 | [42.93764, 140.97134](https://www.openstreetmap.org/#map=18/42.93764/140.97134) | — | 0 m |
 | 線の端が何もない所で終わる | 北陸 | 名前なし（[way 315662818](https://www.openstreetmap.org/way/315662818)） | 275 | [36.48431, 137.71842](https://www.openstreetmap.org/#map=18/36.48431/137.71842) | — | 4720 m |
 | 線の端が何もない所で終わる | 北陸 | 名前なし（[way 814581988](https://www.openstreetmap.org/way/814581988)） | 154 | [36.00573, 137.29472](https://www.openstreetmap.org/#map=18/36.00573/137.29472) | — | 0 m |
 | 線の端が何もない所で終わる | 北陸 | 名前なし（[way 1221247460](https://www.openstreetmap.org/way/1221247460)） | 154 | [36.38426, 136.63939](https://www.openstreetmap.org/#map=18/36.38426/136.63939) | — | 0 m |
@@ -226,7 +233,6 @@
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 324539814](https://www.openstreetmap.org/way/324539814)） | 500 | [35.52424, 135.34489](https://www.openstreetmap.org/#map=18/35.52424/135.34489) | — | 1 m |
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 1301298483](https://www.openstreetmap.org/way/1301298483)） | 275 | [34.73210, 134.81509](https://www.openstreetmap.org/#map=18/34.73210/134.81509) | — | 0 m |
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 1301298483](https://www.openstreetmap.org/way/1301298483)） | 275 | [34.73686, 134.80095](https://www.openstreetmap.org/#map=18/34.73686/134.80095) | — | 0 m |
-| 線の端が何もない所で終わる | 関西 | 名前なし（[way 209443606](https://www.openstreetmap.org/way/209443606)） | 275 | [34.97885, 136.45357](https://www.openstreetmap.org/#map=18/34.97885/136.45357) | — | 1 m |
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 622454358](https://www.openstreetmap.org/way/622454358)） | 275 | [35.13530, 136.57610](https://www.openstreetmap.org/#map=18/35.13530/136.57610) | — | 0 m |
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 632100415](https://www.openstreetmap.org/way/632100415)） | 275 | [35.16734, 136.50291](https://www.openstreetmap.org/#map=18/35.16734/136.50291) | — | 0 m |
 | 線の端が何もない所で終わる | 関西 | 名前なし（[way 211909768](https://www.openstreetmap.org/way/211909768)） | 275 | [35.17612, 136.81641](https://www.openstreetmap.org/#map=18/35.17612/136.81641) | — | 0 m |
@@ -249,10 +255,6 @@
 | 線の端が何もない所で終わる | 九州 | 新日鉄戸畑線（[way 1511503197](https://www.openstreetmap.org/way/1511503197)） | 220 | [33.90402, 130.82575](https://www.openstreetmap.org/#map=18/33.90402/130.82575) | — | 0 m |
 | 線の端が何もない所で終わる | 九州 | 名前なし（[way 318438197](https://www.openstreetmap.org/way/318438197)） | 220 | [33.96781, 131.16703](https://www.openstreetmap.org/#map=18/33.96781/131.16703) | — | 489 m |
 | 線の端が何もない所で終わる | 東北 | 名前なし（[way 1042235622](https://www.openstreetmap.org/way/1042235622)） | 275 | [38.66275, 140.90429](https://www.openstreetmap.org/#map=18/38.66275/140.90429) | — | 0 m |
-| 線の端が何もない所で終わる | 東北 | 名前なし（[way 315497700](https://www.openstreetmap.org/way/315497700)） | 154 | [36.82879, 138.78083](https://www.openstreetmap.org/#map=18/36.82879/138.78083) | — | 2 m |
-| 線の端が何もない所で終わる | 東北 | 名前なし（[way 249620071](https://www.openstreetmap.org/way/249620071)） | 154 | [37.57968, 140.12328](https://www.openstreetmap.org/#map=18/37.57968/140.12328) | — | 0 m |
-| 線の端が何もない所で終わる | 東北 | 名前なし（[way 180788070](https://www.openstreetmap.org/way/180788070)） | 154 | [37.60849, 140.13060](https://www.openstreetmap.org/#map=18/37.60849/140.13060) | — | 0 m |
-| 線の端が何もない所で終わる | 東北 | 長瀬川線（[way 249620084](https://www.openstreetmap.org/way/249620084)） | 154 | [37.66036, 140.10922](https://www.openstreetmap.org/#map=18/37.66036/140.10922) | — | 0 m |
 | 線の端が何もない所で終わる | 東北 | 名前なし（[way 170197075](https://www.openstreetmap.org/way/170197075)） | 154 | [37.94403, 139.08222](https://www.openstreetmap.org/#map=18/37.94403/139.08222) | — | 0 m |
 | 線の端が何もない所で終わる | 東北 | 名前なし（[way 103760550](https://www.openstreetmap.org/way/103760550)） | 154 | [38.26415, 141.01819](https://www.openstreetmap.org/#map=18/38.26415/141.01819) | — | 0 m |
 | 線の端が何もない所で終わる | 東北 | 名前なし（[way 769008376](https://www.openstreetmap.org/way/769008376)） | 154 | [38.44990, 140.04689](https://www.openstreetmap.org/#map=18/38.44990/140.04689) | — | 0 m |
@@ -262,6 +264,7 @@
 | 線の端が何もない所で終わる | 東京 | 常陸那珂火力線（[way 103827618](https://www.openstreetmap.org/way/103827618)） | 275 | [36.43570, 140.60958](https://www.openstreetmap.org/#map=18/36.43570/140.60958) | — | 0 m |
 | 線の端が何もない所で終わる | 東京 | 東海原子力線（[way 658373455](https://www.openstreetmap.org/way/658373455)） | 275 | [36.46754, 140.60513](https://www.openstreetmap.org/#map=18/36.46754/140.60513) | — | 1 m |
 | 線の端が何もない所で終わる | 東京 | 八木沢線（[way 518992990](https://www.openstreetmap.org/way/518992990)） | 275 | [36.91016, 139.05577](https://www.openstreetmap.org/#map=18/36.91016/139.05577) | — | 0 m |
+| 線の端が何もない所で終わる | 東京 | 勿来幹線（[way 1556490127](https://www.openstreetmap.org/way/1556490127)） | 275 | [36.91725, 140.81341](https://www.openstreetmap.org/#map=18/36.91725/140.81341) | — | 23 m |
 | 線の端が何もない所で終わる | 東京 | 旭硝子千葉線（[way 1133622347](https://www.openstreetmap.org/way/1133622347)） | 154 | [35.53324, 140.08849](https://www.openstreetmap.org/#map=18/35.53324/140.08849) | — | 128 m |
 | 線の端が何もない所で終わる | 東京 | 柿生線;川崎火力線（[way 77166686](https://www.openstreetmap.org/way/77166686)） | 154 | [35.53398, 139.67178](https://www.openstreetmap.org/#map=18/35.53398/139.67178) | — | 32 m |
 | 線の端が何もない所で終わる | 東京 | 東海鳥屋線（建設中）（[way 1220959276](https://www.openstreetmap.org/way/1220959276)） | 154 | [35.55212, 139.25576](https://www.openstreetmap.org/#map=18/35.55212/139.25576) | — | 0 m |
