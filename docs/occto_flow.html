@@ -160,6 +160,13 @@ function fit() {
   ox = (W - (maxx - minx) * sc) / 2 - minx * sc; oy = (H - (maxy - miny) * sc) / 2 - miny * sc;
 }
 const sx = x => x * sc + ox, sy = y => y * sc + oy;
+// アドレスの #v=経度,緯度,倍率(全体を収めた倍率に対して)で、最初に見せる範囲を決める(共有・カードの画像用)
+function viewFromHash() {
+  const m = location.hash.match(/v=(-?[\d.]+),(-?[\d.]+),([\d.]+)/);
+  if (!m || !land.length) return;
+  const [x, y] = P([+m[1], +m[2]]), z = Math.max(0.5, Math.min(+m[3], 60));
+  sc = sc0 * z; ox = W / 2 - x * sc; oy = H / 2 - y * sc;
+}
 
 async function getJSON(name) {
   const r = await fetch(BASE + name, { cache: 'no-cache' });
@@ -331,7 +338,7 @@ async function init() {
   } catch (e) { $('msg').textContent = `線路の一覧を読めませんでした(${e.message})`; $('status').textContent = ''; return; }
   land = (LN.outline || []).map(r => r.map(P));
   land.forEach(r => r.forEach(([x, y]) => { minx = Math.min(minx, x); maxx = Math.max(maxx, x); miny = Math.min(miny, y); maxy = Math.max(maxy, y); }));
-  fit();
+  fit(); viewFromHash();
   await refresh(true);
   setInterval(() => refresh(false), REFRESH_MS);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - lastLoad > REFRESH_MS) refresh(false); });
@@ -384,7 +391,8 @@ cv.addEventListener('wheel', e => {
   e.preventDefault(); const r = cv.getBoundingClientRect();
   zoomTo(sc * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top, { sc, ox, oy });
 }, { passive: false });
-new ResizeObserver(() => { fit(); if (TD) draw(); }).observe($('mapbox'));
+new ResizeObserver(() => { fit(); viewFromHash(); if (TD) draw(); }).observe($('mapbox'));
+addEventListener('hashchange', () => { fit(); viewFromHash(); if (TD) draw(); });
 const redraw = () => { if (TD) { draw(); side(); } };
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
 new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
