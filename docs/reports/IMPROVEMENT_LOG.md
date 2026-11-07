@@ -8,6 +8,14 @@ KPIは `ajgrid validate --topology --all --solve` の計測値
 
 ---
 
+## 2026-11-07 — **Claude Opus 5.5** — 【「#37 のつなぐ点の選び方を直して」】介入#37(仮の給電)のつなぐ点をバスの番号の順に依らずに決める
+
+- `src/powerflow/compensation.add_provisional_infeed`: 塊の中で需要の最も大きいバスが同点のとき、一番近い 275 kV 以上のバスまでが短い方 → 名前の順。つなぐ先の上位バスも同じ距離なら名前の順。塊の並びも需要・名前の順。テスト `tests/test_provisional_infeed_anchor.py`(バスを作る順を 4 通りに変えても同じバス)
+- 発端: 介入#58 の試算で、天草の塊のつなぐ点がバスの番号のずれだけで志岐↔浄南町と入れ替わり、西の最大負荷率が 605↔432% と動いた(直しの効き目と取り違えかけた)
+- 前と後(全段・MODEL_VERSION 06e11e23): 塊の数は同じ、つなぐ点が替わった塊 東 1・西 7(どれも上位バスまで短く)、天草は志岐のまま。潮流の損失 東 +1.0・西 +2.4 MW、N-1 の要約は変わらない
+
+---
+
 ## 2026-11-07 — **Claude Opus 5.5** — 【オーナー「正典を変える直しは before/after の図と根拠を付けて先生に見せてから」】介入#57: 変電所の無い点に潮流計算が張っていた変圧器を、実在しないと確かめた 13 か所で外す
 
 - レポート正本: `docs/reports/junction_cuts_2026-11-07.md`。ロジックは `src/powerflow/junction_cuts.py`、台帳は `data/reference/junction_misconnects.json`、テストは `tests/test_junction_cuts.py`(5 本)。正典(all.json)は変えない。採用は先生の確認のあと(この PR のマージ = 採用)
