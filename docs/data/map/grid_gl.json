@@ -1,0 +1,368 @@
+{
+ "_about": "docs/map_gl.html が読む。scripts/build_map_gl_tiles.py が書く。sources の sha256 が今のファイルと違えば作り直す(tests/test_map_gl_tiles.py)。",
+ "sources": {
+  "docs/data/map/lines_all.geojson": "b6b2937a17af4bb4b00d95e8e5e2dc2068c39c8cbb0f6b5502a8f976c6fdae7c",
+  "docs/data/map/subs_all.geojson": "0a1a842f52e5dd6d2cc4214a59ec5ef247377f9990c02c0ea90f8a9bef41ffc9",
+  "docs/data/plants_utility.geojson": "606ebeaf122af1e39b58d666e5ac42c4971aca9b8e8faad147bcfadb42e1cc21",
+  "docs/data/map/regions.json": "005f53bf67fbc94831da2b1cbcd22f6d02ca3b96ea3e92f541aca93b3aaf4107"
+ },
+ "names_en_from": [
+  "data/chubu_substations.geojson",
+  "data/chugoku_substations.geojson",
+  "data/hokkaido_substations.geojson",
+  "data/hokuriku_substations.geojson",
+  "data/kansai_substations.geojson",
+  "data/kyushu_substations.geojson",
+  "data/okinawa_substations.geojson",
+  "data/shikoku_substations.geojson",
+  "data/tohoku_substations.geojson",
+  "data/tokyo_substations.geojson",
+  "data/tokyo_substations_supplement.geojson",
+  "data/chubu_lines.geojson",
+  "data/chugoku_lines.geojson",
+  "data/hokkaido_lines.geojson",
+  "data/hokuriku_lines.geojson",
+  "data/hokuriku_lines_supplement.geojson",
+  "data/kansai_lines.geojson",
+  "data/kansai_lines_supplement.geojson",
+  "data/kyushu_lines.geojson",
+  "data/okinawa_lines.geojson",
+  "data/shikoku_lines.geojson",
+  "data/tohoku_lines.geojson",
+  "data/tokyo_lines.geojson",
+  "data/tokyo_lines_supplement.geojson",
+  "data/chubu_plants.geojson",
+  "data/chugoku_plants.geojson",
+  "data/hokkaido_plants.geojson",
+  "data/hokuriku_plants.geojson",
+  "data/kansai_plants.geojson",
+  "data/kyushu_plants.geojson",
+  "data/okinawa_plants.geojson",
+  "data/shikoku_plants.geojson",
+  "data/tohoku_plants.geojson",
+  "data/tokyo_plants.geojson",
+  "data/tokyo_plants_supplement.geojson"
+ ],
+ "outputs": {
+  "docs/data/map/grid.pmtiles": 8262318,
+  "docs/data/map/names_en.json": 58699
+ },
+ "zoom": [
+  3,
+  11
+ ],
+ "tippecanoe": "tippecanoe v2.79.0",
+ "features": {
+  "lines": 19909,
+  "subs": 9274,
+  "plants": 544
+ },
+ "names_en": {
+  "entries": 1347,
+  "osm_conflicts": 26,
+  "features_with_en": {
+   "lines": 1672,
+   "subs": 1295,
+   "plants": 140
+  }
+ },
+ "counts": {
+  "all": {
+   "500": {
+    "lines": 646,
+    "subs": 271,
+    "plants": 544
+   },
+   "275": {
+    "lines": 1983,
+    "subs": 830,
+    "plants": 544
+   },
+   "154": {
+    "lines": 6264,
+    "subs": 2478,
+    "plants": 544
+   },
+   "66": {
+    "lines": 18302,
+    "subs": 8537,
+    "plants": 544
+   },
+   "0": {
+    "lines": 19909,
+    "subs": 9274,
+    "plants": 544
+   }
+  },
+  "hokkaido": {
+   "500": {
+    "lines": 0,
+    "subs": 0,
+    "plants": 48
+   },
+   "275": {
+    "lines": 32,
+    "subs": 15,
+    "plants": 48
+   },
+   "154": {
+    "lines": 186,
+    "subs": 89,
+    "plants": 48
+   },
+   "66": {
+    "lines": 915,
+    "subs": 528,
+    "plants": 48
+   },
+   "0": {
+    "lines": 936,
+    "subs": 551,
+    "plants": 48
+   }
+  },
+  "tohoku": {
+   "500": {
+    "lines": 50,
+    "subs": 25,
+    "plants": 104
+   },
+   "275": {
+    "lines": 217,
+    "subs": 100,
+    "plants": 104
+   },
+   "154": {
+    "lines": 675,
+    "subs": 305,
+    "plants": 104
+   },
+   "66": {
+    "lines": 2074,
+    "subs": 1121,
+    "plants": 104
+   },
+   "0": {
+    "lines": 2167,
+    "subs": 1160,
+    "plants": 104
+   }
+  },
+  "tokyo": {
+   "500": {
+    "lines": 194,
+    "subs": 84,
+    "plants": 84
+   },
+   "275": {
+    "lines": 538,
+    "subs": 254,
+    "plants": 84
+   },
+   "154": {
+    "lines": 1430,
+    "subs": 634,
+    "plants": 84
+   },
+   "66": {
+    "lines": 4893,
+    "subs": 2239,
+    "plants": 84
+   },
+   "0": {
+    "lines": 5148,
+    "subs": 2346,
+    "plants": 84
+   }
+  },
+  "chubu": {
+   "500": {
+    "lines": 79,
+    "subs": 33,
+    "plants": 142
+   },
+   "275": {
+    "lines": 281,
+    "subs": 176,
+    "plants": 142
+   },
+   "154": {
+    "lines": 808,
+    "subs": 519,
+    "plants": 142
+   },
+   "66": {
+    "lines": 1673,
+    "subs": 1150,
+    "plants": 142
+   },
+   "0": {
+    "lines": 1934,
+    "subs": 1342,
+    "plants": 142
+   }
+  },
+  "hokuriku": {
+   "500": {
+    "lines": 30,
+    "subs": 9,
+    "plants": 47
+   },
+   "275": {
+    "lines": 185,
+    "subs": 37,
+    "plants": 47
+   },
+   "154": {
+    "lines": 752,
+    "subs": 124,
+    "plants": 47
+   },
+   "66": {
+    "lines": 1431,
+    "subs": 320,
+    "plants": 47
+   },
+   "0": {
+    "lines": 1633,
+    "subs": 359,
+    "plants": 47
+   }
+  },
+  "kansai": {
+   "500": {
+    "lines": 128,
+    "subs": 51,
+    "plants": 60
+   },
+   "275": {
+    "lines": 544,
+    "subs": 173,
+    "plants": 60
+   },
+   "154": {
+    "lines": 1310,
+    "subs": 398,
+    "plants": 60
+   },
+   "66": {
+    "lines": 2965,
+    "subs": 1092,
+    "plants": 60
+   },
+   "0": {
+    "lines": 3241,
+    "subs": 1275,
+    "plants": 60
+   }
+  },
+  "chugoku": {
+   "500": {
+    "lines": 51,
+    "subs": 31,
+    "plants": 39
+   },
+   "275": {
+    "lines": 72,
+    "subs": 37,
+    "plants": 39
+   },
+   "154": {
+    "lines": 148,
+    "subs": 149,
+    "plants": 39
+   },
+   "66": {
+    "lines": 795,
+    "subs": 717,
+    "plants": 39
+   },
+   "0": {
+    "lines": 899,
+    "subs": 784,
+    "plants": 39
+   }
+  },
+  "shikoku": {
+   "500": {
+    "lines": 30,
+    "subs": 9,
+    "plants": 20
+   },
+   "275": {
+    "lines": 30,
+    "subs": 9,
+    "plants": 20
+   },
+   "154": {
+    "lines": 309,
+    "subs": 75,
+    "plants": 20
+   },
+   "66": {
+    "lines": 1111,
+    "subs": 316,
+    "plants": 20
+   },
+   "0": {
+    "lines": 1302,
+    "subs": 351,
+    "plants": 20
+   }
+  },
+  "kyushu": {
+   "500": {
+    "lines": 84,
+    "subs": 29,
+    "plants": 0
+   },
+   "275": {
+    "lines": 84,
+    "subs": 29,
+    "plants": 0
+   },
+   "154": {
+    "lines": 646,
+    "subs": 185,
+    "plants": 0
+   },
+   "66": {
+    "lines": 2330,
+    "subs": 981,
+    "plants": 0
+   },
+   "0": {
+    "lines": 2534,
+    "subs": 1027,
+    "plants": 0
+   }
+  },
+  "okinawa": {
+   "500": {
+    "lines": 0,
+    "subs": 0,
+    "plants": 0
+   },
+   "275": {
+    "lines": 0,
+    "subs": 0,
+    "plants": 0
+   },
+   "154": {
+    "lines": 0,
+    "subs": 0,
+    "plants": 0
+   },
+   "66": {
+    "lines": 115,
+    "subs": 73,
+    "plants": 0
+   },
+   "0": {
+    "lines": 115,
+    "subs": 79,
+    "plants": 0
+   }
+  }
+ }
+}

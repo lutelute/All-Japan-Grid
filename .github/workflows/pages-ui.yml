@@ -13,6 +13,7 @@ on:
       - "docs/css/**"
       - "tests/test_pages_map_ui.py"
       - "tests/test_pages_overlays_ui.py"
+      - "tests/test_pages_map_gl_ui.py"
       - ".github/workflows/pages-ui.yml"
   pull_request:
     paths:
@@ -21,6 +22,7 @@ on:
       - "docs/css/**"
       - "tests/test_pages_map_ui.py"
       - "tests/test_pages_overlays_ui.py"
+      - "tests/test_pages_map_gl_ui.py"
       - ".github/workflows/pages-ui.yml"
   workflow_dispatch:
 
@@ -38,6 +40,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest playwright
           python -m playwright install --with-deps chromium
+      # map_gl.html(MapLibre の試作)は WebGL を SwiftShader で描く。使えなければ飛ばす(-rs で理由を出す)
       - name: Map hover / click / deep links
         # tests/conftest.py は pandapower などを読む。この検査は使わないので読まない
-        run: python -m pytest -q --noconftest tests/test_pages_map_ui.py tests/test_pages_overlays_ui.py -p no:cacheprovider
+        run: python -m pytest -q --noconftest tests/test_pages_map_ui.py tests/test_pages_overlays_ui.py tests/test_pages_map_gl_ui.py -p no:cacheprovider -rs
