@@ -270,14 +270,34 @@ def test_bridges_join_every_piece_to_the_main_network():
     assert all(any(ex._near_paths(s, it, 1.0) for it in items) for s in pts)
 
 
+def test_shapes_fill_dashed_lines_from_osm_and_gsi():
+    """点線(モデルの線と照合できなかったところ)に当てた OSM・地理院の送電線の形の台帳
+    (data/reference/occto_line_shapes.json): 出典が書いてあり、OSM の形は電圧か名前が道の半分以上で合い、遠回りしすぎない。
+    当てた線路の形は変電所の点の近くから始まって終わる。"""
+    sh = json.loads((ROOT / "data" / "reference" / "occto_line_shapes.json").read_text(encoding="utf-8"))
+    assert "OpenStreetMap" in sh["source"] and "国土地理院" in sh["source"]
+    for it in sh["items"]:
+        assert it["src"] in ("osm", "gsi") and it["kind"] in ("line", "gap") and len(it["coords"]) >= 2
+        assert it["length_km"] <= 1.6 * it["straight_km"] + 3.0, it["id"]
+        if it["src"] == "osm":
+            assert max(it["kv_frac"], it["named_frac"]) >= 0.5, it["id"]
+    d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
+    assert d["shapes"]["lines"] >= 90 and d["shapes"]["gaps"] >= 300
+    for x in d["lines"]:
+        if x.get("g"):
+            a, b = x["s"]
+            ends = [x["p"][0][0], x["p"][0][-1]] + [q for seg in x["j"] for q in seg]
+            assert all(min(ex._km(s, e) for e in ends) < 0.3 for s in (a, b) if s), x["id"]
+
+
 def test_lines_join_at_stations_and_stay_in_area():
     """線路の端は変電所の点(s)から始まり、点線のつなぎも含めて端どうしがつながる。位置はエリアの県の中。"""
     d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
     for x in d["lines"]:
         a, b = (x.get("s") or [None, None])
         if x["p"] and a:
-            # 描き始めは変電所の点(切れ端が離れていれば、変電所からの点線)。点線の座標は 3 桁に丸めてある
-            starts = [x["p"][0][0]] + [seg[0] for seg in x["j"][:1]]
+            # 線は変電所の点に触れる(切れ端が離れていれば、変電所からの点線)。点線の座標は 3 桁に丸めてある
+            starts = [q for path in x["p"] for q in (path[0], path[-1])] + [q for seg in x["j"] for q in seg]
             assert min(ex._km(q, a) for q in starts) < 0.3, x["id"]
         for seg in x["j"]:
             assert ex._km(seg[0], seg[1]) < 250, f"{x['id']}: 点線が長すぎる(位置の取り違え?)"

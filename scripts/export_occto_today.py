@@ -500,6 +500,47 @@ def place_branches(lines: list) -> int:
     return placed
 
 
+SHAPES = ROOT / "data" / "reference" / "occto_line_shapes.json"
+
+
+def apply_shapes(lines: list, path: Path = SHAPES) -> tuple[int, int]:
+    """モデルの線と照合できず点線になったところに、OSM か地理院の送電線の形を当てる(scripts/build_occto_line_shapes.py)。
+    点線だけの線路は形を替え(g = 形の出どころ)、線路の中の切れ目の点線は形を足す(gf = 埋めた切れ目の数)。
+    形の端が変電所の点から GAP_KM より離れていれば、そこだけ点線でつなぐ。照合を作り直して点線が変わったものには当てない。"""
+    if not path.exists():
+        return 0, 0
+    items = json.loads(path.read_text(encoding="utf-8"))["items"]
+    k3 = lambda q: (round(q[0], 3), round(q[1], 3))
+    by = {(it["id"], it["kind"], k3(it["ends"][0]), k3(it["ends"][1])): it for it in items}
+    n_line = n_gap = 0
+    for x in lines:
+        if not x["p"] and x["j"]:
+            a, b = x["j"][0][0], x["j"][-1][-1]
+            it = by.get((x["id"], "line", k3(a), k3(b)))
+            if not it:
+                continue
+            c = it["coords"]
+            x["p"] = [c]
+            x["j"] = [[[round(u, 3), round(v, 3)] for u, v in seg] for seg in ([a, c[0]], [c[-1], b]) if _km(*seg) > GAP_KM]
+            x["g"] = it["src"]
+            n_line += 1
+        elif x["p"] and x["j"]:
+            keep, filled = [], 0
+            for seg in x["j"]:
+                it = by.get((x["id"], "gap", k3(seg[0]), k3(seg[1])))
+                if not it:
+                    keep.append(seg)
+                    continue
+                c = it["coords"]
+                x["p"].append(c)
+                keep += [[[round(u, 3), round(v, 3)] for u, v in s] for s in ([seg[0], c[0]], [c[-1], seg[1]]) if _km(*s) > GAP_KM]
+                filled += 1
+            if filled:
+                x["j"], x["gf"] = keep, filled
+                n_gap += filled
+    return n_line, n_gap
+
+
 IC_CONF = ROOT / "config" / "occto_interconnections.yaml"
 
 
@@ -687,17 +728,20 @@ def cmd_lines(a) -> int:
     n_branch = place_branches(lines)
     for x in lines:
         x.pop("d_ends")
+    n_shape = (0, 0) if a.no_shapes else apply_shapes(lines)
     ics = interconnections(lines)
     brs = bridges(lines, ics)
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
             "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines,
-            "ics": ics, "bridges": brs}
+            "ics": ics, "bridges": brs,
+            "shapes": {"lines": n_shape[0], "gaps": n_shape[1],
+                       "source": json.loads(SHAPES.read_text(encoding="utf-8"))["source"] if any(n_shape) else None}}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・連系線 %d・つなぎのモデルの線 %d・輪郭 %d 枚・%d KB",
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・T 分岐の位置を決めた端 %d・OSM と地理院の形 線路 %d・切れ目 %d・連系線 %d・つなぎのモデルの線 %d・輪郭 %d 枚・%d KB",
              a.out, len(lines),
              sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
              sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
-             n_branch, len(ics), len(brs), len(data["outline"]), a.out.stat().st_size // 1024)
+             n_branch, *n_shape, len(ics), len(brs), len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
 
@@ -716,6 +760,7 @@ def main() -> int:
     li.add_argument("--crosswalk", type=Path, default=ROOT / "data" / "external" / "occto" / "occto_line_crosswalk.json")
     li.add_argument("--out", type=Path, default=LINES_OUT)
     li.add_argument("--tol", type=float, default=0.002, help="線の簡略化の許容(度)")
+    li.add_argument("--no-shapes", action="store_true", help="OSM・地理院の形を当てない(build_occto_line_shapes.py の対象を出すとき)")
     li.set_defaults(fn=cmd_lines)
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%F %T")
