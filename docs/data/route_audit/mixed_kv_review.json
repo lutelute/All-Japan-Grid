@@ -37,7 +37,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 2,
@@ -69,7 +70,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 3,
@@ -96,7 +98,8 @@
      3
     ]
    ],
-   "powerflow": "43a"
+   "powerflow": "43a",
+   "osm_kind": "inferred"
   },
   {
    "no": 4,
@@ -162,7 +165,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 6,
@@ -195,7 +199,8 @@
      3
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 7,
@@ -221,7 +226,8 @@
      4
     ]
    ],
-   "powerflow": "43a"
+   "powerflow": "43a",
+   "osm_kind": "crossing"
   },
   {
    "no": 8,
@@ -350,7 +356,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 12,
@@ -410,7 +417,8 @@
      3
     ]
    ],
-   "powerflow": "43a"
+   "powerflow": "43a",
+   "osm_kind": "inferred"
   },
   {
    "no": 14,
@@ -444,7 +452,8 @@
      3
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 15,
@@ -506,7 +515,8 @@
      3
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 17,
@@ -581,7 +591,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 19,
@@ -613,7 +624,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 20,
@@ -678,7 +690,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "crossing"
   },
   {
    "no": 22,
@@ -731,7 +744,8 @@
      3
     ]
    ],
-   "powerflow": "43a"
+   "powerflow": "43a",
+   "osm_kind": "inferred"
   },
   {
    "no": 24,
@@ -762,7 +776,8 @@
      1
     ]
    ],
-   "powerflow": "none"
+   "powerflow": "none",
+   "osm_kind": "duplicate"
   },
   {
    "no": 25,
@@ -793,7 +808,8 @@
      1
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "duplicate"
   },
   {
    "no": 26,
@@ -825,11 +841,13 @@
      3
     ]
    ],
-   "powerflow": "colocated"
+   "powerflow": "colocated",
+   "osm_kind": "duplicate"
   }
  ],
  "fields": {
   "canon": "正典での形(split=電圧ごとに別の点で、正典の中ではつながっていない / one=1 つの点に電圧の違う枝)",
-  "powerflow": "潮流計算の網でのつながり(colocated=同じ座標の変圧器 / 43a=介入#43a の変圧器 / none=変圧器なし)"
+  "powerflow": "潮流計算の網でのつながり(colocated=同じ座標の変圧器 / 43a=介入#43a の変圧器 / none=変圧器なし)",
+  "osm_kind": "誤接続と判定した 17 か所を正典の元の OSM の way で確かめた種類(2026-11-07 午後): crossing=電圧タグの違う way が同じ点を頂点に持つ(交差・併架) / duplicate=同じ way が 2 つの地域の取り出しに入り推し量りの電圧が分かれた写し / inferred=電圧タグの無い 1 本の線の途中からの T 分岐で、電圧の違いは推し量りから"
  }
 }
