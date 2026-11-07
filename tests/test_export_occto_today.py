@@ -141,6 +141,35 @@ def test_lines_file_matches_canon_and_has_unique_ids():
     assert d["outline"], "日本の輪郭が無い"
 
 
+def test_chain_orders_pieces_from_station_and_bridges_gaps():
+    """切れ端を変電所 a から b へ並べ直し、向きをそろえ、切れ目と両端の離れを点線で結ぶ。"""
+    a, b = [135.0, 35.0], [135.2, 35.0]
+    far = [[135.2, 35.0], [135.12, 35.0]]        # b 側の切れ端(逆向き)
+    near = [[135.01, 35.0], [135.08, 35.0]]      # a の 1 km 先から始まる切れ端
+    solid, dash = ex.chain([far, near], a, b)
+    assert solid == [near, far[::-1]]
+    assert dash == [[a, near[0]], [near[-1], far[-1]]]   # a からの 1 km と、切れ端どうしの 4 km
+    # 両端が分からなければ、在る切れ端だけを並べる
+    solid, dash = ex.chain([near], None, None)
+    assert solid == [near] and dash == []
+
+
+def test_lines_join_at_stations_and_stay_in_area():
+    """線路の端は変電所の点(s)から始まり、点線のつなぎも含めて端どうしがつながる。位置はエリアの県の中。"""
+    d = json.loads((FM / "occto_lines.json").read_text(encoding="utf-8"))
+    for x in d["lines"]:
+        a, b = (x.get("s") or [None, None])
+        if x["p"] and a:
+            # 描き始めは変電所の点(切れ端が離れていれば、変電所からの点線)。点線の座標は 3 桁に丸めてある
+            starts = [x["p"][0][0]] + [seg[0] for seg in x["j"][:1]]
+            assert min(ex._km(q, a) for q in starts) < 0.3, x["id"]
+        for seg in x["j"]:
+            assert ex._km(seg[0], seg[1]) < 250, f"{x['id']}: 点線が長すぎる(位置の取り違え?)"
+    # 東北の福島変電所が北海道の福島町に当たっていた(2026-11-07)
+    fuku = [x for x in d["lines"] if x["a"] == "tohoku" and "福島" in x["d"]]
+    assert fuku and all(not s or s[1] < 39.5 for x in fuku for s in x["s"])
+
+
 def test_today_file_shape():
     d = json.loads((FM / "occto_today.json").read_text(encoding="utf-8"))
     for k in ("made", "source", "days", "times", "lines", "cap", "ic"):

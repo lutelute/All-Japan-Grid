@@ -28,6 +28,7 @@ import datetime as dt
 import io
 import json
 import logging
+import math
 import os
 import re
 import sys
@@ -353,6 +354,37 @@ def outline(path: Path = PREFS) -> list:
     return out
 
 
+def _km(p, q) -> float:
+    dx = (p[0] - q[0]) * 111.32 * math.cos(math.radians((p[1] + q[1]) / 2))
+    return math.hypot(dx, (p[1] - q[1]) * 110.57)
+
+
+GAP_KM = 0.3   # これより離れた切れ目は点線でつなぐ(変電所の構内の大きさより小さい)
+
+
+def chain(parts: list, a: list | None, b: list | None) -> tuple[list, list]:
+    """モデルの線の切れ端を、変電所 a から b へ向けて並べ直す。(向きをそろえた切れ端, つなぎの点線)。
+
+    切れ端は経路の区間ごとの線の形で、順番も向きもばらばら。いまの端にいちばん近い切れ端を、近い側から
+    つないでいく。a・b が分からなければ、在る切れ端の端から始める。切れ目が GAP_KM より大きければ点線で結ぶ。
+    """
+    rest = [list(p) for p in parts if len(p) >= 2]
+    solid, dash = [], []
+    cur = a or (rest[0][0] if rest else None)
+    while rest:
+        d, i, rev = min((min((_km(cur, p[0]), j, False), (_km(cur, p[-1]), j, True)) for j, p in enumerate(rest)))
+        p = rest.pop(i)
+        if rev:
+            p = p[::-1]
+        if d > GAP_KM:
+            dash.append([cur, p[0]])
+        solid.append(p)
+        cur = p[-1]
+    if b and cur and _km(cur, b) > GAP_KM:
+        dash.append([cur, b])
+    return solid, dash
+
+
 def cmd_lines(a) -> int:
     cw = json.loads(a.crosswalk.read_text(encoding="utf-8"))
     geom: dict[str, list] = {}
@@ -371,13 +403,22 @@ def cmd_lines(a) -> int:
                     seen.add(k)
                     paths += geom[k]
         conf = r.get("conf")
-        lines.append({"id": line_id(r["area"], r["line"], r["direction"]), "a": r["area"], "n": r["line"],
-                      "d": r["direction"], "kv": int(r["kv"]), "c": conf if conf in ("A", "B", "C") else None,
-                      "p": paths})
+        fa, fb = r.get("from_xy"), r.get("to_xy")
+        if paths:
+            paths, dash = chain(paths, fa, fb)
+        else:
+            # 形が無くても両端の変電所が分かれば、両端を結ぶ点線(位置は模式)
+            dash = [[fa, fb]] if fa and fb else []
+        rec = {"id": line_id(r["area"], r["line"], r["direction"]), "a": r["area"], "n": r["line"],
+               "d": r["direction"], "kv": int(r["kv"]), "c": conf if conf in ("A", "B", "C") else None,
+               "p": paths, "j": [[[round(x, 3), round(y, 3)] for x, y in seg] for seg in dash], "s": [fa, fb]}
+        lines.append(rec)
     data = {"made": dt.datetime.now(JST).isoformat(timespec="minutes"), "crosswalk_made": cw.get("made_at"),
             "built_sha256": cw.get("built_sha256"), "areas": AREA_JA, "outline": outline(), "lines": lines}
     write_json(a.out, data)
-    log.info("%s: 線路 %d(描ける %d)・輪郭 %d 枚・%d KB", a.out, len(lines), sum(1 for x in lines if x["p"]),
+    log.info("%s: 線路 %d(形あり %d・模式だけ %d・描けない %d)・つなぎの点線 %d・輪郭 %d 枚・%d KB", a.out, len(lines),
+             sum(1 for x in lines if x["p"]), sum(1 for x in lines if not x["p"] and x["j"]),
+             sum(1 for x in lines if not x["p"] and not x["j"]), sum(len(x["j"]) for x in lines if x["p"]),
              len(data["outline"]), a.out.stat().st_size // 1024)
     return 0
 
