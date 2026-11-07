@@ -12,6 +12,7 @@ on:
       - "docs/js/**"
       - "docs/css/**"
       - "tests/test_pages_map_ui.py"
+      - "tests/test_pages_overlays_ui.py"
       - ".github/workflows/pages-ui.yml"
   pull_request:
     paths:
@@ -19,6 +20,7 @@ on:
       - "docs/js/**"
       - "docs/css/**"
       - "tests/test_pages_map_ui.py"
+      - "tests/test_pages_overlays_ui.py"
       - ".github/workflows/pages-ui.yml"
   workflow_dispatch:
 
@@ -38,4 +40,4 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Map hover / click / deep links
         # tests/conftest.py は pandapower などを読む。この検査は使わないので読まない
-        run: python -m pytest -q --noconftest tests/test_pages_map_ui.py -p no:cacheprovider
+        run: python -m pytest -q --noconftest tests/test_pages_map_ui.py tests/test_pages_overlays_ui.py -p no:cacheprovider
