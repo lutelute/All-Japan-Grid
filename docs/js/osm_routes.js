@@ -515,8 +515,13 @@
     function towerMarker(T, i, onRoute) {
         var rids = towerRoutes(T, i);
         var z = map.getZoom();
-        var m = L.circleMarker([T.la[i] / 1e5, T.lo[i] / 1e5], {
-            radius: z >= 15 ? 4.5 : z >= 13 ? 3.5 : 2.5,
+        // ズーム 13 以上では鉄塔の形(tower_dots.js)を描くので、選んだ線の鉄塔はその形を囲む輪で目立たせる
+        var m = L.circleMarker([T.la[i] / 1e5, T.lo[i] / 1e5], z >= 13 ? {
+            radius: z >= 16 ? 17 : z >= 15 ? 14 : z >= 14 ? 11 : 9,
+            color: onRoute ? "#ffd33d" : "#d0d7de", weight: 2, fillColor: onRoute ? "#ffd33d" : "#d0d7de", fillOpacity: 0.12,
+            renderer: AGJMap.renderer(map),
+        } : {
+            radius: 2.5,
             color: "#0d1117", weight: 1.2, fillColor: onRoute ? "#ffffff" : "#d0d7de", fillOpacity: 1,
             renderer: AGJMap.renderer(map),
         });
@@ -534,9 +539,12 @@
             hits = hits.filter(Boolean);
             var est = T.est[i] || null, estRoute = est && est[1] >= 0 ? T.rl[est[1]] : null;
             var estHit = est ? hits.filter(function (h) { return h.rec[C.ID] === estRoute; })[0] : null;
+            // 6 つの要素のものは線の端まで延ばした推定 [番号, 路線, 元の鉄塔の地域, 元の鉄塔, 元の番号, 何基先](export_osm_routes.py)
+            var ext = est && est.length >= 6 && est[3] ? est : null;
+            var estHow = ext ? "推定：No." + ext[4] + " の鉄塔から " + ext[5] + " 基先へ延ばした" : "推定：前後の番号から";
             var rows = [
                 ["番号", t.ref ? esc(t.ref) + '<span class="val-note">（OSM）</span>'
-                    : est ? esc(String(est[0])) + '<span class="val-est">（推定：前後の番号から' + (estHit ? "・" + esc(title(estHit.rec)) : "") + "）</span>"
+                    : est ? esc(String(est[0])) + '<span class="val-est">（' + esc(estHow) + (estHit ? "・" + esc(title(estHit.rec)) : "") + "）</span>"
                     : '<span class="osm-slot-ordinal">OSM に番号なし</span>'],
             ];
             if (t.name) rows.push(["名前", esc(t.name)]);
@@ -569,9 +577,12 @@
                     first ? { text: "この線を選ぶ", onClick: function () { selectRoute(first.rec[C.ID], first.reg, { card: true }); } } : null,
                     first ? { text: "前の鉄塔へ", onClick: function () { stepTower(t, first, -1); } } : null,
                     first ? { text: "次の鉄塔へ", onClick: function () { stepTower(t, first, +1); } } : null,
+                    ext && meta && meta.regions[ext[2]] ? { text: "延ばした元の鉄塔（No." + ext[4] + "）へ",
+                        onClick: function () { selectTowerById(meta.regions[ext[2]], ext[3], { fly: true }); } } : null,
                     { text: "OpenStreetMap で見る", href: "https://www.openstreetmap.org/node/" + t.id, blank: true },
                 ].filter(Boolean),
-                note: "番号は OSM の ref タグです。番号の無い鉄塔に番号は付けていません。地図データ © OpenStreetMap contributors（ODbL）。",
+                note: "番号は OSM の ref タグです。（推定）の番号は、同じ線の番号のある鉄塔から推し量ったもので、鉄塔の札の番号と違うことがあります。" +
+                      "番号の無い鉄塔は、線の何基目かで呼んでいます。地図データ © OpenStreetMap contributors（ODbL）。",
             };
             withOwnCard(function () { AGJMap.showCard(map, spec, marker || null); });
             var el = cardEl();

@@ -1,0 +1,180 @@
+# OCCTO の地内基幹送電線の端(変電所・開閉所・発電所)の位置の台帳(潮流マップの表示だけに使う)
+#
+# 背景(2026-11-07): OCCTO の潮流実績の線路は、両端の変電所名と線路名だけを持つ。
+# scripts/build_occto_line_crosswalk.py は両端をモデル・OSM の名前で引いて位置を出すが、
+# 次の端は引けなかった(引けないと、その線路は地図に描けない)。
+#   - モデルにも手元の OSM の層にも名前が無い(名古屋の 275 kV の地下の変電所、OSM に名前の無い変電所)
+#   - 名前が 2 文字で、解決器の索引に入らない(「田原」「金山」「高根」。MIN_KEY_LEN = 3)
+#   - 同じ名前の別の所を引いた(東北の「福島」→北海道の福島町、北陸の「南条」→長野)
+#
+# 運用規約:
+#   - 位置は表示(潮流マップの点と模式の点線)だけに使う。モデルの節点・接続・照合は変えない
+#   - 座標は開かれた出典から取る(ref に書く):
+#       osm:<種類>/<番号> = OSM の要素(ODbL)の中心 / gsi:注記 = 地理院地図の注記 / gsi:記号 = 地理院地図の記号 /
+#       gsi:住所 = 資料の住所を地理院の住所検索で引いた点 / gsi:写真 = 地理院の空中写真で設備を確かめて読んだ点
+#     住所や名前の出典の資料は src に書く
+#   - 各社の空き容量マップと、それをまとめた REI の送電線マップ(All Rights Reserved)は、
+#     当たりを付けるのに使ってよいが、座標の出典にはしない
+#   - 名前の取り違え(同じ名前の別の設備・鉄道の変電所)を防ぐため、電圧か線路名で確かめたものだけを入れる
+#   - conf: 高 = 名前と電圧(か設備の種類)が合う / 中 = 名前の読み替えや敷地の推定が要る / 低 = 所在地の資料が無く推定
+#   - 誤りが分かったら行を消す(git の履歴が台帳)
+#
+# 鍵は (area, name)。name は OCCTO の向きの欄を station_name() でそろえた名前(「北新得SS」→「北新得変電所」)。
+points:
+  # --- 中部 ---
+  - {area: chubu, name: 中濃, lon: 136.9384, lat: 35.4487, conf: 高, ref: "osm:way/170366038",
+     basis: "OSM の変電所(名前なし・275 kV・中部電力)。中濃犬山線・北部中濃線の 275 kV と合う"}
+  - {area: chubu, name: 川越, lon: 136.6887, lat: 35.0089, conf: 高, ref: "osm:way/180359727",
+     basis: "OSM の川越火力発電所(三重県川越町)。線路は川越火力線"}
+  - {area: chubu, name: 新佐倉, lon: 138.1474, lat: 34.6268, conf: 中, ref: "osm:way/677532710",
+     basis: "OSM の変電所(名前なし)。浜岡原子力のある御前崎市佐倉の構内の北側。線路は浜岡新佐倉線"}
+  - {area: chubu, name: 東栄, lon: 137.7084, lat: 35.0716, conf: 高, ref: "osm:way/116559939",
+     basis: "OSM の変電所(名前なし・500 kV、愛知県東栄町)。東栄幹線・駿遠幹線の 500 kV と合う"}
+  - {area: chubu, name: 東海, lon: 136.9008, lat: 35.0493, conf: 中, ref: "osm:way/869785334",
+     basis: "OSM の変電所(名前なし・電圧なし、東海市名和町)。知多第二火力・下広井・松ヶ枝と結ぶ 275 kV の端"}
+  - {area: chubu, name: 浜岡, lon: 138.1468, lat: 34.6227, conf: 高, ref: "osm:way/806310370",
+     basis: "OSM の浜岡原子力発電所"}
+  - {area: chubu, name: 田原, lon: 137.3074, lat: 34.6585, conf: 高, ref: "osm:way/170260169",
+     basis: "OSM の変電所「田原」(275 kV)。モデルにも同じ名前の節点がある(名前が 2 文字で解決器の索引に入らない)"}
+  - {area: chubu, name: 知多第二, lon: 136.8636, lat: 35.0058, conf: 高, ref: "osm:way/180359747",
+     basis: "OSM の知多第二火力発電所"}
+  - {area: chubu, name: 碧南, lon: 136.9605, lat: 34.8404, conf: 高, ref: "osm:way/101926129",
+     basis: "OSM の碧南火力発電所"}
+  - {area: chubu, name: 電名, lon: 136.9943, lat: 35.2647, conf: 中, ref: "osm:way/169121278",
+     basis: "OSM の変電所「電源名古屋」(275 kV、春日井市)。「電名」は電源名古屋の略と読んだ。佐久間西幹里線(電源開発の佐久間西幹線の続き)・犬山電名線・電名瀬戸線の端"}
+  - {area: chubu, name: 馬瀬, lon: 137.1574, lat: 35.7588, conf: 中, ref: "osm:node/1210028403",
+     basis: "OSM の馬瀬川第一水力発電所(下呂市)。「馬瀬」は馬瀬川第一と読んだ。高根第一(揚水)と結ぶ高根馬瀬線の端"}
+  - {area: chubu, name: 高根, lon: 137.4916, lat: 36.0351, conf: 中, ref: "osm:way/1002444623",
+     basis: "OSM の高根第一水力発電所(高山市高根町)。「高根」は高根第一と読んだ(解決器は千葉の高根変電所を引いていた)"}
+  # 名古屋の 275 kV の地下の変電所と、OSM に名前の無い開閉所(2026-11-07、公開の資料の住所と空中写真で)
+  - {area: chubu, name: 下広井, lon: 136.8887, lat: 35.1626, conf: 中, ref: "osm:way/199750939",
+     src: "https://ja.wikipedia.org/wiki/中部電力パワーグリッド",
+     basis: "名古屋市内の 275 kV 地中送電線の節に、中部電力名駅南ビルの地下とある。OSM の建物「中電名駅南ビル」(中村区名駅南三丁目)"}
+  - {area: chubu, name: 名城, lon: 136.8966, lat: 35.1824, conf: 高, ref: "gsi:住所",
+     src: "https://www.bunka.go.jp/kindai/kenzoubutsu/research_doboku/denryoku/hendensho/s006/index.html",
+     basis: "文化庁の近代化遺産の調査に、中区三の丸一丁目 1-1(名古屋城正門前の駐車場の地下)。JR 東海のリニアの名城変電所(中区丸の内、約 740 m 南東)とは別"}
+  - {area: chubu, name: 牛島町, lon: 136.8813, lat: 35.1754, conf: 中, ref: "gsi:住所",
+     src: "https://ja.wikipedia.org/wiki/中部電力パワーグリッド",
+     basis: "名古屋ルーセントタワーの敷地(西区牛島町 6-1)の地下"}
+  - {area: chubu, name: 金山, lon: 136.9095, lat: 35.1455, conf: 中, ref: "gsi:住所",
+     src: "https://commons.wikimedia.org/wiki/File:Chubu_Electric_Power_Kanayama_Substation_20170731.jpg",
+     basis: "中区金山五丁目(町丁の代表点。門の銘板の写真は南へ約 200 m)。解決器は岡山の金山変電所を引いていた"}
+  - {area: chubu, name: 松ヶ枝, lon: 136.9153, lat: 35.1586, conf: 中, ref: "osm:way/1308939515",
+     src: "https://ja.wikipedia.org/wiki/中部電力千代田ビル",
+     basis: "中部電力千代田ビル(中区千代田二丁目)の地下の松ケ枝超高圧変電所。OSM の建物「中電千代田ビル」"}
+  - {area: chubu, name: 梅森, lon: 137.0113, lat: 35.1369, conf: 中, ref: "gsi:写真",
+     src: "https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_70.pdf",
+     basis: "系統構成図の梅森開閉所(日進市)。OSM で北豊田から来る 275 kV の線の西の端に、建屋のある区画が写真で見える(名古屋市内へ向かう地中線の起点)"}
+  - {area: chubu, name: 東浦, lon: 136.9476, lat: 34.9650, conf: 中, ref: "osm:way/678803013",
+     src: "https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_70.pdf",
+     basis: "系統構成図の東浦開閉所(知多郡東浦町)。OSM の変電所(名前なし)に北豊田からと知多側からの 275 kV の線が入る"}
+  - {area: chubu, name: 尾鷲, lon: 136.2052, lat: 34.0657, conf: 中, ref: "gsi:写真",
+     src: "https://powergrid.chuden.co.jp/resource/goannai/hatsuden_kouri/takuso_kyokyu/rule/rule_70.pdf",
+     basis: "系統構成図の尾鷲変電所。旧 尾鷲三田火力(尾鷲市国市松泉町)の跡地の西の端の屋外の開閉設備。OSM の尾鷲伊勢線と池原尾鷲線(275 kV)がここで終わる"}
+  - {area: chubu, name: 犬山, lon: 136.9841, lat: 35.3242, conf: 中, ref: "osm:way/209429355",
+     basis: "OSM の犬山変電所(中部電力パワーグリッド、電圧のタグなし)。これまでの点は名古屋鉄道の犬山変電所で、約 7 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: chubu, name: 鈴鹿, lon: 136.3571, lat: 34.8676, conf: 高, ref: "osm:way/618344836",
+     basis: "OSM の鈴鹿開閉所(中部電力・275 kV、亀山市)。OSM の鈴鹿幹線(275 kV)の端。これまでの点は事業者も電圧も無い別の鈴鹿変電所(鈴鹿市)で、約 19 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  # --- 中国 ---
+  - {area: chugoku, name: 南山口変電所, lon: 131.4959, lat: 34.1083, conf: 高, ref: "osm:way/319371122",
+     basis: "OSM の変電所(名前なし・220 kV、山口市)。南山口支線の 220 kV と合う"}
+  - {area: chugoku, name: 新倉敷変電所, lon: 133.6925, lat: 34.6049, conf: 中, ref: "osm:way/242389846",
+     basis: "OSM の変電所(名前なし・電圧なし、倉敷市玉島)"}
+  - {area: chugoku, name: 新岩国変電所, lon: 132.2000, lat: 34.1181, conf: 高, ref: "osm:way/641638470",
+     basis: "OSM の変電所(名前なし・220 kV、岩国火力の隣)。新岩国連絡線の 220 kV と合う"}
+  - {area: chugoku, name: 智頭変電所, lon: 134.1863, lat: 35.2088, conf: 高, ref: "gsi:注記",
+     basis: "地理院地図の注記「智頭変電所」(鳥取県智頭町)。OSM の変電所(way/242253537)が東 150 m にある"}
+  - {area: chugoku, name: 松江変電所, lon: 133.1064, lat: 35.4094, conf: 中, ref: "osm:way/317951887",
+     basis: "OSM の変電所(名前なし、松江市)。北松江変電所(500 kV)とは別の所で、南へ 7 km"}
+  # --- 北海道 ---
+  - {area: hokkaido, name: 大野変電所, lon: 140.6073, lat: 41.8880, conf: 高, ref: "osm:way/254271516",
+     basis: "OSM の「北海道電力(株) 大野変電所」(275/187/66 kV、北斗市)と地理院の注記「大野変電所」。モデルの節点は英語名 Ōno Substation"}
+  - {area: hokkaido, name: 西滝川変電所, lon: 141.8906, lat: 43.5760, conf: 中, ref: "osm:way/675557803",
+     basis: "OSM の変電所(名前なし・電圧なし、滝川市)"}
+  - {area: hokkaido, name: 南九条変電所, lon: 141.3480, lat: 43.0484, conf: 中, ref: "gsi:住所",
+     src: "https://www.mapion.co.jp/phonebook/M51018/01101/89319446_ipcbl/",
+     basis: "札幌市中央区南 9 条西 8 丁目(電話帳の住所)。OSM の南九条線は円山西町で地中に入り、その先は描かれていない"}
+  - {area: hokkaido, name: 追分開閉所, lon: 141.7990, lat: 42.8818, conf: 中, ref: "osm:way/171940160",
+     basis: "OSM の変電所(名前なし・北海道電力、安平町追分)。十勝幹線の東と西・追分線がこの 1 点に集まる"}
+  - {area: hokkaido, name: 函館変換所, lon: 140.6639, lat: 41.9319, conf: 高, ref: "osm:way/262597730",
+     basis: "OSM の変換所(power=converter、名前なし、七飯町)。北本直流幹線(OSM、250 kV 直流)の北海道側の端で、北七飯変電所の東 600 m。以前の点は函館市内の函館変電所(66 kV)だった"}
+  # --- 北陸 ---
+  - {area: hokuriku, name: 南条変電所, lon: 136.1731, lat: 35.8096, conf: 高, ref: "osm:way/618344841",
+     basis: "OSM の変電所(名前なし・275/154 kV・北陸電力、福井県南越前町)。解決器は長野の南条変電所を引いていた"}
+  - {area: hokuriku, name: 新福井変電所, lon: 136.2939, lat: 36.1415, conf: 高, ref: "osm:way/315614776",
+     basis: "OSM の変電所(名前なし・275/154 kV・北陸電力、坂井市丸岡町)"}
+  - {area: hokuriku, name: 東金津変電所, lon: 136.2869, lat: 36.2065, conf: 高, ref: "osm:way/315614783",
+     basis: "OSM の変電所(名前なし・275/77 kV・北陸電力、あわら市)"}
+  # --- 関西 ---
+  - {area: kansai, name: 大河内発電所, lon: 134.7093, lat: 35.1340, conf: 高, ref: "gsi:注記",
+     basis: "地理院地図の注記「大河内発電所」(兵庫県神河町、揚水)"}
+  - {area: kansai, name: 小曽根変電所・下穂積変電所・北豊中変電所, lon: 135.4816, lat: 34.7551, conf: 中, ref: "osm:way/111363724",
+     basis: "端が 3 か所の線路(西大阪小曽根線＋北豊中線)。最初の小曽根(OSM の小曽根電力所、275/154/77 kV)で代表させた"}
+  # --- 九州 ---
+  - {area: kyushu, name: 一ツ瀬変電所, lon: 131.3239, lat: 32.1947, conf: 中, ref: "osm:way/231759891",
+     basis: "OSM の一ツ瀬水力発電所(西都市)。変電所は発電所の構内と読んだ"}
+  - {area: kyushu, name: 上椎葉変電所, lon: 131.1732, lat: 32.4747, conf: 中, ref: "osm:way/231877019",
+     basis: "OSM の上椎葉水力発電所(椎葉村)。変電所は発電所の構内と読んだ"}
+  - {area: kyushu, name: 上椎葉発電所, lon: 131.1732, lat: 32.4747, conf: 高, ref: "osm:way/231877019",
+     basis: "OSM の上椎葉水力発電所(椎葉村)"}
+  - {area: kyushu, name: 大平変電所, lon: 130.7044, lat: 32.4242, conf: 中, ref: "osm:way/216499699",
+     basis: "OSM の大平水力発電所(八代市、九州電力の揚水)。変電所は発電所の構内と読んだ"}
+  - {area: kyushu, name: 槻田開閉所, lon: 130.8475, lat: 33.8613, conf: 高, ref: "osm:way/297939963",
+     basis: "OSM の「槻田系統開閉所」(220 kV、北九州市)"}
+  - {area: kyushu, name: 西佐世保変電所, lon: 129.6464, lat: 33.1966, conf: 中, ref: "osm:way/219579624",
+     basis: "OSM の変電所(名前なし・220 kV、佐世保市光町、相浦火力の隣)。モデルの光町変電所(220 kV)と同じ所。名前の対応の台帳は光町を相浦変電所としているが、相浦はここから北へ約 0.8 km と見られ、取り違えの疑いがある(未検証)"}
+  - {area: kyushu, name: 速見変電所, lon: 131.5346, lat: 33.4128, conf: 高, ref: "osm:way/259056356",
+     basis: "OSM の「速水変電所」(220/66 kV・九州電力、大分県日出町)。OSM の名前は字が違う"}
+  - {area: kyushu, name: 高野開閉所, lon: 130.9459, lat: 31.7850, conf: 高, ref: "osm:way/218035208",
+     basis: "OSM の「高野系統開閉所」(220 kV)"}
+  - {area: kyushu, name: 川薩変電所, lon: 130.1997, lat: 31.8565, conf: 低, ref: "gsi:写真",
+     src: "https://www.occto.or.jp/assets/kyoukei/torimatome/files/250328_kyokei_torimatome.pdf",
+     basis: "供給計画の取りまとめに「川薩開閉所 220 kV 4 回線 2026 年 11 月」。所在地の資料は無い。旧 川内発電所の開閉設備で新鹿児島線と川内火力線(各 2 回線)がつながるので、ここと推定"}
+  - {area: kyushu, name: 熊本変電所, lon: 130.9026, lat: 32.9091, conf: 高, ref: "osm:way/405626236",
+     basis: "OSM の熊本変電所(九州電力送配電・500/220/66 kV、菊池郡)。OSM の熊本幹線・中九州幹線・熊本上椎葉線の端。これまでの点は九州旅客鉄道の熊本変電所(熊本市)で、約 25 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: kyushu, name: 熊本, lon: 130.9026, lat: 32.9091, conf: 高, ref: "osm:way/405626236",
+     basis: "上の熊本変電所と同じ(OCCTO の向きの欄の書き方が「熊本」の線路)"}
+  - {area: kyushu, name: 門司変電所, lon: 130.9709, lat: 33.8961, conf: 高, ref: "osm:way/189776902",
+     basis: "OSM の門司変電所(九州電力送配電・220/66 kV)。これまでの点は九州旅客鉄道の門司変電所で、約 3.6 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: kyushu, name: 筑豊変電所, lon: 130.7602, lat: 33.603, conf: 高, ref: "osm:way/219569064",
+     basis: "OSM の筑豊変電所(九州電力送配電・220/66 kV)。OSM の筑豊線(220 kV)の端。これまでの点は九州旅客鉄道の筑豊変電所で、約 10 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  # --- 沖縄 ---
+  - {area: okinawa, name: 具志川火力変電所, lon: 127.8751, lat: 26.3803, conf: 中, ref: "osm:node/1210028335",
+     basis: "OSM の具志川火力発電所(うるま市)。変電所は発電所の構内と読んだ"}
+  - {area: okinawa, name: 具志川火力開閉所, lon: 127.8751, lat: 26.3803, conf: 中, ref: "osm:node/1210028335",
+     basis: "OSM の具志川火力発電所(うるま市)。開閉所は発電所の構内と読んだ"}
+  - {area: okinawa, name: 栄野比変電所, lon: 127.8263, lat: 26.3920, conf: 中, ref: "osm:way/516695281",
+     basis: "OSM の変電所(名前なし・沖縄電力、沖縄市池原。うるま市栄野比との境)"}
+  - {area: okinawa, name: 牧港第一変電所, lon: 127.7197, lat: 26.2687, conf: 高, ref: "osm:way/516775936",
+     basis: "OSM の変電所(名前なし・132 kV、牧港火力の南隣)"}
+  - {area: okinawa, name: 石川開閉所, lon: 127.8386, lat: 26.4427, conf: 中, ref: "osm:way/516775959",
+     basis: "OSM の変電所(名前なし・132 kV・沖縄電力、うるま市石川)。西 400 m に 66 kV の変電所があり、132 kV の方を採った"}
+  # --- 四国 ---
+  - {area: shikoku, name: 阿南変換所, lon: 134.6367, lat: 33.8277, conf: 高, ref: "osm:way/722673849",
+     basis: "OSM の「阿南周波数変換所」(500 kV、阿南市橘町、橘湾発電所の南)。阿南紀北直流幹線(OSM の海底ケーブル)の四国側の端。以前の点は北へ 6 km の阿南発電所(187 kV)だった"}
+  # --- 東北 ---
+  - {area: tohoku, name: 信濃川, lon: 138.6830, lat: 37.0538, conf: 高, ref: "osm:way/319098734",
+     basis: "OSM の信濃川水力発電所と地理院の注記「信濃川発電所」(新潟県津南町)"}
+  - {area: tohoku, name: 東上越, lon: 138.3733, lat: 37.1896, conf: 高, ref: "gsi:注記",
+     basis: "地理院地図の注記「東上越変電所」(新潟県上越市)。モデルでは東京エリアの節点"}
+  - {area: tohoku, name: 福島, lon: 140.4228, lat: 37.6760, conf: 高, ref: "osm:way/107262429",
+     basis: "OSM の福島変電所(275 kV、福島市)と地理院の注記「福島変電所」。解決器は北海道の福島変電所を引いていた"}
+  - {area: tohoku, name: 宮城丸森, lon: 140.7518, lat: 37.8467, conf: 中, ref: "gsi:写真",
+     src: "https://nw.tohoku-epco.co.jp/news/pdf/__icsFiles/afieldfile/2026/05/08/260508001.pdf",
+     basis: "東北電力ネットワークの資料に宮城丸森開閉所(500 kV、伊具郡丸森町筆甫、常磐北幹線・常磐南幹線)。写真で常磐幹線のすぐ東に造成地。66 kV の丸森変電所(北へ約 7.5 km)とは別"}
+  # --- 東京 ---
+  - {area: tokyo, name: 南横須賀, lon: 139.7145, lat: 35.2146, conf: 中, ref: "osm:way/1347097155",
+     basis: "OSM の変電所(名前なし・東京電力パワーグリッド、横須賀市久里浜、横須賀火力の西隣)"}
+  - {area: tokyo, name: 千葉印西, lon: 140.1568, lat: 35.8168, conf: 中, ref: "gsi:記号",
+     src: "https://www.tepco.co.jp/toudenhou/pg/1668074_9043.html",
+     basis: "千葉印西変電所(印西市牧の台、2024-06 運転開始、新京葉から 275 kV の洞道)。地理院地図の記号の位置(空中写真は運転開始より前)。印西市大森の 66 kV の印西変電所とは別"}
+  - {area: tokyo, name: 新古河, lon: 139.8323, lat: 36.1065, conf: 高, ref: "osm:relation/15580570",
+     basis: "OSM の新古河変電所(東京電力パワーグリッド・500/275 kV、坂東市)。これまでの点は東武鉄道の新古河変電所(加須市)で、約 16 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: tokyo, name: 新座, lon: 139.5502, lat: 35.7953, conf: 高, ref: "osm:way/136298957",
+     basis: "OSM の新座変電所(東京電力パワーグリッド・275/154 kV)。これまでの点は東日本旅客鉄道の新座変電所で、約 0.9 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: tokyo, name: 練馬, lon: 139.6469, lat: 35.7367, conf: 高, ref: "osm:way/653499539",
+     basis: "OSM の練馬変電所(東京電力パワーグリッド・275/66 kV)。これまでの点は東武鉄道の練馬変電所で、約 3.6 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: tokyo, name: 多摩, lon: 139.4407, lat: 35.7341, conf: 高, ref: "osm:way/153760214",
+     basis: "OSM の多摩変電所(東京電力パワーグリッド・275/66 kV)。これまでの点は西武鉄道の多磨変電所で、約 9 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}
+  - {area: tokyo, name: 鹿島, lon: 140.6561, lat: 35.8966, conf: 高, ref: "osm:way/340648895",
+     basis: "OSM の鹿島変電所(東京電力パワーグリッド・275/66 kV、神栖市)。これまでの点は東日本旅客鉄道の鹿島変電所で、約 9 km 離れていた(2026-11-07 OSM の変電所と全部の点を突き合わせて見つけた取り違え)"}

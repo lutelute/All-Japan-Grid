@@ -96,6 +96,49 @@
 
     function dotSize(z) { return z <= 6 ? 1 : z <= 8 ? 1.4 : z <= 10 ? 2 : z <= 12 ? 2.6 : z <= 14 ? 3.6 : 5; }
 
+    // 寄ったら(ズーム GLYPH_ZOOM 以上)点の代わりに鉄塔の形を描く(2026-11-07)。脚の開いた塔に腕木が 2 段。
+    // 上の腕木の高さを鉄塔の位置に合わせる(線が腕木に掛かって見える)。形は 1 度だけ小さな canvas に描いて貼る
+    // (drawImage)ので、数百基が見えていても重くならない。遠くからは点のまま(24.6 万基)
+    var GLYPH_ZOOM = 13;
+    var glyphCache = {};
+    function glyphSize(z) { return z >= 16 ? [26, 32] : z >= 15 ? [22, 27] : z >= 14 ? [17, 21] : [13, 16]; }  // [幅, 高さ]
+    function glyph(z, dpr) {
+        var wh = glyphSize(z), W = wh[0], H = wh[1], key = W + "x" + H + "@" + dpr;
+        if (glyphCache[key]) return glyphCache[key];
+        var pad = 3, cw = W + 2 * pad, ch = H + 2 * pad;
+        var c = document.createElement("canvas");
+        c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr);
+        var g = c.getContext("2d");
+        g.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var ax = cw / 2, ay = pad + 0.32 * H;          // 上の腕木の高さ = 鉄塔の位置
+        var top = pad, base = pad + H, half = W / 2;
+        var footL = ax - 0.30 * W, footR = ax + 0.30 * W, neck = 0.07 * W;
+        function path() {
+            g.beginPath();
+            // 頂部と胴(脚が下で開く)
+            g.moveTo(ax, top); g.lineTo(ax - neck, ay - 0.18 * H); g.lineTo(footL, base);
+            g.moveTo(ax, top); g.lineTo(ax + neck, ay - 0.18 * H); g.lineTo(footR, base);
+            // 上の腕木(線が掛かる)と下の腕木
+            g.moveTo(ax - half, ay); g.lineTo(ax + half, ay);
+            var y2 = ay + 0.22 * H, w2 = 0.36 * W;
+            g.moveTo(ax - w2, y2); g.lineTo(ax + w2, y2);
+            // 胴の斜め材(X)
+            var yA = ay + 0.38 * H, yB = base - 0.02 * H;
+            var xl = function (y) { return ax - neck - (y - (ay - 0.18 * H)) / (base - (ay - 0.18 * H)) * (0.30 * W - neck); };
+            var xr = function (y) { return 2 * ax - xl(y); };
+            g.moveTo(xl(yA), yA); g.lineTo(xr(yB), yB);
+            g.moveTo(xr(yA), yA); g.lineTo(xl(yB), yB);
+            g.moveTo(xl(yA), yA); g.lineTo(xr(yA), yA);
+        }
+        g.lineCap = "round"; g.lineJoin = "round";
+        path(); g.strokeStyle = "rgba(13,17,23,0.95)"; g.lineWidth = 3.2; g.stroke();   // 縁(暗い背景でも写真でも見える)
+        path(); g.strokeStyle = "#f0f3f6"; g.lineWidth = 1.4; g.stroke();
+        var out = { img: c, w: cw, h: ch, ax: ax, ay: ay,
+                    box: { l: half + 1, r: half + 1, t: ay - top + 1, b: base - ay + 1 } };   // 当たり判定(鉄塔の位置から)
+        glyphCache[key] = out;
+        return out;
+    }
+
     function draw() {
         if (!st.canvas) return;
         var size = map.getSize(), dpr = window.devicePixelRatio || 1;
@@ -116,17 +159,18 @@
         st.pane.style.zIndex = z >= 12 ? 450 : 390;
         var po = map.getPixelOrigin(), ox = po.x + topLeft.x, oy = po.y + topLeft.y;
         var r = dotSize(z), h = r / 2, w = size.x, hh = size.y;
-        // 遠くからは薄く小さく(線と変電所を隠さない)、寄ると白く縁取りして目立たせる
-        ctx.fillStyle = z >= 13 ? "#f0f3f6" : z >= 10 ? "rgba(220,226,232,0.85)" : "rgba(200,208,216,0.5)";
-        var stroke = z >= 13;
-        if (stroke) { ctx.strokeStyle = "#0d1117"; ctx.lineWidth = 1; }
+        var G = z >= GLYPH_ZOOM ? glyph(z, dpr) : null;
+        st.glyph = G;
+        if (G) r = Math.max(G.w, G.h);
+        // 遠くからは薄く小さく(線と変電所を隠さない)、寄ると鉄塔の形
+        ctx.fillStyle = z >= 10 ? "rgba(220,226,232,0.85)" : "rgba(200,208,216,0.5)";
         for (var s = 0; s < st.sets.length; s++) {
             var S = st.sets[s], mx = S.mx, my = S.my, n = S.T.n, cnt = 0;
             for (var i = 0; i < n; i++) {
                 var x = mx[i] * scale - ox, y = my[i] * scale - oy;
                 if (x < -r || y < -r || x > w + r || y > hh + r) continue;
-                ctx.fillRect(x - h, y - h, r, r);
-                if (stroke) ctx.strokeRect(x - h, y - h, r, r);
+                if (G) ctx.drawImage(G.img, x - G.ax, y - G.ay, G.w, G.h);
+                else ctx.fillRect(x - h, y - h, r, r);
                 var k = st.nDrawn++;
                 st.drawnX[k] = x; st.drawnY[k] = y; st.drawnSet[k] = s; st.drawnIdx[k] = i;
                 cnt++;
@@ -187,8 +231,26 @@
     }
 
     // 画面の点(地図の入れ物の座標)に一番近い鉄塔
+    // 鉄塔の形を描いているとき、押した位置がその鉄塔の絵の上か
+    function inGlyph(k, cp) {
+        var G = st.glyph;
+        if (!G) return false;
+        var dx = cp.x - st.drawnX[k], dy = cp.y - st.drawnY[k], b = G.box;
+        return dx >= -b.l && dx <= b.r && dy >= -b.t && dy <= b.b;
+    }
+
     function pick(cp, px) {
         var best = -1, bd = (px || PICK_PX) * (px || PICK_PX);
+        if (st.glyph) {
+            // 絵の上を押したらその鉄塔(重なるときは鉄塔の位置に近い方)
+            var gb = Infinity;
+            for (var g = 0; g < st.nDrawn; g++) {
+                if (!inGlyph(g, cp)) continue;
+                var gx = st.drawnX[g] - cp.x, gy = st.drawnY[g] - cp.y, gd = gx * gx + gy * gy;
+                if (gd < gb) { gb = gd; best = g; }
+            }
+            if (best >= 0) return best;
+        }
         for (var k = 0; k < st.nDrawn; k++) {
             var dx = st.drawnX[k] - cp.x, dy = st.drawnY[k] - cp.y, d = dx * dx + dy * dy;
             if (d <= bd) { bd = d; best = k; }
@@ -250,9 +312,9 @@
         }
         var near = linesNear(cp, LINE_PX);
         if (st.mode === "auto" && near.length) {
-            // 線の上: よく寄っていて点の真上を押したときだけ鉄塔、それ以外は線(地図がそのまま線のカードを開く)
+            // 線の上: 鉄塔の絵の上か、よく寄っていて点の真上を押したときだけ鉄塔、それ以外は線(地図がそのまま線のカードを開く)
             var dx = st.drawnX[k] - cp.x, dy = st.drawnY[k] - cp.y;
-            if (!(map.getZoom() >= 14 && dx * dx + dy * dy <= 9)) return;
+            if (!(inGlyph(k, cp) || (map.getZoom() >= 14 && dx * dx + dy * dy <= 9))) return;
         }
         e.stopPropagation();
         e.preventDefault();
@@ -327,7 +389,7 @@
             Object.keys(st.perRegion).forEach(function (r) { tot += st.perRegion[r].data; drawn += st.perRegion[r].drawn; });
             return { on: st.on, loaded: st.loaded && st.nLoaded === st.nRegions, regionsLoaded: st.nLoaded, total: tot, drawn: drawn,
                      perRegion: st.perRegion, zoom: map.getZoom(), mode: st.mode, loadMs: st.tLoad,
-                     bendTotal: st.bendTotal, bendsDrawn: st.nB };
+                     bendTotal: st.bendTotal, bendsDrawn: st.nB, glyph: !!st.glyph };
         },
         // 確かめ用: 画面の点(地図の入れ物の座標)にある鉄塔
         pickAt: function (x, y) {

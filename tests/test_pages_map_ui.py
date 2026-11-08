@@ -409,3 +409,67 @@ def test_route_audit_markers_open_evidence_card(browser, site):
     assert "候補であって誤りの判定ではありません" in text, text
     assert not errors, errors
     page.close()
+
+
+def test_towers_are_drawn_as_tower_glyphs_and_the_body_is_clickable(browser, site):
+    """寄ると(ズーム 13 以上)鉄塔を点でなく鉄塔の形で描き、絵の脚のあたりを押しても鉄塔のカードが開く(2026-11-07)。"""
+    import json as _json
+    meta = _json.loads((DOCS / "data" / "osm_routes" / "meta.json").read_text(encoding="utf-8"))
+    reg = "tohoku"
+    d = _json.loads((DOCS / "data" / "osm_routes" / f"towers_{reg}.json").read_text(encoding="utf-8"))
+    i = d["n"] // 3
+    la = sum(d["lat"][: i + 1]) / 1e5
+    lo = sum(d["lon"][: i + 1]) / 1e5
+    page, errors = _open_map(browser, f"{site}/map.html")
+    page.wait_for_function("() => window.TowerDots && TowerDots.state().loaded", timeout=60_000)
+    page.evaluate(f"() => {{ map.setView([{la}, {lo}], 12, {{animate:false}}); }}")
+    page.wait_for_timeout(800)
+    assert page.evaluate("() => TowerDots.state().glyph") is False      # ズーム 12 は点のまま
+    page.evaluate(f"() => {{ map.setView([{la}, {lo}], 15, {{animate:false}}); }}")
+    page.wait_for_timeout(1500)
+    assert page.evaluate("() => TowerDots.state().glyph") is True
+    xy = page.evaluate(f"""() => {{
+        const r = map.getContainer().getBoundingClientRect(), p = map.latLngToContainerPoint([{la}, {lo}]);
+        return {{x: r.left + p.x, y: r.top + p.y + 9}};   // 鉄塔の位置(上の腕木)より 9 px 下 = 胴・脚
+    }}""")
+    page.mouse.click(xy["x"], xy["y"])
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')", timeout=10_000)
+    assert "載っている線" in page.inner_text(".agj-card")
+
+
+def _an_extended_tower():
+    """線の端まで延ばした番号の推定を持つ鉄塔を 1 基(地域の番号・node id・推定・元の鉄塔の id)。"""
+    import json as _json
+    meta = _json.loads((DOCS / "data" / "osm_routes" / "meta.json").read_text(encoding="utf-8"))
+    for ri, reg in enumerate(meta["regions"]):
+        d = _json.loads((DOCS / "data" / "osm_routes" / f"towers_{reg}.json").read_text(encoding="utf-8"))
+        ext = {int(k): v for k, v in d["est"].items() if len(v) >= 6}
+        if not ext:
+            continue
+        acc, ids = 0, []
+        for x in d["id"]:
+            acc += x
+            ids.append(acc)
+        k = min(ext)
+        return ri, ids[k], ext[k]
+    return None
+
+
+def test_tower_card_shows_extended_number_and_jumps_to_source(browser, site):
+    """端まで延ばした番号は「推定：No.n の鉄塔から k 基先へ延ばした」と出し、元の鉄塔へ飛べる(2026-11-07)。"""
+    hit = _an_extended_tower()
+    if hit is None:
+        pytest.skip("延ばした推定の鉄塔が無い")
+    ri, tid, est = hit
+    page, errors = _open_map(browser, f"{site}/map.html?tower={ri}.{tid}")
+    page.wait_for_function("() => /鉄塔/.test((document.querySelector('.agj-card') || {}).innerText || '')",
+                           timeout=30_000)
+    text = page.inner_text(".agj-card")
+    assert f"推定：No.{est[4]} の鉄塔から {est[5]} 基先へ延ばした" in text, text
+    assert f"No.{est[0]}（推定）" in text, text
+    page.get_by_text(f"延ばした元の鉄塔（No.{est[4]}）へ").click()
+    page.wait_for_function(f"() => /No\\.{est[4]}/.test(document.querySelector('.agj-card').innerText)"
+                           " && /OSM/.test(document.querySelector('.agj-card').innerText)", timeout=30_000)
+    assert f"tower={est[2]}.{est[3]}" in page.url, page.url
+    assert not errors, errors
+    page.close()
