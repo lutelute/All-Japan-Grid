@@ -329,8 +329,11 @@ def align_copy_ends(collected: Dict[str, dict], owner_of=None, island_of=None) -
                 kv, sub = float(n.get("kv") or 0), bool(n.get("sub"))
                 isl = island_of(t[0], t[1], reg)
                 here = [(k, s) for i2, k, s in at_target[t] if i2 == isl]   # 寄せ先の点のうち、同じ島に入るもの
-                if any(k == kv and (s or not sub) for k, s in here):
-                    n_merged += 1                        # 寄せ先に同じ電圧の点(変電所なら変電所の点)がある
+                # 寄せ先に同じ電圧の点(変電所なら変電所の点)がある。変電所でない点は、どちらかの電圧が不明(0)なら
+                # 同じ電圧とみなす(2026-11-08: #60 が区切った電圧不明の分岐点を変電所の座標へ動かして残すと、潮流計算の
+                # 網が同じ座標の 2 点を 1 つのバスにし、先に並ぶ分岐点の名前と性質を取って変電所の需要が外れた。桑野・多良など 7 か所)
+                if any((k == kv or (not sub and (k == 0 or kv == 0))) and (s or not sub) for k, s in here):
+                    n_merged += 1
                     continue
                 if here and ends_at[c] - gown[c] == 0 and not (sub and not any(s for _, s in here)):
                     n_merged += 1                        # 写しだけが付く行き止まりの点: 寄せ先が表す(変電所の点は寄せ先に変電所が無ければ残す)

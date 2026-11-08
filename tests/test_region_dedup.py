@@ -262,3 +262,15 @@ def test_copies_of_different_label_islands_are_not_split():
     }
     _, ls = align_copy_splits(col, island_of=SAME)
     assert ls["n_skipped_island"] == 1 and ls["n_edges_split"] == 0
+
+
+def test_unknown_voltage_junction_is_merged_into_the_substation():
+    """電圧不明(0)の区切りの点を変電所の点に寄せたら、動かして残さずに消す(潮流計算の網で変電所の需要が外れるため)。"""
+    S = (35.0008, 137.03)
+    col = {
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*S, 66.0, sub=1, nid="S")], "edges": [_line(P[0], S, 0, 3)]},
+        "chubu": {"nodes": [_n(*P[0], 0.0), _n(*P[6], 0.0)], "edges": [_line(P[0], P[6], 0, 6, kv=0.0)]},
+    }
+    out, _, _ = _run(col, owner=lambda la, lo: "chubu")
+    at_s = [n for v in out.values() for n in v["nodes"] if (n["lat"], n["lon"]) == S]
+    assert [n["id"] for n in at_s] == ["S"]
