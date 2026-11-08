@@ -2,11 +2,11 @@
  "note": "介入#38 の正典化(2026-09-03)。座標の県の周波数が一意で、領土エリアの周波数と一致するノードだけを再属性する(混在県は #42 の担当)。復元=本台帳 flips の to→from 逆再生 + all.json.pre_freqfix.bak",
  "marker": "intervention38",
  "by_dir": {
-  "chubu->tokyo": 202,
+  "chubu->tokyo": 204,
   "tokyo->chubu": 3
  },
- "cross_edges_before": 68,
- "cross_edges_after": 46,
+ "cross_edges_before": 74,
+ "cross_edges_after": 47,
  "flips": [
   {
    "id": "tokyo_jct_34.9285:137.5552:0",
@@ -133,6 +133,15 @@
    "to": "tokyo",
    "lat": 35.70869,
    "lon": 138.90795
+  },
+  {
+   "id": "chubu_jct_35.6137:138.9589:66",
+   "name": "chubu junction 35.6137:138.9589:66",
+   "pref": "山梨県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.61369,
+   "lon": 138.95894
   },
   {
    "id": "chubu_jct_35.5593:138.9137:66",
@@ -349,6 +358,33 @@
    "to": "tokyo",
    "lat": 35.52565,
    "lon": 138.31403
+  },
+  {
+   "id": "chubu_jct_35.6136:138.9589:66",
+   "name": "chubu junction 35.6136:138.9589:66",
+   "pref": "山梨県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.61361,
+   "lon": 138.95893
+  },
+  {
+   "id": "chubu_jct_35.6137:138.9591:66",
+   "name": "chubu junction 35.6137:138.9591:66",
+   "pref": "山梨県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.61369,
+   "lon": 138.95908
+  },
+  {
+   "id": "chubu_jct_35.6136:138.959:66",
+   "name": "chubu junction 35.6136:138.959:66",
+   "pref": "山梨県",
+   "from": "chubu",
+   "to": "tokyo",
+   "lat": 35.61358,
+   "lon": 138.95901
   },
   {
    "id": "chubu_jct_35.4892:138.7775:0",
@@ -1598,17 +1634,8 @@
    "pref": "山梨県",
    "from": "chubu",
    "to": "tokyo",
-   "lat": 35.23888,
-   "lon": 138.51008
-  },
-  {
-   "id": "chubu_sub_603@u",
-   "name": "富士川第一変電所 (untyped)",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.23888,
-   "lon": 138.51008
+   "lat": 35.23928,
+   "lon": 138.50992
   },
   {
    "id": "chubu_sub_665",
@@ -1636,15 +1663,6 @@
    "to": "tokyo",
    "lat": 35.36179,
    "lon": 138.45349
-  },
-  {
-   "id": "chubu_sub_689",
-   "name": "佐野川変電所",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.26165,
-   "lon": 138.49759
   },
   {
    "id": "chubu_sub_690",
@@ -1856,8 +1874,8 @@
  ],
  "runs": [
   {
-   "added": 205,
-   "total": 205
+   "added": 207,
+   "total": 207
   }
  ]
 }

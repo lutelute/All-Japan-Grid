@@ -26,8 +26,8 @@
    "junction_trafos": 11
   },
   "west": {
-   "trafos": 974,
-   "junction_trafos": 51
+   "trafos": 968,
+   "junction_trafos": 49
   },
   "okinawa": {
    "trafos": 19,
@@ -36,10 +36,10 @@
  },
  "by_how": {
   "43a": 21,
-  "colocated": 42
+  "colocated": 40
  },
  "by_class": {
-  "unknown_kv": 32,
+  "unknown_kv": 30,
   "made_edge": 15,
   "photo": 12,
   "near_sub": 4
@@ -1766,53 +1766,6 @@
   },
   {
    "island": "west",
-   "lat": 35.04456,
-   "lon": 136.00738,
-   "hv_kv": 154.0,
-   "lv_kv": 66.0,
-   "how": "colocated",
-   "canon": "split",
-   "canon_nodes": [
-    [
-     "chubu_jct_35.0446:136.0074:0",
-     0.0,
-     3
-    ],
-    [
-     "kansai_jct_35.0446:136.0074:0",
-     154.0,
-     3
-    ]
-   ],
-   "regions": [
-    "chubu",
-    "kansai"
-   ],
-   "edges": [
-    [
-     0.0,
-     "伊勢町変電所~近江河西変電所線"
-    ],
-    [
-     0.0,
-     "甲賀変電所~手原一丁目変電所線"
-    ],
-    [
-     0.0,
-     "甲賀変電所~蜂屋変電所線"
-    ],
-    [
-     154.0,
-     "甲賀変電所~蜂屋変電所線"
-    ]
-   ],
-   "made_edge": [],
-   "nearest_sub_m": 1569,
-   "nearest_sub": "蜂屋変電所",
-   "class": "unknown_kv"
-  },
-  {
-   "island": "west",
    "lat": 35.05844,
    "lon": 134.74602,
    "hv_kv": 275.0,
@@ -2017,52 +1970,6 @@
   },
   {
    "island": "west",
-   "lat": 35.2064,
-   "lon": 138.23452,
-   "hv_kv": 154.0,
-   "lv_kv": 66.0,
-   "how": "colocated",
-   "canon": "split",
-   "canon_nodes": [
-    [
-     "tokyo_jct_35.2064:138.2345:0",
-     0.0,
-     1
-    ],
-    [
-     "chubu_jct_35.2064:138.2345:154",
-     154.0,
-     3
-    ]
-   ],
-   "regions": [
-    "chubu"
-   ],
-   "edges": [
-    [
-     0.0,
-     "tokyo_line_4282"
-    ],
-    [
-     154.0,
-     "中部送電線_734"
-    ],
-    [
-     154.0,
-     "葵区変電所~川根本町変電所線"
-    ],
-    [
-     154.0,
-     "葵区変電所~川根本町変電所線"
-    ]
-   ],
-   "made_edge": [],
-   "nearest_sub_m": 1277,
-   "nearest_sub": "tokyo_sub_1856",
-   "class": "unknown_kv"
-  },
-  {
-   "island": "west",
    "lat": 35.21582,
    "lon": 136.25348,
    "hv_kv": 154.0,
@@ -2144,13 +2051,8 @@
    "hv_kv": 77.0,
    "lv_kv": 66.0,
    "how": "43a",
-   "canon": "split",
+   "canon": "one",
    "canon_nodes": [
-    [
-     "tokyo_jct_35.2391:138.5894:66",
-     66.0,
-     3
-    ],
     [
      "chubu_jct_35.2391:138.5894:0",
      0.0,
@@ -2158,12 +2060,11 @@
     ]
    ],
    "regions": [
-    "chubu",
-    "tokyo"
+    "chubu"
    ],
    "edges": [
     [
-     0.0,
+     66.0,
      "中部送電線_845"
     ],
     [
@@ -2175,10 +2076,6 @@
      "中部送電線_847"
     ],
     [
-     66.0,
-     "東京送電線_113"
-    ],
-    [
      77.0,
      "東京送電線_113 / 東京電力パワーグリッド 66.0kV線 / 浅間上町変電所~中島町変電所線 / 東京電力パワーグ"
     ]
@@ -2187,7 +2084,7 @@
     "disclosure",
     "recovery"
    ],
-   "nearest_sub_m": 1135,
+   "nearest_sub_m": 1228,
    "nearest_sub": "中島町変電所",
    "class": "unknown_kv"
   },
@@ -2817,10 +2714,6 @@
     [
      0.0,
      "tokyo_line_4110"
-    ],
-    [
-     0.0,
-     "tokyo_line_4111"
     ],
     [
      77.0,

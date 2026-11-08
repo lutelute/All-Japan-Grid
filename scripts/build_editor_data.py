@@ -176,6 +176,9 @@ def main():
     ap.add_argument("--region-dedup", action=argparse.BooleanOptionalAction, default=None,
                     help="介入#58(案) 地域をまたぐ写し(頂点まで同じ形の枝が 2 つ以上の地域から出る)を全国でまとめる前に 1 つにする。"
                          "既定=region_dedup.REGION_DEDUP_DEFAULT(環境変数 AJG_REGION_DEDUP=1/0)")
+    ap.add_argument("--region-dedup-ends", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#59(案) 形が同じで端を結ぶ点だけが違う地域の写しの端の点を、#58 の前に 1 つに寄せる。"
+                         "既定=region_dedup.END_ALIGN_DEFAULT(環境変数 AJG_REGION_DEDUP_ENDS=1/0)")
     args = ap.parse_args()
 
     regions = args.regions or REGIONS_ALL
@@ -214,9 +217,18 @@ def main():
 
     if do_national and collected:
         # 介入#58(案): 地域をまたぐ写しを 1 つにまとめる(src/topology/region_dedup.py)。地域ごとの正典(<地域>.json)は変えない
-        from src.topology.region_dedup import REGION_DEDUP_DEFAULT, dedup_region_copies
+        from src.topology.region_dedup import (END_ALIGN_DEFAULT, REGION_DEDUP_DEFAULT, align_copy_ends,
+                                               dedup_region_copies)
         if args.region_dedup if args.region_dedup is not None else REGION_DEDUP_DEFAULT:
+            led_ends = None
+            # 介入#59(案): 端を結ぶ点だけが違う写しの端の点を寄せてから、#58 でまとめる
+            if args.region_dedup_ends if args.region_dedup_ends is not None else END_ALIGN_DEFAULT:
+                collected, led_ends = align_copy_ends(collected)
+                print(f"  介入#59 region-dedup-ends: 端の点 {led_ends['n_points_aliased']} を寄せ、枝の端 "
+                      f"{led_ends['n_edge_ends_repointed']} を書き換え、両端が同じ点になった枝 {led_ends['n_edges_collapsed']} を消した")
             collected, led = dedup_region_copies(collected)
+            if led_ends is not None:
+                led["ends"] = led_ends
             lp = os.path.join(PROJECT_ROOT, "docs", "data", "fragments", "region_dedup_ledger.json")
             os.makedirs(os.path.dirname(lp), exist_ok=True)
             with open(lp, "w", encoding="utf-8") as fh:
