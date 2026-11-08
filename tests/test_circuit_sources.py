@@ -106,7 +106,11 @@ def test_real_canon_honshi_circuits_stay_on_the_bridge_lines():
     d = json.loads((ROOT / "docs" / "data" / "built" / "all.json").read_text(encoding="utf-8"))
     bridge = [e for e in d["edges"] if "福江町三丁目変電所線" in str(e.get("name")) and e.get("kv") == 500.0
               and "本四連系線" in str(e.get("par_note"))]
-    assert len(bridge) >= 3 and all(e["par"] == 2 for e in bridge)
+    # 本数は数えない: 中国と四国の取り出しの写しが重なっていた正典では 3 本、介入#58 で写しをまとめると 2 本
+    # (2026-11-09)。2 回線が橋の両側(児島の側 34.46・坂出の側 34.30)の区間に付いていることを見る
+    assert len(bridge) >= 2 and all(e["par"] == 2 for e in bridge)
+    lats = sorted(p[0] for e in bridge for p in (e["a"], e["b"]))
+    assert lats[0] < 34.31 and lats[-1] > 34.45
     tie = [e for e in d["edges"] if e.get("tie") and e.get("name") == "中国四国間連系線"]
     assert len(tie) == 1 and tie[0]["par"] == 1 and "par_src" not in tie[0]
     ends = sorted([tie[0]["a"], tie[0]["b"]])

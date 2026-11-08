@@ -173,6 +173,9 @@ def main():
     ap.add_argument("--date", default=None, help="generated date stamp (YYYY-MM-DD)")
     ap.add_argument("--join-untagged-tips", action="store_true",
                     help="join untagged dead-end tower tips (ledger 132)")
+    ap.add_argument("--region-dedup", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#58(案) 地域をまたぐ写し(頂点まで同じ形の枝が 2 つ以上の地域から出る)を全国でまとめる前に 1 つにする。"
+                         "既定=region_dedup.REGION_DEDUP_DEFAULT(環境変数 AJG_REGION_DEDUP=1/0)")
     args = ap.parse_args()
 
     regions = args.regions or REGIONS_ALL
@@ -210,6 +213,16 @@ def main():
         manifest_regions.append({"id": r, "stats": stats})
 
     if do_national and collected:
+        # 介入#58(案): 地域をまたぐ写しを 1 つにまとめる(src/topology/region_dedup.py)。地域ごとの正典(<地域>.json)は変えない
+        from src.topology.region_dedup import REGION_DEDUP_DEFAULT, dedup_region_copies
+        if args.region_dedup if args.region_dedup is not None else REGION_DEDUP_DEFAULT:
+            collected, led = dedup_region_copies(collected)
+            lp = os.path.join(PROJECT_ROOT, "docs", "data", "fragments", "region_dedup_ledger.json")
+            os.makedirs(os.path.dirname(lp), exist_ok=True)
+            with open(lp, "w", encoding="utf-8") as fh:
+                json.dump(led, fh, ensure_ascii=False, indent=1)
+            print(f"  介入#58 region-dedup: 写し {led['n_groups']} 組・枝 {led['n_edges_dropped']}・点 {led['n_nodes_dropped']} を落とし、"
+                  f"電圧を写しから補った枝 {led['n_kv_filled']}")
         nat = build_national(collected)
         nat["generated"] = args.date
         size = write_json(os.path.join(OUT_DIR, "all.json"), nat)

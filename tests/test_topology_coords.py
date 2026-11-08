@@ -76,4 +76,5 @@ def test_built_model_actually_shares_coordinates():
     st = CoordIndex(nodes).shared_coord_stats()
     assert st["n_shared_coords"] > 1000, st
     # 座標→単一IDに潰すと消えるノードが実際に大量にある
-    assert st["n_would_be_lost"] > 3000, st
+    # 介入#58(地域をまたぐ写しを 1 つにまとめる)で 3,000 余り → 2,295 に減った。残りは多電圧の変電所(電圧ごとの点)など
+    assert st["n_would_be_lost"] > 2000, st

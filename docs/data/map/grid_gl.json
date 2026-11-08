@@ -1,10 +1,10 @@
 {
  "_about": "docs/map_gl.html が読む。scripts/build_map_gl_tiles.py が書く。sources の sha256 が今のファイルと違えば作り直す(tests/test_map_gl_tiles.py)。",
  "sources": {
-  "docs/data/map/lines_all.geojson": "2fbaf06646f260babbe6d849751825b4a482ca68f21dca33bf275cd17b5fba96",
-  "docs/data/map/subs_all.geojson": "0a1a842f52e5dd6d2cc4214a59ec5ef247377f9990c02c0ea90f8a9bef41ffc9",
+  "docs/data/map/lines_all.geojson": "3f4c8c068c916f950bf5402bdd5bdaf02aa0e64f2ea4c988e91db791dd46a782",
+  "docs/data/map/subs_all.geojson": "1272c20edf62479b7de53c09ee62f61ae64ed6f68841219d619114b4cd813df8",
   "docs/data/plants_utility.geojson": "606ebeaf122af1e39b58d666e5ac42c4971aca9b8e8faad147bcfadb42e1cc21",
-  "docs/data/map/regions.json": "2b551997575dbcecb4921df86efd04cbb74e74ca6cdaaef7a4f5f812b8bf5e9c"
+  "docs/data/map/regions.json": "aa346d8f22d8c788f523d92e1d93cfb5429e2fa349bda933c193a875d3d503b6"
  },
  "names_en_from": [
   "data/chubu_substations.geojson",
@@ -44,8 +44,8 @@
   "data/tokyo_plants_supplement.geojson"
  ],
  "outputs": {
-  "docs/data/map/grid.pmtiles": 8263195,
-  "docs/data/map/names_en.json": 58699
+  "docs/data/map/grid.pmtiles": 7919097,
+  "docs/data/map/names_en.json": 58663
  },
  "zoom": [
   3,
@@ -53,44 +53,44 @@
  ],
  "tippecanoe": "tippecanoe v2.79.0",
  "features": {
-  "lines": 19909,
-  "subs": 9274,
+  "lines": 17368,
+  "subs": 8365,
   "plants": 544
  },
  "names_en": {
-  "entries": 1347,
+  "entries": 1346,
   "osm_conflicts": 26,
   "features_with_en": {
-   "lines": 1672,
-   "subs": 1295,
+   "lines": 1601,
+   "subs": 1205,
    "plants": 140
   }
  },
  "counts": {
   "all": {
    "500": {
-    "lines": 646,
-    "subs": 271,
+    "lines": 594,
+    "subs": 261,
     "plants": 544
    },
    "275": {
-    "lines": 1983,
-    "subs": 830,
+    "lines": 1772,
+    "subs": 781,
     "plants": 544
    },
    "154": {
-    "lines": 6264,
-    "subs": 2478,
+    "lines": 5318,
+    "subs": 2221,
     "plants": 544
    },
    "66": {
-    "lines": 18302,
-    "subs": 8537,
+    "lines": 16088,
+    "subs": 7704,
     "plants": 544
    },
    "0": {
-    "lines": 19909,
-    "subs": 9274,
+    "lines": 17368,
+    "subs": 8365,
     "plants": 544
    }
   },
@@ -106,18 +106,18 @@
     "plants": 48
    },
    "154": {
-    "lines": 186,
+    "lines": 185,
     "subs": 89,
     "plants": 48
    },
    "66": {
-    "lines": 915,
-    "subs": 528,
+    "lines": 911,
+    "subs": 526,
     "plants": 48
    },
    "0": {
-    "lines": 936,
-    "subs": 551,
+    "lines": 932,
+    "subs": 549,
     "plants": 48
    }
   },
@@ -134,206 +134,206 @@
    },
    "154": {
     "lines": 675,
-    "subs": 305,
+    "subs": 299,
     "plants": 104
    },
    "66": {
-    "lines": 2074,
-    "subs": 1121,
+    "lines": 2090,
+    "subs": 1087,
     "plants": 104
    },
    "0": {
-    "lines": 2167,
-    "subs": 1160,
+    "lines": 2179,
+    "subs": 1122,
     "plants": 104
    }
   },
   "tokyo": {
    "500": {
-    "lines": 194,
+    "lines": 191,
     "subs": 84,
     "plants": 84
    },
    "275": {
-    "lines": 538,
+    "lines": 532,
     "subs": 254,
     "plants": 84
    },
    "154": {
-    "lines": 1430,
-    "subs": 634,
+    "lines": 1396,
+    "subs": 633,
     "plants": 84
    },
    "66": {
-    "lines": 4893,
-    "subs": 2239,
+    "lines": 4712,
+    "subs": 2223,
     "plants": 84
    },
    "0": {
-    "lines": 5148,
-    "subs": 2346,
+    "lines": 4937,
+    "subs": 2327,
     "plants": 84
    }
   },
   "chubu": {
    "500": {
-    "lines": 79,
-    "subs": 33,
+    "lines": 86,
+    "subs": 32,
     "plants": 142
    },
    "275": {
-    "lines": 281,
-    "subs": 176,
+    "lines": 370,
+    "subs": 163,
     "plants": 142
    },
    "154": {
-    "lines": 808,
-    "subs": 519,
+    "lines": 1067,
+    "subs": 432,
     "plants": 142
    },
    "66": {
-    "lines": 1673,
-    "subs": 1150,
+    "lines": 2096,
+    "subs": 878,
     "plants": 142
    },
    "0": {
-    "lines": 1934,
-    "subs": 1342,
+    "lines": 2392,
+    "subs": 1051,
     "plants": 142
    }
   },
   "hokuriku": {
    "500": {
-    "lines": 30,
-    "subs": 9,
+    "lines": 22,
+    "subs": 8,
     "plants": 47
    },
    "275": {
-    "lines": 185,
-    "subs": 37,
+    "lines": 100,
+    "subs": 34,
     "plants": 47
    },
    "154": {
-    "lines": 752,
-    "subs": 124,
+    "lines": 352,
+    "subs": 114,
     "plants": 47
    },
    "66": {
-    "lines": 1431,
-    "subs": 320,
+    "lines": 719,
+    "subs": 304,
     "plants": 47
    },
    "0": {
-    "lines": 1633,
-    "subs": 359,
+    "lines": 806,
+    "subs": 334,
     "plants": 47
    }
   },
   "kansai": {
    "500": {
-    "lines": 128,
-    "subs": 51,
+    "lines": 104,
+    "subs": 48,
     "plants": 60
    },
    "275": {
-    "lines": 544,
-    "subs": 173,
+    "lines": 359,
+    "subs": 145,
     "plants": 60
    },
    "154": {
-    "lines": 1310,
-    "subs": 398,
+    "lines": 796,
+    "subs": 321,
     "plants": 60
    },
    "66": {
-    "lines": 2965,
-    "subs": 1092,
+    "lines": 2034,
+    "subs": 953,
     "plants": 60
    },
    "0": {
-    "lines": 3241,
-    "subs": 1275,
+    "lines": 2211,
+    "subs": 1122,
     "plants": 60
    }
   },
   "chugoku": {
    "500": {
     "lines": 51,
-    "subs": 31,
+    "subs": 26,
     "plants": 39
    },
    "275": {
     "lines": 72,
-    "subs": 37,
+    "subs": 32,
     "plants": 39
    },
    "154": {
-    "lines": 148,
-    "subs": 149,
+    "lines": 192,
+    "subs": 92,
     "plants": 39
    },
    "66": {
-    "lines": 795,
-    "subs": 717,
+    "lines": 1069,
+    "subs": 503,
     "plants": 39
    },
    "0": {
-    "lines": 900,
-    "subs": 784,
+    "lines": 1234,
+    "subs": 560,
     "plants": 39
    }
   },
   "shikoku": {
    "500": {
-    "lines": 30,
+    "lines": 18,
     "subs": 9,
     "plants": 20
    },
    "275": {
-    "lines": 30,
+    "lines": 18,
     "subs": 9,
     "plants": 20
    },
    "154": {
-    "lines": 309,
-    "subs": 75,
+    "lines": 162,
+    "subs": 68,
     "plants": 20
    },
    "66": {
-    "lines": 1111,
-    "subs": 316,
+    "lines": 567,
+    "subs": 259,
     "plants": 20
    },
    "0": {
-    "lines": 1302,
-    "subs": 351,
+    "lines": 636,
+    "subs": 282,
     "plants": 20
    }
   },
   "kyushu": {
    "500": {
-    "lines": 84,
+    "lines": 72,
     "subs": 29,
     "plants": 0
    },
    "275": {
-    "lines": 84,
+    "lines": 72,
     "subs": 29,
     "plants": 0
    },
    "154": {
-    "lines": 646,
-    "subs": 185,
+    "lines": 493,
+    "subs": 173,
     "plants": 0
    },
    "66": {
-    "lines": 2330,
-    "subs": 981,
+    "lines": 1775,
+    "subs": 898,
     "plants": 0
    },
    "0": {
-    "lines": 2533,
-    "subs": 1027,
+    "lines": 1926,
+    "subs": 939,
     "plants": 0
    }
   },

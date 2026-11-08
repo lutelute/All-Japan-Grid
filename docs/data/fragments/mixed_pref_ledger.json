@@ -5,13 +5,13 @@
   "chubu->tokyo": 2
  },
  "vetoed": {
-  "whitelist": 10,
-  "crossing_guard": 26,
+  "whitelist": 8,
+  "crossing_guard": 20,
   "pf_gate": 2,
-  "river_side_mismatch": 17,
-  "protected_zone": 73
+  "river_side_mismatch": 14,
+  "protected_zone": 58
  },
- "pre_cross_edges": 53,
+ "pre_cross_edges": 43,
  "new_cross_edges": 0,
  "vetoed_whitelist": [
   {
@@ -53,16 +53,6 @@
    "id": "tokyo_sub_1788",
    "name": "新信濃変電所",
    "why": "FC固定: 新信濃変電所"
-  },
-  {
-   "id": "chubu_jct_35.1963:138.6402:0",
-   "name": "chubu junction 35.1963:138.6402:0",
-   "why": "越境幹線: 田代幹線 / 田代幹線 / 田代幹線 / 田代幹線 "
-  },
-  {
-   "id": "chubu_jct_35.2611:138.6437:0",
-   "name": "chubu junction 35.2611:138.6437:0",
-   "why": "越境幹線: 佐久間東幹線（山線） / 佐久間東幹線（山線） / "
   }
  ],
  "vetoed_crossing": [
@@ -112,49 +102,19 @@
    "cut_edge": "南箕輪村変電所~大芝変電所線 / 田畑変電所~松島変電所線 "
   },
   {
-   "id": "chubu_jct_35.1896:138.6426:0",
-   "name": "chubu junction 35.1896:138.6426:0",
-   "cut_edge": "中野台二丁目変電所~浅間上町変電所線"
-  },
-  {
-   "id": "chubu_jct_35.249:138.6474:0",
-   "name": "chubu junction 35.249:138.6474:0",
-   "cut_edge": "東京送電線_22"
-  },
-  {
    "id": "chubu_jct_35.1609:138.8457:77",
    "name": "chubu junction 35.1609:138.8457:77",
    "cut_edge": "岩渕-沼津線"
   },
   {
-   "id": "chubu_jct_35.21:138.6282:0",
-   "name": "chubu junction 35.21:138.6282:0",
-   "cut_edge": "中野台二丁目変電所~中島町変電所線"
+   "id": "chubu_jct_35.1895:138.6427:0",
+   "name": "chubu junction 35.1895:138.6427:0",
+   "cut_edge": "中野台二丁目変電所~浅間上町変電所線 / 岩渕-沼津線"
   },
   {
-   "id": "chubu_jct_35.2111:138.6275:0",
-   "name": "chubu junction 35.2111:138.6275:0",
-   "cut_edge": "東京送電線_29"
-  },
-  {
-   "id": "chubu_jct_35.2002:138.6302:0",
-   "name": "chubu junction 35.2002:138.6302:0",
-   "cut_edge": "浅間上町変電所~中島町変電所線"
-  },
-  {
-   "id": "chubu_jct_35.2082:138.6246:0",
-   "name": "chubu junction 35.2082:138.6246:0",
-   "cut_edge": "浅間上町変電所~中島町変電所線 / 東京電力パワーグリッド "
-  },
-  {
-   "id": "chubu_jct_35.1493:138.6834:154",
-   "name": "chubu junction 35.1493:138.6834:154",
-   "cut_edge": "岳南線"
-  },
-  {
-   "id": "chubu_jct_35.1723:138.6901:154",
-   "name": "chubu junction 35.1723:138.6901:154",
-   "cut_edge": "岳南線 / 東京電力パワーグリッド 154.0kV線 / 東"
+   "id": "chubu_jct_35.1894:138.6428:0",
+   "name": "chubu junction 35.1894:138.6428:0",
+   "cut_edge": "中部送電線_132"
   },
   {
    "id": "chubu_jct_35.1679:138.7607:77",
@@ -229,6 +189,16 @@
    "lon": 138.4147
   },
   {
+   "id": "tokyo_jct_35.011:138.4086:0",
+   "name": "tokyo junction 35.011:138.4086:0",
+   "sub": 0,
+   "pref": "静岡県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 35.01104,
+   "lon": 138.40863
+  },
+  {
    "id": "tokyo_jct_35.0153:138.3854:0",
    "name": "tokyo junction 35.0153:138.3854:0",
    "sub": 0,
@@ -257,16 +227,6 @@
    "to": "chubu",
    "lat": 34.96894,
    "lon": 138.41789
-  },
-  {
-   "id": "tokyo_jct_36.8088:138.6189:0",
-   "name": "tokyo junction 36.8088:138.6189:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 36.80882,
-   "lon": 138.61891
   },
   {
    "id": "tokyo_jct_34.8553:138.2337:0",
@@ -319,34 +279,24 @@
    "lon": 138.22185
   },
   {
-   "id": "tokyo_jct_34.8555:138.2248:0",
-   "name": "tokyo junction 34.8555:138.2248:0",
+   "id": "tokyo_jct_36.559:138.1107:0",
+   "name": "tokyo junction 36.559:138.1107:0",
    "sub": 0,
-   "pref": "静岡県",
+   "pref": "長野県",
    "from": "tokyo",
    "to": "chubu",
-   "lat": 34.85547,
-   "lon": 138.22483
+   "lat": 36.55901,
+   "lon": 138.11072
   },
   {
-   "id": "tokyo_jct_34.954:138.348:0",
-   "name": "tokyo junction 34.954:138.348:0",
+   "id": "tokyo_jct_36.5541:138.1492:0",
+   "name": "tokyo junction 36.5541:138.1492:0",
    "sub": 0,
-   "pref": "静岡県",
+   "pref": "長野県",
    "from": "tokyo",
    "to": "chubu",
-   "lat": 34.95398,
-   "lon": 138.34796
-  },
-  {
-   "id": "tokyo_jct_34.9652:138.3169:0",
-   "name": "tokyo junction 34.9652:138.3169:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 34.9652,
-   "lon": 138.31689
+   "lat": 36.5541,
+   "lon": 138.14922
   },
   {
    "id": "tokyo_jct_35.1709:138.1283:0",
@@ -377,46 +327,6 @@
    "to": "chubu",
    "lat": 35.3865,
    "lon": 138.03224
-  },
-  {
-   "id": "tokyo_jct_35.5463:138.0567:0",
-   "name": "tokyo junction 35.5463:138.0567:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.54632,
-   "lon": 138.05666
-  },
-  {
-   "id": "tokyo_jct_35.5494:138.0498:0",
-   "name": "tokyo junction 35.5494:138.0498:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.54942,
-   "lon": 138.0498
-  },
-  {
-   "id": "tokyo_jct_35.592:137.9319:0",
-   "name": "tokyo junction 35.592:137.9319:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.59205,
-   "lon": 137.93195
-  },
-  {
-   "id": "tokyo_jct_35.5512:138.0493:0",
-   "name": "tokyo junction 35.5512:138.0493:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.55121,
-   "lon": 138.04935
   },
   {
    "id": "tokyo_jct_35.5572:137.8975:0",
@@ -457,36 +367,6 @@
    "to": "chubu",
    "lat": 35.32001,
    "lon": 138.18396
-  },
-  {
-   "id": "tokyo_jct_34.855:138.1288:0",
-   "name": "tokyo junction 34.855:138.1288:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 34.85503,
-   "lon": 138.12876
-  },
-  {
-   "id": "tokyo_jct_34.8293:138.1642:0",
-   "name": "tokyo junction 34.8293:138.1642:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 34.82928,
-   "lon": 138.16421
-  },
-  {
-   "id": "tokyo_jct_34.8332:138.1617:0",
-   "name": "tokyo junction 34.8332:138.1617:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 34.83325,
-   "lon": 138.1617
   },
   {
    "id": "tokyo_jct_36.4389:137.9244:0",
@@ -589,26 +469,6 @@
    "lon": 138.1976
   },
   {
-   "id": "tokyo_jct_36.1406:138.2341:0",
-   "name": "tokyo junction 36.1406:138.2341:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 36.14065,
-   "lon": 138.23408
-  },
-  {
-   "id": "tokyo_jct_36.1657:138.1745:0",
-   "name": "tokyo junction 36.1657:138.1745:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 36.16566,
-   "lon": 138.17455
-  },
-  {
    "id": "tokyo_jct_35.8141:138.0788:0",
    "name": "tokyo junction 35.8141:138.0788:0",
    "sub": 0,
@@ -627,16 +487,6 @@
    "to": "chubu",
    "lat": 35.82605,
    "lon": 138.05519
-  },
-  {
-   "id": "tokyo_jct_35.8211:138.0869:0",
-   "name": "tokyo junction 35.8211:138.0869:0",
-   "sub": 0,
-   "pref": "長野県",
-   "from": "tokyo",
-   "to": "chubu",
-   "lat": 35.82106,
-   "lon": 138.0869
   },
   {
    "id": "tokyo_jct_35.854:138.0936:77",
@@ -687,6 +537,16 @@
    "to": "chubu",
    "lat": 36.60432,
    "lon": 138.24959
+  },
+  {
+   "id": "tokyo_jct_36.5044:138.1734:0",
+   "name": "tokyo junction 36.5044:138.1734:0",
+   "sub": 0,
+   "pref": "長野県",
+   "from": "tokyo",
+   "to": "chubu",
+   "lat": 36.50445,
+   "lon": 138.17335
   },
   {
    "id": "tokyo_jct_36.4988:138.1438:0",
@@ -949,26 +809,6 @@
    "lon": 138.31098
   },
   {
-   "id": "chubu_jct_35.1895:138.6427:0",
-   "name": "chubu junction 35.1895:138.6427:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.18954,
-   "lon": 138.64269
-  },
-  {
-   "id": "chubu_jct_35.1894:138.6428:0",
-   "name": "chubu junction 35.1894:138.6428:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.1894,
-   "lon": 138.64281
-  },
-  {
    "id": "chubu_jct_35.2184:138.9265:66",
    "name": "chubu junction 35.2184:138.9265:66",
    "sub": 0,
@@ -1007,26 +847,6 @@
    "to": "tokyo",
    "lat": 35.37323,
    "lon": 138.9604
-  },
-  {
-   "id": "chubu_jct_35.0736:138.9195:0",
-   "name": "chubu junction 35.0736:138.9195:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.07356,
-   "lon": 138.91953
-  },
-  {
-   "id": "chubu_jct_35.0765:138.9198:0",
-   "name": "chubu junction 35.0765:138.9198:0",
-   "sub": 0,
-   "pref": "静岡県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.07651,
-   "lon": 138.91984
   },
   {
    "id": "chubu_jct_34.6269:138.8569:0",
@@ -1079,24 +899,24 @@
    "lon": 138.88948
   },
   {
-   "id": "chubu_jct_35.128:138.9193:0",
-   "name": "chubu junction 35.128:138.9193:0",
+   "id": "chubu_jct_35.1493:138.6834:154",
+   "name": "chubu junction 35.1493:138.6834:154",
    "sub": 0,
    "pref": "静岡県",
    "from": "chubu",
    "to": "tokyo",
-   "lat": 35.12803,
-   "lon": 138.91931
+   "lat": 35.14932,
+   "lon": 138.68339
   },
   {
-   "id": "chubu_jct_35.139:138.9151:0",
-   "name": "chubu junction 35.139:138.9151:0",
+   "id": "chubu_jct_35.1723:138.6901:154",
+   "name": "chubu junction 35.1723:138.6901:154",
    "sub": 0,
    "pref": "静岡県",
    "from": "chubu",
    "to": "tokyo",
-   "lat": 35.139,
-   "lon": 138.9151
+   "lat": 35.17226,
+   "lon": 138.69007
   },
   {
    "id": "chubu_jct_36.9382:138.8078:0",
@@ -1107,56 +927,6 @@
    "to": "tohoku",
    "lat": 36.9382,
    "lon": 138.80778
-  },
-  {
-   "id": "chubu_jct_37.0088:138.6511:0",
-   "name": "chubu junction 37.0088:138.6511:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 37.00879,
-   "lon": 138.65109
-  },
-  {
-   "id": "chubu_jct_36.9094:138.8093:0",
-   "name": "chubu junction 36.9094:138.8093:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.90939,
-   "lon": 138.80929
-  },
-  {
-   "id": "chubu_jct_36.9017:138.7995:0",
-   "name": "chubu junction 36.9017:138.7995:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.90169,
-   "lon": 138.79945
-  },
-  {
-   "id": "chubu_jct_36.9275:138.8126:0",
-   "name": "chubu junction 36.9275:138.8126:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.92751,
-   "lon": 138.81258
-  },
-  {
-   "id": "chubu_jct_36.913:138.8089:0",
-   "name": "chubu junction 36.913:138.8089:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.91295,
-   "lon": 138.80891
   },
   {
    "id": "chubu_jct_36.8914:138.7497:0",
@@ -1177,26 +947,6 @@
    "to": "tohoku",
    "lat": 36.89126,
    "lon": 138.74913
-  },
-  {
-   "id": "chubu_jct_37.0139:138.8758:154",
-   "name": "chubu junction 37.0139:138.8758:154",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 37.01388,
-   "lon": 138.87576
-  },
-  {
-   "id": "chubu_jct_36.9727:138.8022:0",
-   "name": "chubu junction 36.9727:138.8022:0",
-   "sub": 0,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.97275,
-   "lon": 138.8022
   },
   {
    "id": "chubu_jct_36.8009:138.7855:0",
@@ -1289,36 +1039,6 @@
    "lon": 138.22607
   },
   {
-   "id": "chubu_sub_1050",
-   "name": "灰雨変電所",
-   "sub": 1,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.99291,
-   "lon": 138.59129
-  },
-  {
-   "id": "chubu_sub_1080",
-   "name": "土樽変電所_2",
-   "sub": 1,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.92529,
-   "lon": 138.84121
-  },
-  {
-   "id": "chubu_sub_1081",
-   "name": "神立変電所",
-   "sub": 1,
-   "pref": "新潟県",
-   "from": "chubu",
-   "to": "tohoku",
-   "lat": 36.91369,
-   "lon": 138.80805
-  },
-  {
    "id": "chubu_sub_1154",
    "name": "新湯沢変電所",
    "sub": 1,
@@ -1361,12 +1081,12 @@
  ],
  "runs": [
   {
-   "added": 114,
-   "total": 114
+   "added": 90,
+   "total": 90
   },
   {
    "added": 2,
-   "total": 116
+   "total": 92
   }
  ]
 }

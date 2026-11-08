@@ -1,0 +1,507 @@
+{
+ "ref": "origin/main",
+ "canon": {
+  "before": {
+   "nodes": 17744,
+   "edges": 19909,
+   "main_nodes": 16010,
+   "subs": 9274,
+   "coords_multi_region": 2040,
+   "edges_same_shape_extra": 3200,
+   "km_lines": 90970.7
+  },
+  "after": {
+   "nodes": 15628,
+   "edges": 17368,
+   "main_nodes": 14150,
+   "subs": 8365,
+   "coords_multi_region": 273,
+   "edges_same_shape_extra": 693,
+   "km_lines": 80932.4
+  }
+ },
+ "powerflow": {
+  "hokkaido": {
+   "n_bus": [
+    831,
+    831
+   ],
+   "n_line": [
+    858,
+    858
+   ],
+   "n_trafo": [
+    69,
+    69
+   ],
+   "n_implicit_stepdown": [
+    0,
+    0
+   ],
+   "n_junction_cuts": [
+    0,
+    0
+   ],
+   "n_components": [
+    22,
+    22
+   ],
+   "n_synthetic_slack": [
+    20,
+    20
+   ],
+   "total_load_mw": [
+    4420.0,
+    4420.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8603862964,
+    0.8603862964
+   ],
+   "ac_vm_max": [
+    1.00347375,
+    1.00347375
+   ],
+   "ac_max_loading_pct": [
+    85.24518392,
+    85.24518392
+   ],
+   "ac_total_loss_mw": [
+    100.3510649,
+    100.3510649
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "east": {
+   "n_bus": [
+    6245,
+    6213
+   ],
+   "n_line": [
+    6443,
+    6419
+   ],
+   "n_trafo": [
+    670,
+    662
+   ],
+   "n_implicit_stepdown": [
+    28,
+    23
+   ],
+   "n_junction_cuts": [
+    6,
+    6
+   ],
+   "n_components": [
+    239,
+    232
+   ],
+   "n_synthetic_slack": [
+    227,
+    220
+   ],
+   "total_load_mw": [
+    55250.0,
+    55250.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8560614659,
+    0.8560076814
+   ],
+   "ac_vm_max": [
+    1.022906943,
+    1.022906943
+   ],
+   "ac_max_loading_pct": [
+    894.5047814,
+    894.5096922
+   ],
+   "ac_total_loss_mw": [
+    1331.527915,
+    1331.63027
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "west": {
+   "n_bus": [
+    7983,
+    7954
+   ],
+   "n_line": [
+    8116,
+    8091
+   ],
+   "n_trafo": [
+    990,
+    974
+   ],
+   "n_implicit_stepdown": [
+    38,
+    32
+   ],
+   "n_junction_cuts": [
+    7,
+    7
+   ],
+   "n_components": [
+    295,
+    295
+   ],
+   "n_synthetic_slack": [
+    285,
+    285
+   ],
+   "total_load_mw": [
+    73865.0,
+    73865.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.7261722925,
+    0.7261642245
+   ],
+   "ac_vm_max": [
+    1.039107506,
+    1.039107895
+   ],
+   "ac_max_loading_pct": [
+    605.6117718,
+    605.6234186
+   ],
+   "ac_total_loss_mw": [
+    1137.719802,
+    1134.636186
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "okinawa": {
+   "n_bus": [
+    100,
+    100
+   ],
+   "n_line": [
+    96,
+    96
+   ],
+   "n_trafo": [
+    19,
+    19
+   ],
+   "n_implicit_stepdown": [
+    0,
+    0
+   ],
+   "n_junction_cuts": [
+    0,
+    0
+   ],
+   "n_components": [
+    7,
+    7
+   ],
+   "n_synthetic_slack": [
+    5,
+    5
+   ],
+   "total_load_mw": [
+    1360.0,
+    1360.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.7554116959,
+    0.7554116959
+   ],
+   "ac_vm_max": [
+    1.000000332,
+    1.000000332
+   ],
+   "ac_max_loading_pct": [
+    232.9599888,
+    232.9599888
+   ],
+   "ac_total_loss_mw": [
+    29.20504127,
+    29.20504127
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  }
+ },
+ "n1": {
+  "hokkaido": {
+   "island": [
+    "hokkaido",
+    "hokkaido"
+   ],
+   "n_bus": [
+    799,
+    799
+   ],
+   "n_bus_full": [
+    831,
+    831
+   ],
+   "n_branch": [
+    916,
+    916
+   ],
+   "n_outage_evaluated": [
+    767,
+    767
+   ],
+   "n_islanding": [
+    149,
+    149
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    127,
+    127
+   ],
+   "base_n_over_physical": [
+    0,
+    0
+   ],
+   "base_max_loading_physical_pct": [
+    44.3,
+    44.3
+   ],
+   "n_outage_causing_new_over_physical": [
+    0,
+    0
+   ],
+   "n_outage_new_over_120_physical": [
+    0,
+    0
+   ],
+   "max_new_loading_physical_pct": [
+    79.3,
+    79.3
+   ],
+   "islanding_total_load_mw": [
+    1790.0,
+    1790.0
+   ],
+   "islanding_n_over_100mw": [
+    0,
+    0
+   ]
+  },
+  "east": {
+   "island": [
+    "east",
+    "east"
+   ],
+   "n_bus": [
+    5804,
+    5784
+   ],
+   "n_bus_full": [
+    6245,
+    6213
+   ],
+   "n_branch": [
+    6904,
+    6877
+   ],
+   "n_outage_evaluated": [
+    5944,
+    5925
+   ],
+   "n_islanding": [
+    956,
+    948
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    1404,
+    1403
+   ],
+   "base_n_over_physical": [
+    57,
+    57
+   ],
+   "base_max_loading_physical_pct": [
+    415.2,
+    415.2
+   ],
+   "n_outage_causing_new_over_physical": [
+    126,
+    125
+   ],
+   "n_outage_new_over_120_physical": [
+    50,
+    50
+   ],
+   "max_new_loading_physical_pct": [
+    205.4,
+    205.5
+   ],
+   "islanding_total_load_mw": [
+    11867.7,
+    11788.1
+   ],
+   "islanding_n_over_100mw": [
+    3,
+    3
+   ]
+  },
+  "west": {
+   "island": [
+    "west",
+    "west"
+   ],
+   "n_bus": [
+    7467,
+    7438
+   ],
+   "n_bus_full": [
+    7983,
+    7954
+   ],
+   "n_branch": [
+    8876,
+    8835
+   ],
+   "n_outage_evaluated": [
+    6749,
+    6718
+   ],
+   "n_islanding": [
+    2119,
+    2109
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    2464,
+    2455
+   ],
+   "base_n_over_physical": [
+    21,
+    20
+   ],
+   "base_max_loading_physical_pct": [
+    247.8,
+    247.8
+   ],
+   "n_outage_causing_new_over_physical": [
+    246,
+    230
+   ],
+   "n_outage_new_over_120_physical": [
+    55,
+    58
+   ],
+   "max_new_loading_physical_pct": [
+    212.5,
+    212.3
+   ],
+   "islanding_total_load_mw": [
+    32474.5,
+    32438.1
+   ],
+   "islanding_n_over_100mw": [
+    41,
+    40
+   ]
+  },
+  "okinawa": {
+   "island": [
+    "okinawa",
+    "okinawa"
+   ],
+   "n_bus": [
+    94,
+    94
+   ],
+   "n_bus_full": [
+    100,
+    100
+   ],
+   "n_branch": [
+    115,
+    115
+   ],
+   "n_outage_evaluated": [
+    88,
+    88
+   ],
+   "n_islanding": [
+    27,
+    27
+   ],
+   "min_kv": [
+    132.0,
+    132.0
+   ],
+   "n_monitor_physical": [
+    23,
+    23
+   ],
+   "base_n_over_physical": [
+    2,
+    2
+   ],
+   "base_max_loading_physical_pct": [
+    123.4,
+    123.4
+   ],
+   "n_outage_causing_new_over_physical": [
+    0,
+    0
+   ],
+   "n_outage_new_over_120_physical": [
+    0,
+    0
+   ],
+   "max_new_loading_physical_pct": [
+    90.2,
+    90.2
+   ],
+   "islanding_total_load_mw": [
+    1755.0,
+    1755.0
+   ],
+   "islanding_n_over_100mw": [
+    3,
+    3
+   ]
+  }
+ }
+}
