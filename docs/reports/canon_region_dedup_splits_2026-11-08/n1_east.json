@@ -1,0 +1,832 @@
+{
+ "what": "#168 の N-1(実在の線を見張る数え方)で東の新たな過負荷を生む開放が 125 → 145 に増えた内訳",
+ "n_causing": [
+  125,
+  145
+ ],
+ "n_base_over": [
+  57,
+  56
+ ],
+ "n_only_after": 21,
+ "n_only_before": 1,
+ "n_both": 124,
+ "n_only_after_marginal_le_103pct": 19,
+ "n_monitored": [
+  1403,
+  1402
+ ],
+ "n_monitored_lost": 58,
+ "n_monitored_lost_touching_new": 0,
+ "targets": [
+  {
+   "name": "新新田線;佐波線",
+   "from": "tokyo junction 36.2296:139.2272:154",
+   "to": "新岡部変電所 154kV",
+   "n_outages": 10,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 91.55,
+   "base_pct_after": 97.22,
+   "base_over_before": false,
+   "base_over_after": false
+  },
+  {
+   "name": "南葛線;武南線",
+   "from": "美笹変電所 154kV",
+   "to": "鳩ヶ谷変電所 154kV",
+   "n_outages": 4,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 96.22,
+   "base_pct_after": 97.35,
+   "base_over_before": false,
+   "base_over_after": false
+  },
+  {
+   "name": "西水戸線",
+   "from": "tokyo junction 36.4368:140.4493:154",
+   "to": "西水戸変電所 154kV",
+   "n_outages": 3,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 100.5,
+   "base_pct_after": 93.36,
+   "base_over_before": true,
+   "base_over_after": false
+  },
+  {
+   "name": "小松川線",
+   "from": "草加変電所 154kV",
+   "to": "西袋変電所 154kV",
+   "n_outages": 2,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 94.45,
+   "base_pct_after": 95.92,
+   "base_over_before": false,
+   "base_over_after": false
+  },
+  {
+   "name": "野木線 / 八千代線",
+   "from": "tokyo junction 36.1848:139.8798:154",
+   "to": "tokyo junction 36.2339:139.7901:154",
+   "n_outages": 1,
+   "par_before": 4,
+   "par_after": 4,
+   "cap_before_mw": 1066.94,
+   "cap_after_mw": 1066.94,
+   "base_pct_before": 79.85,
+   "base_pct_after": 83.13,
+   "base_over_before": false,
+   "base_over_after": false
+  },
+  {
+   "name": "佐波線;JR時沢岡部線;明乳群馬線",
+   "from": "日立オートモティブ変電所 154kV",
+   "to": "明乳群馬変電所 154kV",
+   "n_outages": 1,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 46.84,
+   "base_pct_after": 52.07,
+   "base_over_before": false,
+   "base_over_after": false
+  },
+  {
+   "name": "南葛線",
+   "from": "新郷変電所 154kV",
+   "to": "鳩ヶ谷変電所 154kV",
+   "n_outages": 1,
+   "par_before": 2,
+   "par_after": 2,
+   "cap_before_mw": 533.47,
+   "cap_after_mw": 533.47,
+   "base_pct_before": 85.8,
+   "base_pct_after": 87.61,
+   "base_over_before": false,
+   "base_over_after": false
+  }
+ ],
+ "only_after": [
+  {
+   "name": "西水戸線",
+   "from": "tokyo junction 36.4368:140.4493:154",
+   "to": "西水戸変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": 498.04,
+   "f0_other_mw": 536.16,
+   "post_max_new_pct": 170.8,
+   "new_over": [
+    {
+     "name": "西水戸線",
+     "from": "tokyo junction 36.4368:140.4493:154",
+     "to": "西水戸変電所 154kV",
+     "base_pct": 93.36,
+     "post_pct": 170.8
+    }
+   ]
+  },
+  {
+   "name": "trafo_500/154kV@pairmed@osm",
+   "from": "新筑波変電所 500kV",
+   "to": "新筑波変電所 154kV",
+   "table": "trafo",
+   "kv": 500.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 1030.6,
+   "f0_other_mw": null,
+   "post_max_new_pct": 109.73,
+   "new_over": [
+    {
+     "name": "小松川線",
+     "from": "草加変電所 154kV",
+     "to": "西袋変電所 154kV",
+     "base_pct": 95.92,
+     "post_pct": 101.65
+    },
+    {
+     "name": "西水戸線",
+     "from": "tokyo junction 36.4368:140.4493:154",
+     "to": "西水戸変電所 154kV",
+     "base_pct": 93.36,
+     "post_pct": 109.73
+    }
+   ]
+  },
+  {
+   "name": "那珂線",
+   "from": "tokyo junction 36.4828:140.4218:275",
+   "to": "新茂木 275kV",
+   "table": "line",
+   "kv": 275.0,
+   "class": "osm_line",
+   "f0_mw": 845.41,
+   "f0_other_mw": 1102.03,
+   "post_max_new_pct": 102.9,
+   "new_over": [
+    {
+     "name": "西水戸線",
+     "from": "tokyo junction 36.4368:140.4493:154",
+     "to": "西水戸変電所 154kV",
+     "base_pct": 93.36,
+     "post_pct": 102.9
+    }
+   ]
+  },
+  {
+   "name": "野木線 / 八千代線",
+   "from": "tokyo junction 36.2339:139.7901:154",
+   "to": "tokyo junction 36.1848:139.8798:154",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": -886.91,
+   "f0_other_mw": -851.95,
+   "post_max_new_pct": 102.85,
+   "new_over": [
+    {
+     "name": "野木線 / 八千代線",
+     "from": "tokyo junction 36.2339:139.7901:154",
+     "to": "tokyo junction 36.1848:139.8798:154",
+     "base_pct": 83.13,
+     "post_pct": 102.85
+    }
+   ]
+  },
+  {
+   "name": "新岡部線;下児玉線",
+   "from": "新岡部変電所 154kV",
+   "to": "tokyo junction 36.1962:139.1742:154",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": 288.79,
+   "f0_other_mw": 280.14,
+   "post_max_new_pct": 102.68,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 102.68
+    }
+   ]
+  },
+  {
+   "name": "佐波線;JR時沢岡部線;明乳群馬線",
+   "from": "明乳群馬変電所 154kV",
+   "to": "日立オートモティブ変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": 277.78,
+   "f0_other_mw": 249.87,
+   "post_max_new_pct": 101.76,
+   "new_over": [
+    {
+     "name": "佐波線;JR時沢岡部線;明乳群馬線",
+     "from": "明乳群馬変電所 154kV",
+     "to": "日立オートモティブ変電所 154kV",
+     "base_pct": 52.07,
+     "post_pct": 101.76
+    }
+   ]
+  },
+  {
+   "name": "trafo_500/275kV@pairmed@osm",
+   "from": "新岡部変電所 500kV",
+   "to": "新岡部変電所 275kV",
+   "table": "trafo",
+   "kv": 500.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 342.96,
+   "f0_other_mw": null,
+   "post_max_new_pct": 101.39,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 101.39
+    }
+   ]
+  },
+  {
+   "name": "trafo_275/66kV@pairmed@osm",
+   "from": "北熊谷変電所 275kV",
+   "to": "北熊谷変電所 66kV",
+   "table": "trafo",
+   "kv": 275.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 331.87,
+   "f0_other_mw": null,
+   "post_max_new_pct": 101.29,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 101.29
+    }
+   ]
+  },
+  {
+   "name": "trafo_154/66kV",
+   "from": "西袋変電所 154kV",
+   "to": "西袋変電所 66kV",
+   "table": "trafo",
+   "kv": 154.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 55.89,
+   "f0_other_mw": null,
+   "post_max_new_pct": 101.17,
+   "new_over": [
+    {
+     "name": "小松川線",
+     "from": "草加変電所 154kV",
+     "to": "西袋変電所 154kV",
+     "base_pct": 95.92,
+     "post_pct": 101.17
+    }
+   ]
+  },
+  {
+   "name": "京北線",
+   "from": "tokyo junction 35.8529:139.717:154",
+   "to": "新郷変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": -264.13,
+   "f0_other_mw": -257.82,
+   "post_max_new_pct": 101.14,
+   "new_over": [
+    {
+     "name": "南葛線",
+     "from": "鳩ヶ谷変電所 154kV",
+     "to": "新郷変電所 154kV",
+     "base_pct": 87.61,
+     "post_pct": 101.14
+    }
+   ]
+  },
+  {
+   "name": "trafo_500/275kV@pairmed@pub",
+   "from": "新坂戸変電所 500kV",
+   "to": "新坂戸変電所 275kV",
+   "table": "trafo",
+   "kv": 500.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 991.68,
+   "f0_other_mw": null,
+   "post_max_new_pct": 101.11,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 101.11
+    }
+   ]
+  },
+  {
+   "name": "trafo_154/66kV",
+   "from": "tokyo_sub_1843 154kV",
+   "to": "tokyo_sub_1843 66kV",
+   "table": "trafo",
+   "kv": 154.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 79.4,
+   "f0_other_mw": null,
+   "post_max_new_pct": 100.87,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.87
+    }
+   ]
+  },
+  {
+   "name": "trafo_500/66kV",
+   "from": "生品変電所 500kV",
+   "to": "生品変電所 66kV",
+   "table": "trafo",
+   "kv": 500.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 77.48,
+   "f0_other_mw": null,
+   "post_max_new_pct": 100.86,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.86
+    }
+   ]
+  },
+  {
+   "name": "東京中線",
+   "from": "tokyo junction 36.0188:139.5593:275",
+   "to": "北東京変電所 275kV",
+   "table": "line",
+   "kv": 275.0,
+   "class": "osm_line",
+   "f0_mw": -1016.65,
+   "f0_other_mw": -988.26,
+   "post_max_new_pct": 100.75,
+   "new_over": [
+    {
+     "name": "南葛線;武南線",
+     "from": "美笹変電所 154kV",
+     "to": "鳩ヶ谷変電所 154kV",
+     "base_pct": 97.35,
+     "post_pct": 100.75
+    }
+   ]
+  },
+  {
+   "name": "新古河線",
+   "from": "栗橋変電所 500kV",
+   "to": "新古河変電所 500kV",
+   "table": "line",
+   "kv": 500.0,
+   "class": "osm_line",
+   "f0_mw": -3730.14,
+   "f0_other_mw": -3579.38,
+   "post_max_new_pct": 100.72,
+   "new_over": [
+    {
+     "name": "南葛線;武南線",
+     "from": "美笹変電所 154kV",
+     "to": "鳩ヶ谷変電所 154kV",
+     "base_pct": 97.35,
+     "post_pct": 100.72
+    }
+   ]
+  },
+  {
+   "name": "trafo_275/66kV@nameplate@osm",
+   "from": "東毛変電所 275kV",
+   "to": "東毛変電所 66kV",
+   "table": "trafo",
+   "kv": 275.0,
+   "class": "trafo_nameplate",
+   "f0_mw": 109.06,
+   "f0_other_mw": 108.11,
+   "post_max_new_pct": 100.68,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.68
+    }
+   ]
+  },
+  {
+   "name": "trafo_154/66kV#43a@推定",
+   "from": "田端変電所",
+   "to": "田端変電所@66kV(#43a)",
+   "table": "trafo",
+   "kv": 154.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 70.63,
+   "f0_other_mw": null,
+   "post_max_new_pct": 100.34,
+   "new_over": [
+    {
+     "name": "南葛線;武南線",
+     "from": "美笹変電所 154kV",
+     "to": "鳩ヶ谷変電所 154kV",
+     "base_pct": 97.35,
+     "post_pct": 100.34
+    }
+   ]
+  },
+  {
+   "name": "0701(小国町—東上越)",
+   "from": "小国町変電所",
+   "to": "東上越変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "disclosure_edge",
+   "f0_mw": 178.3,
+   "f0_other_mw": 184.26,
+   "post_max_new_pct": 100.28,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.28
+    }
+   ]
+  },
+  {
+   "name": "trafo_275/66kV",
+   "from": "練馬変電所 275kV",
+   "to": "練馬変電所 66kV",
+   "table": "trafo",
+   "kv": 275.0,
+   "class": "trafo_heuristic",
+   "f0_mw": 183.89,
+   "f0_other_mw": null,
+   "post_max_new_pct": 100.19,
+   "new_over": [
+    {
+     "name": "南葛線;武南線",
+     "from": "美笹変電所 154kV",
+     "to": "鳩ヶ谷変電所 154kV",
+     "base_pct": 97.35,
+     "post_pct": 100.19
+    }
+   ]
+  },
+  {
+   "name": "tokyo_line_4204",
+   "from": "南十日町変電所",
+   "to": "tokyo_sub_1843 66kV",
+   "table": "line",
+   "kv": 66.0,
+   "class": "osm_line",
+   "f0_mw": -61.08,
+   "f0_other_mw": null,
+   "post_max_new_pct": 100.03,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.03
+    }
+   ]
+  },
+  {
+   "name": "0709(東上越—上越)",
+   "from": "上越変電所@154kV(#43a)",
+   "to": "東上越変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "disclosure_edge",
+   "f0_mw": -161.81,
+   "f0_other_mw": -167.77,
+   "post_max_new_pct": 100.0,
+   "new_over": [
+    {
+     "name": "新新田線;佐波線",
+     "from": "tokyo junction 36.2296:139.2272:154",
+     "to": "新岡部変電所 154kV",
+     "base_pct": 97.22,
+     "post_pct": 100.0
+    }
+   ]
+  }
+ ],
+ "only_before": [
+  {
+   "name": "筑南線 / 筑館線",
+   "from": "中都町四丁目変電所 154kV",
+   "to": "大畑変電所 154kV",
+   "table": "line",
+   "kv": 154.0,
+   "class": "osm_line",
+   "f0_mw": 273.63,
+   "f0_other_mw": 253.86,
+   "post_max_new_pct": 101.08,
+   "new_over": [
+    {
+     "name": "筑南線 / 筑館線",
+     "from": "中都町四丁目変電所 154kV",
+     "to": "大畑変電所 154kV",
+     "base_pct": 51.29,
+     "post_pct": 101.08
+    }
+   ]
+  }
+ ],
+ "synthetic_tie": {
+  "before": [
+   [
+    "南相馬変電所 500kV",
+    "tokyo junction 37.3806:140.8018:500",
+    1738.35
+   ]
+  ],
+  "after": [
+   [
+    "南相馬変電所 500kV",
+    "tokyo junction 37.3579:140.9587:500",
+    0.0
+   ]
+  ]
+ },
+ "flow_275kv_decrease": [
+  {
+   "name": "南相馬変電所~南いわき開閉所線",
+   "from": "南いわき開閉所",
+   "to": "南相馬変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 2323.62,
+   "f0_after": 328.59,
+   "d_abs": -1995.0
+  },
+  {
+   "name": "川内線",
+   "from": "南いわき開閉所",
+   "to": "新いわき開閉所",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -2307.65,
+   "f0_after": -800.37,
+   "d_abs": -1507.3
+  },
+  {
+   "name": "中栃木線",
+   "from": "新今市開閉所",
+   "to": "新栃木変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 950.95,
+   "f0_after": 426.78,
+   "d_abs": -524.2
+  },
+  {
+   "name": "福島東幹線",
+   "from": "新いわき開閉所",
+   "to": "新福島変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 462.1,
+   "f0_after": 122.22,
+   "d_abs": -339.9
+  },
+  {
+   "name": "trafo_500/275kV@nameplate@osm",
+   "from": "新福島変電所 275kV",
+   "to": "新福島変電所 500kV",
+   "kv": 500.0,
+   "table": "trafo",
+   "f0_before": 430.43,
+   "f0_after": 106.72,
+   "d_abs": -323.7
+  },
+  {
+   "name": "新福島変電所~南相馬変電所線",
+   "from": "南相馬変電所 275kV",
+   "to": "新福島変電所 275kV",
+   "kv": 275.0,
+   "table": "line",
+   "f0_before": 336.71,
+   "f0_after": 15.28,
+   "d_abs": -321.4
+  },
+  {
+   "name": "南相馬変電所~二本松市変電所線",
+   "from": "二本松市変電所 275kV",
+   "to": "南相馬変電所 275kV",
+   "kv": 275.0,
+   "table": "line",
+   "f0_before": -756.03,
+   "f0_after": -446.26,
+   "d_abs": -309.8
+  },
+  {
+   "name": "常磐幹線",
+   "from": "tohoku junction 37.8427:140.7503:500",
+   "to": "南相馬変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -690.28,
+   "f0_after": -426.98,
+   "d_abs": -263.3
+  },
+  {
+   "name": "常磐幹線",
+   "from": "tohoku junction 37.8427:140.7503:500",
+   "to": "白石市変電所_4 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 1449.5,
+   "f0_after": 1187.56,
+   "d_abs": -261.9
+  },
+  {
+   "name": "那珂線",
+   "from": "tokyo junction 36.4828:140.4218:275",
+   "to": "新茂木 275kV",
+   "kv": 275.0,
+   "table": "line",
+   "f0_before": 1102.03,
+   "f0_after": 845.41,
+   "d_abs": -256.6
+  },
+  {
+   "name": "trafo_500/275kV@pairmed@osm",
+   "from": "新茂木 275kV",
+   "to": "新茂木 500kV",
+   "kv": 500.0,
+   "table": "trafo",
+   "f0_before": -1098.13,
+   "f0_after": -841.51,
+   "d_abs": -256.6
+  },
+  {
+   "name": "常磐幹線",
+   "from": "白石市変電所_4 500kV",
+   "to": "西仙台変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -1363.68,
+   "f0_after": -1110.42,
+   "d_abs": -253.3
+  }
+ ],
+ "flow_275kv_increase": [
+  {
+   "name": "新茂木線",
+   "from": "新栃木変電所 500kV",
+   "to": "新茂木 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 965.08,
+   "f0_after": 1594.07,
+   "d_abs": 629.0
+  },
+  {
+   "name": "植田変電所~須賀川変電所線",
+   "from": "tohoku junction 36.9859:140.74:275",
+   "to": "須賀川変電所 275kV",
+   "kv": 275.0,
+   "table": "line",
+   "f0_before": -356.5,
+   "f0_after": -573.71,
+   "d_abs": 217.2
+  },
+  {
+   "name": "須賀川変電所~福島変電所線",
+   "from": "福島変電所 275kV",
+   "to": "須賀川変電所 275kV",
+   "kv": 275.0,
+   "table": "line",
+   "f0_before": 13.01,
+   "f0_after": 208.23,
+   "d_abs": 195.2
+  },
+  {
+   "name": "新茂木~益子町変電所線",
+   "from": "川島変電所 500kV",
+   "to": "新茂木 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 217.59,
+   "f0_after": 379.31,
+   "d_abs": 161.7
+  },
+  {
+   "name": "福島幹線",
+   "from": "川島変電所 500kV",
+   "to": "新古河変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -126.85,
+   "f0_after": -282.28,
+   "d_abs": 155.4
+  },
+  {
+   "name": "新古河線",
+   "from": "新古河変電所 500kV",
+   "to": "栗橋変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -3579.38,
+   "f0_after": -3730.14,
+   "d_abs": 150.8
+  },
+  {
+   "name": "新古河線",
+   "from": "埼玉変電所 500kV",
+   "to": "栗橋変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -3459.58,
+   "f0_after": -3608.64,
+   "d_abs": 149.1
+  },
+  {
+   "name": "新古河線",
+   "from": "GCT鴻巣変電所 500kV",
+   "to": "埼玉変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -3273.34,
+   "f0_after": -3418.29,
+   "d_abs": 144.9
+  },
+  {
+   "name": "新古河線",
+   "from": "GCT鴻巣変電所 500kV",
+   "to": "新所沢変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": -3165.95,
+   "f0_after": -3309.44,
+   "d_abs": 143.5
+  },
+  {
+   "name": "新所沢線",
+   "from": "新所沢変電所 500kV",
+   "to": "日高変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 1351.2,
+   "f0_after": 1464.73,
+   "d_abs": 113.5
+  },
+  {
+   "name": "朝日幹線",
+   "from": "越後開閉所 500kV",
+   "to": "関川村変電所 500kV",
+   "kv": 500.0,
+   "table": "line",
+   "f0_before": 1.8,
+   "f0_after": -90.74,
+   "d_abs": 88.9
+  },
+  {
+   "name": "trafo_500/275kV",
+   "from": "越後開閉所 275kV",
+   "to": "越後開閉所 500kV",
+   "kv": 500.0,
+   "table": "trafo",
+   "f0_before": 10.31,
+   "f0_after": -82.22,
+   "d_abs": 71.9
+  }
+ ]
+}
