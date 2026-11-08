@@ -130,6 +130,22 @@ def norm_sub(name) -> str:
     return s
 
 
+# 経路をたどってよい合成の連系タイ。合成タイ(tie)・直流の連系枝(dc_tie・dc)は OCCTO の定義から両端を直線で
+# 結んだ枝で、実在の線ではない(介入#31 で潮流では止めている)。回線数を当てる経路にこれを通すと、実在の線を
+# 飛ばして直線に回線数が付く(2026-11-08: 本四の中国側の端を東岡山に直したら、東岡山〜讃岐の直線が瀬戸大橋の
+# 500 kV 線より短くなり、本四の 2 回線が直線に付いた)。通してよいのは、実在の線の切れ目を代表して通電のまま
+# 残しているタイだけ = src/powerflow/full_from_built.KEEP_LIVE_TIES(同じ集合であることは試験で確かめる。
+# あちらは pandapower を読むので --light から import しない)
+ROUTABLE_TIES = {"東北東京間連系線"}
+
+
+def routable(e: dict) -> bool:
+    """回線数を当てる経路にこの枝を通してよいか(実在の線か、通電のまま残す合成タイ)。"""
+    if e.get("tie") or e.get("dc_tie") or e.get("dc"):
+        return str(e.get("name") or "") in ROUTABLE_TIES
+    return True
+
+
 def kv_class(kv) -> str | None:
     try:
         kv = float(kv)
@@ -562,7 +578,7 @@ class Model:
         if cls not in self._graphs:
             g = nx.MultiGraph()
             for i, e in enumerate(self.edges):
-                if not e.get("main", True):
+                if not e.get("main", True) or not routable(e):
                     continue
                 if kv_ok(kv_src, e.get("kv")):
                     g.add_edge(k5(*e["a"]), k5(*e["b"]), idx=i, weight=self.edge_len[i])

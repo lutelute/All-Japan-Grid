@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -243,9 +244,13 @@ def test_interconnections_ledger():
     keys = {r["ic"] for r in conf if r["ic"]}
     assert keys <= set(today), keys - set(today)
     assert {k for k in today if "フェンス" not in k} <= keys
-    # 本四連系線の中国側は東岡山(モデルの台帳 data/reference/interconnections.yaml の「東山口」は誤り。OCCTO 第 104 回 広域系統整備委員会 資料 2)
+    # 本四連系線の中国側は東岡山(OCCTO 第 104 回 広域系統整備委員会 資料 2)。モデルの台帳
+    # data/reference/interconnections.yaml も同じ(08-19 に「東山口」と書き違えていたのを 2026-11-08 に直した)
     honshi = next(r for r in conf if r["ic"] == "本四連系線")
     assert {e["name"] for e in honshi["ends"]} == {"東岡山変電所", "讃岐変電所"}
+    model = yaml.safe_load((ROOT / "data" / "reference" / "interconnections.yaml").read_text(encoding="utf-8"))
+    route = next(ic["route"] for ic in model["interconnections"] if ic["id"] == "ic_008")
+    assert {route["from_substation_ja"], route["to_substation_ja"]} == {"東岡山変電所", "讃岐変電所"}
 
 
 def test_interconnections_follow_osm_through_converters():

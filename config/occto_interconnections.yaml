@@ -24,8 +24,8 @@
 #       https://www.occto.or.jp/assets/kouikikeitou/seibikeikaku/nakanishi-erea/files/240403_kihounyouken.pdf
 #
 # 中部北陸間(南福光連系所の BTB)は、中部と北陸の線路の端が同じ南福光の点なので線は描かず、変換所の点だけを置く。
-# data/reference/interconnections.yaml(モデルの連系線の台帳)の本四連系線の中国側の端は「東山口変電所」だが、
-# [2] では東岡山変電所。ここでは [2] に従う(モデルの台帳の直しは別に扱う)。
+# 本四連系線の中国側の端は [2] の東岡山変電所。data/reference/interconnections.yaml(モデルの連系線の台帳)は
+# 08-19 に「東山口変電所」と書き違えていたので、2026-11-08 に東岡山へ直した(docs/MODEL_INTERVENTIONS.md の #33 訂正)。
 
 links:
   - ic: 北海道・本州間電力連系設備
