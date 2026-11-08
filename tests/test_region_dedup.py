@@ -179,9 +179,9 @@ def _ab(v):
 
 
 def test_branch_point_of_one_region_splits_the_other_copy():
-    """tokyo は P3 に分岐があって区切り、chubu は通り抜ける。chubu の写しを P3 で区切ってから #58 でまとめる。"""
+    """kansai は P3 に分岐があって区切り、chubu は通り抜ける。chubu の写しを P3 で区切ってから #58 でまとめる。"""
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0), _n(*Q, 66.0)],
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0), _n(*Q, 66.0)],
                   "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6),
                             {"a": list(P[3]), "b": list(Q), "kv": 66.0, "par": 1, "name": "枝"}]},
         "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
@@ -189,39 +189,39 @@ def test_branch_point_of_one_region_splits_the_other_copy():
     out, ls, lh = _run(col, owner=lambda la, lo: "chubu")
     assert ls["n_edges_split"] == 1 and ls["rows"][0]["why"] == ["end"]
     assert _ab(out["chubu"]) == [(P[0], P[3]), (P[3], P[6])]            # 領土の chubu の写しを残し、P3 で区切る
-    assert [e["name"] for e in out["tokyo"]["edges"]] == ["枝"]           # tokyo の写しは落ち、枝は P3 に付いたまま
+    assert [e["name"] for e in out["kansai"]["edges"]] == ["枝"]           # kansai の写しは落ち、枝は P3 に付いたまま
     assert any("_jct_split_" in n["id"] for n in out["chubu"]["nodes"])
     assert lh["n_joints_healed"] == 0
 
 
 def test_split_is_healed_when_nothing_else_needs_it():
-    """tokyo の区切り P3 に何も付かないなら、tokyo の写しが落ちたあと chubu の枝をつなぎ直す(区切る前に戻る)。"""
+    """kansai の区切り P3 に何も付かないなら、kansai の写しが落ちたあと chubu の枝をつなぎ直す(区切る前に戻る)。"""
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
                   "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
         "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
     }
     out, _, lh = _run(col, owner=lambda la, lo: "chubu")
-    assert lh["n_joints_healed"] == 1 and out["tokyo"]["edges"] == []
+    assert lh["n_joints_healed"] == 1 and out["kansai"]["edges"] == []
     assert out["chubu"]["edges"] == [_line(P[0], P[6], 0, 6)]
     assert not any("_jct_split_" in n["id"] for n in out["chubu"]["nodes"])
     assert not any(k.startswith("_") for v in out.values() for x in v["edges"] + v["nodes"] for k in x)
 
 
 def test_truncated_copy_joins_the_longer_copy():
-    """tokyo の写しは P3 で止まる(先の way が取り出しに無い)。重なる所は領土の写しを残し、P3 でつながる。"""
+    """kansai の写しは P3 で止まる(先の way が取り出しに無い)。重なる所は領土の写しを残し、P3 でつながる。"""
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0)], "edges": [_line(P[0], P[3], 0, 3)]},
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0)], "edges": [_line(P[0], P[3], 0, 3)]},
         "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
     }
-    out, _, _ = _run(col, owner=lambda la, lo: "tokyo" if lo < P[3][1] else "chubu")
-    assert _ab(out["tokyo"]) == [(P[0], P[3])] and _ab(out["chubu"]) == [(P[3], P[6])]
+    out, _, _ = _run(col, owner=lambda la, lo: "kansai" if lo < P[3][1] else "chubu")
+    assert _ab(out["kansai"]) == [(P[0], P[3])] and _ab(out["chubu"]) == [(P[3], P[6])]
 
 
 def test_vertex_with_two_voltages_is_not_split():
     """電圧の違う併架の頂点は区切らない(同じ座標に電圧の違う点ができ、潮流計算が変圧器を作るため)。"""
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
                   "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
         "chubu": {"nodes": [_n(*P[0], 154.0), _n(*P[6], 154.0)], "edges": [_line(P[0], P[6], 0, 6, kv=154.0)]},
     }
@@ -232,22 +232,33 @@ def test_vertex_with_two_voltages_is_not_split():
 def test_copies_of_different_islands_are_not_split():
     """区切りの理由になった地域と潮流計算の島が違えば区切らない(周波数の境)。"""
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
                   "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
         "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
     }
-    _, ls = align_copy_splits(col, island_of=lambda la, lo, reg: "east" if reg == "tokyo" else "west")
+    _, ls = align_copy_splits(col, island_of=lambda la, lo, reg: "east" if reg == "kansai" else "west")
     assert ls["n_skipped_island"] == 1 and ls["n_edges_split"] == 0
 
 
 def test_substation_the_line_enters_is_kept():
-    """tokyo の写しは P3 で変電所 S に入り、chubu の写し(S が取り出しに無い)は通り抜ける。区切った点を S に寄せ、
+    """kansai の写しは P3 で変電所 S に入り、chubu の写し(S が取り出しに無い)は通り抜ける。区切った点を S に寄せ、
     継ぎ目に S があるのでつなぎ直さない(変電所の点を分岐点の方へ寄せて消さない。#59 の寄せ先は変電所の点が先)。"""
     S = (35.0008, 137.03)
     col = {
-        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*S, 66.0, sub=1, nid="S")], "edges": [_line(P[0], S, 0, 3)]},
+        "kansai": {"nodes": [_n(*P[0], 66.0), _n(*S, 66.0, sub=1, nid="S")], "edges": [_line(P[0], S, 0, 3)]},
         "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
     }
     out, _, lh = _run(col, owner=lambda la, lo: "chubu")
-    assert _ab(out["chubu"]) == [(P[0], S), (S, P[6])] and out["tokyo"]["edges"] == []
-    assert [n["id"] for n in out["tokyo"]["nodes"]] == ["S"] and lh["n_joints_healed"] == 0
+    assert _ab(out["chubu"]) == [(P[0], S), (S, P[6])] and out["kansai"]["edges"] == []
+    assert [n["id"] for n in out["kansai"]["nodes"]] == ["S"] and lh["n_joints_healed"] == 0
+
+
+def test_copies_of_different_label_islands_are_not_split():
+    """地域の名札の島が違えば(東京と中部)、潮流計算の島が同じでも区切らない(後段の #34 が名札で島を見るため)。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+                  "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    _, ls = align_copy_splits(col, island_of=SAME)
+    assert ls["n_skipped_island"] == 1 and ls["n_edges_split"] == 0

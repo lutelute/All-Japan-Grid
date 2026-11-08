@@ -414,8 +414,11 @@ def align_copy_splits(collected: Dict[str, dict], island_of=None) -> Tuple[Dict[
     区切らない頂点:
       - その頂点を通る枝・そこにある点の、分かる電圧が 2 つ以上(電圧の違う併架。同じ座標に電圧の違う点ができると
         潮流計算の網が変電所の無い所の変圧器を作る)
-      - 区切る地域と、区切りの理由になった地域とで、潮流計算の島が違う(周波数の境。#59 の富士市と同じ。
-        区切ると、島の違う写しが #58 で落ち、島の中の線が切れる)
+      - 区切る地域と、区切りの理由になった地域とで、島が違う(周波数の境)。島は 2 つの見方の両方で見る:
+        潮流計算の島(領土で再属性したあと。#59 の富士市と同じく、区切ると島の違う写しが #58 で落ち、島の中の線が
+        切れる)と、地域の名札の島(ISLANDS。全国のつながり・断片の回収(#34)・ノード衛生が使う)。名札だけで見ると、
+        愛知・静岡の 60 Hz の所の東京の写しを区切って落とすと、残った切れ端を #34 が東の断片として 116 km 先の
+        東清水変電所へつないだ(2026-11-08 の試算)
       - 区切る地域に、もうそこを通る枝のものでない点がある(区切るとその点につながってしまう)
     island_of: (lat, lon, 地域) → 島。既定は #59 と同じ。検査で差し替える。
     Returns: (区切った collected, 帳簿)
@@ -502,7 +505,8 @@ def align_copy_splits(collected: Dict[str, dict], island_of=None) -> Tuple[Dict[
                 if q not in made and (reg, q) in node_at:
                     own_skip.add((reg, q))
                     continue
-                if any(isl(q, r2) != isl(q, reg) for r2 in by_of[(reg, q)]):
+                if any(ISLANDS.get(r2) != ISLANDS.get(reg) or isl(q, r2) != isl(q, reg)
+                       for r2 in by_of[(reg, q)]):
                     island_skip.add((reg, q))
                     continue
                 cuts.append(k)
