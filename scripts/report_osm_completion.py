@@ -72,16 +72,16 @@ def main():
 
     def tower_table(title, c):
         L.append(f"### {title}\n")
-        L.append("| 地域 | 鉄塔 | 番号か名前（OSM） | 番号（推定） | n 基目だけ（推定） | どれも無い | 線の折れ点（推定の鉄塔） |")
-        L.append("|---|---:|---:|---:|---:|---:|---:|")
+        L.append("| 地域 | 鉄塔 | 番号か名前（OSM） | 番号（推定：前後から） | 番号（推定：端まで延ばす） | n 基目だけ（推定） | どれも無い | 線の折れ点（推定の鉄塔） |")
+        L.append("|---|---:|---:|---:|---:|---:|---:|---:|")
         tot = collections.Counter()
         for r in REGIONS:
             x = c.get(r, {})
             tot.update(x)
             L.append(f"| {JA[r]} | {n(x.get('towers', 0))} | {n(x.get('ref_or_name_osm', 0))}（{pct(x.get('ref_or_name_osm', 0), x.get('towers', 0))}） | "
-                     f"{n(x.get('ref_est', 0))} | {n(x.get('ordinal_only', 0))} | {n(x.get('nothing', 0))} | {n(x.get('bends', 0))} |")
+                     f"{n(x.get('ref_est', 0))} | {n(x.get('ref_ext', 0))} | {n(x.get('ordinal_only', 0))} | {n(x.get('nothing', 0))} | {n(x.get('bends', 0))} |")
         L.append(f"| **計** | **{n(tot['towers'])}** | **{n(tot['ref_or_name_osm'])}**（{pct(tot['ref_or_name_osm'], tot['towers'])}） | "
-                 f"**{n(tot['ref_est'])}** | **{n(tot['ordinal_only'])}** | **{n(tot['nothing'])}** | **{n(tot['bends'])}** |\n")
+                 f"**{n(tot['ref_est'])}** | **{n(tot['ref_ext'])}** | **{n(tot['ordinal_only'])}** | **{n(tot['nothing'])}** | **{n(tot['bends'])}** |\n")
         return tot
 
     def line_table(title, c):
