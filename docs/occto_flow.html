@@ -15,6 +15,7 @@
   --bg:#eef1f4; --panel:#f8fafb; --ink:#17212b; --muted:#5b6876; --rule:#d3dae1;
   --land:#dfe5ea; --coast:#b9c4ce; --accent:#1f6feb; --warn:#b42318;
   --l0:#2a9d8f; --l1:#7fb069; --l2:#e9c46a; --l3:#f08a4b; --l4:#d62828; --nocap:#7a8a99;
+  --brg:#7b5ea7;
   --sel:#111827;
   --f-ui:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
   --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -22,11 +23,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0e141b; --panel:#141c25; --ink:#e6edf3; --muted:#93a1b0; --rule:#26323f;
   --land:#1b2530; --coast:#2f3d4c; --accent:#58a6ff; --warn:#ff7b72;
-  --l0:#2ec4b6; --l1:#9ad46b; --l2:#f4d35e; --l3:#ff9f5a; --l4:#ff4d4d; --nocap:#6b7c8d; --sel:#ffffff; color-scheme:dark}}
+  --l0:#2ec4b6; --l1:#9ad46b; --l2:#f4d35e; --l3:#ff9f5a; --l4:#ff4d4d; --nocap:#6b7c8d; --brg:#b9a3e3; --sel:#ffffff; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e141b; --panel:#141c25; --ink:#e6edf3; --muted:#93a1b0; --rule:#26323f;
   --land:#1b2530; --coast:#2f3d4c; --accent:#58a6ff; --warn:#ff7b72;
-  --l0:#2ec4b6; --l1:#9ad46b; --l2:#f4d35e; --l3:#ff9f5a; --l4:#ff4d4d; --nocap:#6b7c8d; --sel:#ffffff; color-scheme:dark}
+  --l0:#2ec4b6; --l1:#9ad46b; --l2:#f4d35e; --l3:#ff9f5a; --l4:#ff4d4d; --nocap:#6b7c8d; --brg:#b9a3e3; --sel:#ffffff; color-scheme:dark}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:14px;line-height:1.55}
 .wrap{display:flex;flex-direction:column;gap:12px;min-height:100%;box-sizing:border-box;
@@ -52,6 +53,10 @@ canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .ramp{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
 .ramp i{display:block;width:26px;height:6px;border-radius:2px}
 .ramp i.dash{height:0;border-top:2px dashed var(--nocap);border-radius:0}
+.ramp i.brg{height:0;border-top:3px dotted var(--brg);border-radius:0}
+.ramp i.icl{height:4px;background:var(--l1);box-shadow:0 0 0 1.5px var(--ink);border-radius:0}
+.ramp i.icl.dc{background:linear-gradient(var(--l1) 0 1.5px,var(--panel) 1.5px 2.5px,var(--l1) 2.5px)}
+.ramp i.cvk{width:8px;height:8px;border-radius:1px;background:var(--panel);box-shadow:inset 0 0 0 2px var(--ink);margin:0 9px}
 .ramp i.dot{width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.55;margin:0 10px}
 .ramp span{font-family:var(--f-num);font-size:11px;color:var(--muted);margin-left:4px}
 .tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;font-size:12.5px;max-width:280px;box-shadow:0 4px 14px rgb(0 0 0 / .18)}
@@ -71,6 +76,7 @@ li.row:hover,li.row.on{background:color-mix(in srgb,var(--accent) 12%,transparen
 .pct{font-family:var(--f-num);font-variant-numeric:tabular-nums;font-size:12.5px;padding:0 6px;border-radius:4px;color:#111}
 .ic{display:grid;gap:7px}
 .icr{display:grid;gap:2px}
+.icr[data-i]{cursor:pointer}
 .icr .top{display:flex;justify-content:space-between;gap:8px;font-size:12.5px}
 .icr .top span:last-child{font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
 .bar{position:relative;height:8px;background:var(--land);border-radius:4px}
@@ -108,7 +114,10 @@ footer p{margin:0 0 4px}
       <div>運用容量に対する潮流</div>
       <div class="ramp" id="ramp"></div>
       <div class="ramp"><i style="background:var(--nocap)"></i><span>容量なし・値なし</span></div>
-      <div class="ramp"><i class="dash"></i><span>点線 = モデルに線の形が無いところ(両端の変電所を結んだ模式)</span></div>
+      <div class="ramp"><i class="dash"></i><span>点線 = モデル・OSM・地理院の地図に線の形が見つからないところ(両端を結んだ模式)</span></div>
+      <div class="ramp"><i class="icl"></i><i class="icl dc"></i><span>連系線(エリアの間、黒い縁。白い中線 = 直流。形は OSM の送電線・海底ケーブル)</span></div>
+      <div class="ramp"><i class="cvk"></i><span>変換所(直流・周波数変換・BTB)</span></div>
+      <div class="ramp"><i class="brg"></i><span>つなぎ = OCCTO の一覧に無いモデルの線(離れた線路が本線とどこでつながるか)</span></div>
       <div class="ramp"><i class="dot"></i><span>変電所・発電所(線路の端)</span></div>
       <div style="color:var(--muted)">太さ = 潮流の大きさ。ドラッグで移動、ホイールかピンチで拡大</div>
     </div>
@@ -148,7 +157,7 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const STOPS = [0, .3, .6, .85, 1];
-let LN = null, TD = null, T = [], L = [], ST = [], ti = 0, sel = -1, hover = -1, playing = null, lastLoad = 0;
+let LN = null, TD = null, T = [], L = [], ST = [], CV = [], ti = 0, sel = -1, hover = -1, hoverCv = -1, playing = null, lastLoad = 0;
 
 // 投影: 経度を cos(36°) で縮めた正距円筒
 const KX = Math.cos(36 * Math.PI / 180);
@@ -184,8 +193,20 @@ function build() {
   L = LN.lines.map(x => ({ ...x, pp: x.p.map(path => path.map(P)), jj: (x.j || []).map(seg => seg.map(P)), v: [] }));
   // 変電所の点(両端の位置。重なりは 1 つに)
   const seen = new Set(); ST = [];
-  LN.lines.forEach(x => (x.s || []).forEach(q => { if (!q) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));
+  LN.lines.forEach(x => (x.s || []).forEach((q, i) => { if (!q || (x.t && x.t[i])) return; const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } }));   // t = T 分岐の端(幹線の上に置いた点。変電所ではないので点を打たない)
   L.forEach(l => byId.set(l.id, l));
+  // 連系線(エリアの間): OSM の送電線・ケーブルの形(端 → 変換所 → 端 の区間ごと)。形の無い区間は両端を結ぶ点線(模式)。
+  // 値は連系線の 5 分値(同じ名前の線は同じ値 = その名前の合計)
+  (LN.ics || []).forEach(x => {
+    const arr = x.k ? (TD.ic || {})[x.k] : null, p = x.p || [];
+    L.push({ ...x, id: 'ic|' + x.n, ic: true, pp: p.map(path => path.map(P)), jj: (p.length ? x.j || [] : [x.s]).map(seg => seg.map(P)),
+             v: arr ? arr.map(e => e ? e[0] : null) : [] });
+    x.s.forEach(q => { const k = q.join(','); if (!seen.has(k)) { seen.add(k); ST.push(P(q)); } });
+  });
+  // 変換所(直流と交流・50 Hz と 60 Hz を変換する所)の点
+  CV = (LN.converters || []).map(c => ({ ...c, xy: P(c.s) }));
+  // つなぎ: OCCTO の一覧だけでは離れる線路から本線の変電所まで、モデルの線をたどった道筋(値なし)
+  (LN.bridges || []).forEach((b, k) => L.push({ ...b, id: 'br|' + k, br: true, n: 'つなぎ(' + b.for.join('・') + ')', pp: b.p.map(path => path.map(P)), jj: [], v: [] }));
   for (const [id, e] of Object.entries(TD.lines)) {
     let l = byId.get(id);
     if (!l) { const [a, n, d] = id.split('|'); l = { id, a, n, d, kv: e.kv, c: null, p: [], pp: [], jj: [] }; L.push(l); byId.set(id, l); }
@@ -196,7 +217,10 @@ function build() {
 
 // 運用容量: 潮流の向きに合う公表値があればそれ、無ければ反対向きの値、それも無ければ最大
 const capDays = () => Object.keys(TD.cap).sort();
+const icAt = (l, i) => (l.k && (TD.ic || {})[l.k] || [])[i] || null;   // [潮流, 運用容量(順), 運用容量(逆、負)]
+const icN = l => L.filter(m => m.ic && m.k === l.k).length;
 function capOf(l, i) {
+  if (l.ic) { const x = icAt(l, i); return x ? { cap: x[0] < 0 ? -x[2] : x[1], f: '', note: '' } : null; }
   const day = (T[i] || '').slice(0, 10), days = capDays();
   const c = (TD.cap[day] || {})[l.id] || (days.length ? (TD.cap[days[days.length - 1]] || {})[l.id] : null);
   if (!c) return null;
@@ -223,18 +247,57 @@ function draw() {
   ctx.fillStyle = css('--panel'); ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = css('--land'); ctx.strokeStyle = css('--coast'); ctx.lineWidth = 0.6;
   land.forEach(r => { ctx.beginPath(); r.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.closePath(); ctx.fill(); ctx.stroke(); });
-  const order = L.map((l, i) => i).filter(i => L[i].pp.length || L[i].jj.length).sort((a, b) => (load(L[a], ti) ?? -1) - (load(L[b], ti) ?? -1));
+  // つなぎ(モデルの線)は下に、点々で
+  ctx.lineCap = 'round'; ctx.setLineDash([0.1, 4.5]);
+  L.forEach((l, i) => { if (!l.br) return; ctx.strokeStyle = i === sel || i === hover ? css('--sel') : css('--brg'); ctx.lineWidth = i === sel || i === hover ? 4 : 2.6; strokePaths(l); });
+  ctx.setLineDash([]);
+  const order = L.map((l, i) => i).filter(i => !L[i].ic && !L[i].br && (L[i].pp.length || L[i].jj.length)).sort((a, b) => (load(L[a], ti) ?? -1) - (load(L[b], ti) ?? -1));
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const i of order) {
     const l = L[i];
     if (i === sel || i === hover) { ctx.strokeStyle = css('--sel'); ctx.lineWidth = width(l.v[ti]) + 4; strokePaths(l); }
     ctx.strokeStyle = col(load(l, ti)); ctx.lineWidth = width(l.v[ti]); strokePaths(l);
   }
+  L.forEach((l, i) => { if (l.ic) strokeIC(l, i === sel || i === hover); });
   // 変電所の点(線の上に小さく)
   ctx.fillStyle = css('--ink'); ctx.globalAlpha = 0.55;
   const rr = Math.max(1.2, Math.min(3, sc / sc0 * 0.9));
   ST.forEach(([x, y]) => { ctx.beginPath(); ctx.arc(sx(x), sy(y), rr, 0, 2 * Math.PI); ctx.fill(); });
   ctx.globalAlpha = 1;
+  // 変換所: 白い四角に黒い縁。拡大したら名前も
+  const z = sc / sc0, q = Math.max(7, Math.min(11, 5 + z * 1.2));
+  CV.forEach((c, k) => {
+    const x = sx(c.xy[0]), y = sy(c.xy[1]), hi = k === hoverCv;
+    ctx.fillStyle = css('--panel'); ctx.strokeStyle = hi ? css('--sel') : css('--ink'); ctx.lineWidth = hi ? 3 : 2;
+    ctx.fillRect(x - q / 2, y - q / 2, q, q); ctx.strokeRect(x - q / 2, y - q / 2, q, q);
+  });
+  if (z >= 2.5) {   // 名前: 右・左・上・下の順に、ほかの名前と重ならない所へ(どこも重なるなら出さない)
+    ctx.font = '600 11.5px ' + (css('--f-ui') || 'sans-serif'); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const boxes = [], h = 14;
+    CV.forEach(c => {
+      const cx = sx(c.xy[0]), cy = sy(c.xy[1]), w = ctx.measureText(c.n).width, d = q / 2 + 4;
+      const at = [[cx + d, cy], [cx - d - w, cy], [cx - w / 2, cy - d - h / 2], [cx - w / 2, cy + d + h / 2]]
+        .find(([x, y]) => !boxes.some(b => x < b[2] && x + w > b[0] && y - h / 2 < b[3] && y + h / 2 > b[1]));
+      if (!at) return;
+      boxes.push([at[0], at[1] - h / 2, at[0] + w, at[1] + h / 2]);
+      ctx.strokeStyle = css('--panel'); ctx.lineWidth = 3; ctx.strokeText(c.n, at[0], at[1]);
+      ctx.fillStyle = css('--ink'); ctx.fillText(c.n, at[0], at[1]);
+    });
+  }
+}
+function strokeIC(l, hi) {
+  const one = path => { ctx.beginPath(); path.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.stroke(); };
+  const c = col(load(l, ti));
+  if (hi) { ctx.strokeStyle = css('--sel'); ctx.lineWidth = 9; l.pp.forEach(one); l.jj.forEach(one); }
+  // 形のある所は実線(黒い縁 + 値の色。直流は白い中線)
+  ctx.strokeStyle = css('--ink'); ctx.lineWidth = 5.5; l.pp.forEach(one);
+  ctx.strokeStyle = c; ctx.lineWidth = 3; l.pp.forEach(one);
+  if (/直流/.test(l.kind || '')) { ctx.strokeStyle = css('--panel'); ctx.lineWidth = 1; l.pp.forEach(one); }
+  // 形の無い区間・変電所までの短いつなぎは破線(模式)
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = css('--ink'); ctx.lineWidth = 4.5; l.jj.forEach(one);
+  ctx.strokeStyle = c; ctx.lineWidth = 2.2; l.jj.forEach(one);
+  ctx.setLineDash([]);
 }
 function strokePaths(l) {
   const one = path => { ctx.beginPath(); path.forEach(([x, y], j) => j ? ctx.lineTo(sx(x), sy(y)) : ctx.moveTo(sx(x), sy(y))); ctx.stroke(); };
@@ -260,25 +323,58 @@ const pct = r => r == null ? '容量なし' : Math.round(r * 100) + '%';
 const hm = t => t ? `${+t.slice(5, 7)}/${+t.slice(8, 10)} ${t.slice(11)}` : '—';
 const area = a => (LN.areas || {})[a] || a;
 const CONF = { A: '名前と両端で照合', B: '両端だけで照合', C: '片端と線名で照合' };
+const SHAPE = {   // モデルの線と照合できなかった線路の形の出どころ(scripts/build_occto_line_shapes.py)
+  osm: '線の形は OSM の送電線(両端の変電所の間を、同じ電圧の線でたどった)',
+  gsi: '線の形は地理院の電子国土基本図の送電線(電圧の区別が無いので、別の線をたどっている場合がある)' };
+function icText(l) {
+  const x = icAt(l, ti), n = icN(l), ar = (l.a || []).map(a => a ? area(a) : '?');
+  const head = `<b>${esc(l.n)}</b> <span style="color:var(--muted)">連系線・${esc(l.kind)}</span><br>`;
+  const val = !l.k ? 'この線だけの値は OCCTO の 5 分値に無い(中部・北陸・関西の「フェンス」= 複数の連系線の合成の値だけ)<br>'
+    : x ? `潮流 <b style="font-family:var(--f-num)">${fmt(x[0])} MW</b>(正: ${esc(ar[0])} → ${esc(ar[1])})<br>`
+      + `運用容量 順 ${fmt(x[1])}・逆 ${fmt(-x[2])} MW → ${pct(load(l, ti))}<br>` : 'この時刻の値なし<br>';
+  const cvs = CV.filter(c => (c.links || []).includes(l.n)).map(c => c.n);
+  const shape = (l.p || []).length ? `線の形は OSM の送電線・ケーブル(端 → 変換所 → 端 の区間ごとにたどった)${l.jj.length ? '。破線は形の無い所(模式)' : ''}`
+    : '線は両端を結んだ模式';
+  return head + val + (cvs.length ? `変換所: ${esc(cvs.join('・'))}<br>` : '')
+    + `<span style="color:var(--muted)">${l.k ? `値は OCCTO の連系線「${esc(l.k)}」${n > 1 ? `(${n} 本の合計。同じ名前の線は同じ値)` : ''}。` : ''}`
+    + `${shape}。端の出典: ${esc(l.src)}</span>`;
+}
+function cvText(c) {
+  const kind = { 直流: '直流と交流を変換する変換所', 周波数変換: '50 Hz と 60 Hz を変換する周波数変換所', BTB: '交流を直流にして、また交流に戻して結ぶ連系所(BTB)' }[c.kind] || c.kind;
+  return `<b>${esc(c.n)}</b> <span style="color:var(--muted)">${esc(kind)}</span><br>${esc(c.note)}<br>`
+    + ((c.links || []).length ? `連系線: ${esc(c.links.join('・'))}<br>` : '')
+    + `<span style="color:var(--muted)">位置は OSM(${esc(c.ref)})</span>`;
+}
+function nearestCv(mx, my) {
+  let best = -1, bd = 9 * 9;
+  CV.forEach((c, k) => { const dx = sx(c.xy[0]) - mx, dy = sy(c.xy[1]) - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = k; } });
+  return best;
+}
 function lineText(l) {
+  if (l.ic) return icText(l);
+  if (l.br) return `<b>つなぎ</b> <span style="color:var(--muted)">モデルの線・${esc(l.kv.join('・'))} kV・${l.km} km</span><br>`
+    + `${esc(l.for.join('・'))} を本線の変電所とつなぐ道筋。OCCTO の地内基幹の一覧には無い線${l.via.length ? `(${esc(l.via.join('・'))})` : ''}を通る。<br>`
+    + `<span style="color:var(--muted)">潮流の値は無い。モデルの線を、電圧の低い線ほど遠いとみなしてたどった最短の道筋で、実際に潮流が通る道とは限らない</span>`;
   const r = load(l, ti), c = capOf(l, ti);
   return `<b>${esc(l.n)}</b> <span style="color:var(--muted)">${esc(area(l.a))}・${l.kv} kV</span><br>`
     + `潮流 <b style="font-family:var(--f-num)">${fmt(l.v[ti])} MW</b>(正: ${esc(l.d)})<br>`
     + `運用容量 ${c ? fmt(c.cap) + ' MW' : '—'} → ${pct(r)}${c && c.f ? `(${esc(c.f)}${c.note ? '・' + c.note : ''})` : ''}<br>`
-    + `<span style="color:var(--muted)">${l.pp.length ? (CONF[l.c] || '') + (l.jj.length ? '・点線はモデルに線の形が無いところ(模式)' : '') : l.jj.length ? '線の形がモデルに無いので、両端の変電所を点線で結んだ(位置は模式・#141)' : '地図に描けない線路(#141)'}</span>`;
+    + `<span style="color:var(--muted)">${l.pp.length ? (SHAPE[l.g] || CONF[l.c] || '') + (l.gf ? `・モデルの線の切れ目 ${l.gf} か所を OSM の送電線で埋めた` : '') + (l.jj.length ? '・点線は線の形が見つからないところ(模式)' : '') : l.jj.length ? '線の形がモデルに無いので、両端の変電所を点線で結んだ(位置は模式・#141)' + (l.t ? '。T 分岐の端は分岐する先の幹線の上に置いた' : '') : '地図に描けない線路(#141)'}</span>`;
 }
 function showDetail() {
   const box = $('detail');
   if (sel < 0 || !L[sel]) { box.innerHTML = '<span class="k">地図の線か、上の一覧を押すと出ます</span>'; return; }
   const l = L[sel], n = T.length, w = 300, h = 70;
+  if (l.br) { box.innerHTML = `<div>${lineText(l)}</div>`; return; }
   const vs = T.map((_, i) => l.v[i] ?? null);
-  const caps = T.map((_, i) => (capOf(l, i) || {}).cap || 0);
-  const mx = Math.max(1, ...vs.map(v => Math.abs(v ?? 0)), ...caps);
+  const caps = T.map((_, i) => l.ic ? ((icAt(l, i) || [])[1] || 0) : (capOf(l, i) || {}).cap || 0);
+  const capsDn = l.ic ? T.map((_, i) => -((icAt(l, i) || [])[2] || 0)) : caps;   // 連系線は逆向きの容量が別
+  const mx = Math.max(1, ...vs.map(v => Math.abs(v ?? 0)), ...caps, ...capsDn);
   const X = i => (n > 1 ? i / (n - 1) * w : 0).toFixed(1);
   const y = v => (h / 2 - (v / mx) * (h / 2 - 4)).toFixed(1);
   const pts = vs.map((v, i) => v == null ? null : `${X(i)},${y(v)}`).filter(Boolean).join(' ');
-  const capPts = s => caps.map((c, i) => c ? `${X(i)},${y(s * c)}` : null).filter(Boolean).join(' ');
-  const capl = caps.some(Boolean) ? `<polyline points="${capPts(1)}" fill="none" stroke="var(--l4)" stroke-dasharray="3 3" stroke-width="1"/><polyline points="${capPts(-1)}" fill="none" stroke="var(--l4)" stroke-dasharray="3 3" stroke-width="1"/>` : '';
+  const capPts = s => (s > 0 ? caps : capsDn).map((c, i) => c ? `${X(i)},${y(s * c)}` : null).filter(Boolean).join(' ');
+  const capl = caps.some(Boolean) || capsDn.some(Boolean) ? `<polyline points="${capPts(1)}" fill="none" stroke="var(--l4)" stroke-dasharray="3 3" stroke-width="1"/><polyline points="${capPts(-1)}" fill="none" stroke="var(--l4)" stroke-dasharray="3 3" stroke-width="1"/>` : '';
   const d1 = T.findIndex(t => t.slice(0, 10) !== T[0].slice(0, 10));
   const dayl = d1 > 0 ? `<line x1="${X(d1)}" x2="${X(d1)}" y1="0" y2="${h}" stroke="var(--rule)" stroke-width="1"/>` : '';
   box.innerHTML = `<div>${lineText(l)}</div>
@@ -290,14 +386,14 @@ function showDetail() {
     <span class="k">${hm(T[0])} 〜 ${hm(T[n - 1])}${d1 > 0 ? '(縦の細線が日付の変わり目)' : ''}。点線は運用容量</span>`;
 }
 function side() {
-  const have = L.map((l, i) => i).filter(i => L[i].v[ti] != null);
+  const have = L.map((l, i) => i).filter(i => !L[i].ic && !L[i].br && L[i].v[ti] != null);
   const rs = have.map(i => [i, load(L[i], ti)]).filter(([, r]) => r != null).sort((a, b) => b[1] - a[1]);
   $('s-n').textContent = have.length;
   $('s-80').textContent = rs.filter(([, r]) => r >= .8).length;
   $('s-max').textContent = rs.length ? pct(rs[0][1]) : '—';
   $('top').innerHTML = rs.slice(0, 10).map(([i, r]) => {
     const l = L[i];
-    return `<li class="row${i === sel ? ' on' : ''}" tabindex="0" data-i="${i}"><span class="nm">${esc(l.n)}<em>${esc(area(l.a))}・${l.kv}kV${l.pp.length ? '' : '・地図に無い'}</em></span><span class="pct" style="background:${col(r)}">${pct(r)}</span></li>`;
+    return `<li class="row${i === sel ? ' on' : ''}" tabindex="0" data-i="${i}"><span class="nm">${esc(l.n)}<em>${esc(area(l.a))}・${l.kv}kV${l.pp.length ? '' : l.jj.length ? '・点線(模式)' : '・地図に無い'}</em></span><span class="pct" style="background:${col(r)}">${pct(r)}</span></li>`;
   }).join('');
   $('top').querySelectorAll('li').forEach(li => {
     const go = () => { sel = +li.dataset.i; draw(); side(); showDetail(); };
@@ -306,14 +402,19 @@ function side() {
   const ics = Object.entries(TD.ic || {});
   $('ic').innerHTML = ics.length ? ics.map(([nm, arr]) => {
     const x = arr[ti];
-    if (!x) return `<div class="icr"><div class="top"><span>${esc(nm)}</span><span>—</span></div></div>`;
+    const at = L.findIndex(l => l.ic && l.k === nm), go = at >= 0 ? ` data-i="${at}" tabindex="0" role="button"` : '';
+    if (!x) return `<div class="icr"${go}><div class="top"><span>${esc(nm)}</span><span>—</span></div></div>`;
     const [fl, cf, cr] = x, sp = (cf - cr) || 1;
     const zero = (-cr) / sp * 100;
     const end = Math.max(0, Math.min(100, zero + fl / sp * 100));   // 容量を超えたら端で止める
     const a = Math.min(zero, end), b = Math.abs(end - zero);
-    return `<div class="icr"><div class="top"><span>${esc(nm)}</span><span>${fmt(fl)} MW${fl > cf || fl < cr ? ' ⚠ 容量超え' : ''}</span></div>
+    return `<div class="icr"${go}><div class="top"><span>${esc(nm)}</span><span>${fmt(fl)} MW${fl > cf || fl < cr ? ' ⚠ 容量超え' : ''}</span></div>
       <div class="bar" title="逆 ${fmt(cr)} 〜 順 ${fmt(cf)} MW"><span class="z" style="left:${zero}%"></span><span class="f" style="left:${a}%;width:${Math.max(b, .5)}%"></span></div></div>`;
   }).join('') : '<span class="k" style="color:var(--muted)">この回は取れなかった</span>';
+  $('ic').querySelectorAll('[data-i]').forEach(el => {
+    const go = () => { sel = +el.dataset.i; draw(); side(); showDetail(); };
+    el.onclick = go; el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+  });
 }
 function setTime(i) { ti = Math.max(0, Math.min(T.length - 1, i)); $('t').value = ti; $('clock').textContent = hm(T[ti]); draw(); side(); showDetail(); }
 
@@ -325,13 +426,24 @@ function status() {
 }
 function foot() {
   const nDraw = LN.lines.filter(l => l.p.length).length, nSch = LN.lines.filter(l => !l.p.length && (l.j || []).length).length;
+  const nOsm = LN.lines.filter(l => l.g === 'osm').length, nGsi = LN.lines.filter(l => l.g === 'gsi').length, sh = LN.shapes || {};
   $('foot').innerHTML = `<p>出典: ${esc(TD.source)}(${esc(TD.days[0])}〜${esc(TD.days[TD.days.length - 1])})を加工して作成。`
     + `原典は <a href="https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login">OCCTO 系統情報サービス</a>。毎時取り直して載せている。時刻は公表の表記のまま。</p>`
-    + `<p>線の形は All-Japan-Grid のモデルの線で、OCCTO の線路の両端の変電所から照合した(${LN.lines.length} 線路のうち ${nDraw} は形あり、`
+    + `<p>線の形は All-Japan-Grid のモデルの線で、OCCTO の線路の両端の変電所から照合した(${LN.lines.length} 線路のうち ${nDraw} は形あり`
+    + `${nOsm + nGsi ? `(モデルの線と照合できなかった ${nOsm + nGsi} 本は OSM ${nOsm}・地理院 ${nGsi} の送電線の形、モデルの線の切れ目 ${sh.gaps || 0} か所も OSM で埋めた)` : ''}、`
     + `${nSch} は両端の変電所を結ぶ点線だけ、残り ${LN.lines.length - nDraw - nSch} は変電所の位置が分からず一覧にだけ出る)。`
     + `線は両端の変電所から描き始めて終え、モデルの線が切れているところは点線でつないだ(点線の位置は模式)。`
     + `点は線路の端の変電所・発電所。理由と直し方は <a href="https://github.com/lutelute/All-Japan-Grid/issues/141">#141</a>。`
     + `運用容量は同じ日の実績を線路名で突き合わせ、潮流の向きに合う値があればそれ、無ければ公表されている値を使った。</p>`
+    + `<p>エリアの間の連系線(黒い縁の線、${(LN.ics || []).length} 本)は、端の変電所から変換所を通って反対の端までの区間ごとに、`
+    + `OSM の送電線・ケーブル(直流の線、津軽海峡・紀伊水道の海底ケーブル、青函トンネルの中のケーブルを含む)をたどった形`
+    + `(${(LN.shapes || {}).ic_legs || 0} 区間)。白い中線は直流。四角は変換所(${CV.length} か所。南福光連系所は中部と北陸の線路の端が同じ所なので点だけ)。`
+    + `端・変換所と出典は <a href="https://github.com/lutelute/All-Japan-Grid/blob/main/config/occto_interconnections.yaml">config/occto_interconnections.yaml</a>。`
+    + `色は連系線の 5 分値の、潮流の向きの運用容量に対する割合。1 つの値が 2 本以上の合計のもの(北海道本州・東北東京・FC・関西中国)は同じ色。`
+    + `三重東近江線・越前嶺南線は 5 分値にその線だけの値が無い(中部・北陸・関西のフェンス = 合成の値だけ)ので「値なし」の色。</p>`
+    + `<p>紫の点々(つなぎ、${(LN.bridges || []).length} 本)は、OCCTO の地内基幹の一覧にほかとつなぐ線路が無い所(東上越幹線・北与野線など)から、`
+    + `いちばん近い本線の変電所までのモデルの線(OCCTO の一覧に無い 110〜500 kV の線)。電圧の低い線ほど遠いとみなした最短の道筋で、値は無い。</p>`
+    + (sh.source ? `<p>線の形の一部: ${esc(sh.source)}。点線が残るのは、OSM にも地理院の地図にも線が無いところ(名古屋・那覇・東京・大阪の都心の地中ケーブルなど)。</p>` : '')
     + `<p>研究のための表示で、運用の判断には使わないでください。</p>`;
 }
 
@@ -395,19 +507,23 @@ cv.addEventListener('pointermove', e => {
   if (pinch && touches.size === 2) { const [a, b] = [...touches.values()]; zoomTo(pinch.sc * gap(a, b) / pinch.d, pinch.cx, pinch.cy, pinch); return; }
   const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
   if (drag) { const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true; ox = drag.ox + dx; oy = drag.oy + dy; draw(); return; }
-  const i = nearest(mx, my), tip = $('tip');
-  if (i !== hover) { hover = i; draw(); }
-  if (i < 0) { tip.hidden = true; return; }
-  tip.innerHTML = lineText(L[i]); tip.hidden = false;
+  const k = nearestCv(mx, my), i = k >= 0 ? -1 : nearest(mx, my), tip = $('tip');
+  if (i !== hover || k !== hoverCv) { hover = i; hoverCv = k; draw(); }
+  if (i < 0 && k < 0) { tip.hidden = true; return; }
+  tip.innerHTML = k >= 0 ? cvText(CV[k]) : lineText(L[i]); tip.hidden = false;
   tip.style.left = Math.max(4, Math.min(mx + 14, W - 290)) + 'px'; tip.style.top = Math.max(4, Math.min(my + 14, H - 110)) + 'px';
 });
 cv.addEventListener('pointerup', e => {
   const wasPinch = touches.size === 2; lift(e);
   cv.style.cursor = 'grab';
-  if (TD && drag && !drag.moved && !wasPinch) { const r = cv.getBoundingClientRect(); sel = nearest(e.clientX - r.left, e.clientY - r.top); side(); showDetail(); draw(); }
+  if (TD && drag && !drag.moved && !wasPinch) {
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, k = nearestCv(mx, my);
+    const link = k >= 0 ? (CV[k].links || [])[0] : null;   // 変換所を押したら、その連系線を選ぶ
+    sel = k >= 0 ? (link ? L.findIndex(l => l.ic && l.n === link) : -1) : nearest(mx, my); side(); showDetail(); draw();
+  }
   drag = null;
 });
-cv.addEventListener('pointerleave', () => { $('tip').hidden = true; if (hover >= 0) { hover = -1; draw(); } });
+cv.addEventListener('pointerleave', () => { $('tip').hidden = true; if (hover >= 0 || hoverCv >= 0) { hover = -1; hoverCv = -1; draw(); } });
 cv.addEventListener('wheel', e => {
   e.preventDefault(); const r = cv.getBoundingClientRect();
   zoomTo(sc * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top, { sc, ox, oy });

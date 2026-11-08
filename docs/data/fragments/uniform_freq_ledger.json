@@ -2,11 +2,11 @@
  "note": "介入#38 の正典化(2026-09-03)。座標の県の周波数が一意で、領土エリアの周波数と一致するノードだけを再属性する(混在県は #42 の担当)。復元=本台帳 flips の to→from 逆再生 + all.json.pre_freqfix.bak",
  "marker": "intervention38",
  "by_dir": {
-  "chubu->tokyo": 218,
+  "chubu->tokyo": 204,
   "tokyo->chubu": 3
  },
- "cross_edges_before": 90,
- "cross_edges_after": 52,
+ "cross_edges_before": 74,
+ "cross_edges_after": 47,
  "flips": [
   {
    "id": "tokyo_jct_34.9285:137.5552:0",
@@ -43,24 +43,6 @@
    "to": "tokyo",
    "lat": 35.62605,
    "lon": 138.56827
-  },
-  {
-   "id": "chubu_jct_35.6887:138.4984:66",
-   "name": "chubu junction 35.6887:138.4984:66",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.68871,
-   "lon": 138.49841
-  },
-  {
-   "id": "chubu_jct_35.6878:138.4972:66",
-   "name": "chubu junction 35.6878:138.4972:66",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.68784,
-   "lon": 138.49722
   },
   {
    "id": "chubu_jct_35.708:138.9071:500",
@@ -286,24 +268,6 @@
    "to": "tokyo",
    "lat": 35.27556,
    "lon": 139.16752
-  },
-  {
-   "id": "chubu_jct_35.7049:138.7209:0",
-   "name": "chubu junction 35.7049:138.7209:0",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.70491,
-   "lon": 138.72095
-  },
-  {
-   "id": "chubu_jct_35.7128:138.719:0",
-   "name": "chubu junction 35.7128:138.719:0",
-   "pref": "山梨県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 35.71283,
-   "lon": 138.71899
   },
   {
    "id": "chubu_jct_35.7865:138.3971:66",
@@ -783,42 +747,6 @@
    "lon": 139.05818
   },
   {
-   "id": "chubu_jct_36.6033:139.0495:66",
-   "name": "chubu junction 36.6033:139.0495:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.60327,
-   "lon": 139.04948
-  },
-  {
-   "id": "chubu_jct_36.6034:139.0494:66",
-   "name": "chubu junction 36.6034:139.0494:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.60337,
-   "lon": 139.04936
-  },
-  {
-   "id": "chubu_jct_36.6022:139.0467:154",
-   "name": "chubu junction 36.6022:139.0467:154",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.60218,
-   "lon": 139.04668
-  },
-  {
-   "id": "chubu_jct_36.6026:139.0463:154",
-   "name": "chubu junction 36.6026:139.0463:154",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.60263,
-   "lon": 139.04633
-  },
-  {
    "id": "chubu_jct_36.6408:139.0512:66",
    "name": "chubu junction 36.6408:139.0512:66",
    "pref": "群馬県",
@@ -1017,24 +945,6 @@
    "lon": 138.89581
   },
   {
-   "id": "chubu_jct_36.4158:138.7886:66",
-   "name": "chubu junction 36.4158:138.7886:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.41582,
-   "lon": 138.78856
-  },
-  {
-   "id": "chubu_jct_36.4155:138.7877:66",
-   "name": "chubu junction 36.4155:138.7877:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.4155,
-   "lon": 138.78769
-  },
-  {
    "id": "chubu_jct_36.5722:138.7333:66",
    "name": "chubu junction 36.5722:138.7333:66",
    "pref": "群馬県",
@@ -1150,24 +1060,6 @@
    "to": "tokyo",
    "lat": 36.55065,
    "lon": 138.61202
-  },
-  {
-   "id": "chubu_jct_36.6019:138.6299:66",
-   "name": "chubu junction 36.6019:138.6299:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.60191,
-   "lon": 138.62987
-  },
-  {
-   "id": "chubu_jct_36.5998:138.6313:66",
-   "name": "chubu junction 36.5998:138.6313:66",
-   "pref": "群馬県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.59982,
-   "lon": 138.63135
   },
   {
    "id": "chubu_jct_36.3475:138.9541:66",
@@ -1593,24 +1485,6 @@
    "lon": 139.09548
   },
   {
-   "id": "chubu_jct_36.0309:139.0828:66",
-   "name": "chubu junction 36.0309:139.0828:66",
-   "pref": "埼玉県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.03091,
-   "lon": 139.08281
-  },
-  {
-   "id": "chubu_jct_36.0306:139.0827:66",
-   "name": "chubu junction 36.0306:139.0827:66",
-   "pref": "埼玉県",
-   "from": "chubu",
-   "to": "tokyo",
-   "lat": 36.03062,
-   "lon": 139.08274
-  },
-  {
    "id": "chubu_jct_36.0402:139.0683:66",
    "name": "chubu junction 36.0402:139.0683:66",
    "pref": "埼玉県",
@@ -2000,8 +1874,8 @@
  ],
  "runs": [
   {
-   "added": 221,
-   "total": 221
+   "added": 207,
+   "total": 207
   }
  ]
 }

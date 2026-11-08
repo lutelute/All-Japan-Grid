@@ -429,6 +429,40 @@ def infer_numbers(seq: List[int], is_tower, num_of) -> Dict[int, int]:
     return out
 
 
+def extend_numbers(seq: List[int], is_tower, num_of) -> Dict[int, Tuple[int, int, int]]:
+    """並び seq の両端の、番号の無い鉄塔に、番号のある鉄塔から番号を延ばす(2026-11-07)。
+
+    延ばすのは、番号のある鉄塔が 2 基以上あり、どの隣り合う 2 基のあいだも「1 基ごとに番号が 1 つずつ増える
+    (どこも減る)」とそろう並びだけ(向きと間隔がそろう = 数え方がこの並びに沿っている根拠)。番号が 1 より
+    小さくなる所では止める。あいだの鉄塔は infer_numbers が埋めるので、ここは外側(一番端の番号のある鉄塔より外)だけ。
+    返り値: {鉄塔: (番号, 延ばした元の鉄塔, 元から何基先か)}
+    """
+    tw = []
+    for n in seq:
+        if is_tower(n) and (not tw or tw[-1] != n):
+            tw.append(n)
+    known = [(i, num_of(n)) for i, n in enumerate(tw) if num_of(n) is not None]
+    if len(known) < 2:
+        return {}
+    steps = {(n2 - n1) / (i2 - i1) for (i1, n1), (i2, n2) in zip(known, known[1:])}
+    if steps not in ({1.0}, {-1.0}):
+        return {}
+    step = int(steps.pop())
+    out: Dict[int, Tuple[int, int, int]] = {}
+    (i0, n0), (i1, n1) = known[0], known[-1]
+    for i in range(i0 - 1, -1, -1):              # 前の端へ
+        num = n0 - step * (i0 - i)
+        if num < 1:
+            break
+        out[tw[i]] = (num, tw[i0], i0 - i)
+    for i in range(i1 + 1, len(tw)):              # 後ろの端へ
+        num = n1 + step * (i - i1)
+        if num < 1:
+            break
+        out[tw[i]] = (num, tw[i1], i - i1)
+    return out
+
+
 def is_dc(tags: dict) -> bool:
     return str(tags.get("frequency") or "").strip() == "0" or "dc" in str(tags.get("current") or "").lower()
 

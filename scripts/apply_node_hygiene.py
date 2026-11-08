@@ -21,6 +21,12 @@ tokyo対応物(同名変電所/junction)を持つ=**23ノード全部が二重�
   4. 名前つきノードが未解決で残る断片 → **断片ごとスキップ**(要人手レビュー)
   5. 影響ペアの余剰エッジdedup(同一無向k5ペアの重複オブジェクトを1本へ・
      path/name保持を優先)と、リマップで生じた自己ループ削除
+  6. (追記 2026-11-09)線の上の双子: 完全双子が 1 つしかなくゲートを通らない断片でも、残りの点が
+     双子の島の本系統の線の頂点の上の分岐点で、断片の線がすべて双子の島の線の上にあれば、同じ線を
+     2 つの地域が取り出した写しの切れ端とみなし、点と線を消す(混在県は付け替えをしないので消す)。
+     #58 のあと、佐久の勝間~小海町変電所線の東京の写しが東の 4 バスの切れ端として残り、中部の
+     水力 3 件が東にも付いた(docs/reports/canon_region_dedup_2026-11-07.md「佐久の水力と小諸の太陽光」)。
+     無効化: --no-on-path-twins / 環境変数 AJG_HYGIENE_ON_PATH=0
 
 無効化(③): docs/data/fragments/node_hygiene_ledger.json に削除ノード全量・
 リマップ対・再帰属・削除エッジ全量を記録(逆再生で復元可能)。
@@ -44,6 +50,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 import sys
 import unicodedata
@@ -59,6 +66,8 @@ ISLAND_OF = {"hokkaido": "hokkaido", "tohoku": "east", "tokyo": "east",
              "chugoku": "west", "shikoku": "west", "kyushu": "west",
              "okinawa": "okinawa"}
 MATCH_M = 150.0   # 近傍双子の許容距離(m)。c1実測: 名前つき最大117m・junction145m
+# #35 の追記(2026-11-09): 線の上の双子。docs/reports/canon_region_dedup_2026-11-07.md の「佐久の水力と小諸の太陽光」
+ON_PATH_DEFAULT = (os.environ.get("AJG_HYGIENE_ON_PATH", "1") == "1")
 # 介入#42 の既定。採用ゲート(docs/reports/mixed_pref_gate_2026-09-02.md)の結果で決める:
 #   合格 → True(STEPS/Snakefile は明示 --mixed-pref も渡す) / 不合格 → False
 MIXED_PREF_DEFAULT = True    # 採用 2026-09-02(ゲート全合格・west slack -291MW)
@@ -130,6 +139,11 @@ def main() -> int:
                     default=True,
                     help="介入#38 の正典化(一意周波数県の跨ぎラベルを正典へ焼く)。"
                          "既定ON・--no-freq-fix で無効化(回帰比較用)")
+    ap.add_argument("--on-path-twins", action=argparse.BooleanOptionalAction,
+                    default=ON_PATH_DEFAULT,
+                    help="#35 の追記(2026-11-09): 線の上の双子。完全双子が 1 つしかない断片でも、"
+                         "残りの点が双子の島の線の頂点の上の分岐点で、断片の線がすべて双子の島の線の上に"
+                         "あれば消す。--no-on-path-twins / 環境変数 AJG_HYGIENE_ON_PATH=0 で無効化")
     args = ap.parse_args()
 
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
@@ -174,6 +188,51 @@ def main() -> int:
                         best = (d, m)
         return best
 
+    vert_of = {}
+
+    def twin_vertices(tw):
+        """双子の島の本系統の線の頂点(k5)の集合。"""
+        if tw not in vert_of:
+            ks, s = main_of[tw], set()
+            for e in edges:
+                if e.get("a") and e.get("b") and k5(*e["a"]) in ks and k5(*e["b"]) in ks:
+                    s.update(k5(*q) for q in (e.get("path") or [e["a"], e["b"]]))
+            vert_of[tw] = s
+        return vert_of[tw]
+
+    def on_path_plan(isl, ci, comp, keys, twin_isl):
+        """#35 の追記(2026-11-09): 線の上の双子。
+
+        完全双子が足りずにゲートを通らない断片でも、
+          - 完全双子(同じ座標に双子の島の本系統の点)が 1 つ以上あり、
+          - 残りの点がすべて、双子の島に点の無い分岐点で、双子の島の本系統の線の頂点の上にあり、
+          - 断片の線(分岐点に付く線)の頂点がすべて、双子の島の本系統の線の頂点の上にある
+        なら、同じ線を 2 つの地域が取り出した写しの切れ端とみなし、点と線を消す。
+        混在県では分岐点の地域の付け替えをしない(#38 の守り)ので、付け替えでなく消す。
+        完全双子どうしを結ぶ線があるときは、消すと双子の島に新しいつながりができうるので扱わない。
+        例: 佐久の勝間~小海町変電所線の東京の写し(#58 のあと、完全双子が 1 つになって残った)。"""
+        tv = twin_vertices(twin_isl)
+        X = {k for k in comp if k in main_of[twin_isl]}
+        J = set(comp) - X
+        if not X or not J:
+            return None
+        if not all(is_junction(keys[k]) and k in tv and k not in keys_of[twin_isl] for k in J):
+            return None
+        F = []
+        for e in edges:
+            if not (e.get("a") and e.get("b")):
+                continue
+            ka, kb = k5(*e["a"]), k5(*e["b"])
+            if ka in X and kb in X and ka != kb:
+                return None
+            if ka in J or kb in J:
+                F.append(e)
+        if not F or not all(all(k5(*q) in tv for q in (e.get("path") or [e["a"], e["b"]])) for e in F):
+            return None
+        return {"island": isl, "comp": ci, "twin_island": twin_isl, "n_nodes": len(comp),
+                "drops": [keys[k] for k in comp], "remaps": [], "reattrs": [],
+                "drop_edges": F, "on_path": [keys[k] for k in J]}
+
     plans, skipped = [], []
     for isl in islands:
         keys, comps = keys_of[isl], comps_of[isl]
@@ -190,6 +249,10 @@ def main() -> int:
             frac = n_exact / len(comp)
             # screen と同じ suspect ゲート(全ノード双子 or frac>=0.2&n>=2)
             if not (n_exact == len(comp) or (frac >= 0.2 and n_exact >= 2)):
+                if args.on_path_twins:
+                    p = on_path_plan(isl, ci, comp, keys, twin_isl)
+                    if p is not None:
+                        plans.append(p)
                 continue
             drops, remaps, reattrs, blocked = [], [], [], []
             for k in comp:
@@ -224,7 +287,9 @@ def main() -> int:
     for p in plans:
         print(f"  [{p['island']}] comp{p['comp']:>4} {p['n_nodes']:>3}ノード "
               f"→ {p['twin_island']}: drop={len(p['drops'])} "
-              f"remap={len(p['remaps'])} reattr={len(p['reattrs'])}")
+              f"remap={len(p['remaps'])} reattr={len(p['reattrs'])}"
+              + (f" 線の上の双子(分岐点{len(p['on_path'])}・線{len(p['drop_edges'])}本を消す)"
+                 if p.get("on_path") else ""))
     for s in skipped:
         names = [b["name"] for b in s["blocked"]][:3]
         print(f"  SKIP [{s['island']}] comp{s['comp']} {s['n_nodes']}ノード "
@@ -380,6 +445,11 @@ def _apply_hygiene(built, nodes, edges, plans, isl_grid) -> None:
         rec = {"island": p["island"], "comp": p["comp"],
                "twin_island": p["twin_island"],
                "dropped_nodes": [], "remapped": [], "reattributed": []}
+        if p.get("on_path"):
+            # #35 の追記(2026-11-09): 線の上の双子。消した線は removed_edges に why 付きで残す
+            rec["kind"] = "on_path_twin"
+            rec["on_path_junctions"] = [{"id": n.get("id"), "lat": n["lat"], "lon": n["lon"]}
+                                        for n in p["on_path"]]
         for n in p["drops"]:
             drop_ids.add(id(n))
             rec["dropped_nodes"].append(dict(n))
@@ -428,6 +498,16 @@ def _apply_hygiene(built, nodes, edges, plans, isl_grid) -> None:
 
     # ノード削除
     built["nodes"] = [n for n in nodes if id(n) not in drop_ids]
+
+    # 線の上の双子の断片の線を消す(#35 の追記・2026-11-09)。どれも双子の島の線の上にある写し
+    drop_edge_ids = {id(e) for p in plans for e in p.get("drop_edges", [])}
+    if drop_edge_ids:
+        for e in edges:
+            if id(e) in drop_edge_ids:
+                ledger["removed_edges"].append(
+                    dict({k: v for k, v in e.items() if k != "path"}, why="on_path_twin",
+                         n_path=len(e.get("path") or [])))
+        edges = [e for e in edges if id(e) not in drop_edge_ids]
 
     # エッジのリマップ + 自己ループ除去 + 影響ペアdedup
     affected = set()

@@ -106,13 +106,34 @@ class Sites:
 
 
 def region_lookup(built_nodes):
+    """座標 → 地域。いちばん近い正典の点の地域。
+
+    地域をまたぐ写し(同じ線が 2 つの地域の取り出しに入る)では、同じ座標に地域の違う点が並ぶ。2026-11-07 まで
+    STRtree.nearest がそのどちらかを返していて、どちらになるかが OS で変わった(Mac と Linux で鉄塔の地域が
+    数百基単位で食い違った)。同じ距離の候補を全部取り、鉄塔の座標の領土(都道府県→エリア、正典の #5 と同じ
+    area_of_coord)の地域があればそれ、無ければ REGIONS の順の最初、で決める。"""
+    from src.powerflow.region_attribution import area_of_coord
     pts = shp_points([[n["lon"], n["lat"]] for n in built_nodes])
     tree = STRtree(pts)
     regs = [n.get("region") or "" for n in built_nodes]
+    order = {r: k for k, r in enumerate(REGIONS)}
 
     def f(lonlats):
-        idx = tree.nearest(shp_points(lonlats))
-        return [regs[i] for i in np.atleast_1d(idx)]
+        if not len(lonlats):
+            return []
+        q_idx, t_idx = tree.query_nearest(shp_points(lonlats), all_matches=True)
+        cand = collections.defaultdict(set)
+        for i, j in zip(np.atleast_1d(q_idx), np.atleast_1d(t_idx)):
+            cand[int(i)].add(regs[int(j)])
+        out = []
+        for i, (lo, la) in enumerate(lonlats):
+            rs = cand.get(i) or {""}
+            if len(rs) == 1:
+                out.append(next(iter(rs)))
+                continue
+            a = area_of_coord(la, lo)
+            out.append(a if a in rs else min(rs, key=lambda r: (order.get(r, 99), r)))
+        return out
     return f
 
 
@@ -153,6 +174,7 @@ def main():
                 rel_count[m["ref"]] += 1
     num_of = lambda n: R.ref_number((towers[n].get("tags") or {}).get("ref")) if n in towers else None
     est_num, est_rid, est_conflict = {}, {}, set()
+    ext, ext_conflict = {}, set()      # 端まで延ばした番号 {鉄塔: (番号, 路線, 元の鉄塔, 何基先)}
     route_linear = {}
     for rid in sorted(mem):
         seqs, linear = R.chains(mem[rid], ways)
@@ -165,9 +187,22 @@ def main():
                     est_conflict.add(node)
                 est_num.setdefault(node, num)
                 est_rid.setdefault(node, rid)
+            # 端まで延ばす(番号のある鉄塔が 2 基以上で、向きと間隔がそろう並びだけ。R.extend_numbers)
+            for node, (num, src, k) in R.extend_numbers(seq, lambda n: n in towers, num_of).items():
+                if (towers[node].get("tags") or {}).get("ref"):
+                    continue
+                if node in ext and ext[node][0] != num:
+                    ext_conflict.add(node)
+                ext.setdefault(node, (num, rid, src, k))
     for node in est_conflict:          # 路線によって違う番号になる鉄塔(併架など)は埋めない
         est_num.pop(node, None)
         est_rid.pop(node, None)
+    for node in list(ext):
+        # 路線によって違う番号になる鉄塔、前後の番号から埋めた推定とぶつかる鉄塔は延ばさない(あいだを埋めた方が根拠が強い)
+        if node in ext_conflict or node in est_conflict or (node in est_num and est_num[node] != ext[node][0]):
+            ext.pop(node)
+        elif node in est_num:
+            ext.pop(node)              # 同じ番号なら、前後の番号から埋めた方として出す
     # 線の折れ点: 架空線(power=line)の途中の点で、鉄塔などのタグが無いもの(鉄塔が描かれていないが、折れ点は鉄塔の位置であることが多い)
     bends = {}
     for wid in sorted(ways):
@@ -273,6 +308,7 @@ def main():
     towers_by_region = collections.defaultdict(list)
     tids = sorted(towers)
     treg = region_of([[towers[i]["lon"], towers[i]["lat"]] for i in tids])
+    reg_of_tower = dict(zip(tids, treg))
     for tid, reg in zip(tids, treg):
         towers_by_region[reg].append(tid)
     bends_by_region = {}
@@ -304,6 +340,8 @@ def main():
         if not (t.get("ref") or t.get("name")):
             if tid in est_num:
                 c["ref_est"] += 1
+            elif tid in ext:
+                c["ref_ext"] += 1
             elif any(route_linear.get(r) for r in tower_routes.get(tid, ())):
                 c["ordinal_only"] += 1
             else:
@@ -348,6 +386,10 @@ def main():
                 names[str(k)] = t["name"]
             if tid in est_num:
                 ests[str(k)] = [est_num[tid], ri_of.get(est_rid[tid], -1)]
+            elif tid in ext:
+                num, rid_, src, steps = ext[tid]
+                ests[str(k)] = [num, ri_of.get(rid_, -1), REGIONS.index(reg_of_tower[src]) if src in reg_of_tower else -1,
+                                src, num_of(src), steps]
             ex = {kk: t[kk] for kk in TOWER_TAGS if t.get(kk) and kk != "operator"}
             if ex:
                 extra[str(k)] = ex
@@ -355,7 +397,10 @@ def main():
             "region": reg, "n": len(ids),
             "how": "id・lat・lon は 1 つ前との差(lat・lon は ×1e5 の整数)。r は rl の番号(-1 は線に載っていない、配列は併架)",
             "rl": rl, "id": did, "lat": dla, "lon": dlo, "r": rr, "ref": refs, "name": names, "tags": extra,
-            "est": ests, "est_how": "番号の推定 {位置: [番号, rl の番号(その番号を埋めた路線)]}。前後の番号のある鉄塔の間の基数が番号の差と合うときだけ",
+            "est": ests, "est_how": ("番号の推定 {位置: [番号, rl の番号(その番号を埋めた路線)]}。前後の番号のある鉄塔の間の基数が"
+                                     "番号の差と合うときだけ。6 つの要素のものは線の端まで延ばした推定 [番号, rl の番号, 延ばした元の鉄塔の地域"
+                                     "(regions の番号), 元の鉄塔の node id, 元の番号, 元から何基先]。番号のある鉄塔が 2 基以上あり、どの 2 基の"
+                                     "あいだも 1 基ごとに番号が 1 つずつ増える(減る)並びだけ"),
             "bends": bends_by_region.get(reg, {"n": 0, "lat": [], "lon": [], "r": [], "rl": []}),
             "bends_how": "線の折れ点(鉄塔のタグの無い架空線の途中の点)。lat・lon は 1 つ前との差、r は bends.rl の番号"})
         towers_by_region[reg] = [(tid, lat5(towers[tid]["lat"]), lat5(towers[tid]["lon"]),
