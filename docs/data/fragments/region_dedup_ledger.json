@@ -1,28 +1,30 @@
 {
  "what": "地域をまたぐ写し(頂点まで同じ形の枝が 2 つ以上の地域から出る)を 1 つにまとめた帳簿(介入#58 案)",
- "n_groups": 2515,
+ "n_groups": 2764,
  "kinds": {
-  "same_kv": 2462,
+  "same_kv": 2687,
   "kv0_filled": 8,
-  "kv_differs": 45
+  "kv_differs": 69
  },
- "n_edges_dropped": 2619,
- "n_nodes_dropped": 2222,
+ "n_edges_dropped": 2920,
+ "n_nodes_dropped": 2494,
  "n_kv_filled": 8,
  "pairs": {
-  "chubu|hokuriku": 726,
-  "chubu|kansai": 612,
-  "chugoku|shikoku": 478,
-  "chugoku|kyushu": 363,
-  "tohoku|tokyo": 139,
+  "chubu|hokuriku": 762,
+  "chubu|kansai": 650,
+  "chugoku|shikoku": 502,
+  "chugoku|kyushu": 371,
+  "tohoku|tokyo": 218,
   "chubu|tokyo": 110,
-  "kansai|shikoku": 41,
+  "kansai|shikoku": 42,
+  "chubu|hokuriku|kansai": 28,
+  "chugoku|kyushu|shikoku": 26,
   "hokkaido|tohoku": 21,
-  "chugoku|kyushu|shikoku": 16,
-  "chubu|hokuriku|kansai": 5,
+  "chugoku|kansai|shikoku": 19,
+  "chugoku|kansai": 11,
   "chubu|hokuriku|tokyo": 1,
   "hokuriku|tokyo": 1,
-  "chugoku|kansai": 1,
+  "hokuriku|kansai": 1,
   "kyushu|shikoku": 1
  },
  "kv_rows": [
@@ -920,6 +922,28 @@
    ],
    "kv": {
     "chubu": [
+     154.0
+    ],
+    "kansai": [
+     0.0
+    ]
+   },
+   "name": "中部送電線_70",
+   "mid": [
+    35.3319,
+    136.80945
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chubu",
+   "owner": "chubu",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
      77.0
     ],
     "kansai": [
@@ -967,6 +991,28 @@
      0.0
     ],
     "kansai": [
+     66.0
+    ]
+   },
+   "name": "JR西日本 33.0kV線",
+   "mid": [
+    34.7691,
+    136.00261
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "kansai": [
      154.0
     ]
    },
@@ -974,6 +1020,94 @@
    "mid": [
     35.32157,
     136.00609
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "kansai": [
+     154.0
+    ]
+   },
+   "name": "勝野変電所~大津市変電所線",
+   "mid": [
+    35.2708,
+    135.98867
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "kansai": [
+     154.0
+    ]
+   },
+   "name": "勝野変電所~大津市変電所線",
+   "mid": [
+    35.24203,
+    135.94951
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "chubu",
+    "kansai"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "kansai": [
+     154.0
+    ]
+   },
+   "name": "東草津三丁目変電所~手原一丁目変電所線",
+   "mid": [
+    35.01099,
+    135.99158
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "hokuriku",
+   "owner": "hokuriku",
+   "regions": [
+    "chubu",
+    "hokuriku"
+   ],
+   "kv": {
+    "chubu": [
+     0.0
+    ],
+    "hokuriku": [
+     66.0
+    ]
+   },
+   "name": "春日変電所_2~高内変電所_2線",
+   "mid": [
+    36.56296,
+    137.19062
    ]
   },
   {
@@ -1090,14 +1224,180 @@
   },
   {
    "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "kansai",
+    "chugoku"
+   ],
+   "kv": {
+    "kansai": [
+     77.0
+    ],
+    "chugoku": [
+     0.0
+    ]
+   },
+   "name": "関西送電線_132",
+   "mid": [
+    34.8193,
+    134.49856
+   ]
+  },
+  {
+   "kind": "kv_differs",
    "keep": "shikoku",
    "owner": "shikoku",
+   "regions": [
+    "kansai",
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "kansai": [
+     66.0
+    ],
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "桑野変電所~鉢変電所線",
+   "mid": [
+    33.85126,
+    134.57003
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "kansai",
+    "chugoku"
+   ],
+   "kv": {
+    "kansai": [
+     77.0
+    ],
+    "chugoku": [
+     0.0
+    ]
+   },
+   "name": "関西送電線_153",
+   "mid": [
+    34.80124,
+    134.47039
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "kansai",
+    "chugoku"
+   ],
+   "kv": {
+    "kansai": [
+     77.0
+    ],
+    "chugoku": [
+     0.0
+    ]
+   },
+   "name": "関西送電線_153",
+   "mid": [
+    34.78581,
+    134.44292
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "kansai",
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "kansai": [
+     66.0
+    ],
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "桑野変電所~鉢変電所線",
+   "mid": [
+    33.80792,
+    134.47735
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
    "regions": [
     "kansai",
     "shikoku"
    ],
    "kv": {
     "kansai": [
+     77.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "志筑変電所~松帆西路変電所線",
+   "mid": [
+    34.4335,
+    134.85473
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "kansai",
+   "owner": "kansai",
+   "regions": [
+    "kansai",
+    "shikoku"
+   ],
+   "kv": {
+    "kansai": [
+     77.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "志筑変電所~松帆西路変電所線",
+   "mid": [
+    34.35577,
+    134.78538
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "kansai",
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "kansai": [
+     0.0
+    ],
+    "chugoku": [
      0.0
     ],
     "shikoku": [
@@ -1108,6 +1408,50 @@
    "mid": [
     33.74315,
     134.50872
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "西広島変電所~古市四丁目変電所線",
+   "mid": [
+    34.39654,
+    132.41008
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "namebind",
+   "mid": [
+    34.396,
+    133.15431
    ]
   },
   {
@@ -1130,6 +1474,124 @@
    "mid": [
     33.77799,
     134.48938
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "鉢変電所~多良変電所線",
+   "mid": [
+    33.70884,
+    134.45983
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "鉢変電所~多良変電所線",
+   "mid": [
+    33.64386,
+    134.37613
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "shikoku",
+   "owner": "shikoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     0.0
+    ],
+    "shikoku": [
+     66.0
+    ]
+   },
+   "name": "鉢変電所~多良変電所線",
+   "mid": [
+    33.60884,
+    134.34161
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "藤生町三丁目変電所~高森線",
+   "mid": [
+    34.10831,
+    132.09572
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "古開作変電所~藤生町三丁目変電所線",
+   "mid": [
+    34.09504,
+    132.12712
    ]
   },
   {
@@ -1204,29 +1666,231 @@
      0.0
     ]
    },
+   "name": "柳井市変電所~古開作変電所線",
+   "mid": [
+    33.98458,
+    132.14214
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
    "name": "中国送電線_331",
    "mid": [
     34.09251,
     132.10875
    ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     220.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "中国送電線_279",
+   "mid": [
+    34.39625,
+    132.56279
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku"
+   ],
+   "kv": {
+    "chugoku": [
+     220.0
+    ],
+    "shikoku": [
+     0.0
+    ]
+   },
+   "name": "中国送電線_279",
+   "mid": [
+    34.42272,
+    132.58942
+   ]
+  },
+  {
+   "kind": "kv_differs",
+   "keep": "chugoku",
+   "owner": "chugoku",
+   "regions": [
+    "chugoku",
+    "shikoku",
+    "kyushu"
+   ],
+   "kv": {
+    "chugoku": [
+     110.0
+    ],
+    "shikoku": [
+     110.0
+    ],
+    "kyushu": [
+     0.0
+    ]
+   },
+   "name": "namebind",
+   "mid": [
+    33.96546,
+    132.18442
+   ]
   }
  ],
  "ends": {
   "what": "形が同じで端を結ぶ点だけが違う地域の写しの、端の点を 1 つに寄せた帳簿(介入#59 案、#58 の前)",
-  "n_points_aliased": 49,
-  "n_edge_ends_repointed": 94,
-  "n_edges_collapsed": 5,
+  "n_points_aliased": 238,
+  "n_edge_ends_repointed": 411,
+  "n_edges_collapsed": 33,
   "n_nodes_moved": 8,
-  "n_nodes_merged": 47,
+  "n_nodes_merged": 241,
   "n_nodes_kept_other_island": 7,
   "gap_max_m": 600.0,
   "kinds": {
-   "dangling": 32,
-   "same_substation": 12,
-   "junction_to_substation": 4,
-   "substation_pair": 1
+   "junction_to_substation": 163,
+   "dangling": 64,
+   "same_substation": 11
   },
   "rows": [
+   {
+    "from": [
+     33.57305,
+     132.81686
+    ],
+    "to": [
+     33.57275,
+     132.8167
+    ],
+    "gap_m": 36.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "小田変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "松山線"
+    ]
+   },
+   {
+    "from": [
+     33.60444,
+     134.34863
+    ],
+    "to": [
+     33.60321,
+     134.34902
+    ],
+    "gap_m": 141.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "多良変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "鉢変電所~多良変電所線",
+     "鉢変電所~大殿変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.60761,
+     131.01144
+    ],
+    "to": [
+     33.60815,
+     131.01539
+    ],
+    "gap_m": 371.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "豊前変電所 220kV",
+     "豊前変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "豊前北幹線"
+    ]
+   },
+   {
+    "from": [
+     33.61034,
+     131.01466
+    ],
+    "to": [
+     33.60815,
+     131.01539
+    ],
+    "gap_m": 253.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "豊前変電所 220kV",
+     "豊前変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北九州豊前線"
+    ]
+   },
    {
     "from": [
      33.62458,
@@ -1252,6 +1916,90 @@
     "lines": [
      "九州電力送配電 66.0kV線",
      "大字畠中変電所~泉変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.63837,
+     133.6897
+    ],
+    "to": [
+     33.63565,
+     133.69002
+    ],
+    "gap_m": 304.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "土佐山田町新改変電所 187kV",
+     "土佐山田町新改変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "本山町変電所~井川変電所線",
+     "西条変電所~土佐山田町新改変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.63856,
+     133.69204
+    ],
+    "to": [
+     33.63565,
+     133.69002
+    ],
+    "gap_m": 374.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "土佐山田町新改変電所 187kV",
+     "土佐山田町新改変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "土佐山田町新改変電所~井川変電所線",
+     "本山町変電所~井川変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.63879,
+     133.69084
+    ],
+    "to": [
+     33.63565,
+     133.69002
+    ],
+    "gap_m": 357.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "土佐山田町新改変電所 187kV",
+     "土佐山田町新改変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "三好市変電所~本山町変電所線",
+     "物部町押谷変電所~土佐山田町新改変電所線"
     ]
    },
    {
@@ -1283,6 +2031,89 @@
    },
    {
     "from": [
+     33.67374,
+     134.42299
+    ],
+    "to": [
+     33.67362,
+     134.42005
+    ],
+    "gap_m": 272.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "牟岐変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "鉢変電所~多良変電所線",
+     "鉢変電所~大殿変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.67436,
+     134.41731
+    ],
+    "to": [
+     33.67362,
+     134.42005
+    ],
+    "gap_m": 266.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "牟岐変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "鉢変電所~多良変電所線",
+     "鉢変電所~大殿変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.7359,
+     134.52371
+    ],
+    "to": [
+     33.73659,
+     134.52553
+    ],
+    "gap_m": 185.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "美波町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_327",
+     "四国送電線_124",
+     "関西送電線_71"
+    ]
+   },
+   {
+    "from": [
      33.82744,
      134.6343
     ],
@@ -1305,8 +2136,492 @@
     ],
     "other_ends_at_from": 0,
     "lines": [
+     "南庄町一丁目変電所~阿南周波数変換所線",
      "阿波変電所~鉢変電所線",
      "阿波変電所~阿南周波数変換所線"
+    ]
+   },
+   {
+    "from": [
+     33.83489,
+     130.76493
+    ],
+    "to": [
+     33.83516,
+     130.76224
+    ],
+    "gap_m": 250.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "上津役変電所 220kV",
+     "上津役変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "上津役幹線"
+    ]
+   },
+   {
+    "from": [
+     33.86437,
+     130.79407
+    ],
+    "to": [
+     33.8652,
+     130.79252
+    ],
+    "gap_m": 170.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "前田変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "西谷前田線"
+    ]
+   },
+   {
+    "from": [
+     33.87049,
+     134.61381
+    ],
+    "to": [
+     33.87277,
+     134.61566
+    ],
+    "gap_m": 306.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "桑野変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_208",
+     "桑野変電所~美波町変電所線",
+     "桑野変電所~鉢変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.87992,
+     134.64886
+    ],
+    "to": [
+     33.87963,
+     134.65195
+    ],
+    "gap_m": 287.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "阿南発電所 (Anan Power Station) 187kV",
+     "阿南発電所 (Anan Power Station) 500kV",
+     "阿南発電所 (Anan Power Station) 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "井川変電所~鉢変電所線",
+     "井川変電所~阿南発電所 (Anan Power Station)線",
+     "関西電力送配電 187.0kV線"
+    ]
+   },
+   {
+    "from": [
+     33.92188,
+     130.80015
+    ],
+    "to": [
+     33.9219,
+     130.80008
+    ],
+    "gap_m": 6.8,
+    "kind": "same_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [
+     "安瀬変電所"
+    ],
+    "to_subs": [
+     "安瀬変電所"
+    ],
+    "other_ends_at_from": 3,
+    "lines": [
+     "若松安瀬上線・若松安瀬下線"
+    ]
+   },
+   {
+    "from": [
+     33.9234,
+     130.78116
+    ],
+    "to": [
+     33.92408,
+     130.78173
+    ],
+    "gap_m": 92.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "kyushu_sub_520"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "若松安瀬上線・若松安瀬下線"
+    ]
+   },
+   {
+    "from": [
+     33.92411,
+     130.78301
+    ],
+    "to": [
+     33.92408,
+     130.78173
+    ],
+    "gap_m": 118.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "kyushu_sub_520"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "若松安瀬上線・若松安瀬下線"
+    ]
+   },
+   {
+    "from": [
+     33.95377,
+     131.96066
+    ],
+    "to": [
+     33.95496,
+     131.95874
+    ],
+    "gap_m": 221.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku",
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "光変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中央南変電所~田布施町変電所線",
+     "光変電所~田布施町変電所線"
+    ]
+   },
+   {
+    "from": [
+     33.99794,
+     134.40986
+    ],
+    "to": [
+     34.0007,
+     134.40823
+    ],
+    "gap_m": 342.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "阿波変電所 187kV",
+     "阿波変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南庄町一丁目変電所~阿南周波数変換所線",
+     "阿波変電所~鉢変電所線",
+     "阿波変電所~阿南周波数変換所線"
+    ]
+   },
+   {
+    "from": [
+     34.0026,
+     134.58737
+    ],
+    "to": [
+     34.00281,
+     134.59004
+    ],
+    "gap_m": 247.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南小松島町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南庄町一丁目変電所~南小松島町変電所線",
+     "四国電力送配電 66.0kV線",
+     "国府変電所~南小松島町変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.03189,
+     133.89325
+    ],
+    "to": [
+     34.03198,
+     133.89103
+    ],
+    "gap_m": 205.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "井川変電所 187kV",
+     "井川変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "井川変電所~鉢変電所線",
+     "井川変電所~阿南発電所 (Anan Power Station)線",
+     "関西電力送配電 187.0kV線"
+    ]
+   },
+   {
+    "from": [
+     34.06093,
+     134.4669
+    ],
+    "to": [
+     34.06234,
+     134.46875
+    ],
+    "gap_m": 231.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "国府変電所 187kV",
+     "国府変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "国府変電所~桑野変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.06199,
+     134.47208
+    ],
+    "to": [
+     34.06234,
+     134.46875
+    ],
+    "gap_m": 309.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "国府変電所 187kV",
+     "国府変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "四国電力送配電 66.0kV線",
+     "国府変電所~南庄町一丁目変電所線",
+     "関西電力送配電 66.0kV線"
+    ]
+   },
+   {
+    "from": [
+     34.06276,
+     134.4727
+    ],
+    "to": [
+     34.06234,
+     134.46875
+    ],
+    "gap_m": 367.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "国府変電所 187kV",
+     "国府変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南庄町一丁目変電所~南小松島町変電所線",
+     "四国電力送配電 66.0kV線",
+     "国府変電所~南小松島町変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.06319,
+     134.47298
+    ],
+    "to": [
+     34.06234,
+     134.46875
+    ],
+    "gap_m": 401.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "国府変電所 187kV",
+     "国府変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "応神東線"
+    ]
+   },
+   {
+    "from": [
+     34.11454,
+     134.51612
+    ],
+    "to": [
+     34.11705,
+     134.51729
+    ],
+    "gap_m": 299.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "応神変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "応神東線"
+    ]
+   },
+   {
+    "from": [
+     34.11694,
+     134.51396
+    ],
+    "to": [
+     34.11705,
+     134.51729
+    ],
+    "gap_m": 307.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "応神変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "四国電力送配電 66.0kV線",
+     "大内変電所~応神変電所線",
+     "応神東線"
     ]
    },
    {
@@ -1341,6 +2656,66 @@
    },
    {
     "from": [
+     34.16611,
+     134.55535
+    ],
+    "to": [
+     34.16479,
+     134.55597
+    ],
+    "gap_m": 157.6,
+    "kind": "dangling",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "鳴門変電所 187kV",
+     "鳴門変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "南庄町一丁目変電所~鳴門変電所線",
+     "国府変電所~徳島市変電所線",
+     "国府変電所~鳴門変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.16905,
+     133.95361
+    ],
+    "to": [
+     34.165,
+     133.95325
+    ],
+    "gap_m": 452.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "讃岐変電所 187kV",
+     "讃岐変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "四国電力送配電 187.0kV線",
+     "讃岐変電所~徳島市変電所線",
+     "讃岐変電所~鳴門変電所線"
+    ]
+   },
+   {
+    "from": [
      34.19798,
      131.82529
     ],
@@ -1370,6 +2745,117 @@
    },
    {
     "from": [
+     34.20313,
+     131.82831
+    ],
+    "to": [
+     34.19939,
+     131.826
+    ],
+    "gap_m": 467.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku",
+     "kyushu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "東山口変電所 (Higashi Yamaguchi Hendensho) 220kV",
+     "東山口変電所 (Higashi Yamaguchi Hendensho) 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "東山口幹線 (Higashi Yamaguchi Kansen)"
+    ]
+   },
+   {
+    "from": [
+     34.24631,
+     134.34278
+    ],
+    "to": [
+     34.24673,
+     134.34232
+    ],
+    "gap_m": 63.1,
+    "kind": "dangling",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku",
+     "shikoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大内変電所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "四国電力送配電 66.0kV線",
+     "大内変電所~徳島市変電所線",
+     "大内変電所~応神変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.32742,
+     134.83562
+    ],
+    "to": [
+     34.32911,
+     134.83893
+    ],
+    "gap_m": 357.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "山添変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "四国電力送配電 77.0kV線",
+     "松帆西路変電所~山添変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.35849,
+     131.95918
+    ],
+    "to": [
+     34.35822,
+     131.9572
+    ],
+    "gap_m": 184.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "六日市変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "友和変電所~美和町西畑変電所線",
+     "吉和変電所~六日市変電所線"
+    ]
+   },
+   {
+    "from": [
      34.39812,
      133.0425
     ],
@@ -1378,7 +2864,7 @@
      133.04276
     ],
     "gap_m": 35.8,
-    "kind": "same_substation",
+    "kind": "dangling",
     "from_regions": [
      "shikoku"
     ],
@@ -1391,9 +2877,10 @@
     "to_subs": [
      "沼田一丁目変電所"
     ],
-    "other_ends_at_from": 1,
+    "other_ends_at_from": 0,
     "lines": [
      "leadin",
+     "中国送電線_96",
      "忠海長浜一丁目変電所~沼田一丁目変電所線",
      "新倉一丁目変電所~沼田一丁目変電所線",
      "西日本旅客鉄道 110.0kV線"
@@ -1431,17 +2918,156 @@
    },
    {
     "from": [
-     34.41343,
-     132.25646
+     34.40278,
+     132.5748
+    ],
+    "to": [
+     34.404,
+     132.577
+    ],
+    "gap_m": 243.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "中野五丁目変電所 110kV",
+     "中野五丁目変電所 220kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中野五丁目変電所~東広島変電所線",
+     "大州四丁目変電所~広島補助き電区分所線"
+    ]
+   },
+   {
+    "from": [
+     34.40377,
+     132.50719
+    ],
+    "to": [
+     34.40379,
+     132.50575
+    ],
+    "gap_m": 132.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "東広島変電所 (untyped)",
+     "東広島変電所 110kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "東広島変電所~仁保四丁目変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.404,
+     132.57387
+    ],
+    "to": [
+     34.404,
+     132.577
+    ],
+    "gap_m": 287.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "中野五丁目変電所 110kV",
+     "中野五丁目変電所 220kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_279",
+     "大州四丁目変電所~南西条変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.4042,
+     132.5816
+    ],
+    "to": [
+     34.404,
+     132.577
+    ],
+    "gap_m": 423.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "中野五丁目変電所 110kV",
+     "中野五丁目変電所 220kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南西条変電所~中野五丁目変電所線",
+     "大州四丁目変電所~広島補助き電区分所線"
+    ]
+   },
+   {
+    "from": [
+     34.40657,
+     132.57561
+    ],
+    "to": [
+     34.404,
+     132.577
+    ],
+    "gap_m": 313.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "中野五丁目変電所 110kV",
+     "中野五丁目変電所 220kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_279",
+     "大州四丁目変電所~南西条変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.40966,
+     132.25786
     ],
     "to": [
      34.41247,
      132.25751
     ],
-    "gap_m": 143.9,
+    "gap_m": 314.5,
     "kind": "junction_to_substation",
     "from_regions": [
-     "kyushu",
      "shikoku"
     ],
     "to_regions": [
@@ -1455,7 +3081,232 @@
     ],
     "other_ends_at_from": 1,
     "lines": [
+     "新西広島岩国線 (Shin Nishi Hiroshima Iwakuni Sen)"
+    ]
+   },
+   {
+    "from": [
+     34.41135,
+     132.26044
+    ],
+    "to": [
+     34.41247,
+     132.25751
+    ],
+    "gap_m": 296.6,
+    "kind": "dangling",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新西広島変電所 110kV",
+     "新西広島変電所 220kV",
+     "新西広島変電所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "北広島変電所 (Kita-Hiroshima Hendensho)~廿日市変電所線",
+     "広島変電所~古市四丁目変電所線",
+     "段原変電所~廿日市変電所線",
+     "西広島変電所~廿日市変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.41343,
+     132.25646
+    ],
+    "to": [
+     34.41247,
+     132.25751
+    ],
+    "gap_m": 143.9,
+    "kind": "dangling",
+    "from_regions": [
+     "kyushu",
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新西広島変電所 110kV",
+     "新西広島変電所 220kV",
+     "新西広島変電所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
      "東山口幹線 (Higashi Yamaguchi Kansen)"
+    ]
+   },
+   {
+    "from": [
+     34.42011,
+     133.17607
+    ],
+    "to": [
+     34.42191,
+     133.1779
+    ],
+    "gap_m": 261.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "尾道変電所 (untyped)",
+     "尾道変電所 110kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "尾道変電所~因島変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.42028,
+     133.21313
+    ],
+    "to": [
+     34.4239,
+     133.2129
+    ],
+    "gap_m": 403.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新高山三丁目変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "東尾道向島線"
+    ]
+   },
+   {
+    "from": [
+     34.4228,
+     133.17414
+    ],
+    "to": [
+     34.42191,
+     133.1779
+    ],
+    "gap_m": 359.2,
+    "kind": "dangling",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "尾道変電所 (untyped)",
+     "尾道変電所 110kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "向島変電所~沼隈町大字草深変電所線",
+     "栗原西一丁目変電所~中国電力（株）本庄変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.4375,
+     132.5388
+    ],
+    "to": [
+     34.44007,
+     132.53848
+    ],
+    "gap_m": 287.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "広島変電所 110kV",
+     "広島変電所 220kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "広島変電所~押込町変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.44773,
+     136.37018
+    ],
+    "to": [
+     34.44569,
+     136.36997
+    ],
+    "gap_m": 227.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "伊勢開閉所 275kV",
+     "伊勢開閉所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "伊勢中勢線",
+     "伊勢幹線"
+    ]
+   },
+   {
+    "from": [
+     34.44838,
+     136.36876
+    ],
+    "to": [
+     34.44569,
+     136.36997
+    ],
+    "gap_m": 319.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "伊勢開閉所 275kV",
+     "伊勢開閉所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "伊勢幹線"
     ]
    },
    {
@@ -1484,6 +3335,370 @@
     "lines": [
      "受電所~福江町三丁目変電所線",
      "菰池二丁目変電所~福江町三丁目変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.46097,
+     133.24895
+    ],
+    "to": [
+     34.46168,
+     133.24966
+    ],
+    "gap_m": 102.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "松永変電所 (untyped)",
+     "松永変電所 110kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "向島変電所~沼隈町大字草深変電所線",
+     "栗原西一丁目変電所~中国電力（株）本庄変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.46319,
+     133.25236
+    ],
+    "to": [
+     34.46168,
+     133.24966
+    ],
+    "gap_m": 299.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "松永変電所 (untyped)",
+     "松永変電所 110kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "向島変電所~沼隈町大字草深変電所線",
+     "栗原西一丁目変電所~中国電力（株）本庄変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.47844,
+     132.12955
+    ],
+    "to": [
+     34.48115,
+     132.13073
+    ],
+    "gap_m": 320.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "吉和変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "友和変電所~美和町西畑変電所線",
+     "吉和変電所~六日市変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.48959,
+     132.70548
+    ],
+    "to": [
+     34.48892,
+     132.70872
+    ],
+    "gap_m": 306.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "shikoku"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新広島変電所 220kV",
+     "新広島変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南西条変電所~黒瀬変電所線",
+     "新広島変電所~黒瀬変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.54507,
+     136.53694
+    ],
+    "to": [
+     34.54564,
+     136.53883
+    ],
+    "gap_m": 184.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南勢変電所 154kV",
+     "南勢変電所 275kV",
+     "南勢変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南勢北勢線"
+    ]
+   },
+   {
+    "from": [
+     34.57637,
+     136.51552
+    ],
+    "to": [
+     34.57446,
+     136.51507
+    ],
+    "gap_m": 216.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "外五曲町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "久居南勢線"
+    ]
+   },
+   {
+    "from": [
+     34.6945,
+     131.97811
+    ],
+    "to": [
+     34.69734,
+     131.97954
+    ],
+    "gap_m": 342.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kyushu"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "西島根変電所 110kV",
+     "西島根変電所 275kV",
+     "西島根変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国電力ネットワーク 500.0kV線",
+     "新山口変電所~西島根変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.80636,
+     134.48581
+    ],
+    "to": [
+     34.80761,
+     134.4846
+    ],
+    "gap_m": 177.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "古池本町変電所 (untyped)",
+     "古池本町変電所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_28",
+     "関西送電線_132"
+    ]
+   },
+   {
+    "from": [
+     34.81947,
+     134.50189
+    ],
+    "to": [
+     34.82094,
+     134.50362
+    ],
+    "gap_m": 227.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "揖保川町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "釜島変電所~古池本町変電所線",
+     "関西送電線_209"
+    ]
+   },
+   {
+    "from": [
+     34.83778,
+     134.38772
+    ],
+    "to": [
+     34.83782,
+     134.38527
+    ],
+    "gap_m": 223.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "釜島変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "釜島変電所~古池本町変電所線",
+     "関西送電線_209"
+    ]
+   },
+   {
+    "from": [
+     34.85032,
+     134.66604
+    ],
+    "to": [
+     34.84922,
+     134.66777
+    ],
+    "gap_m": 199.9,
+    "kind": "dangling",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "姫路変電所 275kV",
+     "姫路変電所 77kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "揖保川町変電所~姫路変電所線",
+     "西播変電所~古池本町変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.86297,
+     134.42866
+    ],
+    "to": [
+     34.8614,
+     134.4253
+    ],
+    "gap_m": 353.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "西播変電所 (untyped)",
+     "西播変電所 275kV",
+     "西播変電所 500kV",
+     "西播変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "揖保川町変電所~姫路変電所線",
+     "西播変電所~古池本町変電所線"
+    ]
+   },
+   {
+    "from": [
+     34.86436,
+     134.42509
+    ],
+    "to": [
+     34.8614,
+     134.4253
+    ],
+    "gap_m": 330.1,
+    "kind": "dangling",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "西播変電所 (untyped)",
+     "西播変電所 275kV",
+     "西播変電所 500kV",
+     "西播変電所 77kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "光都一丁目変電所~西播変電所線",
+     "山崎町変電所~揖保川町変電所線"
     ]
    },
    {
@@ -1517,6 +3732,63 @@
    },
    {
     "from": [
+     34.86786,
+     135.89944
+    ],
+    "to": [
+     34.86562,
+     135.89699
+    ],
+    "gap_m": 335.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南京都変電所 (untyped)",
+     "南京都変電所 154kV",
+     "南京都変電所 275kV",
+     "南京都変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "甲賀線"
+    ]
+   },
+   {
+    "from": [
+     34.98671,
+     135.99376
+    ],
+    "to": [
+     34.98515,
+     135.99284
+    ],
+    "gap_m": 192.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "栗東変電所 154kV",
+     "栗東変電所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "六地蔵変電所~本巣市変電所線"
+    ]
+   },
+   {
+    "from": [
      35.03578,
      135.99641
     ],
@@ -1540,6 +3812,64 @@
     "lines": [
      "甲賀変電所~手原一丁目変電所線",
      "甲賀変電所~蜂屋変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.04312,
+     136.08204
+    ],
+    "to": [
+     35.04427,
+     136.08406
+    ],
+    "gap_m": 224.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu",
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大字小口変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "中部電力パワーグリッド 275.0kV線",
+     "六地蔵変電所~本巣市変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.04541,
+     136.08607
+    ],
+    "to": [
+     35.04427,
+     136.08406
+    ],
+    "gap_m": 222.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu",
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大字小口変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中部電力パワーグリッド 275.0kV線",
+     "六地蔵変電所~本巣市変電所線",
+     "六地蔵変電所~白鳥町大島変電所線"
     ]
    },
    {
@@ -1568,6 +3898,169 @@
     "lines": [
      "久崎変電所~光都一丁目変電所線",
      "関西電力(株) 揖保変電所~山崎開閉所線"
+    ]
+   },
+   {
+    "from": [
+     35.06239,
+     136.80705
+    ],
+    "to": [
+     35.06264,
+     136.80903
+    ],
+    "gap_m": 182.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "木場変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "飛島七宝線 (Tobishima Shippō Sen)"
+    ]
+   },
+   {
+    "from": [
+     35.06313,
+     136.81025
+    ],
+    "to": [
+     35.06264,
+     136.80903
+    ],
+    "gap_m": 123.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "木場変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "飛島七宝線 (Tobishima Shippō Sen)"
+    ]
+   },
+   {
+    "from": [
+     35.06389,
+     134.59778
+    ],
+    "to": [
+     35.06254,
+     134.60249
+    ],
+    "gap_m": 454.7,
+    "kind": "dangling",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "山崎開閉所 (untyped)",
+     "山崎開閉所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "光都一丁目変電所~開閉所線",
+     "山崎開閉所~山崎町変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.0819,
+     135.98872
+    ],
+    "to": [
+     35.08103,
+     135.98803
+    ],
+    "gap_m": 115.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "近江河西変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中部送電線_481",
+     "関西送電線_579"
+    ]
+   },
+   {
+    "from": [
+     35.09909,
+     136.80612
+    ],
+    "to": [
+     35.09977,
+     136.81033
+    ],
+    "gap_m": 390.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "名南変電所 154kV",
+     "名南変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "名南変電所~鎌倉町変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.09977,
+     136.8095
+    ],
+    "to": [
+     35.09977,
+     136.81033
+    ],
+    "gap_m": 75.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "名南変電所 154kV",
+     "名南変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "海部開閉所~名南変電所線",
+     "海部開閉所~学戸六丁目変電所線"
     ]
    },
    {
@@ -1604,6 +4097,34 @@
    },
    {
     "from": [
+     35.20711,
+     134.18793
+    ],
+    "to": [
+     35.20844,
+     134.18791
+    ],
+    "gap_m": 148.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chugoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "開閉所 220kV",
+     "開閉所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "光都一丁目変電所~開閉所線",
+     "山崎開閉所~山崎町変電所線"
+    ]
+   },
+   {
+    "from": [
      35.2085,
      138.2207
     ],
@@ -1630,6 +4151,33 @@
     "lines": [
      "tokyo_line_4282",
      "中部送電線_734"
+    ]
+   },
+   {
+    "from": [
+     35.22461,
+     135.93457
+    ],
+    "to": [
+     35.22429,
+     135.93567
+    ],
+    "gap_m": 106.2,
+    "kind": "dangling",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大津市変電所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "中部送電線_593",
+     "勝野変電所~大津市変電所線"
     ]
    },
    {
@@ -1689,6 +4237,139 @@
     "other_ends_at_from": 3,
     "lines": [
      "佐野川線"
+    ]
+   },
+   {
+    "from": [
+     35.24018,
+     136.8158
+    ],
+    "to": [
+     35.24133,
+     136.81564
+    ],
+    "gap_m": 128.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "井之口沖ノ田町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "岩倉稲沢線"
+    ]
+   },
+   {
+    "from": [
+     35.24092,
+     136.81864
+    ],
+    "to": [
+     35.24133,
+     136.81564
+    ],
+    "gap_m": 276.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "井之口沖ノ田町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "岩倉稲沢線"
+    ]
+   },
+   {
+    "from": [
+     35.24312,
+     136.82736
+    ],
+    "to": [
+     35.24308,
+     136.82847
+    ],
+    "gap_m": 101.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "春日西須ケ畑変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "岩倉稲沢線"
+    ]
+   },
+   {
+    "from": [
+     35.25471,
+     135.97116
+    ],
+    "to": [
+     35.25348,
+     135.96922
+    ],
+    "gap_m": 223.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大津市変電所_2 154kV",
+     "大津市変電所_2 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "西日本北小松線"
+    ]
+   },
+   {
+    "from": [
+     35.2556,
+     135.96705
+    ],
+    "to": [
+     35.25348,
+     135.96922
+    ],
+    "gap_m": 307.6,
+    "kind": "dangling",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大津市変電所_2 154kV",
+     "大津市変電所_2 77kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "中部送電線_593",
+     "勝野変電所~大津市変電所線"
     ]
    },
    {
@@ -1778,6 +4459,60 @@
    },
    {
     "from": [
+     35.28677,
+     136.8163
+    ],
+    "to": [
+     35.28875,
+     136.81726
+    ],
+    "gap_m": 237.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "森本変電所 154kV",
+     "森本変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "関西幹線"
+    ]
+   },
+   {
+    "from": [
+     35.28789,
+     136.81896
+    ],
+    "to": [
+     35.28875,
+     136.81726
+    ],
+    "gap_m": 181.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "森本変電所 154kV",
+     "森本変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "関西幹線"
+    ]
+   },
+   {
+    "from": [
      35.29808,
      136.00299
     ],
@@ -1802,9 +4537,557 @@
      "勝野変電所 154kV",
      "勝野変電所 77kV"
     ],
-    "other_ends_at_from": 4,
+    "other_ends_at_from": 2,
     "lines": [
-     "勝野変電所~安曇変電所線"
+     "中部送電線_593",
+     "勝野変電所~大津市変電所線",
+     "勝野変電所~安曇変電所線",
+     "西日本北小松線"
+    ]
+   },
+   {
+    "from": [
+     35.32892,
+     136.81913
+    ],
+    "to": [
+     35.32754,
+     136.82104
+    ],
+    "gap_m": 231.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北一宮変電所 154kV",
+     "北一宮変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中部送電線_70",
+     "関西送電線_443"
+    ]
+   },
+   {
+    "from": [
+     35.33086,
+     136.81885
+    ],
+    "to": [
+     35.32754,
+     136.82104
+    ],
+    "gap_m": 419.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北一宮変電所 154kV",
+     "北一宮変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北一宮加納線 (Kita Ichinomiya Kanō Sen)"
+    ]
+   },
+   {
+    "from": [
+     35.33384,
+     136.90233
+    ],
+    "to": [
+     35.3337,
+     136.9063
+    ],
+    "gap_m": 360.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大口町変電所 154kV",
+     "大口町変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "関西幹線"
+    ]
+   },
+   {
+    "from": [
+     35.33562,
+     136.90404
+    ],
+    "to": [
+     35.3337,
+     136.9063
+    ],
+    "gap_m": 296.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大口町変電所 154kV",
+     "大口町変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "関西幹線"
+    ]
+   },
+   {
+    "from": [
+     35.35897,
+     136.95836
+    ],
+    "to": [
+     35.35871,
+     136.96065
+    ],
+    "gap_m": 209.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "羽黒変電所 (untyped)",
+     "羽黒変電所 154kV",
+     "羽黒変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "関西幹線"
+    ]
+   },
+   {
+    "from": [
+     35.43842,
+     136.69543
+    ],
+    "to": [
+     35.43596,
+     136.69449
+    ],
+    "gap_m": 286.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu",
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北方開閉所 (Kitakata Kaiheisho) 154kV",
+     "北方開閉所 (Kitakata Kaiheisho) 275kV",
+     "北方開閉所 (Kitakata Kaiheisho) 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "小坂町小坂町変電所~北方開閉所 (Kitakata Kaiheisho)線",
+     "小坂町小坂町変電所~本巣市変電所線",
+     "関西電力送配電 154.0kV線"
+    ]
+   },
+   {
+    "from": [
+     35.50267,
+     136.87077
+    ],
+    "to": [
+     35.50514,
+     136.87053
+    ],
+    "gap_m": 275.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関開閉所 (untyped)",
+     "関開閉所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北部西濃線"
+    ]
+   },
+   {
+    "from": [
+     35.50464,
+     136.86849
+    ],
+    "to": [
+     35.50514,
+     136.87053
+    ],
+    "gap_m": 193.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku",
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関開閉所 (untyped)",
+     "関開閉所 275kV"
+    ],
+    "other_ends_at_from": 2,
+    "lines": [
+     "北町変電所~本巣市変電所線",
+     "北陸送電線_176",
+     "関開閉所~本巣市変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.50512,
+     136.87284
+    ],
+    "to": [
+     35.50514,
+     136.87053
+    ],
+    "gap_m": 209.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関開閉所 (untyped)",
+     "関開閉所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北部西濃線"
+    ]
+   },
+   {
+    "from": [
+     35.50588,
+     136.87295
+    ],
+    "to": [
+     35.50514,
+     136.87053
+    ],
+    "gap_m": 234.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関開閉所 (untyped)",
+     "関開閉所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "本巣市変電所~白川村変電所線",
+     "関開閉所~白川村変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.50668,
+     136.86681
+    ],
+    "to": [
+     35.50514,
+     136.87053
+    ],
+    "gap_m": 378.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関開閉所 (untyped)",
+     "関開閉所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "丸山幹線"
+    ]
+   },
+   {
+    "from": [
+     35.5271,
+     136.93516
+    ],
+    "to": [
+     35.52736,
+     136.9369
+    ],
+    "gap_m": 160.3,
+    "kind": "dangling",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北部変電所 154kV",
+     "北部変電所 275kV",
+     "北部変電所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "北部西濃線"
+    ]
+   },
+   {
+    "from": [
+     35.53004,
+     136.93321
+    ],
+    "to": [
+     35.52736,
+     136.9369
+    ],
+    "gap_m": 448.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北部変電所 154kV",
+     "北部変電所 275kV",
+     "北部変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "高根町上ケ洞変電所~三ツ渕変電所線",
+     "高根町上ケ洞変電所~北部変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.53103,
+     136.93591
+    ],
+    "to": [
+     35.52736,
+     136.9369
+    ],
+    "gap_m": 418.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北部変電所 154kV",
+     "北部変電所 275kV",
+     "北部変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "西部幹線"
+    ]
+   },
+   {
+    "from": [
+     35.54426,
+     134.50503
+    ],
+    "to": [
+     35.54255,
+     134.50639
+    ],
+    "gap_m": 226.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chugoku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "温泉変電所 (untyped)",
+     "温泉変電所 66kV",
+     "温泉変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中国送電線_238",
+     "関西送電線_203"
+    ]
+   },
+   {
+    "from": [
+     35.55416,
+     135.97219
+    ],
+    "to": [
+     35.55663,
+     135.97246
+    ],
+    "gap_m": 276.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "嶺南変電所 (untyped)",
+     "嶺南変電所 275kV",
+     "嶺南変電所 500kV",
+     "嶺南変電所 77kV"
+    ],
+    "other_ends_at_from": 2,
+    "lines": [
+     "八乙女変電所~嶺南変電所線",
+     "越前変電所~疋田変電所線",
+     "越前変電所~色浜変電所_2線"
+    ]
+   },
+   {
+    "from": [
+     35.55643,
+     135.97584
+    ],
+    "to": [
+     35.55663,
+     135.97246
+    ],
+    "gap_m": 306.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "嶺南変電所 (untyped)",
+     "嶺南変電所 275kV",
+     "嶺南変電所 500kV",
+     "嶺南変電所 77kV"
+    ],
+    "other_ends_at_from": 2,
+    "lines": [
+     "色浜変電所~嶺南変電所線",
+     "越前変電所~疋田変電所線",
+     "越前変電所~色浜変電所_2線"
+    ]
+   },
+   {
+    "from": [
+     35.5566,
+     135.97644
+    ],
+    "to": [
+     35.55663,
+     135.97246
+    ],
+    "gap_m": 360.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "嶺南変電所 (untyped)",
+     "嶺南変電所 275kV",
+     "嶺南変電所 500kV",
+     "嶺南変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "嶺南変電所~湖東変電所線",
+     "疋田変電所~湖東変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.55896,
+     135.97224
+    ],
+    "to": [
+     35.55663,
+     135.97246
+    ],
+    "gap_m": 260.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "kansai"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "嶺南変電所 (untyped)",
+     "嶺南変電所 275kV",
+     "嶺南変電所 500kV",
+     "嶺南変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "白木一丁目変電所~嶺南変電所線",
+     "色浜変電所~疋田変電所線"
     ]
    },
    {
@@ -1833,6 +5116,61 @@
     "lines": [
      "本巣市変電所~三ツ渕変電所線",
      "神洞変電所~三ツ渕変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.58299,
+     136.87817
+    ],
+    "to": [
+     35.58152,
+     136.88213
+    ],
+    "gap_m": 394.1,
+    "kind": "dangling",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "神洞変電所 154kV",
+     "神洞変電所 275kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "本巣市変電所~白川村変電所線",
+     "関開閉所~白川村変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.58873,
+     137.00997
+    ],
+    "to": [
+     35.58824,
+     137.01162
+    ],
+    "gap_m": 159.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "関市変電所_2"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "白鳥町大島変電所~三ツ渕変電所線",
+     "白鳥町大島変電所~関市変電所線"
     ]
    },
    {
@@ -1949,6 +5287,35 @@
    },
    {
     "from": [
+     35.63511,
+     136.96465
+    ],
+    "to": [
+     35.6355,
+     136.96235
+    ],
+    "gap_m": 212.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "Gifu Substation 154kV",
+     "Gifu Substation 500kV",
+     "Gifu Substation 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "白鳥町大島変電所~三ツ渕変電所線",
+     "白鳥町大島変電所~関市変電所線"
+    ]
+   },
+   {
+    "from": [
      35.63595,
      136.96166
     ],
@@ -1977,6 +5344,94 @@
    },
    {
     "from": [
+     35.63758,
+     136.95909
+    ],
+    "to": [
+     35.6355,
+     136.96235
+    ],
+    "gap_m": 375.0,
+    "kind": "dangling",
+    "from_regions": [
+     "hokuriku",
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "Gifu Substation 154kV",
+     "Gifu Substation 500kV",
+     "Gifu Substation 77kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "小坂町小坂町変電所~北方開閉所 (Kitakata Kaiheisho)線",
+     "小坂町小坂町変電所~本巣市変電所線",
+     "関西電力送配電 154.0kV線"
+    ]
+   },
+   {
+    "from": [
+     35.63896,
+     136.9636
+    ],
+    "to": [
+     35.6355,
+     136.96235
+    ],
+    "gap_m": 401.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "Gifu Substation 154kV",
+     "Gifu Substation 500kV",
+     "Gifu Substation 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "越美幹線"
+    ]
+   },
+   {
+    "from": [
+     35.6392,
+     136.96397
+    ],
+    "to": [
+     35.6355,
+     136.96235
+    ],
+    "gap_m": 437.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "Gifu Substation 154kV",
+     "Gifu Substation 500kV",
+     "Gifu Substation 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "白鳥町大島変電所~三ツ渕変電所線",
+     "白鳥町大島変電所~関市変電所線"
+    ]
+   },
+   {
+    "from": [
      35.6705,
      138.74332
     ],
@@ -2001,6 +5456,34 @@
     "other_ends_at_from": 1,
     "lines": [
      "大-勝 線"
+    ]
+   },
+   {
+    "from": [
+     35.70033,
+     137.68128
+    ],
+    "to": [
+     35.6981,
+     137.68044
+    ],
+    "gap_m": 259.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大桑村変電所_2 (untyped)",
+     "大桑村変電所_2 154kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "須原開閉所~木曽町変電所線"
     ]
    },
    {
@@ -2034,6 +5517,65 @@
    },
    {
     "from": [
+     35.80703,
+     136.17449
+    ],
+    "to": [
+     35.80939,
+     136.17446
+    ],
+    "gap_m": 262.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "奥野々変電所 154kV",
+     "奥野々変電所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "奥野々変電所~敦賀変電所線",
+     "奥野々変電所~色浜変電所_2線"
+    ]
+   },
+   {
+    "from": [
+     35.80927,
+     136.17549
+    ],
+    "to": [
+     35.80939,
+     136.17446
+    ],
+    "gap_m": 93.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "奥野々変電所 154kV",
+     "奥野々変電所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "奥野々変電所~敦賀変電所線"
+    ]
+   },
+   {
+    "from": [
      35.86295,
      137.96513
     ],
@@ -2058,6 +5600,35 @@
     "lines": [
      "tokyo_line_4141",
      "田畑変電所~東春近変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.90001,
+     136.15612
+    ],
+    "to": [
+     35.90226,
+     136.15569
+    ],
+    "gap_m": 253.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "中央一丁目変電所 (untyped)",
+     "中央一丁目変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中央一丁目変電所~八乙女変電所線",
+     "関西送電線_541"
     ]
    },
    {
@@ -2090,6 +5661,36 @@
    },
    {
     "from": [
+     35.94679,
+     137.26258
+    ],
+    "to": [
+     35.94827,
+     137.26259
+    ],
+    "gap_m": 164.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "小坂町小坂町変電所 (untyped)",
+     "小坂町小坂町変電所 154kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "小坂町小坂町変電所~北方開閉所 (Kitakata Kaiheisho)線",
+     "小坂町小坂町変電所~本巣市変電所線",
+     "関西電力送配電 154.0kV線"
+    ]
+   },
+   {
+    "from": [
      35.97074,
      139.07469
     ],
@@ -2114,6 +5715,37 @@
     "other_ends_at_from": 0,
     "lines": [
      "秩父変電所~昭電秩父変電所線"
+    ]
+   },
+   {
+    "from": [
+     35.99425,
+     136.41532
+    ],
+    "to": [
+     35.99496,
+     136.41467
+    ],
+    "gap_m": 98.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "chubu",
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "越前変電所 154kV",
+     "越前変電所 275kV",
+     "越前変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "八乙女変電所~嶺南変電所線",
+     "越前変電所~疋田変電所線",
+     "越前変電所~色浜変電所_2線"
     ]
    },
    {
@@ -2186,6 +5818,33 @@
    },
    {
     "from": [
+     36.16962,
+     139.90352
+    ],
+    "to": [
+     36.16775,
+     139.90391
+    ],
+    "gap_m": 211.1,
+    "kind": "dangling",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新筑波変電所 154kV",
+     "新筑波変電所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "福島東幹線"
+    ]
+   },
+   {
+    "from": [
      36.17118,
      137.64552
     ],
@@ -2247,6 +5906,115 @@
    },
    {
     "from": [
+     36.25174,
+     136.36695
+    ],
+    "to": [
+     36.25321,
+     136.36607
+    ],
+    "gap_m": 181.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "山中変電所 66kV",
+     "山中変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "leadin",
+     "我谷線"
+    ]
+   },
+   {
+    "from": [
+     36.25221,
+     136.36284
+    ],
+    "to": [
+     36.25321,
+     136.36607
+    ],
+    "gap_m": 310.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "山中変電所 66kV",
+     "山中変電所 77kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "大堂寺線"
+    ]
+   },
+   {
+    "from": [
+     36.27211,
+     137.92124
+    ],
+    "to": [
+     36.27487,
+     137.91941
+    ],
+    "gap_m": 348.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "安曇野市変電所_4"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "安曇野市変電所_2~松本市変電所線",
+     "安曇野市変電所~新橋変電所線"
+    ]
+   },
+   {
+    "from": [
+     36.2773,
+     137.91782
+    ],
+    "to": [
+     36.27487,
+     137.91941
+    ],
+    "gap_m": 305.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "安曇野市変電所_4"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "安曇野市変電所_2~松本市変電所線",
+     "安曇野市変電所~新橋変電所線"
+    ]
+   },
+   {
+    "from": [
      36.29961,
      136.32475
     ],
@@ -2255,7 +6023,7 @@
      136.32484
     ],
     "gap_m": 8.2,
-    "kind": "substation_pair",
+    "kind": "dangling",
     "from_regions": [
      "chubu"
     ],
@@ -2268,11 +6036,93 @@
     "to_subs": [
      "大聖寺変電所"
     ],
-    "other_ends_at_from": 1,
+    "other_ends_at_from": 0,
     "lines": [
+     "大堂寺線",
      "山代線",
      "片山津線",
      "牛ノ谷変電所~南郷町変電所線"
+    ]
+   },
+   {
+    "from": [
+     36.3454,
+     140.0296
+    ],
+    "to": [
+     36.34542,
+     140.0321
+    ],
+    "gap_m": 224.2,
+    "kind": "dangling",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "協和変電所 500kV",
+     "協和変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "福島東幹線"
+    ]
+   },
+   {
+    "from": [
+     36.35042,
+     137.92343
+    ],
+    "to": [
+     36.34988,
+     137.92558
+    ],
+    "gap_m": 201.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "安曇野市変電所_2"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "namebind",
+     "中部電力パワーグリッド 77.0kV線"
+    ]
+   },
+   {
+    "from": [
+     36.44304,
+     137.93455
+    ],
+    "to": [
+     36.44342,
+     137.93612
+    ],
+    "gap_m": 146.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "生坂村変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "池田変電所~大町市変電所_2線",
+     "生坂村変電所~大町市変電所線"
     ]
    },
    {
@@ -2309,6 +6159,34 @@
    },
    {
     "from": [
+     36.49402,
+     136.91639
+    ],
+    "to": [
+     36.49568,
+     136.91647
+    ],
+    "gap_m": 184.9,
+    "kind": "dangling",
+    "from_regions": [
+     "kansai"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "城端開閉所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "城端開閉所~疋田変電所線",
+     "城端開閉所~色浜変電所_2線",
+     "関西電力送配電 275.0kV線"
+    ]
+   },
+   {
+    "from": [
      36.49582,
      136.9165
     ],
@@ -2317,7 +6195,7 @@
      136.91647
     ],
     "gap_m": 15.8,
-    "kind": "same_substation",
+    "kind": "dangling",
     "from_regions": [
      "chubu"
     ],
@@ -2330,14 +6208,152 @@
     "to_subs": [
      "城端開閉所"
     ],
-    "other_ends_at_from": 1,
+    "other_ends_at_from": 0,
     "lines": [
      "加賀変電所~城端開閉所線",
      "城端開閉所~城変電所_2線",
      "城端開閉所~城変電所線",
      "城端開閉所~婦中町新屋変電所線",
      "城端開閉所~新富山変電所線",
-     "成出変電所~城端開閉所線"
+     "城端開閉所~疋田変電所線",
+     "城端開閉所~色浜変電所_2線",
+     "成出変電所~城端開閉所線",
+     "関西電力送配電 275.0kV線"
+    ]
+   },
+   {
+    "from": [
+     36.52004,
+     140.15461
+    ],
+    "to": [
+     36.52302,
+     140.15291
+    ],
+    "gap_m": 364.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新茂木 275kV",
+     "新茂木 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "福島東幹線"
+    ]
+   },
+   {
+    "from": [
+     36.52117,
+     140.15609
+    ],
+    "to": [
+     36.52302,
+     140.15291
+    ],
+    "gap_m": 351.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新茂木 275kV",
+     "新茂木 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "福島東幹線"
+    ]
+   },
+   {
+    "from": [
+     36.52406,
+     140.15544
+    ],
+    "to": [
+     36.52302,
+     140.15291
+    ],
+    "gap_m": 254.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新茂木 275kV",
+     "新茂木 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "福島幹線"
+    ]
+   },
+   {
+    "from": [
+     36.57813,
+     139.22584
+    ],
+    "to": [
+     36.57928,
+     139.22324
+    ],
+    "gap_m": 265.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "東群馬変電所 275kV",
+     "東群馬変電所 500kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "奥只見線"
+    ]
+   },
+   {
+    "from": [
+     36.58171,
+     139.22583
+    ],
+    "to": [
+     36.57928,
+     139.22324
+    ],
+    "gap_m": 356.1,
+    "kind": "dangling",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "東群馬変電所 275kV",
+     "東群馬変電所 500kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "南いわき幹線"
     ]
    },
    {
@@ -2371,6 +6387,324 @@
    },
    {
     "from": [
+     36.61184,
+     139.9817
+    ],
+    "to": [
+     36.61408,
+     139.98036
+    ],
+    "gap_m": 276.6,
+    "kind": "dangling",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "宝積寺変電所 154kV",
+     "宝積寺変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "猪苗代新幹線"
+    ]
+   },
+   {
+    "from": [
+     36.62241,
+     139.98962
+    ],
+    "to": [
+     36.62461,
+     139.9902
+    ],
+    "gap_m": 250.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "宝積寺変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "猪苗代新幹線"
+    ]
+   },
+   {
+    "from": [
+     36.62674,
+     139.99076
+    ],
+    "to": [
+     36.62461,
+     139.9902
+    ],
+    "gap_m": 242.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "宝積寺変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "猪苗代新幹線"
+    ]
+   },
+   {
+    "from": [
+     36.71158,
+     139.83632
+    ],
+    "to": [
+     36.71272,
+     139.83219
+    ],
+    "gap_m": 389.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新今市開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "新いわき幹線"
+    ]
+   },
+   {
+    "from": [
+     36.71248,
+     139.82858
+    ],
+    "to": [
+     36.71272,
+     139.83219
+    ],
+    "gap_m": 323.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新今市開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南いわき幹線"
+    ]
+   },
+   {
+    "from": [
+     36.71474,
+     139.83063
+    ],
+    "to": [
+     36.71272,
+     139.83219
+    ],
+    "gap_m": 264.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新今市開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "南いわき幹線"
+    ]
+   },
+   {
+    "from": [
+     36.71681,
+     138.97589
+    ],
+    "to": [
+     36.71645,
+     138.97919
+    ],
+    "gap_m": 297.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "小松変電所 154kV",
+     "小松変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "須田貝線"
+    ]
+   },
+   {
+    "from": [
+     36.72555,
+     139.22497
+    ],
+    "to": [
+     36.72853,
+     139.22343
+    ],
+    "gap_m": 359.1,
+    "kind": "dangling",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "摺淵変電所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "上毛幹線"
+    ]
+   },
+   {
+    "from": [
+     36.73547,
+     139.96601
+    ],
+    "to": [
+     36.7373,
+     139.96403
+    ],
+    "gap_m": 269.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "下滝開閉所 (untyped)",
+     "下滝開閉所 154kV",
+     "下滝開閉所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "猪苗代新幹線"
+    ]
+   },
+   {
+    "from": [
+     36.74043,
+     139.96274
+    ],
+    "to": [
+     36.7373,
+     139.96403
+    ],
+    "gap_m": 366.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "下滝開閉所 (untyped)",
+     "下滝開閉所 154kV",
+     "下滝開閉所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "蒲須坂-矢板線 / JR矢板線"
+    ]
+   },
+   {
+    "from": [
+     36.79006,
+     140.71305
+    ],
+    "to": [
+     36.79138,
+     140.71674
+    ],
+    "gap_m": 360.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "木皿変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北茨城線"
+    ]
+   },
+   {
+    "from": [
+     36.79305,
+     140.71915
+    ],
+    "to": [
+     36.79138,
+     140.71674
+    ],
+    "gap_m": 284.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tohoku"
+    ],
+    "to_regions": [
+     "tokyo"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "木皿変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北茨城線"
+    ]
+   },
+   {
+    "from": [
      36.9382,
      138.80778
     ],
@@ -2394,6 +6728,169 @@
     "other_ends_at_from": 0,
     "lines": [
      "湯沢変電所~越後湯沢変電所線"
+    ]
+   },
+   {
+    "from": [
+     36.96164,
+     140.89878
+    ],
+    "to": [
+     36.96101,
+     140.90043
+    ],
+    "gap_m": 162.7,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "小名浜変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "小平線"
+    ]
+   },
+   {
+    "from": [
+     36.98979,
+     137.9249
+    ],
+    "to": [
+     36.98996,
+     137.92703
+    ],
+    "gap_m": 190.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "hokuriku"
+    ],
+    "to_regions": [
+     "chubu"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "糸魚川市変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中部送電線_701",
+     "糸魚川変電所~大字須沢変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.00553,
+     140.72405
+    ],
+    "to": [
+     37.00487,
+     140.72687
+    ],
+    "gap_m": 261.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "上遠野変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "6D1D"
+    ]
+   },
+   {
+    "from": [
+     37.0082,
+     137.78824
+    ],
+    "to": [
+     37.00991,
+     137.79248
+    ],
+    "gap_m": 422.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大字青海変電所 (untyped)",
+     "大字青海変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "朝日町変電所_2~大字青海変電所線",
+     "朝日町変電所~糸魚川市変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.00832,
+     137.7954
+    ],
+    "to": [
+     37.00991,
+     137.79248
+    ],
+    "gap_m": 314.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大字青海変電所 (untyped)",
+     "大字青海変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "中部送電線_702",
+     "北陸送電線_119"
+    ]
+   },
+   {
+    "from": [
+     37.01138,
+     137.79426
+    ],
+    "to": [
+     37.00991,
+     137.79248
+    ],
+    "gap_m": 227.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大字青海変電所 (untyped)",
+     "大字青海変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "白馬村変電所~大字青海変電所線",
+     "白馬村変電所~糸魚川市変電所線"
     ]
    },
    {
@@ -2471,10 +6968,573 @@
     "to_subs": [
      "花園変電所"
     ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4267",
+     "tokyo_line_4269",
+     "東北電力ネットワーク 66.0kV線",
+     "白河市変電所~花園変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.03799,
+     140.37856
+    ],
+    "to": [
+     37.03755,
+     140.38248
+    ],
+    "gap_m": 351.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "花園変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4268",
+     "東北電力ネットワーク 66.0kV線"
+    ]
+   },
+   {
+    "from": [
+     37.06249,
+     137.00982
+    ],
+    "to": [
+     37.06439,
+     137.00849
+    ],
+    "gap_m": 242.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "大田町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "七尾大田火力線"
+    ]
+   },
+   {
+    "from": [
+     37.06771,
+     136.73954
+    ],
+    "to": [
+     37.06929,
+     136.74056
+    ],
+    "gap_m": 197.8,
+    "kind": "dangling",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "志賀町変電所 500kV",
+     "志賀町変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "志賀中能登線"
+    ]
+   },
+   {
+    "from": [
+     37.06792,
+     140.86763
+    ],
+    "to": [
+     37.06701,
+     140.87008
+    ],
+    "gap_m": 240.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "好間変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "好間線"
+    ]
+   },
+   {
+    "from": [
+     37.06918,
+     140.84984
+    ],
+    "to": [
+     37.0684,
+     140.84762
+    ],
+    "gap_m": 215.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "好間町上好間変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "好間線"
+    ]
+   },
+   {
+    "from": [
+     37.06962,
+     140.01042
+    ],
+    "to": [
+     37.07048,
+     140.01203
+    ],
+    "gap_m": 172.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "那須湯本変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "那須線"
+    ]
+   },
+   {
+    "from": [
+     37.07201,
+     136.92882
+    ],
+    "to": [
+     37.07353,
+     136.92952
+    ],
+    "gap_m": 180.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "和倉変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "和倉線"
+    ]
+   },
+   {
+    "from": [
+     37.07639,
+     140.85766
+    ],
+    "to": [
+     37.07339,
+     140.85744
+    ],
+    "gap_m": 334.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "いわき市変電所_4"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4277",
+     "東北電力ネットワーク 66.0kV線"
+    ]
+   },
+   {
+    "from": [
+     37.07765,
+     140.10768
+    ],
+    "to": [
+     37.07914,
+     140.10657
+    ],
+    "gap_m": 193.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "豊原変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "豊原線"
+    ]
+   },
+   {
+    "from": [
+     37.08256,
+     140.84792
+    ],
+    "to": [
+     37.0819,
+     140.84552
+    ],
+    "gap_m": 225.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "いわき市変電所_3"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4277",
+     "東北電力ネットワーク 66.0kV線"
+    ]
+   },
+   {
+    "from": [
+     37.10027,
+     139.90604
+    ],
+    "to": [
+     37.09858,
+     139.90536
+    ],
+    "gap_m": 197.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "沼原電力所 (untyped)",
+     "沼原電力所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "沼原線"
+    ]
+   },
+   {
+    "from": [
+     37.10077,
+     140.35826
+    ],
+    "to": [
+     37.10387,
+     140.35786
+    ],
+    "gap_m": 346.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "白河市変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4267",
+     "白河市変電所~花園変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.10586,
+     140.35583
+    ],
+    "to": [
+     37.10387,
+     140.35786
+    ],
+    "gap_m": 285.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "白河市変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4267",
+     "泉崎村変電所~白河市変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.10686,
+     140.22393
+    ],
+    "to": [
+     37.10921,
+     140.22755
+    ],
+    "gap_m": 414.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "合戦坂変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4252",
+     "合戦坂変電所~米村道北変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.11035,
+     140.2313
+    ],
+    "to": [
+     37.10921,
+     140.22755
+    ],
+    "gap_m": 356.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "合戦坂変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4256",
+     "東北電力ネットワーク 66.0kV線"
+    ]
+   },
+   {
+    "from": [
+     37.1111,
+     140.2311
+    ],
+    "to": [
+     37.10921,
+     140.22755
+    ],
+    "gap_m": 378.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "合戦坂変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4266",
+     "米村道北変電所~合戦坂変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.11626,
+     140.8714
+    ],
+    "to": [
+     37.11406,
+     140.87453
+    ],
+    "gap_m": 370.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北平変電所 154kV",
+     "北平変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "北小名浜変電所~いわき変電所線",
+     "北平変電所~いわき変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.12579,
+     139.71911
+    ],
+    "to": [
+     37.1242,
+     139.71883
+    ],
+    "gap_m": 178.7,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [
+     "tokyo_sub_1802"
+    ],
+    "to_subs": [
+     "糸沢変電所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "tokyo_line_4242",
+     "南会津町変電所~糸沢変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.14023,
+     140.71941
+    ],
+    "to": [
+     37.14221,
+     140.72229
+    ],
+    "gap_m": 337.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新いわき開閉所"
+    ],
     "other_ends_at_from": 2,
     "lines": [
-     "tokyo_line_4269",
-     "東北電力ネットワーク 66.0kV線"
+     "福島東幹線"
+    ]
+   },
+   {
+    "from": [
+     37.14103,
+     140.72646
+    ],
+    "to": [
+     37.14221,
+     140.72229
+    ],
+    "gap_m": 392.7,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新いわき開閉所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "広野火力線"
+    ]
+   },
+   {
+    "from": [
+     37.1412,
+     140.72125
+    ],
+    "to": [
+     37.14221,
+     140.72229
+    ],
+    "gap_m": 145.5,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新いわき開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "福島幹線"
     ]
    },
    {
@@ -2501,6 +7561,166 @@
     "other_ends_at_from": 0,
     "lines": [
      "福島東幹線"
+    ]
+   },
+   {
+    "from": [
+     37.14307,
+     140.719
+    ],
+    "to": [
+     37.14221,
+     140.72229
+    ],
+    "gap_m": 307.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新いわき開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "新いわき幹線"
+    ]
+   },
+   {
+    "from": [
+     37.1451,
+     140.72023
+    ],
+    "to": [
+     37.14221,
+     140.72229
+    ],
+    "gap_m": 370.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "新いわき開閉所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "川内線"
+    ]
+   },
+   {
+    "from": [
+     37.15745,
+     140.46017
+    ],
+    "to": [
+     37.15661,
+     140.46109
+    ],
+    "gap_m": 124.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "屋敷ノ入変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4258",
+     "屋敷ノ入変電所~花咲変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.15828,
+     140.4606
+    ],
+    "to": [
+     37.15661,
+     140.46109
+    ],
+    "gap_m": 190.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "屋敷ノ入変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4258",
+     "屋敷ノ入変電所~須賀川変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.16042,
+     140.32051
+    ],
+    "to": [
+     37.16324,
+     140.31997
+    ],
+    "gap_m": 317.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "泉崎村変電所 154kV",
+     "泉崎村変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4267",
+     "泉崎村変電所~白河市変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.16057,
+     139.24316
+    ],
+    "to": [
+     37.16041,
+     139.24373
+    ],
+    "gap_m": 53.6,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "魚沼市変電所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "奥只見線"
     ]
    },
    {
@@ -2532,6 +7752,62 @@
    },
    {
     "from": [
+     37.16433,
+     140.3202
+    ],
+    "to": [
+     37.16324,
+     140.31997
+    ],
+    "gap_m": 123.0,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "泉崎村変電所 154kV",
+     "泉崎村変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "tokyo_line_4259",
+     "須賀川変電所~泉崎村変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.16752,
+     140.22029
+    ],
+    "to": [
+     37.16908,
+     140.21994
+    ],
+    "gap_m": 176.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "豊地変電所 154kV",
+     "豊地変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4266",
+     "豊地変電所~米村道北変電所線"
+    ]
+   },
+   {
+    "from": [
      37.19856,
      140.31248
     ],
@@ -2551,10 +7827,312 @@
     "to_subs": [
      "花咲変電所"
     ],
-    "other_ends_at_from": 2,
+    "other_ends_at_from": 1,
     "lines": [
+     "tokyo_line_4271",
      "tokyo_line_4273",
-     "屋敷ノ入変電所~花咲変電所線"
+     "屋敷ノ入変電所~花咲変電所線",
+     "泉崎村変電所~花咲変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.19984,
+     139.79244
+    ],
+    "to": [
+     37.20161,
+     139.79195
+    ],
+    "gap_m": 201.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南会津町変電所_2"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4242",
+     "南会津町変電所~糸沢変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.20307,
+     139.79532
+    ],
+    "to": [
+     37.20161,
+     139.79195
+    ],
+    "gap_m": 340.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南会津町変電所_2"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4243",
+     "下郷町変電所~南会津町変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.22865,
+     136.91209
+    ],
+    "to": [
+     37.23143,
+     136.91083
+    ],
+    "gap_m": 329.0,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "北陸電力穴水変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "穴水線"
+    ]
+   },
+   {
+    "from": [
+     37.23838,
+     141.00866
+    ],
+    "to": [
+     37.23729,
+     141.00997
+    ],
+    "gap_m": 167.9,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "広野町変電所 500kV",
+     "広野町変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "広野火力線"
+    ]
+   },
+   {
+    "from": [
+     37.24099,
+     136.88995
+    ],
+    "to": [
+     37.2406,
+     136.89292
+    ],
+    "gap_m": 266.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "chubu"
+    ],
+    "to_regions": [
+     "hokuriku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "上野変電所_2 154kV",
+     "上野変電所_2 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "鳳至線"
+    ]
+   },
+   {
+    "from": [
+     37.25249,
+     140.37994
+    ],
+    "to": [
+     37.25471,
+     140.38256
+    ],
+    "gap_m": 339.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "前田川扇町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4263",
+     "岡の台変電所~前田川扇町変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.27475,
+     140.36746
+    ],
+    "to": [
+     37.27655,
+     140.36446
+    ],
+    "gap_m": 332.8,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南須賀川変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4261",
+     "前田川扇町変電所~南須賀川変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.2765,
+     140.36255
+    ],
+    "to": [
+     37.27655,
+     140.36446
+    ],
+    "gap_m": 169.3,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南須賀川変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4261",
+     "南須賀川変電所~西山寺町変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.2831,
+     140.63239
+    ],
+    "to": [
+     37.28053,
+     140.63388
+    ],
+    "gap_m": 315.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "小野新町変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4265",
+     "郡山変電所~小野新町変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.30363,
+     140.42318
+    ],
+    "to": [
+     37.30586,
+     140.42603
+    ],
+    "gap_m": 354.0,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "須賀川変電所 154kV",
+     "須賀川変電所 275kV",
+     "須賀川変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "tokyo_line_4258",
+     "屋敷ノ入変電所~須賀川変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.30371,
+     140.42615
+    ],
+    "to": [
+     37.30586,
+     140.42603
+    ],
+    "gap_m": 239.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "須賀川変電所 154kV",
+     "須賀川変電所 275kV",
+     "須賀川変電所 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4259",
+     "須賀川変電所~泉崎村変電所線"
     ]
    },
    {
@@ -2588,6 +8166,63 @@
    },
    {
     "from": [
+     37.30586,
+     140.42397
+    ],
+    "to": [
+     37.30586,
+     140.42603
+    ],
+    "gap_m": 182.4,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "須賀川変電所 154kV",
+     "須賀川変電所 275kV",
+     "須賀川変電所 66kV"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "tokyo_line_4261",
+     "前田川扇町変電所~須賀川変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.31625,
+     139.28735
+    ],
+    "to": [
+     37.31479,
+     139.28857
+    ],
+    "gap_m": 195.1,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "田子倉発電所 154kV",
+     "田子倉発電所 275kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "tokyo_line_4172",
+     "田子倉発電所~渋川変電所線"
+    ]
+   },
+   {
+    "from": [
      37.33567,
      140.80539
     ],
@@ -2611,6 +8246,33 @@
     "lines": [
      "tokyo_line_4275",
      "上川内変電所~田村市変電所線"
+    ]
+   },
+   {
+    "from": [
+     37.34229,
+     139.90557
+    ],
+    "to": [
+     37.34492,
+     139.90859
+    ],
+    "gap_m": 396.4,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "下郷町変電所_2 500kV",
+     "下郷町変電所_2 66kV"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "下郷線"
     ]
    },
    {
@@ -2640,9 +8302,247 @@
     "lines": [
      "福島東幹線"
     ]
+   },
+   {
+    "from": [
+     37.3804,
+     140.80729
+    ],
+    "to": [
+     37.38109,
+     140.80564
+    ],
+    "gap_m": 164.9,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南いわき開閉所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "川内線"
+    ]
+   },
+   {
+    "from": [
+     37.38064,
+     140.80179
+    ],
+    "to": [
+     37.38109,
+     140.80564
+    ],
+    "gap_m": 344.2,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "南いわき開閉所"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "南いわき幹線"
+    ]
+   },
+   {
+    "from": [
+     37.41077,
+     140.07927
+    ],
+    "to": [
+     37.41192,
+     140.0773
+    ],
+    "gap_m": 216.2,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "赤津変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "猪苗代旧幹線"
+    ]
+   },
+   {
+    "from": [
+     37.41287,
+     140.0743
+    ],
+    "to": [
+     37.41192,
+     140.0773
+    ],
+    "gap_m": 285.6,
+    "kind": "junction_to_substation",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "赤津変電所"
+    ],
+    "other_ends_at_from": 1,
+    "lines": [
+     "猪苗代旧幹線"
+    ]
+   },
+   {
+    "from": [
+     37.54234,
+     140.00323
+    ],
+    "to": [
+     37.54354,
+     140.00344
+    ],
+    "gap_m": 134.9,
+    "kind": "dangling",
+    "from_regions": [
+     "tokyo"
+    ],
+    "to_regions": [
+     "tohoku"
+    ],
+    "from_subs": [],
+    "to_subs": [
+     "会津若松市変電所_2"
+    ],
+    "other_ends_at_from": 0,
+    "lines": [
+     "猪苗代旧幹線"
+    ]
    }
   ],
   "collapsed": [
+   {
+    "region": "tohoku",
+    "name": "南いわき幹線",
+    "kv": 500.0,
+    "at": [
+     36.71272,
+     139.83219
+    ]
+   },
+   {
+    "region": "tohoku",
+    "name": "福島東幹線",
+    "kv": 500.0,
+    "at": [
+     36.52302,
+     140.15291
+    ]
+   },
+   {
+    "region": "tohoku",
+    "name": "猪苗代新幹線",
+    "kv": 154.0,
+    "at": [
+     36.62461,
+     139.9902
+    ]
+   },
+   {
+    "region": "tohoku",
+    "name": "北茨城線",
+    "kv": 66.0,
+    "at": [
+     36.79138,
+     140.71674
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "福島幹線",
+    "kv": 500.0,
+    "at": [
+     37.14221,
+     140.72229
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "猪苗代旧幹線",
+    "kv": 154.0,
+    "at": [
+     37.41192,
+     140.0773
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "tokyo_line_4258",
+    "kv": 66.0,
+    "at": [
+     37.15661,
+     140.46109
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "tokyo_line_4261",
+    "kv": 66.0,
+    "at": [
+     37.27655,
+     140.36446
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "tokyo_line_4267",
+    "kv": 66.0,
+    "at": [
+     37.10387,
+     140.35786
+    ]
+   },
+   {
+    "region": "tokyo",
+    "name": "tokyo_line_4268",
+    "kv": 66.0,
+    "at": [
+     37.03755,
+     140.38248
+    ]
+   },
+   {
+    "region": "chubu",
+    "name": "伊勢幹線",
+    "kv": 275.0,
+    "at": [
+     34.44569,
+     136.36997
+    ]
+   },
+   {
+    "region": "chubu",
+    "name": "越前変電所~疋田変電所線",
+    "kv": 500.0,
+    "at": [
+     35.55663,
+     135.97246
+    ]
+   },
    {
     "region": "chubu",
     "name": "勝野変電所 intra-substation 77kV stub",
@@ -2687,8 +8587,6102 @@
      36.47786,
      136.97971
     ]
+   },
+   {
+    "region": "hokuriku",
+    "name": "越前変電所~色浜変電所_2線",
+    "kv": 500.0,
+    "at": [
+     35.55663,
+     135.97246
+    ]
+   },
+   {
+    "region": "hokuriku",
+    "name": "中部電力パワーグリッド 275.0kV線",
+    "kv": 275.0,
+    "at": [
+     35.04427,
+     136.08406
+    ]
+   },
+   {
+    "region": "hokuriku",
+    "name": "白鳥町大島変電所~三ツ渕変電所線",
+    "kv": 77.0,
+    "at": [
+     35.6355,
+     136.96235
+    ]
+   },
+   {
+    "region": "hokuriku",
+    "name": "安曇野市変電所_2~松本市変電所線",
+    "kv": 77.0,
+    "at": [
+     36.27487,
+     137.91941
+    ]
+   },
+   {
+    "region": "kansai",
+    "name": "飛島七宝線 (Tobishima Shippō Sen)",
+    "kv": 154.0,
+    "at": [
+     35.06264,
+     136.80903
+    ]
+   },
+   {
+    "region": "kansai",
+    "name": "関西幹線",
+    "kv": 154.0,
+    "at": [
+     35.3337,
+     136.9063
+    ]
+   },
+   {
+    "region": "kansai",
+    "name": "関西幹線",
+    "kv": 154.0,
+    "at": [
+     35.28875,
+     136.81726
+    ]
+   },
+   {
+    "region": "kansai",
+    "name": "岩倉稲沢線",
+    "kv": 154.0,
+    "at": [
+     35.24133,
+     136.81564
+    ]
+   },
+   {
+    "region": "kansai",
+    "name": "北部西濃線",
+    "kv": 275.0,
+    "at": [
+     35.50514,
+     136.87053
+    ]
+   },
+   {
+    "region": "chugoku",
+    "name": "応神東線",
+    "kv": 66.0,
+    "at": [
+     34.11705,
+     134.51729
+    ]
+   },
+   {
+    "region": "chugoku",
+    "name": "鉢変電所~大殿変電所線",
+    "kv": 0.0,
+    "at": [
+     33.67362,
+     134.42005
+    ]
+   },
+   {
+    "region": "chugoku",
+    "name": "本山町変電所~井川変電所線",
+    "kv": 187.0,
+    "at": [
+     33.63565,
+     133.69002
+    ]
+   },
+   {
+    "region": "chugoku",
+    "name": "若松安瀬上線・若松安瀬下線",
+    "kv": 66.0,
+    "at": [
+     33.92408,
+     130.78173
+    ]
+   },
+   {
+    "region": "shikoku",
+    "name": "大州四丁目変電所~広島補助き電区分所線",
+    "kv": 110.0,
+    "at": [
+     34.404,
+     132.577
+    ]
+   },
+   {
+    "region": "shikoku",
+    "name": "大州四丁目変電所~南西条変電所線",
+    "kv": 0.0,
+    "at": [
+     34.404,
+     132.577
+    ]
+   },
+   {
+    "region": "shikoku",
+    "name": "向島変電所~沼隈町大字草深変電所線",
+    "kv": 0.0,
+    "at": [
+     34.46168,
+     133.24966
+    ]
    }
   ],
-  "too_far": []
+  "too_far": [
+   {
+    "names": [
+     "岩倉稲沢線"
+    ],
+    "gaps_m": [
+     153.5,
+     624.2
+    ]
+   }
+  ]
+ },
+ "splits": {
+  "what": "区切りの違う地域の写しの区切りをそろえた帳簿(介入#60 案、#59・#58 の前。heal は #58 のあと)",
+  "n_shared_segments": 47680,
+  "n_candidate_points": 477,
+  "n_points_skipped_kv": 56,
+  "n_skipped_island": 140,
+  "n_skipped_own_node": 0,
+  "n_edges_split": 223,
+  "n_pieces": 549,
+  "n_nodes_made": 326,
+  "why": {
+   "end": 444,
+   "diverge": 33
+  },
+  "skipped_island": [
+   [
+    "chubu",
+    [
+     34.83486,
+     137.4622
+    ]
+   ],
+   [
+    "chubu",
+    [
+     34.85503,
+     138.12876
+    ]
+   ],
+   [
+    "chubu",
+    [
+     34.88496,
+     138.3008
+    ]
+   ],
+   [
+    "chubu",
+    [
+     34.95284,
+     138.39913
+    ]
+   ],
+   [
+    "chubu",
+    [
+     34.9652,
+     138.31689
+    ]
+   ],
+   [
+    "chubu",
+    [
+     34.96688,
+     138.42084
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.0144,
+     138.39104
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.02212,
+     138.41245
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.02801,
+     138.46545
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.08499,
+     137.83901
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.13283,
+     138.1317
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.14948,
+     138.1304
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.152,
+     138.68247
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.2675,
+     139.16517
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.28587,
+     138.5855
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.34684,
+     138.56942
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.37957,
+     137.9912
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.3865,
+     138.03224
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.48965,
+     138.77815
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.52558,
+     138.31237
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.54942,
+     138.0498
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.55121,
+     138.04935
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.55892,
+     138.91772
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.56181,
+     138.92041
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.56863,
+     138.49584
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.56885,
+     138.49888
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.60097,
+     138.88529
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.60259,
+     138.88948
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.60532,
+     138.91113
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.61229,
+     138.95739
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.61532,
+     138.93963
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.61566,
+     138.95951
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.61603,
+     138.94557
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.63548,
+     138.57043
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.63567,
+     138.57796
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.63634,
+     138.57733
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.67146,
+     138.73057
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.67789,
+     138.58185
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.70791,
+     138.91396
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.74472,
+     137.93525
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.82106,
+     138.0869
+    ]
+   ],
+   [
+    "chubu",
+    [
+     35.85398,
+     138.0936
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.00413,
+     138.16546
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.07894,
+     138.47434
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.09047,
+     138.47636
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.1252,
+     138.46714
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.15621,
+     138.47276
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.28853,
+     139.20022
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.33782,
+     138.35143
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.34236,
+     139.00895
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.4389,
+     137.92444
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.47433,
+     139.02509
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.49307,
+     138.18957
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.53617,
+     139.06007
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.54054,
+     139.06056
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.61255,
+     139.06305
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.62079,
+     138.80269
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.68347,
+     138.19564
+    ]
+   ],
+   [
+    "chubu",
+    [
+     36.80225,
+     138.7821
+    ]
+   ],
+   [
+    "hokkaido",
+    [
+     41.18812,
+     141.31039
+    ]
+   ],
+   [
+    "hokkaido",
+    [
+     41.18877,
+     141.38442
+    ]
+   ],
+   [
+    "hokkaido",
+    [
+     41.20894,
+     140.99922
+    ]
+   ],
+   [
+    "hokkaido",
+    [
+     41.24711,
+     141.13039
+    ]
+   ],
+   [
+    "hokkaido",
+    [
+     41.29162,
+     141.18566
+    ]
+   ],
+   [
+    "hokuriku",
+    [
+     36.13155,
+     137.92972
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.50435,
+     140.9171
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.58182,
+     140.41993
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.59583,
+     140.33654
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.60149,
+     140.34746
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.68174,
+     140.3833
+    ]
+   ],
+   [
+    "tohoku",
+    [
+     41.8175,
+     140.60963
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     34.85384,
+     138.22996
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     34.92891,
+     137.55747
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     34.93304,
+     137.57047
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.0144,
+     138.39104
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.13283,
+     138.1317
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.14948,
+     138.1304
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.16794,
+     138.76068
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.17226,
+     138.69007
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.28587,
+     138.5855
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.56035,
+     137.8923
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.56181,
+     138.92041
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.59668,
+     137.94678
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.60625,
+     138.91368
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.61152,
+     137.97338
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.61301,
+     138.55097
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.70491,
+     138.72095
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.74096,
+     137.94086
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.7865,
+     138.39709
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.81487,
+     138.07309
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.83173,
+     137.9938
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.83213,
+     138.00002
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.95945,
+     138.16997
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.97856,
+     138.18575
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.98146,
+     138.18899
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.98246,
+     139.10417
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     35.98617,
+     138.13375
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.03091,
+     139.08281
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.17973,
+     137.79447
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.18632,
+     137.82283
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.27231,
+     138.46946
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.27584,
+     138.37157
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.27781,
+     138.36864
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.27994,
+     138.36807
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.30449,
+     138.4506
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.32584,
+     138.33479
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.3273,
+     138.63512
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.3288,
+     138.32811
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.33442,
+     138.34292
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.33706,
+     138.27748
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.34236,
+     139.00895
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.34434,
+     137.99395
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.37538,
+     138.90705
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.37608,
+     138.90602
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.41582,
+     138.78856
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.41685,
+     137.89002
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.42032,
+     138.01859
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.43236,
+     138.19524
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.43505,
+     137.84737
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.45758,
+     138.19104
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.47404,
+     139.02443
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.47433,
+     139.02509
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.49845,
+     138.14644
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.55457,
+     138.14384
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.55869,
+     138.11348
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.55983,
+     138.11344
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.59982,
+     138.63135
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.60218,
+     139.04668
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.60337,
+     139.04936
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.61848,
+     138.80223
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.65636,
+     138.17168
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.84201,
+     138.77813
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.97275,
+     138.8022
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.98979,
+     137.9249
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.9899,
+     137.86549
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.98996,
+     137.9268
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.99178,
+     138.2243
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     36.99202,
+     137.9282
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     37.00879,
+     138.65109
+    ]
+   ],
+   [
+    "tokyo",
+    [
+     37.01388,
+     138.87576
+    ]
+   ]
+  ],
+  "rows": [
+   {
+    "region": "tohoku",
+    "at": [
+     36.71474,
+     139.83063
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.71248,
+     139.82858
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.59008,
+     139.35567
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.59119,
+     139.33967
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.52117,
+     140.15609
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.52004,
+     140.15461
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.3454,
+     140.0296
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.19906,
+     139.94595
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.19681,
+     139.94136
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     37.14369,
+     140.71533
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.52406,
+     140.15544
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "福島幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     37.14442,
+     140.71723
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "新いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.71158,
+     139.83632
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "新いわき幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     37.29526,
+     140.16211
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.73973,
+     139.96493
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.73547,
+     139.96601
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.62674,
+     139.99076
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.62241,
+     139.98962
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.61184,
+     139.9817
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.78623,
+     139.95349
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "栃那線 / 西那須野線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     37.29379,
+     140.16016
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.68178,
+     140.65598
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "阿武隈線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.57813,
+     139.22584
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "奥只見線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     37.11355,
+     140.16864
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "合戦坂変電所~米村道北変電所線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.77326,
+     139.23781
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "上毛幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.79077,
+     139.26672
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "上毛幹線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.71681,
+     138.97589
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "須田貝線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.74043,
+     139.96274
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "蒲須坂-矢板線 / JR矢板線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.79305,
+     140.71915
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "北茨城線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.79006,
+     140.71305
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "北茨城線"
+   },
+   {
+    "region": "tohoku",
+    "at": [
+     36.78004,
+     140.68633
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tokyo"
+    ],
+    "name": "北茨城線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.19681,
+     139.94136
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.19906,
+     139.94595
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "福島東幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.59119,
+     139.33967
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.59008,
+     139.35567
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "南いわき幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.71657,
+     139.82014
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "下郷線 / 塩原線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.34229,
+     139.90557
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "下郷線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.06772,
+     139.26098
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "奥只見線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.14307,
+     140.719
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "新いわき幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.1451,
+     140.72023
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "川内線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.1412,
+     140.72125
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "福島幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.29526,
+     140.16211
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "猪苗代新幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.78186,
+     139.75832
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "下滝線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.46733,
+     140.01223
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.41287,
+     140.0743
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.41077,
+     140.07927
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.13048,
+     140.18221
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "猪苗代旧幹線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.07765,
+     140.10768
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "豊原線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.11626,
+     140.8714
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "北小名浜変電所~いわき変電所線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.96164,
+     140.89878
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "小平線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.76847,
+     139.84061
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "沼原線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.05737,
+     139.91177
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "沼原線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.10027,
+     139.90604
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "沼原線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.05187,
+     139.92822
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "板室線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.00953,
+     140.8388
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "東北電力ネットワーク 66.0kV線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.02348,
+     140.84427
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "東北電力ネットワーク 66.0kV線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.77787,
+     140.68331
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "勿来線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.77953,
+     140.68506
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "勿来線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.80486,
+     140.7152
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "leadin"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     36.78004,
+     140.68633
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "北茨城線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.06962,
+     140.01042
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "那須線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.31625,
+     139.28735
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4172"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.19984,
+     139.79244
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4242"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.20307,
+     139.79532
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4243"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.29706,
+     139.93279
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4243"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.23838,
+     141.00866
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "広野火力線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.10686,
+     140.22393
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4252"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.11035,
+     140.2313
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4256"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.11204,
+     140.23868
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4256"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.1059,
+     140.24484
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4256"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.05606,
+     140.35303
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4256"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.06792,
+     140.86763
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "好間線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.06918,
+     140.84984
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "好間線"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.15828,
+     140.4606
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4258"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.15745,
+     140.46017
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4258"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.30371,
+     140.42615
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4259"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.171,
+     140.21722
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4260"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.26596,
+     140.37847
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4261"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.27475,
+     140.36746
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4261"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.2765,
+     140.36255
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4261"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.25249,
+     140.37994
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4263"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.29087,
+     140.62901
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4265"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.2831,
+     140.63239
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4265"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.1111,
+     140.2311
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4266"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.14246,
+     140.226
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4266"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.16752,
+     140.22029
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4266"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.16042,
+     140.32051
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4267"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.10586,
+     140.35583
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4267"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.10077,
+     140.35826
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4267"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.08,
+     140.37156
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4267"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.03799,
+     140.37856
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4268"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.18008,
+     140.30401
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4271"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.07639,
+     140.85766
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4277"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.08256,
+     140.84792
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "tokyo_line_4277"
+   },
+   {
+    "region": "tokyo",
+    "at": [
+     37.00553,
+     140.72405
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "tohoku"
+    ],
+    "name": "6D1D"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.57637,
+     136.51552
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "久居南勢線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.51562,
+     136.11055
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "西浅井町塩津浜変電所~東近江開閉所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.86786,
+     135.89944
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "甲賀線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.54936,
+     136.63369
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "山県市変電所~揖斐変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.00485,
+     136.0213
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.98671,
+     135.99376
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.84992,
+     136.87332
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "六地蔵変電所~白鳥町大島変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.17612,
+     136.81641
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.44838,
+     136.36876
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "伊勢幹線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.44773,
+     136.37018
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "伊勢幹線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.55416,
+     135.97219
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "越前変電所~疋田変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.55643,
+     135.97584
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "越前変電所~疋田変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.5566,
+     135.97644
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "疋田変電所~湖東変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.55478,
+     135.97927
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "城端開閉所~疋田変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.70636,
+     136.66398
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "中部電力パワーグリッド 500.0kV線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.59965,
+     137.07301
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku",
+     "kansai"
+    ],
+    "name": "三ツ渕変電所~関市変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.54976,
+     137.11205
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "三ツ渕変電所~西栃井変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.54507,
+     136.53694
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "南勢北勢線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.71775,
+     136.14232
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "北陸幹線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.79329,
+     136.188
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "北陸幹線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.58692,
+     136.54006
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "三雲鎌田線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     34.59909,
+     136.5473
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "セントラル硝子松阪線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.66457,
+     136.09077
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "奥野々変電所~敦賀変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.70469,
+     135.96481
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "色浜変電所~疋田変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.55896,
+     135.97224
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "色浜変電所~疋田変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.73035,
+     135.99497
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "日本原子力発電 275.0kV線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.65493,
+     136.03711
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.2556,
+     135.96705
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "中部送電線_593"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.0819,
+     135.98872
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "中部送電線_481"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.25471,
+     135.97116
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "西日本北小松線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     35.80065,
+     136.73883
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "関開閉所~本巣市変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.06771,
+     136.73954
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "志賀中能登線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.04852,
+     136.91642
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "和倉線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.07201,
+     136.92882
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "和倉線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.24099,
+     136.88995
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "鳳至線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.06249,
+     137.00982
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "七尾大田火力線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     36.25221,
+     136.36284
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "大堂寺線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.0082,
+     137.78824
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "朝日町変電所~糸魚川市変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.00553,
+     136.8018
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "高浜線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.11215,
+     136.83594
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "穴水線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.22865,
+     136.91209
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "穴水線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     36.25174,
+     136.36695
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "我谷線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     36.2575,
+     137.93446
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "安曇野市変電所~新橋変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.01138,
+     137.79426
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "白馬村変電所~糸魚川市変電所線"
+   },
+   {
+    "region": "chubu",
+    "at": [
+     37.00832,
+     137.7954
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "中部送電線_702"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.55416,
+     135.97219
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "越前変電所~色浜変電所_2線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.55643,
+     135.97584
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "越前変電所~色浜変電所_2線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.63758,
+     136.95909
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "小坂町小坂町変電所~本巣市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.58143,
+     136.8841
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "小坂町小坂町変電所~本巣市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.46658,
+     136.70961
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "小坂町小坂町変電所~本巣市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.45963,
+     136.70491
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "小坂町小坂町変電所~本巣市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.43842,
+     136.69543
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "小坂町小坂町変電所~本巣市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.63896,
+     136.9636
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "越美幹線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.04312,
+     136.08204
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "中部電力パワーグリッド 275.0kV線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.04541,
+     136.08607
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "中部電力パワーグリッド 275.0kV線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.05046,
+     136.09465
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "中部電力パワーグリッド 275.0kV線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.84992,
+     136.87332
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "中部電力パワーグリッド 275.0kV線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.70636,
+     136.66398
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "中部電力パワーグリッド 500.0kV線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.6392,
+     136.96397
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "白鳥町大島変電所~三ツ渕変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.63511,
+     136.96465
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "白鳥町大島変電所~三ツ渕変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.58873,
+     137.00997
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "白鳥町大島変電所~三ツ渕変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.44524,
+     136.5983
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.70033,
+     137.68128
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.61598,
+     137.60583
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "大桑村変電所~平沢変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.67356,
+     137.65542
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "大桑村変電所~平沢変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.12185,
+     137.89564
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "高根町上ケ洞変電所~新信濃変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.53004,
+     136.93321
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "高根町上ケ洞変電所~三ツ渕変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.50588,
+     136.87295
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "本巣市変電所~白川村変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.58299,
+     136.87817
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "本巣市変電所~白川村変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     37.06056,
+     136.72978
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "志賀原子力線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     37.06225,
+     136.72964
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "志賀中能登線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.35042,
+     137.92343
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.71775,
+     136.14232
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "北陸幹線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.79329,
+     136.188
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "北陸幹線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.2773,
+     137.91782
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "安曇野市変電所_2~松本市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.27211,
+     137.92124
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "安曇野市変電所_2~松本市変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.44304,
+     137.93455
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "池田変電所~大町市変電所_2線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.57005,
+     137.18643
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "春日変電所_2~高内変電所_2線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.55077,
+     136.63484
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu",
+     "kansai"
+    ],
+    "name": "北陸送電線_17"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.53719,
+     137.43834
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "牛ケ増変電所~富山市変電所_2線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     36.98979,
+     137.9249
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "糸魚川変電所~大字須沢変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.73035,
+     135.99497
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "色浜変電所_2~色浜変電所線"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.80065,
+     136.73883
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "北陸送電線_176"
+   },
+   {
+    "region": "hokuriku",
+    "at": [
+     35.50464,
+     136.86849
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北陸送電線_176"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.16905,
+     133.95361
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.17469,
+     133.99861
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.20817,
+     134.21081
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.18405,
+     134.54783
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "四国電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.33086,
+     136.81885
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北一宮加納線 (Kita Ichinomiya Kanō Sen)"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.51562,
+     136.11055
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "西浅井町塩津浜変電所~東近江開閉所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.84042,
+     135.92206
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "南近江線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.50574,
+     136.96123
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北方開閉所 (Kitakata Kaiheisho)~山県市変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.50668,
+     136.86681
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "丸山幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.54936,
+     136.63369
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "山県市変電所~揖斐変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.55478,
+     135.97927
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "関西電力送配電 275.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.94679,
+     137.26258
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "関西電力送配電 154.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.87781,
+     137.20008
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "関西電力送配電 154.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.63758,
+     136.95909
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西電力送配電 154.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.58143,
+     136.8841
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西電力送配電 154.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.00485,
+     136.0213
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "六地蔵変電所~本巣市変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.09977,
+     136.8095
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "海部開閉所~学戸六丁目変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.17612,
+     136.81641
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.06239,
+     136.80705
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "飛島七宝線 (Tobishima Shippō Sen)"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.06313,
+     136.81025
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "飛島七宝線 (Tobishima Shippō Sen)"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.09909,
+     136.80612
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.99425,
+     136.41532
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "八乙女変電所~嶺南変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.55385,
+     135.97788
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "嶺南変電所~湖東変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.70636,
+     136.66398
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 500.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "中部電力パワーグリッド 500.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.53103,
+     136.93591
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "西部幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.35897,
+     136.95836
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.33562,
+     136.90404
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.33384,
+     136.90233
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.28789,
+     136.81896
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.28677,
+     136.8163
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.24396,
+     136.82977
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "岩倉稲沢線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.24312,
+     136.82736
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "岩倉稲沢線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.24092,
+     136.81864
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "岩倉稲沢線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.24018,
+     136.8158
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "岩倉稲沢線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.32892,
+     136.81913
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "関西送電線_443"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.88551,
+     134.43243
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "山崎町変電所~揖保川町変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.20711,
+     134.18793
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "山崎開閉所~山崎町変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.86297,
+     134.42866
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "揖保川町変電所~姫路変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.80636,
+     134.48581
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "関西送電線_132"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     33.99794,
+     134.40986
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "南庄町一丁目変電所~阿南周波数変換所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.06319,
+     134.47298
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "応神東線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.15154,
+     134.46705
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 66.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.21086,
+     134.40973
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 66.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.06276,
+     134.4727
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "南庄町一丁目変電所~南小松島町変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.06199,
+     134.47208
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "関西電力送配電 66.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.164,
+     134.45198
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "南庄町一丁目変電所~鳴門変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.16647,
+     134.45384
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "南庄町一丁目変電所~鳴門変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.71775,
+     136.14232
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "北陸幹線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.03189,
+     133.89325
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "関西電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     33.8788,
+     134.27423
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "関西電力送配電 187.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.06093,
+     134.4669
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.66457,
+     136.09077
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.80703,
+     136.17449
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.76895,
+     135.99564
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "JR西日本 33.0kV線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.80006,
+     134.48003
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "関西送電線_153"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.79497,
+     134.4607
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "関西送電線_153"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.50267,
+     136.87077
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北部西濃線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.50512,
+     136.87284
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北部西濃線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.80927,
+     136.17549
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     33.79919,
+     134.41078
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "桑野変電所~美波町変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.70469,
+     135.96481
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 275.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "白木一丁目変電所~嶺南変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.65493,
+     136.03711
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 275.0,
+    "by": [
+     "hokuriku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     34.83778,
+     134.38772
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "関西送電線_209"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.90001,
+     136.15612
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "関西送電線_541"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.86468,
+     136.17448
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu",
+     "hokuriku"
+    ],
+    "name": "関西送電線_541"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.00847,
+     136.00336
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 154.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "東草津三丁目変電所~手原一丁目変電所線"
+   },
+   {
+    "region": "kansai",
+    "at": [
+     35.50464,
+     136.86849
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chubu"
+    ],
+    "name": "北町変電所~本巣市変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.39039,
+     132.40438
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "西広島変電所~古市四丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.40209,
+     132.41411
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "西広島変電所~古市四丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.48064,
+     132.83134
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "忠海長浜一丁目変電所~新広島変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.45949,
+     132.43519
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "広島変電所~古市四丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.40686,
+     132.59596
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "南西条変電所~中野五丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.60761,
+     131.01144
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "豊前北幹線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.61034,
+     131.01466
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "北九州豊前線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.83489,
+     130.76493
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "上津役幹線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.80006,
+     134.48003
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "古池本町変電所~緑ケ丘四丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.164,
+     134.45198
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "国府変電所~徳島市変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.16647,
+     134.45384
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "国府変電所~徳島市変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.11694,
+     134.51396
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "応神東線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.11454,
+     134.51612
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "応神東線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.09628,
+     134.50482
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "応神東線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.0026,
+     134.58737
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "四国電力送配電 66.0kV線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.42914,
+     133.12606
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "中国送電線_96"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.39535,
+     133.15437
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.14803,
+     131.9007
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "新徳山変電所~美和町西畑変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.67374,
+     134.42299
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "鉢変電所~大殿変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.67436,
+     134.41731
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "鉢変電所~大殿変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.61147,
+     134.33645
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "鉢変電所~大殿変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.60444,
+     134.34863
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "鉢変電所~大殿変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.7359,
+     134.52371
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "中国送電線_327"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.4001,
+     133.09905
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "中国送電線_95"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.40017,
+     133.0977
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "中国送電線_95"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.81947,
+     134.50189
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "釜島変電所~古池本町変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.63856,
+     133.69204
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "本山町変電所~井川変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.63837,
+     133.6897
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "本山町変電所~井川変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.83861,
+     134.51666
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "井川変電所~鉢変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.87992,
+     134.64886
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "井川変電所~鉢変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     34.7758,
+     134.4277
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "古池本町変電所~緑ケ丘四丁目変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     35.17074,
+     134.44776
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "長尾変電所~下町変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.92411,
+     130.78301
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "若松安瀬上線・若松安瀬下線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.9234,
+     130.78116
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "若松安瀬上線・若松安瀬下線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.86437,
+     130.79407
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "西谷前田線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.87049,
+     134.61381
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "中国送電線_208"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.82702,
+     134.52136
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "中国送電線_208"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.79919,
+     134.41078
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai",
+     "shikoku"
+    ],
+    "name": "中国送電線_208"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     35.54426,
+     134.50503
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "中国送電線_238"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.57305,
+     132.81686
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "松山線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.63879,
+     133.69084
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "三好市変電所~本山町変電所線"
+   },
+   {
+    "region": "chugoku",
+    "at": [
+     33.95293,
+     132.19175
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.42921,
+     132.41479
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "西広島変電所~廿日市変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.42288,
+     132.37971
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "西広島変電所~廿日市変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.18405,
+     134.54783
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "讃岐変電所~鳴門変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.48959,
+     132.70548
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "南西条変電所~黒瀬変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.45323,
+     132.66308
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "南西条変電所~黒瀬変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.40966,
+     132.25786
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "新西広島岩国線 (Shin Nishi Hiroshima Iwakuni Sen)"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.40569,
+     132.51191
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "大州四丁目変電所~広島補助き電区分所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.40278,
+     132.5748
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "大州四丁目変電所~広島補助き電区分所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.4042,
+     132.5816
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "大州四丁目変電所~広島補助き電区分所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.4375,
+     132.5388
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.20313,
+     131.82831
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku",
+     "kyushu"
+    ],
+    "name": "東山口幹線 (Higashi Yamaguchi Kansen)"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     33.5886,
+     132.54216
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "四国中央西幹線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.164,
+     134.45198
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "国府変電所~鳴門変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.16647,
+     134.45384
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 187.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "国府変電所~鳴門変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.0371,
+     134.50353
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku",
+     "kansai"
+    ],
+    "name": "国府変電所~南庄町一丁目変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.42011,
+     133.17607
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.42028,
+     133.21313
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "東尾道向島線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.47844,
+     132.12955
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "友和変電所~美和町西畑変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.35849,
+     131.95918
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "友和変電所~美和町西畑変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     33.95377,
+     131.96066
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku",
+     "kyushu"
+    ],
+    "name": "中央南変電所~田布施町変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     33.79919,
+     134.41078
+    ],
+    "why": [
+     "diverge"
+    ],
+    "kv": 66.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "桑野変電所~鉢変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.39527,
+     134.83164
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "四国送電線_84"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.32742,
+     134.83562
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 77.0,
+    "by": [
+     "kansai"
+    ],
+    "name": "四国電力送配電 77.0kV線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.404,
+     132.57387
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "大州四丁目変電所~南西条変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.40657,
+     132.57561
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "大州四丁目変電所~南西条変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.4228,
+     133.17414
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "向島変電所~沼隈町大字草深変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.4495,
+     133.23428
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "向島変電所~沼隈町大字草深変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.46097,
+     133.24895
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "向島変電所~沼隈町大字草深変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.46319,
+     133.25236
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "向島変電所~沼隈町大字草深変電所線"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     33.95293,
+     132.19175
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "kyushu"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "shikoku",
+    "at": [
+     34.40377,
+     132.50719
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 110.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "namebind"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     33.73453,
+     130.67282
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "北九州変電所~宮田変電所線"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     34.6945,
+     131.97811
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 500.0,
+    "by": [
+     "chugoku"
+    ],
+    "name": "中国電力ネットワーク 500.0kV線"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     34.3558,
+     132.24048
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 220.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "美和町西畑変電所~新徳山変電所線"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     34.14803,
+     131.9007
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 66.0,
+    "by": [
+     "shikoku"
+    ],
+    "name": "新徳山変電所~美和町西畑変電所線"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     34.09803,
+     132.1313
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "古開作変電所~高森線"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     33.9717,
+     132.18747
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "九州送電線_381"
+   },
+   {
+    "region": "kyushu",
+    "at": [
+     34.1462,
+     132.16964
+    ],
+    "why": [
+     "end"
+    ],
+    "kv": 0.0,
+    "by": [
+     "chugoku",
+     "shikoku"
+    ],
+    "name": "九州送電線_536"
+   }
+  ],
+  "n_joints_healed": 37,
+  "n_pieces_left": 206,
+  "n_split_nodes_left": 58
  }
 }

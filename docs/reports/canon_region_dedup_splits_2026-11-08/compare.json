@@ -1,0 +1,559 @@
+{
+ "ref": "cd7c90d2",
+ "canon": {
+  "before": {
+   "nodes": 15562,
+   "edges": 17314,
+   "main_nodes": 14063,
+   "subs": 8305,
+   "split_junctions": 0,
+   "coords_multi_region": 239,
+   "dead_end_junction_coords": 2795,
+   "orphan_node_coords": 247,
+   "km_path": 80304.8,
+   "km_segments_on_two_or_more_edges": 9340.4,
+   "overlap_pairs": {
+    "main_not_same_shape": 794,
+    "all": 1019
+   }
+  },
+  "after": {
+   "nodes": 15385,
+   "edges": 17265,
+   "main_nodes": 13897,
+   "subs": 8211,
+   "split_junctions": 58,
+   "coords_multi_region": 144,
+   "dead_end_junction_coords": 2765,
+   "orphan_node_coords": 247,
+   "km_path": 75418.6,
+   "km_segments_on_two_or_more_edges": 4467.9,
+   "overlap_pairs": {
+    "main_not_same_shape": 518,
+    "all": 735
+   }
+  }
+ },
+ "cross_region_copies_km": {
+  "before": {
+   "km": 5855.1,
+   "by_regions": {
+    "tohoku|tokyo": 1357.5,
+    "chubu|hokuriku|kansai": 858.3,
+    "chubu|kansai": 778.6,
+    "chubu|hokuriku": 675.9,
+    "chugoku|shikoku": 612.3,
+    "chubu|tokyo": 508.1,
+    "chugoku|kyushu": 278.6,
+    "chugoku|kansai|shikoku": 221.3,
+    "hokkaido|tohoku": 210.5,
+    "kansai|shikoku": 157.6,
+    "chugoku|kansai": 126.8,
+    "chubu|hokuriku|tokyo": 24.7,
+    "hokuriku|kansai": 20.9,
+    "hokuriku|tokyo": 14.9,
+    "chugoku|kyushu|shikoku": 9.2
+   }
+  },
+  "after": {
+   "km": 1074.6,
+   "by_regions": {
+    "chubu|tokyo": 513.5,
+    "hokkaido|tohoku": 210.5,
+    "chubu|kansai": 107.8,
+    "chugoku|shikoku": 94.7,
+    "tohoku|tokyo": 75.5,
+    "chubu|hokuriku": 26.6,
+    "hokuriku|tokyo": 14.9,
+    "chubu|hokuriku|tokyo": 13.9,
+    "chugoku|kyushu|shikoku": 9.2,
+    "chugoku|kyushu": 4.2,
+    "kansai|shikoku": 3.8
+   }
+  }
+ },
+ "powerflow": {
+  "hokkaido": {
+   "n_bus": [
+    831,
+    831
+   ],
+   "n_line": [
+    858,
+    858
+   ],
+   "n_trafo": [
+    69,
+    69
+   ],
+   "n_implicit_stepdown": [
+    0,
+    0
+   ],
+   "n_junction_cuts": [
+    0,
+    0
+   ],
+   "n_components": [
+    22,
+    22
+   ],
+   "n_synthetic_slack": [
+    20,
+    20
+   ],
+   "total_load_mw": [
+    4420.0,
+    4420.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8603862964,
+    0.8603862964
+   ],
+   "ac_vm_max": [
+    1.00347375,
+    1.00347375
+   ],
+   "ac_max_loading_pct": [
+    85.24518392,
+    85.24518392
+   ],
+   "ac_total_loss_mw": [
+    100.3510649,
+    100.3510649
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "east": {
+   "n_bus": [
+    6219,
+    6206
+   ],
+   "n_line": [
+    6419,
+    6411
+   ],
+   "n_trafo": [
+    663,
+    663
+   ],
+   "n_implicit_stepdown": [
+    23,
+    23
+   ],
+   "n_junction_cuts": [
+    6,
+    6
+   ],
+   "n_components": [
+    235,
+    234
+   ],
+   "n_synthetic_slack": [
+    222,
+    222
+   ],
+   "total_load_mw": [
+    55250.0,
+    55250.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.8560939237,
+    0.8560199819
+   ],
+   "ac_vm_max": [
+    1.022906943,
+    1.008679404
+   ],
+   "ac_max_loading_pct": [
+    894.583068,
+    895.437434
+   ],
+   "ac_total_loss_mw": [
+    1334.323599,
+    1303.297243
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "west": {
+   "n_bus": [
+    7926,
+    7889
+   ],
+   "n_line": [
+    8041,
+    8000
+   ],
+   "n_trafo": [
+    973,
+    965
+   ],
+   "n_implicit_stepdown": [
+    32,
+    33
+   ],
+   "n_junction_cuts": [
+    7,
+    7
+   ],
+   "n_components": [
+    295,
+    295
+   ],
+   "n_synthetic_slack": [
+    285,
+    285
+   ],
+   "total_load_mw": [
+    73865.0,
+    73865.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.7168294605,
+    0.7168385705
+   ],
+   "ac_vm_max": [
+    1.039094052,
+    1.009947074
+   ],
+   "ac_max_loading_pct": [
+    432.7125086,
+    498.3221268
+   ],
+   "ac_total_loss_mw": [
+    1022.869684,
+    1142.145376
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  },
+  "okinawa": {
+   "n_bus": [
+    100,
+    100
+   ],
+   "n_line": [
+    96,
+    96
+   ],
+   "n_trafo": [
+    19,
+    19
+   ],
+   "n_implicit_stepdown": [
+    0,
+    0
+   ],
+   "n_junction_cuts": [
+    0,
+    0
+   ],
+   "n_components": [
+    7,
+    7
+   ],
+   "n_synthetic_slack": [
+    5,
+    5
+   ],
+   "total_load_mw": [
+    1360.0,
+    1360.0
+   ],
+   "ac_converged": [
+    true,
+    true
+   ],
+   "ac_vm_min": [
+    0.7554116959,
+    0.7554116959
+   ],
+   "ac_vm_max": [
+    1.000000332,
+    1.000000332
+   ],
+   "ac_max_loading_pct": [
+    232.9599888,
+    232.9599888
+   ],
+   "ac_total_loss_mw": [
+    29.20504127,
+    29.20504127
+   ],
+   "dc_converged": [
+    true,
+    true
+   ]
+  }
+ },
+ "n1": {
+  "hokkaido": {
+   "island": [
+    "hokkaido",
+    "hokkaido"
+   ],
+   "n_bus": [
+    799,
+    799
+   ],
+   "n_bus_full": [
+    831,
+    831
+   ],
+   "n_branch": [
+    916,
+    916
+   ],
+   "n_outage_evaluated": [
+    767,
+    767
+   ],
+   "n_islanding": [
+    149,
+    149
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    127,
+    127
+   ],
+   "base_n_over_physical": [
+    0,
+    0
+   ],
+   "base_max_loading_physical_pct": [
+    44.3,
+    44.3
+   ],
+   "n_outage_causing_new_over_physical": [
+    0,
+    0
+   ],
+   "n_outage_new_over_120_physical": [
+    0,
+    0
+   ],
+   "max_new_loading_physical_pct": [
+    79.3,
+    79.3
+   ],
+   "islanding_total_load_mw": [
+    1790.0,
+    1790.0
+   ],
+   "islanding_n_over_100mw": [
+    0,
+    0
+   ]
+  },
+  "east": {
+   "island": [
+    "east",
+    "east"
+   ],
+   "n_bus": [
+    5785,
+    5773
+   ],
+   "n_bus_full": [
+    6219,
+    6206
+   ],
+   "n_branch": [
+    6876,
+    6868
+   ],
+   "n_outage_evaluated": [
+    5923,
+    5919
+   ],
+   "n_islanding": [
+    949,
+    945
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    1403,
+    1402
+   ],
+   "base_n_over_physical": [
+    57,
+    56
+   ],
+   "base_max_loading_physical_pct": [
+    414.8,
+    414.8
+   ],
+   "n_outage_causing_new_over_physical": [
+    125,
+    145
+   ],
+   "n_outage_new_over_120_physical": [
+    50,
+    50
+   ],
+   "max_new_loading_physical_pct": [
+    205.5,
+    205.7
+   ],
+   "islanding_total_load_mw": [
+    11635.8,
+    11635.1
+   ],
+   "islanding_n_over_100mw": [
+    3,
+    3
+   ]
+  },
+  "west": {
+   "island": [
+    "west",
+    "west"
+   ],
+   "n_bus": [
+    7410,
+    7373
+   ],
+   "n_bus_full": [
+    7926,
+    7889
+   ],
+   "n_branch": [
+    8784,
+    8735
+   ],
+   "n_outage_evaluated": [
+    6660,
+    6630
+   ],
+   "n_islanding": [
+    2116,
+    2097
+   ],
+   "min_kv": [
+    154.0,
+    154.0
+   ],
+   "n_monitor_physical": [
+    2434,
+    2413
+   ],
+   "base_n_over_physical": [
+    20,
+    22
+   ],
+   "base_max_loading_physical_pct": [
+    247.6,
+    247.3
+   ],
+   "n_outage_causing_new_over_physical": [
+    229,
+    197
+   ],
+   "n_outage_new_over_120_physical": [
+    58,
+    60
+   ],
+   "max_new_loading_physical_pct": [
+    212.4,
+    230.5
+   ],
+   "islanding_total_load_mw": [
+    32486.3,
+    33031.0
+   ],
+   "islanding_n_over_100mw": [
+    40,
+    44
+   ]
+  },
+  "okinawa": {
+   "island": [
+    "okinawa",
+    "okinawa"
+   ],
+   "n_bus": [
+    94,
+    94
+   ],
+   "n_bus_full": [
+    100,
+    100
+   ],
+   "n_branch": [
+    115,
+    115
+   ],
+   "n_outage_evaluated": [
+    88,
+    88
+   ],
+   "n_islanding": [
+    27,
+    27
+   ],
+   "min_kv": [
+    132.0,
+    132.0
+   ],
+   "n_monitor_physical": [
+    23,
+    23
+   ],
+   "base_n_over_physical": [
+    2,
+    2
+   ],
+   "base_max_loading_physical_pct": [
+    123.4,
+    123.4
+   ],
+   "n_outage_causing_new_over_physical": [
+    0,
+    0
+   ],
+   "n_outage_new_over_120_physical": [
+    0,
+    0
+   ],
+   "max_new_loading_physical_pct": [
+    90.2,
+    90.2
+   ],
+   "islanding_total_load_mw": [
+    1755.0,
+    1755.0
+   ],
+   "islanding_n_over_100mw": [
+    3,
+    3
+   ]
+  }
+ }
+}
